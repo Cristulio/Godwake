@@ -29,11 +29,9 @@ export function createIronCellsDelve(): DelveState {
       kind: 'combat',
       title: 'The Vivisector’s Antechamber',
       flavorText:
-        'Slabs slick with old blood. Two goblins crouch in the shadows, gnawing on something pale.',
-      monsters: [
-        { defId: 'goblin', count: 2, displayPrefix: 'Goblin' },
-      ],
-      xpReward: 100,
+        'A slab slick with old blood. A single goblin crouches in the shadow of it, gnawing on something pale.',
+      monsters: [{ defId: 'goblin', count: 1 }],
+      xpReward: 75,
     },
     {
       id: 'room-4',
@@ -48,8 +46,8 @@ export function createIronCellsDelve(): DelveState {
       kind: 'boss',
       title: 'The Warden’s Hall',
       flavorText:
-        'A wide stone hall. Three goblins, the largest dragging a chain-bound greatsword that scrapes sparks against the floor.',
-      monsters: [{ defId: 'goblin', count: 3, displayPrefix: 'Goblin' }],
+        'A wide stone hall. The Warden waits at the far end, chain-bound greatsword dragging behind it.',
+      monsters: [{ defId: 'goblin-warden', count: 1 }],
       xpReward: 200,
     },
   ];

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useGameStore } from '../../stores/gameStore';
 
 interface DiceRollOverlayProps {
   attackerName: string;
@@ -13,12 +14,6 @@ interface DiceRollOverlayProps {
   onDismiss: () => void;
 }
 
-/**
- * Mounted briefly when an attack roll happens. Shows a spinning d20 cycling
- * through random numbers, then settles on the actual natural roll. After a
- * short pause, displays the math (1d20+X vs AC Y) and the result tag, then
- * fades out.
- */
 export function DiceRollOverlay({
   attackerName,
   targetName,
@@ -31,38 +26,36 @@ export function DiceRollOverlay({
   crit,
   onDismiss,
 }: DiceRollOverlayProps) {
+  const speed = useGameStore((s) => s.speedMultiplier);
   const [spinning, setSpinning] = useState(true);
   const [shownNumber, setShownNumber] = useState(rollNatural);
   const [revealedResult, setRevealedResult] = useState(false);
 
   useEffect(() => {
     let mounted = true;
-    let tickInterval: ReturnType<typeof setInterval>;
+    const t = (ms: number) => Math.max(40, Math.round(ms / speed));
 
-    // Phase 1: spin (700ms) — flashing numbers 1-20
-    tickInterval = setInterval(() => {
+    const tickInterval = setInterval(() => {
       if (!mounted) return;
       setShownNumber(Math.floor(Math.random() * 20) + 1);
-    }, 55);
+    }, t(35));
 
     const stopSpin = setTimeout(() => {
       if (!mounted) return;
       clearInterval(tickInterval);
       setShownNumber(rollNatural);
       setSpinning(false);
-    }, 700);
+    }, t(280));
 
-    // Phase 2: settle (180ms) then reveal full result
     const revealTimer = setTimeout(() => {
       if (!mounted) return;
       setRevealedResult(true);
-    }, 880);
+    }, t(360));
 
-    // Phase 3: dismiss
     const dismissTimer = setTimeout(() => {
       if (!mounted) return;
       onDismiss();
-    }, 2200);
+    }, t(1200));
 
     return () => {
       mounted = false;
@@ -71,7 +64,7 @@ export function DiceRollOverlay({
       clearTimeout(revealTimer);
       clearTimeout(dismissTimer);
     };
-  }, [rollNatural, onDismiss]);
+  }, [rollNatural, onDismiss, speed]);
 
   const resultLabel = crit ? 'CRITICAL HIT' : hit ? 'HIT' : 'MISS';
   const resultClass = crit
@@ -82,27 +75,25 @@ export function DiceRollOverlay({
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center pointer-events-none">
-      <div className="absolute inset-0 bg-[var(--color-bg-base)] opacity-60" />
-      <div className="relative flex flex-col items-center gap-4">
-        <div className="text-[var(--color-text-secondary)] text-xs uppercase tracking-[0.3em]">
+      <div className="absolute inset-0 bg-[var(--color-bg-base)] opacity-65" />
+      <div className="relative flex flex-col items-center gap-3">
+        <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-[0.3em]">
           {attackerName} → {targetName} · {weaponName}
         </div>
         <D20Svg natural={shownNumber} spinning={spinning} crit={crit && !spinning} />
         {revealedResult ? (
-          <div className="flex flex-col items-center gap-1">
-            <div className="text-[var(--color-text-primary)] text-base font-mono tracking-wide">
+          <div className="flex flex-col items-center gap-0.5 animate-fade-in">
+            <div className="text-[var(--color-text-primary)] text-sm font-mono tracking-wide">
               1d20{attackBonus >= 0 ? '+' : ''}
               {attackBonus} = <span className="text-[var(--color-accent-amber)]">{total}</span>{' '}
               <span className="text-[var(--color-text-dim)]">vs AC {targetAC}</span>
             </div>
-            <div className={`text-2xl font-bold uppercase tracking-[0.4em] ${resultClass}`}>
+            <div className={`text-xl font-bold uppercase tracking-[0.4em] ${resultClass}`}>
               {resultLabel}
             </div>
           </div>
         ) : (
-          <div className="text-[var(--color-text-secondary)] text-xs uppercase tracking-[0.3em] opacity-0">
-            rolling
-          </div>
+          <div className="h-9" />
         )}
       </div>
     </div>
@@ -121,31 +112,55 @@ function D20Svg({
   return (
     <div
       className={`
-        relative w-32 h-32 flex items-center justify-center
-        ${spinning ? 'animate-spin' : ''}
-        ${crit ? 'drop-shadow-[0_0_24px_rgba(244,167,66,0.6)]' : ''}
+        relative w-28 h-28 flex items-center justify-center
+        ${spinning ? 'animate-d20-tumble' : ''}
+        ${crit ? 'drop-shadow-[0_0_28px_rgba(244,167,66,0.7)]' : ''}
       `}
     >
-      <svg viewBox="0 0 100 100" className="w-full h-full" shapeRendering="geometricPrecision">
+      <svg viewBox="0 0 100 100" className="w-full h-full">
+        <defs>
+          <radialGradient id="d20-grad" cx="0.4" cy="0.35">
+            <stop offset="0%" stopColor="#4a3a26" />
+            <stop offset="55%" stopColor="#2d2218" />
+            <stop offset="100%" stopColor="#1a1410" />
+          </radialGradient>
+        </defs>
+        {/* outer icosahedron silhouette */}
         <polygon
-          points="50,5 95,30 95,70 50,95 5,70 5,30"
-          fill="var(--color-bg-panel)"
-          stroke={crit ? 'var(--color-accent-amber)' : 'var(--color-border-bright)'}
-          strokeWidth="2"
+          points="50,4 93,28 93,72 50,96 7,72 7,28"
+          fill="url(#d20-grad)"
+          stroke={crit ? '#f4a742' : '#8c6232'}
+          strokeWidth="2.5"
+          strokeLinejoin="round"
         />
+        {/* upward triangle facet — top half of star */}
         <polygon
-          points="50,5 95,30 50,55 5,30"
-          fill="var(--color-bg-panel-hover)"
-          stroke={crit ? 'var(--color-accent-amber)' : 'var(--color-border-warm)'}
+          points="50,8 89,70 11,70"
+          fill="none"
+          stroke={crit ? '#ffb347' : '#6b4a2e'}
           strokeWidth="1"
-          opacity="0.5"
+          opacity="0.55"
+        />
+        {/* downward triangle facet — bottom half of star */}
+        <polygon
+          points="50,92 89,30 11,30"
+          fill="none"
+          stroke={crit ? '#ffb347' : '#6b4a2e'}
+          strokeWidth="1"
+          opacity="0.55"
+        />
+        {/* central front-facing triangle: where the number is read */}
+        <polygon
+          points="34,46 66,46 50,75"
+          fill="#1a1410"
+          stroke={crit ? '#f4a742' : '#8c6232'}
+          strokeWidth="1.5"
         />
       </svg>
       <div
         className={`
-          absolute inset-0 flex items-center justify-center font-mono text-3xl
+          absolute inset-0 flex items-center justify-center font-mono text-2xl pt-3
           ${crit ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-text-primary)]'}
-          ${spinning ? 'opacity-70' : ''}
         `}
       >
         {natural}

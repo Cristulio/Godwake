@@ -86,3 +86,37 @@ img {
   50% { box-shadow: 0 0 24px rgba(244,167,66,0.5); }
 }
 .animate-pulse-glow { animation: godwake-pulse-glow 1.4s ease-in-out infinite; }
+
+@keyframes godwake-d20-tumble {
+  0% { transform: rotate(-25deg) scale(1.1); }
+  35% { transform: rotate(120deg) scale(1.15); }
+  70% { transform: rotate(280deg) scale(1.05); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+.animate-d20-tumble { animation: godwake-d20-tumble 320ms cubic-bezier(0.3, 0.6, 0.4, 1) forwards; }
+
+@keyframes godwake-idle-breath {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1px) scale(1.015); }
+}
+.animate-idle-breath { animation: godwake-idle-breath 2.4s ease-in-out infinite; }
+
+@keyframes godwake-lunge-right {
+  0% { transform: translateX(0); }
+  40% { transform: translateX(28px); }
+  100% { transform: translateX(0); }
+}
+.animate-lunge-right { animation: godwake-lunge-right 420ms ease-out; }
+
+@keyframes godwake-lunge-left {
+  0% { transform: translateX(0); }
+  40% { transform: translateX(-28px); }
+  100% { transform: translateX(0); }
+}
+.animate-lunge-left { animation: godwake-lunge-left 420ms ease-out; }
+
+@keyframes godwake-die-fall {
+  0% { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(40px) rotate(-25deg); opacity: 0; }
+}
+.animate-die-fall { animation: godwake-die-fall 700ms ease-in forwards; }

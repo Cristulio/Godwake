@@ -44,6 +44,8 @@ export const MonsterSchema = z.object({
   /** Sprite path or identifier. Optional at MVP. */
   art: z.string().optional(),
   flavorText: z.string().optional(),
+  /** Boss gimmick: this monster takes its turn before the player on round 1. */
+  firstStrike: z.boolean().optional(),
 });
 
 export type Monster = z.infer<typeof MonsterSchema>;

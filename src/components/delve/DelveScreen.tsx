@@ -127,8 +127,10 @@ export function DelveScreen() {
         <CombatScreen
           character={character}
           state={combat}
+          scene={room.kind === 'boss' ? 'boss' : 'combat'}
           roomTitle={room.title.toUpperCase()}
           roomLabel={`${room.kind === 'boss' ? 'Boss · ' : ''}Round ${combat.round}`}
+          onAbandon={() => useGameStore.getState().abandonDelve()}
           onCombatResolved={(outcome) => {
             if (outcome === 'victory') {
               if (room.xpReward) addDelveReward(0, room.xpReward);

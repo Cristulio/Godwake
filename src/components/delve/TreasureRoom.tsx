@@ -23,7 +23,7 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
   }, []);
 
   return (
-    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in">
+    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_40%,rgba(212,176,98,0.10),transparent_55%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)]">
         <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
           {room.title.toUpperCase()}
@@ -33,12 +33,12 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
         </p>
       </header>
 
-      <Panel>
+      <Panel className="bg-gradient-to-br from-[#2d2418] to-[#221a14]">
         <div className="flex flex-col items-center gap-6 py-8">
           <div
             className={`
               text-6xl transition-all duration-500
-              ${revealed ? 'scale-110' : 'scale-90 opacity-50'}
+              ${revealed ? 'scale-110 drop-shadow-[0_0_24px_rgba(212,176,98,0.7)]' : 'scale-90 opacity-50'}
             `}
           >
             💰

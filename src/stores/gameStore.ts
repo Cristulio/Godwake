@@ -14,6 +14,8 @@ interface GameState {
   character: Character | null;
   delve: DelveState | null;
   combat: CombatState | null;
+  /** Animation/turn-pacing multiplier. 1 = normal, 2 = fast forward. */
+  speedMultiplier: 1 | 2;
 
   // Navigation
   goToTitle: () => void;
@@ -34,6 +36,11 @@ interface GameState {
   addDelveReward: (gold: number, xp: number) => void;
   finishDelve: () => void;
   failDelve: () => void;
+  /** Player gives up mid-delve: HP restored, rewards dropped, no XP/gold gain. */
+  abandonDelve: () => void;
+
+  // Settings
+  setSpeed: (s: 1 | 2) => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -42,6 +49,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   character: null,
   delve: null,
   combat: null,
+  speedMultiplier: 1,
 
   goToTitle: () => set({ screen: 'title' }),
   goToHub: () => set({ screen: 'hub' }),
@@ -127,4 +135,18 @@ export const useGameStore = create<GameState>((set, get) => ({
         delve: { ...s.delve, phase: 'failed' },
       };
     }),
+
+  abandonDelve: () =>
+    set((s) => {
+      if (!s.character) return s;
+      return {
+        // Restore HP and rest, but drop all delve rewards.
+        character: longRest(s.character),
+        delve: null,
+        combat: null,
+        screen: 'hub',
+      };
+    }),
+
+  setSpeed: (s) => set({ speedMultiplier: s }),
 }));

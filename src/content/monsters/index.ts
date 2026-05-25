@@ -1,7 +1,8 @@
 import type { Monster } from '../../schemas/monster';
 import { GOBLIN } from './goblin';
+import { GOBLIN_WARDEN } from './goblin-warden';
 
-const ALL_MONSTERS: Monster[] = [GOBLIN];
+const ALL_MONSTERS: Monster[] = [GOBLIN, GOBLIN_WARDEN];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
 
@@ -17,4 +18,4 @@ export function listMonsters(): Monster[] {
   return ALL_MONSTERS;
 }
 
-export { GOBLIN };
+export { GOBLIN, GOBLIN_WARDEN };

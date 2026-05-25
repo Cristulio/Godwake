@@ -27,7 +27,7 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in">
+    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.07),transparent_55%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)]">
         <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
           {room.title.toUpperCase()}
@@ -37,9 +37,9 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
         </p>
       </header>
 
-      <Panel>
+      <Panel className="bg-gradient-to-br from-[#2d2218] to-[#221a14]">
         <div className="flex flex-col items-center gap-6 py-6">
-          <div className="text-6xl">🔥</div>
+          <div className="text-6xl drop-shadow-[0_0_18px_rgba(244,167,66,0.6)]">🔥</div>
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-md">
             {room.flavorText}
           </p>
@@ -55,7 +55,7 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
             Short rest (heal to full)
           </Button>
         ) : (
-          <div className="text-[var(--color-status-poison)] text-sm uppercase tracking-widest">
+          <div className="text-[var(--color-status-poison)] text-sm uppercase tracking-widest animate-fade-in">
             You feel restored.
           </div>
         )}

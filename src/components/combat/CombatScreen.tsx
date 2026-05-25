@@ -9,38 +9,43 @@ import {
   monsterAttack,
   playerAttack,
 } from '../../engine/combat';
-import { EnemyCard } from './EnemyCard';
-import { InitiativeTracker } from './InitiativeTracker';
 import { CombatLog } from './CombatLog';
-import { PlayerPanel } from './PlayerPanel';
 import { ActionBar } from './ActionBar';
 import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
+import { Battlefield } from './Battlefield';
+import { InitiativeTracker } from './InitiativeTracker';
 
 interface CombatScreenProps {
   character: Character;
   state: CombatState;
-  /** Called once the player has acknowledged the resolution screen. */
   onCombatResolved: (outcome: 'victory' | 'defeat') => void;
-  /** Optional title shown in the header (room/dungeon name). */
+  onAbandon?: () => void;
   roomTitle?: string;
   roomLabel?: string;
+  scene?: 'combat' | 'boss';
 }
 
 export function CombatScreen({
   character,
   state,
   onCombatResolved,
+  onAbandon,
   roomTitle,
   roomLabel,
+  scene = 'combat',
 }: CombatScreenProps) {
   const setCombat = useGameStore((s) => s.setCombat);
   const setCharacter = useGameStore((s) => s.setCharacter);
+  const speed = useGameStore((s) => s.speedMultiplier);
+  const setSpeed = useGameStore((s) => s.setSpeed);
   const [selectingTarget, setSelectingTarget] = useState(false);
   const [overlayActive, setOverlayActive] = useState(false);
   const [shake, setShake] = useState(false);
+  const [confirmAbandon, setConfirmAbandon] = useState(false);
+  const [autoEndNotice, setAutoEndNotice] = useState(false);
 
-  // Mount dice overlay whenever a new attack event arrives.
+  // Mount dice overlay whenever a new attack event arrives
   useEffect(() => {
     if (!state.lastAttack) return;
     setOverlayActive(true);
@@ -52,7 +57,7 @@ export function CombatScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.lastAttack?.id]);
 
-  // Auto-advance monster turns. Wait long enough for the dice overlay to play.
+  // Monster turns auto-advance with timing that respects speed multiplier
   useEffect(() => {
     if (state.status !== 'active') return;
     if (isPlayerTurn(state)) return;
@@ -63,7 +68,7 @@ export function CombatScreen({
       const attacked = monsterAttack({ roller, character, state }, currentId);
       setCharacter({ ...character });
       setCombat(attacked);
-    }, 700);
+    }, 700 / speed);
 
     const advanceTimer = setTimeout(() => {
       const latest = useGameStore.getState().combat;
@@ -71,7 +76,7 @@ export function CombatScreen({
       const advanced = endTurn(latest, character);
       setCharacter({ ...character });
       setCombat(advanced);
-    }, 700 + 2300);
+    }, (700 + 1500) / speed);
 
     return () => {
       clearTimeout(attackTimer);
@@ -79,6 +84,32 @@ export function CombatScreen({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.currentTurnIndex, state.status]);
+
+  // Auto-end the player's turn when their action is spent and no other actions exist.
+  // (Fighter-level-1 has no other action available yet beyond Attack.)
+  useEffect(() => {
+    if (state.status !== 'active') return;
+    if (!isPlayerTurn(state)) return;
+    if (overlayActive) return;
+    if (!character.actionEconomy.actionUsed) return;
+    // TODO: also check bonus actions / items / spells when those land.
+
+    setAutoEndNotice(true);
+    const t = setTimeout(() => {
+      setAutoEndNotice(false);
+      const latest = useGameStore.getState().combat;
+      if (!latest) return;
+      const next = endTurn(latest, character);
+      setCharacter({ ...character });
+      setCombat(next);
+    }, 1100 / speed);
+
+    return () => {
+      clearTimeout(t);
+      setAutoEndNotice(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [character.actionEconomy.actionUsed, state.currentTurnIndex, overlayActive]);
 
   function handleAttackClick() {
     const aliveMonsters = state.combatants.filter(
@@ -117,47 +148,58 @@ export function CombatScreen({
   }
 
   const isResolved = state.status !== 'active';
-  const currentTurnId = state.initiativeOrder[state.currentTurnIndex];
 
   return (
-    <div className={`min-h-screen p-6 max-w-6xl mx-auto flex flex-col gap-4 ${shake ? 'animate-shake' : ''}`}>
-      <header className="flex justify-between items-baseline pb-3 border-b border-[var(--color-border-warm)]">
+    <div className={`min-h-screen flex flex-col gap-3 max-w-6xl mx-auto p-4 md:p-6 ${shake ? 'animate-shake' : ''}`}>
+      <header className="flex justify-between items-baseline pb-2 border-b border-[var(--color-border-warm)]">
         <div>
-          <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
+          <h1 className="text-lg md:text-xl text-[var(--color-accent-amber)] tracking-wider">
             {roomTitle ?? 'Encounter'}
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
+          <p className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest">
             {roomLabel ?? `Round ${state.round}`}
           </p>
         </div>
-        <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest">
-          Round {state.round}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setSpeed(speed === 1 ? 2 : 1)}
+            className={`
+              px-2 py-1 border-2 text-[10px] uppercase tracking-widest font-bold
+              ${speed === 2
+                ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-amber)]'
+                : 'border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)]'}
+            `}
+          >
+            {speed === 2 ? '▶▶ 2×' : '▶ 1×'}
+          </button>
+          {onAbandon && (
+            <button
+              type="button"
+              onClick={() => setConfirmAbandon(true)}
+              className="px-2 py-1 border-2 border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-accent-blood)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent-blood)] text-[10px] uppercase tracking-widest font-bold"
+            >
+              Abandon
+            </button>
+          )}
         </div>
       </header>
 
       <InitiativeTracker state={state} character={character} />
 
-      <div className="flex flex-wrap gap-3 min-h-[200px] items-start">
-        {state.combatants
-          .filter((c) => c.kind === 'monster')
-          .map((c) => (
-            <EnemyCard
-              key={c.id}
-              combatant={c as Extract<typeof c, { kind: 'monster' }>}
-              isActiveTurn={currentTurnId === c.id}
-              selectable={selectingTarget}
-              onSelect={() => doAttack(c.id)}
-            />
-          ))}
-      </div>
+      <Battlefield
+        character={character}
+        state={state}
+        scene={scene}
+        selectingTarget={selectingTarget}
+        onSelectTarget={(id) => doAttack(id)}
+      />
 
       <CombatLog entries={state.log} />
 
-      <PlayerPanel character={character} isActiveTurn={currentTurnId === 'player'} />
-
       {isResolved ? (
         <div className="flex flex-col items-center gap-4 mt-2 animate-fade-in">
-          <div className={`text-3xl uppercase tracking-[0.4em] ${
+          <div className={`text-2xl md:text-3xl uppercase tracking-[0.4em] ${
             state.status === 'player-victory'
               ? 'text-[var(--color-accent-amber)]'
               : 'text-[var(--color-accent-blood)]'
@@ -169,18 +211,24 @@ export function CombatScreen({
           </Button>
         </div>
       ) : (
-        <ActionBar
-          character={character}
-          state={state}
-          onAttack={handleAttackClick}
-          onEndTurn={handleEndTurn}
-        />
-      )}
-
-      {selectingTarget && (
-        <div className="text-center text-[var(--color-accent-amber)] text-xs uppercase tracking-widest animate-pulse">
-          Select a target...
-        </div>
+        <>
+          {selectingTarget && (
+            <div className="text-center text-[var(--color-accent-amber)] text-xs uppercase tracking-widest animate-pulse">
+              ► Select a target
+            </div>
+          )}
+          {autoEndNotice && (
+            <div className="text-center text-[var(--color-text-secondary)] text-xs uppercase tracking-widest italic">
+              Ending turn — no actions remain.
+            </div>
+          )}
+          <ActionBar
+            character={character}
+            state={state}
+            onAttack={handleAttackClick}
+            onEndTurn={handleEndTurn}
+          />
+        </>
       )}
 
       {overlayActive && state.lastAttack && (
@@ -197,6 +245,33 @@ export function CombatScreen({
           crit={state.lastAttack.crit}
           onDismiss={() => setOverlayActive(false)}
         />
+      )}
+
+      {confirmAbandon && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/80">
+          <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-6 max-w-sm">
+            <div className="text-[var(--color-accent-amber)] text-sm uppercase tracking-widest mb-2">
+              Abandon the delve?
+            </div>
+            <p className="text-[var(--color-text-secondary)] text-sm mb-4">
+              Flee back to Phandalin. You keep your hide, but the gold and the glory stay buried.
+            </p>
+            <div className="flex gap-2 justify-end">
+              <Button variant="secondary" onClick={() => setConfirmAbandon(false)}>
+                Stay
+              </Button>
+              <Button
+                variant="danger"
+                onClick={() => {
+                  setConfirmAbandon(false);
+                  onAbandon?.();
+                }}
+              >
+                Abandon
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -21,9 +21,10 @@ const BUILDINGS: Building[] = [
     enabled: false,
   },
   {
-    id: 'adventurers-board',
-    name: "Adventurer's Board",
-    description: 'Posted notices of dungeons that need delving. Start a new run here.',
+    id: 'delveboard',
+    name: 'The Delveboard',
+    description:
+      'A blackwood slab at the back of the Stonehill Inn. Job postings, dungeon maps, and bounties pinned in dried wax. Start a run here.',
     enabled: true,
   },
   {
@@ -100,7 +101,7 @@ export function HubScreen() {
             <Button
               variant={b.enabled ? 'primary' : 'secondary'}
               disabled={!b.enabled}
-              onClick={b.id === 'adventurers-board' ? handleEnterDungeon : undefined}
+              onClick={b.id === 'delveboard' ? handleEnterDungeon : undefined}
             >
               {b.enabled ? 'Enter' : 'Coming soon'}
             </Button>
