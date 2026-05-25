@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-base: #0F0B08;
+  --color-bg-elevated: #1A1410;
+  --color-bg-panel: #221A14;
+  --color-bg-panel-hover: #2D2218;
+  --color-border-dim: #3A2E22;
+  --color-border-warm: #6B4A2E;
+  --color-border-bright: #8C6232;
+
+  --color-text-primary: #E8DCC4;
+  --color-text-secondary: #B5A282;
+  --color-text-dim: #6B5E48;
+  --color-text-muted: #4A3F30;
+
+  --color-accent-amber: #F4A742;
+  --color-accent-torch: #FFB347;
+  --color-accent-gold: #D4B062;
+  --color-accent-blood: #B5302C;
+  --color-accent-teal-shadow: #1F3A3D;
+  --color-accent-arcane: #8B5FBF;
+
+  --color-status-poison: #8FBC1F;
+  --color-status-fire: #FF6B2B;
+  --color-status-frost: #5DADE2;
+  --color-status-holy: #FFD700;
+  --color-status-necrotic: #5E1A8C;
+
+  --font-display: "Press Start 2P", "Courier New", monospace;
+  --font-body: "JetBrains Mono", "Consolas", monospace;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-elevated);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-warm);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-bright);
+}
