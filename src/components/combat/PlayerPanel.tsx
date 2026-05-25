@@ -1,7 +1,10 @@
+import { useEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { computeAC } from '../../engine/character/derived';
+import { PlayerPortrait } from './PlayerPortrait';
+import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
 
 interface PlayerPanelProps {
   character: Character;
@@ -15,17 +18,47 @@ export function PlayerPanel({ character, isActiveTurn }: PlayerPanelProps) {
   const hpPercent = (character.hp.current / character.hp.max) * 100;
   const ae = character.actionEconomy;
 
+  const prevHp = useRef(character.hp.current);
+  const [damageFloats, setDamageFloats] = useState<FloatingDamageItem[]>([]);
+  const [hitFlash, setHitFlash] = useState(false);
+
+  useEffect(() => {
+    if (prevHp.current === character.hp.current) return;
+    const delta = prevHp.current - character.hp.current;
+    prevHp.current = character.hp.current;
+    if (delta > 0) {
+      const id = Date.now() + Math.random();
+      setDamageFloats((d) => [...d, { id, amount: delta, kind: 'damage' }]);
+      setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1500);
+      setHitFlash(true);
+      setTimeout(() => setHitFlash(false), 240);
+    } else if (delta < 0) {
+      const id = Date.now() + Math.random();
+      setDamageFloats((d) => [...d, { id, amount: -delta, kind: 'heal' }]);
+      setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1500);
+    }
+  }, [character.hp.current]);
+
   return (
     <div
       className={`
-        bg-[var(--color-bg-panel)] border-2 p-4 flex gap-4
+        bg-[var(--color-bg-panel)] border-2 p-4 flex gap-4 transition-all
         ${isActiveTurn
           ? 'border-[var(--color-accent-amber)] shadow-[0_0_24px_rgba(244,167,66,0.25)]'
           : 'border-[var(--color-border-warm)]'}
       `}
     >
-      <div className="w-24 h-24 bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] flex items-center justify-center text-4xl shrink-0">
-        <span aria-hidden>🛡️</span>
+      <div
+        className={`
+          w-24 h-24 bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] flex items-center justify-center shrink-0 relative overflow-hidden
+          ${hitFlash ? 'animate-pulse' : ''}
+        `}
+      >
+        <PlayerPortrait classId={character.classId} className="w-full h-full" />
+        {hitFlash && (
+          <div className="absolute inset-0 bg-[var(--color-accent-blood)] opacity-50 mix-blend-screen" />
+        )}
+        <FloatingDamage items={damageFloats} />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -42,9 +75,9 @@ export function PlayerPanel({ character, isActiveTurn }: PlayerPanelProps) {
             <div className="font-mono text-[var(--color-text-primary)]">
               {character.hp.current}/{character.hp.max}
             </div>
-            <div className="h-1 bg-[var(--color-bg-elevated)] mt-1">
+            <div className="h-1.5 bg-[var(--color-bg-elevated)] mt-1 border border-[var(--color-border-dim)] overflow-hidden">
               <div
-                className={`h-full transition-all ${
+                className={`h-full transition-all duration-500 ease-out ${
                   hpPercent > 50 ? 'bg-[var(--color-status-poison)]'
                     : hpPercent > 25 ? 'bg-[var(--color-accent-amber)]'
                       : 'bg-[var(--color-accent-blood)]'
@@ -77,12 +110,12 @@ function ActionFlag({ label, available }: { label: string; available: boolean })
   return (
     <div className="flex items-center gap-1">
       <span
-        className={`w-2 h-2 rounded-full ${
+        className={`w-2 h-2 rounded-full transition-colors ${
           available ? 'bg-[var(--color-status-poison)]' : 'bg-[var(--color-text-muted)]'
         }`}
       />
       <span
-        className={`uppercase tracking-wider ${
+        className={`uppercase tracking-wider transition-colors ${
           available ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-muted)] line-through'
         }`}
       >

@@ -120,6 +120,7 @@ export function createCombat(input: CreateCombatInput): CombatState {
     round: 1,
     log,
     status: 'active',
+    attackEventCounter: 0,
   };
 }
 

@@ -1,9 +1,7 @@
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
-import { getActiveRoller } from '../../engine/dice';
-import { createCombat } from '../../engine/combat';
-import { GOBLIN } from '../../content/monsters';
+import { createIronCellsDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 
@@ -38,9 +36,8 @@ const BUILDINGS: Building[] = [
 
 export function HubScreen() {
   const character = useGameStore((s) => s.character);
-  const goToDelve = useGameStore((s) => s.goToDelve);
   const goToTitle = useGameStore((s) => s.goToTitle);
-  const setCombat = useGameStore((s) => s.setCombat);
+  const startDelve = useGameStore((s) => s.startDelve);
 
   if (!character) {
     return (
@@ -55,15 +52,8 @@ export function HubScreen() {
   const cls = getClass(character.classId);
 
   function handleEnterDungeon() {
-    if (!character) return;
-    const roller = getActiveRoller();
-    const combat = createCombat({
-      roller,
-      character,
-      monsters: [{ def: GOBLIN }],
-    });
-    setCombat(combat);
-    goToDelve();
+    const delve = createIronCellsDelve();
+    startDelve(delve);
   }
 
   return (

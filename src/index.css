@@ -64,3 +64,25 @@ img {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-border-bright);
 }
+
+@keyframes godwake-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-5px) translateY(-1px); }
+  30% { transform: translateX(5px) translateY(2px); }
+  45% { transform: translateX(-4px); }
+  60% { transform: translateX(4px) translateY(-1px); }
+  75% { transform: translateX(-2px); }
+}
+.animate-shake { animation: godwake-shake 450ms ease-in-out; }
+
+@keyframes godwake-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: godwake-fade-in 320ms ease-out forwards; }
+
+@keyframes godwake-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(244,167,66,0); }
+  50% { box-shadow: 0 0 24px rgba(244,167,66,0.5); }
+}
+.animate-pulse-glow { animation: godwake-pulse-glow 1.4s ease-in-out infinite; }

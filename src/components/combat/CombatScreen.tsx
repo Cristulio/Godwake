@@ -15,31 +15,68 @@ import { CombatLog } from './CombatLog';
 import { PlayerPanel } from './PlayerPanel';
 import { ActionBar } from './ActionBar';
 import { Button } from '../ui/Button';
+import { DiceRollOverlay } from './DiceRollOverlay';
 
 interface CombatScreenProps {
   character: Character;
   state: CombatState;
+  /** Called once the player has acknowledged the resolution screen. */
+  onCombatResolved: (outcome: 'victory' | 'defeat') => void;
+  /** Optional title shown in the header (room/dungeon name). */
+  roomTitle?: string;
+  roomLabel?: string;
 }
 
-export function CombatScreen({ character, state }: CombatScreenProps) {
+export function CombatScreen({
+  character,
+  state,
+  onCombatResolved,
+  roomTitle,
+  roomLabel,
+}: CombatScreenProps) {
   const setCombat = useGameStore((s) => s.setCombat);
   const setCharacter = useGameStore((s) => s.setCharacter);
-  const goToHub = useGameStore((s) => s.goToHub);
   const [selectingTarget, setSelectingTarget] = useState(false);
+  const [overlayActive, setOverlayActive] = useState(false);
+  const [shake, setShake] = useState(false);
 
-  // Auto-advance monster turns after a short delay
+  // Mount dice overlay whenever a new attack event arrives.
+  useEffect(() => {
+    if (!state.lastAttack) return;
+    setOverlayActive(true);
+    if (state.lastAttack.crit) {
+      setShake(true);
+      const t = setTimeout(() => setShake(false), 460);
+      return () => clearTimeout(t);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.lastAttack?.id]);
+
+  // Auto-advance monster turns. Wait long enough for the dice overlay to play.
   useEffect(() => {
     if (state.status !== 'active') return;
     if (isPlayerTurn(state)) return;
     const currentId = state.initiativeOrder[state.currentTurnIndex];
-    const timer = setTimeout(() => {
+
+    const attackTimer = setTimeout(() => {
       const roller = getActiveRoller();
       const attacked = monsterAttack({ roller, character, state }, currentId);
-      const advanced = endTurn(attacked, character);
+      setCharacter({ ...character });
+      setCombat(attacked);
+    }, 700);
+
+    const advanceTimer = setTimeout(() => {
+      const latest = useGameStore.getState().combat;
+      if (!latest || latest.status !== 'active') return;
+      const advanced = endTurn(latest, character);
       setCharacter({ ...character });
       setCombat(advanced);
-    }, 900);
-    return () => clearTimeout(timer);
+    }, 700 + 2300);
+
+    return () => {
+      clearTimeout(attackTimer);
+      clearTimeout(advanceTimer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.currentTurnIndex, state.status]);
 
@@ -75,49 +112,32 @@ export function CombatScreen({ character, state }: CombatScreenProps) {
     setCombat(next);
   }
 
-  function handleReturnToHub() {
-    setCombat(null);
-    // MVP "rest at hub": restore HP and per-rest resources. Replaced by the
-    // reincarnation flow + proper short/long rests once those land.
-    setCharacter({
-      ...character,
-      hp: { ...character.hp, current: character.hp.max, temp: 0 },
-      resources: {
-        ...character.resources,
-        secondWindAvailable: true,
-      },
-      actionEconomy: {
-        actionUsed: false,
-        bonusActionUsed: false,
-        reactionUsed: false,
-        movementRemaining: 30,
-      },
-    });
-    goToHub();
+  function handleContinue() {
+    onCombatResolved(state.status === 'player-victory' ? 'victory' : 'defeat');
   }
 
   const isResolved = state.status !== 'active';
   const currentTurnId = state.initiativeOrder[state.currentTurnIndex];
 
   return (
-    <div className="min-h-screen p-6 max-w-6xl mx-auto flex flex-col gap-4">
+    <div className={`min-h-screen p-6 max-w-6xl mx-auto flex flex-col gap-4 ${shake ? 'animate-shake' : ''}`}>
       <header className="flex justify-between items-baseline pb-3 border-b border-[var(--color-border-warm)]">
         <div>
           <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-            THE IRON CELLS · Room 1
+            {roomTitle ?? 'Encounter'}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-            Chapter I · Round {state.round}
+            {roomLabel ?? `Round ${state.round}`}
           </p>
         </div>
         <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest">
-          The Mage's Cells
+          Round {state.round}
         </div>
       </header>
 
       <InitiativeTracker state={state} character={character} />
 
-      <div className="flex flex-wrap gap-3 min-h-[180px]">
+      <div className="flex flex-wrap gap-3 min-h-[200px] items-start">
         {state.combatants
           .filter((c) => c.kind === 'monster')
           .map((c) => (
@@ -136,16 +156,16 @@ export function CombatScreen({ character, state }: CombatScreenProps) {
       <PlayerPanel character={character} isActiveTurn={currentTurnId === 'player'} />
 
       {isResolved ? (
-        <div className="flex flex-col items-center gap-4 mt-2">
-          <div className={`text-2xl uppercase tracking-widest ${
+        <div className="flex flex-col items-center gap-4 mt-2 animate-fade-in">
+          <div className={`text-3xl uppercase tracking-[0.4em] ${
             state.status === 'player-victory'
               ? 'text-[var(--color-accent-amber)]'
               : 'text-[var(--color-accent-blood)]'
           }`}>
-            {state.status === 'player-victory' ? 'Victory' : 'Defeat'}
+            {state.status === 'player-victory' ? 'Victory' : 'You have fallen'}
           </div>
-          <Button variant="primary" onClick={handleReturnToHub}>
-            Return to Phandalin
+          <Button variant="primary" onClick={handleContinue}>
+            {state.status === 'player-victory' ? 'Continue Deeper →' : 'Wake at the Grove'}
           </Button>
         </div>
       ) : (
@@ -161,6 +181,22 @@ export function CombatScreen({ character, state }: CombatScreenProps) {
         <div className="text-center text-[var(--color-accent-amber)] text-xs uppercase tracking-widest animate-pulse">
           Select a target...
         </div>
+      )}
+
+      {overlayActive && state.lastAttack && (
+        <DiceRollOverlay
+          key={state.lastAttack.id}
+          attackerName={state.lastAttack.attackerName}
+          targetName={state.lastAttack.targetName}
+          weaponName={state.lastAttack.weaponName}
+          attackBonus={state.lastAttack.attackBonus}
+          rollNatural={state.lastAttack.natural}
+          total={state.lastAttack.total}
+          targetAC={state.lastAttack.targetAC}
+          hit={state.lastAttack.hit}
+          crit={state.lastAttack.crit}
+          onDismiss={() => setOverlayActive(false)}
+        />
       )}
     </div>
   );

@@ -37,6 +37,21 @@ export interface CombatLogEntry {
   kind?: 'roll' | 'damage' | 'system' | 'narration';
 }
 
+export interface AttackEvent {
+  /** Monotonic id — increments per attack so subscribers can detect new events. */
+  id: number;
+  attackerName: string;
+  targetName: string;
+  attackerKind: 'player' | 'monster';
+  weaponName: string;
+  attackBonus: number;
+  natural: number;
+  total: number;
+  targetAC: number;
+  hit: boolean;
+  crit: boolean;
+}
+
 export interface CombatState {
   combatants: Combatant[];
   /** Combatant ids in turn order, set when combat starts. */
@@ -45,4 +60,8 @@ export interface CombatState {
   round: number;
   log: CombatLogEntry[];
   status: CombatStatus;
+  /** Latest attack roll — populated for dice-roll overlay animation. */
+  lastAttack?: AttackEvent;
+  /** Counter to issue stable AttackEvent ids. */
+  attackEventCounter: number;
 }

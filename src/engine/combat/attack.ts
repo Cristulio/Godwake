@@ -2,6 +2,7 @@ import type { DiceRoller } from '../dice';
 import { parseDiceExpression } from '../dice';
 import type { Character } from '../../types/character';
 import type {
+  AttackEvent,
   Combatant,
   CombatState,
   CombatLogEntry,
@@ -126,7 +127,26 @@ export function playerAttack(
     text: `${character.name} attacks ${displayName(target, character)} with ${weapon.name}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
   });
 
-  let nextState: CombatState = { ...state, log: [...state.log, ...logEntries] };
+  const attackEvent: AttackEvent = {
+    id: state.attackEventCounter + 1,
+    attackerName: character.name,
+    targetName: displayName(target, character),
+    attackerKind: 'player',
+    weaponName: weapon.name,
+    attackBonus,
+    natural: toHit.rolls[0],
+    total: toHit.total,
+    targetAC: ac,
+    hit,
+    crit,
+  };
+
+  let nextState: CombatState = {
+    ...state,
+    log: [...state.log, ...logEntries],
+    lastAttack: attackEvent,
+    attackEventCounter: attackEvent.id,
+  };
 
   if (hit) {
     const damageExpr = parseDiceExpression(weapon.damage);
@@ -194,7 +214,26 @@ export function monsterAttack(
     text: `${attacker.instance.displayName} attacks ${character.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
   });
 
-  let nextState: CombatState = { ...state, log: [...state.log, ...logEntries] };
+  const attackEvent: AttackEvent = {
+    id: state.attackEventCounter + 1,
+    attackerName: attacker.instance.displayName,
+    targetName: character.name,
+    attackerKind: 'monster',
+    weaponName: action.name,
+    attackBonus: action.attackBonus,
+    natural: toHit.rolls[0],
+    total: toHit.total,
+    targetAC: ac,
+    hit,
+    crit,
+  };
+
+  let nextState: CombatState = {
+    ...state,
+    log: [...state.log, ...logEntries],
+    lastAttack: attackEvent,
+    attackEventCounter: attackEvent.id,
+  };
 
   if (hit) {
     const damageExpr = parseDiceExpression(action.damage);
