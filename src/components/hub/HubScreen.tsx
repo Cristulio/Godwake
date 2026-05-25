@@ -1,6 +1,11 @@
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
+import { getActiveRoller } from '../../engine/dice';
+import { createCombat } from '../../engine/combat';
+import { GOBLIN } from '../../content/monsters';
+import { getRace } from '../../content/races';
+import { getClass } from '../../content/classes';
 
 interface Building {
   id: string;
@@ -13,7 +18,8 @@ const BUILDINGS: Building[] = [
   {
     id: 'druid-grove',
     name: 'The Druid Grove',
-    description: 'The circle of Mielikki tends the Wellspring. They will return you to life when you fall.',
+    description:
+      'The circle of Mielikki tends the Wellspring. They will return you to life when you fall.',
     enabled: false,
   },
   {
@@ -31,10 +37,32 @@ const BUILDINGS: Building[] = [
 ];
 
 export function HubScreen() {
+  const character = useGameStore((s) => s.character);
   const goToDelve = useGameStore((s) => s.goToDelve);
   const goToTitle = useGameStore((s) => s.goToTitle);
+  const setCombat = useGameStore((s) => s.setCombat);
+
+  if (!character) {
+    return (
+      <div className="p-8 text-[var(--color-text-primary)]">
+        No character. Return to title.
+        <Button onClick={goToTitle}>Title</Button>
+      </div>
+    );
+  }
+
+  const race = getRace(character.raceId);
+  const cls = getClass(character.classId);
 
   function handleEnterDungeon() {
+    if (!character) return;
+    const roller = getActiveRoller();
+    const combat = createCombat({
+      roller,
+      character,
+      monsters: [{ def: GOBLIN }],
+    });
+    setCombat(combat);
     goToDelve();
   }
 
@@ -53,6 +81,25 @@ export function HubScreen() {
           ← Title
         </Button>
       </header>
+
+      <Panel className="mb-6">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] flex items-center justify-center text-3xl">
+            <span aria-hidden>🛡️</span>
+          </div>
+          <div className="flex-1">
+            <div className="text-[var(--color-accent-amber)] font-bold uppercase tracking-wider">
+              {character.name}
+            </div>
+            <div className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
+              {race.name} {cls.name} · Level {character.level}
+            </div>
+            <div className="text-[var(--color-text-secondary)] text-xs mt-1">
+              HP {character.hp.current}/{character.hp.max}
+            </div>
+          </div>
+        </div>
+      </Panel>
 
       <div className="grid md:grid-cols-3 gap-4">
         {BUILDINGS.map((b) => (
@@ -74,15 +121,15 @@ export function HubScreen() {
       <div className="mt-8 grid md:grid-cols-3 gap-4 text-center">
         <Panel>
           <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Gold</div>
-          <div className="text-2xl text-[var(--color-accent-gold)]">0</div>
+          <div className="text-2xl text-[var(--color-accent-gold)]">{character.goldInBank + character.goldInPocket}</div>
         </Panel>
         <Panel>
           <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Renown</div>
-          <div className="text-2xl text-[var(--color-accent-amber)]">0</div>
+          <div className="text-2xl text-[var(--color-accent-amber)]">{character.renown}</div>
         </Panel>
         <Panel>
-          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Delves Completed</div>
-          <div className="text-2xl text-[var(--color-text-primary)]">0</div>
+          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">XP</div>
+          <div className="text-2xl text-[var(--color-text-primary)]">{character.xp}</div>
         </Panel>
       </div>
     </div>
