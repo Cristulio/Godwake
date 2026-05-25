@@ -16,7 +16,7 @@ export function TitleScreen() {
           GODWAKE
         </h1>
         <p className="text-[var(--color-text-secondary)] text-sm md:text-base uppercase tracking-[0.3em]">
-          The soul remembers. The grove returns.
+          Die. Wake. Delve again.
         </p>
       </div>
 

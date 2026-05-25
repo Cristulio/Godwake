@@ -1,0 +1,127 @@
+import { describe, it, expect } from 'vitest';
+import {
+  computeAC,
+  critRange,
+  effectiveAbilityScores,
+  initiativeModifier,
+  modifierFor,
+  proficiencyBonus,
+} from './derived';
+import { createCharacter, STANDARD_ARRAY } from './initialize';
+
+describe('proficiencyBonus', () => {
+  it('is +2 at levels 1-4', () => {
+    expect(proficiencyBonus(1)).toBe(2);
+    expect(proficiencyBonus(2)).toBe(2);
+    expect(proficiencyBonus(4)).toBe(2);
+  });
+  it('is +3 at levels 5-8', () => {
+    expect(proficiencyBonus(5)).toBe(3);
+    expect(proficiencyBonus(8)).toBe(3);
+  });
+  it('is +4 at levels 9-12', () => {
+    expect(proficiencyBonus(9)).toBe(4);
+    expect(proficiencyBonus(12)).toBe(4);
+  });
+  it('is +5 at 13-16, +6 at 17-20', () => {
+    expect(proficiencyBonus(13)).toBe(5);
+    expect(proficiencyBonus(16)).toBe(5);
+    expect(proficiencyBonus(17)).toBe(6);
+    expect(proficiencyBonus(20)).toBe(6);
+  });
+});
+
+describe('character derivation — human fighter', () => {
+  const human = createCharacter({
+    id: 'test-1',
+    name: 'Sir Brick',
+    raceId: 'human',
+    classId: 'fighter',
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[0], // 15
+      dex: STANDARD_ARRAY[2], // 13
+      con: STANDARD_ARRAY[1], // 14
+      int: STANDARD_ARRAY[5], // 8
+      wis: STANDARD_ARRAY[3], // 12
+      cha: STANDARD_ARRAY[4], // 10
+    },
+    skillProficiencies: ['athletics', 'perception'],
+  });
+
+  it('applies human +1 to every ability', () => {
+    const scores = effectiveAbilityScores(human);
+    expect(scores.str).toBe(16);
+    expect(scores.dex).toBe(14);
+    expect(scores.con).toBe(15);
+    expect(scores.int).toBe(9);
+    expect(scores.wis).toBe(13);
+    expect(scores.cha).toBe(11);
+  });
+
+  it('modifiers reflect effective scores', () => {
+    expect(modifierFor(human, 'str')).toBe(3); // 16 -> +3
+    expect(modifierFor(human, 'dex')).toBe(2); // 14 -> +2
+    expect(modifierFor(human, 'con')).toBe(2); // 15 -> +2
+  });
+
+  it('max HP at level 1 = 10 (fighter d10 max) + CON mod (+2) = 12', () => {
+    expect(human.hp.max).toBe(12);
+    expect(human.hp.current).toBe(12);
+  });
+
+  it('AC with no armor = 10 + DEX mod', () => {
+    expect(computeAC(human)).toBe(10 + 2);
+  });
+
+  it('initiative modifier = DEX mod', () => {
+    expect(initiativeModifier(human)).toBe(2);
+  });
+
+  it('starts with only the lv20 crit range (Improved Critical not yet)', () => {
+    expect(critRange(human)).toEqual([20]);
+  });
+
+  it('Improved Critical kicks in at Champion level 3', () => {
+    const champion3 = { ...human, level: 3, subclassId: 'champion' };
+    expect(critRange(champion3)).toEqual([19, 20]);
+  });
+
+  it('Defense fighting style adds +1 AC when wearing armor', () => {
+    const withLeather = {
+      ...human,
+      equipped: {
+        mainHand: null,
+        offHand: null,
+        armor: { itemId: 'leather-armor' },
+      },
+    };
+    // Leather: 11 + DEX(2) = 13. Defense fighting style +1 = 14.
+    expect(computeAC(withLeather)).toBe(14);
+  });
+
+  it('shield adds +2 AC', () => {
+    const withLeatherAndShield = {
+      ...human,
+      equipped: {
+        mainHand: null,
+        offHand: { itemId: 'shield' },
+        armor: { itemId: 'leather-armor' },
+      },
+    };
+    // Leather (11+2) + Defense (1) + Shield (2) = 16.
+    expect(computeAC(withLeatherAndShield)).toBe(16);
+  });
+
+  it('chain mail caps DEX entirely (heavy armor)', () => {
+    const withChain = {
+      ...human,
+      equipped: {
+        mainHand: null,
+        offHand: null,
+        armor: { itemId: 'chain-mail' },
+      },
+    };
+    // Chain 16 + Defense +1 = 17. DEX ignored.
+    expect(computeAC(withChain)).toBe(17);
+  });
+});
