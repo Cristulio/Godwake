@@ -77,6 +77,22 @@ export function CombatScreen({ character, state }: CombatScreenProps) {
 
   function handleReturnToHub() {
     setCombat(null);
+    // MVP "rest at hub": restore HP and per-rest resources. Replaced by the
+    // reincarnation flow + proper short/long rests once those land.
+    setCharacter({
+      ...character,
+      hp: { ...character.hp, current: character.hp.max, temp: 0 },
+      resources: {
+        ...character.resources,
+        secondWindAvailable: true,
+      },
+      actionEconomy: {
+        actionUsed: false,
+        bonusActionUsed: false,
+        reactionUsed: false,
+        movementRemaining: 30,
+      },
+    });
     goToHub();
   }
 
