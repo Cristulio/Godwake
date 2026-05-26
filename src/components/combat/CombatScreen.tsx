@@ -189,7 +189,7 @@ export function CombatScreen({
 
       <InitiativeTracker state={state} character={character} />
 
-      <div className="relative">
+      <div className="grid grid-cols-[1fr_184px] gap-3 items-stretch">
         <Battlefield
           character={character}
           state={state}
@@ -199,21 +199,28 @@ export function CombatScreen({
           onSelectTarget={(id) => doAttack(id)}
         />
 
-        {overlayActive && state.lastAttack && (
-          <DiceRollOverlay
-            key={state.lastAttack.id}
-            attackerName={state.lastAttack.attackerName}
-            targetName={state.lastAttack.targetName}
-            weaponName={state.lastAttack.weaponName}
-            attackBonus={state.lastAttack.attackBonus}
-            rollNatural={state.lastAttack.natural}
-            total={state.lastAttack.total}
-            targetAC={state.lastAttack.targetAC}
-            hit={state.lastAttack.hit}
-            crit={state.lastAttack.crit}
-            onDismiss={() => setOverlayActive(false)}
-          />
-        )}
+        <aside className="relative bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] min-h-[340px] flex flex-col items-center justify-center p-2">
+          {overlayActive && state.lastAttack ? (
+            <DiceRollOverlay
+              key={state.lastAttack.id}
+              attackerName={state.lastAttack.attackerName}
+              targetName={state.lastAttack.targetName}
+              weaponName={state.lastAttack.weaponName}
+              attackBonus={state.lastAttack.attackBonus}
+              rollNatural={state.lastAttack.natural}
+              total={state.lastAttack.total}
+              targetAC={state.lastAttack.targetAC}
+              hit={state.lastAttack.hit}
+              crit={state.lastAttack.crit}
+              onDismiss={() => setOverlayActive(false)}
+            />
+          ) : (
+            <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] text-center px-2">
+              Dice Pool
+              <div className="opacity-50 mt-1">awaiting roll</div>
+            </div>
+          )}
+        </aside>
       </div>
 
       {isResolved ? (

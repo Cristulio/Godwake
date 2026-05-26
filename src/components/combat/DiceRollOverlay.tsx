@@ -78,10 +78,7 @@ export function DiceRollOverlay({
       : 'text-[var(--color-text-muted)]';
 
   return (
-    <div
-      className="absolute top-2 right-2 z-40 w-44 bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-2 shadow-[0_6px_24px_rgba(0,0,0,0.55)] animate-fade-in"
-      style={{ pointerEvents: 'none' }}
-    >
+    <div className="w-full animate-fade-in" style={{ pointerEvents: 'none' }}>
       <div className="flex flex-col items-center gap-1.5">
         <div className="text-[var(--color-text-secondary)] text-[9px] uppercase tracking-[0.25em] text-center truncate w-full">
           {weaponName}
