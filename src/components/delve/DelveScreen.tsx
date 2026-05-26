@@ -19,6 +19,7 @@ function decorationForRoom(roomId: string): BattlefieldDecoration {
   switch (roomId) {
     case 'room-1':
     case 'room-3':
+    case 'room-7':
       return 'iron-cells';
     case 'room-5':
       return 'vivisector-lab';
@@ -157,7 +158,9 @@ export function DelveScreen() {
           onAbandon={() => useGameStore.getState().abandonDelve()}
           onCombatResolved={(outcome) => {
             if (outcome === 'victory') {
-              if (room.xpReward) addDelveReward(0, room.xpReward);
+              const goldDrop = room.goldReward ?? 0;
+              const xpDrop = room.xpReward ?? 0;
+              if (goldDrop || xpDrop) addDelveReward(goldDrop, xpDrop);
               setCombat(null);
               advanceRoom();
               // Imoen whispers on the FIRST cleared room of the run.
