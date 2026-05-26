@@ -87,6 +87,12 @@ export interface Character {
    */
   delveBudgets?: {
     quirkRerollMissesRemaining?: number;
+    /**
+     * Stabilise charges already spent this delve. Available charges =
+     * 1 (free) + extraStabiliseCharges (from blessings) - stabilisesUsed.
+     * Recomputed on every applyDamage call so mid-delve Ilmater pickups count.
+     */
+    stabilisesUsed?: number;
   };
 
   // Meta

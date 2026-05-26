@@ -49,8 +49,8 @@ function targetAC(target: Combatant, character: Character): number {
   return target.kind === 'player' ? computeAC(character) : target.instance.ac;
 }
 
-function applyDamage(state: CombatState, targetId: string, amount: number, character: Character): CombatState {
-  const next = { ...state, combatants: state.combatants.map((c) => ({ ...c })) };
+export function applyDamage(state: CombatState, targetId: string, amount: number, character: Character): CombatState {
+  let next = { ...state, combatants: state.combatants.map((c) => ({ ...c })) };
   const target = next.combatants.find((c) => c.id === targetId);
   if (!target) return state;
 
@@ -69,13 +69,49 @@ function applyDamage(state: CombatState, targetId: string, amount: number, chara
   } else {
     const remainingTemp = Math.max(0, character.hp.temp - amount);
     const overflow = Math.max(0, amount - character.hp.temp);
-    character.hp = {
-      ...character.hp,
-      temp: remainingTemp,
-      current: Math.max(0, character.hp.current - overflow),
-    };
+    const wouldFall =
+      character.hp.current - overflow <= 0 && character.hp.current > 0;
+
+    if (wouldFall && tryConsumeStabilise(character)) {
+      character.hp = { ...character.hp, temp: remainingTemp, current: 1 };
+      next = {
+        ...next,
+        log: [
+          ...next.log,
+          {
+            id: next.log.length + 1,
+            kind: 'system',
+            text: `${character.name} is on death's door — Ilmater's grip holds. Stabilised at 1 HP.`,
+          },
+        ],
+      };
+    } else {
+      character.hp = {
+        ...character.hp,
+        temp: remainingTemp,
+        current: Math.max(0, character.hp.current - overflow),
+      };
+    }
   }
   return next;
+}
+
+/**
+ * Spend a stabilise charge if any are available. Available = 1 (free per delve)
+ * + extraStabiliseCharges (from Ilmater's Patience stacks) - stabilisesUsed.
+ * Mutates character.delveBudgets when it consumes one. Returns whether a
+ * charge was spent.
+ */
+function tryConsumeStabilise(character: Character): boolean {
+  const extra = characterBlessingMods(character).extraStabiliseCharges ?? 0;
+  const used = character.delveBudgets?.stabilisesUsed ?? 0;
+  const available = 1 + extra - used;
+  if (available <= 0) return false;
+  character.delveBudgets = {
+    ...character.delveBudgets,
+    stabilisesUsed: used + 1,
+  };
+  return true;
 }
 
 function isDead(c: Combatant, character: Character): boolean {

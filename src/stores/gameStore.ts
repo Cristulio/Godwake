@@ -25,6 +25,7 @@ function applyDelveStartQuirks(character: Character): Character {
     goldInPocket: character.goldInPocket + bonusGold,
     delveBudgets: {
       quirkRerollMissesRemaining: mods.rerollMissesPerDelve ?? 0,
+      stabilisesUsed: 0,
     },
   };
 }

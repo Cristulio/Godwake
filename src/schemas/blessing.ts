@@ -50,8 +50,12 @@ export const BlessingModifiersSchema = z
     extraTempHpPerRoom: z.number().optional(),
     /** Rerolls available per encounter for missed d20s. */
     rerollMissesPerEncounter: z.number().optional(),
-    /** Rerolls available per delve for death saves. */
-    rerollDeathSavesPerDelve: z.number().optional(),
+    /**
+     * Extra "stabilise" charges added on top of the free one each delve. When
+     * the player would be reduced to 0 HP and a charge is available, they
+     * stabilise at 1 HP instead and the charge is spent.
+     */
+    extraStabiliseCharges: z.number().optional(),
     /** Crit range expansion (e.g. +1 means crit on 19-20 stacks to 18-20). */
     critRangeBonus: z.number().optional(),
   })
