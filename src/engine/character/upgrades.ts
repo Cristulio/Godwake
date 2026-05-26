@@ -40,6 +40,11 @@ export function applyPermanentUpgrade(character: Character, upgradeId: string): 
         ...character,
         permanentInitBonus: (character.permanentInitBonus ?? 0) + 2,
       };
+    case 'sages-pact':
+      return {
+        ...character,
+        attunementSlotsBonus: (character.attunementSlotsBonus ?? 0) + 1,
+      };
     default:
       return character;
   }
