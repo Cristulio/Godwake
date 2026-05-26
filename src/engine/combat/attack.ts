@@ -182,6 +182,7 @@ export function playerAttack(
 
   let attackBonus = abilMod + profBonus;
   attackBonus += character.permanentAttackBonus ?? 0;
+  attackBonus += character.delveAttackBonus ?? 0;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
