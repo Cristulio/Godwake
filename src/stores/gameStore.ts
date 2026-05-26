@@ -215,10 +215,15 @@ export const useGameStore = create<GameState>()(
   addDelveReward: (gold, xp) =>
     set((s) => {
       if (!s.delve) return s;
+      // Bargain Hunter / Pinchpurse scale all delve gold, not just treasure rooms.
+      const multiplier = s.character
+        ? characterQuirkMods(s.character).goldMultiplier ?? 1
+        : 1;
+      const finalGold = Math.floor(gold * multiplier);
       return {
         delve: {
           ...s.delve,
-          goldEarned: s.delve.goldEarned + gold,
+          goldEarned: s.delve.goldEarned + finalGold,
           xpEarned: s.delve.xpEarned + xp,
         },
       };

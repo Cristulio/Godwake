@@ -19,11 +19,12 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
   useEffect(() => {
     const t = setTimeout(() => setRevealed(true), 600);
     if (room.goldReward) {
+      // addDelveReward applies the gold multiplier itself now; we only need to
+      // compute the display value here so the reveal label matches the wallet.
       const mods = character ? characterQuirkMods(character) : {};
       const multiplier = mods.goldMultiplier ?? 1;
-      const final = Math.floor(room.goldReward * multiplier);
-      setActualGold(final);
-      addDelveReward(final, 0);
+      setActualGold(Math.floor(room.goldReward * multiplier));
+      addDelveReward(room.goldReward, 0);
     }
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps

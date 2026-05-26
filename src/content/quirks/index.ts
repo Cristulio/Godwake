@@ -52,7 +52,7 @@ const RAW: Quirk[] = [
     sentiment: 'odd',
     flavor:
       'Something from the surface follows you in the dark. Your skin remembers warmth your bones never knew.',
-    effect: 'Cantrips deal +1 fire damage. Vulnerable to cold damage.',
+    effect: 'Flavor — the soul recalls sunlight.',
     modifiers: {},
   }),
   QuirkSchema.parse({
@@ -169,7 +169,7 @@ const RAW: Quirk[] = [
     sentiment: 'odd',
     flavor:
       'Something from the deep dark followed you up. You don\'t feel the cold the way you should. Or fire, anymore.',
-    effect: 'Cantrips deal +1 cold damage. Vulnerable to fire damage.',
+    effect: 'Flavor — the soul remembers the dark below.',
     modifiers: {},
   }),
   QuirkSchema.parse({
@@ -178,7 +178,7 @@ const RAW: Quirk[] = [
     sentiment: 'odd',
     flavor:
       'Dogs love you. Wolves keep their distance. Something between the two has its eye on you and you can feel it.',
-    effect: 'Beasts hesitate to attack you first. Domesticated animals follow you a little too closely.',
+    effect: 'Flavor — beasts read the soul before the body.',
     modifiers: {},
   }),
 ];

@@ -85,15 +85,30 @@ export function PlayerPanel({ character, isActiveTurn }: PlayerPanelProps) {
                 </span>
               )}
             </div>
-            <div className="h-1.5 bg-[var(--color-bg-elevated)] mt-1 border border-[var(--color-border-dim)] overflow-hidden">
+            <div className="h-1.5 bg-[var(--color-bg-elevated)] mt-1 border border-[var(--color-border-dim)] overflow-hidden flex">
               <div
                 className={`h-full transition-all duration-500 ease-out ${
                   hpPercent > 50 ? 'bg-[var(--color-status-poison)]'
                     : hpPercent > 25 ? 'bg-[var(--color-accent-amber)]'
                       : 'bg-[var(--color-accent-blood)]'
                 }`}
-                style={{ width: `${hpPercent}%` }}
+                style={{
+                  width: `${
+                    (character.hp.current / (character.hp.max + character.hp.temp)) * 100
+                  }%`,
+                }}
               />
+              {character.hp.temp > 0 && (
+                <div
+                  className="h-full bg-[var(--color-accent-amber)]/60 border-l border-[var(--color-bg-base)] transition-all duration-500 ease-out"
+                  style={{
+                    width: `${
+                      (character.hp.temp / (character.hp.max + character.hp.temp)) * 100
+                    }%`,
+                  }}
+                  title={`+${character.hp.temp} temporary HP`}
+                />
+              )}
             </div>
           </div>
           <div>
