@@ -12,37 +12,60 @@
 # named feat/<feature-name>, copies .claude/settings.local.json into it so
 # the new Claude session inherits permissions + shared memory, and (with
 # --launch) opens a new Claude session in the worktree. On iTerm2 the new
-# session splits into a pane of the current window (alternating vertical /
-# horizontal based on aspect ratio so 4 sessions tile into a clean grid);
-# falls back to a new Terminal.app window if iTerm2 isn't installed.
+# session splits into a pane of the current window (alternating split
+# direction by session count so a 4-way fan-out tiles into roughly even
+# panes); falls back to a new Terminal.app window if iTerm2 isn't installed.
+#
+# Pass --brief-file <path> to start the new Claude session with the file's
+# contents as the first user message — the agent reads the brief and gets
+# to work immediately instead of waiting for an initial prompt.
 
 set -euo pipefail
 
 NAME=""
 LAUNCH=0
-for arg in "$@"; do
-  case "$arg" in
+BRIEF_FILE=""
+while [ $# -gt 0 ]; do
+  case "$1" in
     --launch)
       LAUNCH=1
+      shift
+      ;;
+    --brief-file)
+      shift
+      BRIEF_FILE="${1:-}"
+      if [ -z "$BRIEF_FILE" ]; then
+        echo "Error: --brief-file requires a path argument" >&2
+        exit 1
+      fi
+      shift
       ;;
     -*)
-      echo "Unknown flag: $arg" >&2
+      echo "Unknown flag: $1" >&2
       exit 1
       ;;
     *)
-      if [ -z "$NAME" ]; then NAME="$arg"; fi
+      if [ -z "$NAME" ]; then NAME="$1"; fi
+      shift
       ;;
   esac
 done
 
 if [ -z "$NAME" ]; then
-  echo "Usage: scripts/wt-new <feature-name> [--launch]"
+  echo "Usage: scripts/wt-new <feature-name> [--launch] [--brief-file <path>]"
   echo ""
   echo "Examples:"
   echo "  scripts/wt-new quirks-expansion"
   echo "  scripts/wt-new bg2-imoen-rescue --launch"
+  echo "  scripts/wt-new continuous-delve --launch --brief-file .briefs/continuous-delve.md"
   echo ""
-  echo "  --launch  Opens claude in the worktree — iTerm2 split pane, or Terminal.app window."
+  echo "  --launch       Opens claude in the worktree (iTerm2 split pane, or Terminal.app)."
+  echo "  --brief-file   Path to a markdown brief; sent as the agent's first message."
+  exit 1
+fi
+
+if [ -n "$BRIEF_FILE" ] && [ ! -f "$BRIEF_FILE" ]; then
+  echo "Error: brief file not found: $BRIEF_FILE" >&2
   exit 1
 fi
 
@@ -83,7 +106,17 @@ if [ "$LAUNCH" -eq 1 ]; then
     echo "  cd \"$WORKTREE_PATH\" && npm install && claude"
     exit 0
   fi
-  LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude"
+  if [ -n "$BRIEF_FILE" ]; then
+    cp "$BRIEF_FILE" "$WORKTREE_PATH/.briefing.md"
+    echo "→ Copied brief into .briefing.md"
+    # The shell command typed into the new session: cd, install if needed,
+    # then run claude with the brief contents as the first user message.
+    # \\\" → literal \" in LAUNCH_CMD → " when AppleScript writes it to iTerm.
+    # \\\$ → literal \$ → $ when AppleScript writes it; shell then runs $(cat).
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude \\\"\\\$(cat .briefing.md)\\\""
+  else
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude"
+  fi
   if [ -d "/Applications/iTerm.app" ]; then
     echo ""
     echo "→ Opening pane in iTerm2..."
@@ -95,16 +128,16 @@ tell application "iTerm"
     tell current session of current window to write text "$LAUNCH_CMD"
   else
     tell current window
-      tell current session
-        set b to bounds
-        set w to (item 3 of b) - (item 1 of b)
-        set h to (item 4 of b) - (item 2 of b)
-        if w > h then
-          set newSession to (split vertically with default profile)
-        else
-          set newSession to (split horizontally with default profile)
-        end if
-        tell newSession to write text "$LAUNCH_CMD"
+      tell current tab
+        set sessionCount to (count of sessions)
+        tell current session
+          if (sessionCount mod 2) is 0 then
+            set newSession to (split horizontally with default profile)
+          else
+            set newSession to (split vertically with default profile)
+          end if
+          tell newSession to write text "$LAUNCH_CMD"
+        end tell
       end tell
     end tell
   end if
