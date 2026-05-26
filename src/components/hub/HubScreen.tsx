@@ -21,8 +21,9 @@ const BUILDINGS: Building[] = [
     id: 'druid-grove',
     name: 'The Druid Grove',
     description:
-      'The circle of Mielikki tends the Wellspring. They will return you to life when you fall.',
-    enabled: false,
+      'The circle of Mielikki tends the Wellspring. They will return you to life when you fall — and shape what comes back.',
+    enabled: true,
+    cta: 'Tend the Soul',
   },
   {
     id: 'iron-cells',
@@ -44,6 +45,7 @@ export function HubScreen() {
   const character = useGameStore((s) => s.character);
   const goToTitle = useGameStore((s) => s.goToTitle);
   const startDelve = useGameStore((s) => s.startDelve);
+  const goToDruidGrove = useGameStore((s) => s.goToDruidGrove);
 
   if (!character) {
     return (
@@ -125,7 +127,13 @@ export function HubScreen() {
             <Button
               variant={b.enabled ? 'primary' : 'secondary'}
               disabled={!b.enabled}
-              onClick={b.id === 'iron-cells' ? handleEnterDungeon : undefined}
+              onClick={
+                b.id === 'iron-cells'
+                  ? handleEnterDungeon
+                  : b.id === 'druid-grove'
+                    ? goToDruidGrove
+                    : undefined
+              }
             >
               {b.enabled ? (b.cta ?? 'Enter') : 'Coming soon'}
             </Button>

@@ -3,6 +3,7 @@ import { TitleScreen } from './components/title/TitleScreen';
 import { IntroScreen } from './components/title/IntroScreen';
 import { CharacterCreationScreen } from './components/creation/CharacterCreationScreen';
 import { HubScreen } from './components/hub/HubScreen';
+import { DruidGroveScreen } from './components/hub/DruidGroveScreen';
 import { DelveScreen } from './components/delve/DelveScreen';
 import { CodexScreen } from './components/codex/CodexScreen';
 import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
@@ -35,6 +36,9 @@ function App() {
       break;
     case 'hub':
       content = <HubScreen />;
+      break;
+    case 'druid-grove':
+      content = <DruidGroveScreen />;
       break;
     case 'delve':
       content = <DelveScreen />;

@@ -1,6 +1,7 @@
 import type { DelveState } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
+import { RENOWN_PER_DELVE_CLEAR } from '../../stores/gameStore';
 
 interface DelveSummaryProps {
   delve: DelveState;
@@ -10,6 +11,7 @@ interface DelveSummaryProps {
 
 export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
   const victorious = outcome === 'completed';
+  const renownEarned = victorious ? RENOWN_PER_DELVE_CLEAR : 0;
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 max-w-2xl mx-auto gap-8 animate-fade-in">
       <div className="text-center">
@@ -27,10 +29,11 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
       </div>
 
       <Panel className="w-full">
-        <div className="grid grid-cols-3 gap-4 text-center">
+        <div className="grid grid-cols-4 gap-4 text-center">
           <Stat label="Rooms Cleared" value={`${delve.roomsCleared} / ${delve.rooms.length}`} />
           <Stat label="Gold Earned" value={String(delve.goldEarned)} color="gold" />
           <Stat label="XP Earned" value={String(delve.xpEarned)} color="amber" />
+          <Stat label="Renown" value={victorious ? `+${renownEarned}` : '—'} color="amber" />
         </div>
       </Panel>
 
