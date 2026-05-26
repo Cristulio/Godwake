@@ -9,6 +9,7 @@ import { longRest, withResetActionEconomy } from '../engine/character/actions';
 import { rollQuirks, characterQuirkMods } from '../engine/character/quirks';
 import { applyDelveStartUpgrades, applyPermanentUpgrade } from '../engine/character/upgrades';
 import { hasPendingLevelUp, applyLevelUp } from '../engine/character/leveling';
+import { createIronCellsDelve } from '../engine/delve';
 
 function applyDelveStartQuirks(character: Character): Character {
   const mods = characterQuirkMods(character);
@@ -42,6 +43,9 @@ export const RENOWN_PER_DELVE_CLEAR = 25;
 /** Renown granted on a failed delve — small consolation for the soul. */
 export const RENOWN_PER_DELVE_FAILURE = 5;
 
+/** Renown threshold that reveals the Druid Grove on the hub — matches the cheapest upgrade. */
+export const GROVE_UNLOCK_THRESHOLD = 60;
+
 /** Renown threshold required to unlock the road to Athkatla (Chapter 2). */
 export const RENOWN_FOR_CHAPTER_2 = 500;
 
@@ -67,6 +71,8 @@ interface GameState {
   unlockedUpgrades: string[];
   /** True once the player has beaten Ilyich at least once on any incarnation. Gates Chapter 2 access. */
   chapter1Cleared: boolean;
+  /** True once the player has ever held enough renown to buy the cheapest Grove upgrade. Sticky — does not re-lock when renown is spent. */
+  druidGroveUnlocked: boolean;
 
   // Navigation
   goToTitle: () => void;
@@ -135,6 +141,7 @@ export const useGameStore = create<GameState>()(
   discoveredMonsters: [],
   unlockedUpgrades: [],
   chapter1Cleared: false,
+  druidGroveUnlocked: false,
 
   goToTitle: () => set({ screen: 'title' }),
   goToHub: () => set({ screen: 'hub' }),
@@ -157,6 +164,7 @@ export const useGameStore = create<GameState>()(
       discoveredMonsters: [],
       unlockedUpgrades: [],
       chapter1Cleared: false,
+      druidGroveUnlocked: false,
       screen: 'character-creation',
     });
   },
@@ -234,6 +242,8 @@ export const useGameStore = create<GameState>()(
         combat: null,
         screen,
         chapter1Cleared: s.chapter1Cleared || wonBoss,
+        druidGroveUnlocked:
+          s.druidGroveUnlocked || rested.renown >= GROVE_UNLOCK_THRESHOLD,
       };
     }),
 
@@ -278,7 +288,19 @@ export const useGameStore = create<GameState>()(
   showTaunt: (speaker, context) =>
     set({ taunt: { speaker, context, seed: Math.floor(Math.random() * 1000) } }),
   dismissTaunt: () => set({ taunt: null }),
-  markIntroSeen: () => set({ introSeen: true, screen: 'hub' }),
+  markIntroSeen: () => {
+    set({ introSeen: true });
+    // First incarnation: drop the player straight into the cells. They wake
+    // in the dungeon — the hub doesn't reveal until they've fallen at least
+    // once. On subsequent reincarnations the intro doesn't replay, so this
+    // only fires for the very first life.
+    const s = get();
+    if (!s.hasReincarnated && s.character) {
+      get().startDelve(createIronCellsDelve());
+    } else {
+      set({ screen: 'hub' });
+    }
+  },
 
   discoverMonster: (defId) =>
     set((s) =>
@@ -333,6 +355,7 @@ export const useGameStore = create<GameState>()(
         discoveredMonsters: state.discoveredMonsters,
         unlockedUpgrades: state.unlockedUpgrades,
         chapter1Cleared: state.chapter1Cleared,
+        druidGroveUnlocked: state.druidGroveUnlocked,
       }),
       version: 1,
       onRehydrateStorage: () => (state) => {
@@ -353,6 +376,14 @@ export const useGameStore = create<GameState>()(
         // Older saves predate Chapter 2 gating.
         if (state && typeof state.chapter1Cleared !== 'boolean') {
           state.chapter1Cleared = false;
+        }
+        // Older saves predate the Grove gate. Unlock if they already qualify
+        // (already bought something, or have enough renown to do so) so we
+        // don't strip access from existing players.
+        if (state && typeof state.druidGroveUnlocked !== 'boolean') {
+          state.druidGroveUnlocked =
+            (state.unlockedUpgrades?.length ?? 0) > 0 ||
+            (state.character?.renown ?? 0) >= GROVE_UNLOCK_THRESHOLD;
         }
       },
     },
