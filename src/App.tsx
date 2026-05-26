@@ -12,6 +12,7 @@ import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
 import { QuirksTutorial } from './components/lore/QuirksTutorial';
 import { ReincarnationReveal } from './components/lore/ReincarnationReveal';
 import { LevelUpScreen } from './components/level/LevelUpScreen';
+import { AudioControls } from './components/ui/AudioControls';
 
 function App() {
   const screen = useGameStore((s) => s.screen);
@@ -78,6 +79,7 @@ function App() {
         />
       )}
       {showQuirksTutorial && <QuirksTutorial onDismiss={markQuirksTutorialSeen} />}
+      <AudioControls />
     </>
   );
 }

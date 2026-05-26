@@ -5,6 +5,7 @@ import { BlessingCard } from '../ui/BlessingCard';
 import { useGameStore } from '../../stores/gameStore';
 import { getActiveRoller } from '../../engine/dice';
 import { rollBlessingOptions } from '../../engine/character/blessings';
+import { playSfx } from '../../engine/audio';
 
 interface ShrineRoomProps {
   room: RoomSpec;
@@ -25,6 +26,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   function pick(id: string) {
     addBlessing(id);
     setChosen(id);
+    playSfx('shrine_chime');
     // Brief beat before advancing so the player sees the confirmation.
     setTimeout(() => onContinue(), 1000);
   }

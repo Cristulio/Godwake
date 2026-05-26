@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { playSfx } from '../../engine/audio';
 
 interface DiceRollOverlayProps {
   attackerName: string;
@@ -39,6 +40,9 @@ export function DiceRollOverlay({
     let mounted = true;
     const t = (ms: number) => Math.max(40, Math.round(ms / speed));
 
+    playSfx('dice_clack');
+    playSfx('swing_whoosh');
+
     const tickInterval = setInterval(() => {
       if (!mounted) return;
       setShownNumber(Math.floor(Math.random() * 20) + 1);
@@ -54,6 +58,9 @@ export function DiceRollOverlay({
     const revealTimer = setTimeout(() => {
       if (!mounted) return;
       setRevealedResult(true);
+      if (crit) playSfx('crit_hit');
+      else if (hit) playSfx('hit_thud');
+      else playSfx('miss_whiff');
     }, t(330));
 
     const dismissTimer = setTimeout(() => {
@@ -68,7 +75,7 @@ export function DiceRollOverlay({
       clearTimeout(revealTimer);
       clearTimeout(dismissTimer);
     };
-  }, [rollNatural, onDismiss, speed]);
+  }, [rollNatural, onDismiss, speed, hit, crit]);
 
   const resultLabel = crit ? 'CRITICAL' : hit ? 'HIT' : 'MISS';
   const resultClass = crit
