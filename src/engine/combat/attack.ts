@@ -10,7 +10,13 @@ import type {
 } from '../../types/combat';
 import type { Weapon } from '../../schemas/item';
 import { abilityModifier } from '../../types/abilities';
-import { critRange, computeAC, effectiveAbilityScores, characterHasMechanic } from '../character/derived';
+import {
+  critRange,
+  computeAC,
+  effectiveAbilityScores,
+  characterHasMechanic,
+  proficiencyBonus,
+} from '../character/derived';
 import { characterQuirkMods } from '../character/quirks';
 import { characterBlessingMods } from '../character/blessings';
 import { getItem } from '../../content/items';
@@ -122,7 +128,7 @@ export function playerAttack(
     ? (abilityModifier(scores.dex) >= abilityModifier(scores.str) ? 'dex' : 'str')
     : 'str'; // melee default; ranged would force dex; refine later
   const abilMod = abilityModifier(scores[attackAbility]);
-  const profBonus = 2; // Lv 1-4. proficiencyBonus(character.level) -- TODO
+  const profBonus = proficiencyBonus(character.level);
 
   const quirkMods = characterQuirkMods(character);
   const blessingMods = characterBlessingMods(character);

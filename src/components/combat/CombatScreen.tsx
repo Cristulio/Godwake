@@ -9,6 +9,7 @@ import {
   monsterAttack,
   playerAttack,
   useSecondWind,
+  useActionSurge,
   useConsumable,
 } from '../../engine/combat';
 import { ItemPicker } from './ItemPicker';
@@ -103,7 +104,10 @@ export function CombatScreen({
       character.resources.secondWindAvailable === true &&
       !character.actionEconomy.bonusActionUsed &&
       character.hp.current < character.hp.max;
-    if (hasUsableBonus) return;
+    const hasUsableActionSurge =
+      character.classId === 'fighter' &&
+      (character.resources.actionSurgeRemaining ?? 0) > 0;
+    if (hasUsableBonus || hasUsableActionSurge) return;
 
     setAutoEndNotice(true);
     const t = setTimeout(() => {
@@ -124,6 +128,7 @@ export function CombatScreen({
     character.actionEconomy.actionUsed,
     character.actionEconomy.bonusActionUsed,
     character.resources.secondWindAvailable,
+    character.resources.actionSurgeRemaining,
     character.hp.current,
     state.currentTurnIndex,
     overlayActive,
@@ -164,6 +169,12 @@ export function CombatScreen({
   function handleSecondWind() {
     const roller = getActiveRoller();
     const next = useSecondWind({ roller, character, state });
+    setCharacter({ ...character });
+    setCombat(next);
+  }
+
+  function handleActionSurge() {
+    const next = useActionSurge({ character, state });
     setCharacter({ ...character });
     setCombat(next);
   }
@@ -295,6 +306,7 @@ export function CombatScreen({
             state={state}
             onAttack={handleAttackClick}
             onSecondWind={handleSecondWind}
+            onActionSurge={handleActionSurge}
             onUseItem={() => setPickingItem(true)}
             onEndTurn={handleEndTurn}
           />

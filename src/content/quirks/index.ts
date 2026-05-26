@@ -76,11 +76,11 @@ const RAW: Quirk[] = [
   QuirkSchema.parse({
     id: 'bardic-memory',
     name: 'Bardic Memory',
-    sentiment: 'boon',
+    sentiment: 'odd',
     flavor:
       'You can hum songs you have never heard. The words come in a language nobody at the table knows.',
-    effect: '+1 to Charisma checks.',
-    modifiers: { charismaMod: 1 },
+    effect: 'Flavor — the soul carries an old tune.',
+    modifiers: {},
   }),
   QuirkSchema.parse({
     id: 'touched-beyond',
@@ -112,20 +112,20 @@ const RAW: Quirk[] = [
   QuirkSchema.parse({
     id: 'silver-tongue',
     name: 'Silver Tongue',
-    sentiment: 'boon',
+    sentiment: 'odd',
     flavor:
       'Words come easy. The wrong ones especially — but those are the useful ones, mostly.',
-    effect: '+1 to Charisma checks.',
-    modifiers: { charismaMod: 1 },
+    effect: 'Flavor — quick of speech in the inns between deaths.',
+    modifiers: {},
   }),
   QuirkSchema.parse({
     id: 'plain-face',
     name: 'Plain Face',
-    sentiment: 'bane',
+    sentiment: 'odd',
     flavor:
       'Nobody remembers your name on the first try. Sometimes not the second. You learned to repeat it without flinching.',
-    effect: '−1 to Charisma checks.',
-    modifiers: { charismaMod: -1 },
+    effect: 'Flavor — easily forgotten by those who watch you fall.',
+    modifiers: {},
   }),
   QuirkSchema.parse({
     id: 'glassbone',

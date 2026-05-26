@@ -2,6 +2,7 @@ import { Button } from '../ui/Button';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
+import { characterHasMechanic } from '../../engine/character/derived';
 import { getItem } from '../../content/items';
 
 interface ActionBarProps {
@@ -9,6 +10,7 @@ interface ActionBarProps {
   state: CombatState;
   onAttack: () => void;
   onSecondWind: () => void;
+  onActionSurge: () => void;
   onUseItem: () => void;
   onEndTurn: () => void;
 }
@@ -18,6 +20,7 @@ export function ActionBar({
   state,
   onAttack,
   onSecondWind,
+  onActionSurge,
   onUseItem,
   onEndTurn,
 }: ActionBarProps) {
@@ -32,6 +35,16 @@ export function ActionBar({
     character.hp.current < character.hp.max;
   const canSecondWind = playersTurn && active && secondWindUsable;
 
+  // Action Surge: free Action this turn — only useful AFTER you've spent
+  // your action. Fighter L2+.
+  const surgeRemaining = character.resources.actionSurgeRemaining ?? 0;
+  const canActionSurge =
+    playersTurn &&
+    active &&
+    character.classId === 'fighter' &&
+    surgeRemaining > 0 &&
+    character.actionEconomy.actionUsed;
+
   const consumableCount = character.inventory.filter((ref) => {
     try {
       return getItem(ref.itemId).kind === 'consumable';
@@ -44,10 +57,18 @@ export function ActionBar({
 
   const canEndTurn = playersTurn && active;
 
+  // Fighter L5 Extra Attack: two swings per Action. Show progress on the
+  // button so the player knows the second swing is queued.
+  const hasExtraAttack = characterHasMechanic(character, 'extra-attack');
+  const attacksThisTurn = state.playerAttacksThisTurn ?? 0;
+  const attackLabel = hasExtraAttack
+    ? `► Attack (${Math.min(attacksThisTurn + 1, 2)}/2)`
+    : '► Attack';
+
   return (
     <div className="grid grid-cols-6 gap-2">
       <Button variant="primary" onClick={onAttack} disabled={!canAttack}>
-        ► Attack
+        {attackLabel}
       </Button>
       <Button
         variant={canSecondWind ? 'primary' : 'secondary'}
@@ -57,8 +78,13 @@ export function ActionBar({
       >
         Second Wind
       </Button>
-      <Button variant="secondary" disabled>
-        Spells
+      <Button
+        variant={canActionSurge ? 'primary' : 'secondary'}
+        onClick={onActionSurge}
+        disabled={!canActionSurge}
+        title="Free Action: regain your action this turn. Once per short rest."
+      >
+        Action Surge{surgeRemaining > 0 && ` (${surgeRemaining})`}
       </Button>
       <Button variant="secondary" disabled>
         Dodge

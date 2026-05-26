@@ -15,6 +15,14 @@ export function withResetActionEconomy(character: Character): Character {
   };
 }
 
+/** Action Surge charges available at a given Fighter level — 1 at L2, 2 at L17. */
+function fighterActionSurgeMax(character: Character): number {
+  if (character.classId !== 'fighter') return 0;
+  if (character.level >= 17) return 2;
+  if (character.level >= 2) return 1;
+  return 0;
+}
+
 /** MVP short rest: regain hit dice up to (1d4 * level) HP — simplified. */
 export function shortRestHeal(character: Character, healAmount: number): Character {
   const newHp = Math.min(character.hp.max, character.hp.current + healAmount);
@@ -24,6 +32,7 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
     resources: {
       ...character.resources,
       secondWindAvailable: true,
+      actionSurgeRemaining: fighterActionSurgeMax(character),
     },
   };
 }
@@ -37,6 +46,7 @@ export function longRest(character: Character): Character {
     resources: {
       ...character.resources,
       secondWindAvailable: true,
+      actionSurgeRemaining: fighterActionSurgeMax(character),
     },
   });
 }
