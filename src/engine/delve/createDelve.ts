@@ -13,6 +13,13 @@ import {
   MID_POOL as ATH_MID_POOL,
   ELITE_POOL as ATH_ELITE_POOL,
 } from './chapter2Pools';
+// Spellhold composition uses warmup / mid / elite slots only (no early-mid).
+// EARLY_MID_POOL is authored in chapter3Pools for future variants / extension.
+import {
+  WARMUP_POOL as SPH_WARMUP_POOL,
+  MID_POOL as SPH_MID_POOL,
+  ELITE_POOL as SPH_ELITE_POOL,
+} from './chapter3Pools';
 
 function pick<T>(rng: { next(): number }, pool: T[]): T {
   if (pool.length === 0) throw new Error('Empty encounter pool');
@@ -242,6 +249,72 @@ export function createGodwakeDelve(seed: number = randomSeed()): DelveState {
   return {
     dungeonName: 'The Long Road — Iron Cells to Athkatla',
     chapterId: 'godwake',
+    rooms,
+    currentRoomIdx: 0,
+    phase: 'in-room',
+    roomsCleared: 0,
+    goldEarned: 0,
+    xpEarned: 0,
+  };
+}
+
+/**
+ * Chapter 3 / Spellhold — eight rooms inside the Cowled Wizards' island
+ * asylum, gated on the hub by `chapter1Cleared && renown >= 1500`. A side
+ * delve, not an extension of the Godwake run — the player chooses whether
+ * to descend the Iron Cells or sail to Spellhold from the hub.
+ *
+ * Slot pattern: warmup → shrine → mid → rest → elite → shrine → elite →
+ *               Asylum Director (boss).
+ *
+ * Same procedural-pool pattern as Ch1/Ch2: each combat slot draws one entry
+ * from its themed pool via a seeded RNG.
+ */
+export function createSpellholdDelve(seed: number = randomSeed()): DelveState {
+  const rng = createRng(seed);
+
+  const rooms: RoomSpec[] = [
+    combatRoom('room-1', pick(rng, SPH_WARMUP_POOL)),
+    {
+      id: 'room-2',
+      kind: 'shrine',
+      title: 'A Smuggled Shrine to Mystra',
+      flavorText:
+        "Half-hidden behind a moved bookcase in a side-cell — a chalk circle around a star of seven points, and a stub of candle burned by hand-shielding rather than by holder. The Weave is thin in here, but Mystra's silver hand still reaches.",
+    },
+    combatRoom('room-3', pick(rng, SPH_MID_POOL)),
+    {
+      id: 'room-4',
+      kind: 'rest',
+      title: 'The Disused Cell-Block',
+      flavorText:
+        "A row of cells the wardens stopped using after the last riot — doors hanging open, straw mouldering on the floors. Quiet enough to sit down. You can catch your breath here.",
+      restType: 'short',
+    },
+    combatRoom('room-5', pick(rng, SPH_ELITE_POOL)),
+    {
+      id: 'room-6',
+      kind: 'shrine',
+      title: "The Crying God's Mark",
+      flavorText:
+        "A red-knotted bandage hangs on a nail above a cracked basin in a warden's washroom. Someone has been smuggling Ilmater's mercy into Spellhold one prayer at a time. The basin is still wet.",
+    },
+    combatRoom('room-7', pick(rng, SPH_ELITE_POOL)),
+    {
+      id: 'room-8',
+      kind: 'boss',
+      title: "The Director's Chamber",
+      flavorText:
+        "A long vaulted room at the heart of the warden's wing — a desk at the far end with the asylum's ledgers stacked in perfect order, and behind it, in the silver-trim robe and the small round monocle, the man who has been signing the warrants. He does not look surprised. \"You will be still while I work.\"",
+      monsters: [{ defId: 'asylum-director', count: 1 }],
+      xpReward: 1100,
+      goldReward: 140,
+    },
+  ];
+
+  return {
+    dungeonName: 'Spellhold — The Cowled Asylum',
+    chapterId: 'chapter-3',
     rooms,
     currentRoomIdx: 0,
     phase: 'in-room',

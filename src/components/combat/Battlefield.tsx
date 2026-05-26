@@ -8,6 +8,8 @@ export type BattlefieldDecoration =
   | 'wardens-hall'
   | 'athkatla-street'
   | 'magistrate-hall'
+  | 'spellhold-corridor'
+  | 'spellhold-warden-chamber'
   | 'generic';
 
 interface BattlefieldProps {
@@ -133,7 +135,193 @@ function DecorationLayer({ kind }: { kind: BattlefieldDecoration }) {
       {kind === 'wardens-hall' && <WardensHallBackdrop />}
       {kind === 'athkatla-street' && <AthkatlaStreetBackdrop />}
       {kind === 'magistrate-hall' && <MagistrateHallBackdrop />}
+      {kind === 'spellhold-corridor' && <SpellholdCorridorBackdrop />}
+      {kind === 'spellhold-warden-chamber' && <SpellholdWardenChamberBackdrop />}
     </div>
+  );
+}
+
+function SpellholdCorridorBackdrop() {
+  // Pale, watery corridor — bone-white stone, faint silver Cowled sigils on
+  // the wall, cell-bar shadows striping the floor. Reads colder than Iron
+  // Cells (asylum, not torture lab).
+  return (
+    <svg
+      viewBox="0 0 400 200"
+      preserveAspectRatio="none"
+      className="absolute inset-0 w-full h-full"
+    >
+      <defs>
+        <linearGradient id="sph-wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#181820" />
+          <stop offset="55%" stopColor="#222232" />
+          <stop offset="100%" stopColor="#0c0c14" />
+        </linearGradient>
+        <linearGradient id="sph-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1c1c28" />
+          <stop offset="100%" stopColor="#08080e" />
+        </linearGradient>
+        <radialGradient id="sph-glow" cx="0.5" cy="0.4" r="0.55">
+          <stop offset="0%" stopColor="#9ec3ff" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#9ec3ff" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="sph-vignette" cx="0.5" cy="0.5" r="0.6">
+          <stop offset="60%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.6" />
+        </radialGradient>
+      </defs>
+      <rect width="400" height="200" fill="url(#sph-wall)" />
+      {/* Tall stone blocks */}
+      <g fill="#1a1a26" stroke="#0a0a14" strokeWidth="0.5" opacity="0.9">
+        <rect x="0" y="0" width="92" height="40" />
+        <rect x="92" y="0" width="120" height="40" />
+        <rect x="212" y="0" width="98" height="40" />
+        <rect x="310" y="0" width="90" height="40" />
+        <rect x="0" y="40" width="74" height="48" />
+        <rect x="74" y="40" width="132" height="48" />
+        <rect x="206" y="40" width="104" height="48" />
+        <rect x="310" y="40" width="90" height="48" />
+        <rect x="0" y="88" width="100" height="44" />
+        <rect x="100" y="88" width="84" height="44" />
+        <rect x="184" y="88" width="124" height="44" />
+        <rect x="308" y="88" width="92" height="44" />
+      </g>
+      {/* Cell-door grates evenly spaced */}
+      <g fill="#06060a" stroke="#3a3a50" strokeWidth="0.6" opacity="0.95">
+        <rect x="40" y="58" width="34" height="58" />
+        <rect x="160" y="58" width="34" height="58" />
+        <rect x="280" y="58" width="34" height="58" />
+      </g>
+      {/* Vertical bars across each cell window */}
+      <g stroke="#06060a" strokeWidth="1.2" opacity="0.9">
+        <line x1="48" y1="60" x2="48" y2="114" />
+        <line x1="57" y1="60" x2="57" y2="114" />
+        <line x1="66" y1="60" x2="66" y2="114" />
+        <line x1="168" y1="60" x2="168" y2="114" />
+        <line x1="177" y1="60" x2="177" y2="114" />
+        <line x1="186" y1="60" x2="186" y2="114" />
+        <line x1="288" y1="60" x2="288" y2="114" />
+        <line x1="297" y1="60" x2="297" y2="114" />
+        <line x1="306" y1="60" x2="306" y2="114" />
+      </g>
+      {/* Silver Cowled sigil scratched between cells — circle with cross */}
+      <g stroke="#9ec3ff" strokeWidth="0.8" fill="none" opacity="0.55">
+        <circle cx="115" cy="76" r="9" />
+        <line x1="115" y1="67" x2="115" y2="85" />
+        <line x1="106" y1="76" x2="124" y2="76" />
+        <circle cx="240" cy="78" r="8" />
+        <line x1="240" y1="70" x2="240" y2="86" />
+        <line x1="232" y1="78" x2="248" y2="78" />
+      </g>
+      {/* Floor strip */}
+      <rect x="0" y="160" width="400" height="40" fill="url(#sph-floor)" />
+      <g stroke="#0a0a14" strokeWidth="0.5" opacity="0.7">
+        <line x1="0" y1="170" x2="400" y2="170" />
+        <line x1="60" y1="170" x2="40" y2="200" />
+        <line x1="140" y1="170" x2="130" y2="200" />
+        <line x1="220" y1="170" x2="220" y2="200" />
+        <line x1="300" y1="170" x2="320" y2="200" />
+        <line x1="380" y1="170" x2="400" y2="200" />
+      </g>
+      {/* Pale magical glow above, vignette */}
+      <rect width="400" height="200" fill="url(#sph-glow)" />
+      <rect width="400" height="200" fill="url(#sph-vignette)" />
+    </svg>
+  );
+}
+
+function SpellholdWardenChamberBackdrop() {
+  // The Asylum Director's chamber — deep blue-violet, silver Cowled disc on
+  // the wall, an austere desk silhouette, banners trimmed in grey. Reads as
+  // a polished bureaucratic horror — different from Magistrate's Hall (which
+  // is Athkatlan / marble / civic). This one is colder and emptier.
+  return (
+    <svg
+      viewBox="0 0 400 200"
+      preserveAspectRatio="none"
+      className="absolute inset-0 w-full h-full"
+    >
+      <defs>
+        <linearGradient id="sph-wc-wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0a0a1c" />
+          <stop offset="55%" stopColor="#141430" />
+          <stop offset="100%" stopColor="#04040c" />
+        </linearGradient>
+        <linearGradient id="sph-wc-stone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1a1a32" />
+          <stop offset="100%" stopColor="#080814" />
+        </linearGradient>
+        <linearGradient id="sph-wc-desk" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#2a1818" />
+          <stop offset="100%" stopColor="#0c0606" />
+        </linearGradient>
+        <radialGradient id="sph-wc-disc-glow" cx="0.5" cy="0.28" r="0.32">
+          <stop offset="0%" stopColor="#9ec3ff" stopOpacity="0.30" />
+          <stop offset="100%" stopColor="#9ec3ff" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="sph-wc-vignette" cx="0.5" cy="0.5" r="0.6">
+          <stop offset="60%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.65" />
+        </radialGradient>
+      </defs>
+      <rect width="400" height="200" fill="url(#sph-wc-wall)" />
+      {/* Back wall stones */}
+      <g fill="url(#sph-wc-stone)" stroke="#06060e" strokeWidth="0.5" opacity="0.85">
+        <rect x="0" y="0" width="120" height="44" />
+        <rect x="120" y="0" width="170" height="44" />
+        <rect x="290" y="0" width="110" height="44" />
+        <rect x="0" y="44" width="90" height="52" />
+        <rect x="90" y="44" width="220" height="52" />
+        <rect x="310" y="44" width="90" height="52" />
+      </g>
+      {/* Vaulted arched recess behind the desk */}
+      <path d="M 100 96 L 100 50 Q 200 0 300 50 L 300 96 Z" fill="#06060e" stroke="#2a2a48" strokeWidth="1" />
+      <path d="M 110 50 Q 200 6 290 50" fill="none" stroke="#3a3a60" strokeWidth="0.8" opacity="0.6" />
+      {/* Silver Cowled disc on the back wall — concentric rings with cross-line */}
+      <circle cx="200" cy="44" r="18" fill="#1a1a32" stroke="#b5b5e0" strokeWidth="1.4" />
+      <circle cx="200" cy="44" r="12" fill="#06060e" stroke="#7a7aa0" strokeWidth="0.8" />
+      <line x1="200" y1="30" x2="200" y2="58" stroke="#b5b5e0" strokeWidth="0.8" opacity="0.8" />
+      <line x1="186" y1="44" x2="214" y2="44" stroke="#b5b5e0" strokeWidth="0.8" opacity="0.8" />
+      {/* Flanking silver-trim banners */}
+      <rect x="60" y="0" width="14" height="68" fill="#10102a" stroke="#06060e" strokeWidth="0.5" />
+      <polygon points="60,68 74,68 67,82" fill="#10102a" stroke="#06060e" strokeWidth="0.5" />
+      <rect x="64" y="22" width="6" height="18" fill="#b5b5e0" opacity="0.65" />
+      <rect x="326" y="0" width="14" height="68" fill="#10102a" stroke="#06060e" strokeWidth="0.5" />
+      <polygon points="326,68 340,68 333,82" fill="#10102a" stroke="#06060e" strokeWidth="0.5" />
+      <rect x="330" y="22" width="6" height="18" fill="#b5b5e0" opacity="0.65" />
+      {/* Director's desk — long austere bench */}
+      <polygon points="120,150 280,150 296,178 104,178" fill="url(#sph-wc-desk)" stroke="#04040c" strokeWidth="1" />
+      <polygon points="140,114 260,114 260,150 140,150" fill="url(#sph-wc-desk)" stroke="#04040c" strokeWidth="1" />
+      <rect x="140" y="114" width="120" height="3" fill="#7a7aa0" opacity="0.7" />
+      {/* Stacked ledgers on the desk */}
+      <rect x="156" y="120" width="22" height="12" fill="#2a1c10" stroke="#0a0608" strokeWidth="0.5" />
+      <rect x="156" y="118" width="22" height="2" fill="#6a4a22" />
+      <rect x="184" y="122" width="20" height="10" fill="#2a1c10" stroke="#0a0608" strokeWidth="0.5" />
+      <rect x="184" y="120" width="20" height="2" fill="#6a4a22" />
+      <rect x="218" y="120" width="34" height="12" fill="#2a1c10" stroke="#0a0608" strokeWidth="0.5" />
+      <rect x="218" y="118" width="34" height="2" fill="#6a4a22" />
+      {/* Quill and inkwell */}
+      <rect x="208" y="124" width="2" height="8" fill="#06060e" />
+      <line x1="209" y1="124" x2="216" y2="112" stroke="#e8dcc4" strokeWidth="0.6" />
+      <rect x="204" y="128" width="6" height="4" fill="#06060e" />
+      {/* Two pale wall-sconces flanking the disc — Cowled mage-light, not flame */}
+      <circle cx="135" cy="60" r="4" fill="#9ec3ff" opacity="0.7" />
+      <circle cx="135" cy="60" r="2" fill="#dcefff" opacity="0.95" />
+      <circle cx="265" cy="60" r="4" fill="#9ec3ff" opacity="0.7" />
+      <circle cx="265" cy="60" r="2" fill="#dcefff" opacity="0.95" />
+      {/* Disc glow + vignette */}
+      <rect width="400" height="200" fill="url(#sph-wc-disc-glow)" />
+      {/* Floor seams */}
+      <g stroke="#2a2a48" strokeWidth="0.5" opacity="0.45">
+        <line x1="0" y1="184" x2="400" y2="184" />
+        <line x1="60" y1="184" x2="60" y2="200" />
+        <line x1="130" y1="184" x2="130" y2="200" />
+        <line x1="200" y1="184" x2="200" y2="200" />
+        <line x1="270" y1="184" x2="270" y2="200" />
+        <line x1="340" y1="184" x2="340" y2="200" />
+      </g>
+      <rect width="400" height="200" fill="url(#sph-wc-vignette)" />
+    </svg>
   );
 }
 

@@ -1,12 +1,14 @@
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
-import { createGodwakeDelve } from '../../engine/delve';
+import { createGodwakeDelve, createSpellholdDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { PhandalinScene } from './PhandalinScene';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
+
+const SPELLHOLD_RENOWN_GATE = 1500;
 
 interface Building {
   id: string;
@@ -17,8 +19,12 @@ interface Building {
   lockedCta?: string;
 }
 
-function buildingsFor(druidGroveUnlocked: boolean, chapter1Cleared: boolean): Building[] {
-  return [
+function buildingsFor(
+  druidGroveUnlocked: boolean,
+  chapter1Cleared: boolean,
+  renown: number,
+): Building[] {
+  const buildings: Building[] = [
     {
       id: 'druid-grove',
       name: 'The Druid Grove',
@@ -45,6 +51,23 @@ function buildingsFor(druidGroveUnlocked: boolean, chapter1Cleared: boolean): Bu
       enabled: false,
     },
   ];
+  // Spellhold (Ch3) only surfaces after Ch1 is cleared. Hard renown gate at
+  // 1500 — until then the card reads as a sealed rumour, in the same shape
+  // as the Druid Grove card pre-unlock.
+  if (chapter1Cleared) {
+    const spellholdUnlocked = renown >= SPELLHOLD_RENOWN_GATE;
+    buildings.push({
+      id: 'spellhold',
+      name: 'Spellhold',
+      description: spellholdUnlocked
+        ? "A Cowled Wizards' charter at the harbourmaster's desk pays passage to an island off the Amn coast. The asylum on it is not on the public maps. Your name, when you sign, is the only one they ask for."
+        : `A rumour at the docks: an island prison the Cowled Wizards keep off the coast. None of the harbour-captains will speak the name without coin and a charter. Renown ${renown} / ${SPELLHOLD_RENOWN_GATE}.`,
+      enabled: spellholdUnlocked,
+      cta: 'Sail to Spellhold',
+      lockedCta: 'Beyond your renown',
+    });
+  }
+  return buildings;
 }
 
 export function HubScreen() {
@@ -70,6 +93,11 @@ export function HubScreen() {
 
   function handleEnterDungeon() {
     const delve = createGodwakeDelve();
+    startDelve(delve);
+  }
+
+  function handleSailToSpellhold() {
+    const delve = createSpellholdDelve();
     startDelve(delve);
   }
 
@@ -135,8 +163,12 @@ export function HubScreen() {
         </Panel>
       )}
 
-      <div className="grid md:grid-cols-3 gap-4">
-        {buildingsFor(druidGroveUnlocked, chapter1Cleared).map((b) => (
+      <div
+        className={`grid gap-4 ${
+          chapter1Cleared ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3'
+        }`}
+      >
+        {buildingsFor(druidGroveUnlocked, chapter1Cleared, character.renown).map((b) => (
           <Panel key={b.id} title={b.name}>
             <p className="text-[var(--color-text-secondary)] text-sm mb-4 min-h-[5rem]">
               {b.description}
@@ -149,7 +181,9 @@ export function HubScreen() {
                   ? handleEnterDungeon
                   : b.id === 'druid-grove'
                     ? goToDruidGrove
-                    : undefined
+                    : b.id === 'spellhold'
+                      ? handleSailToSpellhold
+                      : undefined
               }
             >
               {b.enabled ? (b.cta ?? 'Enter') : (b.lockedCta ?? 'Coming soon')}
