@@ -28,6 +28,11 @@ describe('xpForLevel', () => {
     expect(xpForLevel(4)).toBe(2700);
     expect(xpForLevel(5)).toBe(6500);
   });
+  it('uses tuned thresholds for levels 6-8', () => {
+    expect(xpForLevel(6)).toBe(9000);
+    expect(xpForLevel(7)).toBe(13000);
+    expect(xpForLevel(8)).toBe(18000);
+  });
 });
 
 describe('hasPendingLevelUp', () => {
@@ -38,7 +43,7 @@ describe('hasPendingLevelUp', () => {
     expect(hasPendingLevelUp({ ...SIR_BRICK, xp: 300 })).toBe(true);
   });
   it('false once level cap reached', () => {
-    expect(hasPendingLevelUp({ ...SIR_BRICK, level: 5, xp: 99999 })).toBe(false);
+    expect(hasPendingLevelUp({ ...SIR_BRICK, level: 8, xp: 99999 })).toBe(false);
   });
 });
 

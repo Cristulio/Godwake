@@ -112,8 +112,10 @@ export function initiativeModifier(character: Character): number {
   const dex = modifierFor(character, 'dex');
   const quirkMods = characterQuirkMods(character);
   const blessingMods = characterBlessingMods(character);
+  const remarkableAthlete = characterHasMechanic(character, 'remarkable-athlete') ? 2 : 0;
   return (
     dex +
+    remarkableAthlete +
     (quirkMods.initiativeMod ?? 0) +
     (blessingMods.initiativeBonus ?? 0) +
     (character.permanentInitBonus ?? 0)

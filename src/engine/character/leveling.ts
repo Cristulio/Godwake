@@ -4,10 +4,11 @@ import { effectiveAbilityScores } from './derived';
 import { getClass } from '../../content/classes';
 
 /**
- * 5e XP-to-level table, capped at level 5 (matches current Ch1 content).
- * Index 0 = level 1 = 0 xp. Index 1 = xp required to reach level 2, etc.
+ * XP-to-level table, capped at level 8. L1-L5 are 5e RAW; L6-L8 are tuned
+ * down from RAW so the current Ch1+Ch2 content can carry the cap raise
+ * without forcing 6+ repeat delves. Index 0 = level 1 = 0 xp.
  */
-const XP_TABLE = [0, 300, 900, 2700, 6500] as const;
+const XP_TABLE = [0, 300, 900, 2700, 6500, 9000, 13000, 18000] as const;
 
 export const MAX_LEVEL = XP_TABLE.length;
 
