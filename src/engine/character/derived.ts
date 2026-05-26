@@ -78,6 +78,7 @@ export function computeAC(character: Character): number {
   const blessingMods = characterBlessingMods(character);
   base += quirkMods.acMod ?? 0;
   base += blessingMods.acBonus ?? 0;
+  base += character.permanentAcBonus ?? 0;
 
   return base;
 }
@@ -111,7 +112,12 @@ export function initiativeModifier(character: Character): number {
   const dex = modifierFor(character, 'dex');
   const quirkMods = characterQuirkMods(character);
   const blessingMods = characterBlessingMods(character);
-  return dex + (quirkMods.initiativeMod ?? 0) + (blessingMods.initiativeBonus ?? 0);
+  return (
+    dex +
+    (quirkMods.initiativeMod ?? 0) +
+    (blessingMods.initiativeBonus ?? 0) +
+    (character.permanentInitBonus ?? 0)
+  );
 }
 
 /**

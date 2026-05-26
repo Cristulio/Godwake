@@ -10,7 +10,7 @@ import type {
 } from '../../types/combat';
 import type { Weapon } from '../../schemas/item';
 import { abilityModifier } from '../../types/abilities';
-import { critRange, computeAC, effectiveAbilityScores } from '../character/derived';
+import { critRange, computeAC, effectiveAbilityScores, characterHasMechanic } from '../character/derived';
 import { characterQuirkMods } from '../character/quirks';
 import { characterBlessingMods } from '../character/blessings';
 import { getItem } from '../../content/items';
@@ -134,6 +134,7 @@ export function playerAttack(
   const playerWounded = character.hp.current <= character.hp.max / 2;
 
   let attackBonus = abilMod + profBonus;
+  attackBonus += character.permanentAttackBonus ?? 0;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
@@ -279,8 +280,18 @@ export function playerAttack(
 }
 
 function markPlayerActionUsed(state: CombatState, character: Character): CombatState {
+  const attacksMade = (state.playerAttacksThisTurn ?? 0) + 1;
+  const maxAttacks = maxAttacksPerAction(character);
+  if (attacksMade < maxAttacks) {
+    return { ...state, playerAttacksThisTurn: attacksMade };
+  }
   character.actionEconomy = { ...character.actionEconomy, actionUsed: true };
-  return state;
+  return { ...state, playerAttacksThisTurn: attacksMade };
+}
+
+/** Fighter L5 Extra Attack grants 2 attacks per Attack action. */
+function maxAttacksPerAction(character: Character): number {
+  return characterHasMechanic(character, 'extra-attack') ? 2 : 1;
 }
 
 /**

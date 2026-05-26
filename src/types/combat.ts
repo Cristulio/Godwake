@@ -70,4 +70,6 @@ export interface CombatState {
   playerHasAttacked: boolean;
   /** Missed-attack rerolls remaining for this encounter (Tymora's Coin etc.). */
   rerollMissesEncounterRemaining: number;
+  /** Player attacks made on the current turn — supports Extra Attack at Fighter L5. Reset on turn change. */
+  playerAttacksThisTurn: number;
 }

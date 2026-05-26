@@ -163,6 +163,7 @@ export function createCombat(input: CreateCombatInput): CombatState {
     attackEventCounter: 0,
     playerHasAttacked: false,
     rerollMissesEncounterRemaining: blessingMods.rerollMissesPerEncounter ?? 0,
+    playerAttacksThisTurn: 0,
   };
 }
 

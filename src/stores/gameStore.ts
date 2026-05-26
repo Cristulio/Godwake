@@ -8,6 +8,7 @@ import { buildPlayerCharacter, type CharacterCreationInput } from '../engine/cha
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
 import { rollQuirks, characterQuirkMods } from '../engine/character/quirks';
 import { applyDelveStartUpgrades, applyPermanentUpgrade } from '../engine/character/upgrades';
+import { hasPendingLevelUp, applyLevelUp } from '../engine/character/leveling';
 
 function applyDelveStartQuirks(character: Character): Character {
   const mods = characterQuirkMods(character);
@@ -32,10 +33,14 @@ export type Screen =
   | 'reincarnation'
   | 'codex'
   | 'druid-grove'
-  | 'chapter2-teaser';
+  | 'chapter2-teaser'
+  | 'level-up';
 
-/** Renown granted per successful delve clear. */
-export const RENOWN_PER_DELVE_CLEAR = 50;
+/** Renown granted per successful delve clear (boss killed). */
+export const RENOWN_PER_DELVE_CLEAR = 25;
+
+/** Renown granted on a failed delve — small consolation for the soul. */
+export const RENOWN_PER_DELVE_FAILURE = 5;
 
 /** Renown threshold required to unlock the road to Athkatla (Chapter 2). */
 export const RENOWN_FOR_CHAPTER_2 = 500;
@@ -109,6 +114,9 @@ interface GameState {
 
   // Renown shop
   purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
+
+  // Leveling: applies one pending level. `overrides` may carry ASI choices etc.
+  applyPendingLevelUp: (overrides?: Partial<Character>) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -209,21 +217,34 @@ export const useGameStore = create<GameState>()(
       }
       const earnedGold = s.delve.goldEarned;
       const earnedXp = s.delve.xpEarned;
+      const wonBoss = s.delve.phase === 'completed';
+      const renownGain = wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
       const rested = longRest({
         ...s.character,
         goldInPocket: s.character.goldInPocket + earnedGold,
         xp: s.character.xp + earnedXp,
-        renown: s.character.renown + RENOWN_PER_DELVE_CLEAR,
+        renown: s.character.renown + renownGain,
         // Blessings were granted for the delve only — they wipe at the hub.
         blessings: [],
       });
-      const wonBoss = s.delve.phase === 'completed';
+      const screen = hasPendingLevelUp(rested) ? 'level-up' : 'hub';
       return {
         character: rested,
         delve: null,
         combat: null,
-        screen: 'hub',
+        screen,
         chapter1Cleared: s.chapter1Cleared || wonBoss,
+      };
+    }),
+
+  applyPendingLevelUp: (overrides) =>
+    set((s) => {
+      if (!s.character) return s;
+      if (!hasPendingLevelUp(s.character)) return { ...s, screen: 'hub' };
+      const leveled = applyLevelUp({ ...s.character, ...(overrides ?? {}) });
+      return {
+        character: leveled,
+        screen: hasPendingLevelUp(leveled) ? 'level-up' : 'hub',
       };
     }),
 

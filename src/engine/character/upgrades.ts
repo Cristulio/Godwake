@@ -20,6 +20,28 @@ export function applyPermanentUpgrade(character: Character, upgradeId: string): 
         hp: { ...character.hp, max: newMax, current: Math.max(character.hp.current, newMax) },
       };
     }
+    case 'mantle-of-the-wakened': {
+      const newMax = character.hp.max + 15;
+      return {
+        ...character,
+        hp: { ...character.hp, max: newMax, current: Math.max(character.hp.current, newMax) },
+      };
+    }
+    case 'heirloom-blade':
+      return {
+        ...character,
+        permanentAttackBonus: (character.permanentAttackBonus ?? 0) + 1,
+      };
+    case 'cloak-of-the-grove':
+      return {
+        ...character,
+        permanentAcBonus: (character.permanentAcBonus ?? 0) + 1,
+      };
+    case 'whisper-of-the-wild':
+      return {
+        ...character,
+        permanentInitBonus: (character.permanentInitBonus ?? 0) + 2,
+      };
     default:
       return character;
   }
@@ -56,6 +78,16 @@ export function applyDelveStartUpgrades(
             resources: { ...c.resources, secondWindAvailable: true },
           };
         }
+        break;
+      case 'tymoras-wager':
+        c = {
+          ...c,
+          delveBudgets: {
+            ...c.delveBudgets,
+            quirkRerollMissesRemaining:
+              (c.delveBudgets?.quirkRerollMissesRemaining ?? 0) + 1,
+          },
+        };
         break;
     }
   }

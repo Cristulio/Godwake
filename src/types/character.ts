@@ -96,4 +96,12 @@ export interface Character {
   goldInBank: number;
   goldInPocket: number;
   renown: number;
+
+  /**
+   * Permanent stat bonuses baked in from Druid Grove upgrades. Optional so
+   * legacy saves rehydrate without migration; treat undefined as 0.
+   */
+  permanentAcBonus?: number;
+  permanentAttackBonus?: number;
+  permanentInitBonus?: number;
 }

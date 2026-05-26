@@ -10,6 +10,7 @@ import { CodexScreen } from './components/codex/CodexScreen';
 import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
 import { QuirksTutorial } from './components/lore/QuirksTutorial';
 import { ReincarnationReveal } from './components/lore/ReincarnationReveal';
+import { LevelUpScreen } from './components/level/LevelUpScreen';
 
 function App() {
   const screen = useGameStore((s) => s.screen);
@@ -53,6 +54,9 @@ function App() {
       break;
     case 'reincarnation':
       content = <ReincarnationReveal />;
+      break;
+    case 'level-up':
+      content = <LevelUpScreen />;
       break;
     default:
       content = <TitleScreen />;

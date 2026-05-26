@@ -62,6 +62,7 @@ export function endTurn(state: CombatState, character: Character): CombatState {
     ...state,
     currentTurnIndex: nextIndex,
     round,
+    playerAttacksThisTurn: 0,
     log: [
       ...state.log,
       {

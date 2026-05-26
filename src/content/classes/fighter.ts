@@ -50,6 +50,24 @@ export const FIGHTER: Class = ClassSchema.parse({
         description: 'You choose a Martial Archetype that shapes the practice of your martial training.',
       },
     ],
+    '4': [
+      {
+        id: 'asi-4',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '5': [
+      {
+        id: 'extra-attack',
+        name: 'Extra Attack',
+        description:
+          'You can attack twice, instead of once, whenever you take the Attack action on your turn.',
+        mechanicKey: 'extra-attack',
+      },
+    ],
   },
   subclasses: [
     {
