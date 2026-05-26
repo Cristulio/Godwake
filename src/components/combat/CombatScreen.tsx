@@ -19,6 +19,7 @@ import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
 import { InitiativeTracker } from './InitiativeTracker';
+import { playMusic, stopMusic, playSfx } from '../../engine/audio';
 
 interface CombatScreenProps {
   character: Character;
@@ -63,6 +64,27 @@ export function CombatScreen({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.lastAttack?.id]);
+
+  // Combat music bed: fade in while combat is active, fade out on resolve.
+  useEffect(() => {
+    if (state.status === 'active') {
+      playMusic('combat_bed');
+    } else {
+      stopMusic();
+    }
+    return () => {
+      stopMusic();
+    };
+  }, [state.status]);
+
+  // Victory / death sting on combat resolution.
+  useEffect(() => {
+    if (state.status === 'player-victory') {
+      playSfx('victory_sting');
+    } else if (state.status === 'player-defeat') {
+      playSfx('death_sting');
+    }
+  }, [state.status]);
 
   // Monster turns auto-advance with timing that respects speed multiplier
   useEffect(() => {
@@ -169,6 +191,7 @@ export function CombatScreen({
   function handleSecondWind() {
     const roller = getActiveRoller();
     const next = useSecondWind({ roller, character, state });
+    playSfx('heal_chime');
     setCharacter({ ...character });
     setCombat(next);
   }
@@ -182,6 +205,7 @@ export function CombatScreen({
   function handleUseItem(inventoryIndex: number) {
     const roller = getActiveRoller();
     const next = useConsumable({ roller, character, state }, inventoryIndex);
+    playSfx('heal_chime');
     setPickingItem(false);
     setCharacter({ ...character });
     setCombat(next);

@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
+import { playSfx } from '../../engine/audio';
 import { Panel } from '../ui/Panel';
 import { getClass } from '../../content/classes';
 import { hpGainForLevelUp } from '../../engine/character/leveling';
@@ -24,6 +25,10 @@ export function LevelUpScreen() {
   const applyPendingLevelUp = useGameStore((s) => s.applyPendingLevelUp);
 
   const [asiPlan, setAsiPlan] = useState<Partial<Record<AbilityName, number>>>({});
+
+  useEffect(() => {
+    playSfx('level_up_sting');
+  }, []);
 
   if (!character) return null;
   const c = character;
