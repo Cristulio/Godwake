@@ -66,7 +66,7 @@ export function ActionBar({
     : '► Attack';
 
   return (
-    <div className="grid grid-cols-6 gap-2">
+    <div className="grid grid-cols-5 gap-2">
       <Button variant="primary" onClick={onAttack} disabled={!canAttack}>
         {attackLabel}
       </Button>
@@ -85,9 +85,6 @@ export function ActionBar({
         title="Free Action: regain your action this turn. Once per short rest."
       >
         Action Surge{surgeRemaining > 0 && ` (${surgeRemaining})`}
-      </Button>
-      <Button variant="secondary" disabled>
-        Dodge
       </Button>
       <Button
         variant={canUseItem ? 'primary' : 'secondary'}

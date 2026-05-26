@@ -22,23 +22,27 @@ interface StartingKit {
 
 function startingKitFor(classId: ClassId): StartingKit {
   switch (classId) {
-    case 'fighter':
+    case 'fighter': {
+      const longsword: ItemRef = { itemId: 'longsword' };
+      const leatherArmor: ItemRef = { itemId: 'leather-armor' };
+      const shield: ItemRef = { itemId: 'shield' };
       return {
         inventory: [
-          { itemId: 'longsword' },
-          { itemId: 'leather-armor' },
-          { itemId: 'shield' },
+          longsword,
+          leatherArmor,
+          shield,
           { itemId: 'dagger' },
           { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
         ],
         equipped: {
-          mainHand: { itemId: 'longsword' },
-          offHand: { itemId: 'shield' },
-          armor: { itemId: 'leather-armor' },
+          mainHand: longsword,
+          offHand: shield,
+          armor: leatherArmor,
         },
         goldInPocket: 25,
       };
+    }
     default:
       return {
         inventory: [],

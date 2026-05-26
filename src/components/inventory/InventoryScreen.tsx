@@ -47,13 +47,26 @@ export function InventoryScreen() {
 
   const groups = groupInventory(character.inventory);
 
-  function isEquippedRef(ref: ItemRef): boolean {
-    if (!character) return false;
-    return (
-      character.equipped.mainHand === ref ||
-      character.equipped.offHand === ref ||
-      character.equipped.armor === ref
-    );
+  // Identity-based comparison breaks across JSON persist/rehydrate AND the
+  // starting kit defines equipped slots with separate object literals from
+  // inventory. Resolve each equipped slot to an inventory index (identity
+  // first, itemId fallback) so equipped items in the bag are highlighted
+  // correctly in every state.
+  const equippedIdxSet = new Set<number>();
+  for (const slot of ['mainHand', 'offHand', 'armor'] as const) {
+    const ref = character.equipped[slot];
+    if (!ref) continue;
+    let idx = character.inventory.indexOf(ref);
+    if (idx === -1) {
+      idx = character.inventory.findIndex(
+        (inv, i) => !equippedIdxSet.has(i) && inv.itemId === ref.itemId,
+      );
+    }
+    if (idx !== -1) equippedIdxSet.add(idx);
+  }
+
+  function isEquippedIdx(idx: number): boolean {
+    return equippedIdxSet.has(idx);
   }
 
   function handleDragStart(e: DragEvent<HTMLDivElement>, inventoryIdx: number) {
@@ -108,7 +121,7 @@ export function InventoryScreen() {
       <header className="flex justify-between items-center mb-6 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
           <h1 className="text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-wider">
-            THE PACK
+            INVENTORY
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
             {character.name} · {character.inventory.length} items · AC {ac}
@@ -181,7 +194,7 @@ export function InventoryScreen() {
       </Panel>
 
       <Panel
-        title={`Pack (${character.inventory.length})`}
+        title={`Backpack (${character.inventory.length})`}
         className={`transition-colors ${dragOverList ? 'border-[var(--color-accent-amber)]' : ''}`}
       >
         <div
@@ -191,7 +204,7 @@ export function InventoryScreen() {
         >
           {character.inventory.length === 0 && (
             <div className="text-[var(--color-text-secondary)] text-sm italic py-4 text-center">
-              The pack is empty.
+              Your backpack is empty.
             </div>
           )}
 
@@ -201,10 +214,10 @@ export function InventoryScreen() {
                 {g.label}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {g.entries.map(({ ref, idx, item, stackCount }) => {
+                {g.entries.map(({ idx, item, stackCount }) => {
                   const slot = slotForItem(item.id);
                   const equippable = slot !== null;
-                  const equipped = isEquippedRef(ref);
+                  const equipped = isEquippedIdx(idx);
                   const hint = equipped
                     ? 'Equipped'
                     : equippable
