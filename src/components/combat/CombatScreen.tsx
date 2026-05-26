@@ -9,7 +9,9 @@ import {
   monsterAttack,
   playerAttack,
   useSecondWind,
+  useConsumable,
 } from '../../engine/combat';
+import { ItemPicker } from './ItemPicker';
 import { CombatLog } from './CombatLog';
 import { ActionBar } from './ActionBar';
 import { Button } from '../ui/Button';
@@ -47,6 +49,7 @@ export function CombatScreen({
   const [shake, setShake] = useState(false);
   const [confirmAbandon, setConfirmAbandon] = useState(false);
   const [autoEndNotice, setAutoEndNotice] = useState(false);
+  const [pickingItem, setPickingItem] = useState(false);
 
   // Mount dice overlay whenever a new attack event arrives
   useEffect(() => {
@@ -165,6 +168,14 @@ export function CombatScreen({
     setCombat(next);
   }
 
+  function handleUseItem(inventoryIndex: number) {
+    const roller = getActiveRoller();
+    const next = useConsumable({ roller, character, state }, inventoryIndex);
+    setPickingItem(false);
+    setCharacter({ ...character });
+    setCombat(next);
+  }
+
   function handleContinue() {
     onCombatResolved(state.status === 'player-victory' ? 'victory' : 'defeat');
   }
@@ -273,12 +284,21 @@ export function CombatScreen({
             state={state}
             onAttack={handleAttackClick}
             onSecondWind={handleSecondWind}
+            onUseItem={() => setPickingItem(true)}
             onEndTurn={handleEndTurn}
           />
         </>
       )}
 
       <CombatLog entries={state.log} />
+
+      {pickingItem && (
+        <ItemPicker
+          character={character}
+          onPick={handleUseItem}
+          onCancel={() => setPickingItem(false)}
+        />
+      )}
 
       {confirmAbandon && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/80">

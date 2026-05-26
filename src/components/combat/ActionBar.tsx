@@ -2,16 +2,25 @@ import { Button } from '../ui/Button';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
+import { getItem } from '../../content/items';
 
 interface ActionBarProps {
   character: Character;
   state: CombatState;
   onAttack: () => void;
   onSecondWind: () => void;
+  onUseItem: () => void;
   onEndTurn: () => void;
 }
 
-export function ActionBar({ character, state, onAttack, onSecondWind, onEndTurn }: ActionBarProps) {
+export function ActionBar({
+  character,
+  state,
+  onAttack,
+  onSecondWind,
+  onUseItem,
+  onEndTurn,
+}: ActionBarProps) {
   const playersTurn = isPlayerTurn(state);
   const active = state.status === 'active';
   const canAttack = playersTurn && active && !character.actionEconomy.actionUsed;
@@ -22,6 +31,16 @@ export function ActionBar({ character, state, onAttack, onSecondWind, onEndTurn 
     !character.actionEconomy.bonusActionUsed &&
     character.hp.current < character.hp.max;
   const canSecondWind = playersTurn && active && secondWindUsable;
+
+  const consumableCount = character.inventory.filter((ref) => {
+    try {
+      return getItem(ref.itemId).kind === 'consumable';
+    } catch {
+      return false;
+    }
+  }).length;
+  const canUseItem =
+    playersTurn && active && !character.actionEconomy.actionUsed && consumableCount > 0;
 
   const canEndTurn = playersTurn && active;
 
@@ -44,8 +63,12 @@ export function ActionBar({ character, state, onAttack, onSecondWind, onEndTurn 
       <Button variant="secondary" disabled>
         Dodge
       </Button>
-      <Button variant="secondary" disabled>
-        Item
+      <Button
+        variant={canUseItem ? 'primary' : 'secondary'}
+        onClick={onUseItem}
+        disabled={!canUseItem}
+      >
+        Item {consumableCount > 0 && `(${consumableCount})`}
       </Button>
       <Button variant="secondary" onClick={onEndTurn} disabled={!canEndTurn}>
         End Turn

@@ -56,7 +56,25 @@ export const ArmorSchema = z.object({
 });
 export type Armor = z.infer<typeof ArmorSchema>;
 
-export const ItemSchema = z.discriminatedUnion('kind', [WeaponSchema, ArmorSchema]);
+export const ConsumableSchema = z.object({
+  id: z.string(),
+  kind: z.literal('consumable'),
+  name: z.string(),
+  /** What category of effect — drives UI grouping. */
+  effect: z.enum(['heal', 'buff', 'utility']),
+  /** Heal expression like "2d4+2". Only present if effect='heal'. */
+  healDice: DiceExpressionStringSchema.optional(),
+  /** Cost in gp when bought. */
+  cost: z.number(),
+  weight: z.number(),
+  rarity: RaritySchema,
+  /** Action economy required: 'action' or 'bonus'. */
+  actionCost: z.enum(['action', 'bonus']),
+  description: z.string().optional(),
+});
+export type Consumable = z.infer<typeof ConsumableSchema>;
+
+export const ItemSchema = z.discriminatedUnion('kind', [WeaponSchema, ArmorSchema, ConsumableSchema]);
 export type Item = z.infer<typeof ItemSchema>;
 
 /** A reference to a specific item instance carried by a character. */

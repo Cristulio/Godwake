@@ -29,6 +29,8 @@ export function buildDefaultFighter(name: string = 'Sir Brick'): Character {
       { itemId: 'leather-armor' },
       { itemId: 'shield' },
       { itemId: 'dagger' },
+      { itemId: 'potion-of-healing' },
+      { itemId: 'potion-of-healing' },
     ],
     equipped: {
       mainHand: { itemId: 'longsword' },
