@@ -101,4 +101,10 @@ export interface Character {
   permanentAcBonus?: number;
   permanentAttackBonus?: number;
   permanentInitBonus?: number;
+  /**
+   * Extra attunement slots above the default. Bumped by Sage's Pact. The cap
+   * lives in `attunementSlotsCap()`; this field is only the additive bonus so
+   * legacy saves with `undefined` rehydrate to the default cap.
+   */
+  attunementSlotsBonus?: number;
 }

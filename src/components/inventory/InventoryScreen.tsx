@@ -4,7 +4,13 @@ import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { getItem } from '../../content/items';
 import { computeAC } from '../../engine/character/derived';
-import { slotForItem, type EquipSlot } from '../../engine/character/equip';
+import {
+  slotForItem,
+  attunementSlotsCap,
+  attunementSlotsUsed,
+  canEquip,
+  type EquipSlot,
+} from '../../engine/character/equip';
 import type { Item, ItemRef } from '../../schemas/item';
 import { ItemIcon } from './ItemIcon';
 import { ItemTooltip } from './ItemTooltip';
@@ -36,6 +42,8 @@ export function InventoryScreen() {
   const [dragOverList, setDragOverList] = useState(false);
 
   const ac = useMemo(() => (character ? computeAC(character) : 0), [character]);
+  const attUsed = useMemo(() => (character ? attunementSlotsUsed(character) : 0), [character]);
+  const attCap = useMemo(() => (character ? attunementSlotsCap(character) : 0), [character]);
 
   if (!character) {
     return (
@@ -92,6 +100,7 @@ export function InventoryScreen() {
     if (!ref) return;
     const targetSlot = slotForItem(ref.itemId);
     if (targetSlot !== slot) return;
+    if (character && !canEquip(character, ref.itemId)) return;
     equipFromInventory(idx);
   }
 
@@ -124,7 +133,17 @@ export function InventoryScreen() {
             INVENTORY
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-            {character.name} · {character.inventory.length} items · AC {ac}
+            {character.name} · {character.inventory.length} items · AC {ac} ·{' '}
+            <span
+              className={
+                attUsed >= attCap
+                  ? 'text-[var(--color-accent-amber)]'
+                  : undefined
+              }
+              title="Items requiring attunement bind to the soul. Sage's Pact raises the cap."
+            >
+              Attunement {attUsed}/{attCap}
+            </span>
           </p>
         </div>
         <Button variant="secondary" onClick={goToHub}>
@@ -218,32 +237,37 @@ export function InventoryScreen() {
                   const slot = slotForItem(item.id);
                   const equippable = slot !== null;
                   const equipped = isEquippedIdx(idx);
+                  const blocked = equippable && !equipped && !canEquip(character!, item.id);
                   const hint = equipped
                     ? 'Equipped'
-                    : equippable
-                      ? 'Click or drag to equip'
-                      : item.kind === 'consumable'
-                        ? 'Use in combat'
-                        : '';
+                    : blocked
+                      ? `No free attunement slot (${attUsed}/${attCap})`
+                      : equippable
+                        ? 'Click or drag to equip'
+                        : item.kind === 'consumable'
+                          ? 'Use in combat'
+                          : '';
                   return (
                     <div
                       key={idx}
-                      draggable={equippable && !equipped}
+                      draggable={equippable && !equipped && !blocked}
                       onDragStart={(e) => handleDragStart(e, idx)}
                       onMouseEnter={() => setHoverIdx(idx)}
                       onMouseLeave={() => setHoverIdx((c) => (c === idx ? null : c))}
                       onClick={() => {
-                        if (equippable && !equipped) equipFromInventory(idx);
+                        if (equippable && !equipped && !blocked) equipFromInventory(idx);
                       }}
                       className={`
                         relative flex items-center gap-3 p-2 border-2 transition-colors
                         ${equipped
                           ? 'border-[var(--color-accent-amber)]/60 bg-[var(--color-bg-panel-hover)]/40'
-                          : 'border-[var(--color-border-warm)]'}
-                        ${equippable && !equipped
-                          ? 'cursor-pointer hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)]'
+                          : blocked
+                            ? 'border-[var(--color-border-dim)] opacity-50'
+                            : 'border-[var(--color-border-warm)]'}
+                        ${equippable && !equipped && !blocked
+                          ? 'cursor-pointer hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)] cursor-grab active:cursor-grabbing'
                           : ''}
-                        ${equippable && !equipped ? 'cursor-grab active:cursor-grabbing' : ''}
+                        ${blocked ? 'cursor-not-allowed' : ''}
                       `}
                     >
                       <ItemIcon item={item} size={40} />
