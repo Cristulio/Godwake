@@ -91,6 +91,96 @@ const RAW: Quirk[] = [
     effect: 'You see the dead clearly. −1 to your first attack roll each combat.',
     modifiers: { firstAttackPenalty: -1 },
   }),
+  QuirkSchema.parse({
+    id: 'featherlight',
+    name: 'Featherlight',
+    sentiment: 'boon',
+    flavor:
+      'You move before you mean to. Doors open into rooms you have not yet decided to enter.',
+    effect: '+1 to initiative.',
+    modifiers: { initiativeMod: 1 },
+  }),
+  QuirkSchema.parse({
+    id: 'late-sleeper',
+    name: 'Late Sleeper',
+    sentiment: 'bane',
+    flavor:
+      'The world starts before you do. By the time you have your boots on, someone is already shouting.',
+    effect: '−2 to initiative.',
+    modifiers: { initiativeMod: -2 },
+  }),
+  QuirkSchema.parse({
+    id: 'silver-tongue',
+    name: 'Silver Tongue',
+    sentiment: 'boon',
+    flavor:
+      'Words come easy. The wrong ones especially — but those are the useful ones, mostly.',
+    effect: '+1 to Charisma checks.',
+    modifiers: { charismaMod: 1 },
+  }),
+  QuirkSchema.parse({
+    id: 'plain-face',
+    name: 'Plain Face',
+    sentiment: 'bane',
+    flavor:
+      'Nobody remembers your name on the first try. Sometimes not the second. You learned to repeat it without flinching.',
+    effect: '−1 to Charisma checks.',
+    modifiers: { charismaMod: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'glassbone',
+    name: 'Glassbone',
+    sentiment: 'bane',
+    flavor:
+      'An old fall the bones still remember. The new soul inherited the ache and the warning both.',
+    effect: '−1 AC.',
+    modifiers: { acMod: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'carrion-eye',
+    name: 'Carrion Eye',
+    sentiment: 'odd',
+    flavor:
+      'You read the weak the way a vulture reads a horizon. Patient. Certain. Already eating.',
+    effect: '+1 to-hit vs wounded enemies (below half HP).',
+    modifiers: { woundedAttackBonus: 1 },
+  }),
+  QuirkSchema.parse({
+    id: 'heavy-pockets',
+    name: 'Heavy Pockets',
+    sentiment: 'boon',
+    flavor:
+      'A coin always rolls into your boot. You stopped wondering whose it was a long time ago.',
+    effect: 'Start each delve with +5 gold.',
+    modifiers: { startBonusGold: 5 },
+  }),
+  QuirkSchema.parse({
+    id: 'pinchpurse',
+    name: 'Pinchpurse',
+    sentiment: 'bane',
+    flavor:
+      'Coin slips through your fingers like the room knows it owes you nothing. You count, you recount — it keeps going.',
+    effect: '−15% to gold rewards from delves.',
+    modifiers: { goldMultiplier: 0.85 },
+  }),
+  QuirkSchema.parse({
+    id: 'cold-touched',
+    name: 'Cold-Touched',
+    sentiment: 'odd',
+    flavor:
+      'Something from the deep dark followed you up. You don\'t feel the cold the way you should. Or fire, anymore.',
+    effect: 'Cantrips deal +1 cold damage. Vulnerable to fire damage.',
+    modifiers: {},
+  }),
+  QuirkSchema.parse({
+    id: 'beast-marked',
+    name: 'Beast-Marked',
+    sentiment: 'odd',
+    flavor:
+      'Dogs love you. Wolves keep their distance. Something between the two has its eye on you and you can feel it.',
+    effect: 'Beasts hesitate to attack you first. Domesticated animals follow you a little too closely.',
+    modifiers: {},
+  }),
 ];
 
 const POOL: Quirk[] = RAW;

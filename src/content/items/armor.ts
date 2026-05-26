@@ -40,4 +40,30 @@ export const SHIELD: Armor = ArmorSchema.parse({
   attunement: false,
 });
 
-export const ALL_ARMOR: Armor[] = [LEATHER_ARMOR, CHAIN_MAIL, SHIELD];
+export const STUDDED_LEATHER: Armor = ArmorSchema.parse({
+  id: 'studded-leather',
+  kind: 'armor',
+  name: 'Studded Leather',
+  category: 'light',
+  baseAC: 12,
+  stealthDisadvantage: false,
+  weight: 13,
+  cost: 45,
+  rarity: 'common',
+  attunement: false,
+});
+
+export const HALF_PLATE: Armor = ArmorSchema.parse({
+  id: 'half-plate',
+  kind: 'armor',
+  name: 'Half Plate',
+  category: 'medium',
+  baseAC: 15,
+  stealthDisadvantage: true,
+  weight: 40,
+  cost: 750,
+  rarity: 'common',
+  attunement: false,
+});
+
+export const ALL_ARMOR: Armor[] = [LEATHER_ARMOR, CHAIN_MAIL, SHIELD, STUDDED_LEATHER, HALF_PLATE];
