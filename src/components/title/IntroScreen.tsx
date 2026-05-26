@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface IntroScreenProps {
   onComplete: () => void;
@@ -37,37 +37,40 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
   const [idx, setIdx] = useState(0);
   const [typed, setTyped] = useState('');
   const [done, setDone] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const scene = SCENES[idx];
 
-  // Typewriter reveal
   useEffect(() => {
     setTyped('');
     setDone(false);
-    let mounted = true;
     let i = 0;
     const text = scene.text;
-    const interval = setInterval(() => {
-      if (!mounted) return;
+    intervalRef.current = setInterval(() => {
       i += 1;
       setTyped(text.slice(0, i));
       if (i >= text.length) {
-        clearInterval(interval);
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = null;
         setDone(true);
       }
     }, 22);
     return () => {
-      mounted = false;
-      clearInterval(interval);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      intervalRef.current = null;
     };
   }, [idx, scene.text]);
 
   function handleAdvance() {
+    // If still typing: STOP the interval and reveal the full line.
     if (!done) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      intervalRef.current = null;
       setTyped(scene.text);
       setDone(true);
       return;
     }
+    // If already shown: move to the next scene (or finish).
     if (idx >= SCENES.length - 1) {
       onComplete();
       return;
@@ -80,7 +83,7 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 gap-8 [background:radial-gradient(ellipse_at_center,#1a0e08_0%,#080404_100%)]">
       <div
-        className="max-w-2xl w-full bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-8 shadow-[0_8px_40px_rgba(0,0,0,0.6)] animate-fade-in"
+        className="max-w-2xl w-full bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-8 shadow-[0_8px_40px_rgba(0,0,0,0.6)] animate-fade-in select-none"
         onClick={handleAdvance}
         style={{ cursor: 'pointer' }}
       >
@@ -105,7 +108,7 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
           <span>
             {idx + 1} / {SCENES.length}
           </span>
-          <span>{done ? '► click to continue' : 'click to skip'}</span>
+          <span>{done ? '► click to continue' : '► click to skip text'}</span>
         </div>
       </div>
       <button

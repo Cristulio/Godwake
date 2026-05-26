@@ -19,10 +19,10 @@ export function createIronCellsDelve(): DelveState {
     {
       id: 'room-2',
       kind: 'combat',
-      title: 'The Kobold Tunnel',
+      title: 'The Mephit Cages',
       flavorText:
-        'A draft of cold air through a hole the goblins did not make. Two kobolds scuttle from the dark, dagger-bone in each clawed hand.',
-      monsters: [{ defId: 'kobold', count: 2, displayPrefix: 'Kobold' }],
+        'Glass jars line the wall — most cracked. Two chalk-grey mephits pour from the broken seals, claws first, leaving streaks of dust in the air.',
+      monsters: [{ defId: 'dust-mephit', count: 2, displayPrefix: 'Mephit' }],
       xpReward: 60,
     },
     {
@@ -36,11 +36,11 @@ export function createIronCellsDelve(): DelveState {
     {
       id: 'room-4',
       kind: 'combat',
-      title: 'The Vivisector\'s Antechamber',
+      title: 'The Vault Guardian',
       flavorText:
-        'A slab slick with old blood, and the cooling subject sits up as you enter. Irenicus has been busy.',
-      monsters: [{ defId: 'skeleton', count: 1 }],
-      xpReward: 90,
+        'An empty harness stands sentinel in the next chamber. The plates ring like a bell as it pivots to face you — a faint green light moves where the eyes should be.',
+      monsters: [{ defId: 'animated-armor', count: 1 }],
+      xpReward: 100,
     },
     {
       id: 'room-5',
@@ -53,11 +53,11 @@ export function createIronCellsDelve(): DelveState {
     {
       id: 'room-6',
       kind: 'boss',
-      title: 'The Warden\'s Hall',
+      title: 'Ilyich\'s Hall',
       flavorText:
-        'A wide stone hall. The Warden waits at the far end, chain-bound greatsword dragging behind it.',
-      monsters: [{ defId: 'goblin-warden', count: 1 }],
-      xpReward: 200,
+        'The duergar slaver waits at the centre of a wide stone hall. He spits on the floor when he sees you. "Another of his pets, are you? Walking. Tch. We\'ll see how long."',
+      monsters: [{ defId: 'duergar-ilyich', count: 1 }],
+      xpReward: 250,
     },
   ];
 

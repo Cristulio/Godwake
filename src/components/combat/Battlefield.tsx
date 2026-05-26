@@ -51,7 +51,7 @@ export function Battlefield({
   return (
     <div
       className={`
-        relative w-full min-h-[340px] border-2 border-[var(--color-border-warm)]
+        relative w-full h-[360px] border-2 border-[var(--color-border-warm)]
         overflow-hidden ${BG_BY_SCENE[scene]}
       `}
     >
@@ -66,8 +66,8 @@ export function Battlefield({
       {/* Edge vignette */}
       <div className="absolute inset-0 pointer-events-none [background:radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.55)_100%)]" />
 
-      <div className="relative flex items-end justify-between px-10 pt-8 pb-6 gap-6 min-h-[340px]">
-        <div className="shrink-0">
+      <div className="relative flex items-end justify-between px-10 pt-8 pb-6 gap-6 h-full">
+        <div className="shrink-0 w-[96px] flex justify-center">
           <BattlefieldSprite
             kind="player"
             character={character}
@@ -77,18 +77,23 @@ export function Battlefield({
           />
         </div>
 
-        <div className="flex items-end gap-8 flex-wrap justify-end max-w-[68%]">
+        {/* Fixed-grid enemy slots — dead sprites stay in their slot so the
+            battlefield doesn't reflow as enemies fall. */}
+        <div
+          className="grid grid-flow-col auto-cols-[96px] gap-6 items-end justify-end h-full pb-4 max-w-[70%]"
+        >
           {monsterCombatants.map((c) => (
-            <BattlefieldSprite
-              key={c.id}
-              kind="monster"
-              instance={c.instance}
-              isActiveTurn={currentTurnId === c.id}
-              facing="left"
-              selectable={selectingTarget}
-              onSelect={() => onSelectTarget(c.id)}
-              attackPulse={monsterAttackPulseFor(c)}
-            />
+            <div key={c.id} className="flex items-end justify-center h-full">
+              <BattlefieldSprite
+                kind="monster"
+                instance={c.instance}
+                isActiveTurn={currentTurnId === c.id}
+                facing="left"
+                selectable={selectingTarget}
+                onSelect={() => onSelectTarget(c.id)}
+                attackPulse={monsterAttackPulseFor(c)}
+              />
+            </div>
           ))}
         </div>
       </div>

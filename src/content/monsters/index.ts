@@ -3,8 +3,19 @@ import { GOBLIN } from './goblin';
 import { GOBLIN_WARDEN } from './goblin-warden';
 import { SKELETON } from './skeleton';
 import { KOBOLD } from './kobold';
+import { ILYICH } from './duergar-ilyich';
+import { DUST_MEPHIT } from './dust-mephit';
+import { ANIMATED_ARMOR } from './animated-armor';
 
-const ALL_MONSTERS: Monster[] = [GOBLIN, GOBLIN_WARDEN, SKELETON, KOBOLD];
+const ALL_MONSTERS: Monster[] = [
+  GOBLIN,
+  GOBLIN_WARDEN,
+  SKELETON,
+  KOBOLD,
+  ILYICH,
+  DUST_MEPHIT,
+  ANIMATED_ARMOR,
+];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
 
@@ -20,4 +31,4 @@ export function listMonsters(): Monster[] {
   return ALL_MONSTERS;
 }
 
-export { GOBLIN, GOBLIN_WARDEN, SKELETON, KOBOLD };
+export { GOBLIN, GOBLIN_WARDEN, SKELETON, KOBOLD, ILYICH, DUST_MEPHIT, ANIMATED_ARMOR };

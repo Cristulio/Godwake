@@ -1,0 +1,32 @@
+import { MonsterSchema, type Monster } from '../../schemas/monster';
+
+/**
+ * Dust Mephit — small elemental denizens of Irenicus's lab. They burst into
+ * choking dust when slain. Iconic Chapter 1 BG2 encounter.
+ */
+export const DUST_MEPHIT: Monster = MonsterSchema.parse({
+  id: 'dust-mephit',
+  name: 'Dust Mephit',
+  cr: '1/4',
+  size: 'small',
+  creatureType: 'elemental',
+  ac: 12,
+  maxHp: 10,
+  speed: 30,
+  abilityScores: { str: 5, dex: 14, con: 10, int: 9, wis: 11, cha: 10 },
+  passivePerception: 10,
+  actions: [
+    {
+      kind: 'attack',
+      name: 'Claws',
+      attackBonus: 4,
+      damage: '1d4+2',
+      damageType: 'slashing',
+      reach: 5,
+      description: 'It darts close, raking with chalk-white claws that leave a gritty smear.',
+    },
+  ],
+  immunities: ['poison'],
+  flavorText:
+    'A grey-skinned imp made of choking dust. The lab is thick with them — they swarm the bell-jars where Irenicus keeps his fresher specimens.',
+});

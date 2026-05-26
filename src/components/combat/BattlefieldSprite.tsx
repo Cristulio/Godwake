@@ -28,6 +28,24 @@ type MonsterProps = CommonProps & {
 
 export type BattlefieldSpriteProps = PlayerProps | MonsterProps;
 
+function monsterSpriteWidth(defId: string): string {
+  switch (defId) {
+    case 'goblin-warden':
+    case 'duergar-ilyich':
+      return '88px';
+    case 'animated-armor':
+      return '88px';
+    case 'skeleton':
+      return '76px';
+    case 'dust-mephit':
+      return '80px';
+    case 'kobold':
+      return '64px';
+    default:
+      return '72px';
+  }
+}
+
 export function BattlefieldSprite(props: BattlefieldSpriteProps) {
   const hpCurrent =
     props.kind === 'player' ? props.character.hp.current : props.instance.hp.current;
@@ -113,7 +131,7 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
           ${selectable ? 'drop-shadow-[0_0_18px_rgba(244,167,66,0.55)] hover:scale-[1.06] transition-transform' : ''}
           ${props.isActiveTurn && !dead ? 'drop-shadow-[0_0_18px_rgba(255,179,71,0.55)]' : ''}
         `}
-        style={{ width: props.kind === 'player' ? '84px' : props.kind === 'monster' && props.instance.defId === 'goblin-warden' ? '88px' : '72px' }}
+        style={{ width: props.kind === 'player' ? '84px' : monsterSpriteWidth(props.instance.defId) }}
       >
         {selectable && (
           <div className="absolute inset-0 border-2 border-[var(--color-accent-amber)] -m-1 pointer-events-none" />
