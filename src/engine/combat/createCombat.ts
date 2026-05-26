@@ -103,30 +103,7 @@ export function createCombat(input: CreateCombatInput): CombatState {
     return a.id.localeCompare(b.id);
   });
 
-  // Player-favored override: the player goes first by default. Only monsters
-  // marked `firstStrike: true` get to act before the player on round 1 (boss
-  // gimmick). Non-priority monsters keep their relative order behind the player.
-  const firstStrikeIds = new Set(
-    combatants
-      .filter((c) => c.kind === 'monster')
-      .filter((c) => getMonster((c as MonsterCombatant).instance.defId).firstStrike === true)
-      .map((c) => c.id),
-  );
-  const reordered: string[] = [];
-  // First-strike monsters, preserving their rolled order.
-  for (const r of initiativeRolls) {
-    if (firstStrikeIds.has(r.id)) reordered.push(r.id);
-  }
-  // Then player.
-  reordered.push('player');
-  // Then everyone else, preserving their rolled order.
-  for (const r of initiativeRolls) {
-    if (r.id === 'player') continue;
-    if (firstStrikeIds.has(r.id)) continue;
-    reordered.push(r.id);
-  }
-
-  const initiativeOrder = reordered;
+  const initiativeOrder = initiativeRolls.map((r) => r.id);
 
   const log = [
     {

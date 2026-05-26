@@ -14,6 +14,8 @@ export interface MonsterInstance {
   acRevealed: boolean;
   conditions: ActiveCondition[];
   actionEconomy: ActionEconomy;
+  /** Set true the first time a 'battle-rage' boss drops to/below half HP. Sticks for the rest of combat. */
+  bossRageActive?: boolean;
 }
 
 export interface PlayerCombatant {
