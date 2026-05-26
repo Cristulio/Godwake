@@ -68,6 +68,24 @@ export const FIGHTER: Class = ClassSchema.parse({
         mechanicKey: 'extra-attack',
       },
     ],
+    '6': [
+      {
+        id: 'asi-6',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '8': [
+      {
+        id: 'asi-8',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
   },
   subclasses: [
     {
@@ -81,6 +99,15 @@ export const FIGHTER: Class = ClassSchema.parse({
             name: 'Improved Critical',
             description: 'Your weapon attacks score a critical hit on a roll of 19 or 20.',
             mechanicKey: 'improved-critical',
+          },
+        ],
+        '7': [
+          {
+            id: 'remarkable-athlete',
+            name: 'Remarkable Athlete',
+            description:
+              'Your reflexes outpace the fight. You gain a permanent +2 bonus to initiative.',
+            mechanicKey: 'remarkable-athlete',
           },
         ],
       },

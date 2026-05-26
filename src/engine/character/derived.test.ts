@@ -152,6 +152,16 @@ describe('character derivation — human fighter', () => {
     expect(initiativeModifier(watched)).toBe(4); // DEX(2) + 2
   });
 
+  it('Remarkable Athlete adds +2 to initiative at Champion level 7', () => {
+    const champion7 = { ...human, level: 7, subclassId: 'champion' };
+    expect(initiativeModifier(champion7)).toBe(4); // DEX(2) + 2
+  });
+
+  it('Remarkable Athlete does not apply below Champion level 7', () => {
+    const champion6 = { ...human, level: 6, subclassId: 'champion' };
+    expect(initiativeModifier(champion6)).toBe(2); // DEX(2) only
+  });
+
   it("Tempus's Edge widens crit range by 1", () => {
     const withEdge = { ...human, blessings: ['tempus-edge'] };
     // Lv1 fighter — no Improved Critical — base 20 → edge brings it to 19-20
