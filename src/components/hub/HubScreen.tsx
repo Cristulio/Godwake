@@ -1,6 +1,6 @@
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
-import { useGameStore } from '../../stores/gameStore';
+import { useGameStore, RENOWN_FOR_CHAPTER_2 } from '../../stores/gameStore';
 import { createIronCellsDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
@@ -46,6 +46,8 @@ export function HubScreen() {
   const goToTitle = useGameStore((s) => s.goToTitle);
   const startDelve = useGameStore((s) => s.startDelve);
   const goToDruidGrove = useGameStore((s) => s.goToDruidGrove);
+  const goToChapter2Teaser = useGameStore((s) => s.goToChapter2Teaser);
+  const chapter1Cleared = useGameStore((s) => s.chapter1Cleared);
 
   if (!character) {
     return (
@@ -141,6 +143,12 @@ export function HubScreen() {
         ))}
       </div>
 
+      <ChapterTwoBanner
+        chapter1Cleared={chapter1Cleared}
+        renown={character.renown}
+        onTravel={goToChapter2Teaser}
+      />
+
       <div className="mt-8 grid md:grid-cols-4 gap-4 text-center">
         <Panel>
           <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Gold</div>
@@ -165,6 +173,98 @@ export function HubScreen() {
           </button>
         </Panel>
       </div>
+    </div>
+  );
+}
+
+interface ChapterTwoBannerProps {
+  chapter1Cleared: boolean;
+  renown: number;
+  onTravel: () => void;
+}
+
+function ChapterTwoBanner({ chapter1Cleared, renown, onTravel }: ChapterTwoBannerProps) {
+  const renownMet = renown >= RENOWN_FOR_CHAPTER_2;
+  const unlocked = chapter1Cleared && renownMet;
+
+  return (
+    <div
+      className={`mt-6 border-2 ${
+        unlocked
+          ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel)]'
+          : 'border-[var(--color-border-dim)] bg-[var(--color-bg-panel)] opacity-90'
+      } p-5`}
+    >
+      <div className="flex flex-col md:flex-row md:items-center gap-5">
+        <div className="flex-1">
+          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-[0.4em] mb-1">
+            The Road South
+          </div>
+          <h2
+            className={`text-xl md:text-2xl uppercase tracking-wider mb-2 ${
+              unlocked ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-text-secondary)]'
+            }`}
+          >
+            Athkatla — City of Coin
+          </h2>
+          <p className="text-[var(--color-text-secondary)] text-sm italic leading-relaxed mb-3 max-w-2xl">
+            {unlocked
+              ? 'A merchant caravan rolls south at dawn. The gilded city waits at the end of the Trade Way.'
+              : 'A rumor of gilded domes and counting houses. The road south is not yet yours to walk.'}
+          </p>
+          <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs uppercase tracking-widest">
+            <Requirement
+              met={chapter1Cleared}
+              label="Survive the Iron Cells"
+              detail={chapter1Cleared ? 'cleared' : 'not yet'}
+            />
+            <Requirement
+              met={renownMet}
+              label="Renown"
+              detail={`${renown} / ${RENOWN_FOR_CHAPTER_2}`}
+            />
+          </div>
+        </div>
+        <div className="md:w-56 flex md:justify-end">
+          <Button
+            variant={unlocked ? 'primary' : 'secondary'}
+            disabled={!unlocked}
+            onClick={unlocked ? onTravel : undefined}
+          >
+            {unlocked ? 'Travel south' : 'Sealed to you'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Requirement({
+  met,
+  label,
+  detail,
+}: {
+  met: boolean;
+  label: string;
+  detail: string;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <span
+        className={
+          met ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-text-dim)]'
+        }
+      >
+        {met ? '✓' : '✗'}
+      </span>
+      <span className="text-[var(--color-text-dim)]">{label}</span>
+      <span
+        className={
+          met ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-text-secondary)]'
+        }
+      >
+        {detail}
+      </span>
     </div>
   );
 }

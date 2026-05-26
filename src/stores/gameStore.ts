@@ -31,10 +31,14 @@ export type Screen =
   | 'delve'
   | 'reincarnation'
   | 'codex'
-  | 'druid-grove';
+  | 'druid-grove'
+  | 'chapter2-teaser';
 
 /** Renown granted per successful delve clear. */
 export const RENOWN_PER_DELVE_CLEAR = 50;
+
+/** Renown threshold required to unlock the road to Athkatla (Chapter 2). */
+export const RENOWN_FOR_CHAPTER_2 = 500;
 
 interface GameState {
   screen: Screen;
@@ -56,6 +60,8 @@ interface GameState {
   discoveredMonsters: string[];
   /** Druid Grove upgrades the player has purchased with Renown. Persists across reincarnation; wipes on new game. */
   unlockedUpgrades: string[];
+  /** True once the player has beaten Ilyich at least once on any incarnation. Gates Chapter 2 access. */
+  chapter1Cleared: boolean;
 
   // Navigation
   goToTitle: () => void;
@@ -63,6 +69,7 @@ interface GameState {
   goToDelve: () => void;
   goToReincarnation: () => void;
   goToDruidGrove: () => void;
+  goToChapter2Teaser: () => void;
 
   // Lifecycle
   startNewGame: (seed: string) => void;
@@ -119,12 +126,14 @@ export const useGameStore = create<GameState>()(
   quirksTutorialSeen: false,
   discoveredMonsters: [],
   unlockedUpgrades: [],
+  chapter1Cleared: false,
 
   goToTitle: () => set({ screen: 'title' }),
   goToHub: () => set({ screen: 'hub' }),
   goToDelve: () => set({ screen: 'delve' }),
   goToReincarnation: () => set({ screen: 'reincarnation' }),
   goToDruidGrove: () => set({ screen: 'druid-grove' }),
+  goToChapter2Teaser: () => set({ screen: 'chapter2-teaser' }),
 
   startNewGame: (seed) => {
     setActiveRoller(seed);
@@ -139,6 +148,7 @@ export const useGameStore = create<GameState>()(
       quirksTutorialSeen: false,
       discoveredMonsters: [],
       unlockedUpgrades: [],
+      chapter1Cleared: false,
       screen: 'character-creation',
     });
   },
@@ -207,11 +217,13 @@ export const useGameStore = create<GameState>()(
         // Blessings were granted for the delve only — they wipe at the hub.
         blessings: [],
       });
+      const wonBoss = s.delve.phase === 'completed';
       return {
         character: rested,
         delve: null,
         combat: null,
         screen: 'hub',
+        chapter1Cleared: s.chapter1Cleared || wonBoss,
       };
     }),
 
@@ -299,6 +311,7 @@ export const useGameStore = create<GameState>()(
         quirksTutorialSeen: state.quirksTutorialSeen,
         discoveredMonsters: state.discoveredMonsters,
         unlockedUpgrades: state.unlockedUpgrades,
+        chapter1Cleared: state.chapter1Cleared,
       }),
       version: 1,
       onRehydrateStorage: () => (state) => {
@@ -315,6 +328,10 @@ export const useGameStore = create<GameState>()(
         // Older saves predate the renown shop.
         if (state && !state.unlockedUpgrades) {
           state.unlockedUpgrades = [];
+        }
+        // Older saves predate Chapter 2 gating.
+        if (state && typeof state.chapter1Cleared !== 'boolean') {
+          state.chapter1Cleared = false;
         }
       },
     },
