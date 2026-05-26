@@ -24,9 +24,213 @@ export function MonsterPortrait({ defId, className = '' }: MonsterPortraitProps)
       return <DustMephitSvg className={className} />;
     case 'animated-armor':
       return <AnimatedArmorSvg className={className} />;
+    case 'bugbear':
+      return <BugbearSvg className={className} />;
+    case 'imp':
+      return <ImpSvg className={className} />;
     default:
       return <GoblinSvg className={className} />;
   }
+}
+
+function BugbearSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 38"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Bugbear Brute"
+    >
+      {/* Tufted ears, swept up like a hyena's */}
+      <polygon points="3,3 1,0 5,3" fill="#7a5028" />
+      <polygon points="21,3 23,0 19,3" fill="#7a5028" />
+      <rect x="2" y="2" width="1" height="1" fill="#3a2210" />
+      <rect x="21" y="2" width="1" height="1" fill="#3a2210" />
+      {/* Heavy brutish head */}
+      <rect x="5" y="3" width="14" height="8" fill="#7a5028" />
+      <rect x="5" y="3" width="14" height="1" fill="#3a2210" />
+      <rect x="4" y="5" width="1" height="5" fill="#5a3818" />
+      <rect x="19" y="5" width="1" height="5" fill="#5a3818" />
+      {/* Patchy fur tufts */}
+      <rect x="6" y="3" width="1" height="1" fill="#3a2210" />
+      <rect x="9" y="3" width="2" height="1" fill="#3a2210" />
+      <rect x="14" y="3" width="1" height="1" fill="#3a2210" />
+      <rect x="17" y="3" width="1" height="1" fill="#3a2210" />
+      {/* Mean little eyes — red, set deep */}
+      <rect x="7" y="5" width="3" height="2" fill="#1a1410" />
+      <rect x="14" y="5" width="3" height="2" fill="#1a1410" />
+      <rect x="8" y="6" width="1" height="1" fill="#b5302c" />
+      <rect x="15" y="6" width="1" height="1" fill="#b5302c" />
+      {/* Broad flat snout */}
+      <rect x="10" y="7" width="4" height="2" fill="#5a3818" />
+      <rect x="11" y="8" width="1" height="1" fill="#1a1410" />
+      <rect x="13" y="8" width="1" height="1" fill="#1a1410" />
+      {/* Tusks jutting up from lower jaw */}
+      <rect x="8" y="10" width="1" height="2" fill="#e8dcc4" />
+      <rect x="15" y="10" width="1" height="2" fill="#e8dcc4" />
+      {/* Snarling mouth */}
+      <rect x="7" y="9" width="10" height="2" fill="#1a1410" />
+      <rect x="9" y="9" width="1" height="1" fill="#e8dcc4" />
+      <rect x="11" y="9" width="1" height="2" fill="#e8dcc4" />
+      <rect x="13" y="9" width="1" height="2" fill="#e8dcc4" />
+      <rect x="15" y="9" width="1" height="1" fill="#e8dcc4" />
+      {/* Iron-studded leather collar (slaver mark) */}
+      <rect x="4" y="11" width="16" height="2" fill="#3a2210" />
+      <rect x="4" y="11" width="16" height="1" fill="#5a3818" />
+      <rect x="6" y="11" width="1" height="1" fill="#8c6232" />
+      <rect x="10" y="11" width="1" height="1" fill="#8c6232" />
+      <rect x="14" y="11" width="1" height="1" fill="#8c6232" />
+      <rect x="17" y="11" width="1" height="1" fill="#8c6232" />
+      {/* Hulking shoulders, hunched */}
+      <rect x="2" y="13" width="20" height="3" fill="#7a5028" />
+      <rect x="2" y="13" width="3" height="3" fill="#5a3818" />
+      <rect x="19" y="13" width="3" height="3" fill="#5a3818" />
+      {/* Hairy barrel chest */}
+      <rect x="4" y="16" width="16" height="9" fill="#7a5028" />
+      {/* Chest fur shading */}
+      <rect x="5" y="17" width="14" height="1" fill="#5a3818" />
+      <rect x="6" y="20" width="2" height="1" fill="#5a3818" />
+      <rect x="10" y="19" width="2" height="1" fill="#5a3818" />
+      <rect x="14" y="21" width="2" height="1" fill="#5a3818" />
+      <rect x="16" y="18" width="2" height="1" fill="#5a3818" />
+      {/* Crude leather strap across chest */}
+      <rect x="4" y="18" width="16" height="1" fill="#3a2210" />
+      <rect x="11" y="17" width="2" height="3" fill="#3a2210" />
+      <rect x="11" y="18" width="2" height="1" fill="#8c6232" />
+      {/* Massive arms */}
+      <rect x="1" y="16" width="3" height="9" fill="#7a5028" />
+      <rect x="20" y="16" width="3" height="9" fill="#7a5028" />
+      <rect x="1" y="16" width="1" height="9" fill="#5a3818" />
+      <rect x="22" y="16" width="1" height="9" fill="#5a3818" />
+      {/* Fists */}
+      <rect x="0" y="24" width="4" height="3" fill="#7a5028" />
+      <rect x="20" y="24" width="4" height="3" fill="#7a5028" />
+      <rect x="0" y="24" width="1" height="3" fill="#5a3818" />
+      {/* Morningstar — held high and angled, both hands grip the haft */}
+      <rect x="20" y="3" width="2" height="22" fill="#3a2210" />
+      <rect x="21" y="3" width="1" height="22" fill="#5a3818" />
+      {/* Spiked head of the morningstar — big spiky ball at top */}
+      <rect x="18" y="0" width="6" height="4" fill="#3a3228" />
+      <rect x="19" y="1" width="4" height="2" fill="#5a5248" />
+      <polygon points="18,0 17,-1 19,1" fill="#3a3228" />
+      <polygon points="24,0 25,-1 23,1" fill="#3a3228" />
+      <polygon points="21,-1 21,1 22,-1" fill="#3a3228" />
+      <polygon points="18,4 17,5 19,3" fill="#3a3228" />
+      <polygon points="24,4 25,5 23,3" fill="#3a3228" />
+      {/* Belt with iron ring */}
+      <rect x="4" y="25" width="16" height="2" fill="#1a1410" />
+      <rect x="10" y="25" width="2" height="2" fill="#8c6232" />
+      {/* Tattered breechcloth */}
+      <rect x="5" y="27" width="14" height="3" fill="#3a2210" />
+      <rect x="8" y="29" width="1" height="2" fill="#3a2210" />
+      <rect x="14" y="29" width="1" height="2" fill="#3a2210" />
+      {/* Thick legs, bowed */}
+      <rect x="5" y="30" width="5" height="6" fill="#7a5028" />
+      <rect x="14" y="30" width="5" height="6" fill="#7a5028" />
+      <rect x="5" y="30" width="1" height="6" fill="#5a3818" />
+      <rect x="18" y="30" width="1" height="6" fill="#5a3818" />
+      {/* Leg fur tufts */}
+      <rect x="7" y="32" width="1" height="1" fill="#3a2210" />
+      <rect x="16" y="33" width="1" height="1" fill="#3a2210" />
+      {/* Crude leather wraps on the calves */}
+      <rect x="5" y="34" width="5" height="1" fill="#3a2210" />
+      <rect x="14" y="34" width="5" height="1" fill="#3a2210" />
+      {/* Splayed clawed feet */}
+      <rect x="4" y="36" width="7" height="2" fill="#5a3818" />
+      <rect x="13" y="36" width="7" height="2" fill="#5a3818" />
+      <rect x="4" y="37" width="1" height="1" fill="#1a1410" />
+      <rect x="6" y="37" width="1" height="1" fill="#1a1410" />
+      <rect x="9" y="37" width="1" height="1" fill="#1a1410" />
+      <rect x="13" y="37" width="1" height="1" fill="#1a1410" />
+      <rect x="16" y="37" width="1" height="1" fill="#1a1410" />
+      <rect x="19" y="37" width="1" height="1" fill="#1a1410" />
+    </svg>
+  );
+}
+
+function ImpSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 22 28"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Imp"
+    >
+      {/* Bat wings spread wide behind */}
+      <polygon points="0,9 5,4 7,11 5,14" fill="#5a1818" />
+      <polygon points="22,9 17,4 15,11 17,14" fill="#5a1818" />
+      <polygon points="1,10 4,7 5,12" fill="#8c2828" opacity="0.55" />
+      <polygon points="21,10 18,7 17,12" fill="#8c2828" opacity="0.55" />
+      {/* Wing bones */}
+      <line x1="2" y1="6" x2="6" y2="13" stroke="#1a0808" strokeWidth="0.5" />
+      <line x1="20" y1="6" x2="16" y2="13" stroke="#1a0808" strokeWidth="0.5" />
+      <line x1="5" y1="4" x2="5" y2="13" stroke="#1a0808" strokeWidth="0.3" />
+      <line x1="17" y1="4" x2="17" y2="13" stroke="#1a0808" strokeWidth="0.3" />
+      {/* Crimson body — slender devil */}
+      <rect x="8" y="7" width="6" height="8" fill="#a83018" />
+      <rect x="7" y="8" width="1" height="6" fill="#8c2010" />
+      <rect x="14" y="8" width="1" height="6" fill="#8c2010" />
+      {/* Demon head — pointed chin */}
+      <rect x="7" y="2" width="8" height="5" fill="#a83018" />
+      <rect x="7" y="2" width="8" height="1" fill="#8c2010" />
+      <rect x="8" y="6" width="6" height="2" fill="#a83018" />
+      <polygon points="9,8 11,10 13,8" fill="#a83018" />
+      {/* Long curving horns */}
+      <rect x="6" y="0" width="1" height="3" fill="#3a1208" />
+      <rect x="15" y="0" width="1" height="3" fill="#3a1208" />
+      <rect x="5" y="1" width="1" height="2" fill="#3a1208" />
+      <rect x="16" y="1" width="1" height="2" fill="#3a1208" />
+      <rect x="4" y="2" width="1" height="1" fill="#3a1208" />
+      <rect x="17" y="2" width="1" height="1" fill="#3a1208" />
+      {/* Glowing yellow slit eyes */}
+      <rect x="8" y="3" width="2" height="2" fill="#1a0808" />
+      <rect x="12" y="3" width="2" height="2" fill="#1a0808" />
+      <rect x="8" y="3" width="1" height="1" fill="#f4d042" />
+      <rect x="13" y="4" width="1" height="1" fill="#f4d042" />
+      {/* Grin with tiny fangs */}
+      <rect x="8" y="5" width="6" height="1" fill="#1a0808" />
+      <rect x="9" y="6" width="1" height="1" fill="#e8dcc4" />
+      <rect x="12" y="6" width="1" height="1" fill="#e8dcc4" />
+      {/* Slender arms */}
+      <rect x="5" y="9" width="2" height="5" fill="#a83018" />
+      <rect x="15" y="9" width="2" height="5" fill="#a83018" />
+      {/* Clawed hands */}
+      <rect x="4" y="13" width="3" height="2" fill="#a83018" />
+      <rect x="15" y="13" width="3" height="2" fill="#a83018" />
+      <polygon points="4,15 3,17 5,16" fill="#1a0808" />
+      <polygon points="6,15 5,17 7,16" fill="#1a0808" />
+      <polygon points="15,15 14,17 16,16" fill="#1a0808" />
+      <polygon points="17,15 16,17 18,16" fill="#1a0808" />
+      {/* Stinger orb of dark energy in right hand (ranged caster motif) */}
+      <circle cx="17" cy="14" r="2" fill="#8c2828" opacity="0.7" />
+      <circle cx="17" cy="14" r="1" fill="#f4a02a" opacity="0.85" />
+      <rect x="17" y="14" width="1" height="1" fill="#fff" opacity="0.6" />
+      {/* Long whippy tail with arrowhead barb */}
+      <rect x="11" y="15" width="1" height="3" fill="#a83018" />
+      <rect x="12" y="17" width="1" height="2" fill="#a83018" />
+      <rect x="13" y="18" width="1" height="2" fill="#a83018" />
+      <rect x="14" y="19" width="1" height="2" fill="#a83018" />
+      <polygon points="14,21 17,21 15,24" fill="#3a1208" />
+      <polygon points="14,21 17,21 16,19" fill="#3a1208" />
+      {/* Goat-style legs */}
+      <rect x="8" y="15" width="2" height="6" fill="#a83018" />
+      <rect x="12" y="15" width="2" height="6" fill="#a83018" />
+      <rect x="8" y="15" width="1" height="6" fill="#8c2010" />
+      <rect x="12" y="15" width="1" height="6" fill="#8c2010" />
+      {/* Cloven hoof-feet */}
+      <rect x="7" y="21" width="4" height="3" fill="#3a1208" />
+      <rect x="11" y="21" width="4" height="3" fill="#3a1208" />
+      <rect x="8" y="23" width="1" height="1" fill="#1a0808" />
+      <rect x="10" y="23" width="1" height="1" fill="#1a0808" />
+      <rect x="12" y="23" width="1" height="1" fill="#1a0808" />
+      <rect x="14" y="23" width="1" height="1" fill="#1a0808" />
+      {/* Sulphur haze at feet */}
+      <ellipse cx="11" cy="26" rx="8" ry="1.5" fill="#8c2828" opacity="0.25" />
+      <ellipse cx="11" cy="27" rx="6" ry="0.8" fill="#f4a02a" opacity="0.15" />
+    </svg>
+  );
 }
 
 function IlyichSvg({ className }: { className?: string }) {

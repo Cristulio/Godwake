@@ -28,9 +28,12 @@ export function createIronCellsDelve(): DelveState {
       kind: 'combat',
       title: 'The Mephit Cages',
       flavorText:
-        'Glass jars line the wall — most cracked. Two chalk-grey mephits pour from the broken seals, claws first, leaving streaks of dust in the air.',
-      monsters: [{ defId: 'dust-mephit', count: 2, displayPrefix: 'Mephit' }],
-      xpReward: 60,
+        'Glass jars line the wall — most cracked. A small crimson imp perches on the highest shelf, laughing as it kicks one of the cages. Two chalk-grey mephits pour from the broken seals, claws first, leaving streaks of dust in the air.',
+      monsters: [
+        { defId: 'imp', count: 1 },
+        { defId: 'dust-mephit', count: 2, displayPrefix: 'Mephit' },
+      ],
+      xpReward: 100,
     },
     {
       id: 'room-4',
@@ -58,11 +61,13 @@ export function createIronCellsDelve(): DelveState {
     },
     {
       id: 'room-7',
-      kind: 'treasure',
-      title: 'A Forgotten Stash',
+      kind: 'combat',
+      title: 'The Bugbear\'s Trove',
       flavorText:
-        'A loose stone in the wall, prised open by long-dead hands. Coins glint among dust and dried bone.',
-      goldReward: 18,
+        'A side-chamber reeks of damp fur and old blood. A hulking goblinoid crouches over a pile of coin and scavenged trinkets — Ilyich\'s cell-keeper, woken cranky. It hefts a spiked club and grunts a challenge.',
+      monsters: [{ defId: 'bugbear', count: 1 }],
+      xpReward: 150,
+      goldReward: 35,
     },
     {
       id: 'room-8',

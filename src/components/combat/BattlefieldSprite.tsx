@@ -43,12 +43,16 @@ function monsterSpriteWidth(defId: string): string {
     case 'goblin-warden':
     case 'duergar-ilyich':
       return '80px';
+    case 'bugbear':
+      return '92px';
     case 'animated-armor':
       return '84px';
     case 'skeleton':
       return '70px';
     case 'dust-mephit':
       return '72px';
+    case 'imp':
+      return '64px';
     case 'kobold':
       return '50px';
     case 'goblin':
