@@ -4,12 +4,19 @@ import type { Character } from '../types/character';
 import type { CombatState } from '../types/combat';
 import type { DelveState } from '../types/delve';
 import { setActiveRoller, getActiveRoller } from '../engine/dice';
-import { buildDefaultFighter } from '../engine/character/defaultCharacter';
+import { buildPlayerCharacter, type CharacterCreationInput } from '../engine/character/defaultCharacter';
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
 import { rollQuirks } from '../engine/character/quirks';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
-export type Screen = 'title' | 'intro' | 'hub' | 'delve' | 'reincarnation' | 'codex';
+export type Screen =
+  | 'title'
+  | 'character-creation'
+  | 'intro'
+  | 'hub'
+  | 'delve'
+  | 'reincarnation'
+  | 'codex';
 
 interface GameState {
   screen: Screen;
@@ -38,6 +45,8 @@ interface GameState {
 
   // Lifecycle
   startNewGame: (seed: string) => void;
+  /** Commits a player's character-creation choices and proceeds to intro. */
+  commitCharacterCreation: (input: CharacterCreationInput) => void;
 
   // Character + combat
   setCharacter: (character: Character) => void;
@@ -93,10 +102,9 @@ export const useGameStore = create<GameState>()(
 
   startNewGame: (seed) => {
     setActiveRoller(seed);
-    const character = buildDefaultFighter();
     set({
       saveSeed: seed,
-      character,
+      character: null,
       combat: null,
       delve: null,
       taunt: null,
@@ -104,8 +112,13 @@ export const useGameStore = create<GameState>()(
       hasReincarnated: false,
       quirksTutorialSeen: false,
       discoveredMonsters: [],
-      screen: 'intro',
+      screen: 'character-creation',
     });
+  },
+
+  commitCharacterCreation: (input) => {
+    const character = buildPlayerCharacter(input);
+    set({ character, screen: 'intro' });
   },
 
   setCharacter: (character) => set({ character }),
