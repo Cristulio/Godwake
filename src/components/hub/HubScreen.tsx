@@ -164,7 +164,7 @@ export function HubScreen() {
         onTravel={goToChapter2Teaser}
       />
 
-      <div className="mt-8 grid md:grid-cols-4 gap-4 text-center">
+      <div className="mt-8 grid md:grid-cols-5 gap-4 text-center">
         <Panel>
           <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Gold</div>
           <div className="text-2xl text-[var(--color-accent-gold)]">{character.goldInBank + character.goldInPocket}</div>
@@ -176,6 +176,16 @@ export function HubScreen() {
         <Panel>
           <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">XP</div>
           <div className="text-2xl text-[var(--color-text-primary)]">{character.xp}</div>
+        </Panel>
+        <Panel>
+          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Pack</div>
+          <button
+            type="button"
+            onClick={useGameStore.getState().goToInventory}
+            className="text-2xl text-[var(--color-text-primary)] hover:text-[var(--color-accent-amber)] uppercase tracking-wider"
+          >
+            Open →
+          </button>
         </Panel>
         <Panel>
           <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Bestiary</div>

@@ -1,6 +1,7 @@
 import type { Character } from '../../types/character';
 import { getItem } from '../../content/items';
 import { Button } from '../ui/Button';
+import { ItemIcon } from '../inventory/ItemIcon';
 
 interface ItemPickerProps {
   character: Character;
@@ -56,10 +57,16 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
                   onClick={() => onPick(firstIdx)}
                   className="text-left p-3 border-2 border-[var(--color-border-warm)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)] transition-colors"
                 >
-                  <div className="flex justify-between items-start gap-3">
+                  <div className="flex items-start gap-3">
+                    <ItemIcon item={item} size={48} />
                     <div className="flex-1 min-w-0">
-                      <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
-                        {item.name}
+                      <div className="flex items-baseline justify-between gap-2">
+                        <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
+                          {item.name}
+                        </div>
+                        <div className="text-[var(--color-accent-amber)] font-mono text-lg shrink-0">
+                          ×{count}
+                        </div>
                       </div>
                       <div className="text-[var(--color-text-secondary)] text-xs italic mt-1">
                         {item.description}
@@ -68,9 +75,6 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
                         {item.actionCost === 'bonus' ? 'Bonus action' : 'Action'}
                         {item.healDice && ` · heal ${item.healDice}`}
                       </div>
-                    </div>
-                    <div className="text-[var(--color-accent-amber)] font-mono text-lg shrink-0">
-                      ×{count}
                     </div>
                   </div>
                 </button>
