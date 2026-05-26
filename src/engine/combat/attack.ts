@@ -143,6 +143,13 @@ export function playerAttack(
 
   let nextState: CombatState = {
     ...state,
+    // The player has now made an attack roll against this monster, so its AC
+    // becomes "known" — UI can reveal it.
+    combatants: state.combatants.map((c) => {
+      if (c.kind !== 'monster' || c.id !== targetId) return c;
+      if (c.instance.acRevealed) return c;
+      return { ...c, instance: { ...c.instance, acRevealed: true } };
+    }),
     log: [...state.log, ...logEntries],
     lastAttack: attackEvent,
     attackEventCounter: attackEvent.id,

@@ -13,7 +13,7 @@ import { CombatLog } from './CombatLog';
 import { ActionBar } from './ActionBar';
 import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
-import { Battlefield } from './Battlefield';
+import { Battlefield, type BattlefieldDecoration } from './Battlefield';
 import { InitiativeTracker } from './InitiativeTracker';
 
 interface CombatScreenProps {
@@ -24,6 +24,7 @@ interface CombatScreenProps {
   roomTitle?: string;
   roomLabel?: string;
   scene?: 'combat' | 'boss';
+  decoration?: BattlefieldDecoration;
 }
 
 export function CombatScreen({
@@ -34,6 +35,7 @@ export function CombatScreen({
   roomTitle,
   roomLabel,
   scene = 'combat',
+  decoration = 'generic',
 }: CombatScreenProps) {
   const setCombat = useGameStore((s) => s.setCombat);
   const setCharacter = useGameStore((s) => s.setCharacter);
@@ -187,13 +189,32 @@ export function CombatScreen({
 
       <InitiativeTracker state={state} character={character} />
 
-      <Battlefield
-        character={character}
-        state={state}
-        scene={scene}
-        selectingTarget={selectingTarget}
-        onSelectTarget={(id) => doAttack(id)}
-      />
+      <div className="relative">
+        <Battlefield
+          character={character}
+          state={state}
+          scene={scene}
+          decoration={decoration}
+          selectingTarget={selectingTarget}
+          onSelectTarget={(id) => doAttack(id)}
+        />
+
+        {overlayActive && state.lastAttack && (
+          <DiceRollOverlay
+            key={state.lastAttack.id}
+            attackerName={state.lastAttack.attackerName}
+            targetName={state.lastAttack.targetName}
+            weaponName={state.lastAttack.weaponName}
+            attackBonus={state.lastAttack.attackBonus}
+            rollNatural={state.lastAttack.natural}
+            total={state.lastAttack.total}
+            targetAC={state.lastAttack.targetAC}
+            hit={state.lastAttack.hit}
+            crit={state.lastAttack.crit}
+            onDismiss={() => setOverlayActive(false)}
+          />
+        )}
+      </div>
 
       {isResolved ? (
         <div className="flex flex-col items-center gap-4 mt-2 animate-fade-in">
@@ -230,22 +251,6 @@ export function CombatScreen({
       )}
 
       <CombatLog entries={state.log} />
-
-      {overlayActive && state.lastAttack && (
-        <DiceRollOverlay
-          key={state.lastAttack.id}
-          attackerName={state.lastAttack.attackerName}
-          targetName={state.lastAttack.targetName}
-          weaponName={state.lastAttack.weaponName}
-          attackBonus={state.lastAttack.attackBonus}
-          rollNatural={state.lastAttack.natural}
-          total={state.lastAttack.total}
-          targetAC={state.lastAttack.targetAC}
-          hit={state.lastAttack.hit}
-          crit={state.lastAttack.crit}
-          onDismiss={() => setOverlayActive(false)}
-        />
-      )}
 
       {confirmAbandon && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/80">

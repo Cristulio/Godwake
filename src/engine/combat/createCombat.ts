@@ -31,6 +31,7 @@ export function spawnMonsterInstance(def: Monster, displayName?: string): Monste
     displayName: displayName ?? def.name,
     hp: { current: def.maxHp, max: def.maxHp, temp: 0 },
     ac: def.ac,
+    acRevealed: false,
     conditions: [],
     actionEconomy: {
       actionUsed: false,

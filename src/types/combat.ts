@@ -10,6 +10,8 @@ export interface MonsterInstance {
   displayName: string;
   hp: HitPoints;
   ac: number;
+  /** True once the player has attacked this monster at least once. Reveals AC in the UI. */
+  acRevealed: boolean;
   conditions: ActiveCondition[];
   actionEconomy: ActionEconomy;
 }

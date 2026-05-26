@@ -5,6 +5,7 @@ import { computeAC } from '../../engine/character/derived';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
 import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
+import { SlashEffect } from './SlashEffect';
 
 type CommonProps = {
   isActiveTurn: boolean;
@@ -32,6 +33,7 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
     props.kind === 'player' ? props.character.hp.current : props.instance.hp.current;
   const hpMax = props.kind === 'player' ? props.character.hp.max : props.instance.hp.max;
   const ac = props.kind === 'player' ? computeAC(props.character) : props.instance.ac;
+  const acVisible = props.kind === 'player' ? true : props.instance.acRevealed;
   const name = props.kind === 'player' ? props.character.name : props.instance.displayName;
   const dead = hpCurrent <= 0;
   const hpPercent = (hpCurrent / hpMax) * 100;
@@ -39,10 +41,11 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
   const prevHp = useRef(hpCurrent);
   const [damageFloats, setDamageFloats] = useState<FloatingDamageItem[]>([]);
   const [hitFlash, setHitFlash] = useState(false);
+  const [slashes, setSlashes] = useState<{ id: number; direction: 'left-to-right' | 'right-to-left' }[]>([]);
   const [lunge, setLunge] = useState(false);
   const lastAttackPulse = useRef(props.attackPulse);
 
-  // Float damage / heal whenever HP changes
+  // Float damage / heal + slash effect whenever HP changes
   useEffect(() => {
     if (prevHp.current === hpCurrent) return;
     const delta = prevHp.current - hpCurrent;
@@ -53,11 +56,19 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
       setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1500);
       setHitFlash(true);
       setTimeout(() => setHitFlash(false), 260);
+
+      // Slash effect: comes from the attacker's side toward this sprite.
+      const direction: 'left-to-right' | 'right-to-left' =
+        props.facing === 'right' ? 'right-to-left' : 'left-to-right';
+      const slashId = Date.now() + Math.random();
+      setSlashes((s) => [...s, { id: slashId, direction }]);
+      setTimeout(() => setSlashes((s) => s.filter((x) => x.id !== slashId)), 350);
     } else if (delta < 0) {
       const id = Date.now() + Math.random();
       setDamageFloats((d) => [...d, { id, amount: -delta, kind: 'heal' }]);
       setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1500);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hpCurrent]);
 
   // Lunge only when this sprite has actually attacked (attackPulse bumps).
@@ -128,6 +139,9 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
             <div className="absolute inset-0 bg-[var(--color-accent-blood)] opacity-55 mix-blend-screen pointer-events-none" />
           )}
         </div>
+        {slashes.map((s) => (
+          <SlashEffect key={s.id} direction={s.direction} />
+        ))}
         <FloatingDamage items={damageFloats} />
         {dead && (
           <div className="absolute inset-x-0 bottom-2 flex items-center justify-center text-[var(--color-accent-blood)] text-[10px] uppercase tracking-[0.3em] font-bold">
@@ -158,7 +172,7 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
           />
         </div>
         <div className="text-[10px] text-[var(--color-text-dim)] font-mono text-center">
-          AC {ac}
+          AC {acVisible ? ac : '?'}
         </div>
       </div>
     </button>

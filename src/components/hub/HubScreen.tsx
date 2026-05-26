@@ -22,10 +22,10 @@ const BUILDINGS: Building[] = [
     enabled: false,
   },
   {
-    id: 'stonehill-inn',
-    name: 'Stonehill Inn',
+    id: 'iron-cells',
+    name: 'The Iron Cells',
     description:
-      'Phandalin\'s tavern, a warm room with a blackwood Delveboard at the back: job postings, dungeon maps, bounties pinned in dried wax.',
+      'A staircase down through Tresendar Manor\'s ruined cellar. The first dungeon under Phandalin.',
     enabled: true,
     cta: 'Delve',
   },
@@ -103,7 +103,7 @@ export function HubScreen() {
             <Button
               variant={b.enabled ? 'primary' : 'secondary'}
               disabled={!b.enabled}
-              onClick={b.id === 'stonehill-inn' ? handleEnterDungeon : undefined}
+              onClick={b.id === 'iron-cells' ? handleEnterDungeon : undefined}
             >
               {b.enabled ? (b.cta ?? 'Enter') : 'Coming soon'}
             </Button>

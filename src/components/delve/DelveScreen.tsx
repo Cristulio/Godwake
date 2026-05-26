@@ -6,12 +6,26 @@ import { getActiveRoller } from '../../engine/dice';
 import { withResetActionEconomy } from '../../engine/character/actions';
 import { getMonster } from '../../content/monsters';
 import { CombatScreen } from '../combat/CombatScreen';
+import type { BattlefieldDecoration } from '../combat/Battlefield';
 import { RestRoom } from './RestRoom';
 import { TreasureRoom } from './TreasureRoom';
 import { DelveSummary } from './DelveSummary';
 import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
+
+function decorationForRoom(roomId: string): BattlefieldDecoration {
+  switch (roomId) {
+    case 'room-1':
+      return 'iron-cells';
+    case 'room-3':
+      return 'vivisector-lab';
+    case 'room-5':
+      return 'wardens-hall';
+    default:
+      return 'generic';
+  }
+}
 
 export function DelveScreen() {
   const character = useGameStore((s) => s.character);
@@ -128,6 +142,7 @@ export function DelveScreen() {
           character={character}
           state={combat}
           scene={room.kind === 'boss' ? 'boss' : 'combat'}
+          decoration={decorationForRoom(room.id)}
           roomTitle={room.title.toUpperCase()}
           roomLabel={`${room.kind === 'boss' ? 'Boss · ' : ''}Round ${combat.round}`}
           onAbandon={() => useGameStore.getState().abandonDelve()}
