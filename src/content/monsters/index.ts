@@ -16,6 +16,10 @@ import { SHADOW } from './shadow';
 import { COWLED_ENFORCER } from './cowled-enforcer';
 import { SLAVER_CUIRASSIER } from './slaver-cuirassier';
 import { ATHKATLA_MAGISTRATE } from './athkatla-magistrate';
+import { BANDIT_CAPTAIN } from './bandit-captain';
+import { DUST_MEPHIT_ELDER } from './dust-mephit-elder';
+import { BONE_STALKER } from './bone-stalker';
+import { SHADOW_HOUND } from './shadow-hound';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -35,6 +39,10 @@ const ALL_MONSTERS: Monster[] = [
   COWLED_ENFORCER,
   SLAVER_CUIRASSIER,
   ATHKATLA_MAGISTRATE,
+  BANDIT_CAPTAIN,
+  DUST_MEPHIT_ELDER,
+  BONE_STALKER,
+  SHADOW_HOUND,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -69,4 +77,8 @@ export {
   COWLED_ENFORCER,
   SLAVER_CUIRASSIER,
   ATHKATLA_MAGISTRATE,
+  BANDIT_CAPTAIN,
+  DUST_MEPHIT_ELDER,
+  BONE_STALKER,
+  SHADOW_HOUND,
 };

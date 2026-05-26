@@ -131,6 +131,13 @@ export const MID_POOL: EncounterEntry[] = [
     ],
     xpReward: 170,
   },
+  {
+    title: 'The Cracked Bell-Jar',
+    flavorText:
+      'The largest jar on the bench has gone the colour of old ledger paper from the inside, and the lid is sitting on the floor beside it. Something three times the size of the others is uncoiling out.',
+    monsters: [{ defId: 'dust-mephit-elder', count: 1 }],
+    xpReward: 180,
+  },
 ];
 
 export const ELITE_POOL: EncounterEntry[] = [
@@ -171,5 +178,15 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'ghoul', count: 1 },
     ],
     xpReward: 220,
+  },
+  {
+    title: 'The Hangman\'s Pit',
+    flavorText:
+      'Two paupers were buried together in this hole and one of them has gotten back up wearing the other. A skeleton stands beside it, less ambitious — content with its own bones.',
+    monsters: [
+      { defId: 'bone-stalker', count: 1 },
+      { defId: 'skeleton', count: 1 },
+    ],
+    xpReward: 210,
   },
 ];

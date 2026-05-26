@@ -41,4 +41,38 @@ export const ANTITOXIN: Consumable = ConsumableSchema.parse({
     'A flat-tasting tincture in a clay phial. Gives advantage on saves against poison for one hour. Tastes of chalk and bitterness.',
 });
 
-export const ALL_CONSUMABLES: Consumable[] = [POTION_OF_HEALING, POTION_OF_GREATER_HEALING, ANTITOXIN];
+export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
+  id: 'potion-of-heroism',
+  kind: 'consumable',
+  name: 'Potion of Heroism',
+  effect: 'heal',
+  healDice: '3d6+6',
+  cost: 180,
+  weight: 0.5,
+  rarity: 'uncommon',
+  actionCost: 'action',
+  description:
+    'A pale gold liquid that smells of beaten copper and pipe-smoke. The label, in a hand that has worn off in places, calls it a draught of valour — drink before the fight, walk straighter into it.',
+});
+
+export const SCROLL_OF_HEALING_WORD: Consumable = ConsumableSchema.parse({
+  id: 'scroll-of-healing-word',
+  kind: 'consumable',
+  name: 'Scroll of Healing Word',
+  effect: 'heal',
+  healDice: '2d4+3',
+  cost: 90,
+  weight: 0.1,
+  rarity: 'common',
+  actionCost: 'bonus',
+  description:
+    'A strip of vellum copied in a hurried, priestly hand — a single word of Lathander\'s mercy, traced once and gone after the speaking. Quicker than a potion: a breath, not a swallow.',
+});
+
+export const ALL_CONSUMABLES: Consumable[] = [
+  POTION_OF_HEALING,
+  POTION_OF_GREATER_HEALING,
+  ANTITOXIN,
+  POTION_OF_HEROISM,
+  SCROLL_OF_HEALING_WORD,
+];

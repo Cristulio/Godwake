@@ -32,3 +32,6 @@ coverage/
 # Worktrees live in a sibling directory but if anyone accidentally creates one
 # inside the repo, don't track it.
 .worktrees/
+
+.briefs/
+.briefing.md

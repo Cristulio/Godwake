@@ -73,6 +73,14 @@ function monsterSpriteWidth(defId: string): string {
       return '88px';
     case 'athkatla-magistrate':
       return '92px';
+    case 'bandit-captain':
+      return '84px';
+    case 'dust-mephit-elder':
+      return '84px';
+    case 'bone-stalker':
+      return '78px';
+    case 'shadow-hound':
+      return '88px';
     default:
       return '60px';
   }

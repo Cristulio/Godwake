@@ -181,6 +181,51 @@ const RAW: Quirk[] = [
     effect: 'Flavor — beasts read the soul before the body.',
     modifiers: {},
   }),
+  QuirkSchema.parse({
+    id: 'old-soldier',
+    name: 'Old Soldier',
+    sentiment: 'boon',
+    flavor:
+      'The fight always gets worse before it ends. You learned that on a wall whose name you no longer remember, and the soul came back knowing it too.',
+    effect: '+1 to initiative. +1 to-hit vs wounded enemies (below half HP).',
+    modifiers: { initiativeMod: 1, woundedAttackBonus: 1 },
+  }),
+  QuirkSchema.parse({
+    id: 'limping',
+    name: 'Limping',
+    sentiment: 'bane',
+    flavor:
+      'An old wound the body did not inherit cleanly. The soul remembers the angle, the bones do not.',
+    effect: '−1 to initiative. −1 AC.',
+    modifiers: { initiativeMod: -1, acMod: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'crows-favor',
+    name: "Crow's Favor",
+    sentiment: 'odd',
+    flavor:
+      'You hesitate when the fight opens — then strike sure once you can see blood. The crows on the rafters have already picked their seat.',
+    effect: '−1 to-hit on your first attack each combat. +1 to-hit vs wounded enemies.',
+    modifiers: { firstAttackPenalty: -1, woundedAttackBonus: 1 },
+  }),
+  QuirkSchema.parse({
+    id: 'magpies-eye',
+    name: "Magpie's Eye",
+    sentiment: 'boon',
+    flavor:
+      'You see coin where others see floor. The Iron Cells were full of it, if you knew where to look. You knew.',
+    effect: 'Start each delve with +5 gold.',
+    modifiers: { startBonusGold: 5 },
+  }),
+  QuirkSchema.parse({
+    id: 'hollow-coin',
+    name: 'Hollow Coin',
+    sentiment: 'bane',
+    flavor:
+      'The purse always feels lighter than the count. You\'ve checked. The count is right. The purse is the liar.',
+    effect: '−10% to gold rewards from delves.',
+    modifiers: { goldMultiplier: 0.9 },
+  }),
 ];
 
 const POOL: Quirk[] = RAW;
