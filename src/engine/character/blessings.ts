@@ -55,9 +55,9 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
     if (m.rerollMissesPerEncounter !== undefined)
       acc.rerollMissesPerEncounter =
         (acc.rerollMissesPerEncounter ?? 0) + m.rerollMissesPerEncounter;
-    if (m.rerollDeathSavesPerDelve !== undefined)
-      acc.rerollDeathSavesPerDelve =
-        (acc.rerollDeathSavesPerDelve ?? 0) + m.rerollDeathSavesPerDelve;
+    if (m.extraStabiliseCharges !== undefined)
+      acc.extraStabiliseCharges =
+        (acc.extraStabiliseCharges ?? 0) + m.extraStabiliseCharges;
     if (m.critRangeBonus !== undefined)
       acc.critRangeBonus = (acc.critRangeBonus ?? 0) + m.critRangeBonus;
   }

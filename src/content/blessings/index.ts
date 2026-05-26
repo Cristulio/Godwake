@@ -49,10 +49,15 @@ const POOL: Blessing[] = [
     effect: 'Advantage on your first attack each combat.',
     modifiers: { firstAttackAdvantage: true },
   }),
-  // Ilmater's Patience removed from the shrine pool until the death-save
-  // system exists — the rerollDeathSavesPerDelve modifier had no engine
-  // reader, so picking it at a shrine did nothing. Restore here once
-  // applyDamage routes a downed player through a save before failure.
+  BlessingSchema.parse({
+    id: 'ilmaters-patience',
+    name: "Ilmater's Patience",
+    god: 'ilmater',
+    flavor: 'The Crying God knows your weight. He carries it a moment longer than you can.',
+    effect:
+      "Once per delve, when you would fall, the Crying God spares you — stabilise at 1 HP. Stacks: +1 stabilise charge.",
+    modifiers: { extraStabiliseCharges: 1 },
+  }),
   BlessingSchema.parse({
     id: 'silvanus-root',
     name: "Silvanus's Root",

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
-import { playerAttack, monsterAttack } from './attack';
+import { playerAttack, monsterAttack, applyDamage } from './attack';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
 import type { MonsterCombatant, CombatState } from '../../types/combat';
@@ -235,5 +235,65 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
     const next = monsterAttack({ roller, character: hero, state }, ilyichId);
     const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
     expect(rageLog).toBeUndefined();
+  });
+});
+
+describe('combat effects — stabilise (death-save replacement)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('free stabilise clamps a would-be-lethal blow to 1 HP and keeps combat active', () => {
+    const goblin = getMonster('goblin');
+    const hero = makeHuman();
+    hero.delveBudgets = { stabilisesUsed: 0 };
+    const roller = createDiceRoller(7);
+    const state = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+    expect(hero.hp.current).toBeGreaterThan(0);
+    const startMax = hero.hp.max;
+
+    const after = applyDamage(state, 'player', startMax + 50, hero);
+
+    expect(hero.hp.current).toBe(1);
+    expect(after.status).toBe('active');
+    expect(hero.delveBudgets?.stabilisesUsed).toBe(1);
+    const stabiliseLog = after.log.find((l) => l.text.includes("Ilmater's grip"));
+    expect(stabiliseLog).toBeDefined();
+  });
+
+  it('second lethal blow with no charges left drops the player', () => {
+    const goblin = getMonster('goblin');
+    const hero = makeHuman();
+    hero.delveBudgets = { stabilisesUsed: 0 };
+    const roller = createDiceRoller(7);
+    let state = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+
+    state = applyDamage(state, 'player', hero.hp.max + 50, hero);
+    expect(hero.hp.current).toBe(1);
+    expect(hero.delveBudgets?.stabilisesUsed).toBe(1);
+
+    state = applyDamage(state, 'player', 5, hero);
+    expect(hero.hp.current).toBe(0);
+    expect(hero.delveBudgets?.stabilisesUsed).toBe(1);
+    const stabiliseLogs = state.log.filter((l) => l.text.includes("Ilmater's grip"));
+    expect(stabiliseLogs).toHaveLength(1);
+  });
+
+  it("Ilmater's Patience grants a second stabilise charge", () => {
+    const goblin = getMonster('goblin');
+    const hero = makeHuman({ blessings: ['ilmaters-patience'] });
+    hero.delveBudgets = { stabilisesUsed: 0 };
+    const roller = createDiceRoller(7);
+    let state = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+
+    state = applyDamage(state, 'player', hero.hp.max + 50, hero);
+    expect(hero.hp.current).toBe(1);
+    expect(state.status).toBe('active');
+
+    state = applyDamage(state, 'player', 5, hero);
+    expect(hero.hp.current).toBe(1);
+    expect(state.status).toBe('active');
+    expect(hero.delveBudgets?.stabilisesUsed).toBe(2);
+
+    state = applyDamage(state, 'player', 5, hero);
+    expect(hero.hp.current).toBe(0);
   });
 });
