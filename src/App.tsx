@@ -8,6 +8,7 @@ import { DelveScreen } from './components/delve/DelveScreen';
 import { CodexScreen } from './components/codex/CodexScreen';
 import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
 import { QuirksTutorial } from './components/lore/QuirksTutorial';
+import { ReincarnationReveal } from './components/lore/ReincarnationReveal';
 
 function App() {
   const screen = useGameStore((s) => s.screen);
@@ -47,9 +48,7 @@ function App() {
       content = <CodexScreen />;
       break;
     case 'reincarnation':
-      content = (
-        <div className="p-8 text-[var(--color-text-primary)]">Reincarnation (TODO)</div>
-      );
+      content = <ReincarnationReveal />;
       break;
     default:
       content = <TitleScreen />;
