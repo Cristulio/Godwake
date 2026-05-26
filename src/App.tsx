@@ -43,6 +43,7 @@ function App() {
       {content}
       {taunt && (
         <IrenicusTaunt
+          speaker={taunt.speaker}
           context={taunt.context}
           seed={taunt.seed}
           onDismiss={dismissTaunt}

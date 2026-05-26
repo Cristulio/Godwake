@@ -6,7 +6,7 @@ import type { DelveState } from '../types/delve';
 import { setActiveRoller } from '../engine/dice';
 import { buildDefaultFighter } from '../engine/character/defaultCharacter';
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
-import type { TauntContext } from '../components/lore/IrenicusTaunt';
+import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
 export type Screen = 'title' | 'intro' | 'hub' | 'delve' | 'reincarnation' | 'codex';
 
@@ -18,8 +18,8 @@ interface GameState {
   combat: CombatState | null;
   /** Animation/turn-pacing multiplier. 1 = normal, 2 = fast forward. */
   speedMultiplier: 1 | 2;
-  /** Active Irenicus taunt context, or null if no overlay. */
-  taunt: { context: TauntContext; seed: number } | null;
+  /** Active soul-bond voice (Irenicus or Imoen) overlay, null if hidden. */
+  taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number } | null;
   /** True if the player has seen the intro already this save. */
   introSeen: boolean;
   /** Monster def ids the player has fought at least once. Powers the codex. */
@@ -51,7 +51,7 @@ interface GameState {
   setSpeed: (s: 1 | 2) => void;
 
   // Lore overlays
-  showTaunt: (context: TauntContext) => void;
+  showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext) => void;
   dismissTaunt: () => void;
   markIntroSeen: () => void;
 
@@ -174,8 +174,8 @@ export const useGameStore = create<GameState>()(
 
   setSpeed: (s) => set({ speedMultiplier: s }),
 
-  showTaunt: (context) =>
-    set({ taunt: { context, seed: Math.floor(Math.random() * 1000) } }),
+  showTaunt: (speaker, context) =>
+    set({ taunt: { speaker, context, seed: Math.floor(Math.random() * 1000) } }),
   dismissTaunt: () => set({ taunt: null }),
   markIntroSeen: () => set({ introSeen: true, screen: 'hub' }),
 

@@ -157,9 +157,18 @@ export function DelveScreen() {
               if (room.xpReward) addDelveReward(0, room.xpReward);
               setCombat(null);
               advanceRoom();
+              // Imoen whispers on the FIRST cleared room of the run.
+              const d = useGameStore.getState().delve;
+              if (d && d.roomsCleared === 0) {
+                useGameStore.getState().showTaunt('imoen', 'first-blood');
+              }
+              // Irenicus taunts after a boss clear.
+              if (room.kind === 'boss') {
+                useGameStore.getState().showTaunt('irenicus', 'chapter-clear');
+              }
             } else {
               setCombat(null);
-              useGameStore.getState().showTaunt('death');
+              useGameStore.getState().showTaunt('irenicus', 'death');
               failDelve();
             }
           }}
