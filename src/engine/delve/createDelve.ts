@@ -38,7 +38,7 @@ export function createIronCellsDelve(): DelveState {
       kind: 'combat',
       title: 'The Vault Guardian',
       flavorText:
-        'An empty harness stands sentinel in the next chamber. The plates ring like a bell as it pivots to face you — a faint green light moves where the eyes should be.',
+        'An empty harness stands sentinel in the next chamber. The plates ring like a bell as it pivots to face you — a faint green light moves where the eyes should be. The master\'s work.',
       monsters: [{ defId: 'animated-armor', count: 1 }],
       xpReward: 100,
     },

@@ -29,5 +29,5 @@ export const ANIMATED_ARMOR: Monster = MonsterSchema.parse({
   ],
   immunities: ['poison', 'psychic'],
   flavorText:
-    'An empty harness driven by a bound elemental. The plates ring like a struck bell when it walks. Irenicus uses dozens to guard his vaults.',
+    'An empty harness driven by a bound elemental. The plates ring like a struck bell when it walks. The master uses dozens to guard his vaults.',
 });

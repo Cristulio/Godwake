@@ -29,5 +29,5 @@ export const ILYICH: Monster = MonsterSchema.parse({
   ],
   resistances: ['poison'],
   flavorText:
-    'Ilyich led the duergar slavers Irenicus paid to break and feed his subjects. He has a guard\'s bored cruelty and a slaver\'s patience. Kill him and his men flee.',
+    'Ilyich led the duergar slavers the master paid to break and feed his subjects. He has a guard\'s bored cruelty and a slaver\'s patience. Kill him and his men flee.',
 });

@@ -15,18 +15,18 @@ const SCENES: { speaker?: string; text: string }[] = [
     text: 'You remember the man with the eyes that did not blink — the one who said, "You are mine now."',
   },
   {
-    speaker: 'A voice in the dark',
+    speaker: 'The voice in the dark',
     text: 'Bhaalspawn. Childe of the slain. You have proven exceptionally resilient. Even your sister\'s screams could not break you. Yet.',
   },
   {
     text: 'The cell door is not locked. He has left it open for you to walk.',
   },
   {
-    speaker: 'A voice in the dark',
+    speaker: 'The voice in the dark',
     text: 'You will work for me, whether you know it or not. The cellars beneath this place are mine — and so, in time, will be the rest. Walk, child. There is so much you have to learn.',
   },
   {
-    text: 'He calls himself Jon Irenicus.',
+    text: 'He gave no name. The unblinking eyes did not need one.',
   },
   {
     text: 'You are the work.',

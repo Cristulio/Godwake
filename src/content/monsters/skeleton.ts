@@ -19,7 +19,7 @@ export const SKELETON: Monster = MonsterSchema.parse({
       damage: '1d6+2',
       damageType: 'piercing',
       reach: 5,
-      description: 'A pitted blade still wedged in the bones of one of Irenicus\'s old subjects.',
+      description: 'A pitted blade still wedged in the bones of one of the master\'s old subjects.',
     },
   ],
   vulnerabilities: ['bludgeoning'],

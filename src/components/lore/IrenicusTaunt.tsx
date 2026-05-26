@@ -92,7 +92,9 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0 }: SoulVoi
     ? 'border-[var(--color-accent-blood)] shadow-[0_0_32px_rgba(181,48,44,0.45)]'
     : 'border-[var(--color-accent-amber)] shadow-[0_0_32px_rgba(244,167,66,0.35)]';
   const bgClass = isIrenicus ? 'bg-[#160a08]' : 'bg-[#1a1408]';
-  const speakerName = isIrenicus ? 'Jon Irenicus' : 'Imoen';
+  // Antagonist stays anonymous until the player has unmasked him through play.
+  // Imoen is named once she speaks (she introduces herself in her first whisper).
+  const speakerName = isIrenicus ? 'The voice in the dark' : 'A voice — small, frightened';
   const subtitle = isIrenicus
     ? '(through the soul-bond)'
     : '(through the soul-bond, faint)';
