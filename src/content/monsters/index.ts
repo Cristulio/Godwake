@@ -20,6 +20,12 @@ import { BANDIT_CAPTAIN } from './bandit-captain';
 import { DUST_MEPHIT_ELDER } from './dust-mephit-elder';
 import { BONE_STALKER } from './bone-stalker';
 import { SHADOW_HOUND } from './shadow-hound';
+import { MAD_MAGE_PRISONER } from './mad-mage-prisoner';
+import { BONEBOUND_TEST_SUBJECT } from './bonebound-test-subject';
+import { HOLLOW_SAGE } from './hollow-sage';
+import { WARDENS_APPRENTICE } from './wardens-apprentice';
+import { SLAYER_HOUND } from './slayer-hound';
+import { ASYLUM_DIRECTOR } from './asylum-director';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -43,6 +49,12 @@ const ALL_MONSTERS: Monster[] = [
   DUST_MEPHIT_ELDER,
   BONE_STALKER,
   SHADOW_HOUND,
+  MAD_MAGE_PRISONER,
+  BONEBOUND_TEST_SUBJECT,
+  HOLLOW_SAGE,
+  WARDENS_APPRENTICE,
+  SLAYER_HOUND,
+  ASYLUM_DIRECTOR,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -81,4 +93,10 @@ export {
   DUST_MEPHIT_ELDER,
   BONE_STALKER,
   SHADOW_HOUND,
+  MAD_MAGE_PRISONER,
+  BONEBOUND_TEST_SUBJECT,
+  HOLLOW_SAGE,
+  WARDENS_APPRENTICE,
+  SLAYER_HOUND,
+  ASYLUM_DIRECTOR,
 };

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { createIronCellsDelve, createGodwakeDelve } from './createDelve';
+import { createIronCellsDelve, createGodwakeDelve, createSpellholdDelve } from './createDelve';
+import { getMonster } from '../../content/monsters';
 
 describe('createIronCellsDelve', () => {
   it('produces 8 rooms in the expected slot pattern', () => {
@@ -91,5 +92,54 @@ describe('createGodwakeDelve', () => {
     expect(camp.monsters).toBeUndefined();
     expect(camp.goldReward).toBeUndefined();
     expect(camp.xpReward).toBeUndefined();
+  });
+});
+
+describe('createSpellholdDelve', () => {
+  it('produces 8 rooms in the warmup-shrine-mid-rest-elite-shrine-elite-boss pattern', () => {
+    const d = createSpellholdDelve(1);
+    expect(d.rooms).toHaveLength(8);
+    expect(d.rooms[0].kind).toBe('combat');
+    expect(d.rooms[1].kind).toBe('shrine');
+    expect(d.rooms[2].kind).toBe('combat');
+    expect(d.rooms[3].kind).toBe('rest');
+    expect(d.rooms[4].kind).toBe('combat');
+    expect(d.rooms[5].kind).toBe('shrine');
+    expect(d.rooms[6].kind).toBe('combat');
+    expect(d.rooms[7].kind).toBe('boss');
+  });
+
+  it('chapterId is chapter-3', () => {
+    const d = createSpellholdDelve(42);
+    expect(d.chapterId).toBe('chapter-3');
+  });
+
+  it('boss is always the Asylum Director', () => {
+    for (let s = 0; s < 10; s++) {
+      const d = createSpellholdDelve(s);
+      expect(d.rooms[7].monsters?.[0].defId).toBe('asylum-director');
+    }
+  });
+
+  it('is deterministic per seed', () => {
+    const a = createSpellholdDelve(42);
+    const b = createSpellholdDelve(42);
+    expect(a.rooms.map((r) => r.title)).toEqual(b.rooms.map((r) => r.title));
+    expect(a.rooms.map((r) => r.monsters)).toEqual(b.rooms.map((r) => r.monsters));
+  });
+
+  it('warmup room has exactly 1 enemy total', () => {
+    for (let s = 0; s < 10; s++) {
+      const d = createSpellholdDelve(s);
+      const totalCount =
+        d.rooms[0].monsters?.reduce((sum, m) => sum + m.count, 0) ?? 0;
+      expect(totalCount).toBe(1);
+    }
+  });
+
+  it('boss has battle-rage mechanic and a Hold Person action', () => {
+    const director = getMonster('asylum-director');
+    expect(director.bossMechanic).toBe('battle-rage');
+    expect(director.actions.some((a) => a.kind === 'paralyze' && a.name === 'Hold Person')).toBe(true);
   });
 });

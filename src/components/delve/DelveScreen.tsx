@@ -43,6 +43,10 @@ function decorationForRoom(roomId: string, chapterId: string): BattlefieldDecora
     if (roomId === 'room-8') return 'magistrate-hall';
     return 'athkatla-street';
   }
+  if (chapterId === 'chapter-3') {
+    if (roomId === 'room-8') return 'spellhold-warden-chamber';
+    return 'spellhold-corridor';
+  }
   switch (roomId) {
     case 'room-1':
     case 'room-3':
