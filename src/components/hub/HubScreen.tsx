@@ -14,32 +14,37 @@ interface Building {
   description: string;
   enabled: boolean;
   cta?: string;
+  lockedCta?: string;
 }
 
-const BUILDINGS: Building[] = [
-  {
-    id: 'druid-grove',
-    name: 'The Druid Grove',
-    description:
-      'The circle of Mielikki tends the Wellspring. They will return you to life when you fall — and shape what comes back.',
-    enabled: true,
-    cta: 'Tend the Soul',
-  },
-  {
-    id: 'iron-cells',
-    name: 'The Iron Cells',
-    description:
-      'A staircase down through Tresendar Manor\'s ruined cellar. The first dungeon under Phandalin.',
-    enabled: true,
-    cta: 'Delve',
-  },
-  {
-    id: 'lionshield-coster',
-    name: 'Lionshield Coster',
-    description: 'A modest trading post. Potions, scrolls, and gear for the road ahead.',
-    enabled: false,
-  },
-];
+function buildingsFor(hasReincarnated: boolean): Building[] {
+  return [
+    {
+      id: 'druid-grove',
+      name: 'The Druid Grove',
+      description: hasReincarnated
+        ? 'The circle of Mielikki tends the Wellspring. They will return you to life when you fall — and shape what comes back.'
+        : 'A clearing past the treeline. Smoke drifts from somewhere within, but no path opens for you. The Wellspring stirs only after the first fall.',
+      enabled: hasReincarnated,
+      cta: 'Tend the Soul',
+      lockedCta: 'Sealed to you',
+    },
+    {
+      id: 'iron-cells',
+      name: 'The Iron Cells',
+      description:
+        'A staircase down through Tresendar Manor\'s ruined cellar. The first dungeon under Phandalin.',
+      enabled: true,
+      cta: 'Delve',
+    },
+    {
+      id: 'lionshield-coster',
+      name: 'Lionshield Coster',
+      description: 'A modest trading post. Potions, scrolls, and gear for the road ahead.',
+      enabled: false,
+    },
+  ];
+}
 
 export function HubScreen() {
   const character = useGameStore((s) => s.character);
@@ -48,6 +53,7 @@ export function HubScreen() {
   const goToDruidGrove = useGameStore((s) => s.goToDruidGrove);
   const goToChapter2Teaser = useGameStore((s) => s.goToChapter2Teaser);
   const chapter1Cleared = useGameStore((s) => s.chapter1Cleared);
+  const hasReincarnated = useGameStore((s) => s.hasReincarnated);
 
   if (!character) {
     return (
@@ -121,7 +127,7 @@ export function HubScreen() {
       )}
 
       <div className="grid md:grid-cols-3 gap-4">
-        {BUILDINGS.map((b) => (
+        {buildingsFor(hasReincarnated).map((b) => (
           <Panel key={b.id} title={b.name}>
             <p className="text-[var(--color-text-secondary)] text-sm mb-4 min-h-[5rem]">
               {b.description}
@@ -137,7 +143,7 @@ export function HubScreen() {
                     : undefined
               }
             >
-              {b.enabled ? (b.cta ?? 'Enter') : 'Coming soon'}
+              {b.enabled ? (b.cta ?? 'Enter') : (b.lockedCta ?? 'Coming soon')}
             </Button>
           </Panel>
         ))}
