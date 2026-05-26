@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Remove a finished worktree after its feature branch has been merged.
+#
+# Usage:
+#   scripts/wt-clean <feature-name>
+#
+# Example:
+#   scripts/wt-clean quirks-expansion
+#
+# This removes the worktree directory and prunes git's worktree list. The
+# feat/<name> branch is preserved — delete it manually with
+# `git branch -d feat/<name>` (or -D if it isn't merged yet).
+
+set -euo pipefail
+
+if [ "${1:-}" = "" ]; then
+  echo "Usage: scripts/wt-clean <feature-name>"
+  exit 1
+fi
+
+NAME="$1"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+PARENT_DIR="$(dirname "$REPO_ROOT")"
+WORKTREE_PATH="$PARENT_DIR/DD-worktrees/$NAME"
+BRANCH="feat/$NAME"
+
+if [ ! -d "$WORKTREE_PATH" ]; then
+  echo "Error: $WORKTREE_PATH does not exist." >&2
+  echo "Active worktrees:"
+  git worktree list
+  exit 1
+fi
+
+echo "→ Removing worktree at $WORKTREE_PATH"
+git worktree remove "$WORKTREE_PATH"
+git worktree prune
+
+echo ""
+echo "✓ Worktree removed."
+echo ""
+echo "Branch $BRANCH is preserved. To delete it:"
+echo "  git branch -d $BRANCH      # if merged"
+echo "  git branch -D $BRANCH      # if you want to force-discard"

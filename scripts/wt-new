@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Create a new feature worktree for parallel Claude work.
+#
+# Usage:
+#   scripts/wt-new <feature-name>
+#
+# Example:
+#   scripts/wt-new quirks-expansion
+#
+# This creates a worktree at ../DD-worktrees/<feature-name> on a new branch
+# named feat/<feature-name>. It also seeds .claude/settings.local.json
+# (permissions + shared memory dir) so the new Claude session inherits the
+# project's setup.
+
+set -euo pipefail
+
+if [ "${1:-}" = "" ]; then
+  echo "Usage: scripts/wt-new <feature-name>"
+  echo "Example: scripts/wt-new quirks-expansion"
+  exit 1
+fi
+
+NAME="$1"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+PARENT_DIR="$(dirname "$REPO_ROOT")"
+WORKTREES_DIR="$PARENT_DIR/DD-worktrees"
+WORKTREE_PATH="$WORKTREES_DIR/$NAME"
+BRANCH="feat/$NAME"
+
+if [ -d "$WORKTREE_PATH" ]; then
+  echo "Error: $WORKTREE_PATH already exists." >&2
+  exit 1
+fi
+
+mkdir -p "$WORKTREES_DIR"
+
+echo "→ Creating worktree at $WORKTREE_PATH on branch $BRANCH"
+git worktree add "$WORKTREE_PATH" -b "$BRANCH"
+
+# Seed Claude settings so the new session has matching permissions + memory.
+if [ -f "$REPO_ROOT/.claude/settings.local.json" ]; then
+  mkdir -p "$WORKTREE_PATH/.claude"
+  cp "$REPO_ROOT/.claude/settings.local.json" "$WORKTREE_PATH/.claude/settings.local.json"
+  echo "→ Copied .claude/settings.local.json"
+fi
+
+echo ""
+echo "✓ Worktree ready."
+echo ""
+echo "  Path:   $WORKTREE_PATH"
+echo "  Branch: $BRANCH"
+echo ""
+echo "Next steps in a new terminal:"
+echo "  cd \"$WORKTREE_PATH\""
+echo "  npm install"
+echo "  claude"
+echo ""
+echo "When merged: scripts/wt-clean $NAME"
