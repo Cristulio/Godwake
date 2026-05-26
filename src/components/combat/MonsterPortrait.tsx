@@ -34,9 +34,438 @@ export function MonsterPortrait({ defId, className = '' }: MonsterPortraitProps)
       return <GhoulSvg className={className} />;
     case 'hobgoblin':
       return <HobgoblinSvg className={className} />;
+    case 'cult-fanatic':
+      return <CultFanaticSvg className={className} />;
+    case 'shadow':
+      return <ShadowSvg className={className} />;
+    case 'cowled-enforcer':
+      return <CowledEnforcerSvg className={className} />;
+    case 'slaver-cuirassier':
+      return <SlaverCuirassierSvg className={className} />;
+    case 'athkatla-magistrate':
+      return <AthkatlaMagistrateSvg className={className} />;
     default:
       return <GoblinSvg className={className} />;
   }
+}
+
+function CultFanaticSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 22 36"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Cult Fanatic"
+    >
+      {/* Hood crown — peaked back */}
+      <polygon points="7,1 11,-1 15,1 16,5 6,5" fill="#d8c8a8" />
+      <polygon points="7,1 11,-1 15,1 16,3 6,3" fill="#a89878" opacity="0.6" />
+      {/* Robe hood draping past shoulders */}
+      <rect x="5" y="4" width="12" height="6" fill="#d8c8a8" />
+      <rect x="4" y="6" width="1" height="4" fill="#a89878" />
+      <rect x="17" y="6" width="1" height="4" fill="#a89878" />
+      {/* Shadowed face inside the hood */}
+      <rect x="7" y="6" width="8" height="5" fill="#3a2818" />
+      {/* Sunken eye sockets, red coal eyes */}
+      <rect x="8" y="7" width="2" height="2" fill="#1a0e08" />
+      <rect x="12" y="7" width="2" height="2" fill="#1a0e08" />
+      <rect x="8" y="8" width="1" height="1" fill="#b5302c" />
+      <rect x="13" y="8" width="1" height="1" fill="#b5302c" />
+      {/* Mouth open in mid-shriek */}
+      <rect x="9" y="10" width="4" height="1" fill="#1a0e08" />
+      <rect x="10" y="10" width="1" height="1" fill="#e8dcc4" />
+      {/* Blood streak from collar — circle of dried blood */}
+      <rect x="5" y="10" width="12" height="1" fill="#5a1208" />
+      {/* Robe body — dirty white with grime */}
+      <rect x="4" y="11" width="14" height="14" fill="#d8c8a8" />
+      <rect x="4" y="11" width="14" height="1" fill="#a89878" />
+      {/* Grime smears */}
+      <rect x="6" y="14" width="2" height="3" fill="#7a6848" opacity="0.55" />
+      <rect x="13" y="16" width="3" height="2" fill="#7a6848" opacity="0.55" />
+      <rect x="8" y="20" width="4" height="1" fill="#5a1208" opacity="0.7" />
+      <rect x="11" y="22" width="2" height="2" fill="#5a1208" opacity="0.7" />
+      {/* Rope belt */}
+      <rect x="4" y="22" width="14" height="2" fill="#5a4028" />
+      <rect x="9" y="22" width="2" height="3" fill="#5a4028" />
+      <rect x="10" y="24" width="1" height="2" fill="#3a2818" />
+      {/* Arms — bare skinny forearms */}
+      <rect x="2" y="13" width="2" height="6" fill="#d8c8a8" />
+      <rect x="18" y="13" width="2" height="6" fill="#d8c8a8" />
+      <rect x="2" y="13" width="1" height="6" fill="#a89878" />
+      <rect x="19" y="13" width="1" height="6" fill="#a89878" />
+      <rect x="2" y="19" width="2" height="3" fill="#b5a282" />
+      <rect x="18" y="19" width="2" height="3" fill="#b5a282" />
+      {/* Sacrificial dagger held aloft in the right hand */}
+      <rect x="19" y="4" width="2" height="9" fill="#5a4028" />
+      <polygon points="18,4 22,4 20,-1" fill="#b5a282" />
+      <rect x="19" y="2" width="2" height="2" fill="#e8dcc4" />
+      <rect x="18" y="13" width="4" height="1" fill="#3a2818" />
+      {/* Off-hand grasping at the air */}
+      <rect x="1" y="20" width="3" height="2" fill="#b5a282" />
+      <rect x="0" y="21" width="1" height="1" fill="#3a2818" />
+      {/* Robe lower half — torn hem */}
+      <rect x="5" y="25" width="12" height="8" fill="#d8c8a8" />
+      <rect x="5" y="25" width="12" height="1" fill="#a89878" />
+      <polygon points="5,33 7,30 9,33" fill="#d8c8a8" />
+      <polygon points="9,33 11,30 13,33" fill="#d8c8a8" />
+      <polygon points="13,33 15,30 17,33" fill="#d8c8a8" />
+      <rect x="7" y="32" width="1" height="1" fill="#a89878" />
+      <rect x="11" y="32" width="1" height="1" fill="#a89878" />
+      <rect x="15" y="32" width="1" height="1" fill="#a89878" />
+      {/* Bare feet poking out */}
+      <rect x="6" y="33" width="3" height="2" fill="#b5a282" />
+      <rect x="13" y="33" width="3" height="2" fill="#b5a282" />
+      <rect x="6" y="35" width="3" height="1" fill="#7a6848" />
+      <rect x="13" y="35" width="3" height="1" fill="#7a6848" />
+    </svg>
+  );
+}
+
+function ShadowSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 22 36"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Shadow"
+    >
+      {/* Wisping head — tall and thin, fades at the top */}
+      <rect x="9" y="2" width="4" height="6" fill="#1a0e1a" opacity="0.55" />
+      <rect x="8" y="3" width="6" height="5" fill="#0a0610" />
+      <rect x="9" y="2" width="4" height="1" fill="#0a0610" opacity="0.55" />
+      <rect x="9" y="0" width="4" height="2" fill="#1a0e1a" opacity="0.25" />
+      {/* Two pinpricks of dead light for eyes */}
+      <rect x="9" y="5" width="1" height="1" fill="#7a82a0" />
+      <rect x="12" y="5" width="1" height="1" fill="#7a82a0" />
+      {/* Sloping shoulders that bleed into the body */}
+      <polygon points="3,11 11,8 19,11 19,15 3,15" fill="#0a0610" />
+      <polygon points="2,12 11,9 20,12 20,14 2,14" fill="#1a0e1a" opacity="0.4" />
+      {/* Tall narrow body, edges feathered */}
+      <rect x="5" y="14" width="12" height="14" fill="#0a0610" />
+      <rect x="4" y="15" width="1" height="12" fill="#1a0e1a" opacity="0.5" />
+      <rect x="17" y="15" width="1" height="12" fill="#1a0e1a" opacity="0.5" />
+      <rect x="3" y="17" width="1" height="8" fill="#1a0e1a" opacity="0.3" />
+      <rect x="18" y="17" width="1" height="8" fill="#1a0e1a" opacity="0.3" />
+      {/* Faint inner glow — necrotic violet */}
+      <rect x="9" y="16" width="4" height="6" fill="#3a1a4a" opacity="0.55" />
+      <rect x="10" y="18" width="2" height="3" fill="#5a2a6a" opacity="0.5" />
+      {/* Long reaching arms — left arm extended toward viewer */}
+      <rect x="0" y="17" width="5" height="2" fill="#0a0610" />
+      <rect x="0" y="17" width="5" height="1" fill="#1a0e1a" opacity="0.55" />
+      <polygon points="0,17 -1,16 -1,20 0,19" fill="#1a0e1a" opacity="0.4" />
+      {/* Long-fingered claw at the end of the left arm */}
+      <rect x="-1" y="16" width="2" height="4" fill="#0a0610" />
+      <polygon points="-1,16 -3,14 -1,17" fill="#0a0610" />
+      <polygon points="-1,18 -3,20 -1,19" fill="#0a0610" />
+      <polygon points="-1,20 -3,22 -1,21" fill="#0a0610" />
+      {/* Right arm trailing back, less reach */}
+      <rect x="17" y="18" width="4" height="2" fill="#0a0610" />
+      <polygon points="21,18 23,20 21,20" fill="#0a0610" />
+      {/* Body fading into a ground-bound trail (no feet) */}
+      <polygon points="5,28 17,28 20,34 2,34" fill="#0a0610" />
+      <polygon points="4,30 18,30 21,36 1,36" fill="#0a0610" opacity="0.7" />
+      <polygon points="3,32 19,32 22,36 0,36" fill="#0a0610" opacity="0.4" />
+      {/* Cold breath wisps trailing off the silhouette */}
+      <rect x="6" y="10" width="1" height="2" fill="#7a82a0" opacity="0.35" />
+      <rect x="15" y="11" width="1" height="2" fill="#7a82a0" opacity="0.35" />
+      <rect x="8" y="22" width="1" height="2" fill="#7a82a0" opacity="0.25" />
+      <rect x="13" y="24" width="1" height="2" fill="#7a82a0" opacity="0.25" />
+    </svg>
+  );
+}
+
+function CowledEnforcerSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 22 36"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Cowled Enforcer"
+    >
+      {/* Tall peaked hood */}
+      <polygon points="8,0 11,-2 14,0 16,5 6,5" fill="#4a4858" />
+      <polygon points="8,0 11,-2 14,0 15,3 7,3" fill="#2a2838" opacity="0.7" />
+      {/* Hood draping past the shoulders */}
+      <rect x="5" y="4" width="12" height="6" fill="#4a4858" />
+      <rect x="4" y="6" width="1" height="5" fill="#2a2838" />
+      <rect x="17" y="6" width="1" height="5" fill="#2a2838" />
+      {/* Hood trim */}
+      <rect x="5" y="4" width="12" height="1" fill="#7a7888" />
+      {/* Silver featureless mask — full face plate */}
+      <rect x="7" y="5" width="8" height="6" fill="#b5b5c8" />
+      <rect x="7" y="5" width="8" height="1" fill="#e8e8f0" />
+      <rect x="7" y="10" width="8" height="1" fill="#5a5a78" />
+      <rect x="7" y="5" width="1" height="6" fill="#7a7a98" />
+      <rect x="14" y="5" width="1" height="6" fill="#7a7a98" />
+      {/* Two narrow eye slits — empty black */}
+      <rect x="9" y="7" width="2" height="1" fill="#0a0a18" />
+      <rect x="11" y="7" width="2" height="1" fill="#0a0a18" />
+      {/* Faint engraved sigil on the forehead of the mask */}
+      <rect x="10" y="6" width="2" height="1" fill="#7a7a98" opacity="0.7" />
+      {/* High silver collar visible above the robe */}
+      <rect x="6" y="11" width="10" height="2" fill="#b5b5c8" />
+      <rect x="6" y="11" width="10" height="1" fill="#e8e8f0" />
+      <rect x="6" y="12" width="10" height="1" fill="#5a5a78" />
+      {/* Body robe — deep grey, formal cut */}
+      <rect x="4" y="13" width="14" height="14" fill="#3a3848" />
+      <rect x="4" y="13" width="14" height="1" fill="#5a5868" />
+      {/* Vertical seam down center */}
+      <rect x="10" y="13" width="2" height="14" fill="#2a2838" />
+      {/* Silver buckle/clasp at sternum */}
+      <rect x="10" y="16" width="2" height="2" fill="#b5b5c8" />
+      <rect x="10" y="16" width="2" height="1" fill="#e8e8f0" />
+      {/* Wide sleeves, draping inward */}
+      <polygon points="4,13 0,18 0,24 4,22" fill="#3a3848" />
+      <polygon points="18,13 22,18 22,24 18,22" fill="#3a3848" />
+      <polygon points="4,13 1,18 4,18" fill="#2a2838" opacity="0.6" />
+      <polygon points="18,13 21,18 18,18" fill="#2a2838" opacity="0.6" />
+      {/* Sleeve cuffs */}
+      <rect x="0" y="22" width="5" height="2" fill="#7a7888" />
+      <rect x="17" y="22" width="5" height="2" fill="#7a7888" />
+      {/* Right hand raised, casting — pale palm out */}
+      <rect x="0" y="22" width="3" height="3" fill="#d8c4a8" />
+      <rect x="0" y="22" width="3" height="1" fill="#a89878" />
+      {/* Force-bolt orb building in the right hand — pale violet light */}
+      <circle cx="1" cy="26" r="3" fill="#a48ee0" opacity="0.55" />
+      <circle cx="1" cy="26" r="2" fill="#e8d4ff" opacity="0.75" />
+      <circle cx="1" cy="26" r="1" fill="#ffffff" opacity="0.9" />
+      {/* Left hand at the side, holding a staff casually */}
+      <rect x="19" y="22" width="3" height="3" fill="#d8c4a8" />
+      <rect x="19" y="22" width="3" height="1" fill="#a89878" />
+      <rect x="21" y="2" width="1" height="32" fill="#3a2418" />
+      <circle cx="21.5" cy="2" r="2" fill="#b5b5c8" />
+      <circle cx="21.5" cy="2" r="1" fill="#e8e8f0" />
+      {/* Belt sash */}
+      <rect x="4" y="25" width="14" height="2" fill="#1a1828" />
+      <rect x="4" y="25" width="14" height="1" fill="#3a3848" />
+      {/* Lower robe — flowing down */}
+      <rect x="5" y="27" width="12" height="7" fill="#3a3848" />
+      <rect x="5" y="27" width="12" height="1" fill="#5a5868" />
+      <polygon points="5,34 6,32 8,34" fill="#3a3848" />
+      <polygon points="9,34 11,32 13,34" fill="#3a3848" />
+      <polygon points="14,34 16,32 17,34" fill="#3a3848" />
+      {/* Boots */}
+      <rect x="6" y="33" width="3" height="3" fill="#1a1828" />
+      <rect x="13" y="33" width="3" height="3" fill="#1a1828" />
+      <rect x="6" y="35" width="3" height="1" fill="#0a0a18" />
+      <rect x="13" y="35" width="3" height="1" fill="#0a0a18" />
+    </svg>
+  );
+}
+
+function SlaverCuirassierSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 22 36"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Slaver Cuirassier"
+    >
+      {/* Tall lacquered helm with brim */}
+      <rect x="6" y="1" width="10" height="5" fill="#1a1410" />
+      <rect x="6" y="0" width="10" height="2" fill="#0a0808" />
+      <rect x="5" y="5" width="12" height="1" fill="#3a2418" />
+      <rect x="6" y="1" width="10" height="1" fill="#3a3228" />
+      {/* Red plume */}
+      <rect x="10" y="-2" width="2" height="3" fill="#b5302c" />
+      <polygon points="9,-2 11,-4 13,-2" fill="#8c1818" />
+      {/* Face shadowed under brim, sun-bronzed */}
+      <rect x="7" y="6" width="8" height="4" fill="#a87838" />
+      <rect x="7" y="6" width="8" height="1" fill="#5a3c1c" />
+      {/* Eyes — cold professional */}
+      <rect x="8" y="7" width="2" height="1" fill="#1a1410" />
+      <rect x="12" y="7" width="2" height="1" fill="#1a1410" />
+      <rect x="8" y="7" width="1" height="1" fill="#e8dcc4" />
+      <rect x="13" y="7" width="1" height="1" fill="#e8dcc4" />
+      {/* Heavy brow */}
+      <rect x="7" y="7" width="8" height="1" fill="#5a3c1c" opacity="0.55" />
+      {/* Hard mouth, dark moustache */}
+      <rect x="9" y="9" width="4" height="1" fill="#3a2010" />
+      {/* Strong jaw */}
+      <rect x="8" y="10" width="6" height="1" fill="#a87838" />
+      {/* Red surcoat collar over the breastplate */}
+      <polygon points="4,12 11,11 18,12 18,14 4,14" fill="#8c1818" />
+      <polygon points="4,12 11,11 18,12 18,13 4,13" fill="#b5302c" opacity="0.6" />
+      {/* Lacquered black pauldrons */}
+      <rect x="2" y="11" width="4" height="5" fill="#0a0808" />
+      <rect x="16" y="11" width="4" height="5" fill="#0a0808" />
+      <rect x="3" y="12" width="2" height="3" fill="#3a3228" />
+      <rect x="17" y="12" width="2" height="3" fill="#3a3228" />
+      <rect x="2" y="11" width="4" height="1" fill="#5a5048" />
+      <rect x="16" y="11" width="4" height="1" fill="#5a5048" />
+      {/* Lacquered black breastplate */}
+      <rect x="5" y="14" width="12" height="11" fill="#0a0808" />
+      <rect x="5" y="14" width="12" height="1" fill="#5a5048" />
+      <rect x="5" y="24" width="12" height="1" fill="#5a5048" />
+      {/* Breastplate sheen */}
+      <rect x="6" y="15" width="2" height="8" fill="#2a221c" opacity="0.7" />
+      <rect x="14" y="15" width="2" height="8" fill="#2a221c" opacity="0.7" />
+      {/* Twisted Coin sigil — gold disc on the chest */}
+      <circle cx="11" cy="18" r="3" fill="#8c6232" />
+      <circle cx="11" cy="18" r="2" fill="#d4a850" />
+      <rect x="10" y="17" width="2" height="2" fill="#5a3c1c" />
+      <rect x="11" y="16" width="1" height="3" fill="#8c6232" />
+      {/* Arms in red sleeves with black bracers */}
+      <rect x="3" y="15" width="3" height="6" fill="#8c1818" />
+      <rect x="16" y="15" width="3" height="6" fill="#8c1818" />
+      <rect x="3" y="20" width="3" height="3" fill="#0a0808" />
+      <rect x="16" y="20" width="3" height="3" fill="#0a0808" />
+      <rect x="3" y="20" width="3" height="1" fill="#5a5048" />
+      <rect x="16" y="20" width="3" height="1" fill="#5a5048" />
+      {/* Gauntlets */}
+      <rect x="2" y="23" width="4" height="2" fill="#1a1410" />
+      <rect x="16" y="23" width="4" height="2" fill="#1a1410" />
+      {/* Heavy mace held at right hand, head down */}
+      <rect x="17" y="23" width="2" height="9" fill="#3a2418" />
+      <rect x="18" y="23" width="1" height="9" fill="#5a3c1c" />
+      {/* Mace head — flanged at the bottom */}
+      <rect x="15" y="31" width="6" height="4" fill="#3a3228" />
+      <rect x="16" y="32" width="4" height="2" fill="#5a5048" />
+      <polygon points="15,31 13,33 15,33" fill="#3a3228" />
+      <polygon points="21,31 23,33 21,33" fill="#3a3228" />
+      <polygon points="15,35 13,33 15,33" fill="#3a3228" />
+      <polygon points="21,35 23,33 21,33" fill="#3a3228" />
+      {/* Belt with chain coiled at left hip */}
+      <rect x="4" y="25" width="14" height="2" fill="#1a1410" />
+      <rect x="10" y="25" width="2" height="2" fill="#8c6232" />
+      <circle cx="3" cy="26" r="1.5" fill="#5a5048" />
+      <circle cx="3" cy="28" r="1.5" fill="#5a5048" />
+      <circle cx="3" cy="26" r="0.6" fill="#1a1410" />
+      <circle cx="3" cy="28" r="0.6" fill="#1a1410" />
+      {/* Tasset skirt */}
+      <rect x="5" y="27" width="12" height="3" fill="#0a0808" />
+      <rect x="5" y="27" width="12" height="1" fill="#5a5048" />
+      <rect x="7" y="28" width="1" height="2" fill="#3a3228" />
+      <rect x="11" y="28" width="1" height="2" fill="#3a3228" />
+      <rect x="14" y="28" width="1" height="2" fill="#3a3228" />
+      {/* Legs in red breeches */}
+      <rect x="6" y="30" width="4" height="3" fill="#8c1818" />
+      <rect x="12" y="30" width="4" height="3" fill="#8c1818" />
+      {/* Greaves */}
+      <rect x="6" y="32" width="4" height="3" fill="#1a1410" />
+      <rect x="12" y="32" width="4" height="3" fill="#1a1410" />
+      <rect x="6" y="32" width="4" height="1" fill="#5a5048" />
+      <rect x="12" y="32" width="4" height="1" fill="#5a5048" />
+      {/* Boots */}
+      <rect x="5" y="34" width="6" height="2" fill="#0a0808" />
+      <rect x="11" y="34" width="6" height="2" fill="#0a0808" />
+    </svg>
+  );
+}
+
+function AthkatlaMagistrateSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 38"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="The Magistrate"
+    >
+      {/* Tall four-pointed hat / mortarboard — Cowled magistrate's crown */}
+      <polygon points="6,2 18,2 22,5 2,5" fill="#1a1828" />
+      <polygon points="6,2 18,2 22,5 2,5" fill="#3a3848" opacity="0.5" />
+      <rect x="9" y="0" width="6" height="3" fill="#1a1828" />
+      <rect x="9" y="0" width="6" height="1" fill="#3a3848" />
+      <rect x="11" y="-2" width="2" height="2" fill="#8c6232" />
+      <circle cx="12" cy="-2" r="1.5" fill="#d4a850" />
+      <circle cx="12" cy="-2" r="0.7" fill="#ffe890" />
+      {/* Tassel hanging off one side */}
+      <rect x="20" y="5" width="1" height="4" fill="#d4a850" />
+      <rect x="20" y="9" width="2" height="1" fill="#d4a850" />
+      <rect x="20" y="10" width="1" height="2" fill="#8c6232" />
+      {/* Long thin face — late fifties */}
+      <rect x="8" y="5" width="8" height="7" fill="#d8c4a8" />
+      <rect x="8" y="5" width="8" height="1" fill="#a89878" />
+      <rect x="8" y="11" width="8" height="1" fill="#a89878" />
+      <rect x="7" y="6" width="1" height="6" fill="#a89878" />
+      <rect x="16" y="6" width="1" height="6" fill="#a89878" />
+      {/* Receding silver hair at temples visible behind the hat */}
+      <rect x="6" y="6" width="2" height="2" fill="#b5b5c8" />
+      <rect x="16" y="6" width="2" height="2" fill="#b5b5c8" />
+      {/* Narrow cold eyes — pale grey */}
+      <rect x="9" y="7" width="2" height="1" fill="#1a1410" />
+      <rect x="13" y="7" width="2" height="1" fill="#1a1410" />
+      <rect x="9" y="7" width="1" height="1" fill="#a8b8c8" />
+      <rect x="14" y="7" width="1" height="1" fill="#a8b8c8" />
+      {/* Heavy brow ridge */}
+      <rect x="8" y="6" width="8" height="1" fill="#a89878" />
+      {/* Sharp nose */}
+      <rect x="11" y="8" width="2" height="2" fill="#a89878" />
+      {/* Thin pressed-line mouth — no expression */}
+      <rect x="10" y="10" width="4" height="1" fill="#3a2010" />
+      {/* Silver Cowled-Wizard high collar */}
+      <polygon points="4,12 12,11 20,12 21,15 3,15" fill="#b5b5c8" />
+      <polygon points="4,12 12,11 20,12 20,13 4,13" fill="#e8e8f0" />
+      {/* Magistrate's seal of office on a chain */}
+      <line x1="9" y1="13" x2="12" y2="17" stroke="#d4a850" strokeWidth="0.6" />
+      <line x1="15" y1="13" x2="12" y2="17" stroke="#d4a850" strokeWidth="0.6" />
+      <rect x="11" y="17" width="3" height="3" fill="#d4a850" />
+      <rect x="11" y="17" width="3" height="1" fill="#ffe890" />
+      <rect x="12" y="18" width="1" height="1" fill="#5a3c1c" />
+      {/* Magistrate's robe — deep midnight blue with silver trim */}
+      <rect x="4" y="13" width="16" height="15" fill="#1a2050" />
+      <rect x="4" y="13" width="16" height="1" fill="#3a4080" />
+      <rect x="4" y="27" width="16" height="1" fill="#0a0a28" />
+      {/* Center robe seam */}
+      <rect x="11" y="13" width="2" height="15" fill="#0a0a28" />
+      {/* Embroidered silver runes down the seam */}
+      <rect x="11" y="15" width="2" height="1" fill="#b5b5c8" />
+      <rect x="11" y="18" width="2" height="1" fill="#b5b5c8" />
+      <rect x="11" y="21" width="2" height="1" fill="#b5b5c8" />
+      <rect x="11" y="24" width="2" height="1" fill="#b5b5c8" />
+      {/* Pauldron-like robe shoulders */}
+      <rect x="3" y="13" width="2" height="5" fill="#0a0a28" />
+      <rect x="19" y="13" width="2" height="5" fill="#0a0a28" />
+      {/* Wide sleeves draping to the elbow then narrowing */}
+      <polygon points="3,15 0,20 0,26 4,22" fill="#1a2050" />
+      <polygon points="21,15 24,20 24,26 20,22" fill="#1a2050" />
+      <polygon points="3,15 1,20 3,20" fill="#0a0a28" opacity="0.5" />
+      <polygon points="21,15 23,20 21,20" fill="#0a0a28" opacity="0.5" />
+      {/* Silver trim at the sleeve mouth */}
+      <rect x="0" y="24" width="5" height="1" fill="#b5b5c8" />
+      <rect x="19" y="24" width="5" height="1" fill="#b5b5c8" />
+      <rect x="0" y="25" width="5" height="1" fill="#7a7a98" />
+      <rect x="19" y="25" width="5" height="1" fill="#7a7a98" />
+      {/* Right gloved hand raised — palm out, mid-cast */}
+      <rect x="0" y="20" width="3" height="3" fill="#1a1410" />
+      <rect x="-1" y="20" width="1" height="3" fill="#1a1410" />
+      <polygon points="0,20 -2,18 -1,21" fill="#1a1410" />
+      <polygon points="0,23 -2,25 -1,22" fill="#1a1410" />
+      {/* Hold Person glyph — a hollow silver ring forming over the open palm */}
+      <circle cx="-1" cy="21" r="3.5" fill="none" stroke="#b5b5c8" strokeWidth="0.6" opacity="0.85" />
+      <circle cx="-1" cy="21" r="2.5" fill="none" stroke="#e8e8f0" strokeWidth="0.4" opacity="0.85" />
+      <circle cx="-1" cy="21" r="1.2" fill="#b5b5c8" opacity="0.55" />
+      <rect x="-3" y="21" width="4" height="0.5" fill="#e8e8f0" opacity="0.7" />
+      <rect x="-1" y="19" width="0.5" height="4" fill="#e8e8f0" opacity="0.7" />
+      {/* Left gloved hand at the side — holding a rolled warrant scroll */}
+      <rect x="21" y="22" width="3" height="3" fill="#1a1410" />
+      <rect x="21" y="22" width="1" height="2" fill="#e8dcc4" />
+      <rect x="22" y="23" width="2" height="1" fill="#d4a850" />
+      {/* Belt sash with silver clasp */}
+      <rect x="4" y="25" width="16" height="2" fill="#0a0a28" />
+      <rect x="11" y="25" width="2" height="2" fill="#b5b5c8" />
+      <rect x="11" y="25" width="2" height="1" fill="#e8e8f0" />
+      {/* Lower robe flaring out */}
+      <polygon points="4,28 20,28 22,35 2,35" fill="#1a2050" />
+      <polygon points="4,28 20,28 22,30 2,30" fill="#3a4080" opacity="0.4" />
+      <rect x="11" y="28" width="2" height="7" fill="#0a0a28" />
+      {/* Silver hem */}
+      <rect x="2" y="34" width="20" height="1" fill="#b5b5c8" />
+      <polygon points="2,35 5,33 8,35" fill="#1a2050" />
+      <polygon points="8,35 11,33 14,35" fill="#1a2050" />
+      <polygon points="14,35 17,33 20,35" fill="#1a2050" />
+      {/* Black formal boots barely peeking out */}
+      <rect x="9" y="35" width="2" height="2" fill="#0a0808" />
+      <rect x="13" y="35" width="2" height="2" fill="#0a0808" />
+      {/* Faint ambient mage-glow at the feet */}
+      <ellipse cx="12" cy="37" rx="11" ry="1" fill="#3a4080" opacity="0.25" />
+    </svg>
+  );
 }
 
 function StirgeSvg({ className }: { className?: string }) {

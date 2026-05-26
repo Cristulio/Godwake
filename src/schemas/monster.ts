@@ -18,8 +18,22 @@ const MonsterAttackSchema = z.object({
   description: z.string().optional(),
 });
 
-export const MonsterActionSchema = z.discriminatedUnion('kind', [MonsterAttackSchema]);
+const MonsterParalyzeSchema = z.object({
+  kind: z.literal('paralyze'),
+  name: z.string(),
+  saveDC: z.number().int().positive(),
+  saveAbility: AbilitySchema,
+  /** Max rounds the condition persists if no save succeeds. */
+  durationRounds: z.number().int().positive(),
+  description: z.string().optional(),
+});
+
+export const MonsterActionSchema = z.discriminatedUnion('kind', [
+  MonsterAttackSchema,
+  MonsterParalyzeSchema,
+]);
 export type MonsterAttack = z.infer<typeof MonsterAttackSchema>;
+export type MonsterParalyze = z.infer<typeof MonsterParalyzeSchema>;
 export type MonsterAction = z.infer<typeof MonsterActionSchema>;
 
 export const MonsterAbilityScoresSchema = z.record(AbilitySchema, z.number());

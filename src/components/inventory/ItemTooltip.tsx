@@ -1,4 +1,5 @@
-import type { Item, Rarity } from '../../schemas/item';
+import type { Item } from '../../schemas/item';
+import type { Rarity } from '../../schemas/ids';
 
 interface ItemTooltipProps {
   item: Item;

@@ -37,12 +37,13 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
   };
 }
 
-/** Full long rest: full HP + full resources. Used at hub between delves. */
+/** Full long rest: full HP + full resources + conditions cleared. Used at hub between delves. */
 export function longRest(character: Character): Character {
   return withResetActionEconomy({
     ...character,
     hp: { ...character.hp, current: character.hp.max, temp: 0 },
     hitDice: { ...character.hitDice, current: character.hitDice.max },
+    conditions: [],
     resources: {
       ...character.resources,
       secondWindAvailable: true,

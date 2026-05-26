@@ -6,6 +6,8 @@ export type BattlefieldDecoration =
   | 'iron-cells'
   | 'vivisector-lab'
   | 'wardens-hall'
+  | 'athkatla-street'
+  | 'magistrate-hall'
   | 'generic';
 
 interface BattlefieldProps {
@@ -129,6 +131,8 @@ function DecorationLayer({ kind }: { kind: BattlefieldDecoration }) {
       {kind === 'iron-cells' && <IronCellsBackdrop />}
       {kind === 'vivisector-lab' && <VivisectorBackdrop />}
       {kind === 'wardens-hall' && <WardensHallBackdrop />}
+      {kind === 'athkatla-street' && <AthkatlaStreetBackdrop />}
+      {kind === 'magistrate-hall' && <MagistrateHallBackdrop />}
     </div>
   );
 }
@@ -365,6 +369,210 @@ function WardensHallBackdrop() {
         {/* Throne glow + vignette */}
         <rect width="400" height="200" fill="url(#warden-throne-glow)" />
         <rect width="400" height="200" fill="url(#warden-vignette)" />
+      </svg>
+    </>
+  );
+}
+
+function AthkatlaStreetBackdrop() {
+  return (
+    <>
+      <svg
+        viewBox="0 0 400 200"
+        preserveAspectRatio="none"
+        className="absolute inset-0 w-full h-full"
+      >
+        <defs>
+          <linearGradient id="ath-st-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#180e1c" />
+            <stop offset="55%" stopColor="#2a1828" />
+            <stop offset="100%" stopColor="#3a2820" />
+          </linearGradient>
+          <linearGradient id="ath-st-wall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#5a3a1a" />
+            <stop offset="100%" stopColor="#1a0e08" />
+          </linearGradient>
+          <radialGradient id="ath-st-lantern" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stopColor="#ffe890" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#ffb347" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {/* Night sky between rooftops */}
+        <rect width="400" height="200" fill="url(#ath-st-sky)" />
+        {/* Faint star dots */}
+        <g fill="#e8dcc4" opacity="0.45">
+          <rect x="80" y="20" width="1" height="1" />
+          <rect x="170" y="14" width="1" height="1" />
+          <rect x="250" y="22" width="1" height="1" />
+          <rect x="320" y="18" width="1" height="1" />
+        </g>
+        {/* Far rooftops silhouette */}
+        <polygon points="0,80 50,72 100,80 150,68 200,78 250,66 300,80 350,72 400,82 400,200 0,200" fill="#1a0e08" />
+        {/* Left building — counting house facade */}
+        <rect x="0" y="40" width="120" height="160" fill="url(#ath-st-wall)" stroke="#1a0a04" strokeWidth="1" />
+        <rect x="0" y="40" width="120" height="6" fill="#7a4e22" />
+        {/* Counting-house windows — warm light */}
+        <g fill="#ffd870" opacity="0.85">
+          <rect x="14" y="60" width="6" height="10" />
+          <rect x="34" y="60" width="6" height="10" />
+          <rect x="54" y="60" width="6" height="10" />
+          <rect x="74" y="60" width="6" height="10" />
+          <rect x="94" y="60" width="6" height="10" />
+          <rect x="14" y="90" width="6" height="10" />
+          <rect x="34" y="90" width="6" height="10" />
+          <rect x="74" y="90" width="6" height="10" />
+          <rect x="94" y="90" width="6" height="10" />
+        </g>
+        {/* Door + ledger sign */}
+        <rect x="46" y="130" width="28" height="44" fill="#1a0a04" />
+        <rect x="48" y="132" width="24" height="6" fill="#7a4e22" />
+        <rect x="58" y="148" width="4" height="6" fill="#d4a850" />
+        {/* Right building — tenement */}
+        <rect x="280" y="50" width="120" height="150" fill="url(#ath-st-wall)" stroke="#1a0a04" strokeWidth="1" />
+        <rect x="280" y="50" width="120" height="5" fill="#7a4e22" />
+        <g fill="#ffd870" opacity="0.75">
+          <rect x="296" y="70" width="6" height="10" />
+          <rect x="316" y="70" width="6" height="10" />
+          <rect x="356" y="70" width="6" height="10" />
+          <rect x="376" y="70" width="6" height="10" />
+          <rect x="296" y="100" width="6" height="10" />
+          <rect x="336" y="100" width="6" height="10" />
+          <rect x="376" y="100" width="6" height="10" />
+        </g>
+        {/* A high arched window — Cowled-wizard tax sigil */}
+        <rect x="324" y="64" width="22" height="36" fill="#3a2a10" stroke="#5a3a1c" strokeWidth="1" />
+        <polygon points="324,64 335,54 346,64" fill="#3a2a10" stroke="#5a3a1c" strokeWidth="1" />
+        <rect x="332" y="78" width="6" height="14" fill="#7a82a0" opacity="0.4" />
+        {/* Cobblestone street strip across the bottom */}
+        <rect x="0" y="174" width="400" height="26" fill="#1a0e08" />
+        <g fill="#2a1810" stroke="#0e0606" strokeWidth="0.5">
+          <rect x="10" y="178" width="18" height="6" />
+          <rect x="30" y="178" width="22" height="6" />
+          <rect x="54" y="178" width="18" height="6" />
+          <rect x="74" y="178" width="24" height="6" />
+          <rect x="100" y="178" width="20" height="6" />
+          <rect x="124" y="178" width="22" height="6" />
+          <rect x="148" y="178" width="18" height="6" />
+          <rect x="168" y="178" width="24" height="6" />
+          <rect x="194" y="178" width="20" height="6" />
+          <rect x="216" y="178" width="22" height="6" />
+          <rect x="240" y="178" width="18" height="6" />
+          <rect x="260" y="178" width="24" height="6" />
+          <rect x="286" y="178" width="20" height="6" />
+          <rect x="308" y="178" width="22" height="6" />
+          <rect x="332" y="178" width="18" height="6" />
+          <rect x="352" y="178" width="24" height="6" />
+          <rect x="378" y="178" width="20" height="6" />
+        </g>
+        {/* Hanging street lantern centered */}
+        <rect x="198" y="32" width="4" height="22" fill="#3a2418" />
+        <polygon points="190,52 210,52 206,68 194,68" fill="#7a4e22" stroke="#3a2418" strokeWidth="0.5" />
+        <rect x="196" y="56" width="8" height="10" fill="#ffd870" opacity="0.85" />
+        <rect width="400" height="200" fill="url(#ath-st-lantern)" />
+        {/* Edge vignette */}
+        <radialGradient id="ath-st-vignette" cx="0.5" cy="0.5" r="0.55">
+          <stop offset="65%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.55" />
+        </radialGradient>
+        <rect width="400" height="200" fill="url(#ath-st-vignette)" />
+      </svg>
+    </>
+  );
+}
+
+function MagistrateHallBackdrop() {
+  return (
+    <>
+      <svg
+        viewBox="0 0 400 200"
+        preserveAspectRatio="none"
+        className="absolute inset-0 w-full h-full"
+      >
+        <defs>
+          <linearGradient id="mag-wall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0c0c20" />
+            <stop offset="55%" stopColor="#1a1a38" />
+            <stop offset="100%" stopColor="#080814" />
+          </linearGradient>
+          <linearGradient id="mag-marble" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#5a5a78" />
+            <stop offset="100%" stopColor="#1a1a2a" />
+          </linearGradient>
+          <linearGradient id="mag-bench" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#3a2818" />
+            <stop offset="100%" stopColor="#1a0e08" />
+          </linearGradient>
+          <radialGradient id="mag-violet-glow" cx="0.5" cy="0.45" r="0.4">
+            <stop offset="0%" stopColor="#a48ee0" stopOpacity="0.32" />
+            <stop offset="100%" stopColor="#a48ee0" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="mag-vignette" cx="0.5" cy="0.5" r="0.6">
+            <stop offset="60%" stopColor="#000" stopOpacity="0" />
+            <stop offset="100%" stopColor="#000" stopOpacity="0.6" />
+          </radialGradient>
+        </defs>
+        <rect width="400" height="200" fill="url(#mag-wall)" />
+        {/* Vaulted arch back wall */}
+        <path d="M 60 0 L 60 110 Q 200 0 340 110 L 340 0 Z" fill="#080814" />
+        <path d="M 60 110 Q 200 0 340 110" fill="none" stroke="#3a3a60" strokeWidth="2" />
+        <path d="M 80 110 Q 200 20 320 110" fill="none" stroke="#3a3a60" strokeWidth="1" opacity="0.6" />
+        {/* Heraldic seal at the keystone — Cowled disc */}
+        <circle cx="200" cy="32" r="14" fill="#3a3a60" stroke="#b5b5c8" strokeWidth="1" />
+        <circle cx="200" cy="32" r="9" fill="#1a1a38" />
+        <rect x="198" y="20" width="4" height="24" fill="#b5b5c8" opacity="0.6" />
+        <rect x="188" y="30" width="24" height="4" fill="#b5b5c8" opacity="0.6" />
+        {/* Tall flanking marble columns */}
+        <rect x="20" y="0" width="34" height="200" fill="url(#mag-marble)" stroke="#0a0a18" strokeWidth="1" />
+        <rect x="20" y="0" width="34" height="6" fill="#7a7a98" />
+        <rect x="20" y="194" width="34" height="6" fill="#7a7a98" />
+        <rect x="24" y="20" width="26" height="2" fill="#3a3a60" />
+        <rect x="24" y="40" width="26" height="2" fill="#3a3a60" />
+        <rect x="24" y="60" width="26" height="2" fill="#3a3a60" />
+        <rect x="24" y="80" width="26" height="2" fill="#3a3a60" />
+        <rect x="346" y="0" width="34" height="200" fill="url(#mag-marble)" stroke="#0a0a18" strokeWidth="1" />
+        <rect x="346" y="0" width="34" height="6" fill="#7a7a98" />
+        <rect x="346" y="194" width="34" height="6" fill="#7a7a98" />
+        <rect x="350" y="20" width="26" height="2" fill="#3a3a60" />
+        <rect x="350" y="40" width="26" height="2" fill="#3a3a60" />
+        <rect x="350" y="60" width="26" height="2" fill="#3a3a60" />
+        <rect x="350" y="80" width="26" height="2" fill="#3a3a60" />
+        {/* Magistrate's bench dais centered */}
+        <polygon points="150,150 250,150 264,180 136,180" fill="url(#mag-bench)" stroke="#0a0a18" strokeWidth="1" />
+        <polygon points="160,118 240,118 240,150 160,150" fill="url(#mag-bench)" stroke="#0a0a18" strokeWidth="1" />
+        {/* Silver desk-edge */}
+        <rect x="160" y="118" width="80" height="3" fill="#b5b5c8" />
+        {/* Open ledger / warrant on the bench */}
+        <rect x="186" y="124" width="28" height="14" fill="#e8dcc4" stroke="#3a2010" strokeWidth="0.5" />
+        <rect x="186" y="124" width="28" height="2" fill="#a89878" />
+        <rect x="190" y="128" width="20" height="1" fill="#3a2010" />
+        <rect x="190" y="131" width="14" height="1" fill="#3a2010" />
+        <rect x="190" y="134" width="18" height="1" fill="#3a2010" />
+        {/* Pair of candles on the bench */}
+        <rect x="166" y="112" width="2" height="6" fill="#e8dcc4" />
+        <polygon points="167,108 165,114 169,114" fill="#ffd870" />
+        <rect x="232" y="112" width="2" height="6" fill="#e8dcc4" />
+        <polygon points="233,108 231,114 235,114" fill="#ffd870" />
+        {/* Banners hanging from the rafters — silver Cowled livery */}
+        <rect x="100" y="0" width="14" height="60" fill="#1a2050" stroke="#0a0a18" strokeWidth="0.5" />
+        <polygon points="100,60 114,60 107,74" fill="#1a2050" stroke="#0a0a18" strokeWidth="0.5" />
+        <rect x="105" y="18" width="4" height="14" fill="#b5b5c8" opacity="0.7" />
+        <rect x="286" y="0" width="14" height="60" fill="#1a2050" stroke="#0a0a18" strokeWidth="0.5" />
+        <polygon points="286,60 300,60 293,74" fill="#1a2050" stroke="#0a0a18" strokeWidth="0.5" />
+        <rect x="291" y="18" width="4" height="14" fill="#b5b5c8" opacity="0.7" />
+        {/* Faint violet mage-glow around the dais */}
+        <rect width="400" height="200" fill="url(#mag-violet-glow)" />
+        {/* Marble floor tile lines */}
+        <g stroke="#3a3a60" strokeWidth="0.5" opacity="0.45">
+          <line x1="0" y1="184" x2="400" y2="184" />
+          <line x1="50" y1="184" x2="50" y2="200" />
+          <line x1="100" y1="184" x2="100" y2="200" />
+          <line x1="150" y1="184" x2="150" y2="200" />
+          <line x1="200" y1="184" x2="200" y2="200" />
+          <line x1="250" y1="184" x2="250" y2="200" />
+          <line x1="300" y1="184" x2="300" y2="200" />
+          <line x1="350" y1="184" x2="350" y2="200" />
+        </g>
+        <rect width="400" height="200" fill="url(#mag-vignette)" />
       </svg>
     </>
   );

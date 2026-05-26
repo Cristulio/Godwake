@@ -15,7 +15,11 @@ import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 
-function decorationForRoom(roomId: string): BattlefieldDecoration {
+function decorationForRoom(roomId: string, chapterId: string): BattlefieldDecoration {
+  if (chapterId === 'chapter-2') {
+    if (roomId === 'room-8') return 'magistrate-hall';
+    return 'athkatla-street';
+  }
   switch (roomId) {
     case 'room-1':
     case 'room-3':
@@ -152,7 +156,7 @@ export function DelveScreen() {
           character={character}
           state={combat}
           scene={room.kind === 'boss' ? 'boss' : 'combat'}
-          decoration={decorationForRoom(room.id)}
+          decoration={decorationForRoom(room.id, delve.chapterId)}
           roomTitle={room.title.toUpperCase()}
           roomLabel={`${room.kind === 'boss' ? 'Boss · ' : ''}Round ${combat.round}`}
           onAbandon={() => useGameStore.getState().abandonDelve()}
