@@ -6,6 +6,7 @@ import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { PhandalinScene } from './PhandalinScene';
 import { QuirkRow } from '../ui/QuirkBadge';
+import { QuirkCard } from '../ui/QuirkCard';
 
 interface Building {
   id: string;
@@ -100,6 +101,20 @@ export function HubScreen() {
           </div>
         </div>
       </Panel>
+
+      {character.quirks.length > 0 && (
+        <Panel className="mb-6" title="Quirks of this Incarnation">
+          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+            The soul carries scars and gifts from death to death. These shape the life you wear now —
+            until you fall again, and the wheel turns.
+          </p>
+          <div className="grid md:grid-cols-2 gap-3">
+            {character.quirks.map((id) => (
+              <QuirkCard key={id} quirkId={id} />
+            ))}
+          </div>
+        </Panel>
+      )}
 
       <div className="grid md:grid-cols-3 gap-4">
         {BUILDINGS.map((b) => (

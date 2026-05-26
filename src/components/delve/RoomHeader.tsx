@@ -5,32 +5,15 @@ interface RoomHeaderProps {
 }
 
 /**
- * Compact crumb showing the player's progress through the delve.
- * Renders below the main room title in each room component.
+ * A minimal breadcrumb showing only the dungeon's name. The total room count
+ * is intentionally hidden — the player should not know how deep the delve
+ * goes. The room's flavor title (shown in the combat header) is their only
+ * spatial cue.
  */
 export function RoomHeader({ delve }: RoomHeaderProps) {
   return (
-    <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest flex items-center gap-2">
-      <span>{delve.dungeonName}</span>
-      <span>·</span>
-      <span>
-        Room {delve.currentRoomIdx + 1} / {delve.rooms.length}
-      </span>
-      <div className="flex gap-1 ml-2">
-        {delve.rooms.map((_, idx) => (
-          <span
-            key={idx}
-            className={`
-              w-2 h-2 border
-              ${idx < delve.currentRoomIdx
-                ? 'bg-[var(--color-accent-gold)] border-[var(--color-accent-gold)]'
-                : idx === delve.currentRoomIdx
-                  ? 'bg-[var(--color-accent-amber)] border-[var(--color-accent-amber)] animate-pulse'
-                  : 'bg-transparent border-[var(--color-border-dim)]'}
-            `}
-          />
-        ))}
-      </div>
+    <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest">
+      {delve.dungeonName}
     </div>
   );
 }

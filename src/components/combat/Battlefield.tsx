@@ -66,8 +66,12 @@ export function Battlefield({
       {/* Edge vignette */}
       <div className="absolute inset-0 pointer-events-none [background:radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.55)_100%)]" />
 
-      <div className="relative flex items-end justify-between px-10 pt-10 pb-8 gap-6 h-full">
-        <div className="shrink-0 w-[96px] flex justify-center">
+      {/* Absolute-positioned slots — sprites occupy fixed positions on the
+          battlefield regardless of who's alive. Killing an enemy doesn't
+          reflow the layout; the rectangle never gets narrower. */}
+      <div className="absolute inset-0 px-6 pt-10 pb-6">
+        {/* Player at left */}
+        <div className="absolute bottom-8 left-10 w-[96px] flex justify-center">
           <BattlefieldSprite
             kind="player"
             character={character}
@@ -77,25 +81,25 @@ export function Battlefield({
           />
         </div>
 
-        {/* Fixed-grid enemy slots — dead sprites stay in their slot so the
-            battlefield doesn't reflow as enemies fall. */}
-        <div
-          className="grid grid-flow-col auto-cols-[96px] gap-6 items-end justify-end h-full pb-4 max-w-[70%]"
-        >
-          {monsterCombatants.map((c) => (
-            <div key={c.id} className="flex items-end justify-center h-full">
-              <BattlefieldSprite
-                kind="monster"
-                instance={c.instance}
-                isActiveTurn={currentTurnId === c.id}
-                facing="left"
-                selectable={selectingTarget}
-                onSelect={() => onSelectTarget(c.id)}
-                attackPulse={monsterAttackPulseFor(c)}
-              />
-            </div>
-          ))}
-        </div>
+        {/* Enemies anchored to the right, evenly spaced — slot index drives
+            position so dead enemies keep their place. */}
+        {monsterCombatants.map((c, idx) => (
+          <div
+            key={c.id}
+            className="absolute bottom-8 w-[96px] flex justify-center"
+            style={{ right: `${40 + idx * 116}px` }}
+          >
+            <BattlefieldSprite
+              kind="monster"
+              instance={c.instance}
+              isActiveTurn={currentTurnId === c.id}
+              facing="left"
+              selectable={selectingTarget}
+              onSelect={() => onSelectTarget(c.id)}
+              attackPulse={monsterAttackPulseFor(c)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

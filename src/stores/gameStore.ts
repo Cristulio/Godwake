@@ -209,6 +209,12 @@ export const useGameStore = create<GameState>()(
         if (state?.saveSeed) {
           setActiveRoller(state.saveSeed);
         }
+        // Migration: legacy saves predate quirks — roll a starting set so the
+        // hub immediately shows the player what they have. Without this, old
+        // characters look quirkless until they die for the first time.
+        if (state?.character && (!state.character.quirks || state.character.quirks.length === 0)) {
+          state.character = { ...state.character, quirks: rollQuirks(getActiveRoller(), 2) };
+        }
       },
     },
   ),
