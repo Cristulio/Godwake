@@ -7,6 +7,8 @@ import { setActiveRoller, getActiveRoller } from '../engine/dice';
 import { buildPlayerCharacter, type CharacterCreationInput } from '../engine/character/defaultCharacter';
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
 import { rollQuirks } from '../engine/character/quirks';
+import { applyDelveStartUpgrades, applyPermanentUpgrade } from '../engine/character/upgrades';
+import { getUpgrade } from '../content/upgrades';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
 export type Screen =
@@ -16,7 +18,11 @@ export type Screen =
   | 'hub'
   | 'delve'
   | 'reincarnation'
-  | 'codex';
+  | 'codex'
+  | 'druid-grove';
+
+/** Renown granted per successful delve clear. */
+export const RENOWN_PER_DELVE_CLEAR = 50;
 
 interface GameState {
   screen: Screen;
@@ -36,12 +42,15 @@ interface GameState {
   quirksTutorialSeen: boolean;
   /** Monster def ids the player has fought at least once. Powers the codex. */
   discoveredMonsters: string[];
+  /** Druid Grove upgrades the player has purchased with Renown. Persists across reincarnation; wipes on new game. */
+  unlockedUpgrades: string[];
 
   // Navigation
   goToTitle: () => void;
   goToHub: () => void;
   goToDelve: () => void;
   goToReincarnation: () => void;
+  goToDruidGrove: () => void;
 
   // Lifecycle
   startNewGame: (seed: string) => void;
@@ -78,6 +87,9 @@ interface GameState {
 
   // Tutorials
   markQuirksTutorialSeen: () => void;
+
+  // Renown shop
+  purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
 }
 
 export const useGameStore = create<GameState>()(
@@ -94,11 +106,13 @@ export const useGameStore = create<GameState>()(
   hasReincarnated: false,
   quirksTutorialSeen: false,
   discoveredMonsters: [],
+  unlockedUpgrades: [],
 
   goToTitle: () => set({ screen: 'title' }),
   goToHub: () => set({ screen: 'hub' }),
   goToDelve: () => set({ screen: 'delve' }),
   goToReincarnation: () => set({ screen: 'reincarnation' }),
+  goToDruidGrove: () => set({ screen: 'druid-grove' }),
 
   startNewGame: (seed) => {
     setActiveRoller(seed);
@@ -112,6 +126,7 @@ export const useGameStore = create<GameState>()(
       hasReincarnated: false,
       quirksTutorialSeen: false,
       discoveredMonsters: [],
+      unlockedUpgrades: [],
       screen: 'character-creation',
     });
   },
@@ -127,11 +142,11 @@ export const useGameStore = create<GameState>()(
   startDelve: (delve) => {
     const ch = get().character;
     if (!ch) return;
+    const withUpgrades = applyDelveStartUpgrades(withResetActionEconomy(ch), get().unlockedUpgrades);
     set({
       delve,
       combat: null,
-      // Make sure action economy is fresh entering a delve.
-      character: withResetActionEconomy(ch),
+      character: withUpgrades,
       screen: 'delve',
     });
   },
@@ -172,6 +187,7 @@ export const useGameStore = create<GameState>()(
         ...s.character,
         goldInPocket: s.character.goldInPocket + earnedGold,
         xp: s.character.xp + earnedXp,
+        renown: s.character.renown + RENOWN_PER_DELVE_CLEAR,
         // Blessings were granted for the delve only — they wipe at the hub.
         blessings: [],
       });
@@ -229,6 +245,26 @@ export const useGameStore = create<GameState>()(
         : s,
     ),
   markQuirksTutorialSeen: () => set({ quirksTutorialSeen: true }),
+
+  purchaseUpgrade: (upgradeId) => {
+    const s = get();
+    if (!s.character) return { ok: false, reason: 'No character.' };
+    if (s.unlockedUpgrades.includes(upgradeId)) return { ok: false, reason: 'Already owned.' };
+    let up;
+    try {
+      up = getUpgrade(upgradeId);
+    } catch {
+      return { ok: false, reason: 'Unknown upgrade.' };
+    }
+    if (s.character.renown < up.cost) return { ok: false, reason: 'Not enough Renown.' };
+    const spent = { ...s.character, renown: s.character.renown - up.cost };
+    const withPermanent = applyPermanentUpgrade(spent, upgradeId);
+    set({
+      character: withPermanent,
+      unlockedUpgrades: [...s.unlockedUpgrades, upgradeId],
+    });
+    return { ok: true };
+  },
     }),
     {
       name: 'godwake-save',
@@ -243,6 +279,7 @@ export const useGameStore = create<GameState>()(
         hasReincarnated: state.hasReincarnated,
         quirksTutorialSeen: state.quirksTutorialSeen,
         discoveredMonsters: state.discoveredMonsters,
+        unlockedUpgrades: state.unlockedUpgrades,
       }),
       version: 1,
       onRehydrateStorage: () => (state) => {
@@ -255,6 +292,10 @@ export const useGameStore = create<GameState>()(
         // until first death.
         if (state?.character && !state.character.quirks) {
           state.character = { ...state.character, quirks: [] };
+        }
+        // Older saves predate the renown shop.
+        if (state && !state.unlockedUpgrades) {
+          state.unlockedUpgrades = [];
         }
       },
     },
