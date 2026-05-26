@@ -180,7 +180,10 @@ export const useGameStore = create<GameState>()(
 
   finishDelve: () =>
     set((s) => {
-      if (!s.character || !s.delve) return s;
+      if (!s.character) return s;
+      if (!s.delve) {
+        return { ...s, screen: 'hub', combat: null };
+      }
       const earnedGold = s.delve.goldEarned;
       const earnedXp = s.delve.xpEarned;
       const rested = longRest({
@@ -271,7 +274,10 @@ export const useGameStore = create<GameState>()(
       storage: createJSONStorage(() => localStorage),
       // Only persist long-term state; delve/combat are session-scoped.
       partialize: (state) => ({
-        screen: state.screen === 'delve' ? 'hub' : state.screen,
+        screen:
+          state.screen === 'delve' || state.screen === 'reincarnation'
+            ? 'hub'
+            : state.screen,
         saveSeed: state.saveSeed,
         character: state.character,
         speedMultiplier: state.speedMultiplier,
