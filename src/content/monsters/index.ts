@@ -11,6 +11,11 @@ import { IMP } from './imp';
 import { STIRGE } from './stirge';
 import { GHOUL } from './ghoul';
 import { HOBGOBLIN } from './hobgoblin';
+import { CULT_FANATIC } from './cult-fanatic';
+import { SHADOW } from './shadow';
+import { COWLED_ENFORCER } from './cowled-enforcer';
+import { SLAVER_CUIRASSIER } from './slaver-cuirassier';
+import { ATHKATLA_MAGISTRATE } from './athkatla-magistrate';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -25,6 +30,11 @@ const ALL_MONSTERS: Monster[] = [
   STIRGE,
   GHOUL,
   HOBGOBLIN,
+  CULT_FANATIC,
+  SHADOW,
+  COWLED_ENFORCER,
+  SLAVER_CUIRASSIER,
+  ATHKATLA_MAGISTRATE,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -54,4 +64,9 @@ export {
   STIRGE,
   GHOUL,
   HOBGOBLIN,
+  CULT_FANATIC,
+  SHADOW,
+  COWLED_ENFORCER,
+  SLAVER_CUIRASSIER,
+  ATHKATLA_MAGISTRATE,
 };

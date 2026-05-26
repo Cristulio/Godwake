@@ -1,14 +1,20 @@
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
+import { createAthkatlaDelve } from '../../engine/delve/createDelve';
 import { AthkatlaScene } from './AthkatlaScene';
 
 /**
- * Chapter 2 teaser. Unlocked once Ch1 is cleared and 500 Renown is banked.
- * Reading-only beat — no delve starts here yet.
+ * Chapter 2 gateway. Unlocked once Ch1 is cleared and 500 Renown is banked.
+ * Reading panel for the city, then the descent into the Athkatla delve.
  */
 export function Chapter2TeaserScreen() {
   const goToHub = useGameStore((s) => s.goToHub);
+  const startDelve = useGameStore((s) => s.startDelve);
+
+  function descendIntoAthkatla() {
+    startDelve(createAthkatlaDelve());
+  }
 
   return (
     <div className="min-h-screen p-6 max-w-5xl mx-auto">
@@ -42,23 +48,23 @@ export function Chapter2TeaserScreen() {
         </p>
       </Panel>
 
-      <Panel className="mb-6" title="What Waits Below">
+      <Panel className="mb-6" title="What Waits Within">
         <ul className="text-[var(--color-text-primary)] text-sm space-y-2 leading-relaxed">
           <li>
-            <span className="text-[var(--color-accent-amber)]">The Bronze Lion.</span>{' '}
-            A festhall hub — rumor, contracts, a back-room fence. Talk before you delve.
+            <span className="text-[var(--color-accent-amber)]">A path through the city.</span>{' '}
+            Eight rooms — alley, counting house, cowled patrol, Magistrate's hall.
           </li>
           <li>
             <span className="text-[var(--color-accent-amber)]">The Cowled Wizards.</span>{' '}
-            Cast a spell in the open and they will find you. So cast cleverly.
+            Silver-masked enforcers who tax unlicensed magic with bolts of pale violet light.
           </li>
           <li>
-            <span className="text-[var(--color-accent-amber)]">Three new delves.</span>{' '}
-            The Slaver Stockades, the Planar Sphere, the Graveyard District tombs.
+            <span className="text-[var(--color-accent-amber)]">The Slaver Houses.</span>{' '}
+            Lacquered cuirassiers in red and black. The chain at their belt is for you.
           </li>
           <li>
-            <span className="text-[var(--color-accent-amber)]">Level 4–6 enemies.</span>{' '}
-            Cult priests, slaver captains, lesser devils, things wearing human skin.
+            <span className="text-[var(--color-accent-amber)]">The Magistrate.</span>{' '}
+            A senior Cowled Wizard who holds court. Brittle. Patient. Does not raise his voice.
           </li>
         </ul>
       </Panel>
@@ -66,13 +72,16 @@ export function Chapter2TeaserScreen() {
       <Panel>
         <div className="text-center">
           <div className="text-[var(--color-accent-amber)] uppercase tracking-[0.4em] text-xs mb-3">
-            The Story Is Not Yet Written
+            The Road South
           </div>
           <p className="text-[var(--color-text-secondary)] text-xs italic leading-relaxed max-w-xl mx-auto">
-            Chapter II is still being built. For now the gates are open only to the eye.
-            The road south will be walkable in time — the soul will remember.
+            The caravan stops at the West Gate. From here it is your own feet, your own
+            blade, your own name to keep — or to lose.
           </p>
-          <div className="mt-5">
+          <div className="mt-5 flex flex-col items-center gap-3">
+            <Button variant="primary" onClick={descendIntoAthkatla}>
+              Enter Athkatla →
+            </Button>
             <Button variant="secondary" onClick={goToHub}>
               Return to Phandalin
             </Button>

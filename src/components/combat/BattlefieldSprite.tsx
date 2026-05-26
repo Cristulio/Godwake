@@ -63,6 +63,16 @@ function monsterSpriteWidth(defId: string): string {
       return '72px';
     case 'stirge':
       return '60px';
+    case 'cult-fanatic':
+      return '76px';
+    case 'shadow':
+      return '78px';
+    case 'cowled-enforcer':
+      return '80px';
+    case 'slaver-cuirassier':
+      return '88px';
+    case 'athkatla-magistrate':
+      return '92px';
     default:
       return '60px';
   }

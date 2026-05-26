@@ -21,6 +21,11 @@ import { characterQuirkMods } from '../character/quirks';
 import { characterBlessingMods } from '../character/blessings';
 import { getItem } from '../../content/items';
 import { getMonster } from '../../content/monsters';
+import {
+  applyParalyze,
+  isPlayerParalyzed,
+  rollPlayerSave,
+} from './holdPerson';
 
 export interface AttackContext {
   roller: DiceRoller;
@@ -301,7 +306,9 @@ function maxAttacksPerAction(character: Character): number {
 }
 
 /**
- * Monster attacks the player. Picks its first action (Multiattack handling deferred).
+ * Monster attacks the player. Boss-AI picker: if the monster has a paralyze
+ * action and the player isn't already paralyzed, that takes priority over an
+ * attack action. Otherwise picks the first attack action.
  */
 export function monsterAttack(
   ctx: AttackContext,
@@ -312,20 +319,37 @@ export function monsterAttack(
   if (!attacker || attacker.kind !== 'monster') return state;
 
   const monsterDef = getMonster(attacker.instance.defId);
-  const action = monsterDef.actions[0]; // MVP: always first action
+  const playerParalyzed = isPlayerParalyzed(character);
+  const paralyzeAction = monsterDef.actions.find((a) => a.kind === 'paralyze');
+  const attackAction = monsterDef.actions.find((a) => a.kind === 'attack');
+
+  let action = monsterDef.actions[0];
+  // Boss gimmick: a paralyze spell fires once on round 1, then the fight is
+  // a normal brawl regardless of whether it landed. Caps the snowball.
+  if (paralyzeAction && !playerParalyzed && state.round === 1) {
+    action = paralyzeAction;
+  } else if (attackAction) {
+    action = attackAction;
+  }
+
+  if (action.kind === 'paralyze') {
+    return monsterCastParalyze(state, attackerId, attacker.instance.displayName, character, roller, action);
+  }
   if (action.kind !== 'attack') return state;
 
   const ac = computeAC(character);
-  const toHit = roller.d20('normal', action.attackBonus);
+  const attackAdvantage: 'normal' | 'advantage' = playerParalyzed ? 'advantage' : 'normal';
+  const toHit = roller.d20(attackAdvantage, action.attackBonus);
   // Monsters don't get the player's Improved Critical
   const crit = toHit.rolls[0] === 20;
   const hit = crit || (toHit.total >= ac && !toHit.natural1);
 
   const logEntries: CombatLogEntry[] = [];
+  const advantageNote = attackAdvantage === 'advantage' ? ' (advantage — paralyzed)' : '';
   logEntries.push({
     id: nextLogId(state),
     kind: 'roll',
-    text: `${attacker.instance.displayName} attacks ${character.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
+    text: `${attacker.instance.displayName} attacks ${character.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}${advantageNote}.`,
   });
 
   const attackEvent: AttackEvent = {
@@ -399,4 +423,62 @@ function markMonsterActionUsed(state: CombatState, attackerId: string): CombatSt
       };
     }),
   };
+}
+
+interface ParalyzeActionLike {
+  kind: 'paralyze';
+  name: string;
+  saveDC: number;
+  saveAbility: 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';
+  durationRounds: number;
+}
+
+/**
+ * Monster casts a paralyze effect (e.g. Hold Person). Rolls the player's save
+ * against the spell's DC; on a fail, applies the paralyzed condition for
+ * `durationRounds` rounds. No damage. Marks the monster's action used.
+ */
+function monsterCastParalyze(
+  state: CombatState,
+  attackerId: string,
+  attackerName: string,
+  character: Character,
+  roller: DiceRoller,
+  action: ParalyzeActionLike,
+): CombatState {
+  const save = rollPlayerSave(roller, character, action.saveAbility, action.saveDC);
+
+  const logEntries: CombatLogEntry[] = [];
+  logEntries.push({
+    id: nextLogId(state),
+    kind: 'roll',
+    text: `${attackerName} casts ${action.name}. ${character.name} ${action.saveAbility.toUpperCase()} save: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${action.saveDC} — ${save.success ? 'success' : 'fail'}.`,
+  });
+
+  if (!save.success) {
+    applyParalyze(character, {
+      rounds: action.durationRounds,
+      saveDC: action.saveDC,
+      saveAbility: action.saveAbility,
+      source: attackerId,
+    });
+    logEntries.push({
+      id: nextLogId(state) + 1,
+      kind: 'system',
+      text: `${character.name} is paralyzed. The Magistrate's hold tightens.`,
+    });
+  } else {
+    logEntries.push({
+      id: nextLogId(state) + 1,
+      kind: 'system',
+      text: `${character.name} shrugs off the binding.`,
+    });
+  }
+
+  let nextState: CombatState = {
+    ...state,
+    log: [...state.log, ...logEntries],
+  };
+  nextState = markMonsterActionUsed(nextState, attackerId);
+  return nextState;
 }

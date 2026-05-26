@@ -320,6 +320,11 @@ export function CombatScreen({
               ► Select a target
             </div>
           )}
+          {character.conditions.some((c) => c.name === 'paralyzed') && (
+            <div className="text-center text-[var(--color-accent-blood)] text-xs uppercase tracking-[0.3em] font-bold animate-pulse">
+              ✦ Paralyzed — attacks against you have advantage
+            </div>
+          )}
           {autoEndNotice && (
             <div className="text-center text-[var(--color-text-secondary)] text-xs uppercase tracking-widest italic">
               Ending turn — no actions remain.

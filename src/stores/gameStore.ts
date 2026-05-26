@@ -269,11 +269,11 @@ export const useGameStore = create<GameState>()(
     set((s) => {
       if (!s.delve || !s.character) return s;
       // Reincarnation: re-roll quirks for the next life. Class/level/XP persist.
-      // Blessings wipe — they were granted to the falling life, not the soul.
+      // Blessings and conditions wipe — they were on the falling life, not the soul.
       const newQuirks = rollQuirks(getActiveRoller(), 2);
       return {
         delve: { ...s.delve, phase: 'failed' },
-        character: { ...s.character, quirks: newQuirks, blessings: [] },
+        character: { ...s.character, quirks: newQuirks, blessings: [], conditions: [] },
         hasReincarnated: true,
       };
     }),
@@ -381,6 +381,10 @@ export const useGameStore = create<GameState>()(
         // until first death.
         if (state?.character && !state.character.quirks) {
           state.character = { ...state.character, quirks: [] };
+        }
+        // Legacy saves predate engine-read conditions; default to clear.
+        if (state?.character && !Array.isArray(state.character.conditions)) {
+          state.character = { ...state.character, conditions: [] };
         }
         // Older saves predate the renown shop.
         if (state && !state.unlockedUpgrades) {
