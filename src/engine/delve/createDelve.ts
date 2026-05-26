@@ -18,6 +18,13 @@ export function createIronCellsDelve(): DelveState {
     },
     {
       id: 'room-2',
+      kind: 'shrine',
+      title: 'A Forgotten Altar',
+      flavorText:
+        'An altar of weathered stone, three sigils flickering as you approach. The labs above never sealed this off — gods bleed through cracks the master cannot find.',
+    },
+    {
+      id: 'room-3',
       kind: 'combat',
       title: 'The Mephit Cages',
       flavorText:
@@ -26,7 +33,7 @@ export function createIronCellsDelve(): DelveState {
       xpReward: 60,
     },
     {
-      id: 'room-3',
+      id: 'room-4',
       kind: 'rest',
       title: 'A Quiet Alcove',
       flavorText:
@@ -34,7 +41,7 @@ export function createIronCellsDelve(): DelveState {
       restType: 'short',
     },
     {
-      id: 'room-4',
+      id: 'room-5',
       kind: 'combat',
       title: 'The Vault Guardian',
       flavorText:
@@ -43,7 +50,14 @@ export function createIronCellsDelve(): DelveState {
       xpReward: 100,
     },
     {
-      id: 'room-5',
+      id: 'room-6',
+      kind: 'shrine',
+      title: 'The Cracked Sigil',
+      flavorText:
+        'A second altar, half-buried in rubble. Someone tried to chisel the sigils out — and someone else, later, deepened them again. The god is still listening.',
+    },
+    {
+      id: 'room-7',
       kind: 'treasure',
       title: 'A Forgotten Stash',
       flavorText:
@@ -51,7 +65,7 @@ export function createIronCellsDelve(): DelveState {
       goldReward: 18,
     },
     {
-      id: 'room-6',
+      id: 'room-8',
       kind: 'boss',
       title: 'Ilyich\'s Hall',
       flavorText:

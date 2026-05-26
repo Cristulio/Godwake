@@ -1,0 +1,96 @@
+import { BlessingSchema, type Blessing } from '../../schemas/blessing';
+
+const POOL: Blessing[] = [
+  BlessingSchema.parse({
+    id: 'tymoras-coin',
+    name: "Tymora's Coin",
+    god: 'tymora',
+    flavor: 'A copper finds its way into your hand. You did not put it there.',
+    effect: 'Reroll one missed attack per encounter.',
+    modifiers: { rerollMissesPerEncounter: 1 },
+  }),
+  BlessingSchema.parse({
+    id: 'helms-aegis',
+    name: "Helm's Aegis",
+    god: 'helm',
+    flavor: 'A weight settles on your shoulders — invisible, watchful, unwearying.',
+    effect: '+1 AC.',
+    modifiers: { acBonus: 1 },
+  }),
+  BlessingSchema.parse({
+    id: 'tempus-fury',
+    name: "Tempus's Fury",
+    god: 'tempus',
+    flavor: 'The first blow is always the truest. Tempus has a soft spot for the brave.',
+    effect: '+2 damage on the first attack of each combat.',
+    modifiers: { firstAttackDamage: 2 },
+  }),
+  BlessingSchema.parse({
+    id: 'mystras-whisper',
+    name: "Mystra's Whisper",
+    god: 'mystra',
+    flavor: 'The Weave hums faintly around your weapon. Your strikes carry an unseen edge.',
+    effect: '+1 force damage on all attacks.',
+    modifiers: { damageBonus: 1 },
+  }),
+  BlessingSchema.parse({
+    id: 'lathanders-dawn',
+    name: "Lathander's Dawn",
+    god: 'lathander',
+    flavor: 'A faint warmth in the dark. New light at the threshold of each room.',
+    effect: 'Gain 3 temporary HP at the start of each combat.',
+    modifiers: { extraTempHpPerRoom: 3 },
+  }),
+  BlessingSchema.parse({
+    id: 'selunes-veil',
+    name: "Selûne's Veil",
+    god: 'selune',
+    flavor: 'You catch them not seeing you — even when you are obviously there.',
+    effect: 'Advantage on your first attack each combat.',
+    modifiers: { firstAttackAdvantage: true },
+  }),
+  BlessingSchema.parse({
+    id: 'ilmaters-patience',
+    name: "Ilmater's Patience",
+    god: 'ilmater',
+    flavor: 'The Crying God has carried worse than you. He spares a little strength to lend.',
+    effect: '+1 to death saving throws. Reroll one death save per delve.',
+    modifiers: { rerollDeathSavesPerDelve: 1 },
+  }),
+  BlessingSchema.parse({
+    id: 'silvanus-root',
+    name: "Silvanus's Root",
+    god: 'silvanus',
+    flavor: 'The bark of the world clings to your skin. Heavy and slow — and harder to fell.',
+    effect: '+1 AC. −1 initiative (you wait, you weigh, you root).',
+    modifiers: { acBonus: 1, initiativeBonus: -1 },
+  }),
+  BlessingSchema.parse({
+    id: 'tempus-edge',
+    name: "Tempus's Edge",
+    god: 'tempus',
+    flavor: 'Your crit range widens. The god of war prefers a decisive ending.',
+    effect: 'Crit range extends by 1 (e.g. Champion crits on 18-20 instead of 19-20).',
+    modifiers: { critRangeBonus: 1 },
+  }),
+  BlessingSchema.parse({
+    id: 'helms-vigil',
+    name: "Helm's Vigil",
+    god: 'helm',
+    flavor: 'You see threats half a breath before they arrive. The Watcher\'s eye on yours.',
+    effect: '+2 initiative.',
+    modifiers: { initiativeBonus: 2 },
+  }),
+];
+
+const BY_ID: Map<string, Blessing> = new Map(POOL.map((b) => [b.id, b]));
+
+export function getBlessing(id: string): Blessing {
+  const b = BY_ID.get(id);
+  if (!b) throw new Error(`Blessing not found: ${id}`);
+  return b;
+}
+
+export function listBlessings(): Blessing[] {
+  return POOL;
+}

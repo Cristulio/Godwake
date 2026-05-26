@@ -1,4 +1,4 @@
-export type RoomKind = 'combat' | 'rest' | 'treasure' | 'event' | 'boss';
+export type RoomKind = 'combat' | 'rest' | 'treasure' | 'event' | 'boss' | 'shrine';
 
 export interface RoomMonster {
   defId: string;

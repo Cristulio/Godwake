@@ -9,6 +9,7 @@ import { CombatScreen } from '../combat/CombatScreen';
 import type { BattlefieldDecoration } from '../combat/Battlefield';
 import { RestRoom } from './RestRoom';
 import { TreasureRoom } from './TreasureRoom';
+import { ShrineRoom } from './ShrineRoom';
 import { DelveSummary } from './DelveSummary';
 import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
@@ -17,11 +18,11 @@ import { Panel } from '../ui/Panel';
 function decorationForRoom(roomId: string): BattlefieldDecoration {
   switch (roomId) {
     case 'room-1':
-    case 'room-2':
+    case 'room-3':
       return 'iron-cells';
-    case 'room-4':
+    case 'room-5':
       return 'vivisector-lab';
-    case 'room-6':
+    case 'room-8':
       return 'wardens-hall';
     default:
       return 'generic';
@@ -195,6 +196,17 @@ export function DelveScreen() {
           <RoomHeader delve={delve} />
         </div>
         <TreasureRoom room={room} onContinue={() => advanceRoom()} />
+      </div>
+    );
+  }
+
+  if (room.kind === 'shrine') {
+    return (
+      <div>
+        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
+          <RoomHeader delve={delve} />
+        </div>
+        <ShrineRoom room={room} onContinue={() => advanceRoom()} />
       </div>
     );
   }

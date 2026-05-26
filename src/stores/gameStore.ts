@@ -64,6 +64,9 @@ interface GameState {
   discoverMonster: (defId: string) => void;
   goToCodex: () => void;
 
+  // Blessings (mid-delve grants from shrine rooms; wipe at delve end)
+  addBlessing: (id: string) => void;
+
   // Tutorials
   markQuirksTutorialSeen: () => void;
 }
@@ -156,6 +159,8 @@ export const useGameStore = create<GameState>()(
         ...s.character,
         goldInPocket: s.character.goldInPocket + earnedGold,
         xp: s.character.xp + earnedXp,
+        // Blessings were granted for the delve only — they wipe at the hub.
+        blessings: [],
       });
       return {
         character: rested,
@@ -169,10 +174,11 @@ export const useGameStore = create<GameState>()(
     set((s) => {
       if (!s.delve || !s.character) return s;
       // Reincarnation: re-roll quirks for the next life. Class/level/XP persist.
+      // Blessings wipe — they were granted to the falling life, not the soul.
       const newQuirks = rollQuirks(getActiveRoller(), 2);
       return {
         delve: { ...s.delve, phase: 'failed' },
-        character: { ...s.character, quirks: newQuirks },
+        character: { ...s.character, quirks: newQuirks, blessings: [] },
         hasReincarnated: true,
       };
     }),
@@ -181,8 +187,8 @@ export const useGameStore = create<GameState>()(
     set((s) => {
       if (!s.character) return s;
       return {
-        // Restore HP and rest, but drop all delve rewards.
-        character: longRest(s.character),
+        // Restore HP and rest, drop all delve rewards, wipe blessings.
+        character: longRest({ ...s.character, blessings: [] }),
         delve: null,
         combat: null,
         screen: 'hub',
@@ -203,6 +209,12 @@ export const useGameStore = create<GameState>()(
         : { discoveredMonsters: [...s.discoveredMonsters, defId] },
     ),
   goToCodex: () => set({ screen: 'codex' }),
+  addBlessing: (id) =>
+    set((s) =>
+      s.character
+        ? { character: { ...s.character, blessings: [...s.character.blessings, id] } }
+        : s,
+    ),
   markQuirksTutorialSeen: () => set({ quirksTutorialSeen: true }),
     }),
     {

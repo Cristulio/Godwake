@@ -6,6 +6,7 @@ import { computeAC } from '../../engine/character/derived';
 import { PlayerPortrait } from './PlayerPortrait';
 import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
 import { QuirkRow } from '../ui/QuirkBadge';
+import { BlessingRow } from '../ui/BlessingBadge';
 
 interface PlayerPanelProps {
   character: Character;
@@ -109,6 +110,15 @@ export function PlayerPanel({ character, isActiveTurn }: PlayerPanelProps) {
               Quirks
             </div>
             <QuirkRow quirkIds={character.quirks} />
+          </div>
+        )}
+
+        {character.blessings.length > 0 && (
+          <div className="mt-3">
+            <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mb-1">
+              Blessings
+            </div>
+            <BlessingRow blessingIds={character.blessings} />
           </div>
         )}
       </div>
