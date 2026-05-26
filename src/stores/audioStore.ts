@@ -34,7 +34,7 @@ export const useAudioStore = create<AudioState>()(
     (set, get) => ({
       masterVolume: 0.7,
       sfxVolume: 1.0,
-      musicVolume: 0.5,
+      musicVolume: 0,
       muted: false,
 
       setMasterVolume: (v) => {
@@ -61,7 +61,14 @@ export const useAudioStore = create<AudioState>()(
     {
       name: 'godwake-audio',
       storage: createJSONStorage(() => localStorage),
-      version: 1,
+      version: 2,
+      migrate: (persistedState, version) => {
+        const s = (persistedState ?? {}) as Partial<AudioState>;
+        if (version < 2) {
+          return { ...s, musicVolume: 0 } as AudioState;
+        }
+        return s as AudioState;
+      },
       onRehydrateStorage: () => (state) => {
         if (state) pushToEngine(state);
       },
