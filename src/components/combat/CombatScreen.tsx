@@ -183,7 +183,10 @@ export function CombatScreen({
   const isResolved = state.status !== 'active';
 
   return (
-    <div className={`min-h-screen flex flex-col gap-3 max-w-6xl mx-auto p-4 md:p-6 ${shake ? 'animate-shake' : ''}`}>
+    <div
+      className={`min-h-screen flex flex-col gap-3 mx-auto p-4 md:p-6 ${shake ? 'animate-shake' : ''}`}
+      style={{ width: '1000px', maxWidth: '100%' }}
+    >
       <header className="flex justify-between items-baseline pb-2 border-b border-[var(--color-border-warm)]">
         <div>
           <h1 className="text-lg md:text-xl text-[var(--color-accent-amber)] tracking-wider">
@@ -220,17 +223,25 @@ export function CombatScreen({
 
       <InitiativeTracker state={state} character={character} />
 
-      <div className="grid grid-cols-[1fr_140px] gap-3 items-stretch shrink-0 min-h-[420px]">
-        <Battlefield
-          character={character}
-          state={state}
-          scene={scene}
-          decoration={decoration}
-          selectingTarget={selectingTarget}
-          onSelectTarget={(id) => doAttack(id)}
-        />
+      <div
+        className="flex gap-3 items-stretch shrink-0"
+        style={{ height: '420px' }}
+      >
+        <div style={{ width: '824px', flexShrink: 0 }}>
+          <Battlefield
+            character={character}
+            state={state}
+            scene={scene}
+            decoration={decoration}
+            selectingTarget={selectingTarget}
+            onSelectTarget={(id) => doAttack(id)}
+          />
+        </div>
 
-        <aside className="relative bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] min-h-[420px] flex flex-col items-center justify-center p-1.5">
+        <aside
+          className="relative bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] flex flex-col items-center justify-center p-1.5"
+          style={{ width: '140px', flexShrink: 0, height: '420px' }}
+        >
           {overlayActive && state.lastAttack ? (
             <DiceRollOverlay
               key={state.lastAttack.id}

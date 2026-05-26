@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '../ui/Button';
 
 export type TauntContext = 'death' | 'chapter-clear' | 'first-blood' | 'idle' | 'rest' | 'victory';
@@ -62,27 +62,64 @@ interface SoulVoiceProps {
   seed?: number;
 }
 
+const BASE_TICK = 28;
+const FAST_TICK = 4;
+
 export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0 }: SoulVoiceProps) {
   const pool = QUOTES[speaker]?.[context] ?? QUOTES.irenicus.idle;
   const quote = pool[seed % pool.length];
 
   const [typed, setTyped] = useState('');
   const [done, setDone] = useState(false);
+  const [holding, setHolding] = useState(false);
+  const indexRef = useRef(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Reset when quote changes
   useEffect(() => {
+    indexRef.current = 0;
     setTyped('');
     setDone(false);
-    let i = 0;
-    const interval = setInterval(() => {
-      i += 1;
-      setTyped(quote.slice(0, i));
-      if (i >= quote.length) {
-        clearInterval(interval);
+  }, [quote]);
+
+  useEffect(() => {
+    if (done) return;
+    const speed = holding ? FAST_TICK : BASE_TICK;
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      indexRef.current += 1;
+      setTyped(quote.slice(0, indexRef.current));
+      if (indexRef.current >= quote.length) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = null;
         setDone(true);
       }
-    }, 28);
-    return () => clearInterval(interval);
-  }, [quote]);
+    }, speed);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [quote, holding, done]);
+
+  function completeNow() {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = null;
+    indexRef.current = quote.length;
+    setTyped(quote);
+    setDone(true);
+  }
+
+  function handleClick() {
+    if (!done) {
+      completeNow();
+      return;
+    }
+    onDismiss();
+  }
+
+  function handleDoubleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    onDismiss();
+  }
 
   const isIrenicus = speaker === 'irenicus';
   const accentClass = isIrenicus
@@ -92,8 +129,6 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0 }: SoulVoi
     ? 'border-[var(--color-accent-blood)] shadow-[0_0_32px_rgba(181,48,44,0.45)]'
     : 'border-[var(--color-accent-amber)] shadow-[0_0_32px_rgba(244,167,66,0.35)]';
   const bgClass = isIrenicus ? 'bg-[#160a08]' : 'bg-[#1a1408]';
-  // Antagonist stays anonymous until the player has unmasked him through play.
-  // Imoen is named once she speaks (she introduces herself in her first whisper).
   const speakerName = isIrenicus ? 'The voice in the dark' : 'A voice — small, frightened';
   const subtitle = isIrenicus
     ? '(through the soul-bond)'
@@ -103,9 +138,13 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0 }: SoulVoi
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/85 p-6 animate-fade-in"
-      onClick={() => done && onDismiss()}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      onMouseDown={() => setHolding(true)}
+      onMouseUp={() => setHolding(false)}
+      onMouseLeave={() => setHolding(false)}
     >
-      <div className={`max-w-xl w-full ${bgClass} border-2 ${borderClass} p-6`}>
+      <div className={`max-w-xl w-full ${bgClass} border-2 ${borderClass} p-6 select-none`}>
         <div className="flex items-center justify-between mb-3">
           <div className={`${accentClass} text-xs uppercase tracking-[0.4em] font-bold`}>
             ◆ {speakerName}
@@ -122,8 +161,11 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0 }: SoulVoi
           {!done && <span className={`animate-pulse ${accentClass}`}>▌</span>}
           {done && '"'}
         </p>
-        <div className="mt-5 flex justify-end">
-          <Button variant={done ? buttonVariant : 'secondary'} onClick={onDismiss} disabled={!done}>
+        <div className="mt-3 text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
+          {holding ? '▶▶ holding to speed' : done ? '' : 'click skip · hold speed · 2× dismiss'}
+        </div>
+        <div className="mt-3 flex justify-end">
+          <Button variant={done ? buttonVariant : 'secondary'} onClick={(e) => { e.stopPropagation(); onDismiss(); }} disabled={!done}>
             {done ? 'Continue' : '...'}
           </Button>
         </div>

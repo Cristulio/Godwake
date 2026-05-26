@@ -23,6 +23,10 @@ interface GameState {
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number } | null;
   /** True if the player has seen the intro already this save. */
   introSeen: boolean;
+  /** True once the player has died and been reincarnated at least once. */
+  hasReincarnated: boolean;
+  /** True once the quirks tutorial has been dismissed. */
+  quirksTutorialSeen: boolean;
   /** Monster def ids the player has fought at least once. Powers the codex. */
   discoveredMonsters: string[];
 
@@ -59,6 +63,9 @@ interface GameState {
   // Codex
   discoverMonster: (defId: string) => void;
   goToCodex: () => void;
+
+  // Tutorials
+  markQuirksTutorialSeen: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -72,6 +79,8 @@ export const useGameStore = create<GameState>()(
   speedMultiplier: 1,
   taunt: null,
   introSeen: false,
+  hasReincarnated: false,
+  quirksTutorialSeen: false,
   discoveredMonsters: [],
 
   goToTitle: () => set({ screen: 'title' }),
@@ -89,6 +98,9 @@ export const useGameStore = create<GameState>()(
       delve: null,
       taunt: null,
       introSeen: false,
+      hasReincarnated: false,
+      quirksTutorialSeen: false,
+      discoveredMonsters: [],
       screen: 'intro',
     });
   },
@@ -161,6 +173,7 @@ export const useGameStore = create<GameState>()(
       return {
         delve: { ...s.delve, phase: 'failed' },
         character: { ...s.character, quirks: newQuirks },
+        hasReincarnated: true,
       };
     }),
 
@@ -190,6 +203,7 @@ export const useGameStore = create<GameState>()(
         : { discoveredMonsters: [...s.discoveredMonsters, defId] },
     ),
   goToCodex: () => set({ screen: 'codex' }),
+  markQuirksTutorialSeen: () => set({ quirksTutorialSeen: true }),
     }),
     {
       name: 'godwake-save',
@@ -201,6 +215,8 @@ export const useGameStore = create<GameState>()(
         character: state.character,
         speedMultiplier: state.speedMultiplier,
         introSeen: state.introSeen,
+        hasReincarnated: state.hasReincarnated,
+        quirksTutorialSeen: state.quirksTutorialSeen,
         discoveredMonsters: state.discoveredMonsters,
       }),
       version: 1,
@@ -209,11 +225,11 @@ export const useGameStore = create<GameState>()(
         if (state?.saveSeed) {
           setActiveRoller(state.saveSeed);
         }
-        // Migration: legacy saves predate quirks — roll a starting set so the
-        // hub immediately shows the player what they have. Without this, old
-        // characters look quirkless until they die for the first time.
-        if (state?.character && (!state.character.quirks || state.character.quirks.length === 0)) {
-          state.character = { ...state.character, quirks: rollQuirks(getActiveRoller(), 2) };
+        // Ensure character.quirks exists on legacy saves (was undefined before
+        // the system existed). Don't populate — the soul has earned no marks
+        // until first death.
+        if (state?.character && !state.character.quirks) {
+          state.character = { ...state.character, quirks: [] };
         }
       },
     },

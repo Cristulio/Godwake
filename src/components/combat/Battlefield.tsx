@@ -51,9 +51,10 @@ export function Battlefield({
   return (
     <div
       className={`
-        relative w-full h-[420px] border-2 border-[var(--color-border-warm)]
-        overflow-hidden shrink-0 ${BG_BY_SCENE[scene]}
+        relative border-2 border-[var(--color-border-warm)]
+        overflow-hidden ${BG_BY_SCENE[scene]}
       `}
+      style={{ width: '824px', height: '420px', flexShrink: 0 }}
     >
       <DecorationLayer kind={decoration} />
       <GrainOverlay />

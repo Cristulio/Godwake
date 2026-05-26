@@ -5,12 +5,21 @@ import { HubScreen } from './components/hub/HubScreen';
 import { DelveScreen } from './components/delve/DelveScreen';
 import { CodexScreen } from './components/codex/CodexScreen';
 import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
+import { QuirksTutorial } from './components/lore/QuirksTutorial';
 
 function App() {
   const screen = useGameStore((s) => s.screen);
   const taunt = useGameStore((s) => s.taunt);
   const dismissTaunt = useGameStore((s) => s.dismissTaunt);
   const markIntroSeen = useGameStore((s) => s.markIntroSeen);
+  const hasReincarnated = useGameStore((s) => s.hasReincarnated);
+  const quirksTutorialSeen = useGameStore((s) => s.quirksTutorialSeen);
+  const markQuirksTutorialSeen = useGameStore((s) => s.markQuirksTutorialSeen);
+
+  // Show the quirks tutorial once: after first death has happened, the taunt
+  // has dismissed, and the tutorial hasn't been shown yet.
+  const showQuirksTutorial =
+    hasReincarnated && !quirksTutorialSeen && !taunt && screen === 'hub';
 
   let content;
   switch (screen) {
@@ -49,6 +58,7 @@ function App() {
           onDismiss={dismissTaunt}
         />
       )}
+      {showQuirksTutorial && <QuirksTutorial onDismiss={markQuirksTutorialSeen} />}
     </>
   );
 }

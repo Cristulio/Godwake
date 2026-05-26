@@ -33,49 +33,73 @@ const SCENES: { speaker?: string; text: string }[] = [
   },
 ];
 
+const BASE_TICK = 22;
+const FAST_TICK = 4;
+
 export function IntroScreen({ onComplete }: IntroScreenProps) {
   const [idx, setIdx] = useState(0);
   const [typed, setTyped] = useState('');
   const [done, setDone] = useState(false);
+  const [holding, setHolding] = useState(false);
+  const indexRef = useRef(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const scene = SCENES[idx];
 
+  // Reset on scene change
   useEffect(() => {
+    indexRef.current = 0;
     setTyped('');
     setDone(false);
-    let i = 0;
-    const text = scene.text;
+  }, [idx]);
+
+  // Typewriter at current speed; restarts on holding toggle, preserves index.
+  useEffect(() => {
+    if (done) return;
+    const speed = holding ? FAST_TICK : BASE_TICK;
+    if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      i += 1;
-      setTyped(text.slice(0, i));
-      if (i >= text.length) {
+      indexRef.current += 1;
+      setTyped(scene.text.slice(0, indexRef.current));
+      if (indexRef.current >= scene.text.length) {
         if (intervalRef.current) clearInterval(intervalRef.current);
         intervalRef.current = null;
         setDone(true);
       }
-    }, 22);
+    }, speed);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
-      intervalRef.current = null;
     };
-  }, [idx, scene.text]);
+  }, [scene.text, holding, done]);
 
-  function handleAdvance() {
-    // If still typing: STOP the interval and reveal the full line.
-    if (!done) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      intervalRef.current = null;
-      setTyped(scene.text);
-      setDone(true);
-      return;
-    }
-    // If already shown: move to the next scene (or finish).
+  function completeNow() {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = null;
+    indexRef.current = scene.text.length;
+    setTyped(scene.text);
+    setDone(true);
+  }
+
+  function advanceNext() {
     if (idx >= SCENES.length - 1) {
       onComplete();
       return;
     }
     setIdx((i) => i + 1);
+  }
+
+  function handleClick() {
+    if (!done) {
+      completeNow();
+      return;
+    }
+    advanceNext();
+  }
+
+  function handleDoubleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    completeNow();
+    advanceNext();
   }
 
   const isVoiceLine = scene.speaker !== undefined;
@@ -84,7 +108,13 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
     <div className="min-h-screen flex flex-col items-center justify-center px-6 gap-8 [background:radial-gradient(ellipse_at_center,#1a0e08_0%,#080404_100%)]">
       <div
         className="max-w-2xl w-full bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-8 shadow-[0_8px_40px_rgba(0,0,0,0.6)] animate-fade-in select-none"
-        onClick={handleAdvance}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+        onMouseDown={() => setHolding(true)}
+        onMouseUp={() => setHolding(false)}
+        onMouseLeave={() => setHolding(false)}
+        onTouchStart={() => setHolding(true)}
+        onTouchEnd={() => setHolding(false)}
         style={{ cursor: 'pointer' }}
       >
         {isVoiceLine && (
@@ -97,9 +127,7 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
             text-base md:text-lg leading-relaxed min-h-[6rem]
             ${isVoiceLine ? 'italic text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}
           `}
-          style={{
-            textShadow: '0 0 8px rgba(0,0,0,0.5)',
-          }}
+          style={{ textShadow: '0 0 8px rgba(0,0,0,0.5)' }}
         >
           {typed}
           {!done && <span className="animate-pulse text-[var(--color-accent-amber)]">▌</span>}
@@ -108,7 +136,9 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
           <span>
             {idx + 1} / {SCENES.length}
           </span>
-          <span>{done ? '► click to continue' : '► click to skip text'}</span>
+          <span>
+            {holding ? '▶▶ holding to speed' : done ? '► click to continue' : '► click skips · hold speeds · 2× advances'}
+          </span>
         </div>
       </div>
       <button
