@@ -85,8 +85,15 @@ export function CharacterCreationScreen() {
   const [name, setName] = useState('');
   const [raceId, setRaceId] = useState<RaceId>('human');
   const [classId, setClassId] = useState<ClassId>('fighter');
-  const [assignments, setAssignments] = useState<Partial<Record<AbilityName, number>>>({});
+  const [assignments, setAssignments] = useState<Partial<Record<AbilityName, number>>>(
+    () => ({ ...SIR_BRICK_PRESET.baseAbilityScores }),
+  );
   const [skills, setSkills] = useState<SkillName[]>([]);
+
+  // Until the v2 stats UI lands, Fighter auto-takes the Sir Brick standard
+  // array — the in-place editor is hidden for that class. Other classes (when
+  // implemented) will surface the editor again.
+  const usePresetScores = classId === 'fighter';
 
   const race = getRace(raceId);
   const cls = getClass(classId);
@@ -109,6 +116,11 @@ export function CharacterCreationScreen() {
     if (next === classId) return;
     setClassId(next);
     setSkills([]); // skill list depends on class — clear on change
+    if (next === 'fighter') {
+      setAssignments({ ...SIR_BRICK_PRESET.baseAbilityScores });
+    } else {
+      setAssignments({});
+    }
   }
 
   function toggleSkill(s: SkillName) {
@@ -234,6 +246,39 @@ export function CharacterCreationScreen() {
         </div>
       </Panel>
 
+      {usePresetScores && (
+        <Panel className="mb-4" title="Ability Scores">
+          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+            Fighter takes the standard array as Sir Brick: STR 15 / CON 14 / DEX 13 / WIS 12 / CHA 10 / INT 8. Racial bonuses apply on top.
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {ABILITY_NAMES.map((ability) => {
+              const base = SIR_BRICK_PRESET.baseAbilityScores[ability];
+              const racialBonus = race.abilityScoreBonuses[ability] ?? 0;
+              const total = base + racialBonus;
+              const mod = abilityModifier(total);
+              return (
+                <div
+                  key={ability}
+                  className="border border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] px-2 py-1 text-xs flex items-center justify-between gap-2"
+                >
+                  <span className="text-[var(--color-accent-amber)] uppercase tracking-wider font-bold">
+                    {ABILITY_FULL_NAMES[ability]}
+                  </span>
+                  <span className="font-mono text-[var(--color-text-primary)] tabular-nums">
+                    {total}
+                    <span className="ml-1 text-[var(--color-accent-amber)]">
+                      {mod >= 0 ? '+' : ''}{mod}
+                    </span>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </Panel>
+      )}
+
+      {!usePresetScores && (
       <Panel className="mb-4" title={`Ability Scores · Standard Array (${STANDARD_ARRAY.join(', ')})`}>
         <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
           Assign each value to one ability. Racial bonuses apply on top.
@@ -296,6 +341,7 @@ export function CharacterCreationScreen() {
           })}
         </div>
       </Panel>
+      )}
 
       <Panel className="mb-4" title={`Skills · Pick ${cls.skillChoiceCount} (${skills.length}/${cls.skillChoiceCount})`}>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">

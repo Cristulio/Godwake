@@ -76,6 +76,14 @@ export function PlayerPanel({ character, isActiveTurn }: PlayerPanelProps) {
             <div className="text-[var(--color-text-dim)] uppercase tracking-wider">HP</div>
             <div className="font-mono text-[var(--color-text-primary)]">
               {character.hp.current}/{character.hp.max}
+              {character.hp.temp > 0 && (
+                <span
+                  className="ml-1 text-[var(--color-accent-amber)]"
+                  title="Temporary HP — absorbs damage before regular HP."
+                >
+                  +{character.hp.temp}
+                </span>
+              )}
             </div>
             <div className="h-1.5 bg-[var(--color-bg-elevated)] mt-1 border border-[var(--color-border-dim)] overflow-hidden">
               <div

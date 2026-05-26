@@ -60,6 +60,13 @@ export const MonsterSchema = z.object({
   flavorText: z.string().optional(),
   /** Boss gimmick: this monster takes its turn before the player on round 1. */
   firstStrike: z.boolean().optional(),
+  /**
+   * Optional boss mechanic id. The combat engine reads this to apply per-boss
+   * behaviors. 'battle-rage' = on the first turn this monster is at or below
+   * half HP, it enters Battle Rage: advantage on attacks and +2 damage from
+   * then until end of combat.
+   */
+  bossMechanic: z.enum(['battle-rage']).optional(),
 });
 
 export type Monster = z.infer<typeof MonsterSchema>;

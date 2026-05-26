@@ -102,8 +102,8 @@ describe('Hold Person — Magistrate boss mechanic', () => {
     }];
     const roller = createDiceRoller(9);
     let state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
-    // Advance until it's the player's turn. createCombat puts firstStrike
-    // monsters before the player; endTurn rolls into player's slot.
+    // Advance until it's the player's turn — rolled initiative order may
+    // place the monster first or the player first depending on the d20.
     while (state.initiativeOrder[state.currentTurnIndex] !== 'player') {
       state = endTurn(state, hero);
     }

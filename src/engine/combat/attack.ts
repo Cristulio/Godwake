@@ -337,17 +337,49 @@ export function monsterAttack(
   }
   if (action.kind !== 'attack') return state;
 
+  // Battle Rage transition: if this monster has the rage mechanic and is now
+  // at or below half HP and hasn't entered rage yet, flip the flag and
+  // announce. Subsequent attacks read the flag to apply the buffs.
+  let workingState = state;
+  const bloodied =
+    attacker.instance.hp.current * 2 <= attacker.instance.hp.max;
+  const hasBattleRage = monsterDef.bossMechanic === 'battle-rage';
+  const enteringRage =
+    hasBattleRage && bloodied && !attacker.instance.bossRageActive;
+  if (enteringRage) {
+    workingState = setBossRageActive(workingState, attackerId);
+    workingState = {
+      ...workingState,
+      log: [
+        ...workingState.log,
+        {
+          id: nextLogId(workingState),
+          kind: 'system',
+          text: `${attacker.instance.displayName} enters Battle Rage — advantage on attacks, +2 damage.`,
+        },
+      ],
+    };
+  }
+  const raging =
+    hasBattleRage && (enteringRage || attacker.instance.bossRageActive === true);
+
   const ac = computeAC(character);
-  const attackAdvantage: 'normal' | 'advantage' = playerParalyzed ? 'advantage' : 'normal';
+  const attackAdvantage: 'normal' | 'advantage' =
+    playerParalyzed || raging ? 'advantage' : 'normal';
   const toHit = roller.d20(attackAdvantage, action.attackBonus);
   // Monsters don't get the player's Improved Critical
   const crit = toHit.rolls[0] === 20;
   const hit = crit || (toHit.total >= ac && !toHit.natural1);
 
   const logEntries: CombatLogEntry[] = [];
-  const advantageNote = attackAdvantage === 'advantage' ? ' (advantage — paralyzed)' : '';
+  const advantageNote =
+    attackAdvantage === 'advantage'
+      ? raging && !playerParalyzed
+        ? ' (advantage — raging)'
+        : ' (advantage — paralyzed)'
+      : '';
   logEntries.push({
-    id: nextLogId(state),
+    id: nextLogId(workingState),
     kind: 'roll',
     text: `${attacker.instance.displayName} attacks ${character.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}${advantageNote}.`,
   });
@@ -367,8 +399,8 @@ export function monsterAttack(
   };
 
   let nextState: CombatState = {
-    ...state,
-    log: [...state.log, ...logEntries],
+    ...workingState,
+    log: [...workingState.log, ...logEntries],
     lastAttack: attackEvent,
     attackEventCounter: attackEvent.id,
   };
@@ -380,7 +412,8 @@ export function monsterAttack(
       die: damageExpr.die,
       modifier: 0,
     });
-    const rawDamage = damageRoll.total + damageExpr.modifier;
+    const rageBonus = raging ? 2 : 0;
+    const rawDamage = damageRoll.total + damageExpr.modifier + rageBonus;
 
     const quirkMods = characterQuirkMods(character);
     const immune =
@@ -388,9 +421,14 @@ export function monsterAttack(
     const totalDamage = immune ? 0 : rawDamage;
 
     nextState = applyDamage(nextState, 'player', totalDamage, character);
+    const modifierSuffix =
+      damageExpr.modifier !== 0
+        ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}`
+        : '';
+    const rageSuffix = rageBonus > 0 ? ` +${rageBonus} rage` : '';
     const damageLine = immune
       ? `Damage negated: ${character.name} is immune to ${action.damageType}.`
-      : `Damage: ${damageRoll.rolls.join('+')}${damageExpr.modifier !== 0 ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}` : ''} = ${totalDamage} ${action.damageType}.`;
+      : `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} = ${totalDamage} ${action.damageType}.`;
     nextState = {
       ...nextState,
       log: [
@@ -420,6 +458,19 @@ function markMonsterActionUsed(state: CombatState, attackerId: string): CombatSt
           ...c.instance,
           actionEconomy: { ...c.instance.actionEconomy, actionUsed: true },
         },
+      };
+    }),
+  };
+}
+
+function setBossRageActive(state: CombatState, attackerId: string): CombatState {
+  return {
+    ...state,
+    combatants: state.combatants.map((c) => {
+      if (c.id !== attackerId || c.kind !== 'monster') return c;
+      return {
+        ...c,
+        instance: { ...c.instance, bossRageActive: true },
       };
     }),
   };

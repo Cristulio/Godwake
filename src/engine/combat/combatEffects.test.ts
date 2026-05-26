@@ -39,10 +39,11 @@ describe('combat effects — initiative modifiers', () => {
     const roller = createDiceRoller(42);
     const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
     const opening = state.log[0].text;
-    // Initiative line should show the player's roll d20 + DEX(2) + Helm(2) = +4 modifier
     expect(opening).toContain('Tester');
-    // Player should be first in the order (player-first override) — confirm it's not blocking
-    expect(state.initiativeOrder[0]).toBe('player');
+    // Player and monster both appear in the initiative order — rolled order
+    // now actually decides who acts first (no player-favored override).
+    expect(state.initiativeOrder).toContain('player');
+    expect(state.initiativeOrder).toHaveLength(2);
   });
 });
 
@@ -192,5 +193,47 @@ describe('combat effects — rerolls', () => {
       }
     }
     expect(consumed).toBe(true);
+  });
+});
+
+describe('combat effects — Battle Rage (Ilyich)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function setupRagingIlyich(): { state: CombatState; ilyichId: string; hero: Character; roller: ReturnType<typeof createDiceRoller> } {
+    const ilyich = getMonster('duergar-ilyich');
+    const hero = makeHuman();
+    const roller = createDiceRoller(7);
+    let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
+    const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+    // Drop Ilyich to half HP so the next monsterAttack triggers rage.
+    state = {
+      ...state,
+      combatants: state.combatants.map((c) =>
+        c.id === ilyichId && c.kind === 'monster'
+          ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: Math.floor(c.instance.hp.max / 2) } } }
+          : c,
+      ),
+    };
+    return { state, ilyichId, hero, roller };
+  }
+
+  it('Ilyich enters Battle Rage when reduced to half HP', () => {
+    const { state, ilyichId, hero, roller } = setupRagingIlyich();
+    const next = monsterAttack({ roller, character: hero, state }, ilyichId);
+    const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
+    expect(rageLog).toBeDefined();
+    const ilyichAfter = next.combatants.find((c) => c.id === ilyichId);
+    expect(ilyichAfter?.kind === 'monster' && ilyichAfter.instance.bossRageActive).toBe(true);
+  });
+
+  it('a healthy Ilyich is not raging', () => {
+    const ilyich = getMonster('duergar-ilyich');
+    const hero = makeHuman();
+    const roller = createDiceRoller(7);
+    const state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
+    const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+    const next = monsterAttack({ roller, character: hero, state }, ilyichId);
+    const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
+    expect(rageLog).toBeUndefined();
   });
 });
