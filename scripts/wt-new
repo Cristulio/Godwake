@@ -81,15 +81,36 @@ if [ "$LAUNCH" -eq 1 ]; then
     echo "  cd \"$WORKTREE_PATH\" && npm install && claude"
     exit 0
   fi
-  echo ""
-  echo "→ Launching new Terminal window..."
-  osascript <<EOF
-tell application "Terminal"
+  LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude"
+  if [ -d "/Applications/iTerm.app" ]; then
+    echo ""
+    echo "→ Opening new iTerm2 tab..."
+    osascript <<EOF
+tell application "iTerm"
   activate
-  do script "cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude"
+  if (count of windows) = 0 then
+    create window with default profile
+    tell current session of current window to write text "$LAUNCH_CMD"
+  else
+    tell current window
+      create tab with default profile
+      tell current session of current tab to write text "$LAUNCH_CMD"
+    end tell
+  end if
 end tell
 EOF
-  echo "✓ New Terminal window opened with claude running."
+    echo "✓ iTerm2 tab opened with claude running."
+  else
+    echo ""
+    echo "→ Launching new Terminal window..."
+    osascript <<EOF
+tell application "Terminal"
+  activate
+  do script "$LAUNCH_CMD"
+end tell
+EOF
+    echo "✓ New Terminal window opened with claude running."
+  fi
 else
   echo ""
   echo "Open a new terminal there to start a Claude session:"
