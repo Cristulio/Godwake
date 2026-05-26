@@ -5,6 +5,7 @@ import { getClass } from '../../content/classes';
 import { computeAC } from '../../engine/character/derived';
 import { PlayerPortrait } from './PlayerPortrait';
 import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
+import { QuirkRow } from '../ui/QuirkBadge';
 
 interface PlayerPanelProps {
   character: Character;
@@ -101,6 +102,15 @@ export function PlayerPanel({ character, isActiveTurn }: PlayerPanelProps) {
           <ActionFlag label="Bonus" available={!ae.bonusActionUsed} />
           <ActionFlag label="Reaction" available={!ae.reactionUsed} />
         </div>
+
+        {character.quirks.length > 0 && (
+          <div className="mt-3">
+            <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mb-1">
+              Quirks
+            </div>
+            <QuirkRow quirkIds={character.quirks} />
+          </div>
+        )}
       </div>
     </div>
   );

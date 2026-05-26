@@ -28,21 +28,33 @@ type MonsterProps = CommonProps & {
 
 export type BattlefieldSpriteProps = PlayerProps | MonsterProps;
 
+/**
+ * Per-monster display widths. Heights flow from each sprite's viewBox aspect.
+ * Fighter is rendered at 84px wide (= 140px tall at 24:40 ratio); use that as
+ * the "human" reference and size races accordingly.
+ *
+ *   Goblin / kobold        — small race, ~68% human height
+ *   Skeleton / mephit      — medium-small, ~80% human height
+ *   Warden / Ilyich        — duergar (small but stocky), full ~95%
+ *   Animated Armor         — human-plate-suit sized, ~100%
+ */
 function monsterSpriteWidth(defId: string): string {
   switch (defId) {
     case 'goblin-warden':
     case 'duergar-ilyich':
-      return '88px';
-    case 'animated-armor':
-      return '88px';
-    case 'skeleton':
-      return '76px';
-    case 'dust-mephit':
       return '80px';
-    case 'kobold':
-      return '64px';
-    default:
+    case 'animated-armor':
+      return '84px';
+    case 'skeleton':
+      return '70px';
+    case 'dust-mephit':
       return '72px';
+    case 'kobold':
+      return '50px';
+    case 'goblin':
+      return '56px';
+    default:
+      return '60px';
   }
 }
 

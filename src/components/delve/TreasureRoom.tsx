@@ -3,6 +3,7 @@ import type { RoomSpec } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
+import { characterQuirkMods } from '../../engine/character/quirks';
 
 interface TreasureRoomProps {
   room: RoomSpec;
@@ -11,12 +12,18 @@ interface TreasureRoomProps {
 
 export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
   const addDelveReward = useGameStore((s) => s.addDelveReward);
+  const character = useGameStore((s) => s.character);
   const [revealed, setRevealed] = useState(false);
+  const [actualGold, setActualGold] = useState(room.goldReward ?? 0);
 
   useEffect(() => {
     const t = setTimeout(() => setRevealed(true), 600);
     if (room.goldReward) {
-      addDelveReward(room.goldReward, 0);
+      const mods = character ? characterQuirkMods(character) : {};
+      const multiplier = mods.goldMultiplier ?? 1;
+      const final = Math.floor(room.goldReward * multiplier);
+      setActualGold(final);
+      addDelveReward(final, 0);
     }
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +55,12 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
           </p>
           {revealed && room.goldReward && (
             <div className="text-2xl font-mono text-[var(--color-accent-gold)] animate-fade-in">
-              +{room.goldReward} gold
+              +{actualGold} gold
+              {actualGold > (room.goldReward ?? 0) && (
+                <span className="text-sm text-[var(--color-status-poison)] ml-2 uppercase tracking-widest">
+                  · bargain hunter
+                </span>
+              )}
             </div>
           )}
         </div>

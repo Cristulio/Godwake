@@ -5,6 +5,7 @@ import { createIronCellsDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { PhandalinScene } from './PhandalinScene';
+import { QuirkRow } from '../ui/QuirkBadge';
 
 interface Building {
   id: string;
@@ -92,6 +93,9 @@ export function HubScreen() {
             </div>
             <div className="text-[var(--color-text-secondary)] text-xs mt-1">
               HP {character.hp.current}/{character.hp.max}
+            </div>
+            <div className="mt-2">
+              <QuirkRow quirkIds={character.quirks} emptyText="The soul wears no marks this life" />
             </div>
           </div>
         </div>

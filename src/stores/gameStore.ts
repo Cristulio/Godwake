@@ -3,9 +3,10 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Character } from '../types/character';
 import type { CombatState } from '../types/combat';
 import type { DelveState } from '../types/delve';
-import { setActiveRoller } from '../engine/dice';
+import { setActiveRoller, getActiveRoller } from '../engine/dice';
 import { buildDefaultFighter } from '../engine/character/defaultCharacter';
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
+import { rollQuirks } from '../engine/character/quirks';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
 export type Screen = 'title' | 'intro' | 'hub' | 'delve' | 'reincarnation' | 'codex';
@@ -154,9 +155,12 @@ export const useGameStore = create<GameState>()(
 
   failDelve: () =>
     set((s) => {
-      if (!s.delve) return s;
+      if (!s.delve || !s.character) return s;
+      // Reincarnation: re-roll quirks for the next life. Class/level/XP persist.
+      const newQuirks = rollQuirks(getActiveRoller(), 2);
       return {
         delve: { ...s.delve, phase: 'failed' },
+        character: { ...s.character, quirks: newQuirks },
       };
     }),
 

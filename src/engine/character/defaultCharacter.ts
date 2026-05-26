@@ -1,5 +1,7 @@
 import type { Character } from '../../types/character';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
+import { rollQuirks } from './quirks';
+import { getActiveRoller } from '../dice';
 
 /**
  * MVP placeholder: builds a default Fighter (Champion) so the player can
@@ -38,5 +40,6 @@ export function buildDefaultFighter(name: string = 'Sir Brick'): Character {
       armor: { itemId: 'leather-armor' },
     },
     goldInPocket: 25,
+    quirks: rollQuirks(getActiveRoller(), 2),
   };
 }

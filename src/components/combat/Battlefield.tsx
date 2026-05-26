@@ -51,8 +51,8 @@ export function Battlefield({
   return (
     <div
       className={`
-        relative w-full h-[360px] border-2 border-[var(--color-border-warm)]
-        overflow-hidden ${BG_BY_SCENE[scene]}
+        relative w-full h-[420px] border-2 border-[var(--color-border-warm)]
+        overflow-hidden shrink-0 ${BG_BY_SCENE[scene]}
       `}
     >
       <DecorationLayer kind={decoration} />
@@ -66,7 +66,7 @@ export function Battlefield({
       {/* Edge vignette */}
       <div className="absolute inset-0 pointer-events-none [background:radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.55)_100%)]" />
 
-      <div className="relative flex items-end justify-between px-10 pt-8 pb-6 gap-6 h-full">
+      <div className="relative flex items-end justify-between px-10 pt-10 pb-8 gap-6 h-full">
         <div className="shrink-0 w-[96px] flex justify-center">
           <BattlefieldSprite
             kind="player"

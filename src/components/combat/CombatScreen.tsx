@@ -220,7 +220,7 @@ export function CombatScreen({
 
       <InitiativeTracker state={state} character={character} />
 
-      <div className="grid grid-cols-[1fr_140px] gap-3 items-stretch">
+      <div className="grid grid-cols-[1fr_140px] gap-3 items-stretch shrink-0 min-h-[420px]">
         <Battlefield
           character={character}
           state={state}
@@ -230,7 +230,7 @@ export function CombatScreen({
           onSelectTarget={(id) => doAttack(id)}
         />
 
-        <aside className="relative bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] min-h-[360px] flex flex-col items-center justify-center p-1.5">
+        <aside className="relative bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] min-h-[420px] flex flex-col items-center justify-center p-1.5">
           {overlayActive && state.lastAttack ? (
             <DiceRollOverlay
               key={state.lastAttack.id}

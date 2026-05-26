@@ -1,0 +1,107 @@
+import { QuirkSchema, type Quirk } from '../../schemas/quirk';
+
+const RAW: Quirk[] = [
+  QuirkSchema.parse({
+    id: 'tymoras-eye',
+    name: "Tymora's Eye",
+    sentiment: 'boon',
+    flavor:
+      'The lady of luck has lent you a single coin of her favour. You feel it pressing against your ribs.',
+    effect: 'Reroll a missed attack once per delve.',
+    modifiers: { rerollMissesPerDelve: 1 },
+  }),
+  QuirkSchema.parse({
+    id: 'iron-stomach',
+    name: 'Iron Stomach',
+    sentiment: 'odd',
+    flavor:
+      'You ate something in the cells that disagreed with you and somehow won the argument. Nothing tastes quite right anymore.',
+    effect: 'Immune to poison damage. Smell-based Perception checks are clumsy.',
+    modifiers: { poisonImmune: true },
+  }),
+  QuirkSchema.parse({
+    id: 'bargain-hunter',
+    name: 'Bargain Hunter',
+    sentiment: 'boon',
+    flavor:
+      'You learned where the merchants keep the second purse — the one they\'d swear they never had.',
+    effect: '+25% to gold rewards from delves.',
+    modifiers: { goldMultiplier: 1.25 },
+  }),
+  QuirkSchema.parse({
+    id: 'vertigo',
+    name: 'Vertigo',
+    sentiment: 'bane',
+    flavor:
+      'The world tilts a half-step when it shouldn\'t. You move first because you know it will only get worse.',
+    effect: 'Initiative −2, but +2 to-hit on your first attack of each combat.',
+    modifiers: { initiativeMod: -2, firstTurnAttackBonus: 2 },
+  }),
+  QuirkSchema.parse({
+    id: 'hangry',
+    name: 'Hangry',
+    sentiment: 'boon',
+    flavor:
+      'Pain sharpens. The hungrier the wolf, the meaner the bite. You learned that one quickly.',
+    effect: '+2 to damage rolls when you are at or below half HP.',
+    modifiers: { hangryDamageBonus: 2 },
+  }),
+  QuirkSchema.parse({
+    id: 'sun-touched',
+    name: 'Sun-Touched',
+    sentiment: 'odd',
+    flavor:
+      'Something from the surface follows you in the dark. Your skin remembers warmth your bones never knew.',
+    effect: 'Cantrips deal +1 fire damage. Vulnerable to cold damage.',
+    modifiers: {},
+  }),
+  QuirkSchema.parse({
+    id: 'bloody-minded',
+    name: 'Bloody-Minded',
+    sentiment: 'odd',
+    flavor:
+      'You finish what you start. The wounded don\'t deserve mercy and the dying are easier to kill.',
+    effect: '+1 to-hit vs wounded enemies (below half HP). −1 AC.',
+    modifiers: { woundedAttackBonus: 1, acMod: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'cursed-coin',
+    name: 'Cursed Coin',
+    sentiment: 'odd',
+    flavor:
+      'A copper that always comes back. The face on it is not one of the gods you know.',
+    effect: 'Start each delve with +10 gold. Cannot be sold or discarded.',
+    modifiers: { startBonusGold: 10 },
+  }),
+  QuirkSchema.parse({
+    id: 'bardic-memory',
+    name: 'Bardic Memory',
+    sentiment: 'boon',
+    flavor:
+      'You can hum songs you have never heard. The words come in a language nobody at the table knows.',
+    effect: '+1 to Charisma checks.',
+    modifiers: { charismaMod: 1 },
+  }),
+  QuirkSchema.parse({
+    id: 'touched-beyond',
+    name: 'Touched by the Beyond',
+    sentiment: 'bane',
+    flavor:
+      'When you blink, you see the room as it was. The dead are still there. They are very busy.',
+    effect: 'You see the dead clearly. −1 to your first attack roll each combat.',
+    modifiers: { firstAttackPenalty: -1 },
+  }),
+];
+
+const POOL: Quirk[] = RAW;
+const BY_ID: Map<string, Quirk> = new Map(POOL.map((q) => [q.id, q]));
+
+export function getQuirk(id: string): Quirk {
+  const q = BY_ID.get(id);
+  if (!q) throw new Error(`Quirk not found: ${id}`);
+  return q;
+}
+
+export function listQuirks(): Quirk[] {
+  return POOL;
+}
