@@ -5,6 +5,8 @@ import type { Armor } from '../../schemas/item';
 import { getRace } from '../../content/races';
 import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
+import { characterQuirkMods } from './quirks';
+import { characterBlessingMods } from './blessings';
 
 /**
  * Proficiency bonus by character level (PHB Table: Proficiency Bonus).
@@ -72,6 +74,11 @@ export function computeAC(character: Character): number {
     base += 1;
   }
 
+  const quirkMods = characterQuirkMods(character);
+  const blessingMods = characterBlessingMods(character);
+  base += quirkMods.acMod ?? 0;
+  base += blessingMods.acBonus ?? 0;
+
   return base;
 }
 
@@ -98,15 +105,24 @@ export function characterHasMechanic(character: Character, mechanicKey: string):
 }
 
 /**
- * Initiative = DEX modifier (+ feats/items later).
+ * Initiative = DEX modifier + quirk/blessing initiative tweaks.
  */
 export function initiativeModifier(character: Character): number {
-  return modifierFor(character, 'dex');
+  const dex = modifierFor(character, 'dex');
+  const quirkMods = characterQuirkMods(character);
+  const blessingMods = characterBlessingMods(character);
+  return dex + (quirkMods.initiativeMod ?? 0) + (blessingMods.initiativeBonus ?? 0);
 }
 
 /**
  * Crit range. Default 20 only. Improved Critical (Champion lv3) → 19-20.
+ * Tempus's Edge (blessing) widens the band by N on the low end.
  */
 export function critRange(character: Character): number[] {
-  return characterHasMechanic(character, 'improved-critical') ? [19, 20] : [20];
+  const base = characterHasMechanic(character, 'improved-critical') ? 19 : 20;
+  const bonus = characterBlessingMods(character).critRangeBonus ?? 0;
+  const low = Math.max(2, base - bonus);
+  const result: number[] = [];
+  for (let n = low; n <= 20; n++) result.push(n);
+  return result;
 }

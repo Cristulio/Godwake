@@ -83,6 +83,14 @@ export interface Character {
   // Run-state additions
   quirks: string[];
   blessings: string[];
+  /**
+   * Per-delve mutable budgets (Tymora's Eye reroll counter, etc.). Optional so
+   * legacy saves rehydrate without migration; treat undefined fields as 0.
+   * Initialized in startDelve, mutated in combat, dropped at delve end.
+   */
+  delveBudgets?: {
+    quirkRerollMissesRemaining?: number;
+  };
 
   // Meta
   goldInBank: number;
