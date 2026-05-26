@@ -1,45 +1,88 @@
 import type { Character } from '../../types/character';
+import type { AbilityScores } from '../../types/abilities';
+import type { ClassId, RaceId } from '../../schemas/ids';
+import type { SkillName } from '../../types/skills';
+import type { ItemRef } from '../../schemas/item';
+import type { EquipmentSlots } from '../../types/character';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
 
+export interface CharacterCreationInput {
+  name: string;
+  raceId: RaceId;
+  classId: ClassId;
+  baseAbilityScores: AbilityScores;
+  skillProficiencies: SkillName[];
+}
+
+interface StartingKit {
+  inventory: ItemRef[];
+  equipped: EquipmentSlots;
+  goldInPocket: number;
+}
+
+function startingKitFor(classId: ClassId): StartingKit {
+  switch (classId) {
+    case 'fighter':
+      return {
+        inventory: [
+          { itemId: 'longsword' },
+          { itemId: 'leather-armor' },
+          { itemId: 'shield' },
+          { itemId: 'dagger' },
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: { itemId: 'longsword' },
+          offHand: { itemId: 'shield' },
+          armor: { itemId: 'leather-armor' },
+        },
+        goldInPocket: 25,
+      };
+    default:
+      return {
+        inventory: [],
+        equipped: { mainHand: null, offHand: null, armor: null },
+        goldInPocket: 10,
+      };
+  }
+}
+
 /**
- * MVP placeholder: builds a default Fighter (Champion) so the player can
- * start a delve without going through character creation yet. Once the
- * character creation screen is built, this becomes a quick-start template
- * rather than the only path.
+ * Builds the character from the player's character-creation choices and
+ * outfits them with their class's starting kit. New lives wear no quirks
+ * until they fall — the soul earns no marks before its first death.
  */
-export function buildDefaultFighter(name: string = 'Sir Brick'): Character {
+export function buildPlayerCharacter(input: CharacterCreationInput): Character {
+  const kit = startingKitFor(input.classId);
   return {
     ...createCharacter({
       id: 'player-1',
-      name,
-      raceId: 'human',
-      classId: 'fighter',
-      baseAbilityScores: {
-        str: STANDARD_ARRAY[0], // 15
-        con: STANDARD_ARRAY[1], // 14
-        dex: STANDARD_ARRAY[2], // 13
-        wis: STANDARD_ARRAY[3], // 12
-        cha: STANDARD_ARRAY[4], // 10
-        int: STANDARD_ARRAY[5], // 8
-      },
-      skillProficiencies: ['athletics', 'perception'],
+      name: input.name,
+      raceId: input.raceId,
+      classId: input.classId,
+      baseAbilityScores: input.baseAbilityScores,
+      skillProficiencies: input.skillProficiencies,
     }),
-    inventory: [
-      { itemId: 'longsword' },
-      { itemId: 'leather-armor' },
-      { itemId: 'shield' },
-      { itemId: 'dagger' },
-      { itemId: 'potion-of-healing' },
-      { itemId: 'potion-of-healing' },
-    ],
-    equipped: {
-      mainHand: { itemId: 'longsword' },
-      offHand: { itemId: 'shield' },
-      armor: { itemId: 'leather-armor' },
-    },
-    goldInPocket: 25,
-    // No quirks on first life — the soul wears no marks until it first dies
-    // and the grove returns it changed.
+    inventory: kit.inventory,
+    equipped: kit.equipped,
+    goldInPocket: kit.goldInPocket,
     quirks: [],
   };
 }
+
+/** The Sir Brick preset — used as a "Recommended" quick-start in creation. */
+export const SIR_BRICK_PRESET: CharacterCreationInput = {
+  name: 'Sir Brick',
+  raceId: 'human',
+  classId: 'fighter',
+  baseAbilityScores: {
+    str: STANDARD_ARRAY[0], // 15
+    con: STANDARD_ARRAY[1], // 14
+    dex: STANDARD_ARRAY[2], // 13
+    wis: STANDARD_ARRAY[3], // 12
+    cha: STANDARD_ARRAY[4], // 10
+    int: STANDARD_ARRAY[5], // 8
+  },
+  skillProficiencies: ['athletics', 'perception'],
+};

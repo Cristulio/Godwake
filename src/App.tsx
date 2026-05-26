@@ -1,6 +1,7 @@
 import { useGameStore } from './stores/gameStore';
 import { TitleScreen } from './components/title/TitleScreen';
 import { IntroScreen } from './components/title/IntroScreen';
+import { CharacterCreationScreen } from './components/creation/CharacterCreationScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { DelveScreen } from './components/delve/DelveScreen';
 import { CodexScreen } from './components/codex/CodexScreen';
@@ -25,6 +26,9 @@ function App() {
   switch (screen) {
     case 'title':
       content = <TitleScreen />;
+      break;
+    case 'character-creation':
+      content = <CharacterCreationScreen />;
       break;
     case 'intro':
       content = <IntroScreen onComplete={markIntroSeen} />;
