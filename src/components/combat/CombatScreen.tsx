@@ -13,11 +13,14 @@ import {
   useCunningAction,
   type CunningActionChoice,
   useConsumable,
+  castSpell,
 } from '../../engine/combat';
+import { getSpell } from '../../content/spells';
 import { ItemPicker } from './ItemPicker';
 import { CombatLog } from './CombatLog';
 import { ActionBar } from './ActionBar';
 import { CunningActionPicker } from './CunningActionPicker';
+import { SpellPicker } from './SpellPicker';
 import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
@@ -56,6 +59,8 @@ export function CombatScreen({
   const [autoEndNotice, setAutoEndNotice] = useState(false);
   const [pickingItem, setPickingItem] = useState(false);
   const [pickingCunning, setPickingCunning] = useState(false);
+  const [pickingSpell, setPickingSpell] = useState(false);
+  const [castingSpellId, setCastingSpellId] = useState<string | null>(null);
 
   // Mount dice overlay whenever a new attack event arrives
   useEffect(() => {
@@ -138,6 +143,9 @@ export function CombatScreen({
       (character.resources.cunningActionUsesRemaining ?? 0) > 0 &&
       !character.actionEconomy.bonusActionUsed;
     if (hasUsableBonus || hasUsableActionSurge || hasUsableCunningAction) return;
+    // Don't auto-end mid-spell-pick — the player may have a cantrip queued
+    // even after a slot-spell. The Spells modal flow short-circuits this.
+    if (pickingSpell || castingSpellId) return;
 
     setAutoEndNotice(true);
     const t = setTimeout(() => {
@@ -178,6 +186,11 @@ export function CombatScreen({
   }
 
   function doAttack(targetId: string) {
+    // If we're mid-spell selection, route to spell cast instead.
+    if (castingSpellId) {
+      doCastSpell(castingSpellId, targetId);
+      return;
+    }
     const roller = getActiveRoller();
     const equippedWeaponId = character.equipped.mainHand?.itemId;
     if (!equippedWeaponId) return;
@@ -189,6 +202,34 @@ export function CombatScreen({
     setSelectingTarget(false);
     setCharacter({ ...character });
     setCombat(next);
+  }
+
+  function handleSpellPicked(spellId: string) {
+    const spell = getSpell(spellId);
+    setPickingSpell(false);
+    const aliveMonsters = state.combatants.filter(
+      (c) => c.kind === 'monster' && c.instance.hp.current > 0,
+    );
+    if (spell.target === 'single' && aliveMonsters.length > 1) {
+      // Need a target pick.
+      setCastingSpellId(spellId);
+      setSelectingTarget(true);
+      return;
+    }
+    const targetId =
+      spell.target !== 'self' && aliveMonsters[0]
+        ? aliveMonsters[0].id
+        : undefined;
+    doCastSpell(spellId, targetId);
+  }
+
+  function doCastSpell(spellId: string, targetId?: string) {
+    const roller = getActiveRoller();
+    const result = castSpell({ roller, character, state, spellId, targetId });
+    setCastingSpellId(null);
+    setSelectingTarget(false);
+    setCharacter({ ...character });
+    if (result.cast) setCombat(result.state);
   }
 
   function handleEndTurn() {
@@ -353,6 +394,7 @@ export function CombatScreen({
             onSecondWind={handleSecondWind}
             onActionSurge={handleActionSurge}
             onCunningAction={() => setPickingCunning(true)}
+            onSpells={() => setPickingSpell(true)}
             onUseItem={() => setPickingItem(true)}
             onEndTurn={handleEndTurn}
           />
@@ -373,6 +415,14 @@ export function CombatScreen({
         <CunningActionPicker
           onPick={handleCunningAction}
           onCancel={() => setPickingCunning(false)}
+        />
+      )}
+
+      {pickingSpell && (
+        <SpellPicker
+          character={character}
+          onPick={handleSpellPicked}
+          onCancel={() => setPickingSpell(false)}
         />
       )}
 

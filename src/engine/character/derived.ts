@@ -80,6 +80,14 @@ export function computeAC(character: Character): number {
   base += blessingMods.acBonus ?? 0;
   base += character.permanentAcBonus ?? 0;
 
+  // Wizard buffs.
+  if (character.resources.mageArmorActive && !bodyArmor) {
+    base += 3;
+  }
+  if (character.resources.shieldActive) {
+    base += 5;
+  }
+
   return base;
 }
 

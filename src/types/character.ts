@@ -31,6 +31,14 @@ export interface EquipmentSlots {
   armor: ItemRef | null;
 }
 
+/** Wizard spell slots by level. Missing entries treated as 0. */
+export interface SpellSlots {
+  1?: number;
+  2?: number;
+  3?: number;
+  4?: number;
+}
+
 /** Per-class run-state resources (Second Wind charges, Action Surge uses, rage, etc.). */
 export interface ClassResources {
   /** Fighter: Second Wind (1 use per short rest). */
@@ -41,6 +49,14 @@ export interface ClassResources {
   sneakAttackUsedThisTurn?: boolean;
   /** Rogue: Cunning Action uses left this combat. 1 base, 2 for Thief subclass. Refreshes on encounter start + short/long rest. */
   cunningActionUsesRemaining?: number;
+  /** Wizard: current spell slots remaining by level. Refreshes on long rest. */
+  spellSlots?: SpellSlots;
+  /** Wizard: spell ids the wizard has prepared/known and can cast. Cantrips included; cantrips don't consume a slot. */
+  knownSpells?: string[];
+  /** Wizard: Mage Armor active this combat (+3 AC). Clears at combat end. */
+  mageArmorActive?: boolean;
+  /** Wizard: Shield reaction-buff active for the next monster turn (+5 AC). Cleared at start of player's next turn. */
+  shieldActive?: boolean;
 }
 
 /**

@@ -127,6 +127,16 @@ export function createCombat(input: CreateCombatInput): CombatState {
     };
   }
 
+  // Wizard: Mage Armor and Shield are per-combat buffs. Clear stale state so
+  // a previous combat's casts don't carry AC forward into the next room.
+  if (character.classId === 'wizard') {
+    character.resources = {
+      ...character.resources,
+      mageArmorActive: false,
+      shieldActive: false,
+    };
+  }
+
   // Lathander's Dawn (and any future per-room temp-HP blessing): grant temp HP
   // at the start of combat. Temp HP doesn't stack — take the higher of current
   // and granted, RAW.
