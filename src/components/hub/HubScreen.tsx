@@ -10,6 +10,7 @@ interface Building {
   name: string;
   description: string;
   enabled: boolean;
+  cta?: string;
 }
 
 const BUILDINGS: Building[] = [
@@ -21,11 +22,12 @@ const BUILDINGS: Building[] = [
     enabled: false,
   },
   {
-    id: 'delveboard',
-    name: 'The Delveboard',
+    id: 'stonehill-inn',
+    name: 'Stonehill Inn',
     description:
-      'A blackwood slab at the back of the Stonehill Inn. Job postings, dungeon maps, and bounties pinned in dried wax. Start a run here.',
+      'Phandalin\'s tavern, a warm room with a blackwood Delveboard at the back: job postings, dungeon maps, bounties pinned in dried wax.',
     enabled: true,
+    cta: 'Delve',
   },
   {
     id: 'lionshield-coster',
@@ -101,9 +103,9 @@ export function HubScreen() {
             <Button
               variant={b.enabled ? 'primary' : 'secondary'}
               disabled={!b.enabled}
-              onClick={b.id === 'delveboard' ? handleEnterDungeon : undefined}
+              onClick={b.id === 'stonehill-inn' ? handleEnterDungeon : undefined}
             >
-              {b.enabled ? 'Enter' : 'Coming soon'}
+              {b.enabled ? (b.cta ?? 'Enter') : 'Coming soon'}
             </Button>
           </Panel>
         ))}

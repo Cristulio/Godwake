@@ -12,7 +12,7 @@ interface FloatingDamageProps {
 
 export function FloatingDamage({ items }: FloatingDamageProps) {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-visible">
+    <div className="absolute inset-0 pointer-events-none overflow-visible z-10">
       {items.map((item) => (
         <DamageNumber key={item.id} item={item} />
       ))}
@@ -45,11 +45,14 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
   return (
     <div
       className={`
-        absolute left-1/2 top-1/2 -translate-x-1/2 font-mono text-2xl font-bold ${color}
+        absolute left-1/2 top-1/3 -translate-x-1/2 font-mono text-4xl font-extrabold ${color}
         transition-all duration-[1400ms] ease-out
-        ${visible ? '-translate-y-16 opacity-0' : 'translate-y-0 opacity-100'}
+        ${visible ? '-translate-y-20 opacity-0' : 'translate-y-0 opacity-100'}
       `}
-      style={{ textShadow: '0 0 6px rgba(0,0,0,0.8), 0 0 12px rgba(0,0,0,0.6)' }}
+      style={{
+        textShadow:
+          '0 0 6px rgba(0,0,0,0.95), 0 0 14px rgba(0,0,0,0.85), 2px 2px 0 rgba(0,0,0,0.9)',
+      }}
     >
       {label}
     </div>

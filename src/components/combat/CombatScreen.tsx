@@ -195,8 +195,6 @@ export function CombatScreen({
         onSelectTarget={(id) => doAttack(id)}
       />
 
-      <CombatLog entries={state.log} />
-
       {isResolved ? (
         <div className="flex flex-col items-center gap-4 mt-2 animate-fade-in">
           <div className={`text-2xl md:text-3xl uppercase tracking-[0.4em] ${
@@ -230,6 +228,8 @@ export function CombatScreen({
           />
         </>
       )}
+
+      <CombatLog entries={state.log} />
 
       {overlayActive && state.lastAttack && (
         <DiceRollOverlay

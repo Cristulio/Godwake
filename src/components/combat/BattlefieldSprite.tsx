@@ -9,6 +9,8 @@ import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
 type CommonProps = {
   isActiveTurn: boolean;
   facing: 'left' | 'right';
+  /** Bumps when this sprite has just executed an attack. Triggers a lunge animation. */
+  attackPulse: number;
 };
 
 type PlayerProps = CommonProps & {
@@ -29,8 +31,7 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
   const hpCurrent =
     props.kind === 'player' ? props.character.hp.current : props.instance.hp.current;
   const hpMax = props.kind === 'player' ? props.character.hp.max : props.instance.hp.max;
-  const ac =
-    props.kind === 'player' ? computeAC(props.character) : props.instance.ac;
+  const ac = props.kind === 'player' ? computeAC(props.character) : props.instance.ac;
   const name = props.kind === 'player' ? props.character.name : props.instance.displayName;
   const dead = hpCurrent <= 0;
   const hpPercent = (hpCurrent / hpMax) * 100;
@@ -39,7 +40,9 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
   const [damageFloats, setDamageFloats] = useState<FloatingDamageItem[]>([]);
   const [hitFlash, setHitFlash] = useState(false);
   const [lunge, setLunge] = useState(false);
+  const lastAttackPulse = useRef(props.attackPulse);
 
+  // Float damage / heal whenever HP changes
   useEffect(() => {
     if (prevHp.current === hpCurrent) return;
     const delta = prevHp.current - hpCurrent;
@@ -57,24 +60,25 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
     }
   }, [hpCurrent]);
 
-  // Lunge when this sprite becomes the active turn taker
+  // Lunge only when this sprite has actually attacked (attackPulse bumps).
   useEffect(() => {
-    if (props.isActiveTurn && !dead) {
-      setLunge(true);
-      const t = setTimeout(() => setLunge(false), 420);
-      return () => clearTimeout(t);
-    }
-  }, [props.isActiveTurn, dead]);
+    if (props.attackPulse === lastAttackPulse.current) return;
+    if (props.attackPulse === 0) return;
+    lastAttackPulse.current = props.attackPulse;
+    if (dead) return;
+    setLunge(true);
+    const t = setTimeout(() => setLunge(false), 420);
+    return () => clearTimeout(t);
+  }, [props.attackPulse, dead]);
+
+  const selectable = props.kind === 'monster' && props.selectable && !dead;
 
   const lungeClass = lunge
     ? props.facing === 'right'
       ? 'animate-lunge-right'
       : 'animate-lunge-left'
     : '';
-
   const idleClass = dead ? 'animate-die-fall' : 'animate-idle-breath';
-
-  const selectable = props.kind === 'monster' && props.selectable && !dead;
 
   return (
     <button
@@ -88,41 +92,51 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
         disabled:cursor-default
       `}
     >
-      <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-bold">
+      <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-bold mb-0.5">
         {name}
       </div>
 
       <div
         className={`
-          relative w-28 h-28 flex items-center justify-center
-          ${selectable ? 'ring-2 ring-[var(--color-accent-amber)] ring-offset-2 ring-offset-transparent hover:scale-105 transition-transform shadow-[0_0_18px_rgba(244,167,66,0.45)]' : ''}
-          ${props.isActiveTurn && !dead ? 'drop-shadow-[0_0_14px_rgba(255,179,71,0.5)]' : ''}
+          relative flex items-end justify-center
+          ${selectable ? 'drop-shadow-[0_0_18px_rgba(244,167,66,0.55)] hover:scale-[1.06] transition-transform' : ''}
+          ${props.isActiveTurn && !dead ? 'drop-shadow-[0_0_18px_rgba(255,179,71,0.55)]' : ''}
         `}
+        style={{ width: props.kind === 'player' ? '84px' : props.kind === 'monster' && props.instance.defId === 'goblin-warden' ? '88px' : '72px' }}
       >
+        {selectable && (
+          <div className="absolute inset-0 border-2 border-[var(--color-accent-amber)] -m-1 pointer-events-none" />
+        )}
         <div
           className={`
-            w-full h-full ${lungeClass || idleClass}
+            relative w-full ${lungeClass || idleClass}
             ${props.facing === 'left' ? '-scale-x-100' : ''}
           `}
         >
           {props.kind === 'monster' ? (
-            <MonsterPortrait defId={props.instance.defId} className="w-full h-full" />
+            <MonsterPortrait
+              defId={props.instance.defId}
+              className="w-full h-auto"
+            />
           ) : (
-            <PlayerPortrait classId={props.character.classId} className="w-full h-full" />
+            <PlayerPortrait
+              classId={props.character.classId}
+              className="w-full h-auto"
+            />
+          )}
+          {hitFlash && (
+            <div className="absolute inset-0 bg-[var(--color-accent-blood)] opacity-55 mix-blend-screen pointer-events-none" />
           )}
         </div>
-        {hitFlash && (
-          <div className="absolute inset-0 bg-[var(--color-accent-blood)] opacity-55 mix-blend-screen pointer-events-none" />
-        )}
         <FloatingDamage items={damageFloats} />
         {dead && (
-          <div className="absolute inset-0 flex items-center justify-center text-[var(--color-accent-blood)] text-[10px] uppercase tracking-[0.3em] font-bold">
+          <div className="absolute inset-x-0 bottom-2 flex items-center justify-center text-[var(--color-accent-blood)] text-[10px] uppercase tracking-[0.3em] font-bold">
             Slain
           </div>
         )}
       </div>
 
-      <div className="w-28 flex flex-col gap-0.5 mt-1">
+      <div className="w-20 flex flex-col gap-0.5 mt-1">
         <div className="flex justify-between text-[10px] font-mono">
           <span className="text-[var(--color-text-dim)]">HP</span>
           <span className="text-[var(--color-text-primary)]">

@@ -7,15 +7,14 @@ interface BattlefieldProps {
   state: CombatState;
   selectingTarget: boolean;
   onSelectTarget: (id: string) => void;
-  /** 'combat' | 'boss' — controls the background tint. */
   scene: 'combat' | 'boss';
 }
 
 const BG_BY_SCENE: Record<'combat' | 'boss', string> = {
   combat:
-    'bg-gradient-to-br from-[#1a1410] via-[#221a14] to-[#1f1410] [background-image:radial-gradient(circle_at_70%_30%,rgba(244,167,66,0.06),transparent_60%),linear-gradient(to_bottom_right,#1a1410,#221a14_55%,#1f1410)]',
+    '[background:radial-gradient(circle_at_75%_28%,rgba(244,167,66,0.10),transparent_55%),radial-gradient(circle_at_30%_85%,rgba(31,58,61,0.18),transparent_50%),linear-gradient(to_bottom_right,#15100c,#1f1610_55%,#1a100c)]',
   boss:
-    'bg-gradient-to-br from-[#160a08] via-[#221008] to-[#1a0808] [background-image:radial-gradient(circle_at_70%_30%,rgba(181,48,44,0.10),transparent_60%),linear-gradient(to_bottom_right,#0f0606,#1f0a08_60%,#260a08)]',
+    '[background:radial-gradient(circle_at_75%_28%,rgba(181,48,44,0.18),transparent_55%),radial-gradient(circle_at_30%_85%,rgba(15,5,5,0.30),transparent_50%),linear-gradient(to_bottom_right,#0e0606,#1a0808_60%,#220a08)]',
 };
 
 export function Battlefield({
@@ -30,18 +29,32 @@ export function Battlefield({
     (c) => c.kind === 'monster',
   ) as MonsterCombatant[];
 
+  // Compute attackPulse per sprite: bumps the unique attack-event id when this
+  // sprite is the attacker, otherwise stays at 0. Subscribers re-trigger the
+  // lunge animation only when their own pulse changes.
+  const playerAttackPulse =
+    state.lastAttack && state.lastAttack.attackerKind === 'player'
+      ? state.lastAttack.id
+      : 0;
+  const monsterAttackPulseFor = (c: MonsterCombatant) =>
+    state.lastAttack &&
+    state.lastAttack.attackerKind === 'monster' &&
+    state.lastAttack.attackerName === c.instance.displayName
+      ? state.lastAttack.id
+      : 0;
+
   return (
     <div
       className={`
-        relative w-full min-h-[260px] border-2 border-[var(--color-border-warm)]
+        relative w-full min-h-[340px] border-2 border-[var(--color-border-warm)]
         overflow-hidden ${BG_BY_SCENE[scene]}
       `}
     >
-      {/* subtle floor strip */}
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[rgba(0,0,0,0.45)] to-transparent pointer-events-none" />
-      <div className="absolute bottom-3 left-0 right-0 h-px bg-[var(--color-border-dim)] opacity-40" />
+      {/* Floor strip with subtle vignette */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[rgba(0,0,0,0.55)] to-transparent pointer-events-none" />
+      <div className="absolute bottom-4 left-6 right-6 h-px bg-[var(--color-border-dim)] opacity-40" />
 
-      <div className="relative flex items-end justify-between px-8 py-6 gap-4 min-h-[260px]">
+      <div className="relative flex items-end justify-between px-10 pt-8 pb-6 gap-6 min-h-[340px]">
         {/* Player on the left, facing right */}
         <div className="shrink-0">
           <BattlefieldSprite
@@ -49,11 +62,12 @@ export function Battlefield({
             character={character}
             isActiveTurn={currentTurnId === 'player'}
             facing="right"
+            attackPulse={playerAttackPulse}
           />
         </div>
 
         {/* Enemies on the right, facing left */}
-        <div className="flex items-end gap-6 flex-wrap justify-end max-w-[68%]">
+        <div className="flex items-end gap-8 flex-wrap justify-end max-w-[68%]">
           {monsterCombatants.map((c) => (
             <BattlefieldSprite
               key={c.id}
@@ -63,6 +77,7 @@ export function Battlefield({
               facing="left"
               selectable={selectingTarget}
               onSelect={() => onSelectTarget(c.id)}
+              attackPulse={monsterAttackPulseFor(c)}
             />
           ))}
         </div>
