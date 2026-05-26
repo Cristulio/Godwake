@@ -4,6 +4,7 @@ import { useGameStore } from '../../stores/gameStore';
 import { createIronCellsDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
+import { PhandalinScene } from './PhandalinScene';
 
 interface Building {
   id: string;
@@ -61,7 +62,7 @@ export function HubScreen() {
 
   return (
     <div className="min-h-screen p-6 max-w-6xl mx-auto">
-      <header className="flex justify-between items-center mb-8 pb-4 border-b border-[var(--color-border-warm)]">
+      <header className="flex justify-between items-center mb-4 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
           <h1 className="text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-wider">
             PHANDALIN
@@ -74,6 +75,8 @@ export function HubScreen() {
           ← Title
         </Button>
       </header>
+
+      <PhandalinScene />
 
       <Panel className="mb-6">
         <div className="flex items-center gap-4">
