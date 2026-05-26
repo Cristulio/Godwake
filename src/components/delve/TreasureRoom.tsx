@@ -3,7 +3,7 @@ import type { RoomSpec } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
-import { characterQuirkMods } from '../../engine/character/quirks';
+import { characterQuirkMods, soulMarkMultiplier } from '../../engine/character/quirks';
 
 interface TreasureRoomProps {
   room: RoomSpec;
@@ -19,11 +19,13 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
   useEffect(() => {
     const t = setTimeout(() => setRevealed(true), 600);
     if (room.goldReward) {
+      // addDelveReward applies gold + soul-mark multipliers; mirror them here
+      // so the reveal label matches what the wallet actually receives.
       const mods = character ? characterQuirkMods(character) : {};
-      const multiplier = mods.goldMultiplier ?? 1;
-      const final = Math.floor(room.goldReward * multiplier);
-      setActualGold(final);
-      addDelveReward(final, 0);
+      const goldMult = mods.goldMultiplier ?? 1;
+      const soulMult = character ? soulMarkMultiplier(character) : 1;
+      setActualGold(Math.floor(room.goldReward * goldMult * soulMult));
+      addDelveReward(room.goldReward, 0);
     }
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps

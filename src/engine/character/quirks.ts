@@ -66,3 +66,27 @@ export function aggregateQuirkModifiers(quirkIds: string[]): QuirkModifiers {
 export function characterQuirkMods(character: Character): QuirkModifiers {
   return aggregateQuirkModifiers(character.quirks);
 }
+
+/**
+ * Count of bane-sentiment quirks the character carries. The delve's gold /
+ * XP / renown rewards multiply by (1 + SOUL_MARK_PER_BANE * baneCount) — the
+ * soul that has suffered more, earns more — so a 2-bane roll compensates
+ * with +40% rewards.
+ */
+export function baneQuirkCount(character: Character): number {
+  let n = 0;
+  for (const id of character.quirks) {
+    try {
+      if (getQuirk(id).sentiment === 'bane') n += 1;
+    } catch {
+      continue;
+    }
+  }
+  return n;
+}
+
+export const SOUL_MARK_PER_BANE = 0.2;
+
+export function soulMarkMultiplier(character: Character): number {
+  return 1 + SOUL_MARK_PER_BANE * baneQuirkCount(character);
+}

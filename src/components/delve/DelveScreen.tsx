@@ -150,7 +150,7 @@ export function DelveScreen() {
     return (
       <div className="flex flex-col">
         <div className="max-w-6xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>
         <CombatScreen
           character={character}
@@ -191,7 +191,7 @@ export function DelveScreen() {
     return (
       <div>
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>
         <RestRoom room={room} onContinue={() => advanceRoom()} />
       </div>
@@ -202,7 +202,7 @@ export function DelveScreen() {
     return (
       <div>
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>
         <TreasureRoom room={room} onContinue={() => advanceRoom()} />
       </div>
@@ -213,7 +213,7 @@ export function DelveScreen() {
     return (
       <div>
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>
         <ShrineRoom room={room} onContinue={() => advanceRoom()} />
       </div>

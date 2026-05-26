@@ -58,8 +58,6 @@ export const MonsterSchema = z.object({
   /** Sprite path or identifier. Optional at MVP. */
   art: z.string().optional(),
   flavorText: z.string().optional(),
-  /** Boss gimmick: this monster takes its turn before the player on round 1. */
-  firstStrike: z.boolean().optional(),
   /**
    * Optional boss mechanic id. The combat engine reads this to apply per-boss
    * behaviors. 'battle-rage' = on the first turn this monster is at or below

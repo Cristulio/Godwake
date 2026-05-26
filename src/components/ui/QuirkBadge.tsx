@@ -25,10 +25,17 @@ export function QuirkBadge({ quirkId, size = 'sm' }: QuirkBadgeProps) {
       ? 'text-[10px] px-1.5 py-0.5'
       : 'text-xs px-2 py-1';
 
+  // Banes contribute to the soul-mark reward bonus (+20% gold/xp/renown each).
+  // Surface that in the tooltip so the player understands the trade.
+  const tooltipParts = [`${q.name} — ${q.effect}`, q.flavor];
+  if (q.sentiment === 'bane') {
+    tooltipParts.splice(1, 0, 'Soul-mark: +20% gold, XP, and renown earned per bane.');
+  }
+
   return (
     <span
       className={`inline-block border ${colorClass} ${sizeClass} uppercase tracking-widest font-bold bg-[var(--color-bg-panel)]/80`}
-      title={`${q.name} — ${q.effect}\n\n${q.flavor}`}
+      title={tooltipParts.join('\n\n')}
     >
       {q.name}
     </span>

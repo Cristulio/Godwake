@@ -1,7 +1,16 @@
 import type { DelveState } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
-import { RENOWN_PER_DELVE_CLEAR } from '../../stores/gameStore';
+import {
+  RENOWN_PER_DELVE_CLEAR,
+  RENOWN_PER_DELVE_FAILURE,
+  useGameStore,
+} from '../../stores/gameStore';
+import {
+  baneQuirkCount,
+  soulMarkMultiplier,
+  SOUL_MARK_PER_BANE,
+} from '../../engine/character/quirks';
 
 interface DelveSummaryProps {
   delve: DelveState;
@@ -10,8 +19,12 @@ interface DelveSummaryProps {
 }
 
 export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
+  const character = useGameStore((s) => s.character);
   const victorious = outcome === 'completed';
-  const renownEarned = victorious ? RENOWN_PER_DELVE_CLEAR : 0;
+  const banes = character ? baneQuirkCount(character) : 0;
+  const soulMark = character ? soulMarkMultiplier(character) : 1;
+  const renownBase = victorious ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
+  const renownEarned = Math.floor(renownBase * soulMark);
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 max-w-2xl mx-auto gap-8 animate-fade-in">
       <div className="text-center">
@@ -33,8 +46,18 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
           <Stat label="Rooms Cleared" value={`${delve.roomsCleared} / ${delve.rooms.length}`} />
           <Stat label="Gold Earned" value={String(delve.goldEarned)} color="gold" />
           <Stat label="XP Earned" value={String(delve.xpEarned)} color="amber" />
-          <Stat label="Renown" value={victorious ? `+${renownEarned}` : '—'} color="amber" />
+          <Stat label={victorious ? 'Renown' : 'Renown (lost)'} value={`+${renownEarned}`} color="amber" />
         </div>
+        {banes > 0 && (
+          <div className="mt-3 pt-3 border-t border-[var(--color-border-dim)] text-center">
+            <span className="text-[var(--color-accent-amber)] text-[10px] uppercase tracking-widest">
+              ◆ Soul-mark · +{Math.round(SOUL_MARK_PER_BANE * banes * 100)}%
+            </span>
+            <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest ml-2">
+              ({banes} bane{banes > 1 ? 's' : ''} · boosts gold, xp, renown)
+            </span>
+          </div>
+        )}
       </Panel>
 
       {!victorious && (

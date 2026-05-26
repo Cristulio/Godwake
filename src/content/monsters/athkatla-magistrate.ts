@@ -40,7 +40,6 @@ export const ATHKATLA_MAGISTRATE: Monster = MonsterSchema.parse({
     },
   ],
   resistances: ['psychic'],
-  firstStrike: true,
   flavorText:
     "Beneath the high silver collar of the Cowled Wizards, a thin man in his fifties with a magistrate's seal of office on a chain. He has had people killed before lunch and signed the next warrant before the body was lifted.",
 });

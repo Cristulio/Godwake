@@ -48,8 +48,6 @@ export function createCharacter(input: CreateCharacterInput): Character {
     conditions: [],
     inventory: [],
     equipped: { mainHand: null, offHand: null, armor: null },
-    attunedItems: [],
-    attunementSlotsMax: 3,
     resources: classStartingResources(input.classId),
     actionEconomy: {
       actionUsed: false,

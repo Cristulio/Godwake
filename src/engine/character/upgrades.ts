@@ -11,8 +11,6 @@ export function applyPermanentUpgrade(character: Character, upgradeId: string): 
   const up = getUpgrade(upgradeId);
   if (up.kind !== 'permanent') return character;
   switch (up.id) {
-    case 'sages-pact':
-      return { ...character, attunementSlotsMax: character.attunementSlotsMax + 1 };
     case 'iron-will': {
       const newMax = character.hp.max + 5;
       return {

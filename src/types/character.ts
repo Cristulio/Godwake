@@ -70,9 +70,6 @@ export interface Character {
   // Gear
   inventory: ItemRef[];
   equipped: EquipmentSlots;
-  /** Item ids attuned to this character. */
-  attunedItems: string[];
-  attunementSlotsMax: number;
 
   // Resources (per-class)
   resources: ClassResources;
