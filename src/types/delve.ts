@@ -1,4 +1,4 @@
-export type RoomKind = 'combat' | 'rest' | 'treasure' | 'event' | 'boss' | 'shrine';
+export type RoomKind = 'combat' | 'rest' | 'treasure' | 'event' | 'boss' | 'shrine' | 'camp';
 
 export interface RoomMonster {
   defId: string;
@@ -33,4 +33,10 @@ export interface DelveState {
   roomsCleared: number;
   goldEarned: number;
   xpEarned: number;
+  /**
+   * Set true the moment the Ch1 boss (Ilyich) is killed inside a combined
+   * Godwake delve. Lets us credit `chapter1Cleared` even if the player then
+   * presses south, dies in Ch2, and the delve technically fails.
+   */
+  chapter1BossKilled?: boolean;
 }

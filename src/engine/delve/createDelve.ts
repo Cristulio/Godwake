@@ -157,6 +157,100 @@ export function createAthkatlaDelve(seed: number = randomSeed()): DelveState {
   };
 }
 
+/**
+ * Godwake — the single continuous delve. Iron Cells (Ch1, 8 rooms) → roadside
+ * camp (1 room, Short Rest + merchant + branch) → Athkatla (Ch2, 6 rooms,
+ * ending at the Magistrate). 15 rooms total.
+ *
+ * Camp is the seam: HP damage, blessings, Second Wind / Action Surge state,
+ * gold, and XP all carry across. The player can press south (continue) or
+ * make for Phandalin (early exit with rewards). Combined chapterId='godwake';
+ * room ids 1-8 are Ch1, room 9 is camp, rooms 10-15 are Ch2.
+ */
+export function createGodwakeDelve(seed: number = randomSeed()): DelveState {
+  const rng = createRng(seed);
+
+  const rooms: RoomSpec[] = [
+    // Ch1 — The Iron Cells (warmup → shrine → early-mid → rest → mid → shrine → elite → Ilyich)
+    combatRoom('room-1', pick(rng, WARMUP_POOL)),
+    {
+      id: 'room-2',
+      kind: 'shrine',
+      title: 'A Forgotten Altar',
+      flavorText:
+        'An altar of weathered stone, three sigils flickering as you approach. The labs above never sealed this off — gods bleed through cracks the master cannot find.',
+    },
+    combatRoom('room-3', pick(rng, EARLY_MID_POOL)),
+    {
+      id: 'room-4',
+      kind: 'rest',
+      title: 'A Quiet Alcove',
+      flavorText:
+        'A side-passage with a broken lantern. The walls are scratched with prayers in a language you almost know. You can catch your breath here.',
+      restType: 'short',
+    },
+    combatRoom('room-5', pick(rng, MID_POOL)),
+    {
+      id: 'room-6',
+      kind: 'shrine',
+      title: 'The Cracked Sigil',
+      flavorText:
+        'A second altar, half-buried in rubble. Someone tried to chisel the sigils out — and someone else, later, deepened them again. The god is still listening.',
+    },
+    combatRoom('room-7', pick(rng, ELITE_POOL)),
+    {
+      id: 'room-8',
+      kind: 'boss',
+      title: "Ilyich's Hall",
+      flavorText:
+        'The duergar slaver waits at the centre of a wide stone hall. He spits on the floor when he sees you. "Another of his pets, are you? Walking. Tch. We\'ll see how long."',
+      monsters: [{ defId: 'duergar-ilyich', count: 1 }],
+      xpReward: 250,
+    },
+    // Camp — the seam between chapters
+    {
+      id: 'room-9',
+      kind: 'camp',
+      title: 'A Roadside Fire',
+      flavorText:
+        "Three days south of the Iron Cells the trees thin, and the Trade Way bends towards Amn. A caravan-merchant has a fire going by the milestone — kettle on, ox unhitched, a tarp pegged out in case the night turns. He looks up without surprise, as if he had been expecting someone walking out of the north on foot and bloody.",
+    },
+    // Ch2 — Athkatla (warmup → early-mid → shrine → mid → elite → Magistrate)
+    combatRoom('room-10', pick(rng, ATH_WARMUP_POOL)),
+    combatRoom('room-11', pick(rng, ATH_EARLY_MID_POOL)),
+    {
+      id: 'room-12',
+      kind: 'shrine',
+      title: 'A Plague-Worn Altar to Ilmater',
+      flavorText:
+        "Even Athkatla cannot stamp out the Crying God. A cracked stone basin half-hidden in a brick recess — Ilmater's red knot scratched in chalk and re-chalked a hundred times. Bandages hang dry on a nail.",
+    },
+    combatRoom('room-13', pick(rng, ATH_MID_POOL)),
+    combatRoom('room-14', pick(rng, ATH_ELITE_POOL)),
+    {
+      id: 'room-15',
+      kind: 'boss',
+      title: "The Magistrate's Hall",
+      flavorText:
+        "A vaulted chamber, marble underfoot, a high bench at the far end. The Magistrate is already seated. He looks up from a warrant and folds it once. \"You are not on the docket. The exception is easily corrected.\"",
+      monsters: [{ defId: 'athkatla-magistrate', count: 1 }],
+      xpReward: 700,
+      goldReward: 80,
+    },
+  ];
+
+  return {
+    dungeonName: 'The Long Road — Iron Cells to Athkatla',
+    chapterId: 'godwake',
+    rooms,
+    currentRoomIdx: 0,
+    phase: 'in-room',
+    roomsCleared: 0,
+    goldEarned: 0,
+    xpEarned: 0,
+  };
+}
+
 export function currentRoom(state: DelveState): RoomSpec {
   return state.rooms[state.currentRoomIdx];
 }

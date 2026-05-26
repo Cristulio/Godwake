@@ -1,0 +1,342 @@
+import { useEffect, useState } from 'react';
+import type { RoomSpec } from '../../types/delve';
+import { Panel } from '../ui/Panel';
+import { Button } from '../ui/Button';
+import { BlessingCard } from '../ui/BlessingCard';
+import { useGameStore } from '../../stores/gameStore';
+import { shortRestHeal } from '../../engine/character/actions';
+import { getActiveRoller } from '../../engine/dice';
+import { rollBlessingOptions } from '../../engine/character/blessings';
+import { getItem } from '../../content/items';
+import { playSfx } from '../../engine/audio';
+
+interface CampRoomProps {
+  room: RoomSpec;
+  onPressSouth: () => void;
+  onMakeForPhandalin: () => void;
+}
+
+const MERCHANT_POTION_IDS = ['potion-of-healing', 'potion-of-greater-healing'];
+
+export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomProps) {
+  const character = useGameStore((s) => s.character);
+  const setCharacter = useGameStore((s) => s.setCharacter);
+  const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
+  const addBlessing = useGameStore((s) => s.addBlessing);
+  const showTaunt = useGameStore((s) => s.showTaunt);
+  const [rested, setRested] = useState(false);
+  const [merchantOpen, setMerchantOpen] = useState(false);
+  const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
+  const [blessingOptions, setBlessingOptions] = useState<string[]>([]);
+  const [blessingTaken, setBlessingTaken] = useState(false);
+  const [merchantBlessingTaken, setMerchantBlessingTaken] = useState(false);
+
+  // Imoen whispers when the road opens up.
+  useEffect(() => {
+    const t = setTimeout(() => showTaunt('imoen', 'rest'), 500);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!character) return null;
+
+  function handleShortRest() {
+    if (!character || rested) return;
+    // Camp rest is the same SHAPE as a short rest — refresh Second Wind and
+    // Action Surge — but does NOT heal HP. The seam should still feel like a
+    // pressure relief, not a free heal-to-full button.
+    const refreshed = shortRestHeal(character, 0);
+    setCharacter(refreshed);
+    setRested(true);
+  }
+
+  function openMerchant() {
+    if (blessingOptions.length === 0) {
+      const roller = getActiveRoller();
+      setBlessingOptions(rollBlessingOptions(roller, 3));
+    }
+    setMerchantOpen(true);
+    setPurchaseMessage(null);
+  }
+
+  function buyPotion(itemId: string) {
+    const r = purchaseFromMerchant(itemId);
+    if (r.ok) {
+      const item = getItem(itemId);
+      setPurchaseMessage(`${item.name} added to your pack.`);
+      playSfx('ui_click');
+    } else {
+      setPurchaseMessage(r.reason ?? 'Cannot purchase.');
+    }
+  }
+
+  function pickMerchantBlessing(id: string) {
+    if (merchantBlessingTaken) return;
+    addBlessing(id);
+    setMerchantBlessingTaken(true);
+    setBlessingTaken(true);
+    playSfx('shrine_chime');
+  }
+
+  return (
+    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.10),transparent_60%)]">
+      <header className="pb-3 border-b border-[var(--color-border-warm)]">
+        <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
+          {room.title.toUpperCase()}
+        </h1>
+        <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
+          Camp · The Long Road · Athkatla lies south
+        </p>
+      </header>
+
+      <Panel className="bg-gradient-to-br from-[#2a1d12] to-[#1a1108]">
+        <div className="flex flex-col items-center gap-4 py-4">
+          <RoadsideFireScene />
+          <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-xl leading-relaxed">
+            {room.flavorText}
+          </p>
+          <div className="text-xs uppercase tracking-widest text-[var(--color-text-dim)]">
+            HP {character.hp.current}/{character.hp.max} · {character.goldInPocket} gp
+          </div>
+        </div>
+      </Panel>
+
+      <div className="grid md:grid-cols-2 gap-3">
+        <Panel>
+          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
+            ◆ Short Rest
+          </div>
+          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+            Catch your breath by the fire. Wounds will not close — but a fighter's second wind
+            and a careful surge can be readied again.
+          </p>
+          {!rested ? (
+            <Button variant="primary" onClick={handleShortRest}>
+              Rest by the fire
+            </Button>
+          ) : (
+            <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
+              Second Wind, Action Surge — readied.
+            </div>
+          )}
+        </Panel>
+
+        <Panel>
+          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
+            ◆ The Caravan-Merchant
+          </div>
+          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+            "Coin in this pocket, comfort in the other. Road south is long. You'll want both."
+          </p>
+          <Button variant="secondary" onClick={openMerchant}>
+            Trade with him
+          </Button>
+        </Panel>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-3 justify-center mt-2">
+        <Button variant="primary" onClick={onPressSouth}>
+          Press south to Athkatla →
+        </Button>
+        <Button variant="secondary" onClick={onMakeForPhandalin}>
+          Make for Phandalin
+        </Button>
+      </div>
+
+      {merchantOpen && (
+        <MerchantModal
+          potionIds={MERCHANT_POTION_IDS}
+          goldInPocket={character.goldInPocket}
+          blessingOptions={blessingOptions}
+          merchantBlessingTaken={merchantBlessingTaken}
+          purchaseMessage={purchaseMessage}
+          onBuyPotion={buyPotion}
+          onPickBlessing={pickMerchantBlessing}
+          onClose={() => {
+            setMerchantOpen(false);
+            setPurchaseMessage(null);
+            // The blessing slot can only be claimed once per camp visit; if
+            // it was taken, surface the confirmation as the merchant closes.
+            if (blessingTaken) {
+              setBlessingTaken(false);
+            }
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+interface MerchantModalProps {
+  potionIds: string[];
+  goldInPocket: number;
+  blessingOptions: string[];
+  merchantBlessingTaken: boolean;
+  purchaseMessage: string | null;
+  onBuyPotion: (itemId: string) => void;
+  onPickBlessing: (id: string) => void;
+  onClose: () => void;
+}
+
+function MerchantModal({
+  potionIds,
+  goldInPocket,
+  blessingOptions,
+  merchantBlessingTaken,
+  purchaseMessage,
+  onBuyPotion,
+  onPickBlessing,
+  onClose,
+}: MerchantModalProps) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in">
+      <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-5">
+        <header className="flex justify-between items-center pb-3 mb-4 border-b border-[var(--color-border-warm)]">
+          <div>
+            <h2 className="text-lg text-[var(--color-accent-amber)] uppercase tracking-wider">
+              The Caravan-Merchant
+            </h2>
+            <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
+              {goldInPocket} gp in pocket
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-amber)] text-xs uppercase tracking-widest"
+          >
+            Close ×
+          </button>
+        </header>
+
+        <div className="grid gap-3 mb-4">
+          {potionIds.map((id) => {
+            const item = getItem(id);
+            const tooDear = goldInPocket < item.cost;
+            return (
+              <div
+                key={id}
+                className="border border-[var(--color-border-dim)] p-3 flex items-center gap-4"
+              >
+                <div className="flex-1">
+                  <div className="text-[var(--color-text-primary)] text-sm uppercase tracking-wider">
+                    {item.name}
+                  </div>
+                  <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
+                    {item.description}
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="text-[var(--color-accent-gold)] text-sm">{item.cost} gp</div>
+                  <Button
+                    variant={tooDear ? 'secondary' : 'primary'}
+                    disabled={tooDear}
+                    onClick={() => onBuyPotion(id)}
+                  >
+                    {tooDear ? 'Too dear' : 'Buy'}
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {purchaseMessage && (
+          <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest text-center mb-4">
+            {purchaseMessage}
+          </div>
+        )}
+
+        <div className="pt-3 border-t border-[var(--color-border-dim)]">
+          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
+            ◆ Bless me, traveller
+          </div>
+          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+            "Carry a god's mark with you. Won't cost a copper — only a name to remember the
+            road by." (Choose one of three; offered once per camp.)
+          </p>
+          {merchantBlessingTaken ? (
+            <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
+              The merchant nods. "Walk well, then."
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-3">
+              {blessingOptions.map((id) => (
+                <BlessingCard key={id} blessingId={id} pickable onPick={() => onPickBlessing(id)} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RoadsideFireScene() {
+  return (
+    <svg
+      viewBox="0 0 320 140"
+      className="w-full max-w-md drop-shadow-[0_0_18px_rgba(244,167,66,0.4)]"
+      role="img"
+      aria-label="A roadside fire under a dusk sky, the road bending south."
+    >
+      <defs>
+        <radialGradient id="camp-fire-glow" cx="0.5" cy="0.65" r="0.6">
+          <stop offset="0%" stopColor="#ffd76a" stopOpacity="0.95" />
+          <stop offset="50%" stopColor="#f4a742" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#f4a742" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="camp-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1a1322" />
+          <stop offset="55%" stopColor="#3a1f1c" />
+          <stop offset="100%" stopColor="#5a2a1a" />
+        </linearGradient>
+        <linearGradient id="camp-road" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#3a2a20" />
+          <stop offset="100%" stopColor="#1a1208" />
+        </linearGradient>
+      </defs>
+      {/* Sky */}
+      <rect x="0" y="0" width="320" height="90" fill="url(#camp-sky)" />
+      {/* Stars */}
+      <circle cx="40" cy="18" r="0.8" fill="#fff8d0" />
+      <circle cx="80" cy="30" r="0.6" fill="#fff8d0" opacity="0.7" />
+      <circle cx="230" cy="14" r="0.9" fill="#fff8d0" />
+      <circle cx="280" cy="32" r="0.6" fill="#fff8d0" opacity="0.7" />
+      {/* Distant southern hills */}
+      <path d="M0 78 L 60 60 L 110 70 L 170 56 L 230 68 L 320 58 L 320 90 L 0 90 Z" fill="#1a1018" />
+      {/* Road bending south */}
+      <path
+        d="M 0 130 L 110 100 L 170 92 L 220 90 L 320 95 L 320 140 L 0 140 Z"
+        fill="url(#camp-road)"
+      />
+      {/* Milestone */}
+      <rect x="195" y="80" width="6" height="14" fill="#3a2a20" stroke="#1a1208" strokeWidth="0.5" />
+      <rect x="193" y="79" width="10" height="3" fill="#5a4030" />
+      {/* Cart silhouette */}
+      <rect x="230" y="80" width="40" height="14" fill="#2a1a10" stroke="#1a1208" strokeWidth="0.5" />
+      <rect x="234" y="76" width="32" height="6" fill="#3a2418" />
+      <circle cx="238" cy="96" r="4" fill="#1a1208" stroke="#3a2418" strokeWidth="0.5" />
+      <circle cx="262" cy="96" r="4" fill="#1a1208" stroke="#3a2418" strokeWidth="0.5" />
+      {/* Tarp pegs lines */}
+      <line x1="270" y1="80" x2="285" y2="92" stroke="#3a2418" strokeWidth="0.5" />
+      {/* Fire glow */}
+      <ellipse cx="100" cy="110" rx="55" ry="22" fill="url(#camp-fire-glow)" />
+      {/* Fire logs */}
+      <rect x="86" y="108" width="28" height="3" fill="#3a2418" />
+      <rect x="92" y="112" width="22" height="3" fill="#2a1a10" />
+      {/* Fire flames */}
+      <path d="M 92 108 Q 96 96 100 108 Q 104 90 108 108 Z" fill="#ffd76a" opacity="0.9" />
+      <path d="M 95 108 Q 100 102 105 108 Z" fill="#fff8d0" opacity="0.85" />
+      {/* Sitting figure silhouette */}
+      <ellipse cx="65" cy="106" rx="6" ry="3" fill="#1a1208" />
+      <rect x="62" y="98" width="6" height="8" fill="#1a1208" />
+      <circle cx="65" cy="95" r="3" fill="#1a1208" />
+      {/* Ox silhouette (unhitched) */}
+      <rect x="280" y="100" width="22" height="9" fill="#1a1208" />
+      <rect x="280" y="108" width="3" height="6" fill="#1a1208" />
+      <rect x="299" y="108" width="3" height="6" fill="#1a1208" />
+      <rect x="298" y="96" width="6" height="6" fill="#1a1208" />
+    </svg>
+  );
+}

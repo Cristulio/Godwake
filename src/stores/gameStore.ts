@@ -14,7 +14,8 @@ import {
 import { applyDelveStartUpgrades, applyPermanentUpgrade } from '../engine/character/upgrades';
 import { hasPendingLevelUp, applyLevelUp } from '../engine/character/leveling';
 import { equipItem as equipItemFn, unequipSlot as unequipSlotFn, type EquipSlot } from '../engine/character/equip';
-import { createIronCellsDelve } from '../engine/delve';
+import { createGodwakeDelve } from '../engine/delve';
+import { getItem } from '../content/items';
 
 function applyDelveStartQuirks(character: Character): Character {
   const mods = characterQuirkMods(character);
@@ -105,6 +106,12 @@ interface GameState {
   failDelve: () => void;
   /** Player gives up mid-delve: HP restored, rewards dropped, no XP/gold gain. */
   abandonDelve: () => void;
+  /** Flip the on-delve Ch1-boss flag the moment Ilyich falls. Lets the camp early-exit and post-camp deaths still credit chapter1Cleared. */
+  markChapter1BossKilled: () => void;
+  /** Camp early-exit: complete the delve at the seam with Ch1 rewards and CLEAR-tier renown. */
+  concludeDelveAtCamp: () => void;
+  /** Merchant purchase at camp. Deducts gold from pocket; pushes item ref to inventory. */
+  purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
 
   // Settings
   setSpeed: (s: 1 | 2) => void;
@@ -258,12 +265,13 @@ export const useGameStore = create<GameState>()(
         blessings: [],
       });
       const screen = hasPendingLevelUp(rested) ? 'level-up' : 'hub';
+      const ch1Killed = s.delve.chapter1BossKilled === true;
       return {
         character: rested,
         delve: null,
         combat: null,
         screen,
-        chapter1Cleared: s.chapter1Cleared || wonBoss,
+        chapter1Cleared: s.chapter1Cleared || wonBoss || ch1Killed,
         druidGroveUnlocked:
           s.druidGroveUnlocked || rested.renown >= GROVE_UNLOCK_THRESHOLD,
       };
@@ -318,7 +326,7 @@ export const useGameStore = create<GameState>()(
     // only fires for the very first life.
     const s = get();
     if (!s.hasReincarnated && s.character) {
-      get().startDelve(createIronCellsDelve());
+      get().startDelve(createGodwakeDelve());
     } else {
       set({ screen: 'hub' });
     }
@@ -344,6 +352,34 @@ export const useGameStore = create<GameState>()(
         : s,
     ),
   markQuirksTutorialSeen: () => set({ quirksTutorialSeen: true }),
+
+  markChapter1BossKilled: () =>
+    set((s) => (s.delve ? { delve: { ...s.delve, chapter1BossKilled: true } } : s)),
+
+  concludeDelveAtCamp: () =>
+    set((s) => (s.delve ? { delve: { ...s.delve, phase: 'completed' } } : s)),
+
+  purchaseFromMerchant: (itemId) => {
+    const s = get();
+    if (!s.character) return { ok: false, reason: 'No character.' };
+    let item;
+    try {
+      item = getItem(itemId);
+    } catch {
+      return { ok: false, reason: 'Unknown item.' };
+    }
+    if (s.character.goldInPocket < item.cost) {
+      return { ok: false, reason: 'Not enough gold.' };
+    }
+    set({
+      character: {
+        ...s.character,
+        goldInPocket: s.character.goldInPocket - item.cost,
+        inventory: [...s.character.inventory, { itemId }],
+      },
+    });
+    return { ok: true };
+  },
 
   purchaseUpgrade: (upgradeId) => {
     const s = get();

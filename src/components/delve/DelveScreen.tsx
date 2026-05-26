@@ -10,12 +10,35 @@ import type { BattlefieldDecoration } from '../combat/Battlefield';
 import { RestRoom } from './RestRoom';
 import { TreasureRoom } from './TreasureRoom';
 import { ShrineRoom } from './ShrineRoom';
+import { CampRoom } from './CampRoom';
 import { DelveSummary } from './DelveSummary';
 import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 
 function decorationForRoom(roomId: string, chapterId: string): BattlefieldDecoration {
+  // Godwake combined delve: rooms 1-8 are Iron Cells, 9 is camp, 10-15 Athkatla.
+  if (chapterId === 'godwake') {
+    switch (roomId) {
+      case 'room-1':
+      case 'room-3':
+      case 'room-7':
+        return 'iron-cells';
+      case 'room-5':
+        return 'vivisector-lab';
+      case 'room-8':
+        return 'wardens-hall';
+      case 'room-15':
+        return 'magistrate-hall';
+      case 'room-10':
+      case 'room-11':
+      case 'room-13':
+      case 'room-14':
+        return 'athkatla-street';
+      default:
+        return 'generic';
+    }
+  }
   if (chapterId === 'chapter-2') {
     if (roomId === 'room-8') return 'magistrate-hall';
     return 'athkatla-street';
@@ -176,6 +199,12 @@ export function DelveScreen() {
               if (room.kind === 'boss') {
                 useGameStore.getState().showTaunt('irenicus', 'chapter-clear');
               }
+              // Combined Godwake delve: Ilyich is a mid-delve boss, not the
+              // final. Flag the kill so the chapter1Cleared flip survives
+              // a subsequent Ch2 death.
+              if (room.id === 'room-8' && delve.chapterId === 'godwake') {
+                useGameStore.getState().markChapter1BossKilled();
+              }
             } else {
               setCombat(null);
               useGameStore.getState().showTaunt('irenicus', 'death');
@@ -216,6 +245,21 @@ export function DelveScreen() {
           <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>
         <ShrineRoom room={room} onContinue={() => advanceRoom()} />
+      </div>
+    );
+  }
+
+  if (room.kind === 'camp') {
+    return (
+      <div>
+        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
+          <RoomHeader delve={delve} blessingIds={character.blessings} />
+        </div>
+        <CampRoom
+          room={room}
+          onPressSouth={() => advanceRoom()}
+          onMakeForPhandalin={() => useGameStore.getState().concludeDelveAtCamp()}
+        />
       </div>
     );
   }
