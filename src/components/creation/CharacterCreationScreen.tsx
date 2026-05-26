@@ -20,10 +20,13 @@ const RACE_LABEL: Record<RaceId, string> = {
   human: 'Human',
   'half-elf': 'Half-Elf',
   elf: 'Elf',
+  'wood-elf': 'Wood Elf',
   dwarf: 'Dwarf',
+  'hill-dwarf': 'Hill Dwarf',
   halfling: 'Halfling',
   'half-orc': 'Half-Orc',
   gnome: 'Gnome',
+  tiefling: 'Tiefling',
 };
 
 const CLASS_LABEL: Record<ClassId, string> = {
@@ -44,12 +47,15 @@ const CLASS_BLURB: Record<ClassId, string> = {
 
 const RACE_BLURB: Record<RaceId, string> = {
   human: 'Wanderers and adventurers. +1 to every ability score.',
-  'half-elf': 'Walkers between two worlds. Charisma-tilted and resilient.',
+  'half-elf': 'Walkers between two worlds. +2 CHA, +1 DEX, +1 CON.',
   elf: 'Long-lived and keen-eyed. Trance instead of sleep.',
+  'wood-elf': 'Long-lived archers of the high forest. +2 DEX, +1 WIS, speed 35.',
   dwarf: 'Stone-blooded, axe-handed, suspicious of magic.',
+  'hill-dwarf': 'Stone-blooded toughness. +2 CON, +1 WIS, +1 HP per level.',
   halfling: 'Small, lucky, and harder to pin down than they look.',
   'half-orc': 'Strength and stamina; the rage of one heritage, the wits of the other.',
   gnome: 'Tinker-souled and curious. Small frames, bright minds.',
+  tiefling: 'Bloodlines marked by an older pact. +2 CHA, +1 INT, fire resistance.',
 };
 
 const SKILL_LABEL: Record<SkillName, string> = {

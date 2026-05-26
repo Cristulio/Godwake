@@ -21,6 +21,7 @@ import { characterQuirkMods } from '../character/quirks';
 import { characterBlessingMods } from '../character/blessings';
 import { getItem } from '../../content/items';
 import { getMonster } from '../../content/monsters';
+import { getRace } from '../../content/races';
 import {
   applyParalyze,
   isPlayerParalyzed,
@@ -482,7 +483,15 @@ export function monsterAttack(
     const quirkMods = characterQuirkMods(character);
     const immune =
       action.damageType === 'poison' && quirkMods.poisonImmune === true;
-    const totalDamage = immune ? 0 : rawDamage;
+    const race = getRace(character.raceId);
+    const resisted =
+      !immune &&
+      (race.damageResistances?.includes(action.damageType) ?? false);
+    const totalDamage = immune
+      ? 0
+      : resisted
+        ? Math.floor(rawDamage / 2)
+        : rawDamage;
 
     nextState = applyDamage(nextState, 'player', totalDamage, character);
     const modifierSuffix =
@@ -492,7 +501,9 @@ export function monsterAttack(
     const rageSuffix = rageBonus > 0 ? ` +${rageBonus} rage` : '';
     const damageLine = immune
       ? `Damage negated: ${character.name} is immune to ${action.damageType}.`
-      : `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} = ${totalDamage} ${action.damageType}.`;
+      : resisted
+        ? `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} → halved (${action.damageType} resistance) = ${totalDamage} ${action.damageType}.`
+        : `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} = ${totalDamage} ${action.damageType}.`;
     nextState = {
       ...nextState,
       log: [

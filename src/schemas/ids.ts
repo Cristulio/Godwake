@@ -4,10 +4,13 @@ export const RaceIdSchema = z.enum([
   'human',
   'half-elf',
   'elf',
+  'wood-elf',
   'dwarf',
+  'hill-dwarf',
   'halfling',
   'half-orc',
   'gnome',
+  'tiefling',
 ]);
 export type RaceId = z.infer<typeof RaceIdSchema>;
 
