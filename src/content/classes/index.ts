@@ -1,8 +1,9 @@
 import type { Class } from '../../schemas/class';
 import type { ClassId } from '../../schemas/ids';
 import { FIGHTER } from './fighter';
+import { ROGUE } from './rogue';
 
-const ALL_CLASSES: Class[] = [FIGHTER];
+const ALL_CLASSES: Class[] = [FIGHTER, ROGUE];
 
 const CLASS_BY_ID: Record<ClassId, Class | undefined> = ALL_CLASSES.reduce(
   (acc, c) => {

@@ -43,6 +43,25 @@ function startingKitFor(classId: ClassId): StartingKit {
         goldInPocket: 25,
       };
     }
+    case 'rogue': {
+      const dagger: ItemRef = { itemId: 'dagger' };
+      const leatherArmor: ItemRef = { itemId: 'leather-armor' };
+      return {
+        inventory: [
+          dagger,
+          { itemId: 'shortbow' },
+          leatherArmor,
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: dagger,
+          offHand: null,
+          armor: leatherArmor,
+        },
+        goldInPocket: 15,
+      };
+    }
     default:
       return {
         inventory: [],

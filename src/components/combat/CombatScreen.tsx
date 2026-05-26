@@ -10,11 +10,14 @@ import {
   playerAttack,
   useSecondWind,
   useActionSurge,
+  useCunningAction,
+  type CunningActionChoice,
   useConsumable,
 } from '../../engine/combat';
 import { ItemPicker } from './ItemPicker';
 import { CombatLog } from './CombatLog';
 import { ActionBar } from './ActionBar';
+import { CunningActionPicker } from './CunningActionPicker';
 import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
@@ -52,6 +55,7 @@ export function CombatScreen({
   const [confirmAbandon, setConfirmAbandon] = useState(false);
   const [autoEndNotice, setAutoEndNotice] = useState(false);
   const [pickingItem, setPickingItem] = useState(false);
+  const [pickingCunning, setPickingCunning] = useState(false);
 
   // Mount dice overlay whenever a new attack event arrives
   useEffect(() => {
@@ -129,7 +133,11 @@ export function CombatScreen({
     const hasUsableActionSurge =
       character.classId === 'fighter' &&
       (character.resources.actionSurgeRemaining ?? 0) > 0;
-    if (hasUsableBonus || hasUsableActionSurge) return;
+    const hasUsableCunningAction =
+      character.classId === 'rogue' &&
+      (character.resources.cunningActionUsesRemaining ?? 0) > 0 &&
+      !character.actionEconomy.bonusActionUsed;
+    if (hasUsableBonus || hasUsableActionSurge || hasUsableCunningAction) return;
 
     setAutoEndNotice(true);
     const t = setTimeout(() => {
@@ -151,6 +159,7 @@ export function CombatScreen({
     character.actionEconomy.bonusActionUsed,
     character.resources.secondWindAvailable,
     character.resources.actionSurgeRemaining,
+    character.resources.cunningActionUsesRemaining,
     character.hp.current,
     state.currentTurnIndex,
     overlayActive,
@@ -198,6 +207,13 @@ export function CombatScreen({
 
   function handleActionSurge() {
     const next = useActionSurge({ character, state });
+    setCharacter({ ...character });
+    setCombat(next);
+  }
+
+  function handleCunningAction(choice: CunningActionChoice) {
+    const next = useCunningAction({ character, state, choice });
+    setPickingCunning(false);
     setCharacter({ ...character });
     setCombat(next);
   }
@@ -336,6 +352,7 @@ export function CombatScreen({
             onAttack={handleAttackClick}
             onSecondWind={handleSecondWind}
             onActionSurge={handleActionSurge}
+            onCunningAction={() => setPickingCunning(true)}
             onUseItem={() => setPickingItem(true)}
             onEndTurn={handleEndTurn}
           />
@@ -349,6 +366,13 @@ export function CombatScreen({
           character={character}
           onPick={handleUseItem}
           onCancel={() => setPickingItem(false)}
+        />
+      )}
+
+      {pickingCunning && (
+        <CunningActionPicker
+          onPick={handleCunningAction}
+          onCancel={() => setPickingCunning(false)}
         />
       )}
 

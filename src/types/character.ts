@@ -37,6 +37,10 @@ export interface ClassResources {
   secondWindAvailable?: boolean;
   /** Fighter: Action Surge (1 use at lv2, 2 at lv17). */
   actionSurgeRemaining?: number;
+  /** Rogue: Sneak Attack already fired this turn (true once spent, reset on turn change). */
+  sneakAttackUsedThisTurn?: boolean;
+  /** Rogue: Cunning Action uses left this combat. 1 base, 2 for Thief subclass. Refreshes on encounter start + short/long rest. */
+  cunningActionUsesRemaining?: number;
 }
 
 /**
@@ -118,4 +122,10 @@ export interface Character {
    * +1). Stacks with `permanentAttackBonus`. Cleared in `finishDelve`.
    */
   delveAttackBonus?: number;
+  /**
+   * One-shot advantage on the player's next attack roll. Set true by Rogue's
+   * Cunning Action: Hide (and cleared when that attack resolves). Optional so
+   * legacy saves rehydrate without migration.
+   */
+  nextAttackAdvantage?: boolean;
 }

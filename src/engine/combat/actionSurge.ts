@@ -37,6 +37,7 @@ export function useActionSurge(ctx: ActionSurgeContext): CombatState {
   return {
     ...state,
     playerAttacksThisTurn: 0,
+    sneakAttackUsedThisTurn: false,
     log: [...state.log, log],
   };
 }

@@ -77,6 +77,11 @@ function classStartingResources(classId: ClassId) {
         secondWindAvailable: true,
         actionSurgeRemaining: 0, // 1 at lv2, 2 at lv17
       };
+    case 'rogue':
+      return {
+        sneakAttackUsedThisTurn: false,
+        cunningActionUsesRemaining: 1, // 2 once Thief subclass is picked at L3
+      };
     default:
       return {};
   }

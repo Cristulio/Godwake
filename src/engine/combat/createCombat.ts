@@ -11,6 +11,7 @@ import type { Monster } from '../../schemas/monster';
 import { abilityModifier } from '../../types/abilities';
 import { initiativeModifier } from '../character/derived';
 import { characterBlessingMods } from '../character/blessings';
+import { rogueCunningActionMax } from '../character/actions';
 import { getMonster } from '../../content/monsters';
 
 let monsterInstanceCounter = 0;
@@ -114,6 +115,17 @@ export function createCombat(input: CreateCombatInput): CombatState {
         .join(', ')}.`,
     },
   ];
+
+  // Rogue: refresh per-combat resources. Stale Hide from before combat is
+  // dropped; Cunning Action pool refills.
+  if (character.classId === 'rogue') {
+    character.nextAttackAdvantage = false;
+    character.resources = {
+      ...character.resources,
+      sneakAttackUsedThisTurn: false,
+      cunningActionUsesRemaining: rogueCunningActionMax(character),
+    };
+  }
 
   // Lathander's Dawn (and any future per-room temp-HP blessing): grant temp HP
   // at the start of combat. Temp HP doesn't stack — take the higher of current
