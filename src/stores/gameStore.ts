@@ -76,6 +76,8 @@ interface GameState {
   quirksTutorialSeen: boolean;
   /** Monster def ids the player has fought at least once. Powers the codex. */
   discoveredMonsters: string[];
+  /** Cumulative encounter count per monster def id, incremented per-combat-start. */
+  monsterEncounters: Record<string, number>;
   /** Druid Grove upgrades the player has purchased with Renown. Persists across reincarnation; wipes on new game. */
   unlockedUpgrades: string[];
   /** True once the player has beaten Ilyich at least once on any incarnation. Gates Chapter 2 access. */
@@ -165,6 +167,7 @@ export const useGameStore = create<GameState>()(
   hasReincarnated: false,
   quirksTutorialSeen: false,
   discoveredMonsters: [],
+  monsterEncounters: {},
   unlockedUpgrades: [],
   chapter1Cleared: false,
   druidGroveUnlocked: false,
@@ -188,6 +191,7 @@ export const useGameStore = create<GameState>()(
       hasReincarnated: false,
       quirksTutorialSeen: false,
       discoveredMonsters: [],
+      monsterEncounters: {},
       unlockedUpgrades: [],
       chapter1Cleared: false,
       druidGroveUnlocked: false,
@@ -349,11 +353,14 @@ export const useGameStore = create<GameState>()(
   },
 
   discoverMonster: (defId) =>
-    set((s) =>
-      s.discoveredMonsters.includes(defId)
-        ? s
-        : { discoveredMonsters: [...s.discoveredMonsters, defId] },
-    ),
+    set((s) => {
+      const already = s.discoveredMonsters.includes(defId);
+      const prevCount = s.monsterEncounters[defId] ?? 0;
+      return {
+        discoveredMonsters: already ? s.discoveredMonsters : [...s.discoveredMonsters, defId],
+        monsterEncounters: { ...s.monsterEncounters, [defId]: prevCount + 1 },
+      };
+    }),
   goToCodex: () => set({ screen: 'codex' }),
 
   goToInventory: () => set({ screen: 'inventory' }),
@@ -464,6 +471,7 @@ export const useGameStore = create<GameState>()(
         hasReincarnated: state.hasReincarnated,
         quirksTutorialSeen: state.quirksTutorialSeen,
         discoveredMonsters: state.discoveredMonsters,
+        monsterEncounters: state.monsterEncounters,
         unlockedUpgrades: state.unlockedUpgrades,
         chapter1Cleared: state.chapter1Cleared,
         druidGroveUnlocked: state.druidGroveUnlocked,
@@ -487,6 +495,16 @@ export const useGameStore = create<GameState>()(
         // Older saves predate the renown shop.
         if (state && !state.unlockedUpgrades) {
           state.unlockedUpgrades = [];
+        }
+        // Older saves predate the codex encounter counter. Seed each already-
+        // discovered monster at 1 so the codex doesn't show "x 0" for known
+        // entries; new combats will increment from there.
+        if (state && (!state.monsterEncounters || typeof state.monsterEncounters !== 'object')) {
+          const seeded: Record<string, number> = {};
+          for (const id of state?.discoveredMonsters ?? []) {
+            seeded[id] = 1;
+          }
+          state.monsterEncounters = seeded;
         }
         // Older saves predate Chapter 2 gating.
         if (state && typeof state.chapter1Cleared !== 'boolean') {
