@@ -28,9 +28,265 @@ export function MonsterPortrait({ defId, className = '' }: MonsterPortraitProps)
       return <BugbearSvg className={className} />;
     case 'imp':
       return <ImpSvg className={className} />;
+    case 'stirge':
+      return <StirgeSvg className={className} />;
+    case 'ghoul':
+      return <GhoulSvg className={className} />;
+    case 'hobgoblin':
+      return <HobgoblinSvg className={className} />;
     default:
       return <GoblinSvg className={className} />;
   }
+}
+
+function StirgeSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 22 22"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Stirge"
+    >
+      {/* Bat wings spread wide */}
+      <polygon points="0,7 5,3 7,10 5,12" fill="#5a3818" />
+      <polygon points="22,7 17,3 15,10 17,12" fill="#5a3818" />
+      <polygon points="1,8 4,5 5,10" fill="#7a5028" opacity="0.6" />
+      <polygon points="21,8 18,5 17,10" fill="#7a5028" opacity="0.6" />
+      {/* Wing bones */}
+      <line x1="2" y1="5" x2="6" y2="11" stroke="#1a1410" strokeWidth="0.4" />
+      <line x1="20" y1="5" x2="16" y2="11" stroke="#1a1410" strokeWidth="0.4" />
+      {/* Bulbous insect body */}
+      <ellipse cx="11" cy="9" rx="4" ry="3" fill="#3a2418" />
+      <ellipse cx="11" cy="8" rx="3" ry="2" fill="#5a3818" />
+      {/* Body segmentation */}
+      <rect x="8" y="9" width="6" height="1" fill="#1a1410" />
+      <rect x="9" y="11" width="4" height="1" fill="#1a1410" />
+      {/* Tiny compound eyes (clustered) */}
+      <rect x="8" y="6" width="2" height="2" fill="#1a1410" />
+      <rect x="12" y="6" width="2" height="2" fill="#1a1410" />
+      <rect x="9" y="6" width="1" height="1" fill="#b5302c" />
+      <rect x="12" y="6" width="1" height="1" fill="#b5302c" />
+      {/* Long needle proboscis */}
+      <rect x="10" y="11" width="2" height="2" fill="#3a2418" />
+      <rect x="10" y="13" width="2" height="1" fill="#5a3818" />
+      <rect x="10" y="14" width="1" height="7" fill="#a89878" />
+      <rect x="10" y="14" width="1" height="2" fill="#d4c8a8" />
+      {/* Tiny clawed legs tucked up */}
+      <rect x="7" y="11" width="1" height="2" fill="#1a1410" />
+      <rect x="14" y="11" width="1" height="2" fill="#1a1410" />
+      <rect x="6" y="13" width="1" height="1" fill="#1a1410" />
+      <rect x="15" y="13" width="1" height="1" fill="#1a1410" />
+      {/* Antennae */}
+      <rect x="9" y="4" width="1" height="2" fill="#1a1410" />
+      <rect x="12" y="4" width="1" height="2" fill="#1a1410" />
+      <rect x="8" y="3" width="1" height="1" fill="#1a1410" />
+      <rect x="13" y="3" width="1" height="1" fill="#1a1410" />
+    </svg>
+  );
+}
+
+function GhoulSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 22 34"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Ghoul"
+    >
+      {/* Patches of scalp — tufts of hair on a bald skull */}
+      <rect x="7" y="1" width="1" height="2" fill="#2a1a10" />
+      <rect x="11" y="0" width="2" height="2" fill="#2a1a10" />
+      <rect x="14" y="2" width="1" height="1" fill="#2a1a10" />
+      {/* Gaunt elongated head — grey-green flesh stretched on bone */}
+      <rect x="6" y="2" width="10" height="9" fill="#8a8a78" />
+      <rect x="6" y="2" width="10" height="1" fill="#6a6a58" />
+      <rect x="5" y="4" width="1" height="5" fill="#6a6a58" />
+      <rect x="16" y="4" width="1" height="5" fill="#6a6a58" />
+      {/* Hollowed cheeks — shadow streaks */}
+      <rect x="6" y="7" width="2" height="2" fill="#5a5a48" />
+      <rect x="14" y="7" width="2" height="2" fill="#5a5a48" />
+      {/* Sunken black sockets */}
+      <rect x="7" y="4" width="3" height="3" fill="#0a0a08" />
+      <rect x="12" y="4" width="3" height="3" fill="#0a0a08" />
+      {/* Tiny pin-point eyes — sickly yellow */}
+      <rect x="8" y="5" width="1" height="1" fill="#c4a430" />
+      <rect x="13" y="5" width="1" height="1" fill="#c4a430" />
+      {/* Slit nose — two dark holes */}
+      <rect x="10" y="7" width="1" height="1" fill="#1a1410" />
+      <rect x="11" y="7" width="1" height="1" fill="#1a1410" />
+      {/* Distended jaw — unhinged from too many bites */}
+      <rect x="6" y="9" width="10" height="3" fill="#1a1410" />
+      <rect x="7" y="9" width="1" height="2" fill="#d4c8a8" />
+      <rect x="9" y="9" width="1" height="3" fill="#d4c8a8" />
+      <rect x="11" y="9" width="1" height="2" fill="#d4c8a8" />
+      <rect x="13" y="9" width="1" height="3" fill="#d4c8a8" />
+      {/* Bottom row of fangs */}
+      <rect x="8" y="11" width="1" height="1" fill="#d4c8a8" />
+      <rect x="10" y="11" width="1" height="1" fill="#d4c8a8" />
+      <rect x="12" y="11" width="1" height="1" fill="#d4c8a8" />
+      {/* Drool */}
+      <rect x="9" y="12" width="1" height="2" fill="#a8c478" opacity="0.7" />
+      {/* Bony neck */}
+      <rect x="9" y="11" width="4" height="2" fill="#6a6a58" />
+      {/* Skeletal shoulders */}
+      <rect x="3" y="13" width="16" height="2" fill="#8a8a78" />
+      <rect x="3" y="13" width="3" height="2" fill="#6a6a58" />
+      <rect x="16" y="13" width="3" height="2" fill="#6a6a58" />
+      {/* Rope-tight torso, ribcage showing through */}
+      <rect x="5" y="15" width="12" height="9" fill="#8a8a78" />
+      <rect x="6" y="16" width="10" height="1" fill="#6a6a58" />
+      <rect x="6" y="18" width="10" height="1" fill="#6a6a58" />
+      <rect x="6" y="20" width="10" height="1" fill="#6a6a58" />
+      {/* Sternum shadow */}
+      <rect x="10" y="15" width="2" height="9" fill="#5a5a48" />
+      {/* Tattered shroud strap */}
+      <rect x="5" y="17" width="12" height="1" fill="#3a2e22" />
+      {/* Spindly arms */}
+      <rect x="2" y="15" width="3" height="9" fill="#8a8a78" />
+      <rect x="17" y="15" width="3" height="9" fill="#8a8a78" />
+      <rect x="2" y="15" width="1" height="9" fill="#6a6a58" />
+      <rect x="19" y="15" width="1" height="9" fill="#6a6a58" />
+      {/* Skeletal arm hints */}
+      <rect x="3" y="17" width="1" height="1" fill="#5a5a48" />
+      <rect x="18" y="19" width="1" height="1" fill="#5a5a48" />
+      {/* Splayed clawed hands */}
+      <rect x="1" y="23" width="4" height="2" fill="#8a8a78" />
+      <rect x="17" y="23" width="4" height="2" fill="#8a8a78" />
+      {/* Long curving claws */}
+      <polygon points="1,25 0,28 2,26" fill="#3a3228" />
+      <polygon points="3,25 2,28 4,26" fill="#3a3228" />
+      <polygon points="5,25 5,28 6,26" fill="#3a3228" />
+      <polygon points="17,25 16,26 18,28" fill="#3a3228" />
+      <polygon points="19,25 18,26 20,28" fill="#3a3228" />
+      <polygon points="21,25 20,26 21,28" fill="#3a3228" />
+      {/* Tattered loincloth */}
+      <rect x="5" y="24" width="12" height="3" fill="#3a2e22" />
+      <rect x="6" y="26" width="1" height="2" fill="#3a2e22" />
+      <rect x="9" y="26" width="1" height="3" fill="#3a2e22" />
+      <rect x="13" y="26" width="1" height="2" fill="#3a2e22" />
+      {/* Stick-thin legs */}
+      <rect x="6" y="27" width="3" height="5" fill="#8a8a78" />
+      <rect x="13" y="27" width="3" height="5" fill="#8a8a78" />
+      <rect x="6" y="27" width="1" height="5" fill="#6a6a58" />
+      <rect x="15" y="27" width="1" height="5" fill="#6a6a58" />
+      {/* Knee bulge */}
+      <rect x="6" y="29" width="3" height="1" fill="#5a5a48" />
+      <rect x="13" y="29" width="3" height="1" fill="#5a5a48" />
+      {/* Splayed clawed feet */}
+      <rect x="5" y="32" width="5" height="2" fill="#8a8a78" />
+      <rect x="12" y="32" width="5" height="2" fill="#8a8a78" />
+      <polygon points="5,34 4,33 6,34" fill="#3a3228" />
+      <polygon points="9,34 9,33 11,34" fill="#3a3228" />
+      <polygon points="13,34 12,33 14,34" fill="#3a3228" />
+      <polygon points="17,34 16,33 18,34" fill="#3a3228" />
+    </svg>
+  );
+}
+
+function HobgoblinSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 22 36"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Hobgoblin Soldier"
+    >
+      {/* Helm comb / ridge */}
+      <rect x="9" y="0" width="4" height="1" fill="#1a1410" />
+      <rect x="10" y="-1" width="2" height="1" fill="#1a1410" />
+      {/* Black-iron helm */}
+      <rect x="6" y="1" width="10" height="4" fill="#3a3228" />
+      <rect x="5" y="2" width="1" height="3" fill="#1a1410" />
+      <rect x="16" y="2" width="1" height="3" fill="#1a1410" />
+      <rect x="6" y="1" width="10" height="1" fill="#5a5048" />
+      {/* Cheek-pieces flanking the face */}
+      <rect x="6" y="5" width="2" height="3" fill="#3a3228" />
+      <rect x="14" y="5" width="2" height="3" fill="#3a3228" />
+      {/* Burnt-orange face */}
+      <rect x="8" y="5" width="6" height="5" fill="#c46a2a" />
+      <rect x="8" y="5" width="6" height="1" fill="#9c4a18" />
+      {/* Pointed ears poking past the cheek-pieces */}
+      <rect x="4" y="3" width="2" height="2" fill="#c46a2a" />
+      <rect x="16" y="3" width="2" height="2" fill="#c46a2a" />
+      <rect x="3" y="4" width="1" height="1" fill="#9c4a18" />
+      <rect x="18" y="4" width="1" height="1" fill="#9c4a18" />
+      {/* Disciplined narrow eyes — amber */}
+      <rect x="8" y="6" width="2" height="1" fill="#1a1410" />
+      <rect x="12" y="6" width="2" height="1" fill="#1a1410" />
+      <rect x="8" y="6" width="1" height="1" fill="#f4a02a" />
+      <rect x="13" y="6" width="1" height="1" fill="#f4a02a" />
+      {/* Strong nose */}
+      <rect x="10" y="7" width="2" height="2" fill="#9c4a18" />
+      {/* Hard set mouth — no snarl, no smile */}
+      <rect x="9" y="9" width="4" height="1" fill="#1a1410" />
+      <rect x="9" y="9" width="1" height="1" fill="#e8dcc4" />
+      <rect x="12" y="9" width="1" height="1" fill="#e8dcc4" />
+      {/* Chin */}
+      <rect x="9" y="10" width="4" height="1" fill="#9c4a18" />
+      {/* Black-iron pauldrons */}
+      <rect x="2" y="11" width="4" height="4" fill="#1a1410" />
+      <rect x="16" y="11" width="4" height="4" fill="#1a1410" />
+      <rect x="3" y="12" width="2" height="2" fill="#5a5048" />
+      <rect x="17" y="12" width="2" height="2" fill="#5a5048" />
+      {/* Half-plate breastplate */}
+      <rect x="5" y="11" width="12" height="11" fill="#3a3228" />
+      <rect x="6" y="12" width="10" height="9" fill="#2a221c" />
+      {/* Plate trim */}
+      <rect x="5" y="11" width="12" height="1" fill="#5a5048" />
+      <rect x="5" y="21" width="12" height="1" fill="#5a5048" />
+      {/* Center groove */}
+      <rect x="10" y="12" width="2" height="9" fill="#5a5048" />
+      {/* Regimental sash diagonal — burnt orange */}
+      <polygon points="6,15 8,11 9,11 7,15" fill="#9c4a18" />
+      {/* Brass insignia on chest */}
+      <rect x="9" y="15" width="4" height="3" fill="#8c6232" />
+      <rect x="10" y="16" width="2" height="1" fill="#1a1410" />
+      {/* Belt */}
+      <rect x="4" y="22" width="14" height="2" fill="#1a1410" />
+      <rect x="10" y="22" width="2" height="2" fill="#8c6232" />
+      {/* Arms — orange skin, faulds at shoulder */}
+      <rect x="3" y="15" width="3" height="7" fill="#c46a2a" />
+      <rect x="16" y="15" width="3" height="7" fill="#c46a2a" />
+      <rect x="3" y="15" width="1" height="7" fill="#9c4a18" />
+      <rect x="18" y="15" width="1" height="7" fill="#9c4a18" />
+      {/* Iron vambraces */}
+      <rect x="3" y="19" width="3" height="3" fill="#3a3228" />
+      <rect x="16" y="19" width="3" height="3" fill="#3a3228" />
+      <rect x="3" y="19" width="3" height="1" fill="#5a5048" />
+      <rect x="16" y="19" width="3" height="1" fill="#5a5048" />
+      {/* Gauntlets */}
+      <rect x="2" y="22" width="4" height="2" fill="#1a1410" />
+      <rect x="16" y="22" width="4" height="2" fill="#1a1410" />
+      {/* Longsword — held vertical at the right hip, parade-ready */}
+      <rect x="18" y="3" width="2" height="20" fill="#b5a282" />
+      <rect x="19" y="3" width="1" height="20" fill="#e8dcc4" />
+      <rect x="17" y="22" width="4" height="1" fill="#5a4030" />
+      <rect x="18" y="22" width="2" height="3" fill="#3a2418" />
+      <rect x="19" y="2" width="1" height="1" fill="#8c6232" />
+      {/* Skirt of tassets */}
+      <rect x="5" y="24" width="12" height="3" fill="#3a3228" />
+      <rect x="5" y="24" width="12" height="1" fill="#5a5048" />
+      <rect x="7" y="25" width="1" height="2" fill="#1a1410" />
+      <rect x="11" y="25" width="1" height="2" fill="#1a1410" />
+      <rect x="14" y="25" width="1" height="2" fill="#1a1410" />
+      {/* Legs — orange skin under iron greaves */}
+      <rect x="6" y="27" width="4" height="6" fill="#c46a2a" />
+      <rect x="12" y="27" width="4" height="6" fill="#c46a2a" />
+      {/* Greaves over the lower leg */}
+      <rect x="6" y="30" width="4" height="3" fill="#3a3228" />
+      <rect x="12" y="30" width="4" height="3" fill="#3a3228" />
+      <rect x="6" y="30" width="4" height="1" fill="#5a5048" />
+      <rect x="12" y="30" width="4" height="1" fill="#5a5048" />
+      {/* Iron boots */}
+      <rect x="5" y="33" width="6" height="3" fill="#1a1410" />
+      <rect x="11" y="33" width="6" height="3" fill="#1a1410" />
+      <rect x="5" y="35" width="6" height="1" fill="#3a3228" />
+      <rect x="11" y="35" width="6" height="1" fill="#3a3228" />
+    </svg>
+  );
 }
 
 function BugbearSvg({ className }: { className?: string }) {

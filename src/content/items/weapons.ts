@@ -45,4 +45,47 @@ export const SHORTBOW: Weapon = WeaponSchema.parse({
   attunement: false,
 });
 
-export const ALL_WEAPONS: Weapon[] = [LONGSWORD, DAGGER, SHORTBOW];
+export const GREATSWORD: Weapon = WeaponSchema.parse({
+  id: 'greatsword',
+  kind: 'weapon',
+  name: 'Greatsword',
+  category: 'martial',
+  damage: '2d6',
+  damageType: 'slashing',
+  properties: ['heavy', 'two-handed'],
+  weight: 6,
+  cost: 50,
+  rarity: 'common',
+  attunement: false,
+});
+
+export const WARHAMMER: Weapon = WeaponSchema.parse({
+  id: 'warhammer',
+  kind: 'weapon',
+  name: 'Warhammer',
+  category: 'martial',
+  damage: '1d8',
+  damageType: 'bludgeoning',
+  properties: ['versatile'],
+  versatileDamage: '1d10',
+  weight: 2,
+  cost: 15,
+  rarity: 'common',
+  attunement: false,
+});
+
+export const RAPIER: Weapon = WeaponSchema.parse({
+  id: 'rapier',
+  kind: 'weapon',
+  name: 'Rapier',
+  category: 'martial',
+  damage: '1d8',
+  damageType: 'piercing',
+  properties: ['finesse'],
+  weight: 2,
+  cost: 25,
+  rarity: 'common',
+  attunement: false,
+});
+
+export const ALL_WEAPONS: Weapon[] = [LONGSWORD, DAGGER, SHORTBOW, GREATSWORD, WARHAMMER, RAPIER];

@@ -12,9 +12,12 @@ export function createIronCellsDelve(): DelveState {
       kind: 'combat',
       title: 'The Iron Cells',
       flavorText:
-        'Sealed doors line the corridor. A lone goblin scout has been left to keep watch — and to die slow if it fails.',
-      monsters: [{ defId: 'goblin', count: 1 }],
-      xpReward: 50,
+        'Sealed doors line the corridor. A goblin scout has been left to keep watch — and to die slow if it fails. The rafters above are thick with shapes. One drops first, proboscis already drinking the air.',
+      monsters: [
+        { defId: 'goblin', count: 1 },
+        { defId: 'stirge', count: 1 },
+      ],
+      xpReward: 60,
     },
     {
       id: 'room-2',
@@ -48,9 +51,12 @@ export function createIronCellsDelve(): DelveState {
       kind: 'combat',
       title: 'The Vault Guardian',
       flavorText:
-        'An empty harness stands sentinel in the next chamber. The plates ring like a bell as it pivots to face you — a faint green light moves where the eyes should be. The master\'s work.',
-      monsters: [{ defId: 'animated-armor', count: 1 }],
-      xpReward: 100,
+        'An empty harness stands sentinel in the next chamber. The plates ring like a bell as it pivots to face you — a faint green light moves where the eyes should be. The master\'s work. At its feet, a ghoul looks up from something it has half-eaten — the vault doubles as a tomb, and the tomb doubles as a larder.',
+      monsters: [
+        { defId: 'animated-armor', count: 1 },
+        { defId: 'ghoul', count: 1 },
+      ],
+      xpReward: 150,
     },
     {
       id: 'room-6',

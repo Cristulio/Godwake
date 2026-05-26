@@ -57,6 +57,12 @@ function monsterSpriteWidth(defId: string): string {
       return '50px';
     case 'goblin':
       return '56px';
+    case 'hobgoblin':
+      return '82px';
+    case 'ghoul':
+      return '72px';
+    case 'stirge':
+      return '60px';
     default:
       return '60px';
   }
