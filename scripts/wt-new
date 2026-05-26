@@ -111,9 +111,9 @@ if [ "$LAUNCH" -eq 1 ]; then
     echo "→ Copied brief into .briefing.md"
     # The shell command typed into the new session: cd, install if needed,
     # then run claude with the brief contents as the first user message.
-    # \\\" → literal \" in LAUNCH_CMD → " when AppleScript writes it to iTerm.
-    # \\\$ → literal \$ → $ when AppleScript writes it; shell then runs $(cat).
-    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude \\\"\\\$(cat .briefing.md)\\\""
+    # \\\" → literal \" (AppleScript-escaped " inside the string)
+    # \$   → literal $ (AppleScript has no $ interpolation, just pass it through)
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude \\\"\$(cat .briefing.md)\\\""
   else
     LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude"
   fi

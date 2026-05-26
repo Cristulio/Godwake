@@ -2,6 +2,7 @@ import type { Character } from '../../types/character';
 import { abilityModifier } from '../../types/abilities';
 import { effectiveAbilityScores } from './derived';
 import { getClass } from '../../content/classes';
+import { getRace } from '../../content/races';
 
 /**
  * XP-to-level table, capped at level 8. L1-L5 are 5e RAW; L6-L8 are tuned
@@ -25,12 +26,13 @@ export function hasPendingLevelUp(character: Character): boolean {
   return character.xp >= xpForLevel(character.level + 1);
 }
 
-/** Average HP gain per Fighter level: (hitDie/2 + 1) + CON modifier. */
+/** Average HP gain per level: (hitDie/2 + 1) + CON modifier + race bonusHpPerLevel. */
 export function hpGainForLevelUp(character: Character): number {
   const cls = getClass(character.classId);
   const avg = cls.hitDie / 2 + 1;
   const con = abilityModifier(effectiveAbilityScores(character).con);
-  return Math.max(1, avg + con);
+  const raceBonus = getRace(character.raceId).bonusHpPerLevel ?? 0;
+  return Math.max(1, avg + con + raceBonus);
 }
 
 /**

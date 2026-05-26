@@ -64,7 +64,8 @@ export function createCharacter(input: CreateCharacterInput): Character {
 
   const scores = effectiveAbilityScores(seedCharacter);
   const conMod = abilityModifier(scores.con);
-  const maxHp = cls.hitDie + conMod;
+  const bonusHp = race.bonusHpPerLevel ?? 0;
+  const maxHp = cls.hitDie + conMod + bonusHp;
   seedCharacter.hp = { current: maxHp, max: maxHp, temp: 0 };
 
   return seedCharacter;
