@@ -39,4 +39,10 @@ export interface DelveState {
    * presses south, dies in Ch2, and the delve technically fails.
    */
   chapter1BossKilled?: boolean;
+  /**
+   * The mutually-exclusive choice the player made at the roadside camp.
+   * Set by `pickCampChoice`; locks the other two options for the rest of
+   * the delve. Cleared on delve end.
+   */
+  campChoice?: 'rest' | 'sharpen' | 'prayer';
 }

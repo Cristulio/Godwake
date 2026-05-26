@@ -5,7 +5,8 @@ import type { CombatState } from '../types/combat';
 import type { DelveState } from '../types/delve';
 import { setActiveRoller, getActiveRoller } from '../engine/dice';
 import { buildPlayerCharacter, type CharacterCreationInput } from '../engine/character/defaultCharacter';
-import { longRest, withResetActionEconomy } from '../engine/character/actions';
+import { longRest, shortRestHeal, withResetActionEconomy } from '../engine/character/actions';
+import { rollBlessingOptions } from '../engine/character/blessings';
 import {
   rollQuirks,
   characterQuirkMods,
@@ -111,6 +112,12 @@ interface GameState {
   markChapter1BossKilled: () => void;
   /** Camp early-exit: complete the delve at the seam with Ch1 rewards and CLEAR-tier renown. */
   concludeDelveAtCamp: () => void;
+  /**
+   * Lock in one of the three roadside-camp choices. Applies its effect
+   * immediately and stamps `delve.campChoice` so the UI disables the others.
+   * No-op if already chosen.
+   */
+  pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => void;
   /** Merchant purchase at camp. Deducts gold from pocket; pushes item ref to inventory. */
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
 
@@ -264,6 +271,8 @@ export const useGameStore = create<GameState>()(
         renown: s.character.renown + renownGain,
         // Blessings were granted for the delve only — they wipe at the hub.
         blessings: [],
+        // Sharpen the Blade was a per-delve buff — drop it.
+        delveAttackBonus: 0,
       });
       const screen = hasPendingLevelUp(rested) ? 'level-up' : 'hub';
       const ch1Killed = s.delve.chapter1BossKilled === true;
@@ -297,7 +306,13 @@ export const useGameStore = create<GameState>()(
       const newQuirks = rollQuirks(getActiveRoller(), 2);
       return {
         delve: { ...s.delve, phase: 'failed' },
-        character: { ...s.character, quirks: newQuirks, blessings: [], conditions: [] },
+        character: {
+          ...s.character,
+          quirks: newQuirks,
+          blessings: [],
+          conditions: [],
+          delveAttackBonus: 0,
+        },
         hasReincarnated: true,
       };
     }),
@@ -306,8 +321,8 @@ export const useGameStore = create<GameState>()(
     set((s) => {
       if (!s.character) return s;
       return {
-        // Restore HP and rest, drop all delve rewards, wipe blessings.
-        character: longRest({ ...s.character, blessings: [] }),
+        // Restore HP and rest, drop all delve rewards, wipe blessings + camp buffs.
+        character: longRest({ ...s.character, blessings: [], delveAttackBonus: 0 }),
         delve: null,
         combat: null,
         screen: 'hub',
@@ -359,6 +374,37 @@ export const useGameStore = create<GameState>()(
 
   concludeDelveAtCamp: () =>
     set((s) => (s.delve ? { delve: { ...s.delve, phase: 'completed' } } : s)),
+
+  pickCampChoice: (choice) => {
+    const s = get();
+    if (!s.character || !s.delve) return;
+    if (s.delve.campChoice) return;
+
+    let nextCharacter = s.character;
+    if (choice === 'rest') {
+      // Same shape as the old Short Rest button: refresh Second Wind +
+      // Action Surge, no HP heal.
+      nextCharacter = shortRestHeal(s.character, 0);
+    } else if (choice === 'sharpen') {
+      nextCharacter = {
+        ...s.character,
+        delveAttackBonus: (s.character.delveAttackBonus ?? 0) + 1,
+      };
+    } else if (choice === 'prayer') {
+      const [rolled] = rollBlessingOptions(getActiveRoller(), 1);
+      if (rolled) {
+        nextCharacter = {
+          ...s.character,
+          blessings: [...s.character.blessings, rolled],
+        };
+      }
+    }
+
+    set({
+      character: nextCharacter,
+      delve: { ...s.delve, campChoice: choice },
+    });
+  },
 
   purchaseFromMerchant: (itemId) => {
     const s = get();

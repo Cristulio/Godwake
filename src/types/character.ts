@@ -113,4 +113,9 @@ export interface Character {
    * legacy saves with `undefined` rehydrate to the default cap.
    */
   attunementSlotsBonus?: number;
+  /**
+   * Per-delve attack bonus granted by camp choices (Sharpen the Blade adds
+   * +1). Stacks with `permanentAttackBonus`. Cleared in `finishDelve`.
+   */
+  delveAttackBonus?: number;
 }

@@ -4,11 +4,13 @@ import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { BlessingCard } from '../ui/BlessingCard';
 import { useGameStore } from '../../stores/gameStore';
-import { shortRestHeal } from '../../engine/character/actions';
+import { getBlessing } from '../../content/blessings';
 import { getActiveRoller } from '../../engine/dice';
 import { rollBlessingOptions } from '../../engine/character/blessings';
 import { getItem } from '../../content/items';
 import { playSfx } from '../../engine/audio';
+
+type CampChoice = 'rest' | 'sharpen' | 'prayer';
 
 interface CampRoomProps {
   room: RoomSpec;
@@ -27,11 +29,14 @@ const MERCHANT_POTION_IDS = [
 
 export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomProps) {
   const character = useGameStore((s) => s.character);
-  const setCharacter = useGameStore((s) => s.setCharacter);
+  const campChoice = useGameStore((s) => s.delve?.campChoice ?? null);
+  const pickCampChoice = useGameStore((s) => s.pickCampChoice);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const addBlessing = useGameStore((s) => s.addBlessing);
   const showTaunt = useGameStore((s) => s.showTaunt);
-  const [rested, setRested] = useState(false);
+  // The blessing id pulled by "A Prayer Whispered". Captured on click so
+  // we can echo the exact god back to the player even if blessings change.
+  const [prayerGrantedId, setPrayerGrantedId] = useState<string | null>(null);
   const [merchantOpen, setMerchantOpen] = useState(false);
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
   const [blessingOptions, setBlessingOptions] = useState<string[]>([]);
@@ -47,14 +52,25 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
 
   if (!character) return null;
 
-  function handleShortRest() {
-    if (!character || rested) return;
-    // Camp rest is the same SHAPE as a short rest — refresh Second Wind and
-    // Action Surge — but does NOT heal HP. The seam should still feel like a
-    // pressure relief, not a free heal-to-full button.
-    const refreshed = shortRestHeal(character, 0);
-    setCharacter(refreshed);
-    setRested(true);
+  function handlePickChoice(choice: CampChoice) {
+    if (!character || campChoice) return;
+    if (choice === 'prayer') {
+      // Snapshot the granted blessing so the UI can name it. The store's
+      // `pickCampChoice('prayer')` would also roll, but it would be a
+      // different (unseeded-equivalent) roll — drive it from here instead.
+      const [granted] = rollBlessingOptions(getActiveRoller(), 1);
+      if (granted) {
+        addBlessing(granted);
+        setPrayerGrantedId(granted);
+      }
+      useGameStore.setState((s) =>
+        s.delve ? { delve: { ...s.delve, campChoice: 'prayer' } } : s,
+      );
+      playSfx('shrine_chime');
+      return;
+    }
+    pickCampChoice(choice);
+    playSfx('ui_click');
   }
 
   function openMerchant() {
@@ -108,38 +124,64 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
         </div>
       </Panel>
 
-      <div className="grid md:grid-cols-2 gap-3">
-        <Panel>
-          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
-            ◆ Short Rest
-          </div>
-          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-            Catch your breath by the fire. Wounds will not close — but a fighter's second wind
-            and a careful surge can be readied again.
-          </p>
-          {!rested ? (
-            <Button variant="primary" onClick={handleShortRest}>
-              Rest by the fire
-            </Button>
-          ) : (
-            <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
-              Second Wind, Action Surge — readied.
-            </div>
-          )}
-        </Panel>
-
-        <Panel>
-          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
-            ◆ The Caravan-Merchant
-          </div>
-          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-            "Coin in this pocket, comfort in the other. Road south is long. You'll want both."
-          </p>
-          <Button variant="secondary" onClick={openMerchant}>
-            Trade with him
-          </Button>
-        </Panel>
+      <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest text-center">
+        ◆ A single boon — choose one ◆
       </div>
+
+      <div className="grid md:grid-cols-3 gap-3">
+        <CampChoiceCard
+          choiceId="rest"
+          title="Rest at the Fire"
+          flavor="Catch your breath. Wounds will not close — but Second Wind and a careful surge can be readied again."
+          locked={campChoice !== null && campChoice !== 'rest'}
+          picked={campChoice === 'rest'}
+          pickedSummary="Second Wind, Action Surge — readied."
+          buttonLabel="Rest by the fire"
+          onPick={() => handlePickChoice('rest')}
+        />
+        <CampChoiceCard
+          choiceId="sharpen"
+          title="Sharpen the Blade"
+          flavor="A whetstone, a long breath, the road in your hand. Strike truer for the rest of this delve."
+          locked={campChoice !== null && campChoice !== 'sharpen'}
+          picked={campChoice === 'sharpen'}
+          pickedSummary="+1 to all attack rolls for the rest of the delve."
+          buttonLabel="Hone the edge"
+          onPick={() => handlePickChoice('sharpen')}
+        />
+        <CampChoiceCard
+          choiceId="prayer"
+          title="A Prayer Whispered"
+          flavor="The fire crackles. A name leaves your lips. Something in the dark answers."
+          locked={campChoice !== null && campChoice !== 'prayer'}
+          picked={campChoice === 'prayer'}
+          pickedSummary={
+            prayerGrantedId
+              ? `${getBlessing(prayerGrantedId).name} — granted.`
+              : 'A blessing — granted.'
+          }
+          buttonLabel="Whisper a prayer"
+          onPick={() => handlePickChoice('prayer')}
+        />
+      </div>
+
+      {campChoice === 'prayer' && prayerGrantedId && (
+        <div className="max-w-md mx-auto">
+          <BlessingCard blessingId={prayerGrantedId} />
+        </div>
+      )}
+
+      <Panel>
+        <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
+          ◆ The Caravan-Merchant
+        </div>
+        <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+          "Coin in this pocket, comfort in the other. Road south is long. You'll want both."
+        </p>
+        <Button variant="secondary" onClick={openMerchant}>
+          Trade with him
+        </Button>
+      </Panel>
 
       <div className="flex flex-col md:flex-row gap-3 justify-center mt-2">
         <Button variant="primary" onClick={onPressSouth}>
@@ -276,6 +318,51 @@ function MerchantModal({
         </div>
       </div>
     </div>
+  );
+}
+
+interface CampChoiceCardProps {
+  choiceId: CampChoice;
+  title: string;
+  flavor: string;
+  locked: boolean;
+  picked: boolean;
+  pickedSummary: string;
+  buttonLabel: string;
+  onPick: () => void;
+}
+
+function CampChoiceCard({
+  title,
+  flavor,
+  locked,
+  picked,
+  pickedSummary,
+  buttonLabel,
+  onPick,
+}: CampChoiceCardProps) {
+  return (
+    <Panel className={locked ? 'opacity-40' : undefined}>
+      <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
+        ◆ {title}
+      </div>
+      <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+        {flavor}
+      </p>
+      {picked ? (
+        <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
+          {pickedSummary}
+        </div>
+      ) : locked ? (
+        <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic">
+          The moment has passed.
+        </div>
+      ) : (
+        <Button variant="primary" onClick={onPick}>
+          {buttonLabel}
+        </Button>
+      )}
+    </Panel>
   );
 }
 
