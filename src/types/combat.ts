@@ -66,4 +66,8 @@ export interface CombatState {
   lastAttack?: AttackEvent;
   /** Counter to issue stable AttackEvent ids. */
   attackEventCounter: number;
+  /** True after the player has made their first attack roll this combat. */
+  playerHasAttacked: boolean;
+  /** Missed-attack rerolls remaining for this encounter (Tymora's Coin etc.). */
+  rerollMissesEncounterRemaining: number;
 }

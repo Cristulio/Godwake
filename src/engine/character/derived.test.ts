@@ -124,4 +124,48 @@ describe('character derivation — human fighter', () => {
     // Chain 16 + Defense +1 = 17. DEX ignored.
     expect(computeAC(withChain)).toBe(17);
   });
+
+  it('Bloody-Minded quirk subtracts 1 AC', () => {
+    const cursed = { ...human, quirks: ['bloody-minded'] };
+    // 10 + DEX(2) − 1 = 11
+    expect(computeAC(cursed)).toBe(11);
+  });
+
+  it("Helm's Aegis blessing adds 1 AC", () => {
+    const blessed = { ...human, blessings: ['helms-aegis'] };
+    expect(computeAC(blessed)).toBe(13);
+  });
+
+  it("Silvanus's Root stacks +1 AC, −1 initiative", () => {
+    const rooted = { ...human, blessings: ['silvanus-root'] };
+    expect(computeAC(rooted)).toBe(13);
+    expect(initiativeModifier(rooted)).toBe(1); // DEX(2) − 1
+  });
+
+  it('Vertigo quirk subtracts 2 from initiative', () => {
+    const dizzy = { ...human, quirks: ['vertigo'] };
+    expect(initiativeModifier(dizzy)).toBe(0); // DEX(2) − 2
+  });
+
+  it("Helm's Vigil adds 2 to initiative", () => {
+    const watched = { ...human, blessings: ['helms-vigil'] };
+    expect(initiativeModifier(watched)).toBe(4); // DEX(2) + 2
+  });
+
+  it("Tempus's Edge widens crit range by 1", () => {
+    const withEdge = { ...human, blessings: ['tempus-edge'] };
+    // Lv1 fighter — no Improved Critical — base 20 → edge brings it to 19-20
+    expect(critRange(withEdge)).toEqual([19, 20]);
+  });
+
+  it("Tempus's Edge stacks with Improved Critical", () => {
+    const champion3 = {
+      ...human,
+      level: 3,
+      subclassId: 'champion',
+      blessings: ['tempus-edge'],
+    };
+    // Champion 19-20 + 1 → 18-20
+    expect(critRange(champion3)).toEqual([18, 19, 20]);
+  });
 });

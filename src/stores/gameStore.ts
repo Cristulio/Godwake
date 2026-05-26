@@ -6,8 +6,20 @@ import type { DelveState } from '../types/delve';
 import { setActiveRoller, getActiveRoller } from '../engine/dice';
 import { buildPlayerCharacter, type CharacterCreationInput } from '../engine/character/defaultCharacter';
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
-import { rollQuirks } from '../engine/character/quirks';
+import { rollQuirks, characterQuirkMods } from '../engine/character/quirks';
 import { applyDelveStartUpgrades, applyPermanentUpgrade } from '../engine/character/upgrades';
+
+function applyDelveStartQuirks(character: Character): Character {
+  const mods = characterQuirkMods(character);
+  const bonusGold = mods.startBonusGold ?? 0;
+  return {
+    ...character,
+    goldInPocket: character.goldInPocket + bonusGold,
+    delveBudgets: {
+      quirkRerollMissesRemaining: mods.rerollMissesPerDelve ?? 0,
+    },
+  };
+}
 import { getUpgrade } from '../content/upgrades';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
@@ -143,10 +155,11 @@ export const useGameStore = create<GameState>()(
     const ch = get().character;
     if (!ch) return;
     const withUpgrades = applyDelveStartUpgrades(withResetActionEconomy(ch), get().unlockedUpgrades);
+    const withQuirkBudgets = applyDelveStartQuirks(withUpgrades);
     set({
       delve,
       combat: null,
-      character: withUpgrades,
+      character: withQuirkBudgets,
       screen: 'delve',
     });
   },

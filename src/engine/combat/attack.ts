@@ -11,6 +11,8 @@ import type {
 import type { Weapon } from '../../schemas/item';
 import { abilityModifier } from '../../types/abilities';
 import { critRange, computeAC, effectiveAbilityScores } from '../character/derived';
+import { characterQuirkMods } from '../character/quirks';
+import { characterBlessingMods } from '../character/blessings';
 import { getItem } from '../../content/items';
 import { getMonster } from '../../content/monsters';
 
@@ -43,15 +45,24 @@ function applyDamage(state: CombatState, targetId: string, amount: number, chara
 
   if (target.kind === 'monster') {
     const mc = target as MonsterCombatant;
+    const remainingTemp = Math.max(0, mc.instance.hp.temp - amount);
+    const overflow = Math.max(0, amount - mc.instance.hp.temp);
     mc.instance = {
       ...mc.instance,
-      hp: { ...mc.instance.hp, current: Math.max(0, mc.instance.hp.current - amount) },
+      hp: {
+        ...mc.instance.hp,
+        temp: remainingTemp,
+        current: Math.max(0, mc.instance.hp.current - overflow),
+      },
     };
   } else {
-    // Player damage — applied to the character's HP. The character lives in the
-    // game store; we mutate via the side-channel and rely on the caller to
-    // sync. For MVP we mutate the passed character directly (callers re-store).
-    character.hp = { ...character.hp, current: Math.max(0, character.hp.current - amount) };
+    const remainingTemp = Math.max(0, character.hp.temp - amount);
+    const overflow = Math.max(0, amount - character.hp.temp);
+    character.hp = {
+      ...character.hp,
+      temp: remainingTemp,
+      current: Math.max(0, character.hp.current - overflow),
+    };
   }
   return next;
 }
@@ -112,12 +123,32 @@ export function playerAttack(
     : 'str'; // melee default; ranged would force dex; refine later
   const abilMod = abilityModifier(scores[attackAbility]);
   const profBonus = 2; // Lv 1-4. proficiencyBonus(character.level) -- TODO
-  const attackBonus = abilMod + profBonus;
-  const ac = targetAC(target, character);
 
-  const toHit = roller.d20('normal', attackBonus);
-  const crit = critRange(character).includes(toHit.rolls[0]);
-  const hit = crit || (toHit.total >= ac && !toHit.natural1);
+  const quirkMods = characterQuirkMods(character);
+  const blessingMods = characterBlessingMods(character);
+  const isFirstAttack = !state.playerHasAttacked;
+  const targetWounded =
+    target.kind === 'monster' &&
+    target.instance.hp.current > 0 &&
+    target.instance.hp.current <= target.instance.hp.max / 2;
+  const playerWounded = character.hp.current <= character.hp.max / 2;
+
+  let attackBonus = abilMod + profBonus;
+  if (isFirstAttack) {
+    attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
+    attackBonus += quirkMods.firstAttackPenalty ?? 0;
+  }
+  if (targetWounded) attackBonus += quirkMods.woundedAttackBonus ?? 0;
+  if (isFirstAttack && blessingMods.firstAttackBonus) {
+    attackBonus += blessingMods.firstAttackBonus;
+  }
+
+  const ac = targetAC(target, character);
+  const advantage =
+    isFirstAttack && blessingMods.firstAttackAdvantage ? 'advantage' : 'normal';
+  let toHit = roller.d20(advantage, attackBonus);
+  let crit = critRange(character).includes(toHit.rolls[0]);
+  let hit = crit || (toHit.total >= ac && !toHit.natural1);
 
   const logEntries: CombatLogEntry[] = [];
   const newLogId = nextLogId(state);
@@ -126,6 +157,29 @@ export function playerAttack(
     kind: 'roll',
     text: `${character.name} attacks ${displayName(target, character)} with ${weapon.name}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
   });
+
+  // Auto-reroll a miss if a reroll budget is available. Prefer the
+  // per-encounter budget (Tymora's Coin) before the per-delve one (Tymora's Eye).
+  let usedEncounterReroll = 0;
+  let usedDelveReroll = 0;
+  if (!hit) {
+    let source: 'encounter' | 'delve' | null = null;
+    if (state.rerollMissesEncounterRemaining > 0) source = 'encounter';
+    else if ((character.delveBudgets?.quirkRerollMissesRemaining ?? 0) > 0) source = 'delve';
+    if (source) {
+      if (source === 'encounter') usedEncounterReroll = 1;
+      else usedDelveReroll = 1;
+      toHit = roller.d20(advantage, attackBonus);
+      crit = critRange(character).includes(toHit.rolls[0]);
+      hit = crit || (toHit.total >= ac && !toHit.natural1);
+      const sourceLabel = source === 'encounter' ? "Tymora's Coin" : "Tymora's Eye";
+      logEntries.push({
+        id: newLogId + 1,
+        kind: 'roll',
+        text: `${sourceLabel} — reroll. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
+      });
+    }
+  }
 
   const attackEvent: AttackEvent = {
     id: state.attackEventCounter + 1,
@@ -165,10 +219,33 @@ export function playerAttack(
         modifier: 0,
       },
     );
-    const totalDamage = damageRoll.total + abilMod + damageExpr.modifier;
+
+    let bonusDamage = 0;
+    const bonusParts: string[] = [];
+    const flatBonus = blessingMods.damageBonus ?? 0;
+    if (flatBonus) {
+      bonusDamage += flatBonus;
+      bonusParts.push(`${flatBonus >= 0 ? '+' : ''}${flatBonus} blessing`);
+    }
+    const holyBonus = blessingMods.holyDamageBonus ?? 0;
+    if (holyBonus) {
+      bonusDamage += holyBonus;
+      bonusParts.push(`+${holyBonus} radiant`);
+    }
+    if (playerWounded && quirkMods.hangryDamageBonus) {
+      bonusDamage += quirkMods.hangryDamageBonus;
+      bonusParts.push(`+${quirkMods.hangryDamageBonus} Hangry`);
+    }
+    if (isFirstAttack && blessingMods.firstAttackDamage) {
+      bonusDamage += blessingMods.firstAttackDamage;
+      bonusParts.push(`+${blessingMods.firstAttackDamage} first strike`);
+    }
+
+    const totalDamage = damageRoll.total + abilMod + damageExpr.modifier + bonusDamage;
 
     nextState = applyDamage(nextState, targetId, totalDamage, character);
 
+    const bonusSuffix = bonusParts.length > 0 ? ` (${bonusParts.join(', ')})` : '';
     nextState = {
       ...nextState,
       log: [
@@ -176,7 +253,7 @@ export function playerAttack(
         {
           id: nextLogId(nextState),
           kind: 'damage',
-          text: `Damage: ${damageRoll.rolls.join('+')}${abilMod !== 0 ? ` ${abilMod > 0 ? '+' : ''}${abilMod}` : ''}${damageExpr.modifier !== 0 ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}` : ''} = ${totalDamage} ${weapon.damageType}.`,
+          text: `Damage: ${damageRoll.rolls.join('+')}${abilMod !== 0 ? ` ${abilMod > 0 ? '+' : ''}${abilMod}` : ''}${damageExpr.modifier !== 0 ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}` : ''} = ${totalDamage} ${weapon.damageType}${bonusSuffix}.`,
         },
       ],
     };
@@ -184,6 +261,19 @@ export function playerAttack(
 
   // Mark action used for the player
   nextState = markPlayerActionUsed(nextState, character);
+  nextState = {
+    ...nextState,
+    playerHasAttacked: true,
+    rerollMissesEncounterRemaining:
+      nextState.rerollMissesEncounterRemaining - usedEncounterReroll,
+  };
+  if (usedDelveReroll > 0 && character.delveBudgets) {
+    character.delveBudgets = {
+      ...character.delveBudgets,
+      quirkRerollMissesRemaining:
+        (character.delveBudgets.quirkRerollMissesRemaining ?? 0) - usedDelveReroll,
+    };
+  }
 
   return evaluateCombatEnd(nextState, character);
 }
@@ -249,9 +339,17 @@ export function monsterAttack(
       die: damageExpr.die,
       modifier: 0,
     });
-    const totalDamage = damageRoll.total + damageExpr.modifier;
+    const rawDamage = damageRoll.total + damageExpr.modifier;
+
+    const quirkMods = characterQuirkMods(character);
+    const immune =
+      action.damageType === 'poison' && quirkMods.poisonImmune === true;
+    const totalDamage = immune ? 0 : rawDamage;
 
     nextState = applyDamage(nextState, 'player', totalDamage, character);
+    const damageLine = immune
+      ? `Damage negated: ${character.name} is immune to ${action.damageType}.`
+      : `Damage: ${damageRoll.rolls.join('+')}${damageExpr.modifier !== 0 ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}` : ''} = ${totalDamage} ${action.damageType}.`;
     nextState = {
       ...nextState,
       log: [
@@ -259,7 +357,7 @@ export function monsterAttack(
         {
           id: nextLogId(nextState),
           kind: 'damage',
-          text: `Damage: ${damageRoll.rolls.join('+')}${damageExpr.modifier !== 0 ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}` : ''} = ${totalDamage} ${action.damageType}.`,
+          text: damageLine,
         },
       ],
     };

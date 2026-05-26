@@ -10,6 +10,7 @@ import type {
 import type { Monster } from '../../schemas/monster';
 import { abilityModifier } from '../../types/abilities';
 import { initiativeModifier } from '../character/derived';
+import { characterBlessingMods } from '../character/blessings';
 import { getMonster } from '../../content/monsters';
 
 let monsterInstanceCounter = 0;
@@ -137,6 +138,21 @@ export function createCombat(input: CreateCombatInput): CombatState {
     },
   ];
 
+  // Lathander's Dawn (and any future per-room temp-HP blessing): grant temp HP
+  // at the start of combat. Temp HP doesn't stack — take the higher of current
+  // and granted, RAW.
+  const blessingMods = characterBlessingMods(character);
+  const tempHpGrant = blessingMods.extraTempHpPerRoom ?? 0;
+  if (tempHpGrant > 0) {
+    const newTemp = Math.max(character.hp.temp, tempHpGrant);
+    character.hp = { ...character.hp, temp: newTemp };
+    log.push({
+      id: log.length + 1,
+      kind: 'system' as const,
+      text: `${character.name} gains ${tempHpGrant} temporary HP from a blessing.`,
+    });
+  }
+
   return {
     combatants,
     initiativeOrder,
@@ -145,6 +161,8 @@ export function createCombat(input: CreateCombatInput): CombatState {
     log,
     status: 'active',
     attackEventCounter: 0,
+    playerHasAttacked: false,
+    rerollMissesEncounterRemaining: blessingMods.rerollMissesPerEncounter ?? 0,
   };
 }
 
