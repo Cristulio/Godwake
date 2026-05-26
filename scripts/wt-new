@@ -11,8 +11,10 @@
 # Creates a worktree at ../DD-worktrees/<feature-name> on a new branch
 # named feat/<feature-name>, copies .claude/settings.local.json into it so
 # the new Claude session inherits permissions + shared memory, and (with
-# --launch) opens a new macOS Terminal window already running `claude` in
-# the worktree.
+# --launch) opens a new Claude session in the worktree. On iTerm2 the new
+# session splits into a pane of the current window (alternating vertical /
+# horizontal based on aspect ratio so 4 sessions tile into a clean grid);
+# falls back to a new Terminal.app window if iTerm2 isn't installed.
 
 set -euo pipefail
 
@@ -40,7 +42,7 @@ if [ -z "$NAME" ]; then
   echo "  scripts/wt-new quirks-expansion"
   echo "  scripts/wt-new bg2-imoen-rescue --launch"
   echo ""
-  echo "  --launch  Opens a new macOS Terminal window running claude in the worktree."
+  echo "  --launch  Opens claude in the worktree — iTerm2 split pane, or Terminal.app window."
   exit 1
 fi
 
@@ -84,7 +86,7 @@ if [ "$LAUNCH" -eq 1 ]; then
   LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude"
   if [ -d "/Applications/iTerm.app" ]; then
     echo ""
-    echo "→ Opening new iTerm2 tab..."
+    echo "→ Opening pane in iTerm2..."
     osascript <<EOF
 tell application "iTerm"
   activate
@@ -93,13 +95,22 @@ tell application "iTerm"
     tell current session of current window to write text "$LAUNCH_CMD"
   else
     tell current window
-      create tab with default profile
-      tell current session of current tab to write text "$LAUNCH_CMD"
+      tell current session
+        set b to bounds
+        set w to (item 3 of b) - (item 1 of b)
+        set h to (item 4 of b) - (item 2 of b)
+        if w > h then
+          set newSession to (split vertically with default profile)
+        else
+          set newSession to (split horizontally with default profile)
+        end if
+        tell newSession to write text "$LAUNCH_CMD"
+      end tell
     end tell
   end if
 end tell
 EOF
-    echo "✓ iTerm2 tab opened with claude running."
+    echo "✓ iTerm2 pane opened with claude running."
   else
     echo ""
     echo "→ Launching new Terminal window..."
