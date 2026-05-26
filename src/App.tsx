@@ -7,6 +7,7 @@ import { DruidGroveScreen } from './components/hub/DruidGroveScreen';
 import { Chapter2TeaserScreen } from './components/hub/Chapter2TeaserScreen';
 import { DelveScreen } from './components/delve/DelveScreen';
 import { CodexScreen } from './components/codex/CodexScreen';
+import { InventoryScreen } from './components/inventory/InventoryScreen';
 import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
 import { QuirksTutorial } from './components/lore/QuirksTutorial';
 import { ReincarnationReveal } from './components/lore/ReincarnationReveal';
@@ -51,6 +52,9 @@ function App() {
       break;
     case 'codex':
       content = <CodexScreen />;
+      break;
+    case 'inventory':
+      content = <InventoryScreen />;
       break;
     case 'reincarnation':
       content = <ReincarnationReveal />;

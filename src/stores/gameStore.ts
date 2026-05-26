@@ -9,6 +9,7 @@ import { longRest, withResetActionEconomy } from '../engine/character/actions';
 import { rollQuirks, characterQuirkMods } from '../engine/character/quirks';
 import { applyDelveStartUpgrades, applyPermanentUpgrade } from '../engine/character/upgrades';
 import { hasPendingLevelUp, applyLevelUp } from '../engine/character/leveling';
+import { equipItem as equipItemFn, unequipSlot as unequipSlotFn, type EquipSlot } from '../engine/character/equip';
 import { createIronCellsDelve } from '../engine/delve';
 
 function applyDelveStartQuirks(character: Character): Character {
@@ -33,6 +34,7 @@ export type Screen =
   | 'delve'
   | 'reincarnation'
   | 'codex'
+  | 'inventory'
   | 'druid-grove'
   | 'chapter2-teaser'
   | 'level-up';
@@ -111,6 +113,11 @@ interface GameState {
   // Codex
   discoverMonster: (defId: string) => void;
   goToCodex: () => void;
+
+  // Inventory
+  goToInventory: () => void;
+  equipFromInventory: (inventoryIdx: number) => void;
+  unequipSlot: (slot: EquipSlot) => void;
 
   // Blessings (mid-delve grants from shrine rooms; wipe at delve end)
   addBlessing: (id: string) => void;
@@ -309,6 +316,12 @@ export const useGameStore = create<GameState>()(
         : { discoveredMonsters: [...s.discoveredMonsters, defId] },
     ),
   goToCodex: () => set({ screen: 'codex' }),
+
+  goToInventory: () => set({ screen: 'inventory' }),
+  equipFromInventory: (inventoryIdx) =>
+    set((s) => (s.character ? { character: equipItemFn(s.character, inventoryIdx) } : s)),
+  unequipSlot: (slot) =>
+    set((s) => (s.character ? { character: unequipSlotFn(s.character, slot) } : s)),
   addBlessing: (id) =>
     set((s) =>
       s.character
