@@ -66,6 +66,8 @@ interface GameState {
   combat: CombatState | null;
   /** Animation/turn-pacing multiplier. 1 = normal, 2 = fast forward. */
   speedMultiplier: 1 | 2;
+  /** Delay (ms, pre-speed-multiplier) before auto-ending a turn with no actions remaining. */
+  autoEndTurnDelayMs: number;
   /** Active soul-bond voice (Irenicus or Imoen) overlay, null if hidden. */
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number } | null;
   /** True if the player has seen the intro already this save. */
@@ -125,6 +127,7 @@ interface GameState {
 
   // Settings
   setSpeed: (s: 1 | 2) => void;
+  setAutoEndTurnDelay: (ms: number) => void;
 
   // Lore overlays
   showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext) => void;
@@ -162,6 +165,7 @@ export const useGameStore = create<GameState>()(
   delve: null,
   combat: null,
   speedMultiplier: 1,
+  autoEndTurnDelayMs: 1100,
   taunt: null,
   introSeen: false,
   hasReincarnated: false,
@@ -334,6 +338,8 @@ export const useGameStore = create<GameState>()(
     }),
 
   setSpeed: (s) => set({ speedMultiplier: s }),
+  setAutoEndTurnDelay: (ms) =>
+    set({ autoEndTurnDelayMs: Math.max(200, Math.min(3000, Math.round(ms))) }),
 
   showTaunt: (speaker, context) =>
     set({ taunt: { speaker, context, seed: Math.floor(Math.random() * 1000) } }),
@@ -467,6 +473,7 @@ export const useGameStore = create<GameState>()(
         saveSeed: state.saveSeed,
         character: state.character,
         speedMultiplier: state.speedMultiplier,
+        autoEndTurnDelayMs: state.autoEndTurnDelayMs,
         introSeen: state.introSeen,
         hasReincarnated: state.hasReincarnated,
         quirksTutorialSeen: state.quirksTutorialSeen,

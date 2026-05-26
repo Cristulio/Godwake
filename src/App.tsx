@@ -68,7 +68,7 @@ function App() {
   }
 
   return (
-    <>
+    <div className="crt-scanlines">
       {content}
       {taunt && (
         <IrenicusTaunt
@@ -80,7 +80,7 @@ function App() {
       )}
       {showQuirksTutorial && <QuirksTutorial onDismiss={markQuirksTutorialSeen} />}
       <AudioControls />
-    </>
+    </div>
   );
 }
 

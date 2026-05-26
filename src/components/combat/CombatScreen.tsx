@@ -52,9 +52,11 @@ export function CombatScreen({
   const setCharacter = useGameStore((s) => s.setCharacter);
   const speed = useGameStore((s) => s.speedMultiplier);
   const setSpeed = useGameStore((s) => s.setSpeed);
+  const autoEndTurnDelayMs = useGameStore((s) => s.autoEndTurnDelayMs);
   const [selectingTarget, setSelectingTarget] = useState(false);
   const [overlayActive, setOverlayActive] = useState(false);
   const [shake, setShake] = useState(false);
+  const [screenFlash, setScreenFlash] = useState<'player-crit' | 'enemy-crit' | null>(null);
   const [confirmAbandon, setConfirmAbandon] = useState(false);
   const [autoEndNotice, setAutoEndNotice] = useState(false);
   const [pickingItem, setPickingItem] = useState(false);
@@ -68,8 +70,15 @@ export function CombatScreen({
     setOverlayActive(true);
     if (state.lastAttack.crit) {
       setShake(true);
-      const t = setTimeout(() => setShake(false), 460);
-      return () => clearTimeout(t);
+      const flashKind: 'player-crit' | 'enemy-crit' =
+        state.lastAttack.attackerKind === 'player' ? 'player-crit' : 'enemy-crit';
+      setScreenFlash(flashKind);
+      const tShake = setTimeout(() => setShake(false), 460);
+      const tFlash = setTimeout(() => setScreenFlash(null), 220);
+      return () => {
+        clearTimeout(tShake);
+        clearTimeout(tFlash);
+      };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.lastAttack?.id]);
@@ -155,7 +164,7 @@ export function CombatScreen({
       const next = endTurn(latest, character);
       setCharacter({ ...character });
       setCombat(next);
-    }, 1100 / speed);
+    }, autoEndTurnDelayMs / speed);
 
     return () => {
       clearTimeout(t);
@@ -276,15 +285,30 @@ export function CombatScreen({
 
   return (
     <div
-      className={`min-h-screen flex flex-col gap-3 mx-auto p-4 md:p-6 ${shake ? 'animate-shake' : ''}`}
+      className={`min-h-screen flex flex-col gap-3 mx-auto p-4 md:p-6 relative animate-room-enter ${shake ? 'animate-shake' : ''}`}
       style={{ width: '1000px', maxWidth: '100%' }}
     >
-      <header className="flex justify-between items-baseline pb-2 border-b border-[var(--color-border-warm)]">
+      {/* Screen flash for crits */}
+      {screenFlash && (
+        <div
+          className="fixed inset-0 pointer-events-none z-30 animate-screen-flash"
+          style={{
+            backgroundColor:
+              screenFlash === 'player-crit'
+                ? 'rgba(244, 167, 66, 0.65)'
+                : 'rgba(200, 51, 46, 0.75)',
+          }}
+        />
+      )}
+      <header className="flex justify-between items-baseline pb-3 border-b border-[var(--color-border-warm)]">
         <div>
-          <h1 className="text-lg md:text-xl text-[var(--color-accent-amber)] tracking-wider">
+          <h1
+            className="font-display text-lg md:text-xl text-[var(--color-accent-amber)] tracking-[0.1em]"
+            style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.85), 0 0 14px rgba(244,167,66,0.3)' }}
+          >
             {roomTitle ?? 'Encounter'}
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest">
+          <p className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-[0.25em] mt-1">
             {roomLabel ?? `Round ${state.round}`}
           </p>
         </div>
@@ -292,12 +316,12 @@ export function CombatScreen({
           <button
             type="button"
             onClick={() => setSpeed(speed === 1 ? 2 : 1)}
-            className={`
-              px-2 py-1 border-2 text-[10px] uppercase tracking-widest font-bold
+            className={`btn-chunky px-3 py-1.5 border-2 text-[10px] uppercase tracking-widest font-bold transition-colors
               ${speed === 2
-                ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-amber)]'
-                : 'border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)]'}
+                ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
+                : 'bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)]'}
             `}
+            title={speed === 2 ? 'Slow down' : 'Speed up'}
           >
             {speed === 2 ? '▶▶ 2×' : '▶ 1×'}
           </button>
@@ -305,9 +329,9 @@ export function CombatScreen({
             <button
               type="button"
               onClick={() => setConfirmAbandon(true)}
-              className="px-2 py-1 border-2 border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-accent-blood)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent-blood)] text-[10px] uppercase tracking-widest font-bold"
+              className="btn-chunky px-3 py-1.5 border-2 bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-accent-deep-blood)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent-blood)] text-[10px] uppercase tracking-widest font-bold transition-colors"
             >
-              Abandon
+              ⚑ Abandon
             </button>
           )}
         </div>
@@ -358,16 +382,24 @@ export function CombatScreen({
       </div>
 
       {isResolved ? (
-        <div className="flex flex-col items-center gap-4 mt-2 animate-fade-in">
-          <div className={`text-2xl md:text-3xl uppercase tracking-[0.4em] ${
-            state.status === 'player-victory'
-              ? 'text-[var(--color-accent-amber)]'
-              : 'text-[var(--color-accent-blood)]'
-          }`}>
-            {state.status === 'player-victory' ? 'Victory' : 'You have fallen'}
+        <div className="flex flex-col items-center gap-5 mt-2 animate-pop-in">
+          <div
+            className={`font-display text-3xl md:text-4xl uppercase tracking-[0.4em] ${
+              state.status === 'player-victory'
+                ? 'text-[var(--color-accent-amber)]'
+                : 'text-[var(--color-accent-blood)]'
+            }`}
+            style={{
+              textShadow:
+                state.status === 'player-victory'
+                  ? '0 0 24px rgba(244,167,66,0.6), 4px 4px 0 rgba(0,0,0,0.9)'
+                  : '0 0 24px rgba(200,51,46,0.6), 4px 4px 0 rgba(0,0,0,0.9)',
+            }}
+          >
+            {state.status === 'player-victory' ? '◆ Victory ◆' : '✗ You have fallen ✗'}
           </div>
-          <Button variant="primary" onClick={handleContinue}>
-            {state.status === 'player-victory' ? 'Continue Deeper →' : 'Wake at the Grove'}
+          <Button variant="primary" size="lg" onClick={handleContinue}>
+            {state.status === 'player-victory' ? '▸ Continue Deeper' : '↻ Wake at the Grove'}
           </Button>
         </div>
       ) : (

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
-import type { MonsterInstance } from '../../types/combat';
+import type { MonsterInstance, AttackEvent } from '../../types/combat';
 import { computeAC } from '../../engine/character/derived';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
@@ -12,6 +12,8 @@ type CommonProps = {
   facing: 'left' | 'right';
   /** Bumps when this sprite has just executed an attack. Triggers a lunge animation. */
   attackPulse: number;
+  /** Latest attack event in combat — used to detect crits against this sprite. */
+  lastAttack?: AttackEvent;
 };
 
 type PlayerProps = CommonProps & {
@@ -28,16 +30,6 @@ type MonsterProps = CommonProps & {
 
 export type BattlefieldSpriteProps = PlayerProps | MonsterProps;
 
-/**
- * Per-monster display widths. Heights flow from each sprite's viewBox aspect.
- * Fighter is rendered at 84px wide (= 140px tall at 24:40 ratio); use that as
- * the "human" reference and size races accordingly.
- *
- *   Goblin / kobold        — small race, ~68% human height
- *   Skeleton / mephit      — medium-small, ~80% human height
- *   Warden / Ilyich        — duergar (small but stocky), full ~95%
- *   Animated Armor         — human-plate-suit sized, ~100%
- */
 function monsterSpriteWidth(defId: string): string {
   switch (defId) {
     case 'goblin-warden':
@@ -98,8 +90,10 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
 
   const prevHp = useRef(hpCurrent);
   const [damageFloats, setDamageFloats] = useState<FloatingDamageItem[]>([]);
-  const [hitFlash, setHitFlash] = useState(false);
-  const [slashes, setSlashes] = useState<{ id: number; direction: 'left-to-right' | 'right-to-left' }[]>([]);
+  const [hitFlash, setHitFlash] = useState<'normal' | 'crit' | null>(null);
+  const [hitPause, setHitPause] = useState(false);
+  const [sparks, setSparks] = useState<Array<{ id: number; dx: number; dy: number }>>([]);
+  const [slashes, setSlashes] = useState<{ id: number; direction: 'left-to-right' | 'right-to-left'; crit: boolean }[]>([]);
   const [lunge, setLunge] = useState(false);
   const lastAttackPulse = useRef(props.attackPulse);
 
@@ -109,18 +103,52 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
     const delta = prevHp.current - hpCurrent;
     prevHp.current = hpCurrent;
     if (delta > 0) {
+      // Detect crit against THIS sprite by matching the lastAttack event.
+      const targetMatches =
+        props.lastAttack &&
+        (props.kind === 'monster'
+          ? props.lastAttack.targetName === props.instance.displayName
+          : props.lastAttack.attackerKind === 'monster');
+      const wasCrit = props.lastAttack?.crit === true && targetMatches;
+
       const id = Date.now() + Math.random();
-      setDamageFloats((d) => [...d, { id, amount: delta, kind: 'damage' }]);
-      setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1500);
-      setHitFlash(true);
-      setTimeout(() => setHitFlash(false), 260);
+      setDamageFloats((d) => [
+        ...d,
+        { id, amount: delta, kind: wasCrit ? 'crit' : 'damage' },
+      ]);
+      setTimeout(
+        () => setDamageFloats((d) => d.filter((x) => x.id !== id)),
+        wasCrit ? 1500 : 1200,
+      );
+
+      setHitFlash(wasCrit ? 'crit' : 'normal');
+      setTimeout(() => setHitFlash(null), wasCrit ? 320 : 240);
+      setHitPause(true);
+      setTimeout(() => setHitPause(false), 160);
 
       // Slash effect: comes from the attacker's side toward this sprite.
       const direction: 'left-to-right' | 'right-to-left' =
         props.facing === 'right' ? 'right-to-left' : 'left-to-right';
       const slashId = Date.now() + Math.random();
-      setSlashes((s) => [...s, { id: slashId, direction }]);
+      setSlashes((s) => [...s, { id: slashId, direction, crit: !!wasCrit }]);
       setTimeout(() => setSlashes((s) => s.filter((x) => x.id !== slashId)), 350);
+
+      if (wasCrit) {
+        // Crit spark burst — 8 particles radiating outward
+        const burst = Array.from({ length: 8 }, (_, i) => {
+          const angle = (i / 8) * Math.PI * 2 + Math.random() * 0.5;
+          const dist = 36 + Math.random() * 20;
+          return {
+            id: id + i + 1,
+            dx: Math.cos(angle) * dist,
+            dy: Math.sin(angle) * dist - 8,
+          };
+        });
+        setSparks((s) => [...s, ...burst]);
+        setTimeout(() => {
+          setSparks((s) => s.filter((sp) => !burst.find((b) => b.id === sp.id)));
+        }, 600);
+      }
     } else if (delta < 0) {
       const id = Date.now() + Math.random();
       setDamageFloats((d) => [...d, { id, amount: -delta, kind: 'heal' }]);
@@ -136,7 +164,7 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
     lastAttackPulse.current = props.attackPulse;
     if (dead) return;
     setLunge(true);
-    const t = setTimeout(() => setLunge(false), 420);
+    const t = setTimeout(() => setLunge(false), 460);
     return () => clearTimeout(t);
   }, [props.attackPulse, dead]);
 
@@ -161,7 +189,7 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
         disabled:cursor-default
       `}
     >
-      <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-bold mb-0.5">
+      <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-bold mb-0.5 font-display">
         {name}
       </div>
 
@@ -174,11 +202,11 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
         style={{ width: props.kind === 'player' ? '84px' : monsterSpriteWidth(props.instance.defId) }}
       >
         {selectable && (
-          <div className="absolute inset-0 border-2 border-[var(--color-accent-amber)] -m-1 pointer-events-none" />
+          <div className="absolute inset-0 border-2 border-[var(--color-accent-amber)] -m-1 pointer-events-none animate-pulse-glow" />
         )}
         <div
           className={`
-            relative w-full ${lungeClass || idleClass}
+            relative w-full ${lungeClass || idleClass} ${hitPause ? 'animate-hit-pause' : ''}
             ${props.facing === 'left' ? '-scale-x-100' : ''}
           `}
         >
@@ -193,16 +221,31 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
               className="w-full h-auto"
             />
           )}
-          {hitFlash && (
+          {hitFlash === 'normal' && (
             <div className="absolute inset-0 bg-[var(--color-accent-blood)] opacity-55 mix-blend-screen pointer-events-none" />
+          )}
+          {hitFlash === 'crit' && (
+            <div className="absolute inset-0 pointer-events-none animate-hit-flash-crit" />
           )}
         </div>
         {slashes.map((s) => (
           <SlashEffect key={s.id} direction={s.direction} />
         ))}
+        {/* Crit sparks */}
+        {sparks.map((s) => (
+          <div
+            key={s.id}
+            className="absolute left-1/2 top-1/2 w-1.5 h-1.5 bg-[var(--color-accent-torch)] pointer-events-none animate-spark rounded-[1px]"
+            style={{
+              boxShadow:
+                '0 0 6px rgba(255,179,71,0.95), 0 0 14px rgba(255,71,48,0.6)',
+              ['--spark-dest' as string]: `translate(${s.dx}px, ${s.dy}px)`,
+            }}
+          />
+        ))}
         <FloatingDamage items={damageFloats} />
         {dead && (
-          <div className="absolute inset-x-0 bottom-2 flex items-center justify-center text-[var(--color-accent-blood)] text-[10px] uppercase tracking-[0.3em] font-bold">
+          <div className="absolute inset-x-0 bottom-2 flex items-center justify-center text-[var(--color-accent-blood)] text-[10px] uppercase tracking-[0.3em] font-bold font-display">
             Slain
           </div>
         )}
@@ -210,27 +253,35 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
 
       <div className="w-20 flex flex-col gap-0.5 mt-1">
         <div className="flex justify-between text-[10px] font-mono">
-          <span className="text-[var(--color-text-dim)]">HP</span>
+          <span className="text-[var(--color-text-dim)] font-display text-[8px]">HP</span>
           <span className="text-[var(--color-text-primary)]">
             {hpCurrent}/{hpMax}
           </span>
         </div>
-        <div className="h-1.5 bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] overflow-hidden">
+        <div className="h-2 bg-[var(--color-bg-deep)] border border-[var(--color-border-dim)] overflow-hidden relative">
           <div
             className={`h-full transition-all duration-500 ease-out ${
               props.kind === 'monster'
-                ? 'bg-[var(--color-accent-blood)]'
+                ? hpPercent > 50
+                  ? 'bg-gradient-to-r from-[var(--color-accent-blood)] to-[var(--color-accent-deep-blood)]'
+                  : 'bg-gradient-to-r from-[var(--color-accent-deep-blood)] to-[var(--color-accent-blood)] animate-pulse'
                 : hpPercent > 50
-                  ? 'bg-[var(--color-status-poison)]'
+                  ? 'bg-gradient-to-r from-[var(--color-status-poison)] to-[#5a8013]'
                   : hpPercent > 25
-                    ? 'bg-[var(--color-accent-amber)]'
-                    : 'bg-[var(--color-accent-blood)]'
+                    ? 'bg-gradient-to-r from-[var(--color-accent-amber)] to-[var(--color-accent-torch)]'
+                    : 'bg-gradient-to-r from-[var(--color-accent-blood)] to-[var(--color-accent-deep-blood)] animate-pulse'
             }`}
+            style={{ width: `${hpPercent}%` }}
+          />
+          {/* Glossy shine on top half */}
+          <div
+            className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent pointer-events-none"
             style={{ width: `${hpPercent}%` }}
           />
         </div>
         <div className="text-[10px] text-[var(--color-text-dim)] font-mono text-center">
-          AC {acVisible ? ac : '?'}
+          <span className="font-display text-[8px] mr-1">AC</span>
+          {acVisible ? ac : '?'}
         </div>
       </div>
     </button>

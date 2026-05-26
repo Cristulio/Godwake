@@ -77,9 +77,9 @@ export function DiceRollOverlay({
     };
   }, [rollNatural, onDismiss, speed, hit, crit]);
 
-  const resultLabel = crit ? 'CRITICAL' : hit ? 'HIT' : 'MISS';
+  const resultLabel = crit ? 'CRIT!' : hit ? 'HIT' : 'MISS';
   const resultClass = crit
-    ? 'text-[var(--color-accent-amber)]'
+    ? 'text-[var(--color-dmg-crit)]'
     : hit
       ? 'text-[var(--color-status-poison)]'
       : 'text-[var(--color-text-muted)]';
@@ -87,30 +87,40 @@ export function DiceRollOverlay({
   return (
     <div className="w-full animate-fade-in" style={{ pointerEvents: 'none' }}>
       <div className="flex flex-col items-center gap-1.5">
-        <div className="text-[var(--color-text-secondary)] text-[9px] uppercase tracking-[0.25em] text-center truncate w-full">
+        <div className="font-display text-[var(--color-accent-gold)] text-[8px] uppercase tracking-[0.3em] text-center truncate w-full">
           {weaponName}
         </div>
         <D20Svg natural={shownNumber} spinning={spinning} crit={crit && !spinning} />
         {revealedResult ? (
-          <div className="flex flex-col items-center gap-0.5 animate-fade-in w-full">
-            <div className="text-[var(--color-text-primary)] text-[10px] font-mono">
-              {rollNatural} {attackBonus >= 0 ? '+' : ''}
-              {attackBonus} = <span className="text-[var(--color-accent-amber)]">{total}</span>
+          <div className="flex flex-col items-center gap-0.5 animate-scale-in w-full">
+            <div className="text-[var(--color-text-primary)] text-[11px] font-mono">
+              <span className="text-[var(--color-text-dim)]">{rollNatural}</span>
+              <span className="text-[var(--color-text-secondary)]">
+                {' '}{attackBonus >= 0 ? '+' : ''}{attackBonus}{' '}=
+              </span>{' '}
+              <span className="text-[var(--color-accent-amber)] font-bold text-base">{total}</span>
             </div>
             <div className="text-[var(--color-text-dim)] text-[9px] font-mono">
               vs AC {targetAC}
             </div>
-            <div className={`text-sm font-bold uppercase tracking-[0.3em] mt-0.5 ${resultClass}`}>
+            <div
+              className={`font-display text-base uppercase tracking-[0.3em] mt-1 ${resultClass}`}
+              style={{
+                textShadow: crit
+                  ? '0 0 12px rgba(255,71,48,0.8), 2px 2px 0 rgba(0,0,0,0.9)'
+                  : '2px 2px 0 rgba(0,0,0,0.7)',
+              }}
+            >
               {resultLabel}
             </div>
           </div>
         ) : (
-          <div className="text-[var(--color-text-dim)] text-[9px] font-mono uppercase tracking-widest h-9 flex items-center">
+          <div className="text-[var(--color-text-dim)] text-[9px] font-mono uppercase tracking-widest h-9 flex items-center animate-pulse">
             rolling…
           </div>
         )}
-        <div className="text-[var(--color-text-dim)] text-[8px] uppercase tracking-widest text-center truncate w-full">
-          {attackerName} → {targetName}
+        <div className="text-[var(--color-text-dim)] text-[8px] uppercase tracking-widest text-center truncate w-full mt-1">
+          {attackerName} <span className="opacity-50">→</span> {targetName}
         </div>
       </div>
     </div>

@@ -222,7 +222,7 @@ export function DelveScreen() {
 
   if (room.kind === 'rest') {
     return (
-      <div>
+      <div key={room.id} className="animate-room-enter">
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
           <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>
@@ -233,7 +233,7 @@ export function DelveScreen() {
 
   if (room.kind === 'treasure') {
     return (
-      <div>
+      <div key={room.id} className="animate-room-enter">
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
           <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>
@@ -244,7 +244,7 @@ export function DelveScreen() {
 
   if (room.kind === 'shrine') {
     return (
-      <div>
+      <div key={room.id} className="animate-room-enter">
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
           <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>
@@ -255,7 +255,7 @@ export function DelveScreen() {
 
   if (room.kind === 'camp') {
     return (
-      <div>
+      <div key={room.id} className="animate-room-enter">
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
           <RoomHeader delve={delve} blessingIds={character.blessings} />
         </div>

@@ -83,6 +83,7 @@ export function Battlefield({
             isActiveTurn={currentTurnId === 'player'}
             facing="right"
             attackPulse={playerAttackPulse}
+            lastAttack={state.lastAttack}
           />
         </div>
 
@@ -102,6 +103,7 @@ export function Battlefield({
               selectable={selectingTarget}
               onSelect={() => onSelectTarget(c.id)}
               attackPulse={monsterAttackPulseFor(c)}
+              lastAttack={state.lastAttack}
             />
           </div>
         ))}

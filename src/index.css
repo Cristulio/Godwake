@@ -1,34 +1,52 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-base: #0F0B08;
-  --color-bg-elevated: #1A1410;
-  --color-bg-panel: #221A14;
-  --color-bg-panel-hover: #2D2218;
+  /* Backgrounds — slightly cooler black-brown for more depth */
+  --color-bg-base: #0A0805;
+  --color-bg-elevated: #15100B;
+  --color-bg-panel: #1F1812;
+  --color-bg-panel-hover: #2A2017;
+  --color-bg-deep: #050302;
+
+  /* Borders — three-tier for hierarchy */
   --color-border-dim: #3A2E22;
   --color-border-warm: #6B4A2E;
-  --color-border-bright: #8C6232;
+  --color-border-bright: #A37340;
 
-  --color-text-primary: #E8DCC4;
-  --color-text-secondary: #B5A282;
-  --color-text-dim: #6B5E48;
-  --color-text-muted: #4A3F30;
+  /* Text — slightly warmer / cooler tiers */
+  --color-text-primary: #EFE3CA;
+  --color-text-secondary: #BFAB8A;
+  --color-text-dim: #7A6B52;
+  --color-text-muted: #4F4332;
 
+  /* Accents */
   --color-accent-amber: #F4A742;
   --color-accent-torch: #FFB347;
   --color-accent-gold: #D4B062;
-  --color-accent-blood: #B5302C;
+  --color-accent-blood: #C8332E;
+  --color-accent-deep-blood: #8B1F1B;
   --color-accent-teal-shadow: #1F3A3D;
-  --color-accent-arcane: #8B5FBF;
+  --color-accent-arcane: #9B6FCF;
+  --color-accent-arcane-deep: #5E3A8F;
 
+  /* Status colors — game-y, punchy */
   --color-status-poison: #8FBC1F;
   --color-status-fire: #FF6B2B;
   --color-status-frost: #5DADE2;
   --color-status-holy: #FFD700;
-  --color-status-necrotic: #5E1A8C;
+  --color-status-necrotic: #6E1FA0;
+  --color-status-shadow: #2A1F3A;
 
+  /* Damage / heal palette for floating numbers */
+  --color-dmg-normal: #FFE0A0;
+  --color-dmg-crit: #FF4730;
+  --color-dmg-heal: #6FD954;
+  --color-dmg-block: #8AA8FF;
+
+  /* Fonts — Press Start 2P for chunky pixel headings, JetBrains for body, Cinzel for narrative beats */
   --font-display: "Press Start 2P", "Courier New", monospace;
   --font-body: "JetBrains Mono", "Consolas", monospace;
+  --font-narrative: "Cinzel", "Georgia", serif;
 }
 
 html, body, #root {
@@ -43,43 +61,174 @@ body {
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-img {
+/* Pixelated rendering for images / sprites */
+img, svg.pixel {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
 }
 
+/* Scrollbars — thinner and amber-tinted */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-bg-elevated);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-border-warm);
+  border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-bright);
+  background: var(--color-accent-amber);
 }
+
+/* Headings use the pixel display font — pixel-perfect 8-bit feel */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  text-rendering: geometricPrecision;
+}
+
+/* Narrative text — book-feel for intro / reincarnation / lore */
+.font-narrative {
+  font-family: var(--font-narrative);
+  letter-spacing: 0.01em;
+}
+
+/* --- Atmospheric overlays --- */
+
+/* Subtle CRT scanlines — fixed-position overlay, pointer-events none */
+.crt-scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.10) 2px,
+    rgba(0, 0, 0, 0.10) 3px
+  );
+  mix-blend-mode: multiply;
+}
+
+/* Vignette — darkens corners for depth */
+.crt-scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+}
+
+/* --- Panel & button textures --- */
+
+/* Etched panel — inset shadow for "carved" look */
+.panel-etched {
+  background: linear-gradient(180deg, var(--color-bg-panel) 0%, var(--color-bg-elevated) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+.panel-etched-warm {
+  background: linear-gradient(180deg, var(--color-bg-panel) 0%, var(--color-bg-elevated) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 167, 66, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 0 0 1px var(--color-border-warm),
+    0 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Glowing accent panel — used for important UI like character card */
+.panel-warm-glow {
+  box-shadow:
+    inset 0 1px 0 rgba(244, 167, 66, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(244, 167, 66, 0.08);
+}
+
+/* Button — chunky weight with shadow */
+.btn-chunky {
+  position: relative;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.35),
+    0 2px 0 rgba(0, 0, 0, 0.5);
+  transition:
+    transform 80ms ease-out,
+    box-shadow 80ms ease-out,
+    background-color 120ms ease-out;
+}
+
+.btn-chunky:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.35),
+    0 3px 0 rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(244, 167, 66, 0.25);
+}
+
+.btn-chunky:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 0 rgba(0, 0, 0, 0.4),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 rgba(0, 0, 0, 0);
+}
+
+/* --- Animations (existing + new) --- */
 
 @keyframes godwake-shake {
   0%, 100% { transform: translateX(0); }
-  15% { transform: translateX(-5px) translateY(-1px); }
-  30% { transform: translateX(5px) translateY(2px); }
-  45% { transform: translateX(-4px); }
-  60% { transform: translateX(4px) translateY(-1px); }
+  10% { transform: translateX(-8px) translateY(-2px); }
+  25% { transform: translateX(8px) translateY(3px); }
+  40% { transform: translateX(-6px) translateY(-1px); }
+  55% { transform: translateX(6px) translateY(2px); }
+  70% { transform: translateX(-3px); }
+  85% { transform: translateX(2px); }
+}
+.animate-shake { animation: godwake-shake 380ms cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+@keyframes godwake-shake-soft {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
   75% { transform: translateX(-2px); }
 }
-.animate-shake { animation: godwake-shake 450ms ease-in-out; }
+.animate-shake-soft { animation: godwake-shake-soft 220ms ease-in-out; }
 
 @keyframes godwake-fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in { animation: godwake-fade-in 320ms ease-out forwards; }
+
+@keyframes godwake-fade-in-slow {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in-slow { animation: godwake-fade-in-slow 900ms ease-out forwards; }
+
+@keyframes godwake-scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-scale-in { animation: godwake-scale-in 240ms cubic-bezier(0.22, 1.2, 0.36, 1) forwards; }
 
 @keyframes godwake-pulse-glow {
   0%, 100% { box-shadow: 0 0 0 rgba(244,167,66,0); }
@@ -101,22 +250,118 @@ img {
 }
 .animate-idle-breath { animation: godwake-idle-breath 2.4s ease-in-out infinite; }
 
+/* Anticipation + follow-through lunge — pulls back THEN strikes */
 @keyframes godwake-lunge-right {
   0% { transform: translateX(0); }
-  40% { transform: translateX(28px); }
+  18% { transform: translateX(-8px); }
+  48% { transform: translateX(32px); }
+  78% { transform: translateX(28px); }
   100% { transform: translateX(0); }
 }
-.animate-lunge-right { animation: godwake-lunge-right 420ms ease-out; }
+.animate-lunge-right { animation: godwake-lunge-right 460ms cubic-bezier(0.34, 1.56, 0.64, 1); }
 
 @keyframes godwake-lunge-left {
   0% { transform: translateX(0); }
-  40% { transform: translateX(-28px); }
+  18% { transform: translateX(8px); }
+  48% { transform: translateX(-32px); }
+  78% { transform: translateX(-28px); }
   100% { transform: translateX(0); }
 }
-.animate-lunge-left { animation: godwake-lunge-left 420ms ease-out; }
+.animate-lunge-left { animation: godwake-lunge-left 460ms cubic-bezier(0.34, 1.56, 0.64, 1); }
 
 @keyframes godwake-die-fall {
-  0% { transform: translateY(0) rotate(0); opacity: 1; }
-  100% { transform: translateY(40px) rotate(-25deg); opacity: 0; }
+  0% { transform: translateY(0) rotate(0); opacity: 1; filter: brightness(1); }
+  30% { transform: translateY(4px) rotate(-8deg); filter: brightness(1.5); }
+  100% { transform: translateY(50px) rotate(-30deg); opacity: 0; filter: brightness(0.5); }
 }
-.animate-die-fall { animation: godwake-die-fall 700ms ease-in forwards; }
+.animate-die-fall { animation: godwake-die-fall 800ms cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards; }
+
+/* Damage number float — bigger arc, rotation, gravity */
+@keyframes godwake-damage-float {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  15% { opacity: 1; transform: translateY(-22px) scale(1.4); }
+  40% { transform: translateY(-30px) scale(1.1); }
+  85% { opacity: 1; transform: translateY(-44px) scale(1); }
+  100% { opacity: 0; transform: translateY(-56px) scale(0.9); }
+}
+.animate-damage-float { animation: godwake-damage-float 1100ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+@keyframes godwake-damage-crit {
+  0% { opacity: 0; transform: translateY(0) scale(0.4) rotate(-8deg); }
+  10% { opacity: 1; transform: translateY(-18px) scale(1.7) rotate(-3deg); }
+  25% { transform: translateY(-22px) scale(1.5) rotate(2deg); }
+  85% { opacity: 1; transform: translateY(-50px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-66px) scale(1); }
+}
+.animate-damage-crit { animation: godwake-damage-crit 1300ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* Hit pause — brief freeze for impact emphasis */
+@keyframes godwake-hit-pause {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.04); filter: brightness(2); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+.animate-hit-pause { animation: godwake-hit-pause 140ms ease-out; }
+
+@keyframes godwake-hit-flash-crit {
+  0%, 100% { background-color: rgba(255, 71, 48, 0); }
+  20% { background-color: rgba(255, 71, 48, 0.8); }
+  60% { background-color: rgba(255, 200, 100, 0.4); }
+}
+.animate-hit-flash-crit { animation: godwake-hit-flash-crit 280ms ease-out; }
+
+/* Particle sparks for crits */
+@keyframes godwake-spark {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: var(--spark-dest, translate(20px, -20px)) scale(0.2); }
+}
+.animate-spark { animation: godwake-spark 520ms ease-out forwards; }
+
+/* Slash arc — improved */
+@keyframes godwake-slash {
+  0% { opacity: 0; transform: scale(0.5) rotate(-20deg); }
+  30% { opacity: 1; transform: scale(1.2) rotate(15deg); }
+  100% { opacity: 0; transform: scale(1.5) rotate(35deg); }
+}
+.animate-slash { animation: godwake-slash 320ms ease-out forwards; }
+
+/* Screen flash for big moments */
+@keyframes godwake-screen-flash {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.3; }
+}
+.animate-screen-flash { animation: godwake-screen-flash 180ms ease-out forwards; }
+
+/* Subtle ambient flicker — torches, etc */
+@keyframes godwake-torch-flicker {
+  0%, 100% { opacity: 1; }
+  20% { opacity: 0.92; }
+  40% { opacity: 1; }
+  60% { opacity: 0.96; }
+  80% { opacity: 0.88; }
+}
+.animate-torch-flicker { animation: godwake-torch-flicker 3.2s ease-in-out infinite; }
+
+/* Pop-in for cards / modals */
+@keyframes godwake-pop-in {
+  0% { opacity: 0; transform: scale(0.85) translateY(8px); }
+  60% { opacity: 1; transform: scale(1.04) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-pop-in { animation: godwake-pop-in 360ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+/* Sliding banner — used for level-up notifications etc */
+@keyframes godwake-banner-slide {
+  0% { opacity: 0; transform: translateY(-40px); }
+  10% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+.animate-banner { animation: godwake-banner-slide 2400ms ease-in-out forwards; }
+
+/* Slow room transition */
+@keyframes godwake-room-enter {
+  0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-room-enter { animation: godwake-room-enter 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }

@@ -110,39 +110,56 @@ export function HubScreen() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-6xl mx-auto">
-      <header className="flex justify-between items-center mb-4 pb-4 border-b border-[var(--color-border-warm)]">
+    <div className="min-h-screen p-6 max-w-6xl mx-auto animate-room-enter">
+      <header className="flex justify-between items-end mb-4 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
-          <h1 className="text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-wider">
+          <h1 className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.15em]" style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.85), 0 0 18px rgba(244,167,66,0.3)' }}>
             PHANDALIN
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
+          <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
             Sword Coast · Chapter I · The Mage's Cells
           </p>
         </div>
-        <Button variant="secondary" onClick={goToTitle}>
+        <Button variant="ghost" onClick={goToTitle}>
           ← Title
         </Button>
       </header>
 
       <PhandalinScene />
 
-      <Panel className="mb-6">
+      <Panel tone="glow" className="mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] flex items-center justify-center text-3xl">
+          <div className="w-16 h-16 panel-etched border border-[var(--color-border-warm)] flex items-center justify-center text-3xl shrink-0">
             <span aria-hidden>🛡️</span>
           </div>
-          <div className="flex-1">
-            <div className="text-[var(--color-accent-amber)] font-bold uppercase tracking-wider">
+          <div className="flex-1 min-w-0">
+            <div className="font-display text-[var(--color-accent-amber)] text-sm uppercase tracking-widest" style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.8)' }}>
               {character.name}
             </div>
-            <div className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-              {race.name} {cls.name} · Level {character.level}
+            <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest mt-0.5">
+              {race.name} {cls.name} · <span className="text-[var(--color-accent-amber)]">Level {character.level}</span>
             </div>
-            <div className="text-[var(--color-text-secondary)] text-xs mt-1">
-              HP {character.hp.current}/{character.hp.max}
+            <div className="mt-2 flex items-center gap-3">
+              <span className="font-display text-[9px] text-[var(--color-text-dim)] tracking-widest">HP</span>
+              <span className="font-mono text-[var(--color-text-primary)] text-sm">{character.hp.current}/{character.hp.max}</span>
+              <div className="flex-1 h-2 bg-[var(--color-bg-deep)] border border-[var(--color-border-dim)] overflow-hidden relative max-w-xs">
+                <div
+                  className={`h-full transition-all duration-500 ease-out ${
+                    character.hp.current / character.hp.max > 0.5
+                      ? 'bg-gradient-to-r from-[var(--color-status-poison)] to-[#5a8013]'
+                      : character.hp.current / character.hp.max > 0.25
+                        ? 'bg-gradient-to-r from-[var(--color-accent-amber)] to-[var(--color-accent-torch)]'
+                        : 'bg-gradient-to-r from-[var(--color-accent-blood)] to-[var(--color-accent-deep-blood)] animate-pulse'
+                  }`}
+                  style={{ width: `${(character.hp.current / character.hp.max) * 100}%` }}
+                />
+                <div
+                  className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent pointer-events-none"
+                  style={{ width: `${(character.hp.current / character.hp.max) * 100}%` }}
+                />
+              </div>
             </div>
-            <div className="mt-2">
+            <div className="mt-3">
               <QuirkRow quirkIds={character.quirks} emptyText="The soul wears no marks this life" />
             </div>
           </div>
@@ -192,39 +209,64 @@ export function HubScreen() {
         ))}
       </div>
 
-      <div className="mt-8 grid md:grid-cols-5 gap-4 text-center">
-        <Panel>
-          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Gold</div>
-          <div className="text-2xl text-[var(--color-accent-gold)]">{character.goldInBank + character.goldInPocket}</div>
-        </Panel>
-        <Panel>
-          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Renown</div>
-          <div className="text-2xl text-[var(--color-accent-amber)]">{character.renown}</div>
-        </Panel>
-        <Panel>
-          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">XP</div>
-          <div className="text-2xl text-[var(--color-text-primary)]">{character.xp}</div>
-        </Panel>
-        <Panel>
-          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Pack</div>
-          <button
-            type="button"
-            onClick={useGameStore.getState().goToInventory}
-            className="text-2xl text-[var(--color-text-primary)] hover:text-[var(--color-accent-amber)] uppercase tracking-wider"
-          >
+      <div className="mt-8 grid grid-cols-3 md:grid-cols-5 gap-3 text-center">
+        <StatTile label="Gold" value={character.goldInBank + character.goldInPocket} accent="gold" glyph="◈" />
+        <StatTile label="Renown" value={character.renown} accent="amber" glyph="◆" />
+        <StatTile label="XP" value={character.xp} accent="primary" glyph="✦" />
+        <button
+          type="button"
+          onClick={useGameStore.getState().goToInventory}
+          className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
+        >
+          <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
+            ⛁ Inventory
+          </div>
+          <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
             Open →
-          </button>
-        </Panel>
-        <Panel>
-          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-1">Bestiary</div>
-          <button
-            type="button"
-            onClick={useGameStore.getState().goToCodex}
-            className="text-2xl text-[var(--color-text-primary)] hover:text-[var(--color-accent-amber)] uppercase tracking-wider"
-          >
+          </div>
+        </button>
+        <button
+          type="button"
+          onClick={useGameStore.getState().goToCodex}
+          className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
+        >
+          <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
+            ☥ Bestiary
+          </div>
+          <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
             Open →
-          </button>
-        </Panel>
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+interface StatTileProps {
+  label: string;
+  value: number | string;
+  accent: 'gold' | 'amber' | 'primary';
+  glyph?: string;
+}
+
+function StatTile({ label, value, accent, glyph }: StatTileProps) {
+  const accentClass =
+    accent === 'gold'
+      ? 'text-[var(--color-accent-gold)]'
+      : accent === 'amber'
+        ? 'text-[var(--color-accent-amber)]'
+        : 'text-[var(--color-text-primary)]';
+  return (
+    <div className="panel-etched border border-[var(--color-border-warm)] p-4 text-center">
+      <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 flex items-center justify-center gap-1">
+        {glyph && <span className="text-[var(--color-accent-gold)]">{glyph}</span>}
+        {label}
+      </div>
+      <div
+        className={`font-mono text-2xl ${accentClass}`}
+        style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.6)' }}
+      >
+        {value}
       </div>
     </div>
   );
