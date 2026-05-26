@@ -11,6 +11,7 @@ interface ActionBarProps {
   onAttack: () => void;
   onSecondWind: () => void;
   onActionSurge: () => void;
+  onCunningAction: () => void;
   onUseItem: () => void;
   onEndTurn: () => void;
 }
@@ -21,6 +22,7 @@ export function ActionBar({
   onAttack,
   onSecondWind,
   onActionSurge,
+  onCunningAction,
   onUseItem,
   onEndTurn,
 }: ActionBarProps) {
@@ -45,6 +47,14 @@ export function ActionBar({
     surgeRemaining > 0 &&
     character.actionEconomy.actionUsed;
 
+  const cunningRemaining = character.resources.cunningActionUsesRemaining ?? 0;
+  const canCunningAction =
+    playersTurn &&
+    active &&
+    character.classId === 'rogue' &&
+    cunningRemaining > 0 &&
+    !character.actionEconomy.bonusActionUsed;
+
   const consumableCount = character.inventory.filter((ref) => {
     try {
       return getItem(ref.itemId).kind === 'consumable';
@@ -65,19 +75,32 @@ export function ActionBar({
     ? `► Attack (${Math.min(attacksThisTurn + 1, 2)}/2)`
     : '► Attack';
 
+  const isRogue = character.classId === 'rogue';
+
   return (
     <div className="grid grid-cols-5 gap-2">
       <Button variant="primary" onClick={onAttack} disabled={!canAttack}>
         {attackLabel}
       </Button>
-      <Button
-        variant={canSecondWind ? 'primary' : 'secondary'}
-        onClick={onSecondWind}
-        disabled={!canSecondWind}
-        title="Bonus action: heal 1d10 + level. Once per short rest."
-      >
-        Second Wind
-      </Button>
+      {isRogue ? (
+        <Button
+          variant={canCunningAction ? 'primary' : 'secondary'}
+          onClick={onCunningAction}
+          disabled={!canCunningAction}
+          title="Bonus action: Dash, Disengage, or Hide. Hide grants advantage on your next attack."
+        >
+          Cunning Action{cunningRemaining > 0 && ` (${cunningRemaining})`}
+        </Button>
+      ) : (
+        <Button
+          variant={canSecondWind ? 'primary' : 'secondary'}
+          onClick={onSecondWind}
+          disabled={!canSecondWind}
+          title="Bonus action: heal 1d10 + level. Once per short rest."
+        >
+          Second Wind
+        </Button>
+      )}
       <Button
         variant={canActionSurge ? 'primary' : 'secondary'}
         onClick={onActionSurge}

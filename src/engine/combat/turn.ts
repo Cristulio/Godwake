@@ -72,6 +72,7 @@ export function endTurn(state: CombatState, character: Character): CombatState {
     currentTurnIndex: nextIndex,
     round,
     playerAttacksThisTurn: 0,
+    sneakAttackUsedThisTurn: false,
     log: [
       ...state.log,
       {

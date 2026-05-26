@@ -62,6 +62,12 @@ export function applyLevelUp(character: Character): Character {
     }
   }
 
+  // Rogue Thief: Fast Hands grants a second Cunning Action use per combat.
+  // Refresh the pool so the upgrade is felt on the very next encounter.
+  if (character.classId === 'rogue' && subclassId === 'thief' && newLevel >= 3) {
+    resources.cunningActionUsesRemaining = 2;
+  }
+
   return {
     ...character,
     level: newLevel,

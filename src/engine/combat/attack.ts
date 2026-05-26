@@ -193,8 +193,13 @@ export function playerAttack(
   }
 
   const ac = targetAC(target, character);
-  const advantage =
-    isFirstAttack && blessingMods.firstAttackAdvantage ? 'advantage' : 'normal';
+  const hideAdvantage = character.nextAttackAdvantage === true;
+  const advantage: 'normal' | 'advantage' =
+    (isFirstAttack && blessingMods.firstAttackAdvantage) || hideAdvantage
+      ? 'advantage'
+      : 'normal';
+  // One-shot: consume Hide on the actual attack roll, hit or miss.
+  if (hideAdvantage) character.nextAttackAdvantage = false;
   let toHit = roller.d20(advantage, attackBonus);
   let crit = critRange(character).includes(toHit.rolls[0]);
   let hit = crit || (toHit.total >= ac && !toHit.natural1);
@@ -258,6 +263,7 @@ export function playerAttack(
     attackEventCounter: attackEvent.id,
   };
 
+  let sneakAttackFiredFlag = false;
   if (hit) {
     const damageExpr = parseDiceExpression(weapon.damage);
     // On crit, double the dice (not the modifier).
@@ -290,6 +296,24 @@ export function playerAttack(
       bonusParts.push(`+${blessingMods.firstAttackDamage} first strike`);
     }
 
+    // Rogue Sneak Attack: once per turn, when the strike has the angle —
+    // either rolled with advantage, or the target is already bloodied
+    // (HP at half or less). Engine substitute for 5e's "ally adjacent"
+    // clause: there are no allies here, but a wounded foe is leaning.
+    const sneakAlreadyUsed = state.sneakAttackUsedThisTurn === true;
+    const isRogue = character.classId === 'rogue';
+    const sneakTriggers = advantage === 'advantage' || targetWounded;
+    if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
+      const sneakRoll = roller.roll({
+        count: 1 * (crit ? 2 : 1),
+        die: 6,
+        modifier: 0,
+      });
+      bonusDamage += sneakRoll.total;
+      bonusParts.push(`+${sneakRoll.total} Sneak Attack`);
+      sneakAttackFiredFlag = true;
+    }
+
     const totalDamage = damageRoll.total + abilMod + damageExpr.modifier + bonusDamage;
 
     nextState = applyDamage(nextState, targetId, totalDamage, character);
@@ -316,6 +340,9 @@ export function playerAttack(
     rerollMissesEncounterRemaining:
       nextState.rerollMissesEncounterRemaining - usedEncounterReroll,
   };
+  if (hit && sneakAttackFiredFlag) {
+    nextState = { ...nextState, sneakAttackUsedThisTurn: true };
+  }
   if (usedDelveReroll > 0 && character.delveBudgets) {
     character.delveBudgets = {
       ...character.delveBudgets,

@@ -74,4 +74,6 @@ export interface CombatState {
   rerollMissesEncounterRemaining: number;
   /** Player attacks made on the current turn — supports Extra Attack at Fighter L5. Reset on turn change. */
   playerAttacksThisTurn: number;
+  /** Rogue Sneak Attack already fired this turn. Reset on turn change. Optional so legacy saves rehydrate. */
+  sneakAttackUsedThisTurn?: boolean;
 }
