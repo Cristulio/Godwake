@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Character } from '../types/character';
 import type { CombatState } from '../types/combat';
 import type { DelveState } from '../types/delve';
@@ -7,7 +8,7 @@ import { buildDefaultFighter } from '../engine/character/defaultCharacter';
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
 import type { TauntContext } from '../components/lore/IrenicusTaunt';
 
-export type Screen = 'title' | 'intro' | 'hub' | 'delve' | 'reincarnation';
+export type Screen = 'title' | 'intro' | 'hub' | 'delve' | 'reincarnation' | 'codex';
 
 interface GameState {
   screen: Screen;
@@ -21,6 +22,8 @@ interface GameState {
   taunt: { context: TauntContext; seed: number } | null;
   /** True if the player has seen the intro already this save. */
   introSeen: boolean;
+  /** Monster def ids the player has fought at least once. Powers the codex. */
+  discoveredMonsters: string[];
 
   // Navigation
   goToTitle: () => void;
@@ -51,9 +54,15 @@ interface GameState {
   showTaunt: (context: TauntContext) => void;
   dismissTaunt: () => void;
   markIntroSeen: () => void;
+
+  // Codex
+  discoverMonster: (defId: string) => void;
+  goToCodex: () => void;
 }
 
-export const useGameStore = create<GameState>((set, get) => ({
+export const useGameStore = create<GameState>()(
+  persist(
+    (set, get) => ({
   screen: 'title',
   saveSeed: null,
   character: null,
@@ -62,6 +71,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   speedMultiplier: 1,
   taunt: null,
   introSeen: false,
+  discoveredMonsters: [],
 
   goToTitle: () => set({ screen: 'title' }),
   goToHub: () => set({ screen: 'hub' }),
@@ -168,4 +178,34 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ taunt: { context, seed: Math.floor(Math.random() * 1000) } }),
   dismissTaunt: () => set({ taunt: null }),
   markIntroSeen: () => set({ introSeen: true, screen: 'hub' }),
-}));
+
+  discoverMonster: (defId) =>
+    set((s) =>
+      s.discoveredMonsters.includes(defId)
+        ? s
+        : { discoveredMonsters: [...s.discoveredMonsters, defId] },
+    ),
+  goToCodex: () => set({ screen: 'codex' }),
+    }),
+    {
+      name: 'godwake-save',
+      storage: createJSONStorage(() => localStorage),
+      // Only persist long-term state; delve/combat are session-scoped.
+      partialize: (state) => ({
+        screen: state.screen === 'delve' ? 'hub' : state.screen,
+        saveSeed: state.saveSeed,
+        character: state.character,
+        speedMultiplier: state.speedMultiplier,
+        introSeen: state.introSeen,
+        discoveredMonsters: state.discoveredMonsters,
+      }),
+      version: 1,
+      onRehydrateStorage: () => (state) => {
+        // Re-arm the dice roller from the persisted save seed on load.
+        if (state?.saveSeed) {
+          setActiveRoller(state.saveSeed);
+        }
+      },
+    },
+  ),
+);

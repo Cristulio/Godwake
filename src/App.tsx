@@ -3,6 +3,7 @@ import { TitleScreen } from './components/title/TitleScreen';
 import { IntroScreen } from './components/title/IntroScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { DelveScreen } from './components/delve/DelveScreen';
+import { CodexScreen } from './components/codex/CodexScreen';
 import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
 
 function App() {
@@ -24,6 +25,9 @@ function App() {
       break;
     case 'delve':
       content = <DelveScreen />;
+      break;
+    case 'codex':
+      content = <CodexScreen />;
       break;
     case 'reincarnation':
       content = (

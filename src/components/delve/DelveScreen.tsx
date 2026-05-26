@@ -69,6 +69,11 @@ export function DelveScreen() {
       monsters,
     });
     setCombat(newCombat);
+    // Codex: unlock each monster type fought.
+    const discover = useGameStore.getState().discoverMonster;
+    for (const m of room.monsters) {
+      discover(m.defId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [delve?.currentRoomIdx, delve?.phase]);
 
