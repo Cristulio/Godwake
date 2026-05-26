@@ -118,8 +118,10 @@ export function DelveScreen() {
         delve={delve}
         outcome="failed"
         onReturn={() => {
-          // For now: reset HP, drop rewards, return to hub. Reincarnation flow lands later.
-          finishDelve();
+          // Route through the Reincarnation Reveal — the dramatic moment where
+          // the new quirks roll in over the painted Druid Grove. The reveal
+          // itself calls finishDelve() to land back at Phandalin.
+          useGameStore.getState().goToReincarnation();
         }}
       />
     );
