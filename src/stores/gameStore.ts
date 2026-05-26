@@ -5,8 +5,9 @@ import type { DelveState } from '../types/delve';
 import { setActiveRoller } from '../engine/dice';
 import { buildDefaultFighter } from '../engine/character/defaultCharacter';
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
+import type { TauntContext } from '../components/lore/IrenicusTaunt';
 
-export type Screen = 'title' | 'hub' | 'delve' | 'reincarnation';
+export type Screen = 'title' | 'intro' | 'hub' | 'delve' | 'reincarnation';
 
 interface GameState {
   screen: Screen;
@@ -16,6 +17,10 @@ interface GameState {
   combat: CombatState | null;
   /** Animation/turn-pacing multiplier. 1 = normal, 2 = fast forward. */
   speedMultiplier: 1 | 2;
+  /** Active Irenicus taunt context, or null if no overlay. */
+  taunt: { context: TauntContext; seed: number } | null;
+  /** True if the player has seen the intro already this save. */
+  introSeen: boolean;
 
   // Navigation
   goToTitle: () => void;
@@ -41,6 +46,11 @@ interface GameState {
 
   // Settings
   setSpeed: (s: 1 | 2) => void;
+
+  // Lore overlays
+  showTaunt: (context: TauntContext) => void;
+  dismissTaunt: () => void;
+  markIntroSeen: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -50,6 +60,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   delve: null,
   combat: null,
   speedMultiplier: 1,
+  taunt: null,
+  introSeen: false,
 
   goToTitle: () => set({ screen: 'title' }),
   goToHub: () => set({ screen: 'hub' }),
@@ -64,7 +76,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       character,
       combat: null,
       delve: null,
-      screen: 'hub',
+      taunt: null,
+      introSeen: false,
+      screen: 'intro',
     });
   },
 
@@ -149,4 +163,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     }),
 
   setSpeed: (s) => set({ speedMultiplier: s }),
+
+  showTaunt: (context) =>
+    set({ taunt: { context, seed: Math.floor(Math.random() * 1000) } }),
+  dismissTaunt: () => set({ taunt: null }),
+  markIntroSeen: () => set({ introSeen: true, screen: 'hub' }),
 }));

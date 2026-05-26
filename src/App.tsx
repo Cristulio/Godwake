@@ -1,23 +1,51 @@
 import { useGameStore } from './stores/gameStore';
 import { TitleScreen } from './components/title/TitleScreen';
+import { IntroScreen } from './components/title/IntroScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { DelveScreen } from './components/delve/DelveScreen';
+import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
 
 function App() {
   const screen = useGameStore((s) => s.screen);
+  const taunt = useGameStore((s) => s.taunt);
+  const dismissTaunt = useGameStore((s) => s.dismissTaunt);
+  const markIntroSeen = useGameStore((s) => s.markIntroSeen);
 
+  let content;
   switch (screen) {
     case 'title':
-      return <TitleScreen />;
+      content = <TitleScreen />;
+      break;
+    case 'intro':
+      content = <IntroScreen onComplete={markIntroSeen} />;
+      break;
     case 'hub':
-      return <HubScreen />;
+      content = <HubScreen />;
+      break;
     case 'delve':
-      return <DelveScreen />;
+      content = <DelveScreen />;
+      break;
     case 'reincarnation':
-      return <div className="p-8 text-[var(--color-text-primary)]">Reincarnation (TODO)</div>;
+      content = (
+        <div className="p-8 text-[var(--color-text-primary)]">Reincarnation (TODO)</div>
+      );
+      break;
     default:
-      return <TitleScreen />;
+      content = <TitleScreen />;
   }
+
+  return (
+    <>
+      {content}
+      {taunt && (
+        <IrenicusTaunt
+          context={taunt.context}
+          seed={taunt.seed}
+          onDismiss={dismissTaunt}
+        />
+      )}
+    </>
+  );
 }
 
 export default App;

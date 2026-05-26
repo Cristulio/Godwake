@@ -14,9 +14,140 @@ export function MonsterPortrait({ defId, className = '' }: MonsterPortraitProps)
       return <GoblinSvg className={className} />;
     case 'goblin-warden':
       return <GoblinWardenSvg className={className} />;
+    case 'skeleton':
+      return <SkeletonSvg className={className} />;
+    case 'kobold':
+      return <KoboldSvg className={className} />;
     default:
       return <GoblinSvg className={className} />;
   }
+}
+
+function SkeletonSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 20 36"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Skeleton"
+    >
+      {/* Skull crown */}
+      <rect x="6" y="0" width="8" height="2" fill="#d4c8a8" />
+      <rect x="5" y="2" width="10" height="7" fill="#d4c8a8" />
+      <rect x="4" y="3" width="1" height="5" fill="#a89878" />
+      <rect x="15" y="3" width="1" height="5" fill="#a89878" />
+      {/* Black eye sockets */}
+      <rect x="6" y="4" width="3" height="3" fill="#0a0808" />
+      <rect x="11" y="4" width="3" height="3" fill="#0a0808" />
+      <rect x="7" y="5" width="1" height="1" fill="#ffb347" />
+      <rect x="12" y="5" width="1" height="1" fill="#ffb347" />
+      {/* Nasal cavity */}
+      <rect x="9" y="6" width="2" height="2" fill="#0a0808" />
+      {/* Grinning teeth */}
+      <rect x="6" y="8" width="8" height="2" fill="#0a0808" />
+      <rect x="6" y="8" width="1" height="2" fill="#d4c8a8" />
+      <rect x="8" y="8" width="1" height="2" fill="#d4c8a8" />
+      <rect x="10" y="8" width="1" height="2" fill="#d4c8a8" />
+      <rect x="12" y="8" width="1" height="2" fill="#d4c8a8" />
+      {/* Spinal column / vertebrae */}
+      <rect x="9" y="10" width="2" height="1" fill="#a89878" />
+      <rect x="9" y="13" width="2" height="1" fill="#a89878" />
+      <rect x="9" y="16" width="2" height="1" fill="#a89878" />
+      {/* Ribcage */}
+      <rect x="6" y="11" width="8" height="9" fill="#1a1410" />
+      <rect x="7" y="11" width="1" height="9" fill="#d4c8a8" />
+      <rect x="12" y="11" width="1" height="9" fill="#d4c8a8" />
+      <rect x="6" y="12" width="2" height="1" fill="#d4c8a8" />
+      <rect x="12" y="12" width="2" height="1" fill="#d4c8a8" />
+      <rect x="6" y="14" width="2" height="1" fill="#d4c8a8" />
+      <rect x="12" y="14" width="2" height="1" fill="#d4c8a8" />
+      <rect x="6" y="16" width="2" height="1" fill="#d4c8a8" />
+      <rect x="12" y="16" width="2" height="1" fill="#d4c8a8" />
+      <rect x="6" y="18" width="2" height="1" fill="#d4c8a8" />
+      <rect x="12" y="18" width="2" height="1" fill="#d4c8a8" />
+      {/* Pelvis */}
+      <rect x="6" y="20" width="8" height="2" fill="#a89878" />
+      {/* Bone arms */}
+      <rect x="4" y="11" width="2" height="9" fill="#d4c8a8" />
+      <rect x="14" y="11" width="2" height="9" fill="#d4c8a8" />
+      {/* Hand bones */}
+      <rect x="3" y="20" width="3" height="2" fill="#d4c8a8" />
+      <rect x="14" y="20" width="3" height="2" fill="#d4c8a8" />
+      {/* Rusted shortsword in right hand */}
+      <rect x="15" y="9" width="2" height="11" fill="#8c7a52" />
+      <rect x="16" y="9" width="1" height="11" fill="#d4c8a8" />
+      <rect x="14" y="19" width="4" height="1" fill="#5a4030" />
+      <rect x="15" y="20" width="2" height="2" fill="#1a1410" />
+      {/* Bone legs */}
+      <rect x="7" y="22" width="2" height="11" fill="#d4c8a8" />
+      <rect x="11" y="22" width="2" height="11" fill="#d4c8a8" />
+      <rect x="7" y="22" width="1" height="11" fill="#a89878" />
+      <rect x="11" y="22" width="1" height="11" fill="#a89878" />
+      {/* Bone feet */}
+      <rect x="5" y="33" width="4" height="2" fill="#d4c8a8" />
+      <rect x="11" y="33" width="4" height="2" fill="#d4c8a8" />
+    </svg>
+  );
+}
+
+function KoboldSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 18 26"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Kobold"
+    >
+      {/* Reptilian head with snout */}
+      <rect x="5" y="2" width="8" height="6" fill="#8a4a1c" />
+      <rect x="13" y="3" width="3" height="3" fill="#8a4a1c" /> {/* snout */}
+      <rect x="14" y="4" width="1" height="1" fill="#5a3010" />
+      {/* Tiny horns */}
+      <rect x="6" y="0" width="1" height="2" fill="#5a3010" />
+      <rect x="11" y="0" width="1" height="2" fill="#5a3010" />
+      {/* Yellow eyes */}
+      <rect x="6" y="4" width="2" height="2" fill="#f4d042" />
+      <rect x="9" y="4" width="2" height="2" fill="#f4d042" />
+      <rect x="7" y="5" width="1" height="1" fill="#0a0808" />
+      <rect x="10" y="5" width="1" height="1" fill="#0a0808" />
+      {/* Toothy mouth */}
+      <rect x="6" y="7" width="6" height="1" fill="#0a0808" />
+      <rect x="7" y="7" width="1" height="1" fill="#d4c8a8" />
+      <rect x="10" y="7" width="1" height="1" fill="#d4c8a8" />
+      {/* Scrawny neck */}
+      <rect x="7" y="8" width="4" height="1" fill="#8a4a1c" />
+      {/* Tiny body (scaled) */}
+      <rect x="5" y="9" width="8" height="5" fill="#a05428" />
+      <rect x="5" y="9" width="8" height="1" fill="#5a3010" />
+      <rect x="7" y="11" width="4" height="2" fill="#3a1a08" /> {/* dark torso shadow */}
+      {/* Scrawny arms */}
+      <rect x="3" y="9" width="2" height="6" fill="#8a4a1c" />
+      <rect x="13" y="9" width="2" height="6" fill="#8a4a1c" />
+      {/* Small claw hands */}
+      <rect x="2" y="14" width="3" height="2" fill="#8a4a1c" />
+      <rect x="13" y="14" width="3" height="2" fill="#8a4a1c" />
+      {/* Bone dagger in right hand */}
+      <rect x="14" y="10" width="1" height="5" fill="#d4c8a8" />
+      <rect x="13" y="14" width="3" height="1" fill="#6b4a2e" />
+      {/* Loincloth */}
+      <rect x="5" y="14" width="8" height="2" fill="#3a2e22" />
+      {/* Stubby legs */}
+      <rect x="6" y="16" width="2" height="5" fill="#8a4a1c" />
+      <rect x="10" y="16" width="2" height="5" fill="#8a4a1c" />
+      {/* Tail visible behind */}
+      <rect x="13" y="14" width="1" height="6" fill="#5a3010" />
+      <rect x="14" y="18" width="1" height="2" fill="#5a3010" />
+      {/* Clawed feet */}
+      <rect x="5" y="21" width="4" height="3" fill="#8a4a1c" />
+      <rect x="9" y="21" width="4" height="3" fill="#8a4a1c" />
+      <rect x="5" y="23" width="1" height="2" fill="#d4c8a8" /> {/* claws */}
+      <rect x="7" y="23" width="1" height="2" fill="#d4c8a8" />
+      <rect x="10" y="23" width="1" height="2" fill="#d4c8a8" />
+      <rect x="12" y="23" width="1" height="2" fill="#d4c8a8" />
+    </svg>
+  );
 }
 
 function GoblinSvg({ className }: { className?: string }) {

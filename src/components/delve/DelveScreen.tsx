@@ -17,10 +17,11 @@ import { Panel } from '../ui/Panel';
 function decorationForRoom(roomId: string): BattlefieldDecoration {
   switch (roomId) {
     case 'room-1':
+    case 'room-2':
       return 'iron-cells';
-    case 'room-3':
+    case 'room-4':
       return 'vivisector-lab';
-    case 'room-5':
+    case 'room-6':
       return 'wardens-hall';
     default:
       return 'generic';
@@ -153,6 +154,7 @@ export function DelveScreen() {
               advanceRoom();
             } else {
               setCombat(null);
+              useGameStore.getState().showTaunt('death');
               failDelve();
             }
           }}

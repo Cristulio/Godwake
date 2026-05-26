@@ -18,6 +18,15 @@ export function createIronCellsDelve(): DelveState {
     },
     {
       id: 'room-2',
+      kind: 'combat',
+      title: 'The Kobold Tunnel',
+      flavorText:
+        'A draft of cold air through a hole the goblins did not make. Two kobolds scuttle from the dark, dagger-bone in each clawed hand.',
+      monsters: [{ defId: 'kobold', count: 2, displayPrefix: 'Kobold' }],
+      xpReward: 60,
+    },
+    {
+      id: 'room-3',
       kind: 'rest',
       title: 'A Quiet Alcove',
       flavorText:
@@ -25,16 +34,16 @@ export function createIronCellsDelve(): DelveState {
       restType: 'short',
     },
     {
-      id: 'room-3',
+      id: 'room-4',
       kind: 'combat',
-      title: 'The Vivisector’s Antechamber',
+      title: 'The Vivisector\'s Antechamber',
       flavorText:
-        'A slab slick with old blood. A single goblin crouches in the shadow of it, gnawing on something pale.',
-      monsters: [{ defId: 'goblin', count: 1 }],
-      xpReward: 75,
+        'A slab slick with old blood, and the cooling subject sits up as you enter. Irenicus has been busy.',
+      monsters: [{ defId: 'skeleton', count: 1 }],
+      xpReward: 90,
     },
     {
-      id: 'room-4',
+      id: 'room-5',
       kind: 'treasure',
       title: 'A Forgotten Stash',
       flavorText:
@@ -42,9 +51,9 @@ export function createIronCellsDelve(): DelveState {
       goldReward: 18,
     },
     {
-      id: 'room-5',
+      id: 'room-6',
       kind: 'boss',
-      title: 'The Warden’s Hall',
+      title: 'The Warden\'s Hall',
       flavorText:
         'A wide stone hall. The Warden waits at the far end, chain-bound greatsword dragging behind it.',
       monsters: [{ defId: 'goblin-warden', count: 1 }],

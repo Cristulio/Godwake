@@ -1,8 +1,10 @@
 import type { Monster } from '../../schemas/monster';
 import { GOBLIN } from './goblin';
 import { GOBLIN_WARDEN } from './goblin-warden';
+import { SKELETON } from './skeleton';
+import { KOBOLD } from './kobold';
 
-const ALL_MONSTERS: Monster[] = [GOBLIN, GOBLIN_WARDEN];
+const ALL_MONSTERS: Monster[] = [GOBLIN, GOBLIN_WARDEN, SKELETON, KOBOLD];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
 
@@ -18,4 +20,4 @@ export function listMonsters(): Monster[] {
   return ALL_MONSTERS;
 }
 
-export { GOBLIN, GOBLIN_WARDEN };
+export { GOBLIN, GOBLIN_WARDEN, SKELETON, KOBOLD };
