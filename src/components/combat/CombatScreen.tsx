@@ -8,6 +8,7 @@ import {
   isPlayerTurn,
   monsterAttack,
   playerAttack,
+  useSecondWind,
 } from '../../engine/combat';
 import { CombatLog } from './CombatLog';
 import { ActionBar } from './ActionBar';
@@ -87,14 +88,19 @@ export function CombatScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.currentTurnIndex, state.status]);
 
-  // Auto-end the player's turn when their action is spent and no other actions exist.
-  // (Fighter-level-1 has no other action available yet beyond Attack.)
+  // Auto-end the player's turn when their action and any usable bonus are spent.
   useEffect(() => {
     if (state.status !== 'active') return;
     if (!isPlayerTurn(state)) return;
     if (overlayActive) return;
     if (!character.actionEconomy.actionUsed) return;
-    // TODO: also check bonus actions / items / spells when those land.
+
+    const hasUsableBonus =
+      character.classId === 'fighter' &&
+      character.resources.secondWindAvailable === true &&
+      !character.actionEconomy.bonusActionUsed &&
+      character.hp.current < character.hp.max;
+    if (hasUsableBonus) return;
 
     setAutoEndNotice(true);
     const t = setTimeout(() => {
@@ -111,7 +117,14 @@ export function CombatScreen({
       setAutoEndNotice(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [character.actionEconomy.actionUsed, state.currentTurnIndex, overlayActive]);
+  }, [
+    character.actionEconomy.actionUsed,
+    character.actionEconomy.bonusActionUsed,
+    character.resources.secondWindAvailable,
+    character.hp.current,
+    state.currentTurnIndex,
+    overlayActive,
+  ]);
 
   function handleAttackClick() {
     const aliveMonsters = state.combatants.filter(
@@ -141,6 +154,13 @@ export function CombatScreen({
 
   function handleEndTurn() {
     const next = endTurn(state, character);
+    setCharacter({ ...character });
+    setCombat(next);
+  }
+
+  function handleSecondWind() {
+    const roller = getActiveRoller();
+    const next = useSecondWind({ roller, character, state });
     setCharacter({ ...character });
     setCombat(next);
   }
@@ -252,6 +272,7 @@ export function CombatScreen({
             character={character}
             state={state}
             onAttack={handleAttackClick}
+            onSecondWind={handleSecondWind}
             onEndTurn={handleEndTurn}
           />
         </>
