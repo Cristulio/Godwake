@@ -36,15 +36,10 @@ const RAW: Upgrade[] = [
     cost: 100,
     kind: 'delveStart',
   },
-  {
-    id: 'sages-pact',
-    name: "Sage's Pact",
-    flavor:
-      'An old druid presses her thumb to your sternum and whispers a word from before the gods. The world makes a little more room for you.',
-    effect: '+1 attunement slot, permanent.',
-    cost: 150,
-    kind: 'permanent',
-  },
+  // Sage's Pact removed from the Grove pool until item attunement is wired.
+  // `attunementSlotsMax` was incrementing but no equip / item code consults
+  // it, so the upgrade was a renown sink that did nothing. Restore once
+  // attunement gates equippable +N gear.
   {
     id: 'iron-will',
     name: 'Iron Will',
