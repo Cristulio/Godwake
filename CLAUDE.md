@@ -16,14 +16,17 @@ its own working directory.
 From the main repo:
 
 ```
-scripts/wt-new <feature-name>
+scripts/wt-new <feature-name>            # create only
+scripts/wt-new <feature-name> --launch   # create + open a new Terminal with claude
 ```
 
-That creates a worktree at `../DD-worktrees/<feature-name>` on branch
-`feat/<feature-name>`, and copies `.claude/settings.local.json` so the new
-session inherits permissions + the shared memory pointer.
+`--launch` is macOS-only (uses `osascript` to open Terminal.app). Without
+the flag, just open a fresh terminal in the worktree manually,
+`npm install`, then `claude`.
 
-Open a fresh terminal in that worktree, `npm install`, then `claude`.
+The worktree is created at `../DD-worktrees/<feature-name>` on branch
+`feat/<feature-name>`. `.claude/settings.local.json` is copied so the new
+session inherits permissions + the shared memory pointer.
 
 ### Cleaning up after merge
 

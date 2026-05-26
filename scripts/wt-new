@@ -2,25 +2,48 @@
 # Create a new feature worktree for parallel Claude work.
 #
 # Usage:
-#   scripts/wt-new <feature-name>
+#   scripts/wt-new <feature-name> [--launch]
 #
-# Example:
+# Examples:
 #   scripts/wt-new quirks-expansion
+#   scripts/wt-new bg2-imoen-rescue --launch
 #
-# This creates a worktree at ../DD-worktrees/<feature-name> on a new branch
-# named feat/<feature-name>. It also seeds .claude/settings.local.json
-# (permissions + shared memory dir) so the new Claude session inherits the
-# project's setup.
+# Creates a worktree at ../DD-worktrees/<feature-name> on a new branch
+# named feat/<feature-name>, copies .claude/settings.local.json into it so
+# the new Claude session inherits permissions + shared memory, and (with
+# --launch) opens a new macOS Terminal window already running `claude` in
+# the worktree.
 
 set -euo pipefail
 
-if [ "${1:-}" = "" ]; then
-  echo "Usage: scripts/wt-new <feature-name>"
-  echo "Example: scripts/wt-new quirks-expansion"
+NAME=""
+LAUNCH=0
+for arg in "$@"; do
+  case "$arg" in
+    --launch)
+      LAUNCH=1
+      ;;
+    -*)
+      echo "Unknown flag: $arg" >&2
+      exit 1
+      ;;
+    *)
+      if [ -z "$NAME" ]; then NAME="$arg"; fi
+      ;;
+  esac
+done
+
+if [ -z "$NAME" ]; then
+  echo "Usage: scripts/wt-new <feature-name> [--launch]"
+  echo ""
+  echo "Examples:"
+  echo "  scripts/wt-new quirks-expansion"
+  echo "  scripts/wt-new bg2-imoen-rescue --launch"
+  echo ""
+  echo "  --launch  Opens a new macOS Terminal window running claude in the worktree."
   exit 1
 fi
 
-NAME="$1"
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 PARENT_DIR="$(dirname "$REPO_ROOT")"
 WORKTREES_DIR="$PARENT_DIR/DD-worktrees"
@@ -37,7 +60,8 @@ mkdir -p "$WORKTREES_DIR"
 echo "→ Creating worktree at $WORKTREE_PATH on branch $BRANCH"
 git worktree add "$WORKTREE_PATH" -b "$BRANCH"
 
-# Seed Claude settings so the new session has matching permissions + memory.
+# Seed Claude settings so the new session has matching permissions + shared
+# auto-memory pointer.
 if [ -f "$REPO_ROOT/.claude/settings.local.json" ]; then
   mkdir -p "$WORKTREE_PATH/.claude"
   cp "$REPO_ROOT/.claude/settings.local.json" "$WORKTREE_PATH/.claude/settings.local.json"
@@ -49,10 +73,32 @@ echo "✓ Worktree ready."
 echo ""
 echo "  Path:   $WORKTREE_PATH"
 echo "  Branch: $BRANCH"
-echo ""
-echo "Next steps in a new terminal:"
-echo "  cd \"$WORKTREE_PATH\""
-echo "  npm install"
-echo "  claude"
+
+if [ "$LAUNCH" -eq 1 ]; then
+  if ! command -v osascript >/dev/null 2>&1; then
+    echo ""
+    echo "Note: --launch requires macOS (osascript not found). Open a terminal manually:"
+    echo "  cd \"$WORKTREE_PATH\" && npm install && claude"
+    exit 0
+  fi
+  echo ""
+  echo "→ Launching new Terminal window..."
+  osascript <<EOF
+tell application "Terminal"
+  activate
+  do script "cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude"
+end tell
+EOF
+  echo "✓ New Terminal window opened with claude running."
+else
+  echo ""
+  echo "Open a new terminal there to start a Claude session:"
+  echo "  cd \"$WORKTREE_PATH\""
+  echo "  npm install"
+  echo "  claude"
+  echo ""
+  echo "Or run with --launch to auto-open: scripts/wt-new $NAME --launch"
+fi
+
 echo ""
 echo "When merged: scripts/wt-clean $NAME"

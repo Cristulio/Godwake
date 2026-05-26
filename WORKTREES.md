@@ -41,7 +41,13 @@ from any of them.
    `main`. It also copies `.claude/settings.local.json` so the new Claude
    session inherits permissions + the shared memory pointer.
 
-3. **Open it in a new terminal.**
+   Or **one-command launch** (macOS only): adds a new Terminal window with
+   `claude` already running in the worktree:
+   ```
+   scripts/wt-new wizard-class --launch
+   ```
+
+3. **Open it in a new terminal** (skip if you used `--launch`).
    ```
    cd ../DD-worktrees/wizard-class
    npm install
