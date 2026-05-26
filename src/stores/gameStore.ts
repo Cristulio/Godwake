@@ -6,7 +6,11 @@ import type { DelveState } from '../types/delve';
 import { setActiveRoller, getActiveRoller } from '../engine/dice';
 import { buildPlayerCharacter, type CharacterCreationInput } from '../engine/character/defaultCharacter';
 import { longRest, withResetActionEconomy } from '../engine/character/actions';
-import { rollQuirks, characterQuirkMods } from '../engine/character/quirks';
+import {
+  rollQuirks,
+  characterQuirkMods,
+  soulMarkMultiplier,
+} from '../engine/character/quirks';
 import { applyDelveStartUpgrades, applyPermanentUpgrade } from '../engine/character/upgrades';
 import { hasPendingLevelUp, applyLevelUp } from '../engine/character/leveling';
 import { equipItem as equipItemFn, unequipSlot as unequipSlotFn, type EquipSlot } from '../engine/character/equip';
@@ -215,16 +219,20 @@ export const useGameStore = create<GameState>()(
   addDelveReward: (gold, xp) =>
     set((s) => {
       if (!s.delve) return s;
-      // Bargain Hunter / Pinchpurse scale all delve gold, not just treasure rooms.
-      const multiplier = s.character
-        ? characterQuirkMods(s.character).goldMultiplier ?? 1
+      // Bargain Hunter / Pinchpurse scale gold; Soul-mark scales gold AND xp
+      // (each bane quirk = +20%). Both stack multiplicatively.
+      const goldMul = s.character
+        ? (characterQuirkMods(s.character).goldMultiplier ?? 1) *
+          soulMarkMultiplier(s.character)
         : 1;
-      const finalGold = Math.floor(gold * multiplier);
+      const xpMul = s.character ? soulMarkMultiplier(s.character) : 1;
+      const finalGold = Math.floor(gold * goldMul);
+      const finalXp = Math.floor(xp * xpMul);
       return {
         delve: {
           ...s.delve,
           goldEarned: s.delve.goldEarned + finalGold,
-          xpEarned: s.delve.xpEarned + xp,
+          xpEarned: s.delve.xpEarned + finalXp,
         },
       };
     }),
@@ -238,7 +246,9 @@ export const useGameStore = create<GameState>()(
       const earnedGold = s.delve.goldEarned;
       const earnedXp = s.delve.xpEarned;
       const wonBoss = s.delve.phase === 'completed';
-      const renownGain = wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
+      // Soul-mark also boosts renown (each bane quirk = +20%).
+      const renownBase = wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
+      const renownGain = Math.floor(renownBase * soulMarkMultiplier(s.character));
       const rested = longRest({
         ...s.character,
         goldInPocket: s.character.goldInPocket + earnedGold,
