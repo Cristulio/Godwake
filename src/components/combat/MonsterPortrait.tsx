@@ -44,6 +44,14 @@ export function MonsterPortrait({ defId, className = '' }: MonsterPortraitProps)
       return <SlaverCuirassierSvg className={className} />;
     case 'athkatla-magistrate':
       return <AthkatlaMagistrateSvg className={className} />;
+    case 'bandit-captain':
+      return <HobgoblinSvg className={className} />;
+    case 'dust-mephit-elder':
+      return <DustMephitSvg className={className} />;
+    case 'bone-stalker':
+      return <SkeletonSvg className={className} />;
+    case 'shadow-hound':
+      return <GhoulSvg className={className} />;
     default:
       return <GoblinSvg className={className} />;
   }

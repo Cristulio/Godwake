@@ -16,7 +16,14 @@ interface CampRoomProps {
   onMakeForPhandalin: () => void;
 }
 
-const MERCHANT_POTION_IDS = ['potion-of-healing', 'potion-of-greater-healing'];
+const MERCHANT_POTION_IDS = [
+  'potion-of-healing',
+  'potion-of-greater-healing',
+  'potion-of-heroism',
+  'scroll-of-healing-word',
+  'adamantine-shortsword',
+  'cloak-of-faerun',
+];
 
 export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomProps) {
   const character = useGameStore((s) => s.character);

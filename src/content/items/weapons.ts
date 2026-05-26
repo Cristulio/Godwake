@@ -88,4 +88,28 @@ export const RAPIER: Weapon = WeaponSchema.parse({
   attunement: false,
 });
 
-export const ALL_WEAPONS: Weapon[] = [LONGSWORD, DAGGER, SHORTBOW, GREATSWORD, WARHAMMER, RAPIER];
+export const ADAMANTINE_SHORTSWORD: Weapon = WeaponSchema.parse({
+  id: 'adamantine-shortsword',
+  kind: 'weapon',
+  name: 'Adamantine Shortsword',
+  category: 'martial',
+  damage: '1d6+1',
+  damageType: 'piercing',
+  properties: ['finesse', 'light'],
+  weight: 2,
+  cost: 320,
+  rarity: 'uncommon',
+  attunement: true,
+  description:
+    'A short, dark-grey blade with a faint blue undertone where the lamplight catches the edge. Adamantine — does not chip, does not dull, and the +1 is not a smith\'s boast, it is the alloy.',
+});
+
+export const ALL_WEAPONS: Weapon[] = [
+  LONGSWORD,
+  DAGGER,
+  SHORTBOW,
+  GREATSWORD,
+  WARHAMMER,
+  RAPIER,
+  ADAMANTINE_SHORTSWORD,
+];

@@ -88,6 +88,28 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
     ],
     xpReward: 240,
   },
+  {
+    title: 'The Bandit Captain\'s Hold',
+    flavorText:
+      "A black-coated captain stands in the middle of the lane with his rapier already drawn. The two cultists at his shoulders look like the kind of help you hire for an afternoon and never pay.",
+    monsters: [
+      { defId: 'bandit-captain', count: 1 },
+      { defId: 'cult-fanatic', count: 1 },
+    ],
+    xpReward: 270,
+    goldReward: 24,
+  },
+  {
+    title: 'The Kennel-Gate',
+    flavorText:
+      "Two of the slaver-houses' nightwalkers slip the leash and come up the lane in silence. Their handler stays back in the doorway with the second leash still in his hand.",
+    monsters: [
+      { defId: 'shadow-hound', count: 1 },
+      { defId: 'slaver-cuirassier', count: 1 },
+    ],
+    xpReward: 260,
+    goldReward: 14,
+  },
 ];
 
 export const MID_POOL: EncounterEntry[] = [
