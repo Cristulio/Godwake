@@ -383,6 +383,46 @@ export function monsterAttack(
   const attacker = findCombatant(state, attackerId);
   if (!attacker || attacker.kind !== 'monster') return state;
 
+  // Monster Hold Person handling: paralyzed monsters tick down their duration
+  // on their own turn and lose the action. No save (simplified per gameplay
+  // rules — Wizard spends a 2nd-level slot for guaranteed 2-round shutdown).
+  const paralyzed = attacker.instance.conditions.find((c) => c.name === 'paralyzed');
+  if (paralyzed && paralyzed.duration.kind === 'rounds') {
+    const next = paralyzed.duration.value - 1;
+    const expired = next <= 0;
+    const updatedConditions = expired
+      ? attacker.instance.conditions.filter((c) => c.name !== 'paralyzed')
+      : attacker.instance.conditions.map((c) =>
+          c.name === 'paralyzed'
+            ? { ...c, duration: { kind: 'rounds' as const, value: next } }
+            : c,
+        );
+    return {
+      ...state,
+      log: [
+        ...state.log,
+        {
+          id: nextLogId(state),
+          kind: 'system',
+          text: expired
+            ? `${attacker.instance.displayName} shakes off the binding.`
+            : `${attacker.instance.displayName} is paralyzed — the turn is lost.`,
+        },
+      ],
+      combatants: state.combatants.map((c) => {
+        if (c.id !== attackerId || c.kind !== 'monster') return c;
+        return {
+          ...c,
+          instance: {
+            ...c.instance,
+            conditions: updatedConditions,
+            actionEconomy: { ...c.instance.actionEconomy, actionUsed: true },
+          },
+        };
+      }),
+    };
+  }
+
   const monsterDef = getMonster(attacker.instance.defId);
   const playerParalyzed = isPlayerParalyzed(character);
   const paralyzeAction = monsterDef.actions.find((a) => a.kind === 'paralyze');

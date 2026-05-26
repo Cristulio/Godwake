@@ -62,6 +62,24 @@ function startingKitFor(classId: ClassId): StartingKit {
         goldInPocket: 15,
       };
     }
+    case 'wizard': {
+      // Wizards have no armor proficiency — they rely on Mage Armor when
+      // the situation warrants. A dagger covers the (rare) melee turn.
+      const dagger: ItemRef = { itemId: 'dagger' };
+      return {
+        inventory: [
+          dagger,
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: dagger,
+          offHand: null,
+          armor: null,
+        },
+        goldInPocket: 20,
+      };
+    }
     default:
       return {
         inventory: [],

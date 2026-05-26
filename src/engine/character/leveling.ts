@@ -3,6 +3,7 @@ import { abilityModifier } from '../../types/abilities';
 import { effectiveAbilityScores } from './derived';
 import { getClass } from '../../content/classes';
 import { getRace } from '../../content/races';
+import { wizardSpellSlotsForLevel } from './actions';
 
 /**
  * XP-to-level table, capped at level 8. L1-L5 are 5e RAW; L6-L8 are tuned
@@ -68,6 +69,12 @@ export function applyLevelUp(character: Character): Character {
   // Refresh the pool so the upgrade is felt on the very next encounter.
   if (character.classId === 'rogue' && subclassId === 'thief' && newLevel >= 3) {
     resources.cunningActionUsesRemaining = 2;
+  }
+
+  // Wizard: slots scale with level. Granting via the slot table also refills
+  // the well — leveling reads as a long rest in narrative terms.
+  if (character.classId === 'wizard') {
+    resources.spellSlots = wizardSpellSlotsForLevel(newLevel);
   }
 
   return {

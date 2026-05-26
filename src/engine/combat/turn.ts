@@ -88,6 +88,11 @@ export function endTurn(state: CombatState, character: Character): CombatState {
 
   nextState = resetActionEconomyForCurrent(nextState, character);
 
+  // Wizard: Shield expires at the start of the player's next turn.
+  if (order[nextIndex] === 'player' && character.resources.shieldActive) {
+    character.resources = { ...character.resources, shieldActive: false };
+  }
+
   if (order[nextIndex] === 'player' && isPlayerParalyzed(character)) {
     nextState = resolvePlayerParalyzedTurn(nextState, character);
   }

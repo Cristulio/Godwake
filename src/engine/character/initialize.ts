@@ -83,6 +83,23 @@ function classStartingResources(classId: ClassId) {
         sneakAttackUsedThisTurn: false,
         cunningActionUsesRemaining: 1, // 2 once Thief subclass is picked at L3
       };
+    case 'wizard':
+      return {
+        spellSlots: { 1: 2, 2: 0, 3: 0, 4: 0 },
+        knownSpells: [
+          'fire-bolt',
+          'mage-armor',
+          'magic-missile',
+          'shield',
+          'burning-hands',
+          // Hold Person is in the wizard's book from L1 but uncastable until a
+          // 2nd-level slot arrives at L3 — canCastSpell gates on slot, not on
+          // a separate "prepared at level X" flag.
+          'hold-person',
+        ],
+        mageArmorActive: false,
+        shieldActive: false,
+      };
     default:
       return {};
   }
