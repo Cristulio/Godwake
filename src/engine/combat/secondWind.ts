@@ -17,9 +17,11 @@ export interface SecondWindContext {
 }
 
 /**
- * Fighter feature. Bonus action, once per short rest: regain 1d10 + fighter
- * level hit points. Returns the new combat state and a fresh character
- * reference per CombatActionResult.
+ * Fighter feature. Bonus action, once per combat: regain 1d10 + fighter level
+ * hit points. The base charge refreshes at the start of every encounter
+ * (see createCombat); short/long rest also refresh it, but the per-combat
+ * refresh is the load-bearing one for boss attrition. Returns the new combat
+ * state and a fresh character reference per CombatActionResult.
  */
 export function useSecondWind(ctx: SecondWindContext): CombatActionResult {
   const { roller, character, state } = ctx;

@@ -30,7 +30,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'second-wind',
         name: 'Second Wind',
         description:
-          'On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. Once per short or long rest.',
+          'On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. Refreshes at the start of every combat encounter.',
         mechanicKey: 'second-wind',
       },
     ],
