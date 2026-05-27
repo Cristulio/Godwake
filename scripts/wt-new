@@ -126,6 +126,7 @@ tell application "iTerm"
   activate
   if (count of windows) = 0 then
     create window with default profile
+    delay 3
     tell current session of current window to write text "$LAUNCH_CMD"
   else
     tell current window
@@ -138,6 +139,10 @@ tell application "iTerm"
         tell rightmostSession
           set newSession to (split vertically with default profile)
         end tell
+        -- Wait for the new shell to finish init before typing. Without this,
+        -- parallel wt-new fan-outs lose leading characters of the typed
+        -- command (cd → rcd / icd / etc) because zsh isn't ready yet.
+        delay 3
         tell newSession to write text "$LAUNCH_CMD"
       end tell
     end tell
