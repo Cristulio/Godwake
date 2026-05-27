@@ -16,8 +16,9 @@ import {
   rollQuirks,
   characterQuirkMods,
   soulMarkMultiplier,
+  renownSoulMarkMultiplier,
 } from '../engine/character/quirks';
-import { applyDelveStartUpgrades, applyPermanentUpgrade } from '../engine/character/upgrades';
+import { applyDelveStartUpgrades, applyPermanentUpgrade, type UnlockedUpgrades } from '../engine/character/upgrades';
 import { hasPendingLevelUp, applyLevelUp } from '../engine/character/leveling';
 import { equipItem as equipItemFn, unequipSlot as unequipSlotFn, type EquipSlot } from '../engine/character/equip';
 import { createGodwakeDelve } from '../engine/delve';
@@ -36,6 +37,22 @@ function applyDelveStartQuirks(character: Character): Character {
   };
 }
 import { getUpgrade } from '../content/upgrades';
+
+/**
+ * Convert legacy `string[]` of owned upgrade ids → the rank-aware
+ * `Record<id, rank>` shape. Used both at slot-load and at persist-rehydrate.
+ */
+function migrateUnlockedUpgrades(raw: unknown): UnlockedUpgrades {
+  if (Array.isArray(raw)) {
+    const out: UnlockedUpgrades = {};
+    for (const id of raw) {
+      if (typeof id === 'string') out[id] = 1;
+    }
+    return out;
+  }
+  if (raw && typeof raw === 'object') return raw as UnlockedUpgrades;
+  return {};
+}
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
 export type Screen =
@@ -140,8 +157,12 @@ interface GameState {
   discoveredMonsters: string[];
   /** Cumulative encounter count per monster def id, incremented per-combat-start. */
   monsterEncounters: Record<string, number>;
-  /** Druid Grove upgrades the player has purchased with Renown. Persists across reincarnation; wipes on new game. */
-  unlockedUpgrades: string[];
+  /**
+   * Druid Grove upgrades the player has purchased with Renown. Each id maps
+   * to the current rank (1..maxRank). Missing keys / rank 0 = not owned.
+   * Persists across reincarnation; wipes on new game.
+   */
+  unlockedUpgrades: UnlockedUpgrades;
   /** True once the player has beaten Ilyich at least once on any incarnation. Gates Chapter 2 access. */
   chapter1Cleared: boolean;
   /** True once the player has ever held enough renown to buy the cheapest Grove upgrade. Sticky — does not re-lock when renown is spent. */
@@ -173,6 +194,12 @@ interface GameState {
   abandonDelve: () => void;
   /** Flip the on-delve Ch1-boss flag the moment Ilyich falls. Lets the camp early-exit and post-camp deaths still credit chapter1Cleared. */
   markChapter1BossKilled: () => void;
+  /**
+   * Quartermaster's Stipend hook: called when any chapter boss falls. Adds
+   * `chapterClearGoldBonus` (set at delve start) to the delve's gold ledger.
+   * No-op if the player doesn't own the upgrade.
+   */
+  creditChapterClearGold: () => void;
   /** Camp early-exit: complete the delve at the seam with Ch1 rewards and CLEAR-tier renown. */
   concludeDelveAtCamp: () => void;
   /**
@@ -231,7 +258,7 @@ interface PersistedSnapshot {
   quirksTutorialSeen: boolean;
   discoveredMonsters: string[];
   monsterEncounters: Record<string, number>;
-  unlockedUpgrades: string[];
+  unlockedUpgrades: UnlockedUpgrades;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
   __metadata?: SaveSlotMetadata;
@@ -307,7 +334,7 @@ export const useGameStore = create<GameState>()(
   quirksTutorialSeen: false,
   discoveredMonsters: [],
   monsterEncounters: {},
-  unlockedUpgrades: [],
+  unlockedUpgrades: {},
   chapter1Cleared: false,
   druidGroveUnlocked: false,
 
@@ -331,7 +358,7 @@ export const useGameStore = create<GameState>()(
       quirksTutorialSeen: false,
       discoveredMonsters: [],
       monsterEncounters: {},
-      unlockedUpgrades: [],
+      unlockedUpgrades: {},
       chapter1Cleared: false,
       druidGroveUnlocked: false,
       screen: 'character-creation',
@@ -373,8 +400,25 @@ export const useGameStore = create<GameState>()(
       poisonImmuneEncounter: false,
       conditions: [],
     };
-    const withUpgrades = applyDelveStartUpgrades(withResetActionEconomy(freshlyDescended), get().unlockedUpgrades);
-    const withQuirkBudgets = applyDelveStartQuirks(withUpgrades);
+    const unlocked = get().unlockedUpgrades;
+    const withUpgrades = applyDelveStartUpgrades(
+      withResetActionEconomy(freshlyDescended),
+      unlocked,
+    );
+    let withQuirkBudgets = applyDelveStartQuirks(withUpgrades);
+
+    // Pilgrim's Step: seed N random blessings at delve start. Done here
+    // because the upgrade's apply() is pure and can't reach the active
+    // dice roller — this is the natural seam.
+    const pilgrimRank = unlocked['pilgrims-step'] ?? 0;
+    if (pilgrimRank > 0) {
+      const rolled = rollBlessingOptions(getActiveRoller(), pilgrimRank);
+      withQuirkBudgets = {
+        ...withQuirkBudgets,
+        blessings: [...withQuirkBudgets.blessings, ...rolled],
+      };
+    }
+
     set({
       delve,
       combat: null,
@@ -430,7 +474,7 @@ export const useGameStore = create<GameState>()(
       // it (each bane quirk = +20%). Gold and XP and level all stay in the
       // delve and die with it; startDelve seeds the next run at L1/0/0.
       const renownBase = wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
-      const renownGain = Math.floor(renownBase * soulMarkMultiplier(s.character));
+      const renownGain = Math.floor(renownBase * renownSoulMarkMultiplier(s.character));
       const settled: Character = {
         ...s.character,
         renown: s.character.renown + renownGain,
@@ -466,7 +510,24 @@ export const useGameStore = create<GameState>()(
       if (!s.delve || !s.character) return s;
       // Reincarnation: re-roll quirks for the next life. Class/level/XP persist.
       // Blessings and conditions wipe — they were on the falling life, not the soul.
-      const newQuirks = rollQuirks(getActiveRoller(), 2);
+      // Wheelturner: the first existing quirk survives the turn; only the rest reroll.
+      const oldQuirks = s.character.quirks;
+      const carry =
+        s.character.wheelturnerUnlocked && oldQuirks.length > 0
+          ? [oldQuirks[0]]
+          : [];
+      const rolledCount = Math.max(0, 2 - carry.length);
+      const fresh = rolledCount > 0 ? rollQuirks(getActiveRoller(), rolledCount) : [];
+      const newQuirks = [...carry, ...fresh.filter((id) => !carry.includes(id))];
+      // Guard: if dedupe shrank fresh, top up with one more roll attempt.
+      while (newQuirks.length < 2 && rolledCount > 0) {
+        const more = rollQuirks(getActiveRoller(), 1);
+        for (const id of more) {
+          if (!newQuirks.includes(id)) newQuirks.push(id);
+        }
+        if (newQuirks.length >= 2) break;
+        if (more.length === 0) break;
+      }
       return {
         delve: { ...s.delve, phase: 'failed' },
         character: {
@@ -537,6 +598,17 @@ export const useGameStore = create<GameState>()(
   markChapter1BossKilled: () =>
     set((s) => (s.delve ? { delve: { ...s.delve, chapter1BossKilled: true } } : s)),
 
+  creditChapterClearGold: () =>
+    set((s) => {
+      if (!s.delve || !s.character) return s;
+      const bonus = s.character.chapterClearGoldBonus ?? 0;
+      if (bonus <= 0) return s;
+      return {
+        character: { ...s.character, goldInPocket: s.character.goldInPocket + bonus },
+        delve: { ...s.delve, goldEarned: s.delve.goldEarned + bonus },
+      };
+    }),
+
   concludeDelveAtCamp: () =>
     set((s) => (s.delve ? { delve: { ...s.delve, phase: 'completed' } } : s)),
 
@@ -596,19 +668,26 @@ export const useGameStore = create<GameState>()(
   purchaseUpgrade: (upgradeId) => {
     const s = get();
     if (!s.character) return { ok: false, reason: 'No character.' };
-    if (s.unlockedUpgrades.includes(upgradeId)) return { ok: false, reason: 'Already owned.' };
     let up;
     try {
       up = getUpgrade(upgradeId);
     } catch {
       return { ok: false, reason: 'Unknown upgrade.' };
     }
-    if (s.character.renown < up.cost) return { ok: false, reason: 'Not enough Renown.' };
-    const spent = { ...s.character, renown: s.character.renown - up.cost };
-    const withPermanent = applyPermanentUpgrade(spent, upgradeId);
+    const currentRank = s.unlockedUpgrades[upgradeId] ?? 0;
+    if (currentRank >= up.maxRank) {
+      return { ok: false, reason: 'Already at max rank.' };
+    }
+    const nextRank = currentRank + 1;
+    const cost = up.costForRank(nextRank);
+    if (s.character.renown < cost) return { ok: false, reason: 'Not enough Renown.' };
+    let next: Character = { ...s.character, renown: s.character.renown - cost };
+    if (up.kind === 'permanent') {
+      next = applyPermanentUpgrade(next, upgradeId, nextRank);
+    }
     set({
-      character: withPermanent,
-      unlockedUpgrades: [...s.unlockedUpgrades, upgradeId],
+      character: next,
+      unlockedUpgrades: { ...s.unlockedUpgrades, [upgradeId]: nextRank },
     });
     return { ok: true };
   },
@@ -644,7 +723,7 @@ export const useGameStore = create<GameState>()(
         s.monsterEncounters && typeof s.monsterEncounters === 'object'
           ? s.monsterEncounters
           : {},
-      unlockedUpgrades: Array.isArray(s.unlockedUpgrades) ? s.unlockedUpgrades : [],
+      unlockedUpgrades: migrateUnlockedUpgrades(s.unlockedUpgrades),
       chapter1Cleared: !!s.chapter1Cleared,
       druidGroveUnlocked: !!s.druidGroveUnlocked,
       delve: null,
@@ -672,7 +751,7 @@ export const useGameStore = create<GameState>()(
         quirksTutorialSeen: false,
         discoveredMonsters: [],
         monsterEncounters: {},
-        unlockedUpgrades: [],
+        unlockedUpgrades: {},
         chapter1Cleared: false,
         druidGroveUnlocked: false,
       });
@@ -726,9 +805,10 @@ export const useGameStore = create<GameState>()(
         if (state?.character && !Array.isArray(state.character.conditions)) {
           state.character = { ...state.character, conditions: [] };
         }
-        // Older saves predate the renown shop.
-        if (state && !state.unlockedUpgrades) {
-          state.unlockedUpgrades = [];
+        // Older saves predate the renown shop OR were on the pre-rank
+        // schema (string[] of owned ids). Convert array → Record<id, 1>.
+        if (state) {
+          state.unlockedUpgrades = migrateUnlockedUpgrades(state.unlockedUpgrades);
         }
         // Older saves predate the codex encounter counter. Seed each already-
         // discovered monster at 1 so the codex doesn't show "x 0" for known
@@ -749,7 +829,7 @@ export const useGameStore = create<GameState>()(
         // don't strip access from existing players.
         if (state && typeof state.druidGroveUnlocked !== 'boolean') {
           state.druidGroveUnlocked =
-            (state.unlockedUpgrades?.length ?? 0) > 0 ||
+            Object.keys(state.unlockedUpgrades ?? {}).length > 0 ||
             (state.character?.renown ?? 0) >= GROVE_UNLOCK_THRESHOLD;
         }
         // Older saves predate the reincarnation counter. Seed at 1 if they've

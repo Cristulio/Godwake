@@ -1,98 +1,58 @@
 import type { Character } from '../../types/character';
-import { getUpgrade } from '../../content/upgrades';
+import { findUpgrade } from '../../content/upgrades';
+
+/** Record<upgradeId, currentRank>. Rank 0 / missing = not owned. */
+export type UnlockedUpgrades = Record<string, number>;
 
 /**
- * Apply a permanent upgrade's effect to the character at purchase time.
- * Permanent upgrades are baked into character stats — the unlocked-id list
- * is the source of truth for "owned", but the effects live on the character
- * so reincarnations keep them.
+ * Apply the DELTA effect of a permanent upgrade rank to the character. Called
+ * once at purchase with the just-bought rank — the function knows to apply
+ * a single rank's worth of effect (e.g. +5 HP, +1 AC) so multi-rank purchases
+ * compound naturally across calls.
  */
-export function applyPermanentUpgrade(character: Character, upgradeId: string): Character {
-  const up = getUpgrade(upgradeId);
+export function applyPermanentUpgrade(
+  character: Character,
+  upgradeId: string,
+  rank: number,
+): Character {
+  const up = findUpgrade(upgradeId);
+  if (!up) return character;
   if (up.kind !== 'permanent') return character;
-  switch (up.id) {
-    case 'iron-will': {
-      const newMax = character.hp.max + 5;
-      return {
-        ...character,
-        hp: { ...character.hp, max: newMax, current: Math.max(character.hp.current, newMax) },
-      };
-    }
-    case 'mantle-of-the-wakened': {
-      const newMax = character.hp.max + 15;
-      return {
-        ...character,
-        hp: { ...character.hp, max: newMax, current: Math.max(character.hp.current, newMax) },
-      };
-    }
-    case 'heirloom-blade':
-      return {
-        ...character,
-        permanentAttackBonus: (character.permanentAttackBonus ?? 0) + 1,
-      };
-    case 'cloak-of-the-grove':
-      return {
-        ...character,
-        permanentAcBonus: (character.permanentAcBonus ?? 0) + 1,
-      };
-    case 'whisper-of-the-wild':
-      return {
-        ...character,
-        permanentInitBonus: (character.permanentInitBonus ?? 0) + 2,
-      };
-    case 'sages-pact':
-      return {
-        ...character,
-        attunementSlotsBonus: (character.attunementSlotsBonus ?? 0) + 1,
-      };
-    default:
-      return character;
-  }
+  return up.apply(character, rank);
 }
 
 /**
  * Apply all per-delve upgrade effects to the character right before a delve
- * begins. Pure — produces a new character.
+ * begins. Pure — produces a new character. Per-delve fields (gold floor,
+ * potions, reroll budgets, stabilise bonus etc.) are stamped on each call.
  */
 export function applyDelveStartUpgrades(
   character: Character,
-  unlockedUpgrades: string[],
+  unlocked: UnlockedUpgrades,
 ): Character {
   let c = character;
-  for (const id of unlockedUpgrades) {
-    let up;
-    try {
-      up = getUpgrade(id);
-    } catch {
-      continue;
-    }
+  // Reset per-delve fields that are owned by upgrades so unowned-after-respec
+  // doesn't leave stale values. (We currently can't respec, but defensive.)
+  c = {
+    ...c,
+    delveStabiliseBonus: 0,
+    shrineOptionBonus: 0,
+    shrineTitheGold: 0,
+    chapterClearGoldBonus: 0,
+  };
+  if (c.resources.secondWindBonusRemaining) {
+    c = {
+      ...c,
+      resources: { ...c.resources, secondWindBonusRemaining: 0 },
+    };
+  }
+
+  for (const [id, rank] of Object.entries(unlocked)) {
+    if (!rank || rank <= 0) continue;
+    const up = findUpgrade(id);
+    if (!up) continue;
     if (up.kind !== 'delveStart') continue;
-    switch (up.id) {
-      case 'coin-in-pocket':
-        c = { ...c, goldInPocket: c.goldInPocket + 25 };
-        break;
-      case 'mielikki-cache':
-        c = { ...c, inventory: [...c.inventory, { itemId: 'potion-of-healing' }] };
-        break;
-      case 'wellspring-vigil':
-        if (c.classId === 'fighter') {
-          c = {
-            ...c,
-            resources: { ...c.resources, secondWindAvailable: true },
-          };
-        }
-        break;
-      case 'tymoras-wager':
-        c = {
-          ...c,
-          delveBudgets: {
-            ...c.delveBudgets,
-            quirkRerollMissesRemaining:
-              (c.delveBudgets?.quirkRerollMissesRemaining ?? 0) + 1,
-          },
-        };
-        break;
-    }
+    c = up.apply(c, rank);
   }
   return c;
 }

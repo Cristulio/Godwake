@@ -108,9 +108,10 @@ export function applyDamage(state: CombatState, targetId: string, amount: number
  * charge was spent.
  */
 function tryConsumeStabilise(character: Character): boolean {
-  const extra = characterBlessingMods(character).extraStabiliseCharges ?? 0;
+  const blessingExtra = characterBlessingMods(character).extraStabiliseCharges ?? 0;
+  const upgradeExtra = character.delveStabiliseBonus ?? 0;
   const used = character.delveBudgets?.stabilisesUsed ?? 0;
-  const available = 1 + extra - used;
+  const available = 1 + blessingExtra + upgradeExtra - used;
   if (available <= 0) return false;
   character.delveBudgets = {
     ...character.delveBudgets,
@@ -302,6 +303,27 @@ export function playerAttack(
     if (isFirstAttack && blessingMods.firstAttackDamage) {
       bonusDamage += blessingMods.firstAttackDamage;
       bonusParts.push(`+${blessingMods.firstAttackDamage} first strike`);
+    }
+    // Grove upgrades — permanent damage bonuses baked into the soul.
+    const whetstone = character.permanentDamageBonus ?? 0;
+    if (whetstone) {
+      bonusDamage += whetstone;
+      bonusParts.push(`+${whetstone} Whetstone`);
+    }
+    if (isFirstAttack && (character.permanentFirstAttackDamage ?? 0) > 0) {
+      const fc = character.permanentFirstAttackDamage ?? 0;
+      bonusDamage += fc;
+      bonusParts.push(`+${fc} First Cut`);
+    }
+    if (targetWounded && (character.permanentWoundedTargetDamage ?? 0) > 0) {
+      const bo = character.permanentWoundedTargetDamage ?? 0;
+      bonusDamage += bo;
+      bonusParts.push(`+${bo} Bleed-Out`);
+    }
+    if (crit && (character.permanentCritDamageBonus ?? 0) > 0) {
+      const cd = character.permanentCritDamageBonus ?? 0;
+      bonusDamage += cd;
+      bonusParts.push(`+${cd} Fellfast`);
     }
 
     // Rogue Sneak Attack: once per turn, when the strike has the angle —

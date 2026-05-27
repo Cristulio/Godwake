@@ -14,13 +14,30 @@ interface ShrineRoomProps {
 
 export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   const addBlessing = useGameStore((s) => s.addBlessing);
+  const shrineOptionBonus = useGameStore((s) => s.character?.shrineOptionBonus ?? 0);
+  const shrineTitheGold = useGameStore((s) => s.character?.shrineTitheGold ?? 0);
   const [options, setOptions] = useState<string[]>([]);
   const [chosen, setChosen] = useState<string | null>(null);
 
-  // Roll 3 unique blessing options on mount.
+  // Roll N unique blessing options on mount. Wider Pantheon adds extras.
   useEffect(() => {
     const roller = getActiveRoller();
-    setOptions(rollBlessingOptions(roller, 3));
+    const count = 3 + shrineOptionBonus;
+    setOptions(rollBlessingOptions(roller, count));
+    // Shrine Tithe: pay out gold on each shrine entry.
+    if (shrineTitheGold > 0) {
+      const state = useGameStore.getState();
+      const ch = state.character;
+      if (ch) {
+        useGameStore.setState({
+          character: { ...ch, goldInPocket: ch.goldInPocket + shrineTitheGold },
+          delve: state.delve
+            ? { ...state.delve, goldEarned: state.delve.goldEarned + shrineTitheGold }
+            : state.delve,
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function pick(id: string) {

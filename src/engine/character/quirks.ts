@@ -88,3 +88,13 @@ export const SOUL_MARK_PER_BANE = 0.2;
 export function soulMarkMultiplier(character: Character): number {
   return 1 + SOUL_MARK_PER_BANE * baneQuirkCount(character);
 }
+
+/**
+ * Renown-specific multiplier: stacks the soul-mark with the Soul Marrow Grove
+ * upgrade (extra +5/10/15% per bane). Gold and XP do NOT get the upgrade
+ * bonus — only the renown carried back to the Wellspring.
+ */
+export function renownSoulMarkMultiplier(character: Character): number {
+  const extra = character.permanentRenownBonusPerBane ?? 0;
+  return 1 + (SOUL_MARK_PER_BANE + extra) * baneQuirkCount(character);
+}
