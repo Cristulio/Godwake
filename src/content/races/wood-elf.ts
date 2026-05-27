@@ -14,12 +14,19 @@ export const WOOD_ELF: Race = RaceSchema.parse({
   speed: 35,
   size: 'medium',
   validClasses: ['fighter', 'wizard', 'cleric', 'rogue', 'barbarian'],
+  initiativeBonus: 1,
   features: [
     {
       id: 'wood-elf-fleetfoot',
       name: 'Fleet of Foot',
       description:
         'Long-lived archers of the high forest. Tread quiet on Faerûnian leaf-loam — your base walking speed is 35 feet.',
+    },
+    {
+      id: 'wood-elf-fey-reflexes',
+      name: 'Fey Reflexes',
+      description:
+        'The elf hears the fight a half-breath before the others do. +1 to initiative.',
     },
   ],
 });

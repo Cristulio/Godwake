@@ -66,10 +66,9 @@ export function characterQuirkMods(character: Character): QuirkModifiers {
 }
 
 /**
- * Count of bane-sentiment quirks the character carries. The delve's gold /
- * XP / renown rewards multiply by (1 + SOUL_MARK_PER_BANE * baneCount) — the
- * soul that has suffered more, earns more — so a 2-bane roll compensates
- * with +40% rewards.
+ * Count of bane-sentiment quirks the character carries. Kept as the raw count
+ * for UI / Grove-upgrade descriptions. The actual reward math uses
+ * `baneSoulMarkWeight`, which weighs harsher banes more heavily.
  */
 export function baneQuirkCount(character: Character): number {
   let n = 0;
@@ -83,10 +82,30 @@ export function baneQuirkCount(character: Character): number {
   return n;
 }
 
+/**
+ * Sum of `soulMarkWeight` (default 1.0) across the character's bane quirks.
+ * Harsh banes — ones that block an entire mechanic from firing — weigh more
+ * so their renown compensation reflects the actual pain. A "normal" 1-bane
+ * roll still scores 1.0; a `limping` (combined −1 init / −1 AC) roll scores
+ * 1.5.
+ */
+export function baneSoulMarkWeight(character: Character): number {
+  let total = 0;
+  for (const id of character.quirks) {
+    try {
+      const q = getQuirk(id);
+      if (q.sentiment === 'bane') total += q.soulMarkWeight ?? 1.0;
+    } catch {
+      continue;
+    }
+  }
+  return total;
+}
+
 export const SOUL_MARK_PER_BANE = 0.2;
 
 export function soulMarkMultiplier(character: Character): number {
-  return 1 + SOUL_MARK_PER_BANE * baneQuirkCount(character);
+  return 1 + SOUL_MARK_PER_BANE * baneSoulMarkWeight(character);
 }
 
 /**
@@ -96,5 +115,5 @@ export function soulMarkMultiplier(character: Character): number {
  */
 export function renownSoulMarkMultiplier(character: Character): number {
   const extra = character.permanentRenownBonusPerBane ?? 0;
-  return 1 + (SOUL_MARK_PER_BANE + extra) * baneQuirkCount(character);
+  return 1 + (SOUL_MARK_PER_BANE + extra) * baneSoulMarkWeight(character);
 }

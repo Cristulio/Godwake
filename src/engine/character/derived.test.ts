@@ -77,10 +77,11 @@ describe('character derivation — human fighter', () => {
     expect(initiativeModifier(human)).toBe(2);
   });
 
-  it('Wood Elf init = DEX mod only — speed 35 does not bump init', () => {
+  it('Wood Elf init = DEX mod + Fey Reflexes (+1); speed 35 does not also bump it', () => {
     // Wood Elf grants +2 DEX on top of base 13 → effective DEX 15 (+2 mod).
+    // Fey Reflexes adds an explicit +1 racial init bonus.
     const woodElf = { ...human, raceId: 'wood-elf' as const };
-    expect(initiativeModifier(woodElf)).toBe(2);
+    expect(initiativeModifier(woodElf)).toBe(3);
   });
 
   it('Hill Dwarf init = DEX mod only — speed 25 does not penalise init', () => {
@@ -164,14 +165,14 @@ describe('character derivation — human fighter', () => {
     expect(initiativeModifier(watched)).toBe(4); // DEX(2) + 2
   });
 
-  it('Remarkable Athlete adds +2 to initiative at Champion level 7', () => {
-    const champion7 = { ...human, level: 7, subclassId: 'champion' };
-    expect(initiativeModifier(champion7)).toBe(4); // DEX(2) + 2
+  it('Remarkable Athlete adds +2 to initiative at Champion level 5', () => {
+    const champion5 = { ...human, level: 5, subclassId: 'champion' };
+    expect(initiativeModifier(champion5)).toBe(4); // DEX(2) + 2
   });
 
-  it('Remarkable Athlete does not apply below Champion level 7', () => {
-    const champion6 = { ...human, level: 6, subclassId: 'champion' };
-    expect(initiativeModifier(champion6)).toBe(2); // DEX(2) only
+  it('Remarkable Athlete does not apply below Champion level 5', () => {
+    const champion4 = { ...human, level: 4, subclassId: 'champion' };
+    expect(initiativeModifier(champion4)).toBe(2); // DEX(2) only
   });
 
   it("Tempus's Edge widens crit range by 1", () => {

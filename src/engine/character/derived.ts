@@ -117,19 +117,24 @@ export function characterHasMechanic(character: Character, mechanicKey: string):
 }
 
 /**
- * Initiative = DEX modifier + quirk/blessing tweaks + permanent/delve bonuses.
+ * Initiative = DEX modifier + race initiative bonus + quirk/blessing tweaks
+ * + permanent/delve bonuses.
  *
  * Race speed used to fold into initiative (+/- 1 per 5ft delta from 30). The
  * coupling was invisible to players and doubled-up on Hill Dwarf's already
- * heavy "slow but tough" fantasy. Speed is now purely a movement-flavor field.
+ * heavy "slow but tough" fantasy. Speed is now purely a movement-flavor field;
+ * race init bumps live in an explicit `initiativeBonus` field (e.g. Wood Elf
+ * Fey Reflexes +1).
  */
 export function initiativeModifier(character: Character): number {
   const dex = modifierFor(character, 'dex');
+  const race = getRace(character.raceId);
   const quirkMods = characterQuirkMods(character);
   const blessingMods = characterBlessingMods(character);
   const remarkableAthlete = characterHasMechanic(character, 'remarkable-athlete') ? 2 : 0;
   return (
     dex +
+    (race.initiativeBonus ?? 0) +
     remarkableAthlete +
     (quirkMods.initiativeMod ?? 0) +
     (blessingMods.initiativeBonus ?? 0) +

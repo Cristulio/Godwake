@@ -40,5 +40,12 @@ export const QuirkSchema = z.object({
   /** Plain-language mechanical effect for the UI. */
   effect: z.string(),
   modifiers: QuirkModifiersSchema,
+  /**
+   * Per-bane soul-mark weight. Defaults to 1.0 — a "normal" bane is worth
+   * +20% renown. Harsher banes that block an entire mechanic (no rest heal,
+   * no spell slot recovery) weigh 1.4-1.5; flavour-only or trade banes stay
+   * at 1.0. Ignored for non-bane sentiments.
+   */
+  soulMarkWeight: z.number().positive().optional(),
 });
 export type Quirk = z.infer<typeof QuirkSchema>;
