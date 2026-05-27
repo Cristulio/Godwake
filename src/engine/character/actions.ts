@@ -10,7 +10,7 @@ export function withResetActionEconomy(character: Character): Character {
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: race.speed,
+      movementRemaining: race.speed + (character.permanentSpeedBonus ?? 0),
     },
   };
 }
@@ -26,8 +26,8 @@ function fighterActionSurgeMax(character: Character): number {
 /** Rogue: Cunning Action uses per combat. Thief (L3+) gets a second use via Fast Hands. */
 export function rogueCunningActionMax(character: Character): number {
   if (character.classId !== 'rogue') return 0;
-  if (character.subclassId === 'thief' && character.level >= 3) return 2;
-  return 1;
+  const base = character.subclassId === 'thief' && character.level >= 3 ? 2 : 1;
+  return base + (character.permanentCunningActionBonus ?? 0);
 }
 
 /**

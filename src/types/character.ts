@@ -170,6 +170,12 @@ export interface Character {
   permanentRenownBonusPerBane?: number;
   /** Grove upgrade: unlocks the on-reincarnation quirk picker. */
   wheelturnerUnlocked?: boolean;
+  /** Grove upgrade (Shadowstep): +N extra Cunning Action uses per combat (Rogue). */
+  permanentCunningActionBonus?: number;
+  /** Grove upgrade (Knife in the Dark): +N bonus Sneak Attack dice (Rogue). */
+  permanentSneakAttackDiceBonus?: number;
+  /** Grove upgrade (Pilgrim's Boots): +N ft to base movement each turn. */
+  permanentSpeedBonus?: number;
   /**
    * Grove upgrade: extra stabilise charges per delve (Hardier Soul). Stacks
    * with Ilmater's Patience (blessing). Reset at delve start.

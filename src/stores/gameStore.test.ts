@@ -3,8 +3,12 @@ import {
   useGameStore,
   RENOWN_PER_DELVE_CLEAR,
   RENOWN_PER_DELVE_FAILURE,
+  RENOWN_PER_CHAPTER_BOSS,
   GROVE_UNLOCK_THRESHOLD,
 } from './gameStore';
+import { getUpgrade } from '../content/upgrades';
+import { applyPermanentUpgrade } from '../engine/character/upgrades';
+import { withResetActionEconomy } from '../engine/character/actions';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
 import { createGodwakeDelve } from '../engine/delve';
 import { effectiveAbilityScores } from '../engine/character/derived';
@@ -211,6 +215,86 @@ describe('finishDelve — renown economy', () => {
     const startingRenown = useGameStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
     expect(useGameStore.getState().character!.renown).toBe(startingRenown + 50);
+  });
+
+  it('death mid-Ch2 after Ilyich-kill awards 25 renown (15 + 10)', () => {
+    expect(RENOWN_PER_CHAPTER_BOSS).toBe(10);
+    const delve = useGameStore.getState().delve!;
+    // Position the player past the Ilyich boss (room-10, idx 9) — say in
+    // room-12 (idx 11), the first Ch2 combat. phase='failed' = dying there.
+    useGameStore.setState({
+      delve: { ...delve, currentRoomIdx: 11, phase: 'failed' },
+    });
+    const startingRenown = useGameStore.getState().character!.renown;
+    useGameStore.getState().finishDelve();
+    expect(useGameStore.getState().character!.renown).toBe(startingRenown + 25);
+  });
+
+  it('death mid-Ch4 after killing 3 chapter bosses awards 45 renown', () => {
+    const delve = useGameStore.getState().delve!;
+    // Position the player after Ilyich (idx 9), Magistrate (idx 18), and
+    // the Asylum Director (idx 27) — say in room-31 (idx 30), early Ch4.
+    useGameStore.setState({
+      delve: { ...delve, currentRoomIdx: 30, phase: 'failed' },
+    });
+    const startingRenown = useGameStore.getState().character!.renown;
+    useGameStore.getState().finishDelve();
+    expect(useGameStore.getState().character!.renown).toBe(startingRenown + 45);
+  });
+
+  it('full clear still pays the clear-tier 50 (no chapter-boss stack on clear)', () => {
+    const delve = useGameStore.getState().delve!;
+    // currentRoomIdx pinned at the Matron Mother room (idx 36) — the only
+    // position phase='completed' should ever fire from on the chained delve.
+    useGameStore.setState({
+      delve: { ...delve, currentRoomIdx: 36, phase: 'completed' },
+    });
+    const startingRenown = useGameStore.getState().character!.renown;
+    useGameStore.getState().finishDelve();
+    expect(useGameStore.getState().character!.renown).toBe(startingRenown + 50);
+  });
+});
+
+describe('Grove upgrade — Pilgrim\'s Boots', () => {
+  beforeEach(() => resetStore());
+
+  it('rank 1 costs 25 renown', () => {
+    const up = getUpgrade('pilgrims-boots');
+    expect(up.maxRank).toBe(1);
+    expect(up.costForRank(1)).toBe(25);
+  });
+
+  it('purchase at 25 renown succeeds and bumps movement at delve start', () => {
+    useGameStore.setState({
+      character: { ...useGameStore.getState().character!, renown: 25 },
+    });
+    const res = useGameStore.getState().purchaseUpgrade('pilgrims-boots');
+    expect(res.ok).toBe(true);
+    const s = useGameStore.getState();
+    expect(s.character!.renown).toBe(0);
+    expect(s.character!.permanentSpeedBonus).toBe(5);
+    expect(s.unlockedUpgrades['pilgrims-boots']).toBe(1);
+    // Movement on a fresh-economy turn picks up the +5 over base race speed.
+    const baseSpeed = withResetActionEconomy({
+      ...s.character!,
+      permanentSpeedBonus: 0,
+    }).actionEconomy.movementRemaining;
+    const withBoots = withResetActionEconomy(s.character!).actionEconomy.movementRemaining;
+    expect(withBoots).toBe(baseSpeed + 5);
+  });
+
+  it('purchase at 24 renown fails', () => {
+    useGameStore.setState({
+      character: { ...useGameStore.getState().character!, renown: 24 },
+    });
+    const res = useGameStore.getState().purchaseUpgrade('pilgrims-boots');
+    expect(res.ok).toBe(false);
+  });
+
+  it('apply() adds +5 ft via applyPermanentUpgrade', () => {
+    const ch = { ...useGameStore.getState().character!, permanentSpeedBonus: 0 };
+    const after = applyPermanentUpgrade(ch, 'pilgrims-boots', 1);
+    expect(after.permanentSpeedBonus).toBe(5);
   });
 });
 

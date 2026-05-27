@@ -368,7 +368,9 @@ export function playerAttack(
     const isRogue = character.classId === 'rogue';
     const sneakTriggers = advantage === 'advantage' || targetWounded;
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
-      const sneakDice = sneakAttackDiceForLevel(character.level);
+      const sneakDice =
+        sneakAttackDiceForLevel(character.level) +
+        (character.permanentSneakAttackDiceBonus ?? 0);
       const sneakRoll = roller.roll({
         count: sneakDice * (crit ? 2 : 1),
         die: 6,
