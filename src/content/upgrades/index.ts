@@ -41,7 +41,7 @@ const RAW: Upgrade[] = [
     name: "Sage's Pact",
     flavor:
       'An old druid presses her thumb to your sternum and whispers a word from before the gods. The world makes a little more room for you.',
-    effect: '+1 attunement slot, permanent.',
+    effect: '+1 Soul-bind slot, permanent.',
     cost: 150,
     kind: 'permanent',
   },

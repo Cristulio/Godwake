@@ -95,7 +95,7 @@ function renderStats(item: Item) {
   rows.push(['Weight', `${item.weight} lb`]);
   rows.push(['Value', `${item.cost} gp`]);
   if (item.kind !== 'consumable' && item.attunement) {
-    rows.push(['Attunement', 'required']);
+    rows.push(['Soul-bound', 'required']);
   }
 
   return rows.map(([label, value]) => (
