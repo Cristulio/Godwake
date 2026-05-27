@@ -13,7 +13,7 @@ export const ASYLUM_DIRECTOR: Monster = MonsterSchema.parse({
   cr: '5',
   size: 'medium',
   creatureType: 'humanoid (human)',
-  ac: 16,
+  ac: 15,
   maxHp: 78,
   speed: 30,
   abilityScores: { str: 14, dex: 14, con: 14, int: 18, wis: 16, cha: 14 },
@@ -32,7 +32,7 @@ export const ASYLUM_DIRECTOR: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Director\'s Glaive',
       attackBonus: 8,
-      damage: '2d10+4',
+      damage: '2d8+4',
       damageType: 'slashing',
       reach: 10,
       description:
