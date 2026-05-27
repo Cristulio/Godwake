@@ -11,6 +11,9 @@ export type BattlefieldDecoration =
   | 'magistrate-hall'
   | 'spellhold-corridor'
   | 'spellhold-warden-chamber'
+  | 'underdark-tunnel'
+  | 'ust-natha-temple'
+  | 'ust-natha-throne'
   | 'generic';
 
 interface BattlefieldProps {
@@ -142,7 +145,354 @@ function DecorationLayer({ kind }: { kind: BattlefieldDecoration }) {
       {kind === 'magistrate-hall' && <MagistrateHallBackdrop />}
       {kind === 'spellhold-corridor' && <SpellholdCorridorBackdrop />}
       {kind === 'spellhold-warden-chamber' && <SpellholdWardenChamberBackdrop />}
+      {kind === 'underdark-tunnel' && <UnderdarkTunnelBackdrop />}
+      {kind === 'ust-natha-temple' && <UstNathaTempleBackdrop />}
+      {kind === 'ust-natha-throne' && <UstNathaThroneBackdrop />}
     </div>
+  );
+}
+
+function UnderdarkTunnelBackdrop() {
+  // Raw Underdark cave — faerzress glow in cool purple-green, deep stone,
+  // bone-light flecks scattered on the floor. Reads as "you are not in a
+  // building any more." Color-only per the brief; no detailed SVG art.
+  return (
+    <svg
+      viewBox="0 0 400 200"
+      preserveAspectRatio="none"
+      className="absolute inset-0 w-full h-full"
+    >
+      <defs>
+        <linearGradient id="ud-wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0a0612" />
+          <stop offset="55%" stopColor="#15102a" />
+          <stop offset="100%" stopColor="#04020a" />
+        </linearGradient>
+        <radialGradient id="ud-faerz-purple" cx="0.28" cy="0.32" r="0.45">
+          <stop offset="0%" stopColor="#7a4ec8" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#7a4ec8" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="ud-faerz-green" cx="0.74" cy="0.4" r="0.4">
+          <stop offset="0%" stopColor="#3a8e6a" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="#3a8e6a" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="ud-vignette" cx="0.5" cy="0.5" r="0.62">
+          <stop offset="60%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.7" />
+        </radialGradient>
+      </defs>
+      <rect width="400" height="200" fill="url(#ud-wall)" />
+      {/* Rough stalactite silhouettes hanging from the ceiling */}
+      <g fill="#06040c" opacity="0.92">
+        <polygon points="20,0 36,0 28,38" />
+        <polygon points="56,0 78,0 67,52" />
+        <polygon points="104,0 122,0 113,32" />
+        <polygon points="150,0 180,0 165,60" />
+        <polygon points="206,0 222,0 214,28" />
+        <polygon points="246,0 274,0 260,50" />
+        <polygon points="302,0 322,0 312,34" />
+        <polygon points="346,0 378,0 362,56" />
+      </g>
+      {/* Rough stalagmite silhouettes rising from the floor */}
+      <g fill="#06040c" opacity="0.95">
+        <polygon points="0,200 0,150 18,200" />
+        <polygon points="58,200 70,158 84,200" />
+        <polygon points="148,200 162,142 178,200" />
+        <polygon points="244,200 258,154 274,200" />
+        <polygon points="336,200 354,148 372,200" />
+        <polygon points="380,200 392,166 400,200" />
+      </g>
+      {/* Faerzress flecks scattered across the wall */}
+      <g opacity="0.85">
+        <circle cx="62" cy="58" r="1.2" fill="#b78cff" />
+        <circle cx="94" cy="78" r="0.9" fill="#9ec3ff" />
+        <circle cx="138" cy="46" r="1.1" fill="#b78cff" />
+        <circle cx="182" cy="92" r="1.0" fill="#7cf0b0" />
+        <circle cx="224" cy="68" r="1.3" fill="#b78cff" />
+        <circle cx="268" cy="50" r="0.9" fill="#7cf0b0" />
+        <circle cx="312" cy="88" r="1.2" fill="#b78cff" />
+        <circle cx="348" cy="70" r="0.8" fill="#9ec3ff" />
+        <circle cx="78" cy="120" r="0.9" fill="#7cf0b0" />
+        <circle cx="198" cy="118" r="1.0" fill="#b78cff" />
+        <circle cx="318" cy="124" r="0.8" fill="#9ec3ff" />
+      </g>
+      {/* Faerzress glow patches */}
+      <rect width="400" height="200" fill="url(#ud-faerz-purple)" />
+      <rect width="400" height="200" fill="url(#ud-faerz-green)" />
+      {/* Floor strip — wet underground stone */}
+      <rect x="0" y="170" width="400" height="30" fill="#06040c" />
+      <g stroke="#2a1c44" strokeWidth="0.5" opacity="0.45">
+        <line x1="0" y1="178" x2="400" y2="178" />
+        <line x1="50" y1="178" x2="34" y2="200" />
+        <line x1="130" y1="178" x2="116" y2="200" />
+        <line x1="210" y1="178" x2="210" y2="200" />
+        <line x1="290" y1="178" x2="304" y2="200" />
+        <line x1="360" y1="178" x2="380" y2="200" />
+      </g>
+      <rect width="400" height="200" fill="url(#ud-vignette)" />
+    </svg>
+  );
+}
+
+function UstNathaTempleBackdrop() {
+  // The temple-corridor near the city centre. Sickly green faerzress along
+  // the wall, an eight-legged Lolth sigil scratched between stone-courses,
+  // a stretched spider-silk banner. Reads as "you are inside Lolth's house
+  // now." Color-only per the brief.
+  return (
+    <svg
+      viewBox="0 0 400 200"
+      preserveAspectRatio="none"
+      className="absolute inset-0 w-full h-full"
+    >
+      <defs>
+        <linearGradient id="un-temple-wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0c0418" />
+          <stop offset="55%" stopColor="#1c0a32" />
+          <stop offset="100%" stopColor="#06020c" />
+        </linearGradient>
+        <linearGradient id="un-temple-stone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1a0a28" />
+          <stop offset="100%" stopColor="#06020c" />
+        </linearGradient>
+        <radialGradient id="un-temple-glow" cx="0.5" cy="0.4" r="0.5">
+          <stop offset="0%" stopColor="#7cf0b0" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="#7cf0b0" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="un-temple-glow-side" cx="0.18" cy="0.5" r="0.32">
+          <stop offset="0%" stopColor="#b78cff" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#b78cff" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="un-temple-vignette" cx="0.5" cy="0.5" r="0.6">
+          <stop offset="60%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.65" />
+        </radialGradient>
+      </defs>
+      <rect width="400" height="200" fill="url(#un-temple-wall)" />
+      {/* Basalt block courses */}
+      <g fill="url(#un-temple-stone)" stroke="#04020a" strokeWidth="0.5" opacity="0.92">
+        <rect x="0" y="0" width="92" height="42" />
+        <rect x="92" y="0" width="138" height="42" />
+        <rect x="230" y="0" width="80" height="42" />
+        <rect x="310" y="0" width="90" height="42" />
+        <rect x="0" y="42" width="68" height="50" />
+        <rect x="68" y="42" width="140" height="50" />
+        <rect x="208" y="42" width="110" height="50" />
+        <rect x="318" y="42" width="82" height="50" />
+        <rect x="0" y="92" width="120" height="42" />
+        <rect x="120" y="92" width="84" height="42" />
+        <rect x="204" y="92" width="116" height="42" />
+        <rect x="320" y="92" width="80" height="42" />
+      </g>
+      {/* Eight-legged Lolth sigil scratched between courses */}
+      <g stroke="#b53a3a" strokeWidth="1" fill="none" opacity="0.75">
+        <circle cx="200" cy="62" r="14" />
+        <line x1="200" y1="48" x2="200" y2="76" />
+        <line x1="186" y1="62" x2="214" y2="62" />
+        <line x1="190" y1="52" x2="210" y2="72" />
+        <line x1="210" y1="52" x2="190" y2="72" />
+        {/* Eight short leg-stubs around the circle */}
+        <line x1="200" y1="46" x2="200" y2="42" />
+        <line x1="214" y1="62" x2="218" y2="62" />
+        <line x1="200" y1="78" x2="200" y2="82" />
+        <line x1="186" y1="62" x2="182" y2="62" />
+        <line x1="190" y1="52" x2="186" y2="48" />
+        <line x1="210" y1="52" x2="214" y2="48" />
+        <line x1="210" y1="72" x2="214" y2="76" />
+        <line x1="190" y1="72" x2="186" y2="76" />
+      </g>
+      {/* Flanking spider-silk banners — long, gauzy, blood-trim */}
+      <rect x="58" y="0" width="14" height="72" fill="#1a0612" stroke="#06020a" strokeWidth="0.5" />
+      <polygon points="58,72 72,72 65,88" fill="#1a0612" stroke="#06020a" strokeWidth="0.5" />
+      <rect x="62" y="22" width="6" height="18" fill="#b53a3a" opacity="0.65" />
+      <rect x="328" y="0" width="14" height="72" fill="#1a0612" stroke="#06020a" strokeWidth="0.5" />
+      <polygon points="328,72 342,72 335,88" fill="#1a0612" stroke="#06020a" strokeWidth="0.5" />
+      <rect x="332" y="22" width="6" height="18" fill="#b53a3a" opacity="0.65" />
+      {/* Faerzress wall-flecks (sickly green and faint purple) */}
+      <g opacity="0.85">
+        <circle cx="36" cy="60" r="1.2" fill="#7cf0b0" />
+        <circle cx="118" cy="84" r="0.9" fill="#7cf0b0" />
+        <circle cx="158" cy="32" r="1.0" fill="#b78cff" />
+        <circle cx="246" cy="36" r="1.1" fill="#7cf0b0" />
+        <circle cx="284" cy="104" r="0.9" fill="#7cf0b0" />
+        <circle cx="362" cy="80" r="1.2" fill="#b78cff" />
+        <circle cx="380" cy="118" r="0.9" fill="#7cf0b0" />
+      </g>
+      {/* Webbing strung across the corner — drawn as thin straight strands */}
+      <g stroke="#dcdcf0" strokeWidth="0.4" opacity="0.35">
+        <line x1="0" y1="0" x2="56" y2="46" />
+        <line x1="0" y1="14" x2="44" y2="40" />
+        <line x1="0" y1="28" x2="36" y2="38" />
+        <line x1="400" y1="0" x2="344" y2="46" />
+        <line x1="400" y1="14" x2="356" y2="40" />
+        <line x1="400" y1="28" x2="364" y2="38" />
+      </g>
+      {/* Faerzress glow patches */}
+      <rect width="400" height="200" fill="url(#un-temple-glow)" />
+      <rect width="400" height="200" fill="url(#un-temple-glow-side)" />
+      {/* Floor seams */}
+      <rect x="0" y="170" width="400" height="30" fill="#04020a" />
+      <g stroke="#1a0a28" strokeWidth="0.4" opacity="0.55">
+        <line x1="0" y1="180" x2="400" y2="180" />
+        <line x1="60" y1="180" x2="44" y2="200" />
+        <line x1="140" y1="180" x2="128" y2="200" />
+        <line x1="220" y1="180" x2="220" y2="200" />
+        <line x1="300" y1="180" x2="316" y2="200" />
+        <line x1="372" y1="180" x2="390" y2="200" />
+      </g>
+      <rect width="400" height="200" fill="url(#un-temple-vignette)" />
+    </svg>
+  );
+}
+
+function UstNathaThroneBackdrop() {
+  // The Matron Mother's audience chamber. Deepest blue-violet, a raised
+  // egg-case throne silhouette, an enormous Lolth sigil glowing red on the
+  // back wall, eight-pronged candelabra on either side. Reads colder and
+  // older than the Magistrate's marble hall. Color-only per the brief.
+  return (
+    <svg
+      viewBox="0 0 400 200"
+      preserveAspectRatio="none"
+      className="absolute inset-0 w-full h-full"
+    >
+      <defs>
+        <linearGradient id="un-throne-wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0a0418" />
+          <stop offset="55%" stopColor="#180830" />
+          <stop offset="100%" stopColor="#04020a" />
+        </linearGradient>
+        <linearGradient id="un-throne-stone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#18082c" />
+          <stop offset="100%" stopColor="#06020c" />
+        </linearGradient>
+        <linearGradient id="un-throne-eggcase" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#2a142a" />
+          <stop offset="100%" stopColor="#0a0410" />
+        </linearGradient>
+        <radialGradient id="un-throne-sigil-glow" cx="0.5" cy="0.32" r="0.35">
+          <stop offset="0%" stopColor="#b53a3a" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#b53a3a" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="un-throne-vignette" cx="0.5" cy="0.5" r="0.6">
+          <stop offset="60%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.72" />
+        </radialGradient>
+      </defs>
+      <rect width="400" height="200" fill="url(#un-throne-wall)" />
+      {/* Basalt back-wall blocks */}
+      <g fill="url(#un-throne-stone)" stroke="#04020a" strokeWidth="0.6" opacity="0.92">
+        <rect x="0" y="0" width="110" height="44" />
+        <rect x="110" y="0" width="180" height="44" />
+        <rect x="290" y="0" width="110" height="44" />
+        <rect x="0" y="44" width="84" height="56" />
+        <rect x="84" y="44" width="232" height="56" />
+        <rect x="316" y="44" width="84" height="56" />
+      </g>
+      {/* Vaulted recess — pointed arch */}
+      <path d="M 110 100 L 110 48 Q 200 -8 290 48 L 290 100 Z" fill="#04020a" stroke="#3a1c4a" strokeWidth="1" />
+      <path d="M 122 50 Q 200 -4 278 50" fill="none" stroke="#4a2a64" strokeWidth="0.8" opacity="0.5" />
+      {/* Lolth sigil in the recess — circle, cross, X, eight leg-stubs */}
+      <circle cx="200" cy="46" r="22" fill="#1a0612" stroke="#b53a3a" strokeWidth="1.6" />
+      <circle cx="200" cy="46" r="14" fill="#06020a" stroke="#7a2828" strokeWidth="0.8" />
+      <g stroke="#b53a3a" strokeWidth="1" fill="none">
+        <line x1="200" y1="24" x2="200" y2="68" />
+        <line x1="178" y1="46" x2="222" y2="46" />
+        <line x1="184" y1="30" x2="216" y2="62" />
+        <line x1="216" y1="30" x2="184" y2="62" />
+        <line x1="200" y1="20" x2="200" y2="14" />
+        <line x1="200" y1="72" x2="200" y2="78" />
+        <line x1="174" y1="46" x2="168" y2="46" />
+        <line x1="226" y1="46" x2="232" y2="46" />
+        <line x1="182" y1="28" x2="178" y2="24" />
+        <line x1="218" y1="28" x2="222" y2="24" />
+        <line x1="182" y1="64" x2="178" y2="68" />
+        <line x1="218" y1="64" x2="222" y2="68" />
+      </g>
+      {/* Flanking eight-pronged candelabra — silhouettes with red flames */}
+      <g>
+        <rect x="58" y="68" width="3" height="70" fill="#10081a" />
+        <line x1="59" y1="80" x2="40" y2="68" stroke="#10081a" strokeWidth="1" />
+        <line x1="59" y1="80" x2="78" y2="68" stroke="#10081a" strokeWidth="1" />
+        <line x1="59" y1="92" x2="38" y2="84" stroke="#10081a" strokeWidth="1" />
+        <line x1="59" y1="92" x2="80" y2="84" stroke="#10081a" strokeWidth="1" />
+        <line x1="59" y1="104" x2="36" y2="100" stroke="#10081a" strokeWidth="1" />
+        <line x1="59" y1="104" x2="82" y2="100" stroke="#10081a" strokeWidth="1" />
+        <line x1="59" y1="116" x2="38" y2="118" stroke="#10081a" strokeWidth="1" />
+        <line x1="59" y1="116" x2="80" y2="118" stroke="#10081a" strokeWidth="1" />
+        {/* Eight little red flames */}
+        <circle cx="40" cy="66" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="78" cy="66" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="38" cy="82" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="80" cy="82" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="36" cy="98" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="82" cy="98" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="38" cy="116" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="80" cy="116" r="1.6" fill="#e85a3a" opacity="0.85" />
+      </g>
+      <g>
+        <rect x="339" y="68" width="3" height="70" fill="#10081a" />
+        <line x1="340" y1="80" x2="321" y2="68" stroke="#10081a" strokeWidth="1" />
+        <line x1="340" y1="80" x2="359" y2="68" stroke="#10081a" strokeWidth="1" />
+        <line x1="340" y1="92" x2="319" y2="84" stroke="#10081a" strokeWidth="1" />
+        <line x1="340" y1="92" x2="361" y2="84" stroke="#10081a" strokeWidth="1" />
+        <line x1="340" y1="104" x2="317" y2="100" stroke="#10081a" strokeWidth="1" />
+        <line x1="340" y1="104" x2="363" y2="100" stroke="#10081a" strokeWidth="1" />
+        <line x1="340" y1="116" x2="319" y2="118" stroke="#10081a" strokeWidth="1" />
+        <line x1="340" y1="116" x2="361" y2="118" stroke="#10081a" strokeWidth="1" />
+        <circle cx="321" cy="66" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="359" cy="66" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="319" cy="82" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="361" cy="82" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="317" cy="98" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="363" cy="98" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="319" cy="116" r="1.6" fill="#e85a3a" opacity="0.85" />
+        <circle cx="361" cy="116" r="1.6" fill="#e85a3a" opacity="0.85" />
+      </g>
+      {/* Matron's throne — a low egg-case silhouette */}
+      <polygon points="140,156 260,156 274,184 126,184" fill="url(#un-throne-eggcase)" stroke="#04020a" strokeWidth="1" />
+      <path
+        d="M 158 156 Q 200 96 242 156 Z"
+        fill="url(#un-throne-eggcase)"
+        stroke="#3a1c4a"
+        strokeWidth="0.8"
+      />
+      {/* Egg-case ridges */}
+      <g stroke="#3a1c4a" strokeWidth="0.5" fill="none" opacity="0.65">
+        <path d="M 168 150 Q 200 110 232 150" />
+        <path d="M 178 150 Q 200 124 222 150" />
+      </g>
+      {/* Heavy hanging webbing across the back of the alcove */}
+      <g stroke="#cccce0" strokeWidth="0.4" opacity="0.32">
+        <line x1="115" y1="48" x2="180" y2="78" />
+        <line x1="180" y1="78" x2="220" y2="78" />
+        <line x1="220" y1="78" x2="285" y2="48" />
+        <line x1="155" y1="56" x2="210" y2="86" />
+        <line x1="210" y1="86" x2="245" y2="56" />
+      </g>
+      {/* Faerzress wall-flecks (deep purple and a hint of green) */}
+      <g opacity="0.85">
+        <circle cx="98" cy="58" r="1.2" fill="#b78cff" />
+        <circle cx="124" cy="86" r="0.9" fill="#7cf0b0" />
+        <circle cx="296" cy="56" r="1.1" fill="#b78cff" />
+        <circle cx="276" cy="86" r="0.9" fill="#7cf0b0" />
+        <circle cx="22" cy="108" r="0.9" fill="#b78cff" />
+        <circle cx="378" cy="112" r="1.0" fill="#b78cff" />
+      </g>
+      {/* Sigil + red ambient glow */}
+      <rect width="400" height="200" fill="url(#un-throne-sigil-glow)" />
+      {/* Floor seams */}
+      <rect x="0" y="184" width="400" height="16" fill="#04020a" />
+      <g stroke="#3a1c4a" strokeWidth="0.4" opacity="0.5">
+        <line x1="0" y1="188" x2="400" y2="188" />
+        <line x1="60" y1="188" x2="60" y2="200" />
+        <line x1="140" y1="188" x2="140" y2="200" />
+        <line x1="220" y1="188" x2="220" y2="200" />
+        <line x1="300" y1="188" x2="300" y2="200" />
+        <line x1="360" y1="188" x2="360" y2="200" />
+      </g>
+      <rect width="400" height="200" fill="url(#un-throne-vignette)" />
+    </svg>
   );
 }
 

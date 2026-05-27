@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
-import { createGodwakeDelve, createSpellholdDelve } from '../../engine/delve';
+import { createGodwakeDelve, createSpellholdDelve, createUstNathaDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { playMusic, stopMusic } from '../../engine/audio';
@@ -11,6 +11,7 @@ import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
 
 const SPELLHOLD_RENOWN_GATE = 1500;
+const UST_NATHA_RENOWN_GATE = 3000;
 
 interface Building {
   id: string;
@@ -68,6 +69,19 @@ function buildingsFor(
       cta: 'Sail to Spellhold',
       lockedCta: 'Beyond your renown',
     });
+    // Ust Natha (Ch4) — the drow city beneath Amn. Same surface pattern as
+    // Spellhold: only appears after Ch1 clear, hard renown gate at 3000.
+    const ustNathaUnlocked = renown >= UST_NATHA_RENOWN_GATE;
+    buildings.push({
+      id: 'ust-natha',
+      name: 'Ust Natha',
+      description: ustNathaUnlocked
+        ? 'Coin and a charter buy you passage with the Cowled escorts who know the way down.'
+        : `A rumour at the docks of a slave-market deeper than the Underdark itself… Renown ${renown} / ${UST_NATHA_RENOWN_GATE}.`,
+      enabled: ustNathaUnlocked,
+      cta: 'Descend to Ust Natha',
+      lockedCta: 'Beyond your renown',
+    });
   }
   return buildings;
 }
@@ -107,6 +121,11 @@ export function HubScreen() {
 
   function handleSailToSpellhold() {
     const delve = createSpellholdDelve();
+    startDelve(delve);
+  }
+
+  function handleDescendToUstNatha() {
+    const delve = createUstNathaDelve();
     startDelve(delve);
   }
 
@@ -209,7 +228,9 @@ export function HubScreen() {
                     ? goToDruidGrove
                     : b.id === 'spellhold'
                       ? handleSailToSpellhold
-                      : undefined
+                      : b.id === 'ust-natha'
+                        ? handleDescendToUstNatha
+                        : undefined
               }
             >
               {b.enabled ? (b.cta ?? 'Enter') : (b.lockedCta ?? 'Coming soon')}

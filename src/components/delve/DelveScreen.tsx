@@ -48,6 +48,11 @@ function decorationForRoom(roomId: string, chapterId: string): BattlefieldDecora
     if (roomId === 'room-8') return 'spellhold-warden-chamber';
     return 'spellhold-corridor';
   }
+  if (chapterId === 'chapter-4') {
+    if (roomId === 'room-8') return 'ust-natha-throne';
+    if (roomId === 'room-7' || roomId === 'room-5') return 'ust-natha-temple';
+    return 'underdark-tunnel';
+  }
   switch (roomId) {
     case 'room-1':
     case 'room-3':

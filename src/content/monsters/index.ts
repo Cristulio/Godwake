@@ -26,6 +26,12 @@ import { HOLLOW_SAGE } from './hollow-sage';
 import { WARDENS_APPRENTICE } from './wardens-apprentice';
 import { SLAYER_HOUND } from './slayer-hound';
 import { ASYLUM_DIRECTOR } from './asylum-director';
+import { DROW_WARRIOR } from './drow-warrior';
+import { DROW_CROSSBOWMAN } from './drow-crossbowman';
+import { DRIDERLING } from './driderling';
+import { DRIDER } from './drider';
+import { MIND_FLAYER_FRAGMENT } from './mind-flayer-fragment';
+import { DROW_MATRON_MOTHER } from './drow-matron-mother';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -55,6 +61,12 @@ const ALL_MONSTERS: Monster[] = [
   WARDENS_APPRENTICE,
   SLAYER_HOUND,
   ASYLUM_DIRECTOR,
+  DROW_WARRIOR,
+  DROW_CROSSBOWMAN,
+  DRIDERLING,
+  DRIDER,
+  MIND_FLAYER_FRAGMENT,
+  DROW_MATRON_MOTHER,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -99,4 +111,10 @@ export {
   WARDENS_APPRENTICE,
   SLAYER_HOUND,
   ASYLUM_DIRECTOR,
+  DROW_WARRIOR,
+  DROW_CROSSBOWMAN,
+  DRIDERLING,
+  DRIDER,
+  MIND_FLAYER_FRAGMENT,
+  DROW_MATRON_MOTHER,
 };
