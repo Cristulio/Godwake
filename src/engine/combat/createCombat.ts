@@ -158,6 +158,18 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     });
   }
 
+  // Fighter: Second Wind refreshes at the start of every combat encounter.
+  // RAW it's once per short rest, but sim showed the Fighter dying at boss
+  // rooms (Magistrate, Director) with one stale Second Wind that couldn't
+  // close the gap on attrition fights. Per-encounter refresh mirrors the
+  // Rogue's Cunning Action cadence and gives the Fighter a real clutch heal
+  // in every fight. Action Surge stays on short-rest (still a "burst" button).
+  if (nextCharacter.classId === 'fighter') {
+    nextCharacter = patchResources(nextCharacter, {
+      secondWindAvailable: true,
+    });
+  }
+
   // Wizards walk into every fight already wrapped in Mage Armor (passive class
   // baseline — no slot cost, no action cost). Shield is per-combat reaction-
   // only, so clear stale state.
