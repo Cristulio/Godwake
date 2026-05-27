@@ -17,7 +17,7 @@ export const FIGHTER: Class = ClassSchema.parse({
     'perception',
     'survival',
   ],
-  subclassLevel: 3,
+  subclassLevel: 2,
   featuresByLevel: {
     '1': [
       {
@@ -42,8 +42,6 @@ export const FIGHTER: Class = ClassSchema.parse({
           'On your turn, you can take one additional action. Once per short or long rest.',
         mechanicKey: 'action-surge',
       },
-    ],
-    '3': [
       {
         id: 'martial-archetype',
         name: 'Martial Archetype',
@@ -103,7 +101,7 @@ export const FIGHTER: Class = ClassSchema.parse({
       name: 'Champion',
       description: 'A martial archetype focused on the raw physical power honed to deadly perfection.',
       featuresByLevel: {
-        '3': [
+        '2': [
           {
             id: 'improved-critical',
             name: 'Improved Critical',

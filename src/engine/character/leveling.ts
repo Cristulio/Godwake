@@ -10,7 +10,7 @@ import { wizardSpellSlotsForLevel } from './actions';
  * down from RAW so the current Ch1+Ch2 content can carry the cap raise
  * without forcing 6+ repeat delves. Index 0 = level 1 = 0 xp.
  */
-const XP_TABLE = [0, 300, 900, 2700, 6500, 9000, 13000, 18000] as const;
+const XP_TABLE = [0, 300, 900, 2700, 4500, 9000, 13000, 18000] as const;
 
 export const MAX_LEVEL = XP_TABLE.length;
 

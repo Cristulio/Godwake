@@ -93,9 +93,9 @@ describe('character derivation — human fighter', () => {
     expect(critRange(human)).toEqual([20]);
   });
 
-  it('Improved Critical kicks in at Champion level 3', () => {
-    const champion3 = { ...human, level: 3, subclassId: 'champion' };
-    expect(critRange(champion3)).toEqual([19, 20]);
+  it('Improved Critical kicks in at Champion level 2', () => {
+    const champion2 = { ...human, level: 2, subclassId: 'champion' };
+    expect(critRange(champion2)).toEqual([19, 20]);
   });
 
   it('Defense fighting style adds +1 AC when wearing armor', () => {
@@ -181,13 +181,13 @@ describe('character derivation — human fighter', () => {
   });
 
   it("Tempus's Edge stacks with Improved Critical", () => {
-    const champion3 = {
+    const champion2 = {
       ...human,
-      level: 3,
+      level: 2,
       subclassId: 'champion',
       blessings: ['tempus-edge'],
     };
     // Champion 19-20 + 1 → 18-20
-    expect(critRange(champion3)).toEqual([18, 19, 20]);
+    expect(critRange(champion2)).toEqual([18, 19, 20]);
   });
 });

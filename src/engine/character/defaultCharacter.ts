@@ -44,18 +44,18 @@ function startingKitFor(classId: ClassId): StartingKit {
       };
     }
     case 'rogue': {
-      const dagger: ItemRef = { itemId: 'dagger' };
+      const rapier: ItemRef = { itemId: 'rapier' };
       const leatherArmor: ItemRef = { itemId: 'leather-armor' };
       return {
         inventory: [
-          dagger,
+          rapier,
+          { itemId: 'dagger' },
           { itemId: 'shortbow' },
           leatherArmor,
           { itemId: 'potion-of-healing' },
-          { itemId: 'potion-of-healing' },
         ],
         equipped: {
-          mainHand: dagger,
+          mainHand: rapier,
           offHand: null,
           armor: leatherArmor,
         },
@@ -63,13 +63,10 @@ function startingKitFor(classId: ClassId): StartingKit {
       };
     }
     case 'wizard': {
-      // Wizards have no armor proficiency — they rely on Mage Armor when
-      // the situation warrants. A dagger covers the (rare) melee turn.
       const dagger: ItemRef = { itemId: 'dagger' };
       return {
         inventory: [
           dagger,
-          { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
         ],
         equipped: {

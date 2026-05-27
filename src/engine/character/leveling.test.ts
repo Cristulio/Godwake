@@ -22,11 +22,11 @@ describe('xpForLevel', () => {
   it('returns 0 for level 1', () => {
     expect(xpForLevel(1)).toBe(0);
   });
-  it('matches 5e thresholds for levels 2-5', () => {
+  it('matches tuned thresholds for levels 2-5 (L5 lowered for delve reachability)', () => {
     expect(xpForLevel(2)).toBe(300);
     expect(xpForLevel(3)).toBe(900);
     expect(xpForLevel(4)).toBe(2700);
-    expect(xpForLevel(5)).toBe(6500);
+    expect(xpForLevel(5)).toBe(4500);
   });
   it('uses tuned thresholds for levels 6-8', () => {
     expect(xpForLevel(6)).toBe(9000);
@@ -62,11 +62,9 @@ describe('applyLevelUp', () => {
     expect(next.resources.actionSurgeRemaining).toBe(1);
   });
 
-  it('auto-picks Champion subclass at level 3', () => {
+  it('auto-picks Champion subclass at level 2', () => {
     const l2 = applyLevelUp({ ...SIR_BRICK, xp: 300 });
-    expect(l2.subclassId).toBeNull();
-    const l3 = applyLevelUp({ ...l2, xp: 900 });
-    expect(l3.subclassId).toBe('champion');
+    expect(l2.subclassId).toBe('champion');
   });
 
   it('bumps hit dice in lockstep with level', () => {
