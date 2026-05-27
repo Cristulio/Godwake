@@ -368,6 +368,7 @@ export const useGameStore = create<GameState>()(
       resources: classStartingResources(ch.classId),
       blessings: [],
       delveAttackBonus: 0,
+      delveInitBonus: 0,
       nextAttackAdvantage: false,
       poisonImmuneEncounter: false,
       conditions: [],
@@ -435,6 +436,7 @@ export const useGameStore = create<GameState>()(
         renown: s.character.renown + renownGain,
         blessings: [],
         delveAttackBonus: 0,
+        delveInitBonus: 0,
       };
       const ch1Killed = s.delve.chapter1BossKilled === true;
       return {
@@ -473,6 +475,7 @@ export const useGameStore = create<GameState>()(
           blessings: [],
           conditions: [],
           delveAttackBonus: 0,
+          delveInitBonus: 0,
         },
         hasReincarnated: true,
       };
@@ -483,7 +486,7 @@ export const useGameStore = create<GameState>()(
       if (!s.character) return s;
       return {
         // Restore HP and rest, drop all delve rewards, wipe blessings + camp buffs.
-        character: longRest({ ...s.character, blessings: [], delveAttackBonus: 0 }),
+        character: longRest({ ...s.character, blessings: [], delveAttackBonus: 0, delveInitBonus: 0 }),
         delve: null,
         combat: null,
         screen: 'hub',

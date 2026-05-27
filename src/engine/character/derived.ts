@@ -135,7 +135,8 @@ export function initiativeModifier(character: Character): number {
     remarkableAthlete +
     (quirkMods.initiativeMod ?? 0) +
     (blessingMods.initiativeBonus ?? 0) +
-    (character.permanentInitBonus ?? 0)
+    (character.permanentInitBonus ?? 0) +
+    (character.delveInitBonus ?? 0)
   );
 }
 

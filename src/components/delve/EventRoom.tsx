@@ -1,0 +1,249 @@
+import { useMemo, useState } from 'react';
+import type { RoomSpec } from '../../types/delve';
+import { Panel } from '../ui/Panel';
+import { Button } from '../ui/Button';
+import { useGameStore } from '../../stores/gameStore';
+import { getActiveRoller } from '../../engine/dice';
+import { getEvent } from '../../content/events';
+import {
+  applyEventOutcome,
+  resolveChoiceOutcome,
+  type AppliedEffect,
+  type EventOutcomeResult,
+} from '../../engine/delve';
+import { playSfx } from '../../engine/audio';
+import type { EventChoice } from '../../schemas/event';
+
+interface EventRoomProps {
+  room: RoomSpec;
+  onContinue: () => void;
+  /** Called when an outcome demands a combat encounter (spawn_ambush). */
+  onAmbush: (monsterDefIds: string[]) => void;
+}
+
+interface ResolvedTurn {
+  choiceLabel: string;
+  result: EventOutcomeResult;
+}
+
+export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
+  const character = useGameStore((s) => s.character);
+  const setCharacter = useGameStore((s) => s.setCharacter);
+
+  const template = useMemo(() => {
+    if (!room.eventTemplateId) return null;
+    try {
+      return getEvent(room.eventTemplateId);
+    } catch {
+      return null;
+    }
+  }, [room.eventTemplateId]);
+
+  const [resolved, setResolved] = useState<ResolvedTurn | null>(null);
+
+  if (!character) return null;
+
+  if (!template) {
+    return (
+      <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
+        <Panel>
+          <p className="text-[var(--color-text-secondary)] text-sm">
+            Nothing of note here. The corridor goes on.
+          </p>
+        </Panel>
+        <div className="flex justify-center">
+          <Button variant="primary" onClick={onContinue}>
+            Continue Deeper →
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  function handlePick(choice: EventChoice) {
+    if (!character) return;
+    const roller = getActiveRoller();
+    const outcome = resolveChoiceOutcome(choice.outcome, roller);
+    const result = applyEventOutcome(character, outcome, roller);
+    setCharacter(result.character);
+    setResolved({ choiceLabel: choice.label, result });
+    playSfx('ui_click');
+  }
+
+  function handleContinue() {
+    if (!resolved) {
+      onContinue();
+      return;
+    }
+    if (resolved.result.ambush) {
+      onAmbush(resolved.result.ambush.monsterDefIds);
+      return;
+    }
+    onContinue();
+  }
+
+  return (
+    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(212,176,98,0.07),transparent_55%)]">
+      <header className="pb-3 border-b border-[var(--color-border-warm)]">
+        <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
+          {template.title.toUpperCase()}
+        </h1>
+        <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
+          Event · The road pauses
+        </p>
+      </header>
+
+      <Panel tone="warm" className="bg-gradient-to-br from-[#2d2418] to-[#221a14]">
+        <p className="text-[var(--color-text-secondary)] text-sm italic leading-relaxed">
+          {template.flavor}
+        </p>
+      </Panel>
+
+      {!resolved ? (
+        <>
+          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em] text-center">
+            ► Choose your road
+          </div>
+          <div className="flex flex-col gap-3">
+            {template.choices.map((choice) => (
+              <ChoiceButton
+                key={choice.id}
+                choice={choice}
+                gold={character.goldInPocket}
+                hp={character.hp.current}
+                onPick={() => handlePick(choice)}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <ResolutionPanel
+          choiceLabel={resolved.choiceLabel}
+          result={resolved.result}
+          onContinue={handleContinue}
+        />
+      )}
+    </div>
+  );
+}
+
+interface ChoiceButtonProps {
+  choice: EventChoice;
+  gold: number;
+  hp: number;
+  onPick: () => void;
+}
+
+function ChoiceButton({ choice, gold, hp, onPick }: ChoiceButtonProps) {
+  const goldShort =
+    choice.requiresGold !== undefined && gold < choice.requiresGold
+      ? `needs ${choice.requiresGold}g (you have ${gold})`
+      : null;
+  const hpShort =
+    choice.requiresHpAtLeast !== undefined && hp < choice.requiresHpAtLeast
+      ? `needs ${choice.requiresHpAtLeast} HP (you have ${hp})`
+      : null;
+  const disabledReason = goldShort ?? hpShort;
+  const disabled = disabledReason !== null;
+
+  return (
+    <button
+      type="button"
+      onClick={onPick}
+      disabled={disabled}
+      className={`
+        text-left p-4 border-2 transition-all
+        ${disabled
+          ? 'border-[var(--color-border-dim)] bg-[var(--color-bg-panel)]/40 cursor-not-allowed opacity-60'
+          : 'panel-etched-warm border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] hover:bg-[var(--color-bg-panel-hover)] cursor-pointer'}
+      `}
+    >
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
+          {choice.label}
+        </div>
+        {choice.requiresGold !== undefined && (
+          <div className="text-[var(--color-accent-gold)] text-xs uppercase tracking-widest shrink-0">
+            {choice.requiresGold}g
+          </div>
+        )}
+      </div>
+      {choice.hint && (
+        <div className="text-[var(--color-text-secondary)] text-xs italic mt-1">
+          {choice.hint}
+        </div>
+      )}
+      {disabled && (
+        <div className="text-[var(--color-accent-blood)] text-[10px] uppercase tracking-widest mt-2">
+          ✕ {disabledReason}
+        </div>
+      )}
+    </button>
+  );
+}
+
+interface ResolutionPanelProps {
+  choiceLabel: string;
+  result: EventOutcomeResult;
+  onContinue: () => void;
+}
+
+function ResolutionPanel({ choiceLabel, result, onContinue }: ResolutionPanelProps) {
+  const continueLabel = result.ambush ? 'Draw steel →' : 'Continue Deeper →';
+  return (
+    <div className="flex flex-col gap-4 animate-fade-in">
+      <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest text-center">
+        you chose · {choiceLabel}
+      </div>
+      <Panel tone="warm">
+        <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">
+          {result.resolution}
+        </p>
+        {result.effectsApplied.length > 0 && (
+          <ul className="mt-3 pt-3 border-t border-[var(--color-border-dim)] flex flex-col gap-1">
+            {result.effectsApplied.map((eff, idx) => (
+              <li
+                key={`${eff.kind}-${idx}`}
+                className={`text-xs uppercase tracking-widest font-mono ${toneForEffect(eff)}`}
+              >
+                · {eff.detail}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Panel>
+      <div className="flex justify-center">
+        <Button variant="primary" onClick={onContinue}>
+          {continueLabel}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function toneForEffect(eff: AppliedEffect): string {
+  switch (eff.kind) {
+    case 'hp_delta':
+      return eff.detail.includes('+')
+        ? 'text-[var(--color-status-poison)]'
+        : 'text-[var(--color-accent-blood)]';
+    case 'temp_hp':
+      return 'text-[var(--color-accent-amber)]';
+    case 'gold_delta':
+      return eff.detail.includes('+')
+        ? 'text-[var(--color-accent-gold)]'
+        : 'text-[var(--color-accent-blood)]';
+    case 'grant_blessing':
+    case 'grant_blessing_id':
+      return 'text-[var(--color-accent-amber)]';
+    case 'grant_quirk_reroll':
+      return 'text-[var(--color-text-secondary)]';
+    case 'apply_attack_bonus_run':
+    case 'init_bonus_run':
+      return 'text-[var(--color-accent-amber)]';
+    case 'spawn_ambush':
+      return 'text-[var(--color-accent-blood)]';
+    default:
+      return 'text-[var(--color-text-secondary)]';
+  }
+}

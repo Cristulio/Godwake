@@ -20,6 +20,8 @@ export interface RoomSpec {
   restType?: 'short' | 'long';
   /** XP awarded for clearing (combat + boss). */
   xpReward?: number;
+  /** Event rooms: which template to render. Resolved against `getEvent(id)`. */
+  eventTemplateId?: string;
 }
 
 export type DelvePhase = 'in-room' | 'between-rooms' | 'completed' | 'failed';

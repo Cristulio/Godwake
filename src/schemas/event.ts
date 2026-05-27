@@ -1,0 +1,52 @@
+import { z } from 'zod';
+
+export const EventEffectSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('hp_delta'), amount: z.number() }),
+  z.object({ kind: z.literal('temp_hp'), amount: z.number().positive() }),
+  z.object({ kind: z.literal('gold_delta'), amount: z.number() }),
+  z.object({ kind: z.literal('grant_blessing'), random: z.literal(true).optional() }),
+  z.object({ kind: z.literal('grant_blessing_id'), id: z.string() }),
+  z.object({ kind: z.literal('grant_quirk_reroll') }),
+  z.object({ kind: z.literal('apply_attack_bonus_run'), amount: z.number().positive() }),
+  z.object({ kind: z.literal('init_bonus_run'), amount: z.number().positive() }),
+  z.object({ kind: z.literal('spawn_ambush'), monsterDefIds: z.array(z.string()) }),
+]);
+export type EventEffect = z.infer<typeof EventEffectSchema>;
+
+export const EventOutcomeSchema = z.object({
+  resolution: z.string(),
+  effects: z.array(EventEffectSchema),
+});
+export type EventOutcome = z.infer<typeof EventOutcomeSchema>;
+
+export const EventChoiceOutcomeSchema = z.union([
+  EventOutcomeSchema,
+  z.object({
+    random: z.array(
+      z.object({
+        weight: z.number().positive(),
+        outcome: EventOutcomeSchema,
+      }),
+    ),
+  }),
+]);
+export type EventChoiceOutcome = z.infer<typeof EventChoiceOutcomeSchema>;
+
+export const EventChoiceSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  hint: z.string().optional(),
+  requiresGold: z.number().optional(),
+  requiresHpAtLeast: z.number().optional(),
+  outcome: EventChoiceOutcomeSchema,
+});
+export type EventChoice = z.infer<typeof EventChoiceSchema>;
+
+export const EventTemplateSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  flavor: z.string(),
+  minChapter: z.number().int().positive().optional(),
+  choices: z.array(EventChoiceSchema).min(2).max(3),
+});
+export type EventTemplate = z.infer<typeof EventTemplateSchema>;
