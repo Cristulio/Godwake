@@ -138,9 +138,9 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Goblin Warren',
     flavorText:
-      'Two goblins working a pulley pause and let it slam shut. A stirge drops from the rafters at the sound, looking for whatever they were trying to lift.',
+      'A goblin warden in scavenged half-plate leans on the pulley as if he owns the corridor. A stirge drops from the rafters at the sound of your boots, looking for whatever the warden has been bleeding for sport.',
     monsters: [
-      { defId: 'goblin', count: 2, displayPrefix: 'Goblin' },
+      { defId: 'goblin-warden', count: 1 },
       { defId: 'stirge', count: 1 },
     ],
     xpReward: 180,
@@ -196,10 +196,10 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Imp\'s Court',
     flavorText:
-      'The imp from earlier — or one just like it — is back, this time with two kobold conscripts scuttling at its heels like petty courtiers. It points imperiously, and the kobolds rush, eager to please their tiny tyrant.',
+      'The imp from earlier — or one just like it — is back, this time with a hobgoblin enforcer it has bribed into the role of bodyguard. It points imperiously; the hobgoblin sighs and obliges.',
     monsters: [
       { defId: 'imp', count: 1 },
-      { defId: 'kobold', count: 2, displayPrefix: 'Kobold' },
+      { defId: 'hobgoblin', count: 1 },
     ],
     xpReward: 264,
   },

@@ -153,24 +153,24 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Cult Vigil',
     flavorText:
-      "Two fanatics chant over a kneeling third — a hobgoblin sergeant bound at the wrist. The chant stops the second you cross the doorway. The sergeant gets up.",
+      "A fanatic chants over a kneeling hobgoblin sergeant bound at the wrist. The chant stops the second you cross the doorway. The sergeant gets up.",
     monsters: [
-      { defId: 'cult-fanatic', count: 2, displayPrefix: 'Fanatic' },
+      { defId: 'cult-fanatic', count: 1 },
       { defId: 'hobgoblin', count: 1 },
     ],
-    xpReward: 380,
-    goldReward: 18,
+    xpReward: 340,
+    goldReward: 16,
   },
   {
     title: 'The Stockade Run',
     flavorText:
-      "Two cuirassiers and a robed knife-bearer come through the gate at a controlled jog — the kind of formation a guild captain drills into a squad weekly.",
+      "A cuirassier and a robed knife-bearer come through the gate at a controlled jog — paired up by a guild captain who drills the formation weekly.",
     monsters: [
-      { defId: 'slaver-cuirassier', count: 2, displayPrefix: 'Cuirassier' },
+      { defId: 'slaver-cuirassier', count: 1 },
       { defId: 'cult-fanatic', count: 1 },
     ],
-    xpReward: 380,
-    goldReward: 26,
+    xpReward: 340,
+    goldReward: 22,
   },
   {
     title: 'The Captain and the Hound',
@@ -200,13 +200,13 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'A Cowled Audit',
     flavorText:
-      "A senior Cowled enforcer has been waiting for you — robe trim a shade lighter than the rest, mask polished to a mirror. A pair of cuirassiers flank her like clerks.",
+      "A senior Cowled enforcer has been waiting for you — robe trim a shade lighter than the rest, mask polished to a mirror. A cuirassier stands at her elbow like a clerk who knows where the ledgers are kept.",
     monsters: [
       { defId: 'cowled-enforcer', count: 1 },
-      { defId: 'slaver-cuirassier', count: 2, displayPrefix: 'Cuirassier' },
+      { defId: 'slaver-cuirassier', count: 1 },
     ],
-    xpReward: 500,
-    goldReward: 32,
+    xpReward: 460,
+    goldReward: 28,
   },
   {
     title: 'The Twin Cowls',
@@ -219,14 +219,13 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Black Carriage',
     flavorText:
-      "The carriage has stopped in the middle of the street and disgorged a robed cultist, a slaver cuirassier, and something that may once have been a man, tall and thin and silent.",
+      "The carriage has stopped in the middle of the street and disgorged a slaver cuirassier and something that may once have been a man — tall and thin and silent, the air going around it where it shouldn't.",
     monsters: [
-      { defId: 'cult-fanatic', count: 1 },
       { defId: 'slaver-cuirassier', count: 1 },
       { defId: 'shadow', count: 1 },
     ],
-    xpReward: 520,
-    goldReward: 28,
+    xpReward: 460,
+    goldReward: 24,
   },
   {
     title: 'The Rooftop Chase',
@@ -242,24 +241,23 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: "The Bandit Captain's Brace",
     flavorText:
-      "A bandit-captain has set himself at the lane's mouth with a cult-fanatic and a slaver-cuirassier flanking. They are paid in different coin by different masters, but they have agreed about today.",
+      "A bandit-captain has set himself at the lane's mouth with a slaver-cuirassier at his shoulder. They are paid in different coin by different masters, but they have agreed about today.",
     monsters: [
       { defId: 'bandit-captain', count: 1 },
-      { defId: 'cult-fanatic', count: 1 },
       { defId: 'slaver-cuirassier', count: 1 },
     ],
-    xpReward: 540,
-    goldReward: 38,
+    xpReward: 480,
+    goldReward: 32,
   },
   {
     title: 'The Cowled Kennel-Master',
     flavorText:
-      "A Cowled enforcer in silver-trim robes walks the lane with two shadow-hounds at heel. The hounds are not chained. The enforcer does not look at them.",
+      "A Cowled enforcer in silver-trim robes walks the lane with a shadow-hound at heel. The hound is not chained. The enforcer does not look at it.",
     monsters: [
       { defId: 'cowled-enforcer', count: 1 },
-      { defId: 'shadow-hound', count: 2, displayPrefix: 'Hound' },
+      { defId: 'shadow-hound', count: 1 },
     ],
-    xpReward: 520,
-    goldReward: 30,
+    xpReward: 470,
+    goldReward: 26,
   },
 ];

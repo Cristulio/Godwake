@@ -47,10 +47,10 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Cull-Brood',
     flavorText:
-      "Three driderlings round the corner abreast and stop dead — they have been hunting in formation since they hatched and they have just found something larger than the usual quarry. They confer with their forelegs, briefly. Then they come.",
-    monsters: [{ defId: 'driderling', count: 3, displayPrefix: 'Driderling' }],
-    xpReward: 340,
-    goldReward: 24,
+      "A driderling pair rounds the corner abreast and stops dead — they have been hunting in formation since they hatched and they have just found something larger than the usual quarry. They confer with their forelegs, briefly. Then they come.",
+    monsters: [{ defId: 'driderling', count: 2, displayPrefix: 'Driderling' }],
+    xpReward: 290,
+    goldReward: 20,
   },
   {
     title: "The Crossbow at the Turn",
@@ -88,10 +88,10 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Web-Mouth',
     flavorText:
-      "The corridor opens out into a side-cavern strung floor-to-ceiling with silk. A driderling pair drops from the rafters in unison; a third crawls up out of a hole in the floor between you. Lolth's children are most dangerous in threes.",
-    monsters: [{ defId: 'driderling', count: 3, displayPrefix: 'Driderling' }],
-    xpReward: 540,
-    goldReward: 30,
+      "The corridor opens out into a side-cavern strung floor-to-ceiling with silk. A driderling drops from the rafters; a larger one crawls up out of a hole in the floor between you. Lolth's children hunt best in matched pairs.",
+    monsters: [{ defId: 'driderling', count: 2, displayPrefix: 'Driderling' }],
+    xpReward: 460,
+    goldReward: 26,
   },
   {
     title: 'The Crossbow Pair',
@@ -104,13 +104,13 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Brood and Their Handler',
     flavorText:
-      "A drow warrior steps into the corridor with two driderlings at his heels — they have been bred from the same egg-sac he tends in the lower kennels. He whistles once and they fan out.",
+      "A drow warrior steps into the corridor with a driderling at his heel — bred from the egg-sac he tends in the lower kennels. He whistles once and the spider-thing fans out.",
     monsters: [
       { defId: 'drow-warrior', count: 1 },
-      { defId: 'driderling', count: 2, displayPrefix: 'Driderling' },
+      { defId: 'driderling', count: 1 },
     ],
-    xpReward: 600,
-    goldReward: 42,
+    xpReward: 520,
+    goldReward: 36,
   },
   {
     title: 'A Mind-Touched Drow',
@@ -153,24 +153,24 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Spider-Watch',
     flavorText:
-      "A drow warrior, a drow crossbowman, and a brace of driderlings — the standard temple-watch composition for this stretch of corridor. They are not the ones who patrol it. They are the ones who replace the patrol when the patrol fails to return.",
+      "A drow warrior and a driderling — the standard temple-watch composition for this stretch of corridor. They are not the ones who patrol it. They are the ones who replace the patrol when the patrol fails to return.",
     monsters: [
       { defId: 'drow-warrior', count: 1 },
-      { defId: 'driderling', count: 2, displayPrefix: 'Driderling' },
+      { defId: 'driderling', count: 1 },
     ],
-    xpReward: 700,
-    goldReward: 50,
+    xpReward: 600,
+    goldReward: 42,
   },
   {
     title: "The Drider's Brood",
     flavorText:
-      "A drider stands in the centre of the next chamber, and two of its own brood-driderlings flank it on the floor at its forelegs. The drider is not pleased to be acknowledged as their mother. She is also not denying it.",
+      "A drider stands in the centre of the next chamber, and one of its own brood-driderlings clings to the wall at its foreleg. The drider is not pleased to be acknowledged as a mother. She is also not denying it.",
     monsters: [
       { defId: 'drider', count: 1 },
-      { defId: 'driderling', count: 2, displayPrefix: 'Driderling' },
+      { defId: 'driderling', count: 1 },
     ],
-    xpReward: 740,
-    goldReward: 48,
+    xpReward: 660,
+    goldReward: 42,
   },
   {
     title: 'The Twin Crossbowmen',
@@ -219,46 +219,45 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Temple-Watch Pair',
     flavorText:
-      "Two drow warriors of the same House at the temple gate, scimitars drawn, mithral catching the bone-light. Between them, a single drider that the priestesses keep on a silver leash that is not, on closer look, actually attached to anything.",
+      "A drow warrior at the temple gate, scimitar drawn, mithral catching the bone-light. Behind him, a single drider that the priestesses keep on a silver leash that is not, on closer look, actually attached to anything.",
     monsters: [
-      { defId: 'drow-warrior', count: 2, displayPrefix: 'Warrior' },
+      { defId: 'drow-warrior', count: 1 },
       { defId: 'drider', count: 1 },
     ],
-    xpReward: 1040,
-    goldReward: 76,
+    xpReward: 920,
+    goldReward: 64,
   },
   {
     title: 'The Crossfire',
     flavorText:
-      "A drider in the rafters, two crossbowmen with bolts already wet and nocked at floor-level — the standard ambush composition for the corridor leading to the inner temple. They have done this before. The corridor has fresh bolt-scars on the walls from the last time.",
+      "A drider in the rafters, a crossbowman with a bolt already wet and nocked at floor-level — the standard ambush composition for the corridor leading to the inner temple. They have done this before. The corridor has fresh bolt-scars on the walls from the last time.",
     monsters: [
       { defId: 'drider', count: 1 },
-      { defId: 'drow-crossbowman', count: 2, displayPrefix: 'Crossbowman' },
+      { defId: 'drow-crossbowman', count: 1 },
     ],
-    xpReward: 1080,
-    goldReward: 80,
+    xpReward: 940,
+    goldReward: 68,
   },
   {
     title: 'The Fragment Among the Brood',
     flavorText:
-      "A mind flayer fragment stands at the head of a side-chamber and three driderlings are arranged below it in the obscene attentive crouch of things being studied. They look up at you together. The fragment does not need to.",
+      "A mind flayer fragment stands at the head of a side-chamber, a single driderling arranged below it in the obscene attentive crouch of a thing being studied. It looks up at you. The fragment does not need to.",
     monsters: [
       { defId: 'mind-flayer-fragment', count: 1 },
-      { defId: 'driderling', count: 3, displayPrefix: 'Driderling' },
+      { defId: 'driderling', count: 1 },
     ],
-    xpReward: 1100,
-    goldReward: 78,
+    xpReward: 920,
+    goldReward: 60,
   },
   {
     title: "The House-Watch in Full",
     flavorText:
-      "A drow warrior, a drow crossbowman, and a drider at the audience-arch — the full standard house-watch the Matron has assigned to this corridor since the last incident. The watch has been polishing for hours.",
+      "A drow crossbowman and a drider at the audience-arch — the lean watch the Matron leaves on this corridor between full patrols. The crossbowman has been polishing his bolts for hours.",
     monsters: [
-      { defId: 'drow-warrior', count: 1 },
       { defId: 'drow-crossbowman', count: 1 },
       { defId: 'drider', count: 1 },
     ],
-    xpReward: 1140,
-    goldReward: 86,
+    xpReward: 960,
+    goldReward: 72,
   },
 ];

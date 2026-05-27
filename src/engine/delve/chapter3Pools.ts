@@ -173,13 +173,13 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: "The Apprentice's Final",
     flavorText:
-      "A Warden's Apprentice stands at the end of the gallery with a stitched test-subject at either hand. This is her practical examination. The wardens grade in blood.",
+      "A Warden's Apprentice stands at the end of the gallery with a stitched test-subject at her hand. This is her practical examination. The wardens grade in blood.",
     monsters: [
       { defId: 'wardens-apprentice', count: 1 },
-      { defId: 'bonebound-test-subject', count: 2, displayPrefix: 'Subject' },
+      { defId: 'bonebound-test-subject', count: 1 },
     ],
-    xpReward: 620,
-    goldReward: 32,
+    xpReward: 560,
+    goldReward: 28,
   },
 ];
 
@@ -209,35 +209,34 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Test-Pit',
     flavorText:
-      "The Cowled Wizards have built a pit at the end of the gallery and the pit is currently in use — a Hollow Sage circles two stitched subjects like he's grading their gait.",
+      "The Cowled Wizards have built a pit at the end of the gallery and the pit is currently in use — a Hollow Sage circles a stitched subject like he's grading its gait.",
     monsters: [
       { defId: 'hollow-sage', count: 1 },
-      { defId: 'bonebound-test-subject', count: 2, displayPrefix: 'Subject' },
+      { defId: 'bonebound-test-subject', count: 1 },
     ],
-    xpReward: 780,
-    goldReward: 34,
+    xpReward: 720,
+    goldReward: 30,
   },
   {
     title: 'The Apprentice and Her Pack',
     flavorText:
-      "Two slayer hounds and the apprentice who trained them. She does not give them a command — they have been trained well enough that the command isn't necessary.",
+      "A slayer hound and the apprentice who trained it. She does not give it a command — it has been trained well enough that the command isn't necessary.",
     monsters: [
       { defId: 'wardens-apprentice', count: 1 },
-      { defId: 'slayer-hound', count: 2, displayPrefix: 'Hound' },
+      { defId: 'slayer-hound', count: 1 },
     ],
-    xpReward: 820,
-    goldReward: 44,
+    xpReward: 740,
+    goldReward: 38,
   },
   {
     title: "The Sages' Conference",
     flavorText:
-      "Two Hollow Sages stand at the head of the gallery either side of a Warden's Apprentice who is taking notes she will never get to file. All three turn together. The air widens.",
+      "Two Hollow Sages stand at the head of the gallery, facing the same direction. They turn together when they see you, and the still air between them widens until you can feel it on your teeth.",
     monsters: [
       { defId: 'hollow-sage', count: 2, displayPrefix: 'Sage' },
-      { defId: 'wardens-apprentice', count: 1 },
     ],
-    xpReward: 860,
-    goldReward: 48,
+    xpReward: 800,
+    goldReward: 42,
   },
   {
     title: 'The Examiner and His Subject',
