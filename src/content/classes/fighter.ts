@@ -87,6 +87,16 @@ export const FIGHTER: Class = ClassSchema.parse({
       },
     ],
   },
+  preset: {
+    characterName: 'Sir Brick',
+    recommendedRaceId: 'human',
+    // Standard array (15/14/13/12/10/8) tilted into STR/CON. With Human's
+    // +1-across the table reads 16/15/14/13/11/9 in the summary.
+    abilityScores: { str: 15, dex: 13, con: 14, int: 8, wis: 12, cha: 10 },
+    recommendedSkills: ['athletics', 'perception'],
+    flavorBlurb:
+      'A blunt instrument with a sword arm. Walks at the front, takes the first hit, lives to grumble about it.',
+  },
   subclasses: [
     {
       id: 'champion',
