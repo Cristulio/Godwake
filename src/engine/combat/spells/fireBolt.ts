@@ -1,6 +1,7 @@
 import type { Character } from '../../../types/character';
 import type { CombatState, CombatLogEntry } from '../../../types/combat';
-import { critRange } from '../../character/derived';
+import { critRange, effectiveAbilityScores } from '../../character/derived';
+import { abilityModifier } from '../../../types/abilities';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
 import {
@@ -56,7 +57,13 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
       die: 10,
       modifier: 0,
     });
-    const bonus = spellDamageBonus(nextCharacter);
+    // Fire Bolt adds the caster's INT modifier on hit — Eldritch-Blast-style
+    // floor. Without this the L1 wizard's only at-will action is 1d10 (avg
+    // 5.5) vs AC 13-15 mobs, and once the 2 starting slots burn through they
+    // can't keep up DPR. Sim showed median 2-room death at L1; the INT-mod
+    // bump (+3 with starting INT 16) lifts cantrip floor by ~55%.
+    const intMod = abilityModifier(effectiveAbilityScores(nextCharacter).int);
+    const bonus = spellDamageBonus(nextCharacter) + intMod;
     const total = damageRoll.total + bonus;
     const damaged = applyDamage(nextState, targetId, total, nextCharacter);
     nextState = damaged.state;

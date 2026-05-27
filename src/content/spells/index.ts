@@ -9,7 +9,7 @@ export const FIRE_BOLT: Spell = SpellSchema.parse({
   target: 'single',
   damageType: 'fire',
   description:
-    'A mote of fire streaks at one target you can see. On a hit, 1d10 fire damage.',
+    'A mote of fire streaks at one target you can see. On a hit, 1d10 + your Intelligence modifier as fire damage.',
   effectKey: 'fire-bolt',
 });
 
