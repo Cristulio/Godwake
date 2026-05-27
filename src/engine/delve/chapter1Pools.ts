@@ -31,35 +31,35 @@ export const WARMUP_POOL: EncounterEntry[] = [
     flavorText:
       'A goblin scout has been left to keep watch — and to die slow if it fails. It draws a chipped blade and grins all the way to its ears.',
     monsters: [{ defId: 'goblin', count: 1 }],
-    xpReward: 50,
+    xpReward: 60,
   },
   {
     title: 'The Iron Cells',
     flavorText:
       'A kobold skitters at the edge of the lantern light. Smaller than you, and meaner for it. The thing actually hisses.',
     monsters: [{ defId: 'kobold', count: 1 }],
-    xpReward: 40,
+    xpReward: 48,
   },
   {
     title: 'The Iron Cells',
     flavorText:
       'Bone clatters on stone — a skeleton rises from a heap of armor scraps. Whatever the master kept down here, he forgot to bury this one twice.',
     monsters: [{ defId: 'skeleton', count: 1 }],
-    xpReward: 50,
+    xpReward: 60,
   },
   {
     title: 'The Iron Cells',
     flavorText:
       'The rafters above are thick with shapes. One drops first, proboscis already drinking the air.',
     monsters: [{ defId: 'stirge', count: 1 }],
-    xpReward: 40,
+    xpReward: 48,
   },
   {
     title: 'The Iron Cells',
     flavorText:
       'A second corpse-shape pries itself out of the rubble at the corner. Older bones, harder bones — and a longer memory of being killed.',
     monsters: [{ defId: 'bone-stalker', count: 1 }],
-    xpReward: 60,
+    xpReward: 72,
   },
 ];
 
@@ -72,14 +72,14 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
       { defId: 'goblin', count: 1 },
       { defId: 'kobold', count: 1 },
     ],
-    xpReward: 90,
+    xpReward: 108,
   },
   {
     title: 'The Kobold Den',
     flavorText:
       'A pair of kobolds bicker over the corpse of something soft. They stop bickering when they see you.',
     monsters: [{ defId: 'kobold', count: 2, displayPrefix: 'Kobold' }],
-    xpReward: 80,
+    xpReward: 96,
   },
   {
     title: 'The Bone-Pit',
@@ -89,14 +89,14 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
       { defId: 'skeleton', count: 1 },
       { defId: 'stirge', count: 1 },
     ],
-    xpReward: 90,
+    xpReward: 108,
   },
   {
     title: 'The Dust-Choked Lab',
     flavorText:
       'A glass jar lies cracked on the bench, chalk-grey dust pouring out in the shape of a mephit. It opens its eyes as you cross the threshold.',
     monsters: [{ defId: 'dust-mephit', count: 1 }],
-    xpReward: 75,
+    xpReward: 90,
   },
   {
     title: 'The Tomb-Yard',
@@ -106,14 +106,14 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
       { defId: 'skeleton', count: 1 },
       { defId: 'bone-stalker', count: 1 },
     ],
-    xpReward: 95,
+    xpReward: 114,
   },
   {
     title: 'The Stirge Loft',
     flavorText:
       'Two stirges drop from the rafters in succession, the second a heartbeat behind the first — close enough that you cannot put steel to both without letting one feed.',
     monsters: [{ defId: 'stirge', count: 2, displayPrefix: 'Stirge' }],
-    xpReward: 80,
+    xpReward: 96,
   },
 ];
 
@@ -123,7 +123,7 @@ export const MID_POOL: EncounterEntry[] = [
     flavorText:
       'An empty harness stands sentinel in the next chamber. The plates ring like a bell as it pivots to face you — a faint green light moves where the eyes should be.',
     monsters: [{ defId: 'animated-armor', count: 1 }],
-    xpReward: 140,
+    xpReward: 168,
   },
   {
     title: 'The Tomb-Larder',
@@ -133,7 +133,7 @@ export const MID_POOL: EncounterEntry[] = [
       { defId: 'ghoul', count: 1 },
       { defId: 'skeleton', count: 1 },
     ],
-    xpReward: 160,
+    xpReward: 192,
   },
   {
     title: 'The Goblin Warren',
@@ -143,7 +143,7 @@ export const MID_POOL: EncounterEntry[] = [
       { defId: 'goblin', count: 2, displayPrefix: 'Goblin' },
       { defId: 'stirge', count: 1 },
     ],
-    xpReward: 150,
+    xpReward: 180,
   },
   {
     title: 'The Mephit Cages',
@@ -153,14 +153,14 @@ export const MID_POOL: EncounterEntry[] = [
       { defId: 'imp', count: 1 },
       { defId: 'dust-mephit', count: 1 },
     ],
-    xpReward: 170,
+    xpReward: 204,
   },
   {
     title: 'The Cracked Bell-Jar',
     flavorText:
       'The largest jar on the bench has gone the colour of old ledger paper from the inside, and the lid is sitting on the floor beside it. Something three times the size of the others is uncoiling out.',
     monsters: [{ defId: 'dust-mephit-elder', count: 1 }],
-    xpReward: 180,
+    xpReward: 216,
   },
   {
     title: "The Warden's Reserve",
@@ -170,7 +170,7 @@ export const MID_POOL: EncounterEntry[] = [
       { defId: 'goblin-warden', count: 1 },
       { defId: 'goblin', count: 1 },
     ],
-    xpReward: 160,
+    xpReward: 192,
   },
 ];
 
@@ -180,7 +180,7 @@ export const ELITE_POOL: EncounterEntry[] = [
     flavorText:
       'A side-chamber reeks of damp fur and old blood. A hulking goblinoid crouches over a pile of coin and scavenged trinkets. It hefts a spiked club and grunts a challenge.',
     monsters: [{ defId: 'bugbear', count: 1 }],
-    xpReward: 200,
+    xpReward: 240,
     goldReward: 35,
   },
   {
@@ -191,7 +191,7 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'hobgoblin', count: 1 },
       { defId: 'goblin', count: 1 },
     ],
-    xpReward: 180,
+    xpReward: 216,
   },
   {
     title: 'The Imp\'s Court',
@@ -201,7 +201,7 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'imp', count: 1 },
       { defId: 'kobold', count: 2, displayPrefix: 'Kobold' },
     ],
-    xpReward: 220,
+    xpReward: 264,
   },
   {
     title: 'The Sentinel & The Hunger',
@@ -211,7 +211,7 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'animated-armor', count: 1 },
       { defId: 'ghoul', count: 1 },
     ],
-    xpReward: 220,
+    xpReward: 264,
   },
   {
     title: 'The Hangman\'s Pit',
@@ -221,7 +221,7 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'bone-stalker', count: 1 },
       { defId: 'skeleton', count: 1 },
     ],
-    xpReward: 210,
+    xpReward: 252,
   },
   {
     title: 'The Master-at-Arms',
@@ -231,7 +231,7 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'goblin-warden', count: 1 },
       { defId: 'hobgoblin', count: 1 },
     ],
-    xpReward: 230,
+    xpReward: 276,
     goldReward: 18,
   },
   {
@@ -242,7 +242,7 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'bugbear', count: 1 },
       { defId: 'ghoul', count: 1 },
     ],
-    xpReward: 240,
+    xpReward: 288,
     goldReward: 28,
   },
 ];

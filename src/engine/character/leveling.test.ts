@@ -22,10 +22,10 @@ describe('xpForLevel', () => {
   it('returns 0 for level 1', () => {
     expect(xpForLevel(1)).toBe(0);
   });
-  it('matches tuned thresholds for levels 2-5 (L5 lowered for delve reachability)', () => {
+  it('matches tuned thresholds for levels 2-5 (L3/L4 lowered so caster unlocks reach mid-delve)', () => {
     expect(xpForLevel(2)).toBe(300);
-    expect(xpForLevel(3)).toBe(900);
-    expect(xpForLevel(4)).toBe(2700);
+    expect(xpForLevel(3)).toBe(600);
+    expect(xpForLevel(4)).toBe(2000);
     expect(xpForLevel(5)).toBe(4500);
   });
   it('uses tuned thresholds for levels 6-8', () => {
