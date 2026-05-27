@@ -1,23 +1,26 @@
 import { useEffect, useState } from 'react';
 import type { DelveState } from '../../types/delve';
 import { BlessingCard } from '../ui/BlessingCard';
+import { QuirkCard } from '../ui/QuirkCard';
 
 interface RoomHeaderProps {
   delve: DelveState;
   blessingIds?: string[];
+  quirkIds?: string[];
 }
 
 /**
- * A minimal breadcrumb showing only the dungeon's name. The total room count
- * is intentionally hidden — the player should not know how deep the delve
- * goes. The room's flavor title (shown in the combat header) is their only
- * spatial cue.
+ * Minimal breadcrumb. The total room count is intentionally hidden — the
+ * player should not know how deep the delve goes. The room's flavor title
+ * (shown in the combat header) is their only spatial cue.
  *
- * The blessings button is the player's any-time review surface during a
- * delve — they can pop it open from any room type to re-read their gifts.
+ * The Soul-marks button opens an any-time review of both quirks and
+ * blessings — the two persistent run-flavors the player can re-read from
+ * any room type without leaving.
  */
-export function RoomHeader({ delve, blessingIds = [] }: RoomHeaderProps) {
+export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeaderProps) {
   const [open, setOpen] = useState(false);
+  const total = blessingIds.length + quirkIds.length;
 
   useEffect(() => {
     if (!open) return;
@@ -31,10 +34,10 @@ export function RoomHeader({ delve, blessingIds = [] }: RoomHeaderProps) {
   return (
     <>
       <div className="flex items-center justify-between gap-3">
-        <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest">
+        <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
           {delve.dungeonName}
         </div>
-        {blessingIds.length > 0 && (
+        {total > 0 && (
           <button
             type="button"
             onClick={() => setOpen(true)}
@@ -42,10 +45,21 @@ export function RoomHeader({ delve, blessingIds = [] }: RoomHeaderProps) {
               border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)]
               hover:bg-[var(--color-bg-panel-hover)] hover:text-[var(--color-accent-amber)]
               text-[10px] uppercase tracking-widest font-bold px-2 py-1 transition-colors
+              flex items-center gap-2
             "
-            title="Show all active blessings"
+            title="Show all active quirks and blessings"
           >
-            ◆ Blessings ({blessingIds.length})
+            <span>◆ Soul-marks</span>
+            {quirkIds.length > 0 && (
+              <span className="text-[var(--color-accent-amber)]">
+                ◉ {quirkIds.length}
+              </span>
+            )}
+            {blessingIds.length > 0 && (
+              <span className="text-[var(--color-accent-gold)]">
+                ◇ {blessingIds.length}
+              </span>
+            )}
           </button>
         )}
       </div>
@@ -56,32 +70,59 @@ export function RoomHeader({ delve, blessingIds = [] }: RoomHeaderProps) {
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-gold)] max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            className="panel-etched-warm border-2 border-[var(--color-accent-gold)] max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-3 p-4 border-b border-[var(--color-border-warm)]">
               <div>
-                <h2 className="text-[var(--color-accent-amber)] text-lg uppercase tracking-widest">
-                  Active Blessings
+                <h2 className="font-display text-[var(--color-accent-amber)] text-base uppercase tracking-[0.2em]">
+                  ◆ Soul-marks
                 </h2>
-                <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
-                  Wiped at the next return to Phandalin
+                <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
+                  Quirks persist between lives · Blessings wipe at Phandalin
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-amber)] text-xs uppercase tracking-widest"
+                className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-amber)] text-xs uppercase tracking-widest transition-colors"
                 title="Close (Esc)"
               >
                 ✕ Close
               </button>
             </div>
-            <div className="p-4 flex flex-col gap-3">
-              {blessingIds.map((id) => (
-                <BlessingCard key={id} blessingId={id} />
-              ))}
-            </div>
+
+            {quirkIds.length > 0 && (
+              <div className="p-4 border-b border-[var(--color-border-dim)]">
+                <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
+                  <span>◉ Quirks</span>
+                  <span className="text-[var(--color-text-dim)]">
+                    · {quirkIds.length} mark{quirkIds.length === 1 ? '' : 's'} on the soul
+                  </span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {quirkIds.map((id) => (
+                    <QuirkCard key={id} quirkId={id} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {blessingIds.length > 0 && (
+              <div className="p-4">
+                <div className="font-display text-[var(--color-accent-gold)] text-[10px] uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
+                  <span>◇ Blessings</span>
+                  <span className="text-[var(--color-text-dim)]">
+                    · {blessingIds.length} gift{blessingIds.length === 1 ? '' : 's'} for the road
+                  </span>
+                </div>
+                <div className="flex flex-col gap-3">
+                  {blessingIds.map((id) => (
+                    <BlessingCard key={id} blessingId={id} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -43,7 +43,7 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
 
       <Panel className="w-full">
         <div className="grid grid-cols-4 gap-4 text-center">
-          <Stat label="Rooms Cleared" value={`${delve.roomsCleared} / ${delve.rooms.length}`} />
+          <Stat label="Rooms Cleared" value={String(delve.roomsCleared)} />
           <Stat label="Gold Earned" value={String(delve.goldEarned)} color="gold" />
           <Stat label="XP Earned" value={String(delve.xpEarned)} color="amber" />
           <Stat label={victorious ? 'Renown' : 'Renown (lost)'} value={`+${renownEarned}`} color="amber" />

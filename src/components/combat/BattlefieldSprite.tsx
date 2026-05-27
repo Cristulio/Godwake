@@ -82,11 +82,18 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
   const hpCurrent =
     props.kind === 'player' ? props.character.hp.current : props.instance.hp.current;
   const hpMax = props.kind === 'player' ? props.character.hp.max : props.instance.hp.max;
+  const hpTemp =
+    props.kind === 'player' ? props.character.hp.temp : props.instance.hp.temp;
   const ac = props.kind === 'player' ? computeAC(props.character) : props.instance.ac;
   const acVisible = props.kind === 'player' ? true : props.instance.acRevealed;
   const name = props.kind === 'player' ? props.character.name : props.instance.displayName;
   const dead = hpCurrent <= 0;
-  const hpPercent = (hpCurrent / hpMax) * 100;
+  // When temp HP is present, scale the bar against (max + temp) so the temp
+  // buffer reads as an extension of the bar instead of overlapping current.
+  const hpScale = hpMax + hpTemp;
+  const hpPercent = (hpCurrent / hpScale) * 100;
+  const tempPercent = (hpTemp / hpScale) * 100;
+  const healthRatio = hpCurrent / hpMax;
 
   const prevHp = useRef(hpCurrent);
   const [damageFloats, setDamageFloats] = useState<FloatingDamageItem[]>([]);
@@ -256,27 +263,41 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
           <span className="text-[var(--color-text-dim)] font-display text-[8px]">HP</span>
           <span className="text-[var(--color-text-primary)]">
             {hpCurrent}/{hpMax}
+            {hpTemp > 0 && (
+              <span
+                className="ml-0.5 text-[var(--color-accent-amber)]"
+                title={`+${hpTemp} temporary HP — absorbs damage first`}
+              >
+                +{hpTemp}
+              </span>
+            )}
           </span>
         </div>
-        <div className="h-2 bg-[var(--color-bg-deep)] border border-[var(--color-border-dim)] overflow-hidden relative">
+        <div className="h-2 bg-[var(--color-bg-deep)] border border-[var(--color-border-dim)] overflow-hidden relative flex">
           <div
             className={`h-full transition-all duration-500 ease-out ${
               props.kind === 'monster'
-                ? hpPercent > 50
+                ? healthRatio > 0.5
                   ? 'bg-gradient-to-r from-[var(--color-accent-blood)] to-[var(--color-accent-deep-blood)]'
                   : 'bg-gradient-to-r from-[var(--color-accent-deep-blood)] to-[var(--color-accent-blood)] animate-pulse'
-                : hpPercent > 50
+                : healthRatio > 0.5
                   ? 'bg-gradient-to-r from-[var(--color-status-poison)] to-[#5a8013]'
-                  : hpPercent > 25
+                  : healthRatio > 0.25
                     ? 'bg-gradient-to-r from-[var(--color-accent-amber)] to-[var(--color-accent-torch)]'
                     : 'bg-gradient-to-r from-[var(--color-accent-blood)] to-[var(--color-accent-deep-blood)] animate-pulse'
             }`}
             style={{ width: `${hpPercent}%` }}
           />
+          {hpTemp > 0 && (
+            <div
+              className="h-full bg-[var(--color-accent-amber)]/65 border-l border-[var(--color-bg-base)] transition-all duration-500 ease-out"
+              style={{ width: `${tempPercent}%` }}
+              title={`+${hpTemp} temporary HP`}
+            />
+          )}
           {/* Glossy shine on top half */}
           <div
             className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent pointer-events-none"
-            style={{ width: `${hpPercent}%` }}
           />
         </div>
         <div className="text-[10px] text-[var(--color-text-dim)] font-mono text-center">

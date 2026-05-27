@@ -177,7 +177,7 @@ export function DelveScreen() {
     return (
       <div className="flex flex-col">
         <div className="max-w-6xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
         </div>
         <CombatScreen
           character={character}
@@ -224,7 +224,7 @@ export function DelveScreen() {
     return (
       <div key={room.id} className="animate-room-enter">
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
         </div>
         <RestRoom room={room} onContinue={() => advanceRoom()} />
       </div>
@@ -235,7 +235,7 @@ export function DelveScreen() {
     return (
       <div key={room.id} className="animate-room-enter">
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
         </div>
         <TreasureRoom room={room} onContinue={() => advanceRoom()} />
       </div>
@@ -246,7 +246,7 @@ export function DelveScreen() {
     return (
       <div key={room.id} className="animate-room-enter">
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
         </div>
         <ShrineRoom room={room} onContinue={() => advanceRoom()} />
       </div>
@@ -257,7 +257,7 @@ export function DelveScreen() {
     return (
       <div key={room.id} className="animate-room-enter">
         <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} />
+          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
         </div>
         <CampRoom
           room={room}
