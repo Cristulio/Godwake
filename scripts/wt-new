@@ -12,9 +12,10 @@
 # named feat/<feature-name>, copies .claude/settings.local.json into it so
 # the new Claude session inherits permissions + shared memory, and (with
 # --launch) opens a new Claude session in the worktree. On iTerm2 the new
-# session splits into a pane of the current window (alternating split
-# direction by session count so a 4-way fan-out tiles into roughly even
-# panes); falls back to a new Terminal.app window if iTerm2 isn't installed.
+# session splits into a pane of the current window — always vertically,
+# so each new pane lands to the right of the existing strip (a 5-way
+# fan-out becomes 5 side-by-side columns). Falls back to a new
+# Terminal.app window if iTerm2 isn't installed.
 #
 # Pass --brief-file <path> to start the new Claude session with the file's
 # contents as the first user message — the agent reads the brief and gets
@@ -129,15 +130,15 @@ tell application "iTerm"
   else
     tell current window
       tell current tab
+        -- Always split vertically: each new pane lands to the right of the
+        -- current session. We target the LAST session in the tab (most
+        -- recently added) so successive spawns cascade rightward in a strip.
         set sessionCount to (count of sessions)
-        tell current session
-          if (sessionCount mod 2) is 0 then
-            set newSession to (split horizontally with default profile)
-          else
-            set newSession to (split vertically with default profile)
-          end if
-          tell newSession to write text "$LAUNCH_CMD"
+        set rightmostSession to (session sessionCount)
+        tell rightmostSession
+          set newSession to (split vertically with default profile)
         end tell
+        tell newSession to write text "$LAUNCH_CMD"
       end tell
     end tell
   end if
