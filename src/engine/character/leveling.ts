@@ -6,11 +6,12 @@ import { getRace } from '../../content/races';
 import { wizardSpellSlotsForLevel } from './actions';
 
 /**
- * XP-to-level table, capped at level 8. L1-L5 are 5e RAW; L6-L8 are tuned
- * down from RAW so the current Ch1+Ch2 content can carry the cap raise
- * without forcing 6+ repeat delves. Index 0 = level 1 = 0 xp.
+ * XP-to-level table, capped at level 8. L3 and L4 are pulled down from 5e
+ * RAW so caster L3 unlocks (Hold Person, Misty Step) reliably fire inside a
+ * Ch1+Ch2 chained delve — sim runs were dying before crossing 900 XP. L5+
+ * is the previously tuned curve. Index 0 = level 1 = 0 xp.
  */
-const XP_TABLE = [0, 300, 900, 2700, 4500, 9000, 13000, 18000] as const;
+const XP_TABLE = [0, 300, 600, 2000, 4500, 9000, 13000, 18000] as const;
 
 export const MAX_LEVEL = XP_TABLE.length;
 

@@ -96,11 +96,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const classBonusHp = ch.classId === 'wizard' ? 1 : 0;
     const permanentHpBonus = ch.permanentBonuses?.hp ?? 0;
     const baseHpMax = cls.hitDie + conMod + bonusHp + classBonusHp + permanentHpBonus;
+    // Coin in the Pocket seeds gold from a permanent bonus on the soul, not
+    // a delve-start mutation, so we add it after the run-scoped reset to 0.
+    const startingGold = ch.permanentBonuses?.startingGold ?? 0;
     const freshlyDescended: Character = {
       ...ch,
       level: 1,
       xp: 0,
-      goldInPocket: 0,
+      goldInPocket: startingGold,
       hp: { current: baseHpMax, max: baseHpMax, temp: 0 },
       hitDice: { current: 1, max: 1, die: cls.hitDie },
       resources: classStartingResources(ch.classId),
@@ -280,7 +283,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (!s.delve || !character) return;
-    const bonus = character.chapterClearGoldBonus ?? 0;
+    // Two sources stack: Quartermaster's Stipend (delveStart, top-level) and
+    // Coin in the Pocket's per-clear payout (permanent, permanentBonuses).
+    const bonus =
+      (character.chapterClearGoldBonus ?? 0) +
+      (character.permanentBonuses?.chapterClearGold ?? 0);
     if (bonus <= 0) return;
     charSlice.setCharacter({
       ...character,

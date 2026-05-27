@@ -276,7 +276,7 @@ const RAW: Upgrade[] = [
     flavor:
       'Mielikki burns a word into the back of your throat. Every spell tastes hotter on the way out.',
     effectAtRank: (r) => `+${r} damage to spells, permanent.`,
-    costForRank: (r) => rankCost(100, r),
+    costForRank: (r) => rankCost(140, r),
     maxRank: 5,
     apply: (c) => addPermanentBonus(c, 'spellDamage', 1),
     kind: 'permanent',
@@ -288,12 +288,16 @@ const RAW: Upgrade[] = [
     category: 'coin',
     name: 'Coin in the Pocket',
     flavor:
-      'The Grove keepers tuck a few coppers into the hem of your coat each time the Wellspring releases you.',
-    effectAtRank: (r) => `Start each delve with +${r * 25} gold.`,
+      'The Grove keepers tuck a few coppers into the hem of your coat each time the Wellspring releases you — and slip another purse to the quartermaster against the chapters you clear.',
+    effectAtRank: (r) =>
+      `Start each delve with +${r * 25} gold, and gain +${r * 5} gold each time a chapter boss falls.`,
     costForRank: (r) => rankCost(60, r),
     maxRank: 3,
-    apply: (c, rank) => ({ ...c, goldInPocket: c.goldInPocket + 25 * rank }),
-    kind: 'delveStart',
+    apply: (c) => {
+      const withStart = addPermanentBonus(c, 'startingGold', 25);
+      return addPermanentBonus(withStart, 'chapterClearGold', 5);
+    },
+    kind: 'permanent',
   },
   {
     id: 'mielikki-cache',
@@ -309,21 +313,6 @@ const RAW: Upgrade[] = [
         ...c.inventory,
         ...Array.from({ length: rank }, () => ({ itemId: 'potion-of-healing' })),
       ],
-    }),
-    kind: 'delveStart',
-  },
-  {
-    id: 'pinchpurse-insurance',
-    category: 'coin',
-    name: 'Pinchpurse Insurance',
-    flavor:
-      'An old keeper presses a knot of coins into your hand. "For when the wheel comes around lean," she says, and will not take it back.',
-    effectAtRank: (r) => `Start each delve with at least ${10 * r} gold (floor).`,
-    costForRank: (r) => rankCost(80, r),
-    maxRank: 4,
-    apply: (c, rank) => ({
-      ...c,
-      goldInPocket: Math.max(c.goldInPocket, 10 * rank),
     }),
     kind: 'delveStart',
   },
@@ -395,7 +384,7 @@ const RAW: Upgrade[] = [
     flavor:
       'A node of the Wellspring set behind your sternum. Spells take aim a little surer.',
     effectAtRank: (r) => `+${r} to spell attack rolls, permanent.`,
-    costForRank: (r) => rankCost(140, r),
+    costForRank: (r) => rankCost(100, r),
     maxRank: 3,
     apply: (c) => addPermanentBonus(c, 'spellAttack', 1),
     kind: 'permanent',

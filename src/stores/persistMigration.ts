@@ -6,8 +6,13 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *  v1 → v2: unlockedUpgrades array → record, permanentHpBonus re-derived, etc.
  *  v2 → v3: top-level `permanentXxxBonus` fields folded into one
  *           `permanentBonuses: { ac, init, attack, ... }` nested object.
+ *  v3 → v4: coin-in-pocket flipped from delveStart to permanent; backfill
+ *           startingGold/chapterClearGold on existing saves. Pinchpurse
+ *           Insurance was deleted; drop its rank entry (renown is not
+ *           refunded — the upgrade was non-decisional and Coin in the
+ *           Pocket now dominates that slot).
  */
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -85,6 +90,19 @@ export function migrateCharacter(
     }
   }
 
+  // v3 → v4: Coin in the Pocket switched from delveStart to permanent. Pre-v4
+  // owners have the rank but no baked-in bonus, so applyPermanentUpgrade was
+  // never called for them. Backfill from the rank so the upgrade keeps
+  // working on load.
+  if (folded.startingGold === undefined && folded.chapterClearGold === undefined) {
+    const coinRank = unlockedUpgrades['coin-in-pocket'] ?? 0;
+    if (coinRank > 0) {
+      folded.startingGold = coinRank * 25;
+      folded.chapterClearGold = coinRank * 5;
+      anyFolded = true;
+    }
+  }
+
   if (anyFolded || c.permanentBonuses) {
     c.permanentBonuses = folded;
   }
@@ -125,6 +143,14 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
 
   // 1. unlockedUpgrades: array → record
   const unlockedUpgrades = migrateUnlockedUpgrades(state.unlockedUpgrades);
+  // v3 → v4: Pinchpurse Insurance was consolidated into Coin in the Pocket.
+  // Drop the obsolete rank entry so applyDelveStartUpgrades doesn't iterate
+  // a now-undefined upgrade. Renown spent on it is not refunded — the
+  // upgrade was a non-decision next to Coin in the Pocket and we'd rather
+  // ship clean than over-correct.
+  if ('pinchpurse-insurance' in unlockedUpgrades) {
+    delete unlockedUpgrades['pinchpurse-insurance'];
+  }
   state.unlockedUpgrades = unlockedUpgrades;
 
   // 2. Character normalization (defaults new optional fields).

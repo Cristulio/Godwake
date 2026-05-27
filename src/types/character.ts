@@ -152,6 +152,10 @@ export interface Character {
     cunningAction?: number;
     /** Rogue Knife in the Dark: +N bonus Sneak Attack dice. */
     sneakAttackDice?: number;
+    /** Coin in the Pocket: seed gold at delve start. Read by delveStore.startDelve. */
+    startingGold?: number;
+    /** Coin in the Pocket: gold credited each time a chapter boss falls. Read by creditChapterClearGold (stacks with Quartermaster's Stipend's `chapterClearGoldBonus`). */
+    chapterClearGold?: number;
   };
   /**
    * Extra attunement slots above the default. Bumped by Sage's Pact. The cap
