@@ -3,26 +3,25 @@ import type { DiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
 
 /**
- * Gold dropped by a monster when killed, scaled to its CR. Bands tuned so a
- * full delve clear yields meaningful (but not save-breaking) coin: a Ch1
- * room of three CR-1/4 mobs drops ~10-20 gp, a CR-2 boss like Ilyich drops
- * ~20-30, a Ch4 Matron Mother (CR 6) drops ~120.
+ * Gold dropped by a monster when killed, scaled to its CR. Tuned for a
+ * Slay-the-Spire feel: every kill funds something, a normal Ch1 clear
+ * affords ~1-2 mid-tier shop items, and a boss kill funds a real visit
+ * without trivializing the shop. A CR-2 boss like Ilyich drops ~24-60
+ * (avg ~42), a Ch4 Matron Mother (CR 6) drops ~230.
  *
  * Returns a roll-result so combat logs can show the math.
  */
 export function rollGoldDropForMonster(roller: DiceRoller, monster: Monster): number {
-  // CR string → midpoint of a small range. We roll a tiny variance dice so
-  // the same monster doesn't always drop the same amount.
   const cr = parseCr(monster.cr);
-  if (cr <= 0.125) return roller.roll('1d4+1').total; // CR 1/8
-  if (cr <= 0.25) return roller.roll('1d4+2').total; // CR 1/4
-  if (cr <= 0.5) return roller.roll('1d6+3').total; // CR 1/2
-  if (cr <= 1) return roller.roll('2d6+4').total; // CR 1
-  if (cr <= 2) return roller.roll('2d8+8').total; // CR 2 — ~10-24 (avg 17)
-  if (cr <= 3) return roller.roll('3d8+12').total; // CR 3 — ~15-36 (avg 25)
-  if (cr <= 4) return roller.roll('3d10+18').total; // CR 4 — ~21-48 (avg 35)
-  if (cr <= 5) return roller.roll('4d10+30').total; // CR 5 — ~34-70 (avg 52)
-  return roller.roll('5d12+60').total; // CR 6+ — ~65-120 (avg 92)
+  if (cr <= 0.125) return roller.roll('1d4+3').total; // CR 1/8 — ~4-7 (avg 5.5)
+  if (cr <= 0.25) return roller.roll('1d6+4').total; // CR 1/4 — ~5-10 (avg 7.5)
+  if (cr <= 0.5) return roller.roll('2d6+6').total; // CR 1/2 — ~8-18 (avg 13)
+  if (cr <= 1) return roller.roll('3d8+8').total; // CR 1 — ~11-32 (avg 21.5)
+  if (cr <= 2) return roller.roll('4d10+20').total; // CR 2 — ~24-60 (avg 42)
+  if (cr <= 3) return roller.roll('4d10+40').total; // CR 3 — ~44-80 (avg 62)
+  if (cr <= 4) return roller.roll('5d12+55').total; // CR 4 — ~60-115 (avg 87.5)
+  if (cr <= 5) return roller.roll('6d12+90').total; // CR 5 — ~96-162 (avg 129)
+  return roller.roll('10d12+165').total; // CR 6+ — ~175-285 (avg 230)
 }
 
 function parseCr(crStr: string): number {
