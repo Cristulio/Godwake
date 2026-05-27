@@ -37,6 +37,7 @@ export interface AttackContext {
 
 // CombatActionResult + combatResult helper moved to ./types.ts
 import { combatResult, type CombatActionResult } from './types';
+import { appendLog } from './log';
 export type { CombatActionResult } from './types';
 
 function nextLogId(state: CombatState): number {
@@ -84,17 +85,11 @@ export function applyDamage(state: CombatState, targetId: string, amount: number
 
     if (wouldFall && tryConsumeStabilise(character)) {
       character.hp = { ...character.hp, temp: remainingTemp, current: 1 };
-      next = {
-        ...next,
-        log: [
-          ...next.log,
-          {
-            id: next.log.length + 1,
-            kind: 'system',
-            text: `${character.name} is on death's door — Ilmater's grip holds. Stabilised at 1 HP.`,
-          },
-        ],
-      };
+      next = appendLog(next, {
+        id: next.log.length + 1,
+        kind: 'system',
+        text: `${character.name} is on death's door — Ilmater's grip holds. Stabilised at 1 HP.`,
+      });
     } else {
       character.hp = {
         ...character.hp,
@@ -137,25 +132,17 @@ function evaluateCombatEnd(state: CombatState, character: Character): CombatStat
     // Combat resolved — clear per-encounter flags so they don't bleed into
     // the next room.
     if (character.poisonImmuneEncounter) character.poisonImmuneEncounter = false;
-    return {
-      ...state,
-      status: 'player-victory',
-      log: [
-        ...state.log,
-        { id: nextLogId(state), kind: 'system', text: 'Victory. The room falls silent.' },
-      ],
-    };
+    return appendLog(
+      { ...state, status: 'player-victory' },
+      { id: nextLogId(state), kind: 'system', text: 'Victory. The room falls silent.' },
+    );
   }
   if (character.hp.current <= 0) {
     if (character.poisonImmuneEncounter) character.poisonImmuneEncounter = false;
-    return {
-      ...state,
-      status: 'player-defeat',
-      log: [
-        ...state.log,
-        { id: nextLogId(state), kind: 'system', text: 'You have fallen.' },
-      ],
-    };
+    return appendLog(
+      { ...state, status: 'player-defeat' },
+      { id: nextLogId(state), kind: 'system', text: 'You have fallen.' },
+    );
   }
   return state;
 }
@@ -268,19 +255,21 @@ export function playerAttack(
     crit,
   };
 
-  let nextState: CombatState = {
-    ...state,
-    // The player has now made an attack roll against this monster, so its AC
-    // becomes "known" — UI can reveal it.
-    combatants: state.combatants.map((c) => {
-      if (c.kind !== 'monster' || c.id !== targetId) return c;
-      if (c.instance.acRevealed) return c;
-      return { ...c, instance: { ...c.instance, acRevealed: true } };
-    }),
-    log: [...state.log, ...logEntries],
-    lastAttack: attackEvent,
-    attackEventCounter: attackEvent.id,
-  };
+  let nextState: CombatState = appendLog(
+    {
+      ...state,
+      // The player has now made an attack roll against this monster, so its AC
+      // becomes "known" — UI can reveal it.
+      combatants: state.combatants.map((c) => {
+        if (c.kind !== 'monster' || c.id !== targetId) return c;
+        if (c.instance.acRevealed) return c;
+        return { ...c, instance: { ...c.instance, acRevealed: true } };
+      }),
+      lastAttack: attackEvent,
+      attackEventCounter: attackEvent.id,
+    },
+    ...logEntries,
+  );
 
   let sneakAttackFiredFlag = false;
   if (hit) {
@@ -349,17 +338,11 @@ export function playerAttack(
     if (bonusDamage !== 0) {
       equation.push(`${bonusDamage > 0 ? '+' : ''}${bonusDamage}`);
     }
-    nextState = {
-      ...nextState,
-      log: [
-        ...nextState.log,
-        {
-          id: nextLogId(nextState),
-          kind: 'damage',
-          text: `Damage: ${equation.join(' ')} = ${totalDamage} ${weapon.damageType}${bonusSuffix}.`,
-        },
-      ],
-    };
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'damage',
+      text: `Damage: ${equation.join(' ')} = ${totalDamage} ${weapon.damageType}${bonusSuffix}.`,
+    });
   }
 
   // Mark action used for the player
@@ -426,10 +409,22 @@ export function monsterAttack(
             ? { ...c, duration: { kind: 'rounds' as const, value: next } }
             : c,
         );
-    return combatResult({
-      ...state,
-      log: [
-        ...state.log,
+    return combatResult(
+      appendLog(
+        {
+          ...state,
+          combatants: state.combatants.map((c) => {
+            if (c.id !== attackerId || c.kind !== 'monster') return c;
+            return {
+              ...c,
+              instance: {
+                ...c.instance,
+                conditions: updatedConditions,
+                actionEconomy: { ...c.instance.actionEconomy, actionUsed: true },
+              },
+            };
+          }),
+        },
         {
           id: nextLogId(state),
           kind: 'system',
@@ -437,19 +432,9 @@ export function monsterAttack(
             ? `${attacker.instance.displayName} shakes off the binding.`
             : `${attacker.instance.displayName} is paralyzed — the turn is lost.`,
         },
-      ],
-      combatants: state.combatants.map((c) => {
-        if (c.id !== attackerId || c.kind !== 'monster') return c;
-        return {
-          ...c,
-          instance: {
-            ...c.instance,
-            conditions: updatedConditions,
-            actionEconomy: { ...c.instance.actionEconomy, actionUsed: true },
-          },
-        };
-      }),
-    }, character);
+      ),
+      character,
+    );
   }
 
   const monsterDef = getMonster(attacker.instance.defId);
@@ -485,17 +470,11 @@ export function monsterAttack(
     hasBattleRage && bloodied && !attacker.instance.bossRageActive;
   if (enteringRage) {
     workingState = setBossRageActive(workingState, attackerId);
-    workingState = {
-      ...workingState,
-      log: [
-        ...workingState.log,
-        {
-          id: nextLogId(workingState),
-          kind: 'system',
-          text: `${attacker.instance.displayName} enters Battle Rage — advantage on attacks, +2 damage.`,
-        },
-      ],
-    };
+    workingState = appendLog(workingState, {
+      id: nextLogId(workingState),
+      kind: 'system',
+      text: `${attacker.instance.displayName} enters Battle Rage — advantage on attacks, +2 damage.`,
+    });
   }
   const raging =
     hasBattleRage && (enteringRage || attacker.instance.bossRageActive === true);
@@ -535,12 +514,14 @@ export function monsterAttack(
     crit,
   };
 
-  let nextState: CombatState = {
-    ...workingState,
-    log: [...workingState.log, ...logEntries],
-    lastAttack: attackEvent,
-    attackEventCounter: attackEvent.id,
-  };
+  let nextState: CombatState = appendLog(
+    {
+      ...workingState,
+      lastAttack: attackEvent,
+      attackEventCounter: attackEvent.id,
+    },
+    ...logEntries,
+  );
 
   if (hit) {
     const damageExpr = parseDiceExpression(action.damage);
@@ -577,17 +558,11 @@ export function monsterAttack(
       : resisted
         ? `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} → halved (${action.damageType} resistance) = ${totalDamage} ${action.damageType}.`
         : `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} = ${totalDamage} ${action.damageType}.`;
-    nextState = {
-      ...nextState,
-      log: [
-        ...nextState.log,
-        {
-          id: nextLogId(nextState),
-          kind: 'damage',
-          text: damageLine,
-        },
-      ],
-    };
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'damage',
+      text: damageLine,
+    });
   }
 
   // Mark monster's action used
@@ -674,10 +649,7 @@ function monsterCastParalyze(
     });
   }
 
-  let nextState: CombatState = {
-    ...state,
-    log: [...state.log, ...logEntries],
-  };
+  let nextState: CombatState = appendLog(state, ...logEntries);
   const spellEffectId = (nextState.spellEffectCounter ?? 0) + 1;
   nextState = {
     ...nextState,

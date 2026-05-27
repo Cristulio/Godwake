@@ -14,6 +14,13 @@ import { characterBlessingMods } from '../character/blessings';
 import { rogueCunningActionMax } from '../character/actions';
 import { getMonster } from '../../content/monsters';
 
+/**
+ * Max entries retained in CombatState.log. The renderer (CombatLog.tsx) tails
+ * the last 80 for display; this cap protects engine memory and the persisted
+ * save blob during long fights where hundreds of entries could accumulate.
+ */
+export const MAX_COMBAT_LOG = 200;
+
 let monsterInstanceCounter = 0;
 
 function nextMonsterInstanceId(defId: string): string {
