@@ -65,13 +65,6 @@ export const WARMUP_POOL: EncounterEntry[] = [
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
   {
-    title: 'The Iron Cells',
-    flavorText:
-      'A grey-furred hobgoblin lieutenant has been left at the cell-mouth as a checkpoint. He does not bother to call you halt — he hefts his blade and waits.',
-    monsters: [{ defId: 'hobgoblin', count: 1 }],
-    xpReward: 60,
-  },
-  {
     title: 'The Watch Post',
     flavorText:
       'Two pairs of yellow eyes — a goblin and a smaller kobold conscript backing it. They split as they come, hoping you only see one.',
