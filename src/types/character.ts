@@ -195,6 +195,20 @@ export interface Character {
    */
   nextAttackAdvantage?: boolean;
   /**
+   * One-shot +N bonus added to the player's next attack roll. Set by Rogue's
+   * Cunning Action: Dash (sprint-in momentum) — engine has no movement system,
+   * so Dash pays out as next-strike accuracy. Consumed on the actual attack
+   * roll, hit or miss. Stacks with nextAttackAdvantage.
+   */
+  nextAttackBonus?: number;
+  /**
+   * One-shot damage reduction applied to the next incoming hit on the player.
+   * Set by Rogue's Cunning Action: Disengage (twisting out of the way). Read
+   * and cleared inside applyDamage. Subtracts from raw damage before temp HP
+   * absorbs the rest; can reduce a hit to 0 but not below.
+   */
+  incomingDamageReduction?: number;
+  /**
    * Per-combat poison immunity. Set true when the player drinks Antitoxin;
    * cleared in combat resolution (player-victory or player-defeat). Stacks
    * with the Iron Stomach quirk's permanent immunity — either is enough.

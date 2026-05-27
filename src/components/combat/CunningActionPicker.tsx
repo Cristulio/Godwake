@@ -15,12 +15,12 @@ const OPTIONS: Array<{ choice: CunningActionChoice; label: string; blurb: string
   {
     choice: 'disengage',
     label: 'Disengage',
-    blurb: 'Step back from the swing. Gain 3 temporary HP to soak the next blow.',
+    blurb: 'Twist out of the way. The next incoming hit deals 2 less damage.',
   },
   {
     choice: 'dash',
     label: 'Dash',
-    blurb: 'Reposition across the room. Pure footwork — no other effect.',
+    blurb: 'Sprint into reach. Your next attack rolls with +2.',
   },
 ];
 
