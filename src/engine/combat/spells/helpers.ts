@@ -40,7 +40,7 @@ export function spellAttackBonus(character: Character): number {
   return (
     abilityModifier(scores.int) +
     proficiencyBonus(character.level) +
-    (character.permanentSpellAttackBonus ?? 0)
+    (character.permanentBonuses?.spellAttack ?? 0)
   );
 }
 
@@ -55,12 +55,12 @@ export function spellSaveDC(character: Character): number {
     abilityModifier(scores.int) +
     proficiencyBonus(character.level) +
     classBonus +
-    (character.permanentSpellDcBonus ?? 0)
+    (character.permanentBonuses?.spellDc ?? 0)
   );
 }
 
 export function spellDamageBonus(character: Character): number {
-  return character.permanentSpellDamageBonus ?? 0;
+  return character.permanentBonuses?.spellDamage ?? 0;
 }
 
 export function attachSpellEffect(

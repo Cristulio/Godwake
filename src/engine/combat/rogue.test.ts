@@ -86,13 +86,13 @@ describe('Rogue — Sneak Attack scaling in combat', () => {
   });
 });
 
-describe('Rogue — Knife in the Dark (permanentSneakAttackDiceBonus)', () => {
+describe('Rogue — Knife in the Dark (permanentBonuses.sneakAttackDice)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
   function fireSneakAtLevelWithBonus(level: number, bonus: number): string | undefined {
     for (let seed = 1; seed <= 120; seed++) {
       const goblin = getMonster('goblin');
-      const rogue = makeRogue({ level, permanentSneakAttackDiceBonus: bonus });
+      const rogue = makeRogue({ level, permanentBonuses: { sneakAttackDice: bonus } });
       const roller = createDiceRoller(seed);
       let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
       state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;

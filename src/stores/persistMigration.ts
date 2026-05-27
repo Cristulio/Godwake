@@ -1,8 +1,13 @@
 import type { Character } from '../types/character';
 import type { UnlockedUpgrades } from '../engine/character/upgrades';
 
-/** Current persisted save shape version. Bumped from 1 → 2 in this PR. */
-export const SAVE_VERSION = 2;
+/**
+ * Current persisted save shape version.
+ *  v1 → v2: unlockedUpgrades array → record, permanentHpBonus re-derived, etc.
+ *  v2 → v3: top-level `permanentXxxBonus` fields folded into one
+ *           `permanentBonuses: { ac, init, attack, ... }` nested object.
+ */
+export const SAVE_VERSION = 3;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -31,32 +36,60 @@ export function migrateCharacter(
   unlockedUpgrades: UnlockedUpgrades,
 ): Character | null {
   if (!character) return null;
-  const c: Character = { ...character };
+  const c = { ...character } as Character & Record<string, unknown>;
 
   // Field was undefined in older saves before the quirks system existed.
   if (!Array.isArray(c.quirks)) c.quirks = [];
   // Engine started reading conditions explicitly later in the session.
   if (!Array.isArray(c.conditions)) c.conditions = [];
 
-  // permanentHpBonus: pre-refactor, Mantle of the Wakened / Iron Will mutated
-  // hp.max directly and that mutation got wiped on every startDelve. Re-derive
-  // from owned Grove ranks so existing players don't lose Renown spend.
-  if (typeof c.permanentHpBonus !== 'number') {
+  // permanentBonuses (v3): pre-refactor, the 11 top-level permanentXxxBonus
+  // fields lived directly on Character. Fold them into the nested object and
+  // drop the old keys. Mantle/Iron Will re-derive logic that used to live
+  // here (v1→v2) is preserved by writing the rederived value into hp.
+  const legacyMap: Array<[keyof NonNullable<Character['permanentBonuses']>, string]> = [
+    ['ac', 'permanentAcBonus'],
+    ['init', 'permanentInitBonus'],
+    ['attack', 'permanentAttackBonus'],
+    ['damage', 'permanentDamageBonus'],
+    ['critRange', 'permanentCritRangeBonus'],
+    ['hp', 'permanentHpBonus'],
+    ['spellAttack', 'permanentSpellAttackBonus'],
+    ['spellDc', 'permanentSpellDcBonus'],
+    ['spellDamage', 'permanentSpellDamageBonus'],
+    ['cunningAction', 'permanentCunningActionBonus'],
+    ['sneakAttackDice', 'permanentSneakAttackDiceBonus'],
+  ];
+  const folded: NonNullable<Character['permanentBonuses']> = { ...(c.permanentBonuses ?? {}) };
+  let anyFolded = false;
+  for (const [newKey, oldKey] of legacyMap) {
+    const legacyVal = c[oldKey];
+    if (typeof legacyVal === 'number') {
+      // Nested wins on collision (already-migrated state shouldn't clobber).
+      if (folded[newKey] === undefined) folded[newKey] = legacyVal;
+      anyFolded = true;
+    }
+    delete c[oldKey];
+  }
+
+  // Re-derive HP bonus for legacy chars that owned Mantle/Iron Will but
+  // never had the field set (v0 → v1 migration). This must run AFTER the
+  // legacy fold so a present permanentHpBonus is preserved.
+  if (folded.hp === undefined) {
     const mantleRank = unlockedUpgrades['mantle-of-the-wakened'] ?? 0;
     const ironWillRank = unlockedUpgrades['iron-will'] ?? 0;
     const rederived = mantleRank * 5 + ironWillRank * 5;
-    if (rederived > 0) c.permanentHpBonus = rederived;
+    if (rederived > 0) {
+      folded.hp = rederived;
+      anyFolded = true;
+    }
   }
 
-  // The remaining new optional fields default to undefined naturally — the
-  // engine reads them with `??` so no explicit fill is needed. Listing them
-  // here as a manifest for future diffs:
-  //   permanentSpellAttackBonus, permanentSpellDcBonus, permanentSpellDamageBonus
-  //   permanentCunningActionBonus, permanentSneakAttackDiceBonus
-  //   nextAttackBonus, incomingDamageReduction, bonusAttackAvailable
-  //   resources.mistyStepActive
+  if (anyFolded || c.permanentBonuses) {
+    c.permanentBonuses = folded;
+  }
 
-  return c;
+  return c as Character;
 }
 
 export interface MigratedSnapshot {
@@ -73,7 +106,11 @@ export interface MigratedSnapshot {
 }
 
 /**
- * Apply v1 → v2 migration to a persisted snapshot in-place. Used by:
+ * Apply v1 → current migration to a persisted snapshot in-place. Despite the
+ * historical name, this is the single migration entry point and handles
+ * v1→v2→v3 in one pass (every step is idempotent on already-migrated state).
+ *
+ * Used by:
  *  - the zustand `persist` middleware's `migrate` hook on the facade store
  *  - `loadFromSlot` when reading an older slot's wrapper
  *  - the migration test (see `persistMigration.test.ts`)

@@ -31,23 +31,67 @@ describe('migrateV1ToV2', () => {
     expect(v2.unlockedUpgrades).toEqual({ 'heirloom-blade': 1 });
   });
 
-  it('re-derives permanentHpBonus from Mantle/Iron Will ranks for legacy chars', () => {
-    const character = makeBareCharacter({ permanentHpBonus: undefined });
+  it('re-derives permanentBonuses.hp from Mantle/Iron Will ranks for legacy chars', () => {
+    const character = makeBareCharacter({});
     const v2 = migrateV1ToV2({
       character,
       unlockedUpgrades: { 'mantle-of-the-wakened': 3, 'iron-will': 2 },
     });
     // 3*5 (Mantle) + 2*5 (Iron Will) = 25
-    expect(v2.character?.permanentHpBonus).toBe(25);
+    expect(v2.character?.permanentBonuses?.hp).toBe(25);
   });
 
-  it('leaves permanentHpBonus alone when already set', () => {
+  it('leaves permanentBonuses.hp alone when already set on a v2 char', () => {
     const character = makeBareCharacter({ permanentHpBonus: 7 });
     const v2 = migrateV1ToV2({
       character,
       unlockedUpgrades: { 'mantle-of-the-wakened': 5 },
     });
-    expect(v2.character?.permanentHpBonus).toBe(7);
+    expect(v2.character?.permanentBonuses?.hp).toBe(7);
+    // Top-level field is gone after v3 fold.
+    expect((v2.character as unknown as Record<string, unknown>).permanentHpBonus).toBeUndefined();
+  });
+
+  it('folds the 11 top-level permanentXxxBonus fields into permanentBonuses (v2→v3)', () => {
+    const character = makeBareCharacter({
+      permanentAcBonus: 1,
+      permanentInitBonus: 2,
+      permanentAttackBonus: 3,
+      permanentDamageBonus: 4,
+      permanentCritRangeBonus: 1,
+      permanentHpBonus: 5,
+      permanentSpellAttackBonus: 1,
+      permanentSpellDcBonus: 1,
+      permanentSpellDamageBonus: 2,
+      permanentCunningActionBonus: 1,
+      permanentSneakAttackDiceBonus: 2,
+    });
+    const v3 = migrateV1ToV2({ character, unlockedUpgrades: {} });
+    expect(v3.character?.permanentBonuses).toEqual({
+      ac: 1,
+      init: 2,
+      attack: 3,
+      damage: 4,
+      critRange: 1,
+      hp: 5,
+      spellAttack: 1,
+      spellDc: 1,
+      spellDamage: 2,
+      cunningAction: 1,
+      sneakAttackDice: 2,
+    });
+    const ch = v3.character as unknown as Record<string, unknown>;
+    expect(ch.permanentAcBonus).toBeUndefined();
+    expect(ch.permanentSneakAttackDiceBonus).toBeUndefined();
+  });
+
+  it('is idempotent on an already-v3 character (permanentBonuses passes through)', () => {
+    const character = {
+      ...makeBareCharacter({}),
+      permanentBonuses: { ac: 2, hp: 10 },
+    };
+    const v3 = migrateV1ToV2({ character, unlockedUpgrades: {} });
+    expect(v3.character?.permanentBonuses).toEqual({ ac: 2, hp: 10 });
   });
 
   it('defaults quirks and conditions on legacy characters', () => {
@@ -132,8 +176,8 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 2', () => {
-    expect(SAVE_VERSION).toBe(2);
+  it('is 3', () => {
+    expect(SAVE_VERSION).toBe(3);
   });
 });
 

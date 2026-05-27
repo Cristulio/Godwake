@@ -78,7 +78,7 @@ export function computeAC(character: Character): number {
   const blessingMods = characterBlessingMods(character);
   base += quirkMods.acMod ?? 0;
   base += blessingMods.acBonus ?? 0;
-  base += character.permanentAcBonus ?? 0;
+  base += character.permanentBonuses?.ac ?? 0;
 
   // Wizard buffs.
   if (character.resources.mageArmorActive && !bodyArmor) {
@@ -133,7 +133,7 @@ export function initiativeModifier(character: Character): number {
     remarkableAthlete +
     (quirkMods.initiativeMod ?? 0) +
     (blessingMods.initiativeBonus ?? 0) +
-    (character.permanentInitBonus ?? 0) +
+    (character.permanentBonuses?.init ?? 0) +
     (character.delveInitBonus ?? 0)
   );
 }
@@ -145,7 +145,7 @@ export function initiativeModifier(character: Character): number {
 export function critRange(character: Character): number[] {
   const base = characterHasMechanic(character, 'improved-critical') ? 19 : 20;
   const blessingBonus = characterBlessingMods(character).critRangeBonus ?? 0;
-  const upgradeBonus = character.permanentCritRangeBonus ?? 0;
+  const upgradeBonus = character.permanentBonuses?.critRange ?? 0;
   const low = Math.max(2, base - blessingBonus - upgradeBonus);
   const result: number[] = [];
   for (let n = low; n <= 20; n++) result.push(n);
