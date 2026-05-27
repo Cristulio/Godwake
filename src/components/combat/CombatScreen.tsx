@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { useGameStore } from '../../stores/gameStore';
@@ -25,7 +25,7 @@ import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
 import { InitiativeTracker } from './InitiativeTracker';
-import { playMusic, stopMusic, playSfx } from '../../engine/audio';
+import { playMusic, stopMusic, playSfx, type MusicId } from '../../engine/audio';
 
 interface CombatScreenProps {
   character: Character;
@@ -63,6 +63,7 @@ export function CombatScreen({
   const [pickingCunning, setPickingCunning] = useState(false);
   const [pickingSpell, setPickingSpell] = useState(false);
   const [castingSpellId, setCastingSpellId] = useState<string | null>(null);
+  const bedChoiceRef = useRef<MusicId | null>(null);
 
   // Mount dice overlay whenever a new attack event arrives
   useEffect(() => {
@@ -83,17 +84,39 @@ export function CombatScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.lastAttack?.id]);
 
-  // Combat music bed: fade in while combat is active, fade out on resolve.
+  // Combat music bed: boss rooms get the bossly bed after a 3s intro sting;
+  // normal rooms randomize between the two ambient beds the first time the
+  // combat goes active and stick to that choice for the rest of the fight.
   useEffect(() => {
-    if (state.status === 'active') {
-      playMusic('combat_bed');
-    } else {
+    if (state.status !== 'active') {
       stopMusic();
+      return () => {
+        stopMusic();
+      };
     }
+
+    if (scene === 'boss') {
+      bedChoiceRef.current = 'combat_bed_bossly';
+      playSfx('boss_intro');
+      const introTimer = setTimeout(() => {
+        playMusic('combat_bed_bossly');
+      }, 2800);
+      return () => {
+        clearTimeout(introTimer);
+        stopMusic();
+      };
+    }
+
+    if (!bedChoiceRef.current) {
+      bedChoiceRef.current =
+        Math.random() < 0.5 ? 'combat_bed' : 'combat_bed_tense';
+    }
+    playMusic(bedChoiceRef.current);
     return () => {
       stopMusic();
     };
-  }, [state.status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.status, scene]);
 
   // Victory / death sting on combat resolution.
   useEffect(() => {
@@ -363,6 +386,7 @@ export function CombatScreen({
               key={state.lastAttack.id}
               attackerName={state.lastAttack.attackerName}
               targetName={state.lastAttack.targetName}
+              attackerKind={state.lastAttack.attackerKind}
               weaponName={state.lastAttack.weaponName}
               attackBonus={state.lastAttack.attackBonus}
               rollNatural={state.lastAttack.natural}

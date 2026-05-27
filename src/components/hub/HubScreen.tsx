@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
 import { createGodwakeDelve, createSpellholdDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
+import { playMusic, stopMusic } from '../../engine/audio';
 import { PhandalinScene } from './PhandalinScene';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
@@ -78,6 +80,13 @@ export function HubScreen() {
   const chapter1Cleared = useGameStore((s) => s.chapter1Cleared);
   const hasReincarnated = useGameStore((s) => s.hasReincarnated);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
+
+  useEffect(() => {
+    playMusic('hub_ambient');
+    return () => {
+      stopMusic();
+    };
+  }, []);
 
   if (!character) {
     return (

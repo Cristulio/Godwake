@@ -22,6 +22,7 @@ import { characterBlessingMods } from '../character/blessings';
 import { getItem } from '../../content/items';
 import { getMonster } from '../../content/monsters';
 import { getRace } from '../../content/races';
+import { playSfx, swingSfxForWeapon } from '../audio';
 import {
   applyParalyze,
   isPlayerParalyzed,
@@ -57,6 +58,7 @@ export function applyDamage(state: CombatState, targetId: string, amount: number
 
   if (target.kind === 'monster') {
     const mc = target as MonsterCombatant;
+    const wasAlive = mc.instance.hp.current > 0;
     const remainingTemp = Math.max(0, mc.instance.hp.temp - amount);
     const overflow = Math.max(0, amount - mc.instance.hp.temp);
     mc.instance = {
@@ -67,6 +69,9 @@ export function applyDamage(state: CombatState, targetId: string, amount: number
         current: Math.max(0, mc.instance.hp.current - overflow),
       },
     };
+    if (wasAlive && mc.instance.hp.current === 0) {
+      playSfx('monster_death');
+    }
   } else {
     const remainingTemp = Math.max(0, character.hp.temp - amount);
     const overflow = Math.max(0, amount - character.hp.temp);
@@ -163,6 +168,7 @@ export function playerAttack(
 
   const weapon = getItem(weaponItemId);
   if (weapon.kind !== 'weapon') return state;
+  playSfx(swingSfxForWeapon(weapon));
 
   const scores = effectiveAbilityScores(character);
   const isFinesse = (weapon as Weapon).properties.includes('finesse');
