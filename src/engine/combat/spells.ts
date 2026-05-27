@@ -54,7 +54,11 @@ function spellAttackBonus(character: Character): number {
 
 function spellSaveDC(character: Character): number {
   const scores = effectiveAbilityScores(character);
-  return 8 + abilityModifier(scores.int) + proficiencyBonus(character.level);
+  // Wizards get +1 baseline ("Focused Casting") so save-or-suck spells like
+  // Burning Hands actually land — without this, DC 12 vs typical +2/+3 DEX
+  // saves means ~55% save rate and AoE feels useless.
+  const classBonus = character.classId === 'wizard' ? 1 : 0;
+  return 8 + abilityModifier(scores.int) + proficiencyBonus(character.level) + classBonus;
 }
 
 /**
@@ -282,7 +286,9 @@ function castBurningHands(ctx: CastSpellContext): CastResult {
 function castShield(character: Character, state: CombatState): CastResult {
   consumeSlot(character, 1);
   character.resources = { ...character.resources, shieldActive: true };
-  markActionUsed(character);
+  // Shield is a reaction in 5e — does NOT cost the player's action. Marking
+  // the reaction so a follow-up Shield in the same round is gated.
+  character.actionEconomy = { ...character.actionEconomy, reactionUsed: true };
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'narration',

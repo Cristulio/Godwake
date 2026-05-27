@@ -64,7 +64,10 @@ export function createCharacter(input: CreateCharacterInput): Character {
   const scores = effectiveAbilityScores(seedCharacter);
   const conMod = abilityModifier(scores.con);
   const bonusHp = race.bonusHpPerLevel ?? 0;
-  const maxHp = cls.hitDie + conMod + bonusHp;
+  // Wizards get +1 HP/level baseline so a d6 hit die survives an opening
+  // 3-mob room without burning a slot on Mage Armor first.
+  const classBonusHp = input.classId === 'wizard' ? 1 : 0;
+  const maxHp = cls.hitDie + conMod + bonusHp + classBonusHp;
   seedCharacter.hp = { current: maxHp, max: maxHp, temp: 0 };
 
   return seedCharacter;
@@ -87,7 +90,6 @@ export function classStartingResources(classId: ClassId) {
         spellSlots: { 1: 2, 2: 0, 3: 0, 4: 0 },
         knownSpells: [
           'fire-bolt',
-          'mage-armor',
           'magic-missile',
           'shield',
           'burning-hands',
@@ -96,6 +98,8 @@ export function classStartingResources(classId: ClassId) {
           // a separate "prepared at level X" flag.
           'hold-person',
         ],
+        // Mage Armor is a passive class baseline — auto-applied at combat
+        // start by createCombat. Not in knownSpells (no manual cast).
         mageArmorActive: false,
         shieldActive: false,
       };

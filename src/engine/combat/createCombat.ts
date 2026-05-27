@@ -134,12 +134,13 @@ export function createCombat(input: CreateCombatInput): CombatState {
     };
   }
 
-  // Wizard: Mage Armor and Shield are per-combat buffs. Clear stale state so
-  // a previous combat's casts don't carry AC forward into the next room.
+  // Wizards walk into every fight already wrapped in Mage Armor (passive class
+  // baseline — no slot cost, no action cost). Shield is per-combat reaction-
+  // only, so clear stale state.
   if (character.classId === 'wizard') {
     character.resources = {
       ...character.resources,
-      mageArmorActive: false,
+      mageArmorActive: true,
       shieldActive: false,
     };
   }
