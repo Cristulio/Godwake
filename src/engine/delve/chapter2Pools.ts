@@ -35,10 +35,13 @@ export const WARMUP_POOL: EncounterEntry[] = [
     goldReward: 18,
   },
   {
-    title: 'Hobgoblin Outriders',
+    title: 'A Hobgoblin and His Knife',
     flavorText:
-      "Two hobgoblin mercenaries in Athkatlan livery stand at the corner, watching the street. They turn together — disciplined, professional, contracted.",
-    monsters: [{ defId: 'hobgoblin', count: 2, displayPrefix: 'Hobgoblin' }],
+      "A hobgoblin mercenary in Athkatlan livery stands at the corner with a robed cult-knife at his elbow — paid by different masters, agreed about the morning. The hobgoblin nods once; the cultist moves first.",
+    monsters: [
+      { defId: 'hobgoblin', count: 1 },
+      { defId: 'cult-fanatic', count: 1 },
+    ],
     xpReward: 150,
   },
   {

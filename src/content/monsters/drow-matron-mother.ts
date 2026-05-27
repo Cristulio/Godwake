@@ -39,6 +39,16 @@ export const DROW_MATRON_MOTHER: Monster = MonsterSchema.parse({
       description:
         "The dagger is cold mithral with the Lolth-glyph chased into the flat, the edge wet with a priestess-cured drow venom. She does not draw it back between strokes — she opens you and turns the wrist on the same motion.",
     },
+    {
+      kind: 'attack',
+      name: "Spider's Curse",
+      attackBonus: 7,
+      damage: '1d8',
+      damageType: 'fire',
+      range: [60, 120],
+      description:
+        "The Matron Mother lifts her free hand and traces a spider-glyph in the air. The web ignites between her fingers and falls on you in burning strands — Lolth's punishment for surface-fire stolen by a surface-thing.",
+    },
   ],
   resistances: ['poison', 'psychic'],
   bossMechanic: 'battle-rage',

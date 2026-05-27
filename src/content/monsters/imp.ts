@@ -39,7 +39,7 @@ export const IMP: Monster = MonsterSchema.parse({
     },
   ],
   resistances: ['cold'],
-  immunities: ['fire', 'poison'],
+  immunities: ['poison'],
   flavorText:
-    'A small crimson devil with a needle tail and yellow-slit eyes. It speaks the mephits\' tongue and finds their fear funny. The master would burn it for trespass — if he ever noticed it.',
+    'A small crimson devil with a needle tail and yellow-slit eyes. It speaks the mephits\' tongue and finds their fear funny. Too thin a hide for a proper devil — flame still bites it. The master would burn it for trespass, if he ever noticed it.',
 });

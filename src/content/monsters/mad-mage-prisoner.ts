@@ -29,6 +29,16 @@ export const MAD_MAGE_PRISONER: Monster = MonsterSchema.parse({
       description:
         'The prisoner traces the same three sigils he has traced ten thousand times. A bolt of grey-violet light unspools from his fingertip and finds you without bothering to look.',
     },
+    {
+      kind: 'attack',
+      name: 'Wild Surge: Flame',
+      attackBonus: 3,
+      damage: '1d6',
+      damageType: 'fire',
+      range: [30, 60],
+      description:
+        "Something snaps loose in the shaved-headed man's litany — a wrong sigil, drawn wide and shaking. Flame coughs out of his palm in a stuttering arc that wasn't aimed at anything in particular.",
+    },
   ],
   flavorText:
     "A shaven-headed man in a stained robe, the brand of the Cowled Wizards still fresh on his palm. He mutters the incantation without breath between words — the only thing left in the cell that still has a shape.",
