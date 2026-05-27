@@ -36,12 +36,6 @@ function findMonster(state: ReturnType<typeof createCombat>): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
 }
 
-function extractAttackBonus(line: string): number {
-  const m = line.match(/d20([+-]\d+)/);
-  if (!m) throw new Error(`no d20 bonus in: ${line}`);
-  return Number(m[1]);
-}
-
 describe('sneakAttackDiceForLevel', () => {
   it('returns 1d6 at L1-2, 2d6 at L3-4, 3d6 at L5-6, 4d6 at L7-8', () => {
     expect(sneakAttackDiceForLevel(1)).toBe(1);
@@ -269,44 +263,82 @@ describe('Rogue — Cunning Action', () => {
     void state;
   });
 
-  it('Dash sets a one-shot +2 attack bonus and the next roll consumes it', () => {
+  it('Dash queues a bonus swing this turn — player can attack again after the Action is spent', () => {
     const goblin = getMonster('goblin');
-    const seed = 7;
-
-    // Baseline: rogue attacks with no Dash. Capture the printed attack bonus.
-    const baselineRogue = makeRogue();
-    const baselineRoller = createDiceRoller(seed);
-    let baselineState = createCombat({
-      roller: baselineRoller,
-      character: baselineRogue,
-      monsters: [{ def: goblin }],
-    });
-    const baselineGoblinId = findMonster(baselineState).id;
-    baselineState = playerAttack(
-      { roller: baselineRoller, character: baselineRogue, state: baselineState },
-      baselineGoblinId,
-      'dagger',
-    ).state;
-    const baselineLine = baselineState.log.find((l) => l.text.includes('attacks Goblin'));
-    const baselineBonus = extractAttackBonus(baselineLine?.text ?? '');
-
-    // With Dash: same seed, the printed bonus should be exactly +2 higher.
     const rogue = makeRogue();
-    const roller = createDiceRoller(seed);
+    const roller = createDiceRoller(7);
     let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
-    expect(rogue.nextAttackBonus ?? 0).toBe(0);
+    // Inflate the goblin's HP so a single swing can't end combat before the
+    // bonus swing has a chance to fire.
+    state = {
+      ...state,
+      combatants: state.combatants.map((c) =>
+        c.kind === 'monster'
+          ? { ...c, instance: { ...c.instance, hp: { current: 200, max: 200, temp: 0 } } }
+          : c,
+      ),
+    };
+    expect(rogue.bonusAttackAvailable ?? false).toBe(false);
 
     state = useCunningAction({ character: rogue, state, choice: 'dash' }).state;
-    expect(rogue.nextAttackBonus).toBe(2);
+    expect(rogue.bonusAttackAvailable).toBe(true);
     expect(rogue.actionEconomy.bonusActionUsed).toBe(true);
-    expect(state.log[state.log.length - 1].text).toContain('+2');
 
     const goblinId = findMonster(state).id;
+    // First swing — uses the Attack action.
     state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
-    expect(rogue.nextAttackBonus).toBe(0);
-    const dashLine = state.log.find((l) => l.text.includes('attacks Goblin'));
-    const dashBonus = extractAttackBonus(dashLine?.text ?? '');
-    expect(dashBonus - baselineBonus).toBe(2);
+    expect(rogue.actionEconomy.actionUsed).toBe(true);
+    expect(rogue.bonusAttackAvailable).toBe(true);
+
+    // Second swing — funded by Dash, action stays spent, flag clears.
+    state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+    expect(rogue.bonusAttackAvailable).toBe(false);
+    expect(rogue.actionEconomy.actionUsed).toBe(true);
+
+    // Two attack lines in the log — one per swing.
+    const attackLines = state.log.filter((l) => l.text.includes('attacks Goblin'));
+    expect(attackLines.length).toBe(2);
+  });
+
+  it('Dash bonus swing does NOT get Sneak Attack (once-per-turn rule)', () => {
+    // Find a seed where the rogue lands both swings on a wounded goblin so
+    // Sneak Attack would trigger on every hit if the gate were broken.
+    let validated = false;
+    for (let seed = 1; seed <= 200 && !validated; seed++) {
+      const goblin = getMonster('goblin');
+      const rogue = makeRogue();
+      const roller = createDiceRoller(seed);
+      let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+      // Wound the goblin so the SA "bloodied target" trigger is always active.
+      state = {
+        ...state,
+        combatants: state.combatants.map((c) =>
+          c.kind === 'monster'
+            ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: 100, max: 200 } } }
+            : c,
+        ),
+      };
+      // Now drop current to half so it stays bloodied through both swings.
+      state = {
+        ...state,
+        combatants: state.combatants.map((c) =>
+          c.kind === 'monster'
+            ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: 50 } } }
+            : c,
+        ),
+      };
+      state = useCunningAction({ character: rogue, state, choice: 'dash' }).state;
+      const goblinId = findMonster(state).id;
+      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      if (state.status !== 'active') continue;
+      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      const sneakLines = state.log.filter((l) => l.text.includes('Sneak Attack'));
+      const attackLines = state.log.filter((l) => l.text.includes('attacks Goblin'));
+      if (attackLines.length < 2) continue;
+      expect(sneakLines.length).toBeLessThanOrEqual(1);
+      validated = true;
+    }
+    expect(validated).toBe(true);
   });
 
   it('is gated by the per-combat use pool', () => {

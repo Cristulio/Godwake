@@ -11,15 +11,14 @@ export interface CunningActionContext {
   choice: CunningActionChoice;
 }
 
-const DASH_ATTACK_BONUS = 2;
 const DISENGAGE_DAMAGE_REDUCTION = 2;
 
 /**
  * Rogue L1 Cunning Action. Bonus action, pick one effect:
- *  - Hide: next attack rolls with advantage.
- *  - Dash: +2 to your next attack roll (sprint-in momentum — engine has no
- *    movement system, so Dash translates into next-strike accuracy).
- *  - Disengage: 2 damage reduction on the next incoming hit (twist away).
+ *  - Hide: next attack rolls with advantage (setup).
+ *  - Dash: gain a second swing this turn (burst). Sneak Attack still gated to
+ *    once per turn, so the bonus swing is a clean damage roll without it.
+ *  - Disengage: 2 damage reduction on the next incoming hit (survival).
  *
  * Burns the bonus action and one use from the per-combat pool (Thief gets
  * two uses via Fast Hands).
@@ -48,8 +47,8 @@ export function useCunningAction(ctx: CunningActionContext): CombatActionResult 
     character.incomingDamageReduction = DISENGAGE_DAMAGE_REDUCTION;
     narration = `${character.name} twists clear — next incoming hit deals ${DISENGAGE_DAMAGE_REDUCTION} less damage.`;
   } else {
-    character.nextAttackBonus = DASH_ATTACK_BONUS;
-    narration = `${character.name} surges forward — next attack rolls with +${DASH_ATTACK_BONUS}.`;
+    character.bonusAttackAvailable = true;
+    narration = `${character.name} surges forward — a second strike rides the momentum.`;
   }
 
   const log: CombatLogEntry = {

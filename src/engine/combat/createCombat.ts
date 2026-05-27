@@ -127,6 +127,7 @@ export function createCombat(input: CreateCombatInput): CombatState {
   // dropped; Cunning Action pool refills.
   if (character.classId === 'rogue') {
     character.nextAttackAdvantage = false;
+    character.bonusAttackAvailable = false;
     character.resources = {
       ...character.resources,
       sneakAttackUsedThisTurn: false,

@@ -209,12 +209,18 @@ export interface Character {
    */
   nextAttackAdvantage?: boolean;
   /**
-   * One-shot +N bonus added to the player's next attack roll. Set by Rogue's
-   * Cunning Action: Dash (sprint-in momentum) — engine has no movement system,
-   * so Dash pays out as next-strike accuracy. Consumed on the actual attack
-   * roll, hit or miss. Stacks with nextAttackAdvantage.
+   * One-shot +N bonus added to the player's next attack roll. Reserved for
+   * future buffs that need flat-to-hit; Dash no longer uses it. Consumed on
+   * the actual attack roll, hit or miss. Stacks with nextAttackAdvantage.
    */
   nextAttackBonus?: number;
+  /**
+   * One-shot extra attack this turn, funded by Rogue's Cunning Action: Dash.
+   * When set, the player can swing again even after the Action is spent. The
+   * Sneak Attack once-per-turn gate (`sneakAttackUsedThisTurn`) still applies,
+   * so the bonus swing does not double Sneak. Cleared on use or at turn end.
+   */
+  bonusAttackAvailable?: boolean;
   /**
    * One-shot damage reduction applied to the next incoming hit on the player.
    * Set by Rogue's Cunning Action: Disengage (twisting out of the way). Read

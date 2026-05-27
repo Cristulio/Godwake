@@ -192,10 +192,16 @@ export function playerAttack(
   playSfx(swingSfxForWeapon(weapon));
 
   const scores = effectiveAbilityScores(character);
-  const isFinesse = (weapon as Weapon).properties.includes('finesse');
-  const attackAbility: 'str' | 'dex' = isFinesse
-    ? (abilityModifier(scores.dex) >= abilityModifier(scores.str) ? 'dex' : 'str')
-    : 'str'; // melee default; ranged would force dex; refine later
+  const w = weapon as Weapon;
+  const isFinesse = w.properties.includes('finesse');
+  // Ranged weapons (bows, crossbows) are flagged by the `ammunition` property.
+  // Thrown daggers stay in the finesse branch — they're melee that can fly.
+  const isRanged = w.properties.includes('ammunition');
+  const attackAbility: 'str' | 'dex' = isRanged
+    ? 'dex'
+    : isFinesse
+      ? (abilityModifier(scores.dex) >= abilityModifier(scores.str) ? 'dex' : 'str')
+      : 'str';
   const abilMod = abilityModifier(scores[attackAbility]);
   const profBonus = proficiencyBonus(character.level);
 
@@ -219,9 +225,10 @@ export function playerAttack(
   if (isFirstAttack && blessingMods.firstAttackBonus) {
     attackBonus += blessingMods.firstAttackBonus;
   }
-  // Cunning Action: Dash — one-shot momentum bonus on the next attack.
-  const dashBonus = character.nextAttackBonus ?? 0;
-  attackBonus += dashBonus;
+  // One-shot flat-to-hit bonus consumed by the next attack roll (reserved
+  // hook — Dash now grants a bonus swing instead of accuracy).
+  const nextBonus = character.nextAttackBonus ?? 0;
+  attackBonus += nextBonus;
 
   const ac = targetAC(target, character);
   const hideAdvantage = character.nextAttackAdvantage === true;
@@ -229,19 +236,21 @@ export function playerAttack(
     (isFirstAttack && blessingMods.firstAttackAdvantage) || hideAdvantage
       ? 'advantage'
       : 'normal';
-  // One-shot: consume Hide and Dash on the actual attack roll, hit or miss.
+  // One-shot: consume Hide and any pending flat-to-hit bonus on the actual
+  // attack roll, hit or miss.
   if (hideAdvantage) character.nextAttackAdvantage = false;
-  if (dashBonus > 0) character.nextAttackBonus = 0;
+  if (nextBonus > 0) character.nextAttackBonus = 0;
   let toHit = roller.d20(advantage, attackBonus);
   let crit = critRange(character).includes(toHit.rolls[0]);
   let hit = crit || (toHit.total >= ac && !toHit.natural1);
 
   const logEntries: CombatLogEntry[] = [];
   const newLogId = nextLogId(state);
+  const attackVerb = isRanged ? 'fires at' : 'attacks';
   logEntries.push({
     id: newLogId,
     kind: 'roll',
-    text: `${character.name} attacks ${displayName(target, character)} with ${weapon.name}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
+    text: `${character.name} ${attackVerb} ${displayName(target, character)} with ${weapon.name}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
   });
 
   // Auto-reroll a miss if a reroll budget is available. Prefer the
@@ -416,6 +425,12 @@ export function playerAttack(
 }
 
 function markPlayerActionUsed(state: CombatState, character: Character): CombatState {
+  // Cunning Action: Dash — if the Action is already spent, this swing is the
+  // bonus one. Burn the flag, don't tick the per-Action attack counter.
+  if (character.actionEconomy.actionUsed && character.bonusAttackAvailable) {
+    character.bonusAttackAvailable = false;
+    return state;
+  }
   const attacksMade = (state.playerAttacksThisTurn ?? 0) + 1;
   const maxAttacks = maxAttacksPerAction(character);
   if (attacksMade < maxAttacks) {

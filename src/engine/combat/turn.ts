@@ -70,6 +70,13 @@ export function endTurn(state: CombatState, character: Character): CombatActionR
     }
   }
 
+  // Cunning Action: Dash is "burst" — burn it or lose it. If the rogue
+  // queued a bonus swing and didn't fire it before End Turn, drop the flag
+  // so it can't be banked into next round.
+  if (character.bonusAttackAvailable) {
+    character.bonusAttackAvailable = false;
+  }
+
   let nextState: CombatState = appendLog(
     {
       ...state,
