@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
 import type { MonsterInstance, AttackEvent } from '../../types/combat';
 import { computeAC } from '../../engine/character/derived';
@@ -78,7 +78,7 @@ function monsterSpriteWidth(defId: string): string {
   }
 }
 
-export function BattlefieldSprite(props: BattlefieldSpriteProps) {
+function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   const hpCurrent =
     props.kind === 'player' ? props.character.hp.current : props.instance.hp.current;
   const hpMax = props.kind === 'player' ? props.character.hp.max : props.instance.hp.max;
@@ -308,3 +308,43 @@ export function BattlefieldSprite(props: BattlefieldSpriteProps) {
     </button>
   );
 }
+
+/**
+ * Memoized: combat state changes ~6-8x in a single dice/swing/hit cascade.
+ * A sprite only needs to re-render when its OWN HP / activity / attack-pulse
+ * changes, or when the latest attack might target it. The comparator below
+ * skips render when none of those changed.
+ */
+export const BattlefieldSprite = memo(BattlefieldSpriteImpl, (prev, next) => {
+  if (prev.kind !== next.kind) return false;
+  if (prev.isActiveTurn !== next.isActiveTurn) return false;
+  if (prev.facing !== next.facing) return false;
+  if (prev.attackPulse !== next.attackPulse) return false;
+  // lastAttack: only matters if it CHANGES — a new event id triggers a flash.
+  // Sprite reads `lastAttack` to detect crits against itself, so id is enough.
+  if (prev.lastAttack?.id !== next.lastAttack?.id) return false;
+  if (prev.kind === 'player' && next.kind === 'player') {
+    return (
+      prev.character.hp.current === next.character.hp.current &&
+      prev.character.hp.max === next.character.hp.max &&
+      prev.character.hp.temp === next.character.hp.temp &&
+      prev.character === next.character // catch any other field via identity
+    );
+  }
+  if (prev.kind === 'monster' && next.kind === 'monster') {
+    // onSelect intentionally NOT compared — Battlefield re-creates an
+    // arrow each render (`() => onSelectTarget(c.id)`). Including it here
+    // would defeat the memo. The closure captures the monster id, which
+    // doesn't change for a given combatant.
+    return (
+      prev.selectable === next.selectable &&
+      prev.instance.hp.current === next.instance.hp.current &&
+      prev.instance.hp.max === next.instance.hp.max &&
+      prev.instance.hp.temp === next.instance.hp.temp &&
+      prev.instance.ac === next.instance.ac &&
+      prev.instance.acRevealed === next.instance.acRevealed &&
+      prev.instance === next.instance
+    );
+  }
+  return false;
+});

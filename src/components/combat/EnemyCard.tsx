@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import type { MonsterCombatant, AttackEvent } from '../../types/combat';
 import { MonsterPortrait } from './MonsterPortrait';
 import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
@@ -12,7 +12,7 @@ interface EnemyCardProps {
   lastAttack?: AttackEvent;
 }
 
-export function EnemyCard({ combatant, isActiveTurn, selectable, onSelect, lastAttack }: EnemyCardProps) {
+function EnemyCardImpl({ combatant, isActiveTurn, selectable, onSelect, lastAttack }: EnemyCardProps) {
   const { instance } = combatant;
   const dead = instance.hp.current <= 0;
   const hpPercent = (instance.hp.current / instance.hp.max) * 100;
@@ -144,3 +144,16 @@ export function EnemyCard({ combatant, isActiveTurn, selectable, onSelect, lastA
     </button>
   );
 }
+
+/**
+ * Memoized — same reasoning as BattlefieldSprite: combat state churns hard
+ * during a dice/swing/hit cascade, and a single card only needs to re-render
+ * when its OWN monster instance or selectability changes.
+ */
+export const EnemyCard = memo(EnemyCardImpl, (prev, next) => {
+  if (prev.isActiveTurn !== next.isActiveTurn) return false;
+  if (prev.selectable !== next.selectable) return false;
+  if (prev.lastAttack?.id !== next.lastAttack?.id) return false;
+  // onSelect intentionally not compared; callers re-create arrows each render.
+  return prev.combatant === next.combatant;
+});
