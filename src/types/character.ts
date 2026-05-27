@@ -139,6 +139,12 @@ export interface Character {
   permanentAttackBonus?: number;
   permanentInitBonus?: number;
   /**
+   * Grove upgrade: +N permanent max HP (Mantle of the Wakened, Iron Will).
+   * Folded into baseHpMax in startDelve so the bonus survives every descent;
+   * legacy `bumpHpMax` mutation on `hp.max` did not survive.
+   */
+  permanentHpBonus?: number;
+  /**
    * Extra attunement slots above the default. Bumped by Sage's Pact. The cap
    * lives in `attunementSlotsCap()`; this field is only the additive bonus so
    * legacy saves with `undefined` rehydrate to the default cap.
