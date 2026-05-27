@@ -154,7 +154,8 @@ const POOL: EventTemplate[] = [
       {
         id: 'loot-him',
         label: 'Loot him where he sits',
-        hint: 'He hasn\'t the strength to stop you.',
+        hint: "He hasn't the strength to stop you — unless he does.",
+        successChance: 0.65,
         outcome: {
           resolution:
             'His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it.',
@@ -162,6 +163,11 @@ const POOL: EventTemplate[] = [
             { kind: 'gold_delta', amount: 5 },
             { kind: 'grant_quirk_reroll' },
           ],
+        },
+        failureOutcome: {
+          resolution:
+            'He finds one last knife as you bend over him. It bites your thigh before you can stand. By the time you wrench free he is laughing and bleeding both, and your hands are empty.',
+          effects: [{ kind: 'hp_delta', amount: -4 }],
         },
       },
     ],
@@ -313,13 +319,18 @@ const POOL: EventTemplate[] = [
       {
         id: 'kick-the-bowl',
         label: 'Kick his alms-bowl',
-        hint: 'The coins are yours now.',
+        hint: 'The coins are yours now — if the city does not see.',
+        successChance: 0.7,
         outcome: {
-          resolution: "The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. But the city marks you in a small ledger you cannot read.",
+          resolution: "The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser.",
           effects: [
             { kind: 'gold_delta', amount: 8 },
             { kind: 'grant_quirk_reroll' },
           ],
+        },
+        failureOutcome: {
+          resolution: "The bowl rings against the cobbles and a customs-man's whistle answers from the arch. Two hands take you by the shoulders and a third by the ribs before you can run. You leave bruised and lighter.",
+          effects: [{ kind: 'hp_delta', amount: -4 }],
         },
       },
     ],
@@ -471,13 +482,18 @@ const POOL: EventTemplate[] = [
       {
         id: 'cuff-him',
         label: 'Cuff him aside and walk on',
-        hint: 'Athkatla teaches its children.',
+        hint: 'Athkatla teaches its children — if the swing lands clean.',
+        successChance: 0.7,
         outcome: {
           resolution: 'He sprawls in the gutter. The knife rings on the cobbles. You pocket it without looking back.',
           effects: [
             { kind: 'gold_delta', amount: 2 },
             { kind: 'grant_quirk_reroll' },
           ],
+        },
+        failureOutcome: {
+          resolution: 'He ducks under the cuff with the speed of a thing that has done it before, and the blade catches the back of your hand on the way past. He is into an alley before you can curse, and the knife goes with him.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
     ],

@@ -76,6 +76,28 @@ export function canTakeChoice(character: Character, choice: EventChoice): Choice
 }
 
 /**
+ * Roll a choice's success check, when one is defined. When `successChance` is
+ * unset, the choice is deterministic and `outcome` is returned unchanged.
+ * When set, a 1d100 ≤ Math.round(chance*100) is success; failure falls
+ * through to `failureOutcome` (or a quiet empty outcome if none was supplied).
+ */
+export function rollChoiceCheck(
+  choice: EventChoice,
+  roller: DiceRoller,
+): { succeeded?: boolean; outcome: EventChoiceOutcome } {
+  if (choice.successChance === undefined) return { outcome: choice.outcome };
+  const roll = roller.roll('1d100').total;
+  const threshold = Math.round(choice.successChance * 100);
+  const succeeded = roll <= threshold;
+  if (succeeded) return { succeeded: true, outcome: choice.outcome };
+  const fallback: EventChoiceOutcome = choice.failureOutcome ?? {
+    resolution: 'It does not go your way.',
+    effects: [],
+  };
+  return { succeeded: false, outcome: fallback };
+}
+
+/**
  * Resolve a choice outcome — single or weighted-random — into a concrete
  * outcome via the roller. Random branches are picked by rolling 1-100 and
  * walking the cumulative-weight ladder.
@@ -129,13 +151,13 @@ function rerollOneBaneQuirk(character: Character, roller: DiceRoller): {
     }
   });
   if (baneIdx === -1) {
-    return { character, detail: 'no bane quirk to re-roll' };
+    return { character, detail: 'Waukeen finds no bane to shake from you.' };
   }
   const pool = listQuirks();
   const owned = new Set(character.quirks);
   const others = pool.filter((q) => !owned.has(q.id));
   if (others.length === 0) {
-    return { character, detail: 'no replacement quirk available' };
+    return { character, detail: 'The gods have no marks left to trade you.' };
   }
   const replacement = others[roller.roll('1d100').total % others.length];
   const nextQuirks = [...character.quirks];
