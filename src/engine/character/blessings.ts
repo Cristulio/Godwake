@@ -1,26 +1,50 @@
 import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
-import type { BlessingModifiers } from '../../schemas/blessing';
+import type { Blessing, BlessingModifiers } from '../../schemas/blessing';
 import { getBlessing, listBlessings } from '../../content/blessings';
+
+/**
+ * Canonical string fingerprint of a blessing's mechanical effect bundle.
+ * Two blessings with different names but identical numeric/boolean modifiers
+ * collide on signature, so the roller can avoid offering effectively-duplicate
+ * choices to the player. Sorted keys; undefined fields stripped.
+ */
+export function blessingSignature(b: Blessing): string {
+  const m = b.modifiers ?? {};
+  const keys = (Object.keys(m) as (keyof BlessingModifiers)[])
+    .filter((k) => m[k] !== undefined)
+    .sort();
+  const parts: string[] = [];
+  for (const k of keys) {
+    parts.push(`${k}:${JSON.stringify(m[k])}`);
+  }
+  return parts.join('|');
+}
 
 /**
  * Roll N unique blessing options from the pool. Used by ShrineRoom to
  * present the player with a choice. Uses the seeded roller so the offered
- * blessings are deterministic per save.
+ * blessings are deterministic per save. Dedupes both by id and by
+ * mechanical effect signature, so the player never sees two cards that do
+ * the same thing.
  */
 export function rollBlessingOptions(roller: DiceRoller, count: number = 3): string[] {
   const pool = listBlessings();
   const result: string[] = [];
   const seen = new Set<string>();
+  const seenSignatures = new Set<string>();
   let safety = 0;
   while (result.length < count && safety < 64) {
     safety += 1;
     const r = roller.roll('1d100');
     const idx = r.total % pool.length;
-    const pick = pool[idx].id;
-    if (seen.has(pick)) continue;
-    seen.add(pick);
-    result.push(pick);
+    const candidate = pool[idx];
+    if (seen.has(candidate.id)) continue;
+    const sig = blessingSignature(candidate);
+    if (seenSignatures.has(sig)) continue;
+    seen.add(candidate.id);
+    seenSignatures.add(sig);
+    result.push(candidate.id);
   }
   return result;
 }
