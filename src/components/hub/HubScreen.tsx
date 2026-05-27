@@ -70,7 +70,7 @@ export function HubScreen() {
         </Button>
       </header>
 
-      <PhandalinScene />
+      <PhandalinScene druidGroveUnlocked={druidGroveUnlocked} />
 
       <Panel tone="glow" className="mb-6">
         <div className="flex items-center gap-4">

@@ -4,9 +4,16 @@
  * with multiple gradient layers for a painterly dusk-into-night feel.
  *
  * Ambient life: chimney smoke, flickering torches, distant birds, swaying
- * grass, breathing sky. All CSS-only — no JS animation loops.
+ * grass, a villager in a doorway, a cart by the well, a flock of crows.
+ * The Iron Cells stairwell shows as a darker opening at the manor base.
+ * The Druid Grove only renders if `druidGroveUnlocked` — before it's unlocked,
+ * the painted treeline is a quiet, undifferentiated dark mass.
  */
-export function PhandalinScene() {
+interface PhandalinSceneProps {
+  druidGroveUnlocked?: boolean;
+}
+
+export function PhandalinScene({ druidGroveUnlocked = true }: PhandalinSceneProps = {}) {
   return (
     <div className="relative w-full h-48 md:h-56 border-2 border-[var(--color-border-warm)] overflow-hidden mb-6">
       <svg
@@ -95,7 +102,7 @@ export function PhandalinScene() {
         <circle cx="657" cy="34" r="3" fill="#e0c878" opacity="0.5" />
         <circle cx="643" cy="46" r="2" fill="#e0c878" opacity="0.5" />
 
-        {/* Distant birds — two silhouettes drifting across at different cadences */}
+        {/* Distant birds — a small flock of crows drifting across at different cadences */}
         <g
           className="animate-bird-fly"
           style={{ animationDelay: '0s', animationDuration: '22s' }}
@@ -115,6 +122,39 @@ export function PhandalinScene() {
             d="M 0 58 q 2.4 -2.4 4.8 0 q 2.4 -2.4 4.8 0"
             stroke="#1a0e10"
             strokeWidth="1"
+            fill="none"
+          />
+        </g>
+        <g
+          className="animate-bird-fly"
+          style={{ animationDelay: '-4s', animationDuration: '30s' }}
+        >
+          <path
+            d="M 0 46 q 2.2 -2.2 4.4 0 q 2.2 -2.2 4.4 0"
+            stroke="#1a0e10"
+            strokeWidth="0.9"
+            fill="none"
+          />
+        </g>
+        <g
+          className="animate-bird-fly"
+          style={{ animationDelay: '-15s', animationDuration: '24s' }}
+        >
+          <path
+            d="M 0 70 q 2.6 -2.6 5.2 0 q 2.6 -2.6 5.2 0"
+            stroke="#1a0e10"
+            strokeWidth="1.0"
+            fill="none"
+          />
+        </g>
+        <g
+          className="animate-bird-fly"
+          style={{ animationDelay: '-2s', animationDuration: '34s' }}
+        >
+          <path
+            d="M 0 32 q 2 -2 4 0 q 2 -2 4 0"
+            stroke="#1a0e10"
+            strokeWidth="0.8"
             fill="none"
           />
         </g>
@@ -162,7 +202,19 @@ export function PhandalinScene() {
           />
           {/* Manor walls behind tower */}
           <rect x="40" y="155" width="40" height="40" fill="#1a120c" stroke="#0a0606" strokeWidth="1" />
-          <rect x="60" y="170" width="8" height="14" fill="#0a0606" />
+          {/* Iron Cells stairwell — a dark square opening in the manor base
+              with stone steps descending into pure black. The way down. */}
+          <rect x="56" y="172" width="14" height="22" fill="#020000" stroke="#0a0606" strokeWidth="1" />
+          <polygon points="56,172 56,168 70,168 70,172" fill="#1a120c" />
+          {/* Steps descending — staggered shadow bands */}
+          <rect x="58" y="176" width="10" height="1.5" fill="#0a0606" opacity="0.95" />
+          <rect x="58" y="180" width="10" height="1.5" fill="#0a0606" opacity="0.9" />
+          <rect x="58" y="184" width="10" height="1.5" fill="#0a0606" opacity="0.85" />
+          <rect x="58" y="188" width="10" height="1.5" fill="#0a0606" opacity="0.8" />
+          {/* Faint cell-bar grid carved on the lintel */}
+          <line x1="58" y1="169" x2="58" y2="172" stroke="#3a2418" strokeWidth="0.6" />
+          <line x1="62" y1="169" x2="62" y2="172" stroke="#3a2418" strokeWidth="0.6" />
+          <line x1="66" y1="169" x2="66" y2="172" stroke="#3a2418" strokeWidth="0.6" />
           {/* Tower base / collapse */}
           <polygon points="80,190 60,200 80,200" fill="#0e0606" />
           <polygon points="140,190 160,200 140,200" fill="#0e0606" />
@@ -220,6 +272,13 @@ export function PhandalinScene() {
             className="animate-torch-flicker"
             style={{ animationDelay: '-0.6s', animationDuration: '3.4s' }}
           />
+          {/* Villager silhouette in the doorway — leaning out, watching the road */}
+          <g>
+            <rect x="396" y="164" width="6" height="14" fill="#0a0604" />
+            <rect x="397" y="160" width="4" height="5" fill="#0a0604" />
+            {/* Warm rim-light from the lantern */}
+            <rect x="395" y="160" width="1" height="20" fill="#ffb347" opacity="0.55" />
+          </g>
           {/* Windows with warm light */}
           <rect x="338" y="155" width="14" height="14" fill="#ffb347" />
           <rect x="340" y="157" width="10" height="10" fill="#f4d042" />
@@ -255,51 +314,105 @@ export function PhandalinScene() {
           <rect x="315" y="163" width="10" height="4" fill="#3a2418" />
         </g>
 
-        {/* Druid Grove — right, ancient oak */}
+        {/* Town well + cart, between the inn and the grove */}
         <g>
-          {/* Trunk */}
-          <path
-            d="M 690 200 L 692 150 L 685 140 L 695 130 L 700 120 L 708 110 L 716 100 L 720 95 L 728 110 L 730 130 L 728 150 L 730 200 Z"
-            fill="#1f0e08"
-            stroke="#0a0606"
-            strokeWidth="1"
-          />
-          {/* Roots */}
-          <path d="M 680 200 L 690 180 L 700 200" fill="#1a0c08" stroke="#0a0606" strokeWidth="0.5" />
-          <path d="M 720 200 L 730 180 L 740 200" fill="#1a0c08" stroke="#0a0606" strokeWidth="0.5" />
-          {/* Canopy mass */}
-          <ellipse cx="710" cy="80" rx="55" ry="32" fill="#1a2e1a" />
-          <ellipse cx="685" cy="90" rx="35" ry="22" fill="#1a2e1a" />
-          <ellipse cx="735" cy="92" rx="32" ry="20" fill="#1a2e1a" />
-          {/* Leaf highlights */}
-          <ellipse cx="700" cy="68" rx="20" ry="12" fill="#2d4a22" opacity="0.7" />
-          <ellipse cx="720" cy="82" rx="15" ry="9" fill="#2d4a22" opacity="0.6" />
-          <ellipse cx="680" cy="84" rx="12" ry="7" fill="#2d4a22" opacity="0.5" />
-          {/* Glowing fey-light in the canopy */}
-          <circle
-            cx="700"
-            cy="80"
-            r="3"
-            fill="#a8d042"
-            opacity="0.6"
-            className="animate-torch-flicker"
-            style={{ animationDelay: '-0.3s', animationDuration: '4.6s' }}
-          />
-          <circle
-            cx="725"
-            cy="78"
-            r="2"
-            fill="#a8d042"
-            opacity="0.5"
-            className="animate-torch-flicker"
-            style={{ animationDelay: '-2.4s', animationDuration: '5.1s' }}
-          />
-          {/* Standing stones at the base */}
-          <rect x="668" y="184" width="6" height="14" fill="#3a2a22" />
-          <rect x="666" y="182" width="10" height="2" fill="#3a2a22" />
-          <rect x="744" y="186" width="6" height="12" fill="#3a2a22" />
-          <rect x="742" y="184" width="10" height="2" fill="#3a2a22" />
+          {/* Well — stone ring */}
+          <ellipse cx="552" cy="200" rx="10" ry="3" fill="#2a1c14" />
+          <rect x="544" y="192" width="16" height="8" fill="#3a2820" stroke="#0a0606" strokeWidth="0.8" />
+          <rect x="544" y="192" width="16" height="2" fill="#5a4030" />
+          {/* Well roof posts */}
+          <rect x="544" y="178" width="2" height="14" fill="#1a120c" />
+          <rect x="558" y="178" width="2" height="14" fill="#1a120c" />
+          {/* Roof */}
+          <polygon points="540,180 552,170 564,180 562,182 542,182" fill="#3a2418" stroke="#1a120c" strokeWidth="0.8" />
+          {/* Bucket on the rope */}
+          <line x1="552" y1="180" x2="552" y2="190" stroke="#3a2418" strokeWidth="0.5" />
+          <rect x="550" y="188" width="4" height="3" fill="#5a4030" />
+
+          {/* Cart parked beside the well */}
+          <g>
+            <rect x="500" y="195" width="36" height="5" fill="#5a3a22" stroke="#0a0606" strokeWidth="0.8" />
+            <rect x="500" y="195" width="36" height="1" fill="#7a5630" />
+            <line x1="502" y1="194" x2="534" y2="194" stroke="#3a2418" strokeWidth="0.6" />
+            <circle cx="507" cy="202" r="3" fill="#1a120c" stroke="#3a2418" strokeWidth="0.6" />
+            <circle cx="507" cy="202" r="1" fill="#3a2418" />
+            <circle cx="529" cy="202" r="3" fill="#1a120c" stroke="#3a2418" strokeWidth="0.6" />
+            <circle cx="529" cy="202" r="1" fill="#3a2418" />
+            <line x1="498" y1="198" x2="488" y2="200" stroke="#3a2418" strokeWidth="1" />
+            <rect x="514" y="190" width="8" height="6" fill="#3a2418" stroke="#1a120c" strokeWidth="0.5" />
+            <line x1="514" y1="193" x2="522" y2="193" stroke="#1a120c" strokeWidth="0.4" />
+            <line x1="518" y1="190" x2="518" y2="196" stroke="#1a120c" strokeWidth="0.4" />
+          </g>
         </g>
+
+        {/* Druid Grove — right, ancient oak. Only painted when unlocked.
+            When sealed, a dark undifferentiated treeline holds the silhouette
+            so the skyline isn't empty. */}
+        {druidGroveUnlocked ? (
+          <g>
+            {/* Backing treeline — softer hint of the deeper grove */}
+            <path
+              d="M 624 162 L 632 152 L 640 158 L 650 148 L 660 156 L 670 146 L 680 156 L 690 148 L 700 158 L 712 150 L 724 158 L 736 152 L 750 158 L 762 154 L 774 158 L 786 152 L 800 158 L 800 200 L 624 200 Z"
+              fill="#0a1208"
+              opacity="0.85"
+            />
+            {/* Trunk */}
+            <path
+              d="M 690 200 L 692 150 L 685 140 L 695 130 L 700 120 L 708 110 L 716 100 L 720 95 L 728 110 L 730 130 L 728 150 L 730 200 Z"
+              fill="#1f0e08"
+              stroke="#0a0606"
+              strokeWidth="1"
+            />
+            {/* Roots */}
+            <path d="M 680 200 L 690 180 L 700 200" fill="#1a0c08" stroke="#0a0606" strokeWidth="0.5" />
+            <path d="M 720 200 L 730 180 L 740 200" fill="#1a0c08" stroke="#0a0606" strokeWidth="0.5" />
+            {/* Canopy mass */}
+            <ellipse cx="710" cy="80" rx="55" ry="32" fill="#1a2e1a" />
+            <ellipse cx="685" cy="90" rx="35" ry="22" fill="#1a2e1a" />
+            <ellipse cx="735" cy="92" rx="32" ry="20" fill="#1a2e1a" />
+            {/* Leaf highlights */}
+            <ellipse cx="700" cy="68" rx="20" ry="12" fill="#2d4a22" opacity="0.7" />
+            <ellipse cx="720" cy="82" rx="15" ry="9" fill="#2d4a22" opacity="0.6" />
+            <ellipse cx="680" cy="84" rx="12" ry="7" fill="#2d4a22" opacity="0.5" />
+            {/* Glowing fey-light in the canopy */}
+            <circle
+              cx="700"
+              cy="80"
+              r="3"
+              fill="#a8d042"
+              opacity="0.6"
+              className="animate-torch-flicker"
+              style={{ animationDelay: '-0.3s', animationDuration: '4.6s' }}
+            />
+            <circle
+              cx="725"
+              cy="78"
+              r="2"
+              fill="#a8d042"
+              opacity="0.5"
+              className="animate-torch-flicker"
+              style={{ animationDelay: '-2.4s', animationDuration: '5.1s' }}
+            />
+            {/* Standing stones at the base */}
+            <rect x="668" y="184" width="6" height="14" fill="#3a2a22" />
+            <rect x="666" y="182" width="10" height="2" fill="#3a2a22" />
+            <rect x="744" y="186" width="6" height="12" fill="#3a2a22" />
+            <rect x="742" y="184" width="10" height="2" fill="#3a2a22" />
+          </g>
+        ) : (
+          <g opacity="0.95">
+            <path
+              d="M 624 168 L 632 154 L 640 162 L 650 150 L 660 158 L 670 146 L 680 158 L 690 148 L 700 160 L 712 150 L 724 160 L 736 152 L 750 160 L 762 154 L 774 160 L 786 152 L 800 160 L 800 200 L 624 200 Z"
+              fill="#0a0a0a"
+            />
+            <path
+              d="M 624 168 L 632 154 L 640 162 L 650 150 L 660 158 L 670 146 L 680 158 L 690 148 L 700 160 L 712 150 L 724 160 L 736 152 L 750 160 L 762 154 L 774 160 L 786 152 L 800 160"
+              fill="none"
+              stroke="#1a1a1a"
+              strokeWidth="0.8"
+            />
+          </g>
+        )}
 
         {/* Foreground ground */}
         <rect x="0" y="195" width="800" height="25" fill="url(#ground)" />
