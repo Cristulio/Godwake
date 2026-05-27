@@ -1,19 +1,28 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/Button';
-import { useGameStore } from '../../stores/gameStore';
+import { useGameStore, hasAnySave, getSlotMetadata } from '../../stores/gameStore';
 
 export function TitleScreen() {
   const startNewGame = useGameStore((s) => s.startNewGame);
   const [glow, setGlow] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setGlow(true), 200);
     return () => clearTimeout(t);
   }, []);
 
-  function handleNewGame() {
+  function beginNewGame() {
     const seed = `godwake-${Date.now()}-${Math.floor(Math.random() * 1e9).toString(36)}`;
     startNewGame(seed);
+  }
+
+  function handleNewGame() {
+    if (hasAnySave()) {
+      setConfirming(true);
+      return;
+    }
+    beginNewGame();
   }
 
   return (
@@ -74,6 +83,55 @@ export function TitleScreen() {
       </div>
       <div className="absolute bottom-4 left-4 text-[var(--color-text-muted)] text-[9px] font-display tracking-[0.3em] uppercase opacity-40">
         Made for friends
+      </div>
+
+      {confirming && (
+        <NewGameConfirm onCancel={() => setConfirming(false)} onConfirm={beginNewGame} />
+      )}
+    </div>
+  );
+}
+
+function NewGameConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
+  const meta = getSlotMetadata(0);
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onCancel();
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onCancel]);
+
+  const soulLabel = meta
+    ? `${meta.characterName} · level ${meta.characterLevel} · ${meta.location}`
+    : 'an existing soul';
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in-slow"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }}
+    >
+      <div className="panel-etched-warm border-2 border-[var(--color-border-warm)] p-6 w-[min(90vw,420px)] shadow-2xl animate-scale-in">
+        <div className="font-display text-[var(--color-accent-amber)] text-[11px] uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
+          <span className="text-[var(--color-accent-gold)]">◆</span> Begin a new game?
+        </div>
+        <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed mb-2">
+          Your soul — <span className="text-[var(--color-text-primary)]">{soulLabel}</span> —
+          will be released back to the wheel.
+        </p>
+        <p className="text-[var(--color-text-muted)] text-[11px] italic mb-5">
+          Manual save slots are not touched. Only the active autosave is wiped.
+        </p>
+        <div className="flex justify-end gap-2">
+          <Button variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={onConfirm}>
+            Begin
+          </Button>
+        </div>
       </div>
     </div>
   );
