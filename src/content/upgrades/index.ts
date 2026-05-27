@@ -42,14 +42,6 @@ export function rankCost(base: number, rank: number): number {
   return Math.round(base * Math.pow(rank, 1.6));
 }
 
-function bumpHpMax(character: Character, delta: number): Character {
-  const newMax = character.hp.max + delta;
-  return {
-    ...character,
-    hp: { ...character.hp, max: newMax, current: Math.max(character.hp.current, newMax) },
-  };
-}
-
 const RAW: Upgrade[] = [
   // ─── BODY ──────────────────────────────────────────────────────────────
   {
@@ -61,7 +53,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r * 5} maximum HP, permanent across reincarnations.`,
     costForRank: (r) => rankCost(80, r),
     maxRank: 5,
-    apply: (c) => bumpHpMax(c, 5),
+    apply: (c) => ({ ...c, permanentHpBonus: (c.permanentHpBonus ?? 0) + 5 }),
     kind: 'permanent',
   },
   {
@@ -401,7 +393,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => (r === 0 ? '+5 maximum HP, permanent.' : '+5 maximum HP, permanent.'),
     costForRank: (r) => rankCost(220, r),
     maxRank: 1,
-    apply: (c) => bumpHpMax(c, 5),
+    apply: (c) => ({ ...c, permanentHpBonus: (c.permanentHpBonus ?? 0) + 5 }),
     kind: 'permanent',
   },
   {

@@ -382,7 +382,13 @@ export const useGameStore = create<GameState>()(
     const conMod = abilityModifier(effectiveAbilityScores(ch).con);
     const race = getRace(ch.raceId);
     const bonusHp = race.bonusHpPerLevel ?? 0;
-    const baseHpMax = cls.hitDie + conMod + bonusHp;
+    // Wizard +1/level baseline must be rebuilt on every descent — initialize.ts
+    // bakes it into hp.max at character creation, but startDelve recomputes
+    // baseHpMax and would otherwise strip it. Same for Grove HP bonuses
+    // (Mantle of the Wakened, Iron Will), which live on permanentHpBonus.
+    const classBonusHp = ch.classId === 'wizard' ? 1 : 0;
+    const permanentHpBonus = ch.permanentHpBonus ?? 0;
+    const baseHpMax = cls.hitDie + conMod + bonusHp + classBonusHp + permanentHpBonus;
     const freshlyDescended: Character = {
       ...ch,
       level: 1,
@@ -838,6 +844,19 @@ export const useGameStore = create<GameState>()(
         // already reincarnated so the Souls-walked readout isn't misleading.
         if (state && typeof state.deathCount !== 'number') {
           state.deathCount = state.hasReincarnated ? 1 : 0;
+        }
+        // Older saves predate permanentHpBonus. Pre-refactor, Mantle of the
+        // Wakened / Iron Will mutated hp.max directly — and that mutation got
+        // wiped on every startDelve. Re-derive from owned ranks so existing
+        // players don't lose Renown spend.
+        if (state?.character && typeof state.character.permanentHpBonus !== 'number') {
+          const owned = state.unlockedUpgrades ?? {};
+          const mantleRank = owned['mantle-of-the-wakened'] ?? 0;
+          const ironWillRank = owned['iron-will'] ?? 0;
+          const rederived = mantleRank * 5 + ironWillRank * 5;
+          if (rederived > 0) {
+            state.character = { ...state.character, permanentHpBonus: rederived };
+          }
         }
       },
     },

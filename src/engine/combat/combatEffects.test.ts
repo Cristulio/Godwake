@@ -259,7 +259,9 @@ describe('combat effects — stabilise (death-save replacement)', () => {
     expect(stabiliseLog).toBeDefined();
   });
 
-  it('second lethal blow with no charges left drops the player', () => {
+  it('third lethal blow with no charges left drops the player', () => {
+    // Baseline is 2 free stabilises per delve (bumped from 1). The third
+    // lethal blow has nothing left to spend.
     const goblin = getMonster('goblin');
     const hero = makeHuman();
     hero.delveBudgets = { stabilisesUsed: 0 };
@@ -271,13 +273,18 @@ describe('combat effects — stabilise (death-save replacement)', () => {
     expect(hero.delveBudgets?.stabilisesUsed).toBe(1);
 
     state = applyDamage(state, 'player', 5, hero);
+    expect(hero.hp.current).toBe(1);
+    expect(hero.delveBudgets?.stabilisesUsed).toBe(2);
+
+    state = applyDamage(state, 'player', 5, hero);
     expect(hero.hp.current).toBe(0);
-    expect(hero.delveBudgets?.stabilisesUsed).toBe(1);
+    expect(hero.delveBudgets?.stabilisesUsed).toBe(2);
     const stabiliseLogs = state.log.filter((l) => l.text.includes("Ilmater's grip"));
-    expect(stabiliseLogs).toHaveLength(1);
+    expect(stabiliseLogs).toHaveLength(2);
   });
 
-  it("Ilmater's Patience grants a second stabilise charge", () => {
+  it("Ilmater's Patience grants an additional stabilise charge on top of the baseline", () => {
+    // Baseline 2 + blessing 1 = 3 charges. Fourth lethal blow drops.
     const goblin = getMonster('goblin');
     const hero = makeHuman({ blessings: ['ilmaters-patience'] });
     hero.delveBudgets = { stabilisesUsed: 0 };
@@ -292,6 +299,10 @@ describe('combat effects — stabilise (death-save replacement)', () => {
     expect(hero.hp.current).toBe(1);
     expect(state.status).toBe('active');
     expect(hero.delveBudgets?.stabilisesUsed).toBe(2);
+
+    state = applyDamage(state, 'player', 5, hero);
+    expect(hero.hp.current).toBe(1);
+    expect(hero.delveBudgets?.stabilisesUsed).toBe(3);
 
     state = applyDamage(state, 'player', 5, hero);
     expect(hero.hp.current).toBe(0);

@@ -118,17 +118,21 @@ export function applyDamage(state: CombatState, targetId: string, amount: number
   return next;
 }
 
+/** Default auto-stabilise charges granted per delve before bonuses stack. */
+const BASE_STABILISE_CHARGES = 2;
+
 /**
- * Spend a stabilise charge if any are available. Available = 1 (free per delve)
- * + extraStabiliseCharges (from Ilmater's Patience stacks) - stabilisesUsed.
- * Mutates character.delveBudgets when it consumes one. Returns whether a
- * charge was spent.
+ * Spend a stabilise charge if any are available. Available =
+ * BASE_STABILISE_CHARGES (free per delve) + extraStabiliseCharges (from
+ * Ilmater's Patience stacks) + delveStabiliseBonus (Hardier Soul) -
+ * stabilisesUsed. Mutates character.delveBudgets when it consumes one.
+ * Returns whether a charge was spent.
  */
 function tryConsumeStabilise(character: Character): boolean {
   const blessingExtra = characterBlessingMods(character).extraStabiliseCharges ?? 0;
   const upgradeExtra = character.delveStabiliseBonus ?? 0;
   const used = character.delveBudgets?.stabilisesUsed ?? 0;
-  const available = 1 + blessingExtra + upgradeExtra - used;
+  const available = BASE_STABILISE_CHARGES + blessingExtra + upgradeExtra - used;
   if (available <= 0) return false;
   character.delveBudgets = {
     ...character.delveBudgets,
