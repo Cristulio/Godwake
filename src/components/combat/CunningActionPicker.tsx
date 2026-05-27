@@ -20,7 +20,7 @@ const OPTIONS: Array<{ choice: CunningActionChoice; label: string; blurb: string
   {
     choice: 'dash',
     label: 'Dash',
-    blurb: 'Sprint into reach. Your next attack rolls with +2.',
+    blurb: 'Surge forward — take a quick second strike this turn (no Sneak Attack on the second).',
   },
 ];
 

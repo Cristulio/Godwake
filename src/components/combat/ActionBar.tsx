@@ -31,7 +31,11 @@ export function ActionBar({
 }: ActionBarProps) {
   const playersTurn = isPlayerTurn(state);
   const active = state.status === 'active';
-  const canAttack = playersTurn && active && !character.actionEconomy.actionUsed;
+  // Cunning Action: Dash queues a free swing the player can fire even after
+  // the Action is spent.
+  const hasBonusAttack = character.bonusAttackAvailable === true;
+  const canAttack =
+    playersTurn && active && (!character.actionEconomy.actionUsed || hasBonusAttack);
 
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
@@ -96,9 +100,12 @@ export function ActionBar({
   // button so the player knows the second swing is queued.
   const hasExtraAttack = characterHasMechanic(character, 'extra-attack');
   const attacksThisTurn = state.playerAttacksThisTurn ?? 0;
-  const attackLabel = hasExtraAttack
-    ? `► Attack (${Math.min(attacksThisTurn + 1, 2)}/2)`
-    : '► Attack';
+  const dashSwingPending = hasBonusAttack && character.actionEconomy.actionUsed;
+  const attackLabel = dashSwingPending
+    ? '► Attack (Dash)'
+    : hasExtraAttack
+      ? `► Attack (${Math.min(attacksThisTurn + 1, 2)}/2)`
+      : '► Attack';
 
   // Two-row layout. Row 1 = the heavy hitters (Attack + class-specific
   // actions + Spells when applicable). Row 2 = universal utility (Item /
@@ -144,7 +151,7 @@ export function ActionBar({
             variant={canCunningAction ? 'primary' : 'secondary'}
             onClick={onCunningAction}
             disabled={!canCunningAction}
-            title="Bonus action: Hide (advantage on next attack), Dash (+2 to next attack), or Disengage (2 damage reduction on next incoming hit)."
+            title="Bonus action: Hide (advantage on next attack), Dash (a quick second strike this turn), or Disengage (2 damage reduction on next incoming hit)."
             className="flex-1"
           >
             Cunning Action{cunningRemaining > 0 && ` (${cunningRemaining})`}
