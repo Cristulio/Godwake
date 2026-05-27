@@ -55,8 +55,6 @@ export function aggregateQuirkModifiers(quirkIds: string[]): QuirkModifiers {
       acc.firstAttackPenalty = (acc.firstAttackPenalty ?? 0) + m.firstAttackPenalty;
     if (m.rerollMissesPerDelve !== undefined)
       acc.rerollMissesPerDelve = (acc.rerollMissesPerDelve ?? 0) + m.rerollMissesPerDelve;
-    if (m.charismaMod !== undefined)
-      acc.charismaMod = (acc.charismaMod ?? 0) + m.charismaMod;
     if (m.startBonusGold !== undefined)
       acc.startBonusGold = (acc.startBonusGold ?? 0) + m.startBonusGold;
   }

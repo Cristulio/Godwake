@@ -24,8 +24,6 @@ export const QuirkModifiersSchema = z
     firstAttackPenalty: z.number().optional(),
     /** Rerolls available per delve for missed d20s. */
     rerollMissesPerDelve: z.number().optional(),
-    /** Flat modifier to Charisma checks. */
-    charismaMod: z.number().optional(),
     /** Extra gold at the start of each delve. */
     startBonusGold: z.number().optional(),
   })

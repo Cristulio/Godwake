@@ -43,7 +43,7 @@ export type Screen =
   | 'codex'
   | 'inventory'
   | 'druid-grove'
-  | 'chapter2-teaser'
+  | 'lionshield-coster'
   | 'level-up';
 
 /** Renown granted per successful delve clear (boss killed). */
@@ -88,8 +88,8 @@ function locationLabel(screen: Screen): string {
       return 'Phandalin';
     case 'druid-grove':
       return 'Druid Grove';
-    case 'chapter2-teaser':
-      return 'Road to Athkatla';
+    case 'lionshield-coster':
+      return 'Lionshield Coster';
     case 'codex':
       return 'Bestiary';
     case 'inventory':
@@ -155,7 +155,7 @@ interface GameState {
   goToDelve: () => void;
   goToReincarnation: () => void;
   goToDruidGrove: () => void;
-  goToChapter2Teaser: () => void;
+  goToLionshieldCoster: () => void;
 
   // Lifecycle
   startNewGame: (seed: string) => void;
@@ -330,7 +330,7 @@ export const useGameStore = create<GameState>()(
   goToReincarnation: () =>
     set((s) => ({ screen: 'reincarnation', deathCount: s.deathCount + 1 })),
   goToDruidGrove: () => set({ screen: 'druid-grove' }),
-  goToChapter2Teaser: () => set({ screen: 'chapter2-teaser' }),
+  goToLionshieldCoster: () => set({ screen: 'lionshield-coster' }),
 
   startNewGame: (seed) => {
     setActiveRoller(seed);

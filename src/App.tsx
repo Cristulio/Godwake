@@ -1,18 +1,62 @@
+import { lazy, Suspense } from 'react';
 import { useGameStore } from './stores/gameStore';
 import { TitleScreen } from './components/title/TitleScreen';
-import { IntroScreen } from './components/title/IntroScreen';
-import { CharacterCreationScreen } from './components/creation/CharacterCreationScreen';
 import { HubScreen } from './components/hub/HubScreen';
-import { DruidGroveScreen } from './components/hub/DruidGroveScreen';
-import { Chapter2TeaserScreen } from './components/hub/Chapter2TeaserScreen';
-import { DelveScreen } from './components/delve/DelveScreen';
-import { CodexScreen } from './components/codex/CodexScreen';
-import { InventoryScreen } from './components/inventory/InventoryScreen';
 import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
-import { QuirksTutorial } from './components/lore/QuirksTutorial';
-import { ReincarnationReveal } from './components/lore/ReincarnationReveal';
-import { LevelUpScreen } from './components/level/LevelUpScreen';
 import { SettingsButton } from './components/ui/SettingsButton';
+
+// Lazy-load screens that aren't on the critical path. Cuts the initial bundle
+// and lets Cloudflare serve gameplay faster — the title/hub/delve loop covers
+// 90%+ of session time anyway.
+const IntroScreen = lazy(() =>
+  import('./components/title/IntroScreen').then((m) => ({ default: m.IntroScreen })),
+);
+const CharacterCreationScreen = lazy(() =>
+  import('./components/creation/CharacterCreationScreen').then((m) => ({
+    default: m.CharacterCreationScreen,
+  })),
+);
+const DruidGroveScreen = lazy(() =>
+  import('./components/hub/DruidGroveScreen').then((m) => ({ default: m.DruidGroveScreen })),
+);
+const LionshieldCosterScreen = lazy(() =>
+  import('./components/hub/LionshieldCosterScreen').then((m) => ({
+    default: m.LionshieldCosterScreen,
+  })),
+);
+const CodexScreen = lazy(() =>
+  import('./components/codex/CodexScreen').then((m) => ({ default: m.CodexScreen })),
+);
+const InventoryScreen = lazy(() =>
+  import('./components/inventory/InventoryScreen').then((m) => ({ default: m.InventoryScreen })),
+);
+const ReincarnationReveal = lazy(() =>
+  import('./components/lore/ReincarnationReveal').then((m) => ({
+    default: m.ReincarnationReveal,
+  })),
+);
+const LevelUpScreen = lazy(() =>
+  import('./components/level/LevelUpScreen').then((m) => ({ default: m.LevelUpScreen })),
+);
+const QuirksTutorial = lazy(() =>
+  import('./components/lore/QuirksTutorial').then((m) => ({ default: m.QuirksTutorial })),
+);
+// DelveScreen pulls all combat code + the 1.5k-line MonsterPortrait library.
+// Lazy so the title/hub loop loads fast; delve chunk warms when the player
+// first descends.
+const DelveScreen = lazy(() =>
+  import('./components/delve/DelveScreen').then((m) => ({ default: m.DelveScreen })),
+);
+
+function ScreenFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="font-display text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] animate-pulse">
+        ◆ Loading
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const screen = useGameStore((s) => s.screen);
@@ -45,8 +89,8 @@ function App() {
     case 'druid-grove':
       content = <DruidGroveScreen />;
       break;
-    case 'chapter2-teaser':
-      content = <Chapter2TeaserScreen />;
+    case 'lionshield-coster':
+      content = <LionshieldCosterScreen />;
       break;
     case 'delve':
       content = <DelveScreen />;
@@ -69,7 +113,7 @@ function App() {
 
   return (
     <div className="crt-scanlines">
-      {content}
+      <Suspense fallback={<ScreenFallback />}>{content}</Suspense>
       {taunt && (
         <IrenicusTaunt
           speaker={taunt.speaker}
@@ -78,7 +122,11 @@ function App() {
           onDismiss={dismissTaunt}
         />
       )}
-      {showQuirksTutorial && <QuirksTutorial onDismiss={markQuirksTutorialSeen} />}
+      {showQuirksTutorial && (
+        <Suspense fallback={null}>
+          <QuirksTutorial onDismiss={markQuirksTutorialSeen} />
+        </Suspense>
+      )}
       <SettingsButton />
     </div>
   );

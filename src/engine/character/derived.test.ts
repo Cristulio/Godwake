@@ -73,8 +73,20 @@ describe('character derivation — human fighter', () => {
     expect(computeAC(human)).toBe(10 + 2);
   });
 
-  it('initiative modifier = DEX mod', () => {
+  it('initiative modifier = DEX mod (Human, speed 30 → 0 race delta)', () => {
     expect(initiativeModifier(human)).toBe(2);
+  });
+
+  it('Wood Elf adds +1 init from race speed 35', () => {
+    const woodElf = { ...human, raceId: 'wood-elf' as const };
+    expect(initiativeModifier(woodElf)).toBe(3); // DEX(2) + 1 speed delta
+  });
+
+  it('Hill Dwarf takes -1 init from race speed 25', () => {
+    // Hill Dwarf gives no DEX bonus; effective DEX drops from human 14 → 13 (+1 mod).
+    // Speed 25 = -1 init delta. Total: +1 - 1 = 0.
+    const hillDwarf = { ...human, raceId: 'hill-dwarf' as const };
+    expect(initiativeModifier(hillDwarf)).toBe(0);
   });
 
   it('starts with only the lv20 crit range (Improved Critical not yet)', () => {

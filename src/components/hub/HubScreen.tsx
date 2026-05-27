@@ -50,8 +50,10 @@ function buildingsFor(
     {
       id: 'lionshield-coster',
       name: 'Lionshield Coster',
-      description: 'A modest trading post. Potions, scrolls, and gear for the road ahead.',
-      enabled: false,
+      description:
+        "Linene Graywind's trading post sells potions, scrolls, and mid-tier gear. Always open, always taking coin.",
+      enabled: true,
+      cta: 'Spend Gold',
     },
   ];
   // Spellhold (Ch3) only surfaces after Ch1 is cleared. Hard renown gate at
@@ -230,7 +232,9 @@ export function HubScreen() {
                       ? handleSailToSpellhold
                       : b.id === 'ust-natha'
                         ? handleDescendToUstNatha
-                        : undefined
+                        : b.id === 'lionshield-coster'
+                          ? useGameStore.getState().goToLionshieldCoster
+                          : undefined
               }
             >
               {b.enabled ? (b.cta ?? 'Enter') : (b.lockedCta ?? 'Coming soon')}
