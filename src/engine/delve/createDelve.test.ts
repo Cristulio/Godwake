@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { createIronCellsDelve, createGodwakeDelve, createSpellholdDelve } from './createDelve';
+import {
+  createIronCellsDelve,
+  createGodwakeDelve,
+  createSpellholdDelve,
+  createUstNathaDelve,
+} from './createDelve';
 import { getMonster } from '../../content/monsters';
 
 describe('createIronCellsDelve', () => {
@@ -141,5 +146,56 @@ describe('createSpellholdDelve', () => {
     const director = getMonster('asylum-director');
     expect(director.bossMechanic).toBe('battle-rage');
     expect(director.actions.some((a) => a.kind === 'paralyze' && a.name === 'Hold Person')).toBe(true);
+  });
+});
+
+describe('createUstNathaDelve', () => {
+  it('produces 8 rooms in the warmup-shrine-mid-rest-elite-shrine-elite-boss pattern', () => {
+    const d = createUstNathaDelve(1);
+    expect(d.rooms).toHaveLength(8);
+    expect(d.rooms[0].kind).toBe('combat');
+    expect(d.rooms[1].kind).toBe('shrine');
+    expect(d.rooms[2].kind).toBe('combat');
+    expect(d.rooms[3].kind).toBe('rest');
+    expect(d.rooms[4].kind).toBe('combat');
+    expect(d.rooms[5].kind).toBe('shrine');
+    expect(d.rooms[6].kind).toBe('combat');
+    expect(d.rooms[7].kind).toBe('boss');
+  });
+
+  it('chapterId is chapter-4', () => {
+    const d = createUstNathaDelve(42);
+    expect(d.chapterId).toBe('chapter-4');
+  });
+
+  it('boss is always the Matron Mother', () => {
+    for (let s = 0; s < 10; s++) {
+      const d = createUstNathaDelve(s);
+      expect(d.rooms[7].monsters?.[0].defId).toBe('drow-matron-mother');
+    }
+  });
+
+  it('is deterministic per seed', () => {
+    const a = createUstNathaDelve(42);
+    const b = createUstNathaDelve(42);
+    expect(a.rooms.map((r) => r.title)).toEqual(b.rooms.map((r) => r.title));
+    expect(a.rooms.map((r) => r.monsters)).toEqual(b.rooms.map((r) => r.monsters));
+  });
+
+  it('boss has battle-rage mechanic and a Hold Person action', () => {
+    const matron = getMonster('drow-matron-mother');
+    expect(matron.bossMechanic).toBe('battle-rage');
+    expect(matron.actions.some((a) => a.kind === 'paralyze')).toBe(true);
+  });
+
+  it('every monster id referenced in pools resolves via getMonster', () => {
+    for (let s = 0; s < 8; s++) {
+      const d = createUstNathaDelve(s);
+      for (const room of d.rooms) {
+        for (const m of room.monsters ?? []) {
+          expect(() => getMonster(m.defId)).not.toThrow();
+        }
+      }
+    }
   });
 });

@@ -20,6 +20,12 @@ import {
   MID_POOL as SPH_MID_POOL,
   ELITE_POOL as SPH_ELITE_POOL,
 } from './chapter3Pools';
+import {
+  WARMUP_POOL as UN_WARMUP_POOL,
+  EARLY_MID_POOL as UN_EARLY_MID_POOL,
+  MID_POOL as UN_MID_POOL,
+  ELITE_POOL as UN_ELITE_POOL,
+} from './chapter4Pools';
 
 function pick<T>(rng: { next(): number }, pool: T[]): T {
   if (pool.length === 0) throw new Error('Empty encounter pool');
@@ -315,6 +321,73 @@ export function createSpellholdDelve(seed: number = randomSeed()): DelveState {
   return {
     dungeonName: 'Spellhold — The Cowled Asylum',
     chapterId: 'chapter-3',
+    rooms,
+    currentRoomIdx: 0,
+    phase: 'in-room',
+    roomsCleared: 0,
+    goldEarned: 0,
+    xpEarned: 0,
+  };
+}
+
+/**
+ * Chapter 4 / Ust Natha — eight rooms threading the drow city of the
+ * Underdark, gated on the hub by `renown >= 3000`. A side delve, not an
+ * extension of any other run — the player chooses whether to descend the
+ * Iron Cells, sail to Spellhold, or take Cowled passage down to Ust Natha
+ * from the hub.
+ *
+ * Slot pattern: warmup → shrine → early-mid → rest → mid → shrine →
+ *               elite → Matron Mother (boss).
+ *
+ * Same procedural-pool pattern as Ch1/Ch2/Ch3: each combat slot draws one
+ * entry from its themed pool via a seeded RNG.
+ */
+export function createUstNathaDelve(seed: number = randomSeed()): DelveState {
+  const rng = createRng(seed);
+
+  const rooms: RoomSpec[] = [
+    combatRoom('room-1', pick(rng, UN_WARMUP_POOL)),
+    {
+      id: 'room-2',
+      kind: 'shrine',
+      title: 'A Faerzress Sigil to Eilistraee',
+      flavorText:
+        "Hidden behind a fallen slab in the lower tunnels — a circle scratched in chalk, a moon-and-sword glyph at its centre. The drow goddess of the dance, the one Lolth's priestesses have a standing kill-order on. The bone-light flickers green here in a way that is not entirely natural.",
+    },
+    combatRoom('room-3', pick(rng, UN_EARLY_MID_POOL)),
+    {
+      id: 'room-4',
+      kind: 'rest',
+      title: 'A Disused Slave-Pen',
+      flavorText:
+        "A cage-tier the slavers have not stocked this season — the chains hang slack, the straw is old. The faerzress glow is dim enough here that the corridor-watch will not look in. You can catch your breath here.",
+      restType: 'short',
+    },
+    combatRoom('room-5', pick(rng, UN_MID_POOL)),
+    {
+      id: 'room-6',
+      kind: 'shrine',
+      title: "A Surface-Smuggled Altar to Selûne",
+      flavorText:
+        "A scrap of silver-moon tapestry pinned to a niche wall, half a candle-stub still warm. Some surface-elf slave from a previous caravan smuggled the moon-mother down here a prayer at a time. The drow priestesses have not yet found this one. The Lady is still listening.",
+    },
+    combatRoom('room-7', pick(rng, UN_ELITE_POOL)),
+    {
+      id: 'room-8',
+      kind: 'boss',
+      title: "The Matron Mother's Audience",
+      flavorText:
+        "The inner temple of Lolth — black basalt, eight-legged sigils in arterial red along the walls, the air thick with the resin-smoke the priestesses burn for visions. At the centre, on a low throne carved from a single spider's egg-case, the Matron Mother does not rise. \"You are not on the slave-roll. The exception is easily corrected.\"",
+      monsters: [{ defId: 'drow-matron-mother', count: 1 }],
+      xpReward: 1650,
+      goldReward: 220,
+    },
+  ];
+
+  return {
+    dungeonName: 'Ust Natha — The Drow City',
+    chapterId: 'chapter-4',
     rooms,
     currentRoomIdx: 0,
     phase: 'in-room',
