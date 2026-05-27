@@ -239,7 +239,7 @@ export function InventoryScreen() {
                         </div>
                         {attuned && (
                           <div className="text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest font-display mt-1">
-                            ◆ Attuned
+                            ◆ Soul-bound
                           </div>
                         )}
                       </div>
@@ -264,6 +264,7 @@ export function InventoryScreen() {
         </Panel>
 
         <div
+          title={`Some items bind to your soul — only ${attCap} can be equipped at once. Unlocked via the Grove.`}
           className={`
             panel-etched-warm border-2 p-4 flex flex-col justify-center
             ${attAtCap
@@ -273,7 +274,7 @@ export function InventoryScreen() {
         >
           <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 flex items-center gap-1">
             <span className="text-[var(--color-accent-gold)]">◆</span>
-            Attunement
+            Soul-bound
           </div>
           <div
             className={`font-mono text-2xl ${
@@ -327,7 +328,7 @@ export function InventoryScreen() {
                   const hint = equipped
                     ? 'Equipped'
                     : blocked
-                      ? `No free attunement slot (${attUsed}/${attCap})`
+                      ? `No free Soul-bind slot (${attUsed}/${attCap})`
                       : equippable
                         ? 'Click or drag to equip'
                         : item.kind === 'consumable'
@@ -381,7 +382,7 @@ export function InventoryScreen() {
                           )}
                           {isAttunement && (
                             <div className="font-display text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest">
-                              ◆ Attuned
+                              ◆ Soul-bound
                             </div>
                           )}
                         </div>
