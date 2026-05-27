@@ -59,7 +59,8 @@ export const ROGUE: Class = ClassSchema.parse({
         id: 'uncanny-dodge',
         name: 'Uncanny Dodge',
         description:
-          'When an attacker you can see hits you, your reaction halves the damage. (Flavor — engine support pending.)',
+          'Once per round, when an attacker hits you, your reaction halves the damage (rounded down). Triggers automatically on the first hit each round.',
+        mechanicKey: 'uncanny-dodge',
       },
     ],
     '6': [

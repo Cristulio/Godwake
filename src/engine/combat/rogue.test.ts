@@ -298,6 +298,158 @@ describe('Rogue — Sneak Attack', () => {
   });
 });
 
+describe('Rogue — Uncanny Dodge', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('halves the first incoming hit per round at L5', () => {
+    let rogue = makeRogue({ level: 5 });
+    const roller = createDiceRoller(1);
+    const init = createCombat({
+      roller,
+      character: rogue,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    let state = init.state;
+    rogue = init.character;
+    const hpBefore = rogue.hp.current;
+    const dmg = applyDamage(state, 'player', 7, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
+    expect(rogue.hp.current).toBe(hpBefore - 3);
+    expect(rogue.actionEconomy.reactionUsed).toBe(true);
+    const log = state.log.find((l) => l.text.includes('Uncanny Dodge'));
+    expect(log?.text).toContain('damage halved (7 → 3)');
+  });
+
+  it('second hit in the same round takes full damage', () => {
+    let rogue = makeRogue({ level: 5 });
+    const roller = createDiceRoller(1);
+    const init = createCombat({
+      roller,
+      character: rogue,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    let state = init.state;
+    rogue = init.character;
+    const hpBefore = rogue.hp.current;
+    let dmg = applyDamage(state, 'player', 6, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
+    expect(rogue.hp.current).toBe(hpBefore - 3);
+    dmg = applyDamage(state, 'player', 4, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
+    expect(rogue.hp.current).toBe(hpBefore - 3 - 4);
+    void state;
+  });
+
+  it('does not trigger for L4 Rogue', () => {
+    let rogue = makeRogue({ level: 4 });
+    const roller = createDiceRoller(1);
+    const init = createCombat({
+      roller,
+      character: rogue,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    let state = init.state;
+    rogue = init.character;
+    const hpBefore = rogue.hp.current;
+    const dmg = applyDamage(state, 'player', 6, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
+    expect(rogue.hp.current).toBe(hpBefore - 6);
+    expect(rogue.actionEconomy.reactionUsed).toBe(false);
+    expect(state.log.find((l) => l.text.includes('Uncanny Dodge'))).toBeUndefined();
+  });
+
+  it('does not trigger for a Fighter at L5', () => {
+    let fighter: Character = {
+      ...createCharacter({
+        id: 'test-fighter-ud',
+        name: 'Brick',
+        raceId: 'human',
+        classId: 'fighter',
+        baseAbilityScores: {
+          str: STANDARD_ARRAY[0],
+          dex: STANDARD_ARRAY[2],
+          con: STANDARD_ARRAY[1],
+          int: STANDARD_ARRAY[5],
+          wis: STANDARD_ARRAY[3],
+          cha: STANDARD_ARRAY[4],
+        },
+        skillProficiencies: ['athletics', 'perception'],
+      }),
+      level: 5,
+      inventory: [{ itemId: 'longsword' }],
+      equipped: { mainHand: { itemId: 'longsword' }, offHand: null, armor: null },
+    };
+    const roller = createDiceRoller(1);
+    const init = createCombat({
+      roller,
+      character: fighter,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    let state = init.state;
+    fighter = init.character;
+    const hpBefore = fighter.hp.current;
+    const dmg = applyDamage(state, 'player', 6, fighter);
+    state = dmg.state;
+    fighter = dmg.character;
+    expect(fighter.hp.current).toBe(hpBefore - 6);
+    expect(state.log.find((l) => l.text.includes('Uncanny Dodge'))).toBeUndefined();
+  });
+
+  it('reaction resets when the Rogue starts a new turn, re-enabling Uncanny Dodge', () => {
+    let rogue = makeRogue({ level: 5 });
+    const roller = createDiceRoller(1);
+    const init = createCombat({
+      roller,
+      character: rogue,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    let state = init.state;
+    rogue = init.character;
+    let dmg = applyDamage(state, 'player', 8, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
+    expect(rogue.actionEconomy.reactionUsed).toBe(true);
+
+    // Cycle initiative back to the player so reaction resets.
+    for (let i = 0; i < state.initiativeOrder.length; i++) {
+      const et = endTurn(state, rogue);
+      state = et.state;
+      rogue = et.character;
+      if (state.initiativeOrder[state.currentTurnIndex] === 'player') break;
+    }
+    expect(state.initiativeOrder[state.currentTurnIndex]).toBe('player');
+    expect(rogue.actionEconomy.reactionUsed).toBe(false);
+
+    const hpBefore = rogue.hp.current;
+    dmg = applyDamage(state, 'player', 6, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
+    expect(rogue.hp.current).toBe(hpBefore - 3);
+    expect(rogue.actionEconomy.reactionUsed).toBe(true);
+  });
+
+  it('zero or temp-HP-only damage does not waste the reaction', () => {
+    let rogue = makeRogue({ level: 5 });
+    const roller = createDiceRoller(1);
+    const init = createCombat({
+      roller,
+      character: rogue,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    let state = init.state;
+    rogue = init.character;
+    const dmg = applyDamage(state, 'player', 0, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
+    expect(rogue.actionEconomy.reactionUsed).toBe(false);
+    expect(state.log.find((l) => l.text.includes('Uncanny Dodge'))).toBeUndefined();
+  });
+});
+
 describe('Rogue — Cunning Action', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
