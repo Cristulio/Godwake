@@ -7,7 +7,9 @@ import type {
 import { characterBlessingMods } from '../../character/blessings';
 import { playSfx } from '../../audio';
 import { appendLog } from '../log';
-import { patchDelveBudgets, patchHp } from '../types';
+import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
+
+const UNCANNY_DODGE_LEVEL = 5;
 
 export function nextLogId(state: CombatState): number {
   return state.log.length + 1;
@@ -62,6 +64,21 @@ export function applyDamage(
       kind: 'system',
       text: `${nextCharacter.name} twists with the blow — ${reduction} damage avoided.`,
     });
+  }
+  if (
+    nextCharacter.classId === 'rogue' &&
+    nextCharacter.level >= UNCANNY_DODGE_LEVEL &&
+    !nextCharacter.actionEconomy.reactionUsed &&
+    workingAmount > 0
+  ) {
+    const halved = Math.floor(workingAmount / 2);
+    next = appendLog(next, {
+      id: next.log.length + 1,
+      kind: 'system',
+      text: `${nextCharacter.name} uses Uncanny Dodge — damage halved (${workingAmount} → ${halved}).`,
+    });
+    workingAmount = halved;
+    nextCharacter = patchActionEconomy(nextCharacter, { reactionUsed: true });
   }
   const remainingTemp = Math.max(0, nextCharacter.hp.temp - workingAmount);
   const overflow = Math.max(0, workingAmount - nextCharacter.hp.temp);
