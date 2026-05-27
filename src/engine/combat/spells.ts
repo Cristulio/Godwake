@@ -7,6 +7,7 @@ import type {
   SpellEffectKind,
 } from '../../types/combat';
 import { getSpell } from '../../content/spells';
+import { getMonster } from '../../content/monsters';
 import { applyDamage } from './attack';
 import { abilityModifier } from '../../types/abilities';
 import { effectiveAbilityScores, characterHasMechanic, proficiencyBonus } from '../character/derived';
@@ -320,23 +321,17 @@ function castHoldPerson(ctx: CastSpellContext): CastResult {
 
   consumeSlot(character, 2);
 
-  // Monster save vs. Hold Person. We don't have monster save proficiencies
-  // wired generically; use WIS modifier from the monster's ability scores
-  // (most beasts have WIS 8-12 so it stays a meaningful threat).
   const dc = spellSaveDC(character);
-  // Pull monster def for ability scores — but to avoid an import cycle here,
-  // approximate save mod from monster AC vs. baseline. Simpler: roll d20+0
-  // (treat all targets as having a wis mod of 0). Keeps the engine honest
-  // and gives Hold Person bite proportional to the wizard's INT/proficiency.
-  const wisMod = 0;
-  const save = roller.d20('normal', wisMod);
+  const monsterDef = getMonster(target.instance.defId);
+  const targetWisMod = abilityModifier(monsterDef.abilityScores.wis ?? 10);
+  const save = roller.d20('normal', targetWisMod);
   const success = save.total >= dc;
 
   const logs: CombatLogEntry[] = [
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${character.name} weaves Hold Person at ${target.instance.displayName}. WIS save: d20${wisMod >= 0 ? '+' : ''}${wisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+      text: `${character.name} weaves Hold Person at ${target.instance.displayName}. WIS save: d20${targetWisMod >= 0 ? '+' : ''}${targetWisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
     },
   ];
 
