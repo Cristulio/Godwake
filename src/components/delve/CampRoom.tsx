@@ -131,12 +131,12 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
       <div className="grid md:grid-cols-3 gap-3">
         <CampChoiceCard
           choiceId="rest"
-          title="Rest at the Fire"
-          flavor="Catch your breath. Wounds will not close — but Second Wind and a careful surge can be readied again."
+          title="Make Camp at the Fire"
+          flavor="A full night by the coals. Wounds close, dice come home to the hand, and what was spent is yours again before dawn."
           locked={campChoice !== null && campChoice !== 'rest'}
           picked={campChoice === 'rest'}
-          pickedSummary="Second Wind, Action Surge — readied."
-          buttonLabel="Rest by the fire"
+          pickedSummary="Full rest — HP restored, all resources readied."
+          buttonLabel="Make camp"
           onPick={() => handlePickChoice('rest')}
         />
         <CampChoiceCard

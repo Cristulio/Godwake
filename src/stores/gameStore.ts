@@ -10,7 +10,7 @@ import { effectiveAbilityScores } from '../engine/character/derived';
 import { abilityModifier } from '../types/abilities';
 import { getRace } from '../content/races';
 import { getClass } from '../content/classes';
-import { longRest, shortRestHeal, withResetActionEconomy } from '../engine/character/actions';
+import { longRest, withResetActionEconomy } from '../engine/character/actions';
 import { rollBlessingOptions } from '../engine/character/blessings';
 import {
   rollQuirks,
@@ -619,9 +619,11 @@ export const useGameStore = create<GameState>()(
 
     let nextCharacter = s.character;
     if (choice === 'rest') {
-      // Same shape as the old Short Rest button: refresh Second Wind +
-      // Action Surge, no HP heal.
-      nextCharacter = shortRestHeal(s.character, 0);
+      // Camps are the chained delve's real breather: full HP, full
+      // resources, conditions cleared. Rest rooms only half-heal — the
+      // "make camp at the fire" choice is what undoes the chapter's
+      // attrition.
+      nextCharacter = longRest(s.character);
     } else if (choice === 'sharpen') {
       nextCharacter = {
         ...s.character,

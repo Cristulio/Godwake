@@ -28,9 +28,12 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
 
   function handleShortRest() {
     if (!character) return;
-    // MVP simplified short rest: heal 1d10 + level (Hit Die roll). Skipping
-    // hit-die tracking for now — just heals to full.
-    const healed = shortRestHeal(character, character.hp.max - character.hp.current);
+    // Rest rooms knit half-max HP and refresh class resources (Second Wind,
+    // Action Surge, Cunning Action, spell slots). Full healing is reserved
+    // for camps — the chained delve needs HP attrition to bite between
+    // chapters.
+    const healAmount = Math.floor(character.hp.max * 0.5);
+    const healed = shortRestHeal(character, healAmount);
     setCharacter(healed);
     setRested(true);
   }
@@ -52,6 +55,10 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-md">
             {room.flavorText}
           </p>
+          <p className="text-[var(--color-text-dim)] text-xs italic text-center max-w-md">
+            You catch your breath. The wound knits — not fully, but enough. Save the
+            true healing for the fire at the chapter's edge.
+          </p>
           <div className="text-xs uppercase tracking-widest text-[var(--color-text-dim)]">
             HP {character.hp.current}/{character.hp.max}
           </div>
@@ -61,11 +68,11 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
       <div className="flex gap-3 justify-center">
         {!rested ? (
           <Button variant="primary" onClick={handleShortRest}>
-            Short rest (heal to full)
+            Short rest (heal half, refresh resources)
           </Button>
         ) : (
           <div className="text-[var(--color-status-poison)] text-sm uppercase tracking-widest animate-fade-in">
-            You feel restored.
+            You feel steadied.
           </div>
         )}
         <Button variant={rested ? 'primary' : 'secondary'} onClick={onContinue}>
