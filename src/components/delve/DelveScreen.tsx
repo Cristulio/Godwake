@@ -257,6 +257,7 @@ export function DelveScreen() {
               // Irenicus taunts after a boss clear.
               if (isBossRoom) {
                 useGameStore.getState().showTaunt('irenicus', 'chapter-clear');
+                useGameStore.getState().creditChapterClearGold();
               }
               // Chained Godwake delve: Ilyich is the Ch1 boss at room-10,
               // not the final. Flag the kill so the chapter1Cleared flip

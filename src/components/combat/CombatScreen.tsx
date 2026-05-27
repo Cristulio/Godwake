@@ -165,7 +165,8 @@ export function CombatScreen({
 
     const hasUsableBonus =
       character.classId === 'fighter' &&
-      character.resources.secondWindAvailable === true &&
+      (character.resources.secondWindAvailable === true ||
+        (character.resources.secondWindBonusRemaining ?? 0) > 0) &&
       !character.actionEconomy.bonusActionUsed &&
       character.hp.current < character.hp.max;
     const hasUsableActionSurge =
@@ -199,6 +200,7 @@ export function CombatScreen({
     character.actionEconomy.actionUsed,
     character.actionEconomy.bonusActionUsed,
     character.resources.secondWindAvailable,
+    character.resources.secondWindBonusRemaining,
     character.resources.actionSurgeRemaining,
     character.resources.cunningActionUsesRemaining,
     character.hp.current,

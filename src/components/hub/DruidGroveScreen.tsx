@@ -2,7 +2,15 @@ import { useState } from 'react';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
-import { listUpgrades, type Upgrade } from '../../content/upgrades';
+import {
+  listUpgradesByCategory,
+  listUpgrades,
+  UPGRADE_CATEGORIES,
+  CATEGORY_LABELS,
+  CATEGORY_TAGLINES,
+  type Upgrade,
+  type UpgradeCategory,
+} from '../../content/upgrades';
 import { GroveScene } from './GroveScene';
 
 type FlashKind = 'ok' | 'err';
@@ -14,6 +22,7 @@ export function DruidGroveScreen() {
   const goToHub = useGameStore((s) => s.goToHub);
   const [flash, setFlash] = useState<{ kind: FlashKind; msg: string } | null>(null);
   const [pulsing, setPulsing] = useState<string | null>(null);
+  const [tab, setTab] = useState<UpgradeCategory>('body');
 
   if (!character) {
     return (
@@ -22,8 +31,6 @@ export function DruidGroveScreen() {
       </div>
     );
   }
-
-  const upgrades = listUpgrades();
 
   function tryBuy(id: string) {
     const res = purchase(id);
@@ -37,8 +44,13 @@ export function DruidGroveScreen() {
     setTimeout(() => setFlash(null), 2400);
   }
 
+  const all = listUpgrades();
+  const ownedRanks = all.reduce((sum, u) => sum + (unlocked[u.id] ?? 0), 0);
+  const totalRanks = all.reduce((sum, u) => sum + u.maxRank, 0);
+  const categoryUpgrades = listUpgradesByCategory(tab);
+
   return (
-    <div className="min-h-screen p-6 max-w-5xl mx-auto animate-room-enter">
+    <div className="min-h-screen p-6 max-w-6xl mx-auto animate-room-enter">
       <header className="flex justify-between items-end mb-4 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
           <h1
@@ -83,7 +95,7 @@ export function DruidGroveScreen() {
               {character.renown}
             </div>
             <div className="font-mono text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mt-1">
-              {unlocked.length} / {upgrades.length} blessed
+              {ownedRanks} / {totalRanks} ranks blessed
             </div>
           </div>
         </div>
@@ -102,12 +114,23 @@ export function DruidGroveScreen() {
         </div>
       )}
 
+      <CategoryTabs current={tab} onChange={setTab} unlocked={unlocked} />
+
+      <div className="mb-4 text-center">
+        <div className="font-display text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em]">
+          {CATEGORY_LABELS[tab]}
+        </div>
+        <div className="font-narrative italic text-[var(--color-text-secondary)] text-xs mt-1">
+          {CATEGORY_TAGLINES[tab]}
+        </div>
+      </div>
+
       <div className="grid md:grid-cols-2 gap-4">
-        {upgrades.map((u) => (
+        {categoryUpgrades.map((u) => (
           <UpgradeCard
             key={u.id}
             upgrade={u}
-            owned={unlocked.includes(u.id)}
+            currentRank={unlocked[u.id] ?? 0}
             renown={character.renown}
             pulsing={pulsing === u.id}
             onBuy={() => tryBuy(u.id)}
@@ -118,82 +141,153 @@ export function DruidGroveScreen() {
   );
 }
 
+interface CategoryTabsProps {
+  current: UpgradeCategory;
+  onChange: (c: UpgradeCategory) => void;
+  unlocked: Record<string, number>;
+}
+
+function CategoryTabs({ current, onChange, unlocked }: CategoryTabsProps) {
+  return (
+    <div className="flex gap-1 mb-5 border-b border-[var(--color-border-warm)]">
+      {UPGRADE_CATEGORIES.map((cat) => {
+        const inCat = listUpgradesByCategory(cat);
+        const owned = inCat.reduce((s, u) => s + (unlocked[u.id] ?? 0), 0);
+        const max = inCat.reduce((s, u) => s + u.maxRank, 0);
+        const active = cat === current;
+        return (
+          <button
+            key={cat}
+            type="button"
+            onClick={() => onChange(cat)}
+            className={`
+              flex-1 py-2 px-3 border-2 border-b-0 transition-colors text-center
+              font-display text-[11px] uppercase tracking-widest
+              ${active
+                ? 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)] bg-[var(--color-bg-panel)]'
+                : 'border-[var(--color-border-dim)] text-[var(--color-text-dim)] hover:text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'}
+            `}
+          >
+            <div>{CATEGORY_LABELS[cat]}</div>
+            <div className="font-mono text-[9px] mt-0.5 opacity-70">
+              {owned} / {max}
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 interface UpgradeCardProps {
   upgrade: Upgrade;
-  owned: boolean;
+  currentRank: number;
   renown: number;
   pulsing: boolean;
   onBuy: () => void;
 }
 
-function UpgradeCard({ upgrade, owned, renown, pulsing, onBuy }: UpgradeCardProps) {
-  const affordable = renown >= upgrade.cost;
-  const shortfall = upgrade.cost - renown;
+function UpgradeCard({ upgrade, currentRank, renown, pulsing, onBuy }: UpgradeCardProps) {
+  const maxed = currentRank >= upgrade.maxRank;
+  const nextRank = currentRank + 1;
+  const nextCost = maxed ? null : upgrade.costForRank(nextRank);
+  const affordable = nextCost !== null && renown >= nextCost;
+  const owned = currentRank > 0;
+  const shortfall = nextCost !== null ? nextCost - renown : 0;
 
-  const borderClass = owned
-    ? 'border-[var(--color-accent-amber)]/70'
-    : affordable
-      ? 'border-[var(--color-accent-gold)] hover:shadow-[0_0_22px_rgba(244,167,66,0.3)]'
-      : 'border-[var(--color-border-dim)]';
+  const borderClass = maxed
+    ? 'border-[var(--color-accent-amber)] shadow-[0_0_18px_rgba(244,167,66,0.25)]'
+    : owned
+      ? 'border-[var(--color-accent-amber)]/60'
+      : affordable
+        ? 'border-[var(--color-accent-gold)] hover:shadow-[0_0_22px_rgba(244,167,66,0.3)]'
+        : 'border-[var(--color-border-dim)]';
 
   return (
     <div
       className={`
-        relative panel-etched-warm border-2 p-4 transition-all
+        relative panel-etched-warm border-2 p-4 transition-all flex flex-col
         ${borderClass}
-        ${owned ? 'opacity-75' : ''}
         ${pulsing ? 'animate-pulse-glow' : ''}
       `}
     >
-      {owned && (
+      {maxed && (
         <div className="absolute -top-px -right-px bg-[var(--color-accent-gold)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
-          ◆ Owned
+          ◆ Max Rank
         </div>
       )}
 
-      <div className="flex justify-between items-start mb-2 gap-3">
+      <div className="flex justify-between items-start mb-1 gap-3">
         <h3 className="font-display text-[var(--color-accent-amber)] uppercase tracking-wider text-[12px] leading-tight">
           {upgrade.name}
         </h3>
-        <div
-          className={`text-sm font-mono whitespace-nowrap shrink-0 ${
-            owned
-              ? 'text-[var(--color-text-dim)] line-through'
-              : affordable
-                ? 'text-[var(--color-accent-gold)]'
-                : 'text-[var(--color-text-dim)]'
-          }`}
-          style={affordable && !owned ? { textShadow: '0 0 8px rgba(212,176,98,0.5)' } : undefined}
-        >
-          {upgrade.cost} R
-        </div>
+        <RankPips current={currentRank} max={upgrade.maxRank} />
       </div>
 
       <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed font-narrative">
         {upgrade.flavor}
       </p>
-      <p className="text-[var(--color-text-primary)] text-sm mb-4 font-mono">
-        {upgrade.effect}
-      </p>
 
-      {owned ? (
-        <div className="font-display text-[10px] uppercase tracking-widest text-[var(--color-accent-amber)]/70 text-center py-2 border border-[var(--color-accent-amber)]/40 bg-[var(--color-bg-deep)]/40">
-          ✓ Blessed
-        </div>
-      ) : affordable ? (
-        <Button variant="primary" onClick={onBuy} className="w-full">
-          Drink from the Wellspring
-        </Button>
-      ) : (
-        <div className="flex flex-col gap-1">
-          <Button variant="secondary" disabled className="w-full">
-            Wellspring withholds
-          </Button>
-          <div className="text-[10px] uppercase tracking-widest text-[var(--color-accent-blood)] text-center font-mono mt-0.5">
-            — {shortfall} renown short
+      <div className="text-[var(--color-text-primary)] text-xs mb-3 font-mono space-y-1">
+        {owned && (
+          <div>
+            <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mr-2">
+              Now ({currentRank}/{upgrade.maxRank})
+            </span>
+            {upgrade.effectAtRank(currentRank)}
           </div>
-        </div>
-      )}
+        )}
+        {!maxed && (
+          <div className="text-[var(--color-accent-gold)]">
+            <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mr-2">
+              Next ({nextRank}/{upgrade.maxRank})
+            </span>
+            {upgrade.effectAtRank(nextRank)}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-auto">
+        {maxed ? (
+          <div className="font-display text-[10px] uppercase tracking-widest text-[var(--color-accent-amber)]/80 text-center py-2 border border-[var(--color-accent-amber)]/40 bg-[var(--color-bg-deep)]/40">
+            ✓ Soul blessed in full
+          </div>
+        ) : affordable ? (
+          <Button variant="primary" onClick={onBuy} className="w-full">
+            {owned ? `Rank up — ${nextCost} R` : `Drink — ${nextCost} R`}
+          </Button>
+        ) : (
+          <div className="flex flex-col gap-1">
+            <Button variant="secondary" disabled className="w-full">
+              {nextCost} R — Wellspring withholds
+            </Button>
+            <div className="text-[10px] uppercase tracking-widest text-[var(--color-accent-blood)] text-center font-mono mt-0.5">
+              — {shortfall} renown short
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function RankPips({ current, max }: { current: number; max: number }) {
+  return (
+    <div className="flex gap-1 shrink-0">
+      {Array.from({ length: max }, (_, i) => {
+        const filled = i < current;
+        return (
+          <div
+            key={i}
+            className={`
+              w-2.5 h-2.5 border
+              ${filled
+                ? 'bg-[var(--color-accent-gold)] border-[var(--color-accent-amber)] shadow-[0_0_6px_rgba(244,167,66,0.6)]'
+                : 'bg-transparent border-[var(--color-border-dim)]'}
+            `}
+          />
+        );
+      })}
     </div>
   );
 }

@@ -18,7 +18,9 @@ export interface SecondWindContext {
 export function useSecondWind(ctx: SecondWindContext): CombatActionResult {
   const { roller, character, state } = ctx;
 
-  if (!character.resources.secondWindAvailable) return combatResult(state, character);
+  const baseCharge = character.resources.secondWindAvailable === true;
+  const bonusCharges = character.resources.secondWindBonusRemaining ?? 0;
+  if (!baseCharge && bonusCharges <= 0) return combatResult(state, character);
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
 
   const heal = roller.roll(`1d10+${character.level}`);
@@ -27,7 +29,15 @@ export function useSecondWind(ctx: SecondWindContext): CombatActionResult {
   const actuallyHealed = after - before;
 
   character.hp = { ...character.hp, current: after };
-  character.resources = { ...character.resources, secondWindAvailable: false };
+  // Spend bonus charges first — they're per-delve and don't refresh on rest.
+  if (bonusCharges > 0) {
+    character.resources = {
+      ...character.resources,
+      secondWindBonusRemaining: bonusCharges - 1,
+    };
+  } else {
+    character.resources = { ...character.resources, secondWindAvailable: false };
+  }
   character.actionEconomy = {
     ...character.actionEconomy,
     bonusActionUsed: true,

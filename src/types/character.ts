@@ -43,6 +43,13 @@ export interface SpellSlots {
 export interface ClassResources {
   /** Fighter: Second Wind (1 use per short rest). */
   secondWindAvailable?: boolean;
+  /**
+   * Fighter: extra Second Wind charges granted by the Wellspring Vigil
+   * Grove upgrade. Initialized at delve start; consumed BEFORE the boolean
+   * `secondWindAvailable` flips so rest-refreshes still get the L1 charge.
+   * Not refreshed by short/long rest — these are per-delve charges.
+   */
+  secondWindBonusRemaining?: number;
   /** Fighter: Action Surge (1 use at lv2, 2 at lv17). */
   actionSurgeRemaining?: number;
   /** Rogue: Sneak Attack already fired this turn (true once spent, reset on turn change). */
@@ -135,6 +142,41 @@ export interface Character {
    * legacy saves with `undefined` rehydrate to the default cap.
    */
   attunementSlotsBonus?: number;
+  /** Grove upgrade: +N damage on every weapon hit. */
+  permanentDamageBonus?: number;
+  /** Grove upgrade: crit range widens by N (so default 20-only becomes (20-N)-20). */
+  permanentCritRangeBonus?: number;
+  /** Grove upgrade: +N damage on the first attack of each combat. */
+  permanentFirstAttackDamage?: number;
+  /** Grove upgrade: +N damage against wounded targets (HP at half or less). */
+  permanentWoundedTargetDamage?: number;
+  /** Grove upgrade: +N damage on critical hits (added after dice doubling). */
+  permanentCritDamageBonus?: number;
+  /** Grove upgrade: extra fraction of renown per bane-quirk on top of soul-mark. */
+  permanentRenownBonusPerBane?: number;
+  /** Grove upgrade: unlocks the on-reincarnation quirk picker. */
+  wheelturnerUnlocked?: boolean;
+  /**
+   * Grove upgrade: extra stabilise charges per delve (Hardier Soul). Stacks
+   * with Ilmater's Patience (blessing). Reset at delve start.
+   */
+  delveStabiliseBonus?: number;
+  /**
+   * Grove upgrade: extra blessing options offered at each shrine room.
+   * Set at delve start, read by ShrineRoom.
+   */
+  shrineOptionBonus?: number;
+  /**
+   * Grove upgrade: gold awarded each time the player enters a shrine room.
+   * Set at delve start, paid out by ShrineRoom on mount.
+   */
+  shrineTitheGold?: number;
+  /**
+   * Grove upgrade: gold awarded each time a chapter boss falls (Quartermaster's
+   * Stipend). Set at delve start, paid out by the boss-clear branch in
+   * DelveScreen.
+   */
+  chapterClearGoldBonus?: number;
   /**
    * Per-delve attack bonus granted by camp choices (Sharpen the Blade adds
    * +1). Stacks with `permanentAttackBonus`. Cleared in `finishDelve`.

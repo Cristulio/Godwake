@@ -37,12 +37,17 @@ export function ActionBar({
   const isRogue = character.classId === 'rogue';
   const isWizard = character.classId === 'wizard';
 
+  const secondWindBonus = character.resources.secondWindBonusRemaining ?? 0;
+  const secondWindHasCharge =
+    character.resources.secondWindAvailable === true || secondWindBonus > 0;
   const secondWindUsable =
     isFighter &&
-    character.resources.secondWindAvailable === true &&
+    secondWindHasCharge &&
     !character.actionEconomy.bonusActionUsed &&
     character.hp.current < character.hp.max;
   const canSecondWind = playersTurn && active && secondWindUsable;
+  const secondWindCount =
+    (character.resources.secondWindAvailable === true ? 1 : 0) + secondWindBonus;
 
   // Action Surge: free Action this turn — only useful AFTER you've spent
   // your action. Fighter L2+.
@@ -119,7 +124,7 @@ export function ActionBar({
             title="Bonus action: heal 1d10 + level. Once per short rest."
             className="flex-1"
           >
-            Second Wind
+            Second Wind{secondWindCount > 1 ? ` (${secondWindCount})` : ''}
           </Button>
         )}
         {isFighter && (

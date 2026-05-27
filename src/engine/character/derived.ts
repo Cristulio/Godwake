@@ -146,8 +146,9 @@ export function initiativeModifier(character: Character): number {
  */
 export function critRange(character: Character): number[] {
   const base = characterHasMechanic(character, 'improved-critical') ? 19 : 20;
-  const bonus = characterBlessingMods(character).critRangeBonus ?? 0;
-  const low = Math.max(2, base - bonus);
+  const blessingBonus = characterBlessingMods(character).critRangeBonus ?? 0;
+  const upgradeBonus = character.permanentCritRangeBonus ?? 0;
+  const low = Math.max(2, base - blessingBonus - upgradeBonus);
   const result: number[] = [];
   for (let n = low; n <= 20; n++) result.push(n);
   return result;

@@ -1,111 +1,400 @@
+import type { Character } from '../../types/character';
+
 /**
  * Druid Grove upgrades. The Wellspring of Mielikki blesses the soul, not the
  * flesh — purchases persist across reincarnations.
  *
- * Each upgrade is bought once with Renown. Wiring:
- *  - `delveStart` upgrades: applied in gameStore.startDelve
- *  - `permanent` upgrades: applied at character creation / when read in derived stats
+ * Each upgrade is ranked. Buying rank N at cost `costForRank(N)` unlocks rank
+ * N+1. Effects compound. Two kinds:
+ *  - `permanent` upgrades: applied once at purchase time via
+ *    `applyPermanentUpgrade` — the new rank's effect is the DELTA from the
+ *    previous rank, baked into character stats and surviving reincarnation.
+ *  - `delveStart` upgrades: applied at the top of every delve via
+ *    `applyDelveStartUpgrades` — the apply function takes the current rank
+ *    and seeds the character's per-delve fields.
  */
 export type UpgradeKind = 'delveStart' | 'permanent';
+export type UpgradeCategory = 'body' | 'edge' | 'coin' | 'spirit' | 'soul';
 
 export interface Upgrade {
   id: string;
+  category: UpgradeCategory;
   name: string;
   flavor: string;
-  effect: string;
-  cost: number;
+  /** Human-facing description of the effect AT the given rank. rank 0 means "not yet owned". */
+  effectAtRank: (rank: number) => string;
+  /** Renown cost to BUY rank N (where N = 1..maxRank). Roughly base * rank^1.6. */
+  costForRank: (rank: number) => number;
+  maxRank: number;
+  /**
+   * Apply this upgrade at the given rank to the character. For `permanent`
+   * upgrades this is called once at purchase with the new rank; the function
+   * applies the DELTA from rank-1 (i.e. only the new rank's effect). For
+   * `delveStart` upgrades this is called at delve start with the owned rank;
+   * the function applies the FULL effect at that rank.
+   */
+  apply: (character: Character, rank: number) => Character;
   kind: UpgradeKind;
 }
 
+/** Standard cost curve: base * rank^1.6, rounded. */
+export function rankCost(base: number, rank: number): number {
+  return Math.round(base * Math.pow(rank, 1.6));
+}
+
+function bumpHpMax(character: Character, delta: number): Character {
+  const newMax = character.hp.max + delta;
+  return {
+    ...character,
+    hp: { ...character.hp, max: newMax, current: Math.max(character.hp.current, newMax) },
+  };
+}
+
 const RAW: Upgrade[] = [
+  // ─── BODY ──────────────────────────────────────────────────────────────
   {
-    id: 'coin-in-pocket',
-    name: 'Coin in the Pocket',
+    id: 'mantle-of-the-wakened',
+    category: 'body',
+    name: 'Mantle of the Wakened',
     flavor:
-      'The Grove keepers tuck a few coppers into the hem of your coat each time the Wellspring releases you. They never speak of where the coin came from.',
-    effect: 'Start each delve with +25 gold.',
-    cost: 60,
-    kind: 'delveStart',
-  },
-  {
-    id: 'mielikki-cache',
-    name: "Mielikki's Cache",
-    flavor:
-      'A second flask, stoppered with wax and the Lady\'s sigil. It tastes of pine sap and summer rain.',
-    effect: 'Start each delve with +1 Potion of Healing.',
-    cost: 100,
-    kind: 'delveStart',
-  },
-  {
-    id: 'sages-pact',
-    name: "Sage's Pact",
-    flavor:
-      'An old druid presses her thumb to your sternum and whispers a word from before the gods. The world makes a little more room for you.',
-    effect: '+1 Soul-bind slot, permanent.',
-    cost: 150,
-    kind: 'permanent',
-  },
-  {
-    id: 'iron-will',
-    name: 'Iron Will',
-    flavor:
-      'The Wellspring pulls deeper this time. You wake with breath you did not have before. Whatever the master takes, the soul keeps a little more.',
-    effect: '+5 maximum HP, permanent across reincarnations.',
-    cost: 220,
-    kind: 'permanent',
-  },
-  {
-    id: 'wellspring-vigil',
-    name: 'Wellspring Vigil',
-    flavor:
-      'Mielikki\'s circle keeps a vigil while you sleep. You step into the dark with the second breath already drawn.',
-    effect: 'Fighter: start each delve with +1 Second Wind charge.',
-    cost: 320,
-    kind: 'delveStart',
-  },
-  {
-    id: 'heirloom-blade',
-    name: 'Heirloom Blade',
-    flavor:
-      'A blade laid on the Wellspring stones the night of your last death. The Grove keepers do not say whose blade it was. The grip has been worn smooth by another hand.',
-    effect: '+1 to all melee attack rolls, permanent.',
-    cost: 200,
+      'The Wellspring keeps something back — a fistful of the old life sewn into the seam of the new. The flesh remembers wounds it has not taken yet.',
+    effectAtRank: (r) => `+${r * 5} maximum HP, permanent across reincarnations.`,
+    costForRank: (r) => rankCost(80, r),
+    maxRank: 5,
+    apply: (c) => bumpHpMax(c, 5),
     kind: 'permanent',
   },
   {
     id: 'cloak-of-the-grove',
+    category: 'body',
     name: 'Cloak of the Grove',
     flavor:
-      'Spider-silk shot through with fern fronds and the cinder of last winter\'s fire. It moves when no wind touches it.',
-    effect: '+1 AC, permanent.',
-    cost: 260,
+      "Spider-silk shot through with fern fronds and the cinder of last winter's fire. It moves when no wind touches it.",
+    effectAtRank: (r) => `+${r} AC, permanent.`,
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 3,
+    apply: (c) => ({ ...c, permanentAcBonus: (c.permanentAcBonus ?? 0) + 1 }),
     kind: 'permanent',
   },
   {
-    id: 'tymoras-wager',
-    name: "Tymora's Wager",
+    id: 'stoneweave-boots',
+    category: 'body',
+    name: 'Stoneweave Boots',
     flavor:
-      'A copper coin pressed into your palm by a laughing priestess. Heads, you live. Tails, you live again. She never lets you see the result.',
-    effect: 'Start each delve with +1 missed-attack reroll budget.',
-    cost: 140,
+      'Hide-leather over river stone, laced by a druid who refused to look you in the eye. They settle your weight before the first blow lands.',
+    effectAtRank: (r) => `+${r} initiative, permanent.`,
+    costForRank: (r) => rankCost(100, r),
+    maxRank: 4,
+    apply: (c) => ({ ...c, permanentInitBonus: (c.permanentInitBonus ?? 0) + 1 }),
+    kind: 'permanent',
+  },
+  {
+    id: 'wellspring-vigil',
+    category: 'body',
+    name: 'Wellspring Vigil',
+    flavor:
+      "Mielikki's circle keeps a vigil while you sleep. You step into the dark with the second breath already drawn — and a third, and a fourth.",
+    effectAtRank: (r) => `Fighter: +${r} Second Wind charge${r === 1 ? '' : 's'} per delve.`,
+    costForRank: (r) => rankCost(100, r),
+    maxRank: 3,
+    apply: (c, rank) => {
+      if (c.classId !== 'fighter') return c;
+      return {
+        ...c,
+        resources: {
+          ...c.resources,
+          secondWindAvailable: true,
+          secondWindBonusRemaining: rank,
+        },
+      };
+    },
     kind: 'delveStart',
   },
   {
-    id: 'whisper-of-the-wild',
-    name: 'Whisper of the Wild',
+    id: 'hardier-soul',
+    category: 'body',
+    name: 'Hardier Soul',
     flavor:
-      'A wolf stands at the edge of the firelight while the druids work the rite. You wake hearing what it heard the moment before it ran.',
-    effect: '+2 initiative, permanent.',
-    cost: 180,
+      "Ilmater's mark pressed beneath the heart. When the body breaks, the soul remembers it can still stand once more.",
+    effectAtRank: (r) => `+${r} stabilise charge${r === 1 ? '' : 's'} per delve.`,
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 3,
+    apply: (c, rank) => ({
+      ...c,
+      delveStabiliseBonus: rank,
+    }),
+    kind: 'delveStart',
+  },
+
+  // ─── EDGE ──────────────────────────────────────────────────────────────
+  {
+    id: 'heirloom-blade',
+    category: 'edge',
+    name: 'Heirloom Blade',
+    flavor:
+      'A blade laid on the Wellspring stones the night of your last death. The grip has been worn smooth by another hand.',
+    effectAtRank: (r) => `+${r} to all attack rolls, permanent.`,
+    costForRank: (r) => rankCost(180, r),
+    maxRank: 4,
+    apply: (c) => ({ ...c, permanentAttackBonus: (c.permanentAttackBonus ?? 0) + 1 }),
     kind: 'permanent',
   },
   {
-    id: 'mantle-of-the-wakened',
-    name: 'Mantle of the Wakened',
+    id: 'whetstone-resolve',
+    category: 'edge',
+    name: 'Whetstone Resolve',
     flavor:
-      'The Wellspring keeps something back this time — a fistful of the old life, sewn into the seam of the new. The flesh remembers wounds it has not taken yet.',
-    effect: '+15 maximum HP, permanent across reincarnations.',
-    cost: 360,
+      "A stone the size of your thumb, oily with old grease and older blood. The edge it gives you doesn't dull.",
+    effectAtRank: (r) => `+${r} damage on all weapon hits, permanent.`,
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 4,
+    apply: (c) => ({
+      ...c,
+      permanentDamageBonus: (c.permanentDamageBonus ?? 0) + 1,
+    }),
+    kind: 'permanent',
+  },
+  {
+    id: 'killers-eye',
+    category: 'edge',
+    name: "Killer's Eye",
+    flavor:
+      'A wolf-tooth necklace. The druids will not say which of the Wellspring children lost it. Your eye sharpens before you know why.',
+    effectAtRank: (r) => `Crit range widens by ${r} (rank ${r}: crit on ${20 - r}-20).`,
+    costForRank: (r) => rankCost(200, r),
+    maxRank: 2,
+    apply: (c) => ({
+      ...c,
+      permanentCritRangeBonus: (c.permanentCritRangeBonus ?? 0) + 1,
+    }),
+    kind: 'permanent',
+  },
+  {
+    id: 'first-cut',
+    category: 'edge',
+    name: 'First Cut',
+    flavor:
+      'A length of red thread tied to the wrist. The hand it guides moves a half-breath earlier than the others.',
+    effectAtRank: (r) => `+${r} damage on the first attack of each combat, permanent.`,
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 3,
+    apply: (c) => ({
+      ...c,
+      permanentFirstAttackDamage: (c.permanentFirstAttackDamage ?? 0) + 1,
+    }),
+    kind: 'permanent',
+  },
+  {
+    id: 'bleed-out',
+    category: 'edge',
+    name: 'Bleed-Out',
+    flavor:
+      "An owl's feather pressed against your collar by a child who would not speak. Wounded things lean toward you, and you toward them.",
+    effectAtRank: (r) => `+${r} damage against wounded targets (HP at half or less), permanent.`,
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 2,
+    apply: (c) => ({
+      ...c,
+      permanentWoundedTargetDamage: (c.permanentWoundedTargetDamage ?? 0) + 1,
+    }),
+    kind: 'permanent',
+  },
+  {
+    id: 'fellfast-strike',
+    category: 'edge',
+    name: 'Fellfast Strike',
+    flavor:
+      'A hawk-bone splinter set into the pommel. When the strike lands true, the bone hums and the wound runs deeper than steel should reach.',
+    effectAtRank: (r) => `+${r} damage on critical hits, permanent.`,
+    costForRank: (r) => rankCost(180, r),
+    maxRank: 3,
+    apply: (c) => ({
+      ...c,
+      permanentCritDamageBonus: (c.permanentCritDamageBonus ?? 0) + 1,
+    }),
+    kind: 'permanent',
+  },
+
+  // ─── COIN ──────────────────────────────────────────────────────────────
+  {
+    id: 'coin-in-pocket',
+    category: 'coin',
+    name: 'Coin in the Pocket',
+    flavor:
+      'The Grove keepers tuck a few coppers into the hem of your coat each time the Wellspring releases you.',
+    effectAtRank: (r) => `Start each delve with +${r * 25} gold.`,
+    costForRank: (r) => rankCost(60, r),
+    maxRank: 3,
+    apply: (c, rank) => ({ ...c, goldInPocket: c.goldInPocket + 25 * rank }),
+    kind: 'delveStart',
+  },
+  {
+    id: 'mielikki-cache',
+    category: 'coin',
+    name: "Mielikki's Cache",
+    flavor: "A flask stoppered with wax and the Lady's sigil. It tastes of pine sap and summer rain.",
+    effectAtRank: (r) => `Start each delve with +${r} Potion${r === 1 ? '' : 's'} of Healing.`,
+    costForRank: (r) => rankCost(100, r),
+    maxRank: 4,
+    apply: (c, rank) => ({
+      ...c,
+      inventory: [
+        ...c.inventory,
+        ...Array.from({ length: rank }, () => ({ itemId: 'potion-of-healing' })),
+      ],
+    }),
+    kind: 'delveStart',
+  },
+  {
+    id: 'pinchpurse-insurance',
+    category: 'coin',
+    name: 'Pinchpurse Insurance',
+    flavor:
+      'An old keeper presses a knot of coins into your hand. "For when the wheel comes around lean," she says, and will not take it back.',
+    effectAtRank: (r) => `Start each delve with at least ${10 * r} gold (floor).`,
+    costForRank: (r) => rankCost(80, r),
+    maxRank: 4,
+    apply: (c, rank) => ({
+      ...c,
+      goldInPocket: Math.max(c.goldInPocket, 10 * rank),
+    }),
+    kind: 'delveStart',
+  },
+  {
+    id: 'quartermasters-stipend',
+    category: 'coin',
+    name: "Quartermaster's Stipend",
+    flavor:
+      'A folded chit, sealed with green wax. Present it at a chapter cleared and the Grove will reimburse, by some accounting only they keep.',
+    effectAtRank: (r) => `Gain +${10 * r} gold each time a chapter boss falls.`,
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 3,
+    apply: (c, rank) => ({ ...c, chapterClearGoldBonus: 10 * rank }),
+    kind: 'delveStart',
+  },
+
+  // ─── SPIRIT ─────────────────────────────────────────────────────────────
+  {
+    id: 'wider-pantheon',
+    category: 'spirit',
+    name: 'Wider Pantheon',
+    flavor:
+      "Mielikki nods at her cousins, and they listen. At each altar, more voices speak — and a wider choice is laid before you.",
+    effectAtRank: (r) => `Shrines offer ${3 + r} blessings (instead of 3).`,
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 2,
+    apply: (c, rank) => ({ ...c, shrineOptionBonus: rank }),
+    kind: 'delveStart',
+  },
+  {
+    id: 'pilgrims-step',
+    category: 'spirit',
+    name: "Pilgrim's Step",
+    flavor:
+      'You wake from the Wellspring with a god already murmuring at your shoulder. The road begins blessed.',
+    effectAtRank: (r) =>
+      `Start each delve with ${r} random shrine blessing${r === 1 ? '' : 's'} already in hand.`,
+    costForRank: (r) => rankCost(200, r),
+    maxRank: 2,
+    // Pilgrim's Step blessings are rolled in gameStore.startDelve (needs the
+    // active roller). The apply function is a no-op marker — the store reads
+    // the rank directly.
+    apply: (c) => c,
+    kind: 'delveStart',
+  },
+  {
+    id: 'tymoras-wager',
+    category: 'spirit',
+    name: "Tymora's Wager",
+    flavor:
+      "A copper coin pressed into your palm by a laughing priestess. Heads, you live. Tails, you live again. She never lets you see the result.",
+    effectAtRank: (r) => `Start each delve with +${r} missed-attack reroll budget.`,
+    costForRank: (r) => rankCost(100, r),
+    maxRank: 3,
+    apply: (c, rank) => ({
+      ...c,
+      delveBudgets: {
+        ...c.delveBudgets,
+        quirkRerollMissesRemaining:
+          (c.delveBudgets?.quirkRerollMissesRemaining ?? 0) + rank,
+      },
+    }),
+    kind: 'delveStart',
+  },
+  {
+    id: 'shrine-tithe',
+    category: 'spirit',
+    name: 'Shrine Tithe',
+    flavor:
+      "The Grove circles a tithe back to you at each altar — coin for coin, blood for blood. It is not generosity. It is bookkeeping.",
+    effectAtRank: (r) => `Gain +${20 * r} gold at each shrine room visited.`,
+    costForRank: (r) => rankCost(100, r),
+    maxRank: 2,
+    apply: (c, rank) => ({ ...c, shrineTitheGold: 20 * rank }),
+    kind: 'delveStart',
+  },
+
+  // ─── SOUL ──────────────────────────────────────────────────────────────
+  {
+    id: 'whisper-of-the-wild',
+    category: 'soul',
+    name: 'Whisper of the Wild',
+    flavor:
+      'A wolf stands at the edge of the firelight while the druids work the rite. You wake hearing what it heard the moment before it ran.',
+    effectAtRank: (r) => `+${r * 2} initiative, permanent.`,
+    costForRank: (r) => rankCost(180, r),
+    maxRank: 3,
+    apply: (c) => ({ ...c, permanentInitBonus: (c.permanentInitBonus ?? 0) + 2 }),
+    kind: 'permanent',
+  },
+  {
+    id: 'iron-will',
+    category: 'soul',
+    name: 'Iron Will',
+    flavor:
+      'The Wellspring pulls deeper this time. You wake with breath you did not have before. Whatever the master takes, the soul keeps a little more.',
+    effectAtRank: (r) => (r === 0 ? '+5 maximum HP, permanent.' : '+5 maximum HP, permanent.'),
+    costForRank: (r) => rankCost(220, r),
+    maxRank: 1,
+    apply: (c) => bumpHpMax(c, 5),
+    kind: 'permanent',
+  },
+  {
+    id: 'sages-pact',
+    category: 'soul',
+    name: "Sage's Pact",
+    flavor:
+      "An old druid presses her thumb to your sternum and whispers a word from before the gods. The world makes a little more room for you.",
+    effectAtRank: (r) => `+${r} Soul-bind slot${r === 1 ? '' : 's'}, permanent.`,
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 2,
+    apply: (c) => ({ ...c, attunementSlotsBonus: (c.attunementSlotsBonus ?? 0) + 1 }),
+    kind: 'permanent',
+  },
+  {
+    id: 'soul-marrow',
+    category: 'soul',
+    name: 'Soul Marrow',
+    flavor:
+      'The bane-marks bite deeper now, and the Wellspring drinks deeper with them. What hurts your soul makes its return larger.',
+    effectAtRank: (r) =>
+      `Each bane-quirk you carry grants an additional +${5 * r}% renown beyond the soul-mark.`,
+    costForRank: (r) => rankCost(250, r),
+    maxRank: 3,
+    apply: (c, rank) => ({ ...c, permanentRenownBonusPerBane: 0.05 * rank }),
+    kind: 'permanent',
+  },
+  {
+    id: 'wheelturner',
+    category: 'soul',
+    name: 'Wheelturner',
+    flavor:
+      "An old druid lays her hand on your chest and says only, 'One thread the wheel will not cut.' Your first quirk survives the turn.",
+    effectAtRank: () =>
+      'On reincarnation, your first current quirk is carried into the new life (the second slot rerolls).',
+    costForRank: (r) => rankCost(300, r),
+    maxRank: 1,
+    apply: (c) => ({ ...c, wheelturnerUnlocked: true }),
     kind: 'permanent',
   },
 ];
@@ -118,6 +407,39 @@ export function getUpgrade(id: string): Upgrade {
   return u;
 }
 
+/** Safe variant: returns undefined for unknown ids (used by migrations). */
+export function findUpgrade(id: string): Upgrade | undefined {
+  return BY_ID.get(id);
+}
+
 export function listUpgrades(): Upgrade[] {
   return RAW;
 }
+
+export function listUpgradesByCategory(category: UpgradeCategory): Upgrade[] {
+  return RAW.filter((u) => u.category === category);
+}
+
+export const UPGRADE_CATEGORIES: UpgradeCategory[] = [
+  'body',
+  'edge',
+  'coin',
+  'spirit',
+  'soul',
+];
+
+export const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
+  body: 'Body',
+  edge: 'Edge',
+  coin: 'Coin',
+  spirit: 'Spirit',
+  soul: 'Soul',
+};
+
+export const CATEGORY_TAGLINES: Record<UpgradeCategory, string> = {
+  body: 'Flesh that endures',
+  edge: 'Steel that strikes truer',
+  coin: 'Pockets that are never quite empty',
+  spirit: 'Gods who lean closer',
+  soul: 'The thread the wheel cannot cut',
+};
