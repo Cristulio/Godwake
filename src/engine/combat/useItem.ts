@@ -11,9 +11,9 @@ export interface UseItemContext {
 }
 
 /**
- * Consume an item from inventory. For MVP only healing potions are supported.
- * The matching ItemRef is removed from inventory; the appropriate action cost
- * is spent; HP is restored on heal items.
+ * Consume an item from inventory. Heal potions roll dice and restore HP;
+ * Antitoxin grants per-combat poison immunity. The matching ItemRef is
+ * removed from inventory and the appropriate action cost is spent.
  */
 export function useConsumable(
   ctx: UseItemContext,
@@ -38,6 +38,12 @@ export function useConsumable(
     const actuallyHealed = after - before;
     character.hp = { ...character.hp, current: after };
     logText += ` Rolls ${item.healDice} = ${heal.total} → +${actuallyHealed} HP.`;
+  } else if (ref.itemId === 'antitoxin') {
+    // Per-combat poison immunity. Mirrors the Iron Stomach quirk's
+    // poisonImmune path in applyDamage so the existing immune gate
+    // handles both transparently. Cleared in combat resolution.
+    character.poisonImmuneEncounter = true;
+    logText += ` The phial empties cold — poison will slide off until the room falls silent.`;
   }
 
   // Spend action economy

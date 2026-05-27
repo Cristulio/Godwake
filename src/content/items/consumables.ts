@@ -38,7 +38,7 @@ export const ANTITOXIN: Consumable = ConsumableSchema.parse({
   rarity: 'common',
   actionCost: 'action',
   description:
-    'A flat-tasting tincture in a clay phial. Gives advantage on saves against poison for one hour. Tastes of chalk and bitterness.',
+    'A flat-tasting tincture in a clay phial. Drink to shrug off poison damage for the rest of this combat. Tastes of chalk and bitterness.',
 });
 
 export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({

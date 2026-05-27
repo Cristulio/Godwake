@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { currentRoom } from '../../engine/delve';
 import { createCombat } from '../../engine/combat';
+import { rollRoomGoldDrops } from '../../engine/combat/goldDrop';
 import { getActiveRoller } from '../../engine/dice';
 import { withResetActionEconomy } from '../../engine/character/actions';
 import { playSfx } from '../../engine/audio';
@@ -209,8 +210,16 @@ export function DelveScreen() {
           onAbandon={() => useGameStore.getState().abandonDelve()}
           onCombatResolved={(outcome) => {
             if (outcome === 'victory') {
-              const goldDrop = room.goldReward ?? 0;
+              const roomGold = room.goldReward ?? 0;
               const xpDrop = room.xpReward ?? 0;
+              // Per-monster CR-scaled gold drops, on top of any fixed
+              // room-level goldReward. Computed from the room's monster
+              // pool (each instance drops independently).
+              const monsterDefIds = (room.monsters ?? []).flatMap((m) =>
+                Array.from({ length: m.count }, () => m.defId),
+              );
+              const mobGold = rollRoomGoldDrops(getActiveRoller(), monsterDefIds);
+              const goldDrop = roomGold + mobGold;
               if (goldDrop || xpDrop) addDelveReward(goldDrop, xpDrop);
               setCombat(null);
               advanceRoom();

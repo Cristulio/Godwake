@@ -242,20 +242,36 @@ function MerchantModal({
       <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-5">
         <header className="flex justify-between items-center pb-3 mb-4 border-b border-[var(--color-border-warm)]">
           <div>
-            <h2 className="text-lg text-[var(--color-accent-amber)] uppercase tracking-wider">
+            <h2 className="font-display text-lg text-[var(--color-accent-amber)] uppercase tracking-[0.15em]">
               The Caravan-Merchant
             </h2>
-            <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
-              {goldInPocket} gp in pocket
+            <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic mt-1">
+              Coin and a charter, no questions asked.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-amber)] text-xs uppercase tracking-widest"
-          >
-            Close ×
-          </button>
+          <div className="flex items-center gap-3">
+            <div
+              className="panel-etched-warm border border-[var(--color-accent-gold)] px-3 py-2 text-right"
+              title="Gold in pocket"
+            >
+              <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
+                ◈ Gold
+              </div>
+              <div
+                className="font-mono text-xl text-[var(--color-accent-gold)] leading-none"
+                style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.7)' }}
+              >
+                {goldInPocket}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-amber)] text-xs uppercase tracking-widest"
+            >
+              Close ×
+            </button>
+          </div>
         </header>
 
         <div className="grid gap-3 mb-4">

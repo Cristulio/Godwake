@@ -144,4 +144,10 @@ export interface Character {
    * legacy saves rehydrate without migration.
    */
   nextAttackAdvantage?: boolean;
+  /**
+   * Per-combat poison immunity. Set true when the player drinks Antitoxin;
+   * cleared in combat resolution (player-victory or player-defeat). Stacks
+   * with the Iron Stomach quirk's permanent immunity — either is enough.
+   */
+  poisonImmuneEncounter?: boolean;
 }

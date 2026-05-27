@@ -42,10 +42,10 @@ function buildingsFor(
       id: 'iron-cells',
       name: chapter1Cleared ? 'The Long Road South' : 'The Iron Cells',
       description: chapter1Cleared
-        ? "A staircase down through Tresendar Manor's ruined cellar. Past the duergar, the road bends south — Athkatla waits at the end of the Trade Way."
+        ? "The duergar are dead and the staircase is yours. Skip the cells; ride the Trade Way south. The Athkatla road waits at the outskirts of Phandalin."
         : "A staircase down through Tresendar Manor's ruined cellar. The first dungeon under Phandalin.",
       enabled: true,
-      cta: 'Delve',
+      cta: chapter1Cleared ? 'Take the South Road' : 'Delve',
     },
     {
       id: 'lionshield-coster',
@@ -117,7 +117,10 @@ export function HubScreen() {
   const cls = getClass(character.classId);
 
   function handleEnterDungeon() {
-    const delve = createGodwakeDelve();
+    // After clearing Ch1, the "Long Road South" entry skips Iron Cells and
+    // drops the player straight at the Athkatla road — no replaying the
+    // duergar floors every reincarnation.
+    const delve = createGodwakeDelve({ skipChapter1: chapter1Cleared });
     startDelve(delve);
   }
 

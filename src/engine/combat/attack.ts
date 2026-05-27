@@ -134,6 +134,9 @@ function evaluateCombatEnd(state: CombatState, character: Character): CombatStat
     .filter((c) => c.kind === 'monster')
     .every((c) => isDead(c, character));
   if (allMonstersDead) {
+    // Combat resolved — clear per-encounter flags so they don't bleed into
+    // the next room.
+    if (character.poisonImmuneEncounter) character.poisonImmuneEncounter = false;
     return {
       ...state,
       status: 'player-victory',
@@ -144,6 +147,7 @@ function evaluateCombatEnd(state: CombatState, character: Character): CombatStat
     };
   }
   if (character.hp.current <= 0) {
+    if (character.poisonImmuneEncounter) character.poisonImmuneEncounter = false;
     return {
       ...state,
       status: 'player-defeat',
@@ -334,6 +338,17 @@ export function playerAttack(
     nextState = applyDamage(nextState, targetId, totalDamage, character);
 
     const bonusSuffix = bonusParts.length > 0 ? ` (${bonusParts.join(', ')})` : '';
+    // Build the visible equation so EVERY addend is shown and the math
+    // matches the total. Previously the equation hid `bonusDamage`,
+    // making it look like `2 +4 = 7` when the +1 radiant was off-screen.
+    const equation: string[] = [damageRoll.rolls.join('+')];
+    if (abilMod !== 0) equation.push(`${abilMod > 0 ? '+' : ''}${abilMod}`);
+    if (damageExpr.modifier !== 0) {
+      equation.push(`${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}`);
+    }
+    if (bonusDamage !== 0) {
+      equation.push(`${bonusDamage > 0 ? '+' : ''}${bonusDamage}`);
+    }
     nextState = {
       ...nextState,
       log: [
@@ -341,7 +356,7 @@ export function playerAttack(
         {
           id: nextLogId(nextState),
           kind: 'damage',
-          text: `Damage: ${damageRoll.rolls.join('+')}${abilMod !== 0 ? ` ${abilMod > 0 ? '+' : ''}${abilMod}` : ''}${damageExpr.modifier !== 0 ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}` : ''} = ${totalDamage} ${weapon.damageType}${bonusSuffix}.`,
+          text: `Damage: ${equation.join(' ')} = ${totalDamage} ${weapon.damageType}${bonusSuffix}.`,
         },
       ],
     };
@@ -539,7 +554,8 @@ export function monsterAttack(
 
     const quirkMods = characterQuirkMods(character);
     const immune =
-      action.damageType === 'poison' && quirkMods.poisonImmune === true;
+      action.damageType === 'poison' &&
+      (quirkMods.poisonImmune === true || character.poisonImmuneEncounter === true);
     const race = getRace(character.raceId);
     const resisted =
       !immune &&

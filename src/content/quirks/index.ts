@@ -88,7 +88,7 @@ const RAW: Quirk[] = [
     sentiment: 'bane',
     flavor:
       'When you blink, you see the room as it was. The dead are still there. They are very busy.',
-    effect: 'You see the dead clearly. −1 to your first attack roll each combat.',
+    effect: '−1 to your first attack roll each combat.',
     modifiers: { firstAttackPenalty: -1 },
   }),
   QuirkSchema.parse({

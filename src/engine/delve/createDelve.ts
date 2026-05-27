@@ -180,8 +180,19 @@ export function createAthkatlaDelve(seed: number = randomSeed()): DelveState {
  * make for Phandalin (early exit with rewards). Combined chapterId='godwake';
  * room ids 1-8 are Ch1, room 9 is camp, rooms 10-15 are Ch2.
  */
-export function createGodwakeDelve(seed: number = randomSeed()): DelveState {
-  const rng = createRng(seed);
+export interface GodwakeDelveOptions {
+  /** Seed for the encounter pool RNG. */
+  seed?: number;
+  /** Skip the Ch1 + camp prefix and start the player at room-10 (Ch2 R1). Used by the post-Ch1 "Long Road South" entry point so vets can replay Ch2 directly. */
+  skipChapter1?: boolean;
+}
+
+export function createGodwakeDelve(
+  optsOrSeed: number | GodwakeDelveOptions = {},
+): DelveState {
+  const opts: GodwakeDelveOptions =
+    typeof optsOrSeed === 'number' ? { seed: optsOrSeed } : optsOrSeed;
+  const rng = createRng(opts.seed ?? randomSeed());
 
   const rooms: RoomSpec[] = [
     // Ch1 — The Iron Cells (warmup → shrine → early-mid → rest → mid → shrine → elite → Ilyich)
@@ -252,10 +263,16 @@ export function createGodwakeDelve(seed: number = randomSeed()): DelveState {
     },
   ];
 
+  // Optionally skip the Ch1 + camp prefix when a veteran wants Ch2 only.
+  // Picks up from room-10 (Ch2 R1) with the camp's effects already-resolved
+  // (no Sharpen/Prayer pre-applied — fair start, just minus the Ch1 grind).
+  const finalRooms = opts.skipChapter1 ? rooms.slice(9) : rooms;
   return {
-    dungeonName: 'The Long Road — Iron Cells to Athkatla',
+    dungeonName: opts.skipChapter1
+      ? 'Athkatla — Long Road South'
+      : 'The Long Road — Iron Cells to Athkatla',
     chapterId: 'godwake',
-    rooms,
+    rooms: finalRooms,
     currentRoomIdx: 0,
     phase: 'in-room',
     roomsCleared: 0,

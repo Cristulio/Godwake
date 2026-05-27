@@ -86,9 +86,9 @@ const POOL: Blessing[] = [
     id: 'tymoras-wink',
     name: "Tymora's Wink",
     god: 'tymora',
-    flavor: 'The lady leans in close. The coin in your pocket warms once, then is still.',
-    effect: 'Reroll one missed attack per encounter.',
-    modifiers: { rerollMissesPerEncounter: 1 },
+    flavor: 'The lady leans in close. When the floor would catch you, her coin slips between your spine and the stone.',
+    effect: 'Once per delve, if you would fall, you stabilise at 1 HP instead.',
+    modifiers: { extraStabiliseCharges: 1 },
   }),
   BlessingSchema.parse({
     id: 'tymoras-gambit',
