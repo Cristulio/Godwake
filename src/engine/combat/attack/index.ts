@@ -1,4 +1,4 @@
-export { applyDamage } from './damage';
+export { applyDamage, evaluateCombatEnd } from './damage';
 export {
   playerAttack,
   sneakAttackDiceForLevel,

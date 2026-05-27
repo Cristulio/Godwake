@@ -57,13 +57,14 @@ describe('useActionSurge', () => {
   });
 
   it('clears actionUsed, decrements remaining, resets attacks-this-turn', () => {
-    const c = applyLevelUp({ ...mkChar(), xp: 300 });
-    c.actionEconomy.actionUsed = true;
+    let c = applyLevelUp({ ...mkChar(), xp: 300 });
+    c = { ...c, actionEconomy: { ...c.actionEconomy, actionUsed: true } };
     const s = mkState();
-    const next = useActionSurge({ character: c, state: s }).state;
+    const result = useActionSurge({ character: c, state: s });
+    c = result.character;
     expect(c.actionEconomy.actionUsed).toBe(false);
     expect(c.resources.actionSurgeRemaining).toBe(0);
-    expect(next.playerAttacksThisTurn).toBe(0);
-    expect(next.log.length).toBe(1);
+    expect(result.state.playerAttacksThisTurn).toBe(0);
+    expect(result.state.log.length).toBe(1);
   });
 });

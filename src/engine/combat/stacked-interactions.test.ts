@@ -20,7 +20,7 @@ import { useScreenStore } from '../../stores/screenStore';
 import { useGameStore } from '../../stores/gameStore';
 import { createGodwakeDelve } from '../delve';
 import type { Character } from '../../types/character';
-import type { MonsterCombatant } from '../../types/combat';
+import type { CombatState, MonsterCombatant } from '../../types/combat';
 
 function makeHillDwarfWizard(extra: Partial<Character> = {}): Character {
   return {
@@ -68,7 +68,7 @@ function makeRogue(extra: Partial<Character> = {}): Character {
   };
 }
 
-function findMonsterCombatant(state: ReturnType<typeof createCombat>): MonsterCombatant {
+function findMonsterCombatant(state: CombatState): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
 }
 
@@ -152,9 +152,11 @@ describe('Sneak Attack scaling stacks with Knife in the Dark', () => {
   function fireSneakDiceLabel(level: number, bonus: number): string | undefined {
     for (let seed = 1; seed <= 200; seed++) {
       const goblin = getMonster('goblin');
-      const rogue = makeRogue({ level, permanentBonuses: { sneakAttackDice: bonus } });
+      let rogue = makeRogue({ level, permanentBonuses: { sneakAttackDice: bonus } });
       const roller = createDiceRoller(seed);
-      let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+      const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+      let state = init.state;
+      rogue = init.character;
       // Bloat goblin HP so it survives until the SA line lands, regardless of
       // dice roll variance.
       state = {
@@ -165,9 +167,13 @@ describe('Sneak Attack scaling stacks with Knife in the Dark', () => {
             : c,
         ),
       };
-      state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;
+      const ca = useCunningAction({ character: rogue, state, choice: 'hide' });
+      state = ca.state;
+      rogue = ca.character;
       const goblinId = findMonsterCombatant(state).id;
-      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
+      state = atk.state;
+      rogue = atk.character;
       const log = state.log.find((l) => l.text.includes('Sneak Attack'));
       if (log) return log.text;
     }
@@ -200,9 +206,11 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
 
   it('monster attack rolls with advantage and damage line shows +2 rage', () => {
     const director = getMonster('asylum-director');
-    const wizard = makeHillDwarfWizard();
+    let wizard = makeHillDwarfWizard();
     const roller = createDiceRoller(3);
-    let state = createCombat({ roller, character: wizard, monsters: [{ def: director }] });
+    const init = createCombat({ roller, character: wizard, monsters: [{ def: director }] });
+    let state = init.state;
+    wizard = init.character;
 
     // Force the director into Battle Rage immediately so we don't have to
     // chip its HP below half via the engine's own attacks.
@@ -223,7 +231,7 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
     };
 
     // Apply paralysis to the player (skip the save flow).
-    applyParalyze(wizard, {
+    const paralyzedWizard = applyParalyze(wizard, {
       rounds: 3,
       saveDC: 15,
       saveAbility: 'wis',
@@ -241,20 +249,13 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
     let rageLog: string | undefined;
     for (let seed = 1; seed <= 50; seed++) {
       const trialRoller = createDiceRoller(seed);
-      // Re-paralyze freshly per trial since conditions mutate the character.
-      applyParalyze(wizard, {
-        rounds: 3,
-        saveDC: 15,
-        saveAbility: 'wis',
-        source: 'asylum-director',
-      });
       const after = monsterAttack(
-        { roller: trialRoller, character: wizard, state },
+        { roller: trialRoller, character: paralyzedWizard, state },
         directorId,
       ).state;
       const damage = after.log.find((l) => l.kind === 'damage');
       const roll = after.log.find(
-        (l) => l.kind === 'roll' && l.text.includes('attacks ' + wizard.name),
+        (l) => l.kind === 'roll' && l.text.includes('attacks ' + paralyzedWizard.name),
       );
       if (damage && roll) {
         hitLog = roll.text;
@@ -282,12 +283,17 @@ describe('Mage Armor passive + Shield reaction AC stack', () => {
 
   it('stacks +3 and +5 while both flags are live, clears Shield at next player turn', () => {
     const goblin = getMonster('goblin');
-    const wizard = makeHillDwarfWizard();
+    let wizard = makeHillDwarfWizard();
     // Remove armor so Mage Armor applies (it only adds when !bodyArmor).
-    wizard.equipped = { mainHand: { itemId: 'dagger' }, offHand: null, armor: null };
+    wizard = {
+      ...wizard,
+      equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: null },
+    };
 
     const roller = createDiceRoller(11);
-    let state = createCombat({ roller, character: wizard, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: wizard, monsters: [{ def: goblin }] });
+    let state = init.state;
+    wizard = init.character;
     // createCombat sets mageArmorActive=true for wizards.
     expect(wizard.resources.mageArmorActive).toBe(true);
 
@@ -300,15 +306,20 @@ describe('Mage Armor passive + Shield reaction AC stack', () => {
     const cast = castSpell({ roller, character: wizard, state, spellId: 'shield' });
     expect(cast.cast).toBe(true);
     state = cast.state;
+    wizard = cast.character;
     expect(wizard.resources.shieldActive).toBe(true);
     expect(computeAC(wizard)).toBe(baselineAC + 5); // +5 from shield
 
     // Advance to the next turn (monster), then back to player — Shield should
     // clear when the player's turn starts.
-    state = endTurn(state, wizard).state;
+    let et = endTurn(state, wizard);
+    state = et.state;
+    wizard = et.character;
     // Now it's the monster's turn (or another non-player slot). Shield is
     // still active until the next player turn.
-    state = endTurn(state, wizard).state;
+    et = endTurn(state, wizard);
+    state = et.state;
+    wizard = et.character;
     // Should be back on the player. Shield expired in the turn-start branch.
     expect(wizard.resources.shieldActive).toBe(false);
     expect(computeAC(wizard)).toBe(baselineAC);
@@ -327,7 +338,7 @@ describe('Disengage damage reduction stacks under buffed HP pool', () => {
 
   it('reduces a 10-damage hit by 2, then subtracts 8 from HP', () => {
     const goblin = getMonster('goblin');
-    const rogue: Character = {
+    let rogue: Character = {
       ...createCharacter({
         id: 'hd-rogue',
         name: 'Stonefoot',
@@ -347,21 +358,29 @@ describe('Disengage damage reduction stacks under buffed HP pool', () => {
       equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: null },
     };
     // Bump the HP pool as if Mantle had been applied at delve-start.
-    rogue.hp = { current: 30, max: 30, temp: 0 };
+    rogue = { ...rogue, hp: { current: 30, max: 30, temp: 0 } };
 
     const roller = createDiceRoller(3);
-    let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    let state = init.state;
+    rogue = init.character;
 
-    state = useCunningAction({ character: rogue, state, choice: 'disengage' }).state;
+    const ca = useCunningAction({ character: rogue, state, choice: 'disengage' });
+    state = ca.state;
+    rogue = ca.character;
     expect(rogue.incomingDamageReduction).toBe(2);
 
     const before = rogue.hp.current;
-    state = applyDamage(state, 'player', 10, rogue);
+    let dmg = applyDamage(state, 'player', 10, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
     expect(rogue.hp.current).toBe(before - 8);
     expect(rogue.incomingDamageReduction).toBe(0);
 
     // A second 10-damage hit gets no reduction.
-    state = applyDamage(state, 'player', 10, rogue);
+    dmg = applyDamage(state, 'player', 10, rogue);
+    state = dmg.state;
+    rogue = dmg.character;
     expect(rogue.hp.current).toBe(before - 8 - 10);
     void state;
   });

@@ -6,13 +6,14 @@ import type {
   SpellEffectKind,
 } from '../../../types/combat';
 import { getSpell } from '../../../content/spells';
-import { applyDamage } from '../attack';
+import { applyDamage, evaluateCombatEnd as evaluateCombatEndShared } from '../attack';
 import { abilityModifier } from '../../../types/abilities';
 import {
   effectiveAbilityScores,
   proficiencyBonus,
 } from '../../character/derived';
 import { appendLog } from '../log';
+import { patchActionEconomy, patchSpellSlots } from '../types';
 
 export interface CastSpellContext {
   roller: DiceRoller;
@@ -35,7 +36,7 @@ export function nextLogId(state: CombatState): number {
   return state.log.length + 1;
 }
 
-export function spellAttackBonus(character: Character): number {
+export function spellAttackBonus(character: Readonly<Character>): number {
   const scores = effectiveAbilityScores(character);
   return (
     abilityModifier(scores.int) +
@@ -44,7 +45,7 @@ export function spellAttackBonus(character: Character): number {
   );
 }
 
-export function spellSaveDC(character: Character): number {
+export function spellSaveDC(character: Readonly<Character>): number {
   const scores = effectiveAbilityScores(character);
   // Wizards get +1 baseline ("Focused Casting") so save-or-suck spells like
   // Burning Hands actually land — without this, DC 12 vs typical +2/+3 DEX
@@ -59,7 +60,7 @@ export function spellSaveDC(character: Character): number {
   );
 }
 
-export function spellDamageBonus(character: Character): number {
+export function spellDamageBonus(character: Readonly<Character>): number {
   return character.permanentBonuses?.spellDamage ?? 0;
 }
 
@@ -80,21 +81,24 @@ export function attachSpellEffect(
 /**
  * Returns the count of slots available at level n, treating undefined as 0.
  */
-export function slotsAt(character: Character, level: 1 | 2 | 3 | 4): number {
+export function slotsAt(character: Readonly<Character>, level: 1 | 2 | 3 | 4): number {
   return character.resources.spellSlots?.[level] ?? 0;
 }
 
 /**
- * Spend one slot of the given level (mutates resources). Caller checked availability.
+ * Spend one slot of the given level. Returns the patched character. Caller
+ * checked availability.
  */
-export function consumeSlot(character: Character, level: 1 | 2 | 3 | 4): void {
-  const slots = { ...(character.resources.spellSlots ?? {}) };
-  slots[level] = Math.max(0, (slots[level] ?? 0) - 1);
-  character.resources = { ...character.resources, spellSlots: slots };
+export function consumeSlot(
+  character: Readonly<Character>,
+  level: 1 | 2 | 3 | 4,
+): Character {
+  const current = character.resources.spellSlots?.[level] ?? 0;
+  return patchSpellSlots(character, { [level]: Math.max(0, current - 1) });
 }
 
-export function markActionUsed(character: Character): void {
-  character.actionEconomy = { ...character.actionEconomy, actionUsed: true };
+export function markActionUsed(character: Readonly<Character>): Character {
+  return patchActionEconomy(character, { actionUsed: true });
 }
 
 export function findMonster(state: CombatState, id: string): MonsterCombatant | undefined {
@@ -114,7 +118,7 @@ export function firstLiveMonsterId(state: CombatState): string | undefined {
  * Returns reason on failure for UI tooltips.
  */
 export function canCastSpell(
-  character: Character,
+  character: Readonly<Character>,
   spellId: string,
 ): { ok: true } | { ok: false; reason: string } {
   const known = character.resources.knownSpells ?? [];
@@ -135,26 +139,24 @@ export function canCastSpell(
 }
 
 /**
- * Local evaluator — matches attack.ts logic but kept local to avoid a circular
- * import. Marks combat resolved if all monsters are dead.
+ * Local evaluator — delegates to the shared evaluator in attack/damage.ts but
+ * returns only the state for callsites that want to keep their character
+ * accumulator threaded externally. Use `evaluateCombatEndFull` to get the
+ * fresh character back as well.
  */
-export function evaluateCombatEnd(state: CombatState, character: Character): CombatState {
-  const aliveMonsters = state.combatants.filter(
-    (c) => c.kind === 'monster' && c.instance.hp.current > 0,
-  );
-  if (aliveMonsters.length === 0) {
-    return appendLog(
-      { ...state, status: 'player-victory' },
-      { id: nextLogId(state), kind: 'system', text: 'Victory. The room falls silent.' },
-    );
-  }
-  if (character.hp.current <= 0) {
-    return appendLog(
-      { ...state, status: 'player-defeat' },
-      { id: nextLogId(state), kind: 'system', text: 'You have fallen.' },
-    );
-  }
-  return state;
+export function evaluateCombatEnd(
+  state: CombatState,
+  character: Readonly<Character>,
+): CombatState {
+  return evaluateCombatEndShared(state, character).state;
+}
+
+/** Same as evaluateCombatEnd, but also returns the fresh character (poison-immune flag cleanup, etc.). */
+export function evaluateCombatEndFull(
+  state: CombatState,
+  character: Readonly<Character>,
+): { state: CombatState; character: Character } {
+  return evaluateCombatEndShared(state, character);
 }
 
 /**
@@ -167,13 +169,13 @@ export function castAreaEvocation(
   effect: 'fireball' | 'lightning-bolt',
 ): CastResult {
   const { character, state, roller } = ctx;
-  consumeSlot(character, 3);
+  let nextCharacter: Character = consumeSlot(character, 3);
 
   const damageType: 'fire' | 'lightning' = effect === 'fireball' ? 'fire' : 'lightning';
   const flavor =
     effect === 'fireball'
-      ? `${character.name} flicks an ember — it blooms into a roar of flame`
-      : `${character.name} hurls a white arc of lightning across the room`;
+      ? `${nextCharacter.name} flicks an ember — it blooms into a roar of flame`
+      : `${nextCharacter.name} hurls a white arc of lightning across the room`;
 
   const aliveMonsters = state.combatants.filter(
     (c) => c.kind === 'monster' && c.instance.hp.current > 0,
@@ -181,7 +183,7 @@ export function castAreaEvocation(
 
   const damageRoll = roller.roll({ count: 8, die: 6, modifier: 0 });
   const fullDmg = damageRoll.total;
-  const dc = spellSaveDC(character);
+  const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
@@ -211,7 +213,9 @@ export function castAreaEvocation(
       kind: 'roll',
       text: `${m.instance.displayName} DEX save: ${save.total} vs DC ${dc} — ${success ? 'success (half)' : 'fail (full)'}.`,
     });
-    nextState = applyDamage(nextState, m.id, dmg, character);
+    const damaged = applyDamage(nextState, m.id, dmg, nextCharacter);
+    nextState = damaged.state;
+    nextCharacter = damaged.character;
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
@@ -219,6 +223,7 @@ export function castAreaEvocation(
     });
   }
 
-  markActionUsed(character);
-  return { state: evaluateCombatEnd(nextState, character), character, cast: true };
+  nextCharacter = markActionUsed(nextCharacter);
+  const ended = evaluateCombatEndFull(nextState, nextCharacter);
+  return { state: ended.state, character: ended.character, cast: true };
 }

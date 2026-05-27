@@ -5,7 +5,7 @@ import { castSpell } from './';
 import { createDiceRoller } from '../../dice';
 import { getMonster } from '../../../content/monsters';
 import type { Character } from '../../../types/character';
-import type { MonsterCombatant } from '../../../types/combat';
+import type { CombatState, MonsterCombatant } from '../../../types/combat';
 
 function makeTieflingWizard(): Character {
   return {
@@ -29,7 +29,7 @@ function makeTieflingWizard(): Character {
   };
 }
 
-function findMonster(state: ReturnType<typeof createCombat>): MonsterCombatant {
+function findMonster(state: CombatState): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
 }
 
@@ -48,7 +48,7 @@ describe('Burning Hands — caster Tiefling fire resistance does NOT self-apply'
     const startingHp = wizard.hp.current;
 
     const roller = createDiceRoller(7);
-    const state = createCombat({ roller, character: wizard, monsters: [{ def: goblin }] });
+    const state = createCombat({ roller, character: wizard, monsters: [{ def: goblin }] }).state;
 
     const cast = castSpell({
       roller,
@@ -85,7 +85,7 @@ describe('Burning Hands — caster Tiefling fire resistance does NOT self-apply'
     const goblin = getMonster('goblin');
     const wizard = makeTieflingWizard();
     const roller = createDiceRoller(7);
-    let state = createCombat({ roller, character: wizard, monsters: [{ def: goblin }] });
+    let state = createCombat({ roller, character: wizard, monsters: [{ def: goblin }] }).state;
 
     const goblinBefore = findMonster(state).instance.hp.current;
     const cast = castSpell({

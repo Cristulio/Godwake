@@ -1,6 +1,11 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
-import { combatResult, type CombatActionResult } from './types';
+import {
+  combatResult,
+  patchActionEconomy,
+  patchResources,
+  type CombatActionResult,
+} from './types';
 import { appendLog } from './log';
 
 export type CunningActionChoice = 'dash' | 'disengage' | 'hide';
@@ -30,25 +35,22 @@ export function useCunningAction(ctx: CunningActionContext): CombatActionResult 
   const usesLeft = character.resources.cunningActionUsesRemaining ?? 0;
   if (usesLeft <= 0) return combatResult(state, character);
 
-  character.resources = {
-    ...character.resources,
+  let nextCharacter: Character = character;
+  nextCharacter = patchResources(nextCharacter, {
     cunningActionUsesRemaining: usesLeft - 1,
-  };
-  character.actionEconomy = {
-    ...character.actionEconomy,
-    bonusActionUsed: true,
-  };
+  });
+  nextCharacter = patchActionEconomy(nextCharacter, { bonusActionUsed: true });
 
   let narration: string;
   if (choice === 'hide') {
-    character.nextAttackAdvantage = true;
-    narration = `${character.name} slips into a shadow. Next strike lands with advantage.`;
+    nextCharacter = { ...nextCharacter, nextAttackAdvantage: true };
+    narration = `${nextCharacter.name} slips into a shadow. Next strike lands with advantage.`;
   } else if (choice === 'disengage') {
-    character.incomingDamageReduction = DISENGAGE_DAMAGE_REDUCTION;
-    narration = `${character.name} twists clear — next incoming hit deals ${DISENGAGE_DAMAGE_REDUCTION} less damage.`;
+    nextCharacter = { ...nextCharacter, incomingDamageReduction: DISENGAGE_DAMAGE_REDUCTION };
+    narration = `${nextCharacter.name} twists clear — next incoming hit deals ${DISENGAGE_DAMAGE_REDUCTION} less damage.`;
   } else {
-    character.bonusAttackAvailable = true;
-    narration = `${character.name} surges forward — a second strike rides the momentum.`;
+    nextCharacter = { ...nextCharacter, bonusAttackAvailable: true };
+    narration = `${nextCharacter.name} surges forward — a second strike rides the momentum.`;
   }
 
   const log: CombatLogEntry = {
@@ -57,5 +59,5 @@ export function useCunningAction(ctx: CunningActionContext): CombatActionResult 
     text: narration,
   };
 
-  return combatResult(appendLog(state, log), character);
+  return combatResult(appendLog(state, log), nextCharacter);
 }

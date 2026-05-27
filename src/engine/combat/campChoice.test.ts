@@ -42,8 +42,8 @@ describe('camp choice — Sharpen the Blade (delveAttackBonus)', () => {
     const rollerA = createDiceRoller(99);
     const rollerB = createDiceRoller(99);
 
-    const stateA = createCombat({ roller: rollerA, character: baseline, monsters: [{ def: goblin }] });
-    const stateB = createCombat({ roller: rollerB, character: sharpened, monsters: [{ def: goblin }] });
+    const stateA = createCombat({ roller: rollerA, character: baseline, monsters: [{ def: goblin }] }).state;
+    const stateB = createCombat({ roller: rollerB, character: sharpened, monsters: [{ def: goblin }] }).state;
 
     const goblinIdA = (stateA.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
     const goblinIdB = (stateB.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
@@ -66,8 +66,8 @@ describe('camp choice — Sharpen the Blade (delveAttackBonus)', () => {
     const rollerA = createDiceRoller(11);
     const rollerB = createDiceRoller(11);
 
-    const stateA = createCombat({ roller: rollerA, character: baseline, monsters: [{ def: goblin }] });
-    const stateB = createCombat({ roller: rollerB, character: both, monsters: [{ def: goblin }] });
+    const stateA = createCombat({ roller: rollerA, character: baseline, monsters: [{ def: goblin }] }).state;
+    const stateB = createCombat({ roller: rollerB, character: both, monsters: [{ def: goblin }] }).state;
 
     const goblinIdA = (stateA.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
     const goblinIdB = (stateB.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;

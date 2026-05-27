@@ -1,6 +1,11 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
-import { combatResult, type CombatActionResult } from './types';
+import {
+  combatResult,
+  patchActionEconomy,
+  patchResources,
+  type CombatActionResult,
+} from './types';
 import { appendLog } from './log';
 
 export interface ActionSurgeContext {
@@ -21,19 +26,16 @@ export function useActionSurge(ctx: ActionSurgeContext): CombatActionResult {
   if ((character.resources.actionSurgeRemaining ?? 0) <= 0) return combatResult(state, character);
   if (!character.actionEconomy.actionUsed) return combatResult(state, character);
 
-  character.resources = {
-    ...character.resources,
-    actionSurgeRemaining: (character.resources.actionSurgeRemaining ?? 0) - 1,
-  };
-  character.actionEconomy = {
-    ...character.actionEconomy,
-    actionUsed: false,
-  };
+  let nextCharacter: Character = character;
+  nextCharacter = patchResources(nextCharacter, {
+    actionSurgeRemaining: (nextCharacter.resources.actionSurgeRemaining ?? 0) - 1,
+  });
+  nextCharacter = patchActionEconomy(nextCharacter, { actionUsed: false });
 
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${character.name} surges — adrenaline burns through the wound. One more swing.`,
+    text: `${nextCharacter.name} surges — adrenaline burns through the wound. One more swing.`,
   };
 
   return combatResult(
@@ -45,6 +47,6 @@ export function useActionSurge(ctx: ActionSurgeContext): CombatActionResult {
       },
       log,
     ),
-    character,
+    nextCharacter,
   );
 }

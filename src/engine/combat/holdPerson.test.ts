@@ -43,7 +43,7 @@ describe('Hold Person — Magistrate boss mechanic', () => {
     expect(magistrate.actions[0].kind).toBe('paralyze');
     const hero = makeHuman();
     const roller = createDiceRoller(1);
-    const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
+    const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] }).state;
     const monsterId = state.combatants.find((c) => c.kind === 'monster')!.id;
     const after = monsterAttack({ roller, character: hero, state }, monsterId).state;
     // First turn must be a save line, not a damage line.
@@ -55,13 +55,16 @@ describe('Hold Person — Magistrate boss mechanic', () => {
   it('failed save applies paralyzed condition to the player', () => {
     const magistrate = getMonster('athkatla-magistrate');
     // A WIS-3 hero will fail the (now softened) DC 12 save on most d20s.
-    const hero = makeHuman({ baseAbilityScores: {
+    let hero = makeHuman({ baseAbilityScores: {
       str: 14, dex: 12, con: 13, int: 10, wis: 8, cha: 10,
     } });
     const roller = createDiceRoller(2);
-    const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
+    const init = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
+    const state = init.state;
+    hero = init.character;
     const monsterId = state.combatants.find((c) => c.kind === 'monster')!.id;
-    monsterAttack({ roller, character: hero, state }, monsterId).state;
+    const ma = monsterAttack({ roller, character: hero, state }, monsterId);
+    hero = ma.character;
     const paralyzed = hero.conditions.find((c) => c.name === 'paralyzed');
     // The seed and the score combination should land on a fail. If a future
     // test flake hits here, swap the seed — the mechanic is the assertion.
@@ -81,7 +84,7 @@ describe('Hold Person — Magistrate boss mechanic', () => {
       saveAbility: 'wis',
     }];
     const roller = createDiceRoller(5);
-    const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
+    const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] }).state;
     const monsterId = state.combatants.find((c) => c.kind === 'monster')!.id;
     const after = monsterAttack({ roller, character: hero, state }, monsterId).state;
     const attackLine = after.log.find((l) => l.text.includes('Mind Spike'));
@@ -91,21 +94,28 @@ describe('Hold Person — Magistrate boss mechanic', () => {
 
   it('paralyzed player turn fails save and locks action economy', () => {
     const magistrate = getMonster('athkatla-magistrate');
-    const hero = makeHuman({ baseAbilityScores: {
+    let hero = makeHuman({ baseAbilityScores: {
       str: 14, dex: 12, con: 13, int: 10, wis: 8, cha: 10,
     } });
-    hero.conditions = [{
-      name: 'paralyzed',
-      duration: { kind: 'rounds', value: 3 },
-      saveDC: 14,
-      saveAbility: 'wis',
-    }];
+    hero = {
+      ...hero,
+      conditions: [{
+        name: 'paralyzed',
+        duration: { kind: 'rounds', value: 3 },
+        saveDC: 14,
+        saveAbility: 'wis',
+      }],
+    };
     const roller = createDiceRoller(9);
-    let state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
+    const init = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
+    let state = init.state;
+    hero = init.character;
     // Advance until it's the player's turn — rolled initiative order may
     // place the monster first or the player first depending on the d20.
     while (state.initiativeOrder[state.currentTurnIndex] !== 'player') {
-      state = endTurn(state, hero).state;
+      const et = endTurn(state, hero);
+      state = et.state;
+      hero = et.character;
     }
     expect(hero.actionEconomy.actionUsed).toBe(true);
     expect(hero.actionEconomy.bonusActionUsed).toBe(true);

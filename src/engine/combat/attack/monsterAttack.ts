@@ -35,8 +35,9 @@ export function monsterAttack(
   attackerId: string,
 ): CombatActionResult {
   const { roller, character, state } = ctx;
+  let nextCharacter: Character = character;
   const attacker = findCombatant(state, attackerId);
-  if (!attacker || attacker.kind !== 'monster') return combatResult(state, character);
+  if (!attacker || attacker.kind !== 'monster') return combatResult(state, nextCharacter);
 
   // Monster Hold Person handling: paralyzed monsters tick down their duration
   // on their own turn and lose the action. No save (simplified per gameplay
@@ -76,12 +77,12 @@ export function monsterAttack(
             : `${attacker.instance.displayName} is paralyzed — the turn is lost.`,
         },
       ),
-      character,
+      nextCharacter,
     );
   }
 
   const monsterDef = getMonster(attacker.instance.defId);
-  const playerParalyzed = isPlayerParalyzed(character);
+  const playerParalyzed = isPlayerParalyzed(nextCharacter);
   const paralyzeAction = monsterDef.actions.find((a) => a.kind === 'paralyze');
   const attackAction = monsterDef.actions.find((a) => a.kind === 'attack');
 
@@ -95,12 +96,17 @@ export function monsterAttack(
   }
 
   if (action.kind === 'paralyze') {
-    return combatResult(
-      monsterCastParalyze(state, attackerId, attacker.instance.displayName, character, roller, action),
-      character,
+    const result = monsterCastParalyze(
+      state,
+      attackerId,
+      attacker.instance.displayName,
+      nextCharacter,
+      roller,
+      action,
     );
+    return combatResult(result.state, result.character);
   }
-  if (action.kind !== 'attack') return combatResult(state, character);
+  if (action.kind !== 'attack') return combatResult(state, nextCharacter);
 
   // Battle Rage transition: if this monster has the rage mechanic and is now
   // at or below half HP and hasn't entered rage yet, flip the flag and
@@ -122,7 +128,7 @@ export function monsterAttack(
   const raging =
     hasBattleRage && (enteringRage || attacker.instance.bossRageActive === true);
 
-  const ac = computeAC(character);
+  const ac = computeAC(nextCharacter);
   const attackAdvantage: 'normal' | 'advantage' =
     playerParalyzed ? 'advantage' : 'normal';
   const toHit = roller.d20(attackAdvantage, action.attackBonus);
@@ -136,13 +142,13 @@ export function monsterAttack(
   logEntries.push({
     id: nextLogId(workingState),
     kind: 'roll',
-    text: `${attacker.instance.displayName} attacks ${character.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}${advantageNote}.`,
+    text: `${attacker.instance.displayName} attacks ${nextCharacter.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}${advantageNote}.`,
   });
 
   const attackEvent: AttackEvent = {
     id: state.attackEventCounter + 1,
     attackerName: attacker.instance.displayName,
-    targetName: character.name,
+    targetName: nextCharacter.name,
     attackerKind: 'monster',
     weaponName: action.name,
     attackBonus: action.attackBonus,
@@ -172,11 +178,11 @@ export function monsterAttack(
     const rageBonus = raging ? 2 : 0;
     const rawDamage = damageRoll.total + damageExpr.modifier + rageBonus;
 
-    const quirkMods = characterQuirkMods(character);
+    const quirkMods = characterQuirkMods(nextCharacter);
     const immune =
       action.damageType === 'poison' &&
-      (quirkMods.poisonImmune === true || character.poisonImmuneEncounter === true);
-    const race = getRace(character.raceId);
+      (quirkMods.poisonImmune === true || nextCharacter.poisonImmuneEncounter === true);
+    const race = getRace(nextCharacter.raceId);
     const resisted =
       !immune &&
       (race.damageResistances?.includes(action.damageType) ?? false);
@@ -186,14 +192,16 @@ export function monsterAttack(
         ? Math.floor(rawDamage / 2)
         : rawDamage;
 
-    nextState = applyDamage(nextState, 'player', totalDamage, character);
+    const damaged = applyDamage(nextState, 'player', totalDamage, nextCharacter);
+    nextState = damaged.state;
+    nextCharacter = damaged.character;
     const modifierSuffix =
       damageExpr.modifier !== 0
         ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}`
         : '';
     const rageSuffix = rageBonus > 0 ? ` +${rageBonus} rage` : '';
     const damageLine = immune
-      ? `Damage negated: ${character.name} is immune to ${action.damageType}.`
+      ? `Damage negated: ${nextCharacter.name} is immune to ${action.damageType}.`
       : resisted
         ? `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} → halved (${action.damageType} resistance) = ${totalDamage} ${action.damageType}.`
         : `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} = ${totalDamage} ${action.damageType}.`;
@@ -206,7 +214,8 @@ export function monsterAttack(
 
   // Mark monster's action used
   nextState = markMonsterActionUsed(nextState, attackerId);
-  return combatResult(evaluateCombatEnd(nextState, character), character);
+  const ended = evaluateCombatEnd(nextState, nextCharacter);
+  return combatResult(ended.state, ended.character);
 }
 
 function markMonsterActionUsed(state: CombatState, attackerId: string): CombatState {
@@ -255,21 +264,22 @@ function monsterCastParalyze(
   state: CombatState,
   attackerId: string,
   attackerName: string,
-  character: Character,
+  character: Readonly<Character>,
   roller: DiceRoller,
   action: ParalyzeActionLike,
-): CombatState {
-  const save = rollPlayerSave(roller, character, action.saveAbility, action.saveDC);
+): { state: CombatState; character: Character } {
+  let nextCharacter: Character = character;
+  const save = rollPlayerSave(roller, nextCharacter, action.saveAbility, action.saveDC);
 
   const logEntries: CombatLogEntry[] = [];
   logEntries.push({
     id: nextLogId(state),
     kind: 'roll',
-    text: `${attackerName} casts ${action.name}. ${character.name} ${action.saveAbility.toUpperCase()} save: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${action.saveDC} — ${save.success ? 'success' : 'fail'}.`,
+    text: `${attackerName} casts ${action.name}. ${nextCharacter.name} ${action.saveAbility.toUpperCase()} save: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${action.saveDC} — ${save.success ? 'success' : 'fail'}.`,
   });
 
   if (!save.success) {
-    applyParalyze(character, {
+    nextCharacter = applyParalyze(nextCharacter, {
       rounds: action.durationRounds,
       saveDC: action.saveDC,
       saveAbility: action.saveAbility,
@@ -278,13 +288,13 @@ function monsterCastParalyze(
     logEntries.push({
       id: nextLogId(state) + 1,
       kind: 'system',
-      text: `${character.name} is paralyzed. The Magistrate's hold tightens.`,
+      text: `${nextCharacter.name} is paralyzed. The Magistrate's hold tightens.`,
     });
   } else {
     logEntries.push({
       id: nextLogId(state) + 1,
       kind: 'system',
-      text: `${character.name} shrugs off the binding.`,
+      text: `${nextCharacter.name} shrugs off the binding.`,
     });
   }
 
@@ -301,5 +311,5 @@ function monsterCastParalyze(
     },
   };
   nextState = markMonsterActionUsed(nextState, attackerId);
-  return nextState;
+  return { state: nextState, character: nextCharacter };
 }
