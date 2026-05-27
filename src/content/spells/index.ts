@@ -75,6 +75,44 @@ export const HOLD_PERSON: Spell = SpellSchema.parse({
   effectKey: 'hold-person',
 });
 
+export const MISTY_STEP: Spell = SpellSchema.parse({
+  id: 'misty-step',
+  name: 'Misty Step',
+  level: 2,
+  school: 'conjuration',
+  range: 'Self',
+  target: 'self',
+  description:
+    'You sidestep into a brief fold of silver mist and reappear half a pace askew. +2 AC until the start of your next turn. Cast as a bonus action.',
+  effectKey: 'misty-step',
+});
+
+export const FIREBALL: Spell = SpellSchema.parse({
+  id: 'fireball',
+  name: 'Fireball',
+  level: 3,
+  school: 'evocation',
+  range: '150 ft',
+  target: 'area',
+  damageType: 'fire',
+  description:
+    'A bead of ember leaves your fingertip and blooms — 8d6 fire damage to every enemy in the room. A successful Dexterity save halves the burn.',
+  effectKey: 'fireball',
+});
+
+export const LIGHTNING_BOLT: Spell = SpellSchema.parse({
+  id: 'lightning-bolt',
+  name: 'Lightning Bolt',
+  level: 3,
+  school: 'evocation',
+  range: '100 ft line',
+  target: 'area',
+  damageType: 'lightning',
+  description:
+    'A jagged arc of white lightning leaps from your palm and carves the room — 8d6 lightning damage to every enemy. A successful Dexterity save halves the strike.',
+  effectKey: 'lightning-bolt',
+});
+
 const ALL_SPELLS: Spell[] = [
   FIRE_BOLT,
   MAGIC_MISSILE,
@@ -82,6 +120,9 @@ const ALL_SPELLS: Spell[] = [
   SHIELD,
   MAGE_ARMOR,
   HOLD_PERSON,
+  MISTY_STEP,
+  FIREBALL,
+  LIGHTNING_BOLT,
 ];
 
 const SPELL_BY_ID: Map<string, Spell> = new Map(ALL_SPELLS.map((s) => [s.id, s]));

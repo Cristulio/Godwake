@@ -64,6 +64,8 @@ export interface ClassResources {
   mageArmorActive?: boolean;
   /** Wizard: Shield reaction-buff active for the next monster turn (+5 AC). Cleared at start of player's next turn. */
   shieldActive?: boolean;
+  /** Wizard: Misty Step bonus-action displacement active (+2 AC). Cleared at start of player's next turn. */
+  mistyStepActive?: boolean;
 }
 
 /**

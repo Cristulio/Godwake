@@ -142,6 +142,7 @@ export function createCombat(input: CreateCombatInput): CombatState {
       ...character.resources,
       mageArmorActive: true,
       shieldActive: false,
+      mistyStepActive: false,
     };
   }
 

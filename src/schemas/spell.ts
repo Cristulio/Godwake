@@ -31,6 +31,9 @@ export const SpellEffectKeySchema = z.enum([
   'shield',
   'mage-armor',
   'hold-person',
+  'misty-step',
+  'fireball',
+  'lightning-bolt',
 ]);
 export type SpellEffectKey = z.infer<typeof SpellEffectKeySchema>;
 

@@ -376,6 +376,116 @@ describe('Wizard — Grove caster bonuses', () => {
   });
 });
 
+describe('Wizard — Misty Step (L3 unlock)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('is auto-learned at L3 by applyLevelUp', () => {
+    let w = makeWizard();
+    expect(w.resources.knownSpells).not.toContain('misty-step');
+    w = applyLevelUp(w); // L2
+    expect(w.resources.knownSpells).not.toContain('misty-step');
+    w = applyLevelUp(w); // L3
+    expect(w.resources.knownSpells).toContain('misty-step');
+  });
+
+  it('costs a bonus action, consumes a 2nd-level slot, and grants +2 AC until next turn', () => {
+    const goblin = getMonster('goblin');
+    let w = makeWizard();
+    w = applyLevelUp(w);
+    w = applyLevelUp(w); // L3 — has 2nd-level slots, knows misty-step
+    expect(slotsAt(w, 2)).toBe(2);
+
+    const roller = createDiceRoller(11);
+    let state = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    const baseAC = computeAC(w);
+
+    const result = castSpell({ roller, character: w, state, spellId: 'misty-step' });
+    expect(result.cast).toBe(true);
+    state = result.state;
+
+    expect(slotsAt(w, 2)).toBe(1);
+    expect(w.actionEconomy.bonusActionUsed).toBe(true);
+    expect(w.actionEconomy.actionUsed).toBe(false);
+    expect(w.resources.mistyStepActive).toBe(true);
+    expect(computeAC(w)).toBe(baseAC + 2);
+
+    // Cycle to next player turn — the +2 AC should expire.
+    state = endTurn(state, w).state;
+    state = endTurn(state, w).state;
+    expect(w.resources.mistyStepActive).toBeFalsy();
+    expect(computeAC(w)).toBe(baseAC);
+  });
+});
+
+describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('L5 wizard has 2× L3 slots AND knows Fireball + Lightning Bolt', () => {
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L1 → L5
+    expect(w.level).toBe(5);
+    expect(w.resources.spellSlots?.[3]).toBe(2);
+    expect(w.resources.knownSpells).toContain('fireball');
+    expect(w.resources.knownSpells).toContain('lightning-bolt');
+    expect(w.resources.knownSpells).toContain('misty-step');
+  });
+
+  it('Fireball damages every living monster and consumes a 3rd-level slot', () => {
+    const goblin = getMonster('goblin');
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
+    const roller = createDiceRoller(13);
+    let state = createCombat({
+      roller,
+      character: w,
+      monsters: [{ def: goblin }, { def: goblin, displayName: 'Goblin B' }],
+    });
+    const slotsBefore = slotsAt(w, 3);
+    const before = state.combatants
+      .filter((c) => c.kind === 'monster')
+      .map((c) => (c as MonsterCombatant).instance.hp.current);
+
+    const result = castSpell({ roller, character: w, state, spellId: 'fireball' });
+    expect(result.cast).toBe(true);
+    state = result.state;
+
+    expect(slotsAt(w, 3)).toBe(slotsBefore - 1);
+    expect(w.actionEconomy.actionUsed).toBe(true);
+    const after = state.combatants
+      .filter((c) => c.kind === 'monster')
+      .map((c) => (c as MonsterCombatant).instance.hp.current);
+    for (let i = 0; i < before.length; i++) {
+      expect(after[i]).toBeLessThan(before[i]);
+    }
+  });
+
+  it('Lightning Bolt damages every living monster and consumes a 3rd-level slot', () => {
+    const goblin = getMonster('goblin');
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
+    const roller = createDiceRoller(17);
+    let state = createCombat({
+      roller,
+      character: w,
+      monsters: [{ def: goblin }, { def: goblin, displayName: 'Goblin B' }],
+    });
+    const slotsBefore = slotsAt(w, 3);
+    const before = state.combatants
+      .filter((c) => c.kind === 'monster')
+      .map((c) => (c as MonsterCombatant).instance.hp.current);
+
+    state = castSpell({ roller, character: w, state, spellId: 'lightning-bolt' }).state;
+
+    expect(slotsAt(w, 3)).toBe(slotsBefore - 1);
+    const after = state.combatants
+      .filter((c) => c.kind === 'monster')
+      .map((c) => (c as MonsterCombatant).instance.hp.current);
+    for (let i = 0; i < before.length; i++) {
+      expect(after[i]).toBeLessThan(before[i]);
+    }
+  });
+});
+
 describe('Wizard — canCastSpell guards', () => {
   it('returns ok=false when no slot remains', () => {
     const w = makeWizard();

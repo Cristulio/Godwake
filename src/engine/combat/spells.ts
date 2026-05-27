@@ -116,10 +116,17 @@ export function canCastSpell(
   character: Character,
   spellId: string,
 ): { ok: true } | { ok: false; reason: string } {
-  if (character.actionEconomy.actionUsed) return { ok: false, reason: 'Action already used.' };
   const known = character.resources.knownSpells ?? [];
   if (!known.includes(spellId)) return { ok: false, reason: 'Spell not prepared.' };
   const spell = getSpell(spellId);
+  // Bonus-action spells (Misty Step) gate on the bonus-action slot, not action.
+  if (spell.effectKey === 'misty-step') {
+    if (character.actionEconomy.bonusActionUsed) {
+      return { ok: false, reason: 'Bonus action already used.' };
+    }
+  } else if (character.actionEconomy.actionUsed) {
+    return { ok: false, reason: 'Action already used.' };
+  }
   if (spell.level === 0) return { ok: true };
   const lvl = spell.level as 1 | 2 | 3;
   if (slotsAt(character, lvl) <= 0) return { ok: false, reason: `No level-${lvl} slot remaining.` };
@@ -150,6 +157,12 @@ export function castSpell(ctx: CastSpellContext): CastResult {
       return castMageArmor(character, state);
     case 'hold-person':
       return castHoldPerson(ctx);
+    case 'misty-step':
+      return castMistyStep(character, state);
+    case 'fireball':
+      return castAreaEvocation(ctx, 'fireball');
+    case 'lightning-bolt':
+      return castAreaEvocation(ctx, 'lightning-bolt');
     default:
       // Exhaustive guard — if a new effectKey is added, this branch becomes
       // unreachable but keeps the switch honest.
@@ -392,6 +405,85 @@ function castHoldPerson(ctx: CastSpellContext): CastResult {
   }
   markActionUsed(character);
   return { state: nextState, character, cast: true };
+}
+
+function castMistyStep(character: Character, state: CombatState): CastResult {
+  consumeSlot(character, 2);
+  character.resources = { ...character.resources, mistyStepActive: true };
+  character.actionEconomy = { ...character.actionEconomy, bonusActionUsed: true };
+  let nextState: CombatState = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'narration',
+    text: `${character.name} steps through a curl of silver mist — +2 AC until next turn.`,
+  });
+  nextState = attachSpellEffect(nextState, 'misty-step', 'player');
+  return { state: nextState, character, cast: true };
+}
+
+/**
+ * Shared AoE evocation handler — Fireball and Lightning Bolt both roll 8d6
+ * against every living monster, with a DEX save for half (mirrors 5e RAW for
+ * the shape; the engine has no terrain so cone/line/sphere collapse to "all").
+ */
+function castAreaEvocation(
+  ctx: CastSpellContext,
+  effect: 'fireball' | 'lightning-bolt',
+): CastResult {
+  const { character, state, roller } = ctx;
+  consumeSlot(character, 3);
+
+  const damageType: 'fire' | 'lightning' = effect === 'fireball' ? 'fire' : 'lightning';
+  const flavor =
+    effect === 'fireball'
+      ? `${character.name} flicks an ember — it blooms into a roar of flame`
+      : `${character.name} hurls a white arc of lightning across the room`;
+
+  const aliveMonsters = state.combatants.filter(
+    (c) => c.kind === 'monster' && c.instance.hp.current > 0,
+  ) as MonsterCombatant[];
+
+  const damageRoll = roller.roll({ count: 8, die: 6, modifier: 0 });
+  const fullDmg = damageRoll.total;
+  const dc = spellSaveDC(character);
+
+  let nextState: CombatState = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'roll',
+    text: `${flavor}. ${damageRoll.rolls.join('+')} = ${fullDmg} ${damageType}. DEX save DC ${dc} for half.`,
+  });
+
+  nextState = attachSpellEffect(nextState, effect, 'player', aliveMonsters[0]?.id);
+
+  for (const m of aliveMonsters) {
+    // Monster DEX save — engine doesn't track per-monster save mods, so use
+    // the same wis-mod=0 approximation Hold Person uses. DC scales with caster.
+    const save = roller.d20('normal', 0);
+    const success = save.total >= dc;
+    const dmg = success ? Math.floor(fullDmg / 2) : fullDmg;
+
+    nextState = {
+      ...nextState,
+      combatants: nextState.combatants.map((c) => {
+        if (c.kind !== 'monster' || c.id !== m.id) return c;
+        if (c.instance.acRevealed) return c;
+        return { ...c, instance: { ...c.instance, acRevealed: true } };
+      }),
+    };
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'roll',
+      text: `${m.instance.displayName} DEX save: ${save.total} vs DC ${dc} — ${success ? 'success (half)' : 'fail (full)'}.`,
+    });
+    nextState = applyDamage(nextState, m.id, dmg, character);
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'damage',
+      text: `${m.instance.displayName} takes ${dmg} ${damageType}.`,
+    });
+  }
+
+  markActionUsed(character);
+  return { state: evaluateCombatEnd(nextState, character), character, cast: true };
 }
 
 /**

@@ -76,6 +76,17 @@ export function applyLevelUp(character: Character): Character {
   // the well — leveling reads as a long rest in narrative terms.
   if (character.classId === 'wizard') {
     resources.spellSlots = wizardSpellSlotsForLevel(newLevel);
+    // Auto-learn the spells unlocked at each level milestone so the new slots
+    // aren't dead air. Without this, L5 wizards have 3rd-level slots and no
+    // 3rd-level spell to spend them on.
+    const known = resources.knownSpells ?? [];
+    const learn: string[] = [];
+    if (newLevel >= 3 && !known.includes('misty-step')) learn.push('misty-step');
+    if (newLevel >= 5 && !known.includes('fireball')) learn.push('fireball');
+    if (newLevel >= 5 && !known.includes('lightning-bolt')) learn.push('lightning-bolt');
+    if (learn.length > 0) {
+      resources.knownSpells = [...known, ...learn];
+    }
   }
 
   return {

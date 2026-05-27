@@ -94,6 +94,10 @@ export function endTurn(state: CombatState, character: Character): CombatActionR
   if (order[nextIndex] === 'player' && character.resources.shieldActive) {
     character.resources = { ...character.resources, shieldActive: false };
   }
+  // Wizard: Misty Step's displacement bonus expires at the start of the player's next turn.
+  if (order[nextIndex] === 'player' && character.resources.mistyStepActive) {
+    character.resources = { ...character.resources, mistyStepActive: false };
+  }
 
   if (order[nextIndex] === 'player' && isPlayerParalyzed(character)) {
     nextState = resolvePlayerParalyzedTurn(nextState, character);
