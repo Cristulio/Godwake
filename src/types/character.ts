@@ -141,6 +141,12 @@ export interface Character {
    */
   delveAttackBonus?: number;
   /**
+   * Per-delve initiative bonus granted by event choices (e.g. picking up
+   * the bone on the stake). Stacks with `permanentInitBonus`. Cleared in
+   * `finishDelve` / `failDelve` / `abandonDelve`.
+   */
+  delveInitBonus?: number;
+  /**
    * One-shot advantage on the player's next attack roll. Set true by Rogue's
    * Cunning Action: Hide (and cleared when that attack resolves). Optional so
    * legacy saves rehydrate without migration.

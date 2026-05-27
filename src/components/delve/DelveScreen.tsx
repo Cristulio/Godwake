@@ -13,6 +13,7 @@ import { RestRoom } from './RestRoom';
 import { TreasureRoom } from './TreasureRoom';
 import { ShrineRoom } from './ShrineRoom';
 import { CampRoom } from './CampRoom';
+import { EventRoom } from './EventRoom';
 import { DelveSummary } from './DelveSummary';
 import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
@@ -184,17 +185,11 @@ export function DelveScreen() {
     return null;
   }
 
-  // Combat / boss rooms: render the combat screen if we have a combat in progress.
-  if (room.kind === 'combat' || room.kind === 'boss') {
-    if (!combat) {
-      return (
-        <div className="min-h-screen p-6 flex items-center justify-center">
-          <div className="text-[var(--color-text-dim)] text-sm uppercase tracking-widest animate-pulse">
-            Preparing encounter...
-          </div>
-        </div>
-      );
-    }
+  // Combat in progress: render the combat screen. This fires for combat /
+  // boss rooms (spawned by the effect above) AND for event-room ambushes
+  // (spawned directly by EventRoom via setCombat).
+  if (combat) {
+    const isBossRoom = room.kind === 'boss';
     return (
       <div className="flex flex-col">
         <div className="max-w-6xl w-full mx-auto px-6 pt-4">
@@ -203,24 +198,27 @@ export function DelveScreen() {
         <CombatScreen
           character={character}
           state={combat}
-          scene={room.kind === 'boss' ? 'boss' : 'combat'}
+          scene={isBossRoom ? 'boss' : 'combat'}
           decoration={decorationForRoom(room.id, delve.chapterId)}
           roomTitle={room.title.toUpperCase()}
-          roomLabel={`${room.kind === 'boss' ? 'Boss · ' : ''}Round ${combat.round}`}
+          roomLabel={`${isBossRoom ? 'Boss · ' : ''}Round ${combat.round}`}
           onAbandon={() => useGameStore.getState().abandonDelve()}
           onCombatResolved={(outcome) => {
             if (outcome === 'victory') {
-              const roomGold = room.goldReward ?? 0;
-              const xpDrop = room.xpReward ?? 0;
-              // Per-monster CR-scaled gold drops, on top of any fixed
-              // room-level goldReward. Computed from the room's monster
-              // pool (each instance drops independently).
-              const monsterDefIds = (room.monsters ?? []).flatMap((m) =>
-                Array.from({ length: m.count }, () => m.defId),
-              );
-              const mobGold = rollRoomGoldDrops(getActiveRoller(), monsterDefIds);
-              const goldDrop = roomGold + mobGold;
-              if (goldDrop || xpDrop) addDelveReward(goldDrop, xpDrop);
+              const isRegularCombat = room.kind === 'combat' || room.kind === 'boss';
+              if (isRegularCombat) {
+                const roomGold = room.goldReward ?? 0;
+                const xpDrop = room.xpReward ?? 0;
+                // Per-monster CR-scaled gold drops, on top of any fixed
+                // room-level goldReward. Computed from the room's monster
+                // pool (each instance drops independently).
+                const monsterDefIds = (room.monsters ?? []).flatMap((m) =>
+                  Array.from({ length: m.count }, () => m.defId),
+                );
+                const mobGold = rollRoomGoldDrops(getActiveRoller(), monsterDefIds);
+                const goldDrop = roomGold + mobGold;
+                if (goldDrop || xpDrop) addDelveReward(goldDrop, xpDrop);
+              }
               setCombat(null);
               advanceRoom();
               // Imoen whispers on the FIRST cleared room of the run.
@@ -229,7 +227,7 @@ export function DelveScreen() {
                 useGameStore.getState().showTaunt('imoen', 'first-blood');
               }
               // Irenicus taunts after a boss clear.
-              if (room.kind === 'boss') {
+              if (isBossRoom) {
                 useGameStore.getState().showTaunt('irenicus', 'chapter-clear');
               }
               // Combined Godwake delve: Ilyich is a mid-delve boss, not the
@@ -245,6 +243,18 @@ export function DelveScreen() {
             }
           }}
         />
+      </div>
+    );
+  }
+
+  // Combat / boss room without a combat yet — render the loading placeholder
+  // while the spawn-on-enter effect builds the encounter.
+  if (room.kind === 'combat' || room.kind === 'boss') {
+    return (
+      <div className="min-h-screen p-6 flex items-center justify-center">
+        <div className="text-[var(--color-text-dim)] text-sm uppercase tracking-widest animate-pulse">
+          Preparing encounter...
+        </div>
       </div>
     );
   }
@@ -278,6 +288,41 @@ export function DelveScreen() {
           <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
         </div>
         <ShrineRoom room={room} onContinue={() => advanceRoom()} />
+      </div>
+    );
+  }
+
+  if (room.kind === 'event') {
+    return (
+      <div key={room.id} className="animate-room-enter">
+        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
+          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
+        </div>
+        <EventRoom
+          room={room}
+          onContinue={() => advanceRoom()}
+          onAmbush={(monsterDefIds) => {
+            const roller = getActiveRoller();
+            const fresh = withResetActionEconomy(character);
+            setCharacter(fresh);
+            const totals: Record<string, number> = {};
+            for (const id of monsterDefIds) totals[id] = (totals[id] ?? 0) + 1;
+            const seen: Record<string, number> = {};
+            const monsters = monsterDefIds.map((defId) => {
+              const def = getMonster(defId);
+              const idx = seen[defId] ?? 0;
+              seen[defId] = idx + 1;
+              const displayName = totals[defId] > 1
+                ? `${def.name} ${String.fromCharCode(65 + idx)}`
+                : def.name;
+              return { def, displayName };
+            });
+            const newCombat = createCombat({ roller, character: fresh, monsters });
+            setCombat(newCombat);
+            const discover = useGameStore.getState().discoverMonster;
+            for (const id of monsterDefIds) discover(id);
+          }}
+        />
       </div>
     );
   }
