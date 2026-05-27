@@ -56,6 +56,24 @@ export interface AttackEvent {
   crit: boolean;
 }
 
+export type SpellEffectKind =
+  | 'magic-missile'
+  | 'fire-bolt'
+  | 'burning-hands'
+  | 'shield'
+  | 'mage-armor'
+  | 'hold-person';
+
+export interface SpellEffectEvent {
+  /** Monotonic id — increments per cast so the SpellEffectLayer mounts a fresh component. */
+  id: number;
+  kind: SpellEffectKind;
+  /** Combatant id of the caster — 'player' or a monster id. */
+  attackerId: string;
+  /** Combatant id of the target. Undefined for self-buffs (shield, mage-armor). */
+  targetId?: string;
+}
+
 export interface CombatState {
   combatants: Combatant[];
   /** Combatant ids in turn order, set when combat starts. */
@@ -68,6 +86,10 @@ export interface CombatState {
   lastAttack?: AttackEvent;
   /** Counter to issue stable AttackEvent ids. */
   attackEventCounter: number;
+  /** Latest spell-cast event — populated for the SpellEffectLayer overlay. */
+  spellEffectEvent?: SpellEffectEvent;
+  /** Counter to issue stable SpellEffectEvent ids. Optional so legacy saves rehydrate. */
+  spellEffectCounter?: number;
   /** True after the player has made their first attack roll this combat. */
   playerHasAttacked: boolean;
   /** Missed-attack rerolls remaining for this encounter (Tymora's Coin etc.). */

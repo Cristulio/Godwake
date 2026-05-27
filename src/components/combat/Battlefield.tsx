@@ -1,6 +1,7 @@
 import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import { BattlefieldSprite } from './BattlefieldSprite';
+import { SpellEffectLayer } from './SpellEffect';
 
 export type BattlefieldDecoration =
   | 'iron-cells'
@@ -108,6 +109,8 @@ export function Battlefield({
           </div>
         ))}
       </div>
+
+      <SpellEffectLayer state={state} />
     </div>
   );
 }
