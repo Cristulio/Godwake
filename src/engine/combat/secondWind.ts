@@ -2,6 +2,7 @@ import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { combatResult, type CombatActionResult } from './types';
+import { appendLog } from './log';
 
 export interface SecondWindContext {
   roller: DiceRoller;
@@ -38,5 +39,5 @@ export function useSecondWind(ctx: SecondWindContext): CombatActionResult {
     text: `${character.name} catches a second wind. 1d10+${character.level} = ${heal.total} → +${actuallyHealed} HP.`,
   };
 
-  return combatResult({ ...state, log: [...state.log, log] }, character);
+  return combatResult(appendLog(state, log), character);
 }

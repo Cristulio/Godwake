@@ -3,6 +3,7 @@ import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { getItem } from '../../content/items';
 import { combatResult, type CombatActionResult } from './types';
+import { appendLog } from './log';
 
 export interface UseItemContext {
   roller: DiceRoller;
@@ -65,5 +66,5 @@ export function useConsumable(
     text: logText,
   };
 
-  return combatResult({ ...state, log: [...state.log, log] }, character);
+  return combatResult(appendLog(state, log), character);
 }

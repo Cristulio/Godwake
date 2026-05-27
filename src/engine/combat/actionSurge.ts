@@ -1,6 +1,7 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { combatResult, type CombatActionResult } from './types';
+import { appendLog } from './log';
 
 export interface ActionSurgeContext {
   character: Character;
@@ -36,12 +37,14 @@ export function useActionSurge(ctx: ActionSurgeContext): CombatActionResult {
   };
 
   return combatResult(
-    {
-      ...state,
-      playerAttacksThisTurn: 0,
-      sneakAttackUsedThisTurn: false,
-      log: [...state.log, log],
-    },
+    appendLog(
+      {
+        ...state,
+        playerAttacksThisTurn: 0,
+        sneakAttackUsedThisTurn: false,
+      },
+      log,
+    ),
     character,
   );
 }

@@ -1,6 +1,7 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { combatResult, type CombatActionResult } from './types';
+import { appendLog } from './log';
 
 export type CunningActionChoice = 'dash' | 'disengage' | 'hide';
 
@@ -58,5 +59,5 @@ export function useCunningAction(ctx: CunningActionContext): CombatActionResult 
     text: narration,
   };
 
-  return combatResult({ ...state, log: [...state.log, log] }, character);
+  return combatResult(appendLog(state, log), character);
 }

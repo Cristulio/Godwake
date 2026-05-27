@@ -10,6 +10,7 @@ import { getSpell } from '../../content/spells';
 import { applyDamage } from './attack';
 import { abilityModifier } from '../../types/abilities';
 import { effectiveAbilityScores, characterHasMechanic, proficiencyBonus } from '../character/derived';
+import { appendLog } from './log';
 
 function attachSpellEffect(
   state: CombatState,
@@ -158,15 +159,17 @@ function castFireBolt(ctx: CastSpellContext): CastResult {
     },
   ];
 
-  let nextState: CombatState = {
-    ...state,
-    log: [...state.log, ...logs],
-    combatants: state.combatants.map((c) => {
-      if (c.kind !== 'monster' || c.id !== targetId) return c;
-      if (c.instance.acRevealed) return c;
-      return { ...c, instance: { ...c.instance, acRevealed: true } };
-    }),
-  };
+  let nextState: CombatState = appendLog(
+    {
+      ...state,
+      combatants: state.combatants.map((c) => {
+        if (c.kind !== 'monster' || c.id !== targetId) return c;
+        if (c.instance.acRevealed) return c;
+        return { ...c, instance: { ...c.instance, acRevealed: true } };
+      }),
+    },
+    ...logs,
+  );
   nextState = attachSpellEffect(nextState, 'fire-bolt', 'player', targetId);
 
   if (hit) {
@@ -176,17 +179,11 @@ function castFireBolt(ctx: CastSpellContext): CastResult {
       modifier: 0,
     });
     nextState = applyDamage(nextState, targetId, damageRoll.total, character);
-    nextState = {
-      ...nextState,
-      log: [
-        ...nextState.log,
-        {
-          id: nextLogId(nextState),
-          kind: 'damage',
-          text: `Damage: ${damageRoll.rolls.join('+')} = ${damageRoll.total} fire.`,
-        },
-      ],
-    };
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'damage',
+      text: `Damage: ${damageRoll.rolls.join('+')} = ${damageRoll.total} fire.`,
+    });
   }
 
   markActionUsed(character);
@@ -209,22 +206,21 @@ function castMagicMissile(ctx: CastSpellContext): CastResult {
     total += r.total;
   }
 
-  let nextState: CombatState = {
-    ...state,
-    combatants: state.combatants.map((c) => {
-      if (c.kind !== 'monster' || c.id !== targetId) return c;
-      if (c.instance.acRevealed) return c;
-      return { ...c, instance: { ...c.instance, acRevealed: true } };
-    }),
-    log: [
-      ...state.log,
-      {
-        id: nextLogId(state),
-        kind: 'roll',
-        text: `${character.name} casts Magic Missile. Three darts streak at ${target.instance.displayName} — ${rolls.join('+')} = ${total} force, auto-hit.`,
-      },
-    ],
-  };
+  let nextState: CombatState = appendLog(
+    {
+      ...state,
+      combatants: state.combatants.map((c) => {
+        if (c.kind !== 'monster' || c.id !== targetId) return c;
+        if (c.instance.acRevealed) return c;
+        return { ...c, instance: { ...c.instance, acRevealed: true } };
+      }),
+    },
+    {
+      id: nextLogId(state),
+      kind: 'roll',
+      text: `${character.name} casts Magic Missile. Three darts streak at ${target.instance.displayName} — ${rolls.join('+')} = ${total} force, auto-hit.`,
+    },
+  );
 
   nextState = applyDamage(nextState, targetId, total, character);
   nextState = attachSpellEffect(nextState, 'magic-missile', 'player', targetId);
@@ -249,17 +245,11 @@ function castBurningHands(ctx: CastSpellContext): CastResult {
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
   const dmg = damageRoll.total;
 
-  let nextState: CombatState = {
-    ...state,
-    log: [
-      ...state.log,
-      {
-        id: nextLogId(state),
-        kind: 'roll',
-        text: `${character.name} hurls a cone of flame. ${damageRoll.rolls.join('+')} = ${dmg} fire${evoker ? ' (Sculpt Spells)' : ''}.`,
-      },
-    ],
-  };
+  let nextState: CombatState = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'roll',
+    text: `${character.name} hurls a cone of flame. ${damageRoll.rolls.join('+')} = ${dmg} fire${evoker ? ' (Sculpt Spells)' : ''}.`,
+  });
 
   nextState = attachSpellEffect(
     nextState,
@@ -278,17 +268,11 @@ function castBurningHands(ctx: CastSpellContext): CastResult {
       }),
     };
     nextState = applyDamage(nextState, m.id, dmg, character);
-    nextState = {
-      ...nextState,
-      log: [
-        ...nextState.log,
-        {
-          id: nextLogId(nextState),
-          kind: 'damage',
-          text: `${m.instance.displayName} takes ${dmg} fire.`,
-        },
-      ],
-    };
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'damage',
+      text: `${m.instance.displayName} takes ${dmg} fire.`,
+    });
   }
 
   markActionUsed(character);
@@ -299,17 +283,11 @@ function castShield(character: Character, state: CombatState): CastResult {
   consumeSlot(character, 1);
   character.resources = { ...character.resources, shieldActive: true };
   markActionUsed(character);
-  let nextState: CombatState = {
-    ...state,
-    log: [
-      ...state.log,
-      {
-        id: nextLogId(state),
-        kind: 'narration',
-        text: `${character.name} snaps a wall of force into place — +5 AC until next turn.`,
-      },
-    ],
-  };
+  let nextState: CombatState = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'narration',
+    text: `${character.name} snaps a wall of force into place — +5 AC until next turn.`,
+  });
   nextState = attachSpellEffect(nextState, 'shield', 'player');
   return { state: nextState, character, cast: true };
 }
@@ -318,17 +296,11 @@ function castMageArmor(character: Character, state: CombatState): CastResult {
   consumeSlot(character, 1);
   character.resources = { ...character.resources, mageArmorActive: true };
   markActionUsed(character);
-  let nextState: CombatState = {
-    ...state,
-    log: [
-      ...state.log,
-      {
-        id: nextLogId(state),
-        kind: 'narration',
-        text: `${character.name} wraps themselves in shimmering force — +3 AC for this fight.`,
-      },
-    ],
-  };
+  let nextState: CombatState = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'narration',
+    text: `${character.name} wraps themselves in shimmering force — +3 AC for this fight.`,
+  });
   nextState = attachSpellEffect(nextState, 'mage-armor', 'player');
   return { state: nextState, character, cast: true };
 }
@@ -362,42 +334,41 @@ function castHoldPerson(ctx: CastSpellContext): CastResult {
     },
   ];
 
-  let nextState: CombatState = { ...state, log: [...state.log, ...logs] };
+  let nextState: CombatState = appendLog(state, ...logs);
   nextState = attachSpellEffect(nextState, 'hold-person', 'player', targetId);
   if (!success) {
     // Apply the paralyzed condition to the monster. Reuse the player-side
     // shape: write the condition into the monster instance directly.
-    nextState = {
-      ...nextState,
-      combatants: nextState.combatants.map((c) => {
-        if (c.kind !== 'monster' || c.id !== targetId) return c;
-        const cond = {
-          name: 'paralyzed' as const,
-          duration: { kind: 'rounds' as const, value: 2 },
-          saveDC: dc,
-          saveAbility: 'wis' as const,
-          source: character.id,
-        };
-        return {
-          ...c,
-          instance: {
-            ...c.instance,
-            conditions: [
-              ...c.instance.conditions.filter((x) => x.name !== 'paralyzed'),
-              cond,
-            ],
-          },
-        };
-      }),
-      log: [
-        ...nextState.log,
-        {
-          id: nextLogId(nextState),
-          kind: 'system',
-          text: `${target.instance.displayName} stiffens — bound by the spell.`,
-        },
-      ],
-    };
+    nextState = appendLog(
+      {
+        ...nextState,
+        combatants: nextState.combatants.map((c) => {
+          if (c.kind !== 'monster' || c.id !== targetId) return c;
+          const cond = {
+            name: 'paralyzed' as const,
+            duration: { kind: 'rounds' as const, value: 2 },
+            saveDC: dc,
+            saveAbility: 'wis' as const,
+            source: character.id,
+          };
+          return {
+            ...c,
+            instance: {
+              ...c.instance,
+              conditions: [
+                ...c.instance.conditions.filter((x) => x.name !== 'paralyzed'),
+                cond,
+              ],
+            },
+          };
+        }),
+      },
+      {
+        id: nextLogId(nextState),
+        kind: 'system',
+        text: `${target.instance.displayName} stiffens — bound by the spell.`,
+      },
+    );
   }
   markActionUsed(character);
   return { state: nextState, character, cast: true };
@@ -412,24 +383,16 @@ function evaluateCombatEnd(state: CombatState, character: Character): CombatStat
     (c) => c.kind === 'monster' && c.instance.hp.current > 0,
   );
   if (aliveMonsters.length === 0) {
-    return {
-      ...state,
-      status: 'player-victory',
-      log: [
-        ...state.log,
-        { id: nextLogId(state), kind: 'system', text: 'Victory. The room falls silent.' },
-      ],
-    };
+    return appendLog(
+      { ...state, status: 'player-victory' },
+      { id: nextLogId(state), kind: 'system', text: 'Victory. The room falls silent.' },
+    );
   }
   if (character.hp.current <= 0) {
-    return {
-      ...state,
-      status: 'player-defeat',
-      log: [
-        ...state.log,
-        { id: nextLogId(state), kind: 'system', text: 'You have fallen.' },
-      ],
-    };
+    return appendLog(
+      { ...state, status: 'player-defeat' },
+      { id: nextLogId(state), kind: 'system', text: 'You have fallen.' },
+    );
   }
   return state;
 }

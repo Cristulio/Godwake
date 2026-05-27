@@ -4,6 +4,7 @@ import { getMonster } from '../../content/monsters';
 import { getRace } from '../../content/races';
 import { getActiveRoller } from '../dice';
 import { combatResult, type CombatActionResult } from './types';
+import { appendLog } from './log';
 import {
   decrementParalyzeDuration,
   getPlayerParalyzed,
@@ -69,24 +70,23 @@ export function endTurn(state: CombatState, character: Character): CombatActionR
     }
   }
 
-  let nextState: CombatState = {
-    ...state,
-    currentTurnIndex: nextIndex,
-    round,
-    playerAttacksThisTurn: 0,
-    sneakAttackUsedThisTurn: false,
-    log: [
-      ...state.log,
-      {
-        id: state.log.length + 1,
-        kind: 'system',
-        text:
-          order[nextIndex] === 'player'
-            ? `— Your turn (round ${round}). —`
-            : `— ${combatantDisplayName(state, order[nextIndex])}'s turn (round ${round}). —`,
-      },
-    ],
-  };
+  let nextState: CombatState = appendLog(
+    {
+      ...state,
+      currentTurnIndex: nextIndex,
+      round,
+      playerAttacksThisTurn: 0,
+      sneakAttackUsedThisTurn: false,
+    },
+    {
+      id: state.log.length + 1,
+      kind: 'system',
+      text:
+        order[nextIndex] === 'player'
+          ? `— Your turn (round ${round}). —`
+          : `— ${combatantDisplayName(state, order[nextIndex])}'s turn (round ${round}). —`,
+    },
+  );
 
   nextState = resetActionEconomyForCurrent(nextState, character);
 
@@ -128,7 +128,7 @@ function resolvePlayerParalyzedTurn(state: CombatState, character: Character): C
       kind: 'system' as const,
       text: `${character.name} breaks free. The Magistrate's hold falls away.`,
     });
-    return { ...state, log: [...state.log, ...logEntries] };
+    return appendLog(state, ...logEntries);
   }
 
   const expired = decrementParalyzeDuration(character);
@@ -138,7 +138,7 @@ function resolvePlayerParalyzedTurn(state: CombatState, character: Character): C
       kind: 'system' as const,
       text: `The binding wears thin and snaps. ${character.name} can move again.`,
     });
-    return { ...state, log: [...state.log, ...logEntries] };
+    return appendLog(state, ...logEntries);
   }
 
   lockOutActionEconomy(character);
@@ -147,7 +147,7 @@ function resolvePlayerParalyzedTurn(state: CombatState, character: Character): C
     kind: 'system' as const,
     text: `${character.name} cannot move. The turn is lost.`,
   });
-  return { ...state, log: [...state.log, ...logEntries] };
+  return appendLog(state, ...logEntries);
 }
 
 function combatantDisplayName(state: CombatState, id: string): string {
