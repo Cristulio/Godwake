@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
-import { listRaces, getRace } from '../../content/races';
+import { getRace } from '../../content/races';
 import { listClasses, getClass } from '../../content/classes';
-import { RaceIdSchema, ClassIdSchema, type RaceId, type ClassId } from '../../schemas/ids';
+import { RaceIdSchema, type RaceId, type ClassId } from '../../schemas/ids';
 import {
   ABILITY_NAMES,
   ABILITY_FULL_NAMES,
@@ -13,8 +13,10 @@ import {
   type AbilityScores,
 } from '../../types/abilities';
 import { STANDARD_ARRAY } from '../../engine/character/initialize';
-import { SIR_BRICK_PRESET } from '../../engine/character/defaultCharacter';
 import type { SkillName } from '../../types/skills';
+import type { ClassPreset } from '../../schemas/class';
+
+type Step = 1 | 2 | 3 | 4;
 
 const RACE_LABEL: Record<RaceId, string> = {
   human: 'Human',
@@ -27,14 +29,6 @@ const RACE_LABEL: Record<RaceId, string> = {
   'half-orc': 'Half-Orc',
   gnome: 'Gnome',
   tiefling: 'Tiefling',
-};
-
-const CLASS_LABEL: Record<ClassId, string> = {
-  fighter: 'Fighter',
-  wizard: 'Wizard',
-  cleric: 'Cleric',
-  rogue: 'Rogue',
-  barbarian: 'Barbarian',
 };
 
 const CLASS_BLURB: Record<ClassId, string> = {
@@ -79,11 +73,6 @@ const SKILL_LABEL: Record<SkillName, string> = {
   survival: 'Survival',
 };
 
-const ALL_RACE_IDS = RaceIdSchema.options;
-const ALL_CLASS_IDS = ClassIdSchema.options;
-const IMPLEMENTED_RACE_IDS = new Set(listRaces().map((r) => r.id));
-const IMPLEMENTED_CLASS_IDS = new Set(listClasses().map((c) => c.id));
-
 const ABILITY_SHORT: Record<AbilityName, string> = {
   str: 'STR',
   dex: 'DEX',
@@ -92,6 +81,19 @@ const ABILITY_SHORT: Record<AbilityName, string> = {
   wis: 'WIS',
   cha: 'CHA',
 };
+
+// Step 1 and Step 2 only surface implemented options. Cleric / Barbarian and
+// Elf / Dwarf / Halfling / Half-Orc / Gnome are deliberately hidden until
+// they're implemented — the v1 screen showed greyed-out "Coming soon" tiles
+// and several players read those as bugs.
+const STEPPER_CLASS_IDS: readonly ClassId[] = ['fighter', 'rogue', 'wizard'];
+const STEPPER_RACE_IDS: readonly RaceId[] = [
+  'human',
+  'wood-elf',
+  'hill-dwarf',
+  'half-elf',
+  'tiefling',
+];
 
 function raceStatLine(id: RaceId): string {
   const race = (() => {
@@ -120,52 +122,49 @@ function classStatLine(id: ClassId): string {
   return `d${cls.hitDie} HD · ${cls.skillChoiceCount} skill picks`;
 }
 
+const IMPLEMENTED_CLASS_IDS = new Set(listClasses().map((c) => c.id));
+
 export function CharacterCreationScreen() {
   const commit = useGameStore((s) => s.commitCharacterCreation);
   const goToTitle = useGameStore((s) => s.goToTitle);
 
+  const [step, setStep] = useState<Step>(1);
   const [name, setName] = useState('');
-  const [raceId, setRaceId] = useState<RaceId>('human');
-  const [classId, setClassId] = useState<ClassId>('fighter');
-  const [assignments, setAssignments] = useState<Partial<Record<AbilityName, number>>>(
-    () => ({ ...SIR_BRICK_PRESET.baseAbilityScores }),
-  );
+  const [raceId, setRaceId] = useState<RaceId | null>(null);
+  const [classId, setClassId] = useState<ClassId | null>(null);
+  const [assignments, setAssignments] = useState<Partial<Record<AbilityName, number>>>({});
   const [skills, setSkills] = useState<SkillName[]>([]);
 
-  // Until the v2 stats UI lands, Fighter auto-takes the Sir Brick standard
-  // array — the in-place editor is hidden for that class. Other classes (when
-  // implemented) will surface the editor again.
-  const usePresetScores = classId === 'fighter';
-
-  const race = getRace(raceId);
-  const cls = getClass(classId);
+  const cls = classId ? getClass(classId) : null;
+  const race = raceId ? getRace(raceId) : null;
+  const preset: ClassPreset | null = cls?.preset ?? null;
 
   const allAssigned = ABILITY_NAMES.every((a) => typeof assignments[a] === 'number');
-  const skillsValid = skills.length === cls.skillChoiceCount;
+  const skillsValid = cls ? skills.length === cls.skillChoiceCount : false;
   const nameValid = name.trim().length > 0;
-  const canConfirm = nameValid && allAssigned && skillsValid;
-
-  function assignAbility(ability: AbilityName, value: number | null) {
-    setAssignments((prev) => {
-      const next = { ...prev };
-      if (value == null) delete next[ability];
-      else next[ability] = value;
-      return next;
-    });
-  }
 
   function pickClass(next: ClassId) {
     if (next === classId) return;
     setClassId(next);
-    setSkills([]); // skill list depends on class — clear on change
-    if (next === 'fighter') {
-      setAssignments({ ...SIR_BRICK_PRESET.baseAbilityScores });
-    } else {
-      setAssignments({});
-    }
+    setSkills([]);
+    setAssignments({});
+  }
+
+  function pickRace(next: RaceId) {
+    setRaceId(next);
+  }
+
+  function assignAbility(ability: AbilityName, value: number | null) {
+    setAssignments((prev) => {
+      const nextMap = { ...prev };
+      if (value == null) delete nextMap[ability];
+      else nextMap[ability] = value;
+      return nextMap;
+    });
   }
 
   function toggleSkill(s: SkillName) {
+    if (!cls) return;
     setSkills((prev) => {
       if (prev.includes(s)) return prev.filter((x) => x !== s);
       if (prev.length >= cls.skillChoiceCount) return prev;
@@ -174,15 +173,31 @@ export function CharacterCreationScreen() {
   }
 
   function applyPreset() {
-    setName(SIR_BRICK_PRESET.name);
-    setRaceId(SIR_BRICK_PRESET.raceId);
-    setClassId(SIR_BRICK_PRESET.classId);
-    setAssignments({ ...SIR_BRICK_PRESET.baseAbilityScores });
-    setSkills([...SIR_BRICK_PRESET.skillProficiencies]);
+    if (!preset || !classId) return;
+    // Pull the recommended race through Zod so a content typo can't escape
+    // into UI state.
+    const presetRace = RaceIdSchema.parse(preset.recommendedRaceId);
+    setName(preset.characterName);
+    setRaceId(presetRace);
+    setAssignments({ ...preset.abilityScores });
+    setSkills([...preset.recommendedSkills]);
+    setStep(4);
+  }
+
+  function next() {
+    if (step === 1 && classId) setStep(2);
+    else if (step === 2 && raceId) setStep(3);
+    else if (step === 3 && allAssigned && skillsValid) setStep(4);
+  }
+
+  function back() {
+    if (step === 4) setStep(3);
+    else if (step === 3) setStep(2);
+    else if (step === 2) setStep(1);
   }
 
   function confirm() {
-    if (!canConfirm) return;
+    if (!classId || !raceId || !allAssigned || !skillsValid || !nameValid) return;
     const scores: AbilityScores = {
       str: assignments.str!,
       dex: assignments.dex!,
@@ -199,6 +214,13 @@ export function CharacterCreationScreen() {
       skillProficiencies: skills,
     });
   }
+
+  const canNext =
+    (step === 1 && !!classId) ||
+    (step === 2 && !!raceId) ||
+    (step === 3 && allAssigned && skillsValid);
+  const canConfirm =
+    !!classId && !!raceId && allAssigned && skillsValid && nameValid;
 
   return (
     <div className="min-h-screen p-6 max-w-5xl mx-auto animate-room-enter">
@@ -217,141 +239,251 @@ export function CharacterCreationScreen() {
             The wheel turns. Choose the shape it takes.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="primary" onClick={applyPreset}>
-            Sir Brick Preset
-          </Button>
+        <div className="flex gap-2 items-center">
+          {preset && classId && (
+            <Button variant="primary" onClick={applyPreset}>
+              Use {preset.characterName} Preset
+            </Button>
+          )}
           <Button variant="ghost" onClick={goToTitle}>
             ← Title
           </Button>
         </div>
       </header>
 
-      <Panel className="mb-4" title="Name">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          maxLength={32}
-          placeholder="Enter a name…"
-          className="w-full bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] focus:border-[var(--color-accent-amber)] outline-none px-3 py-2 text-[var(--color-text-primary)] tracking-wider"
-        />
-      </Panel>
+      <StepIndicator step={step} />
 
-      <Panel className="mb-4" title="Race" tone="warm">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {ALL_RACE_IDS.map((id) => {
-            const implemented = IMPLEMENTED_RACE_IDS.has(id);
-            const selected = id === raceId;
-            return (
-              <button
-                key={id}
-                disabled={!implemented}
-                onClick={() => setRaceId(id)}
-                className={`text-left p-3 border transition-colors ${
-                  selected
-                    ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)]'
-                    : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
-                } disabled:opacity-40 disabled:cursor-not-allowed`}
-              >
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-base ${selected ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-accent-gold)]'}`}
-                  >
-                    ◆
-                  </span>
-                  <span className="font-display text-[var(--color-text-primary)] text-[10px] uppercase tracking-[0.18em]">
-                    {RACE_LABEL[id]}
-                  </span>
-                </div>
-                <div className="text-[var(--color-text-secondary)] text-xs mt-2 leading-relaxed">
-                  {implemented ? RACE_BLURB[id] : 'Coming soon'}
-                </div>
-                {implemented && (
-                  <div className="font-mono text-[10px] mt-2 text-[var(--color-accent-amber)] tabular-nums tracking-wide">
-                    {raceStatLine(id)}
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </Panel>
-
-      <Panel className="mb-4" title="Class" tone="warm">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-          {ALL_CLASS_IDS.map((id) => {
-            const implemented = IMPLEMENTED_CLASS_IDS.has(id);
-            const selected = id === classId;
-            return (
-              <button
-                key={id}
-                disabled={!implemented}
-                onClick={() => pickClass(id)}
-                className={`text-left p-3 border transition-colors ${
-                  selected
-                    ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)]'
-                    : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
-                } disabled:opacity-40 disabled:cursor-not-allowed`}
-              >
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-base ${selected ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-accent-gold)]'}`}
-                  >
-                    ✦
-                  </span>
-                  <span className="font-display text-[var(--color-text-primary)] text-[10px] uppercase tracking-[0.18em]">
-                    {CLASS_LABEL[id]}
-                  </span>
-                </div>
-                <div className="text-[var(--color-text-secondary)] text-xs mt-2 leading-relaxed">
-                  {implemented ? CLASS_BLURB[id] : 'Coming soon'}
-                </div>
-                {implemented && (
-                  <div className="font-mono text-[10px] mt-2 text-[var(--color-accent-amber)] tabular-nums tracking-wide">
-                    {classStatLine(id)}
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </Panel>
-
-      {usePresetScores && (
-        <Panel className="mb-4" title="Ability Scores" tone="glow">
-          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-            Fighter takes the standard array as Sir Brick: STR 15 / CON 14 / DEX 13 / WIS 12 / CHA 10 / INT 8. Racial bonuses apply on top.
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            {ABILITY_NAMES.map((ability) => {
-              const base = SIR_BRICK_PRESET.baseAbilityScores[ability];
-              const racialBonus = race.abilityScoreBonuses[ability] ?? 0;
-              const total = base + racialBonus;
-              const mod = abilityModifier(total);
-              return (
-                <div
-                  key={ability}
-                  className="border border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] px-2 py-1 text-xs flex items-center justify-between gap-2"
-                >
-                  <span className="text-[var(--color-accent-amber)] uppercase tracking-wider font-bold">
-                    {ABILITY_FULL_NAMES[ability]}
-                  </span>
-                  <span className="font-mono text-[var(--color-text-primary)] tabular-nums">
-                    {total}
-                    <span className="ml-1 text-[var(--color-accent-amber)]">
-                      {mod >= 0 ? '+' : ''}{mod}
-                    </span>
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </Panel>
+      {step === 1 && (
+        <ClassStep classId={classId} pickClass={pickClass} />
       )}
 
-      {!usePresetScores && (
-      <Panel className="mb-4" title={`Ability Scores · Standard Array (${STANDARD_ARRAY.join(', ')})`}>
+      {step === 2 && (
+        <RaceStep raceId={raceId} pickRace={pickRace} />
+      )}
+
+      {step === 3 && cls && race && (
+        <AbilitiesAndSkillsStep
+          cls={cls}
+          race={race}
+          assignments={assignments}
+          assignAbility={assignAbility}
+          skills={skills}
+          toggleSkill={toggleSkill}
+        />
+      )}
+
+      {step === 4 && cls && race && (
+        <NameAndConfirmStep
+          name={name}
+          setName={setName}
+          cls={cls}
+          race={race}
+          assignments={assignments as AbilityScores}
+          skills={skills}
+        />
+      )}
+
+      <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
+        <div>
+          {step > 1 && (
+            <Button variant="secondary" onClick={back}>
+              ← Back
+            </Button>
+          )}
+        </div>
+        <div className="font-narrative text-[var(--color-text-dim)] text-sm italic tracking-wide hidden md:block">
+          {stepHint(step, { canNext, canConfirm })}
+        </div>
+        {step < 4 ? (
+          <Button variant="primary" size="lg" disabled={!canNext} onClick={next}>
+            Next ▸
+          </Button>
+        ) : (
+          <Button variant="primary" size="lg" disabled={!canConfirm} onClick={confirm}>
+            <span className="mr-2 text-[var(--color-bg-base)]">▸</span>
+            Begin
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function stepHint(step: Step, flags: { canNext: boolean; canConfirm: boolean }): string {
+  if (step === 1) return flags.canNext ? 'A class is chosen.' : 'Pick a class to continue.';
+  if (step === 2) return flags.canNext ? 'A bloodline is chosen.' : 'Pick a race to continue.';
+  if (step === 3) return flags.canNext ? 'Scores and skills are set.' : 'Assign every score and pick your skills.';
+  return flags.canConfirm ? 'Ready to walk the world.' : 'Enter a name to begin.';
+}
+
+interface StepIndicatorProps {
+  step: Step;
+}
+
+function StepIndicator({ step }: StepIndicatorProps) {
+  const labels: Array<{ n: Step; label: string }> = [
+    { n: 1, label: 'Class' },
+    { n: 2, label: 'Race' },
+    { n: 3, label: 'Scores & Skills' },
+    { n: 4, label: 'Name' },
+  ];
+  return (
+    <ol className="flex items-center gap-2 mb-4 text-[10px] uppercase tracking-[0.2em] font-display">
+      {labels.map((entry, i) => {
+        const isActive = entry.n === step;
+        const isDone = entry.n < step;
+        return (
+          <li key={entry.n} className="flex items-center gap-2">
+            <span
+              className={`px-2 py-1 border ${
+                isActive
+                  ? 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)]'
+                  : isDone
+                    ? 'border-[var(--color-border-warm)] text-[var(--color-text-secondary)]'
+                    : 'border-[var(--color-border-dim)] text-[var(--color-text-dim)]'
+              }`}
+            >
+              {entry.n}. {entry.label}
+            </span>
+            {i < labels.length - 1 && (
+              <span className="text-[var(--color-border-dim)]">·</span>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+interface ClassStepProps {
+  classId: ClassId | null;
+  pickClass: (id: ClassId) => void;
+}
+
+function ClassStep({ classId, pickClass }: ClassStepProps) {
+  return (
+    <Panel className="mb-4" title="Choose a Class" tone="warm">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        {STEPPER_CLASS_IDS.map((id) => {
+          const implemented = IMPLEMENTED_CLASS_IDS.has(id);
+          const selected = id === classId;
+          const cls = implemented ? getClass(id) : null;
+          return (
+            <button
+              key={id}
+              disabled={!implemented}
+              onClick={() => pickClass(id)}
+              className={`text-left p-4 border transition-colors ${
+                selected
+                  ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)]'
+                  : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
+              } disabled:opacity-40 disabled:cursor-not-allowed`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`text-base ${
+                    selected
+                      ? 'text-[var(--color-accent-amber)]'
+                      : 'text-[var(--color-accent-gold)]'
+                  }`}
+                >
+                  ✦
+                </span>
+                <span className="font-display text-[var(--color-text-primary)] text-xs uppercase tracking-[0.2em]">
+                  {cls?.name ?? id}
+                </span>
+              </div>
+              <div className="text-[var(--color-text-secondary)] text-sm mt-3 leading-relaxed">
+                {CLASS_BLURB[id]}
+              </div>
+              <div className="font-mono text-[10px] mt-3 text-[var(--color-accent-amber)] tabular-nums tracking-wide">
+                {classStatLine(id)}
+              </div>
+              {cls?.preset && (
+                <div className="font-narrative text-[var(--color-text-dim)] text-xs italic mt-3 leading-relaxed">
+                  Preset: {cls.preset.characterName}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </Panel>
+  );
+}
+
+interface RaceStepProps {
+  raceId: RaceId | null;
+  pickRace: (id: RaceId) => void;
+}
+
+function RaceStep({ raceId, pickRace }: RaceStepProps) {
+  return (
+    <Panel className="mb-4" title="Choose a Bloodline" tone="warm">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        {STEPPER_RACE_IDS.map((id) => {
+          const selected = id === raceId;
+          return (
+            <button
+              key={id}
+              onClick={() => pickRace(id)}
+              className={`text-left p-3 border transition-colors ${
+                selected
+                  ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)]'
+                  : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`text-base ${
+                    selected
+                      ? 'text-[var(--color-accent-amber)]'
+                      : 'text-[var(--color-accent-gold)]'
+                  }`}
+                >
+                  ◆
+                </span>
+                <span className="font-display text-[var(--color-text-primary)] text-[10px] uppercase tracking-[0.18em]">
+                  {RACE_LABEL[id]}
+                </span>
+              </div>
+              <div className="text-[var(--color-text-secondary)] text-xs mt-2 leading-relaxed">
+                {RACE_BLURB[id]}
+              </div>
+              <div className="font-mono text-[10px] mt-2 text-[var(--color-accent-amber)] tabular-nums tracking-wide">
+                {raceStatLine(id)}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </Panel>
+  );
+}
+
+interface AbilitiesAndSkillsStepProps {
+  cls: ReturnType<typeof getClass>;
+  race: ReturnType<typeof getRace>;
+  assignments: Partial<Record<AbilityName, number>>;
+  assignAbility: (ability: AbilityName, value: number | null) => void;
+  skills: SkillName[];
+  toggleSkill: (s: SkillName) => void;
+}
+
+function AbilitiesAndSkillsStep({
+  cls,
+  race,
+  assignments,
+  assignAbility,
+  skills,
+  toggleSkill,
+}: AbilitiesAndSkillsStepProps) {
+  return (
+    <>
+      <Panel
+        className="mb-4"
+        title={`Ability Scores · Standard Array (${STANDARD_ARRAY.join(', ')})`}
+      >
         <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
           Assign each value to one ability. Racial bonuses apply on top.
         </p>
@@ -372,11 +504,11 @@ export function CharacterCreationScreen() {
                 <div className="flex gap-1 flex-wrap">
                   {STANDARD_ARRAY.map((v, i) => {
                     const isMine = assigned === v;
-                    const takenElsewhere = !isMine && Object.entries(assignments).some(
-                      ([a, av]) => a !== ability && av === v,
-                    );
-                    // Allow duplicate values in the array (none in standard) by also
-                    // indexing each chip — we still want one click per usage.
+                    const takenElsewhere =
+                      !isMine &&
+                      Object.entries(assignments).some(
+                        ([a, av]) => a !== ability && av === v,
+                      );
                     return (
                       <button
                         key={`${v}-${i}`}
@@ -398,10 +530,14 @@ export function CharacterCreationScreen() {
                     <>
                       <span className="text-[var(--color-text-primary)]">{total}</span>
                       {racialBonus > 0 && (
-                        <span className="text-[var(--color-text-dim)]"> ({assigned}+{racialBonus})</span>
+                        <span className="text-[var(--color-text-dim)]">
+                          {' '}
+                          ({assigned}+{racialBonus})
+                        </span>
                       )}
                       <span className="ml-2 text-[var(--color-accent-amber)]">
-                        {mod! >= 0 ? '+' : ''}{mod}
+                        {mod! >= 0 ? '+' : ''}
+                        {mod}
                       </span>
                     </>
                   ) : (
@@ -413,9 +549,11 @@ export function CharacterCreationScreen() {
           })}
         </div>
       </Panel>
-      )}
 
-      <Panel className="mb-4" title={`Skills · Pick ${cls.skillChoiceCount} (${skills.length}/${cls.skillChoiceCount})`}>
+      <Panel
+        className="mb-4"
+        title={`Skills · Pick ${cls.skillChoiceCount} (${skills.length}/${cls.skillChoiceCount})`}
+      >
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
           {cls.skillChoiceFrom.map((s) => {
             const selected = skills.includes(s);
@@ -437,18 +575,102 @@ export function CharacterCreationScreen() {
           })}
         </div>
       </Panel>
+    </>
+  );
+}
 
-      <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
-        <div className="font-narrative text-[var(--color-text-dim)] text-sm italic tracking-wide">
-          {canConfirm
-            ? 'Ready to walk the world.'
-            : 'Complete every section above.'}
+interface NameAndConfirmStepProps {
+  name: string;
+  setName: (v: string) => void;
+  cls: ReturnType<typeof getClass>;
+  race: ReturnType<typeof getRace>;
+  assignments: AbilityScores;
+  skills: SkillName[];
+}
+
+function NameAndConfirmStep({
+  name,
+  setName,
+  cls,
+  race,
+  assignments,
+  skills,
+}: NameAndConfirmStepProps) {
+  const totals = useMemo(() => {
+    return ABILITY_NAMES.map((a) => {
+      const base = assignments[a];
+      const bonus = race.abilityScoreBonuses[a] ?? 0;
+      const total = base + bonus;
+      return { ability: a, base, bonus, total, mod: abilityModifier(total) };
+    });
+  }, [assignments, race]);
+
+  return (
+    <>
+      <Panel className="mb-4" title="Name">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          maxLength={32}
+          placeholder="Enter a name…"
+          className="w-full bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] focus:border-[var(--color-accent-amber)] outline-none px-3 py-2 text-[var(--color-text-primary)] tracking-wider"
+        />
+      </Panel>
+
+      <Panel className="mb-4" title="Summary" tone="glow">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div>
+            <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-wider">
+              Class
+            </div>
+            <div className="text-[var(--color-text-primary)] font-display">{cls.name}</div>
+            <div className="text-[var(--color-text-secondary)] text-xs mt-1 leading-relaxed">
+              {CLASS_BLURB[cls.id]}
+            </div>
+          </div>
+          <div>
+            <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-wider">
+              Race
+            </div>
+            <div className="text-[var(--color-text-primary)] font-display">
+              {RACE_LABEL[race.id]}
+            </div>
+            <div className="text-[var(--color-text-secondary)] text-xs mt-1 leading-relaxed">
+              {RACE_BLURB[race.id]}
+            </div>
+          </div>
         </div>
-        <Button variant="primary" size="lg" disabled={!canConfirm} onClick={confirm}>
-          <span className="mr-2 text-[var(--color-bg-base)]">▸</span>
-          Begin
-        </Button>
-      </div>
-    </div>
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          {totals.map(({ ability, total, mod }) => (
+            <div
+              key={ability}
+              className="border border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] px-2 py-1 text-xs flex items-center justify-between gap-2"
+            >
+              <span className="text-[var(--color-accent-amber)] uppercase tracking-wider font-bold">
+                {ABILITY_FULL_NAMES[ability]}
+              </span>
+              <span className="font-mono text-[var(--color-text-primary)] tabular-nums">
+                {total}
+                <span className="ml-1 text-[var(--color-accent-amber)]">
+                  {mod >= 0 ? '+' : ''}
+                  {mod}
+                </span>
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4">
+          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-wider">
+            Skills
+          </div>
+          <div className="text-[var(--color-text-primary)] text-sm mt-1">
+            {skills.length > 0
+              ? skills.map((s) => SKILL_LABEL[s]).join(' · ')
+              : '—'}
+          </div>
+        </div>
+      </Panel>
+    </>
   );
 }

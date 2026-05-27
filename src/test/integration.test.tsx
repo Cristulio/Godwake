@@ -82,9 +82,15 @@ describe('integration — character creation → first delve via store', () => {
 
   it('renders the standalone CharacterCreationScreen (bypassing lazy)', () => {
     render(<CharacterCreationScreen />);
+    // Step 1 is the class step — header is "FORGE A SOUL", the Next button is
+    // present (disabled), and the preset button is hidden until a class is
+    // picked. The Sir Brick preset surfaces only after the Fighter card is
+    // tapped (covered by the stepper test).
     expect(screen.getByText(/forge a soul/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /sir brick preset/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /begin/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /use .* preset/i }),
+    ).not.toBeInTheDocument();
   });
 });
 
