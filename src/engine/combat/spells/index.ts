@@ -1,6 +1,8 @@
 export {
   canCastSpell,
   slotsAt,
+  spellAttackBonus,
+  spellSaveDC,
   type CastResult,
   type CastSpellContext,
 } from './helpers';
