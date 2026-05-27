@@ -222,6 +222,9 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
     const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
     const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
     expect(rageLog).toBeDefined();
+    // Announcement must read as +2 damage only (no advantage clause).
+    expect(rageLog!.text).toContain('+2 damage per hit');
+    expect(rageLog!.text).not.toContain('advantage');
     const ilyichAfter = next.combatants.find((c) => c.id === ilyichId);
     expect(ilyichAfter?.kind === 'monster' && ilyichAfter.instance.bossRageActive).toBe(true);
   });
@@ -235,6 +238,60 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
     const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
     const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
     expect(rageLog).toBeUndefined();
+  });
+
+  it('rage attack roll has no advantage marker (rage no longer grants advantage)', () => {
+    // Sweep seeds so we don't depend on a specific roll outcome — every
+    // rage-turn attack log line should be free of any "advantage" suffix
+    // (the only advantage source post-rebalance is paralyze, and Ilyich
+    // does not paralyze).
+    const ilyich = getMonster('duergar-ilyich');
+    for (let seed = 1; seed <= 10; seed++) {
+      const hero = makeHuman();
+      const roller = createDiceRoller(seed);
+      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
+      const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+      state = {
+        ...state,
+        combatants: state.combatants.map((c) =>
+          c.id === ilyichId && c.kind === 'monster'
+            ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: Math.floor(c.instance.hp.max / 2) } } }
+            : c,
+        ),
+      };
+      const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
+      const attackLine = next.log.find((l) => l.text.includes('Heavy War Pick'));
+      expect(attackLine).toBeDefined();
+      expect(attackLine!.text).not.toContain('advantage');
+    }
+  });
+
+  it('rage still adds +2 to damage on hits', () => {
+    // Find a seed where the rage-turn attack connects, then assert the
+    // damage line carries the "+2 rage" suffix.
+    const ilyich = getMonster('duergar-ilyich');
+    let confirmed = false;
+    for (let seed = 1; seed <= 200 && !confirmed; seed++) {
+      const hero = makeHuman();
+      const roller = createDiceRoller(seed);
+      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
+      const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+      state = {
+        ...state,
+        combatants: state.combatants.map((c) =>
+          c.id === ilyichId && c.kind === 'monster'
+            ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: Math.floor(c.instance.hp.max / 2) } } }
+            : c,
+        ),
+      };
+      const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
+      const damageLine = next.log.find((l) => l.kind === 'damage' && l.text.includes('rage'));
+      if (damageLine) {
+        expect(damageLine.text).toContain('+2 rage');
+        confirmed = true;
+      }
+    }
+    expect(confirmed).toBe(true);
   });
 });
 
