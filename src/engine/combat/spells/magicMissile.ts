@@ -1,3 +1,4 @@
+import type { Character } from '../../../types/character';
 import type { CombatState } from '../../../types/combat';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
@@ -6,7 +7,7 @@ import {
   type CastSpellContext,
   attachSpellEffect,
   consumeSlot,
-  evaluateCombatEnd,
+  evaluateCombatEndFull,
   findMonster,
   firstLiveMonsterId,
   markActionUsed,
@@ -16,12 +17,13 @@ import {
 
 export function castMagicMissile(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
+  let nextCharacter: Character = character;
   const targetId = ctx.targetId ?? firstLiveMonsterId(state);
-  if (!targetId) return { state, character, cast: false };
+  if (!targetId) return { state, character: nextCharacter, cast: false };
   const target = findMonster(state, targetId);
-  if (!target) return { state, character, cast: false };
+  if (!target) return { state, character: nextCharacter, cast: false };
 
-  consumeSlot(character, 1);
+  nextCharacter = consumeSlot(nextCharacter, 1);
   const rolls: number[] = [];
   let total = 0;
   for (let i = 0; i < 3; i++) {
@@ -29,7 +31,7 @@ export function castMagicMissile(ctx: CastSpellContext): CastResult {
     rolls.push(r.total);
     total += r.total;
   }
-  const bonus = spellDamageBonus(character);
+  const bonus = spellDamageBonus(nextCharacter);
   total += bonus;
 
   let nextState: CombatState = appendLog(
@@ -44,12 +46,15 @@ export function castMagicMissile(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${character.name} casts Magic Missile. Three darts streak at ${target.instance.displayName} — ${rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${total} force, auto-hit.`,
+      text: `${nextCharacter.name} casts Magic Missile. Three darts streak at ${target.instance.displayName} — ${rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${total} force, auto-hit.`,
     },
   );
 
-  nextState = applyDamage(nextState, targetId, total, character);
+  const damaged = applyDamage(nextState, targetId, total, nextCharacter);
+  nextState = damaged.state;
+  nextCharacter = damaged.character;
   nextState = attachSpellEffect(nextState, 'magic-missile', 'player', targetId);
-  markActionUsed(character);
-  return { state: evaluateCombatEnd(nextState, character), character, cast: true };
+  nextCharacter = markActionUsed(nextCharacter);
+  const ended = evaluateCombatEndFull(nextState, nextCharacter);
+  return { state: ended.state, character: ended.character, cast: true };
 }

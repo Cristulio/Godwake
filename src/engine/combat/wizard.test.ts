@@ -9,7 +9,7 @@ import { getMonster } from '../../content/monsters';
 import { longRest, wizardSpellSlotsForLevel } from '../character/actions';
 import { applyLevelUp } from '../character/leveling';
 import { computeAC } from '../character/derived';
-import type { MonsterCombatant } from '../../types/combat';
+import type { CombatState, MonsterCombatant } from '../../types/combat';
 import type { Character } from '../../types/character';
 
 function makeWizard(extra: Partial<Character> = {}): Character {
@@ -36,7 +36,7 @@ function makeWizard(extra: Partial<Character> = {}): Character {
   };
 }
 
-function findMonster(state: ReturnType<typeof createCombat>): MonsterCombatant {
+function findMonster(state: CombatState): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
 }
 
@@ -72,9 +72,11 @@ describe('Wizard — Magic Missile', () => {
 
   it('auto-hits, consumes a 1st-level slot, deals 3d4+3 force', () => {
     const goblin = getMonster('goblin');
-    const w = makeWizard();
+    let w = makeWizard();
     const roller = createDiceRoller(7);
-    let state = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    let state = init.state;
+    w = init.character;
     expect(slotsAt(w, 1)).toBe(2);
 
     const goblinId = findMonster(state).id;
@@ -82,6 +84,7 @@ describe('Wizard — Magic Missile', () => {
     const result = castSpell({ roller, character: w, state, spellId: 'magic-missile', targetId: goblinId });
     expect(result.cast).toBe(true);
     state = result.state;
+    w = result.character;
 
     expect(slotsAt(w, 1)).toBe(1);
     expect(w.actionEconomy.actionUsed).toBe(true);
@@ -98,12 +101,16 @@ describe('Wizard — Fire Bolt cantrip', () => {
 
   it('does not consume a slot', () => {
     const goblin = getMonster('goblin');
-    const w = makeWizard();
+    let w = makeWizard();
     const roller = createDiceRoller(3);
-    let state = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    let state = init.state;
+    w = init.character;
     const before = slotsAt(w, 1);
     const goblinId = findMonster(state).id;
-    state = castSpell({ roller, character: w, state, spellId: 'fire-bolt', targetId: goblinId }).state;
+    const cast = castSpell({ roller, character: w, state, spellId: 'fire-bolt', targetId: goblinId });
+    state = cast.state;
+    w = cast.character;
     expect(slotsAt(w, 1)).toBe(before);
     expect(w.actionEconomy.actionUsed).toBe(true);
   });
@@ -123,7 +130,7 @@ describe('Wizard — Fire Bolt crit range honors permanentBonuses.critRange', ()
       const baseline = makeWizard();
       const buffed: Character = { ...makeWizard(), permanentBonuses: { critRange: 1 } };
 
-      let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] });
+      let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] }).state;
       const idA = stateA.combatants.find((c) => c.kind === 'monster')!.id;
       stateA = castSpell({
         roller: createDiceRoller(seed),
@@ -139,7 +146,7 @@ describe('Wizard — Fire Bolt crit range honors permanentBonuses.critRange', ()
       if (totalA !== 24) continue;
 
       _resetMonsterInstanceCounter();
-      let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] });
+      let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] }).state;
       const idB = stateB.combatants.find((c) => c.kind === 'monster')!.id;
       stateB = castSpell({
         roller: createDiceRoller(seed),
@@ -173,7 +180,7 @@ describe('Wizard — Fire Bolt crit range honors permanentBonuses.critRange', ()
     let saw19 = false;
     for (let seed = 1; seed <= 400 && !saw19; seed++) {
       const w = makeWizard();
-      let state = createCombat({ roller: createDiceRoller(seed), character: w, monsters: [{ def: goblin }] });
+      let state = createCombat({ roller: createDiceRoller(seed), character: w, monsters: [{ def: goblin }] }).state;
       const id = state.combatants.find((c) => c.kind === 'monster')!.id;
       state = castSpell({
         roller: createDiceRoller(seed),
@@ -205,23 +212,31 @@ describe('Wizard — Mage Armor', () => {
 describe('Wizard — Shield reaction-buff', () => {
   it('adds +5 AC and is cleared at start of player turn', () => {
     const goblin = getMonster('goblin');
-    const w = makeWizard();
+    let w = makeWizard();
     const roller = createDiceRoller(4);
-    let state = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    let state = init.state;
+    w = init.character;
     const baseAC = computeAC(w);
 
-    state = castSpell({ roller, character: w, state, spellId: 'shield' }).state;
+    const cast = castSpell({ roller, character: w, state, spellId: 'shield' });
+    state = cast.state;
+    w = cast.character;
     expect(computeAC(w)).toBe(baseAC + 5);
 
     // Cycle through monster turn -> back to player turn.
     // The cleanup runs in turn.endTurn when transitioning to the player.
     // Force-end the player turn:
-    w.actionEconomy = { ...w.actionEconomy, actionUsed: true };
-    state = endTurn(state, w).state;
+    w = { ...w, actionEconomy: { ...w.actionEconomy, actionUsed: true } };
+    let et = endTurn(state, w);
+    state = et.state;
+    w = et.character;
     // Monster turn — but goblin may not actually attack if seed misses; just
     // ensure shield persists for that turn.
     expect(computeAC(w)).toBe(baseAC + 5);
-    state = endTurn(state, w).state;
+    et = endTurn(state, w);
+    state = et.state;
+    w = et.character;
     // Back to player — shield expires.
     expect(w.resources.shieldActive).toBeFalsy();
     expect(computeAC(w)).toBe(baseAC);
@@ -233,18 +248,22 @@ describe('Wizard — Burning Hands', () => {
 
   it('damages every living monster in the room', () => {
     const goblin = getMonster('goblin');
-    const w = makeWizard();
+    let w = makeWizard();
     const roller = createDiceRoller(6);
-    let state = createCombat({
+    const init = createCombat({
       roller,
       character: w,
       monsters: [{ def: goblin }, { def: goblin, displayName: 'Goblin B' }],
     });
+    let state = init.state;
+    w = init.character;
     const before = state.combatants.filter((c) => c.kind === 'monster').map((c) => {
       const m = c as MonsterCombatant;
       return m.instance.hp.current;
     });
-    state = castSpell({ roller, character: w, state, spellId: 'burning-hands' }).state;
+    const cast = castSpell({ roller, character: w, state, spellId: 'burning-hands' });
+    state = cast.state;
+    w = cast.character;
     const after = state.combatants.filter((c) => c.kind === 'monster').map((c) => {
       const m = c as MonsterCombatant;
       return m.instance.hp.current;
@@ -261,32 +280,40 @@ describe('Wizard — Hold Person', () => {
 
   it('paralyzes a monster on a failed save and the monster loses its turn', () => {
     const goblin = getMonster('goblin');
-    const w: Character = { ...makeWizard(), level: 3 };
+    let baseW: Character = { ...makeWizard(), level: 3 };
     // Bump the slot table to L3 so 2nd-level slots exist.
-    w.resources = { ...w.resources, spellSlots: wizardSpellSlotsForLevel(3) };
-    expect(slotsAt(w, 2)).toBeGreaterThan(0);
+    baseW = { ...baseW, resources: { ...baseW.resources, spellSlots: wizardSpellSlotsForLevel(3) } };
+    expect(slotsAt(baseW, 2)).toBeGreaterThan(0);
 
     // Run several seeds until the save actually fails. Goblin WIS 8 (-1) vs
     // DC ~13 fails on a roll of 13 or less, so most seeds land a paralyze.
     let validated = false;
     for (let seed = 1; seed <= 60 && !validated; seed++) {
-      // Reset wizard state every iteration — character mutates during cast.
-      w.resources = { ...w.resources, spellSlots: wizardSpellSlotsForLevel(3) };
-      w.actionEconomy = { ...w.actionEconomy, actionUsed: false };
+      // Reset wizard state every iteration — engine returns a fresh copy.
+      let w: Character = {
+        ...baseW,
+        resources: { ...baseW.resources, spellSlots: wizardSpellSlotsForLevel(3) },
+        actionEconomy: { ...baseW.actionEconomy, actionUsed: false },
+      };
       const roller = createDiceRoller(seed);
-      let state = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+      const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+      let state = init.state;
+      w = init.character;
       const goblinId = findMonster(state).id;
       const slotsBefore = slotsAt(w, 2);
       const result = castSpell({ roller, character: w, state, spellId: 'hold-person', targetId: goblinId });
       if (!result.cast) continue;
       state = result.state;
+      w = result.character;
       expect(slotsAt(w, 2)).toBe(slotsBefore - 1);
       const target = findMonster(state);
       const isParalyzed = target.instance.conditions.some((c) => c.name === 'paralyzed');
       if (!isParalyzed) continue;
 
       // Run the goblin's turn — it should lose the attack.
-      state = monsterAttack({ roller, character: w, state }, goblinId).state;
+      const ma = monsterAttack({ roller, character: w, state }, goblinId);
+      state = ma.state;
+      w = ma.character;
       const log = state.log[state.log.length - 1];
       expect(log.text).toContain('paralyzed');
       validated = true;
@@ -312,7 +339,7 @@ describe('Wizard — Hold Person', () => {
         w.resources = { ...w.resources, spellSlots: wizardSpellSlotsForLevel(3) };
         const roller = createDiceRoller(seed);
         const def = monsterId === 'goblin' ? lowWisDef : highWisDef;
-        let state = createCombat({ roller, character: w, monsters: [{ def }] });
+        let state = createCombat({ roller, character: w, monsters: [{ def }] }).state;
         const targetId = findMonster(state).id;
         const result = castSpell({ roller, character: w, state, spellId: 'hold-person', targetId });
         if (!result.cast) continue;
@@ -384,7 +411,7 @@ describe('Wizard — Grove caster bonuses', () => {
     const buffed: Character = { ...makeWizard(), permanentBonuses: { spellAttack: 2 } };
 
     const seed = 11;
-    let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] });
+    let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] }).state;
     const goblinIdA = findMonster(stateA).id;
     stateA = castSpell({
       roller: createDiceRoller(seed),
@@ -394,7 +421,7 @@ describe('Wizard — Grove caster bonuses', () => {
       targetId: goblinIdA,
     }).state;
 
-    let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] });
+    let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] }).state;
     const goblinIdB = findMonster(stateB).id;
     stateB = castSpell({
       roller: createDiceRoller(seed),
@@ -419,12 +446,12 @@ describe('Wizard — Grove caster bonuses', () => {
     buffed.resources = { ...buffed.resources, spellSlots: wizardSpellSlotsForLevel(3) };
 
     const seed = 9;
-    let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] });
+    let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] }).state;
     const idA = findMonster(stateA).id;
     stateA = castSpell({ roller: createDiceRoller(seed), character: baseline, state: stateA, spellId: 'hold-person', targetId: idA }).state;
     const dcA = Number(stateA.log.find((l) => l.text.includes('vs DC'))!.text.match(/vs DC (\d+)/)?.[1]);
 
-    let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] });
+    let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] }).state;
     const idB = findMonster(stateB).id;
     stateB = castSpell({ roller: createDiceRoller(seed), character: buffed, state: stateB, spellId: 'hold-person', targetId: idB }).state;
     const dcB = Number(stateB.log.find((l) => l.text.includes('vs DC'))!.text.match(/vs DC (\d+)/)?.[1]);
@@ -438,9 +465,11 @@ describe('Wizard — Grove caster bonuses', () => {
     // Find a seed where the cantrip hits; assert damage line carries the +3.
     let validated = false;
     for (let seed = 1; seed <= 60 && !validated; seed++) {
-      const character: Character = { ...buffed };
-      character.actionEconomy = { ...character.actionEconomy, actionUsed: false };
-      let state = createCombat({ roller: createDiceRoller(seed), character, monsters: [{ def: goblin }] });
+      const character: Character = {
+        ...buffed,
+        actionEconomy: { ...buffed.actionEconomy, actionUsed: false },
+      };
+      let state = createCombat({ roller: createDiceRoller(seed), character, monsters: [{ def: goblin }] }).state;
       const targetId = findMonster(state).id;
       state = castSpell({
         roller: createDiceRoller(seed),
@@ -480,12 +509,15 @@ describe('Wizard — Misty Step (L3 unlock)', () => {
     expect(slotsAt(w, 2)).toBe(2);
 
     const roller = createDiceRoller(11);
-    let state = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    let state = init.state;
+    w = init.character;
     const baseAC = computeAC(w);
 
     const result = castSpell({ roller, character: w, state, spellId: 'misty-step' });
     expect(result.cast).toBe(true);
     state = result.state;
+    w = result.character;
 
     expect(slotsAt(w, 2)).toBe(1);
     expect(w.actionEconomy.bonusActionUsed).toBe(true);
@@ -494,8 +526,12 @@ describe('Wizard — Misty Step (L3 unlock)', () => {
     expect(computeAC(w)).toBe(baseAC + 2);
 
     // Cycle to next player turn — the +2 AC should expire.
-    state = endTurn(state, w).state;
-    state = endTurn(state, w).state;
+    let et = endTurn(state, w);
+    state = et.state;
+    w = et.character;
+    et = endTurn(state, w);
+    state = et.state;
+    w = et.character;
     expect(w.resources.mistyStepActive).toBeFalsy();
     expect(computeAC(w)).toBe(baseAC);
   });
@@ -519,11 +555,13 @@ describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
     let w = makeWizard();
     for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
     const roller = createDiceRoller(13);
-    let state = createCombat({
+    const init = createCombat({
       roller,
       character: w,
       monsters: [{ def: goblin }, { def: goblin, displayName: 'Goblin B' }],
     });
+    let state = init.state;
+    w = init.character;
     const slotsBefore = slotsAt(w, 3);
     const before = state.combatants
       .filter((c) => c.kind === 'monster')
@@ -532,6 +570,7 @@ describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
     const result = castSpell({ roller, character: w, state, spellId: 'fireball' });
     expect(result.cast).toBe(true);
     state = result.state;
+    w = result.character;
 
     expect(slotsAt(w, 3)).toBe(slotsBefore - 1);
     expect(w.actionEconomy.actionUsed).toBe(true);
@@ -548,17 +587,21 @@ describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
     let w = makeWizard();
     for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
     const roller = createDiceRoller(17);
-    let state = createCombat({
+    const init = createCombat({
       roller,
       character: w,
       monsters: [{ def: goblin }, { def: goblin, displayName: 'Goblin B' }],
     });
+    let state = init.state;
+    w = init.character;
     const slotsBefore = slotsAt(w, 3);
     const before = state.combatants
       .filter((c) => c.kind === 'monster')
       .map((c) => (c as MonsterCombatant).instance.hp.current);
 
-    state = castSpell({ roller, character: w, state, spellId: 'lightning-bolt' }).state;
+    const cast = castSpell({ roller, character: w, state, spellId: 'lightning-bolt' });
+    state = cast.state;
+    w = cast.character;
 
     expect(slotsAt(w, 3)).toBe(slotsBefore - 1);
     const after = state.combatants

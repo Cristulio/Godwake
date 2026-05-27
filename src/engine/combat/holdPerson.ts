@@ -4,17 +4,24 @@ import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import type { DiceRoller } from '../dice';
 import { modifierFor } from '../character/derived';
+import { patchActionEconomy } from './types';
 
 /**
  * Hold Person and other paralyze effects. Boss-scoped for now (the Magistrate)
  * but written against the generic ActiveCondition shape so future spells reuse it.
+ *
+ * All mutators in this module are PURE — they take a Readonly<Character> and
+ * return a freshly-patched Character. Callers thread the returned value
+ * through their local `nextCharacter` accumulator.
  */
 
-export function isPlayerParalyzed(character: Character): boolean {
+export function isPlayerParalyzed(character: Readonly<Character>): boolean {
   return character.conditions.some((c) => c.name === 'paralyzed');
 }
 
-export function getPlayerParalyzed(character: Character): ActiveCondition | undefined {
+export function getPlayerParalyzed(
+  character: Readonly<Character>,
+): ActiveCondition | undefined {
   return character.conditions.find((c) => c.name === 'paralyzed');
 }
 
@@ -27,7 +34,7 @@ export function getPlayerParalyzed(character: Character): ActiveCondition | unde
  */
 export function rollPlayerSave(
   roller: DiceRoller,
-  character: Character,
+  character: Readonly<Character>,
   ability: AbilityName,
   dc: number,
 ): { success: boolean; natural: number; total: number; mod: number } {
@@ -43,12 +50,12 @@ export function rollPlayerSave(
 
 /**
  * Append a paralyzed condition to the player, replacing any existing one.
- * Caller is responsible for logging the application.
+ * Returns the patched character; caller logs the application separately.
  */
 export function applyParalyze(
-  character: Character,
+  character: Readonly<Character>,
   options: { rounds: number; saveDC: number; saveAbility: AbilityName; source?: string },
-): void {
+): Character {
   const without = character.conditions.filter((c) => c.name !== 'paralyzed');
   const condition: ActiveCondition = {
     name: 'paralyzed',
@@ -57,45 +64,56 @@ export function applyParalyze(
     saveAbility: options.saveAbility,
     source: options.source,
   };
-  character.conditions = [...without, condition];
+  return { ...character, conditions: [...without, condition] };
 }
 
-export function removeParalyze(character: Character): void {
-  character.conditions = character.conditions.filter((c) => c.name !== 'paralyzed');
+export function removeParalyze(character: Readonly<Character>): Character {
+  return {
+    ...character,
+    conditions: character.conditions.filter((c) => c.name !== 'paralyzed'),
+  };
 }
 
 /**
- * Decrement remaining rounds on the active paralyzed condition. Returns whether
- * the condition expired naturally (durations of 1 → 0 → expired).
+ * Decrement remaining rounds on the active paralyzed condition. Returns the
+ * patched character along with whether the condition expired naturally
+ * (durations of 1 → 0 → expired).
  */
-export function decrementParalyzeDuration(character: Character): boolean {
+export function decrementParalyzeDuration(
+  character: Readonly<Character>,
+): { character: Character; expired: boolean } {
   const cond = getPlayerParalyzed(character);
-  if (!cond || cond.duration.kind !== 'rounds') return false;
+  if (!cond || cond.duration.kind !== 'rounds') {
+    return { character, expired: false };
+  }
   const next = cond.duration.value - 1;
   if (next <= 0) {
-    removeParalyze(character);
-    return true;
+    return { character: removeParalyze(character), expired: true };
   }
-  character.conditions = character.conditions.map((c) =>
-    c.name === 'paralyzed'
-      ? { ...c, duration: { kind: 'rounds', value: next } }
-      : c,
-  );
-  return false;
+  return {
+    character: {
+      ...character,
+      conditions: character.conditions.map((c) =>
+        c.name === 'paralyzed'
+          ? { ...c, duration: { kind: 'rounds', value: next } }
+          : c,
+      ),
+    },
+    expired: false,
+  };
 }
 
 /**
  * Lock out the player's action economy for a paralyzed turn so the auto-end
- * turn effect picks the turn up immediately.
+ * turn effect picks the turn up immediately. Returns the patched character.
  */
-export function lockOutActionEconomy(character: Character): void {
-  character.actionEconomy = {
-    ...character.actionEconomy,
+export function lockOutActionEconomy(character: Readonly<Character>): Character {
+  return patchActionEconomy(character, {
     actionUsed: true,
     bonusActionUsed: true,
     reactionUsed: true,
     movementRemaining: 0,
-  };
+  });
 }
 
 export function nextLogId(state: CombatState): number {

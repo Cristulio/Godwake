@@ -2,7 +2,12 @@ import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { getItem } from '../../content/items';
-import { combatResult, type CombatActionResult } from './types';
+import {
+  combatResult,
+  patchActionEconomy,
+  patchHp,
+  type CombatActionResult,
+} from './types';
 import { appendLog } from './log';
 
 export interface UseItemContext {
@@ -21,44 +26,52 @@ export function useConsumable(
   inventoryIndex: number,
 ): CombatActionResult {
   const { roller, character, state } = ctx;
-  const ref = character.inventory[inventoryIndex];
-  if (!ref) return combatResult(state, character);
+  let nextCharacter: Character = character;
+  const ref = nextCharacter.inventory[inventoryIndex];
+  if (!ref) return combatResult(state, nextCharacter);
   const item = getItem(ref.itemId);
-  if (item.kind !== 'consumable') return combatResult(state, character);
+  if (item.kind !== 'consumable') return combatResult(state, nextCharacter);
 
   // Action economy check
-  if (item.actionCost === 'action' && character.actionEconomy.actionUsed) return combatResult(state, character);
-  if (item.actionCost === 'bonus' && character.actionEconomy.bonusActionUsed) return combatResult(state, character);
+  if (item.actionCost === 'action' && nextCharacter.actionEconomy.actionUsed) {
+    return combatResult(state, nextCharacter);
+  }
+  if (item.actionCost === 'bonus' && nextCharacter.actionEconomy.bonusActionUsed) {
+    return combatResult(state, nextCharacter);
+  }
 
-  let logText = `${character.name} uses ${item.name}.`;
+  let logText = `${nextCharacter.name} uses ${item.name}.`;
 
   if (item.effect === 'heal' && item.healDice) {
     const heal = roller.roll(item.healDice);
-    const before = character.hp.current;
-    const after = Math.min(character.hp.max, before + heal.total);
+    const before = nextCharacter.hp.current;
+    const after = Math.min(nextCharacter.hp.max, before + heal.total);
     const actuallyHealed = after - before;
-    character.hp = { ...character.hp, current: after };
+    nextCharacter = patchHp(nextCharacter, { current: after });
     logText += ` Rolls ${item.healDice} = ${heal.total} → +${actuallyHealed} HP.`;
   } else if (ref.itemId === 'antitoxin') {
     // Per-combat poison immunity. Mirrors the Iron Stomach quirk's
     // poisonImmune path in applyDamage so the existing immune gate
     // handles both transparently. Cleared in combat resolution.
-    character.poisonImmuneEncounter = true;
+    nextCharacter = { ...nextCharacter, poisonImmuneEncounter: true };
     logText += ` The phial empties cold — poison will slide off until the room falls silent.`;
   }
 
   // Spend action economy
   if (item.actionCost === 'action') {
-    character.actionEconomy = { ...character.actionEconomy, actionUsed: true };
+    nextCharacter = patchActionEconomy(nextCharacter, { actionUsed: true });
   } else {
-    character.actionEconomy = { ...character.actionEconomy, bonusActionUsed: true };
+    nextCharacter = patchActionEconomy(nextCharacter, { bonusActionUsed: true });
   }
 
   // Remove one of this item from inventory (the specific index)
-  character.inventory = [
-    ...character.inventory.slice(0, inventoryIndex),
-    ...character.inventory.slice(inventoryIndex + 1),
-  ];
+  nextCharacter = {
+    ...nextCharacter,
+    inventory: [
+      ...nextCharacter.inventory.slice(0, inventoryIndex),
+      ...nextCharacter.inventory.slice(inventoryIndex + 1),
+    ],
+  };
 
   const log: CombatLogEntry = {
     id: state.log.length + 1,
@@ -66,5 +79,5 @@ export function useConsumable(
     text: logText,
   };
 
-  return combatResult(appendLog(state, log), character);
+  return combatResult(appendLog(state, log), nextCharacter);
 }

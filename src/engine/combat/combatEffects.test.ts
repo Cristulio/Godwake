@@ -37,7 +37,7 @@ describe('combat effects — initiative modifiers', () => {
     const goblin = getMonster('goblin');
     const blessed = makeHuman({ blessings: ['helms-vigil'] });
     const roller = createDiceRoller(42);
-    const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
+    const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] }).state;
     const opening = state.log[0].text;
     expect(opening).toContain('Tester');
     // Player and monster both appear in the initiative order — rolled order
@@ -55,17 +55,17 @@ describe('combat effects — temp HP at combat start', () => {
     const blessed = makeHuman({ blessings: ['lathanders-dawn'] });
     expect(blessed.hp.temp).toBe(0);
     const roller = createDiceRoller(7);
-    createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
-    expect(blessed.hp.temp).toBe(3);
+    const after = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] }).character;
+    expect(after.hp.temp).toBe(3);
   });
 
   it('does not stack on top of existing temp HP', () => {
     const goblin = getMonster('goblin');
-    const blessed = makeHuman({ blessings: ['lathanders-dawn'] });
-    blessed.hp = { ...blessed.hp, temp: 5 };
+    let blessed = makeHuman({ blessings: ['lathanders-dawn'] });
+    blessed = { ...blessed, hp: { ...blessed.hp, temp: 5 } };
     const roller = createDiceRoller(7);
-    createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
-    expect(blessed.hp.temp).toBe(5);
+    const after = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] }).character;
+    expect(after.hp.temp).toBe(5);
   });
 });
 
@@ -74,9 +74,11 @@ describe('combat effects — temp HP absorbs damage', () => {
 
   it('drains temp HP before regular HP', () => {
     const goblin = getMonster('goblin');
-    const blessed = makeHuman({ blessings: ['lathanders-dawn'] });
+    let blessed = makeHuman({ blessings: ['lathanders-dawn'] });
     const roller = createDiceRoller(11);
-    const initial = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
+    let initial = init.state;
+    blessed = init.character;
     expect(blessed.hp.temp).toBe(3);
     const startCurrent = blessed.hp.current;
 
@@ -88,7 +90,9 @@ describe('combat effects — temp HP absorbs damage', () => {
     let consumed = false;
     for (let i = 0; i < 30 && !consumed; i++) {
       const before = blessed.hp.temp;
-      state = monsterAttack({ roller, character: blessed, state }, goblinId).state;
+      const r = monsterAttack({ roller, character: blessed, state }, goblinId);
+      state = r.state;
+      blessed = r.character;
       if (blessed.hp.temp < before) consumed = true;
       if (state.status !== 'active') break;
     }
@@ -107,7 +111,7 @@ describe('combat effects — Tempus first-attack damage', () => {
     const goblin = getMonster('goblin');
     const blessed = makeHuman({ blessings: ['tempus-fury'] });
     const roller = createDiceRoller(3);
-    const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
+    const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] }).state;
     expect(state.playerHasAttacked).toBe(false);
     const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
     const after = playerAttack({ roller, character: blessed, state }, goblinId, 'longsword').state;
@@ -131,7 +135,7 @@ describe('combat effects — rerolls', () => {
     const goblin = getMonster('goblin');
     const blessed = makeHuman({ blessings: ['tymoras-coin'] });
     const roller = createDiceRoller(99);
-    const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
+    const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] }).state;
     expect(state.rerollMissesEncounterRemaining).toBe(1);
   });
 
@@ -143,7 +147,7 @@ describe('combat effects — rerolls', () => {
     for (let seed = 1; seed <= 50 && !consumed; seed++) {
       const blessed = makeHuman({ blessings: ['tymoras-coin'] });
       const roller = createDiceRoller(seed);
-      let state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
+      let state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] }).state;
       state = {
         ...state,
         combatants: state.combatants.map((c) =>
@@ -173,10 +177,12 @@ describe('combat effects — rerolls', () => {
     const goblin = getMonster('goblin');
     let consumed = false;
     for (let seed = 1; seed <= 50 && !consumed; seed++) {
-      const eyed = makeHuman({ quirks: ['tymoras-eye'] });
-      eyed.delveBudgets = { quirkRerollMissesRemaining: 1 };
+      let eyed = makeHuman({ quirks: ['tymoras-eye'] });
+      eyed = { ...eyed, delveBudgets: { quirkRerollMissesRemaining: 1 } };
       const roller = createDiceRoller(seed);
-      let state = createCombat({ roller, character: eyed, monsters: [{ def: goblin }] });
+      const init = createCombat({ roller, character: eyed, monsters: [{ def: goblin }] });
+      let state = init.state;
+      eyed = init.character;
       expect(state.rerollMissesEncounterRemaining).toBe(0);
       state = {
         ...state,
@@ -185,7 +191,9 @@ describe('combat effects — rerolls', () => {
         ),
       };
       const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-      state = playerAttack({ roller, character: eyed, state }, goblinId, 'longsword').state;
+      const atk = playerAttack({ roller, character: eyed, state }, goblinId, 'longsword');
+      state = atk.state;
+      eyed = atk.character;
       if (eyed.delveBudgets?.quirkRerollMissesRemaining === 0) {
         const rerollLog = state.log.find((e) => e.text.includes("Tymora's Eye"));
         expect(rerollLog).toBeDefined();
@@ -203,7 +211,7 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
     const ilyich = getMonster('duergar-ilyich');
     const hero = makeHuman();
     const roller = createDiceRoller(7);
-    let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
+    let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
     const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
     // Drop Ilyich to half HP so the next monsterAttack triggers rage.
     state = {
@@ -233,7 +241,7 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
     const ilyich = getMonster('duergar-ilyich');
     const hero = makeHuman();
     const roller = createDiceRoller(7);
-    const state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
+    const state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
     const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
     const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
     const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
@@ -249,7 +257,7 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
     for (let seed = 1; seed <= 10; seed++) {
       const hero = makeHuman();
       const roller = createDiceRoller(seed);
-      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
+      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
       const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
       state = {
         ...state,
@@ -274,7 +282,7 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
     for (let seed = 1; seed <= 200 && !confirmed; seed++) {
       const hero = makeHuman();
       const roller = createDiceRoller(seed);
-      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
+      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
       const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
       state = {
         ...state,
@@ -300,19 +308,22 @@ describe('combat effects — stabilise (death-save replacement)', () => {
 
   it('free stabilise clamps a would-be-lethal blow to 1 HP and keeps combat active', () => {
     const goblin = getMonster('goblin');
-    const hero = makeHuman();
+    let hero = makeHuman();
     hero.delveBudgets = { stabilisesUsed: 0 };
     const roller = createDiceRoller(7);
-    const state = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+    const state = init.state;
+    hero = init.character;
     expect(hero.hp.current).toBeGreaterThan(0);
     const startMax = hero.hp.max;
 
     const after = applyDamage(state, 'player', startMax + 50, hero);
+    hero = after.character;
 
     expect(hero.hp.current).toBe(1);
-    expect(after.status).toBe('active');
+    expect(after.state.status).toBe('active');
     expect(hero.delveBudgets?.stabilisesUsed).toBe(1);
-    const stabiliseLog = after.log.find((l) => l.text.includes("Ilmater's grip"));
+    const stabiliseLog = after.state.log.find((l) => l.text.includes("Ilmater's grip"));
     expect(stabiliseLog).toBeDefined();
   });
 
@@ -320,20 +331,28 @@ describe('combat effects — stabilise (death-save replacement)', () => {
     // Baseline is 2 free stabilises per delve (bumped from 1). The third
     // lethal blow has nothing left to spend.
     const goblin = getMonster('goblin');
-    const hero = makeHuman();
+    let hero = makeHuman();
     hero.delveBudgets = { stabilisesUsed: 0 };
     const roller = createDiceRoller(7);
-    let state = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+    let state = init.state;
+    hero = init.character;
 
-    state = applyDamage(state, 'player', hero.hp.max + 50, hero);
+    let dmg = applyDamage(state, 'player', hero.hp.max + 50, hero);
+    state = dmg.state;
+    hero = dmg.character;
     expect(hero.hp.current).toBe(1);
     expect(hero.delveBudgets?.stabilisesUsed).toBe(1);
 
-    state = applyDamage(state, 'player', 5, hero);
+    dmg = applyDamage(state, 'player', 5, hero);
+    state = dmg.state;
+    hero = dmg.character;
     expect(hero.hp.current).toBe(1);
     expect(hero.delveBudgets?.stabilisesUsed).toBe(2);
 
-    state = applyDamage(state, 'player', 5, hero);
+    dmg = applyDamage(state, 'player', 5, hero);
+    state = dmg.state;
+    hero = dmg.character;
     expect(hero.hp.current).toBe(0);
     expect(hero.delveBudgets?.stabilisesUsed).toBe(2);
     const stabiliseLogs = state.log.filter((l) => l.text.includes("Ilmater's grip"));
@@ -343,25 +362,35 @@ describe('combat effects — stabilise (death-save replacement)', () => {
   it("Ilmater's Patience grants an additional stabilise charge on top of the baseline", () => {
     // Baseline 2 + blessing 1 = 3 charges. Fourth lethal blow drops.
     const goblin = getMonster('goblin');
-    const hero = makeHuman({ blessings: ['ilmaters-patience'] });
+    let hero = makeHuman({ blessings: ['ilmaters-patience'] });
     hero.delveBudgets = { stabilisesUsed: 0 };
     const roller = createDiceRoller(7);
-    let state = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+    let state = init.state;
+    hero = init.character;
 
-    state = applyDamage(state, 'player', hero.hp.max + 50, hero);
+    let dmg = applyDamage(state, 'player', hero.hp.max + 50, hero);
+    state = dmg.state;
+    hero = dmg.character;
     expect(hero.hp.current).toBe(1);
     expect(state.status).toBe('active');
 
-    state = applyDamage(state, 'player', 5, hero);
+    dmg = applyDamage(state, 'player', 5, hero);
+    state = dmg.state;
+    hero = dmg.character;
     expect(hero.hp.current).toBe(1);
     expect(state.status).toBe('active');
     expect(hero.delveBudgets?.stabilisesUsed).toBe(2);
 
-    state = applyDamage(state, 'player', 5, hero);
+    dmg = applyDamage(state, 'player', 5, hero);
+    state = dmg.state;
+    hero = dmg.character;
     expect(hero.hp.current).toBe(1);
     expect(hero.delveBudgets?.stabilisesUsed).toBe(3);
 
-    state = applyDamage(state, 'player', 5, hero);
+    dmg = applyDamage(state, 'player', 5, hero);
+    state = dmg.state;
+    hero = dmg.character;
     expect(hero.hp.current).toBe(0);
   });
 });

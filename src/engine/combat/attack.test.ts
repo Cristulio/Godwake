@@ -4,7 +4,7 @@ import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack } from './attack';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
-import type { MonsterCombatant } from '../../types/combat';
+import type { CombatState, MonsterCombatant } from '../../types/combat';
 import type { Character } from '../../types/character';
 
 function extractAttackBonus(line: string): number {
@@ -13,7 +13,7 @@ function extractAttackBonus(line: string): number {
   return Number(m[1]);
 }
 
-function findMonster(state: ReturnType<typeof createCombat>): MonsterCombatant {
+function findMonster(state: CombatState): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
 }
 
@@ -81,14 +81,17 @@ describe('playerAttack — weapon ability selection', () => {
     };
     const goblin = getMonster('goblin');
     const roller = createDiceRoller(1);
-    let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    let state = init.state;
+    let character = init.character;
     const goblinId = findMonster(state).id;
-    state = playerAttack({ roller, character: rogue, state }, goblinId, 'shortbow').state;
+    ({ state, character } = playerAttack({ roller, character, state }, goblinId, 'shortbow'));
     const line = state.log.find((l) => /fires at .* with Shortbow/.test(l.text));
     expect(line).toBeDefined();
     const bonus = extractAttackBonus(line!.text);
     expect(bonus).toBe(6);
     expect(bonus).not.toBe(1);
+    void character;
   });
 
   it('Fighter with longsword still uses STR', () => {
@@ -103,9 +106,12 @@ describe('playerAttack — weapon ability selection', () => {
     };
     const goblin = getMonster('goblin');
     const roller = createDiceRoller(3);
-    let state = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
+    let state = init.state;
+    let character = init.character;
     const goblinId = findMonster(state).id;
-    state = playerAttack({ roller, character: fighter, state }, goblinId, 'longsword').state;
+    ({ state, character } = playerAttack({ roller, character, state }, goblinId, 'longsword'));
+    void character;
     const line = state.log.find((l) => /attacks .* with Longsword/.test(l.text));
     expect(line).toBeDefined();
     // STR 16 → +3 mod. L1 proficiency = +2. Expected +5.
@@ -117,9 +123,12 @@ describe('playerAttack — weapon ability selection', () => {
     rogue.baseAbilityScores = { str: 10, dex: 14, con: 12, int: 10, wis: 10, cha: 8 };
     const goblin = getMonster('goblin');
     const roller = createDiceRoller(2);
-    let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    let state = init.state;
+    let character = init.character;
     const goblinId = findMonster(state).id;
-    state = playerAttack({ roller, character: rogue, state }, goblinId, 'shortbow').state;
+    ({ state, character } = playerAttack({ roller, character, state }, goblinId, 'shortbow'));
+    void character;
     const shortbowLine = state.log.find((l) => l.text.includes('Shortbow'));
     expect(shortbowLine?.text).toContain('fires at');
     expect(shortbowLine?.text).not.toContain('attacks Goblin with Shortbow');

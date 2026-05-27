@@ -1,3 +1,4 @@
+import type { Character } from '../../../types/character';
 import type { CombatState, MonsterCombatant } from '../../../types/combat';
 import { characterHasMechanic } from '../../character/derived';
 import { applyDamage } from '../attack';
@@ -7,7 +8,7 @@ import {
   type CastSpellContext,
   attachSpellEffect,
   consumeSlot,
-  evaluateCombatEnd,
+  evaluateCombatEndFull,
   markActionUsed,
   nextLogId,
   spellDamageBonus,
@@ -15,10 +16,9 @@ import {
 
 export function castBurningHands(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
-
-  consumeSlot(character, 1);
+  let nextCharacter: Character = consumeSlot(character, 1);
   // Evocation subclass: Sculpt Spells reflavor — Burning Hands burns one die hotter.
-  const evoker = characterHasMechanic(character, 'sculpt-spells');
+  const evoker = characterHasMechanic(nextCharacter, 'sculpt-spells');
   const dice = evoker ? 4 : 3;
 
   const aliveMonsters = state.combatants.filter(
@@ -28,13 +28,13 @@ export function castBurningHands(ctx: CastSpellContext): CastResult {
   // Primary target (the cone's anchor) takes the full roll; in our solo combat
   // the cone catches everything in front. We damage every living monster.
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
-  const bonus = spellDamageBonus(character);
+  const bonus = spellDamageBonus(nextCharacter);
   const dmg = damageRoll.total + bonus;
 
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${character.name} hurls a cone of flame. ${damageRoll.rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${dmg} fire${evoker ? ' (Sculpt Spells)' : ''}.`,
+    text: `${nextCharacter.name} hurls a cone of flame. ${damageRoll.rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${dmg} fire${evoker ? ' (Sculpt Spells)' : ''}.`,
   });
 
   nextState = attachSpellEffect(
@@ -53,7 +53,9 @@ export function castBurningHands(ctx: CastSpellContext): CastResult {
         return { ...c, instance: { ...c.instance, acRevealed: true } };
       }),
     };
-    nextState = applyDamage(nextState, m.id, dmg, character);
+    const damaged = applyDamage(nextState, m.id, dmg, nextCharacter);
+    nextState = damaged.state;
+    nextCharacter = damaged.character;
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
@@ -61,6 +63,7 @@ export function castBurningHands(ctx: CastSpellContext): CastResult {
     });
   }
 
-  markActionUsed(character);
-  return { state: evaluateCombatEnd(nextState, character), character, cast: true };
+  nextCharacter = markActionUsed(nextCharacter);
+  const ended = evaluateCombatEndFull(nextState, nextCharacter);
+  return { state: ended.state, character: ended.character, cast: true };
 }

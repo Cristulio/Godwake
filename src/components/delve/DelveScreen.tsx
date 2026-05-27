@@ -145,13 +145,13 @@ export function DelveScreen() {
     );
 
     const fresh = withResetActionEconomy(character);
-    setCharacter(fresh);
     const newCombat = createCombat({
       roller,
       character: fresh,
       monsters,
     });
-    setCombat(newCombat);
+    setCharacter(newCombat.character);
+    setCombat(newCombat.state);
     // Codex: unlock each monster type fought.
     const discover = useGameStore.getState().discoverMonster;
     for (const m of room.monsters) {
@@ -333,7 +333,6 @@ export function DelveScreen() {
           onAmbush={(monsterDefIds) => {
             const roller = getActiveRoller();
             const fresh = withResetActionEconomy(character);
-            setCharacter(fresh);
             const totals: Record<string, number> = {};
             for (const id of monsterDefIds) totals[id] = (totals[id] ?? 0) + 1;
             const seen: Record<string, number> = {};
@@ -347,7 +346,8 @@ export function DelveScreen() {
               return { def, displayName };
             });
             const newCombat = createCombat({ roller, character: fresh, monsters });
-            setCombat(newCombat);
+            setCharacter(newCombat.character);
+            setCombat(newCombat.state);
             const discover = useGameStore.getState().discoverMonster;
             for (const id of monsterDefIds) discover(id);
           }}

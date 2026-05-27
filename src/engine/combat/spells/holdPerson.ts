@@ -1,3 +1,4 @@
+import type { Character } from '../../../types/character';
 import type { CombatState, CombatLogEntry } from '../../../types/combat';
 import { getMonster } from '../../../content/monsters';
 import { abilityModifier } from '../../../types/abilities';
@@ -16,14 +17,15 @@ import {
 
 export function castHoldPerson(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
+  let nextCharacter: Character = character;
   const targetId = ctx.targetId ?? firstLiveMonsterId(state);
-  if (!targetId) return { state, character, cast: false };
+  if (!targetId) return { state, character: nextCharacter, cast: false };
   const target = findMonster(state, targetId);
-  if (!target) return { state, character, cast: false };
+  if (!target) return { state, character: nextCharacter, cast: false };
 
-  consumeSlot(character, 2);
+  nextCharacter = consumeSlot(nextCharacter, 2);
 
-  const dc = spellSaveDC(character);
+  const dc = spellSaveDC(nextCharacter);
   const monsterDef = getMonster(target.instance.defId);
   const targetWisMod = abilityModifier(monsterDef.abilityScores.wis ?? 10);
   const save = roller.d20('normal', targetWisMod);
@@ -33,7 +35,7 @@ export function castHoldPerson(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${character.name} weaves Hold Person at ${target.instance.displayName}. WIS save: d20${targetWisMod >= 0 ? '+' : ''}${targetWisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+      text: `${nextCharacter.name} weaves Hold Person at ${target.instance.displayName}. WIS save: d20${targetWisMod >= 0 ? '+' : ''}${targetWisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
     },
   ];
 
@@ -52,7 +54,7 @@ export function castHoldPerson(ctx: CastSpellContext): CastResult {
             duration: { kind: 'rounds' as const, value: 2 },
             saveDC: dc,
             saveAbility: 'wis' as const,
-            source: character.id,
+            source: nextCharacter.id,
           };
           return {
             ...c,
@@ -73,6 +75,6 @@ export function castHoldPerson(ctx: CastSpellContext): CastResult {
       },
     );
   }
-  markActionUsed(character);
-  return { state: nextState, character, cast: true };
+  nextCharacter = markActionUsed(nextCharacter);
+  return { state: nextState, character: nextCharacter, cast: true };
 }

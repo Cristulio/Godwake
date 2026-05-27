@@ -3,7 +3,12 @@ import type { CombatState } from '../../types/combat';
 import { getMonster } from '../../content/monsters';
 import { getRace } from '../../content/races';
 import { getActiveRoller } from '../dice';
-import { combatResult, type CombatActionResult } from './types';
+import {
+  combatResult,
+  patchActionEconomy,
+  patchResources,
+  type CombatActionResult,
+} from './types';
 import { appendLog } from './log';
 import {
   decrementParalyzeDuration,
@@ -14,35 +19,41 @@ import {
   rollPlayerSave,
 } from './holdPerson';
 
-function resetActionEconomyForCurrent(state: CombatState, character: Character): CombatState {
+function resetActionEconomyForCurrent(
+  state: CombatState,
+  character: Readonly<Character>,
+): { state: CombatState; character: Character } {
   const currentId = state.initiativeOrder[state.currentTurnIndex];
   if (currentId === 'player') {
-    character.actionEconomy = {
+    const nextCharacter = patchActionEconomy(character, {
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
       movementRemaining: getRace(character.raceId).speed,
-    };
-    return state;
+    });
+    return { state, character: nextCharacter };
   }
   return {
-    ...state,
-    combatants: state.combatants.map((c) => {
-      if (c.id !== currentId || c.kind !== 'monster') return c;
-      const def = getMonster(c.instance.defId);
-      return {
-        ...c,
-        instance: {
-          ...c.instance,
-          actionEconomy: {
-            actionUsed: false,
-            bonusActionUsed: false,
-            reactionUsed: false,
-            movementRemaining: def.speed,
+    state: {
+      ...state,
+      combatants: state.combatants.map((c) => {
+        if (c.id !== currentId || c.kind !== 'monster') return c;
+        const def = getMonster(c.instance.defId);
+        return {
+          ...c,
+          instance: {
+            ...c.instance,
+            actionEconomy: {
+              actionUsed: false,
+              bonusActionUsed: false,
+              reactionUsed: false,
+              movementRemaining: def.speed,
+            },
           },
-        },
-      };
-    }),
+        };
+      }),
+    },
+    character,
   };
 }
 
@@ -50,8 +61,9 @@ function resetActionEconomyForCurrent(state: CombatState, character: Character):
  * Advance to the next combatant in the initiative order. Skip dead combatants.
  * Increment round when wrapping. Reset action economy for the new turn-holder.
  */
-export function endTurn(state: CombatState, character: Character): CombatActionResult {
+export function endTurn(state: CombatState, character: Readonly<Character>): CombatActionResult {
   if (state.status !== 'active') return combatResult(state, character);
+  let nextCharacter: Character = character;
 
   let nextIndex = state.currentTurnIndex;
   let round = state.round;
@@ -63,7 +75,7 @@ export function endTurn(state: CombatState, character: Character): CombatActionR
 
     const id = order[nextIndex];
     if (id === 'player') {
-      if (character.hp.current > 0) break;
+      if (nextCharacter.hp.current > 0) break;
     } else {
       const combatant = state.combatants.find((c) => c.id === id);
       if (combatant?.kind === 'monster' && combatant.instance.hp.current > 0) break;
@@ -73,8 +85,8 @@ export function endTurn(state: CombatState, character: Character): CombatActionR
   // Cunning Action: Dash is "burst" — burn it or lose it. If the rogue
   // queued a bonus swing and didn't fire it before End Turn, drop the flag
   // so it can't be banked into next round.
-  if (character.bonusAttackAvailable) {
-    character.bonusAttackAvailable = false;
+  if (nextCharacter.bonusAttackAvailable) {
+    nextCharacter = { ...nextCharacter, bonusAttackAvailable: false };
   }
 
   let nextState: CombatState = appendLog(
@@ -95,22 +107,26 @@ export function endTurn(state: CombatState, character: Character): CombatActionR
     },
   );
 
-  nextState = resetActionEconomyForCurrent(nextState, character);
+  const reset = resetActionEconomyForCurrent(nextState, nextCharacter);
+  nextState = reset.state;
+  nextCharacter = reset.character;
 
   // Wizard: Shield expires at the start of the player's next turn.
-  if (order[nextIndex] === 'player' && character.resources.shieldActive) {
-    character.resources = { ...character.resources, shieldActive: false };
+  if (order[nextIndex] === 'player' && nextCharacter.resources.shieldActive) {
+    nextCharacter = patchResources(nextCharacter, { shieldActive: false });
   }
   // Wizard: Misty Step's displacement bonus expires at the start of the player's next turn.
-  if (order[nextIndex] === 'player' && character.resources.mistyStepActive) {
-    character.resources = { ...character.resources, mistyStepActive: false };
+  if (order[nextIndex] === 'player' && nextCharacter.resources.mistyStepActive) {
+    nextCharacter = patchResources(nextCharacter, { mistyStepActive: false });
   }
 
-  if (order[nextIndex] === 'player' && isPlayerParalyzed(character)) {
-    nextState = resolvePlayerParalyzedTurn(nextState, character);
+  if (order[nextIndex] === 'player' && isPlayerParalyzed(nextCharacter)) {
+    const resolved = resolvePlayerParalyzedTurn(nextState, nextCharacter);
+    nextState = resolved.state;
+    nextCharacter = resolved.character;
   }
 
-  return combatResult(nextState, character);
+  return combatResult(nextState, nextCharacter);
 }
 
 /**
@@ -119,46 +135,51 @@ export function endTurn(state: CombatState, character: Character): CombatActionR
  * gets a normal turn. Failure ticks the duration; if it hits zero the
  * condition expires anyway, otherwise the player loses the turn.
  */
-function resolvePlayerParalyzedTurn(state: CombatState, character: Character): CombatState {
-  const cond = getPlayerParalyzed(character);
-  if (!cond || !cond.saveDC || !cond.saveAbility) return state;
+function resolvePlayerParalyzedTurn(
+  state: CombatState,
+  character: Readonly<Character>,
+): { state: CombatState; character: Character } {
+  let nextCharacter: Character = character;
+  const cond = getPlayerParalyzed(nextCharacter);
+  if (!cond || !cond.saveDC || !cond.saveAbility) return { state, character: nextCharacter };
   const roller = getActiveRoller();
-  const save = rollPlayerSave(roller, character, cond.saveAbility, cond.saveDC);
+  const save = rollPlayerSave(roller, nextCharacter, cond.saveAbility, cond.saveDC);
   const logEntries = [];
 
   logEntries.push({
     id: state.log.length + 1,
     kind: 'roll' as const,
-    text: `${character.name} struggles against paralysis. ${cond.saveAbility.toUpperCase()} save: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${cond.saveDC} — ${save.success ? 'success' : 'fail'}.`,
+    text: `${nextCharacter.name} struggles against paralysis. ${cond.saveAbility.toUpperCase()} save: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${cond.saveDC} — ${save.success ? 'success' : 'fail'}.`,
   });
 
   if (save.success) {
-    removeParalyze(character);
+    nextCharacter = removeParalyze(nextCharacter);
     logEntries.push({
       id: state.log.length + 2,
       kind: 'system' as const,
-      text: `${character.name} breaks free. The Magistrate's hold falls away.`,
+      text: `${nextCharacter.name} breaks free. The Magistrate's hold falls away.`,
     });
-    return appendLog(state, ...logEntries);
+    return { state: appendLog(state, ...logEntries), character: nextCharacter };
   }
 
-  const expired = decrementParalyzeDuration(character);
-  if (expired) {
+  const dec = decrementParalyzeDuration(nextCharacter);
+  nextCharacter = dec.character;
+  if (dec.expired) {
     logEntries.push({
       id: state.log.length + 2,
       kind: 'system' as const,
-      text: `The binding wears thin and snaps. ${character.name} can move again.`,
+      text: `The binding wears thin and snaps. ${nextCharacter.name} can move again.`,
     });
-    return appendLog(state, ...logEntries);
+    return { state: appendLog(state, ...logEntries), character: nextCharacter };
   }
 
-  lockOutActionEconomy(character);
+  nextCharacter = lockOutActionEconomy(nextCharacter);
   logEntries.push({
     id: state.log.length + 2,
     kind: 'system' as const,
-    text: `${character.name} cannot move. The turn is lost.`,
+    text: `${nextCharacter.name} cannot move. The turn is lost.`,
   });
-  return appendLog(state, ...logEntries);
+  return { state: appendLog(state, ...logEntries), character: nextCharacter };
 }
 
 function combatantDisplayName(state: CombatState, id: string): string {

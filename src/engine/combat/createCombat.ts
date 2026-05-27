@@ -13,6 +13,12 @@ import { initiativeModifier } from '../character/derived';
 import { characterBlessingMods } from '../character/blessings';
 import { rogueCunningActionMax } from '../character/actions';
 import { getMonster } from '../../content/monsters';
+import {
+  combatResult,
+  patchHp,
+  patchResources,
+  type CombatActionResult,
+} from './types';
 
 /**
  * Max entries retained in CombatState.log. The renderer (CombatLog.tsx) tails
@@ -59,10 +65,17 @@ export interface CreateCombatInput {
 
 /**
  * Initialize a combat encounter: spawn monster instances, roll initiative
- * for everyone, set the turn order, log the opening line.
+ * for everyone, set the turn order, log the opening line. Also applies
+ * per-class start-of-combat patches to the character (Rogue refreshes
+ * Cunning Action; Wizard activates passive Mage Armor; Lathander's Dawn
+ * grants temp HP). Returns BOTH the combat state and the patched character.
+ *
+ * Callers (production + tests) consume `{ state, character }` — internals are
+ * fully pure, so the input `character` is untouched.
  */
-export function createCombat(input: CreateCombatInput): CombatState {
-  const { roller, character, monsters } = input;
+export function createCombat(input: CreateCombatInput): CombatActionResult {
+  const { roller, monsters } = input;
+  let nextCharacter: Character = input.character;
 
   const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }) => {
     const instance = spawnMonsterInstance(def, displayName);
@@ -76,7 +89,7 @@ export function createCombat(input: CreateCombatInput): CombatState {
   const playerCombatant: PlayerCombatant = {
     kind: 'player',
     id: 'player',
-    characterId: character.id,
+    characterId: nextCharacter.id,
   };
 
   const combatants: Combatant[] = [playerCombatant, ...monsterCombatants];
@@ -85,7 +98,7 @@ export function createCombat(input: CreateCombatInput): CombatState {
   const initiativeRolls: Array<{ id: string; total: number; tiebreaker: number }> = [];
   for (const combatant of combatants) {
     if (combatant.kind === 'player') {
-      const mod = initiativeModifier(character);
+      const mod = initiativeModifier(nextCharacter);
       const roll = roller.d20('normal', mod);
       initiativeRolls.push({
         id: combatant.id,
@@ -118,51 +131,52 @@ export function createCombat(input: CreateCombatInput): CombatState {
       id: 1,
       kind: 'system' as const,
       text: `Combat begins. Initiative: ${initiativeRolls
-        .map((r) => `${nameFor(r.id, combatants, character)} (${r.total})`)
+        .map((r) => `${nameFor(r.id, combatants, nextCharacter)} (${r.total})`)
         .join(', ')}.`,
     },
   ];
 
   // Rogue: refresh per-combat resources. Stale Hide from before combat is
   // dropped; Cunning Action pool refills.
-  if (character.classId === 'rogue') {
-    character.nextAttackAdvantage = false;
-    character.bonusAttackAvailable = false;
-    character.resources = {
-      ...character.resources,
-      sneakAttackUsedThisTurn: false,
-      cunningActionUsesRemaining: rogueCunningActionMax(character),
+  if (nextCharacter.classId === 'rogue') {
+    nextCharacter = {
+      ...nextCharacter,
+      nextAttackAdvantage: false,
+      bonusAttackAvailable: false,
     };
+    nextCharacter = patchResources(nextCharacter, {
+      sneakAttackUsedThisTurn: false,
+      cunningActionUsesRemaining: rogueCunningActionMax(nextCharacter),
+    });
   }
 
   // Wizards walk into every fight already wrapped in Mage Armor (passive class
   // baseline — no slot cost, no action cost). Shield is per-combat reaction-
   // only, so clear stale state.
-  if (character.classId === 'wizard') {
-    character.resources = {
-      ...character.resources,
+  if (nextCharacter.classId === 'wizard') {
+    nextCharacter = patchResources(nextCharacter, {
       mageArmorActive: true,
       shieldActive: false,
       mistyStepActive: false,
-    };
+    });
   }
 
   // Lathander's Dawn (and any future per-room temp-HP blessing): grant temp HP
   // at the start of combat. Temp HP doesn't stack — take the higher of current
   // and granted, RAW.
-  const blessingMods = characterBlessingMods(character);
+  const blessingMods = characterBlessingMods(nextCharacter);
   const tempHpGrant = blessingMods.extraTempHpPerRoom ?? 0;
   if (tempHpGrant > 0) {
-    const newTemp = Math.max(character.hp.temp, tempHpGrant);
-    character.hp = { ...character.hp, temp: newTemp };
+    const newTemp = Math.max(nextCharacter.hp.temp, tempHpGrant);
+    nextCharacter = patchHp(nextCharacter, { temp: newTemp });
     log.push({
       id: log.length + 1,
       kind: 'system' as const,
-      text: `${character.name} gains ${tempHpGrant} temporary HP from a blessing.`,
+      text: `${nextCharacter.name} gains ${tempHpGrant} temporary HP from a blessing.`,
     });
   }
 
-  return {
+  const state: CombatState = {
     combatants,
     initiativeOrder,
     currentTurnIndex: 0,
@@ -174,13 +188,15 @@ export function createCombat(input: CreateCombatInput): CombatState {
     rerollMissesEncounterRemaining: blessingMods.rerollMissesPerEncounter ?? 0,
     playerAttacksThisTurn: 0,
   };
+
+  return combatResult(state, nextCharacter);
 }
 
 function monsterDefForCombatant(combatant: MonsterCombatant): Monster {
   return getMonster(combatant.instance.defId);
 }
 
-function nameFor(combatantId: string, combatants: Combatant[], character: Character): string {
+function nameFor(combatantId: string, combatants: Combatant[], character: Readonly<Character>): string {
   const c = combatants.find((x) => x.id === combatantId);
   if (!c) return combatantId;
   if (c.kind === 'player') return character.name;

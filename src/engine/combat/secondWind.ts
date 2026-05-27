@@ -1,7 +1,13 @@
 import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
-import { combatResult, type CombatActionResult } from './types';
+import {
+  combatResult,
+  patchActionEconomy,
+  patchHp,
+  patchResources,
+  type CombatActionResult,
+} from './types';
 import { appendLog } from './log';
 
 export interface SecondWindContext {
@@ -23,31 +29,28 @@ export function useSecondWind(ctx: SecondWindContext): CombatActionResult {
   if (!baseCharge && bonusCharges <= 0) return combatResult(state, character);
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
 
-  const heal = roller.roll(`1d10+${character.level}`);
-  const before = character.hp.current;
-  const after = Math.min(character.hp.max, before + heal.total);
+  let nextCharacter: Character = character;
+  const heal = roller.roll(`1d10+${nextCharacter.level}`);
+  const before = nextCharacter.hp.current;
+  const after = Math.min(nextCharacter.hp.max, before + heal.total);
   const actuallyHealed = after - before;
 
-  character.hp = { ...character.hp, current: after };
+  nextCharacter = patchHp(nextCharacter, { current: after });
   // Spend bonus charges first — they're per-delve and don't refresh on rest.
   if (bonusCharges > 0) {
-    character.resources = {
-      ...character.resources,
+    nextCharacter = patchResources(nextCharacter, {
       secondWindBonusRemaining: bonusCharges - 1,
-    };
+    });
   } else {
-    character.resources = { ...character.resources, secondWindAvailable: false };
+    nextCharacter = patchResources(nextCharacter, { secondWindAvailable: false });
   }
-  character.actionEconomy = {
-    ...character.actionEconomy,
-    bonusActionUsed: true,
-  };
+  nextCharacter = patchActionEconomy(nextCharacter, { bonusActionUsed: true });
 
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${character.name} catches a second wind. 1d10+${character.level} = ${heal.total} → +${actuallyHealed} HP.`,
+    text: `${nextCharacter.name} catches a second wind. 1d10+${nextCharacter.level} = ${heal.total} → +${actuallyHealed} HP.`,
   };
 
-  return combatResult(appendLog(state, log), character);
+  return combatResult(appendLog(state, log), nextCharacter);
 }
