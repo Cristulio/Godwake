@@ -48,6 +48,22 @@ export const WARMUP_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'shadow', count: 1 }],
     xpReward: 130,
   },
+  {
+    title: 'The Slaver Kennel',
+    flavorText:
+      "A shadow-hound slips its handler's grip and pads down the alley with the easy stride of a thing that knows its own collar will not be required for this work.",
+    monsters: [{ defId: 'shadow-hound', count: 1 }],
+    xpReward: 140,
+    goldReward: 10,
+  },
+  {
+    title: 'A Bandit Lookout',
+    flavorText:
+      "A bandit-captain in a black coat leans on a doorpost. He sees you at the same moment you see him. He does not call for help — he is the help, paid by the morning.",
+    monsters: [{ defId: 'bandit-captain', count: 1 }],
+    xpReward: 170,
+    goldReward: 22,
+  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
@@ -153,6 +169,28 @@ export const MID_POOL: EncounterEntry[] = [
     xpReward: 380,
     goldReward: 26,
   },
+  {
+    title: 'The Captain and the Hound',
+    flavorText:
+      "A black-coated bandit-captain stands in the lane with a shadow-hound straining at a chain in his other hand. He lets it go when he sees you. He does not draw — yet.",
+    monsters: [
+      { defId: 'bandit-captain', count: 1 },
+      { defId: 'shadow-hound', count: 1 },
+    ],
+    xpReward: 370,
+    goldReward: 28,
+  },
+  {
+    title: 'The Lantern-Yard Patrol',
+    flavorText:
+      "A shadow and a slaver-cuirassier work the same yard in silence — the slaver in front to drive prey, the shadow behind to take whatever the slaver leaves alive.",
+    monsters: [
+      { defId: 'shadow', count: 1 },
+      { defId: 'slaver-cuirassier', count: 1 },
+    ],
+    xpReward: 350,
+    goldReward: 18,
+  },
 ];
 
 export const ELITE_POOL: EncounterEntry[] = [
@@ -196,6 +234,29 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'hobgoblin', count: 1 },
     ],
     xpReward: 500,
+    goldReward: 30,
+  },
+  {
+    title: "The Bandit Captain's Brace",
+    flavorText:
+      "A bandit-captain has set himself at the lane's mouth with a cult-fanatic and a slaver-cuirassier flanking. They are paid in different coin by different masters, but they have agreed about today.",
+    monsters: [
+      { defId: 'bandit-captain', count: 1 },
+      { defId: 'cult-fanatic', count: 1 },
+      { defId: 'slaver-cuirassier', count: 1 },
+    ],
+    xpReward: 540,
+    goldReward: 38,
+  },
+  {
+    title: 'The Cowled Kennel-Master',
+    flavorText:
+      "A Cowled enforcer in silver-trim robes walks the lane with two shadow-hounds at heel. The hounds are not chained. The enforcer does not look at them.",
+    monsters: [
+      { defId: 'cowled-enforcer', count: 1 },
+      { defId: 'shadow-hound', count: 2, displayPrefix: 'Hound' },
+    ],
+    xpReward: 520,
     goldReward: 30,
   },
 ];

@@ -50,6 +50,22 @@ export const WARMUP_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'mad-mage-prisoner', count: 1 }],
     xpReward: 200,
   },
+  {
+    title: 'A Hound at the Cell-Block End',
+    flavorText:
+      "A slayer hound lies at the corridor's end, head on its paws, eyes catching the corridor-light. It does not rise when you turn the corner. It only stands, slowly, the way a dog stands when the rest of the work is its.",
+    monsters: [{ defId: 'slayer-hound', count: 1 }],
+    xpReward: 220,
+    goldReward: 12,
+  },
+  {
+    title: "An Apprentice's First Patrol",
+    flavorText:
+      "A young Cowled apprentice in a uniform two sizes too crisp steps into the corridor with the wand-grip her mistress drilled into her wrong-side-up. She is going to die here, but she does not know it yet.",
+    monsters: [{ defId: 'wardens-apprentice', count: 1 }],
+    xpReward: 250,
+    goldReward: 16,
+  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
@@ -90,6 +106,25 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
     xpReward: 450,
     goldReward: 20,
   },
+  {
+    title: "The Apprentice's Subject",
+    flavorText:
+      "A Warden's Apprentice walks the gallery beside a stitched test-subject she is grading on its gait. She glances at you the way a clerk glances at an extra line of work.",
+    monsters: [
+      { defId: 'wardens-apprentice', count: 1 },
+      { defId: 'bonebound-test-subject', count: 1 },
+    ],
+    xpReward: 460,
+    goldReward: 26,
+  },
+  {
+    title: 'The Kennel-Pair',
+    flavorText:
+      "Two slayer hounds in matched livery come up the corridor abreast. They have been raised in adjacent kennels and they have already agreed which of them takes the throat.",
+    monsters: [{ defId: 'slayer-hound', count: 2, displayPrefix: 'Hound' }],
+    xpReward: 480,
+    goldReward: 18,
+  },
 ];
 
 export const MID_POOL: EncounterEntry[] = [
@@ -123,6 +158,28 @@ export const MID_POOL: EncounterEntry[] = [
       "Two slayer hounds come up the corridor shoulder to shoulder. They have been hunting together for a while. They split as they reach you, hoping you cannot watch both.",
     monsters: [{ defId: 'slayer-hound', count: 2, displayPrefix: 'Hound' }],
     xpReward: 560,
+  },
+  {
+    title: 'The Reading-Room Ambush',
+    flavorText:
+      "A Hollow Sage at the lectern, a Mad Mage Prisoner crouched between two shelves. The shelves were chosen for the angle of attack. The sage was chosen for being already empty.",
+    monsters: [
+      { defId: 'hollow-sage', count: 1 },
+      { defId: 'mad-mage-prisoner', count: 1 },
+    ],
+    xpReward: 600,
+    goldReward: 28,
+  },
+  {
+    title: "The Apprentice's Final",
+    flavorText:
+      "A Warden's Apprentice stands at the end of the gallery with a stitched test-subject at either hand. This is her practical examination. The wardens grade in blood.",
+    monsters: [
+      { defId: 'wardens-apprentice', count: 1 },
+      { defId: 'bonebound-test-subject', count: 2, displayPrefix: 'Subject' },
+    ],
+    xpReward: 620,
+    goldReward: 32,
   },
 ];
 
@@ -170,5 +227,27 @@ export const ELITE_POOL: EncounterEntry[] = [
     ],
     xpReward: 820,
     goldReward: 44,
+  },
+  {
+    title: "The Sages' Conference",
+    flavorText:
+      "Two Hollow Sages stand at the head of the gallery either side of a Warden's Apprentice who is taking notes she will never get to file. All three turn together. The air widens.",
+    monsters: [
+      { defId: 'hollow-sage', count: 2, displayPrefix: 'Sage' },
+      { defId: 'wardens-apprentice', count: 1 },
+    ],
+    xpReward: 860,
+    goldReward: 48,
+  },
+  {
+    title: 'The Examiner and His Subject',
+    flavorText:
+      "A Hollow Sage with a slayer hound at his hip — the hound is leashed, the sage is not. The lectern in the alcove behind them is open to a page someone has been crossing names off.",
+    monsters: [
+      { defId: 'hollow-sage', count: 1 },
+      { defId: 'slayer-hound', count: 1 },
+    ],
+    xpReward: 800,
+    goldReward: 42,
   },
 ];

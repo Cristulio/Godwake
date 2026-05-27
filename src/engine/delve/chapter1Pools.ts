@@ -54,6 +54,20 @@ export const WARMUP_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'stirge', count: 1 }],
     xpReward: 40,
   },
+  {
+    title: 'The Iron Cells',
+    flavorText:
+      'A grey-furred hobgoblin lieutenant has been left at the cell-mouth as a checkpoint. He does not bother to call you halt — he hefts his blade and waits.',
+    monsters: [{ defId: 'hobgoblin', count: 1 }],
+    xpReward: 60,
+  },
+  {
+    title: 'The Iron Cells',
+    flavorText:
+      'A second corpse-shape pries itself out of the rubble at the corner. Older bones, harder bones — and a longer memory of being killed.',
+    monsters: [{ defId: 'bone-stalker', count: 1 }],
+    xpReward: 60,
+  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
@@ -90,6 +104,23 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
       'A glass jar lies cracked on the bench, chalk-grey dust pouring out in the shape of a mephit. It opens its eyes as you cross the threshold.',
     monsters: [{ defId: 'dust-mephit', count: 1 }],
     xpReward: 75,
+  },
+  {
+    title: 'The Tomb-Yard',
+    flavorText:
+      "A skeleton drags itself upright over the bones of an older one. The older one is also still moving — slower, patient. They were buried as a pair.",
+    monsters: [
+      { defId: 'skeleton', count: 1 },
+      { defId: 'bone-stalker', count: 1 },
+    ],
+    xpReward: 95,
+  },
+  {
+    title: 'The Stirge Loft',
+    flavorText:
+      'Two stirges drop from the rafters in succession, the second a heartbeat behind the first — close enough that you cannot put steel to both without letting one feed.',
+    monsters: [{ defId: 'stirge', count: 2, displayPrefix: 'Stirge' }],
+    xpReward: 80,
   },
 ];
 
@@ -137,6 +168,16 @@ export const MID_POOL: EncounterEntry[] = [
       'The largest jar on the bench has gone the colour of old ledger paper from the inside, and the lid is sitting on the floor beside it. Something three times the size of the others is uncoiling out.',
     monsters: [{ defId: 'dust-mephit-elder', count: 1 }],
     xpReward: 180,
+  },
+  {
+    title: "The Warden's Reserve",
+    flavorText:
+      "A goblin warden of higher trim than the corridor scouts stands at the doorway with a goblin grunt at each elbow. He has been bored. He looks pleased now.",
+    monsters: [
+      { defId: 'goblin-warden', count: 1 },
+      { defId: 'goblin', count: 1 },
+    ],
+    xpReward: 160,
   },
 ];
 
@@ -188,5 +229,27 @@ export const ELITE_POOL: EncounterEntry[] = [
       { defId: 'skeleton', count: 1 },
     ],
     xpReward: 210,
+  },
+  {
+    title: 'The Master-at-Arms',
+    flavorText:
+      "A goblin warden in scavenged half-plate has stationed himself at the corridor turn with a hobgoblin sergeant at his shoulder. Neither speaks. The warden's bell rings once. The sergeant moves.",
+    monsters: [
+      { defId: 'goblin-warden', count: 1 },
+      { defId: 'hobgoblin', count: 1 },
+    ],
+    xpReward: 230,
+    goldReward: 18,
+  },
+  {
+    title: 'The Bugbear and His Hound',
+    flavorText:
+      "The bugbear is back, or another of his cousins — and this one keeps something on a length of rusted chain. A ghoul, drooling, eyes mad with the patience of a thing that has been kept hungry on purpose.",
+    monsters: [
+      { defId: 'bugbear', count: 1 },
+      { defId: 'ghoul', count: 1 },
+    ],
+    xpReward: 240,
+    goldReward: 28,
   },
 ];
