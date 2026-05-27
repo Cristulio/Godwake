@@ -35,17 +35,20 @@ export function CodexScreen() {
   const openMonster = openId ? getMonster(openId) : null;
 
   return (
-    <div className="min-h-screen p-6 max-w-6xl mx-auto">
+    <div className="min-h-screen p-6 max-w-6xl mx-auto animate-room-enter">
       <header className="flex flex-wrap justify-between items-end gap-3 mb-6 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
-          <h1 className="text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-wider">
-            THE TOWN LIBRARY
+          <h1
+            className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.15em]"
+            style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.85), 0 0 18px rgba(244,167,66,0.3)' }}
+          >
+            THE BESTIARY
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-            Bestiary · {discovered.length} / {all.length} discovered
+          <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
+            Town Library · <span className="text-[var(--color-accent-gold)]">{discovered.length}</span> / {all.length} discovered
           </p>
         </div>
-        <Button variant="secondary" onClick={goToHub}>
+        <Button variant="ghost" onClick={goToHub}>
           ← Phandalin
         </Button>
       </header>
@@ -68,19 +71,19 @@ export function CodexScreen() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by name…"
+          placeholder="search by name…"
           className="
-            bg-[var(--color-bg-elevated)] border border-[var(--color-border-warm)]
-            px-3 py-1.5 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-dim)]
+            font-mono bg-[var(--color-bg-deep)] border-2 border-[var(--color-border-warm)]
+            px-3 py-1.5 text-xs text-[var(--color-text-primary)] placeholder-[var(--color-text-dim)]
             focus:outline-none focus:border-[var(--color-accent-amber)]
-            min-w-[200px]
+            min-w-[220px] uppercase tracking-widest
           "
           aria-label="Search bestiary by monster name"
         />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center text-[var(--color-text-dim)] text-sm italic py-12">
+        <div className="text-center text-[var(--color-text-dim)] text-sm italic py-12 font-mono">
           No entries match.
         </div>
       ) : (
@@ -127,13 +130,22 @@ function FilterTab({
     <button
       type="button"
       onClick={onClick}
-      className={`px-3 py-1.5 text-[10px] uppercase tracking-widest font-bold border transition-colors ${
-        active
-          ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
-          : 'bg-[var(--color-bg-panel)] text-[var(--color-text-secondary)] border-[var(--color-border-warm)] hover:bg-[var(--color-bg-panel-hover)] hover:text-[var(--color-accent-amber)]'
-      }`}
+      className={`
+        btn-chunky relative px-3 py-1.5 text-[10px] uppercase tracking-widest font-bold border-2 transition-colors
+        ${
+          active
+            ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
+            : 'bg-[var(--color-bg-panel)] text-[var(--color-text-secondary)] border-[var(--color-border-warm)] hover:bg-[var(--color-bg-panel-hover)] hover:text-[var(--color-accent-amber)]'
+        }
+      `}
     >
       {label}
+      {active && (
+        <span
+          className="absolute -bottom-[2px] left-2 right-2 h-[2px] bg-[var(--color-accent-gold)]"
+          aria-hidden
+        />
+      )}
     </button>
   );
 }
@@ -156,24 +168,27 @@ function KnownCard({
       type="button"
       onClick={onClick}
       className="
-        group bg-[var(--color-bg-panel)] border border-[var(--color-border-warm)]
-        hover:border-[var(--color-accent-amber)] hover:bg-[var(--color-bg-panel-hover)]
-        transition-colors p-2 text-left flex flex-col gap-2 animate-fade-in
+        group panel-etched-warm border border-[var(--color-border-warm)]
+        hover:border-[var(--color-accent-amber)]
+        transition-all p-2 text-left flex flex-col gap-2 animate-fade-in
+        hover:shadow-[0_0_18px_rgba(244,167,66,0.25)]
       "
       title={`View ${name}`}
     >
-      <div className="relative w-full h-28 bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] flex items-end justify-center p-1">
-        <MonsterPortrait defId={defId} className="w-full h-full" />
-        <div className="absolute top-1 left-1 bg-[var(--color-bg-base)]/80 border border-[var(--color-accent-gold)] text-[var(--color-accent-amber)] text-[9px] uppercase tracking-widest px-1.5 py-0.5 font-bold">
+      <div className="relative w-full h-[120px] bg-[var(--color-bg-deep)] border border-[var(--color-border-dim)] flex items-end justify-center p-1 overflow-hidden">
+        <div className="transition-all duration-300 group-hover:[filter:drop-shadow(0_0_18px_rgba(244,167,66,0.25))] w-full h-[96px] flex items-end justify-center">
+          <MonsterPortrait defId={defId} className="w-full h-full" />
+        </div>
+        <div className="absolute top-1 left-1 bg-[var(--color-bg-base)]/85 border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest px-1.5 py-0.5 font-display">
           CR {cr}
         </div>
       </div>
       <div className="min-w-0">
-        <div className="text-[var(--color-accent-amber)] uppercase tracking-wider text-xs font-bold truncate group-hover:text-[var(--color-accent-torch)]">
+        <div className="font-display text-[var(--color-accent-amber)] uppercase tracking-wider text-[10px] truncate group-hover:text-[var(--color-accent-torch)]">
           {name}
         </div>
-        <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest font-mono">
-          × {count} {count === 1 ? 'encounter' : 'encounters'}
+        <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
+          × {count} {count === 1 ? 'kill' : 'kills'}
         </div>
       </div>
     </button>
@@ -184,20 +199,20 @@ function UnknownCard() {
   return (
     <div
       className="
-        bg-[var(--color-bg-panel)] border border-[var(--color-border-dim)] opacity-70
+        panel-etched border border-[var(--color-border-dim)] opacity-70
         p-2 flex flex-col gap-2 cursor-not-allowed
       "
       title="Defeat one to add this entry."
       aria-label="Undiscovered monster"
     >
-      <div className="w-full h-28 bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] flex items-center justify-center text-3xl text-[var(--color-text-dim)] font-bold">
+      <div className="w-full h-[120px] bg-[var(--color-bg-deep)] border border-[var(--color-border-dim)] flex items-center justify-center text-4xl text-[var(--color-text-muted)] font-display animate-pulse">
         ?
       </div>
       <div>
-        <div className="text-[var(--color-text-dim)] uppercase tracking-wider text-xs font-bold">
+        <div className="font-display text-[var(--color-text-dim)] uppercase tracking-wider text-[10px]">
           ???
         </div>
-        <div className="text-[var(--color-text-muted)] text-[10px] italic">
+        <div className="text-[var(--color-text-muted)] text-[10px] italic font-mono mt-0.5">
           Undiscovered
         </div>
       </div>
