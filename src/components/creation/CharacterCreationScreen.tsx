@@ -84,6 +84,42 @@ const ALL_CLASS_IDS = ClassIdSchema.options;
 const IMPLEMENTED_RACE_IDS = new Set(listRaces().map((r) => r.id));
 const IMPLEMENTED_CLASS_IDS = new Set(listClasses().map((c) => c.id));
 
+const ABILITY_SHORT: Record<AbilityName, string> = {
+  str: 'STR',
+  dex: 'DEX',
+  con: 'CON',
+  int: 'INT',
+  wis: 'WIS',
+  cha: 'CHA',
+};
+
+function raceStatLine(id: RaceId): string {
+  const race = (() => {
+    try {
+      return getRace(id);
+    } catch {
+      return null;
+    }
+  })();
+  if (!race) return '';
+  const bonuses = ABILITY_NAMES.filter((a) => (race.abilityScoreBonuses[a] ?? 0) > 0)
+    .map((a) => `${ABILITY_SHORT[a]} +${race.abilityScoreBonuses[a]}`)
+    .join(' · ');
+  return `SPD ${race.speed}${bonuses ? ' · ' + bonuses : ''}`;
+}
+
+function classStatLine(id: ClassId): string {
+  const cls = (() => {
+    try {
+      return getClass(id);
+    } catch {
+      return null;
+    }
+  })();
+  if (!cls) return '';
+  return `d${cls.hitDie} HD · ${cls.skillChoiceCount} skill picks`;
+}
+
 export function CharacterCreationScreen() {
   const commit = useGameStore((s) => s.commitCharacterCreation);
   const goToTitle = useGameStore((s) => s.goToTitle);
@@ -165,21 +201,27 @@ export function CharacterCreationScreen() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-5xl mx-auto">
+    <div className="min-h-screen p-6 max-w-5xl mx-auto animate-room-enter">
       <header className="flex justify-between items-end mb-6 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
-          <h1 className="text-3xl md:text-4xl text-[var(--color-accent-amber)] tracking-widest">
+          <h1
+            className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.3em] leading-tight"
+            style={{
+              textShadow:
+                '0 0 18px rgba(244,167,66,0.55), 0 0 6px rgba(244,167,66,0.85), 0 2px 0 rgba(0,0,0,0.9)',
+            }}
+          >
             FORGE A SOUL
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
+          <p className="font-narrative text-[var(--color-text-secondary)] text-sm italic mt-2 tracking-wide">
             The wheel turns. Choose the shape it takes.
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={applyPreset}>
+          <Button variant="primary" onClick={applyPreset}>
             Sir Brick Preset
           </Button>
-          <Button variant="secondary" onClick={goToTitle}>
+          <Button variant="ghost" onClick={goToTitle}>
             ← Title
           </Button>
         </div>
@@ -196,7 +238,7 @@ export function CharacterCreationScreen() {
         />
       </Panel>
 
-      <Panel className="mb-4" title="Race">
+      <Panel className="mb-4" title="Race" tone="warm">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {ALL_RACE_IDS.map((id) => {
             const implemented = IMPLEMENTED_RACE_IDS.has(id);
@@ -212,19 +254,31 @@ export function CharacterCreationScreen() {
                     : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
                 } disabled:opacity-40 disabled:cursor-not-allowed`}
               >
-                <div className="text-[var(--color-text-primary)] font-bold uppercase tracking-wider text-sm">
-                  {RACE_LABEL[id]}
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-base ${selected ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-accent-gold)]'}`}
+                  >
+                    ◆
+                  </span>
+                  <span className="font-display text-[var(--color-text-primary)] text-[10px] uppercase tracking-[0.18em]">
+                    {RACE_LABEL[id]}
+                  </span>
                 </div>
-                <div className="text-[var(--color-text-secondary)] text-xs mt-1 leading-relaxed">
+                <div className="text-[var(--color-text-secondary)] text-xs mt-2 leading-relaxed">
                   {implemented ? RACE_BLURB[id] : 'Coming soon'}
                 </div>
+                {implemented && (
+                  <div className="font-mono text-[10px] mt-2 text-[var(--color-accent-amber)] tabular-nums tracking-wide">
+                    {raceStatLine(id)}
+                  </div>
+                )}
               </button>
             );
           })}
         </div>
       </Panel>
 
-      <Panel className="mb-4" title="Class">
+      <Panel className="mb-4" title="Class" tone="warm">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           {ALL_CLASS_IDS.map((id) => {
             const implemented = IMPLEMENTED_CLASS_IDS.has(id);
@@ -240,12 +294,24 @@ export function CharacterCreationScreen() {
                     : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
                 } disabled:opacity-40 disabled:cursor-not-allowed`}
               >
-                <div className="text-[var(--color-text-primary)] font-bold uppercase tracking-wider text-sm">
-                  {CLASS_LABEL[id]}
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-base ${selected ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-accent-gold)]'}`}
+                  >
+                    ✦
+                  </span>
+                  <span className="font-display text-[var(--color-text-primary)] text-[10px] uppercase tracking-[0.18em]">
+                    {CLASS_LABEL[id]}
+                  </span>
                 </div>
-                <div className="text-[var(--color-text-secondary)] text-xs mt-1 leading-relaxed">
+                <div className="text-[var(--color-text-secondary)] text-xs mt-2 leading-relaxed">
                   {implemented ? CLASS_BLURB[id] : 'Coming soon'}
                 </div>
+                {implemented && (
+                  <div className="font-mono text-[10px] mt-2 text-[var(--color-accent-amber)] tabular-nums tracking-wide">
+                    {classStatLine(id)}
+                  </div>
+                )}
               </button>
             );
           })}
@@ -253,7 +319,7 @@ export function CharacterCreationScreen() {
       </Panel>
 
       {usePresetScores && (
-        <Panel className="mb-4" title="Ability Scores">
+        <Panel className="mb-4" title="Ability Scores" tone="glow">
           <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
             Fighter takes the standard array as Sir Brick: STR 15 / CON 14 / DEX 13 / WIS 12 / CHA 10 / INT 8. Racial bonuses apply on top.
           </p>
@@ -373,12 +439,13 @@ export function CharacterCreationScreen() {
       </Panel>
 
       <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
-        <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest">
+        <div className="font-narrative text-[var(--color-text-dim)] text-sm italic tracking-wide">
           {canConfirm
             ? 'Ready to walk the world.'
             : 'Complete every section above.'}
         </div>
-        <Button variant="primary" disabled={!canConfirm} onClick={confirm}>
+        <Button variant="primary" size="lg" disabled={!canConfirm} onClick={confirm}>
+          <span className="mr-2 text-[var(--color-bg-base)]">▸</span>
           Begin
         </Button>
       </div>

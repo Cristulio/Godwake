@@ -74,6 +74,8 @@ interface GameState {
   introSeen: boolean;
   /** True once the player has died and been reincarnated at least once. */
   hasReincarnated: boolean;
+  /** Number of times the soul has walked back into Phandalin from the Grove. Increments on every reincarnation, including the first. */
+  deathCount: number;
   /** True once the quirks tutorial has been dismissed. */
   quirksTutorialSeen: boolean;
   /** Monster def ids the player has fought at least once. Powers the codex. */
@@ -169,6 +171,7 @@ export const useGameStore = create<GameState>()(
   taunt: null,
   introSeen: false,
   hasReincarnated: false,
+  deathCount: 0,
   quirksTutorialSeen: false,
   discoveredMonsters: [],
   monsterEncounters: {},
@@ -179,7 +182,8 @@ export const useGameStore = create<GameState>()(
   goToTitle: () => set({ screen: 'title' }),
   goToHub: () => set({ screen: 'hub' }),
   goToDelve: () => set({ screen: 'delve' }),
-  goToReincarnation: () => set({ screen: 'reincarnation' }),
+  goToReincarnation: () =>
+    set((s) => ({ screen: 'reincarnation', deathCount: s.deathCount + 1 })),
   goToDruidGrove: () => set({ screen: 'druid-grove' }),
   goToChapter2Teaser: () => set({ screen: 'chapter2-teaser' }),
 
@@ -193,6 +197,7 @@ export const useGameStore = create<GameState>()(
       taunt: null,
       introSeen: false,
       hasReincarnated: false,
+      deathCount: 0,
       quirksTutorialSeen: false,
       discoveredMonsters: [],
       monsterEncounters: {},
@@ -476,6 +481,7 @@ export const useGameStore = create<GameState>()(
         autoEndTurnDelayMs: state.autoEndTurnDelayMs,
         introSeen: state.introSeen,
         hasReincarnated: state.hasReincarnated,
+        deathCount: state.deathCount,
         quirksTutorialSeen: state.quirksTutorialSeen,
         discoveredMonsters: state.discoveredMonsters,
         monsterEncounters: state.monsterEncounters,
@@ -524,6 +530,11 @@ export const useGameStore = create<GameState>()(
           state.druidGroveUnlocked =
             (state.unlockedUpgrades?.length ?? 0) > 0 ||
             (state.character?.renown ?? 0) >= GROVE_UNLOCK_THRESHOLD;
+        }
+        // Older saves predate the reincarnation counter. Seed at 1 if they've
+        // already reincarnated so the Souls-walked readout isn't misleading.
+        if (state && typeof state.deathCount !== 'number') {
+          state.deathCount = state.hasReincarnated ? 1 : 0;
         }
       },
     },
