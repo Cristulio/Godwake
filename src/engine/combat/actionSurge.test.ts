@@ -42,7 +42,8 @@ describe('useActionSurge', () => {
     const c = mkChar();
     c.actionEconomy.actionUsed = true;
     const s = mkState();
-    const next = useActionSurge({ character: c, state: s }).state;    expect(next).toBe(s);
+    const next = useActionSurge({ character: c, state: s }).state;
+    expect(next).toBe(s);
     expect(c.actionEconomy.actionUsed).toBe(true);
   });
 
@@ -50,7 +51,8 @@ describe('useActionSurge', () => {
     const c = applyLevelUp({ ...mkChar(), xp: 300 });
     expect(c.resources.actionSurgeRemaining).toBe(1);
     const s = mkState();
-    const next = useActionSurge({ character: c, state: s }).state;    expect(next).toBe(s);
+    const next = useActionSurge({ character: c, state: s }).state;
+    expect(next).toBe(s);
     expect(c.resources.actionSurgeRemaining).toBe(1);
   });
 
@@ -58,7 +60,8 @@ describe('useActionSurge', () => {
     const c = applyLevelUp({ ...mkChar(), xp: 300 });
     c.actionEconomy.actionUsed = true;
     const s = mkState();
-    const next = useActionSurge({ character: c, state: s }).state;    expect(c.actionEconomy.actionUsed).toBe(false);
+    const next = useActionSurge({ character: c, state: s }).state;
+    expect(c.actionEconomy.actionUsed).toBe(false);
     expect(c.resources.actionSurgeRemaining).toBe(0);
     expect(next.playerAttacksThisTurn).toBe(0);
     expect(next.log.length).toBe(1);

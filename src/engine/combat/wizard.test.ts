@@ -130,10 +130,12 @@ describe('Wizard — Shield reaction-buff', () => {
     // The cleanup runs in turn.endTurn when transitioning to the player.
     // Force-end the player turn:
     w.actionEconomy = { ...w.actionEconomy, actionUsed: true };
-    state = endTurn(state, w).state;    // Monster turn — but goblin may not actually attack if seed misses; just
+    state = endTurn(state, w).state;
+    // Monster turn — but goblin may not actually attack if seed misses; just
     // ensure shield persists for that turn.
     expect(computeAC(w)).toBe(baseAC + 5);
-    state = endTurn(state, w).state;    // Back to player — shield expires.
+    state = endTurn(state, w).state;
+    // Back to player — shield expires.
     expect(w.resources.shieldActive).toBeFalsy();
     expect(computeAC(w)).toBe(baseAC);
   });
@@ -197,7 +199,8 @@ describe('Wizard — Hold Person', () => {
       if (!isParalyzed) continue;
 
       // Run the goblin's turn — it should lose the attack.
-      state = monsterAttack({ roller, character: w, state }, goblinId).state;      const log = state.log[state.log.length - 1];
+      state = monsterAttack({ roller, character: w, state }, goblinId).state;
+      const log = state.log[state.log.length - 1];
       expect(log.text).toContain('paralyzed');
       validated = true;
     }

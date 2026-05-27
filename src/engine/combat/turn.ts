@@ -1,6 +1,7 @@
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { getMonster } from '../../content/monsters';
+import { getRace } from '../../content/races';
 import { getActiveRoller } from '../dice';
 import { combatResult, type CombatActionResult } from './types';
 import {
@@ -19,7 +20,7 @@ function resetActionEconomyForCurrent(state: CombatState, character: Character):
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: 30, // TODO: pull from race.speed
+      movementRemaining: getRace(character.raceId).speed,
     };
     return state;
   }

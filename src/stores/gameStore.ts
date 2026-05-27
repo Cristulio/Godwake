@@ -124,7 +124,6 @@ interface GameState {
   character: Character | null;
   delve: DelveState | null;
   combat: CombatState | null;
-  // speedMultiplier + autoEndTurnDelayMs moved to useSettingsStore.
   /** Active soul-bond voice (Irenicus or Imoen) overlay, null if hidden. */
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number } | null;
   /** True if the player has seen the intro already this save. */
@@ -184,9 +183,6 @@ interface GameState {
   /** Merchant purchase at camp. Deducts gold from pocket; pushes item ref to inventory. */
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
 
-  // Settings
-  // setSpeed + setAutoEndTurnDelay moved to useSettingsStore.
-
   // Lore overlays
   showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext) => void;
   dismissTaunt: () => void;
@@ -228,7 +224,6 @@ interface PersistedSnapshot {
   screen: Screen;
   saveSeed: string | null;
   character: Character | null;
-  // speedMultiplier + autoEndTurnDelayMs migrated to useSettingsStore.
   introSeen: boolean;
   hasReincarnated: boolean;
   deathCount: number;
@@ -254,7 +249,6 @@ function buildSnapshot(state: GameState): PersistedSnapshot {
         : state.screen,
     saveSeed: state.saveSeed,
     character: state.character,
-    // settings moved out — settingsStore persists those independently.
     introSeen: state.introSeen,
     hasReincarnated: state.hasReincarnated,
     deathCount: state.deathCount,
@@ -305,7 +299,6 @@ export const useGameStore = create<GameState>()(
   character: null,
   delve: null,
   combat: null,
-  // settings moved — see useSettingsStore.
   taunt: null,
   introSeen: false,
   hasReincarnated: false,
@@ -480,8 +473,6 @@ export const useGameStore = create<GameState>()(
       };
     }),
 
-  // settings actions moved — see useSettingsStore.
-
   showTaunt: (speaker, context) =>
     set({ taunt: { speaker, context, seed: Math.floor(Math.random() * 1000) } }),
   dismissTaunt: () => set({ taunt: null }),
@@ -622,9 +613,9 @@ export const useGameStore = create<GameState>()(
       screen: (s.screen ?? 'hub') as Screen,
       saveSeed: s.saveSeed ?? null,
       character: s.character ?? null,
-      // settings moved to useSettingsStore — older slot dumps may carry
-      // these fields but loadFromSlot no longer applies them. Settings
-      // persist via their own store now.
+      // speed/timing settings live in useSettingsStore now — slot loads
+      // don't touch them, so the player's pacing preference survives a
+      // slot switch.
       introSeen: s.introSeen ?? false,
       hasReincarnated: s.hasReincarnated ?? false,
       quirksTutorialSeen: s.quirksTutorialSeen ?? false,

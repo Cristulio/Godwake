@@ -158,7 +158,11 @@ function evaluateCombatEnd(state: CombatState, character: Character): CombatStat
 
 /**
  * Player attacks a target with a weapon (must be the equipped main-hand).
- * Returns updated combat state (and mutates character.hp on damage taken — TODO).
+ * Returns CombatActionResult: callers use result.state and result.character
+ * directly. Internally still mutates ctx.character; the API surface gives
+ * the caller a fresh reference via the combatResult helper, which is what
+ * React.memo / Object.is comparators check. See dd-roguelite-mutation-
+ * refactor-plan for the internal-purity cleanup that's still pending.
  */
 export function playerAttack(
   ctx: AttackContext,

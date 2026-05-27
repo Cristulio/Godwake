@@ -49,9 +49,11 @@ describe('Rogue — Sneak Attack', () => {
       const roller = createDiceRoller(seed);
       let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
       // Trigger Hide so the attack rolls with advantage.
-      state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;      expect(rogue.nextAttackAdvantage).toBe(true);
+      state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;
+      expect(rogue.nextAttackAdvantage).toBe(true);
       const goblinId = findMonster(state).id;
-      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;      const damageLog = state.log.find((l) => l.text.includes('Sneak Attack'));
+      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      const damageLog = state.log.find((l) => l.text.includes('Sneak Attack'));
       if (damageLog) {
         observed = true;
         expect(state.sneakAttackUsedThisTurn).toBe(true);
@@ -79,7 +81,8 @@ describe('Rogue — Sneak Attack', () => {
         ),
       };
       const goblinId = findMonster(state).id;
-      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;      const sneakLog = state.log.find((l) => l.text.includes('Sneak Attack'));
+      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      const sneakLog = state.log.find((l) => l.text.includes('Sneak Attack'));
       if (sneakLog) {
         observed = true;
         expect(state.sneakAttackUsedThisTurn).toBe(true);
@@ -100,8 +103,10 @@ describe('Rogue — Sneak Attack', () => {
       // attack twice in one "turn" without invoking Action Surge plumbing.
       const roller = createDiceRoller(seed);
       let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
-      state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;      const goblinId = findMonster(state).id;
-      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;      const firstSneak = state.log.filter((l) => l.text.includes('Sneak Attack')).length;
+      state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;
+      const goblinId = findMonster(state).id;
+      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      const firstSneak = state.log.filter((l) => l.text.includes('Sneak Attack')).length;
       if (firstSneak !== 1) continue;
       if (state.status !== 'active') continue;
 
@@ -117,7 +122,8 @@ describe('Rogue — Sneak Attack', () => {
         ),
       };
 
-      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;      const totalSneak = state.log.filter((l) => l.text.includes('Sneak Attack')).length;
+      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      const totalSneak = state.log.filter((l) => l.text.includes('Sneak Attack')).length;
       expect(totalSneak).toBe(1);
       validated = true;
     }
@@ -130,7 +136,8 @@ describe('Rogue — Sneak Attack', () => {
     const roller = createDiceRoller(5);
     let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
     state = { ...state, sneakAttackUsedThisTurn: true };
-    state = endTurn(state, rogue).state;    expect(state.sneakAttackUsedThisTurn).toBe(false);
+    state = endTurn(state, rogue).state;
+    expect(state.sneakAttackUsedThisTurn).toBe(false);
   });
 
   it('does not fire for non-Rogue characters even with advantage', () => {
@@ -158,7 +165,8 @@ describe('Rogue — Sneak Attack', () => {
     const roller = createDiceRoller(11);
     let state = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
     const goblinId = findMonster(state).id;
-    state = playerAttack({ roller, character: fighter, state }, goblinId, 'longsword').state;    const sneak = state.log.find((l) => l.text.includes('Sneak Attack'));
+    state = playerAttack({ roller, character: fighter, state }, goblinId, 'longsword').state;
+    const sneak = state.log.find((l) => l.text.includes('Sneak Attack'));
     expect(sneak).toBeUndefined();
   });
 });
@@ -188,7 +196,8 @@ describe('Rogue — Cunning Action', () => {
     const roller = createDiceRoller(2);
     let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
     expect(rogue.hp.temp).toBe(0);
-    state = useCunningAction({ character: rogue, state, choice: 'disengage' }).state;    expect(rogue.hp.temp).toBe(3);
+    state = useCunningAction({ character: rogue, state, choice: 'disengage' }).state;
+    expect(rogue.hp.temp).toBe(3);
     expect(rogue.actionEconomy.bonusActionUsed).toBe(true);
   });
 
@@ -197,11 +206,13 @@ describe('Rogue — Cunning Action', () => {
     const rogue = makeRogue();
     const roller = createDiceRoller(2);
     let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
-    state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;    // Reset bonus action to simulate a new turn, but keep the depleted pool.
+    state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;
+    // Reset bonus action to simulate a new turn, but keep the depleted pool.
     rogue.actionEconomy = { ...rogue.actionEconomy, bonusActionUsed: false };
     rogue.nextAttackAdvantage = false;
     const before = state;
-    state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;    expect(state).toBe(before);
+    state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;
+    expect(state).toBe(before);
     expect(rogue.nextAttackAdvantage).toBe(false);
   });
 
@@ -229,7 +240,8 @@ describe('Rogue — Cunning Action', () => {
     const roller = createDiceRoller(3);
     let state = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
     const before = state;
-    state = useCunningAction({ character: fighter, state, choice: 'hide' }).state;    expect(state).toBe(before);
+    state = useCunningAction({ character: fighter, state, choice: 'hide' }).state;
+    expect(state).toBe(before);
     expect(fighter.nextAttackAdvantage).toBeFalsy();
   });
 });
