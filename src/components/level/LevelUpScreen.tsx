@@ -8,6 +8,28 @@ import { hpGainForLevelUp } from '../../engine/character/leveling';
 import { effectiveAbilityScores } from '../../engine/character/derived';
 import type { AbilityName, AbilityScores } from '../../types/abilities';
 import type { Character } from '../../types/character';
+import type { SkillName } from '../../types/skills';
+
+const SKILL_LABEL: Record<SkillName, string> = {
+  acrobatics: 'Acrobatics',
+  'animal-handling': 'Animal Handling',
+  arcana: 'Arcana',
+  athletics: 'Athletics',
+  deception: 'Deception',
+  history: 'History',
+  insight: 'Insight',
+  intimidation: 'Intimidation',
+  investigation: 'Investigation',
+  medicine: 'Medicine',
+  nature: 'Nature',
+  perception: 'Perception',
+  performance: 'Performance',
+  persuasion: 'Persuasion',
+  religion: 'Religion',
+  'sleight-of-hand': 'Sleight of Hand',
+  stealth: 'Stealth',
+  survival: 'Survival',
+};
 
 const ABILITY_LABELS: Record<AbilityName, string> = {
   str: 'Strength',
@@ -25,6 +47,7 @@ export function LevelUpScreen() {
   const applyPendingLevelUp = useGameStore((s) => s.applyPendingLevelUp);
 
   const [asiPlan, setAsiPlan] = useState<Partial<Record<AbilityName, number>>>({});
+  const [pickedSkills, setPickedSkills] = useState<SkillName[]>([]);
 
   useEffect(() => {
     playSfx('level_up_sting');
@@ -53,6 +76,12 @@ export function LevelUpScreen() {
   const hpDelta = hpGainForLevelUp(c);
   const isAsiLevel = features.some((f) => f.mechanicKey === 'asi');
 
+  const skillGrants = cls.skillGrantsByLevel?.[String(nextLevel)] ?? 0;
+  const availableSkills = cls.skillChoiceFrom.filter(
+    (s) => !c.skillProficiencies.includes(s),
+  );
+  const skillsValid = pickedSkills.length === Math.min(skillGrants, availableSkills.length);
+
   const plannedTotal = Object.values(asiPlan).reduce<number>((a, b) => a + (b ?? 0), 0);
   const asiValid = !isAsiLevel || plannedTotal === 2;
 
@@ -69,17 +98,28 @@ export function LevelUpScreen() {
     });
   }
 
+  function toggleSkill(s: SkillName) {
+    setPickedSkills((prev) => {
+      if (prev.includes(s)) return prev.filter((x) => x !== s);
+      if (prev.length >= skillGrants) return prev;
+      return [...prev, s];
+    });
+  }
+
   function handleContinue() {
-    if (!asiValid) return;
-    let overrides: Partial<Character> | undefined;
+    if (!asiValid || !skillsValid) return;
+    const overrides: Partial<Character> = {};
     if (isAsiLevel) {
       const newBase: AbilityScores = { ...c.baseAbilityScores };
       for (const ab of ABILITY_ORDER) {
         newBase[ab] = (newBase[ab] ?? 0) + (asiPlan[ab] ?? 0);
       }
-      overrides = { baseAbilityScores: newBase };
+      overrides.baseAbilityScores = newBase;
     }
-    applyPendingLevelUp(overrides);
+    if (pickedSkills.length > 0) {
+      overrides.skillProficiencies = [...c.skillProficiencies, ...pickedSkills];
+    }
+    applyPendingLevelUp(Object.keys(overrides).length > 0 ? overrides : undefined);
   }
 
   const eff = effectiveAbilityScores(c);
@@ -196,11 +236,60 @@ export function LevelUpScreen() {
           </Panel>
         )}
 
+        {skillGrants > 0 && availableSkills.length > 0 && (
+          <Panel
+            title={`New Skill Proficiency — pick ${skillGrants} (${pickedSkills.length}/${Math.min(
+              skillGrants,
+              availableSkills.length,
+            )})`}
+            tone="warm"
+          >
+            <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
+              Already-trained skills are unavailable.
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {cls.skillChoiceFrom.map((s) => {
+                const owned = c.skillProficiencies.includes(s);
+                const selected = pickedSkills.includes(s);
+                const disabled =
+                  owned || (!selected && pickedSkills.length >= skillGrants);
+                return (
+                  <button
+                    key={s}
+                    disabled={disabled}
+                    onClick={() => toggleSkill(s)}
+                    className={`text-left px-3 py-2 border text-sm transition-colors ${
+                      selected
+                        ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
+                        : owned
+                          ? 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-dim)] line-through'
+                          : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
+                    } disabled:opacity-40 disabled:cursor-not-allowed`}
+                  >
+                    {SKILL_LABEL[s]}
+                  </button>
+                );
+              })}
+            </div>
+          </Panel>
+        )}
+
         <div className="flex justify-center mt-2">
-          <Button variant="primary" size="lg" onClick={handleContinue} disabled={!asiValid}>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={handleContinue}
+            disabled={!asiValid || !skillsValid}
+          >
             {isAsiLevel && !asiValid
               ? `Place ${2 - plannedTotal} more point${2 - plannedTotal === 1 ? '' : 's'}`
-              : 'Continue →'}
+              : !skillsValid
+                ? `Pick ${Math.min(skillGrants, availableSkills.length) - pickedSkills.length} more skill${
+                    Math.min(skillGrants, availableSkills.length) - pickedSkills.length === 1
+                      ? ''
+                      : 's'
+                  }`
+                : 'Continue →'}
           </Button>
         </div>
       </div>

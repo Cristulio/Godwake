@@ -7,6 +7,7 @@ export const FIGHTER: Class = ClassSchema.parse({
   primaryAbility: ['str', 'dex'],
   savingThrowProficiencies: ['str', 'con'],
   skillChoiceCount: 2,
+  skillGrantsByLevel: { '3': 1, '5': 1 },
   skillChoiceFrom: [
     'acrobatics',
     'animal-handling',
