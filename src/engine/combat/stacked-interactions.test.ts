@@ -87,7 +87,7 @@ describe('Hill Dwarf wizard + Mantle of the Wakened r2 + wizard baseline', () =>
     // call apply per rank, so two ranks = +10).
     let buffed = applyPermanentUpgrade(wizard, 'mantle-of-the-wakened', 1);
     buffed = applyPermanentUpgrade(buffed, 'mantle-of-the-wakened', 2);
-    expect(buffed.permanentHpBonus).toBe(10);
+    expect(buffed.permanentBonuses?.hp).toBe(10);
 
     const conMod = abilityModifier(effectiveAbilityScores(buffed).con);
     const raceBonus = 1; // Hill Dwarf bonusHpPerLevel
@@ -118,7 +118,7 @@ describe('Hill Dwarf wizard + Mantle of the Wakened r2 + wizard baseline', () =>
     useMetaStore.setState({ unlockedUpgrades: { 'mantle-of-the-wakened': 2 } });
     useScreenStore.setState({ screen: 'hub' });
 
-    const wizard = makeHillDwarfWizard({ permanentHpBonus: 10 });
+    const wizard = makeHillDwarfWizard({ permanentBonuses: { hp: 10 } });
     useCharacterStore.setState({ character: wizard });
 
     const conMod = abilityModifier(effectiveAbilityScores(wizard).con);
@@ -128,7 +128,7 @@ describe('Hill Dwarf wizard + Mantle of the Wakened r2 + wizard baseline', () =>
     const afterFirst = useCharacterStore.getState().character!;
     expect(afterFirst.hp.max).toBe(expectedBase);
     expect(afterFirst.hp.current).toBe(expectedBase);
-    expect(afterFirst.permanentHpBonus).toBe(10);
+    expect(afterFirst.permanentBonuses?.hp).toBe(10);
 
     // Simulate a death + re-descent. permanentHpBonus is sticky on the soul.
     useCharacterStore.setState({
@@ -152,7 +152,7 @@ describe('Sneak Attack scaling stacks with Knife in the Dark', () => {
   function fireSneakDiceLabel(level: number, bonus: number): string | undefined {
     for (let seed = 1; seed <= 200; seed++) {
       const goblin = getMonster('goblin');
-      const rogue = makeRogue({ level, permanentSneakAttackDiceBonus: bonus });
+      const rogue = makeRogue({ level, permanentBonuses: { sneakAttackDice: bonus } });
       const roller = createDiceRoller(seed);
       let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
       // Bloat goblin HP so it survives until the SA line lands, regardless of

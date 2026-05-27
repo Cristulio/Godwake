@@ -59,9 +59,9 @@ describe('save-migration chain — v1 → v2', () => {
     // Step 1: array → record, rank=1 default.
     expect(v2.unlockedUpgrades).toEqual({ 'mantle-of-the-wakened': 1 });
 
-    // Step 2: permanentHpBonus on character stays put (already set, so the
-    // re-derive guard leaves it alone).
-    expect(v2.character?.permanentHpBonus).toBe(5);
+    // Step 2: legacy permanentHpBonus folded into permanentBonuses.hp (v3 shape).
+    expect(v2.character?.permanentBonuses?.hp).toBe(5);
+    expect((v2.character as Record<string, unknown> | null)?.permanentHpBonus).toBeUndefined();
 
     // Step 3: monsterEncounters seeded from discoveredMonsters.
     expect(v2.monsterEncounters).toEqual({ goblin: 1 });
@@ -79,6 +79,6 @@ describe('save-migration chain — v1 → v2', () => {
 
   it('SAVE_VERSION is exposed and pins the current chain endpoint', () => {
     // Sanity check the chain endpoint so the v3 todo above is unambiguous.
-    expect(SAVE_VERSION).toBe(2);
+    expect(SAVE_VERSION).toBe(3);
   });
 });
