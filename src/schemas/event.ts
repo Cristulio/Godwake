@@ -44,7 +44,15 @@ export const EventChoiceSchema = z.object({
    * which includes racial bonuses. UI hides/disables the option below it.
    */
   requiresCha: z.number().optional(),
+  /**
+   * Probability in [0,1] that `outcome` fires. When undefined, the choice is
+   * deterministic and `outcome` always fires. When set, the UI shows a chance
+   * chip and the engine rolls: pass → `outcome`, fail → `failureOutcome`
+   * (or an empty outcome if none is supplied).
+   */
+  successChance: z.number().min(0).max(1).optional(),
   outcome: EventChoiceOutcomeSchema,
+  failureOutcome: EventChoiceOutcomeSchema.optional(),
 });
 export type EventChoice = z.infer<typeof EventChoiceSchema>;
 

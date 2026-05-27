@@ -9,6 +9,7 @@ import {
   applyEventOutcome,
   canTakeChoice,
   resolveChoiceOutcome,
+  rollChoiceCheck,
   type AppliedEffect,
   type EventOutcomeResult,
 } from '../../engine/delve';
@@ -65,7 +66,8 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   function handlePick(choice: EventChoice) {
     if (!character) return;
     const roller = getActiveRoller();
-    const outcome = resolveChoiceOutcome(choice.outcome, roller);
+    const checked = rollChoiceCheck(choice, roller);
+    const outcome = resolveChoiceOutcome(checked.outcome, roller);
     const result = applyEventOutcome(character, outcome, roller);
     setCharacter(result.character);
     setResolved({ choiceLabel: choice.label, result });
@@ -96,7 +98,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
       </header>
 
       <Panel tone="warm" className="bg-gradient-to-br from-[#2d2418] to-[#221a14]">
-        <p className="text-[var(--color-text-secondary)] text-sm italic leading-relaxed">
+        <p className="text-[var(--color-text-primary)] text-base italic leading-7">
           {template.flavor}
         </p>
       </Panel>
@@ -160,6 +162,14 @@ function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
           {choice.label}
         </div>
         <div className="flex items-baseline gap-2 shrink-0">
+          {choice.successChance !== undefined && (
+            <div
+              data-testid="chance-badge"
+              className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest border border-[var(--color-border-warm)] px-1.5 py-0.5"
+            >
+              {Math.round(choice.successChance * 100)}%
+            </div>
+          )}
           {chaTag && (
             <div
               data-testid="cha-badge"
