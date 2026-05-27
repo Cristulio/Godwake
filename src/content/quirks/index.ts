@@ -198,6 +198,7 @@ const RAW: Quirk[] = [
       'An old wound the body did not inherit cleanly. The soul remembers the angle, the bones do not.',
     effect: '−1 to initiative. −1 AC.',
     modifiers: { initiativeMod: -1, acMod: -1 },
+    soulMarkWeight: 1.5,
   }),
   QuirkSchema.parse({
     id: 'crows-favor',

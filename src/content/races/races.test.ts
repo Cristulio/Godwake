@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
-import { effectiveAbilityScores, modifierFor } from '../../engine/character/derived';
+import { effectiveAbilityScores, initiativeModifier, modifierFor } from '../../engine/character/derived';
 import { applyLevelUp, hpGainForLevelUp } from '../../engine/character/leveling';
 import { listRaces, getRace } from './index';
 
@@ -39,6 +39,12 @@ describe('Wood Elf', () => {
 
   it('has 35 ft. speed', () => {
     expect(getRace('wood-elf').speed).toBe(35);
+  });
+
+  it('Fey Reflexes adds +1 to initiative', () => {
+    expect(getRace('wood-elf').initiativeBonus).toBe(1);
+    // Base DEX 13 + race +2 = 15 → +2 DEX mod. Plus Fey Reflexes +1 = +3.
+    expect(initiativeModifier(elf)).toBe(3);
   });
 });
 
@@ -169,5 +175,28 @@ describe('Tiefling', () => {
     const resists = getRace('tiefling').damageResistances ?? [];
     expect(resists).toContain('fire');
     expect(resists).toContain('poison');
+  });
+
+  it('gains +1 HP at level 1 from Infernal Constitution', () => {
+    // fighter d10 + CON mod (14 → +2) + tiefling bonusHp(1) = 13
+    expect(tiefling.hp.max).toBe(10 + 2 + 1);
+  });
+
+  it('gains +1 HP per level via hpGainForLevelUp', () => {
+    // avg fighter HP (6) + CON mod (+2) + tiefling bonus (+1) = 9
+    expect(hpGainForLevelUp(tiefling)).toBe(6 + 2 + 1);
+  });
+
+  it('tiefling wizard L1 HP includes wizard +1 baseline AND tiefling +1', () => {
+    // d6 hit die + CON mod (+2) + tiefling +1 + wizard +1 = 10
+    const wiz = createCharacter({
+      id: 'tf-wiz',
+      name: 'Aria',
+      raceId: 'tiefling',
+      classId: 'wizard',
+      baseAbilityScores: BASE_SCORES,
+      skillProficiencies: ['arcana', 'history'],
+    });
+    expect(wiz.hp.max).toBe(6 + 2 + 1 + 1);
   });
 });

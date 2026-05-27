@@ -109,7 +109,7 @@ export const FIGHTER: Class = ClassSchema.parse({
             mechanicKey: 'improved-critical',
           },
         ],
-        '7': [
+        '5': [
           {
             id: 'remarkable-athlete',
             name: 'Remarkable Athlete',
