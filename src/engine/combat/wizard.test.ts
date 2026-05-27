@@ -109,19 +109,19 @@ describe('Wizard — Fire Bolt cantrip', () => {
   });
 });
 
-describe('Wizard — Fire Bolt crit range honors permanentCritRangeBonus', () => {
+describe('Wizard — Fire Bolt crit range honors permanentBonuses.critRange', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('treats a natural 19 as a crit when permanentCritRangeBonus is +1 (Killer\'s Eye)', () => {
+  it('treats a natural 19 as a crit when permanentBonuses.critRange is +1 (Killer\'s Eye)', () => {
     // Regression test: castFireBolt used to hard-code `rolls[0] === 20`, ignoring
-    // the Grove Killer's Eye upgrade (permanentCritRangeBonus). Find a seed where
+    // the Grove Killer's Eye upgrade. Find a seed where
     // the fire-bolt d20 lands on 19. With baseline crit range, that's a regular
     // hit. With +1 crit range, it's a CRITICAL HIT and damage doubles.
     const goblin = getMonster('goblin');
     let validated = false;
     for (let seed = 1; seed <= 400 && !validated; seed++) {
       const baseline = makeWizard();
-      const buffed: Character = { ...makeWizard(), permanentCritRangeBonus: 1 };
+      const buffed: Character = { ...makeWizard(), permanentBonuses: { critRange: 1 } };
 
       let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] });
       const idA = stateA.combatants.find((c) => c.kind === 'monster')!.id;
@@ -378,10 +378,10 @@ describe('Wizard — long rest refresh', () => {
 describe('Wizard — Grove caster bonuses', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('Arcane Focus adds permanentSpellAttackBonus to Fire Bolt attack rolls', () => {
+  it('Arcane Focus adds permanentBonuses.spellAttack to Fire Bolt attack rolls', () => {
     const goblin = getMonster('goblin');
     const baseline = makeWizard();
-    const buffed: Character = { ...makeWizard(), permanentSpellAttackBonus: 2 };
+    const buffed: Character = { ...makeWizard(), permanentBonuses: { spellAttack: 2 } };
 
     const seed = 11;
     let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] });
@@ -411,11 +411,11 @@ describe('Wizard — Grove caster bonuses', () => {
     expect(totalB - totalA).toBe(2);
   });
 
-  it('Sigil of the Wakened Mind adds permanentSpellDcBonus to the spell save DC (via Hold Person)', () => {
+  it('Sigil of the Wakened Mind adds permanentBonuses.spellDc to the spell save DC (via Hold Person)', () => {
     const goblin = getMonster('goblin');
     const baseline: Character = { ...makeWizard(), level: 3 };
     baseline.resources = { ...baseline.resources, spellSlots: wizardSpellSlotsForLevel(3) };
-    const buffed: Character = { ...baseline, permanentSpellDcBonus: 1 };
+    const buffed: Character = { ...baseline, permanentBonuses: { spellDc: 1 } };
     buffed.resources = { ...buffed.resources, spellSlots: wizardSpellSlotsForLevel(3) };
 
     const seed = 9;
@@ -432,9 +432,9 @@ describe('Wizard — Grove caster bonuses', () => {
     expect(dcB - dcA).toBe(1);
   });
 
-  it('Burning Tongue adds permanentSpellDamageBonus to a Fire Bolt hit', () => {
+  it('Burning Tongue adds permanentBonuses.spellDamage to a Fire Bolt hit', () => {
     const goblin = getMonster('goblin');
-    const buffed: Character = { ...makeWizard(), permanentSpellDamageBonus: 3 };
+    const buffed: Character = { ...makeWizard(), permanentBonuses: { spellDamage: 3 } };
     // Find a seed where the cantrip hits; assert damage line carries the +3.
     let validated = false;
     for (let seed = 1; seed <= 60 && !validated; seed++) {

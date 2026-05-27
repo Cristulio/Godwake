@@ -27,7 +27,7 @@ function fighterActionSurgeMax(character: Character): number {
 export function rogueCunningActionMax(character: Character): number {
   if (character.classId !== 'rogue') return 0;
   const base = character.subclassId === 'thief' && character.level >= 3 ? 2 : 1;
-  return base + (character.permanentCunningActionBonus ?? 0);
+  return base + (character.permanentBonuses?.cunningAction ?? 0);
 }
 
 /**

@@ -92,9 +92,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // Wizard +1/level baseline must be rebuilt on every descent — initialize.ts
     // bakes it into hp.max at character creation, but startDelve recomputes
     // baseHpMax and would otherwise strip it. Same for Grove HP bonuses
-    // (Mantle of the Wakened, Iron Will), which live on permanentHpBonus.
+    // (Mantle of the Wakened, Iron Will), which live on permanentBonuses.hp.
     const classBonusHp = ch.classId === 'wizard' ? 1 : 0;
-    const permanentHpBonus = ch.permanentHpBonus ?? 0;
+    const permanentHpBonus = ch.permanentBonuses?.hp ?? 0;
     const baseHpMax = cls.hitDie + conMod + bonusHp + classBonusHp + permanentHpBonus;
     const freshlyDescended: Character = {
       ...ch,

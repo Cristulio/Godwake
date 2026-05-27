@@ -132,7 +132,7 @@ describe('gameStore.startDelve — HP preservation', () => {
   });
 
   it('preserves Mantle of the Wakened R3 (+15 HP) for a wizard across startDelve', () => {
-    const wizard = makeWizard({ permanentHpBonus: 15 });
+    const wizard = makeWizard({ permanentBonuses: { hp: 15 } });
     const expected = expectedBaseHpMax(wizard) + 15;
 
     useCharacterStore.setState({ character: wizard });
@@ -145,7 +145,7 @@ describe('gameStore.startDelve — HP preservation', () => {
   });
 
   it('preserves Mantle R5 (+25 HP) for a fighter across startDelve', () => {
-    const fighter = makeFighter({ permanentHpBonus: 25 });
+    const fighter = makeFighter({ permanentBonuses: { hp: 25 } });
     const expected = expectedBaseHpMax(fighter) + 25;
 
     useCharacterStore.setState({ character: fighter });
@@ -157,9 +157,9 @@ describe('gameStore.startDelve — HP preservation', () => {
     expect(after.hp.current).toBe(expected);
   });
 
-  it('stacks permanentHpBonus with the wizard baseline', () => {
+  it('stacks permanentBonuses.hp with the wizard baseline', () => {
     // Mantle R2 (+10) + Iron Will (+5) = +15 over baseline.
-    const wizard = makeWizard({ permanentHpBonus: 15 });
+    const wizard = makeWizard({ permanentBonuses: { hp: 15 } });
     const expected = expectedBaseHpMax(wizard) + 15;
 
     useCharacterStore.setState({ character: wizard });

@@ -42,6 +42,33 @@ export function rankCost(base: number, rank: number): number {
   return Math.round(base * Math.pow(rank, 1.3));
 }
 
+type PermanentBonusKey = keyof NonNullable<Character['permanentBonuses']>;
+
+/** Add `delta` to `character.permanentBonuses[key]`, treating undefined as 0. */
+function addPermanentBonus(
+  c: Character,
+  key: PermanentBonusKey,
+  delta: number,
+): Character {
+  const current = c.permanentBonuses?.[key] ?? 0;
+  return {
+    ...c,
+    permanentBonuses: { ...c.permanentBonuses, [key]: current + delta },
+  };
+}
+
+/** Set an absolute rank value on `permanentBonuses[key]` (for delveStart upgrades). */
+function setPermanentBonus(
+  c: Character,
+  key: PermanentBonusKey,
+  value: number,
+): Character {
+  return {
+    ...c,
+    permanentBonuses: { ...c.permanentBonuses, [key]: value },
+  };
+}
+
 const RAW: Upgrade[] = [
   // ─── BODY ──────────────────────────────────────────────────────────────
   {
@@ -65,7 +92,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r * 5} maximum HP, permanent across reincarnations.`,
     costForRank: (r) => rankCost(80, r),
     maxRank: 5,
-    apply: (c) => ({ ...c, permanentHpBonus: (c.permanentHpBonus ?? 0) + 5 }),
+    apply: (c) => addPermanentBonus(c, 'hp', 5),
     kind: 'permanent',
   },
   {
@@ -77,7 +104,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r} AC, permanent.`,
     costForRank: (r) => rankCost(150, r),
     maxRank: 3,
-    apply: (c) => ({ ...c, permanentAcBonus: (c.permanentAcBonus ?? 0) + 1 }),
+    apply: (c) => addPermanentBonus(c, 'ac', 1),
     kind: 'permanent',
   },
   {
@@ -89,7 +116,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r} initiative, permanent.`,
     costForRank: (r) => rankCost(100, r),
     maxRank: 4,
-    apply: (c) => ({ ...c, permanentInitBonus: (c.permanentInitBonus ?? 0) + 1 }),
+    apply: (c) => addPermanentBonus(c, 'init', 1),
     kind: 'permanent',
   },
   {
@@ -140,7 +167,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r} to all attack rolls, permanent.`,
     costForRank: (r) => rankCost(180, r),
     maxRank: 4,
-    apply: (c) => ({ ...c, permanentAttackBonus: (c.permanentAttackBonus ?? 0) + 1 }),
+    apply: (c) => addPermanentBonus(c, 'attack', 1),
     kind: 'permanent',
   },
   {
@@ -152,10 +179,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r} damage on all weapon hits, permanent.`,
     costForRank: (r) => rankCost(150, r),
     maxRank: 4,
-    apply: (c) => ({
-      ...c,
-      permanentDamageBonus: (c.permanentDamageBonus ?? 0) + 1,
-    }),
+    apply: (c) => addPermanentBonus(c, 'damage', 1),
     kind: 'permanent',
   },
   {
@@ -167,10 +191,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `Crit range widens by ${r} (rank ${r}: crit on ${20 - r}-20).`,
     costForRank: (r) => rankCost(200, r),
     maxRank: 2,
-    apply: (c) => ({
-      ...c,
-      permanentCritRangeBonus: (c.permanentCritRangeBonus ?? 0) + 1,
-    }),
+    apply: (c) => addPermanentBonus(c, 'critRange', 1),
     kind: 'permanent',
   },
   {
@@ -229,7 +250,7 @@ const RAW: Upgrade[] = [
     maxRank: 3,
     apply: (c, rank) => {
       if (c.classId !== 'rogue') return c;
-      return { ...c, permanentCunningActionBonus: rank };
+      return setPermanentBonus(c, 'cunningAction', rank);
     },
     kind: 'delveStart',
   },
@@ -244,7 +265,7 @@ const RAW: Upgrade[] = [
     maxRank: 3,
     apply: (c, rank) => {
       if (c.classId !== 'rogue') return c;
-      return { ...c, permanentSneakAttackDiceBonus: rank };
+      return setPermanentBonus(c, 'sneakAttackDice', rank);
     },
     kind: 'permanent',
   },
@@ -257,10 +278,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r} damage to spells, permanent.`,
     costForRank: (r) => rankCost(100, r),
     maxRank: 5,
-    apply: (c) => ({
-      ...c,
-      permanentSpellDamageBonus: (c.permanentSpellDamageBonus ?? 0) + 1,
-    }),
+    apply: (c) => addPermanentBonus(c, 'spellDamage', 1),
     kind: 'permanent',
   },
 
@@ -379,10 +397,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r} to spell attack rolls, permanent.`,
     costForRank: (r) => rankCost(140, r),
     maxRank: 3,
-    apply: (c) => ({
-      ...c,
-      permanentSpellAttackBonus: (c.permanentSpellAttackBonus ?? 0) + 1,
-    }),
+    apply: (c) => addPermanentBonus(c, 'spellAttack', 1),
     kind: 'permanent',
   },
   {
@@ -394,10 +409,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r} spell save DC, permanent.`,
     costForRank: (r) => rankCost(180, r),
     maxRank: 3,
-    apply: (c) => ({
-      ...c,
-      permanentSpellDcBonus: (c.permanentSpellDcBonus ?? 0) + 1,
-    }),
+    apply: (c) => addPermanentBonus(c, 'spellDc', 1),
     kind: 'permanent',
   },
   {
@@ -423,7 +435,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => `+${r * 2} initiative, permanent.`,
     costForRank: (r) => rankCost(180, r),
     maxRank: 3,
-    apply: (c) => ({ ...c, permanentInitBonus: (c.permanentInitBonus ?? 0) + 2 }),
+    apply: (c) => addPermanentBonus(c, 'init', 2),
     kind: 'permanent',
   },
   {
@@ -435,7 +447,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => (r === 0 ? '+5 maximum HP, permanent.' : '+5 maximum HP, permanent.'),
     costForRank: (r) => rankCost(220, r),
     maxRank: 1,
-    apply: (c) => ({ ...c, permanentHpBonus: (c.permanentHpBonus ?? 0) + 5 }),
+    apply: (c) => addPermanentBonus(c, 'hp', 5),
     kind: 'permanent',
   },
   {

@@ -29,15 +29,17 @@ describe('rogueCunningActionMax — Shadowstep bonus', () => {
     expect(rogueCunningActionMax(makeRogue())).toBe(1);
   });
 
-  it('adds permanentCunningActionBonus on top of the base 1', () => {
-    expect(rogueCunningActionMax(makeRogue({ permanentCunningActionBonus: 2 }))).toBe(3);
+  it('adds permanentBonuses.cunningAction on top of the base 1', () => {
+    expect(
+      rogueCunningActionMax(makeRogue({ permanentBonuses: { cunningAction: 2 } })),
+    ).toBe(3);
   });
 
   it('stacks with the Thief subclass second-use at L3', () => {
     const r = makeRogue({
       subclassId: 'thief',
       level: 3,
-      permanentCunningActionBonus: 1,
+      permanentBonuses: { cunningAction: 1 },
     });
     expect(rogueCunningActionMax(r)).toBe(3);
   });
@@ -59,7 +61,7 @@ describe('rogueCunningActionMax — Shadowstep bonus', () => {
         },
         skillProficiencies: ['athletics', 'perception'],
       }),
-      permanentCunningActionBonus: 2,
+      permanentBonuses: { cunningAction: 2 },
     };
     expect(rogueCunningActionMax(fighter)).toBe(0);
   });

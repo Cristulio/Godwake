@@ -58,10 +58,10 @@ describe('camp choice — Sharpen the Blade (delveAttackBonus)', () => {
     expect(afterB.lastAttack!.total - afterA.lastAttack!.total).toBe(1);
   });
 
-  it('stacks with permanentAttackBonus', () => {
+  it('stacks with permanentBonuses.attack', () => {
     const goblin = getMonster('goblin');
     const baseline = makeFighter();
-    const both = makeFighter({ delveAttackBonus: 1, permanentAttackBonus: 1 });
+    const both = makeFighter({ delveAttackBonus: 1, permanentBonuses: { attack: 1 } });
 
     const rollerA = createDiceRoller(11);
     const rollerB = createDiceRoller(11);

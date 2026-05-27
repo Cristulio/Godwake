@@ -133,33 +133,32 @@ export interface Character {
 
   /**
    * Permanent stat bonuses baked in from Druid Grove upgrades. Optional so
-   * legacy saves rehydrate without migration; treat undefined as 0.
+   * legacy saves rehydrate without migration; treat any undefined key as 0.
+   * Consolidated from 11 top-level `permanentXxxBonus` fields in the v3
+   * save migration.
    */
-  permanentAcBonus?: number;
-  permanentAttackBonus?: number;
-  permanentInitBonus?: number;
-  /**
-   * Grove upgrade: +N permanent max HP (Mantle of the Wakened, Iron Will).
-   * Folded into baseHpMax in startDelve so the bonus survives every descent;
-   * legacy `bumpHpMax` mutation on `hp.max` did not survive.
-   */
-  permanentHpBonus?: number;
+  permanentBonuses?: {
+    ac?: number;
+    init?: number;
+    attack?: number;
+    damage?: number;
+    /** Crit-range widening (Killer's Eye): default 20-only becomes (20-N)-20. */
+    critRange?: number;
+    hp?: number;
+    spellAttack?: number;
+    spellDc?: number;
+    spellDamage?: number;
+    /** Rogue Shadowstep: +N extra Cunning Action uses per combat. */
+    cunningAction?: number;
+    /** Rogue Knife in the Dark: +N bonus Sneak Attack dice. */
+    sneakAttackDice?: number;
+  };
   /**
    * Extra attunement slots above the default. Bumped by Sage's Pact. The cap
    * lives in `attunementSlotsCap()`; this field is only the additive bonus so
    * legacy saves with `undefined` rehydrate to the default cap.
    */
   attunementSlotsBonus?: number;
-  /** Grove upgrade: +N damage on every weapon hit. */
-  permanentDamageBonus?: number;
-  /** Grove upgrade: +N to spell attack rolls (cantrips + spell-attack spells). */
-  permanentSpellAttackBonus?: number;
-  /** Grove upgrade: +N to spell save DC. */
-  permanentSpellDcBonus?: number;
-  /** Grove upgrade: +N flat damage added once per damaging-spell cast. */
-  permanentSpellDamageBonus?: number;
-  /** Grove upgrade: crit range widens by N (so default 20-only becomes (20-N)-20). */
-  permanentCritRangeBonus?: number;
   /** Grove upgrade: +N damage on the first attack of each combat. */
   permanentFirstAttackDamage?: number;
   /** Grove upgrade: +N damage against wounded targets (HP at half or less). */
@@ -170,10 +169,6 @@ export interface Character {
   permanentRenownBonusPerBane?: number;
   /** Grove upgrade: unlocks the on-reincarnation quirk picker. */
   wheelturnerUnlocked?: boolean;
-  /** Grove upgrade (Shadowstep): +N extra Cunning Action uses per combat (Rogue). */
-  permanentCunningActionBonus?: number;
-  /** Grove upgrade (Knife in the Dark): +N bonus Sneak Attack dice (Rogue). */
-  permanentSneakAttackDiceBonus?: number;
   /** Grove upgrade (Pilgrim's Boots): +N ft to base movement each turn. */
   permanentSpeedBonus?: number;
   /**
@@ -199,12 +194,12 @@ export interface Character {
   chapterClearGoldBonus?: number;
   /**
    * Per-delve attack bonus granted by camp choices (Sharpen the Blade adds
-   * +1). Stacks with `permanentAttackBonus`. Cleared in `finishDelve`.
+   * +1). Stacks with `permanentBonuses.attack`. Cleared in `finishDelve`.
    */
   delveAttackBonus?: number;
   /**
    * Per-delve initiative bonus granted by event choices (e.g. picking up
-   * the bone on the stake). Stacks with `permanentInitBonus`. Cleared in
+   * the bone on the stake). Stacks with `permanentBonuses.init`. Cleared in
    * `finishDelve` / `failDelve` / `abandonDelve`.
    */
   delveInitBonus?: number;

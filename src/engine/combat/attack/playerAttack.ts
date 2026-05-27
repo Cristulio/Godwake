@@ -92,7 +92,7 @@ export function playerAttack(
   const playerWounded = character.hp.current <= character.hp.max / 2;
 
   let attackBonus = abilMod + profBonus;
-  attackBonus += character.permanentAttackBonus ?? 0;
+  attackBonus += character.permanentBonuses?.attack ?? 0;
   attackBonus += character.delveAttackBonus ?? 0;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
@@ -216,7 +216,7 @@ export function playerAttack(
       bonusParts.push(`+${blessingMods.firstAttackDamage} first strike`);
     }
     // Grove upgrades — permanent damage bonuses baked into the soul.
-    const whetstone = character.permanentDamageBonus ?? 0;
+    const whetstone = character.permanentBonuses?.damage ?? 0;
     if (whetstone) {
       bonusDamage += whetstone;
       bonusParts.push(`+${whetstone} Whetstone`);
@@ -247,7 +247,7 @@ export function playerAttack(
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
       const sneakDice =
         sneakAttackDiceForLevel(character.level) +
-        (character.permanentSneakAttackDiceBonus ?? 0);
+        (character.permanentBonuses?.sneakAttackDice ?? 0);
       const sneakRoll = roller.roll({
         count: sneakDice * (crit ? 2 : 1),
         die: 6,
