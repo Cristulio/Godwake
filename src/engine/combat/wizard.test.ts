@@ -46,21 +46,24 @@ describe('Wizard — starting resources', () => {
     expect(w.resources.spellSlots?.[1]).toBe(2);
     expect(w.resources.spellSlots?.[2]).toBe(0);
     expect(w.resources.spellSlots?.[3]).toBe(0);
+    // Mage Armor is no longer in knownSpells — auto-applied as a passive class
+    // baseline at combat start (createCombat sets mageArmorActive=true).
     expect(w.resources.knownSpells).toEqual(
       expect.arrayContaining([
         'fire-bolt',
-        'mage-armor',
         'magic-missile',
         'shield',
         'burning-hands',
       ]),
     );
+    expect(w.resources.knownSpells).not.toContain('mage-armor');
   });
 
-  it('uses d6 hit die', () => {
+  it('uses d6 hit die plus wizard +1/level baseline', () => {
     const w = makeWizard();
-    // L1 max HP = hit die + CON mod. CON 13 + 1 (human) = 14 → +2 mod. 6 + 2 = 8.
-    expect(w.hp.max).toBe(8);
+    // L1 max HP = hit die + CON mod + wizard +1/level baseline.
+    // CON 13 + 1 (human) = 14 → +2 mod. 6 + 2 + 1 = 9.
+    expect(w.hp.max).toBe(9);
   });
 });
 
