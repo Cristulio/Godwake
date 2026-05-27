@@ -58,6 +58,66 @@ export const GROVE_UNLOCK_THRESHOLD = 60;
 /** Renown threshold required to unlock the road to Athkatla (Chapter 2). */
 export const RENOWN_FOR_CHAPTER_2 = 500;
 
+/** Save-slot ids. 0 = autosave, 1 & 2 = manual slots. */
+export type SaveSlotId = 0 | 1 | 2;
+export const SAVE_SLOT_IDS: SaveSlotId[] = [0, 1, 2];
+const LEGACY_SAVE_KEY = 'godwake-save';
+export const SAVE_SLOT_KEY_PREFIX = 'godwake-save-slot-';
+function slotKey(slot: SaveSlotId): string {
+  return `${SAVE_SLOT_KEY_PREFIX}${slot}`;
+}
+
+export interface SaveSlotMetadata {
+  savedAt: string;
+  characterName: string;
+  characterLevel: number;
+  location: string;
+  chapterCleared: number;
+}
+
+/** Pretty location label for the save-slot UI. */
+function locationLabel(screen: Screen): string {
+  switch (screen) {
+    case 'title':
+      return 'Title';
+    case 'character-creation':
+      return 'Soul-shaping';
+    case 'intro':
+      return 'Soul-bond intro';
+    case 'hub':
+      return 'Phandalin';
+    case 'druid-grove':
+      return 'Druid Grove';
+    case 'chapter2-teaser':
+      return 'Road to Athkatla';
+    case 'codex':
+      return 'Bestiary';
+    case 'inventory':
+      return 'Pack';
+    case 'level-up':
+      return 'Forge of Worlds';
+    case 'delve':
+      return 'In delve';
+    case 'reincarnation':
+      return 'Between lives';
+    default:
+      return String(screen);
+  }
+}
+
+/** Migrate the legacy single-key save into slot 0. Runs once on module load. */
+function migrateLegacySaveKey() {
+  if (typeof localStorage === 'undefined') return;
+  const legacy = localStorage.getItem(LEGACY_SAVE_KEY);
+  if (!legacy) return;
+  const targetKey = slotKey(0);
+  if (!localStorage.getItem(targetKey)) {
+    localStorage.setItem(targetKey, legacy);
+  }
+  localStorage.removeItem(LEGACY_SAVE_KEY);
+}
+migrateLegacySaveKey();
+
 interface GameState {
   screen: Screen;
   saveSeed: string | null;
@@ -156,6 +216,91 @@ interface GameState {
 
   // Leveling: applies one pending level. `overrides` may carry ASI choices etc.
   applyPendingLevelUp: (overrides?: Partial<Character>) => void;
+
+  // Save slots — slot 0 is autosave (written on every state change by the
+  // persist middleware); slots 1 and 2 are manual.
+  saveToSlot: (slot: SaveSlotId) => { ok: boolean; reason?: string };
+  loadFromSlot: (slot: SaveSlotId) => { ok: boolean; reason?: string };
+  deleteSlot: (slot: SaveSlotId) => void;
+  /** Returns the JSON string for the requested slot, or null if empty. */
+  exportSlot: (slot: SaveSlotId) => string | null;
+  /** Parses a previously-exported JSON string into slot 1 or 2. Slot 0 is never the import target. */
+  importToSlot: (slot: 1 | 2, json: string) => { ok: boolean; reason?: string };
+}
+
+interface PersistedSnapshot {
+  screen: Screen;
+  saveSeed: string | null;
+  character: Character | null;
+  speedMultiplier: 1 | 2;
+  autoEndTurnDelayMs: number;
+  introSeen: boolean;
+  hasReincarnated: boolean;
+  deathCount: number;
+  quirksTutorialSeen: boolean;
+  discoveredMonsters: string[];
+  monsterEncounters: Record<string, number>;
+  unlockedUpgrades: string[];
+  chapter1Cleared: boolean;
+  druidGroveUnlocked: boolean;
+  __metadata?: SaveSlotMetadata;
+}
+
+interface SlotWrapper {
+  state: PersistedSnapshot;
+  version: number;
+}
+
+function buildSnapshot(state: GameState): PersistedSnapshot {
+  return {
+    screen:
+      state.screen === 'delve' || state.screen === 'reincarnation'
+        ? 'hub'
+        : state.screen,
+    saveSeed: state.saveSeed,
+    character: state.character,
+    speedMultiplier: state.speedMultiplier,
+    autoEndTurnDelayMs: state.autoEndTurnDelayMs,
+    introSeen: state.introSeen,
+    hasReincarnated: state.hasReincarnated,
+    deathCount: state.deathCount,
+    quirksTutorialSeen: state.quirksTutorialSeen,
+    discoveredMonsters: state.discoveredMonsters,
+    monsterEncounters: state.monsterEncounters,
+    unlockedUpgrades: state.unlockedUpgrades,
+    chapter1Cleared: state.chapter1Cleared,
+    druidGroveUnlocked: state.druidGroveUnlocked,
+    __metadata: {
+      savedAt: new Date().toISOString(),
+      characterName: state.character?.name ?? '—',
+      characterLevel: state.character?.level ?? 0,
+      location: locationLabel(state.screen),
+      chapterCleared: state.chapter1Cleared ? 1 : 0,
+    },
+  };
+}
+
+function readSlotWrapper(slot: SaveSlotId): SlotWrapper | null {
+  if (typeof localStorage === 'undefined') return null;
+  const raw = localStorage.getItem(slotKey(slot));
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as SlotWrapper;
+    if (!parsed || typeof parsed !== 'object' || !parsed.state) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+/** Read-only inspector for the save-slot UI. Pulls metadata out of localStorage. */
+export function getSlotMetadata(slot: SaveSlotId): SaveSlotMetadata | null {
+  const wrapper = readSlotWrapper(slot);
+  return wrapper?.state.__metadata ?? null;
+}
+
+export function hasAnySave(): boolean {
+  return SAVE_SLOT_IDS.some((s) => readSlotWrapper(s) !== null);
 }
 
 export const useGameStore = create<GameState>()(
@@ -465,30 +610,103 @@ export const useGameStore = create<GameState>()(
     });
     return { ok: true };
   },
+
+  saveToSlot: (slot) => {
+    if (typeof localStorage === 'undefined') return { ok: false, reason: 'No storage.' };
+    const snapshot = buildSnapshot(get());
+    try {
+      const wrapper: SlotWrapper = { state: snapshot, version: 1 };
+      localStorage.setItem(slotKey(slot), JSON.stringify(wrapper));
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, reason: e instanceof Error ? e.message : 'Save failed.' };
+    }
+  },
+
+  loadFromSlot: (slot) => {
+    const wrapper = readSlotWrapper(slot);
+    if (!wrapper) return { ok: false, reason: 'Empty slot.' };
+    const s = wrapper.state;
+    useGameStore.setState({
+      screen: (s.screen ?? 'hub') as Screen,
+      saveSeed: s.saveSeed ?? null,
+      character: s.character ?? null,
+      speedMultiplier: s.speedMultiplier ?? 1,
+      autoEndTurnDelayMs: s.autoEndTurnDelayMs ?? 1100,
+      introSeen: s.introSeen ?? false,
+      hasReincarnated: s.hasReincarnated ?? false,
+      quirksTutorialSeen: s.quirksTutorialSeen ?? false,
+      discoveredMonsters: Array.isArray(s.discoveredMonsters) ? s.discoveredMonsters : [],
+      monsterEncounters:
+        s.monsterEncounters && typeof s.monsterEncounters === 'object'
+          ? s.monsterEncounters
+          : {},
+      unlockedUpgrades: Array.isArray(s.unlockedUpgrades) ? s.unlockedUpgrades : [],
+      chapter1Cleared: !!s.chapter1Cleared,
+      druidGroveUnlocked: !!s.druidGroveUnlocked,
+      delve: null,
+      combat: null,
+      taunt: null,
+    });
+    if (s.saveSeed) setActiveRoller(s.saveSeed);
+    return { ok: true };
+  },
+
+  deleteSlot: (slot) => {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(slotKey(slot));
+    }
+    if (slot === 0) {
+      useGameStore.setState({
+        screen: 'title',
+        saveSeed: null,
+        character: null,
+        delve: null,
+        combat: null,
+        taunt: null,
+        introSeen: false,
+        hasReincarnated: false,
+        quirksTutorialSeen: false,
+        discoveredMonsters: [],
+        monsterEncounters: {},
+        unlockedUpgrades: [],
+        chapter1Cleared: false,
+        druidGroveUnlocked: false,
+      });
+    }
+  },
+
+  exportSlot: (slot) => {
+    const wrapper = readSlotWrapper(slot);
+    if (!wrapper) return null;
+    return JSON.stringify(wrapper, null, 2);
+  },
+
+  importToSlot: (slot, json) => {
+    if (typeof localStorage === 'undefined') return { ok: false, reason: 'No storage.' };
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(json);
+    } catch {
+      return { ok: false, reason: 'Not valid JSON.' };
+    }
+    const candidate = parsed as Partial<SlotWrapper>;
+    if (!candidate || typeof candidate !== 'object' || !candidate.state) {
+      return { ok: false, reason: 'Missing save payload.' };
+    }
+    try {
+      localStorage.setItem(slotKey(slot), JSON.stringify({ state: candidate.state, version: candidate.version ?? 1 }));
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, reason: e instanceof Error ? e.message : 'Import failed.' };
+    }
+  },
     }),
     {
-      name: 'godwake-save',
+      name: slotKey(0),
       storage: createJSONStorage(() => localStorage),
       // Only persist long-term state; delve/combat are session-scoped.
-      partialize: (state) => ({
-        screen:
-          state.screen === 'delve' || state.screen === 'reincarnation'
-            ? 'hub'
-            : state.screen,
-        saveSeed: state.saveSeed,
-        character: state.character,
-        speedMultiplier: state.speedMultiplier,
-        autoEndTurnDelayMs: state.autoEndTurnDelayMs,
-        introSeen: state.introSeen,
-        hasReincarnated: state.hasReincarnated,
-        deathCount: state.deathCount,
-        quirksTutorialSeen: state.quirksTutorialSeen,
-        discoveredMonsters: state.discoveredMonsters,
-        monsterEncounters: state.monsterEncounters,
-        unlockedUpgrades: state.unlockedUpgrades,
-        chapter1Cleared: state.chapter1Cleared,
-        druidGroveUnlocked: state.druidGroveUnlocked,
-      }),
+      partialize: (state) => buildSnapshot(state as GameState),
       version: 1,
       onRehydrateStorage: () => (state) => {
         // Re-arm the dice roller from the persisted save seed on load.
