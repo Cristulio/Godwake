@@ -22,6 +22,11 @@ const OPTIONS: Array<{ choice: CunningActionChoice; label: string; blurb: string
     label: 'Dash',
     blurb: 'Surge forward — take a quick second strike this turn (no Sneak Attack on the second).',
   },
+  {
+    choice: 'steel',
+    label: 'Steel Yourself',
+    blurb: 'Brace your mind. Advantage on your next saving throw.',
+  },
 ];
 
 export function CunningActionPicker({ onPick, onCancel }: CunningActionPickerProps) {

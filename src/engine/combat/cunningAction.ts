@@ -8,7 +8,7 @@ import {
 } from './types';
 import { appendLog } from './log';
 
-export type CunningActionChoice = 'dash' | 'disengage' | 'hide';
+export type CunningActionChoice = 'dash' | 'disengage' | 'hide' | 'steel';
 
 export interface CunningActionContext {
   character: Character;
@@ -24,6 +24,7 @@ const DISENGAGE_DAMAGE_REDUCTION = 2;
  *  - Dash: gain a second swing this turn (burst). Sneak Attack still gated to
  *    once per turn, so the bonus swing is a clean damage roll without it.
  *  - Disengage: 2 damage reduction on the next incoming hit (survival).
+ *  - Steel: advantage on the next saving throw (anti-paralyze / anti-fear).
  *
  * Burns the bonus action and one use from the per-combat pool (Thief gets
  * two uses via Fast Hands).
@@ -48,6 +49,9 @@ export function useCunningAction(ctx: CunningActionContext): CombatActionResult 
   } else if (choice === 'disengage') {
     nextCharacter = { ...nextCharacter, incomingDamageReduction: DISENGAGE_DAMAGE_REDUCTION };
     narration = `${nextCharacter.name} twists clear — next incoming hit deals ${DISENGAGE_DAMAGE_REDUCTION} less damage.`;
+  } else if (choice === 'steel') {
+    nextCharacter = { ...nextCharacter, nextSaveAdvantage: true };
+    narration = `${nextCharacter.name} steels their nerve — the soul braces for the strike. Advantage on the next save.`;
   } else {
     nextCharacter = { ...nextCharacter, bonusAttackAvailable: true };
     narration = `${nextCharacter.name} surges forward — a second strike rides the momentum.`;

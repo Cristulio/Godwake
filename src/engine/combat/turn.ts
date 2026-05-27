@@ -144,12 +144,13 @@ function resolvePlayerParalyzedTurn(
   if (!cond || !cond.saveDC || !cond.saveAbility) return { state, character: nextCharacter };
   const roller = getActiveRoller();
   const save = rollPlayerSave(roller, nextCharacter, cond.saveAbility, cond.saveDC);
+  nextCharacter = save.character;
   const logEntries = [];
 
   logEntries.push({
     id: state.log.length + 1,
     kind: 'roll' as const,
-    text: `${nextCharacter.name} struggles against paralysis. ${cond.saveAbility.toUpperCase()} save: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${cond.saveDC} — ${save.success ? 'success' : 'fail'}.`,
+    text: `${nextCharacter.name} struggles against paralysis. ${cond.saveAbility.toUpperCase()} save${save.advantage ? ' (advantage)' : ''}: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${cond.saveDC} — ${save.success ? 'success' : 'fail'}.`,
   });
 
   if (save.success) {

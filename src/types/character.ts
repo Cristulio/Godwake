@@ -214,6 +214,13 @@ export interface Character {
    */
   nextAttackAdvantage?: boolean;
   /**
+   * One-shot advantage on the player's next saving throw. Set by Rogue's
+   * Cunning Action: Steel Yourself and as a side effect of Wizard's Misty
+   * Step. Consumed by the next save roll regardless of outcome. Persists
+   * across turns until used; cleared on combat start.
+   */
+  nextSaveAdvantage?: boolean;
+  /**
    * One-shot +N bonus added to the player's next attack roll. Reserved for
    * future buffs that need flat-to-hit; Dash no longer uses it. Consumed on
    * the actual attack roll, hit or miss. Stacks with nextAttackAdvantage.

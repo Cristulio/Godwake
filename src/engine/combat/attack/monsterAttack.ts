@@ -270,12 +270,13 @@ function monsterCastParalyze(
 ): { state: CombatState; character: Character } {
   let nextCharacter: Character = character;
   const save = rollPlayerSave(roller, nextCharacter, action.saveAbility, action.saveDC);
+  nextCharacter = save.character;
 
   const logEntries: CombatLogEntry[] = [];
   logEntries.push({
     id: nextLogId(state),
     kind: 'roll',
-    text: `${attackerName} casts ${action.name}. ${nextCharacter.name} ${action.saveAbility.toUpperCase()} save: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${action.saveDC} — ${save.success ? 'success' : 'fail'}.`,
+    text: `${attackerName} casts ${action.name}. ${nextCharacter.name} ${action.saveAbility.toUpperCase()} save${save.advantage ? ' (advantage)' : ''}: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${action.saveDC} — ${save.success ? 'success' : 'fail'}.`,
   });
 
   if (!save.success) {
