@@ -46,8 +46,13 @@ export function wizardSpellSlotsForLevel(level: number): SpellSlots {
   return { 1: 2, 2: 0, 3: 0, 4: 0 };
 }
 
-/** MVP short rest: regain hit dice up to (1d4 * level) HP — simplified. */
+/** MVP short rest: regain hit dice up to (1d4 * level) HP — simplified.
+ *  Also refreshes class resources, INCLUDING wizard spell slots. The chained
+ *  delve is too long for slots to refill only at the hub — wizards would be
+ *  cantripping by room 4. Camp rests + rest rooms are the wizard's recovery.
+ */
 export function shortRestHeal(character: Character, healAmount: number): Character {
+  const isWizard = character.classId === 'wizard';
   const newHp = Math.min(character.hp.max, character.hp.current + healAmount);
   return {
     ...character,
@@ -61,6 +66,9 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
         character.classId === 'rogue'
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
+      spellSlots: isWizard
+        ? wizardSpellSlotsForLevel(character.level)
+        : character.resources.spellSlots,
     },
   };
 }

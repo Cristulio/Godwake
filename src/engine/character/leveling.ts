@@ -27,13 +27,14 @@ export function hasPendingLevelUp(character: Character): boolean {
   return character.xp >= xpForLevel(character.level + 1);
 }
 
-/** Average HP gain per level: (hitDie/2 + 1) + CON modifier + race bonusHpPerLevel. */
+/** Average HP gain per level: (hitDie/2 + 1) + CON modifier + race bonusHpPerLevel + class bonus (wizard +1). */
 export function hpGainForLevelUp(character: Character): number {
   const cls = getClass(character.classId);
   const avg = cls.hitDie / 2 + 1;
   const con = abilityModifier(effectiveAbilityScores(character).con);
   const raceBonus = getRace(character.raceId).bonusHpPerLevel ?? 0;
-  return Math.max(1, avg + con + raceBonus);
+  const classBonus = character.classId === 'wizard' ? 1 : 0;
+  return Math.max(1, avg + con + raceBonus + classBonus);
 }
 
 /**
