@@ -96,6 +96,7 @@ export function longRest(character: Character): Character {
         : character.resources.spellSlots,
       mageArmorActive: isWizard ? false : character.resources.mageArmorActive,
       shieldActive: isWizard ? false : character.resources.shieldActive,
+      mistyStepActive: isWizard ? false : character.resources.mistyStepActive,
     },
   });
 }

@@ -87,6 +87,9 @@ export function computeAC(character: Character): number {
   if (character.resources.shieldActive) {
     base += 5;
   }
+  if (character.resources.mistyStepActive) {
+    base += 2;
+  }
 
   return base;
 }

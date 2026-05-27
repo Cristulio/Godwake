@@ -49,6 +49,12 @@ export const WIZARD: Class = ClassSchema.parse({
           'Your spellbook deepens — you can now anchor 2nd-level workings such as Hold Person.',
         mechanicKey: 'second-level-slots',
       },
+      {
+        id: 'learn-misty-step',
+        name: 'Misty Step',
+        description:
+          'A new working enters the book: step through a curl of silver mist and resolve a half-pace askew. Bonus action, +2 AC until your next turn.',
+      },
     ],
     '4': [
       {
@@ -66,6 +72,18 @@ export const WIZARD: Class = ClassSchema.parse({
         description:
           'You can now anchor 3rd-level workings. The threshold of named spells widens.',
         mechanicKey: 'third-level-slots',
+      },
+      {
+        id: 'learn-fireball',
+        name: 'Fireball',
+        description:
+          'A bead of ember from your fingertip blooms into a roar — 8d6 fire to every enemy in the room. A successful Dexterity save halves the burn.',
+      },
+      {
+        id: 'learn-lightning-bolt',
+        name: 'Lightning Bolt',
+        description:
+          'A jagged white arc carves the room — 8d6 lightning to every enemy. A successful Dexterity save halves the strike.',
       },
     ],
     '6': [

@@ -62,7 +62,10 @@ export type SpellEffectKind =
   | 'burning-hands'
   | 'shield'
   | 'mage-armor'
-  | 'hold-person';
+  | 'hold-person'
+  | 'misty-step'
+  | 'fireball'
+  | 'lightning-bolt';
 
 export interface SpellEffectEvent {
   /** Monotonic id — increments per cast so the SpellEffectLayer mounts a fresh component. */

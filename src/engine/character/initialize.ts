@@ -102,6 +102,7 @@ export function classStartingResources(classId: ClassId) {
         // start by createCombat. Not in knownSpells (no manual cast).
         mageArmorActive: false,
         shieldActive: false,
+        mistyStepActive: false,
       };
     default:
       return {};
