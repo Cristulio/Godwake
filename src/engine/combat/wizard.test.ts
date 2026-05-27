@@ -182,8 +182,8 @@ describe('Wizard — Hold Person', () => {
     w.resources = { ...w.resources, spellSlots: wizardSpellSlotsForLevel(3) };
     expect(slotsAt(w, 2)).toBeGreaterThan(0);
 
-    // Run several seeds until the save actually fails (monster wis-mod = 0,
-    // so DC ~13 should fail more often than not).
+    // Run several seeds until the save actually fails. Goblin WIS 8 (-1) vs
+    // DC ~13 fails on a roll of 13 or less, so most seeds land a paralyze.
     let validated = false;
     for (let seed = 1; seed <= 60 && !validated; seed++) {
       // Reset wizard state every iteration — character mutates during cast.
@@ -208,6 +208,46 @@ describe('Wizard — Hold Person', () => {
       validated = true;
     }
     expect(validated).toBe(true);
+  });
+
+  it('high-WIS targets save more often than low-WIS targets against the same DC', () => {
+    // Two monsters with the same room but very different WIS:
+    //  - goblin: WIS 8 (-1)
+    //  - hollow-sage: WIS 16 (+3)
+    // Across many seeds, the high-WIS target must beat the DC noticeably more
+    // often. This is the regression test for the old hardcoded wisMod=0 bug
+    // where Magistrate-class WIS counted for nothing.
+    const lowWisDef = getMonster('goblin');
+    const highWisDef = getMonster('hollow-sage');
+
+    function paralyzeRate(monsterId: string): number {
+      let attempts = 0;
+      let paralyzed = 0;
+      for (let seed = 1; seed <= 200; seed++) {
+        const w: Character = { ...makeWizard(), level: 3 };
+        w.resources = { ...w.resources, spellSlots: wizardSpellSlotsForLevel(3) };
+        const roller = createDiceRoller(seed);
+        const def = monsterId === 'goblin' ? lowWisDef : highWisDef;
+        let state = createCombat({ roller, character: w, monsters: [{ def }] });
+        const targetId = findMonster(state).id;
+        const result = castSpell({ roller, character: w, state, spellId: 'hold-person', targetId });
+        if (!result.cast) continue;
+        state = result.state;
+        attempts++;
+        const target = findMonster(state);
+        if (target.instance.conditions.some((c) => c.name === 'paralyzed')) {
+          paralyzed++;
+        }
+      }
+      return paralyzed / Math.max(1, attempts);
+    }
+
+    const goblinRate = paralyzeRate('goblin');
+    const sageRate = paralyzeRate('hollow-sage');
+    // High-WIS should be paralyzed materially less often. The +4 gap between
+    // -1 and +3 is ~20% on a d20 — assert at least a 10% margin to stay
+    // robust to seed variance.
+    expect(goblinRate).toBeGreaterThan(sageRate + 0.1);
   });
 });
 
