@@ -109,6 +109,90 @@ describe('Wizard — Fire Bolt cantrip', () => {
   });
 });
 
+describe('Wizard — Fire Bolt crit range honors permanentCritRangeBonus', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('treats a natural 19 as a crit when permanentCritRangeBonus is +1 (Killer\'s Eye)', () => {
+    // Regression test: castFireBolt used to hard-code `rolls[0] === 20`, ignoring
+    // the Grove Killer's Eye upgrade (permanentCritRangeBonus). Find a seed where
+    // the fire-bolt d20 lands on 19. With baseline crit range, that's a regular
+    // hit. With +1 crit range, it's a CRITICAL HIT and damage doubles.
+    const goblin = getMonster('goblin');
+    let validated = false;
+    for (let seed = 1; seed <= 400 && !validated; seed++) {
+      const baseline = makeWizard();
+      const buffed: Character = { ...makeWizard(), permanentCritRangeBonus: 1 };
+
+      let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] });
+      const idA = stateA.combatants.find((c) => c.kind === 'monster')!.id;
+      stateA = castSpell({
+        roller: createDiceRoller(seed),
+        character: baseline,
+        state: stateA,
+        spellId: 'fire-bolt',
+        targetId: idA,
+      }).state;
+      const rollLineA = stateA.log.find((l) => l.text.includes('Fire Bolt'));
+      if (!rollLineA) continue;
+      // Attack bonus = INT mod (+3 from human +1) + prof (+2) = +5. d20=19 → total 24.
+      const totalA = Number(rollLineA.text.match(/= (\d+) vs AC/)?.[1]);
+      if (totalA !== 24) continue;
+
+      _resetMonsterInstanceCounter();
+      let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] });
+      const idB = stateB.combatants.find((c) => c.kind === 'monster')!.id;
+      stateB = castSpell({
+        roller: createDiceRoller(seed),
+        character: buffed,
+        state: stateB,
+        spellId: 'fire-bolt',
+        targetId: idB,
+      }).state;
+      const rollLineB = stateB.log.find((l) => l.text.includes('Fire Bolt'))!;
+
+      // Baseline: 19 is a regular hit, log says "— hit".
+      expect(rollLineA.text).toContain('— hit');
+      expect(rollLineA.text).not.toContain('CRITICAL');
+      // Buffed: 19 is now a crit.
+      expect(rollLineB.text).toContain('CRITICAL HIT');
+
+      // Buffed damage doubles dice — strictly greater than baseline.
+      const dmgA = stateA.log.find((l) => l.kind === 'damage')!;
+      const dmgB = stateB.log.find((l) => l.kind === 'damage')!;
+      const valA = Number(dmgA.text.match(/= (\d+) fire/)?.[1]);
+      const valB = Number(dmgB.text.match(/= (\d+) fire/)?.[1]);
+      expect(valB).toBeGreaterThan(valA);
+
+      validated = true;
+    }
+    expect(validated).toBe(true);
+  });
+
+  it('baseline wizard (no crit bonus) does NOT crit on a natural 19', () => {
+    const goblin = getMonster('goblin');
+    let saw19 = false;
+    for (let seed = 1; seed <= 400 && !saw19; seed++) {
+      const w = makeWizard();
+      let state = createCombat({ roller: createDiceRoller(seed), character: w, monsters: [{ def: goblin }] });
+      const id = state.combatants.find((c) => c.kind === 'monster')!.id;
+      state = castSpell({
+        roller: createDiceRoller(seed),
+        character: w,
+        state,
+        spellId: 'fire-bolt',
+        targetId: id,
+      }).state;
+      const line = state.log.find((l) => l.text.includes('Fire Bolt'));
+      if (!line) continue;
+      const total = Number(line.text.match(/= (\d+) vs AC/)?.[1]);
+      if (total !== 24) continue;
+      saw19 = true;
+      expect(line.text).not.toContain('CRITICAL');
+    }
+    expect(saw19).toBe(true);
+  });
+});
+
 describe('Wizard — Mage Armor', () => {
   it('adds +3 AC when no body armor is worn', () => {
     const w = makeWizard();

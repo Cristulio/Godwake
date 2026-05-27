@@ -10,7 +10,7 @@ import { getSpell } from '../../content/spells';
 import { getMonster } from '../../content/monsters';
 import { applyDamage } from './attack';
 import { abilityModifier } from '../../types/abilities';
-import { effectiveAbilityScores, characterHasMechanic, proficiencyBonus } from '../character/derived';
+import { effectiveAbilityScores, characterHasMechanic, proficiencyBonus, critRange } from '../character/derived';
 import { appendLog } from './log';
 
 function attachSpellEffect(
@@ -180,7 +180,7 @@ function castFireBolt(ctx: CastSpellContext): CastResult {
 
   const attackBonus = spellAttackBonus(character);
   const toHit = roller.d20('normal', attackBonus);
-  const crit = toHit.rolls[0] === 20;
+  const crit = critRange(character).includes(toHit.rolls[0]);
   const hit = crit || (toHit.total >= target.instance.ac && !toHit.natural1);
 
   const logs: CombatLogEntry[] = [
