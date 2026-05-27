@@ -144,7 +144,7 @@ export function ActionBar({
             variant={canCunningAction ? 'primary' : 'secondary'}
             onClick={onCunningAction}
             disabled={!canCunningAction}
-            title="Bonus action: Dash, Disengage, or Hide. Hide grants advantage on your next attack."
+            title="Bonus action: Hide (advantage on next attack), Dash (+2 to next attack), or Disengage (2 damage reduction on next incoming hit)."
             className="flex-1"
           >
             Cunning Action{cunningRemaining > 0 && ` (${cunningRemaining})`}

@@ -11,13 +11,15 @@ export interface CunningActionContext {
   choice: CunningActionChoice;
 }
 
+const DASH_ATTACK_BONUS = 2;
+const DISENGAGE_DAMAGE_REDUCTION = 2;
+
 /**
  * Rogue L1 Cunning Action. Bonus action, pick one effect:
  *  - Hide: next attack rolls with advantage.
- *  - Disengage: a one-turn defense buff (granted via temp HP — engine
- *    doesn't track movement, so this softens the next monster blow instead
- *    of avoiding it outright).
- *  - Dash: flavor only — no movement system to feed.
+ *  - Dash: +2 to your next attack roll (sprint-in momentum — engine has no
+ *    movement system, so Dash translates into next-strike accuracy).
+ *  - Disengage: 2 damage reduction on the next incoming hit (twist away).
  *
  * Burns the bonus action and one use from the per-combat pool (Thief gets
  * two uses via Fast Hands).
@@ -43,14 +45,11 @@ export function useCunningAction(ctx: CunningActionContext): CombatActionResult 
     character.nextAttackAdvantage = true;
     narration = `${character.name} slips into a shadow. Next strike lands with advantage.`;
   } else if (choice === 'disengage') {
-    // Engine has no movement; grant 3 temp HP as a one-turn soak so the
-    // pick has a tangible payoff. Temp HP doesn't stack — take the higher.
-    const grant = 3;
-    const newTemp = Math.max(character.hp.temp, grant);
-    character.hp = { ...character.hp, temp: newTemp };
-    narration = `${character.name} slips back a step — +${grant} temporary HP to soak the next blow.`;
+    character.incomingDamageReduction = DISENGAGE_DAMAGE_REDUCTION;
+    narration = `${character.name} twists clear — next incoming hit deals ${DISENGAGE_DAMAGE_REDUCTION} less damage.`;
   } else {
-    narration = `${character.name} darts across the room — every angle suddenly looks open.`;
+    character.nextAttackBonus = DASH_ATTACK_BONUS;
+    narration = `${character.name} surges forward — next attack rolls with +${DASH_ATTACK_BONUS}.`;
   }
 
   const log: CombatLogEntry = {

@@ -33,7 +33,7 @@ export const ROGUE: Class = ClassSchema.parse({
         id: 'cunning-action',
         name: 'Cunning Action',
         description:
-          'A bonus action each turn: Dash (regroup), Disengage (slip the next blow), or Hide (your next attack rolls with advantage).',
+          'A bonus action each turn: Hide (advantage on your next attack), Dash (+2 to your next attack roll), or Disengage (2 damage reduction on the next incoming hit).',
         mechanicKey: 'cunning-action',
       },
     ],

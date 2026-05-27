@@ -82,6 +82,19 @@ export function applyDamage(state: CombatState, targetId: string, amount: number
       playSfx('monster_death');
     }
   } else {
+    // Disengage: one-shot incoming damage reduction. Consumes on first hit
+    // received, even if that hit was already going to be 0 — the rogue paid
+    // a bonus action for it.
+    const reduction = character.incomingDamageReduction ?? 0;
+    if (reduction > 0) {
+      amount = Math.max(0, amount - reduction);
+      character.incomingDamageReduction = 0;
+      next = appendLog(next, {
+        id: next.log.length + 1,
+        kind: 'system',
+        text: `${character.name} twists with the blow — ${reduction} damage avoided.`,
+      });
+    }
     const remainingTemp = Math.max(0, character.hp.temp - amount);
     const overflow = Math.max(0, amount - character.hp.temp);
     const wouldFall =
@@ -202,6 +215,9 @@ export function playerAttack(
   if (isFirstAttack && blessingMods.firstAttackBonus) {
     attackBonus += blessingMods.firstAttackBonus;
   }
+  // Cunning Action: Dash — one-shot momentum bonus on the next attack.
+  const dashBonus = character.nextAttackBonus ?? 0;
+  attackBonus += dashBonus;
 
   const ac = targetAC(target, character);
   const hideAdvantage = character.nextAttackAdvantage === true;
@@ -209,8 +225,9 @@ export function playerAttack(
     (isFirstAttack && blessingMods.firstAttackAdvantage) || hideAdvantage
       ? 'advantage'
       : 'normal';
-  // One-shot: consume Hide on the actual attack roll, hit or miss.
+  // One-shot: consume Hide and Dash on the actual attack roll, hit or miss.
   if (hideAdvantage) character.nextAttackAdvantage = false;
+  if (dashBonus > 0) character.nextAttackBonus = 0;
   let toHit = roller.d20(advantage, attackBonus);
   let crit = critRange(character).includes(toHit.rolls[0]);
   let hit = crit || (toHit.total >= ac && !toHit.natural1);

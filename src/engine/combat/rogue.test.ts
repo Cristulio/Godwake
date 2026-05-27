@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
-import { playerAttack, sneakAttackDiceForLevel } from './attack';
+import { playerAttack, applyDamage, sneakAttackDiceForLevel } from './attack';
 import { useCunningAction } from './cunningAction';
 import { endTurn } from './turn';
 import { createDiceRoller } from '../dice';
@@ -34,6 +34,12 @@ function makeRogue(extra: Partial<Character> = {}): Character {
 
 function findMonster(state: ReturnType<typeof createCombat>): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
+}
+
+function extractAttackBonus(line: string): number {
+  const m = line.match(/d20([+-]\d+)/);
+  if (!m) throw new Error(`no d20 bonus in: ${line}`);
+  return Number(m[1]);
 }
 
 describe('sneakAttackDiceForLevel', () => {
@@ -240,15 +246,67 @@ describe('Rogue — Cunning Action', () => {
     expect(log.text).toContain('shadow');
   });
 
-  it('Disengage grants 3 temporary HP', () => {
+  it('Disengage arms incoming-damage reduction and consumes it on the next hit', () => {
     const goblin = getMonster('goblin');
     const rogue = makeRogue();
     const roller = createDiceRoller(2);
     let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
-    expect(rogue.hp.temp).toBe(0);
+    expect(rogue.incomingDamageReduction ?? 0).toBe(0);
+
     state = useCunningAction({ character: rogue, state, choice: 'disengage' }).state;
-    expect(rogue.hp.temp).toBe(3);
+    expect(rogue.incomingDamageReduction).toBe(2);
     expect(rogue.actionEconomy.bonusActionUsed).toBe(true);
+
+    // Take a 5-damage hit. Reduction should turn it into 3, then clear.
+    const hpBefore = rogue.hp.current;
+    state = applyDamage(state, 'player', 5, rogue);
+    expect(rogue.hp.current).toBe(hpBefore - 3);
+    expect(rogue.incomingDamageReduction).toBe(0);
+
+    // A second hit gets no discount.
+    state = applyDamage(state, 'player', 4, rogue);
+    expect(rogue.hp.current).toBe(hpBefore - 3 - 4);
+    void state;
+  });
+
+  it('Dash sets a one-shot +2 attack bonus and the next roll consumes it', () => {
+    const goblin = getMonster('goblin');
+    const seed = 7;
+
+    // Baseline: rogue attacks with no Dash. Capture the printed attack bonus.
+    const baselineRogue = makeRogue();
+    const baselineRoller = createDiceRoller(seed);
+    let baselineState = createCombat({
+      roller: baselineRoller,
+      character: baselineRogue,
+      monsters: [{ def: goblin }],
+    });
+    const baselineGoblinId = findMonster(baselineState).id;
+    baselineState = playerAttack(
+      { roller: baselineRoller, character: baselineRogue, state: baselineState },
+      baselineGoblinId,
+      'dagger',
+    ).state;
+    const baselineLine = baselineState.log.find((l) => l.text.includes('attacks Goblin'));
+    const baselineBonus = extractAttackBonus(baselineLine?.text ?? '');
+
+    // With Dash: same seed, the printed bonus should be exactly +2 higher.
+    const rogue = makeRogue();
+    const roller = createDiceRoller(seed);
+    let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    expect(rogue.nextAttackBonus ?? 0).toBe(0);
+
+    state = useCunningAction({ character: rogue, state, choice: 'dash' }).state;
+    expect(rogue.nextAttackBonus).toBe(2);
+    expect(rogue.actionEconomy.bonusActionUsed).toBe(true);
+    expect(state.log[state.log.length - 1].text).toContain('+2');
+
+    const goblinId = findMonster(state).id;
+    state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+    expect(rogue.nextAttackBonus).toBe(0);
+    const dashLine = state.log.find((l) => l.text.includes('attacks Goblin'));
+    const dashBonus = extractAttackBonus(dashLine?.text ?? '');
+    expect(dashBonus - baselineBonus).toBe(2);
   });
 
   it('is gated by the per-combat use pool', () => {
