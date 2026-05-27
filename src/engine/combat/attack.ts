@@ -651,6 +651,17 @@ function monsterCastParalyze(
     ...state,
     log: [...state.log, ...logEntries],
   };
+  const spellEffectId = (nextState.spellEffectCounter ?? 0) + 1;
+  nextState = {
+    ...nextState,
+    spellEffectCounter: spellEffectId,
+    spellEffectEvent: {
+      id: spellEffectId,
+      kind: 'hold-person',
+      attackerId,
+      targetId: 'player',
+    },
+  };
   nextState = markMonsterActionUsed(nextState, attackerId);
   return nextState;
 }

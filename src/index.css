@@ -400,3 +400,78 @@ img, svg.pixel {
   50%      { opacity: 0.45; }
 }
 .animate-sky-breathe { animation: godwake-sky-breathe 20s ease-in-out infinite; }
+
+/* === Spell FX === */
+
+/* Magic Missile dart: arc from origin to target with --dx/--dy CSS vars on the wrapper */
+@keyframes godwake-mm-dart {
+  0% { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  10% { transform: translate(calc(var(--dx) * 0.1), calc(var(--dy) * 0.1 - 8px)) scale(1); opacity: 1; }
+  50% { transform: translate(calc(var(--dx) * 0.5), calc(var(--dy) * 0.5 - 28px)) scale(1); opacity: 1; }
+  92% { transform: translate(calc(var(--dx) * 0.94), calc(var(--dy) * 0.94 - 6px)) scale(1.05); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.6); opacity: 0; }
+}
+.animate-mm-dart { animation: godwake-mm-dart 560ms cubic-bezier(0.4, 0.1, 0.6, 1) forwards; }
+
+/* Force burst at impact */
+@keyframes godwake-mm-burst {
+  0% { transform: scale(0.2); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.animate-mm-burst { animation: godwake-mm-burst 360ms ease-out forwards; }
+
+/* Fire Bolt arcing fireball */
+@keyframes godwake-firebolt-arc {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  15% { opacity: 1; }
+  50% { transform: translate(calc(var(--dx) * 0.5), calc(var(--dy) * 0.5 - 44px)) scale(1.1); opacity: 1; }
+  92% { transform: translate(calc(var(--dx) * 0.94), calc(var(--dy) * 0.94 - 4px)) scale(1.2); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1.6); opacity: 0; }
+}
+.animate-firebolt-arc { animation: godwake-firebolt-arc 620ms cubic-bezier(0.4, 0.1, 0.6, 1) forwards; }
+
+/* Fire Bolt trail particle — fades + shrinks behind the head */
+@keyframes godwake-flame-trail {
+  0% { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.3) translateY(6px); }
+}
+.animate-flame-trail { animation: godwake-flame-trail 360ms ease-out forwards; }
+
+/* Burning Hands cone — in 100ms, hold 300ms, out 200ms */
+@keyframes godwake-burning-hands {
+  0% { opacity: 0; transform: scale(0.5); }
+  16% { opacity: 1; transform: scale(1); }
+  66% { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 0; transform: scale(1); }
+}
+.animate-burning-hands { animation: godwake-burning-hands 600ms ease-out forwards; }
+
+/* Shield hex shimmer — pulses for ~1.4s */
+@keyframes godwake-shield-shimmer {
+  0% { opacity: 0; transform: scale(0.7); }
+  14% { opacity: 0.95; transform: scale(1.08); }
+  28% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.04); }
+  72% { opacity: 0.55; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.18); }
+}
+.animate-shield-shimmer { animation: godwake-shield-shimmer 1400ms ease-out forwards; }
+
+/* Mage Armor runic circle — forms, rotates, fades */
+@keyframes godwake-mage-armor {
+  0% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  35% { opacity: 1; transform: scale(1.08) rotate(120deg); }
+  75% { opacity: 0.85; transform: scale(1) rotate(240deg); }
+  100% { opacity: 0; transform: scale(1.2) rotate(360deg); }
+}
+.animate-mage-armor { animation: godwake-mage-armor 900ms cubic-bezier(0.3, 0.8, 0.4, 1) forwards; }
+
+/* Hold Person purple chain-ring — staggered shrink-in then fade */
+@keyframes godwake-hold-ring {
+  0% { opacity: 0; transform: scale(1.6); }
+  35% { opacity: 1; transform: scale(1); }
+  75% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.2); }
+}
+.animate-hold-ring { animation: godwake-hold-ring 1100ms cubic-bezier(0.4, 0.1, 0.6, 1) forwards; }
