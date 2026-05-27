@@ -27,24 +27,43 @@ export function getPlayerParalyzed(
 
 /**
  * Roll a saving throw against an applied paralyze effect. Returns whether the
- * save succeeded plus the natural and total for logging. Fighter saving-throw
- * proficiencies aren't honored yet (only WIS/CHA/INT saves come up in practice
- * via paralyze/charm/fear effects, and Fighter has none of those proficient
- * RAW). Add prof bonus tracking when we have a class that needs it.
+ * save succeeded plus the natural and total for logging. Honors
+ * `character.nextSaveAdvantage` (Rogue Steel Yourself / Wizard Misty Step) —
+ * if set, the roll is made with advantage and the flag is consumed regardless
+ * of outcome. The returned `character` reflects the consumed flag; callers
+ * must thread it through their `nextCharacter` accumulator.
+ *
+ * Fighter saving-throw proficiencies aren't honored yet (only WIS/CHA/INT
+ * saves come up in practice via paralyze/charm/fear effects, and Fighter has
+ * none of those proficient RAW). Add prof bonus tracking when we have a class
+ * that needs it.
  */
 export function rollPlayerSave(
   roller: DiceRoller,
   character: Readonly<Character>,
   ability: AbilityName,
   dc: number,
-): { success: boolean; natural: number; total: number; mod: number } {
+): {
+  success: boolean;
+  natural: number;
+  total: number;
+  mod: number;
+  advantage: boolean;
+  character: Character;
+} {
   const mod = modifierFor(character, ability);
-  const roll = roller.d20('normal', mod);
+  const advantage = !!character.nextSaveAdvantage;
+  const roll = roller.d20(advantage ? 'advantage' : 'normal', mod);
+  const next: Character = advantage
+    ? { ...character, nextSaveAdvantage: false }
+    : (character as Character);
   return {
     success: roll.total >= dc,
     natural: roll.rolls[0],
     total: roll.total,
     mod,
+    advantage,
+    character: next,
   };
 }
 

@@ -77,6 +77,14 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   const { roller, monsters } = input;
   let nextCharacter: Character = input.character;
 
+  // Clear one-shot save advantage from any prior fight. nextAttackAdvantage
+  // is cleared per-class below (only Rogue can leave one armed); save-advantage
+  // can come from both Rogue (Steel Yourself) and Wizard (Misty Step), so wipe
+  // it here for everyone.
+  if (nextCharacter.nextSaveAdvantage) {
+    nextCharacter = { ...nextCharacter, nextSaveAdvantage: false };
+  }
+
   const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }) => {
     const instance = spawnMonsterInstance(def, displayName);
     return {

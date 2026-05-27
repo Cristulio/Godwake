@@ -3,10 +3,67 @@ import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { monsterAttack } from './attack';
 import { endTurn } from './turn';
-import { createDiceRoller } from '../dice';
+import { createDiceRoller, type DiceRoller } from '../dice';
 import { setActiveRoller } from '../dice';
+import type { RollResult } from '../../types/dice';
 import { getMonster } from '../../content/monsters';
+import { rollPlayerSave } from './holdPerson';
+import { useCunningAction } from './cunningAction';
+import { castSpell } from './spells';
+import { applyLevelUp } from '../character/leveling';
 import type { Character } from '../../types/character';
+
+/**
+ * Build a DiceRoller that returns each d20 natural in `rolls` in order.
+ * For advantage/disadvantage rolls the engine consumes TWO naturals — keep
+ * that in mind when seeding.
+ */
+function stubRoller(rolls: number[]): DiceRoller {
+  let i = 0;
+  const next = () => {
+    if (i >= rolls.length) throw new Error('stubRoller exhausted');
+    return rolls[i++];
+  };
+  return {
+    d20(advantage = 'normal', modifier = 0): RollResult {
+      const first = next();
+      if (advantage === 'normal') {
+        return {
+          expression: { count: 1, die: 20, modifier },
+          rolls: [first],
+          modifier,
+          total: first + modifier,
+          natural20: first === 20,
+          natural1: first === 1,
+          advantage,
+        };
+      }
+      const second = next();
+      const chosen = advantage === 'advantage'
+        ? Math.max(first, second)
+        : Math.min(first, second);
+      const discarded = advantage === 'advantage'
+        ? Math.min(first, second)
+        : Math.max(first, second);
+      return {
+        expression: { count: 1, die: 20, modifier },
+        rolls: [chosen],
+        modifier,
+        total: chosen + modifier,
+        natural20: chosen === 20,
+        natural1: chosen === 1,
+        advantage,
+        discardedRoll: discarded,
+      };
+    },
+    roll() {
+      throw new Error('stubRoller only implements d20');
+    },
+    serialize() {
+      return { state: 0 };
+    },
+  };
+}
 
 function makeHuman(extra: Partial<Character> = {}): Character {
   return {
@@ -121,5 +178,144 @@ describe('Hold Person — Magistrate boss mechanic', () => {
     expect(hero.actionEconomy.bonusActionUsed).toBe(true);
     const lockoutLog = state.log.find((l) => l.text.includes('cannot move'));
     expect(lockoutLog).toBeDefined();
+  });
+});
+
+describe('nextSaveAdvantage — save-advantage vector', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function makeHeroWisPlusOne(extra: Partial<Character> = {}): Character {
+    // Human (+1 to all) + base WIS 12 → effective WIS 13 → mod +1.
+    return {
+      ...createCharacter({
+        id: 'wis-hero',
+        name: 'Sage',
+        raceId: 'human',
+        classId: 'fighter',
+        baseAbilityScores: {
+          str: 14,
+          dex: 12,
+          con: 13,
+          int: 10,
+          wis: 12,
+          cha: 10,
+        },
+        skillProficiencies: ['athletics', 'perception'],
+      }),
+      ...extra,
+    };
+  }
+
+  function makeRogueL1(): Character {
+    return createCharacter({
+      id: 'steel-rogue',
+      name: 'Shiv',
+      raceId: 'human',
+      classId: 'rogue',
+      baseAbilityScores: {
+        str: 8,
+        dex: 15,
+        con: 14,
+        int: 13,
+        wis: 12,
+        cha: 10,
+      },
+      skillProficiencies: ['stealth', 'sleight-of-hand'],
+    });
+  }
+
+  function makeWizardL3(): Character {
+    let w = createCharacter({
+      id: 'mist-wizard',
+      name: 'Inara',
+      raceId: 'human',
+      classId: 'wizard',
+      baseAbilityScores: {
+        str: 8,
+        dex: 12,
+        con: 13,
+        int: 15,
+        wis: 14,
+        cha: 10,
+      },
+      skillProficiencies: ['arcana', 'history'],
+    });
+    w = applyLevelUp(w); // L2
+    w = applyLevelUp(w); // L3 — gains 2nd-level slot + misty-step
+    return w;
+  }
+
+  it('Steeled save rolls with advantage and consumes the flag', () => {
+    const baseline = makeHeroWisPlusOne();
+
+    // Without the flag: stub returns 8 → 8 + 1 mod = 9 vs DC 14 → fail.
+    {
+      const roller = stubRoller([8]);
+      const result = rollPlayerSave(roller, baseline, 'wis', 14);
+      expect(result.mod).toBe(1);
+      expect(result.advantage).toBe(false);
+      expect(result.total).toBe(9);
+      expect(result.success).toBe(false);
+      expect(result.character.nextSaveAdvantage).toBeFalsy();
+    }
+
+    // With the flag: stub returns 8 then 17. Advantage takes the higher (17),
+    // total = 17 + 1 = 18 vs DC 14 → pass. Flag consumed.
+    {
+      const steeled: Character = { ...baseline, nextSaveAdvantage: true };
+      const roller = stubRoller([8, 17]);
+      const result = rollPlayerSave(roller, steeled, 'wis', 14);
+      expect(result.advantage).toBe(true);
+      expect(result.total).toBe(18);
+      expect(result.success).toBe(true);
+      expect(result.character.nextSaveAdvantage).toBe(false);
+    }
+  });
+
+  it('Steel Yourself arms nextSaveAdvantage and spends a Cunning Action use', () => {
+    const goblin = getMonster('goblin');
+    let rogue = makeRogueL1();
+    const roller = createDiceRoller(3);
+    const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    let state = init.state;
+    rogue = init.character;
+    expect(rogue.nextSaveAdvantage).toBeFalsy();
+    expect(rogue.actionEconomy.bonusActionUsed).toBe(false);
+    expect(rogue.resources.cunningActionUsesRemaining).toBe(1);
+
+    const ca = useCunningAction({ character: rogue, state, choice: 'steel' });
+    state = ca.state;
+    rogue = ca.character;
+    expect(rogue.nextSaveAdvantage).toBe(true);
+    expect(rogue.actionEconomy.bonusActionUsed).toBe(true);
+    expect(rogue.resources.cunningActionUsesRemaining).toBe(0);
+    const log = state.log[state.log.length - 1];
+    expect(log.text.toLowerCase()).toContain('steel');
+  });
+
+  it('Misty Step sets nextSaveAdvantage alongside mistyStepActive', () => {
+    const goblin = getMonster('goblin');
+    let w = makeWizardL3();
+    const roller = createDiceRoller(11);
+    const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    let state = init.state;
+    w = init.character;
+    expect(w.nextSaveAdvantage).toBeFalsy();
+    expect(w.resources.mistyStepActive).toBeFalsy();
+
+    const cast = castSpell({ roller, character: w, state, spellId: 'misty-step' });
+    expect(cast.cast).toBe(true);
+    state = cast.state;
+    w = cast.character;
+    expect(w.resources.mistyStepActive).toBe(true);
+    expect(w.nextSaveAdvantage).toBe(true);
+  });
+
+  it('createCombat clears a lingering nextSaveAdvantage from a prior fight', () => {
+    const goblin = getMonster('goblin');
+    const hero: Character = { ...makeHeroWisPlusOne(), nextSaveAdvantage: true };
+    const roller = createDiceRoller(4);
+    const init = createCombat({ roller, character: hero, monsters: [{ def: goblin }] });
+    expect(init.character.nextSaveAdvantage).toBe(false);
   });
 });
