@@ -1,8 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useGameStore } from './gameStore';
+import {
+  useGameStore,
+  RENOWN_PER_DELVE_CLEAR,
+  RENOWN_PER_DELVE_FAILURE,
+  GROVE_UNLOCK_THRESHOLD,
+} from './gameStore';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
 import { createGodwakeDelve } from '../engine/delve';
 import { effectiveAbilityScores } from '../engine/character/derived';
+import { hasPendingLevelUp } from '../engine/character/leveling';
 import { abilityModifier } from '../types/abilities';
 import { getClass } from '../content/classes';
 import { getRace } from '../content/races';
@@ -57,6 +63,22 @@ function expectedBaseHpMax(ch: Character): number {
   const bonusHp = race.bonusHpPerLevel ?? 0;
   const classBonusHp = ch.classId === 'wizard' ? 1 : 0;
   return cls.hitDie + conMod + bonusHp + classBonusHp;
+}
+
+function resetStore(extra: Partial<ReturnType<typeof useGameStore.getState>> = {}) {
+  useGameStore.setState({
+    screen: 'delve',
+    character: makeFighter(),
+    delve: createGodwakeDelve(1),
+    combat: null,
+    introSeen: true,
+    hasReincarnated: false,
+    deathCount: 0,
+    druidGroveUnlocked: false,
+    chapter1Cleared: false,
+    unlockedUpgrades: {},
+    ...extra,
+  });
 }
 
 describe('gameStore.startDelve — HP preservation', () => {
@@ -126,5 +148,101 @@ describe('gameStore.startDelve — HP preservation', () => {
 
     const after = useGameStore.getState().character!;
     expect(after.hp.max).toBe(expected);
+  });
+});
+
+describe('addDelveReward — XP propagation (Hades-style within-run)', () => {
+  beforeEach(() => resetStore());
+
+  it('increments character.xp, not just delve.xpEarned', () => {
+    const before = useGameStore.getState();
+    expect(before.character?.xp ?? 0).toBe(0);
+    expect(before.delve?.xpEarned ?? 0).toBe(0);
+
+    useGameStore.getState().addDelveReward(0, 100);
+
+    const after = useGameStore.getState();
+    expect(after.character?.xp).toBe(100);
+    expect(after.delve?.xpEarned).toBe(100);
+  });
+
+  it('stacks across multiple reward grants', () => {
+    useGameStore.getState().addDelveReward(0, 80);
+    useGameStore.getState().addDelveReward(0, 150);
+    const s = useGameStore.getState();
+    expect(s.character?.xp).toBe(230);
+    expect(s.delve?.xpEarned).toBe(230);
+  });
+
+  it('hitting 300 XP from addDelveReward flips hasPendingLevelUp true and routes to level-up', () => {
+    expect(hasPendingLevelUp(useGameStore.getState().character!)).toBe(false);
+    useGameStore.getState().addDelveReward(0, 300);
+    const s = useGameStore.getState();
+    expect(hasPendingLevelUp(s.character!)).toBe(true);
+    expect(s.screen).toBe('level-up');
+  });
+
+  it('keeps screen unchanged when the reward does not cross a threshold', () => {
+    useGameStore.setState({ screen: 'delve' });
+    useGameStore.getState().addDelveReward(0, 100);
+    expect(useGameStore.getState().screen).toBe('delve');
+  });
+});
+
+describe('finishDelve — renown economy', () => {
+  beforeEach(() => resetStore());
+
+  it('death awards 15 renown (soul-mark = 0)', () => {
+    expect(RENOWN_PER_DELVE_FAILURE).toBe(15);
+    // failed delve = phase !== 'completed'
+    useGameStore.setState({
+      delve: { ...useGameStore.getState().delve!, phase: 'failed' },
+    });
+    const startingRenown = useGameStore.getState().character!.renown;
+    useGameStore.getState().finishDelve();
+    expect(useGameStore.getState().character!.renown).toBe(startingRenown + 15);
+  });
+
+  it('clear awards 50 renown (soul-mark = 0)', () => {
+    expect(RENOWN_PER_DELVE_CLEAR).toBe(50);
+    useGameStore.setState({
+      delve: { ...useGameStore.getState().delve!, phase: 'completed' },
+    });
+    const startingRenown = useGameStore.getState().character!.renown;
+    useGameStore.getState().finishDelve();
+    expect(useGameStore.getState().character!.renown).toBe(startingRenown + 50);
+  });
+});
+
+describe('Druid Grove unlock threshold', () => {
+  beforeEach(() => resetStore());
+
+  it('GROVE_UNLOCK_THRESHOLD is 30', () => {
+    expect(GROVE_UNLOCK_THRESHOLD).toBe(30);
+  });
+
+  it('does not unlock at 29 renown after a death', () => {
+    // Start with 14 renown so death (+15) lands at 29.
+    useGameStore.setState({
+      character: { ...useGameStore.getState().character!, renown: 14 },
+      delve: { ...useGameStore.getState().delve!, phase: 'failed' },
+      druidGroveUnlocked: false,
+    });
+    useGameStore.getState().finishDelve();
+    const s = useGameStore.getState();
+    expect(s.character!.renown).toBe(29);
+    expect(s.druidGroveUnlocked).toBe(false);
+  });
+
+  it('unlocks at exactly 30 renown after a death', () => {
+    useGameStore.setState({
+      character: { ...useGameStore.getState().character!, renown: 15 },
+      delve: { ...useGameStore.getState().delve!, phase: 'failed' },
+      druidGroveUnlocked: false,
+    });
+    useGameStore.getState().finishDelve();
+    const s = useGameStore.getState();
+    expect(s.character!.renown).toBe(30);
+    expect(s.druidGroveUnlocked).toBe(true);
   });
 });

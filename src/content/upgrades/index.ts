@@ -37,9 +37,9 @@ export interface Upgrade {
   kind: UpgradeKind;
 }
 
-/** Standard cost curve: base * rank^1.6, rounded. */
+/** Standard cost curve: base * rank^1.3, rounded. Flattened from 1.6 so the top ranks of multi-rank trees remain reachable in a normal play schedule. */
 export function rankCost(base: number, rank: number): number {
-  return Math.round(base * Math.pow(rank, 1.6));
+  return Math.round(base * Math.pow(rank, 1.3));
 }
 
 const RAW: Upgrade[] = [

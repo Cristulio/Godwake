@@ -68,13 +68,13 @@ export type Screen =
   | 'level-up';
 
 /** Renown granted per successful delve clear (boss killed). */
-export const RENOWN_PER_DELVE_CLEAR = 25;
+export const RENOWN_PER_DELVE_CLEAR = 50;
 
 /** Renown granted on a failed delve — small consolation for the soul. */
-export const RENOWN_PER_DELVE_FAILURE = 5;
+export const RENOWN_PER_DELVE_FAILURE = 15;
 
-/** Renown threshold that reveals the Druid Grove on the hub — matches the cheapest upgrade. */
-export const GROVE_UNLOCK_THRESHOLD = 60;
+/** Renown threshold that reveals the Druid Grove on the hub. Front-loaded so meta-progression is visible within the first few deaths. */
+export const GROVE_UNLOCK_THRESHOLD = 30;
 
 /** Renown threshold required to unlock the road to Athkatla (Chapter 2). */
 export const RENOWN_FOR_CHAPTER_2 = 500;
@@ -460,12 +460,31 @@ export const useGameStore = create<GameState>()(
       const xpMul = s.character ? soulMarkMultiplier(s.character) : 1;
       const finalGold = Math.floor(gold * goldMul);
       const finalXp = Math.floor(xp * xpMul);
+      // Hades-style: XP propagates to the character WITHIN the current run so
+      // the player levels up mid-delve. On death/clear, startDelve resets the
+      // character back to L1/0xp — the next run starts over.
+      if (!s.character) {
+        return {
+          delve: {
+            ...s.delve,
+            goldEarned: s.delve.goldEarned + finalGold,
+            xpEarned: s.delve.xpEarned + finalXp,
+          },
+        };
+      }
+      const nextChar: Character = {
+        ...s.character,
+        xp: (s.character.xp ?? 0) + finalXp,
+      };
+      const pendingLevelUp = hasPendingLevelUp(nextChar);
       return {
+        character: nextChar,
         delve: {
           ...s.delve,
           goldEarned: s.delve.goldEarned + finalGold,
           xpEarned: s.delve.xpEarned + finalXp,
         },
+        screen: pendingLevelUp ? 'level-up' : s.screen,
       };
     }),
 
@@ -503,11 +522,15 @@ export const useGameStore = create<GameState>()(
   applyPendingLevelUp: (overrides) =>
     set((s) => {
       if (!s.character) return s;
-      if (!hasPendingLevelUp(s.character)) return { ...s, screen: 'hub' };
+      // Mid-delve level-ups return to the delve so the run resumes from the
+      // room the player was in. Out-of-delve level-ups (legacy / shouldn't
+      // happen post-Hades-pivot) drop to the hub.
+      const resumeScreen: Screen = s.delve ? 'delve' : 'hub';
+      if (!hasPendingLevelUp(s.character)) return { ...s, screen: resumeScreen };
       const leveled = applyLevelUp({ ...s.character, ...(overrides ?? {}) });
       return {
         character: leveled,
-        screen: hasPendingLevelUp(leveled) ? 'level-up' : 'hub',
+        screen: hasPendingLevelUp(leveled) ? 'level-up' : resumeScreen,
       };
     }),
 
