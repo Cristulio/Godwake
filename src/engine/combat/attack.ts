@@ -35,6 +35,22 @@ export interface AttackContext {
   state: CombatState;
 }
 
+/**
+ * Public contract for combat actions: callers receive BOTH the new combat
+ * state AND a fresh `character` reference. Callers call setCharacter +
+ * setCombat with these directly — no `setCharacter({ ...character })`
+ * shotgun needed.
+ *
+ * Internals still mutate the passed-in character (a deeper refactor is on
+ * the next-priorities list); this wrapper ensures the caller-facing
+ * reference is always new, which is what React's memo/identity checks rely
+ * on for re-render correctness.
+ */
+export interface CombatActionResult {
+  state: CombatState;
+  character: Character;
+}
+
 function nextLogId(state: CombatState): number {
   return state.log.length + 1;
 }

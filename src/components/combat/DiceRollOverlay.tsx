@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useGameStore } from '../../stores/gameStore';
+import { useSettingsStore } from '../../stores/settingsStore';
 import { playSfx } from '../../engine/audio';
 
 interface DiceRollOverlayProps {
@@ -33,7 +33,7 @@ export function DiceRollOverlay({
   crit,
   onDismiss,
 }: DiceRollOverlayProps) {
-  const speed = useGameStore((s) => s.speedMultiplier);
+  const speed = useSettingsStore((s) => s.speedMultiplier);
   const [spinning, setSpinning] = useState(true);
   const [shownNumber, setShownNumber] = useState(rollNatural);
   const [revealedResult, setRevealedResult] = useState(false);

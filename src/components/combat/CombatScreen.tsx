@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { useGameStore } from '../../stores/gameStore';
+import { useSettingsStore } from '../../stores/settingsStore';
 import { getActiveRoller } from '../../engine/dice';
 import {
   endTurn,
@@ -50,9 +51,9 @@ export function CombatScreen({
 }: CombatScreenProps) {
   const setCombat = useGameStore((s) => s.setCombat);
   const setCharacter = useGameStore((s) => s.setCharacter);
-  const speed = useGameStore((s) => s.speedMultiplier);
-  const setSpeed = useGameStore((s) => s.setSpeed);
-  const autoEndTurnDelayMs = useGameStore((s) => s.autoEndTurnDelayMs);
+  const speed = useSettingsStore((s) => s.speedMultiplier);
+  const setSpeed = useSettingsStore((s) => s.setSpeed);
+  const autoEndTurnDelayMs = useSettingsStore((s) => s.autoEndTurnDelayMs);
   const [selectingTarget, setSelectingTarget] = useState(false);
   const [overlayActive, setOverlayActive] = useState(false);
   const [shake, setShake] = useState(false);

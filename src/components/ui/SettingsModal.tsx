@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAudioStore } from '../../stores/audioStore';
+import { useSettingsStore } from '../../stores/settingsStore';
 import {
   useGameStore,
   getSlotMetadata,
@@ -169,10 +170,10 @@ function AudioSection() {
 }
 
 function GameplaySection() {
-  const speedMultiplier = useGameStore((s) => s.speedMultiplier);
-  const setSpeed = useGameStore((s) => s.setSpeed);
-  const autoEndTurnDelayMs = useGameStore((s) => s.autoEndTurnDelayMs);
-  const setAutoEndTurnDelay = useGameStore((s) => s.setAutoEndTurnDelay);
+  const speedMultiplier = useSettingsStore((s) => s.speedMultiplier);
+  const setSpeed = useSettingsStore((s) => s.setSpeed);
+  const autoEndTurnDelayMs = useSettingsStore((s) => s.autoEndTurnDelayMs);
+  const setAutoEndTurnDelay = useSettingsStore((s) => s.setAutoEndTurnDelay);
 
   return (
     <div>

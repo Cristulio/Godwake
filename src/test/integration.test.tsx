@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from '../App';
 import { useGameStore } from '../stores/gameStore';
+import { useSettingsStore } from '../stores/settingsStore';
 import { ErrorBoundary } from '../components/system/ErrorBoundary';
 import { CharacterCreationScreen } from '../components/creation/CharacterCreationScreen';
 import { SIR_BRICK_PRESET } from '../engine/character/defaultCharacter';
@@ -120,18 +121,25 @@ describe('integration — error boundary', () => {
   });
 });
 
-describe('integration — settings persistence', () => {
+describe('integration — settings persistence (settingsStore)', () => {
   beforeEach(resetStore);
 
-  it('autoEndTurnDelayMs round-trips through the store', () => {
-    useGameStore.getState().setAutoEndTurnDelay(700);
-    expect(useGameStore.getState().autoEndTurnDelayMs).toBe(700);
+  it('autoEndTurnDelayMs round-trips through the settings store', () => {
+    useSettingsStore.getState().setAutoEndTurnDelay(700);
+    expect(useSettingsStore.getState().autoEndTurnDelayMs).toBe(700);
   });
 
   it('setAutoEndTurnDelay clamps to [200, 3000]', () => {
-    useGameStore.getState().setAutoEndTurnDelay(50);
-    expect(useGameStore.getState().autoEndTurnDelayMs).toBe(200);
-    useGameStore.getState().setAutoEndTurnDelay(99999);
-    expect(useGameStore.getState().autoEndTurnDelayMs).toBe(3000);
+    useSettingsStore.getState().setAutoEndTurnDelay(50);
+    expect(useSettingsStore.getState().autoEndTurnDelayMs).toBe(200);
+    useSettingsStore.getState().setAutoEndTurnDelay(99999);
+    expect(useSettingsStore.getState().autoEndTurnDelayMs).toBe(3000);
+  });
+
+  it('speedMultiplier toggles between 1 and 2', () => {
+    useSettingsStore.getState().setSpeed(2);
+    expect(useSettingsStore.getState().speedMultiplier).toBe(2);
+    useSettingsStore.getState().setSpeed(1);
+    expect(useSettingsStore.getState().speedMultiplier).toBe(1);
   });
 });

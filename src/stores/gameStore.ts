@@ -124,10 +124,7 @@ interface GameState {
   character: Character | null;
   delve: DelveState | null;
   combat: CombatState | null;
-  /** Animation/turn-pacing multiplier. 1 = normal, 2 = fast forward. */
-  speedMultiplier: 1 | 2;
-  /** Delay (ms, pre-speed-multiplier) before auto-ending a turn with no actions remaining. */
-  autoEndTurnDelayMs: number;
+  // speedMultiplier + autoEndTurnDelayMs moved to useSettingsStore.
   /** Active soul-bond voice (Irenicus or Imoen) overlay, null if hidden. */
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number } | null;
   /** True if the player has seen the intro already this save. */
@@ -188,8 +185,7 @@ interface GameState {
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
 
   // Settings
-  setSpeed: (s: 1 | 2) => void;
-  setAutoEndTurnDelay: (ms: number) => void;
+  // setSpeed + setAutoEndTurnDelay moved to useSettingsStore.
 
   // Lore overlays
   showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext) => void;
@@ -232,8 +228,7 @@ interface PersistedSnapshot {
   screen: Screen;
   saveSeed: string | null;
   character: Character | null;
-  speedMultiplier: 1 | 2;
-  autoEndTurnDelayMs: number;
+  // speedMultiplier + autoEndTurnDelayMs migrated to useSettingsStore.
   introSeen: boolean;
   hasReincarnated: boolean;
   deathCount: number;
@@ -259,8 +254,7 @@ function buildSnapshot(state: GameState): PersistedSnapshot {
         : state.screen,
     saveSeed: state.saveSeed,
     character: state.character,
-    speedMultiplier: state.speedMultiplier,
-    autoEndTurnDelayMs: state.autoEndTurnDelayMs,
+    // settings moved out — settingsStore persists those independently.
     introSeen: state.introSeen,
     hasReincarnated: state.hasReincarnated,
     deathCount: state.deathCount,
@@ -311,8 +305,7 @@ export const useGameStore = create<GameState>()(
   character: null,
   delve: null,
   combat: null,
-  speedMultiplier: 1,
-  autoEndTurnDelayMs: 1100,
+  // settings moved — see useSettingsStore.
   taunt: null,
   introSeen: false,
   hasReincarnated: false,
@@ -487,9 +480,7 @@ export const useGameStore = create<GameState>()(
       };
     }),
 
-  setSpeed: (s) => set({ speedMultiplier: s }),
-  setAutoEndTurnDelay: (ms) =>
-    set({ autoEndTurnDelayMs: Math.max(200, Math.min(3000, Math.round(ms))) }),
+  // settings actions moved — see useSettingsStore.
 
   showTaunt: (speaker, context) =>
     set({ taunt: { speaker, context, seed: Math.floor(Math.random() * 1000) } }),
@@ -631,8 +622,9 @@ export const useGameStore = create<GameState>()(
       screen: (s.screen ?? 'hub') as Screen,
       saveSeed: s.saveSeed ?? null,
       character: s.character ?? null,
-      speedMultiplier: s.speedMultiplier ?? 1,
-      autoEndTurnDelayMs: s.autoEndTurnDelayMs ?? 1100,
+      // settings moved to useSettingsStore — older slot dumps may carry
+      // these fields but loadFromSlot no longer applies them. Settings
+      // persist via their own store now.
       introSeen: s.introSeen ?? false,
       hasReincarnated: s.hasReincarnated ?? false,
       quirksTutorialSeen: s.quirksTutorialSeen ?? false,
