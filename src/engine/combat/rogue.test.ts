@@ -67,7 +67,7 @@ describe('Rogue — Sneak Attack scaling in combat', () => {
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
       rogue = atk.character;
-      const log = state.log.find((l) => l.text.includes('Sneak Attack'));
+      const log = state.log.find((l) => l.text.includes('sneak ('));
       if (log) return log.text;
     }
     return undefined;
@@ -76,19 +76,19 @@ describe('Rogue — Sneak Attack scaling in combat', () => {
   it('logs 1d6 at L1', () => {
     const text = fireSneakAtLevel(1);
     expect(text).toBeDefined();
-    expect(text).toContain('Sneak Attack (1d6)');
+    expect(text).toContain('sneak (1d6)');
   });
 
   it('logs 2d6 at L3', () => {
     const text = fireSneakAtLevel(3);
     expect(text).toBeDefined();
-    expect(text).toContain('Sneak Attack (2d6)');
+    expect(text).toContain('sneak (2d6)');
   });
 
   it('logs 3d6 at L5', () => {
     const text = fireSneakAtLevel(5);
     expect(text).toBeDefined();
-    expect(text).toContain('Sneak Attack (3d6)');
+    expect(text).toContain('sneak (3d6)');
   });
 });
 
@@ -110,7 +110,7 @@ describe('Rogue — Knife in the Dark (permanentBonuses.sneakAttackDice)', () =>
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
       rogue = atk.character;
-      const log = state.log.find((l) => l.text.includes('Sneak Attack'));
+      const log = state.log.find((l) => l.text.includes('sneak ('));
       if (log) return log.text;
     }
     return undefined;
@@ -119,19 +119,19 @@ describe('Rogue — Knife in the Dark (permanentBonuses.sneakAttackDice)', () =>
   it('L3 rogue with +1 bonus rolls 3d6 (2d6 base + 1d6 bonus)', () => {
     const text = fireSneakAtLevelWithBonus(3, 1);
     expect(text).toBeDefined();
-    expect(text).toContain('Sneak Attack (3d6)');
+    expect(text).toContain('sneak (3d6)');
   });
 
   it('L1 rogue with +2 bonus rolls 3d6 (1d6 base + 2d6 bonus)', () => {
     const text = fireSneakAtLevelWithBonus(1, 2);
     expect(text).toBeDefined();
-    expect(text).toContain('Sneak Attack (3d6)');
+    expect(text).toContain('sneak (3d6)');
   });
 
   it('bonus = 0 matches the no-bonus baseline at L1 (1d6)', () => {
     const text = fireSneakAtLevelWithBonus(1, 0);
     expect(text).toBeDefined();
-    expect(text).toContain('Sneak Attack (1d6)');
+    expect(text).toContain('sneak (1d6)');
   });
 });
 
@@ -158,7 +158,7 @@ describe('Rogue — Sneak Attack', () => {
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
       rogue = atk.character;
-      const damageLog = state.log.find((l) => l.text.includes('Sneak Attack'));
+      const damageLog = state.log.find((l) => l.text.includes('sneak ('));
       if (damageLog) {
         observed = true;
         expect(state.sneakAttackUsedThisTurn).toBe(true);
@@ -191,7 +191,7 @@ describe('Rogue — Sneak Attack', () => {
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
       rogue = atk.character;
-      const sneakLog = state.log.find((l) => l.text.includes('Sneak Attack'));
+      const sneakLog = state.log.find((l) => l.text.includes('sneak ('));
       if (sneakLog) {
         observed = true;
         expect(state.sneakAttackUsedThisTurn).toBe(true);
@@ -221,7 +221,7 @@ describe('Rogue — Sneak Attack', () => {
       const atk1 = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk1.state;
       rogue = atk1.character;
-      const firstSneak = state.log.filter((l) => l.text.includes('Sneak Attack')).length;
+      const firstSneak = state.log.filter((l) => l.text.includes('sneak (')).length;
       if (firstSneak !== 1) continue;
       if (state.status !== 'active') continue;
 
@@ -240,7 +240,7 @@ describe('Rogue — Sneak Attack', () => {
       const atk2 = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk2.state;
       rogue = atk2.character;
-      const totalSneak = state.log.filter((l) => l.text.includes('Sneak Attack')).length;
+      const totalSneak = state.log.filter((l) => l.text.includes('sneak (')).length;
       expect(totalSneak).toBe(1);
       validated = true;
     }
@@ -292,7 +292,7 @@ describe('Rogue — Sneak Attack', () => {
     const atk = playerAttack({ roller, character: fighter, state }, goblinId, 'longsword');
     state = atk.state;
     fighter = atk.character;
-    const sneak = state.log.find((l) => l.text.includes('Sneak Attack'));
+    const sneak = state.log.find((l) => l.text.includes('sneak ('));
     expect(sneak).toBeUndefined();
     void fighter;
   });
@@ -437,7 +437,7 @@ describe('Rogue — Cunning Action', () => {
       atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
       rogue = atk.character;
-      const sneakLines = state.log.filter((l) => l.text.includes('Sneak Attack'));
+      const sneakLines = state.log.filter((l) => l.text.includes('sneak ('));
       const attackLines = state.log.filter((l) => l.text.includes('attacks Goblin'));
       if (attackLines.length < 2) continue;
       expect(sneakLines.length).toBeLessThanOrEqual(1);
