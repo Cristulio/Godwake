@@ -57,13 +57,6 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Iron Cells',
     flavorText:
-      'A grey-furred hobgoblin lieutenant has been left at the cell-mouth as a checkpoint. He does not bother to call you halt — he hefts his blade and waits.',
-    monsters: [{ defId: 'hobgoblin', count: 1 }],
-    xpReward: 60,
-  },
-  {
-    title: 'The Iron Cells',
-    flavorText:
       'A second corpse-shape pries itself out of the rubble at the corner. Older bones, harder bones — and a longer memory of being killed.',
     monsters: [{ defId: 'bone-stalker', count: 1 }],
     xpReward: 60,
@@ -71,6 +64,13 @@ export const WARMUP_POOL: EncounterEntry[] = [
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
+  {
+    title: 'The Iron Cells',
+    flavorText:
+      'A grey-furred hobgoblin lieutenant has been left at the cell-mouth as a checkpoint. He does not bother to call you halt — he hefts his blade and waits.',
+    monsters: [{ defId: 'hobgoblin', count: 1 }],
+    xpReward: 60,
+  },
   {
     title: 'The Watch Post',
     flavorText:
@@ -203,10 +203,10 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Imp\'s Court',
     flavorText:
-      'The imp from earlier — or one just like it — is back, this time with two dust mephits flanking it like petty courtiers. It bows mockingly.',
+      'The imp from earlier — or one just like it — is back, this time with two kobold conscripts scuttling at its heels like petty courtiers. It points imperiously, and the kobolds rush, eager to please their tiny tyrant.',
     monsters: [
       { defId: 'imp', count: 1 },
-      { defId: 'dust-mephit', count: 2, displayPrefix: 'Mephit' },
+      { defId: 'kobold', count: 2, displayPrefix: 'Kobold' },
     ],
     xpReward: 220,
   },
