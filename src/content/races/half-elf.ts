@@ -5,8 +5,8 @@ export const HALF_ELF: Race = RaceSchema.parse({
   name: 'Half-Elf',
   abilityScoreBonuses: {
     str: 0,
-    dex: 1,
-    con: 1,
+    dex: 0,
+    con: 0,
     int: 0,
     wis: 0,
     cha: 2,
@@ -19,7 +19,7 @@ export const HALF_ELF: Race = RaceSchema.parse({
       id: 'half-elf-versatility',
       name: 'Two-World Walker',
       description:
-        'Walkers between two worlds. Charisma-tilted and resilient — fixed +1 Dexterity and +1 Constitution alongside the Half-Elf charm (the 5e free picker is collapsed to a useful default while a creation-time picker UI is still pending).',
+        "Walkers between two worlds. +2 Charisma, plus +1 to your class's primary ability and +1 to a secondary stat (Dexterity for martials, Constitution for casters) — the half-blood adapts to whatever calling claims it.",
     },
   ],
 });

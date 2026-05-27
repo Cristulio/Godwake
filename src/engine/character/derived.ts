@@ -117,24 +117,19 @@ export function characterHasMechanic(character: Character, mechanicKey: string):
 }
 
 /**
- * Initiative = DEX modifier + quirk/blessing tweaks + race-speed delta.
+ * Initiative = DEX modifier + quirk/blessing tweaks + permanent/delve bonuses.
  *
- * Race speed (the 5e feet/round number) was previously cosmetic. Each
- * 5-foot delta from the default 30 maps to +/- 1 initiative — Wood Elves
- * (35) act sooner, Dwarves (25) act later, Humans (30) wash. Per
- * [[feedback-gameplay-over-5e]], this turns a flavor stat into a
- * gameplay knob without inventing new mechanics.
+ * Race speed used to fold into initiative (+/- 1 per 5ft delta from 30). The
+ * coupling was invisible to players and doubled-up on Hill Dwarf's already
+ * heavy "slow but tough" fantasy. Speed is now purely a movement-flavor field.
  */
 export function initiativeModifier(character: Character): number {
   const dex = modifierFor(character, 'dex');
   const quirkMods = characterQuirkMods(character);
   const blessingMods = characterBlessingMods(character);
   const remarkableAthlete = characterHasMechanic(character, 'remarkable-athlete') ? 2 : 0;
-  const race = getRace(character.raceId);
-  const speedInit = Math.round((race.speed - 30) / 5);
   return (
     dex +
-    speedInit +
     remarkableAthlete +
     (quirkMods.initiativeMod ?? 0) +
     (blessingMods.initiativeBonus ?? 0) +

@@ -1,7 +1,8 @@
-import type { AbilityScores } from '../../types/abilities';
+import type { AbilityName, AbilityScores } from '../../types/abilities';
 import type { Character } from '../../types/character';
 import type { ClassId, RaceId } from '../../schemas/ids';
 import type { SkillName } from '../../types/skills';
+import type { Class } from '../../schemas/class';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { effectiveAbilityScores } from './derived';
@@ -30,6 +31,15 @@ export function createCharacter(input: CreateCharacterInput): Character {
     throw new Error(`Race ${race.id} cannot be class ${cls.id}.`);
   }
 
+  // Half-Elf 5e gets a free +1/+1 picker. Until char-creation has a UI step
+  // for it, route the bonuses to the class's primary ability + a secondary
+  // (DEX for martials, CON for casters) so wizard half-elves don't ship
+  // with a -1 INT vs other race picks.
+  const baseAbilityScores: AbilityScores =
+    input.raceId === 'half-elf'
+      ? applyHalfElfAutoRoute(input.baseAbilityScores, cls)
+      : input.baseAbilityScores;
+
   // Lv1 max HP = max hit die + CON mod (standard 5e rule for taking max at lv1)
   // Effective ability scores need race bonuses applied.
   const seedCharacter: Character = {
@@ -38,7 +48,7 @@ export function createCharacter(input: CreateCharacterInput): Character {
     raceId: input.raceId,
     classId: input.classId,
     subclassId: input.subclassId ?? null,
-    baseAbilityScores: input.baseAbilityScores,
+    baseAbilityScores,
     level: 1,
     xp: 0,
     skillProficiencies: input.skillProficiencies,
@@ -71,6 +81,27 @@ export function createCharacter(input: CreateCharacterInput): Character {
   seedCharacter.hp = { current: maxHp, max: maxHp, temp: 0 };
 
   return seedCharacter;
+}
+
+/**
+ * Half-Elf's 5e "+1 to two other abilities" picker, auto-resolved by class.
+ * Primary ability gets +1; the secondary is DEX for martial classes and CON
+ * for casters. If the primary already is DEX (rogue) or CON, the secondary
+ * falls through to the other so the +1 always lands somewhere useful.
+ */
+function applyHalfElfAutoRoute(
+  base: AbilityScores,
+  cls: Class,
+): AbilityScores {
+  const primary: AbilityName = (cls.primaryAbility[0] ?? 'str') as AbilityName;
+  const isCaster = primary === 'int' || primary === 'wis' || primary === 'cha';
+  let secondary: AbilityName = isCaster ? 'con' : 'dex';
+  if (secondary === primary) secondary = primary === 'dex' ? 'con' : 'dex';
+  return {
+    ...base,
+    [primary]: base[primary] + 1,
+    [secondary]: base[secondary] + 1,
+  };
 }
 
 export function classStartingResources(classId: ClassId) {
