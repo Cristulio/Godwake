@@ -14,13 +14,13 @@ export const TIEFLING: Race = RaceSchema.parse({
   speed: 30,
   size: 'medium',
   validClasses: ['fighter', 'wizard', 'cleric', 'rogue', 'barbarian'],
-  damageResistances: ['fire'],
+  damageResistances: ['fire', 'poison'],
   features: [
     {
       id: 'tiefling-hellish-resistance',
-      name: 'Hellish Resistance',
+      name: 'Infernal Constitution',
       description:
-        'Bloodlines marked by a pact older than memory. Horns and smoke and a long résumé — you take half damage from fire.',
+        'Bloodlines marked by a pact older than memory. Horns, smoke, and a hellbound liver — you take half damage from fire and poison.',
     },
   ],
 });

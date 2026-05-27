@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
-import { effectiveAbilityScores } from '../../engine/character/derived';
+import { effectiveAbilityScores, modifierFor } from '../../engine/character/derived';
 import { applyLevelUp, hpGainForLevelUp } from '../../engine/character/leveling';
 import { listRaces, getRace } from './index';
 
@@ -78,24 +78,70 @@ describe('Hill Dwarf', () => {
   });
 });
 
-describe('Half-Elf', () => {
-  const halfElf = createCharacter({
-    id: 'he-1',
-    name: 'Imoen',
-    raceId: 'half-elf',
-    classId: 'fighter',
-    baseAbilityScores: BASE_SCORES,
-    skillProficiencies: ['athletics', 'perception'],
+describe('Half-Elf — class-aware +1/+1 auto-route', () => {
+  it('fighter half-elf routes +1 to STR (primary) and +1 to DEX (martial secondary)', () => {
+    const halfElfFighter = createCharacter({
+      id: 'he-fighter',
+      name: 'Imoen',
+      raceId: 'half-elf',
+      classId: 'fighter',
+      baseAbilityScores: BASE_SCORES,
+      skillProficiencies: ['athletics', 'perception'],
+    });
+    const scores = effectiveAbilityScores(halfElfFighter);
+    expect(scores.cha).toBe(BASE_SCORES.cha + 2);
+    expect(scores.str).toBe(BASE_SCORES.str + 1);
+    expect(scores.dex).toBe(BASE_SCORES.dex + 1);
+    expect(scores.con).toBe(BASE_SCORES.con);
+    expect(scores.int).toBe(BASE_SCORES.int);
+    expect(scores.wis).toBe(BASE_SCORES.wis);
   });
 
-  it('applies +2 CHA, +1 DEX, +1 CON bonuses', () => {
-    const scores = effectiveAbilityScores(halfElf);
+  it('wizard half-elf routes +1 to INT (primary) and +1 to CON (caster secondary)', () => {
+    // Wizard preset usually puts the highest array slot on INT. Use 15 INT
+    // here so the bumped score lands at 16 → +3 mod (spell attack +5 at lv1
+    // with proficiency, spell save DC 14).
+    const wizardScores = {
+      str: 8,
+      dex: 14,
+      con: 13,
+      int: 15,
+      wis: 12,
+      cha: 10,
+    };
+    const halfElfWizard = createCharacter({
+      id: 'he-wizard',
+      name: 'Aerie',
+      raceId: 'half-elf',
+      classId: 'wizard',
+      baseAbilityScores: wizardScores,
+      skillProficiencies: ['arcana', 'history'],
+    });
+    const scores = effectiveAbilityScores(halfElfWizard);
+    expect(scores.cha).toBe(wizardScores.cha + 2);
+    expect(scores.int).toBe(wizardScores.int + 1); // 16
+    expect(scores.con).toBe(wizardScores.con + 1);
+    expect(scores.str).toBe(wizardScores.str);
+    expect(scores.dex).toBe(wizardScores.dex);
+    expect(scores.wis).toBe(wizardScores.wis);
+    // INT 16 → +3 mod. With L1 prof +2 and wizard +1 baseline, that's
+    // DC 14 and spell attack +5 — parity with other-race wizards.
+    expect(modifierFor(halfElfWizard, 'int')).toBe(3);
+  });
+
+  it('rogue half-elf routes +1 to DEX (primary) and +1 to CON (DEX-primary fallback)', () => {
+    const halfElfRogue = createCharacter({
+      id: 'he-rogue',
+      name: 'Yoshimo',
+      raceId: 'half-elf',
+      classId: 'rogue',
+      baseAbilityScores: BASE_SCORES,
+      skillProficiencies: ['stealth', 'sleight-of-hand'],
+    });
+    const scores = effectiveAbilityScores(halfElfRogue);
     expect(scores.cha).toBe(BASE_SCORES.cha + 2);
     expect(scores.dex).toBe(BASE_SCORES.dex + 1);
     expect(scores.con).toBe(BASE_SCORES.con + 1);
-    expect(scores.str).toBe(BASE_SCORES.str); // no bonus
-    expect(scores.int).toBe(BASE_SCORES.int);
-    expect(scores.wis).toBe(BASE_SCORES.wis);
   });
 
   it('has 30 ft. speed', () => {
@@ -119,7 +165,9 @@ describe('Tiefling', () => {
     expect(scores.int).toBe(BASE_SCORES.int + 1);
   });
 
-  it('has fire resistance', () => {
-    expect(getRace('tiefling').damageResistances).toContain('fire');
+  it('resists fire AND poison damage', () => {
+    const resists = getRace('tiefling').damageResistances ?? [];
+    expect(resists).toContain('fire');
+    expect(resists).toContain('poison');
   });
 });
