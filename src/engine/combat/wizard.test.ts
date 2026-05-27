@@ -291,6 +291,91 @@ describe('Wizard — long rest refresh', () => {
   });
 });
 
+describe('Wizard — Grove caster bonuses', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('Arcane Focus adds permanentSpellAttackBonus to Fire Bolt attack rolls', () => {
+    const goblin = getMonster('goblin');
+    const baseline = makeWizard();
+    const buffed: Character = { ...makeWizard(), permanentSpellAttackBonus: 2 };
+
+    const seed = 11;
+    let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] });
+    const goblinIdA = findMonster(stateA).id;
+    stateA = castSpell({
+      roller: createDiceRoller(seed),
+      character: baseline,
+      state: stateA,
+      spellId: 'fire-bolt',
+      targetId: goblinIdA,
+    }).state;
+
+    let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] });
+    const goblinIdB = findMonster(stateB).id;
+    stateB = castSpell({
+      roller: createDiceRoller(seed),
+      character: buffed,
+      state: stateB,
+      spellId: 'fire-bolt',
+      targetId: goblinIdB,
+    }).state;
+
+    const rollLineA = stateA.log.find((l) => l.text.includes('Fire Bolt'))!;
+    const rollLineB = stateB.log.find((l) => l.text.includes('Fire Bolt'))!;
+    const totalA = Number(rollLineA.text.match(/= (\d+) vs AC/)?.[1]);
+    const totalB = Number(rollLineB.text.match(/= (\d+) vs AC/)?.[1]);
+    expect(totalB - totalA).toBe(2);
+  });
+
+  it('Sigil of the Wakened Mind adds permanentSpellDcBonus to the spell save DC (via Hold Person)', () => {
+    const goblin = getMonster('goblin');
+    const baseline: Character = { ...makeWizard(), level: 3 };
+    baseline.resources = { ...baseline.resources, spellSlots: wizardSpellSlotsForLevel(3) };
+    const buffed: Character = { ...baseline, permanentSpellDcBonus: 1 };
+    buffed.resources = { ...buffed.resources, spellSlots: wizardSpellSlotsForLevel(3) };
+
+    const seed = 9;
+    let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] });
+    const idA = findMonster(stateA).id;
+    stateA = castSpell({ roller: createDiceRoller(seed), character: baseline, state: stateA, spellId: 'hold-person', targetId: idA }).state;
+    const dcA = Number(stateA.log.find((l) => l.text.includes('vs DC'))!.text.match(/vs DC (\d+)/)?.[1]);
+
+    let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] });
+    const idB = findMonster(stateB).id;
+    stateB = castSpell({ roller: createDiceRoller(seed), character: buffed, state: stateB, spellId: 'hold-person', targetId: idB }).state;
+    const dcB = Number(stateB.log.find((l) => l.text.includes('vs DC'))!.text.match(/vs DC (\d+)/)?.[1]);
+
+    expect(dcB - dcA).toBe(1);
+  });
+
+  it('Burning Tongue adds permanentSpellDamageBonus to a Fire Bolt hit', () => {
+    const goblin = getMonster('goblin');
+    const buffed: Character = { ...makeWizard(), permanentSpellDamageBonus: 3 };
+    // Find a seed where the cantrip hits; assert damage line carries the +3.
+    let validated = false;
+    for (let seed = 1; seed <= 60 && !validated; seed++) {
+      const character: Character = { ...buffed };
+      character.actionEconomy = { ...character.actionEconomy, actionUsed: false };
+      let state = createCombat({ roller: createDiceRoller(seed), character, monsters: [{ def: goblin }] });
+      const targetId = findMonster(state).id;
+      state = castSpell({
+        roller: createDiceRoller(seed),
+        character,
+        state,
+        spellId: 'fire-bolt',
+        targetId,
+      }).state;
+      const dmgLog = state.log.find((l) => l.kind === 'damage' && l.text.includes('fire'));
+      if (!dmgLog) continue;
+      const m = dmgLog.text.match(/\+3 = (\d+) fire/);
+      if (!m) continue;
+      expect(dmgLog.text).toContain('+3 =');
+      validated = true;
+    }
+    expect(validated).toBe(true);
+  });
+});
+
 describe('Wizard — canCastSpell guards', () => {
   it('returns ok=false when no slot remains', () => {
     const w = makeWizard();

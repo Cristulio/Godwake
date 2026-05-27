@@ -214,6 +214,21 @@ const RAW: Upgrade[] = [
     }),
     kind: 'permanent',
   },
+  {
+    id: 'burning-tongue',
+    category: 'edge',
+    name: 'Burning Tongue',
+    flavor:
+      'Mielikki burns a word into the back of your throat. Every spell tastes hotter on the way out.',
+    effectAtRank: (r) => `+${r} damage to spells, permanent.`,
+    costForRank: (r) => rankCost(100, r),
+    maxRank: 5,
+    apply: (c) => ({
+      ...c,
+      permanentSpellDamageBonus: (c.permanentSpellDamageBonus ?? 0) + 1,
+    }),
+    kind: 'permanent',
+  },
 
   // ─── COIN ──────────────────────────────────────────────────────────────
   {
@@ -320,6 +335,36 @@ const RAW: Upgrade[] = [
       },
     }),
     kind: 'delveStart',
+  },
+  {
+    id: 'arcane-focus',
+    category: 'spirit',
+    name: 'Arcane Focus',
+    flavor:
+      'A node of the Wellspring set behind your sternum. Spells take aim a little surer.',
+    effectAtRank: (r) => `+${r} to spell attack rolls, permanent.`,
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 3,
+    apply: (c) => ({
+      ...c,
+      permanentSpellAttackBonus: (c.permanentSpellAttackBonus ?? 0) + 1,
+    }),
+    kind: 'permanent',
+  },
+  {
+    id: 'sigil-of-the-wakened-mind',
+    category: 'spirit',
+    name: 'Sigil of the Wakened Mind',
+    flavor:
+      'An old druid traces a rune over your eyes. The world hears your words louder.',
+    effectAtRank: (r) => `+${r} spell save DC, permanent.`,
+    costForRank: (r) => rankCost(180, r),
+    maxRank: 3,
+    apply: (c) => ({
+      ...c,
+      permanentSpellDcBonus: (c.permanentSpellDcBonus ?? 0) + 1,
+    }),
+    kind: 'permanent',
   },
   {
     id: 'shrine-tithe',

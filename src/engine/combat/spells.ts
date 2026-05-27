@@ -50,7 +50,11 @@ function nextLogId(state: CombatState): number {
 
 function spellAttackBonus(character: Character): number {
   const scores = effectiveAbilityScores(character);
-  return abilityModifier(scores.int) + proficiencyBonus(character.level);
+  return (
+    abilityModifier(scores.int) +
+    proficiencyBonus(character.level) +
+    (character.permanentSpellAttackBonus ?? 0)
+  );
 }
 
 function spellSaveDC(character: Character): number {
@@ -59,7 +63,17 @@ function spellSaveDC(character: Character): number {
   // Burning Hands actually land — without this, DC 12 vs typical +2/+3 DEX
   // saves means ~55% save rate and AoE feels useless.
   const classBonus = character.classId === 'wizard' ? 1 : 0;
-  return 8 + abilityModifier(scores.int) + proficiencyBonus(character.level) + classBonus;
+  return (
+    8 +
+    abilityModifier(scores.int) +
+    proficiencyBonus(character.level) +
+    classBonus +
+    (character.permanentSpellDcBonus ?? 0)
+  );
+}
+
+function spellDamageBonus(character: Character): number {
+  return character.permanentSpellDamageBonus ?? 0;
 }
 
 /**
@@ -183,11 +197,13 @@ function castFireBolt(ctx: CastSpellContext): CastResult {
       die: 10,
       modifier: 0,
     });
-    nextState = applyDamage(nextState, targetId, damageRoll.total, character);
+    const bonus = spellDamageBonus(character);
+    const total = damageRoll.total + bonus;
+    nextState = applyDamage(nextState, targetId, total, character);
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `Damage: ${damageRoll.rolls.join('+')} = ${damageRoll.total} fire.`,
+      text: `Damage: ${damageRoll.rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${total} fire.`,
     });
   }
 
@@ -210,6 +226,8 @@ function castMagicMissile(ctx: CastSpellContext): CastResult {
     rolls.push(r.total);
     total += r.total;
   }
+  const bonus = spellDamageBonus(character);
+  total += bonus;
 
   let nextState: CombatState = appendLog(
     {
@@ -223,7 +241,7 @@ function castMagicMissile(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${character.name} casts Magic Missile. Three darts streak at ${target.instance.displayName} — ${rolls.join('+')} = ${total} force, auto-hit.`,
+      text: `${character.name} casts Magic Missile. Three darts streak at ${target.instance.displayName} — ${rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${total} force, auto-hit.`,
     },
   );
 
@@ -248,12 +266,13 @@ function castBurningHands(ctx: CastSpellContext): CastResult {
   // Primary target (the cone's anchor) takes the full roll; in our solo combat
   // the cone catches everything in front. We damage every living monster.
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
-  const dmg = damageRoll.total;
+  const bonus = spellDamageBonus(character);
+  const dmg = damageRoll.total + bonus;
 
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${character.name} hurls a cone of flame. ${damageRoll.rolls.join('+')} = ${dmg} fire${evoker ? ' (Sculpt Spells)' : ''}.`,
+    text: `${character.name} hurls a cone of flame. ${damageRoll.rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${dmg} fire${evoker ? ' (Sculpt Spells)' : ''}.`,
   });
 
   nextState = attachSpellEffect(

@@ -144,6 +144,12 @@ export interface Character {
   attunementSlotsBonus?: number;
   /** Grove upgrade: +N damage on every weapon hit. */
   permanentDamageBonus?: number;
+  /** Grove upgrade: +N to spell attack rolls (cantrips + spell-attack spells). */
+  permanentSpellAttackBonus?: number;
+  /** Grove upgrade: +N to spell save DC. */
+  permanentSpellDcBonus?: number;
+  /** Grove upgrade: +N flat damage added once per damaging-spell cast. */
+  permanentSpellDamageBonus?: number;
   /** Grove upgrade: crit range widens by N (so default 20-only becomes (20-N)-20). */
   permanentCritRangeBonus?: number;
   /** Grove upgrade: +N damage on the first attack of each combat. */
