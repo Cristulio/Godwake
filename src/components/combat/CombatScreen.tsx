@@ -22,6 +22,7 @@ import { CombatLog } from './CombatLog';
 import { ActionBar } from './ActionBar';
 import { CunningActionPicker } from './CunningActionPicker';
 import { SpellPicker } from './SpellPicker';
+import { SpellHUD } from './SpellHUD';
 import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
@@ -446,6 +447,7 @@ export function CombatScreen({
               Ending turn — no actions remain.
             </div>
           )}
+          <SpellHUD character={character} />
           <ActionBar
             character={character}
             state={state}

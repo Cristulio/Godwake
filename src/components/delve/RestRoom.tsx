@@ -28,11 +28,11 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
 
   function handleShortRest() {
     if (!character) return;
-    // Rest rooms knit half-max HP and refresh class resources (Second Wind,
+    // Rest rooms knit 70% of max HP and refresh class resources (Second Wind,
     // Action Surge, Cunning Action, spell slots). Full healing is reserved
-    // for camps — the chained delve needs HP attrition to bite between
-    // chapters.
-    const healAmount = Math.floor(character.hp.max * 0.5);
+    // for camps — the chained delve still needs HP attrition to bite between
+    // chapters, but 50% left players walking into elites at ~7 HP.
+    const healAmount = Math.floor(character.hp.max * 0.7);
     const healed = shortRestHeal(character, healAmount);
     setCharacter(healed);
     setRested(true);
@@ -56,8 +56,9 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
             {room.flavorText}
           </p>
           <p className="text-[var(--color-text-dim)] text-xs italic text-center max-w-md">
-            You catch your breath. The wound knits — not fully, but enough. Save the
-            true healing for the fire at the chapter's edge.
+            You catch your breath. More breath returns than before — the wound
+            knits deep, but not whole. Save the true healing for the fire at
+            the chapter's edge.
           </p>
           <div className="text-xs uppercase tracking-widest text-[var(--color-text-dim)]">
             HP {character.hp.current}/{character.hp.max}
@@ -68,7 +69,7 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
       <div className="flex gap-3 justify-center">
         {!rested ? (
           <Button variant="primary" onClick={handleShortRest}>
-            Short rest (heal half, refresh resources)
+            Short rest (heal 70%, refresh resources)
           </Button>
         ) : (
           <div className="text-[var(--color-status-poison)] text-sm uppercase tracking-widest animate-fade-in">
