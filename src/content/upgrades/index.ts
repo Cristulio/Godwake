@@ -45,6 +45,18 @@ export function rankCost(base: number, rank: number): number {
 const RAW: Upgrade[] = [
   // ─── BODY ──────────────────────────────────────────────────────────────
   {
+    id: 'pilgrims-boots',
+    category: 'body',
+    name: "Pilgrim's Boots",
+    flavor:
+      'The druids gift the wakened soul a pair of hide-leather boots before the road. The path bends a little kinder beneath them.',
+    effectAtRank: (r) => `+${r * 5} ft movement each turn, permanent.`,
+    costForRank: () => 25,
+    maxRank: 1,
+    apply: (c) => ({ ...c, permanentSpeedBonus: (c.permanentSpeedBonus ?? 0) + 5 }),
+    kind: 'permanent',
+  },
+  {
     id: 'mantle-of-the-wakened',
     category: 'body',
     name: 'Mantle of the Wakened',
@@ -204,6 +216,36 @@ const RAW: Upgrade[] = [
       ...c,
       permanentCritDamageBonus: (c.permanentCritDamageBonus ?? 0) + 1,
     }),
+    kind: 'permanent',
+  },
+  {
+    id: 'shadowstep',
+    category: 'edge',
+    name: 'Shadowstep',
+    flavor:
+      "The Wakeful Mother's blessing — the shadow learns your step before you take it.",
+    effectAtRank: (r) => `+${r} Cunning Action use per combat (Rogue).`,
+    costForRank: (r) => rankCost(100, r),
+    maxRank: 3,
+    apply: (c, rank) => {
+      if (c.classId !== 'rogue') return c;
+      return { ...c, permanentCunningActionBonus: rank };
+    },
+    kind: 'delveStart',
+  },
+  {
+    id: 'knife-in-the-dark',
+    category: 'edge',
+    name: 'Knife in the Dark',
+    flavor:
+      "Selûne's other face — the wound finds its way home.",
+    effectAtRank: (r) => `+${r}d6 Sneak Attack damage (Rogue).`,
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 3,
+    apply: (c, rank) => {
+      if (c.classId !== 'rogue') return c;
+      return { ...c, permanentSneakAttackDiceBonus: rank };
+    },
     kind: 'permanent',
   },
   {

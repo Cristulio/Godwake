@@ -92,6 +92,43 @@ describe('Rogue — Sneak Attack scaling in combat', () => {
   });
 });
 
+describe('Rogue — Knife in the Dark (permanentSneakAttackDiceBonus)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function fireSneakAtLevelWithBonus(level: number, bonus: number): string | undefined {
+    for (let seed = 1; seed <= 120; seed++) {
+      const goblin = getMonster('goblin');
+      const rogue = makeRogue({ level, permanentSneakAttackDiceBonus: bonus });
+      const roller = createDiceRoller(seed);
+      let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+      state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;
+      const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      const log = state.log.find((l) => l.text.includes('Sneak Attack'));
+      if (log) return log.text;
+    }
+    return undefined;
+  }
+
+  it('L3 rogue with +1 bonus rolls 3d6 (2d6 base + 1d6 bonus)', () => {
+    const text = fireSneakAtLevelWithBonus(3, 1);
+    expect(text).toBeDefined();
+    expect(text).toContain('Sneak Attack (3d6)');
+  });
+
+  it('L1 rogue with +2 bonus rolls 3d6 (1d6 base + 2d6 bonus)', () => {
+    const text = fireSneakAtLevelWithBonus(1, 2);
+    expect(text).toBeDefined();
+    expect(text).toContain('Sneak Attack (3d6)');
+  });
+
+  it('bonus = 0 matches the no-bonus baseline at L1 (1d6)', () => {
+    const text = fireSneakAtLevelWithBonus(1, 0);
+    expect(text).toBeDefined();
+    expect(text).toContain('Sneak Attack (1d6)');
+  });
+});
+
 describe('Rogue — Sneak Attack', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 

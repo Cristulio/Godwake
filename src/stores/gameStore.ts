@@ -73,6 +73,13 @@ export const RENOWN_PER_DELVE_CLEAR = 50;
 /** Renown granted on a failed delve — small consolation for the soul. */
 export const RENOWN_PER_DELVE_FAILURE = 15;
 
+/**
+ * Hades-style partial credit: bonus renown per chapter boss killed in a
+ * failed delve. Dying at the Matron's door is worth more than dying to a
+ * goblin in room 1.
+ */
+export const RENOWN_PER_CHAPTER_BOSS = 10;
+
 /** Renown threshold that reveals the Druid Grove on the hub. Front-loaded so meta-progression is visible within the first few deaths. */
 export const GROVE_UNLOCK_THRESHOLD = 30;
 
@@ -495,10 +502,20 @@ export const useGameStore = create<GameState>()(
         return { ...s, screen: 'hub', combat: null };
       }
       const wonBoss = s.delve.phase === 'completed';
-      // Renown is the ONLY thing that crosses the wheel — soul-mark bumps
-      // it (each bane quirk = +20%). Gold and XP and level all stay in the
-      // delve and die with it; startDelve seeds the next run at L1/0/0.
-      const renownBase = wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
+      // Partial credit for chapter bosses cleared this delve. On full clear
+      // we keep the existing CLEAR amount (50) without stacking — that's
+      // already the "you killed everything" payout. On death, the bonus is
+      // additive over the consolation 15 so deep deaths pay better than
+      // shallow ones.
+      const bossLimitIdx = wonBoss
+        ? s.delve.currentRoomIdx + 1
+        : s.delve.currentRoomIdx;
+      const bossesKilled = s.delve.rooms
+        .slice(0, bossLimitIdx)
+        .filter((r) => r.kind === 'boss').length;
+      const renownBase = wonBoss
+        ? RENOWN_PER_DELVE_CLEAR
+        : RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bossesKilled;
       const renownGain = Math.floor(renownBase * renownSoulMarkMultiplier(s.character));
       const settled: Character = {
         ...s.character,
