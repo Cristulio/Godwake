@@ -365,3 +365,38 @@ img, svg.pixel {
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 .animate-room-enter { animation: godwake-room-enter 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* Hub ambience — chimney smoke rising, fading, drifting sideways */
+@keyframes godwake-smoke-drift {
+  0%   { opacity: 0;    transform: translate(0, 0)      scale(0.7); }
+  15%  { opacity: 0.6;  transform: translate(2px, -10px) scale(0.85); }
+  45%  { opacity: 0.4;  transform: translate(6px, -28px) scale(1.1); }
+  75%  { opacity: 0.2;  transform: translate(2px, -46px) scale(1.3); }
+  100% { opacity: 0;    transform: translate(-4px, -60px) scale(1.5); }
+}
+.animate-smoke-drift { animation: godwake-smoke-drift 6.5s ease-out infinite; }
+
+/* Hub ambience — birds arcing across the sky */
+@keyframes godwake-bird-fly {
+  0%   { opacity: 0; transform: translate(-30px, 8px)  rotate(-3deg); }
+  4%   { opacity: 1; }
+  35%  {              transform: translate(280px, -10px) rotate(2deg); }
+  65%  {              transform: translate(540px, -8px)  rotate(-2deg); }
+  96%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(840px, 6px)  rotate(0deg); }
+}
+.animate-bird-fly { animation: godwake-bird-fly 22s linear infinite; }
+
+/* Hub ambience — grass / weeds swaying at the base */
+@keyframes godwake-grass-sway {
+  0%, 100% { transform: rotate(-1.2deg); }
+  50%      { transform: rotate(1.2deg); }
+}
+.animate-grass-sway { animation: godwake-grass-sway 3s ease-in-out infinite; }
+
+/* Hub ambience — sky overlay slowly breathing between warm + cool dusk */
+@keyframes godwake-sky-breathe {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 0.45; }
+}
+.animate-sky-breathe { animation: godwake-sky-breathe 20s ease-in-out infinite; }

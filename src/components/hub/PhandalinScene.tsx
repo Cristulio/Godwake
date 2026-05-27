@@ -2,6 +2,9 @@
  * Painted Phandalin skyline — Tresendar Manor (left, ruined), Stonehill Inn
  * (center, warm), Druid Grove (right, ancient oak). Rendered as inline SVG
  * with multiple gradient layers for a painterly dusk-into-night feel.
+ *
+ * Ambient life: chimney smoke, flickering torches, distant birds, swaying
+ * grass, breathing sky. All CSS-only — no JS animation loops.
  */
 export function PhandalinScene() {
   return (
@@ -18,6 +21,12 @@ export function PhandalinScene() {
             <stop offset="35%" stopColor="#3a1c1e" />
             <stop offset="65%" stopColor="#6b3a22" />
             <stop offset="100%" stopColor="#8c4a26" />
+          </linearGradient>
+          {/* Cooler dusk overlay — breathes in/out on top of base sky */}
+          <linearGradient id="sky-cool" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0e0a24" />
+            <stop offset="50%" stopColor="#241830" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#3a2238" stopOpacity="0" />
           </linearGradient>
           {/* Moon */}
           <radialGradient id="moon" cx="0.5" cy="0.5" r="0.5">
@@ -45,10 +54,26 @@ export function PhandalinScene() {
             <stop offset="0%" stopColor="#ffb347" stopOpacity="0.55" />
             <stop offset="100%" stopColor="#ffb347" stopOpacity="0" />
           </radialGradient>
+          {/* Torch / lantern radial halo */}
+          <radialGradient id="torch-halo" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stopColor="#ffd07a" stopOpacity="0.9" />
+            <stop offset="60%" stopColor="#ffb347" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#ffb347" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
         {/* Sky */}
         <rect x="0" y="0" width="800" height="220" fill="url(#sky)" />
+
+        {/* Sky breathing overlay — long slow cool shift */}
+        <rect
+          x="0"
+          y="0"
+          width="800"
+          height="220"
+          fill="url(#sky-cool)"
+          className="animate-sky-breathe"
+        />
 
         {/* Stars */}
         <g fill="#fff5d1" opacity="0.7">
@@ -69,6 +94,30 @@ export function PhandalinScene() {
         <circle cx="650" cy="40" r="18" fill="#fff5d1" opacity="0.85" />
         <circle cx="657" cy="34" r="3" fill="#e0c878" opacity="0.5" />
         <circle cx="643" cy="46" r="2" fill="#e0c878" opacity="0.5" />
+
+        {/* Distant birds — two silhouettes drifting across at different cadences */}
+        <g
+          className="animate-bird-fly"
+          style={{ animationDelay: '0s', animationDuration: '22s' }}
+        >
+          <path
+            d="M 0 40 q 3 -3 6 0 q 3 -3 6 0"
+            stroke="#1a0e10"
+            strokeWidth="1.2"
+            fill="none"
+          />
+        </g>
+        <g
+          className="animate-bird-fly"
+          style={{ animationDelay: '-9s', animationDuration: '26s' }}
+        >
+          <path
+            d="M 0 58 q 2.4 -2.4 4.8 0 q 2.4 -2.4 4.8 0"
+            stroke="#1a0e10"
+            strokeWidth="1"
+            fill="none"
+          />
+        </g>
 
         {/* Distant mountain range */}
         <polygon
@@ -100,6 +149,17 @@ export function PhandalinScene() {
           <rect x="118" y="135" width="6" height="10" fill="#0a0606" />
           <rect x="92" y="155" width="6" height="10" fill="#0a0606" />
           <rect x="118" y="160" width="6" height="10" fill="#0a0606" />
+          {/* A single ember in one of the windows — someone's holed up in the ruin */}
+          <rect
+            x="118"
+            y="135"
+            width="6"
+            height="10"
+            fill="#a8421a"
+            opacity="0.85"
+            className="animate-torch-flicker"
+            style={{ animationDelay: '-1.4s', animationDuration: '4.1s' }}
+          />
           {/* Manor walls behind tower */}
           <rect x="40" y="155" width="40" height="40" fill="#1a120c" stroke="#0a0606" strokeWidth="1" />
           <rect x="60" y="170" width="8" height="14" fill="#0a0606" />
@@ -130,22 +190,65 @@ export function PhandalinScene() {
           {/* Chimney */}
           <rect x="430" y="118" width="12" height="22" fill="#2a1a10" stroke="#0a0606" strokeWidth="1" />
           <rect x="428" y="116" width="16" height="3" fill="#2a1a10" />
-          {/* Smoke */}
-          <ellipse cx="436" cy="106" rx="6" ry="4" fill="#3a2a1c" opacity="0.6" />
-          <ellipse cx="442" cy="96" rx="8" ry="5" fill="#2a1a10" opacity="0.5" />
-          <ellipse cx="448" cy="84" rx="10" ry="6" fill="#1a0e08" opacity="0.4" />
+          {/* Chimney smoke — two staggered wisps so the column never stops */}
+          <g
+            className="animate-smoke-drift"
+            style={{ transformOrigin: '436px 116px', animationDelay: '0s' }}
+          >
+            <ellipse cx="436" cy="110" rx="5" ry="3.5" fill="#3a2a1c" />
+            <ellipse cx="438" cy="100" rx="6" ry="4" fill="#2a1a10" />
+            <ellipse cx="436" cy="90" rx="7" ry="4.5" fill="#1a0e08" />
+          </g>
+          <g
+            className="animate-smoke-drift"
+            style={{ transformOrigin: '436px 116px', animationDelay: '-3.2s' }}
+          >
+            <ellipse cx="434" cy="112" rx="4" ry="3" fill="#3a2a1c" />
+            <ellipse cx="437" cy="102" rx="5" ry="3.5" fill="#2a1a10" />
+            <ellipse cx="435" cy="92" rx="6" ry="4" fill="#1a0e08" />
+          </g>
           {/* Door */}
           <rect x="392" y="158" width="14" height="22" fill="#1a0e08" stroke="#0a0606" strokeWidth="1" />
           <rect x="394" y="164" width="2" height="2" fill="#ffb347" />
+          {/* Lantern halo over the door */}
+          <rect
+            x="380"
+            y="146"
+            width="38"
+            height="38"
+            fill="url(#torch-halo)"
+            className="animate-torch-flicker"
+            style={{ animationDelay: '-0.6s', animationDuration: '3.4s' }}
+          />
           {/* Windows with warm light */}
           <rect x="338" y="155" width="14" height="14" fill="#ffb347" />
           <rect x="340" y="157" width="10" height="10" fill="#f4d042" />
           <line x1="345" y1="155" x2="345" y2="169" stroke="#3a2418" strokeWidth="1" />
           <line x1="338" y1="162" x2="352" y2="162" stroke="#3a2418" strokeWidth="1" />
+          {/* Left window flicker halo */}
+          <rect
+            x="326"
+            y="145"
+            width="38"
+            height="34"
+            fill="url(#torch-halo)"
+            className="animate-torch-flicker"
+            style={{ animationDelay: '-2.1s', animationDuration: '3.8s' }}
+          />
           <rect x="446" y="155" width="14" height="14" fill="#ffb347" />
           <rect x="448" y="157" width="10" height="10" fill="#f4d042" />
           <line x1="453" y1="155" x2="453" y2="169" stroke="#3a2418" strokeWidth="1" />
           <line x1="446" y1="162" x2="460" y2="162" stroke="#3a2418" strokeWidth="1" />
+          {/* Right window flicker halo */}
+          <rect
+            x="434"
+            y="145"
+            width="38"
+            height="34"
+            fill="url(#torch-halo)"
+            className="animate-torch-flicker"
+            style={{ animationDelay: '-1.1s', animationDuration: '3.0s' }}
+          />
           {/* Hanging sign */}
           <line x1="320" y1="150" x2="320" y2="165" stroke="#1a120c" strokeWidth="1" />
           <rect x="310" y="160" width="20" height="10" fill="#5a3a22" stroke="#0a0606" strokeWidth="1" />
@@ -173,8 +276,24 @@ export function PhandalinScene() {
           <ellipse cx="720" cy="82" rx="15" ry="9" fill="#2d4a22" opacity="0.6" />
           <ellipse cx="680" cy="84" rx="12" ry="7" fill="#2d4a22" opacity="0.5" />
           {/* Glowing fey-light in the canopy */}
-          <circle cx="700" cy="80" r="3" fill="#a8d042" opacity="0.6" />
-          <circle cx="725" cy="78" r="2" fill="#a8d042" opacity="0.5" />
+          <circle
+            cx="700"
+            cy="80"
+            r="3"
+            fill="#a8d042"
+            opacity="0.6"
+            className="animate-torch-flicker"
+            style={{ animationDelay: '-0.3s', animationDuration: '4.6s' }}
+          />
+          <circle
+            cx="725"
+            cy="78"
+            r="2"
+            fill="#a8d042"
+            opacity="0.5"
+            className="animate-torch-flicker"
+            style={{ animationDelay: '-2.4s', animationDuration: '5.1s' }}
+          />
           {/* Standing stones at the base */}
           <rect x="668" y="184" width="6" height="14" fill="#3a2a22" />
           <rect x="666" y="182" width="10" height="2" fill="#3a2a22" />
@@ -188,7 +307,47 @@ export function PhandalinScene() {
         {/* Path / road suggestion */}
         <path d="M 0 210 Q 400 196 800 208" stroke="#3a2a1a" strokeWidth="2" fill="none" opacity="0.7" />
 
-        {/* Subtle title text — town name engraved in stone */}
+        {/* Foreground grass / weeds — small swaying clusters across the base */}
+        <g
+          className="animate-grass-sway"
+          style={{ transformOrigin: '170px 213px', animationDelay: '0s' }}
+        >
+          <line x1="168" y1="213" x2="166" y2="204" stroke="#2a3a18" strokeWidth="1" />
+          <line x1="170" y1="213" x2="170" y2="202" stroke="#3a4a20" strokeWidth="1" />
+          <line x1="172" y1="213" x2="174" y2="205" stroke="#2a3a18" strokeWidth="1" />
+        </g>
+        <g
+          className="animate-grass-sway"
+          style={{ transformOrigin: '258px 213px', animationDelay: '-1.1s', animationDuration: '3.6s' }}
+        >
+          <line x1="256" y1="213" x2="255" y2="206" stroke="#2a3a18" strokeWidth="1" />
+          <line x1="258" y1="213" x2="258" y2="203" stroke="#3a4a20" strokeWidth="1" />
+          <line x1="260" y1="213" x2="262" y2="207" stroke="#2a3a18" strokeWidth="1" />
+        </g>
+        <g
+          className="animate-grass-sway"
+          style={{ transformOrigin: '516px 213px', animationDelay: '-0.6s', animationDuration: '2.7s' }}
+        >
+          <line x1="514" y1="213" x2="513" y2="205" stroke="#2a3a18" strokeWidth="1" />
+          <line x1="516" y1="213" x2="516" y2="202" stroke="#3a4a20" strokeWidth="1" />
+          <line x1="518" y1="213" x2="520" y2="206" stroke="#2a3a18" strokeWidth="1" />
+        </g>
+        <g
+          className="animate-grass-sway"
+          style={{ transformOrigin: '604px 213px', animationDelay: '-1.8s', animationDuration: '3.2s' }}
+        >
+          <line x1="602" y1="213" x2="601" y2="207" stroke="#2a3a18" strokeWidth="1" />
+          <line x1="604" y1="213" x2="604" y2="204" stroke="#3a4a20" strokeWidth="1" />
+          <line x1="606" y1="213" x2="608" y2="206" stroke="#2a3a18" strokeWidth="1" />
+        </g>
+        <g
+          className="animate-grass-sway"
+          style={{ transformOrigin: '60px 213px', animationDelay: '-2.4s', animationDuration: '3.4s' }}
+        >
+          <line x1="58" y1="213" x2="57" y2="206" stroke="#2a3a18" strokeWidth="1" />
+          <line x1="60" y1="213" x2="60" y2="203" stroke="#3a4a20" strokeWidth="1" />
+          <line x1="62" y1="213" x2="64" y2="207" stroke="#2a3a18" strokeWidth="1" />
+        </g>
       </svg>
       {/* Inn warm glow as a CSS pseudo on top (gives it a flicker feel) */}
       <div className="absolute left-[42%] top-[55%] w-32 h-20 rounded-full bg-[var(--color-accent-amber)] opacity-15 blur-2xl pointer-events-none animate-pulse-glow" />
