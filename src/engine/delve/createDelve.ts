@@ -1,5 +1,7 @@
 import type { DelveState, RoomSpec } from '../../types/delve';
 import { createRng, randomSeed } from '../dice/rng';
+import { eventsForChapter } from '../../content/events';
+import type { EventTemplate } from '../../schemas/event';
 import {
   WARMUP_POOL,
   EARLY_MID_POOL,
@@ -27,7 +29,11 @@ import {
   ELITE_POOL as UN_ELITE_POOL,
 } from './chapter4Pools';
 
-function pick<T>(rng: { next(): number }, pool: T[]): T {
+interface Rng {
+  next(): number;
+}
+
+function pick<T>(rng: Rng, pool: T[]): T {
   if (pool.length === 0) throw new Error('Empty encounter pool');
   return pool[Math.floor(rng.next() * pool.length)];
 }
@@ -41,6 +47,34 @@ function combatRoom(id: string, e: EncounterEntry): RoomSpec {
     monsters: e.monsters,
     xpReward: e.xpReward,
     goldReward: e.goldReward,
+  };
+}
+
+/**
+ * Pick an event template from the pool of events available at or below the
+ * given chapter, then wrap it as an event-kind RoomSpec. Used by the chained
+ * Godwake delve to drop 1+ narrative beats per chapter. Picks via the same
+ * seeded RNG that composes the combat slots, so a delve seed locks events too.
+ */
+function eventRoom(id: string, rng: Rng, chapter: number, excludeIds: Set<string>): { room: RoomSpec; templateId: string } {
+  const pool = eventsForChapter(chapter).filter((e) => !excludeIds.has(e.id));
+  if (pool.length === 0) {
+    // Fall back to the unfiltered chapter pool if exclusion empties it (small chapter pools).
+    const fallback = eventsForChapter(chapter);
+    const tpl = pick(rng, fallback);
+    return { room: eventRoomFromTemplate(id, tpl), templateId: tpl.id };
+  }
+  const tpl = pick(rng, pool);
+  return { room: eventRoomFromTemplate(id, tpl), templateId: tpl.id };
+}
+
+function eventRoomFromTemplate(id: string, tpl: EventTemplate): RoomSpec {
+  return {
+    id,
+    kind: 'event',
+    title: tpl.title,
+    flavorText: tpl.flavor,
+    eventTemplateId: tpl.id,
   };
 }
 
@@ -171,20 +205,19 @@ export function createAthkatlaDelve(seed: number = randomSeed()): DelveState {
 }
 
 /**
- * Godwake — the single continuous delve. Iron Cells (Ch1, 8 rooms) → roadside
- * camp (1 room, Short Rest + merchant + branch) → Athkatla (Ch2, 6 rooms,
- * ending at the Magistrate). 15 rooms total.
+ * Godwake — the single continuous delve walking the player through every
+ * chapter of the run. ~37 rooms across four chapters with three camp seams.
  *
- * Camp is the seam: HP damage, blessings, Second Wind / Action Surge state,
- * gold, and XP all carry across. The player can press south (continue) or
- * make for Phandalin (early exit with rewards). Combined chapterId='godwake';
- * room ids 1-8 are Ch1, room 9 is camp, rooms 10-15 are Ch2.
+ *   Ch1 Iron Cells (10) → Camp → Ch2 Athkatla (8) → Camp → Ch3 Spellhold (8)
+ *     → Camp → Ch4 Ust Natha (8). Ends at the Drow Matron Mother.
+ *
+ * Each camp is the seam: HP damage, blessings, Second Wind / Action Surge
+ * state, gold, and XP all carry across. Combat slots and event picks share
+ * one seeded RNG so a delve seed locks the full run.
  */
 export interface GodwakeDelveOptions {
   /** Seed for the encounter pool RNG. */
   seed?: number;
-  /** Skip the Ch1 + camp prefix and start the player at room-10 (Ch2 R1). Used by the post-Ch1 "Long Road South" entry point so vets can replay Ch2 directly. */
-  skipChapter1?: boolean;
 }
 
 export function createGodwakeDelve(
@@ -194,8 +227,18 @@ export function createGodwakeDelve(
     typeof optsOrSeed === 'number' ? { seed: optsOrSeed } : optsOrSeed;
   const rng = createRng(opts.seed ?? randomSeed());
 
+  // Track already-picked event templates so a single delve never repeats a
+  // narrative beat. Pool is shared across chapter filters because a Ch1 event
+  // is also a Ch4 event candidate (eventsForChapter is cumulative).
+  const usedEventIds = new Set<string>();
+  function nextEvent(id: string, chapter: number): RoomSpec {
+    const { room, templateId } = eventRoom(id, rng, chapter, usedEventIds);
+    usedEventIds.add(templateId);
+    return room;
+  }
+
   const rooms: RoomSpec[] = [
-    // Ch1 — The Iron Cells (warmup → shrine → early-mid → rest → mid → shrine → elite → Ilyich)
+    // ─── Chapter 1: Tresendar Manor / The Iron Cells (10 rooms) ─────────
     combatRoom('room-1', pick(rng, WARMUP_POOL)),
     {
       id: 'room-2',
@@ -204,26 +247,28 @@ export function createGodwakeDelve(
       flavorText:
         'An altar of weathered stone, three sigils flickering as you approach. The labs above never sealed this off — gods bleed through cracks the master cannot find.',
     },
-    combatRoom('room-3', pick(rng, EARLY_MID_POOL)),
+    nextEvent('room-3', 1),
+    combatRoom('room-4', pick(rng, EARLY_MID_POOL)),
     {
-      id: 'room-4',
+      id: 'room-5',
       kind: 'rest',
       title: 'A Quiet Alcove',
       flavorText:
         'A side-passage with a broken lantern. The walls are scratched with prayers in a language you almost know. You can catch your breath here.',
       restType: 'short',
     },
-    combatRoom('room-5', pick(rng, MID_POOL)),
+    combatRoom('room-6', pick(rng, MID_POOL)),
     {
-      id: 'room-6',
+      id: 'room-7',
       kind: 'shrine',
       title: 'The Cracked Sigil',
       flavorText:
         'A second altar, half-buried in rubble. Someone tried to chisel the sigils out — and someone else, later, deepened them again. The god is still listening.',
     },
-    combatRoom('room-7', pick(rng, ELITE_POOL)),
+    combatRoom('room-8', pick(rng, ELITE_POOL)),
+    nextEvent('room-9', 1),
     {
-      id: 'room-8',
+      id: 'room-10',
       kind: 'boss',
       title: "Ilyich's Hall",
       flavorText:
@@ -231,28 +276,45 @@ export function createGodwakeDelve(
       monsters: [{ defId: 'duergar-ilyich', count: 1 }],
       xpReward: 250,
     },
-    // Camp — the seam between chapters
+
+    // ─── Camp 1: roadside fire south of the Cells ───────────────────────
     {
-      id: 'room-9',
+      id: 'room-11',
       kind: 'camp',
       title: 'A Roadside Fire',
       flavorText:
         "Three days south of the Iron Cells the trees thin, and the Trade Way bends towards Amn. A caravan-merchant has a fire going by the milestone — kettle on, ox unhitched, a tarp pegged out in case the night turns. He looks up without surprise, as if he had been expecting someone walking out of the north on foot and bloody.",
     },
-    // Ch2 — Athkatla (warmup → early-mid → shrine → mid → elite → Magistrate)
-    combatRoom('room-10', pick(rng, ATH_WARMUP_POOL)),
-    combatRoom('room-11', pick(rng, ATH_EARLY_MID_POOL)),
+
+    // ─── Chapter 2: Athkatla / City of Coin (8 rooms) ───────────────────
+    combatRoom('room-12', pick(rng, ATH_WARMUP_POOL)),
     {
-      id: 'room-12',
+      id: 'room-13',
+      kind: 'shrine',
+      title: 'A Curbside Shrine to Waukeen',
+      flavorText:
+        "A pillar of guilded sandstone, four niches at the base. Athkatla's merchant queen does not promise gold — only that the scale will tip true. Coins clink at the bottom of the basin.",
+    },
+    nextEvent('room-14', 2),
+    combatRoom('room-15', pick(rng, ATH_MID_POOL)),
+    {
+      id: 'room-16',
+      kind: 'rest',
+      title: 'A Festhall Backroom',
+      flavorText:
+        "A back room of the Bronze Lion, its proprietor pretending not to see. A jug of watered wine and a stool by the brazier. You can catch your breath here.",
+      restType: 'short',
+    },
+    combatRoom('room-17', pick(rng, ATH_ELITE_POOL)),
+    {
+      id: 'room-18',
       kind: 'shrine',
       title: 'A Plague-Worn Altar to Ilmater',
       flavorText:
         "Even Athkatla cannot stamp out the Crying God. A cracked stone basin half-hidden in a brick recess — Ilmater's red knot scratched in chalk and re-chalked a hundred times. Bandages hang dry on a nail.",
     },
-    combatRoom('room-13', pick(rng, ATH_MID_POOL)),
-    combatRoom('room-14', pick(rng, ATH_ELITE_POOL)),
     {
-      id: 'room-15',
+      id: 'room-19',
       kind: 'boss',
       title: "The Magistrate's Hall",
       flavorText:
@@ -261,18 +323,106 @@ export function createGodwakeDelve(
       xpReward: 700,
       goldReward: 80,
     },
+
+    // ─── Camp 2: Athkatla docks before the Spellhold crossing ───────────
+    {
+      id: 'room-20',
+      kind: 'camp',
+      title: 'A Harbour-Lamp at the Docks',
+      flavorText:
+        "The Magistrate's hall is hours behind you and the docks of Athkatla have not yet been told. A harbour-merchant has set a lamp on a coil of rope at the end of the jetty — kettle in his hand, the keel of a smuggler's wherry ticking against the boards beneath. He sees the blood on your sleeve and offers a cup before he offers a name.",
+    },
+
+    // ─── Chapter 3: Spellhold / The Cowled Asylum (8 rooms) ─────────────
+    combatRoom('room-21', pick(rng, SPH_WARMUP_POOL)),
+    {
+      id: 'room-22',
+      kind: 'shrine',
+      title: 'A Smuggled Shrine to Mystra',
+      flavorText:
+        "Half-hidden behind a moved bookcase in a side-cell — a chalk circle around a star of seven points, and a stub of candle burned by hand-shielding rather than by holder. The Weave is thin in here, but Mystra's silver hand still reaches.",
+    },
+    nextEvent('room-23', 3),
+    combatRoom('room-24', pick(rng, SPH_MID_POOL)),
+    {
+      id: 'room-25',
+      kind: 'rest',
+      title: 'The Disused Cell-Block',
+      flavorText:
+        "A row of cells the wardens stopped using after the last riot — doors hanging open, straw mouldering on the floors. Quiet enough to sit down. You can catch your breath here.",
+      restType: 'short',
+    },
+    combatRoom('room-26', pick(rng, SPH_ELITE_POOL)),
+    {
+      id: 'room-27',
+      kind: 'shrine',
+      title: "The Crying God's Mark",
+      flavorText:
+        "A red-knotted bandage hangs on a nail above a cracked basin in a warden's washroom. Someone has been smuggling Ilmater's mercy into Spellhold one prayer at a time. The basin is still wet.",
+    },
+    {
+      id: 'room-28',
+      kind: 'boss',
+      title: "The Director's Chamber",
+      flavorText:
+        "A long vaulted room at the heart of the warden's wing — a desk at the far end with the asylum's ledgers stacked in perfect order, and behind it, in the silver-trim robe and the small round monocle, the man who has been signing the warrants. He does not look surprised. \"You will be still while I work.\"",
+      monsters: [{ defId: 'asylum-director', count: 1 }],
+      xpReward: 1100,
+      goldReward: 140,
+    },
+
+    // ─── Camp 3: Underdark seam between Spellhold and Ust Natha ─────────
+    {
+      id: 'room-29',
+      kind: 'camp',
+      title: 'A Smuggler-Fire in the Underdark',
+      flavorText:
+        "Past the Director's wing the Cowled Wizards keep a service-shaft that drops into the Upperdark. At the first widening, a surface-smuggler has a chemical-fire going in a brass bowl that does not give off smoke. He has been waiting for someone who walked out of Spellhold alive. He has goods to move down. You have a road to walk.",
+    },
+
+    // ─── Chapter 4: Ust Natha / The Drow City (8 rooms) ─────────────────
+    combatRoom('room-30', pick(rng, UN_WARMUP_POOL)),
+    {
+      id: 'room-31',
+      kind: 'shrine',
+      title: 'A Faerzress Sigil to Eilistraee',
+      flavorText:
+        "Hidden behind a fallen slab in the lower tunnels — a circle scratched in chalk, a moon-and-sword glyph at its centre. The drow goddess of the dance, the one Lolth's priestesses have a standing kill-order on. The bone-light flickers green here in a way that is not entirely natural.",
+    },
+    nextEvent('room-32', 4),
+    combatRoom('room-33', pick(rng, UN_EARLY_MID_POOL)),
+    {
+      id: 'room-34',
+      kind: 'rest',
+      title: 'A Disused Slave-Pen',
+      flavorText:
+        "A cage-tier the slavers have not stocked this season — the chains hang slack, the straw is old. The faerzress glow is dim enough here that the corridor-watch will not look in. You can catch your breath here.",
+      restType: 'short',
+    },
+    combatRoom('room-35', pick(rng, UN_MID_POOL)),
+    {
+      id: 'room-36',
+      kind: 'shrine',
+      title: "A Surface-Smuggled Altar to Selûne",
+      flavorText:
+        "A scrap of silver-moon tapestry pinned to a niche wall, half a candle-stub still warm. Some surface-elf slave from a previous caravan smuggled the moon-mother down here a prayer at a time. The drow priestesses have not yet found this one. The Lady is still listening.",
+    },
+    {
+      id: 'room-37',
+      kind: 'boss',
+      title: "The Matron Mother's Audience",
+      flavorText:
+        "The inner temple of Lolth — black basalt, eight-legged sigils in arterial red along the walls, the air thick with the resin-smoke the priestesses burn for visions. At the centre, on a low throne carved from a single spider's egg-case, the Matron Mother does not rise. \"You are not on the slave-roll. The exception is easily corrected.\"",
+      monsters: [{ defId: 'drow-matron-mother', count: 1 }],
+      xpReward: 1650,
+      goldReward: 220,
+    },
   ];
 
-  // Optionally skip the Ch1 + camp prefix when a veteran wants Ch2 only.
-  // Picks up from room-10 (Ch2 R1) with the camp's effects already-resolved
-  // (no Sharpen/Prayer pre-applied — fair start, just minus the Ch1 grind).
-  const finalRooms = opts.skipChapter1 ? rooms.slice(9) : rooms;
   return {
-    dungeonName: opts.skipChapter1
-      ? 'Athkatla — Long Road South'
-      : 'The Long Road — Iron Cells to Athkatla',
+    dungeonName: 'Godwake — From the Cells to the Spider',
     chapterId: 'godwake',
-    rooms: finalRooms,
+    rooms,
     currentRoomIdx: 0,
     phase: 'in-room',
     roomsCleared: 0,

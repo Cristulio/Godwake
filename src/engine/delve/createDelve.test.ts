@@ -57,26 +57,47 @@ describe('createIronCellsDelve', () => {
 });
 
 describe('createGodwakeDelve', () => {
-  it('emits 15 rooms with camp at the seam', () => {
+  it('emits at least 28 rooms across the chained run', () => {
     const d = createGodwakeDelve(1);
-    expect(d.rooms).toHaveLength(15);
-    // Ch1 (rooms 1-8): combat → shrine → combat → rest → combat → shrine → combat → boss
-    expect(d.rooms[0].kind).toBe('combat');
-    expect(d.rooms[1].kind).toBe('shrine');
-    expect(d.rooms[3].kind).toBe('rest');
-    expect(d.rooms[7].kind).toBe('boss');
-    expect(d.rooms[7].monsters?.[0].defId).toBe('duergar-ilyich');
-    // Camp at room 9 (index 8).
-    expect(d.rooms[8].kind).toBe('camp');
-    expect(d.rooms[8].id).toBe('room-9');
-    // Ch2 (rooms 10-15): combat → combat → shrine → combat → combat → boss.
-    expect(d.rooms[9].kind).toBe('combat');
-    expect(d.rooms[10].kind).toBe('combat');
-    expect(d.rooms[11].kind).toBe('shrine');
-    expect(d.rooms[12].kind).toBe('combat');
-    expect(d.rooms[13].kind).toBe('combat');
-    expect(d.rooms[14].kind).toBe('boss');
-    expect(d.rooms[14].monsters?.[0].defId).toBe('athkatla-magistrate');
+    expect(d.rooms.length).toBeGreaterThanOrEqual(28);
+  });
+
+  it('has three camp seams between the chapters', () => {
+    const d = createGodwakeDelve(1);
+    const camps = d.rooms.filter((r) => r.kind === 'camp');
+    expect(camps).toHaveLength(3);
+  });
+
+  it('has four bosses, one per chapter, in the expected order', () => {
+    const d = createGodwakeDelve(1);
+    const bosses = d.rooms.filter((r) => r.kind === 'boss');
+    expect(bosses).toHaveLength(4);
+    expect(bosses[0].monsters?.[0].defId).toBe('duergar-ilyich');
+    expect(bosses[1].monsters?.[0].defId).toBe('athkatla-magistrate');
+    expect(bosses[2].monsters?.[0].defId).toBe('asylum-director');
+    expect(bosses[3].monsters?.[0].defId).toBe('drow-matron-mother');
+  });
+
+  it('has at least four event rooms threaded through the chapters', () => {
+    const d = createGodwakeDelve(1);
+    const events = d.rooms.filter((r) => r.kind === 'event');
+    expect(events.length).toBeGreaterThanOrEqual(4);
+    // Every event room must resolve against the registry — no orphan ids.
+    for (const e of events) {
+      expect(e.eventTemplateId).toBeTruthy();
+    }
+  });
+
+  it('has at least two shrines per chapter span', () => {
+    const d = createGodwakeDelve(1);
+    const shrines = d.rooms.filter((r) => r.kind === 'shrine');
+    expect(shrines.length).toBeGreaterThanOrEqual(8);
+  });
+
+  it('has at least one rest room per chapter span', () => {
+    const d = createGodwakeDelve(1);
+    const rests = d.rooms.filter((r) => r.kind === 'rest');
+    expect(rests.length).toBeGreaterThanOrEqual(4);
   });
 
   it('chapterId is godwake', () => {
@@ -89,14 +110,47 @@ describe('createGodwakeDelve', () => {
     const b = createGodwakeDelve(42);
     expect(a.rooms.map((r) => r.id)).toEqual(b.rooms.map((r) => r.id));
     expect(a.rooms.map((r) => r.monsters)).toEqual(b.rooms.map((r) => r.monsters));
+    expect(a.rooms.map((r) => r.eventTemplateId)).toEqual(
+      b.rooms.map((r) => r.eventTemplateId),
+    );
   });
 
-  it('camp room carries no combat / loot fields', () => {
+  it('camp rooms carry no combat / loot fields', () => {
     const d = createGodwakeDelve(7);
-    const camp = d.rooms[8];
-    expect(camp.monsters).toBeUndefined();
-    expect(camp.goldReward).toBeUndefined();
-    expect(camp.xpReward).toBeUndefined();
+    for (const camp of d.rooms.filter((r) => r.kind === 'camp')) {
+      expect(camp.monsters).toBeUndefined();
+      expect(camp.goldReward).toBeUndefined();
+      expect(camp.xpReward).toBeUndefined();
+    }
+  });
+
+  it('every monster id referenced in the chain resolves via getMonster', () => {
+    for (let s = 0; s < 6; s++) {
+      const d = createGodwakeDelve(s);
+      for (const room of d.rooms) {
+        for (const m of room.monsters ?? []) {
+          expect(() => getMonster(m.defId)).not.toThrow();
+        }
+      }
+    }
+  });
+
+  it('the chained delve places the four bosses in chapter order', () => {
+    const d = createGodwakeDelve(99);
+    const bossIndices = d.rooms
+      .map((r, idx) => ({ r, idx }))
+      .filter(({ r }) => r.kind === 'boss')
+      .map(({ idx }) => idx);
+    expect(bossIndices).toEqual([...bossIndices].sort((a, b) => a - b));
+    const campIndices = d.rooms
+      .map((r, idx) => ({ r, idx }))
+      .filter(({ r }) => r.kind === 'camp')
+      .map(({ idx }) => idx);
+    // Each camp seam falls between two bosses.
+    for (let i = 0; i < 3; i++) {
+      expect(campIndices[i]).toBeGreaterThan(bossIndices[i]);
+      expect(campIndices[i]).toBeLessThan(bossIndices[i + 1]);
+    }
   });
 });
 

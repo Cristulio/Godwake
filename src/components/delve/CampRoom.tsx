@@ -108,7 +108,7 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
           {room.title.toUpperCase()}
         </h1>
         <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-          Camp · The Long Road · Athkatla lies south
+          Camp · A pause on the long road · The deeper dark ahead
         </p>
       </header>
 
@@ -176,7 +176,7 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
           ◆ The Caravan-Merchant
         </div>
         <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-          "Coin in this pocket, comfort in the other. Road south is long. You'll want both."
+          "Coin in this pocket, comfort in the other. The road keeps going. You'll want both."
         </p>
         <Button variant="secondary" onClick={openMerchant}>
           Trade with him
@@ -185,10 +185,10 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
 
       <div className="flex flex-col md:flex-row gap-3 justify-center mt-2">
         <Button variant="primary" onClick={onPressSouth}>
-          Press south to Athkatla →
+          Press on into the dark →
         </Button>
         <Button variant="secondary" onClick={onMakeForPhandalin}>
-          Make for Phandalin
+          Turn back to Phandalin
         </Button>
       </div>
 

@@ -20,24 +20,52 @@ import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 
 function decorationForRoom(roomId: string, chapterId: string): BattlefieldDecoration {
-  // Godwake combined delve: rooms 1-8 are Iron Cells, 9 is camp, 10-15 Athkatla.
+  // Godwake chained delve: 37 rooms across four chapters.
+  //   Ch1 Iron Cells: rooms 1-10 (boss at room-10)
+  //   Camp 1: room-11
+  //   Ch2 Athkatla: rooms 12-19 (boss at room-19)
+  //   Camp 2: room-20
+  //   Ch3 Spellhold: rooms 21-28 (boss at room-28)
+  //   Camp 3: room-29
+  //   Ch4 Ust Natha: rooms 30-37 (boss at room-37)
   if (chapterId === 'godwake') {
     switch (roomId) {
+      // Ch1 combat
       case 'room-1':
-      case 'room-3':
-      case 'room-7':
+      case 'room-4':
         return 'iron-cells';
-      case 'room-5':
+      case 'room-6':
         return 'vivisector-lab';
       case 'room-8':
-        return 'wardens-hall';
-      case 'room-15':
-        return 'magistrate-hall';
+        return 'iron-cells';
+      // Ch1 boss
       case 'room-10':
-      case 'room-11':
-      case 'room-13':
-      case 'room-14':
+        return 'wardens-hall';
+      // Ch2 combat
+      case 'room-12':
+      case 'room-15':
+      case 'room-17':
         return 'athkatla-street';
+      // Ch2 boss
+      case 'room-19':
+        return 'magistrate-hall';
+      // Ch3 combat
+      case 'room-21':
+      case 'room-24':
+      case 'room-26':
+        return 'spellhold-corridor';
+      // Ch3 boss
+      case 'room-28':
+        return 'spellhold-warden-chamber';
+      // Ch4 combat
+      case 'room-30':
+      case 'room-33':
+        return 'underdark-tunnel';
+      case 'room-35':
+        return 'ust-natha-temple';
+      // Ch4 boss
+      case 'room-37':
+        return 'ust-natha-throne';
       default:
         return 'generic';
     }
@@ -230,10 +258,10 @@ export function DelveScreen() {
               if (isBossRoom) {
                 useGameStore.getState().showTaunt('irenicus', 'chapter-clear');
               }
-              // Combined Godwake delve: Ilyich is a mid-delve boss, not the
-              // final. Flag the kill so the chapter1Cleared flip survives
-              // a subsequent Ch2 death.
-              if (room.id === 'room-8' && delve.chapterId === 'godwake') {
+              // Chained Godwake delve: Ilyich is the Ch1 boss at room-10,
+              // not the final. Flag the kill so the chapter1Cleared flip
+              // survives a subsequent death deeper in the run.
+              if (room.id === 'room-10' && delve.chapterId === 'godwake') {
                 useGameStore.getState().markChapter1BossKilled();
               }
             } else {

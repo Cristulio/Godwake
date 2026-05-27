@@ -52,6 +52,25 @@ export const WARMUP_POOL: EncounterEntry[] = [
     xpReward: 340,
     goldReward: 24,
   },
+  {
+    title: "The Crossbow at the Turn",
+    flavorText:
+      "A drow crossbowman has set the corner since the last bell, mithral catching the faerzress. He has not yet decided whether to fire — he is reading your stride for slave-house or freelance.",
+    monsters: [{ defId: 'drow-crossbowman', count: 1 }],
+    xpReward: 290,
+    goldReward: 28,
+  },
+  {
+    title: 'A Brood and a Bowman',
+    flavorText:
+      "A drow crossbowman is leaning on a niche-pillar while two driderlings work the floor at his boots. He gives them the corridor-warmth they want; they give him the kill.",
+    monsters: [
+      { defId: 'drow-crossbowman', count: 1 },
+      { defId: 'driderling', count: 1 },
+    ],
+    xpReward: 330,
+    goldReward: 32,
+  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
@@ -93,6 +112,25 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
     xpReward: 600,
     goldReward: 42,
   },
+  {
+    title: 'A Mind-Touched Drow',
+    flavorText:
+      "A drow warrior stands in the corridor with the slack-jaw of a thing that has been emptied and refilled. Behind him, half in the wall, the grey-skinned thing that did the refilling has not yet looked away from your face.",
+    monsters: [
+      { defId: 'mind-flayer-fragment', count: 1 },
+      { defId: 'drow-warrior', count: 1 },
+    ],
+    xpReward: 620,
+    goldReward: 48,
+  },
+  {
+    title: 'Two Warriors at the Arch',
+    flavorText:
+      "Two drow warriors of the same House at the archway, scimitars drawn at parade-rest, mithral catching the faerzress. Their hand-sign agrees that you are not a guest.",
+    monsters: [{ defId: 'drow-warrior', count: 2, displayPrefix: 'Warrior' }],
+    xpReward: 580,
+    goldReward: 40,
+  },
 ];
 
 export const MID_POOL: EncounterEntry[] = [
@@ -133,6 +171,25 @@ export const MID_POOL: EncounterEntry[] = [
     ],
     xpReward: 740,
     goldReward: 48,
+  },
+  {
+    title: 'The Twin Crossbowmen',
+    flavorText:
+      "Two drow crossbowmen at opposite ends of a long gallery, bolts already nocked, neither facing the other. They have done this corridor before. Their volley is already plotted.",
+    monsters: [{ defId: 'drow-crossbowman', count: 2, displayPrefix: 'Crossbowman' }],
+    xpReward: 720,
+    goldReward: 54,
+  },
+  {
+    title: 'A Web in the Audience-Hall',
+    flavorText:
+      "A drider perched in the corner of a low-ceilinged audience-hall, a drow warrior at the door — the warrior to drive prey, the drider to bind and feed. The web is already strung, ankle to ankle.",
+    monsters: [
+      { defId: 'drider', count: 1 },
+      { defId: 'drow-warrior', count: 1 },
+    ],
+    xpReward: 760,
+    goldReward: 56,
   },
 ];
 
@@ -180,5 +237,28 @@ export const ELITE_POOL: EncounterEntry[] = [
     ],
     xpReward: 1080,
     goldReward: 80,
+  },
+  {
+    title: 'The Fragment Among the Brood',
+    flavorText:
+      "A mind flayer fragment stands at the head of a side-chamber and three driderlings are arranged below it in the obscene attentive crouch of things being studied. They look up at you together. The fragment does not need to.",
+    monsters: [
+      { defId: 'mind-flayer-fragment', count: 1 },
+      { defId: 'driderling', count: 3, displayPrefix: 'Driderling' },
+    ],
+    xpReward: 1100,
+    goldReward: 78,
+  },
+  {
+    title: "The House-Watch in Full",
+    flavorText:
+      "A drow warrior, a drow crossbowman, and a drider at the audience-arch — the full standard house-watch the Matron has assigned to this corridor since the last incident. The watch has been polishing for hours.",
+    monsters: [
+      { defId: 'drow-warrior', count: 1 },
+      { defId: 'drow-crossbowman', count: 1 },
+      { defId: 'drider', count: 1 },
+    ],
+    xpReward: 1140,
+    goldReward: 86,
   },
 ];
