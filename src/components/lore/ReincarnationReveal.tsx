@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
 import { QuirkCard } from '../ui/QuirkCard';
+import { playSfx } from '../../engine/audio';
 
 const HEADLINE = 'You wake again. The flesh is new. The soul remembers.';
 const BASE_TICK = 36;
@@ -9,6 +10,7 @@ const FAST_TICK = 4;
 
 export function ReincarnationReveal() {
   const character = useGameStore((s) => s.character);
+  const deathCount = useGameStore((s) => s.deathCount);
   const finishDelve = useGameStore((s) => s.finishDelve);
 
   const [typed, setTyped] = useState('');
@@ -17,6 +19,7 @@ export function ReincarnationReveal() {
   const [holding, setHolding] = useState(false);
   const indexRef = useRef(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastSfxCountRef = useRef(0);
 
   // Typewriter for the headline, with hold-to-speed.
   useEffect(() => {
@@ -37,15 +40,27 @@ export function ReincarnationReveal() {
     };
   }, [holding, headlineDone]);
 
-  // After the headline completes, stagger-reveal quirks at 700ms intervals.
+  // After the headline completes, stagger-reveal quirks. Each arrival plays
+  // a soft ui_click so the soul-mark drop has audible weight.
   const quirkCount = character?.quirks.length ?? 0;
   useEffect(() => {
     if (!headlineDone) return;
     if (revealedCount >= quirkCount) return;
-    const delay = holding ? 120 : 700;
-    const t = setTimeout(() => setRevealedCount((c) => c + 1), delay);
+    const delay = holding ? 80 : 200;
+    const t = setTimeout(() => {
+      setRevealedCount((c) => c + 1);
+    }, delay);
     return () => clearTimeout(t);
   }, [headlineDone, revealedCount, quirkCount, holding]);
+
+  // Fire ui_click on every quirk arrival (including skip-completes), without
+  // re-firing for unchanged renders. Tracks the last count we played for.
+  useEffect(() => {
+    if (revealedCount > lastSfxCountRef.current) {
+      lastSfxCountRef.current = revealedCount;
+      playSfx('ui_click');
+    }
+  }, [revealedCount]);
 
   function completeNow() {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -85,11 +100,19 @@ export function ReincarnationReveal() {
       <GroveBackdrop />
 
       <div className="relative z-10 max-w-3xl w-full flex flex-col items-center gap-8">
+        {/* Souls-walked counter */}
+        <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.4em] animate-fade-in-slow">
+          ◆ Souls walked: {deathCount} ◆
+        </div>
+
         {/* Headline */}
-        <div className="text-center min-h-[6rem] flex items-center justify-center">
+        <div className="text-center min-h-[7rem] flex items-center justify-center max-w-md">
           <p
-            className="text-2xl md:text-3xl text-[var(--color-text-primary)] italic leading-relaxed"
-            style={{ textShadow: '0 0 24px rgba(244,167,66,0.45), 0 0 12px rgba(0,0,0,0.8)' }}
+            className="font-narrative text-2xl md:text-3xl text-[var(--color-text-primary)] italic leading-relaxed"
+            style={{
+              textShadow:
+                '0 0 24px rgba(244,167,66,0.5), 0 0 12px rgba(0,0,0,0.85), 0 2px 0 rgba(0,0,0,0.9)',
+            }}
           >
             {typed}
             {!headlineDone && (
@@ -101,12 +124,12 @@ export function ReincarnationReveal() {
         {/* Quirks reveal */}
         {headlineDone && quirkCount > 0 && (
           <div className="w-full flex flex-col gap-3 animate-fade-in">
-            <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] text-center mb-1">
+            <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.4em] text-center mb-1">
               The soul carries what the flesh forgot
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               {character.quirks.slice(0, revealedCount).map((id) => (
-                <div key={id} className="animate-fade-in">
+                <div key={id} className="animate-scale-in">
                   <QuirkCard quirkId={id} />
                 </div>
               ))}
@@ -115,7 +138,7 @@ export function ReincarnationReveal() {
         )}
 
         {headlineDone && quirkCount === 0 && (
-          <div className="text-[var(--color-text-secondary)] text-sm italic text-center animate-fade-in">
+          <div className="font-narrative text-[var(--color-text-secondary)] text-base italic text-center animate-fade-in max-w-md">
             No quirks this life. The soul comes back clean — for once.
           </div>
         )}
@@ -126,6 +149,7 @@ export function ReincarnationReveal() {
             <div className="animate-fade-in flex flex-col items-center gap-3">
               <Button
                 variant="primary"
+                size="lg"
                 onClick={(e) => {
                   e.stopPropagation();
                   finishDelve();
@@ -287,6 +311,8 @@ function GroveBackdrop() {
       </svg>
       {/* CSS-level slow pulse on the wellspring halo */}
       <div className="absolute left-1/2 top-[78%] -translate-x-1/2 w-72 h-32 rounded-full bg-[var(--color-accent-amber)] opacity-15 blur-3xl pointer-events-none animate-pulse-glow" />
+      {/* Fey-light flicker on the canopy — makes the painted scene breathe. */}
+      <div className="absolute inset-0 pointer-events-none animate-torch-flicker [background:radial-gradient(ellipse_at_50%_32%,rgba(168,208,66,0.18)_0%,transparent_35%)]" />
       {/* Edge vignette */}
       <div className="absolute inset-0 [background:radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.6)_100%)] pointer-events-none" />
     </div>

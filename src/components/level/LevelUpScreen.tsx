@@ -85,41 +85,56 @@ export function LevelUpScreen() {
   const eff = effectiveAbilityScores(c);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 gap-8 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 gap-8 relative overflow-hidden animate-fade-in-slow">
       <ForgeBackdrop />
       <div className="relative z-10 w-full max-w-3xl flex flex-col gap-6">
-        <div className="text-center">
-          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] mb-2">
+        <div className="text-center animate-scale-in">
+          <div className="font-narrative text-[var(--color-accent-amber)] text-sm italic tracking-[0.3em] mb-3">
             The soul tempers
           </div>
           <h1
-            className="text-4xl md:text-5xl font-bold text-[var(--color-text-primary)] italic"
-            style={{ textShadow: '0 0 24px rgba(244,167,66,0.45), 0 0 12px rgba(0,0,0,0.8)' }}
+            className="font-display text-2xl md:text-4xl text-[var(--color-accent-amber)] tracking-[0.25em]"
+            style={{
+              textShadow:
+                '0 0 28px rgba(244,167,66,0.7), 0 0 12px rgba(244,167,66,0.9), 0 3px 0 rgba(0,0,0,0.9)',
+            }}
           >
-            Level {nextLevel}
+            ◆ LEVEL {nextLevel} ◆
           </h1>
-          <div className="text-[var(--color-text-secondary)] text-sm mt-2 uppercase tracking-widest">
+          <div className="text-[var(--color-text-secondary)] text-xs mt-3 uppercase tracking-[0.3em]">
             {c.name} · {cls.name}
           </div>
         </div>
 
         <Panel title="Body">
-          <div className="flex items-baseline gap-4">
+          <div className="flex items-baseline gap-4 flex-wrap">
             <div className="text-[var(--color-text-secondary)] text-sm">Maximum HP</div>
-            <div className="text-[var(--color-text-primary)] text-2xl font-bold">
-              {c.hp.max} <span className="text-[var(--color-accent-amber)]">→ {c.hp.max + hpDelta}</span>
+            <div className="font-display text-[var(--color-text-primary)] text-lg">
+              {c.hp.max}{' '}
+              <span className="text-[var(--color-accent-amber)]">→ {c.hp.max + hpDelta}</span>
             </div>
-            <div className="text-[var(--color-text-dim)] text-xs">(+{hpDelta})</div>
+            <div
+              key={`hp-${nextLevel}`}
+              className="font-display text-base animate-pop-in"
+              style={{
+                color: 'var(--color-dmg-heal)',
+                textShadow: '0 0 14px rgba(111,217,84,0.5)',
+              }}
+            >
+              +{hpDelta} HP
+            </div>
           </div>
         </Panel>
 
         {features.length > 0 && (
-          <Panel title="New features">
+          <Panel title="New features" tone="glow" className="animate-scale-in">
             <ul className="flex flex-col gap-3">
               {features.map((f) => (
                 <li key={f.id} className="border-l-2 border-[var(--color-accent-amber)] pl-3">
-                  <div className="text-[var(--color-text-primary)] font-bold">{f.name}</div>
-                  <div className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
+                  <div className="font-display text-[var(--color-text-primary)] text-[11px] uppercase tracking-[0.2em]">
+                    {f.name}
+                  </div>
+                  <div className="text-[var(--color-text-secondary)] text-sm leading-relaxed mt-1.5">
                     {f.description}
                   </div>
                 </li>
@@ -129,7 +144,7 @@ export function LevelUpScreen() {
         )}
 
         {isAsiLevel && (
-          <Panel title="Ability Score Improvement — spend 2 points">
+          <Panel title="Ability Score Improvement — spend 2 points" tone="warm">
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
               +2 to one ability, or +1 to two. ({plannedTotal}/2 placed)
             </div>
@@ -141,34 +156,38 @@ export function LevelUpScreen() {
                 return (
                   <div
                     key={ab}
-                    className="flex items-center justify-between border border-[var(--color-border-dim)] px-3 py-2"
+                    className="flex items-center justify-between border border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] px-3 py-2"
                   >
                     <div>
-                      <div className="text-[var(--color-text-primary)] text-sm font-bold">
+                      <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.18em]">
                         {ABILITY_LABELS[ab]}
                       </div>
-                      <div className="text-[var(--color-text-dim)] text-xs">
-                        {base} (base) → {finalEffective} eff.
+                      <div className="text-[var(--color-text-dim)] text-xs mt-1 font-mono tabular-nums">
+                        {base} → {finalEffective}
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button
-                        className="w-6 h-6 border border-[var(--color-border-warm)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-panel-hover)] disabled:opacity-30"
+                      <Button
+                        variant="secondary"
+                        size="sm"
                         onClick={() => bump(ab, -1)}
                         disabled={planned === 0}
+                        className="!px-2 !py-0.5"
                       >
                         −
-                      </button>
-                      <div className="w-6 text-center text-[var(--color-accent-amber)] font-bold">
+                      </Button>
+                      <div className="w-7 text-center font-display text-[var(--color-accent-amber)] text-sm">
                         +{planned}
                       </div>
-                      <button
-                        className="w-6 h-6 border border-[var(--color-border-warm)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-panel-hover)] disabled:opacity-30"
+                      <Button
+                        variant="primary"
+                        size="sm"
                         onClick={() => bump(ab, +1)}
                         disabled={plannedTotal >= 2 || planned >= 2}
+                        className="!px-2 !py-0.5"
                       >
                         +
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 );
@@ -178,7 +197,7 @@ export function LevelUpScreen() {
         )}
 
         <div className="flex justify-center mt-2">
-          <Button variant="primary" onClick={handleContinue} disabled={!asiValid}>
+          <Button variant="primary" size="lg" onClick={handleContinue} disabled={!asiValid}>
             {isAsiLevel && !asiValid
               ? `Place ${2 - plannedTotal} more point${2 - plannedTotal === 1 ? '' : 's'}`
               : 'Continue →'}
