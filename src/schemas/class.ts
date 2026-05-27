@@ -41,6 +41,8 @@ export const ClassSchema = z.object({
   /** Skills the player can pick from at character creation. */
   skillChoiceCount: z.number().int().nonnegative(),
   skillChoiceFrom: z.array(SkillSchema),
+  /** Extra skill picks granted on level-up, keyed by character level. */
+  skillGrantsByLevel: z.record(z.string(), z.number().int().positive()).optional(),
   /** Level at which a subclass is selected. */
   subclassLevel: z.number().int().positive(),
   /** Class features by character level, e.g., {1: [...], 2: [...]}. */

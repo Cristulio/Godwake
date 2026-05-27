@@ -7,6 +7,7 @@ export const WIZARD: Class = ClassSchema.parse({
   primaryAbility: ['int'],
   savingThrowProficiencies: ['int', 'wis'],
   skillChoiceCount: 2,
+  skillGrantsByLevel: { '3': 1, '5': 1 },
   skillChoiceFrom: [
     'arcana',
     'history',

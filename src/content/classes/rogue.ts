@@ -7,6 +7,7 @@ export const ROGUE: Class = ClassSchema.parse({
   primaryAbility: ['dex'],
   savingThrowProficiencies: ['dex', 'int'],
   skillChoiceCount: 2,
+  skillGrantsByLevel: { '3': 1, '5': 1, '7': 1 },
   skillChoiceFrom: [
     'acrobatics',
     'athletics',
