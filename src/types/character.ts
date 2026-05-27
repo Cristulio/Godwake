@@ -74,7 +74,9 @@ export interface Character {
   /** Standard array values assigned at character creation. Never changes. */
   baseAbilityScores: AbilityScores;
 
-  // Progression
+  // Progression — run-scoped. Resets to 1/0 in gameStore.startDelve;
+  // wiped back to 1/0 in finishDelve. Persists through combat ticks but
+  // not between delves.
   level: number;
   xp: number;
 
@@ -115,8 +117,8 @@ export interface Character {
     stabilisesUsed?: number;
   };
 
-  // Meta
-  goldInBank: number;
+  // Currencies. goldInPocket is RUN-SCOPED (resets at delve start/end);
+  // renown is the only currency that survives the wheel.
   goldInPocket: number;
   renown: number;
 

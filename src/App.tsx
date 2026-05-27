@@ -19,11 +19,6 @@ const CharacterCreationScreen = lazy(() =>
 const DruidGroveScreen = lazy(() =>
   import('./components/hub/DruidGroveScreen').then((m) => ({ default: m.DruidGroveScreen })),
 );
-const LionshieldCosterScreen = lazy(() =>
-  import('./components/hub/LionshieldCosterScreen').then((m) => ({
-    default: m.LionshieldCosterScreen,
-  })),
-);
 const CodexScreen = lazy(() =>
   import('./components/codex/CodexScreen').then((m) => ({ default: m.CodexScreen })),
 );
@@ -88,9 +83,6 @@ function App() {
       break;
     case 'druid-grove':
       content = <DruidGroveScreen />;
-      break;
-    case 'lionshield-coster':
-      content = <LionshieldCosterScreen />;
       break;
     case 'delve':
       content = <DelveScreen />;

@@ -57,7 +57,6 @@ export function createCharacter(input: CreateCharacterInput): Character {
     },
     quirks: [],
     blessings: [],
-    goldInBank: 0,
     goldInPocket: 0,
     renown: 0,
   };
@@ -71,7 +70,7 @@ export function createCharacter(input: CreateCharacterInput): Character {
   return seedCharacter;
 }
 
-function classStartingResources(classId: ClassId) {
+export function classStartingResources(classId: ClassId) {
   switch (classId) {
     case 'fighter':
       return {

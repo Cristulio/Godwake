@@ -31,6 +31,7 @@ export interface DelveState {
   currentRoomIdx: number;
   phase: DelvePhase;
   roomsCleared: number;
+  /** Cumulative gold/xp awarded this delve; surfaced on DelveSummary. */
   goldEarned: number;
   xpEarned: number;
   /**

@@ -5,6 +5,11 @@ import type { CombatState } from '../types/combat';
 import type { DelveState } from '../types/delve';
 import { setActiveRoller, getActiveRoller } from '../engine/dice';
 import { buildPlayerCharacter, type CharacterCreationInput } from '../engine/character/defaultCharacter';
+import { classStartingResources } from '../engine/character/initialize';
+import { effectiveAbilityScores } from '../engine/character/derived';
+import { abilityModifier } from '../types/abilities';
+import { getRace } from '../content/races';
+import { getClass } from '../content/classes';
 import { longRest, shortRestHeal, withResetActionEconomy } from '../engine/character/actions';
 import { rollBlessingOptions } from '../engine/character/blessings';
 import {
@@ -43,7 +48,6 @@ export type Screen =
   | 'codex'
   | 'inventory'
   | 'druid-grove'
-  | 'lionshield-coster'
   | 'level-up';
 
 /** Renown granted per successful delve clear (boss killed). */
@@ -88,8 +92,6 @@ function locationLabel(screen: Screen): string {
       return 'Phandalin';
     case 'druid-grove':
       return 'Druid Grove';
-    case 'lionshield-coster':
-      return 'Lionshield Coster';
     case 'codex':
       return 'Bestiary';
     case 'inventory':
@@ -151,7 +153,6 @@ interface GameState {
   goToDelve: () => void;
   goToReincarnation: () => void;
   goToDruidGrove: () => void;
-  goToLionshieldCoster: () => void;
 
   // Lifecycle
   startNewGame: (seed: string) => void;
@@ -316,8 +317,6 @@ export const useGameStore = create<GameState>()(
   goToReincarnation: () =>
     set((s) => ({ screen: 'reincarnation', deathCount: s.deathCount + 1 })),
   goToDruidGrove: () => set({ screen: 'druid-grove' }),
-  goToLionshieldCoster: () => set({ screen: 'lionshield-coster' }),
-
   startNewGame: (seed) => {
     setActiveRoller(seed);
     set({
@@ -350,7 +349,30 @@ export const useGameStore = create<GameState>()(
   startDelve: (delve) => {
     const ch = get().character;
     if (!ch) return;
-    const withUpgrades = applyDelveStartUpgrades(withResetActionEconomy(ch), get().unlockedUpgrades);
+    // Hades-style fresh run: level, xp, gold all reset to baseline.
+    // Renown + Grove upgrades + quirks survived the wheel.
+    const cls = getClass(ch.classId);
+    const conMod = abilityModifier(effectiveAbilityScores(ch).con);
+    const race = getRace(ch.raceId);
+    const bonusHp = race.bonusHpPerLevel ?? 0;
+    const baseHpMax = cls.hitDie + conMod + bonusHp;
+    const freshlyDescended: Character = {
+      ...ch,
+      level: 1,
+      xp: 0,
+      goldInPocket: 0,
+      hp: { current: baseHpMax, max: baseHpMax, temp: 0 },
+      hitDice: { current: 1, max: 1, die: cls.hitDie },
+      // Class resources reset to starting state (Second Wind ready, no
+      // surge, sneak attack available, full Wizard slots for L1).
+      resources: classStartingResources(ch.classId),
+      blessings: [],
+      delveAttackBonus: 0,
+      nextAttackAdvantage: false,
+      poisonImmuneEncounter: false,
+      conditions: [],
+    };
+    const withUpgrades = applyDelveStartUpgrades(withResetActionEconomy(freshlyDescended), get().unlockedUpgrades);
     const withQuirkBudgets = applyDelveStartQuirks(withUpgrades);
     set({
       delve,
@@ -402,32 +424,27 @@ export const useGameStore = create<GameState>()(
       if (!s.delve) {
         return { ...s, screen: 'hub', combat: null };
       }
-      const earnedGold = s.delve.goldEarned;
-      const earnedXp = s.delve.xpEarned;
       const wonBoss = s.delve.phase === 'completed';
-      // Soul-mark also boosts renown (each bane quirk = +20%).
+      // Renown is the ONLY thing that crosses the wheel — soul-mark bumps
+      // it (each bane quirk = +20%). Gold and XP and level all stay in the
+      // delve and die with it; startDelve seeds the next run at L1/0/0.
       const renownBase = wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
       const renownGain = Math.floor(renownBase * soulMarkMultiplier(s.character));
-      const rested = longRest({
+      const settled: Character = {
         ...s.character,
-        goldInPocket: s.character.goldInPocket + earnedGold,
-        xp: s.character.xp + earnedXp,
         renown: s.character.renown + renownGain,
-        // Blessings were granted for the delve only — they wipe at the hub.
         blessings: [],
-        // Sharpen the Blade was a per-delve buff — drop it.
         delveAttackBonus: 0,
-      });
-      const screen = hasPendingLevelUp(rested) ? 'level-up' : 'hub';
+      };
       const ch1Killed = s.delve.chapter1BossKilled === true;
       return {
-        character: rested,
+        character: settled,
         delve: null,
         combat: null,
-        screen,
+        screen: 'hub',
         chapter1Cleared: s.chapter1Cleared || wonBoss || ch1Killed,
         druidGroveUnlocked:
-          s.druidGroveUnlocked || rested.renown >= GROVE_UNLOCK_THRESHOLD,
+          s.druidGroveUnlocked || settled.renown >= GROVE_UNLOCK_THRESHOLD,
       };
     }),
 

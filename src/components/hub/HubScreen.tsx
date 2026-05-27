@@ -2,91 +2,13 @@ import { useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
-import { createGodwakeDelve, createSpellholdDelve, createUstNathaDelve } from '../../engine/delve';
+import { createGodwakeDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { playMusic, stopMusic } from '../../engine/audio';
 import { PhandalinScene } from './PhandalinScene';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
-
-const SPELLHOLD_RENOWN_GATE = 1500;
-const UST_NATHA_RENOWN_GATE = 3000;
-
-interface Building {
-  id: string;
-  name: string;
-  description: string;
-  enabled: boolean;
-  cta?: string;
-  lockedCta?: string;
-}
-
-function buildingsFor(
-  druidGroveUnlocked: boolean,
-  chapter1Cleared: boolean,
-  renown: number,
-): Building[] {
-  const buildings: Building[] = [
-    {
-      id: 'druid-grove',
-      name: 'The Druid Grove',
-      description: druidGroveUnlocked
-        ? 'The circle of Mielikki tends the Wellspring. They will return you to life when you fall — and shape what comes back.'
-        : 'A clearing past the treeline. Smoke drifts from somewhere within, but no path opens for you. Renown enough to barter has not yet reached the keepers.',
-      enabled: druidGroveUnlocked,
-      cta: 'Tend the Soul',
-      lockedCta: 'Sealed to you',
-    },
-    {
-      id: 'iron-cells',
-      name: chapter1Cleared ? 'The Long Road South' : 'The Iron Cells',
-      description: chapter1Cleared
-        ? "The duergar are dead and the staircase is yours. Skip the cells; ride the Trade Way south. The Athkatla road waits at the outskirts of Phandalin."
-        : "A staircase down through Tresendar Manor's ruined cellar. The first dungeon under Phandalin.",
-      enabled: true,
-      cta: chapter1Cleared ? 'Take the South Road' : 'Delve',
-    },
-    {
-      id: 'lionshield-coster',
-      name: 'Lionshield Coster',
-      description:
-        "Linene Graywind's trading post sells potions, scrolls, and mid-tier gear. Always open, always taking coin.",
-      enabled: true,
-      cta: 'Spend Gold',
-    },
-  ];
-  // Spellhold (Ch3) only surfaces after Ch1 is cleared. Hard renown gate at
-  // 1500 — until then the card reads as a sealed rumour, in the same shape
-  // as the Druid Grove card pre-unlock.
-  if (chapter1Cleared) {
-    const spellholdUnlocked = renown >= SPELLHOLD_RENOWN_GATE;
-    buildings.push({
-      id: 'spellhold',
-      name: 'Spellhold',
-      description: spellholdUnlocked
-        ? "A Cowled Wizards' charter at the harbourmaster's desk pays passage to an island off the Amn coast. The asylum on it is not on the public maps. Your name, when you sign, is the only one they ask for."
-        : `A rumour at the docks: an island prison the Cowled Wizards keep off the coast. None of the harbour-captains will speak the name without coin and a charter. Renown ${renown} / ${SPELLHOLD_RENOWN_GATE}.`,
-      enabled: spellholdUnlocked,
-      cta: 'Sail to Spellhold',
-      lockedCta: 'Beyond your renown',
-    });
-    // Ust Natha (Ch4) — the drow city beneath Amn. Same surface pattern as
-    // Spellhold: only appears after Ch1 clear, hard renown gate at 3000.
-    const ustNathaUnlocked = renown >= UST_NATHA_RENOWN_GATE;
-    buildings.push({
-      id: 'ust-natha',
-      name: 'Ust Natha',
-      description: ustNathaUnlocked
-        ? 'Coin and a charter buy you passage with the Cowled escorts who know the way down.'
-        : `A rumour at the docks of a slave-market deeper than the Underdark itself… Renown ${renown} / ${UST_NATHA_RENOWN_GATE}.`,
-      enabled: ustNathaUnlocked,
-      cta: 'Descend to Ust Natha',
-      lockedCta: 'Beyond your renown',
-    });
-  }
-  return buildings;
-}
 
 export function HubScreen() {
   const character = useGameStore((s) => s.character);
@@ -117,20 +39,10 @@ export function HubScreen() {
   const cls = getClass(character.classId);
 
   function handleEnterDungeon() {
-    // After clearing Ch1, the "Long Road South" entry skips Iron Cells and
-    // drops the player straight at the Athkatla road — no replaying the
-    // duergar floors every reincarnation.
-    const delve = createGodwakeDelve({ skipChapter1: chapter1Cleared });
-    startDelve(delve);
-  }
-
-  function handleSailToSpellhold() {
-    const delve = createSpellholdDelve();
-    startDelve(delve);
-  }
-
-  function handleDescendToUstNatha() {
-    const delve = createUstNathaDelve();
+    // Hades-style: one delve, every run. All chapters chain. Chapters
+    // unlock progressively within the run, not via separate hub entries.
+    void chapter1Cleared; // referenced for future "skip already-cleared" flag
+    const delve = createGodwakeDelve();
     startDelve(delve);
   }
 
@@ -213,55 +125,39 @@ export function HubScreen() {
         </Panel>
       )}
 
-      <div
-        className={`grid gap-4 ${
-          chapter1Cleared ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3'
-        }`}
-      >
-        {buildingsFor(druidGroveUnlocked, chapter1Cleared, character.renown).map((b) => (
-          <Panel key={b.id} title={b.name}>
-            <p className="text-[var(--color-text-secondary)] text-sm mb-4 min-h-[5rem]">
-              {b.description}
-            </p>
-            <Button
-              variant={b.enabled ? 'primary' : 'secondary'}
-              disabled={!b.enabled}
-              onClick={
-                b.id === 'iron-cells'
-                  ? handleEnterDungeon
-                  : b.id === 'druid-grove'
-                    ? goToDruidGrove
-                    : b.id === 'spellhold'
-                      ? handleSailToSpellhold
-                      : b.id === 'ust-natha'
-                        ? handleDescendToUstNatha
-                        : b.id === 'lionshield-coster'
-                          ? useGameStore.getState().goToLionshieldCoster
-                          : undefined
-              }
-            >
-              {b.enabled ? (b.cta ?? 'Enter') : (b.lockedCta ?? 'Coming soon')}
-            </Button>
-          </Panel>
-        ))}
+      {/* Single descent. Chapters unfold inside the delve, not on the
+          hub. Grove is the only place that takes coin for permanent
+          purchases — and it spends renown, not gold. */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Panel tone="warm" title="The Descent">
+          <p className="text-[var(--color-text-secondary)] text-sm mb-4 leading-relaxed">
+            One road, many rooms. The cells beneath Tresendar Manor open onto a longer dark — chapter by chapter, the wheel turns. Gold and XP belong to the road; only renown returns.
+          </p>
+          <Button variant="primary" size="lg" onClick={handleEnterDungeon}>
+            ▸ Descend
+          </Button>
+        </Panel>
+        <Panel
+          tone={druidGroveUnlocked ? 'glow' : 'default'}
+          title="The Druid Grove"
+        >
+          <p className="text-[var(--color-text-secondary)] text-sm mb-4 leading-relaxed">
+            {druidGroveUnlocked
+              ? 'The circle of Mielikki tends the Wellspring. They will return you to life when you fall — and shape what comes back. Spend renown here.'
+              : 'A clearing past the treeline. Smoke drifts from somewhere within, but no path opens for you. Renown enough to barter has not yet reached the keepers.'}
+          </p>
+          <Button
+            variant={druidGroveUnlocked ? 'primary' : 'secondary'}
+            disabled={!druidGroveUnlocked}
+            onClick={goToDruidGrove}
+          >
+            {druidGroveUnlocked ? '◆ Tend the Soul' : 'Sealed to you'}
+          </Button>
+        </Panel>
       </div>
 
-      <div className="mt-8 grid grid-cols-3 md:grid-cols-5 gap-3 text-center">
-        <StatTile label="Gold" value={character.goldInBank + character.goldInPocket} accent="gold" glyph="◈" />
+      <div className="mt-8 grid grid-cols-3 gap-3 text-center">
         <StatTile label="Renown" value={character.renown} accent="amber" glyph="◆" />
-        <StatTile label="XP" value={character.xp} accent="primary" glyph="✦" />
-        <button
-          type="button"
-          onClick={useGameStore.getState().goToInventory}
-          className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
-        >
-          <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
-            ⛁ Inventory
-          </div>
-          <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
-            Open →
-          </div>
-        </button>
         <button
           type="button"
           onClick={useGameStore.getState().goToCodex}
@@ -269,6 +165,18 @@ export function HubScreen() {
         >
           <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
             ☥ Bestiary
+          </div>
+          <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
+            Open →
+          </div>
+        </button>
+        <button
+          type="button"
+          onClick={useGameStore.getState().goToInventory}
+          className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
+        >
+          <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
+            ⛁ Inventory
           </div>
           <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
             Open →
