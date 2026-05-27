@@ -7,10 +7,12 @@ import { getActiveRoller } from '../../engine/dice';
 import { getEvent } from '../../content/events';
 import {
   applyEventOutcome,
+  canTakeChoice,
   resolveChoiceOutcome,
   type AppliedEffect,
   type EventOutcomeResult,
 } from '../../engine/delve';
+import type { Character } from '../../types/character';
 import { playSfx } from '../../engine/audio';
 import type { EventChoice } from '../../schemas/event';
 
@@ -109,8 +111,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
               <ChoiceButton
                 key={choice.id}
                 choice={choice}
-                gold={character.goldInPocket}
-                hp={character.hp.current}
+                character={character}
                 onPick={() => handlePick(choice)}
               />
             ))}
@@ -129,22 +130,18 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
 
 interface ChoiceButtonProps {
   choice: EventChoice;
-  gold: number;
-  hp: number;
+  character: Character;
   onPick: () => void;
 }
 
-function ChoiceButton({ choice, gold, hp, onPick }: ChoiceButtonProps) {
-  const goldShort =
-    choice.requiresGold !== undefined && gold < choice.requiresGold
-      ? `needs ${choice.requiresGold}g (you have ${gold})`
+function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
+  const availability = canTakeChoice(character, choice);
+  const disabled = !availability.ok;
+  const disabledReason = !availability.ok ? availability.reason : null;
+  const chaTag =
+    choice.requiresCha !== undefined
+      ? `CHA +${choice.requiresCha}`
       : null;
-  const hpShort =
-    choice.requiresHpAtLeast !== undefined && hp < choice.requiresHpAtLeast
-      ? `needs ${choice.requiresHpAtLeast} HP (you have ${hp})`
-      : null;
-  const disabledReason = goldShort ?? hpShort;
-  const disabled = disabledReason !== null;
 
   return (
     <button
@@ -162,11 +159,21 @@ function ChoiceButton({ choice, gold, hp, onPick }: ChoiceButtonProps) {
         <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
           {choice.label}
         </div>
-        {choice.requiresGold !== undefined && (
-          <div className="text-[var(--color-accent-gold)] text-xs uppercase tracking-widest shrink-0">
-            {choice.requiresGold}g
-          </div>
-        )}
+        <div className="flex items-baseline gap-2 shrink-0">
+          {chaTag && (
+            <div
+              data-testid="cha-badge"
+              className="text-[var(--color-accent-amber)] text-[10px] uppercase tracking-widest border border-[var(--color-accent-amber)]/60 px-1.5 py-0.5"
+            >
+              {chaTag}
+            </div>
+          )}
+          {choice.requiresGold !== undefined && (
+            <div className="text-[var(--color-accent-gold)] text-xs uppercase tracking-widest">
+              {choice.requiresGold}g
+            </div>
+          )}
+        </div>
       </div>
       {choice.hint && (
         <div className="text-[var(--color-text-secondary)] text-xs italic mt-1">

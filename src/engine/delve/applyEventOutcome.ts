@@ -1,12 +1,14 @@
 import type { Character } from '../../types/character';
 import type { DiceRoller } from '../dice';
 import type {
+  EventChoice,
   EventChoiceOutcome,
   EventEffect,
   EventOutcome,
 } from '../../schemas/event';
 import { listBlessings, getBlessing } from '../../content/blessings';
 import { listQuirks, getQuirk } from '../../content/quirks';
+import { modifierFor } from '../character/derived';
 
 /** Plain-text record of a single effect that landed. Useful for UI summaries. */
 export interface AppliedEffect {
@@ -27,6 +29,50 @@ export interface EventOutcomeResult {
    * advancing the room. Created by `spawn_ambush` effects.
    */
   ambush?: { monsterDefIds: string[] };
+}
+
+/**
+ * Availability of a choice for the current character. `ok=true` means every
+ * gate passes; `ok=false` means at least one gate fails and the UI should
+ * disable / hide the option. The first failing gate populates `reason`.
+ */
+export type ChoiceAvailability =
+  | { ok: true }
+  | { ok: false; reason: string; gate: 'gold' | 'hp' | 'cha' };
+
+/**
+ * Check whether the character meets every gate on a choice: gold cost, HP
+ * threshold, and CHA modifier (BG2-style [Persuade] gate). Returns the first
+ * failing gate's reason so the UI can show a single, specific blocker.
+ */
+export function canTakeChoice(character: Character, choice: EventChoice): ChoiceAvailability {
+  if (choice.requiresGold !== undefined && character.goldInPocket < choice.requiresGold) {
+    return {
+      ok: false,
+      gate: 'gold',
+      reason: `needs ${choice.requiresGold}g (you have ${character.goldInPocket})`,
+    };
+  }
+  if (choice.requiresHpAtLeast !== undefined && character.hp.current < choice.requiresHpAtLeast) {
+    return {
+      ok: false,
+      gate: 'hp',
+      reason: `needs ${choice.requiresHpAtLeast} HP (you have ${character.hp.current})`,
+    };
+  }
+  if (choice.requiresCha !== undefined) {
+    const chaMod = modifierFor(character, 'cha');
+    if (chaMod < choice.requiresCha) {
+      const sign = choice.requiresCha >= 0 ? '+' : '';
+      const youSign = chaMod >= 0 ? '+' : '';
+      return {
+        ok: false,
+        gate: 'cha',
+        reason: `needs CHA ${sign}${choice.requiresCha} (you have ${youSign}${chaMod})`,
+      };
+    }
+  }
+  return { ok: true };
 }
 
 /**

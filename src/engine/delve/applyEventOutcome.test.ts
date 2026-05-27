@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { createDiceRoller } from '../dice';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
-import { applyEventOutcome, resolveChoiceOutcome } from './applyEventOutcome';
+import { applyEventOutcome, canTakeChoice, resolveChoiceOutcome } from './applyEventOutcome';
 import type { Character } from '../../types/character';
-import type { EventOutcome, EventChoiceOutcome } from '../../schemas/event';
+import type { EventChoice, EventOutcome, EventChoiceOutcome } from '../../schemas/event';
 import { listBlessings } from '../../content/blessings';
 import { listQuirks } from '../../content/quirks';
 
@@ -267,5 +267,85 @@ describe('cost-gating helpers — choice rejection', () => {
     const walletB = 25;
     expect(walletA < requiresGold).toBe(true);
     expect(walletB < requiresGold).toBe(false);
+  });
+});
+
+describe('canTakeChoice — gate evaluation', () => {
+  function choice(overrides: Partial<EventChoice>): EventChoice {
+    return {
+      id: 'test-choice',
+      label: 'Test',
+      outcome: { resolution: 'ok', effects: [] },
+      ...overrides,
+    };
+  }
+
+  it('returns ok when no gates are present', () => {
+    const c = makeChar();
+    expect(canTakeChoice(c, choice({})).ok).toBe(true);
+  });
+
+  it('gold gate: blocks when wallet is short, allows when wallet meets cost', () => {
+    const poor = makeChar({ goldInPocket: 4 });
+    const rich = makeChar({ goldInPocket: 5 });
+    const gated = choice({ requiresGold: 5 });
+    const a = canTakeChoice(poor, gated);
+    expect(a.ok).toBe(false);
+    if (!a.ok) expect(a.gate).toBe('gold');
+    expect(canTakeChoice(rich, gated).ok).toBe(true);
+  });
+
+  it('hp gate: blocks when current HP below threshold', () => {
+    const hurt = makeChar();
+    hurt.hp = { current: 3, max: 20, temp: 0 };
+    const gated = choice({ requiresHpAtLeast: 6 });
+    const a = canTakeChoice(hurt, gated);
+    expect(a.ok).toBe(false);
+    if (!a.ok) expect(a.gate).toBe('hp');
+  });
+
+  it('cha gate: blocks when effective CHA mod is below threshold', () => {
+    // STANDARD_ARRAY = [15,14,13,12,10,8]. makeChar maps cha=STANDARD_ARRAY[4]=10 → mod 0.
+    // Human race grants +1 to every stat → cha 11 → mod 0.
+    const dull = makeChar();
+    const gated = choice({ requiresCha: 1 });
+    const a = canTakeChoice(dull, gated);
+    expect(a.ok).toBe(false);
+    if (!a.ok) {
+      expect(a.gate).toBe('cha');
+      expect(a.reason).toContain('CHA');
+    }
+  });
+
+  it('cha gate: allows when effective CHA mod meets threshold (Half-Elf-style build)', () => {
+    // Put 15 (the top of the standard array) into cha; race +1 → 16 → mod +3.
+    const silverTongue = createCharacter({
+      id: 'silver',
+      name: 'Silver',
+      raceId: 'human',
+      classId: 'fighter',
+      baseAbilityScores: {
+        str: STANDARD_ARRAY[1],
+        dex: STANDARD_ARRAY[2],
+        con: STANDARD_ARRAY[3],
+        int: STANDARD_ARRAY[5],
+        wis: STANDARD_ARRAY[4],
+        cha: STANDARD_ARRAY[0],
+      },
+      skillProficiencies: ['athletics', 'perception'],
+    });
+    expect(canTakeChoice(silverTongue, choice({ requiresCha: 3 })).ok).toBe(true);
+    const tooHard = canTakeChoice(silverTongue, choice({ requiresCha: 4 }));
+    expect(tooHard.ok).toBe(false);
+    if (!tooHard.ok) expect(tooHard.gate).toBe('cha');
+  });
+
+  it('gate priority: gold checked before hp before cha (first failure surfaces)', () => {
+    const broke = makeChar({ goldInPocket: 0 });
+    broke.hp = { current: 1, max: 20, temp: 0 };
+    const triple = choice({ requiresGold: 5, requiresHpAtLeast: 10, requiresCha: 5 });
+    const a = canTakeChoice(broke, triple);
+    expect(a.ok).toBe(false);
+    if (!a.ok) expect(a.gate).toBe('gold');
   });
 });

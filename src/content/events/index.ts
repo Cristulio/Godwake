@@ -24,6 +24,20 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'speak-gently',
+        label: '[Charisma] Speak gently with her',
+        hint: 'The Crying God listens to a kind word.',
+        requiresCha: 1,
+        outcome: {
+          resolution:
+            'You crouch and put words to the ache in her shoulders before she names it herself. She lifts her eyes for the first time and tells you a small story about her sister. When you stand, her thumb has marked Ilmater\'s tear on your brow, and her god rides a little of the road with you.',
+          effects: [
+            { kind: 'hp_delta', amount: 4 },
+            { kind: 'grant_blessing', random: true },
+          ],
+        },
+      },
+      {
         id: 'refuse',
         label: 'Refuse and walk on',
         hint: 'The Crying God notices.',
@@ -342,6 +356,17 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'bluff-the-cowl',
+        label: '[Charisma] Bluff the recruiter',
+        hint: 'Name-drop a Cowled superior you have never met.',
+        requiresCha: 3,
+        outcome: {
+          resolution:
+            'You drop a name with the calm of a man who has stood in chambers above this one. The Cowl\'s eyes flicker — the briefest re-evaluation — and the chalk-sigil presses onto your hand without a coin asked. They step back into the arch, the stone sealing behind them, and you walk on with a wizard\'s mark and a wizard\'s purse intact.',
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }],
+        },
+      },
+      {
         id: 'draw-on-them',
         label: 'Draw on them',
         hint: 'A wizard is a wizard.',
@@ -384,6 +409,21 @@ const POOL: EventTemplate[] = [
             'He wraps the bottle in waxed cloth and slips it into your pack. The first swallow on the road tomorrow knits something the day broke.',
           effects: [
             { kind: 'gold_delta', amount: -15 },
+            { kind: 'hp_delta', amount: 8 },
+          ],
+        },
+      },
+      {
+        id: 'haggle',
+        label: '[Charisma] Haggle for the bottle',
+        hint: 'A smile, a story of the road, a price brought down.',
+        requiresGold: 8,
+        requiresCha: 1,
+        outcome: {
+          resolution:
+            'You spin him a tale about Amnian summers and a sister who married a vintner. He laughs and waves a hand. "Half price for a walker who knows the country, then." The bottle goes into your pack at a thief\'s rate.',
+          effects: [
+            { kind: 'gold_delta', amount: -8 },
             { kind: 'hp_delta', amount: 8 },
           ],
         },
@@ -504,6 +544,17 @@ const POOL: EventTemplate[] = [
             { kind: 'gold_delta', amount: 40 },
             { kind: 'grant_quirk_reroll' },
           ],
+        },
+      },
+      {
+        id: 'talk-down',
+        label: '[Charisma] Talk him down',
+        hint: 'A calm voice between the bars; a name remembered for him.',
+        requiresCha: 2,
+        outcome: {
+          resolution:
+            'You crouch to his level and speak with the steadiness of a stranger who is not afraid of him. He blinks. Once. Twice. Then he hands the purse through the bars with both hands, like a child returning a borrowed thing. "Yours, walker. Yours. Not the Director\'s. Not anymore." The weight in your pocket is clean.',
+          effects: [{ kind: 'gold_delta', amount: 40 }],
         },
       },
       {
@@ -669,6 +720,17 @@ const POOL: EventTemplate[] = [
             { kind: 'gold_delta', amount: -60 },
             { kind: 'grant_blessing', random: true },
           ],
+        },
+      },
+      {
+        id: 'flatter-the-spider',
+        label: '[Charisma] Flatter the Spider',
+        hint: 'A courtier\'s tongue for Lolth\'s red lace.',
+        requiresCha: 3,
+        outcome: {
+          resolution:
+            'You bow as a noble of Ust Natha would bow, and put the priestess\'s own beauty into Lolth\'s mouth — the kind of compliment that is also a prayer. Her smile does not change, but her hand opens. "The Spider notes a tongue worth keeping." The corridor opens. No blood. No coin. The blessing she leaves is colder than the dark.',
+          effects: [{ kind: 'grant_blessing', random: true }],
         },
       },
       {

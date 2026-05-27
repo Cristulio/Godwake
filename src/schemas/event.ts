@@ -38,6 +38,12 @@ export const EventChoiceSchema = z.object({
   hint: z.string().optional(),
   requiresGold: z.number().optional(),
   requiresHpAtLeast: z.number().optional(),
+  /**
+   * Minimum effective CHA modifier required to take this option (BG2-style
+   * [Persuade] gate). Threshold is compared against `modifierFor(c, 'cha')`,
+   * which includes racial bonuses. UI hides/disables the option below it.
+   */
+  requiresCha: z.number().optional(),
   outcome: EventChoiceOutcomeSchema,
 });
 export type EventChoice = z.infer<typeof EventChoiceSchema>;
@@ -47,6 +53,6 @@ export const EventTemplateSchema = z.object({
   title: z.string(),
   flavor: z.string(),
   minChapter: z.number().int().positive().optional(),
-  choices: z.array(EventChoiceSchema).min(2).max(3),
+  choices: z.array(EventChoiceSchema).min(2).max(4),
 });
 export type EventTemplate = z.infer<typeof EventTemplateSchema>;
