@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 22 22"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Stirge"
+    >
+
+      <polygon points="0,7 5,3 7,10 5,12" fill="#5a3818" />
+      <polygon points="22,7 17,3 15,10 17,12" fill="#5a3818" />
+      <polygon points="1,8 4,5 5,10" fill="#7a5028" opacity="0.6" />
+      <polygon points="21,8 18,5 17,10" fill="#7a5028" opacity="0.6" />
+
+      <line x1="2" y1="5" x2="6" y2="11" stroke="#1a1410" stroke-width="0.4" />
+      <line x1="20" y1="5" x2="16" y2="11" stroke="#1a1410" stroke-width="0.4" />
+
+      <ellipse cx="11" cy="9" rx="4" ry="3" fill="#3a2418" />
+      <ellipse cx="11" cy="8" rx="3" ry="2" fill="#5a3818" />
+
+      <rect x="8" y="9" width="6" height="1" fill="#1a1410" />
+      <rect x="9" y="11" width="4" height="1" fill="#1a1410" />
+
+      <rect x="8" y="6" width="2" height="2" fill="#1a1410" />
+      <rect x="12" y="6" width="2" height="2" fill="#1a1410" />
+      <rect x="9" y="6" width="1" height="1" fill="#b5302c" />
+      <rect x="12" y="6" width="1" height="1" fill="#b5302c" />
+
+      <rect x="10" y="11" width="2" height="2" fill="#3a2418" />
+      <rect x="10" y="13" width="2" height="1" fill="#5a3818" />
+      <rect x="10" y="14" width="1" height="7" fill="#a89878" />
+      <rect x="10" y="14" width="1" height="2" fill="#d4c8a8" />
+
+      <rect x="7" y="11" width="1" height="2" fill="#1a1410" />
+      <rect x="14" y="11" width="1" height="2" fill="#1a1410" />
+      <rect x="6" y="13" width="1" height="1" fill="#1a1410" />
+      <rect x="15" y="13" width="1" height="1" fill="#1a1410" />
+
+      <rect x="9" y="4" width="1" height="2" fill="#1a1410" />
+      <rect x="12" y="4" width="1" height="2" fill="#1a1410" />
+      <rect x="8" y="3" width="1" height="1" fill="#1a1410" />
+      <rect x="13" y="3" width="1" height="1" fill="#1a1410" />
+    </svg>

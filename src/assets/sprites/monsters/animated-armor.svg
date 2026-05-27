@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 22 40"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Animated Armor"
+    >
+
+      <rect x="10" y="0" width="2" height="1" fill="#b5302c" />
+      <rect x="11" y="-1" width="1" height="1" fill="#b5302c" />
+
+      <rect x="7" y="1" width="8" height="2" fill="#6a625a" />
+      <rect x="6" y="2" width="10" height="6" fill="#7a7268" />
+      <rect x="5" y="3" width="1" height="5" fill="#5a5248" />
+      <rect x="16" y="3" width="1" height="5" fill="#5a5248" />
+
+      <rect x="7" y="5" width="8" height="2" fill="#0a0606" />
+      <rect x="8" y="5" width="1" height="1" fill="#3a8c5a" />
+      <rect x="13" y="5" width="1" height="1" fill="#3a8c5a" />
+
+      <rect x="7" y="7" width="8" height="2" fill="#5a5248" />
+
+      <rect x="9" y="9" width="4" height="1" fill="#0a0606" />
+
+      <rect x="2" y="10" width="5" height="4" fill="#5a5248" />
+      <rect x="15" y="10" width="5" height="4" fill="#5a5248" />
+      <rect x="3" y="11" width="3" height="2" fill="#7a7268" />
+      <rect x="16" y="11" width="3" height="2" fill="#7a7268" />
+
+      <polygon points="2,10 1,8 3,10" fill="#3a3228" />
+      <polygon points="20,10 21,8 19,10" fill="#3a3228" />
+
+      <rect x="6" y="11" width="10" height="11" fill="#6a625a" />
+      <rect x="5" y="12" width="12" height="9" fill="#7a7268" />
+      <rect x="5" y="12" width="12" height="1" fill="#5a5248" />
+
+      <rect x="10" y="13" width="2" height="8" fill="#5a5248" />
+
+      <rect x="9" y="16" width="4" height="2" fill="#3a8c5a" />
+      <rect x="10" y="17" width="2" height="1" fill="#a8d042" />
+
+      <rect x="5" y="22" width="12" height="3" fill="#5a5248" />
+      <rect x="5" y="22" width="12" height="1" fill="#3a3228" />
+      <rect x="7" y="23" width="1" height="2" fill="#3a3228" />
+      <rect x="10" y="23" width="1" height="2" fill="#3a3228" />
+      <rect x="13" y="23" width="1" height="2" fill="#3a3228" />
+
+      <rect x="3" y="14" width="3" height="3" fill="#7a7268" />
+      <rect x="16" y="14" width="3" height="3" fill="#7a7268" />
+      <rect x="3" y="17" width="2" height="1" fill="#3a3228" />
+      <rect x="17" y="17" width="2" height="1" fill="#3a3228" />
+      <rect x="3" y="18" width="3" height="5" fill="#7a7268" />
+      <rect x="16" y="18" width="3" height="5" fill="#7a7268" />
+
+      <rect x="2" y="23" width="5" height="3" fill="#3a3228" />
+      <rect x="15" y="23" width="5" height="3" fill="#3a3228" />
+      <rect x="3" y="24" width="3" height="1" fill="#7a7268" />
+      <rect x="16" y="24" width="3" height="1" fill="#7a7268" />
+
+      <rect x="18" y="6" width="2" height="18" fill="#3a2e22" />
+      <rect x="17" y="3" width="4" height="4" fill="#5a5248" />
+      <rect x="16" y="4" width="6" height="2" fill="#3a3228" />
+      <rect x="17" y="2" width="1" height="1" fill="#3a3228" />
+      <rect x="20" y="2" width="1" height="1" fill="#3a3228" />
+      <rect x="18" y="1" width="2" height="2" fill="#3a3228" />
+
+      <rect x="6" y="25" width="4" height="9" fill="#7a7268" />
+      <rect x="12" y="25" width="4" height="9" fill="#7a7268" />
+      <rect x="6" y="25" width="1" height="9" fill="#5a5248" />
+      <rect x="12" y="25" width="1" height="9" fill="#5a5248" />
+
+      <rect x="6" y="29" width="4" height="2" fill="#3a3228" />
+      <rect x="12" y="29" width="4" height="2" fill="#3a3228" />
+
+      <rect x="5" y="34" width="6" height="4" fill="#3a3228" />
+      <rect x="11" y="34" width="6" height="4" fill="#3a3228" />
+      <polygon points="5,38 7,40 11,38" fill="#3a3228" />
+      <polygon points="11,38 13,40 17,38" fill="#3a3228" />
+    </svg>
