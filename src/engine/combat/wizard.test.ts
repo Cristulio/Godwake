@@ -462,7 +462,8 @@ describe('Wizard — Grove caster bonuses', () => {
   it('Burning Tongue adds permanentBonuses.spellDamage to a Fire Bolt hit', () => {
     const goblin = getMonster('goblin');
     const buffed: Character = { ...makeWizard(), permanentBonuses: { spellDamage: 3 } };
-    // Find a seed where the cantrip hits; assert damage line carries the +3.
+    // Fire Bolt damage = 1d10 + INT mod (+3 for makeWizard's INT 15 + Human
+    // +1 → 16) + spellDamage (+3 Burning Tongue) = +6 total bonus.
     let validated = false;
     for (let seed = 1; seed <= 60 && !validated; seed++) {
       const character: Character = {
@@ -480,9 +481,9 @@ describe('Wizard — Grove caster bonuses', () => {
       }).state;
       const dmgLog = state.log.find((l) => l.kind === 'damage' && l.text.includes('fire'));
       if (!dmgLog) continue;
-      const m = dmgLog.text.match(/\+3 = (\d+) fire/);
+      const m = dmgLog.text.match(/\+6 = (\d+) fire/);
       if (!m) continue;
-      expect(dmgLog.text).toContain('+3 =');
+      expect(dmgLog.text).toContain('+6 =');
       validated = true;
     }
     expect(validated).toBe(true);
