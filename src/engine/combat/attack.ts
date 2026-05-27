@@ -44,6 +44,10 @@ function nextLogId(state: CombatState): number {
   return state.log.length + 1;
 }
 
+export function sneakAttackDiceForLevel(level: number): number {
+  return Math.max(1, Math.ceil(level / 2));
+}
+
 function findCombatant(state: CombatState, id: string): Combatant | undefined {
   return state.combatants.find((c) => c.id === id);
 }
@@ -334,13 +338,14 @@ export function playerAttack(
     const isRogue = character.classId === 'rogue';
     const sneakTriggers = advantage === 'advantage' || targetWounded;
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
+      const sneakDice = sneakAttackDiceForLevel(character.level);
       const sneakRoll = roller.roll({
-        count: 1 * (crit ? 2 : 1),
+        count: sneakDice * (crit ? 2 : 1),
         die: 6,
         modifier: 0,
       });
       bonusDamage += sneakRoll.total;
-      bonusParts.push(`+${sneakRoll.total} Sneak Attack`);
+      bonusParts.push(`+${sneakRoll.total} Sneak Attack (${sneakDice}d6)`);
       sneakAttackFiredFlag = true;
     }
 

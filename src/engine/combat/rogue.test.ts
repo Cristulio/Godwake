@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
-import { playerAttack } from './attack';
+import { playerAttack, sneakAttackDiceForLevel } from './attack';
 import { useCunningAction } from './cunningAction';
 import { endTurn } from './turn';
 import { createDiceRoller } from '../dice';
@@ -35,6 +35,56 @@ function makeRogue(extra: Partial<Character> = {}): Character {
 function findMonster(state: ReturnType<typeof createCombat>): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
 }
+
+describe('sneakAttackDiceForLevel', () => {
+  it('returns 1d6 at L1-2, 2d6 at L3-4, 3d6 at L5-6, 4d6 at L7-8', () => {
+    expect(sneakAttackDiceForLevel(1)).toBe(1);
+    expect(sneakAttackDiceForLevel(2)).toBe(1);
+    expect(sneakAttackDiceForLevel(3)).toBe(2);
+    expect(sneakAttackDiceForLevel(4)).toBe(2);
+    expect(sneakAttackDiceForLevel(5)).toBe(3);
+    expect(sneakAttackDiceForLevel(6)).toBe(3);
+    expect(sneakAttackDiceForLevel(7)).toBe(4);
+    expect(sneakAttackDiceForLevel(8)).toBe(4);
+  });
+});
+
+describe('Rogue — Sneak Attack scaling in combat', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function fireSneakAtLevel(level: number): string | undefined {
+    for (let seed = 1; seed <= 120; seed++) {
+      const goblin = getMonster('goblin');
+      const rogue = makeRogue({ level });
+      const roller = createDiceRoller(seed);
+      let state = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+      state = useCunningAction({ character: rogue, state, choice: 'hide' }).state;
+      const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+      state = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger').state;
+      const log = state.log.find((l) => l.text.includes('Sneak Attack'));
+      if (log) return log.text;
+    }
+    return undefined;
+  }
+
+  it('logs 1d6 at L1', () => {
+    const text = fireSneakAtLevel(1);
+    expect(text).toBeDefined();
+    expect(text).toContain('Sneak Attack (1d6)');
+  });
+
+  it('logs 2d6 at L3', () => {
+    const text = fireSneakAtLevel(3);
+    expect(text).toBeDefined();
+    expect(text).toContain('Sneak Attack (2d6)');
+  });
+
+  it('logs 3d6 at L5', () => {
+    const text = fireSneakAtLevel(5);
+    expect(text).toBeDefined();
+    expect(text).toContain('Sneak Attack (3d6)');
+  });
+});
 
 describe('Rogue — Sneak Attack', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
