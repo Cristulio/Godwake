@@ -61,8 +61,10 @@ export const MonsterSchema = z.object({
   /**
    * Optional boss mechanic id. The combat engine reads this to apply per-boss
    * behaviors. 'battle-rage' = on the first turn this monster is at or below
-   * half HP, it enters Battle Rage: advantage on attacks and +2 damage from
-   * then until end of combat.
+   * half HP, it enters Battle Rage: +2 damage per hit from then until end of
+   * combat. (No advantage — the advantage component was dropped in the boss-
+   * math rebalance because it converted misses into hits and snowballed past
+   * the player's healing curve.)
    */
   bossMechanic: z.enum(['battle-rage']).optional(),
 });

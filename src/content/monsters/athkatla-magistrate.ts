@@ -5,7 +5,10 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * magistrate over a guild court and rules with the kind of casual cruelty
  * that requires no warrant. Brittle (low HP, light armor) but lethal: opens
  * combat with a Hold Person and then chips the paralyzed player to death
- * with Mind Spike.
+ * with Mind Spike. Hold Person DC is intentionally soft (12) — at the L3-4
+ * power band the player hits with WIS+1 or so, so DC 12 lands at roughly
+ * 50/50. Three rounds of guaranteed paralyze + auto-advantage Mind Spike
+ * was a save-or-die at DC 14; 50/50 keeps the threat real without the wall.
  */
 export const ATHKATLA_MAGISTRATE: Monster = MonsterSchema.parse({
   id: 'athkatla-magistrate',
@@ -22,7 +25,7 @@ export const ATHKATLA_MAGISTRATE: Monster = MonsterSchema.parse({
     {
       kind: 'paralyze',
       name: 'Hold Person',
-      saveDC: 14,
+      saveDC: 12,
       saveAbility: 'wis',
       durationRounds: 3,
       description:

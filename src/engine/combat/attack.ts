@@ -521,7 +521,7 @@ export function monsterAttack(
     workingState = appendLog(workingState, {
       id: nextLogId(workingState),
       kind: 'system',
-      text: `${attacker.instance.displayName} enters Battle Rage — advantage on attacks, +2 damage.`,
+      text: `${attacker.instance.displayName} enters Battle Rage — +2 damage per hit.`,
     });
   }
   const raging =
@@ -529,7 +529,7 @@ export function monsterAttack(
 
   const ac = computeAC(character);
   const attackAdvantage: 'normal' | 'advantage' =
-    playerParalyzed || raging ? 'advantage' : 'normal';
+    playerParalyzed ? 'advantage' : 'normal';
   const toHit = roller.d20(attackAdvantage, action.attackBonus);
   // Monsters don't get the player's Improved Critical
   const crit = toHit.rolls[0] === 20;
@@ -537,11 +537,7 @@ export function monsterAttack(
 
   const logEntries: CombatLogEntry[] = [];
   const advantageNote =
-    attackAdvantage === 'advantage'
-      ? raging && !playerParalyzed
-        ? ' (advantage — raging)'
-        : ' (advantage — paralyzed)'
-      : '';
+    attackAdvantage === 'advantage' ? ' (advantage — paralyzed)' : '';
   logEntries.push({
     id: nextLogId(workingState),
     kind: 'roll',

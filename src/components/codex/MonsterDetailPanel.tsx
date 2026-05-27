@@ -242,6 +242,6 @@ function Stat({ label, value, accentValue = false }: { label: string; value: str
 function bossMechanicText(mechanic: 'battle-rage'): string {
   switch (mechanic) {
     case 'battle-rage':
-      return 'Battle Rage: when reduced to half HP or less, gains advantage on attacks and +2 damage for the rest of combat.';
+      return 'Battle Rage: when reduced to half HP or less, gains +2 damage per hit for the rest of combat.';
   }
 }
