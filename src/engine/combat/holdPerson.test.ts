@@ -45,8 +45,7 @@ describe('Hold Person — Magistrate boss mechanic', () => {
     const roller = createDiceRoller(1);
     const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
     const monsterId = state.combatants.find((c) => c.kind === 'monster')!.id;
-    const after = monsterAttack({ roller, character: hero, state }, monsterId);
-    // First turn must be a save line, not a damage line.
+    const after = monsterAttack({ roller, character: hero, state }, monsterId).state;    // First turn must be a save line, not a damage line.
     const lastTwo = after.log.slice(-2).map((l) => l.text).join(' || ');
     expect(lastTwo).toMatch(/Hold Person/);
     expect(lastTwo).toMatch(/save/);
@@ -61,8 +60,7 @@ describe('Hold Person — Magistrate boss mechanic', () => {
     const roller = createDiceRoller(2);
     const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
     const monsterId = state.combatants.find((c) => c.kind === 'monster')!.id;
-    monsterAttack({ roller, character: hero, state }, monsterId);
-    const paralyzed = hero.conditions.find((c) => c.name === 'paralyzed');
+    monsterAttack({ roller, character: hero, state }, monsterId).state;    const paralyzed = hero.conditions.find((c) => c.name === 'paralyzed');
     // The seed and the score combination should land on a fail. If a future
     // test flake hits here, swap the seed — the mechanic is the assertion.
     expect(paralyzed).toBeDefined();
@@ -83,8 +81,7 @@ describe('Hold Person — Magistrate boss mechanic', () => {
     const roller = createDiceRoller(5);
     const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] });
     const monsterId = state.combatants.find((c) => c.kind === 'monster')!.id;
-    const after = monsterAttack({ roller, character: hero, state }, monsterId);
-    const attackLine = after.log.find((l) => l.text.includes('Mind Spike'));
+    const after = monsterAttack({ roller, character: hero, state }, monsterId).state;    const attackLine = after.log.find((l) => l.text.includes('Mind Spike'));
     expect(attackLine).toBeDefined();
     expect(attackLine!.text).toContain('advantage');
   });
@@ -105,8 +102,7 @@ describe('Hold Person — Magistrate boss mechanic', () => {
     // Advance until it's the player's turn — rolled initiative order may
     // place the monster first or the player first depending on the d20.
     while (state.initiativeOrder[state.currentTurnIndex] !== 'player') {
-      state = endTurn(state, hero);
-    }
+      state = endTurn(state, hero).state;    }
     expect(hero.actionEconomy.actionUsed).toBe(true);
     expect(hero.actionEconomy.bonusActionUsed).toBe(true);
     const lockoutLog = state.log.find((l) => l.text.includes('cannot move'));

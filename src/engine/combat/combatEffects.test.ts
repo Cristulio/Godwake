@@ -88,8 +88,7 @@ describe('combat effects — temp HP absorbs damage', () => {
     let consumed = false;
     for (let i = 0; i < 30 && !consumed; i++) {
       const before = blessed.hp.temp;
-      state = monsterAttack({ roller, character: blessed, state }, goblinId);
-      if (blessed.hp.temp < before) consumed = true;
+      state = monsterAttack({ roller, character: blessed, state }, goblinId).state;      if (blessed.hp.temp < before) consumed = true;
       if (state.status !== 'active') break;
     }
     expect(consumed).toBe(true);
@@ -110,8 +109,7 @@ describe('combat effects — Tempus first-attack damage', () => {
     const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
     expect(state.playerHasAttacked).toBe(false);
     const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-    const after = playerAttack({ roller, character: blessed, state }, goblinId, 'longsword');
-    expect(after.playerHasAttacked).toBe(true);
+    const after = playerAttack({ roller, character: blessed, state }, goblinId, 'longsword').state;    expect(after.playerHasAttacked).toBe(true);
   });
 });
 
@@ -151,8 +149,7 @@ describe('combat effects — rerolls', () => {
         ),
       };
       const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-      state = playerAttack({ roller, character: blessed, state }, goblinId, 'longsword');
-      if (state.rerollMissesEncounterRemaining === 0) {
+      state = playerAttack({ roller, character: blessed, state }, goblinId, 'longsword').state;      if (state.rerollMissesEncounterRemaining === 0) {
         const rerollLog = state.log.find((e) => e.text.includes("Tymora's Coin"));
         expect(rerollLog).toBeDefined();
         consumed = true;
@@ -185,8 +182,7 @@ describe('combat effects — rerolls', () => {
         ),
       };
       const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-      state = playerAttack({ roller, character: eyed, state }, goblinId, 'longsword');
-      if (eyed.delveBudgets?.quirkRerollMissesRemaining === 0) {
+      state = playerAttack({ roller, character: eyed, state }, goblinId, 'longsword').state;      if (eyed.delveBudgets?.quirkRerollMissesRemaining === 0) {
         const rerollLog = state.log.find((e) => e.text.includes("Tymora's Eye"));
         expect(rerollLog).toBeDefined();
         consumed = true;
@@ -219,8 +215,7 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
 
   it('Ilyich enters Battle Rage when reduced to half HP', () => {
     const { state, ilyichId, hero, roller } = setupRagingIlyich();
-    const next = monsterAttack({ roller, character: hero, state }, ilyichId);
-    const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
+    const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;    const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
     expect(rageLog).toBeDefined();
     const ilyichAfter = next.combatants.find((c) => c.id === ilyichId);
     expect(ilyichAfter?.kind === 'monster' && ilyichAfter.instance.bossRageActive).toBe(true);
@@ -232,8 +227,7 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
     const roller = createDiceRoller(7);
     const state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] });
     const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-    const next = monsterAttack({ roller, character: hero, state }, ilyichId);
-    const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
+    const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;    const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
     expect(rageLog).toBeUndefined();
   });
 });

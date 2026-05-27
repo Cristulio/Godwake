@@ -2,6 +2,7 @@ import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { getItem } from '../../content/items';
+import { combatResult, type CombatActionResult } from './types';
 
 export interface UseItemContext {
   roller: DiceRoller;
@@ -17,16 +18,16 @@ export interface UseItemContext {
 export function useConsumable(
   ctx: UseItemContext,
   inventoryIndex: number,
-): CombatState {
+): CombatActionResult {
   const { roller, character, state } = ctx;
   const ref = character.inventory[inventoryIndex];
-  if (!ref) return state;
+  if (!ref) return combatResult(state, character);
   const item = getItem(ref.itemId);
-  if (item.kind !== 'consumable') return state;
+  if (item.kind !== 'consumable') return combatResult(state, character);
 
   // Action economy check
-  if (item.actionCost === 'action' && character.actionEconomy.actionUsed) return state;
-  if (item.actionCost === 'bonus' && character.actionEconomy.bonusActionUsed) return state;
+  if (item.actionCost === 'action' && character.actionEconomy.actionUsed) return combatResult(state, character);
+  if (item.actionCost === 'bonus' && character.actionEconomy.bonusActionUsed) return combatResult(state, character);
 
   let logText = `${character.name} uses ${item.name}.`;
 
@@ -58,8 +59,5 @@ export function useConsumable(
     text: logText,
   };
 
-  return {
-    ...state,
-    log: [...state.log, log],
-  };
+  return combatResult({ ...state, log: [...state.log, log] }, character);
 }

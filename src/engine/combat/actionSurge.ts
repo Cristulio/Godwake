@@ -1,5 +1,6 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
+import { combatResult, type CombatActionResult } from './types';
 
 export interface ActionSurgeContext {
   character: Character;
@@ -14,10 +15,10 @@ export interface ActionSurgeContext {
  * Resets `playerAttacksThisTurn` too so a Fighter L5 with Extra Attack still
  * gets their full two-attack swing on the surged Action.
  */
-export function useActionSurge(ctx: ActionSurgeContext): CombatState {
+export function useActionSurge(ctx: ActionSurgeContext): CombatActionResult {
   const { character, state } = ctx;
-  if ((character.resources.actionSurgeRemaining ?? 0) <= 0) return state;
-  if (!character.actionEconomy.actionUsed) return state;
+  if ((character.resources.actionSurgeRemaining ?? 0) <= 0) return combatResult(state, character);
+  if (!character.actionEconomy.actionUsed) return combatResult(state, character);
 
   character.resources = {
     ...character.resources,
@@ -34,10 +35,13 @@ export function useActionSurge(ctx: ActionSurgeContext): CombatState {
     text: `${character.name} surges — adrenaline burns through the wound. One more swing.`,
   };
 
-  return {
-    ...state,
-    playerAttacksThisTurn: 0,
-    sneakAttackUsedThisTurn: false,
-    log: [...state.log, log],
-  };
+  return combatResult(
+    {
+      ...state,
+      playerAttacksThisTurn: 0,
+      sneakAttackUsedThisTurn: false,
+      log: [...state.log, log],
+    },
+    character,
+  );
 }

@@ -48,9 +48,7 @@ describe('camp choice — Sharpen the Blade (delveAttackBonus)', () => {
     const goblinIdA = (stateA.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
     const goblinIdB = (stateB.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
 
-    const afterA = playerAttack({ roller: rollerA, character: baseline, state: stateA }, goblinIdA, 'longsword');
-    const afterB = playerAttack({ roller: rollerB, character: sharpened, state: stateB }, goblinIdB, 'longsword');
-
+    const afterA = playerAttack({ roller: rollerA, character: baseline, state: stateA }, goblinIdA, 'longsword').state;    const afterB = playerAttack({ roller: rollerB, character: sharpened, state: stateB }, goblinIdB, 'longsword').state;
     expect(afterA.lastAttack).toBeDefined();
     expect(afterB.lastAttack).toBeDefined();
     // Same natural roll, different attack bonus by exactly 1.
@@ -73,9 +71,7 @@ describe('camp choice — Sharpen the Blade (delveAttackBonus)', () => {
     const goblinIdA = (stateA.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
     const goblinIdB = (stateB.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
 
-    const afterA = playerAttack({ roller: rollerA, character: baseline, state: stateA }, goblinIdA, 'longsword');
-    const afterB = playerAttack({ roller: rollerB, character: both, state: stateB }, goblinIdB, 'longsword');
-
+    const afterA = playerAttack({ roller: rollerA, character: baseline, state: stateA }, goblinIdA, 'longsword').state;    const afterB = playerAttack({ roller: rollerB, character: both, state: stateB }, goblinIdB, 'longsword').state;
     expect(afterB.lastAttack!.attackBonus - afterA.lastAttack!.attackBonus).toBe(2);
   });
 });

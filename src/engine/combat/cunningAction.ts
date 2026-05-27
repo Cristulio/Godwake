@@ -1,5 +1,6 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
+import { combatResult, type CombatActionResult } from './types';
 
 export type CunningActionChoice = 'dash' | 'disengage' | 'hide';
 
@@ -20,12 +21,12 @@ export interface CunningActionContext {
  * Burns the bonus action and one use from the per-combat pool (Thief gets
  * two uses via Fast Hands).
  */
-export function useCunningAction(ctx: CunningActionContext): CombatState {
+export function useCunningAction(ctx: CunningActionContext): CombatActionResult {
   const { character, state, choice } = ctx;
-  if (character.classId !== 'rogue') return state;
-  if (character.actionEconomy.bonusActionUsed) return state;
+  if (character.classId !== 'rogue') return combatResult(state, character);
+  if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
   const usesLeft = character.resources.cunningActionUsesRemaining ?? 0;
-  if (usesLeft <= 0) return state;
+  if (usesLeft <= 0) return combatResult(state, character);
 
   character.resources = {
     ...character.resources,
@@ -57,8 +58,5 @@ export function useCunningAction(ctx: CunningActionContext): CombatState {
     text: narration,
   };
 
-  return {
-    ...state,
-    log: [...state.log, log],
-  };
+  return combatResult({ ...state, log: [...state.log, log] }, character);
 }

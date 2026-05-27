@@ -35,21 +35,9 @@ export interface AttackContext {
   state: CombatState;
 }
 
-/**
- * Public contract for combat actions: callers receive BOTH the new combat
- * state AND a fresh `character` reference. Callers call setCharacter +
- * setCombat with these directly — no `setCharacter({ ...character })`
- * shotgun needed.
- *
- * Internals still mutate the passed-in character (a deeper refactor is on
- * the next-priorities list); this wrapper ensures the caller-facing
- * reference is always new, which is what React's memo/identity checks rely
- * on for re-render correctness.
- */
-export interface CombatActionResult {
-  state: CombatState;
-  character: Character;
-}
+// CombatActionResult + combatResult helper moved to ./types.ts
+import { combatResult, type CombatActionResult } from './types';
+export type { CombatActionResult } from './types';
 
 function nextLogId(state: CombatState): number {
   return state.log.length + 1;
@@ -176,14 +164,14 @@ export function playerAttack(
   ctx: AttackContext,
   targetId: string,
   weaponItemId: string,
-): CombatState {
+): CombatActionResult {
   const { roller, character, state } = ctx;
   const target = findCombatant(state, targetId);
-  if (!target) return state;
-  if (target.kind !== 'monster') return state;
+  if (!target) return combatResult(state, character);
+  if (target.kind !== 'monster') return combatResult(state, character);
 
   const weapon = getItem(weaponItemId);
-  if (weapon.kind !== 'weapon') return state;
+  if (weapon.kind !== 'weapon') return combatResult(state, character);
   playSfx(swingSfxForWeapon(weapon));
 
   const scores = effectiveAbilityScores(character);
@@ -374,7 +362,7 @@ export function playerAttack(
     };
   }
 
-  return evaluateCombatEnd(nextState, character);
+  return combatResult(evaluateCombatEnd(nextState, character), character);
 }
 
 function markPlayerActionUsed(state: CombatState, character: Character): CombatState {
@@ -400,10 +388,10 @@ function maxAttacksPerAction(character: Character): number {
 export function monsterAttack(
   ctx: AttackContext,
   attackerId: string,
-): CombatState {
+): CombatActionResult {
   const { roller, character, state } = ctx;
   const attacker = findCombatant(state, attackerId);
-  if (!attacker || attacker.kind !== 'monster') return state;
+  if (!attacker || attacker.kind !== 'monster') return combatResult(state, character);
 
   // Monster Hold Person handling: paralyzed monsters tick down their duration
   // on their own turn and lose the action. No save (simplified per gameplay
@@ -419,7 +407,7 @@ export function monsterAttack(
             ? { ...c, duration: { kind: 'rounds' as const, value: next } }
             : c,
         );
-    return {
+    return combatResult({
       ...state,
       log: [
         ...state.log,
@@ -442,7 +430,7 @@ export function monsterAttack(
           },
         };
       }),
-    };
+    }, character);
   }
 
   const monsterDef = getMonster(attacker.instance.defId);
@@ -460,9 +448,12 @@ export function monsterAttack(
   }
 
   if (action.kind === 'paralyze') {
-    return monsterCastParalyze(state, attackerId, attacker.instance.displayName, character, roller, action);
+    return combatResult(
+      monsterCastParalyze(state, attackerId, attacker.instance.displayName, character, roller, action),
+      character,
+    );
   }
-  if (action.kind !== 'attack') return state;
+  if (action.kind !== 'attack') return combatResult(state, character);
 
   // Battle Rage transition: if this monster has the rage mechanic and is now
   // at or below half HP and hasn't entered rage yet, flip the flag and
@@ -581,7 +572,7 @@ export function monsterAttack(
 
   // Mark monster's action used
   nextState = markMonsterActionUsed(nextState, attackerId);
-  return evaluateCombatEnd(nextState, character);
+  return combatResult(evaluateCombatEnd(nextState, character), character);
 }
 
 function markMonsterActionUsed(state: CombatState, attackerId: string): CombatState {

@@ -136,17 +136,17 @@ export function CombatScreen({
 
     const attackTimer = setTimeout(() => {
       const roller = getActiveRoller();
-      const attacked = monsterAttack({ roller, character, state }, currentId);
-      setCharacter({ ...character });
-      setCombat(attacked);
+      const result = monsterAttack({ roller, character, state }, currentId);
+      setCharacter(result.character);
+      setCombat(result.state);
     }, 700 / speed);
 
     const advanceTimer = setTimeout(() => {
       const latest = useGameStore.getState().combat;
       if (!latest || latest.status !== 'active') return;
-      const advanced = endTurn(latest, character);
-      setCharacter({ ...character });
-      setCombat(advanced);
+      const result = endTurn(latest, character);
+      setCharacter(result.character);
+      setCombat(result.state);
     }, (700 + 1500) / speed);
 
     return () => {
@@ -185,9 +185,9 @@ export function CombatScreen({
       setAutoEndNotice(false);
       const latest = useGameStore.getState().combat;
       if (!latest) return;
-      const next = endTurn(latest, character);
-      setCharacter({ ...character });
-      setCombat(next);
+      const result = endTurn(latest, character);
+      setCharacter(result.character);
+      setCombat(result.state);
     }, autoEndTurnDelayMs / speed);
 
     return () => {
@@ -227,14 +227,14 @@ export function CombatScreen({
     const roller = getActiveRoller();
     const equippedWeaponId = character.equipped.mainHand?.itemId;
     if (!equippedWeaponId) return;
-    const next = playerAttack(
+    const result = playerAttack(
       { roller, character, state },
       targetId,
       equippedWeaponId,
     );
     setSelectingTarget(false);
-    setCharacter({ ...character });
-    setCombat(next);
+    setCharacter(result.character);
+    setCombat(result.state);
   }
 
   function handleSpellPicked(spellId: string) {
@@ -261,44 +261,44 @@ export function CombatScreen({
     const result = castSpell({ roller, character, state, spellId, targetId });
     setCastingSpellId(null);
     setSelectingTarget(false);
-    setCharacter({ ...character });
+    setCharacter(result.character);
     if (result.cast) setCombat(result.state);
   }
 
   function handleEndTurn() {
-    const next = endTurn(state, character);
-    setCharacter({ ...character });
-    setCombat(next);
+    const result = endTurn(state, character);
+    setCharacter(result.character);
+    setCombat(result.state);
   }
 
   function handleSecondWind() {
     const roller = getActiveRoller();
-    const next = useSecondWind({ roller, character, state });
+    const result = useSecondWind({ roller, character, state });
     playSfx('heal_chime');
-    setCharacter({ ...character });
-    setCombat(next);
+    setCharacter(result.character);
+    setCombat(result.state);
   }
 
   function handleActionSurge() {
-    const next = useActionSurge({ character, state });
-    setCharacter({ ...character });
-    setCombat(next);
+    const result = useActionSurge({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
   }
 
   function handleCunningAction(choice: CunningActionChoice) {
-    const next = useCunningAction({ character, state, choice });
+    const result = useCunningAction({ character, state, choice });
     setPickingCunning(false);
-    setCharacter({ ...character });
-    setCombat(next);
+    setCharacter(result.character);
+    setCombat(result.state);
   }
 
   function handleUseItem(inventoryIndex: number) {
     const roller = getActiveRoller();
-    const next = useConsumable({ roller, character, state }, inventoryIndex);
+    const result = useConsumable({ roller, character, state }, inventoryIndex);
     playSfx('heal_chime');
     setPickingItem(false);
-    setCharacter({ ...character });
-    setCombat(next);
+    setCharacter(result.character);
+    setCombat(result.state);
   }
 
   function handleContinue() {

@@ -2,6 +2,7 @@ import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { getMonster } from '../../content/monsters';
 import { getActiveRoller } from '../dice';
+import { combatResult, type CombatActionResult } from './types';
 import {
   decrementParalyzeDuration,
   getPlayerParalyzed,
@@ -47,8 +48,8 @@ function resetActionEconomyForCurrent(state: CombatState, character: Character):
  * Advance to the next combatant in the initiative order. Skip dead combatants.
  * Increment round when wrapping. Reset action economy for the new turn-holder.
  */
-export function endTurn(state: CombatState, character: Character): CombatState {
-  if (state.status !== 'active') return state;
+export function endTurn(state: CombatState, character: Character): CombatActionResult {
+  if (state.status !== 'active') return combatResult(state, character);
 
   let nextIndex = state.currentTurnIndex;
   let round = state.round;
@@ -97,7 +98,7 @@ export function endTurn(state: CombatState, character: Character): CombatState {
     nextState = resolvePlayerParalyzedTurn(nextState, character);
   }
 
-  return nextState;
+  return combatResult(nextState, character);
 }
 
 /**

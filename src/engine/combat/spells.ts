@@ -36,6 +36,8 @@ export interface CastSpellContext {
 
 export interface CastResult {
   state: CombatState;
+  /** Fresh character reference per the CombatActionResult contract. */
+  character: Character;
   /** True if the spell actually cast. False = invalid (no slot, bad target, etc.) — state returned unchanged. */
   cast: boolean;
 }
@@ -112,7 +114,7 @@ export function canCastSpell(
 export function castSpell(ctx: CastSpellContext): CastResult {
   const { character, state, spellId, roller } = ctx;
   const check = canCastSpell(character, spellId);
-  if (!check.ok) return { state, cast: false };
+  if (!check.ok) return { state, character, cast: false };
 
   const spell = getSpell(spellId);
   switch (spell.effectKey) {
@@ -132,16 +134,16 @@ export function castSpell(ctx: CastSpellContext): CastResult {
       // Exhaustive guard — if a new effectKey is added, this branch becomes
       // unreachable but keeps the switch honest.
       void roller;
-      return { state, cast: false };
+      return { state, character, cast: false };
   }
 }
 
 function castFireBolt(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
   const targetId = ctx.targetId ?? firstLiveMonsterId(state);
-  if (!targetId) return { state, cast: false };
+  if (!targetId) return { state, character, cast: false };
   const target = findMonster(state, targetId);
-  if (!target) return { state, cast: false };
+  if (!target) return { state, character, cast: false };
 
   const attackBonus = spellAttackBonus(character);
   const toHit = roller.d20('normal', attackBonus);
@@ -188,15 +190,15 @@ function castFireBolt(ctx: CastSpellContext): CastResult {
   }
 
   markActionUsed(character);
-  return { state: evaluateCombatEnd(nextState, character), cast: true };
+  return { state: evaluateCombatEnd(nextState, character), character, cast: true };
 }
 
 function castMagicMissile(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
   const targetId = ctx.targetId ?? firstLiveMonsterId(state);
-  if (!targetId) return { state, cast: false };
+  if (!targetId) return { state, character, cast: false };
   const target = findMonster(state, targetId);
-  if (!target) return { state, cast: false };
+  if (!target) return { state, character, cast: false };
 
   consumeSlot(character, 1);
   const rolls: number[] = [];
@@ -227,7 +229,7 @@ function castMagicMissile(ctx: CastSpellContext): CastResult {
   nextState = applyDamage(nextState, targetId, total, character);
   nextState = attachSpellEffect(nextState, 'magic-missile', 'player', targetId);
   markActionUsed(character);
-  return { state: evaluateCombatEnd(nextState, character), cast: true };
+  return { state: evaluateCombatEnd(nextState, character), character, cast: true };
 }
 
 function castBurningHands(ctx: CastSpellContext): CastResult {
@@ -290,7 +292,7 @@ function castBurningHands(ctx: CastSpellContext): CastResult {
   }
 
   markActionUsed(character);
-  return { state: evaluateCombatEnd(nextState, character), cast: true };
+  return { state: evaluateCombatEnd(nextState, character), character, cast: true };
 }
 
 function castShield(character: Character, state: CombatState): CastResult {
@@ -309,7 +311,7 @@ function castShield(character: Character, state: CombatState): CastResult {
     ],
   };
   nextState = attachSpellEffect(nextState, 'shield', 'player');
-  return { state: nextState, cast: true };
+  return { state: nextState, character, cast: true };
 }
 
 function castMageArmor(character: Character, state: CombatState): CastResult {
@@ -328,15 +330,15 @@ function castMageArmor(character: Character, state: CombatState): CastResult {
     ],
   };
   nextState = attachSpellEffect(nextState, 'mage-armor', 'player');
-  return { state: nextState, cast: true };
+  return { state: nextState, character, cast: true };
 }
 
 function castHoldPerson(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
   const targetId = ctx.targetId ?? firstLiveMonsterId(state);
-  if (!targetId) return { state, cast: false };
+  if (!targetId) return { state, character, cast: false };
   const target = findMonster(state, targetId);
-  if (!target) return { state, cast: false };
+  if (!target) return { state, character, cast: false };
 
   consumeSlot(character, 2);
 
@@ -398,7 +400,7 @@ function castHoldPerson(ctx: CastSpellContext): CastResult {
     };
   }
   markActionUsed(character);
-  return { state: nextState, cast: true };
+  return { state: nextState, character, cast: true };
 }
 
 /**
