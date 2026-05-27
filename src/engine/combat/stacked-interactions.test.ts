@@ -174,7 +174,7 @@ describe('Sneak Attack scaling stacks with Knife in the Dark', () => {
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
       rogue = atk.character;
-      const log = state.log.find((l) => l.text.includes('Sneak Attack'));
+      const log = state.log.find((l) => l.text.includes('sneak ('));
       if (log) return log.text;
     }
     return undefined;
@@ -183,13 +183,13 @@ describe('Sneak Attack scaling stacks with Knife in the Dark', () => {
   it('L3 rogue + Knife r1 logs 3d6', () => {
     const text = fireSneakDiceLabel(3, 1);
     expect(text).toBeDefined();
-    expect(text).toContain('Sneak Attack (3d6)');
+    expect(text).toContain('sneak (3d6)');
   });
 
   it('L5 rogue + Knife r1 logs 4d6', () => {
     const text = fireSneakDiceLabel(5, 1);
     expect(text).toBeDefined();
-    expect(text).toContain('Sneak Attack (4d6)');
+    expect(text).toContain('sneak (4d6)');
   });
 });
 
@@ -267,7 +267,7 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
     expect(hitLog).toBeDefined();
     expect(hitLog).toContain('(advantage — paralyzed)');
     expect(rageLog).toBeDefined();
-    expect(rageLog).toContain('+2 rage');
+    expect(rageLog).toContain('+ 2 rage');
   });
 });
 

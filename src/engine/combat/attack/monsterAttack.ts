@@ -195,16 +195,19 @@ export function monsterAttack(
     const damaged = applyDamage(nextState, 'player', totalDamage, nextCharacter);
     nextState = damaged.state;
     nextCharacter = damaged.character;
-    const modifierSuffix =
-      damageExpr.modifier !== 0
-        ? ` ${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}`
-        : '';
-    const rageSuffix = rageBonus > 0 ? ` +${rageBonus} rage` : '';
+    const breakdown: string[] = [`${damageRoll.total} dice`];
+    if (damageExpr.modifier !== 0) {
+      breakdown.push(
+        damageExpr.modifier > 0
+          ? `+ ${damageExpr.modifier} bonus`
+          : `- ${Math.abs(damageExpr.modifier)} bonus`,
+      );
+    }
+    if (rageBonus > 0) breakdown.push(`+ ${rageBonus} rage`);
+    const resistSuffix = resisted ? ` (${action.damageType} resistance, halved)` : '';
     const damageLine = immune
       ? `Damage negated: ${nextCharacter.name} is immune to ${action.damageType}.`
-      : resisted
-        ? `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} → halved (${action.damageType} resistance) = ${totalDamage} ${action.damageType}.`
-        : `Damage: ${damageRoll.rolls.join('+')}${modifierSuffix}${rageSuffix} = ${totalDamage} ${action.damageType}.`;
+      : `Damage: ${totalDamage} ${action.damageType} (${breakdown.join(' ')})${resistSuffix}.`;
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',

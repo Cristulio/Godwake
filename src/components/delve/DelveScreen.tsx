@@ -254,9 +254,12 @@ export function DelveScreen() {
               if (d && d.roomsCleared === 0) {
                 useGameStore.getState().showTaunt('imoen', 'first-blood');
               }
-              // Irenicus taunts after a boss clear.
+              // Irenicus taunts after a boss clear. Delay so the victory
+              // beat lands before the overlay steals the moment.
               if (isBossRoom) {
-                useGameStore.getState().showTaunt('irenicus', 'chapter-clear');
+                setTimeout(() => {
+                  useGameStore.getState().showTaunt('irenicus', 'chapter-clear');
+                }, 1500);
                 useGameStore.getState().creditChapterClearGold();
               }
               // Chained Godwake delve: Ilyich is the Ch1 boss at room-10,

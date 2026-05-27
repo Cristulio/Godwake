@@ -56,6 +56,7 @@ const SPRITES: Record<string, SpriteEntry> = {
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Dust Mephit' },
   'bone-stalker': { url: skeletonUrl, label: 'Skeleton' },
   'shadow-hound': { url: ghoulUrl, label: 'Ghoul' },
+  'wardens-apprentice': { url: cowledEnforcerUrl, label: "Warden's Apprentice" },
 };
 
 export function MonsterPortrait({ defId, className = '' }: MonsterPortraitProps) {

@@ -295,7 +295,7 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
       const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
       const damageLine = next.log.find((l) => l.kind === 'damage' && l.text.includes('rage'));
       if (damageLine) {
-        expect(damageLine.text).toContain('+2 rage');
+        expect(damageLine.text).toContain('+ 2 rage');
         confirmed = true;
       }
     }

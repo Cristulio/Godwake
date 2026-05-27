@@ -298,7 +298,7 @@ function MerchantModal({
                     disabled={tooDear}
                     onClick={() => onBuyPotion(id)}
                   >
-                    {tooDear ? 'Too dear' : 'Buy'}
+                    {tooDear ? `Need ${item.cost - goldInPocket} more` : 'Buy'}
                   </Button>
                 </div>
               </div>

@@ -200,6 +200,8 @@ export function playerAttack(
     );
 
     let bonusDamage = 0;
+    let sneakDamage = 0;
+    let sneakDice = 0;
     const bonusParts: string[] = [];
     const flatBonus = blessingMods.damageBonus ?? 0;
     if (flatBonus) {
@@ -249,7 +251,7 @@ export function playerAttack(
     const isRogue = nextCharacter.classId === 'rogue';
     const sneakTriggers = advantage === 'advantage' || targetWounded;
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
-      const sneakDice =
+      sneakDice =
         sneakAttackDiceForLevel(nextCharacter.level) +
         (nextCharacter.permanentBonuses?.sneakAttackDice ?? 0);
       const sneakRoll = roller.roll({
@@ -257,8 +259,8 @@ export function playerAttack(
         die: 6,
         modifier: 0,
       });
-      bonusDamage += sneakRoll.total;
-      bonusParts.push(`+${sneakRoll.total} Sneak Attack (${sneakDice}d6)`);
+      sneakDamage = sneakRoll.total;
+      bonusDamage += sneakDamage;
       sneakAttackFiredFlag = true;
     }
 
@@ -268,22 +270,19 @@ export function playerAttack(
     nextState = damaged.state;
     nextCharacter = damaged.character;
 
-    const bonusSuffix = bonusParts.length > 0 ? ` (${bonusParts.join(', ')})` : '';
-    // Build the visible equation so EVERY addend is shown and the math
-    // matches the total. Previously the equation hid `bonusDamage`,
-    // making it look like `2 +4 = 7` when the +1 radiant was off-screen.
-    const equation: string[] = [damageRoll.rolls.join('+')];
-    if (abilMod !== 0) equation.push(`${abilMod > 0 ? '+' : ''}${abilMod}`);
-    if (damageExpr.modifier !== 0) {
-      equation.push(`${damageExpr.modifier > 0 ? '+' : ''}${damageExpr.modifier}`);
-    }
-    if (bonusDamage !== 0) {
-      equation.push(`${bonusDamage > 0 ? '+' : ''}${bonusDamage}`);
-    }
+    const breakdown: string[] = [`${damageRoll.total} dice`];
+    const pushPart = (val: number, label: string) => {
+      if (val === 0) return;
+      breakdown.push(val > 0 ? `+ ${val} ${label}` : `- ${Math.abs(val)} ${label}`);
+    };
+    pushPart(abilMod, 'STR');
+    pushPart(damageExpr.modifier, 'magic');
+    if (sneakDamage > 0) pushPart(sneakDamage, `sneak (${sneakDice}d6)`);
+    const flavorSuffix = bonusParts.length > 0 ? ` (${bonusParts.join(', ')})` : '';
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `Damage: ${equation.join(' ')} = ${totalDamage} ${weapon.damageType}${bonusSuffix}.`,
+      text: `Damage: ${totalDamage} ${weapon.damageType} (${breakdown.join(' ')})${flavorSuffix}.`,
     });
   }
 
