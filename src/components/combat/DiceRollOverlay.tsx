@@ -5,6 +5,7 @@ import { playSfx } from '../../engine/audio';
 interface DiceRollOverlayProps {
   attackerName: string;
   targetName: string;
+  attackerKind: 'player' | 'monster';
   weaponName: string;
   attackBonus: number;
   rollNatural: number;
@@ -22,6 +23,7 @@ interface DiceRollOverlayProps {
 export function DiceRollOverlay({
   attackerName,
   targetName,
+  attackerKind,
   weaponName,
   attackBonus,
   rollNatural,
@@ -41,7 +43,9 @@ export function DiceRollOverlay({
     const t = (ms: number) => Math.max(40, Math.round(ms / speed));
 
     playSfx('dice_clack');
-    playSfx('swing_whoosh');
+    // Player swings are emitted from `playerAttack` so the audio matches the
+    // equipped weapon's category. Monster swings come through here.
+    if (attackerKind === 'monster') playSfx('swing_whoosh');
 
     const tickInterval = setInterval(() => {
       if (!mounted) return;
@@ -75,7 +79,7 @@ export function DiceRollOverlay({
       clearTimeout(revealTimer);
       clearTimeout(dismissTimer);
     };
-  }, [rollNatural, onDismiss, speed, hit, crit]);
+  }, [rollNatural, onDismiss, speed, hit, crit, attackerKind]);
 
   const resultLabel = crit ? 'CRIT!' : hit ? 'HIT' : 'MISS';
   const resultClass = crit

@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { currentRoom } from '../../engine/delve';
 import { createCombat } from '../../engine/combat';
 import { getActiveRoller } from '../../engine/dice';
 import { withResetActionEconomy } from '../../engine/character/actions';
+import { playSfx } from '../../engine/audio';
 import { getMonster } from '../../content/monsters';
 import { CombatScreen } from '../combat/CombatScreen';
 import type { BattlefieldDecoration } from '../combat/Battlefield';
@@ -74,6 +75,20 @@ export function DelveScreen() {
   const failDelve = useGameStore((s) => s.failDelve);
 
   const room = delve ? currentRoom(delve) : null;
+
+  // Footstep on room transition — fires whenever `currentRoomIdx` increments.
+  const lastRoomIdxRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!delve) {
+      lastRoomIdxRef.current = null;
+      return;
+    }
+    const prev = lastRoomIdxRef.current;
+    if (prev !== null && delve.currentRoomIdx > prev) {
+      playSfx('footstep');
+    }
+    lastRoomIdxRef.current = delve.currentRoomIdx;
+  }, [delve?.currentRoomIdx, delve]);
 
   // Spawn combat on entering a combat/boss room.
   useEffect(() => {
