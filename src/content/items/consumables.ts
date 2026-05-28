@@ -52,7 +52,7 @@ export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
   rarity: 'uncommon',
   actionCost: 'action',
   description:
-    'A pale gold liquid that smells of beaten copper and pipe-smoke. The label, in a hand that has worn off in places, calls it a draught of valour — drink before the fight, walk straighter into it.',
+    'A pale gold liquid that smells of beaten copper and pipe-smoke. The label, in a hand that has worn off in places, calls it a draught of valour — drink before the fight, walk straighter into it. Restores 3d6+6 hit points.',
 });
 
 export const SCROLL_OF_HEALING_WORD: Consumable = ConsumableSchema.parse({
@@ -66,7 +66,7 @@ export const SCROLL_OF_HEALING_WORD: Consumable = ConsumableSchema.parse({
   rarity: 'common',
   actionCost: 'bonus',
   description:
-    'A strip of vellum copied in a hurried, priestly hand — a single word of Lathander\'s mercy, traced once and gone after the speaking. Quicker than a potion: a breath, not a swallow.',
+    'A strip of vellum copied in a hurried, priestly hand — a single word of Lathander\'s mercy, traced once and gone after the speaking. Quicker than a potion: a breath, not a swallow. Bonus action; restores 2d4+3 hit points.',
 });
 
 export const ALL_CONSUMABLES: Consumable[] = [

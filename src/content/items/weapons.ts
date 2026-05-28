@@ -101,7 +101,7 @@ export const ADAMANTINE_SHORTSWORD: Weapon = WeaponSchema.parse({
   rarity: 'uncommon',
   attunement: true,
   description:
-    'A short, dark-grey blade with a faint blue undertone where the lamplight catches the edge. Adamantine — does not chip, does not dull, and the +1 is not a smith\'s boast, it is the alloy.',
+    'A short, dark-grey blade with a faint blue undertone where the lamplight catches the edge. Adamantine — does not chip, does not dull, and the +1 is not a smith\'s boast, it is the alloy. Strikes for 1d6+1 piercing; finesse and light. Soul-bound — claims an attunement slot.',
 });
 
 export const ALL_WEAPONS: Weapon[] = [
