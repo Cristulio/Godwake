@@ -209,7 +209,7 @@ describe('engine internal purity — character is never mutated in place', () =>
       character: fighter,
       state: {
         combatants: [],
-        initiativeOrder: [],
+        turnOrder: [],
         currentTurnIndex: 0,
         round: 1,
         log: [],

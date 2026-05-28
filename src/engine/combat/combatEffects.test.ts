@@ -30,20 +30,17 @@ function makeHuman(extra: Partial<Character> = {}): Character {
   };
 }
 
-describe('combat effects — initiative modifiers', () => {
+describe('combat effects — turn order', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it("Helm's Vigil adds +2 to the initiative roll log", () => {
+  it('player always acts first; monsters follow in spawn order', () => {
     const goblin = getMonster('goblin');
-    const blessed = makeHuman({ blessings: ['helms-vigil'] });
+    const hero = makeHuman();
     const roller = createDiceRoller(42);
-    const state = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] }).state;
-    const opening = state.log[0].text;
-    expect(opening).toContain('Tester');
-    // Player and monster both appear in the initiative order — rolled order
-    // now actually decides who acts first (no player-favored override).
-    expect(state.initiativeOrder).toContain('player');
-    expect(state.initiativeOrder).toHaveLength(2);
+    const state = createCombat({ roller, character: hero, monsters: [{ def: goblin }] }).state;
+    expect(state.turnOrder[0]).toBe('player');
+    expect(state.turnOrder).toHaveLength(2);
+    expect(state.log[0].text).toBe('Combat begins.');
   });
 });
 

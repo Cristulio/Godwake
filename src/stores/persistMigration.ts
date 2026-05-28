@@ -16,8 +16,11 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *           rows. Default to empty maps on older saves.
  *  v5 → v6: knownNpcs gates name reveals for the soul-bond NPCs (Irenicus,
  *           Imoen). Missing field on older saves → []  (everyone pre-reveal).
+ *  v6 → v7: initiative removed entirely (player always acts first). Strip
+ *           legacy `permanentInitBonus` / `delveInitBonus` / nested `init`
+ *           bonus on load so the new turn engine never sees them.
  */
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -59,7 +62,6 @@ export function migrateCharacter(
   // here (v1→v2) is preserved by writing the rederived value into hp.
   const legacyMap: Array<[keyof NonNullable<Character['permanentBonuses']>, string]> = [
     ['ac', 'permanentAcBonus'],
-    ['init', 'permanentInitBonus'],
     ['attack', 'permanentAttackBonus'],
     ['damage', 'permanentDamageBonus'],
     ['critRange', 'permanentCritRangeBonus'],
@@ -81,6 +83,12 @@ export function migrateCharacter(
     }
     delete c[oldKey];
   }
+  // Initiative was removed entirely (player always acts first). Strip any
+  // legacy `permanentInitBonus` / nested `init` field from saves so older
+  // snapshots rehydrate cleanly without carrying a dead key.
+  delete c.permanentInitBonus;
+  delete (folded as Record<string, unknown>).init;
+  delete c.delveInitBonus;
 
   // Re-derive HP bonus for legacy chars that owned Mantle/Iron Will but
   // never had the field set (v0 → v1 migration). This must run AFTER the

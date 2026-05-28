@@ -241,7 +241,7 @@ export function simulateBossFight(
   for (let i = 0; i < MAX_ROUNDS * 8; i++) {
     if (s.status !== 'active') break;
     if (s.round > MAX_ROUNDS) break;
-    const currentId = s.initiativeOrder[s.currentTurnIndex];
+    const currentId = s.turnOrder[s.currentTurnIndex];
     if (currentId === 'player') {
       if (ch.hp.current <= 0) break;
       const r = takeTurn(roller, s, ch);

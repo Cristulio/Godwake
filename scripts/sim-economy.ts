@@ -391,7 +391,7 @@ function runEncounter(
         }
       }
     } else {
-      const currentId = state.initiativeOrder[state.currentTurnIndex];
+      const currentId = state.turnOrder[state.currentTurnIndex];
       const r = monsterAttack({ roller, character: next, state }, currentId);
       state = r.state;
       next = r.character;

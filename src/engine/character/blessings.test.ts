@@ -55,8 +55,8 @@ describe('blessingSignature', () => {
   });
 
   it('is order-insensitive across modifier keys', () => {
-    const a = fakeBlessing('a', { acBonus: 1, initiativeBonus: -1 });
-    const b = fakeBlessing('b', { initiativeBonus: -1, acBonus: 1 });
+    const a = fakeBlessing('a', { acBonus: 1, damageBonus: 2 });
+    const b = fakeBlessing('b', { damageBonus: 2, acBonus: 1 });
     expect(blessingSignature(a)).toBe(blessingSignature(b));
   });
 
@@ -79,7 +79,7 @@ describe('rollBlessingOptions — signature dedup', () => {
       fakeBlessing('ac-1-a', { acBonus: 1 }),
       fakeBlessing('ac-1-b', { acBonus: 1 }),
       fakeBlessing('dmg-1', { damageBonus: 1 }),
-      fakeBlessing('init-2', { initiativeBonus: 2 }),
+      fakeBlessing('fa-2', { firstAttackBonus: 2 }),
     ];
     withFakePool(pool, () => {
       for (let seed = 0; seed < 200; seed += 1) {
@@ -180,17 +180,6 @@ describe('aggregateBlessingModifiers — non-stacking fields take max-of-individ
 });
 
 describe('aggregateBlessingModifiers — remaining sum-style fields', () => {
-  it('still sums initiativeBonus (Selûne + Helm)', () => {
-    const pool: Blessing[] = [
-      fakeBlessing('selune', { initiativeBonus: 1 }),
-      fakeBlessing('helm', { initiativeBonus: 2 }),
-    ];
-    withFakePool(pool, () => {
-      const mods = aggregateBlessingModifiers(['selune', 'helm']);
-      expect(mods.initiativeBonus).toBe(3);
-    });
-  });
-
   it('still sums extraStabiliseCharges (Ilmater + Tymora)', () => {
     const pool: Blessing[] = [
       fakeBlessing('ilm', { extraStabiliseCharges: 1 }),

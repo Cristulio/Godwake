@@ -23,7 +23,7 @@ function resetActionEconomyForCurrent(
   state: CombatState,
   character: Readonly<Character>,
 ): { state: CombatState; character: Character } {
-  const currentId = state.initiativeOrder[state.currentTurnIndex];
+  const currentId = state.turnOrder[state.currentTurnIndex];
   if (currentId === 'player') {
     const nextCharacter = patchActionEconomy(character, {
       actionUsed: false,
@@ -58,16 +58,20 @@ function resetActionEconomyForCurrent(
 }
 
 /**
- * Advance to the next combatant in the initiative order. Skip dead combatants.
- * Increment round when wrapping. Reset action economy for the new turn-holder.
+ * Compute the next live turn-holder. Skips dead combatants. Wraps from the
+ * last index back to 0 and bumps the round counter.
+ *
+ * TODO: time-stop hook — if character.extraTurnsRemaining > 0, decrement and
+ * re-trigger player turn instead of advancing. (Plug here so callers stay
+ * agnostic to whether the player just bought another turn.)
  */
-export function endTurn(state: CombatState, character: Readonly<Character>): CombatActionResult {
-  if (state.status !== 'active') return combatResult(state, character);
-  let nextCharacter: Character = character;
-
+function advanceTurn(
+  state: CombatState,
+  character: Readonly<Character>,
+): { nextIndex: number; round: number } {
   let nextIndex = state.currentTurnIndex;
   let round = state.round;
-  const order = state.initiativeOrder;
+  const order = state.turnOrder;
 
   for (let i = 0; i < order.length; i++) {
     nextIndex = (nextIndex + 1) % order.length;
@@ -75,12 +79,26 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
 
     const id = order[nextIndex];
     if (id === 'player') {
-      if (nextCharacter.hp.current > 0) break;
+      if (character.hp.current > 0) break;
     } else {
       const combatant = state.combatants.find((c) => c.id === id);
       if (combatant?.kind === 'monster' && combatant.instance.hp.current > 0) break;
     }
   }
+
+  return { nextIndex, round };
+}
+
+/**
+ * Advance to the next combatant in turn order. Skip dead combatants.
+ * Increment round when wrapping. Reset action economy for the new turn-holder.
+ */
+export function endTurn(state: CombatState, character: Readonly<Character>): CombatActionResult {
+  if (state.status !== 'active') return combatResult(state, character);
+  let nextCharacter: Character = character;
+
+  const { nextIndex, round } = advanceTurn(state, nextCharacter);
+  const order = state.turnOrder;
 
   // Cunning Action: Dash is "burst" — burn it or lose it. If the rogue
   // queued a bonus swing and didn't fire it before End Turn, drop the flag
@@ -134,8 +152,12 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
  * condition's DC at turn start. Success removes the condition; the player
  * gets a normal turn. Failure ticks the duration; if it hits zero the
  * condition expires anyway, otherwise the player loses the turn.
+ *
+ * Exported so `createCombat` can run the same resolution on round-1 turn-0
+ * (player goes first, so the "first player turn" never travels through
+ * `endTurn`).
  */
-function resolvePlayerParalyzedTurn(
+export function resolvePlayerParalyzedTurn(
   state: CombatState,
   character: Readonly<Character>,
 ): { state: CombatState; character: Character } {
@@ -191,7 +213,7 @@ function combatantDisplayName(state: CombatState, id: string): string {
 }
 
 export function currentCombatantId(state: CombatState): string {
-  return state.initiativeOrder[state.currentTurnIndex];
+  return state.turnOrder[state.currentTurnIndex];
 }
 
 export function isPlayerTurn(state: CombatState): boolean {

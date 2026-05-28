@@ -25,7 +25,7 @@ function mkChar() {
 function mkState(): CombatState {
   return {
     combatants: [],
-    initiativeOrder: [],
+    turnOrder: [],
     currentTurnIndex: 0,
     round: 1,
     log: [],

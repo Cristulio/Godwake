@@ -489,7 +489,7 @@ function runCombat(
       state = turn.state;
       character = turn.character;
     } else {
-      const r = monsterAttack({ roller, character, state }, state.initiativeOrder[state.currentTurnIndex]);
+      const r = monsterAttack({ roller, character, state }, state.turnOrder[state.currentTurnIndex]);
       state = r.state;
       character = r.character;
       if (state.status === 'active') {

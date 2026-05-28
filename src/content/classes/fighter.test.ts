@@ -13,15 +13,10 @@ describe('Fighter class — feature layout', () => {
     expect(l2.map((f) => f.id)).toContain('improved-critical');
   });
 
-  it('Champion grants Remarkable Athlete at L5 (moved down from L7 — chained delve XP caps at ~L6)', () => {
+  it('Champion no longer grants Remarkable Athlete (initiative was removed)', () => {
     const l5 = champion!.featuresByLevel['5'] ?? [];
-    expect(l5.map((f) => f.id)).toContain('remarkable-athlete');
-    const ra = l5.find((f) => f.id === 'remarkable-athlete');
-    expect(ra?.mechanicKey).toBe('remarkable-athlete');
-  });
-
-  it('Champion no longer grants Remarkable Athlete at L7', () => {
     const l7 = champion!.featuresByLevel['7'] ?? [];
+    expect(l5.map((f) => f.id)).not.toContain('remarkable-athlete');
     expect(l7.map((f) => f.id)).not.toContain('remarkable-athlete');
   });
 

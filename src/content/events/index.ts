@@ -236,10 +236,10 @@ const POOL: EventTemplate[] = [
         label: 'Pluck the jaw from the stake',
         hint: 'A curse, but the dead keep walking faster.',
         outcome: {
-          resolution: 'The jaw fits your pocket as though it has been waiting for it. You feel cold across the shoulders, and quicker on your feet.',
+          resolution: 'The jaw fits your pocket as though it has been waiting for it. You feel cold across the shoulders, and your hand truer on the grip.',
           effects: [
             { kind: 'hp_delta', amount: -1 },
-            { kind: 'init_bonus_run', amount: 1 },
+            { kind: 'apply_attack_bonus_run', amount: 1 },
           ],
         },
       },
@@ -413,9 +413,9 @@ const POOL: EventTemplate[] = [
         hint: 'Warmth and a small ache.',
         outcome: {
           resolution:
-            'You drain it. It is better than it has any right to be. Your head goes loose; your arm goes long. You feel a half-step quicker but a half-step less guarded.',
+            'You drain it. It is better than it has any right to be. Your head goes loose; your arm goes long. You feel a half-step truer with the blade, but a half-step less guarded.',
           effects: [
-            { kind: 'init_bonus_run', amount: 1 },
+            { kind: 'apply_attack_bonus_run', amount: 1 },
             { kind: 'hp_delta', amount: -2 },
           ],
         },
@@ -735,8 +735,7 @@ const POOL: EventTemplate[] = [
             'You draw your own blade across your forearm. She gathers the dripping into a thumb-vial and breathes a syllable over it. A coldness threads up your spine and steadies your stance.',
           effects: [
             { kind: 'hp_delta', amount: -8 },
-            { kind: 'apply_attack_bonus_run', amount: 1 },
-            { kind: 'init_bonus_run', amount: 1 },
+            { kind: 'apply_attack_bonus_run', amount: 2 },
           ],
         },
       },

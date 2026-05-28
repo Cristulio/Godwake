@@ -90,7 +90,7 @@ function totalMonsterHpAlive(state: CombatState): number {
 }
 
 function isPlayerTurn(state: CombatState): boolean {
-  return state.initiativeOrder[state.currentTurnIndex] === 'player';
+  return state.turnOrder[state.currentTurnIndex] === 'player';
 }
 
 function pick<T>(arr: readonly T[]): T {
@@ -686,7 +686,7 @@ function simulateCombat(
       state = ended.state;
       c = ended.character;
     } else {
-      const monsterId = state.initiativeOrder[state.currentTurnIndex];
+      const monsterId = state.turnOrder[state.currentTurnIndex];
       const slotsBefore1 = slotsAt(c, 1);
       const reactionBefore = c.actionEconomy.reactionUsed;
       const r = monsterAttack({ roller, character: c, state }, monsterId);

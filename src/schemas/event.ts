@@ -16,7 +16,6 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
     fallbackText: z.string().optional(),
   }),
   z.object({ kind: z.literal('apply_attack_bonus_run'), amount: z.number().positive() }),
-  z.object({ kind: z.literal('init_bonus_run'), amount: z.number().positive() }),
   z.object({ kind: z.literal('spawn_ambush'), monsterDefIds: z.array(z.string()) }),
   z.object({
     kind: z.literal('reveal_boss_intel'),

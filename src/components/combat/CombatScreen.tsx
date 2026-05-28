@@ -27,7 +27,7 @@ import { CombatHUD } from './CombatHUD';
 import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
-import { InitiativeTracker } from './InitiativeTracker';
+import { TurnOrderTracker } from './TurnOrderTracker';
 import { BossIntelBadge } from './BossIntelBadge';
 import { playMusic, stopMusic, playSfx, type MusicId } from '../../engine/audio';
 
@@ -146,7 +146,7 @@ export function CombatScreen({
   useEffect(() => {
     if (state.status !== 'active') return;
     if (isPlayerTurn(state)) return;
-    const currentId = state.initiativeOrder[state.currentTurnIndex];
+    const currentId = state.turnOrder[state.currentTurnIndex];
 
     const attackTimer = setTimeout(() => {
       const roller = getActiveRoller();
@@ -400,7 +400,7 @@ export function CombatScreen({
         return <BossIntelBadge bossDefId={bossDefId} level={intelLevel} />;
       })()}
 
-      <InitiativeTracker state={state} character={character} />
+      <TurnOrderTracker state={state} character={character} />
 
       <div
         className="flex gap-3 items-stretch shrink-0"

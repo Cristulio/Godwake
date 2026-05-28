@@ -106,8 +106,13 @@ export interface SpellEffectEvent {
 
 export interface CombatState {
   combatants: Combatant[];
-  /** Combatant ids in turn order, set when combat starts. */
-  initiativeOrder: string[];
+  /**
+   * Combatant ids in turn order, set when combat starts. Player always goes
+   * first, then monsters in spawn order. No initiative rolls — deterministic.
+   * Future "extra turn" mechanics (time-stop-style spells) plug into
+   * `advanceTurn` rather than reshuffling this list.
+   */
+  turnOrder: string[];
   currentTurnIndex: number;
   round: number;
   log: CombatLogEntry[];

@@ -256,7 +256,6 @@ function toneForEffect(eff: AppliedEffect): string {
     case 'grant_quirk_reroll':
       return 'text-[var(--color-text-secondary)]';
     case 'apply_attack_bonus_run':
-    case 'init_bonus_run':
       return 'text-[var(--color-accent-amber)]';
     case 'spawn_ambush':
       return 'text-[var(--color-accent-blood)]';

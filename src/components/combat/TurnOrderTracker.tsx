@@ -1,18 +1,18 @@
 import type { CombatState } from '../../types/combat';
 import type { Character } from '../../types/character';
 
-interface InitiativeTrackerProps {
+interface TurnOrderTrackerProps {
   state: CombatState;
   character: Character;
 }
 
-export function InitiativeTracker({ state, character }: InitiativeTrackerProps) {
+export function TurnOrderTracker({ state, character }: TurnOrderTrackerProps) {
   return (
     <div className="flex items-center gap-2 flex-wrap text-[10px] uppercase">
       <span className="font-display text-[var(--color-accent-gold)] text-[9px] tracking-[0.25em]">
         ◆ Order
       </span>
-      {state.initiativeOrder.map((id, idx) => {
+      {state.turnOrder.map((id, idx) => {
         const c = state.combatants.find((x) => x.id === id);
         if (!c) return null;
         const name = c.kind === 'player' ? character.name : c.instance.displayName;

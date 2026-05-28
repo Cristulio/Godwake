@@ -110,15 +110,6 @@ export const FIGHTER: Class = ClassSchema.parse({
             mechanicKey: 'improved-critical',
           },
         ],
-        '5': [
-          {
-            id: 'remarkable-athlete',
-            name: 'Remarkable Athlete',
-            description:
-              'Your reflexes outpace the fight. You gain a permanent +2 bonus to initiative.',
-            mechanicKey: 'remarkable-athlete',
-          },
-        ],
       },
     },
   ],

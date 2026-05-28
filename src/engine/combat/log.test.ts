@@ -11,7 +11,7 @@ function mkState(logSize = 0): CombatState {
   }));
   return {
     combatants: [],
-    initiativeOrder: [],
+    turnOrder: [],
     currentTurnIndex: 0,
     round: 1,
     log,
@@ -33,7 +33,7 @@ describe('appendLog', () => {
     const next = appendLog(s, entry(4));
     expect(next).not.toBe(s);
     expect(next.combatants).toBe(s.combatants);
-    expect(next.initiativeOrder).toBe(s.initiativeOrder);
+    expect(next.turnOrder).toBe(s.turnOrder);
     expect(next.status).toBe(s.status);
     expect(next.round).toBe(s.round);
     expect(next.currentTurnIndex).toBe(s.currentTurnIndex);

@@ -62,9 +62,9 @@ const POOL: Blessing[] = [
     id: 'silvanus-root',
     name: "Silvanus's Root",
     god: 'silvanus',
-    flavor: 'The bark of the world clings to your skin. Heavy and slow — and harder to fell.',
-    effect: '+1 AC. −1 initiative (you wait, you weigh, you root).',
-    modifiers: { acBonus: 1, initiativeBonus: -1 },
+    flavor: 'The bark of the world clings to your skin. Heavier in the stance, harder to fell.',
+    effect: '+1 AC.',
+    modifiers: { acBonus: 1 },
   }),
   BlessingSchema.parse({
     id: 'tempus-edge',
@@ -73,14 +73,6 @@ const POOL: Blessing[] = [
     flavor: 'Your crit range widens. The god of war prefers a decisive ending.',
     effect: 'Crit range extends by 1 (e.g. Champion crits on 18-20 instead of 19-20).',
     modifiers: { critRangeBonus: 1 },
-  }),
-  BlessingSchema.parse({
-    id: 'helms-vigil',
-    name: "Helm's Vigil",
-    god: 'helm',
-    flavor: 'You see threats half a breath before they arrive. The Watcher\'s eye on yours.',
-    effect: '+2 initiative.',
-    modifiers: { initiativeBonus: 2 },
   }),
   BlessingSchema.parse({
     id: 'tymoras-wink',
@@ -137,14 +129,6 @@ const POOL: Blessing[] = [
     flavor: 'A speck of dawn rides your blade. The dark flinches where it touches.',
     effect: '+1 radiant damage on hits.',
     modifiers: { holyDamageBonus: 1 },
-  }),
-  BlessingSchema.parse({
-    id: 'selunes-tide',
-    name: "Selûne's Tide",
-    god: 'selune',
-    flavor: 'You step in time to a moon you cannot see. The room waits a beat for you.',
-    effect: '+1 initiative.',
-    modifiers: { initiativeBonus: 1 },
   }),
   BlessingSchema.parse({
     id: 'ilmaters-crown',
