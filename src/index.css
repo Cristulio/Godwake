@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Cache-buster: forces a new content-hash so Cloudflare serves a fresh CSS
+   asset. The previous hashed file was returning HTTP 500 from the CDN.
+   This custom property is not stripped by Tailwind v4 the way comments are. */
+:root {
+  --build-version: "2026-05-28-cdn-fix";
+}
+
 @theme {
   /* Backgrounds — slightly cooler black-brown for more depth */
   --color-bg-base: #0A0805;
