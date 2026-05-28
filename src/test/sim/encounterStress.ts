@@ -11,7 +11,7 @@ import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import type { RoomMonster } from '../../types/delve';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
-import { applyLevelUp } from '../../engine/character/leveling';
+import { simulateLevelUp } from '../../engine/character/leveling';
 import { createDiceRoller, type DiceRoller } from '../../engine/dice';
 import { createCombat } from '../../engine/combat/createCombat';
 import { playerAttack } from '../../engine/combat/attack';
@@ -158,7 +158,7 @@ export function characterAtLevel(classId: ClassId, targetLevel: number): Charact
   if (!builder) throw new Error(`No sim archetype for class: ${classId}`);
   let c = builder();
   while (c.level < targetLevel) {
-    c = applyLevelUp({ ...c, xp: 9999999 });
+    c = simulateLevelUp({ ...c, xp: 9999999 });
   }
   return c;
 }
