@@ -119,7 +119,6 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       campBoons: [],
       delveAttackBonus: 0,
       delveSpellAttackBonus: 0,
-      delveInitBonus: 0,
       nextAttackAdvantage: false,
       poisonImmuneEncounter: false,
       conditions: [],
@@ -230,7 +229,6 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       campBoons: [],
       delveAttackBonus: 0,
       delveSpellAttackBonus: 0,
-      delveInitBonus: 0,
       bossIntel: {},
       boldApproachBosses: [],
     };
@@ -280,7 +278,6 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       conditions: [],
       delveAttackBonus: 0,
       delveSpellAttackBonus: 0,
-      delveInitBonus: 0,
       bossIntel: {},
       boldApproachBosses: [],
     });
@@ -301,7 +298,6 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         blessings: [],
         campBoons: [],
         delveAttackBonus: 0,
-        delveInitBonus: 0,
         bossIntel: {},
         boldApproachBosses: [],
       }),

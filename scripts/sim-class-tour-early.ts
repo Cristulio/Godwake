@@ -402,7 +402,7 @@ function runEncounter(
   let safety = 0;
   while (s.status === 'active' && safety < MAX_TURNS_PER_FIGHT * 8) {
     safety += 1;
-    const cur = s.initiativeOrder[s.currentTurnIndex];
+    const cur = s.turnOrder[s.currentTurnIndex];
     if (cur === 'player') {
       if (ch.hp.current <= 0) break;
       const ctx = takeTurn({ roller, state: s, character: ch, metrics });
@@ -468,7 +468,6 @@ function scoreBlessing(id: string): number {
     if (m.firstAttackDamage) s += m.firstAttackDamage * 2;
     if (m.firstAttackBonus) s += m.firstAttackBonus * 2;
     if (m.firstAttackAdvantage) s += 5;
-    if (m.initiativeBonus) s += m.initiativeBonus * 1;
     if (m.critRangeBonus) s += m.critRangeBonus * 4;
     if (m.rerollMissesPerEncounter) s += m.rerollMissesPerEncounter * 3;
     return s;

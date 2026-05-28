@@ -290,7 +290,6 @@ function scoreBlessing(id: string): number {
     if (m.firstAttackDamage) s += m.firstAttackDamage * 2;
     if (m.firstAttackBonus) s += m.firstAttackBonus * 2;
     if (m.firstAttackAdvantage) s += 5;
-    if (m.initiativeBonus) s += m.initiativeBonus * 1;
     if (m.critRangeBonus) s += m.critRangeBonus * 4;
     if (m.rerollMissesPerEncounter) s += m.rerollMissesPerEncounter * 3;
     return s;

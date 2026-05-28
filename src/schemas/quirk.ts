@@ -10,8 +10,6 @@ export const QuirkModifiersSchema = z
     goldMultiplier: z.number().optional(),
     /** Immune to poison damage. */
     poisonImmune: z.boolean().optional(),
-    /** Flat modifier to initiative rolls. */
-    initiativeMod: z.number().optional(),
     /** Flat modifier to AC. */
     acMod: z.number().optional(),
     /** When below half HP, +N to damage rolls. */

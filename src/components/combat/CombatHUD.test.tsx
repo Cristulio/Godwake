@@ -54,7 +54,7 @@ function makeChar(classId: ClassId, overrides: Partial<Character> = {}): Charact
 function emptyState(overrides: Partial<CombatState> = {}): CombatState {
   return {
     combatants: [],
-    initiativeOrder: [],
+    turnOrder: [],
     currentTurnIndex: 0,
     round: 1,
     log: [],

@@ -428,7 +428,7 @@ function runEncounter(
   let safety = 0;
   while (s.status === 'active' && safety < MAX_TURNS_PER_FIGHT * 8) {
     safety += 1;
-    const cur = s.initiativeOrder[s.currentTurnIndex];
+    const cur = s.turnOrder[s.currentTurnIndex];
     if (cur === 'player') {
       if (ch.hp.current <= 0) break;
       const ctx = takeTurn({ roller, state: s, character: ch, metrics });

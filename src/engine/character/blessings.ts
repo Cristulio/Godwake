@@ -75,9 +75,8 @@ export function rollBlessingOptions(roller: DiceRoller, count: number = 3): stri
  * (`firstAttackBonus`, `firstAttackDamage`, `rerollMissesPerEncounter`)
  * keep `sum` — there's nothing to stack with today, but the additive
  * shape is correct if a second source is ever added intentionally.
- * `initiativeBonus` and `extraStabiliseCharges` were flagged medium/low
- * risk and deferred (initiative is once per combat; stabilise charges
- * are situational "free deaths").
+ * `extraStabiliseCharges` keeps `sum` for the same reason (situational
+ * "free deaths"; stacking is the intent if multiple charges are offered).
  */
 export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModifiers {
   const acc: BlessingModifiers = {};
@@ -91,8 +90,6 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
     const m = b.modifiers;
     if (m.acBonus !== undefined)
       acc.acBonus = Math.max(acc.acBonus ?? 0, m.acBonus);
-    if (m.initiativeBonus !== undefined)
-      acc.initiativeBonus = (acc.initiativeBonus ?? 0) + m.initiativeBonus;
     if (m.firstAttackBonus !== undefined)
       acc.firstAttackBonus = (acc.firstAttackBonus ?? 0) + m.firstAttackBonus;
     if (m.firstAttackDamage !== undefined)

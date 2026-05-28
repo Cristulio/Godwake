@@ -225,7 +225,7 @@ function monsterTurn(
   character: Character,
   metrics: RunMetrics,
 ): { state: CombatState; character: Character } {
-  const currentId = state.initiativeOrder[state.currentTurnIndex];
+  const currentId = state.turnOrder[state.currentTurnIndex];
   const before = character.hp.current;
   const result = monsterAttack({ roller, character, state }, currentId);
   let nextState = result.state;

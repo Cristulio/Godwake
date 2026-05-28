@@ -52,7 +52,7 @@ describe('migrateV1ToV2', () => {
     expect((v2.character as unknown as Record<string, unknown>).permanentHpBonus).toBeUndefined();
   });
 
-  it('folds the 11 top-level permanentXxxBonus fields into permanentBonuses (v2→v3)', () => {
+  it('folds the legacy permanentXxxBonus fields into permanentBonuses (v2→v3); strips removed init (v6→v7)', () => {
     const character = makeBareCharacter({
       permanentAcBonus: 1,
       permanentInitBonus: 2,
@@ -69,7 +69,6 @@ describe('migrateV1ToV2', () => {
     const v3 = migrateV1ToV2({ character, unlockedUpgrades: {} });
     expect(v3.character?.permanentBonuses).toEqual({
       ac: 1,
-      init: 2,
       attack: 3,
       damage: 4,
       critRange: 1,
@@ -83,6 +82,8 @@ describe('migrateV1ToV2', () => {
     const ch = v3.character as unknown as Record<string, unknown>;
     expect(ch.permanentAcBonus).toBeUndefined();
     expect(ch.permanentSneakAttackDiceBonus).toBeUndefined();
+    expect(ch.permanentInitBonus).toBeUndefined();
+    expect((v3.character?.permanentBonuses as Record<string, unknown> | undefined)?.init).toBeUndefined();
   });
 
   it('is idempotent on an already-v3 character (permanentBonuses passes through)', () => {
@@ -197,8 +198,8 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 6', () => {
-    expect(SAVE_VERSION).toBe(6);
+  it('is 7', () => {
+    expect(SAVE_VERSION).toBe(7);
   });
 });
 

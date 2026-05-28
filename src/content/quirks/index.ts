@@ -33,9 +33,9 @@ const RAW: Quirk[] = [
     name: 'Vertigo',
     sentiment: 'bane',
     flavor:
-      'The world tilts a half-step when it shouldn\'t. You move first because you know it will only get worse.',
-    effect: 'Initiative −2, but +2 to-hit on your first attack of each combat.',
-    modifiers: { initiativeMod: -2, firstTurnAttackBonus: 2 },
+      'The world tilts a half-step when it shouldn\'t. You swing harder because you only see the target right once.',
+    effect: '+2 to-hit on your first attack each combat, but −1 AC.',
+    modifiers: { firstTurnAttackBonus: 2, acMod: -1 },
   }),
   QuirkSchema.parse({
     id: 'hangry',
@@ -97,8 +97,8 @@ const RAW: Quirk[] = [
     sentiment: 'boon',
     flavor:
       'You move before you mean to. Doors open into rooms you have not yet decided to enter.',
-    effect: '+1 to initiative.',
-    modifiers: { initiativeMod: 1 },
+    effect: '+1 to-hit on your first attack each combat.',
+    modifiers: { firstTurnAttackBonus: 1 },
   }),
   QuirkSchema.parse({
     id: 'late-sleeper',
@@ -106,8 +106,8 @@ const RAW: Quirk[] = [
     sentiment: 'bane',
     flavor:
       'The world starts before you do. By the time you have your boots on, someone is already shouting.',
-    effect: '−2 to initiative.',
-    modifiers: { initiativeMod: -2 },
+    effect: '−1 to your first attack roll each combat.',
+    modifiers: { firstAttackPenalty: -1 },
   }),
   QuirkSchema.parse({
     id: 'silver-tongue',
@@ -187,8 +187,8 @@ const RAW: Quirk[] = [
     sentiment: 'boon',
     flavor:
       'The fight always gets worse before it ends. You learned that on a wall whose name you no longer remember, and the soul came back knowing it too.',
-    effect: '+1 to initiative. +1 to-hit vs wounded enemies (below half HP).',
-    modifiers: { initiativeMod: 1, woundedAttackBonus: 1 },
+    effect: '+1 to-hit on your first attack each combat. +1 to-hit vs wounded enemies.',
+    modifiers: { firstTurnAttackBonus: 1, woundedAttackBonus: 1 },
   }),
   QuirkSchema.parse({
     id: 'limping',
@@ -196,8 +196,8 @@ const RAW: Quirk[] = [
     sentiment: 'bane',
     flavor:
       'An old wound the body did not inherit cleanly. The soul remembers the angle, the bones do not.',
-    effect: '−1 to initiative. −1 AC.',
-    modifiers: { initiativeMod: -1, acMod: -1 },
+    effect: '−1 AC. −1 to your first attack roll each combat.',
+    modifiers: { acMod: -1, firstAttackPenalty: -1 },
     soulMarkWeight: 1.5,
   }),
   QuirkSchema.parse({

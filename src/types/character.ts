@@ -146,7 +146,6 @@ export interface Character {
    */
   permanentBonuses?: {
     ac?: number;
-    init?: number;
     attack?: number;
     damage?: number;
     /** Crit-range widening (Killer's Eye): default 20-only becomes (20-N)-20. */
@@ -215,12 +214,6 @@ export interface Character {
    * in `finishDelve`.
    */
   delveSpellAttackBonus?: number;
-  /**
-   * Per-delve initiative bonus granted by event choices (e.g. picking up
-   * the bone on the stake). Stacks with `permanentBonuses.init`. Cleared in
-   * `finishDelve` / `failDelve` / `abandonDelve`.
-   */
-  delveInitBonus?: number;
   /**
    * One-shot advantage on the player's next attack roll. Set true by Rogue's
    * Cunning Action: Hide (and cleared when that attack resolves). Optional so

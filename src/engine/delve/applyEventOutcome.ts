@@ -343,17 +343,6 @@ export function applyEventOutcome(
         });
         break;
       }
-      case 'init_bonus_run': {
-        next = {
-          ...next,
-          delveInitBonus: (next.delveInitBonus ?? 0) + effect.amount,
-        };
-        effectsApplied.push({
-          kind: effect.kind,
-          detail: `+${effect.amount} initiative (rest of delve)`,
-        });
-        break;
-      }
       case 'spawn_ambush': {
         ambush = { monsterDefIds: effect.monsterDefIds };
         effectsApplied.push({

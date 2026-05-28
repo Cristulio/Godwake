@@ -532,7 +532,7 @@ function runCombat(
       const hpBefore = character.hp.current;
       const r = monsterAttack(
         { roller, character, state },
-        state.initiativeOrder[state.currentTurnIndex],
+        state.turnOrder[state.currentTurnIndex],
       );
       state = r.state;
       character = r.character;

@@ -40,7 +40,7 @@ export function Battlefield({
   scene,
   decoration = 'generic',
 }: BattlefieldProps) {
-  const currentTurnId = state.initiativeOrder[state.currentTurnIndex];
+  const currentTurnId = state.turnOrder[state.currentTurnIndex];
   const monsterCombatants = state.combatants.filter(
     (c) => c.kind === 'monster',
   ) as MonsterCombatant[];

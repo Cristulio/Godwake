@@ -242,16 +242,6 @@ describe('applyEventOutcome — effect kinds', () => {
     expect(r.character.delveAttackBonus).toBe(2);
   });
 
-  it('init_bonus_run: adds to delveInitBonus', () => {
-    const char = makeChar();
-    const r = applyEventOutcome(
-      char,
-      outcome({ effects: [{ kind: 'init_bonus_run', amount: 2 }] }),
-      createDiceRoller(1),
-    );
-    expect(r.character.delveInitBonus).toBe(2);
-  });
-
   it('spawn_ambush: returns the monster def ids as a sentinel', () => {
     const char = makeChar();
     const r = applyEventOutcome(

@@ -20,8 +20,6 @@ export const RaceSchema = z.object({
   bonusHpPerLevel: z.number().int().nonnegative().optional(),
   /** Damage types the race resists (damage halved). E.g. Tiefling fire. */
   damageResistances: z.array(DamageTypeSchema).optional(),
-  /** Flat modifier to initiative rolls (e.g. Wood Elf Fey Reflexes: +1). */
-  initiativeBonus: z.number().int().optional(),
 });
 
 export type RaceFeature = z.infer<typeof RaceFeatureSchema>;

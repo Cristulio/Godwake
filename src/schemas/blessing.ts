@@ -34,8 +34,6 @@ export const BlessingModifiersSchema = z
   .object({
     /** Flat bonus to AC. */
     acBonus: z.number().optional(),
-    /** Flat modifier to initiative rolls. */
-    initiativeBonus: z.number().optional(),
     /** +N to-hit on the first attack of each combat. */
     firstAttackBonus: z.number().optional(),
     /** +N damage on the first attack of each combat. */

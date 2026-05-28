@@ -160,7 +160,7 @@ function aliveMonsters(state: CombatState): MonsterCombatant[] {
 }
 
 function isPlayerTurn(state: CombatState): boolean {
-  return state.initiativeOrder[state.currentTurnIndex] === 'player';
+  return state.turnOrder[state.currentTurnIndex] === 'player';
 }
 
 function totalMonsterHpAlive(state: CombatState): number {
@@ -301,7 +301,7 @@ function simulateCombat(
       state = ended.state;
       c = ended.character;
     } else {
-      const monsterId = state.initiativeOrder[state.currentTurnIndex];
+      const monsterId = state.turnOrder[state.currentTurnIndex];
       const r = monsterAttack({ roller, character: c, state }, monsterId);
       state = r.state;
       c = r.character;

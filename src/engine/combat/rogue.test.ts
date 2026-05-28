@@ -415,13 +415,13 @@ describe('Rogue — Uncanny Dodge', () => {
     expect(rogue.actionEconomy.reactionUsed).toBe(true);
 
     // Cycle initiative back to the player so reaction resets.
-    for (let i = 0; i < state.initiativeOrder.length; i++) {
+    for (let i = 0; i < state.turnOrder.length; i++) {
       const et = endTurn(state, rogue);
       state = et.state;
       rogue = et.character;
-      if (state.initiativeOrder[state.currentTurnIndex] === 'player') break;
+      if (state.turnOrder[state.currentTurnIndex] === 'player') break;
     }
-    expect(state.initiativeOrder[state.currentTurnIndex]).toBe('player');
+    expect(state.turnOrder[state.currentTurnIndex]).toBe('player');
     expect(rogue.actionEconomy.reactionUsed).toBe(false);
 
     const hpBefore = rogue.hp.current;

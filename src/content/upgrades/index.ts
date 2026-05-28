@@ -108,18 +108,6 @@ const RAW: Upgrade[] = [
     kind: 'permanent',
   },
   {
-    id: 'stoneweave-boots',
-    category: 'body',
-    name: 'Stoneweave Boots',
-    flavor:
-      'Hide-leather over river stone, laced by a druid who refused to look you in the eye. They settle your weight before the first blow lands.',
-    effectAtRank: (r) => `+${r} initiative, permanent.`,
-    costForRank: (r) => rankCost(100, r),
-    maxRank: 4,
-    apply: (c) => addPermanentBonus(c, 'init', 1),
-    kind: 'permanent',
-  },
-  {
     id: 'wellspring-vigil',
     category: 'body',
     name: 'Wellspring Vigil',
@@ -415,18 +403,6 @@ const RAW: Upgrade[] = [
   },
 
   // ─── SOUL ──────────────────────────────────────────────────────────────
-  {
-    id: 'whisper-of-the-wild',
-    category: 'soul',
-    name: 'Whisper of the Wild',
-    flavor:
-      'A wolf stands at the edge of the firelight while the druids work the rite. You wake hearing what it heard the moment before it ran.',
-    effectAtRank: (r) => `+${r * 2} initiative, permanent.`,
-    costForRank: (r) => rankCost(180, r),
-    maxRank: 3,
-    apply: (c) => addPermanentBonus(c, 'init', 2),
-    kind: 'permanent',
-  },
   {
     id: 'iron-will',
     category: 'soul',

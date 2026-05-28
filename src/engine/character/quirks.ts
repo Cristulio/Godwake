@@ -42,8 +42,6 @@ export function aggregateQuirkModifiers(quirkIds: string[]): QuirkModifiers {
     if (m.goldMultiplier !== undefined)
       acc.goldMultiplier = (acc.goldMultiplier ?? 1) * m.goldMultiplier;
     if (m.poisonImmune) acc.poisonImmune = true;
-    if (m.initiativeMod !== undefined)
-      acc.initiativeMod = (acc.initiativeMod ?? 0) + m.initiativeMod;
     if (m.acMod !== undefined) acc.acMod = (acc.acMod ?? 0) + m.acMod;
     if (m.hangryDamageBonus !== undefined)
       acc.hangryDamageBonus = (acc.hangryDamageBonus ?? 0) + m.hangryDamageBonus;
@@ -86,8 +84,8 @@ export function baneQuirkCount(character: Character): number {
  * Sum of `soulMarkWeight` (default 1.0) across the character's bane quirks.
  * Harsh banes — ones that block an entire mechanic from firing — weigh more
  * so their renown compensation reflects the actual pain. A "normal" 1-bane
- * roll still scores 1.0; a `limping` (combined −1 init / −1 AC) roll scores
- * 1.5.
+ * roll still scores 1.0; a `limping` (−1 AC plus a first-attack penalty)
+ * scores 1.5.
  */
 export function baneSoulMarkWeight(character: Character): number {
   let total = 0;

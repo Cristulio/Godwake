@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
-import { effectiveAbilityScores, initiativeModifier, modifierFor } from '../../engine/character/derived';
+import { effectiveAbilityScores, modifierFor } from '../../engine/character/derived';
 import { applyLevelUp, hpGainForLevelUp } from '../../engine/character/leveling';
 import { listRaces, getRace } from './index';
 
@@ -39,12 +39,6 @@ describe('Wood Elf', () => {
 
   it('has 35 ft. speed', () => {
     expect(getRace('wood-elf').speed).toBe(35);
-  });
-
-  it('Fey Reflexes adds +1 to initiative', () => {
-    expect(getRace('wood-elf').initiativeBonus).toBe(1);
-    // Base DEX 13 + race +2 = 15 → +2 DEX mod. Plus Fey Reflexes +1 = +3.
-    expect(initiativeModifier(elf)).toBe(3);
   });
 });
 

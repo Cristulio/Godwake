@@ -39,7 +39,7 @@ function bareCharacter(overrides: Partial<Character> = {}): Character {
 function bareState(overrides: Partial<CombatState> = {}): CombatState {
   return {
     combatants: [],
-    initiativeOrder: [],
+    turnOrder: [],
     currentTurnIndex: 0,
     round: 1,
     log: [],

@@ -3,7 +3,6 @@ import {
   computeAC,
   critRange,
   effectiveAbilityScores,
-  initiativeModifier,
   modifierFor,
   proficiencyBonus,
 } from './derived';
@@ -73,23 +72,6 @@ describe('character derivation — human fighter', () => {
     expect(computeAC(human)).toBe(10 + 2);
   });
 
-  it('initiative modifier = DEX mod (no speed coupling)', () => {
-    expect(initiativeModifier(human)).toBe(2);
-  });
-
-  it('Wood Elf init = DEX mod + Fey Reflexes (+1); speed 35 does not also bump it', () => {
-    // Wood Elf grants +2 DEX on top of base 13 → effective DEX 15 (+2 mod).
-    // Fey Reflexes adds an explicit +1 racial init bonus.
-    const woodElf = { ...human, raceId: 'wood-elf' as const };
-    expect(initiativeModifier(woodElf)).toBe(3);
-  });
-
-  it('Hill Dwarf init = DEX mod only — speed 25 does not penalise init', () => {
-    // Hill Dwarf gives no DEX bonus; effective DEX = base 13 (+1 mod).
-    const hillDwarf = { ...human, raceId: 'hill-dwarf' as const };
-    expect(initiativeModifier(hillDwarf)).toBe(1);
-  });
-
   it('starts with only the lv20 crit range (Improved Critical not yet)', () => {
     expect(critRange(human)).toEqual([20]);
   });
@@ -149,30 +131,9 @@ describe('character derivation — human fighter', () => {
     expect(computeAC(blessed)).toBe(13);
   });
 
-  it("Silvanus's Root stacks +1 AC, −1 initiative", () => {
+  it("Silvanus's Root grants +1 AC", () => {
     const rooted = { ...human, blessings: ['silvanus-root'] };
     expect(computeAC(rooted)).toBe(13);
-    expect(initiativeModifier(rooted)).toBe(1); // DEX(2) − 1
-  });
-
-  it('Vertigo quirk subtracts 2 from initiative', () => {
-    const dizzy = { ...human, quirks: ['vertigo'] };
-    expect(initiativeModifier(dizzy)).toBe(0); // DEX(2) − 2
-  });
-
-  it("Helm's Vigil adds 2 to initiative", () => {
-    const watched = { ...human, blessings: ['helms-vigil'] };
-    expect(initiativeModifier(watched)).toBe(4); // DEX(2) + 2
-  });
-
-  it('Remarkable Athlete adds +2 to initiative at Champion level 5', () => {
-    const champion5 = { ...human, level: 5, subclassId: 'champion' };
-    expect(initiativeModifier(champion5)).toBe(4); // DEX(2) + 2
-  });
-
-  it('Remarkable Athlete does not apply below Champion level 5', () => {
-    const champion4 = { ...human, level: 4, subclassId: 'champion' };
-    expect(initiativeModifier(champion4)).toBe(2); // DEX(2) only
   });
 
   it("Tempus's Edge widens crit range by 1", () => {
