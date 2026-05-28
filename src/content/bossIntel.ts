@@ -174,7 +174,7 @@ export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {
       {
         id: 'read-omens',
         label: 'Read the omens',
-        hint: 'Free. A name and the shape of the threat.',
+        hint: "Free. Reveals the boss's name, rough HP, and signature attack with its save DC.",
         outcome: {
           resolution: card.omenResolution,
           effects: [
@@ -189,7 +189,7 @@ export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {
       {
         id: 'pay-for-scout',
         label: 'Pay for the scout',
-        hint: 'The full ledger. Numbers and routine.',
+        hint: "Reveals the boss's exact HP, AC, and every attack with save DCs — kept on a badge during the boss fight.",
         requiresGold: card.scoutPrice,
         outcome: {
           resolution: card.scoutResolution,
