@@ -12,7 +12,14 @@ import {
   type AbilityName,
   type AbilityScores,
 } from '../../types/abilities';
-import { STANDARD_ARRAY } from '../../engine/character/initialize';
+import {
+  POINT_BUY_CAP,
+  budgetForClass,
+  canLower,
+  canRaise,
+  defaultScoresForClass,
+  pointsRemaining,
+} from '../../engine/character/abilityPointBuy';
 import { SKILL_DESCRIPTIONS, isSkillEnabled, type SkillName } from '../../types/skills';
 import type { ClassPreset } from '../../schemas/class';
 
@@ -140,6 +147,25 @@ export function CharacterCreationScreen() {
   const preset: ClassPreset | null = cls?.preset ?? null;
 
   const allAssigned = ABILITY_NAMES.every((a) => typeof assignments[a] === 'number');
+  // Once a class is picked the six scores are always fully populated (auto-
+  // assigned), so a full AbilityScores view is safe to derive.
+  const currentScores: AbilityScores | null =
+    classId && allAssigned
+      ? {
+          str: assignments.str!,
+          dex: assignments.dex!,
+          con: assignments.con!,
+          int: assignments.int!,
+          wis: assignments.wis!,
+          cha: assignments.cha!,
+        }
+      : null;
+  const budget = classId ? budgetForClass(classId) : 0;
+  const remaining =
+    currentScores != null ? pointsRemaining(currentScores, budget) : budget;
+  // Scores are valid only when every point is allocated. The auto-assigned
+  // array starts at exactly 0 remaining, so Next is live without any edits.
+  const scoresValid = currentScores != null && remaining === 0;
   // Only enabled skills surface in the picker — disabled ones are hidden per the
   // no-flavor-only rule. The class's nominal skillChoiceCount may exceed what's
   // enabled today; clamp so the picker is always satisfiable.
@@ -156,19 +182,24 @@ export function CharacterCreationScreen() {
     if (next === classId) return;
     setClassId(next);
     setSkills([]);
-    setAssignments({});
+    setAssignments(defaultScoresForClass(next));
   }
 
   function pickRace(next: RaceId) {
     setRaceId(next);
   }
 
-  function assignAbility(ability: AbilityName, value: number | null) {
+  function bumpAbility(ability: AbilityName, delta: number) {
+    if (!classId) return;
     setAssignments((prev) => {
-      const nextMap = { ...prev };
-      if (value == null) delete nextMap[ability];
-      else nextMap[ability] = value;
-      return nextMap;
+      const current = prev[ability];
+      if (typeof current !== 'number') return prev;
+      const nextValue = current + delta;
+      if (delta > 0 && !canRaise(current, pointsRemaining(prev as AbilityScores, budgetForClass(classId)))) {
+        return prev;
+      }
+      if (delta < 0 && !canLower(current)) return prev;
+      return { ...prev, [ability]: nextValue };
     });
   }
 
@@ -205,7 +236,7 @@ export function CharacterCreationScreen() {
   function next() {
     if (step === 1 && classId) setStep(2);
     else if (step === 2 && raceId) setStep(3);
-    else if (step === 3 && allAssigned && skillsValid) setStep(4);
+    else if (step === 3 && scoresValid && skillsValid) setStep(4);
   }
 
   function back() {
@@ -236,7 +267,7 @@ export function CharacterCreationScreen() {
   const canNext =
     (step === 1 && !!classId) ||
     (step === 2 && !!raceId) ||
-    (step === 3 && allAssigned && skillsValid);
+    (step === 3 && scoresValid && skillsValid);
   const canConfirm =
     !!classId && !!raceId && allAssigned && skillsValid && nameValid;
 
@@ -279,11 +310,12 @@ export function CharacterCreationScreen() {
         <RaceStep raceId={raceId} pickRace={pickRace} />
       )}
 
-      {step === 3 && cls && race && (
+      {step === 3 && cls && race && currentScores && (
         <AbilitiesAndSkillsStep
           race={race}
-          assignments={assignments}
-          assignAbility={assignAbility}
+          scores={currentScores}
+          bumpAbility={bumpAbility}
+          remaining={remaining}
           skills={skills}
           toggleSkill={toggleSkill}
           availableSkills={enabledSkillsForClass}
@@ -331,7 +363,7 @@ export function CharacterCreationScreen() {
 function stepHint(step: Step, flags: { canNext: boolean; canConfirm: boolean }): string {
   if (step === 1) return flags.canNext ? 'A class is chosen.' : 'Pick a class to continue.';
   if (step === 2) return flags.canNext ? 'A bloodline is chosen.' : 'Pick a race to continue.';
-  if (step === 3) return flags.canNext ? 'Scores and skills are set.' : 'Assign every score and pick your skills.';
+  if (step === 3) return flags.canNext ? 'Scores and skills are set.' : 'Spend every point and pick your skills.';
   return flags.canConfirm ? 'Ready to walk the world.' : 'Enter a name to begin.';
 }
 
@@ -482,8 +514,9 @@ function RaceStep({ raceId, pickRace }: RaceStepProps) {
 
 interface AbilitiesAndSkillsStepProps {
   race: ReturnType<typeof getRace>;
-  assignments: Partial<Record<AbilityName, number>>;
-  assignAbility: (ability: AbilityName, value: number | null) => void;
+  scores: AbilityScores;
+  bumpAbility: (ability: AbilityName, delta: number) => void;
+  remaining: number;
   skills: SkillName[];
   toggleSkill: (s: SkillName) => void;
   availableSkills: SkillName[];
@@ -492,8 +525,9 @@ interface AbilitiesAndSkillsStepProps {
 
 function AbilitiesAndSkillsStep({
   race,
-  assignments,
-  assignAbility,
+  scores,
+  bumpAbility,
+  remaining,
   skills,
   toggleSkill,
   availableSkills,
@@ -501,69 +535,80 @@ function AbilitiesAndSkillsStep({
 }: AbilitiesAndSkillsStepProps) {
   return (
     <>
-      <Panel
-        className="mb-4"
-        title={`Ability Scores · Standard Array (${STANDARD_ARRAY.join(', ')})`}
-      >
-        <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-          Assign each value to one ability. Racial bonuses apply on top.
-        </p>
+      <Panel className="mb-4" title="Ability Scores">
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <p className="text-[var(--color-text-secondary)] text-xs italic leading-relaxed">
+            Auto-assigned for your class. Lower a score to free points, raise
+            another to spend them — anything above 18 costs double. Racial
+            bonuses apply on top.
+          </p>
+          <div
+            className={`shrink-0 font-mono text-xs px-2 py-1 border tabular-nums ${
+              remaining === 0
+                ? 'border-[var(--color-border-dim)] text-[var(--color-text-dim)]'
+                : 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)]'
+            }`}
+          >
+            {remaining} pt{remaining === 1 ? '' : 's'} left
+          </div>
+        </div>
         <div className="space-y-2">
           {ABILITY_NAMES.map((ability) => {
-            const assigned = assignments[ability];
+            const base = scores[ability];
             const racialBonus = race.abilityScoreBonuses[ability] ?? 0;
-            const total = typeof assigned === 'number' ? assigned + racialBonus : null;
-            const mod = total != null ? abilityModifier(total) : null;
+            const total = base + racialBonus;
+            const mod = abilityModifier(total);
+            const lowerDisabled = !canLower(base);
+            const raiseDisabled = !canRaise(base, remaining);
+            const surcharged = base >= 18 && base < POINT_BUY_CAP;
             return (
               <div
                 key={ability}
-                className="grid grid-cols-[110px_1fr_140px] items-center gap-3 py-1 border-b border-[var(--color-border-dim)] last:border-b-0"
+                className="grid grid-cols-[110px_1fr_150px] items-center gap-3 py-1 border-b border-[var(--color-border-dim)] last:border-b-0"
               >
                 <div className="text-[var(--color-accent-amber)] uppercase tracking-wider text-xs font-bold">
                   {ABILITY_FULL_NAMES[ability]}
                 </div>
-                <div className="flex gap-1 flex-wrap">
-                  {STANDARD_ARRAY.map((v, i) => {
-                    const isMine = assigned === v;
-                    const takenElsewhere =
-                      !isMine &&
-                      Object.entries(assignments).some(
-                        ([a, av]) => a !== ability && av === v,
-                      );
-                    return (
-                      <button
-                        key={`${v}-${i}`}
-                        disabled={takenElsewhere}
-                        onClick={() => assignAbility(ability, isMine ? null : v)}
-                        className={`w-9 h-8 border text-sm font-bold transition-colors ${
-                          isMine
-                            ? 'border-[var(--color-accent-amber)] bg-[var(--color-accent-amber)] text-[var(--color-bg-base)]'
-                            : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-primary)] hover:border-[var(--color-border-warm)]'
-                        } disabled:opacity-30 disabled:cursor-not-allowed`}
-                      >
-                        {v}
-                      </button>
-                    );
-                  })}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => bumpAbility(ability, -1)}
+                    disabled={lowerDisabled}
+                    className="!px-2 !py-0.5"
+                  >
+                    −
+                  </Button>
+                  <div className="w-8 text-center font-mono text-sm font-bold text-[var(--color-text-primary)] tabular-nums">
+                    {base}
+                  </div>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => bumpAbility(ability, +1)}
+                    disabled={raiseDisabled}
+                    className="!px-2 !py-0.5"
+                  >
+                    +
+                  </Button>
+                  {surcharged && (
+                    <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-wider">
+                      ×2 cost
+                    </span>
+                  )}
                 </div>
                 <div className="text-[var(--color-text-secondary)] text-xs text-right tabular-nums">
-                  {total != null ? (
-                    <>
-                      <span className="text-[var(--color-text-primary)]">{total}</span>
-                      {racialBonus > 0 && (
-                        <span className="text-[var(--color-text-dim)]">
-                          {' '}
-                          ({assigned}+{racialBonus})
-                        </span>
-                      )}
-                      <span className="ml-2 text-[var(--color-accent-amber)]">
-                        {mod! >= 0 ? '+' : ''}
-                        {mod}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-[var(--color-text-dim)]">unassigned</span>
+                  <span className="text-[var(--color-text-primary)]">{total}</span>
+                  {racialBonus > 0 && (
+                    <span className="text-[var(--color-text-dim)]">
+                      {' '}
+                      ({base}+{racialBonus})
+                    </span>
                   )}
+                  <span className="ml-2 text-[var(--color-accent-amber)]">
+                    {mod >= 0 ? '+' : ''}
+                    {mod}
+                  </span>
                 </div>
               </div>
             );
