@@ -17,6 +17,7 @@ import {
   isPlayerParalyzed,
   rollPlayerSave,
 } from '../holdPerson';
+import { tryShieldReaction } from '../spells/shield';
 import { combatResult, type CombatActionResult } from '../types';
 import { appendLog } from '../log';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
@@ -135,16 +136,27 @@ export function monsterAttack(
   const toHit = roller.d20(attackAdvantage, action.attackBonus);
   // Monsters don't get the player's Improved Critical
   const crit = toHit.rolls[0] === 20;
-  const hit = crit || (toHit.total >= ac && !toHit.natural1);
+  let hit = crit || (toHit.total >= ac && !toHit.natural1);
 
-  const logEntries: CombatLogEntry[] = [];
   const advantageNote =
     attackAdvantage === 'advantage' ? ' (advantage — paralyzed)' : '';
-  logEntries.push({
+  workingState = appendLog(workingState, {
     id: nextLogId(workingState),
     kind: 'roll',
     text: `${attacker.instance.displayName} attacks ${nextCharacter.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}${advantageNote}.`,
   });
+
+  // Shield reaction (wizard): if a non-crit hit lands and Shield would flip it
+  // to a miss, the wizard auto-burns a level-1 slot + her reaction. Crits
+  // (nat 20) bypass Shield — Shield only raises AC, and a nat 20 hits anything.
+  if (hit && !crit) {
+    const triggered = tryShieldReaction(nextCharacter, workingState, ac, toHit.total);
+    if (triggered) {
+      workingState = triggered.state;
+      nextCharacter = triggered.character;
+      hit = false;
+    }
+  }
 
   const attackEvent: AttackEvent = {
     id: state.attackEventCounter + 1,
@@ -163,14 +175,11 @@ export function monsterAttack(
     damageType: action.damageType,
   };
 
-  let nextState: CombatState = appendLog(
-    {
-      ...workingState,
-      lastAttack: attackEvent,
-      attackEventCounter: attackEvent.id,
-    },
-    ...logEntries,
-  );
+  let nextState: CombatState = {
+    ...workingState,
+    lastAttack: attackEvent,
+    attackEventCounter: attackEvent.id,
+  };
 
   if (hit) {
     const damageExpr = parseDiceExpression(action.damage);
