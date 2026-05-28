@@ -186,8 +186,12 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       },
     });
     if (!character) return;
+    // goldEarned is the run-aggregate ledger; goldInPocket is the spendable
+    // purse the shop reads from. Both must update or boss/treasure gold never
+    // reaches the player.
     const nextChar: Character = {
       ...character,
+      goldInPocket: character.goldInPocket + finalGold,
       xp: (character.xp ?? 0) + finalXp,
     };
     charSlice.setCharacter(nextChar);

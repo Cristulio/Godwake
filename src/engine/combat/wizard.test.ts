@@ -116,87 +116,51 @@ describe('Wizard — Fire Bolt cantrip', () => {
   });
 });
 
-describe('Wizard — Fire Bolt crit range honors permanentBonuses.critRange', () => {
+describe('Wizard — Fire Bolt save-for-half', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('treats a natural 19 as a crit when permanentBonuses.critRange is +1 (Killer\'s Eye)', () => {
-    // Regression test: castFireBolt used to hard-code `rolls[0] === 20`, ignoring
-    // the Grove Killer's Eye upgrade. Find a seed where
-    // the fire-bolt d20 lands on 19. With baseline crit range, that's a regular
-    // hit. With +1 crit range, it's a CRITICAL HIT and damage doubles.
+  it('always deals damage — failed saves take full, successful saves take floor(full / 2)', () => {
     const goblin = getMonster('goblin');
-    let validated = false;
-    for (let seed = 1; seed <= 400 && !validated; seed++) {
-      const baseline = makeWizard();
-      const buffed: Character = { ...makeWizard(), permanentBonuses: { critRange: 1 } };
-
-      let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] }).state;
-      const idA = stateA.combatants.find((c) => c.kind === 'monster')!.id;
-      stateA = castSpell({
-        roller: createDiceRoller(seed),
-        character: baseline,
-        state: stateA,
-        spellId: 'fire-bolt',
-        targetId: idA,
-      }).state;
-      const rollLineA = stateA.log.find((l) => l.text.includes('Fire Bolt'));
-      if (!rollLineA) continue;
-      // Attack bonus = INT mod (+3 from human +1) + prof (+2) = +5. d20=19 → total 24.
-      const totalA = Number(rollLineA.text.match(/= (\d+) vs AC/)?.[1]);
-      if (totalA !== 24) continue;
-
-      _resetMonsterInstanceCounter();
-      let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] }).state;
-      const idB = stateB.combatants.find((c) => c.kind === 'monster')!.id;
-      stateB = castSpell({
-        roller: createDiceRoller(seed),
-        character: buffed,
-        state: stateB,
-        spellId: 'fire-bolt',
-        targetId: idB,
-      }).state;
-      const rollLineB = stateB.log.find((l) => l.text.includes('Fire Bolt'))!;
-
-      // Baseline: 19 is a regular hit, log says "— hit".
-      expect(rollLineA.text).toContain('— hit');
-      expect(rollLineA.text).not.toContain('CRITICAL');
-      // Buffed: 19 is now a crit.
-      expect(rollLineB.text).toContain('CRITICAL HIT');
-
-      // Buffed damage doubles dice — strictly greater than baseline.
-      const dmgA = stateA.log.find((l) => l.kind === 'damage')!;
-      const dmgB = stateB.log.find((l) => l.kind === 'damage')!;
-      const valA = Number(dmgA.text.match(/= (\d+) fire/)?.[1]);
-      const valB = Number(dmgB.text.match(/= (\d+) fire/)?.[1]);
-      expect(valB).toBeGreaterThan(valA);
-
-      validated = true;
-    }
-    expect(validated).toBe(true);
-  });
-
-  it('baseline wizard (no crit bonus) does NOT crit on a natural 19', () => {
-    const goblin = getMonster('goblin');
-    let saw19 = false;
-    for (let seed = 1; seed <= 400 && !saw19; seed++) {
+    let sawFailed = false;
+    let sawSaved = false;
+    for (let seed = 1; seed <= 200 && (!sawFailed || !sawSaved); seed++) {
       const w = makeWizard();
-      let state = createCombat({ roller: createDiceRoller(seed), character: w, monsters: [{ def: goblin }] }).state;
-      const id = state.combatants.find((c) => c.kind === 'monster')!.id;
+      const init = createCombat({ roller: createDiceRoller(seed), character: w, monsters: [{ def: goblin }] });
+      let state = init.state;
+      const targetId = findMonster(state).id;
       state = castSpell({
         roller: createDiceRoller(seed),
-        character: w,
+        character: init.character,
         state,
         spellId: 'fire-bolt',
-        targetId: id,
+        targetId,
       }).state;
-      const line = state.log.find((l) => l.text.includes('Fire Bolt'));
-      if (!line) continue;
-      const total = Number(line.text.match(/= (\d+) vs AC/)?.[1]);
-      if (total !== 24) continue;
-      saw19 = true;
-      expect(line.text).not.toContain('CRITICAL');
+      const rollLine = state.log.find((l) => l.text.includes('Fire Bolt'));
+      const dmgLine = state.log.find((l) => l.kind === 'damage');
+      if (!rollLine || !dmgLine) continue;
+      const dealt = Number(dmgLine.text.match(/= (\d+) fire/)?.[1]);
+      expect(dealt).toBeGreaterThan(0);
+      if (rollLine.text.includes('(failed)')) {
+        expect(dmgLine.text).not.toContain('halved');
+        sawFailed = true;
+      } else if (rollLine.text.includes('(saved)')) {
+        expect(dmgLine.text).toContain('halved');
+        sawSaved = true;
+      }
     }
-    expect(saw19).toBe(true);
+    expect(sawFailed).toBe(true);
+    expect(sawSaved).toBe(true);
+  });
+
+  it('logs DC and save outcome in the roll line', () => {
+    const goblin = getMonster('goblin');
+    const w = makeWizard();
+    const roller = createDiceRoller(3);
+    const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    const targetId = findMonster(init.state).id;
+    const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'fire-bolt', targetId });
+    const rollLine = result.state.log.find((l) => l.text.includes('Fire Bolt'))!;
+    expect(rollLine.text).toMatch(/DEX save DC \d+: \d+ \((saved|failed)\)/);
   });
 });
 
@@ -405,39 +369,6 @@ describe('Wizard — long rest refresh', () => {
 describe('Wizard — Grove caster bonuses', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('Arcane Focus adds permanentBonuses.spellAttack to Fire Bolt attack rolls', () => {
-    const goblin = getMonster('goblin');
-    const baseline = makeWizard();
-    const buffed: Character = { ...makeWizard(), permanentBonuses: { spellAttack: 2 } };
-
-    const seed = 11;
-    let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] }).state;
-    const goblinIdA = findMonster(stateA).id;
-    stateA = castSpell({
-      roller: createDiceRoller(seed),
-      character: baseline,
-      state: stateA,
-      spellId: 'fire-bolt',
-      targetId: goblinIdA,
-    }).state;
-
-    let stateB = createCombat({ roller: createDiceRoller(seed), character: buffed, monsters: [{ def: goblin }] }).state;
-    const goblinIdB = findMonster(stateB).id;
-    stateB = castSpell({
-      roller: createDiceRoller(seed),
-      character: buffed,
-      state: stateB,
-      spellId: 'fire-bolt',
-      targetId: goblinIdB,
-    }).state;
-
-    const rollLineA = stateA.log.find((l) => l.text.includes('Fire Bolt'))!;
-    const rollLineB = stateB.log.find((l) => l.text.includes('Fire Bolt'))!;
-    const totalA = Number(rollLineA.text.match(/= (\d+) vs AC/)?.[1]);
-    const totalB = Number(rollLineB.text.match(/= (\d+) vs AC/)?.[1]);
-    expect(totalB - totalA).toBe(2);
-  });
-
   it('Sigil of the Wakened Mind adds permanentBonuses.spellDc to the spell save DC (via Hold Person)', () => {
     const goblin = getMonster('goblin');
     const baseline: Character = { ...makeWizard(), level: 3 };
@@ -463,7 +394,8 @@ describe('Wizard — Grove caster bonuses', () => {
     const goblin = getMonster('goblin');
     const buffed: Character = { ...makeWizard(), permanentBonuses: { spellDamage: 3 } };
     // Fire Bolt damage = 1d10 + INT mod (+3 for makeWizard's INT 15 + Human
-    // +1 → 16) + spellDamage (+3 Burning Tongue) = +6 total bonus.
+    // +1 → 16) + spellDamage (+3 Burning Tongue) = +6 total bonus. The
+    // breakdown shows "+6" pre-halving on both saved and failed casts.
     let validated = false;
     for (let seed = 1; seed <= 60 && !validated; seed++) {
       const character: Character = {
@@ -481,9 +413,8 @@ describe('Wizard — Grove caster bonuses', () => {
       }).state;
       const dmgLog = state.log.find((l) => l.kind === 'damage' && l.text.includes('fire'));
       if (!dmgLog) continue;
-      const m = dmgLog.text.match(/\+6 = (\d+) fire/);
-      if (!m) continue;
-      expect(dmgLog.text).toContain('+6 =');
+      if (!dmgLog.text.includes('+6')) continue;
+      expect(dmgLog.text).toContain('+6');
       validated = true;
     }
     expect(validated).toBe(true);
