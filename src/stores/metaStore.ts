@@ -22,6 +22,13 @@ interface MetaStoreState {
   /** Per-def map of {abilityName: kills} — which attack a given monster used to finish the player. */
   monsterKillingAbilities: Record<string, Record<string, number>>;
   unlockedUpgrades: UnlockedUpgrades;
+  /**
+   * Highest number of chapter bosses felled in any single run. The continuous
+   * chain is linear, so this doubles as "deepest chapter ever cleared" — the
+   * small progression model the meta loop builds on (Ascension, deeper Grove
+   * tiers). `chapter1Cleared` is the legacy boolean view of it (>= 1).
+   */
+  chaptersCleared: number;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
   /**
@@ -38,6 +45,11 @@ interface MetaStoreState {
   purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
   setHasReincarnated: (v: boolean) => void;
   incrementDeathCount: () => void;
+  /**
+   * Record that `count` chapters were cleared in a run. Raises the all-time
+   * high water mark and keeps the legacy `chapter1Cleared` flag in sync.
+   */
+  recordChapterCleared: (count: number) => void;
   setChapter1Cleared: (v: boolean) => void;
   setDruidGroveUnlocked: (v: boolean) => void;
   setUnlockedUpgrades: (u: UnlockedUpgrades) => void;
@@ -54,6 +66,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   monsterKilledBy: {},
   monsterKillingAbilities: {},
   unlockedUpgrades: {},
+  chaptersCleared: 0,
   chapter1Cleared: false,
   druidGroveUnlocked: false,
   knownNpcs: [],
@@ -122,6 +135,11 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
 
   setHasReincarnated: (v) => set({ hasReincarnated: v }),
   incrementDeathCount: () => set((s) => ({ deathCount: s.deathCount + 1 })),
+  recordChapterCleared: (count) =>
+    set((s) => ({
+      chaptersCleared: Math.max(s.chaptersCleared, count),
+      chapter1Cleared: s.chapter1Cleared || count >= 1,
+    })),
   setChapter1Cleared: (v) => set({ chapter1Cleared: v }),
   setDruidGroveUnlocked: (v) => set({ druidGroveUnlocked: v }),
   setUnlockedUpgrades: (u) => set({ unlockedUpgrades: u }),
@@ -142,6 +160,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       monsterKilledBy: {},
       monsterKillingAbilities: {},
       unlockedUpgrades: {},
+      chaptersCleared: 0,
       chapter1Cleared: false,
       druidGroveUnlocked: false,
       knownNpcs: [],

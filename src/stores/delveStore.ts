@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import type { Character } from '../types/character';
-import type { DelveState } from '../types/delve';
+import type { DelveState, RoomSpec } from '../types/delve';
 import { getActiveRoller } from '../engine/dice';
+import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
 import { classStartingResources } from '../engine/character/initialize';
 import { effectiveAbilityScores } from '../engine/character/derived';
 import { abilityModifier } from '../types/abilities';
@@ -53,6 +54,67 @@ function applyDelveStartQuirks(character: Character): Character {
 }
 
 /**
+ * Roll the next life's quirks, guaranteeing at least two distinct ids. `carry`
+ * holds quirks that survive the turn (Wheelturner keeps the first). The bounded
+ * retry tops up one at a time and is capped so a small or exhausted quirk pool
+ * can never spin forever.
+ */
+function rollReincarnationQuirks(carry: string[]): string[] {
+  const roller = getActiveRoller();
+  const result = [...carry];
+  for (const id of rollQuirks(roller, Math.max(2 - result.length, 1))) {
+    if (!result.includes(id)) result.push(id);
+  }
+  for (let attempt = 0; result.length < 2 && attempt < 32; attempt++) {
+    const [id] = rollQuirks(roller, 1);
+    if (id && !result.includes(id)) result.push(id);
+  }
+  return result;
+}
+
+/**
+ * Turn the wheel: the soul reincarnates into a fresh life. Quirks reroll (the
+ * Wheelturner upgrade carries the first one forward), level/xp reset to the
+ * baseline, and everything that belonged to the life just ended — blessings,
+ * camp boons, conditions, delve buffs, boss intel — is left behind.
+ *
+ * This is the single reincarnation routine shared by BOTH death (`failDelve`)
+ * and clear (`finishDelve`): winning and dying differ only in the renown tier
+ * and lore beat, never in whether the soul turns the wheel. A future endless
+ * mode would simply skip this call to keep a build across clears.
+ *
+ * Returns the reincarnated character; also fires the one-time meta side effects
+ * (reincarnation flag + first-life NPC reveal).
+ */
+function reincarnateSoul(character: Character): Character {
+  const oldQuirks = character.quirks;
+  const carry =
+    character.wheelturnerUnlocked && oldQuirks.length > 0 ? [oldQuirks[0]] : [];
+  const newQuirks = rollReincarnationQuirks(carry);
+
+  const meta = useMetaStore.getState();
+  meta.setHasReincarnated(true);
+  // First turn of the wheel = Imoen reveal beat. Whispered through the falling
+  // (or the triumph), by the time the soul wakes again she has a name.
+  // Idempotent — only the first life triggers it.
+  meta.markNpcKnown('imoen');
+
+  return {
+    ...character,
+    level: 1,
+    xp: 0,
+    quirks: newQuirks,
+    blessings: [],
+    campBoons: [],
+    conditions: [],
+    delveAttackBonus: 0,
+    delveSpellAttackBonus: 0,
+    bossIntel: {},
+    boldApproachBosses: [],
+  };
+}
+
+/**
  * The active run: delve state + the cross-cutting orchestrators that mutate
  * delve, character, combat, screen, and meta together. Session-only — never
  * persisted (delve drops on reload).
@@ -64,13 +126,21 @@ interface DelveStoreState {
   startDelve: (delve: DelveState) => void;
   advanceRoom: () => void;
   addDelveReward: (gold: number, xp: number) => void;
+  /** Credit gold from a non-combat source (e.g. Shrine Tithe) to purse + ledger. */
+  grantTitheGold: (amount: number) => void;
+  /**
+   * Settle a cleared combat/boss room: gold drops, room advance, first-blood /
+   * boss taunts, chapter-boss + NPC-reveal bookkeeping. The view just dispatches.
+   */
+  resolveRoomVictory: (room: RoomSpec) => void;
   finishDelve: () => void;
   failDelve: () => void;
   abandonDelve: () => void;
   markChapter1BossKilled: () => void;
   creditChapterClearGold: () => void;
   concludeDelveAtCamp: () => void;
-  pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => void;
+  /** Resolve a camp choice. Returns the granted blessing id for 'prayer', else null. */
+  pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => string | null;
   /**
    * Resolve the current camp's boon picker. `boonId === null` means the player
    * explicitly skipped the panel. The same camp tier cannot be resolved twice.
@@ -204,6 +274,72 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     }
   },
 
+  grantTitheGold: (amount) => {
+    if (amount <= 0) return;
+    const s = get();
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!character) return;
+    // Mirror the addDelveReward split: spendable purse + run-aggregate ledger.
+    charSlice.setCharacter({
+      ...character,
+      goldInPocket: character.goldInPocket + amount,
+    });
+    if (s.delve) {
+      set({ delve: { ...s.delve, goldEarned: s.delve.goldEarned + amount } });
+    }
+  },
+
+  resolveRoomVictory: (room) => {
+    const s = get();
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!s.delve || !character) return;
+    const isBossRoom = room.kind === 'boss';
+    const isRegularCombat = room.kind === 'combat' || isBossRoom;
+    if (isRegularCombat) {
+      const roomGold = room.goldReward ?? 0;
+      const xpDrop = room.xpReward ?? 0;
+      // Per-monster CR-scaled gold drops, on top of any fixed room-level
+      // goldReward. Each instance drops independently.
+      const monsterDefIds = (room.monsters ?? []).flatMap((m) =>
+        Array.from({ length: m.count }, () => m.defId),
+      );
+      const mobGold = rollRoomGoldDrops(getActiveRoller(), monsterDefIds);
+      let goldDrop = roomGold + mobGold;
+      // Boss intel "walk past" reward: +5% gold from that specific boss.
+      if (isBossRoom) {
+        const bossDefId = room.monsters?.[0]?.defId;
+        if (bossDefId && character.boldApproachBosses?.includes(bossDefId)) {
+          goldDrop = Math.floor(goldDrop * 1.05);
+        }
+      }
+      if (goldDrop || xpDrop) get().addDelveReward(goldDrop, xpDrop);
+    }
+    useCombatStore.getState().setCombat(null);
+    get().advanceRoom();
+    // Imoen whispers on the FIRST cleared room of the run.
+    const d = get().delve;
+    if (d && d.roomsCleared === 0) {
+      useScreenStore.getState().showTaunt('imoen', 'first-blood');
+    }
+    // Irenicus taunts after a boss clear. Delay so the victory beat lands
+    // before the overlay steals the moment.
+    if (isBossRoom) {
+      setTimeout(() => {
+        useScreenStore.getState().showTaunt('irenicus', 'chapter-clear');
+      }, 1500);
+      get().creditChapterClearGold();
+    }
+    // Chained Godwake delve: Ilyich is the Ch1 boss at room-10, not the final.
+    // Flag the kill so the chapter1Cleared flip survives a death deeper in the
+    // run. Also the reveal beat — the Voice steps forward with a name.
+    if (room.id === 'room-10' && s.delve.chapterId === 'godwake') {
+      get().markChapter1BossKilled();
+      useMetaStore.getState().markNpcKnown('irenicus');
+    }
+  },
+
   finishDelve: () => {
     const s = get();
     const charSlice = useCharacterStore.getState();
@@ -225,24 +361,40 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const renownBase = wonBoss
       ? RENOWN_PER_DELVE_CLEAR
       : RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bossesKilled;
+    // Soul-mark multiplier reads the quirks the soul carried THIS run, so
+    // settle renown BEFORE the wheel turns.
     const renownGain = Math.floor(renownBase * renownSoulMarkMultiplier(character));
-    const settled: Character = {
+    const withRenown: Character = {
       ...character,
       renown: character.renown + renownGain,
-      blessings: [],
-      campBoons: [],
-      delveAttackBonus: 0,
-      delveSpellAttackBonus: 0,
-      bossIntel: {},
-      boldApproachBosses: [],
     };
+    // A clear turns the wheel here; a death already reincarnated in failDelve,
+    // so on the death path we only wipe run-scoped fields (this also covers
+    // direct finishDelve() calls in tests that never went through failDelve).
+    const settled: Character = wonBoss
+      ? reincarnateSoul(withRenown)
+      : {
+          ...withRenown,
+          blessings: [],
+          campBoons: [],
+          delveAttackBonus: 0,
+          delveSpellAttackBonus: 0,
+          bossIntel: {},
+          boldApproachBosses: [],
+        };
     const ch1Killed = s.delve.chapter1BossKilled === true;
+    // Beating the final boss = the whole chain fell. Mid-run deaths credit the
+    // chapter bosses actually killed. The room-10 flag is a belt-and-braces
+    // floor for chapter 1 (it's set the instant Ilyich dies).
+    const chaptersThisRun = wonBoss
+      ? Math.max(bossesKilled, 1)
+      : Math.max(bossesKilled, ch1Killed ? 1 : 0);
     charSlice.setCharacter(settled);
     set({ delve: null });
     useCombatStore.getState().setCombat(null);
     useScreenStore.getState().setScreen('hub');
-    if (!meta.chapter1Cleared && (wonBoss || ch1Killed)) {
-      meta.setChapter1Cleared(true);
+    if (chaptersThisRun > 0) {
+      meta.recordChapterCleared(chaptersThisRun);
     }
     if (!meta.druidGroveUnlocked && settled.renown >= GROVE_UNLOCK_THRESHOLD) {
       meta.setDruidGroveUnlocked(true);
@@ -254,42 +406,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (!s.delve || !character) return;
-    // Reincarnation: re-roll quirks for the next life. Class/level/XP persist.
-    // Blessings and conditions wipe — they were on the falling life, not the soul.
-    // Wheelturner: the first existing quirk survives the turn; only the rest reroll.
-    const oldQuirks = character.quirks;
-    const carry =
-      character.wheelturnerUnlocked && oldQuirks.length > 0
-        ? [oldQuirks[0]]
-        : [];
-    const rolledCount = Math.max(0, 2 - carry.length);
-    const fresh = rolledCount > 0 ? rollQuirks(getActiveRoller(), rolledCount) : [];
-    const newQuirks = [...carry, ...fresh.filter((id) => !carry.includes(id))];
-    while (newQuirks.length < 2 && rolledCount > 0) {
-      const more = rollQuirks(getActiveRoller(), 1);
-      for (const id of more) {
-        if (!newQuirks.includes(id)) newQuirks.push(id);
-      }
-      if (newQuirks.length >= 2) break;
-      if (more.length === 0) break;
-    }
+    // Death turns the wheel. Renown is settled by the finishDelve() call the
+    // reincarnation reveal makes on the way back to the hub.
     set({ delve: { ...s.delve, phase: 'failed' } });
-    charSlice.setCharacter({
-      ...character,
-      quirks: newQuirks,
-      blessings: [],
-      campBoons: [],
-      conditions: [],
-      delveAttackBonus: 0,
-      delveSpellAttackBonus: 0,
-      bossIntel: {},
-      boldApproachBosses: [],
-    });
-    useMetaStore.getState().setHasReincarnated(true);
-    // First death = Imoen reveal beat. She's whispered through the falling,
-    // the panic, the bleeding-out — by the time the soul wakes again she's
-    // earned her name in the player's head. One-time-per-soul.
-    useMetaStore.getState().markNpcKnown('imoen');
+    charSlice.setCharacter(reincarnateSoul(character));
   },
 
   abandonDelve: () => {
@@ -339,10 +459,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const s = get();
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
-    if (!character || !s.delve) return;
-    if (s.delve.campChoice) return;
+    if (!character || !s.delve) return null;
+    if (s.delve.campChoice) return null;
 
     let nextCharacter = character;
+    let grantedBlessingId: string | null = null;
     if (choice === 'rest') {
       nextCharacter = longRest(character);
     } else if (choice === 'sharpen') {
@@ -360,8 +481,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
               delveAttackBonus: (character.delveAttackBonus ?? 0) + 1,
             };
     } else if (choice === 'prayer') {
-      const [rolled] = rollBlessingOptions(getActiveRoller(), 1);
+      // Class-aware roll, matching the shrine/merchant rolls. Single source of
+      // truth — the view just reads back the granted id to name the god.
+      const [rolled] = rollBlessingOptions(getActiveRoller(), 1, character.classId);
       if (rolled) {
+        grantedBlessingId = rolled;
         nextCharacter = {
           ...character,
           blessings: [...character.blessings, rolled],
@@ -371,6 +495,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
 
     charSlice.setCharacter(nextCharacter);
     set({ delve: { ...s.delve, campChoice: choice } });
+    return grantedBlessingId;
   },
 
   pickCampBoon: (tier, boonId) => {

@@ -369,3 +369,40 @@ describe('facade — useGameStore mirrors focused stores', () => {
     expect(useGameStore.getState().discoveredMonsters).toContain('goblin');
   });
 });
+
+describe('startDelve — fresh descent resets run-scoped state', () => {
+  beforeEach(() => resetStores());
+
+  it('resets level, xp, blessings, camp boons, and conditions on descent', () => {
+    const dirty = makeFighter({
+      level: 5,
+      xp: 999,
+      blessings: ['blessing-a'],
+      campBoons: ['boon-a'],
+      conditions: [{ kind: 'poisoned', roundsRemaining: 2 } as never],
+    });
+    useCharacterStore.setState({ character: dirty });
+
+    useGameStore.getState().startDelve(createGodwakeDelve(1));
+
+    const after = useCharacterStore.getState().character!;
+    expect(after.level).toBe(1);
+    expect(after.xp).toBe(0);
+    expect(after.blessings).toEqual([]);
+    expect(after.campBoons).toEqual([]);
+    expect(after.conditions).toEqual([]);
+  });
+
+  it('reseeds gold from permanent startingGold, not the prior run purse', () => {
+    const rich = makeFighter({
+      quirks: [],
+      goldInPocket: 500,
+      permanentBonuses: { startingGold: 25 },
+    });
+    useCharacterStore.setState({ character: rich });
+
+    useGameStore.getState().startDelve(createGodwakeDelve(1));
+
+    expect(useCharacterStore.getState().character!.goldInPocket).toBe(25);
+  });
+});

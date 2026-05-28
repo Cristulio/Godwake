@@ -1,9 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
-import { useMetaStore } from '../../stores/metaStore';
 import { currentRoom } from '../../engine/delve';
 import { createCombat } from '../../engine/combat';
-import { rollRoomGoldDrops } from '../../engine/combat/goldDrop';
 import { getActiveRoller } from '../../engine/dice';
 import { withResetActionEconomy } from '../../engine/character/actions';
 import { playSfx } from '../../engine/audio';
@@ -108,7 +106,7 @@ export function DelveScreen() {
   const setCharacter = useGameStore((s) => s.setCharacter);
   const goToHub = useGameStore((s) => s.goToHub);
   const advanceRoom = useGameStore((s) => s.advanceRoom);
-  const addDelveReward = useGameStore((s) => s.addDelveReward);
+  const resolveRoomVictory = useGameStore((s) => s.resolveRoomVictory);
   const finishDelve = useGameStore((s) => s.finishDelve);
   const failDelve = useGameStore((s) => s.failDelve);
 
@@ -254,54 +252,7 @@ export function DelveScreen() {
           onAbandon={() => useGameStore.getState().abandonDelve()}
           onCombatResolved={(outcome) => {
             if (outcome === 'victory') {
-              const isRegularCombat = room.kind === 'combat' || room.kind === 'boss';
-              if (isRegularCombat) {
-                const roomGold = room.goldReward ?? 0;
-                const xpDrop = room.xpReward ?? 0;
-                // Per-monster CR-scaled gold drops, on top of any fixed
-                // room-level goldReward. Computed from the room's monster
-                // pool (each instance drops independently).
-                const monsterDefIds = (room.monsters ?? []).flatMap((m) =>
-                  Array.from({ length: m.count }, () => m.defId),
-                );
-                const mobGold = rollRoomGoldDrops(getActiveRoller(), monsterDefIds);
-                let goldDrop = roomGold + mobGold;
-                // Boss intel "walk past" reward: +5% gold from that specific boss.
-                if (room.kind === 'boss') {
-                  const bossDefId = room.monsters?.[0]?.defId;
-                  if (
-                    bossDefId &&
-                    character.boldApproachBosses?.includes(bossDefId)
-                  ) {
-                    goldDrop = Math.floor(goldDrop * 1.05);
-                  }
-                }
-                if (goldDrop || xpDrop) addDelveReward(goldDrop, xpDrop);
-              }
-              setCombat(null);
-              advanceRoom();
-              // Imoen whispers on the FIRST cleared room of the run.
-              const d = useGameStore.getState().delve;
-              if (d && d.roomsCleared === 0) {
-                useGameStore.getState().showTaunt('imoen', 'first-blood');
-              }
-              // Irenicus taunts after a boss clear. Delay so the victory
-              // beat lands before the overlay steals the moment.
-              if (isBossRoom) {
-                setTimeout(() => {
-                  useGameStore.getState().showTaunt('irenicus', 'chapter-clear');
-                }, 1500);
-                useGameStore.getState().creditChapterClearGold();
-              }
-              // Chained Godwake delve: Ilyich is the Ch1 boss at room-10,
-              // not the final. Flag the kill so the chapter1Cleared flip
-              // survives a subsequent death deeper in the run. Also the
-              // reveal beat — the player has just defeated the Voice's
-              // lieutenant, and the Voice steps forward with a name.
-              if (room.id === 'room-10' && delve.chapterId === 'godwake') {
-                useGameStore.getState().markChapter1BossKilled();
-                useMetaStore.getState().markNpcKnown('irenicus');
-              }
+              resolveRoomVictory(room);
             } else {
               setCombat(null);
               useGameStore.getState().showTaunt('irenicus', 'death');

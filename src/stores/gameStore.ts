@@ -2,7 +2,7 @@ import { create, type StoreApi } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Character } from '../types/character';
 import type { CombatState } from '../types/combat';
-import type { DelveState } from '../types/delve';
+import type { DelveState, RoomSpec } from '../types/delve';
 import type { Postmortem } from '../types/postmortem';
 import { setActiveRoller } from '../engine/dice';
 import { type CharacterCreationInput } from '../engine/character/defaultCharacter';
@@ -122,6 +122,7 @@ interface GameState {
   monsterKillingAbilities: Record<string, Record<string, number>>;
   postmortem: Postmortem | null;
   unlockedUpgrades: UnlockedUpgrades;
+  chaptersCleared: number;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
   knownNpcs: string[];
@@ -145,13 +146,15 @@ interface GameState {
   startDelve: (delve: DelveState) => void;
   advanceRoom: () => void;
   addDelveReward: (gold: number, xp: number) => void;
+  grantTitheGold: (amount: number) => void;
+  resolveRoomVictory: (room: RoomSpec) => void;
   finishDelve: () => void;
   failDelve: () => void;
   abandonDelve: () => void;
   markChapter1BossKilled: () => void;
   creditChapterClearGold: () => void;
   concludeDelveAtCamp: () => void;
-  pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => void;
+  pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => string | null;
   pickCampBoon: (tier: number, boonId: string | null) => void;
   consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
@@ -210,6 +213,7 @@ interface PersistedSnapshot {
   monsterKilledBy: Record<string, number>;
   monsterKillingAbilities: Record<string, Record<string, number>>;
   unlockedUpgrades: UnlockedUpgrades;
+  chaptersCleared: number;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
   knownNpcs: string[];
@@ -245,6 +249,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     monsterKilledBy: meta.monsterKilledBy,
     monsterKillingAbilities: meta.monsterKillingAbilities,
     unlockedUpgrades: meta.unlockedUpgrades,
+    chaptersCleared: meta.chaptersCleared,
     chapter1Cleared: meta.chapter1Cleared,
     druidGroveUnlocked: meta.druidGroveUnlocked,
     knownNpcs: meta.knownNpcs,
@@ -253,7 +258,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
       characterName: ch.character?.name ?? '—',
       characterLevel: ch.character?.level ?? 0,
       location: locationLabel(screen.screen),
-      chapterCleared: meta.chapter1Cleared ? 1 : 0,
+      chapterCleared: meta.chaptersCleared,
     },
   };
 }
@@ -287,6 +292,14 @@ function scatterSnapshot(s: PersistedSnapshot) {
         ? s.monsterKillingAbilities
         : {},
     unlockedUpgrades: s.unlockedUpgrades ?? {},
+    // Old saves predate the progression model — derive the high-water mark
+    // from the legacy boolean so a prior chapter-1 clear isn't lost.
+    chaptersCleared:
+      typeof s.chaptersCleared === 'number'
+        ? s.chaptersCleared
+        : s.chapter1Cleared
+          ? 1
+          : 0,
     chapter1Cleared: !!s.chapter1Cleared,
     druidGroveUnlocked: !!s.druidGroveUnlocked,
     knownNpcs: Array.isArray(s.knownNpcs) ? s.knownNpcs : [],
@@ -355,6 +368,7 @@ export const useGameStore = create<GameState>()(
           monsterKilledBy: m.monsterKilledBy,
           monsterKillingAbilities: m.monsterKillingAbilities,
           unlockedUpgrades: m.unlockedUpgrades,
+          chaptersCleared: m.chaptersCleared,
           chapter1Cleared: m.chapter1Cleared,
           knownNpcs: m.knownNpcs,
           druidGroveUnlocked: m.druidGroveUnlocked,
@@ -396,6 +410,7 @@ export const useGameStore = create<GameState>()(
         monsterKillingAbilities: useMetaStore.getState().monsterKillingAbilities,
         postmortem: useScreenStore.getState().postmortem,
         unlockedUpgrades: useMetaStore.getState().unlockedUpgrades,
+        chaptersCleared: useMetaStore.getState().chaptersCleared,
         chapter1Cleared: useMetaStore.getState().chapter1Cleared,
         druidGroveUnlocked: useMetaStore.getState().druidGroveUnlocked,
         knownNpcs: useMetaStore.getState().knownNpcs,
@@ -437,6 +452,10 @@ export const useGameStore = create<GameState>()(
         advanceRoom: () => useDelveStore.getState().advanceRoom(),
         addDelveReward: (gold, xp) =>
           useDelveStore.getState().addDelveReward(gold, xp),
+        grantTitheGold: (amount) =>
+          useDelveStore.getState().grantTitheGold(amount),
+        resolveRoomVictory: (room) =>
+          useDelveStore.getState().resolveRoomVictory(room),
         finishDelve: () => useDelveStore.getState().finishDelve(),
         failDelve: () => useDelveStore.getState().failDelve(),
         abandonDelve: () => useDelveStore.getState().abandonDelve(),

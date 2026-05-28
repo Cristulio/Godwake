@@ -80,23 +80,15 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
   function handlePickChoice(choice: CampChoice) {
     if (!character || campChoice) return;
+    // Single source of truth: the store does the class-aware roll and returns
+    // the granted blessing id so the UI can name the god.
+    const granted = pickCampChoice(choice);
     if (choice === 'prayer') {
-      // Snapshot the granted blessing so the UI can name it. The store's
-      // `pickCampChoice('prayer')` would also roll, but it would be a
-      // different (unseeded-equivalent) roll — drive it from here instead.
-      const [granted] = rollBlessingOptions(getActiveRoller(), 1, character.classId);
-      if (granted) {
-        addBlessing(granted);
-        setPrayerGrantedId(granted);
-      }
-      useGameStore.setState((s) =>
-        s.delve ? { delve: { ...s.delve, campChoice: 'prayer' } } : s,
-      );
+      if (granted) setPrayerGrantedId(granted);
       playSfx('shrine_chime');
-      return;
+    } else {
+      playSfx('ui_click');
     }
-    pickCampChoice(choice);
-    playSfx('ui_click');
   }
 
   function openMerchant() {
@@ -129,13 +121,29 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
   return (
     <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.10),transparent_60%)]">
-      <header className="pb-3 border-b border-[var(--color-border-warm)]">
-        <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-          {room.title.toUpperCase()}
-        </h1>
-        <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-          Camp · A pause on the long road · The deeper dark ahead
-        </p>
+      <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
+            {room.title.toUpperCase()}
+          </h1>
+          <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
+            Camp · A pause on the long road · The deeper dark ahead
+          </p>
+        </div>
+        <div
+          className="shrink-0 panel-etched-warm border border-[var(--color-accent-gold)] px-3 py-1.5 text-right"
+          title="Gold in pocket — what you can spend at the caravan"
+        >
+          <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
+            ◈ Gold
+          </div>
+          <div
+            className="font-mono text-lg text-[var(--color-accent-gold)] leading-none"
+            style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.7)' }}
+          >
+            {character.goldInPocket}
+          </div>
+        </div>
       </header>
 
       <Panel className="bg-gradient-to-br from-[#2a1d12] to-[#1a1108]">
@@ -145,7 +153,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
             {room.flavorText}
           </p>
           <div className="text-xs uppercase tracking-widest text-[var(--color-text-dim)]">
-            HP {character.hp.current}/{character.hp.max} · {character.goldInPocket} gp
+            HP {character.hp.current}/{character.hp.max}
           </div>
         </div>
       </Panel>
@@ -288,7 +296,7 @@ function MerchantModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in">
       <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-5">
-        <header className="flex justify-between items-center pb-3 mb-4 border-b border-[var(--color-border-warm)]">
+        <header className="sticky top-0 z-10 -mx-5 -mt-5 px-5 pt-5 pb-3 mb-4 bg-[var(--color-bg-base)] flex justify-between items-center border-b border-[var(--color-border-warm)]">
           <div>
             <h2 className="font-display text-lg text-[var(--color-accent-amber)] uppercase tracking-[0.15em]">
               The Caravan-Merchant
@@ -379,6 +387,12 @@ function MerchantModal({
               ))}
             </div>
           )}
+        </div>
+
+        <div className="sticky bottom-0 -mx-5 -mb-5 mt-5 px-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-end">
+          <Button variant="secondary" onClick={onClose}>
+            Leave the caravan →
+          </Button>
         </div>
       </div>
     </div>
