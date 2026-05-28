@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Animated Armor — empty plate harnesses Irenicus drives with bound elementals.
+ * Animated Armor — empty plate harnesses Velnaris drives with bound elementals.
  * Lab guardians. Iconic Chapter 1 BG2 encounter (his vaults are full of them).
  */
 export const ANIMATED_ARMOR: Monster = MonsterSchema.parse({

@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Dust Mephit — small elemental denizens of Irenicus's lab. They burst into
+ * Dust Mephit — small elemental denizens of Velnaris's lab. They burst into
  * choking dust when slain. Iconic Chapter 1 BG2 encounter.
  */
 export const DUST_MEPHIT: Monster = MonsterSchema.parse({

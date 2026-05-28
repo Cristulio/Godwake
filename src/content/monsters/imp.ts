@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Imp — a devil-spawn slipped through the wards Irenicus's apprentices laid
+ * Imp — a devil-spawn slipped through the wards Velnaris's apprentices laid
  * for elementals. It tortures the mephits for sport. Ranged needler with
  * poison; tuned below RAW so it isn't a one-shot terror in Ch1.
  */
