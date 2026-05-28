@@ -53,13 +53,31 @@ export function rollBlessingOptions(roller: DiceRoller, count: number = 3): stri
  * Combine modifiers from a list of blessing ids into a single bundle.
  * Most numeric fields sum; boolean fields OR.
  *
- * `extraTempHpPerRoom` is the exception: 5e RAW for temporary HP says
- * sources do not stack — you take the higher of any conflicting grants.
- * Without this carve-out, Lathander's Dawn (+3) and Ilmater's Crown (+2)
- * would compound to +5 every combat, which the immortal-hypothesis sim
- * (\`src/sim/immortalHypothesisSim.ts\`) showed was the dominant survival
- * lever in the blessing system and the real source of the playtester's
- * "immortal Rogue" feel. Aggregator picks max-of-individual instead.
+ * **Non-stacking fields take max-of-individual, not sum.** This carve-out
+ * exists because several pool blessings target the same mechanical lever,
+ * and summing them compounds into the dominant build (the "always pick
+ * this" trap) instead of a meaningful choice. The immortal-hypothesis sim
+ * (`src/sim/immortalHypothesisSim.ts`) caught `extraTempHpPerRoom` first;
+ * the audit follow-up flagged four more reachable-in-the-pool cases:
+ *
+ *   - `extraTempHpPerRoom` — 5e RAW: temp HP doesn't stack (PR #80).
+ *     Lathander's Dawn +3 + Ilmater's Crown +2 should be +3, not +5.
+ *   - `acBonus` — Helm's Aegis + Mystra's Ward + Silvanus's Root reach +3
+ *     AC, ≈ what plate gives, ≈ −15% damage taken cumulative.
+ *   - `critRangeBonus` — Tempus's Edge + Tymora's Gambit reach +2 (crit
+ *     on 18–20), a 3× crit rate that multiplies with damage per hit.
+ *   - `damageBonus` — Mystra's Whisper + Silvanus's Thorn reach +2 per
+ *     hit, multiplied by attack count (Fighter Extra Attack = +4/round).
+ *   - `holyDamageBonus` — Helm's Bulwark + Lathander's Ember reach +2 per
+ *     hit; radiant resistance is rare so this is near-full damage.
+ *
+ * Fields with only one stacking source in the current pool
+ * (`firstAttackBonus`, `firstAttackDamage`, `rerollMissesPerEncounter`)
+ * keep `sum` — there's nothing to stack with today, but the additive
+ * shape is correct if a second source is ever added intentionally.
+ * `initiativeBonus` and `extraStabiliseCharges` were flagged medium/low
+ * risk and deferred (initiative is once per combat; stabilise charges
+ * are situational "free deaths").
  */
 export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModifiers {
   const acc: BlessingModifiers = {};
@@ -71,7 +89,8 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
       continue;
     }
     const m = b.modifiers;
-    if (m.acBonus !== undefined) acc.acBonus = (acc.acBonus ?? 0) + m.acBonus;
+    if (m.acBonus !== undefined)
+      acc.acBonus = Math.max(acc.acBonus ?? 0, m.acBonus);
     if (m.initiativeBonus !== undefined)
       acc.initiativeBonus = (acc.initiativeBonus ?? 0) + m.initiativeBonus;
     if (m.firstAttackBonus !== undefined)
@@ -79,9 +98,10 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
     if (m.firstAttackDamage !== undefined)
       acc.firstAttackDamage = (acc.firstAttackDamage ?? 0) + m.firstAttackDamage;
     if (m.firstAttackAdvantage) acc.firstAttackAdvantage = true;
-    if (m.damageBonus !== undefined) acc.damageBonus = (acc.damageBonus ?? 0) + m.damageBonus;
+    if (m.damageBonus !== undefined)
+      acc.damageBonus = Math.max(acc.damageBonus ?? 0, m.damageBonus);
     if (m.holyDamageBonus !== undefined)
-      acc.holyDamageBonus = (acc.holyDamageBonus ?? 0) + m.holyDamageBonus;
+      acc.holyDamageBonus = Math.max(acc.holyDamageBonus ?? 0, m.holyDamageBonus);
     if (m.extraTempHpPerRoom !== undefined)
       acc.extraTempHpPerRoom = Math.max(acc.extraTempHpPerRoom ?? 0, m.extraTempHpPerRoom);
     if (m.rerollMissesPerEncounter !== undefined)
@@ -91,7 +111,7 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
       acc.extraStabiliseCharges =
         (acc.extraStabiliseCharges ?? 0) + m.extraStabiliseCharges;
     if (m.critRangeBonus !== undefined)
-      acc.critRangeBonus = (acc.critRangeBonus ?? 0) + m.critRangeBonus;
+      acc.critRangeBonus = Math.max(acc.critRangeBonus ?? 0, m.critRangeBonus);
   }
   return acc;
 }

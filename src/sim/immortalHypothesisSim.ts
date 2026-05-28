@@ -1,20 +1,26 @@
 /**
- * Immortal-hypothesis simulator. Tests whether the playtester's "immortal
- * Rogue" feeling came from blessing-stack abuse: `extraTempHpPerRoom`
- * aggregates additively, so picking Lathander's Dawn (+3) and Ilmater's
- * Crown (+2) together grants +5 temp HP every combat instead of the higher
- * of the two.
+ * Immortal-hypothesis simulator. Originally tested whether the playtester's
+ * "immortal Rogue" feeling came from blessing-stack abuse: `extraTempHpPerRoom`
+ * aggregating additively, so picking Lathander's Dawn (+3) and Ilmater's Crown
+ * (+2) together granted +5 temp HP every combat instead of the higher of the
+ * two. PR #80 confirmed and fixed that case.
  *
- * Class-agnostic by design — the fix would apply to all classes. Runs
- * Rogue/Fighter/Wizard at L3/L5/L7 across four loadouts:
+ * Extended for the blessing-aggregator audit follow-up to also stress the
+ * other in-pool stacking fields the audit flagged: `acBonus`, `critRangeBonus`,
+ * `damageBonus`. Runs Rogue/Fighter/Wizard at L3/L5/L7 across seven loadouts:
  *
  *   A — vacuum:        no blessings, no Grove upgrades (floor reference)
- *   B — single:        Lathander's Dawn only
- *   C — stacked:       Lathander's Dawn + Ilmater's Crown (the suspect combo)
+ *   B — single tHP:    Lathander's Dawn only
+ *   C — stacked tHP:   Lathander's Dawn + Ilmater's Crown (the suspect combo)
  *   D — Grove+stacked: C + a fully-invested defensive Grove loadout
+ *   E — stacked AC:    Helm's Aegis + Mystra's Ward + Silvanus's Root (reaches +3 AC pre-fix)
+ *   F — stacked crit:  Tempus's Edge + Tymora's Gambit (crit on 18–20 pre-fix)
+ *   G — stacked dmg:   Mystra's Whisper + Silvanus's Thorn (+2/hit pre-fix)
  *
- * Hypothesis is CONFIRMED if C is meaningfully better than B and B than A.
- * REFUTED if C and B are roughly equal (engine already caps stacking).
+ * Original temp-HP hypothesis is CONFIRMED if C is meaningfully better than B
+ * and B than A. After the #80 fix, C should ≈ B. The new E/F/G loadouts are
+ * regression cells: post-aggregator-audit, picking the second source in each
+ * category should grant no extra power versus a single source.
  *
  * Run via vitest:
  *   npm run test:run -- src/sim/immortalHypothesisSim.test.ts
@@ -38,13 +44,16 @@ import {
 } from '../engine/combat';
 import { characterAtLevel, takeTurn } from '../test/sim/encounterStress';
 
-export type Loadout = 'A' | 'B' | 'C' | 'D';
+export type Loadout = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G';
 
 const LOADOUT_BLESSINGS: Record<Loadout, string[]> = {
   A: [],
   B: ['lathanders-dawn'],
   C: ['lathanders-dawn', 'ilmaters-crown'],
   D: ['lathanders-dawn', 'ilmaters-crown'],
+  E: ['helms-aegis', 'mystras-ward', 'silvanus-root'],
+  F: ['tempus-edge', 'tymoras-gambit'],
+  G: ['mystras-whisper', 'silvanus-thorn'],
 };
 
 /**
