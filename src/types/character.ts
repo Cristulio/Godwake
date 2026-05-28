@@ -66,6 +66,10 @@ export interface ClassResources {
   shieldActive?: boolean;
   /** Wizard: Misty Step bonus-action displacement active (+2 AC). Cleared at start of player's next turn. */
   mistyStepActive?: boolean;
+  /** Wizard: Blur rounds left. While > 0, attackers roll against the player at disadvantage. Decrements at the start of each player turn; reset at combat start. */
+  blurRoundsRemaining?: number;
+  /** Wizard: Mirror Image duplicates left. Each absorbs one blow that would otherwise hit the player; cleared at combat start. */
+  mirrorImages?: number;
 }
 
 /**

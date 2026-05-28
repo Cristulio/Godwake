@@ -87,6 +87,43 @@ export const MISTY_STEP: Spell = SpellSchema.parse({
   effectKey: 'misty-step',
 });
 
+export const SCORCHING_RAY: Spell = SpellSchema.parse({
+  id: 'scorching-ray',
+  name: 'Scorching Ray',
+  level: 2,
+  school: 'evocation',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'fire',
+  description:
+    'Three searing rays streak from your hand at one target. Each is its own attack roll — 2d6 fire on a hit. Miss with one and the others still burn.',
+  effectKey: 'scorching-ray',
+});
+
+export const BLUR: Spell = SpellSchema.parse({
+  id: 'blur',
+  name: 'Blur',
+  level: 2,
+  school: 'illusion',
+  range: 'Self',
+  target: 'self',
+  description:
+    'Your outline smears and doubles. For the next 3 rounds, attackers roll against you with disadvantage.',
+  effectKey: 'blur',
+});
+
+export const MIRROR_IMAGE: Spell = SpellSchema.parse({
+  id: 'mirror-image',
+  name: 'Mirror Image',
+  level: 2,
+  school: 'illusion',
+  range: 'Self',
+  target: 'self',
+  description:
+    'Three flickering duplicates wheel around you. Each blow that would land shatters a duplicate instead, until none remain.',
+  effectKey: 'mirror-image',
+});
+
 export const FIREBALL: Spell = SpellSchema.parse({
   id: 'fireball',
   name: 'Fireball',
@@ -121,6 +158,9 @@ const ALL_SPELLS: Spell[] = [
   MAGE_ARMOR,
   HOLD_PERSON,
   MISTY_STEP,
+  SCORCHING_RAY,
+  BLUR,
+  MIRROR_IMAGE,
   FIREBALL,
   LIGHTNING_BOLT,
 ];

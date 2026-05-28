@@ -7,6 +7,9 @@ import { castShield } from './shield';
 import { castMageArmor } from './mageArmor';
 import { castHoldPerson } from './holdPerson';
 import { castMistyStep } from './mistyStep';
+import { castScorchingRay } from './scorchingRay';
+import { castBlur } from './blur';
+import { castMirrorImage } from './mirrorImage';
 import { castFireball } from './fireball';
 import { castLightningBolt } from './lightningBolt';
 
@@ -36,6 +39,12 @@ export function castSpell(ctx: CastSpellContext): CastResult {
       return castHoldPerson(ctx);
     case 'misty-step':
       return castMistyStep(character, state);
+    case 'scorching-ray':
+      return castScorchingRay(ctx);
+    case 'blur':
+      return castBlur(character, state);
+    case 'mirror-image':
+      return castMirrorImage(character, state);
     case 'fireball':
       return castFireball(ctx);
     case 'lightning-bolt':

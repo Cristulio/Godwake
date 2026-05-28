@@ -51,10 +51,10 @@ export const WIZARD: Class = ClassSchema.parse({
         mechanicKey: 'second-level-slots',
       },
       {
-        id: 'learn-misty-step',
-        name: 'Misty Step',
+        id: 'learn-second-level-spell',
+        name: 'Second-Level Working',
         description:
-          'A new working enters the book: step through a curl of silver mist and resolve a half-pace askew. Bonus action, +2 AC until your next turn.',
+          'A new 2nd-level working enters your book — choose one: Misty Step (blink askew), Scorching Ray (three fire rays), Blur (attackers strike at disadvantage), or Mirror Image (duplicates soak the blows).',
       },
     ],
     '4': [

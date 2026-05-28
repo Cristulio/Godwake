@@ -137,6 +137,15 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
   if (order[nextIndex] === 'player' && nextCharacter.resources.mistyStepActive) {
     nextCharacter = patchResources(nextCharacter, { mistyStepActive: false });
   }
+  // Wizard: Blur ticks down one round each time the player's turn comes around.
+  if (
+    order[nextIndex] === 'player' &&
+    (nextCharacter.resources.blurRoundsRemaining ?? 0) > 0
+  ) {
+    nextCharacter = patchResources(nextCharacter, {
+      blurRoundsRemaining: (nextCharacter.resources.blurRoundsRemaining ?? 0) - 1,
+    });
+  }
 
   if (order[nextIndex] === 'player' && isPlayerParalyzed(nextCharacter)) {
     const resolved = resolvePlayerParalyzedTurn(nextState, nextCharacter);

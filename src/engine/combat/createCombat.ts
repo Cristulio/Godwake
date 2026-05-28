@@ -157,6 +157,8 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       mageArmorActive: true,
       shieldActive: false,
       mistyStepActive: false,
+      blurRoundsRemaining: 0,
+      mirrorImages: 0,
     });
   }
 
