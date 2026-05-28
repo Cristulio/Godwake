@@ -243,10 +243,10 @@ describe('finishDelve — renown economy', () => {
 
   it('death mid-Ch4 after killing 3 chapter bosses awards 45 renown', () => {
     const delve = useDelveStore.getState().delve!;
-    // Index 31 = the Underdark camp immediately after the Ch3 boss in the
-    // intel-augmented godwake layout (3 intel rooms shift each boss +1).
+    // Index 37 = the Underdark camp immediately after the Ch3 boss (idx 36) in
+    // the 50-room godwake layout. slice(0, 37) counts Ilyich/Magistrate/Director.
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: 31, phase: 'failed' },
+      delve: { ...delve, currentRoomIdx: 37, phase: 'failed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
@@ -256,7 +256,7 @@ describe('finishDelve — renown economy', () => {
   it('full clear still pays the clear-tier 50 (no chapter-boss stack on clear)', () => {
     const delve = useDelveStore.getState().delve!;
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: 36, phase: 'completed' },
+      delve: { ...delve, currentRoomIdx: 49, phase: 'completed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();

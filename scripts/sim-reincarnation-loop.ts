@@ -63,7 +63,7 @@ const RENOWN_PER_CHAPTER_BOSS = 10;
 const GROVE_UNLOCK_THRESHOLD = 30;
 
 // Total rooms in the full Godwake chain.
-const TOTAL_ROOMS = 37;
+const TOTAL_ROOMS = 50;
 
 // ─── Grove purchase priorities ──────────────────────────────────────────────
 // Greedy buy: at each life transition, the soul re-evaluates and buys the
@@ -250,12 +250,12 @@ interface LifeOutcome {
 }
 
 function roomChapter(idx: number): number {
-  if (idx <= 9) return 1;
-  if (idx === 10) return 1;
-  if (idx <= 18) return 2;
-  if (idx === 19) return 2;
-  if (idx <= 27) return 3;
-  if (idx === 28) return 3;
+  // Godwake layout (50 rooms): ch1 indices 0–10 (boss 10, camp 11),
+  // ch2 12–23 (boss 23, camp 24), ch3 25–36 (boss 36, camp 37),
+  // ch4 38–49 (boss 49). Each camp bills to the chapter it follows.
+  if (idx <= 11) return 1;
+  if (idx <= 24) return 2;
+  if (idx <= 37) return 3;
   return 4;
 }
 
