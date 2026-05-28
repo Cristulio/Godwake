@@ -132,14 +132,79 @@ describe('applyEventOutcome — effect kinds', () => {
     expect(r.character.quirks[0]).not.toBe(baneId);
   });
 
-  it('grant_quirk_reroll: no-op when no bane quirks present', () => {
-    const char = makeChar({ quirks: ['sun-touched'] });
+  it('grant_quirk_reroll: no-bane grants fallback gold (L1 smart-fallback)', () => {
+    // L1 characters have no bane quirks yet, so the reroll no-ops on quirks
+    // but pays out a small gold compensation so the choice never feels empty.
+    const char = makeChar({ goldInPocket: 10, quirks: [] });
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'grant_quirk_reroll' }] }),
+      createDiceRoller(1),
+    );
+    expect(r.character.quirks).toEqual([]);
+    expect(r.character.goldInPocket).toBe(15);
+    expect(r.effectsApplied.map((e) => e.kind)).toEqual([
+      'grant_quirk_reroll',
+      'gold_delta',
+    ]);
+    expect(r.effectsApplied[1].detail).toContain('+5g');
+  });
+
+  it('grant_quirk_reroll: only-boon also triggers fallback (no bane present)', () => {
+    const char = makeChar({ goldInPocket: 0, quirks: ['sun-touched'] });
     const r = applyEventOutcome(
       char,
       outcome({ effects: [{ kind: 'grant_quirk_reroll' }] }),
       createDiceRoller(1),
     );
     expect(r.character.quirks).toEqual(['sun-touched']);
+    expect(r.character.goldInPocket).toBe(5);
+  });
+
+  it('grant_quirk_reroll: per-event fallbackText surfaces when supplied', () => {
+    const char = makeChar({ quirks: [] });
+    const r = applyEventOutcome(
+      char,
+      outcome({
+        effects: [
+          {
+            kind: 'grant_quirk_reroll',
+            fallbackText: 'Eilistraee finds no bane to shake from you.',
+          },
+        ],
+      }),
+      createDiceRoller(1),
+    );
+    const reroll = r.effectsApplied.find((e) => e.kind === 'grant_quirk_reroll');
+    expect(reroll?.detail).toBe('Eilistraee finds no bane to shake from you.');
+  });
+
+  it('grant_quirk_reroll: default fallback wording is god-agnostic', () => {
+    const char = makeChar({ quirks: [] });
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'grant_quirk_reroll' }] }),
+      createDiceRoller(1),
+    );
+    const reroll = r.effectsApplied.find((e) => e.kind === 'grant_quirk_reroll');
+    expect(reroll?.detail).not.toContain('Waukeen');
+    expect(reroll?.detail).toContain('no bane');
+  });
+
+  it('grant_quirk_reroll: when a bane is present, fallback gold is NOT granted', () => {
+    // Regression guard for the L1 smart-fallback: only the no-bane path pays
+    // gold; characters with banes should still get the reroll and nothing else.
+    const banes = listQuirks().filter((q) => q.sentiment === 'bane');
+    const baneId = banes[0].id;
+    const char = makeChar({ goldInPocket: 10, quirks: [baneId] });
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'grant_quirk_reroll' }] }),
+      createDiceRoller(11),
+    );
+    expect(r.character.goldInPocket).toBe(10);
+    expect(r.character.quirks[0]).not.toBe(baneId);
+    expect(r.effectsApplied.map((e) => e.kind)).toEqual(['grant_quirk_reroll']);
   });
 
   it('apply_attack_bonus_run: adds to delveAttackBonus', () => {
