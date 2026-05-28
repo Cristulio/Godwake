@@ -24,7 +24,7 @@ interface ScreenStoreState {
   screen: Screen;
   introSeen: boolean;
   quirksTutorialSeen: boolean;
-  taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number } | null;
+  taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number; chapter?: number } | null;
   postmortem: Postmortem | null;
 
   setScreen: (screen: Screen) => void;
@@ -35,7 +35,7 @@ interface ScreenStoreState {
   goToDruidGrove: () => void;
   goToCodex: () => void;
   goToInventory: () => void;
-  showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext) => void;
+  showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext, chapter?: number) => void;
   dismissTaunt: () => void;
   setIntroSeen: (v: boolean) => void;
   markQuirksTutorialSeen: () => void;
@@ -60,8 +60,8 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
   goToDruidGrove: () => set({ screen: 'druid-grove' }),
   goToCodex: () => set({ screen: 'codex' }),
   goToInventory: () => set({ screen: 'inventory' }),
-  showTaunt: (speaker, context) =>
-    set({ taunt: { speaker, context, seed: Math.floor(Math.random() * 1000) } }),
+  showTaunt: (speaker, context, chapter) =>
+    set({ taunt: { speaker, context, seed: Math.floor(Math.random() * 1000), chapter } }),
   dismissTaunt: () => set({ taunt: null }),
   setIntroSeen: (v) => set({ introSeen: v }),
   markQuirksTutorialSeen: () => set({ quirksTutorialSeen: true }),

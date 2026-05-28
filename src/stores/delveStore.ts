@@ -324,10 +324,17 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       useScreenStore.getState().showTaunt('imoen', 'first-blood');
     }
     // Irenicus taunts after a boss clear. Delay so the victory beat lands
-    // before the overlay steals the moment.
+    // before the overlay steals the moment. The chapter just cleared is the
+    // count of boss rooms up to and including this one (rooms run in chapter
+    // order in the chained delve) — metaStore.chaptersCleared is only the prior
+    // high-water mark until finishDelve, so it can't name the current chapter.
     if (isBossRoom) {
+      const bossIdx = s.delve.rooms.findIndex((r) => r.id === room.id);
+      const clearedChapter = s.delve.rooms
+        .slice(0, bossIdx + 1)
+        .filter((r) => r.kind === 'boss').length;
       setTimeout(() => {
-        useScreenStore.getState().showTaunt('irenicus', 'chapter-clear');
+        useScreenStore.getState().showTaunt('irenicus', 'chapter-clear', clearedChapter);
       }, 1500);
       get().creditChapterClearGold();
     }

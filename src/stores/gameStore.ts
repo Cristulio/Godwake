@@ -110,7 +110,7 @@ interface GameState {
   character: Character | null;
   delve: DelveState | null;
   combat: CombatState | null;
-  taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number } | null;
+  taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number; chapter?: number } | null;
   introSeen: boolean;
   hasReincarnated: boolean;
   deathCount: number;
@@ -160,7 +160,7 @@ interface GameState {
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
 
   // Lore overlays
-  showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext) => void;
+  showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext, chapter?: number) => void;
   dismissTaunt: () => void;
   markIntroSeen: () => void;
 
@@ -473,8 +473,8 @@ export const useGameStore = create<GameState>()(
         purchaseFromMerchant: (itemId) =>
           useDelveStore.getState().purchaseFromMerchant(itemId),
 
-        showTaunt: (speaker, context) =>
-          useScreenStore.getState().showTaunt(speaker, context),
+        showTaunt: (speaker, context, chapter) =>
+          useScreenStore.getState().showTaunt(speaker, context, chapter),
         dismissTaunt: () => useScreenStore.getState().dismissTaunt(),
         markIntroSeen: () => {
           useScreenStore.getState().setIntroSeen(true);
