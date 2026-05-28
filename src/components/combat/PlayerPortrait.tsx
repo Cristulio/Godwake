@@ -199,10 +199,10 @@ function WizardSvg({ className }: { className?: string }) {
       <rect x="5" y="7" width="12" height="2" fill="#3a2a5a" />
       <rect x="5" y="7" width="12" height="1" fill="#503d78" />
       <rect x="5" y="8" width="12" height="1" fill="#2a1d48" />
-      {/* Star on hat */}
-      <rect x="10" y="4" width="1" height="1" fill="#f4d042" />
-      <rect x="9" y="5" width="3" height="1" fill="#f4d042" />
-      <rect x="10" y="6" width="1" height="1" fill="#f4d042" />
+      {/* Tarnished metal band on hat — grim sigil instead of gold star */}
+      <rect x="8" y="5" width="7" height="1" fill="#2a1d48" />
+      <rect x="10" y="5" width="3" height="1" fill="#5a4858" />
+      <rect x="11" y="4" width="1" height="1" fill="#7a6a78" />
       {/* Face (under brim) */}
       <rect x="8" y="9" width="8" height="4" fill="#d4c8a8" />
       <rect x="8" y="9" width="1" height="4" fill="#a89878" />
