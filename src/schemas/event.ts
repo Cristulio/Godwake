@@ -69,11 +69,31 @@ export const EventChoiceSchema = z.object({
 });
 export type EventChoice = z.infer<typeof EventChoiceSchema>;
 
+/**
+ * Visual taxonomy for the event header motif (see `EventMotif`). Keyed to the
+ * event's theme, not bespoke per-event art. Untagged events (e.g. the boss-intel
+ * rooms built in `bossIntel.ts`) fall back to `omen`, which fits a pre-threat
+ * "reading the portents" beat.
+ */
+export const EVENT_TYPES = [
+  'shrine',
+  'omen',
+  'treasure',
+  'beast',
+  'stranger',
+  'bargain',
+  'lore',
+  'ruin',
+] as const;
+export const EventTypeSchema = z.enum(EVENT_TYPES);
+export type EventType = z.infer<typeof EventTypeSchema>;
+
 export const EventTemplateSchema = z.object({
   id: z.string(),
   title: z.string(),
   flavor: z.string(),
   minChapter: z.number().int().positive().optional(),
+  eventType: EventTypeSchema.default('omen'),
   choices: z.array(EventChoiceSchema).min(2).max(4),
 });
 export type EventTemplate = z.infer<typeof EventTemplateSchema>;
