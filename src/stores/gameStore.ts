@@ -323,7 +323,12 @@ export function getSlotMetadata(slot: SaveSlotId): SaveSlotMetadata | null {
 }
 
 export function hasAnySave(): boolean {
-  return SAVE_SLOT_IDS.some((s) => readSlotWrapper(s) !== null);
+  // A pristine install autosaves the default title state immediately, so a bare
+  // wrapper isn't a real save. Only count slots where a soul has been forged.
+  return SAVE_SLOT_IDS.some((s) => {
+    const meta = getSlotMetadata(s);
+    return meta != null && meta.characterLevel >= 1;
+  });
 }
 
 export const useGameStore = create<GameState>()(

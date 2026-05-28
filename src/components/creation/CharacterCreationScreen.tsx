@@ -43,7 +43,7 @@ const RACE_BLURB: Record<RaceId, string> = {
   human: 'Wanderers and adventurers. +1 to every ability score.',
   'half-elf': 'Walkers between two worlds. +2 CHA, +1 DEX, +1 CON.',
   elf: 'Long-lived and keen-eyed. Trance instead of sleep.',
-  'wood-elf': 'Long-lived archers of the high forest. +2 DEX, +1 WIS, speed 35.',
+  'wood-elf': 'Long-lived archers of the high forest. +2 DEX, +1 WIS, +1 HP per level.',
   dwarf: 'Stone-blooded, axe-handed, suspicious of magic.',
   'hill-dwarf': 'Stone-blooded toughness. +2 CON, +1 WIS, +1 HP per level.',
   halfling: 'Small, lucky, and harder to pin down than they look.',
@@ -107,7 +107,7 @@ function raceStatLine(id: RaceId): string {
   const bonuses = ABILITY_NAMES.filter((a) => (race.abilityScoreBonuses[a] ?? 0) > 0)
     .map((a) => `${ABILITY_SHORT[a]} +${race.abilityScoreBonuses[a]}`)
     .join(' · ');
-  return `SPD ${race.speed}${bonuses ? ' · ' + bonuses : ''}`;
+  return bonuses;
 }
 
 function classStatLine(id: ClassId): string {
