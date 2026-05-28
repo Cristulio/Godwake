@@ -51,27 +51,53 @@ export const SKILL_TO_ABILITY: Record<SkillName, AbilityName> = {
 export type ProficiencyLevel = 'none' | 'proficient' | 'expert';
 
 /**
- * Short in-world descriptions shown under each skill name in the picker.
- * `(future)` marks skills that aren't yet consumed by event/dialogue gates —
- * kept on the sheet so proficiencies don't have to be re-plumbed later.
+ * Per the no-flavor-only rule: only skills with engine consumers — or near-term
+ * planned consumers — surface in the active picker. Disabled skills stay in the
+ * type union so save data and class definitions don't have to be reshuffled
+ * when an engine hook eventually lands; the UI filters by this map.
  */
+export const SKILL_ENABLED: Record<SkillName, boolean> = {
+  acrobatics: false,
+  'animal-handling': false,
+  arcana: false,
+  athletics: false,
+  deception: false,
+  history: false,
+  insight: true,
+  intimidation: false,
+  investigation: false,
+  medicine: true,
+  nature: false,
+  perception: false,
+  performance: false,
+  persuasion: false,
+  religion: false,
+  'sleight-of-hand': false,
+  stealth: false,
+  survival: false,
+};
+
+export function isSkillEnabled(s: SkillName): boolean {
+  return SKILL_ENABLED[s] === true;
+}
+
 export const SKILL_DESCRIPTIONS: Record<SkillName, string> = {
-  acrobatics: 'Keep your footing on broken ground and slick stone. (future)',
-  'animal-handling': 'Calm or command beasts encountered in the deep. (future)',
-  arcana: 'Identify magical effects and recognise spells in combat. (future)',
-  athletics: 'Climb, shove, and grapple your way through obstacles. (future)',
-  deception: 'Lie convincingly to wardens, cultists, and city guards. (future)',
-  history: 'Recall lore at shrines and ancient sites. (future)',
-  insight: 'See through deceptions in dialogue. (future)',
-  intimidation: 'Cow weaker foes into yielding gold or passage. (future)',
-  investigation: 'Spot traps and hidden items in rooms. (future)',
-  medicine: 'Stabilise allies and stop bleeding wounds. (future)',
-  nature: 'Read the wilds — track game, name plants, feel a storm coming. (future)',
-  perception: 'Notice ambushes, hidden doors, and small things astray. (future)',
-  performance: 'Hold a crowd with song or story for coin or favour. (future)',
-  persuasion: 'Talk a stranger into a kindness they did not plan to give. (future)',
-  religion: 'Recognise divine signs at altars and shrines. (future)',
-  'sleight-of-hand': 'Lift a purse, palm a coin, plant a blade. (future)',
-  stealth: 'Move unseen past patrols and sleeping things. (future)',
-  survival: 'Find shelter, water, and the right road in unmarked country. (future)',
+  acrobatics: 'Keep your footing on broken ground and slick stone.',
+  'animal-handling': 'Calm or command beasts encountered in the deep.',
+  arcana: 'Identify magical effects and recognise spells in combat.',
+  athletics: 'Climb, shove, and grapple your way through obstacles.',
+  deception: 'Lie convincingly to wardens, cultists, and city guards.',
+  history: 'Recall lore at shrines and ancient sites.',
+  insight: 'See through deceptions in dialogue.',
+  intimidation: 'Cow weaker foes into yielding gold or passage.',
+  investigation: 'Spot traps and hidden items in rooms.',
+  medicine: 'Stabilise allies and stop bleeding wounds.',
+  nature: 'Read the wilds — track game, name plants, feel a storm coming.',
+  perception: 'Notice ambushes, hidden doors, and small things astray.',
+  performance: 'Hold a crowd with song or story for coin or favour.',
+  persuasion: 'Talk a stranger into a kindness they did not plan to give.',
+  religion: 'Recognise divine signs at altars and shrines.',
+  'sleight-of-hand': 'Lift a purse, palm a coin, plant a blade.',
+  stealth: 'Move unseen past patrols and sleeping things.',
+  survival: 'Find shelter, water, and the right road in unmarked country.',
 };

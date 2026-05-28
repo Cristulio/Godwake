@@ -89,10 +89,10 @@ describe('CharacterCreationScreen — stepper', () => {
     expect(char.baseAbilityScores.int).toBe(8);
     expect(char.baseAbilityScores.wis).toBe(12);
     expect(char.baseAbilityScores.cha).toBe(10);
-    expect(char.skillProficiencies.sort()).toEqual(['athletics', 'perception']);
+    expect(char.skillProficiencies.sort()).toEqual(['insight']);
   });
 
-  it('Wizard preset commits Tiefling + Arcana / History + INT-15 base', () => {
+  it('Wizard preset commits Tiefling + Insight / Medicine + INT-15 base', () => {
     render(<CharacterCreationScreen />);
     fireEvent.click(screen.getByRole('button', { name: /wizard/i }));
     fireEvent.click(screen.getByRole('button', { name: /use veyra ash preset/i }));
@@ -107,7 +107,7 @@ describe('CharacterCreationScreen — stepper', () => {
     );
   });
 
-  it('Rogue preset commits Wood Elf + Stealth / Sleight of Hand + DEX-tuned base', () => {
+  it('Rogue preset commits Wood Elf + Insight + DEX-tuned base', () => {
     render(<CharacterCreationScreen />);
     fireEvent.click(screen.getByRole('button', { name: /rogue/i }));
     fireEvent.click(screen.getByRole('button', { name: /use maelis vell preset/i }));

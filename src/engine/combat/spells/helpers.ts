@@ -40,11 +40,13 @@ export function nextLogId(state: CombatState): number {
 
 export function spellAttackBonus(character: Readonly<Character>): number {
   const scores = effectiveAbilityScores(character);
+  const boonBonus = characterCampBoonMods(character).spellAttackBonus ?? 0;
   return (
     abilityModifier(scores.int) +
     proficiencyBonus(character.level) +
     (character.permanentBonuses?.spellAttack ?? 0) +
-    (character.delveSpellAttackBonus ?? 0)
+    (character.delveSpellAttackBonus ?? 0) +
+    boonBonus
   );
 }
 
@@ -66,7 +68,8 @@ export function spellSaveDC(character: Readonly<Character>): number {
 }
 
 export function spellDamageBonus(character: Readonly<Character>): number {
-  return character.permanentBonuses?.spellDamage ?? 0;
+  const boonBonus = characterCampBoonMods(character).spellDamageBonus ?? 0;
+  return (character.permanentBonuses?.spellDamage ?? 0) + boonBonus;
 }
 
 export function attachSpellEffect(

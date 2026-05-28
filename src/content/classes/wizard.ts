@@ -112,7 +112,7 @@ export const WIZARD: Class = ClassSchema.parse({
     // Tiefling's +1 INT / +2 CHA the summary reads INT 16, DEX 14, CON 13,
     // WIS 12, CHA 10, STR 8.
     abilityScores: { str: 8, dex: 14, con: 13, int: 15, wis: 12, cha: 8 },
-    recommendedSkills: ['arcana', 'history'],
+    recommendedSkills: ['insight', 'medicine'],
     flavorBlurb:
       'Scholar of the older pact. Reads grimoires the way most folk read warning signs — slowly, and then twice.',
   },

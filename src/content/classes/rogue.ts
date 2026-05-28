@@ -97,7 +97,7 @@ export const ROGUE: Class = ClassSchema.parse({
     // the first stray hit. With Wood Elf's +2 DEX / +1 WIS the summary
     // reads DEX 16, CON 14, WIS 13, INT 12, CHA 10, STR 8.
     abilityScores: { str: 8, dex: 14, con: 14, int: 12, wis: 12, cha: 10 },
-    recommendedSkills: ['stealth', 'sleight-of-hand'],
+    recommendedSkills: ['insight'],
     flavorBlurb:
       'Quiet boots, quicker hands. Reads a room for exits before she reads it for friends.',
   },

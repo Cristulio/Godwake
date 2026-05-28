@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ClassIdSchema } from './ids';
 
 /**
  * Faerûn gods that grant blessings at shrine rooms.
@@ -69,5 +70,15 @@ export const BlessingSchema = z.object({
   flavor: z.string(),
   effect: z.string(),
   modifiers: BlessingModifiersSchema,
+  /**
+   * Class ids this blessing is meaningful for. Omit (or empty) = all classes.
+   * Sim PR #105 caught that weapon-attack-keyed blessings (first-attack
+   * to-hit / damage, crit range, weapon damageBonus, holyDamageBonus,
+   * rerollMissesPerEncounter) are entirely dead for Wizard — those spells
+   * either save-for-half or auto-hit, never roll-to-hit. Shrine/camp
+   * blessing offers filter by this list so Wizards never get a flavor-only
+   * card on their pick screen.
+   */
+  classRelevance: z.array(ClassIdSchema).optional(),
 });
 export type Blessing = z.infer<typeof BlessingSchema>;

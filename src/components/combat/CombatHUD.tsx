@@ -126,7 +126,7 @@ function Pill({
 export function CombatHUD({ character, state }: CombatHUDProps) {
   const ac = computeAC(character);
   const race = getRace(character.raceId);
-  const speed = race.speed + (character.permanentSpeedBonus ?? 0);
+  const speed = race.speed;
 
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
@@ -183,7 +183,11 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
   }
   const blessingsShown = blessingEntries.slice(0, 4);
   const blessingsOverflow = Math.max(0, blessingEntries.length - blessingsShown.length);
-  const blessingsTooltip = blessingEntries
+  // Overflow tooltip names only the blessings beyond the first 4 (those don't
+  // have their own visible chip), so hovering "+2" tells the player exactly
+  // what's hidden.
+  const overflowTooltip = blessingEntries
+    .slice(blessingsShown.length)
     .map((b) => `${b.name} — ${b.effect}`)
     .join('\n');
 
@@ -344,18 +348,23 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
 
       {blessingEntries.length > 0 && (
         <Section title="Blessings">
-          <div className="flex items-center gap-1" title={blessingsTooltip}>
+          <div className="flex items-center gap-1">
             {blessingsShown.map((b) => (
               <span
                 key={b.id}
-                aria-label={b.name}
+                title={`${b.name} — ${b.effect}`}
+                aria-label={`${b.name} — ${b.effect}`}
                 className="inline-flex items-center justify-center w-4 h-4 border border-[var(--color-accent-gold)] bg-[var(--color-bg-elevated)] text-[var(--color-accent-amber)] text-[10px] leading-none"
               >
                 {blessingGlyph(b.god)}
               </span>
             ))}
             {blessingsOverflow > 0 && (
-              <span className="text-[var(--color-text-secondary)] tabular-nums">
+              <span
+                title={overflowTooltip}
+                aria-label={overflowTooltip}
+                className="text-[var(--color-text-secondary)] tabular-nums"
+              >
                 +{blessingsOverflow}
               </span>
             )}

@@ -1,7 +1,22 @@
 import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { Blessing, BlessingModifiers } from '../../schemas/blessing';
+import type { ClassId } from '../../schemas/ids';
 import { getBlessing, listBlessings } from '../../content/blessings';
+
+/**
+ * Filter the blessing pool by class relevance. A blessing with no
+ * `classRelevance` is universal and always passes; one with a list passes only
+ * when the class is in it. Lets shrines/camps avoid offering a Wizard a
+ * weapon-keyed card (dead per PR #105 sim).
+ */
+export function blessingsForClass(classId: ClassId | undefined): Blessing[] {
+  const all = listBlessings();
+  if (!classId) return all;
+  return all.filter(
+    (b) => !b.classRelevance || b.classRelevance.length === 0 || b.classRelevance.includes(classId),
+  );
+}
 
 /**
  * Canonical string fingerprint of a blessing's mechanical effect bundle.
@@ -26,10 +41,15 @@ export function blessingSignature(b: Blessing): string {
  * present the player with a choice. Uses the seeded roller so the offered
  * blessings are deterministic per save. Dedupes both by id and by
  * mechanical effect signature, so the player never sees two cards that do
- * the same thing.
+ * the same thing. When `classId` is provided, the pool is filtered to
+ * class-relevant blessings first (weapon blessings hidden from Wizards).
  */
-export function rollBlessingOptions(roller: DiceRoller, count: number = 3): string[] {
-  const pool = listBlessings();
+export function rollBlessingOptions(
+  roller: DiceRoller,
+  count: number = 3,
+  classId?: ClassId,
+): string[] {
+  const pool = blessingsForClass(classId);
   const result: string[] = [];
   const seen = new Set<string>();
   const seenSignatures = new Set<string>();

@@ -54,6 +54,7 @@ const RAW: Quirk[] = [
       'Something from the surface follows you in the dark. Your skin remembers warmth your bones never knew.',
     effect: 'Flavor — the soul recalls sunlight.',
     modifiers: {},
+    enabled: false,
   }),
   QuirkSchema.parse({
     id: 'bloody-minded',
@@ -81,6 +82,7 @@ const RAW: Quirk[] = [
       'You can hum songs you have never heard. The words come in a language nobody at the table knows.',
     effect: 'Flavor — the soul carries an old tune.',
     modifiers: {},
+    enabled: false,
   }),
   QuirkSchema.parse({
     id: 'touched-beyond',
@@ -117,6 +119,7 @@ const RAW: Quirk[] = [
       'Words come easy. The wrong ones especially — but those are the useful ones, mostly.',
     effect: 'Flavor — quick of speech in the inns between deaths.',
     modifiers: {},
+    enabled: false,
   }),
   QuirkSchema.parse({
     id: 'plain-face',
@@ -126,6 +129,7 @@ const RAW: Quirk[] = [
       'Nobody remembers your name on the first try. Sometimes not the second. You learned to repeat it without flinching.',
     effect: 'Flavor — easily forgotten by those who watch you fall.',
     modifiers: {},
+    enabled: false,
   }),
   QuirkSchema.parse({
     id: 'glassbone',
@@ -171,6 +175,7 @@ const RAW: Quirk[] = [
       'Something from the deep dark followed you up. You don\'t feel the cold the way you should. Or fire, anymore.',
     effect: 'Flavor — the soul remembers the dark below.',
     modifiers: {},
+    enabled: false,
   }),
   QuirkSchema.parse({
     id: 'beast-marked',
@@ -180,6 +185,7 @@ const RAW: Quirk[] = [
       'Dogs love you. Wolves keep their distance. Something between the two has its eye on you and you can feel it.',
     effect: 'Flavor — beasts read the soul before the body.',
     modifiers: {},
+    enabled: false,
   }),
   QuirkSchema.parse({
     id: 'old-soldier',
@@ -238,6 +244,21 @@ export function getQuirk(id: string): Quirk {
   return q;
 }
 
-export function listQuirks(): Quirk[] {
+/**
+ * Every quirk in the codebase, including ones currently filtered out of the
+ * active reincarnation roll. Read this when you need to look up a stored
+ * quirk id (save data may reference a now-disabled quirk).
+ */
+export function listAllQuirks(): Quirk[] {
   return POOL;
+}
+
+/**
+ * Active reincarnation pool — quirks with engine consumers. Flavor-only
+ * entries (empty modifiers, no mechanic) are kept in the codebase for save
+ * compatibility and lore reference but excluded from new rolls per the
+ * no-flavor-only rule.
+ */
+export function listQuirks(): Quirk[] {
+  return POOL.filter((q) => q.enabled !== false);
 }

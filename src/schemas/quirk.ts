@@ -47,5 +47,12 @@ export const QuirkSchema = z.object({
    * at 1.0. Ignored for non-bane sentiments.
    */
   soulMarkWeight: z.number().positive().optional(),
+  /**
+   * Whether this quirk is currently in the active reincarnation pool.
+   * Defaults to true. Flavor-only entries with no engine consumer stay in the
+   * codebase (so save data and lore stay intact) but are filtered out of the
+   * active roll per the no-flavor-only rule.
+   */
+  enabled: z.boolean().optional().default(true),
 });
 export type Quirk = z.infer<typeof QuirkSchema>;

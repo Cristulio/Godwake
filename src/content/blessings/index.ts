@@ -1,5 +1,11 @@
 import { BlessingSchema, type Blessing } from '../../schemas/blessing';
 
+// Classes whose primary action is a weapon attack roll. Spells in this build
+// either save-for-half or auto-hit, so first-attack-bonus / crit-range /
+// damage-on-hit / reroll-miss blessings never fire for Wizards. Tagging them
+// here lets shrines and camps filter the offer pool by class.
+const WEAPON_CLASSES = ['fighter', 'rogue'] as const;
+
 const POOL: Blessing[] = [
   BlessingSchema.parse({
     id: 'tymoras-coin',
@@ -8,6 +14,7 @@ const POOL: Blessing[] = [
     flavor: 'A copper finds its way into your hand. You did not put it there.',
     effect: 'Reroll one missed attack per encounter.',
     modifiers: { rerollMissesPerEncounter: 1 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'helms-aegis',
@@ -24,6 +31,7 @@ const POOL: Blessing[] = [
     flavor: 'The first blow is always the truest. Tempus has a soft spot for the brave.',
     effect: '+2 damage on the first attack of each combat.',
     modifiers: { firstAttackDamage: 2 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'mystras-whisper',
@@ -32,6 +40,7 @@ const POOL: Blessing[] = [
     flavor: 'The Weave hums faintly around your weapon. Your strikes carry an unseen edge.',
     effect: '+1 force damage on all attacks.',
     modifiers: { damageBonus: 1 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'lathanders-dawn',
@@ -48,6 +57,7 @@ const POOL: Blessing[] = [
     flavor: 'You catch them not seeing you — even when you are obviously there.',
     effect: 'Advantage on your first attack each combat.',
     modifiers: { firstAttackAdvantage: true },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'ilmaters-patience',
@@ -73,6 +83,7 @@ const POOL: Blessing[] = [
     flavor: 'Your crit range widens. The god of war prefers a decisive ending.',
     effect: 'Crit range extends by 1 (e.g. Champion crits on 18-20 instead of 19-20).',
     modifiers: { critRangeBonus: 1 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'helms-vigil',
@@ -97,6 +108,7 @@ const POOL: Blessing[] = [
     flavor: 'A reckless prayer answered. The dice know which way to fall.',
     effect: 'Crit range extends by 1.',
     modifiers: { critRangeBonus: 1 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'helms-bulwark',
@@ -105,6 +117,7 @@ const POOL: Blessing[] = [
     flavor: 'Your strikes carry a witness. Steel rings as if struck twice — once by you, once by Him.',
     effect: '+1 radiant damage on hits.',
     modifiers: { holyDamageBonus: 1 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'tempus-charge',
@@ -113,6 +126,7 @@ const POOL: Blessing[] = [
     flavor: 'The first step into the room is the bravest. Tempus rewards that step.',
     effect: 'Advantage on your first attack each combat.',
     modifiers: { firstAttackAdvantage: true },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'mystras-ward',
@@ -129,6 +143,7 @@ const POOL: Blessing[] = [
     flavor: 'A thread of the Weave guides your first strike. It does not let go until it lands.',
     effect: '+2 to-hit on the first attack of each combat.',
     modifiers: { firstAttackBonus: 2 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'lathanders-ember',
@@ -137,6 +152,7 @@ const POOL: Blessing[] = [
     flavor: 'A speck of dawn rides your blade. The dark flinches where it touches.',
     effect: '+1 radiant damage on hits.',
     modifiers: { holyDamageBonus: 1 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'selunes-tide',
@@ -161,6 +177,7 @@ const POOL: Blessing[] = [
     flavor: 'A briar has grown into the seam of your glove. It bites for you when you bite.',
     effect: '+1 damage on all attacks.',
     modifiers: { damageBonus: 1 },
+    classRelevance: [...WEAPON_CLASSES],
   }),
 ];
 
