@@ -23,7 +23,7 @@ const PRE_REVEAL_LABEL: Record<SoulVoiceSpeaker, string> = {
   imoen: 'A Whisper',
 };
 const REAL_NAME: Record<SoulVoiceSpeaker, string> = {
-  irenicus: 'Irenicus',
+  irenicus: 'Velnaris',
   imoen: 'Imoen',
 };
 

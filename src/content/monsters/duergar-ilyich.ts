@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Ilyich, the duergar slaver — boss of BG2 Chapter 1's Irenicus dungeon.
+ * Ilyich, the duergar slaver — boss of Chapter 1's Velnaris dungeon.
  * Reskinned Goblin Warden role: same fight shape, very different flavor.
  */
 export const ILYICH: Monster = MonsterSchema.parse({
