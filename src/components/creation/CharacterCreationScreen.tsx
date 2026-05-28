@@ -13,7 +13,7 @@ import {
   type AbilityScores,
 } from '../../types/abilities';
 import { STANDARD_ARRAY } from '../../engine/character/initialize';
-import type { SkillName } from '../../types/skills';
+import { SKILL_DESCRIPTIONS, type SkillName } from '../../types/skills';
 import type { ClassPreset } from '../../schemas/class';
 
 type Step = 1 | 2 | 3 | 4;
@@ -569,7 +569,10 @@ function AbilitiesAndSkillsStep({
                     : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
                 } disabled:opacity-40 disabled:cursor-not-allowed`}
               >
-                {SKILL_LABEL[s]}
+                <div>{SKILL_LABEL[s]}</div>
+                <div className="text-[var(--color-text-dim)] text-xs mt-1">
+                  {SKILL_DESCRIPTIONS[s]}
+                </div>
               </button>
             );
           })}

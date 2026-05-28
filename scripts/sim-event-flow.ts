@@ -186,8 +186,10 @@ function fallbackWordingProbe(): FallbackProbe[] {
     // Force success path so we exercise the success outcome's reroll effect.
     const concrete = resolveChoiceOutcome(choice.outcome, roller);
     const applied = applyEventOutcome(character, concrete, roller);
-    const rerollFx = applied.effectsApplied.find((x) => x.kind === 'grant_quirk_reroll');
-    const detail = rerollFx?.detail ?? '<no grant_quirk_reroll effect surfaced>';
+    // After the UI text overhaul, the fallback flavor is appended to the
+    // resolution (the dialogue panel) instead of being pushed as a separate
+    // rewards-list line. Probe the resolution for the god-appropriate cue.
+    const detail = applied.resolution;
     const lower = detail.toLowerCase();
     const matched = e.expectedFlavor.some((kw) => lower.includes(kw));
     const waukeenInWrongContext = !e.waukeenAllowed && lower.includes('waukeen');
@@ -256,11 +258,10 @@ function l1GrantProbe(trials = 200): GrantProbe[] {
       totalDelta += delta;
       minDelta = Math.min(minDelta, delta);
       maxDelta = Math.max(maxDelta, delta);
-      if (
-        applied.effectsApplied.some(
-          (x) => x.kind === 'gold_delta' && /no bane to shake/i.test(x.detail),
-        )
-      ) {
+      // After the UI text overhaul the "(no bane to shake)" jargon was removed
+      // from the gold_delta detail; detect fallback firing via the resolution
+      // suffix that now carries the flavor instead.
+      if (/no bane/i.test(applied.resolution)) {
         fallbackFires += 1;
       }
     }
@@ -435,22 +436,20 @@ function simulateDelves(preset: CharPreset, level: number, runs: number, seedBas
       const applied = applyEventOutcome(character, concrete, roller);
       character = applied.character;
 
-      const rerollFx = applied.effectsApplied.find((x) => x.kind === 'grant_quirk_reroll');
-      if (rerollFx && /no bane/i.test(rerollFx.detail)) {
+      // Fallback fired? Detect via the resolution-suffix flavor text. The
+      // rewards list no longer carries a `grant_quirk_reroll` detail line in
+      // the no-bane path — flavor moved to the dialogue panel.
+      if (carriesReroll && /no bane/i.test(applied.resolution)) {
         summary.totalFallbackFired += 1;
-        if (
-          applied.effectsApplied.some(
-            (x) => x.kind === 'gold_delta' && /no bane to shake/i.test(x.detail),
-          )
-        ) {
+        if (applied.effectsApplied.some((x) => x.kind === 'gold_delta')) {
           summary.total5gFallbackTriggered += 1;
         }
         // Sanity: "Waukeen" only OK on actual Waukeen event.
-        if (/waukeen/i.test(rerollFx.detail) && !waukeenAllowedIds.has(tpl.id)) {
+        if (/waukeen/i.test(applied.resolution) && !waukeenAllowedIds.has(tpl.id)) {
           summary.waukeenLeakCount += 1;
         }
         if (summary.samples.length < 6) {
-          summary.samples.push({ eventId: tpl.id, detail: rerollFx.detail });
+          summary.samples.push({ eventId: tpl.id, detail: applied.resolution });
         }
       }
     }

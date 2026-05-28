@@ -166,16 +166,29 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
           buttonLabel="Make camp"
           onPick={() => handlePickChoice('rest')}
         />
-        <CampChoiceCard
-          choiceId="sharpen"
-          title="Sharpen the Blade"
-          flavor="A whetstone, a long breath, the road in your hand. Strike truer for the rest of this delve."
-          locked={campChoice !== null && campChoice !== 'sharpen'}
-          picked={campChoice === 'sharpen'}
-          pickedSummary="+1 to all attack rolls for the rest of the delve."
-          buttonLabel="Hone the edge"
-          onPick={() => handlePickChoice('sharpen')}
-        />
+        {character.classId === 'wizard' ? (
+          <CampChoiceCard
+            choiceId="sharpen"
+            title="Whet the Mind"
+            flavor="A glyph drawn in ash, a long breath, the road in your thoughts. Your sigils land truer for the rest of this delve."
+            locked={campChoice !== null && campChoice !== 'sharpen'}
+            picked={campChoice === 'sharpen'}
+            pickedSummary="+1 to all spell attack rolls for the rest of the delve."
+            buttonLabel="Sharpen the sigil"
+            onPick={() => handlePickChoice('sharpen')}
+          />
+        ) : (
+          <CampChoiceCard
+            choiceId="sharpen"
+            title="Sharpen the Blade"
+            flavor="A whetstone, a long breath, the road in your hand. Strike truer for the rest of this delve."
+            locked={campChoice !== null && campChoice !== 'sharpen'}
+            picked={campChoice === 'sharpen'}
+            pickedSummary="+1 to all attack rolls for the rest of the delve."
+            buttonLabel="Hone the edge"
+            onPick={() => handlePickChoice('sharpen')}
+          />
+        )}
         <CampChoiceCard
           choiceId="prayer"
           title="A Prayer Whispered"

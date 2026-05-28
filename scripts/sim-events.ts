@@ -351,22 +351,20 @@ function simulateDelves(preset: CharPreset, level: number, runs: number, seedBas
         const concrete = resolveChoiceOutcome(rolled.outcome, roller);
         const applied = applyEventOutcome(character, concrete, roller);
         character = applied.character;
-        if (
-          applied.effectsApplied.some(
-            (e) => e.kind === 'grant_quirk_reroll' && /no bane/i.test(e.detail),
-          )
-        ) {
+        // The UI-text overhaul moved the no-bane fallback flavor from the
+        // rewards-list `grant_quirk_reroll` entry to the resolution suffix.
+        // Detect via the resolution string instead.
+        if (/no bane/i.test(applied.resolution)) {
           stats.quirkRerollNoBaneSeen += 1;
         }
       } else {
         const concrete = resolveChoiceOutcome(pick.outcome, roller);
         const applied = applyEventOutcome(character, concrete, roller);
         character = applied.character;
-        if (
-          applied.effectsApplied.some(
-            (e) => e.kind === 'grant_quirk_reroll' && /no bane/i.test(e.detail),
-          )
-        ) {
+        // The UI-text overhaul moved the no-bane fallback flavor from the
+        // rewards-list `grant_quirk_reroll` entry to the resolution suffix.
+        // Detect via the resolution string instead.
+        if (/no bane/i.test(applied.resolution)) {
           stats.quirkRerollNoBaneSeen += 1;
         }
       }
@@ -394,7 +392,7 @@ function quirkRerollProbe(): QuirkRerollProbe[] {
   );
   results.push({
     scenario: 'No quirks at all',
-    detail: r1.effectsApplied.map((e) => e.detail).join(' | '),
+    detail: [r1.resolution, ...r1.effectsApplied.map((e) => e.detail)].join(' | '),
   });
 
   // Scenario 2: character with one bane quirk
@@ -411,7 +409,7 @@ function quirkRerollProbe(): QuirkRerollProbe[] {
     );
     results.push({
       scenario: `One bane (${allBanes[0].name}) → re-roll`,
-      detail: r2.effectsApplied.map((e) => e.detail).join(' | '),
+      detail: [r2.resolution, ...r2.effectsApplied.map((e) => e.detail)].join(' | '),
     });
   }
 
@@ -429,7 +427,7 @@ function quirkRerollProbe(): QuirkRerollProbe[] {
     );
     results.push({
       scenario: `Only a boon (${allBoons[0].name}) — no bane to shake`,
-      detail: r3.effectsApplied.map((e) => e.detail).join(' | '),
+      detail: [r3.resolution, ...r3.effectsApplied.map((e) => e.detail)].join(' | '),
     });
   }
 

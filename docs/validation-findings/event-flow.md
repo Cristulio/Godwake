@@ -41,12 +41,12 @@ Forced no-bane branch on each event's reroll-bearing choice (L1 Fighter with emp
 
 | Event | Choice | Theme | Surfaced detail | Match expected | Waukeen leak |
 |---|---|---|---|:--:|:--:|
-| pale-cleric-shrine | steal | Ilmatari shrine — Crying God | Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. | Y | no |
-| wounded-captain | loot-him | bandit deserter, generic road | The road finds no bane to shake from you. The captain's curses fade to coughing behind you. | Y | no |
-| beggar-at-the-gate | kick-the-bowl | Waukeen-flavored — Waukeen is correct here | Waukeen finds no bane to shake from you — her scale tips clean today. | Y | no |
-| street-orphan | cuff-him | Athkatla street orphan — city, not Waukeen | Athkatla finds no bane to shake from you — the city marks its lesson and lets you walk. | Y | no |
-| mad-prisoner-bargain | take-the-purse | Spellhold asylum cell | The asylum finds no bane to shake from you — only a small laugh from the cell at your back. | Y | no |
-| eilistraee-shrine | take-the-silver | Eilistraee shrine — moon goddess of the drow | Eilistraee finds no bane to shake from you — her silver weighs only what you have given. | Y | no |
+| pale-cleric-shrine | steal | Ilmatari shrine — Crying God | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. | Y | no |
+| wounded-captain | loot-him | bandit deserter, generic road | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. | Y | no |
+| beggar-at-the-gate | kick-the-bowl | Waukeen-flavored — Waukeen is correct here | The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser. Waukeen finds no bane to shake from you — her scale tips clean today. | Y | no |
+| street-orphan | cuff-him | Athkatla street orphan — city, not Waukeen | He sprawls in the gutter. The knife rings on the cobbles. A handful of silver spills from a torn lining you hadn't noticed; you pocket it without looking back. Athkatla finds no bane to shake from you — the city marks its lesson and lets you walk. | Y | no |
+| mad-prisoner-bargain | take-the-purse | Spellhold asylum cell | The purse is heavier than it should be. Inside: coin, and something else that goes still in your pocket. The man laughs once and you cannot say what is funny. The asylum finds no bane to shake from you — only a small laugh from the cell at your back. | Y | no |
+| eilistraee-shrine | take-the-silver | Eilistraee shrine — moon goddess of the drow | The figure goes cold in your palm the moment it leaves the niche. You pocket it anyway. The candle gutters. Something small and silvered closes in the dark of the cleft, and your shoulders go heavy. Eilistraee finds no bane to shake from you — her silver weighs only what you have given. | Y | no |
 
 ## Part 2 — L1 +5g smart-grant rate
 
@@ -104,12 +104,12 @@ Per cell: 50 delves, identical seeds across (class, level) so event pool is stab
 
 | Cell | Event | Detail |
 |---|---|---|
-| Fighter (human) L1 | pale-cleric-shrine | Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
-| Fighter (human) L3 | beggar-at-the-gate | Waukeen finds no bane to shake from you — her scale tips clean today. |
-| Rogue (wood-elf) L1 | pale-cleric-shrine | Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
-| Rogue (wood-elf) L3 | beggar-at-the-gate | Waukeen finds no bane to shake from you — her scale tips clean today. |
-| Wizard (tiefling, default) L1 | pale-cleric-shrine | Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
-| Wizard (tiefling, default) L3 | beggar-at-the-gate | Waukeen finds no bane to shake from you — her scale tips clean today. |
+| Fighter (human) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
+| Fighter (human) L3 | beggar-at-the-gate | The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser. Waukeen finds no bane to shake from you — her scale tips clean today. |
+| Rogue (wood-elf) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
+| Rogue (wood-elf) L3 | beggar-at-the-gate | The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser. Waukeen finds no bane to shake from you — her scale tips clean today. |
+| Wizard (tiefling, default) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
+| Wizard (tiefling, default) L3 | beggar-at-the-gate | The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser. Waukeen finds no bane to shake from you — her scale tips clean today. |
 
 ## Sim methodology
 

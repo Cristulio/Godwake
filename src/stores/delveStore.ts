@@ -118,6 +118,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       blessings: [],
       campBoons: [],
       delveAttackBonus: 0,
+      delveSpellAttackBonus: 0,
       delveInitBonus: 0,
       nextAttackAdvantage: false,
       poisonImmuneEncounter: false,
@@ -228,6 +229,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       blessings: [],
       campBoons: [],
       delveAttackBonus: 0,
+      delveSpellAttackBonus: 0,
       delveInitBonus: 0,
       bossIntel: {},
       boldApproachBosses: [],
@@ -277,6 +279,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       campBoons: [],
       conditions: [],
       delveAttackBonus: 0,
+      delveSpellAttackBonus: 0,
       delveInitBonus: 0,
       bossIntel: {},
       boldApproachBosses: [],
@@ -343,10 +346,19 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (choice === 'rest') {
       nextCharacter = longRest(character);
     } else if (choice === 'sharpen') {
-      nextCharacter = {
-        ...character,
-        delveAttackBonus: (character.delveAttackBonus ?? 0) + 1,
-      };
+      // Class-aware Sharpen: wizards bump spell attack rolls (Whet the Mind);
+      // martials bump weapon attack rolls (Sharpen the Blade). Same magnitude,
+      // class-appropriate lever — see CampRoom.tsx for the labels.
+      nextCharacter =
+        character.classId === 'wizard'
+          ? {
+              ...character,
+              delveSpellAttackBonus: (character.delveSpellAttackBonus ?? 0) + 1,
+            }
+          : {
+              ...character,
+              delveAttackBonus: (character.delveAttackBonus ?? 0) + 1,
+            };
     } else if (choice === 'prayer') {
       const [rolled] = rollBlessingOptions(getActiveRoller(), 1);
       if (rolled) {
