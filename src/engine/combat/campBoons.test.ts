@@ -143,24 +143,25 @@ describe('camp boons — derived modifiers', () => {
     expect(foundDelta).toBe(1);
   });
 
-  it('Blade of the Vow seeds 1 per-combat reroll budget; first damaging hit consumes it', () => {
+  it('Blade of the Vow seeds 3 per-combat rerolls; each damaging hit consumes one', () => {
     const goblin = getMonster('goblin');
     const buffed = makeFighter({ campBoons: ['blade-of-the-vow'] });
     const seed = 5;
     const roller = createDiceRoller(seed);
     _resetMonsterInstanceCounter();
     const initial = createCombat({ roller, character: buffed, monsters: [{ def: goblin }] });
-    expect(initial.state.bladeOfVowRerollsRemaining).toBe(1);
+    expect(initial.state.bladeOfVowRerollsRemaining).toBe(3);
     const target = (initial.state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
 
-    // Drive attacks until one hits.
+    // Drive attacks until three have hit — burning through all reroll charges.
     let state = initial.state;
     let char = initial.character;
-    for (let i = 0; i < 6; i++) {
+    let hitsLanded = 0;
+    for (let i = 0; i < 18 && hitsLanded < 3; i++) {
       const r = playerAttack({ roller, character: char, state }, target, 'longsword');
       state = r.state;
       char = r.character;
-      if (r.state.lastAttack?.hit) break;
+      if (r.state.lastAttack?.hit) hitsLanded += 1;
     }
     expect(state.bladeOfVowRerollsRemaining).toBe(0);
   });

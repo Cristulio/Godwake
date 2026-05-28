@@ -37,7 +37,7 @@ export function aggregateCampBoonMods(boonIds: readonly string[]): CampBoonModif
         break;
       case 'blade-of-the-vow':
         acc.weaponDamageRerollPerCombat =
-          (acc.weaponDamageRerollPerCombat ?? 0) + 1;
+          (acc.weaponDamageRerollPerCombat ?? 0) + 3;
         break;
       // vigor / mantle / patience / eyes-of-the-lich are applied at pick-time
       // (HP bumps, stabilise budget, preview flag). They never read here.

@@ -76,7 +76,7 @@ const ALL_BOONS: CampBoon[] = [
     id: 'blade-of-the-vow',
     tier: 3,
     name: 'Blade of the Vow',
-    description: 'Once per combat, re-roll your lowest weapon damage die. Keep the better roll.',
+    description: 'Re-roll your lowest weapon damage die up to three times per combat. Keep the better roll each time.',
     flavor: 'A vow muttered to long-dead saints. The blade does not forget.',
   },
   {
