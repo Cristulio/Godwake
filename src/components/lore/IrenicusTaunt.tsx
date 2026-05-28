@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '../ui/Button';
 import { Imoen, Irenicus as IrenicusPortrait } from './NpcPortrait';
+import { useMetaStore } from '../../stores/metaStore';
 
 export type TauntContext =
   | 'death'
@@ -14,6 +15,17 @@ export type TauntContext =
   | 'boss-approach'
   | 'low-hp';
 export type SoulVoiceSpeaker = 'irenicus' | 'imoen';
+
+// Pre-reveal labels for the soul-bond NPCs. The player only sees the real
+// name after an in-game introduction beat (see metaStore.knownNpcs).
+const PRE_REVEAL_LABEL: Record<SoulVoiceSpeaker, string> = {
+  irenicus: 'The Voice',
+  imoen: 'A Whisper',
+};
+const REAL_NAME: Record<SoulVoiceSpeaker, string> = {
+  irenicus: 'Irenicus',
+  imoen: 'Imoen',
+};
 
 const QUOTES: Record<SoulVoiceSpeaker, Record<TauntContext, string[]>> = {
   irenicus: {
@@ -171,6 +183,8 @@ const FAST_TICK = 4;
 export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0 }: SoulVoiceProps) {
   const pool = QUOTES[speaker]?.[context] ?? QUOTES.irenicus.idle;
   const quote = pool[seed % pool.length];
+  const isKnown = useMetaStore((s) => s.knownNpcs.includes(speaker));
+  const speakerLabel = isKnown ? REAL_NAME[speaker] : PRE_REVEAL_LABEL[speaker];
 
   const [typed, setTyped] = useState('');
   const [done, setDone] = useState(false);
@@ -238,7 +252,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0 }: SoulVoi
     }
     return 'linear-gradient(135deg, #1a1408 0%, #2a1c0a 55%, #1a1408 100%)';
   }, [isIrenicus]);
-  const speakerName = isIrenicus ? 'Irenicus' : 'Imoen';
+  const speakerName = speakerLabel;
   const subtitle = isIrenicus
     ? 'the voice in the dark — through the soul-bond'
     : 'a voice, small and frightened — through the soul-bond';
@@ -274,7 +288,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0 }: SoulVoi
           className={`shrink-0 border-2 ${portraitFrameTint} p-2 md:p-3 select-none`}
           style={{ imageRendering: 'pixelated' }}
         >
-          <PortraitGlyph className="w-20 md:w-28 h-auto" />
+          <PortraitGlyph className="w-20 md:w-28 h-auto" ariaLabel={speakerName} />
           <div
             className={`mt-1 text-center text-[10px] md:text-xs uppercase tracking-[0.3em] font-bold ${accentClass}`}
           >

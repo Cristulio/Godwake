@@ -14,8 +14,10 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *  v4 → v5: codex now tracks monsterDefeats / monsterKilledBy /
  *           monsterKillingAbilities for the postmortem + bestiary win-rate
  *           rows. Default to empty maps on older saves.
+ *  v5 → v6: knownNpcs gates name reveals for the soul-bond NPCs (Irenicus,
+ *           Imoen). Missing field on older saves → []  (everyone pre-reveal).
  */
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -125,6 +127,7 @@ export interface MigratedSnapshot {
   druidGroveUnlocked: boolean;
   deathCount: number;
   hasReincarnated: boolean;
+  knownNpcs: string[];
   // Allow extra fields to ride through (screen, saveSeed, introSeen, etc.).
   [k: string]: unknown;
 }
@@ -218,6 +221,11 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
     Array.isArray(state.monsterKillingAbilities)
   ) {
     state.monsterKillingAbilities = {};
+  }
+
+  // v5 → v6: knownNpcs gates the soul-bond name reveal. Missing = pre-reveal.
+  if (!Array.isArray(state.knownNpcs)) {
+    state.knownNpcs = [];
   }
 
   return state as MigratedSnapshot;
