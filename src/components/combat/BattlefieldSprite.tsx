@@ -73,6 +73,30 @@ function monsterSpriteWidth(defId: string): string {
       return '78px';
     case 'shadow-hound':
       return '88px';
+    case 'bonebound-test-subject':
+      return '78px';
+    case 'hollow-sage':
+      return '78px';
+    case 'mad-mage-prisoner':
+      return '76px';
+    case 'drow-warrior':
+      return '80px';
+    case 'drow-crossbowman':
+      return '78px';
+    case 'drow-matron-mother':
+      return '92px';
+    case 'drider':
+      return '110px';
+    case 'driderling':
+      return '54px';
+    case 'mind-flayer-fragment':
+      return '74px';
+    case 'slayer-hound':
+      return '92px';
+    case 'asylum-director':
+      return '96px';
+    case 'wardens-apprentice':
+      return '80px';
     default:
       return '60px';
   }
