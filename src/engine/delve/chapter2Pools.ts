@@ -73,10 +73,13 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Counting House Foyer',
     flavorText:
-      "Two slaver cuirassiers stand at the desk like they own it — and they do today. The ledgers behind them have your master's hand at the bottom of a page you weren't supposed to see.",
-    monsters: [{ defId: 'slaver-cuirassier', count: 2, displayPrefix: 'Cuirassier' }],
-    xpReward: 280,
-    goldReward: 22,
+      "A slaver cuirassier stands at the desk like he owns it — and he does today. A robed cult-knife behind him keeps one hand on the ledger your master signed at a page you weren't supposed to see.",
+    monsters: [
+      { defId: 'slaver-cuirassier', count: 1 },
+      { defId: 'cult-fanatic', count: 1 },
+    ],
+    xpReward: 260,
+    goldReward: 20,
   },
   {
     title: 'The Cult Cell',
