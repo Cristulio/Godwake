@@ -9,7 +9,7 @@ import { getMonster } from '../../content/monsters';
 import { rollPlayerSave } from './holdPerson';
 import { useCunningAction } from './cunningAction';
 import { castSpell } from './spells';
-import { applyLevelUp } from '../character/leveling';
+import { simulateLevelUp } from '../character/leveling';
 import type { Character } from '../../types/character';
 
 /**
@@ -242,8 +242,8 @@ describe('nextSaveAdvantage — save-advantage vector', () => {
       },
       skillProficiencies: ['arcana', 'history'],
     });
-    w = applyLevelUp(w); // L2
-    w = applyLevelUp(w); // L3 — gains 2nd-level slot + misty-step
+    w = simulateLevelUp(w); // L2
+    w = simulateLevelUp(w); // L3 — sim picks Misty Step (only L2 spell unknown)
     return w;
   }
 

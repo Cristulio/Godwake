@@ -49,6 +49,10 @@ export const SpellSchema = z.object({
   description: z.string(),
   /** Engine handler key. The `castSpell` switch routes off this. */
   effectKey: SpellEffectKeySchema,
+  /** When false, this spell is excluded from offer pools (level-up picker,
+   *  future scroll drops). Code still ships for combat reference. Undefined
+   *  reads as true. */
+  enabled: z.boolean().optional(),
 });
 
 export type Spell = z.infer<typeof SpellSchema>;

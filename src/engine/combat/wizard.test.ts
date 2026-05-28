@@ -7,7 +7,7 @@ import { endTurn } from './turn';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
 import { longRest, wizardSpellSlotsForLevel } from '../character/actions';
-import { applyLevelUp } from '../character/leveling';
+import { applyLevelUp, simulateLevelUp } from '../character/leveling';
 import { computeAC } from '../character/derived';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import type { Character } from '../../types/character';
@@ -452,20 +452,20 @@ describe('Wizard — Grove caster bonuses', () => {
 describe('Wizard — Misty Step (L3 unlock)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('is auto-learned at L3 by applyLevelUp', () => {
+  it('is picked at L3 by simulateLevelUp (sim default; UI exposes a chooser)', () => {
     let w = makeWizard();
     expect(w.resources.knownSpells).not.toContain('misty-step');
-    w = applyLevelUp(w); // L2
+    w = simulateLevelUp(w); // L2 — no learn tier
     expect(w.resources.knownSpells).not.toContain('misty-step');
-    w = applyLevelUp(w); // L3
+    w = simulateLevelUp(w); // L3 — picker fires, sim auto-picks misty-step
     expect(w.resources.knownSpells).toContain('misty-step');
   });
 
   it('costs a bonus action, consumes a 2nd-level slot, and grants +2 AC until next turn', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
-    w = applyLevelUp(w);
-    w = applyLevelUp(w); // L3 — has 2nd-level slots, knows misty-step
+    w = simulateLevelUp(w);
+    w = simulateLevelUp(w); // L3 — has 2nd-level slots, knows misty-step
     expect(slotsAt(w, 2)).toBe(2);
 
     const roller = createDiceRoller(11);
@@ -500,20 +500,22 @@ describe('Wizard — Misty Step (L3 unlock)', () => {
 describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('L5 wizard has 2× L3 slots AND knows Fireball + Lightning Bolt', () => {
+  it('L5 wizard has 2× L3 slots and learns one L3 spell via the picker (sim picks Fireball)', () => {
     let w = makeWizard();
-    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L1 → L5
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L1 → L5
     expect(w.level).toBe(5);
     expect(w.resources.spellSlots?.[3]).toBe(2);
-    expect(w.resources.knownSpells).toContain('fireball');
-    expect(w.resources.knownSpells).toContain('lightning-bolt');
-    expect(w.resources.knownSpells).toContain('misty-step');
+    expect(w.resources.knownSpells).toContain('misty-step'); // picked at L3
+    expect(w.resources.knownSpells).toContain('fireball'); // sim priority at L5
+    // The L5 picker grants exactly one L3 spell; lightning-bolt isn't learned
+    // by default. The Lightning Bolt cast test below stamps it explicitly.
+    expect(w.resources.knownSpells).not.toContain('lightning-bolt');
   });
 
   it('Fireball damages every living monster and consumes a 3rd-level slot', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
-    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5
     const roller = createDiceRoller(13);
     const init = createCombat({
       roller,
@@ -545,7 +547,16 @@ describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
   it('Lightning Bolt damages every living monster and consumes a 3rd-level slot', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
-    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5
+    // Sim picks Fireball at L5; stamp Lightning Bolt so this test focuses on
+    // the spell, not the picker.
+    w = {
+      ...w,
+      resources: {
+        ...w.resources,
+        knownSpells: [...(w.resources.knownSpells ?? []), 'lightning-bolt'],
+      },
+    };
     const roller = createDiceRoller(17);
     const init = createCombat({
       roller,
@@ -609,7 +620,7 @@ describe('Wizard — Sculpt Spells (Evocation L2)', () => {
   it('L5 evoker rolls 9d6 Fireball (8d6 base + 1 from Sculpt Spells)', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
-    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5
     expect(w.subclassId).toBe('evocation');
     const roller = createDiceRoller(31);
     const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
@@ -628,7 +639,15 @@ describe('Wizard — Sculpt Spells (Evocation L2)', () => {
   it('L5 evoker rolls 9d6 Lightning Bolt', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
-    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5
+    // Sim picks Fireball at L5 — stamp Lightning Bolt for the spell-under-test.
+    w = {
+      ...w,
+      resources: {
+        ...w.resources,
+        knownSpells: [...(w.resources.knownSpells ?? []), 'lightning-bolt'],
+      },
+    };
     const roller = createDiceRoller(33);
     const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
     let state = init.state;

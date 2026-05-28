@@ -4,11 +4,27 @@ import { Button } from '../ui/Button';
 import { playSfx } from '../../engine/audio';
 import { Panel } from '../ui/Panel';
 import { getClass } from '../../content/classes';
-import { hpGainForLevelUp } from '../../engine/character/leveling';
+import {
+  hpGainForLevelUp,
+  availableWizardSpellsForLearn,
+  wizardSpellLearnTierForLevel,
+} from '../../engine/character/leveling';
 import { effectiveAbilityScores } from '../../engine/character/derived';
 import type { AbilityName, AbilityScores } from '../../types/abilities';
 import type { Character } from '../../types/character';
 import { SKILL_DESCRIPTIONS, isSkillEnabled, type SkillName } from '../../types/skills';
+import type { Spell, SpellLevel } from '../../schemas/spell';
+
+const SCHOOL_LABEL: Record<Spell['school'], string> = {
+  abjuration: 'Abjuration',
+  conjuration: 'Conjuration',
+  divination: 'Divination',
+  enchantment: 'Enchantment',
+  evocation: 'Evocation',
+  illusion: 'Illusion',
+  necromancy: 'Necromancy',
+  transmutation: 'Transmutation',
+};
 
 const SKILL_LABEL: Record<SkillName, string> = {
   acrobatics: 'Acrobatics',
@@ -48,6 +64,7 @@ export function LevelUpScreen() {
 
   const [asiPlan, setAsiPlan] = useState<Partial<Record<AbilityName, number>>>({});
   const [pickedSkills, setPickedSkills] = useState<SkillName[]>([]);
+  const [pickedSpellId, setPickedSpellId] = useState<string | null>(null);
 
   useEffect(() => {
     playSfx('level_up_sting');
@@ -86,6 +103,13 @@ export function LevelUpScreen() {
   const plannedTotal = Object.values(asiPlan).reduce<number>((a, b) => a + (b ?? 0), 0);
   const asiValid = !isAsiLevel || plannedTotal === 2;
 
+  const spellLearnTier: SpellLevel | null =
+    c.classId === 'wizard' ? wizardSpellLearnTierForLevel(nextLevel) : null;
+  const availableSpells: Spell[] =
+    spellLearnTier === null ? [] : availableWizardSpellsForLearn(c, spellLearnTier);
+  const needsSpellPick = spellLearnTier !== null && availableSpells.length > 0;
+  const spellValid = !needsSpellPick || pickedSpellId !== null;
+
   function bump(ability: AbilityName, delta: number) {
     setAsiPlan((prev) => {
       const current = prev[ability] ?? 0;
@@ -108,7 +132,7 @@ export function LevelUpScreen() {
   }
 
   function handleContinue() {
-    if (!asiValid || !skillsValid) return;
+    if (!asiValid || !skillsValid || !spellValid) return;
     const overrides: Partial<Character> = {};
     if (isAsiLevel) {
       const newBase: AbilityScores = { ...c.baseAbilityScores };
@@ -119,6 +143,13 @@ export function LevelUpScreen() {
     }
     if (pickedSkills.length > 0) {
       overrides.skillProficiencies = [...c.skillProficiencies, ...pickedSkills];
+    }
+    if (needsSpellPick && pickedSpellId) {
+      const existing = c.resources.knownSpells ?? [];
+      overrides.resources = {
+        ...c.resources,
+        knownSpells: [...existing, pickedSpellId],
+      };
     }
     applyPendingLevelUp(Object.keys(overrides).length > 0 ? overrides : undefined);
   }
@@ -278,12 +309,57 @@ export function LevelUpScreen() {
           </Panel>
         )}
 
+        {needsSpellPick && (
+          <Panel
+            title={`Learn a New Spell — pick 1 (${pickedSpellId ? 1 : 0}/1)`}
+            tone="warm"
+          >
+            <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
+              {spellLearnTier === 2
+                ? "Your first 2nd-level slot opens — a spell to fill it."
+                : "Your first 3rd-level slot opens — a spell to fill it."}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {availableSpells.map((sp) => {
+                const selected = pickedSpellId === sp.id;
+                return (
+                  <button
+                    key={sp.id}
+                    onClick={() => setPickedSpellId(selected ? null : sp.id)}
+                    className={`text-left px-3 py-2 border text-sm transition-colors ${
+                      selected
+                        ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
+                        : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
+                    }`}
+                  >
+                    <div className="flex items-baseline justify-between gap-2">
+                      <div className="font-display text-[var(--color-text-primary)] text-[12px] uppercase tracking-[0.18em]">
+                        {sp.name}
+                      </div>
+                      <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
+                        L{sp.level} · {SCHOOL_LABEL[sp.school]}
+                      </div>
+                    </div>
+                    <div className="text-[var(--color-text-dim)] text-[11px] mt-1 normal-case tracking-normal">
+                      {sp.range} · {sp.target}
+                      {sp.damageType ? ` · ${sp.damageType}` : ''}
+                    </div>
+                    <div className="text-[var(--color-text-secondary)] text-xs mt-1.5 leading-relaxed normal-case tracking-normal">
+                      {sp.description}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </Panel>
+        )}
+
         <div className="flex justify-center mt-2">
           <Button
             variant="primary"
             size="lg"
             onClick={handleContinue}
-            disabled={!asiValid || !skillsValid}
+            disabled={!asiValid || !skillsValid || !spellValid}
           >
             {isAsiLevel && !asiValid
               ? `Place ${2 - plannedTotal} more point${2 - plannedTotal === 1 ? '' : 's'}`
@@ -293,7 +369,9 @@ export function LevelUpScreen() {
                       ? ''
                       : 's'
                   }`
-                : 'Continue →'}
+                : !spellValid
+                  ? 'Pick a spell'
+                  : 'Continue →'}
           </Button>
         </div>
       </div>

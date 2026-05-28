@@ -4,6 +4,8 @@ import { effectiveAbilityScores } from './derived';
 import { getClass } from '../../content/classes';
 import { getRace } from '../../content/races';
 import { wizardSpellSlotsForLevel } from './actions';
+import { listSpells } from '../../content/spells';
+import type { Spell, SpellLevel } from '../../schemas/spell';
 
 /**
  * XP-to-level table, capped at level 8. L3 and L4 are pulled down from 5e
@@ -74,20 +76,12 @@ export function applyLevelUp(character: Character): Character {
   }
 
   // Wizard: slots scale with level. Granting via the slot table also refills
-  // the well — leveling reads as a long rest in narrative terms.
+  // the well — leveling reads as a long rest in narrative terms. Spell
+  // learning is no longer auto-granted here — the LevelUpScreen surfaces a
+  // picker at L3 (first 2nd-level slot) and L5 (first 3rd-level slot); the
+  // picked id arrives via the `resources.knownSpells` override.
   if (character.classId === 'wizard') {
     resources.spellSlots = wizardSpellSlotsForLevel(newLevel);
-    // Auto-learn the spells unlocked at each level milestone so the new slots
-    // aren't dead air. Without this, L5 wizards have 3rd-level slots and no
-    // 3rd-level spell to spend them on.
-    const known = resources.knownSpells ?? [];
-    const learn: string[] = [];
-    if (newLevel >= 3 && !known.includes('misty-step')) learn.push('misty-step');
-    if (newLevel >= 5 && !known.includes('fireball')) learn.push('fireball');
-    if (newLevel >= 5 && !known.includes('lightning-bolt')) learn.push('lightning-bolt');
-    if (learn.length > 0) {
-      resources.knownSpells = [...known, ...learn];
-    }
   }
 
   return {
@@ -106,4 +100,74 @@ export function applyLevelUp(character: Character): Character {
     },
     resources,
   };
+}
+
+/**
+ * The spell-tier a wizard unlocks for the *first time* at the given new
+ * level. Returns null when the level is not a learning milestone.
+ *
+ * L3 unlocks the first 2nd-level slot; L5 unlocks the first 3rd-level slot.
+ * Past L5, slot counts grow but no new tier opens — no further pickers.
+ */
+export function wizardSpellLearnTierForLevel(newLevel: number): SpellLevel | null {
+  if (newLevel === 3) return 2;
+  if (newLevel === 5) return 3;
+  return null;
+}
+
+/**
+ * Spells at the given tier that the wizard has not yet learned and that are
+ * still enabled in content. The level-up picker offers these; the sim
+ * auto-picks from this set.
+ */
+export function availableWizardSpellsForLearn(
+  character: Character,
+  tier: SpellLevel,
+): Spell[] {
+  const known = new Set(character.resources.knownSpells ?? []);
+  return listSpells().filter(
+    (s) => s.level === tier && s.enabled !== false && !known.has(s.id),
+  );
+}
+
+/**
+ * Headless level-up: auto-picks a wizard spell when the new level opens a
+ * spell-tier picker (highest-damage AoE first, then single-target damage,
+ * then utility). Sims, balance tests, and any non-UI caller should use this
+ * instead of `applyLevelUp` so spell-learning is not skipped by accident.
+ *
+ * Tie-break order is deterministic so sim runs stay reproducible:
+ *   fireball > lightning-bolt > burning-hands > magic-missile > magic-missile
+ *   > hold-person > misty-step > shield > mage-armor > fire-bolt
+ */
+const SIM_SPELL_PRIORITY: readonly string[] = [
+  'fireball',
+  'lightning-bolt',
+  'burning-hands',
+  'magic-missile',
+  'hold-person',
+  'misty-step',
+  'shield',
+  'mage-armor',
+  'fire-bolt',
+];
+
+export function simulateLevelUp(character: Character): Character {
+  const newLevel = character.level + 1;
+  const tier = wizardSpellLearnTierForLevel(newLevel);
+  if (character.classId !== 'wizard' || tier === null) {
+    return applyLevelUp(character);
+  }
+  const pool = availableWizardSpellsForLearn(character, tier);
+  if (pool.length === 0) return applyLevelUp(character);
+  const rank = (id: string): number => {
+    const idx = SIM_SPELL_PRIORITY.indexOf(id);
+    return idx >= 0 ? idx : Number.MAX_SAFE_INTEGER;
+  };
+  const pick = [...pool].sort((a, b) => rank(a.id) - rank(b.id))[0];
+  const existing = character.resources.knownSpells ?? [];
+  return applyLevelUp({
+    ...character,
+    resources: { ...character.resources, knownSpells: [...existing, pick.id] },
+  });
 }

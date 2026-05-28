@@ -35,7 +35,7 @@ import type { CombatState } from '../types/combat';
 import type { DelveState, RoomSpec } from '../types/delve';
 import type { ClassId, RaceId } from '../schemas/ids';
 import { setActiveRoller, getActiveRoller } from '../engine/dice';
-import { applyLevelUp } from '../engine/character/leveling';
+import { simulateLevelUp } from '../engine/character/leveling';
 import { shortRestHeal, longRest } from '../engine/character/actions';
 import { createGodwakeDelve } from '../engine/delve';
 import { getMonster } from '../content/monsters';
@@ -276,7 +276,7 @@ function makeCharacter(spec: ScenarioSpec): Character {
   // Level up to L7 (subclass auto-picks at L2 for wizard evoker, L3 for fighter
   // champion — but content only has one subclass per class so it's automatic).
   while (c.level < 7) {
-    c = applyLevelUp({ ...c, xp: 9999999 });
+    c = simulateLevelUp({ ...c, xp: 9999999 });
   }
   // Top up to full HP / fresh resources.
   c = { ...c, hp: { ...c.hp, current: c.hp.max } };
