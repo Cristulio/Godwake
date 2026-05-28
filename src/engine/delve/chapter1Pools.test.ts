@@ -9,7 +9,9 @@ import {
 // Pre-bump baseline (sum of every xpReward across the four Ch1 combat pools).
 // Sim runs at this baseline left wizards short of L3 by the elite room; the
 // +20% bump (rounded per-entry) lifts a perfect-roll Ch1 over ~990 XP.
-const PRE_BUMP_BASELINE_TOTAL = 240 + 510 + 960 + 1500; // 3210
+// Warmup baseline is 180 (down from 240): the bone-stalker — too swingy for the
+// first fight — moved out of the warmup pool. Its XP still counts in early-mid.
+const PRE_BUMP_BASELINE_TOTAL = 180 + 510 + 960 + 1500; // 3150
 
 describe('chapter1 combat pools — XP +20% sim fix', () => {
   it('every entry has a positive xpReward', () => {
@@ -35,7 +37,7 @@ describe('chapter1 combat pools — XP +20% sim fix', () => {
     const mid = MID_POOL.reduce((a, e) => a + e.xpReward, 0);
     const elite = ELITE_POOL.reduce((a, e) => a + e.xpReward, 0);
 
-    expect(warmup).toBeGreaterThanOrEqual(Math.floor(240 * 1.2));
+    expect(warmup).toBeGreaterThanOrEqual(Math.floor(180 * 1.2));
     expect(earlyMid).toBeGreaterThanOrEqual(Math.floor(510 * 1.2));
     expect(mid).toBeGreaterThanOrEqual(Math.floor(960 * 1.2));
     expect(elite).toBeGreaterThanOrEqual(Math.floor(1500 * 1.2));
