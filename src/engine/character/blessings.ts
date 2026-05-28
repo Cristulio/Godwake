@@ -51,7 +51,15 @@ export function rollBlessingOptions(roller: DiceRoller, count: number = 3): stri
 
 /**
  * Combine modifiers from a list of blessing ids into a single bundle.
- * Numeric fields sum; boolean fields OR.
+ * Most numeric fields sum; boolean fields OR.
+ *
+ * `extraTempHpPerRoom` is the exception: 5e RAW for temporary HP says
+ * sources do not stack — you take the higher of any conflicting grants.
+ * Without this carve-out, Lathander's Dawn (+3) and Ilmater's Crown (+2)
+ * would compound to +5 every combat, which the immortal-hypothesis sim
+ * (\`src/sim/immortalHypothesisSim.ts\`) showed was the dominant survival
+ * lever in the blessing system and the real source of the playtester's
+ * "immortal Rogue" feel. Aggregator picks max-of-individual instead.
  */
 export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModifiers {
   const acc: BlessingModifiers = {};
@@ -75,7 +83,7 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
     if (m.holyDamageBonus !== undefined)
       acc.holyDamageBonus = (acc.holyDamageBonus ?? 0) + m.holyDamageBonus;
     if (m.extraTempHpPerRoom !== undefined)
-      acc.extraTempHpPerRoom = (acc.extraTempHpPerRoom ?? 0) + m.extraTempHpPerRoom;
+      acc.extraTempHpPerRoom = Math.max(acc.extraTempHpPerRoom ?? 0, m.extraTempHpPerRoom);
     if (m.rerollMissesPerEncounter !== undefined)
       acc.rerollMissesPerEncounter =
         (acc.rerollMissesPerEncounter ?? 0) + m.rerollMissesPerEncounter;

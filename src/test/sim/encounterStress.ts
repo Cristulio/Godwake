@@ -153,7 +153,7 @@ const ARCHETYPES: Record<SimClassId, ArchetypeBuilder> = {
 };
 
 /** Level a fresh archetype up to `targetLevel` by feeding stub XP. */
-function characterAtLevel(classId: ClassId, targetLevel: number): Character {
+export function characterAtLevel(classId: ClassId, targetLevel: number): Character {
   const builder = ARCHETYPES[classId as SimClassId];
   if (!builder) throw new Error(`No sim archetype for class: ${classId}`);
   let c = builder();
@@ -163,7 +163,7 @@ function characterAtLevel(classId: ClassId, targetLevel: number): Character {
   return c;
 }
 
-function liveMonsters(state: CombatState): MonsterCombatant[] {
+export function liveMonsters(state: CombatState): MonsterCombatant[] {
   return state.combatants.filter(
     (c) => c.kind === 'monster' && c.instance.hp.current > 0,
   ) as MonsterCombatant[];
@@ -332,7 +332,7 @@ function wizardTurn(
   return { state: s, character: ch };
 }
 
-function takeTurn(
+export function takeTurn(
   roller: DiceRoller,
   state: CombatState,
   character: Character,
