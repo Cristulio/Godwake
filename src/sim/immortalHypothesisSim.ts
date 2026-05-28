@@ -134,16 +134,26 @@ function applyGrove(c: Character, unlocked: UnlockedUpgrades): Character {
   return r;
 }
 
-function makeCharacter(classId: ClassId, level: number, loadout: Loadout): Character {
+export function makeCharacterFromBlessings(
+  classId: ClassId,
+  level: number,
+  blessings: string[],
+  grove?: UnlockedUpgrades,
+): Character {
   let c = characterAtLevel(classId, level);
   c = { ...c, hp: { ...c.hp, current: c.hp.max } };
-  // Blessings: just stamp them on the character. The engine reads them via
-  // characterBlessingMods at combat start (where temp HP is granted).
-  c = { ...c, blessings: [...c.blessings, ...LOADOUT_BLESSINGS[loadout]] };
-  if (loadout === 'D') {
-    c = applyGrove(c, GROVE_LOADOUT_D);
-  }
+  c = { ...c, blessings: [...c.blessings, ...blessings] };
+  if (grove) c = applyGrove(c, grove);
   return c;
+}
+
+function makeCharacter(classId: ClassId, level: number, loadout: Loadout): Character {
+  return makeCharacterFromBlessings(
+    classId,
+    level,
+    LOADOUT_BLESSINGS[loadout],
+    loadout === 'D' ? GROVE_LOADOUT_D : undefined,
+  );
 }
 
 function chapterFor(roomIdx: number): number {
@@ -238,20 +248,23 @@ function runCombatEncounter(
   return { character, died, damageDealt, damageTaken, tempHpGained };
 }
 
-export function runDelve(
-  classId: ClassId,
-  startLevel: number,
-  loadout: Loadout,
-  seed: number,
-): RunStats {
+export function runDelveCustom(opts: {
+  classId: ClassId;
+  startLevel: number;
+  blessings: string[];
+  grove?: UnlockedUpgrades;
+  seed: number;
+  loadoutLabel?: Loadout;
+}): RunStats {
+  const { classId, startLevel, blessings, grove, seed, loadoutLabel = 'A' } = opts;
   setActiveRoller(seed >>> 0);
-  let character = makeCharacter(classId, startLevel, loadout);
+  let character = makeCharacterFromBlessings(classId, startLevel, blessings, grove);
   const delve: DelveState = createGodwakeDelve({ seed: seed >>> 0 });
 
   const stats: RunStats = {
     classId,
     startLevel,
-    loadout,
+    loadout: loadoutLabel,
     died: false,
     deathChapter: 0,
     deathRoom: null,
@@ -312,6 +325,22 @@ export function runDelve(
     stats.encountersFought > 0 ? stats.tempHpGained / stats.encountersFought : 0;
   stats.effectiveHp = character.hp.max + stats.tempHpGained;
   return stats;
+}
+
+export function runDelve(
+  classId: ClassId,
+  startLevel: number,
+  loadout: Loadout,
+  seed: number,
+): RunStats {
+  return runDelveCustom({
+    classId,
+    startLevel,
+    blessings: LOADOUT_BLESSINGS[loadout],
+    grove: loadout === 'D' ? GROVE_LOADOUT_D : undefined,
+    seed,
+    loadoutLabel: loadout,
+  });
 }
 
 export function summarize(
