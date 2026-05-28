@@ -218,15 +218,15 @@ export const ELITE_POOL: EncounterEntry[] = [
     goldReward: 30,
   },
   {
-    title: 'The Apprentice and Her Pack',
+    title: 'The Apprentice and Her Subject',
     flavorText:
-      "A slayer hound and the apprentice who trained it. She does not give it a command — it has been trained well enough that the command isn't necessary.",
+      "A Warden's Apprentice walks the corridor with a Mad Mage Prisoner three paces behind her, reciting the same syllable her wand-grip is shaped for. She has been grading him for weeks. He has stopped noticing.",
     monsters: [
       { defId: 'wardens-apprentice', count: 1 },
-      { defId: 'slayer-hound', count: 1 },
+      { defId: 'mad-mage-prisoner', count: 1 },
     ],
-    xpReward: 740,
-    goldReward: 38,
+    xpReward: 700,
+    goldReward: 34,
   },
   {
     title: "The Sages' Conference",
@@ -241,12 +241,12 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Examiner and His Subject',
     flavorText:
-      "A Hollow Sage with a slayer hound at his hip — the hound is leashed, the sage is not. The lectern in the alcove behind them is open to a page someone has been crossing names off.",
+      "A Hollow Sage stands at a lectern with a stitched test-subject at his hip — the subject's seams catch the corridor-light. The lectern is open to a page someone has been crossing names off.",
     monsters: [
       { defId: 'hollow-sage', count: 1 },
-      { defId: 'slayer-hound', count: 1 },
+      { defId: 'bonebound-test-subject', count: 1 },
     ],
-    xpReward: 800,
-    goldReward: 42,
+    xpReward: 740,
+    goldReward: 36,
   },
 ];

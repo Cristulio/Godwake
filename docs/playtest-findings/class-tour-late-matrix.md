@@ -19,19 +19,19 @@ mirrors each class's existing sim policy.
 
 | Class | L | Runs | Run-win | Enc-win | Lives used | TTK rds | Hit % | Crit % | Dmg dealt | Dmg taken | HP healed | Gold |
 |------|--:|----:|-------:|-------:|----------:|------:|------:|------:|---------:|---------:|---------:|----:|
-| rogue | 5 | 50 | 0% | 69% | 3.00 / 3 | 5.59 | 72% | 0% | 388 | 177 | 63 | 577 |
-| rogue | 7 | 50 | 0% | 75% | 3.00 / 3 | 5.94 | 71% | 0% | 551 | 240 | 83 | 908 |
-| fighter | 5 | 50 | 0% | 73% | 3.00 / 3 | 5.45 | 65% | 9% | 499 | 311 | 178 | 763 |
-| fighter | 7 | 50 | 0% | 79% | 3.00 / 3 | 5.80 | 66% | 10% | 700 | 443 | 250 | 1143 |
-| wizard | 5 | 50 | 0% | 70% | 3.00 / 3 | 4.53 | 0% | 0% | 442 | 175 | 64 | 700 |
-| wizard | 7 | 50 | 0% | 76% | 3.00 / 3 | 4.48 | 0% | 0% | 611 | 248 | 95 | 1006 |
+| rogue | 5 | 50 | 0% | 70% | 3.00 / 3 | 5.73 | 71% | 0% | 403 | 177 | 63 | 587 |
+| rogue | 7 | 50 | 0% | 77% | 3.00 / 3 | 5.88 | 72% | 0% | 591 | 247 | 86 | 951 |
+| fighter | 5 | 50 | 0% | 74% | 3.00 / 3 | 5.48 | 66% | 10% | 542 | 318 | 183 | 816 |
+| fighter | 7 | 50 | 0% | 79% | 3.00 / 3 | 5.93 | 66% | 10% | 748 | 446 | 250 | 1137 |
+| wizard | 5 | 50 | 0% | 72% | 3.00 / 3 | 4.59 | 0% | 0% | 481 | 177 | 66 | 741 |
+| wizard | 7 | 50 | 0% | 76% | 3.00 / 3 | 4.58 | 0% | 0% | 610 | 246 | 93 | 955 |
 
 ### Variant: `no-uncanny-dodge`
 
 | Class | L | Runs | Run-win | Enc-win | Lives used | TTK rds | Hit % | Crit % | Dmg dealt | Dmg taken | HP healed | Gold |
 |------|--:|----:|-------:|-------:|----------:|------:|------:|------:|---------:|---------:|---------:|----:|
-| rogue | 5 | 50 | 0% | 61% | 3.00 / 3 | 4.38 | 75% | 0% | 251 | 164 | 50 | 339 |
-| rogue | 7 | 50 | 0% | 67% | 3.00 / 3 | 4.76 | 77% | 0% | 363 | 232 | 76 | 510 |
+| rogue | 5 | 50 | 0% | 62% | 3.00 / 3 | 4.47 | 75% | 0% | 261 | 165 | 51 | 352 |
+| rogue | 7 | 50 | 0% | 68% | 3.00 / 3 | 4.75 | 78% | 0% | 373 | 232 | 76 | 529 |
 
 
 ## Resource exhaustion at the boss
@@ -40,48 +40,48 @@ How often did each class arrive at the chapter boss with its signature lever emp
 
 | Class | L | Variant | Out-of-spells (chapter) | Cunning empty at boss | Second Wind spent at boss |
 |------|--:|--------|-----------------------:|---------------------:|-------------------------:|
-| rogue | 5 | normal | — | 6% | — |
-| rogue | 7 | normal | — | 54% | — |
-| fighter | 5 | normal | — | — | 40% |
-| fighter | 7 | normal | — | — | 86% |
-| wizard | 5 | normal | 6% | — | — |
+| rogue | 5 | normal | — | 18% | — |
+| rogue | 7 | normal | — | 72% | — |
+| fighter | 5 | normal | — | — | 60% |
+| fighter | 7 | normal | — | — | 88% |
+| wizard | 5 | normal | 16% | — | — |
 | wizard | 7 | normal | 0% | — | — |
 | rogue | 5 | no-uncanny-dodge | — | 0% | — |
-| rogue | 7 | no-uncanny-dodge | — | 0% | — |
+| rogue | 7 | no-uncanny-dodge | — | 6% | — |
 
 ## Per-boss death clustering
 
 | Class | L | Variant | Asylum Director | Matron Mother | Other (mid/elite/warmup) |
 |------|--:|--------|---------------:|--------------:|------------------------:|
-| rogue | 5 | normal | 4 | 0 | 146 |
-| rogue | 7 | normal | 40 | 0 | 110 |
-| fighter | 5 | normal | 22 | 0 | 128 |
-| fighter | 7 | normal | 62 | 1 | 87 |
-| wizard | 5 | normal | 28 | 0 | 122 |
-| wizard | 7 | normal | 84 | 0 | 66 |
+| rogue | 5 | normal | 15 | 0 | 135 |
+| rogue | 7 | normal | 51 | 0 | 99 |
+| fighter | 5 | normal | 34 | 1 | 115 |
+| fighter | 7 | normal | 77 | 3 | 70 |
+| wizard | 5 | normal | 54 | 0 | 96 |
+| wizard | 7 | normal | 88 | 0 | 62 |
 | rogue | 5 | no-uncanny-dodge | 0 | 0 | 150 |
-| rogue | 7 | no-uncanny-dodge | 1 | 0 | 149 |
+| rogue | 7 | no-uncanny-dodge | 4 | 0 | 146 |
 
 ### Full death breakdown by room
 
-- **rogue L5 normal**: Ch3-elite-b(64), Ch3-elite-a(42), Ch3-mid(40), Ch3-boss(4)
-- **rogue L7 normal**: Ch3-elite-b(80), Ch3-boss(40), Ch3-elite-a(19), Ch3-mid(10), Ch4-em(1)
-- **fighter L5 normal**: Ch3-elite-b(75), Ch3-elite-a(29), Ch3-mid(23), Ch3-boss(22), Ch4-em(1)
-- **fighter L7 normal**: Ch3-elite-b(66), Ch3-boss(62), Ch4-elite(8), Ch3-elite-a(6), Ch3-mid(4), Ch4-em(2), Ch4-mid(1), Ch4-boss(1)
-- **wizard L5 normal**: Ch3-elite-b(56), Ch3-mid(48), Ch3-boss(28), Ch3-elite-a(15), Ch3-warmup(3)
-- **wizard L7 normal**: Ch3-boss(84), Ch3-elite-b(37), Ch3-mid(24), Ch3-elite-a(4), Ch3-warmup(1)
-- **rogue L5 no-uncanny-dodge**: Ch3-mid(82), Ch3-elite-a(50), Ch3-elite-b(17), Ch3-warmup(1)
-- **rogue L7 no-uncanny-dodge**: Ch3-elite-a(57), Ch3-mid(47), Ch3-elite-b(45), Ch3-boss(1)
+- **rogue L5 normal**: Ch3-elite-b(57), Ch3-mid(41), Ch3-elite-a(37), Ch3-boss(15)
+- **rogue L7 normal**: Ch3-elite-b(69), Ch3-boss(51), Ch3-elite-a(16), Ch3-mid(8), Ch4-elite(3), Ch4-em(2), Ch4-mid(1)
+- **fighter L5 normal**: Ch3-elite-b(67), Ch3-boss(34), Ch3-elite-a(25), Ch3-mid(20), Ch4-em(2), Ch4-elite(1), Ch4-boss(1)
+- **fighter L7 normal**: Ch3-boss(77), Ch3-elite-b(53), Ch4-elite(5), Ch3-mid(4), Ch4-em(4), Ch4-boss(3), Ch3-elite-a(2), Ch4-mid(2)
+- **wizard L5 normal**: Ch3-boss(54), Ch3-mid(45), Ch3-elite-b(35), Ch3-elite-a(13), Ch3-warmup(3)
+- **wizard L7 normal**: Ch3-boss(88), Ch3-elite-b(34), Ch3-mid(24), Ch3-elite-a(3), Ch3-warmup(1)
+- **rogue L5 no-uncanny-dodge**: Ch3-mid(80), Ch3-elite-a(47), Ch3-elite-b(22), Ch3-warmup(1)
+- **rogue L7 no-uncanny-dodge**: Ch3-elite-b(55), Ch3-mid(46), Ch3-elite-a(45), Ch3-boss(4)
 
 ## Per-class detail (per life / per run)
 
 | Class | L | Variant | Sneak/life | Cunning/life | SW/life | AS/life | Slot1/run | Slot2/run | Slot3/run | Cantrip-share | Misty/run | FireBolt hit% | Potions/run |
 |------|--:|--------|----------:|------------:|--------:|--------:|---------:|---------:|---------:|--------------:|---------:|-------------:|-----------:|
-| rogue | 5 | normal | 6.94 | 6.21 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 3.00 |
-| rogue | 7 | normal | 8.33 | 7.65 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 3.00 |
-| fighter | 5 | normal | 0.00 | 0.00 | 2.54 | 1.79 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 5.96 |
-| fighter | 7 | normal | 0.00 | 0.00 | 3.09 | 2.02 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 5.98 |
-| wizard | 5 | normal | 0.00 | 0.00 | 0.00 | 0.00 | 13.38 | 13.06 | 6.14 | 8% | 5.98 | 60% | 3.00 |
-| wizard | 7 | normal | 0.00 | 0.00 | 0.00 | 0.00 | 15.28 | 14.98 | 10.48 | 7% | 7.70 | 64% | 3.00 |
-| rogue | 5 | no-uncanny-dodge | 4.75 | 4.85 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 2.98 |
-| rogue | 7 | no-uncanny-dodge | 5.85 | 5.63 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 3.00 |
+| rogue | 5 | normal | 7.27 | 6.36 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 3.00 |
+| rogue | 7 | normal | 9.06 | 8.21 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 3.00 |
+| fighter | 5 | normal | 0.00 | 0.00 | 2.62 | 1.86 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 5.92 |
+| fighter | 7 | normal | 0.00 | 0.00 | 3.18 | 2.03 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 6.00 |
+| wizard | 5 | normal | 0.00 | 0.00 | 0.00 | 0.00 | 14.84 | 13.38 | 6.48 | 8% | 6.04 | 60% | 3.00 |
+| wizard | 7 | normal | 0.00 | 0.00 | 0.00 | 0.00 | 15.88 | 14.96 | 10.26 | 8% | 7.66 | 63% | 3.00 |
+| rogue | 5 | no-uncanny-dodge | 4.86 | 4.97 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 3.00 |
+| rogue | 7 | no-uncanny-dodge | 6.00 | 5.77 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0% | 0.00 | 0% | 3.00 |

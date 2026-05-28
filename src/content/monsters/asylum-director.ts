@@ -6,6 +6,11 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * (advantage + 2 dmg, sticks for rest of combat), reusing the PR #11
  * mechanic. Both an opening lockdown AND a back-half spike — meant to
  * feel like a Beholder-adjacent encounter inside the schema budget.
+ *
+ * Hold Person DC dropped 15 → 13 in the boss-wall tuning pass: at the L5-7
+ * power band even a WIS-12 (+1) wizard failed the DC 15 save ~70% of the
+ * time, and once paralyzed the glaive autocrits. DC 13 keeps the threat
+ * real (+1 WIS still fails 55%) but the lockdown is no longer near-certain.
  */
 export const ASYLUM_DIRECTOR: Monster = MonsterSchema.parse({
   id: 'asylum-director',
@@ -22,7 +27,7 @@ export const ASYLUM_DIRECTOR: Monster = MonsterSchema.parse({
     {
       kind: 'paralyze',
       name: 'Hold Person',
-      saveDC: 15,
+      saveDC: 13,
       saveAbility: 'wis',
       durationRounds: 3,
       description:

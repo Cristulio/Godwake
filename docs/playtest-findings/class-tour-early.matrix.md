@@ -11,11 +11,11 @@ Scope: rooms 1–19 only (Ilyich + Magistrate). Reincarnation = fresh char at th
 | Class | L | Lives | Death% | RunFullClear% | Ch1 death% | Ch2 death% | Boss death% | Chapters | Combats won | Rounds/combat | Dmg dealt | Dmg taken | HP healed | Gold |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | rogue | 1 | 150 | 100.0% | 0.0% | 32.8% | 0.0% | 100.0% | 0.00 | 2.1 | 3.43 | 34 | 27 | 16 | 2 |
-| rogue | 3 | 150 | 100.0% | 0.0% | 16.8% | 43.3% | 56.7% | 0.26 | 4.0 | 3.69 | 89 | 56 | 28 | 10 |
-| fighter | 1 | 150 | 100.0% | 0.0% | 24.2% | 60.0% | 74.5% | 0.08 | 2.9 | 4.54 | 55 | 46 | 32 | 4 |
-| fighter | 3 | 150 | 100.0% | 0.0% | 12.1% | 41.8% | 45.5% | 0.44 | 4.7 | 5.48 | 114 | 95 | 62 | 17 |
-| wizard | 1 | 150 | 100.0% | 0.0% | 27.1% | 66.7% | 92.9% | 0.01 | 2.7 | 2.88 | 48 | 27 | 16 | 2 |
-| wizard | 3 | 149 | 99.3% | 2.0% | 13.1% | 38.2% | 65.4% | 0.36 | 4.9 | 3.00 | 122 | 56 | 28 | 21 |
+| rogue | 3 | 150 | 100.0% | 0.0% | 16.2% | 44.8% | 51.1% | 0.29 | 4.1 | 3.68 | 90 | 57 | 29 | 10 |
+| fighter | 1 | 150 | 100.0% | 0.0% | 24.7% | 64.3% | 80.9% | 0.06 | 2.9 | 4.53 | 54 | 46 | 31 | 4 |
+| fighter | 3 | 150 | 100.0% | 0.0% | 11.6% | 39.4% | 44.4% | 0.46 | 4.8 | 5.42 | 119 | 97 | 64 | 18 |
+| wizard | 1 | 150 | 100.0% | 0.0% | 26.9% | 60.0% | 89.3% | 0.02 | 2.7 | 2.88 | 48 | 27 | 16 | 2 |
+| wizard | 3 | 148 | 98.6% | 4.0% | 12.3% | 36.8% | 61.8% | 0.41 | 5.0 | 2.97 | 127 | 57 | 29 | 22 |
 
 ## Class-specific signals
 
@@ -23,16 +23,16 @@ Scope: rooms 1–19 only (Ilyich + Magistrate). Reincarnation = fresh char at th
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | rogue | 1 | 0.00 | 0.00 | 0.00 | 1.95 | 0.00 | 0.00 | 0.00 |
 | rogue | 3 | 0.00 | 0.00 | 0.00 | 1.99 | 0.00 | 0.00 | 0.00 |
-| fighter | 1 | 2.45 | 0.62 | 0.00 | 1.96 | 0.00 | 0.00 | 0.00 |
-| fighter | 3 | 3.35 | 0.59 | 2.28 | 1.99 | 0.00 | 0.00 | 0.00 |
-| wizard | 1 | 0.00 | 0.00 | 0.00 | 1.92 | 3.39 | 0.00 | 3.78 |
-| wizard | 3 | 0.00 | 0.00 | 0.00 | 1.98 | 8.19 | 0.00 | 4.95 |
+| fighter | 1 | 2.43 | 0.62 | 0.00 | 1.96 | 0.00 | 0.00 | 0.00 |
+| fighter | 3 | 3.41 | 0.59 | 2.34 | 1.99 | 0.00 | 0.00 | 0.00 |
+| wizard | 1 | 0.00 | 0.00 | 0.00 | 1.92 | 3.40 | 0.00 | 3.80 |
+| wizard | 3 | 0.00 | 0.00 | 0.00 | 1.97 | 8.45 | 0.00 | 4.84 |
 
 ## Death distribution
 
 - **rogue L1** — Ch1: 150, Ch2: 0. Top causes: goblin-warden (22), bone-stalker (21), ghoul (18), hobgoblin (15), stirge (14)
-- **rogue L3** — Ch1: 111, Ch2: 39. Top causes: duergar-ilyich (49), hobgoblin (16), slaver-cuirassier (13), bone-stalker (13), shadow (10)
-- **fighter L1** — Ch1: 138, Ch2: 12. Top causes: duergar-ilyich (35), goblin-warden (21), hobgoblin (15), ghoul (15), bone-stalker (13)
-- **fighter L3** — Ch1: 84, Ch2: 66. Top causes: duergar-ilyich (46), slaver-cuirassier (22), bone-stalker (12), bandit-captain (11), cowled-enforcer (10)
-- **wizard L1** — Ch1: 148, Ch2: 2. Top causes: duergar-ilyich (26), goblin-warden (25), hobgoblin (16), skeleton (16), bugbear (14)
-- **wizard L3** — Ch1: 96, Ch2: 52. Top causes: duergar-ilyich (90), slaver-cuirassier (16), athkatla-magistrate (12), shadow (10), cowled-enforcer (8)
+- **rogue L3** — Ch1: 107, Ch2: 43. Top causes: duergar-ilyich (45), hobgoblin (16), slaver-cuirassier (13), bone-stalker (13), cowled-enforcer (11)
+- **fighter L1** — Ch1: 141, Ch2: 9. Top causes: duergar-ilyich (38), goblin-warden (21), ghoul (15), hobgoblin (14), bone-stalker (13)
+- **fighter L3** — Ch1: 81, Ch2: 69. Top causes: duergar-ilyich (43), slaver-cuirassier (20), bandit-captain (13), bone-stalker (12), cowled-enforcer (12)
+- **wizard L1** — Ch1: 147, Ch2: 3. Top causes: goblin-warden (25), duergar-ilyich (25), hobgoblin (16), skeleton (16), bugbear (14)
+- **wizard L3** — Ch1: 90, Ch2: 56. Top causes: duergar-ilyich (84), slaver-cuirassier (17), athkatla-magistrate (13), cowled-enforcer (11), shadow (10)
