@@ -233,7 +233,7 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
     // Apply paralysis to the player (skip the save flow).
     const paralyzedWizard = applyParalyze(wizard, {
       rounds: 3,
-      saveDC: 15,
+      saveDC: 13,
       saveAbility: 'wis',
       source: 'asylum-director',
     });

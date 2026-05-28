@@ -111,7 +111,7 @@ describe('Hold Person — Magistrate boss mechanic', () => {
 
   it('failed save applies paralyzed condition to the player', () => {
     const magistrate = getMonster('athkatla-magistrate');
-    // A WIS-3 hero will fail the (now softened) DC 12 save on most d20s.
+    // A WIS-3 hero will fail the (now softened) DC 11 save on most d20s.
     let hero = makeHuman({ baseAbilityScores: {
       str: 14, dex: 12, con: 13, int: 10, wis: 8, cha: 10,
     } });
@@ -126,7 +126,7 @@ describe('Hold Person — Magistrate boss mechanic', () => {
     // The seed and the score combination should land on a fail. If a future
     // test flake hits here, swap the seed — the mechanic is the assertion.
     expect(paralyzed).toBeDefined();
-    expect(paralyzed!.saveDC).toBe(12);
+    expect(paralyzed!.saveDC).toBe(11);
     expect(paralyzed!.saveAbility).toBe('wis');
   });
 

@@ -10,7 +10,7 @@ export const ILYICH: Monster = MonsterSchema.parse({
   cr: '2',
   size: 'medium',
   creatureType: 'humanoid (dwarf, duergar)',
-  ac: 16,
+  ac: 15,
   maxHp: 32,
   speed: 25,
   abilityScores: { str: 15, dex: 11, con: 14, int: 11, wis: 10, cha: 9 },
