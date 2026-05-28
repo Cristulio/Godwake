@@ -24,6 +24,13 @@ interface MetaStoreState {
   unlockedUpgrades: UnlockedUpgrades;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
+  /**
+   * NPC ids the player has been introduced to in-game. Drives whether the
+   * soul-bond panel shows the real name (e.g. "Irenicus") or the pre-reveal
+   * placeholder ("The Voice"). Persists across reincarnation — the reveal is
+   * one-time-per-soul.
+   */
+  knownNpcs: string[];
 
   discoverMonster: (defId: string) => void;
   recordMonsterDefeat: (defId: string) => void;
@@ -34,6 +41,7 @@ interface MetaStoreState {
   setChapter1Cleared: (v: boolean) => void;
   setDruidGroveUnlocked: (v: boolean) => void;
   setUnlockedUpgrades: (u: UnlockedUpgrades) => void;
+  markNpcKnown: (npcId: string) => void;
   resetMeta: () => void;
 }
 
@@ -48,6 +56,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   unlockedUpgrades: {},
   chapter1Cleared: false,
   druidGroveUnlocked: false,
+  knownNpcs: [],
 
   discoverMonster: (defId) =>
     set((s) => {
@@ -116,6 +125,12 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   setChapter1Cleared: (v) => set({ chapter1Cleared: v }),
   setDruidGroveUnlocked: (v) => set({ druidGroveUnlocked: v }),
   setUnlockedUpgrades: (u) => set({ unlockedUpgrades: u }),
+  markNpcKnown: (npcId) =>
+    set((s) =>
+      s.knownNpcs.includes(npcId)
+        ? s
+        : { knownNpcs: [...s.knownNpcs, npcId] },
+    ),
 
   resetMeta: () =>
     set({
@@ -129,5 +144,6 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       unlockedUpgrades: {},
       chapter1Cleared: false,
       druidGroveUnlocked: false,
+      knownNpcs: [],
     }),
 }));

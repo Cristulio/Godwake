@@ -278,6 +278,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       boldApproachBosses: [],
     });
     useMetaStore.getState().setHasReincarnated(true);
+    // First death = Imoen reveal beat. She's whispered through the falling,
+    // the panic, the bleeding-out — by the time the soul wakes again she's
+    // earned her name in the player's head. One-time-per-soul.
+    useMetaStore.getState().markNpcKnown('imoen');
   },
 
   abandonDelve: () => {

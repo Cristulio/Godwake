@@ -124,6 +124,7 @@ interface GameState {
   unlockedUpgrades: UnlockedUpgrades;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
+  knownNpcs: string[];
 
   // Navigation
   goToTitle: () => void;
@@ -211,6 +212,7 @@ interface PersistedSnapshot {
   unlockedUpgrades: UnlockedUpgrades;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
+  knownNpcs: string[];
   __metadata?: SaveSlotMetadata;
 }
 
@@ -245,6 +247,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     unlockedUpgrades: meta.unlockedUpgrades,
     chapter1Cleared: meta.chapter1Cleared,
     druidGroveUnlocked: meta.druidGroveUnlocked,
+    knownNpcs: meta.knownNpcs,
     __metadata: {
       savedAt: new Date().toISOString(),
       characterName: ch.character?.name ?? '—',
@@ -286,6 +289,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
     unlockedUpgrades: s.unlockedUpgrades ?? {},
     chapter1Cleared: !!s.chapter1Cleared,
     druidGroveUnlocked: !!s.druidGroveUnlocked,
+    knownNpcs: Array.isArray(s.knownNpcs) ? s.knownNpcs : [],
   });
   useScreenStore.setState({
     screen: (s.screen ?? 'hub') as Screen,
@@ -347,6 +351,7 @@ export const useGameStore = create<GameState>()(
           monsterKillingAbilities: m.monsterKillingAbilities,
           unlockedUpgrades: m.unlockedUpgrades,
           chapter1Cleared: m.chapter1Cleared,
+          knownNpcs: m.knownNpcs,
           druidGroveUnlocked: m.druidGroveUnlocked,
         });
       };
@@ -388,6 +393,7 @@ export const useGameStore = create<GameState>()(
         unlockedUpgrades: useMetaStore.getState().unlockedUpgrades,
         chapter1Cleared: useMetaStore.getState().chapter1Cleared,
         druidGroveUnlocked: useMetaStore.getState().druidGroveUnlocked,
+        knownNpcs: useMetaStore.getState().knownNpcs,
 
         goToTitle: () => useScreenStore.getState().goToTitle(),
         goToHub: () => useScreenStore.getState().goToHub(),

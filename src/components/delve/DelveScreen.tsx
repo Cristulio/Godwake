@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { useMetaStore } from '../../stores/metaStore';
 import { currentRoom } from '../../engine/delve';
 import { createCombat } from '../../engine/combat';
 import { rollRoomGoldDrops } from '../../engine/combat/goldDrop';
@@ -294,9 +295,12 @@ export function DelveScreen() {
               }
               // Chained Godwake delve: Ilyich is the Ch1 boss at room-10,
               // not the final. Flag the kill so the chapter1Cleared flip
-              // survives a subsequent death deeper in the run.
+              // survives a subsequent death deeper in the run. Also the
+              // reveal beat — the player has just defeated the Voice's
+              // lieutenant, and the Voice steps forward with a name.
               if (room.id === 'room-10' && delve.chapterId === 'godwake') {
                 useGameStore.getState().markChapter1BossKilled();
+                useMetaStore.getState().markNpcKnown('irenicus');
               }
             } else {
               setCombat(null);
