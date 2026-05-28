@@ -369,7 +369,9 @@ export function applyEventOutcome(
         effectsApplied.push({
           kind: effect.kind,
           detail:
-            effect.level === 'full' ? 'full intel on the boss' : 'partial intel on the boss',
+            effect.level === 'full'
+              ? "Boss's exact stats revealed in the fight"
+              : 'Partial boss info revealed',
         });
         break;
       }

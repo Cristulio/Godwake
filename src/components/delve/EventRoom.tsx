@@ -90,13 +90,23 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   return (
     <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(212,176,98,0.07),transparent_55%)]">
       <EventMotif type={template.eventType} />
-      <header className="pb-3 border-b border-[var(--color-border-warm)]">
-        <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-          {template.title.toUpperCase()}
-        </h1>
-        <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-          Event · The road pauses
-        </p>
+      <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
+            {template.title.toUpperCase()}
+          </h1>
+          <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
+            Event · The road pauses
+          </p>
+        </div>
+        <div data-testid="gold-balance" className="shrink-0 text-right">
+          <div className="text-[var(--color-accent-gold)] text-lg font-bold tracking-wider">
+            {character.goldInPocket}g
+          </div>
+          <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
+            in pocket
+          </div>
+        </div>
       </header>
 
       <Panel tone="warm" className="bg-gradient-to-br from-[#2d2418] to-[#221a14]">
