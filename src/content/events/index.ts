@@ -485,9 +485,9 @@ const POOL: EventTemplate[] = [
         hint: 'Athkatla teaches its children — if the swing lands clean.',
         successChance: 0.7,
         outcome: {
-          resolution: 'He sprawls in the gutter. The knife rings on the cobbles. You pocket it without looking back.',
+          resolution: 'He sprawls in the gutter. The knife rings on the cobbles. A handful of silver spills from a torn lining you hadn\'t noticed; you pocket it without looking back.',
           effects: [
-            { kind: 'gold_delta', amount: 2 },
+            { kind: 'gold_delta', amount: 5 },
             { kind: 'grant_quirk_reroll' },
           ],
         },
