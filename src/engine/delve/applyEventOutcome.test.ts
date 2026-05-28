@@ -130,11 +130,16 @@ describe('applyEventOutcome — effect kinds', () => {
     expect(r.character.quirks).toHaveLength(2);
     expect(r.character.quirks[1]).toBe('sun-touched');
     expect(r.character.quirks[0]).not.toBe(baneId);
+    const reroll = r.effectsApplied.find((e) => e.kind === 'grant_quirk_reroll');
+    expect(reroll?.detail).toMatch(/^Bane shaken: .+ → .+$/);
   });
 
   it('grant_quirk_reroll: no-bane grants fallback gold (L1 smart-fallback)', () => {
     // L1 characters have no bane quirks yet, so the reroll no-ops on quirks
     // but pays out a small gold compensation so the choice never feels empty.
+    // The rewards list shows ONE gold line ("+5g"); the fallback flavor moves
+    // into the resolution so the rewards list isn't cluttered with engine
+    // jargon like "(no bane to shake)".
     const char = makeChar({ goldInPocket: 10, quirks: [] });
     const r = applyEventOutcome(
       char,
@@ -143,11 +148,30 @@ describe('applyEventOutcome — effect kinds', () => {
     );
     expect(r.character.quirks).toEqual([]);
     expect(r.character.goldInPocket).toBe(15);
-    expect(r.effectsApplied.map((e) => e.kind)).toEqual([
-      'grant_quirk_reroll',
-      'gold_delta',
-    ]);
-    expect(r.effectsApplied[1].detail).toContain('+5g');
+    expect(r.effectsApplied.map((e) => e.kind)).toEqual(['gold_delta']);
+    expect(r.effectsApplied[0].detail).toBe('+5g');
+    expect(r.effectsApplied[0].detail).not.toContain('no bane');
+    expect(r.resolution).toContain('no bane');
+  });
+
+  it('grant_quirk_reroll: no-bane fallback merges with explicit gold_delta into one line', () => {
+    // Wounded-captain "loot-him" pays +5g explicitly AND triggers the no-bane
+    // fallback (+5g more). Player should see ONE "+10g" line, not two "+5g"
+    // lines.
+    const char = makeChar({ goldInPocket: 0, quirks: [] });
+    const r = applyEventOutcome(
+      char,
+      outcome({
+        effects: [
+          { kind: 'gold_delta', amount: 5 },
+          { kind: 'grant_quirk_reroll' },
+        ],
+      }),
+      createDiceRoller(1),
+    );
+    expect(r.character.goldInPocket).toBe(10);
+    expect(r.effectsApplied.map((e) => e.kind)).toEqual(['gold_delta']);
+    expect(r.effectsApplied[0].detail).toBe('+10g');
   });
 
   it('grant_quirk_reroll: only-boon also triggers fallback (no bane present)', () => {
@@ -161,7 +185,7 @@ describe('applyEventOutcome — effect kinds', () => {
     expect(r.character.goldInPocket).toBe(5);
   });
 
-  it('grant_quirk_reroll: per-event fallbackText surfaces when supplied', () => {
+  it('grant_quirk_reroll: per-event fallbackText surfaces in the resolution panel', () => {
     const char = makeChar({ quirks: [] });
     const r = applyEventOutcome(
       char,
@@ -175,8 +199,10 @@ describe('applyEventOutcome — effect kinds', () => {
       }),
       createDiceRoller(1),
     );
-    const reroll = r.effectsApplied.find((e) => e.kind === 'grant_quirk_reroll');
-    expect(reroll?.detail).toBe('Eilistraee finds no bane to shake from you.');
+    expect(r.resolution).toContain('Eilistraee finds no bane to shake from you.');
+    expect(
+      r.effectsApplied.find((e) => e.kind === 'grant_quirk_reroll'),
+    ).toBeUndefined();
   });
 
   it('grant_quirk_reroll: default fallback wording is god-agnostic', () => {
@@ -186,9 +212,8 @@ describe('applyEventOutcome — effect kinds', () => {
       outcome({ effects: [{ kind: 'grant_quirk_reroll' }] }),
       createDiceRoller(1),
     );
-    const reroll = r.effectsApplied.find((e) => e.kind === 'grant_quirk_reroll');
-    expect(reroll?.detail).not.toContain('Waukeen');
-    expect(reroll?.detail).toContain('no bane');
+    expect(r.resolution).not.toContain('Waukeen');
+    expect(r.resolution).toContain('no bane');
   });
 
   it('grant_quirk_reroll: when a bane is present, fallback gold is NOT granted', () => {

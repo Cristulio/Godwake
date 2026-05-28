@@ -209,6 +209,13 @@ export interface Character {
    */
   delveAttackBonus?: number;
   /**
+   * Per-delve spell-attack bonus granted by the wizard-flavored camp choice
+   * "Whet the Mind". Mirrors `delveAttackBonus` for spell attack rolls so
+   * Sharpen-the-Blade has a class-appropriate analogue for casters. Cleared
+   * in `finishDelve`.
+   */
+  delveSpellAttackBonus?: number;
+  /**
    * Per-delve initiative bonus granted by event choices (e.g. picking up
    * the bone on the stake). Stacks with `permanentBonuses.init`. Cleared in
    * `finishDelve` / `failDelve` / `abandonDelve`.

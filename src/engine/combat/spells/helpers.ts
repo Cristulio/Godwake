@@ -43,7 +43,8 @@ export function spellAttackBonus(character: Readonly<Character>): number {
   return (
     abilityModifier(scores.int) +
     proficiencyBonus(character.level) +
-    (character.permanentBonuses?.spellAttack ?? 0)
+    (character.permanentBonuses?.spellAttack ?? 0) +
+    (character.delveSpellAttackBonus ?? 0)
   );
 }
 

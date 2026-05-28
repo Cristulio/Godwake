@@ -113,9 +113,9 @@ Stable per-seed delve content across cells: identical events seen, only characte
 
 | Scenario | Detail surfaced |
 |---|---|
-| No quirks at all | The gods find no bane to shake from you. \| +5g (no bane to shake) |
-| One bane (Vertigo) → re-roll | re-rolled Vertigo → Hangry |
-| Only a boon (Tymora's Eye) — no bane to shake | The gods find no bane to shake from you. \| +5g (no bane to shake) |
+| No quirks at all | probe The gods find no bane to shake from you. \| +5g |
+| One bane (Vertigo) → re-roll | probe \| Bane shaken: Vertigo → Hangry |
+| Only a boon (Tymora's Eye) — no bane to shake | probe The gods find no bane to shake from you. \| +5g |
 
 ## F. Reward EV scan (success-chance choices)
 

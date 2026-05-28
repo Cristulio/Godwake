@@ -144,21 +144,37 @@ const QUIRK_REROLL_FALLBACK_GOLD = 5;
 /**
  * Replace one bane quirk with a fresh random pick from the pool. When the
  * character carries no bane quirks the reroll no-ops and a small gold
- * compensation is granted instead (see QUIRK_REROLL_FALLBACK_GOLD). The
- * replacement may roll back to the same quirk slot in rare cases — that's
- * fine; a soul that walked out the door of a god and came back with the
- * same mark is a story.
+ * compensation is granted instead (see QUIRK_REROLL_FALLBACK_GOLD).
+ *
+ * Returns a discriminated result so the caller can decide where to surface
+ * each piece: a real reroll yields a one-line "Bane shaken" effect; a
+ * fallback yields gold (merged into the existing gold line) and a flavor
+ * suffix that gets appended to the resolution, not the rewards list.
  */
+type RerollResult =
+  | {
+      kind: 'rerolled';
+      character: Character;
+      oldName: string;
+      newName: string;
+    }
+  | {
+      kind: 'no-marks-left';
+      character: Character;
+      detail: string;
+    }
+  | {
+      kind: 'fallback-gold';
+      character: Character;
+      fallbackText: string;
+      fallbackGold: number;
+    };
+
 function rerollOneBaneQuirk(
   character: Character,
   roller: DiceRoller,
   fallbackText?: string,
-): {
-  character: Character;
-  detail: string;
-  /** Extra effect to surface alongside the reroll (e.g. fallback gold). */
-  extra?: AppliedEffect;
-} {
+): RerollResult {
   const baneIdx = character.quirks.findIndex((qid) => {
     try {
       return getQuirk(qid).sentiment === 'bane';
@@ -171,21 +187,22 @@ function rerollOneBaneQuirk(
       ...character,
       goldInPocket: character.goldInPocket + QUIRK_REROLL_FALLBACK_GOLD,
     };
-    const text = fallbackText ?? 'The gods find no bane to shake from you.';
     return {
+      kind: 'fallback-gold',
       character: next,
-      detail: text,
-      extra: {
-        kind: 'gold_delta',
-        detail: `+${QUIRK_REROLL_FALLBACK_GOLD}g (no bane to shake)`,
-      },
+      fallbackText: fallbackText ?? 'The gods find no bane to shake from you.',
+      fallbackGold: QUIRK_REROLL_FALLBACK_GOLD,
     };
   }
   const pool = listQuirks();
   const owned = new Set(character.quirks);
   const others = pool.filter((q) => !owned.has(q.id));
   if (others.length === 0) {
-    return { character, detail: 'The gods have no marks left to trade you.' };
+    return {
+      kind: 'no-marks-left',
+      character,
+      detail: 'The gods have no marks left to trade you.',
+    };
   }
   const replacement = others[roller.roll('1d100').total % others.length];
   const nextQuirks = [...character.quirks];
@@ -198,8 +215,10 @@ function rerollOneBaneQuirk(
     // already fell back to id
   }
   return {
+    kind: 'rerolled',
     character: { ...character, quirks: nextQuirks },
-    detail: `re-rolled ${oldName} → ${replacement.name}`,
+    oldName,
+    newName: replacement.name,
   };
 }
 
@@ -221,6 +240,13 @@ export function applyEventOutcome(
   let next: Character = { ...character };
   const effectsApplied: AppliedEffect[] = [];
   let ambush: EventOutcomeResult['ambush'];
+  // Suffix flavor lines (e.g. quirk-reroll fallback) that should appear in the
+  // resolution panel instead of the rewards list.
+  const resolutionSuffixes: string[] = [];
+  // Sum of gold added by silent paths (e.g. the no-bane fallback). Merged
+  // into the rewards-list gold line at the end so the player sees one
+  // total instead of duplicate lines.
+  let silentGoldDelta = 0;
 
   for (const effect of outcome.effects) {
     switch (effect.kind) {
@@ -289,14 +315,21 @@ export function applyEventOutcome(
         break;
       }
       case 'grant_quirk_reroll': {
-        const { character: rerolled, detail, extra } = rerollOneBaneQuirk(
-          next,
-          roller,
-          effect.fallbackText,
-        );
-        next = rerolled;
-        effectsApplied.push({ kind: effect.kind, detail });
-        if (extra) effectsApplied.push(extra);
+        const res = rerollOneBaneQuirk(next, roller, effect.fallbackText);
+        next = res.character;
+        if (res.kind === 'rerolled') {
+          effectsApplied.push({
+            kind: effect.kind,
+            detail: `Bane shaken: ${res.oldName} → ${res.newName}`,
+          });
+        } else if (res.kind === 'no-marks-left') {
+          effectsApplied.push({ kind: effect.kind, detail: res.detail });
+        } else {
+          // Fallback: surface the flavor in the resolution panel and merge
+          // the consolation gold into the single rewards-list gold line.
+          resolutionSuffixes.push(res.fallbackText);
+          silentGoldDelta += res.fallbackGold;
+        }
         break;
       }
       case 'apply_attack_bonus_run': {
@@ -365,9 +398,33 @@ export function applyEventOutcome(
     }
   }
 
+  if (silentGoldDelta !== 0) {
+    const existingIdx = effectsApplied.findIndex((e) => e.kind === 'gold_delta');
+    if (existingIdx === -1) {
+      effectsApplied.push({
+        kind: 'gold_delta',
+        detail: `${silentGoldDelta >= 0 ? '+' : ''}${silentGoldDelta}g`,
+      });
+    } else {
+      const existing = effectsApplied[existingIdx];
+      const match = existing.detail.match(/(-?\d+)g/);
+      const prev = match ? parseInt(match[1], 10) : 0;
+      const merged = prev + silentGoldDelta;
+      effectsApplied[existingIdx] = {
+        kind: 'gold_delta',
+        detail: `${merged >= 0 ? '+' : ''}${merged}g`,
+      };
+    }
+  }
+
+  const resolution =
+    resolutionSuffixes.length > 0
+      ? `${outcome.resolution} ${resolutionSuffixes.join(' ')}`
+      : outcome.resolution;
+
   return {
     character: next,
-    resolution: outcome.resolution,
+    resolution,
     effectsApplied,
     ambush,
   };

@@ -402,6 +402,29 @@ describe('Wizard — long rest refresh', () => {
   });
 });
 
+describe('Wizard — Whet the Mind (delveSpellAttackBonus)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('adds delveSpellAttackBonus to a Fire Bolt attack roll', () => {
+    const goblin = getMonster('goblin');
+    const baseline = makeWizard();
+    const whetted: Character = { ...makeWizard(), delveSpellAttackBonus: 1 };
+
+    const seed = 7;
+    let stateA = createCombat({ roller: createDiceRoller(seed), character: baseline, monsters: [{ def: goblin }] }).state;
+    const idA = findMonster(stateA).id;
+    stateA = castSpell({ roller: createDiceRoller(seed), character: baseline, state: stateA, spellId: 'fire-bolt', targetId: idA }).state;
+
+    let stateB = createCombat({ roller: createDiceRoller(seed), character: whetted, monsters: [{ def: goblin }] }).state;
+    const idB = findMonster(stateB).id;
+    stateB = castSpell({ roller: createDiceRoller(seed), character: whetted, state: stateB, spellId: 'fire-bolt', targetId: idB }).state;
+
+    const totalA = Number(stateA.log.find((l) => l.text.includes('Fire Bolt'))!.text.match(/= (\d+) vs AC/)?.[1]);
+    const totalB = Number(stateB.log.find((l) => l.text.includes('Fire Bolt'))!.text.match(/= (\d+) vs AC/)?.[1]);
+    expect(totalB - totalA).toBe(1);
+  });
+});
+
 describe('Wizard — Grove caster bonuses', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 

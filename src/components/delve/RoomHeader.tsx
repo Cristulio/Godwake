@@ -78,8 +78,8 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
                 <h2 className="font-display text-[var(--color-accent-amber)] text-base uppercase tracking-[0.2em]">
                   ◆ Soul-marks
                 </h2>
-                <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
-                  Quirks persist between lives · Blessings wipe at Phandalin
+                <p className="text-[var(--color-text-dim)] text-xs italic mt-1 normal-case tracking-normal">
+                  Quirks are scars of the soul — they survive the wheel. Blessings belong to the body and end with it.
                 </p>
               </div>
               <button
