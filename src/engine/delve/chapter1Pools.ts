@@ -54,13 +54,6 @@ export const WARMUP_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'stirge', count: 1 }],
     xpReward: 48,
   },
-  {
-    title: 'The Iron Cells',
-    flavorText:
-      'A second corpse-shape pries itself out of the rubble at the corner. Older bones, harder bones — and a longer memory of being killed.',
-    monsters: [{ defId: 'bone-stalker', count: 1 }],
-    xpReward: 72,
-  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
