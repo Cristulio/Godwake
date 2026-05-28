@@ -44,7 +44,7 @@ export const ANTITOXIN: Consumable = ConsumableSchema.parse({
 export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
   id: 'potion-of-heroism',
   kind: 'consumable',
-  name: 'Potion of Heroism',
+  name: 'Potion of Vitality',
   effect: 'heal',
   healDice: '3d6+6',
   cost: 180,
@@ -52,7 +52,7 @@ export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
   rarity: 'uncommon',
   actionCost: 'action',
   description:
-    'A pale gold liquid that smells of beaten copper and pipe-smoke. The label, in a hand that has worn off in places, calls it a draught of valour — drink before the fight, walk straighter into it. Restores 3d6+6 hit points.',
+    'A pale gold liquid that smells of beaten copper and pipe-smoke. A deep restorative — one long swallow knits torn flesh and steadies the blood. Restores 3d6+6 hit points.',
 });
 
 export const SCROLL_OF_HEALING_WORD: Consumable = ConsumableSchema.parse({

@@ -30,7 +30,7 @@ export const WIZARD: Class = ClassSchema.parse({
         id: 'arcane-cantrips',
         name: 'Arcane Cantrips',
         description:
-          'You wield Fire Bolt (1d10 fire, at-will) and Mage Hand (a flicker of force at your fingertips).',
+          'You wield Fire Bolt (1d10 fire, at-will) — a mote of flame flung from the fingertips, yours to throw as often as the fight demands.',
         mechanicKey: 'arcane-cantrips',
       },
     ],
@@ -89,10 +89,11 @@ export const WIZARD: Class = ClassSchema.parse({
     ],
     '6': [
       {
-        id: 'arcane-recovery',
-        name: 'Arcane Recovery',
+        id: 'asi-6',
+        name: 'Ability Score Improvement',
         description:
-          'Between fights, a moment of focused breath recovers a sliver of arcane reserve. (Flavor — engine support pending.)',
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
       },
     ],
     '8': [

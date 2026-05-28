@@ -66,18 +66,11 @@ export const ROGUE: Class = ClassSchema.parse({
     ],
     '6': [
       {
-        id: 'expertise-6',
-        name: 'Expertise',
+        id: 'asi-6',
+        name: 'Ability Score Improvement',
         description:
-          'Your proficiency bonus is doubled for two of your skill proficiencies. (Flavor — engine support pending.)',
-      },
-    ],
-    '7': [
-      {
-        id: 'evasion',
-        name: 'Evasion',
-        description:
-          'When subject to an effect that allows a Dex save for half damage, a successful save takes no damage and a fail takes half. (Flavor — engine support pending.)',
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
       },
     ],
     '8': [

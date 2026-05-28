@@ -13,13 +13,14 @@ export const WOOD_ELF: Race = RaceSchema.parse({
   },
   speed: 35,
   size: 'medium',
-  validClasses: ['fighter', 'wizard', 'cleric', 'rogue', 'barbarian'],
+  validClasses: ['fighter', 'wizard', 'rogue'],
+  bonusHpPerLevel: 1,
   features: [
     {
-      id: 'wood-elf-fleetfoot',
-      name: 'Fleet of Foot',
+      id: 'wood-elf-fey-vigor',
+      name: 'Fey-Touched Vigor',
       description:
-        'Long-lived archers of the high forest. Tread quiet on Faerûnian leaf-loam — your base walking speed is 35 feet.',
+        'Long-lived archers of the high forest — quick to mend, slow to fall. Your hit point maximum increases by 1 for every character level.',
     },
   ],
 });

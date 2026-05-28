@@ -646,7 +646,7 @@ const POOL: EventTemplate[] = [
         outcome: {
           resolution:
             'You speak the syllables. The page goes warm. Something coils into your chest — a small thread of the Weave, willing to ride with you the rest of the road.',
-          effects: [{ kind: 'grant_blessing_id', id: 'mystras-whisper' }],
+          effects: [{ kind: 'grant_blessing', random: true }],
         },
       },
       {
@@ -794,7 +794,7 @@ const POOL: EventTemplate[] = [
             'You set the coin at the figure\'s feet. The candle steadies further. A warmth that has nothing to do with the candle settles into your chest for the rest of the road.',
           effects: [
             { kind: 'gold_delta', amount: -20 },
-            { kind: 'grant_blessing_id', id: 'selunes-tide' },
+            { kind: 'grant_blessing_id', id: 'selunes-veil' },
           ],
         },
       },
