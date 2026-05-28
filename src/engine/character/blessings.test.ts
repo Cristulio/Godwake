@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createDiceRoller } from '../dice';
 import { BlessingSchema, type Blessing } from '../../schemas/blessing';
-import { blessingSignature, rollBlessingOptions } from './blessings';
+import { aggregateBlessingModifiers, blessingSignature, rollBlessingOptions } from './blessings';
 
 const mocks = vi.hoisted(() => ({
   useFakePool: false,
@@ -106,6 +106,30 @@ describe('rollBlessingOptions — signature dedup', () => {
       const roller = createDiceRoller(42);
       const result = rollBlessingOptions(roller, 3);
       expect(result.length).toBe(1);
+    });
+  });
+});
+
+describe('aggregateBlessingModifiers — temp HP does not stack', () => {
+  it('takes max-of-individual for extraTempHpPerRoom (not sum)', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('lath', { extraTempHpPerRoom: 3 }),
+      fakeBlessing('ilm', { extraTempHpPerRoom: 2 }),
+    ];
+    withFakePool(pool, () => {
+      const mods = aggregateBlessingModifiers(['lath', 'ilm']);
+      expect(mods.extraTempHpPerRoom).toBe(3);
+    });
+  });
+
+  it('still sums numeric fields that are designed to stack (acBonus)', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('helm', { acBonus: 1 }),
+      fakeBlessing('mystra', { acBonus: 1 }),
+    ];
+    withFakePool(pool, () => {
+      const mods = aggregateBlessingModifiers(['helm', 'mystra']);
+      expect(mods.acBonus).toBe(2);
     });
   });
 });
