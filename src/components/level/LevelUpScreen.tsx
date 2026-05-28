@@ -8,7 +8,7 @@ import { hpGainForLevelUp } from '../../engine/character/leveling';
 import { effectiveAbilityScores } from '../../engine/character/derived';
 import type { AbilityName, AbilityScores } from '../../types/abilities';
 import type { Character } from '../../types/character';
-import { SKILL_DESCRIPTIONS, type SkillName } from '../../types/skills';
+import { SKILL_DESCRIPTIONS, isSkillEnabled, type SkillName } from '../../types/skills';
 
 const SKILL_LABEL: Record<SkillName, string> = {
   acrobatics: 'Acrobatics',
@@ -77,8 +77,9 @@ export function LevelUpScreen() {
   const isAsiLevel = features.some((f) => f.mechanicKey === 'asi');
 
   const skillGrants = cls.skillGrantsByLevel?.[String(nextLevel)] ?? 0;
+  // Disabled (unwired) skills don't surface — match character creation.
   const availableSkills = cls.skillChoiceFrom.filter(
-    (s) => !c.skillProficiencies.includes(s),
+    (s) => isSkillEnabled(s) && !c.skillProficiencies.includes(s),
   );
   const skillsValid = pickedSkills.length === Math.min(skillGrants, availableSkills.length);
 
@@ -248,7 +249,7 @@ export function LevelUpScreen() {
               Already-trained skills are unavailable.
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {cls.skillChoiceFrom.map((s) => {
+              {cls.skillChoiceFrom.filter(isSkillEnabled).map((s) => {
                 const owned = c.skillProficiencies.includes(s);
                 const selected = pickedSkills.includes(s);
                 const disabled =

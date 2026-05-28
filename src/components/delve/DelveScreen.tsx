@@ -424,7 +424,6 @@ export function DelveScreen() {
         <CampRoom
           room={room}
           onPressSouth={() => advanceRoom()}
-          onMakeForPhandalin={() => useGameStore.getState().concludeDelveAtCamp()}
         />
       </div>
     );

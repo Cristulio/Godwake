@@ -137,7 +137,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // dice roller — this is the natural seam.
     const pilgrimRank = unlocked['pilgrims-step'] ?? 0;
     if (pilgrimRank > 0) {
-      const rolled = rollBlessingOptions(getActiveRoller(), pilgrimRank);
+      const rolled = rollBlessingOptions(
+        getActiveRoller(),
+        pilgrimRank,
+        withQuirkBudgets.classId,
+      );
       withQuirkBudgets = {
         ...withQuirkBudgets,
         blessings: [...withQuirkBudgets.blessings, ...rolled],

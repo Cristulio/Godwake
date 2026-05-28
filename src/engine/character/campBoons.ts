@@ -11,6 +11,10 @@ export interface CampBoonModifiers {
   acBonus?: number;
   damageBonus?: number;
   spellDcBonus?: number;
+  /** +N to spell attack rolls (Wizard parallel to Eye of the Hawk). */
+  spellAttackBonus?: number;
+  /** +N to spell damage (Wizard parallel to Blade of the Vow / Might). */
+  spellDamageBonus?: number;
   wisSaveBonus?: number;
   /** Blade of the Vow grants 1 lowest-die reroll per combat. */
   weaponDamageRerollPerCombat?: number;
@@ -22,6 +26,9 @@ export function aggregateCampBoonMods(boonIds: readonly string[]): CampBoonModif
     switch (id) {
       case 'eye-of-the-hawk':
         acc.attackBonus = (acc.attackBonus ?? 0) + 1;
+        break;
+      case 'eye-of-the-mind':
+        acc.spellAttackBonus = (acc.spellAttackBonus ?? 0) + 1;
         break;
       case 'stillness-of-the-mind':
         acc.wisSaveBonus = (acc.wisSaveBonus ?? 0) + 1;
@@ -38,6 +45,9 @@ export function aggregateCampBoonMods(boonIds: readonly string[]): CampBoonModif
       case 'blade-of-the-vow':
         acc.weaponDamageRerollPerCombat =
           (acc.weaponDamageRerollPerCombat ?? 0) + 3;
+        break;
+      case 'vow-of-the-tome':
+        acc.spellDamageBonus = (acc.spellDamageBonus ?? 0) + 1;
         break;
       // vigor / mantle / patience / eyes-of-the-lich are applied at pick-time
       // (HP bumps, stabilise budget, preview flag). They never read here.

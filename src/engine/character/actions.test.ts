@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
-import { rogueCunningActionMax, withResetActionEconomy } from './actions';
+import { rogueCunningActionMax } from './actions';
 import type { Character } from '../../types/character';
 
 function makeRogue(extra: Partial<Character> = {}): Character {
@@ -67,20 +67,3 @@ describe('rogueCunningActionMax — Shadowstep bonus', () => {
   });
 });
 
-describe('withResetActionEconomy — Pilgrim\'s Boots speed bonus', () => {
-  it('adds permanentSpeedBonus to movementRemaining each turn', () => {
-    const base = withResetActionEconomy(makeRogue());
-    const withBoots = withResetActionEconomy(makeRogue({ permanentSpeedBonus: 5 }));
-    expect(withBoots.actionEconomy.movementRemaining).toBe(
-      base.actionEconomy.movementRemaining + 5,
-    );
-  });
-
-  it('treats an undefined bonus as 0', () => {
-    const base = withResetActionEconomy(makeRogue());
-    const explicitZero = withResetActionEconomy(makeRogue({ permanentSpeedBonus: 0 }));
-    expect(explicitZero.actionEconomy.movementRemaining).toBe(
-      base.actionEconomy.movementRemaining,
-    );
-  });
-});

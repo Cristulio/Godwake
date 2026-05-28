@@ -20,7 +20,6 @@ type CampChoice = 'rest' | 'sharpen' | 'prayer';
 interface CampRoomProps {
   room: RoomSpec;
   onPressSouth: () => void;
-  onMakeForPhandalin: () => void;
 }
 
 const MERCHANT_POTION_IDS = [
@@ -32,7 +31,7 @@ const MERCHANT_POTION_IDS = [
   'cloak-of-faerun',
 ];
 
-export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomProps) {
+export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const campChoice = useGameStore((s) => s.delve?.campChoice ?? null);
@@ -85,7 +84,7 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
       // Snapshot the granted blessing so the UI can name it. The store's
       // `pickCampChoice('prayer')` would also roll, but it would be a
       // different (unseeded-equivalent) roll — drive it from here instead.
-      const [granted] = rollBlessingOptions(getActiveRoller(), 1);
+      const [granted] = rollBlessingOptions(getActiveRoller(), 1, character.classId);
       if (granted) {
         addBlessing(granted);
         setPrayerGrantedId(granted);
@@ -103,7 +102,7 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
   function openMerchant() {
     if (blessingOptions.length === 0) {
       const roller = getActiveRoller();
-      setBlessingOptions(rollBlessingOptions(roller, 3));
+      setBlessingOptions(rollBlessingOptions(roller, 3, character?.classId));
     }
     setMerchantOpen(true);
     setPurchaseMessage(null);
@@ -235,12 +234,9 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
         </Button>
       </Panel>
 
-      <div className="flex flex-col md:flex-row gap-3 justify-center mt-2">
+      <div className="flex justify-center mt-2">
         <Button variant="primary" onClick={onPressSouth}>
           Press on into the dark →
-        </Button>
-        <Button variant="secondary" onClick={onMakeForPhandalin}>
-          Turn back to Phandalin
         </Button>
       </div>
 
@@ -455,7 +451,7 @@ function CampBoonPicker({ tier, options, resolution, onPick }: CampBoonPickerPro
           ◆ Choose a Boon · Camp {tier}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
-          {resolved ? 'Resolved' : 'One pick — for the rest of the delve'}
+          {resolved ? 'Taken' : 'One pick — for the rest of the delve'}
         </div>
       </div>
 

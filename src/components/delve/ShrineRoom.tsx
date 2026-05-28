@@ -16,6 +16,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   const addBlessing = useGameStore((s) => s.addBlessing);
   const shrineOptionBonus = useGameStore((s) => s.character?.shrineOptionBonus ?? 0);
   const shrineTitheGold = useGameStore((s) => s.character?.shrineTitheGold ?? 0);
+  const classId = useGameStore((s) => s.character?.classId);
   const [options, setOptions] = useState<string[]>([]);
   const [chosen, setChosen] = useState<string | null>(null);
 
@@ -23,7 +24,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   useEffect(() => {
     const roller = getActiveRoller();
     const count = 3 + shrineOptionBonus;
-    setOptions(rollBlessingOptions(roller, count));
+    setOptions(rollBlessingOptions(roller, count, classId));
     // Shrine Tithe: pay out gold on each shrine entry.
     if (shrineTitheGold > 0) {
       const state = useGameStore.getState();

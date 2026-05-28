@@ -27,6 +27,16 @@ const ALL_BOONS: CampBoon[] = [
     flavor: 'A breath. A fixed star. The world narrowed to a single straight line.',
   },
   {
+    // Wizard-side parallel to Eye of the Hawk. Wizard spells either save-for-
+    // half or auto-hit, so +1 weapon-attack is dead; the matched-power swap is
+    // +1 to spell attack rolls, mirroring the Sharpen/Whet camp choice.
+    id: 'eye-of-the-mind',
+    tier: 1,
+    name: 'Eye of the Mind',
+    description: '+1 to all spell attack rolls for the rest of the delve.',
+    flavor: 'A breath. A glyph held steady in the mind. The Weave threads tauter for it.',
+  },
+  {
     id: 'stillness-of-the-mind',
     tier: 1,
     name: 'Stillness of the Mind',
@@ -80,6 +90,16 @@ const ALL_BOONS: CampBoon[] = [
     flavor: 'A vow muttered to long-dead saints. The blade does not forget.',
   },
   {
+    // Wizard-side parallel. Wizard never makes weapon-damage rolls in this
+    // build, so Blade of the Vow's reroll budget never fires. Match-power
+    // alternative: +1 spell damage on every spell that deals damage.
+    id: 'vow-of-the-tome',
+    tier: 3,
+    name: 'Vow of the Tome',
+    description: '+1 damage on every spell that deals damage, for the rest of the delve.',
+    flavor: 'A vow muttered into the spine of an open book. The Weave reads back.',
+  },
+  {
     id: 'eyes-of-the-lich',
     tier: 3,
     name: 'Eyes of the Lich',
@@ -103,15 +123,20 @@ export function listCampBoons(): CampBoon[] {
 }
 
 /**
- * The three boons offered at the given camp tier. Tier 2 swaps the middle
- * option by class — Wizards see Surge of the Storm (spell DC), other classes
- * see Might of the Mountain (weapon damage).
+ * The three boons offered at the given camp tier. Every tier swaps its
+ * weapon-attack-keyed slot for a spell-keyed equivalent when the character
+ * is a Wizard, mirroring the Sharpen/Whet camp-choice pattern. Power tier
+ * is matched 1:1 — the wizard variant grants an equivalent magnitude lever
+ * on the spell side.
  */
 export function boonsForCampTier(tier: CampBoonTier, classId: ClassId): CampBoon[] {
   if (tier === 1) {
+    const middle = classId === 'wizard'
+      ? getCampBoon('eye-of-the-mind')
+      : getCampBoon('eye-of-the-hawk');
     return [
       getCampBoon('vigor-of-the-road'),
-      getCampBoon('eye-of-the-hawk'),
+      middle,
       getCampBoon('stillness-of-the-mind'),
     ];
   }
@@ -125,9 +150,12 @@ export function boonsForCampTier(tier: CampBoonTier, classId: ClassId): CampBoon
       getCampBoon('patience-of-ilmater'),
     ];
   }
+  const middle = classId === 'wizard'
+    ? getCampBoon('vow-of-the-tome')
+    : getCampBoon('blade-of-the-vow');
   return [
     getCampBoon('mantle-of-the-slain'),
-    getCampBoon('blade-of-the-vow'),
+    middle,
     getCampBoon('eyes-of-the-lich'),
   ];
 }

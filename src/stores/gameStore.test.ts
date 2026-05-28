@@ -13,7 +13,6 @@ import { useScreenStore } from './screenStore';
 import { useCombatStore } from './combatStore';
 import { getUpgrade } from '../content/upgrades';
 import { applyPermanentUpgrade } from '../engine/character/upgrades';
-import { withResetActionEconomy } from '../engine/character/actions';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
 import { createGodwakeDelve } from '../engine/delve';
 import { effectiveAbilityScores } from '../engine/character/derived';
@@ -274,22 +273,17 @@ describe('Grove upgrade — Pilgrim\'s Boots', () => {
     expect(up.costForRank(1)).toBe(25);
   });
 
-  it('purchase at 25 renown succeeds and bumps movement at delve start', () => {
+  it('purchase at 25 renown succeeds and bumps maximum HP', () => {
     useCharacterStore.setState({
       character: { ...useCharacterStore.getState().character!, renown: 25 },
     });
+    const before = useCharacterStore.getState().character!.permanentBonuses?.hp ?? 0;
     const res = useGameStore.getState().purchaseUpgrade('pilgrims-boots');
     expect(res.ok).toBe(true);
     const ch = useCharacterStore.getState().character!;
     expect(ch.renown).toBe(0);
-    expect(ch.permanentSpeedBonus).toBe(5);
+    expect((ch.permanentBonuses?.hp ?? 0) - before).toBe(2);
     expect(useMetaStore.getState().unlockedUpgrades['pilgrims-boots']).toBe(1);
-    const baseSpeed = withResetActionEconomy({
-      ...ch,
-      permanentSpeedBonus: 0,
-    }).actionEconomy.movementRemaining;
-    const withBoots = withResetActionEconomy(ch).actionEconomy.movementRemaining;
-    expect(withBoots).toBe(baseSpeed + 5);
   });
 
   it('purchase at 24 renown fails', () => {
@@ -300,10 +294,11 @@ describe('Grove upgrade — Pilgrim\'s Boots', () => {
     expect(res.ok).toBe(false);
   });
 
-  it('apply() adds +5 ft via applyPermanentUpgrade', () => {
-    const ch = { ...useCharacterStore.getState().character!, permanentSpeedBonus: 0 };
+  it('apply() adds +2 HP via applyPermanentUpgrade', () => {
+    const ch = useCharacterStore.getState().character!;
+    const beforeHp = ch.permanentBonuses?.hp ?? 0;
     const after = applyPermanentUpgrade(ch, 'pilgrims-boots', 1);
-    expect(after.permanentSpeedBonus).toBe(5);
+    expect((after.permanentBonuses?.hp ?? 0) - beforeHp).toBe(2);
   });
 });
 

@@ -10,7 +10,7 @@ export function withResetActionEconomy(character: Character): Character {
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: race.speed + (character.permanentSpeedBonus ?? 0),
+      movementRemaining: race.speed,
     },
   };
 }

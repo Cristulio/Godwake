@@ -13,7 +13,7 @@ import {
   type AbilityScores,
 } from '../../types/abilities';
 import { STANDARD_ARRAY } from '../../engine/character/initialize';
-import { SKILL_DESCRIPTIONS, type SkillName } from '../../types/skills';
+import { SKILL_DESCRIPTIONS, isSkillEnabled, type SkillName } from '../../types/skills';
 import type { ClassPreset } from '../../schemas/class';
 
 type Step = 1 | 2 | 3 | 4;
@@ -140,7 +140,16 @@ export function CharacterCreationScreen() {
   const preset: ClassPreset | null = cls?.preset ?? null;
 
   const allAssigned = ABILITY_NAMES.every((a) => typeof assignments[a] === 'number');
-  const skillsValid = cls ? skills.length === cls.skillChoiceCount : false;
+  // Only enabled skills surface in the picker — disabled ones are hidden per the
+  // no-flavor-only rule. The class's nominal skillChoiceCount may exceed what's
+  // enabled today; clamp so the picker is always satisfiable.
+  const enabledSkillsForClass = cls
+    ? cls.skillChoiceFrom.filter(isSkillEnabled)
+    : [];
+  const effectiveSkillCount = cls
+    ? Math.min(cls.skillChoiceCount, enabledSkillsForClass.length)
+    : 0;
+  const skillsValid = cls ? skills.length === effectiveSkillCount : false;
   const nameValid = name.trim().length > 0;
 
   function pickClass(next: ClassId) {
@@ -167,7 +176,7 @@ export function CharacterCreationScreen() {
     if (!cls) return;
     setSkills((prev) => {
       if (prev.includes(s)) return prev.filter((x) => x !== s);
-      if (prev.length >= cls.skillChoiceCount) return prev;
+      if (prev.length >= effectiveSkillCount) return prev;
       return [...prev, s];
     });
   }
@@ -175,12 +184,21 @@ export function CharacterCreationScreen() {
   function applyPreset() {
     if (!preset || !classId) return;
     // Pull the recommended race through Zod so a content typo can't escape
-    // into UI state.
+    // into UI state. Filter the preset's skills down to enabled ones; if the
+    // preset recommended a now-disabled skill, fall back to the first enabled
+    // option from the class list so the player isn't dropped into an invalid
+    // state.
     const presetRace = RaceIdSchema.parse(preset.recommendedRaceId);
+    const recommended = preset.recommendedSkills.filter(isSkillEnabled);
+    const filled = [...recommended];
+    for (const s of enabledSkillsForClass) {
+      if (filled.length >= effectiveSkillCount) break;
+      if (!filled.includes(s)) filled.push(s);
+    }
     setName(preset.characterName);
     setRaceId(presetRace);
     setAssignments({ ...preset.abilityScores });
-    setSkills([...preset.recommendedSkills]);
+    setSkills(filled.slice(0, effectiveSkillCount));
     setStep(4);
   }
 
@@ -263,12 +281,13 @@ export function CharacterCreationScreen() {
 
       {step === 3 && cls && race && (
         <AbilitiesAndSkillsStep
-          cls={cls}
           race={race}
           assignments={assignments}
           assignAbility={assignAbility}
           skills={skills}
           toggleSkill={toggleSkill}
+          availableSkills={enabledSkillsForClass}
+          effectiveSkillCount={effectiveSkillCount}
         />
       )}
 
@@ -462,21 +481,23 @@ function RaceStep({ raceId, pickRace }: RaceStepProps) {
 }
 
 interface AbilitiesAndSkillsStepProps {
-  cls: ReturnType<typeof getClass>;
   race: ReturnType<typeof getRace>;
   assignments: Partial<Record<AbilityName, number>>;
   assignAbility: (ability: AbilityName, value: number | null) => void;
   skills: SkillName[];
   toggleSkill: (s: SkillName) => void;
+  availableSkills: SkillName[];
+  effectiveSkillCount: number;
 }
 
 function AbilitiesAndSkillsStep({
-  cls,
   race,
   assignments,
   assignAbility,
   skills,
   toggleSkill,
+  availableSkills,
+  effectiveSkillCount,
 }: AbilitiesAndSkillsStepProps) {
   return (
     <>
@@ -552,12 +573,16 @@ function AbilitiesAndSkillsStep({
 
       <Panel
         className="mb-4"
-        title={`Skills · Pick ${cls.skillChoiceCount} (${skills.length}/${cls.skillChoiceCount})`}
+        title={
+          effectiveSkillCount > 0
+            ? `Skills · Pick ${effectiveSkillCount} (${skills.length}/${effectiveSkillCount})`
+            : 'Skills · None available yet'
+        }
       >
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          {cls.skillChoiceFrom.map((s) => {
+          {availableSkills.map((s) => {
             const selected = skills.includes(s);
-            const disabled = !selected && skills.length >= cls.skillChoiceCount;
+            const disabled = !selected && skills.length >= effectiveSkillCount;
             return (
               <button
                 key={s}

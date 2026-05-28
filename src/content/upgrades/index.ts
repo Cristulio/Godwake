@@ -72,15 +72,19 @@ function setPermanentBonus(
 const RAW: Upgrade[] = [
   // ─── BODY ──────────────────────────────────────────────────────────────
   {
+    // Reflavor: prior version granted +5 ft movement, but the combat engine
+    // never reads movement (rooms aren't positional). Per the no-flavor-only
+    // rule, the cheap starter slot now grants +2 maximum HP — same renown
+    // cost, mechanically real, fits the "road-toughened" flavor.
     id: 'pilgrims-boots',
     category: 'body',
     name: "Pilgrim's Boots",
     flavor:
-      'The druids gift the wakened soul a pair of hide-leather boots before the road. The path bends a little kinder beneath them.',
-    effectAtRank: (r) => `+${r * 5} ft movement each turn, permanent.`,
+      'The druids gift the wakened soul a pair of hide-leather boots before the road. The first mile teaches the back. The hundredth thickens it.',
+    effectAtRank: (r) => `+${r * 2} maximum HP, permanent.`,
     costForRank: () => 25,
     maxRank: 1,
-    apply: (c) => ({ ...c, permanentSpeedBonus: (c.permanentSpeedBonus ?? 0) + 5 }),
+    apply: (c) => addPermanentBonus(c, 'hp', 2),
     kind: 'permanent',
   },
   {

@@ -6,7 +6,8 @@ import type {
   EventEffect,
   EventOutcome,
 } from '../../schemas/event';
-import { listBlessings, getBlessing } from '../../content/blessings';
+import { getBlessing } from '../../content/blessings';
+import { blessingsForClass } from '../character/blessings';
 import { listQuirks, getQuirk } from '../../content/quirks';
 import { modifierFor } from '../character/derived';
 
@@ -127,7 +128,9 @@ export function resolveChoiceOutcome(
  */
 function rollNewBlessing(character: Character, roller: DiceRoller): string | null {
   const owned = new Set(character.blessings);
-  const candidates = listBlessings().filter((b) => !owned.has(b.id));
+  // Pull from the class-relevant pool so a random event grant never lands a
+  // Wizard a weapon-attack-keyed dud.
+  const candidates = blessingsForClass(character.classId).filter((b) => !owned.has(b.id));
   if (candidates.length === 0) return null;
   const idx = roller.roll('1d100').total % candidates.length;
   return candidates[idx].id;
