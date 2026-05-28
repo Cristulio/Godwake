@@ -614,6 +614,197 @@ describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
   });
 });
 
+describe('Wizard — Sculpt Spells (Evocation L2)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('L1 wizard rolls 3d6 Burning Hands (no subclass yet); L2+ evoker rolls 4d6', () => {
+    const goblin = getMonster('goblin');
+    const seed = 21;
+
+    // Pre-subclass wizard (L1) — no Sculpt Spells.
+    let w1 = makeWizard();
+    let s1 = createCombat({ roller: createDiceRoller(seed), character: w1, monsters: [{ def: goblin }] }).state;
+    w1 = createCombat({ roller: createDiceRoller(seed), character: w1, monsters: [{ def: goblin }] }).character;
+    const cast1 = castSpell({ roller: createDiceRoller(seed), character: w1, state: s1, spellId: 'burning-hands' });
+    s1 = cast1.state;
+    const roll1 = s1.log.find((l) => l.text.includes('cone of flame'))!;
+    const diceCount1 = roll1.text.match(/=/) ? roll1.text.split(' = ')[0].split('+').length : 0;
+    expect(diceCount1).toBe(3);
+    expect(roll1.text).not.toContain('Sculpt Spells');
+
+    // L2 wizard — auto-picks Evocation, Sculpt Spells unlocked.
+    let w2 = makeWizard();
+    w2 = applyLevelUp(w2);
+    expect(w2.subclassId).toBe('evocation');
+    _resetMonsterInstanceCounter();
+    let s2 = createCombat({ roller: createDiceRoller(seed), character: w2, monsters: [{ def: goblin }] }).state;
+    w2 = createCombat({ roller: createDiceRoller(seed), character: w2, monsters: [{ def: goblin }] }).character;
+    const cast2 = castSpell({ roller: createDiceRoller(seed), character: w2, state: s2, spellId: 'burning-hands' });
+    s2 = cast2.state;
+    const roll2 = s2.log.find((l) => l.text.includes('cone of flame'))!;
+    const diceCount2 = roll2.text.split(' = ')[0].split('+').length;
+    expect(diceCount2).toBe(4);
+    expect(roll2.text).toContain('Sculpt Spells');
+  });
+
+  it('L5 evoker rolls 9d6 Fireball (8d6 base + 1 from Sculpt Spells)', () => {
+    const goblin = getMonster('goblin');
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
+    expect(w.subclassId).toBe('evocation');
+    const roller = createDiceRoller(31);
+    const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    let state = init.state;
+    w = init.character;
+
+    const cast = castSpell({ roller, character: w, state, spellId: 'fireball' });
+    expect(cast.cast).toBe(true);
+    state = cast.state;
+    const roll = state.log.find((l) => l.text.includes('blooms into a roar of flame'))!;
+    const diceCount = roll.text.split(' = ')[0].split('+').length;
+    expect(diceCount).toBe(9);
+    expect(roll.text).toContain('Sculpt Spells');
+  });
+
+  it('L5 evoker rolls 9d6 Lightning Bolt', () => {
+    const goblin = getMonster('goblin');
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = applyLevelUp(w); // L5
+    const roller = createDiceRoller(33);
+    const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+    let state = init.state;
+    w = init.character;
+
+    const cast = castSpell({ roller, character: w, state, spellId: 'lightning-bolt' });
+    expect(cast.cast).toBe(true);
+    state = cast.state;
+    const roll = state.log.find((l) => l.text.includes('white arc of lightning'))!;
+    const diceCount = roll.text.split(' = ')[0].split('+').length;
+    expect(diceCount).toBe(9);
+    expect(roll.text).toContain('Sculpt Spells');
+  });
+});
+
+describe('Wizard — Shield true reaction', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('auto-triggers on an incoming hit that Shield would flip to a miss', () => {
+    const goblin = getMonster('goblin');
+    // Find a seed where the goblin hits, but a +5 Shield would save the wizard.
+    let validated = false;
+    for (let seed = 1; seed <= 200 && !validated; seed++) {
+      let w = makeWizard();
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+      let state = init.state;
+      w = init.character;
+      const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+      const baseAc = computeAC(w);
+      const slotsBefore = slotsAt(w, 1);
+
+      const result = monsterAttack({ roller, character: w, state }, goblinId);
+      state = result.state;
+      w = result.character;
+
+      const shieldLog = state.log.find((l) => l.text.includes('casts Shield'));
+      if (!shieldLog) continue;
+
+      // Shield triggered: slot consumed, reaction marked, shieldActive set,
+      // AC bumped +5, attack reported as miss in lastAttack.
+      expect(slotsAt(w, 1)).toBe(slotsBefore - 1);
+      expect(w.actionEconomy.reactionUsed).toBe(true);
+      expect(w.resources.shieldActive).toBe(true);
+      expect(computeAC(w)).toBe(baseAc + 5);
+      expect(state.lastAttack?.hit).toBe(false);
+      expect(shieldLog.text).toContain(`AC ${baseAc} → ${baseAc + 5}`);
+      expect(shieldLog.text).toContain('attack now misses');
+      validated = true;
+    }
+    expect(validated).toBe(true);
+  });
+
+  it('does NOT trigger when no slot remains', () => {
+    const goblin = getMonster('goblin');
+    let validated = false;
+    for (let seed = 1; seed <= 200 && !validated; seed++) {
+      let w = makeWizard();
+      w.resources = { ...w.resources, spellSlots: { 1: 0, 2: 0, 3: 0, 4: 0 } };
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+      let state = init.state;
+      w = init.character;
+      const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+
+      const result = monsterAttack({ roller, character: w, state }, goblinId);
+      state = result.state;
+      w = result.character;
+
+      const shieldLog = state.log.find((l) => l.text.includes('casts Shield'));
+      expect(shieldLog).toBeUndefined();
+      // Look for a seed where the goblin actually hit so we know the "would
+      // shield save" branch was reachable. Otherwise keep trying seeds.
+      if (state.lastAttack?.hit === true) validated = true;
+    }
+    expect(validated).toBe(true);
+  });
+
+  it('does NOT trigger on a crit (nat 20 bypasses Shield)', () => {
+    const goblin = getMonster('goblin');
+    let validated = false;
+    for (let seed = 1; seed <= 300 && !validated; seed++) {
+      let w = makeWizard();
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+      let state = init.state;
+      w = init.character;
+      const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+      const slotsBefore = slotsAt(w, 1);
+
+      const result = monsterAttack({ roller, character: w, state }, goblinId);
+      state = result.state;
+      w = result.character;
+
+      if (state.lastAttack?.crit !== true) continue;
+      // Crit landed — Shield must NOT have intercepted.
+      const shieldLog = state.log.find((l) => l.text.includes('casts Shield'));
+      expect(shieldLog).toBeUndefined();
+      expect(slotsAt(w, 1)).toBe(slotsBefore);
+      expect(w.resources.shieldActive).toBeFalsy();
+      validated = true;
+    }
+    expect(validated).toBe(true);
+  });
+
+  it('reaction flag resets at start of next player turn', () => {
+    const goblin = getMonster('goblin');
+    let validated = false;
+    for (let seed = 1; seed <= 200 && !validated; seed++) {
+      let w = makeWizard();
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
+      let state = init.state;
+      w = init.character;
+      const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+
+      const result = monsterAttack({ roller, character: w, state }, goblinId);
+      state = result.state;
+      w = result.character;
+
+      if (!w.actionEconomy.reactionUsed) continue;
+      // Cycle back to player turn — reaction flag should clear.
+      let et = endTurn(state, w);
+      state = et.state;
+      w = et.character;
+      et = endTurn(state, w);
+      state = et.state;
+      w = et.character;
+      expect(w.actionEconomy.reactionUsed).toBe(false);
+      validated = true;
+    }
+    expect(validated).toBe(true);
+  });
+});
+
 describe('Wizard — canCastSpell guards', () => {
   it('returns ok=false when no slot remains', () => {
     const w = makeWizard();

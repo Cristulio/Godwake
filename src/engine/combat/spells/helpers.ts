@@ -9,6 +9,7 @@ import { getSpell } from '../../../content/spells';
 import { applyDamage, evaluateCombatEnd as evaluateCombatEndShared } from '../attack';
 import { abilityModifier } from '../../../types/abilities';
 import {
+  characterHasMechanic,
   effectiveAbilityScores,
   proficiencyBonus,
 } from '../../character/derived';
@@ -184,14 +185,17 @@ export function castAreaEvocation(
     (c) => c.kind === 'monster' && c.instance.hp.current > 0,
   ) as MonsterCombatant[];
 
-  const damageRoll = roller.roll({ count: 8, die: 6, modifier: 0 });
+  // Sculpt Spells reflavor — Evocation subclass burns one die hotter on AoEs.
+  const evoker = characterHasMechanic(nextCharacter, 'sculpt-spells');
+  const dice = evoker ? 9 : 8;
+  const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
   const fullDmg = damageRoll.total;
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${flavor}. ${damageRoll.rolls.join('+')} = ${fullDmg} ${damageType}. DEX save DC ${dc} for half.`,
+    text: `${flavor}. ${damageRoll.rolls.join('+')} = ${fullDmg} ${damageType}${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half.`,
   });
 
   nextState = attachSpellEffect(nextState, effect, 'player', aliveMonsters[0]?.id);

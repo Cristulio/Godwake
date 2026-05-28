@@ -128,7 +128,7 @@ export const WIZARD: Class = ClassSchema.parse({
             id: 'sculpt-spells',
             name: 'Sculpt Spells',
             description:
-              'Your evocations are honed past the page. Burning Hands burns one die hotter.',
+              'Your evocations are honed past the page. Burning Hands, Fireball, and Lightning Bolt each burn one die hotter.',
             mechanicKey: 'sculpt-spells',
           },
         ],
