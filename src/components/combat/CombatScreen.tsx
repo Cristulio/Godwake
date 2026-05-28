@@ -150,7 +150,13 @@ export function CombatScreen({
 
     const attackTimer = setTimeout(() => {
       const roller = getActiveRoller();
-      const result = monsterAttack({ roller, character, state }, currentId);
+      // Read latest character from the store — the closure-captured `character`
+      // is from when the effect last fired (currentTurnIndex change), which is
+      // stale if anything updated character between effect-fire and this timer.
+      const latestChar = useGameStore.getState().character;
+      const latestState = useGameStore.getState().combat;
+      if (!latestChar || !latestState) return;
+      const result = monsterAttack({ roller, character: latestChar, state: latestState }, currentId);
       setCharacter(result.character);
       setCombat(result.state);
     }, 700 / speed);
@@ -158,7 +164,12 @@ export function CombatScreen({
     const advanceTimer = setTimeout(() => {
       const latest = useGameStore.getState().combat;
       if (!latest || latest.status !== 'active') return;
-      const result = endTurn(latest, character);
+      // Same stale-closure trap as attackTimer — the attack we just fired
+      // updated character.hp, so we must read fresh here or we'll overwrite
+      // the damaged character with the pre-damage closure copy.
+      const latestChar = useGameStore.getState().character;
+      if (!latestChar) return;
+      const result = endTurn(latest, latestChar);
       setCharacter(result.character);
       setCombat(result.state);
     }, (700 + 1500) / speed);
@@ -200,7 +211,9 @@ export function CombatScreen({
       setAutoEndNotice(false);
       const latest = useGameStore.getState().combat;
       if (!latest) return;
-      const result = endTurn(latest, character);
+      const latestChar = useGameStore.getState().character;
+      if (!latestChar) return;
+      const result = endTurn(latest, latestChar);
       setCharacter(result.character);
       setCombat(result.state);
     }, autoEndTurnDelayMs / speed);
