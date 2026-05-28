@@ -33,11 +33,28 @@ describe('Rogue balance matrix', () => {
     // eslint-disable-next-line no-console
     console.log(`\n[rogueSim] wrote ${OUT_FILE} (${elapsedSec}s)\n${headline}`);
 
+    // ── Guard-rails (LOOSE) ────────────────────────────────────────────────
+    // Wide bands so ordinary balance drift stays green; only a genuine
+    // regression turns this RED. Re-tighten after the sibling combat/meta
+    // branches land.
     expect(summaries.length).toBe(START_LEVELS.length * VARIANTS.length);
     for (const s of summaries) {
       expect(s.runs).toBe(RUNS_PER_CELL);
       expect(s.avgRoomsCleared).toBeGreaterThan(0);
+      expect(s.avgRoomsCleared).toBeLessThanOrEqual(37);
+      expect(s.deathRate).toBeGreaterThanOrEqual(0);
+      expect(s.deathRate).toBeLessThanOrEqual(1);
+      expect(s.avgChaptersCleared).toBeGreaterThanOrEqual(0);
+      expect(s.avgChaptersCleared).toBeLessThanOrEqual(4);
     }
+
+    // Anti-immortal ceiling: every cell must still die regularly. The
+    // class-balance-philosophy floor is "each death is rewarding" (death >
+    // 30%), and this sim exists because of the "feels immortal" rogue report.
+    // The worst current cell (loaded L7) sits at ~88% death, so the 30% band
+    // has a wide margin — it goes RED only if the rogue turns near-unkillable.
+    const minDeathRate = Math.min(...summaries.map((s) => s.deathRate));
+    expect(minDeathRate).toBeGreaterThan(0.3);
   }, 600_000);
 });
 

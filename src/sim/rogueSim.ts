@@ -9,7 +9,7 @@
 import type { Character } from '../types/character';
 import type { CombatState } from '../types/combat';
 import type { DelveState, RoomSpec } from '../types/delve';
-import { setActiveRoller, getActiveRoller, createDiceRoller } from '../engine/dice';
+import { setActiveRoller, getActiveRoller } from '../engine/dice';
 import { buildPlayerCharacter } from '../engine/character/defaultCharacter';
 import { applyLevelUp } from '../engine/character/leveling';
 import { shortRestHeal, longRest } from '../engine/character/actions';
@@ -26,7 +26,6 @@ import {
   endTurn,
   currentCombatantId,
 } from '../engine/combat';
-import { rollQuirks } from '../engine/character/quirks';
 import type { RaceId } from '../schemas/ids';
 
 interface PerRunStats {
@@ -117,7 +116,6 @@ function chapterFor(roomIdx: number): number {
 function chooseCunningAction(
   character: Character,
   state: CombatState,
-  stats: PerRunStats,
 ): 'hide' | 'disengage' | 'dash' | 'steel' | null {
   if (character.actionEconomy.bonusActionUsed) return null;
   if ((character.resources.cunningActionUsesRemaining ?? 0) <= 0) return null;
@@ -204,7 +202,7 @@ function runCombatEncounter(
         }
       }
 
-      const cunning = chooseCunningAction(character, state, stats);
+      const cunning = chooseCunningAction(character, state);
       if (cunning) {
         const r = useCunningAction({ character, state, choice: cunning });
         state = r.state;
@@ -419,29 +417,6 @@ export function runRogueDelve(
   return stats;
 }
 
-/**
- * Run a full reincarnation arc: simulate one soul that dies and respawns
- * across N delves, then return the aggregate stats for the arc. Quirks are
- * re-rolled on each death per game rules.
- */
-export function runRogueArc(
-  startLevel: number,
-  seed: number,
-  variant: SimVariant = 'vanilla',
-  maxRuns: number = 5,
-): PerRunStats[] {
-  const arc: PerRunStats[] = [];
-  let curSeed = seed >>> 0;
-  setActiveRoller(curSeed);
-  for (let n = 0; n < maxRuns; n++) {
-    const stats = runRogueDelve(startLevel, curSeed, variant);
-    arc.push(stats);
-    if (!stats.died) break;
-    curSeed = (curSeed * 1664525 + 1013904223) >>> 0;
-  }
-  return arc;
-}
-
 export function runMatrix(
   startLevels: number[],
   variants: SimVariant[],
@@ -555,8 +530,3 @@ export function formatSummary(s: MatrixSummary): string {
   }
   return lines.join('\n');
 }
-
-// Unused helpers — kept hidden so the sim TS file compiles cleanly even if
-// future refactors trim engine surface. Suppress unused-import lint.
-void rollQuirks;
-void createDiceRoller;

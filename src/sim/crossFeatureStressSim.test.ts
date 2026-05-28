@@ -15,7 +15,6 @@ import {
   runScenario,
   ablate,
   type ScenarioSummary,
-  type ScenarioSpec,
   type AblationKnob,
 } from './crossFeatureStressSim';
 
@@ -216,11 +215,39 @@ describe('cross-feature stress matrix', () => {
     mkdirSync(join(process.cwd(), 'docs', 'validation-findings'), { recursive: true });
     writeFileSync(FINDINGS_PATH, lines.join('\n'));
 
-    // Cheap assertions so vitest doesn't pass silently on a file-write fail.
+    // ── Guard-rails (LOOSE) ────────────────────────────────────────────────
+    // Calibrated to survive the in-flight combat change (Burning Hands gaining
+    // a save) and the meta-loop redesign: these fire only on "this should never
+    // happen" regressions, not on small numeric drift. Tighten in a later pass
+    // once the sibling branches land.
     for (const s of summaries) {
       expect(Number.isFinite(s.deathRate)).toBe(true);
       expect(Number.isFinite(s.avgChaptersCleared)).toBe(true);
       expect(s.runs).toBe(RUNS_PER_CELL);
+      expect(s.deathRate).toBeGreaterThanOrEqual(0);
+      expect(s.deathRate).toBeLessThanOrEqual(1);
+      expect(s.avgChaptersCleared).toBeGreaterThanOrEqual(0);
+      expect(s.avgChaptersCleared).toBeLessThanOrEqual(4);
     }
+
+    // Ceiling: no build may be strictly dominant — near-unkillable (death <
+    // 15%) AND crushing the Matron (ch4-kill > 25%). Promotes the
+    // OPTIMAL_DOMINATES band from a report note to a hard gate. The strongest
+    // build today (Fighter) sits at ~64% death, far outside the band; a
+    // regression that makes any class trivially win turns this RED.
+    const dominant = summaries
+      .filter(
+        (s) =>
+          s.deathRate < OPTIMAL_DOMINATES_DEATH_LT &&
+          s.bossKillRates.ch4 > OPTIMAL_DOMINATES_CH4_GT,
+      )
+      .map((s) => s.label);
+    expect(dominant).toEqual([]);
+
+    // Floor: even the minimum-investment Pauper Wizard must clear Ch1 at least
+    // once across the matrix. Loose form of the PAUPER_FLOOR_CH1_GT report
+    // threshold (~94% today) — the accessibility regression we guard against is
+    // ch1-clear collapsing to zero.
+    expect(pauper.bossKillRates.ch1).toBeGreaterThan(0);
   }, 600_000);
 });

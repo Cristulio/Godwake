@@ -17,16 +17,6 @@ const LEVELS = [3, 5, 7];
 const LOADOUTS: Loadout[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 const RUNS_PER_CELL = 30;
 
-const LOADOUT_DESC: Record<Loadout, string> = {
-  A: 'vacuum (no blessings, no Grove)',
-  B: "Lathander's Dawn only (+3 tHP)",
-  C: "Lathander + Ilmater (+3 +2 = ?)",
-  D: 'C + Grove (Mantle 5, Iron Will 1, Cloak 3, Hardier Soul 3, Wellspring Vigil 3)',
-  E: 'stacked AC — Helm + Mystra + Silvanus (3× +1 AC; max-of-individual ⇒ +1)',
-  F: 'stacked crit — Tempus + Tymora (2× +1 crit range; max-of-individual ⇒ +1)',
-  G: 'stacked damage — Mystra + Silvanus (2× +1 dmg; max-of-individual ⇒ +1)',
-};
-
 describe('Immortal hypothesis matrix', () => {
   it('runs class × level × loadout matrix and writes findings', () => {
     const startedAt = Date.now();
@@ -49,10 +39,28 @@ describe('Immortal hypothesis matrix', () => {
         `verdict: ${verdict.headline}\n`,
     );
 
+    // ── Guard-rails (LOOSE) ────────────────────────────────────────────────
+    // These encode the aggregator-cap invariant, not tuned numbers, so they
+    // survive the in-flight combat/meta changes. Tighten in a later pass.
     expect(summaries.length).toBe(CLASSES.length * LEVELS.length * LOADOUTS.length);
     for (const s of summaries) {
       expect(s.runs).toBe(RUNS_PER_CELL);
+      expect(s.deathRate).toBeGreaterThanOrEqual(0);
+      expect(s.deathRate).toBeLessThanOrEqual(1);
+      expect(s.avgTempHpPerEncounter).toBeGreaterThanOrEqual(0);
     }
+
+    // The aggregator-cap invariant (PR #80): stacking a second temp-HP blessing
+    // (loadout C = Lathander + Ilmater) must NOT grant materially more temp HP
+    // than a single source (loadout B = Lathander). If additive stacking is
+    // reintroduced, tHP-C jumps well past tHP-B and these go RED. Margin is
+    // wide today (C ≈ B, both ~2–2.6 tHP/encounter).
+    for (const p of verdict.perClass) {
+      expect(p.tempHpC).toBeLessThanOrEqual(p.tempHpB + 1.5);
+    }
+
+    // And the rolled-up verdict must stay REFUTED — temp HP does not stack.
+    expect(verdict.confirmed).toBe(false);
   }, 600_000);
 });
 
