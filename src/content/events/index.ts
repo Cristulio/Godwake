@@ -380,7 +380,7 @@ const POOL: EventTemplate[] = [
         id: 'bluff-the-cowl',
         label: '[Charisma] Bluff the recruiter',
         hint: 'Name-drop a Cowled superior you have never met.',
-        requiresCha: 2,
+        requiresCha: 1,
         outcome: {
           resolution:
             'You drop a name with the calm of a man who has stood in chambers above this one. The Cowl\'s eyes flicker — the briefest re-evaluation — and the chalk-sigil presses onto your hand without a coin asked. They step back into the arch, the stone sealing behind them, and you walk on with a wizard\'s mark and a wizard\'s purse intact.',
