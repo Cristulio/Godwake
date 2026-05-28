@@ -32,6 +32,9 @@ export const SpellEffectKeySchema = z.enum([
   'mage-armor',
   'hold-person',
   'misty-step',
+  'scorching-ray',
+  'blur',
+  'mirror-image',
   'fireball',
   'lightning-bolt',
 ]);

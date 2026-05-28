@@ -18,7 +18,7 @@ import {
   rollPlayerSave,
 } from '../holdPerson';
 import { tryShieldReaction } from '../spells/shield';
-import { combatResult, type CombatActionResult } from '../types';
+import { combatResult, patchResources, type CombatActionResult } from '../types';
 import { appendLog } from '../log';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
 import type { AttackContext } from './playerAttack';
@@ -131,15 +131,23 @@ export function monsterAttack(
     hasBattleRage && (enteringRage || attacker.instance.bossRageActive === true);
 
   const ac = computeAC(nextCharacter);
-  const attackAdvantage: 'normal' | 'advantage' =
-    playerParalyzed ? 'advantage' : 'normal';
+  // Blur smears the player's outline — attackers roll at disadvantage. A
+  // paralyzed player instead grants advantage; if both apply they cancel to a
+  // straight roll (5e advantage/disadvantage cancellation).
+  const blurActive = (nextCharacter.resources.blurRoundsRemaining ?? 0) > 0;
+  const attackAdvantage: 'normal' | 'advantage' | 'disadvantage' =
+    playerParalyzed === blurActive ? 'normal' : playerParalyzed ? 'advantage' : 'disadvantage';
   const toHit = roller.d20(attackAdvantage, action.attackBonus);
   // Monsters don't get the player's Improved Critical
   const crit = toHit.rolls[0] === 20;
   let hit = crit || (toHit.total >= ac && !toHit.natural1);
 
   const advantageNote =
-    attackAdvantage === 'advantage' ? ' (advantage — paralyzed)' : '';
+    attackAdvantage === 'advantage'
+      ? ' (advantage — paralyzed)'
+      : attackAdvantage === 'disadvantage'
+        ? ' (disadvantage — Blur)'
+        : '';
   workingState = appendLog(workingState, {
     id: nextLogId(workingState),
     kind: 'roll',
@@ -156,6 +164,20 @@ export function monsterAttack(
       nextCharacter = triggered.character;
       hit = false;
     }
+  }
+
+  // Mirror Image: a blow that would land (a crit included — the duplicate
+  // takes it) shatters a duplicate instead. Charge-based evasion, spent only
+  // on hits so weak misses don't waste an image.
+  if (hit && (nextCharacter.resources.mirrorImages ?? 0) > 0) {
+    const remaining = (nextCharacter.resources.mirrorImages ?? 0) - 1;
+    nextCharacter = patchResources(nextCharacter, { mirrorImages: remaining });
+    hit = false;
+    workingState = appendLog(workingState, {
+      id: nextLogId(workingState),
+      kind: 'system',
+      text: `A flickering duplicate shatters — the blow finds only afterimage.${remaining > 0 ? ` ${remaining} image${remaining === 1 ? '' : 's'} remain.` : ' No images remain.'}`,
+    });
   }
 
   const attackEvent: AttackEvent = {

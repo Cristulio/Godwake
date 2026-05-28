@@ -14,5 +14,8 @@ export { castShield } from './shield';
 export { castMageArmor } from './mageArmor';
 export { castHoldPerson } from './holdPerson';
 export { castMistyStep } from './mistyStep';
+export { castScorchingRay } from './scorchingRay';
+export { castBlur } from './blur';
+export { castMirrorImage } from './mirrorImage';
 export { castFireball } from './fireball';
 export { castLightningBolt } from './lightningBolt';
