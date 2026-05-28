@@ -12,6 +12,7 @@ import {
   effectiveAbilityScores,
   proficiencyBonus,
 } from '../../character/derived';
+import { characterCampBoonMods } from '../../character/campBoons';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchSpellSlots } from '../types';
 
@@ -51,12 +52,14 @@ export function spellSaveDC(character: Readonly<Character>): number {
   // Burning Hands actually land — without this, DC 12 vs typical +2/+3 DEX
   // saves means ~55% save rate and AoE feels useless.
   const classBonus = character.classId === 'wizard' ? 1 : 0;
+  const boonBonus = characterCampBoonMods(character).spellDcBonus ?? 0;
   return (
     8 +
     abilityModifier(scores.int) +
     proficiencyBonus(character.level) +
     classBonus +
-    (character.permanentBonuses?.spellDc ?? 0)
+    (character.permanentBonuses?.spellDc ?? 0) +
+    boonBonus
   );
 }
 

@@ -146,6 +146,8 @@ interface GameState {
   creditChapterClearGold: () => void;
   concludeDelveAtCamp: () => void;
   pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => void;
+  pickCampBoon: (tier: number, boonId: string | null) => void;
+  consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
 
   // Lore overlays
@@ -396,6 +398,9 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().concludeDelveAtCamp(),
         pickCampChoice: (choice) =>
           useDelveStore.getState().pickCampChoice(choice),
+        pickCampBoon: (tier, boonId) =>
+          useDelveStore.getState().pickCampBoon(tier, boonId),
+        consumeLichEyes: () => useDelveStore.getState().consumeLichEyes(),
         purchaseFromMerchant: (itemId) =>
           useDelveStore.getState().purchaseFromMerchant(itemId),
 

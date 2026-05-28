@@ -18,6 +18,7 @@ import {
 } from '../../character/derived';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
+import { characterCampBoonMods } from '../../character/campBoons';
 import { getItem } from '../../../content/items';
 import { playSfx, swingSfxForWeapon } from '../../audio';
 import {
@@ -88,6 +89,7 @@ export function playerAttack(
 
   const quirkMods = characterQuirkMods(nextCharacter);
   const blessingMods = characterBlessingMods(nextCharacter);
+  const boonMods = characterCampBoonMods(nextCharacter);
   const isFirstAttack = !state.playerHasAttacked;
   const targetWounded =
     target.kind === 'monster' &&
@@ -98,6 +100,7 @@ export function playerAttack(
   let attackBonus = abilMod + profBonus;
   attackBonus += nextCharacter.permanentBonuses?.attack ?? 0;
   attackBonus += nextCharacter.delveAttackBonus ?? 0;
+  attackBonus += boonMods.attackBonus ?? 0;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
@@ -188,6 +191,7 @@ export function playerAttack(
   );
 
   let sneakAttackFiredFlag = false;
+  let bladeOfVowUsed = false;
   if (hit) {
     const damageExpr = parseDiceExpression(weapon.damage);
     // On crit, double the dice (not the modifier).
@@ -198,6 +202,28 @@ export function playerAttack(
         modifier: 0,
       },
     );
+
+    // Blade of the Vow (camp boon): once per combat, reroll the lowest weapon
+    // damage die and keep the higher result. Consumed on the first damaging
+    // strike where the boon budget is still > 0.
+    let bladeOfVowDelta = 0;
+    if (
+      (nextState.bladeOfVowRerollsRemaining ?? 0) > 0 &&
+      damageRoll.rolls.length > 0
+    ) {
+      let lowestIdx = 0;
+      for (let i = 1; i < damageRoll.rolls.length; i++) {
+        if (damageRoll.rolls[i] < damageRoll.rolls[lowestIdx]) lowestIdx = i;
+      }
+      const original = damageRoll.rolls[lowestIdx];
+      const reroll = roller.roll({ count: 1, die: damageExpr.die, modifier: 0 });
+      if (reroll.rolls[0] > original) {
+        damageRoll.rolls[lowestIdx] = reroll.rolls[0];
+        damageRoll.total = damageRoll.total - original + reroll.rolls[0];
+        bladeOfVowDelta = reroll.rolls[0] - original;
+      }
+      bladeOfVowUsed = true;
+    }
 
     let bonusDamage = 0;
     let sneakDamage = 0;
@@ -241,6 +267,15 @@ export function playerAttack(
       const cd = nextCharacter.permanentCritDamageBonus ?? 0;
       bonusDamage += cd;
       bonusParts.push(`+${cd} Fellfast`);
+    }
+    // Might of the Mountain (camp boon): +1 flat damage on every weapon hit.
+    const mountainBonus = boonMods.damageBonus ?? 0;
+    if (mountainBonus) {
+      bonusDamage += mountainBonus;
+      bonusParts.push(`+${mountainBonus} Mountain`);
+    }
+    if (bladeOfVowUsed && bladeOfVowDelta > 0) {
+      bonusParts.push(`+${bladeOfVowDelta} Vow reroll`);
     }
 
     // Rogue Sneak Attack: once per turn, when the strike has the angle —
@@ -295,6 +330,9 @@ export function playerAttack(
     playerHasAttacked: true,
     rerollMissesEncounterRemaining:
       nextState.rerollMissesEncounterRemaining - usedEncounterReroll,
+    bladeOfVowRerollsRemaining: bladeOfVowUsed
+      ? Math.max(0, (nextState.bladeOfVowRerollsRemaining ?? 0) - 1)
+      : nextState.bladeOfVowRerollsRemaining,
   };
   if (hit && sneakAttackFiredFlag) {
     nextState = { ...nextState, sneakAttackUsedThisTurn: true };

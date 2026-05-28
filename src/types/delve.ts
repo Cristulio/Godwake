@@ -48,4 +48,16 @@ export interface DelveState {
    * the delve. Cleared on delve end.
    */
   campChoice?: 'rest' | 'sharpen' | 'prayer';
+  /**
+   * Per-camp boon resolutions: one entry appended each time the player
+   * picks a boon OR explicitly skips the picker at a camp. `boonId === null`
+   * means "skipped, do not offer again at this camp". Tier corresponds to
+   * the 1st/2nd/3rd camp encountered in the delve. Cleared on delve end.
+   */
+  campBoons?: Array<{ tier: number; boonId: string | null }>;
+  /**
+   * Set true when Eyes of the Lich is picked; cleared the first time the
+   * player enters a boss room afterwards (the stat-block reveal consumes it).
+   */
+  lichEyesAvailable?: boolean;
 }

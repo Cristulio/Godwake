@@ -112,6 +112,13 @@ export interface Character {
   quirks: string[];
   blessings: string[];
   /**
+   * Camp Boon ids active for the current delve. Each Camp room offers a
+   * Hades-style "Mirror of Night" pick of 3 small permanent buffs scoped to
+   * the run. Mirrored from `delve.campBoons` for fast derived reads; cleared
+   * on delve end alongside blessings.
+   */
+  campBoons?: string[];
+  /**
    * Per-delve mutable budgets (Tymora's Eye reroll counter, etc.). Optional so
    * legacy saves rehydrate without migration; treat undefined fields as 0.
    * Initialized in startDelve, mutated in combat, dropped at delve end.

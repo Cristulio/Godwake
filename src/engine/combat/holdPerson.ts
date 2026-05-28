@@ -4,6 +4,7 @@ import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import type { DiceRoller } from '../dice';
 import { modifierFor } from '../character/derived';
+import { characterCampBoonMods } from '../character/campBoons';
 import { patchActionEconomy } from './types';
 
 /**
@@ -51,7 +52,12 @@ export function rollPlayerSave(
   advantage: boolean;
   character: Character;
 } {
-  const mod = modifierFor(character, ability);
+  let mod = modifierFor(character, ability);
+  // Stillness of the Mind (camp boon) — +1 to WIS saves for the rest of the
+  // delve. Stacks with the ability modifier.
+  if (ability === 'wis') {
+    mod += characterCampBoonMods(character).wisSaveBonus ?? 0;
+  }
   const advantage = !!character.nextSaveAdvantage;
   const roll = roller.d20(advantage ? 'advantage' : 'normal', mod);
   const next: Character = advantage

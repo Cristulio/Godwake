@@ -101,4 +101,10 @@ export interface CombatState {
   playerAttacksThisTurn: number;
   /** Rogue Sneak Attack already fired this turn. Reset on turn change. Optional so legacy saves rehydrate. */
   sneakAttackUsedThisTurn?: boolean;
+  /**
+   * Blade of the Vow (camp boon) re-roll budget for this encounter. Reset to 1
+   * on combat start when the boon is active; consumed on the first weapon
+   * damage roll by re-rolling the lowest die and keeping the higher result.
+   */
+  bladeOfVowRerollsRemaining?: number;
 }

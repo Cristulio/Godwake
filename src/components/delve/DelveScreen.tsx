@@ -132,6 +132,10 @@ export function DelveScreen() {
     if (combat) return; // already in combat
     if (room.kind !== 'combat' && room.kind !== 'boss') return;
     if (!room.monsters) return;
+    // Eyes of the Lich (camp boon): pause boss combat-spawn while the player
+    // reads the stat-block preview. The pre-fight panel clears the flag and
+    // re-fires this effect.
+    if (room.kind === 'boss' && delve.lichEyesAvailable) return;
 
     const roller = getActiveRoller();
     const monsters = room.monsters.flatMap((m) =>
@@ -289,6 +293,28 @@ export function DelveScreen() {
     );
   }
 
+  // Eyes of the Lich (camp boon): pre-fight stat block preview before the
+  // spawn-on-enter effect builds the encounter. Cleared by the "Begin" button.
+  if (
+    room.kind === 'boss' &&
+    delve.lichEyesAvailable &&
+    !combat &&
+    room.monsters &&
+    room.monsters.length > 0
+  ) {
+    return (
+      <div key={room.id} className="animate-room-enter">
+        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
+          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
+        </div>
+        <LichEyesPreview
+          bossDefId={room.monsters[0].defId}
+          onContinue={() => useGameStore.getState().consumeLichEyes()}
+        />
+      </div>
+    );
+  }
+
   // Combat / boss room without a combat yet — render the loading placeholder
   // while the spawn-on-enter effect builds the encounter.
   if (room.kind === 'combat' || room.kind === 'boss') {
@@ -385,4 +411,77 @@ export function DelveScreen() {
   }
 
   return null;
+}
+
+function LichEyesPreview({
+  bossDefId,
+  onContinue,
+}: {
+  bossDefId: string;
+  onContinue: () => void;
+}) {
+  const def = getMonster(bossDefId);
+  const stat = (label: string, value: string | number) => (
+    <div className="flex justify-between border-b border-[var(--color-border-dim)] py-1">
+      <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
+        {label}
+      </span>
+      <span className="text-[var(--color-text-primary)] font-mono text-xs">{value}</span>
+    </div>
+  );
+  return (
+    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6">
+      <Panel className="bg-gradient-to-br from-[#1e1a2a] to-[#0b0813] border-[var(--color-accent-amber)]">
+        <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
+          ◆ Eyes of the Lich
+        </div>
+        <p className="text-[var(--color-text-secondary)] text-xs italic mb-4 leading-relaxed">
+          A glance behind eyes that have long ceased to blink. You see the
+          measure of what waits.
+        </p>
+        <div className="border border-[var(--color-border-warm)] p-4">
+          <div className="font-display text-lg text-[var(--color-accent-amber)] uppercase tracking-[0.15em] mb-1">
+            {def.name}
+          </div>
+          <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic mb-3">
+            {def.creatureType} · CR {def.cr}
+          </div>
+          {stat('AC', def.ac)}
+          {stat('HP', `${def.maxHp}`)}
+          {stat('Speed', `${def.speed} ft`)}
+          {stat(
+            'STR / DEX / CON',
+            `${def.abilityScores.str ?? 10} / ${def.abilityScores.dex ?? 10} / ${def.abilityScores.con ?? 10}`,
+          )}
+          {stat(
+            'INT / WIS / CHA',
+            `${def.abilityScores.int ?? 10} / ${def.abilityScores.wis ?? 10} / ${def.abilityScores.cha ?? 10}`,
+          )}
+          {def.resistances && def.resistances.length > 0 &&
+            stat('Resistances', def.resistances.join(', '))}
+          {def.immunities && def.immunities.length > 0 &&
+            stat('Immunities', def.immunities.join(', '))}
+          {def.vulnerabilities && def.vulnerabilities.length > 0 &&
+            stat('Vulnerabilities', def.vulnerabilities.join(', '))}
+          <div className="mt-3 space-y-2">
+            {def.actions.map((a, idx) => (
+              <div key={idx} className="text-[11px] text-[var(--color-text-primary)] leading-relaxed">
+                <span className="text-[var(--color-accent-amber)] uppercase tracking-widest">
+                  {a.name}
+                </span>{' '}
+                {a.kind === 'attack'
+                  ? `· +${a.attackBonus} to hit, ${a.damage} ${a.damageType}`
+                  : `· DC ${a.saveDC} ${a.saveAbility.toUpperCase()} save, ${a.durationRounds}r`}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex justify-center mt-4">
+          <Button variant="primary" onClick={onContinue}>
+            I have seen enough →
+          </Button>
+        </div>
+      </Panel>
+    </div>
+  );
 }
