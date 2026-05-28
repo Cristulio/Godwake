@@ -62,19 +62,6 @@ const RENOWN_PER_DELVE_FAILURE = 15;
 const RENOWN_PER_CHAPTER_BOSS = 10;
 const GROVE_UNLOCK_THRESHOLD = 30;
 
-const BOSS_DEF_IDS = {
-  ilyich: 'duergar-ilyich',
-  magistrate: 'athkatla-magistrate',
-  director: 'asylum-director',
-  matron: 'drow-matron-mother',
-} as const;
-const CHAPTER_OF_BOSS: Record<string, number> = {
-  [BOSS_DEF_IDS.ilyich]: 1,
-  [BOSS_DEF_IDS.magistrate]: 2,
-  [BOSS_DEF_IDS.director]: 3,
-  [BOSS_DEF_IDS.matron]: 4,
-};
-
 // Total rooms in the full Godwake chain.
 const TOTAL_ROOMS = 37;
 

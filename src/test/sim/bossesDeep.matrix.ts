@@ -18,7 +18,7 @@ import {
   type Loadout,
 } from './bossesDeep';
 
-const CLASSES: ClassId[] = ['rogue', 'fighter', 'wizard'];
+const CLASSES: Array<'rogue' | 'fighter' | 'wizard'> = ['rogue', 'fighter', 'wizard'];
 const LOADOUTS: Loadout[] = ['vacuum', 'loaded'];
 
 export interface MatrixCells {

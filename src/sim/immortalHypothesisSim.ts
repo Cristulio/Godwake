@@ -30,7 +30,6 @@ import type { CombatState } from '../types/combat';
 import type { DelveState, RoomSpec } from '../types/delve';
 import type { ClassId } from '../schemas/ids';
 import { setActiveRoller, getActiveRoller } from '../engine/dice';
-import { applyLevelUp } from '../engine/character/leveling';
 import { shortRestHeal, longRest } from '../engine/character/actions';
 import { createGodwakeDelve } from '../engine/delve';
 import { getMonster } from '../content/monsters';
@@ -145,15 +144,6 @@ export function makeCharacterFromBlessings(
   c = { ...c, blessings: [...c.blessings, ...blessings] };
   if (grove) c = applyGrove(c, grove);
   return c;
-}
-
-function makeCharacter(classId: ClassId, level: number, loadout: Loadout): Character {
-  return makeCharacterFromBlessings(
-    classId,
-    level,
-    LOADOUT_BLESSINGS[loadout],
-    loadout === 'D' ? GROVE_LOADOUT_D : undefined,
-  );
 }
 
 function chapterFor(roomIdx: number): number {
@@ -397,5 +387,3 @@ export function runMatrix(opts: MatrixOpts): CellSummary[] {
   }
   return summaries;
 }
-
-void applyLevelUp;
