@@ -260,6 +260,10 @@ function toneForEffect(eff: AppliedEffect): string {
       return 'text-[var(--color-accent-amber)]';
     case 'spawn_ambush':
       return 'text-[var(--color-accent-blood)]';
+    case 'reveal_boss_intel':
+      return 'text-[var(--color-accent-amber)]';
+    case 'mark_bold_approach':
+      return 'text-[var(--color-accent-gold)]';
     default:
       return 'text-[var(--color-text-secondary)]';
   }

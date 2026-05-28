@@ -244,7 +244,17 @@ export function DelveScreen() {
                   Array.from({ length: m.count }, () => m.defId),
                 );
                 const mobGold = rollRoomGoldDrops(getActiveRoller(), monsterDefIds);
-                const goldDrop = roomGold + mobGold;
+                let goldDrop = roomGold + mobGold;
+                // Boss intel "walk past" reward: +5% gold from that specific boss.
+                if (room.kind === 'boss') {
+                  const bossDefId = room.monsters?.[0]?.defId;
+                  if (
+                    bossDefId &&
+                    character.boldApproachBosses?.includes(bossDefId)
+                  ) {
+                    goldDrop = Math.floor(goldDrop * 1.05);
+                  }
+                }
                 if (goldDrop || xpDrop) addDelveReward(goldDrop, xpDrop);
               }
               setCombat(null);

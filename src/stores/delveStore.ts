@@ -113,6 +113,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       nextAttackAdvantage: false,
       poisonImmuneEncounter: false,
       conditions: [],
+      bossIntel: {},
+      boldApproachBosses: [],
     };
     const unlocked = meta.unlockedUpgrades;
     const withUpgrades = applyDelveStartUpgrades(
@@ -213,6 +215,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       blessings: [],
       delveAttackBonus: 0,
       delveInitBonus: 0,
+      bossIntel: {},
+      boldApproachBosses: [],
     };
     const ch1Killed = s.delve.chapter1BossKilled === true;
     charSlice.setCharacter(settled);
@@ -259,6 +263,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       conditions: [],
       delveAttackBonus: 0,
       delveInitBonus: 0,
+      bossIntel: {},
+      boldApproachBosses: [],
     });
     useMetaStore.getState().setHasReincarnated(true);
   },
@@ -268,7 +274,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const character = charSlice.character;
     if (!character) return;
     charSlice.setCharacter(
-      longRest({ ...character, blessings: [], delveAttackBonus: 0, delveInitBonus: 0 }),
+      longRest({
+        ...character,
+        blessings: [],
+        delveAttackBonus: 0,
+        delveInitBonus: 0,
+        bossIntel: {},
+        boldApproachBosses: [],
+      }),
     );
     set({ delve: null });
     useCombatStore.getState().setCombat(null);
