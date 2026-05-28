@@ -70,12 +70,6 @@ export function TitleScreen() {
         <Button variant="primary" size="lg" onClick={handleNewGame}>
           ▸ New Game
         </Button>
-        <Button variant="secondary" disabled>
-          Continue
-        </Button>
-        <Button variant="ghost" disabled>
-          Settings
-        </Button>
       </div>
 
       <div className="absolute bottom-4 right-4 text-[var(--color-text-muted)] text-[9px] font-mono tracking-widest uppercase opacity-60">
