@@ -111,6 +111,7 @@ function App() {
           speaker={taunt.speaker}
           context={taunt.context}
           seed={taunt.seed}
+          chapter={taunt.chapter}
           onDismiss={dismissTaunt}
         />
       )}
