@@ -331,6 +331,37 @@ export function applyEventOutcome(
         });
         break;
       }
+      case 'reveal_boss_intel': {
+        const existing = next.bossIntel ?? {};
+        // Full reveal supersedes partial; never downgrade if both fire.
+        const current = existing[effect.bossDefId];
+        const upgraded =
+          current === 'full' || effect.level === 'full' ? 'full' : 'partial';
+        next = {
+          ...next,
+          bossIntel: { ...existing, [effect.bossDefId]: upgraded },
+        };
+        effectsApplied.push({
+          kind: effect.kind,
+          detail:
+            effect.level === 'full' ? 'full intel on the boss' : 'partial intel on the boss',
+        });
+        break;
+      }
+      case 'mark_bold_approach': {
+        const existing = next.boldApproachBosses ?? [];
+        if (!existing.includes(effect.bossDefId)) {
+          next = {
+            ...next,
+            boldApproachBosses: [...existing, effect.bossDefId],
+          };
+        }
+        effectsApplied.push({
+          kind: effect.kind,
+          detail: '+5% gold on the boss',
+        });
+        break;
+      }
     }
   }
 

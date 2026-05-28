@@ -244,8 +244,10 @@ describe('finishDelve — renown economy', () => {
 
   it('death mid-Ch4 after killing 3 chapter bosses awards 45 renown', () => {
     const delve = useDelveStore.getState().delve!;
+    // Index 31 = the Underdark camp immediately after the Ch3 boss in the
+    // intel-augmented godwake layout (3 intel rooms shift each boss +1).
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: 30, phase: 'failed' },
+      delve: { ...delve, currentRoomIdx: 31, phase: 'failed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();

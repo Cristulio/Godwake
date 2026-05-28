@@ -18,6 +18,12 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('apply_attack_bonus_run'), amount: z.number().positive() }),
   z.object({ kind: z.literal('init_bonus_run'), amount: z.number().positive() }),
   z.object({ kind: z.literal('spawn_ambush'), monsterDefIds: z.array(z.string()) }),
+  z.object({
+    kind: z.literal('reveal_boss_intel'),
+    bossDefId: z.string(),
+    level: z.union([z.literal('partial'), z.literal('full')]),
+  }),
+  z.object({ kind: z.literal('mark_bold_approach'), bossDefId: z.string() }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
 

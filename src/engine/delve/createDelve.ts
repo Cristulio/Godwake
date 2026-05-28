@@ -1,6 +1,7 @@
 import type { DelveState, RoomSpec } from '../../types/delve';
 import { createRng, randomSeed } from '../dice/rng';
 import { eventsForChapter } from '../../content/events';
+import { intelEventIdFor, getBossIntelCard } from '../../content/bossIntel';
 import type { EventTemplate } from '../../schemas/event';
 import {
   WARMUP_POOL,
@@ -79,6 +80,23 @@ function eventRoomFromTemplate(id: string, tpl: EventTemplate): RoomSpec {
 }
 
 /**
+ * Build the deterministic intel room placed 1 step before each chapter boss.
+ * The event template is pulled by boss def id, so the player walks into the
+ * same intel beat every run — preparation, not surprise.
+ */
+function intelRoomFor(id: string, bossDefId: string): RoomSpec {
+  const card = getBossIntelCard(bossDefId);
+  if (!card) throw new Error(`No intel card for boss ${bossDefId}`);
+  return {
+    id,
+    kind: 'event',
+    title: card.roomTitle,
+    flavorText: card.roomFlavor,
+    eventTemplateId: intelEventIdFor(bossDefId),
+  };
+}
+
+/**
  * Chapter 1 / The Iron Cells — eight rooms with a difficulty ramp.
  *
  * Slot pattern: warmup → shrine → early-mid → rest → mid → shrine → elite → boss
@@ -117,6 +135,7 @@ export function createIronCellsDelve(seed: number = randomSeed()): DelveState {
         'A second altar, half-buried in rubble. Someone tried to chisel the sigils out — and someone else, later, deepened them again. The god is still listening.',
     },
     combatRoom('room-7', pick(rng, ELITE_POOL)),
+    intelRoomFor('room-intel-ch1', 'duergar-ilyich'),
     {
       id: 'room-8',
       kind: 'boss',
@@ -180,6 +199,7 @@ export function createAthkatlaDelve(seed: number = randomSeed()): DelveState {
         "Even Athkatla cannot stamp out the Crying God. A cracked stone basin half-hidden in a brick recess — Ilmater's red knot scratched in chalk and re-chalked a hundred times. Bandages hang dry on a nail.",
     },
     combatRoom('room-7', pick(rng, ATH_ELITE_POOL)),
+    intelRoomFor('room-intel-ch2', 'athkatla-magistrate'),
     {
       id: 'room-8',
       kind: 'boss',
@@ -267,6 +287,7 @@ export function createGodwakeDelve(
     },
     combatRoom('room-8', pick(rng, ELITE_POOL)),
     nextEvent('room-9', 1),
+    intelRoomFor('room-intel-ch1', 'duergar-ilyich'),
     {
       id: 'room-10',
       kind: 'boss',
@@ -313,6 +334,7 @@ export function createGodwakeDelve(
       flavorText:
         "Even Athkatla cannot stamp out the Crying God. A cracked stone basin half-hidden in a brick recess — Ilmater's red knot scratched in chalk and re-chalked a hundred times. Bandages hang dry on a nail.",
     },
+    intelRoomFor('room-intel-ch2', 'athkatla-magistrate'),
     {
       id: 'room-19',
       kind: 'boss',
@@ -360,6 +382,7 @@ export function createGodwakeDelve(
       flavorText:
         "A red-knotted bandage hangs on a nail above a cracked basin in a warden's washroom. Someone has been smuggling Ilmater's mercy into Spellhold one prayer at a time. The basin is still wet.",
     },
+    intelRoomFor('room-intel-ch3', 'asylum-director'),
     {
       id: 'room-28',
       kind: 'boss',
@@ -407,6 +430,7 @@ export function createGodwakeDelve(
       flavorText:
         "A scrap of silver-moon tapestry pinned to a niche wall, half a candle-stub still warm. Some surface-elf slave from a previous caravan smuggled the moon-mother down here a prayer at a time. The drow priestesses have not yet found this one. The Lady is still listening.",
     },
+    intelRoomFor('room-intel-ch4', 'drow-matron-mother'),
     {
       id: 'room-37',
       kind: 'boss',
@@ -473,6 +497,7 @@ export function createSpellholdDelve(seed: number = randomSeed()): DelveState {
         "A red-knotted bandage hangs on a nail above a cracked basin in a warden's washroom. Someone has been smuggling Ilmater's mercy into Spellhold one prayer at a time. The basin is still wet.",
     },
     combatRoom('room-7', pick(rng, SPH_ELITE_POOL)),
+    intelRoomFor('room-intel-ch3', 'asylum-director'),
     {
       id: 'room-8',
       kind: 'boss',
@@ -540,6 +565,7 @@ export function createUstNathaDelve(seed: number = randomSeed()): DelveState {
         "A scrap of silver-moon tapestry pinned to a niche wall, half a candle-stub still warm. Some surface-elf slave from a previous caravan smuggled the moon-mother down here a prayer at a time. The drow priestesses have not yet found this one. The Lady is still listening.",
     },
     combatRoom('room-7', pick(rng, UN_ELITE_POOL)),
+    intelRoomFor('room-intel-ch4', 'drow-matron-mother'),
     {
       id: 'room-8',
       kind: 'boss',

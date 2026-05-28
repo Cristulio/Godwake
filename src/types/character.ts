@@ -246,4 +246,16 @@ export interface Character {
    * with the Iron Stomach quirk's permanent immunity — either is enough.
    */
   poisonImmuneEncounter?: boolean;
+  /**
+   * Boss intel revealed this delve, keyed by boss monster def id. `partial`
+   * shows name + HP range + signature ability; `full` shows the complete stat
+   * block. Set by the pre-boss intel room. Cleared at delve end.
+   */
+  bossIntel?: Record<string, 'partial' | 'full'>;
+  /**
+   * Bosses the player chose to walk past without intel. Each entry grants a
+   * +5% gold bonus on that specific boss's drop ("the gods reward the bold").
+   * Cleared at delve end.
+   */
+  boldApproachBosses?: string[];
 }

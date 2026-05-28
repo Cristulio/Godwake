@@ -1,4 +1,5 @@
 import { EventTemplateSchema, type EventTemplate } from '../../schemas/event';
+import { buildAllIntelEventTemplates } from '../bossIntel';
 
 const POOL: EventTemplate[] = [
   // ─── Chapter 1: Iron Cells — simple, low-stakes choices ───────────────
@@ -827,7 +828,13 @@ const POOL: EventTemplate[] = [
   }),
 ];
 
-const BY_ID: Map<string, EventTemplate> = new Map(POOL.map((e) => [e.id, e]));
+// Boss-intel templates are looked up by id (the pre-boss slot picks them
+// deterministically — they must never appear in the random narrative pool).
+const INTEL_POOL: EventTemplate[] = buildAllIntelEventTemplates();
+
+const BY_ID: Map<string, EventTemplate> = new Map(
+  [...POOL, ...INTEL_POOL].map((e) => [e.id, e]),
+);
 
 export function getEvent(id: string): EventTemplate {
   const e = BY_ID.get(id);
