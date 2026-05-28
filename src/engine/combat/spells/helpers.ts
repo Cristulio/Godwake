@@ -6,6 +6,7 @@ import type {
   SpellEffectKind,
 } from '../../../types/combat';
 import { getSpell } from '../../../content/spells';
+import { getMonster } from '../../../content/monsters';
 import { applyDamage, evaluateCombatEnd as evaluateCombatEndShared } from '../attack';
 import { abilityModifier } from '../../../types/abilities';
 import {
@@ -204,10 +205,43 @@ export function castAreaEvocation(
 
   nextState = attachSpellEffect(nextState, effect, 'player', aliveMonsters[0]?.id);
 
-  for (const m of aliveMonsters) {
-    // Monster DEX save — engine doesn't track per-monster save mods, so use
-    // the same wis-mod=0 approximation Hold Person uses. DC scales with caster.
-    const save = roller.d20('normal', 0);
+  const resolved = applyAreaSaveForHalf(nextState, nextCharacter, aliveMonsters, {
+    roller,
+    fullDmg,
+    dc,
+    damageType,
+  });
+  nextState = resolved.state;
+  nextCharacter = resolved.character;
+
+  nextCharacter = markActionUsed(nextCharacter);
+  const ended = evaluateCombatEndFull(nextState, nextCharacter);
+  return { state: ended.state, character: ended.character, cast: true };
+}
+
+/**
+ * Per-monster DEX-save-for-half application, shared by every AoE evocation
+ * (Fireball, Lightning Bolt, Burning Hands). Each monster rolls its own DEX
+ * save off its actual ability scores, so a nimble enemy dodges more often than
+ * a sluggish one; success halves the damage. DC scales with the caster
+ * (spellSaveDC, which carries the wizard Focused Casting +1). Callers pass the
+ * already-rolled full damage and the per-cast DC so spell-specific dice and
+ * bonuses stay in each spell's own handler.
+ */
+export function applyAreaSaveForHalf(
+  state: CombatState,
+  character: Character,
+  monsters: readonly MonsterCombatant[],
+  opts: { roller: DiceRoller; fullDmg: number; dc: number; damageType: string },
+): { state: CombatState; character: Character } {
+  const { roller, fullDmg, dc, damageType } = opts;
+  let nextState = state;
+  let nextCharacter = character;
+
+  for (const m of monsters) {
+    const monsterDef = getMonster(m.instance.defId);
+    const dexMod = abilityModifier(monsterDef.abilityScores.dex ?? 10);
+    const save = roller.d20('normal', dexMod);
     const success = save.total >= dc;
     const dmg = success ? Math.floor(fullDmg / 2) : fullDmg;
 
@@ -222,7 +256,7 @@ export function castAreaEvocation(
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `${m.instance.displayName} DEX save: ${save.total} vs DC ${dc} — ${success ? 'success (half)' : 'fail (full)'}.`,
+      text: `${m.instance.displayName} DEX save: d20${dexMod >= 0 ? '+' : ''}${dexMod} = ${save.total} vs DC ${dc} — ${success ? 'success (half)' : 'fail (full)'}.`,
     });
     const damaged = applyDamage(nextState, m.id, dmg, nextCharacter);
     nextState = damaged.state;
@@ -234,7 +268,5 @@ export function castAreaEvocation(
     });
   }
 
-  nextCharacter = markActionUsed(nextCharacter);
-  const ended = evaluateCombatEndFull(nextState, nextCharacter);
-  return { state: ended.state, character: ended.character, cast: true };
+  return { state: nextState, character: nextCharacter };
 }

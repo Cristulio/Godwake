@@ -1,17 +1,18 @@
 import type { Character } from '../../../types/character';
 import type { CombatState, MonsterCombatant } from '../../../types/combat';
 import { characterHasMechanic } from '../../character/derived';
-import { applyDamage } from '../attack';
 import { appendLog } from '../log';
 import {
   type CastResult,
   type CastSpellContext,
+  applyAreaSaveForHalf,
   attachSpellEffect,
   consumeSlot,
   evaluateCombatEndFull,
   markActionUsed,
   nextLogId,
   spellDamageBonus,
+  spellSaveDC,
 } from './helpers';
 
 export function castBurningHands(ctx: CastSpellContext): CastResult {
@@ -25,16 +26,17 @@ export function castBurningHands(ctx: CastSpellContext): CastResult {
     (c) => c.kind === 'monster' && c.instance.hp.current > 0,
   ) as MonsterCombatant[];
 
-  // Primary target (the cone's anchor) takes the full roll; in our solo combat
-  // the cone catches everything in front. We damage every living monster.
+  // The cone catches everything in front; each monster rolls a DEX save for
+  // half via the shared AoE path so a L1 slot no longer out-values a L3 one.
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
   const bonus = spellDamageBonus(nextCharacter);
-  const dmg = damageRoll.total + bonus;
+  const fullDmg = damageRoll.total + bonus;
+  const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} hurls a cone of flame. ${damageRoll.rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${dmg} fire${evoker ? ' (Sculpt Spells)' : ''}.`,
+    text: `${nextCharacter.name} hurls a cone of flame. ${damageRoll.rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${fullDmg} fire${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half.`,
   });
 
   nextState = attachSpellEffect(
@@ -44,24 +46,14 @@ export function castBurningHands(ctx: CastSpellContext): CastResult {
     aliveMonsters[0]?.id,
   );
 
-  for (const m of aliveMonsters) {
-    nextState = {
-      ...nextState,
-      combatants: nextState.combatants.map((c) => {
-        if (c.kind !== 'monster' || c.id !== m.id) return c;
-        if (c.instance.acRevealed) return c;
-        return { ...c, instance: { ...c.instance, acRevealed: true } };
-      }),
-    };
-    const damaged = applyDamage(nextState, m.id, dmg, nextCharacter);
-    nextState = damaged.state;
-    nextCharacter = damaged.character;
-    nextState = appendLog(nextState, {
-      id: nextLogId(nextState),
-      kind: 'damage',
-      text: `${m.instance.displayName} takes ${dmg} fire.`,
-    });
-  }
+  const resolved = applyAreaSaveForHalf(nextState, nextCharacter, aliveMonsters, {
+    roller,
+    fullDmg,
+    dc,
+    damageType: 'fire',
+  });
+  nextState = resolved.state;
+  nextCharacter = resolved.character;
 
   nextCharacter = markActionUsed(nextCharacter);
   const ended = evaluateCombatEndFull(nextState, nextCharacter);
