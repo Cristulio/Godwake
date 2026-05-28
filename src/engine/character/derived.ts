@@ -7,6 +7,7 @@ import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
 import { characterQuirkMods } from './quirks';
 import { characterBlessingMods } from './blessings';
+import { characterCampBoonMods } from './campBoons';
 
 /**
  * Proficiency bonus by character level (PHB Table: Proficiency Bonus).
@@ -76,8 +77,10 @@ export function computeAC(character: Character): number {
 
   const quirkMods = characterQuirkMods(character);
   const blessingMods = characterBlessingMods(character);
+  const boonMods = characterCampBoonMods(character);
   base += quirkMods.acMod ?? 0;
   base += blessingMods.acBonus ?? 0;
+  base += boonMods.acBonus ?? 0;
   base += character.permanentBonuses?.ac ?? 0;
 
   // Wizard buffs.

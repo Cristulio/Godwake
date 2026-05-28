@@ -18,6 +18,7 @@ import {
 import { applyDelveStartUpgrades } from '../engine/character/upgrades';
 import { hasPendingLevelUp } from '../engine/character/leveling';
 import { getItem } from '../content/items';
+import { getCampBoon } from '../content/campBoons';
 import { useCharacterStore } from './characterStore';
 import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
@@ -70,6 +71,13 @@ interface DelveStoreState {
   creditChapterClearGold: () => void;
   concludeDelveAtCamp: () => void;
   pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => void;
+  /**
+   * Resolve the current camp's boon picker. `boonId === null` means the player
+   * explicitly skipped the panel. The same camp tier cannot be resolved twice.
+   */
+  pickCampBoon: (tier: number, boonId: string | null) => void;
+  /** Clear the Eyes-of-the-Lich preview flag once the player has read the stat block. */
+  consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
 }
 
@@ -108,6 +116,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       hitDice: { current: 1, max: 1, die: cls.hitDie },
       resources: classStartingResources(ch.classId),
       blessings: [],
+      campBoons: [],
       delveAttackBonus: 0,
       delveInitBonus: 0,
       nextAttackAdvantage: false,
@@ -213,6 +222,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       ...character,
       renown: character.renown + renownGain,
       blessings: [],
+      campBoons: [],
       delveAttackBonus: 0,
       delveInitBonus: 0,
       bossIntel: {},
@@ -260,6 +270,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       ...character,
       quirks: newQuirks,
       blessings: [],
+      campBoons: [],
       conditions: [],
       delveAttackBonus: 0,
       delveInitBonus: 0,
@@ -277,6 +288,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       longRest({
         ...character,
         blessings: [],
+        campBoons: [],
         delveAttackBonus: 0,
         delveInitBonus: 0,
         bossIntel: {},
@@ -340,6 +352,68 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     charSlice.setCharacter(nextCharacter);
     set({ delve: { ...s.delve, campChoice: choice } });
   },
+
+  pickCampBoon: (tier, boonId) => {
+    const s = get();
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!character || !s.delve) return;
+    const existing = s.delve.campBoons ?? [];
+    if (existing.some((e) => e.tier === tier)) return;
+
+    let nextCharacter: Character = character;
+    let nextDelve: DelveState = {
+      ...s.delve,
+      campBoons: [...existing, { tier, boonId }],
+    };
+
+    if (boonId) {
+      // Mirror onto the character so derived/combat reads stay simple.
+      nextCharacter = {
+        ...nextCharacter,
+        campBoons: [...(nextCharacter.campBoons ?? []), boonId],
+      };
+
+      // Pick-time side effects — HP bumps, stabilise budget, Lich's Eyes flag.
+      const boon = getCampBoon(boonId);
+      if (boon.id === 'vigor-of-the-road') {
+        const bump = Math.max(1, Math.floor(nextCharacter.hp.max * 0.05));
+        nextCharacter = {
+          ...nextCharacter,
+          hp: {
+            ...nextCharacter.hp,
+            max: nextCharacter.hp.max + bump,
+            current: nextCharacter.hp.current + bump,
+          },
+        };
+      } else if (boon.id === 'mantle-of-the-slain') {
+        const bump = nextCharacter.level;
+        nextCharacter = {
+          ...nextCharacter,
+          hp: {
+            ...nextCharacter.hp,
+            max: nextCharacter.hp.max + bump,
+            current: nextCharacter.hp.current + bump,
+          },
+        };
+      } else if (boon.id === 'patience-of-ilmater') {
+        nextCharacter = {
+          ...nextCharacter,
+          delveStabiliseBonus: (nextCharacter.delveStabiliseBonus ?? 0) + 1,
+        };
+      } else if (boon.id === 'eyes-of-the-lich') {
+        nextDelve = { ...nextDelve, lichEyesAvailable: true };
+      }
+    }
+
+    charSlice.setCharacter(nextCharacter);
+    set({ delve: nextDelve });
+  },
+
+  consumeLichEyes: () =>
+    set((s) =>
+      s.delve ? { delve: { ...s.delve, lichEyesAvailable: false } } : s,
+    ),
 
   purchaseFromMerchant: (itemId) => {
     const charSlice = useCharacterStore.getState();

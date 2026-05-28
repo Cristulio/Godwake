@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { RoomSpec } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
@@ -9,6 +9,11 @@ import { getActiveRoller } from '../../engine/dice';
 import { rollBlessingOptions } from '../../engine/character/blessings';
 import { getItem } from '../../content/items';
 import { playSfx } from '../../engine/audio';
+import {
+  boonsForCampTier,
+  type CampBoon,
+  type CampBoonTier,
+} from '../../content/campBoons';
 
 type CampChoice = 'rest' | 'sharpen' | 'prayer';
 
@@ -29,11 +34,33 @@ const MERCHANT_POTION_IDS = [
 
 export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomProps) {
   const character = useGameStore((s) => s.character);
+  const delve = useGameStore((s) => s.delve);
   const campChoice = useGameStore((s) => s.delve?.campChoice ?? null);
   const pickCampChoice = useGameStore((s) => s.pickCampChoice);
+  const pickCampBoon = useGameStore((s) => s.pickCampBoon);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const addBlessing = useGameStore((s) => s.addBlessing);
   const showTaunt = useGameStore((s) => s.showTaunt);
+
+  // Which camp is this in the delve sequence? Count camp rooms from the start
+  // up to (and including) the current room — the count is the tier index.
+  const campTier = useMemo<CampBoonTier | null>(() => {
+    if (!delve) return null;
+    let count = 0;
+    for (let i = 0; i <= delve.currentRoomIdx && i < delve.rooms.length; i++) {
+      if (delve.rooms[i].kind === 'camp') count += 1;
+    }
+    if (count === 1 || count === 2 || count === 3) return count;
+    return null;
+  }, [delve]);
+
+  const boonResolution = (delve?.campBoons ?? []).find(
+    (e) => e.tier === campTier,
+  );
+  const boonOptions = useMemo<CampBoon[]>(() => {
+    if (!character || campTier === null) return [];
+    return boonsForCampTier(campTier, character.classId);
+  }, [character, campTier]);
   // The blessing id pulled by "A Prayer Whispered". Captured on click so
   // we can echo the exact god back to the player even if blessings change.
   const [prayerGrantedId, setPrayerGrantedId] = useState<string | null>(null);
@@ -169,6 +196,18 @@ export function CampRoom({ room, onPressSouth, onMakeForPhandalin }: CampRoomPro
         <div className="max-w-md mx-auto">
           <BlessingCard blessingId={prayerGrantedId} />
         </div>
+      )}
+
+      {campTier !== null && (
+        <CampBoonPicker
+          tier={campTier}
+          options={boonOptions}
+          resolution={boonResolution ?? null}
+          onPick={(boonId) => {
+            pickCampBoon(campTier, boonId);
+            playSfx(boonId ? 'shrine_chime' : 'ui_click');
+          }}
+        />
       )}
 
       <Panel>
@@ -377,6 +416,83 @@ function CampChoiceCard({
         <Button variant="primary" onClick={onPick}>
           {buttonLabel}
         </Button>
+      )}
+    </Panel>
+  );
+}
+
+interface CampBoonPickerProps {
+  tier: CampBoonTier;
+  options: CampBoon[];
+  resolution: { tier: number; boonId: string | null } | null;
+  onPick: (boonId: string | null) => void;
+}
+
+function CampBoonPicker({ tier, options, resolution, onPick }: CampBoonPickerProps) {
+  const resolved = resolution !== null;
+  const pickedBoon = resolved
+    ? options.find((b) => b.id === resolution.boonId) ?? null
+    : null;
+  const skipped = resolved && resolution.boonId === null;
+
+  return (
+    <Panel className="bg-gradient-to-br from-[#1e1a2a] to-[#100d18] border-[var(--color-accent-amber)]">
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest">
+          ◆ Choose a Boon · Camp {tier}
+        </div>
+        <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
+          {resolved ? 'Resolved' : 'One pick — for the rest of the delve'}
+        </div>
+      </div>
+
+      {!resolved && (
+        <>
+          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+            The road has marked you. Take one boon to carry south — or walk on
+            unburdened.
+          </p>
+          <div className="grid md:grid-cols-3 gap-3">
+            {options.map((b) => (
+              <button
+                type="button"
+                key={b.id}
+                onClick={() => onPick(b.id)}
+                className="text-left border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] hover:bg-[#2a1d12] transition-colors p-3 flex flex-col gap-1"
+              >
+                <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest">
+                  {b.name}
+                </div>
+                <div className="text-[var(--color-text-primary)] text-xs leading-relaxed">
+                  {b.description}
+                </div>
+                <div className="text-[var(--color-text-dim)] text-[11px] italic leading-relaxed mt-1">
+                  {b.flavor}
+                </div>
+              </button>
+            ))}
+          </div>
+          <div className="mt-3 flex justify-end">
+            <button
+              type="button"
+              onClick={() => onPick(null)}
+              className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-amber)] text-[11px] uppercase tracking-widest italic"
+            >
+              Walk on unburdened →
+            </button>
+          </div>
+        </>
+      )}
+
+      {resolved && pickedBoon && (
+        <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
+          {pickedBoon.name} — taken. {pickedBoon.description}
+        </div>
+      )}
+      {resolved && skipped && (
+        <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic">
+          You left the boon on the road. The dark is darker for it.
+        </div>
       )}
     </Panel>
   );

@@ -11,6 +11,7 @@ import type { Monster } from '../../schemas/monster';
 import { abilityModifier } from '../../types/abilities';
 import { initiativeModifier } from '../character/derived';
 import { characterBlessingMods } from '../character/blessings';
+import { characterCampBoonMods } from '../character/campBoons';
 import { rogueCunningActionMax } from '../character/actions';
 import { getMonster } from '../../content/monsters';
 import {
@@ -196,6 +197,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     });
   }
 
+  const boonMods = characterCampBoonMods(nextCharacter);
   const state: CombatState = {
     combatants,
     initiativeOrder,
@@ -207,6 +209,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     playerHasAttacked: false,
     rerollMissesEncounterRemaining: blessingMods.rerollMissesPerEncounter ?? 0,
     playerAttacksThisTurn: 0,
+    bladeOfVowRerollsRemaining: boonMods.weaponDamageRerollPerCombat ?? 0,
   };
 
   return combatResult(state, nextCharacter);
