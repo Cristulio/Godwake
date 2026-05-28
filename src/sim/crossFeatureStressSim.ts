@@ -5,7 +5,7 @@
  * monster bestiary codex, +misc). Each was validated in isolation; this
  * sim stress-tests their worst-case STACKED interaction.
  *
- * Four scenarios, 500 full-Godwake delves each (4 chapters, 37 rooms):
+ * Four scenarios, 500 full-Godwake delves each (4 chapters, 50 rooms):
  *
  *   1. Optimal Soul (Wizard L7, tiefling): every defensive lever stacked
  *      — capped AC blessings, capped tempHP, defensive camp boons (Stillness
@@ -300,13 +300,13 @@ function makeCharacter(spec: ScenarioSpec): Character {
 }
 
 function chapterFor(roomIdx: number): number {
-  // Godwake layout (41 rooms total): ch1 indices 0–10 (boss at 10, camp at 11),
-  // ch2 indices 12–20 (boss at 20, camp at 21), ch3 indices 22–30 (boss at 30,
-  // camp at 31), ch4 indices 32–40 (boss at 40). The camp room separating two
+  // Godwake layout (50 rooms total): ch1 indices 0–10 (boss at 10, camp at 11),
+  // ch2 indices 12–23 (boss at 23, camp at 24), ch3 indices 25–36 (boss at 36,
+  // camp at 37), ch4 indices 38–49 (boss at 49). The camp room separating two
   // chapters bills to the preceding chapter so cleanup is local.
   if (roomIdx <= 11) return 1;
-  if (roomIdx <= 21) return 2;
-  if (roomIdx <= 31) return 3;
+  if (roomIdx <= 24) return 2;
+  if (roomIdx <= 37) return 3;
   return 4;
 }
 
@@ -395,7 +395,7 @@ export interface DelveRunStats {
   encountersFought: number;
   damageDealt: number;
   damageTaken: number;
-  /** True if Matron Mother fight was reached (room 37). */
+  /** True if Matron Mother fight was reached (final boss, room-46). */
   reachedFinalBoss: boolean;
   /** True if Matron was killed and final delve finished alive. */
   killedMatron: boolean;

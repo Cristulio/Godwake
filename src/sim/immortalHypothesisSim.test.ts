@@ -194,7 +194,7 @@ ${matrixRows.join('\n')}
 
 - **Engine:** real \`createCombat\` / \`playerAttack\` / \`monsterAttack\` / \`endTurn\` path.
 - **AI:** class-aware turn handlers reused from \`src/test/sim/encounterStress.ts\` (rogue: Hide → Sneak Attack; fighter: Action Surge + Second Wind; wizard: Fireball/Lightning/Burning Hands/Magic Missile/Fire Bolt priority).
-- **Delve:** full Godwake delve (\`createGodwakeDelve\`) — 37 rooms, 4 chapters, seeded.
+- **Delve:** full Godwake delve (\`createGodwakeDelve\`) — 50 rooms, 4 chapters, seeded.
 - **Shrine/event rooms:** no-op. Blessings are pre-stamped per loadout so the signal isn't diluted by random shrine picks.
 - **Rest rooms:** 70% HP heal. Camp room: long rest.
 - **Runs per cell:** ${runsPerCell}

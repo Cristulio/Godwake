@@ -147,9 +147,12 @@ export function makeCharacterFromBlessings(
 }
 
 function chapterFor(roomIdx: number): number {
-  if (roomIdx <= 9) return 1;
-  if (roomIdx <= 19) return 2;
-  if (roomIdx <= 28) return 3;
+  // Godwake layout (50 rooms): ch1 indices 0–10 (boss 10, camp 11),
+  // ch2 12–23 (boss 23, camp 24), ch3 25–36 (boss 36, camp 37),
+  // ch4 38–49 (boss 49). Each camp bills to the chapter it follows.
+  if (roomIdx <= 11) return 1;
+  if (roomIdx <= 24) return 2;
+  if (roomIdx <= 37) return 3;
   return 4;
 }
 
