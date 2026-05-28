@@ -6,10 +6,20 @@ import { abilityModifier, ABILITY_NAMES, ABILITY_FULL_NAMES } from '../../types/
 interface MonsterDetailPanelProps {
   monster: Monster;
   encounters: number;
+  defeated: number;
+  killedByCount: number;
+  killingAbilities: Record<string, number>;
   onClose: () => void;
 }
 
-export function MonsterDetailPanel({ monster, encounters, onClose }: MonsterDetailPanelProps) {
+export function MonsterDetailPanel({
+  monster,
+  encounters,
+  defeated,
+  killedByCount,
+  killingAbilities,
+  onClose,
+}: MonsterDetailPanelProps) {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose();
@@ -58,15 +68,32 @@ export function MonsterDetailPanel({ monster, encounters, onClose }: MonsterDeta
             <div className="w-[160px] h-[220px] bg-[var(--color-bg-deep)] border-2 border-[var(--color-border-warm)] flex items-end justify-center p-2">
               <MonsterPortrait defId={monster.id} className="w-full h-full" />
             </div>
-            <div className="panel-etched border border-[var(--color-border-dim)] px-3 py-2 text-center w-full">
-              <div className="font-display text-[var(--color-text-dim)] uppercase tracking-widest text-[9px]">
-                Encountered
+            <div className="panel-etched border border-[var(--color-border-dim)] px-3 py-2 w-full grid grid-cols-3 gap-2 text-center">
+              <div>
+                <div className="font-display text-[var(--color-text-dim)] uppercase tracking-widest text-[8px]">
+                  Met
+                </div>
+                <div className="text-[var(--color-accent-gold)] font-mono text-base">
+                  {encounters}
+                </div>
               </div>
-              <div
-                className="text-[var(--color-accent-gold)] font-mono text-lg"
-                style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.6)' }}
-              >
-                × {encounters}
+              <div>
+                <div className="font-display text-[var(--color-text-dim)] uppercase tracking-widest text-[8px]">
+                  Slain
+                </div>
+                <div className="text-[var(--color-status-poison)] font-mono text-base">
+                  {defeated}
+                </div>
+              </div>
+              <div>
+                <div className="font-display text-[var(--color-text-dim)] uppercase tracking-widest text-[8px]">
+                  Felled by
+                </div>
+                <div
+                  className={`font-mono text-base ${killedByCount > 0 ? 'text-[var(--color-accent-blood)]' : 'text-[var(--color-text-dim)]'}`}
+                >
+                  {killedByCount}
+                </div>
               </div>
             </div>
           </div>
@@ -135,7 +162,11 @@ export function MonsterDetailPanel({ monster, encounters, onClose }: MonsterDeta
               <SectionHeader>◆ Actions</SectionHeader>
               <div className="flex flex-col gap-2">
                 {monster.actions.map((a, i) => (
-                  <ActionRow key={`${a.kind}-${a.name}-${i}`} action={a} />
+                  <ActionRow
+                    key={`${a.kind}-${a.name}-${i}`}
+                    action={a}
+                    killCount={killingAbilities[a.name] ?? 0}
+                  />
                 ))}
               </div>
             </div>
@@ -174,7 +205,16 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ActionRow({ action }: { action: MonsterAction }) {
+function ActionRow({ action, killCount }: { action: MonsterAction; killCount: number }) {
+  const killBadge =
+    killCount > 0 ? (
+      <span
+        className="bg-[var(--color-accent-blood)]/30 text-[var(--color-accent-blood)] border border-[var(--color-accent-blood)]/50 px-1.5 py-0.5 text-[9px] uppercase tracking-widest font-mono"
+        title="Times this ability has killed you"
+      >
+        ✗ killed you × {killCount}
+      </span>
+    ) : null;
   if (action.kind === 'attack') {
     const reachRange = action.range
       ? `range ${action.range[0]}/${action.range[1]} ft`
@@ -199,6 +239,7 @@ function ActionRow({ action }: { action: MonsterAction }) {
             {action.description}
           </p>
         )}
+        {killBadge && <div className="mt-1.5">{killBadge}</div>}
       </div>
     );
   }
@@ -220,6 +261,7 @@ function ActionRow({ action }: { action: MonsterAction }) {
           {action.description}
         </p>
       )}
+      {killBadge && <div className="mt-1.5">{killBadge}</div>}
     </div>
   );
 }

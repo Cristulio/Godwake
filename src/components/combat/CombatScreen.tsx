@@ -16,6 +16,7 @@ import {
   useConsumable,
   castSpell,
 } from '../../engine/combat';
+import { buildPostmortem } from '../../engine/combat/postmortem';
 import { getSpell } from '../../content/spells';
 import { ItemPicker } from './ItemPicker';
 import { CombatLog } from './CombatLog';
@@ -127,6 +128,17 @@ export function CombatScreen({
       playSfx('victory_sting');
     } else if (state.status === 'player-defeat') {
       playSfx('death_sting');
+      // Snapshot the moment of death for the postmortem screen. Has to run
+      // BEFORE the DelveScreen tears combat down via failDelve(); doing it
+      // here in CombatScreen guarantees lastAttack/lastSave are still live.
+      const delve = useGameStore.getState().delve;
+      const snapshot = buildPostmortem(state, character, delve);
+      useGameStore.getState().setPostmortem(snapshot);
+      if (snapshot.killerDefId) {
+        useGameStore
+          .getState()
+          .recordPlayerKilledBy(snapshot.killerDefId, snapshot.attackName);
+      }
     }
   }, [state.status]);
 

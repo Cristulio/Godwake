@@ -8,6 +8,7 @@ import { characterBlessingMods } from '../../character/blessings';
 import { playSfx } from '../../audio';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
+import { useMetaStore } from '../../../stores/metaStore';
 
 const UNCANNY_DODGE_LEVEL = 5;
 
@@ -46,6 +47,14 @@ export function applyDamage(
     };
     if (wasAlive && mc.instance.hp.current === 0) {
       playSfx('monster_death');
+      // Codex: count one defeat per monster instance felled. Wrapped in
+      // try/catch so engine tests that don't instantiate the meta store
+      // (none today, but future ones may) don't fall over.
+      try {
+        useMetaStore.getState().recordMonsterDefeat(mc.instance.defId);
+      } catch {
+        /* meta store unavailable — non-fatal */
+      }
     }
     return { state: next, character: nextCharacter };
   }

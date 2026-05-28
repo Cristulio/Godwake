@@ -6,6 +6,7 @@ import type {
   Combatant,
   CombatState,
   CombatLogEntry,
+  SaveEvent,
 } from '../../../types/combat';
 import { computeAC } from '../../character/derived';
 import { characterQuirkMods } from '../../character/quirks';
@@ -150,6 +151,8 @@ export function monsterAttack(
     attackerName: attacker.instance.displayName,
     targetName: nextCharacter.name,
     attackerKind: 'monster',
+    attackerId: attackerId,
+    attackerDefId: attacker.instance.defId,
     weaponName: action.name,
     attackBonus: action.attackBonus,
     natural: toHit.rolls[0],
@@ -157,6 +160,7 @@ export function monsterAttack(
     targetAC: ac,
     hit,
     crit,
+    damageType: action.damageType,
   };
 
   let nextState: CombatState = appendLog(
@@ -195,6 +199,14 @@ export function monsterAttack(
     const damaged = applyDamage(nextState, 'player', totalDamage, nextCharacter);
     nextState = damaged.state;
     nextCharacter = damaged.character;
+    // Stamp the actual damage delivered onto lastAttack so the postmortem can
+    // quote the killing blow's number (raw damage is misleading on resists).
+    if (nextState.lastAttack && nextState.lastAttack.id === attackEvent.id) {
+      nextState = {
+        ...nextState,
+        lastAttack: { ...nextState.lastAttack, damageDealt: totalDamage },
+      };
+    }
     const breakdown: string[] = [`${damageRoll.total} dice`];
     if (damageExpr.modifier !== 0) {
       breakdown.push(
@@ -303,9 +315,24 @@ function monsterCastParalyze(
   }
 
   let nextState: CombatState = appendLog(state, ...logEntries);
+  const saveEventId = (nextState.saveEventCounter ?? 0) + 1;
+  const saveEvent: SaveEvent = {
+    id: saveEventId,
+    sourceName: action.name,
+    casterName: attackerName,
+    ability: action.saveAbility,
+    dc: action.saveDC,
+    mod: save.mod,
+    natural: save.natural,
+    total: save.total,
+    success: save.success,
+    advantage: save.advantage,
+  };
   const spellEffectId = (nextState.spellEffectCounter ?? 0) + 1;
   nextState = {
     ...nextState,
+    saveEventCounter: saveEventId,
+    lastSave: saveEvent,
     spellEffectCounter: spellEffectId,
     spellEffectEvent: {
       id: spellEffectId,

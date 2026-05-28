@@ -15,11 +15,19 @@ interface MetaStoreState {
   deathCount: number;
   discoveredMonsters: string[];
   monsterEncounters: Record<string, number>;
+  /** Times the player has defeated each monster def. */
+  monsterDefeats: Record<string, number>;
+  /** Times each monster def has dealt the killing blow to the player. */
+  monsterKilledBy: Record<string, number>;
+  /** Per-def map of {abilityName: kills} — which attack a given monster used to finish the player. */
+  monsterKillingAbilities: Record<string, Record<string, number>>;
   unlockedUpgrades: UnlockedUpgrades;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
 
   discoverMonster: (defId: string) => void;
+  recordMonsterDefeat: (defId: string) => void;
+  recordPlayerKilledBy: (defId: string, abilityName?: string) => void;
   purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
   setHasReincarnated: (v: boolean) => void;
   incrementDeathCount: () => void;
@@ -34,6 +42,9 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   deathCount: 0,
   discoveredMonsters: [],
   monsterEncounters: {},
+  monsterDefeats: {},
+  monsterKilledBy: {},
+  monsterKillingAbilities: {},
   unlockedUpgrades: {},
   chapter1Cleared: false,
   druidGroveUnlocked: false,
@@ -45,6 +56,31 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       return {
         discoveredMonsters: already ? s.discoveredMonsters : [...s.discoveredMonsters, defId],
         monsterEncounters: { ...s.monsterEncounters, [defId]: prevCount + 1 },
+      };
+    }),
+
+  recordMonsterDefeat: (defId) =>
+    set((s) => ({
+      monsterDefeats: {
+        ...s.monsterDefeats,
+        [defId]: (s.monsterDefeats[defId] ?? 0) + 1,
+      },
+    })),
+
+  recordPlayerKilledBy: (defId, abilityName) =>
+    set((s) => {
+      const prevForDef = s.monsterKillingAbilities[defId] ?? {};
+      const nextForDef = abilityName
+        ? { ...prevForDef, [abilityName]: (prevForDef[abilityName] ?? 0) + 1 }
+        : prevForDef;
+      return {
+        monsterKilledBy: {
+          ...s.monsterKilledBy,
+          [defId]: (s.monsterKilledBy[defId] ?? 0) + 1,
+        },
+        monsterKillingAbilities: abilityName
+          ? { ...s.monsterKillingAbilities, [defId]: nextForDef }
+          : s.monsterKillingAbilities,
       };
     }),
 
@@ -87,6 +123,9 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       deathCount: 0,
       discoveredMonsters: [],
       monsterEncounters: {},
+      monsterDefeats: {},
+      monsterKilledBy: {},
+      monsterKillingAbilities: {},
       unlockedUpgrades: {},
       chapter1Cleared: false,
       druidGroveUnlocked: false,
