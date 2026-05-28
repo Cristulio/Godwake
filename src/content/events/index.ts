@@ -5,6 +5,7 @@ const POOL: EventTemplate[] = [
   // ─── Chapter 1: Iron Cells — simple, low-stakes choices ───────────────
   EventTemplateSchema.parse({
     id: 'pale-cleric-shrine',
+    eventType: 'shrine',
     title: 'A Pale Cleric at a Roadside Shrine',
     flavor:
       "A woman in moth-eaten Ilmatari grey sits on the lip of a cracked basin, hands folded in her lap. She does not look up when you approach. \"Will you sit? The Crying God listens better when two hearts pause together.\"",
@@ -69,6 +70,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'cracked-mirror',
+    eventType: 'omen',
     title: 'A Cracked Mirror in the Dust',
     flavor:
       "Propped against a fallen beam, a hand-mirror with a single hairline crack splitting your face into two strangers. The left one is smiling. You are not.",
@@ -127,6 +129,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'wounded-captain',
+    eventType: 'stranger',
     title: 'A Wounded Captain',
     flavor:
       "A bandit deserter — captain's tabard, captain's split lip — propped against the wall with one hand pressed to his side. \"Coin in my purse for a wound that won't stop bleeding. Take a blow for me, walker. I'm done. The other lads won't be.\"",
@@ -182,6 +185,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'whispering-door',
+    eventType: 'omen',
     title: 'A Whispering Door',
     flavor:
       "A door of black wood set crookedly into the corridor, where no architect would have left one. The latch whispers to itself in a language that is almost yours.",
@@ -226,6 +230,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'bones-on-stake',
+    eventType: 'ruin',
     title: 'Bones on a Stake',
     flavor:
       "Someone has driven an iron rod into the floor of the cell-block and crowned it with a knuckle, two ribs, and a jaw of something that died here in better light.",
@@ -266,6 +271,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'rats-in-the-grain',
+    eventType: 'beast',
     title: 'Rats in the Grain Sack',
     flavor:
       "A guard's mess-sack, half-eaten through. Two rats lift their heads at you with the calm of small things that have not been hunted in this corridor.",
@@ -295,6 +301,7 @@ const POOL: EventTemplate[] = [
   // ─── Chapter 2: Athkatla — coin-flavored choices ─────────────────────
   EventTemplateSchema.parse({
     id: 'beggar-at-the-gate',
+    eventType: 'stranger',
     title: 'A Beggar at the Gate',
     flavor:
       "A bone-thin man in Waukeen's faded yellow squats by the customs post. \"A coin, walker. A coin and the merchant queen counts you fair on her scales.\"",
@@ -348,6 +355,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'cowled-recruiter',
+    eventType: 'stranger',
     title: 'A Cowled Recruiter in the Shadow of an Arch',
     flavor:
       "A figure in the grey-and-blue of the Cowled Wizards steps out of an arch as if from the stone itself. \"You walk loud, walker. The Cowl licenses talent. A small payment, and a small protection — name your wager.\"",
@@ -402,6 +410,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'wine-merchant',
+    eventType: 'bargain',
     title: 'A Wine-Merchant\'s Hospitality',
     flavor:
       "A man in a saffron coat leans across his counter with a cup already poured. \"On the house, walker. A taste of Amnian red. The cellar has more — for those with coin and the throat for it.\"",
@@ -463,6 +472,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'street-orphan',
+    eventType: 'stranger',
     title: 'A Street Orphan with a Knife',
     flavor:
       "A boy of perhaps ten steps out of an arch with a small knife held the wrong way. His coat is too thin for the season. \"Purse,\" he says, the word too big for him. \"Purse, walker.\"",
@@ -514,6 +524,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'oghma-scribe',
+    eventType: 'lore',
     title: 'A Scribe of Oghma',
     flavor:
       "A bald man in white linen squats in the lee of a wall with a folio open on his knees. He looks up as you pass. \"A line of your road, walker. The Binder pays for stories. A copper for a name, a silver for a why.\"",
@@ -557,6 +568,7 @@ const POOL: EventTemplate[] = [
   // ─── Chapter 3: Spellhold — deeper trade-offs ────────────────────────
   EventTemplateSchema.parse({
     id: 'mad-prisoner-bargain',
+    eventType: 'bargain',
     title: 'A Mad Prisoner with a Bargain',
     flavor:
       "A man in a shredded asylum smock presses his cheek to the bars of his cell. \"Walker. Walker. Take it. Take it from me. I'll be lighter. You'll be richer. The Director won't notice — he never notices.\" His hand pushes through the bars holding a velvet purse far too heavy for it.",
@@ -634,6 +646,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'hollow-library',
+    eventType: 'lore',
     title: 'A Hollow Library',
     flavor:
       "A reading-room behind a half-locked door — the shelves stripped, save for one folio left open on a lectern. The page is blank. As you watch, a single line of ink runs itself across the parchment.",
@@ -676,6 +689,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'warden-deal',
+    eventType: 'treasure',
     title: "A Warden's Quiet Deal",
     flavor:
       "A side-corridor; a warden in undyed grey leaning against a doorframe with a key on his palm. \"The Director keeps a strongbox three doors down. The key is short-lived — I'll be missing it inside the hour. Buy the hour from me, walker.\"",
@@ -720,6 +734,7 @@ const POOL: EventTemplate[] = [
   // ─── Chapter 4: Ust Natha — drow stakes ──────────────────────────────
   EventTemplateSchema.parse({
     id: 'drow-priestess-test',
+    eventType: 'shrine',
     title: "A Priestess's Test",
     flavor:
       "A drow in Lolth's red lace blocks the corridor with the calm of a woman who has not been moved in a hundred years. \"Walker. The Spider Queen tests her gifts. Cut yourself for her or pay her the weight of the cut. Both are an offering. Neither is a refusal.\"",
@@ -779,6 +794,7 @@ const POOL: EventTemplate[] = [
 
   EventTemplateSchema.parse({
     id: 'eilistraee-shrine',
+    eventType: 'shrine',
     title: 'A Hidden Shrine to Eilistraee',
     flavor:
       "A cleft in the rock barely wide enough for a shoulder. Inside: a tallow stub burning steadier than it should, and a small silver figure of a woman with a sword raised to a moon she cannot see. A drow has been hiding her here.",

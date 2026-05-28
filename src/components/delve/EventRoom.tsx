@@ -5,6 +5,7 @@ import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { getActiveRoller } from '../../engine/dice';
 import { getEvent } from '../../content/events';
+import { EventMotif } from './EventMotif';
 import {
   applyEventOutcome,
   canTakeChoice,
@@ -88,6 +89,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
 
   return (
     <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(212,176,98,0.07),transparent_55%)]">
+      <EventMotif type={template.eventType} />
       <header className="pb-3 border-b border-[var(--color-border-warm)]">
         <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
           {template.title.toUpperCase()}
