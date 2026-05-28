@@ -47,6 +47,10 @@ export interface AttackEvent {
   attackerName: string;
   targetName: string;
   attackerKind: 'player' | 'monster';
+  /** Combatant id of the attacker. Optional so legacy rehydrates work. Used by the postmortem to look up the killer's monster def. */
+  attackerId?: string;
+  /** Monster def id of the attacker, when the attacker is a monster. Lets the postmortem resolve the killer's codex entry directly. */
+  attackerDefId?: string;
   weaponName: string;
   attackBonus: number;
   natural: number;
@@ -54,6 +58,29 @@ export interface AttackEvent {
   targetAC: number;
   hit: boolean;
   crit: boolean;
+  /** Damage actually applied to the target after immunities/resistances. Optional so legacy rehydrates work. */
+  damageDealt?: number;
+  /** Damage type, when applicable. */
+  damageType?: string;
+}
+
+export interface SaveEvent {
+  /** Monotonic id — increments per save roll. */
+  id: number;
+  /** Display name of the effect/source (e.g. "Hold Person"). */
+  sourceName: string;
+  /** Display name of the caster (e.g. "Magistrate"). */
+  casterName?: string;
+  ability: 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';
+  dc: number;
+  /** Player's ability modifier on the save. */
+  mod: number;
+  /** d20 face. */
+  natural: number;
+  /** Final total (d20 + mod). */
+  total: number;
+  success: boolean;
+  advantage: boolean;
 }
 
 export type SpellEffectKind =
@@ -93,6 +120,10 @@ export interface CombatState {
   spellEffectEvent?: SpellEffectEvent;
   /** Counter to issue stable SpellEffectEvent ids. Optional so legacy saves rehydrate. */
   spellEffectCounter?: number;
+  /** Most recent saving-throw event the player rolled. Used by the postmortem to attribute deaths to a failed save (Hold Person, etc.). */
+  lastSave?: SaveEvent;
+  /** Counter to issue stable SaveEvent ids. Optional so legacy saves rehydrate. */
+  saveEventCounter?: number;
   /** True after the player has made their first attack roll this combat. */
   playerHasAttacked: boolean;
   /** Missed-attack rerolls remaining for this encounter (Tymora's Coin etc.). */

@@ -165,6 +165,33 @@ describe('useMetaStore — basic CRUD', () => {
     expect(useMetaStore.getState().deathCount).toBe(2);
   });
 
+  it('recordMonsterDefeat increments per-def defeat counts', () => {
+    useMetaStore.getState().recordMonsterDefeat('goblin');
+    useMetaStore.getState().recordMonsterDefeat('goblin');
+    useMetaStore.getState().recordMonsterDefeat('skeleton');
+    const s = useMetaStore.getState();
+    expect(s.monsterDefeats).toEqual({ goblin: 2, skeleton: 1 });
+  });
+
+  it('recordPlayerKilledBy increments killer + ability buckets', () => {
+    useMetaStore.getState().recordPlayerKilledBy('duergar-ilyich', 'Eldritch Burst');
+    useMetaStore.getState().recordPlayerKilledBy('duergar-ilyich', 'Eldritch Burst');
+    useMetaStore.getState().recordPlayerKilledBy('duergar-ilyich', 'Greataxe');
+    const s = useMetaStore.getState();
+    expect(s.monsterKilledBy['duergar-ilyich']).toBe(3);
+    expect(s.monsterKillingAbilities['duergar-ilyich']).toEqual({
+      'Eldritch Burst': 2,
+      Greataxe: 1,
+    });
+  });
+
+  it('recordPlayerKilledBy with no ability still counts the kill', () => {
+    useMetaStore.getState().recordPlayerKilledBy('shadow');
+    const s = useMetaStore.getState();
+    expect(s.monsterKilledBy['shadow']).toBe(1);
+    expect(s.monsterKillingAbilities['shadow']).toBeUndefined();
+  });
+
   it('resetMeta wipes all fields', () => {
     useMetaStore.setState({
       hasReincarnated: true,

@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Character } from '../types/character';
 import type { CombatState } from '../types/combat';
 import type { DelveState } from '../types/delve';
+import type { Postmortem } from '../types/postmortem';
 import { setActiveRoller } from '../engine/dice';
 import { type CharacterCreationInput } from '../engine/character/defaultCharacter';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
@@ -116,6 +117,10 @@ interface GameState {
   quirksTutorialSeen: boolean;
   discoveredMonsters: string[];
   monsterEncounters: Record<string, number>;
+  monsterDefeats: Record<string, number>;
+  monsterKilledBy: Record<string, number>;
+  monsterKillingAbilities: Record<string, Record<string, number>>;
+  postmortem: Postmortem | null;
   unlockedUpgrades: UnlockedUpgrades;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
@@ -155,7 +160,13 @@ interface GameState {
 
   // Codex
   discoverMonster: (defId: string) => void;
+  recordMonsterDefeat: (defId: string) => void;
+  recordPlayerKilledBy: (defId: string, abilityName?: string) => void;
   goToCodex: () => void;
+
+  // Postmortem (transient, cleared on REINCARNATE)
+  setPostmortem: (p: Postmortem | null) => void;
+  clearPostmortem: () => void;
 
   // Inventory
   goToInventory: () => void;
@@ -192,6 +203,9 @@ interface PersistedSnapshot {
   quirksTutorialSeen: boolean;
   discoveredMonsters: string[];
   monsterEncounters: Record<string, number>;
+  monsterDefeats: Record<string, number>;
+  monsterKilledBy: Record<string, number>;
+  monsterKillingAbilities: Record<string, Record<string, number>>;
   unlockedUpgrades: UnlockedUpgrades;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
@@ -223,6 +237,9 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     quirksTutorialSeen: screen.quirksTutorialSeen,
     discoveredMonsters: meta.discoveredMonsters,
     monsterEncounters: meta.monsterEncounters,
+    monsterDefeats: meta.monsterDefeats,
+    monsterKilledBy: meta.monsterKilledBy,
+    monsterKillingAbilities: meta.monsterKillingAbilities,
     unlockedUpgrades: meta.unlockedUpgrades,
     chapter1Cleared: meta.chapter1Cleared,
     druidGroveUnlocked: meta.druidGroveUnlocked,
@@ -252,6 +269,18 @@ function scatterSnapshot(s: PersistedSnapshot) {
       s.monsterEncounters && typeof s.monsterEncounters === 'object'
         ? s.monsterEncounters
         : {},
+    monsterDefeats:
+      s.monsterDefeats && typeof s.monsterDefeats === 'object'
+        ? s.monsterDefeats
+        : {},
+    monsterKilledBy:
+      s.monsterKilledBy && typeof s.monsterKilledBy === 'object'
+        ? s.monsterKilledBy
+        : {},
+    monsterKillingAbilities:
+      s.monsterKillingAbilities && typeof s.monsterKillingAbilities === 'object'
+        ? s.monsterKillingAbilities
+        : {},
     unlockedUpgrades: s.unlockedUpgrades ?? {},
     chapter1Cleared: !!s.chapter1Cleared,
     druidGroveUnlocked: !!s.druidGroveUnlocked,
@@ -261,6 +290,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
     introSeen: !!s.introSeen,
     quirksTutorialSeen: !!s.quirksTutorialSeen,
     taunt: null,
+    postmortem: null,
   });
   useDelveStore.setState({ delve: null });
   useCombatStore.setState({ combat: null });
@@ -310,6 +340,9 @@ export const useGameStore = create<GameState>()(
           deathCount: m.deathCount,
           discoveredMonsters: m.discoveredMonsters,
           monsterEncounters: m.monsterEncounters,
+          monsterDefeats: m.monsterDefeats,
+          monsterKilledBy: m.monsterKilledBy,
+          monsterKillingAbilities: m.monsterKillingAbilities,
           unlockedUpgrades: m.unlockedUpgrades,
           chapter1Cleared: m.chapter1Cleared,
           druidGroveUnlocked: m.druidGroveUnlocked,
@@ -322,6 +355,7 @@ export const useGameStore = create<GameState>()(
           introSeen: sc.introSeen,
           quirksTutorialSeen: sc.quirksTutorialSeen,
           taunt: sc.taunt,
+          postmortem: sc.postmortem,
         });
       };
 
@@ -345,6 +379,10 @@ export const useGameStore = create<GameState>()(
         quirksTutorialSeen: useScreenStore.getState().quirksTutorialSeen,
         discoveredMonsters: useMetaStore.getState().discoveredMonsters,
         monsterEncounters: useMetaStore.getState().monsterEncounters,
+        monsterDefeats: useMetaStore.getState().monsterDefeats,
+        monsterKilledBy: useMetaStore.getState().monsterKilledBy,
+        monsterKillingAbilities: useMetaStore.getState().monsterKillingAbilities,
+        postmortem: useScreenStore.getState().postmortem,
         unlockedUpgrades: useMetaStore.getState().unlockedUpgrades,
         chapter1Cleared: useMetaStore.getState().chapter1Cleared,
         druidGroveUnlocked: useMetaStore.getState().druidGroveUnlocked,
@@ -371,6 +409,7 @@ export const useGameStore = create<GameState>()(
             introSeen: false,
             quirksTutorialSeen: false,
             taunt: null,
+            postmortem: null,
           });
         },
 
@@ -418,6 +457,13 @@ export const useGameStore = create<GameState>()(
 
         discoverMonster: (defId) =>
           useMetaStore.getState().discoverMonster(defId),
+        recordMonsterDefeat: (defId) =>
+          useMetaStore.getState().recordMonsterDefeat(defId),
+        recordPlayerKilledBy: (defId, abilityName) =>
+          useMetaStore.getState().recordPlayerKilledBy(defId, abilityName),
+
+        setPostmortem: (p) => useScreenStore.getState().setPostmortem(p),
+        clearPostmortem: () => useScreenStore.getState().clearPostmortem(),
 
         equipFromInventory: (idx) =>
           useCharacterStore.getState().equipFromInventory(idx),
@@ -482,6 +528,7 @@ export const useGameStore = create<GameState>()(
               introSeen: false,
               quirksTutorialSeen: false,
               taunt: null,
+              postmortem: null,
             });
           }
         },

@@ -11,8 +11,11 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *           Insurance was deleted; drop its rank entry (renown is not
  *           refunded — the upgrade was non-decisional and Coin in the
  *           Pocket now dominates that slot).
+ *  v4 → v5: codex now tracks monsterDefeats / monsterKilledBy /
+ *           monsterKillingAbilities for the postmortem + bestiary win-rate
+ *           rows. Default to empty maps on older saves.
  */
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -114,6 +117,9 @@ export interface MigratedSnapshot {
   unlockedUpgrades: UnlockedUpgrades;
   character: Character | null;
   monsterEncounters: Record<string, number>;
+  monsterDefeats: Record<string, number>;
+  monsterKilledBy: Record<string, number>;
+  monsterKillingAbilities: Record<string, Record<string, number>>;
   discoveredMonsters: string[];
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
@@ -189,6 +195,29 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
 
   if (!Array.isArray(state.discoveredMonsters)) {
     state.discoveredMonsters = [];
+  }
+
+  // v4 → v5: backfill the postmortem/bestiary tracking maps.
+  if (
+    !state.monsterDefeats ||
+    typeof state.monsterDefeats !== 'object' ||
+    Array.isArray(state.monsterDefeats)
+  ) {
+    state.monsterDefeats = {};
+  }
+  if (
+    !state.monsterKilledBy ||
+    typeof state.monsterKilledBy !== 'object' ||
+    Array.isArray(state.monsterKilledBy)
+  ) {
+    state.monsterKilledBy = {};
+  }
+  if (
+    !state.monsterKillingAbilities ||
+    typeof state.monsterKillingAbilities !== 'object' ||
+    Array.isArray(state.monsterKillingAbilities)
+  ) {
+    state.monsterKillingAbilities = {};
   }
 
   return state as MigratedSnapshot;

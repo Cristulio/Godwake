@@ -10,6 +10,9 @@ type Filter = 'all' | 'encountered' | 'undiscovered';
 export function CodexScreen() {
   const discovered = useGameStore((s) => s.discoveredMonsters);
   const encounters = useGameStore((s) => s.monsterEncounters);
+  const defeats = useGameStore((s) => s.monsterDefeats);
+  const killedBy = useGameStore((s) => s.monsterKilledBy);
+  const killingAbilities = useGameStore((s) => s.monsterKillingAbilities);
   const goToHub = useGameStore((s) => s.goToHub);
 
   const all = useMemo(() => listMonsters(), []);
@@ -97,6 +100,8 @@ export function CodexScreen() {
                 name={m.name}
                 cr={m.cr}
                 count={encounters[m.id] ?? 0}
+                defeated={defeats[m.id] ?? 0}
+                killedByCount={killedBy[m.id] ?? 0}
                 onClick={() => setOpenId(m.id)}
               />
             ) : (
@@ -110,6 +115,9 @@ export function CodexScreen() {
         <MonsterDetailPanel
           monster={openMonster}
           encounters={encounters[openMonster.id] ?? 0}
+          defeated={defeats[openMonster.id] ?? 0}
+          killedByCount={killedBy[openMonster.id] ?? 0}
+          killingAbilities={killingAbilities[openMonster.id] ?? {}}
           onClose={() => setOpenId(null)}
         />
       )}
@@ -155,14 +163,19 @@ function KnownCard({
   name,
   cr,
   count,
+  defeated,
+  killedByCount,
   onClick,
 }: {
   defId: string;
   name: string;
   cr: string;
   count: number;
+  defeated: number;
+  killedByCount: number;
   onClick: () => void;
 }) {
+  const unbeaten = killedByCount > 0 && defeated === 0;
   return (
     <button
       type="button"
@@ -182,13 +195,29 @@ function KnownCard({
         <div className="absolute top-1 left-1 bg-[var(--color-bg-base)]/85 border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest px-1.5 py-0.5 font-display">
           CR {cr}
         </div>
+        {unbeaten && (
+          <div
+            className="absolute top-1 right-1 bg-[var(--color-accent-blood)]/85 border border-[var(--color-accent-blood)] text-[var(--color-text-primary)] text-[9px] uppercase tracking-widest px-1.5 py-0.5 font-display"
+            title="You've never defeated this one"
+          >
+            ⚠ Unbeaten
+          </div>
+        )}
       </div>
       <div className="min-w-0">
         <div className="font-display text-[var(--color-accent-amber)] uppercase tracking-wider text-[10px] truncate group-hover:text-[var(--color-accent-torch)]">
           {name}
         </div>
-        <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
-          × {count} {count === 1 ? 'kill' : 'kills'}
+        <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-widest font-mono mt-0.5 flex gap-2 flex-wrap">
+          <span title="Encounters">× {count}</span>
+          <span className="text-[var(--color-status-poison)]" title="Defeated">
+            ✓ {defeated}
+          </span>
+          {killedByCount > 0 && (
+            <span className="text-[var(--color-accent-blood)]" title="Killed by">
+              ✗ {killedByCount}
+            </span>
+          )}
         </div>
       </div>
     </button>

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
+import type { Postmortem } from '../types/postmortem';
 
 export type Screen =
   | 'title'
@@ -24,6 +25,7 @@ interface ScreenStoreState {
   introSeen: boolean;
   quirksTutorialSeen: boolean;
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number } | null;
+  postmortem: Postmortem | null;
 
   setScreen: (screen: Screen) => void;
   goToTitle: () => void;
@@ -37,6 +39,8 @@ interface ScreenStoreState {
   dismissTaunt: () => void;
   setIntroSeen: (v: boolean) => void;
   markQuirksTutorialSeen: () => void;
+  setPostmortem: (p: Postmortem | null) => void;
+  clearPostmortem: () => void;
 }
 
 export const useScreenStore = create<ScreenStoreState>()((set) => ({
@@ -44,6 +48,7 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
   introSeen: false,
   quirksTutorialSeen: false,
   taunt: null,
+  postmortem: null,
 
   setScreen: (screen) => set({ screen }),
   goToTitle: () => set({ screen: 'title' }),
@@ -60,4 +65,6 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
   dismissTaunt: () => set({ taunt: null }),
   setIntroSeen: (v) => set({ introSeen: v }),
   markQuirksTutorialSeen: () => set({ quirksTutorialSeen: true }),
+  setPostmortem: (p) => set({ postmortem: p }),
+  clearPostmortem: () => set({ postmortem: null }),
 }));

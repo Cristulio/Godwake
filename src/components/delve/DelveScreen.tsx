@@ -15,6 +15,7 @@ import { ShrineRoom } from './ShrineRoom';
 import { CampRoom } from './CampRoom';
 import { EventRoom } from './EventRoom';
 import { DelveSummary } from './DelveSummary';
+import { PostmortemModal } from './PostmortemModal';
 import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
@@ -101,6 +102,7 @@ export function DelveScreen() {
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const combat = useGameStore((s) => s.combat);
+  const postmortem = useGameStore((s) => s.postmortem);
   const setCombat = useGameStore((s) => s.setCombat);
   const setCharacter = useGameStore((s) => s.setCharacter);
   const goToHub = useGameStore((s) => s.goToHub);
@@ -195,6 +197,20 @@ export function DelveScreen() {
     );
   }
   if (delve.phase === 'failed') {
+    // Postmortem precedes the summary: show what killed the player, then the
+    // standard "You Have Fallen" totals, then the reincarnation reveal. The
+    // postmortem is cleared when the player advances past it.
+    if (postmortem) {
+      return (
+        <PostmortemModal
+          postmortem={postmortem}
+          onReincarnate={() => {
+            useGameStore.getState().clearPostmortem();
+            useGameStore.getState().goToReincarnation();
+          }}
+        />
+      );
+    }
     return (
       <DelveSummary
         delve={delve}

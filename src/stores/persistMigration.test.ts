@@ -147,6 +147,27 @@ describe('migrateV1ToV2', () => {
     expect(v2.deathCount).toBe(1);
   });
 
+  it('defaults the v5 codex tracking maps to empty objects', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {} });
+    expect(v.monsterDefeats).toEqual({});
+    expect(v.monsterKilledBy).toEqual({});
+    expect(v.monsterKillingAbilities).toEqual({});
+  });
+
+  it('preserves existing v5 codex tracking maps when present', () => {
+    const v = migrateV1ToV2({
+      unlockedUpgrades: {},
+      monsterDefeats: { goblin: 4 },
+      monsterKilledBy: { 'duergar-ilyich': 2 },
+      monsterKillingAbilities: { 'duergar-ilyich': { 'Eldritch Burst': 2 } },
+    });
+    expect(v.monsterDefeats).toEqual({ goblin: 4 });
+    expect(v.monsterKilledBy).toEqual({ 'duergar-ilyich': 2 });
+    expect(v.monsterKillingAbilities).toEqual({
+      'duergar-ilyich': { 'Eldritch Burst': 2 },
+    });
+  });
+
   it('rehydrates a synthetic full v1 save into a valid v2 shape', () => {
     const v1Snapshot: Record<string, unknown> = {
       screen: 'hub',
@@ -176,8 +197,8 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 4', () => {
-    expect(SAVE_VERSION).toBe(4);
+  it('is 5', () => {
+    expect(SAVE_VERSION).toBe(5);
   });
 });
 
