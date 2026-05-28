@@ -77,7 +77,7 @@ Y = choice is available for this (class, level). For a failing gate the cell sho
 | beggar-at-the-gate | kick-the-bowl | 0.7 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | cowled-recruiter | pay-the-cowl | — | 25 | — | — | Y | Y | Y | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold |
 | cowled-recruiter | wave-them-off | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
-| cowled-recruiter | bluff-the-cowl | — | — | — | 3 | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | Y | Y | Y |
+| cowled-recruiter | bluff-the-cowl | — | — | — | 2 | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | Y | Y | Y |
 | cowled-recruiter | draw-on-them | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | wine-merchant | free-cup | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | wine-merchant | buy-bottle | — | 15 | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
@@ -98,24 +98,24 @@ Stable per-seed delve content across cells: identical events seen, only characte
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Fighter (STR build, Sir Brick) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 0 | 46 | 40 |
 | Fighter (STR build, Sir Brick) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 0 | 45 | 39 |
-| Fighter (STR build, Sir Brick) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 0 | 44 | 42 |
+| Fighter (STR build, Sir Brick) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 0 | 45 | 42 |
 | Rogue (DEX build, wood-elf) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 0 | 45 | 40 |
-| Rogue (DEX build, wood-elf) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 0 | 45 | 39 |
-| Rogue (DEX build, wood-elf) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 0 | 46 | 42 |
-| Wizard (INT build, tiefling) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 31 | 13 | 40 |
+| Rogue (DEX build, wood-elf) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 0 | 46 | 39 |
+| Rogue (DEX build, wood-elf) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 0 | 45 | 42 |
+| Wizard (INT build, tiefling) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 33 | 13 | 40 |
 | Wizard (INT build, tiefling) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 33 | 13 | 39 |
 | Wizard (INT build, tiefling) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 32 | 13 | 42 |
 | Rogue (CHA cross-check, tiefling-charlatan) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 45 | 0 | 40 |
-| Rogue (CHA cross-check, tiefling-charlatan) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 45 | 0 | 39 |
-| Rogue (CHA cross-check, tiefling-charlatan) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 46 | 0 | 42 |
+| Rogue (CHA cross-check, tiefling-charlatan) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 46 | 0 | 39 |
+| Rogue (CHA cross-check, tiefling-charlatan) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 45 | 0 | 42 |
 
 ## E. grant_quirk_reroll fallback paths
 
 | Scenario | Detail surfaced |
 |---|---|
-| No quirks at all | Waukeen finds no bane to shake from you. |
+| No quirks at all | The gods find no bane to shake from you. \| +5g (no bane to shake) |
 | One bane (Vertigo) → re-roll | re-rolled Vertigo → Hangry |
-| Only a boon (Tymora's Eye) — no bane to shake | Waukeen finds no bane to shake from you. |
+| Only a boon (Tymora's Eye) — no bane to shake | The gods find no bane to shake from you. \| +5g (no bane to shake) |
 
 ## F. Reward EV scan (success-chance choices)
 

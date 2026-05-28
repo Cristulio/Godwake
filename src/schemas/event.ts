@@ -6,7 +6,15 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('gold_delta'), amount: z.number() }),
   z.object({ kind: z.literal('grant_blessing'), random: z.literal(true).optional() }),
   z.object({ kind: z.literal('grant_blessing_id'), id: z.string() }),
-  z.object({ kind: z.literal('grant_quirk_reroll') }),
+  z.object({
+    kind: z.literal('grant_quirk_reroll'),
+    /**
+     * Optional flavor line shown when the reroll no-ops because the character
+     * has no bane quirk to shake. Each event can supply a god-appropriate
+     * line; when omitted, a god-agnostic default is used.
+     */
+    fallbackText: z.string().optional(),
+  }),
   z.object({ kind: z.literal('apply_attack_bonus_run'), amount: z.number().positive() }),
   z.object({ kind: z.literal('init_bonus_run'), amount: z.number().positive() }),
   z.object({ kind: z.literal('spawn_ambush'), monsterDefIds: z.array(z.string()) }),

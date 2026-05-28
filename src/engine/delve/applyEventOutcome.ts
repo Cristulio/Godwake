@@ -134,14 +134,30 @@ function rollNewBlessing(character: Character, roller: DiceRoller): string | nul
 }
 
 /**
- * Replace one bane quirk with a fresh random pick from the pool. No-op when
- * the character carries no bane quirks. The replacement may roll back to
- * the same quirk slot in rare cases — that's fine; a soul that walked out
- * the door of a god and came back with the same mark is a story.
+ * Compensation gold granted when `grant_quirk_reroll` would no-op because the
+ * character has no bane quirk to shake. L1 characters trigger this ~67% of
+ * the time (no quirks accrued yet); without compensation the reward feels
+ * punishing on early picks.
  */
-function rerollOneBaneQuirk(character: Character, roller: DiceRoller): {
+const QUIRK_REROLL_FALLBACK_GOLD = 5;
+
+/**
+ * Replace one bane quirk with a fresh random pick from the pool. When the
+ * character carries no bane quirks the reroll no-ops and a small gold
+ * compensation is granted instead (see QUIRK_REROLL_FALLBACK_GOLD). The
+ * replacement may roll back to the same quirk slot in rare cases — that's
+ * fine; a soul that walked out the door of a god and came back with the
+ * same mark is a story.
+ */
+function rerollOneBaneQuirk(
+  character: Character,
+  roller: DiceRoller,
+  fallbackText?: string,
+): {
   character: Character;
   detail: string;
+  /** Extra effect to surface alongside the reroll (e.g. fallback gold). */
+  extra?: AppliedEffect;
 } {
   const baneIdx = character.quirks.findIndex((qid) => {
     try {
@@ -151,7 +167,19 @@ function rerollOneBaneQuirk(character: Character, roller: DiceRoller): {
     }
   });
   if (baneIdx === -1) {
-    return { character, detail: 'Waukeen finds no bane to shake from you.' };
+    const next: Character = {
+      ...character,
+      goldInPocket: character.goldInPocket + QUIRK_REROLL_FALLBACK_GOLD,
+    };
+    const text = fallbackText ?? 'The gods find no bane to shake from you.';
+    return {
+      character: next,
+      detail: text,
+      extra: {
+        kind: 'gold_delta',
+        detail: `+${QUIRK_REROLL_FALLBACK_GOLD}g (no bane to shake)`,
+      },
+    };
   }
   const pool = listQuirks();
   const owned = new Set(character.quirks);
@@ -261,9 +289,14 @@ export function applyEventOutcome(
         break;
       }
       case 'grant_quirk_reroll': {
-        const { character: rerolled, detail } = rerollOneBaneQuirk(next, roller);
+        const { character: rerolled, detail, extra } = rerollOneBaneQuirk(
+          next,
+          roller,
+          effect.fallbackText,
+        );
         next = rerolled;
         effectsApplied.push({ kind: effect.kind, detail });
+        if (extra) effectsApplied.push(extra);
         break;
       }
       case 'apply_attack_bonus_run': {

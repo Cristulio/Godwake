@@ -56,7 +56,10 @@ const POOL: EventTemplate[] = [
             'You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to.',
           effects: [
             { kind: 'gold_delta', amount: 10 },
-            { kind: 'grant_quirk_reroll' },
+            {
+              kind: 'grant_quirk_reroll',
+              fallbackText: 'Ilmater finds no bane to shake from you — only a tear briefly cool on your brow.',
+            },
           ],
         },
       },
@@ -161,7 +164,10 @@ const POOL: EventTemplate[] = [
             'His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it.',
           effects: [
             { kind: 'gold_delta', amount: 5 },
-            { kind: 'grant_quirk_reroll' },
+            {
+              kind: 'grant_quirk_reroll',
+              fallbackText: 'The road finds no bane to shake from you. The captain\'s curses fade to coughing behind you.',
+            },
           ],
         },
         failureOutcome: {
@@ -325,7 +331,10 @@ const POOL: EventTemplate[] = [
           resolution: "The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser.",
           effects: [
             { kind: 'gold_delta', amount: 8 },
-            { kind: 'grant_quirk_reroll' },
+            {
+              kind: 'grant_quirk_reroll',
+              fallbackText: 'Waukeen finds no bane to shake from you — her scale tips clean today.',
+            },
           ],
         },
         failureOutcome: {
@@ -370,7 +379,7 @@ const POOL: EventTemplate[] = [
         id: 'bluff-the-cowl',
         label: '[Charisma] Bluff the recruiter',
         hint: 'Name-drop a Cowled superior you have never met.',
-        requiresCha: 3,
+        requiresCha: 2,
         outcome: {
           resolution:
             'You drop a name with the calm of a man who has stood in chambers above this one. The Cowl\'s eyes flicker — the briefest re-evaluation — and the chalk-sigil presses onto your hand without a coin asked. They step back into the arch, the stone sealing behind them, and you walk on with a wizard\'s mark and a wizard\'s purse intact.',
@@ -488,7 +497,10 @@ const POOL: EventTemplate[] = [
           resolution: 'He sprawls in the gutter. The knife rings on the cobbles. A handful of silver spills from a torn lining you hadn\'t noticed; you pocket it without looking back.',
           effects: [
             { kind: 'gold_delta', amount: 5 },
-            { kind: 'grant_quirk_reroll' },
+            {
+              kind: 'grant_quirk_reroll',
+              fallbackText: 'Athkatla finds no bane to shake from you — the city marks its lesson and lets you walk.',
+            },
           ],
         },
         failureOutcome: {
@@ -558,7 +570,10 @@ const POOL: EventTemplate[] = [
             "The purse is heavier than it should be. Inside: coin, and something else that goes still in your pocket. The man laughs once and you cannot say what is funny.",
           effects: [
             { kind: 'gold_delta', amount: 40 },
-            { kind: 'grant_quirk_reroll' },
+            {
+              kind: 'grant_quirk_reroll',
+              fallbackText: 'The asylum finds no bane to shake from you — only a small laugh from the cell at your back.',
+            },
           ],
         },
       },
@@ -792,7 +807,10 @@ const POOL: EventTemplate[] = [
             'The figure goes cold in your palm the moment it leaves the niche. You pocket it anyway. The candle gutters. Something small and silvered closes in the dark of the cleft, and your shoulders go heavy.',
           effects: [
             { kind: 'gold_delta', amount: 25 },
-            { kind: 'grant_quirk_reroll' },
+            {
+              kind: 'grant_quirk_reroll',
+              fallbackText: 'Eilistraee finds no bane to shake from you — her silver weighs only what you have given.',
+            },
           ],
         },
       },
