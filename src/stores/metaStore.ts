@@ -4,6 +4,11 @@ import { applyPermanentUpgrade, type UnlockedUpgrades } from '../engine/characte
 import { getUpgrade } from '../content/upgrades';
 import { MAX_ASCENSION } from '../engine/delve/ascension';
 import { useCharacterStore } from './characterStore';
+import {
+  LEGENDARY_ORDER,
+  MAX_ACTIVE_LEGENDARIES,
+  aggregateLegendaryBonuses,
+} from '../content/legendaries';
 
 /**
  * Long-term progress that survives reincarnation but resets on New Game:
@@ -46,6 +51,18 @@ interface MetaStoreState {
    * one-time-per-soul.
    */
   knownNpcs: string[];
+  /**
+   * Legendary relics the soul has earned (cross-delve persistent gear). Account
+   * level — survives reincarnation, reset only on New Game. Earned by clearing
+   * the chain (see delveStore.finishDelve).
+   */
+  ownedLegendaries: string[];
+  /**
+   * The subset of owned legendaries currently attuned. Their aggregate bonus is
+   * baked onto the character by `setActiveLegendaries`. Capped at
+   * MAX_ACTIVE_LEGENDARIES (mirror-style slot limit).
+   */
+  activeLegendaries: string[];
 
   discoverMonster: (defId: string) => void;
   recordMonsterDefeat: (defId: string) => void;
@@ -68,6 +85,17 @@ interface MetaStoreState {
   unlockNextAscension: (clearedAtLevel: number) => void;
   setUnlockedUpgrades: (u: UnlockedUpgrades) => void;
   markNpcKnown: (npcId: string) => void;
+  /**
+   * Grant the next un-owned legendary in unlock order. Returns the granted id,
+   * or null when the set is already complete. Does not auto-attune — the player
+   * picks which to run from the hub.
+   */
+  grantNextLegendary: () => string | null;
+  /**
+   * Set the attuned legendaries (validated against ownership + the slot cap) and
+   * bake their aggregate bonus onto the active character.
+   */
+  setActiveLegendaries: (ids: string[]) => void;
   resetMeta: () => void;
 }
 
@@ -85,6 +113,8 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   druidGroveUnlocked: false,
   ascensionUnlocked: 0,
   knownNpcs: [],
+  ownedLegendaries: [],
+  activeLegendaries: [],
 
   discoverMonster: (defId) =>
     set((s) => {
@@ -175,6 +205,34 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
         : { knownNpcs: [...s.knownNpcs, npcId] },
     ),
 
+  grantNextLegendary: () => {
+    const owned = get().ownedLegendaries;
+    const next = LEGENDARY_ORDER.find((id) => !owned.includes(id));
+    if (!next) return null;
+    set({ ownedLegendaries: [...owned, next] });
+    return next;
+  },
+
+  setActiveLegendaries: (ids) => {
+    const owned = get().ownedLegendaries;
+    // Keep only owned ids, dedupe, and clamp to the slot cap.
+    const valid = [...new Set(ids)]
+      .filter((id) => owned.includes(id))
+      .slice(0, MAX_ACTIVE_LEGENDARIES);
+    set({ activeLegendaries: valid });
+    // Bake the aggregate onto the live character so the engine reads it. The
+    // field rides reincarnation/descent via object spread (reincarnateSoul,
+    // startDelve) and a hub swap via carrySoulProgress.
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (character) {
+      charSlice.setCharacter({
+        ...character,
+        legendaryBonuses: aggregateLegendaryBonuses(valid),
+      });
+    }
+  },
+
   resetMeta: () =>
     set({
       hasReincarnated: false,
@@ -190,5 +248,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       druidGroveUnlocked: false,
       ascensionUnlocked: 0,
       knownNpcs: [],
+      ownedLegendaries: [],
+      activeLegendaries: [],
     }),
 }));

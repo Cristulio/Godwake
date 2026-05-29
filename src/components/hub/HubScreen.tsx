@@ -11,6 +11,8 @@ import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { playMusic, stopMusic } from '../../engine/audio';
 import { PhandalinScene } from './PhandalinScene';
+import { LegendaryScreen } from './LegendaryScreen';
+import { MAX_ACTIVE_LEGENDARIES } from '../../content/legendaries';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
 
@@ -24,6 +26,9 @@ export function HubScreen() {
   const hasReincarnated = useGameStore((s) => s.hasReincarnated);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
   const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
+  const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
+  const activeLegendaries = useGameStore((s) => s.activeLegendaries);
+  const [view, setView] = useState<'hub' | 'relics'>('hub');
   // Default to the hardest unlocked rung; the player may dial it down (Spire-style).
   const [selectedAscension, setSelectedAscension] = useState(() => ascensionUnlocked);
   const selected = Math.max(0, Math.min(selectedAscension, ascensionUnlocked));
@@ -61,6 +66,13 @@ export function HubScreen() {
   // minimal: one prompt, one button, no town and no choices.
   if (!hasReincarnated) {
     return <FirstLifeFallback name={character.name} onDescend={handleEnterDungeon} onTitle={goToTitle} />;
+  }
+
+  // The reliquary opens only once the soul has earned a relic (progressive
+  // onboarding) — the button below is hidden until then, so this is reachable
+  // only with at least one owned.
+  if (view === 'relics') {
+    return <LegendaryScreen onBack={() => setView('hub')} />;
   }
 
   return (
@@ -175,7 +187,11 @@ export function HubScreen() {
         </Panel>
       </div>
 
-      <div className="mt-8 grid grid-cols-3 gap-3 text-center">
+      <div
+        className={`mt-8 grid gap-3 text-center ${
+          ownedLegendaries.length > 0 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'
+        }`}
+      >
         <StatTile label="Renown" value={character.renown} accent="amber" glyph="◆" />
         <button
           type="button"
@@ -201,6 +217,20 @@ export function HubScreen() {
             Open →
           </div>
         </button>
+        {ownedLegendaries.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setView('relics')}
+            className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
+          >
+            <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
+              ✦ Relics
+            </div>
+            <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
+              {activeLegendaries.length}/{MAX_ACTIVE_LEGENDARIES} attuned →
+            </div>
+          </button>
+        )}
       </div>
     </div>
   );

@@ -500,6 +500,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // unlocks nothing new (Spire-style).
     if (wonBoss) {
       meta.unlockNextAscension(ascensionLevel);
+      // Clearing the chain earns the next legendary relic (cross-delve gear).
+      // Deterministic unlock order; a no-op once the set is complete. The
+      // player attunes it from the hub — it doesn't auto-equip.
+      meta.grantNextLegendary();
     }
     if (!meta.druidGroveUnlocked && settled.renown >= GROVE_UNLOCK_THRESHOLD) {
       meta.setDruidGroveUnlocked(true);

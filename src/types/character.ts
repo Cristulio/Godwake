@@ -85,6 +85,21 @@ export interface ClassResources {
 }
 
 /**
+ * Bonuses contributed by the player's ACTIVE legendary relics (cross-delve
+ * persistent gear, soul/account level). Mirrors the permanent-bonus channels
+ * the engine already reads; folded onto the character whenever the active set
+ * changes (and carried across reincarnation / hub swap). Optional so legacy
+ * saves rehydrate without migration — treat any undefined key as 0.
+ */
+export interface LegendaryBonuses {
+  ac?: number;
+  /** Crit-range widening: default 20-only becomes (20-N)-20. */
+  critRange?: number;
+  /** Additive ability-score deltas, folded into effectiveAbilityScores. */
+  abilityScores?: Partial<AbilityScores>;
+}
+
+/**
  * A character in the game world. Identity (race/class/abilities) is the "soul" —
  * stable across reincarnations. Body (HP, conditions, inventory) is per-life.
  */
@@ -179,6 +194,12 @@ export interface Character {
     /** Coin in the Pocket: gold credited each time a chapter boss falls. Read by creditChapterClearGold (stacks with Quartermaster's Stipend's `chapterClearGoldBonus`). */
     chapterClearGold?: number;
   };
+  /**
+   * Aggregate of the player's ACTIVE legendary relics, baked on by
+   * `setActiveLegendaries` and carried across the wheel. Read alongside
+   * `permanentBonuses` in derived.ts. Optional; undefined = no relics attuned.
+   */
+  legendaryBonuses?: LegendaryBonuses;
   /**
    * Extra attunement slots above the default. Bumped by Sage's Pact. The cap
    * lives in `attunementSlotsCap()`; this field is only the additive bonus so

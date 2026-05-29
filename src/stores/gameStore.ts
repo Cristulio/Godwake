@@ -134,6 +134,8 @@ interface GameState {
   druidGroveUnlocked: boolean;
   ascensionUnlocked: number;
   knownNpcs: string[];
+  ownedLegendaries: string[];
+  activeLegendaries: string[];
 
   // Navigation
   goToTitle: () => void;
@@ -204,6 +206,9 @@ interface GameState {
   // Renown shop
   purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
 
+  // Legendary relics
+  setActiveLegendaries: (ids: string[]) => void;
+
   // Leveling
   applyPendingLevelUp: (overrides?: Partial<Character>) => void;
 
@@ -234,6 +239,8 @@ interface PersistedSnapshot {
   druidGroveUnlocked: boolean;
   ascensionUnlocked: number;
   knownNpcs: string[];
+  ownedLegendaries: string[];
+  activeLegendaries: string[];
   __metadata?: SaveSlotMetadata;
 }
 
@@ -271,6 +278,8 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     druidGroveUnlocked: meta.druidGroveUnlocked,
     ascensionUnlocked: meta.ascensionUnlocked,
     knownNpcs: meta.knownNpcs,
+    ownedLegendaries: meta.ownedLegendaries,
+    activeLegendaries: meta.activeLegendaries,
     __metadata: {
       savedAt: new Date().toISOString(),
       characterName: ch.character?.name ?? '—',
@@ -325,6 +334,8 @@ function scatterSnapshot(s: PersistedSnapshot) {
         ? s.ascensionUnlocked
         : 0,
     knownNpcs: Array.isArray(s.knownNpcs) ? s.knownNpcs : [],
+    ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
+    activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
   });
   useScreenStore.setState({
     screen: (s.screen ?? 'hub') as Screen,
@@ -395,6 +406,8 @@ export const useGameStore = create<GameState>()(
           ascensionUnlocked: m.ascensionUnlocked,
           knownNpcs: m.knownNpcs,
           druidGroveUnlocked: m.druidGroveUnlocked,
+          ownedLegendaries: m.ownedLegendaries,
+          activeLegendaries: m.activeLegendaries,
         });
       };
       const mirrorScreen = () => {
@@ -438,6 +451,8 @@ export const useGameStore = create<GameState>()(
         druidGroveUnlocked: useMetaStore.getState().druidGroveUnlocked,
         ascensionUnlocked: useMetaStore.getState().ascensionUnlocked,
         knownNpcs: useMetaStore.getState().knownNpcs,
+        ownedLegendaries: useMetaStore.getState().ownedLegendaries,
+        activeLegendaries: useMetaStore.getState().activeLegendaries,
 
         goToTitle: () => useScreenStore.getState().goToTitle(),
         goToHub: () => useScreenStore.getState().goToHub(),
@@ -544,6 +559,9 @@ export const useGameStore = create<GameState>()(
 
         purchaseUpgrade: (upgradeId) =>
           useMetaStore.getState().purchaseUpgrade(upgradeId),
+
+        setActiveLegendaries: (ids) =>
+          useMetaStore.getState().setActiveLegendaries(ids),
 
         applyPendingLevelUp: (overrides) => {
           // Mid-delve level-ups resume the delve screen; out-of-delve fall
