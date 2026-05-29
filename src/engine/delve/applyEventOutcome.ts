@@ -243,7 +243,8 @@ function rerollOneBaneQuirk(
  * and an optional ambush sentinel for the caller to honor (spawn combat
  * instead of advancing the room).
  *
- * HP changes clamp to [0, max]. Gold changes floor at 0 — a choice that
+ * HP costs floor at 1 (a non-combat event never kills); heals clamp to max.
+ * Gold changes floor at 0 — a choice that
  * costs more than the player has should have been gated upstream; this is
  * a safety net.
  */
@@ -267,7 +268,12 @@ export function applyEventOutcome(
     switch (effect.kind) {
       case 'hp_delta': {
         const before = next.hp.current;
-        const after = Math.max(0, Math.min(next.hp.max, before + effect.amount));
+        // Event HP costs must NEVER be lethal — a non-combat choice ("cut your
+        // hand") can wound you but not kill you. Costs floor at 1; only combat
+        // drops you to 0. Without this floor, an event could leave you at 0 HP
+        // and dump you into the next room already slain.
+        const floor = effect.amount < 0 ? 1 : 0;
+        const after = Math.max(floor, Math.min(next.hp.max, before + effect.amount));
         next = { ...next, hp: { ...next.hp, current: after } };
         effectsApplied.push({
           kind: effect.kind,

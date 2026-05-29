@@ -64,7 +64,7 @@ describe('applyEventOutcome — effect kinds', () => {
     expect(r.character.hp.current).toBe(20);
   });
 
-  it('hp_delta: damages, floored at 0', () => {
+  it('hp_delta: a cost never kills — floors at 1, not 0', () => {
     const char = makeChar();
     char.hp = { current: 4, max: 20, temp: 0 };
     const r = applyEventOutcome(
@@ -72,7 +72,8 @@ describe('applyEventOutcome — effect kinds', () => {
       outcome({ effects: [{ kind: 'hp_delta', amount: -10 }] }),
       createDiceRoller(1),
     );
-    expect(r.character.hp.current).toBe(0);
+    // A non-combat event wounds but never slays — only combat drops you to 0.
+    expect(r.character.hp.current).toBe(1);
   });
 
   it('temp_hp: takes max with current temp (no stacking)', () => {
