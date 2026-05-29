@@ -10,7 +10,7 @@ export const LONGSWORD: Weapon = WeaponSchema.parse({
   properties: ['versatile'],
   versatileDamage: '1d10',
   weight: 3,
-  cost: 15,
+  cost: 30,
   rarity: 'common',
   attunement: false,
 });
@@ -25,7 +25,7 @@ export const DAGGER: Weapon = WeaponSchema.parse({
   properties: ['finesse', 'light', 'thrown'],
   range: [20, 60],
   weight: 1,
-  cost: 2,
+  cost: 4,
   rarity: 'common',
   attunement: false,
 });
@@ -54,7 +54,7 @@ export const GREATSWORD: Weapon = WeaponSchema.parse({
   damageType: 'slashing',
   properties: ['heavy', 'two-handed'],
   weight: 6,
-  cost: 50,
+  cost: 60,
   rarity: 'common',
   attunement: false,
 });
@@ -69,7 +69,7 @@ export const WARHAMMER: Weapon = WeaponSchema.parse({
   properties: ['versatile'],
   versatileDamage: '1d10',
   weight: 2,
-  cost: 15,
+  cost: 30,
   rarity: 'common',
   attunement: false,
 });
@@ -83,7 +83,7 @@ export const RAPIER: Weapon = WeaponSchema.parse({
   damageType: 'piercing',
   properties: ['finesse'],
   weight: 2,
-  cost: 25,
+  cost: 40,
   rarity: 'common',
   attunement: false,
 });
@@ -130,7 +130,7 @@ export const QUARTERSTAFF: Weapon = WeaponSchema.parse({
   properties: ['versatile'],
   versatileDamage: '1d8',
   weight: 4,
-  cost: 2,
+  cost: 3,
   rarity: 'common',
   attunement: false,
   description:
@@ -147,7 +147,7 @@ export const BATTLEAXE: Weapon = WeaponSchema.parse({
   properties: ['versatile'],
   versatileDamage: '1d10',
   weight: 4,
-  cost: 10,
+  cost: 30,
   rarity: 'common',
   attunement: false,
   description:
@@ -163,7 +163,7 @@ export const FLAIL: Weapon = WeaponSchema.parse({
   damageType: 'bludgeoning',
   properties: [],
   weight: 2,
-  cost: 10,
+  cost: 25,
   rarity: 'common',
   attunement: false,
   description:

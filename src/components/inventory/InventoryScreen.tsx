@@ -9,6 +9,7 @@ import {
   attunementSlotsCap,
   attunementSlotsUsed,
   canEquip,
+  equipDenialReason,
   type EquipSlot,
 } from '../../engine/character/equip';
 import type { Item, ItemRef } from '../../schemas/item';
@@ -330,13 +331,15 @@ export function InventoryScreen() {
                   const slot = slotForItem(item.id);
                   const equippable = slot !== null;
                   const equipped = isEquippedIdx(idx);
-                  const blocked = equippable && !equipped && !canEquip(character!, item.id);
+                  const denial =
+                    equippable && !equipped ? equipDenialReason(character!, item.id) : null;
+                  const blocked = denial !== null;
                   const isAttunement =
                     item.kind !== 'consumable' && (item as { attunement: boolean }).attunement;
                   const hint = equipped
                     ? 'Equipped'
-                    : blocked
-                      ? `No free Soul-bind slot (${attUsed}/${attCap})`
+                    : denial
+                      ? denial
                       : equippable
                         ? 'Click or drag to equip'
                         : item.kind === 'consumable'
