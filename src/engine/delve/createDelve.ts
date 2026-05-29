@@ -142,7 +142,7 @@ export function createIronCellsDelve(seed: number = randomSeed()): DelveState {
       kind: 'rest',
       title: 'A Quiet Alcove',
       flavorText:
-        'A side-passage with a broken lantern. The walls are scratched with prayers in a language you almost know. You can catch your breath here.',
+        'A side-passage with a broken lantern. The walls are scratched with prayers in a language you almost know.',
       restType: 'short',
     },
     combatRoom('room-5', pick(rng, MID_POOL)),
@@ -206,7 +206,7 @@ export function createAthkatlaDelve(seed: number = randomSeed()): DelveState {
       kind: 'rest',
       title: 'A Festhall Backroom',
       flavorText:
-        "A back room of the Bronze Lion, its proprietor pretending not to see. A jug of watered wine and a stool by the brazier. You can catch your breath here.",
+        "A back room of the Bronze Lion, its proprietor pretending not to see. A jug of watered wine and a stool by the brazier.",
       restType: 'short',
     },
     combatRoom('room-5', pick(rng, ATH_MID_POOL)),
@@ -308,7 +308,7 @@ export function createGodwakeDelve(
       kind: 'rest',
       title: 'A Quiet Alcove',
       flavorText:
-        'A side-passage with a broken lantern. The walls are scratched with prayers in a language you almost know. You can catch your breath here.',
+        'A side-passage with a broken lantern. The walls are scratched with prayers in a language you almost know.',
       restType: 'short',
     },
     combatRoom('room-6', pick(rng, MID_POOL)),
@@ -359,7 +359,7 @@ export function createGodwakeDelve(
       kind: 'rest',
       title: 'A Festhall Backroom',
       flavorText:
-        "A back room of the Bronze Lion, its proprietor pretending not to see. A jug of watered wine and a stool by the brazier. You can catch your breath here.",
+        "A back room of the Bronze Lion, its proprietor pretending not to see. A jug of watered wine and a stool by the brazier.",
       restType: 'short',
     },
     combatRoom('room-16', athMidA),
@@ -378,7 +378,7 @@ export function createGodwakeDelve(
       kind: 'rest',
       title: "A Shuttered Notary's Office",
       flavorText:
-        "A notary's back office with the shutters drawn and the day's warrants still drying on a line. Whoever worked here left in a hurry. The cot in the corner is narrow, but the door bolts from the inside. You can catch your breath here.",
+        "A notary's back office with the shutters drawn and the day's warrants still drying on a line. Whoever worked here left in a hurry. The cot in the corner is narrow, but the door bolts from the inside.",
       restType: 'short',
     },
     intelRoomFor('room-intel-ch2', 'athkatla-magistrate'),
@@ -420,7 +420,7 @@ export function createGodwakeDelve(
       kind: 'rest',
       title: 'The Disused Cell-Block',
       flavorText:
-        "A row of cells the wardens stopped using after the last riot — doors hanging open, straw mouldering on the floors. Quiet enough to sit down. You can catch your breath here.",
+        "A row of cells the wardens stopped using after the last riot — doors hanging open, straw mouldering on the floors. Quiet enough to sit down.",
       restType: 'short',
     },
     combatRoom('room-28', sphMidA),
@@ -439,7 +439,7 @@ export function createGodwakeDelve(
       kind: 'rest',
       title: 'A Water-Stained Observation Gallery',
       flavorText:
-        "A gallery the wardens once used to watch the cells below — the glass long since cracked, the floor warped with old flood-water. Nothing watches you here. You can catch your breath.",
+        "A gallery the wardens once used to watch the cells below — the glass long since cracked, the floor warped with old flood-water. Nothing watches you here.",
       restType: 'short',
     },
     intelRoomFor('room-intel-ch3', 'asylum-director'),
@@ -481,7 +481,7 @@ export function createGodwakeDelve(
       kind: 'rest',
       title: 'A Disused Slave-Pen',
       flavorText:
-        "A cage-tier the slavers have not stocked this season — the chains hang slack, the straw is old. The faerzress glow is dim enough here that the corridor-watch will not look in. You can catch your breath here.",
+        "A cage-tier the slavers have not stocked this season — the chains hang slack, the straw is old. The faerzress glow is dim enough here that the corridor-watch will not look in.",
       restType: 'short',
     },
     combatRoom('room-40', unMidA),
@@ -500,7 +500,7 @@ export function createGodwakeDelve(
       kind: 'rest',
       title: 'A Cold Faerzress Hollow',
       flavorText:
-        "A pocket in the rock where the faerzress has guttered out — no glow, no warmth, and for that reason no drow patrol bothers to sweep it. The dark is total and, for once, on your side. You can catch your breath here.",
+        "A pocket in the rock where the faerzress has guttered out — no glow, no warmth, and for that reason no drow patrol bothers to sweep it. The dark is total and, for once, on your side.",
       restType: 'short',
     },
     intelRoomFor('room-intel-ch4', 'drow-matron-mother'),
@@ -559,7 +559,7 @@ export function createSpellholdDelve(seed: number = randomSeed()): DelveState {
       kind: 'rest',
       title: 'The Disused Cell-Block',
       flavorText:
-        "A row of cells the wardens stopped using after the last riot — doors hanging open, straw mouldering on the floors. Quiet enough to sit down. You can catch your breath here.",
+        "A row of cells the wardens stopped using after the last riot — doors hanging open, straw mouldering on the floors. Quiet enough to sit down.",
       restType: 'short',
     },
     combatRoom('room-5', pick(rng, SPH_ELITE_POOL)),
@@ -627,7 +627,7 @@ export function createUstNathaDelve(seed: number = randomSeed()): DelveState {
       kind: 'rest',
       title: 'A Disused Slave-Pen',
       flavorText:
-        "A cage-tier the slavers have not stocked this season — the chains hang slack, the straw is old. The faerzress glow is dim enough here that the corridor-watch will not look in. You can catch your breath here.",
+        "A cage-tier the slavers have not stocked this season — the chains hang slack, the straw is old. The faerzress glow is dim enough here that the corridor-watch will not look in.",
       restType: 'short',
     },
     combatRoom('room-5', pick(rng, UN_MID_POOL)),

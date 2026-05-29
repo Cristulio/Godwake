@@ -56,9 +56,8 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
             {room.flavorText}
           </p>
           <p className="text-[var(--color-text-dim)] text-xs italic text-center max-w-md">
-            You catch your breath. More breath returns than before — the wound
-            knits deep, but not whole. Save the true healing for the fire at
-            the chapter's edge.
+            The wound knits deep, but not whole — true healing waits for the
+            fire at the chapter's edge.
           </p>
           <div className="text-xs uppercase tracking-widest text-[var(--color-text-dim)]">
             HP {character.hp.current}/{character.hp.max}
@@ -69,7 +68,7 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
       <div className="flex gap-3 justify-center">
         {!rested ? (
           <Button variant="primary" onClick={handleShortRest}>
-            Short rest (heal 70%, refresh resources)
+            Rest (heal 70%, refresh resources)
           </Button>
         ) : (
           <div className="text-[var(--color-status-poison)] text-sm uppercase tracking-widest animate-fade-in">

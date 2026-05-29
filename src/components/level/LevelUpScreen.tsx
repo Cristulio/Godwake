@@ -89,7 +89,9 @@ export function LevelUpScreen() {
           String(nextLevel)
         ] ?? [])
       : []),
-  ];
+    // Spell-learn prompts (learn-*) are fully represented by the selectable
+    // spell cards below — drop their blurbs so the options aren't listed twice.
+  ].filter((f) => !f.id.startsWith('learn-'));
   const hpDelta = hpGainForLevelUp(c);
   const isAsiLevel = features.some((f) => f.mechanicKey === 'asi');
 

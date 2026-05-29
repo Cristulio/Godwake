@@ -26,7 +26,7 @@ interface SlotMeta {
 
 const SLOTS: SlotMeta[] = [
   { slot: 'mainHand', label: 'Main Hand', hint: 'A weapon or one-handed implement.' },
-  { slot: 'offHand', label: 'Off Hand', hint: 'A shield or light weapon.' },
+  { slot: 'offHand', label: 'Off Hand · Shield', hint: 'A shield only — off-hand weapons aren\'t wielded.' },
   { slot: 'armor', label: 'Body', hint: 'Light, medium, or heavy armor.' },
 ];
 
