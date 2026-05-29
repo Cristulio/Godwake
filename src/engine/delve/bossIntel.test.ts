@@ -128,10 +128,10 @@ describe('boss intel rooms — choices', () => {
 
   it('paying the scout deducts the chapter-scaled fee and stores full intel', () => {
     const cases: Array<[string, number]> = [
-      ['duergar-ilyich', 15],
-      ['athkatla-magistrate', 30],
-      ['asylum-director', 50],
-      ['drow-matron-mother', 75],
+      ['duergar-ilyich', 8],
+      ['athkatla-magistrate', 15],
+      ['asylum-director', 25],
+      ['drow-matron-mother', 40],
     ];
     for (const [bossDefId, expectedPrice] of cases) {
       const tpl = getEvent(intelEventIdFor(bossDefId));
@@ -227,10 +227,10 @@ describe('boss intel cards — content', () => {
   it('every card has a unique scout price scaling with chapter', () => {
     const prices = BOSS_INTEL_CARDS.map((c) => c.scoutPrice);
     expect(new Set(prices).size).toBe(prices.length);
-    expect(getBossIntelCard('duergar-ilyich')?.scoutPrice).toBe(15);
-    expect(getBossIntelCard('athkatla-magistrate')?.scoutPrice).toBe(30);
-    expect(getBossIntelCard('asylum-director')?.scoutPrice).toBe(50);
-    expect(getBossIntelCard('drow-matron-mother')?.scoutPrice).toBe(75);
+    expect(getBossIntelCard('duergar-ilyich')?.scoutPrice).toBe(8);
+    expect(getBossIntelCard('athkatla-magistrate')?.scoutPrice).toBe(15);
+    expect(getBossIntelCard('asylum-director')?.scoutPrice).toBe(25);
+    expect(getBossIntelCard('drow-matron-mother')?.scoutPrice).toBe(40);
   });
 
   it('every card lists at least one full-action stat line', () => {

@@ -132,16 +132,16 @@ const POOL: EventTemplate[] = [
     eventType: 'stranger',
     title: 'A Wounded Captain',
     flavor:
-      "A bandit deserter — captain's tabard, captain's split lip — propped against the wall with one hand pressed to his side. \"Coin in my purse for a wound that won't stop bleeding. Take a blow for me, walker. I'm done. The other lads won't be.\"",
+      "A bandit deserter — captain's tabard, captain's split lip — propped against the wall with one hand pressed to his side. \"My old crew's hunting me, walker, and they want to see a body bleed. Let me cut you — once, somewhere they'll spot it — and they'll call the debt settled and let me crawl off. There's a purse in it. Your blood, my freedom.\"",
     minChapter: 1,
     choices: [
       {
         id: 'take-the-blow',
-        label: 'Take the blow for him',
-        hint: 'A real wound, real coin.',
+        label: 'Let him cut you for coin',
+        hint: 'He buys the wound; you keep the purse. You bleed, he walks.',
         outcome: {
           resolution:
-            "He draws a dirk and opens you between two ribs with a craftsman's care. \"That'll satisfy them.\" He drops the purse and is gone before you can answer.",
+            "He draws a dirk and opens you between two ribs with a craftsman's care — deep enough to convince, shallow enough to survive. \"That'll satisfy them.\" He presses the purse into your red hand and limps off down the corridor, free.",
           effects: [
             { kind: 'hp_delta', amount: -5 },
             { kind: 'gold_delta', amount: 30 },
@@ -527,13 +527,13 @@ const POOL: EventTemplate[] = [
     eventType: 'lore',
     title: 'A Scribe of Oghma',
     flavor:
-      "A bald man in white linen squats in the lee of a wall with a folio open on his knees. He looks up as you pass. \"A line of your road, walker. The Binder pays for stories. A copper for a name, a silver for a why.\"",
+      "A bald man in white linen squats in the lee of a wall with a folio open on his knees. He looks up as you pass. \"A line of your road, walker. The Binder pays a coin for a story — your name, or the why beneath it. The name is easy. The why will cost you more than coin, and pay you back in kind.\"",
     minChapter: 2,
     choices: [
       {
         id: 'sell-name',
         label: 'Give him your name',
-        hint: 'A copper paid for a copper given.',
+        hint: 'A coin for a name freely given.',
         outcome: {
           resolution:
             'He inks the name with quick, clean strokes. "The Binder remembers, walker." A coin rings on the cobble between your boots.',
@@ -543,10 +543,10 @@ const POOL: EventTemplate[] = [
       {
         id: 'sell-story',
         label: 'Tell him the why',
-        hint: 'A silver, and a heaviness lifted.',
+        hint: 'The same coin — and a weight off your chest.',
         outcome: {
           resolution:
-            'You give him a piece of yourself that you did not know you still carried. He writes it small. When he is done, the air feels less full of you. The silver in your hand is warm.',
+            'You give him a piece of yourself that you did not know you still carried. He writes it small. When he is done, the air feels less full of you. The coin he presses into your hand is warm.',
           effects: [
             { kind: 'gold_delta', amount: 1 },
             { kind: 'temp_hp', amount: 3 },

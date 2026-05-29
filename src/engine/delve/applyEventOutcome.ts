@@ -10,12 +10,23 @@ import { getBlessing } from '../../content/blessings';
 import { blessingsForClass } from '../character/blessings';
 import { listQuirks, getQuirk } from '../../content/quirks';
 import { modifierFor } from '../character/derived';
+import { getBossIntelCard } from '../../content/bossIntel';
 
 /** Plain-text record of a single effect that landed. Useful for UI summaries. */
 export interface AppliedEffect {
   kind: EventEffect['kind'];
   /** Short human-readable summary ("+5 HP", "+10g", "Tymora's Coin"). */
   detail: string;
+  /**
+   * Concrete boss-intel stat lines for `reveal_boss_intel` effects. Lets the
+   * resolution panel surface the actual name / HP / signature the choice
+   * promised, instead of only the mood prose. Absent for every other kind.
+   */
+  intel?: {
+    bossName: string;
+    level: 'partial' | 'full';
+    lines: string[];
+  };
 }
 
 export interface EventOutcomeResult {
@@ -336,13 +347,22 @@ export function applyEventOutcome(
         break;
       }
       case 'apply_attack_bonus_run': {
-        next = {
-          ...next,
-          delveAttackBonus: (next.delveAttackBonus ?? 0) + effect.amount,
-        };
+        // Class-aware: casters cast, so a weapon-attack bonus is a dud for
+        // them — route it to spell attacks instead. Mirrors the camp-choice
+        // split in delveStore (`classId === 'wizard'`).
+        const isCaster = next.classId === 'wizard';
+        next = isCaster
+          ? {
+              ...next,
+              delveSpellAttackBonus: (next.delveSpellAttackBonus ?? 0) + effect.amount,
+            }
+          : {
+              ...next,
+              delveAttackBonus: (next.delveAttackBonus ?? 0) + effect.amount,
+            };
         effectsApplied.push({
           kind: effect.kind,
-          detail: `+${effect.amount} attack (rest of delve)`,
+          detail: `+${effect.amount} ${isCaster ? 'spell' : 'weapon'} attack (rest of delve)`,
         });
         break;
       }
@@ -366,12 +386,24 @@ export function applyEventOutcome(
           ...next,
           bossIntel: { ...existing, [effect.bossDefId]: upgraded },
         };
+        const card = getBossIntelCard(effect.bossDefId);
+        const intel = card
+          ? {
+              bossName: card.bossName,
+              level: effect.level,
+              lines:
+                effect.level === 'full'
+                  ? [`HP ${card.exactHp}`, `AC ${card.ac}`, ...card.fullActions]
+                  : [`HP ${card.hpRangeText}`, `Signature — ${card.signature}`],
+            }
+          : undefined;
         effectsApplied.push({
           kind: effect.kind,
           detail:
             effect.level === 'full'
-              ? "Boss's exact stats revealed in the fight"
-              : 'Partial boss info revealed',
+              ? "The scout's full ledger — kept on a badge during the fight"
+              : 'You read the omens',
+          intel,
         });
         break;
       }
