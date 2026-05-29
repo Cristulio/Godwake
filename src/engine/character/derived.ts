@@ -5,7 +5,7 @@ import type { Armor } from '../../schemas/item';
 import { getRace } from '../../content/races';
 import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
-import { characterQuirkMods } from './quirks';
+import { characterQuirkMods, baneQuirkCount } from './quirks';
 import { characterBlessingMods } from './blessings';
 import { characterCampBoonMods } from './campBoons';
 
@@ -35,6 +35,16 @@ export function effectiveAbilityScores(character: Character): AbilityScores {
 export function modifierFor(character: Character, ability: AbilityName): number {
   const scores = effectiveAbilityScores(character);
   return abilityModifier(scores[ability]);
+}
+
+/** At (or above) max HP — the trigger for "while at full HP" blessings. */
+function isFullHp(character: Character): boolean {
+  return character.hp.max > 0 && character.hp.current >= character.hp.max;
+}
+
+/** HP at half or less — the "bloodied" trigger shared with playerAttack's wounded check. */
+function isBloodied(character: Character): boolean {
+  return character.hp.current <= character.hp.max / 2;
 }
 
 /**
@@ -83,6 +93,12 @@ export function computeAC(character: Character): number {
   base += boonMods.acBonus ?? 0;
   base += character.permanentBonuses?.ac ?? 0;
 
+  // Conditional / soul-mark AC blessings. Full-HP and bloodied are mutually
+  // exclusive in practice; the per-bane lever is unconditional.
+  if (isFullHp(character)) base += blessingMods.acBonusWhileFull ?? 0;
+  if (isBloodied(character)) base += blessingMods.acBonusWhileBloodied ?? 0;
+  base += (blessingMods.acBonusPerBaneQuirk ?? 0) * baneQuirkCount(character);
+
   // Wizard buffs.
   if (character.resources.mageArmorActive && !bodyArmor) {
     base += 3;
@@ -121,11 +137,16 @@ export function characterHasMechanic(character: Character, mechanicKey: string):
 
 /**
  * Crit range. Default 20 only. Improved Critical (Champion lv3) → 19-20.
- * Tempus's Edge (blessing) widens the band by N on the low end.
+ * Tempus's Edge (blessing) widens the band by N on the low end. Conditional
+ * blessings widen it further while at full HP (Selûne's Clarity) or while
+ * bloodied (Tempus's Bloodfury) — read live, so the band tracks current HP.
  */
 export function critRange(character: Character): number[] {
   const base = characterHasMechanic(character, 'improved-critical') ? 19 : 20;
-  const blessingBonus = characterBlessingMods(character).critRangeBonus ?? 0;
+  const mods = characterBlessingMods(character);
+  let blessingBonus = mods.critRangeBonus ?? 0;
+  if (isFullHp(character)) blessingBonus += mods.critRangeBonusWhileFull ?? 0;
+  if (isBloodied(character)) blessingBonus += mods.critRangeBonusWhileBloodied ?? 0;
   const upgradeBonus = character.permanentBonuses?.critRange ?? 0;
   const low = Math.max(2, base - blessingBonus - upgradeBonus);
   const result: number[] = [];

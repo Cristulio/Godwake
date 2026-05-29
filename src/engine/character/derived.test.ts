@@ -152,4 +152,45 @@ describe('character derivation — human fighter', () => {
     // Champion 19-20 + 1 → 18-20
     expect(critRange(champion2)).toEqual([18, 19, 20]);
   });
+
+  it("Helm's Vigil adds +2 AC only while at full HP", () => {
+    const full = { ...human, blessings: ['helms-vigil'] };
+    // human starts at full HP → 10 + DEX(2) + 2 = 14
+    expect(computeAC(full)).toBe(14);
+    const scratched = { ...full, hp: { ...full.hp, current: full.hp.max - 1 } };
+    // one point of damage drops the turtle bonus → back to 12
+    expect(computeAC(scratched)).toBe(12);
+  });
+
+  it("Ilmater's Forbearance adds +2 AC only while bloodied", () => {
+    const blessed = { ...human, blessings: ['ilmaters-forbearance'] };
+    // full HP → no bonus
+    expect(computeAC(blessed)).toBe(12);
+    const bloodied = { ...blessed, hp: { ...blessed.hp, current: Math.floor(blessed.hp.max / 2) } };
+    // at or below half → +2
+    expect(computeAC(bloodied)).toBe(14);
+  });
+
+  it("Silvanus's Burden adds +1 AC per bane quirk", () => {
+    // pinchpurse / hollow-coin are gold-only banes — no acMod to muddy the math.
+    const twoBanes = { ...human, blessings: ['silvanus-burden'], quirks: ['pinchpurse', 'hollow-coin'] };
+    // 10 + DEX(2) + 2 banes = 14
+    expect(computeAC(twoBanes)).toBe(14);
+    const noBanes = { ...human, blessings: ['silvanus-burden'], quirks: [] };
+    expect(computeAC(noBanes)).toBe(12);
+  });
+
+  it("Selûne's Clarity widens crit range only while at full HP", () => {
+    const full = { ...human, blessings: ['selunes-clarity'] };
+    expect(critRange(full)).toEqual([19, 20]);
+    const scratched = { ...full, hp: { ...full.hp, current: full.hp.max - 1 } };
+    expect(critRange(scratched)).toEqual([20]);
+  });
+
+  it("Tempus's Bloodfury widens crit range only while bloodied", () => {
+    const blessed = { ...human, blessings: ['tempus-bloodfury'] };
+    expect(critRange(blessed)).toEqual([20]);
+    const bloodied = { ...blessed, hp: { ...blessed.hp, current: Math.floor(blessed.hp.max / 2) } };
+    expect(critRange(bloodied)).toEqual([19, 20]);
+  });
 });

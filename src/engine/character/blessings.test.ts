@@ -270,6 +270,91 @@ describe('aggregateBlessingModifiers — remaining sum-style fields', () => {
   });
 });
 
+describe('aggregateBlessingModifiers — v2 conditional/scaling levers', () => {
+  it('takes max-of for every temp-HP source (they share one non-stacking pool)', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('a', { tempHpPerDelveLevel: 1 }),
+      fakeBlessing('b', { tempHpPerDelveLevel: 2 }),
+      fakeBlessing('c', { tempHpPerBaneQuirk: 2 }),
+      fakeBlessing('d', { tempHpPerBaneQuirk: 3 }),
+      fakeBlessing('e', { bossTempHp: 4 }),
+      fakeBlessing('f', { bossTempHp: 6 }),
+    ];
+    withFakePool(pool, () => {
+      const mods = aggregateBlessingModifiers(['a', 'b', 'c', 'd', 'e', 'f']);
+      expect(mods.tempHpPerDelveLevel).toBe(2);
+      expect(mods.tempHpPerBaneQuirk).toBe(3);
+      expect(mods.bossTempHp).toBe(6);
+    });
+  });
+
+  it('takes max-of for conditional AC and crit levers', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('af1', { acBonusWhileFull: 1 }),
+      fakeBlessing('af2', { acBonusWhileFull: 2 }),
+      fakeBlessing('ab1', { acBonusWhileBloodied: 2 }),
+      fakeBlessing('apb', { acBonusPerBaneQuirk: 1 }),
+      fakeBlessing('cf', { critRangeBonusWhileFull: 1 }),
+      fakeBlessing('cb', { critRangeBonusWhileBloodied: 1 }),
+    ];
+    withFakePool(pool, () => {
+      const mods = aggregateBlessingModifiers(['af1', 'af2', 'ab1', 'apb', 'cf', 'cb']);
+      expect(mods.acBonusWhileFull).toBe(2);
+      expect(mods.acBonusWhileBloodied).toBe(2);
+      expect(mods.acBonusPerBaneQuirk).toBe(1);
+      expect(mods.critRangeBonusWhileFull).toBe(1);
+      expect(mods.critRangeBonusWhileBloodied).toBe(1);
+    });
+  });
+
+  it('SUMS the two regen fields (a second healing pick genuinely compounds)', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('r1', { regenPerCombat: 2 }),
+      fakeBlessing('r2', { regenPerCombat: 3 }),
+      fakeBlessing('p1', { regenPctPerCombat: 10 }),
+      fakeBlessing('p2', { regenPctPerCombat: 5 }),
+    ];
+    withFakePool(pool, () => {
+      const mods = aggregateBlessingModifiers(['r1', 'r2', 'p1', 'p2']);
+      expect(mods.regenPerCombat).toBe(5);
+      expect(mods.regenPctPerCombat).toBe(15);
+    });
+  });
+});
+
+describe('rollBlessingOptions — v2 levers stack/non-stack offer rules', () => {
+  it('a conditional AC blessing is non-stacking: owning one blocks its twin', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('full-a', { acBonusWhileFull: 2 }),
+      fakeBlessing('full-b', { acBonusWhileFull: 2 }),
+      fakeBlessing('dmg', { damageBonus: 1 }),
+    ];
+    withFakePool(pool, () => {
+      for (let seed = 0; seed < 100; seed += 1) {
+        const roller = createDiceRoller(seed);
+        const result = rollBlessingOptions(roller, 3, undefined, ['full-a']);
+        expect(result).not.toContain('full-a');
+        expect(result).not.toContain('full-b');
+      }
+    });
+  });
+
+  it('a regen blessing still gets offered when owned (charges sum)', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('regen-a', { regenPerCombat: 2 }),
+      fakeBlessing('regen-b', { regenPerCombat: 2 }),
+    ];
+    withFakePool(pool, () => {
+      for (let seed = 0; seed < 50; seed += 1) {
+        const roller = createDiceRoller(seed);
+        const result = rollBlessingOptions(roller, 1, undefined, ['regen-a']);
+        expect(result.length).toBe(1);
+        expect(['regen-a', 'regen-b']).toContain(result[0]);
+      }
+    });
+  });
+});
+
 describe('rollBlessingOptions — real pool', () => {
   it('100-roll sweep produces no batch with two identical-signature entries', async () => {
     const { getBlessing } = await import('../../content/blessings');

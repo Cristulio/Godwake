@@ -9,6 +9,7 @@ import type {
 } from '../../types/combat';
 import type { Monster } from '../../schemas/monster';
 import { characterBlessingMods } from '../character/blessings';
+import { baneQuirkCount } from '../character/quirks';
 import { characterCampBoonMods } from '../character/campBoons';
 import { rogueCunningActionMax } from '../character/actions';
 import {
@@ -78,8 +79,9 @@ export interface CreateCombatInput {
  * (player first, then monsters in spawn order — no initiative rolls), log
  * the opening line. Also applies per-class start-of-combat patches to the
  * character (Rogue refreshes Cunning Action; Wizard activates passive Mage
- * Armor; Lathander's Dawn grants temp HP). Returns BOTH the combat state
- * and the patched character.
+ * Armor) and start-of-combat blessing effects (temp HP — flat, depth-scaling,
+ * bane-scaling, and boss-only — plus per-combat regeneration). Returns BOTH
+ * the combat state and the patched character.
  *
  * Callers (production + tests) consume `{ state, character }` — internals are
  * fully pure, so the input `character` is untouched.
@@ -175,11 +177,19 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     });
   }
 
-  // Lathander's Dawn (and any future per-room temp-HP blessing): grant temp HP
-  // at the start of combat. Temp HP doesn't stack — take the higher of current
-  // and granted, RAW.
+  // Start-of-combat temp HP from blessings. Several distinct levers feed the
+  // same pool: a flat grant (Lathander's Dawn / Ilmater's Crown), one scaling
+  // with delve level (Lathander's Ascendance), one scaling with bane quirks
+  // (Mystra's Reserve), and a boss-only gird (Helm's Bastion). Temp HP doesn't
+  // stack — take the single largest source, then the higher of that and any
+  // temp HP already on the sheet (RAW).
   const blessingMods = characterBlessingMods(nextCharacter);
-  const tempHpGrant = blessingMods.extraTempHpPerRoom ?? 0;
+  const tempHpGrant = Math.max(
+    blessingMods.extraTempHpPerRoom ?? 0,
+    (blessingMods.tempHpPerDelveLevel ?? 0) * nextCharacter.level,
+    (blessingMods.tempHpPerBaneQuirk ?? 0) * baneQuirkCount(nextCharacter),
+    isBoss ? (blessingMods.bossTempHp ?? 0) : 0,
+  );
   if (tempHpGrant > 0) {
     const newTemp = Math.max(nextCharacter.hp.temp, tempHpGrant);
     nextCharacter = patchHp(nextCharacter, { temp: newTemp });
@@ -187,6 +197,23 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       id: log.length + 1,
       kind: 'system' as const,
       text: `${nextCharacter.name} gains ${tempHpGrant} temporary HP from a blessing.`,
+    });
+  }
+
+  // Per-combat regeneration (Silvanus's Renewal flat + Ilmater's Mercy percent).
+  // Real healing of current HP, capped at max — matters most in back-to-back
+  // rooms where the player walks in already scratched. Both fields sum.
+  const regenAmount =
+    (blessingMods.regenPerCombat ?? 0) +
+    Math.floor((nextCharacter.hp.max * (blessingMods.regenPctPerCombat ?? 0)) / 100);
+  if (regenAmount > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
+    const before = nextCharacter.hp.current;
+    const after = Math.min(nextCharacter.hp.max, before + regenAmount);
+    nextCharacter = patchHp(nextCharacter, { current: after });
+    log.push({
+      id: log.length + 1,
+      kind: 'system' as const,
+      text: `${nextCharacter.name} recovers ${after - before} HP from a blessing.`,
     });
   }
 
