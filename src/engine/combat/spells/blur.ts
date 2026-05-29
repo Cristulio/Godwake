@@ -10,8 +10,13 @@ import {
   nextLogId,
 } from './helpers';
 
-/** Rounds the displacement holds. Read by the monster-attack path as a disadvantage source. */
-export const BLUR_ROUNDS = 3;
+/**
+ * Rounds the displacement holds. Read by the monster-attack path as a
+ * disadvantage source. Set to 5 (a full combat's worth) so Blur is worth a
+ * whole action + 2nd-level slot — it's the sustained-defense pick, distinct
+ * from Mirror Image's burst soak and Misty Step's one-turn panic button.
+ */
+export const BLUR_ROUNDS = 5;
 
 export function castBlur(character: Readonly<Character>, state: CombatState): CastResult {
   let nextCharacter: Character = consumeSlot(character, 2);
