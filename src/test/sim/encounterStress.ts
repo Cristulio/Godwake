@@ -141,12 +141,80 @@ const WIZARD_ARCHETYPE: ArchetypeBuilder = () => {
   };
 };
 
-type SimClassId = Extract<ClassId, 'rogue' | 'fighter' | 'wizard'>;
+const BARBARIAN_ARCHETYPE: ArchetypeBuilder = () => {
+  const c = createCharacter({
+    id: 'sim-barbarian',
+    name: 'Korrek',
+    raceId: 'human' as RaceId,
+    classId: 'barbarian',
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[0], // 15
+      con: STANDARD_ARRAY[1], // 14
+      dex: STANDARD_ARRAY[2], // 13
+      cha: STANDARD_ARRAY[3], // 12
+      wis: STANDARD_ARRAY[4], // 10
+      int: STANDARD_ARRAY[5], // 8
+    },
+    skillProficiencies: ['athletics', 'intimidation'],
+  });
+  // No armor — Unarmored Defense — greataxe + a bundle of javelins.
+  return {
+    ...c,
+    inventory: [
+      { itemId: 'greataxe' },
+      { itemId: 'javelin' },
+      { itemId: 'javelin' },
+      { itemId: 'potion-of-healing' },
+      { itemId: 'potion-of-healing' },
+    ],
+    equipped: {
+      mainHand: { itemId: 'greataxe' },
+      offHand: null,
+      armor: null,
+    },
+  };
+};
+
+const RANGER_ARCHETYPE: ArchetypeBuilder = () => {
+  const c = createCharacter({
+    id: 'sim-ranger',
+    name: 'Faelar',
+    raceId: 'wood-elf' as RaceId,
+    classId: 'ranger',
+    baseAbilityScores: {
+      dex: STANDARD_ARRAY[0], // 15
+      con: STANDARD_ARRAY[1], // 14
+      str: STANDARD_ARRAY[2], // 13
+      wis: STANDARD_ARRAY[3], // 12
+      int: STANDARD_ARRAY[4], // 10
+      cha: STANDARD_ARRAY[5], // 8
+    },
+    skillProficiencies: ['perception', 'survival'],
+  });
+  return {
+    ...c,
+    inventory: [
+      { itemId: 'longbow' },
+      { itemId: 'shortsword' },
+      { itemId: 'leather-armor' },
+      { itemId: 'potion-of-healing' },
+    ],
+    equipped: {
+      mainHand: { itemId: 'longbow' },
+      offHand: null,
+      armor: { itemId: 'leather-armor' },
+    },
+  };
+};
+
+type SimClassId = Extract<ClassId, 'rogue' | 'fighter' | 'wizard' | 'barbarian' | 'ranger'>;
 
 const ARCHETYPES: Record<SimClassId, ArchetypeBuilder> = {
   rogue: ROGUE_ARCHETYPE,
   fighter: FIGHTER_ARCHETYPE,
   wizard: WIZARD_ARCHETYPE,
+  barbarian: BARBARIAN_ARCHETYPE,
+  ranger: RANGER_ARCHETYPE,
 };
 
 /**

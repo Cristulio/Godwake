@@ -42,7 +42,8 @@ const CLASS_KIT: Record<ClassId, string> = {
   rogue: 'Rapier, shortbow & leather armor · 1 healing potion · 15 gold',
   wizard: 'Dagger & spellbook · 1 healing potion · 20 gold',
   cleric: '—',
-  barbarian: '—',
+  barbarian: 'Greataxe & javelins, no armor · 2 healing potions · 20 gold',
+  ranger: 'Longbow, shortsword & leather armor · 1 healing potion · 15 gold',
 };
 
 const CLASS_HALLMARKS: Record<ClassId, string> = {
@@ -50,7 +51,8 @@ const CLASS_HALLMARKS: Record<ClassId, string> = {
   rogue: 'Sneak Attack · Cunning Action · Uncanny Dodge',
   wizard: 'Fire Bolt · Magic Missile · Fireball at L5',
   cleric: '—',
-  barbarian: '—',
+  barbarian: 'Rage · Reckless Attack · Berserker Frenzy',
+  ranger: "Hunter's Mark · Archery · Colossus Slayer",
 };
 
 function skillLabel(s: SkillName): string {

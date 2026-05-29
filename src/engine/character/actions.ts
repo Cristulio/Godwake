@@ -1,5 +1,6 @@
 import type { Character, SpellSlots } from '../../types/character';
 import { getRace } from '../../content/races';
+import { characterHasMechanic } from './derived';
 
 /** Returns a character object with fresh action economy for a new turn. */
 export function withResetActionEconomy(character: Character): Character {
@@ -21,6 +22,26 @@ function fighterActionSurgeMax(character: Character): number {
   if (character.level >= 17) return 2;
   if (character.level >= 2) return 1;
   return 0;
+}
+
+/**
+ * Barbarian: Rage activations available per combat. Refreshed at the start of
+ * every encounter (createCombat) and on rest. Scales gently with level so a
+ * hardened barbarian can re-rage if the first one runs out mid-fight.
+ */
+export function barbarianRageMax(character: Character): number {
+  if (character.classId !== 'barbarian') return 0;
+  return character.level >= 3 ? 2 : 1;
+}
+
+/** Rounds a Rage holds once entered. Covers a full ordinary fight. */
+export const RAGE_ROUNDS = 5;
+
+/** Flat bonus damage on a melee hit while raging. Berserker's Frenzy adds more. */
+export function rageDamageBonus(character: Character): number {
+  if (character.classId !== 'barbarian') return 0;
+  const frenzy = characterHasMechanic(character, 'frenzy') ? 2 : 0;
+  return 2 + frenzy;
 }
 
 /** Rogue: Cunning Action uses per combat. Thief (L3+) gets a second use via Fast Hands. */
@@ -66,6 +87,8 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
         character.classId === 'rogue'
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
+      rageUsesRemaining: barbarianRageMax(character),
+      rageRoundsRemaining: 0,
       spellSlots: isWizard
         ? wizardSpellSlotsForLevel(character.level)
         : character.resources.spellSlots,
@@ -91,6 +114,8 @@ export function longRest(character: Character): Character {
         character.classId === 'rogue'
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
+      rageUsesRemaining: barbarianRageMax(character),
+      rageRoundsRemaining: 0,
       spellSlots: isWizard
         ? wizardSpellSlotsForLevel(character.level)
         : character.resources.spellSlots,

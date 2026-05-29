@@ -73,6 +73,12 @@ export function computeAC(character: Character): number {
     }
   }
 
+  // Barbarian Unarmored Defense: with no body armor, the guard is bone and
+  // instinct — AC becomes 10 + DEX + CON. A shield (added below) still stacks.
+  if (!bodyArmor && characterHasMechanic(character, 'unarmored-defense')) {
+    base = 10 + dexMod + modifierFor(character, 'con');
+  }
+
   if (equipped.offHand) {
     const item = getItem(equipped.offHand.itemId);
     if (item.kind === 'armor' && item.category === 'shield') {
@@ -111,6 +117,11 @@ export function computeAC(character: Character): number {
   }
 
   return base;
+}
+
+/** True while the Barbarian's Rage is burning (physical resistance + bonus melee damage). */
+export function isRaging(character: Character): boolean {
+  return (character.resources.rageRoundsRemaining ?? 0) > 0;
 }
 
 export function characterHasMechanic(character: Character, mechanicKey: string): boolean {

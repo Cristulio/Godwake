@@ -146,6 +146,14 @@ export interface CombatState {
   /** Rogue Sneak Attack already fired this turn. Reset on turn change. Optional so legacy saves rehydrate. */
   sneakAttackUsedThisTurn?: boolean;
   /**
+   * Ranger Hunter's Mark: the combatant id of the currently-branded quarry.
+   * Hits on this target deal bonus damage. Cleared/re-set by re-casting the
+   * mark; combat starts unmarked. Optional so legacy saves rehydrate.
+   */
+  huntersMarkTargetId?: string;
+  /** Ranger (Hunter) Colossus Slayer already fired this turn. Reset on turn change. Optional so legacy saves rehydrate. */
+  colossusSlayerUsedThisTurn?: boolean;
+  /**
    * Blade of the Vow (camp boon) re-roll budget for this encounter. Reset to 1
    * on combat start when the boon is active; consumed on the first weapon
    * damage roll by re-rolling the lowest die and keeping the higher result.

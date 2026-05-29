@@ -14,8 +14,11 @@ import {
   computeAC,
   effectiveAbilityScores,
   characterHasMechanic,
+  isRaging,
   proficiencyBonus,
 } from '../../character/derived';
+import { rageDamageBonus } from '../../character/actions';
+import { HUNTERS_MARK_DICE } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
 import { characterCampBoonMods } from '../../character/campBoons';
@@ -102,6 +105,8 @@ export function playerAttack(
   attackBonus += nextCharacter.permanentBonuses?.attack ?? 0;
   attackBonus += nextCharacter.delveAttackBonus ?? 0;
   attackBonus += boonMods.attackBonus ?? 0;
+  // Ranger Fighting Style: Archery — +2 to attack rolls with ranged weapons.
+  if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
@@ -118,10 +123,13 @@ export function playerAttack(
   const ac = targetAC(target, nextCharacter);
   const hideAdvantage = nextCharacter.nextAttackAdvantage === true;
   // Monster debuffs (poisoned/frightened/blinded/restrained) impose
-  // disadvantage. If the player also has advantage (Hide / first-strike
-  // blessing) the two cancel to a straight roll (5e advantage/disadvantage).
+  // disadvantage on the player's attacks. Advantage comes from Hide, a
+  // first-strike blessing, or a Barbarian's Reckless Attack (melee only).
+  // Advantage + disadvantage cancel to a straight roll (5e).
   const condMods = playerConditionMods(nextCharacter);
-  const hasAdvantage = (isFirstAttack && !!blessingMods.firstAttackAdvantage) || hideAdvantage;
+  const recklessAdvantage = nextCharacter.recklessActive === true && !isRanged;
+  const hasAdvantage =
+    (isFirstAttack && !!blessingMods.firstAttackAdvantage) || hideAdvantage || recklessAdvantage;
   const hasDisadvantage = condMods.attackDisadvantage;
   const advantage: 'normal' | 'advantage' | 'disadvantage' =
     hasAdvantage === hasDisadvantage ? 'normal' : hasAdvantage ? 'advantage' : 'disadvantage';
@@ -196,6 +204,7 @@ export function playerAttack(
   );
 
   let sneakAttackFiredFlag = false;
+  let colossusFiredFlag = false;
   let bladeOfVowUsed = false;
   if (hit) {
     const damageExpr = parseDiceExpression(weapon.damage);
@@ -286,6 +295,15 @@ export function playerAttack(
       bonusDamage += mountainBonus;
       onTypeParts.push({ amount: mountainBonus, label: 'Mountain' });
     }
+    // Barbarian Rage: bonus damage on melee hits while the fury burns
+    // (Berserker's Frenzy folds its extra into rageDamageBonus).
+    if (isRaging(nextCharacter) && !isRanged) {
+      const rd = rageDamageBonus(nextCharacter);
+      if (rd > 0) {
+        bonusDamage += rd;
+        onTypeParts.push({ amount: rd, label: 'Rage' });
+      }
+    }
     // Vow reroll is already baked into the dice total — a note, not a summand,
     // or the breakdown would double-count it.
     if (bladeOfVowUsed && bladeOfVowDelta > 0) {
@@ -311,6 +329,40 @@ export function playerAttack(
       sneakDamage = sneakRoll.total;
       bonusDamage += sneakDamage;
       sneakAttackFiredFlag = true;
+    }
+
+    // Ranger Hunter's Mark: extra dice on every hit against the branded quarry.
+    let markDamage = 0;
+    if (
+      state.huntersMarkTargetId === targetId &&
+      characterHasMechanic(nextCharacter, 'hunters-mark')
+    ) {
+      const markExpr = parseDiceExpression(HUNTERS_MARK_DICE);
+      const markRoll = roller.roll({
+        count: markExpr.count * (crit ? 2 : 1),
+        die: markExpr.die,
+        modifier: 0,
+      });
+      markDamage = markRoll.total;
+      bonusDamage += markDamage;
+    }
+
+    // Ranger (Hunter) Colossus Slayer: once per turn, a hit on a foe already
+    // below its full health drives an extra 1d8 home.
+    let colossusDamage = 0;
+    const targetBelowMax =
+      target.kind === 'monster' &&
+      target.instance.hp.current > 0 &&
+      target.instance.hp.current < target.instance.hp.max;
+    if (
+      characterHasMechanic(nextCharacter, 'colossus-slayer') &&
+      state.colossusSlayerUsedThisTurn !== true &&
+      targetBelowMax
+    ) {
+      const colossusRoll = roller.roll({ count: crit ? 2 : 1, die: 8, modifier: 0 });
+      colossusDamage = colossusRoll.total;
+      bonusDamage += colossusDamage;
+      colossusFiredFlag = true;
     }
 
     // Weakened: a flat reduction to outgoing weapon damage. Folded into the
@@ -349,6 +401,8 @@ export function playerAttack(
     pushPart(abilMod, attackAbility.toUpperCase());
     pushPart(damageExpr.modifier, 'magic');
     if (sneakDamage > 0) pushPart(sneakDamage, `sneak (${sneakDice}d6)`);
+    if (markDamage > 0) pushPart(markDamage, `mark (${HUNTERS_MARK_DICE})`);
+    if (colossusDamage > 0) pushPart(colossusDamage, 'colossus (1d8)');
     for (const p of onTypeParts) pushPart(p.amount, p.label);
     // Headline splits by damage type: the weapon-type subtotal (which the
     // parenthetical sums to) plus any off-type segments shown by their own type.
@@ -380,6 +434,9 @@ export function playerAttack(
   };
   if (hit && sneakAttackFiredFlag) {
     nextState = { ...nextState, sneakAttackUsedThisTurn: true };
+  }
+  if (hit && colossusFiredFlag) {
+    nextState = { ...nextState, colossusSlayerUsedThisTurn: true };
   }
   if (usedDelveReroll > 0 && nextCharacter.delveBudgets) {
     nextCharacter = patchDelveBudgets(nextCharacter, {

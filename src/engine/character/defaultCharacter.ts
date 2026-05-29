@@ -78,6 +78,47 @@ function startingKitFor(classId: ClassId): StartingKit {
         goldInPocket: 20,
       };
     }
+    case 'barbarian': {
+      // No armor — Unarmored Defense does the work. A bundle of javelins for
+      // the ones that keep their distance.
+      const greataxe: ItemRef = { itemId: 'greataxe' };
+      return {
+        inventory: [
+          greataxe,
+          { itemId: 'javelin' },
+          { itemId: 'javelin' },
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: greataxe,
+          offHand: null,
+          armor: null,
+        },
+        goldInPocket: 20,
+      };
+    }
+    case 'ranger': {
+      // Longbow opens the room; the shortsword is for when something closes.
+      // Light armor keeps the archer mobile. (Ammunition isn't tracked — the
+      // bow is self-supplied, same as the rogue's shortbow.)
+      const longbow: ItemRef = { itemId: 'longbow' };
+      const leatherArmor: ItemRef = { itemId: 'leather-armor' };
+      return {
+        inventory: [
+          longbow,
+          { itemId: 'shortsword' },
+          leatherArmor,
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: longbow,
+          offHand: null,
+          armor: leatherArmor,
+        },
+        goldInPocket: 15,
+      };
+    }
     default:
       return {
         inventory: [],

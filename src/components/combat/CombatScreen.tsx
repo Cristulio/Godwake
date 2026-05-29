@@ -13,6 +13,9 @@ import {
   useActionSurge,
   useCunningAction,
   type CunningActionChoice,
+  useRage,
+  useRecklessAttack,
+  useHuntersMark,
   useConsumable,
   castSpell,
   chooseCombatAction,
@@ -68,6 +71,7 @@ export function CombatScreen({
   const [autoEndNotice, setAutoEndNotice] = useState(false);
   const [pickingItem, setPickingItem] = useState(false);
   const [pickingCunning, setPickingCunning] = useState(false);
+  const [markingTarget, setMarkingTarget] = useState(false);
   const [pickingSpell, setPickingSpell] = useState(false);
   const [castingSpellId, setCastingSpellId] = useState<string | null>(null);
   const bedChoiceRef = useRef<MusicId | null>(null);
@@ -206,7 +210,33 @@ export function CombatScreen({
       character.classId === 'rogue' &&
       (character.resources.cunningActionUsesRemaining ?? 0) > 0 &&
       !character.actionEconomy.bonusActionUsed;
-    if (hasUsableBonus || hasUsableActionSurge || hasUsableCunningAction) return;
+    const hasUsableRage =
+      character.classId === 'barbarian' &&
+      (character.resources.rageUsesRemaining ?? 0) > 0 &&
+      (character.resources.rageRoundsRemaining ?? 0) <= 0 &&
+      !character.actionEconomy.bonusActionUsed;
+    // Worth waiting on only if the mark isn't already riding a live quarry —
+    // otherwise re-marking is pointless and the turn should auto-end.
+    const markOnLiveTarget =
+      state.huntersMarkTargetId != null &&
+      state.combatants.some(
+        (c) =>
+          c.kind === 'monster' &&
+          c.id === state.huntersMarkTargetId &&
+          c.instance.hp.current > 0,
+      );
+    const hasUsableHuntersMark =
+      character.classId === 'ranger' &&
+      !character.actionEconomy.bonusActionUsed &&
+      !markOnLiveTarget;
+    if (
+      hasUsableBonus ||
+      hasUsableActionSurge ||
+      hasUsableCunningAction ||
+      hasUsableRage ||
+      hasUsableHuntersMark
+    )
+      return;
     // Don't auto-end mid-spell-pick — the player may have a cantrip queued
     // even after a slot-spell. The Spells modal flow short-circuits this.
     if (pickingSpell || castingSpellId) return;
@@ -235,6 +265,8 @@ export function CombatScreen({
     character.resources.secondWindBonusRemaining,
     character.resources.actionSurgeRemaining,
     character.resources.cunningActionUsesRemaining,
+    character.resources.rageUsesRemaining,
+    character.resources.rageRoundsRemaining,
     character.hp.current,
     state.currentTurnIndex,
     overlayActive,
@@ -254,6 +286,7 @@ export function CombatScreen({
     if (overlayActive) return;
     if (
       selectingTarget ||
+      markingTarget ||
       pickingItem ||
       pickingCunning ||
       pickingSpell ||
@@ -305,6 +338,7 @@ export function CombatScreen({
     character,
     overlayActive,
     selectingTarget,
+    markingTarget,
     pickingItem,
     pickingCunning,
     pickingSpell,
@@ -329,6 +363,11 @@ export function CombatScreen({
     // If we're mid-spell selection, route to spell cast instead.
     if (castingSpellId) {
       doCastSpell(castingSpellId, targetId);
+      return;
+    }
+    // If we're picking a Hunter's Mark target, brand instead of swing.
+    if (markingTarget) {
+      doHuntersMark(targetId);
       return;
     }
     const roller = getActiveRoller();
@@ -395,6 +434,39 @@ export function CombatScreen({
   function handleCunningAction(choice: CunningActionChoice) {
     const result = useCunningAction({ character, state, choice });
     setPickingCunning(false);
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleRage() {
+    const result = useRage({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleRecklessAttack() {
+    const result = useRecklessAttack({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleHuntersMarkClick() {
+    const aliveMonsters = state.combatants.filter(
+      (c) => c.kind === 'monster' && c.instance.hp.current > 0,
+    );
+    if (aliveMonsters.length === 0) return;
+    if (aliveMonsters.length === 1) {
+      doHuntersMark(aliveMonsters[0].id);
+    } else {
+      setMarkingTarget(true);
+      setSelectingTarget(true);
+    }
+  }
+
+  function doHuntersMark(targetId: string) {
+    const result = useHuntersMark({ character, state, targetId });
+    setMarkingTarget(false);
+    setSelectingTarget(false);
     setCharacter(result.character);
     setCombat(result.state);
   }
@@ -550,7 +622,7 @@ export function CombatScreen({
         <>
           {selectingTarget && (
             <div className="text-center text-[var(--color-accent-amber)] text-xs uppercase tracking-widest animate-pulse">
-              ► Select a target
+              {markingTarget ? '► Select a quarry to mark' : '► Select a target'}
             </div>
           )}
           {character.conditions.some((c) => c.name === 'paralyzed') && (
@@ -571,6 +643,9 @@ export function CombatScreen({
             onSecondWind={handleSecondWind}
             onActionSurge={handleActionSurge}
             onCunningAction={() => setPickingCunning(true)}
+            onRage={handleRage}
+            onRecklessAttack={handleRecklessAttack}
+            onHuntersMark={handleHuntersMarkClick}
             onSpells={() => setPickingSpell(true)}
             onUseItem={() => setPickingItem(true)}
             onEndTurn={handleEndTurn}

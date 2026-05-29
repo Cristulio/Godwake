@@ -116,6 +116,7 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       round,
       playerAttacksThisTurn: 0,
       sneakAttackUsedThisTurn: false,
+      colossusSlayerUsedThisTurn: false,
     },
     {
       id: state.log.length + 1,
@@ -147,6 +148,19 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     nextCharacter = patchResources(nextCharacter, {
       blurRoundsRemaining: (nextCharacter.resources.blurRoundsRemaining ?? 0) - 1,
     });
+  }
+  // Barbarian: the Reckless stance (and the advantage it hands enemies) clears
+  // at the start of the barbarian's next turn; Rage burns down one round each
+  // time that turn comes around.
+  if (order[nextIndex] === 'player') {
+    if (nextCharacter.recklessActive) {
+      nextCharacter = { ...nextCharacter, recklessActive: false };
+    }
+    if ((nextCharacter.resources.rageRoundsRemaining ?? 0) > 0) {
+      nextCharacter = patchResources(nextCharacter, {
+        rageRoundsRemaining: (nextCharacter.resources.rageRoundsRemaining ?? 0) - 1,
+      });
+    }
   }
 
   // Tick down monster-debuff conditions (poisoned/frightened/blinded/restrained/
