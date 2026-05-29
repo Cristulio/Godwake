@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "sim:reincarnation": "tsx scripts/sim-reincarnation-loop.ts"
+    "sim:reincarnation": "tsx scripts/sim-reincarnation-loop.ts",
+    "sim:order-rotate": "tsx scripts/sim-order-rotate.ts"
   },
   "dependencies": {
     "pixi.js": "^8.18.1",
