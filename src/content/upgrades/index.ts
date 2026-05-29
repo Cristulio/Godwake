@@ -35,6 +35,14 @@ export interface Upgrade {
    */
   apply: (character: Character, rank: number) => Character;
   kind: UpgradeKind;
+  /**
+   * Progression gate for deeper Grove tiers. Absent = always available.
+   * `ascension` is the minimum `metaStore.ascensionUnlocked` required to buy
+   * (1 = "clear the chain once"). Until met the Grove shows the upgrade as
+   * "clear to unlock" (same category as the existing druidGroveUnlocked gate —
+   * a real, reachable upgrade, never a phantom no-op) and purchase is refused.
+   */
+  unlock?: { ascension: number; label: string };
 }
 
 /** Standard cost curve: base * rank^1.3, rounded. Flattened from 1.6 so the top ranks of multi-rank trees remain reachable in a normal play schedule. */
@@ -147,6 +155,21 @@ const RAW: Upgrade[] = [
       delveStabiliseBonus: rank,
     }),
     kind: 'delveStart',
+  },
+  {
+    // Deeper Grove tier — sealed until the soul has walked the whole chain and
+    // returned. Raises the HP ceiling past what the base trees reach.
+    id: 'wellspring-depths',
+    category: 'body',
+    name: "Wellspring's Depth",
+    flavor:
+      "The pool only shows its floor to a soul that has walked the whole road and come back from the spider's hall. What it gives now, it could not give before.",
+    effectAtRank: (r) => `+${r * 10} maximum HP, permanent across reincarnations.`,
+    costForRank: (r) => rankCost(200, r),
+    maxRank: 3,
+    apply: (c) => addPermanentBonus(c, 'hp', 10),
+    kind: 'permanent',
+    unlock: { ascension: 1, label: 'Clear the chain to unlock.' },
   },
 
   // ─── EDGE ──────────────────────────────────────────────────────────────
@@ -272,6 +295,21 @@ const RAW: Upgrade[] = [
     maxRank: 5,
     apply: (c) => addPermanentBonus(c, 'spellDamage', 1),
     kind: 'permanent',
+  },
+  {
+    // Deeper Grove tier — sealed until the soul has cleared the chain at
+    // Ascension 3. A mixed offensive crown for both martials and casters.
+    id: 'crown-of-the-returned',
+    category: 'edge',
+    name: 'Crown of the Returned',
+    flavor:
+      'Beaten from the ash of cleared chains. Only a soul the wheel has carried back again and again may wear it without burning.',
+    effectAtRank: (r) => `+${r} to all attack rolls and spell-attack rolls, permanent.`,
+    costForRank: (r) => rankCost(350, r),
+    maxRank: 2,
+    apply: (c) => addPermanentBonus(addPermanentBonus(c, 'attack', 1), 'spellAttack', 1),
+    kind: 'permanent',
+    unlock: { ascension: 3, label: 'Reach Ascension 3 to unlock.' },
   },
 
   // ─── COIN ──────────────────────────────────────────────────────────────

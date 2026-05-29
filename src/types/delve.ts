@@ -60,4 +60,10 @@ export interface DelveState {
    * player enters a boss room afterwards (the stat-block reveal consumes it).
    */
   lichEyesAvailable?: boolean;
+  /**
+   * Ascension level this run is being played at (0 = base). Stamped at delve
+   * creation from the hub selector; read by combat spawning (enemy HP/damage),
+   * starting-gold scaling, and the renown payout on clear/death.
+   */
+  ascensionLevel?: number;
 }

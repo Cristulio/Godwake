@@ -99,6 +99,7 @@ function resetStores(extra: ResetSlices = {}) {
     unlockedUpgrades: extra.unlockedUpgrades ?? {},
     chapter1Cleared: extra.chapter1Cleared ?? false,
     druidGroveUnlocked: extra.druidGroveUnlocked ?? false,
+    ascensionUnlocked: 0,
   });
   useScreenStore.setState({
     screen: 'delve',
@@ -299,6 +300,43 @@ describe('Grove upgrade — Pilgrim\'s Boots', () => {
     const beforeHp = ch.permanentBonuses?.hp ?? 0;
     const after = applyPermanentUpgrade(ch, 'pilgrims-boots', 1);
     expect((after.permanentBonuses?.hp ?? 0) - beforeHp).toBe(2);
+  });
+});
+
+describe('Grove gating — ascension-locked deeper tiers', () => {
+  beforeEach(() => resetStores());
+
+  it('refuses a clear-gated upgrade before the chain has been cleared', () => {
+    useCharacterStore.setState({
+      character: { ...useCharacterStore.getState().character!, renown: 1000 },
+    });
+    useMetaStore.setState({ ascensionUnlocked: 0, unlockedUpgrades: {} });
+    const res = useGameStore.getState().purchaseUpgrade('wellspring-depths');
+    expect(res.ok).toBe(false);
+    expect(res.reason).toBe('Clear the chain to unlock.');
+    expect(useMetaStore.getState().unlockedUpgrades['wellspring-depths']).toBeUndefined();
+    // Renown is untouched by a refused purchase.
+    expect(useCharacterStore.getState().character!.renown).toBe(1000);
+  });
+
+  it('allows the clear-gated upgrade once ascensionUnlocked meets the gate', () => {
+    useCharacterStore.setState({
+      character: { ...useCharacterStore.getState().character!, renown: 1000 },
+    });
+    useMetaStore.setState({ ascensionUnlocked: 1, unlockedUpgrades: {} });
+    const res = useGameStore.getState().purchaseUpgrade('wellspring-depths');
+    expect(res.ok).toBe(true);
+    expect(useMetaStore.getState().unlockedUpgrades['wellspring-depths']).toBe(1);
+  });
+
+  it('keeps the Ascension-3 tier sealed at Ascension 1', () => {
+    useCharacterStore.setState({
+      character: { ...useCharacterStore.getState().character!, renown: 1000 },
+    });
+    useMetaStore.setState({ ascensionUnlocked: 1, unlockedUpgrades: {} });
+    const res = useGameStore.getState().purchaseUpgrade('crown-of-the-returned');
+    expect(res.ok).toBe(false);
+    expect(res.reason).toBe('Reach Ascension 3 to unlock.');
   });
 });
 

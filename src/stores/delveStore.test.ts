@@ -4,9 +4,10 @@ import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore } from './screenStore';
 import { useCombatStore } from './combatStore';
-import { createGodwakeDelve } from '../engine/delve';
+import { createGodwakeDelve, getAscensionLevel, MAX_ASCENSION } from '../engine/delve';
 import { setActiveRoller } from '../engine/dice';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
+import { renownSoulMarkMultiplier } from '../engine/character/quirks';
 import type { Character } from '../types/character';
 
 function makeFighter(extra: Partial<Character> = {}): Character {
@@ -226,5 +227,93 @@ describe('delveStore — gold stacking', () => {
     useDelveStore.getState().grantTitheGold(0);
     useDelveStore.getState().grantTitheGold(-5);
     expect(char().goldInPocket).toBe(startPurse);
+  });
+});
+
+describe('delveStore — ascension ladder', () => {
+  beforeEach(() => {
+    setActiveRoller('ascension-seed');
+    seedRun({ quirks: [] });
+  });
+
+  it('clearing the chain at the current highest unlocked opens the next rung', () => {
+    useMetaStore.setState({ ascensionUnlocked: 2 });
+    setDelve({ phase: 'completed', currentRoomIdx: 36, ascensionLevel: 2 });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(useMetaStore.getState().ascensionUnlocked).toBe(3);
+  });
+
+  it('replaying a LOWER level than the highest unlocks nothing new', () => {
+    useMetaStore.setState({ ascensionUnlocked: 3 });
+    setDelve({ phase: 'completed', currentRoomIdx: 36, ascensionLevel: 1 });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(useMetaStore.getState().ascensionUnlocked).toBe(3);
+  });
+
+  it('a death at the highest level does NOT advance the ladder', () => {
+    useMetaStore.setState({ ascensionUnlocked: 2 });
+    setDelve({ phase: 'failed', currentRoomIdx: 36, ascensionLevel: 2 });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(useMetaStore.getState().ascensionUnlocked).toBe(2);
+  });
+
+  it('the ladder caps at MAX_ASCENSION', () => {
+    useMetaStore.setState({ ascensionUnlocked: MAX_ASCENSION });
+    setDelve({ phase: 'completed', currentRoomIdx: 36, ascensionLevel: MAX_ASCENSION });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(useMetaStore.getState().ascensionUnlocked).toBe(MAX_ASCENSION);
+  });
+
+  it('renown composes the soul-mark and ascension multipliers multiplicatively', () => {
+    // Two banes give a non-trivial soul-mark; Ascension 4 gives a non-trivial
+    // reward bump. The payout must reflect BOTH, multiplied.
+    const character = makeFighter({ level: 3, quirks: ['vertigo', 'glassbone'], renown: 0 });
+    useCharacterStore.setState({ character, saveSeed: null });
+    useMetaStore.setState({ ascensionUnlocked: 4, hasReincarnated: false });
+    useDelveStore.setState({
+      delve: {
+        ...createGodwakeDelve(1),
+        phase: 'completed',
+        currentRoomIdx: 36,
+        ascensionLevel: 4,
+      },
+    });
+
+    const soulMark = renownSoulMarkMultiplier(character);
+    const ascMult = getAscensionLevel(4).renownMult;
+    expect(soulMark).toBeGreaterThan(1);
+    expect(ascMult).toBeGreaterThan(1);
+    const expected = Math.floor(RENOWN_PER_DELVE_CLEAR * soulMark * ascMult);
+
+    useDelveStore.getState().finishDelve();
+
+    expect(char().renown).toBe(expected);
+    // Sanity: applying only one multiplier would land short of the product.
+    expect(expected).toBeGreaterThan(Math.floor(RENOWN_PER_DELVE_CLEAR * ascMult));
+    expect(expected).toBeGreaterThan(Math.floor(RENOWN_PER_DELVE_CLEAR * soulMark));
+  });
+
+  it('startDelve scales seeded starting gold by the ascension startingGoldMult', () => {
+    const character = makeFighter({
+      level: 3,
+      quirks: [],
+      permanentBonuses: { startingGold: 100 },
+    });
+    useCharacterStore.setState({ character, saveSeed: null });
+    useMetaStore.setState({ unlockedUpgrades: {} });
+
+    useDelveStore.getState().startDelve(createGodwakeDelve({ seed: 1, ascension: 6 }));
+
+    const expected = Math.floor(100 * getAscensionLevel(6).startingGoldMult);
+    expect(char().goldInPocket).toBe(expected);
+    expect(expected).toBeLessThan(100);
   });
 });

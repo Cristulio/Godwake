@@ -211,7 +211,8 @@ export function monsterAttack(
       modifier: 0,
     });
     const rageBonus = raging ? 2 : 0;
-    const rawDamage = damageRoll.total + damageExpr.modifier + rageBonus;
+    const ascensionBonus = attacker.instance.bonusDamage ?? 0;
+    const rawDamage = damageRoll.total + damageExpr.modifier + rageBonus + ascensionBonus;
 
     const quirkMods = characterQuirkMods(nextCharacter);
     const immune =
@@ -247,6 +248,7 @@ export function monsterAttack(
       );
     }
     if (rageBonus > 0) breakdown.push(`+ ${rageBonus} rage`);
+    if (ascensionBonus > 0) breakdown.push(`+ ${ascensionBonus} ascension`);
     const resistSuffix = resisted ? ` (${action.damageType} resistance, halved)` : '';
     const damageLine = immune
       ? `Damage negated: ${nextCharacter.name} is immune to ${action.damageType}.`

@@ -154,6 +154,8 @@ export function DelveScreen() {
       roller,
       character: fresh,
       monsters,
+      ascension: delve.ascensionLevel ?? 0,
+      isBoss: room.kind === 'boss',
     });
     setCharacter(newCombat.character);
     setCombat(newCombat.state);
@@ -355,7 +357,12 @@ export function DelveScreen() {
                 : def.name;
               return { def, displayName };
             });
-            const newCombat = createCombat({ roller, character: fresh, monsters });
+            const newCombat = createCombat({
+              roller,
+              character: fresh,
+              monsters,
+              ascension: delve.ascensionLevel ?? 0,
+            });
             setCharacter(newCombat.character);
             setCombat(newCombat.state);
             const discover = useGameStore.getState().discoverMonster;

@@ -18,6 +18,7 @@ type FlashKind = 'ok' | 'err';
 export function DruidGroveScreen() {
   const character = useGameStore((s) => s.character);
   const unlocked = useGameStore((s) => s.unlockedUpgrades);
+  const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
   const purchase = useGameStore((s) => s.purchaseUpgrade);
   const goToHub = useGameStore((s) => s.goToHub);
   const [flash, setFlash] = useState<{ kind: FlashKind; msg: string } | null>(null);
@@ -132,6 +133,7 @@ export function DruidGroveScreen() {
             upgrade={u}
             currentRank={unlocked[u.id] ?? 0}
             renown={character.renown}
+            locked={(u.unlock?.ascension ?? 0) > ascensionUnlocked}
             pulsing={pulsing === u.id}
             onBuy={() => tryBuy(u.id)}
           />
@@ -183,25 +185,28 @@ interface UpgradeCardProps {
   upgrade: Upgrade;
   currentRank: number;
   renown: number;
+  locked: boolean;
   pulsing: boolean;
   onBuy: () => void;
 }
 
-function UpgradeCard({ upgrade, currentRank, renown, pulsing, onBuy }: UpgradeCardProps) {
+function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: UpgradeCardProps) {
   const maxed = currentRank >= upgrade.maxRank;
   const nextRank = currentRank + 1;
   const nextCost = maxed ? null : upgrade.costForRank(nextRank);
-  const affordable = nextCost !== null && renown >= nextCost;
+  const affordable = !locked && nextCost !== null && renown >= nextCost;
   const owned = currentRank > 0;
   const shortfall = nextCost !== null ? nextCost - renown : 0;
 
-  const borderClass = maxed
-    ? 'border-[var(--color-accent-amber)] shadow-[0_0_18px_rgba(244,167,66,0.25)]'
-    : owned
-      ? 'border-[var(--color-accent-amber)]/60'
-      : affordable
-        ? 'border-[var(--color-accent-gold)] hover:shadow-[0_0_22px_rgba(244,167,66,0.3)]'
-        : 'border-[var(--color-border-dim)]';
+  const borderClass = locked
+    ? 'border-[var(--color-border-dim)] opacity-80'
+    : maxed
+      ? 'border-[var(--color-accent-amber)] shadow-[0_0_18px_rgba(244,167,66,0.25)]'
+      : owned
+        ? 'border-[var(--color-accent-amber)]/60'
+        : affordable
+          ? 'border-[var(--color-accent-gold)] hover:shadow-[0_0_22px_rgba(244,167,66,0.3)]'
+          : 'border-[var(--color-border-dim)]';
 
   return (
     <div
@@ -211,7 +216,12 @@ function UpgradeCard({ upgrade, currentRank, renown, pulsing, onBuy }: UpgradeCa
         ${pulsing ? 'animate-pulse-glow' : ''}
       `}
     >
-      {maxed && (
+      {locked && (
+        <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
+          ⚿ Sealed
+        </div>
+      )}
+      {!locked && maxed && (
         <div className="absolute -top-px -right-px bg-[var(--color-accent-gold)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
           ◆ Max Rank
         </div>
@@ -248,7 +258,11 @@ function UpgradeCard({ upgrade, currentRank, renown, pulsing, onBuy }: UpgradeCa
       </div>
 
       <div className="mt-auto">
-        {maxed ? (
+        {locked ? (
+          <div className="font-display text-[10px] uppercase tracking-widest text-[var(--color-text-dim)] text-center py-2 border border-[var(--color-border-dim)] bg-[var(--color-bg-deep)]/40">
+            ⚿ {upgrade.unlock?.label ?? 'Locked'}
+          </div>
+        ) : maxed ? (
           <div className="font-display text-[10px] uppercase tracking-widest text-[var(--color-accent-amber)]/80 text-center py-2 border border-[var(--color-accent-amber)]/40 bg-[var(--color-bg-deep)]/40">
             ✓ Soul blessed in full
           </div>

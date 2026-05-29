@@ -1,2 +1,3 @@
 export * from './createDelve';
 export * from './applyEventOutcome';
+export * from './ascension';
