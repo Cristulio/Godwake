@@ -71,6 +71,14 @@ export const WARMUP_POOL: EncounterEntry[] = [
     xpReward: 330,
     goldReward: 32,
   },
+  {
+    title: 'The Web-Mouth',
+    flavorText:
+      "A cavern hunting-spider drops from a ceiling-slit and lands square in the corridor, big as a war-hound. A jet of grey silk hits your legs before you have finished drawing — and then both sets of fangs come at once.",
+    monsters: [{ defId: 'cavern-hunting-spider', count: 1 }],
+    xpReward: 340,
+    goldReward: 22,
+  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
@@ -131,6 +139,28 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
     xpReward: 580,
     goldReward: 40,
   },
+  {
+    title: 'The Web and the Brood',
+    flavorText:
+      "A cavern hunting-spider has strung the gallery ankle-high and a driderling waits in the silk beside it. The big spider webs; the small one feeds on whatever stops moving.",
+    monsters: [
+      { defId: 'cavern-hunting-spider', count: 1 },
+      { defId: 'driderling', count: 1 },
+    ],
+    xpReward: 580,
+    goldReward: 30,
+  },
+  {
+    title: 'The Priestess and Her Blade',
+    flavorText:
+      "A drow war-priestess walks a step behind a House-warrior, the spider-sigil already in her hand. Every wound you open on the warrior closes around a skin of black webbing. Lolth is not finished with him.",
+    monsters: [
+      { defId: 'drow-war-priestess', count: 1 },
+      { defId: 'drow-warrior', count: 1 },
+    ],
+    xpReward: 600,
+    goldReward: 44,
+  },
 ];
 
 export const MID_POOL: EncounterEntry[] = [
@@ -190,6 +220,28 @@ export const MID_POOL: EncounterEntry[] = [
     ],
     xpReward: 760,
     goldReward: 56,
+  },
+  {
+    title: 'The Priestess and Her Bow',
+    flavorText:
+      "A drow war-priestess holds the centre of the gallery with a crossbowman at her flank. She heals and shields him faster than the bolts you take in return; the math only resolves when she falls.",
+    monsters: [
+      { defId: 'drow-war-priestess', count: 1 },
+      { defId: 'drow-crossbowman', count: 1 },
+    ],
+    xpReward: 700,
+    goldReward: 50,
+  },
+  {
+    title: 'The Stalker in the Gallery',
+    flavorText:
+      "A cavern hunting-spider works one end of a long gallery and a House-warrior the other. The spider webs you to the floor; the warrior walks up at his leisure to finish what the silk started.",
+    monsters: [
+      { defId: 'cavern-hunting-spider', count: 1 },
+      { defId: 'drow-warrior', count: 1 },
+    ],
+    xpReward: 720,
+    goldReward: 48,
   },
 ];
 
@@ -259,5 +311,24 @@ export const ELITE_POOL: EncounterEntry[] = [
     ],
     xpReward: 960,
     goldReward: 72,
+  },
+  {
+    title: 'The Brood-Warren',
+    flavorText:
+      "The corridor opens into a low warren and the smell hits first. A Lolth-blessed broodmother fills the far wall, her abdomen the size of a wine-tun and never still. She convulses, and a clutch of half-formed driderlings pours out already running. There will always be more until she stops.",
+    monsters: [{ defId: 'spider-broodmother', count: 1 }],
+    xpReward: 1000,
+    goldReward: 76,
+  },
+  {
+    title: 'The Priestess and Her Drider',
+    flavorText:
+      "A drow war-priestess at the temple gate with a drider coiled above the arch. The priestess mends and shields the spider-thing between strikes; the drider does not need much help. Drop the priestess, or the drider never tires.",
+    monsters: [
+      { defId: 'drow-war-priestess', count: 1 },
+      { defId: 'drider', count: 1 },
+    ],
+    xpReward: 980,
+    goldReward: 70,
   },
 ];

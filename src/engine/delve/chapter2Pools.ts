@@ -67,6 +67,14 @@ export const WARMUP_POOL: EncounterEntry[] = [
     xpReward: 170,
     goldReward: 22,
   },
+  {
+    title: 'The Coffle-Road',
+    flavorText:
+      "A slaver-house lash-captain stands in the lane with ten feet of barbed leather already uncoiled. He cracks it once, a hand-span from your ear — not to strike, yet, but to remind you what you are to him.",
+    monsters: [{ defId: 'lash-captain', count: 1 }],
+    xpReward: 175,
+    goldReward: 18,
+  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
@@ -131,6 +139,17 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
     ],
     xpReward: 260,
     goldReward: 14,
+  },
+  {
+    title: 'The Driving-Line',
+    flavorText:
+      "A lash-captain works the front of the line and a robed cult-knife the back. The whip-crack frightens the prey forward; the knife is waiting where the prey ends up.",
+    monsters: [
+      { defId: 'lash-captain', count: 1 },
+      { defId: 'cult-fanatic', count: 1 },
+    ],
+    xpReward: 270,
+    goldReward: 18,
   },
 ];
 
@@ -197,6 +216,25 @@ export const MID_POOL: EncounterEntry[] = [
     xpReward: 350,
     goldReward: 18,
   },
+  {
+    title: 'The Conjurer in the Counting-House',
+    flavorText:
+      "A Cowled Wizard waits behind the desk and does not stand. A circle of cold fire opens at his shoulder, and something with wings folds itself out of it, already grinning. He will not duel you. He delegates.",
+    monsters: [{ defId: 'cowled-conjurer', count: 1 }],
+    xpReward: 360,
+    goldReward: 24,
+  },
+  {
+    title: 'The Warded Escort',
+    flavorText:
+      "A slaver-cuirassier stands a pace in front of a robed wardpriest. Every blow you land on the slaver sinks into a skin of grey light a half-second before it hits. The light is coming from her.",
+    monsters: [
+      { defId: 'cowled-wardpriest', count: 1 },
+      { defId: 'slaver-cuirassier', count: 1 },
+    ],
+    xpReward: 360,
+    goldReward: 20,
+  },
 ];
 
 export const ELITE_POOL: EncounterEntry[] = [
@@ -259,6 +297,28 @@ export const ELITE_POOL: EncounterEntry[] = [
     monsters: [
       { defId: 'cowled-enforcer', count: 1 },
       { defId: 'shadow-hound', count: 1 },
+    ],
+    xpReward: 470,
+    goldReward: 26,
+  },
+  {
+    title: 'The Conjurer and His Brute',
+    flavorText:
+      "A Cowled conjurer keeps a cuirassier between himself and the door, and binds a winged servitor the moment you cross it. Kill the brute and the imp keeps coming; kill the conjurer and the bindings unravel mid-air.",
+    monsters: [
+      { defId: 'cowled-conjurer', count: 1 },
+      { defId: 'slaver-cuirassier', count: 1 },
+    ],
+    xpReward: 490,
+    goldReward: 28,
+  },
+  {
+    title: "The Wardpriest's Line",
+    flavorText:
+      "A hobgoblin in Athkatlan livery holds the lane while a wardpriest stands a step behind, two fingers raised. The hobgoblin should have died a round ago. The grey light keeps deciding otherwise.",
+    monsters: [
+      { defId: 'cowled-wardpriest', count: 1 },
+      { defId: 'hobgoblin', count: 1 },
     ],
     xpReward: 470,
     goldReward: 26,

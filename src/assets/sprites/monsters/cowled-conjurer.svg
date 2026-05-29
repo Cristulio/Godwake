@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 22 34"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Cowled Conjurer"
+    >
+      <!-- summoning circle, cold fire, at the side -->
+      <rect x="16" y="13" width="6" height="6" fill="none" />
+      <rect x="17" y="13" width="4" height="1" fill="#4a6ad0" opacity="0.7" />
+      <rect x="17" y="18" width="4" height="1" fill="#4a6ad0" opacity="0.7" />
+      <rect x="16" y="14" width="1" height="4" fill="#4a6ad0" opacity="0.7" />
+      <rect x="21" y="14" width="1" height="4" fill="#4a6ad0" opacity="0.7" />
+      <rect x="18" y="15" width="2" height="2" fill="#6a8af0" opacity="0.5" />
+
+      <!-- pointed cowl -->
+      <polygon points="11,1 5,9 17,9" fill="#3a3a44" />
+      <polygon points="11,1 8,9 11,9" fill="#2a2a32" />
+
+      <!-- shadowed face + silver mask -->
+      <rect x="7" y="6" width="8" height="5" fill="#15151a" />
+      <rect x="8" y="7" width="6" height="3" fill="#9a9aaa" />
+      <rect x="9" y="8" width="1" height="1" fill="#15151a" />
+      <rect x="12" y="8" width="1" height="1" fill="#15151a" />
+
+      <!-- robe body -->
+      <rect x="5" y="10" width="12" height="14" fill="#3a3a44" />
+      <rect x="5" y="10" width="12" height="1" fill="#4a4a55" />
+      <rect x="10" y="10" width="2" height="14" fill="#2a2a32" />
+      <!-- silver collar -->
+      <rect x="7" y="10" width="8" height="1" fill="#9a9aaa" />
+
+      <!-- gesturing arm toward the circle -->
+      <rect x="15" y="12" width="3" height="2" fill="#3a3a44" />
+      <rect x="17" y="12" width="2" height="2" fill="#c8c4b8" />
+
+      <!-- robe hem flares -->
+      <polygon points="5,24 3,32 9,32" fill="#3a3a44" />
+      <polygon points="17,24 19,32 11,32" fill="#3a3a44" />
+      <rect x="9" y="24" width="4" height="8" fill="#2a2a32" />
+      <rect x="3" y="31" width="16" height="1" fill="#1a1a20" />
+    </svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 22 34"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Famished Ghast"
+    >
+      <!-- gaunt head -->
+      <rect x="7" y="2" width="8" height="7" fill="#9a9a82" />
+      <rect x="7" y="2" width="8" height="1" fill="#6a6a58" />
+      <rect x="6" y="4" width="1" height="3" fill="#6a6a58" />
+      <rect x="15" y="4" width="1" height="3" fill="#6a6a58" />
+
+      <!-- hollow eyes, hungry glow -->
+      <rect x="7" y="4" width="3" height="3" fill="#0a0a08" />
+      <rect x="12" y="4" width="3" height="3" fill="#0a0a08" />
+      <rect x="8" y="5" width="1" height="1" fill="#d4a430" />
+      <rect x="13" y="5" width="1" height="1" fill="#d4a430" />
+
+      <!-- unhinged jaw + teeth -->
+      <rect x="7" y="8" width="8" height="3" fill="#1a1410" />
+      <rect x="8" y="8" width="1" height="2" fill="#d4c8a8" />
+      <rect x="10" y="8" width="1" height="3" fill="#d4c8a8" />
+      <rect x="12" y="8" width="1" height="2" fill="#d4c8a8" />
+      <rect x="9" y="10" width="1" height="1" fill="#d4c8a8" />
+      <rect x="11" y="10" width="1" height="1" fill="#d4c8a8" />
+
+      <!-- starved ribcage torso -->
+      <rect x="6" y="11" width="10" height="10" fill="#8a8a72" />
+      <rect x="7" y="12" width="8" height="1" fill="#5a5a48" />
+      <rect x="7" y="14" width="8" height="1" fill="#5a5a48" />
+      <rect x="7" y="16" width="8" height="1" fill="#5a5a48" />
+      <rect x="7" y="18" width="8" height="1" fill="#5a5a48" />
+      <rect x="10" y="11" width="2" height="10" fill="#6a6a58" />
+
+      <!-- raking claws, both raised -->
+      <rect x="2" y="9" width="4" height="3" fill="#8a8a72" />
+      <polygon points="1,12 0,14 2,13" fill="#3a3228" />
+      <polygon points="2,12 2,15 3,13" fill="#3a3228" />
+      <polygon points="4,12 4,15 5,13" fill="#3a3228" />
+
+      <rect x="16" y="9" width="4" height="3" fill="#8a8a72" />
+      <polygon points="21,12 22,14 20,13" fill="#3a3228" />
+      <polygon points="20,12 20,15 19,13" fill="#3a3228" />
+      <polygon points="18,12 18,15 17,13" fill="#3a3228" />
+
+      <!-- spindly legs -->
+      <rect x="7" y="21" width="3" height="9" fill="#8a8a72" />
+      <rect x="12" y="21" width="3" height="9" fill="#8a8a72" />
+      <rect x="7" y="21" width="1" height="9" fill="#6a6a58" />
+      <rect x="14" y="21" width="1" height="9" fill="#6a6a58" />
+
+      <!-- feet / talons -->
+      <rect x="6" y="30" width="5" height="2" fill="#6a6a58" />
+      <rect x="11" y="30" width="5" height="2" fill="#6a6a58" />
+      <polygon points="6,32 5,34 7,32" fill="#3a3228" />
+      <polygon points="9,32 9,34 11,32" fill="#3a3228" />
+      <polygon points="11,32 11,34 13,32" fill="#3a3228" />
+      <polygon points="15,32 15,34 17,32" fill="#3a3228" />
+    </svg>

@@ -18,6 +18,8 @@ import {
   removeParalyze,
   rollPlayerSave,
 } from './holdPerson';
+import { tickPlayerConditions } from './playerConditions';
+import type { ConditionName } from '../../types/conditions';
 
 function resetActionEconomyForCurrent(
   state: CombatState,
@@ -147,6 +149,21 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     });
   }
 
+  // Tick down monster-debuff conditions (poisoned/frightened/blinded/restrained/
+  // weakened) at the start of the player's turn, dropping any that expire.
+  // Paralyzed is skipped here — its save-each-turn resolver below owns it.
+  if (order[nextIndex] === 'player') {
+    const ticked = tickPlayerConditions(nextCharacter);
+    nextCharacter = ticked.character;
+    for (const name of ticked.expired) {
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'system',
+        text: `${nextCharacter.name} ${conditionEndText(name)}.`,
+      });
+    }
+  }
+
   if (order[nextIndex] === 'player' && isPlayerParalyzed(nextCharacter)) {
     const resolved = resolvePlayerParalyzedTurn(nextState, nextCharacter);
     nextState = resolved.state;
@@ -154,6 +171,23 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
   }
 
   return combatResult(nextState, nextCharacter);
+}
+
+function conditionEndText(name: ConditionName): string {
+  switch (name) {
+    case 'poisoned':
+      return 'shakes off the poison';
+    case 'frightened':
+      return 'steadies — the fear passes';
+    case 'blinded':
+      return 'blinks the dark away — sight returns';
+    case 'restrained':
+      return 'tears free';
+    case 'weakened':
+      return 'feels their strength return';
+    default:
+      return `is no longer ${name}`;
+  }
 }
 
 /**

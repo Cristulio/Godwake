@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 22 34"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Drow War-Priestess"
+    >
+      <!-- white hair -->
+      <rect x="5" y="2" width="10" height="3" fill="#d8d4e0" />
+      <rect x="4" y="3" width="2" height="7" fill="#c8c4d4" />
+      <rect x="14" y="3" width="2" height="7" fill="#c8c4d4" />
+
+      <!-- dark drow face -->
+      <rect x="6" y="4" width="8" height="6" fill="#42344e" />
+      <rect x="7" y="6" width="2" height="1" fill="#d44a6a" />
+      <rect x="11" y="6" width="2" height="1" fill="#d44a6a" />
+      <rect x="9" y="8" width="2" height="1" fill="#2a1e30" />
+
+      <!-- robe with spider sigil -->
+      <rect x="5" y="10" width="12" height="13" fill="#3a1a2a" />
+      <rect x="5" y="10" width="12" height="1" fill="#4a2436" />
+      <rect x="10" y="10" width="2" height="13" fill="#2a1220" />
+      <!-- eight-pointed Lolth sigil -->
+      <rect x="9" y="14" width="4" height="1" fill="#b53c4a" />
+      <rect x="10" y="13" width="2" height="3" fill="#b53c4a" />
+      <rect x="9" y="13" width="1" height="1" fill="#d44a6a" />
+      <rect x="12" y="15" width="1" height="1" fill="#d44a6a" />
+
+      <!-- raised mending hand, web-light -->
+      <rect x="2" y="10" width="3" height="3" fill="#3a1a2a" />
+      <rect x="1" y="8" width="2" height="3" fill="#6a5470" />
+      <rect x="0" y="7" width="2" height="2" fill="#9a84a0" opacity="0.55" />
+
+      <!-- serpent-flail arm -->
+      <rect x="16" y="11" width="3" height="6" fill="#3a1a2a" />
+      <rect x="18" y="9" width="1" height="9" fill="#2a2e22" />
+      <rect x="17" y="9" width="3" height="2" fill="#3a5a2a" />
+      <rect x="18" y="7" width="1" height="2" fill="#4a7a2a" />
+
+      <!-- hem -->
+      <polygon points="5,23 4,32 9,32" fill="#3a1a2a" />
+      <polygon points="17,23 18,32 11,32" fill="#3a1a2a" />
+      <rect x="9" y="23" width="4" height="9" fill="#2a1220" />
+      <rect x="4" y="31" width="14" height="1" fill="#1a0a14" />
+    </svg>

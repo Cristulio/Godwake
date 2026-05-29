@@ -15,12 +15,17 @@ export type ConditionName =
   | 'restrained'
   | 'stunned'
   | 'unconscious'
-  | 'exhausted';
+  | 'exhausted'
+  // Not a 5e condition. Godwake-local: the target's blows land softer — a flat
+  // reduction to outgoing weapon damage (amount stored in ActiveCondition.level).
+  // Models sapping/withering effects (Cell Wight grip, energy drain).
+  | 'weakened';
 
 export const CONDITION_NAMES: readonly ConditionName[] = [
   'blinded', 'charmed', 'deafened', 'frightened', 'grappled',
   'incapacitated', 'invisible', 'paralyzed', 'petrified',
   'poisoned', 'prone', 'restrained', 'stunned', 'unconscious', 'exhausted',
+  'weakened',
 ] as const;
 
 export type DurationKind =

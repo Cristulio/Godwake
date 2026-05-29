@@ -29,6 +29,20 @@ import mindFlayerFragmentUrl from '../../assets/sprites/monsters/mind-flayer-fra
 import shadowHoundUrl from '../../assets/sprites/monsters/shadow-hound.svg';
 import slayerHoundUrl from '../../assets/sprites/monsters/slayer-hound.svg';
 import asylumDirectorUrl from '../../assets/sprites/monsters/asylum-director.svg';
+import plagueboundCurUrl from '../../assets/sprites/monsters/plaguebound-cur.svg';
+import cellWightUrl from '../../assets/sprites/monsters/cell-wight.svg';
+import famishedGhastUrl from '../../assets/sprites/monsters/famished-ghast.svg';
+import duergarTaskmasterUrl from '../../assets/sprites/monsters/duergar-taskmaster.svg';
+import cowledConjurerUrl from '../../assets/sprites/monsters/cowled-conjurer.svg';
+import lashCaptainUrl from '../../assets/sprites/monsters/lash-captain.svg';
+import cowledWardpriestUrl from '../../assets/sprites/monsters/cowled-wardpriest.svg';
+import gibberingHuskUrl from '../../assets/sprites/monsters/gibbering-husk.svg';
+import mindLeechUrl from '../../assets/sprites/monsters/mind-leech.svg';
+import sphereAberrationUrl from '../../assets/sprites/monsters/sphere-aberration.svg';
+import asylumFleshwrightUrl from '../../assets/sprites/monsters/asylum-fleshwright.svg';
+import spiderBroodmotherUrl from '../../assets/sprites/monsters/spider-broodmother.svg';
+import drowWarPriestessUrl from '../../assets/sprites/monsters/drow-war-priestess.svg';
+import cavernHuntingSpiderUrl from '../../assets/sprites/monsters/cavern-hunting-spider.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -79,6 +93,20 @@ const SPRITES: Record<string, SpriteEntry> = {
   'shadow-hound': { url: shadowHoundUrl, label: 'Shadow Hound' },
   'slayer-hound': { url: slayerHoundUrl, label: 'Slayer Hound' },
   'asylum-director': { url: asylumDirectorUrl, label: 'The Asylum Director' },
+  'plaguebound-cur': { url: plagueboundCurUrl, label: 'Plaguebound Cur' },
+  'cell-wight': { url: cellWightUrl, label: 'Cell Wight' },
+  'famished-ghast': { url: famishedGhastUrl, label: 'Famished Ghast' },
+  'duergar-taskmaster': { url: duergarTaskmasterUrl, label: 'Duergar Taskmaster' },
+  'cowled-conjurer': { url: cowledConjurerUrl, label: 'Cowled Conjurer' },
+  'lash-captain': { url: lashCaptainUrl, label: 'Lash-Captain' },
+  'cowled-wardpriest': { url: cowledWardpriestUrl, label: 'Cowled Wardpriest' },
+  'gibbering-husk': { url: gibberingHuskUrl, label: 'Gibbering Husk' },
+  'mind-leech': { url: mindLeechUrl, label: 'Mind Leech' },
+  'sphere-aberration': { url: sphereAberrationUrl, label: 'Reknitting Horror' },
+  'asylum-fleshwright': { url: asylumFleshwrightUrl, label: 'Asylum Fleshwright' },
+  'spider-broodmother': { url: spiderBroodmotherUrl, label: 'Spider Broodmother' },
+  'drow-war-priestess': { url: drowWarPriestessUrl, label: 'Drow War-Priestess' },
+  'cavern-hunting-spider': { url: cavernHuntingSpiderUrl, label: 'Cavern Hunting-Spider' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },

@@ -18,6 +18,12 @@ export interface MonsterInstance {
   bossRageActive?: boolean;
   /** Flat damage added to each of this monster's landed attacks (ascension scaling). Set at spawn. */
   bonusDamage?: number;
+  /**
+   * Per-action cadence bookkeeping for summon / sustain specials, keyed by the
+   * action's name. `uses` enforces `once`; `lastRound` enforces `cooldownRounds`.
+   * Optional so legacy saves rehydrate (treated as "never used").
+   */
+  actionState?: Record<string, { uses: number; lastRound: number }>;
 }
 
 export interface PlayerCombatant {
