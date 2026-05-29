@@ -22,8 +22,10 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *  v7 → v8: Ascension ladder. `ascensionUnlocked` (highest unlocked, default 0)
  *           added to the meta snapshot. Old saves default to 0 — a returning
  *           player re-clears the chain to open Ascension 1.
+ *  v8 → v9: Legendary relics. `ownedLegendaries` / `activeLegendaries` (both
+ *           default []) added to the meta snapshot. Old saves own none.
  */
-export const SAVE_VERSION = 8;
+export const SAVE_VERSION = 9;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -140,6 +142,8 @@ export interface MigratedSnapshot {
   deathCount: number;
   hasReincarnated: boolean;
   knownNpcs: string[];
+  ownedLegendaries: string[];
+  activeLegendaries: string[];
   // Allow extra fields to ride through (screen, saveSeed, introSeen, etc.).
   [k: string]: unknown;
 }
@@ -243,6 +247,14 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   // v7 → v8: ascension ladder. Old saves start at 0 (must re-clear to unlock 1).
   if (typeof state.ascensionUnlocked !== 'number' || state.ascensionUnlocked < 0) {
     state.ascensionUnlocked = 0;
+  }
+
+  // v8 → v9: legendary relics. Old saves own none.
+  if (!Array.isArray(state.ownedLegendaries)) {
+    state.ownedLegendaries = [];
+  }
+  if (!Array.isArray(state.activeLegendaries)) {
+    state.activeLegendaries = [];
   }
 
   return state as MigratedSnapshot;

@@ -29,6 +29,15 @@ export function effectiveAbilityScores(character: Character): AbilityScores {
   for (const ability of Object.keys(race.abilityScoreBonuses) as AbilityName[]) {
     result[ability] = (result[ability] ?? 0) + (race.abilityScoreBonuses[ability] ?? 0);
   }
+  // Active legendary relics (cross-delve gear) layer on top of race. Folding
+  // here means every downstream read — attack, damage, saves, spell DC, AC via
+  // DEX, HP via CON — picks them up with no extra plumbing.
+  const legendary = character.legendaryBonuses?.abilityScores;
+  if (legendary) {
+    for (const ability of Object.keys(legendary) as AbilityName[]) {
+      result[ability] = (result[ability] ?? 0) + (legendary[ability] ?? 0);
+    }
+  }
   return result;
 }
 
@@ -98,6 +107,7 @@ export function computeAC(character: Character): number {
   base += blessingMods.acBonus ?? 0;
   base += boonMods.acBonus ?? 0;
   base += character.permanentBonuses?.ac ?? 0;
+  base += character.legendaryBonuses?.ac ?? 0;
 
   // Conditional / soul-mark AC blessings. Full-HP and bloodied are mutually
   // exclusive in practice; the per-bane lever is unconditional.
@@ -159,7 +169,8 @@ export function critRange(character: Character): number[] {
   if (isFullHp(character)) blessingBonus += mods.critRangeBonusWhileFull ?? 0;
   if (isBloodied(character)) blessingBonus += mods.critRangeBonusWhileBloodied ?? 0;
   const upgradeBonus = character.permanentBonuses?.critRange ?? 0;
-  const low = Math.max(2, base - blessingBonus - upgradeBonus);
+  const legendaryBonus = character.legendaryBonuses?.critRange ?? 0;
+  const low = Math.max(2, base - blessingBonus - upgradeBonus - legendaryBonus);
   const result: number[] = [];
   for (let n = low; n <= 20; n++) result.push(n);
   return result;
