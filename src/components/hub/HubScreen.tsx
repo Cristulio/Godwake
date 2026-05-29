@@ -19,6 +19,7 @@ export function HubScreen() {
   const goToTitle = useGameStore((s) => s.goToTitle);
   const startDelve = useGameStore((s) => s.startDelve);
   const goToDruidGrove = useGameStore((s) => s.goToDruidGrove);
+  const goToCharacterSelect = useGameStore((s) => s.goToCharacterSelect);
   const chapter1Cleared = useGameStore((s) => s.chapter1Cleared);
   const hasReincarnated = useGameStore((s) => s.hasReincarnated);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
@@ -85,7 +86,7 @@ export function HubScreen() {
           <div className="w-16 h-16 panel-etched border border-[var(--color-border-warm)] flex items-center justify-center text-3xl shrink-0">
             <span aria-hidden>🛡️</span>
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 self-stretch flex flex-col justify-center">
             <div className="font-display text-[var(--color-accent-amber)] text-sm uppercase tracking-widest" style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.8)' }}>
               {character.name}
             </div>
@@ -116,6 +117,9 @@ export function HubScreen() {
               <QuirkRow quirkIds={character.quirks} emptyText="The soul wears no marks this life" />
             </div>
           </div>
+          <Button variant="secondary" onClick={goToCharacterSelect} className="shrink-0 self-start">
+            ⇄ Change Character
+          </Button>
         </div>
       </Panel>
 
