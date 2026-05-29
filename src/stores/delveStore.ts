@@ -108,6 +108,10 @@ function reincarnateSoul(character: Character): Character {
     blessings: [],
     campBoons: [],
     conditions: [],
+    // Refill the body so the between-lives screen shows a whole soul, not a
+    // corpse stuck at 0 HP from the death that ended the last run. startDelve
+    // recomputes the level-1 ceiling on descent — this is just for the wait.
+    hp: { current: character.hp.max, max: character.hp.max, temp: 0 },
     delveAttackBonus: 0,
     delveSpellAttackBonus: 0,
     bossIntel: {},
@@ -507,7 +511,12 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     } else if (choice === 'prayer') {
       // Class-aware roll, matching the shrine/merchant rolls. Single source of
       // truth — the view just reads back the granted id to name the god.
-      const [rolled] = rollBlessingOptions(getActiveRoller(), 1, character.classId);
+      const [rolled] = rollBlessingOptions(
+        getActiveRoller(),
+        1,
+        character.classId,
+        character.blessings,
+      );
       if (rolled) {
         grantedBlessingId = rolled;
         nextCharacter = {
