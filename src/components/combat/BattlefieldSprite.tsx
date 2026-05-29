@@ -6,6 +6,7 @@ import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
 import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
 import { MirrorImages } from './SpellEffect';
+import { IntentBadge } from './IntentBadge';
 
 type CommonProps = {
   isActiveTurn: boolean;
@@ -244,6 +245,10 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   }, [props.attackPulse, dead]);
 
   const selectable = props.kind === 'monster' && props.selectable && !dead;
+  // enemy-telegraph: show the monster's next-turn intent, except while it's
+  // mid-execution on its own turn (the action is already resolving).
+  const intent =
+    props.kind === 'monster' && !dead && !props.isActiveTurn ? props.instance.intent : undefined;
 
   const lungeClass = lunge
     ? props.facing === 'right'
@@ -270,6 +275,10 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
         disabled:cursor-default
       `}
     >
+      <div className="h-5 flex items-end justify-center mb-0.5">
+        {intent && <IntentBadge intent={intent} />}
+      </div>
+
       <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-bold mb-0.5 font-display">
         {name}
       </div>

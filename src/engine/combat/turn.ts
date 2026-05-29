@@ -19,6 +19,7 @@ import {
   rollPlayerSave,
 } from './holdPerson';
 import { tickPlayerConditions } from './playerConditions';
+import { refreshMonsterIntents } from './attack/monsterIntent';
 import type { ConditionName } from '../../types/conditions';
 
 function resetActionEconomyForCurrent(
@@ -182,6 +183,13 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     const resolved = resolvePlayerParalyzedTurn(nextState, nextCharacter);
     nextState = resolved.state;
     nextCharacter = resolved.character;
+  }
+
+  // enemy-telegraph: re-select every monster's intent at the top of the
+  // player's turn, against the post-housekeeping state, so the badge reflects
+  // exactly what the player is now deciding against.
+  if (order[nextIndex] === 'player') {
+    nextState = refreshMonsterIntents(nextState, nextCharacter);
   }
 
   return combatResult(nextState, nextCharacter);

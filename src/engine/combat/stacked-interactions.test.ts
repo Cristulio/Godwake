@@ -7,7 +7,7 @@ import { applyPermanentUpgrade } from '../character/upgrades';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { createDiceRoller } from '../dice';
 import { castSpell } from './spells';
-import { monsterAttack, playerAttack, applyDamage } from './attack';
+import { monsterAttack, playerAttack, applyDamage, refreshMonsterIntents } from './attack';
 import { endTurn } from './turn';
 import { useCunningAction } from './cunningAction';
 import { applyParalyze } from './holdPerson';
@@ -241,6 +241,9 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
     // Set the director's turn so monsterAttack picks the attack action
     // (round > 1 so paralyze isn't re-cast, and player is already paralyzed).
     state = { ...state, round: 2 };
+    // Pick-then-resolve: re-plan the intent against round-2 + paralyzed-player,
+    // dropping the round-1 Hold Person opener for the Glaive attack.
+    state = refreshMonsterIntents(state, paralyzedWizard);
     const directorId = findMonsterCombatant(state).id;
 
     // Try a few seeds to find one where the director hits — the assertion is
