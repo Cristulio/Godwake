@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useDelveStore, RENOWN_PER_DELVE_CLEAR } from './delveStore';
+import {
+  useDelveStore,
+  RENOWN_PER_DELVE_CLEAR,
+  RENOWN_PER_CHAPTER_BOSS,
+  RENOWN_PER_ROOM_REACHED,
+} from './delveStore';
 import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore } from './screenStore';
@@ -8,7 +13,21 @@ import { createGodwakeDelve, getAscensionLevel, MAX_ASCENSION } from '../engine/
 import { setActiveRoller } from '../engine/dice';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
 import { renownSoulMarkMultiplier } from '../engine/character/quirks';
+import { effectiveAbilityScores } from '../engine/character/derived';
+import { abilityModifier } from '../types/abilities';
+import { getClass } from '../content/classes';
+import { getRace } from '../content/races';
 import type { Character } from '../types/character';
+
+/** Mirror of delveStore's private level1HpMax — the level-1 descent ceiling. */
+function level1HpMax(ch: Character): number {
+  const cls = getClass(ch.classId);
+  const conMod = abilityModifier(effectiveAbilityScores(ch).con);
+  const raceBonusHp = getRace(ch.raceId).bonusHpPerLevel ?? 0;
+  const classBonusHp = ch.classId === 'wizard' ? 1 : 0;
+  const permanentHp = ch.permanentBonuses?.hp ?? 0;
+  return cls.hitDie + conMod + raceBonusHp + classBonusHp + permanentHp;
+}
 
 function makeFighter(extra: Partial<Character> = {}): Character {
   return {
@@ -78,13 +97,16 @@ describe('delveStore.finishDelve — reincarnate on clear', () => {
     expect(useScreenStore.getState().screen).toBe('hub');
   });
 
-  it('a clear still settles the clear-tier renown (soul-mark = 0)', () => {
+  it('a clear settles the clear premium + boss + depth credit (soul-mark = 0)', () => {
     seedRun({ quirks: [], renown: 10 });
+    // currentRoomIdx 36 → slice(0, 37) credits 3 bosses (idx 10/23/36); depth = 36.
     setDelve({ phase: 'completed', currentRoomIdx: 36 });
 
     useDelveStore.getState().finishDelve();
 
-    expect(char().renown).toBe(10 + RENOWN_PER_DELVE_CLEAR);
+    const expectedGain =
+      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 36;
+    expect(char().renown).toBe(10 + expectedGain);
   });
 
   it('a clear records the chapter-progression high-water mark', () => {
@@ -171,6 +193,21 @@ describe('delveStore — reincarnation refills HP for the between-lives screen',
     const c = char();
     expect(c.hp.current).toBe(c.hp.max);
     expect(c.hp.current).toBeGreaterThan(0);
+  });
+
+  it('refills to the LEVEL-1 ceiling, not the dead life leveled max', () => {
+    // A level-6 soul carrying a leveled max of 46 dies. The between-lives screen
+    // must show the level-1 ceiling it will actually descend with (~13 for this
+    // fighter), so HP no longer reads 46/46 then snaps down on Descend.
+    seedRun({ quirks: [], level: 6, hp: { current: 5, max: 46, temp: 0 } });
+    const expected = level1HpMax(char());
+
+    useDelveStore.getState().failDelve();
+
+    const c = char();
+    expect(c.hp.max).toBe(expected);
+    expect(c.hp.current).toBe(expected);
+    expect(c.hp.max).toBeLessThan(46);
   });
 });
 
@@ -348,14 +385,17 @@ describe('delveStore — ascension ladder', () => {
     const ascMult = getAscensionLevel(4).renownMult;
     expect(soulMark).toBeGreaterThan(1);
     expect(ascMult).toBeGreaterThan(1);
-    const expected = Math.floor(RENOWN_PER_DELVE_CLEAR * soulMark * ascMult);
+    // base = clear premium + 3 bosses (idx 10/23/36) + depth 36.
+    const base =
+      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 36;
+    const expected = Math.floor(base * soulMark * ascMult);
 
     useDelveStore.getState().finishDelve();
 
     expect(char().renown).toBe(expected);
     // Sanity: applying only one multiplier would land short of the product.
-    expect(expected).toBeGreaterThan(Math.floor(RENOWN_PER_DELVE_CLEAR * ascMult));
-    expect(expected).toBeGreaterThan(Math.floor(RENOWN_PER_DELVE_CLEAR * soulMark));
+    expect(expected).toBeGreaterThan(Math.floor(base * ascMult));
+    expect(expected).toBeGreaterThan(Math.floor(base * soulMark));
   });
 
   it('startDelve scales seeded starting gold by the ascension startingGoldMult', () => {

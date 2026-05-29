@@ -4,6 +4,7 @@ import {
   RENOWN_PER_DELVE_CLEAR,
   RENOWN_PER_DELVE_FAILURE,
   RENOWN_PER_CHAPTER_BOSS,
+  RENOWN_PER_ROOM_REACHED,
   GROVE_UNLOCK_THRESHOLD,
 } from './gameStore';
 import { useCharacterStore } from './characterStore';
@@ -231,37 +232,65 @@ describe('finishDelve — renown economy', () => {
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + 50);
   });
 
-  it('death mid-Ch2 after Ilyich-kill awards 25 renown (15 + 10)', () => {
+  it('death mid-Ch2 after Ilyich-kill stacks failure base + 1 boss + depth', () => {
     expect(RENOWN_PER_CHAPTER_BOSS).toBe(10);
     const delve = useDelveStore.getState().delve!;
+    // currentRoomIdx 11 → slice(0, 11) counts Ilyich (idx 10); depth = 11.
     useDelveStore.setState({
       delve: { ...delve, currentRoomIdx: 11, phase: 'failed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
-    expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + 25);
+    const expectedGain =
+      RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * 1 + RENOWN_PER_ROOM_REACHED * 11;
+    expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
 
-  it('death mid-Ch4 after killing 3 chapter bosses awards 45 renown', () => {
+  it('death mid-Ch4 stacks failure base + 3 bosses + the deeper depth credit', () => {
     const delve = useDelveStore.getState().delve!;
     // Index 37 = the Underdark camp immediately after the Ch3 boss (idx 36) in
-    // the 50-room godwake layout. slice(0, 37) counts Ilyich/Magistrate/Director.
+    // the 50-room godwake layout. slice(0, 37) counts Ilyich/Magistrate/Director;
+    // depth = 37, so this deep death pays far more than a shallow one.
     useDelveStore.setState({
       delve: { ...delve, currentRoomIdx: 37, phase: 'failed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
-    expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + 45);
+    const expectedGain =
+      RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 37;
+    expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
 
-  it('full clear still pays the clear-tier 50 (no chapter-boss stack on clear)', () => {
+  it('full clear pays the clear premium + all four bosses + full depth', () => {
     const delve = useDelveStore.getState().delve!;
+    // currentRoomIdx 49 → slice(0, 50) counts all four bosses; depth = 49.
     useDelveStore.setState({
       delve: { ...delve, currentRoomIdx: 49, phase: 'completed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
-    expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + 50);
+    const expectedGain =
+      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 4 + RENOWN_PER_ROOM_REACHED * 49;
+    expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
+  });
+
+  it('orders clear > deep death > shallow death (depth rewards pushing farther)', () => {
+    const base = useDelveStore.getState().delve!;
+    const payout = (patch: Partial<DelveState>): number => {
+      useCharacterStore.setState({
+        character: { ...useCharacterStore.getState().character!, renown: 0 },
+      });
+      useDelveStore.setState({ delve: { ...base, ...patch } });
+      useGameStore.getState().finishDelve();
+      return useCharacterStore.getState().character!.renown;
+    };
+
+    const shallowDeath = payout({ currentRoomIdx: 3, phase: 'failed' });
+    const deepDeath = payout({ currentRoomIdx: 37, phase: 'failed' });
+    const clear = payout({ currentRoomIdx: 49, phase: 'completed' });
+
+    expect(shallowDeath).toBeLessThan(deepDeath);
+    expect(deepDeath).toBeLessThan(clear);
   });
 });
 
