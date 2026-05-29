@@ -14,13 +14,9 @@ import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initiali
 import { simulateLevelUp } from '../../engine/character/leveling';
 import { createDiceRoller, type DiceRoller } from '../../engine/dice';
 import { createCombat } from '../../engine/combat/createCombat';
-import { playerAttack } from '../../engine/combat/attack';
 import { monsterAttack } from '../../engine/combat/attack';
 import { endTurn } from '../../engine/combat/turn';
-import { useSecondWind } from '../../engine/combat/secondWind';
-import { useActionSurge } from '../../engine/combat/actionSurge';
-import { useConsumable } from '../../engine/combat/useItem';
-import { castSpell, slotsAt } from '../../engine/combat/spells';
+import { runAutoTurn } from '../../engine/combat/actionPolicy';
 import { getMonster } from '../../content/monsters';
 import type { ClassId, RaceId } from '../../schemas/ids';
 import type { EncounterEntry } from '../../engine/delve/chapter1Pools';
@@ -169,180 +165,18 @@ export function liveMonsters(state: CombatState): MonsterCombatant[] {
   ) as MonsterCombatant[];
 }
 
-function lowestHpMonsterId(state: CombatState): string | undefined {
-  const live = liveMonsters(state);
-  if (live.length === 0) return undefined;
-  const sorted = [...live].sort(
-    (a, b) => a.instance.hp.current - b.instance.hp.current,
-  );
-  return sorted[0].id;
-}
-
-function findHealingPotionIdx(c: Character): number {
-  return c.inventory.findIndex((r) => r.itemId === 'potion-of-healing');
-}
-
-function rogueTurn(
-  roller: DiceRoller,
-  state: CombatState,
-  character: Character,
-): { state: CombatState; character: Character } {
-  let s = state;
-  let ch = character;
-  const target = lowestHpMonsterId(s);
-  if (!target) return { state: s, character: ch };
-
-  // Heal if very low and a potion is in inventory.
-  if (ch.hp.current <= ch.hp.max * 0.3) {
-    const idx = findHealingPotionIdx(ch);
-    if (idx >= 0 && !ch.actionEconomy.actionUsed) {
-      const r = useConsumable({ roller, character: ch, state: s }, idx);
-      s = r.state;
-      ch = r.character;
-    }
-  }
-
-  const weaponId = ch.equipped.mainHand?.itemId ?? 'dagger';
-  const attacksToMake = 4; // upper bound; markPlayerActionUsed gates it
-  for (let i = 0; i < attacksToMake; i++) {
-    if (s.status !== 'active') break;
-    const live = liveMonsters(s);
-    if (live.length === 0) break;
-    const tid = lowestHpMonsterId(s);
-    if (!tid) break;
-    if (ch.actionEconomy.actionUsed && !ch.bonusAttackAvailable) break;
-    const r = playerAttack({ roller, character: ch, state: s }, tid, weaponId);
-    s = r.state;
-    ch = r.character;
-  }
-  return { state: s, character: ch };
-}
-
-function fighterTurn(
-  roller: DiceRoller,
-  state: CombatState,
-  character: Character,
-): { state: CombatState; character: Character } {
-  let s = state;
-  let ch = character;
-  const liveStart = liveMonsters(s);
-  if (liveStart.length === 0) return { state: s, character: ch };
-
-  // Heal if very low and a potion is in inventory.
-  if (ch.hp.current <= ch.hp.max * 0.3) {
-    const idx = findHealingPotionIdx(ch);
-    if (idx >= 0 && !ch.actionEconomy.actionUsed) {
-      const r = useConsumable({ roller, character: ch, state: s }, idx);
-      s = r.state;
-      ch = r.character;
-    }
-  } else if (ch.hp.current <= ch.hp.max * 0.5 && ch.resources.secondWindAvailable && !ch.actionEconomy.bonusActionUsed) {
-    const r = useSecondWind({ roller, character: ch, state: s });
-    s = r.state;
-    ch = r.character;
-  }
-
-  const weaponId = ch.equipped.mainHand?.itemId ?? 'longsword';
-
-  for (let pass = 0; pass < 2; pass++) {
-    if (s.status !== 'active') break;
-    // Burn attacks while action available
-    for (let i = 0; i < 4; i++) {
-      if (s.status !== 'active') break;
-      const live = liveMonsters(s);
-      if (live.length === 0) break;
-      const tid = lowestHpMonsterId(s);
-      if (!tid) break;
-      if (ch.actionEconomy.actionUsed) break;
-      const r = playerAttack({ roller, character: ch, state: s }, tid, weaponId);
-      s = r.state;
-      ch = r.character;
-    }
-    // Action Surge if available and at least one enemy still alive
-    if (
-      pass === 0 &&
-      s.status === 'active' &&
-      liveMonsters(s).length > 0 &&
-      (ch.resources.actionSurgeRemaining ?? 0) > 0 &&
-      ch.actionEconomy.actionUsed
-    ) {
-      // Only surge if hurt enough or fight is dragging
-      const enemiesAlive = liveMonsters(s).length;
-      const hurt = ch.hp.current <= ch.hp.max * 0.7;
-      if (enemiesAlive >= 2 || hurt) {
-        const r = useActionSurge({ character: ch, state: s });
-        s = r.state;
-        ch = r.character;
-        continue;
-      }
-    }
-    break;
-  }
-  return { state: s, character: ch };
-}
-
-function wizardKnowsSpell(ch: Character, id: string): boolean {
-  return (ch.resources.knownSpells ?? []).includes(id);
-}
-
-function wizardTurn(
-  roller: DiceRoller,
-  state: CombatState,
-  character: Character,
-): { state: CombatState; character: Character } {
-  let s = state;
-  let ch = character;
-  const live = liveMonsters(s);
-  if (live.length === 0) return { state: s, character: ch };
-
-  // Heal if very low.
-  if (ch.hp.current <= ch.hp.max * 0.3) {
-    const idx = findHealingPotionIdx(ch);
-    if (idx >= 0 && !ch.actionEconomy.actionUsed) {
-      const r = useConsumable({ roller, character: ch, state: s }, idx);
-      s = r.state;
-      ch = r.character;
-    }
-  }
-
-  // Choose a spell to cast as the action.
-  if (!ch.actionEconomy.actionUsed) {
-    const target = lowestHpMonsterId(s);
-    const enemyCount = liveMonsters(s).length;
-
-    // Prefer AoE if 3+ enemies and a slot exists.
-    if (enemyCount >= 3 && wizardKnowsSpell(ch, 'fireball') && slotsAt(ch, 3) > 0) {
-      const r = castSpell({ roller, character: ch, state: s, spellId: 'fireball', targetId: target });
-      if (r.cast) { s = r.state; ch = r.character; }
-    } else if (enemyCount >= 3 && wizardKnowsSpell(ch, 'lightning-bolt') && slotsAt(ch, 3) > 0) {
-      const r = castSpell({ roller, character: ch, state: s, spellId: 'lightning-bolt', targetId: target });
-      if (r.cast) { s = r.state; ch = r.character; }
-    } else if (enemyCount >= 2 && wizardKnowsSpell(ch, 'burning-hands') && slotsAt(ch, 1) > 0) {
-      const r = castSpell({ roller, character: ch, state: s, spellId: 'burning-hands', targetId: target });
-      if (r.cast) { s = r.state; ch = r.character; }
-    } else if (wizardKnowsSpell(ch, 'magic-missile') && slotsAt(ch, 1) > 0) {
-      const r = castSpell({ roller, character: ch, state: s, spellId: 'magic-missile', targetId: target });
-      if (r.cast) { s = r.state; ch = r.character; }
-    } else {
-      // Cantrip: fire bolt
-      const r = castSpell({ roller, character: ch, state: s, spellId: 'fire-bolt', targetId: target });
-      if (r.cast) { s = r.state; ch = r.character; }
-    }
-  }
-  return { state: s, character: ch };
-}
-
+/**
+ * Play a full player turn with the shared action policy — the SAME decision
+ * logic that powers the in-game Auto-Battle toggle. The old inline per-class
+ * AI (no Cunning Action, no L2 spells, no targeting) is gone; the bots now play
+ * as competently as a watching player would, so sim findings track real play.
+ */
 export function takeTurn(
   roller: DiceRoller,
   state: CombatState,
   character: Character,
 ): { state: CombatState; character: Character } {
-  switch (character.classId) {
-    case 'rogue': return rogueTurn(roller, state, character);
-    case 'fighter': return fighterTurn(roller, state, character);
-    case 'wizard': return wizardTurn(roller, state, character);
-    default: return { state, character };
-  }
+  return runAutoTurn(roller, state, character);
 }
 
 const MAX_ROUNDS = 25;

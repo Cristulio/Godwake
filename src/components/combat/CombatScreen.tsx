@@ -15,6 +15,8 @@ import {
   type CunningActionChoice,
   useConsumable,
   castSpell,
+  chooseCombatAction,
+  applyPlannedAction,
 } from '../../engine/combat';
 import { buildPostmortem } from '../../engine/combat/postmortem';
 import { getSpell } from '../../content/spells';
@@ -57,6 +59,8 @@ export function CombatScreen({
   const speed = useSettingsStore((s) => s.speedMultiplier);
   const setSpeed = useSettingsStore((s) => s.setSpeed);
   const autoEndTurnDelayMs = useSettingsStore((s) => s.autoEndTurnDelayMs);
+  const autoBattle = useSettingsStore((s) => s.autoBattle);
+  const setAutoBattle = useSettingsStore((s) => s.setAutoBattle);
   const [selectingTarget, setSelectingTarget] = useState(false);
   const [overlayActive, setOverlayActive] = useState(false);
   const [shake, setShake] = useState(false);
@@ -182,7 +186,9 @@ export function CombatScreen({
   }, [state.currentTurnIndex, state.status]);
 
   // Auto-end the player's turn when their action and any usable bonus are spent.
+  // Disabled while Auto-Battle drives the turn — that loop ends the turn itself.
   useEffect(() => {
+    if (autoBattle) return;
     if (state.status !== 'active') return;
     if (!isPlayerTurn(state)) return;
     if (overlayActive) return;
@@ -233,6 +239,79 @@ export function CombatScreen({
     character.hp.current,
     state.currentTurnIndex,
     overlayActive,
+    autoBattle,
+  ]);
+
+  // Auto-Battle: when on, the shared action policy plays the player's turn one
+  // timed step at a time (paced by the speed multiplier so 2× + AUTO fast-
+  // forwards). The player can toggle it off any turn to resume manual control.
+  // Reads fresh state/character from the store inside the timer so it never
+  // dispatches against a stale closure, and bails on any open picker/overlay
+  // so manual flows aren't interrupted.
+  useEffect(() => {
+    if (!autoBattle) return;
+    if (state.status !== 'active') return;
+    if (!isPlayerTurn(state)) return;
+    if (overlayActive) return;
+    if (
+      selectingTarget ||
+      pickingItem ||
+      pickingCunning ||
+      pickingSpell ||
+      castingSpellId ||
+      confirmAbandon
+    ) {
+      return;
+    }
+
+    const stepDelay = 600 / speed;
+    const t = setTimeout(() => {
+      if (!useSettingsStore.getState().autoBattle) return;
+      const latestState = useGameStore.getState().combat;
+      const latestChar = useGameStore.getState().character;
+      if (!latestState || !latestChar) return;
+      if (latestState.status !== 'active' || !isPlayerTurn(latestState)) return;
+
+      const action = chooseCombatAction(latestState, latestChar);
+      if (action.kind === 'end-turn') {
+        const r = endTurn(latestState, latestChar);
+        setCharacter(r.character);
+        setCombat(r.state);
+        return;
+      }
+      const roller = getActiveRoller();
+      const r = applyPlannedAction(
+        { roller, state: latestState, character: latestChar },
+        action,
+      );
+      // Engine refused the action (no-op) — end the turn rather than stall.
+      if (r.state === latestState && r.character === latestChar) {
+        const e = endTurn(latestState, latestChar);
+        setCharacter(e.character);
+        setCombat(e.state);
+        return;
+      }
+      if (action.kind === 'item' || action.kind === 'second-wind') {
+        playSfx('heal_chime');
+      }
+      setCharacter(r.character);
+      setCombat(r.state);
+    }, stepDelay);
+
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    autoBattle,
+    state,
+    character,
+    overlayActive,
+    selectingTarget,
+    pickingItem,
+    pickingCunning,
+    pickingSpell,
+    castingSpellId,
+    confirmAbandon,
+    speed,
   ]);
 
   function handleAttackClick() {
@@ -377,6 +456,18 @@ export function CombatScreen({
             title={speed === 2 ? 'Slow down' : 'Speed up'}
           >
             {speed === 2 ? '▶▶ 2×' : '▶ 1×'}
+          </button>
+          <button
+            type="button"
+            onClick={() => setAutoBattle(!autoBattle)}
+            className={`btn-chunky px-3 py-1.5 border-2 text-[10px] uppercase tracking-widest font-bold transition-colors
+              ${autoBattle
+                ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
+                : 'bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)]'}
+            `}
+            title={autoBattle ? 'Turn off Auto-Battle' : 'Auto-Battle: let the tactics engine play your turns'}
+          >
+            ⚙ AUTO
           </button>
           {onAbandon && (
             <button
