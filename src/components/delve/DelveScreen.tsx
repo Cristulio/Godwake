@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Character } from '../../types/character';
-import type { DelveState } from '../../types/delve';
+import type { DelveState, RoomSpec } from '../../types/delve';
 import type { MonsterAction } from '../../schemas/monster';
 import { useGameStore } from '../../stores/gameStore';
 import { currentRoom } from '../../engine/delve';
@@ -16,13 +16,32 @@ import { TreasureRoom } from './TreasureRoom';
 import { ShrineRoom } from './ShrineRoom';
 import { CampRoom } from './CampRoom';
 import { EventRoom } from './EventRoom';
+import { ShopRoom } from './ShopRoom';
+import { DelveMap } from './DelveMap';
 import { DelveSummary } from './DelveSummary';
 import { PostmortemModal } from './PostmortemModal';
 import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 
-function decorationForRoom(roomId: string, chapterId: string): BattlefieldDecoration {
+function decorationForRoom(room: RoomSpec, chapterId: string): BattlefieldDecoration {
+  // Branching Godwake delve: nodes carry their chapter, so the backdrop keys
+  // off that (boss rooms get the throne/hall variant) rather than hard-coded
+  // room ids that the map no longer numbers linearly.
+  if (room.chapter) {
+    const isBoss = room.kind === 'boss';
+    switch (room.chapter) {
+      case 1:
+        return isBoss ? 'wardens-hall' : 'iron-cells';
+      case 2:
+        return isBoss ? 'magistrate-hall' : 'athkatla-street';
+      case 3:
+        return isBoss ? 'spellhold-warden-chamber' : 'spellhold-corridor';
+      case 4:
+        return isBoss ? 'ust-natha-throne' : 'underdark-tunnel';
+    }
+  }
+  const roomId = room.id;
   // Godwake chained delve: 37 rooms across four chapters.
   //   Ch1 Iron Cells: rooms 1-10 (boss at room-10)
   //   Camp 1: room-11
@@ -134,7 +153,7 @@ export function DelveScreen() {
     if (!delve || !character || !room) return;
     if (delve.phase !== 'in-room') return;
     if (combat) return; // already in combat
-    if (room.kind !== 'combat' && room.kind !== 'boss') return;
+    if (room.kind !== 'combat' && room.kind !== 'boss' && room.kind !== 'elite') return;
     if (!room.monsters) return;
     // Eyes of the Lich (camp boon): pause boss combat-spawn while the player
     // reads the stat-block preview. The pre-fight panel clears the flag and
@@ -233,6 +252,16 @@ export function DelveScreen() {
     );
   }
 
+  // Between nodes at a branch point: the route map. The player picks the next
+  // node, which steps the run back into the in-room phase.
+  if (delve.phase === 'between-rooms') {
+    return (
+      <div key="map" className="animate-fade-in">
+        <DelveMap delve={delve} character={character} />
+      </div>
+    );
+  }
+
   if (!room) {
     return null;
   }
@@ -242,6 +271,7 @@ export function DelveScreen() {
   // (spawned directly by EventRoom via setCombat).
   if (combat) {
     const isBossRoom = room.kind === 'boss';
+    const isEliteRoom = room.kind === 'elite';
     return (
       <div className="flex flex-col">
         <div className="max-w-6xl w-full mx-auto px-6 pt-4">
@@ -251,9 +281,9 @@ export function DelveScreen() {
           character={character}
           state={combat}
           scene={isBossRoom ? 'boss' : 'combat'}
-          decoration={decorationForRoom(room.id, delve.chapterId)}
+          decoration={decorationForRoom(room, delve.chapterId)}
           roomTitle={room.title.toUpperCase()}
-          roomLabel={`${isBossRoom ? 'Boss · ' : ''}Round ${combat.round}`}
+          roomLabel={`${isBossRoom ? 'Boss · ' : isEliteRoom ? 'Elite · ' : ''}Round ${combat.round}`}
           onAbandon={() => useGameStore.getState().abandonDelve()}
           onCombatResolved={(outcome) => {
             if (outcome === 'victory') {
@@ -291,9 +321,9 @@ export function DelveScreen() {
     );
   }
 
-  // Combat / boss room without a combat yet — render the loading placeholder
-  // while the spawn-on-enter effect builds the encounter.
-  if (room.kind === 'combat' || room.kind === 'boss') {
+  // Combat / elite / boss room without a combat yet — render the loading
+  // placeholder while the spawn-on-enter effect builds the encounter.
+  if (room.kind === 'combat' || room.kind === 'boss' || room.kind === 'elite') {
     return (
       <div className="min-h-screen p-6 flex items-center justify-center">
         <div className="text-[var(--color-text-dim)] text-sm uppercase tracking-widest animate-pulse">
@@ -326,6 +356,15 @@ export function DelveScreen() {
       <div key={room.id} className="animate-room-enter">
         <DelveTopBar delve={delve} character={character} />
         <ShrineRoom room={room} onContinue={() => advanceRoom()} />
+      </div>
+    );
+  }
+
+  if (room.kind === 'shop') {
+    return (
+      <div key={room.id} className="animate-room-enter">
+        <DelveTopBar delve={delve} character={character} />
+        <ShopRoom room={room} onContinue={() => advanceRoom()} />
       </div>
     );
   }

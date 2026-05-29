@@ -248,29 +248,40 @@ describe('finishDelve — renown economy', () => {
 
   it('death mid-Ch4 stacks failure base + 3 bosses + the deeper depth credit', () => {
     const delve = useDelveStore.getState().delve!;
-    // Index 43 = the Underdark camp immediately after the Ch3 boss (idx 42) in
-    // the 58-room godwake layout. slice(0, 43) counts Ilyich/Magistrate/Director;
-    // depth = 43, so this deep death pays far more than a shallow one.
+    // Die one node short of the Matron: the three earlier chapter bosses are
+    // behind us. Boss count is read from the actual branching layout so the
+    // assertion holds whatever indices the generator assigns.
+    const matronIdx = delve.rooms.findIndex(
+      (r) => r.kind === 'boss' && r.monsters?.[0]?.defId === 'drow-matron-mother',
+    );
+    const idx = matronIdx - 1;
+    const bosses = delve.rooms.slice(0, idx).filter((r) => r.kind === 'boss').length;
+    expect(bosses).toBe(3);
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: 43, phase: 'failed' },
+      delve: { ...delve, currentRoomIdx: idx, phase: 'failed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
     const expectedGain =
-      RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 43;
+      RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bosses + RENOWN_PER_ROOM_REACHED * idx;
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
 
   it('full clear pays the clear premium + all four bosses + full depth', () => {
     const delve = useDelveStore.getState().delve!;
-    // currentRoomIdx 57 → slice(0, 58) counts all four bosses; depth = 57.
+    // A clear ends at the Matron (the last node); slice(0, idx+1) counts all four.
+    const idx = delve.rooms.findIndex(
+      (r) => r.kind === 'boss' && r.monsters?.[0]?.defId === 'drow-matron-mother',
+    );
+    const bosses = delve.rooms.slice(0, idx + 1).filter((r) => r.kind === 'boss').length;
+    expect(bosses).toBe(4);
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: 57, phase: 'completed' },
+      delve: { ...delve, currentRoomIdx: idx, phase: 'completed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
     const expectedGain =
-      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 4 + RENOWN_PER_ROOM_REACHED * 57;
+      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * bosses + RENOWN_PER_ROOM_REACHED * idx;
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
 

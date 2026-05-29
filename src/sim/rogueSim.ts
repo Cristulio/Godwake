@@ -106,14 +106,25 @@ function levelTo(character: Character, target: number): Character {
   return c;
 }
 
-function chapterFor(roomIdx: number): number {
-  // Godwake layout (58 rooms): ch1 indices 0–12 (boss 12, camp 13),
-  // ch2 14–27 (boss 27, camp 28), ch3 29–42 (boss 42, camp 43),
-  // ch4 44–57 (boss 57). Each camp bills to the chapter it follows.
-  if (roomIdx <= 13) return 1;
-  if (roomIdx <= 28) return 2;
-  if (roomIdx <= 43) return 3;
-  return 4;
+/**
+ * Route the bot one node forward through the branching map: at a fork it heads
+ * for a rest when bloodied, otherwise takes the first listed road (a stable
+ * forward route). Returns undefined at a terminal node (the final boss).
+ */
+function nextNode(
+  delve: DelveState,
+  node: RoomSpec,
+  character: Character,
+): RoomSpec | undefined {
+  const reachable = (node.next ?? [])
+    .map((id) => delve.rooms.find((r) => r.id === id))
+    .filter((r): r is RoomSpec => r !== undefined);
+  if (reachable.length <= 1) return reachable[0];
+  if (character.hp.current < character.hp.max * 0.5) {
+    const rest = reachable.find((r) => r.kind === 'rest');
+    if (rest) return rest;
+  }
+  return reachable[0];
 }
 
 function chooseCunningAction(
@@ -333,12 +344,16 @@ function runSingleDelve(
   const delve: DelveState = createGodwakeDelve({ seed: delveSeed });
   let died = false;
 
-  for (let i = 0; i < delve.rooms.length && !died; i++) {
-    const room: RoomSpec = delve.rooms[i];
-    const chapter = chapterFor(i);
-    stats.roomsCleared = i;
+  // Walk a route through the branching map rather than every node — one fork
+  // per layer, terminating at the final boss.
+  let node: RoomSpec | undefined = delve.rooms[0];
+  let steps = 0;
+  while (node && !died) {
+    const room = node;
+    const chapter = room.chapter ?? 1;
+    stats.roomsCleared = steps;
     stats.chaptersCleared = chapter - 1;
-    if (room.kind === 'combat' || room.kind === 'boss') {
+    if (room.kind === 'combat' || room.kind === 'elite' || room.kind === 'boss') {
       stats.encountersFought += 1;
       const result = runCombatEncounter(character, room.monsters ?? [], stats);
       character = result.character;
@@ -367,11 +382,13 @@ function runSingleDelve(
     } else if (room.kind === 'shrine' && variant === 'loaded') {
       character = pickBlessingAtShrine(character, stats);
     }
-    // events: no-op (sim doesn't model player choice)
+    // events / shop: no-op (sim doesn't model player choice)
+    steps += 1;
+    node = nextNode(delve, room, character);
   }
   if (!died) {
-    stats.chaptersCleared = chapterFor(delve.rooms.length - 1);
-    stats.roomsCleared = delve.rooms.length;
+    stats.chaptersCleared = 4;
+    stats.roomsCleared = steps;
   }
   stats.finalLevel = character.level;
   return { character, died };

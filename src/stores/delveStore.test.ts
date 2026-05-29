@@ -99,13 +99,19 @@ describe('delveStore.finishDelve — reincarnate on clear', () => {
 
   it('a clear settles the clear premium + boss + depth credit (soul-mark = 0)', () => {
     seedRun({ quirks: [], renown: 10 });
-    // currentRoomIdx 42 → slice(0, 43) credits 3 bosses (idx 12/27/42); depth = 42.
-    setDelve({ phase: 'completed', currentRoomIdx: 42 });
+    // Boss count is read from the actual branching layout (slice up to the
+    // current node), so the assertion is independent of node numbering.
+    const idx = 42;
+    setDelve({ phase: 'completed', currentRoomIdx: idx });
+    const bosses = useDelveStore
+      .getState()
+      .delve!.rooms.slice(0, idx + 1)
+      .filter((r) => r.kind === 'boss').length;
 
     useDelveStore.getState().finishDelve();
 
     const expectedGain =
-      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 42;
+      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * bosses + RENOWN_PER_ROOM_REACHED * idx;
     expect(char().renown).toBe(10 + expectedGain);
   });
 
@@ -385,9 +391,15 @@ describe('delveStore — ascension ladder', () => {
     const ascMult = getAscensionLevel(4).renownMult;
     expect(soulMark).toBeGreaterThan(1);
     expect(ascMult).toBeGreaterThan(1);
-    // base = clear premium + 3 bosses (idx 12/27/42) + depth 42.
+    // base = clear premium + bosses behind the current node + depth, read from
+    // the actual branching layout rather than hard-coded indices.
+    const idx = 42;
+    const bosses = useDelveStore
+      .getState()
+      .delve!.rooms.slice(0, idx + 1)
+      .filter((r) => r.kind === 'boss').length;
     const base =
-      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 42;
+      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * bosses + RENOWN_PER_ROOM_REACHED * idx;
     const expected = Math.floor(base * soulMark * ascMult);
 
     useDelveStore.getState().finishDelve();

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { DelveState, RoomKind } from '../../types/delve';
+import type { DelveState, RoomKind, RoomSpec } from '../../types/delve';
 import { BlessingCard } from '../ui/BlessingCard';
 import { QuirkCard } from '../ui/QuirkCard';
 import { useGameStore } from '../../stores/gameStore';
@@ -19,6 +19,8 @@ const ROOM_AHEAD_LABEL: Record<RoomKind, string> = {
   event: 'Omen',
   shrine: 'Shrine',
   camp: 'Camp',
+  shop: 'Shop',
+  elite: 'Elite',
 };
 
 /**
@@ -34,13 +36,17 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
   const [open, setOpen] = useState(false);
   const total = blessingIds.length + quirkIds.length;
 
-  // Wayfarer's Map (Grove on-ramp): reveal the KIND of the next `rank` rooms.
-  // Read the owned rank straight from the meta store — the upgrade itself is a
-  // no-op marker. Total depth is never shown; only the upcoming kinds.
+  // Wayfarer's Map (Grove on-ramp): reveal the KIND of the reachable next
+  // nodes — the fork waiting past this room. Read the owned rank straight from
+  // the meta store; the upgrade itself is a no-op marker. Total depth is never
+  // shown, only the upcoming kinds. (Linear delves carry no edges → nothing.)
   const wayfarerRank = useGameStore((s) => s.unlockedUpgrades['wayfarers-map'] ?? 0);
+  const current = delve.rooms[delve.currentRoomIdx];
   const roadAhead =
-    wayfarerRank > 0
-      ? delve.rooms.slice(delve.currentRoomIdx + 1, delve.currentRoomIdx + 1 + wayfarerRank)
+    wayfarerRank > 0 && current?.next
+      ? current.next
+          .map((id) => delve.rooms.find((r) => r.id === id))
+          .filter((r): r is RoomSpec => r !== undefined)
       : [];
 
   useEffect(() => {
