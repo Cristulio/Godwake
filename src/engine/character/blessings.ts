@@ -2,7 +2,7 @@ import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { Blessing, BlessingModifiers } from '../../schemas/blessing';
 import type { ClassId } from '../../schemas/ids';
-import { getBlessing, listBlessings } from '../../content/blessings';
+import { getBlessing, listBlessings, getBlessingCategory } from '../../content/blessings';
 
 /**
  * Filter the blessing pool by class relevance. A blessing with no
@@ -86,6 +86,14 @@ export function isNonStackingBlessing(b: Blessing): boolean {
  * the same thing. When `classId` is provided, the pool is filtered to
  * class-relevant blessings first (weapon blessings hidden from Wizards).
  *
+ * **Effect-type spread:** the pool is AC-heavy, so beyond signature dedup the
+ * roll also favours one card per effect category (defense / vitality / offense
+ * / …) — a first pass takes only fresh categories, then a relaxed second pass
+ * fills any remainder by id+signature uniqueness alone. So an offer never
+ * shows three same-category blessings unless the (class-filtered) pool genuinely
+ * can't span that many categories, and the count is never reduced below what
+ * signature dedup alone would yield.
+ *
  * `ownedBlessingIds` are the blessings the soul already holds this run. Any
  * owned blessing that is purely non-stacking is excluded from the roll — a
  * second copy would be a dead pick. Owned blessings that still stack stay
@@ -101,6 +109,7 @@ export function rollBlessingOptions(
   const result: string[] = [];
   const seen = new Set<string>();
   const seenSignatures = new Set<string>();
+  const seenCategories = new Set<string>();
   // Pre-block the signatures of owned non-stacking blessings so the roller
   // never re-offers an inert duplicate.
   for (const id of ownedBlessingIds) {
@@ -112,18 +121,23 @@ export function rollBlessingOptions(
     }
     if (isNonStackingBlessing(owned)) seenSignatures.add(blessingSignature(owned));
   }
-  let safety = 0;
-  while (result.length < count && safety < 64) {
-    safety += 1;
-    const r = roller.roll('1d100');
-    const idx = r.total % pool.length;
-    const candidate = pool[idx];
-    if (seen.has(candidate.id)) continue;
-    const sig = blessingSignature(candidate);
-    if (seenSignatures.has(sig)) continue;
-    seen.add(candidate.id);
-    seenSignatures.add(sig);
-    result.push(candidate.id);
+  for (const enforceCategory of [true, false]) {
+    let safety = 0;
+    while (result.length < count && safety < 64) {
+      safety += 1;
+      const r = roller.roll('1d100');
+      const idx = r.total % pool.length;
+      const candidate = pool[idx];
+      if (seen.has(candidate.id)) continue;
+      const sig = blessingSignature(candidate);
+      if (seenSignatures.has(sig)) continue;
+      const category = getBlessingCategory(candidate);
+      if (enforceCategory && seenCategories.has(category)) continue;
+      seen.add(candidate.id);
+      seenSignatures.add(sig);
+      seenCategories.add(category);
+      result.push(candidate.id);
+    }
   }
   return result;
 }

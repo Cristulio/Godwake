@@ -68,7 +68,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
           <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em] text-center">
             ► Choose a blessing
           </div>
-          <div className="grid md:grid-cols-3 gap-3">
+          <div className="grid md:grid-cols-3 gap-4 items-stretch">
             {options.map((id) => (
               <BlessingCard key={id} blessingId={id} pickable onPick={() => pick(id)} />
             ))}

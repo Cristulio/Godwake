@@ -355,6 +355,87 @@ describe('rollBlessingOptions — v2 levers stack/non-stack offer rules', () => 
   });
 });
 
+describe('getBlessingCategory', () => {
+  it('buckets the three AC blessings the player saw together as one category', async () => {
+    const { getBlessing, getBlessingCategory } = await import('../../content/blessings');
+    // Helm's Vigil (+2 AC full) / Mystra's Ward (+1 AC) / Ilmater's Forbearance
+    // (+2 AC bloodied) — the trio that all showed in one offer. All defensive.
+    const cats = ['helms-vigil', 'mystras-ward', 'ilmaters-forbearance'].map((id) =>
+      getBlessingCategory(getBlessing(id)),
+    );
+    expect(new Set(cats)).toEqual(new Set(['defense']));
+  });
+
+  it('separates distinct effect levers into distinct categories', async () => {
+    const { getBlessing, getBlessingCategory } = await import('../../content/blessings');
+    expect(getBlessingCategory(getBlessing('helms-aegis'))).toBe('defense');
+    expect(getBlessingCategory(getBlessing('lathanders-dawn'))).toBe('vitality');
+    expect(getBlessingCategory(getBlessing('silvanus-renewal'))).toBe('vitality');
+    expect(getBlessingCategory(getBlessing('mystras-whisper'))).toBe('offense');
+    expect(getBlessingCategory(getBlessing('selunes-veil'))).toBe('precision');
+    expect(getBlessingCategory(getBlessing('tempus-edge'))).toBe('crit');
+    expect(getBlessingCategory(getBlessing('ilmaters-patience'))).toBe('salvation');
+    expect(getBlessingCategory(getBlessing('tymoras-coin'))).toBe('fortune');
+  });
+});
+
+describe('rollBlessingOptions — effect-category spread', () => {
+  it('a single offer never shows three same-category blessings (real pool, every class)', async () => {
+    const { getBlessing, getBlessingCategory } = await import('../../content/blessings');
+    for (const classId of [undefined, 'fighter', 'rogue', 'wizard'] as const) {
+      for (let seed = 0; seed < 200; seed += 1) {
+        const roller = createDiceRoller(seed);
+        const result = rollBlessingOptions(roller, 3, classId);
+        const counts = new Map<string, number>();
+        for (const id of result) {
+          const c = getBlessingCategory(getBlessing(id));
+          counts.set(c, (counts.get(c) ?? 0) + 1);
+        }
+        expect(Math.max(...counts.values())).toBeLessThan(3);
+      }
+    }
+  });
+
+  it('prefers distinct categories when the pool can span them', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('ac-flat', { acBonus: 1 }),
+      fakeBlessing('ac-full', { acBonusWhileFull: 2 }),
+      fakeBlessing('ac-bloodied', { acBonusWhileBloodied: 2 }),
+      fakeBlessing('dmg', { damageBonus: 1 }),
+      fakeBlessing('temp', { extraTempHpPerRoom: 3 }),
+    ];
+    withFakePool(pool, () => {
+      for (let seed = 0; seed < 200; seed += 1) {
+        const roller = createDiceRoller(seed);
+        const result = rollBlessingOptions(roller, 3);
+        expect(result.length).toBe(3);
+        // Three defensive cards exist, but defense/offense/vitality can all be
+        // spanned — so a roll of three never stacks more than one defense card.
+        const defenseCount = result.filter((id) =>
+          ['ac-flat', 'ac-full', 'ac-bloodied'].includes(id),
+        ).length;
+        expect(defenseCount).toBeLessThan(2);
+      }
+    });
+  });
+
+  it('relaxes the spread to still return N when the pool is single-category', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('ac-a', { acBonus: 1 }),
+      fakeBlessing('ac-b', { acBonus: 2 }),
+      fakeBlessing('ac-c', { acBonus: 3 }),
+    ];
+    withFakePool(pool, () => {
+      const roller = createDiceRoller(7);
+      const result = rollBlessingOptions(roller, 3);
+      // All defense but distinct signatures — the relaxed second pass fills all
+      // three rather than reducing the count below signature-dedup's yield.
+      expect(result.length).toBe(3);
+      expect(new Set(result).size).toBe(3);
+    });
+  });
+});
+
 describe('rollBlessingOptions — real pool', () => {
   it('100-roll sweep produces no batch with two identical-signature entries', async () => {
     const { getBlessing } = await import('../../content/blessings');
