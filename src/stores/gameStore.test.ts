@@ -408,6 +408,53 @@ describe('facade — useGameStore mirrors focused stores', () => {
   });
 });
 
+describe('selectCharacter — hub character swap keeps the soul', () => {
+  beforeEach(() => resetStores());
+
+  it('rebuilds the vessel from the chosen class preset and routes to the hub', () => {
+    useCharacterStore.setState({ character: makeFighter() });
+    useGameStore.getState().selectCharacter('wizard');
+
+    const after = useCharacterStore.getState().character!;
+    expect(after.classId).toBe('wizard');
+    expect(after.name).toBe(getClass('wizard').preset!.characterName);
+    expect(after.level).toBe(1);
+    expect(after.xp).toBe(0);
+    expect(useScreenStore.getState().screen).toBe('hub');
+  });
+
+  it('preserves renown, Grove HP, and quirks across the swap', () => {
+    useCharacterStore.setState({
+      character: makeFighter({
+        renown: 240,
+        quirks: ['test-quirk'],
+        permanentBonuses: { hp: 10 },
+      }),
+    });
+
+    useGameStore.getState().selectCharacter('wizard');
+
+    const after = useCharacterStore.getState().character!;
+    expect(after.renown).toBe(240);
+    expect(after.quirks).toEqual(['test-quirk']);
+    expect(after.permanentBonuses?.hp).toBe(10);
+    // HP reads the fresh L1 ceiling plus the carried Grove bonus.
+    expect(after.hp.max).toBe(expectedBaseHpMax(after) + 10);
+    expect(after.hp.current).toBe(after.hp.max);
+  });
+
+  it('does not touch the metaStore Grove ledger', () => {
+    useCharacterStore.setState({ character: makeFighter({ renown: 100 }) });
+    useMetaStore.setState({ unlockedUpgrades: { 'mantle-of-the-wakened': 2 } });
+
+    useGameStore.getState().selectCharacter('rogue');
+
+    expect(useMetaStore.getState().unlockedUpgrades).toEqual({
+      'mantle-of-the-wakened': 2,
+    });
+  });
+});
+
 describe('startDelve — fresh descent resets run-scoped state', () => {
   beforeEach(() => resetStores());
 

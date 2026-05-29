@@ -4,6 +4,7 @@ import type { ClassId, RaceId } from '../../schemas/ids';
 import type { SkillName } from '../../types/skills';
 import type { ItemRef } from '../../schemas/item';
 import type { EquipmentSlots } from '../../types/character';
+import { getClass } from '../../content/classes';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
 
 export interface CharacterCreationInput {
@@ -109,7 +110,55 @@ export function buildPlayerCharacter(input: CharacterCreationInput): Character {
   };
 }
 
-/** The Sir Brick preset — used as a "Recommended" quick-start in creation. */
+/**
+ * The fixed, pre-made character for a class. Selection model (Slay-the-Spire
+ * "pick a character"): name, race, ability block, and skills come straight
+ * from the class preset — no point-buy, no assignment. Picking a class IS
+ * choosing this character.
+ */
+export function presetCreationInput(classId: ClassId): CharacterCreationInput {
+  const preset = getClass(classId).preset;
+  if (!preset) {
+    throw new Error(`Class ${classId} has no character preset to select.`);
+  }
+  return {
+    name: preset.characterName,
+    raceId: preset.recommendedRaceId,
+    classId,
+    baseAbilityScores: { ...preset.abilityScores },
+    skillProficiencies: [...preset.recommendedSkills],
+  };
+}
+
+/**
+ * Overlay the soul/account-level progress that survives a hub character swap
+ * onto a freshly-built vessel. Renown is the only persistent currency; the
+ * rest are Druid Grove permanent-upgrade payloads baked onto the character at
+ * purchase. Quirks are soul marks and ride along — a swap is not a death, so
+ * they are not rerolled. The Grove ledger + renown gates live in metaStore and
+ * are untouched; only these baked character fields move to the new body. HP is
+ * recomputed to the fresh L1 ceiling plus the permanent HP bonus so the hub
+ * reads the same number `startDelve` will rebuild on descent.
+ */
+export function carrySoulProgress(fresh: Character, soul: Character): Character {
+  const permanentHp = soul.permanentBonuses?.hp ?? 0;
+  const max = fresh.hp.max + permanentHp;
+  return {
+    ...fresh,
+    renown: soul.renown,
+    quirks: soul.quirks,
+    permanentBonuses: soul.permanentBonuses,
+    permanentFirstAttackDamage: soul.permanentFirstAttackDamage,
+    permanentWoundedTargetDamage: soul.permanentWoundedTargetDamage,
+    permanentCritDamageBonus: soul.permanentCritDamageBonus,
+    permanentRenownBonusPerBane: soul.permanentRenownBonusPerBane,
+    attunementSlotsBonus: soul.attunementSlotsBonus,
+    wheelturnerUnlocked: soul.wheelturnerUnlocked,
+    hp: { current: max, max, temp: 0 },
+  };
+}
+
+/** The Sir Brick preset — kept for the archived v1 creation flow. */
 export const SIR_BRICK_PRESET: CharacterCreationInput = {
   name: 'Sir Brick',
   raceId: 'human',

@@ -1,29 +1,25 @@
 import { useMemo, useState } from 'react';
 import { Button } from '../ui/Button';
-import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
 import { getRace } from '../../content/races';
-import { listClasses, getClass } from '../../content/classes';
-import { RaceIdSchema, type RaceId, type ClassId } from '../../schemas/ids';
+import { listClasses } from '../../content/classes';
+import { presetCreationInput } from '../../engine/character/defaultCharacter';
+import type { RaceId, ClassId } from '../../schemas/ids';
 import {
   ABILITY_NAMES,
-  ABILITY_FULL_NAMES,
   abilityModifier,
   type AbilityName,
-  type AbilityScores,
 } from '../../types/abilities';
-import {
-  POINT_BUY_CAP,
-  budgetForClass,
-  canLower,
-  canRaise,
-  defaultScoresForClass,
-  pointsRemaining,
-} from '../../engine/character/abilityPointBuy';
-import { SKILL_DESCRIPTIONS, isSkillEnabled, type SkillName } from '../../types/skills';
-import type { ClassPreset } from '../../schemas/class';
+import type { SkillName } from '../../types/skills';
 
-type Step = 1 | 2 | 3 | 4;
+const ABILITY_SHORT: Record<AbilityName, string> = {
+  str: 'STR',
+  dex: 'DEX',
+  con: 'CON',
+  int: 'INT',
+  wis: 'WIS',
+  cha: 'CHA',
+};
 
 const RACE_LABEL: Record<RaceId, string> = {
   human: 'Human',
@@ -38,238 +34,88 @@ const RACE_LABEL: Record<RaceId, string> = {
   tiefling: 'Tiefling',
 };
 
-const CLASS_BLURB: Record<ClassId, string> = {
-  fighter: 'A martial veteran of the Sword Coast. Steel, Second Wind, and a long road.',
-  wizard: 'Bookbound caster. Cantrips and the slow accrual of arcane lore.',
-  cleric: 'A vessel of divine power. Heals, smites, and channels gods.',
-  rogue: 'Shadow and edge. Sneak Attack and a careful step over every trap.',
-  barbarian: 'Rage incarnate. The body takes the punishment so the soul keeps swinging.',
+// The real starting kit per class (mirrors startingKitFor in defaultCharacter),
+// and the signature features the soul already carries or grows into. Both are
+// truthful — no flavor-only filler.
+const CLASS_KIT: Record<ClassId, string> = {
+  fighter: 'Longsword, shield & leather armor · 2 healing potions · 25 gold',
+  rogue: 'Rapier, shortbow & leather armor · 1 healing potion · 15 gold',
+  wizard: 'Dagger & spellbook · 1 healing potion · 20 gold',
+  cleric: '—',
+  barbarian: '—',
 };
 
-const RACE_BLURB: Record<RaceId, string> = {
-  human: 'Wanderers and adventurers. +1 to every ability score.',
-  'half-elf': 'Walkers between two worlds. +2 CHA, +1 DEX, +1 CON.',
-  elf: 'Long-lived and keen-eyed. Trance instead of sleep.',
-  'wood-elf': 'Long-lived archers of the high forest. +2 DEX, +1 WIS, +1 HP per level.',
-  dwarf: 'Stone-blooded, axe-handed, suspicious of magic.',
-  'hill-dwarf': 'Stone-blooded toughness. +2 CON, +1 WIS, +1 HP per level.',
-  halfling: 'Small, lucky, and harder to pin down than they look.',
-  'half-orc': 'Strength and stamina; the rage of one heritage, the wits of the other.',
-  gnome: 'Tinker-souled and curious. Small frames, bright minds.',
-  tiefling: 'Bloodlines marked by an older pact. +2 CHA, +1 INT, fire resistance.',
+const CLASS_HALLMARKS: Record<ClassId, string> = {
+  fighter: 'Second Wind · Action Surge · Champion crits on 19–20',
+  rogue: 'Sneak Attack · Cunning Action · Uncanny Dodge',
+  wizard: 'Fire Bolt · Magic Missile · Fireball at L5',
+  cleric: '—',
+  barbarian: '—',
 };
 
-const SKILL_LABEL: Record<SkillName, string> = {
-  acrobatics: 'Acrobatics',
-  'animal-handling': 'Animal Handling',
-  arcana: 'Arcana',
-  athletics: 'Athletics',
-  deception: 'Deception',
-  history: 'History',
-  insight: 'Insight',
-  intimidation: 'Intimidation',
-  investigation: 'Investigation',
-  medicine: 'Medicine',
-  nature: 'Nature',
-  perception: 'Perception',
-  performance: 'Performance',
-  persuasion: 'Persuasion',
-  religion: 'Religion',
-  'sleight-of-hand': 'Sleight of Hand',
-  stealth: 'Stealth',
-  survival: 'Survival',
-};
-
-const ABILITY_SHORT: Record<AbilityName, string> = {
-  str: 'STR',
-  dex: 'DEX',
-  con: 'CON',
-  int: 'INT',
-  wis: 'WIS',
-  cha: 'CHA',
-};
-
-// Step 1 and Step 2 only surface implemented options. Cleric / Barbarian and
-// Elf / Dwarf / Halfling / Half-Orc / Gnome are deliberately hidden until
-// they're implemented — the v1 screen showed greyed-out "Coming soon" tiles
-// and several players read those as bugs.
-const STEPPER_CLASS_IDS: readonly ClassId[] = ['fighter', 'rogue', 'wizard'];
-const STEPPER_RACE_IDS: readonly RaceId[] = [
-  'human',
-  'wood-elf',
-  'hill-dwarf',
-  'half-elf',
-  'tiefling',
-];
-
-function raceStatLine(id: RaceId): string {
-  const race = (() => {
-    try {
-      return getRace(id);
-    } catch {
-      return null;
-    }
-  })();
-  if (!race) return '';
-  const bonuses = ABILITY_NAMES.filter((a) => (race.abilityScoreBonuses[a] ?? 0) > 0)
-    .map((a) => `${ABILITY_SHORT[a]} +${race.abilityScoreBonuses[a]}`)
-    .join(' · ');
-  return bonuses;
+function skillLabel(s: SkillName): string {
+  return s
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
 }
 
-function classStatLine(id: ClassId): string {
-  const cls = (() => {
-    try {
-      return getClass(id);
-    } catch {
-      return null;
-    }
-  })();
-  if (!cls) return '';
-  return `d${cls.hitDie} HD · ${cls.skillChoiceCount} skill picks`;
+interface SoulOption {
+  classId: ClassId;
+  className: string;
+  characterName: string;
+  raceId: RaceId;
+  blurb: string;
+  skills: SkillName[];
+  scores: { ability: AbilityName; total: number; mod: number }[];
 }
 
-const IMPLEMENTED_CLASS_IDS = new Set(listClasses().map((c) => c.id));
+function buildSoulOptions(): SoulOption[] {
+  return listClasses()
+    .filter((cls) => cls.preset)
+    .map((cls) => {
+      const preset = cls.preset!;
+      const race = getRace(preset.recommendedRaceId);
+      const scores = ABILITY_NAMES.map((a) => {
+        const total = preset.abilityScores[a] + (race.abilityScoreBonuses[a] ?? 0);
+        return { ability: a, total, mod: abilityModifier(total) };
+      });
+      return {
+        classId: cls.id,
+        className: cls.name,
+        characterName: preset.characterName,
+        raceId: preset.recommendedRaceId,
+        blurb: preset.flavorBlurb,
+        skills: preset.recommendedSkills,
+        scores,
+      };
+    });
+}
 
 export function CharacterCreationScreen() {
   const commit = useGameStore((s) => s.commitCharacterCreation);
+  const selectCharacter = useGameStore((s) => s.selectCharacter);
   const goToTitle = useGameStore((s) => s.goToTitle);
+  const goToHub = useGameStore((s) => s.goToHub);
+  const existing = useGameStore((s) => s.character);
 
-  const [step, setStep] = useState<Step>(1);
-  const [name, setName] = useState('');
-  const [raceId, setRaceId] = useState<RaceId | null>(null);
-  const [classId, setClassId] = useState<ClassId | null>(null);
-  const [assignments, setAssignments] = useState<Partial<Record<AbilityName, number>>>({});
-  const [skills, setSkills] = useState<SkillName[]>([]);
+  // A soul already in the world means this is a hub swap, not first creation.
+  // Swapping keeps renown / Grove / quirks and returns to Phandalin; first
+  // creation runs the intro → first-delve handoff.
+  const isSwap = existing != null;
 
-  const cls = classId ? getClass(classId) : null;
-  const race = raceId ? getRace(raceId) : null;
-  const preset: ClassPreset | null = cls?.preset ?? null;
-
-  const allAssigned = ABILITY_NAMES.every((a) => typeof assignments[a] === 'number');
-  // Once a class is picked the six scores are always fully populated (auto-
-  // assigned), so a full AbilityScores view is safe to derive.
-  const currentScores: AbilityScores | null =
-    classId && allAssigned
-      ? {
-          str: assignments.str!,
-          dex: assignments.dex!,
-          con: assignments.con!,
-          int: assignments.int!,
-          wis: assignments.wis!,
-          cha: assignments.cha!,
-        }
-      : null;
-  const budget = classId ? budgetForClass(classId) : 0;
-  const remaining =
-    currentScores != null ? pointsRemaining(currentScores, budget) : budget;
-  // Scores are valid only when every point is allocated. The auto-assigned
-  // array starts at exactly 0 remaining, so Next is live without any edits.
-  const scoresValid = currentScores != null && remaining === 0;
-  // Only enabled skills surface in the picker — disabled ones are hidden per the
-  // no-flavor-only rule. The class's nominal skillChoiceCount may exceed what's
-  // enabled today; clamp so the picker is always satisfiable.
-  const enabledSkillsForClass = cls
-    ? cls.skillChoiceFrom.filter(isSkillEnabled)
-    : [];
-  const effectiveSkillCount = cls
-    ? Math.min(cls.skillChoiceCount, enabledSkillsForClass.length)
-    : 0;
-  const skillsValid = cls ? skills.length === effectiveSkillCount : false;
-  const nameValid = name.trim().length > 0;
-
-  function pickClass(next: ClassId) {
-    if (next === classId) return;
-    setClassId(next);
-    setSkills([]);
-    setAssignments(defaultScoresForClass(next));
-  }
-
-  function pickRace(next: RaceId) {
-    setRaceId(next);
-  }
-
-  function bumpAbility(ability: AbilityName, delta: number) {
-    if (!classId) return;
-    setAssignments((prev) => {
-      const current = prev[ability];
-      if (typeof current !== 'number') return prev;
-      const nextValue = current + delta;
-      if (delta > 0 && !canRaise(current, pointsRemaining(prev as AbilityScores, budgetForClass(classId)))) {
-        return prev;
-      }
-      if (delta < 0 && !canLower(current)) return prev;
-      return { ...prev, [ability]: nextValue };
-    });
-  }
-
-  function toggleSkill(s: SkillName) {
-    if (!cls) return;
-    setSkills((prev) => {
-      if (prev.includes(s)) return prev.filter((x) => x !== s);
-      if (prev.length >= effectiveSkillCount) return prev;
-      return [...prev, s];
-    });
-  }
-
-  function applyPreset() {
-    if (!preset || !classId) return;
-    // Pull the recommended race through Zod so a content typo can't escape
-    // into UI state. Filter the preset's skills down to enabled ones; if the
-    // preset recommended a now-disabled skill, fall back to the first enabled
-    // option from the class list so the player isn't dropped into an invalid
-    // state.
-    const presetRace = RaceIdSchema.parse(preset.recommendedRaceId);
-    const recommended = preset.recommendedSkills.filter(isSkillEnabled);
-    const filled = [...recommended];
-    for (const s of enabledSkillsForClass) {
-      if (filled.length >= effectiveSkillCount) break;
-      if (!filled.includes(s)) filled.push(s);
-    }
-    setName(preset.characterName);
-    setRaceId(presetRace);
-    setAssignments({ ...preset.abilityScores });
-    setSkills(filled.slice(0, effectiveSkillCount));
-    setStep(4);
-  }
-
-  function next() {
-    if (step === 1 && classId) setStep(2);
-    else if (step === 2 && raceId) setStep(3);
-    else if (step === 3 && scoresValid && skillsValid) setStep(4);
-  }
-
-  function back() {
-    if (step === 4) setStep(3);
-    else if (step === 3) setStep(2);
-    else if (step === 2) setStep(1);
-  }
+  const options = useMemo(buildSoulOptions, []);
+  const [selectedClassId, setSelectedClassId] = useState<ClassId | null>(null);
+  const selected = options.find((o) => o.classId === selectedClassId) ?? null;
 
   function confirm() {
-    if (!classId || !raceId || !allAssigned || !skillsValid || !nameValid) return;
-    const scores: AbilityScores = {
-      str: assignments.str!,
-      dex: assignments.dex!,
-      con: assignments.con!,
-      int: assignments.int!,
-      wis: assignments.wis!,
-      cha: assignments.cha!,
-    };
-    commit({
-      name: name.trim(),
-      raceId,
-      classId,
-      baseAbilityScores: scores,
-      skillProficiencies: skills,
-    });
+    if (!selectedClassId) return;
+    if (isSwap) {
+      selectCharacter(selectedClassId);
+    } else {
+      commit(presetCreationInput(selectedClassId));
+    }
   }
-
-  const canNext =
-    (step === 1 && !!classId) ||
-    (step === 2 && !!raceId) ||
-    (step === 3 && scoresValid && skillsValid);
-  const canConfirm =
-    !!classId && !!raceId && allAssigned && skillsValid && nameValid;
 
   return (
     <div className="min-h-screen p-6 max-w-5xl mx-auto animate-room-enter">
@@ -282,468 +128,129 @@ export function CharacterCreationScreen() {
                 '0 0 18px rgba(244,167,66,0.55), 0 0 6px rgba(244,167,66,0.85), 0 2px 0 rgba(0,0,0,0.9)',
             }}
           >
-            FORGE A SOUL
+            CHOOSE A SOUL
           </h1>
           <p className="font-narrative text-[var(--color-text-secondary)] text-sm italic mt-2 tracking-wide">
-            The wheel turns. Choose the shape it takes.
+            {isSwap
+              ? 'Step into a different body for the next descent. Your renown, your marks, and the keepers’ gifts all follow you.'
+              : 'Three souls wait at the wheel. Pick the one you will wear into the dark.'}
           </p>
         </div>
-        <div className="flex gap-2 items-center">
-          {preset && classId && (
-            <Button variant="primary" onClick={applyPreset}>
-              Use {preset.characterName} Preset
-            </Button>
-          )}
-          <Button variant="ghost" onClick={goToTitle}>
-            ← Title
-          </Button>
-        </div>
+        <Button variant="ghost" onClick={isSwap ? goToHub : goToTitle}>
+          {isSwap ? '← Phandalin' : '← Title'}
+        </Button>
       </header>
 
-      <StepIndicator step={step} />
-
-      {step === 1 && (
-        <ClassStep classId={classId} pickClass={pickClass} />
-      )}
-
-      {step === 2 && (
-        <RaceStep raceId={raceId} pickRace={pickRace} />
-      )}
-
-      {step === 3 && cls && race && currentScores && (
-        <AbilitiesAndSkillsStep
-          race={race}
-          scores={currentScores}
-          bumpAbility={bumpAbility}
-          remaining={remaining}
-          skills={skills}
-          toggleSkill={toggleSkill}
-          availableSkills={enabledSkillsForClass}
-          effectiveSkillCount={effectiveSkillCount}
-        />
-      )}
-
-      {step === 4 && cls && race && (
-        <NameAndConfirmStep
-          name={name}
-          setName={setName}
-          cls={cls}
-          race={race}
-          assignments={assignments as AbilityScores}
-          skills={skills}
-        />
-      )}
-
-      <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
-        <div>
-          {step > 1 && (
-            <Button variant="secondary" onClick={back}>
-              ← Back
-            </Button>
-          )}
-        </div>
-        <div className="font-narrative text-[var(--color-text-dim)] text-sm italic tracking-wide hidden md:block">
-          {stepHint(step, { canNext, canConfirm })}
-        </div>
-        {step < 4 ? (
-          <Button variant="primary" size="lg" disabled={!canNext} onClick={next}>
-            Next ▸
-          </Button>
-        ) : (
-          <Button variant="primary" size="lg" disabled={!canConfirm} onClick={confirm}>
-            <span className="mr-2 text-[var(--color-bg-base)]">▸</span>
-            Begin
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function stepHint(step: Step, flags: { canNext: boolean; canConfirm: boolean }): string {
-  if (step === 1) return flags.canNext ? 'A class is chosen.' : 'Pick a class to continue.';
-  if (step === 2) return flags.canNext ? 'A bloodline is chosen.' : 'Pick a race to continue.';
-  if (step === 3) return flags.canNext ? 'Scores and skills are set.' : 'Spend every point and pick your skills.';
-  return flags.canConfirm ? 'Ready to walk the world.' : 'Enter a name to begin.';
-}
-
-interface StepIndicatorProps {
-  step: Step;
-}
-
-function StepIndicator({ step }: StepIndicatorProps) {
-  const labels: Array<{ n: Step; label: string }> = [
-    { n: 1, label: 'Class' },
-    { n: 2, label: 'Race' },
-    { n: 3, label: 'Scores & Skills' },
-    { n: 4, label: 'Name' },
-  ];
-  return (
-    <ol className="flex items-center gap-2 mb-4 text-[10px] uppercase tracking-[0.2em] font-display">
-      {labels.map((entry, i) => {
-        const isActive = entry.n === step;
-        const isDone = entry.n < step;
-        return (
-          <li key={entry.n} className="flex items-center gap-2">
-            <span
-              className={`px-2 py-1 border ${
-                isActive
-                  ? 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)]'
-                  : isDone
-                    ? 'border-[var(--color-border-warm)] text-[var(--color-text-secondary)]'
-                    : 'border-[var(--color-border-dim)] text-[var(--color-text-dim)]'
-              }`}
-            >
-              {entry.n}. {entry.label}
-            </span>
-            {i < labels.length - 1 && (
-              <span className="text-[var(--color-border-dim)]">·</span>
-            )}
-          </li>
-        );
-      })}
-    </ol>
-  );
-}
-
-interface ClassStepProps {
-  classId: ClassId | null;
-  pickClass: (id: ClassId) => void;
-}
-
-function ClassStep({ classId, pickClass }: ClassStepProps) {
-  return (
-    <Panel className="mb-4" title="Choose a Class" tone="warm">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {STEPPER_CLASS_IDS.map((id) => {
-          const implemented = IMPLEMENTED_CLASS_IDS.has(id);
-          const selected = id === classId;
-          const cls = implemented ? getClass(id) : null;
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {options.map((opt) => {
+          const isSelected = opt.classId === selectedClassId;
           return (
             <button
-              key={id}
-              disabled={!implemented}
-              onClick={() => pickClass(id)}
-              className={`text-left p-4 border transition-colors ${
-                selected
-                  ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)]'
-                  : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
-              } disabled:opacity-40 disabled:cursor-not-allowed`}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className={`text-base ${
-                    selected
-                      ? 'text-[var(--color-accent-amber)]'
-                      : 'text-[var(--color-accent-gold)]'
-                  }`}
-                >
-                  ✦
-                </span>
-                <span className="font-display text-[var(--color-text-primary)] text-xs uppercase tracking-[0.2em]">
-                  {cls?.name ?? id}
-                </span>
-              </div>
-              <div className="text-[var(--color-text-secondary)] text-sm mt-3 leading-relaxed">
-                {CLASS_BLURB[id]}
-              </div>
-              <div className="font-mono text-[10px] mt-3 text-[var(--color-accent-amber)] tabular-nums tracking-wide">
-                {classStatLine(id)}
-              </div>
-              {cls?.preset && (
-                <div className="font-narrative text-[var(--color-text-dim)] text-xs italic mt-3 leading-relaxed">
-                  Preset: {cls.preset.characterName}
-                </div>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </Panel>
-  );
-}
-
-interface RaceStepProps {
-  raceId: RaceId | null;
-  pickRace: (id: RaceId) => void;
-}
-
-function RaceStep({ raceId, pickRace }: RaceStepProps) {
-  return (
-    <Panel className="mb-4" title="Choose a Bloodline" tone="warm">
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {STEPPER_RACE_IDS.map((id) => {
-          const selected = id === raceId;
-          return (
-            <button
-              key={id}
-              onClick={() => pickRace(id)}
-              className={`text-left p-3 border transition-colors ${
-                selected
+              key={opt.classId}
+              onClick={() => setSelectedClassId(opt.classId)}
+              aria-pressed={isSelected}
+              className={`text-left p-4 border transition-colors flex flex-col gap-3 ${
+                isSelected
                   ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)]'
                   : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <span
-                  className={`text-base ${
-                    selected
-                      ? 'text-[var(--color-accent-amber)]'
-                      : 'text-[var(--color-accent-gold)]'
-                  }`}
-                >
-                  ◆
-                </span>
-                <span className="font-display text-[var(--color-text-primary)] text-[10px] uppercase tracking-[0.18em]">
-                  {RACE_LABEL[id]}
-                </span>
-              </div>
-              <div className="text-[var(--color-text-secondary)] text-xs mt-2 leading-relaxed">
-                {RACE_BLURB[id]}
-              </div>
-              <div className="font-mono text-[10px] mt-2 text-[var(--color-accent-amber)] tabular-nums tracking-wide">
-                {raceStatLine(id)}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </Panel>
-  );
-}
-
-interface AbilitiesAndSkillsStepProps {
-  race: ReturnType<typeof getRace>;
-  scores: AbilityScores;
-  bumpAbility: (ability: AbilityName, delta: number) => void;
-  remaining: number;
-  skills: SkillName[];
-  toggleSkill: (s: SkillName) => void;
-  availableSkills: SkillName[];
-  effectiveSkillCount: number;
-}
-
-function AbilitiesAndSkillsStep({
-  race,
-  scores,
-  bumpAbility,
-  remaining,
-  skills,
-  toggleSkill,
-  availableSkills,
-  effectiveSkillCount,
-}: AbilitiesAndSkillsStepProps) {
-  return (
-    <>
-      <Panel className="mb-4" title="Ability Scores">
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <p className="text-[var(--color-text-secondary)] text-xs italic leading-relaxed">
-            Auto-assigned for your class. Lower a score to free points, raise
-            another to spend them — anything above 18 costs double. Racial
-            bonuses apply on top.
-          </p>
-          <div
-            className={`shrink-0 font-mono text-xs px-2 py-1 border tabular-nums ${
-              remaining === 0
-                ? 'border-[var(--color-border-dim)] text-[var(--color-text-dim)]'
-                : 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)]'
-            }`}
-          >
-            {remaining} pt{remaining === 1 ? '' : 's'} left
-          </div>
-        </div>
-        <div className="space-y-2">
-          {ABILITY_NAMES.map((ability) => {
-            const base = scores[ability];
-            const racialBonus = race.abilityScoreBonuses[ability] ?? 0;
-            const total = base + racialBonus;
-            const mod = abilityModifier(total);
-            const lowerDisabled = !canLower(base);
-            const raiseDisabled = !canRaise(base, remaining);
-            const surcharged = base >= 18 && base < POINT_BUY_CAP;
-            return (
-              <div
-                key={ability}
-                className="grid grid-cols-[110px_1fr_150px] items-center gap-3 py-1 border-b border-[var(--color-border-dim)] last:border-b-0"
-              >
-                <div className="text-[var(--color-accent-amber)] uppercase tracking-wider text-xs font-bold">
-                  {ABILITY_FULL_NAMES[ability]}
-                </div>
+              <div>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => bumpAbility(ability, -1)}
-                    disabled={lowerDisabled}
-                    className="!px-2 !py-0.5"
+                  <span
+                    className={`text-base ${
+                      isSelected
+                        ? 'text-[var(--color-accent-amber)]'
+                        : 'text-[var(--color-accent-gold)]'
+                    }`}
                   >
-                    −
-                  </Button>
-                  <div className="w-8 text-center font-mono text-sm font-bold text-[var(--color-text-primary)] tabular-nums">
-                    {base}
-                  </div>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => bumpAbility(ability, +1)}
-                    disabled={raiseDisabled}
-                    className="!px-2 !py-0.5"
-                  >
-                    +
-                  </Button>
-                  {surcharged && (
-                    <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-wider">
-                      ×2 cost
-                    </span>
-                  )}
-                </div>
-                <div className="text-[var(--color-text-secondary)] text-xs text-right tabular-nums">
-                  <span className="text-[var(--color-text-primary)]">{total}</span>
-                  {racialBonus > 0 && (
-                    <span className="text-[var(--color-text-dim)]">
-                      {' '}
-                      ({base}+{racialBonus})
-                    </span>
-                  )}
-                  <span className="ml-2 text-[var(--color-accent-amber)]">
-                    {mod >= 0 ? '+' : ''}
-                    {mod}
+                    ✦
+                  </span>
+                  <span className="font-display text-[var(--color-text-primary)] text-sm tracking-wide">
+                    {opt.characterName}
                   </span>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </Panel>
-
-      <Panel
-        className="mb-4"
-        title={
-          effectiveSkillCount > 0
-            ? `Skills · Pick ${effectiveSkillCount} (${skills.length}/${effectiveSkillCount})`
-            : 'Skills · None available yet'
-        }
-      >
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          {availableSkills.map((s) => {
-            const selected = skills.includes(s);
-            const disabled = !selected && skills.length >= effectiveSkillCount;
-            return (
-              <button
-                key={s}
-                disabled={disabled}
-                onClick={() => toggleSkill(s)}
-                className={`text-left px-3 py-2 border text-sm transition-colors ${
-                  selected
-                    ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
-                    : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
-                } disabled:opacity-40 disabled:cursor-not-allowed`}
-              >
-                <div>{SKILL_LABEL[s]}</div>
-                <div className="text-[var(--color-text-dim)] text-xs mt-1">
-                  {SKILL_DESCRIPTIONS[s]}
+                <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-[0.2em] mt-1">
+                  {RACE_LABEL[opt.raceId]} {opt.className}
                 </div>
-              </button>
-            );
-          })}
-        </div>
-      </Panel>
-    </>
-  );
-}
+              </div>
 
-interface NameAndConfirmStepProps {
-  name: string;
-  setName: (v: string) => void;
-  cls: ReturnType<typeof getClass>;
-  race: ReturnType<typeof getRace>;
-  assignments: AbilityScores;
-  skills: SkillName[];
-}
+              <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
+                {opt.blurb}
+              </p>
 
-function NameAndConfirmStep({
-  name,
-  setName,
-  cls,
-  race,
-  assignments,
-  skills,
-}: NameAndConfirmStepProps) {
-  const totals = useMemo(() => {
-    return ABILITY_NAMES.map((a) => {
-      const base = assignments[a];
-      const bonus = race.abilityScoreBonuses[a] ?? 0;
-      const total = base + bonus;
-      return { ability: a, base, bonus, total, mod: abilityModifier(total) };
-    });
-  }, [assignments, race]);
+              <div className="grid grid-cols-3 gap-1.5">
+                {opt.scores.map(({ ability, total, mod }) => (
+                  <div
+                    key={ability}
+                    className="border border-[var(--color-border-dim)] bg-[var(--color-bg-deep)]/40 px-1.5 py-1 text-center"
+                  >
+                    <div className="font-display text-[8px] text-[var(--color-accent-amber)] uppercase tracking-widest">
+                      {ABILITY_SHORT[ability]}
+                    </div>
+                    <div className="font-mono text-[var(--color-text-primary)] text-xs tabular-nums">
+                      {total}
+                      <span className="ml-0.5 text-[var(--color-text-dim)]">
+                        {mod >= 0 ? '+' : ''}
+                        {mod}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-  return (
-    <>
-      <Panel className="mb-4" title="Name">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          maxLength={32}
-          placeholder="Enter a name…"
-          className="w-full bg-[var(--color-bg-elevated)] border border-[var(--color-border-dim)] focus:border-[var(--color-accent-amber)] outline-none px-3 py-2 text-[var(--color-text-primary)] tracking-wider"
-        />
-      </Panel>
+              <div className="space-y-1.5 text-[11px] leading-relaxed">
+                <div>
+                  <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[9px]">
+                    Hallmarks ·{' '}
+                  </span>
+                  <span className="text-[var(--color-text-secondary)]">
+                    {CLASS_HALLMARKS[opt.classId]}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[9px]">
+                    Kit ·{' '}
+                  </span>
+                  <span className="text-[var(--color-text-secondary)]">
+                    {CLASS_KIT[opt.classId]}
+                  </span>
+                </div>
+                {opt.skills.length > 0 && (
+                  <div>
+                    <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[9px]">
+                      Skills ·{' '}
+                    </span>
+                    <span className="text-[var(--color-text-secondary)]">
+                      {opt.skills.map(skillLabel).join(' · ')}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
 
-      <Panel className="mb-4" title="Summary" tone="glow">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          <div>
-            <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-wider">
-              Class
-            </div>
-            <div className="text-[var(--color-text-primary)] font-display">{cls.name}</div>
-            <div className="text-[var(--color-text-secondary)] text-xs mt-1 leading-relaxed">
-              {CLASS_BLURB[cls.id]}
-            </div>
-          </div>
-          <div>
-            <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-wider">
-              Race
-            </div>
-            <div className="text-[var(--color-text-primary)] font-display">
-              {RACE_LABEL[race.id]}
-            </div>
-            <div className="text-[var(--color-text-secondary)] text-xs mt-1 leading-relaxed">
-              {RACE_BLURB[race.id]}
-            </div>
-          </div>
+      <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
+        <div className="font-narrative text-[var(--color-text-dim)] text-sm italic tracking-wide hidden md:block">
+          {selected
+            ? `${selected.characterName} stands ready.`
+            : 'Pick a soul to continue.'}
         </div>
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {totals.map(({ ability, total, mod }) => (
-            <div
-              key={ability}
-              className="border border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] px-2 py-1 text-xs flex items-center justify-between gap-2"
-            >
-              <span className="text-[var(--color-accent-amber)] uppercase tracking-wider font-bold">
-                {ABILITY_FULL_NAMES[ability]}
-              </span>
-              <span className="font-mono text-[var(--color-text-primary)] tabular-nums">
-                {total}
-                <span className="ml-1 text-[var(--color-accent-amber)]">
-                  {mod >= 0 ? '+' : ''}
-                  {mod}
-                </span>
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4">
-          <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-wider">
-            Skills
-          </div>
-          <div className="text-[var(--color-text-primary)] text-sm mt-1">
-            {skills.length > 0
-              ? skills.map((s) => SKILL_LABEL[s]).join(' · ')
-              : '—'}
-          </div>
-        </div>
-      </Panel>
-    </>
+        <Button
+          variant="primary"
+          size="lg"
+          disabled={!selected}
+          onClick={confirm}
+        >
+          {selected
+            ? isSwap
+              ? `Become ${selected.characterName} ▸`
+              : `Begin as ${selected.characterName} ▸`
+            : 'Choose a soul'}
+        </Button>
+      </div>
+    </div>
   );
 }

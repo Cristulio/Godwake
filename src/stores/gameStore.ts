@@ -5,7 +5,13 @@ import type { CombatState } from '../types/combat';
 import type { DelveState, RoomSpec } from '../types/delve';
 import type { Postmortem } from '../types/postmortem';
 import { setActiveRoller } from '../engine/dice';
-import { type CharacterCreationInput } from '../engine/character/defaultCharacter';
+import {
+  buildPlayerCharacter,
+  presetCreationInput,
+  carrySoulProgress,
+  type CharacterCreationInput,
+} from '../engine/character/defaultCharacter';
+import { type ClassId } from '../schemas/ids';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
 import { type EquipSlot } from '../engine/character/equip';
 import { createGodwakeDelve } from '../engine/delve';
@@ -134,10 +140,18 @@ interface GameState {
   goToDelve: () => void;
   goToReincarnation: () => void;
   goToDruidGrove: () => void;
+  goToCharacterSelect: () => void;
 
   // Lifecycle
   startNewGame: (seed: string) => void;
   commitCharacterCreation: (input: CharacterCreationInput) => void;
+  /**
+   * Swap to a different class-character at the hub between runs. Re-creates the
+   * vessel from the chosen class preset and carries the soul's renown, Grove
+   * payloads, and quirks across. metaStore (the Grove ledger + renown gates) is
+   * left untouched; the new character starts a fresh L1 run on the next descent.
+   */
+  selectCharacter: (classId: ClassId) => void;
 
   // Character + combat
   setCharacter: (character: Character) => void;
@@ -432,6 +446,8 @@ export const useGameStore = create<GameState>()(
           useMetaStore.getState().incrementDeathCount();
         },
         goToDruidGrove: () => useScreenStore.getState().goToDruidGrove(),
+        goToCharacterSelect: () =>
+          useScreenStore.getState().setScreen('character-creation'),
         goToCodex: () => useScreenStore.getState().goToCodex(),
         goToInventory: () => useScreenStore.getState().goToInventory(),
 
@@ -452,6 +468,14 @@ export const useGameStore = create<GameState>()(
 
         commitCharacterCreation: (input) =>
           useCharacterStore.getState().commitCharacterCreation(input),
+
+        selectCharacter: (classId) => {
+          const charSlice = useCharacterStore.getState();
+          const soul = charSlice.character;
+          const fresh = buildPlayerCharacter(presetCreationInput(classId));
+          charSlice.setCharacter(soul ? carrySoulProgress(fresh, soul) : fresh);
+          useScreenStore.getState().setScreen('hub');
+        },
 
         setCharacter: (character) =>
           useCharacterStore.getState().setCharacter(character),

@@ -43,11 +43,6 @@ export const FIGHTER: Class = ClassSchema.parse({
           'On your turn, you can take one additional action. Once per short or long rest.',
         mechanicKey: 'action-surge',
       },
-      {
-        id: 'martial-archetype',
-        name: 'Martial Archetype',
-        description: 'You choose a Martial Archetype that shapes the practice of your martial training.',
-      },
     ],
     '4': [
       {
@@ -105,8 +100,9 @@ export const FIGHTER: Class = ClassSchema.parse({
         '2': [
           {
             id: 'improved-critical',
-            name: 'Improved Critical',
-            description: 'Your weapon attacks score a critical hit on a roll of 19 or 20.',
+            name: 'Martial Archetype: Champion',
+            description:
+              'Your training settles into the Champion’s path — raw power, honed to a killing edge. Your weapon attacks now score a critical hit on a roll of 19 or 20.',
             mechanicKey: 'improved-critical',
           },
         ],

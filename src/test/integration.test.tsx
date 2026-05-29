@@ -81,16 +81,13 @@ describe('integration — character creation → first delve via store', () => {
   });
 
   it('renders the standalone CharacterCreationScreen (bypassing lazy)', () => {
+    useGameStore.setState({ character: null });
     render(<CharacterCreationScreen />);
-    // Step 1 is the class step — header is "FORGE A SOUL", the Next button is
-    // present (disabled), and the preset button is hidden until a class is
-    // picked. The Sir Brick preset surfaces only after the Fighter card is
-    // tapped (covered by the stepper test).
-    expect(screen.getByText(/forge a soul/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: /use .* preset/i }),
-    ).not.toBeInTheDocument();
+    // Selection model: a single "CHOOSE A SOUL" screen with one card per
+    // playable class and a confirm that's gated until a soul is picked.
+    expect(screen.getByRole('heading', { name: /choose a soul/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sir brick/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /choose a soul/i })).toBeDisabled();
   });
 });
 

@@ -38,14 +38,6 @@ export const ROGUE: Class = ClassSchema.parse({
         mechanicKey: 'cunning-action',
       },
     ],
-    '3': [
-      {
-        id: 'roguish-archetype',
-        name: 'Roguish Archetype',
-        description:
-          'You commit to a roguish archetype that shapes the way you cut a path through the world.',
-      },
-    ],
     '4': [
       {
         id: 'asi-4',
@@ -104,9 +96,9 @@ export const ROGUE: Class = ClassSchema.parse({
         '3': [
           {
             id: 'fast-hands',
-            name: 'Fast Hands',
+            name: 'Roguish Archetype: Thief',
             description:
-              'Your hands are quicker than the room can follow. You gain a second Cunning Action per combat.',
+              'Your path settles into the Thief’s — locks, ledges, and the quick exit. Your hands move faster than the room can follow: you gain a second Cunning Action each combat.',
             mechanicKey: 'fast-hands',
           },
         ],
