@@ -1,144 +1,101 @@
 import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
 
 /**
- * Boss intel cards — what the player can learn 1 room before each chapter boss.
+ * Boss intel cards — the tactical edge a player can ready 1 room before each
+ * chapter boss.
  *
  * The intel beat is a BG2-style preparatory room (the Twisted Rune door, the
- * approach to Bodhi's lair). Three options:
- *   1. Read the omens (free)        — partial reveal: name, HP range, signature ability + DC
- *   2. Pay for the scout (chapter-scaling gold) — full reveal: HP, AC, all actions with DCs
- *   3. Walk past (free)             — no intel, but boss gold drop +5% on this boss
+ * approach to Bodhi's lair). Reading the room no longer dumps a stat sheet —
+ * once a boss is memorised, raw numbers are worthless. Instead each choice
+ * grants a *combat* edge consumed at the boss fight:
+ *   1. Find the weak spot (free)   — `weak-spot`: advantage on your opening strike.
+ *   2. Study the approach (coin)   — `battle-plan`: opening strike + advantage on
+ *                                     your first save (the held-opener counter) +
+ *                                     a chapter-scaled temp-HP gird.
+ *   3. Walk past (free)            — no edge, but boss gold drop +5% on this boss.
  *
- * Source of truth: the boss monster definitions. Numbers here mirror the stat
- * blocks so the player who pays the scout is reading the same sheet the engine
- * will roll against. Signature text is diegetic, not stat-sheet narration.
+ * Buff magnitudes are defined here (`bossIntelBuffFor`) and applied at boss
+ * combat start in `createCombat`. The intel beat is preparation, not narration.
  */
 export interface BossIntelCard {
   /** Monster def id this card foreshadows. Matches the boss room's monster. */
   bossDefId: string;
-  /** Display name shown on the intel badge during combat. */
-  bossName: string;
-  /** Partial reveal HP text (banded, not exact — "around 30 HP", "60-80 HP"). */
-  hpRangeText: string;
-  /** Exact HP, AC, signature DC — revealed in full when the scout is paid. */
-  exactHp: number;
-  ac: number;
-  /** One-line summary of the signature ability (the one to plan around). */
-  signature: string;
-  /** Per-action stat lines for the scout's full reveal. */
-  fullActions: string[];
+  /** Chapter index (1-4). Scales the `battle-plan` temp-HP gird. */
+  chapter: 1 | 2 | 3 | 4;
   /** Title shown on the intel event room. */
   roomTitle: string;
   /** Diegetic flavor text for the intel room — pre-boss BG2/FromSoft tone. */
   roomFlavor: string;
-  /** Read-the-omens resolution text (partial reveal). */
-  omenResolution: string;
-  /** Pay-the-scout resolution text (full reveal). */
-  scoutResolution: string;
+  /** Resolution text for the free "find the weak spot" choice. */
+  weakSpotResolution: string;
+  /** Resolution text for the paid "study the approach" choice. */
+  battlePlanResolution: string;
   /** Walk-past resolution text (gods reward the bold). */
   walkPastResolution: string;
-  /** Scout fee in gold. Scales by chapter: 8 / 15 / 25 / 40. */
-  scoutPrice: number;
+  /** Coin cost of the paid edge. Scales by chapter: 8 / 15 / 25 / 40. */
+  coinCost: number;
 }
 
 export const BOSS_INTEL_CARDS: BossIntelCard[] = [
   // ─── Ch1 · Ilyich ─────────────────────────────────────────────────────
   {
     bossDefId: 'duergar-ilyich',
-    bossName: 'Ilyich the Duergar',
-    hpRangeText: 'about 30 HP',
-    exactHp: 32,
-    ac: 16,
-    signature: 'Battle-rage at half HP (advantage + 2 damage, rest of fight)',
-    fullActions: [
-      'Heavy War Pick — +5 to hit · 1d10+3 piercing',
-      'Battle-rage trigger — at half HP, gains advantage on attacks and +2 damage for the rest of the fight',
-    ],
+    chapter: 1,
     roomTitle: 'A Duergar Shrine in the Wall',
     roomFlavor:
       "A side-niche carved into the corridor wall — duergar hammers hung crossed above a small mound of bone-meal idols, the meal still loose enough to take a thumbprint. He prays here before each kill, by the look of the worn place on the floor. The smell is iron and old sweat. A scrap of grey hide pinned to the wall reads, in Undercommon, only this: when the iron breaks, the iron does not stop.",
-    omenResolution:
-      "You read the shrine the way a tracker reads a footprint. Stone-blood fury. The iron does not stop — the duergar phrase for a berserk that starts when the wound is honest. He will be patient until you cut him. Then he will not be patient at all.",
-    scoutResolution:
-      'The scout was a half-elf with a goblin\'s tongue and a thief\'s memory. She came back with the chalk-mark of the duergar\'s name on her cuff and a clean tally: pick the size of his forearm, two-handed swing, a curse in Undercommon every third stroke. She does not stay for the fight.',
+    weakSpotResolution:
+      "You read the shrine the way a tracker reads a footprint. He fights right-handed and guards his off-side late — the iron does not stop, but it starts honest and slow. You will know where to put the first cut.",
+    battlePlanResolution:
+      "You read the shrine and then the worn place on the floor, and you map the whole approach. He opens patient, swings two-handed, and only breaks into the rage once the wound is honest. You walk in with the first cut planned and your guard already set for the turn.",
     walkPastResolution:
       "You step past the shrine without breaking stride. Somewhere in the rock the dust shifts as if a god noted the going. The gods reward the bold — Ilyich's purse will weigh a touch heavier when it falls.",
-    scoutPrice: 8,
+    coinCost: 8,
   },
   // ─── Ch2 · The Magistrate ─────────────────────────────────────────────
   {
     bossDefId: 'athkatla-magistrate',
-    bossName: 'The Magistrate',
-    hpRangeText: 'about 50 HP',
-    exactHp: 52,
-    ac: 14,
-    signature: 'Hold Person — WIS save, DC 12, 3 rounds paralysed',
-    fullActions: [
-      'Hold Person — WIS save DC 12 · 3 rounds paralysed · opener of choice',
-      'Mind Spike — +7 to hit · 3d6+4 psychic · auto-crit while you are paralysed',
-      'Resists psychic damage',
-    ],
+    chapter: 2,
     roomTitle: "A Court-Crier's Recess",
     roomFlavor:
       "A side-arch off the main avenue where a court-crier has tacked the day's dockets on a board. Among the warrants is the Magistrate's own sentencing notice for last sevenday — twelve names, twelve crossed-out hands, the ink still glossy on three of them. Beneath the board, scratched into the marble by some defendant's last act before the bench, two crooked letters in Common: STAND STILL.",
-    omenResolution:
-      'You read the board the way a defendant reads it. He does not raise his voice. He raises his hand. Whoever stands still longest is whoever the Magistrate cares to be still — the cold-silver light comes after.',
-    scoutResolution:
-      'The scout was a Cowled stipendiary who owed someone in Phandalin a favour. She brings a court clerk\'s memorandum: opener is always the same — a gloved hand, a will-clamp — and the sentence is read in Mind Spike afterwards. Three names died standing this month. She has been told to leave you the page and not to be seen leaving.',
+    weakSpotResolution:
+      'You read the board the way a defendant reads it. He does not raise his voice — he raises his hand, and the cold-silver light comes after. Knowing the gesture is coming, your first blow finds the gap before he can lift it.',
+    battlePlanResolution:
+      'You read the board, then the order the names were crossed in. The opener is always the will-clamp; the sentence is read after. You time your guard to the gesture — your mind braced against the clamp — and put your first strike in before it lands.',
     walkPastResolution:
       'You leave the docket-board unread and the warrant un-named. The merchant queen counts the bold among her takers — the Magistrate\'s purse will weigh a touch heavier when the sentence reverses.',
-    scoutPrice: 15,
+    coinCost: 15,
   },
   // ─── Ch3 · The Asylum Director ────────────────────────────────────────
   {
     bossDefId: 'asylum-director',
-    bossName: 'The Asylum Director',
-    hpRangeText: '70–80 HP',
-    exactHp: 78,
-    ac: 15,
-    signature: 'Hold Person — WIS save, DC 15 (hard) — opens with it',
-    fullActions: [
-      'Hold Person — WIS save DC 15 · 3 rounds paralysed · the opener',
-      "Director's Glaive — +8 to hit · 2d8+4 slashing · auto-crit while you are paralysed",
-      'Battle-rage trigger — at half HP, gains advantage and +2 damage for the rest of the fight',
-      'Resists psychic damage',
-    ],
+    chapter: 3,
     roomTitle: "A Vivisector's Tray",
     roomFlavor:
       "A side-room the wardens have not stripped yet. A folding table, oilcloth, a tray of implements laid out in a precise hand: clamps, retractors, two blades of unfamiliar length. On the wall, a chart with twelve named subjects in a small clean script, every name crossed through but the freshest two. A glaive of greater reach than the wardens carry leans in the corner — the Director's, by the silver-and-grey trim of the haft. He sharpens it here.",
-    omenResolution:
-      'You read the chart the way a subject reads it. He stills the subject first. Then he works at reach. By the time the subject names what is happening, the subject is not on the chart any more — only the cross-stroke is. The glaive in the corner is for when the will-clamp will not be enough.',
-    scoutResolution:
-      'The scout was a warden\'s apprentice who hates her master enough to bring the ledger. She lays out the routine: a will-clamp first, hard enough that a strong mind still folds half the time; then the glaive at long reach while you cannot close; then, when the work is half-done, a second wind on him you cannot read coming. The page is dated. The page is recent. She does not wait for thanks.',
+    weakSpotResolution:
+      'You read the chart the way a subject reads it. He stills the subject first, then works the long blade. Knowing the order, you set your opening blow for the half-beat before the clamp closes.',
+    battlePlanResolution:
+      "You read the chart and the routine both: the will-clamp first, then the glaive at reach, and a second wind when the work is half-done. You walk in with your mind braced against the clamp and your first strike already aimed at the gap his routine leaves open.",
     walkPastResolution:
       'You leave the tray as you found it and the chart un-named. The Crying God notes the going. The Director\'s strongbox will weigh a touch heavier when the chart breaks.',
-    scoutPrice: 25,
+    coinCost: 25,
   },
   // ─── Ch4 · The Matron Mother ──────────────────────────────────────────
   {
     bossDefId: 'drow-matron-mother',
-    bossName: 'The Matron Mother',
-    hpRangeText: '90–100 HP',
-    exactHp: 96,
-    ac: 17,
-    signature: "Lolth's Stilling — WIS save, DC 16 (drow priestess-grade)",
-    fullActions: [
-      "Lolth's Stilling — WIS save DC 16 · 3 rounds paralysed · the temple prayer",
-      'Venomed Ritual Dagger — +8 to hit · 2d8+5 poison',
-      "Spider's Curse — +7 to hit · 1d8 fire",
-      'Battle-rage trigger — at half HP, gains advantage and +2 damage for the rest of the fight',
-      'Resists poison and psychic damage',
-    ],
+    chapter: 4,
     roomTitle: 'A Devotional Antechamber',
     roomFlavor:
       "A small antechamber set into the temple corridor — a low basalt slab as an altar, a cup of priestess-cured venom evaporating slow in the air, a thumb-vial of fresh blood crusted around the rim. On the wall in arterial red, the eight-legged sigil of Lolth, and beneath it a litany scratched in drow script: BE STILL FOR THE SPIDER · BE STILL FOR THE PRIESTESS · BE STILL FOR THE TURN OF THE FANG. The stone has been knelt on. The kneel has been deep.",
-    omenResolution:
-      "You read the litany the way a sacrifice reads it. Three stillings. The priestess does not bargain. She prays you flat and then she opens you with the venom-edge, and the dagger does not draw back between strokes. The vial of blood is from a previous walker. The vial is empty. You will not be still long.",
-    scoutResolution:
-      "The scout was an Eilistraee-cult drow who has been waiting for a surface-walker worth the risk. She brings the priestess's full devotional pattern: a temple-prayer to still you, then the venomed ritual dagger at close reach turning the wrist on each stroke, and a spider-glyph at distance when you press her. Halfway down the prayer she takes a second wind no surface-priest she has ever seen would survive. The cup of venom on the altar is not for you. The cup of venom is for her.",
+    weakSpotResolution:
+      "You read the litany the way a sacrifice reads it. The prayer comes first — be still — and the venom-edge after. Knowing the stilling is the opener, you set your first cut to land before she finishes the words.",
+    battlePlanResolution:
+      "You read the litany and the whole devotional pattern: the temple-prayer to still you, the venomed dagger turning on each stroke, the spider-glyph at distance, the second wind halfway down the prayer. You walk in with your mind set against the stilling and your opening strike already aimed past her guard.",
     walkPastResolution:
       "You leave the antechamber as you found it and the litany unread. Eilistraee's hidden moon notes the going. The Matron's tribute-purse will weigh a touch heavier when the prayer is broken.",
-    scoutPrice: 40,
+    coinCost: 40,
   },
 ];
 
@@ -148,6 +105,63 @@ const BY_BOSS_DEF: Map<string, BossIntelCard> = new Map(
 
 export function getBossIntelCard(bossDefId: string): BossIntelCard | null {
   return BY_BOSS_DEF.get(bossDefId) ?? null;
+}
+
+export type BossIntelBuffTier = 'weak-spot' | 'battle-plan';
+
+/**
+ * The mechanical edge a readied intel choice grants at the boss fight. All
+ * levers are combat-scoped (consumed in/by the fight), so the buff never leaks
+ * into later chapters of the same delve.
+ */
+export interface BossIntelBuff {
+  tier: BossIntelBuffTier;
+  /** Short label for the resolution / rewards line. */
+  label: string;
+  /** Player-facing one-liner describing the edge. */
+  description: string;
+  /** Temp-HP gird applied at boss-combat start (non-stacking with blessings). */
+  tempHp: number;
+  /** Advantage on the opening attack roll against the boss. */
+  firstStrikeAdvantage: boolean;
+  /** Advantage on the first saving throw vs the boss — the held-opener counter. */
+  bracedSave: boolean;
+}
+
+/** Battle-plan gird scales with chapter: 6 / 9 / 12 / 15 temp HP. */
+function battlePlanTempHp(chapter: BossIntelCard['chapter']): number {
+  return 3 * (chapter + 1);
+}
+
+/**
+ * Resolve the combat edge for a boss + tier. Returns null for an unknown boss
+ * (defensive — the room only ever offers cards that exist).
+ */
+export function bossIntelBuffFor(
+  bossDefId: string,
+  tier: BossIntelBuffTier,
+): BossIntelBuff | null {
+  const card = getBossIntelCard(bossDefId);
+  if (!card) return null;
+  if (tier === 'weak-spot') {
+    return {
+      tier,
+      label: 'Weak Spot',
+      description: 'Advantage on your opening strike against the boss.',
+      tempHp: 0,
+      firstStrikeAdvantage: true,
+      bracedSave: false,
+    };
+  }
+  const gird = battlePlanTempHp(card.chapter);
+  return {
+    tier,
+    label: 'Battle Plan',
+    description: `Advantage on your opening strike and first save vs the boss, plus ${gird} temporary HP.`,
+    tempHp: gird,
+    firstStrikeAdvantage: true,
+    bracedSave: true,
+  };
 }
 
 /**
@@ -160,45 +174,47 @@ export function intelEventIdFor(bossDefId: string): string {
 }
 
 /**
- * Build the EventTemplate for a boss intel card. Three choices: omens (free,
- * partial reveal), scout (gold cost, full reveal), walk past (mark bold for
- * +5% gold on that boss). Returned templates are registered into the main
- * event pool from `content/events/index.ts`.
+ * Build the EventTemplate for a boss intel card. Three choices: find the weak
+ * spot (free, minor edge), study the approach (coin, bigger edge), walk past
+ * (mark bold for +5% gold on that boss). Returned templates are registered
+ * into the main event pool from `content/events/index.ts`.
  */
 export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {
+  const weakSpot = bossIntelBuffFor(card.bossDefId, 'weak-spot')!;
+  const battlePlan = bossIntelBuffFor(card.bossDefId, 'battle-plan')!;
   return EventTemplateSchema.parse({
     id: intelEventIdFor(card.bossDefId),
     title: card.roomTitle,
     flavor: card.roomFlavor,
     choices: [
       {
-        id: 'read-omens',
-        label: 'Read the omens',
-        hint: "Free. Reveals the boss's name, rough HP, and signature attack with its save DC.",
+        id: 'find-weak-spot',
+        label: 'Find the weak spot',
+        hint: `Free. ${weakSpot.description}`,
         outcome: {
-          resolution: card.omenResolution,
+          resolution: card.weakSpotResolution,
           effects: [
             {
-              kind: 'reveal_boss_intel',
+              kind: 'grant_boss_buff',
               bossDefId: card.bossDefId,
-              level: 'partial',
+              tier: 'weak-spot',
             },
           ],
         },
       },
       {
-        id: 'pay-for-scout',
-        label: 'Pay for the scout',
-        hint: "Reveals the boss's exact HP, AC, and every attack with save DCs — kept on a badge during the boss fight.",
-        requiresGold: card.scoutPrice,
+        id: 'study-the-approach',
+        label: 'Study the approach',
+        hint: battlePlan.description,
+        requiresGold: card.coinCost,
         outcome: {
-          resolution: card.scoutResolution,
+          resolution: card.battlePlanResolution,
           effects: [
-            { kind: 'gold_delta', amount: -card.scoutPrice },
+            { kind: 'gold_delta', amount: -card.coinCost },
             {
-              kind: 'reveal_boss_intel',
+              kind: 'grant_boss_buff',
               bossDefId: card.bossDefId,
-              level: 'full',
+              tier: 'battle-plan',
             },
           ],
         },
@@ -206,7 +222,7 @@ export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {
       {
         id: 'walk-past',
         label: 'Walk past',
-        hint: 'Walk past. The bold take their road and ask no questions.',
+        hint: 'Walk past. The bold take their road and ask no questions. (+5% gold on the boss.)',
         outcome: {
           resolution: card.walkPastResolution,
           effects: [{ kind: 'mark_bold_approach', bossDefId: card.bossDefId }],

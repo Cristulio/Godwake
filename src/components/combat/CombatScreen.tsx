@@ -30,7 +30,6 @@ import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
 import { TurnOrderTracker } from './TurnOrderTracker';
-import { BossIntelBadge } from './BossIntelBadge';
 import { playMusic, stopMusic, playSfx, type MusicId } from '../../engine/audio';
 
 interface CombatScreenProps {
@@ -480,16 +479,6 @@ export function CombatScreen({
           )}
         </div>
       </header>
-
-      {scene === 'boss' && (() => {
-        const bossMonster = state.combatants.find(
-          (c): c is Extract<typeof c, { kind: 'monster' }> => c.kind === 'monster',
-        );
-        const bossDefId = bossMonster?.instance.defId;
-        const intelLevel = bossDefId ? character.bossIntel?.[bossDefId] : undefined;
-        if (!bossDefId || !intelLevel) return null;
-        return <BossIntelBadge bossDefId={bossDefId} level={intelLevel} />;
-      })()}
 
       <TurnOrderTracker state={state} character={character} />
 

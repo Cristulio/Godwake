@@ -11,8 +11,11 @@ import { getEvent } from '../../content/events';
 import {
   BOSS_INTEL_CARDS,
   getBossIntelCard,
+  bossIntelBuffFor,
   intelEventIdFor,
 } from '../../content/bossIntel';
+import { createCombat } from '../combat/createCombat';
+import { getMonster } from '../../content/monsters';
 import { createDiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { EventOutcome } from '../../schemas/event';
@@ -114,19 +117,19 @@ describe('boss intel rooms — placement', () => {
 });
 
 describe('boss intel rooms — choices', () => {
-  it('reading the omens stores partial intel for the right boss (no gold cost)', () => {
+  it('finding the weak spot readies the free edge for the right boss (no gold cost)', () => {
     const tpl = getEvent(intelEventIdFor('duergar-ilyich'));
-    const omens = tpl.choices.find((c) => c.id === 'read-omens');
-    expect(omens).toBeTruthy();
+    const free = tpl.choices.find((c) => c.id === 'find-weak-spot');
+    expect(free).toBeTruthy();
+    expect(free?.requiresGold).toBeUndefined();
     const character = dummyCharacter();
-    // Outcome here is the deterministic single-branch outcome.
-    const outcome = omens!.outcome as EventOutcome;
+    const outcome = free!.outcome as EventOutcome;
     const result = applyEventOutcome(character, outcome, roller());
-    expect(result.character.bossIntel?.['duergar-ilyich']).toBe('partial');
+    expect(result.character.bossIntel?.['duergar-ilyich']).toBe('weak-spot');
     expect(result.character.goldInPocket).toBe(100);
   });
 
-  it('paying the scout deducts the chapter-scaled fee and stores full intel', () => {
+  it('studying the approach deducts the chapter-scaled coin cost and readies the battle plan', () => {
     const cases: Array<[string, number]> = [
       ['duergar-ilyich', 8],
       ['athkatla-magistrate', 15],
@@ -135,17 +138,17 @@ describe('boss intel rooms — choices', () => {
     ];
     for (const [bossDefId, expectedPrice] of cases) {
       const tpl = getEvent(intelEventIdFor(bossDefId));
-      const scout = tpl.choices.find((c) => c.id === 'pay-for-scout');
-      expect(scout?.requiresGold).toBe(expectedPrice);
+      const paid = tpl.choices.find((c) => c.id === 'study-the-approach');
+      expect(paid?.requiresGold).toBe(expectedPrice);
       const character = dummyCharacter();
-      const outcome = scout!.outcome as EventOutcome;
+      const outcome = paid!.outcome as EventOutcome;
       const result = applyEventOutcome(character, outcome, roller());
       expect(result.character.goldInPocket).toBe(100 - expectedPrice);
-      expect(result.character.bossIntel?.[bossDefId]).toBe('full');
+      expect(result.character.bossIntel?.[bossDefId]).toBe('battle-plan');
     }
   });
 
-  it('walking past sets the bold-approach flag and never stores intel', () => {
+  it('walking past sets the bold-approach flag and never readies a buff', () => {
     const tpl = getEvent(intelEventIdFor('drow-matron-mother'));
     const past = tpl.choices.find((c) => c.id === 'walk-past');
     expect(past).toBeTruthy();
@@ -157,14 +160,14 @@ describe('boss intel rooms — choices', () => {
     expect(result.character.goldInPocket).toBe(100);
   });
 
-  it('full reveal supersedes partial when both fire on the same boss', () => {
+  it('battle-plan supersedes weak-spot when both fire on the same boss', () => {
     const character = dummyCharacter();
     const after1 = applyEventOutcome(
       character,
       {
         resolution: '',
         effects: [
-          { kind: 'reveal_boss_intel', bossDefId: 'asylum-director', level: 'partial' },
+          { kind: 'grant_boss_buff', bossDefId: 'asylum-director', tier: 'weak-spot' },
         ],
       },
       roller(),
@@ -174,30 +177,30 @@ describe('boss intel rooms — choices', () => {
       {
         resolution: '',
         effects: [
-          { kind: 'reveal_boss_intel', bossDefId: 'asylum-director', level: 'full' },
+          { kind: 'grant_boss_buff', bossDefId: 'asylum-director', tier: 'battle-plan' },
         ],
       },
       roller(),
     );
-    expect(after2.character.bossIntel?.['asylum-director']).toBe('full');
+    expect(after2.character.bossIntel?.['asylum-director']).toBe('battle-plan');
   });
 
-  it('partial reveal does not downgrade an existing full reveal', () => {
+  it('weak-spot does not downgrade an existing battle-plan', () => {
     const character: Character = {
       ...dummyCharacter(),
-      bossIntel: { 'asylum-director': 'full' },
+      bossIntel: { 'asylum-director': 'battle-plan' },
     };
     const after = applyEventOutcome(
       character,
       {
         resolution: '',
         effects: [
-          { kind: 'reveal_boss_intel', bossDefId: 'asylum-director', level: 'partial' },
+          { kind: 'grant_boss_buff', bossDefId: 'asylum-director', tier: 'weak-spot' },
         ],
       },
       roller(),
     );
-    expect(after.character.bossIntel?.['asylum-director']).toBe('full');
+    expect(after.character.bossIntel?.['asylum-director']).toBe('battle-plan');
   });
 
   it('walk-past flag is idempotent (re-applying does not double-list)', () => {
@@ -217,6 +220,103 @@ describe('boss intel rooms — choices', () => {
   });
 });
 
+describe('boss intel — buff definitions', () => {
+  it('weak-spot is the minor opener edge for every boss (advantage, no gird, no brace)', () => {
+    for (const card of BOSS_INTEL_CARDS) {
+      const buff = bossIntelBuffFor(card.bossDefId, 'weak-spot');
+      expect(buff).toBeTruthy();
+      expect(buff!.firstStrikeAdvantage).toBe(true);
+      expect(buff!.bracedSave).toBe(false);
+      expect(buff!.tempHp).toBe(0);
+    }
+  });
+
+  it('battle-plan adds the braced save and a chapter-scaled temp-HP gird', () => {
+    const expectedGird: Record<string, number> = {
+      'duergar-ilyich': 6, // chapter 1
+      'athkatla-magistrate': 9, // chapter 2
+      'asylum-director': 12, // chapter 3
+      'drow-matron-mother': 15, // chapter 4
+    };
+    for (const card of BOSS_INTEL_CARDS) {
+      const buff = bossIntelBuffFor(card.bossDefId, 'battle-plan');
+      expect(buff).toBeTruthy();
+      expect(buff!.firstStrikeAdvantage).toBe(true);
+      expect(buff!.bracedSave).toBe(true);
+      expect(buff!.tempHp).toBe(expectedGird[card.bossDefId]);
+    }
+  });
+
+  it('returns null for an unknown boss', () => {
+    expect(bossIntelBuffFor('not-a-boss', 'weak-spot')).toBeNull();
+  });
+});
+
+describe('boss intel — applied at the boss fight (createCombat)', () => {
+  it('weak-spot arms advantage on the opening strike, no gird, no braced save', () => {
+    const def = getMonster('duergar-ilyich');
+    const character: Character = {
+      ...dummyCharacter(),
+      bossIntel: { 'duergar-ilyich': 'weak-spot' },
+    };
+    const { character: after } = createCombat({
+      character,
+      monsters: [{ def }],
+      isBoss: true,
+    });
+    expect(after.nextAttackAdvantage).toBe(true);
+    expect(after.nextSaveAdvantage).toBeFalsy();
+    expect(after.hp.temp).toBe(0);
+  });
+
+  it('battle-plan arms opening strike + braced save + the chapter gird', () => {
+    const def = getMonster('duergar-ilyich');
+    const character: Character = {
+      ...dummyCharacter(),
+      bossIntel: { 'duergar-ilyich': 'battle-plan' },
+    };
+    const { character: after } = createCombat({
+      character,
+      monsters: [{ def }],
+      isBoss: true,
+    });
+    expect(after.nextAttackAdvantage).toBe(true);
+    expect(after.nextSaveAdvantage).toBe(true);
+    expect(after.hp.temp).toBe(6); // Ilyich is chapter 1 → 6 temp HP
+  });
+
+  it('does not apply the buff to a non-boss encounter', () => {
+    const def = getMonster('duergar-ilyich');
+    const character: Character = {
+      ...dummyCharacter(),
+      bossIntel: { 'duergar-ilyich': 'battle-plan' },
+    };
+    const { character: after } = createCombat({
+      character,
+      monsters: [{ def }],
+      isBoss: false,
+    });
+    expect(after.nextAttackAdvantage).toBeFalsy();
+    expect(after.nextSaveAdvantage).toBeFalsy();
+    expect(after.hp.temp).toBe(0);
+  });
+
+  it('does not apply when the readied intel is for a different boss', () => {
+    const def = getMonster('duergar-ilyich');
+    const character: Character = {
+      ...dummyCharacter(),
+      bossIntel: { 'asylum-director': 'battle-plan' },
+    };
+    const { character: after } = createCombat({
+      character,
+      monsters: [{ def }],
+      isBoss: true,
+    });
+    expect(after.nextAttackAdvantage).toBeFalsy();
+    expect(after.hp.temp).toBe(0);
+  });
+});
+
 describe('boss intel cards — content', () => {
   it('exposes one card per chapter boss', () => {
     expect(BOSS_INTEL_CARDS.map((c) => c.bossDefId).sort()).toEqual(
@@ -224,33 +324,20 @@ describe('boss intel cards — content', () => {
     );
   });
 
-  it('every card has a unique scout price scaling with chapter', () => {
-    const prices = BOSS_INTEL_CARDS.map((c) => c.scoutPrice);
+  it('every card has a unique coin cost scaling with chapter', () => {
+    const prices = BOSS_INTEL_CARDS.map((c) => c.coinCost);
     expect(new Set(prices).size).toBe(prices.length);
-    expect(getBossIntelCard('duergar-ilyich')?.scoutPrice).toBe(8);
-    expect(getBossIntelCard('athkatla-magistrate')?.scoutPrice).toBe(15);
-    expect(getBossIntelCard('asylum-director')?.scoutPrice).toBe(25);
-    expect(getBossIntelCard('drow-matron-mother')?.scoutPrice).toBe(40);
+    expect(getBossIntelCard('duergar-ilyich')?.coinCost).toBe(8);
+    expect(getBossIntelCard('athkatla-magistrate')?.coinCost).toBe(15);
+    expect(getBossIntelCard('asylum-director')?.coinCost).toBe(25);
+    expect(getBossIntelCard('drow-matron-mother')?.coinCost).toBe(40);
   });
 
-  it('every card lists at least one full-action stat line', () => {
+  it('every card carries the resolution prose for all three choices', () => {
     for (const card of BOSS_INTEL_CARDS) {
-      expect(card.fullActions.length).toBeGreaterThan(0);
-      expect(card.signature.length).toBeGreaterThan(0);
-    }
-  });
-
-  it('no intel stat line leaks a non-functional positional stat (reach/range)', () => {
-    // Combat is non-positional — the engine never reads reach or range, so the
-    // scout/omen reveal must show only actionable numbers (HP, AC, to-hit,
-    // damage, save DCs, triggers).
-    for (const card of BOSS_INTEL_CARDS) {
-      for (const line of card.fullActions) {
-        expect(line).not.toMatch(/\breach\b/i);
-        expect(line).not.toMatch(/\brange\b/i);
-      }
-      expect(card.signature).not.toMatch(/\breach\b/i);
-      expect(card.signature).not.toMatch(/\brange\b/i);
+      expect(card.weakSpotResolution.length).toBeGreaterThan(0);
+      expect(card.battlePlanResolution.length).toBeGreaterThan(0);
+      expect(card.walkPastResolution.length).toBeGreaterThan(0);
     }
   });
 });

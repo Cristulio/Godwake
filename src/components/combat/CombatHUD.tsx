@@ -58,6 +58,22 @@ function conditionGlyph(name: string): string {
   }
 }
 
+function wizardBuffDescription(name: string): string {
+  // Tooltips describe the mechanical effect, not just "active". Numbers mirror
+  // the wizard-buff branch in computeAC (Mage Armor +3 over the 10+DEX base =
+  // 13+DEX while unarmored; Shield +5; Misty Step +2).
+  switch (name) {
+    case 'Mage Armor':
+      return 'Mage Armor — base AC becomes 13 + DEX while unarmored.';
+    case 'Shield':
+      return 'Shield — +5 AC against incoming attacks until your next turn.';
+    case 'Misty Step':
+      return 'Misty Step — +2 AC until your next turn.';
+    default:
+      return `${name} active`;
+  }
+}
+
 function Dot({ on, title }: { on: boolean; title?: string }) {
   return (
     <span
@@ -331,7 +347,7 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
       {wizardBuffs.length > 0 && (
         <Section title="Buffs">
           {wizardBuffs.map((b) => (
-            <Pill key={b} text={b} on tone="gold" title={`${b} active`} />
+            <Pill key={b} text={b} on tone="gold" title={wizardBuffDescription(b)} />
           ))}
         </Section>
       )}
