@@ -118,6 +118,59 @@ describe('playerAttack — weapon ability selection', () => {
     expect(extractAttackBonus(line!.text)).toBe(5);
   });
 
+  it('stamps the full pre-clamp damage on lastAttack so overkill reads true (fix #1)', () => {
+    const fighter = makeFighterStrBuild();
+    fighter.baseAbilityScores = { str: 16, dex: 12, con: 14, int: 8, wis: 10, cha: 10 };
+    const goblin = getMonster('goblin');
+    // Seed picked so the longsword connects (asserted below).
+    const roller = createDiceRoller(5);
+    const init = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
+    let state = init.state;
+    let character = init.character;
+    const goblinId = findMonster(state).id;
+    ({ state, character } = playerAttack({ roller, character, state }, goblinId, 'longsword'));
+    void character;
+    expect(state.lastAttack?.hit).toBe(true);
+    const dmgLine = state.log.find((l) => l.kind === 'damage');
+    expect(dmgLine).toBeDefined();
+    const headlineTotal = Number(dmgLine!.text.match(/Damage: (\d+)/)![1]);
+    // damageDealt carries the full rolled number, independent of how little HP
+    // the goblin had left — that's what the floating combat number reads.
+    expect(state.lastAttack?.damageDealt).toBe(headlineTotal);
+    expect(state.lastAttack?.damageType).toBe('slashing');
+  });
+
+  it('splits off-type radiant from the weapon type and the breakdown sums (fix #2)', () => {
+    const fighter = makeFighterStrBuild();
+    fighter.baseAbilityScores = { str: 16, dex: 12, con: 14, int: 8, wis: 10, cha: 10 };
+    fighter.blessings = ['helms-bulwark']; // +1 radiant on hits
+    const goblin = getMonster('goblin');
+    const roller = createDiceRoller(5);
+    const init = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
+    let state = init.state;
+    let character = init.character;
+    const goblinId = findMonster(state).id;
+    ({ state, character } = playerAttack({ roller, character, state }, goblinId, 'longsword'));
+    void character;
+    expect(state.lastAttack?.hit).toBe(true);
+    const dmgLine = state.log.find((l) => l.kind === 'damage');
+    expect(dmgLine).toBeDefined();
+    const text = dmgLine!.text;
+    // Headline reads "<N> slashing + 1 radiant (<breakdown>)" — radiant is
+    // never folded into / mislabeled as slashing.
+    const head = text.match(/Damage: (\d+) slashing \+ (\d+) radiant \((.+)\)/);
+    expect(head).toBeTruthy();
+    const weaponTotal = Number(head![1]);
+    expect(Number(head![2])).toBe(1);
+    // The parenthetical components sum to the weapon-type subtotal.
+    const terms = head![3].split(/ (?=[+-] )/);
+    const sum = terms.reduce((acc, t) => {
+      const m = t.match(/^([+-]?)\s*(\d+)/);
+      return m ? acc + (m[1] === '-' ? -1 : 1) * Number(m[2]) : acc;
+    }, 0);
+    expect(sum).toBe(weaponTotal);
+  });
+
   it('ranged attack log uses "fires at" verb (not "attacks")', () => {
     const rogue = makeRogueDexBuild();
     rogue.baseAbilityScores = { str: 10, dex: 14, con: 12, int: 10, wis: 10, cha: 8 };

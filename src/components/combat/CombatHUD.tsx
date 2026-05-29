@@ -181,16 +181,6 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
       // Unknown blessing id — skip rather than crash the HUD.
     }
   }
-  const blessingsShown = blessingEntries.slice(0, 4);
-  const blessingsOverflow = Math.max(0, blessingEntries.length - blessingsShown.length);
-  // Overflow tooltip names only the blessings beyond the first 4 (those don't
-  // have their own visible chip), so hovering "+2" tells the player exactly
-  // what's hidden.
-  const overflowTooltip = blessingEntries
-    .slice(blessingsShown.length)
-    .map((b) => `${b.name} — ${b.effect}`)
-    .join('\n');
-
   // --- Status conditions (skip duration noise — just the names) ---
   const conditions = character.conditions;
 
@@ -348,8 +338,10 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
 
       {blessingEntries.length > 0 && (
         <Section title="Blessings">
-          <div className="flex items-center gap-1">
-            {blessingsShown.map((b) => (
+          {/* Show every blessing — each glyph carries its own tooltip. Wrap to a
+              second row only when the icons actually run out of horizontal room. */}
+          <div className="flex flex-wrap items-center gap-1 max-w-[220px]">
+            {blessingEntries.map((b) => (
               <span
                 key={b.id}
                 title={`${b.name} — ${b.effect}`}
@@ -359,15 +351,6 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
                 {blessingGlyph(b.god)}
               </span>
             ))}
-            {blessingsOverflow > 0 && (
-              <span
-                title={overflowTooltip}
-                aria-label={overflowTooltip}
-                className="text-[var(--color-text-secondary)] tabular-nums"
-              >
-                +{blessingsOverflow}
-              </span>
-            )}
           </div>
         </Section>
       )}

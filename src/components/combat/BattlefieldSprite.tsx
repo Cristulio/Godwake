@@ -127,6 +127,7 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   const [slashes, setSlashes] = useState<{ id: number; direction: 'left-to-right' | 'right-to-left'; crit: boolean }[]>([]);
   const [lunge, setLunge] = useState(false);
   const lastAttackPulse = useRef(props.attackPulse);
+  const lastFloatedAttackId = useRef<number | undefined>(undefined);
 
   // Float damage / heal + slash effect whenever HP changes
   useEffect(() => {
@@ -142,10 +143,25 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
           : props.lastAttack.attackerKind === 'monster');
       const wasCrit = props.lastAttack?.crit === true && targetMatches;
 
+      // Show the FULL rolled damage (overkill reads true), but only when this
+      // HP drop is caused by a NEW attack event aimed at this sprite — a stale
+      // lastAttack (e.g. a later spell tick) falls back to the clamped delta.
+      const freshAttack =
+        !!targetMatches &&
+        props.lastAttack !== undefined &&
+        props.lastAttack.id !== lastFloatedAttackId.current;
+      if (props.lastAttack) lastFloatedAttackId.current = props.lastAttack.id;
+      const amount =
+        freshAttack &&
+        props.lastAttack?.damageDealt !== undefined &&
+        props.lastAttack.damageDealt > 0
+          ? props.lastAttack.damageDealt
+          : delta;
+
       const id = Date.now() + Math.random();
       setDamageFloats((d) => [
         ...d,
-        { id, amount: delta, kind: wasCrit ? 'crit' : 'damage' },
+        { id, amount, kind: wasCrit ? 'crit' : 'damage' },
       ]);
       setTimeout(
         () => setDamageFloats((d) => d.filter((x) => x.id !== id)),
