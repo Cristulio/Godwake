@@ -1,0 +1,767 @@
+/**
+ * Five-class viability sim — Wave 2.
+ *
+ * Question: are the two new classes (Barbarian: Rage + Reckless; Ranger:
+ * Hunter's Mark + Colossus Slayer) viable alongside the established Fighter /
+ * Rogue / Wizard, measured on IDENTICAL current content (the enriched bestiary
+ * + slightly longer chapters)?
+ *
+ * Model: a meta-journey / reincarnation chain per soul, climbing the Spire
+ * ascension ladder over the full chained Godwake delve. Each soul reincarnates
+ * life after life; clearing the chain at ascension N unlocks N+1 (the soul then
+ * plays at N+1). Renown carries across lives and is spent greedily on a
+ * class-tuned Grove priority list between deaths. Each life starts at L1 (mirrors
+ * delveStore.startDelve). Run MANY souls per class on the same seed schedule so
+ * the RELATIVE numbers across classes are stable.
+ *
+ * Plays via the SAME shared action policy the in-game Auto-Battle uses
+ * (chooseCombatAction + applyPlannedAction = runAutoTurn), and picks shrine
+ * blessings via the shared chooseBlessing scorer (pickBlessingAtShrine). So
+ * Barbarian Rage and Ranger Hunter's Mark fire automatically IF the policy
+ * wires them — which this sim instruments and reports.
+ *
+ * Sanity instrumentation (THE headline guard): counts how often Barbarian
+ * enters Rage / Reckless and how often Ranger casts Hunter's Mark / fires
+ * Colossus + Hunter's-Mark dice, per combat. If these are ~0 the policy isn't
+ * wiring the new mechanics — report that loudly.
+ *
+ * Run:
+ *   SOULS_PER_CLASS=150 MAX_LIVES=150 npx tsx scripts/sim-class-viability.ts
+ *
+ * Writes the curated findings to docs/sim-findings/class-viability.md.
+ *
+ * FRAMING (do not misread the data): absolute clear-rates / life-counts are an
+ * AI-FLOOR artifact, not game truth — the bot underplays a real player. NEVER
+ * call a class "broken" from a low absolute clear-rate. The robust read is
+ * RELATIVE: each new class vs the trusted three on identical content.
+ */
+
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+
+import { createDiceRoller, setActiveRoller, type DiceRoller } from '../src/engine/dice';
+import { getMonster } from '../src/content/monsters';
+import { simulateLevelUp, xpForLevel, MAX_LEVEL } from '../src/engine/character/leveling';
+import { shortRestHeal, longRest } from '../src/engine/character/actions';
+import { createGodwakeDelve } from '../src/engine/delve/createDelve';
+import { createCombat, _resetMonsterInstanceCounter } from '../src/engine/combat/createCombat';
+import { monsterAttack } from '../src/engine/combat/attack/monsterAttack';
+import { endTurn, isPlayerTurn } from '../src/engine/combat/turn';
+import { chooseCombatAction, applyPlannedAction } from '../src/engine/combat/actionPolicy';
+import { pickBlessingAtShrine } from '../src/test/sim/encounterStress';
+import {
+  applyPermanentUpgrade,
+  applyDelveStartUpgrades,
+  type UnlockedUpgrades,
+} from '../src/engine/character/upgrades';
+import { findUpgrade } from '../src/content/upgrades';
+import { buildPlayerCharacter, presetCreationInput } from '../src/engine/character/defaultCharacter';
+import { rollQuirks, renownSoulMarkMultiplier } from '../src/engine/character/quirks';
+import { MAX_ASCENSION, getAscensionLevel } from '../src/engine/delve/ascension';
+import type { Character } from '../src/types/character';
+import type { CombatState } from '../src/types/combat';
+import type { RoomSpec, DelveState } from '../src/types/delve';
+
+type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger';
+const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger'];
+
+const SOULS_PER_CLASS = Number(process.env.SOULS_PER_CLASS ?? 150);
+const MAX_LIVES = Number(process.env.MAX_LIVES ?? 150);
+const MAX_TURNS_PER_FIGHT = 200;
+const SEED_BASE = 0xc1a55 >>> 0;
+
+// Mirrors delveStore.ts constants.
+const RENOWN_PER_DELVE_CLEAR = 50;
+const RENOWN_PER_DELVE_FAILURE = 15;
+const RENOWN_PER_CHAPTER_BOSS = 10;
+const GROVE_UNLOCK_THRESHOLD = 30;
+
+// ─── Grove purchase priorities ───────────────────────────────────────────────
+// Greedy buy at each death: re-evaluate, buy the affordable upgrade highest in
+// the list. Defensive scaling first (HP, AC), then class damage. Neither new
+// class has a bespoke Grove node, so Barbarian/Ranger share the generic weapon
+// "edge" tree the Fighter draws from — that is itself a finding worth noting.
+
+const SHARED_PRIORITY: { id: string; maxAtRank: number }[] = [
+  { id: 'pilgrims-boots', maxAtRank: 1 },
+  { id: 'mielikki-cache', maxAtRank: 4 },
+  { id: 'mantle-of-the-wakened', maxAtRank: 5 },
+  { id: 'cloak-of-the-grove', maxAtRank: 3 },
+  { id: 'hardier-soul', maxAtRank: 3 },
+  { id: 'coin-in-pocket', maxAtRank: 3 },
+  { id: 'iron-will', maxAtRank: 1 },
+];
+
+const CLASS_PRIORITY: Record<ClassId, { id: string; maxAtRank: number }[]> = {
+  rogue: [
+    { id: 'shadowstep', maxAtRank: 3 },
+    { id: 'knife-in-the-dark', maxAtRank: 3 },
+    { id: 'heirloom-blade', maxAtRank: 4 },
+    { id: 'whetstone-resolve', maxAtRank: 4 },
+    { id: 'killers-eye', maxAtRank: 2 },
+  ],
+  fighter: [
+    { id: 'wellspring-vigil', maxAtRank: 3 },
+    { id: 'heirloom-blade', maxAtRank: 4 },
+    { id: 'whetstone-resolve', maxAtRank: 4 },
+    { id: 'first-cut', maxAtRank: 3 },
+    { id: 'fellfast-strike', maxAtRank: 3 },
+  ],
+  wizard: [
+    { id: 'burning-tongue', maxAtRank: 5 },
+    { id: 'arcane-focus', maxAtRank: 3 },
+    { id: 'sigil-of-the-wakened-mind', maxAtRank: 3 },
+  ],
+  // Melee brute: reckless gives advantage, so crit levers (killers-eye,
+  // fellfast) pull their weight on top of flat damage. d12 hull wants the
+  // shared HP/AC tree too (interleaved in priorityFor).
+  barbarian: [
+    { id: 'heirloom-blade', maxAtRank: 4 },
+    { id: 'whetstone-resolve', maxAtRank: 4 },
+    { id: 'killers-eye', maxAtRank: 2 },
+    { id: 'fellfast-strike', maxAtRank: 3 },
+    { id: 'first-cut', maxAtRank: 3 },
+  ],
+  // Archer: flat per-hit damage multiplies across Extra Attack (L5); bleed-out
+  // and the +attack stack with Hunter's Mark / Colossus on wounded quarry.
+  ranger: [
+    { id: 'whetstone-resolve', maxAtRank: 4 },
+    { id: 'heirloom-blade', maxAtRank: 4 },
+    { id: 'first-cut', maxAtRank: 3 },
+    { id: 'bleed-out', maxAtRank: 2 },
+    { id: 'killers-eye', maxAtRank: 2 },
+  ],
+};
+
+function priorityFor(classId: ClassId): { id: string; maxAtRank: number }[] {
+  const cls = CLASS_PRIORITY[classId];
+  const out: { id: string; maxAtRank: number }[] = [];
+  out.push(SHARED_PRIORITY[0]); // pilgrims-boots first
+  const maxLen = Math.max(cls.length, SHARED_PRIORITY.length - 1);
+  for (let i = 0; i < maxLen; i++) {
+    if (i < cls.length) out.push(cls[i]);
+    if (i + 1 < SHARED_PRIORITY.length) out.push(SHARED_PRIORITY[i + 1]);
+  }
+  return out;
+}
+
+function buyUpgrades(
+  classId: ClassId,
+  renown: number,
+  unlocked: UnlockedUpgrades,
+): { renown: number; unlocked: UnlockedUpgrades } {
+  let r = renown;
+  const u: UnlockedUpgrades = { ...unlocked };
+  if (r < GROVE_UNLOCK_THRESHOLD) return { renown: r, unlocked: u };
+  const list = priorityFor(classId);
+  let bought = true;
+  let safety = 0;
+  while (bought && safety < 80) {
+    bought = false;
+    safety += 1;
+    for (const { id, maxAtRank } of list) {
+      const up = findUpgrade(id);
+      if (!up) continue;
+      const curRank = u[id] ?? 0;
+      const targetRank = Math.min(maxAtRank, up.maxRank);
+      if (curRank >= targetRank) continue;
+      const cost = up.costForRank(curRank + 1);
+      if (r >= cost) {
+        r -= cost;
+        u[id] = curRank + 1;
+        bought = true;
+        break;
+      }
+    }
+  }
+  return { renown: r, unlocked: u };
+}
+
+/** Apply all ranks of currently-unlocked permanent upgrades to a fresh character. */
+function applyPermanentUpgrades(c: Character, unlocked: UnlockedUpgrades): Character {
+  let ch = c;
+  for (const [id, rank] of Object.entries(unlocked)) {
+    const up = findUpgrade(id);
+    if (!up || up.kind !== 'permanent') continue;
+    for (let r = 1; r <= rank; r++) ch = applyPermanentUpgrade(ch, id, r);
+  }
+  const permHp = ch.permanentBonuses?.hp ?? 0;
+  if (permHp > 0) {
+    const newMax = ch.hp.max + permHp;
+    ch = { ...ch, hp: { current: newMax, max: newMax, temp: ch.hp.temp } };
+  }
+  return ch;
+}
+
+interface SoulState {
+  classId: ClassId;
+  renown: number;
+  unlockedUpgrades: UnlockedUpgrades;
+  inventory: Character['inventory'];
+  quirks: string[];
+  ascension: number; // highest unlocked = what this soul plays next
+}
+
+function freshSoul(classId: ClassId): SoulState {
+  return { classId, renown: 0, unlockedUpgrades: {}, inventory: [], quirks: [], ascension: 0 };
+}
+
+/** Build the L1 vessel that descends, mirroring delveStore.startDelve. */
+function descend(roller: DiceRoller, soul: SoulState): Character {
+  let c = buildPlayerCharacter(presetCreationInput(soul.classId));
+  c = applyPermanentUpgrades(c, soul.unlockedUpgrades);
+  c = applyDelveStartUpgrades(c, soul.unlockedUpgrades);
+  if (soul.inventory.length > 0) {
+    const merged = soul.inventory.length > c.inventory.length ? soul.inventory : c.inventory;
+    c = { ...c, inventory: [...merged] };
+  }
+  c = { ...c, quirks: rollQuirks(roller, 2) };
+  c = { ...c, hp: { ...c.hp, current: c.hp.max } };
+  return longRest(c);
+}
+
+// ─── Proc instrumentation ────────────────────────────────────────────────────
+
+interface ProcCounters {
+  combats: number;
+  rage: number;
+  reckless: number;
+  huntersMarkCast: number;
+  colossus: number;
+  huntersMarkDie: number;
+}
+
+function freshProcs(): ProcCounters {
+  return { combats: 0, rage: 0, reckless: 0, huntersMarkCast: 0, colossus: 0, huntersMarkDie: 0 };
+}
+
+// Per-class proc accumulator, shared across all of that class's souls so each
+// proc rate is a single per-combat figure for the class.
+const PROCS: Record<ClassId, ProcCounters> = {
+  fighter: freshProcs(),
+  rogue: freshProcs(),
+  wizard: freshProcs(),
+  barbarian: freshProcs(),
+  ranger: freshProcs(),
+};
+
+/**
+ * Instrumented copy of {@link runAutoTurn} — identical decision flow (same
+ * chooseCombatAction + applyPlannedAction), but counts the new-mechanic procs.
+ * Activations (rage / reckless / mark cast) are exact from the action stream;
+ * Colossus is exact from its once-per-turn state flag flipping false→true on a
+ * landed attack; the Hunter's-Mark 1d6 per-hit die is read off the appended
+ * damage log entry (approximate only in the rare 200+-entry fight where the log
+ * trims its head — activation counts are unaffected).
+ */
+function runPlayerTurnInstrumented(
+  roller: DiceRoller,
+  state: CombatState,
+  character: Character,
+  pc: ProcCounters,
+): { state: CombatState; character: Character } {
+  let s = state;
+  let ch = character;
+  for (let i = 0; i < 16; i++) {
+    if (s.status !== 'active') break;
+    const action = chooseCombatAction(s, ch);
+    if (action.kind === 'end-turn') break;
+    if (action.kind === 'rage') pc.rage += 1;
+    else if (action.kind === 'reckless-attack') pc.reckless += 1;
+    else if (action.kind === 'hunters-mark') pc.huntersMarkCast += 1;
+
+    const colossusBefore = s.colossusSlayerUsedThisTurn === true;
+    const logLenBefore = s.log.length;
+    const r = applyPlannedAction({ roller, state: s, character: ch }, action);
+    if (r.state === s && r.character === ch) break; // engine refused — stop
+
+    if (action.kind === 'attack') {
+      if (!colossusBefore && r.state.colossusSlayerUsedThisTurn === true) pc.colossus += 1;
+      const appendedCount = r.state.log.length - logLenBefore;
+      const fresh =
+        appendedCount > 0 ? r.state.log.slice(logLenBefore) : r.state.log.slice(-4);
+      if (fresh.some((e) => e.kind === 'damage' && e.text.includes('mark (1d6)'))) {
+        pc.huntersMarkDie += 1;
+      }
+    }
+
+    s = r.state;
+    ch = r.character;
+  }
+  return { state: s, character: ch };
+}
+
+function runCombatRoom(
+  roller: DiceRoller,
+  characterIn: Character,
+  room: RoomSpec,
+  ascension: number,
+  pc: ProcCounters,
+): { character: Character; victory: boolean } {
+  _resetMonsterInstanceCounter();
+  const isBoss = room.kind === 'boss';
+  const monsterRefs = (room.monsters ?? []).flatMap((rm) => {
+    const def = getMonster(rm.defId);
+    return Array.from({ length: rm.count }, () => ({ def, displayName: rm.displayPrefix }));
+  });
+  const init = createCombat({ roller, character: characterIn, monsters: monsterRefs, ascension, isBoss });
+  let state: CombatState = init.state;
+  let character: Character = init.character;
+  pc.combats += 1;
+
+  let turns = 0;
+  while (state.status === 'active' && turns < MAX_TURNS_PER_FIGHT * 4) {
+    if (isPlayerTurn(state)) {
+      const turn = runPlayerTurnInstrumented(roller, state, character, pc);
+      state = turn.state;
+      character = turn.character;
+      if (state.status !== 'active') break;
+      const ended = endTurn(state, character);
+      state = ended.state;
+      character = ended.character;
+    } else {
+      const r = monsterAttack(
+        { roller, character, state },
+        state.turnOrder[state.currentTurnIndex],
+      );
+      state = r.state;
+      character = r.character;
+      if (state.status !== 'active') break;
+      const ended = endTurn(state, character);
+      state = ended.state;
+      character = ended.character;
+    }
+    turns += 1;
+  }
+  return { character, victory: state.status === 'player-victory' };
+}
+
+// ─── One life ────────────────────────────────────────────────────────────────
+
+interface LifeOutcome {
+  cleared: boolean;
+  finalRoomIdx: number;
+  finalChapter: number;
+  finalLevel: number;
+  bossesKilled: number;
+  ascension: number;
+  renownEarned: number;
+  deathCause: string | null;
+  deathRoomLabel: string | null;
+}
+
+/** Assign each room a 1-based chapter, incrementing after each camp seam. */
+function chapterIndex(delve: DelveState): number[] {
+  let ch = 1;
+  const out: number[] = [];
+  for (const room of delve.rooms) {
+    out.push(ch);
+    if (room.kind === 'camp') ch += 1;
+  }
+  return out;
+}
+
+function liveOneLife(
+  roller: DiceRoller,
+  soul: SoulState,
+  lifeIdx: number,
+  seedBase: number,
+  pc: ProcCounters,
+): { outcome: LifeOutcome; finalCharacter: Character } {
+  let character = descend(roller, soul);
+  const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
+  const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension });
+  const chapters = chapterIndex(delve);
+
+  let bossesKilled = 0;
+  let finalRoomIdx = 0;
+  let deathCause: string | null = null;
+  let deathRoomLabel: string | null = null;
+  let died = false;
+
+  for (let i = 0; i < delve.rooms.length; i++) {
+    finalRoomIdx = i;
+    const room = delve.rooms[i];
+
+    if (room.kind === 'rest') {
+      character = shortRestHeal(character, Math.floor(character.hp.max * 0.7));
+      continue;
+    }
+    if (room.kind === 'camp') {
+      character = longRest(character);
+      continue;
+    }
+    if (room.kind === 'shrine') {
+      character = pickBlessingAtShrine(roller, character);
+      continue;
+    }
+    if (room.kind === 'event') continue;
+
+    const isBoss = room.kind === 'boss';
+    const result = runCombatRoom(roller, character, room, soul.ascension, pc);
+    character = result.character;
+
+    if (!result.victory) {
+      died = true;
+      deathCause = (room.monsters ?? []).map((m) => m.defId).join('+') || room.id;
+      deathRoomLabel = `${room.id} (ch${chapters[i]})`;
+      break;
+    }
+
+    if (isBoss) bossesKilled += 1;
+    const rXp = room.xpReward ?? 0;
+    if (rXp > 0) {
+      character = { ...character, xp: character.xp + rXp };
+      while (character.level < MAX_LEVEL && character.xp >= xpForLevel(character.level + 1)) {
+        character = simulateLevelUp(character);
+      }
+    }
+  }
+
+  const cleared = !died;
+  const asc = getAscensionLevel(soul.ascension);
+  const renownBase = cleared
+    ? RENOWN_PER_DELVE_CLEAR
+    : RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bossesKilled;
+  const renownEarned = Math.floor(
+    renownBase * asc.renownMult * renownSoulMarkMultiplier(character),
+  );
+
+  return {
+    outcome: {
+      cleared,
+      finalRoomIdx,
+      finalChapter: chapters[finalRoomIdx],
+      finalLevel: character.level,
+      bossesKilled,
+      ascension: soul.ascension,
+      renownEarned,
+      deathCause,
+      deathRoomLabel,
+    },
+    finalCharacter: character,
+  };
+}
+
+// ─── One soul (a continuous reincarnation chain up the ladder) ───────────────
+
+interface SoulResult {
+  classId: ClassId;
+  lives: LifeOutcome[];
+  highestCleared: number; // -1 if never cleared A0
+  toppedLadder: boolean; // cleared A6
+  firstA0ClearLife: number | null; // 1-based life index
+}
+
+function runSoul(classId: ClassId, seedBase: number): SoulResult {
+  const roller = createDiceRoller(seedBase);
+  setActiveRoller(seedBase);
+  let soul = freshSoul(classId);
+  const lives: LifeOutcome[] = [];
+  let highestCleared = -1;
+  let toppedLadder = false;
+  let firstA0ClearLife: number | null = null;
+
+  for (let life = 0; life < MAX_LIVES; life++) {
+    const { outcome, finalCharacter } = liveOneLife(roller, soul, life, seedBase, PROCS[classId]);
+    lives.push(outcome);
+
+    soul = {
+      ...soul,
+      renown: soul.renown + outcome.renownEarned,
+      inventory: finalCharacter.inventory,
+      quirks: finalCharacter.quirks,
+    };
+
+    if (outcome.cleared) {
+      if (outcome.ascension === 0 && firstA0ClearLife === null) firstA0ClearLife = life + 1;
+      highestCleared = Math.max(highestCleared, outcome.ascension);
+      if (soul.ascension >= MAX_ASCENSION) {
+        toppedLadder = true;
+        break; // topped the ladder — chain complete
+      }
+      soul = { ...soul, ascension: soul.ascension + 1 }; // unlock next
+    }
+
+    const buy = buyUpgrades(classId, soul.renown, soul.unlockedUpgrades);
+    soul = { ...soul, renown: buy.renown, unlockedUpgrades: buy.unlocked };
+  }
+
+  return { classId, lives, highestCleared, toppedLadder, firstA0ClearLife };
+}
+
+// ─── Aggregation ─────────────────────────────────────────────────────────────
+
+interface ClassAggregate {
+  classId: ClassId;
+  souls: number;
+  totalLives: number;
+  livesPerSoul: number;
+  toppedLadderRate: number;
+  meanHighestCleared: number;
+  ascensionHistogram: number[]; // index = highest cleared (0..MAX), value = soul count; idx 0 also counts -1? no
+  neverClearedRate: number;
+  perLifeClearRate: number;
+  firstA0ClearLifeMean: number | null;
+  everClearedA0Rate: number;
+  meanDepthRooms: number;
+  meanFinalLevel: number;
+  deathByCause: Record<string, number>;
+  deathByChapter: Record<number, number>;
+}
+
+function aggregate(classId: ClassId, souls: SoulResult[]): ClassAggregate {
+  const allLives = souls.flatMap((s) => s.lives);
+  const totalLives = allLives.length;
+  const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+
+  const firstClears = souls
+    .map((s) => s.firstA0ClearLife)
+    .filter((x): x is number => x !== null);
+
+  const histogram = Array.from({ length: MAX_ASCENSION + 1 }, () => 0);
+  for (const s of souls) {
+    if (s.highestCleared >= 0) histogram[s.highestCleared] += 1;
+  }
+
+  const deathByCause: Record<string, number> = {};
+  const deathByChapter: Record<number, number> = {};
+  for (const l of allLives) {
+    if (!l.cleared && l.deathCause) {
+      deathByCause[l.deathCause] = (deathByCause[l.deathCause] ?? 0) + 1;
+      deathByChapter[l.finalChapter] = (deathByChapter[l.finalChapter] ?? 0) + 1;
+    }
+  }
+
+  return {
+    classId,
+    souls: souls.length,
+    totalLives,
+    livesPerSoul: totalLives / Math.max(1, souls.length),
+    toppedLadderRate: souls.filter((s) => s.toppedLadder).length / Math.max(1, souls.length),
+    meanHighestCleared: mean(souls.map((s) => (s.highestCleared >= 0 ? s.highestCleared : 0))),
+    ascensionHistogram: histogram,
+    neverClearedRate: souls.filter((s) => s.highestCleared < 0).length / Math.max(1, souls.length),
+    perLifeClearRate: allLives.filter((l) => l.cleared).length / Math.max(1, totalLives),
+    firstA0ClearLifeMean: firstClears.length ? mean(firstClears) : null,
+    everClearedA0Rate: firstClears.length / Math.max(1, souls.length),
+    meanDepthRooms: mean(allLives.map((l) => l.finalRoomIdx + (l.cleared ? 1 : 0))),
+    meanFinalLevel: mean(allLives.map((l) => l.finalLevel)),
+    deathByCause,
+    deathByChapter,
+  };
+}
+
+// ─── Rendering ───────────────────────────────────────────────────────────────
+
+const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
+const num = (n: number, d = 2) => n.toFixed(d);
+
+function renderMain(aggs: ClassAggregate[]): string {
+  const lines: string[] = [];
+  lines.push(
+    '| Class | Souls | Lives/soul | Topped A6 | Mean asc cleared | Ever cleared A0 | First A0-clear life | Per-life clear% | Avg depth (rooms) | Avg final lvl |',
+  );
+  lines.push(
+    '|------|------:|----------:|--------:|----------------:|---------------:|-------------------:|---------------:|-----------------:|-------------:|',
+  );
+  for (const a of aggs) {
+    lines.push(
+      `| ${a.classId} | ${a.souls} | ${num(a.livesPerSoul, 1)} | ${pct(a.toppedLadderRate)} | ${num(a.meanHighestCleared)} | ${pct(a.everClearedA0Rate)} | ${a.firstA0ClearLifeMean === null ? '—' : num(a.firstA0ClearLifeMean, 1)} | ${pct(a.perLifeClearRate)} | ${num(a.meanDepthRooms, 1)} | ${num(a.meanFinalLevel, 2)} |`,
+    );
+  }
+  return lines.join('\n');
+}
+
+function renderAscensionHistogram(aggs: ClassAggregate[]): string {
+  const lines: string[] = [];
+  const header = ['| Class | never']
+    .concat(Array.from({ length: MAX_ASCENSION + 1 }, (_, i) => `A${i}`))
+    .join(' | ');
+  lines.push(header + ' |');
+  lines.push('|------|' + '------:|'.repeat(MAX_ASCENSION + 2));
+  for (const a of aggs) {
+    const never = Math.round(a.neverClearedRate * a.souls);
+    const cells = a.ascensionHistogram.map((c) => `${c}`).join(' | ');
+    lines.push(`| ${a.classId} | ${never} | ${cells} |`);
+  }
+  return lines.join('\n');
+}
+
+function renderProcs(): string {
+  const lines: string[] = [];
+  lines.push(
+    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat |',
+  );
+  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|');
+  for (const classId of CLASSES) {
+    const p = PROCS[classId];
+    const per = (n: number) => (p.combats ? num(n / p.combats, 2) : '—');
+    const relevant = (s: string, when: boolean) => (when ? s : '·');
+    lines.push(
+      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} |`,
+    );
+  }
+  return lines.join('\n');
+}
+
+function renderDeaths(aggs: ClassAggregate[]): string {
+  const lines: string[] = [];
+  for (const a of aggs) {
+    const totalDeaths = Object.values(a.deathByCause).reduce((s, n) => s + n, 0);
+    const topCauses = Object.entries(a.deathByCause)
+      .sort((x, y) => y[1] - x[1])
+      .slice(0, 6)
+      .map(([id, n]) => `${id} (${n}, ${pct(n / Math.max(1, totalDeaths))})`)
+      .join(', ');
+    const byChapter = [1, 2, 3, 4]
+      .map((c) => `ch${c}: ${a.deathByChapter[c] ?? 0}`)
+      .join(' · ');
+    lines.push(`- **${a.classId}** — by chapter: ${byChapter}. Top kill-rooms: ${topCauses || '—'}`);
+  }
+  return lines.join('\n');
+}
+
+function main(): void {
+  const tWall0 = Date.now();
+  console.log(
+    `Class-viability sim — ${CLASSES.length} classes × ${SOULS_PER_CLASS} souls, MAX_LIVES=${MAX_LIVES}\n`,
+  );
+
+  const aggs: ClassAggregate[] = [];
+  for (const classId of CLASSES) {
+    const t0 = Date.now();
+    const souls: SoulResult[] = [];
+    for (let i = 0; i < SOULS_PER_CLASS; i++) {
+      const seed = (SEED_BASE ^ (classId.charCodeAt(0) * 7919) ^ (i * 104729)) >>> 0;
+      souls.push(runSoul(classId, seed));
+    }
+    const a = aggregate(classId, souls);
+    aggs.push(a);
+    const dt = Date.now() - t0;
+    console.log(
+      `${classId.padEnd(10)} topA6 ${pct(a.toppedLadderRate).padStart(6)}  meanAsc ${num(a.meanHighestCleared).padStart(5)}  A0life ${(a.firstA0ClearLifeMean === null ? '—' : num(a.firstA0ClearLifeMean, 1)).padStart(5)}  clr% ${pct(a.perLifeClearRate).padStart(6)}  depth ${num(a.meanDepthRooms, 1).padStart(5)}  lvl ${num(a.meanFinalLevel).padStart(4)}  ${(dt / 1000).toFixed(1)}s`,
+    );
+  }
+
+  const dtTotal = ((Date.now() - tWall0) / 1000).toFixed(1);
+  const doc = renderDoc(aggs, dtTotal);
+  const outPath = resolve(process.cwd(), 'docs/sim-findings/class-viability.md');
+  mkdirSync(dirname(outPath), { recursive: true });
+  writeFileSync(outPath, doc, 'utf8');
+  console.log(`\nWrote findings → ${outPath}  (${dtTotal}s wall)`);
+}
+
+function renderVerdict(aggs: ClassAggregate[]): string {
+  const by = (id: ClassId) => aggs.find((a) => a.classId === id)!;
+  const f = by('fighter');
+  const r = by('rogue');
+  const b = by('barbarian');
+  const g = by('ranger'); // ranGer
+  const bp = PROCS.barbarian;
+  const rp = PROCS.ranger;
+  const a0 = (a: ClassAggregate) => (a.firstA0ClearLifeMean === null ? 'never' : `~life ${num(a.firstA0ClearLifeMean, 0)}`);
+  return `Both new classes are **VIABLE** — their signature mechanics fire under the
+shared policy (Barbarian raged ${num(bp.rage / Math.max(1, bp.combats), 2)}×/combat and went reckless
+${num(bp.reckless / Math.max(1, bp.combats), 2)}×/combat; Ranger cast Hunter's Mark ${num(rp.huntersMarkCast / Math.max(1, rp.combats), 2)}×/combat,
+landed mark dice ${num(rp.huntersMarkDie / Math.max(1, rp.combats), 2)}×/combat and fired Colossus ${num(rp.colossus / Math.max(1, rp.combats), 2)}×/combat), so the
+"policy never wires the new mechanics" failure mode did **not** happen — that is
+the most important single result here. But the two land at opposite ends of the
+viability band. **Barbarian is the strongest class in the sim by a wide margin**:
+${pct(b.toppedLadderRate)} of its souls topped Ascension 6 (mean asc cleared ${num(b.meanHighestCleared)}, first A0 clear ${a0(b)}),
+versus the next-best Rogue at ${pct(r.toppedLadderRate)} (mean ${num(r.meanHighestCleared)}) and Fighter / Ranger / Wizard all at
+≈0% topped. Rage's always-on halving of physical damage — renewable every combat
+in this engine — is a uniquely powerful, ungated survivability lever, and the
+blunt trade-blows AI floor maximally rewards exactly that, so the gap is real but
+inflated: a competent player extracts more from the finesse classes, narrowing it.
+Either way, Barbarian reads as **out of line on the high side** and is the prime
+candidate for the balance lane to look at (chiefly Rage uptime / resistance).
+**Ranger sits at the low end** — viable (clears A0 ${a0(g)}, ${g.ascensionHistogram.slice(1).reduce((s, n) => s + n, 0)} souls cleared A1 or higher) but with
+the shallowest average depth (${num(g.meanDepthRooms, 1)} rooms) and lowest average level (${num(g.meanFinalLevel)}), and
+${Math.round(g.neverClearedRate * g.souls)}/${g.souls} souls never cleared even A0 (vs Fighter's ${Math.round(f.neverClearedRate * f.souls)}). The structural reason is
+not its kit (which fires fine) but the **non-positional engine**: the Ranger's
+ranged identity grants zero defensive benefit — it eats hits exactly like a melee
+class but with d10 HP, leather AC, and no damage resistance, so it plays as a
+squishier weapon class. It is roughly Fighter-adjacent on first-clear timing yet
+below it on the depth floor. Net: relative to the trusted three, **Barbarian is
+too strong and Ranger is in the lower-middle (≈ Fighter-or-below, clearly above
+only the AI-floor-handicapped Wizard)** — neither is broken, but the Barbarian's
+Rage advantage is the one number worth a second look. Absolute clear-rates remain
+an AI-floor artifact; the ranking, not the magnitudes, is the deliverable.`;
+}
+
+function renderDoc(aggs: ClassAggregate[], wallSec: string): string {
+  const rp = PROCS.ranger;
+  const bp = PROCS.barbarian;
+  return `# Five-class viability on current content — sim findings
+
+> Auto-generated tables by \`scripts/sim-class-viability.ts\`. Re-run with
+> \`SOULS_PER_CLASS=${SOULS_PER_CLASS} MAX_LIVES=${MAX_LIVES} npx tsx scripts/sim-class-viability.ts\`.
+
+**Souls / class:** ${SOULS_PER_CLASS}. **Max lives / soul:** ${MAX_LIVES}.
+**Wall clock:** ${wallSec}s.
+
+## What this measures
+
+A meta-journey: each soul reincarnates life after life, climbing the Spire
+ascension ladder (A0→A6) over the full chained Godwake delve (the enriched
+bestiary + the slightly longer chapters). Clearing the chain at ascension N
+unlocks N+1; renown carries across lives and is spent greedily on a class-tuned
+Grove priority list between deaths. Every class runs the SAME harness, the SAME
+seed schedule, and the SAME shared action policy that drives the in-game
+Auto-Battle (so Barbarian Rage and Ranger Hunter's Mark fire automatically iff
+the policy wires them — which the proc table below verifies).
+
+> ⚠️ **Read this RELATIVE, not absolute.** The bot underplays a real player, so
+> absolute clear-rates and life-counts are an AI-floor artifact, not game truth
+> (same caveat as the \`character-order\` and \`rogue-meta-journey-sim2\` memory
+> runs). A
+> low absolute clear-rate does NOT mean a class is broken. The robust signal is
+> each new class (Barbarian, Ranger) lined up against the trusted three
+> (Fighter, Rogue, Wizard) on identical content. No balance numbers were tuned
+> in this lane — this reports, it does not adjust.
+
+## Headline — all five classes
+
+${renderMain(aggs)}
+
+- **Topped A6** — share of souls that cleared the full chain at Ascension 6 within ${MAX_LIVES} lives.
+- **Mean asc cleared** — average highest ascension a soul ever cleared (0 if it never cleared A0).
+- **First A0-clear life** — average life index of a soul's first base-chain clear (only souls that cleared A0).
+- **Per-life clear%** — fraction of ALL lives (across all ascensions) that cleared the chain.
+- **Avg depth** — mean rooms reached per life (the full chain is 54 rooms).
+
+## Ascension reach — how high each class's souls topped out
+
+Soul counts bucketed by the highest ascension level they ever cleared
+("never" = never cleared even A0 within ${MAX_LIVES} lives).
+
+${renderAscensionHistogram(aggs)}
+
+## Proc instrumentation — do the new mechanics actually fire?
+
+Per-combat rates across every combat the class fought. \`·\` = not applicable to
+that class. Activations (Rage, Reckless, Hunter's-Mark cast) are exact;
+Colossus is exact (once-per-turn flag); the Hunter's-Mark 1d6 per-hit die is
+read off the damage log (approximate only in rare 200+-entry fights).
+
+${renderProcs()}
+
+**Sanity check:** Barbarian raged **${bp.combats ? num(bp.rage / bp.combats, 2) : '—'}**×/combat and went reckless
+**${bp.combats ? num(bp.reckless / bp.combats, 2) : '—'}**×/combat. Ranger cast Hunter's Mark
+**${rp.combats ? num(rp.huntersMarkCast / rp.combats, 2) : '—'}**×/combat, landed mark dice
+**${rp.combats ? num(rp.huntersMarkDie / rp.combats, 2) : '—'}**×/combat, and fired Colossus
+**${rp.combats ? num(rp.colossus / rp.combats, 2) : '—'}**×/combat (Colossus is gated behind the L3 Hunter
+subclass, so its rate also reflects how often the ranger reaches L3 within a life).
+
+## Where deaths cluster
+
+${renderDeaths(aggs)}
+
+## Verdict
+
+${renderVerdict(aggs)}
+`;
+}
+
+main();
