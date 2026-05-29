@@ -37,7 +37,7 @@ export interface BossIntelCard {
   scoutResolution: string;
   /** Walk-past resolution text (gods reward the bold). */
   walkPastResolution: string;
-  /** Scout fee in gold. Scales by chapter: 15 / 30 / 50 / 75. */
+  /** Scout fee in gold. Scales by chapter: 8 / 15 / 25 / 40. */
   scoutPrice: number;
 }
 
@@ -63,7 +63,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       'The scout was a half-elf with a goblin\'s tongue and a thief\'s memory. She came back with the chalk-mark of the duergar\'s name on her cuff and a clean tally: pick the size of his forearm, two-handed swing, a curse in Undercommon every third stroke. She does not stay for the fight.',
     walkPastResolution:
       "You step past the shrine without breaking stride. Somewhere in the rock the dust shifts as if a god noted the going. The gods reward the bold — Ilyich's purse will weigh a touch heavier when it falls.",
-    scoutPrice: 15,
+    scoutPrice: 8,
   },
   // ─── Ch2 · The Magistrate ─────────────────────────────────────────────
   {
@@ -87,7 +87,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       'The scout was a Cowled stipendiary who owed someone in Phandalin a favour. She brings a court clerk\'s memorandum: opener is always the same — a gloved hand, a will-clamp — and the sentence is read in Mind Spike afterwards. Three names died standing this month. She has been told to leave you the page and not to be seen leaving.',
     walkPastResolution:
       'You leave the docket-board unread and the warrant un-named. The merchant queen counts the bold among her takers — the Magistrate\'s purse will weigh a touch heavier when the sentence reverses.',
-    scoutPrice: 30,
+    scoutPrice: 15,
   },
   // ─── Ch3 · The Asylum Director ────────────────────────────────────────
   {
@@ -112,7 +112,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       'The scout was a warden\'s apprentice who hates her master enough to bring the ledger. She lays out the routine: a will-clamp first, hard enough that a strong mind still folds half the time; then the glaive at long reach while you cannot close; then, when the work is half-done, a second wind on him you cannot read coming. The page is dated. The page is recent. She does not wait for thanks.',
     walkPastResolution:
       'You leave the tray as you found it and the chart un-named. The Crying God notes the going. The Director\'s strongbox will weigh a touch heavier when the chart breaks.',
-    scoutPrice: 50,
+    scoutPrice: 25,
   },
   // ─── Ch4 · The Matron Mother ──────────────────────────────────────────
   {
@@ -138,7 +138,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       "The scout was an Eilistraee-cult drow who has been waiting for a surface-walker worth the risk. She brings the priestess's full devotional pattern: a temple-prayer to still you, then the venomed ritual dagger at close reach turning the wrist on each stroke, and a spider-glyph at distance when you press her. Halfway down the prayer she takes a second wind no surface-priest she has ever seen would survive. The cup of venom on the altar is not for you. The cup of venom is for her.",
     walkPastResolution:
       "You leave the antechamber as you found it and the litany unread. Eilistraee's hidden moon notes the going. The Matron's tribute-purse will weigh a touch heavier when the prayer is broken.",
-    scoutPrice: 75,
+    scoutPrice: 40,
   },
 ];
 
