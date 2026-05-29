@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { RoomSpec } from '../../types/delve';
 import type { Item } from '../../schemas/item';
 import { Panel } from '../ui/Panel';
@@ -9,17 +9,30 @@ import { useGameStore } from '../../stores/gameStore';
 import { getBlessing } from '../../content/blessings';
 import { getItem } from '../../content/items';
 import { playSfx } from '../../engine/audio';
+import { getActiveRoller } from '../../engine/dice';
+import { rollBlessingOptions } from '../../engine/character/blessings';
 import {
   boonsForCampTier,
   type CampBoon,
   type CampBoonTier,
 } from '../../content/campBoons';
 
-type CampChoice = 'rest' | 'sharpen' | 'prayer';
-
 /** Whether the caravan shop is open. Blessings are granted at shrines, not
  * here — the camp only sells wares. */
 type MerchantStep = 'closed' | 'shop';
+
+/** Which branch of the campfire fork the player has expanded but not yet
+ * committed. Rest commits on a single click; Attune and Risk reveal a
+ * sub-panel first. */
+type ForkBranch = 'attune' | 'risk';
+
+interface RiskResult {
+  roll: number;
+  outcome: 'win' | 'loss';
+  blessingId: string | null;
+  gold: number;
+  damage: number;
+}
 
 interface CampRoomProps {
   room: RoomSpec;
@@ -98,6 +111,8 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const campChoice = useGameStore((s) => s.delve?.campChoice ?? null);
   const pickCampChoice = useGameStore((s) => s.pickCampChoice);
   const pickCampBoon = useGameStore((s) => s.pickCampBoon);
+  const setCharacter = useGameStore((s) => s.setCharacter);
+  const addDelveReward = useGameStore((s) => s.addDelveReward);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const showTaunt = useGameStore((s) => s.showTaunt);
   const goToInventory = useGameStore((s) => s.goToInventory);
@@ -124,9 +139,8 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
   const stockIds = useMemo(() => merchantStockForTier(campTier), [campTier]);
 
-  // The blessing id pulled by "A Prayer Whispered". Captured on click so
-  // we can echo the exact god back to the player even if blessings change.
-  const [prayerGrantedId, setPrayerGrantedId] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<ForkBranch | null>(null);
+  const [riskResult, setRiskResult] = useState<RiskResult | null>(null);
   const [merchantStep, setMerchantStep] = useState<MerchantStep>('closed');
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
 
@@ -139,17 +153,87 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
   if (!character) return null;
 
-  function handlePickChoice(choice: CampChoice) {
-    if (!character || campChoice) return;
-    // Single source of truth: the store does the class-aware roll and returns
-    // the granted blessing id so the UI can name the god.
-    const granted = pickCampChoice(choice);
-    if (choice === 'prayer') {
-      if (granted) setPrayerGrantedId(granted);
+  // The campfire is a single weighted fork: heal, attune a lasting boon, or
+  // gamble — pick ONE, the other two close. (The merchant below is a separate
+  // gold-sink, not part of the fork.)
+  const restTaken = campChoice === 'rest';
+  const takenBoon = boonResolution && boonResolution.boonId
+    ? boonOptions.find((b) => b.id === boonResolution.boonId) ?? null
+    : null;
+  const boonTaken = takenBoon !== null;
+  const riskTaken = riskResult !== null;
+  const committed = restTaken || boonTaken || riskTaken;
+
+  const riskTier = campTier ?? 1;
+  const riskDamage = Math.max(1, Math.floor(character.hp.max * 0.25));
+
+  function handleRest() {
+    if (!character || committed) return;
+    pickCampChoice('rest');
+    setExpanded(null);
+    playSfx('heal_chime');
+  }
+
+  function toggleBranch(branch: ForkBranch) {
+    if (committed) return;
+    setExpanded((cur) => (cur === branch ? null : branch));
+    playSfx('ui_click');
+  }
+
+  function handlePickBoon(boonId: string) {
+    if (committed || campTier === null) return;
+    pickCampBoon(campTier, boonId);
+    setExpanded(null);
+    playSfx('shrine_chime');
+  }
+
+  function resolveRisk() {
+    if (!character || committed) return;
+    const roller = getActiveRoller();
+    const roll = roller.d20();
+    playSfx('dice_clack');
+
+    if (roll.total >= 11) {
+      // The dark answers: a blessing's whisper, and coin pressed into the palm.
+      const [blessingId] = rollBlessingOptions(
+        roller,
+        1,
+        character.classId,
+        character.blessings,
+      );
+      const gold = blessingId ? 15 * riskTier : 50 * riskTier;
+      if (blessingId) {
+        setCharacter({
+          ...character,
+          blessings: [...character.blessings, blessingId],
+        });
+      }
+      addDelveReward(gold, 0);
+      setRiskResult({
+        roll: roll.total,
+        outcome: 'win',
+        blessingId: blessingId ?? null,
+        gold,
+        damage: 0,
+      });
       playSfx('shrine_chime');
     } else {
-      playSfx('ui_click');
+      // The dark takes its due. A campfire gamble bleeds you, but never kills.
+      const nextCurrent = Math.max(1, character.hp.current - riskDamage);
+      setCharacter({
+        ...character,
+        hp: { ...character.hp, current: nextCurrent },
+      });
+      setRiskResult({
+        roll: roll.total,
+        outcome: 'loss',
+        blessingId: null,
+        gold: 0,
+        damage: riskDamage,
+      });
+      playSfx('hit_thud');
     }
+    setExpanded(null);
   }
 
   function openShop() {
@@ -209,75 +293,126 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
       </Panel>
 
       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest text-center">
-        ◆ A single boon — choose one ◆
+        ◆ The campfire — take one, the other two close ◆
       </div>
 
-      <div className="grid md:grid-cols-3 gap-3">
-        <CampChoiceCard
-          choiceId="rest"
+      <div className="grid md:grid-cols-3 gap-3 items-start">
+        <ForkCard
           title="Make Camp at the Fire"
           flavor="A full night by the coals. Wounds close, dice come home to the hand, and what was spent is yours again before dawn."
-          locked={campChoice !== null && campChoice !== 'rest'}
-          picked={campChoice === 'rest'}
-          pickedSummary="Full rest — HP restored, all resources readied."
-          buttonLabel="Make camp"
-          onPick={() => handlePickChoice('rest')}
-        />
-        {character.classId === 'wizard' ? (
-          <CampChoiceCard
-            choiceId="sharpen"
-            title="Whet the Mind"
-            flavor="A glyph drawn in ash, a long breath, the road in your thoughts. Your sigils land truer for the rest of this delve."
-            locked={campChoice !== null && campChoice !== 'sharpen'}
-            picked={campChoice === 'sharpen'}
-            pickedSummary="+1 to all spell attack rolls for the rest of the delve."
-            buttonLabel="Sharpen the sigil"
-            onPick={() => handlePickChoice('sharpen')}
-          />
-        ) : (
-          <CampChoiceCard
-            choiceId="sharpen"
-            title="Sharpen the Blade"
-            flavor="A whetstone, a long breath, the road in your hand. Strike truer for the rest of this delve."
-            locked={campChoice !== null && campChoice !== 'sharpen'}
-            picked={campChoice === 'sharpen'}
-            pickedSummary="+1 to all attack rolls for the rest of the delve."
-            buttonLabel="Hone the edge"
-            onPick={() => handlePickChoice('sharpen')}
-          />
-        )}
-        <CampChoiceCard
-          choiceId="prayer"
-          title="A Prayer Whispered"
-          flavor="The fire crackles. A name leaves your lips. Something in the dark answers."
-          locked={campChoice !== null && campChoice !== 'prayer'}
-          picked={campChoice === 'prayer'}
-          pickedSummary={
-            prayerGrantedId
-              ? `${getBlessing(prayerGrantedId).name} — granted.`
-              : 'A blessing — granted.'
+          state={
+            restTaken ? 'taken' : committed ? 'closed' : 'open'
           }
-          buttonLabel="Whisper a prayer"
-          onPick={() => handlePickChoice('prayer')}
+          buttonLabel="Make camp"
+          onPick={handleRest}
+          takenSummary="Full rest — HP restored, all resources readied."
+        />
+        <ForkCard
+          title="Attune by the Coals"
+          flavor="A long study of what you carry. Bind one lasting boon into yourself — it holds for the rest of this delve."
+          state={
+            boonTaken
+              ? 'taken'
+              : committed
+                ? 'closed'
+                : expanded === 'attune'
+                  ? 'active'
+                  : 'open'
+          }
+          buttonLabel={boonOptions.length === 0 ? 'No rite to attune' : 'Choose the rite ↓'}
+          disabled={boonOptions.length === 0}
+          onPick={() => toggleBranch('attune')}
+          takenSummary={
+            takenBoon
+              ? `${takenBoon.name} — attuned. ${takenBoon.description}`
+              : undefined
+          }
+        />
+        <ForkCard
+          title="Tempt the Dark"
+          flavor="Throw the bones into the fire and speak a name. Something out past the light is always listening — and it does not give for free."
+          accent="ember"
+          state={
+            riskTaken ? 'taken' : committed ? 'closed' : expanded === 'risk' ? 'active' : 'open'
+          }
+          buttonLabel="Throw the bones ↓"
+          onPick={() => toggleBranch('risk')}
+          takenSummary={
+            riskResult
+              ? riskResult.outcome === 'win'
+                ? `The dark answered (rolled ${riskResult.roll}). ${
+                    riskResult.blessingId
+                      ? `${getBlessing(riskResult.blessingId).name} granted, and `
+                      : ''
+                  }+${riskResult.gold} gold.`
+                : `The dark took its due (rolled ${riskResult.roll}). −${riskResult.damage} HP.`
+              : undefined
+          }
         />
       </div>
 
-      {campChoice === 'prayer' && prayerGrantedId && (
-        <div className="max-w-md mx-auto">
-          <BlessingCard blessingId={prayerGrantedId} />
-        </div>
+      {!committed && expanded === 'attune' && boonOptions.length > 0 && (
+        <Panel className="bg-gradient-to-br from-[#1e1a2a] to-[#100d18] border-[var(--color-accent-amber)] animate-fade-in">
+          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
+            ◆ Attune one boon · Camp {campTier}
+          </div>
+          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+            The road has marked you. Bind one boon to carry south — this is the
+            night's whole gift, so choose with the dark in mind.
+          </p>
+          <div className="grid md:grid-cols-3 gap-3">
+            {boonOptions.map((b) => (
+              <button
+                type="button"
+                key={b.id}
+                onClick={() => handlePickBoon(b.id)}
+                className="text-left border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] hover:bg-[#2a1d12] transition-colors p-3 flex flex-col gap-1"
+              >
+                <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest">
+                  {b.name}
+                </div>
+                <div className="text-[var(--color-text-primary)] text-xs leading-relaxed">
+                  {b.description}
+                </div>
+                <div className="text-[var(--color-text-dim)] text-[11px] italic leading-relaxed mt-1">
+                  {b.flavor}
+                </div>
+              </button>
+            ))}
+          </div>
+        </Panel>
       )}
 
-      {campTier !== null && (
-        <CampBoonPicker
-          tier={campTier}
-          options={boonOptions}
-          resolution={boonResolution ?? null}
-          onPick={(boonId) => {
-            pickCampBoon(campTier, boonId);
-            playSfx(boonId ? 'shrine_chime' : 'ui_click');
-          }}
-        />
+      {!committed && expanded === 'risk' && (
+        <Panel className="rest-fork-ember bg-gradient-to-br from-[#2a1212] to-[#160a0a] animate-fade-in">
+          <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest mb-2">
+            ◆ Tempt the Dark
+          </div>
+          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+            One throw of the bones. No fight, no flight — only the roll and what
+            it brings.
+          </p>
+          <ul className="text-[var(--color-text-primary)] text-xs leading-relaxed mb-4 flex flex-col gap-1">
+            <li>
+              <span className="text-[var(--color-accent-gold)]">11 or higher</span> — the dark
+              answers: a blessing's whisper{` and ${15 * riskTier} gold`} (or {50 * riskTier} gold
+              if no blessing is left to give).
+            </li>
+            <li>
+              <span className="text-[var(--color-status-poison)]">10 or lower</span> — it takes
+              its due: you lose {riskDamage} HP (a quarter of your health), down to no less than 1.
+            </li>
+          </ul>
+          <Button variant="primary" onClick={resolveRisk}>
+            Throw the bones
+          </Button>
+        </Panel>
+      )}
+
+      {riskTaken && riskResult?.blessingId && (
+        <div className="max-w-md mx-auto animate-fade-in">
+          <BlessingCard blessingId={riskResult.blessingId} />
+        </div>
       )}
 
       <Panel>
@@ -430,123 +565,63 @@ function ShopModal({
   );
 }
 
-interface CampChoiceCardProps {
-  choiceId: CampChoice;
+type ForkCardState = 'open' | 'active' | 'taken' | 'closed';
+
+interface ForkCardProps {
   title: string;
   flavor: string;
-  locked: boolean;
-  picked: boolean;
-  pickedSummary: string;
+  state: ForkCardState;
   buttonLabel: string;
   onPick: () => void;
+  takenSummary?: ReactNode;
+  accent?: 'amber' | 'ember';
+  disabled?: boolean;
 }
 
-function CampChoiceCard({
+function ForkCard({
   title,
   flavor,
-  locked,
-  picked,
-  pickedSummary,
+  state,
   buttonLabel,
   onPick,
-}: CampChoiceCardProps) {
+  takenSummary,
+  accent = 'amber',
+  disabled = false,
+}: ForkCardProps) {
+  const panelClass = [
+    state === 'closed' ? 'opacity-40' : '',
+    state === 'active'
+      ? 'border-[var(--color-accent-amber)] bg-[#2a1d12]'
+      : '',
+    accent === 'ember' && state !== 'closed' ? 'rest-fork-ember' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <Panel className={locked ? 'opacity-40' : undefined}>
+    <Panel className={panelClass || undefined}>
       <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
         ◆ {title}
       </div>
       <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
         {flavor}
       </p>
-      {picked ? (
-        <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
-          {pickedSummary}
+      {state === 'taken' ? (
+        <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest leading-relaxed">
+          {takenSummary}
         </div>
-      ) : locked ? (
+      ) : state === 'closed' ? (
         <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic">
           The moment has passed.
         </div>
       ) : (
-        <Button variant="primary" onClick={onPick}>
-          {buttonLabel}
+        <Button
+          variant={state === 'active' ? 'secondary' : 'primary'}
+          disabled={disabled}
+          onClick={onPick}
+        >
+          {state === 'active' ? 'Never mind ✕' : buttonLabel}
         </Button>
-      )}
-    </Panel>
-  );
-}
-
-interface CampBoonPickerProps {
-  tier: CampBoonTier;
-  options: CampBoon[];
-  resolution: { tier: number; boonId: string | null } | null;
-  onPick: (boonId: string | null) => void;
-}
-
-function CampBoonPicker({ tier, options, resolution, onPick }: CampBoonPickerProps) {
-  const resolved = resolution !== null;
-  const pickedBoon = resolved
-    ? options.find((b) => b.id === resolution.boonId) ?? null
-    : null;
-  const skipped = resolved && resolution.boonId === null;
-
-  return (
-    <Panel className="bg-gradient-to-br from-[#1e1a2a] to-[#100d18] border-[var(--color-accent-amber)]">
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest">
-          ◆ Choose a Boon · Camp {tier}
-        </div>
-        <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
-          {resolved ? 'Taken' : 'One pick — for the rest of the delve'}
-        </div>
-      </div>
-
-      {!resolved && (
-        <>
-          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-            The road has marked you. Take one boon to carry south — or walk on
-            unburdened.
-          </p>
-          <div className="grid md:grid-cols-3 gap-3">
-            {options.map((b) => (
-              <button
-                type="button"
-                key={b.id}
-                onClick={() => onPick(b.id)}
-                className="text-left border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] hover:bg-[#2a1d12] transition-colors p-3 flex flex-col gap-1"
-              >
-                <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest">
-                  {b.name}
-                </div>
-                <div className="text-[var(--color-text-primary)] text-xs leading-relaxed">
-                  {b.description}
-                </div>
-                <div className="text-[var(--color-text-dim)] text-[11px] italic leading-relaxed mt-1">
-                  {b.flavor}
-                </div>
-              </button>
-            ))}
-          </div>
-          <div className="mt-3 flex justify-end">
-            <button
-              type="button"
-              onClick={() => onPick(null)}
-              className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-amber)] text-[11px] uppercase tracking-widest italic"
-            >
-              Walk on unburdened →
-            </button>
-          </div>
-        </>
-      )}
-
-      {resolved && pickedBoon && (
-        <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
-          {pickedBoon.name} — taken. {pickedBoon.description}
-        </div>
-      )}
-      {resolved && skipped && (
-        <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic">
-          You left the boon on the road. The dark is darker for it.
-        </div>
       )}
     </Panel>
   );
