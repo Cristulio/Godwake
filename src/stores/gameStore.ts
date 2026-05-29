@@ -125,6 +125,7 @@ interface GameState {
   chaptersCleared: number;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
+  ascensionUnlocked: number;
   knownNpcs: string[];
 
   // Navigation
@@ -216,6 +217,7 @@ interface PersistedSnapshot {
   chaptersCleared: number;
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
+  ascensionUnlocked: number;
   knownNpcs: string[];
   __metadata?: SaveSlotMetadata;
 }
@@ -252,6 +254,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     chaptersCleared: meta.chaptersCleared,
     chapter1Cleared: meta.chapter1Cleared,
     druidGroveUnlocked: meta.druidGroveUnlocked,
+    ascensionUnlocked: meta.ascensionUnlocked,
     knownNpcs: meta.knownNpcs,
     __metadata: {
       savedAt: new Date().toISOString(),
@@ -302,6 +305,10 @@ function scatterSnapshot(s: PersistedSnapshot) {
           : 0,
     chapter1Cleared: !!s.chapter1Cleared,
     druidGroveUnlocked: !!s.druidGroveUnlocked,
+    ascensionUnlocked:
+      typeof s.ascensionUnlocked === 'number' && s.ascensionUnlocked >= 0
+        ? s.ascensionUnlocked
+        : 0,
     knownNpcs: Array.isArray(s.knownNpcs) ? s.knownNpcs : [],
   });
   useScreenStore.setState({
@@ -370,6 +377,7 @@ export const useGameStore = create<GameState>()(
           unlockedUpgrades: m.unlockedUpgrades,
           chaptersCleared: m.chaptersCleared,
           chapter1Cleared: m.chapter1Cleared,
+          ascensionUnlocked: m.ascensionUnlocked,
           knownNpcs: m.knownNpcs,
           druidGroveUnlocked: m.druidGroveUnlocked,
         });
@@ -413,6 +421,7 @@ export const useGameStore = create<GameState>()(
         chaptersCleared: useMetaStore.getState().chaptersCleared,
         chapter1Cleared: useMetaStore.getState().chapter1Cleared,
         druidGroveUnlocked: useMetaStore.getState().druidGroveUnlocked,
+        ascensionUnlocked: useMetaStore.getState().ascensionUnlocked,
         knownNpcs: useMetaStore.getState().knownNpcs,
 
         goToTitle: () => useScreenStore.getState().goToTitle(),

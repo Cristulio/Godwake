@@ -19,8 +19,11 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *  v6 → v7: initiative removed entirely (player always acts first). Strip
  *           legacy `permanentInitBonus` / `delveInitBonus` / nested `init`
  *           bonus on load so the new turn engine never sees them.
+ *  v7 → v8: Ascension ladder. `ascensionUnlocked` (highest unlocked, default 0)
+ *           added to the meta snapshot. Old saves default to 0 — a returning
+ *           player re-clears the chain to open Ascension 1.
  */
-export const SAVE_VERSION = 7;
+export const SAVE_VERSION = 8;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -133,6 +136,7 @@ export interface MigratedSnapshot {
   discoveredMonsters: string[];
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
+  ascensionUnlocked: number;
   deathCount: number;
   hasReincarnated: boolean;
   knownNpcs: string[];
@@ -234,6 +238,11 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   // v5 → v6: knownNpcs gates the soul-bond name reveal. Missing = pre-reveal.
   if (!Array.isArray(state.knownNpcs)) {
     state.knownNpcs = [];
+  }
+
+  // v7 → v8: ascension ladder. Old saves start at 0 (must re-clear to unlock 1).
+  if (typeof state.ascensionUnlocked !== 'number' || state.ascensionUnlocked < 0) {
+    state.ascensionUnlocked = 0;
   }
 
   return state as MigratedSnapshot;

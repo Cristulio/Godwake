@@ -11,6 +11,7 @@ import {
   soulMarkMultiplier,
   SOUL_MARK_PER_BANE,
 } from '../../engine/character/quirks';
+import { getAscensionLevel, MAX_ASCENSION } from '../../engine/delve';
 
 interface DelveSummaryProps {
   delve: DelveState;
@@ -20,11 +21,19 @@ interface DelveSummaryProps {
 
 export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
   const character = useGameStore((s) => s.character);
+  const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
   const victorious = outcome === 'completed';
   const banes = character ? baneQuirkCount(character) : 0;
   const soulMark = character ? soulMarkMultiplier(character) : 1;
+  const ascensionLevel = delve.ascensionLevel ?? 0;
+  const ascension = getAscensionLevel(ascensionLevel);
   const renownBase = victorious ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
-  const renownEarned = Math.floor(renownBase * soulMark);
+  // Mirrors finishDelve: soul-mark and ascension multipliers stack multiplicatively.
+  const renownEarned = Math.floor(renownBase * soulMark * ascension.renownMult);
+  // A clear at the current highest rung opens the next (see unlockNextAscension).
+  // ascensionUnlocked hasn't incremented yet — finishDelve runs on Return.
+  const willUnlockAscension =
+    victorious && ascensionLevel >= ascensionUnlocked && ascensionUnlocked < MAX_ASCENSION;
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 max-w-2xl mx-auto gap-8 animate-fade-in">
       <div className="text-center">
@@ -58,7 +67,24 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
             </span>
           </div>
         )}
+        {ascensionLevel > 0 && (
+          <div className="mt-3 pt-3 border-t border-[var(--color-border-dim)] text-center">
+            <span className="text-[var(--color-accent-blood)] text-[10px] uppercase tracking-widest">
+              ▲ Ascension {ascensionLevel}
+            </span>
+            <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest ml-2">
+              (renown ×{ascension.renownMult.toFixed(2)})
+            </span>
+          </div>
+        )}
       </Panel>
+
+      {willUnlockAscension && (
+        <p className="text-[var(--color-accent-amber)] italic text-sm text-center max-w-md animate-pulse-glow">
+          The world deepens. Ascension {ascensionUnlocked + 1} opens to you — a harder
+          road, and a richer one. The Grove stirs with it.
+        </p>
+      )}
 
       {!victorious && (
         <p className="text-[var(--color-text-secondary)] italic text-sm text-center max-w-md">

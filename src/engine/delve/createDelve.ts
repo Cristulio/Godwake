@@ -1,5 +1,6 @@
 import type { DelveState, RoomSpec } from '../../types/delve';
 import { createRng, randomSeed } from '../dice/rng';
+import { clampAscension } from './ascension';
 import { eventsForChapter } from '../../content/events';
 import { intelEventIdFor, getBossIntelCard } from '../../content/bossIntel';
 import type { EventTemplate } from '../../schemas/event';
@@ -264,6 +265,8 @@ export function createAthkatlaDelve(seed: number = randomSeed()): DelveState {
 export interface GodwakeDelveOptions {
   /** Seed for the encounter pool RNG. */
   seed?: number;
+  /** Ascension level to play this run at (0 = base). Scales enemies + payout. */
+  ascension?: number;
 }
 
 export function createGodwakeDelve(
@@ -522,6 +525,7 @@ export function createGodwakeDelve(
     roomsCleared: 0,
     goldEarned: 0,
     xpEarned: 0,
+    ascensionLevel: clampAscension(opts.ascension ?? 0),
   };
 }
 

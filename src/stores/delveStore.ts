@@ -18,6 +18,7 @@ import {
 } from '../engine/character/quirks';
 import { applyDelveStartUpgrades } from '../engine/character/upgrades';
 import { hasPendingLevelUp } from '../engine/character/leveling';
+import { getAscensionLevel } from '../engine/delve/ascension';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
 import { useCharacterStore } from './characterStore';
@@ -176,7 +177,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const baseHpMax = cls.hitDie + conMod + bonusHp + classBonusHp + permanentHpBonus;
     // Coin in the Pocket seeds gold from a permanent bonus on the soul, not
     // a delve-start mutation, so we add it after the run-scoped reset to 0.
-    const startingGold = ch.permanentBonuses?.startingGold ?? 0;
+    // Higher ascension levels tighten the purse (startingGoldMult < 1).
+    const ascension = getAscensionLevel(delve.ascensionLevel ?? 0);
+    const startingGold = Math.floor(
+      (ch.permanentBonuses?.startingGold ?? 0) * ascension.startingGoldMult,
+    );
     const freshlyDescended: Character = {
       ...ch,
       level: 1,
@@ -368,9 +373,15 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const renownBase = wonBoss
       ? RENOWN_PER_DELVE_CLEAR
       : RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bossesKilled;
-    // Soul-mark multiplier reads the quirks the soul carried THIS run, so
-    // settle renown BEFORE the wheel turns.
-    const renownGain = Math.floor(renownBase * renownSoulMarkMultiplier(character));
+    // Ascension reward multiplier composes MULTIPLICATIVELY with the soul-mark
+    // (audit flagged multiplier-stacking as a past bug-class — both apply here).
+    // Soul-mark reads the quirks the soul carried THIS run, so settle renown
+    // BEFORE the wheel turns.
+    const ascensionLevel = s.delve.ascensionLevel ?? 0;
+    const ascensionMult = getAscensionLevel(ascensionLevel).renownMult;
+    const renownGain = Math.floor(
+      renownBase * renownSoulMarkMultiplier(character) * ascensionMult,
+    );
     const withRenown: Character = {
       ...character,
       renown: character.renown + renownGain,
@@ -402,6 +413,12 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     useScreenStore.getState().setScreen('hub');
     if (chaptersThisRun > 0) {
       meta.recordChapterCleared(chaptersThisRun);
+    }
+    // A clear of the full chain advances the world: clearing at the current
+    // highest unlocked ascension opens the next rung. Replaying a lower level
+    // unlocks nothing new (Spire-style).
+    if (wonBoss) {
+      meta.unlockNextAscension(ascensionLevel);
     }
     if (!meta.druidGroveUnlocked && settled.renown >= GROVE_UNLOCK_THRESHOLD) {
       meta.setDruidGroveUnlocked(true);

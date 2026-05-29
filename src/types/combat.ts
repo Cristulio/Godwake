@@ -16,6 +16,8 @@ export interface MonsterInstance {
   actionEconomy: ActionEconomy;
   /** Set true the first time a 'battle-rage' boss drops to/below half HP. Sticks for the rest of combat. */
   bossRageActive?: boolean;
+  /** Flat damage added to each of this monster's landed attacks (ascension scaling). Set at spawn. */
+  bonusDamage?: number;
 }
 
 export interface PlayerCombatant {

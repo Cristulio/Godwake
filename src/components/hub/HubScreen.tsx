@@ -1,8 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
-import { createGodwakeDelve } from '../../engine/delve';
+import {
+  createGodwakeDelve,
+  getAscensionLevel,
+  MAX_ASCENSION,
+} from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { playMusic, stopMusic } from '../../engine/audio';
@@ -18,6 +22,10 @@ export function HubScreen() {
   const chapter1Cleared = useGameStore((s) => s.chapter1Cleared);
   const hasReincarnated = useGameStore((s) => s.hasReincarnated);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
+  const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
+  // Default to the hardest unlocked rung; the player may dial it down (Spire-style).
+  const [selectedAscension, setSelectedAscension] = useState(() => ascensionUnlocked);
+  const selected = Math.max(0, Math.min(selectedAscension, ascensionUnlocked));
 
   useEffect(() => {
     playMusic('hub_ambient');
@@ -42,7 +50,7 @@ export function HubScreen() {
     // Hades-style: one delve, every run. All chapters chain. Chapters
     // unlock progressively within the run, not via separate hub entries.
     void chapter1Cleared; // referenced for future "skip already-cleared" flag
-    const delve = createGodwakeDelve();
+    const delve = createGodwakeDelve({ ascension: selected });
     startDelve(delve);
   }
 
@@ -133,8 +141,15 @@ export function HubScreen() {
           <p className="text-[var(--color-text-secondary)] text-sm mb-4 leading-relaxed">
             One road, many rooms. The cells beneath Tresendar Manor open onto a longer dark — chapter by chapter, the wheel turns. Gold and XP belong to the road; only renown returns.
           </p>
+          {ascensionUnlocked > 0 && (
+            <AscensionSelector
+              unlocked={ascensionUnlocked}
+              selected={selected}
+              onSelect={setSelectedAscension}
+            />
+          )}
           <Button variant="primary" size="lg" onClick={handleEnterDungeon}>
-            ▸ Descend
+            ▸ Descend{selected > 0 ? ` · Ascension ${selected}` : ''}
           </Button>
         </Panel>
         <Panel
@@ -182,6 +197,94 @@ export function HubScreen() {
             Open →
           </div>
         </button>
+      </div>
+    </div>
+  );
+}
+
+interface AscensionSelectorProps {
+  unlocked: number;
+  selected: number;
+  onSelect: (level: number) => void;
+}
+
+/**
+ * Pre-descent ascension picker. Only rendered once the chain has been cleared
+ * at least once (ascensionUnlocked > 0) — before that there is nothing to
+ * choose and no phantom "locked" rung is shown. The player may pick any level
+ * 0..unlocked; the active modifiers + reward bump for the choice are surfaced
+ * so the trade-off is legible.
+ */
+/** Truthful, config-derived list of the modifiers ACTIVE at a level (they accumulate). */
+function activeModifierLines(level: ReturnType<typeof getAscensionLevel>): string[] {
+  const lines: string[] = [];
+  if (level.enemyHpMult > 1) {
+    lines.push(`Enemies +${Math.round((level.enemyHpMult - 1) * 100)}% HP`);
+  }
+  if (level.enemyDamageBonus > 0) {
+    lines.push(`Enemy blows +${level.enemyDamageBonus} damage`);
+  }
+  if (level.bossHpMult > 1) {
+    lines.push(`Bosses +${Math.round((level.bossHpMult - 1) * 100)}% HP (on top)`);
+  }
+  if (level.startingGoldMult < 1) {
+    lines.push(`Start with ${Math.round((1 - level.startingGoldMult) * 100)}% less gold`);
+  }
+  return lines;
+}
+
+function AscensionSelector({ unlocked, selected, onSelect }: AscensionSelectorProps) {
+  const level = getAscensionLevel(selected);
+  const atCeiling = unlocked >= MAX_ASCENSION;
+  const modifiers = activeModifierLines(level);
+  return (
+    <div className="mb-4 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/40 p-3">
+      <div className="flex items-center justify-between mb-2">
+        <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
+          ▲ Ascension
+        </div>
+        <div className="font-mono text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
+          {atCeiling ? 'Ladder mastered' : `Highest unlocked · ${unlocked}`}
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-1 mb-2">
+        {Array.from({ length: unlocked + 1 }, (_, lvl) => {
+          const active = lvl === selected;
+          return (
+            <button
+              key={lvl}
+              type="button"
+              onClick={() => onSelect(lvl)}
+              className={`
+                w-9 h-9 border-2 font-mono text-sm transition-colors
+                ${active
+                  ? 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)] bg-[var(--color-bg-panel)]'
+                  : 'border-[var(--color-border-dim)] text-[var(--color-text-dim)] hover:border-[var(--color-border-warm)] hover:text-[var(--color-text-secondary)]'}
+              `}
+              aria-label={`Ascension ${lvl}`}
+              aria-pressed={active}
+            >
+              {lvl}
+            </button>
+          );
+        })}
+      </div>
+      {modifiers.length === 0 ? (
+        <div className="text-[var(--color-text-secondary)] text-xs italic leading-relaxed">
+          No modifiers — the chain as the world first knew it.
+        </div>
+      ) : (
+        <ul className="text-[var(--color-text-secondary)] text-xs leading-relaxed list-none space-y-0.5">
+          {modifiers.map((m) => (
+            <li key={m} className="flex gap-1.5">
+              <span className="text-[var(--color-accent-blood)]">▸</span>
+              {m}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="font-mono text-[10px] text-[var(--color-accent-gold)] uppercase tracking-widest mt-1.5">
+        ◆ Renown reward ×{level.renownMult.toFixed(2)}
       </div>
     </div>
   );

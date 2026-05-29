@@ -19,6 +19,7 @@ import {
 } from './types';
 import { isPlayerParalyzed } from './holdPerson';
 import { resolvePlayerParalyzedTurn } from './turn';
+import { applyAscensionToMonster, ascensionDamageBonus } from '../delve/ascension';
 
 /**
  * Max entries retained in CombatState.log. The renderer (CombatLog.tsx) tails
@@ -66,6 +67,10 @@ export interface CreateCombatInput {
   roller?: DiceRoller;
   character: Character;
   monsters: Array<{ def: Monster; displayName?: string }>;
+  /** Ascension level for enemy scaling (max HP + per-attack damage). Default 0 = no scaling. */
+  ascension?: number;
+  /** True when this is a chapter-boss encounter — applies the boss HP multiplier on top of enemyHpMult. */
+  isBoss?: boolean;
 }
 
 /**
@@ -91,12 +96,20 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     nextCharacter = { ...nextCharacter, nextSaveAdvantage: false };
   }
 
+  // Ascension scaling: HP rides on the (copied) def so spawnMonsterInstance
+  // seeds the right max HP; the per-attack damage bonus is stamped on the
+  // instance because monsterAttack re-derives its damage from the canonical
+  // content def and never sees a transformed copy.
+  const ascension = input.ascension ?? 0;
+  const isBoss = input.isBoss ?? false;
+  const enemyDamageBonus = ascensionDamageBonus(ascension);
   const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }) => {
-    const instance = spawnMonsterInstance(def, displayName);
+    const scaledDef = applyAscensionToMonster(def, ascension, isBoss);
+    const instance = spawnMonsterInstance(scaledDef, displayName);
     return {
       kind: 'monster' as const,
       id: instance.id,
-      instance,
+      instance: enemyDamageBonus > 0 ? { ...instance, bonusDamage: enemyDamageBonus } : instance,
     };
   });
 

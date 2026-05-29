@@ -198,8 +198,27 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 7', () => {
-    expect(SAVE_VERSION).toBe(7);
+  it('is 8', () => {
+    expect(SAVE_VERSION).toBe(8);
+  });
+});
+
+describe('migrateV1ToV2 — v7 → v8 ascension', () => {
+  it('defaults ascensionUnlocked to 0 when missing', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {} });
+    expect(v.ascensionUnlocked).toBe(0);
+  });
+
+  it('resets a negative/garbage ascensionUnlocked to 0', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, ascensionUnlocked: -2 }).ascensionUnlocked).toBe(0);
+    expect(
+      migrateV1ToV2({ unlockedUpgrades: {}, ascensionUnlocked: 'x' as unknown as number })
+        .ascensionUnlocked,
+    ).toBe(0);
+  });
+
+  it('preserves an existing ascensionUnlocked', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, ascensionUnlocked: 4 }).ascensionUnlocked).toBe(4);
   });
 });
 

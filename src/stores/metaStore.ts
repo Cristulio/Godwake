@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { Character } from '../types/character';
 import { applyPermanentUpgrade, type UnlockedUpgrades } from '../engine/character/upgrades';
 import { getUpgrade } from '../content/upgrades';
+import { MAX_ASCENSION } from '../engine/delve/ascension';
 import { useCharacterStore } from './characterStore';
 
 /**
@@ -32,6 +33,13 @@ interface MetaStoreState {
   chapter1Cleared: boolean;
   druidGroveUnlocked: boolean;
   /**
+   * Highest ascension level the player has unlocked (default 0 = base only).
+   * Clearing the chain at this level unlocks the next (Spire-style); a lower
+   * level may always be replayed. Gates the hub ascension selector and the
+   * deeper Grove tiers. Persisted.
+   */
+  ascensionUnlocked: number;
+  /**
    * NPC ids the player has been introduced to in-game. Drives whether the
    * soul-bond panel shows the real name (e.g. "Irenicus") or the pre-reveal
    * placeholder ("The Voice"). Persists across reincarnation — the reveal is
@@ -52,6 +60,12 @@ interface MetaStoreState {
   recordChapterCleared: (count: number) => void;
   setChapter1Cleared: (v: boolean) => void;
   setDruidGroveUnlocked: (v: boolean) => void;
+  /**
+   * Clear-the-chain payoff: if the run was played at the current highest
+   * unlocked level, open the next rung (capped at MAX_ASCENSION). Replaying a
+   * lower level unlocks nothing new.
+   */
+  unlockNextAscension: (clearedAtLevel: number) => void;
   setUnlockedUpgrades: (u: UnlockedUpgrades) => void;
   markNpcKnown: (npcId: string) => void;
   resetMeta: () => void;
@@ -69,6 +83,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   chaptersCleared: 0,
   chapter1Cleared: false,
   druidGroveUnlocked: false,
+  ascensionUnlocked: 0,
   knownNpcs: [],
 
   discoverMonster: (defId) =>
@@ -115,6 +130,10 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     } catch {
       return { ok: false, reason: 'Unknown upgrade.' };
     }
+    const requiredAscension = up.unlock?.ascension ?? 0;
+    if (get().ascensionUnlocked < requiredAscension) {
+      return { ok: false, reason: up.unlock?.label ?? 'Locked.' };
+    }
     const currentRank = get().unlockedUpgrades[upgradeId] ?? 0;
     if (currentRank >= up.maxRank) {
       return { ok: false, reason: 'Already at max rank.' };
@@ -142,6 +161,12 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     })),
   setChapter1Cleared: (v) => set({ chapter1Cleared: v }),
   setDruidGroveUnlocked: (v) => set({ druidGroveUnlocked: v }),
+  unlockNextAscension: (clearedAtLevel) =>
+    set((s) =>
+      clearedAtLevel >= s.ascensionUnlocked && s.ascensionUnlocked < MAX_ASCENSION
+        ? { ascensionUnlocked: s.ascensionUnlocked + 1 }
+        : s,
+    ),
   setUnlockedUpgrades: (u) => set({ unlockedUpgrades: u }),
   markNpcKnown: (npcId) =>
     set((s) =>
@@ -163,6 +188,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       chaptersCleared: 0,
       chapter1Cleared: false,
       druidGroveUnlocked: false,
+      ascensionUnlocked: 0,
       knownNpcs: [],
     }),
 }));
