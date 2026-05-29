@@ -4,6 +4,7 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="The Asylum Director"
     >
+
       <polygon points="7,1 12,-2 17,1 18,7 6,7" fill="#1a0a18" />
       <polygon points="7,1 12,-2 17,1 17,4 7,4" fill="#0a0508" opacity="0.8" />
 

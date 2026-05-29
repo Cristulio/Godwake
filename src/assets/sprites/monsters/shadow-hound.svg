@@ -4,6 +4,7 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Shadow Hound"
     >
+
       <rect x="2" y="9" width="6" height="6" fill="#1a1828" />
       <polygon points="2,9 0,7 0,11" fill="#1a1828" />
       <polygon points="2,12 0,14 2,15" fill="#1a1828" />

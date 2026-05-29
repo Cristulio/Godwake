@@ -4,6 +4,7 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Driderling"
     >
+
       <ellipse cx="11" cy="12" rx="7" ry="5" fill="#1a0a18" />
       <ellipse cx="11" cy="11" rx="6" ry="4" fill="#2a1024" />
 
