@@ -9,9 +9,9 @@ export const POTION_OF_HEALING: Consumable = ConsumableSchema.parse({
   cost: 50,
   weight: 0.5,
   rarity: 'common',
-  actionCost: 'action',
+  actionCost: 'bonus',
   description:
-    'A small glass vial of red-gold liquid. Drinking it restores 2d4+2 hit points. Smells faintly of cinnamon and iron.',
+    'A small glass vial of red-gold liquid. Restores 2d4+2 hit points. Smells faintly of cinnamon and iron. Quaffed in a heartbeat — a bonus action.',
 });
 
 export const POTION_OF_GREATER_HEALING: Consumable = ConsumableSchema.parse({
@@ -23,9 +23,9 @@ export const POTION_OF_GREATER_HEALING: Consumable = ConsumableSchema.parse({
   cost: 150,
   weight: 0.5,
   rarity: 'uncommon',
-  actionCost: 'action',
+  actionCost: 'bonus',
   description:
-    'A larger vial than the common draught — the red is deeper, almost black, and it carries the faint scent of cloves. Restores 4d4+4 hit points.',
+    'A larger vial than the common draught — the red is deeper, almost black, and it carries the faint scent of cloves. Restores 4d4+4 hit points. A swift draught — a bonus action.',
 });
 
 export const ANTITOXIN: Consumable = ConsumableSchema.parse({
@@ -36,9 +36,9 @@ export const ANTITOXIN: Consumable = ConsumableSchema.parse({
   cost: 50,
   weight: 0.5,
   rarity: 'common',
-  actionCost: 'action',
+  actionCost: 'bonus',
   description:
-    'A flat-tasting tincture in a clay phial. Drink to shrug off poison damage for the rest of this combat. Tastes of chalk and bitterness.',
+    'A flat-tasting tincture in a clay phial. Drink to shrug off poison damage for the rest of this combat. Tastes of chalk and bitterness. Downed in a heartbeat — a bonus action.',
 });
 
 export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
@@ -50,9 +50,9 @@ export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
   cost: 180,
   weight: 0.5,
   rarity: 'uncommon',
-  actionCost: 'action',
+  actionCost: 'bonus',
   description:
-    'A pale gold liquid that smells of beaten copper and pipe-smoke. A deep restorative — one long swallow knits torn flesh and steadies the blood. Restores 3d6+6 hit points.',
+    'A pale gold liquid that smells of beaten copper and pipe-smoke. A deep restorative — one swallow knits torn flesh and steadies the blood. Restores 3d6+6 hit points. A bonus action.',
 });
 
 export const SCROLL_OF_HEALING_WORD: Consumable = ConsumableSchema.parse({
@@ -66,7 +66,7 @@ export const SCROLL_OF_HEALING_WORD: Consumable = ConsumableSchema.parse({
   rarity: 'common',
   actionCost: 'bonus',
   description:
-    'A strip of vellum copied in a hurried, priestly hand — a single word of Lathander\'s mercy, traced once and gone after the speaking. Quicker than a potion: a breath, not a swallow. Bonus action; restores 2d4+3 hit points.',
+    'A strip of vellum copied in a hurried, priestly hand — a single word of Lathander\'s mercy, traced once and gone after the speaking. A spoken word, not a swallow. Bonus action; restores 2d4+3 hit points.',
 });
 
 export const ALL_CONSUMABLES: Consumable[] = [
