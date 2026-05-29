@@ -494,9 +494,9 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter }
     return 'linear-gradient(135deg, #1a1408 0%, #2a1c0a 55%, #1a1408 100%)';
   }, [isIrenicus]);
   const speakerName = speakerLabel;
-  const subtitle = isIrenicus
-    ? 'the voice in the dark — through the soul-bond'
-    : 'a voice, small and frightened — through the soul-bond';
+  // The name is already stated on the portrait pillar (◆ {speakerName}); the
+  // subtitle only frames how it reaches you, so identity isn't said twice.
+  const subtitle = 'through the soul-bond';
 
   const buttonVariant = isIrenicus ? 'danger' : 'primary';
 

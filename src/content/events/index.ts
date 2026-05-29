@@ -260,10 +260,24 @@ const POOL: EventTemplate[] = [
       {
         id: 'spit',
         label: 'Spit on it',
-        hint: 'A copper from your boot for the affront.',
+        hint: 'The dead\'s good opinion, or its very bad one.',
         outcome: {
-          resolution: 'You spit, and a copper rattles out of your boot-cuff. You stoop, pocket it, and walk on with the dead\'s good opinion or its very bad one.',
-          effects: [{ kind: 'gold_delta', amount: 1 }],
+          random: [
+            {
+              weight: 60,
+              outcome: {
+                resolution: 'You spit, and a copper rattles out of your boot-cuff. You stoop, pocket it, and walk on with the dead\'s good opinion.',
+                effects: [{ kind: 'gold_delta', amount: 1 }],
+              },
+            },
+            {
+              weight: 40,
+              outcome: {
+                resolution: 'You spit. The jaw seems to grin wider. A cold draught finds the back of your neck and stays there, and the corridor ahead feels longer than it was.',
+                effects: [{ kind: 'hp_delta', amount: -3 }],
+              },
+            },
+          ],
         },
       },
     ],
@@ -550,11 +564,14 @@ const POOL: EventTemplate[] = [
       {
         id: 'disarm',
         label: 'Take the knife from him',
-        hint: 'Gentle hands, hard lesson.',
+        hint: 'Gentle hands, a coin pressed after — a hard lesson, kindly taught.',
         outcome: {
           resolution:
             'You catch his wrist and turn the blade. He stares at his empty hand for a long beat. \"Eat,\" you say, and press a coin into the palm. He runs. Something in your chest unclenches.',
-          effects: [{ kind: 'temp_hp', amount: 4 }],
+          effects: [
+            { kind: 'gold_delta', amount: -2 },
+            { kind: 'temp_hp', amount: 4 },
+          ],
         },
       },
       {
@@ -601,14 +618,11 @@ const POOL: EventTemplate[] = [
       {
         id: 'sell-story',
         label: 'Tell him the why',
-        hint: 'The same coin — and a weight off your chest.',
+        hint: 'No coin for this one — but a weight off your chest.',
         outcome: {
           resolution:
-            'You give him a piece of yourself that you did not know you still carried. He writes it small. When he is done, the air feels less full of you. The coin he presses into your hand is warm.',
-          effects: [
-            { kind: 'gold_delta', amount: 1 },
-            { kind: 'temp_hp', amount: 3 },
-          ],
+            'You give him a piece of yourself that you did not know you still carried. He writes it small. When he is done, the air feels less full of you. He offers no coin for it, and you find you did not want one. You walk lighter.',
+          effects: [{ kind: 'temp_hp', amount: 3 }],
         },
       },
       {
