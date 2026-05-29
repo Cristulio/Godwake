@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type {
   CombatState,
   MonsterCombatant,
   SpellEffectEvent,
   SpellEffectKind,
 } from '../../types/combat';
+import { PlayerPortrait } from './PlayerPortrait';
 
 interface Anchor {
   x: number;
@@ -609,5 +610,156 @@ function ChainRing() {
         })}
       </g>
     </svg>
+  );
+}
+
+// ---------- Mirror Image ----------
+
+// Warm-amber illusion tint applied to the duplicate portraits. Pushes every
+// class palette toward the ember spectrum so the silhouettes read as conjured
+// copies rather than real party members, with a soft amber glow on top.
+const MIRROR_TINT =
+  'sepia(1) saturate(4.5) hue-rotate(-12deg) brightness(1.05) drop-shadow(0 0 5px rgba(244,167,66,0.8))';
+
+interface MirrorSlot {
+  /** Horizontal offset from the player center, px. */
+  x: number;
+  scale: number;
+  /** Tilt, degrees — alternating sides lean outward. */
+  rot: number;
+}
+
+// Fan the duplicates outward in alternating right/left pairs, each tier a
+// little smaller, further out, and more tilted than the last.
+function mirrorSlot(i: number): MirrorSlot {
+  const side = i % 2 === 0 ? 1 : -1;
+  const tier = Math.floor(i / 2);
+  return {
+    x: side * (30 + tier * 26),
+    scale: 0.84 - tier * 0.1,
+    rot: side * (2 + tier * 2),
+  };
+}
+
+interface MirrorImagesProps {
+  classId: string;
+  /** `character.resources.mirrorImages` — live duplicate count. */
+  count: number;
+}
+
+/**
+ * Persistent overlay for the L2 wizard Mirror Image. Renders one shimmering
+ * amber duplicate of the player sprite per remaining image, flanking the real
+ * one. When the count drops (an image absorbed a hit), the freed slot plays a
+ * brief shatter burst. Mounts behind the player sprite (`-z-10` inside the
+ * isolated sprite container) so the real player stays in front.
+ */
+export function MirrorImages({ classId, count }: MirrorImagesProps) {
+  const prevCount = useRef(count);
+  const [shatters, setShatters] = useState<{ id: number; slot: MirrorSlot }[]>([]);
+
+  useEffect(() => {
+    if (count < prevCount.current) {
+      const broken: { id: number; slot: MirrorSlot }[] = [];
+      for (let i = count; i < prevCount.current; i++) {
+        broken.push({ id: Date.now() + i, slot: mirrorSlot(i) });
+      }
+      setShatters((s) => [...s, ...broken]);
+      const ids = new Set(broken.map((b) => b.id));
+      setTimeout(() => setShatters((s) => s.filter((x) => !ids.has(x.id))), 500);
+    }
+    prevCount.current = count;
+  }, [count]);
+
+  if (count <= 0 && shatters.length === 0) return null;
+
+  return (
+    <div className="absolute inset-0 -z-10 pointer-events-none overflow-visible">
+      {Array.from({ length: Math.max(count, 0) }).map((_, i) => (
+        <MirrorGhost key={`ghost-${i}`} classId={classId} slot={mirrorSlot(i)} phaseMs={-i * 700} />
+      ))}
+      {shatters.map((s) => (
+        <MirrorShatter key={s.id} slot={s.slot} />
+      ))}
+    </div>
+  );
+}
+
+function MirrorGhost({
+  classId,
+  slot,
+  phaseMs,
+}: {
+  classId: string;
+  slot: MirrorSlot;
+  phaseMs: number;
+}) {
+  return (
+    <div
+      className="absolute bottom-0 left-0 w-full overflow-visible"
+      style={{
+        transform: `translateX(${slot.x}px) scale(${slot.scale}) rotate(${slot.rot}deg)`,
+        transformOrigin: 'bottom center',
+      }}
+    >
+      {/* Entrance pop on cast (opacity + scale, once). */}
+      <div className="w-full animate-mirror-in">
+        {/* Steady opacity flicker (infinite); tint applied here so the
+            entrance/flicker opacities multiply cleanly across nodes. */}
+        <div
+          className="w-full animate-mirror-shimmer"
+          style={{ filter: MIRROR_TINT, animationDelay: `${phaseMs}ms` }}
+        >
+          <PlayerPortrait classId={classId} className="w-full h-auto" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MirrorShatter({ slot }: { slot: MirrorSlot }) {
+  // Shards computed once — the parent unmounts this after the burst.
+  const [shards] = useState(() =>
+    Array.from({ length: 7 }, (_, i) => {
+      const angle = (i / 7) * Math.PI * 2 + Math.random() * 0.6;
+      const dist = 26 + Math.random() * 22;
+      return {
+        id: i,
+        dx: Math.cos(angle) * dist,
+        dy: Math.sin(angle) * dist - 6,
+        rot: Math.round(angle * 57),
+      };
+    }),
+  );
+
+  return (
+    <div
+      className="absolute bottom-0 left-0 w-full overflow-visible"
+      style={{
+        transform: `translateX(${slot.x}px) scale(${slot.scale}) rotate(${slot.rot}deg)`,
+        transformOrigin: 'bottom center',
+      }}
+    >
+      {/* Amber flash bloom at torso height. */}
+      <div
+        className="absolute left-1/2 top-[42%] w-24 h-24 -translate-x-1/2 -translate-y-1/2 rounded-full animate-mirror-shatter"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(255,244,214,0.95) 0%, rgba(244,167,66,0.6) 38%, rgba(244,167,66,0) 70%)',
+        }}
+      />
+      {/* Splintering amber shards. */}
+      {shards.map((sh) => (
+        <div
+          key={sh.id}
+          className="absolute left-1/2 top-[42%] w-1.5 h-2.5 bg-[var(--color-accent-amber)] animate-spark"
+          style={{
+            boxShadow: '0 0 6px rgba(244,167,66,0.95), 0 0 12px rgba(255,179,71,0.6)',
+            transform: `rotate(${sh.rot}deg)`,
+            ['--spark-dest' as string]: `translate(${sh.dx}px, ${sh.dy}px) rotate(${sh.rot}deg)`,
+          }}
+        />
+      ))}
+    </div>
   );
 }
