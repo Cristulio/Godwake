@@ -50,6 +50,18 @@ const NON_STACKING_MODIFIER_KEYS: ReadonlySet<keyof BlessingModifiers> = new Set
   'extraTempHpPerRoom',
   'critRangeBonus',
   'firstAttackAdvantage',
+  // Relic-style conditional/scaling levers added alongside the v2 pool. All
+  // take max-of-individual in `aggregateBlessingModifiers`, so a second copy is
+  // a dead pick — block the duplicate once owned. The two regen fields are
+  // deliberately ABSENT (they sum, so a second copy genuinely stacks).
+  'tempHpPerDelveLevel',
+  'tempHpPerBaneQuirk',
+  'bossTempHp',
+  'acBonusWhileFull',
+  'acBonusWhileBloodied',
+  'acBonusPerBaneQuirk',
+  'critRangeBonusWhileFull',
+  'critRangeBonusWhileBloodied',
 ]);
 
 /**
@@ -144,6 +156,13 @@ export function rollBlessingOptions(
  * shape is correct if a second source is ever added intentionally.
  * `extraStabiliseCharges` keeps `sum` for the same reason (situational
  * "free deaths"; stacking is the intent if multiple charges are offered).
+ *
+ * The v2 conditional/scaling levers follow the same split: every temp-HP
+ * source (`tempHpPerDelveLevel`, `tempHpPerBaneQuirk`, `bossTempHp`) and every
+ * AC/crit conditional (`acBonusWhile*`, `acBonusPerBaneQuirk`,
+ * `critRangeBonusWhile*`) is `max-of` — a duplicate adds nothing. The two
+ * regen fields (`regenPerCombat`, `regenPctPerCombat`) `sum`, so two healing
+ * picks genuinely compound.
  */
 export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModifiers {
   const acc: BlessingModifiers = {};
@@ -176,6 +195,34 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
         (acc.extraStabiliseCharges ?? 0) + m.extraStabiliseCharges;
     if (m.critRangeBonus !== undefined)
       acc.critRangeBonus = Math.max(acc.critRangeBonus ?? 0, m.critRangeBonus);
+    // v2 conditional/scaling levers. Temp-HP and AC/crit conditionals are
+    // max-of (a second copy doesn't compound); the two regen fields sum.
+    if (m.tempHpPerDelveLevel !== undefined)
+      acc.tempHpPerDelveLevel = Math.max(acc.tempHpPerDelveLevel ?? 0, m.tempHpPerDelveLevel);
+    if (m.tempHpPerBaneQuirk !== undefined)
+      acc.tempHpPerBaneQuirk = Math.max(acc.tempHpPerBaneQuirk ?? 0, m.tempHpPerBaneQuirk);
+    if (m.bossTempHp !== undefined)
+      acc.bossTempHp = Math.max(acc.bossTempHp ?? 0, m.bossTempHp);
+    if (m.regenPerCombat !== undefined)
+      acc.regenPerCombat = (acc.regenPerCombat ?? 0) + m.regenPerCombat;
+    if (m.regenPctPerCombat !== undefined)
+      acc.regenPctPerCombat = (acc.regenPctPerCombat ?? 0) + m.regenPctPerCombat;
+    if (m.acBonusWhileFull !== undefined)
+      acc.acBonusWhileFull = Math.max(acc.acBonusWhileFull ?? 0, m.acBonusWhileFull);
+    if (m.acBonusWhileBloodied !== undefined)
+      acc.acBonusWhileBloodied = Math.max(acc.acBonusWhileBloodied ?? 0, m.acBonusWhileBloodied);
+    if (m.acBonusPerBaneQuirk !== undefined)
+      acc.acBonusPerBaneQuirk = Math.max(acc.acBonusPerBaneQuirk ?? 0, m.acBonusPerBaneQuirk);
+    if (m.critRangeBonusWhileFull !== undefined)
+      acc.critRangeBonusWhileFull = Math.max(
+        acc.critRangeBonusWhileFull ?? 0,
+        m.critRangeBonusWhileFull,
+      );
+    if (m.critRangeBonusWhileBloodied !== undefined)
+      acc.critRangeBonusWhileBloodied = Math.max(
+        acc.critRangeBonusWhileBloodied ?? 0,
+        m.critRangeBonusWhileBloodied,
+      );
   }
   return acc;
 }
