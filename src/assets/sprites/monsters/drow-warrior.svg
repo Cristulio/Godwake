@@ -4,6 +4,7 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Drow Warrior"
     >
+
       <rect x="6" y="0" width="10" height="2" fill="#e8e0c4" />
       <rect x="5" y="2" width="12" height="3" fill="#e8e0c4" />
       <rect x="5" y="2" width="12" height="1" fill="#ffffff" />

@@ -4,6 +4,7 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Mind Flayer Fragment"
     >
+
       <ellipse cx="11" cy="6" rx="7" ry="5" fill="#5a3a78" />
       <ellipse cx="11" cy="5" rx="6" ry="4" fill="#7a5a98" />
       <ellipse cx="11" cy="3" rx="5" ry="2" fill="#a48ee0" opacity="0.5" />

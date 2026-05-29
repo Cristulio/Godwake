@@ -4,6 +4,7 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Bonebound Test Subject"
     >
+
       <rect x="6" y="0" width="10" height="2" fill="#5a4858" />
       <rect x="5" y="2" width="12" height="8" fill="#7a6a78" />
       <rect x="4" y="3" width="1" height="7" fill="#5a4858" />
