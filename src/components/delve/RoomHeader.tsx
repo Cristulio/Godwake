@@ -1,13 +1,25 @@
 import { useEffect, useState } from 'react';
-import type { DelveState } from '../../types/delve';
+import type { DelveState, RoomKind } from '../../types/delve';
 import { BlessingCard } from '../ui/BlessingCard';
 import { QuirkCard } from '../ui/QuirkCard';
+import { useGameStore } from '../../stores/gameStore';
 
 interface RoomHeaderProps {
   delve: DelveState;
   blessingIds?: string[];
   quirkIds?: string[];
 }
+
+/** Short labels for the Wayfarer's Map road-ahead chips. Kind only, never depth. */
+const ROOM_AHEAD_LABEL: Record<RoomKind, string> = {
+  combat: 'Fight',
+  boss: 'Boss',
+  rest: 'Rest',
+  treasure: 'Spoils',
+  event: 'Omen',
+  shrine: 'Shrine',
+  camp: 'Camp',
+};
 
 /**
  * Minimal breadcrumb. The total room count is intentionally hidden — the
@@ -21,6 +33,15 @@ interface RoomHeaderProps {
 export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeaderProps) {
   const [open, setOpen] = useState(false);
   const total = blessingIds.length + quirkIds.length;
+
+  // Wayfarer's Map (Grove on-ramp): reveal the KIND of the next `rank` rooms.
+  // Read the owned rank straight from the meta store — the upgrade itself is a
+  // no-op marker. Total depth is never shown; only the upcoming kinds.
+  const wayfarerRank = useGameStore((s) => s.unlockedUpgrades['wayfarers-map'] ?? 0);
+  const roadAhead =
+    wayfarerRank > 0
+      ? delve.rooms.slice(delve.currentRoomIdx + 1, delve.currentRoomIdx + 1 + wayfarerRank)
+      : [];
 
   useEffect(() => {
     if (!open) return;
@@ -63,6 +84,24 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
           </button>
         )}
       </div>
+
+      {roadAhead.length > 0 && (
+        <div className="flex items-center gap-2 mt-1.5">
+          <span className="font-display text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em]">
+            Road ahead
+          </span>
+          <div className="flex items-center gap-1">
+            {roadAhead.map((r, i) => (
+              <span
+                key={`${r.id}-${i}`}
+                className="font-display text-[9px] uppercase tracking-widest px-1.5 py-0.5 border border-[var(--color-border-dim)] text-[var(--color-text-secondary)] bg-[var(--color-bg-deep)]/40"
+              >
+                {ROOM_AHEAD_LABEL[r.kind]}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {open && (
         <div
