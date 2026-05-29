@@ -34,14 +34,6 @@ export const WIZARD: Class = ClassSchema.parse({
         mechanicKey: 'arcane-cantrips',
       },
     ],
-    '2': [
-      {
-        id: 'arcane-tradition',
-        name: 'Arcane Tradition',
-        description:
-          'You commit to a school of magic. Its discipline shapes the rest of your study.',
-      },
-    ],
     '3': [
       {
         id: 'second-level-slots',
@@ -127,9 +119,9 @@ export const WIZARD: Class = ClassSchema.parse({
         '2': [
           {
             id: 'sculpt-spells',
-            name: 'Sculpt Spells',
+            name: 'Arcane Tradition: Evocation',
             description:
-              'Your evocations are honed past the page. Burning Hands, Fireball, and Lightning Bolt each burn one die hotter.',
+              'Your study settles into the School of Evocation — raw arcane force, shaped past the page. Burning Hands, Fireball, and Lightning Bolt each burn one die hotter.',
             mechanicKey: 'sculpt-spells',
           },
         ],
