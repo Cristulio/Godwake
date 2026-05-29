@@ -16,9 +16,12 @@ interface SettingsState {
   speedMultiplier: 1 | 2;
   /** Delay (ms, pre-speed-multiplier) before auto-ending a turn with no actions remaining. */
   autoEndTurnDelayMs: number;
+  /** When true, the player's combat turns are played automatically by the shared action policy. */
+  autoBattle: boolean;
 
   setSpeed: (s: 1 | 2) => void;
   setAutoEndTurnDelay: (ms: number) => void;
+  setAutoBattle: (on: boolean) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -26,9 +29,11 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       speedMultiplier: 1,
       autoEndTurnDelayMs: 1100,
+      autoBattle: false,
       setSpeed: (s) => set({ speedMultiplier: s }),
       setAutoEndTurnDelay: (ms) =>
         set({ autoEndTurnDelayMs: Math.max(200, Math.min(3000, Math.round(ms))) }),
+      setAutoBattle: (on) => set({ autoBattle: on }),
     }),
     {
       name: 'godwake-settings',

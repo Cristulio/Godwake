@@ -1,0 +1,181 @@
+import { describe, it, expect } from 'vitest';
+import type { Character } from '../../types/character';
+import type { RaceId } from '../../schemas/ids';
+import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
+import { simulateLevelUp } from '../character/leveling';
+import { createDiceRoller } from '../dice';
+import { getMonster } from '../../content/monsters';
+import { createCombat } from './createCombat';
+import { chooseCombatAction } from './actionPolicy';
+
+function rogue(): Character {
+  const c = createCharacter({
+    id: 'p-rogue',
+    name: 'Shiv',
+    raceId: 'wood-elf' as RaceId,
+    classId: 'rogue',
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[5],
+      dex: STANDARD_ARRAY[0],
+      con: STANDARD_ARRAY[1],
+      int: STANDARD_ARRAY[2],
+      wis: STANDARD_ARRAY[3],
+      cha: STANDARD_ARRAY[4],
+    },
+    skillProficiencies: ['stealth', 'sleight-of-hand'],
+  });
+  return {
+    ...c,
+    inventory: [{ itemId: 'rapier' }, { itemId: 'potion-of-healing' }],
+    equipped: { mainHand: { itemId: 'rapier' }, offHand: null, armor: { itemId: 'leather-armor' } },
+  };
+}
+
+function fighter(): Character {
+  const c = createCharacter({
+    id: 'p-fighter',
+    name: 'Brick',
+    raceId: 'human' as RaceId,
+    classId: 'fighter',
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[0],
+      con: STANDARD_ARRAY[1],
+      dex: STANDARD_ARRAY[2],
+      wis: STANDARD_ARRAY[3],
+      cha: STANDARD_ARRAY[4],
+      int: STANDARD_ARRAY[5],
+    },
+    skillProficiencies: ['athletics', 'perception'],
+  });
+  return {
+    ...c,
+    inventory: [{ itemId: 'longsword' }, { itemId: 'potion-of-healing' }],
+    equipped: { mainHand: { itemId: 'longsword' }, offHand: { itemId: 'shield' }, armor: { itemId: 'leather-armor' } },
+  };
+}
+
+function wizard(): Character {
+  const c = createCharacter({
+    id: 'p-wizard',
+    name: 'Quill',
+    raceId: 'human' as RaceId,
+    classId: 'wizard',
+    baseAbilityScores: {
+      int: STANDARD_ARRAY[0],
+      con: STANDARD_ARRAY[1],
+      dex: STANDARD_ARRAY[2],
+      wis: STANDARD_ARRAY[3],
+      cha: STANDARD_ARRAY[4],
+      str: STANDARD_ARRAY[5],
+    },
+    skillProficiencies: ['arcana', 'investigation'],
+  });
+  return {
+    ...c,
+    inventory: [{ itemId: 'dagger' }, { itemId: 'potion-of-healing' }],
+    equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: null },
+  };
+}
+
+function atLevel(builder: () => Character, level: number): Character {
+  let c = builder();
+  while (c.level < level) c = simulateLevelUp({ ...c, xp: 9_999_999 });
+  return c;
+}
+
+/** Spawn a realistic combat-start state (class buffs applied) for `classId`. */
+function startCombat(c: Character, monsters: { defId: string; count: number }[]) {
+  const roller = createDiceRoller(1);
+  const defs = monsters.flatMap((m) =>
+    Array.from({ length: m.count }, () => ({ def: getMonster(m.defId) })),
+  );
+  return createCombat({ roller, character: c, monsters: defs });
+}
+
+describe('chooseCombatAction', () => {
+  it('picks AoE (Fireball) against a crowd when a 3rd-level slot is up', () => {
+    const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'goblin', count: 3 }]);
+    expect((character.resources.knownSpells ?? [])).toContain('fireball');
+    const action = chooseCombatAction(state, character);
+    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'fireball' }));
+  });
+
+  it('does NOT burn a 3rd-level slot on one weak enemy — cantrips instead', () => {
+    const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'goblin', count: 1 }]);
+    const action = chooseCombatAction(state, character);
+    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'fire-bolt' }));
+  });
+
+  it('finishes a low-HP target with Magic Missile (guaranteed, no roll)', () => {
+    const { state, character } = startCombat(wizard(), [{ defId: 'goblin', count: 1 }]);
+    const goblin = state.combatants.find((c) => c.kind === 'monster');
+    if (goblin?.kind === 'monster') goblin.instance.hp.current = 4; // ≤ MM guaranteed min
+    const action = chooseCombatAction(state, character);
+    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'magic-missile' }));
+  });
+
+  it('falls back to a cantrip when all spell slots are spent', () => {
+    const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'goblin', count: 3 }]);
+    const dry: Character = {
+      ...character,
+      resources: { ...character.resources, spellSlots: { 1: 0, 2: 0, 3: 0, 4: 0 } },
+    };
+    const action = chooseCombatAction(state, dry);
+    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'fire-bolt' }));
+  });
+
+  it('drinks a potion when critically wounded (rogue, bonus action)', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    const hurt: Character = {
+      ...character,
+      hp: { ...character.hp, current: Math.floor(character.hp.max * 0.2) },
+    };
+    const action = chooseCombatAction(state, hurt);
+    expect(action.kind).toBe('item');
+  });
+
+  it('opens with Cunning Action: Hide to set up Sneak Attack (rogue)', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    expect((character.resources.cunningActionUsesRemaining ?? 0)).toBeGreaterThan(0);
+    const action = chooseCombatAction(state, character);
+    expect(action).toEqual({ kind: 'cunning-action', choice: 'hide' });
+  });
+
+  it('attacks the focus target when healthy (fighter)', () => {
+    const { state, character } = startCombat(fighter(), [{ defId: 'goblin', count: 1 }]);
+    const action = chooseCombatAction(state, character);
+    expect(action.kind).toBe('attack');
+  });
+
+  it('spends Second Wind when a Fighter drops below half', () => {
+    const { state, character } = startCombat(fighter(), [{ defId: 'goblin', count: 1 }]);
+    const hurt: Character = {
+      ...character,
+      hp: { ...character.hp, current: Math.floor(character.hp.max * 0.4) },
+    };
+    const action = chooseCombatAction(state, hurt);
+    expect(action.kind).toBe('second-wind');
+  });
+
+  it('Action Surges after the action is spent while outnumbered', () => {
+    const { state, character } = startCombat(atLevel(fighter, 3), [{ defId: 'goblin', count: 2 }]);
+    const surged: Character = {
+      ...character,
+      actionEconomy: { ...character.actionEconomy, actionUsed: true, bonusActionUsed: true },
+      resources: { ...character.resources, actionSurgeRemaining: 1 },
+    };
+    const action = chooseCombatAction(state, surged);
+    expect(action.kind).toBe('action-surge');
+  });
+
+  it('ends the turn when nothing productive remains', () => {
+    const { state, character } = startCombat(fighter(), [{ defId: 'goblin', count: 1 }]);
+    const spent: Character = {
+      ...character,
+      actionEconomy: { ...character.actionEconomy, actionUsed: true, bonusActionUsed: true },
+      resources: { ...character.resources, secondWindAvailable: false, actionSurgeRemaining: 0 },
+    };
+    const action = chooseCombatAction(state, spent);
+    expect(action.kind).toBe('end-turn');
+  });
+});
