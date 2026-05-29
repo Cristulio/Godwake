@@ -20,7 +20,7 @@ export function FloatingDamage({ items }: FloatingDamageProps) {
 
 const KIND_STYLE: Record<
   FloatingDamageItem['kind'],
-  { color: string; prefix: string; suffix: string; animation: string; size: string }
+  { color: string; prefix: string; suffix: string; animation: string; size: string; glow: string }
 > = {
   damage: {
     color: 'text-[var(--color-dmg-normal)]',
@@ -28,34 +28,39 @@ const KIND_STYLE: Record<
     suffix: '',
     animation: 'animate-damage-float',
     size: 'text-[42px]',
+    glow: 'rgba(255,179,71,0.55)',
   },
   crit: {
     color: 'text-[var(--color-dmg-crit)]',
     prefix: '−',
     suffix: '!',
     animation: 'animate-damage-crit',
-    size: 'text-[58px]',
+    size: 'text-[60px]',
+    glow: 'rgba(255,71,48,0.9)',
   },
   heal: {
     color: 'text-[var(--color-dmg-heal)]',
     prefix: '+',
     suffix: '',
-    animation: 'animate-damage-float',
+    animation: 'animate-damage-heal',
     size: 'text-[42px]',
+    glow: 'rgba(111,217,84,0.75)',
   },
   block: {
     color: 'text-[var(--color-dmg-block)]',
     prefix: '',
     suffix: ' blocked',
-    animation: 'animate-damage-float',
+    animation: 'animate-damage-deflect',
     size: 'text-[30px]',
+    glow: 'rgba(138,168,255,0.7)',
   },
   miss: {
     color: 'text-[var(--color-text-secondary)]',
     prefix: '',
     suffix: '',
-    animation: 'animate-damage-float',
+    animation: 'animate-damage-deflect',
     size: 'text-[34px]',
+    glow: 'rgba(0,0,0,0)',
   },
 };
 
@@ -68,8 +73,15 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
         ? `${item.amount}${style.suffix}`
         : `${style.prefix}${item.amount}${style.suffix}`;
 
-  // Spread numbers slightly so back-to-back hits don't perfectly overlap
+  // Spread numbers slightly so back-to-back hits don't perfectly overlap.
   const offsetX = ((item.id % 5) - 2) * 14;
+
+  // Crit keeps the dramatic dual-glow + thick outline; everything else gets a
+  // tighter coloured halo over a hard black edge so it pops on any background.
+  const textShadow =
+    item.kind === 'crit'
+      ? `0 0 12px ${style.glow}, 0 0 24px rgba(255,71,48,0.6), 3px 3px 0 rgba(0,0,0,0.95), -2px -2px 0 rgba(0,0,0,0.95)`
+      : `0 0 9px ${style.glow}, 0 0 4px rgba(0,0,0,0.95), 2px 2px 0 rgba(0,0,0,0.9)`;
 
   return (
     <div
@@ -77,10 +89,7 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
       style={{
         left: '50%',
         transform: `translate(calc(-50% + ${offsetX}px), 0)`,
-        textShadow:
-          item.kind === 'crit'
-            ? '0 0 12px rgba(255,71,48,0.9), 0 0 22px rgba(255,71,48,0.6), 3px 3px 0 rgba(0,0,0,0.95), -3px -3px 0 rgba(0,0,0,0.95)'
-            : '0 0 6px rgba(0,0,0,0.95), 0 0 14px rgba(0,0,0,0.85), 2px 2px 0 rgba(0,0,0,0.9)',
+        textShadow,
         letterSpacing: '0.02em',
       }}
     >

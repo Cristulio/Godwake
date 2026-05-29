@@ -28,6 +28,8 @@ function FighterSvg({ className }: { className?: string }) {
       preserveAspectRatio="xMidYMax meet"
       aria-label="Fighter"
     >
+      {/* Ground-contact shadow — drawn first so the figure stands on it */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.5" fill="#000" opacity="0.38" />
       {/* Plume / crest */}
       <rect x="11" y="0" width="2" height="1" fill="#d4b062" />
       {/* Helmet crown */}
@@ -43,10 +45,14 @@ function FighterSvg({ className }: { className?: string }) {
       <rect x="8" y="7" width="8" height="2" fill="#6b4a2e" />
       {/* Neck */}
       <rect x="10" y="9" width="4" height="1" fill="#3a2e22" />
+      {/* Helmet key-light (warm torch from upper-left) */}
+      <rect x="8" y="2" width="2" height="3" fill="#a8814a" />
       {/* Shoulders / pauldrons */}
       <rect x="5" y="10" width="14" height="2" fill="#8c6232" />
       <rect x="5" y="10" width="2" height="2" fill="#6b4a2e" />
       <rect x="17" y="10" width="2" height="2" fill="#6b4a2e" />
+      {/* Pauldron rim highlight */}
+      <rect x="7" y="10" width="3" height="1" fill="#a8814a" />
       {/* Chest plate */}
       <rect x="7" y="12" width="10" height="9" fill="#3a2e22" />
       <rect x="6" y="12" width="1" height="9" fill="#5a4030" />
@@ -102,6 +108,8 @@ function RogueSvg({ className }: { className?: string }) {
       preserveAspectRatio="xMidYMax meet"
       aria-label="Rogue"
     >
+      {/* Ground-contact shadow */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.5" fill="#000" opacity="0.38" />
       {/* Hood outline / peak */}
       <rect x="9" y="1" width="6" height="1" fill="#1f1a18" />
       <rect x="8" y="2" width="8" height="1" fill="#1f1a18" />
@@ -110,6 +118,9 @@ function RogueSvg({ className }: { className?: string }) {
       <rect x="6" y="5" width="12" height="6" fill="#2a2420" />
       <rect x="6" y="5" width="1" height="6" fill="#1a1410" />
       <rect x="17" y="5" width="1" height="6" fill="#1a1410" />
+      {/* Hood rim catch-light (cool, upper-left) */}
+      <rect x="7" y="4" width="4" height="1" fill="#3d352f" />
+      <rect x="7" y="5" width="1" height="3" fill="#3d352f" />
       {/* Hood front fold */}
       <rect x="6" y="10" width="12" height="1" fill="#1a1410" />
       {/* Face shadow inside hood */}
@@ -188,6 +199,8 @@ function WizardSvg({ className }: { className?: string }) {
       preserveAspectRatio="xMidYMax meet"
       aria-label="Wizard"
     >
+      {/* Ground-contact shadow */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.5" fill="#000" opacity="0.38" />
       {/* Pointed hat — tall, slightly canted */}
       <rect x="11" y="0" width="2" height="1" fill="#3a2a5a" />
       <rect x="10" y="1" width="3" height="1" fill="#3a2a5a" />
@@ -199,6 +212,9 @@ function WizardSvg({ className }: { className?: string }) {
       {/* Hat shadow side */}
       <rect x="11" y="2" width="2" height="5" fill="#2a1d48" />
       <rect x="12" y="3" width="2" height="3" fill="#2a1d48" />
+      {/* Hat left-slope catch-light (upper-left) */}
+      <rect x="8" y="4" width="1" height="2" fill="#5a4488" />
+      <rect x="7" y="6" width="1" height="1" fill="#5a4488" />
       {/* Hat brim — wide */}
       <rect x="5" y="7" width="12" height="2" fill="#3a2a5a" />
       <rect x="5" y="7" width="12" height="1" fill="#503d78" />
@@ -282,6 +298,8 @@ function BarbarianSvg({ className }: { className?: string }) {
       preserveAspectRatio="xMidYMax meet"
       aria-label="Barbarian"
     >
+      {/* Ground-contact shadow */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.5" fill="#000" opacity="0.38" />
       {/* Wild topknot */}
       <rect x="10" y="0" width="3" height="1" fill="#3a2418" />
       <rect x="11" y="1" width="1" height="1" fill="#5a3a20" />
@@ -308,6 +326,9 @@ function BarbarianSvg({ className }: { className?: string }) {
       <rect x="4" y="11" width="16" height="2" fill="#c8a878" />
       <rect x="4" y="11" width="2" height="2" fill="#a07c50" />
       <rect x="18" y="11" width="2" height="2" fill="#a07c50" />
+      {/* Deltoid catch-light (upper-left torch) */}
+      <rect x="6" y="11" width="4" height="1" fill="#dcc098" />
+      <rect x="7" y="13" width="2" height="1" fill="#dcc098" />
       {/* Bare chest with war paint */}
       <rect x="6" y="13" width="12" height="7" fill="#c8a878" />
       <rect x="6" y="13" width="1" height="7" fill="#a07c50" />
@@ -373,6 +394,8 @@ function RangerSvg({ className }: { className?: string }) {
       preserveAspectRatio="xMidYMax meet"
       aria-label="Ranger"
     >
+      {/* Ground-contact shadow */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.5" fill="#000" opacity="0.38" />
       {/* Hood peak — green */}
       <rect x="9" y="1" width="5" height="1" fill="#27401f" />
       <rect x="8" y="2" width="7" height="1" fill="#2e4a22" />
@@ -380,6 +403,9 @@ function RangerSvg({ className }: { className?: string }) {
       <rect x="7" y="3" width="9" height="5" fill="#345029" />
       <rect x="7" y="3" width="1" height="5" fill="#223818" />
       <rect x="15" y="3" width="1" height="5" fill="#223818" />
+      {/* Hood rim catch-light (upper-left) */}
+      <rect x="8" y="3" width="3" height="1" fill="#4a6b3a" />
+      <rect x="8" y="4" width="1" height="2" fill="#4a6b3a" />
       {/* Face in the hood shadow */}
       <rect x="9" y="5" width="6" height="4" fill="#c8a878" />
       <rect x="9" y="5" width="1" height="4" fill="#a07c50" />
