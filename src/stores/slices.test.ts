@@ -90,11 +90,58 @@ describe('useDelveStore — basic CRUD', () => {
     expect(useDelveStore.getState().delve).toBe(d);
   });
 
-  it('advanceRoom moves currentRoomIdx forward', () => {
+  it('advanceRoom reveals the route map at a fork; chooseRoom steps into a node', () => {
     const d = createGodwakeDelve(1);
-    useDelveStore.setState({ delve: { ...d, currentRoomIdx: 0 } });
+    useDelveStore.setState({ delve: d });
+    const entry = d.rooms[0];
+    expect(entry.next && entry.next.length).toBeGreaterThan(1); // a real branch
+
+    // Finishing a branch node hands control to the map, leaving position put.
     useDelveStore.getState().advanceRoom();
-    expect(useDelveStore.getState().delve?.currentRoomIdx).toBe(1);
+    expect(useDelveStore.getState().delve?.phase).toBe('between-rooms');
+    expect(useDelveStore.getState().delve?.currentRoomIdx).toBe(0);
+
+    // Choosing a reachable node steps the run into it.
+    const target = entry.next![0];
+    useDelveStore.getState().chooseRoom(target);
+    const after = useDelveStore.getState().delve!;
+    expect(after.phase).toBe('in-room');
+    expect(after.currentRoomId).toBe(target);
+    expect(after.rooms[after.currentRoomIdx].id).toBe(target);
+  });
+
+  it('chooseRoom refuses a node not reachable from the current one', () => {
+    const d = createGodwakeDelve(1);
+    useDelveStore.setState({ delve: { ...d, phase: 'between-rooms' } });
+    const unreachable = d.rooms.find(
+      (r) => r.id !== d.rooms[0].id && !(d.rooms[0].next ?? []).includes(r.id),
+    )!;
+    useDelveStore.getState().chooseRoom(unreachable.id);
+    expect(useDelveStore.getState().delve?.currentRoomIdx).toBe(0);
+  });
+
+  it('a full route walk navigates through every chapter to completion', () => {
+    useDelveStore.setState({ delve: createGodwakeDelve(7) });
+    const store = useDelveStore.getState();
+    let guard = 0;
+    while (useDelveStore.getState().delve!.phase !== 'completed' && guard++ < 300) {
+      const cur = useDelveStore.getState().delve!;
+      if (cur.phase === 'between-rooms') {
+        const node = cur.rooms[cur.currentRoomIdx];
+        store.chooseRoom(node.next![0]); // always take the first open road
+      } else {
+        store.advanceRoom(); // reveal the map, auto-step a seam, or finish
+      }
+    }
+    const done = useDelveStore.getState().delve!;
+    expect(done.phase).toBe('completed');
+    const chapters = new Set(
+      done.visitedRoomIds!.map((id) => done.rooms.find((r) => r.id === id)?.chapter),
+    );
+    expect(chapters.has(1)).toBe(true);
+    expect(chapters.has(4)).toBe(true);
+    // Walked a real subset of the map, not the whole flat list.
+    expect(done.visitedRoomIds!.length).toBeLessThan(done.rooms.length);
   });
 
   it('markChapter1BossKilled flips the flag on the delve', () => {

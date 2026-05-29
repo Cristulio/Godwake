@@ -1,4 +1,13 @@
-export type RoomKind = 'combat' | 'rest' | 'treasure' | 'event' | 'boss' | 'shrine' | 'camp';
+export type RoomKind =
+  | 'combat'
+  | 'rest'
+  | 'treasure'
+  | 'event'
+  | 'boss'
+  | 'shrine'
+  | 'camp'
+  | 'shop'
+  | 'elite';
 
 export interface RoomMonster {
   defId: string;
@@ -12,16 +21,28 @@ export interface RoomSpec {
   kind: RoomKind;
   title: string;
   flavorText: string;
-  /** Combat / boss rooms: monsters to spawn. */
+  /** Combat / boss / elite rooms: monsters to spawn. */
   monsters?: RoomMonster[];
   /** Treasure: gold granted on entry. */
   goldReward?: number;
   /** Rest: short or long rest available. */
   restType?: 'short' | 'long';
-  /** XP awarded for clearing (combat + boss). */
+  /** XP awarded for clearing (combat + boss + elite). */
   xpReward?: number;
   /** Event rooms: which template to render. Resolved against `getEvent(id)`. */
   eventTemplateId?: string;
+  /**
+   * Branching map: ids of the nodes reachable by stepping forward from this
+   * one. Empty/absent marks a terminal node (the final boss). The chapter
+   * camps and the intel→boss seam carry a single id (forced step); the earlier
+   * layers carry several (a real route fork). Linear delves omit this entirely
+   * and navigation falls back to the next array index.
+   */
+  next?: string[];
+  /** Column on the chapter map (0 = chapter entry, boss = last). Layout only. */
+  layer?: number;
+  /** Which chapter (1–4) this node belongs to. Set by the branching generator. */
+  chapter?: number;
 }
 
 export type DelvePhase = 'in-room' | 'between-rooms' | 'completed' | 'failed';
@@ -31,6 +52,18 @@ export interface DelveState {
   chapterId: string;
   rooms: RoomSpec[];
   currentRoomIdx: number;
+  /**
+   * Id of the current node. Mirrors `rooms[currentRoomIdx].id` and is the
+   * source of truth the branching map reads. Absent on legacy linear delves,
+   * where `currentRoomIdx` alone drives navigation.
+   */
+  currentRoomId?: string;
+  /**
+   * Ids of every node the soul has entered this run, in order. Drives the map's
+   * lit "road taken"; the branches not chosen stay dark. Seeded with the entry
+   * node at generation.
+   */
+  visitedRoomIds?: string[];
   phase: DelvePhase;
   roomsCleared: number;
   /** Cumulative gold/xp awarded this delve; surfaced on DelveSummary. */

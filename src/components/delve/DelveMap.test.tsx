@@ -1,0 +1,66 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { DelveMap } from './DelveMap';
+import { useGameStore } from '../../stores/gameStore';
+import { useDelveStore } from '../../stores/delveStore';
+import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
+import { createGodwakeDelve } from '../../engine/delve';
+
+function makeFighter() {
+  return createCharacter({
+    id: 'map-fighter',
+    name: 'Brick',
+    raceId: 'human',
+    classId: 'fighter',
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[0],
+      dex: STANDARD_ARRAY[2],
+      con: STANDARD_ARRAY[1],
+      int: STANDARD_ARRAY[5],
+      wis: STANDARD_ARRAY[4],
+      cha: STANDARD_ARRAY[3],
+    },
+    skillProficiencies: ['athletics', 'intimidation'],
+  });
+}
+
+describe('DelveMap — route choice UI', () => {
+  beforeEach(() => {
+    const delve = { ...createGodwakeDelve(1), phase: 'between-rooms' as const };
+    useGameStore.setState({ character: makeFighter(), combat: null });
+    useDelveStore.setState({ delve });
+  });
+
+  it('renders a clickable node for each reachable next room', () => {
+    const delve = useDelveStore.getState().delve!;
+    const reachable = delve.rooms[delve.currentRoomIdx].next ?? [];
+    expect(reachable.length).toBeGreaterThan(1);
+
+    const { container } = render(
+      <DelveMap delve={delve} character={useGameStore.getState().character!} />,
+    );
+    const enabled = container.querySelectorAll('button.bm-node:not([disabled])');
+    expect(enabled.length).toBe(reachable.length);
+  });
+
+  it('clicking a reachable node steps the run into it', () => {
+    const delve = useDelveStore.getState().delve!;
+    const targetId = delve.rooms[delve.currentRoomIdx].next![0];
+
+    const { container } = render(
+      <DelveMap delve={delve} character={useGameStore.getState().character!} />,
+    );
+    const first = container.querySelector('button.bm-node:not([disabled])') as HTMLButtonElement;
+    fireEvent.click(first);
+
+    const after = useDelveStore.getState().delve!;
+    expect(after.phase).toBe('in-room');
+    expect(after.currentRoomId).toBe(targetId);
+  });
+
+  it('shows the chapter heading and the open-pack control', () => {
+    render(<DelveMap delve={useDelveStore.getState().delve!} character={useGameStore.getState().character!} />);
+    expect(screen.getByText(/choose your road/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /pack/i })).toBeInTheDocument();
+  });
+});

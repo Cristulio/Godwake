@@ -146,14 +146,24 @@ export function makeCharacterFromBlessings(
   return c;
 }
 
-function chapterFor(roomIdx: number): number {
-  // Godwake layout (58 rooms): ch1 indices 0–12 (boss 12, camp 13),
-  // ch2 14–27 (boss 27, camp 28), ch3 29–42 (boss 42, camp 43),
-  // ch4 44–57 (boss 57). Each camp bills to the chapter it follows.
-  if (roomIdx <= 13) return 1;
-  if (roomIdx <= 28) return 2;
-  if (roomIdx <= 43) return 3;
-  return 4;
+/**
+ * Route one node forward through the branching map: head for a rest when
+ * bloodied, else take the first listed road. Undefined at the final boss.
+ */
+function nextNode(
+  delve: DelveState,
+  node: RoomSpec,
+  character: Character,
+): RoomSpec | undefined {
+  const reachable = (node.next ?? [])
+    .map((id) => delve.rooms.find((r) => r.id === id))
+    .filter((r): r is RoomSpec => r !== undefined);
+  if (reachable.length <= 1) return reachable[0];
+  if (character.hp.current < character.hp.max * 0.5) {
+    const rest = reachable.find((r) => r.kind === 'rest');
+    if (rest) return rest;
+  }
+  return reachable[0];
 }
 
 interface EncounterResult {
@@ -273,12 +283,15 @@ export function runDelveCustom(opts: {
     effectiveHp: character.hp.max,
   };
 
-  for (let i = 0; i < delve.rooms.length && !stats.died; i++) {
-    const room: RoomSpec = delve.rooms[i];
-    const chapter = chapterFor(i);
-    stats.roomsCleared = i;
+  // Walk one route through the branching map, fork by fork, to the final boss.
+  let node: RoomSpec | undefined = delve.rooms[0];
+  let steps = 0;
+  while (node && !stats.died) {
+    const room = node;
+    const chapter = room.chapter ?? 1;
+    stats.roomsCleared = steps;
     stats.chaptersCleared = chapter - 1;
-    if (room.kind === 'combat' || room.kind === 'boss') {
+    if (room.kind === 'combat' || room.kind === 'elite' || room.kind === 'boss') {
       stats.encountersFought += 1;
       const result = runCombatEncounter(character, room.monsters ?? []);
       character = result.character;
@@ -307,12 +320,14 @@ export function runDelveCustom(opts: {
     } else if (room.kind === 'camp') {
       character = longRest(character);
     }
-    // shrine / event / treasure: sim leaves them no-op (the loadout's
+    // shrine / event / shop / treasure: sim leaves them no-op (the loadout's
     // blessings are pre-stamped, so shrine pickups would dilute the signal).
+    steps += 1;
+    node = nextNode(delve, room, character);
   }
   if (!stats.died) {
-    stats.chaptersCleared = chapterFor(delve.rooms.length - 1);
-    stats.roomsCleared = delve.rooms.length;
+    stats.chaptersCleared = 4;
+    stats.roomsCleared = steps;
   }
   stats.tempHpPerEncounter =
     stats.encountersFought > 0 ? stats.tempHpGained / stats.encountersFought : 0;

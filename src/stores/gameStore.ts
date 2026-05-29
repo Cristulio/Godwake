@@ -163,6 +163,7 @@ interface GameState {
   // Delve flow
   startDelve: (delve: DelveState) => void;
   advanceRoom: () => void;
+  chooseRoom: (nextId: string) => void;
   addDelveReward: (gold: number, xp: number) => void;
   grantTitheGold: (amount: number) => void;
   resolveRoomVictory: (room: RoomSpec) => void;
@@ -499,6 +500,7 @@ export const useGameStore = create<GameState>()(
 
         startDelve: (delve) => useDelveStore.getState().startDelve(delve),
         advanceRoom: () => useDelveStore.getState().advanceRoom(),
+        chooseRoom: (nextId) => useDelveStore.getState().chooseRoom(nextId),
         addDelveReward: (gold, xp) =>
           useDelveStore.getState().addDelveReward(gold, xp),
         grantTitheGold: (amount) =>

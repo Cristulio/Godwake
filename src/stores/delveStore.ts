@@ -114,6 +114,30 @@ function gearResetToKit(
   return { inventory: [...kitInventory, ...carriedLegendaries], equipped };
 }
 
+/**
+ * Step the run into the node with id `nextId`: sync currentRoomIdx/Id, light it
+ * up on the map's visited trail, and return to the in-room phase. `roomsCleared`
+ * is passed only by the auto-step path (the node just left was cleared); a map
+ * pick leaves it alone because `advanceRoom` already credited the clear.
+ */
+function enterRoom(
+  delve: DelveState,
+  nextId: string,
+  roomsCleared?: number,
+): DelveState {
+  const idx = delve.rooms.findIndex((r) => r.id === nextId);
+  if (idx < 0) return delve;
+  const visited = delve.visitedRoomIds ?? [];
+  return {
+    ...delve,
+    currentRoomIdx: idx,
+    currentRoomId: nextId,
+    visitedRoomIds: visited.includes(nextId) ? visited : [...visited, nextId],
+    phase: 'in-room',
+    ...(roomsCleared !== undefined ? { roomsCleared } : {}),
+  };
+}
+
 function applyDelveStartQuirks(character: Character): Character {
   const mods = characterQuirkMods(character);
   const bonusGold = mods.startBonusGold ?? 0;
@@ -205,7 +229,13 @@ interface DelveStoreState {
 
   setDelve: (delve: DelveState | null) => void;
   startDelve: (delve: DelveState) => void;
+  /**
+   * Finish the current node: reveal the route map at a branch, walk straight
+   * through a forced step, or complete the run at the final boss.
+   */
   advanceRoom: () => void;
+  /** Step the run into a chosen reachable next node from the route map. */
+  chooseRoom: (nextId: string) => void;
   addDelveReward: (gold: number, xp: number) => void;
   /** Credit gold from a non-combat source (e.g. Shrine Tithe) to purse + ledger. */
   grantTitheGold: (amount: number) => void;
@@ -307,15 +337,45 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
   advanceRoom: () =>
     set((s) => {
       if (!s.delve) return s;
-      const wasLast = s.delve.currentRoomIdx >= s.delve.rooms.length - 1;
-      const next: DelveState = {
-        ...s.delve,
-        currentRoomIdx: wasLast ? s.delve.currentRoomIdx : s.delve.currentRoomIdx + 1,
-        phase: wasLast ? 'completed' : 'in-room',
-        roomsCleared: s.delve.roomsCleared + 1,
-      };
+      const d = s.delve;
+      const cur = d.rooms[d.currentRoomIdx];
       useCombatStore.getState().setCombat(null);
-      return { delve: next };
+      const roomsCleared = d.roomsCleared + 1;
+
+      // Legacy linear delve (no graph edges): step the array index, as before.
+      if (d.currentRoomId === undefined) {
+        const wasLast = d.currentRoomIdx >= d.rooms.length - 1;
+        return {
+          delve: {
+            ...d,
+            currentRoomIdx: wasLast ? d.currentRoomIdx : d.currentRoomIdx + 1,
+            phase: wasLast ? 'completed' : 'in-room',
+            roomsCleared,
+          },
+        };
+      }
+
+      const nextIds = cur?.next ?? [];
+      // Terminal node (the final boss) — the chain has fallen.
+      if (nextIds.length === 0) {
+        return { delve: { ...d, phase: 'completed', roomsCleared } };
+      }
+      // A forced single step (intel→boss, boss→camp, camp→next entry): walk
+      // straight through. Only a real fork opens the route map.
+      if (nextIds.length === 1) {
+        return { delve: enterRoom(d, nextIds[0], roomsCleared) };
+      }
+      return { delve: { ...d, phase: 'between-rooms', roomsCleared } };
+    }),
+
+  chooseRoom: (nextId) =>
+    set((s) => {
+      if (!s.delve) return s;
+      const cur = s.delve.rooms[s.delve.currentRoomIdx];
+      // Only step to a node actually reachable from where we stand.
+      if (cur?.next && !cur.next.includes(nextId)) return s;
+      useCombatStore.getState().setCombat(null);
+      return { delve: enterRoom(s.delve, nextId) };
     }),
 
   addDelveReward: (gold, xp) => {
@@ -376,7 +436,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const character = charSlice.character;
     if (!s.delve || !character) return;
     const isBossRoom = room.kind === 'boss';
-    const isRegularCombat = room.kind === 'combat' || isBossRoom;
+    const isRegularCombat = room.kind === 'combat' || room.kind === 'elite' || isBossRoom;
     if (isRegularCombat) {
       const roomGold = room.goldReward ?? 0;
       const xpDrop = room.xpReward ?? 0;
@@ -418,10 +478,15 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       }, 1500);
       get().creditChapterClearGold();
     }
-    // Chained Godwake delve: Ilyich is the Ch1 boss at room-10, not the final.
-    // Flag the kill so the chapter1Cleared flip survives a death deeper in the
-    // run. Also the reveal beat — the Voice steps forward with a name.
-    if (room.id === 'room-10' && s.delve.chapterId === 'godwake') {
+    // Chained Godwake delve: Ilyich is the Ch1 boss, not the final. Flag the
+    // kill (by boss identity, not a hard-coded room id — the branching map
+    // numbers nodes differently) so the chapter1Cleared flip survives a death
+    // deeper in the run. Also the reveal beat — the Voice steps forward with a name.
+    if (
+      isBossRoom &&
+      room.monsters?.[0]?.defId === 'duergar-ilyich' &&
+      s.delve.chapterId === 'godwake'
+    ) {
       get().markChapter1BossKilled();
       useMetaStore.getState().markNpcKnown('irenicus');
     }

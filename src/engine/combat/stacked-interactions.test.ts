@@ -18,6 +18,12 @@ import { useCombatStore } from '../../stores/combatStore';
 import { useMetaStore } from '../../stores/metaStore';
 import { useScreenStore } from '../../stores/screenStore';
 import { useGameStore } from '../../stores/gameStore';
+import {
+  RENOWN_PER_DELVE_FAILURE,
+  RENOWN_PER_CHAPTER_BOSS,
+  RENOWN_PER_ROOM_REACHED,
+} from '../../stores/delveStore';
+import { renownSoulMarkMultiplier } from '../character/quirks';
 import { createGodwakeDelve } from '../delve';
 import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
@@ -487,7 +493,7 @@ describe('Chapter-boss renown bonus + soul-mark stacking', () => {
     useScreenStore.setState({ screen: 'hub' });
   });
 
-  it('death in Ch3 after killing 2 chapter bosses with 1 bane → 78 renown', () => {
+  it('death in Ch3 after killing 2 chapter bosses with 1 bane stacks bosses + depth × soul-mark', () => {
     const fighter: Character = {
       ...createCharacter({
         id: 'onebane',
@@ -509,15 +515,23 @@ describe('Chapter-boss renown bonus + soul-mark stacking', () => {
     };
     useCharacterStore.setState({ character: fighter });
     const delve = createGodwakeDelve(1);
-    // currentRoomIdx=30 → slice(0, 30) includes Ilyich (idx 12) and Magistrate
-    // (idx 27) but not the Director (idx 42).
+    // Die at the Ch3 Director: slice(0, idx) counts Ilyich + Magistrate (2),
+    // not the Director itself. Indices read from the actual branching layout.
+    const idx = delve.rooms.findIndex(
+      (r) => r.kind === 'boss' && r.monsters?.[0]?.defId === 'asylum-director',
+    );
+    const bosses = delve.rooms.slice(0, idx).filter((r) => r.kind === 'boss').length;
+    expect(bosses).toBe(2);
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: 30, phase: 'failed' },
+      delve: { ...delve, currentRoomIdx: idx, phase: 'failed' },
     });
 
     useGameStore.getState().finishDelve();
 
-    expect(useCharacterStore.getState().character!.renown).toBe(78);
+    const base =
+      RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bosses + RENOWN_PER_ROOM_REACHED * idx;
+    const expected = Math.floor(base * renownSoulMarkMultiplier(fighter));
+    expect(useCharacterStore.getState().character!.renown).toBe(expected);
   });
 });
 

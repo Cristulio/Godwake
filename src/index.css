@@ -989,3 +989,61 @@ img, svg.pixel {
   50% { box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 8px currentColor; }
 }
 .enemy-intent-urgent { animation: godwake-intent-pulse 1.5s ease-in-out infinite; }
+/* === branching-map === (branching node map / route UI; append-only, own block) */
+.bm-map-frame {
+  border: 1px solid var(--color-border-warm);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244, 167, 66, 0.06), transparent 70%),
+    var(--color-bg-deep);
+  padding: 18px 8px;
+}
+.bm-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bm-accent, var(--color-border-warm));
+  background: var(--color-bg-panel);
+  color: var(--color-text-secondary);
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out, filter 120ms ease-out;
+}
+.bm-node-tag {
+  font-family: var(--font-display, inherit);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.bm-node-locked {
+  opacity: 0.32;
+  filter: grayscale(0.6);
+}
+.bm-node-visited {
+  opacity: 0.82;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+.bm-node-current {
+  opacity: 1;
+  color: var(--color-text-primary);
+  box-shadow: 0 0 0 3px rgba(244, 167, 66, 0.35), 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+.bm-node-reachable {
+  opacity: 1;
+  color: var(--color-accent-amber);
+  background: var(--color-bg-panel-hover);
+  cursor: pointer;
+  animation: bm-node-beckon 1.6s ease-in-out infinite;
+}
+.bm-node-reachable:hover,
+.bm-node-reachable:focus-visible {
+  transform: translate(-1px, -2px) scale(1.08);
+  box-shadow: 0 0 14px var(--bm-accent, var(--color-accent-amber)), 3px 4px 0 rgba(0, 0, 0, 0.6);
+  outline: none;
+}
+@keyframes bm-node-beckon {
+  0%, 100% { box-shadow: 0 0 0 1px var(--bm-accent, var(--color-accent-amber)), 2px 2px 0 rgba(0, 0, 0, 0.6); }
+  50% { box-shadow: 0 0 12px var(--bm-accent, var(--color-accent-amber)), 2px 2px 0 rgba(0, 0, 0, 0.6); }
+}

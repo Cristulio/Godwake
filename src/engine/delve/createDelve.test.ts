@@ -4,8 +4,11 @@ import {
   createGodwakeDelve,
   createSpellholdDelve,
   createUstNathaDelve,
+  reachableRooms,
+  roomById,
 } from './createDelve';
 import { getMonster } from '../../content/monsters';
+import type { DelveState } from '../../types/delve';
 
 describe('createIronCellsDelve', () => {
   it('produces 11 rooms in the expected slot pattern (intel room before boss)', () => {
@@ -259,6 +262,76 @@ describe('createUstNathaDelve', () => {
           expect(() => getMonster(m.defId)).not.toThrow();
         }
       }
+    }
+  });
+});
+
+describe('createGodwakeDelve — branching graph', () => {
+  /** Forward-reachable id set from the entry node. */
+  function reachableFromEntry(d: DelveState): Set<string> {
+    const seen = new Set<string>();
+    const stack = [d.rooms[0].id];
+    while (stack.length) {
+      const id = stack.pop()!;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      for (const n of roomById(d, id)?.next ?? []) stack.push(n);
+    }
+    return seen;
+  }
+
+  it('seeds the entry node, current id, and visited trail', () => {
+    const d = createGodwakeDelve(1);
+    expect(d.currentRoomIdx).toBe(0);
+    expect(d.currentRoomId).toBe(d.rooms[0].id);
+    expect(d.visitedRoomIds).toEqual([d.rooms[0].id]);
+  });
+
+  it('opens with a real fork (the entry reaches more than one node)', () => {
+    const d = createGodwakeDelve(1);
+    expect(reachableRooms(d, d.rooms[0]).length).toBeGreaterThan(1);
+  });
+
+  it('every node is reachable from the entry and every edge resolves', () => {
+    const d = createGodwakeDelve(3);
+    const reachable = reachableFromEntry(d);
+    // Camps + downstream chapters are reachable only through the boss→camp seam,
+    // so the whole flat list should be covered.
+    expect(reachable.size).toBe(d.rooms.length);
+    for (const room of d.rooms) {
+      for (const id of room.next ?? []) {
+        expect(roomById(d, id)).toBeDefined();
+      }
+    }
+  });
+
+  it('every node can still reach a boss (no dead ends before the convergence)', () => {
+    const d = createGodwakeDelve(5);
+    const reachesBoss = (start: string): boolean => {
+      const seen = new Set<string>();
+      const stack = [start];
+      while (stack.length) {
+        const id = stack.pop()!;
+        if (seen.has(id)) continue;
+        seen.add(id);
+        const r = roomById(d, id);
+        if (r?.kind === 'boss') return true;
+        for (const n of r?.next ?? []) stack.push(n);
+      }
+      return false;
+    };
+    expect(d.rooms.every((r) => reachesBoss(r.id))).toBe(true);
+  });
+
+  it('offers shop and elite route nodes, and the final boss is terminal', () => {
+    const d = createGodwakeDelve(7);
+    expect(d.rooms.some((r) => r.kind === 'shop')).toBe(true);
+    expect(d.rooms.some((r) => r.kind === 'elite')).toBe(true);
+    const matron = d.rooms.find((r) => r.monsters?.[0]?.defId === 'drow-matron-mother')!;
+    expect(matron.next ?? []).toHaveLength(0);
+    // Every other chapter boss leads onward to its camp.
+    for (const boss of d.rooms.filter((r) => r.kind === 'boss' && r !== matron)) {
+      expect(reachableRooms(d, boss).some((r) => r.kind === 'camp')).toBe(true);
     }
   });
 });
