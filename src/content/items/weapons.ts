@@ -104,6 +104,89 @@ export const ADAMANTINE_SHORTSWORD: Weapon = WeaponSchema.parse({
     'A short, dark-grey blade with a faint blue undertone where the lamplight catches the edge. Adamantine — does not chip, does not dull, and the +1 is not a smith\'s boast, it is the alloy. Strikes for 1d6+1 piercing; finesse and light. Soul-bound — claims an attunement slot.',
 });
 
+export const MACE: Weapon = WeaponSchema.parse({
+  id: 'mace',
+  kind: 'weapon',
+  name: 'Mace',
+  category: 'simple',
+  damage: '1d6',
+  damageType: 'bludgeoning',
+  properties: [],
+  weight: 4,
+  cost: 5,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A flanged head of cast iron on a short haft — no edge to dull, only weight to bring down. Strikes for 1d6 bludgeoning, and tells through a shield where a blade would skid.',
+});
+
+export const QUARTERSTAFF: Weapon = WeaponSchema.parse({
+  id: 'quarterstaff',
+  kind: 'weapon',
+  name: 'Quarterstaff',
+  category: 'simple',
+  damage: '1d6',
+  damageType: 'bludgeoning',
+  properties: ['versatile'],
+  versatileDamage: '1d8',
+  weight: 4,
+  cost: 2,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A length of seasoned ash, banded at both ends. Plain, balanced, quick — 1d6 bludgeoning one-handed, 1d8 gripped in both. The weapon of those who cannot be seen carrying one.',
+});
+
+export const BATTLEAXE: Weapon = WeaponSchema.parse({
+  id: 'battleaxe',
+  kind: 'weapon',
+  name: 'Battleaxe',
+  category: 'martial',
+  damage: '1d8',
+  damageType: 'slashing',
+  properties: ['versatile'],
+  versatileDamage: '1d10',
+  weight: 4,
+  cost: 10,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A broad single-bitted axe with a bearded edge for hooking a shield aside. 1d8 slashing one-handed, 1d10 with both hands on the haft.',
+});
+
+export const FLAIL: Weapon = WeaponSchema.parse({
+  id: 'flail',
+  kind: 'weapon',
+  name: 'Flail',
+  category: 'martial',
+  damage: '1d8',
+  damageType: 'bludgeoning',
+  properties: [],
+  weight: 2,
+  cost: 10,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A spiked head chained to the haft — it whips around a raised guard and comes down where the parry is not. 1d8 bludgeoning, and difficult to turn aside.',
+});
+
+export const HAND_CROSSBOW: Weapon = WeaponSchema.parse({
+  id: 'hand-crossbow',
+  kind: 'weapon',
+  name: 'Hand Crossbow',
+  category: 'martial',
+  damage: '1d6',
+  damageType: 'piercing',
+  properties: ['light', 'ammunition', 'loading'],
+  range: [30, 120],
+  weight: 3,
+  cost: 75,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A compact crossbow built for one hand and close work — a bolt slipped in, a quick draw, a quiet shot. 1d6 piercing at range; light in the hand, but slow to crank between shots.',
+});
+
 export const ALL_WEAPONS: Weapon[] = [
   LONGSWORD,
   DAGGER,
@@ -111,5 +194,10 @@ export const ALL_WEAPONS: Weapon[] = [
   GREATSWORD,
   WARHAMMER,
   RAPIER,
+  MACE,
+  QUARTERSTAFF,
+  BATTLEAXE,
+  FLAIL,
+  HAND_CROSSBOW,
   ADAMANTINE_SHORTSWORD,
 ];

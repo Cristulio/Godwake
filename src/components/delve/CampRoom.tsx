@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { RoomSpec } from '../../types/delve';
+import type { Item } from '../../schemas/item';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { BlessingCard } from '../ui/BlessingCard';
+import { CampScene } from './CampScene';
 import { useGameStore } from '../../stores/gameStore';
 import { getBlessing } from '../../content/blessings';
 import { getActiveRoller } from '../../engine/dice';
@@ -17,19 +19,80 @@ import {
 
 type CampChoice = 'rest' | 'sharpen' | 'prayer';
 
+/** Which beat of the caravan visit is showing — shopping and the free
+ * god-mark are sequential screens, never the same panel. */
+type MerchantStep = 'closed' | 'shop' | 'blessing';
+
 interface CampRoomProps {
   room: RoomSpec;
   onPressSouth: () => void;
 }
 
-const MERCHANT_POTION_IDS = [
+/**
+ * Caravan stock, scaled by camp depth. STS rule: gold should always have a
+ * worthwhile sink, and later shops carry stronger, pricier wares. The roadside
+ * stocks cheap arms and the basic draughts; the Athkatla docks add a greater
+ * draught, a hand-crossbow, armour and the adamantine blade; the Upperdark
+ * smuggler — last coin-stop before the Matron — fences the dearest gear.
+ * Stock is cumulative: a deeper merchant carries everything the shallower ones
+ * did, plus more. Every id resolves through `getItem`, so nothing here is
+ * orphaned and all of it buys through the existing `purchaseFromMerchant` path.
+ */
+const STOCK_BASE = [
   'potion-of-healing',
-  'potion-of-greater-healing',
-  'potion-of-heroism',
+  'antitoxin',
   'scroll-of-healing-word',
+  'mace',
+  'quarterstaff',
+  'battleaxe',
+  'flail',
+];
+const STOCK_TIER_2 = [
+  'potion-of-greater-healing',
+  'hand-crossbow',
+  'shield',
+  'studded-leather',
+  'chain-mail',
   'adamantine-shortsword',
+];
+const STOCK_TIER_3 = [
+  'potion-of-heroism', // "Potion of Vitality" — 3d6+6, the dearest draught
+  'half-plate',
   'cloak-of-faerun',
 ];
+
+export function merchantStockForTier(tier: CampBoonTier | null): string[] {
+  const t = tier ?? 1;
+  const ids = [...STOCK_BASE];
+  if (t >= 2) ids.push(...STOCK_TIER_2);
+  if (t >= 3) ids.push(...STOCK_TIER_3);
+  return ids;
+}
+
+/** Grouped, ordered sections for the shop list. */
+const STOCK_GROUPS: Array<{ kind: Item['kind']; label: string }> = [
+  { kind: 'consumable', label: 'Draughts & Charms' },
+  { kind: 'weapon', label: 'Arms' },
+  { kind: 'armor', label: 'Armour' },
+];
+
+/** Most wares carry their own flavour; armour pieces don't, so synthesise a
+ * short stat line rather than show a blank row. */
+function itemBlurb(item: Item): string {
+  if (item.description) return item.description;
+  if (item.kind === 'weapon') {
+    const versatile = item.versatileDamage
+      ? `, ${item.versatileDamage} two-handed`
+      : '';
+    return `${item.damage} ${item.damageType}${versatile}.`;
+  }
+  if (item.kind === 'armor') {
+    if (item.category === 'shield') return `A banded shield. +${item.baseAC} AC.`;
+    const cat = item.category.charAt(0).toUpperCase() + item.category.slice(1);
+    return `${cat} armour. Base AC ${item.baseAC}.`;
+  }
+  return '';
+}
 
 export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const character = useGameStore((s) => s.character);
@@ -60,13 +123,15 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     if (!character || campTier === null) return [];
     return boonsForCampTier(campTier, character.classId);
   }, [character, campTier]);
+
+  const stockIds = useMemo(() => merchantStockForTier(campTier), [campTier]);
+
   // The blessing id pulled by "A Prayer Whispered". Captured on click so
   // we can echo the exact god back to the player even if blessings change.
   const [prayerGrantedId, setPrayerGrantedId] = useState<string | null>(null);
-  const [merchantOpen, setMerchantOpen] = useState(false);
+  const [merchantStep, setMerchantStep] = useState<MerchantStep>('closed');
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
   const [blessingOptions, setBlessingOptions] = useState<string[]>([]);
-  const [blessingTaken, setBlessingTaken] = useState(false);
   const [merchantBlessingTaken, setMerchantBlessingTaken] = useState(false);
 
   // Imoen whispers when the road opens up.
@@ -91,16 +156,19 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     }
   }
 
-  function openMerchant() {
+  function openShop() {
+    // Roll the free god-mark options now so they're ready for the blessing
+    // beat that follows the shop.
     if (blessingOptions.length === 0) {
       const roller = getActiveRoller();
       setBlessingOptions(rollBlessingOptions(roller, 3, character?.classId));
     }
-    setMerchantOpen(true);
+    setMerchantStep('shop');
     setPurchaseMessage(null);
+    playSfx('ui_click');
   }
 
-  function buyPotion(itemId: string) {
+  function buyItem(itemId: string) {
     const r = purchaseFromMerchant(itemId);
     if (r.ok) {
       const item = getItem(itemId);
@@ -115,7 +183,6 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     if (merchantBlessingTaken) return;
     addBlessing(id);
     setMerchantBlessingTaken(true);
-    setBlessingTaken(true);
     playSfx('shrine_chime');
   }
 
@@ -148,7 +215,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
       <Panel className="bg-gradient-to-br from-[#2a1d12] to-[#1a1108]">
         <div className="flex flex-col items-center gap-4 py-4">
-          <RoadsideFireScene />
+          <CampScene tier={campTier} />
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-xl leading-relaxed">
             {room.flavorText}
           </p>
@@ -235,10 +302,10 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
           ◆ The Caravan-Merchant
         </div>
         <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-          "Coin in this pocket, comfort in the other. The road keeps going. You'll want both."
+          "Coin in this pocket, comfort in the other. The road keeps going. You'll want both — and I've a god's mark to spare, after."
         </p>
-        <Button variant="secondary" onClick={openMerchant}>
-          Trade with him
+        <Button variant="secondary" onClick={openShop}>
+          Step up to the caravan →
         </Button>
       </Panel>
 
@@ -248,51 +315,53 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
         </Button>
       </div>
 
-      {merchantOpen && (
-        <MerchantModal
-          potionIds={MERCHANT_POTION_IDS}
+      {merchantStep === 'shop' && (
+        <ShopModal
+          stockIds={stockIds}
           goldInPocket={character.goldInPocket}
-          blessingOptions={blessingOptions}
-          merchantBlessingTaken={merchantBlessingTaken}
           purchaseMessage={purchaseMessage}
-          onBuyPotion={buyPotion}
-          onPickBlessing={pickMerchantBlessing}
+          onBuy={buyItem}
           onClose={() => {
-            setMerchantOpen(false);
+            setMerchantStep('closed');
             setPurchaseMessage(null);
-            // The blessing slot can only be claimed once per camp visit; if
-            // it was taken, surface the confirmation as the merchant closes.
-            if (blessingTaken) {
-              setBlessingTaken(false);
-            }
           }}
+          onAdvanceToBlessing={() => {
+            setMerchantStep('blessing');
+            setPurchaseMessage(null);
+          }}
+        />
+      )}
+
+      {merchantStep === 'blessing' && (
+        <BlessingOfferModal
+          blessingOptions={blessingOptions}
+          taken={merchantBlessingTaken}
+          onPick={pickMerchantBlessing}
+          onClose={() => setMerchantStep('closed')}
         />
       )}
     </div>
   );
 }
 
-interface MerchantModalProps {
-  potionIds: string[];
+interface ShopModalProps {
+  stockIds: string[];
   goldInPocket: number;
-  blessingOptions: string[];
-  merchantBlessingTaken: boolean;
   purchaseMessage: string | null;
-  onBuyPotion: (itemId: string) => void;
-  onPickBlessing: (id: string) => void;
+  onBuy: (itemId: string) => void;
   onClose: () => void;
+  onAdvanceToBlessing: () => void;
 }
 
-function MerchantModal({
-  potionIds,
+function ShopModal({
+  stockIds,
   goldInPocket,
-  blessingOptions,
-  merchantBlessingTaken,
   purchaseMessage,
-  onBuyPotion,
-  onPickBlessing,
+  onBuy,
   onClose,
-}: MerchantModalProps) {
+  onAdvanceToBlessing,
+}: ShopModalProps) {
+  const items = stockIds.map(getItem);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in">
       <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-5">
@@ -330,37 +399,47 @@ function MerchantModal({
           </div>
         </header>
 
-        <div className="grid gap-3 mb-4">
-          {potionIds.map((id) => {
-            const item = getItem(id);
-            const tooDear = goldInPocket < item.cost;
-            return (
-              <div
-                key={id}
-                className="border border-[var(--color-border-dim)] p-3 flex items-center gap-4"
-              >
-                <div className="flex-1">
-                  <div className="text-[var(--color-text-primary)] text-sm uppercase tracking-wider">
-                    {item.name}
-                  </div>
-                  <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
-                    {item.description}
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="text-[var(--color-accent-gold)] text-sm">{item.cost} gp</div>
-                  <Button
-                    variant={tooDear ? 'secondary' : 'primary'}
-                    disabled={tooDear}
-                    onClick={() => onBuyPotion(id)}
-                  >
-                    {tooDear ? `Need ${item.cost - goldInPocket} more` : 'Buy'}
-                  </Button>
-                </div>
+        {STOCK_GROUPS.map((group) => {
+          const groupItems = items.filter((it) => it.kind === group.kind);
+          if (groupItems.length === 0) return null;
+          return (
+            <div key={group.kind} className="mb-5">
+              <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
+                {group.label}
               </div>
-            );
-          })}
-        </div>
+              <div className="grid gap-3">
+                {groupItems.map((item) => {
+                  const tooDear = goldInPocket < item.cost;
+                  return (
+                    <div
+                      key={item.id}
+                      className="border border-[var(--color-border-dim)] p-3 flex items-center gap-4"
+                    >
+                      <div className="flex-1">
+                        <div className="text-[var(--color-text-primary)] text-sm uppercase tracking-wider">
+                          {item.name}
+                        </div>
+                        <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
+                          {itemBlurb(item)}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="text-[var(--color-accent-gold)] text-sm">{item.cost} gp</div>
+                        <Button
+                          variant={tooDear ? 'secondary' : 'primary'}
+                          disabled={tooDear}
+                          onClick={() => onBuy(item.id)}
+                        >
+                          {tooDear ? `Need ${item.cost - goldInPocket} more` : 'Buy'}
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
 
         {purchaseMessage && (
           <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest text-center mb-4">
@@ -368,47 +447,80 @@ function MerchantModal({
           </div>
         )}
 
-        {/* Blessings are free god-marks, not stock. Set them apart from the
-            gp-priced wares above with a labelled divider + their own tinted,
-            gold-bordered panel so they don't read as purchasables. */}
-        <div className="mt-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px flex-1 bg-[var(--color-border-warm)]" />
-            <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
-              Not for sale
-            </div>
-            <div className="h-px flex-1 bg-[var(--color-border-warm)]" />
-          </div>
-          <div className="border-2 border-[var(--color-accent-gold)] bg-gradient-to-br from-[#1e1a2a] to-[#100d18] p-4">
-            <div className="flex items-baseline justify-between gap-3 mb-2">
-              <div className="text-[var(--color-accent-gold)] text-xs uppercase tracking-widest">
-                ◆ Bless me, traveller
-              </div>
-              <div className="text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest shrink-0">
-                No coin
-              </div>
-            </div>
-            <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-              "Carry a god's mark with you. Won't cost a copper — only a name to remember the
-              road by." (Choose one of three; offered once per camp.)
-            </p>
-            {merchantBlessingTaken ? (
-              <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
-                The merchant nods. "Walk well, then."
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-3 gap-3">
-                {blessingOptions.map((id) => (
-                  <BlessingCard key={id} blessingId={id} pickable onPick={() => onPickBlessing(id)} />
-                ))}
-              </div>
-            )}
-          </div>
+        <div className="sticky bottom-0 -mx-5 -mb-5 mt-5 px-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-between items-center gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-amber)] text-[11px] uppercase tracking-widest italic"
+          >
+            ← Done trading
+          </button>
+          <Button variant="primary" onClick={onAdvanceToBlessing}>
+            "A god's mark, before you go" →
+          </Button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+interface BlessingOfferModalProps {
+  blessingOptions: string[];
+  taken: boolean;
+  onPick: (id: string) => void;
+  onClose: () => void;
+}
+
+/** The free god-mark — its own beat after the shop, never a panel sharing the
+ * merchant's wares. Blessings are gifts, not stock. */
+function BlessingOfferModal({
+  blessingOptions,
+  taken,
+  onPick,
+  onClose,
+}: BlessingOfferModalProps) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 animate-fade-in">
+      <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-gold)] p-5">
+        <header className="sticky top-0 z-10 -mx-5 -mt-5 px-5 pt-5 pb-3 mb-4 bg-[var(--color-bg-base)] flex justify-between items-center border-b border-[var(--color-border-warm)]">
+          <div>
+            <h2 className="font-display text-lg text-[var(--color-accent-gold)] uppercase tracking-[0.15em]">
+              Bless Me, Traveller
+            </h2>
+            <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic mt-1">
+              No coin — only a name to remember the road by.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-gold)] text-xs uppercase tracking-widest"
+          >
+            Close ×
+          </button>
+        </header>
+
+        <p className="text-[var(--color-text-secondary)] text-xs italic mb-4 leading-relaxed">
+          The merchant turns from his wares and presses two fingers to his brow.
+          "Carry a god's mark with you. Won't cost a copper. Choose one of the
+          three — offered once, here at this fire."
+        </p>
+
+        {taken ? (
+          <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest mb-4">
+            The merchant nods. "Walk well, then."
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-3 mb-4">
+            {blessingOptions.map((id) => (
+              <BlessingCard key={id} blessingId={id} pickable onPick={() => onPick(id)} />
+            ))}
+          </div>
+        )}
 
         <div className="sticky bottom-0 -mx-5 -mb-5 mt-5 px-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-end">
           <Button variant="secondary" onClick={onClose}>
-            Leave the caravan →
+            Walk on →
           </Button>
         </div>
       </div>
@@ -535,74 +647,5 @@ function CampBoonPicker({ tier, options, resolution, onPick }: CampBoonPickerPro
         </div>
       )}
     </Panel>
-  );
-}
-
-function RoadsideFireScene() {
-  return (
-    <svg
-      viewBox="0 0 320 140"
-      className="w-full max-w-md drop-shadow-[0_0_18px_rgba(244,167,66,0.4)]"
-      role="img"
-      aria-label="A roadside fire under a dusk sky, the road bending south."
-    >
-      <defs>
-        <radialGradient id="camp-fire-glow" cx="0.5" cy="0.65" r="0.6">
-          <stop offset="0%" stopColor="#ffd76a" stopOpacity="0.95" />
-          <stop offset="50%" stopColor="#f4a742" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="#f4a742" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="camp-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1a1322" />
-          <stop offset="55%" stopColor="#3a1f1c" />
-          <stop offset="100%" stopColor="#5a2a1a" />
-        </linearGradient>
-        <linearGradient id="camp-road" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#3a2a20" />
-          <stop offset="100%" stopColor="#1a1208" />
-        </linearGradient>
-      </defs>
-      {/* Sky */}
-      <rect x="0" y="0" width="320" height="90" fill="url(#camp-sky)" />
-      {/* Stars */}
-      <circle cx="40" cy="18" r="0.8" fill="#fff8d0" />
-      <circle cx="80" cy="30" r="0.6" fill="#fff8d0" opacity="0.7" />
-      <circle cx="230" cy="14" r="0.9" fill="#fff8d0" />
-      <circle cx="280" cy="32" r="0.6" fill="#fff8d0" opacity="0.7" />
-      {/* Distant southern hills */}
-      <path d="M0 78 L 60 60 L 110 70 L 170 56 L 230 68 L 320 58 L 320 90 L 0 90 Z" fill="#1a1018" />
-      {/* Road bending south */}
-      <path
-        d="M 0 130 L 110 100 L 170 92 L 220 90 L 320 95 L 320 140 L 0 140 Z"
-        fill="url(#camp-road)"
-      />
-      {/* Milestone */}
-      <rect x="195" y="80" width="6" height="14" fill="#3a2a20" stroke="#1a1208" strokeWidth="0.5" />
-      <rect x="193" y="79" width="10" height="3" fill="#5a4030" />
-      {/* Cart silhouette */}
-      <rect x="230" y="80" width="40" height="14" fill="#2a1a10" stroke="#1a1208" strokeWidth="0.5" />
-      <rect x="234" y="76" width="32" height="6" fill="#3a2418" />
-      <circle cx="238" cy="96" r="4" fill="#1a1208" stroke="#3a2418" strokeWidth="0.5" />
-      <circle cx="262" cy="96" r="4" fill="#1a1208" stroke="#3a2418" strokeWidth="0.5" />
-      {/* Tarp pegs lines */}
-      <line x1="270" y1="80" x2="285" y2="92" stroke="#3a2418" strokeWidth="0.5" />
-      {/* Fire glow */}
-      <ellipse cx="100" cy="110" rx="55" ry="22" fill="url(#camp-fire-glow)" />
-      {/* Fire logs */}
-      <rect x="86" y="108" width="28" height="3" fill="#3a2418" />
-      <rect x="92" y="112" width="22" height="3" fill="#2a1a10" />
-      {/* Fire flames */}
-      <path d="M 92 108 Q 96 96 100 108 Q 104 90 108 108 Z" fill="#ffd76a" opacity="0.9" />
-      <path d="M 95 108 Q 100 102 105 108 Z" fill="#fff8d0" opacity="0.85" />
-      {/* Sitting figure silhouette */}
-      <ellipse cx="65" cy="106" rx="6" ry="3" fill="#1a1208" />
-      <rect x="62" y="98" width="6" height="8" fill="#1a1208" />
-      <circle cx="65" cy="95" r="3" fill="#1a1208" />
-      {/* Ox silhouette (unhitched) */}
-      <rect x="280" y="100" width="22" height="9" fill="#1a1208" />
-      <rect x="280" y="108" width="3" height="6" fill="#1a1208" />
-      <rect x="299" y="108" width="3" height="6" fill="#1a1208" />
-      <rect x="298" y="96" width="6" height="6" fill="#1a1208" />
-    </svg>
   );
 }
