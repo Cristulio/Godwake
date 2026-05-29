@@ -108,7 +108,7 @@ export const BLUR: Spell = SpellSchema.parse({
   range: 'Self',
   target: 'self',
   description:
-    'Your outline smears and doubles. For the next 3 rounds, attackers roll against you with disadvantage.',
+    'Your outline smears and doubles. For the next 5 rounds, attackers roll against you with disadvantage.',
   effectKey: 'blur',
 });
 

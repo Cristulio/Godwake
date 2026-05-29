@@ -5,6 +5,7 @@ import { createCombat, _resetMonsterInstanceCounter } from '../createCombat';
 import { monsterAttack } from '../attack';
 import { endTurn } from '../turn';
 import { castSpell } from './dispatch';
+import { BLUR_ROUNDS } from './blur';
 import { createDiceRoller, setActiveRoller, type DiceRoller } from '../../dice';
 import { parseDiceExpression } from '../../dice';
 import type { RollResult } from '../../../types/dice';
@@ -150,7 +151,7 @@ describe('Scorching Ray — three independent attack rolls', () => {
   });
 });
 
-describe('Blur — attackers roll at disadvantage for 3 rounds', () => {
+describe('Blur — attackers roll at disadvantage for 5 rounds', () => {
   it('cast arms blurRoundsRemaining and spends a 2nd-level slot + action', () => {
     const goblin = getMonster('goblin');
     const init = createCombat({ character: makeWizardL3Knowing('blur'), monsters: [{ def: goblin }] });
@@ -159,7 +160,7 @@ describe('Blur — attackers roll at disadvantage for 3 rounds', () => {
     const roller = createDiceRoller(1);
     const cast = castSpell({ roller, character: init.character, state: init.state, spellId: 'blur' });
     expect(cast.cast).toBe(true);
-    expect(cast.character.resources.blurRoundsRemaining).toBe(3);
+    expect(cast.character.resources.blurRoundsRemaining).toBe(BLUR_ROUNDS);
     expect(cast.character.resources.spellSlots?.[2]).toBe(slotsBefore - 1);
     expect(cast.character.actionEconomy.actionUsed).toBe(true);
   });
@@ -190,7 +191,7 @@ describe('Blur — attackers roll at disadvantage for 3 rounds', () => {
     expect(attackLine?.text).not.toContain('disadvantage');
   });
 
-  it('ticks down one round per player turn and lapses after 3 rounds', () => {
+  it('ticks down one round per player turn and lapses after BLUR_ROUNDS rounds', () => {
     const goblin = getMonster('goblin');
     const init = createCombat({ character: makeWizardL3Knowing('blur'), monsters: [{ def: goblin }] });
     const roller = createDiceRoller(7);
@@ -200,19 +201,17 @@ describe('Blur — attackers roll at disadvantage for 3 rounds', () => {
       state: init.state,
       spellId: 'blur',
     });
-    expect(character.resources.blurRoundsRemaining).toBe(3);
+    expect(character.resources.blurRoundsRemaining).toBe(BLUR_ROUNDS);
 
     const advanceRound = () => {
       // player -> monster, then monster -> player (one full round back to us).
       ({ state, character } = endTurn(state, character));
       ({ state, character } = endTurn(state, character));
     };
-    advanceRound();
-    expect(character.resources.blurRoundsRemaining).toBe(2);
-    advanceRound();
-    expect(character.resources.blurRoundsRemaining).toBe(1);
-    advanceRound();
-    expect(character.resources.blurRoundsRemaining).toBe(0);
+    for (let remaining = BLUR_ROUNDS - 1; remaining >= 0; remaining--) {
+      advanceRound();
+      expect(character.resources.blurRoundsRemaining).toBe(remaining);
+    }
 
     const after = monsterAttack({ roller, character, state }, monsterId(state));
     const attackLine = after.state.log.find((l) => l.text.includes('Scimitar'));
