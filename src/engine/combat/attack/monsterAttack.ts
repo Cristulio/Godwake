@@ -12,7 +12,6 @@ import type {
   SpellEffectKind,
 } from '../../../types/combat';
 import type {
-  MonsterAction,
   MonsterAttack,
   MonsterDebuff,
   MonsterSummon,
@@ -31,10 +30,15 @@ import {
 import {
   applyPlayerCondition,
   playerConditionMods,
-  playerHasCondition,
   DEFAULT_WEAKENED_AMOUNT,
 } from '../playerConditions';
 import { spawnMonsterInstance } from '../createCombat';
+import {
+  liveMonsters,
+  pickAllyTarget,
+  resolveIntentAction,
+  selectMonsterIntent,
+} from './monsterIntent';
 import { tryShieldReaction } from '../spells/shield';
 import { combatResult, patchResources, type CombatActionResult } from '../types';
 import { appendLog } from '../log';
@@ -43,12 +47,6 @@ import type { AttackContext } from './playerAttack';
 
 function findCombatant(state: CombatState, id: string): Combatant | undefined {
   return state.combatants.find((c) => c.id === id);
-}
-
-function liveMonsters(state: CombatState): MonsterCombatant[] {
-  return state.combatants.filter(
-    (c): c is MonsterCombatant => c.kind === 'monster' && c.instance.hp.current > 0,
-  );
 }
 
 function patchMonsterInstance(
@@ -147,7 +145,10 @@ export function monsterAttack(
   }
 
   const monsterDef = getMonster(attacker.instance.defId);
-  const action = pickMonsterAction(monsterDef.actions, attacker.instance, state, character);
+  // Resolve the telegraphed action (selected ahead of the player's turn), so
+  // what happens equals the intent the player saw. Falls back to a fresh pick
+  // for an add summoned mid-round that has no intent yet.
+  const action = resolveIntentAction(monsterDef, attacker.instance, state, character);
 
   let result: { state: CombatState; character: Character };
   switch (action.kind) {
@@ -188,104 +189,31 @@ export function monsterAttack(
   }
 
   const marked = markMonsterActionUsed(result.state, attackerId);
-  const ended = evaluateCombatEnd(marked, result.character);
+  // Re-pick this monster's intent now that the turn's action is spent (the
+  // next player-turn refresh re-plans all of them, but this keeps the badge
+  // honest during the rest of the monster phase). Clear it if it just died.
+  const repicked = repickActingIntent(marked, attackerId, result.character);
+  const ended = evaluateCombatEnd(repicked, result.character);
   return combatResult(ended.state, ended.character);
 }
 
-/**
- * Monster-side action picker. Walks the def's actions in author order and takes
- * the first "gated special" that is live this turn (signature ability first),
- * otherwise falls back to multiattack, then a plain attack. Bosses keep their
- * round-1 paralyze opener; regular monsters drive their own toolkit.
- */
-function pickMonsterAction(
-  actions: MonsterAction[],
-  instance: MonsterInstance,
+/** Re-select the just-acted monster's intent (or clear it if it's now dead). */
+function repickActingIntent(
   state: CombatState,
+  attackerId: string,
   character: Readonly<Character>,
-): MonsterAction {
-  const playerParalyzed = isPlayerParalyzed(character);
-  for (const a of actions) {
-    if (a.kind === 'paralyze' && !playerParalyzed && state.round === 1) return a;
-    if (a.kind === 'debuff' && !playerHasCondition(character, a.condition)) return a;
-    if (a.kind === 'summon' && summonAvailable(a, instance, state)) return a;
-    if (a.kind === 'sustain' && sustainAvailable(a, instance, state)) return a;
+): CombatState {
+  const live = state.combatants.find(
+    (c): c is MonsterCombatant => c.id === attackerId && c.kind === 'monster',
+  );
+  if (!live) return state;
+  if (live.instance.hp.current <= 0) {
+    return live.instance.intent
+      ? patchMonsterInstance(state, attackerId, (inst) => ({ ...inst, intent: undefined }))
+      : state;
   }
-  const multi = actions.find((a) => a.kind === 'multiattack');
-  if (multi) return multi;
-  const attack = actions.find((a) => a.kind === 'attack');
-  if (attack) return attack;
-  return actions[0];
-}
-
-function specialOnCooldown(
-  instance: MonsterInstance,
-  name: string,
-  once: boolean | undefined,
-  cooldownRounds: number | undefined,
-  round: number,
-): boolean {
-  const st = instance.actionState?.[name];
-  if (once && (st?.uses ?? 0) >= 1) return true;
-  const cd = cooldownRounds ?? 2;
-  if (st && round - st.lastRound < cd) return true;
-  return false;
-}
-
-function summonAvailable(
-  action: MonsterSummon,
-  instance: MonsterInstance,
-  state: CombatState,
-): boolean {
-  if (specialOnCooldown(instance, action.name, action.once, action.cooldownRounds, state.round)) {
-    return false;
-  }
-  if (action.maxActive !== undefined) {
-    const alive = liveMonsters(state).filter(
-      (c) => c.instance.defId === action.summonDefId,
-    ).length;
-    if (alive >= action.maxActive) return false;
-  }
-  return true;
-}
-
-function pickAllyTarget(
-  state: CombatState,
-  selfId: string,
-  action: MonsterSustain,
-): MonsterCombatant | undefined {
-  const allies = liveMonsters(state).filter((c) => c.id !== selfId);
-  if (allies.length === 0) return undefined;
-  const mostWounded = (list: MonsterCombatant[]) =>
-    [...list].sort(
-      (a, b) =>
-        a.instance.hp.current / a.instance.hp.max -
-        b.instance.hp.current / b.instance.hp.max,
-    )[0];
-  if (action.heal) {
-    const wounded = allies.filter((c) => c.instance.hp.current < c.instance.hp.max);
-    if (wounded.length) return mostWounded(wounded);
-  }
-  if (action.wardTempHp !== undefined) {
-    const unwarded = allies.filter((c) => c.instance.hp.temp < action.wardTempHp!);
-    if (unwarded.length) return mostWounded(unwarded);
-  }
-  return undefined;
-}
-
-function sustainAvailable(
-  action: MonsterSustain,
-  instance: MonsterInstance,
-  state: CombatState,
-): boolean {
-  if (specialOnCooldown(instance, action.name, action.once, action.cooldownRounds, state.round)) {
-    return false;
-  }
-  const target = action.target ?? 'self';
-  if (target === 'self') {
-    return instance.hp.current > 0 && instance.hp.current * 2 <= instance.hp.max;
-  }
-  return pickAllyTarget(state, instance.id, action) !== undefined;
+  const intent = selectMonsterIntent(live.instance, state, character);
+  return patchMonsterInstance(state, attackerId, (inst) => ({ ...inst, intent }));
 }
 
 function bumpActionState(

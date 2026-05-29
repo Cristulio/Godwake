@@ -20,6 +20,7 @@ import {
 } from './types';
 import { isPlayerParalyzed } from './holdPerson';
 import { resolvePlayerParalyzedTurn } from './turn';
+import { refreshMonsterIntents } from './attack/monsterIntent';
 import { applyAscensionToMonster, ascensionDamageBonus } from '../delve/ascension';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 
@@ -283,6 +284,10 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     state = resolved.state;
     nextCharacter = resolved.character;
   }
+
+  // enemy-telegraph: seed each monster's round-1 intent (after the entry
+  // paralyzed-save resolves, so bosses correctly telegraph their opener).
+  state = refreshMonsterIntents(state, nextCharacter);
 
   return combatResult(state, nextCharacter);
 }

@@ -1,5 +1,43 @@
-import type { ActiveCondition } from './conditions';
+import type { ActiveCondition, ConditionName } from './conditions';
 import type { ActionEconomy, HitPoints } from './character';
+import type { MonsterAction } from '../schemas/monster';
+
+// === enemy-telegraph === Slay-the-Spire-style enemy intent. Each live monster
+// carries the action it will take on its NEXT turn, selected ahead of the
+// player's turn and resolved verbatim on the monster's turn so the telegraph
+// never lies. Owned by feat/enemy-telegraph; engine selection lives in
+// engine/combat/attack/monsterIntent.ts, display in components/combat.
+
+/** Display category for the intent badge. */
+export type MonsterIntentKind =
+  | 'attack' // single weapon swing — carries expected damage
+  | 'multiattack' // flurry of swings — carries per-hit damage + hit count
+  | 'drain' // life-draining attack — carries expected damage
+  | 'paralyze' // save-or-be-held
+  | 'debuff' // inflict a condition (carries the condition name)
+  | 'summon' // call reinforcements onto the field
+  | 'sustain-heal' // heal itself or a wounded ally
+  | 'ward'; // gird itself or an ally with temporary HP
+
+export interface MonsterIntent {
+  /** What the badge shows. */
+  kind: MonsterIntentKind;
+  /**
+   * Addresses the def action this intent resolves to (kind + name uniquely
+   * identify it within a monster's action list). The engine re-derives the
+   * action from the canonical content def at resolve time — never a stored
+   * copy — so the resolved action is guaranteed to equal the telegraph.
+   */
+  actionKind: MonsterAction['kind'];
+  actionName: string;
+  /** Expected (average) damage for attack / multiattack / drain intents. */
+  damage?: number;
+  /** Number of strikes for a multiattack intent. */
+  hits?: number;
+  /** Condition inflicted, for debuff / paralyze intents. */
+  condition?: ConditionName;
+}
+// === end enemy-telegraph ===
 
 export interface MonsterInstance {
   /** Unique instance id within the combat encounter. */
@@ -24,6 +62,13 @@ export interface MonsterInstance {
    * Optional so legacy saves rehydrate (treated as "never used").
    */
   actionState?: Record<string, { uses: number; lastRound: number }>;
+  /**
+   * enemy-telegraph: the action this monster will take on its next turn,
+   * selected ahead of the player's turn. Absent when freshly summoned or
+   * rehydrated from a legacy save (the engine re-picks on the fly), and cleared
+   * while the monster is paralyzed (it has no honest move to telegraph).
+   */
+  intent?: MonsterIntent;
 }
 
 export interface PlayerCombatant {

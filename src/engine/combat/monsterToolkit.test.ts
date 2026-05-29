@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
-import { monsterAttack, playerAttack } from './attack';
+import { monsterAttack, playerAttack, refreshMonsterIntents } from './attack';
 import { endTurn } from './turn';
 import { createDiceRoller } from '../dice';
 import {
@@ -170,7 +170,9 @@ describe('monster summon action', () => {
     const r1 = monsterAttack({ roller, character: ch, state: s }, bid);
     s = r1.state; ch = r1.character;
     expect(monstersOf(s, 'driderling').length).toBe(2);
-    // Clear the cooldown so the picker is allowed to summon again immediately.
+    // Clear the cooldown so the picker is allowed to summon again immediately,
+    // then re-plan the intent (start-of-player-turn refresh) so the next turn
+    // resolves a summon rather than the post-summon attack it re-picked.
     s = {
       ...s,
       combatants: s.combatants.map((c) =>
@@ -179,6 +181,7 @@ describe('monster summon action', () => {
           : c,
       ),
     };
+    s = refreshMonsterIntents(s, ch);
     const r2 = monsterAttack({ roller, character: ch, state: s }, bid);
     s = r2.state;
     expect(monstersOf(s, 'driderling').length).toBe(4);
@@ -191,6 +194,7 @@ describe('monster summon action', () => {
           : c,
       ),
     };
+    s = refreshMonsterIntents(s, ch);
     const r3 = monsterAttack({ roller, character: ch, state: s }, bid);
     expect(monstersOf(r3.state, 'driderling').length).toBe(4);
   });
@@ -218,6 +222,9 @@ describe('monster sustain action', () => {
     const roller = createDiceRoller(5);
     let s = createCombat({ roller, character: makeFighter(), monsters: [{ def: getDef('sphere-aberration') }] }).state;
     s = patchInstanceHp(s, 'sphere-aberration', 10); // max 45 → bloodied
+    // Pick-then-resolve: re-plan the intent against the now-bloodied state, as
+    // the start-of-player-turn refresh would, so the heal is telegraphed.
+    s = refreshMonsterIntents(s, makeFighter());
     const id = monstersOf(s, 'sphere-aberration')[0].id;
     const r = monsterAttack({ roller, character: makeFighter(), state: s }, id);
     const healed = monstersOf(r.state, 'sphere-aberration')[0].instance.hp.current;

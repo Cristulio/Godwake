@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
-import { monsterAttack } from './attack';
+import { monsterAttack, refreshMonsterIntents } from './attack';
 import { createDiceRoller, type DiceRoller } from '../dice';
 import { setActiveRoller } from '../dice';
 import type { RollResult } from '../../types/dice';
@@ -146,7 +146,11 @@ describe('Hold Person — Magistrate boss mechanic', () => {
       saveAbility: 'wis',
     }];
     const roller = createDiceRoller(5);
-    const state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] }).state;
+    let state = createCombat({ roller, character: hero, monsters: [{ def: magistrate }] }).state;
+    // Pick-then-resolve: re-plan the magistrate's intent against the held
+    // player (as the start-of-turn refresh would). With the player already
+    // paralyzed the round-1 opener is dropped, so Mind Spike is telegraphed.
+    state = refreshMonsterIntents(state, hero);
     const monsterId = state.combatants.find((c) => c.kind === 'monster')!.id;
     const after = monsterAttack({ roller, character: hero, state }, monsterId).state;
     const attackLine = after.log.find((l) => l.text.includes('Mind Spike'));
