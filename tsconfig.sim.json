@@ -23,6 +23,7 @@
   "include": [
     "src/sim/**/*.ts",
     "src/test/sim/**/*.ts",
-    "scripts/sim-reincarnation-loop.ts"
+    "scripts/sim-reincarnation-loop.ts",
+    "scripts/sim-blessing-fidelity.ts"
   ]
 }
