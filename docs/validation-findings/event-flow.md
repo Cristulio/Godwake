@@ -93,23 +93,23 @@ Per cell: 50 delves, identical seeds across (class, level) so event pool is stab
 
 | Cell | Runs | Events seen | Reroll events | Reroll chosen | Fallback fired | +5g triggered | Waukeen leaks |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Fighter (human) L1 | 50 | 450 | 78 | 61 | 61 | 61 | 0 |
-| Fighter (human) L3 | 50 | 450 | 78 | 62 | 62 | 62 | 0 |
-| Rogue (wood-elf) L1 | 50 | 450 | 78 | 61 | 61 | 61 | 0 |
-| Rogue (wood-elf) L3 | 50 | 450 | 78 | 62 | 62 | 62 | 0 |
-| Wizard (tiefling, default) L1 | 50 | 450 | 78 | 61 | 61 | 61 | 0 |
-| Wizard (tiefling, default) L3 | 50 | 450 | 78 | 62 | 62 | 62 | 0 |
+| Fighter (human) L1 | 50 | 550 | 119 | 96 | 96 | 96 | 0 |
+| Fighter (human) L3 | 50 | 550 | 119 | 94 | 94 | 94 | 0 |
+| Rogue (wood-elf) L1 | 50 | 550 | 119 | 96 | 96 | 96 | 0 |
+| Rogue (wood-elf) L3 | 50 | 550 | 119 | 94 | 94 | 94 | 0 |
+| Wizard (tiefling, default) L1 | 50 | 550 | 119 | 96 | 96 | 96 | 0 |
+| Wizard (tiefling, default) L3 | 50 | 550 | 119 | 94 | 94 | 94 | 0 |
 
 ### Sample surfaced fallback strings (first per cell)
 
 | Cell | Event | Detail |
 |---|---|---|
-| Fighter (human) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
-| Fighter (human) L3 | beggar-at-the-gate | The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser. Waukeen finds no bane to shake from you — her scale tips clean today. |
-| Rogue (wood-elf) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
-| Rogue (wood-elf) L3 | beggar-at-the-gate | The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser. Waukeen finds no bane to shake from you — her scale tips clean today. |
-| Wizard (tiefling, default) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
-| Wizard (tiefling, default) L3 | beggar-at-the-gate | The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser. Waukeen finds no bane to shake from you — her scale tips clean today. |
+| Fighter (human) L1 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
+| Fighter (human) L3 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
+| Rogue (wood-elf) L1 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
+| Rogue (wood-elf) L3 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
+| Wizard (tiefling, default) L1 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
+| Wizard (tiefling, default) L3 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
 
 ## Sim methodology
 

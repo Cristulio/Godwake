@@ -36,6 +36,8 @@ Per-choice 1d100 sweep, 4000 trials each. Pass criteria: observed within ±2% of
 | Event | Choice | Declared | Observed | Δ (pp) | OK |
 |---|---|---:|---:|---:|:--:|
 | wounded-captain | loot-him | 65.0% | 65.7% | 0.72 | Y |
+| rats-in-the-grain | cook | 65.0% | 65.3% | 0.35 | Y |
+| dead-mans-steel | search-pack | 60.0% | 59.1% | -0.92 | Y |
 | beggar-at-the-gate | kick-the-bowl | 70.0% | 69.8% | -0.25 | Y |
 | street-orphan | cuff-him | 70.0% | 70.3% | 0.28 | Y |
 
@@ -46,6 +48,8 @@ Forced a failure roll on each success-chance choice, applied to a Fighter L3. Re
 | Event | Choice | failureOutcome present | Effects applied on fail |
 |---|---|:--:|---|
 | wounded-captain | loot-him | Y | hp_delta: -4 HP |
+| rats-in-the-grain | cook | Y | hp_delta: -3 HP |
+| dead-mans-steel | search-pack | Y | hp_delta: -4 HP |
 | beggar-at-the-gate | kick-the-bowl | Y | hp_delta: -4 HP |
 | street-orphan | cuff-him | Y | hp_delta: -3 HP |
 
@@ -70,8 +74,11 @@ Y = choice is available for this (class, level). For a failing gate the cell sho
 | bones-on-stake | take | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | bones-on-stake | leave | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | bones-on-stake | spit | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
-| rats-in-the-grain | cook | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| rats-in-the-grain | cook | 0.65 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | rats-in-the-grain | leave | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| dead-mans-steel | take-blade | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| dead-mans-steel | search-pack | 0.6 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| dead-mans-steel | leave | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | beggar-at-the-gate | give | — | 5 | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | beggar-at-the-gate | walk-past | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | beggar-at-the-gate | kick-the-bowl | 0.7 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
@@ -89,6 +96,9 @@ Y = choice is available for this (class, level). For a failing gate the cell sho
 | oghma-scribe | sell-name | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | oghma-scribe | sell-story | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | oghma-scribe | walk-on | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| pilgrim-road-smith | buy-blade | — | 40 | — | — | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold |
+| pilgrim-road-smith | haggle-smith | — | 25 | — | 1 | n:cha | n:cha | n:cha | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold |
+| pilgrim-road-smith | walk-on-smith | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 
 ## D. Per-cell delve runs (50 runs/cell, Ch1+Ch2 events only)
 
@@ -96,18 +106,18 @@ Stable per-seed delve content across cells: identical events seen, only characte
 
 | Cell | Events seen | sc seen | sc picked | succ | fail | succ% (obs) | CHA seen | CHA accessible | CHA blocked | no-bane re-rolls |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Fighter (STR build, Sir Brick) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 0 | 46 | 40 |
-| Fighter (STR build, Sir Brick) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 0 | 45 | 39 |
-| Fighter (STR build, Sir Brick) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 0 | 45 | 42 |
-| Rogue (DEX build, wood-elf) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 0 | 45 | 40 |
-| Rogue (DEX build, wood-elf) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 0 | 46 | 39 |
-| Rogue (DEX build, wood-elf) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 0 | 45 | 42 |
-| Wizard (INT build, tiefling) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 46 | 0 | 40 |
-| Wizard (INT build, tiefling) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 46 | 0 | 39 |
-| Wizard (INT build, tiefling) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 45 | 0 | 42 |
-| Rogue (CHA cross-check, tiefling-charlatan) L1 | 220 | 60 | 60 | 40 | 20 | 66.7% | 46 | 45 | 0 | 40 |
-| Rogue (CHA cross-check, tiefling-charlatan) L3 | 220 | 60 | 60 | 39 | 21 | 65.0% | 46 | 46 | 0 | 39 |
-| Rogue (CHA cross-check, tiefling-charlatan) L5 | 220 | 60 | 60 | 42 | 18 | 70.0% | 46 | 45 | 0 | 42 |
+| Fighter (STR build, Sir Brick) L1 | 311 | 128 | 128 | 94 | 34 | 73.4% | 78 | 0 | 69 | 52 |
+| Fighter (STR build, Sir Brick) L3 | 311 | 128 | 128 | 81 | 47 | 63.3% | 78 | 0 | 69 | 54 |
+| Fighter (STR build, Sir Brick) L5 | 311 | 128 | 128 | 79 | 49 | 61.7% | 78 | 0 | 70 | 41 |
+| Rogue (DEX build, wood-elf) L1 | 311 | 128 | 128 | 94 | 34 | 73.4% | 78 | 0 | 65 | 52 |
+| Rogue (DEX build, wood-elf) L3 | 311 | 128 | 128 | 81 | 47 | 63.3% | 78 | 0 | 67 | 54 |
+| Rogue (DEX build, wood-elf) L5 | 311 | 128 | 128 | 79 | 49 | 61.7% | 78 | 0 | 66 | 41 |
+| Wizard (INT build, tiefling) L1 | 311 | 128 | 128 | 94 | 34 | 73.4% | 78 | 66 | 0 | 52 |
+| Wizard (INT build, tiefling) L3 | 311 | 128 | 128 | 81 | 47 | 63.3% | 78 | 67 | 0 | 54 |
+| Wizard (INT build, tiefling) L5 | 311 | 128 | 128 | 79 | 49 | 61.7% | 78 | 66 | 0 | 41 |
+| Rogue (CHA cross-check, tiefling-charlatan) L1 | 311 | 128 | 128 | 94 | 34 | 73.4% | 78 | 65 | 0 | 52 |
+| Rogue (CHA cross-check, tiefling-charlatan) L3 | 311 | 128 | 128 | 81 | 47 | 63.3% | 78 | 67 | 0 | 54 |
+| Rogue (CHA cross-check, tiefling-charlatan) L5 | 311 | 128 | 128 | 79 | 49 | 61.7% | 78 | 66 | 0 | 41 |
 
 ## E. grant_quirk_reroll fallback paths
 
@@ -124,5 +134,7 @@ Stable per-seed delve content across cells: identical events seen, only characte
 | Event | Choice | p | succ.gold | succ.hp | succ.bless | succ.reroll | fail.gold | fail.hp | fail.ambush | evGold | evHp | Note |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
 | wounded-captain | loot-him | 65% | 5 | 0 | 0 | 1 | 0 | -4 | 0 | 3.3 | -1.4 |  |
+| rats-in-the-grain | cook | 65% | 0 | 3 | 0 | 0 | 0 | -3 | 0 | 0.0 | 0.9 | underrewarded vs failure cost |
+| dead-mans-steel | search-pack | 60% | 18 | 0 | 0 | 0 | 0 | -4 | 0 | 10.8 | -1.6 |  |
 | beggar-at-the-gate | kick-the-bowl | 70% | 8 | 0 | 0 | 1 | 0 | -4 | 0 | 5.6 | -1.2 |  |
 | street-orphan | cuff-him | 70% | 5 | 0 | 0 | 1 | 0 | -3 | 0 | 3.5 | -0.9 |  |
