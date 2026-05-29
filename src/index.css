@@ -944,3 +944,16 @@ img, svg.pixel {
   100% { opacity: 0; transform: translateY(-34px) scale(0.95); }
 }
 .animate-damage-deflect { animation: godwake-damage-deflect 1000ms cubic-bezier(0.3, 0.9, 0.4, 1) forwards; }
+
+/* === rest-fork (feat/rest-fork) === */
+/* The "Tempt the Dark" gamble reads as danger, not the warm amber of the safe
+   choices — a low ember border + breathing glow so the risky branch is legible
+   at a glance. */
+.rest-fork-ember {
+  border-color: var(--color-status-poison);
+  animation: godwake-rest-fork-ember 2.6s ease-in-out infinite;
+}
+@keyframes godwake-rest-fork-ember {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(176, 58, 46, 0); }
+  50% { box-shadow: 0 0 14px 1px rgba(176, 58, 46, 0.35); }
+}
