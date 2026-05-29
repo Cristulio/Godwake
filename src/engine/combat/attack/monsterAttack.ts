@@ -9,6 +9,7 @@ import type {
   MonsterCombatant,
   MonsterInstance,
   SaveEvent,
+  SpellEffectKind,
 } from '../../../types/combat';
 import type {
   MonsterAction,
@@ -61,6 +62,43 @@ function patchMonsterInstance(
       c.id === id && c.kind === 'monster' ? { ...c, instance: fn(c.instance) } : c,
     ),
   };
+}
+
+/**
+ * Push an enemy-side VFX event onto the combat bus (mirrors the player-side
+ * `attachSpellEffect` in spells/helpers, kept local to avoid an import cycle
+ * through the attack barrel). The SpellEffectLayer renders the matching
+ * bespoke effect (see SpellEffect.tsx — enemy-vfx section).
+ */
+function attachEnemyEffect(
+  state: CombatState,
+  kind: SpellEffectKind,
+  attackerId: string,
+  targetId?: string,
+): CombatState {
+  const next = (state.spellEffectCounter ?? 0) + 1;
+  return {
+    ...state,
+    spellEffectCounter: next,
+    spellEffectEvent: { id: next, kind, attackerId, targetId },
+  };
+}
+
+function debuffEffectKind(condition: ConditionName): SpellEffectKind | undefined {
+  switch (condition) {
+    case 'poisoned':
+      return 'debuff-poison';
+    case 'frightened':
+      return 'debuff-frighten';
+    case 'blinded':
+      return 'debuff-blind';
+    case 'weakened':
+      return 'debuff-weaken';
+    case 'restrained':
+      return 'debuff-restrain';
+    default:
+      return undefined;
+  }
 }
 
 /**
@@ -302,6 +340,7 @@ function resolveSingleAttack(
       kind: 'system',
       text: `${attacker.instance.displayName} enters Battle Rage — +2 damage per hit.`,
     });
+    workingState = attachEnemyEffect(workingState, 'enemy-frenzy', attackerId);
   }
   const raging =
     hasBattleRage && (enteringRage || attacker.instance.bossRageActive === true);
@@ -478,6 +517,7 @@ function resolveSingleAttack(
               kind: 'system',
               text: `${live.instance.displayName} drains ${after - before} HP from the wound.`,
             });
+            nextState = attachEnemyEffect(nextState, 'sustain-drain', attackerId, 'player');
           }
         }
       }
@@ -505,7 +545,7 @@ function monsterMultiattack(
       : { state, character: character as Character };
   }
 
-  let workingState = state;
+  let workingState = attachEnemyEffect(state, 'multiattack-flurry', attackerId, 'player');
   let workingChar: Character = character as Character;
   for (let i = 0; i < multi.attacks; i++) {
     if (workingChar.hp.current <= 0) break;
@@ -578,6 +618,9 @@ function monsterSummon(
     kind: 'system',
     text: `${attacker.instance.displayName} calls ${count > 1 ? `${count} ${summonDef.name}s` : `a ${summonDef.name}`} into the fight.`,
   });
+  // Anchor the rift on the first new add's slot (it's already in nextState's
+  // combatants/turnOrder, so the layer resolves its battlefield position).
+  nextState = attachEnemyEffect(nextState, 'enemy-summon', attackerId, newCombatants[0].id);
   return { state: nextState, character: character as Character };
 }
 
@@ -633,6 +676,12 @@ function monsterSustain(
     kind: 'system',
     text: `${attacker.instance.displayName} uses ${action.name}${parts.length ? ` — ${parts.join(' and ')}` : ''}.`,
   });
+  // Heal up-glow takes precedence; a ward-only action shows the bubble instead.
+  if (healAmount > 0) {
+    nextState = attachEnemyEffect(nextState, 'sustain-heal', attackerId, target.id);
+  } else if (action.wardTempHp !== undefined) {
+    nextState = attachEnemyEffect(nextState, 'sustain-ward', attackerId, target.id);
+  }
   return { state: nextState, character: character as Character };
 }
 
@@ -712,6 +761,13 @@ function monsterCastDebuff(
     advantage: save.advantage,
   };
   nextState = { ...nextState, saveEventCounter: saveEventId, lastSave: saveEvent };
+  // Telegraph the affliction only when it actually lands (save failed).
+  if (!save.success) {
+    const effectKind = debuffEffectKind(action.condition);
+    if (effectKind) {
+      nextState = attachEnemyEffect(nextState, effectKind, attackerId, 'player');
+    }
+  }
   return { state: nextState, character: nextCharacter };
 }
 

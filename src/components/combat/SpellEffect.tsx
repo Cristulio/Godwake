@@ -120,6 +120,29 @@ export function SpellEffect({ kind, origin, target, onDone }: SpellEffectProps) 
       return <SecondWindEffect origin={origin} onDone={onDone} />;
     case 'action-surge':
       return <ActionSurgeEffect origin={origin} onDone={onDone} />;
+    // === enemy-vfx (feat/vfx-enemies) ===
+    case 'enemy-summon':
+      return <SummonEffect target={target} onDone={onDone} />;
+    case 'debuff-poison':
+      return <PoisonCloudEffect target={target} onDone={onDone} />;
+    case 'debuff-frighten':
+      return <FrightenEffect target={target} onDone={onDone} />;
+    case 'debuff-blind':
+      return <BlindEffect target={target} onDone={onDone} />;
+    case 'debuff-weaken':
+      return <WeakenEffect target={target} onDone={onDone} />;
+    case 'debuff-restrain':
+      return <RestrainEffect target={target} onDone={onDone} />;
+    case 'sustain-heal':
+      return <SustainHealEffect target={target} onDone={onDone} />;
+    case 'sustain-ward':
+      return <SustainWardEffect target={target} onDone={onDone} />;
+    case 'sustain-drain':
+      return <LifeDrainEffect origin={origin} target={target} onDone={onDone} />;
+    case 'multiattack-flurry':
+      return <FlurryEffect origin={origin} target={target} onDone={onDone} />;
+    case 'enemy-frenzy':
+      return <FrenzyEffect origin={origin} onDone={onDone} />;
     default:
       return null;
   }
@@ -1135,5 +1158,882 @@ function MirrorShatter({ slot }: { slot: MirrorSlot }) {
         />
       ))}
     </div>
+  );
+}
+
+// ============================================================================
+// === enemy-vfx (feat/vfx-enemies) ===
+// Bespoke effects for the monster toolkit (#164). Player casts anchor on the
+// left at (112, 316); monster slots fan right from (712, 316). The anchor is
+// treated as a sprite's vertical center, so most effects center on it.
+// ============================================================================
+
+interface TargetAnchorProps {
+  target: Anchor;
+  onDone: () => void;
+}
+
+/** Scatters `count` motes radially around the origin, with an optional upward
+ *  bias and random angular jitter. Computed once per mount (positions are
+ *  stable for the life of the effect). */
+function scatter(
+  count: number,
+  opts: { min: number; max: number; up?: number; spread?: number },
+): { id: number; dx: number; dy: number; delay: number }[] {
+  const up = opts.up ?? 0;
+  const spread = opts.spread ?? 0.6;
+  return Array.from({ length: count }, (_, i) => {
+    const angle = (i / count) * Math.PI * 2 + Math.random() * spread;
+    const dist = opts.min + Math.random() * (opts.max - opts.min);
+    return {
+      id: i,
+      dx: Math.cos(angle) * dist,
+      dy: Math.sin(angle) * dist - up,
+      delay: Math.round(Math.random() * 160),
+    };
+  });
+}
+
+/** A single glowing particle that drifts to (--dx, --dy) under `animClass`. */
+function EffectMote({
+  dx,
+  dy,
+  delay,
+  animClass,
+  background,
+  glow,
+  size = 6,
+}: {
+  dx: number;
+  dy: number;
+  delay: number;
+  animClass: string;
+  background: string;
+  glow: string;
+  size?: number;
+}) {
+  return (
+    <div
+      className={`absolute ${animClass}`}
+      style={
+        {
+          left: 0,
+          top: 0,
+          width: size,
+          height: size,
+          marginLeft: -size / 2,
+          marginTop: -size / 2,
+          borderRadius: '50%',
+          background,
+          boxShadow: glow,
+          animationDelay: `${delay}ms`,
+          ['--dx' as string]: `${dx}px`,
+          ['--dy' as string]: `${dy}px`,
+        } as React.CSSProperties
+      }
+    />
+  );
+}
+
+// ---------- Summon ----------
+
+function SummonEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(950, onDone);
+  const [motes] = useState(() => scatter(8, { min: 16, max: 42, up: 34, spread: 0.5 }));
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      {[0, 1, 2].map((i) => (
+        <div
+          key={`smoke-${i}`}
+          className="absolute animate-rift-smoke"
+          style={{
+            left: -16 + i * 16,
+            top: 14,
+            width: 0,
+            height: 0,
+            animationDelay: `${i * 90}ms`,
+          }}
+        >
+          <SmokePuff />
+        </div>
+      ))}
+      <div
+        className="absolute animate-enemy-rift"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <RiftSlit />
+      </div>
+      {motes.map((m) => (
+        <EffectMote
+          key={m.id}
+          dx={m.dx}
+          dy={m.dy}
+          delay={m.delay}
+          animClass="animate-rift-mote"
+          background="radial-gradient(circle, #f0d2ff 0%, #b45cff 50%, rgba(110,31,160,0) 75%)"
+          glow="0 0 6px rgba(180,92,255,0.85)"
+        />
+      ))}
+    </div>
+  );
+}
+
+function RiftSlit() {
+  return (
+    <svg
+      width="74"
+      height="156"
+      viewBox="-37 -78 74 156"
+      style={{ position: 'absolute', left: -37, top: -78, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="summon-void" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#100018" stopOpacity="0.95" />
+          <stop offset="60%" stopColor="#2a0a3f" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#2a0a3f" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="summon-edge" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#e065ff" stopOpacity="0.95" />
+          <stop offset="50%" stopColor="#9b6fcf" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#6e1fa0" stopOpacity="0.95" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="0" cy="0" rx="24" ry="70" fill="url(#summon-void)" />
+      <ellipse cx="0" cy="0" rx="22" ry="66" fill="none" stroke="url(#summon-edge)" strokeWidth="3" />
+      <ellipse cx="0" cy="0" rx="7" ry="58" fill="#f0d2ff" opacity="0.55" />
+      {/* Crackling energy along the tear */}
+      <g stroke="#e065ff" strokeWidth="1.2" strokeLinecap="round" opacity="0.8" fill="none">
+        <path d="M -4 -40 L 5 -24 L -3 -8 L 4 8 L -5 26 L 3 42" />
+        <path d="M 8 -30 L -2 -12 L 7 4 L -3 22" opacity="0.6" />
+      </g>
+    </svg>
+  );
+}
+
+function SmokePuff() {
+  return (
+    <svg
+      width="64"
+      height="64"
+      viewBox="-32 -32 64 64"
+      style={{ position: 'absolute', left: -32, top: -32, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="summon-smoke" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#4a3a5e" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#241830" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="20" fill="url(#summon-smoke)" />
+      <circle cx="-10" cy="4" r="13" fill="url(#summon-smoke)" />
+      <circle cx="11" cy="2" r="11" fill="url(#summon-smoke)" />
+    </svg>
+  );
+}
+
+// ---------- Debuff: Poison ----------
+
+function PoisonCloudEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(1000, onDone);
+  const drips = [
+    { x: -26, d: 80 },
+    { x: -6, d: 0 },
+    { x: 16, d: 200 },
+    { x: 34, d: 320 },
+  ];
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y - 18, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-poison-cloud"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <PoisonCloud />
+      </div>
+      {drips.map((drip, i) => (
+        <div
+          key={i}
+          className="absolute animate-poison-drip"
+          style={{ left: drip.x, top: 8, width: 0, height: 0, animationDelay: `${drip.d}ms` }}
+        >
+          <PoisonDrip />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PoisonCloud() {
+  return (
+    <svg
+      width="150"
+      height="110"
+      viewBox="-75 -55 150 110"
+      style={{ position: 'absolute', left: -75, top: -55, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="poison-grad" cx="0.5" cy="0.45" r="0.55">
+          <stop offset="0%" stopColor="#d7f06a" stopOpacity="0.85" />
+          <stop offset="45%" stopColor="var(--color-status-poison)" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#2f4a08" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="40" fill="url(#poison-grad)" />
+      <circle cx="-28" cy="6" r="24" fill="url(#poison-grad)" />
+      <circle cx="26" cy="-4" r="26" fill="url(#poison-grad)" />
+      <circle cx="10" cy="14" r="20" fill="url(#poison-grad)" />
+      <circle cx="-12" cy="-16" r="18" fill="url(#poison-grad)" />
+      {/* Bubbles */}
+      <g fill="#eaff8c" opacity="0.7">
+        <circle cx="-8" cy="-4" r="3.5" />
+        <circle cx="14" cy="6" r="2.5" />
+        <circle cx="-22" cy="10" r="2" />
+      </g>
+    </svg>
+  );
+}
+
+function PoisonDrip() {
+  return (
+    <svg
+      width="14"
+      height="22"
+      viewBox="-7 -11 14 22"
+      style={{ position: 'absolute', left: -7, top: -11, overflow: 'visible' }}
+    >
+      <defs>
+        <linearGradient id="poison-drip-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#d7f06a" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="var(--color-status-poison)" stopOpacity="0.5" />
+        </linearGradient>
+      </defs>
+      <path d="M 0 -9 Q 5 2 0 9 Q -5 2 0 -9 Z" fill="url(#poison-drip-grad)" />
+    </svg>
+  );
+}
+
+// ---------- Debuff: Frightened ----------
+
+function FrightenEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(900, onDone);
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      {/* Cold desaturating veil over the target */}
+      <div
+        className="absolute animate-fright-chill"
+        style={{
+          left: -46,
+          top: -52,
+          width: 92,
+          height: 104,
+          borderRadius: '46% 46% 42% 42%',
+          background:
+            'radial-gradient(ellipse at center, rgba(93,173,226,0.32) 0%, rgba(42,31,58,0.4) 55%, rgba(42,31,58,0) 100%)',
+        }}
+      />
+      {/* Looming shadow that surges in from the monster side, then recoils */}
+      <div
+        className="absolute animate-fright-shadow"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <ShadowMaw />
+      </div>
+    </div>
+  );
+}
+
+function ShadowMaw() {
+  return (
+    <svg
+      width="150"
+      height="150"
+      viewBox="-75 -75 150 150"
+      style={{ position: 'absolute', left: -75, top: -75, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="fright-grad" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="var(--color-status-shadow)" stopOpacity="0.92" />
+          <stop offset="70%" stopColor="#191228" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#191228" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Hooded shadow body */}
+      <path
+        d="M 0 -56 C 34 -56 52 -26 50 6 C 48 38 26 58 0 58 C -26 58 -48 38 -50 6 C -52 -26 -34 -56 0 -56 Z"
+        fill="url(#fright-grad)"
+      />
+      {/* Reaching tendrils */}
+      <g stroke="#3a2f6b" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.8">
+        <path d="M -36 30 Q -54 44 -60 64" />
+        <path d="M 36 30 Q 54 44 60 64" />
+        <path d="M -16 48 Q -22 64 -18 76" />
+        <path d="M 18 48 Q 24 64 20 76" />
+      </g>
+      {/* Cold hollow eyes */}
+      <g fill="#9ed8ff" opacity="0.9">
+        <ellipse cx="-14" cy="-10" rx="5" ry="8" />
+        <ellipse cx="14" cy="-10" rx="5" ry="8" />
+      </g>
+    </svg>
+  );
+}
+
+// ---------- Debuff: Blinded ----------
+
+function BlindEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(850, onDone);
+  const [splats] = useState(() => scatter(7, { min: 18, max: 38, spread: 0.7 }));
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y - 14, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-blind-ink"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <InkBlob />
+      </div>
+      {splats.map((s) => (
+        <EffectMote
+          key={s.id}
+          dx={s.dx}
+          dy={s.dy}
+          delay={s.delay}
+          animClass="animate-blind-splat"
+          background="radial-gradient(circle, #1a1622 0%, #050308 70%, rgba(5,3,8,0) 100%)"
+          glow="0 0 4px rgba(0,0,0,0.6)"
+          size={7}
+        />
+      ))}
+    </div>
+  );
+}
+
+function InkBlob() {
+  return (
+    <svg
+      width="120"
+      height="100"
+      viewBox="-60 -50 120 100"
+      style={{ position: 'absolute', left: -60, top: -50, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="blind-grad" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#000000" stopOpacity="0.96" />
+          <stop offset="62%" stopColor="#0a0710" stopOpacity="0.92" />
+          <stop offset="100%" stopColor="#1a1622" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Irregular splatter blob */}
+      <path
+        d="M 0 -38 C 24 -42 44 -22 40 2 C 50 10 46 34 22 36 C 14 50 -14 50 -24 34 C -48 32 -50 8 -38 -2 C -44 -24 -22 -36 0 -38 Z"
+        fill="url(#blind-grad)"
+      />
+      <circle cx="0" cy="-2" r="18" fill="#000000" opacity="0.5" />
+    </svg>
+  );
+}
+
+// ---------- Debuff: Weakened ----------
+
+function WeakenEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(950, onDone);
+  const [motes] = useState(() => scatter(9, { min: 14, max: 36, up: 30, spread: 0.5 }));
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-weaken-wash"
+        style={{
+          left: -42,
+          top: -50,
+          width: 84,
+          height: 100,
+          borderRadius: '46% 46% 42% 42%',
+          background:
+            'radial-gradient(ellipse at center, rgba(160,160,160,0.4) 0%, rgba(120,120,120,0.18) 60%, rgba(120,120,120,0) 100%)',
+          filter: 'saturate(0.2)',
+        }}
+      />
+      {motes.map((m) => (
+        <EffectMote
+          key={m.id}
+          dx={m.dx}
+          dy={m.dy}
+          delay={m.delay}
+          animClass="animate-weaken-mote"
+          background="radial-gradient(circle, #d8d8d8 0%, #9a9a9a 55%, rgba(120,120,120,0) 80%)"
+          glow="0 0 4px rgba(180,180,180,0.5)"
+          size={5}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ---------- Debuff: Restrained ----------
+
+function RestrainEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(950, onDone);
+  return (
+    <div
+      className="absolute animate-restrain-web"
+      style={{ left: target.x, top: target.y - 6, width: 0, height: 0, transformOrigin: 'center' }}
+    >
+      <WebStrands />
+    </div>
+  );
+}
+
+function WebStrands() {
+  const spokes = 10;
+  const r = 52;
+  return (
+    <svg
+      width="120"
+      height="120"
+      viewBox="-60 -60 120 120"
+      style={{ position: 'absolute', left: -60, top: -60, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="restrain-glow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#eef2f4" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#eef2f4" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="54" fill="url(#restrain-glow)" />
+      <g stroke="#d8dde0" strokeWidth="1.1" opacity="0.85" fill="none">
+        {/* Radial strands */}
+        {Array.from({ length: spokes }).map((_, i) => {
+          const a = (i / spokes) * Math.PI * 2;
+          return (
+            <line key={`s-${i}`} x1="0" y1="0" x2={Math.cos(a) * r} y2={Math.sin(a) * r} />
+          );
+        })}
+        {/* Concentric capture rings */}
+        {[18, 32, 46].map((ring) => (
+          <polygon
+            key={`r-${ring}`}
+            points={Array.from({ length: spokes })
+              .map((_, i) => {
+                const a = (i / spokes) * Math.PI * 2;
+                return `${Math.cos(a) * ring},${Math.sin(a) * ring}`;
+              })
+              .join(' ')}
+            opacity="0.7"
+          />
+        ))}
+      </g>
+      {/* Sticky nodes */}
+      <g fill="#eef2f4" opacity="0.6">
+        <circle cx="0" cy="0" r="2.5" />
+        <circle cx="32" cy="0" r="1.6" />
+        <circle cx="-26" cy="18" r="1.6" />
+        <circle cx="14" cy="-30" r="1.6" />
+      </g>
+    </svg>
+  );
+}
+
+// ---------- Sustain: Heal ----------
+
+function SustainHealEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(1000, onDone);
+  const [motes] = useState(() => scatter(8, { min: 10, max: 30, up: 40, spread: 0.4 }));
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-heal-glow"
+        style={{ left: -32, top: -56, width: 64, height: 88, transformOrigin: 'bottom center' }}
+      >
+        <HealColumn />
+      </div>
+      <div
+        className="absolute animate-heal-pulse"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <HealPulse />
+      </div>
+      {motes.map((m) => (
+        <EffectMote
+          key={m.id}
+          dx={m.dx}
+          dy={m.dy}
+          delay={m.delay}
+          animClass="animate-heal-mote"
+          background="radial-gradient(circle, #d6ffcf 0%, var(--color-dmg-heal) 55%, rgba(63,191,95,0) 80%)"
+          glow="0 0 6px rgba(111,217,84,0.85)"
+        />
+      ))}
+    </div>
+  );
+}
+
+function HealColumn() {
+  return (
+    <svg
+      width="64"
+      height="88"
+      viewBox="0 0 64 88"
+      style={{ overflow: 'visible' }}
+    >
+      <defs>
+        <linearGradient id="heal-col" x1="0.5" y1="1" x2="0.5" y2="0">
+          <stop offset="0%" stopColor="var(--color-dmg-heal)" stopOpacity="0.75" />
+          <stop offset="60%" stopColor="#a8f59a" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#a8f59a" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="32" cy="84" rx="30" ry="10" fill="var(--color-dmg-heal)" opacity="0.35" />
+      <path d="M 8 86 Q 14 30 32 6 Q 50 30 56 86 Z" fill="url(#heal-col)" />
+    </svg>
+  );
+}
+
+function HealPulse() {
+  return (
+    <svg
+      width="90"
+      height="90"
+      viewBox="-45 -45 90 90"
+      style={{ position: 'absolute', left: -45, top: -45, overflow: 'visible' }}
+    >
+      <circle cx="0" cy="0" r="38" fill="none" stroke="var(--color-dmg-heal)" strokeWidth="2" opacity="0.7" />
+      {/* Mending cross */}
+      <g fill="#d6ffcf" opacity="0.9">
+        <rect x="-3" y="-12" width="6" height="24" rx="1.5" />
+        <rect x="-12" y="-3" width="24" height="6" rx="1.5" />
+      </g>
+    </svg>
+  );
+}
+
+// ---------- Sustain: Ward ----------
+
+function SustainWardEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(1100, onDone);
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y - 6, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-ward-bubble"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <WardBubble />
+      </div>
+      <div
+        className="absolute animate-ward-sheen"
+        style={{ left: -20, top: -34, width: 40, height: 60 }}
+      >
+        <WardSheen />
+      </div>
+    </div>
+  );
+}
+
+function WardBubble() {
+  return (
+    <svg
+      width="124"
+      height="138"
+      viewBox="-62 -69 124 138"
+      style={{ position: 'absolute', left: -62, top: -69, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="ward-fill" cx="0.42" cy="0.36" r="0.7">
+          <stop offset="0%" stopColor="#fff3cf" stopOpacity="0.22" />
+          <stop offset="55%" stopColor="var(--color-accent-gold)" stopOpacity="0.14" />
+          <stop offset="100%" stopColor="var(--color-accent-amber)" stopOpacity="0.04" />
+        </radialGradient>
+        <linearGradient id="ward-rim" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#ffe9a8" stopOpacity="0.95" />
+          <stop offset="55%" stopColor="var(--color-accent-amber)" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#ffe9a8" stopOpacity="0.9" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="0" cy="0" rx="56" ry="64" fill="url(#ward-fill)" />
+      <ellipse cx="0" cy="0" rx="56" ry="64" fill="none" stroke="url(#ward-rim)" strokeWidth="2.4" />
+      {/* Hex facet lattice on the dome */}
+      <g stroke="#ffe9a8" strokeWidth="0.7" opacity="0.4" fill="none">
+        <path d="M 0 -64 L 0 64" />
+        <path d="M -52 -22 Q 0 -34 52 -22" />
+        <path d="M -56 14 Q 0 26 56 14" />
+        <path d="M -28 -58 Q -34 0 -22 60" />
+        <path d="M 28 -58 Q 34 0 22 60" />
+      </g>
+      {/* Highlight cap */}
+      <ellipse cx="-20" cy="-38" rx="14" ry="9" fill="#fff7e0" opacity="0.55" transform="rotate(-28 -20 -38)" />
+    </svg>
+  );
+}
+
+function WardSheen() {
+  return (
+    <svg width="40" height="60" viewBox="0 0 40 60" style={{ overflow: 'visible' }}>
+      <defs>
+        <linearGradient id="ward-sheen-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#fff7e0" stopOpacity="0" />
+          <stop offset="50%" stopColor="#fff7e0" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#fff7e0" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <rect x="14" y="0" width="12" height="60" rx="6" fill="url(#ward-sheen-grad)" />
+    </svg>
+  );
+}
+
+// ---------- Sustain: Life-drain ----------
+
+function LifeDrainEffect({ origin, target, onDone }: ArcProps) {
+  useDoneTimer(1000, onDone);
+  // Motes travel FROM the wounded player (target) INTO the feeding monster
+  // (origin). The tether bar is rooted at the player and rotated toward the
+  // monster; the feed-bloom sits at the monster end.
+  const dx = origin.x - target.x;
+  const dy = origin.y - target.y;
+  const length = Math.hypot(dx, dy);
+  const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+  const [motes] = useState(() =>
+    Array.from({ length: 6 }, (_, i) => ({ id: i, delay: i * 120 + Math.round(Math.random() * 60) })),
+  );
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      {/* Tether */}
+      <div
+        className="absolute animate-drain-tether"
+        style={{
+          left: 0,
+          top: -3,
+          width: length,
+          height: 6,
+          transformOrigin: '0% 50%',
+          transform: `rotate(${angle}deg)`,
+          borderRadius: 3,
+          background:
+            'linear-gradient(90deg, rgba(111,217,84,0.85) 0%, rgba(110,31,160,0.7) 60%, rgba(110,31,160,0.2) 100%)',
+          boxShadow: '0 0 8px rgba(110,31,160,0.7)',
+        }}
+      />
+      {/* Life motes flowing into the monster */}
+      {motes.map((m) => (
+        <EffectMote
+          key={m.id}
+          dx={dx}
+          dy={dy}
+          delay={m.delay}
+          animClass="animate-drain-mote"
+          background="radial-gradient(circle, #eaffe0 0%, var(--color-dmg-heal) 55%, rgba(63,191,95,0) 80%)"
+          glow="0 0 6px rgba(111,217,84,0.9)"
+        />
+      ))}
+      {/* Feed bloom at the monster */}
+      <div
+        className="absolute animate-drain-feed"
+        style={{ left: dx, top: dy, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <DrainFeed />
+      </div>
+    </div>
+  );
+}
+
+function DrainFeed() {
+  return (
+    <svg
+      width="76"
+      height="76"
+      viewBox="-38 -38 76 76"
+      style={{ position: 'absolute', left: -38, top: -38, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="drain-feed-grad" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#eaffe0" stopOpacity="0.85" />
+          <stop offset="40%" stopColor="var(--color-dmg-heal)" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="var(--color-status-necrotic)" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="32" fill="url(#drain-feed-grad)" />
+    </svg>
+  );
+}
+
+// ---------- Multiattack: Flurry ----------
+
+function FlurryEffect({ origin, target, onDone }: ArcProps) {
+  useDoneTimer(700, onDone);
+  // Streaks land on the player; oriented along the monster→player line so they
+  // read as incoming blows. Each strike is staggered with a small follow-through.
+  const baseAngle = Math.atan2(target.y - origin.y, target.x - origin.x);
+  const strikes = [
+    { off: -18, tilt: -0.42, delay: 0 },
+    { off: 4, tilt: 0.28, delay: 110 },
+    { off: 22, tilt: -0.12, delay: 220 },
+  ];
+  const follow = 22;
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      {strikes.map((s, i) => {
+        const a = baseAngle + s.tilt;
+        const fx = Math.cos(a) * follow;
+        const fy = Math.sin(a) * follow;
+        const deg = (a * 180) / Math.PI;
+        return (
+          <div key={i}>
+            <div
+              className="absolute animate-flurry-streak"
+              style={
+                {
+                  left: 0,
+                  top: s.off,
+                  width: 0,
+                  height: 0,
+                  transform: `rotate(${deg}deg)`,
+                  transformOrigin: 'center',
+                  animationDelay: `${s.delay}ms`,
+                  ['--dx' as string]: `${fx}px`,
+                  ['--dy' as string]: `${fy}px`,
+                } as React.CSSProperties
+              }
+            >
+              <StrikeStreak />
+            </div>
+            <div
+              className="absolute animate-flurry-spark"
+              style={{
+                left: 0,
+                top: s.off,
+                width: 0,
+                height: 0,
+                animationDelay: `${s.delay + 90}ms`,
+                opacity: 0,
+              }}
+            >
+              <StrikeSpark />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function StrikeStreak() {
+  return (
+    <svg
+      width="96"
+      height="24"
+      viewBox="-48 -12 96 24"
+      style={{ position: 'absolute', left: -48, top: -12, overflow: 'visible' }}
+    >
+      <defs>
+        <linearGradient id="flurry-grad" x1="0" y1="0.5" x2="1" y2="0.5">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+          <stop offset="78%" stopColor="#dfe7ef" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+        </linearGradient>
+      </defs>
+      <path d="M -46 0 Q -10 -5 44 0 Q -10 5 -46 0 Z" fill="url(#flurry-grad)" />
+      <circle cx="44" cy="0" r="3" fill="#ffffff" />
+    </svg>
+  );
+}
+
+function StrikeSpark() {
+  return (
+    <svg
+      width="40"
+      height="40"
+      viewBox="-20 -20 40 40"
+      style={{ position: 'absolute', left: -20, top: -20, overflow: 'visible' }}
+    >
+      <g stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" opacity="0.9">
+        <line x1="0" y1="-14" x2="0" y2="-5" />
+        <line x1="0" y1="14" x2="0" y2="5" />
+        <line x1="-14" y1="0" x2="-5" y2="0" />
+        <line x1="14" y1="0" x2="5" y2="0" />
+      </g>
+      <circle cx="0" cy="0" r="3.5" fill="#ffffff" />
+    </svg>
+  );
+}
+
+// ---------- Frenzy: Battle-rage aura ----------
+
+function FrenzyEffect({ origin, onDone }: SelfProps) {
+  useDoneTimer(1000, onDone);
+  const wisps = [-40, -20, 0, 20, 40];
+  return (
+    <div className="absolute" style={{ left: origin.x, top: origin.y, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-frenzy-aura"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <FrenzyAura />
+      </div>
+      <div
+        className="absolute animate-frenzy-ring"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <FrenzyRing />
+      </div>
+      {wisps.map((x, i) => (
+        <div
+          key={i}
+          className="absolute animate-frenzy-wisp"
+          style={{ left: x, top: 30, width: 0, height: 0, animationDelay: `${i * 60}ms` }}
+        >
+          <FrenzyWisp />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FrenzyAura() {
+  return (
+    <svg
+      width="170"
+      height="170"
+      viewBox="-85 -85 170 170"
+      style={{ position: 'absolute', left: -85, top: -85, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="frenzy-grad" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#ffd6c2" stopOpacity="0.0" />
+          <stop offset="55%" stopColor="var(--color-accent-blood)" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="var(--color-accent-deep-blood)" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="72" fill="url(#frenzy-grad)" />
+    </svg>
+  );
+}
+
+function FrenzyRing() {
+  return (
+    <svg
+      width="150"
+      height="150"
+      viewBox="-75 -75 150 150"
+      style={{ position: 'absolute', left: -75, top: -75, overflow: 'visible' }}
+    >
+      <circle cx="0" cy="0" r="60" fill="none" stroke="var(--color-accent-blood)" strokeWidth="3" opacity="0.85" />
+      <circle cx="0" cy="0" r="60" fill="none" stroke="#ffb199" strokeWidth="1" opacity="0.7" />
+    </svg>
+  );
+}
+
+function FrenzyWisp() {
+  return (
+    <svg
+      width="20"
+      height="46"
+      viewBox="-10 -23 20 46"
+      style={{ position: 'absolute', left: -10, top: -23, overflow: 'visible' }}
+    >
+      <defs>
+        <linearGradient id="frenzy-wisp-grad" x1="0.5" y1="1" x2="0.5" y2="0">
+          <stop offset="0%" stopColor="var(--color-accent-deep-blood)" stopOpacity="0.1" />
+          <stop offset="55%" stopColor="var(--color-accent-blood)" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#ffb199" stopOpacity="0.9" />
+        </linearGradient>
+      </defs>
+      <path d="M 0 22 Q -8 4 -2 -8 Q 2 -18 0 -22 Q -2 -16 4 -6 Q 8 6 0 22 Z" fill="url(#frenzy-wisp-grad)" />
+    </svg>
   );
 }
