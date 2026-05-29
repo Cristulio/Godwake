@@ -368,25 +368,42 @@ function MerchantModal({
           </div>
         )}
 
-        <div className="pt-3 border-t border-[var(--color-border-dim)]">
-          <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
-            ◆ Bless me, traveller
+        {/* Blessings are free god-marks, not stock. Set them apart from the
+            gp-priced wares above with a labelled divider + their own tinted,
+            gold-bordered panel so they don't read as purchasables. */}
+        <div className="mt-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px flex-1 bg-[var(--color-border-warm)]" />
+            <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
+              Not for sale
+            </div>
+            <div className="h-px flex-1 bg-[var(--color-border-warm)]" />
           </div>
-          <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-            "Carry a god's mark with you. Won't cost a copper — only a name to remember the
-            road by." (Choose one of three; offered once per camp.)
-          </p>
-          {merchantBlessingTaken ? (
-            <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
-              The merchant nods. "Walk well, then."
+          <div className="border-2 border-[var(--color-accent-gold)] bg-gradient-to-br from-[#1e1a2a] to-[#100d18] p-4">
+            <div className="flex items-baseline justify-between gap-3 mb-2">
+              <div className="text-[var(--color-accent-gold)] text-xs uppercase tracking-widest">
+                ◆ Bless me, traveller
+              </div>
+              <div className="text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest shrink-0">
+                No coin
+              </div>
             </div>
-          ) : (
-            <div className="grid md:grid-cols-3 gap-3">
-              {blessingOptions.map((id) => (
-                <BlessingCard key={id} blessingId={id} pickable onPick={() => onPickBlessing(id)} />
-              ))}
-            </div>
-          )}
+            <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
+              "Carry a god's mark with you. Won't cost a copper — only a name to remember the
+              road by." (Choose one of three; offered once per camp.)
+            </p>
+            {merchantBlessingTaken ? (
+              <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest">
+                The merchant nods. "Walk well, then."
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-3">
+                {blessingOptions.map((id) => (
+                  <BlessingCard key={id} blessingId={id} pickable onPick={() => onPickBlessing(id)} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="sticky bottom-0 -mx-5 -mb-5 mt-5 px-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-end">

@@ -47,7 +47,7 @@ describe('RestRoom — short rest heals 70%', () => {
     const expectedHp = Math.min(before.hp.max, before.hp.current + expectedHeal);
 
     render(<RestRoom room={restRoom} onContinue={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: /short rest/i }));
+    fireEvent.click(screen.getByRole('button', { name: /heal 70%/i }));
 
     const after = useGameStore.getState().character!;
     expect(after.hp.current).toBe(expectedHp);
