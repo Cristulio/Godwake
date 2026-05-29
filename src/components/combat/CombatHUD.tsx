@@ -75,6 +75,49 @@ function wizardBuffDescription(name: string): string {
   }
 }
 
+function HpBar({
+  current,
+  max,
+  temp,
+}: {
+  current: number;
+  max: number;
+  temp: number;
+}) {
+  const healthPct = max > 0 ? current / max : 0;
+  const bloodied = healthPct <= 0.25;
+  const hurt = healthPct <= 0.5;
+  // Temp HP extends the visible pool so it reads as a real (gold) overshield
+  // sitting past full health rather than overwriting it.
+  const denom = max + temp;
+  const fillW = denom > 0 ? (current / denom) * 100 : 0;
+  const tempW = denom > 0 ? (temp / denom) * 100 : 0;
+  const fillClass = bloodied
+    ? 'from-[var(--color-accent-blood)] to-[var(--color-accent-deep-blood)]'
+    : hurt
+      ? 'from-[var(--color-accent-torch)] to-[var(--color-accent-amber)]'
+      : 'from-[var(--color-dmg-heal)] to-[#3f9e30]';
+  return (
+    <div
+      aria-hidden="true"
+      className="relative h-2 w-full min-w-[132px] bg-[var(--color-bg-deep)] border border-[var(--color-border-dim)] overflow-hidden"
+    >
+      <div
+        className={`absolute inset-y-0 left-0 bg-gradient-to-r ${fillClass} transition-[width] duration-500 ease-out ${bloodied ? 'animate-bloodied-throb' : ''}`}
+        style={{ width: `${fillW}%` }}
+      />
+      {temp > 0 && (
+        <div
+          className="absolute inset-y-0 bg-[var(--color-accent-gold)]/75 border-l border-[var(--color-bg-base)] transition-[left,width] duration-500 ease-out"
+          style={{ left: `${fillW}%`, width: `${tempW}%` }}
+        />
+      )}
+      <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-hpbar-sheen pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/12 to-transparent pointer-events-none" />
+    </div>
+  );
+}
+
 function Dot({ on, title }: { on: boolean; title?: string }) {
   return (
     <span
@@ -237,27 +280,34 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
       aria-label="Combat HUD"
     >
       <Section title="Vitals">
-        <span
-          className={`tabular-nums font-bold ${hpTone}`}
-          title={`Hit points${character.hp.temp > 0 ? ` (+${character.hp.temp} temp)` : ''}`}
-        >
-          HP {character.hp.current}/{character.hp.max}
-          {character.hp.temp > 0 && (
-            <span className="ml-1 text-[var(--color-accent-gold)]">+{character.hp.temp}</span>
-          )}
-        </span>
-        <span
-          className="tabular-nums text-[var(--color-text-secondary)]"
-          title="Armor Class"
-        >
-          AC {ac}
-        </span>
-        <span
-          className="tabular-nums text-[var(--color-text-secondary)]"
-          title="Speed (ft per turn)"
-        >
-          SPD {speed}
-        </span>
+        <div className="flex flex-col gap-1 min-w-[150px]">
+          <div className="flex items-center justify-between gap-3">
+            <span
+              className={`tabular-nums font-bold ${hpTone}`}
+              title={`Hit points${character.hp.temp > 0 ? ` (+${character.hp.temp} temp)` : ''}`}
+            >
+              HP {character.hp.current}/{character.hp.max}
+              {character.hp.temp > 0 && (
+                <span className="ml-1 text-[var(--color-accent-gold)]">+{character.hp.temp}</span>
+              )}
+            </span>
+            <span className="flex items-center gap-2.5">
+              <span
+                className="tabular-nums text-[var(--color-text-secondary)]"
+                title="Armor Class"
+              >
+                AC {ac}
+              </span>
+              <span
+                className="tabular-nums text-[var(--color-text-dim)]"
+                title="Speed (ft per turn)"
+              >
+                SPD {speed}
+              </span>
+            </span>
+          </div>
+          <HpBar current={character.hp.current} max={character.hp.max} temp={character.hp.temp} />
+        </div>
       </Section>
 
       {isFighter && (

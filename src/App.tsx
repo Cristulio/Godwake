@@ -105,7 +105,14 @@ function App() {
 
   return (
     <div className="crt-scanlines">
-      <Suspense fallback={<ScreenFallback />}>{content}</Suspense>
+      <Suspense fallback={<ScreenFallback />}>
+        {/* Keyed on `screen` so each route change remounts and replays the
+            scene fade — the only thing that gives moving between hub/map/
+            delve/level-up an intentional beat. Opacity-only (see index.css). */}
+        <div key={screen} className="animate-scene-in">
+          {content}
+        </div>
+      </Suspense>
       {taunt && (
         <IrenicusTaunt
           speaker={taunt.speaker}
