@@ -36,10 +36,35 @@ export const RENOWN_PER_DELVE_FAILURE = 15;
  * goblin in room 1.
  */
 export const RENOWN_PER_CHAPTER_BOSS = 10;
+/**
+ * Depth credit: renown per room reached this run, paid on BOTH clear and
+ * death. Rewards pushing deeper even between bosses, so dying at the Ch2 boss
+ * after clearing twenty rooms pays far more than dying in room 1 — fixing the
+ * old flat-failure formula where only boss kills moved the needle.
+ */
+export const RENOWN_PER_ROOM_REACHED = 1;
 /** Renown threshold that reveals the Druid Grove on the hub. */
 export const GROVE_UNLOCK_THRESHOLD = 30;
 /** Renown threshold required to unlock the road to Athkatla (Chapter 2). */
 export const RENOWN_FOR_CHAPTER_2 = 500;
+
+/**
+ * The level-1 HP ceiling a soul descends with: class hit die + CON mod +
+ * racial per-level HP + the wizard's +1 baseline + any permanent Grove HP
+ * (Mantle of the Wakened, Iron Will). `startDelve` rebuilds this on every
+ * descent; `reincarnateSoul` refills to it so the between-lives screen shows
+ * the SAME number the soul will descend with — not the dead life's leveled
+ * max. effectiveAbilityScores reads only base + race, so run-scoped blessings
+ * still on the dead character don't skew the result.
+ */
+function level1HpMax(ch: Character): number {
+  const cls = getClass(ch.classId);
+  const conMod = abilityModifier(effectiveAbilityScores(ch).con);
+  const raceBonusHp = getRace(ch.raceId).bonusHpPerLevel ?? 0;
+  const classBonusHp = ch.classId === 'wizard' ? 1 : 0;
+  const permanentHp = ch.permanentBonuses?.hp ?? 0;
+  return cls.hitDie + conMod + raceBonusHp + classBonusHp + permanentHp;
+}
 
 function applyDelveStartQuirks(character: Character): Character {
   const mods = characterQuirkMods(character);
@@ -100,6 +125,11 @@ function reincarnateSoul(character: Character): Character {
   // Idempotent — only the first life triggers it.
   meta.markNpcKnown('imoen');
 
+  // Refill the body to the LEVEL-1 ceiling the soul will actually descend with,
+  // not the dead life's leveled max. This is the same number startDelve rebuilds
+  // on descent, so the between-lives screen no longer shows e.g. 46/46 and then
+  // snaps to 16 on Descend.
+  const hpMax = level1HpMax(character);
   return {
     ...character,
     level: 1,
@@ -108,10 +138,7 @@ function reincarnateSoul(character: Character): Character {
     blessings: [],
     campBoons: [],
     conditions: [],
-    // Refill the body so the between-lives screen shows a whole soul, not a
-    // corpse stuck at 0 HP from the death that ended the last run. startDelve
-    // recomputes the level-1 ceiling on descent — this is just for the wait.
-    hp: { current: character.hp.max, max: character.hp.max, temp: 0 },
+    hp: { current: hpMax, max: hpMax, temp: 0 },
     delveAttackBonus: 0,
     delveSpellAttackBonus: 0,
     bossIntel: {},
@@ -169,16 +196,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // Hades-style fresh run: level, xp, gold all reset to baseline.
     // Renown + Grove upgrades + quirks survived the wheel.
     const cls = getClass(ch.classId);
-    const conMod = abilityModifier(effectiveAbilityScores(ch).con);
-    const race = getRace(ch.raceId);
-    const bonusHp = race.bonusHpPerLevel ?? 0;
-    // Wizard +1/level baseline must be rebuilt on every descent — initialize.ts
-    // bakes it into hp.max at character creation, but startDelve recomputes
-    // baseHpMax and would otherwise strip it. Same for Grove HP bonuses
-    // (Mantle of the Wakened, Iron Will), which live on permanentBonuses.hp.
-    const classBonusHp = ch.classId === 'wizard' ? 1 : 0;
-    const permanentHpBonus = ch.permanentBonuses?.hp ?? 0;
-    const baseHpMax = cls.hitDie + conMod + bonusHp + classBonusHp + permanentHpBonus;
+    // Level-1 ceiling, rebuilt every descent (see level1HpMax): hit die + CON +
+    // race HP + wizard's +1 baseline + permanent Grove HP. reincarnateSoul
+    // refills to the same value so the wait-screen matches the descent.
+    const baseHpMax = level1HpMax(ch);
     // Coin in the Pocket seeds gold from a permanent bonus on the soul, not
     // a delve-start mutation, so we add it after the run-scoped reset to 0.
     // Higher ascension levels tighten the purse (startingGoldMult < 1).
@@ -374,9 +395,15 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const bossesKilled = s.delve.rooms
       .slice(0, bossLimitIdx)
       .filter((r) => r.kind === 'boss').length;
-    const renownBase = wonBoss
-      ? RENOWN_PER_DELVE_CLEAR
-      : RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bossesKilled;
+    // Depth credit pays per room reached on BOTH paths; the boss stack rides on
+    // top. A clear swaps the failure base for the clear premium and — reaching
+    // every room and felling every boss — always tops even the deepest death by
+    // construction, so the clear > deep-death > shallow-death ordering holds.
+    const depthRenown = RENOWN_PER_ROOM_REACHED * s.delve.currentRoomIdx;
+    const renownBase =
+      (wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE) +
+      RENOWN_PER_CHAPTER_BOSS * bossesKilled +
+      depthRenown;
     // Ascension reward multiplier composes MULTIPLICATIVELY with the soul-mark
     // (audit flagged multiplier-stacking as a past bug-class — both apply here).
     // Soul-mark reads the quirks the soul carried THIS run, so settle renown
