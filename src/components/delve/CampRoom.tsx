@@ -103,6 +103,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const addBlessing = useGameStore((s) => s.addBlessing);
   const showTaunt = useGameStore((s) => s.showTaunt);
+  const goToInventory = useGameStore((s) => s.goToInventory);
 
   // Which camp is this in the delve sequence? Count camp rooms from the start
   // up to (and including) the current room — the count is the tier index.
@@ -304,9 +305,14 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
         <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
           "Coin in this pocket, comfort in the other. The road keeps going. You'll want both — and I've a god's mark to spare, after."
         </p>
-        <Button variant="secondary" onClick={openShop}>
-          Step up to the caravan →
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="secondary" onClick={openShop}>
+            Step up to the caravan →
+          </Button>
+          <Button variant="ghost" onClick={goToInventory}>
+            ◆ Open your pack
+          </Button>
+        </div>
       </Panel>
 
       <div className="flex justify-center mt-2">

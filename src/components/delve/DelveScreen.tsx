@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import type { Character } from '../../types/character';
+import type { DelveState } from '../../types/delve';
 import { useGameStore } from '../../stores/gameStore';
 import { currentRoom } from '../../engine/delve';
 import { createCombat } from '../../engine/combat';
@@ -303,9 +305,7 @@ export function DelveScreen() {
   if (room.kind === 'rest') {
     return (
       <div key={room.id} className="animate-room-enter">
-        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
-        </div>
+        <DelveTopBar delve={delve} character={character} />
         <RestRoom room={room} onContinue={() => advanceRoom()} />
       </div>
     );
@@ -314,9 +314,7 @@ export function DelveScreen() {
   if (room.kind === 'treasure') {
     return (
       <div key={room.id} className="animate-room-enter">
-        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
-        </div>
+        <DelveTopBar delve={delve} character={character} />
         <TreasureRoom room={room} onContinue={() => advanceRoom()} />
       </div>
     );
@@ -325,9 +323,7 @@ export function DelveScreen() {
   if (room.kind === 'shrine') {
     return (
       <div key={room.id} className="animate-room-enter">
-        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
-        </div>
+        <DelveTopBar delve={delve} character={character} />
         <ShrineRoom room={room} onContinue={() => advanceRoom()} />
       </div>
     );
@@ -336,9 +332,7 @@ export function DelveScreen() {
   if (room.kind === 'event') {
     return (
       <div key={room.id} className="animate-room-enter">
-        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
-          <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
-        </div>
+        <DelveTopBar delve={delve} character={character} />
         <EventRoom
           room={room}
           onContinue={() => advanceRoom()}
@@ -388,6 +382,32 @@ export function DelveScreen() {
   }
 
   return null;
+}
+
+/**
+ * Header for the safe (non-combat) rooms: the room status line plus a Pack
+ * button so weapons bought at camp or found on the road can be equipped
+ * mid-delve. Returns to the same room (the delve is untouched). Not rendered
+ * during combat — no rummaging mid-fight.
+ */
+function DelveTopBar({
+  delve,
+  character,
+}: {
+  delve: DelveState;
+  character: Character;
+}) {
+  const goToInventory = useGameStore((s) => s.goToInventory);
+  return (
+    <div className="max-w-3xl w-full mx-auto px-6 pt-4">
+      <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
+      <div className="flex justify-end mt-2">
+        <Button variant="ghost" onClick={goToInventory}>
+          ◆ Open Pack
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 function LichEyesPreview({

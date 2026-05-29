@@ -32,7 +32,9 @@ const SLOTS: SlotMeta[] = [
 
 export function InventoryScreen() {
   const character = useGameStore((s) => s.character);
+  const delve = useGameStore((s) => s.delve);
   const goToHub = useGameStore((s) => s.goToHub);
+  const goToDelve = useGameStore((s) => s.goToDelve);
   const equipFromInventory = useGameStore((s) => s.equipFromInventory);
   const unequipSlotAction = useGameStore((s) => s.unequipSlot);
 
@@ -177,9 +179,15 @@ export function InventoryScreen() {
             {character.name} · {character.inventory.length} items · AC {ac}
           </p>
         </div>
-        <Button variant="ghost" onClick={goToHub}>
-          ← Phandalin
-        </Button>
+        {delve ? (
+          <Button variant="ghost" onClick={goToDelve}>
+            ← Back to the delve
+          </Button>
+        ) : (
+          <Button variant="ghost" onClick={goToHub}>
+            ← Phandalin
+          </Button>
+        )}
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] gap-4 mb-6">
