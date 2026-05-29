@@ -5,7 +5,7 @@
  * monster bestiary codex, +misc). Each was validated in isolation; this
  * sim stress-tests their worst-case STACKED interaction.
  *
- * Four scenarios, 500 full-Godwake delves each (4 chapters, 50 rooms):
+ * Four scenarios, 500 full-Godwake delves each (4 chapters, 58 rooms):
  *
  *   1. Optimal Soul (Wizard L7, tiefling): every defensive lever stacked
  *      — capped AC blessings, capped tempHP, defensive camp boons (Stillness
@@ -300,13 +300,13 @@ function makeCharacter(spec: ScenarioSpec): Character {
 }
 
 function chapterFor(roomIdx: number): number {
-  // Godwake layout (50 rooms total): ch1 indices 0–10 (boss at 10, camp at 11),
-  // ch2 indices 12–23 (boss at 23, camp at 24), ch3 indices 25–36 (boss at 36,
-  // camp at 37), ch4 indices 38–49 (boss at 49). The camp room separating two
+  // Godwake layout (58 rooms total): ch1 indices 0–12 (boss at 12, camp at 13),
+  // ch2 indices 14–27 (boss at 27, camp at 28), ch3 indices 29–42 (boss at 42,
+  // camp at 43), ch4 indices 44–57 (boss at 57). The camp room separating two
   // chapters bills to the preceding chapter so cleanup is local.
-  if (roomIdx <= 11) return 1;
-  if (roomIdx <= 24) return 2;
-  if (roomIdx <= 37) return 3;
+  if (roomIdx <= 13) return 1;
+  if (roomIdx <= 28) return 2;
+  if (roomIdx <= 43) return 3;
   return 4;
 }
 

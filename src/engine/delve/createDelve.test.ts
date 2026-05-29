@@ -8,18 +8,20 @@ import {
 import { getMonster } from '../../content/monsters';
 
 describe('createIronCellsDelve', () => {
-  it('produces 9 rooms in the expected slot pattern (intel room before boss)', () => {
+  it('produces 11 rooms in the expected slot pattern (intel room before boss)', () => {
     const d = createIronCellsDelve(1);
-    expect(d.rooms).toHaveLength(9);
+    expect(d.rooms).toHaveLength(11);
     expect(d.rooms[0].kind).toBe('combat'); // warmup
     expect(d.rooms[1].kind).toBe('shrine');
     expect(d.rooms[2].kind).toBe('combat'); // early-mid
-    expect(d.rooms[3].kind).toBe('rest');
-    expect(d.rooms[4].kind).toBe('combat'); // mid
-    expect(d.rooms[5].kind).toBe('shrine');
-    expect(d.rooms[6].kind).toBe('combat'); // elite
-    expect(d.rooms[7].kind).toBe('event');  // boss intel
-    expect(d.rooms[8].kind).toBe('boss');
+    expect(d.rooms[3].kind).toBe('combat'); // early-mid
+    expect(d.rooms[4].kind).toBe('rest');
+    expect(d.rooms[5].kind).toBe('combat'); // mid
+    expect(d.rooms[6].kind).toBe('combat'); // mid
+    expect(d.rooms[7].kind).toBe('shrine');
+    expect(d.rooms[8].kind).toBe('combat'); // elite
+    expect(d.rooms[9].kind).toBe('event');  // boss intel
+    expect(d.rooms[10].kind).toBe('boss');
   });
 
   it('is deterministic per seed', () => {
@@ -43,7 +45,7 @@ describe('createIronCellsDelve', () => {
   it('boss is always Ilyich', () => {
     for (let s = 0; s < 10; s++) {
       const d = createIronCellsDelve(s);
-      expect(d.rooms[8].monsters?.[0].defId).toBe('duergar-ilyich');
+      expect(d.rooms[10].monsters?.[0].defId).toBe('duergar-ilyich');
     }
   });
 
@@ -156,9 +158,9 @@ describe('createGodwakeDelve', () => {
 });
 
 describe('createSpellholdDelve', () => {
-  it('produces 9 rooms in the warmup-shrine-mid-rest-elite-shrine-elite-intel-boss pattern', () => {
+  it('produces 11 rooms in the warmup-shrine-mid-rest-elite-shrine-mid-shrine-elite-intel-boss pattern', () => {
     const d = createSpellholdDelve(1);
-    expect(d.rooms).toHaveLength(9);
+    expect(d.rooms).toHaveLength(11);
     expect(d.rooms[0].kind).toBe('combat');
     expect(d.rooms[1].kind).toBe('shrine');
     expect(d.rooms[2].kind).toBe('combat');
@@ -166,8 +168,10 @@ describe('createSpellholdDelve', () => {
     expect(d.rooms[4].kind).toBe('combat');
     expect(d.rooms[5].kind).toBe('shrine');
     expect(d.rooms[6].kind).toBe('combat');
-    expect(d.rooms[7].kind).toBe('event');
-    expect(d.rooms[8].kind).toBe('boss');
+    expect(d.rooms[7].kind).toBe('shrine');
+    expect(d.rooms[8].kind).toBe('combat');
+    expect(d.rooms[9].kind).toBe('event');
+    expect(d.rooms[10].kind).toBe('boss');
   });
 
   it('chapterId is chapter-3', () => {
@@ -178,7 +182,7 @@ describe('createSpellholdDelve', () => {
   it('boss is always the Asylum Director', () => {
     for (let s = 0; s < 10; s++) {
       const d = createSpellholdDelve(s);
-      expect(d.rooms[8].monsters?.[0].defId).toBe('asylum-director');
+      expect(d.rooms[10].monsters?.[0].defId).toBe('asylum-director');
     }
   });
 
@@ -206,18 +210,20 @@ describe('createSpellholdDelve', () => {
 });
 
 describe('createUstNathaDelve', () => {
-  it('produces 9 rooms in the warmup-shrine-mid-rest-elite-shrine-elite-intel-boss pattern', () => {
+  it('produces 11 rooms in the warmup-shrine-early-mid-early-mid-rest-mid-mid-shrine-elite-intel-boss pattern', () => {
     const d = createUstNathaDelve(1);
-    expect(d.rooms).toHaveLength(9);
+    expect(d.rooms).toHaveLength(11);
     expect(d.rooms[0].kind).toBe('combat');
     expect(d.rooms[1].kind).toBe('shrine');
     expect(d.rooms[2].kind).toBe('combat');
-    expect(d.rooms[3].kind).toBe('rest');
-    expect(d.rooms[4].kind).toBe('combat');
-    expect(d.rooms[5].kind).toBe('shrine');
+    expect(d.rooms[3].kind).toBe('combat');
+    expect(d.rooms[4].kind).toBe('rest');
+    expect(d.rooms[5].kind).toBe('combat');
     expect(d.rooms[6].kind).toBe('combat');
-    expect(d.rooms[7].kind).toBe('event');
-    expect(d.rooms[8].kind).toBe('boss');
+    expect(d.rooms[7].kind).toBe('shrine');
+    expect(d.rooms[8].kind).toBe('combat');
+    expect(d.rooms[9].kind).toBe('event');
+    expect(d.rooms[10].kind).toBe('boss');
   });
 
   it('chapterId is chapter-4', () => {
@@ -228,7 +234,7 @@ describe('createUstNathaDelve', () => {
   it('boss is always the Matron Mother', () => {
     for (let s = 0; s < 10; s++) {
       const d = createUstNathaDelve(s);
-      expect(d.rooms[8].monsters?.[0].defId).toBe('drow-matron-mother');
+      expect(d.rooms[10].monsters?.[0].defId).toBe('drow-matron-mother');
     }
   });
 

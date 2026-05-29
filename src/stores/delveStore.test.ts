@@ -99,13 +99,13 @@ describe('delveStore.finishDelve — reincarnate on clear', () => {
 
   it('a clear settles the clear premium + boss + depth credit (soul-mark = 0)', () => {
     seedRun({ quirks: [], renown: 10 });
-    // currentRoomIdx 36 → slice(0, 37) credits 3 bosses (idx 10/23/36); depth = 36.
-    setDelve({ phase: 'completed', currentRoomIdx: 36 });
+    // currentRoomIdx 42 → slice(0, 43) credits 3 bosses (idx 12/27/42); depth = 42.
+    setDelve({ phase: 'completed', currentRoomIdx: 42 });
 
     useDelveStore.getState().finishDelve();
 
     const expectedGain =
-      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 36;
+      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 42;
     expect(char().renown).toBe(10 + expectedGain);
   });
 
@@ -376,7 +376,7 @@ describe('delveStore — ascension ladder', () => {
       delve: {
         ...createGodwakeDelve(1),
         phase: 'completed',
-        currentRoomIdx: 36,
+        currentRoomIdx: 42,
         ascensionLevel: 4,
       },
     });
@@ -385,9 +385,9 @@ describe('delveStore — ascension ladder', () => {
     const ascMult = getAscensionLevel(4).renownMult;
     expect(soulMark).toBeGreaterThan(1);
     expect(ascMult).toBeGreaterThan(1);
-    // base = clear premium + 3 bosses (idx 10/23/36) + depth 36.
+    // base = clear premium + 3 bosses (idx 12/27/42) + depth 42.
     const base =
-      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 36;
+      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * 3 + RENOWN_PER_ROOM_REACHED * 42;
     const expected = Math.floor(base * soulMark * ascMult);
 
     useDelveStore.getState().finishDelve();
