@@ -32,6 +32,7 @@ import {
   type CombatActionResult,
 } from '../types';
 import { appendLog } from '../log';
+import { attachCombatVfx, weaponVfxKind } from '../vfx';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
 
 export interface AttackContext {
@@ -417,6 +418,13 @@ export function playerAttack(
       kind: 'damage',
       text: `Damage: ${headline} (${breakdown.join(' ')})${noteSuffix}.`,
     });
+
+    // Weapon-swing VFX on a connecting hit. Colossus Slayer is a once-per-turn
+    // signature blow, so it shows its own heavy-cleave effect instead of the
+    // plain swing on the strike that triggered it. Whiffs skip the bus — the
+    // attacker's lunge already reads as a miss.
+    const vfxKind = colossusFiredFlag ? 'colossus' : weaponVfxKind(w);
+    nextState = attachCombatVfx(nextState, vfxKind, 'player', targetId);
   }
 
   // Mark action used for the player

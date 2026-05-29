@@ -5,7 +5,6 @@ import { computeAC } from '../../engine/character/derived';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
 import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
-import { SlashEffect } from './SlashEffect';
 import { MirrorImages } from './SpellEffect';
 
 type CommonProps = {
@@ -153,7 +152,7 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   const [hitFlash, setHitFlash] = useState<'normal' | 'crit' | null>(null);
   const [hitPause, setHitPause] = useState(false);
   const [sparks, setSparks] = useState<Array<{ id: number; dx: number; dy: number }>>([]);
-  const [slashes, setSlashes] = useState<{ id: number; direction: 'left-to-right' | 'right-to-left'; crit: boolean }[]>([]);
+  const [knockback, setKnockback] = useState<'left' | 'right' | null>(null);
   const [lunge, setLunge] = useState(false);
   const lastAttackPulse = useRef(props.attackPulse);
   const lastFloatedAttackId = useRef<number | undefined>(undefined);
@@ -202,12 +201,12 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
       setHitPause(true);
       setTimeout(() => setHitPause(false), 160);
 
-      // Slash effect: comes from the attacker's side toward this sprite.
-      const direction: 'left-to-right' | 'right-to-left' =
-        props.facing === 'right' ? 'right-to-left' : 'left-to-right';
-      const slashId = Date.now() + Math.random();
-      setSlashes((s) => [...s, { id: slashId, direction, crit: !!wasCrit }]);
-      setTimeout(() => setSlashes((s) => s.filter((x) => x.id !== slashId)), 350);
+      // Knockback recoil — the struck sprite is shoved away from its attacker.
+      // The attacker stands on the side this sprite faces, so it reels the
+      // opposite way. The offensive swing itself rides the VFX bus overlay.
+      const recoil: 'left' | 'right' = props.facing === 'right' ? 'left' : 'right';
+      setKnockback(recoil);
+      setTimeout(() => setKnockback((k) => (k === recoil ? null : k)), 300);
 
       if (wasCrit) {
         // Crit spark burst — 8 particles radiating outward
@@ -252,6 +251,12 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
       : 'animate-lunge-left'
     : '';
   const idleClass = dead ? 'animate-die-fall' : 'animate-idle-breath';
+  const knockbackClass =
+    knockback === 'left'
+      ? 'animate-knockback-left'
+      : knockback === 'right'
+        ? 'animate-knockback-right'
+        : '';
 
   return (
     <button
@@ -286,33 +291,32 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
         {selectable && (
           <div className="absolute inset-0 border-2 border-[var(--color-accent-amber)] -m-1 pointer-events-none animate-pulse-glow" />
         )}
-        <div
-          className={`
-            relative w-full ${lungeClass || idleClass} ${hitPause ? 'animate-hit-pause' : ''}
-            ${props.facing === 'left' ? '-scale-x-100' : ''}
-          `}
-        >
-          {props.kind === 'monster' ? (
-            <MonsterPortrait
-              defId={props.instance.defId}
-              className="w-full h-auto"
-            />
-          ) : (
-            <PlayerPortrait
-              classId={props.character.classId}
-              className="w-full h-auto"
-            />
-          )}
-          {hitFlash === 'normal' && (
-            <div className="absolute inset-0 bg-[var(--color-accent-blood)] opacity-55 mix-blend-screen pointer-events-none" />
-          )}
-          {hitFlash === 'crit' && (
-            <div className="absolute inset-0 pointer-events-none animate-hit-flash-crit" />
-          )}
+        <div className={`relative w-full ${knockbackClass}`}>
+          <div
+            className={`
+              relative w-full ${lungeClass || idleClass} ${hitPause ? 'animate-hit-pause' : ''}
+              ${props.facing === 'left' ? '-scale-x-100' : ''}
+            `}
+          >
+            {props.kind === 'monster' ? (
+              <MonsterPortrait
+                defId={props.instance.defId}
+                className="w-full h-auto"
+              />
+            ) : (
+              <PlayerPortrait
+                classId={props.character.classId}
+                className="w-full h-auto"
+              />
+            )}
+            {hitFlash === 'normal' && (
+              <div className="absolute inset-0 bg-[var(--color-accent-blood)] opacity-55 mix-blend-screen pointer-events-none" />
+            )}
+            {hitFlash === 'crit' && (
+              <div className="absolute inset-0 pointer-events-none animate-hit-flash-crit" />
+            )}
+          </div>
         </div>
-        {slashes.map((s) => (
-          <SlashEffect key={s.id} direction={s.direction} />
-        ))}
         {/* Crit sparks */}
         {sparks.map((s) => (
           <div

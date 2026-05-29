@@ -7,6 +7,7 @@ import {
   type CombatActionResult,
 } from './types';
 import { appendLog } from './log';
+import { attachCombatVfx } from './vfx';
 
 export type CunningActionChoice = 'dash' | 'disengage' | 'hide' | 'steel';
 
@@ -63,5 +64,5 @@ export function useCunningAction(ctx: CunningActionContext): CombatActionResult 
     text: narration,
   };
 
-  return combatResult(appendLog(state, log), nextCharacter);
+  return combatResult(attachCombatVfx(appendLog(state, log), 'cunning-action', 'player'), nextCharacter);
 }
