@@ -9,6 +9,10 @@ export function PlayerPortrait({ classId, className = '' }: PlayerPortraitProps)
       return <RogueSvg className={className} />;
     case 'wizard':
       return <WizardSvg className={className} />;
+    case 'barbarian':
+      return <BarbarianSvg className={className} />;
+    case 'ranger':
+      return <RangerSvg className={className} />;
     case 'fighter':
     default:
       return <FighterSvg className={className} />;
@@ -265,6 +269,184 @@ function WizardSvg({ className }: { className?: string }) {
       <rect x="13" y="34" width="3" height="4" fill="#1a1410" />
       <rect x="8" y="38" width="3" height="1" fill="#3a2418" />
       <rect x="13" y="38" width="3" height="1" fill="#3a2418" />
+    </svg>
+  );
+}
+
+function BarbarianSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 40"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Barbarian"
+    >
+      {/* Wild topknot */}
+      <rect x="10" y="0" width="3" height="1" fill="#3a2418" />
+      <rect x="11" y="1" width="1" height="1" fill="#5a3a20" />
+      {/* Hair / scalp */}
+      <rect x="8" y="2" width="8" height="2" fill="#3a2418" />
+      <rect x="7" y="3" width="1" height="3" fill="#3a2418" />
+      <rect x="16" y="3" width="1" height="3" fill="#3a2418" />
+      {/* Face — bare, weathered */}
+      <rect x="8" y="4" width="8" height="5" fill="#c8a878" />
+      <rect x="8" y="4" width="1" height="5" fill="#a07c50" />
+      <rect x="15" y="4" width="1" height="5" fill="#a07c50" />
+      {/* Brow shadow + glaring eyes */}
+      <rect x="8" y="5" width="8" height="1" fill="#9c7448" />
+      <rect x="9" y="6" width="2" height="1" fill="#1a1410" />
+      <rect x="13" y="6" width="2" height="1" fill="#1a1410" />
+      {/* War paint stripe across the eyes */}
+      <rect x="8" y="6" width="1" height="1" fill="#b5302c" />
+      <rect x="15" y="6" width="1" height="1" fill="#b5302c" />
+      {/* Jaw / beard stubble */}
+      <rect x="9" y="9" width="6" height="1" fill="#9c7448" />
+      {/* Thick neck */}
+      <rect x="10" y="10" width="4" height="1" fill="#a07c50" />
+      {/* Massive bare shoulders */}
+      <rect x="4" y="11" width="16" height="2" fill="#c8a878" />
+      <rect x="4" y="11" width="2" height="2" fill="#a07c50" />
+      <rect x="18" y="11" width="2" height="2" fill="#a07c50" />
+      {/* Bare chest with war paint */}
+      <rect x="6" y="13" width="12" height="7" fill="#c8a878" />
+      <rect x="6" y="13" width="1" height="7" fill="#a07c50" />
+      <rect x="17" y="13" width="1" height="7" fill="#a07c50" />
+      {/* Pectoral / ab shading */}
+      <rect x="11" y="14" width="1" height="6" fill="#a88858" />
+      <rect x="8" y="16" width="2" height="1" fill="#a88858" />
+      <rect x="14" y="16" width="2" height="1" fill="#a88858" />
+      {/* Red war-paint chevrons */}
+      <rect x="9" y="14" width="2" height="1" fill="#b5302c" />
+      <rect x="13" y="14" width="2" height="1" fill="#b5302c" />
+      {/* Fur / hide belt */}
+      <rect x="6" y="20" width="12" height="2" fill="#5a3a20" />
+      <rect x="6" y="20" width="12" height="1" fill="#6b4a2e" />
+      <rect x="11" y="20" width="2" height="2" fill="#3a2418" />
+      {/* Left arm — gripping the haft low */}
+      <rect x="4" y="13" width="2" height="2" fill="#c8a878" />
+      <rect x="3" y="15" width="2" height="5" fill="#c8a878" />
+      <rect x="3" y="20" width="3" height="2" fill="#a07c50" />
+      {/* Right arm — raised, gripping the haft high */}
+      <rect x="18" y="12" width="2" height="2" fill="#c8a878" />
+      <rect x="19" y="9" width="2" height="4" fill="#c8a878" />
+      <rect x="19" y="7" width="2" height="2" fill="#a07c50" />
+      {/* Greataxe haft — diagonal, gripped in both hands */}
+      <rect x="5" y="19" width="2" height="2" fill="#3a2418" />
+      <rect x="7" y="16" width="2" height="3" fill="#5a3a20" />
+      <rect x="9" y="13" width="2" height="3" fill="#5a3a20" />
+      <rect x="11" y="10" width="2" height="3" fill="#5a3a20" />
+      <rect x="13" y="7" width="2" height="3" fill="#5a3a20" />
+      <rect x="15" y="5" width="2" height="2" fill="#5a3a20" />
+      {/* Greataxe head — broad single blade up top */}
+      <rect x="14" y="1" width="2" height="5" fill="#8a8a92" />
+      <rect x="16" y="0" width="4" height="6" fill="#b5b5be" />
+      <rect x="17" y="1" width="3" height="4" fill="#d8d8e0" />
+      <rect x="16" y="0" width="1" height="6" fill="#6a6a72" />
+      {/* Hip / loincloth */}
+      <rect x="7" y="22" width="10" height="3" fill="#5a3a20" />
+      <rect x="11" y="22" width="2" height="4" fill="#3a2418" />
+      {/* Right leg */}
+      <rect x="8" y="25" width="3" height="9" fill="#c8a878" />
+      <rect x="8" y="25" width="1" height="9" fill="#a07c50" />
+      {/* Left leg */}
+      <rect x="13" y="25" width="3" height="9" fill="#c8a878" />
+      <rect x="13" y="25" width="1" height="9" fill="#a07c50" />
+      {/* Fur leg-wraps */}
+      <rect x="8" y="30" width="3" height="2" fill="#5a3a20" />
+      <rect x="13" y="30" width="3" height="2" fill="#5a3a20" />
+      {/* Crude boots */}
+      <rect x="7" y="34" width="5" height="4" fill="#3a2418" />
+      <rect x="7" y="38" width="5" height="1" fill="#1a1410" />
+      <rect x="12" y="34" width="5" height="4" fill="#3a2418" />
+      <rect x="12" y="38" width="5" height="1" fill="#1a1410" />
+    </svg>
+  );
+}
+
+function RangerSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 40"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Ranger"
+    >
+      {/* Hood peak — green */}
+      <rect x="9" y="1" width="5" height="1" fill="#27401f" />
+      <rect x="8" y="2" width="7" height="1" fill="#2e4a22" />
+      {/* Hood body */}
+      <rect x="7" y="3" width="9" height="5" fill="#345029" />
+      <rect x="7" y="3" width="1" height="5" fill="#223818" />
+      <rect x="15" y="3" width="1" height="5" fill="#223818" />
+      {/* Face in the hood shadow */}
+      <rect x="9" y="5" width="6" height="4" fill="#c8a878" />
+      <rect x="9" y="5" width="1" height="4" fill="#a07c50" />
+      {/* Sharp eyes */}
+      <rect x="10" y="6" width="1" height="1" fill="#1a1410" />
+      <rect x="13" y="6" width="1" height="1" fill="#3a6a2e" />
+      {/* Jaw */}
+      <rect x="10" y="9" width="4" height="1" fill="#a07c50" />
+      {/* Cloak over shoulders */}
+      <rect x="5" y="10" width="14" height="2" fill="#2e4a22" />
+      <rect x="5" y="10" width="2" height="3" fill="#223818" />
+      <rect x="17" y="10" width="2" height="3" fill="#223818" />
+      {/* Leather-jerkin torso */}
+      <rect x="7" y="12" width="10" height="7" fill="#3a2e22" />
+      <rect x="6" y="12" width="1" height="7" fill="#2a2018" />
+      <rect x="17" y="12" width="1" height="7" fill="#2a2018" />
+      {/* Green tunic showing under the jerkin */}
+      <rect x="9" y="13" width="6" height="5" fill="#345029" />
+      <rect x="11" y="13" width="1" height="5" fill="#2a3f20" />
+      {/* Quiver strap across the chest */}
+      <rect x="8" y="13" width="8" height="1" fill="#5a4030" />
+      <rect x="9" y="15" width="7" height="1" fill="#5a4030" />
+      {/* Quiver of arrows over the shoulder */}
+      <rect x="3" y="9" width="3" height="6" fill="#5a4030" />
+      <rect x="3" y="9" width="3" height="1" fill="#6b4a2e" />
+      <rect x="3" y="8" width="1" height="2" fill="#d8d8c0" />
+      <rect x="4" y="7" width="1" height="3" fill="#d8d8c0" />
+      <rect x="5" y="8" width="1" height="2" fill="#d8d8c0" />
+      {/* Belt */}
+      <rect x="6" y="19" width="12" height="1" fill="#1a1410" />
+      <rect x="11" y="19" width="2" height="1" fill="#6b4a2e" />
+      {/* Left arm — extended, holding the bow grip */}
+      <rect x="5" y="12" width="2" height="2" fill="#345029" />
+      <rect x="4" y="14" width="2" height="4" fill="#2e4a22" />
+      <rect x="3" y="17" width="2" height="2" fill="#c8a878" />
+      {/* Longbow — tall vertical stave in the left hand */}
+      <rect x="1" y="2" width="2" height="30" fill="#6b4a2e" />
+      <rect x="1" y="2" width="1" height="30" fill="#8c6232" />
+      <rect x="0" y="2" width="1" height="1" fill="#5a3a20" />
+      <rect x="0" y="31" width="1" height="1" fill="#5a3a20" />
+      {/* Bowstring */}
+      <rect x="3" y="3" width="1" height="28" fill="#b5a282" />
+      {/* Nocked arrow drawn back to the right hand */}
+      <rect x="3" y="16" width="9" height="1" fill="#d8d8c0" />
+      <rect x="2" y="16" width="1" height="1" fill="#8a8a92" />
+      <rect x="11" y="15" width="1" height="3" fill="#3a6a2e" />
+      {/* Right arm — drawing the string back */}
+      <rect x="16" y="12" width="2" height="2" fill="#345029" />
+      <rect x="17" y="14" width="2" height="3" fill="#2e4a22" />
+      <rect x="11" y="16" width="2" height="2" fill="#c8a878" />
+      {/* Cloak falling down the sides */}
+      <rect x="5" y="12" width="1" height="12" fill="#223818" />
+      <rect x="18" y="12" width="1" height="8" fill="#223818" />
+      {/* Hip / belt skirt */}
+      <rect x="7" y="20" width="10" height="3" fill="#2e4a22" />
+      <rect x="7" y="20" width="10" height="1" fill="#345029" />
+      {/* Right leg */}
+      <rect x="8" y="23" width="3" height="9" fill="#3a2e22" />
+      <rect x="8" y="23" width="1" height="9" fill="#2a2018" />
+      {/* Left leg */}
+      <rect x="13" y="23" width="3" height="9" fill="#3a2e22" />
+      <rect x="13" y="23" width="1" height="9" fill="#2a2018" />
+      {/* Soft travelling boots */}
+      <rect x="7" y="32" width="5" height="5" fill="#1f2a18" />
+      <rect x="7" y="37" width="5" height="1" fill="#345029" />
+      <rect x="12" y="32" width="5" height="5" fill="#1f2a18" />
+      <rect x="12" y="37" width="5" height="1" fill="#345029" />
     </svg>
   );
 }

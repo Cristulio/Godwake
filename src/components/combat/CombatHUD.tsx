@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
-import { computeAC } from '../../engine/character/derived';
+import { computeAC, characterHasMechanic } from '../../engine/character/derived';
 import { getRace } from '../../content/races';
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
+  barbarianRageMax,
 } from '../../engine/character/actions';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { getBlessing } from '../../content/blessings';
@@ -147,6 +148,27 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
   const isWizard = character.classId === 'wizard';
+  const isBarbarian = character.classId === 'barbarian';
+  const isRanger = character.classId === 'ranger';
+
+  // --- Barbarian resources ---
+  const rageMax = barbarianRageMax(character);
+  const rageUses = character.resources.rageUsesRemaining ?? 0;
+  const rageRounds = character.resources.rageRoundsRemaining ?? 0;
+  const raging = rageRounds > 0;
+  const hasReckless = isBarbarian && characterHasMechanic(character, 'reckless-attack');
+  const reckless = character.recklessActive === true;
+
+  // --- Ranger resources ---
+  const markId = state.huntersMarkTargetId;
+  const markTarget =
+    markId != null
+      ? state.combatants.find(
+          (c) => c.kind === 'monster' && c.id === markId && c.instance.hp.current > 0,
+        )
+      : undefined;
+  const markName =
+    markTarget && markTarget.kind === 'monster' ? markTarget.instance.displayName : null;
 
   // --- Fighter resources ---
   const secondWindAvailable = character.resources.secondWindAvailable === true;
@@ -303,6 +325,56 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
               uncannyReady
                 ? 'Uncanny Dodge: halves the first hit you take this round.'
                 : 'Uncanny Dodge already used this round — resets at end of turn.'
+            }
+          />
+        </Section>
+      )}
+
+      {isBarbarian && (
+        <Section title="Rage">
+          {Array.from({ length: Math.max(rageMax, rageUses) }).map((_, i) => (
+            <Dot
+              key={`rage-${i}`}
+              on={i < rageUses}
+              title={i < rageUses ? 'Rage available' : 'Rage spent'}
+            />
+          ))}
+          {raging && (
+            <Pill
+              text={`Fury ${rageRounds}`}
+              on
+              tone="blood"
+              title={`Raging for ${rageRounds} more round${rageRounds === 1 ? '' : 's'} — physical damage halved, melee hits land harder.`}
+            />
+          )}
+        </Section>
+      )}
+
+      {hasReckless && (
+        <Section title="Stance">
+          <Pill
+            text={reckless ? 'Reckless' : 'Guarded'}
+            on={reckless}
+            tone="blood"
+            title={
+              reckless
+                ? 'Fighting recklessly — your melee attacks have advantage, and so do attacks against you until your next turn.'
+                : 'Guarded — declare Reckless to trade defense for advantage on your swings.'
+            }
+          />
+        </Section>
+      )}
+
+      {isRanger && (
+        <Section title="Quarry">
+          <Pill
+            text={markName ?? 'Unmarked'}
+            on={markName != null}
+            tone="amber"
+            title={
+              markName
+                ? `Hunter's Mark rides ${markName} — every hit on it bites deeper.`
+                : "No quarry marked — Hunter's Mark adds bonus damage to a branded target."
             }
           />
         </Section>

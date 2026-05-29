@@ -170,6 +170,72 @@ export const FLAIL: Weapon = WeaponSchema.parse({
     'A spiked head chained to the haft — it whips around a raised guard and comes down where the parry is not. 1d8 bludgeoning, and difficult to turn aside.',
 });
 
+export const GREATAXE: Weapon = WeaponSchema.parse({
+  id: 'greataxe',
+  kind: 'weapon',
+  name: 'Greataxe',
+  category: 'martial',
+  damage: '1d12',
+  damageType: 'slashing',
+  properties: ['heavy', 'two-handed'],
+  weight: 7,
+  cost: 30,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A single broad blade on a long haft, swung with the whole body behind it. 1d12 slashing — the heaviest single die a hand can carry, and it asks for both of them.',
+});
+
+export const JAVELIN: Weapon = WeaponSchema.parse({
+  id: 'javelin',
+  kind: 'weapon',
+  name: 'Javelin',
+  category: 'simple',
+  damage: '1d6',
+  damageType: 'piercing',
+  properties: ['thrown'],
+  range: [30, 120],
+  weight: 2,
+  cost: 5,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A light throwing spear, balanced for the cast. 1d6 piercing in the hand or on the wind — the brute keeps a bundle of them for the ones who run.',
+});
+
+export const LONGBOW: Weapon = WeaponSchema.parse({
+  id: 'longbow',
+  kind: 'weapon',
+  name: 'Longbow',
+  category: 'martial',
+  damage: '1d8',
+  damageType: 'piercing',
+  properties: ['ammunition', 'two-handed', 'heavy'],
+  range: [150, 600],
+  weight: 2,
+  cost: 50,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A tall stave of yew, drawn to the ear. 1d8 piercing and a reach that opens a room before the enemy can close it — the patient killer\'s weapon.',
+});
+
+export const SHORTSWORD: Weapon = WeaponSchema.parse({
+  id: 'shortsword',
+  kind: 'weapon',
+  name: 'Shortsword',
+  category: 'martial',
+  damage: '1d6',
+  damageType: 'piercing',
+  properties: ['finesse', 'light'],
+  weight: 2,
+  cost: 10,
+  rarity: 'common',
+  attunement: false,
+  description:
+    'A short, broad blade for close work when the bow has no room. 1d6 piercing; finesse and light — quick to the hand of anyone caught at arm\'s length.',
+});
+
 export const HAND_CROSSBOW: Weapon = WeaponSchema.parse({
   id: 'hand-crossbow',
   kind: 'weapon',
@@ -198,6 +264,10 @@ export const ALL_WEAPONS: Weapon[] = [
   QUARTERSTAFF,
   BATTLEAXE,
   FLAIL,
+  GREATAXE,
+  JAVELIN,
+  LONGBOW,
+  SHORTSWORD,
   HAND_CROSSBOW,
   ADAMANTINE_SHORTSWORD,
 ];

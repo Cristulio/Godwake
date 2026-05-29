@@ -13,6 +13,9 @@ interface ActionBarProps {
   onSecondWind: () => void;
   onActionSurge: () => void;
   onCunningAction: () => void;
+  onRage: () => void;
+  onRecklessAttack: () => void;
+  onHuntersMark: () => void;
   onSpells: () => void;
   onUseItem: () => void;
   onEndTurn: () => void;
@@ -25,6 +28,9 @@ export function ActionBar({
   onSecondWind,
   onActionSurge,
   onCunningAction,
+  onRage,
+  onRecklessAttack,
+  onHuntersMark,
   onSpells,
   onUseItem,
   onEndTurn,
@@ -40,6 +46,8 @@ export function ActionBar({
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
   const isWizard = character.classId === 'wizard';
+  const isBarbarian = character.classId === 'barbarian';
+  const isRanger = character.classId === 'ranger';
 
   const secondWindBonus = character.resources.secondWindBonusRemaining ?? 0;
   const secondWindHasCharge =
@@ -69,6 +77,41 @@ export function ActionBar({
     active &&
     isRogue &&
     cunningRemaining > 0 &&
+    !character.actionEconomy.bonusActionUsed;
+
+  // Barbarian Rage (bonus action) — renewable each combat. Disabled once raging
+  // or out of charges.
+  const rageUses = character.resources.rageUsesRemaining ?? 0;
+  const rageRounds = character.resources.rageRoundsRemaining ?? 0;
+  const raging = rageRounds > 0;
+  const canRage =
+    playersTurn &&
+    active &&
+    isBarbarian &&
+    rageUses > 0 &&
+    !raging &&
+    !character.actionEconomy.bonusActionUsed;
+
+  // Barbarian Reckless Attack — a free stance declared before the swing.
+  const hasReckless = isBarbarian && characterHasMechanic(character, 'reckless-attack');
+  const reckless = character.recklessActive === true;
+  const canReckless =
+    playersTurn && active && hasReckless && !reckless && !character.actionEconomy.actionUsed;
+
+  // Ranger Hunter's Mark (bonus action) — brand or re-brand a quarry.
+  const isMarkLive =
+    state.huntersMarkTargetId != null &&
+    state.combatants.some(
+      (c) =>
+        c.kind === 'monster' &&
+        c.id === state.huntersMarkTargetId &&
+        c.instance.hp.current > 0,
+    );
+  const canHuntersMark =
+    playersTurn &&
+    active &&
+    isRanger &&
+    characterHasMechanic(character, 'hunters-mark') &&
     !character.actionEconomy.bonusActionUsed;
 
   const totalSlots =
@@ -155,6 +198,41 @@ export function ActionBar({
             className="flex-1"
           >
             Cunning Action{cunningRemaining > 0 && ` (${cunningRemaining})`}
+          </Button>
+        )}
+
+        {isBarbarian && (
+          <Button
+            variant={canRage ? 'primary' : 'secondary'}
+            onClick={onRage}
+            disabled={!canRage}
+            title="Bonus action: enter a battle-fury — physical damage against you is halved and your melee hits land harder for several rounds. Refreshes each fight."
+            className="flex-1"
+          >
+            {raging ? `Raging (${rageRounds})` : `Rage${rageUses > 0 ? ` (${rageUses})` : ''}`}
+          </Button>
+        )}
+        {hasReckless && (
+          <Button
+            variant={canReckless ? 'primary' : 'secondary'}
+            onClick={onRecklessAttack}
+            disabled={!canReckless}
+            title="Free: your melee attacks this turn roll with advantage, but attacks against you have advantage until your next turn."
+            className="flex-1"
+          >
+            {reckless ? 'Reckless ✓' : 'Reckless'}
+          </Button>
+        )}
+
+        {isRanger && (
+          <Button
+            variant={canHuntersMark ? 'primary' : 'secondary'}
+            onClick={onHuntersMark}
+            disabled={!canHuntersMark}
+            title="Bonus action: brand a target as your quarry — every hit on it deals extra damage. Re-cast to move the mark."
+            className="flex-1"
+          >
+            {isMarkLive ? 'Re-mark' : "Hunter's Mark"}
           </Button>
         )}
 

@@ -70,6 +70,18 @@ export interface ClassResources {
   blurRoundsRemaining?: number;
   /** Wizard: Mirror Image duplicates left. Each absorbs one blow that would otherwise hit the player; cleared at combat start. */
   mirrorImages?: number;
+  /**
+   * Barbarian: rounds the current Rage holds. While > 0 the barbarian is
+   * raging (physical-damage resistance + bonus melee damage). Decrements at the
+   * start of each player turn; reset to 0 at combat start.
+   */
+  rageRoundsRemaining?: number;
+  /**
+   * Barbarian: Rage activations left this combat. Refreshed to the per-level
+   * max at the start of every encounter (mirrors the Fighter's Second Wind
+   * cadence), so the brute always opens with a rage in hand.
+   */
+  rageUsesRemaining?: number;
 }
 
 /**
@@ -235,6 +247,13 @@ export interface Character {
    * the actual attack roll, hit or miss. Stacks with nextAttackAdvantage.
    */
   nextAttackBonus?: number;
+  /**
+   * Barbarian Reckless Attack stance. Set true when the barbarian declares a
+   * reckless turn: their melee attacks roll with advantage, and attacks against
+   * them roll with advantage until the start of their next turn (when it is
+   * cleared in `endTurn`). Cleared on combat start.
+   */
+  recklessActive?: boolean;
   /**
    * One-shot extra attack this turn, funded by Rogue's Cunning Action: Dash.
    * When set, the player can swing again even after the Action is spent. The

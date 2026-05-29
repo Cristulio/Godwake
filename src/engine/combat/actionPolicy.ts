@@ -3,7 +3,7 @@ import { parseDiceExpression } from '../dice';
 import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import { abilityModifier } from '../../types/abilities';
-import { effectiveAbilityScores, characterHasMechanic } from '../character/derived';
+import { effectiveAbilityScores, characterHasMechanic, isRaging } from '../character/derived';
 import { baneQuirkCount } from '../character/quirks';
 import { isNonStackingBlessing, blessingSignature } from '../character/blessings';
 import { getMonster } from '../../content/monsters';
@@ -16,6 +16,8 @@ import { useConsumable } from './useItem';
 import { useSecondWind } from './secondWind';
 import { useActionSurge } from './actionSurge';
 import { useCunningAction, type CunningActionChoice } from './cunningAction';
+import { useRage, useRecklessAttack } from './rage';
+import { useHuntersMark } from './huntersMark';
 
 /**
  * A single structured combat decision. Callers map it onto the real engine
@@ -31,6 +33,9 @@ export type PlannedAction =
   | { kind: 'second-wind' }
   | { kind: 'action-surge' }
   | { kind: 'cunning-action'; choice: CunningActionChoice }
+  | { kind: 'rage' }
+  | { kind: 'reckless-attack' }
+  | { kind: 'hunters-mark'; targetId: string }
   | { kind: 'end-turn' };
 
 // ---- Tunables --------------------------------------------------------------
@@ -41,6 +46,8 @@ const EMERGENCY_HP = 0.35;
 const SECOND_WIND_HP = 0.5;
 /** Fighter Action Surge only when still hurt at/below this, or outnumbered. */
 const SURGE_HP = 0.7;
+/** Barbarian fights recklessly only while healthy enough to wear the return blows. */
+const RECKLESS_HP = 0.5;
 /** Magic Missile guaranteed minimum (3 darts × min 1d4+1 = 6). A target at or
  *  below this dies for certain — no attack roll, no save. */
 const MAGIC_MISSILE_MIN = 6;
@@ -81,6 +88,13 @@ function monsterThreat(m: MonsterCombatant): number {
 
 function isMonsterParalyzed(m: MonsterCombatant): boolean {
   return m.instance.conditions.some((c) => c.name === 'paralyzed');
+}
+
+/** True when the Ranger's Hunter's Mark is set and still riding a living enemy. */
+function markIsOnLiveTarget(state: CombatState, live: MonsterCombatant[]): boolean {
+  const id = state.huntersMarkTargetId;
+  if (!id) return false;
+  return live.some((m) => m.id === id);
 }
 
 /** Focus-fire target: lowest current HP (fastest removal), ties to higher threat. */
@@ -161,6 +175,8 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
   const isWizard = character.classId === 'wizard';
+  const isBarbarian = character.classId === 'barbarian';
+  const isRanger = character.classId === 'ranger';
 
   const primary = lowestHpTarget(live);
   const threat = highestThreatTarget(live);
@@ -179,6 +195,29 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
       hpPct <= SECOND_WIND_HP
     ) {
       return { kind: 'second-wind' };
+    }
+
+    // Barbarian Rage: open every fight in a fury. Renewable per combat, so the
+    // only gate is "not already raging and a charge in hand" — the resistance
+    // and bonus damage are worth the bonus action immediately.
+    if (
+      isBarbarian &&
+      !isRaging(character) &&
+      (character.resources.rageUsesRemaining ?? 0) > 0 &&
+      characterHasMechanic(character, 'rage')
+    ) {
+      return { kind: 'rage' };
+    }
+
+    // Ranger Hunter's Mark: brand the focus target so every swing bites deeper;
+    // re-brand once the quarry falls (the mark no longer rides a live enemy).
+    if (
+      isRanger &&
+      characterHasMechanic(character, 'hunters-mark') &&
+      primary &&
+      !markIsOnLiveTarget(state, live)
+    ) {
+      return { kind: 'hunters-mark', targetId: primary.id };
     }
 
     // Emergency potion (bonus action) for anyone genuinely low.
@@ -221,6 +260,19 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
     if (isWizard) {
       const wizardAction = chooseWizardAction(state, character, live, primary, threat);
       if (wizardAction) return wizardAction;
+    }
+    // Barbarian Reckless Attack: declare it before swinging while healthy
+    // enough to eat the return blows. Free stance — costs no action — so it
+    // resolves, then the same turn proceeds to the attack.
+    if (
+      isBarbarian &&
+      actionFree &&
+      character.recklessActive !== true &&
+      characterHasMechanic(character, 'reckless-attack') &&
+      hpPct > RECKLESS_HP &&
+      primary
+    ) {
+      return { kind: 'reckless-attack' };
     }
     // Weapon classes (and a wizard with no castable option) swing at the
     // focus-fire target.
@@ -387,6 +439,18 @@ export function applyPlannedAction(
       const r = useCunningAction({ character, state, choice: action.choice });
       return { state: r.state, character: r.character };
     }
+    case 'rage': {
+      const r = useRage({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'reckless-attack': {
+      const r = useRecklessAttack({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'hunters-mark': {
+      const r = useHuntersMark({ character, state, targetId: action.targetId });
+      return { state: r.state, character: r.character };
+    }
     case 'end-turn':
       return { state, character };
   }
@@ -483,7 +547,11 @@ export function scoreBlessing(blessingId: string, character: Character): number 
   const m = b.modifiers ?? {};
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
-  const weaponClass = isFighter || isRogue;
+  const weaponClass =
+    isFighter ||
+    isRogue ||
+    character.classId === 'barbarian' ||
+    character.classId === 'ranger';
   const banes = baneQuirkCount(character);
   const attacks = characterHasMechanic(character, 'extra-attack') ? 2 : 1;
 

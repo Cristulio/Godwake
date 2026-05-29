@@ -20,6 +20,7 @@ export const ClassIdSchema = z.enum([
   'cleric',
   'rogue',
   'barbarian',
+  'ranger',
 ]);
 export type ClassId = z.infer<typeof ClassIdSchema>;
 

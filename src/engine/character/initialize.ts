@@ -116,6 +116,11 @@ export function classStartingResources(classId: ClassId) {
         sneakAttackUsedThisTurn: false,
         cunningActionUsesRemaining: 1, // 2 once Thief subclass is picked at L3
       };
+    case 'barbarian':
+      return {
+        rageRoundsRemaining: 0,
+        rageUsesRemaining: 1, // 2 once the level-up reaches L3
+      };
     case 'wizard':
       return {
         spellSlots: { 1: 2, 2: 0, 3: 0, 4: 0 },

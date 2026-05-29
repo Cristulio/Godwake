@@ -3,8 +3,10 @@ import type { ClassId } from '../../schemas/ids';
 import { FIGHTER } from './fighter';
 import { ROGUE } from './rogue';
 import { WIZARD } from './wizard';
+import { BARBARIAN } from './barbarian';
+import { RANGER } from './ranger';
 
-const ALL_CLASSES: Class[] = [FIGHTER, ROGUE, WIZARD];
+const ALL_CLASSES: Class[] = [FIGHTER, ROGUE, WIZARD, BARBARIAN, RANGER];
 
 const CLASS_BY_ID: Record<ClassId, Class | undefined> = ALL_CLASSES.reduce(
   (acc, c) => {

@@ -13,7 +13,7 @@ export const HILL_DWARF: Race = RaceSchema.parse({
   },
   speed: 25,
   size: 'medium',
-  validClasses: ['fighter', 'wizard', 'rogue'],
+  validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger'],
   bonusHpPerLevel: 1,
   features: [
     {

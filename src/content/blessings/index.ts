@@ -4,7 +4,7 @@ import { BlessingSchema, type Blessing, type BlessingModifiers } from '../../sch
 // either save-for-half or auto-hit, so first-attack-bonus / crit-range /
 // damage-on-hit / reroll-miss blessings never fire for Wizards. Tagging them
 // here lets shrines and camps filter the offer pool by class.
-const WEAPON_CLASSES = ['fighter', 'rogue'] as const;
+const WEAPON_CLASSES = ['fighter', 'rogue', 'barbarian', 'ranger'] as const;
 
 const POOL: Blessing[] = [
   BlessingSchema.parse({

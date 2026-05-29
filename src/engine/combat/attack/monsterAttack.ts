@@ -18,7 +18,7 @@ import type {
   MonsterSustain,
 } from '../../../schemas/monster';
 import type { ConditionName } from '../../../types/conditions';
-import { computeAC } from '../../character/derived';
+import { computeAC, isRaging } from '../../character/derived';
 import { characterQuirkMods } from '../../character/quirks';
 import { getMonster } from '../../../content/monsters';
 import { getRace } from '../../../content/races';
@@ -311,12 +311,22 @@ function resolveSingleAttack(
   const playerVulnerable = playerParalyzed || condMods.grantsAttackerAdvantage;
 
   const ac = computeAC(nextCharacter);
-  // Blur smears the player's outline — attackers roll at disadvantage. A
-  // paralyzed/blinded/restrained player instead grants advantage; if both apply
-  // they cancel to a straight roll (5e advantage/disadvantage cancellation).
+  // Advantage/disadvantage sources net per 5e cancellation: any advantage plus
+  // any disadvantage is a straight roll. Advantage comes from a vulnerable
+  // player (paralyzed / blinded / restrained) or a Barbarian fighting
+  // recklessly; disadvantage from Blur smearing the player's outline.
   const blurActive = (nextCharacter.resources.blurRoundsRemaining ?? 0) > 0;
+  const recklessPlayer = nextCharacter.recklessActive === true;
+  const hasAdvantage = playerVulnerable || recklessPlayer;
+  const hasDisadvantage = blurActive;
   const attackAdvantage: 'normal' | 'advantage' | 'disadvantage' =
-    playerVulnerable === blurActive ? 'normal' : playerVulnerable ? 'advantage' : 'disadvantage';
+    hasAdvantage && hasDisadvantage
+      ? 'normal'
+      : hasAdvantage
+        ? 'advantage'
+        : hasDisadvantage
+          ? 'disadvantage'
+          : 'normal';
   const toHit = roller.d20(attackAdvantage, action.attackBonus);
   const crit = toHit.rolls[0] === 20;
   let hit = crit || (toHit.total >= ac && !toHit.natural1);
@@ -325,7 +335,9 @@ function resolveSingleAttack(
     attackAdvantage === 'advantage'
       ? playerParalyzed
         ? ' (advantage — paralyzed)'
-        : ' (advantage — player exposed)'
+        : recklessPlayer
+          ? ' (advantage — reckless)'
+          : ' (advantage — player exposed)'
       : attackAdvantage === 'disadvantage'
         ? ' (disadvantage — Blur)'
         : '';
@@ -397,9 +409,20 @@ function resolveSingleAttack(
       action.damageType === 'poison' &&
       (quirkMods.poisonImmune === true || nextCharacter.poisonImmuneEncounter === true);
     const race = getRace(nextCharacter.raceId);
-    const resisted =
-      !immune && (race.damageResistances?.includes(action.damageType) ?? false);
-    const totalDamage = immune ? 0 : resisted ? Math.floor(rawDamage / 2) : rawDamage;
+    const raceResists = race.damageResistances?.includes(action.damageType) ?? false;
+    // Barbarian Rage halves physical damage (bludgeoning / piercing / slashing).
+    // Resistance doesn't stack (5e), so rage and a racial resist both just halve.
+    const physical =
+      action.damageType === 'bludgeoning' ||
+      action.damageType === 'piercing' ||
+      action.damageType === 'slashing';
+    const rageResists = isRaging(nextCharacter) && physical;
+    const resisted = !immune && (raceResists || rageResists);
+    const totalDamage = immune
+      ? 0
+      : resisted
+        ? Math.floor(rawDamage / 2)
+        : rawDamage;
 
     const damaged = applyDamage(nextState, 'player', totalDamage, nextCharacter);
     nextState = damaged.state;
@@ -420,7 +443,11 @@ function resolveSingleAttack(
     }
     if (rageBonus > 0) breakdown.push(`+ ${rageBonus} rage`);
     if (ascensionBonus > 0) breakdown.push(`+ ${ascensionBonus} ascension`);
-    const resistSuffix = resisted ? ` (${action.damageType} resistance, halved)` : '';
+    const resistSuffix = resisted
+      ? rageResists && !raceResists
+        ? ' (rage — physical halved)'
+        : ` (${action.damageType} resistance, halved)`
+      : '';
     const damageLine = immune
       ? `Damage negated: ${nextCharacter.name} is immune to ${action.damageType}.`
       : `Damage: ${totalDamage} ${action.damageType} (${breakdown.join(' ')})${resistSuffix}.`;

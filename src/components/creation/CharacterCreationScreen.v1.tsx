@@ -40,6 +40,7 @@ const CLASS_LABEL: Record<ClassId, string> = {
   cleric: 'Cleric',
   rogue: 'Rogue',
   barbarian: 'Barbarian',
+  ranger: 'Ranger',
 };
 
 const CLASS_BLURB: Record<ClassId, string> = {
@@ -48,6 +49,7 @@ const CLASS_BLURB: Record<ClassId, string> = {
   cleric: 'A vessel of divine power. Heals, smites, and channels gods.',
   rogue: 'Shadow and edge. Sneak Attack and a careful step over every trap.',
   barbarian: 'Rage incarnate. The body takes the punishment so the soul keeps swinging.',
+  ranger: 'Bow and quarry. Marks the deadliest thing in the room and feeds it arrows.',
 };
 
 const RACE_BLURB: Record<RaceId, string> = {

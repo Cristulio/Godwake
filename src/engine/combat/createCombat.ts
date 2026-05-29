@@ -11,7 +11,7 @@ import type { Monster } from '../../schemas/monster';
 import { characterBlessingMods } from '../character/blessings';
 import { baneQuirkCount } from '../character/quirks';
 import { characterCampBoonMods } from '../character/campBoons';
-import { rogueCunningActionMax } from '../character/actions';
+import { rogueCunningActionMax, barbarianRageMax } from '../character/actions';
 import {
   combatResult,
   patchHp,
@@ -162,6 +162,17 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   if (nextCharacter.classId === 'fighter') {
     nextCharacter = patchResources(nextCharacter, {
       secondWindAvailable: true,
+    });
+  }
+
+  // Barbarian: Rage refreshes at the start of every encounter (mirrors the
+  // Fighter's Second Wind cadence) so the brute always opens with a rage in
+  // hand. Clear any stale fury / reckless stance from the prior fight.
+  if (nextCharacter.classId === 'barbarian') {
+    nextCharacter = { ...nextCharacter, recklessActive: false };
+    nextCharacter = patchResources(nextCharacter, {
+      rageRoundsRemaining: 0,
+      rageUsesRemaining: barbarianRageMax(nextCharacter),
     });
   }
 
