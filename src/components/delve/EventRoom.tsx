@@ -230,20 +230,14 @@ function ResolutionPanel({ choiceLabel, result, onContinue }: ResolutionPanelPro
         </p>
         {result.effectsApplied.length > 0 && (
           <ul className="mt-3 pt-3 border-t border-[var(--color-border-dim)] flex flex-col gap-2">
-            {result.effectsApplied.map((eff, idx) =>
-              eff.intel ? (
-                <li key={`${eff.kind}-${idx}`} className="list-none">
-                  <BossIntelReveal intel={eff.intel} />
-                </li>
-              ) : (
-                <li
-                  key={`${eff.kind}-${idx}`}
-                  className={`text-xs uppercase tracking-widest font-mono ${toneForEffect(eff)}`}
-                >
-                  · {eff.detail}
-                </li>
-              ),
-            )}
+            {result.effectsApplied.map((eff, idx) => (
+              <li
+                key={`${eff.kind}-${idx}`}
+                className={`text-xs uppercase tracking-widest font-mono ${toneForEffect(eff)}`}
+              >
+                · {eff.detail}
+              </li>
+            ))}
           </ul>
         )}
       </Panel>
@@ -252,29 +246,6 @@ function ResolutionPanel({ choiceLabel, result, onContinue }: ResolutionPanelPro
           {continueLabel}
         </Button>
       </div>
-    </div>
-  );
-}
-
-function BossIntelReveal({ intel }: { intel: NonNullable<AppliedEffect['intel']> }) {
-  return (
-    <div
-      data-testid="boss-intel-reveal"
-      className="border border-[var(--color-accent-amber)]/50 bg-[var(--color-bg-panel)]/60 p-3"
-    >
-      <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
-        {intel.level === 'full' ? "The scout's report" : 'The omens speak'}
-      </div>
-      <div className="text-[var(--color-accent-amber)] text-sm font-bold tracking-wider mt-0.5">
-        {intel.bossName}
-      </div>
-      <ul className="mt-2 flex flex-col gap-1 font-mono text-[11px] text-[var(--color-text-secondary)]">
-        {intel.lines.map((line, i) => (
-          <li key={i} className="leading-snug">
-            · {line}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
@@ -304,7 +275,7 @@ function toneForEffect(eff: AppliedEffect): string {
       return 'text-[var(--color-accent-amber)]';
     case 'spawn_ambush':
       return 'text-[var(--color-accent-blood)]';
-    case 'reveal_boss_intel':
+    case 'grant_boss_buff':
       return 'text-[var(--color-accent-amber)]';
     case 'mark_bold_approach':
       return 'text-[var(--color-accent-gold)]';

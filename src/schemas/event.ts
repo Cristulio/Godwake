@@ -35,10 +35,16 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   }),
   z.object({ kind: z.literal('apply_attack_bonus_run'), amount: z.number().positive() }),
   z.object({ kind: z.literal('spawn_ambush'), monsterDefIds: z.array(z.string()) }),
+  /**
+   * Ready a tactical edge against an upcoming chapter boss. `weak-spot` (free)
+   * is a minor opener advantage; `battle-plan` (paid) is a bigger gird + brace.
+   * The buff is stored on the character keyed by boss def id and consumed at
+   * the boss fight in `createCombat`. Buff magnitudes live in `bossIntel.ts`.
+   */
   z.object({
-    kind: z.literal('reveal_boss_intel'),
+    kind: z.literal('grant_boss_buff'),
     bossDefId: z.string(),
-    level: z.union([z.literal('partial'), z.literal('full')]),
+    tier: z.union([z.literal('weak-spot'), z.literal('battle-plan')]),
   }),
   z.object({ kind: z.literal('mark_bold_approach'), bossDefId: z.string() }),
 ]);

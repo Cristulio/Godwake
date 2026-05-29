@@ -256,11 +256,12 @@ export interface Character {
    */
   poisonImmuneEncounter?: boolean;
   /**
-   * Boss intel revealed this delve, keyed by boss monster def id. `partial`
-   * shows name + HP range + signature ability; `full` shows the complete stat
-   * block. Set by the pre-boss intel room. Cleared at delve end.
+   * Tactical edge readied against a chapter boss this delve, keyed by boss
+   * monster def id. `weak-spot` is the free minor opener advantage; `battle-plan`
+   * is the paid gird + brace. Set by the pre-boss intel room, consumed at the
+   * boss fight in `createCombat`. Cleared at delve end.
    */
-  bossIntel?: Record<string, 'partial' | 'full'>;
+  bossIntel?: Record<string, 'weak-spot' | 'battle-plan'>;
   /**
    * Bosses the player chose to walk past without intel. Each entry grants a
    * +5% gold bonus on that specific boss's drop ("the gods reward the bold").

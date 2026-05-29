@@ -21,6 +21,7 @@ import {
 import { isPlayerParalyzed } from './holdPerson';
 import { resolvePlayerParalyzedTurn } from './turn';
 import { applyAscensionToMonster, ascensionDamageBonus } from '../delve/ascension';
+import { bossIntelBuffFor } from '../../content/bossIntel';
 
 /**
  * Max entries retained in CombatState.log. The renderer (CombatLog.tsx) tails
@@ -215,6 +216,36 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       kind: 'system' as const,
       text: `${nextCharacter.name} recovers ${after - before} HP from a blessing.`,
     });
+  }
+
+  // Boss-fight tactical edge readied in the pre-boss intel room. Combat-scoped
+  // levers only — opening-strike advantage, advantage on the first save (the
+  // held-opener counter), and a temp-HP gird — so the buff is spent in this
+  // fight and never leaks into later chapters. Resolved by the boss def id.
+  // Set after the per-class patches above (Rogue clears nextAttackAdvantage)
+  // and before the paralyzed-on-entry resolver so a braced save applies.
+  if (isBoss && monsters.length > 0) {
+    const bossDefId = monsters[0].def.id;
+    const tier = nextCharacter.bossIntel?.[bossDefId];
+    const buff = tier ? bossIntelBuffFor(bossDefId, tier) : null;
+    if (buff) {
+      if (buff.firstStrikeAdvantage) {
+        nextCharacter = { ...nextCharacter, nextAttackAdvantage: true };
+      }
+      if (buff.bracedSave) {
+        nextCharacter = { ...nextCharacter, nextSaveAdvantage: true };
+      }
+      if (buff.tempHp > 0) {
+        const newTemp = Math.max(nextCharacter.hp.temp, buff.tempHp);
+        nextCharacter = patchHp(nextCharacter, { temp: newTemp });
+      }
+      const girdNote = buff.tempHp > 0 ? ` (+${buff.tempHp} temp HP)` : '';
+      log.push({
+        id: log.length + 1,
+        kind: 'system' as const,
+        text: `${nextCharacter.name} readies the ${buff.label}${girdNote}.`,
+      });
+    }
   }
 
   const boonMods = characterCampBoonMods(nextCharacter);
