@@ -7,6 +7,7 @@ import {
   type CombatActionResult,
 } from './types';
 import { appendLog } from './log';
+import { attachCombatVfx } from './vfx';
 
 export interface HuntersMarkContext {
   character: Character;
@@ -44,7 +45,12 @@ export function useHuntersMark(ctx: HuntersMarkContext): CombatActionResult {
     text: `${nextCharacter.name} marks ${target.instance.displayName} as the quarry. Every arrow that finds it bites the deeper.`,
   };
   return combatResult(
-    appendLog({ ...state, huntersMarkTargetId: targetId }, log),
+    attachCombatVfx(
+      appendLog({ ...state, huntersMarkTargetId: targetId }, log),
+      'hunters-mark',
+      'player',
+      targetId,
+    ),
     nextCharacter,
   );
 }

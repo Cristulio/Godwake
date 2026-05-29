@@ -91,7 +91,15 @@ export interface SaveEvent {
   advantage: boolean;
 }
 
+/**
+ * Canonical combat-VFX kind union — every bespoke battlefield effect the
+ * `SpellEffectLayer` can render. Despite the legacy `SpellEffect*` naming this
+ * is no longer spell-only: it also carries weapon swings and class-ability
+ * signatures. `feat/vfx-combat` owns this union; sibling VFX lanes append at
+ * the extension point at the bottom.
+ */
 export type SpellEffectKind =
+  // Spell casts (the original VFX bus).
   | 'magic-missile'
   | 'fire-bolt'
   | 'burning-hands'
@@ -100,15 +108,34 @@ export type SpellEffectKind =
   | 'hold-person'
   | 'misty-step'
   | 'fireball'
-  | 'lightning-bolt';
+  | 'lightning-bolt'
+  // Weapon attacks (feat/vfx-combat).
+  | 'slash'
+  | 'pierce'
+  | 'bludgeon'
+  | 'arrow'
+  // Class-ability signatures (feat/vfx-combat).
+  | 'rage'
+  | 'reckless'
+  | 'hunters-mark'
+  | 'colossus'
+  | 'cunning-action'
+  | 'second-wind'
+  | 'action-surge'
+  // === VFX-kind extension point (feat/vfx-combat owns this union) ===
+  // feat/vfx-enemies appends enemy kinds here, e.g. `| 'summon' | 'web'`.
+  ;
+
+/** Alias spelling out that the union is the canonical combat-VFX kind set. */
+export type CombatVfxKind = SpellEffectKind;
 
 export interface SpellEffectEvent {
-  /** Monotonic id — increments per cast so the SpellEffectLayer mounts a fresh component. */
+  /** Monotonic id — increments per emit so the SpellEffectLayer mounts a fresh component. */
   id: number;
   kind: SpellEffectKind;
-  /** Combatant id of the caster — 'player' or a monster id. */
+  /** Combatant id of the source — 'player' or a monster id. */
   attackerId: string;
-  /** Combatant id of the target. Undefined for self-buffs (shield, mage-armor). */
+  /** Combatant id of the target. Undefined for self-effects (shield, rage, second-wind). */
   targetId?: string;
 }
 

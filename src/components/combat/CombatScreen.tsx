@@ -65,7 +65,7 @@ export function CombatScreen({
   const setAutoBattle = useSettingsStore((s) => s.setAutoBattle);
   const [selectingTarget, setSelectingTarget] = useState(false);
   const [overlayActive, setOverlayActive] = useState(false);
-  const [shake, setShake] = useState(false);
+  const [shake, setShake] = useState<'hard' | 'soft' | null>(null);
   const [screenFlash, setScreenFlash] = useState<'player-crit' | 'enemy-crit' | null>(null);
   const [confirmAbandon, setConfirmAbandon] = useState(false);
   const [autoEndNotice, setAutoEndNotice] = useState(false);
@@ -80,17 +80,26 @@ export function CombatScreen({
   useEffect(() => {
     if (!state.lastAttack) return;
     setOverlayActive(true);
-    if (state.lastAttack.crit) {
-      setShake(true);
+    const attack = state.lastAttack;
+    // Crits shake hard + flash the screen; a plain-but-heavy blow gets a softer
+    // shake so big damage still lands with weight.
+    const heavyHit = (attack.damageDealt ?? 0) >= 12;
+    if (attack.crit) {
+      setShake('hard');
       const flashKind: 'player-crit' | 'enemy-crit' =
-        state.lastAttack.attackerKind === 'player' ? 'player-crit' : 'enemy-crit';
+        attack.attackerKind === 'player' ? 'player-crit' : 'enemy-crit';
       setScreenFlash(flashKind);
-      const tShake = setTimeout(() => setShake(false), 460);
+      const tShake = setTimeout(() => setShake(null), 460);
       const tFlash = setTimeout(() => setScreenFlash(null), 220);
       return () => {
         clearTimeout(tShake);
         clearTimeout(tFlash);
       };
+    }
+    if (heavyHit) {
+      setShake('soft');
+      const tShake = setTimeout(() => setShake(null), 300);
+      return () => clearTimeout(tShake);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.lastAttack?.id]);
@@ -488,7 +497,7 @@ export function CombatScreen({
 
   return (
     <div
-      className={`min-h-screen flex flex-col gap-3 mx-auto p-4 md:p-6 relative animate-room-enter ${shake ? 'animate-shake' : ''}`}
+      className={`min-h-screen flex flex-col gap-3 mx-auto p-4 md:p-6 relative animate-room-enter ${shake === 'hard' ? 'animate-shake' : shake === 'soft' ? 'animate-shake-soft' : ''}`}
       style={{ width: '1000px', maxWidth: '100%' }}
     >
       {/* Screen flash for crits */}

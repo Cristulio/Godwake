@@ -6,6 +6,12 @@ import type {
   SpellEffectKind,
 } from '../../types/combat';
 import { PlayerPortrait } from './PlayerPortrait';
+import {
+  WeaponSlashEffect,
+  WeaponPierceEffect,
+  WeaponBludgeonEffect,
+  ArrowShotEffect,
+} from './SlashEffect';
 
 interface Anchor {
   x: number;
@@ -90,6 +96,30 @@ export function SpellEffect({ kind, origin, target, onDone }: SpellEffectProps) 
       return <MageArmorEffect origin={origin} onDone={onDone} />;
     case 'hold-person':
       return <HoldPersonEffect target={target} onDone={onDone} />;
+    // --- weapon kinds (feat/vfx-combat) ---
+    case 'slash':
+      return <WeaponSlashEffect origin={origin} target={target} onDone={onDone} />;
+    case 'pierce':
+      return <WeaponPierceEffect origin={origin} target={target} onDone={onDone} />;
+    case 'bludgeon':
+      return <WeaponBludgeonEffect origin={origin} target={target} onDone={onDone} />;
+    case 'arrow':
+      return <ArrowShotEffect origin={origin} target={target} onDone={onDone} />;
+    // --- class-ability kinds (feat/vfx-combat) ---
+    case 'rage':
+      return <RageEffect origin={origin} onDone={onDone} />;
+    case 'reckless':
+      return <RecklessEffect origin={origin} onDone={onDone} />;
+    case 'hunters-mark':
+      return <HuntersMarkEffect target={target} onDone={onDone} />;
+    case 'colossus':
+      return <ColossusEffect origin={origin} target={target} onDone={onDone} />;
+    case 'cunning-action':
+      return <CunningActionEffect origin={origin} onDone={onDone} />;
+    case 'second-wind':
+      return <SecondWindEffect origin={origin} onDone={onDone} />;
+    case 'action-surge':
+      return <ActionSurgeEffect origin={origin} onDone={onDone} />;
     default:
       return null;
   }
@@ -610,6 +640,350 @@ function ChainRing() {
         })}
       </g>
     </svg>
+  );
+}
+
+// ---------- Rage (Barbarian) ----------
+
+function RageEffect({ origin, onDone }: SelfProps) {
+  useDoneTimer(640, onDone);
+  const size = 150;
+  return (
+    <div
+      className="absolute"
+      style={{ left: origin.x, top: origin.y, width: 0, height: 0 }}
+    >
+      {/* Outward roar shockwave */}
+      <div className="absolute animate-rage-roar" style={{ left: 0, top: 0, width: 0, height: 0 }}>
+        <svg
+          width={size}
+          height={size}
+          viewBox="-75 -75 150 150"
+          style={{ position: 'absolute', left: -size / 2, top: -size / 2, overflow: 'visible' }}
+        >
+          <circle cx="0" cy="0" r="52" fill="none" stroke="#ff5a3a" strokeWidth="5" opacity="0.7" />
+          <circle cx="0" cy="0" r="52" fill="none" stroke="#b5302c" strokeWidth="2" opacity="0.5" />
+        </svg>
+      </div>
+      {/* Seething red aura clinging to the body */}
+      <div className="absolute animate-rage-aura" style={{ left: 0, top: 0, width: 0, height: 0 }}>
+        <svg
+          width={size}
+          height={size}
+          viewBox="-75 -75 150 150"
+          style={{ position: 'absolute', left: -size / 2, top: -size / 2, overflow: 'visible' }}
+        >
+          <defs>
+            <radialGradient id="rage-aura-grad" cx="0.5" cy="0.55" r="0.5">
+              <stop offset="0%" stopColor="#ff8a3a" stopOpacity="0" />
+              <stop offset="55%" stopColor="#ff5a3a" stopOpacity="0.28" />
+              <stop offset="78%" stopColor="#b5302c" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#7a1410" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="0" cy="-6" rx="46" ry="62" fill="url(#rage-aura-grad)" />
+        </svg>
+      </div>
+      {/* Rising embers */}
+      {[-26, -8, 12, 30].map((x, i) => (
+        <div
+          key={i}
+          className="absolute w-1.5 h-1.5 bg-[#ff7a3a] rounded-[1px] animate-rage-ember"
+          style={{
+            left: x,
+            top: 6,
+            boxShadow: '0 0 6px rgba(255,90,58,0.9)',
+            animationDelay: `${i * 90}ms`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ---------- Reckless Attack (Barbarian) ----------
+
+function RecklessEffect({ origin, onDone }: SelfProps) {
+  useDoneTimer(420, onDone);
+  return (
+    <div
+      className="absolute animate-reckless-snarl"
+      style={{ left: origin.x, top: origin.y - 8, width: 0, height: 0 }}
+    >
+      <svg
+        width="110"
+        height="110"
+        viewBox="-55 -55 110 110"
+        style={{ position: 'absolute', left: -55, top: -55, overflow: 'visible' }}
+      >
+        <defs>
+          <linearGradient id="reckless-claw" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#ff5a3a" stopOpacity="0" />
+            <stop offset="50%" stopColor="#ff7a4a" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#b5302c" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {/* Three raking claw streaks */}
+        <g stroke="url(#reckless-claw)" strokeWidth="4" strokeLinecap="round" fill="none">
+          <path d="M -40 -34 Q 4 -6 40 28" />
+          <path d="M -34 -22 Q 10 4 44 38" />
+          <path d="M -44 -20 Q 0 8 34 40" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ---------- Hunter's Mark (Ranger) ----------
+
+function HuntersMarkEffect({ target, onDone }: HoldProps) {
+  useDoneTimer(760, onDone);
+  const size = 96;
+  return (
+    <div
+      className="absolute animate-hmark-lock"
+      style={{ left: target.x, top: target.y - 4, width: 0, height: 0 }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox="-48 -48 96 96"
+        style={{ position: 'absolute', left: -size / 2, top: -size / 2, overflow: 'visible' }}
+      >
+        <defs>
+          <radialGradient id="hmark-glow" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stopColor="#9ef0a0" stopOpacity="0" />
+            <stop offset="80%" stopColor="#6fd36a" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#6fd36a" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="0" cy="0" r="44" fill="url(#hmark-glow)" />
+        {/* Outer reticle ring (rotates via parent) */}
+        <circle cx="0" cy="0" r="38" fill="none" stroke="#9ef0a0" strokeWidth="1.4" strokeDasharray="6 5" opacity="0.85" />
+        <circle cx="0" cy="0" r="28" fill="none" stroke="#f4a742" strokeWidth="1.6" opacity="0.85" />
+        {/* Corner brackets */}
+        <g stroke="#fffaf0" strokeWidth="2" strokeLinecap="round" opacity="0.95">
+          <path d="M -38 -26 L -38 -38 L -26 -38" fill="none" />
+          <path d="M 38 -26 L 38 -38 L 26 -38" fill="none" />
+          <path d="M -38 26 L -38 38 L -26 38" fill="none" />
+          <path d="M 38 26 L 38 38 L 26 38" fill="none" />
+        </g>
+        {/* Crosshair + center pip */}
+        <g stroke="#b5302c" strokeWidth="1.6" strokeLinecap="round" opacity="0.9">
+          <line x1="0" y1="-16" x2="0" y2="-6" />
+          <line x1="0" y1="6" x2="0" y2="16" />
+          <line x1="-16" y1="0" x2="-6" y2="0" />
+          <line x1="6" y1="0" x2="16" y2="0" />
+        </g>
+        <circle cx="0" cy="0" r="3" fill="#b5302c" />
+      </svg>
+    </div>
+  );
+}
+
+// ---------- Colossus Slayer (Ranger) ----------
+
+function ColossusEffect({ origin, target, onDone }: ArcProps) {
+  useDoneTimer(500, onDone);
+  const dir = target.x >= origin.x ? 1 : -1;
+  return (
+    <div
+      className="absolute"
+      style={{ left: target.x, top: target.y, width: 0, height: 0 }}
+    >
+      {/* Big downward cleave arc */}
+      <div
+        className="absolute animate-colossus-cleave"
+        style={{ left: 0, top: 0, width: 0, height: 0 }}
+      >
+        <svg
+          width="150"
+          height="150"
+          viewBox="-75 -75 150 150"
+          style={{ position: 'absolute', left: -75, top: -75, overflow: 'visible', transform: `scaleX(${dir})` }}
+        >
+          <defs>
+            <linearGradient id="colossus-blade" x1="0" y1="0" x2="0.6" y2="1">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="45%" stopColor="#ffffff" stopOpacity="0.95" />
+              <stop offset="80%" stopColor="#ffb347" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#b5302c" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d="M -52 -54 Q 30 -30 52 56 Q -4 -10 -52 -54 Z" fill="url(#colossus-blade)" />
+          <path
+            d="M -48 -50 Q 26 -26 46 48"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="3"
+            strokeLinecap="round"
+            opacity="0.95"
+          />
+        </svg>
+      </div>
+      {/* Concussive impact flash + shockwave */}
+      <div className="absolute animate-colossus-impact" style={{ left: 0, top: 8, width: 0, height: 0 }}>
+        <svg
+          width="100"
+          height="100"
+          viewBox="-50 -50 100 100"
+          style={{ position: 'absolute', left: -50, top: -50, overflow: 'visible' }}
+        >
+          <defs>
+            <radialGradient id="colossus-core" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#fffaf0" stopOpacity="1" />
+              <stop offset="50%" stopColor="#ffb347" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#b5302c" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <circle cx="0" cy="0" r="26" fill="url(#colossus-core)" />
+          <circle cx="0" cy="0" r="44" fill="none" stroke="#ffd9a0" strokeWidth="3" opacity="0.7" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Cunning Action (Rogue) ----------
+
+function CunningActionEffect({ origin, onDone }: SelfProps) {
+  useDoneTimer(540, onDone);
+  // Several smoke puffs billow up and out, masking a vanish-flicker.
+  const puffs = [
+    { x: -20, y: 4, d: 0, s: 1 },
+    { x: 14, y: -2, d: 80, s: 1.2 },
+    { x: -4, y: 10, d: 40, s: 0.9 },
+    { x: 24, y: 14, d: 140, s: 1.05 },
+    { x: -28, y: -8, d: 110, s: 0.85 },
+  ];
+  return (
+    <div className="absolute" style={{ left: origin.x, top: origin.y, width: 0, height: 0 }}>
+      {puffs.map((p, i) => (
+        <div
+          key={i}
+          className="absolute animate-cunning-smoke rounded-full"
+          style={{
+            left: p.x,
+            top: p.y,
+            width: 34 * p.s,
+            height: 34 * p.s,
+            marginLeft: (-34 * p.s) / 2,
+            marginTop: (-34 * p.s) / 2,
+            background:
+              'radial-gradient(circle, rgba(120,124,140,0.85) 0%, rgba(74,78,96,0.5) 45%, rgba(40,42,58,0) 72%)',
+            animationDelay: `${p.d}ms`,
+          }}
+        />
+      ))}
+      {/* Faint violet vanish shimmer at the core */}
+      <div
+        className="absolute animate-cunning-vanish rounded-full"
+        style={{
+          left: 0,
+          top: -2,
+          width: 40,
+          height: 56,
+          marginLeft: -20,
+          marginTop: -28,
+          background:
+            'radial-gradient(ellipse, rgba(155,111,207,0.45) 0%, rgba(94,58,143,0) 70%)',
+        }}
+      />
+    </div>
+  );
+}
+
+// ---------- Second Wind (Fighter) ----------
+
+function SecondWindEffect({ origin, onDone }: SelfProps) {
+  useDoneTimer(740, onDone);
+  const size = 130;
+  return (
+    <div className="absolute" style={{ left: origin.x, top: origin.y, width: 0, height: 0 }}>
+      {/* Warm radial heal bloom */}
+      <div className="absolute animate-secondwind-glow" style={{ left: 0, top: -4, width: 0, height: 0 }}>
+        <svg
+          width={size}
+          height={size}
+          viewBox="-65 -65 130 130"
+          style={{ position: 'absolute', left: -size / 2, top: -size / 2, overflow: 'visible' }}
+        >
+          <defs>
+            <radialGradient id="sw-bloom" cx="0.5" cy="0.55" r="0.5">
+              <stop offset="0%" stopColor="#fff6d0" stopOpacity="0.7" />
+              <stop offset="45%" stopColor="#9ef0a0" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#6fd36a" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="0" cy="-4" rx="46" ry="58" fill="url(#sw-bloom)" />
+          {/* Restorative cross sigil */}
+          <g stroke="#fffdf2" strokeWidth="3" strokeLinecap="round" opacity="0.85">
+            <line x1="0" y1="-18" x2="0" y2="18" />
+            <line x1="-18" y1="0" x2="18" y2="0" />
+          </g>
+        </svg>
+      </div>
+      {/* Rising motes of life */}
+      {[-22, -6, 10, 24, 2].map((x, i) => (
+        <div
+          key={i}
+          className="absolute w-1.5 h-1.5 rounded-full animate-secondwind-mote"
+          style={{
+            left: x,
+            top: 18,
+            background: '#bff7b0',
+            boxShadow: '0 0 6px rgba(159,240,160,0.9)',
+            animationDelay: `${i * 80}ms`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ---------- Action Surge (Fighter) ----------
+
+function ActionSurgeEffect({ origin, onDone }: SelfProps) {
+  useDoneTimer(520, onDone);
+  const size = 132;
+  return (
+    <div className="absolute" style={{ left: origin.x, top: origin.y, width: 0, height: 0 }}>
+      {/* Burst ring */}
+      <div className="absolute animate-surge-ring" style={{ left: 0, top: 0, width: 0, height: 0 }}>
+        <svg
+          width={size}
+          height={size}
+          viewBox="-66 -66 132 132"
+          style={{ position: 'absolute', left: -size / 2, top: -size / 2, overflow: 'visible' }}
+        >
+          <defs>
+            <radialGradient id="surge-glow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#fff6d0" stopOpacity="0" />
+              <stop offset="70%" stopColor="#ffb347" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#f4a742" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <circle cx="0" cy="0" r="46" fill="url(#surge-glow)" />
+          <circle cx="0" cy="0" r="46" fill="none" stroke="#ffd9a0" strokeWidth="3" opacity="0.7" />
+        </svg>
+      </div>
+      {/* Speed lines streaking upward-forward */}
+      <div className="absolute animate-surge-lines" style={{ left: 0, top: 0, width: 0, height: 0 }}>
+        <svg
+          width={size}
+          height={size}
+          viewBox="-66 -66 132 132"
+          style={{ position: 'absolute', left: -size / 2, top: -size / 2, overflow: 'visible' }}
+        >
+          <g stroke="#ffd9a0" strokeWidth="2.4" strokeLinecap="round" opacity="0.85">
+            <line x1="-34" y1="-28" x2="-14" y2="-28" />
+            <line x1="-40" y1="-10" x2="-16" y2="-10" />
+            <line x1="-36" y1="8" x2="-12" y2="8" />
+            <line x1="-30" y1="26" x2="-10" y2="26" />
+          </g>
+        </svg>
+      </div>
+    </div>
   );
 }
 

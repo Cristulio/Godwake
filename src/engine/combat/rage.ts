@@ -9,6 +9,7 @@ import {
   type CombatActionResult,
 } from './types';
 import { appendLog } from './log';
+import { attachCombatVfx } from './vfx';
 
 export interface RageContext {
   character: Character;
@@ -40,7 +41,7 @@ export function useRage(ctx: RageContext): CombatActionResult {
     kind: 'narration',
     text: `${nextCharacter.name} gives way to the fury — physical blows glance off, and every swing bites deeper.`,
   };
-  return combatResult(appendLog(state, log), nextCharacter);
+  return combatResult(attachCombatVfx(appendLog(state, log), 'rage', 'player'), nextCharacter);
 }
 
 export interface RecklessAttackContext {
@@ -68,5 +69,5 @@ export function useRecklessAttack(ctx: RecklessAttackContext): CombatActionResul
     kind: 'narration',
     text: `${nextCharacter.name} throws the guard away — strikes land with advantage, but so do the blows that answer.`,
   };
-  return combatResult(appendLog(state, log), nextCharacter);
+  return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
 }

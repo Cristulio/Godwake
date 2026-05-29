@@ -7,6 +7,7 @@ import {
   type CombatActionResult,
 } from './types';
 import { appendLog } from './log';
+import { attachCombatVfx } from './vfx';
 
 export interface ActionSurgeContext {
   character: Character;
@@ -39,13 +40,17 @@ export function useActionSurge(ctx: ActionSurgeContext): CombatActionResult {
   };
 
   return combatResult(
-    appendLog(
-      {
-        ...state,
-        playerAttacksThisTurn: 0,
-        sneakAttackUsedThisTurn: false,
-      },
-      log,
+    attachCombatVfx(
+      appendLog(
+        {
+          ...state,
+          playerAttacksThisTurn: 0,
+          sneakAttackUsedThisTurn: false,
+        },
+        log,
+      ),
+      'action-surge',
+      'player',
     ),
     nextCharacter,
   );

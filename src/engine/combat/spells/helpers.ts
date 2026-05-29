@@ -17,6 +17,7 @@ import {
 import { characterCampBoonMods } from '../../character/campBoons';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchSpellSlots } from '../types';
+import { attachCombatVfx } from '../vfx';
 
 export interface CastSpellContext {
   roller: DiceRoller;
@@ -79,12 +80,7 @@ export function attachSpellEffect(
   attackerId: string,
   targetId?: string,
 ): CombatState {
-  const next = (state.spellEffectCounter ?? 0) + 1;
-  return {
-    ...state,
-    spellEffectCounter: next,
-    spellEffectEvent: { id: next, kind, attackerId, targetId },
-  };
+  return attachCombatVfx(state, kind, attackerId, targetId);
 }
 
 /**
