@@ -122,9 +122,20 @@ export type SpellEffectKind =
   | 'cunning-action'
   | 'second-wind'
   | 'action-surge'
-  // === VFX-kind extension point (feat/vfx-combat owns this union) ===
-  // feat/vfx-enemies appends enemy kinds here, e.g. `| 'summon' | 'web'`.
-  ;
+  // === enemy-vfx (feat/vfx-enemies) === bespoke effects for the monster toolkit
+  // (#164). Each maps to a component in SpellEffect.tsx + keyframes in the
+  // enemy-vfx block of index.css. Emitted from monsterAttack.ts.
+  | 'enemy-summon' // rift portal / spawn-in poof at the new add's slot
+  | 'debuff-poison' // green drip cloud over the player
+  | 'debuff-frighten' // cold shadow looming + recoil
+  | 'debuff-blind' // ink black-out splatter
+  | 'debuff-weaken' // grey sapping motes drawn off the player
+  | 'debuff-restrain' // sticky web strands snapping taut
+  | 'sustain-heal' // green up-glow on the mending monster
+  | 'sustain-ward' // amber protective bubble over the warded monster
+  | 'sustain-drain' // life-drain tether pulling motes target→attacker
+  | 'multiattack-flurry' // flurry of fast strike streaks on the player
+  | 'enemy-frenzy'; // red battle-rage aura flash on the monster
 
 /** Alias spelling out that the union is the canonical combat-VFX kind set. */
 export type CombatVfxKind = SpellEffectKind;

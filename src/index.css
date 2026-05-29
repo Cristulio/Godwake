@@ -692,3 +692,208 @@ img, svg.pixel {
   100% { transform: translateX(0); }
 }
 .animate-knockback-right { animation: godwake-knockback-right 300ms cubic-bezier(0.3, 0.7, 0.4, 1); }
+/* === enemy-vfx (feat/vfx-enemies) === */
+/* Bespoke effects for the monster toolkit (#164): summon / debuff / sustain /
+   multiattack / frenzy. Each keyframe pairs with a component in SpellEffect.tsx
+   and a kind in SpellEffectKind. Motion uses --dx/--dy where the direction is
+   computed from anchor geometry (motes, streaks, drain tether). */
+
+/* -- summon: a rift tears open, smoke billows, the add steps through -- */
+@keyframes godwake-enemy-rift {
+  0% { opacity: 0; transform: scaleY(0) scaleX(0.4); }
+  18% { opacity: 1; transform: scaleY(1.12) scaleX(1.05); }
+  30% { transform: scaleY(1) scaleX(1); }
+  70% { opacity: 0.9; transform: scaleY(1) scaleX(1); }
+  100% { opacity: 0; transform: scaleY(0.15) scaleX(0.5); }
+}
+.animate-enemy-rift { animation: godwake-enemy-rift 900ms cubic-bezier(0.3, 0.8, 0.4, 1) forwards; }
+
+@keyframes godwake-rift-smoke {
+  0% { opacity: 0; transform: translateY(6px) scale(0.4); }
+  35% { opacity: 0.75; }
+  100% { opacity: 0; transform: translateY(-26px) scale(1.5); }
+}
+.animate-rift-smoke { animation: godwake-rift-smoke 900ms ease-out forwards; }
+
+@keyframes godwake-rift-mote {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.9); }
+}
+.animate-rift-mote { animation: godwake-rift-mote 880ms ease-out forwards; }
+
+/* -- debuff: poison drip cloud -- */
+@keyframes godwake-poison-cloud {
+  0% { opacity: 0; transform: scale(0.5) translateY(-6px); }
+  30% { opacity: 0.85; transform: scale(1.05) translateY(0); }
+  60% { opacity: 0.7; transform: scale(1) translateY(2px); }
+  100% { opacity: 0; transform: scale(1.1) translateY(6px); }
+}
+.animate-poison-cloud { animation: godwake-poison-cloud 1000ms ease-in-out forwards; }
+
+@keyframes godwake-poison-drip {
+  0% { opacity: 0; transform: translateY(-4px) scaleY(0.5); }
+  25% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(28px) scaleY(1.4); }
+}
+.animate-poison-drip { animation: godwake-poison-drip 900ms cubic-bezier(0.55, 0, 0.7, 0.5) forwards; }
+
+/* -- debuff: frightened — a cold shadow looms in, the target recoils -- */
+@keyframes godwake-fright-shadow {
+  0% { opacity: 0; transform: translateX(34px) scale(0.6); }
+  35% { opacity: 0.9; transform: translateX(0) scale(1.15); }
+  55% { opacity: 0.85; transform: translateX(-6px) scale(1.05); }
+  100% { opacity: 0; transform: translateX(8px) scale(0.95); }
+}
+.animate-fright-shadow { animation: godwake-fright-shadow 900ms cubic-bezier(0.34, 1.3, 0.5, 1) forwards; }
+
+@keyframes godwake-fright-chill {
+  0% { opacity: 0; }
+  25% { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+.animate-fright-chill { animation: godwake-fright-chill 900ms ease-out forwards; }
+
+/* -- debuff: blinded — ink bloom blacks out, then thins -- */
+@keyframes godwake-blind-ink {
+  0% { opacity: 0; transform: scale(0.2); }
+  18% { opacity: 0.95; transform: scale(1.15); }
+  55% { opacity: 0.9; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+.animate-blind-ink { animation: godwake-blind-ink 850ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+
+@keyframes godwake-blind-splat {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.3); }
+  20% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1); }
+}
+.animate-blind-splat { animation: godwake-blind-splat 760ms ease-out forwards; }
+
+/* -- debuff: weakened — grey motes sap away -- */
+@keyframes godwake-weaken-mote {
+  0% { opacity: 0; transform: translate(0, 8px) scale(1); }
+  30% { opacity: 0.85; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.5); }
+}
+.animate-weaken-mote { animation: godwake-weaken-mote 950ms ease-out forwards; }
+
+@keyframes godwake-weaken-wash {
+  0% { opacity: 0; }
+  40% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+.animate-weaken-wash { animation: godwake-weaken-wash 950ms ease-in-out forwards; }
+
+/* -- debuff: restrained — sticky strands snap taut -- */
+@keyframes godwake-restrain-web {
+  0% { opacity: 0; transform: scale(0.3); }
+  25% { opacity: 1; transform: scale(1.08); }
+  40% { transform: scale(0.98); }
+  80% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+.animate-restrain-web { animation: godwake-restrain-web 950ms cubic-bezier(0.3, 1.5, 0.5, 1) forwards; }
+
+/* -- sustain: self/ally heal — green up-glow + rising motes -- */
+@keyframes godwake-heal-glow {
+  0% { opacity: 0; transform: translateY(14px) scaleY(0.6); }
+  35% { opacity: 0.9; transform: translateY(0) scaleY(1); }
+  70% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(-10px) scaleY(1.05); }
+}
+.animate-heal-glow { animation: godwake-heal-glow 1000ms ease-out forwards; }
+
+@keyframes godwake-heal-mote {
+  0% { opacity: 0; transform: translate(0, 16px) scale(0.6); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1); }
+}
+.animate-heal-mote { animation: godwake-heal-mote 1000ms ease-out forwards; }
+
+@keyframes godwake-heal-pulse {
+  0% { opacity: 0; transform: scale(0.5); }
+  40% { opacity: 0.6; }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+.animate-heal-pulse { animation: godwake-heal-pulse 900ms ease-out forwards; }
+
+/* -- sustain: ward — protective bubble pops up and settles -- */
+@keyframes godwake-ward-bubble {
+  0% { opacity: 0; transform: scale(0.4); }
+  30% { opacity: 0.85; transform: scale(1.12); }
+  48% { transform: scale(0.97); }
+  62% { transform: scale(1.03); }
+  80% { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.02); }
+}
+.animate-ward-bubble { animation: godwake-ward-bubble 1100ms cubic-bezier(0.3, 1.2, 0.5, 1) forwards; }
+
+@keyframes godwake-ward-sheen {
+  0% { opacity: 0; transform: translateX(-22px) rotate(-12deg); }
+  30% { opacity: 0.8; }
+  70% { opacity: 0.5; transform: translateX(22px) rotate(-12deg); }
+  100% { opacity: 0; }
+}
+.animate-ward-sheen { animation: godwake-ward-sheen 1000ms ease-in-out forwards; }
+
+/* -- sustain: life-drain — necrotic tether, motes flow target→attacker -- */
+@keyframes godwake-drain-tether {
+  0% { opacity: 0; }
+  25% { opacity: 0.85; }
+  75% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+.animate-drain-tether { animation: godwake-drain-tether 1000ms ease-in-out forwards; }
+
+@keyframes godwake-drain-mote {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.1); }
+}
+.animate-drain-mote { animation: godwake-drain-mote 760ms cubic-bezier(0.4, 0.1, 0.6, 1) forwards; }
+
+@keyframes godwake-drain-feed {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+.animate-drain-feed { animation: godwake-drain-feed 1000ms ease-out forwards; }
+
+/* -- multiattack: a flurry of fast strike streaks -- */
+@keyframes godwake-flurry-streak {
+  0% { opacity: 0; transform: translate(0, 0) scaleX(0.3); }
+  20% { opacity: 0.95; transform: translate(calc(var(--dx) * 0.5), calc(var(--dy) * 0.5)) scaleX(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scaleX(0.6); }
+}
+.animate-flurry-streak { animation: godwake-flurry-streak 300ms cubic-bezier(0.4, 0.1, 0.7, 1) forwards; }
+
+@keyframes godwake-flurry-spark {
+  0% { opacity: 0; transform: scale(0.3); }
+  40% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+.animate-flurry-spark { animation: godwake-flurry-spark 260ms ease-out forwards; }
+
+/* -- frenzy: a battle-rage aura flares red, twice, then fades -- */
+@keyframes godwake-frenzy-aura {
+  0% { opacity: 0; transform: scale(0.6); }
+  20% { opacity: 0.9; transform: scale(1.15); }
+  45% { opacity: 0.5; transform: scale(1); }
+  62% { opacity: 0.85; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+.animate-frenzy-aura { animation: godwake-frenzy-aura 1000ms ease-out forwards; }
+
+@keyframes godwake-frenzy-ring {
+  0% { opacity: 0.9; transform: scale(0.4); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+.animate-frenzy-ring { animation: godwake-frenzy-ring 700ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+
+@keyframes godwake-frenzy-wisp {
+  0% { opacity: 0; transform: translateY(6px) scaleY(0.5); }
+  35% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-22px) scaleY(1.3); }
+}
+.animate-frenzy-wisp { animation: godwake-frenzy-wisp 900ms ease-out forwards; }
