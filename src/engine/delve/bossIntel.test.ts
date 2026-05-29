@@ -239,4 +239,18 @@ describe('boss intel cards — content', () => {
       expect(card.signature.length).toBeGreaterThan(0);
     }
   });
+
+  it('no intel stat line leaks a non-functional positional stat (reach/range)', () => {
+    // Combat is non-positional — the engine never reads reach or range, so the
+    // scout/omen reveal must show only actionable numbers (HP, AC, to-hit,
+    // damage, save DCs, triggers).
+    for (const card of BOSS_INTEL_CARDS) {
+      for (const line of card.fullActions) {
+        expect(line).not.toMatch(/\breach\b/i);
+        expect(line).not.toMatch(/\brange\b/i);
+      }
+      expect(card.signature).not.toMatch(/\breach\b/i);
+      expect(card.signature).not.toMatch(/\brange\b/i);
+    }
+  });
 });

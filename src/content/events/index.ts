@@ -280,10 +280,15 @@ const POOL: EventTemplate[] = [
       {
         id: 'cook',
         label: 'Drive them off and take the grain',
-        hint: 'Sour bread, but bread.',
+        hint: 'Sour bread, but bread — if the sick one does not bite first.',
+        successChance: 0.65,
         outcome: {
-          resolution: 'You stamp twice. The rats vanish into the wall. The bread is hard but honest. You feel a small steadiness return.',
+          resolution: 'You stamp twice. The rats scatter into the wall before they can turn. The bread is hard but honest, and a small steadiness returns to your legs.',
           effects: [{ kind: 'temp_hp', amount: 3 }],
+        },
+        failureOutcome: {
+          resolution: 'The larger rat is slow with sickness and bold with it — it fastens yellow teeth into the meat of your hand before it bolts. The bite throbs hot and wrong the length of the corridor.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
@@ -292,6 +297,58 @@ const POOL: EventTemplate[] = [
         hint: 'No fight worth the bite of a sick rat.',
         outcome: {
           resolution: 'You step past. The smaller rat watches you the full length of the corridor.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'dead-mans-steel',
+    eventType: 'treasure',
+    title: "A Dead Man's Steel",
+    flavor:
+      "A sellsword slumped against the cell-block wall, a sevenday dead by the smell. His weapon is still locked in his fist — good steel, better than the jailers carry — and a flat pack sags at his hip, the buckles half-worried by someone who left in a hurry before they finished.",
+    minChapter: 1,
+    choices: [
+      {
+        id: 'take-blade',
+        label: 'Pry the weapon from his grip',
+        hint: 'Good steel asks no questions. Yours now.',
+        outcome: {
+          resolution:
+            'Rigor has set his fingers and they give one at a time, dry as old rope. The weapon comes free and sits true in your hand — whoever he was, he kept his edge. You leave him the wall and take his road.',
+          effects: [
+            {
+              kind: 'grant_item',
+              randomFrom: ['greatsword', 'warhammer', 'rapier', 'longsword', 'shortbow'],
+            },
+          ],
+        },
+      },
+      {
+        id: 'search-pack',
+        label: 'Cut the pack from his hip',
+        hint: "Coin over steel — if the buckle is all that's waiting.",
+        successChance: 0.6,
+        outcome: {
+          resolution:
+            'The pack comes away heavy. Coin, a whetstone, a twist of jerky gone to leather. You pocket the silver and leave the rest to the dark.',
+          effects: [{ kind: 'gold_delta', amount: 18 }],
+        },
+        failureOutcome: {
+          resolution:
+            "Your knife parts the strap — and the spring-blade some thief rigged under the flap parts the back of your hand. You jerk away cursing, the pack still on his hip and your own blood on the dead man's coat.",
+          effects: [{ kind: 'hp_delta', amount: -4 }],
+        },
+      },
+      {
+        id: 'leave',
+        label: 'Leave him his steel',
+        hint: 'The dead earned their rest the hard way.',
+        outcome: {
+          resolution:
+            'You straighten his fist over the grip and step past. The corridor takes you on, and the smell does not follow far.',
           effects: [],
         },
       },
@@ -446,14 +503,15 @@ const POOL: EventTemplate[] = [
       {
         id: 'haggle',
         label: '[Charisma] Haggle for the bottle',
-        hint: 'A smile, a story of the road, a price brought down.',
+        hint: 'A smile, a story of the road — the better the telling, the lower the price.',
         requiresGold: 8,
         requiresCha: 1,
         outcome: {
           resolution:
-            'You spin him a tale about Amnian summers and a sister who married a vintner. He laughs and waves a hand. "Half price for a walker who knows the country, then." The bottle goes into your pack at a thief\'s rate.',
+            'You spin him a tale about Amnian summers and a sister who married a vintner. He laughs and waves a hand. "Half price for a walker who knows the country, then" — and the longer you keep him laughing, the more coppers he counts back into your palm. The bottle goes into your pack at a thief\'s rate.',
           effects: [
             { kind: 'gold_delta', amount: -8 },
+            { kind: 'cha_scaled_gold', perPoint: 2 },
             { kind: 'hp_delta', amount: 8 },
           ],
         },
@@ -565,6 +623,56 @@ const POOL: EventTemplate[] = [
     ],
   }),
 
+  EventTemplateSchema.parse({
+    id: 'pilgrim-road-smith',
+    eventType: 'bargain',
+    title: 'A Smith on the Pilgrim Road',
+    flavor:
+      "A travelling smith has set his portable anvil in the lee of a milestone, a rack of finished blades cooling on a leather roll beside him. \"Bound for the dark, walker? You'll want steel that bites back. Forty for the rapier on the roll — or talk me round, if your tongue's as keen as my edges.\"",
+    minChapter: 2,
+    choices: [
+      {
+        id: 'buy-blade',
+        label: 'Buy the rapier off the roll',
+        hint: 'A fair price for honest steel.',
+        requiresGold: 40,
+        outcome: {
+          resolution:
+            'He sights down the blade, then lays it across your palms hilt-first. "Waukeen keep your edge keen, walker." The balance is clean. It goes to your hip like it has always lived there.',
+          effects: [
+            { kind: 'gold_delta', amount: -40 },
+            { kind: 'grant_item', itemId: 'rapier' },
+          ],
+        },
+      },
+      {
+        id: 'haggle-smith',
+        label: '[Charisma] Talk him round',
+        hint: 'Same blade — the sharper the tongue, the lighter the bill.',
+        requiresGold: 25,
+        requiresCha: 1,
+        outcome: {
+          resolution:
+            'You name three smiths you have never met and a war you were never in, and somewhere in the telling his price softens like hot iron. "Aye — for a walker who knows the trade." The longer you keep him laughing, the more he knocks off the bill, and the rapier goes to your hip at a friend\'s rate.',
+          effects: [
+            { kind: 'gold_delta', amount: -25 },
+            { kind: 'cha_scaled_gold', perPoint: 3 },
+            { kind: 'grant_item', itemId: 'rapier' },
+          ],
+        },
+      },
+      {
+        id: 'walk-on-smith',
+        label: 'Walk on',
+        hint: 'Your steel will do. It has so far.',
+        outcome: {
+          resolution: 'He shrugs and turns back to the anvil. "The dark keeps no refunds, walker." The ring of his hammer follows you down the road.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
   // ─── Chapter 3: Spellhold — deeper trade-offs ────────────────────────
   EventTemplateSchema.parse({
     id: 'mad-prisoner-bargain',
@@ -593,12 +701,15 @@ const POOL: EventTemplate[] = [
       {
         id: 'talk-down',
         label: '[Charisma] Talk him down',
-        hint: 'A calm voice between the bars; a name remembered for him.',
+        hint: 'A calm voice between the bars — the steadier you are, the more he trusts you to carry.',
         requiresCha: 2,
         outcome: {
           resolution:
-            'You crouch to his level and speak with the steadiness of a stranger who is not afraid of him. He blinks. Once. Twice. Then he hands the purse through the bars with both hands, like a child returning a borrowed thing. "Yours, walker. Yours. Not the Director\'s. Not anymore." The weight in your pocket is clean.',
-          effects: [{ kind: 'gold_delta', amount: 40 }],
+            'You crouch to his level and speak with the steadiness of a stranger who is not afraid of him. He blinks. Once. Twice. Then he hands the purse through the bars with both hands, like a child returning a borrowed thing — and digs the loose coin from his smock to press after it, the more for how unafraid you were. "Yours, walker. Yours. Not the Director\'s. Not anymore." The weight in your pocket is clean.',
+          effects: [
+            { kind: 'gold_delta', amount: 40 },
+            { kind: 'cha_scaled_gold', perPoint: 6 },
+          ],
         },
       },
       {

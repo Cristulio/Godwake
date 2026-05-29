@@ -291,6 +291,10 @@ function toneForEffect(eff: AppliedEffect): string {
       return eff.detail.includes('+')
         ? 'text-[var(--color-accent-gold)]'
         : 'text-[var(--color-accent-blood)]';
+    case 'cha_scaled_gold':
+      return 'text-[var(--color-accent-gold)]';
+    case 'grant_item':
+      return 'text-[var(--color-accent-amber)]';
     case 'grant_blessing':
     case 'grant_blessing_id':
       return 'text-[var(--color-accent-amber)]';

@@ -6,6 +6,24 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('gold_delta'), amount: z.number() }),
   z.object({ kind: z.literal('grant_blessing'), random: z.literal(true).optional() }),
   z.object({ kind: z.literal('grant_blessing_id'), id: z.string() }),
+  /**
+   * Hand the character a piece of gear (weapon/armor/consumable). Set `itemId`
+   * for a fixed item, or `randomFrom` to roll one id from a pool (the road
+   * "find a weapon" beat). When both are present, `itemId` wins. The granted
+   * item lands in inventory unequipped — the player equips it from the bag.
+   */
+  z.object({
+    kind: z.literal('grant_item'),
+    itemId: z.string().optional(),
+    randomFrom: z.array(z.string()).min(1).optional(),
+  }),
+  /**
+   * Bonus gold scaled by the character's effective CHA modifier — the payoff
+   * half of a [Charisma] choice, so a silver tongue is worth more than the
+   * binary gate. Grants `perPoint × max(0, chaMod)` gold (a positive value can
+   * also offset an upfront cost, i.e. "haggle the price down").
+   */
+  z.object({ kind: z.literal('cha_scaled_gold'), perPoint: z.number().int().positive() }),
   z.object({
     kind: z.literal('grant_quirk_reroll'),
     /**

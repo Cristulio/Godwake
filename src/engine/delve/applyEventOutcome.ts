@@ -11,6 +11,7 @@ import { blessingsForClass } from '../character/blessings';
 import { listQuirks, getQuirk } from '../../content/quirks';
 import { modifierFor } from '../character/derived';
 import { getBossIntelCard } from '../../content/bossIntel';
+import { getItem } from '../../content/items';
 
 /** Plain-text record of a single effect that landed. Useful for UI summaries. */
 export interface AppliedEffect {
@@ -292,6 +293,39 @@ export function applyEventOutcome(
           kind: effect.kind,
           detail: `${effect.amount >= 0 ? '+' : ''}${after - before}g`,
         });
+        break;
+      }
+      case 'cha_scaled_gold': {
+        const chaMod = Math.max(0, modifierFor(next, 'cha'));
+        const bonus = chaMod * effect.perPoint;
+        if (bonus > 0) {
+          next = { ...next, goldInPocket: Math.max(0, next.goldInPocket + bonus) };
+          effectsApplied.push({
+            kind: effect.kind,
+            detail: `+${bonus}g · silver tongue (CHA +${chaMod})`,
+          });
+        }
+        break;
+      }
+      case 'grant_item': {
+        const itemId =
+          effect.itemId ??
+          (effect.randomFrom
+            ? effect.randomFrom[roller.roll('1d100').total % effect.randomFrom.length]
+            : undefined);
+        if (itemId) {
+          let name = itemId;
+          try {
+            name = getItem(itemId).name;
+          } catch {
+            // unknown id falls back to the literal id
+          }
+          next = { ...next, inventory: [...next.inventory, { itemId }] };
+          effectsApplied.push({
+            kind: effect.kind,
+            detail: `gained ${name} — equip it from your pack`,
+          });
+        }
         break;
       }
       case 'grant_blessing': {

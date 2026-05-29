@@ -2,10 +2,32 @@ import { describe, it, expect } from 'vitest';
 import { createDiceRoller } from '../dice';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { applyEventOutcome, canTakeChoice, resolveChoiceOutcome } from './applyEventOutcome';
+import { modifierFor } from '../character/derived';
 import type { Character } from '../../types/character';
 import type { EventChoice, EventOutcome, EventChoiceOutcome } from '../../schemas/event';
 import { listBlessings } from '../../content/blessings';
 import { listQuirks } from '../../content/quirks';
+import { getEvent } from '../../content/events';
+
+/** Top-of-array standard score into CHA → effective mod +3 on a human. */
+function silverTongue(overrides: Partial<Character> = {}): Character {
+  const c = createCharacter({
+    id: 'silver',
+    name: 'Silver',
+    raceId: 'human',
+    classId: 'fighter',
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[1],
+      dex: STANDARD_ARRAY[2],
+      con: STANDARD_ARRAY[3],
+      int: STANDARD_ARRAY[5],
+      wis: STANDARD_ARRAY[4],
+      cha: STANDARD_ARRAY[0],
+    },
+    skillProficiencies: ['athletics', 'perception'],
+  });
+  return { ...c, ...overrides };
+}
 
 function makeChar(overrides: Partial<Character> = {}): Character {
   const base = createCharacter({
@@ -242,6 +264,55 @@ describe('applyEventOutcome — effect kinds', () => {
     expect(r.character.delveAttackBonus).toBe(2);
   });
 
+  it('grant_item: adds the named item to inventory unequipped', () => {
+    const char = makeChar({ inventory: [] });
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'grant_item', itemId: 'rapier' }] }),
+      createDiceRoller(1),
+    );
+    expect(r.character.inventory.map((i) => i.itemId)).toContain('rapier');
+    expect(r.character.equipped.mainHand).toBeNull();
+    const eff = r.effectsApplied.find((e) => e.kind === 'grant_item');
+    expect(eff?.detail).toContain('Rapier');
+  });
+
+  it('grant_item: randomFrom picks exactly one weapon from the pool', () => {
+    const pool = ['greatsword', 'warhammer', 'rapier', 'longsword', 'shortbow'];
+    const char = makeChar({ inventory: [] });
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'grant_item', randomFrom: pool }] }),
+      createDiceRoller(3),
+    );
+    expect(r.character.inventory).toHaveLength(1);
+    expect(pool).toContain(r.character.inventory[0].itemId);
+  });
+
+  it('cha_scaled_gold: grants perPoint × CHA mod gold (silver tongue pays off)', () => {
+    const silver = silverTongue({ goldInPocket: 0 });
+    expect(modifierFor(silver, 'cha')).toBe(3);
+    const r = applyEventOutcome(
+      silver,
+      outcome({ effects: [{ kind: 'cha_scaled_gold', perPoint: 6 }] }),
+      createDiceRoller(1),
+    );
+    expect(r.character.goldInPocket).toBe(18);
+    expect(r.effectsApplied[0].detail).toContain('CHA +3');
+  });
+
+  it('cha_scaled_gold: dump-stat CHA (mod 0) grants nothing and shows no line', () => {
+    const dull = makeChar({ goldInPocket: 0 }); // effective CHA mod 0
+    expect(modifierFor(dull, 'cha')).toBe(0);
+    const r = applyEventOutcome(
+      dull,
+      outcome({ effects: [{ kind: 'cha_scaled_gold', perPoint: 6 }] }),
+      createDiceRoller(1),
+    );
+    expect(r.character.goldInPocket).toBe(0);
+    expect(r.effectsApplied).toHaveLength(0);
+  });
+
   it('spawn_ambush: returns the monster def ids as a sentinel', () => {
     const char = makeChar();
     const r = applyEventOutcome(
@@ -427,5 +498,44 @@ describe('canTakeChoice — gate evaluation', () => {
     const a = canTakeChoice(broke, triple);
     expect(a.ok).toBe(false);
     if (!a.ok) expect(a.gate).toBe('gold');
+  });
+});
+
+describe('event content — road gambles, weapon finds & CHA payoffs', () => {
+  it('rats-in-the-grain "cook" is a real gamble (successChance + sick-rat bite)', () => {
+    const ev = getEvent('rats-in-the-grain');
+    const cook = ev.choices.find((c) => c.id === 'cook');
+    expect(cook?.successChance).toBeGreaterThan(0);
+    expect(cook?.successChance).toBeLessThan(1);
+    expect(cook?.failureOutcome).toBeDefined();
+    const fail = cook!.failureOutcome as EventOutcome;
+    expect(fail.effects.some((e) => e.kind === 'hp_delta' && e.amount < 0)).toBe(true);
+  });
+
+  it('dead-mans-steel "take-blade" grants a weapon from a road pool', () => {
+    const ev = getEvent('dead-mans-steel');
+    const take = ev.choices.find((c) => c.id === 'take-blade');
+    const o = take!.outcome as EventOutcome;
+    const grant = o.effects.find((e) => e.kind === 'grant_item');
+    expect(grant).toBeDefined();
+    if (grant && grant.kind === 'grant_item') {
+      expect(grant.randomFrom && grant.randomFrom.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('pilgrim-road-smith offers a buyable rapier and a CHA-scaled haggle', () => {
+    const ev = getEvent('pilgrim-road-smith');
+    const buy = ev.choices.find((c) => c.id === 'buy-blade');
+    const buyEffects = (buy!.outcome as EventOutcome).effects;
+    expect(
+      buyEffects.some((e) => e.kind === 'grant_item' && e.itemId === 'rapier'),
+    ).toBe(true);
+    const haggle = ev.choices.find((c) => c.id === 'haggle-smith');
+    expect(haggle?.requiresCha).toBe(1);
+    const haggleEffects = (haggle!.outcome as EventOutcome).effects;
+    expect(haggleEffects.some((e) => e.kind === 'cha_scaled_gold')).toBe(true);
+    expect(
+      haggleEffects.some((e) => e.kind === 'grant_item' && e.itemId === 'rapier'),
+    ).toBe(true);
   });
 });

@@ -51,7 +51,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     ac: 16,
     signature: 'Battle-rage at half HP (advantage + 2 damage, rest of fight)',
     fullActions: [
-      'Heavy War Pick — +5 to hit · 1d10+3 piercing · reach 5',
+      'Heavy War Pick — +5 to hit · 1d10+3 piercing',
       'Battle-rage trigger — at half HP, gains advantage on attacks and +2 damage for the rest of the fight',
     ],
     roomTitle: 'A Duergar Shrine in the Wall',
@@ -75,7 +75,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     signature: 'Hold Person — WIS save, DC 12, 3 rounds paralysed',
     fullActions: [
       'Hold Person — WIS save DC 12 · 3 rounds paralysed · opener of choice',
-      'Mind Spike — +7 to hit · 3d6+4 psychic · range 60/120 · auto-crit while target is paralysed',
+      'Mind Spike — +7 to hit · 3d6+4 psychic · auto-crit while you are paralysed',
       'Resists psychic damage',
     ],
     roomTitle: "A Court-Crier's Recess",
@@ -99,7 +99,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     signature: 'Hold Person — WIS save, DC 15 (hard) — opens with it',
     fullActions: [
       'Hold Person — WIS save DC 15 · 3 rounds paralysed · the opener',
-      "Director's Glaive — +8 to hit · 2d8+4 slashing · reach 10 (auto-crit while you are paralysed and out of reach)",
+      "Director's Glaive — +8 to hit · 2d8+4 slashing · auto-crit while you are paralysed",
       'Battle-rage trigger — at half HP, gains advantage and +2 damage for the rest of the fight',
       'Resists psychic damage',
     ],
@@ -124,8 +124,8 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     signature: "Lolth's Stilling — WIS save, DC 16 (drow priestess-grade)",
     fullActions: [
       "Lolth's Stilling — WIS save DC 16 · 3 rounds paralysed · the temple prayer",
-      'Venomed Ritual Dagger — +8 to hit · 2d8+5 poison · reach 5',
-      "Spider's Curse — +7 to hit · 1d8 fire · range 60/120",
+      'Venomed Ritual Dagger — +8 to hit · 2d8+5 poison',
+      "Spider's Curse — +7 to hit · 1d8 fire",
       'Battle-rage trigger — at half HP, gains advantage and +2 damage for the rest of the fight',
       'Resists poison and psychic damage',
     ],
