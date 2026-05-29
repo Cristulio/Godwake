@@ -1,4 +1,4 @@
-import { BlessingSchema, type Blessing } from '../../schemas/blessing';
+import { BlessingSchema, type Blessing, type BlessingModifiers } from '../../schemas/blessing';
 
 // Classes whose primary action is a weapon attack roll. Spells in this build
 // either save-for-half or auto-hit, so first-attack-bonus / crit-range /
@@ -249,6 +249,58 @@ const POOL: Blessing[] = [
     modifiers: { bossTempHp: 6 },
   }),
 ];
+
+/**
+ * Broad effect-type buckets. The pool is AC-heavy — six defensive cards
+ * (flat / while-full / while-bloodied / per-bane) — so without a spread a
+ * single offer can show three near-identical AC blessings. `rollBlessingOptions`
+ * uses the category to favour one card per bucket per offer. Category is
+ * derived from the blessing's modifier lever, so a new blessing is bucketed
+ * automatically with no separate tag list to keep in sync.
+ */
+export type BlessingCategory =
+  | 'defense'
+  | 'vitality'
+  | 'salvation'
+  | 'offense'
+  | 'precision'
+  | 'crit'
+  | 'fortune';
+
+/** Modifier lever → effect bucket. Order is the multi-lever tie-break; the
+ * current pool is single-lever, so each blessing maps by its one modifier. */
+const CATEGORY_BY_MODIFIER: Partial<Record<keyof BlessingModifiers, BlessingCategory>> = {
+  acBonus: 'defense',
+  acBonusWhileFull: 'defense',
+  acBonusWhileBloodied: 'defense',
+  acBonusPerBaneQuirk: 'defense',
+  damageBonus: 'offense',
+  holyDamageBonus: 'offense',
+  firstAttackDamage: 'offense',
+  critRangeBonus: 'crit',
+  critRangeBonusWhileFull: 'crit',
+  critRangeBonusWhileBloodied: 'crit',
+  firstAttackBonus: 'precision',
+  firstAttackAdvantage: 'precision',
+  extraTempHpPerRoom: 'vitality',
+  tempHpPerDelveLevel: 'vitality',
+  tempHpPerBaneQuirk: 'vitality',
+  bossTempHp: 'vitality',
+  regenPerCombat: 'vitality',
+  regenPctPerCombat: 'vitality',
+  extraStabiliseCharges: 'salvation',
+  rerollMissesPerEncounter: 'fortune',
+};
+
+const CATEGORY_PRIORITY = Object.keys(CATEGORY_BY_MODIFIER) as (keyof BlessingModifiers)[];
+
+export function getBlessingCategory(blessing: Blessing): BlessingCategory {
+  const m = blessing.modifiers ?? {};
+  for (const key of CATEGORY_PRIORITY) {
+    if (m[key] !== undefined) return CATEGORY_BY_MODIFIER[key]!;
+  }
+  return 'vitality';
+}
 
 const BY_ID: Map<string, Blessing> = new Map(POOL.map((b) => [b.id, b]));
 

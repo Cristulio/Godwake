@@ -7,8 +7,6 @@ import { BlessingCard } from '../ui/BlessingCard';
 import { CampScene } from './CampScene';
 import { useGameStore } from '../../stores/gameStore';
 import { getBlessing } from '../../content/blessings';
-import { getActiveRoller } from '../../engine/dice';
-import { rollBlessingOptions } from '../../engine/character/blessings';
 import { getItem } from '../../content/items';
 import { playSfx } from '../../engine/audio';
 import {
@@ -19,9 +17,9 @@ import {
 
 type CampChoice = 'rest' | 'sharpen' | 'prayer';
 
-/** Which beat of the caravan visit is showing — shopping and the free
- * god-mark are sequential screens, never the same panel. */
-type MerchantStep = 'closed' | 'shop' | 'blessing';
+/** Whether the caravan shop is open. Blessings are granted at shrines, not
+ * here — the camp only sells wares. */
+type MerchantStep = 'closed' | 'shop';
 
 interface CampRoomProps {
   room: RoomSpec;
@@ -101,7 +99,6 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const pickCampChoice = useGameStore((s) => s.pickCampChoice);
   const pickCampBoon = useGameStore((s) => s.pickCampBoon);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
-  const addBlessing = useGameStore((s) => s.addBlessing);
   const showTaunt = useGameStore((s) => s.showTaunt);
   const goToInventory = useGameStore((s) => s.goToInventory);
 
@@ -132,8 +129,6 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const [prayerGrantedId, setPrayerGrantedId] = useState<string | null>(null);
   const [merchantStep, setMerchantStep] = useState<MerchantStep>('closed');
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
-  const [blessingOptions, setBlessingOptions] = useState<string[]>([]);
-  const [merchantBlessingTaken, setMerchantBlessingTaken] = useState(false);
 
   // Imoen whispers when the road opens up.
   useEffect(() => {
@@ -158,12 +153,6 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   }
 
   function openShop() {
-    // Roll the free god-mark options now so they're ready for the blessing
-    // beat that follows the shop.
-    if (blessingOptions.length === 0) {
-      const roller = getActiveRoller();
-      setBlessingOptions(rollBlessingOptions(roller, 3, character?.classId));
-    }
     setMerchantStep('shop');
     setPurchaseMessage(null);
     playSfx('ui_click');
@@ -178,13 +167,6 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     } else {
       setPurchaseMessage(r.reason ?? 'Cannot purchase.');
     }
-  }
-
-  function pickMerchantBlessing(id: string) {
-    if (merchantBlessingTaken) return;
-    addBlessing(id);
-    setMerchantBlessingTaken(true);
-    playSfx('shrine_chime');
   }
 
   return (
@@ -303,7 +285,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
           ◆ The Caravan-Merchant
         </div>
         <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-          "Coin in this pocket, comfort in the other. The road keeps going. You'll want both — and I've a god's mark to spare, after."
+          "Coin in this pocket, comfort in the other. The road keeps going — best you're well-stocked before the dark."
         </p>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" onClick={openShop}>
@@ -331,19 +313,6 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
             setMerchantStep('closed');
             setPurchaseMessage(null);
           }}
-          onAdvanceToBlessing={() => {
-            setMerchantStep('blessing');
-            setPurchaseMessage(null);
-          }}
-        />
-      )}
-
-      {merchantStep === 'blessing' && (
-        <BlessingOfferModal
-          blessingOptions={blessingOptions}
-          taken={merchantBlessingTaken}
-          onPick={pickMerchantBlessing}
-          onClose={() => setMerchantStep('closed')}
         />
       )}
     </div>
@@ -356,7 +325,6 @@ interface ShopModalProps {
   purchaseMessage: string | null;
   onBuy: (itemId: string) => void;
   onClose: () => void;
-  onAdvanceToBlessing: () => void;
 }
 
 function ShopModal({
@@ -365,7 +333,6 @@ function ShopModal({
   purchaseMessage,
   onBuy,
   onClose,
-  onAdvanceToBlessing,
 }: ShopModalProps) {
   const items = stockIds.map(getItem);
   return (
@@ -453,80 +420,9 @@ function ShopModal({
           </div>
         )}
 
-        <div className="sticky bottom-0 -mx-5 -mb-5 mt-5 px-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-between items-center gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-amber)] text-[11px] uppercase tracking-widest italic"
-          >
-            ← Done trading
-          </button>
-          <Button variant="primary" onClick={onAdvanceToBlessing}>
-            "A god's mark, before you go" →
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-interface BlessingOfferModalProps {
-  blessingOptions: string[];
-  taken: boolean;
-  onPick: (id: string) => void;
-  onClose: () => void;
-}
-
-/** The free god-mark — its own beat after the shop, never a panel sharing the
- * merchant's wares. Blessings are gifts, not stock. */
-function BlessingOfferModal({
-  blessingOptions,
-  taken,
-  onPick,
-  onClose,
-}: BlessingOfferModalProps) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 animate-fade-in">
-      <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-gold)] p-5">
-        <header className="sticky top-0 z-10 -mx-5 -mt-5 px-5 pt-5 pb-3 mb-4 bg-[var(--color-bg-base)] flex justify-between items-center border-b border-[var(--color-border-warm)]">
-          <div>
-            <h2 className="font-display text-lg text-[var(--color-accent-gold)] uppercase tracking-[0.15em]">
-              Bless Me, Traveller
-            </h2>
-            <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic mt-1">
-              No coin — only a name to remember the road by.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-gold)] text-xs uppercase tracking-widest"
-          >
-            Close ×
-          </button>
-        </header>
-
-        <p className="text-[var(--color-text-secondary)] text-xs italic mb-4 leading-relaxed">
-          The merchant turns from his wares and presses two fingers to his brow.
-          "Carry a god's mark with you. Won't cost a copper. Choose one of the
-          three — offered once, here at this fire."
-        </p>
-
-        {taken ? (
-          <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest mb-4">
-            The merchant nods. "Walk well, then."
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-3 gap-3 mb-4">
-            {blessingOptions.map((id) => (
-              <BlessingCard key={id} blessingId={id} pickable onPick={() => onPick(id)} />
-            ))}
-          </div>
-        )}
-
         <div className="sticky bottom-0 -mx-5 -mb-5 mt-5 px-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-end">
-          <Button variant="secondary" onClick={onClose}>
-            Walk on →
+          <Button variant="primary" onClick={onClose}>
+            Done trading →
           </Button>
         </div>
       </div>

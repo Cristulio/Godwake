@@ -16,25 +16,25 @@ export function BlessingCard({ blessingId, onPick, pickable = false }: BlessingC
   }
 
   const baseClass =
-    'bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-gold)]/40 p-4 transition-all';
+    'bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-gold)]/40 p-4 transition-all h-full flex flex-col';
   const interactiveClass = pickable
     ? 'hover:border-[var(--color-accent-amber)] hover:bg-[var(--color-bg-panel-hover)] hover:scale-[1.015] cursor-pointer text-left w-full shadow-[0_0_0_rgba(244,167,66,0)] hover:shadow-[0_0_18px_rgba(244,167,66,0.25)]'
     : '';
 
   const inner = (
     <>
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="text-[var(--color-accent-amber)] uppercase tracking-wider text-sm font-bold">
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <div className="text-[var(--color-accent-amber)] uppercase tracking-wider text-sm font-bold leading-tight">
           ◆ {b.name}
         </div>
-        <span className="text-[9px] uppercase tracking-widest px-1.5 py-0.5 border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)]">
+        <span className="shrink-0 text-[9px] uppercase tracking-widest px-1.5 py-0.5 border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)] whitespace-nowrap">
           {BLESSING_GOD_LABEL[b.god]}
         </span>
       </div>
-      <p className="text-[var(--color-text-secondary)] text-xs italic mb-2 leading-relaxed">
+      <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
         {b.flavor}
       </p>
-      <p className="text-[var(--color-text-primary)] text-xs">
+      <p className="text-[var(--color-text-primary)] text-xs mt-auto pt-2 border-t border-[var(--color-border-dim)]">
         <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[10px] mr-1">
           Effect:
         </span>
