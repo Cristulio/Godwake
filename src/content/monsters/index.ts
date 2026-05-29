@@ -32,6 +32,20 @@ import { DRIDERLING } from './driderling';
 import { DRIDER } from './drider';
 import { MIND_FLAYER_FRAGMENT } from './mind-flayer-fragment';
 import { DROW_MATRON_MOTHER } from './drow-matron-mother';
+import { PLAGUEBOUND_CUR } from './plaguebound-cur';
+import { CELL_WIGHT } from './cell-wight';
+import { FAMISHED_GHAST } from './famished-ghast';
+import { DUERGAR_TASKMASTER } from './duergar-taskmaster';
+import { COWLED_CONJURER } from './cowled-conjurer';
+import { LASH_CAPTAIN } from './lash-captain';
+import { COWLED_WARDPRIEST } from './cowled-wardpriest';
+import { GIBBERING_HUSK } from './gibbering-husk';
+import { MIND_LEECH } from './mind-leech';
+import { SPHERE_ABERRATION } from './sphere-aberration';
+import { ASYLUM_FLESHWRIGHT } from './asylum-fleshwright';
+import { SPIDER_BROODMOTHER } from './spider-broodmother';
+import { DROW_WAR_PRIESTESS } from './drow-war-priestess';
+import { CAVERN_HUNTING_SPIDER } from './cavern-hunting-spider';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -67,6 +81,20 @@ const ALL_MONSTERS: Monster[] = [
   DRIDER,
   MIND_FLAYER_FRAGMENT,
   DROW_MATRON_MOTHER,
+  PLAGUEBOUND_CUR,
+  CELL_WIGHT,
+  FAMISHED_GHAST,
+  DUERGAR_TASKMASTER,
+  COWLED_CONJURER,
+  LASH_CAPTAIN,
+  COWLED_WARDPRIEST,
+  GIBBERING_HUSK,
+  MIND_LEECH,
+  SPHERE_ABERRATION,
+  ASYLUM_FLESHWRIGHT,
+  SPIDER_BROODMOTHER,
+  DROW_WAR_PRIESTESS,
+  CAVERN_HUNTING_SPIDER,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -117,4 +145,18 @@ export {
   DRIDER,
   MIND_FLAYER_FRAGMENT,
   DROW_MATRON_MOTHER,
+  PLAGUEBOUND_CUR,
+  CELL_WIGHT,
+  FAMISHED_GHAST,
+  DUERGAR_TASKMASTER,
+  COWLED_CONJURER,
+  LASH_CAPTAIN,
+  COWLED_WARDPRIEST,
+  GIBBERING_HUSK,
+  MIND_LEECH,
+  SPHERE_ABERRATION,
+  ASYLUM_FLESHWRIGHT,
+  SPIDER_BROODMOTHER,
+  DROW_WAR_PRIESTESS,
+  CAVERN_HUNTING_SPIDER,
 };

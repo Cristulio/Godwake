@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 34"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Lash-Captain"
+    >
+      <!-- coiled whip arcing overhead -->
+      <rect x="14" y="2" width="6" height="1" fill="#3a2e22" />
+      <rect x="19" y="2" width="1" height="4" fill="#3a2e22" />
+      <rect x="20" y="5" width="3" height="1" fill="#3a2e22" />
+      <rect x="22" y="6" width="1" height="3" fill="#3a2e22" />
+      <rect x="20" y="8" width="3" height="1" fill="#3a2e22" />
+      <rect x="22" y="8" width="1" height="2" fill="#7a1a0a" />
+
+      <!-- shaved head + topknot -->
+      <rect x="6" y="3" width="7" height="6" fill="#b08a6a" />
+      <rect x="6" y="3" width="7" height="1" fill="#8a6a4a" />
+      <rect x="9" y="1" width="2" height="2" fill="#2a1a10" />
+      <rect x="7" y="5" width="2" height="1" fill="#1a1410" />
+      <rect x="10" y="5" width="2" height="1" fill="#1a1410" />
+      <rect x="7" y="7" width="5" height="1" fill="#6a4a2a" />
+
+      <!-- studded leather torso -->
+      <rect x="4" y="9" width="11" height="12" fill="#4a3422" />
+      <rect x="4" y="9" width="11" height="1" fill="#5a4430" />
+      <rect x="6" y="11" width="1" height="1" fill="#8a8a6a" />
+      <rect x="9" y="11" width="1" height="1" fill="#8a8a6a" />
+      <rect x="12" y="11" width="1" height="1" fill="#8a8a6a" />
+      <rect x="6" y="14" width="1" height="1" fill="#8a8a6a" />
+      <rect x="9" y="14" width="1" height="1" fill="#8a8a6a" />
+      <rect x="12" y="14" width="1" height="1" fill="#8a8a6a" />
+      <rect x="4" y="17" width="11" height="2" fill="#2a1e12" />
+
+      <!-- whip arm -->
+      <rect x="14" y="9" width="3" height="6" fill="#b08a6a" />
+      <rect x="14" y="9" width="3" height="1" fill="#8a6a4a" />
+
+      <!-- off arm -->
+      <rect x="1" y="10" width="3" height="8" fill="#b08a6a" />
+      <rect x="1" y="10" width="1" height="8" fill="#8a6a4a" />
+
+      <!-- legs -->
+      <rect x="5" y="21" width="4" height="8" fill="#3a2a1a" />
+      <rect x="11" y="21" width="4" height="8" fill="#3a2a1a" />
+      <rect x="5" y="21" width="1" height="8" fill="#2a1e12" />
+      <rect x="14" y="21" width="1" height="8" fill="#2a1e12" />
+
+      <!-- boots -->
+      <rect x="4" y="29" width="5" height="4" fill="#2a1e12" />
+      <rect x="11" y="29" width="5" height="4" fill="#2a1e12" />
+      <rect x="4" y="29" width="5" height="1" fill="#3a2e22" />
+      <rect x="11" y="29" width="5" height="1" fill="#3a2e22" />
+    </svg>

@@ -98,6 +98,34 @@ function monsterSpriteWidth(defId: string): string {
       return '96px';
     case 'wardens-apprentice':
       return '80px';
+    case 'plaguebound-cur':
+      return '84px';
+    case 'cell-wight':
+      return '76px';
+    case 'famished-ghast':
+      return '74px';
+    case 'duergar-taskmaster':
+      return '82px';
+    case 'cowled-conjurer':
+      return '80px';
+    case 'lash-captain':
+      return '84px';
+    case 'cowled-wardpriest':
+      return '80px';
+    case 'gibbering-husk':
+      return '78px';
+    case 'mind-leech':
+      return '54px';
+    case 'sphere-aberration':
+      return '96px';
+    case 'asylum-fleshwright':
+      return '82px';
+    case 'spider-broodmother':
+      return '112px';
+    case 'drow-war-priestess':
+      return '80px';
+    case 'cavern-hunting-spider':
+      return '100px';
     default:
       return '60px';
   }

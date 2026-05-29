@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 22 34"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Cowled Wardpriest"
+    >
+      <!-- ward-light radiating from raised hand -->
+      <rect x="1" y="8" width="4" height="4" fill="#9a9aaa" opacity="0.35" />
+      <rect x="2" y="9" width="2" height="2" fill="#c8c8d8" opacity="0.5" />
+
+      <!-- pointed cowl -->
+      <polygon points="11,1 5,9 17,9" fill="#43434e" />
+      <polygon points="11,1 11,9 17,9" fill="#33333c" />
+
+      <!-- shadowed face -->
+      <rect x="7" y="6" width="8" height="5" fill="#15151a" />
+      <rect x="9" y="8" width="1" height="1" fill="#8aaad0" />
+      <rect x="12" y="8" width="1" height="1" fill="#8aaad0" />
+
+      <!-- robe -->
+      <rect x="5" y="10" width="12" height="14" fill="#43434e" />
+      <rect x="5" y="10" width="12" height="1" fill="#53535e" />
+      <rect x="7" y="10" width="8" height="1" fill="#9a9aaa" />
+      <rect x="10" y="10" width="2" height="14" fill="#33333c" />
+
+      <!-- raised warding arm -->
+      <rect x="3" y="11" width="3" height="3" fill="#43434e" />
+      <rect x="2" y="9" width="2" height="3" fill="#c8c4b8" />
+
+      <!-- other arm at side -->
+      <rect x="16" y="12" width="3" height="7" fill="#43434e" />
+
+      <!-- hem -->
+      <polygon points="5,24 4,32 9,32" fill="#43434e" />
+      <polygon points="17,24 18,32 11,32" fill="#43434e" />
+      <rect x="9" y="24" width="4" height="8" fill="#33333c" />
+      <rect x="4" y="31" width="14" height="1" fill="#23232a" />
+    </svg>

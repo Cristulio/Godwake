@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 22 34"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Asylum Fleshwright"
+    >
+      <!-- high pale forehead, spectacles pushed up -->
+      <rect x="7" y="2" width="8" height="7" fill="#c8c0b0" />
+      <rect x="7" y="2" width="8" height="1" fill="#a8a090" />
+      <rect x="7" y="2" width="8" height="1" fill="#8a8276" />
+      <!-- spectacles on the brow -->
+      <rect x="7" y="3" width="3" height="1" fill="#5a5a62" />
+      <rect x="12" y="3" width="3" height="1" fill="#5a5a62" />
+      <!-- eyes -->
+      <rect x="8" y="5" width="2" height="1" fill="#1a1a14" />
+      <rect x="12" y="5" width="2" height="1" fill="#1a1a14" />
+      <rect x="9" y="7" width="4" height="1" fill="#7a4a4a" />
+
+      <!-- blood-stiff apron over robe -->
+      <rect x="5" y="9" width="12" height="13" fill="#8a8278" />
+      <rect x="7" y="9" width="8" height="13" fill="#b0a898" />
+      <rect x="9" y="11" width="1" height="2" fill="#7a1a0a" />
+      <rect x="11" y="14" width="2" height="1" fill="#7a1a0a" />
+      <rect x="8" y="17" width="2" height="1" fill="#7a1a0a" />
+      <rect x="10" y="9" width="2" height="13" fill="#9a9286" />
+
+      <!-- bone-saw arm -->
+      <rect x="16" y="11" width="3" height="6" fill="#8a8278" />
+      <rect x="18" y="9" width="1" height="8" fill="#3a2e22" />
+      <rect x="19" y="9" width="2" height="9" fill="#c8c4b8" />
+      <rect x="19" y="10" width="2" height="1" fill="#9a968a" />
+      <rect x="19" y="12" width="2" height="1" fill="#9a968a" />
+      <rect x="19" y="14" width="2" height="1" fill="#9a968a" />
+
+      <!-- gloved off-hand -->
+      <rect x="2" y="11" width="3" height="8" fill="#8a8278" />
+      <rect x="2" y="18" width="3" height="2" fill="#c8c0b0" />
+
+      <!-- legs -->
+      <rect x="6" y="22" width="4" height="8" fill="#6a6258" />
+      <rect x="12" y="22" width="4" height="8" fill="#6a6258" />
+      <rect x="6" y="22" width="1" height="8" fill="#5a5248" />
+      <rect x="15" y="22" width="1" height="8" fill="#5a5248" />
+
+      <!-- shoes -->
+      <rect x="5" y="30" width="5" height="3" fill="#2a2620" />
+      <rect x="12" y="30" width="5" height="3" fill="#2a2620" />
+    </svg>

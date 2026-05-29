@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import type { Monster, MonsterAction } from '../../schemas/monster';
+import { getMonster } from '../../content/monsters';
 import { MonsterPortrait } from '../combat/MonsterPortrait';
 import { abilityModifier, ABILITY_NAMES, ABILITY_FULL_NAMES } from '../../types/abilities';
 
@@ -243,6 +244,7 @@ function ActionRow({ action, killCount }: { action: MonsterAction; killCount: nu
       </div>
     );
   }
+  const { meta, body } = actionSummary(action);
   return (
     <div className="panel-etched border border-[var(--color-border-dim)] p-2">
       <div className="flex items-baseline justify-between gap-2">
@@ -250,12 +252,10 @@ function ActionRow({ action, killCount }: { action: MonsterAction; killCount: nu
           {action.name}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest font-mono">
-          {action.durationRounds} rd
+          {meta}
         </div>
       </div>
-      <div className="font-mono text-[11px] text-[var(--color-text-secondary)] mt-1">
-        DC <span className="text-[var(--color-accent-gold)]">{action.saveDC}</span> {action.saveAbility.toUpperCase()} save
-      </div>
+      <div className="font-mono text-[11px] text-[var(--color-text-secondary)] mt-1">{body}</div>
       {action.description && (
         <p className="text-[var(--color-text-secondary)] text-[11px] italic mt-1 leading-snug">
           {action.description}
@@ -264,6 +264,48 @@ function ActionRow({ action, killCount }: { action: MonsterAction; killCount: nu
       {killBadge && <div className="mt-1.5">{killBadge}</div>}
     </div>
   );
+}
+
+/** One-line meta (right) + body summary for a non-attack monster action. */
+function actionSummary(
+  action: Exclude<MonsterAction, { kind: 'attack' }>,
+): { meta: string; body: string } {
+  switch (action.kind) {
+    case 'paralyze':
+      return {
+        meta: `${action.durationRounds} rd`,
+        body: `DC ${action.saveDC} ${action.saveAbility.toUpperCase()} save · paralyze`,
+      };
+    case 'debuff':
+      return {
+        meta: `${action.durationRounds} rd`,
+        body: `DC ${action.saveDC} ${action.saveAbility.toUpperCase()} save · ${action.condition}`,
+      };
+    case 'summon': {
+      const name = monsterNameOrId(action.summonDefId);
+      return {
+        meta: 'summon',
+        body: `summons ${action.count ?? 1}× ${name}`,
+      };
+    }
+    case 'sustain': {
+      const bits: string[] = [];
+      if (action.heal) bits.push(`heals ${action.heal}`);
+      if (action.wardTempHp !== undefined) bits.push(`wards +${action.wardTempHp} temp HP`);
+      const who = (action.target ?? 'self') === 'ally' ? 'an ally' : 'itself';
+      return { meta: 'support', body: `${bits.join(' · ') || 'sustains'} (${who})` };
+    }
+    case 'multiattack':
+      return { meta: `×${action.attacks}`, body: `${action.attacks} attacks in one turn` };
+  }
+}
+
+function monsterNameOrId(defId: string): string {
+  try {
+    return getMonster(defId).name;
+  } catch {
+    return defId;
+  }
 }
 
 function Stat({ label, value, accentValue = false }: { label: string; value: string; accentValue?: boolean }) {

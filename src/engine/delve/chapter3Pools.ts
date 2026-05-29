@@ -66,6 +66,14 @@ export const WARMUP_POOL: EncounterEntry[] = [
     xpReward: 250,
     goldReward: 16,
   },
+  {
+    title: 'The Thing on the Slab',
+    flavorText:
+      'A knot of grey muscle the size of a heart detaches from a restraining-table and drops to the floor with a wet slap. It comes for the back of your neck — and you can see it is hungry for the part of you that decides to run.',
+    monsters: [{ defId: 'mind-leech', count: 1 }],
+    xpReward: 230,
+    goldReward: 16,
+  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
@@ -125,6 +133,24 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
     xpReward: 480,
     goldReward: 18,
   },
+  {
+    title: 'The Babbling Cell',
+    flavorText:
+      "An inmate stands in the middle of an open cell pouring out a torrent of voices — yours among them, saying things you have not said yet. The Sphere is speaking through the hole where its mind used to be.",
+    monsters: [{ defId: 'gibbering-husk', count: 1 }],
+    xpReward: 440,
+    goldReward: 22,
+  },
+  {
+    title: 'The Leech and Its Keeper',
+    flavorText:
+      "A mind leech rides the shoulder of a Mad Mage Prisoner who has stopped noticing it is there. The prisoner chants; the leech feeds; neither is troubled by the other.",
+    monsters: [
+      { defId: 'mind-leech', count: 1 },
+      { defId: 'mad-mage-prisoner', count: 1 },
+    ],
+    xpReward: 450,
+  },
 ];
 
 export const MID_POOL: EncounterEntry[] = [
@@ -180,6 +206,25 @@ export const MID_POOL: EncounterEntry[] = [
     ],
     xpReward: 560,
     goldReward: 28,
+  },
+  {
+    title: 'The Reknitting Ward',
+    flavorText:
+      "A slow grey hill of fused flesh drags itself toward you and forgets, between one moment and the next, that it has ever been hurt. The wounds you open close with a sound like wet cloth tearing in reverse. There is a brazier of cold coals in the corner — make use of it.",
+    monsters: [{ defId: 'sphere-aberration', count: 1 }],
+    xpReward: 580,
+    goldReward: 30,
+  },
+  {
+    title: 'The Babble and the Stitch',
+    flavorText:
+      "A gibbering husk floods the ward with overlapping voices while a stitched test-subject lurches in under cover of the noise. You cannot see straight, and the thing with the seams is counting on it.",
+    monsters: [
+      { defId: 'gibbering-husk', count: 1 },
+      { defId: 'bonebound-test-subject', count: 1 },
+    ],
+    xpReward: 560,
+    goldReward: 24,
   },
 ];
 
@@ -245,6 +290,25 @@ export const ELITE_POOL: EncounterEntry[] = [
     monsters: [
       { defId: 'hollow-sage', count: 1 },
       { defId: 'bonebound-test-subject', count: 1 },
+    ],
+    xpReward: 740,
+    goldReward: 36,
+  },
+  {
+    title: 'The Fleshwright at Work',
+    flavorText:
+      "The Cowled surgeon does not stop working when you enter. Aprons stiff with old work, saw already moving — and every time you think you have him, he claps the dust off his gloves and the thing on the slab behind him sits up.",
+    monsters: [{ defId: 'asylum-fleshwright', count: 1 }],
+    xpReward: 760,
+    goldReward: 46,
+  },
+  {
+    title: 'The Horror and the Leech',
+    flavorText:
+      "A reknitting horror fills the doorway and a mind leech rides its grey shoulder — the horror to soak you, the leech to drink what the horror spills. Both of them get harder to kill the longer you let them feed.",
+    monsters: [
+      { defId: 'sphere-aberration', count: 1 },
+      { defId: 'mind-leech', count: 1 },
     ],
     xpReward: 740,
     goldReward: 36,

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { Character } from '../../types/character';
 import type { DelveState } from '../../types/delve';
+import type { MonsterAction } from '../../schemas/monster';
 import { useGameStore } from '../../stores/gameStore';
 import { currentRoom } from '../../engine/delve';
 import { createCombat } from '../../engine/combat';
@@ -466,9 +467,7 @@ function LichEyesPreview({
                 <span className="text-[var(--color-accent-amber)] uppercase tracking-widest">
                   {a.name}
                 </span>{' '}
-                {a.kind === 'attack'
-                  ? `· +${a.attackBonus} to hit, ${a.damage} ${a.damageType}`
-                  : `· DC ${a.saveDC} ${a.saveAbility.toUpperCase()} save, ${a.durationRounds}r`}
+                {monsterActionPreview(a)}
               </div>
             ))}
           </div>
@@ -481,4 +480,33 @@ function LichEyesPreview({
       </Panel>
     </div>
   );
+}
+
+/** Compact one-line summary of a monster action for the pre-boss intel sheet. */
+function monsterActionPreview(a: MonsterAction): string {
+  switch (a.kind) {
+    case 'attack':
+      return `· +${a.attackBonus} to hit, ${a.damage} ${a.damageType}`;
+    case 'paralyze':
+      return `· DC ${a.saveDC} ${a.saveAbility.toUpperCase()} save, paralyze ${a.durationRounds}r`;
+    case 'debuff':
+      return `· DC ${a.saveDC} ${a.saveAbility.toUpperCase()} save, ${a.condition} ${a.durationRounds}r`;
+    case 'summon': {
+      let name = a.summonDefId;
+      try {
+        name = getMonster(a.summonDefId).name;
+      } catch {
+        /* unknown id — show the raw id */
+      }
+      return `· summons ${a.count ?? 1}× ${name}`;
+    }
+    case 'sustain': {
+      const bits: string[] = [];
+      if (a.heal) bits.push(`heals ${a.heal}`);
+      if (a.wardTempHp !== undefined) bits.push(`wards +${a.wardTempHp}`);
+      return `· ${bits.join(', ') || 'sustains'}`;
+    }
+    case 'multiattack':
+      return `· ${a.attacks} attacks/turn`;
+  }
 }

@@ -20,6 +20,7 @@ import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
 import { characterCampBoonMods } from '../../character/campBoons';
 import { getItem } from '../../../content/items';
+import { playerConditionMods } from '../playerConditions';
 import { playSfx, swingSfxForWeapon } from '../../audio';
 import {
   combatResult,
@@ -116,10 +117,14 @@ export function playerAttack(
 
   const ac = targetAC(target, nextCharacter);
   const hideAdvantage = nextCharacter.nextAttackAdvantage === true;
-  const advantage: 'normal' | 'advantage' =
-    (isFirstAttack && blessingMods.firstAttackAdvantage) || hideAdvantage
-      ? 'advantage'
-      : 'normal';
+  // Monster debuffs (poisoned/frightened/blinded/restrained) impose
+  // disadvantage. If the player also has advantage (Hide / first-strike
+  // blessing) the two cancel to a straight roll (5e advantage/disadvantage).
+  const condMods = playerConditionMods(nextCharacter);
+  const hasAdvantage = (isFirstAttack && !!blessingMods.firstAttackAdvantage) || hideAdvantage;
+  const hasDisadvantage = condMods.attackDisadvantage;
+  const advantage: 'normal' | 'advantage' | 'disadvantage' =
+    hasAdvantage === hasDisadvantage ? 'normal' : hasAdvantage ? 'advantage' : 'disadvantage';
   // One-shot: consume Hide and any pending flat-to-hit bonus on the actual
   // attack roll, hit or miss.
   if (hideAdvantage) nextCharacter = { ...nextCharacter, nextAttackAdvantage: false };
@@ -308,7 +313,16 @@ export function playerAttack(
       sneakAttackFiredFlag = true;
     }
 
-    const totalDamage = damageRoll.total + abilMod + damageExpr.modifier + bonusDamage;
+    // Weakened: a flat reduction to outgoing weapon damage. Folded into the
+    // breakdown as a negative part; a landed hit still grazes for at least 1.
+    if (condMods.outgoingDamagePenalty > 0) {
+      bonusDamage -= condMods.outgoingDamagePenalty;
+      onTypeParts.push({ amount: -condMods.outgoingDamagePenalty, label: 'weakened' });
+    }
+    const totalDamage = Math.max(
+      1,
+      damageRoll.total + abilMod + damageExpr.modifier + bonusDamage,
+    );
     const weaponTypeDamage = totalDamage - offTypeDamage;
 
     const damaged = applyDamage(nextState, targetId, totalDamage, nextCharacter);

@@ -54,6 +54,13 @@ export const WARMUP_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'stirge', count: 1 }],
     xpReward: 48,
   },
+  {
+    title: 'The Kennel-Run',
+    flavorText:
+      'A gaol-dog comes off its chain and down the run at a dead sprint. Its gums are black and the cough that precedes it smells of the grave.',
+    monsters: [{ defId: 'plaguebound-cur', count: 1 }],
+    xpReward: 66,
+  },
 ];
 
 export const EARLY_MID_POOL: EncounterEntry[] = [
@@ -108,6 +115,23 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'stirge', count: 2, displayPrefix: 'Stirge' }],
     xpReward: 96,
   },
+  {
+    title: 'The Feeding Pit',
+    flavorText:
+      'A starved ghast crouches over a stripped ribcage, too far gone to stalk. It hears you, and the patience leaves it all at once.',
+    monsters: [{ defId: 'famished-ghast', count: 1 }],
+    xpReward: 102,
+  },
+  {
+    title: 'The Sick-Run',
+    flavorText:
+      'A plague-bred gaol-dog pads the corridor with a kobold handler who has long since stopped holding the chain. Both are overdue for something to bite.',
+    monsters: [
+      { defId: 'plaguebound-cur', count: 1 },
+      { defId: 'kobold', count: 1 },
+    ],
+    xpReward: 108,
+  },
 ];
 
 export const MID_POOL: EncounterEntry[] = [
@@ -161,6 +185,23 @@ export const MID_POOL: EncounterEntry[] = [
       "A goblin warden of higher trim than the corridor scouts stands at the doorway with a goblin grunt at each elbow. He has been bored. He looks pleased now.",
     monsters: [
       { defId: 'goblin-warden', count: 1 },
+      { defId: 'goblin', count: 1 },
+    ],
+    xpReward: 192,
+  },
+  {
+    title: 'The Dead Cell',
+    flavorText:
+      'A prisoner died in this cell with the manacle still on, and got up wearing it. The iron has fused into the wrist-bone. It reaches for you with the other hand.',
+    monsters: [{ defId: 'cell-wight', count: 1 }],
+    xpReward: 192,
+  },
+  {
+    title: 'The Hungry Dark',
+    flavorText:
+      'A famished ghast and a single goblin share the same dead-end — the goblin keeping well clear of the ghast, both of them turning toward the warmer thing in the doorway.',
+    monsters: [
+      { defId: 'famished-ghast', count: 1 },
       { defId: 'goblin', count: 1 },
     ],
     xpReward: 192,
@@ -237,5 +278,23 @@ export const ELITE_POOL: EncounterEntry[] = [
     ],
     xpReward: 288,
     goldReward: 28,
+  },
+  {
+    title: 'The Taskmaster of the Block',
+    flavorText:
+      'A gray-dwarf overseer leans on a two-handed maul at the foot of the stair, in no hurry at all. He has run this block thirty years on one principle: there is always another goblin in the dark, and always work to break it on. He whistles down the stair to prove it.',
+    monsters: [{ defId: 'duergar-taskmaster', count: 1 }],
+    xpReward: 264,
+    goldReward: 30,
+  },
+  {
+    title: 'The Withering Ward',
+    flavorText:
+      'A cell wight stands over a famished ghast like a gaoler over a starved dog. One drains the strength from your arm; the other waits for the moment the strength is gone.',
+    monsters: [
+      { defId: 'cell-wight', count: 1 },
+      { defId: 'famished-ghast', count: 1 },
+    ],
+    xpReward: 276,
   },
 ];
