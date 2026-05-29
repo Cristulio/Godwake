@@ -1,10 +1,9 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Famished Ghast — Ch1 frenzied striker. Demonstrates the `multiattack` kind
- * (two claw rakes in a turn) and the generalized battle-rage mechanic on a
- * non-boss: once it drops to half HP it frenzies for +2 damage per hit. A
- * glass-cannon pack predator — kill it fast or it kills faster.
+ * Famished Ghast — Ch1 frenzied striker demonstrating the `multiattack` kind
+ * (two claw rakes in a turn). A fast, fragile glass-cannon pack predator — kill
+ * it fast or it kills faster.
  */
 export const FAMISHED_GHAST: Monster = MonsterSchema.parse({
   id: 'famished-ghast',
@@ -30,13 +29,12 @@ export const FAMISHED_GHAST: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Ravening Claws',
       attackBonus: 4,
-      damage: '1d6+2',
+      damage: '1d4+2',
       damageType: 'slashing',
       reach: 5,
       description: 'Split nails, caked black, opening you in long shallow lines.',
     },
   ],
-  bossMechanic: 'battle-rage',
   flavorText:
     'Starved past the point a ghoul stops being patient. The ribs show through the grey skin and the jaw has unhinged itself from too many bites. When it smells you bleeding it stops pretending to stalk.',
 });
