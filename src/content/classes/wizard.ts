@@ -6,6 +6,8 @@ export const WIZARD: Class = ClassSchema.parse({
   hitDie: 6,
   primaryAbility: ['int'],
   savingThrowProficiencies: ['int', 'wis'],
+  // The scholar's hands know only simple arms — dagger, quarterstaff, mace.
+  weaponProficiency: { categories: ['simple'] },
   skillChoiceCount: 2,
   skillGrantsByLevel: { '3': 1, '5': 1 },
   skillChoiceFrom: [

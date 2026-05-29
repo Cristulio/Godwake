@@ -1,6 +1,7 @@
 import type { Character, EquipmentSlots } from '../../types/character';
-import type { ItemRef } from '../../schemas/item';
+import type { ItemRef, Weapon } from '../../schemas/item';
 import { getItem } from '../../content/items';
+import { getClass } from '../../content/classes';
 
 export type EquipSlot = keyof EquipmentSlots;
 
@@ -36,6 +37,21 @@ function requiresAttunement(itemId: string): boolean {
   return (item.kind === 'weapon' || item.kind === 'armor') && item.attunement;
 }
 
+/**
+ * Whether the character's class is trained to wield the given weapon. A weapon
+ * matches if its category is in the class's proficient set, it carries one of
+ * the proficient properties (a Rogue and any `finesse`/`light` blade), or its
+ * id is named explicitly. Classes with no `weaponProficiency` are unrestricted.
+ */
+export function isWeaponProficient(character: Character, weapon: Weapon): boolean {
+  const prof = getClass(character.classId).weaponProficiency;
+  if (!prof) return true;
+  if (prof.categories.includes(weapon.category)) return true;
+  if (prof.properties?.some((p) => weapon.properties.includes(p))) return true;
+  if (prof.ids?.includes(weapon.id)) return true;
+  return false;
+}
+
 /** Maximum number of attuned items the soul can bind at once. */
 export function attunementSlotsCap(character: Character): number {
   return DEFAULT_ATTUNEMENT_SLOTS + (character.attunementSlotsBonus ?? 0);
@@ -52,21 +68,40 @@ export function attunementSlotsUsed(character: Character): number {
 }
 
 /**
- * Whether the given item can be equipped right now. Returns `false` only when
- * attunement would push the character over their cap. The shape allows callers
- * (UI) to gray out items pre-emptively, while `equipItem` is the authoritative
- * enforcement point.
+ * Why the given item can't be equipped right now, or `null` if it can. The UI
+ * surfaces this string directly so the player sees the actual cause (wrong
+ * class for the weapon vs. no free soul-bind slot). `equipItem` is the
+ * authoritative enforcement point; this mirrors its gates for pre-emptive UI.
+ */
+export function equipDenialReason(character: Character, itemId: string): string | null {
+  const item = getItem(itemId);
+
+  if (item.kind === 'weapon' && !isWeaponProficient(character, item)) {
+    return `A ${getClass(character.classId).name} can't wield this`;
+  }
+
+  if (requiresAttunement(itemId)) {
+    // Would this attune a NEW item, or replace an already-attuned one?
+    const targetSlot = slotForItem(itemId);
+    if (targetSlot) {
+      const currentlyInSlot = character.equipped[targetSlot];
+      const replacingAttuned =
+        currentlyInSlot != null && requiresAttunement(currentlyInSlot.itemId);
+      if (!replacingAttuned && attunementSlotsUsed(character) >= attunementSlotsCap(character)) {
+        return `No free Soul-bind slot (${attunementSlotsUsed(character)}/${attunementSlotsCap(character)})`;
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Whether the given item can be equipped right now. Thin wrapper over
+ * `equipDenialReason` for call sites that only need the boolean.
  */
 export function canEquip(character: Character, itemId: string): boolean {
-  if (!requiresAttunement(itemId)) return true;
-  // Would this attune a NEW item, or replace an already-attuned one?
-  const targetSlot = slotForItem(itemId);
-  if (!targetSlot) return true;
-  const currentlyInSlot = character.equipped[targetSlot];
-  const replacingAttuned =
-    currentlyInSlot != null && requiresAttunement(currentlyInSlot.itemId);
-  if (replacingAttuned) return true;
-  return attunementSlotsUsed(character) < attunementSlotsCap(character);
+  return equipDenialReason(character, itemId) === null;
 }
 
 /**
@@ -84,6 +119,8 @@ export function canEquip(character: Character, itemId: string): boolean {
 export function equipItem(character: Character, inventoryIdx: number): Character {
   const ref = character.inventory[inventoryIdx];
   if (!ref) return character;
+  const item = getItem(ref.itemId);
+  if (item.kind === 'weapon' && !isWeaponProficient(character, item)) return character;
   const slot = slotForItem(ref.itemId);
   if (!slot) return character;
 

@@ -83,10 +83,15 @@ import {
   attunementSlotsCap,
   attunementSlotsUsed,
   canEquip,
+  equipDenialReason,
+  isWeaponProficient,
   DEFAULT_ATTUNEMENT_SLOTS,
 } from './equip';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
+import { getItem } from '../../content/items';
 import type { Character } from '../../types/character';
+import type { ClassId } from '../../schemas/ids';
+import type { Weapon } from '../../schemas/item';
 
 function baseChar(): Character {
   return {
@@ -127,6 +132,83 @@ function attunedChar(): Character {
     ],
   };
 }
+
+function charOfClass(classId: ClassId, inventory: string[]): Character {
+  return {
+    ...createCharacter({
+      id: 'test',
+      name: 'Test',
+      raceId: 'human',
+      classId,
+      baseAbilityScores: {
+        str: STANDARD_ARRAY[0],
+        con: STANDARD_ARRAY[1],
+        dex: STANDARD_ARRAY[2],
+        wis: STANDARD_ARRAY[3],
+        cha: STANDARD_ARRAY[4],
+        int: STANDARD_ARRAY[5],
+      },
+      skillProficiencies: [],
+    }),
+    inventory: inventory.map((itemId) => ({ itemId })),
+    equipped: { mainHand: null, offHand: null, armor: null },
+  };
+}
+
+const weapon = (id: string) => getItem(id) as Weapon;
+
+describe('weapon proficiency', () => {
+  it('Fighter is trained with every simple and martial arm', () => {
+    const c = charOfClass('fighter', []);
+    for (const id of ['dagger', 'longsword', 'greatsword', 'battleaxe', 'rapier', 'hand-crossbow']) {
+      expect(isWeaponProficient(c, weapon(id))).toBe(true);
+    }
+  });
+
+  it('Wizard is limited to simple weapons', () => {
+    const c = charOfClass('wizard', []);
+    expect(isWeaponProficient(c, weapon('dagger'))).toBe(true);
+    expect(isWeaponProficient(c, weapon('quarterstaff'))).toBe(true);
+    expect(isWeaponProficient(c, weapon('mace'))).toBe(true);
+    expect(isWeaponProficient(c, weapon('battleaxe'))).toBe(false);
+    expect(isWeaponProficient(c, weapon('greatsword'))).toBe(false);
+    expect(isWeaponProficient(c, weapon('rapier'))).toBe(false);
+  });
+
+  it('Rogue wields simple, finesse, and light weapons but not heavy martial', () => {
+    const c = charOfClass('rogue', []);
+    expect(isWeaponProficient(c, weapon('dagger'))).toBe(true); // simple
+    expect(isWeaponProficient(c, weapon('shortbow'))).toBe(true); // simple ranged
+    expect(isWeaponProficient(c, weapon('rapier'))).toBe(true); // martial, finesse
+    expect(isWeaponProficient(c, weapon('hand-crossbow'))).toBe(true); // martial, light
+    expect(isWeaponProficient(c, weapon('greatsword'))).toBe(false);
+    expect(isWeaponProficient(c, weapon('battleaxe'))).toBe(false);
+  });
+
+  it('equipItem refuses a non-proficient weapon and keeps identity', () => {
+    const c = charOfClass('wizard', ['battleaxe']);
+    const after = equipItem(c, 0);
+    expect(after).toBe(c);
+    expect(after.equipped.mainHand).toBeNull();
+  });
+
+  it('equipItem allows a proficient weapon', () => {
+    const c = charOfClass('wizard', ['quarterstaff']);
+    const after = equipItem(c, 0);
+    expect(after.equipped.mainHand?.itemId).toBe('quarterstaff');
+  });
+
+  it('canEquip / equipDenialReason reflect the class gate with a class-named reason', () => {
+    const wiz = charOfClass('wizard', []);
+    expect(canEquip(wiz, 'battleaxe')).toBe(false);
+    expect(equipDenialReason(wiz, 'battleaxe')).toBe("A Wizard can't wield this");
+    expect(equipDenialReason(wiz, 'dagger')).toBeNull();
+
+    const rog = charOfClass('rogue', []);
+    expect(equipDenialReason(rog, 'greatsword')).toBe("A Rogue can't wield this");
+    expect(equipDenialReason(rog, 'rapier')).toBeNull();
+  });
+});
 
 describe('slotForItem', () => {
   it('weapons go to mainHand', () => {

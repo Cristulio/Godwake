@@ -6,6 +6,8 @@ export const FIGHTER: Class = ClassSchema.parse({
   hitDie: 10,
   primaryAbility: ['str', 'dex'],
   savingThrowProficiencies: ['str', 'con'],
+  // A trained soldier — every simple and martial arm.
+  weaponProficiency: { categories: ['simple', 'martial'] },
   skillChoiceCount: 2,
   skillGrantsByLevel: { '3': 1, '5': 1 },
   skillChoiceFrom: [

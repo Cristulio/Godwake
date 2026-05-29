@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { DamageTypeSchema, RaritySchema } from './ids';
 
-const WeaponPropertySchema = z.enum([
+export const WeaponPropertySchema = z.enum([
   'light',
   'heavy',
   'finesse',

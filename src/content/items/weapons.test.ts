@@ -25,3 +25,27 @@ describe('weapons — new caravan stock', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 });
+
+describe('weapons — prices track power', () => {
+  const cost = (id: string) => (getItem(id) as Weapon).cost;
+
+  it('cheap simple sidearms are the floor (under 10gp)', () => {
+    for (const id of ['dagger', 'quarterstaff', 'mace']) {
+      expect(cost(id)).toBeLessThan(10);
+    }
+  });
+
+  it('martial weapons cost more than the cheap simple ones (the old 10gp battleaxe/flail bug)', () => {
+    const cheapSimpleMax = Math.max(cost('mace'), cost('quarterstaff'), cost('dagger'));
+    for (const id of ['battleaxe', 'flail', 'longsword', 'warhammer', 'rapier', 'greatsword']) {
+      expect(cost(id)).toBeGreaterThan(cheapSimpleMax);
+    }
+  });
+
+  it('the two-handed greatsword is the dearest common melee weapon', () => {
+    const meleeCommon = ['longsword', 'warhammer', 'rapier', 'battleaxe', 'flail', 'mace', 'quarterstaff'];
+    for (const id of meleeCommon) {
+      expect(cost('greatsword')).toBeGreaterThanOrEqual(cost(id));
+    }
+  });
+});

@@ -1,5 +1,18 @@
 import { z } from 'zod';
 import { AbilitySchema, ClassIdSchema, RaceIdSchema, SkillSchema } from './ids';
+import { WeaponPropertySchema } from './item';
+
+/**
+ * Which weapons a class is trained to wield. A weapon is proficient if it
+ * matches ANY clause: its category is listed, it carries one of the listed
+ * properties (e.g. a Rogue and any `finesse` blade), or its id is named
+ * explicitly. Absent = no restriction. Enforced in `equip.ts`.
+ */
+export const WeaponProficiencySchema = z.object({
+  categories: z.array(z.enum(['simple', 'martial'])),
+  properties: z.array(WeaponPropertySchema).optional(),
+  ids: z.array(z.string()).optional(),
+});
 
 export const ClassFeatureSchema = z.object({
   id: z.string(),
@@ -38,6 +51,8 @@ export const ClassSchema = z.object({
   hitDie: z.union([z.literal(6), z.literal(8), z.literal(10), z.literal(12)]),
   primaryAbility: z.array(AbilitySchema),
   savingThrowProficiencies: z.array(AbilitySchema).length(2),
+  /** Weapons the class is trained to wield. Absent = no restriction. */
+  weaponProficiency: WeaponProficiencySchema.optional(),
   /** Skills the player can pick from at character creation. */
   skillChoiceCount: z.number().int().nonnegative(),
   skillChoiceFrom: z.array(SkillSchema),
@@ -52,6 +67,7 @@ export const ClassSchema = z.object({
   preset: ClassPresetSchema.optional(),
 });
 
+export type WeaponProficiency = z.infer<typeof WeaponProficiencySchema>;
 export type ClassFeature = z.infer<typeof ClassFeatureSchema>;
 export type Subclass = z.infer<typeof SubclassSchema>;
 export type ClassPreset = z.infer<typeof ClassPresetSchema>;
