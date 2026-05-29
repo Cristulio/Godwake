@@ -110,6 +110,60 @@ describe('rollBlessingOptions — signature dedup', () => {
   });
 });
 
+describe('rollBlessingOptions — excludes owned non-stacking blessings', () => {
+  it('never re-offers a non-stacking blessing (or its signature twin) once owned', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('ac-a', { acBonus: 1 }),
+      fakeBlessing('ac-b', { acBonus: 1 }),
+      fakeBlessing('dmg', { damageBonus: 1 }),
+      fakeBlessing('reroll', { rerollMissesPerEncounter: 1 }),
+    ];
+    withFakePool(pool, () => {
+      for (let seed = 0; seed < 200; seed += 1) {
+        const roller = createDiceRoller(seed);
+        // Owns one +1 AC card — both AC cards share its signature, so neither
+        // should ever be offered again.
+        const result = rollBlessingOptions(roller, 3, undefined, ['ac-a']);
+        expect(result).not.toContain('ac-a');
+        expect(result).not.toContain('ac-b');
+      }
+    });
+  });
+
+  it('firstAttackAdvantage is non-stacking: owning one blocks the duplicate', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('adv-a', { firstAttackAdvantage: true }),
+      fakeBlessing('adv-b', { firstAttackAdvantage: true }),
+      fakeBlessing('dmg', { damageBonus: 1 }),
+    ];
+    withFakePool(pool, () => {
+      for (let seed = 0; seed < 100; seed += 1) {
+        const roller = createDiceRoller(seed);
+        const result = rollBlessingOptions(roller, 3, undefined, ['adv-a']);
+        expect(result).not.toContain('adv-a');
+        expect(result).not.toContain('adv-b');
+      }
+    });
+  });
+
+  it('still offers a stacking blessing the soul already owns (charges sum)', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('stab-a', { extraStabiliseCharges: 1 }),
+      fakeBlessing('stab-b', { extraStabiliseCharges: 1 }),
+    ];
+    withFakePool(pool, () => {
+      for (let seed = 0; seed < 50; seed += 1) {
+        const roller = createDiceRoller(seed);
+        // Owning a stabilise card must not blank the pool — picking another
+        // genuinely adds a charge.
+        const result = rollBlessingOptions(roller, 1, undefined, ['stab-a']);
+        expect(result.length).toBe(1);
+        expect(['stab-a', 'stab-b']).toContain(result[0]);
+      }
+    });
+  });
+});
+
 describe('aggregateBlessingModifiers — non-stacking fields take max-of-individual', () => {
   it('takes max-of-individual for extraTempHpPerRoom (regression pin for #80)', () => {
     const pool: Blessing[] = [

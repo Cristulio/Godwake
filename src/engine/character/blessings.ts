@@ -37,22 +37,69 @@ export function blessingSignature(b: Blessing): string {
 }
 
 /**
+ * Modifier keys that DON'T stack — `aggregateBlessingModifiers` collapses
+ * them with `Math.max` (or boolean OR for `firstAttackAdvantage`). A second
+ * blessing keyed only on these levers is mechanically inert, so once the soul
+ * owns one it should drop out of future offer rolls. Keep in sync with the
+ * `Math.max`/OR branches in `aggregateBlessingModifiers`.
+ */
+const NON_STACKING_MODIFIER_KEYS: ReadonlySet<keyof BlessingModifiers> = new Set([
+  'acBonus',
+  'damageBonus',
+  'holyDamageBonus',
+  'extraTempHpPerRoom',
+  'critRangeBonus',
+  'firstAttackAdvantage',
+]);
+
+/**
+ * True when EVERY lever a blessing carries is non-stacking — a duplicate adds
+ * nothing, so it's a dead pick once owned. A blessing carrying any summing
+ * field (stabilise charges, first-attack to-hit/damage, reroll) still stacks
+ * and stays offerable even when the soul already holds a copy.
+ */
+export function isNonStackingBlessing(b: Blessing): boolean {
+  const m = b.modifiers ?? {};
+  const keys = (Object.keys(m) as (keyof BlessingModifiers)[]).filter(
+    (k) => m[k] !== undefined,
+  );
+  return keys.length > 0 && keys.every((k) => NON_STACKING_MODIFIER_KEYS.has(k));
+}
+
+/**
  * Roll N unique blessing options from the pool. Used by ShrineRoom to
  * present the player with a choice. Uses the seeded roller so the offered
  * blessings are deterministic per save. Dedupes both by id and by
  * mechanical effect signature, so the player never sees two cards that do
  * the same thing. When `classId` is provided, the pool is filtered to
  * class-relevant blessings first (weapon blessings hidden from Wizards).
+ *
+ * `ownedBlessingIds` are the blessings the soul already holds this run. Any
+ * owned blessing that is purely non-stacking is excluded from the roll — a
+ * second copy would be a dead pick. Owned blessings that still stack stay
+ * eligible.
  */
 export function rollBlessingOptions(
   roller: DiceRoller,
   count: number = 3,
   classId?: ClassId,
+  ownedBlessingIds: string[] = [],
 ): string[] {
   const pool = blessingsForClass(classId);
   const result: string[] = [];
   const seen = new Set<string>();
   const seenSignatures = new Set<string>();
+  // Pre-block the signatures of owned non-stacking blessings so the roller
+  // never re-offers an inert duplicate.
+  for (const id of ownedBlessingIds) {
+    let owned;
+    try {
+      owned = getBlessing(id);
+    } catch {
+      continue;
+    }
+    if (isNonStackingBlessing(owned)) seenSignatures.add(blessingSignature(owned));
+  }
   let safety = 0;
   while (result.length < count && safety < 64) {
     safety += 1;

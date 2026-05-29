@@ -146,6 +146,63 @@ describe('delveStore.failDelve — reincarnation', () => {
   });
 });
 
+describe('delveStore — reincarnation refills HP for the between-lives screen', () => {
+  beforeEach(() => {
+    setActiveRoller('hp-seed');
+  });
+
+  it('death fills hp.current to max and clears temp (a whole soul, not a corpse at 0)', () => {
+    seedRun({ quirks: [], hp: { current: 0, max: 19, temp: 4 } });
+
+    useDelveStore.getState().failDelve();
+
+    const c = char();
+    expect(c.hp.current).toBe(c.hp.max);
+    expect(c.hp.current).toBeGreaterThan(0);
+    expect(c.hp.temp).toBe(0);
+  });
+
+  it('a clear also reincarnates with a full body', () => {
+    seedRun({ quirks: [], hp: { current: 0, max: 25, temp: 0 } });
+    setDelve({ phase: 'completed', currentRoomIdx: 36 });
+
+    useDelveStore.getState().finishDelve();
+
+    const c = char();
+    expect(c.hp.current).toBe(c.hp.max);
+    expect(c.hp.current).toBeGreaterThan(0);
+  });
+});
+
+describe('delveStore — permanent Grove bonuses survive reincarnation', () => {
+  beforeEach(() => {
+    setActiveRoller('grove-seed');
+  });
+
+  it('a purchased permanent HP upgrade survives the wheel and re-applies on descent', () => {
+    // Baseline: identical soul, no upgrade, descended fresh.
+    seedRun({ quirks: [] });
+    useMetaStore.setState({ ascensionUnlocked: 0, unlockedUpgrades: {} });
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+    const baselineMax = char().hp.max;
+
+    // Buy +5 permanent HP (Mantle of the Wakened, rank 1).
+    seedRun({ quirks: [], renown: 1000 });
+    useMetaStore.setState({ ascensionUnlocked: 0, unlockedUpgrades: {} });
+    expect(useMetaStore.getState().purchaseUpgrade('mantle-of-the-wakened').ok).toBe(true);
+    expect(char().permanentBonuses?.hp).toBe(5);
+
+    // Death turns the wheel — the meta-backed bonus must NOT be wiped.
+    useDelveStore.getState().failDelve();
+    expect(char().permanentBonuses?.hp).toBe(5);
+
+    // Re-descend: the +5 is baked back into the level-1 HP ceiling.
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+    expect(char().permanentBonuses?.hp).toBe(5);
+    expect(char().hp.max).toBe(baselineMax + 5);
+  });
+});
+
 describe('delveStore.abandonDelve — wipe without reincarnation', () => {
   beforeEach(() => {
     setActiveRoller('abandon-seed');
