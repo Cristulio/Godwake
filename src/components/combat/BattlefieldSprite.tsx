@@ -6,6 +6,7 @@ import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
 import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
 import { SlashEffect } from './SlashEffect';
+import { MirrorImages } from './SpellEffect';
 
 type CommonProps = {
   isActiveTurn: boolean;
@@ -242,12 +243,18 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
 
       <div
         className={`
-          relative flex items-end justify-center
+          relative flex items-end justify-center isolate
           ${selectable ? 'drop-shadow-[0_0_18px_rgba(244,167,66,0.55)] hover:scale-[1.06] transition-transform' : ''}
           ${props.isActiveTurn && !dead ? 'drop-shadow-[0_0_18px_rgba(255,179,71,0.55)]' : ''}
         `}
         style={{ width: props.kind === 'player' ? '84px' : monsterSpriteWidth(props.instance.defId) }}
       >
+        {props.kind === 'player' && !dead && (
+          <MirrorImages
+            classId={props.character.classId}
+            count={props.character.resources.mirrorImages ?? 0}
+          />
+        )}
         {selectable && (
           <div className="absolute inset-0 border-2 border-[var(--color-accent-amber)] -m-1 pointer-events-none animate-pulse-glow" />
         )}
