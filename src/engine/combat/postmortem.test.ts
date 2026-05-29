@@ -172,6 +172,59 @@ describe('buildPostmortem', () => {
     expect(p.unspentResources).not.toContain('Reaction');
   });
 
+  it('omits Bonus Action / Reaction when the soul never had one', () => {
+    // A wizard with no bonus-action option and no prepared reaction spell:
+    // even with both flags unspent, neither should be surfaced.
+    const ch = bareCharacter({
+      classId: 'wizard',
+      resources: { spellSlots: {}, knownSpells: ['fire-bolt'] },
+      actionEconomy: {
+        actionUsed: false,
+        bonusActionUsed: false,
+        reactionUsed: false,
+        movementRemaining: 30,
+      },
+    });
+    const p = buildPostmortem(bareState(), ch, null);
+    expect(p.unspentResources).toContain('Action');
+    expect(p.unspentResources).not.toContain('Bonus Action');
+    expect(p.unspentResources).not.toContain('Reaction');
+  });
+
+  it('lists Reaction for a Rogue with Uncanny Dodge and Bonus Action for Cunning Action', () => {
+    const ch = bareCharacter({
+      classId: 'rogue',
+      level: 5,
+      resources: { cunningActionUsesRemaining: 1 },
+      actionEconomy: {
+        actionUsed: false,
+        bonusActionUsed: false,
+        reactionUsed: false,
+        movementRemaining: 30,
+      },
+    });
+    const p = buildPostmortem(bareState(), ch, null);
+    expect(p.unspentResources).toContain('Bonus Action');
+    expect(p.unspentResources).toContain('Reaction');
+  });
+
+  it('lists Reaction for a wizard holding a prepared Shield with a slot', () => {
+    const ch = bareCharacter({
+      classId: 'wizard',
+      resources: { knownSpells: ['shield'], spellSlots: { 1: 2 } },
+      actionEconomy: {
+        actionUsed: false,
+        bonusActionUsed: false,
+        reactionUsed: false,
+        movementRemaining: 30,
+      },
+    });
+    const p = buildPostmortem(bareState(), ch, null);
+    expect(p.unspentResources).toContain('Reaction');
+    // Shield is a reaction, not a bonus action — don't surface a phantom one.
+    expect(p.unspentResources).not.toContain('Bonus Action');
+  });
+
   it('produces a safe shape when nothing is known', () => {
     const p = buildPostmortem(bareState(), bareCharacter(), null);
     expect(p.killerName).toBe('Unknown');

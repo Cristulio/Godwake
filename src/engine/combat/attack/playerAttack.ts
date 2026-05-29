@@ -228,54 +228,63 @@ export function playerAttack(
     let bonusDamage = 0;
     let sneakDamage = 0;
     let sneakDice = 0;
-    const bonusParts: string[] = [];
+    let offTypeDamage = 0;
+    // On-type flat bonuses are summands in the weapon-type breakdown so the
+    // parenthetical math adds up. Off-type bonuses (radiant) get their own
+    // headline segment — never folded into / mislabeled as the weapon type.
+    const onTypeParts: { amount: number; label: string }[] = [];
+    const offTypeParts: { amount: number; type: string }[] = [];
+    const damageNotes: string[] = [];
     const flatBonus = blessingMods.damageBonus ?? 0;
     if (flatBonus) {
       bonusDamage += flatBonus;
-      bonusParts.push(`${flatBonus >= 0 ? '+' : ''}${flatBonus} blessing`);
+      onTypeParts.push({ amount: flatBonus, label: 'blessing' });
     }
     const holyBonus = blessingMods.holyDamageBonus ?? 0;
     if (holyBonus) {
       bonusDamage += holyBonus;
-      bonusParts.push(`+${holyBonus} radiant`);
+      offTypeDamage += holyBonus;
+      offTypeParts.push({ amount: holyBonus, type: 'radiant' });
     }
     if (playerWounded && quirkMods.hangryDamageBonus) {
       bonusDamage += quirkMods.hangryDamageBonus;
-      bonusParts.push(`+${quirkMods.hangryDamageBonus} Hangry`);
+      onTypeParts.push({ amount: quirkMods.hangryDamageBonus, label: 'Hangry' });
     }
     if (isFirstAttack && blessingMods.firstAttackDamage) {
       bonusDamage += blessingMods.firstAttackDamage;
-      bonusParts.push(`+${blessingMods.firstAttackDamage} first strike`);
+      onTypeParts.push({ amount: blessingMods.firstAttackDamage, label: 'first strike' });
     }
     // Grove upgrades — permanent damage bonuses baked into the soul.
     const whetstone = nextCharacter.permanentBonuses?.damage ?? 0;
     if (whetstone) {
       bonusDamage += whetstone;
-      bonusParts.push(`+${whetstone} Whetstone`);
+      onTypeParts.push({ amount: whetstone, label: 'Whetstone' });
     }
     if (isFirstAttack && (nextCharacter.permanentFirstAttackDamage ?? 0) > 0) {
       const fc = nextCharacter.permanentFirstAttackDamage ?? 0;
       bonusDamage += fc;
-      bonusParts.push(`+${fc} First Cut`);
+      onTypeParts.push({ amount: fc, label: 'First Cut' });
     }
     if (targetWounded && (nextCharacter.permanentWoundedTargetDamage ?? 0) > 0) {
       const bo = nextCharacter.permanentWoundedTargetDamage ?? 0;
       bonusDamage += bo;
-      bonusParts.push(`+${bo} Bleed-Out`);
+      onTypeParts.push({ amount: bo, label: 'Bleed-Out' });
     }
     if (crit && (nextCharacter.permanentCritDamageBonus ?? 0) > 0) {
       const cd = nextCharacter.permanentCritDamageBonus ?? 0;
       bonusDamage += cd;
-      bonusParts.push(`+${cd} Fellfast`);
+      onTypeParts.push({ amount: cd, label: 'Fellfast' });
     }
     // Might of the Mountain (camp boon): +1 flat damage on every weapon hit.
     const mountainBonus = boonMods.damageBonus ?? 0;
     if (mountainBonus) {
       bonusDamage += mountainBonus;
-      bonusParts.push(`+${mountainBonus} Mountain`);
+      onTypeParts.push({ amount: mountainBonus, label: 'Mountain' });
     }
+    // Vow reroll is already baked into the dice total — a note, not a summand,
+    // or the breakdown would double-count it.
     if (bladeOfVowUsed && bladeOfVowDelta > 0) {
-      bonusParts.push(`+${bladeOfVowDelta} Vow reroll`);
+      damageNotes.push(`Vow reroll +${bladeOfVowDelta}`);
     }
 
     // Rogue Sneak Attack: once per turn, when the strike has the angle —
@@ -300,24 +309,45 @@ export function playerAttack(
     }
 
     const totalDamage = damageRoll.total + abilMod + damageExpr.modifier + bonusDamage;
+    const weaponTypeDamage = totalDamage - offTypeDamage;
 
     const damaged = applyDamage(nextState, targetId, totalDamage, nextCharacter);
     nextState = damaged.state;
     nextCharacter = damaged.character;
+    // Surface the full pre-clamp damage on the attack event so the floating
+    // combat number reads true even when the hit overkills the target's HP.
+    if (nextState.lastAttack && nextState.lastAttack.id === attackEvent.id) {
+      nextState = {
+        ...nextState,
+        lastAttack: {
+          ...nextState.lastAttack,
+          damageDealt: totalDamage,
+          damageType: weapon.damageType,
+        },
+      };
+    }
 
     const breakdown: string[] = [`${damageRoll.total} dice`];
     const pushPart = (val: number, label: string) => {
       if (val === 0) return;
       breakdown.push(val > 0 ? `+ ${val} ${label}` : `- ${Math.abs(val)} ${label}`);
     };
-    pushPart(abilMod, 'STR');
+    pushPart(abilMod, attackAbility.toUpperCase());
     pushPart(damageExpr.modifier, 'magic');
     if (sneakDamage > 0) pushPart(sneakDamage, `sneak (${sneakDice}d6)`);
-    const flavorSuffix = bonusParts.length > 0 ? ` (${bonusParts.join(', ')})` : '';
+    for (const p of onTypeParts) pushPart(p.amount, p.label);
+    // Headline splits by damage type: the weapon-type subtotal (which the
+    // parenthetical sums to) plus any off-type segments shown by their own type.
+    const headline =
+      offTypeParts.length > 0
+        ? `${weaponTypeDamage} ${weapon.damageType}` +
+          offTypeParts.map((p) => ` + ${p.amount} ${p.type}`).join('')
+        : `${totalDamage} ${weapon.damageType}`;
+    const noteSuffix = damageNotes.length > 0 ? ` [${damageNotes.join(', ')}]` : '';
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `Damage: ${totalDamage} ${weapon.damageType} (${breakdown.join(' ')})${flavorSuffix}.`,
+      text: `Damage: ${headline} (${breakdown.join(' ')})${noteSuffix}.`,
     });
   }
 
