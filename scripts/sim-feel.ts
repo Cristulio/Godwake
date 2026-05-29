@@ -207,6 +207,8 @@ interface RunRecord {
   blessingPicks: number;
   restSites: number;
   eventSites: number;
+  shopSites: number;
+  pathChoices: number;
   levelUps: number;
   blessingsFinal: string[];
   /** defId of every enemy instance fought, in order — for repeat-rate. */
@@ -373,29 +375,33 @@ function runOneDelve(
     blessingPicks: 0,
     restSites: 0,
     eventSites: 0,
+    shopSites: 0,
+    pathChoices: 0,
     levelUps: 0,
     blessingsFinal: [],
     enemyInstanceSeq: [],
   };
 
   let died = false;
-  for (let i = 0; i < delve.rooms.length; i += 1) {
-    const room = delve.rooms[i];
+  const byId = new Map(delve.rooms.map((r) => [r.id, r] as const));
+  const isBranching = delve.rooms.some((r) => (r.next?.length ?? 0) > 0);
+  let curId: string | undefined = delve.rooms[0]?.id;
+  const guard = new Set<string>();
+  while (curId && !guard.has(curId)) {
+    guard.add(curId);
+    const room = byId.get(curId);
+    if (!room) break;
     rec.roomsReached += 1;
 
     if (room.kind === 'rest') {
       rec.restSites += 1;
       character = shortRestHeal(character, Math.floor(character.hp.max * 0.7));
-      if (diary) diary.push(`\n_(rest: ${room.title} — heal only, no choice offered)_`);
-      continue;
-    }
-    if (room.kind === 'camp') {
+      if (diary) diary.push(`\n_(rest: ${room.title} — sim auto-heals; the 3-choice fork isn't exercised)_`);
+    } else if (room.kind === 'camp') {
       rec.restSites += 1;
       character = longRest(character);
-      if (diary) diary.push(`\n_(camp: ${room.title} — full long rest, no choice offered)_`);
-      continue;
-    }
-    if (room.kind === 'shrine') {
+      if (diary) diary.push(`\n_(camp: ${room.title} — full long rest)_`);
+    } else if (room.kind === 'shrine') {
       rec.shrineSites += 1;
       const before = character.blessings.length;
       character = pickBlessingAtShrine(roller, character);
@@ -408,33 +414,52 @@ function runOneDelve(
           })_`,
         );
       }
-      continue;
-    }
-    if (room.kind === 'event') {
+    } else if (room.kind === 'event') {
       rec.eventSites += 1;
       if (diary) diary.push(`\n_(event: ${room.title} — sim auto-skips the choice)_`);
-      continue;
-    }
-    if (room.kind === 'treasure') continue;
+    } else if (room.kind === 'shop') {
+      rec.shopSites += 1;
+      if (diary) diary.push(`\n_(shop: ${room.title} — sim skips buying)_`);
+    } else if (room.kind === 'treasure') {
+      // no-op
+    } else {
+      const { fight, character: after } = runFight(roller, character, room, diary);
+      character = after;
+      rec.fights.push(fight);
+      rec.enemyInstanceSeq.push(...fight.enemyInstanceDefIds);
 
-    const { fight, character: after } = runFight(roller, character, room, diary);
-    character = after;
-    rec.fights.push(fight);
-    rec.enemyInstanceSeq.push(...fight.enemyInstanceDefIds);
-
-    if (!fight.victory) {
-      died = true;
-      break;
-    }
-    rec.combatRoomsWon += 1;
-
-    const xp = room.xpReward ?? 0;
-    if (xp > 0) {
-      character = { ...character, xp: character.xp + xp };
-      while (character.level < MAX_LEVEL && character.xp >= xpForLevel(character.level + 1)) {
-        character = simulateLevelUp(character);
-        rec.levelUps += 1;
+      if (!fight.victory) {
+        died = true;
+        break;
       }
+      rec.combatRoomsWon += 1;
+
+      const xp = room.xpReward ?? 0;
+      if (xp > 0) {
+        character = { ...character, xp: character.xp + xp };
+        while (character.level < MAX_LEVEL && character.xp >= xpForLevel(character.level + 1)) {
+          character = simulateLevelUp(character);
+          rec.levelUps += 1;
+        }
+      }
+    }
+
+    // Route to the next node along the branching map. A node with ≥2 reachable
+    // successors is a real fork the player picks (counted as agency); 1 is a
+    // forced step; 0 is the terminal final boss.
+    const nexts = room.next ?? [];
+    if (nexts.length >= 2) rec.pathChoices += 1;
+    if (nexts.length >= 1) {
+      const idx =
+        nexts.length === 1
+          ? 0
+          : roller.roll({ count: 1, die: 20, modifier: 0 }).total % nexts.length;
+      curId = nexts[idx];
+    } else if (isBranching || room.kind === 'boss') {
+      break; // terminal node (final boss)
+    } else {
+      const ni = delve.rooms.findIndex((r) => r.id === curId) + 1;
+      curId = ni > 0 && ni < delve.rooms.length ? delve.rooms[ni].id : undefined;
     }
   }
 
@@ -757,15 +782,15 @@ function main(): void {
   L.push('\n## 2. Agency — meaningful decisions per run, by source\n');
   L.push('| Decision source | Avg per run | Note |');
   L.push('|-----------------|------------:|------|');
-  L.push('| Path choices (map routing) | 0.00 | delve is a fixed linear array — `createGodwakeDelve` |');
-  L.push('| Shop choices | 0.00 | no `shop` room kind exists in the run |');
+  L.push(`| Path choices (map routing) | ${f2(avg((r) => r.pathChoices))} | forks (≥2 reachable nodes) the player picks per run — the branching map |`);
+  L.push(`| Shop nodes reached | ${f2(avg((r) => r.shopSites))} | the \`shop\` room kind now exists; sim skips buying |`);
   L.push(`| Rest forks | 0.00 | ${f2(avg((r) => r.restSites))} rest/camp sites/run, all heal-only (no fork) |`);
   L.push(`| Shrine blessing picks | ${f2(avg((r) => r.blessingPicks))} | real out-of-combat agency (${f2(avg((r) => r.shrineSites))} sites/run) |`);
   L.push(`| Event choices | ${f2(avg((r) => r.eventSites))} | sites/run; sim auto-skips; some are free-upside (no real fork) |`);
   L.push(`| Level-ups | ${f2(avg((r) => r.levelUps))} | automatic — fixed class progression, no player choice |`);
   L.push(`| Combat real-decision turns | ${f1(realDecisionTurnsPerRun)} | of ${f1(combatTurnsPerRun)} combat turns/run |`);
   L.push(
-    `\nNearly all agency is concentrated in **combat** (target + resource decisions) and **shrine picks**. The run-structure layer (path / shop / rest-fork) contributes **≈0** decisions per run.`,
+    `\nThe run-structure layer (path routing + shop + rest) now contributes real choices via the branching map — see the path-choices row above. Combat target/resource decisions and shrine picks remain the rest of the agency.`,
   );
 
   // VARIETY
@@ -850,7 +875,7 @@ function main(): void {
   // Console summary
   console.log(`\n${nRuns} runs, ${fights.length} fights, ${allTurns.length} player turns.`);
   console.log(`Dead turns: ${pct(deadTurns / Math.max(1, allTurns.length))} | avg rounds/fight ${f2(avgRounds)}`);
-  console.log(`Path choices/run: 0 | shrine picks/run ${f2(avg((r) => r.blessingPicks))} | combat real-decision turns/run ${f1(realDecisionTurnsPerRun)}`);
+  console.log(`Path choices/run: ${f2(avg((r) => r.pathChoices))} | shop nodes/run ${f2(avg((r) => r.shopSites))} | shrine picks/run ${f2(avg((r) => r.blessingPicks))} | combat real-decision turns/run ${f1(realDecisionTurnsPerRun)}`);
   console.log(`Blowouts ${pct(blowouts / Math.max(1, wins.length))} | near-death-recover ${pct(nearDeathRecover / Math.max(1, wins.length))}`);
   console.log(`Intent-bearing enemy turns ${pct(intentEnemyTurns / Math.max(1, totalEnemyTurns))} | dead-turns next to intent ${pct(deadAdjIntent / Math.max(1, deadTurns))}`);
   console.log(`\nWrote → ${outPath}`);

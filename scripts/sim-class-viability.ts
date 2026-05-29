@@ -371,50 +371,65 @@ function liveOneLife(
   let character = descend(roller, soul);
   const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
   const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension });
-  const chapters = chapterIndex(delve);
-
   let bossesKilled = 0;
   let finalRoomIdx = 0;
+  let finalChapter = 1;
   let deathCause: string | null = null;
   let deathRoomLabel: string | null = null;
   let died = false;
 
-  for (let i = 0; i < delve.rooms.length; i++) {
-    finalRoomIdx = i;
-    const room = delve.rooms[i];
+  // Route ONE path through the branching map (not every parallel node).
+  const byId = new Map(delve.rooms.map((r) => [r.id, r] as const));
+  const isBranching = delve.rooms.some((r) => (r.next?.length ?? 0) > 0);
+  let curId: string | undefined = delve.rooms[0]?.id;
+  const guard = new Set<string>();
+  while (curId && !guard.has(curId)) {
+    guard.add(curId);
+    const room = byId.get(curId);
+    if (!room) break;
+    finalRoomIdx += 1;
+    finalChapter = room.chapter ?? finalChapter;
 
     if (room.kind === 'rest') {
       character = shortRestHeal(character, Math.floor(character.hp.max * 0.7));
-      continue;
-    }
-    if (room.kind === 'camp') {
+    } else if (room.kind === 'camp') {
       character = longRest(character);
-      continue;
-    }
-    if (room.kind === 'shrine') {
+    } else if (room.kind === 'shrine') {
       character = pickBlessingAtShrine(roller, character);
-      continue;
-    }
-    if (room.kind === 'event') continue;
-
-    const isBoss = room.kind === 'boss';
-    const result = runCombatRoom(roller, character, room, soul.ascension, pc);
-    character = result.character;
-
-    if (!result.victory) {
-      died = true;
-      deathCause = (room.monsters ?? []).map((m) => m.defId).join('+') || room.id;
-      deathRoomLabel = `${room.id} (ch${chapters[i]})`;
-      break;
-    }
-
-    if (isBoss) bossesKilled += 1;
-    const rXp = room.xpReward ?? 0;
-    if (rXp > 0) {
-      character = { ...character, xp: character.xp + rXp };
-      while (character.level < MAX_LEVEL && character.xp >= xpForLevel(character.level + 1)) {
-        character = simulateLevelUp(character);
+    } else if (room.kind === 'event' || room.kind === 'shop' || room.kind === 'treasure') {
+      // sim skips these
+    } else {
+      const isBoss = room.kind === 'boss';
+      const result = runCombatRoom(roller, character, room, soul.ascension, pc);
+      character = result.character;
+      if (!result.victory) {
+        died = true;
+        deathCause = (room.monsters ?? []).map((m) => m.defId).join('+') || room.id;
+        deathRoomLabel = `${room.id} (ch${room.chapter ?? '?'})`;
+        break;
       }
+      if (isBoss) bossesKilled += 1;
+      const rXp = room.xpReward ?? 0;
+      if (rXp > 0) {
+        character = { ...character, xp: character.xp + rXp };
+        while (character.level < MAX_LEVEL && character.xp >= xpForLevel(character.level + 1)) {
+          character = simulateLevelUp(character);
+        }
+      }
+    }
+
+    const nexts = room.next ?? [];
+    if (nexts.length >= 1) {
+      const idx =
+        nexts.length === 1
+          ? 0
+          : roller.roll({ count: 1, die: 20, modifier: 0 }).total % nexts.length;
+      curId = nexts[idx];
+    } else if (isBranching || room.kind === 'boss') {
+      break;
+    } else {
+      const ni = delve.rooms.findIndex((r) => r.id === curId) + 1;
+      curId = ni > 0 && ni < delve.rooms.length ? delve.rooms[ni].id : undefined;
     }
   }
 
@@ -431,7 +446,7 @@ function liveOneLife(
     outcome: {
       cleared,
       finalRoomIdx,
-      finalChapter: chapters[finalRoomIdx],
+      finalChapter,
       finalLevel: character.level,
       bossesKilled,
       ascension: soul.ascension,
