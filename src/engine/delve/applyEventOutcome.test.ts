@@ -7,7 +7,7 @@ import type { Character } from '../../types/character';
 import type { EventChoice, EventOutcome, EventChoiceOutcome } from '../../schemas/event';
 import { listBlessings } from '../../content/blessings';
 import { listQuirks } from '../../content/quirks';
-import { getEvent } from '../../content/events';
+import { getEvent, listEvents } from '../../content/events';
 
 /** Top-of-array standard score into CHA → effective mod +3 on a human. */
 function silverTongue(overrides: Partial<Character> = {}): Character {
@@ -524,7 +524,7 @@ describe('event content — road gambles, weapon finds & CHA payoffs', () => {
     }
   });
 
-  it('pilgrim-road-smith offers a buyable rapier and a CHA-scaled haggle', () => {
+  it('pilgrim-road-smith offers a buyable rapier and a persuasion-checked haggle', () => {
     const ev = getEvent('pilgrim-road-smith');
     const buy = ev.choices.find((c) => c.id === 'buy-blade');
     const buyEffects = (buy!.outcome as EventOutcome).effects;
@@ -532,11 +532,29 @@ describe('event content — road gambles, weapon finds & CHA payoffs', () => {
       buyEffects.some((e) => e.kind === 'grant_item' && e.itemId === 'rapier'),
     ).toBe(true);
     const haggle = ev.choices.find((c) => c.id === 'haggle-smith');
-    expect(haggle?.requiresCha).toBe(1);
+    // The haggle is now a real persuasion check, not a static CHA gate — and a
+    // miss has a distinct (empty-handed) failure branch.
+    expect(haggle?.skillCheck?.skill).toBe('persuasion');
+    expect(haggle?.failureOutcome).toBeDefined();
     const haggleEffects = (haggle!.outcome as EventOutcome).effects;
     expect(haggleEffects.some((e) => e.kind === 'cha_scaled_gold')).toBe(true);
     expect(
       haggleEffects.some((e) => e.kind === 'grant_item' && e.itemId === 'rapier'),
     ).toBe(true);
+  });
+
+  it('every skillCheck option in the pool supplies a failure branch', () => {
+    // A skill check with no failureOutcome would silently no-op on a miss,
+    // which is the "free upside" anti-pattern this lane is removing.
+    for (const ev of listEvents()) {
+      for (const choice of ev.choices) {
+        if (choice.skillCheck) {
+          expect(
+            choice.failureOutcome,
+            `${ev.id}/${choice.id} has a skillCheck but no failureOutcome`,
+          ).toBeDefined();
+        }
+      }
+    }
   });
 });

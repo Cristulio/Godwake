@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { SkillSchema } from './ids';
 
 export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('hp_delta'), amount: z.number() }),
@@ -88,6 +89,20 @@ export const EventChoiceSchema = z.object({
    * (or an empty outcome if none is supplied).
    */
   successChance: z.number().min(0).max(1).optional(),
+  /**
+   * Roll-based skill gate: d20 + the skill's ability modifier + proficiency
+   * (see `skillCheck`) against `dc`. When set, the option is always offerable
+   * (no hidden floor) and the engine rolls on pick — pass → `outcome`, fail →
+   * `failureOutcome`. This is what makes a skill proficiency (persuasion,
+   * deception, athletics, …) actually pay off in play. Distinct from the flat
+   * `successChance` lottery, which ignores the character sheet.
+   */
+  skillCheck: z
+    .object({
+      skill: SkillSchema,
+      dc: z.number().int().positive(),
+    })
+    .optional(),
   outcome: EventChoiceOutcomeSchema,
   failureOutcome: EventChoiceOutcomeSchema.optional(),
 });

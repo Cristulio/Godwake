@@ -1,15 +1,17 @@
 /**
- * Event-flow validation sim — exercises the three PR #84 changes end-to-end:
+ * Event-flow validation sim — guards the quirk-reroll polish and the
+ * `cowled-recruiter` bluff path end-to-end:
  *
- *  1. Per-event `fallbackText` on `grant_quirk_reroll`: each of the 6 events
- *     that grants a quirk reroll must surface its own god-appropriate
- *     fallback line, never the legacy hardcoded Waukeen sentence (except
- *     for the genuinely-Waukeen `beggar-at-the-gate`).
+ *  1. Per-event `fallbackText` on `grant_quirk_reroll`: each event that grants
+ *     a quirk reroll must surface its own god-appropriate fallback line, never
+ *     the legacy hardcoded Waukeen sentence (except the genuinely-Waukeen
+ *     `beggar-at-the-gate`).
  *  2. L1 smart-fallback: when the reroll no-ops, the character gains +5g.
- *     Verified across 200 trials × 6 events.
- *  3. CHA-2 gate on `cowled-recruiter.bluff-the-cowl`: accessibility matrix
- *     across CHA 8–18, plus the headline cell (default tiefling Wizard at
- *     base CHA 10 + race +2 → effective 12, mod +1).
+ *     Verified across 200 trials per reroll event.
+ *  3. Deception skill-check on `cowled-recruiter.bluff-the-cowl`: the events
+ *     lane converted this from a static CHA gate to a real `skillCheck`. The
+ *     odds matrix across CHA 8–18 confirms a higher CHA (and proficiency) lifts
+ *     the pass rate, and that the default tiefling Wizard brings a real bonus.
  *  4. Full-delve event log: 50 delves × 3 classes × 2 levels = 6 cells.
  *     Records events seen, choices picked, fallback strings surfaced, and
  *     flags any "Waukeen" string surfacing in a non-Waukeen event.
@@ -34,6 +36,7 @@ import {
   applyEventOutcome,
 } from '../src/engine/delve/applyEventOutcome';
 import { modifierFor, effectiveAbilityScores } from '../src/engine/character/derived';
+import { skillBonus } from '../src/engine/character/skillCheck';
 import { createGodwakeDelve } from '../src/engine/delve/createDelve';
 import { listQuirks } from '../src/content/quirks';
 import type { Character } from '../src/types/character';
@@ -79,13 +82,6 @@ const REROLL_EVENTS: QuirkRerollEntry[] = [
     expectedFlavor: ['waukeen'],
     waukeenAllowed: true,
     themeNote: 'Waukeen-flavored — Waukeen is correct here',
-  },
-  {
-    eventId: 'street-orphan',
-    choiceId: 'cuff-him',
-    expectedFlavor: ['athkatla', 'city'],
-    waukeenAllowed: false,
-    themeNote: 'Athkatla street orphan — city, not Waukeen',
   },
   {
     eventId: 'mad-prisoner-bargain',
@@ -279,22 +275,38 @@ function l1GrantProbe(trials = 200): GrantProbe[] {
   return results;
 }
 
-// ─── Part 3: CHA-2 gate accessibility ────────────────────────────────────
+// ─── Part 3: deception skill-check accessibility ──────────────────────────
 
 interface ChaMatrixRow {
   cha: number;
   mod: number;
-  bluffAllowed: boolean;
-  reason: string;
+  /** Deception skill bonus (CHA mod + proficiency; untrained in this sweep). */
+  bonus: number;
+  /** Lowest d20 face that clears the DC at this bonus. */
+  needToClear: number;
+  /** Pass probability, accounting for the nat-20/nat-1 swing. */
+  passPct: number;
+}
+
+/** Pass odds for a flat bonus vs a DC, honoring nat-20 auto-pass / nat-1 auto-fail. */
+function deceptionPassPct(bonus: number, dc: number): number {
+  let pass = 0;
+  for (let face = 1; face <= 20; face++) {
+    let ok = face + bonus >= dc;
+    if (face === 20) ok = true;
+    if (face === 1) ok = false;
+    if (ok) pass += 1;
+  }
+  return pass / 20;
 }
 
 function chaMatrix(): ChaMatrixRow[] {
   const ev = getEvent('cowled-recruiter');
   const choice = ev.choices.find((c) => c.id === 'bluff-the-cowl');
-  if (!choice) throw new Error('bluff-the-cowl choice missing');
+  if (!choice?.skillCheck) throw new Error('bluff-the-cowl skill check missing');
+  const dc = choice.skillCheck.dc;
 
-  // Use a wood-elf scaffolding (0 CHA race bonus) so the sweep maps raw CHA
-  // to effective CHA 1-to-1 and the matrix reads naturally.
+  // Wood-elf scaffolding (0 CHA race bonus) so raw CHA maps 1-to-1 to effective.
   const scaffold = buildAtLevel(PRESETS[1], 1);
   const rows: ChaMatrixRow[] = [];
   for (let cha = 8; cha <= 18; cha++) {
@@ -303,12 +315,13 @@ function chaMatrix(): ChaMatrixRow[] {
       baseAbilityScores: { ...scaffold.baseAbilityScores, cha },
     };
     const mod = modifierFor(probe, 'cha');
-    const av = canTakeChoice(probe, choice);
+    const bonus = skillBonus(probe, 'deception');
     rows.push({
       cha,
       mod,
-      bluffAllowed: av.ok,
-      reason: av.ok ? '' : av.reason,
+      bonus,
+      needToClear: Math.max(2, dc - bonus),
+      passPct: deceptionPassPct(bonus, dc),
     });
   }
   return rows;
@@ -316,30 +329,31 @@ function chaMatrix(): ChaMatrixRow[] {
 
 interface PresetBluffRow {
   preset: string;
-  raceBonus: number;
   baseCha: number;
   effectiveCha: number;
   mod: number;
-  bluffAllowed: boolean;
+  bonus: number;
+  passPct: number;
 }
 
 function bluffByPreset(): PresetBluffRow[] {
   const ev = getEvent('cowled-recruiter');
   const choice = ev.choices.find((c) => c.id === 'bluff-the-cowl')!;
+  const dc = choice.skillCheck!.dc;
   const rows: PresetBluffRow[] = [];
   for (const p of PRESETS) {
     const c = buildAtLevel(p, 1);
     const mod = modifierFor(c, 'cha');
-    const av = canTakeChoice(c, choice);
+    const bonus = skillBonus(c, 'deception');
     const baseCha = p.input.baseAbilityScores.cha;
     const effective = effectiveAbilityScores(c).cha;
     rows.push({
       preset: p.label,
-      raceBonus: effective - baseCha,
       baseCha,
       effectiveCha: effective,
       mod,
-      bluffAllowed: av.ok,
+      bonus,
+      passPct: deceptionPassPct(bonus, dc),
     });
   }
   return rows;
@@ -421,14 +435,8 @@ function simulateDelves(preset: CharPreset, level: number, runs: number, seedBas
       const pick = pickStrategy(character, tpl);
       if (!pick) continue;
 
-      let outcome;
-      if (pick.successChance !== undefined) {
-        const r = rollChoiceCheck(pick, roller);
-        outcome = r.outcome;
-      } else {
-        outcome = pick.outcome;
-      }
-      const concrete = resolveChoiceOutcome(outcome, roller);
+      const rolled = rollChoiceCheck(pick, roller, character);
+      const concrete = resolveChoiceOutcome(rolled.outcome, roller);
       // Note whether the picked outcome carries grant_quirk_reroll
       const carriesReroll = concrete.effects.some((fx) => fx.kind === 'grant_quirk_reroll');
       if (carriesReroll) summary.totalRerollChosen += 1;
@@ -532,28 +540,29 @@ export function renderReport(rep: FlowReport): string {
   // TL;DR
   const fallbackOk = rep.fallback.every((f) => f.matchedExpected && !f.waukeenInWrongContext);
   const grantOk = rep.grant.every((g) => g.goldDeltaConsistent && g.fallbackFiredCount === g.trials);
-  const chaPivot = rep.cha.find((r) => r.cha === 12);
-  const chaOk = chaPivot?.bluffAllowed === true;
-  const defaultWizardBluff = rep.bluffByPreset.find((r) => /Wizard/i.test(r.preset))?.bluffAllowed;
-  const wizardOk = defaultWizardBluff === true;
+  const chaLo = rep.cha.find((r) => r.cha === 8);
+  const chaHi = rep.cha.find((r) => r.cha === 18);
+  const chaOk = !!chaLo && !!chaHi && chaHi.passPct > chaLo.passPct;
+  const wizardBonus = rep.bluffByPreset.find((r) => /Wizard/i.test(r.preset))?.bonus ?? 0;
+  const wizardOk = wizardBonus > 0;
   const waukeenLeaks = rep.delveCells.reduce((s, c) => s + c.waukeenLeakCount, 0);
   const coverageMisses = rep.coverage.filter((r) => !r.hasFallbackText);
 
   out.push('## TL;DR\n');
   out.push(
-    `- **Fallback wording** (Part 1): ${fallbackOk ? 'CONFIRMED' : 'BUGS'} — each of the 6 \`grant_quirk_reroll\` events surfaces its own god-appropriate fallback. No Waukeen leak in non-Waukeen contexts.`,
+    `- **Fallback wording** (Part 1): ${fallbackOk ? 'CONFIRMED' : 'BUGS'} — each of the ${rep.fallback.length} \`grant_quirk_reroll\` events surfaces its own god-appropriate fallback. No Waukeen leak in non-Waukeen contexts.`,
   );
   out.push(
-    `- **L1 smart-grant** (Part 2): ${grantOk ? 'CONFIRMED' : 'BUGS'} — when fired against a quirk-less character, gold delta is exactly +${5} every trial across ${rep.grant[0]?.trials ?? '?'} × 6 events = ${rep.grant.length * (rep.grant[0]?.trials ?? 0)} trials.`,
+    `- **L1 smart-grant** (Part 2): ${grantOk ? 'CONFIRMED' : 'BUGS'} — when fired against a quirk-less character, gold delta is exactly +${5} every trial across ${rep.grant[0]?.trials ?? '?'} × ${rep.grant.length} events = ${rep.grant.length * (rep.grant[0]?.trials ?? 0)} trials.`,
   );
   out.push(
-    `- **Bluff gate accessibility** (Part 3): ${chaOk && wizardOk ? 'CONFIRMED (after fix)' : 'BUGS'} — PR #84 set \`requiresCha: 2\`, but the gate compares against the **modifier**, so CHA 12 (mod +1) was still blocked. Validation drops the gate to \`requiresCha: 1\`; CHA 12+ now clears. Default tiefling Wizard preset accesses the path.`,
+    `- **Bluff odds** (Part 3): ${chaOk && wizardOk ? 'CONFIRMED' : 'BUGS'} — \`bluff-the-cowl\` is now a deception \`skillCheck\` (not a static CHA gate). Pass odds rise with CHA across the 8–18 sweep, and the default tiefling Wizard brings a positive deception bonus.`,
   );
   out.push(
     `- **Full-delve sweep** (Part 4): ${waukeenLeaks === 0 ? 'no Waukeen leaks' : `${waukeenLeaks} Waukeen leaks detected`} across ${rep.delveCells.reduce((s, c) => s + c.runs, 0)} simulated delves.`,
   );
   out.push(
-    `- **Coverage** (sanity): ${coverageMisses.length === 0 ? 'all 6 reroll events carry a per-event `fallbackText`' : `${coverageMisses.length} reroll-bearing choices missing a fallbackText`}.`,
+    `- **Coverage** (sanity): ${coverageMisses.length === 0 ? 'every reroll event carries a per-event `fallbackText`' : `${coverageMisses.length} reroll-bearing choices missing a fallbackText`}.`,
   );
   out.push('');
 
@@ -565,21 +574,17 @@ export function renderReport(rep: FlowReport): string {
     `- L1 +5g smart-grant → **${grantOk ? 'CONFIRMED' : 'REGRESSED'}**`,
   );
   out.push(
-    `- bluff-the-cowl gate accessibility → **${chaOk && wizardOk ? 'CONFIRMED (after fix)' : 'REGRESSED'}** — see "Fix shipped" below.`,
+    `- bluff-the-cowl deception odds → **${chaOk && wizardOk ? 'CONFIRMED' : 'REGRESSED'}** — see "Converted to a skill check" below.`,
   );
   out.push('');
 
-  out.push('## Fix shipped — bluff-the-cowl gate interpretation\n');
+  out.push('## Converted to a skill check — bluff-the-cowl\n');
   out.push(
-    "PR #84's commit message stated \"`cowled-recruiter.bluff-the-cowl` gate CHA-3 → CHA-2, so a CHA-12 build (one race bump + base 10) can reach the bluff path.\" The implementation set `requiresCha: 2`.",
+    'The events-polish lane replaced the static `requiresCha` gate on `cowled-recruiter.bluff-the-cowl` with a real deception `skillCheck` (d20 + CHA mod + proficiency vs DC). A miss now routes to a distinct failure branch (the Cowl sees through the name-drop) instead of the option simply being hidden — every CHA option is a genuine gamble, and the deception proficiency finally pays off.',
   );
   out.push('');
   out.push(
-    'However, `requiresCha` is a **modifier** threshold (`canTakeChoice` checks `modifierFor(character, \'cha\') < choice.requiresCha`). `requiresCha: 2` therefore means **CHA mod ≥ +2 → CHA score ≥ 14**, not CHA score ≥ 12. The default tiefling Wizard (base 10 + race +2 = effective 12, mod +1) was still blocked, contradicting the PR\'s own stated intent.',
-  );
-  out.push('');
-  out.push(
-    'Validation fix: `src/content/events/index.ts` — `bluff-the-cowl.requiresCha` 2 → 1. CHA 12+ now clears (mod ≥ +1). CHA 10 (default builds without race bumps) is still blocked, preserving the asymmetric-power design. The Ch4 `flatter-the-spider` CHA-3 gate is untouched.',
+    'The matrix below sweeps raw CHA 8–18 and reports the pass odds (nat-20 always lands, nat-1 always flops). The Ch4 `flatter-the-spider` option was converted to a deception check on the same model.',
   );
   out.push('');
 
@@ -621,25 +626,25 @@ export function renderReport(rep: FlowReport): string {
   out.push('');
 
   // ── Part 3
-  out.push('## Part 3 — CHA accessibility for `cowled-recruiter.bluff-the-cowl`\n');
+  out.push('## Part 3 — deception odds for `cowled-recruiter.bluff-the-cowl`\n');
   out.push(
-    'Gate now `requiresCha: 1` (post-validation fix). Matrix sweeps raw CHA 8 → 18, surfaces the gate decision.\n',
+    'Skill check (deception). Matrix sweeps raw CHA 8 → 18 on a wood-elf scaffold (no CHA race bump), reporting the deception bonus, the d20 face needed to clear the DC, and the resulting pass rate.\n',
   );
-  out.push('| CHA | mod | Bluff allowed | Reason if blocked |');
-  out.push('|---:|---:|:--:|---|');
+  out.push('| CHA | mod | Deception bonus | d20 to clear | Pass % |');
+  out.push('|---:|---:|---:|---:|---:|');
   for (const r of rep.cha) {
     out.push(
-      `| ${r.cha} | ${r.mod >= 0 ? '+' : ''}${r.mod} | ${r.bluffAllowed ? 'YES' : 'NO'} | ${quote(r.reason)} |`,
+      `| ${r.cha} | ${r.mod >= 0 ? '+' : ''}${r.mod} | ${r.bonus >= 0 ? '+' : ''}${r.bonus} | ${r.needToClear} | ${(r.passPct * 100).toFixed(0)}% |`,
     );
   }
   out.push('');
 
-  out.push('### Default-preset accessibility (race bonuses applied)\n');
-  out.push('| Preset | Base CHA | Race +CHA | Effective CHA | Mod | Bluff allowed |');
-  out.push('|---|---:|---:|---:|---:|:--:|');
+  out.push('### Default-preset odds (race bonuses applied)\n');
+  out.push('| Preset | Base CHA | Effective CHA | Mod | Deception bonus | Pass % |');
+  out.push('|---|---:|---:|---:|---:|---:|');
   for (const p of rep.bluffByPreset) {
     out.push(
-      `| ${p.preset} | ${p.baseCha} | +${p.raceBonus} | ${p.effectiveCha} | ${p.mod >= 0 ? '+' : ''}${p.mod} | ${p.bluffAllowed ? 'YES' : 'NO'} |`,
+      `| ${p.preset} | ${p.baseCha} | ${p.effectiveCha} | ${p.mod >= 0 ? '+' : ''}${p.mod} | ${p.bonus >= 0 ? '+' : ''}${p.bonus} | ${(p.passPct * 100).toFixed(0)}% |`,
     );
   }
   out.push('');
@@ -672,13 +677,13 @@ export function renderReport(rep: FlowReport): string {
 
   out.push('## Sim methodology\n');
   out.push(
-    `- **Part 1**: For each of the 6 events, build an L1 Fighter (no quirks → guaranteed no-bane branch), apply the success outcome, capture the \`grant_quirk_reroll\` effect's \`detail\` string. Check (a) the detail contains an expected event-themed keyword and (b) "Waukeen" never appears in a non-Waukeen event's detail.`,
+    `- **Part 1**: For each reroll event, build an L1 Fighter (no quirks → guaranteed no-bane branch), apply the success outcome, capture the \`grant_quirk_reroll\` effect's \`detail\` string. Check (a) the detail contains an expected event-themed keyword and (b) "Waukeen" never appears in a non-Waukeen event's detail.`,
   );
   out.push(
     `- **Part 2**: Per event, run an outcome with only the event's \`grant_quirk_reroll\` effect (so the +5g fallback is isolated from any event-success gold) against a fresh L1 Fighter, ${rep.grant[0]?.trials ?? '?'} trials. Record the gold delta range and the count of "+Ng (no bane to shake)" surfacings.`,
   );
   out.push(
-    `- **Part 3**: Sweep raw CHA 8–18 by mutating the character\'s ability scores directly (bypasses race bumps so the matrix reads naturally). Then a "by preset" pass uses the actual default char-creation builds (race bumps applied) to confirm the default Wizard preset (tiefling +2 CHA) now clears the gate.`,
+    `- **Part 3**: Sweep raw CHA 8–18 by mutating the character\'s ability scores directly (bypasses race bumps so the matrix reads naturally), computing the deception pass rate (nat-20 auto-pass, nat-1 auto-fail) at each bonus. Then a "by preset" pass uses the actual default char-creation builds (race bumps applied) to confirm the default Wizard preset (tiefling +2 CHA) brings a positive deception bonus.`,
   );
   out.push(
     `- **Part 4**: 50 generated Godwake delves per (class, level) cell, stable seeds across cells. AI strategy biases toward reroll-bearing outcomes so the fallback path is heavily exercised, then a "Waukeen leak" counter flags any non-Waukeen event whose fallback line contains "Waukeen".`,

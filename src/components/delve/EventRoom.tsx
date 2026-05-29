@@ -14,9 +14,20 @@ import {
   type AppliedEffect,
   type EventOutcomeResult,
 } from '../../engine/delve';
+import { skillBonus, type SkillCheckResult } from '../../engine/character/skillCheck';
+import { SKILL_TO_ABILITY } from '../../types/skills';
+import { ABILITY_FULL_NAMES } from '../../types/abilities';
+import type { SkillName } from '../../types/skills';
 import type { Character } from '../../types/character';
 import { playSfx } from '../../engine/audio';
 import type { EventChoice } from '../../schemas/event';
+
+function skillLabel(skill: SkillName): string {
+  return skill
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
 
 interface EventRoomProps {
   room: RoomSpec;
@@ -28,6 +39,8 @@ interface EventRoomProps {
 interface ResolvedTurn {
   choiceLabel: string;
   result: EventOutcomeResult;
+  /** Present when the chosen option resolved via a skill check. */
+  check?: SkillCheckResult;
 }
 
 export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
@@ -67,11 +80,11 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   function handlePick(choice: EventChoice) {
     if (!character) return;
     const roller = getActiveRoller();
-    const checked = rollChoiceCheck(choice, roller);
+    const checked = rollChoiceCheck(choice, roller, character);
     const outcome = resolveChoiceOutcome(checked.outcome, roller);
     const result = applyEventOutcome(character, outcome, roller);
     setCharacter(result.character);
-    setResolved({ choiceLabel: choice.label, result });
+    setResolved({ choiceLabel: choice.label, result, check: checked.skillCheck });
     playSfx('ui_click');
   }
 
@@ -135,6 +148,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
         <ResolutionPanel
           choiceLabel={resolved.choiceLabel}
           result={resolved.result}
+          check={resolved.check}
           onContinue={handleContinue}
         />
       )}
@@ -157,6 +171,19 @@ function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
       ? `CHA +${choice.requiresCha}`
       : null;
 
+  let skillTag: { skill: SkillName; dc: number; bonus: number; proficient: boolean } | null = null;
+  if (choice.skillCheck) {
+    const bonus = skillBonus(character, choice.skillCheck.skill);
+    skillTag = {
+      skill: choice.skillCheck.skill,
+      dc: choice.skillCheck.dc,
+      bonus,
+      proficient:
+        character.expertSkills.includes(choice.skillCheck.skill) ||
+        character.skillProficiencies.includes(choice.skillCheck.skill),
+    };
+  }
+
   return (
     <button
       type="button"
@@ -174,6 +201,20 @@ function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
           {choice.label}
         </div>
         <div className="flex items-baseline gap-2 shrink-0">
+          {skillTag && (
+            <div
+              data-testid="skillcheck-badge"
+              title={`${skillLabel(skillTag.skill)} (${ABILITY_FULL_NAMES[SKILL_TO_ABILITY[skillTag.skill]]}) check — your bonus ${skillTag.bonus >= 0 ? '+' : ''}${skillTag.bonus}${skillTag.proficient ? ', proficient' : ''}`}
+              className={`text-[10px] uppercase tracking-widest border px-1.5 py-0.5 ${
+                skillTag.proficient
+                  ? 'text-[var(--color-accent-amber)] border-[var(--color-accent-amber)]/60'
+                  : 'text-[var(--color-text-secondary)] border-[var(--color-border-warm)]'
+              }`}
+            >
+              {skillLabel(skillTag.skill)} DC {skillTag.dc} · {skillTag.bonus >= 0 ? '+' : ''}
+              {skillTag.bonus}
+            </div>
+          )}
           {choice.successChance !== undefined && (
             <div
               data-testid="chance-badge"
@@ -214,16 +255,32 @@ function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
 interface ResolutionPanelProps {
   choiceLabel: string;
   result: EventOutcomeResult;
+  check?: SkillCheckResult;
   onContinue: () => void;
 }
 
-function ResolutionPanel({ choiceLabel, result, onContinue }: ResolutionPanelProps) {
+function ResolutionPanel({ choiceLabel, result, check, onContinue }: ResolutionPanelProps) {
   const continueLabel = result.ambush ? 'Draw steel →' : 'Continue Deeper →';
   return (
     <div className="flex flex-col gap-4 animate-fade-in">
       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest text-center">
         you chose · {choiceLabel}
       </div>
+      {check && (
+        <div
+          data-testid="skillcheck-result"
+          className={`text-center text-xs uppercase tracking-widest font-mono ${
+            check.passed
+              ? 'text-[var(--color-status-poison)]'
+              : 'text-[var(--color-accent-blood)]'
+          }`}
+        >
+          {skillLabel(check.skill)} · d20 {check.d20}
+          {check.abilityMod !== 0 && ` ${check.abilityMod >= 0 ? '+' : '−'}${Math.abs(check.abilityMod)}`}
+          {check.proficiencyMod !== 0 && ` +${check.proficiencyMod}`} = {check.total} vs DC {check.dc} —{' '}
+          {check.passed ? 'Success' : 'Failure'}
+        </div>
+      )}
       <Panel tone="warm">
         <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">
           {result.resolution}
