@@ -1,9 +1,26 @@
 import { describe, it, expect } from 'vitest';
 import { createCharacter } from '../character/initialize';
 import { modifierFor } from '../character/derived';
-import { canTakeChoice } from './applyEventOutcome';
+import { canTakeChoice, rollChoiceCheck } from './applyEventOutcome';
+import { getEvent } from '../../content/events';
 import type { EventChoice } from '../../schemas/event';
 import type { Character } from '../../types/character';
+import type { DiceRoller } from '../dice';
+import type { RollResult } from '../../types/dice';
+
+/** A roller pinned to a single d20 face, for deterministic skill-check routing. */
+function fixedD20(face: number): DiceRoller {
+  const result: RollResult = {
+    expression: { count: 1, die: 20, modifier: 0 },
+    rolls: [face],
+    modifier: 0,
+    total: face,
+    natural20: face === 20,
+    natural1: face === 1,
+    advantage: 'normal',
+  };
+  return { roll: () => result, d20: () => result, serialize: () => ({ state: 0 }) };
+}
 
 function makeWizard(raceId: 'half-elf' | 'tiefling', cha: number): Character {
   return createCharacter({
@@ -72,21 +89,53 @@ describe('CHA-gated event options — visibility threshold (PR #58 wiring)', () 
 });
 
 /**
- * (10) CHA save-style event outcome. The brief asked for a chaCheck: { dc: 13 }
- * roll-based gate. The current engine has NO such field — events only gate on
- * a static CHA modifier via `requiresCha`. No d20 save flow exists for events.
- *
- * Per the brief's escape clause ("If the test fails because the production
- * code has a real bug — or in this case, an unimplemented feature — add
- * `it.skip` with a TODO. Don't modify production code."), this test stays
- * skipped until the chaCheck system is built. See `applyEventOutcome.ts` and
- * `schemas/event.ts` — neither has a save-roll concept for event options.
+ * (10) Skill-check event outcome — now built. `rollChoiceCheck` rolls a d20 +
+ * the skill's ability modifier + proficiency against the choice's `skillCheck.dc`
+ * and routes pass → `outcome`, fail → `failureOutcome`. This is what makes the
+ * CHA skills (and the WIS/STR ones) actually pay off in events.
  */
-describe('CHA save-style event outcome — not yet implemented', () => {
-  it.skip(
-    'rolls a d20 + CHA mod vs a chaCheck DC and routes to pass / fail outcomes (TODO: feature not built; see schemas/event.ts — no chaCheck field exists)',
-    () => {
-      // Intentionally blank — flagged as a missing feature, not a bug.
-    },
-  );
+describe('skill-check event outcome — d20 routing', () => {
+  function checkChoice(): EventChoice {
+    return choice({
+      skillCheck: { skill: 'persuasion', dc: 12 },
+      outcome: { resolution: 'won', effects: [{ kind: 'gold_delta', amount: 10 }] },
+      failureOutcome: { resolution: 'lost', effects: [{ kind: 'hp_delta', amount: -3 }] },
+    });
+  }
+
+  it('a clearing roll routes to the success outcome and reports the tally', () => {
+    // Tiefling base CHA 14 → effective 16 → mod +3. d20 18 + 3 = 21 ≥ 12.
+    const c = makeWizard('tiefling', 14);
+    const res = rollChoiceCheck(checkChoice(), fixedD20(18), c);
+    expect(res.succeeded).toBe(true);
+    expect(res.outcome).toMatchObject({ resolution: 'won' });
+    expect(res.skillCheck?.skill).toBe('persuasion');
+    expect(res.skillCheck?.passed).toBe(true);
+    expect(res.skillCheck?.total).toBe(18 + modifierFor(c, 'cha'));
+  });
+
+  it('a missed roll routes to the failure outcome', () => {
+    const c = makeWizard('half-elf', 8); // low CHA, untrained
+    const res = rollChoiceCheck(checkChoice(), fixedD20(3), c);
+    expect(res.succeeded).toBe(false);
+    expect(res.outcome).toMatchObject({ resolution: 'lost' });
+    expect(res.skillCheck?.passed).toBe(false);
+  });
+
+  it('skill proficiency lifts the same roll over the DC', () => {
+    // Half-Elf base CHA 8 → effective 10 → mod 0. A bare 12 clears DC 12 only
+    // because proficiency (+2 at L1) is added on top.
+    const bare = makeWizard('half-elf', 8);
+    const trained: Character = { ...bare, skillProficiencies: [...bare.skillProficiencies, 'persuasion'] };
+    expect(rollChoiceCheck(checkChoice(), fixedD20(10), bare).succeeded).toBe(false);
+    expect(rollChoiceCheck(checkChoice(), fixedD20(10), trained).succeeded).toBe(true);
+  });
+
+  it('a real event (pale-cleric speak-gently) is a persuasion check with both branches', () => {
+    const ev = getEvent('pale-cleric-shrine');
+    const speak = ev.choices.find((c) => c.id === 'speak-gently');
+    expect(speak?.skillCheck?.skill).toBe('persuasion');
+    expect(speak?.requiresCha).toBeUndefined();
+    expect(speak?.failureOutcome).toBeDefined();
+  });
 });

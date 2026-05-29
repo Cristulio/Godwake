@@ -51,30 +51,33 @@ export const SKILL_TO_ABILITY: Record<SkillName, AbilityName> = {
 export type ProficiencyLevel = 'none' | 'proficient' | 'expert';
 
 /**
- * Per the no-flavor-only rule: only skills with engine consumers — or near-term
- * planned consumers — surface in the active picker. Disabled skills stay in the
- * type union so save data and class definitions don't have to be reshuffled
- * when an engine hook eventually lands; the UI filters by this map.
+ * Per the no-flavor-only rule: only skills with engine consumers surface in the
+ * active picker. The enabled set is exactly the skills that event skill-checks
+ * roll against (see `content/events` + `engine/character/skillCheck`): the three
+ * CHA skills plus the WIS/STR skills the class presets actually grant, so no
+ * preset hands out a dead proficiency. Disabled skills stay in the type union so
+ * save data and class definitions don't have to be reshuffled if an engine hook
+ * later lands; the UI filters by this map.
  */
 export const SKILL_ENABLED: Record<SkillName, boolean> = {
   acrobatics: false,
   'animal-handling': false,
   arcana: false,
-  athletics: false,
-  deception: false,
+  athletics: true,
+  deception: true,
   history: false,
   insight: true,
-  intimidation: false,
+  intimidation: true,
   investigation: false,
   medicine: true,
   nature: false,
-  perception: false,
+  perception: true,
   performance: false,
-  persuasion: false,
+  persuasion: true,
   religion: false,
   'sleight-of-hand': false,
   stealth: false,
-  survival: false,
+  survival: true,
 };
 
 export function isSkillEnabled(s: SkillName): boolean {

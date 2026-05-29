@@ -27,9 +27,9 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'speak-gently',
-        label: '[Charisma] Speak gently with her',
-        hint: 'The Crying God listens to a kind word.',
-        requiresCha: 1,
+        label: '[Persuasion] Speak gently with her',
+        hint: 'Find the words for her ache. Fumble them and the moment closes.',
+        skillCheck: { skill: 'persuasion', dc: 12 },
         outcome: {
           resolution:
             'You crouch and put words to the ache in her shoulders before she names it herself. She lifts her eyes for the first time and tells you a small story about her sister. When you stand, her thumb has marked Ilmater\'s tear on your brow, and her god rides a little of the road with you.',
@@ -37,6 +37,11 @@ const POOL: EventTemplate[] = [
             { kind: 'hp_delta', amount: 4 },
             { kind: 'grant_blessing', random: true },
           ],
+        },
+        failureOutcome: {
+          resolution:
+            'The words come out too eager, too rehearsed. She hears the want in them and folds back into herself, hands in her lap, eyes down. The basin between you stays cold. You walk on with nothing but the echo of your own voice.',
+          effects: [],
         },
       },
       {
@@ -149,6 +154,22 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'tend-him',
+        label: '[Medicine] Bind his wound instead',
+        hint: 'Save the deserter and he pays the surgeon gladly — botch it and he bleeds you a pittance to be rid of you.',
+        skillCheck: { skill: 'medicine', dc: 12 },
+        outcome: {
+          resolution:
+            "You kneel, pack the wound with a strip of his own tabard, and bind it tight and true. The bleeding slows under your hands. He stares at you like you are a thing he has no word for, then presses his whole purse into your palm. \"Didn't ask for that. Won't forget it.\" He limps off, alive and owing.",
+          effects: [{ kind: 'gold_delta', amount: 25 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You pack the wound wrong and the bleeding finds a way around your fingers. He shoves you off with a curse, knots the binding himself, and flicks a few coins at your feet for the trouble. \"Should've let a real chirurgeon at it.\" He crawls off greyer than he was.",
+          effects: [{ kind: 'gold_delta', amount: 5 }],
+        },
+      },
+      {
         id: 'walk-past',
         label: 'Walk past him',
         hint: "Not your war.",
@@ -217,6 +238,22 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'listen-first',
+        label: '[Perception] Listen at the seam first',
+        hint: 'Read the door before you open it — hear grace, take it clean; miss the waiting steel and it takes you.',
+        skillCheck: { skill: 'perception', dc: 12 },
+        outcome: {
+          resolution:
+            'You set your ear to the gap and let the corridor go quiet. No breath. No shifting weight. Only the cedar-warm pull of something kind on the other side. You lift the latch knowing what waits, and the sigil folds into your palm without a fight.',
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'You listen, hear nothing, and trust the nothing. The latch lifts onto a knot of small green shapes that were holding their breath better than you were listening. Steel meets you before flavor does.',
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['goblin', 'goblin'] }],
+        },
+      },
+      {
         id: 'walk-on',
         label: 'Walk on',
         hint: 'Some latches are not for lifting.',
@@ -259,22 +296,22 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'spit',
-        label: 'Spit on it',
-        hint: 'The dead\'s good opinion, or its very bad one.',
+        label: 'Spit on it and defy the dead',
+        hint: 'A stiff spine, or a cold curse — the dead reward defiance as often as they punish it.',
         outcome: {
           random: [
             {
-              weight: 60,
+              weight: 55,
               outcome: {
-                resolution: 'You spit, and a copper rattles out of your boot-cuff. You stoop, pocket it, and walk on with the dead\'s good opinion.',
-                effects: [{ kind: 'gold_delta', amount: 1 }],
+                resolution: 'You spit, square your shoulders, and dare the thing to answer. It does not. Something in you hardens at the daring of it — you walk on with steel in your spine that was not there before.',
+                effects: [{ kind: 'temp_hp', amount: 6 }],
               },
             },
             {
-              weight: 40,
+              weight: 45,
               outcome: {
-                resolution: 'You spit. The jaw seems to grin wider. A cold draught finds the back of your neck and stays there, and the corridor ahead feels longer than it was.',
-                effects: [{ kind: 'hp_delta', amount: -3 }],
+                resolution: 'You spit. The jaw seems to grin wider. A cold draught finds the back of your neck and sinks its teeth in, and the corridor ahead is longer and meaner than it was.',
+                effects: [{ kind: 'hp_delta', amount: -4 }],
               },
             },
           ],
@@ -303,6 +340,20 @@ const POOL: EventTemplate[] = [
         failureOutcome: {
           resolution: 'The larger rat is slow with sickness and bold with it — it fastens yellow teeth into the meat of your hand before it bolts. The bite throbs hot and wrong the length of the corridor.',
           effects: [{ kind: 'hp_delta', amount: -3 }],
+        },
+      },
+      {
+        id: 'forage',
+        label: '[Survival] Sort the good grain from the fouled',
+        hint: 'Know which handful the rats spoiled and you eat clean — guess wrong and it gripes you.',
+        skillCheck: { skill: 'survival', dc: 12 },
+        outcome: {
+          resolution: 'You wave the rats off without hurry and read the sack the way you would read a field — this corner sound, that one fouled and stinking. You eat only what is good. The bread is hard but honest, and steadier in you for the care you took.',
+          effects: [{ kind: 'temp_hp', amount: 4 }],
+        },
+        failureOutcome: {
+          resolution: 'You pick what looks sound, but the rats hid their work well. Two corridors on, your gut twists around the wrong mouthful and will not let go for a long while.',
+          effects: [{ kind: 'hp_delta', amount: -2 }],
         },
       },
       {
@@ -457,13 +508,18 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'bluff-the-cowl',
-        label: '[Charisma] Bluff the recruiter',
-        hint: 'Name-drop a Cowled superior you have never met.',
-        requiresCha: 1,
+        label: '[Deception] Name-drop a Cowled superior',
+        hint: 'Claim a rank you have never held. Sell it and walk free — slip and the Cowl corrects you.',
+        skillCheck: { skill: 'deception', dc: 13 },
         outcome: {
           resolution:
             'You drop a name with the calm of a man who has stood in chambers above this one. The Cowl\'s eyes flicker — the briefest re-evaluation — and the chalk-sigil presses onto your hand without a coin asked. They step back into the arch, the stone sealing behind them, and you walk on with a wizard\'s mark and a wizard\'s purse intact.',
           effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }],
+        },
+        failureOutcome: {
+          resolution:
+            'The name leaves your mouth a half-beat too smooth. The Cowl tilts their head. "That one died in the purges, walker. Try the truth next life." A snap of fingers, a smell of ozone, and the cobbles come up to meet you. They are gone before the ringing stops.',
+          effects: [{ kind: 'hp_delta', amount: -5 }],
         },
       },
       {
@@ -516,10 +572,10 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'haggle',
-        label: '[Charisma] Haggle for the bottle',
-        hint: 'A smile, a story of the road — the better the telling, the lower the price.',
+        label: '[Persuasion] Haggle for the bottle',
+        hint: 'Charm the price down — the better the telling, the lighter the bill. Fall flat and the price holds.',
         requiresGold: 8,
-        requiresCha: 1,
+        skillCheck: { skill: 'persuasion', dc: 13 },
         outcome: {
           resolution:
             'You spin him a tale about Amnian summers and a sister who married a vintner. He laughs and waves a hand. "Half price for a walker who knows the country, then" — and the longer you keep him laughing, the more coppers he counts back into your palm. The bottle goes into your pack at a thief\'s rate.',
@@ -528,6 +584,11 @@ const POOL: EventTemplate[] = [
             { kind: 'cha_scaled_gold', perPoint: 2 },
             { kind: 'hp_delta', amount: 8 },
           ],
+        },
+        failureOutcome: {
+          resolution:
+            'Your tale wanders and his smile thins to courtesy. "Charming, walker. But my children eat Amnian red same as you." The price stays full and you have no stomach to pay it. You leave with the cork still in the bottle and your purse intact.',
+          effects: [],
         },
       },
       {
@@ -563,35 +624,37 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'disarm',
-        label: 'Take the knife from him',
-        hint: 'Gentle hands, a coin pressed after — a hard lesson, kindly taught.',
+        label: '[Insight] Take the knife from him',
+        hint: 'Read him right — scared, not vicious — and disarm him gently. Misjudge it and his panic finds your hand.',
+        skillCheck: { skill: 'insight', dc: 13 },
         outcome: {
           resolution:
-            'You catch his wrist and turn the blade. He stares at his empty hand for a long beat. \"Eat,\" you say, and press a coin into the palm. He runs. Something in your chest unclenches.',
+            'You see it in his eyes before his hand moves — terror, not malice. You catch his wrist soft and turn the blade aside. He stares at his empty hand for a long beat. \"Eat,\" you say, and press a coin into the palm. He runs. Something in your chest unclenches.',
           effects: [
             { kind: 'gold_delta', amount: -2 },
             { kind: 'temp_hp', amount: 4 },
           ],
         },
+        failureOutcome: {
+          resolution:
+            'You read him as frightened and reach in slow. You read him wrong. The blade is already moving — it opens the back of your hand before you close on his wrist, and he is gone into the dark with the knife and your blood on it.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
+        },
       },
       {
-        id: 'cuff-him',
-        label: 'Cuff him aside and walk on',
-        hint: 'Athkatla teaches its children — if the swing lands clean.',
-        successChance: 0.7,
+        id: 'intimidate',
+        label: '[Intimidation] Snarl him into the gutter',
+        hint: 'Cow the boy and he drops everything and runs — but a child of Athkatla has been threatened by worse.',
+        skillCheck: { skill: 'intimidation', dc: 13 },
         outcome: {
-          resolution: 'He sprawls in the gutter. The knife rings on the cobbles. A handful of silver spills from a torn lining you hadn\'t noticed; you pocket it without looking back.',
-          effects: [
-            { kind: 'gold_delta', amount: 5 },
-            {
-              kind: 'grant_quirk_reroll',
-              fallbackText: 'Athkatla finds no bane to shake from you — the city marks its lesson and lets you walk.',
-            },
-          ],
+          resolution:
+            'You take one step and put the whole of the corridor into your voice. The knife clatters from his hand; he bolts so fast a torn lining spills silver across the cobbles behind him. You pocket the coins without looking up.',
+          effects: [{ kind: 'gold_delta', amount: 6 }],
         },
         failureOutcome: {
-          resolution: 'He ducks under the cuff with the speed of a thing that has done it before, and the blade catches the back of your hand on the way past. He is into an alley before you can curse, and the knife goes with him.',
-          effects: [{ kind: 'hp_delta', amount: -3 }],
+          resolution:
+            'He has heard worse from larger men in darker alleys. He spits, slashes once at the air between you, and is gone down a crack too narrow to follow — but the blade caught your forearm on its way past.',
+          effects: [{ kind: 'hp_delta', amount: -2 }],
         },
       },
     ],
@@ -616,13 +679,33 @@ const POOL: EventTemplate[] = [
         },
       },
       {
-        id: 'sell-story',
+        id: 'sell-truth',
         label: 'Tell him the why',
-        hint: 'No coin for this one — but a weight off your chest.',
+        hint: 'Dredging up the real thing costs you — but the Binder pays a true story in kind, and you walk lighter for it.',
         outcome: {
           resolution:
-            'You give him a piece of yourself that you did not know you still carried. He writes it small. When he is done, the air feels less full of you. He offers no coin for it, and you find you did not want one. You walk lighter.',
-          effects: [{ kind: 'temp_hp', amount: 3 }],
+            'You give him a piece of yourself that you did not know you still carried, and the giving of it opens an old wound to the air — it stings the whole way out. He writes it small, reverent. When he is done you are lighter where it counts, and there is a coin in it after all: "The Binder pays best for the true ones."',
+          effects: [
+            { kind: 'hp_delta', amount: -2 },
+            { kind: 'temp_hp', amount: 6 },
+            { kind: 'gold_delta', amount: 3 },
+          ],
+        },
+      },
+      {
+        id: 'sell-lie',
+        label: '[Deception] Sell him a better story',
+        hint: 'Spin a tale grander than your own. Sell it whole and the coin is good — but the Binder knows a false road when he hears one.',
+        skillCheck: { skill: 'deception', dc: 13 },
+        outcome: {
+          resolution:
+            'You give him a war you never fought and a love you never lost, and you give it well — the cadence, the catch in the voice at the right line. His pen flies. "A road worth the ink, walker." He pays for the telling, never the truth, and the purse he counts out is heavier for the craft of the lie.',
+          effects: [{ kind: 'gold_delta', amount: 12 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You reach for grand and land on hollow. He sets the pen down halfway through. "That is not your road, walker. I have inked ten thousand — I know the false ones by the weight." The folio closes. No coin for a liar caught.',
+          effects: [],
         },
       },
       {
@@ -661,10 +744,10 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'haggle-smith',
-        label: '[Charisma] Talk him round',
-        hint: 'Same blade — the sharper the tongue, the lighter the bill.',
+        label: '[Persuasion] Talk him round',
+        hint: 'Same blade, lighter bill — if the tongue is sharp enough. Lose him and forty stays forty.',
         requiresGold: 25,
-        requiresCha: 1,
+        skillCheck: { skill: 'persuasion', dc: 13 },
         outcome: {
           resolution:
             'You name three smiths you have never met and a war you were never in, and somewhere in the telling his price softens like hot iron. "Aye — for a walker who knows the trade." The longer you keep him laughing, the more he knocks off the bill, and the rapier goes to your hip at a friend\'s rate.',
@@ -673,6 +756,11 @@ const POOL: EventTemplate[] = [
             { kind: 'cha_scaled_gold', perPoint: 3 },
             { kind: 'grant_item', itemId: 'rapier' },
           ],
+        },
+        failureOutcome: {
+          resolution:
+            'He lets you talk yourself out, then sights down the blade and shakes his head. "Fair words, walker. But forty\'s the price and forty stays." He lays the rapier back on the roll and turns to the anvil. You keep your coin and your old steel both.',
+          effects: [],
         },
       },
       {
@@ -714,9 +802,9 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'talk-down',
-        label: '[Charisma] Talk him down',
-        hint: 'A calm voice between the bars — the steadier you are, the more he trusts you to carry.',
-        requiresCha: 2,
+        label: '[Persuasion] Talk him down',
+        hint: 'A steady voice between the bars — calm him and he hands it over gladly. Spook him and he clutches it tighter.',
+        skillCheck: { skill: 'persuasion', dc: 14 },
         outcome: {
           resolution:
             'You crouch to his level and speak with the steadiness of a stranger who is not afraid of him. He blinks. Once. Twice. Then he hands the purse through the bars with both hands, like a child returning a borrowed thing — and digs the loose coin from his smock to press after it, the more for how unafraid you were. "Yours, walker. Yours. Not the Director\'s. Not anymore." The weight in your pocket is clean.',
@@ -724,6 +812,11 @@ const POOL: EventTemplate[] = [
             { kind: 'gold_delta', amount: 40 },
             { kind: 'cha_scaled_gold', perPoint: 6 },
           ],
+        },
+        failureOutcome: {
+          resolution:
+            'Something in your voice catches wrong and his eyes go wide and white. He snatches the purse back through the bars and folds himself around it in the corner. "No. No — the Director\'s. The Director\'s. You\'re one of his." He will not look at you again, and the purse goes with him into the dark of the cell.',
+          effects: [],
         },
       },
       {
@@ -737,32 +830,23 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'pry-the-bars',
-        label: 'Pry the bars open',
-        hint: 'A blade against iron. A back against the wall.',
+        label: '[Athletics] Pry the bars open',
+        hint: 'Iron against your shoulder — force it clean and he is grateful; lose the strain and he comes through the gap at you.',
+        skillCheck: { skill: 'athletics', dc: 14 },
         outcome: {
-          random: [
-            {
-              weight: 35,
-              outcome: {
-                resolution:
-                  "He goes still when the bar gives. \"Oh. Oh thank you, walker.\" He presses something cold into your hand and shows you which corridor the warden's keys hang on. A great weight comes off you both.",
-                effects: [
-                  { kind: 'grant_blessing', random: true },
-                  { kind: 'gold_delta', amount: 15 },
-                ],
-              },
-            },
-            {
-              weight: 65,
-              outcome: {
-                resolution:
-                  "He is on you the moment the bar gives, hands at your throat with the strength of grief and starvation. You break loose. The bars are crooked behind you and the corridor is loud.",
-                effects: [
-                  { kind: 'hp_delta', amount: -7 },
-                  { kind: 'spawn_ambush', monsterDefIds: ['mad-mage-prisoner'] },
-                ],
-              },
-            },
+          resolution:
+            "You set your shoulder and your heel and the old iron gives all at once. He goes still. \"Oh. Oh thank you, walker.\" He presses something cold into your hand and shows you which corridor the warden's keys hang on. A great weight comes off you both.",
+          effects: [
+            { kind: 'grant_blessing', random: true },
+            { kind: 'gold_delta', amount: 15 },
+          ],
+        },
+        failureOutcome: {
+          resolution:
+            "The bar bends, sticks, and your strength runs out before its does. In the half-gap you tore he comes at you — hands at your throat with the strength of grief and starvation. You break loose. The bars are crooked behind you and the corridor is loud.",
+          effects: [
+            { kind: 'hp_delta', amount: -7 },
+            { kind: 'spawn_ambush', monsterDefIds: ['mad-mage-prisoner'] },
           ],
         },
       },
@@ -844,12 +928,18 @@ const POOL: EventTemplate[] = [
         },
       },
       {
-        id: 'take-by-force',
-        label: 'Take the key by force',
-        hint: 'One warden, one blade.',
+        id: 'lean-on-him',
+        label: '[Intimidation] Lean on him for the key',
+        hint: 'Make him surrender the hour for nothing — if you can make him fear you more than the Director.',
+        skillCheck: { skill: 'intimidation', dc: 14 },
         outcome: {
           resolution:
-            'You catch his wrist before the key can vanish. He calls — short and surprised — and a second pair of boots arrives from the corridor behind.',
+            'You close the distance and let him read what is in your face. The key is in your palm before he has finished deciding to be brave. "Three doors down," he says, very quietly, and finds somewhere else to be. The strongbox gives without complaint, and you kept your purse for it.',
+          effects: [{ kind: 'gold_delta', amount: 90 }],
+        },
+        failureOutcome: {
+          resolution:
+            'He has stood in this corridor for the Director a long time, and you are not the worst thing it has shown him. He calls — short and sharp — and a second pair of boots answers from the dark behind you.',
           effects: [{ kind: 'spawn_ambush', monsterDefIds: ['wardens-apprentice', 'slayer-hound'] }],
         },
       },
@@ -895,13 +985,18 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'flatter-the-spider',
-        label: '[Charisma] Flatter the Spider',
-        hint: 'A courtier\'s tongue for Lolth\'s red lace.',
-        requiresCha: 3,
+        label: '[Deception] Flatter the Spider',
+        hint: 'A courtier\'s lie for Lolth\'s red lace. Sell the false praise in a court built on it — or be named for what you are.',
+        skillCheck: { skill: 'deception', dc: 15 },
         outcome: {
           resolution:
             'You bow as a noble of Ust Natha would bow, and put the priestess\'s own beauty into Lolth\'s mouth — the kind of compliment that is also a prayer. Her smile does not change, but her hand opens. "The Spider notes a tongue worth keeping." The corridor opens. No blood. No coin. The blessing she leaves is colder than the dark.',
           effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'The flattery is a half-shade too thick, and a priestess of Lolth has heard every shade of it for a hundred years. Her smile does not change. "A clumsy tongue lies to a goddess of liars." She does not move. Behind you, a single set of boots comes up the corridor without hurry.',
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['drow-warrior'] }],
         },
       },
       {

@@ -39,7 +39,6 @@ Per-choice 1d100 sweep, 4000 trials each. Pass criteria: observed within ±2% of
 | rats-in-the-grain | cook | 65.0% | 65.3% | 0.35 | Y |
 | dead-mans-steel | search-pack | 60.0% | 59.1% | -0.92 | Y |
 | beggar-at-the-gate | kick-the-bowl | 70.0% | 69.8% | -0.25 | Y |
-| street-orphan | cuff-him | 70.0% | 70.3% | 0.28 | Y |
 
 ## B. failureOutcome wiring
 
@@ -51,7 +50,6 @@ Forced a failure roll on each success-chance choice, applied to a Fighter L3. Re
 | rats-in-the-grain | cook | Y | hp_delta: -3 HP |
 | dead-mans-steel | search-pack | Y | hp_delta: -4 HP |
 | beggar-at-the-gate | kick-the-bowl | Y | hp_delta: -4 HP |
-| street-orphan | cuff-him | Y | hp_delta: -3 HP |
 
 ## C. Per-class gate availability (Ch1+Ch2 events)
 
@@ -60,21 +58,24 @@ Y = choice is available for this (class, level). For a failing gate the cell sho
 | Event | Choice | sc | gold | hpReq | chaReq | fighter-L1 | fighter-L3 | fighter-L5 | rogue-L1 | rogue-L3 | rogue-L5 | wizard-L1 | wizard-L3 | wizard-L5 | rogue-L1-CHA | rogue-L3-CHA | rogue-L5-CHA |
 |---|---|---:|---:|---:|---:|---|---|---|---|---|---|---|---|---|---|---|---|
 | pale-cleric-shrine | sit | — | 5 | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
-| pale-cleric-shrine | speak-gently | — | — | — | 1 | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | Y | Y | Y | Y | Y | Y |
+| pale-cleric-shrine | speak-gently | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | pale-cleric-shrine | refuse | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | pale-cleric-shrine | steal | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | cracked-mirror | press | — | — | 6 | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | cracked-mirror | leave | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | cracked-mirror | shatter | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | wounded-captain | take-the-blow | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| wounded-captain | tend-him | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | wounded-captain | walk-past | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | wounded-captain | loot-him | 0.65 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | whispering-door | lift-latch | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| whispering-door | listen-first | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | whispering-door | walk-on | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | bones-on-stake | take | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | bones-on-stake | leave | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | bones-on-stake | spit | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | rats-in-the-grain | cook | 0.65 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| rats-in-the-grain | forage | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | rats-in-the-grain | leave | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | dead-mans-steel | take-blade | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | dead-mans-steel | search-pack | 0.6 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
@@ -84,20 +85,21 @@ Y = choice is available for this (class, level). For a failing gate the cell sho
 | beggar-at-the-gate | kick-the-bowl | 0.7 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | cowled-recruiter | pay-the-cowl | — | 25 | — | — | Y | Y | Y | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold |
 | cowled-recruiter | wave-them-off | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
-| cowled-recruiter | bluff-the-cowl | — | — | — | 1 | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | Y | Y | Y | Y | Y | Y |
+| cowled-recruiter | bluff-the-cowl | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | cowled-recruiter | draw-on-them | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | wine-merchant | free-cup | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | wine-merchant | buy-bottle | — | 15 | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
-| wine-merchant | haggle | — | 8 | — | 1 | n:cha | n:cha | n:cha | n:cha | n:cha | n:cha | Y | Y | Y | Y | Y | Y |
+| wine-merchant | haggle | — | 8 | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | wine-merchant | decline | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | street-orphan | pay | — | 3 | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | street-orphan | disarm | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
-| street-orphan | cuff-him | 0.7 | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| street-orphan | intimidate | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | oghma-scribe | sell-name | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
-| oghma-scribe | sell-story | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| oghma-scribe | sell-truth | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| oghma-scribe | sell-lie | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | oghma-scribe | walk-on | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 | pilgrim-road-smith | buy-blade | — | 40 | — | — | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold |
-| pilgrim-road-smith | haggle-smith | — | 25 | — | 1 | n:cha | n:cha | n:cha | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold |
+| pilgrim-road-smith | haggle-smith | — | 25 | — | — | Y | Y | Y | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold | n:gold |
 | pilgrim-road-smith | walk-on-smith | — | — | — | — | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y | Y |
 
 ## D. Per-cell delve runs (50 runs/cell, Ch1+Ch2 events only)
@@ -106,18 +108,18 @@ Stable per-seed delve content across cells: identical events seen, only characte
 
 | Cell | Events seen | sc seen | sc picked | succ | fail | succ% (obs) | CHA seen | CHA accessible | CHA blocked | no-bane re-rolls |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Fighter (STR build, Sir Brick) L1 | 311 | 128 | 128 | 94 | 34 | 73.4% | 78 | 0 | 69 | 52 |
-| Fighter (STR build, Sir Brick) L3 | 311 | 128 | 128 | 81 | 47 | 63.3% | 78 | 0 | 69 | 54 |
-| Fighter (STR build, Sir Brick) L5 | 311 | 128 | 128 | 79 | 49 | 61.7% | 78 | 0 | 70 | 41 |
-| Rogue (DEX build, wood-elf) L1 | 311 | 128 | 128 | 94 | 34 | 73.4% | 78 | 0 | 65 | 52 |
-| Rogue (DEX build, wood-elf) L3 | 311 | 128 | 128 | 81 | 47 | 63.3% | 78 | 0 | 67 | 54 |
-| Rogue (DEX build, wood-elf) L5 | 311 | 128 | 128 | 79 | 49 | 61.7% | 78 | 0 | 66 | 41 |
-| Wizard (INT build, tiefling) L1 | 311 | 128 | 128 | 94 | 34 | 73.4% | 78 | 66 | 0 | 52 |
-| Wizard (INT build, tiefling) L3 | 311 | 128 | 128 | 81 | 47 | 63.3% | 78 | 67 | 0 | 54 |
-| Wizard (INT build, tiefling) L5 | 311 | 128 | 128 | 79 | 49 | 61.7% | 78 | 66 | 0 | 41 |
-| Rogue (CHA cross-check, tiefling-charlatan) L1 | 311 | 128 | 128 | 94 | 34 | 73.4% | 78 | 65 | 0 | 52 |
-| Rogue (CHA cross-check, tiefling-charlatan) L3 | 311 | 128 | 128 | 81 | 47 | 63.3% | 78 | 67 | 0 | 54 |
-| Rogue (CHA cross-check, tiefling-charlatan) L5 | 311 | 128 | 128 | 79 | 49 | 61.7% | 78 | 66 | 0 | 41 |
+| Fighter (STR build, Sir Brick) L1 | 311 | 111 | 111 | 84 | 27 | 75.7% | 0 | 0 | 0 | 42 |
+| Fighter (STR build, Sir Brick) L3 | 311 | 111 | 111 | 69 | 42 | 62.2% | 0 | 0 | 0 | 39 |
+| Fighter (STR build, Sir Brick) L5 | 311 | 111 | 111 | 69 | 42 | 62.2% | 0 | 0 | 0 | 31 |
+| Rogue (DEX build, wood-elf) L1 | 311 | 111 | 111 | 84 | 27 | 75.7% | 0 | 0 | 0 | 42 |
+| Rogue (DEX build, wood-elf) L3 | 311 | 111 | 111 | 69 | 42 | 62.2% | 0 | 0 | 0 | 39 |
+| Rogue (DEX build, wood-elf) L5 | 311 | 111 | 111 | 69 | 42 | 62.2% | 0 | 0 | 0 | 31 |
+| Wizard (INT build, tiefling) L1 | 311 | 111 | 111 | 84 | 27 | 75.7% | 0 | 0 | 0 | 42 |
+| Wizard (INT build, tiefling) L3 | 311 | 111 | 111 | 69 | 42 | 62.2% | 0 | 0 | 0 | 39 |
+| Wizard (INT build, tiefling) L5 | 311 | 111 | 111 | 69 | 42 | 62.2% | 0 | 0 | 0 | 31 |
+| Rogue (CHA cross-check, tiefling-charlatan) L1 | 311 | 111 | 111 | 84 | 27 | 75.7% | 0 | 0 | 0 | 42 |
+| Rogue (CHA cross-check, tiefling-charlatan) L3 | 311 | 111 | 111 | 69 | 42 | 62.2% | 0 | 0 | 0 | 39 |
+| Rogue (CHA cross-check, tiefling-charlatan) L5 | 311 | 111 | 111 | 69 | 42 | 62.2% | 0 | 0 | 0 | 31 |
 
 ## E. grant_quirk_reroll fallback paths
 
@@ -137,4 +139,3 @@ Stable per-seed delve content across cells: identical events seen, only characte
 | rats-in-the-grain | cook | 65% | 0 | 3 | 0 | 0 | 0 | -3 | 0 | 0.0 | 0.9 | underrewarded vs failure cost |
 | dead-mans-steel | search-pack | 60% | 18 | 0 | 0 | 0 | 0 | -4 | 0 | 10.8 | -1.6 |  |
 | beggar-at-the-gate | kick-the-bowl | 70% | 8 | 0 | 0 | 1 | 0 | -4 | 0 | 5.6 | -1.2 |  |
-| street-orphan | cuff-him | 70% | 5 | 0 | 0 | 1 | 0 | -3 | 0 | 3.5 | -0.9 |  |

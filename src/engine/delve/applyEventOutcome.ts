@@ -10,6 +10,7 @@ import { getBlessing } from '../../content/blessings';
 import { blessingsForClass } from '../character/blessings';
 import { listQuirks, getQuirk } from '../../content/quirks';
 import { modifierFor } from '../character/derived';
+import { skillCheck, type SkillCheckResult } from '../character/skillCheck';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { getItem } from '../../content/items';
 
@@ -78,26 +79,46 @@ export function canTakeChoice(character: Character, choice: EventChoice): Choice
   return { ok: true };
 }
 
+export interface ChoiceCheckResult {
+  /** Undefined when the choice was deterministic (no roll happened). */
+  succeeded?: boolean;
+  outcome: EventChoiceOutcome;
+  /** Present when a `skillCheck` choice was rolled — for UI to show the tally. */
+  skillCheck?: SkillCheckResult;
+}
+
 /**
- * Roll a choice's success check, when one is defined. When `successChance` is
- * unset, the choice is deterministic and `outcome` is returned unchanged.
- * When set, a 1d100 ≤ Math.round(chance*100) is success; failure falls
- * through to `failureOutcome` (or a quiet empty outcome if none was supplied).
+ * Resolve a choice's gamble, when it has one. Three modes, in priority order:
+ *
+ *  1. `skillCheck` — a real d20 + ability + proficiency roll vs a DC (needs the
+ *     character). Pass → `outcome`, fail → `failureOutcome`.
+ *  2. `successChance` — a flat 1d100 lottery that ignores the character sheet.
+ *  3. neither — deterministic; `outcome` is returned unchanged.
+ *
+ * Failure falls through to `failureOutcome`, or a quiet empty outcome if none
+ * was supplied.
  */
 export function rollChoiceCheck(
   choice: EventChoice,
   roller: DiceRoller,
-): { succeeded?: boolean; outcome: EventChoiceOutcome } {
+  character?: Character,
+): ChoiceCheckResult {
+  const emptyFallback: EventChoiceOutcome = { resolution: 'It does not go your way.', effects: [] };
+
+  if (choice.skillCheck && character) {
+    const result = skillCheck(character, choice.skillCheck.skill, choice.skillCheck.dc, roller);
+    if (result.passed) {
+      return { succeeded: true, outcome: choice.outcome, skillCheck: result };
+    }
+    return { succeeded: false, outcome: choice.failureOutcome ?? emptyFallback, skillCheck: result };
+  }
+
   if (choice.successChance === undefined) return { outcome: choice.outcome };
   const roll = roller.roll('1d100').total;
   const threshold = Math.round(choice.successChance * 100);
   const succeeded = roll <= threshold;
   if (succeeded) return { succeeded: true, outcome: choice.outcome };
-  const fallback: EventChoiceOutcome = choice.failureOutcome ?? {
-    resolution: 'It does not go your way.',
-    effects: [],
-  };
-  return { succeeded: false, outcome: fallback };
+  return { succeeded: false, outcome: choice.failureOutcome ?? emptyFallback };
 }
 
 /**
