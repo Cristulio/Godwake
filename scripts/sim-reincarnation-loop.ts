@@ -42,9 +42,8 @@ import {
   type UnlockedUpgrades,
 } from '../src/engine/character/upgrades';
 import { findUpgrade } from '../src/content/upgrades';
-import { characterAtLevel, takeTurn } from '../src/test/sim/encounterStress';
+import { characterAtLevel, takeTurn, pickBlessingAtShrine } from '../src/test/sim/encounterStress';
 import { rollQuirks, renownSoulMarkMultiplier } from '../src/engine/character/quirks';
-import { rollBlessingOptions } from '../src/engine/character/blessings';
 import type { Character } from '../src/types/character';
 import type { CombatState } from '../src/types/combat';
 import type { RoomSpec } from '../src/types/delve';
@@ -55,6 +54,9 @@ type Mode = '1-life' | '3-life' | '5-life' | '3-life-no-meta';
 const RUNS_PER_CELL = Number(process.env.RUNS_PER_CELL ?? 200);
 const MAX_TURNS_PER_FIGHT = 200;
 const SEED_BASE = 0xc0ffee >>> 0;
+// Shrine blessings on by default; `BLESSINGS=off` runs the bare-soul baseline
+// for the blessing-fidelity before/after comparison.
+const BLESSINGS_ON = (process.env.BLESSINGS ?? 'on').toLowerCase() !== 'off';
 
 // Mirrors delveStore.ts constants.
 const RENOWN_PER_DELVE_CLEAR = 50;
@@ -334,12 +336,11 @@ function liveOneLife(
       continue;
     }
     if (room.kind === 'shrine') {
-      // Loaded variant: greedy pick a temp-HP blessing for survival lift.
-      // Mirrors the rogueSim heuristic without the full scorer.
-      const options = rollBlessingOptions(roller, 3 + (character.shrineOptionBonus ?? 0));
-      const pick = options[0];
-      if (pick && !character.blessings.includes(pick)) {
-        character = { ...character, blessings: [...character.blessings, pick] };
+      // Pick the best offered blessing via the SHARED policy (survival /
+      // offense / synergy-aware), the same scorer the per-character + fidelity
+      // sims and the in-game Auto path use. `BLESSINGS=off` skips the shrine.
+      if (BLESSINGS_ON) {
+        character = pickBlessingAtShrine(roller, character);
       }
       continue;
     }

@@ -16,7 +16,8 @@ import { createDiceRoller, type DiceRoller } from '../../engine/dice';
 import { createCombat } from '../../engine/combat/createCombat';
 import { monsterAttack } from '../../engine/combat/attack';
 import { endTurn } from '../../engine/combat/turn';
-import { runAutoTurn } from '../../engine/combat/actionPolicy';
+import { runAutoTurn, chooseBlessing } from '../../engine/combat/actionPolicy';
+import { rollBlessingOptions } from '../../engine/character/blessings';
 import { getMonster } from '../../content/monsters';
 import type { ClassId, RaceId } from '../../schemas/ids';
 import type { EncounterEntry } from '../../engine/delve/chapter1Pools';
@@ -148,15 +149,42 @@ const ARCHETYPES: Record<SimClassId, ArchetypeBuilder> = {
   wizard: WIZARD_ARCHETYPE,
 };
 
-/** Level a fresh archetype up to `targetLevel` by feeding stub XP. */
-export function characterAtLevel(classId: ClassId, targetLevel: number): Character {
+/**
+ * Level a fresh archetype up to `targetLevel` by feeding stub XP. Optionally
+ * pre-attach blessing ids — lets the single-encounter harness model a
+ * shrine-buffed character (createCombat reads the blessing modifiers for
+ * start-of-combat temp HP / regen, and derived AC / attack math folds the
+ * rest in).
+ */
+export function characterAtLevel(
+  classId: ClassId,
+  targetLevel: number,
+  blessings: string[] = [],
+): Character {
   const builder = ARCHETYPES[classId as SimClassId];
   if (!builder) throw new Error(`No sim archetype for class: ${classId}`);
   let c = builder();
   while (c.level < targetLevel) {
     c = simulateLevelUp({ ...c, xp: 9999999 });
   }
+  if (blessings.length > 0) c = { ...c, blessings: [...c.blessings, ...blessings] };
   return c;
+}
+
+/**
+ * Roll a class-aware shrine offer and add the SHARED policy's pick to the
+ * character — mirrors the in-game ShrineRoom flow (`rollBlessingOptions` +
+ * `addBlessing`) so sim bots accrue blessings exactly as a competent player
+ * would. Honours the soul's Grove `shrineOptionBonus` and dedups owned
+ * non-stacking cards. Returns the character unchanged on an empty offer or an
+ * already-held pick.
+ */
+export function pickBlessingAtShrine(roller: DiceRoller, character: Character): Character {
+  const count = 3 + (character.shrineOptionBonus ?? 0);
+  const offer = rollBlessingOptions(roller, count, character.classId, character.blessings);
+  const pick = chooseBlessing(offer, character);
+  if (!pick || character.blessings.includes(pick)) return character;
+  return { ...character, blessings: [...character.blessings, pick] };
 }
 
 export function liveMonsters(state: CombatState): MonsterCombatant[] {
@@ -186,13 +214,14 @@ export function simulateEncounter(
   level: number,
   monsters: RoomMonster[],
   seed: number,
+  blessings: string[] = [],
 ): SimRunOutcome {
   const roller = createDiceRoller(seed);
   // Active roller is consumed by spell-side code via getActiveRoller()
   // (turn.ts paralyzed-tick path). Wire it to the same seed.
   // Safe to skip; the engine only reads it for paralyze-save ticks.
 
-  const character = characterAtLevel(classId, level);
+  const character = characterAtLevel(classId, level, blessings);
 
   const monsterDefs = monsters.flatMap((rm) => {
     const def = getMonster(rm.defId);
@@ -245,12 +274,13 @@ export function simulateCell(
   level: number,
   runs: number,
   seedBase: number,
+  blessings: string[] = [],
 ): SimCellResult {
   let wins = 0;
   let totalRounds = 0;
   let totalHpPctOnWin = 0;
   for (let i = 0; i < runs; i++) {
-    const out = simulateEncounter(classId, level, encounter.monsters, seedBase + i);
+    const out = simulateEncounter(classId, level, encounter.monsters, seedBase + i, blessings);
     totalRounds += out.rounds;
     if (out.win) {
       wins += 1;

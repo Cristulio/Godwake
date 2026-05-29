@@ -3,9 +3,13 @@ import { parseDiceExpression } from '../dice';
 import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import { abilityModifier } from '../../types/abilities';
-import { effectiveAbilityScores } from '../character/derived';
+import { effectiveAbilityScores, characterHasMechanic } from '../character/derived';
+import { baneQuirkCount } from '../character/quirks';
+import { isNonStackingBlessing, blessingSignature } from '../character/blessings';
 import { getMonster } from '../../content/monsters';
 import { getItem } from '../../content/items';
+import { getBlessing } from '../../content/blessings';
+import type { Blessing, BlessingModifiers } from '../../schemas/blessing';
 import { playerAttack } from './attack';
 import { castSpell, slotsAt } from './spells';
 import { useConsumable } from './useItem';
@@ -411,4 +415,140 @@ export function runAutoTurn(
     ch = r.character;
   }
   return { state: s, character: ch };
+}
+
+// ---- Shrine blessing policy ------------------------------------------------
+
+/**
+ * Per-combat temp HP a blessing's temp-HP family would grant, mirroring the
+ * `Math.max` fold in {@link createCombat}. Delve-level scaling reads
+ * `character.level` — the exact value the engine multiplies by — so the score
+ * tracks the real grant. Boss-only temp HP is excluded here (most rooms aren't
+ * bosses); it's credited separately, discounted.
+ */
+function blessingTempHpGrant(m: BlessingModifiers, character: Character, banes: number): number {
+  return Math.max(
+    m.extraTempHpPerRoom ?? 0,
+    (m.tempHpPerDelveLevel ?? 0) * character.level,
+    (m.tempHpPerBaneQuirk ?? 0) * banes,
+  );
+}
+
+/**
+ * Score a single offered blessing for THIS build, in a shared "value" unit so
+ * survival, offense, and synergy levers compare on one scale. Higher = better.
+ *
+ * The weights are calibrated to rank picks the way a careful player would, not
+ * to predict exact win-rate (the sims measure the real lift). Three rules shape
+ * them:
+ *
+ *  - **Defensive levers are renewable** (they fire every combat), so a point of
+ *    AC / temp HP / regen is worth real value; a free death-save (stabilise
+ *    charge) is worth the most of all.
+ *  - **Offensive levers scale with how often they fire** — flat damage / crit
+ *    range multiply by attacks-per-round (Fighter Extra Attack = ×2), while
+ *    first-attack-only tricks are credited once. They're worth ~nothing to a
+ *    Wizard, whose spells save-for-half or auto-hit (PR #105), so the whole
+ *    offense block is gated to weapon classes.
+ *  - **Synergy levers** (`*PerBaneQuirk`, `tempHpPerDelveLevel`) are scored at
+ *    the soul's ACTUAL bane count / level, so a bare soul doesn't overvalue a
+ *    card that needs curses it doesn't carry.
+ *
+ * A purely non-stacking lever the soul already owns folds with `Math.max`/OR in
+ * {@link aggregateBlessingModifiers}, so a duplicate is a dead pick — scored
+ * below "take nothing". The temp-HP family also doesn't stack, so only the
+ * MARGINAL temp HP over the best source already held is credited.
+ */
+export function scoreBlessing(blessingId: string, character: Character): number {
+  let b: Blessing;
+  try {
+    b = getBlessing(blessingId);
+  } catch {
+    return -1;
+  }
+
+  // A non-stacking lever already owned adds nothing — dead pick.
+  if (isNonStackingBlessing(b)) {
+    const sig = blessingSignature(b);
+    const dup = character.blessings.some((id) => {
+      try {
+        return blessingSignature(getBlessing(id)) === sig;
+      } catch {
+        return false;
+      }
+    });
+    if (dup) return -1;
+  }
+
+  const m = b.modifiers ?? {};
+  const isFighter = character.classId === 'fighter';
+  const isRogue = character.classId === 'rogue';
+  const weaponClass = isFighter || isRogue;
+  const banes = baneQuirkCount(character);
+  const attacks = characterHasMechanic(character, 'extra-attack') ? 2 : 1;
+
+  let s = 0;
+
+  // --- Survival (all classes) ---
+  if (m.acBonus) s += m.acBonus * 7;
+  if (m.acBonusWhileFull) s += m.acBonusWhileFull * 4; // you open every combat full
+  if (m.acBonusWhileBloodied) s += m.acBonusWhileBloodied * 4; // clutch exactly when low
+  if (m.acBonusPerBaneQuirk) s += m.acBonusPerBaneQuirk * banes * 6;
+
+  // Temp-HP family is max-of (doesn't stack) — credit the marginal gain only.
+  const candTempHp = blessingTempHpGrant(m, character, banes);
+  if (candTempHp > 0) {
+    let ownedTempHp = 0;
+    for (const id of character.blessings) {
+      try {
+        ownedTempHp = Math.max(
+          ownedTempHp,
+          blessingTempHpGrant(getBlessing(id).modifiers ?? {}, character, banes),
+        );
+      } catch {
+        /* unknown id — ignore */
+      }
+    }
+    s += Math.max(0, candTempHp - ownedTempHp) * 2.5;
+  }
+  if (m.bossTempHp) s += m.bossTempHp * 1; // boss-only gird, discounted
+
+  if (m.regenPerCombat) s += m.regenPerCombat * 3;
+  if (m.regenPctPerCombat) s += (m.regenPctPerCombat / 100) * character.hp.max * 3;
+  if (m.extraStabiliseCharges) s += m.extraStabiliseCharges * 12; // a free "don't die"
+
+  // --- Offense (weapon classes only; inert for the wizard's save/auto-hit kit) ---
+  if (weaponClass) {
+    if (m.damageBonus) s += m.damageBonus * attacks * 4;
+    if (m.holyDamageBonus) s += m.holyDamageBonus * attacks * 3.5;
+    if (m.firstAttackDamage) s += m.firstAttackDamage * 2;
+    if (m.firstAttackBonus) s += m.firstAttackBonus * 2;
+    if (m.firstAttackAdvantage) s += isRogue ? 8 : 5; // rogue: reliably enables Sneak Attack
+    if (m.critRangeBonus) s += m.critRangeBonus * 6;
+    if (m.critRangeBonusWhileFull) s += m.critRangeBonusWhileFull * 4;
+    if (m.critRangeBonusWhileBloodied) s += m.critRangeBonusWhileBloodied * 3;
+    if (m.rerollMissesPerEncounter) s += m.rerollMissesPerEncounter * 3;
+  }
+
+  return s;
+}
+
+/**
+ * Pick the best blessing from a shrine offer for this build. PURE — reads
+ * `character`, mutates nothing. Returns the chosen id, or `undefined` for an
+ * empty offer. Used by the sim bots (so balance data reflects a player who
+ * actually takes shrine buffs) and available to the in-game Auto path.
+ */
+export function chooseBlessing(offer: string[], character: Character): string | undefined {
+  if (offer.length === 0) return undefined;
+  let best = offer[0];
+  let bestScore = scoreBlessing(best, character);
+  for (const id of offer.slice(1)) {
+    const sc = scoreBlessing(id, character);
+    if (sc > bestScore) {
+      bestScore = sc;
+      best = id;
+    }
+  }
+  return best;
 }
