@@ -9,7 +9,7 @@ import type React from 'react';
  * it briefly between rooms when `delveState.chapter` advances.
  */
 
-export type ChapterId = 1 | 2 | 3 | 4;
+export type ChapterId = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface ChapterIntroSceneProps {
   chapter: ChapterId;
@@ -40,6 +40,16 @@ const CHAPTER_META: Record<
     title: 'Chapter IV — Ust Natha',
     subtitle: 'A drow city in the deep faerzress',
     render: UstNathaScene,
+  },
+  5: {
+    title: 'Chapter V — The Godwake',
+    subtitle: 'Where the dying god keeps its court',
+    render: GodwakeScene,
+  },
+  6: {
+    title: 'Chapter VI — Beyond the Godwake',
+    subtitle: 'The Wheel. The Unmade. The end.',
+    render: BeyondGodwakeScene,
   },
 };
 
@@ -832,6 +842,335 @@ function UstNathaScene() {
         <radialGradient id="c4-vignette" cx="0.5" cy="0.5" r="0.7">
           <stop offset="50%" stopColor="#000" stopOpacity="0" />
           <stop offset="100%" stopColor="#000" stopOpacity="0.65" />
+        </radialGradient>
+      </defs>
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Chapter 5 — The Godwake
+   Aurelach's realm: shattered divine architecture suspended in a
+   corrupted golden void. Broken marble arches hang mid-air. The sky
+   is fractured light — beautiful and wrong. The floor is cracked
+   across a chasm you can see the nothing through.
+   ───────────────────────────────────────────────────────────────────── */
+function GodwakeScene() {
+  return (
+    <>
+      <defs>
+        <linearGradient id="c5-void" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#050308" />
+          <stop offset="45%" stopColor="#18100a" />
+          <stop offset="100%" stopColor="#2c1a06" />
+        </linearGradient>
+        <radialGradient id="c5-godlight" cx="0.5" cy="0.38" r="0.55">
+          <stop offset="0%" stopColor="#ffe090" stopOpacity="0.9" />
+          <stop offset="35%" stopColor="#c88020" stopOpacity="0.5" />
+          <stop offset="70%" stopColor="#7a4a08" stopOpacity="0.2" />
+          <stop offset="100%" stopColor="#180a02" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="c5-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#2a1c10" />
+          <stop offset="100%" stopColor="#080504" />
+        </linearGradient>
+        <linearGradient id="c5-arch" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#4a3018" />
+          <stop offset="100%" stopColor="#1a0e06" />
+        </linearGradient>
+        <radialGradient id="c5-chasm" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#050308" />
+          <stop offset="100%" stopColor="#020102" />
+        </radialGradient>
+      </defs>
+
+      {/* Background void — dark with a warmth building at the center */}
+      <rect x="0" y="0" width="824" height="280" fill="url(#c5-void)" />
+
+      {/* The divine light source — a corona of corrupted gold at the center */}
+      <rect x="200" y="0" width="424" height="280" fill="url(#c5-godlight)" />
+
+      {/* Fractured light shafts — diagonal beams that crack like glass */}
+      <g opacity="0.45">
+        <polygon points="412,80 380,0 444,0" fill="#ffe090" opacity="0.25" />
+        <polygon points="412,80 320,0 380,0" fill="#e0c060" opacity="0.15" />
+        <polygon points="412,80 444,0 520,0" fill="#e0c060" opacity="0.12" />
+        <polygon points="412,80 250,280 320,280" fill="#c88020" opacity="0.10" />
+        <polygon points="412,80 500,280 580,280" fill="#c88020" opacity="0.10" />
+      </g>
+      {/* Fracture lines across the light beams — the shattering */}
+      <g stroke="#ffec90" strokeWidth="1" opacity="0.35" fill="none">
+        <path d="M 380 0 L 400 40 L 388 44 L 412 80" />
+        <path d="M 444 0 L 430 36 L 444 40 L 412 80" />
+        <path d="M 320 0 L 360 50 L 340 58 L 380 80" />
+        <path d="M 500 0 L 468 46 L 484 52 L 440 80" />
+      </g>
+
+      {/* Distant shattered architecture — broken columns floating mid-air */}
+      <g fill="url(#c5-arch)">
+        {/* Left broken column, tilted */}
+        <rect
+          x="80" y="60" width="28" height="110"
+          transform="rotate(-8 94 115)"
+          stroke="#0a0604" strokeWidth="1"
+        />
+        <rect x="72" y="58" width="44" height="8" transform="rotate(-8 94 62)" fill="#3a2214" />
+        {/* Left column cap, detached and floating above */}
+        <rect
+          x="60" y="22" width="44" height="10"
+          transform="rotate(-4 82 27)"
+          fill="#3a2214" stroke="#0a0604" strokeWidth="1"
+        />
+        <rect
+          x="64" y="14" width="36" height="10"
+          transform="rotate(-4 82 19)"
+          fill="#2a1a0c"
+        />
+        {/* Right broken column, tilted opposite */}
+        <rect
+          x="716" y="50" width="28" height="120"
+          transform="rotate(10 730 110)"
+          stroke="#0a0604" strokeWidth="1"
+        />
+        <rect x="708" y="48" width="44" height="8" transform="rotate(10 730 52)" fill="#3a2214" />
+        {/* Floating arch fragment — center-right */}
+        <path
+          d="M 560 140 L 560 80 Q 620 30 680 80 L 680 140"
+          fill="none"
+          stroke="#4a3018"
+          strokeWidth="16"
+        />
+        <path
+          d="M 560 140 L 560 80 Q 620 30 680 80 L 680 140"
+          fill="none"
+          stroke="#2a1808"
+          strokeWidth="10"
+        />
+      </g>
+
+      {/* Mid-distance — the floor of Aurelach's hall, cracked marble */}
+      <rect x="0" y="190" width="824" height="90" fill="url(#c5-floor)" />
+
+      {/* Marble tile grid — grand scale, cracked */}
+      <g stroke="#1a1008" strokeWidth="1" opacity="0.6">
+        <line x1="0" y1="210" x2="824" y2="210" />
+        <line x1="0" y1="232" x2="824" y2="232" />
+        <line x1="0" y1="254" x2="824" y2="254" />
+        {Array.from({ length: 8 }).map((_, i) => (
+          <line key={`mc${i}`} x1={i * 118} y1="190" x2={i * 118 + 20} y2="280" />
+        ))}
+      </g>
+
+      {/* The chasm — a ragged split across the floor that shows nothing below */}
+      <path
+        d="M 160 218 L 180 196 L 220 202 L 260 190 L 310 200 L 340 196 L 370 204 L 400 196 L 430 202 L 460 196 L 490 206 L 520 198 L 550 210 L 560 230 L 530 238 L 500 226 L 470 234 L 440 226 L 410 234 L 380 226 L 350 232 L 320 226 L 290 234 L 260 228 L 230 236 L 200 228 L 170 236 Z"
+        fill="url(#c5-chasm)"
+        stroke="#0a0604"
+        strokeWidth="1"
+      />
+      {/* Chasm edge highlights — lit from above by the godlight */}
+      <path
+        d="M 160 218 L 180 196 L 220 202 L 260 190 L 310 200 L 340 196 L 370 204 L 400 196 L 430 202 L 460 196 L 490 206 L 520 198 L 550 210"
+        fill="none"
+        stroke="#c89040"
+        strokeWidth="0.8"
+        opacity="0.5"
+      />
+
+      {/* Aurelach's collapsed throne — the god is dying. A vast shape slumped
+          in the center background, half-dissolved into the void. */}
+      <g opacity="0.75">
+        {/* Throne base, cracked */}
+        <rect x="352" y="142" width="120" height="54" fill="#2a1808" stroke="#0a0604" strokeWidth="1" />
+        <rect x="346" y="140" width="132" height="6" fill="#1a1006" />
+        {/* Throne back — tilted, breaking */}
+        <rect
+          x="362" y="60" width="100" height="88"
+          fill="#22140a" stroke="#0a0604" strokeWidth="1"
+        />
+        <rect
+          x="354" y="58" width="116" height="6"
+          fill="#1a1006"
+        />
+        {/* The seated form — barely a silhouette, dissolving */}
+        <path
+          d="M 382 196 L 378 160 L 372 140 L 378 100 L 390 80 L 412 72 L 434 80 L 446 100 L 452 140 L 446 160 L 442 196 Z"
+          fill="#140c04"
+          opacity="0.85"
+        />
+        {/* Crown/halo — shattered, pieces floating */}
+        <circle cx="412" cy="68" r="16" fill="none" stroke="#c89040" strokeWidth="2" opacity="0.55" />
+        <path d="M 400 54 L 398 46 L 404 52" stroke="#e0b840" strokeWidth="1.5" fill="none" opacity="0.65" />
+        <path d="M 412 52 L 412 44" stroke="#e0b840" strokeWidth="1.5" fill="none" opacity="0.65" />
+        <path d="M 424 54 L 426 46 L 420 52" stroke="#e0b840" strokeWidth="1.5" fill="none" opacity="0.65" />
+        {/* Floating crown fragment */}
+        <path d="M 370 38 L 368 30 L 374 36" stroke="#c89040" strokeWidth="1.2" fill="none" opacity="0.45" />
+        <path d="M 454 42 L 456 34 L 450 40" stroke="#c89040" strokeWidth="1.2" fill="none" opacity="0.45" />
+      </g>
+
+      {/* Floating marble fragments — broken architecture suspended mid-fall */}
+      <g fill="#2a1c10" stroke="#0a0604" strokeWidth="0.7" opacity="0.8">
+        <rect x="100" y="118" width="24" height="10" transform="rotate(-12 112 123)" />
+        <rect x="680" y="130" width="20" height="8" transform="rotate(15 690 134)" />
+        <rect x="300" y="30" width="16" height="7" transform="rotate(-6 308 33)" />
+        <rect x="540" y="24" width="18" height="8" transform="rotate(9 549 28)" />
+        <rect x="170" y="46" width="12" height="5" transform="rotate(-20 176 48)" />
+        <rect x="640" y="44" width="14" height="6" transform="rotate(14 647 47)" />
+      </g>
+
+      {/* Foreground rubble on the floor */}
+      <g fill="#1a1008" opacity="0.9">
+        <rect x="0" y="252" width="80" height="28" />
+        <rect x="720" y="258" width="104" height="22" />
+        <rect x="60" y="260" width="40" height="14" />
+        <rect x="700" y="264" width="30" height="12" />
+      </g>
+
+      {/* Vignette */}
+      <rect x="0" y="0" width="824" height="280" fill="url(#c5-vignette)" />
+      <defs>
+        <radialGradient id="c5-vignette" cx="0.5" cy="0.45" r="0.65">
+          <stop offset="45%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.78" />
+        </radialGradient>
+      </defs>
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Chapter 6 — Beyond the Godwake
+   Terminal void. The Wheel of cycles turns at the edge of everything —
+   vast, mechanical, barely visible in the dark. Threads of what were
+   once lives are being drawn back into it. The Unmade is not a figure.
+   It is a presence: the place where the unraveling ends.
+   ───────────────────────────────────────────────────────────────────── */
+function BeyondGodwakeScene() {
+  return (
+    <>
+      <defs>
+        <radialGradient id="c6-void" cx="0.5" cy="0.5" r="0.7">
+          <stop offset="0%" stopColor="#0a0610" />
+          <stop offset="100%" stopColor="#020104" />
+        </radialGradient>
+        <radialGradient id="c6-unmade" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#4a0a2a" stopOpacity="0.85" />
+          <stop offset="40%" stopColor="#1a0410" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#060208" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="c6-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0e0a14" />
+          <stop offset="100%" stopColor="#030206" />
+        </linearGradient>
+      </defs>
+
+      {/* Near-absolute void */}
+      <rect x="0" y="0" width="824" height="280" fill="url(#c6-void)" />
+
+      {/* The Wheel — vast, mechanical, the dominant shape in the void.
+          Only the lower arc and spokes are visible; the top goes off-screen. */}
+      <circle
+        cx="412"
+        cy="-480"
+        r="680"
+        fill="none"
+        stroke="#160c1e"
+        strokeWidth="28"
+        opacity="0.9"
+      />
+      {/* Wheel inner rim */}
+      <circle
+        cx="412"
+        cy="-480"
+        r="640"
+        fill="none"
+        stroke="#0e0814"
+        strokeWidth="10"
+        opacity="0.65"
+      />
+      {/* Wheel spokes — twelve of them, radiating from the off-screen hub */}
+      <g stroke="#130a1a" strokeWidth="4" opacity="0.55">
+        {Array.from({ length: 12 }).map((_, i) => {
+          const angle = ((i * 30 - 90) * Math.PI) / 180;
+          const hubX = 412;
+          const hubY = -480;
+          const rimX = hubX + 680 * Math.cos(angle);
+          const rimY = hubY + 680 * Math.sin(angle);
+          return <line key={`sp${i}`} x1={hubX} y1={hubY} x2={rimX} y2={rimY} />;
+        })}
+      </g>
+      {/* Wheel axle collar — just visible at the top of the frame */}
+      <circle
+        cx="412"
+        cy="-480"
+        r="48"
+        fill="#0a0610"
+        stroke="#1e1028"
+        strokeWidth="8"
+        opacity="0.8"
+      />
+
+      {/* Loom threads — being drawn upward and back into the Wheel's hub.
+          Fine, blood-dark lines rising from the floor toward the unseen center. */}
+      <g stroke="#5a1020" strokeWidth="0.8" opacity="0.6" fill="none">
+        <path d="M 80 280 Q 120 220 140 160 Q 160 100 200 60 Q 260 -40 412 -480" />
+        <path d="M 200 280 Q 220 200 240 140 Q 270 80 320 20 Q 370 -60 412 -480" />
+        <path d="M 380 280 Q 390 200 400 130 Q 408 80 412 -480" />
+        <path d="M 444 280 Q 434 200 424 130 Q 416 80 412 -480" />
+        <path d="M 620 280 Q 590 200 560 140 Q 520 80 470 20 Q 440 -40 412 -480" />
+        <path d="M 740 280 Q 680 200 640 140 Q 580 80 500 40 Q 450 0 412 -480" />
+      </g>
+      {/* Frayed thread ends — things that were lives, mid-unraveling */}
+      <g stroke="#7a1830" strokeWidth="0.5" opacity="0.45" fill="none">
+        <path d="M 80 280 Q 70 260 60 270" />
+        <path d="M 80 280 Q 90 260 84 250" />
+        <path d="M 200 280 Q 188 258 180 268" />
+        <path d="M 200 280 Q 210 260 206 248" />
+        <path d="M 620 280 Q 608 260 600 270" />
+        <path d="M 740 280 Q 728 260 720 268" />
+      </g>
+
+      {/* The Unmade — a presence at the Wheel's far center. Not a figure.
+          A concentration of the void that has stopped unraveling and become
+          something else: the place where everything ends. */}
+      <rect x="212" y="0" width="400" height="280" fill="url(#c6-unmade)" opacity="0.6" />
+      {/* The fracture point — one deep crack from which the unmaking radiates */}
+      <g stroke="#8a2040" strokeWidth="1.2" opacity="0.7" fill="none">
+        <path d="M 412 200 L 408 170 L 400 150 L 412 120 L 424 150 L 416 170 Z" />
+        <path d="M 412 200 L 390 186 L 374 172" />
+        <path d="M 412 200 L 434 186 L 450 172" />
+        <path d="M 412 200 L 404 220 L 394 240" />
+        <path d="M 412 200 L 420 220 L 430 240" />
+      </g>
+      {/* The fracture glow — barely a color, just a lessening of the dark */}
+      <circle cx="412" cy="164" r="24" fill="#2a0818" opacity="0.55" />
+      <circle cx="412" cy="164" r="10" fill="#4a1030" opacity="0.65" />
+      <circle cx="412" cy="164" r="4" fill="#8a2040" opacity="0.8" />
+
+      {/* Floor — the rim of the Wheel, worn smooth */}
+      <rect x="0" y="240" width="824" height="40" fill="url(#c6-floor)" />
+      {/* Worn floor cracks — circular, following the wheel's curve */}
+      <path
+        d="M 0 252 Q 412 240 824 252"
+        fill="none"
+        stroke="#150e1c"
+        strokeWidth="1.5"
+        opacity="0.7"
+      />
+      <path
+        d="M 0 264 Q 412 254 824 264"
+        fill="none"
+        stroke="#0e0812"
+        strokeWidth="1"
+        opacity="0.45"
+      />
+
+      {/* Absolute vignette — this scene is the darkest of all six */}
+      <rect x="0" y="0" width="824" height="280" fill="url(#c6-vignette)" />
+      <defs>
+        <radialGradient id="c6-vignette" cx="0.5" cy="0.5" r="0.52">
+          <stop offset="30%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.88" />
         </radialGradient>
       </defs>
     </>

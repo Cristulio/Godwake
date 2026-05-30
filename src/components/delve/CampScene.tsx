@@ -1,20 +1,21 @@
-import type { CampBoonTier } from '../../content/campBoons';
-
 /**
- * Chapter-keyed camp illustration. The Godwake delve threads three camp seams
- * and each sits in a different world: the Trade Way roadside south of the Iron
- * Cells (Ch1→2), the smuggler's jetty on the Athkatla docks (Ch2→3), and a
- * chemical-fire in the Upperdark below Spellhold (Ch3→4). One static fire no
- * longer reads for all three, so we author a variant per camp tier — same
- * inline-SVG, warm amber/ember 8-bit palette as the event motifs.
+ * Chapter-keyed camp illustration. Each of the five camp seams in the
+ * six-chapter run sits in a different world, so we author one scene per
+ * chapter rather than reusing a single fire. The `chapter` prop is the
+ * RoomSpec.chapter value (1–5) set by campNode in createDelve.
  *
- * Tier maps straight to chapter: camp 1 = roadside, camp 2 = docks, camp 3 =
- * underdark. Anything else (defensive — side delves have no camps) falls back
- * to the roadside fire.
+ * Chapter thematic map:
+ *   1 → roadside fire on the Trade Way (Iron Cells → Athkatla)
+ *   2 → harbour lamp on the Athkatla docks (Athkatla → Asylum)
+ *   3 → smokeless chemical-fire in the Upperdark (Asylum → Underdark)
+ *   4 → cold fire at the edge of the upwelling light (Underdark → Godwake)
+ *   5 → guttering coals before the Wheel (Godwake → Beyond)
  */
-export function CampScene({ tier }: { tier: CampBoonTier | null }) {
-  if (tier === 2) return <HarbourLampScene />;
-  if (tier === 3) return <SmugglerFireScene />;
+export function CampScene({ chapter }: { chapter: number | undefined }) {
+  if (chapter === 2) return <HarbourLampScene />;
+  if (chapter === 3) return <SmugglerFireScene />;
+  if (chapter === 4) return <EdgeOfLightScene />;
+  if (chapter === 5) return <StillnessBeforeWheelScene />;
   return <RoadsideFireScene />;
 }
 
@@ -262,6 +263,207 @@ function SmugglerFireScene() {
       <ellipse cx="244" cy="112" rx="7" ry="3" fill="#120c08" />
       <rect x="240" y="92" width="8" height="14" fill="#120c08" />
       <circle cx="244" cy="88" r="3.5" fill="#120c08" />
+    </svg>
+  );
+}
+
+/**
+ * Camp 4 — a cold fire at the edge of the upwelling light. The deep gnome exile
+ * who fled the Underdark and could go no further. A pale golden glow bleeds up
+ * from a rift in the floor ahead — dawn leaking through the floor of the world.
+ * The fire throws no shadow toward the light.
+ */
+function EdgeOfLightScene() {
+  return (
+    <svg
+      viewBox="0 0 320 140"
+      className={SCENE_CLASS}
+      role="img"
+      aria-label="A cold fire on a rocky shelf at the edge of a rift, pale golden light rising from the crack in the floor ahead."
+    >
+      <defs>
+        <radialGradient id="edge-void" cx="0.5" cy="0.45" r="0.7">
+          <stop offset="0%" stopColor="#1a1228" />
+          <stop offset="100%" stopColor="#06040e" />
+        </radialGradient>
+        <radialGradient id="edge-upwell" cx="0.5" cy="1" r="0.7">
+          <stop offset="0%" stopColor="#f0e8c8" stopOpacity="0.95" />
+          <stop offset="35%" stopColor="#d0bc80" stopOpacity="0.6" />
+          <stop offset="70%" stopColor="#a09050" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#805a20" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="edge-shelf" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#201830" />
+          <stop offset="100%" stopColor="#080610" />
+        </linearGradient>
+        <radialGradient id="edge-cold-fire" cx="0.5" cy="0.6" r="0.6">
+          <stop offset="0%" stopColor="#c89840" stopOpacity="0.85" />
+          <stop offset="55%" stopColor="#8a5820" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#5a3010" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Void background — no sky, only deep Underdark */}
+      <rect x="0" y="0" width="320" height="140" fill="url(#edge-void)" />
+      {/* Rock ceiling, jagged */}
+      <path
+        d="M 0 0 L 0 24 L 18 38 L 38 20 L 62 40 L 88 22 L 114 42 L 148 18 L 170 36 L 200 14 L 230 34 L 256 18 L 280 38 L 320 20 L 320 0 Z"
+        fill="#120e1e"
+      />
+      {/* Faint faerzress residue on ceiling — cool, barely visible */}
+      <g fill="#4a5880" opacity="0.22">
+        <circle cx="70" cy="28" r="1.2" />
+        <circle cx="160" cy="20" r="1.0" />
+        <circle cx="260" cy="30" r="0.9" />
+      </g>
+      {/* Rocky shelf — the floor slopes and then drops away on the right */}
+      <path
+        d="M 0 90 Q 60 82 120 88 Q 160 92 190 86 L 200 96 L 220 106 L 240 118 L 0 118 Z"
+        fill="url(#edge-shelf)"
+      />
+      {/* Rock cracks and texture */}
+      <g stroke="#100c1c" strokeWidth="0.7" opacity="0.55">
+        <path d="M 50 96 L 60 110" fill="none" />
+        <path d="M 100 88 L 108 104" fill="none" />
+        <path d="M 150 90 L 156 106" fill="none" />
+      </g>
+      {/* The rift — a jagged crack in the floor on the right, with the upwelling light */}
+      <path
+        d="M 200 96 L 210 80 L 224 68 L 238 56 L 252 44 L 264 56 L 270 76 L 278 94 L 280 110 L 268 120 L 250 126 L 232 122 L 218 114 L 206 108 Z"
+        fill="#0a0816"
+      />
+      {/* The upwelling — pale gold light from below the crack */}
+      <ellipse cx="240" cy="100" rx="42" ry="30" fill="url(#edge-upwell)" />
+      {/* Rift edges lit from below */}
+      <path
+        d="M 200 96 L 210 80 L 224 68 L 238 56 L 252 44"
+        fill="none"
+        stroke="#c0a060"
+        strokeWidth="1"
+        opacity="0.65"
+      />
+      <path
+        d="M 264 56 L 270 76 L 278 94 L 280 110"
+        fill="none"
+        stroke="#c0a060"
+        strokeWidth="1"
+        opacity="0.55"
+      />
+      {/* Pale light column rising from the rift into the cavern */}
+      <rect
+        x="210"
+        y="20"
+        width="60"
+        height="80"
+        fill="url(#edge-upwell)"
+        opacity="0.35"
+      />
+      {/* Cold fire — small, muted, throws no vivid shadows */}
+      <ellipse cx="98" cy="108" rx="28" ry="12" fill="url(#edge-cold-fire)" />
+      {/* Fire rocks */}
+      <rect x="86" y="108" width="24" height="3" fill="#2a1e10" />
+      {/* Cold flames — low, barely alive */}
+      <path d="M 90 108 Q 93 101 97 108 Q 101 98 105 108 Z" fill="#c89040" opacity="0.75" />
+      <path d="M 93 108 Q 97 103 101 108 Z" fill="#e0b860" opacity="0.6" />
+      {/* Deep gnome exile — small and stocky (gnomes ~75% human height) */}
+      <ellipse cx="66" cy="106" rx="5" ry="2.5" fill="#060410" />
+      <rect x="63" y="97" width="7" height="10" fill="#080612" />
+      <circle cx="66.5" cy="94" r="3.2" fill="#080612" />
+      {/* Large gnome ears — slight stub points */}
+      <path d="M 62 94 L 58 91 L 60 96 Z" fill="#080612" />
+      <path d="M 71 94 L 75 91 L 73 96 Z" fill="#080612" />
+      {/* Cup in hand — the gnome holds it out toward you */}
+      <rect x="73" y="100" width="5" height="4" fill="#0e0c18" />
+      {/* Rock wall behind gnome — far side of shelf */}
+      <path d="M 0 80 Q 20 74 40 80 Q 50 82 60 78 L 60 118 L 0 118 Z" fill="#100c1a" />
+    </svg>
+  );
+}
+
+/**
+ * Camp 5 — the Stillness Before the Wheel. Aurelach is dead. At the rim of
+ * something too large to see the curve of, a figure that was once a pilgrim
+ * tends a guttering fire out of habit. Everything is worn smooth. The great
+ * Wheel is barely visible as an arc in the absolute dark behind it all.
+ */
+function StillnessBeforeWheelScene() {
+  return (
+    <svg
+      viewBox="0 0 320 140"
+      className={SCENE_CLASS}
+      role="img"
+      aria-label="A guttering fire at the rim of an immense Wheel in absolute void, a worn pilgrim offering a cup."
+    >
+      <defs>
+        <radialGradient id="still-void" cx="0.5" cy="0.5" r="0.75">
+          <stop offset="0%" stopColor="#0e0812" />
+          <stop offset="100%" stopColor="#030206" />
+        </radialGradient>
+        <radialGradient id="still-ember" cx="0.5" cy="0.6" r="0.55">
+          <stop offset="0%" stopColor="#9a4020" stopOpacity="0.9" />
+          <stop offset="50%" stopColor="#5a1a08" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#2a0804" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="still-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#140e18" />
+          <stop offset="100%" stopColor="#060408" />
+        </linearGradient>
+      </defs>
+      {/* Absolute void */}
+      <rect x="0" y="0" width="320" height="140" fill="url(#still-void)" />
+      {/* The Wheel — vast arc barely visible in the dark, the curve of something
+          too large to see whole. Only the near edge is present. */}
+      <circle
+        cx="160"
+        cy="-240"
+        r="320"
+        fill="none"
+        stroke="#1c1020"
+        strokeWidth="14"
+        opacity="0.7"
+      />
+      {/* Inner ring — the wheel has two concentric bands */}
+      <circle
+        cx="160"
+        cy="-240"
+        r="290"
+        fill="none"
+        stroke="#140c18"
+        strokeWidth="5"
+        opacity="0.5"
+      />
+      {/* Wheel spokes — barely visible radial lines */}
+      <g stroke="#150d1a" strokeWidth="1.5" opacity="0.4">
+        <line x1="160" y1="80" x2="20" y2="-80" />
+        <line x1="160" y1="80" x2="300" y2="-80" />
+        <line x1="160" y1="80" x2="160" y2="-120" />
+        <line x1="160" y1="80" x2="60" y2="-160" />
+        <line x1="160" y1="80" x2="260" y2="-160" />
+      </g>
+      {/* Worn floor — the rim of the wheel is the ground */}
+      <path d="M 0 104 Q 80 96 160 100 Q 240 104 320 98 L 320 140 L 0 140 Z" fill="url(#still-floor)" />
+      {/* Subtle floor cracks — worn by the turning */}
+      <g stroke="#0e0812" strokeWidth="0.6" opacity="0.5">
+        <path d="M 30 110 L 44 130" fill="none" />
+        <path d="M 200 106 L 208 126" fill="none" />
+        <path d="M 280 100 L 290 120" fill="none" />
+      </g>
+      {/* The guttering fire — almost just coals, barely alive */}
+      <ellipse cx="140" cy="114" rx="22" ry="9" fill="url(#still-ember)" />
+      {/* Coals — no logs, just embers */}
+      <ellipse cx="136" cy="114" rx="8" ry="2.5" fill="#3a1208" />
+      <ellipse cx="144" cy="115" rx="6" ry="2" fill="#2a0e06" />
+      {/* Barely-alive flame — one small tongue */}
+      <path d="M 138 114 Q 140 108 142 114 Z" fill="#8a3810" opacity="0.8" />
+      <path d="M 139 114 Q 141 110 143 114 Z" fill="#c05820" opacity="0.55" />
+      {/* The pilgrim — worn smooth, barely distinguishable from the dark,
+          seated on the wheel's rim, holding out a cup */}
+      <ellipse cx="175" cy="116" rx="6" ry="2.5" fill="#0c0a10" />
+      <rect x="172" y="104" width="8" height="13" fill="#0c0a10" />
+      {/* Head — worn, almost featureless */}
+      <circle cx="176" cy="101" r="3.5" fill="#0e0c14" />
+      {/* The cup — held out toward the viewer, the one visible gesture */}
+      <rect x="182" y="106" width="5" height="4" fill="#2a2030" />
+      <rect x="181" y="105" width="7" height="1.5" fill="#3a2a40" />
     </svg>
   );
 }
