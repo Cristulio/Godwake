@@ -25,6 +25,7 @@
     "src/test/sim/**/*.ts",
     "scripts/sim-reincarnation-loop.ts",
     "scripts/sim-blessing-fidelity.ts",
-    "scripts/sim-feel.ts"
+    "scripts/sim-feel.ts",
+    "scripts/sim-endgame-gear.ts"
   ]
 }
