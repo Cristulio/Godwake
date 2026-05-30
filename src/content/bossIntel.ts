@@ -222,7 +222,7 @@ export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {
       {
         id: 'walk-past',
         label: 'Walk past',
-        hint: 'Walk past. The bold take their road and ask no questions. (+5% gold on the boss.)',
+        hint: 'Walk past. The bold take their road and ask no questions.',
         outcome: {
           resolution: card.walkPastResolution,
           effects: [{ kind: 'mark_bold_approach', bossDefId: card.bossDefId }],

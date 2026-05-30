@@ -76,9 +76,10 @@ export interface DelveState {
    */
   chapter1BossKilled?: boolean;
   /**
-   * The mutually-exclusive choice the player made at the roadside camp.
-   * Set by `pickCampChoice`; locks the other two options for the rest of
-   * the delve. Cleared on delve end.
+   * The mutually-exclusive choice the player made at the CURRENT roadside camp.
+   * Set by `pickCampChoice`; locks the other two options while at that camp.
+   * Cleared on every room entry (and on delve end) so each camp offers a fresh
+   * fork — the per-camp boon resolution lives in `campBoons`, keyed by tier.
    */
   campChoice?: 'rest' | 'sharpen' | 'prayer';
   /**

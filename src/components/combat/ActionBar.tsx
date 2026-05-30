@@ -134,8 +134,22 @@ export function ActionBar({
       return false;
     }
   }).length;
-  const canUseItem =
-    playersTurn && active && !character.actionEconomy.actionUsed && consumableCount > 0;
+  // Gate on action economy by the consumable's own cost. Draughts/charms are
+  // bonus-action items, so once the bonus action is spent (e.g. after Hunter's
+  // Mark) the button must grey out — useConsumable silently no-ops otherwise.
+  const hasUsableConsumable = character.inventory.some((ref) => {
+    let item;
+    try {
+      item = getItem(ref.itemId);
+    } catch {
+      return false;
+    }
+    if (item.kind !== 'consumable') return false;
+    return item.actionCost === 'bonus'
+      ? !character.actionEconomy.bonusActionUsed
+      : !character.actionEconomy.actionUsed;
+  });
+  const canUseItem = playersTurn && active && hasUsableConsumable;
 
   const canEndTurn = playersTurn && active;
 
