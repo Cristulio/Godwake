@@ -426,7 +426,18 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
+  // Self-only actions (Rage, Second Wind, etc.) resolve on the caster, so they
+  // must clear any in-progress target pick. Activating one while the "Select a
+  // target" prompt is up would otherwise leave the battlefield stuck in
+  // targeting mode.
+  function cancelTargeting() {
+    setSelectingTarget(false);
+    setMarkingTarget(false);
+    setCastingSpellId(null);
+  }
+
   function handleSecondWind() {
+    cancelTargeting();
     const roller = getActiveRoller();
     const result = useSecondWind({ roller, character, state });
     playSfx('heal_chime');
@@ -435,12 +446,14 @@ export function CombatScreen({
   }
 
   function handleActionSurge() {
+    cancelTargeting();
     const result = useActionSurge({ character, state });
     setCharacter(result.character);
     setCombat(result.state);
   }
 
   function handleCunningAction(choice: CunningActionChoice) {
+    cancelTargeting();
     const result = useCunningAction({ character, state, choice });
     setPickingCunning(false);
     setCharacter(result.character);
@@ -448,12 +461,14 @@ export function CombatScreen({
   }
 
   function handleRage() {
+    cancelTargeting();
     const result = useRage({ character, state });
     setCharacter(result.character);
     setCombat(result.state);
   }
 
   function handleRecklessAttack() {
+    cancelTargeting();
     const result = useRecklessAttack({ character, state });
     setCharacter(result.character);
     setCombat(result.state);
