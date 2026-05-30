@@ -168,12 +168,12 @@ export function CharacterCreationScreen() {
                   >
                     ✦
                   </span>
-                  <span className="font-display text-[var(--color-text-primary)] text-sm tracking-wide">
-                    {opt.characterName}
+                  <span className="font-display text-[var(--color-text-primary)] text-base tracking-wide">
+                    {RACE_LABEL[opt.raceId]} {opt.className}
                   </span>
                 </div>
-                <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-[0.2em] mt-1">
-                  {RACE_LABEL[opt.raceId]} {opt.className}
+                <div className="text-[var(--color-text-secondary)] text-[11px] tracking-wide mt-1">
+                  {opt.characterName}
                 </div>
               </div>
 

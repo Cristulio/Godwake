@@ -331,7 +331,6 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
         <ForkCard
           title="Tempt the Dark"
           flavor="Throw the bones into the fire and speak a name. Something out past the light is always listening — and it does not give for free."
-          accent="ember"
           state={
             riskTaken ? 'taken' : committed ? 'closed' : expanded === 'risk' ? 'active' : 'open'
           }
@@ -574,7 +573,6 @@ interface ForkCardProps {
   buttonLabel: string;
   onPick: () => void;
   takenSummary?: ReactNode;
-  accent?: 'amber' | 'ember';
   disabled?: boolean;
 }
 
@@ -585,7 +583,6 @@ function ForkCard({
   buttonLabel,
   onPick,
   takenSummary,
-  accent = 'amber',
   disabled = false,
 }: ForkCardProps) {
   const panelClass = [
@@ -593,7 +590,6 @@ function ForkCard({
     state === 'active'
       ? 'border-[var(--color-accent-amber)] bg-[#2a1d12]'
       : '',
-    accent === 'ember' && state !== 'closed' ? 'rest-fork-ember' : '',
   ]
     .filter(Boolean)
     .join(' ');
