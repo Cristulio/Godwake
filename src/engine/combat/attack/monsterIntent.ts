@@ -130,15 +130,22 @@ export function pickMonsterAction(
   return actions[0];
 }
 
-/** Average roll of the attack's damage dice, plus flat ascension + rage bonuses. */
-function avgAttackDamage(action: MonsterAttack, instance: MonsterInstance): number {
+/**
+ * Min–max damage the attack can deal, matching monsterAttack's resolution:
+ * dice (min = count, max = count·die) + the flat modifier + ascension bonus +
+ * rage. Pre-resistance, like the resolver's `rawDamage`.
+ */
+function attackDamageRange(
+  action: MonsterAttack,
+  instance: MonsterInstance,
+): { min: number; max: number } {
   const expr = parseDiceExpression(action.damage);
-  const diceAvg = (expr.count * (expr.die + 1)) / 2;
   const rage = instance.bossRageActive ? 2 : 0;
-  return Math.max(
-    1,
-    Math.round(diceAvg + expr.modifier + (instance.bonusDamage ?? 0) + rage),
-  );
+  const flat = expr.modifier + (instance.bonusDamage ?? 0) + rage;
+  return {
+    min: Math.max(1, expr.count + flat),
+    max: Math.max(1, expr.count * expr.die + flat),
+  };
 }
 
 /** Build the display telegraph for an already-picked action. */
@@ -149,18 +156,23 @@ function buildMonsterIntent(
 ): MonsterIntent {
   const base = { actionKind: action.kind, actionName: action.name };
   switch (action.kind) {
-    case 'attack':
+    case 'attack': {
+      const range = attackDamageRange(action, instance);
       return {
         ...base,
         kind: action.lifeDrain ? 'drain' : 'attack',
-        damage: avgAttackDamage(action, instance),
+        damageMin: range.min,
+        damageMax: range.max,
       };
+    }
     case 'multiattack': {
       const swing = def.actions.find((a): a is MonsterAttack => a.kind === 'attack');
+      const range = swing ? attackDamageRange(swing, instance) : undefined;
       return {
         ...base,
         kind: 'multiattack',
-        damage: swing ? avgAttackDamage(swing, instance) : undefined,
+        damageMin: range?.min,
+        damageMax: range?.max,
         hits: action.attacks,
       };
     }
@@ -218,7 +230,8 @@ function intentsEqual(
     a.kind === b.kind &&
     a.actionKind === b.actionKind &&
     a.actionName === b.actionName &&
-    a.damage === b.damage &&
+    a.damageMin === b.damageMin &&
+    a.damageMax === b.damageMax &&
     a.hits === b.hits &&
     a.condition === b.condition
   );
