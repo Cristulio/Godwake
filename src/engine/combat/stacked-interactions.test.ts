@@ -522,14 +522,19 @@ describe('Chapter-boss renown bonus + soul-mark stacking', () => {
     );
     const bosses = delve.rooms.slice(0, idx).filter((r) => r.kind === 'boss').length;
     expect(bosses).toBe(2);
+    // Depth credits the route ACTUALLY VISITED — a real walk to the Ch3 Director
+    // crosses far fewer nodes than the flat index spans.
+    const visited = delve.rooms.slice(0, 27).map((r) => r.id);
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: idx, phase: 'failed' },
+      delve: { ...delve, currentRoomIdx: idx, phase: 'failed', visitedRoomIds: visited },
     });
 
     useGameStore.getState().finishDelve();
 
     const base =
-      RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bosses + RENOWN_PER_ROOM_REACHED * idx;
+      RENOWN_PER_DELVE_FAILURE +
+      RENOWN_PER_CHAPTER_BOSS * bosses +
+      RENOWN_PER_ROOM_REACHED * (visited.length - 1);
     const expected = Math.floor(base * renownSoulMarkMultiplier(fighter));
     expect(useCharacterStore.getState().character!.renown).toBe(expected);
   });

@@ -235,14 +235,18 @@ describe('finishDelve — renown economy', () => {
   it('death mid-Ch2 after Ilyich-kill stacks failure base + 1 boss + depth', () => {
     expect(RENOWN_PER_CHAPTER_BOSS).toBe(10);
     const delve = useDelveStore.getState().delve!;
-    // currentRoomIdx 20 → slice(0, 20) counts Ilyich (idx 12); depth = 20.
+    // currentRoomIdx 20 → slice(0, 20) counts Ilyich (idx 12) for the boss stack;
+    // depth credits the route ACTUALLY VISITED (entry node seeded free).
+    const visited = delve.rooms.slice(0, 13).map((r) => r.id);
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: 20, phase: 'failed' },
+      delve: { ...delve, currentRoomIdx: 20, phase: 'failed', visitedRoomIds: visited },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
     const expectedGain =
-      RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * 1 + RENOWN_PER_ROOM_REACHED * 20;
+      RENOWN_PER_DELVE_FAILURE +
+      RENOWN_PER_CHAPTER_BOSS * 1 +
+      RENOWN_PER_ROOM_REACHED * (visited.length - 1);
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
 
@@ -257,13 +261,18 @@ describe('finishDelve — renown economy', () => {
     const idx = matronIdx - 1;
     const bosses = delve.rooms.slice(0, idx).filter((r) => r.kind === 'boss').length;
     expect(bosses).toBe(3);
+    // A real route into Ch4 walks far fewer nodes than the flat index spans; the
+    // depth credit follows the visited trail, not currentRoomIdx.
+    const visited = delve.rooms.slice(0, 32).map((r) => r.id);
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: idx, phase: 'failed' },
+      delve: { ...delve, currentRoomIdx: idx, phase: 'failed', visitedRoomIds: visited },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
     const expectedGain =
-      RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bosses + RENOWN_PER_ROOM_REACHED * idx;
+      RENOWN_PER_DELVE_FAILURE +
+      RENOWN_PER_CHAPTER_BOSS * bosses +
+      RENOWN_PER_ROOM_REACHED * (visited.length - 1);
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
 
@@ -275,13 +284,18 @@ describe('finishDelve — renown economy', () => {
     );
     const bosses = delve.rooms.slice(0, idx + 1).filter((r) => r.kind === 'boss').length;
     expect(bosses).toBe(4);
+    // A clear walks one node per layer through all four chapters — a real subset
+    // of the flat list. Depth credits that visited route, not the flat index.
+    const visited = delve.rooms.slice(0, 39).map((r) => r.id);
     useDelveStore.setState({
-      delve: { ...delve, currentRoomIdx: idx, phase: 'completed' },
+      delve: { ...delve, currentRoomIdx: idx, phase: 'completed', visitedRoomIds: visited },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
     const expectedGain =
-      RENOWN_PER_DELVE_CLEAR + RENOWN_PER_CHAPTER_BOSS * bosses + RENOWN_PER_ROOM_REACHED * idx;
+      RENOWN_PER_DELVE_CLEAR +
+      RENOWN_PER_CHAPTER_BOSS * bosses +
+      RENOWN_PER_ROOM_REACHED * (visited.length - 1);
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
 
@@ -296,9 +310,23 @@ describe('finishDelve — renown economy', () => {
       return useCharacterStore.getState().character!.renown;
     };
 
-    const shallowDeath = payout({ currentRoomIdx: 3, phase: 'failed' });
-    const deepDeath = payout({ currentRoomIdx: 43, phase: 'failed' });
-    const clear = payout({ currentRoomIdx: 57, phase: 'completed' });
+    // Depth now rewards the route ACTUALLY VISITED: a longer trail = more credit.
+    const ids = base.rooms.map((r) => r.id);
+    const shallowDeath = payout({
+      currentRoomIdx: 3,
+      phase: 'failed',
+      visitedRoomIds: ids.slice(0, 4),
+    });
+    const deepDeath = payout({
+      currentRoomIdx: 43,
+      phase: 'failed',
+      visitedRoomIds: ids.slice(0, 24),
+    });
+    const clear = payout({
+      currentRoomIdx: 57,
+      phase: 'completed',
+      visitedRoomIds: ids.slice(0, 39),
+    });
 
     expect(shallowDeath).toBeLessThan(deepDeath);
     expect(deepDeath).toBeLessThan(clear);
