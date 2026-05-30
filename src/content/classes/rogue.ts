@@ -7,7 +7,7 @@ export const ROGUE: Class = ClassSchema.parse({
   primaryAbility: ['dex'],
   savingThrowProficiencies: ['dex', 'int'],
   // Light, quick, and quiet: any simple weapon plus finesse/light blades and
-  // sidearms — rapier, dagger, shortbow, hand-crossbow, the adamantine shortsword.
+  // sidearms — rapier, dagger, shortbow, hand-crossbow.
   weaponProficiency: { categories: ['simple'], properties: ['finesse', 'light'] },
   // Stays light to stay quiet — leather and studded leather only, no shield.
   armorProficiency: { categories: ['light'] },
