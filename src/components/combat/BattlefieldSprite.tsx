@@ -4,7 +4,7 @@ import type { MonsterInstance, AttackEvent } from '../../types/combat';
 import { computeAC } from '../../engine/character/derived';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
-import { FloatingDamage, type FloatingDamageItem } from './FloatingDamage';
+import { FloatingDamage, resolveSpriteFloat, type FloatingDamageItem, type FloatSelf } from './FloatingDamage';
 import { MirrorImages } from './SpellEffect';
 import { IntentBadge } from './IntentBadge';
 
@@ -156,82 +156,72 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   const [knockback, setKnockback] = useState<'left' | 'right' | null>(null);
   const [lunge, setLunge] = useState(false);
   const lastAttackPulse = useRef(props.attackPulse);
-  const lastFloatedAttackId = useRef<number | undefined>(undefined);
+  const lastSeenAttackId = useRef<number | undefined>(undefined);
 
-  // Float damage / heal + slash effect whenever HP changes
+  // The floating combat number. Sourced from the landing attack event so it
+  // shows the TRUE rolled damage (crits, affix bonuses, off-type all live in
+  // `damageDealt`) instead of the clamped HP delta — overkill and temp-HP soak
+  // no longer collapse the number to "1". Non-attack damage (poison/bleed
+  // ticks, environment) falls back to the HP delta; HP gains float as heals.
+  // Keyed on both HP and the latest attack id so a landed-but-fully-soaked hit
+  // still surfaces its number.
   useEffect(() => {
-    if (prevHp.current === hpCurrent) return;
-    const delta = prevHp.current - hpCurrent;
+    const attackId = props.lastAttack?.id;
+    const isNewAttack = attackId !== undefined && attackId !== lastSeenAttackId.current;
+    const hpDelta = prevHp.current - hpCurrent;
+    const self: FloatSelf =
+      props.kind === 'player'
+        ? { kind: 'player' }
+        : { kind: 'monster', displayName: props.instance.displayName };
+    const float = resolveSpriteFloat({ lastAttack: props.lastAttack, self, hpDelta, isNewAttack });
     prevHp.current = hpCurrent;
-    if (delta > 0) {
-      // Detect crit against THIS sprite by matching the lastAttack event.
-      const targetMatches =
-        props.lastAttack &&
-        (props.kind === 'monster'
-          ? props.lastAttack.targetName === props.instance.displayName
-          : props.lastAttack.attackerKind === 'monster');
-      const wasCrit = props.lastAttack?.crit === true && targetMatches;
+    if (attackId !== undefined) lastSeenAttackId.current = attackId;
+    if (!float) return;
 
-      // Show the FULL rolled damage (overkill reads true), but only when this
-      // HP drop is caused by a NEW attack event aimed at this sprite — a stale
-      // lastAttack (e.g. a later spell tick) falls back to the clamped delta.
-      const freshAttack =
-        !!targetMatches &&
-        props.lastAttack !== undefined &&
-        props.lastAttack.id !== lastFloatedAttackId.current;
-      if (props.lastAttack) lastFloatedAttackId.current = props.lastAttack.id;
-      const amount =
-        freshAttack &&
-        props.lastAttack?.damageDealt !== undefined &&
-        props.lastAttack.damageDealt > 0
-          ? props.lastAttack.damageDealt
-          : delta;
+    const id = Date.now() + Math.random();
+    setDamageFloats((d) => [...d, { id, amount: float.amount, kind: float.kind }]);
 
-      const id = Date.now() + Math.random();
-      setDamageFloats((d) => [
-        ...d,
-        { id, amount, kind: wasCrit ? 'crit' : 'damage' },
-      ]);
-      setTimeout(
-        () => setDamageFloats((d) => d.filter((x) => x.id !== id)),
-        wasCrit ? 1500 : 1200,
-      );
-
-      setHitFlash(wasCrit ? 'crit' : 'normal');
-      setTimeout(() => setHitFlash(null), wasCrit ? 320 : 240);
-      setHitPause(true);
-      setTimeout(() => setHitPause(false), 160);
-
-      // Knockback recoil — the struck sprite is shoved away from its attacker.
-      // The attacker stands on the side this sprite faces, so it reels the
-      // opposite way. The offensive swing itself rides the VFX bus overlay.
-      const recoil: 'left' | 'right' = props.facing === 'right' ? 'left' : 'right';
-      setKnockback(recoil);
-      setTimeout(() => setKnockback((k) => (k === recoil ? null : k)), 300);
-
-      if (wasCrit) {
-        // Crit spark burst — 8 particles radiating outward
-        const burst = Array.from({ length: 8 }, (_, i) => {
-          const angle = (i / 8) * Math.PI * 2 + Math.random() * 0.5;
-          const dist = 36 + Math.random() * 20;
-          return {
-            id: id + i + 1,
-            dx: Math.cos(angle) * dist,
-            dy: Math.sin(angle) * dist - 8,
-          };
-        });
-        setSparks((s) => [...s, ...burst]);
-        setTimeout(() => {
-          setSparks((s) => s.filter((sp) => !burst.find((b) => b.id === sp.id)));
-        }, 600);
-      }
-    } else if (delta < 0) {
-      const id = Date.now() + Math.random();
-      setDamageFloats((d) => [...d, { id, amount: -delta, kind: 'heal' }]);
+    if (float.kind === 'heal') {
       setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1500);
+      return;
+    }
+
+    const isCrit = float.kind === 'crit';
+    setTimeout(
+      () => setDamageFloats((d) => d.filter((x) => x.id !== id)),
+      isCrit ? 1500 : 1200,
+    );
+
+    setHitFlash(isCrit ? 'crit' : 'normal');
+    setTimeout(() => setHitFlash(null), isCrit ? 320 : 240);
+    setHitPause(true);
+    setTimeout(() => setHitPause(false), 160);
+
+    // Knockback recoil — the struck sprite is shoved away from its attacker.
+    // The attacker stands on the side this sprite faces, so it reels the
+    // opposite way. The offensive swing itself rides the VFX bus overlay.
+    const recoil: 'left' | 'right' = props.facing === 'right' ? 'left' : 'right';
+    setKnockback(recoil);
+    setTimeout(() => setKnockback((k) => (k === recoil ? null : k)), 300);
+
+    if (isCrit) {
+      // Crit spark burst — 8 particles radiating outward
+      const burst = Array.from({ length: 8 }, (_, i) => {
+        const angle = (i / 8) * Math.PI * 2 + Math.random() * 0.5;
+        const dist = 36 + Math.random() * 20;
+        return {
+          id: id + i + 1,
+          dx: Math.cos(angle) * dist,
+          dy: Math.sin(angle) * dist - 8,
+        };
+      });
+      setSparks((s) => [...s, ...burst]);
+      setTimeout(() => {
+        setSparks((s) => s.filter((sp) => !burst.find((b) => b.id === sp.id)));
+      }, 600);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hpCurrent]);
+  }, [hpCurrent, props.lastAttack?.id]);
 
   // Lunge only when this sprite has actually attacked (attackPulse bumps).
   useEffect(() => {

@@ -1,7 +1,52 @@
+import type { AttackEvent } from '../../types/combat';
+
 export interface FloatingDamageItem {
   id: number;
   amount: number;
   kind: 'damage' | 'heal' | 'miss' | 'crit' | 'block';
+}
+
+/** Which combatant a sprite represents, for matching against an attack event. */
+export type FloatSelf =
+  | { kind: 'player' }
+  | { kind: 'monster'; displayName: string };
+
+function attackLandsOn(lastAttack: AttackEvent, self: FloatSelf): boolean {
+  if (!lastAttack.hit) return false;
+  return self.kind === 'player'
+    ? lastAttack.attackerKind === 'monster'
+    : lastAttack.attackerKind === 'player' && lastAttack.targetName === self.displayName;
+}
+
+/**
+ * The floating combat number a sprite should show this commit, or null for
+ * nothing. A fresh attack event that lands on this sprite is authoritative: it
+ * shows the true rolled damage (`damageDealt` already folds in crit-doubling,
+ * affix bonuses, and off-type segments) regardless of how little HP actually
+ * came off — so overkill and temp-HP soak read true instead of collapsing to a
+ * clamped "1". Damage with no fresh attack (poison/bleed ticks, environment)
+ * falls back to the HP delta; HP gains float as heals.
+ */
+export function resolveSpriteFloat(args: {
+  lastAttack: AttackEvent | undefined;
+  self: FloatSelf;
+  /** prevHp − currentHp: positive = damage taken, negative = healed. */
+  hpDelta: number;
+  /** True when `lastAttack.id` is one this sprite has not processed yet. */
+  isNewAttack: boolean;
+}): { amount: number; kind: FloatingDamageItem['kind'] } | null {
+  const { lastAttack, self, hpDelta, isNewAttack } = args;
+  if (
+    isNewAttack &&
+    lastAttack &&
+    attackLandsOn(lastAttack, self) &&
+    (lastAttack.damageDealt ?? 0) > 0
+  ) {
+    return { amount: lastAttack.damageDealt!, kind: lastAttack.crit ? 'crit' : 'damage' };
+  }
+  if (hpDelta > 0) return { amount: hpDelta, kind: 'damage' };
+  if (hpDelta < 0) return { amount: -hpDelta, kind: 'heal' };
+  return null;
 }
 
 interface FloatingDamageProps {

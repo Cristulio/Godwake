@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
-import { playerAttack } from './attack';
+import { playerAttack, weaponDamageDice } from './attack';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
+import { getItem } from '../../content/items';
+import type { Weapon } from '../../schemas/item';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import type { Character } from '../../types/character';
 
@@ -185,5 +187,67 @@ describe('playerAttack — weapon ability selection', () => {
     const shortbowLine = state.log.find((l) => l.text.includes('Shortbow'));
     expect(shortbowLine?.text).toContain('fires at');
     expect(shortbowLine?.text).not.toContain('attacks Goblin with Shortbow');
+  });
+});
+
+describe('versatile weapons — two-handed die (item 16)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('weaponDamageDice picks the 2H die only when versatile and the off-hand is empty', () => {
+    const longsword = getItem('longsword') as Weapon; // 1d8 / 1d10 versatile
+    expect(weaponDamageDice(longsword, true)).toBe('1d10'); // off-hand empty → 2H
+    expect(weaponDamageDice(longsword, false)).toBe('1d8'); // shield/off-hand → 1H
+
+    const greatsword = getItem('greatsword') as Weapon; // 2d6, two-handed (not versatile)
+    expect(weaponDamageDice(greatsword, true)).toBe('2d6');
+
+    const dagger = getItem('dagger') as Weapon; // 1d4, no versatile
+    expect(weaponDamageDice(dagger, true)).toBe('1d4');
+  });
+
+  // Raw dice are logged as "(<N> dice ...)" — independent of STR/affix bonuses —
+  // so we can read the die span straight from the damage line.
+  function rawDice(state: CombatState): number | null {
+    const line = state.log.find((l) => l.kind === 'damage');
+    const m = line?.text.match(/\((\d+) dice/);
+    return m ? Number(m[1]) : null;
+  }
+
+  it('a longsword swung with an empty off-hand rolls 1d10 (can exceed 8); with a shield it stays 1d8', () => {
+    const goblin = getMonster('goblin');
+    const collect = (offHandShield: boolean): number[] => {
+      const dice: number[] = [];
+      for (let seed = 1; seed <= 400; seed++) {
+        _resetMonsterInstanceCounter();
+        const fighter = makeFighterStrBuild();
+        fighter.baseAbilityScores = { str: 16, dex: 12, con: 14, int: 8, wis: 10, cha: 10 };
+        if (offHandShield) fighter.equipped = { ...fighter.equipped, offHand: { itemId: 'shield' } };
+        const roller = createDiceRoller(seed);
+        const init = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
+        const goblinId = findMonster(init.state).id;
+        const { state } = playerAttack(
+          { roller, character: init.character, state: init.state },
+          goblinId,
+          'longsword',
+        );
+        // Only count non-crit hits — a crit doubles the dice and would muddy the span.
+        if (state.lastAttack?.hit && !state.lastAttack.crit) {
+          const n = rawDice(state);
+          if (n !== null) dice.push(n);
+        }
+      }
+      return dice;
+    };
+
+    const twoHanded = collect(false);
+    const oneHanded = collect(true);
+
+    // Both variants must actually land hits over 400 seeds.
+    expect(twoHanded.length).toBeGreaterThan(20);
+    expect(oneHanded.length).toBeGreaterThan(20);
+
+    // Empty off-hand → 1d10, so 9 or 10 shows up. Shield → 1d8, capped at 8.
+    expect(Math.max(...twoHanded)).toBeGreaterThan(8);
+    expect(Math.max(...oneHanded)).toBeLessThanOrEqual(8);
   });
 });
