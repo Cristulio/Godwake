@@ -64,10 +64,10 @@ describe('legendary grant', () => {
     expect(useMetaStore.getState().ownedLegendaries).toHaveLength(LEGENDARIES.length);
   });
 
-  it('finishDelve on a CLEAR drops the next legendary', () => {
+  it('finishDelve on a CLEAR no longer auto-grants a legendary (Wave 2: drops are rare, in-run)', () => {
     useDelveStore.setState({ delve: baseDelve({ phase: 'completed', currentRoomIdx: 1 }) });
     useDelveStore.getState().finishDelve();
-    expect(useMetaStore.getState().ownedLegendaries).toEqual([LEGENDARY_ORDER[0]]);
+    expect(useMetaStore.getState().ownedLegendaries).toEqual([]);
   });
 
   it('finishDelve on a FAILURE drops nothing', () => {
@@ -134,9 +134,8 @@ describe('legendary persistence across reincarnation', () => {
     useDelveStore.getState().finishDelve();
 
     const meta = useMetaStore.getState();
-    // Survived the wheel + earned the next relic on the clear.
-    expect(meta.ownedLegendaries).toContain('heartwood-talisman');
-    expect(meta.ownedLegendaries).toContain(LEGENDARY_ORDER[1]);
+    // Survived the wheel (a clear no longer auto-grants the next relic in Wave 2).
+    expect(meta.ownedLegendaries).toEqual(['heartwood-talisman']);
     // The attuned bonus rides reincarnateSoul's object spread.
     expect(useCharacterStore.getState().character!.legendaryBonuses?.abilityScores).toEqual({
       con: 2,

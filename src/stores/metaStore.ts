@@ -4,9 +4,11 @@ import { applyPermanentUpgrade, type UnlockedUpgrades } from '../engine/characte
 import { getUpgrade } from '../content/upgrades';
 import { MAX_ASCENSION } from '../engine/delve/ascension';
 import { useCharacterStore } from './characterStore';
+import { getActiveRoller } from '../engine/dice';
 import {
   LEGENDARY_ORDER,
-  MAX_ACTIVE_LEGENDARIES,
+  legendarySlotCap,
+  legendaryDropPool,
   aggregateLegendaryBonuses,
 } from '../content/legendaries';
 
@@ -91,6 +93,18 @@ interface MetaStoreState {
    * picks which to run from the hub.
    */
   grantNextLegendary: () => string | null;
+  /**
+   * Bank a RANDOM un-owned legendary eligible for the active character's class
+   * (the rare-drop path). Returns the banked id, or null when none remain.
+   * Banks to the collection only — it does NOT equip mid-run; the player
+   * attunes it from the hub for a future descent.
+   */
+  grantLegendaryDrop: () => string | null;
+  /**
+   * Bank a SPECIFIC legendary by id (the shop "reliquary" purchase). Adds it to
+   * the collection if it's a real, un-owned relic. Returns whether it banked.
+   */
+  bankLegendary: (id: string) => boolean;
   /**
    * Set the attuned legendaries (validated against ownership + the slot cap) and
    * bake their aggregate bonus onto the active character.
@@ -231,12 +245,31 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     return next;
   },
 
+  grantLegendaryDrop: () => {
+    const owned = get().ownedLegendaries;
+    const classId = useCharacterStore.getState().character?.classId;
+    const pool = (classId ? legendaryDropPool(classId) : [...LEGENDARY_ORDER]).filter(
+      (id) => !owned.includes(id),
+    );
+    if (pool.length === 0) return null;
+    const pick = pool[(getActiveRoller().roll('1d100').total - 1) % pool.length];
+    set({ ownedLegendaries: [...owned, pick] });
+    return pick;
+  },
+
+  bankLegendary: (id) => {
+    const owned = get().ownedLegendaries;
+    if (owned.includes(id) || !LEGENDARY_ORDER.includes(id)) return false;
+    set({ ownedLegendaries: [...owned, id] });
+    return true;
+  },
+
   setActiveLegendaries: (ids) => {
     const owned = get().ownedLegendaries;
     // Keep only owned ids, dedupe, and clamp to the slot cap.
     const valid = [...new Set(ids)]
       .filter((id) => owned.includes(id))
-      .slice(0, MAX_ACTIVE_LEGENDARIES);
+      .slice(0, legendarySlotCap(get().ascensionUnlocked));
     set({ activeLegendaries: valid });
     // Bake the aggregate onto the live character so the engine reads it. The
     // field rides reincarnation/descent via object spread (reincarnateSoul,

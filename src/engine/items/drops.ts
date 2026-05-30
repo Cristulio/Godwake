@@ -38,6 +38,25 @@ const RARITY_WEIGHTS: Record<DropSource, Array<[GearRarity, number]>> = {
   ],
 };
 
+/**
+ * Per-source chance (percent) a cleared room ALSO yields a legendary relic. Very
+ * low ("from time to time") and climbing by source. A legendary that drops is
+ * BANKED to the persistent collection (it doesn't roll like normal gear and
+ * doesn't equip mid-run) — see delveStore.resolveRoomVictory.
+ */
+const LEGENDARY_DROP_CHANCE: Record<DropSource, number> = {
+  combat: 1,
+  elite: 3,
+  boss: 6,
+};
+
+/** Roll whether a cleared room yields a legendary relic. Deterministic. */
+export function rollLegendaryDrop(roller: DiceRoller, roomKind: string): boolean {
+  const source = dropSourceForRoom(roomKind);
+  if (!source) return false;
+  return roller.roll('1d100').total <= LEGENDARY_DROP_CHANCE[source];
+}
+
 function pickWeightedRarity(roller: DiceRoller, table: Array<[GearRarity, number]>): GearRarity {
   const total = table.reduce((sum, [, w]) => sum + w, 0);
   // 1..total inclusive from the seeded roller.

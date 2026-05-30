@@ -24,11 +24,23 @@ export interface HitDice {
   die: 6 | 8 | 10 | 12;
 }
 
-/** What's equipped on the body right now (refs into inventory). */
+/**
+ * What's equipped on the body right now (refs into inventory). The three combat
+ * slots (main hand / off hand / body) are always present; Wave 2 adds accessory
+ * slots — helm, amulet, two rings, belt, boots — that carry rolled affixes.
+ * The accessory slots are optional so legacy saves rehydrate without migration
+ * (an absent slot reads the same as an empty one).
+ */
 export interface EquipmentSlots {
   mainHand: ItemRef | null;
   offHand: ItemRef | null;
   armor: ItemRef | null;
+  helm?: ItemRef | null;
+  amulet?: ItemRef | null;
+  ring1?: ItemRef | null;
+  ring2?: ItemRef | null;
+  belt?: ItemRef | null;
+  boots?: ItemRef | null;
 }
 
 /** Wizard spell slots by level. Missing entries treated as 0. */

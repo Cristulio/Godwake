@@ -76,7 +76,7 @@ describe('rollGearStock', () => {
     }
   });
 
-  it('stocks three pieces per visit', () => {
-    expect(rollGearStock('count', 1, 'ranger')).toHaveLength(3);
+  it('stocks five pieces per visit (Wave 2 widened rack)', () => {
+    expect(rollGearStock('count', 1, 'ranger')).toHaveLength(5);
   });
 });

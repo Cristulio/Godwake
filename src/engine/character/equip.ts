@@ -7,6 +7,23 @@ import { getClass } from '../../content/classes';
 export type EquipSlot = keyof EquipmentSlots;
 
 /**
+ * Every equipment slot, in display order. The three combat slots come first,
+ * then the Wave-2 accessory slots. Iterate this anywhere that needs to sweep
+ * all equipped items (attunement counting, affix aggregation, UI).
+ */
+export const EQUIP_SLOTS: EquipSlot[] = [
+  'mainHand',
+  'offHand',
+  'armor',
+  'helm',
+  'amulet',
+  'ring1',
+  'ring2',
+  'belt',
+  'boots',
+];
+
+/**
  * Default attunement cap. Set below the 3-slot equipment count on purpose:
  * the player has mainHand / offHand / armor (3 slots), so a default of 2 means
  * the gate actually bites when 3 attuned items are owned, and Sage's Pact
@@ -24,7 +41,25 @@ export function slotForItem(itemId: string): EquipSlot | null {
   if (item.kind === 'armor') {
     return item.category === 'shield' ? 'offHand' : 'armor';
   }
+  if (item.kind === 'accessory') {
+    // Rings report ring1 as their canonical slot; `equipItem` routes to the
+    // first free ring. `canEquipToSlot` accepts either ring slot for drag-drop.
+    return item.accessorySlot === 'ring' ? 'ring1' : item.accessorySlot;
+  }
   return null;
+}
+
+/**
+ * Whether an item may be dropped onto the given slot. Mirrors `slotForItem`
+ * except a ring matches BOTH ring slots, so the inventory UI lets the player
+ * drag a ring onto either band.
+ */
+export function canEquipToSlot(itemId: string, slot: EquipSlot): boolean {
+  const item = getItem(itemId);
+  if (item.kind === 'accessory' && item.accessorySlot === 'ring') {
+    return slot === 'ring1' || slot === 'ring2';
+  }
+  return slotForItem(itemId) === slot;
 }
 
 function isTwoHanded(itemId: string): boolean {
@@ -82,7 +117,7 @@ export function attunementSlotsCap(character: Character): number {
 /** Count of currently-equipped items that require attunement. */
 export function attunementSlotsUsed(character: Character): number {
   let used = 0;
-  for (const slot of ['mainHand', 'offHand', 'armor'] as const) {
+  for (const slot of EQUIP_SLOTS) {
     const ref = character.equipped[slot];
     if (ref && requiresAttunement(ref.itemId)) used += 1;
   }
@@ -163,8 +198,15 @@ export function equipItem(character: Character, inventoryIdx: number): Character
       equipped.mainHand = null;
     }
     equipped.offHand = ref;
-  } else if (slot === 'armor') {
-    equipped.armor = ref;
+  } else if (item.kind === 'accessory' && item.accessorySlot === 'ring') {
+    // Fill the first empty ring; if both bands are full, the new ring takes
+    // the first slot (the displaced one falls back to the bag).
+    if (!equipped.ring1) equipped.ring1 = ref;
+    else if (!equipped.ring2) equipped.ring2 = ref;
+    else equipped.ring1 = ref;
+  } else {
+    // armor / helm / amulet / belt / boots — direct single-slot assignment.
+    equipped[slot] = ref;
   }
 
   // Attunement cap is checked against the resulting equipped set so that
@@ -180,7 +222,7 @@ export function equipItem(character: Character, inventoryIdx: number): Character
 
 function countAttuned(equipped: EquipmentSlots): number {
   let n = 0;
-  for (const slot of ['mainHand', 'offHand', 'armor'] as const) {
+  for (const slot of EQUIP_SLOTS) {
     const ref = equipped[slot];
     if (ref && requiresAttunement(ref.itemId)) n += 1;
   }

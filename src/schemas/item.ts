@@ -74,7 +74,36 @@ export const ConsumableSchema = z.object({
 });
 export type Consumable = z.infer<typeof ConsumableSchema>;
 
-export const ItemSchema = z.discriminatedUnion('kind', [WeaponSchema, ArmorSchema, ConsumableSchema]);
+/**
+ * Accessory slots — the Wave-2 affix carriers (helm/amulet/ring/belt/boots).
+ * They have no base combat stats of their own; their value is entirely in the
+ * rolled affixes they carry (a ring IS its affixes). Every class can wear them
+ * (no armour/weapon proficiency gate), which finally gives the Wizard gear that
+ * matters.
+ */
+export const AccessorySlotSchema = z.enum(['helm', 'amulet', 'ring', 'belt', 'boots']);
+export type AccessorySlot = z.infer<typeof AccessorySlotSchema>;
+
+export const AccessorySchema = z.object({
+  id: z.string(),
+  kind: z.literal('accessory'),
+  name: z.string(),
+  /** Which body slot this accessory occupies. Rings fill either ring slot. */
+  accessorySlot: AccessorySlotSchema,
+  weight: z.number(),
+  cost: z.number(),
+  rarity: RaritySchema,
+  attunement: z.boolean(),
+  description: z.string().optional(),
+});
+export type Accessory = z.infer<typeof AccessorySchema>;
+
+export const ItemSchema = z.discriminatedUnion('kind', [
+  WeaponSchema,
+  ArmorSchema,
+  ConsumableSchema,
+  AccessorySchema,
+]);
 export type Item = z.infer<typeof ItemSchema>;
 
 // ---------------------------------------------------------------------------
@@ -135,7 +164,7 @@ export const AffixSchema = z.object({
   /** One-line, player-facing description of what the affix does. */
   effect: z.string(),
   /** Which base kinds this affix can roll onto. */
-  appliesTo: z.array(z.enum(['weapon', 'armor'])).nonempty(),
+  appliesTo: z.array(z.enum(['weapon', 'armor', 'accessory'])).nonempty(),
   /**
    * Class ids this affix may roll for. Omit/empty = any class. The class-
    * flavoured affixes (rage/mark/sneak) gate to their owner so a Wizard never
