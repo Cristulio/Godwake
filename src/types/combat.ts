@@ -30,8 +30,13 @@ export interface MonsterIntent {
    */
   actionKind: MonsterAction['kind'];
   actionName: string;
-  /** Expected (average) damage for attack / multiattack / drain intents. */
-  damage?: number;
+  /**
+   * Damage RANGE for attack / multiattack / drain intents — min/max of the
+   * action's dice plus flat mods (ascension + rage), pre-resistance. For a
+   * multiattack this is the per-hit range (multiply by `hits` for the total).
+   */
+  damageMin?: number;
+  damageMax?: number;
   /** Number of strikes for a multiattack intent. */
   hits?: number;
   /** Condition inflicted, for debuff / paralyze intents. */

@@ -46,11 +46,12 @@ describe('enemy-intent telegraph', () => {
     expect(intent).toBeDefined();
     expect(intent!.kind).toBe('attack');
     expect(intent!.actionName).toBe('Scimitar');
-    // 1d6+2 → average 5.5 → rounded 6.
-    expect(intent!.damage).toBe(6);
+    // Scimitar is 1d6+2 → range 3–8, matching monsterAttack's rawDamage.
+    expect(intent!.damageMin).toBe(3);
+    expect(intent!.damageMax).toBe(8);
   });
 
-  it('telegraphs a multiattack with its hit count', () => {
+  it('telegraphs a multiattack with its hit count and per-hit range', () => {
     const init = createCombat({
       roller: createDiceRoller(2),
       character: makeFighter(),
@@ -59,6 +60,9 @@ describe('enemy-intent telegraph', () => {
     const intent = monster(init.state, 'famished-ghast').instance.intent;
     expect(intent!.kind).toBe('multiattack');
     expect(intent!.hits).toBe(2);
+    // Ravening Claws is 1d4+2 → per-hit range 3–6 (badge shows "2× 3–6").
+    expect(intent!.damageMin).toBe(3);
+    expect(intent!.damageMax).toBe(6);
   });
 
   it("telegraphs a boss's round-1 paralyze opener", () => {

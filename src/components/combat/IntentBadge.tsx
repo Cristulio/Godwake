@@ -82,50 +82,85 @@ const ICONS: Record<string, ReactElement> = {
   ),
 };
 
-function conditionWord(c: ConditionName | undefined): string {
-  return c ?? 'a curse';
+/** "3" when min===max, else "3–6". Null when the intent carries no damage. */
+function rangeText(intent: MonsterIntent): string | null {
+  const { damageMin, damageMax } = intent;
+  if (damageMin === undefined || damageMax === undefined) return null;
+  return damageMin === damageMax ? `${damageMin}` : `${damageMin}–${damageMax}`;
+}
+
+/** Total damage across all swings of a multiattack, as a range string. */
+function multiTotalText(intent: MonsterIntent): string | null {
+  const { damageMin, damageMax, hits } = intent;
+  if (damageMin === undefined || damageMax === undefined || !hits) return null;
+  const lo = damageMin * hits;
+  const hi = damageMax * hits;
+  return lo === hi ? `${lo}` : `${lo}–${hi}`;
+}
+
+/** What a condition does to the player — so the read is actionable, not just a name. */
+function debuffEffect(c: ConditionName | undefined): string {
+  switch (c) {
+    case 'poisoned':
+      return 'poisoned — your attacks roll at disadvantage';
+    case 'frightened':
+      return 'frightened — your attacks roll at disadvantage';
+    case 'blinded':
+      return 'blinded — you attack at disadvantage and are easier to hit';
+    case 'restrained':
+      return 'restrained — you attack at disadvantage and are easier to hit';
+    case 'weakened':
+      return 'weakened — your hits deal less damage';
+    default:
+      return 'a curse';
+  }
 }
 
 const STYLES: Record<MonsterIntent['kind'], IntentStyle> = {
   attack: {
     color: 'var(--color-accent-blood)',
     icon: ICONS.attack,
-    describe: (i) => `Will strike for ~${i.damage} damage`,
+    describe: (i) => `Attacks for ${rangeText(i) ?? '?'} damage if it hits.`,
   },
   multiattack: {
     color: 'var(--color-accent-blood)',
     icon: ICONS.multiattack,
-    describe: (i) => `Will strike ${i.hits ?? 2}× for ~${i.damage} each`,
+    describe: (i) => {
+      const per = rangeText(i) ?? '?';
+      const total = multiTotalText(i);
+      return `${i.hits ?? 2} separate hits, ${per} damage each${total ? ` (${total} total)` : ''}.`;
+    },
   },
   drain: {
     color: 'var(--color-status-necrotic)',
     icon: ICONS.drain,
-    describe: (i) => `Will drain ~${i.damage} HP and heal itself`,
+    describe: (i) => `Life-drain for ${rangeText(i) ?? '?'} damage — it heals for part of what it deals.`,
   },
   paralyze: {
     color: 'var(--color-status-holy)',
     icon: ICONS.paralyze,
-    describe: () => 'Will try to paralyze you — save or be held',
+    describe: () =>
+      'Tries to paralyze you. Fail the save and you lose your turns while attackers strike with advantage.',
   },
   debuff: {
     color: 'var(--color-status-poison)',
     icon: ICONS.debuff,
-    describe: (i) => `Will try to inflict ${conditionWord(i.condition)}`,
+    describe: (i) => `Tries to leave you ${debuffEffect(i.condition)}. Save to resist.`,
   },
   summon: {
     color: 'var(--color-accent-arcane)',
     icon: ICONS.summon,
-    describe: () => 'Will summon reinforcements',
+    describe: () => 'Calls in reinforcements — more enemies join the fight.',
   },
   'sustain-heal': {
     color: 'var(--color-status-poison)',
     icon: ICONS['sustain-heal'],
-    describe: () => 'Will heal itself or a wounded ally',
+    describe: () => 'Heals itself or a wounded ally, restoring lost HP.',
   },
   ward: {
     color: 'var(--color-accent-amber)',
     icon: ICONS.ward,
-    describe: () => 'Will shield itself or an ally with temporary HP',
+    describe: () => 'Shields itself or an ally with temporary HP that soaks your next hits.',
   },
 };
 
@@ -139,9 +174,9 @@ const DEBUFF_COLORS: Partial<Record<ConditionName, string>> = {
 };
 
 function valueText(intent: MonsterIntent): string | null {
-  if (intent.kind === 'multiattack') return `${intent.hits ?? 2}×${intent.damage ?? '?'}`;
-  if (intent.damage !== undefined) return `${intent.damage}`;
-  return null;
+  const range = rangeText(intent);
+  if (intent.kind === 'multiattack') return `${intent.hits ?? 2}× ${range ?? '?'}`;
+  return range;
 }
 
 function IntentBadgeImpl({ intent }: IntentBadgeProps) {
