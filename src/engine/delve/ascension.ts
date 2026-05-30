@@ -30,8 +30,12 @@ export interface AscensionLevel extends AscensionModifiers {
 export const MAX_ASCENSION = 6;
 
 /**
- * Slay-the-Spire-style ascension ladder over the full four-chapter Godwake
- * chain. Clear the chain at Ascension N → unlock N+1 (see
+ * Slay-the-Spire-style ascension ladder over the full six-chapter Godwake
+ * chain. The modifiers are global multipliers applied to every enemy at spawn
+ * (see applyAscensionToMonster / createCombat), so they ride the natural
+ * difficulty ramp into the endgame chapters — Ch5/6 carry the highest base
+ * stat blocks, so the same ascension step bites hardest there. Clear the chain
+ * at Ascension N → unlock N+1 (see
  * metaStore.unlockNextAscension); a lower level may always be replayed.
  *
  * Each entry holds the FULL resolved modifier set at that level — authored so

@@ -276,17 +276,17 @@ describe('finishDelve — renown economy', () => {
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
 
-  it('full clear pays the clear premium + all four bosses + full depth', () => {
+  it('full clear pays the clear premium + all six bosses + full depth', () => {
     const delve = useDelveStore.getState().delve!;
-    // A clear ends at the Matron (the last node); slice(0, idx+1) counts all four.
+    // A clear ends at the Unmade (the terminal node); slice(0, idx+1) counts all six.
     const idx = delve.rooms.findIndex(
-      (r) => r.kind === 'boss' && r.monsters?.[0]?.defId === 'drow-matron-mother',
+      (r) => r.kind === 'boss' && r.monsters?.[0]?.defId === 'the-unmade',
     );
     const bosses = delve.rooms.slice(0, idx + 1).filter((r) => r.kind === 'boss').length;
-    expect(bosses).toBe(4);
-    // A clear walks one node per layer through all four chapters — a real subset
+    expect(bosses).toBe(6);
+    // A clear walks one node per layer through all six chapters — a real subset
     // of the flat list. Depth credits that visited route, not the flat index.
-    const visited = delve.rooms.slice(0, 39).map((r) => r.id);
+    const visited = delve.rooms.slice(0, 60).map((r) => r.id);
     useDelveStore.setState({
       delve: { ...delve, currentRoomIdx: idx, phase: 'completed', visitedRoomIds: visited },
     });

@@ -89,18 +89,20 @@ describe('boss intel rooms — placement', () => {
     expect(before.eventTemplateId).toBe(intelEventIdFor('drow-matron-mother'));
   });
 
-  it('Godwake delve has an intel event 1 room before each of its 4 bosses', () => {
+  it('Godwake delve has an intel event 1 room before each of its 6 bosses', () => {
     const d = createGodwakeDelve(1);
     const bossIndices = d.rooms
       .map((r, i) => ({ r, i }))
       .filter(({ r }) => r.kind === 'boss')
       .map(({ i }) => i);
-    expect(bossIndices).toHaveLength(4);
+    expect(bossIndices).toHaveLength(6);
     const expectedBossIds = [
       'duergar-ilyich',
       'athkatla-magistrate',
       'asylum-director',
       'drow-matron-mother',
+      'hollow-dawn',
+      'the-unmade',
     ];
     bossIndices.forEach((bossIdx, i) => {
       const before = d.rooms[bossIdx - 1];

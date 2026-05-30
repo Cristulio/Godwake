@@ -41,7 +41,7 @@ export interface RoomSpec {
   next?: string[];
   /** Column on the chapter map (0 = chapter entry, boss = last). Layout only. */
   layer?: number;
-  /** Which chapter (1–4) this node belongs to. Set by the branching generator. */
+  /** Which chapter (1–6) this node belongs to. Set by the branching generator. */
   chapter?: number;
 }
 

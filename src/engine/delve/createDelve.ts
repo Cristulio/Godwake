@@ -29,6 +29,19 @@ import {
   MID_POOL as UN_MID_POOL,
   ELITE_POOL as UN_ELITE_POOL,
 } from './chapter4Pools';
+import {
+  WARMUP_POOL as GW_WARMUP_POOL,
+  EARLY_MID_POOL as GW_EARLY_MID_POOL,
+  MID_POOL as GW_MID_POOL,
+  ELITE_POOL as GW_ELITE_POOL,
+} from './chapter5Pools';
+import {
+  WARMUP_POOL as LOOM_WARMUP_POOL,
+  EARLY_MID_POOL as LOOM_EARLY_MID_POOL,
+  MID_POOL as LOOM_MID_POOL,
+  ELITE_POOL as LOOM_ELITE_POOL,
+  CHAPTER6_FLAVOR,
+} from './chapter6Pools';
 
 interface Rng {
   next(): number;
@@ -262,13 +275,14 @@ export function createAthkatlaDelve(seed: number = randomSeed()): DelveState {
 
 /**
  * Godwake — the single continuous run, now a BRANCHING node map. Each of the
- * four chapters is a small layered DAG: parallel nodes the player routes
+ * six chapters is a small layered DAG: parallel nodes the player routes
  * between (fight / shrine / rest / shop / elite / event), all converging on the
  * pre-boss intel beat and then the chapter boss. The camps remain the seams
  * between chapters.
  *
  *   Ch1 Iron Cells → Camp → Ch2 Athkatla → Camp → Ch3 Spellhold → Camp →
- *     Ch4 Ust Natha. Ends at the Drow Matron Mother.
+ *     Ch4 Ust Natha → Camp → Ch5 The Godwake → Camp → Ch6 Beyond the Godwake.
+ *     Ends at the Unmade, the still centre of the wheel.
  *
  * The flat `rooms` array holds every node in chapter-major, layer-minor order
  * (boss last in each chapter, camp right after), so the renown/boss bookkeeping
@@ -758,6 +772,74 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
       goldReward: 220,
     },
   },
+  // Ch5 · The Godwake — past the Underdark, into the dead god of dawns that
+  // could not let anything stay ended. Non-combat flavor authored here; the
+  // chapter5Pools file ships only the encounter pools + threshold flavor.
+  {
+    chapter: 5,
+    prefix: 'c5',
+    pools: {
+      warmup: GW_WARMUP_POOL,
+      earlyMid: GW_EARLY_MID_POOL,
+      mid: GW_MID_POOL,
+      elite: GW_ELITE_POOL,
+    },
+    shrines: [
+      {
+        title: 'A Reliquary of Borrowed Mornings',
+        flavorText:
+          "A niche in the pale stone holds the dawn-god's cast-offs: a phial of the first light there ever was, gone cold and still; a sun-disc worn smooth by ten thousand grasping hands. The relics remember being holy. Press your palm to the cold glass, and for a moment so do you.",
+      },
+      {
+        title: 'The Last Honest Altar',
+        flavorText:
+          "Some pilgrim who climbed this far before you scratched a true god's sign into the bleached floor — not the dawn that will not end, but one of the small surface gods who let their dead stay dead. The chalk is faint. The mercy in it is not. Kneel, while the kneeling still means something.",
+      },
+    ],
+    rests: [
+      {
+        title: 'A Stair the Light Scoured White',
+        flavorText:
+          "A flight of steps the dawn has burned bone-pale, the corridor above fallen in behind you. Nothing reborn climbs this way — the cycle does not waste its risen on stairs that go nowhere. Sit. The light here is steady, and for once it asks nothing back.",
+      },
+      {
+        title: 'The Lee of a Toppled Seraph',
+        flavorText:
+          "A hollow seraph fell here long enough ago that the light has bleached its armour to bone, and in the long shadow it throws the warmth of you is hidden from the song. For a little while the cycle's choir cannot find the tune of you, and you can close your eyes.",
+      },
+    ],
+    shop: {
+      title: "A Pilgrim's Cast-Off Cache",
+      flavorText:
+        "The dawn-god kept the coin and gear of every soul it ever turned and sent back, heaped where the climb steepens. Something that was once a pilgrim and is now only a habit sits the hoard, trading the dead's possessions for coin it has no more use for than they did. It does not haggle. It only counts.",
+    },
+    bossDefId: 'hollow-dawn',
+    boss: {
+      title: 'Where the Morning Will Not Break',
+      flavorText:
+        "The climb ends in a vault of fixed, sourceless dawn — no sun, no horizon, only the first light there ever was, held forever at the instant before it falls. At the centre of it Aurelach waits, luminous and vast and unspeakably tired, and as you cross the threshold it says your name — the one you wore before your first death, the one you do not remember — and adds, almost gently, \"You have come the whole way round again. Be still. Let the morning break on you as it has broken on all the others.\"",
+      xpReward: 2000,
+      goldReward: 280,
+    },
+  },
+  // Ch6 · Beyond the Godwake — the Loom of Souls, the wheel itself, terminal
+  // chapter. All non-combat flavor + the boss ship ready-to-wire in
+  // CHAPTER6_FLAVOR; this entry only binds them to the pools.
+  {
+    chapter: CHAPTER6_FLAVOR.chapter,
+    prefix: CHAPTER6_FLAVOR.prefix,
+    pools: {
+      warmup: LOOM_WARMUP_POOL,
+      earlyMid: LOOM_EARLY_MID_POOL,
+      mid: LOOM_MID_POOL,
+      elite: LOOM_ELITE_POOL,
+    },
+    shrines: CHAPTER6_FLAVOR.shrines,
+    rests: CHAPTER6_FLAVOR.rests,
+    shop: CHAPTER6_FLAVOR.shop,
+    bossDefId: CHAPTER6_FLAVOR.bossDefId,
+    boss: CHAPTER6_FLAVOR.boss,
+  },
 ];
 
 const GODWAKE_CAMPS: RoomFlavor[] = [
@@ -775,6 +857,16 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
     title: 'A Smuggler-Fire in the Underdark',
     flavorText:
       "Past the Director's wing the Cowled Wizards keep a service-shaft that drops into the Upperdark. At the first widening, a surface-smuggler has a chemical-fire going in a brass bowl that does not give off smoke. He has been waiting for someone who walked out of Spellhold alive. He has goods to move down. You have a road to walk.",
+  },
+  {
+    title: 'A Fire at the Edge of the Light',
+    flavorText:
+      "The Matron's temple is behind you and the faerzress thins to nothing ahead, where a pale dawn-coloured glow leaks up through the floor of the world. A last camp on the lip of it — a deep-gnome exile who fled the Underdark and could go no further, a small cold fire that throws no shadow toward the light. He does not ask where you mean to go. He has seen the look before, on the others who climbed past him and did not come back down.",
+  },
+  {
+    title: 'A Stillness Before the Wheel',
+    flavorText:
+      "Aurelach is dead, or as dead as a god of endings can be made, and the dawn it held has gone out. Where the light failed there is one last seam of quiet — no merchant here, only a guttering thing that was a pilgrim once, tending a fire out of habit at the rim of something too large to see the curve of. It pours you a cup with a hand worn nearly smooth. \"Past here the road only goes round,\" it says. \"You will want to be rested when you reach the part that turns.\"",
   },
 ];
 
@@ -799,7 +891,7 @@ export function createGodwakeDelve(
 
   // Stitch the chapters together through the camp seams: each chapter boss
   // points at its camp, each camp at the next chapter's entry node. The final
-  // boss (the Matron) is left terminal.
+  // boss (the Unmade) is left terminal.
   const rooms: RoomSpec[] = [];
   chapters.forEach((nodes, i) => {
     rooms.push(...nodes);

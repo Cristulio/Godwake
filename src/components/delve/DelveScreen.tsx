@@ -40,17 +40,18 @@ function decorationForRoom(room: RoomSpec, chapterId: string): BattlefieldDecora
         return isBoss ? 'spellhold-warden-chamber' : 'spellhold-corridor';
       case 4:
         return isBoss ? 'ust-natha-throne' : 'underdark-tunnel';
+      case 5:
+      case 6:
+        // The Godwake / the Loom have no bespoke backdrop art yet — the pale
+        // dawn-light and the wheel fall back to the neutral scene.
+        return 'generic';
     }
   }
   const roomId = room.id;
-  // Godwake chained delve: 37 rooms across four chapters.
-  //   Ch1 Iron Cells: rooms 1-10 (boss at room-10)
-  //   Camp 1: room-11
-  //   Ch2 Athkatla: rooms 12-19 (boss at room-19)
-  //   Camp 2: room-20
-  //   Ch3 Spellhold: rooms 21-28 (boss at room-28)
-  //   Camp 3: room-29
-  //   Ch4 Ust Natha: rooms 30-37 (boss at room-37)
+  // Legacy fallback for the old linear Godwake layout (fixed room-N ids). The
+  // branching delve sets `room.chapter` on every node, so the chapter switch
+  // above handles all six chapters and this id table is only reached if a node
+  // ever lacks a chapter tag.
   if (chapterId === 'godwake') {
     switch (roomId) {
       // Ch1 combat
