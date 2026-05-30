@@ -22,16 +22,16 @@ describe('xpForLevel', () => {
   it('returns 0 for level 1', () => {
     expect(xpForLevel(1)).toBe(0);
   });
-  it('matches tuned thresholds for levels 2-5 (L3/L4 lowered so caster unlocks reach mid-delve)', () => {
-    expect(xpForLevel(2)).toBe(300);
-    expect(xpForLevel(3)).toBe(600);
-    expect(xpForLevel(4)).toBe(2000);
-    expect(xpForLevel(5)).toBe(4500);
+  it('matches routed-play thresholds for levels 2-5 (cliff flattened so a route reaches the expected level)', () => {
+    expect(xpForLevel(2)).toBe(250);
+    expect(xpForLevel(3)).toBe(550);
+    expect(xpForLevel(4)).toBe(1100);
+    expect(xpForLevel(5)).toBe(2200);
   });
-  it('uses tuned thresholds for levels 6-8', () => {
-    expect(xpForLevel(6)).toBe(9000);
-    expect(xpForLevel(7)).toBe(13000);
-    expect(xpForLevel(8)).toBe(18000);
+  it('uses routed-play thresholds for levels 6-8', () => {
+    expect(xpForLevel(6)).toBe(4000);
+    expect(xpForLevel(7)).toBe(6200);
+    expect(xpForLevel(8)).toBe(9000);
   });
 });
 

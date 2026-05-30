@@ -1,10 +1,10 @@
 # Five-class viability on current content — sim findings
 
 > Auto-generated tables by `scripts/sim-class-viability.ts`. Re-run with
-> `SOULS_PER_CLASS=150 MAX_LIVES=150 npx tsx scripts/sim-class-viability.ts`.
+> `SOULS_PER_CLASS=50 MAX_LIVES=100 npx tsx scripts/sim-class-viability.ts`.
 
-**Souls / class:** 150. **Max lives / soul:** 150.
-**Wall clock:** 62.6s.
+**Souls / class:** 50. **Max lives / soul:** 100.
+**Wall clock:** 12.6s.
 
 ## What this measures
 
@@ -30,13 +30,13 @@ the policy wires them — which the proc table below verifies).
 
 | Class | Souls | Lives/soul | Topped A6 | Mean asc cleared | Ever cleared A0 | First A0-clear life | Per-life clear% | Avg depth (rooms) | Avg final lvl |
 |------|------:|----------:|--------:|----------------:|---------------:|-------------------:|---------------:|-----------------:|-------------:|
-| fighter | 150 | 150.0 | 0.0% | 0.99 | 97.3% | 100.5 | 1.3% | 17.8 | 3.15 |
-| rogue | 150 | 149.6 | 9.3% | 4.01 | 100.0% | 89.6 | 3.4% | 17.9 | 3.10 |
-| wizard | 150 | 150.0 | 0.0% | 0.01 | 15.3% | 138.1 | 0.1% | 24.6 | 3.74 |
-| barbarian | 150 | 124.5 | 99.3% | 5.99 | 100.0% | 45.0 | 5.6% | 24.1 | 3.81 |
-| ranger | 150 | 150.0 | 0.0% | 0.55 | 87.3% | 111.9 | 1.0% | 14.0 | 2.72 |
+| fighter | 50 | 100.0 | 0.0% | 0.24 | 84.0% | 73.6 | 1.1% | 13.3 | 3.46 |
+| rogue | 50 | 100.0 | 0.0% | 1.02 | 94.0% | 74.2 | 2.0% | 11.6 | 3.05 |
+| wizard | 50 | 100.0 | 0.0% | 0.00 | 4.0% | 86.5 | 0.0% | 15.2 | 3.77 |
+| barbarian | 50 | 99.4 | 8.0% | 4.36 | 100.0% | 33.7 | 5.4% | 17.9 | 4.29 |
+| ranger | 50 | 100.0 | 0.0% | 0.16 | 56.0% | 79.2 | 0.7% | 10.1 | 2.77 |
 
-- **Topped A6** — share of souls that cleared the full chain at Ascension 6 within 150 lives.
+- **Topped A6** — share of souls that cleared the full chain at Ascension 6 within 100 lives.
 - **Mean asc cleared** — average highest ascension a soul ever cleared (0 if it never cleared A0).
 - **First A0-clear life** — average life index of a soul's first base-chain clear (only souls that cleared A0).
 - **Per-life clear%** — fraction of ALL lives (across all ascensions) that cleared the chain.
@@ -45,15 +45,15 @@ the policy wires them — which the proc table below verifies).
 ## Ascension reach — how high each class's souls topped out
 
 Soul counts bucketed by the highest ascension level they ever cleared
-("never" = never cleared even A0 within 150 lives).
+("never" = never cleared even A0 within 100 lives).
 
 | Class | never | A0 | A1 | A2 | A3 | A4 | A5 | A6 |
 |------|------:|------:|------:|------:|------:|------:|------:|------:|
-| fighter | 4 | 38 | 75 | 26 | 6 | 1 | 0 | 0 |
-| rogue | 0 | 0 | 2 | 11 | 34 | 53 | 36 | 14 |
-| wizard | 127 | 22 | 1 | 0 | 0 | 0 | 0 | 0 |
-| barbarian | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 149 |
-| ranger | 19 | 57 | 66 | 7 | 1 | 0 | 0 | 0 |
+| fighter | 8 | 30 | 12 | 0 | 0 | 0 | 0 | 0 |
+| rogue | 3 | 15 | 16 | 13 | 3 | 0 | 0 | 0 |
+| wizard | 48 | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| barbarian | 0 | 0 | 0 | 1 | 6 | 21 | 18 | 4 |
+| ranger | 22 | 22 | 4 | 2 | 0 | 0 | 0 | 0 |
 
 ## Proc instrumentation — do the new mechanics actually fire?
 
@@ -64,47 +64,47 @@ read off the damage log (approximate only in rare 200+-entry fights).
 
 | Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat |
 |------|------:|----------:|--------------:|----------------:|--------------:|---------------:|
-| fighter | 222708 | · | · | · | · | · |
-| rogue | 222644 | · | · | · | · | · |
-| wizard | 295946 | · | · | · | · | · |
-| barbarian | 240221 | 1.26 | 1.40 | · | · | · |
-| ranger | 181805 | · | · | 1.53 | 0.69 | 2.51 |
+| fighter | 40879 | · | · | · | · | · |
+| rogue | 35860 | · | · | · | · | · |
+| wizard | 46298 | · | · | · | · | · |
+| barbarian | 54214 | 1.20 | 1.28 | · | · | · |
+| ranger | 31521 | · | · | 1.46 | 0.56 | 2.39 |
 
-**Sanity check:** Barbarian raged **1.26**×/combat and went reckless
-**1.40**×/combat. Ranger cast Hunter's Mark
-**1.53**×/combat, landed mark dice
-**2.51**×/combat, and fired Colossus
-**0.69**×/combat (Colossus is gated behind the L3 Hunter
+**Sanity check:** Barbarian raged **1.20**×/combat and went reckless
+**1.28**×/combat. Ranger cast Hunter's Mark
+**1.46**×/combat, landed mark dice
+**2.39**×/combat, and fired Colossus
+**0.56**×/combat (Colossus is gated behind the L3 Hunter
 subclass, so its rate also reflects how often the ranger reaches L3 within a life).
 
 ## Where deaths cluster
 
-- **fighter** — by chapter: ch1: 7582 · ch2: 13501 · ch3: 829 · ch4: 293. Top kill-rooms: cowled-wardpriest+slaver-cuirassier (3445, 15.5%), duergar-ilyich (2070, 9.3%), duergar-taskmaster (1693, 7.6%), cowled-enforcer+slaver-cuirassier (1653, 7.4%), slaver-cuirassier+cult-fanatic (1309, 5.9%), shadow+slaver-cuirassier (839, 3.8%)
-- **rogue** — by chapter: ch1: 10201 · ch2: 9670 · ch3: 1224 · ch4: 598. Top kill-rooms: duergar-ilyich (2042, 9.4%), cowled-wardpriest+slaver-cuirassier (1440, 6.6%), famished-ghast+goblin (1399, 6.4%), cowled-enforcer+slaver-cuirassier (1393, 6.4%), duergar-taskmaster (999, 4.6%), slaver-cuirassier+cult-fanatic (938, 4.3%)
-- **wizard** — by chapter: ch1: 2887 · ch2: 13204 · ch3: 5920 · ch4: 465. Top kill-rooms: cowled-wardpriest+slaver-cuirassier (1835, 8.2%), cowled-enforcer+slaver-cuirassier (1656, 7.4%), duergar-ilyich (1186, 5.3%), cowled-conjurer+slaver-cuirassier (1154, 5.1%), slayer-hound (937, 4.2%), hollow-sage (830, 3.7%)
-- **barbarian** — by chapter: ch1: 2697 · ch2: 13136 · ch3: 1341 · ch4: 449. Top kill-rooms: cowled-wardpriest+slaver-cuirassier (2581, 14.6%), cowled-enforcer+slaver-cuirassier (1771, 10.0%), athkatla-magistrate (1380, 7.8%), duergar-taskmaster (892, 5.1%), duergar-ilyich (832, 4.7%), shadow+slaver-cuirassier (825, 4.7%)
-- **ranger** — by chapter: ch1: 12627 · ch2: 9249 · ch3: 294 · ch4: 116. Top kill-rooms: duergar-ilyich (2616, 11.7%), famished-ghast+goblin (1579, 7.1%), cowled-wardpriest+slaver-cuirassier (1517, 6.8%), cowled-enforcer+slaver-cuirassier (1187, 5.3%), duergar-taskmaster (1168, 5.2%), slaver-cuirassier+cult-fanatic (1011, 4.5%)
+- **fighter** — by chapter: ch1: 1668 · ch2: 2963 · ch3: 186 · ch4: 129. Top kill-rooms: duergar-ilyich (538, 10.9%), cowled-wardpriest+slaver-cuirassier (399, 8.1%), slaver-cuirassier+cult-fanatic (343, 6.9%), cowled-enforcer+slaver-cuirassier (304, 6.1%), duergar-taskmaster (256, 5.2%), shadow+slaver-cuirassier (209, 4.2%)
+- **rogue** — by chapter: ch1: 2719 · ch2: 1879 · ch3: 184 · ch4: 120. Top kill-rooms: duergar-ilyich (508, 10.4%), famished-ghast+goblin (441, 9.0%), ghoul+skeleton (255, 5.2%), goblin-warden+goblin (222, 4.5%), duergar-taskmaster (219, 4.5%), cowled-enforcer+slaver-cuirassier (218, 4.4%)
+- **wizard** — by chapter: ch1: 1082 · ch2: 3145 · ch3: 745 · ch4: 26. Top kill-rooms: cowled-wardpriest+slaver-cuirassier (503, 10.1%), athkatla-magistrate (496, 9.9%), cowled-enforcer+slaver-cuirassier (358, 7.2%), slaver-cuirassier+cult-fanatic (339, 6.8%), duergar-ilyich (310, 6.2%), shadow+slaver-cuirassier (228, 4.6%)
+- **barbarian** — by chapter: ch1: 886 · ch2: 3124 · ch3: 364 · ch4: 328. Top kill-rooms: cowled-wardpriest+slaver-cuirassier (540, 11.5%), athkatla-magistrate (508, 10.8%), cowled-enforcer+slaver-cuirassier (391, 8.3%), duergar-ilyich (295, 6.3%), shadow+slaver-cuirassier (289, 6.1%), slaver-cuirassier+cult-fanatic (263, 5.6%)
+- **ranger** — by chapter: ch1: 3009 · ch2: 1835 · ch3: 65 · ch4: 55. Top kill-rooms: duergar-ilyich (610, 12.3%), famished-ghast+goblin (448, 9.0%), ghoul+skeleton (262, 5.3%), goblin-warden+goblin (244, 4.9%), goblin-warden+stirge (238, 4.8%), slaver-cuirassier+cult-fanatic (219, 4.4%)
 
 ## Verdict
 
 Both new classes are **VIABLE** — their signature mechanics fire under the
-shared policy (Barbarian raged 1.26×/combat and went reckless
-1.40×/combat; Ranger cast Hunter's Mark 1.53×/combat,
-landed mark dice 2.51×/combat and fired Colossus 0.69×/combat), so the
+shared policy (Barbarian raged 1.20×/combat and went reckless
+1.28×/combat; Ranger cast Hunter's Mark 1.46×/combat,
+landed mark dice 2.39×/combat and fired Colossus 0.56×/combat), so the
 "policy never wires the new mechanics" failure mode did **not** happen — that is
 the most important single result here. But the two land at opposite ends of the
 viability band. **Barbarian is the strongest class in the sim by a wide margin**:
-99.3% of its souls topped Ascension 6 (mean asc cleared 5.99, first A0 clear ~life 45),
-versus the next-best Rogue at 9.3% (mean 4.01) and Fighter / Ranger / Wizard all at
+8.0% of its souls topped Ascension 6 (mean asc cleared 4.36, first A0 clear ~life 34),
+versus the next-best Rogue at 0.0% (mean 1.02) and Fighter / Ranger / Wizard all at
 ≈0% topped. Rage's always-on halving of physical damage — renewable every combat
 in this engine — is a uniquely powerful, ungated survivability lever, and the
 blunt trade-blows AI floor maximally rewards exactly that, so the gap is real but
 inflated: a competent player extracts more from the finesse classes, narrowing it.
 Either way, Barbarian reads as **out of line on the high side** and is the prime
 candidate for the balance lane to look at (chiefly Rage uptime / resistance).
-**Ranger sits at the low end** — viable (clears A0 ~life 112, 74 souls cleared A1 or higher) but with
-the shallowest average depth (14.0 rooms) and lowest average level (2.72), and
-19/150 souls never cleared even A0 (vs Fighter's 4). The structural reason is
+**Ranger sits at the low end** — viable (clears A0 ~life 79, 6 souls cleared A1 or higher) but with
+the shallowest average depth (10.1 rooms) and lowest average level (2.77), and
+22/50 souls never cleared even A0 (vs Fighter's 8). The structural reason is
 not its kit (which fires fine) but the **non-positional engine**: the Ranger's
 ranged identity grants zero defensive benefit — it eats hits exactly like a melee
 class but with d10 HP, leather AC, and no damage resistance, so it plays as a
