@@ -239,6 +239,7 @@ describe('boss intel — buff definitions', () => {
       'asylum-director': 12, // chapter 3
       'drow-matron-mother': 15, // chapter 4
       'hollow-dawn': 18, // chapter 5
+      'the-unmade': 21, // chapter 6
     };
     for (const card of BOSS_INTEL_CARDS) {
       const buff = bossIntelBuffFor(card.bossDefId, 'battle-plan');
@@ -328,6 +329,7 @@ describe('boss intel cards — content', () => {
         'drow-matron-mother',
         'duergar-ilyich',
         'hollow-dawn',
+        'the-unmade', // Ch6 (Beyond the Godwake) — wiring deferred
       ].sort(),
     );
   });

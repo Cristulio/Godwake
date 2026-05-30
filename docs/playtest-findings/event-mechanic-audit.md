@@ -108,18 +108,18 @@ Stable per-seed delve content across cells: identical events seen, only characte
 
 | Cell | Events seen | sc seen | sc picked | succ | fail | succ% (obs) | CHA seen | CHA accessible | CHA blocked | no-bane re-rolls |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Fighter (STR build, Sir Brick) L1 | 174 | 52 | 52 | 34 | 18 | 65.4% | 0 | 0 | 0 | 7 |
-| Fighter (STR build, Sir Brick) L3 | 174 | 52 | 52 | 28 | 24 | 53.8% | 0 | 0 | 0 | 6 |
-| Fighter (STR build, Sir Brick) L5 | 174 | 52 | 52 | 39 | 13 | 75.0% | 0 | 0 | 0 | 10 |
-| Rogue (DEX build, wood-elf) L1 | 174 | 52 | 52 | 34 | 18 | 65.4% | 0 | 0 | 0 | 7 |
-| Rogue (DEX build, wood-elf) L3 | 174 | 52 | 52 | 28 | 24 | 53.8% | 0 | 0 | 0 | 6 |
-| Rogue (DEX build, wood-elf) L5 | 174 | 52 | 52 | 39 | 13 | 75.0% | 0 | 0 | 0 | 10 |
-| Wizard (INT build, tiefling) L1 | 174 | 52 | 52 | 34 | 18 | 65.4% | 0 | 0 | 0 | 7 |
-| Wizard (INT build, tiefling) L3 | 174 | 52 | 52 | 28 | 24 | 53.8% | 0 | 0 | 0 | 6 |
-| Wizard (INT build, tiefling) L5 | 174 | 52 | 52 | 39 | 13 | 75.0% | 0 | 0 | 0 | 10 |
-| Rogue (CHA cross-check, tiefling-charlatan) L1 | 174 | 52 | 52 | 34 | 18 | 65.4% | 0 | 0 | 0 | 7 |
-| Rogue (CHA cross-check, tiefling-charlatan) L3 | 174 | 52 | 52 | 28 | 24 | 53.8% | 0 | 0 | 0 | 6 |
-| Rogue (CHA cross-check, tiefling-charlatan) L5 | 174 | 52 | 52 | 39 | 13 | 75.0% | 0 | 0 | 0 | 10 |
+| Fighter (STR build, Sir Brick) L1 | 235 | 65 | 65 | 53 | 12 | 81.5% | 0 | 0 | 0 | 20 |
+| Fighter (STR build, Sir Brick) L3 | 235 | 65 | 65 | 40 | 25 | 61.5% | 0 | 0 | 0 | 15 |
+| Fighter (STR build, Sir Brick) L5 | 235 | 65 | 65 | 47 | 18 | 72.3% | 0 | 0 | 0 | 17 |
+| Rogue (DEX build, wood-elf) L1 | 235 | 65 | 65 | 53 | 12 | 81.5% | 0 | 0 | 0 | 20 |
+| Rogue (DEX build, wood-elf) L3 | 235 | 65 | 65 | 40 | 25 | 61.5% | 0 | 0 | 0 | 15 |
+| Rogue (DEX build, wood-elf) L5 | 235 | 65 | 65 | 47 | 18 | 72.3% | 0 | 0 | 0 | 17 |
+| Wizard (INT build, tiefling) L1 | 235 | 65 | 65 | 53 | 12 | 81.5% | 0 | 0 | 0 | 20 |
+| Wizard (INT build, tiefling) L3 | 235 | 65 | 65 | 40 | 25 | 61.5% | 0 | 0 | 0 | 15 |
+| Wizard (INT build, tiefling) L5 | 235 | 65 | 65 | 47 | 18 | 72.3% | 0 | 0 | 0 | 17 |
+| Rogue (CHA cross-check, tiefling-charlatan) L1 | 235 | 65 | 65 | 53 | 12 | 81.5% | 0 | 0 | 0 | 20 |
+| Rogue (CHA cross-check, tiefling-charlatan) L3 | 235 | 65 | 65 | 40 | 25 | 61.5% | 0 | 0 | 0 | 15 |
+| Rogue (CHA cross-check, tiefling-charlatan) L5 | 235 | 65 | 65 | 47 | 18 | 72.3% | 0 | 0 | 0 | 17 |
 
 ## E. grant_quirk_reroll fallback paths
 

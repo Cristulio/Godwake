@@ -53,6 +53,15 @@ import apostleOfStillnessUrl from '../../assets/sprites/monsters/apostle-of-stil
 import starflensedMawnUrl from '../../assets/sprites/monsters/starflensed-mawn.svg';
 import fallenArchonUrl from '../../assets/sprites/monsters/fallen-archon.svg';
 import hollowDawnUrl from '../../assets/sprites/monsters/hollow-dawn.svg';
+// ─── Chapter 6 · Beyond the Godwake ─────────────────────────────────────
+import threadbarePenitentUrl from '../../assets/sprites/monsters/threadbare-penitent.svg';
+import cycleRevenantUrl from '../../assets/sprites/monsters/cycle-revenant.svg';
+import fateSpinnerUrl from '../../assets/sprites/monsters/fate-spinner.svg';
+import loomApostleUrl from '../../assets/sprites/monsters/loom-apostle.svg';
+import karmicEchoUrl from '../../assets/sprites/monsters/karmic-echo.svg';
+import theUnwoundUrl from '../../assets/sprites/monsters/the-unwound.svg';
+import axleWardenUrl from '../../assets/sprites/monsters/axle-warden.svg';
+import theUnmadeUrl from '../../assets/sprites/monsters/the-unmade.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -128,6 +137,15 @@ const SPRITES: Record<string, SpriteEntry> = {
   'starflensed-mawn': { url: starflensedMawnUrl, label: 'Starflensed Mawn' },
   'fallen-archon': { url: fallenArchonUrl, label: 'Fallen Archon' },
   'hollow-dawn': { url: hollowDawnUrl, label: 'Aurelach, the Hollow Dawn' },
+  // ─── Chapter 6 · Beyond the Godwake ───────────────────────────────────
+  'threadbare-penitent': { url: threadbarePenitentUrl, label: 'Threadbare Penitent' },
+  'cycle-revenant': { url: cycleRevenantUrl, label: 'Cycle-Revenant' },
+  'fate-spinner': { url: fateSpinnerUrl, label: 'Fate-Spinner' },
+  'loom-apostle': { url: loomApostleUrl, label: 'Loom-Apostle' },
+  'karmic-echo': { url: karmicEchoUrl, label: 'Karmic Echo' },
+  'the-unwound': { url: theUnwoundUrl, label: 'The Unwound' },
+  'axle-warden': { url: axleWardenUrl, label: 'Axle-Warden' },
+  'the-unmade': { url: theUnmadeUrl, label: 'The Unmade' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },
