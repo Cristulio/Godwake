@@ -33,28 +33,33 @@ describe('Rogue balance matrix', () => {
     // eslint-disable-next-line no-console
     console.log(`\n[rogueSim] wrote ${OUT_FILE} (${elapsedSec}s)\n${headline}`);
 
-    // ── Guard-rails (LOOSE) ────────────────────────────────────────────────
-    // Wide bands so ordinary balance drift stays green; only a genuine
-    // regression turns this RED. Re-tighten after the sibling combat/meta
-    // branches land.
+    // ── Guard-rails (re-tightened 2026-05-30 to the 6-chapter reality) ──────
+    // Bands now snug around the current full-resim numbers (full-resim lane):
+    // the bare/loaded rogue clears 0% of the 6-chapter run at the AI floor, so
+    // every cell dies 100% and avg depth tops out ~25 rooms / ~1.8 chapters.
+    // Caps are set to the true 6-chapter ceiling (a routed clear is ~62-66
+    // rooms / 6 chapters) so a counting bug or a content-size change trips
+    // them, while leaving slack for legitimate balance drift.
     expect(summaries.length).toBe(START_LEVELS.length * VARIANTS.length);
     for (const s of summaries) {
       expect(s.runs).toBe(RUNS_PER_CELL);
       expect(s.avgRoomsCleared).toBeGreaterThan(0);
-      expect(s.avgRoomsCleared).toBeLessThanOrEqual(58);
+      expect(s.avgRoomsCleared).toBeLessThanOrEqual(70); // routed clear ≈ 66 rooms
       expect(s.deathRate).toBeGreaterThanOrEqual(0);
       expect(s.deathRate).toBeLessThanOrEqual(1);
       expect(s.avgChaptersCleared).toBeGreaterThanOrEqual(0);
-      expect(s.avgChaptersCleared).toBeLessThanOrEqual(4);
+      expect(s.avgChaptersCleared).toBeLessThanOrEqual(6); // 6-chapter run
     }
 
-    // Anti-immortal ceiling: every cell must still die regularly. The
-    // class-balance-philosophy floor is "each death is rewarding" (death >
-    // 30%), and this sim exists because of the "feels immortal" rogue report.
-    // The worst current cell (loaded L7) sits at ~88% death, so the 30% band
-    // has a wide margin — it goes RED only if the rogue turns near-unkillable.
+    // Anti-immortal floor: every cell must still die the large majority of the
+    // time. The class-balance-philosophy floor is "each death is rewarding",
+    // and this sim exists because of the "feels immortal" rogue report. Every
+    // cell sits at 100% death today (the 6-chapter run out-runs the bare/loaded
+    // AI-floor rogue), so the > 0.6 band leaves wide room for a real
+    // survivability buff while still going RED if the rogue turns near-
+    // unkillable (the regression this guards against).
     const minDeathRate = Math.min(...summaries.map((s) => s.deathRate));
-    expect(minDeathRate).toBeGreaterThan(0.3);
+    expect(minDeathRate).toBeGreaterThan(0.6);
   }, 600_000);
 });
 
