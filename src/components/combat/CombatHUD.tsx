@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { computeAC, characterHasMechanic } from '../../engine/character/derived';
-import { getRace } from '../../content/races';
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
@@ -185,8 +184,6 @@ function Pill({
 
 export function CombatHUD({ character, state }: CombatHUDProps) {
   const ac = computeAC(character);
-  const race = getRace(character.raceId);
-  const speed = race.speed;
 
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
@@ -298,12 +295,6 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
               >
                 AC {ac}
               </span>
-              <span
-                className="tabular-nums text-[var(--color-text-dim)]"
-                title="Speed (ft per turn)"
-              >
-                SPD {speed}
-              </span>
             </span>
           </div>
           <HpBar current={character.hp.current} max={character.hp.max} temp={character.hp.temp} />
@@ -394,7 +385,7 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
               text={`Fury ${rageRounds}`}
               on
               tone="blood"
-              title={`Raging for ${rageRounds} more round${rageRounds === 1 ? '' : 's'} — physical damage halved, melee hits land harder.`}
+              title={`Raging for ${rageRounds} more round${rageRounds === 1 ? '' : 's'} — physical damage halved, melee hits land harder, but you can't heal until the fury passes.`}
             />
           )}
         </Section>

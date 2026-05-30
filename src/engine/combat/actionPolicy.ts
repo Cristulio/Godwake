@@ -220,8 +220,9 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
       return { kind: 'hunters-mark', targetId: primary.id };
     }
 
-    // Emergency potion (bonus action) for anyone genuinely low.
-    if (hpPct <= EMERGENCY_HP) {
+    // Emergency potion (bonus action) for anyone genuinely low. Rage locks out
+    // healing, so a raging barbarian can't reach for it — keep swinging instead.
+    if (hpPct <= EMERGENCY_HP && !isRaging(character)) {
       const healIdx = bestHealPotionIdx(character);
       if (healIdx >= 0) return { kind: 'item', inventoryIndex: healIdx };
     }

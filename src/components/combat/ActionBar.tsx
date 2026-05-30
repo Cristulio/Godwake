@@ -145,6 +145,8 @@ export function ActionBar({
       return false;
     }
     if (item.kind !== 'consumable') return false;
+    // Rage locks out healing — a raging barbarian can't drink a draught.
+    if (raging && item.effect === 'heal') return false;
     return item.actionCost === 'bonus'
       ? !character.actionEconomy.bonusActionUsed
       : !character.actionEconomy.actionUsed;
@@ -220,7 +222,7 @@ export function ActionBar({
             variant={canRage ? 'primary' : 'secondary'}
             onClick={onRage}
             disabled={!canRage}
-            title="Bonus action: enter a battle-fury — physical damage against you is halved and your melee hits land harder for several rounds. Refreshes each fight."
+            title="Bonus action: enter a battle-fury — physical damage against you is halved and your melee hits land harder for several rounds, but you can't heal until it passes. Refreshes each fight."
             className="flex-1"
           >
             {raging ? `Raging (${rageRounds})` : `Rage${rageUses > 0 ? ` (${rageUses})` : ''}`}

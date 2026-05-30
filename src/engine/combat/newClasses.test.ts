@@ -4,6 +4,7 @@ import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack } from './attack';
 import { monsterAttack } from './attack/monsterAttack';
 import { useRage, useRecklessAttack } from './rage';
+import { useConsumable } from './useItem';
 import { useHuntersMark } from './huntersMark';
 import { endTurn } from './turn';
 import { createDiceRoller } from '../dice';
@@ -108,6 +109,40 @@ describe('Barbarian — Rage', () => {
       }
     }
     expect(observed).toBe(true);
+  });
+
+  it("can't drink a healing potion while raging — the draught is kept, not spent", () => {
+    const roller = createDiceRoller(1);
+    const barb = makeBarbarian({
+      inventory: [{ itemId: 'greataxe' }, { itemId: 'potion-of-healing' }],
+    });
+    const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
+    const potionIdx = init.character.inventory.findIndex((r) => r.itemId === 'potion-of-healing');
+    const hurt: Character = {
+      ...init.character,
+      hp: { current: 5, max: init.character.hp.max, temp: 0 },
+    };
+
+    // Raging: the heal is a true no-op — HP untouched, potion still in the bag,
+    // no action spent (engine returns the same references for a no-op).
+    const raging: Character = {
+      ...hurt,
+      resources: { ...hurt.resources, rageRoundsRemaining: 5 },
+    };
+    const blocked = useConsumable({ roller, character: raging, state: init.state }, potionIdx);
+    expect(blocked.character).toBe(raging);
+    expect(blocked.state).toBe(init.state);
+    expect(blocked.character.hp.current).toBe(5);
+    expect(
+      blocked.character.inventory.filter((r) => r.itemId === 'potion-of-healing'),
+    ).toHaveLength(1);
+
+    // Control: the same potion, not raging, heals and is consumed.
+    const calm = useConsumable({ roller, character: hurt, state: init.state }, potionIdx);
+    expect(calm.character.hp.current).toBeGreaterThan(5);
+    expect(
+      calm.character.inventory.filter((r) => r.itemId === 'potion-of-healing'),
+    ).toHaveLength(0);
   });
 
   it('halves incoming physical damage while raging (same roll, half result)', () => {

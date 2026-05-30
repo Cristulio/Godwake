@@ -456,8 +456,13 @@ export function playerAttack(
 
     // "of the Leech" weapon affix: heal for a fraction of the damage dealt,
     // capped at max HP. Based on the full rolled damage, not the post-clamp
-    // overkill, so a finishing blow still feeds the wielder.
-    if (affixMods.lifestealPct > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
+    // overkill, so a finishing blow still feeds the wielder. Rage shuts the
+    // valve — no healing of any kind while the fury burns.
+    if (
+      affixMods.lifestealPct > 0 &&
+      !isRaging(nextCharacter) &&
+      nextCharacter.hp.current < nextCharacter.hp.max
+    ) {
       const healed = Math.floor((totalDamage * affixMods.lifestealPct) / 100);
       if (healed > 0) {
         const before = nextCharacter.hp.current;
