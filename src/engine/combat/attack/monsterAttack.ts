@@ -254,9 +254,18 @@ function resolveSingleAttack(
   if (!attacker || attacker.kind !== 'monster') return { state, character: nextCharacter };
   const monsterDef = getMonster(attacker.instance.defId);
 
+  // Ranged "kept at range" payoff: the first enemy attack of the fight resolves
+  // at disadvantage while the player wields a bow. Read the flag here and spend
+  // it on this swing (whether it lands or not) by carrying the cleared value
+  // forward in workingState — so a multiattack only gets the one disadvantaged
+  // strike.
+  const rangedEvasion = (state.rangedEvasionRemaining ?? 0) > 0;
+
   // Battle Rage transition: any monster carrying the mechanic flips to rage the
   // first turn it is at/below half HP. Subsequent swings read the flag.
-  let workingState = state;
+  let workingState: CombatState = rangedEvasion
+    ? { ...state, rangedEvasionRemaining: 0 }
+    : state;
   const bloodied = attacker.instance.hp.current * 2 <= attacker.instance.hp.max;
   const hasBattleRage = monsterDef.bossMechanic === 'battle-rage';
   const enteringRage = hasBattleRage && bloodied && !attacker.instance.bossRageActive;
@@ -287,7 +296,7 @@ function resolveSingleAttack(
   const blurActive = (nextCharacter.resources.blurRoundsRemaining ?? 0) > 0;
   const recklessPlayer = nextCharacter.recklessActive === true;
   const hasAdvantage = playerVulnerable || recklessPlayer;
-  const hasDisadvantage = blurActive;
+  const hasDisadvantage = blurActive || rangedEvasion;
   const attackAdvantage: 'normal' | 'advantage' | 'disadvantage' =
     hasAdvantage && hasDisadvantage
       ? 'normal'
@@ -308,7 +317,9 @@ function resolveSingleAttack(
           ? ' (advantage — reckless)'
           : ' (advantage — player exposed)'
       : attackAdvantage === 'disadvantage'
-        ? ' (disadvantage — Blur)'
+        ? blurActive
+          ? ' (disadvantage — Blur)'
+          : ' (disadvantage — kept at range)'
         : '';
   workingState = appendLog(workingState, {
     id: nextLogId(workingState),

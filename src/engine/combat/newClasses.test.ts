@@ -345,11 +345,24 @@ describe('Ranger (Hunter) — Colossus Slayer', () => {
       const roller = createDiceRoller(seed);
       const init = createCombat({ roller, character: ranger, monsters: [{ def: getMonster('goblin') }] });
       const gid = monsterId(init.state);
-      // Goblin at full HP — Colossus has no wounded target to slay.
-      const atk = playerAttack({ roller, character: init.character, state: init.state }, gid, 'longbow');
-      const hit = atk.state.log.some((l) => l.kind === 'damage');
+      // The ranged opening volley may have grazed (or downed) the goblin —
+      // restore it to full HP and reopen combat so we isolate the "full-HP
+      // target → no Colossus" rule from the volley's damage.
+      const state: CombatState = {
+        ...init.state,
+        status: 'active',
+        combatants: init.state.combatants.map((c) =>
+          c.kind === 'monster' && c.id === gid
+            ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: c.instance.hp.max } } }
+            : c,
+        ),
+      };
+      const before = state.log.length;
+      const atk = playerAttack({ roller, character: init.character, state }, gid, 'longbow');
+      const newLines = atk.state.log.slice(before);
+      const hit = newLines.some((l) => l.kind === 'damage');
       if (hit) {
-        expect(atk.state.log.some((l) => l.text.includes('colossus ('))).toBe(false);
+        expect(newLines.some((l) => l.text.includes('colossus ('))).toBe(false);
         checked = true;
       }
     }

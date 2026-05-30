@@ -68,6 +68,25 @@ function isTwoHanded(itemId: string): boolean {
   return item.properties.includes('two-handed');
 }
 
+/**
+ * A weapon that strikes from a distance — bows and crossbows, flagged by the
+ * `ammunition` property. This is the same notion `playerAttack` uses to roll
+ * off DEX, and the gate for the non-spatial ranged payoff (opening volley +
+ * early evasion). Thrown melee weapons (a dagger, a javelin in hand) are NOT
+ * ranged here: the engine resolves them as melee, so they grant no distance.
+ */
+export function isRangedWeapon(weapon: Weapon): boolean {
+  return weapon.properties.includes('ammunition');
+}
+
+/** True when the character's main hand is a ranged weapon (bow / crossbow). */
+export function wieldsRangedWeapon(character: Character): boolean {
+  const ref = character.equipped.mainHand;
+  if (!ref) return false;
+  const item = getItem(ref.itemId);
+  return item.kind === 'weapon' && isRangedWeapon(item);
+}
+
 function requiresAttunement(itemId: string): boolean {
   const item = getItem(itemId);
   return (item.kind === 'weapon' || item.kind === 'armor') && item.attunement;
