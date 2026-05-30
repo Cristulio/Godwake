@@ -235,9 +235,14 @@ describe('Mirror Image — duplicates soak blows', () => {
   it('absorbs the first 3 hits, then the 4th lands', () => {
     const goblin = getMonster('goblin'); // +4 to hit, 1d6+2 slashing
     const init = createCombat({ character: makeWizardL3Knowing('mirror-image'), monsters: [{ def: goblin }] });
-    // Face 19 → 23 vs the wizard's AC 14 always hits. One damage roll [3] for
-    // the blow that gets through after the images are gone.
-    const roller = makeScriptedRoller({ d20Faces: [19, 19, 19, 19], damageRolls: [[3]] });
+    // Each soaked attack rolls twice: a 19 to-hit (→23 vs AC 14 always hits)
+    // then a 2 see-through (< DC 13 → the goblin is fooled, the image soaks it).
+    // The 4th attack has no images left, so it only rolls the 19 to-hit and the
+    // scripted [3] damage roll.
+    const roller = makeScriptedRoller({
+      d20Faces: [19, 2, 19, 2, 19, 2, 19],
+      damageRolls: [[3]],
+    });
     let { state, character } = castSpell({
       roller,
       character: init.character,
@@ -257,6 +262,27 @@ describe('Mirror Image — duplicates soak blows', () => {
     character = monsterAttack({ roller, character, state }, mid).character;
     expect(character.resources.mirrorImages).toBe(0);
     expect(character.hp.current).toBe(fullHp - 5); // 1d6(=3) + 2
+  });
+
+  it('an enemy that sees through an image still strikes the real wizard', () => {
+    const goblin = getMonster('goblin'); // +4 to hit, 1d6+2 slashing
+    const init = createCombat({ character: makeWizardL3Knowing('mirror-image'), monsters: [{ def: goblin }] });
+    // 19 to-hit (→23 vs AC 14 hits), then a 20 see-through (≥ DC 13 → the goblin
+    // picks out the real wizard). One image still collapses, but [3] damage lands.
+    const roller = makeScriptedRoller({ d20Faces: [19, 20], damageRolls: [[3]] });
+    let { state, character } = castSpell({
+      roller,
+      character: init.character,
+      state: init.state,
+      spellId: 'mirror-image',
+    });
+    const mid = monsterId(state);
+    const fullHp = character.hp.current;
+
+    ({ state, character } = monsterAttack({ roller, character, state }, mid));
+    expect(character.resources.mirrorImages).toBe(2); // a duplicate is spent anyway
+    expect(character.hp.current).toBe(fullHp - 5); // but the blow lands: 1d6(=3) + 2
+    expect(state.log.some((l) => l.text.includes('sees past the flicker'))).toBe(true);
   });
 });
 

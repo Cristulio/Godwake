@@ -41,6 +41,7 @@ import {
   selectMonsterIntent,
 } from './monsterIntent';
 import { tryShieldReaction } from '../spells/shield';
+import { MIRROR_IMAGE_SEE_THROUGH_DC } from '../spells/mirrorImage';
 import { combatResult, patchResources, type CombatActionResult } from '../types';
 import { appendLog } from '../log';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
@@ -326,16 +327,33 @@ function resolveSingleAttack(
     }
   }
 
-  // Mirror Image: a landing blow shatters a duplicate instead.
+  // Mirror Image: a landing blow meets the duplicates. The attacker first rolls
+  // to see through one illusion (flat illusion DC). On a success it picks out the
+  // real wizard — a duplicate still collapses, but the blow lands. On a failure
+  // the blow is wasted on a harmless afterimage (full soak, as before). Either
+  // way one image is spent, so the screen erodes instead of granting immunity.
   if (hit && (nextCharacter.resources.mirrorImages ?? 0) > 0) {
     const remaining = (nextCharacter.resources.mirrorImages ?? 0) - 1;
     nextCharacter = patchResources(nextCharacter, { mirrorImages: remaining });
-    hit = false;
-    workingState = appendLog(workingState, {
-      id: nextLogId(workingState),
-      kind: 'system',
-      text: `A flickering duplicate shatters — the blow finds only afterimage.${remaining > 0 ? ` ${remaining} image${remaining === 1 ? '' : 's'} remain.` : ' No images remain.'}`,
-    });
+    const sawThrough = roller.d20().total >= MIRROR_IMAGE_SEE_THROUGH_DC;
+    const remainNote =
+      remaining > 0
+        ? ` ${remaining} image${remaining === 1 ? '' : 's'} remain.`
+        : ' No images remain.';
+    if (sawThrough) {
+      workingState = appendLog(workingState, {
+        id: nextLogId(workingState),
+        kind: 'system',
+        text: `${attacker.instance.displayName} sees past the flicker and strikes the true ${nextCharacter.name} — a duplicate collapses all the same.${remainNote}`,
+      });
+    } else {
+      hit = false;
+      workingState = appendLog(workingState, {
+        id: nextLogId(workingState),
+        kind: 'system',
+        text: `A flickering duplicate shatters — the blow finds only afterimage.${remainNote}`,
+      });
+    }
   }
 
   const attackEvent: AttackEvent = {
