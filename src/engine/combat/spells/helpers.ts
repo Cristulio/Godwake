@@ -15,6 +15,7 @@ import {
   proficiencyBonus,
 } from '../../character/derived';
 import { characterCampBoonMods } from '../../character/campBoons';
+import { characterAffixMods } from '../../items/affixMods';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchSpellSlots } from '../types';
 import { attachCombatVfx } from '../vfx';
@@ -48,7 +49,8 @@ export function spellAttackBonus(character: Readonly<Character>): number {
     proficiencyBonus(character.level) +
     (character.permanentBonuses?.spellAttack ?? 0) +
     (character.delveSpellAttackBonus ?? 0) +
-    boonBonus
+    boonBonus +
+    characterAffixMods(character).spellAttackBonus
   );
 }
 
@@ -65,13 +67,18 @@ export function spellSaveDC(character: Readonly<Character>): number {
     proficiencyBonus(character.level) +
     classBonus +
     (character.permanentBonuses?.spellDc ?? 0) +
-    boonBonus
+    boonBonus +
+    characterAffixMods(character).spellDcBonus
   );
 }
 
 export function spellDamageBonus(character: Readonly<Character>): number {
   const boonBonus = characterCampBoonMods(character).spellDamageBonus ?? 0;
-  return (character.permanentBonuses?.spellDamage ?? 0) + boonBonus;
+  return (
+    (character.permanentBonuses?.spellDamage ?? 0) +
+    boonBonus +
+    characterAffixMods(character).spellDamageBonus
+  );
 }
 
 export function attachSpellEffect(

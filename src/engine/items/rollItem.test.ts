@@ -68,6 +68,27 @@ describe('eligibleAffixes — class gating', () => {
     expect(eligibleAffixes('weapon', 'barbarian').map((a) => a.id)).toContain('furious');
     expect(eligibleAffixes('weapon', 'ranger').map((a) => a.id)).toContain('quarry');
     expect(eligibleAffixes('weapon', 'rogue').map((a) => a.id)).toContain('shadowed');
+    expect(eligibleAffixes('weapon', 'fighter').map((a) => a.id)).toContain('relentless');
+  });
+
+  it('gates caster affixes to the wizard', () => {
+    const wizardAccessory = eligibleAffixes('accessory', 'wizard').map((a) => a.id);
+    expect(wizardAccessory).toEqual(
+      expect.arrayContaining(['arcane', 'archmage', 'lucid', 'runic']),
+    );
+    // No other class rolls them — Diablo-style off-class drops only.
+    for (const classId of ['fighter', 'rogue', 'barbarian', 'ranger'] as const) {
+      const ids = eligibleAffixes('accessory', classId).map((a) => a.id);
+      expect(ids).not.toContain('arcane');
+      expect(ids).not.toContain('runic');
+    }
+  });
+
+  it('lets every class roll the new generic armour resists', () => {
+    const armorAffixes = eligibleAffixes('armor', 'fighter').map((a) => a.id);
+    expect(armorAffixes).toEqual(
+      expect.arrayContaining(['graveward', 'antivenom', 'warded-mind', 'stalwart', 'pristine']),
+    );
   });
 
   it('splits affixes by base kind', () => {

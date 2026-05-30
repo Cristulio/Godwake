@@ -144,12 +144,26 @@ export const AffixModifiersSchema = z
     tempHpPerCombat: z.number().optional(),
     /** Halve incoming damage of this type (armour affix). */
     resist: DamageTypeSchema.optional(),
+    /** Conditional AC: applied only while the wearer is at full HP. */
+    acBonusWhileFull: z.number().optional(),
+    /** Conditional AC: applied only while the wearer is bloodied (HP at half or less). */
+    acBonusWhileBloodied: z.number().optional(),
+    /** Caster (Wizard): flat bonus to the spell save DC of every save spell. */
+    spellDcBonus: z.number().optional(),
+    /** Caster (Wizard): flat bonus to spell damage rolls. */
+    spellDamageBonus: z.number().optional(),
+    /** Caster (Wizard): flat bonus to spell attack rolls. */
+    spellAttackBonus: z.number().optional(),
+    /** Caster (Wizard): extra level-1 spell slots, added when the well refills. */
+    bonusSpellSlotsL1: z.number().optional(),
     /** Class-flavoured (Barbarian): extra melee damage while Rage burns. */
     rageDamageBonus: z.number().optional(),
     /** Class-flavoured (Ranger): extra damage against the Hunter's Mark target. */
     markDamageBonus: z.number().optional(),
     /** Class-flavoured (Rogue): extra damage on the strike Sneak Attack fires. */
     sneakDamageBonus: z.number().optional(),
+    /** Class-flavoured (Fighter): extra damage on each follow-up swing of a multiattack. */
+    followupDamageBonus: z.number().optional(),
   })
   .default({});
 export type AffixModifiers = z.infer<typeof AffixModifiersSchema>;

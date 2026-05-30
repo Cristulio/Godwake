@@ -1,6 +1,7 @@
 import type { Character, SpellSlots } from '../../types/character';
 import { getRace } from '../../content/races';
 import { characterHasMechanic } from './derived';
+import { characterAffixMods } from '../items/affixMods';
 
 /** Returns a character object with fresh action economy for a new turn. */
 export function withResetActionEconomy(character: Character): Character {
@@ -67,6 +68,20 @@ export function wizardSpellSlotsForLevel(level: number): SpellSlots {
   return { 1: 2, 2: 0, 3: 0, 4: 0 };
 }
 
+/**
+ * The wizard's refilled slot pool, including any extra level-1 slots granted by
+ * equipped gear ("Runic" caster affix). Used everywhere the well refills — rest,
+ * long rest, level-up — so the bonus slot is felt on the next encounter. (Gear
+ * equipped mid-delve only adds the slot at the next refill, which is fine: the
+ * natural flow is equip-then-rest.)
+ */
+export function wizardSpellSlots(character: Readonly<Character>): SpellSlots {
+  const slots = wizardSpellSlotsForLevel(character.level);
+  const bonusL1 = characterAffixMods(character).bonusSpellSlotsL1;
+  if (bonusL1 > 0) slots[1] = (slots[1] ?? 0) + bonusL1;
+  return slots;
+}
+
 /** MVP short rest: regain hit dice up to (1d4 * level) HP — simplified.
  *  Also refreshes class resources, INCLUDING wizard spell slots. The chained
  *  delve is too long for slots to refill only at the hub — wizards would be
@@ -90,7 +105,7 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
       rageUsesRemaining: barbarianRageMax(character),
       rageRoundsRemaining: 0,
       spellSlots: isWizard
-        ? wizardSpellSlotsForLevel(character.level)
+        ? wizardSpellSlots(character)
         : character.resources.spellSlots,
     },
   };
@@ -117,7 +132,7 @@ export function longRest(character: Character): Character {
       rageUsesRemaining: barbarianRageMax(character),
       rageRoundsRemaining: 0,
       spellSlots: isWizard
-        ? wizardSpellSlotsForLevel(character.level)
+        ? wizardSpellSlots(character)
         : character.resources.spellSlots,
       mageArmorActive: isWizard ? false : character.resources.mageArmorActive,
       shieldActive: isWizard ? false : character.resources.shieldActive,

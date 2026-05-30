@@ -29,10 +29,17 @@ const WEAPON_BASE_IDS = [
 ] as const;
 
 const ARMOR_BASE_IDS = [
+  'padded-armor',
   'leather-armor',
   'studded-leather',
+  'hide-armor',
+  'scale-mail',
+  'breastplate',
   'half-plate',
+  'ring-mail',
   'chain-mail',
+  'splint-armor',
+  'plate-armor',
   'shield',
 ] as const;
 
@@ -40,10 +47,15 @@ const ARMOR_BASE_IDS = [
 const ACCESSORY_BASE_IDS = [
   'iron-ring',
   'silver-ring',
+  'gold-ring',
   'jade-amulet',
+  'bone-charm',
   'worn-belt',
+  'studded-girdle',
   'traveler-boots',
+  'soft-boots',
   'iron-helm',
+  'leather-cap',
 ] as const;
 
 /** Affix count by rarity. Purple rolls 3 or 4; legendary is Wave 2 (treat as 4). */

@@ -114,9 +114,11 @@ export function computeAC(character: Character): number {
   base += affixMods.acBonus;
 
   // Conditional / soul-mark AC blessings. Full-HP and bloodied are mutually
-  // exclusive in practice; the per-bane lever is unconditional.
-  if (isFullHp(character)) base += blessingMods.acBonusWhileFull ?? 0;
-  if (isBloodied(character)) base += blessingMods.acBonusWhileBloodied ?? 0;
+  // exclusive in practice; the per-bane lever is unconditional. Conditional
+  // armour affixes (Pristine / Stalwart) ride the same HP triggers.
+  if (isFullHp(character)) base += (blessingMods.acBonusWhileFull ?? 0) + affixMods.acBonusWhileFull;
+  if (isBloodied(character))
+    base += (blessingMods.acBonusWhileBloodied ?? 0) + affixMods.acBonusWhileBloodied;
   base += (blessingMods.acBonusPerBaneQuirk ?? 0) * baneQuirkCount(character);
 
   // Wizard buffs.

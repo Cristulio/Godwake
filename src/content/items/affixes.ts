@@ -86,6 +86,92 @@ const FROSTWARD: Affix = AffixSchema.parse({
   modifiers: { resist: 'cold' },
 });
 
+// --- Armour affixes (Wave-3 breadth: more resists + conditional guard) -------
+// Resists name damage types enemies actually deal (necrotic/poison/psychic),
+// so none are flavour-only. Conditional AC rides the same full-HP / bloodied
+// triggers the blessing system already reads in computeAC.
+
+const GRAVEWARD: Affix = AffixSchema.parse({
+  id: 'graveward',
+  namePart: { kind: 'suffix', word: 'of the Graveward' },
+  effect: 'Resist necrotic — incoming necrotic damage halved.',
+  appliesTo: ['armor', 'accessory'],
+  modifiers: { resist: 'necrotic' },
+});
+
+const ANTIVENOM: Affix = AffixSchema.parse({
+  id: 'antivenom',
+  namePart: { kind: 'suffix', word: 'of the Antivenom' },
+  effect: 'Resist poison — incoming poison damage halved.',
+  appliesTo: ['armor', 'accessory'],
+  modifiers: { resist: 'poison' },
+});
+
+const WARDED_MIND: Affix = AffixSchema.parse({
+  id: 'warded-mind',
+  namePart: { kind: 'suffix', word: 'of the Warded Mind' },
+  effect: 'Resist psychic — incoming psychic damage halved.',
+  appliesTo: ['armor', 'accessory'],
+  modifiers: { resist: 'psychic' },
+});
+
+const STALWART: Affix = AffixSchema.parse({
+  id: 'stalwart',
+  namePart: { kind: 'prefix', word: 'Stalwart' },
+  effect: '+2 AC while bloodied (HP at half or less).',
+  appliesTo: ['armor', 'accessory'],
+  modifiers: { acBonusWhileBloodied: 2 },
+});
+
+const PRISTINE: Affix = AffixSchema.parse({
+  id: 'pristine',
+  namePart: { kind: 'prefix', word: 'Pristine' },
+  effect: '+1 AC while at full HP.',
+  appliesTo: ['armor', 'accessory'],
+  modifiers: { acBonusWhileFull: 1 },
+});
+
+// --- Caster-flavoured affixes (Wizard) --------------------------------------
+// The wizard wears no armour, so these ride weapons (staff/dagger) and
+// accessories — finally giving casters gear worth chasing. Class-gated so a
+// fighter never rolls a spell-DC staff (off-class drops, Diablo-style).
+
+const ARCANE: Affix = AffixSchema.parse({
+  id: 'arcane',
+  namePart: { kind: 'prefix', word: 'Arcane' },
+  effect: '+1 to your spell save DC.',
+  appliesTo: ['weapon', 'accessory'],
+  classGate: ['wizard'],
+  modifiers: { spellDcBonus: 1 },
+});
+
+const ARCHMAGE: Affix = AffixSchema.parse({
+  id: 'archmage',
+  namePart: { kind: 'suffix', word: 'of the Archmage' },
+  effect: '+2 spell damage.',
+  appliesTo: ['weapon', 'accessory'],
+  classGate: ['wizard'],
+  modifiers: { spellDamageBonus: 2 },
+});
+
+const LUCID: Affix = AffixSchema.parse({
+  id: 'lucid',
+  namePart: { kind: 'suffix', word: 'of Lucidity' },
+  effect: '+1 to spell attack rolls.',
+  appliesTo: ['weapon', 'accessory'],
+  classGate: ['wizard'],
+  modifiers: { spellAttackBonus: 1 },
+});
+
+const RUNIC: Affix = AffixSchema.parse({
+  id: 'runic',
+  namePart: { kind: 'prefix', word: 'Runic' },
+  effect: '+1 level-1 spell slot (refills on rest).',
+  appliesTo: ['weapon', 'accessory'],
+  classGate: ['wizard'],
+  modifiers: { bonusSpellSlotsL1: 1 },
+});
+
 // --- Class-flavoured weapon affixes -----------------------------------------
 
 const FURIOUS: Affix = AffixSchema.parse({
@@ -113,6 +199,15 @@ const SHADOWED: Affix = AffixSchema.parse({
   appliesTo: ['weapon'],
   classGate: ['rogue'],
   modifiers: { sneakDamageBonus: 4 },
+});
+
+const RELENTLESS: Affix = AffixSchema.parse({
+  id: 'relentless',
+  namePart: { kind: 'prefix', word: 'Relentless' },
+  effect: '+3 damage on each follow-up swing of your Extra Attack.',
+  appliesTo: ['weapon'],
+  classGate: ['fighter'],
+  modifiers: { followupDamageBonus: 3 },
 });
 
 // --- Accessory affixes (rings / amulets / belts / boots / helms) ------------
@@ -194,9 +289,19 @@ export const ALL_AFFIXES: Affix[] = [
   STONEBLOOD,
   SALAMANDER,
   FROSTWARD,
+  GRAVEWARD,
+  ANTIVENOM,
+  WARDED_MIND,
+  STALWART,
+  PRISTINE,
+  ARCANE,
+  ARCHMAGE,
+  LUCID,
+  RUNIC,
   FURIOUS,
   QUARRY,
   SHADOWED,
+  RELENTLESS,
   WARDING,
   VAMPIRIC,
   PREDATORS,
