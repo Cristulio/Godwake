@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import {
   listUpgradesByCategory,
+  listClassUpgrades,
   listUpgrades,
   UPGRADE_CATEGORIES,
   CATEGORY_LABELS,
@@ -11,9 +12,18 @@ import {
   type Upgrade,
   type UpgradeCategory,
 } from '../../content/upgrades';
+import type { ClassId } from '../../schemas/ids';
 import { GroveScene } from './GroveScene';
 
 type FlashKind = 'ok' | 'err';
+/** Shared functional tabs plus the active class's own tab. */
+type GroveTab = UpgradeCategory | 'class';
+
+const CLASS_TAGLINE = 'Blessings only your kind can carry';
+
+function classLabel(classId: ClassId): string {
+  return classId.charAt(0).toUpperCase() + classId.slice(1);
+}
 
 export function DruidGroveScreen() {
   const character = useGameStore((s) => s.character);
@@ -23,7 +33,7 @@ export function DruidGroveScreen() {
   const goToHub = useGameStore((s) => s.goToHub);
   const [flash, setFlash] = useState<{ kind: FlashKind; msg: string } | null>(null);
   const [pulsing, setPulsing] = useState<string | null>(null);
-  const [tab, setTab] = useState<UpgradeCategory>('body');
+  const [tab, setTab] = useState<GroveTab>('survival');
 
   if (!character) {
     return (
@@ -48,7 +58,12 @@ export function DruidGroveScreen() {
   const all = listUpgrades();
   const ownedRanks = all.reduce((sum, u) => sum + (unlocked[u.id] ?? 0), 0);
   const totalRanks = all.reduce((sum, u) => sum + u.maxRank, 0);
-  const categoryUpgrades = listUpgradesByCategory(tab);
+
+  const classUpgrades = listClassUpgrades(character.classId);
+  const hasClassTab = classUpgrades.length > 0;
+  const shownUpgrades = tab === 'class' ? classUpgrades : listUpgradesByCategory(tab);
+  const tabLabel = tab === 'class' ? classLabel(character.classId) : CATEGORY_LABELS[tab];
+  const tabTagline = tab === 'class' ? CLASS_TAGLINE : CATEGORY_TAGLINES[tab];
 
   return (
     <div className="min-h-screen p-6 max-w-6xl mx-auto animate-room-enter">
@@ -115,19 +130,26 @@ export function DruidGroveScreen() {
         </div>
       )}
 
-      <CategoryTabs current={tab} onChange={setTab} unlocked={unlocked} />
+      <GroveTabs
+        current={tab}
+        onChange={setTab}
+        unlocked={unlocked}
+        classId={character.classId}
+        hasClassTab={hasClassTab}
+        classUpgrades={classUpgrades}
+      />
 
       <div className="mb-4 text-center">
         <div className="font-display text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em]">
-          {CATEGORY_LABELS[tab]}
+          {tabLabel}
         </div>
         <div className="font-narrative italic text-[var(--color-text-secondary)] text-xs mt-1">
-          {CATEGORY_TAGLINES[tab]}
+          {tabTagline}
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        {categoryUpgrades.map((u) => (
+        {shownUpgrades.map((u) => (
           <UpgradeCard
             key={u.id}
             upgrade={u}
@@ -143,41 +165,82 @@ export function DruidGroveScreen() {
   );
 }
 
-interface CategoryTabsProps {
-  current: UpgradeCategory;
-  onChange: (c: UpgradeCategory) => void;
+interface GroveTabsProps {
+  current: GroveTab;
+  onChange: (t: GroveTab) => void;
   unlocked: Record<string, number>;
+  classId: ClassId;
+  hasClassTab: boolean;
+  classUpgrades: Upgrade[];
 }
 
-function CategoryTabs({ current, onChange, unlocked }: CategoryTabsProps) {
+function GroveTabs({ current, onChange, unlocked, classId, hasClassTab, classUpgrades }: GroveTabsProps) {
+  const tally = (ups: Upgrade[]) => ({
+    owned: ups.reduce((s, u) => s + (unlocked[u.id] ?? 0), 0),
+    max: ups.reduce((s, u) => s + u.maxRank, 0),
+  });
+
   return (
-    <div className="flex gap-1 mb-5 border-b border-[var(--color-border-warm)]">
+    <div className="flex flex-wrap gap-1 mb-5 border-b border-[var(--color-border-warm)]">
       {UPGRADE_CATEGORIES.map((cat) => {
-        const inCat = listUpgradesByCategory(cat);
-        const owned = inCat.reduce((s, u) => s + (unlocked[u.id] ?? 0), 0);
-        const max = inCat.reduce((s, u) => s + u.maxRank, 0);
-        const active = cat === current;
+        const { owned, max } = tally(listUpgradesByCategory(cat));
         return (
-          <button
+          <TabButton
             key={cat}
-            type="button"
+            label={CATEGORY_LABELS[cat]}
+            owned={owned}
+            max={max}
+            active={cat === current}
             onClick={() => onChange(cat)}
-            className={`
-              flex-1 py-2 px-3 border-2 border-b-0 transition-colors text-center
-              font-display text-[11px] uppercase tracking-widest
-              ${active
-                ? 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)] bg-[var(--color-bg-panel)]'
-                : 'border-[var(--color-border-dim)] text-[var(--color-text-dim)] hover:text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'}
-            `}
-          >
-            <div>{CATEGORY_LABELS[cat]}</div>
-            <div className="font-mono text-[9px] mt-0.5 opacity-70">
-              {owned} / {max}
-            </div>
-          </button>
+          />
         );
       })}
+      {hasClassTab && (() => {
+        const { owned, max } = tally(classUpgrades);
+        return (
+          <TabButton
+            label={classLabel(classId)}
+            owned={owned}
+            max={max}
+            active={current === 'class'}
+            highlight
+            onClick={() => onChange('class')}
+          />
+        );
+      })()}
     </div>
+  );
+}
+
+interface TabButtonProps {
+  label: string;
+  owned: number;
+  max: number;
+  active: boolean;
+  highlight?: boolean;
+  onClick: () => void;
+}
+
+function TabButton({ label, owned, max, active, highlight, onClick }: TabButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`
+        flex-1 min-w-[5rem] py-2 px-3 border-2 border-b-0 transition-colors text-center
+        font-display text-[11px] uppercase tracking-widest
+        ${active
+          ? 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)] bg-[var(--color-bg-panel)]'
+          : highlight
+            ? 'border-[var(--color-accent-gold)]/50 text-[var(--color-accent-gold)] hover:border-[var(--color-accent-gold)]'
+            : 'border-[var(--color-border-dim)] text-[var(--color-text-dim)] hover:text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'}
+      `}
+    >
+      <div>{label}</div>
+      <div className="font-mono text-[9px] mt-0.5 opacity-70">
+        {owned} / {max}
+      </div>
+    </button>
   );
 }
 
