@@ -135,6 +135,9 @@ function enterRoom(
     currentRoomId: nextId,
     visitedRoomIds: visited.includes(nextId) ? visited : [...visited, nextId],
     phase: 'in-room',
+    // The campfire fork lock is per-camp: clear it on every room entry so the
+    // next camp offers a fresh pick (boons stay tier-keyed in `campBoons`).
+    campChoice: undefined,
     ...(roomsCleared !== undefined ? { roomsCleared } : {}),
   };
 }
@@ -362,6 +365,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
             currentRoomIdx: wasLast ? d.currentRoomIdx : d.currentRoomIdx + 1,
             phase: wasLast ? 'completed' : 'in-room',
             roomsCleared,
+            campChoice: undefined,
           },
         };
       }

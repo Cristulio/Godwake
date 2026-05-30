@@ -486,6 +486,7 @@ export const useGameStore = create<GameState>()(
             introSeen: false,
             quirksTutorialSeen: false,
             taunt: null,
+            tauntQueue: [],
             postmortem: null,
           });
         },
@@ -627,6 +628,7 @@ export const useGameStore = create<GameState>()(
               introSeen: false,
               quirksTutorialSeen: false,
               taunt: null,
+              tauntQueue: [],
               postmortem: null,
             });
           }
