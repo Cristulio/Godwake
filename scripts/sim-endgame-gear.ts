@@ -78,10 +78,9 @@ import { rollItem } from '../src/engine/items/rollItem';
 import { rollRoomGoldDrops } from '../src/engine/combat/goldDrop';
 import {
   legendaryDropPool,
-  aggregateLegendaryBonuses,
-  legendarySlotCap,
+  aggregateLegendaryEffects,
+  canEquipLegendary,
 } from '../src/content/legendaries';
-import { SETS } from '../src/content/sets';
 import { rollGearStock, rollLegendaryOffer, tierForChapter } from '../src/components/delve/shopStock';
 import type { Character } from '../src/types/character';
 import type { CombatState } from '../src/types/combat';
@@ -235,43 +234,13 @@ function applyPermanentUpgrades(c: Character, unlocked: UnlockedUpgrades): Chara
 
 // ─── Legendary attunement (the persistent meta-power) ────────────────────────
 
-/** Solo desirability of a relic's bonus, for greedy slot-filling. */
-function soloLegendaryValue(id: string): number {
-  const b = aggregateLegendaryBonuses([id]);
-  let v = (b.ac ?? 0) * 1.5 + (b.critRange ?? 0) * 1.2;
-  for (const k of Object.keys(b.abilityScores ?? {})) {
-    v += (b.abilityScores as Record<string, number>)[k] ?? 0;
-  }
-  return v;
-}
-
 /**
- * Pick which owned relics to attune for the next descent: fill set pieces first
- * where a set bonus is achievable (own ≥2 of a set), then the highest solo
- * value, up to the ascension slot cap. Mirrors how a player chases sets once
- * the slots open.
+ * Every owned relic the class can equip rides into the run — legendaries are
+ * effect-only with NO slot cap; class-bound relics only stick for their class
+ * (canEquipLegendary). Mirrors metaStore.setActiveLegendaries.
  */
-function chooseActiveLegendaries(owned: string[], ascensionUnlocked: number): string[] {
-  const cap = legendarySlotCap(ascensionUnlocked);
-  if (owned.length <= cap) return [...owned];
-  const selected: string[] = [];
-  // Sets the soul could light up, richest first.
-  const setsByValue = [...SETS].sort((a, b) => b.pieceIds.length - a.pieceIds.length);
-  for (const set of setsByValue) {
-    const have = set.pieceIds.filter((id) => owned.includes(id));
-    if (have.length >= 2) {
-      for (const p of have) {
-        if (selected.length < cap && !selected.includes(p)) selected.push(p);
-      }
-    }
-  }
-  const remaining = owned
-    .filter((id) => !selected.includes(id))
-    .sort((a, b) => soloLegendaryValue(b) - soloLegendaryValue(a));
-  for (const id of remaining) {
-    if (selected.length < cap) selected.push(id);
-  }
-  return selected;
+function chooseActiveLegendaries(owned: string[], classId: ClassId): string[] {
+  return owned.filter((id) => canEquipLegendary(id, classId as SchemaClassId));
 }
 
 // ─── In-run affix gear: a comparative loadout score for greedy equipping ─────
@@ -515,9 +484,9 @@ function descend(roller: DiceRoller, soul: SoulState): Character {
   c = applyPermanentUpgrades(c, soul.unlockedUpgrades);
   c = applyDelveStartUpgrades(c, soul.unlockedUpgrades);
   c = { ...c, quirks: rollQuirks(roller, 2) };
-  // Attune the best legendary loadout within the slot cap; bake the aggregate.
-  const active = MODEL_GEAR ? chooseActiveLegendaries(soul.ownedLegendaries, soul.ascension) : [];
-  c = { ...c, legendaryBonuses: aggregateLegendaryBonuses(active) };
+  // Equip every owned relic the class can wield (no slot cap); bake the effects.
+  const active = MODEL_GEAR ? chooseActiveLegendaries(soul.ownedLegendaries, soul.classId) : [];
+  c = { ...c, legendaryEffects: aggregateLegendaryEffects(active) };
   // Seed the purse (Coin in Pocket × ascension gold mult).
   const goldMult = getAscensionLevel(soul.ascension).startingGoldMult;
   const startingGold = Math.round((c.permanentBonuses?.startingGold ?? 0) * goldMult);
@@ -558,7 +527,7 @@ function liveOneLife(
   const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension });
   const groveRanks = Object.values(soul.unlockedUpgrades).reduce((a, b) => a + b, 0);
   const activeCount = MODEL_GEAR
-    ? chooseActiveLegendaries(soul.ownedLegendaries, soul.ascension).length
+    ? chooseActiveLegendaries(soul.ownedLegendaries, soul.classId).length
     : 0;
 
   let bossesKilled = 0;

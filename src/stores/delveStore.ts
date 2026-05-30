@@ -139,6 +139,8 @@ function enterRoom(
     // The campfire fork lock is per-camp: clear it on every room entry so the
     // next camp offers a fresh pick (boons stay tier-keyed in `campBoons`).
     campChoice: undefined,
+    // The elite fight/gold gate is per-node: reset so each elite re-prompts.
+    eliteEngaged: undefined,
     ...(roomsCleared !== undefined ? { roomsCleared } : {}),
   };
 }
@@ -267,6 +269,13 @@ interface DelveStoreState {
   /** Resolve a camp choice. Returns the granted blessing id for 'prayer', else null. */
   pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => string | null;
   /**
+   * Resolve the elite node's risk/reward decision. 'fight' engages the encounter
+   * (the spawn-on-enter effect builds it; a win may yield a legendary relic);
+   * 'gold' takes the safe purse and advances past the node with no fight, no loot,
+   * and no relic.
+   */
+  pickEliteChoice: (choice: 'fight' | 'gold') => void;
+  /**
    * Resolve the current camp's boon picker. `boonId === null` means the player
    * explicitly skipped the panel. The same camp tier cannot be resolved twice.
    */
@@ -380,6 +389,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
             phase: wasLast ? 'completed' : 'in-room',
             roomsCleared,
             campChoice: undefined,
+            eliteEngaged: undefined,
           },
         };
       }
@@ -804,6 +814,23 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     set((s) =>
       s.delve ? { delve: { ...s.delve, lichEyesAvailable: false } } : s,
     ),
+
+  pickEliteChoice: (choice) => {
+    const s = get();
+    if (!s.delve || s.delve.eliteEngaged) return;
+    if (choice === 'fight') {
+      // Engage: the DelveScreen spawn-on-enter effect builds the encounter once
+      // this flips. A win rolls the elite-only legendary drop in resolveRoomVictory.
+      set({ delve: { ...s.delve, eliteEngaged: true } });
+      return;
+    }
+    // 'gold': the safe payout — take the bounty the elite guarded and move on.
+    // No fight, no loot, no relic.
+    const room = s.delve.rooms[s.delve.currentRoomIdx];
+    const bounty = room?.goldReward ?? 0;
+    if (bounty > 0) get().addDelveReward(bounty, 0);
+    get().advanceRoom();
+  },
 
   purchaseFromMerchant: (itemId) => {
     const charSlice = useCharacterStore.getState();

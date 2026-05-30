@@ -12,7 +12,6 @@ import { getClass } from '../../content/classes';
 import { playMusic, stopMusic } from '../../engine/audio';
 import { PhandalinScene } from './PhandalinScene';
 import { LegendaryScreen } from './LegendaryScreen';
-import { MAX_ACTIVE_LEGENDARIES } from '../../content/legendaries';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
 
@@ -227,7 +226,7 @@ export function HubScreen() {
               ✦ Relics
             </div>
             <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
-              {activeLegendaries.length}/{MAX_ACTIVE_LEGENDARIES} attuned →
+              {activeLegendaries.length} equipped →
             </div>
           </button>
         )}

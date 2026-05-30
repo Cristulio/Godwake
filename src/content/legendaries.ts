@@ -1,82 +1,80 @@
-import type { AbilityName } from '../types/abilities';
-import type { LegendaryBonuses } from '../types/character';
+import type { AffixModifiers } from '../schemas/item';
 import type { ClassId } from '../schemas/ids';
-import { computeSetBonuses, mergeLegendaryBonuses } from './sets';
+import { computeSetBonuses } from './sets';
 
 /**
- * A legendary relic: cross-delve persistent gear (Hades "Mirror for items").
- * Unlike found/bought loot, a legendary survives death and reincarnation. Each
- * grants one small, build-defining bonus folded onto the soul at run start via
- * the active-attunement set. Bonuses speak only in channels the engine already
- * reads (ability scores, AC, crit range) so nothing here is flavor-only.
+ * A legendary relic: cross-delve persistent gear managed only at the Phandalin
+ * hub (Hades keepsake/aspect style — separate from the run's affix gear). A relic
+ * carries NO armour class and NO weapon damage; it is a pure EFFECT, layered on
+ * top of your equipped affix gear through the same affix pipeline (see
+ * engine/items/affixMods.ts).
  *
- * Relics with a `setId` belong to a legendary SET — attuning multiple pieces
- * grants partial bonuses on top (see content/sets.ts).
+ * A relic with a `classGate` is class-BOUND: it can DROP for any class (and is
+ * stashed until then) but is only equippable while playing that class — the gate
+ * is enforced in metaStore.setActiveLegendaries. `setId` ties a relic to a
+ * legendary SET whose completion grants extra effects on top (content/sets.ts).
  */
 export interface Legendary {
   id: string;
   name: string;
   /** One-line flavor in the Forgotten Realms / BG2 voice. */
   flavor: string;
-  /** Player-facing mechanical line, e.g. "+1 Armor Class". */
+  /** Player-facing mechanical line, e.g. "Heal 12% of the damage you deal". */
   effect: string;
-  bonuses: LegendaryBonuses;
+  /** The relic's mechanical payload — an EFFECT set, applied via the affix path. */
+  effects: AffixModifiers;
   /** Set this relic belongs to, if any (content/sets.ts). */
   setId?: string;
-  /**
-   * A class-specific relic only DROPS for this class; omit for class-agnostic.
-   * Any owned relic can be attuned by any class — the gate is on the drop.
-   */
+  /** Class-bound: drops for any class, equippable only while playing this one. */
   classGate?: ClassId;
 }
 
 /**
- * The legendary collection. The first six are standalone Wave-1 relics; the
- * rest are Wave-2 set pieces. Deliberately modest — sims tune magnitudes later;
- * the grind to earn them (rare drops) stays.
+ * The legendary collection. Effect-only, deliberately modest — sims tune the
+ * magnitudes later; the grind to earn them (elite-node drops) stays.
  */
 export const LEGENDARIES: readonly Legendary[] = [
   {
     id: 'heartwood-talisman',
     name: 'Heartwood Talisman',
     flavor: 'A knot of livewood cut from Mielikki’s grove, still warm with sap.',
-    effect: '+2 Constitution — sturdier, harder to put down',
-    bonuses: { abilityScores: { con: 2 } },
+    effect: 'Heal 12% of the damage you deal',
+    effects: { lifestealPct: 12 },
   },
   {
     id: 'bulwark-sigil',
     name: 'Bulwark Sigil',
     flavor: 'A warding glyph hammered into old shield-bronze, cold to the touch.',
-    effect: '+1 Armor Class',
-    bonuses: { ac: 1 },
+    effect: 'Gain 8 temporary HP at the start of each fight',
+    effects: { tempHpPerCombat: 8 },
   },
   {
     id: 'gauntlets-of-the-titan',
     name: 'Gauntlets of the Titan',
     flavor: 'Oversized vambraces that lend a giant’s pull to a mortal arm.',
-    effect: '+2 Strength — heavier blows in melee',
-    bonuses: { abilityScores: { str: 2 } },
+    effect: 'Your blows rend for +4 bleed damage',
+    effects: { bleedDamage: 4 },
   },
   {
     id: 'cloak-of-the-nightwind',
     name: 'Cloak of the Nightwind',
     flavor: 'Spun from shadow and a hunting cat’s quiet.',
-    effect: '+2 Dexterity — sharper aim and surer footing',
-    bonuses: { abilityScores: { dex: 2 } },
+    effect: 'Critical hits land on 19–20',
+    effects: { critRangeBonus: 1 },
   },
   {
     id: 'sages-diadem',
     name: 'Sage’s Diadem',
     flavor: 'A thin circlet that hums faintly against the temples.',
-    effect: '+2 Intelligence — stronger spellcraft',
-    bonuses: { abilityScores: { int: 2 } },
+    effect: '+1 spell save DC and +2 spell damage',
+    effects: { spellDcBonus: 1, spellDamageBonus: 2 },
   },
   {
     id: 'hunters-eye',
     name: 'Hunter’s Eye',
     flavor: 'A petrified raptor’s eye that never blinks at a weak point.',
-    effect: 'Critical hits land on 19–20',
-    bonuses: { critRange: 1 },
+    effect: 'Heal 8% of damage dealt; crits land on 19–20',
+    effects: { lifestealPct: 8, critRangeBonus: 1 },
   },
 
   // --- Set: Aegis of the Vigil (class-agnostic, 3 pieces) -------------------
@@ -84,34 +82,34 @@ export const LEGENDARIES: readonly Legendary[] = [
     id: 'vigil-helm',
     name: 'Vigil Helm',
     flavor: 'A warden’s greathelm, dented by blows that never reached the soul.',
-    effect: '+1 Armor Class',
-    bonuses: { ac: 1 },
+    effect: 'Gain 4 temporary HP at the start of each fight',
+    effects: { tempHpPerCombat: 4 },
     setId: 'vigil',
   },
   {
     id: 'vigil-mantle',
     name: 'Vigil Mantle',
     flavor: 'A heavy cloak stitched with the sigils of the wall-watch.',
-    effect: '+1 Armor Class',
-    bonuses: { ac: 1 },
+    effect: 'Gain 4 temporary HP at the start of each fight',
+    effects: { tempHpPerCombat: 4 },
     setId: 'vigil',
   },
   {
     id: 'vigil-heart',
     name: 'Vigil Heart',
     flavor: 'A locket of clouded amber that steadies a failing pulse.',
-    effect: '+2 Constitution',
-    bonuses: { abilityScores: { con: 2 } },
+    effect: 'Heal 8% of the damage you deal',
+    effects: { lifestealPct: 8 },
     setId: 'vigil',
   },
 
-  // --- Set: Warsong Panoply (Fighter-specific, 2 pieces) --------------------
+  // --- Set: Warsong Panoply (Fighter-bound, 2 pieces) ----------------------
   {
     id: 'warsong-gauntlet',
     name: 'Warsong Gauntlet',
     flavor: 'A war-leader’s gauntlet, its knuckles scarred from a hundred charges.',
-    effect: '+2 Strength',
-    bonuses: { abilityScores: { str: 2 } },
+    effect: '+3 damage on each follow-up swing',
+    effects: { followupDamageBonus: 3 },
     setId: 'warsong',
     classGate: 'fighter',
   },
@@ -119,35 +117,15 @@ export const LEGENDARIES: readonly Legendary[] = [
     id: 'warsong-crest',
     name: 'Warsong Crest',
     flavor: 'A crested helm that turns a battle-cry into something men follow.',
-    effect: '+1 Armor Class',
-    bonuses: { ac: 1 },
+    effect: 'Your blows rend for +3 bleed damage',
+    effects: { bleedDamage: 3 },
     setId: 'warsong',
     classGate: 'fighter',
   },
 ];
 
-/** Unlock order — kept for the legacy deterministic grant + stable iteration. */
+/** Canonical relic id list — stable iteration + drop/validity checks. */
 export const LEGENDARY_ORDER: readonly string[] = LEGENDARIES.map((l) => l.id);
-
-/**
- * BASE number of legendaries that can be attuned at once. The live cap grows
- * with ascension via `legendarySlotCap` — more slots make full sets reachable.
- */
-export const MAX_ACTIVE_LEGENDARIES = 2;
-
-/** Hard ceiling on attunement slots, regardless of ascension. */
-export const MAX_LEGENDARY_SLOT_CAP = 5;
-
-/**
- * Active-legendary slot cap for a given highest-unlocked ascension. Starts at
- * the base (2) and gains a slot every two ascension rungs, so a 3-piece set
- * becomes reachable a couple of clears in and the slots themselves are a meta
- * reward. Clamped to MAX_LEGENDARY_SLOT_CAP.
- */
-export function legendarySlotCap(ascensionUnlocked: number): number {
-  const grown = MAX_ACTIVE_LEGENDARIES + Math.floor(Math.max(0, ascensionUnlocked) / 2);
-  return Math.min(grown, MAX_LEGENDARY_SLOT_CAP);
-}
 
 const BY_ID = new Map(LEGENDARIES.map((l) => [l.id, l]));
 
@@ -156,38 +134,33 @@ export function getLegendary(id: string): Legendary | undefined {
 }
 
 /**
- * The relic ids eligible to drop for a class: every class-agnostic relic plus
- * that class's own gated relics. The drop/bank path picks an un-owned id from
- * this pool.
+ * Relic ids appropriate to OFFER a given class (the shop reliquary): every
+ * class-agnostic relic plus that class's own bound relics. Elite-node DROPS use
+ * a wider any-class pool (off-class relics are stashed) — see metaStore.
  */
 export function legendaryDropPool(classId: ClassId): string[] {
   return LEGENDARIES.filter((l) => !l.classGate || l.classGate === classId).map((l) => l.id);
 }
 
+/** Whether a relic may be EQUIPPED by a character of the given class (class-bound gate). */
+export function canEquipLegendary(id: string, classId: ClassId): boolean {
+  const leg = BY_ID.get(id);
+  if (!leg) return false;
+  return !leg.classGate || leg.classGate === classId;
+}
+
 /**
- * Sum the bonuses of the given active ids into a single aggregate, INCLUDING
- * any completed-set partial bonuses. This is the one place the engine reads —
- * `metaStore.setActiveLegendaries` bakes the result onto the character.
+ * The effect payloads of the equipped relics PLUS any completed-set bonuses, as a
+ * flat list. `metaStore.setActiveLegendaries` bakes this onto the character;
+ * `characterAffixMods` folds each entry into the shared affix pipeline so the
+ * effects ride every channel the engine already reads.
  */
-export function aggregateLegendaryBonuses(ids: readonly string[]): LegendaryBonuses {
-  const result: LegendaryBonuses = {};
-  const abilityScores: Partial<Record<AbilityName, number>> = {};
-  let hasAbility = false;
+export function aggregateLegendaryEffects(ids: readonly string[]): AffixModifiers[] {
+  const out: AffixModifiers[] = [];
   for (const id of ids) {
     const leg = BY_ID.get(id);
-    if (!leg) continue;
-    const b = leg.bonuses;
-    if (b.ac) result.ac = (result.ac ?? 0) + b.ac;
-    if (b.critRange) result.critRange = (result.critRange ?? 0) + b.critRange;
-    if (b.abilityScores) {
-      for (const k of Object.keys(b.abilityScores) as AbilityName[]) {
-        abilityScores[k] = (abilityScores[k] ?? 0) + (b.abilityScores[k] ?? 0);
-        hasAbility = true;
-      }
-    }
+    if (leg) out.push(leg.effects);
   }
-  if (hasAbility) result.abilityScores = abilityScores;
-  // Fold the completed-set partial bonuses on top.
-  mergeLegendaryBonuses(result, computeSetBonuses(ids));
-  return result;
+  out.push(...computeSetBonuses(ids));
+  return out;
 }

@@ -20,10 +20,9 @@ export function proficiencyBonus(level: number): number {
 }
 
 /**
- * Effective ability scores: base soul scores + racial bonuses + in-run ASI
- * gains + legendary relic bonuses.
- * The base "soul" array is stable across reincarnations; everything else layers
- * on top and is cleared at run boundaries.
+ * Effective ability scores: base soul scores + racial bonuses + in-run ASI gains.
+ * The base "soul" array is stable across reincarnations; the ASI gains layer on
+ * top and are cleared at run boundaries.
  */
 export function effectiveAbilityScores(character: Character): AbilityScores {
   const race = getRace(character.raceId);
@@ -38,15 +37,6 @@ export function effectiveAbilityScores(character: Character): AbilityScores {
   if (runAsi) {
     for (const ability of Object.keys(runAsi) as AbilityName[]) {
       result[ability] = (result[ability] ?? 0) + (runAsi[ability] ?? 0);
-    }
-  }
-  // Active legendary relics (cross-delve gear) layer on top of race. Folding
-  // here means every downstream read — attack, damage, saves, spell DC, AC via
-  // DEX, HP via CON — picks them up with no extra plumbing.
-  const legendary = character.legendaryBonuses?.abilityScores;
-  if (legendary) {
-    for (const ability of Object.keys(legendary) as AbilityName[]) {
-      result[ability] = (result[ability] ?? 0) + (legendary[ability] ?? 0);
     }
   }
   return result;
@@ -119,8 +109,8 @@ export function computeAC(character: Character): number {
   base += blessingMods.acBonus ?? 0;
   base += boonMods.acBonus ?? 0;
   base += character.permanentBonuses?.ac ?? 0;
-  base += character.legendaryBonuses?.ac ?? 0;
-  // Equipped-gear affixes (Warded plate, etc.).
+  // Equipped-gear affixes (Warded plate, etc.) — and hub legendary effects,
+  // which characterAffixMods folds into the same accumulator.
   base += affixMods.acBonus;
 
   // Conditional / soul-mark AC blessings. Full-HP and bloodied are mutually
@@ -185,9 +175,9 @@ export function critRange(character: Character): number[] {
   if (isFullHp(character)) blessingBonus += mods.critRangeBonusWhileFull ?? 0;
   if (isBloodied(character)) blessingBonus += mods.critRangeBonusWhileBloodied ?? 0;
   const upgradeBonus = character.permanentBonuses?.critRange ?? 0;
-  const legendaryBonus = character.legendaryBonuses?.critRange ?? 0;
+  // affixBonus folds in hub legendary crit effects via characterAffixMods.
   const affixBonus = characterAffixMods(character).critRangeBonus;
-  const low = Math.max(2, base - blessingBonus - upgradeBonus - legendaryBonus - affixBonus);
+  const low = Math.max(2, base - blessingBonus - upgradeBonus - affixBonus);
   const result: number[] = [];
   for (let n = low; n <= 20; n++) result.push(n);
   return result;

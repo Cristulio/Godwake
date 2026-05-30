@@ -1,29 +1,24 @@
 import { describe, it, expect } from 'vitest';
 import { SETS, computeSetBonuses, setProgress } from './sets';
-import { aggregateLegendaryBonuses, getLegendary } from './legendaries';
+import { getLegendary } from './legendaries';
 
 describe('legendary sets', () => {
   it('grants no set bonus below the 2-piece threshold', () => {
-    expect(computeSetBonuses(['vigil-helm'])).toEqual({});
+    expect(computeSetBonuses(['vigil-helm'])).toEqual([]);
   });
 
-  it('grants the 2-piece bonus at two attuned pieces', () => {
-    // Aegis of the Vigil, 2-piece = +1 AC.
-    expect(computeSetBonuses(['vigil-helm', 'vigil-mantle'])).toEqual({ ac: 1 });
+  it('grants the 2-piece bonus at two equipped pieces', () => {
+    const out = computeSetBonuses(['vigil-helm', 'vigil-mantle']);
+    expect(out).toHaveLength(1);
+    expect(out[0].tempHpPerCombat).toBe(4);
   });
 
   it('stacks the 3-piece bonus ON TOP of the 2-piece (partial/scaling)', () => {
-    // 2pc (+1 AC) + 3pc (+1 AC, +1 CON) = +2 AC, +1 CON.
-    const b = computeSetBonuses(['vigil-helm', 'vigil-mantle', 'vigil-heart']);
-    expect(b.ac).toBe(2);
-    expect(b.abilityScores).toEqual({ con: 1 });
-  });
-
-  it('folds the set bonus into aggregateLegendaryBonuses on top of each piece', () => {
-    // Two Vigil pieces: solo (helm +1 AC, mantle +1 AC) = +2 AC, plus the 2pc
-    // set bonus (+1 AC) = +3 AC total.
-    const agg = aggregateLegendaryBonuses(['vigil-helm', 'vigil-mantle']);
-    expect(agg.ac).toBe(3);
+    const out = computeSetBonuses(['vigil-helm', 'vigil-mantle', 'vigil-heart']);
+    // 2-piece (temp HP) + 3-piece (lifesteal) = two stacked entries.
+    expect(out).toHaveLength(2);
+    expect(out.some((m) => (m.tempHpPerCombat ?? 0) > 0)).toBe(true);
+    expect(out.some((m) => (m.lifestealPct ?? 0) > 0)).toBe(true);
   });
 
   it('every set piece is a real legendary tagged with its setId', () => {
@@ -37,7 +32,7 @@ describe('legendary sets', () => {
     }
   });
 
-  it('reports active set progress', () => {
+  it('reports equipped set progress', () => {
     const vigil = SETS.find((s) => s.id === 'vigil')!;
     expect(setProgress(vigil, ['vigil-helm', 'vigil-heart'])).toBe(2);
     expect(setProgress(vigil, [])).toBe(0);

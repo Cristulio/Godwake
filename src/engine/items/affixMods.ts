@@ -1,5 +1,5 @@
 import type { Character } from '../../types/character';
-import type { ItemRef } from '../../schemas/item';
+import type { ItemRef, AffixModifiers } from '../../schemas/item';
 import type { DamageType } from '../../types/damage';
 import { getAffix } from '../../content/items';
 import { EQUIP_SLOTS } from '../character/equip';
@@ -69,6 +69,28 @@ export function equippedAffixIds(character: Character): string[] {
   return ids;
 }
 
+/** Fold one effect payload (an affix's or a legendary's) into the accumulator. */
+function applyAffixModifiers(acc: AffixMods, m: AffixModifiers): void {
+  acc.acBonus += m.acBonus ?? 0;
+  acc.acBonusWhileFull += m.acBonusWhileFull ?? 0;
+  acc.acBonusWhileBloodied += m.acBonusWhileBloodied ?? 0;
+  acc.attackBonus += m.attackBonus ?? 0;
+  acc.damageBonus += m.damageBonus ?? 0;
+  acc.critRangeBonus += m.critRangeBonus ?? 0;
+  acc.bleedDamage += m.bleedDamage ?? 0;
+  acc.lifestealPct += m.lifestealPct ?? 0;
+  acc.tempHpPerCombat += m.tempHpPerCombat ?? 0;
+  acc.spellDcBonus += m.spellDcBonus ?? 0;
+  acc.spellDamageBonus += m.spellDamageBonus ?? 0;
+  acc.spellAttackBonus += m.spellAttackBonus ?? 0;
+  acc.bonusSpellSlotsL1 += m.bonusSpellSlotsL1 ?? 0;
+  acc.rageDamageBonus += m.rageDamageBonus ?? 0;
+  acc.markDamageBonus += m.markDamageBonus ?? 0;
+  acc.sneakDamageBonus += m.sneakDamageBonus ?? 0;
+  acc.followupDamageBonus += m.followupDamageBonus ?? 0;
+  if (m.resist && !acc.resists.includes(m.resist)) acc.resists.push(m.resist);
+}
+
 /** Aggregate the mechanical effect of a list of affix ids. */
 export function aggregateAffixMods(affixIds: string[]): AffixMods {
   const acc = emptyAffixMods();
@@ -79,30 +101,21 @@ export function aggregateAffixMods(affixIds: string[]): AffixMods {
     } catch {
       continue;
     }
-    const m = affix.modifiers;
-    acc.acBonus += m.acBonus ?? 0;
-    acc.acBonusWhileFull += m.acBonusWhileFull ?? 0;
-    acc.acBonusWhileBloodied += m.acBonusWhileBloodied ?? 0;
-    acc.attackBonus += m.attackBonus ?? 0;
-    acc.damageBonus += m.damageBonus ?? 0;
-    acc.critRangeBonus += m.critRangeBonus ?? 0;
-    acc.bleedDamage += m.bleedDamage ?? 0;
-    acc.lifestealPct += m.lifestealPct ?? 0;
-    acc.tempHpPerCombat += m.tempHpPerCombat ?? 0;
-    acc.spellDcBonus += m.spellDcBonus ?? 0;
-    acc.spellDamageBonus += m.spellDamageBonus ?? 0;
-    acc.spellAttackBonus += m.spellAttackBonus ?? 0;
-    acc.bonusSpellSlotsL1 += m.bonusSpellSlotsL1 ?? 0;
-    acc.rageDamageBonus += m.rageDamageBonus ?? 0;
-    acc.markDamageBonus += m.markDamageBonus ?? 0;
-    acc.sneakDamageBonus += m.sneakDamageBonus ?? 0;
-    acc.followupDamageBonus += m.followupDamageBonus ?? 0;
-    if (m.resist && !acc.resists.includes(m.resist)) acc.resists.push(m.resist);
+    applyAffixModifiers(acc, affix.modifiers);
   }
   return acc;
 }
 
-/** Aggregate affix mods across everything the character has equipped. */
+/**
+ * Aggregate affix mods across everything the character has equipped, PLUS the
+ * effect payloads of the hub-equipped legendary relics (`legendaryEffects`, baked
+ * on by metaStore.setActiveLegendaries). Legendaries are effect-only, so they
+ * ride the very same channels as gear affixes with no extra plumbing.
+ */
 export function characterAffixMods(character: Character): AffixMods {
-  return aggregateAffixMods(equippedAffixIds(character));
+  const acc = aggregateAffixMods(equippedAffixIds(character));
+  for (const m of character.legendaryEffects ?? []) {
+    applyAffixModifiers(acc, m);
+  }
+  return acc;
 }

@@ -4,7 +4,7 @@ import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
 import { useCombatStore } from './combatStore';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
-import { legendarySlotCap } from '../content/legendaries';
+import { LEGENDARIES } from '../content/legendaries';
 import { rollLegendaryOffer } from '../components/delve/shopStock';
 import { setActiveRoller } from '../engine/dice';
 import type { DelveState } from '../types/delve';
@@ -44,7 +44,7 @@ describe('legendary drop banks, does not equip mid-run', () => {
     expect(useMetaStore.getState().activeLegendaries).toEqual([]);
   });
 
-  it('only banks relics eligible for the active class (Fighter set never drops for a Wizard)', () => {
+  it('elite drops can bank ANY class relic — off-class is stashed', () => {
     useCharacterStore.setState({ character: buildPlayerCharacter(presetCreationInput('wizard')) });
     useMetaStore.setState({ ownedLegendaries: [] });
     const banked: string[] = [];
@@ -53,8 +53,10 @@ describe('legendary drop banks, does not equip mid-run', () => {
       if (!id) break;
       banked.push(id);
     }
-    expect(banked).not.toContain('warsong-gauntlet');
-    expect(banked).not.toContain('warsong-crest');
+    // The whole pool is reachable regardless of class — Fighter-bound relics
+    // included (they're stashed until the player runs a Fighter).
+    expect(banked).toContain('warsong-gauntlet');
+    expect(banked).toHaveLength(LEGENDARIES.length);
   });
 
   it('a banked drop survives a clear (the wheel)', () => {
@@ -65,21 +67,10 @@ describe('legendary drop banks, does not equip mid-run', () => {
   });
 });
 
-describe('legendary slot cap grows with ascension', () => {
-  it('starts at 2 and gains a slot every two rungs (capped at 5)', () => {
-    expect(legendarySlotCap(0)).toBe(2);
-    expect(legendarySlotCap(2)).toBe(3);
-    expect(legendarySlotCap(6)).toBe(5);
-    expect(legendarySlotCap(20)).toBe(5);
-  });
-
-  it('setActiveLegendaries clamps to the ascension-derived cap', () => {
+describe('legendary equip has no slot cap', () => {
+  it('equips every owned class-eligible relic regardless of ascension', () => {
     const owned = ['heartwood-talisman', 'bulwark-sigil', 'gauntlets-of-the-titan'];
     useMetaStore.setState({ ascensionUnlocked: 0, ownedLegendaries: owned });
-    useMetaStore.getState().setActiveLegendaries(owned);
-    expect(useMetaStore.getState().activeLegendaries).toHaveLength(2);
-
-    useMetaStore.setState({ ascensionUnlocked: 4 });
     useMetaStore.getState().setActiveLegendaries(owned);
     expect(useMetaStore.getState().activeLegendaries).toHaveLength(3);
   });

@@ -24,9 +24,14 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *           player re-clears the chain to open Ascension 1.
  *  v8 → v9: Legendary relics. `ownedLegendaries` / `activeLegendaries` (both
  *           default []) added to the meta snapshot. Old saves own none.
- *  v9 → v10: Per-soul seen-once dialogue beat tracking. `seenDialogueBeats`
- *            (default []) prevents one-time beats (e.g. Imoen's camp whisper)
- *            from replaying on re-entry or in subsequent runs.
+ *  v9 → v10: Two changes shipped in one bump.
+ *            (a) Per-soul seen-once dialogue beats. `seenDialogueBeats` (default
+ *            []) prevents one-time beats (e.g. Imoen's camp whisper) from
+ *            replaying on re-entry or in subsequent runs.
+ *            (b) Legendaries became EFFECT-ONLY, hub-managed. The dead
+ *            `character.legendaryBonuses` stat field is stripped here; the new
+ *            `character.legendaryEffects` is re-baked from `activeLegendaries` on
+ *            load (scatterSnapshot). Owned/active relic ids are unchanged.
  */
 export const SAVE_VERSION = 10;
 
@@ -97,6 +102,9 @@ export function migrateCharacter(
   delete c.permanentInitBonus;
   delete (folded as Record<string, unknown>).init;
   delete c.delveInitBonus;
+  // v9 → v10: legendaries became effect-only. Drop the dead stat-bonus field;
+  // scatterSnapshot re-bakes character.legendaryEffects from activeLegendaries.
+  delete c.legendaryBonuses;
 
   // Re-derive HP bonus for legacy chars that owned Mantle/Iron Will but
   // never had the field set (v0 → v1 migration). This must run AFTER the

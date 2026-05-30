@@ -1,18 +1,15 @@
-import type { AbilityName } from '../types/abilities';
-import type { LegendaryBonuses } from '../types/character';
+import type { AffixModifiers } from '../schemas/item';
 import type { ClassId } from '../schemas/ids';
 
 /**
- * Legendary SETS (Diablo II style). Each piece is its own legendary relic that
- * occupies one of the soul's active-legendary slots; attuning more pieces of a
- * set grants PARTIAL, SCALING bonuses on top of each piece's solo effect
- * (2-piece, 3-piece…). Because a full set needs several active slots, the slot
- * cap growing with progression (`legendarySlotCap`) is what makes sets a
- * long-game chase.
+ * Legendary SETS (Diablo II style). Each piece is its own legendary relic equipped
+ * at the hub; equipping more pieces of a set grants PARTIAL, SCALING EFFECTS on
+ * top of each piece's solo effect (2-piece, 3-piece…).
  *
- * Bonuses speak only in the channels the engine already reads (AC, crit range,
- * ability scores) so nothing here is flavor-only. Kept modest — sims tune the
- * magnitudes later.
+ * Set bonuses are pure EFFECTS (the affix payload), like the relics themselves —
+ * no armour class, no weapon damage. A class-bound set only DROPS for (and themes
+ * to) its class, but any owned piece is stashed regardless; the equip gate lives
+ * in metaStore.setActiveLegendaries.
  */
 
 export interface SetBonusTier {
@@ -20,7 +17,8 @@ export interface SetBonusTier {
   piecesRequired: number;
   /** Player-facing line shown on the relic screen. */
   label: string;
-  bonuses: LegendaryBonuses;
+  /** Effect payload granted while the tier is met. */
+  bonuses: AffixModifiers;
 }
 
 export interface LegendarySet {
@@ -28,9 +26,9 @@ export interface LegendarySet {
   name: string;
   flavor: string;
   /**
-   * A class-specific set only drops for (and themes to) this class. Omit for a
-   * class-agnostic set. Any owned piece can still be attuned by any class — the
-   * gate is on the DROP, not on use.
+   * A class-bound set only DROPS for (and themes to) this class. Omit for a
+   * class-agnostic set. Owned pieces are always stashed; the equip gate is in
+   * metaStore.setActiveLegendaries.
    */
   classGate?: ClassId;
   /** Relic ids that make up the set, in display order. */
@@ -46,11 +44,15 @@ export const SETS: LegendarySet[] = [
     flavor: 'Wargear of the wardens who never broke at the wall.',
     pieceIds: ['vigil-helm', 'vigil-mantle', 'vigil-heart'],
     bonuses: [
-      { piecesRequired: 2, label: '2-piece: +1 Armor Class', bonuses: { ac: 1 } },
+      {
+        piecesRequired: 2,
+        label: '2-piece: +4 temporary HP each fight',
+        bonuses: { tempHpPerCombat: 4 },
+      },
       {
         piecesRequired: 3,
-        label: '3-piece: +1 Armor Class, +1 Constitution',
-        bonuses: { ac: 1, abilityScores: { con: 1 } },
+        label: '3-piece: heal 8% of the damage you deal',
+        bonuses: { lifestealPct: 8 },
       },
     ],
   },
@@ -63,8 +65,8 @@ export const SETS: LegendarySet[] = [
     bonuses: [
       {
         piecesRequired: 2,
-        label: '2-piece: +1 Strength, crit on 19-20',
-        bonuses: { abilityScores: { str: 1 }, critRange: 1 },
+        label: '2-piece: crits land on 19-20, +2 follow-up damage',
+        bonuses: { critRangeBonus: 1, followupDamageBonus: 2 },
       },
     ],
   },
@@ -81,44 +83,26 @@ export function setForPiece(relicId: string): LegendarySet | undefined {
   return SETS.find((s) => s.pieceIds.includes(relicId));
 }
 
-/** Merge `add` into `target` in place: sum AC, crit range, and ability scores. */
-export function mergeLegendaryBonuses(
-  target: LegendaryBonuses,
-  add: LegendaryBonuses,
-): LegendaryBonuses {
-  if (add.ac) target.ac = (target.ac ?? 0) + add.ac;
-  if (add.critRange) target.critRange = (target.critRange ?? 0) + add.critRange;
-  if (add.abilityScores) {
-    const ability = { ...(target.abilityScores ?? {}) };
-    for (const k of Object.keys(add.abilityScores) as AbilityName[]) {
-      ability[k] = (ability[k] ?? 0) + (add.abilityScores[k] ?? 0);
-    }
-    target.abilityScores = ability;
-  }
-  return target;
-}
-
 /**
- * Aggregate the active set bonuses from the currently-attuned relic ids: for
- * each set, count how many of its pieces are active and apply every threshold
- * met. Returns a single merged `LegendaryBonuses`.
+ * Every met set-tier bonus from the currently-equipped relic ids, as a flat list
+ * of effect payloads (each met threshold contributes its own entry; they stack).
  */
-export function computeSetBonuses(activeIds: readonly string[]): LegendaryBonuses {
+export function computeSetBonuses(activeIds: readonly string[]): AffixModifiers[] {
   const active = new Set(activeIds);
-  const result: LegendaryBonuses = {};
+  const out: AffixModifiers[] = [];
   for (const set of SETS) {
     const have = set.pieceIds.filter((id) => active.has(id)).length;
     if (have < 2) continue;
     for (const tier of set.bonuses) {
-      if (have >= tier.piecesRequired) mergeLegendaryBonuses(result, tier.bonuses);
+      if (have >= tier.piecesRequired) out.push(tier.bonuses);
     }
   }
-  return result;
+  return out;
 }
 
 /**
- * How many active pieces of a set the player currently has and the matching
- * tier labels — used by the relic screen's set-progress display.
+ * How many pieces of a set the player currently has equipped — used by the relic
+ * screen's set-progress display.
  */
 export function setProgress(set: LegendarySet, activeIds: readonly string[]): number {
   const active = new Set(activeIds);

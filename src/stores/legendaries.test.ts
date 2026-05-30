@@ -4,13 +4,13 @@ import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
 import { useCombatStore } from './combatStore';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
-import { computeAC, effectiveAbilityScores } from '../engine/character/derived';
-import { LEGENDARY_ORDER, LEGENDARIES } from '../content/legendaries';
+import { characterAffixMods } from '../engine/items/affixMods';
 import { setActiveRoller } from '../engine/dice';
+import type { ClassId } from '../schemas/ids';
 import type { DelveState } from '../types/delve';
 
-function makeCharacter() {
-  return buildPlayerCharacter(presetCreationInput('fighter'));
+function makeCharacter(classId: ClassId = 'fighter') {
+  return buildPlayerCharacter(presetCreationInput(classId));
 }
 
 function baseDelve(overrides: Partial<DelveState> = {}): DelveState {
@@ -46,99 +46,73 @@ beforeEach(() => {
   });
 });
 
-describe('legendary grant', () => {
-  it('grants the next un-owned relic in order', () => {
-    const meta = useMetaStore.getState();
-    expect(meta.grantNextLegendary()).toBe(LEGENDARY_ORDER[0]);
-    expect(useMetaStore.getState().grantNextLegendary()).toBe(LEGENDARY_ORDER[1]);
-    expect(useMetaStore.getState().ownedLegendaries).toEqual([
-      LEGENDARY_ORDER[0],
-      LEGENDARY_ORDER[1],
-    ]);
-  });
-
-  it('is a no-op once the whole set is owned', () => {
-    for (let i = 0; i < LEGENDARIES.length; i++) useMetaStore.getState().grantNextLegendary();
-    expect(useMetaStore.getState().ownedLegendaries).toHaveLength(LEGENDARIES.length);
-    expect(useMetaStore.getState().grantNextLegendary()).toBeNull();
-    expect(useMetaStore.getState().ownedLegendaries).toHaveLength(LEGENDARIES.length);
-  });
-
-  it('finishDelve on a CLEAR no longer auto-grants a legendary (Wave 2: drops are rare, in-run)', () => {
-    useDelveStore.setState({ delve: baseDelve({ phase: 'completed', currentRoomIdx: 1 }) });
-    useDelveStore.getState().finishDelve();
-    expect(useMetaStore.getState().ownedLegendaries).toEqual([]);
-  });
-
-  it('finishDelve on a FAILURE drops nothing', () => {
-    useDelveStore.setState({ delve: baseDelve({ phase: 'failed', currentRoomIdx: 1 }) });
-    useDelveStore.getState().finishDelve();
-    expect(useMetaStore.getState().ownedLegendaries).toEqual([]);
-  });
-});
-
-describe('legendary attunement', () => {
-  it('rejects un-owned ids and clamps to the slot cap, baking the aggregate', () => {
+describe('legendary equip (effect-only, no slot cap)', () => {
+  it('rejects un-owned ids and bakes the owned effect payloads with no cap', () => {
     useMetaStore.setState({
-      ownedLegendaries: ['heartwood-talisman', 'bulwark-sigil', 'gauntlets-of-the-titan'],
+      ownedLegendaries: ['heartwood-talisman', 'bulwark-sigil', 'cloak-of-the-nightwind'],
     });
-    // Includes an un-owned id and exceeds the cap of 2.
     useMetaStore.getState().setActiveLegendaries([
       'heartwood-talisman',
-      'gauntlets-of-the-titan',
       'bulwark-sigil',
-      'sages-diadem',
+      'cloak-of-the-nightwind',
+      'sages-diadem', // un-owned — dropped
     ]);
     const active = useMetaStore.getState().activeLegendaries;
-    expect(active).toHaveLength(2);
+    expect(active).toHaveLength(3); // no slot cap
     expect(active).not.toContain('sages-diadem');
-    const ch = useCharacterStore.getState().character!;
-    // Aggregate of the first two attuned: +2 STR and +2 CON.
-    expect(ch.legendaryBonuses?.abilityScores).toEqual({ str: 2, con: 2 });
+    // Effects flow through the shared affix pipeline.
+    const mods = characterAffixMods(useCharacterStore.getState().character!);
+    expect(mods.lifestealPct).toBe(12);
+    expect(mods.tempHpPerCombat).toBe(8);
+    expect(mods.critRangeBonus).toBe(1);
   });
 
-  it('clears the baked aggregate when all relics are released', () => {
+  it('clears the baked effects when all relics are released', () => {
     useMetaStore.setState({ ownedLegendaries: ['bulwark-sigil'] });
     useMetaStore.getState().setActiveLegendaries(['bulwark-sigil']);
-    expect(useCharacterStore.getState().character!.legendaryBonuses).toEqual({ ac: 1 });
+    expect(useCharacterStore.getState().character!.legendaryEffects).toHaveLength(1);
     useMetaStore.getState().setActiveLegendaries([]);
-    expect(useCharacterStore.getState().character!.legendaryBonuses).toEqual({});
+    expect(useCharacterStore.getState().character!.legendaryEffects).toEqual([]);
+  });
+
+  it('refuses to equip a class-bound relic for the wrong class', () => {
+    useCharacterStore.setState({ character: makeCharacter('wizard') });
+    useMetaStore.setState({ ownedLegendaries: ['warsong-gauntlet', 'bulwark-sigil'] });
+    useMetaStore.getState().setActiveLegendaries(['warsong-gauntlet', 'bulwark-sigil']);
+    const active = useMetaStore.getState().activeLegendaries;
+    expect(active).toContain('bulwark-sigil');
+    expect(active).not.toContain('warsong-gauntlet');
+  });
+
+  it('equips a class-bound relic for the right class', () => {
+    useCharacterStore.setState({ character: makeCharacter('fighter') });
+    useMetaStore.setState({ ownedLegendaries: ['warsong-gauntlet'] });
+    useMetaStore.getState().setActiveLegendaries(['warsong-gauntlet']);
+    expect(useMetaStore.getState().activeLegendaries).toEqual(['warsong-gauntlet']);
   });
 });
 
-describe('legendary bonus application', () => {
-  it('folds ability-score bonuses into effective scores', () => {
-    const base = makeCharacter();
-    const baseStr = effectiveAbilityScores(base).str;
-    const withRelic = { ...base, legendaryBonuses: { abilityScores: { str: 2 } } };
-    expect(effectiveAbilityScores(withRelic).str).toBe(baseStr + 2);
-  });
-
-  it('adds flat AC on top of the computed value', () => {
-    const base = makeCharacter();
-    const baseAC = computeAC(base);
-    const withRelic = { ...base, legendaryBonuses: { ac: 1 } };
-    expect(computeAC(withRelic)).toBe(baseAC + 1);
+describe('legendary effects apply through the affix pipeline', () => {
+  it('a completed 2-piece set stacks its bonus on top of the pieces', () => {
+    useMetaStore.setState({ ownedLegendaries: ['vigil-helm', 'vigil-mantle'] });
+    useMetaStore.getState().setActiveLegendaries(['vigil-helm', 'vigil-mantle']);
+    const mods = characterAffixMods(useCharacterStore.getState().character!);
+    // helm 4 + mantle 4 + 2-piece set 4 = 12 temp HP each combat.
+    expect(mods.tempHpPerCombat).toBe(12);
   });
 });
 
 describe('legendary persistence across reincarnation', () => {
-  it('keeps owned relics and the baked bonus through a clear (which turns the wheel)', () => {
+  it('keeps owned relics and the baked effects through a clear (which turns the wheel)', () => {
     useMetaStore.setState({ ownedLegendaries: ['heartwood-talisman'] });
     useMetaStore.getState().setActiveLegendaries(['heartwood-talisman']);
-    expect(useCharacterStore.getState().character!.legendaryBonuses?.abilityScores).toEqual({
-      con: 2,
-    });
+    expect(useCharacterStore.getState().character!.legendaryEffects).toHaveLength(1);
 
     useDelveStore.setState({ delve: baseDelve({ phase: 'completed', currentRoomIdx: 1 }) });
     useDelveStore.getState().finishDelve();
 
-    const meta = useMetaStore.getState();
-    // Survived the wheel (a clear no longer auto-grants the next relic in Wave 2).
-    expect(meta.ownedLegendaries).toEqual(['heartwood-talisman']);
-    // The attuned bonus rides reincarnateSoul's object spread.
-    expect(useCharacterStore.getState().character!.legendaryBonuses?.abilityScores).toEqual({
-      con: 2,
-    });
+    // Survived the wheel; the baked effects ride reincarnateSoul's object spread.
+    expect(useMetaStore.getState().ownedLegendaries).toEqual(['heartwood-talisman']);
+    expect(useCharacterStore.getState().character!.legendaryEffects).toHaveLength(1);
   });
 });

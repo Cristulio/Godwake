@@ -1,7 +1,7 @@
 import type { AbilityScores } from './abilities';
 import type { ActiveCondition } from './conditions';
 import type { SkillName } from './skills';
-import type { ItemRef } from '../schemas/item';
+import type { ItemRef, AffixModifiers } from '../schemas/item';
 import type { ClassId, RaceId } from '../schemas/ids';
 
 /** Action economy state during a combat turn. */
@@ -94,21 +94,6 @@ export interface ClassResources {
    * cadence), so the brute always opens with a rage in hand.
    */
   rageUsesRemaining?: number;
-}
-
-/**
- * Bonuses contributed by the player's ACTIVE legendary relics (cross-delve
- * persistent gear, soul/account level). Mirrors the permanent-bonus channels
- * the engine already reads; folded onto the character whenever the active set
- * changes (and carried across reincarnation / hub swap). Optional so legacy
- * saves rehydrate without migration — treat any undefined key as 0.
- */
-export interface LegendaryBonuses {
-  ac?: number;
-  /** Crit-range widening: default 20-only becomes (20-N)-20. */
-  critRange?: number;
-  /** Additive ability-score deltas, folded into effectiveAbilityScores. */
-  abilityScores?: Partial<AbilityScores>;
 }
 
 /**
@@ -215,11 +200,13 @@ export interface Character {
     chapterClearGold?: number;
   };
   /**
-   * Aggregate of the player's ACTIVE legendary relics, baked on by
-   * `setActiveLegendaries` and carried across the wheel. Read alongside
-   * `permanentBonuses` in derived.ts. Optional; undefined = no relics attuned.
+   * Effect payloads of the player's EQUIPPED legendary relics + completed-set
+   * bonuses (hub-managed, cross-delve persistent gear). Pure effects — no AC, no
+   * weapon damage. Baked on by `setActiveLegendaries` and carried across the
+   * wheel; folded into the affix pipeline by `characterAffixMods`. Optional;
+   * undefined = no relics equipped.
    */
-  legendaryBonuses?: LegendaryBonuses;
+  legendaryEffects?: AffixModifiers[];
   /**
    * Extra attunement slots above the default. Bumped by Sage's Pact. The cap
    * lives in `attunementSlotsCap()`; this field is only the additive bonus so

@@ -2,50 +2,57 @@ import { describe, it, expect } from 'vitest';
 import {
   LEGENDARIES,
   LEGENDARY_ORDER,
-  MAX_ACTIVE_LEGENDARIES,
   getLegendary,
-  aggregateLegendaryBonuses,
+  canEquipLegendary,
+  aggregateLegendaryEffects,
 } from './legendaries';
 
 describe('legendary content', () => {
-  it('has a stable unlock order matching the set', () => {
+  it('has a stable id list matching the set, no duplicates', () => {
     expect(LEGENDARY_ORDER).toHaveLength(LEGENDARIES.length);
     expect(LEGENDARY_ORDER).toEqual(LEGENDARIES.map((l) => l.id));
-    // No duplicate ids.
     expect(new Set(LEGENDARY_ORDER).size).toBe(LEGENDARY_ORDER.length);
   });
 
-  it('keeps the attunement cap below the full set (a real choice)', () => {
-    expect(MAX_ACTIVE_LEGENDARIES).toBeGreaterThan(0);
-    expect(MAX_ACTIVE_LEGENDARIES).toBeLessThan(LEGENDARIES.length);
-  });
-
-  it('every relic carries a real, engine-readable bonus (nothing flavor-only)', () => {
+  it('every relic is EFFECT-ONLY (no AC, no weapon damage) yet carries a real effect', () => {
     for (const relic of LEGENDARIES) {
-      const b = relic.bonuses;
-      const hasBonus =
-        (b.ac ?? 0) !== 0 ||
-        (b.critRange ?? 0) !== 0 ||
-        Object.keys(b.abilityScores ?? {}).length > 0;
-      expect(hasBonus, `${relic.id} has no mechanical bonus`).toBe(true);
+      const e = relic.effects;
+      expect(e.acBonus ?? 0, `${relic.id} grants flat AC`).toBe(0);
+      expect(e.acBonusWhileFull ?? 0, `${relic.id} grants conditional AC`).toBe(0);
+      expect(e.acBonusWhileBloodied ?? 0, `${relic.id} grants conditional AC`).toBe(0);
+      expect(e.attackBonus ?? 0, `${relic.id} grants weapon attack`).toBe(0);
+      expect(e.damageBonus ?? 0, `${relic.id} grants flat weapon damage`).toBe(0);
+      const hasEffect =
+        Object.values(e).some((v) => typeof v === 'number' && v !== 0) || !!e.resist;
+      expect(hasEffect, `${relic.id} has no mechanical effect`).toBe(true);
       expect(relic.effect.length).toBeGreaterThan(0);
     }
   });
 
-  it('aggregates ability scores additively across active relics', () => {
-    const agg = aggregateLegendaryBonuses(['gauntlets-of-the-titan', 'heartwood-talisman']);
-    expect(agg.abilityScores).toEqual({ str: 2, con: 2 });
+  it('aggregates relic effects into a flat payload list', () => {
+    const out = aggregateLegendaryEffects(['heartwood-talisman', 'cloak-of-the-nightwind']);
+    // Two relics, no completed set → two entries.
+    expect(out).toHaveLength(2);
+    expect(out.find((m) => (m.lifestealPct ?? 0) > 0)?.lifestealPct).toBe(12);
+    expect(out.find((m) => (m.critRangeBonus ?? 0) > 0)?.critRangeBonus).toBe(1);
   });
 
-  it('aggregates flat AC and crit-range bonuses', () => {
-    const agg = aggregateLegendaryBonuses(['bulwark-sigil', 'hunters-eye']);
-    expect(agg.ac).toBe(1);
-    expect(agg.critRange).toBe(1);
+  it('folds completed-set bonuses into the aggregate', () => {
+    // Full Vigil set: 3 relic effects + 2 met set tiers (2-piece, 3-piece).
+    const out = aggregateLegendaryEffects(['vigil-helm', 'vigil-mantle', 'vigil-heart']);
+    expect(out).toHaveLength(5);
   });
 
-  it('ignores unknown ids and returns an empty aggregate for none', () => {
-    expect(aggregateLegendaryBonuses([])).toEqual({});
-    expect(aggregateLegendaryBonuses(['nonexistent'])).toEqual({});
+  it('ignores unknown ids and returns an empty list for none', () => {
+    expect(aggregateLegendaryEffects([])).toEqual([]);
+    expect(aggregateLegendaryEffects(['nonexistent'])).toEqual([]);
+  });
+
+  it('gates class-bound relics to their class for equipping', () => {
+    expect(canEquipLegendary('warsong-gauntlet', 'fighter')).toBe(true);
+    expect(canEquipLegendary('warsong-gauntlet', 'wizard')).toBe(false);
+    expect(canEquipLegendary('vigil-helm', 'wizard')).toBe(true);
+    expect(canEquipLegendary('nonexistent', 'fighter')).toBe(false);
   });
 
   it('looks relics up by id', () => {
