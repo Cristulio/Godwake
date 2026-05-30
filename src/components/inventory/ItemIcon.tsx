@@ -46,6 +46,53 @@ function renderGlyph(item: Item) {
       return armorGlyph(item.id, item.category);
     case 'consumable':
       return consumableGlyph(item.id, item.effect);
+    case 'accessory':
+      return accessoryGlyph(item.accessorySlot);
+  }
+}
+
+function accessoryGlyph(slot: 'helm' | 'amulet' | 'ring' | 'belt' | 'boots') {
+  switch (slot) {
+    case 'ring':
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="1.6">
+          <circle cx="16" cy="19" r="7" />
+          <path d="M 12 12 L 16 5 L 20 12 Z" fill={accent} stroke="none" />
+        </g>
+      );
+    case 'amulet':
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="1.4">
+          <path d="M 9 7 Q 16 16 23 7" />
+          <circle cx="16" cy="21" r="5" fill={accent} fillOpacity="0.45" />
+        </g>
+      );
+    case 'helm':
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="1.6" strokeLinejoin="round">
+          <path d="M 7 21 Q 7 8 16 8 Q 25 8 25 21 Z" />
+          <line x1="16" y1="8" x2="16" y2="21" stroke={accent} />
+        </g>
+      );
+    case 'belt':
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="1.6">
+          <rect x="5" y="13" width="22" height="6" />
+          <rect x="13" y="12" width="6" height="8" stroke={accent} />
+        </g>
+      );
+    case 'boots':
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="1.6" strokeLinejoin="round">
+          <path d="M 12 6 L 12 20 L 22 20 L 22 24 L 9 24 L 9 6 Z" />
+        </g>
+      );
+    default:
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="1.6">
+          <circle cx="16" cy="16" r="7" />
+        </g>
+      );
   }
 }
 

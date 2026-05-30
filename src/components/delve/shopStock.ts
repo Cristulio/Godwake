@@ -3,6 +3,7 @@ import type { ClassId } from '../../schemas/ids';
 import type { CampBoonTier } from '../../content/campBoons';
 import { createDiceRoller } from '../../engine/dice';
 import { rollItem, rolledItemCost } from '../../engine/items';
+import { legendaryDropPool, getLegendary } from '../../content/legendaries';
 
 /**
  * Shared merchant stock for both the camp caravan (CampRoom) and the route-map
@@ -35,14 +36,15 @@ export function tierForChapter(chapter: number | undefined): CampBoonTier {
 }
 
 /**
- * The rarity mix the merchant lays out by depth. A small, fixed spread (the big
- * rotating pool is Wave 2) — bases and affixes still vary per visit via the
- * seeded roller.
+ * The rarity mix the merchant lays out by depth. Wave 2 widens the rack to five
+ * slots drawn from the big rolled pool (weapons / armour / accessories), so the
+ * stock rotates meaningfully each visit (seeded by the room id) — richer and
+ * deeper as the chapters climb.
  */
 const GEAR_RARITY_MIX: Record<CampBoonTier, GearRarity[]> = {
-  1: ['green', 'green', 'blue'],
-  2: ['green', 'blue', 'blue'],
-  3: ['blue', 'blue', 'purple'],
+  1: ['green', 'green', 'green', 'blue', 'blue'],
+  2: ['green', 'green', 'blue', 'blue', 'purple'],
+  3: ['green', 'blue', 'blue', 'purple', 'purple'],
 };
 
 export interface GearStock {
@@ -53,12 +55,50 @@ export interface GearStock {
 /**
  * Roll the merchant's arms rack: class-legal bases with rolled affixes, priced
  * by rarity. Deterministic per `seed` (pass the room id) so re-renders don't
- * reroll the stock.
+ * reroll the stock. At least one accessory is guaranteed on the rack so the new
+ * slots are buyable, not drop-only.
  */
 export function rollGearStock(seed: string, tier: CampBoonTier, classId: ClassId): GearStock[] {
   const roller = createDiceRoller(`${seed}:gear-shop`);
-  return GEAR_RARITY_MIX[tier].map((rarity) => {
-    const ref = rollItem(roller, { rarity, classId });
+  return GEAR_RARITY_MIX[tier].map((rarity, i) => {
+    const ref = rollItem(
+      roller,
+      i === 1 ? { rarity, classId, kind: 'accessory' } : { rarity, classId },
+    );
     return { ref, cost: rolledItemCost(ref) };
   });
+}
+
+export interface LegendaryOffer {
+  legendaryId: string;
+  name: string;
+  cost: number;
+}
+
+/** Per-tier chance (percent) the merchant has a legendary relic for sale. */
+const LEGENDARY_OFFER_CHANCE: Record<CampBoonTier, number> = { 1: 0, 2: 15, 3: 30 };
+
+/**
+ * Maybe lay out a single legendary relic for sale — the "reliquary" offer. Rare,
+ * deep-chapter only, and only an UN-OWNED relic eligible for the class. Buying it
+ * BANKS the relic to the persistent collection (it does not enter the pack) and
+ * removes it from stock. Deterministic per `seed` so the offer is stable per
+ * visit. Returns null when there's no offer this visit.
+ */
+export function rollLegendaryOffer(
+  seed: string,
+  tier: CampBoonTier,
+  classId: ClassId,
+  ownedIds: readonly string[],
+): LegendaryOffer | null {
+  const chance = LEGENDARY_OFFER_CHANCE[tier];
+  if (chance <= 0) return null;
+  const roller = createDiceRoller(`${seed}:legendary-offer`);
+  if (roller.roll('1d100').total > chance) return null;
+  const pool = legendaryDropPool(classId).filter((id) => !ownedIds.includes(id));
+  if (pool.length === 0) return null;
+  const id = pool[(roller.roll('1d100').total - 1) % pool.length];
+  const leg = getLegendary(id);
+  if (!leg) return null;
+  return { legendaryId: id, name: leg.name, cost: 350 * tier };
 }

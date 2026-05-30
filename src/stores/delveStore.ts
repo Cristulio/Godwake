@@ -4,7 +4,8 @@ import type { DelveState, RoomSpec } from '../types/delve';
 import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
 import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
-import { rollItem, rollGearDrop } from '../engine/items';
+import { rollItem, rollGearDrop, rollLegendaryDrop } from '../engine/items';
+import { getLegendary } from '../content/legendaries';
 import { classStartingResources } from '../engine/character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
 import { effectiveAbilityScores } from '../engine/character/derived';
@@ -233,8 +234,10 @@ interface DelveStoreState {
   /**
    * The most recent rolled gear drop, surfaced by the loot toast. Session-only;
    * set on a combat-room clear that drops, cleared on dismiss or the next drop.
+   * `banked` marks a legendary that went to the persistent reliquary (not the
+   * pack) — the toast tells the player to attune it at the hub.
    */
-  lastLoot: { name: string; rarity: GearRarity } | null;
+  lastLoot: { name: string; rarity: GearRarity; banked?: boolean } | null;
 
   setDelve: (delve: DelveState | null) => void;
   startDelve: (delve: DelveState) => void;
@@ -271,6 +274,12 @@ interface DelveStoreState {
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
   /** Buy a pre-rolled shop item (carries its rolled payload) at the given price. */
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
+  /**
+   * Buy a legendary relic from the shop "reliquary": deducts gold and BANKS it to
+   * the persistent collection (it does not enter the pack and isn't equipped this
+   * run). Caller removes the offer from stock on success.
+   */
+  purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
   /** Dismiss the loot toast. */
   clearLastLoot: () => void;
 }
@@ -487,6 +496,18 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
           }
         }
       }
+      // Rare legendary relic drop: very low chance from any combat source. It is
+      // BANKED to the persistent collection — it does NOT equip this run; the
+      // player attunes it at the hub for a future descent.
+      if (rollLegendaryDrop(getActiveRoller(), room.kind)) {
+        const bankedId = useMetaStore.getState().grantLegendaryDrop();
+        if (bankedId) {
+          const leg = getLegendary(bankedId);
+          set({
+            lastLoot: { name: leg?.name ?? 'Legendary relic', rarity: 'legendary', banked: true },
+          });
+        }
+      }
     }
     useCombatStore.getState().setCombat(null);
     get().advanceRoom();
@@ -606,10 +627,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // unlocks nothing new (Spire-style).
     if (wonBoss) {
       meta.unlockNextAscension(ascensionLevel);
-      // Clearing the chain earns the next legendary relic (cross-delve gear).
-      // Deterministic unlock order; a no-op once the set is complete. The
-      // player attunes it from the hub — it doesn't auto-equip.
-      meta.grantNextLegendary();
+      // Legendaries are no longer a guaranteed per-clear grant (Wave 2): they
+      // drop rarely from any combat source mid-run and bank to the collection
+      // (see resolveRoomVictory). Clearing the chain only advances ascension.
     }
     if (!meta.druidGroveUnlocked && settled.renown >= GROVE_UNLOCK_THRESHOLD) {
       meta.setDruidGroveUnlocked(true);
@@ -812,6 +832,21 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       ...character,
       goldInPocket: character.goldInPocket - cost,
       inventory: [...character.inventory, ref],
+    });
+    return { ok: true };
+  },
+
+  purchaseLegendary: (legendaryId, cost) => {
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!character) return { ok: false, reason: 'No character.' };
+    if (character.goldInPocket < cost) return { ok: false, reason: 'Not enough gold.' };
+    // Bank first so we never charge for a relic that can't be added.
+    const banked = useMetaStore.getState().bankLegendary(legendaryId);
+    if (!banked) return { ok: false, reason: 'Already in your reliquary.' };
+    charSlice.setCharacter({
+      ...character,
+      goldInPocket: character.goldInPocket - cost,
     });
     return { ok: true };
   },

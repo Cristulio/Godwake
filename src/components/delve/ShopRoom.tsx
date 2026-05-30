@@ -8,10 +8,11 @@ import { playSfx } from '../../engine/audio';
 import {
   consumableStockForTier,
   rollGearStock,
+  rollLegendaryOffer,
   tierForChapter,
   type GearStock,
 } from './shopStock';
-import { GearWareRow, ConsumableWareRow } from './MerchantWares';
+import { GearWareRow, ConsumableWareRow, LegendaryWareRow } from './MerchantWares';
 
 interface ShopRoomProps {
   room: RoomSpec;
@@ -29,9 +30,12 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   const character = useGameStore((s) => s.character);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
+  const purchaseLegendary = useGameStore((s) => s.purchaseLegendary);
+  const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const goToInventory = useGameStore((s) => s.goToInventory);
   const [message, setMessage] = useState<string | null>(null);
   const [boughtKeys, setBoughtKeys] = useState<Set<string>>(new Set());
+  const [legendaryBought, setLegendaryBought] = useState(false);
 
   const tier = tierForChapter(room.chapter);
   const classId = character?.classId;
@@ -47,8 +51,20 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     [room.id, tier, classId],
   );
 
+  // The rare reliquary offer is rolled deterministically per visit (owned-blind),
+  // then hidden at render if the rolled relic is already owned or just bought —
+  // so buying it doesn't churn a fresh offer into view.
+  const legendaryOffer = useMemo(
+    () => (classId ? rollLegendaryOffer(room.id, tier, classId, []) : null),
+    [room.id, tier, classId],
+  );
+
   if (!character) return null;
   const gold = character.goldInPocket;
+  const showLegendary =
+    legendaryOffer != null &&
+    !legendaryBought &&
+    !ownedLegendaries.includes(legendaryOffer.legendaryId);
 
   function buyConsumable(itemId: string) {
     const r = purchaseFromMerchant(itemId);
@@ -65,6 +81,18 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     if (r.ok) {
       setBoughtKeys((prev) => new Set(prev).add(key));
       setMessage(`${stock.ref.rolled?.name ?? 'Item'} added to your pack.`);
+      playSfx('ui_click');
+    } else {
+      setMessage(r.reason ?? 'Cannot purchase.');
+    }
+  }
+
+  function buyLegendary() {
+    if (!legendaryOffer) return;
+    const r = purchaseLegendary(legendaryOffer.legendaryId, legendaryOffer.cost);
+    if (r.ok) {
+      setLegendaryBought(true);
+      setMessage(`${legendaryOffer.name} bound to your reliquary — attune it at the hub.`);
       playSfx('ui_click');
     } else {
       setMessage(r.reason ?? 'Cannot purchase.');
@@ -122,6 +150,22 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
                 />
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {showLegendary && legendaryOffer && (
+        <div>
+          <div className="text-[var(--color-accent-gold)] text-[10px] uppercase tracking-[0.3em] mb-2">
+            ✦ Reliquary
+          </div>
+          <div className="grid gap-3">
+            <LegendaryWareRow
+              offer={legendaryOffer}
+              bought={legendaryBought}
+              gold={gold}
+              onBuy={buyLegendary}
+            />
           </div>
         </div>
       )}

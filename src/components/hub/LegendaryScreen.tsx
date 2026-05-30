@@ -4,9 +4,10 @@ import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import {
   LEGENDARIES,
-  MAX_ACTIVE_LEGENDARIES,
+  legendarySlotCap,
   type Legendary,
 } from '../../content/legendaries';
+import { SETS, setProgress } from '../../content/sets';
 
 interface LegendaryScreenProps {
   onBack: () => void;
@@ -22,6 +23,8 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
   const owned = useGameStore((s) => s.ownedLegendaries);
   const active = useGameStore((s) => s.activeLegendaries);
   const setActive = useGameStore((s) => s.setActiveLegendaries);
+  const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
+  const cap = legendarySlotCap(ascensionUnlocked);
   const [flash, setFlash] = useState<string | null>(null);
 
   function toggle(id: string) {
@@ -29,8 +32,8 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
       setActive(active.filter((a) => a !== id));
       return;
     }
-    if (active.length >= MAX_ACTIVE_LEGENDARIES) {
-      setFlash(`Only ${MAX_ACTIVE_LEGENDARIES} relics may be attuned at once.`);
+    if (active.length >= cap) {
+      setFlash(`Only ${cap} relics may be attuned at once. More slots open as you ascend.`);
       setTimeout(() => setFlash(null), 2400);
       return;
     }
@@ -74,7 +77,7 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
               className="font-mono text-3xl text-[var(--color-accent-gold)]"
               style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.7), 0 0 12px rgba(212,176,98,0.4)' }}
             >
-              {active.length} / {MAX_ACTIVE_LEGENDARIES}
+              {active.length} / {cap}
             </div>
             <div className="font-mono text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mt-1">
               {owned.length} / {LEGENDARIES.length} relics found
@@ -102,6 +105,57 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
             <UndiscoveredCard key={relic.id} />
           ),
         )}
+      </div>
+
+      <SetsPanel active={active} owned={owned} />
+    </div>
+  );
+}
+
+function SetsPanel({ active, owned }: { active: string[]; owned: string[] }) {
+  return (
+    <div className="mt-8">
+      <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
+        <span className="text-[var(--color-accent-gold)]/60">✦</span>
+        Set Bonuses · attune multiple pieces
+      </div>
+      <div className="grid md:grid-cols-2 gap-3">
+        {SETS.map((set) => {
+          const activeCount = setProgress(set, active);
+          const ownedCount = set.pieceIds.filter((id) => owned.includes(id)).length;
+          return (
+            <div key={set.id} className="panel-etched border border-[var(--color-border-dim)] p-3">
+              <div className="flex justify-between items-baseline gap-2">
+                <h4 className="font-display text-[var(--color-accent-amber)] uppercase tracking-wider text-[11px]">
+                  {set.name}
+                </h4>
+                <span className="font-mono text-[10px] text-[var(--color-accent-gold)] shrink-0">
+                  {activeCount}/{set.pieceIds.length} attuned
+                </span>
+              </div>
+              <p className="text-[var(--color-text-secondary)] text-[10px] italic mt-1 font-narrative leading-snug">
+                {set.flavor}
+              </p>
+              <div className="mt-2 space-y-0.5">
+                {set.bonuses.map((tier) => {
+                  const on = activeCount >= tier.piecesRequired;
+                  return (
+                    <div
+                      key={tier.piecesRequired}
+                      className="text-[10px] font-mono leading-snug"
+                      style={{ color: on ? 'var(--color-accent-gold)' : 'var(--color-text-dim)' }}
+                    >
+                      {on ? '✦' : '○'} {tier.label}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-1.5 text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
+                {ownedCount}/{set.pieceIds.length} pieces found
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

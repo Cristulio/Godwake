@@ -1,10 +1,10 @@
 import type { DiceRoller } from '../dice';
 import type { ClassId } from '../../schemas/ids';
-import type { Affix, GearRarity, ItemRef, Weapon, Armor } from '../../schemas/item';
+import type { Affix, GearRarity, ItemRef, Weapon, Armor, Accessory } from '../../schemas/item';
 import { getItem, getAffix, listAffixes } from '../../content/items';
 import { classWeaponProficient, classArmorProficient } from '../character/equip';
 
-export type BaseKind = 'weapon' | 'armor';
+export type BaseKind = 'weapon' | 'armor' | 'accessory';
 
 /**
  * Curated base pools for rolled loot — the plain white bases the affix roll
@@ -34,6 +34,16 @@ const ARMOR_BASE_IDS = [
   'half-plate',
   'chain-mail',
   'shield',
+] as const;
+
+/** Accessory bases — class-agnostic affix carriers (helm/amulet/ring/belt/boots). */
+const ACCESSORY_BASE_IDS = [
+  'iron-ring',
+  'silver-ring',
+  'jade-amulet',
+  'worn-belt',
+  'traveler-boots',
+  'iron-helm',
 ] as const;
 
 /** Affix count by rarity. Purple rolls 3 or 4; legendary is Wave 2 (treat as 4). */
@@ -75,12 +85,15 @@ function affixCountFor(roller: DiceRoller, rarity: GearRarity): number {
   return spec;
 }
 
-/** Bases of a kind the class is trained to use. */
-function legalBases(kind: BaseKind, classId: ClassId): Array<Weapon | Armor> {
+/** Bases of a kind the class is trained to use. Accessories have no gate. */
+function legalBases(kind: BaseKind, classId: ClassId): Array<Weapon | Armor | Accessory> {
   if (kind === 'weapon') {
     return WEAPON_BASE_IDS.map((id) => getItem(id) as Weapon).filter((w) =>
       classWeaponProficient(classId, w),
     );
+  }
+  if (kind === 'accessory') {
+    return ACCESSORY_BASE_IDS.map((id) => getItem(id) as Accessory);
   }
   return ARMOR_BASE_IDS.map((id) => getItem(id) as Armor).filter((a) =>
     classArmorProficient(classId, a),
@@ -123,7 +136,13 @@ export function rolledItemCost(ref: ItemRef): number {
  */
 export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
   const { rarity, classId } = opts;
-  let kind: BaseKind = opts.kind ?? (roller.roll('1d100').total <= 55 ? 'weapon' : 'armor');
+  let kind: BaseKind;
+  if (opts.kind) {
+    kind = opts.kind;
+  } else {
+    const r = roller.roll('1d100').total;
+    kind = r <= 45 ? 'weapon' : r <= 75 ? 'armor' : 'accessory';
+  }
 
   let bases = legalBases(kind, classId);
   // A class might be barred from the chosen kind entirely (Wizard + armour) —

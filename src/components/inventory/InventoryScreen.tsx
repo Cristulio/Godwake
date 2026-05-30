@@ -6,10 +6,12 @@ import { getItem } from '../../content/items';
 import { computeAC } from '../../engine/character/derived';
 import {
   slotForItem,
+  canEquipToSlot,
   attunementSlotsCap,
   attunementSlotsUsed,
   canEquip,
   equipDenialReason,
+  EQUIP_SLOTS,
   type EquipSlot,
 } from '../../engine/character/equip';
 import type { Item, ItemRef } from '../../schemas/item';
@@ -30,6 +32,12 @@ const SLOTS: SlotMeta[] = [
   { slot: 'mainHand', label: 'Main Hand', hint: 'A weapon or one-handed implement.' },
   { slot: 'offHand', label: 'Off Hand · Shield', hint: 'A shield only — off-hand weapons aren\'t wielded.' },
   { slot: 'armor', label: 'Body', hint: 'Light, medium, or heavy armor.' },
+  { slot: 'helm', label: 'Helm', hint: 'An affix-bearing helm.' },
+  { slot: 'amulet', label: 'Amulet', hint: 'An affix-bearing amulet.' },
+  { slot: 'belt', label: 'Belt', hint: 'An affix-bearing belt.' },
+  { slot: 'ring1', label: 'Ring I', hint: 'An affix-bearing ring.' },
+  { slot: 'ring2', label: 'Ring II', hint: 'An affix-bearing ring.' },
+  { slot: 'boots', label: 'Boots', hint: 'Affix-bearing boots.' },
 ];
 
 export function InventoryScreen() {
@@ -67,7 +75,7 @@ export function InventoryScreen() {
   // first, itemId fallback) so equipped items in the bag are highlighted
   // correctly in every state.
   const equippedIdxSet = new Set<number>();
-  for (const slot of ['mainHand', 'offHand', 'armor'] as const) {
+  for (const slot of EQUIP_SLOTS) {
     const ref = character.equipped[slot];
     if (!ref) continue;
     let idx = character.inventory.indexOf(ref);
@@ -84,7 +92,7 @@ export function InventoryScreen() {
   }
 
   function hasAttunementEquipped(): boolean {
-    for (const slot of ['mainHand', 'offHand', 'armor'] as const) {
+    for (const slot of EQUIP_SLOTS) {
       const ref = character?.equipped[slot];
       if (!ref) continue;
       const item = getItem(ref.itemId);
@@ -130,8 +138,7 @@ export function InventoryScreen() {
     if (Number.isNaN(idx)) return;
     const ref = character?.inventory[idx];
     if (!ref) return;
-    const targetSlot = slotForItem(ref.itemId);
-    if (targetSlot !== slot) {
+    if (!canEquipToSlot(ref.itemId, slot)) {
       setDragInvalidSlot(slot);
       setTimeout(() => setDragInvalidSlot(null), 320);
       return;
@@ -454,6 +461,7 @@ function groupInventory(inventory: ItemRef[]): InventoryGroup[] {
   // rows so the player can equip a specific instance and see attunement etc.
   const weapons: InventoryEntry[] = [];
   const armor: InventoryEntry[] = [];
+  const accessories: InventoryEntry[] = [];
   const consumables = new Map<string, InventoryEntry>();
   const other: InventoryEntry[] = [];
 
@@ -463,6 +471,8 @@ function groupInventory(inventory: ItemRef[]): InventoryGroup[] {
       weapons.push({ ref, idx, item, stackCount: 1 });
     } else if (item.kind === 'armor') {
       armor.push({ ref, idx, item, stackCount: 1 });
+    } else if (item.kind === 'accessory') {
+      accessories.push({ ref, idx, item, stackCount: 1 });
     } else if (item.kind === 'consumable') {
       const existing = consumables.get(item.id);
       if (existing) {
@@ -478,6 +488,7 @@ function groupInventory(inventory: ItemRef[]): InventoryGroup[] {
   const result: InventoryGroup[] = [];
   if (weapons.length) result.push({ label: 'Weapons', entries: weapons });
   if (armor.length) result.push({ label: 'Armor & Shields', entries: armor });
+  if (accessories.length) result.push({ label: 'Accessories', entries: accessories });
   if (consumables.size) result.push({ label: 'Consumables', entries: [...consumables.values()] });
   if (other.length) result.push({ label: 'Other', entries: other });
   return result;
@@ -491,5 +502,7 @@ function statLine(item: Item): string {
       return item.category === 'shield' ? `+${item.baseAC} AC shield` : `${item.category} · AC ${item.baseAC}`;
     case 'consumable':
       return item.healDice ? `heal ${item.healDice}` : item.effect;
+    case 'accessory':
+      return `${item.accessorySlot} · affixes only`;
   }
 }

@@ -2,6 +2,7 @@ import type { Character } from '../../types/character';
 import type { ItemRef } from '../../schemas/item';
 import type { DamageType } from '../../types/damage';
 import { getAffix } from '../../content/items';
+import { EQUIP_SLOTS } from '../character/equip';
 
 /**
  * Aggregated affix effect across a set of equipped items. Numeric channels sum
@@ -45,10 +46,10 @@ export function affixIdsForRef(ref: ItemRef | null | undefined): string[] {
   return ref?.rolled?.affixes ?? [];
 }
 
-/** Every affix id across the character's equipped slots. */
+/** Every affix id across the character's equipped slots (incl. accessories). */
 export function equippedAffixIds(character: Character): string[] {
   const ids: string[] = [];
-  for (const slot of ['mainHand', 'offHand', 'armor'] as const) {
+  for (const slot of EQUIP_SLOTS) {
     ids.push(...affixIdsForRef(character.equipped[slot]));
   }
   return ids;

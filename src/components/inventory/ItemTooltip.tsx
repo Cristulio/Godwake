@@ -98,6 +98,8 @@ function kindLabel(item: Item): string {
       return item.category === 'shield' ? 'shield' : `${item.category} armor`;
     case 'consumable':
       return `${item.effect} consumable`;
+    case 'accessory':
+      return `${item.accessorySlot} · accessory`;
   }
 }
 

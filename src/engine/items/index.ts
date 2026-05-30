@@ -17,4 +17,5 @@ export {
   type DropSource,
   dropSourceForRoom,
   rollGearDrop,
+  rollLegendaryDrop,
 } from './drops';

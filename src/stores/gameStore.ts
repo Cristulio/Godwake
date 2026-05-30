@@ -117,7 +117,7 @@ interface GameState {
   saveSeed: string | null;
   character: Character | null;
   delve: DelveState | null;
-  lastLoot: { name: string; rarity: GearRarity } | null;
+  lastLoot: { name: string; rarity: GearRarity; banked?: boolean } | null;
   combat: CombatState | null;
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number; chapter?: number } | null;
   introSeen: boolean;
@@ -180,6 +180,7 @@ interface GameState {
   consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
+  purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
   clearLastLoot: () => void;
 
   // Lore overlays
@@ -533,6 +534,8 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().purchaseFromMerchant(itemId),
         purchaseRolledGear: (ref, cost) =>
           useDelveStore.getState().purchaseRolledGear(ref, cost),
+        purchaseLegendary: (legendaryId, cost) =>
+          useDelveStore.getState().purchaseLegendary(legendaryId, cost),
         clearLastLoot: () => useDelveStore.getState().clearLastLoot(),
 
         showTaunt: (speaker, context, chapter) =>

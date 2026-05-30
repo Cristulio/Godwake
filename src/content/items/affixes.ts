@@ -115,6 +115,75 @@ const SHADOWED: Affix = AffixSchema.parse({
   modifiers: { sneakDamageBonus: 4 },
 });
 
+// --- Accessory affixes (rings / amulets / belts / boots / helms) ------------
+// Accessories are pure affix carriers, so these reuse the already-wired effect
+// channels (AC, crit, lifesteal, resist, temp HP, damage, attack) — no new
+// combat plumbing. Every class can roll them (no classGate).
+
+const WARDING: Affix = AffixSchema.parse({
+  id: 'warding',
+  namePart: { kind: 'suffix', word: 'of Warding' },
+  effect: '+1 AC.',
+  appliesTo: ['accessory'],
+  modifiers: { acBonus: 1 },
+});
+
+const VAMPIRIC: Affix = AffixSchema.parse({
+  id: 'vampiric',
+  namePart: { kind: 'prefix', word: 'Vampiric' },
+  effect: 'Heal for 15% of weapon damage dealt.',
+  appliesTo: ['accessory'],
+  modifiers: { lifestealPct: 15 },
+});
+
+const PREDATORS: Affix = AffixSchema.parse({
+  id: 'predators',
+  namePart: { kind: 'suffix', word: "of the Predator" },
+  effect: 'Crit range widened by 1 (crit on 19-20).',
+  appliesTo: ['accessory'],
+  modifiers: { critRangeBonus: 1 },
+});
+
+const EMBERWARD: Affix = AffixSchema.parse({
+  id: 'emberward',
+  namePart: { kind: 'suffix', word: 'of Emberward' },
+  effect: 'Resist fire — incoming fire damage halved.',
+  appliesTo: ['accessory'],
+  modifiers: { resist: 'fire' },
+});
+
+const RIMEWARD: Affix = AffixSchema.parse({
+  id: 'rimeward',
+  namePart: { kind: 'suffix', word: 'of Rimeward' },
+  effect: 'Resist cold — incoming cold damage halved.',
+  appliesTo: ['accessory'],
+  modifiers: { resist: 'cold' },
+});
+
+const VIGOROUS: Affix = AffixSchema.parse({
+  id: 'vigorous',
+  namePart: { kind: 'prefix', word: 'Vigorous' },
+  effect: '+6 temporary HP at the start of each combat.',
+  appliesTo: ['accessory'],
+  modifiers: { tempHpPerCombat: 6 },
+});
+
+const SAVAGE: Affix = AffixSchema.parse({
+  id: 'savage',
+  namePart: { kind: 'prefix', word: 'Savage' },
+  effect: '+1 weapon damage on every hit.',
+  appliesTo: ['accessory'],
+  modifiers: { damageBonus: 1 },
+});
+
+const UNERRING: Affix = AffixSchema.parse({
+  id: 'unerring',
+  namePart: { kind: 'prefix', word: 'Unerring' },
+  effect: '+1 to weapon attack rolls.',
+  appliesTo: ['accessory'],
+  modifiers: { attackBonus: 1 },
+});
+
 export const ALL_AFFIXES: Affix[] = [
   KEEN,
   CRUEL,
@@ -128,6 +197,14 @@ export const ALL_AFFIXES: Affix[] = [
   FURIOUS,
   QUARRY,
   SHADOWED,
+  WARDING,
+  VAMPIRIC,
+  PREDATORS,
+  EMBERWARD,
+  RIMEWARD,
+  VIGOROUS,
+  SAVAGE,
+  UNERRING,
 ];
 
 const AFFIX_BY_ID: Map<string, Affix> = new Map(ALL_AFFIXES.map((a) => [a.id, a]));
