@@ -32,8 +32,19 @@ export interface BossIntelCard {
   battlePlanResolution: string;
   /** Walk-past resolution text (gods reward the bold). */
   walkPastResolution: string;
-  /** Coin cost of the paid edge. Scales by chapter: 8 / 15 / 25 / 40. */
+  /** Coin cost of the paid edge. Set via {@link bossIntelCoinCost}: 25 / 60 / 105 / 160. */
   coinCost: number;
+}
+
+/**
+ * Paid-edge price for a chapter's intel. Scales super-linearly (5·ch² + 20·ch)
+ * so it tracks the rising purse a player carries deeper in — boss drops and
+ * elite/combat gold both climb by chapter, so a flat fee would be pocket change
+ * by Ch4. This keeps "study the approach" a real gold sink and a genuine trade
+ * against a potion or a piece of gear. Ch1-4: 25 / 60 / 105 / 160.
+ */
+export function bossIntelCoinCost(chapter: BossIntelCard['chapter']): number {
+  return 5 * chapter * chapter + 20 * chapter;
 }
 
 export const BOSS_INTEL_CARDS: BossIntelCard[] = [
@@ -50,7 +61,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       "You read the shrine and then the worn place on the floor, and you map the whole approach. He opens patient, swings two-handed, and only breaks into the rage once the wound is honest. You walk in with the first cut planned and your guard already set for the turn.",
     walkPastResolution:
       "You step past the shrine without breaking stride. Somewhere in the rock the dust shifts as if a god noted the going. The gods reward the bold — Ilyich's purse will weigh a touch heavier when it falls.",
-    coinCost: 8,
+    coinCost: bossIntelCoinCost(1),
   },
   // ─── Ch2 · The Magistrate ─────────────────────────────────────────────
   {
@@ -65,7 +76,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       'You read the board, then the order the names were crossed in. The opener is always the will-clamp; the sentence is read after. You time your guard to the gesture — your mind braced against the clamp — and put your first strike in before it lands.',
     walkPastResolution:
       'You leave the docket-board unread and the warrant un-named. The merchant queen counts the bold among her takers — the Magistrate\'s purse will weigh a touch heavier when the sentence reverses.',
-    coinCost: 15,
+    coinCost: bossIntelCoinCost(2),
   },
   // ─── Ch3 · The Asylum Director ────────────────────────────────────────
   {
@@ -80,7 +91,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       "You read the chart and the routine both: the will-clamp first, then the glaive at reach, and a second wind when the work is half-done. You walk in with your mind braced against the clamp and your first strike already aimed at the gap his routine leaves open.",
     walkPastResolution:
       'You leave the tray as you found it and the chart un-named. The Crying God notes the going. The Director\'s strongbox will weigh a touch heavier when the chart breaks.',
-    coinCost: 25,
+    coinCost: bossIntelCoinCost(3),
   },
   // ─── Ch4 · The Matron Mother ──────────────────────────────────────────
   {
@@ -95,7 +106,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       "You read the litany and the whole devotional pattern: the temple-prayer to still you, the venomed dagger turning on each stroke, the spider-glyph at distance, the second wind halfway down the prayer. You walk in with your mind set against the stilling and your opening strike already aimed past her guard.",
     walkPastResolution:
       "You leave the antechamber as you found it and the litany unread. Eilistraee's hidden moon notes the going. The Matron's tribute-purse will weigh a touch heavier when the prayer is broken.",
-    coinCost: 40,
+    coinCost: bossIntelCoinCost(4),
   },
 ];
 

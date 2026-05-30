@@ -8,12 +8,19 @@ import { listSpells } from '../../content/spells';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 
 /**
- * XP-to-level table, capped at level 8. L3 and L4 are pulled down from 5e
- * RAW so caster L3 unlocks (Hold Person, Misty Step) reliably fire inside a
- * Ch1+Ch2 chained delve — sim runs were dying before crossing 900 XP. L5+
- * is the previously tuned curve. Index 0 = level 1 = 0 xp.
+ * XP-to-level table, capped at level 8. Index 0 = level 1 = 0 xp.
+ *
+ * Tuned for ROUTED play. The branching map walks ~one node per layer, so a
+ * single route is far fewer fights than the old all-rooms delve and feeds
+ * roughly half the XP. The previous curve (tuned for the all-rooms count) left
+ * a routed run chronically under-levelled — bosses fought 2-3 levels light, and
+ * the L3→L4 cliff (600→2000) alone stranded players at L3 through most of a run.
+ * The upper bands are pulled down ~half and the cliff flattened so a normal
+ * route reaches the level the content expects (≈L3-4 by the Ch1 boss, L5 by Ch2,
+ * L6 by Ch3, L7-8 in Ch4 — a clean full clear tops out at the cap right at the
+ * Matron). The L2/L3 bands stay an early grind on purpose.
  */
-const XP_TABLE = [0, 300, 600, 2000, 4500, 9000, 13000, 18000] as const;
+const XP_TABLE = [0, 250, 550, 1100, 2200, 4000, 6200, 9000] as const;
 
 export const MAX_LEVEL = XP_TABLE.length;
 

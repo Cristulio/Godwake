@@ -131,19 +131,20 @@ describe('boss intel rooms — choices', () => {
 
   it('studying the approach deducts the chapter-scaled coin cost and readies the battle plan', () => {
     const cases: Array<[string, number]> = [
-      ['duergar-ilyich', 8],
-      ['athkatla-magistrate', 15],
-      ['asylum-director', 25],
-      ['drow-matron-mother', 40],
+      ['duergar-ilyich', 25],
+      ['athkatla-magistrate', 60],
+      ['asylum-director', 105],
+      ['drow-matron-mother', 160],
     ];
     for (const [bossDefId, expectedPrice] of cases) {
       const tpl = getEvent(intelEventIdFor(bossDefId));
       const paid = tpl.choices.find((c) => c.id === 'study-the-approach');
       expect(paid?.requiresGold).toBe(expectedPrice);
-      const character = dummyCharacter();
+      // Purse above the steepest Ch4 fee so every deduction lands exactly.
+      const character = { ...dummyCharacter(), goldInPocket: 500 };
       const outcome = paid!.outcome as EventOutcome;
       const result = applyEventOutcome(character, outcome, roller());
-      expect(result.character.goldInPocket).toBe(100 - expectedPrice);
+      expect(result.character.goldInPocket).toBe(500 - expectedPrice);
       expect(result.character.bossIntel?.[bossDefId]).toBe('battle-plan');
     }
   });
@@ -324,13 +325,16 @@ describe('boss intel cards — content', () => {
     );
   });
 
-  it('every card has a unique coin cost scaling with chapter', () => {
+  it('every card has a unique coin cost scaling super-linearly with chapter', () => {
     const prices = BOSS_INTEL_CARDS.map((c) => c.coinCost);
     expect(new Set(prices).size).toBe(prices.length);
-    expect(getBossIntelCard('duergar-ilyich')?.coinCost).toBe(8);
-    expect(getBossIntelCard('athkatla-magistrate')?.coinCost).toBe(15);
-    expect(getBossIntelCard('asylum-director')?.coinCost).toBe(25);
-    expect(getBossIntelCard('drow-matron-mother')?.coinCost).toBe(40);
+    expect(getBossIntelCard('duergar-ilyich')?.coinCost).toBe(25);
+    expect(getBossIntelCard('athkatla-magistrate')?.coinCost).toBe(60);
+    expect(getBossIntelCard('asylum-director')?.coinCost).toBe(105);
+    expect(getBossIntelCard('drow-matron-mother')?.coinCost).toBe(160);
+    // Each step grows faster than the last — tracks the rising purse by chapter.
+    const steps = prices.slice(1).map((p, i) => p - prices[i]);
+    expect(steps.every((s, i) => i === 0 || s > steps[i - 1])).toBe(true);
   });
 
   it('every card carries the resolution prose for all three choices', () => {
