@@ -205,11 +205,13 @@ function reincarnateSoul(character: Character): Character {
   // Refill the body to the LEVEL-1 ceiling the soul will actually descend with,
   // not the dead life's leveled max. This is the same number startDelve rebuilds
   // on descent, so the between-lives screen no longer shows e.g. 46/46 and then
-  // snaps to 16 on Descend.
-  const hpMax = level1HpMax(character);
+  // snaps to 16 on Descend. runAsiGains is cleared so in-run ASI gains do not
+  // compound into the next life.
+  const hpMax = level1HpMax({ ...character, runAsiGains: undefined });
   return {
     ...character,
     ...gearResetToKit(character),
+    runAsiGains: undefined,
     level: 1,
     xp: 0,
     quirks: newQuirks,
@@ -301,7 +303,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // Level-1 ceiling, rebuilt every descent (see level1HpMax): hit die + CON +
     // race HP + wizard's +1 baseline + permanent Grove HP. reincarnateSoul
     // refills to the same value so the wait-screen matches the descent.
-    const baseHpMax = level1HpMax(ch);
+    // runAsiGains is cleared so in-run ASI gains never carry into the next run
+    // (covers the abandon path that bypasses reincarnateSoul).
+    const baseHpMax = level1HpMax({ ...ch, runAsiGains: undefined });
     // Coin in the Pocket seeds gold from a permanent bonus on the soul, not
     // a delve-start mutation, so we add it after the run-scoped reset to 0.
     // Higher ascension levels tighten the purse (startingGoldMult < 1).
@@ -312,6 +316,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const freshlyDescended: Character = {
       ...ch,
       ...gearResetToKit(ch),
+      runAsiGains: undefined,
       level: 1,
       xp: 0,
       goldInPocket: startingGold,

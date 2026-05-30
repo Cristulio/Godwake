@@ -20,8 +20,10 @@ export function proficiencyBonus(level: number): number {
 }
 
 /**
- * Effective ability scores: base soul scores + racial bonuses (+ future buffs).
- * The base "soul" array is stable across reincarnations; race rolls layer on top.
+ * Effective ability scores: base soul scores + racial bonuses + in-run ASI
+ * gains + legendary relic bonuses.
+ * The base "soul" array is stable across reincarnations; everything else layers
+ * on top and is cleared at run boundaries.
  */
 export function effectiveAbilityScores(character: Character): AbilityScores {
   const race = getRace(character.raceId);
@@ -29,6 +31,14 @@ export function effectiveAbilityScores(character: Character): AbilityScores {
   const result: AbilityScores = { ...base };
   for (const ability of Object.keys(race.abilityScoreBonuses) as AbilityName[]) {
     result[ability] = (result[ability] ?? 0) + (race.abilityScoreBonuses[ability] ?? 0);
+  }
+  // In-run ASI gains (from level-up picks). Run-scoped: cleared at reincarnation
+  // and descent so they never compound across lives.
+  const runAsi = character.runAsiGains;
+  if (runAsi) {
+    for (const ability of Object.keys(runAsi) as AbilityName[]) {
+      result[ability] = (result[ability] ?? 0) + (runAsi[ability] ?? 0);
+    }
   }
   // Active legendary relics (cross-delve gear) layer on top of race. Folding
   // here means every downstream read — attack, damage, saves, spell DC, AC via

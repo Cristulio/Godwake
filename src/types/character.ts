@@ -125,6 +125,14 @@ export interface Character {
   subclassId: string | null;
   /** Standard array values assigned at character creation. Never changes. */
   baseAbilityScores: AbilityScores;
+  /**
+   * Additive ability-score gains from in-run ASIs (level-up picks). Run-scoped:
+   * cleared by startDelve and reincarnateSoul so they never compound across
+   * lives. effectiveAbilityScores folds these on top of baseAbilityScores so all
+   * downstream reads (attack, AC, saves, HP) pick them up within the run.
+   * Optional so old saves rehydrate without migration.
+   */
+  runAsiGains?: Partial<AbilityScores>;
 
   // Progression — run-scoped. Resets to 1/0 in gameStore.startDelve;
   // wiped back to 1/0 in finishDelve. Persists through combat ticks but
