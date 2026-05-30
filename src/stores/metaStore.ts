@@ -174,6 +174,24 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     let next: Character = { ...character, renown: character.renown - cost };
     if (up.kind === 'permanent') {
       next = applyPermanentUpgrade(next, upgradeId, nextRank);
+      // permanent HP upgrades raise the soul's HP ceiling. applyPermanentUpgrade
+      // only bumps permanentBonuses.hp — the value startDelve / reincarnateSoul
+      // fold back into hp.max on the next life. Unlike AC / attack / damage
+      // (read live through derived.ts), hp.max is a stored absolute, so without
+      // this the hub header keeps showing the old max until the next descent.
+      // Mirror the delta onto the live pool now so the purchase reads immediately.
+      const hpDelta =
+        (next.permanentBonuses?.hp ?? 0) - (character.permanentBonuses?.hp ?? 0);
+      if (hpDelta !== 0) {
+        next = {
+          ...next,
+          hp: {
+            ...next.hp,
+            max: next.hp.max + hpDelta,
+            current: next.hp.current + hpDelta,
+          },
+        };
+      }
     }
     useCharacterStore.getState().setCharacter(next);
     set({
