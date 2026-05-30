@@ -40,6 +40,9 @@ import gibberingHuskUrl from '../../assets/sprites/monsters/gibbering-husk.svg';
 import mindLeechUrl from '../../assets/sprites/monsters/mind-leech.svg';
 import sphereAberrationUrl from '../../assets/sprites/monsters/sphere-aberration.svg';
 import asylumFleshwrightUrl from '../../assets/sprites/monsters/asylum-fleshwright.svg';
+import hollowGazeUrl from '../../assets/sprites/monsters/hollow-gaze.svg';
+import witnessMoteUrl from '../../assets/sprites/monsters/witness-mote.svg';
+import gloamingEyeUrl from '../../assets/sprites/monsters/gloaming-eye.svg';
 import spiderBroodmotherUrl from '../../assets/sprites/monsters/spider-broodmother.svg';
 import drowWarPriestessUrl from '../../assets/sprites/monsters/drow-war-priestess.svg';
 import cavernHuntingSpiderUrl from '../../assets/sprites/monsters/cavern-hunting-spider.svg';
@@ -123,6 +126,9 @@ const SPRITES: Record<string, SpriteEntry> = {
   'mind-leech': { url: mindLeechUrl, label: 'Mind Leech' },
   'sphere-aberration': { url: sphereAberrationUrl, label: 'Reknitting Horror' },
   'asylum-fleshwright': { url: asylumFleshwrightUrl, label: 'Asylum Fleshwright' },
+  'hollow-gaze': { url: hollowGazeUrl, label: 'The Hollow Gaze' },
+  'witness-mote': { url: witnessMoteUrl, label: 'Witness-Mote' },
+  'gloaming-eye': { url: gloamingEyeUrl, label: 'Gloaming Eye' },
   'spider-broodmother': { url: spiderBroodmotherUrl, label: 'Spider Broodmother' },
   'drow-war-priestess': { url: drowWarPriestessUrl, label: 'Drow War-Priestess' },
   'cavern-hunting-spider': { url: cavernHuntingSpiderUrl, label: 'Cavern Hunting-Spider' },

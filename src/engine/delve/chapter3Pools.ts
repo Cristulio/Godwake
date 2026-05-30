@@ -226,6 +226,25 @@ export const MID_POOL: EncounterEntry[] = [
     xpReward: 560,
     goldReward: 24,
   },
+  {
+    title: 'The Drifting Witnesses',
+    flavorText:
+      "Two small eyes drift out of a side-cell at head height, blinking open as they come, fixing on you without urgency. Behind them the corridor goes dark in the exact shape of whatever has sent them ahead to look.",
+    monsters: [{ defId: 'witness-mote', count: 2, displayPrefix: 'Witness' }],
+    xpReward: 540,
+    goldReward: 22,
+  },
+  {
+    title: 'The Eye in the Stairwell',
+    flavorText:
+      "A single eye the size of a head hangs in the stairwell where the lamps have failed, its fringe of grey tendrils stirring in no wind. It does not bar your way. It only makes the dark below seem, somehow, the lesser horror.",
+    monsters: [
+      { defId: 'gloaming-eye', count: 1 },
+      { defId: 'witness-mote', count: 1 },
+    ],
+    xpReward: 600,
+    goldReward: 30,
+  },
 ];
 
 export const ELITE_POOL: EncounterEntry[] = [
@@ -312,5 +331,24 @@ export const ELITE_POOL: EncounterEntry[] = [
     ],
     xpReward: 740,
     goldReward: 36,
+  },
+  {
+    title: 'The Hollow Gaze',
+    flavorText:
+      "The corridor opens into a vaulted dark, and the dark is occupied. A blind orb the size of a millstone hangs at its centre, the great eye down its middle sewn and scarred shut — and a crown of lesser stalks lifts toward you, each one blinking awake, each one finding you at once. The cult that starved at its feet were not wrong to put out their eyes. It sees you better than you have ever been seen.",
+    monsters: [{ defId: 'hollow-gaze', count: 1 }],
+    xpReward: 840,
+    goldReward: 50,
+  },
+  {
+    title: 'The Gaze and Its Witnesses',
+    flavorText:
+      "The Hollow Gaze does not hang alone. A grown eye drifts at either shoulder of it, herding the room, and the millstone orb between them turns its sewn-shut face toward you the way a judge turns toward a verdict already written.",
+    monsters: [
+      { defId: 'hollow-gaze', count: 1 },
+      { defId: 'gloaming-eye', count: 1 },
+    ],
+    xpReward: 900,
+    goldReward: 54,
   },
 ];

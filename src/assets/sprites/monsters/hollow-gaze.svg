@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 30 30"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="The Hollow Gaze"
+    >
+      <!-- floating orb body -->
+      <ellipse cx="15" cy="16" rx="11" ry="10" fill="#2a2438" />
+      <ellipse cx="15" cy="15" rx="10" ry="9" fill="#3a3450" />
+      <ellipse cx="13" cy="13" rx="6" ry="5" fill="#4a4468" />
+
+      <!-- the great central eye, scarred and sewn shut -->
+      <ellipse cx="15" cy="16" rx="6" ry="4" fill="#15101e" />
+      <rect x="9" y="15" width="12" height="1" fill="#c8d0e8" opacity="0.85" />
+      <rect x="11" y="14" width="1" height="1" fill="#c8d0e8" opacity="0.7" />
+      <rect x="13" y="17" width="1" height="1" fill="#c8d0e8" opacity="0.7" />
+      <rect x="16" y="14" width="1" height="1" fill="#c8d0e8" opacity="0.7" />
+      <rect x="18" y="17" width="1" height="1" fill="#c8d0e8" opacity="0.7" />
+
+      <!-- crown of lesser eyestalks that see in its stead -->
+      <rect x="6" y="3" width="1" height="5" fill="#3a3450" />
+      <rect x="5" y="2" width="3" height="2" fill="#4a4468" />
+      <rect x="6" y="2" width="1" height="1" fill="#e8d27a" />
+
+      <rect x="14" y="1" width="1" height="5" fill="#3a3450" />
+      <rect x="13" y="0" width="3" height="2" fill="#4a4468" />
+      <rect x="14" y="0" width="1" height="1" fill="#e8d27a" />
+
+      <rect x="23" y="3" width="1" height="5" fill="#3a3450" />
+      <rect x="22" y="2" width="3" height="2" fill="#4a4468" />
+      <rect x="23" y="2" width="1" height="1" fill="#e8d27a" />
+
+      <rect x="2" y="11" width="5" height="1" fill="#3a3450" />
+      <rect x="1" y="10" width="2" height="3" fill="#4a4468" />
+      <rect x="1" y="11" width="1" height="1" fill="#e8d27a" />
+
+      <rect x="23" y="11" width="5" height="1" fill="#3a3450" />
+      <rect x="27" y="10" width="2" height="3" fill="#4a4468" />
+      <rect x="28" y="11" width="1" height="1" fill="#e8d27a" />
+
+      <!-- a stray witness budding off the rim -->
+      <rect x="25" y="20" width="2" height="2" fill="#4a4468" />
+      <rect x="26" y="21" width="1" height="1" fill="#e8d27a" opacity="0.8" />
+
+      <!-- base shadow -->
+      <ellipse cx="15" cy="27" rx="10" ry="2" fill="#1a1626" />
+    </svg>
