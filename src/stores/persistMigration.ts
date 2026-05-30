@@ -24,8 +24,11 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *           player re-clears the chain to open Ascension 1.
  *  v8 → v9: Legendary relics. `ownedLegendaries` / `activeLegendaries` (both
  *           default []) added to the meta snapshot. Old saves own none.
+ *  v9 → v10: Per-soul seen-once dialogue beat tracking. `seenDialogueBeats`
+ *            (default []) prevents one-time beats (e.g. Imoen's camp whisper)
+ *            from replaying on re-entry or in subsequent runs.
  */
-export const SAVE_VERSION = 9;
+export const SAVE_VERSION = 10;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -144,6 +147,7 @@ export interface MigratedSnapshot {
   knownNpcs: string[];
   ownedLegendaries: string[];
   activeLegendaries: string[];
+  seenDialogueBeats: string[];
   // Allow extra fields to ride through (screen, saveSeed, introSeen, etc.).
   [k: string]: unknown;
 }
@@ -255,6 +259,11 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   }
   if (!Array.isArray(state.activeLegendaries)) {
     state.activeLegendaries = [];
+  }
+
+  // v9 → v10: per-soul seen-once dialogue beat tracking.
+  if (!Array.isArray(state.seenDialogueBeats)) {
+    state.seenDialogueBeats = [];
   }
 
   return state as MigratedSnapshot;

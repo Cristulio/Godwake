@@ -198,8 +198,23 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 9', () => {
-    expect(SAVE_VERSION).toBe(9);
+  it('is 10', () => {
+    expect(SAVE_VERSION).toBe(10);
+  });
+});
+
+describe('migrateV1ToV2 — v9 → v10 seenDialogueBeats', () => {
+  it('defaults seenDialogueBeats to [] when missing', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {} });
+    expect(v.seenDialogueBeats).toEqual([]);
+  });
+
+  it('preserves an existing seenDialogueBeats array', () => {
+    const v = migrateV1ToV2({
+      unlockedUpgrades: {},
+      seenDialogueBeats: ['imoen-camp-whisper'],
+    });
+    expect(v.seenDialogueBeats).toEqual(['imoen-camp-whisper']);
   });
 });
 
