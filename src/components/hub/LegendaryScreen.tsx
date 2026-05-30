@@ -4,10 +4,11 @@ import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import {
   LEGENDARIES,
-  legendarySlotCap,
+  canEquipLegendary,
   type Legendary,
 } from '../../content/legendaries';
 import { SETS, setProgress } from '../../content/sets';
+import { getClass } from '../../content/classes';
 
 interface LegendaryScreenProps {
   onBack: () => void;
@@ -15,29 +16,30 @@ interface LegendaryScreenProps {
 
 /**
  * The hub "Relics" view: inspect earned legendary relics and choose which to
- * attune for the next descent (a Hades-mirror-style slot cap). Reached from the
- * Phandalin hub once the soul has earned at least one relic — gated there so the
- * feature only appears after it exists for the player.
+ * EQUIP for every future descent. No slot cap — equipped relics stay on until
+ * changed. Relics are effect-only (no AC, no weapon damage); their effects layer
+ * on top of the run's affix gear. Class-bound relics can be found by any class
+ * but are only equippable while playing that class.
  */
 export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
   const owned = useGameStore((s) => s.ownedLegendaries);
   const active = useGameStore((s) => s.activeLegendaries);
   const setActive = useGameStore((s) => s.setActiveLegendaries);
-  const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
-  const cap = legendarySlotCap(ascensionUnlocked);
+  const classId = useGameStore((s) => s.character?.classId) ?? null;
   const [flash, setFlash] = useState<string | null>(null);
 
-  function toggle(id: string) {
-    if (active.includes(id)) {
-      setActive(active.filter((a) => a !== id));
+  function toggle(relic: Legendary) {
+    if (active.includes(relic.id)) {
+      setActive(active.filter((a) => a !== relic.id));
       return;
     }
-    if (active.length >= cap) {
-      setFlash(`Only ${cap} relics may be attuned at once. More slots open as you ascend.`);
-      setTimeout(() => setFlash(null), 2400);
+    if (classId && !canEquipLegendary(relic.id, classId)) {
+      const cls = relic.classGate ? getClass(relic.classGate).name : 'another class';
+      setFlash(`Bound to the ${cls} — play that class to wield this relic.`);
+      setTimeout(() => setFlash(null), 2600);
       return;
     }
-    setActive([...active, id]);
+    setActive([...active, relic.id]);
   }
 
   return (
@@ -51,7 +53,7 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
             RELICS OF THE SOUL
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
-            Legendary attunements · What death cannot take
+            Legendary effects · What death cannot take
           </p>
         </div>
         <Button variant="ghost" onClick={onBack}>
@@ -62,22 +64,23 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-6">
         <Panel tone="glow">
           <p className="text-[var(--color-text-secondary)] text-sm italic leading-relaxed font-narrative">
-            Some things the wheel cannot strip from you. These relics, earned in the deep dark,
-            return with the soul through every death. Attune the ones you will carry into the next
-            descent — the rest wait, patient, in the dark of the reliquary.
+            Some things the wheel cannot strip from you. These relics, won from the elites of the
+            deep dark, return with the soul through every death. Equip the ones you will carry — they
+            lend no armour and swing no blade, only their gifts, layered over whatever gear the road
+            provides. They stay with you until you choose otherwise.
           </p>
         </Panel>
         <div className="panel-etched-warm border border-[var(--color-border-warm)] p-4 flex items-center gap-4">
           <div className="flex-1">
             <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 flex items-center gap-1">
               <span className="text-[var(--color-accent-gold)]">✦</span>
-              Attuned
+              Equipped
             </div>
             <div
               className="font-mono text-3xl text-[var(--color-accent-gold)]"
               style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.7), 0 0 12px rgba(212,176,98,0.4)' }}
             >
-              {active.length} / {cap}
+              {active.length}
             </div>
             <div className="font-mono text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mt-1">
               {owned.length} / {LEGENDARIES.length} relics found
@@ -98,8 +101,9 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
             <RelicCard
               key={relic.id}
               relic={relic}
-              attuned={active.includes(relic.id)}
-              onToggle={() => toggle(relic.id)}
+              equipped={active.includes(relic.id)}
+              locked={!!classId && !canEquipLegendary(relic.id, classId)}
+              onToggle={() => toggle(relic)}
             />
           ) : (
             <UndiscoveredCard key={relic.id} />
@@ -117,7 +121,7 @@ function SetsPanel({ active, owned }: { active: string[]; owned: string[] }) {
     <div className="mt-8">
       <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
         <span className="text-[var(--color-accent-gold)]/60">✦</span>
-        Set Bonuses · attune multiple pieces
+        Set Bonuses · equip multiple pieces
       </div>
       <div className="grid md:grid-cols-2 gap-3">
         {SETS.map((set) => {
@@ -130,7 +134,7 @@ function SetsPanel({ active, owned }: { active: string[]; owned: string[] }) {
                   {set.name}
                 </h4>
                 <span className="font-mono text-[10px] text-[var(--color-accent-gold)] shrink-0">
-                  {activeCount}/{set.pieceIds.length} attuned
+                  {activeCount}/{set.pieceIds.length} equipped
                 </span>
               </div>
               <p className="text-[var(--color-text-secondary)] text-[10px] italic mt-1 font-narrative leading-snug">
@@ -163,23 +167,32 @@ function SetsPanel({ active, owned }: { active: string[]; owned: string[] }) {
 
 interface RelicCardProps {
   relic: Legendary;
-  attuned: boolean;
+  equipped: boolean;
+  locked: boolean;
   onToggle: () => void;
 }
 
-function RelicCard({ relic, attuned, onToggle }: RelicCardProps) {
+function RelicCard({ relic, equipped, locked, onToggle }: RelicCardProps) {
+  const boundClass = relic.classGate ? getClass(relic.classGate).name : null;
   return (
     <div
       className={`
         relative panel-etched-warm border-2 p-4 transition-all flex flex-col
-        ${attuned
+        ${equipped
           ? 'border-[var(--color-accent-gold)] shadow-[0_0_18px_rgba(244,167,66,0.25)]'
-          : 'border-[var(--color-border-dim)]'}
+          : locked
+            ? 'border-[var(--color-border-dim)] opacity-70'
+            : 'border-[var(--color-border-dim)]'}
       `}
     >
-      {attuned && (
+      {equipped && (
         <div className="absolute -top-px -right-px bg-[var(--color-accent-gold)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
-          ✦ Attuned
+          ✦ Equipped
+        </div>
+      )}
+      {!equipped && locked && boundClass && (
+        <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
+          ⚿ {boundClass}
         </div>
       )}
 
@@ -189,15 +202,21 @@ function RelicCard({ relic, attuned, onToggle }: RelicCardProps) {
       <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed font-narrative">
         {relic.flavor}
       </p>
-      <div className="text-[var(--color-accent-gold)] text-xs mb-3 font-mono">{relic.effect}</div>
+      <div className="text-[var(--color-accent-gold)] text-xs mb-1 font-mono">{relic.effect}</div>
+      {boundClass && (
+        <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-widest font-display mb-2">
+          Bound · {boundClass}
+        </div>
+      )}
 
       <div className="mt-auto">
         <Button
-          variant={attuned ? 'secondary' : 'primary'}
+          variant={equipped ? 'secondary' : locked ? 'secondary' : 'primary'}
           onClick={onToggle}
+          disabled={locked && !equipped}
           className="w-full"
         >
-          {attuned ? 'Release' : 'Attune'}
+          {equipped ? 'Unequip' : locked ? `Bound to the ${boundClass}` : 'Equip'}
         </Button>
       </div>
     </div>
@@ -214,7 +233,7 @@ function UndiscoveredCard() {
         ??? ??? ???
       </h3>
       <p className="text-[var(--color-text-dim)] text-xs italic leading-relaxed font-narrative">
-        A relic not yet earned. Clear the chain and the dark may yield it up.
+        A relic not yet earned. Brave the elites of the dark, and it may yet be yours.
       </p>
     </div>
   );

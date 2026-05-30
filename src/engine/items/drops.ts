@@ -39,15 +39,16 @@ const RARITY_WEIGHTS: Record<DropSource, Array<[GearRarity, number]>> = {
 };
 
 /**
- * Per-source chance (percent) a cleared room ALSO yields a legendary relic. Very
- * low ("from time to time") and climbing by source. A legendary that drops is
- * BANKED to the persistent collection (it doesn't roll like normal gear and
- * doesn't equip mid-run) — see delveStore.resolveRoomVictory.
+ * Chance (percent) that WINNING an ELITE fight yields a legendary relic. The
+ * elite node is the SOLE source: legendaries are earned by taking the elite-risk
+ * path (Fight, not Take-the-gold). Regular combats and bosses never drop them.
+ * A relic that drops is BANKED to the persistent hub reliquary — it never enters
+ * the run inventory and isn't equipped mid-run (see delveStore.resolveRoomVictory).
  */
 const LEGENDARY_DROP_CHANCE: Record<DropSource, number> = {
-  combat: 1,
-  elite: 3,
-  boss: 6,
+  combat: 0,
+  elite: 35,
+  boss: 0,
 };
 
 /** Roll whether a cleared room yields a legendary relic. Deterministic. */

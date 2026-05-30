@@ -17,6 +17,7 @@ import { ShrineRoom } from './ShrineRoom';
 import { CampRoom } from './CampRoom';
 import { EventRoom } from './EventRoom';
 import { ShopRoom } from './ShopRoom';
+import { EliteRoom } from './EliteRoom';
 import { DelveMap } from './DelveMap';
 import { DelveSummary } from './DelveSummary';
 import { PostmortemModal } from './PostmortemModal';
@@ -166,6 +167,9 @@ function DelveScreenBody() {
     if (combat) return; // already in combat
     if (room.kind !== 'combat' && room.kind !== 'boss' && room.kind !== 'elite') return;
     if (!room.monsters) return;
+    // Elite nodes wait on the player's risk/reward decision — don't build the
+    // fight until they choose to engage (EliteRoom sets delve.eliteEngaged).
+    if (room.kind === 'elite' && !delve.eliteEngaged) return;
     // Eyes of the Lich (camp boon): pause boss combat-spawn while the player
     // reads the stat-block preview. The pre-fight panel clears the flag and
     // re-fires this effect.
@@ -198,7 +202,7 @@ function DelveScreenBody() {
       discover(m.defId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [delve?.currentRoomIdx, delve?.phase]);
+  }, [delve?.currentRoomIdx, delve?.phase, delve?.eliteEngaged]);
 
   if (!character) {
     return (
@@ -328,6 +332,17 @@ function DelveScreenBody() {
           bossDefId={room.monsters[0].defId}
           onContinue={() => useGameStore.getState().consumeLichEyes()}
         />
+      </div>
+    );
+  }
+
+  // Elite node: the risk/reward decision shown before the fight. Renders until
+  // the player engages (Fight) or takes the gold and advances past the node.
+  if (room.kind === 'elite' && !delve.eliteEngaged) {
+    return (
+      <div key={room.id} className="animate-room-enter">
+        <DelveTopBar delve={delve} character={character} />
+        <EliteRoom room={room} />
       </div>
     );
   }

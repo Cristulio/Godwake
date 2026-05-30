@@ -83,6 +83,13 @@ export interface DelveState {
    */
   campChoice?: 'rest' | 'sharpen' | 'prayer';
   /**
+   * Elite node risk/reward gate. Undefined while the decision is pending (the
+   * EliteRoom panel shows); set true once the player chooses to FIGHT, which
+   * lets the spawn-on-enter effect build the encounter. Taking the gold instead
+   * advances past the node without engaging. Cleared on every room entry.
+   */
+  eliteEngaged?: boolean;
+  /**
    * Per-camp boon resolutions: one entry appended each time the player
    * picks a boon OR explicitly skips the picker at a camp. `boonId === null`
    * means "skipped, do not offer again at this camp". Tier corresponds to

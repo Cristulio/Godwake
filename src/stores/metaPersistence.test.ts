@@ -12,7 +12,6 @@ import { abilityModifier } from '../types/abilities';
 import { getClass } from '../content/classes';
 import { getRace } from '../content/races';
 import { setActiveRoller } from '../engine/dice';
-import { LEGENDARY_ORDER } from '../content/legendaries';
 import type { Character } from '../types/character';
 
 const KEY = `${SAVE_SLOT_KEY_PREFIX}0`;
@@ -106,24 +105,35 @@ describe('Grove HP upgrade — raises live max HP on purchase (the header bug)',
 });
 
 describe('legendaries survive a character swap (account-level, soul-carried)', () => {
-  it('keeps owned + attuned relics and the baked bonus across selectCharacter', () => {
+  it('keeps owned + equipped relics and the baked effects across selectCharacter', () => {
     useMetaStore.setState({ ownedLegendaries: ['heartwood-talisman', 'bulwark-sigil'] });
     useMetaStore.getState().setActiveLegendaries(['heartwood-talisman', 'bulwark-sigil']);
-    // Baked aggregate: +2 CON and +1 AC.
-    expect(useCharacterStore.getState().character!.legendaryBonuses).toEqual({
-      abilityScores: { con: 2 },
-      ac: 1,
-    });
+    // Both relics are class-agnostic → two effect payloads baked on.
+    expect(useCharacterStore.getState().character!.legendaryEffects).toHaveLength(2);
 
     useGameStore.getState().selectCharacter('wizard');
 
     const meta = useMetaStore.getState();
     expect(meta.ownedLegendaries).toEqual(['heartwood-talisman', 'bulwark-sigil']);
     expect(meta.activeLegendaries).toEqual(['heartwood-talisman', 'bulwark-sigil']);
-    // The baked bonus rides carrySoulProgress onto the new vessel.
+    // The baked effects ride carrySoulProgress + the swap re-bake onto the new vessel.
     const after = useCharacterStore.getState().character!;
     expect(after.classId).toBe('wizard');
-    expect(after.legendaryBonuses).toEqual({ abilityScores: { con: 2 }, ac: 1 });
+    expect(after.legendaryEffects).toHaveLength(2);
+  });
+
+  it('drops a class-bound relic the new class cannot equip on swap', () => {
+    useCharacterStore.setState({ character: makeFighter({ renown: 1000 }) });
+    useMetaStore.setState({ ownedLegendaries: ['warsong-gauntlet', 'bulwark-sigil'] });
+    useMetaStore.getState().setActiveLegendaries(['warsong-gauntlet', 'bulwark-sigil']);
+    expect(useMetaStore.getState().activeLegendaries).toContain('warsong-gauntlet');
+
+    useGameStore.getState().selectCharacter('wizard');
+
+    // The Fighter-bound Warsong gauntlet falls off; the agnostic relic stays.
+    const meta = useMetaStore.getState();
+    expect(meta.activeLegendaries).toEqual(['bulwark-sigil']);
+    expect(meta.ownedLegendaries).toContain('warsong-gauntlet'); // still owned, just stashed
   });
 });
 
@@ -261,8 +271,11 @@ describe('persist round-trip — fresh boot rehydrates the meta loop', () => {
   });
 });
 
-describe('legendary order sanity', () => {
-  it('grants relics in unlock order', () => {
-    expect(useMetaStore.getState().grantNextLegendary()).toBe(LEGENDARY_ORDER[0]);
+describe('legendary drop sanity', () => {
+  it('banks an un-owned relic from the elite-drop pool', () => {
+    useMetaStore.setState({ ownedLegendaries: [] });
+    const id = useMetaStore.getState().grantLegendaryDrop();
+    expect(id).not.toBeNull();
+    expect(useMetaStore.getState().ownedLegendaries).toContain(id!);
   });
 });

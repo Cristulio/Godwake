@@ -177,6 +177,7 @@ interface GameState {
   creditChapterClearGold: () => void;
   concludeDelveAtCamp: () => void;
   pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => string | null;
+  pickEliteChoice: (choice: 'fight' | 'gold') => void;
   pickCampBoon: (tier: number, boonId: string | null) => void;
   consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
@@ -358,6 +359,11 @@ function scatterSnapshot(s: PersistedSnapshot) {
   useDelveStore.setState({ delve: null });
   useCombatStore.setState({ combat: null });
   if (s.saveSeed) setActiveRoller(s.saveSeed);
+  // Re-bake the equipped-legendary effect payloads onto the loaded character
+  // (and drop any off-class relics the current class can't equip). Idempotent
+  // for current saves; for pre-v10 saves it converts the stripped stat field to
+  // the new effect form so equipped relics actually apply.
+  useMetaStore.getState().setActiveLegendaries(useMetaStore.getState().activeLegendaries);
 }
 
 function readSlotWrapper(slot: SaveSlotId): SlotWrapper | null {
@@ -507,6 +513,9 @@ export const useGameStore = create<GameState>()(
           const soul = charSlice.character;
           const fresh = buildPlayerCharacter(presetCreationInput(classId));
           charSlice.setCharacter(soul ? carrySoulProgress(fresh, soul) : fresh);
+          // Re-validate equipped relics for the new class — class-bound relics the
+          // new body can't wield drop, and the effect payloads re-bake onto it.
+          useMetaStore.getState().setActiveLegendaries(useMetaStore.getState().activeLegendaries);
           useScreenStore.getState().setScreen('hub');
         },
 
@@ -534,6 +543,8 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().concludeDelveAtCamp(),
         pickCampChoice: (choice) =>
           useDelveStore.getState().pickCampChoice(choice),
+        pickEliteChoice: (choice) =>
+          useDelveStore.getState().pickEliteChoice(choice),
         pickCampBoon: (tier, boonId) =>
           useDelveStore.getState().pickCampBoon(tier, boonId),
         consumeLichEyes: () => useDelveStore.getState().consumeLichEyes(),

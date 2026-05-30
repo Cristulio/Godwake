@@ -7,9 +7,8 @@ import { useCharacterStore } from './characterStore';
 import { getActiveRoller } from '../engine/dice';
 import {
   LEGENDARY_ORDER,
-  legendarySlotCap,
-  legendaryDropPool,
-  aggregateLegendaryBonuses,
+  aggregateLegendaryEffects,
+  canEquipLegendary,
 } from '../content/legendaries';
 
 /**
@@ -60,15 +59,15 @@ interface MetaStoreState {
    */
   seenDialogueBeats: string[];
   /**
-   * Legendary relics the soul has earned (cross-delve persistent gear). Account
-   * level — survives reincarnation, reset only on New Game. Earned by clearing
-   * the chain (see delveStore.finishDelve).
+   * Legendary relics the soul has earned (cross-delve persistent gear, hub-only).
+   * Account level — survives reincarnation, reset only on New Game. Earned at the
+   * elite node (the fight-the-elite risk path) and the shop reliquary.
    */
   ownedLegendaries: string[];
   /**
-   * The subset of owned legendaries currently attuned. Their aggregate bonus is
-   * baked onto the character by `setActiveLegendaries`. Capped at
-   * MAX_ACTIVE_LEGENDARIES (mirror-style slot limit).
+   * The owned legendaries currently EQUIPPED (no slot cap — they stay on until
+   * changed). Their effect payloads are baked onto the character by
+   * `setActiveLegendaries`; class-bound relics only stick while playing that class.
    */
   activeLegendaries: string[];
 
@@ -95,16 +94,10 @@ interface MetaStoreState {
   markNpcKnown: (npcId: string) => void;
   markDialogueBeatSeen: (beatId: string) => void;
   /**
-   * Grant the next un-owned legendary in unlock order. Returns the granted id,
-   * or null when the set is already complete. Does not auto-attune — the player
-   * picks which to run from the hub.
-   */
-  grantNextLegendary: () => string | null;
-  /**
-   * Bank a RANDOM un-owned legendary eligible for the active character's class
-   * (the rare-drop path). Returns the banked id, or null when none remain.
-   * Banks to the collection only — it does NOT equip mid-run; the player
-   * attunes it from the hub for a future descent.
+   * Bank a RANDOM un-owned legendary (the elite-node drop path). Drops can be any
+   * class's relic — off-class ones are stashed until the player runs that class.
+   * Returns the banked id, or null when none remain. Banks to the collection
+   * only; the player equips it at the hub for a future descent.
    */
   grantLegendaryDrop: () => string | null;
   /**
@@ -113,8 +106,8 @@ interface MetaStoreState {
    */
   bankLegendary: (id: string) => boolean;
   /**
-   * Set the attuned legendaries (validated against ownership + the slot cap) and
-   * bake their aggregate bonus onto the active character.
+   * Set the equipped legendaries (validated against ownership + the class-bound
+   * gate; no slot cap) and bake their effect payloads onto the active character.
    */
   setActiveLegendaries: (ids: string[]) => void;
   resetMeta: () => void;
@@ -252,20 +245,11 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
         : { seenDialogueBeats: [...s.seenDialogueBeats, beatId] },
     ),
 
-  grantNextLegendary: () => {
-    const owned = get().ownedLegendaries;
-    const next = LEGENDARY_ORDER.find((id) => !owned.includes(id));
-    if (!next) return null;
-    set({ ownedLegendaries: [...owned, next] });
-    return next;
-  },
-
   grantLegendaryDrop: () => {
     const owned = get().ownedLegendaries;
-    const classId = useCharacterStore.getState().character?.classId;
-    const pool = (classId ? legendaryDropPool(classId) : [...LEGENDARY_ORDER]).filter(
-      (id) => !owned.includes(id),
-    );
+    // Elite-node drops can yield ANY class's relic; off-class relics are stashed
+    // until the player runs that class (the equip gate handles use).
+    const pool = LEGENDARY_ORDER.filter((id) => !owned.includes(id));
     if (pool.length === 0) return null;
     const pick = pool[(getActiveRoller().roll('1d100').total - 1) % pool.length];
     set({ ownedLegendaries: [...owned, pick] });
@@ -281,20 +265,22 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
 
   setActiveLegendaries: (ids) => {
     const owned = get().ownedLegendaries;
-    // Keep only owned ids, dedupe, and clamp to the slot cap.
-    const valid = [...new Set(ids)]
-      .filter((id) => owned.includes(id))
-      .slice(0, legendarySlotCap(get().ascensionUnlocked));
+    const classId = useCharacterStore.getState().character?.classId;
+    // Keep only owned ids, dedupe, and drop class-bound relics the current class
+    // can't equip. No slot cap — equipped relics stay on until changed.
+    const valid = [...new Set(ids)].filter(
+      (id) => owned.includes(id) && (!classId || canEquipLegendary(id, classId)),
+    );
     set({ activeLegendaries: valid });
-    // Bake the aggregate onto the live character so the engine reads it. The
-    // field rides reincarnation/descent via object spread (reincarnateSoul,
-    // startDelve) and a hub swap via carrySoulProgress.
+    // Bake the effect payloads onto the live character so the affix pipeline
+    // reads them. The field rides reincarnation/descent via object spread
+    // (reincarnateSoul, startDelve) and a hub swap via carrySoulProgress.
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (character) {
       charSlice.setCharacter({
         ...character,
-        legendaryBonuses: aggregateLegendaryBonuses(valid),
+        legendaryEffects: aggregateLegendaryEffects(valid),
       });
     }
   },
