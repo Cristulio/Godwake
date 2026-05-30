@@ -238,6 +238,7 @@ describe('boss intel — buff definitions', () => {
       'athkatla-magistrate': 9, // chapter 2
       'asylum-director': 12, // chapter 3
       'drow-matron-mother': 15, // chapter 4
+      'hollow-dawn': 18, // chapter 5
     };
     for (const card of BOSS_INTEL_CARDS) {
       const buff = bossIntelBuffFor(card.bossDefId, 'battle-plan');
@@ -321,7 +322,13 @@ describe('boss intel — applied at the boss fight (createCombat)', () => {
 describe('boss intel cards — content', () => {
   it('exposes one card per chapter boss', () => {
     expect(BOSS_INTEL_CARDS.map((c) => c.bossDefId).sort()).toEqual(
-      ['asylum-director', 'athkatla-magistrate', 'drow-matron-mother', 'duergar-ilyich'].sort(),
+      [
+        'asylum-director',
+        'athkatla-magistrate',
+        'drow-matron-mother',
+        'duergar-ilyich',
+        'hollow-dawn',
+      ].sort(),
     );
   });
 
@@ -332,6 +339,7 @@ describe('boss intel cards — content', () => {
     expect(getBossIntelCard('athkatla-magistrate')?.coinCost).toBe(60);
     expect(getBossIntelCard('asylum-director')?.coinCost).toBe(105);
     expect(getBossIntelCard('drow-matron-mother')?.coinCost).toBe(160);
+    expect(getBossIntelCard('hollow-dawn')?.coinCost).toBe(225);
     // Each step grows faster than the last — tracks the rising purse by chapter.
     const steps = prices.slice(1).map((p, i) => p - prices[i]);
     expect(steps.every((s, i) => i === 0 || s > steps[i - 1])).toBe(true);
