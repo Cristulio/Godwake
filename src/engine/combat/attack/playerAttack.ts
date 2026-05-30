@@ -18,6 +18,7 @@ import {
   proficiencyBonus,
 } from '../../character/derived';
 import { rageDamageBonus } from '../../character/actions';
+import { isRangedWeapon } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
@@ -96,7 +97,7 @@ export function playerAttack(
   const isFinesse = w.properties.includes('finesse');
   // Ranged weapons (bows, crossbows) are flagged by the `ammunition` property.
   // Thrown daggers stay in the finesse branch — they're melee that can fly.
-  const isRanged = w.properties.includes('ammunition');
+  const isRanged = isRangedWeapon(w);
   const attackAbility: 'str' | 'dex' = isRanged
     ? 'dex'
     : isFinesse

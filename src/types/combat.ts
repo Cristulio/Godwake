@@ -247,4 +247,12 @@ export interface CombatState {
    * damage roll by re-rolling the lowest die and keeping the higher result.
    */
   bladeOfVowRerollsRemaining?: number;
+  /**
+   * Ranged "kept at range" payoff: number of upcoming enemy attacks that resolve
+   * at disadvantage. Set to 1 on combat start when the player wields a ranged
+   * weapon (the bow identity is harder to reach before the enemy closes), and
+   * spent by the first enemy attack roll of the fight. Optional so legacy saves
+   * rehydrate (absent = 0).
+   */
+  rangedEvasionRemaining?: number;
 }

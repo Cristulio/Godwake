@@ -22,6 +22,9 @@ import {
 import { isPlayerParalyzed } from './holdPerson';
 import { resolvePlayerParalyzedTurn } from './turn';
 import { refreshMonsterIntents } from './attack/monsterIntent';
+import { playerAttack } from './attack/playerAttack';
+import { wieldsRangedWeapon } from '../character/equip';
+import { getActiveRoller } from '../dice';
 import { applyAscensionToMonster, ascensionDamageBonus } from '../delve/ascension';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 
@@ -278,6 +281,9 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     rerollMissesEncounterRemaining: blessingMods.rerollMissesPerEncounter ?? 0,
     playerAttacksThisTurn: 0,
     bladeOfVowRerollsRemaining: boonMods.weaponDamageRerollPerCombat ?? 0,
+    // Ranged "kept at range": the first enemy swing comes at disadvantage while
+    // a bow is in hand. Consumed by the first enemy attack (monsterAttack).
+    rangedEvasionRemaining: wieldsRangedWeapon(nextCharacter) ? 1 : 0,
   };
 
   // Player goes first. If they walk in already paralyzed (Magistrate held
@@ -290,9 +296,71 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     nextCharacter = resolved.character;
   }
 
+  // Ranged opening volley: a bow-wielder looses a free shot before the enemy
+  // can close the distance. Resolved here (after the entry paralyzed-save, so a
+  // held player can't fire) and before intents are seeded, so a kill is already
+  // reflected when the survivors telegraph.
+  {
+    const volley = resolveRangedOpeningVolley(state, nextCharacter, input.roller);
+    state = volley.state;
+    nextCharacter = volley.character;
+  }
+
   // enemy-telegraph: seed each monster's round-1 intent (after the entry
   // paralyzed-save resolves, so bosses correctly telegraph their opener).
   state = refreshMonsterIntents(state, nextCharacter);
 
   return combatResult(state, nextCharacter);
+}
+
+/**
+ * Resolve the ranged opening volley: one free attack with the equipped bow
+ * against the first living monster, before the player's real turn. Routed
+ * through the full {@link playerAttack} pipeline so every bow affix and
+ * fighting style applies (making ranged gear desirable), but it must NOT spend
+ * the first-turn action — the entry action economy is restored afterward, and
+ * the per-turn strike counters are cleared so the real turn opens clean.
+ * `playerHasAttacked` stays set (the volley WAS the first attack), so
+ * first-strike bonuses don't double-dip.
+ */
+function resolveRangedOpeningVolley(
+  state: CombatState,
+  character: Character,
+  roller?: DiceRoller,
+): { state: CombatState; character: Character } {
+  if (state.status !== 'active') return { state, character };
+  if (isPlayerParalyzed(character)) return { state, character };
+  if (!wieldsRangedWeapon(character)) return { state, character };
+  const mainHand = character.equipped.mainHand;
+  if (!mainHand) return { state, character };
+  const target = state.combatants.find(
+    (c): c is MonsterCombatant => c.kind === 'monster' && c.instance.hp.current > 0,
+  );
+  if (!target) return { state, character };
+
+  const opened: CombatState = {
+    ...state,
+    log: [
+      ...state.log,
+      {
+        id: state.log.length + 1,
+        kind: 'system' as const,
+        text: `${character.name} looses an opening volley before the enemy can close.`,
+      },
+    ],
+  };
+  const result = playerAttack(
+    { roller: roller ?? getActiveRoller(), character, state: opened },
+    target.id,
+    mainHand.itemId,
+  );
+  return {
+    state: {
+      ...result.state,
+      playerAttacksThisTurn: 0,
+      sneakAttackUsedThisTurn: false,
+      colossusSlayerUsedThisTurn: false,
+    },
+    character: { ...result.character, actionEconomy: character.actionEconomy },
+  };
 }

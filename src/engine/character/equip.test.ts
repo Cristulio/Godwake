@@ -80,6 +80,7 @@ import {
   equipItem,
   unequipSlot,
   slotForItem,
+  canEquipToSlot,
   attunementSlotsCap,
   attunementSlotsUsed,
   canEquip,
@@ -87,6 +88,7 @@ import {
   isWeaponProficient,
   DEFAULT_ATTUNEMENT_SLOTS,
 } from './equip';
+import { computeAC } from './derived';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
 import { getItem } from '../../content/items';
 import type { Character } from '../../types/character';
@@ -367,5 +369,71 @@ describe('attunement', () => {
     expect(attunementSlotsUsed(c)).toBe(1);
     // Now there's room again.
     expect(canEquip(c, 'test-attuned-armor')).toBe(true);
+  });
+});
+
+describe('two ring slots', () => {
+  // A ring carrying the +1 AC "of Warding" affix, so we can see both bands act.
+  function wardingRing(baseId: string): { itemId: string; rolled: { baseId: string; rarity: 'green'; affixes: string[]; name: string } } {
+    return {
+      itemId: baseId,
+      rolled: { baseId, rarity: 'green', affixes: ['warding'], name: `${baseId} of Warding` },
+    };
+  }
+
+  function ringChar(): Character {
+    return {
+      ...createCharacter({
+        id: 'test',
+        name: 'Test',
+        raceId: 'human',
+        classId: 'fighter',
+        baseAbilityScores: {
+          str: STANDARD_ARRAY[0],
+          con: STANDARD_ARRAY[1],
+          dex: STANDARD_ARRAY[2],
+          wis: STANDARD_ARRAY[3],
+          cha: STANDARD_ARRAY[4],
+          int: STANDARD_ARRAY[5],
+        },
+        skillProficiencies: [],
+      }),
+      inventory: [wardingRing('iron-ring'), wardingRing('silver-ring'), { itemId: 'gold-ring' }],
+      equipped: { mainHand: null, offHand: null, armor: null },
+    };
+  }
+
+  it('a ring may be dropped onto either band', () => {
+    expect(canEquipToSlot('iron-ring', 'ring1')).toBe(true);
+    expect(canEquipToSlot('iron-ring', 'ring2')).toBe(true);
+    expect(canEquipToSlot('iron-ring', 'amulet')).toBe(false);
+  });
+
+  it('equips two rings — first fills ring1, second fills ring2', () => {
+    let c = ringChar();
+    c = equipItem(c, 0);
+    expect(c.equipped.ring1?.itemId).toBe('iron-ring');
+    expect(c.equipped.ring2 ?? null).toBeNull();
+    c = equipItem(c, 1);
+    expect(c.equipped.ring1?.itemId).toBe('iron-ring');
+    expect(c.equipped.ring2?.itemId).toBe('silver-ring');
+  });
+
+  it('a third ring displaces the first band when both are full', () => {
+    let c = ringChar();
+    c = equipItem(c, 0); // ring1 = iron
+    c = equipItem(c, 1); // ring2 = silver
+    c = equipItem(c, 2); // gold → first band
+    expect(c.equipped.ring1?.itemId).toBe('gold-ring');
+    expect(c.equipped.ring2?.itemId).toBe('silver-ring');
+  });
+
+  it('both equipped rings contribute their affixes — AC sums', () => {
+    let c = ringChar();
+    const baseAc = computeAC(c);
+    c = equipItem(c, 0);
+    expect(computeAC(c)).toBe(baseAc + 1);
+    c = equipItem(c, 1);
+    expect(computeAC(c)).toBe(baseAc + 2);
   });
 });
