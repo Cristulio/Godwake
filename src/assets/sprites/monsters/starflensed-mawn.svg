@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 28 28"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Starflensed Mawn"
+    >
+      <!-- base shadow -->
+      <ellipse cx="14" cy="26" rx="13" ry="2" fill="#0a0a18" />
+
+      <!-- bulk of luminous meat around the wound -->
+      <ellipse cx="14" cy="15" rx="13" ry="11" fill="#3a3050" />
+      <ellipse cx="14" cy="15" rx="11" ry="10" fill="#4a4068" />
+      <ellipse cx="14" cy="15" rx="9" ry="8" fill="#5a5080" />
+
+      <!-- the hole where a star was: wrong-coloured light -->
+      <circle cx="14" cy="14" r="6.5" fill="#80c0ff" />
+      <circle cx="14" cy="14" r="5" fill="#b0e0ff" />
+      <circle cx="14" cy="14" r="2.6" fill="#ffffff" />
+
+      <!-- ring of teeth around the maw -->
+      <polygon points="14,7 13,11 15,11" fill="#e0e8f0" />
+      <polygon points="20,10 17,12 18,14" fill="#e0e8f0" />
+      <polygon points="21,15 18,15 19,17" fill="#e0e8f0" />
+      <polygon points="19,20 17,17 16,19" fill="#e0e8f0" />
+      <polygon points="14,22 13,18 15,18" fill="#e0e8f0" />
+      <polygon points="9,20 11,17 12,19" fill="#e0e8f0" />
+      <polygon points="7,15 10,15 9,17" fill="#e0e8f0" />
+      <polygon points="8,10 11,12 10,14" fill="#e0e8f0" />
+
+      <!-- spilled light / glare -->
+      <rect x="13" y="0" width="2" height="6" fill="#b0e0ff" opacity="0.5" />
+      <rect x="0" y="14" width="6" height="2" fill="#b0e0ff" opacity="0.4" />
+      <rect x="22" y="14" width="6" height="2" fill="#b0e0ff" opacity="0.4" />
+    </svg>

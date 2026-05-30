@@ -20,8 +20,8 @@ import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
 export interface BossIntelCard {
   /** Monster def id this card foreshadows. Matches the boss room's monster. */
   bossDefId: string;
-  /** Chapter index (1-4). Scales the `battle-plan` temp-HP gird. */
-  chapter: 1 | 2 | 3 | 4;
+  /** Chapter index (1-5). Scales the `battle-plan` temp-HP gird. */
+  chapter: 1 | 2 | 3 | 4 | 5;
   /** Title shown on the intel event room. */
   roomTitle: string;
   /** Diegetic flavor text for the intel room — pre-boss BG2/FromSoft tone. */
@@ -40,8 +40,8 @@ export interface BossIntelCard {
  * Paid-edge price for a chapter's intel. Scales super-linearly (5·ch² + 20·ch)
  * so it tracks the rising purse a player carries deeper in — boss drops and
  * elite/combat gold both climb by chapter, so a flat fee would be pocket change
- * by Ch4. This keeps "study the approach" a real gold sink and a genuine trade
- * against a potion or a piece of gear. Ch1-4: 25 / 60 / 105 / 160.
+ * by the endgame. This keeps "study the approach" a real gold sink and a genuine
+ * trade against a potion or a piece of gear. Ch1-5: 25 / 60 / 105 / 160 / 225.
  */
 export function bossIntelCoinCost(chapter: BossIntelCard['chapter']): number {
   return 5 * chapter * chapter + 20 * chapter;
@@ -108,6 +108,21 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       "You leave the antechamber as you found it and the litany unread. Eilistraee's hidden moon notes the going. The Matron's tribute-purse will weigh a touch heavier when the prayer is broken.",
     coinCost: bossIntelCoinCost(4),
   },
+  // ─── Ch5 · The Hollow Dawn ────────────────────────────────────────────
+  {
+    bossDefId: 'hollow-dawn',
+    chapter: 5,
+    roomTitle: 'A Reliquary of First Mornings',
+    roomFlavor:
+      "A side-shrine off the long climb into the light — a slab of pale stone, and on it the relics the dead god kept of its own dawns: a phial of the first light there ever was, gone still and cold; a sword-form scratched into the stone in a hand that drilled it ten thousand times; a litany in a script older than letters, glowing faint. You can read it anyway, the way you can read a thing in a dream: BE STILL · YOU HAVE RUN THE WHOLE CYCLE · REST NOW · LET THE MORNING BREAK ON YOU AS IT HAS BROKEN ON ALL THE OTHERS. The slab has been knelt at. The kneeling has worn the stone to fit a shape you recognise, with a cold turn in your chest, as your own.",
+    weakSpotResolution:
+      "You read the relics the way one of its turned souls reads them — and you have been one, more times than you have lived. The command comes first, your own forgotten name and then 'be still'; the dawn-blade after. Knowing the prayer is the opener, you set your first cut to land before the morning breaks.",
+    battlePlanResolution:
+      "You read the relics and the whole shape of the climb: the command to still you with the name you wore before your first death, the dawn-blade falling twice where it has fallen on every soul before you, and the long patience that curdles to rage once the wound runs honest. You walk in with your mind set against your own name and your opening strike already aimed past the first light.",
+    walkPastResolution:
+      "You leave the reliquary as you found it and the litany unread. Somewhere far up the climb, a vast and tired thing marks the going, almost glad. The Hollow Dawn's hoard — the coin of every pilgrim it ever turned and sent back — will weigh a touch heavier when the morning finally ends.",
+    coinCost: bossIntelCoinCost(5),
+  },
 ];
 
 const BY_BOSS_DEF: Map<string, BossIntelCard> = new Map(
@@ -139,7 +154,7 @@ export interface BossIntelBuff {
   bracedSave: boolean;
 }
 
-/** Battle-plan gird scales with chapter: 6 / 9 / 12 / 15 temp HP. */
+/** Battle-plan gird scales with chapter: 6 / 9 / 12 / 15 / 18 temp HP. */
 function battlePlanTempHp(chapter: BossIntelCard['chapter']): number {
   return 3 * (chapter + 1);
 }

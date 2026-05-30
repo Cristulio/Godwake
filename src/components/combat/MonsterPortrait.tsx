@@ -43,6 +43,16 @@ import asylumFleshwrightUrl from '../../assets/sprites/monsters/asylum-fleshwrig
 import spiderBroodmotherUrl from '../../assets/sprites/monsters/spider-broodmother.svg';
 import drowWarPriestessUrl from '../../assets/sprites/monsters/drow-war-priestess.svg';
 import cavernHuntingSpiderUrl from '../../assets/sprites/monsters/cavern-hunting-spider.svg';
+import rebornHuskUrl from '../../assets/sprites/monsters/reborn-husk.svg';
+import ashenChoristerUrl from '../../assets/sprites/monsters/ashen-chorister.svg';
+import hollowSeraphUrl from '../../assets/sprites/monsters/hollow-seraph.svg';
+import cycleShepherdUrl from '../../assets/sprites/monsters/cycle-shepherd.svg';
+import deathlessPenitentUrl from '../../assets/sprites/monsters/deathless-penitent.svg';
+import godsbloodWelterUrl from '../../assets/sprites/monsters/godsblood-welter.svg';
+import apostleOfStillnessUrl from '../../assets/sprites/monsters/apostle-of-stillness.svg';
+import starflensedMawnUrl from '../../assets/sprites/monsters/starflensed-mawn.svg';
+import fallenArchonUrl from '../../assets/sprites/monsters/fallen-archon.svg';
+import hollowDawnUrl from '../../assets/sprites/monsters/hollow-dawn.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -107,6 +117,17 @@ const SPRITES: Record<string, SpriteEntry> = {
   'spider-broodmother': { url: spiderBroodmotherUrl, label: 'Spider Broodmother' },
   'drow-war-priestess': { url: drowWarPriestessUrl, label: 'Drow War-Priestess' },
   'cavern-hunting-spider': { url: cavernHuntingSpiderUrl, label: 'Cavern Hunting-Spider' },
+  // ─── Chapter 5 · The Godwake ────────────────────────────────────────────
+  'reborn-husk': { url: rebornHuskUrl, label: 'Reborn Husk' },
+  'ashen-chorister': { url: ashenChoristerUrl, label: 'Ashen Chorister' },
+  'hollow-seraph': { url: hollowSeraphUrl, label: 'Hollow Seraph' },
+  'cycle-shepherd': { url: cycleShepherdUrl, label: 'Cycle-Shepherd' },
+  'deathless-penitent': { url: deathlessPenitentUrl, label: 'Deathless Penitent' },
+  'godsblood-welter': { url: godsbloodWelterUrl, label: 'Godsblood Welter' },
+  'apostle-of-stillness': { url: apostleOfStillnessUrl, label: 'Apostle of Stillness' },
+  'starflensed-mawn': { url: starflensedMawnUrl, label: 'Starflensed Mawn' },
+  'fallen-archon': { url: fallenArchonUrl, label: 'Fallen Archon' },
+  'hollow-dawn': { url: hollowDawnUrl, label: 'Aurelach, the Hollow Dawn' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },

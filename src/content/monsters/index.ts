@@ -46,6 +46,16 @@ import { ASYLUM_FLESHWRIGHT } from './asylum-fleshwright';
 import { SPIDER_BROODMOTHER } from './spider-broodmother';
 import { DROW_WAR_PRIESTESS } from './drow-war-priestess';
 import { CAVERN_HUNTING_SPIDER } from './cavern-hunting-spider';
+import { REBORN_HUSK } from './reborn-husk';
+import { ASHEN_CHORISTER } from './ashen-chorister';
+import { HOLLOW_SERAPH } from './hollow-seraph';
+import { CYCLE_SHEPHERD } from './cycle-shepherd';
+import { DEATHLESS_PENITENT } from './deathless-penitent';
+import { GODSBLOOD_WELTER } from './godsblood-welter';
+import { APOSTLE_OF_STILLNESS } from './apostle-of-stillness';
+import { STARFLENSED_MAWN } from './starflensed-mawn';
+import { FALLEN_ARCHON } from './fallen-archon';
+import { HOLLOW_DAWN } from './hollow-dawn';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -95,6 +105,16 @@ const ALL_MONSTERS: Monster[] = [
   SPIDER_BROODMOTHER,
   DROW_WAR_PRIESTESS,
   CAVERN_HUNTING_SPIDER,
+  REBORN_HUSK,
+  ASHEN_CHORISTER,
+  HOLLOW_SERAPH,
+  CYCLE_SHEPHERD,
+  DEATHLESS_PENITENT,
+  GODSBLOOD_WELTER,
+  APOSTLE_OF_STILLNESS,
+  STARFLENSED_MAWN,
+  FALLEN_ARCHON,
+  HOLLOW_DAWN,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -159,4 +179,14 @@ export {
   SPIDER_BROODMOTHER,
   DROW_WAR_PRIESTESS,
   CAVERN_HUNTING_SPIDER,
+  REBORN_HUSK,
+  ASHEN_CHORISTER,
+  HOLLOW_SERAPH,
+  CYCLE_SHEPHERD,
+  DEATHLESS_PENITENT,
+  GODSBLOOD_WELTER,
+  APOSTLE_OF_STILLNESS,
+  STARFLENSED_MAWN,
+  FALLEN_ARCHON,
+  HOLLOW_DAWN,
 };

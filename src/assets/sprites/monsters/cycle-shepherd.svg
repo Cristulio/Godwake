@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 40"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Cycle-Shepherd"
+    >
+      <!-- deep hood -->
+      <polygon points="11,1 7,5 7,12 17,12 17,5 13,1" fill="#2a2c34" />
+      <polygon points="11,1 8,5 8,11 16,11 16,5 13,1" fill="#1a1c24" />
+      <!-- shadowed face, two cold eyes -->
+      <rect x="9" y="7" width="6" height="4" fill="#0a0c12" />
+      <rect x="9" y="8" width="2" height="2" fill="#7ad8c8" />
+      <rect x="13" y="8" width="2" height="2" fill="#7ad8c8" />
+      <rect x="9" y="8" width="1" height="1" fill="#d4fff4" />
+      <rect x="13" y="8" width="1" height="1" fill="#d4fff4" />
+
+      <!-- robe -->
+      <polygon points="7,12 17,12 20,38 4,38" fill="#2a2c34" />
+      <polygon points="7,12 17,12 18,26 6,26" fill="#34363e" />
+      <rect x="11" y="12" width="2" height="24" fill="#3a3c44" />
+
+      <!-- left arm holding the bone crook -->
+      <rect x="4" y="14" width="3" height="10" fill="#2a2c34" />
+      <!-- bone crook: staff + curl -->
+      <rect x="2" y="-1" width="2" height="32" fill="#c8c0b0" />
+      <rect x="2" y="-1" width="1" height="32" fill="#e0d8c8" />
+      <path d="M3 0 q5 -2 5 4 q0 4 -4 4" fill="none" stroke="#c8c0b0" stroke-width="1.6" />
+      <circle cx="3" cy="0" r="1.4" fill="#7ad8c8" opacity="0.6" />
+
+      <!-- right arm, lowering toward the floor seam -->
+      <rect x="17" y="14" width="3" height="9" fill="#2a2c34" />
+      <rect x="18" y="22" width="3" height="2" fill="#5a5c64" />
+
+      <!-- the gate-seam of cold light it pulls from -->
+      <ellipse cx="17" cy="36" rx="5" ry="1.6" fill="#7ad8c8" opacity="0.4" />
+      <rect x="15" y="30" width="1" height="6" fill="#7ad8c8" opacity="0.5" />
+      <rect x="18" y="28" width="1" height="8" fill="#7ad8c8" opacity="0.5" />
+
+      <!-- hem -->
+      <polygon points="4,38 7,34 10,38" fill="#1a1c24" />
+      <polygon points="10,38 13,34 16,38" fill="#1a1c24" />
+      <polygon points="16,38 19,34 20,38" fill="#1a1c24" />
+    </svg>
