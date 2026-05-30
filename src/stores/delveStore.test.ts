@@ -12,6 +12,7 @@ import { useCombatStore } from './combatStore';
 import { createGodwakeDelve, getAscensionLevel, MAX_ASCENSION } from '../engine/delve';
 import { setActiveRoller } from '../engine/dice';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
+import { presetCreationInput } from '../engine/character/defaultCharacter';
 import { renownSoulMarkMultiplier } from '../engine/character/quirks';
 import { effectiveAbilityScores } from '../engine/character/derived';
 import { abilityModifier } from '../types/abilities';
@@ -428,5 +429,62 @@ describe('delveStore — ascension ladder', () => {
     const expected = Math.floor(100 * getAscensionLevel(6).startingGoldMult);
     expect(char().goldInPocket).toBe(expected);
     expect(expected).toBeLessThan(100);
+  });
+});
+
+describe('delveStore — ASI gains do not persist across lives', () => {
+  const presetStr = presetCreationInput('fighter').baseAbilityScores.str;
+
+  beforeEach(() => {
+    setActiveRoller('asi-seed');
+  });
+
+  it('death clears runAsiGains — in-run ASI does not compound into the next life', () => {
+    // Simulate a fighter who picked STR +2 at level 4 (LevelUpScreen writes to runAsiGains).
+    const ch = makeFighter({ runAsiGains: { str: 2 } });
+    useCharacterStore.setState({ character: ch, saveSeed: null });
+    useDelveStore.setState({ delve: createGodwakeDelve(1) });
+    useCombatStore.setState({ combat: null });
+    useMetaStore.setState({
+      hasReincarnated: false,
+      chaptersCleared: 0,
+      chapter1Cleared: false,
+      druidGroveUnlocked: false,
+      knownNpcs: [],
+    });
+    useScreenStore.setState({ screen: 'delve' });
+
+    // Within the run the ASI is live: runAsiGains holds it, baseAbilityScores unchanged.
+    expect(char().runAsiGains?.str).toBe(2);
+    expect(char().baseAbilityScores.str).toBe(presetStr);
+
+    useDelveStore.getState().failDelve();
+
+    // After death the gain is wiped — baseAbilityScores unchanged, runAsiGains gone.
+    expect(char().baseAbilityScores.str).toBe(presetStr);
+    expect(char().runAsiGains).toBeUndefined();
+  });
+
+  it('startDelve clears runAsiGains — abandon then redescend cannot carry ASI gains', () => {
+    // Simulate a character at hub with a stale in-run ASI on the soul (e.g. after abandonDelve).
+    const ch = makeFighter({ runAsiGains: { str: 2 } });
+    useCharacterStore.setState({ character: ch, saveSeed: null });
+    useDelveStore.setState({ delve: null });
+    useCombatStore.setState({ combat: null });
+    useMetaStore.setState({
+      hasReincarnated: false,
+      chaptersCleared: 0,
+      chapter1Cleared: false,
+      druidGroveUnlocked: false,
+      knownNpcs: [],
+      unlockedUpgrades: {},
+    });
+    useScreenStore.setState({ screen: 'hub' });
+
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+
+    // Descent resets the run-scoped gain — the new run starts clean.
+    expect(char().runAsiGains).toBeUndefined();
+    expect(char().baseAbilityScores.str).toBe(presetStr);
   });
 });

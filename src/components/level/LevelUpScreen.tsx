@@ -137,11 +137,13 @@ export function LevelUpScreen() {
     if (!asiValid || !skillsValid || !spellValid) return;
     const overrides: Partial<Character> = {};
     if (isAsiLevel) {
-      const newBase: AbilityScores = { ...c.baseAbilityScores };
+      const prev = c.runAsiGains ?? {};
+      const next: Partial<AbilityScores> = { ...prev };
       for (const ab of ABILITY_ORDER) {
-        newBase[ab] = (newBase[ab] ?? 0) + (asiPlan[ab] ?? 0);
+        const gain = asiPlan[ab] ?? 0;
+        if (gain) next[ab] = (next[ab] ?? 0) + gain;
       }
-      overrides.baseAbilityScores = newBase;
+      overrides.runAsiGains = next;
     }
     if (pickedSkills.length > 0) {
       overrides.skillProficiencies = [...c.skillProficiencies, ...pickedSkills];
