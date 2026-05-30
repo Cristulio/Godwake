@@ -79,14 +79,11 @@ function startingKitFor(classId: ClassId): StartingKit {
       };
     }
     case 'barbarian': {
-      // No armor — Unarmored Defense does the work. A bundle of javelins for
-      // the ones that keep their distance.
+      // No armor — Unarmored Defense does the work.
       const greataxe: ItemRef = { itemId: 'greataxe' };
       return {
         inventory: [
           greataxe,
-          { itemId: 'javelin' },
-          { itemId: 'javelin' },
           { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
         ],

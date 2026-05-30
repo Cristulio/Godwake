@@ -157,13 +157,11 @@ const BARBARIAN_ARCHETYPE: ArchetypeBuilder = () => {
     },
     skillProficiencies: ['athletics', 'intimidation'],
   });
-  // No armor — Unarmored Defense — greataxe + a bundle of javelins.
+  // No armor — Unarmored Defense — greataxe.
   return {
     ...c,
     inventory: [
       { itemId: 'greataxe' },
-      { itemId: 'javelin' },
-      { itemId: 'javelin' },
       { itemId: 'potion-of-healing' },
       { itemId: 'potion-of-healing' },
     ],

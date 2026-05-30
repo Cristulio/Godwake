@@ -42,7 +42,7 @@ const CLASS_KIT: Record<ClassId, string> = {
   rogue: 'Rapier, shortbow & leather armor · 1 healing potion · 15 gold',
   wizard: 'Dagger & spellbook · 1 healing potion · 20 gold',
   cleric: '—',
-  barbarian: 'Greataxe & javelins, no armor · 2 healing potions · 20 gold',
+  barbarian: 'Greataxe, no armor · 2 healing potions · 20 gold',
   ranger: 'Longbow, shortsword & leather armor · 1 healing potion · 15 gold',
 };
 

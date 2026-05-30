@@ -68,12 +68,13 @@ function emptyState(overrides: Partial<CombatState> = {}): CombatState {
 }
 
 describe('CombatHUD', () => {
-  it('shows core vitals (HP / AC / SPD) for any class', () => {
+  it('shows core vitals (HP / AC) for any class', () => {
     const c = makeChar('fighter');
     render(<CombatHUD character={c} state={emptyState()} />);
     expect(screen.getByText(/HP\s+\d+\/\d+/)).toBeInTheDocument();
     expect(screen.getByText(/AC\s+\d+/)).toBeInTheDocument();
-    expect(screen.getByText(/SPD\s+\d+/)).toBeInTheDocument();
+    // SPD is gone — speed is inert in a non-positional engine.
+    expect(screen.queryByText(/SPD/)).not.toBeInTheDocument();
   });
 
   it('Fighter L1 shows Second Wind ready but no Action Surge section', () => {

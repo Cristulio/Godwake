@@ -2,6 +2,7 @@ import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { getItem } from '../../content/items';
+import { isRaging } from '../character/derived';
 import {
   combatResult,
   patchActionEconomy,
@@ -31,6 +32,13 @@ export function useConsumable(
   if (!ref) return combatResult(state, nextCharacter);
   const item = getItem(ref.itemId);
   if (item.kind !== 'consumable') return combatResult(state, nextCharacter);
+
+  // Rage's tradeoff: no safety net. A raging barbarian can't drink a healing
+  // draught — the fury locks out recovery until it passes. No-op (the potion is
+  // kept, not wasted) so the gate reads as "can't", not "lost it".
+  if (item.effect === 'heal' && isRaging(nextCharacter)) {
+    return combatResult(state, nextCharacter);
+  }
 
   // Action economy check
   if (item.actionCost === 'action' && nextCharacter.actionEconomy.actionUsed) {

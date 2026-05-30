@@ -61,8 +61,8 @@ describe('Barbarian + Ranger — class definitions', () => {
     }
   });
 
-  it('every starting-kit item id resolves (greataxe, javelin, longbow, shortsword exist)', () => {
-    for (const id of ['greataxe', 'javelin', 'longbow', 'shortsword']) {
+  it('new-class weapon item ids resolve (greataxe, longbow, shortsword exist)', () => {
+    for (const id of ['greataxe', 'longbow', 'shortsword']) {
       expect(getItem(id).kind).toBe('weapon');
     }
   });
