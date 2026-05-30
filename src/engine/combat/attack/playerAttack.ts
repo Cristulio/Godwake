@@ -46,6 +46,18 @@ export function sneakAttackDiceForLevel(level: number): number {
   return Math.max(1, Math.ceil(level / 2));
 }
 
+/**
+ * Which damage dice a weapon rolls. A versatile weapon swung two-handed — i.e.
+ * with the off-hand empty (no shield, no second weapon) — rolls its larger
+ * `versatileDamage` die; held one-handed it rolls the base `damage`.
+ */
+export function weaponDamageDice(weapon: Weapon, offHandEmpty: boolean): string {
+  if (offHandEmpty && weapon.properties.includes('versatile') && weapon.versatileDamage) {
+    return weapon.versatileDamage;
+  }
+  return weapon.damage;
+}
+
 function findCombatant(state: CombatState, id: string): Combatant | undefined {
   return state.combatants.find((c) => c.id === id);
 }
@@ -212,7 +224,8 @@ export function playerAttack(
   let colossusFiredFlag = false;
   let bladeOfVowUsed = false;
   if (hit) {
-    const damageExpr = parseDiceExpression(weapon.damage);
+    const offHandEmpty = !nextCharacter.equipped.offHand;
+    const damageExpr = parseDiceExpression(weaponDamageDice(w, offHandEmpty));
     // On crit, double the dice (not the modifier).
     const damageRoll = roller.roll(
       {
