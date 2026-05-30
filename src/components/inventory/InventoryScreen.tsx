@@ -15,6 +15,7 @@ import {
 import type { Item, ItemRef } from '../../schemas/item';
 import { ItemIcon } from './ItemIcon';
 import { ItemTooltip } from './ItemTooltip';
+import { GEAR_RARITY_COLOR } from './rarity';
 
 const DND_INV_MIME = 'application/x-godwake-inv-idx';
 const DND_SLOT_MIME = 'application/x-godwake-slot';
@@ -238,10 +239,17 @@ export function InventoryScreen() {
                       className="flex items-center gap-3 cursor-grab active:cursor-grabbing"
                       title="Double-click or drag to inventory to unequip"
                     >
-                      <ItemIcon item={item} size={56} />
+                      <ItemIcon item={item} size={56} gearRarity={ref.rolled?.rarity} />
                       <div className="flex-1 min-w-0">
-                        <div className="font-display text-[var(--color-text-primary)] uppercase tracking-wider text-[11px] truncate">
-                          {item.name}
+                        <div
+                          className="font-display uppercase tracking-wider text-[11px] truncate"
+                          style={{
+                            color: ref.rolled
+                              ? GEAR_RARITY_COLOR[ref.rolled.rarity]
+                              : 'var(--color-text-primary)',
+                          }}
+                        >
+                          {ref.rolled?.name ?? item.name}
                         </div>
                         <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
                           {statLine(item)}
@@ -263,7 +271,11 @@ export function InventoryScreen() {
                   )}
                   {hoverSlot === s.slot && item && !isDragging && (
                     <div className="absolute z-30 left-full top-0 ml-2">
-                      <ItemTooltip item={item} hint="Double-click or drag down to unequip" />
+                      <ItemTooltip
+                        item={item}
+                        rolled={ref?.rolled}
+                        hint="Double-click or drag down to unequip"
+                      />
                     </div>
                   )}
                 </div>
@@ -327,7 +339,7 @@ export function InventoryScreen() {
                 {g.label}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {g.entries.map(({ idx, item, stackCount }) => {
+                {g.entries.map(({ ref, idx, item, stackCount }) => {
                   const slot = slotForItem(item.id);
                   const equippable = slot !== null;
                   const equipped = isEquippedIdx(idx);
@@ -370,11 +382,18 @@ export function InventoryScreen() {
                         ${blocked ? 'cursor-not-allowed' : ''}
                       `}
                     >
-                      <ItemIcon item={item} size={44} />
+                      <ItemIcon item={item} size={44} gearRarity={ref.rolled?.rarity} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-baseline justify-between gap-2">
-                          <div className="font-display text-[var(--color-text-primary)] uppercase tracking-wider text-[11px] truncate">
-                            {item.name}
+                          <div
+                            className="font-display uppercase tracking-wider text-[11px] truncate"
+                            style={{
+                              color: ref.rolled
+                                ? GEAR_RARITY_COLOR[ref.rolled.rarity]
+                                : 'var(--color-text-primary)',
+                            }}
+                          >
+                            {ref.rolled?.name ?? item.name}
                           </div>
                           {stackCount > 1 && (
                             <div className="text-[var(--color-accent-amber)] font-mono text-xs shrink-0">
@@ -400,7 +419,7 @@ export function InventoryScreen() {
                       </div>
                       {hoverIdx === idx && !isDragging && (
                         <div className="absolute z-30 left-full top-0 ml-2">
-                          <ItemTooltip item={item} hint={hint} />
+                          <ItemTooltip item={item} rolled={ref.rolled} hint={hint} />
                         </div>
                       )}
                     </div>

@@ -1,5 +1,6 @@
 import type { Character, EquipmentSlots } from '../../types/character';
-import type { ItemRef, Weapon } from '../../schemas/item';
+import type { Armor, ItemRef, Weapon } from '../../schemas/item';
+import type { ClassId } from '../../schemas/ids';
 import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
 
@@ -38,18 +39,39 @@ function requiresAttunement(itemId: string): boolean {
 }
 
 /**
- * Whether the character's class is trained to wield the given weapon. A weapon
- * matches if its category is in the class's proficient set, it carries one of
- * the proficient properties (a Rogue and any `finesse`/`light` blade), or its
- * id is named explicitly. Classes with no `weaponProficiency` are unrestricted.
+ * Whether a class is trained to wield the given weapon. A weapon matches if its
+ * category is in the class's proficient set, it carries one of the proficient
+ * properties (a Rogue and any `finesse`/`light` blade), or its id is named
+ * explicitly. Classes with no `weaponProficiency` are unrestricted. Keyed on
+ * the class id so the roll engine can gate bases without a full Character.
  */
-export function isWeaponProficient(character: Character, weapon: Weapon): boolean {
-  const prof = getClass(character.classId).weaponProficiency;
+export function classWeaponProficient(classId: ClassId, weapon: Weapon): boolean {
+  const prof = getClass(classId).weaponProficiency;
   if (!prof) return true;
   if (prof.categories.includes(weapon.category)) return true;
   if (prof.properties?.some((p) => weapon.properties.includes(p))) return true;
   if (prof.ids?.includes(weapon.id)) return true;
   return false;
+}
+
+export function isWeaponProficient(character: Character, weapon: Weapon): boolean {
+  return classWeaponProficient(character.classId, weapon);
+}
+
+/**
+ * Whether a class is trained to wear the given armour. Matches if the armour's
+ * category is in the class's proficient set. Classes with no `armorProficiency`
+ * are unrestricted; an empty `categories` (the Wizard) wears nothing. This is
+ * the armour class-gate — a Ranger can't strap on heavy chain mail.
+ */
+export function classArmorProficient(classId: ClassId, armor: Armor): boolean {
+  const prof = getClass(classId).armorProficiency;
+  if (!prof) return true;
+  return prof.categories.includes(armor.category);
+}
+
+export function isArmorProficient(character: Character, armor: Armor): boolean {
+  return classArmorProficient(character.classId, armor);
 }
 
 /** Maximum number of attuned items the soul can bind at once. */
@@ -78,6 +100,10 @@ export function equipDenialReason(character: Character, itemId: string): string 
 
   if (item.kind === 'weapon' && !isWeaponProficient(character, item)) {
     return `A ${getClass(character.classId).name} can't wield this`;
+  }
+
+  if (item.kind === 'armor' && !isArmorProficient(character, item)) {
+    return `A ${getClass(character.classId).name} can't wear this`;
   }
 
   if (requiresAttunement(itemId)) {
@@ -121,6 +147,7 @@ export function equipItem(character: Character, inventoryIdx: number): Character
   if (!ref) return character;
   const item = getItem(ref.itemId);
   if (item.kind === 'weapon' && !isWeaponProficient(character, item)) return character;
+  if (item.kind === 'armor' && !isArmorProficient(character, item)) return character;
   const slot = slotForItem(ref.itemId);
   if (!slot) return character;
 

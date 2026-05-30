@@ -1,10 +1,14 @@
-import type { Item } from '../../schemas/item';
+import type { Item, RolledItem } from '../../schemas/item';
 import type { Rarity } from '../../schemas/ids';
+import { getAffix } from '../../content/items';
+import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from './rarity';
 
 interface ItemTooltipProps {
   item: Item;
   /** Show the click-to-act hint at the bottom (e.g. "Click to equip"). */
   hint?: string;
+  /** Present for rolled loot — drives the name, rarity colour, and affix list. */
+  rolled?: RolledItem;
 }
 
 const RARITY_LABEL: Record<Rarity, string> = {
@@ -25,25 +29,51 @@ const RARITY_COLOR: Record<Rarity, string> = {
   artifact: 'var(--color-accent-blood)',
 };
 
-export function ItemTooltip({ item, hint }: ItemTooltipProps) {
+export function ItemTooltip({ item, hint, rolled }: ItemTooltipProps) {
+  const isRolled = rolled !== undefined && rolled.rarity !== 'white';
+  const borderColor = isRolled ? GEAR_RARITY_COLOR[rolled.rarity] : 'var(--color-accent-amber)';
+  const displayName = rolled?.name ?? item.name;
   return (
     <div
       role="tooltip"
-      className="w-64 bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-amber)] p-3 shadow-[0_4px_16px_rgba(0,0,0,0.6)] pointer-events-none select-none"
+      className="w-64 bg-[var(--color-bg-panel)] border-2 p-3 shadow-[0_4px_16px_rgba(0,0,0,0.6)] pointer-events-none select-none"
+      style={{ borderColor }}
     >
       <div className="text-[var(--color-text-primary)] font-bold uppercase tracking-wider text-sm leading-tight">
-        {item.name}
+        {displayName}
       </div>
       <div
         className="text-[10px] uppercase tracking-widest mt-0.5"
-        style={{ color: RARITY_COLOR[item.rarity] }}
+        style={{ color: isRolled ? GEAR_RARITY_COLOR[rolled.rarity] : RARITY_COLOR[item.rarity] }}
       >
-        {kindLabel(item)} · {RARITY_LABEL[item.rarity]}
+        {kindLabel(item)} · {isRolled ? GEAR_RARITY_LABEL[rolled.rarity] : RARITY_LABEL[item.rarity]}
       </div>
 
       <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] font-mono">
         {renderStats(item)}
       </div>
+
+      {isRolled && rolled.affixes.length > 0 && (
+        <div className="mt-2 pt-2 border-t border-[var(--color-border-dim)] space-y-0.5">
+          {rolled.affixes.map((id) => {
+            let effect = id;
+            try {
+              effect = getAffix(id).effect;
+            } catch {
+              /* unknown affix id — show the raw id */
+            }
+            return (
+              <div
+                key={id}
+                className="text-[10px] leading-snug"
+                style={{ color: GEAR_RARITY_COLOR[rolled.rarity] }}
+              >
+                ◆ {effect}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {item.description && (
         <p className="text-[var(--color-text-secondary)] text-xs italic mt-2 leading-snug">

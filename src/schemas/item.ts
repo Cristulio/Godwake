@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DamageTypeSchema, RaritySchema } from './ids';
+import { ClassIdSchema, DamageTypeSchema, RaritySchema } from './ids';
 
 export const WeaponPropertySchema = z.enum([
   'light',
@@ -77,9 +77,98 @@ export type Consumable = z.infer<typeof ConsumableSchema>;
 export const ItemSchema = z.discriminatedUnion('kind', [WeaponSchema, ArmorSchema, ConsumableSchema]);
 export type Item = z.infer<typeof ItemSchema>;
 
+// ---------------------------------------------------------------------------
+// Diablo-style rolled gear: a base item + rolled affixes + a gear-rarity tier.
+// This is the per-instance loot model (drops/shop), distinct from the static
+// D&D `RaritySchema` that classifies the base-content magic items.
+// ---------------------------------------------------------------------------
+
+/**
+ * Loot rarity, by colour. Affix count climbs with rarity: white = the starting
+ * kit (0 affixes), green = 1, blue = 2, purple = 3-4, legendary = unique +
+ * persists (Wave 2 — the existing #175 relic system, not rolled here).
+ */
+export const GearRaritySchema = z.enum(['white', 'green', 'blue', 'purple', 'legendary']);
+export type GearRarity = z.infer<typeof GearRaritySchema>;
+
+/**
+ * A single affix's mechanical payload — an EFFECT, modeled like a blessing's
+ * modifiers so it can ride the same derived-stat / on-hit pipeline. Engine code
+ * reads these where relevant (derived.ts AC/crit, playerAttack on-hit,
+ * createCombat temp HP, monsterAttack incoming resist). Unset = no effect.
+ */
+export const AffixModifiersSchema = z
+  .object({
+    /** Flat bonus to AC (armour affix). */
+    acBonus: z.number().optional(),
+    /** Flat +N to weapon attack rolls. */
+    attackBonus: z.number().optional(),
+    /** Flat +N weapon damage on every hit. */
+    damageBonus: z.number().optional(),
+    /** Crit range widens by N (e.g. +1 → crit on 19-20). */
+    critRangeBonus: z.number().optional(),
+    /** Extra flat damage on every weapon hit, shown as its own "bleed" segment. */
+    bleedDamage: z.number().optional(),
+    /** Heal the attacker for this percent (0-100) of weapon damage dealt. */
+    lifestealPct: z.number().optional(),
+    /** Temp HP granted at the start of each combat (folds into the temp-HP pool). */
+    tempHpPerCombat: z.number().optional(),
+    /** Halve incoming damage of this type (armour affix). */
+    resist: DamageTypeSchema.optional(),
+    /** Class-flavoured (Barbarian): extra melee damage while Rage burns. */
+    rageDamageBonus: z.number().optional(),
+    /** Class-flavoured (Ranger): extra damage against the Hunter's Mark target. */
+    markDamageBonus: z.number().optional(),
+    /** Class-flavoured (Rogue): extra damage on the strike Sneak Attack fires. */
+    sneakDamageBonus: z.number().optional(),
+  })
+  .default({});
+export type AffixModifiers = z.infer<typeof AffixModifiersSchema>;
+
+export const AffixSchema = z.object({
+  id: z.string(),
+  /** The word/phrase woven into the rolled item's name (Diablo prefix/suffix). */
+  namePart: z.object({
+    kind: z.enum(['prefix', 'suffix']),
+    word: z.string(),
+  }),
+  /** One-line, player-facing description of what the affix does. */
+  effect: z.string(),
+  /** Which base kinds this affix can roll onto. */
+  appliesTo: z.array(z.enum(['weapon', 'armor'])).nonempty(),
+  /**
+   * Class ids this affix may roll for. Omit/empty = any class. The class-
+   * flavoured affixes (rage/mark/sneak) gate to their owner so a Wizard never
+   * rolls a rage blade.
+   */
+  classGate: z.array(ClassIdSchema).optional(),
+  modifiers: AffixModifiersSchema,
+});
+export type Affix = z.infer<typeof AffixSchema>;
+
+/**
+ * The rolled payload that turns a base item into a loot instance. Lives inline
+ * on the carrying `ItemRef` (so equipped slots carry it too) — `itemId` always
+ * equals `baseId`, so `getItem` still resolves the base stats everywhere.
+ */
+export interface RolledItem {
+  /** Base item id (weapon/armor) this was rolled from. */
+  baseId: string;
+  rarity: GearRarity;
+  /** Affix ids rolled onto the base. */
+  affixes: string[];
+  /** Pre-rendered display name, e.g. "Keen Longsword of the Leech". */
+  name: string;
+}
+
 /** A reference to a specific item instance carried by a character. */
 export interface ItemRef {
   itemId: string;
   /** For charged items. */
   charges?: number;
+  /**
+   * Present for rolled loot (drops/shop). Absent = a plain base item (the
+   * starting kit / static content), treated as white rarity with no affixes.
+   */
+  rolled?: RolledItem;
 }

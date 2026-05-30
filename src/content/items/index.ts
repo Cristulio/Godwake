@@ -22,3 +22,4 @@ export function listItems(): Item[] {
 export * from './weapons';
 export * from './armor';
 export * from './consumables';
+export * from './affixes';

@@ -14,6 +14,16 @@ export const WeaponProficiencySchema = z.object({
   ids: z.array(z.string()).optional(),
 });
 
+/**
+ * Which armour categories a class is trained to wear. This is the armour-
+ * restriction gate (mirrors `weaponProficiency`): a class can equip/roll only
+ * the listed categories. Absent = unrestricted; an empty `categories` = wears
+ * no armour at all (the Wizard). Enforced in `equip.ts`.
+ */
+export const ArmorProficiencySchema = z.object({
+  categories: z.array(z.enum(['light', 'medium', 'heavy', 'shield'])),
+});
+
 export const ClassFeatureSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -53,6 +63,8 @@ export const ClassSchema = z.object({
   savingThrowProficiencies: z.array(AbilitySchema).length(2),
   /** Weapons the class is trained to wield. Absent = no restriction. */
   weaponProficiency: WeaponProficiencySchema.optional(),
+  /** Armour categories the class is trained to wear. Absent = no restriction. */
+  armorProficiency: ArmorProficiencySchema.optional(),
   /** Skills the player can pick from at character creation. */
   skillChoiceCount: z.number().int().nonnegative(),
   skillChoiceFrom: z.array(SkillSchema),
@@ -68,6 +80,7 @@ export const ClassSchema = z.object({
 });
 
 export type WeaponProficiency = z.infer<typeof WeaponProficiencySchema>;
+export type ArmorProficiency = z.infer<typeof ArmorProficiencySchema>;
 export type ClassFeature = z.infer<typeof ClassFeatureSchema>;
 export type Subclass = z.infer<typeof SubclassSchema>;
 export type ClassPreset = z.infer<typeof ClassPresetSchema>;

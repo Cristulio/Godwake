@@ -1,10 +1,13 @@
-import type { Item } from '../../schemas/item';
+import type { GearRarity, Item } from '../../schemas/item';
 import type { Rarity } from '../../schemas/ids';
+import { GEAR_RARITY_COLOR } from './rarity';
 
 interface ItemIconProps {
   item: Item;
   size?: number;
   className?: string;
+  /** Rolled-loot rarity. When set, the frame uses the gear palette. */
+  gearRarity?: GearRarity;
 }
 
 const RARITY_FRAME: Record<Rarity, string> = {
@@ -16,14 +19,16 @@ const RARITY_FRAME: Record<Rarity, string> = {
   artifact: 'var(--color-accent-blood)',
 };
 
-export function ItemIcon({ item, size = 40, className = '' }: ItemIconProps) {
+export function ItemIcon({ item, size = 40, className = '', gearRarity }: ItemIconProps) {
+  const borderColor =
+    gearRarity && gearRarity !== 'white' ? GEAR_RARITY_COLOR[gearRarity] : RARITY_FRAME[item.rarity];
   return (
     <div
       className={`inline-flex items-center justify-center bg-[var(--color-bg-elevated)] border-2 shrink-0 ${className}`}
       style={{
         width: size,
         height: size,
-        borderColor: RARITY_FRAME[item.rarity],
+        borderColor,
       }}
     >
       <svg viewBox="0 0 32 32" width={size - 8} height={size - 8} aria-hidden>

@@ -12,6 +12,7 @@ import {
   type CharacterCreationInput,
 } from '../engine/character/defaultCharacter';
 import { type ClassId } from '../schemas/ids';
+import type { ItemRef, GearRarity } from '../schemas/item';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
 import { type EquipSlot } from '../engine/character/equip';
 import { createGodwakeDelve } from '../engine/delve';
@@ -116,6 +117,7 @@ interface GameState {
   saveSeed: string | null;
   character: Character | null;
   delve: DelveState | null;
+  lastLoot: { name: string; rarity: GearRarity } | null;
   combat: CombatState | null;
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number; chapter?: number } | null;
   introSeen: boolean;
@@ -177,6 +179,8 @@ interface GameState {
   pickCampBoon: (tier: number, boonId: string | null) => void;
   consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
+  purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
+  clearLastLoot: () => void;
 
   // Lore overlays
   showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext, chapter?: number) => void;
@@ -387,8 +391,10 @@ export const useGameStore = create<GameState>()(
         const c = useCharacterStore.getState();
         set({ character: c.character, saveSeed: c.saveSeed });
       };
-      const mirrorDelve = () =>
-        set({ delve: useDelveStore.getState().delve });
+      const mirrorDelve = () => {
+        const d = useDelveStore.getState();
+        set({ delve: d.delve, lastLoot: d.lastLoot });
+      };
       const mirrorCombat = () =>
         set({ combat: useCombatStore.getState().combat });
       const mirrorMeta = () => {
@@ -434,6 +440,7 @@ export const useGameStore = create<GameState>()(
         saveSeed: useCharacterStore.getState().saveSeed,
         character: useCharacterStore.getState().character,
         delve: useDelveStore.getState().delve,
+        lastLoot: useDelveStore.getState().lastLoot,
         combat: useCombatStore.getState().combat,
         taunt: useScreenStore.getState().taunt,
         introSeen: useScreenStore.getState().introSeen,
@@ -523,6 +530,9 @@ export const useGameStore = create<GameState>()(
         consumeLichEyes: () => useDelveStore.getState().consumeLichEyes(),
         purchaseFromMerchant: (itemId) =>
           useDelveStore.getState().purchaseFromMerchant(itemId),
+        purchaseRolledGear: (ref, cost) =>
+          useDelveStore.getState().purchaseRolledGear(ref, cost),
+        clearLastLoot: () => useDelveStore.getState().clearLastLoot(),
 
         showTaunt: (speaker, context, chapter) =>
           useScreenStore.getState().showTaunt(speaker, context, chapter),

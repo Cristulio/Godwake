@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import type { Character, EquipmentSlots } from '../types/character';
 import type { DelveState, RoomSpec } from '../types/delve';
-import type { ItemRef } from '../schemas/item';
+import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
 import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
+import { rollItem, rollGearDrop } from '../engine/items';
 import { classStartingResources } from '../engine/character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
 import { effectiveAbilityScores } from '../engine/character/derived';
@@ -226,6 +227,11 @@ function reincarnateSoul(character: Character): Character {
  */
 interface DelveStoreState {
   delve: DelveState | null;
+  /**
+   * The most recent rolled gear drop, surfaced by the loot toast. Session-only;
+   * set on a combat-room clear that drops, cleared on dismiss or the next drop.
+   */
+  lastLoot: { name: string; rarity: GearRarity } | null;
 
   setDelve: (delve: DelveState | null) => void;
   startDelve: (delve: DelveState) => void;
@@ -260,10 +266,15 @@ interface DelveStoreState {
   /** Clear the Eyes-of-the-Lich preview flag once the player has read the stat block. */
   consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
+  /** Buy a pre-rolled shop item (carries its rolled payload) at the given price. */
+  purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
+  /** Dismiss the loot toast. */
+  clearLastLoot: () => void;
 }
 
 export const useDelveStore = create<DelveStoreState>()((set, get) => ({
   delve: null,
+  lastLoot: null,
 
   setDelve: (delve) => set({ delve }),
 
@@ -455,6 +466,23 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         }
       }
       if (goldDrop || xpDrop) get().addDelveReward(goldDrop, xpDrop);
+      // Gear drop: a low-chance rolled item from the combat-room clear (the loot
+      // source). Re-read the character so the new item layers onto the gold/xp
+      // the reward just credited, not the stale pre-reward snapshot.
+      const dropRarity = rollGearDrop(getActiveRoller(), room.kind);
+      if (dropRarity) {
+        const cur = useCharacterStore.getState().character;
+        if (cur) {
+          const ref = rollItem(getActiveRoller(), { rarity: dropRarity, classId: cur.classId });
+          useCharacterStore.getState().setCharacter({
+            ...cur,
+            inventory: [...cur.inventory, ref],
+          });
+          if (ref.rolled) {
+            set({ lastLoot: { name: ref.rolled.name, rarity: ref.rolled.rarity } });
+          }
+        }
+      }
     }
     useCombatStore.getState().setCombat(null);
     get().advanceRoom();
@@ -768,4 +796,21 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     });
     return { ok: true };
   },
+
+  purchaseRolledGear: (ref, cost) => {
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!character) return { ok: false, reason: 'No character.' };
+    if (character.goldInPocket < cost) {
+      return { ok: false, reason: 'Not enough gold.' };
+    }
+    charSlice.setCharacter({
+      ...character,
+      goldInPocket: character.goldInPocket - cost,
+      inventory: [...character.inventory, ref],
+    });
+    return { ok: true };
+  },
+
+  clearLastLoot: () => set({ lastLoot: null }),
 }));
