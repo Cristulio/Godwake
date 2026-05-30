@@ -3,6 +3,7 @@ import type { RoomSpec } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
+import { useMetaStore } from '../../stores/metaStore';
 import { shortRestHeal } from '../../engine/character/actions';
 
 interface RestRoomProps {
@@ -16,10 +17,13 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
   const showTaunt = useGameStore((s) => s.showTaunt);
   const [rested, setRested] = useState(false);
 
-  // Imoen whispers when the player first reaches an alcove. She can't
-  // breathe through the soul-bond while combat is loud — but here, in stillness.
+  // Imoen whispers when the player first reaches an alcove — once per soul.
   useEffect(() => {
-    const t = setTimeout(() => showTaunt('imoen', 'rest'), 400);
+    if (useMetaStore.getState().seenDialogueBeats.includes('imoen-rest-whisper')) return;
+    const t = setTimeout(() => {
+      showTaunt('imoen', 'rest');
+      useMetaStore.getState().markDialogueBeatSeen('imoen-rest-whisper');
+    }, 400);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

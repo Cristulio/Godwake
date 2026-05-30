@@ -54,6 +54,12 @@ interface MetaStoreState {
    */
   knownNpcs: string[];
   /**
+   * Dialogue beat IDs the soul has already heard. Prevents one-time beats
+   * (e.g. Imoen's camp/rest whispers) from replaying on re-entry or in
+   * subsequent runs. Soul-level — persists across reincarnations.
+   */
+  seenDialogueBeats: string[];
+  /**
    * Legendary relics the soul has earned (cross-delve persistent gear). Account
    * level — survives reincarnation, reset only on New Game. Earned by clearing
    * the chain (see delveStore.finishDelve).
@@ -87,6 +93,7 @@ interface MetaStoreState {
   unlockNextAscension: (clearedAtLevel: number) => void;
   setUnlockedUpgrades: (u: UnlockedUpgrades) => void;
   markNpcKnown: (npcId: string) => void;
+  markDialogueBeatSeen: (beatId: string) => void;
   /**
    * Grant the next un-owned legendary in unlock order. Returns the granted id,
    * or null when the set is already complete. Does not auto-attune — the player
@@ -127,6 +134,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   druidGroveUnlocked: false,
   ascensionUnlocked: 0,
   knownNpcs: [],
+  seenDialogueBeats: [],
   ownedLegendaries: [],
   activeLegendaries: [],
 
@@ -237,6 +245,13 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
         : { knownNpcs: [...s.knownNpcs, npcId] },
     ),
 
+  markDialogueBeatSeen: (beatId) =>
+    set((s) =>
+      s.seenDialogueBeats.includes(beatId)
+        ? s
+        : { seenDialogueBeats: [...s.seenDialogueBeats, beatId] },
+    ),
+
   grantNextLegendary: () => {
     const owned = get().ownedLegendaries;
     const next = LEGENDARY_ORDER.find((id) => !owned.includes(id));
@@ -299,6 +314,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       druidGroveUnlocked: false,
       ascensionUnlocked: 0,
       knownNpcs: [],
+      seenDialogueBeats: [],
       ownedLegendaries: [],
       activeLegendaries: [],
     }),

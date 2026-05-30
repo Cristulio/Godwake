@@ -136,6 +136,7 @@ interface GameState {
   druidGroveUnlocked: boolean;
   ascensionUnlocked: number;
   knownNpcs: string[];
+  seenDialogueBeats: string[];
   ownedLegendaries: string[];
   activeLegendaries: string[];
 
@@ -208,6 +209,7 @@ interface GameState {
 
   // Tutorials
   markQuirksTutorialSeen: () => void;
+  markDialogueBeatSeen: (beatId: string) => void;
 
   // Renown shop
   purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
@@ -245,6 +247,7 @@ interface PersistedSnapshot {
   druidGroveUnlocked: boolean;
   ascensionUnlocked: number;
   knownNpcs: string[];
+  seenDialogueBeats: string[];
   ownedLegendaries: string[];
   activeLegendaries: string[];
   __metadata?: SaveSlotMetadata;
@@ -284,6 +287,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     druidGroveUnlocked: meta.druidGroveUnlocked,
     ascensionUnlocked: meta.ascensionUnlocked,
     knownNpcs: meta.knownNpcs,
+    seenDialogueBeats: meta.seenDialogueBeats,
     ownedLegendaries: meta.ownedLegendaries,
     activeLegendaries: meta.activeLegendaries,
     __metadata: {
@@ -340,6 +344,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
         ? s.ascensionUnlocked
         : 0,
     knownNpcs: Array.isArray(s.knownNpcs) ? s.knownNpcs : [],
+    seenDialogueBeats: Array.isArray(s.seenDialogueBeats) ? s.seenDialogueBeats : [],
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
     activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
   });
@@ -413,6 +418,7 @@ export const useGameStore = create<GameState>()(
           chapter1Cleared: m.chapter1Cleared,
           ascensionUnlocked: m.ascensionUnlocked,
           knownNpcs: m.knownNpcs,
+          seenDialogueBeats: m.seenDialogueBeats,
           druidGroveUnlocked: m.druidGroveUnlocked,
           ownedLegendaries: m.ownedLegendaries,
           activeLegendaries: m.activeLegendaries,
@@ -460,6 +466,7 @@ export const useGameStore = create<GameState>()(
         druidGroveUnlocked: useMetaStore.getState().druidGroveUnlocked,
         ascensionUnlocked: useMetaStore.getState().ascensionUnlocked,
         knownNpcs: useMetaStore.getState().knownNpcs,
+        seenDialogueBeats: useMetaStore.getState().seenDialogueBeats,
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
         activeLegendaries: useMetaStore.getState().activeLegendaries,
 
@@ -572,6 +579,9 @@ export const useGameStore = create<GameState>()(
 
         markQuirksTutorialSeen: () =>
           useScreenStore.getState().markQuirksTutorialSeen(),
+
+        markDialogueBeatSeen: (beatId) =>
+          useMetaStore.getState().markDialogueBeatSeen(beatId),
 
         purchaseUpgrade: (upgradeId) =>
           useMetaStore.getState().purchaseUpgrade(upgradeId),

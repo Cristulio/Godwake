@@ -6,6 +6,7 @@ import { Button } from '../ui/Button';
 import { BlessingCard } from '../ui/BlessingCard';
 import { CampScene } from './CampScene';
 import { useGameStore } from '../../stores/gameStore';
+import { useMetaStore } from '../../stores/metaStore';
 import { getBlessing } from '../../content/blessings';
 import { getItem } from '../../content/items';
 import { playSfx } from '../../engine/audio';
@@ -90,9 +91,13 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const [boughtGearKeys, setBoughtGearKeys] = useState<Set<string>>(new Set());
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
 
-  // Imoen whispers when the road opens up.
+  // Imoen whispers when the road opens up — once per soul (never replays on re-entry or in future runs).
   useEffect(() => {
-    const t = setTimeout(() => showTaunt('imoen', 'rest'), 500);
+    if (useMetaStore.getState().seenDialogueBeats.includes('imoen-camp-whisper')) return;
+    const t = setTimeout(() => {
+      showTaunt('imoen', 'rest');
+      useMetaStore.getState().markDialogueBeatSeen('imoen-camp-whisper');
+    }, 500);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
