@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 14 14"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Witness-Mote"
+    >
+      <!-- small floating eye -->
+      <ellipse cx="7" cy="7" rx="5" ry="4" fill="#2a2438" />
+      <ellipse cx="7" cy="7" rx="4" ry="3" fill="#cdd3e6" />
+      <circle cx="7" cy="7" r="1.6" fill="#15101e" />
+      <rect x="7" y="7" width="1" height="1" fill="#e8d27a" />
+
+      <!-- wet rim of lashes -->
+      <rect x="2" y="6" width="1" height="1" fill="#3a3450" />
+      <rect x="11" y="6" width="1" height="1" fill="#3a3450" />
+      <rect x="6" y="3" width="1" height="1" fill="#3a3450" />
+      <rect x="7" y="11" width="1" height="1" fill="#3a3450" />
+
+      <!-- drifting wisp tail -->
+      <rect x="6" y="11" width="1" height="2" fill="#3a3450" opacity="0.7" />
+      <rect x="5" y="12" width="1" height="1" fill="#3a3450" opacity="0.5" />
+
+      <!-- pale shine -->
+      <rect x="5" y="5" width="1" height="1" fill="#ffffff" opacity="0.6" />
+    </svg>

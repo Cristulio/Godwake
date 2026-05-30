@@ -43,6 +43,9 @@ import { GIBBERING_HUSK } from './gibbering-husk';
 import { MIND_LEECH } from './mind-leech';
 import { SPHERE_ABERRATION } from './sphere-aberration';
 import { ASYLUM_FLESHWRIGHT } from './asylum-fleshwright';
+import { HOLLOW_GAZE } from './hollow-gaze';
+import { WITNESS_MOTE } from './witness-mote';
+import { GLOAMING_EYE } from './gloaming-eye';
 import { SPIDER_BROODMOTHER } from './spider-broodmother';
 import { DROW_WAR_PRIESTESS } from './drow-war-priestess';
 import { CAVERN_HUNTING_SPIDER } from './cavern-hunting-spider';
@@ -111,6 +114,10 @@ const ALL_MONSTERS: Monster[] = [
   MIND_LEECH,
   SPHERE_ABERRATION,
   ASYLUM_FLESHWRIGHT,
+  // ─── Chapter 3 · the blind eye-tyrant (the Hollow Gaze) ─────────────────
+  HOLLOW_GAZE,
+  WITNESS_MOTE,
+  GLOAMING_EYE,
   SPIDER_BROODMOTHER,
   DROW_WAR_PRIESTESS,
   CAVERN_HUNTING_SPIDER,
@@ -194,6 +201,10 @@ export {
   MIND_LEECH,
   SPHERE_ABERRATION,
   ASYLUM_FLESHWRIGHT,
+  // ─── Chapter 3 · the blind eye-tyrant (the Hollow Gaze) ─────────────────
+  HOLLOW_GAZE,
+  WITNESS_MOTE,
+  GLOAMING_EYE,
   SPIDER_BROODMOTHER,
   DROW_WAR_PRIESTESS,
   CAVERN_HUNTING_SPIDER,
