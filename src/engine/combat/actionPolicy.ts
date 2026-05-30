@@ -197,9 +197,8 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
       return { kind: 'second-wind' };
     }
 
-    // Barbarian Rage: open every fight in a fury. Renewable per combat, so the
-    // only gate is "not already raging and a charge in hand" — the resistance
-    // and bonus damage are worth the bonus action immediately.
+    // Barbarian Rage: open every fight in a fury when a charge is available.
+    // Charges are per-rest; the resistance + bonus damage are worth spending one.
     if (
       isBarbarian &&
       !isRaging(character) &&

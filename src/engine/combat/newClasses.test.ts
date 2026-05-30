@@ -84,10 +84,10 @@ describe('Barbarian — Rage', () => {
     const barb = makeBarbarian();
     const roller = createDiceRoller(1);
     const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
-    expect(init.character.resources.rageUsesRemaining).toBe(1);
+    expect(init.character.resources.rageUsesRemaining).toBe(2);
     const r = useRage({ character: init.character, state: init.state });
     expect((r.character.resources.rageRoundsRemaining ?? 0)).toBeGreaterThan(0);
-    expect(r.character.resources.rageUsesRemaining).toBe(0);
+    expect(r.character.resources.rageUsesRemaining).toBe(1);
     expect(r.character.actionEconomy.bonusActionUsed).toBe(true);
   });
 

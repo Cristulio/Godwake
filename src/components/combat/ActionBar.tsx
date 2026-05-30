@@ -3,6 +3,7 @@ import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
 import { characterHasMechanic } from '../../engine/character/derived';
+import { RAGE_ROUNDS } from '../../engine/character/actions';
 import { getItem } from '../../content/items';
 import { slotsAt } from '../../engine/combat/spells';
 
@@ -222,7 +223,7 @@ export function ActionBar({
             variant={canRage ? 'primary' : 'secondary'}
             onClick={onRage}
             disabled={!canRage}
-            title="Bonus action: enter a battle-fury — physical damage against you is halved and your melee hits land harder for several rounds, but you can't heal until it passes. Refreshes each fight."
+            title={`Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends. ${rageUses} charge${rageUses === 1 ? '' : 's'} left — refills at campfire and rest rooms.`}
             className="flex-1"
           >
             {raging ? `Raging (${rageRounds})` : `Rage${rageUses > 0 ? ` (${rageUses})` : ''}`}
