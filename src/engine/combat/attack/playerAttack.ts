@@ -22,6 +22,7 @@ import { HUNTERS_MARK_DICE } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
 import { characterCampBoonMods } from '../../character/campBoons';
+import { characterAffixMods } from '../../items/affixMods';
 import { getItem } from '../../../content/items';
 import { playerConditionMods } from '../playerConditions';
 import { playSfx, swingSfxForWeapon } from '../../audio';
@@ -95,6 +96,7 @@ export function playerAttack(
   const quirkMods = characterQuirkMods(nextCharacter);
   const blessingMods = characterBlessingMods(nextCharacter);
   const boonMods = characterCampBoonMods(nextCharacter);
+  const affixMods = characterAffixMods(nextCharacter);
   const isFirstAttack = !state.playerHasAttacked;
   const targetWounded =
     target.kind === 'monster' &&
@@ -106,6 +108,8 @@ export function playerAttack(
   attackBonus += nextCharacter.permanentBonuses?.attack ?? 0;
   attackBonus += nextCharacter.delveAttackBonus ?? 0;
   attackBonus += boonMods.attackBonus ?? 0;
+  // Honed weapon affix: flat +to-hit.
+  attackBonus += affixMods.attackBonus;
   // Ranger Fighting Style: Archery — +2 to attack rolls with ranged weapons.
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   if (isFirstAttack) {
@@ -255,6 +259,15 @@ export function playerAttack(
       bonusDamage += flatBonus;
       onTypeParts.push({ amount: flatBonus, label: 'blessing' });
     }
+    // Weapon affixes: a flat damage roll (Cruel) and an on-hit bleed.
+    if (affixMods.damageBonus) {
+      bonusDamage += affixMods.damageBonus;
+      onTypeParts.push({ amount: affixMods.damageBonus, label: 'gear' });
+    }
+    if (affixMods.bleedDamage) {
+      bonusDamage += affixMods.bleedDamage;
+      onTypeParts.push({ amount: affixMods.bleedDamage, label: 'bleed' });
+    }
     const holyBonus = blessingMods.holyDamageBonus ?? 0;
     if (holyBonus) {
       bonusDamage += holyBonus;
@@ -304,6 +317,11 @@ export function playerAttack(
         bonusDamage += rd;
         onTypeParts.push({ amount: rd, label: 'Rage' });
       }
+      // Furious weapon affix: extra melee damage while the fury burns.
+      if (affixMods.rageDamageBonus > 0) {
+        bonusDamage += affixMods.rageDamageBonus;
+        onTypeParts.push({ amount: affixMods.rageDamageBonus, label: 'Furious' });
+      }
     }
     // Vow reroll is already baked into the dice total — a note, not a summand,
     // or the breakdown would double-count it.
@@ -330,6 +348,11 @@ export function playerAttack(
       sneakDamage = sneakRoll.total;
       bonusDamage += sneakDamage;
       sneakAttackFiredFlag = true;
+      // Shadowed weapon affix: extra damage on the strike Sneak Attack lands.
+      if (affixMods.sneakDamageBonus > 0) {
+        bonusDamage += affixMods.sneakDamageBonus;
+        onTypeParts.push({ amount: affixMods.sneakDamageBonus, label: 'Shadowed' });
+      }
     }
 
     // Ranger Hunter's Mark: extra dice on every hit against the branded quarry.
@@ -346,6 +369,11 @@ export function playerAttack(
       });
       markDamage = markRoll.total;
       bonusDamage += markDamage;
+      // "of the Quarry" weapon affix: extra flat damage against the marked foe.
+      if (affixMods.markDamageBonus > 0) {
+        bonusDamage += affixMods.markDamageBonus;
+        onTypeParts.push({ amount: affixMods.markDamageBonus, label: 'Quarry' });
+      }
     }
 
     // Ranger (Hunter) Colossus Slayer: once per turn, a hit on a foe already
@@ -425,6 +453,23 @@ export function playerAttack(
     // attacker's lunge already reads as a miss.
     const vfxKind = colossusFiredFlag ? 'colossus' : weaponVfxKind(w);
     nextState = attachCombatVfx(nextState, vfxKind, 'player', targetId);
+
+    // "of the Leech" weapon affix: heal for a fraction of the damage dealt,
+    // capped at max HP. Based on the full rolled damage, not the post-clamp
+    // overkill, so a finishing blow still feeds the wielder.
+    if (affixMods.lifestealPct > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
+      const healed = Math.floor((totalDamage * affixMods.lifestealPct) / 100);
+      if (healed > 0) {
+        const before = nextCharacter.hp.current;
+        const after = Math.min(nextCharacter.hp.max, before + healed);
+        nextCharacter = { ...nextCharacter, hp: { ...nextCharacter.hp, current: after } };
+        nextState = appendLog(nextState, {
+          id: nextLogId(nextState),
+          kind: 'system',
+          text: `${nextCharacter.name} drains ${after - before} HP from the wound.`,
+        });
+      }
+    }
   }
 
   // Mark action used for the player

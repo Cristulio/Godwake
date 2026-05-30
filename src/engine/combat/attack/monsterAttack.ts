@@ -20,6 +20,7 @@ import type {
 import type { ConditionName } from '../../../types/conditions';
 import { computeAC, isRaging } from '../../character/derived';
 import { characterQuirkMods } from '../../character/quirks';
+import { characterAffixMods } from '../../items/affixMods';
 import { getMonster } from '../../../content/monsters';
 import { getRace } from '../../../content/races';
 import {
@@ -384,7 +385,9 @@ function resolveSingleAttack(
       action.damageType === 'piercing' ||
       action.damageType === 'slashing';
     const rageResists = isRaging(nextCharacter) && physical;
-    const resisted = !immune && (raceResists || rageResists);
+    // Armour resist affix (Salamander / Frostward): halve a matching type.
+    const affixResists = characterAffixMods(nextCharacter).resists.includes(action.damageType);
+    const resisted = !immune && (raceResists || rageResists || affixResists);
     const totalDamage = immune
       ? 0
       : resisted

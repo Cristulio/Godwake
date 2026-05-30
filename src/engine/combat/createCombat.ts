@@ -11,6 +11,7 @@ import type { Monster } from '../../schemas/monster';
 import { characterBlessingMods } from '../character/blessings';
 import { baneQuirkCount } from '../character/quirks';
 import { characterCampBoonMods } from '../character/campBoons';
+import { characterAffixMods } from '../items/affixMods';
 import { rogueCunningActionMax, barbarianRageMax } from '../character/actions';
 import {
   combatResult,
@@ -197,11 +198,15 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // stack — take the single largest source, then the higher of that and any
   // temp HP already on the sheet (RAW).
   const blessingMods = characterBlessingMods(nextCharacter);
+  // Stoneblood armour affix folds into the same pool (temp HP doesn't stack —
+  // the single largest source wins, RAW).
+  const affixMods = characterAffixMods(nextCharacter);
   const tempHpGrant = Math.max(
     blessingMods.extraTempHpPerRoom ?? 0,
     (blessingMods.tempHpPerDelveLevel ?? 0) * nextCharacter.level,
     (blessingMods.tempHpPerBaneQuirk ?? 0) * baneQuirkCount(nextCharacter),
     isBoss ? (blessingMods.bossTempHp ?? 0) : 0,
+    affixMods.tempHpPerCombat,
   );
   if (tempHpGrant > 0) {
     const newTemp = Math.max(nextCharacter.hp.temp, tempHpGrant);
@@ -209,7 +214,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     log.push({
       id: log.length + 1,
       kind: 'system' as const,
-      text: `${nextCharacter.name} gains ${tempHpGrant} temporary HP from a blessing.`,
+      text: `${nextCharacter.name} braces with ${tempHpGrant} temporary HP.`,
     });
   }
 

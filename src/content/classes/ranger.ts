@@ -8,6 +8,8 @@ export const RANGER: Class = ClassSchema.parse({
   savingThrowProficiencies: ['str', 'dex'],
   // A hunter trained on the bow and the long blade — every simple and martial arm.
   weaponProficiency: { categories: ['simple', 'martial'] },
+  // Travels light to travel far — light/medium armour and a shield, no heavy plate.
+  armorProficiency: { categories: ['light', 'medium', 'shield'] },
   skillChoiceCount: 2,
   skillGrantsByLevel: { '3': 1, '5': 1 },
   skillChoiceFrom: [

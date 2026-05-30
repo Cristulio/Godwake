@@ -8,6 +8,8 @@ export const WIZARD: Class = ClassSchema.parse({
   savingThrowProficiencies: ['int', 'wis'],
   // The scholar's hands know only simple arms — dagger, quarterstaff, mace.
   weaponProficiency: { categories: ['simple'] },
+  // No armour at all — the wizard's only shell is Mage Armour.
+  armorProficiency: { categories: [] },
   skillChoiceCount: 2,
   skillGrantsByLevel: { '3': 1, '5': 1 },
   skillChoiceFrom: [

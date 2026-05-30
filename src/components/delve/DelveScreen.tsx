@@ -23,6 +23,7 @@ import { PostmortemModal } from './PostmortemModal';
 import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
+import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
 
 function decorationForRoom(room: RoomSpec, chapterId: string): BattlefieldDecoration {
   // Branching Godwake delve: nodes carry their chapter, so the backdrop keys
@@ -120,6 +121,15 @@ function decorationForRoom(room: RoomSpec, chapterId: string): BattlefieldDecora
 }
 
 export function DelveScreen() {
+  return (
+    <>
+      <DelveScreenBody />
+      <LootToast />
+    </>
+  );
+}
+
+function DelveScreenBody() {
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const combat = useGameStore((s) => s.combat);
@@ -446,6 +456,53 @@ function DelveTopBar({
           ◆ Open Pack
         </Button>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Fixed-position loot toast for a rolled drop from a combat clear. Self-contained
+ * (reads the facade), mounted once above every delve branch. Auto-dismisses; a
+ * click jumps to the pack to equip the find.
+ */
+function LootToast() {
+  const lastLoot = useGameStore((s) => s.lastLoot);
+  const clearLastLoot = useGameStore((s) => s.clearLastLoot);
+  const goToInventory = useGameStore((s) => s.goToInventory);
+
+  useEffect(() => {
+    if (!lastLoot) return;
+    const t = setTimeout(() => clearLastLoot(), 6000);
+    return () => clearTimeout(t);
+  }, [lastLoot, clearLastLoot]);
+
+  if (!lastLoot) return null;
+  const color = GEAR_RARITY_COLOR[lastLoot.rarity];
+  return (
+    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 animate-room-enter">
+      <button
+        type="button"
+        onClick={() => {
+          clearLastLoot();
+          goToInventory();
+        }}
+        className="flex items-center gap-3 bg-[var(--color-bg-panel)] border-2 px-4 py-2 shadow-[0_4px_18px_rgba(0,0,0,0.6)]"
+        style={{ borderColor: color }}
+        title="Open your pack to equip it"
+      >
+        <span className="text-lg" style={{ color }}>◆</span>
+        <span className="text-left">
+          <span className="block text-[9px] uppercase tracking-[0.3em] text-[var(--color-text-dim)]">
+            {GEAR_RARITY_LABEL[lastLoot.rarity]} drop
+          </span>
+          <span
+            className="block font-display uppercase tracking-wider text-xs"
+            style={{ color }}
+          >
+            {lastLoot.name}
+          </span>
+        </span>
+      </button>
     </div>
   );
 }

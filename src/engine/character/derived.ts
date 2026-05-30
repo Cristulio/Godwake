@@ -8,6 +8,7 @@ import { getClass } from '../../content/classes';
 import { characterQuirkMods, baneQuirkCount } from './quirks';
 import { characterBlessingMods } from './blessings';
 import { characterCampBoonMods } from './campBoons';
+import { characterAffixMods } from '../items/affixMods';
 
 /**
  * Proficiency bonus by character level (PHB Table: Proficiency Bonus).
@@ -103,11 +104,14 @@ export function computeAC(character: Character): number {
   const quirkMods = characterQuirkMods(character);
   const blessingMods = characterBlessingMods(character);
   const boonMods = characterCampBoonMods(character);
+  const affixMods = characterAffixMods(character);
   base += quirkMods.acMod ?? 0;
   base += blessingMods.acBonus ?? 0;
   base += boonMods.acBonus ?? 0;
   base += character.permanentBonuses?.ac ?? 0;
   base += character.legendaryBonuses?.ac ?? 0;
+  // Equipped-gear affixes (Warded plate, etc.).
+  base += affixMods.acBonus;
 
   // Conditional / soul-mark AC blessings. Full-HP and bloodied are mutually
   // exclusive in practice; the per-bane lever is unconditional.
@@ -170,7 +174,8 @@ export function critRange(character: Character): number[] {
   if (isBloodied(character)) blessingBonus += mods.critRangeBonusWhileBloodied ?? 0;
   const upgradeBonus = character.permanentBonuses?.critRange ?? 0;
   const legendaryBonus = character.legendaryBonuses?.critRange ?? 0;
-  const low = Math.max(2, base - blessingBonus - upgradeBonus - legendaryBonus);
+  const affixBonus = characterAffixMods(character).critRangeBonus;
+  const low = Math.max(2, base - blessingBonus - upgradeBonus - legendaryBonus - affixBonus);
   const result: number[] = [];
   for (let n = low; n <= 20; n++) result.push(n);
   return result;

@@ -8,6 +8,8 @@ export const BARBARIAN: Class = ClassSchema.parse({
   savingThrowProficiencies: ['str', 'con'],
   // A warrior who needs no smith — every simple and martial arm, swung bare.
   weaponProficiency: { categories: ['simple', 'martial'] },
+  // No heavy plate — Unarmored Defense is the brute's guard; light/medium + shield only.
+  armorProficiency: { categories: ['light', 'medium', 'shield'] },
   skillChoiceCount: 2,
   skillGrantsByLevel: { '3': 1, '5': 1 },
   skillChoiceFrom: [

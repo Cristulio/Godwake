@@ -8,6 +8,8 @@ export const FIGHTER: Class = ClassSchema.parse({
   savingThrowProficiencies: ['str', 'con'],
   // A trained soldier — every simple and martial arm.
   weaponProficiency: { categories: ['simple', 'martial'] },
+  // The one heavy-armour class — a Fighter wears anything, chain mail included.
+  armorProficiency: { categories: ['light', 'medium', 'heavy', 'shield'] },
   skillChoiceCount: 2,
   skillGrantsByLevel: { '3': 1, '5': 1 },
   skillChoiceFrom: [
