@@ -124,7 +124,7 @@ describe('useDelveStore — basic CRUD', () => {
     useDelveStore.setState({ delve: createGodwakeDelve(7) });
     const store = useDelveStore.getState();
     let guard = 0;
-    while (useDelveStore.getState().delve!.phase !== 'completed' && guard++ < 300) {
+    while (useDelveStore.getState().delve!.phase !== 'completed' && guard++ < 600) {
       const cur = useDelveStore.getState().delve!;
       if (cur.phase === 'between-rooms') {
         const node = cur.rooms[cur.currentRoomIdx];
@@ -139,7 +139,7 @@ describe('useDelveStore — basic CRUD', () => {
       done.visitedRoomIds!.map((id) => done.rooms.find((r) => r.id === id)?.chapter),
     );
     expect(chapters.has(1)).toBe(true);
-    expect(chapters.has(4)).toBe(true);
+    expect(chapters.has(6)).toBe(true);
     // Walked a real subset of the map, not the whole flat list.
     expect(done.visitedRoomIds!.length).toBeLessThan(done.rooms.length);
   });

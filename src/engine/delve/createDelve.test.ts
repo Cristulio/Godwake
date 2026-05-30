@@ -63,31 +63,33 @@ describe('createIronCellsDelve', () => {
 });
 
 describe('createGodwakeDelve', () => {
-  it('emits at least 28 rooms across the chained run', () => {
+  it('emits at least 80 rooms across the six-chapter chained run', () => {
     const d = createGodwakeDelve(1);
-    expect(d.rooms.length).toBeGreaterThanOrEqual(28);
+    expect(d.rooms.length).toBeGreaterThanOrEqual(80);
   });
 
-  it('has three camp seams between the chapters', () => {
+  it('has five camp seams between the six chapters', () => {
     const d = createGodwakeDelve(1);
     const camps = d.rooms.filter((r) => r.kind === 'camp');
-    expect(camps).toHaveLength(3);
+    expect(camps).toHaveLength(5);
   });
 
-  it('has four bosses, one per chapter, in the expected order', () => {
+  it('has six bosses, one per chapter, in the expected order', () => {
     const d = createGodwakeDelve(1);
     const bosses = d.rooms.filter((r) => r.kind === 'boss');
-    expect(bosses).toHaveLength(4);
+    expect(bosses).toHaveLength(6);
     expect(bosses[0].monsters?.[0].defId).toBe('duergar-ilyich');
     expect(bosses[1].monsters?.[0].defId).toBe('athkatla-magistrate');
     expect(bosses[2].monsters?.[0].defId).toBe('asylum-director');
     expect(bosses[3].monsters?.[0].defId).toBe('drow-matron-mother');
+    expect(bosses[4].monsters?.[0].defId).toBe('hollow-dawn');
+    expect(bosses[5].monsters?.[0].defId).toBe('the-unmade');
   });
 
-  it('has at least four event rooms threaded through the chapters', () => {
+  it('has at least six event rooms threaded through the chapters', () => {
     const d = createGodwakeDelve(1);
     const events = d.rooms.filter((r) => r.kind === 'event');
-    expect(events.length).toBeGreaterThanOrEqual(4);
+    expect(events.length).toBeGreaterThanOrEqual(6);
     // Every event room must resolve against the registry — no orphan ids.
     for (const e of events) {
       expect(e.eventTemplateId).toBeTruthy();
@@ -97,13 +99,13 @@ describe('createGodwakeDelve', () => {
   it('has at least two shrines per chapter span', () => {
     const d = createGodwakeDelve(1);
     const shrines = d.rooms.filter((r) => r.kind === 'shrine');
-    expect(shrines.length).toBeGreaterThanOrEqual(8);
+    expect(shrines.length).toBeGreaterThanOrEqual(12);
   });
 
   it('has at least one rest room per chapter span', () => {
     const d = createGodwakeDelve(1);
     const rests = d.rooms.filter((r) => r.kind === 'rest');
-    expect(rests.length).toBeGreaterThanOrEqual(4);
+    expect(rests.length).toBeGreaterThanOrEqual(6);
   });
 
   it('chapterId is godwake', () => {
@@ -141,7 +143,7 @@ describe('createGodwakeDelve', () => {
     }
   });
 
-  it('the chained delve places the four bosses in chapter order', () => {
+  it('the chained delve places the six bosses in chapter order', () => {
     const d = createGodwakeDelve(99);
     const bossIndices = d.rooms
       .map((r, idx) => ({ r, idx }))
@@ -152,8 +154,8 @@ describe('createGodwakeDelve', () => {
       .map((r, idx) => ({ r, idx }))
       .filter(({ r }) => r.kind === 'camp')
       .map(({ idx }) => idx);
-    // Each camp seam falls between two bosses.
-    for (let i = 0; i < 3; i++) {
+    // Each camp seam falls between two bosses (5 camps between 6 bosses).
+    for (let i = 0; i < 5; i++) {
       expect(campIndices[i]).toBeGreaterThan(bossIndices[i]);
       expect(campIndices[i]).toBeLessThan(bossIndices[i + 1]);
     }
@@ -327,10 +329,10 @@ describe('createGodwakeDelve — branching graph', () => {
     const d = createGodwakeDelve(7);
     expect(d.rooms.some((r) => r.kind === 'shop')).toBe(true);
     expect(d.rooms.some((r) => r.kind === 'elite')).toBe(true);
-    const matron = d.rooms.find((r) => r.monsters?.[0]?.defId === 'drow-matron-mother')!;
-    expect(matron.next ?? []).toHaveLength(0);
+    const finalBoss = d.rooms.find((r) => r.monsters?.[0]?.defId === 'the-unmade')!;
+    expect(finalBoss.next ?? []).toHaveLength(0);
     // Every other chapter boss leads onward to its camp.
-    for (const boss of d.rooms.filter((r) => r.kind === 'boss' && r !== matron)) {
+    for (const boss of d.rooms.filter((r) => r.kind === 'boss' && r !== finalBoss)) {
       expect(reachableRooms(d, boss).some((r) => r.kind === 'camp')).toBe(true);
     }
   });
