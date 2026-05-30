@@ -177,7 +177,8 @@ export function critRange(character: Character): number[] {
   const upgradeBonus = character.permanentBonuses?.critRange ?? 0;
   // affixBonus folds in hub legendary crit effects via characterAffixMods.
   const affixBonus = characterAffixMods(character).critRangeBonus;
-  const low = Math.max(2, base - blessingBonus - upgradeBonus - affixBonus);
+  const boonBonus = characterCampBoonMods(character).critRangeBonus ?? 0;
+  const low = Math.max(2, base - blessingBonus - upgradeBonus - affixBonus - boonBonus);
   const result: number[] = [];
   for (let n = low; n <= 20; n++) result.push(n);
   return result;

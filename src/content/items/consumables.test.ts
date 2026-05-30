@@ -3,9 +3,9 @@ import { getItem } from './index';
 import type { Consumable } from '../../schemas/item';
 
 /**
- * Healing draughts and antitoxin are now quaffed as a BONUS action so a
- * wounded delver can top up and still attack the same turn. The healing-word
- * scroll was already bonus. No consumable should cost a full action.
+ * Healing draughts and antitoxin are quaffed as a BONUS action so a wounded
+ * delver can top up and still attack the same turn. No consumable should cost
+ * a full action.
  */
 describe('consumables — quick-quaff action economy', () => {
   const bonusIds = [
@@ -13,7 +13,6 @@ describe('consumables — quick-quaff action economy', () => {
     'potion-of-greater-healing',
     'potion-of-heroism',
     'antitoxin',
-    'scroll-of-healing-word',
   ];
 
   it.each(bonusIds)('%s costs a bonus action', (id) => {

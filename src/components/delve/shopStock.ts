@@ -16,7 +16,7 @@ import { legendaryDropPool, getLegendary } from '../../content/legendaries';
 /** Fixed consumable stock by depth (cumulative — a deeper merchant carries
  * everything the shallower one did, plus more). Arms are rolled, not listed
  * here. */
-const CONSUMABLE_BASE = ['potion-of-healing', 'antitoxin', 'scroll-of-healing-word'];
+const CONSUMABLE_BASE = ['potion-of-healing', 'antitoxin'];
 const CONSUMABLE_TIER_2 = ['potion-of-greater-healing'];
 const CONSUMABLE_TIER_3 = ['potion-of-heroism']; // "Potion of Vitality" — the dearest draught
 

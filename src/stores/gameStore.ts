@@ -179,7 +179,6 @@ interface GameState {
   pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => string | null;
   pickEliteChoice: (choice: 'fight' | 'gold') => void;
   pickCampBoon: (tier: number, boonId: string | null) => void;
-  consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
   purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
@@ -547,7 +546,6 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().pickEliteChoice(choice),
         pickCampBoon: (tier, boonId) =>
           useDelveStore.getState().pickCampBoon(tier, boonId),
-        consumeLichEyes: () => useDelveStore.getState().consumeLichEyes(),
         purchaseFromMerchant: (itemId) =>
           useDelveStore.getState().purchaseFromMerchant(itemId),
         purchaseRolledGear: (ref, cost) =>

@@ -39,17 +39,17 @@ const HONED: Affix = AffixSchema.parse({
 const BLOODLETTING: Affix = AffixSchema.parse({
   id: 'bloodletting',
   namePart: { kind: 'suffix', word: 'of Bloodletting' },
-  effect: 'Hits bleed for +2 extra damage.',
+  effect: 'Hits apply bleeding: deal 2 damage at the start of your next 3 turns.',
   appliesTo: ['weapon'],
   modifiers: { bleedDamage: 2 },
 });
 
-const LEECHING: Affix = AffixSchema.parse({
-  id: 'leeching',
-  namePart: { kind: 'suffix', word: 'of the Leech' },
-  effect: 'Heal for 25% of weapon damage dealt.',
+const MENDING: Affix = AffixSchema.parse({
+  id: 'mending',
+  namePart: { kind: 'suffix', word: 'of Mending' },
+  effect: 'Hits trigger mending: heal 4 HP at the start of your next 3 turns.',
   appliesTo: ['weapon'],
-  modifiers: { lifestealPct: 25 },
+  modifiers: { regenPerTurn: 4 },
 });
 
 // --- Armour affixes (generic) ----------------------------------------------
@@ -284,7 +284,7 @@ export const ALL_AFFIXES: Affix[] = [
   CRUEL,
   HONED,
   BLOODLETTING,
-  LEECHING,
+  MENDING,
   WARDED,
   STONEBLOOD,
   SALAMANDER,

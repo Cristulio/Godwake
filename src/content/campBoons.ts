@@ -103,8 +103,8 @@ const ALL_BOONS: CampBoon[] = [
     id: 'eyes-of-the-lich',
     tier: 3,
     name: 'Eyes of the Lich',
-    description: 'Read the next boss\'s stat block before the fight begins.',
-    flavor: 'A glance behind eyes that have long ceased to blink.',
+    description: '+1 to all weapon attack rolls and crits land on 19-20 for the rest of the delve.',
+    flavor: 'A glance behind eyes that have long ceased to blink. You see where the living are weak.',
   },
 ];
 

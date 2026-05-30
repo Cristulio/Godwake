@@ -55,24 +55,9 @@ export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
     'A pale gold liquid that smells of beaten copper and pipe-smoke. A deep restorative — one swallow knits torn flesh and steadies the blood. Restores 3d6+6 hit points. A bonus action.',
 });
 
-export const SCROLL_OF_HEALING_WORD: Consumable = ConsumableSchema.parse({
-  id: 'scroll-of-healing-word',
-  kind: 'consumable',
-  name: 'Scroll of Healing Word',
-  effect: 'heal',
-  healDice: '2d4+3',
-  cost: 90,
-  weight: 0.1,
-  rarity: 'common',
-  actionCost: 'bonus',
-  description:
-    'A strip of vellum copied in a hurried, priestly hand — a single word of Lathander\'s mercy, traced once and gone after the speaking. A spoken word, not a swallow. Bonus action; restores 2d4+3 hit points.',
-});
-
 export const ALL_CONSUMABLES: Consumable[] = [
   POTION_OF_HEALING,
   POTION_OF_GREATER_HEALING,
   ANTITOXIN,
   POTION_OF_HEROISM,
-  SCROLL_OF_HEALING_WORD,
 ];

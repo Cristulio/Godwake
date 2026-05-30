@@ -1,5 +1,5 @@
 import type { Character } from '../../types/character';
-import type { CombatState } from '../../types/combat';
+import type { CombatState, MonsterCombatant } from '../../types/combat';
 import { getMonster } from '../../content/monsters';
 import { getRace } from '../../content/races';
 import { getActiveRoller } from '../dice';
@@ -7,6 +7,7 @@ import {
   combatResult,
   patchActionEconomy,
   patchResources,
+  patchHp,
   type CombatActionResult,
 } from './types';
 import { appendLog } from './log';
@@ -21,6 +22,9 @@ import {
 import { tickPlayerConditions } from './playerConditions';
 import { refreshMonsterIntents } from './attack/monsterIntent';
 import type { ConditionName } from '../../types/conditions';
+import { characterAffixMods } from '../items/affixMods';
+import { evaluateCombatEnd } from './attack/damage';
+import { isRaging } from '../character/derived';
 
 function resetActionEconomyForCurrent(
   state: CombatState,
@@ -185,10 +189,76 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     nextCharacter = resolved.character;
   }
 
+  // Regen (of Mending affix): tick one stack at the start of the player's
+  // turn. Suppressed while raging (consistent with lifesteal).
+  if (
+    order[nextIndex] === 'player' &&
+    (nextState.playerRegenStacks ?? 0) > 0 &&
+    !isRaging(nextCharacter)
+  ) {
+    const regenAmount = characterAffixMods(nextCharacter).regenPerTurn;
+    if (regenAmount > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
+      const before = nextCharacter.hp.current;
+      const after = Math.min(nextCharacter.hp.max, before + regenAmount);
+      nextCharacter = patchHp(nextCharacter, { current: after });
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'system',
+        text: `${nextCharacter.name} mends — ${after - before} HP restored. (${(nextState.playerRegenStacks ?? 1) - 1} turns remaining)`,
+      });
+    }
+    nextState = { ...nextState, playerRegenStacks: (nextState.playerRegenStacks ?? 1) - 1 };
+  }
+
+  // Bleed DOT: tick each bleeding monster at the start of the player's turn.
+  if (order[nextIndex] === 'player') {
+    for (const combatant of nextState.combatants) {
+      if (combatant.kind !== 'monster') continue;
+      const mc = combatant as MonsterCombatant;
+      if (
+        mc.instance.hp.current <= 0 ||
+        !mc.instance.bleedTurnsRemaining ||
+        mc.instance.bleedTurnsRemaining <= 0
+      ) continue;
+
+      const bleedDmg = mc.instance.bleedDamagePerTurn ?? 0;
+      if (bleedDmg <= 0) continue;
+
+      const remainingTemp = Math.max(0, mc.instance.hp.temp - bleedDmg);
+      const overflow = Math.max(0, bleedDmg - mc.instance.hp.temp);
+      const newHp = Math.max(0, mc.instance.hp.current - overflow);
+      const newTurns = mc.instance.bleedTurnsRemaining - 1;
+
+      nextState = {
+        ...nextState,
+        combatants: nextState.combatants.map((c) => {
+          if (c.kind !== 'monster' || c.id !== mc.id) return c;
+          return {
+            ...c,
+            instance: {
+              ...c.instance,
+              hp: { ...c.instance.hp, current: newHp, temp: remainingTemp },
+              bleedTurnsRemaining: newTurns,
+            },
+          };
+        }),
+      };
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'damage',
+        text: `${mc.instance.displayName} bleeds for ${bleedDmg} damage.${newTurns > 0 ? ` (${newTurns} turns remaining)` : ''}`,
+      });
+    }
+    // Evaluate if any monster died from bleed.
+    const ended = evaluateCombatEnd(nextState, nextCharacter);
+    nextState = ended.state;
+    nextCharacter = ended.character;
+  }
+
   // enemy-telegraph: re-select every monster's intent at the top of the
   // player's turn, against the post-housekeeping state, so the badge reflects
   // exactly what the player is now deciding against.
-  if (order[nextIndex] === 'player') {
+  if (order[nextIndex] === 'player' && nextState.status === 'active') {
     nextState = refreshMonsterIntents(nextState, nextCharacter);
   }
 

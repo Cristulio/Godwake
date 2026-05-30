@@ -280,8 +280,6 @@ interface DelveStoreState {
    * explicitly skipped the panel. The same camp tier cannot be resolved twice.
    */
   pickCampBoon: (tier: number, boonId: string | null) => void;
-  /** Clear the Eyes-of-the-Lich preview flag once the player has read the stat block. */
-  consumeLichEyes: () => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
   /** Buy a pre-rolled shop item (carries its rolled payload) at the given price. */
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
@@ -801,19 +799,12 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
           ...nextCharacter,
           delveStabiliseBonus: (nextCharacter.delveStabiliseBonus ?? 0) + 1,
         };
-      } else if (boon.id === 'eyes-of-the-lich') {
-        nextDelve = { ...nextDelve, lichEyesAvailable: true };
       }
     }
 
     charSlice.setCharacter(nextCharacter);
     set({ delve: nextDelve });
   },
-
-  consumeLichEyes: () =>
-    set((s) =>
-      s.delve ? { delve: { ...s.delve, lichEyesAvailable: false } } : s,
-    ),
 
   pickEliteChoice: (choice) => {
     const s = get();
