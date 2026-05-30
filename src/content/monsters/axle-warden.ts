@@ -25,8 +25,8 @@ export const AXLE_WARDEN: Monster = MonsterSchema.parse({
       name: 'Turn the Wheel',
       summonDefId: 'threadbare-penitent',
       count: 1,
-      maxActive: 2,
-      cooldownRounds: 2,
+      maxActive: 1,
+      cooldownRounds: 4,
       description:
         'It hauls the great axle a quarter-turn and a worn soul slides off the rim where the wheel meets the floor — upright before it has finished arriving, already reaching for you.',
     },

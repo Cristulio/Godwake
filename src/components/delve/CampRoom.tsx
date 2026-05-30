@@ -238,7 +238,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
       <Panel className="bg-gradient-to-br from-[#2a1d12] to-[#1a1108]">
         <div className="flex flex-col items-center gap-4 py-4">
-          <CampScene tier={campTier} />
+          <CampScene chapter={room.chapter} />
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-xl leading-relaxed">
             {room.flavorText}
           </p>
