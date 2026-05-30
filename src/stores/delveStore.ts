@@ -510,11 +510,20 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const bossesKilled = s.delve.rooms
       .slice(0, bossLimitIdx)
       .filter((r) => r.kind === 'boss').length;
-    // Depth credit pays per room reached on BOTH paths; the boss stack rides on
-    // top. A clear swaps the failure base for the clear premium and — reaching
-    // every room and felling every boss — always tops even the deepest death by
-    // construction, so the clear > deep-death > shallow-death ordering holds.
-    const depthRenown = RENOWN_PER_ROOM_REACHED * s.delve.currentRoomIdx;
+    // Depth credit pays per room ACTUALLY VISITED on BOTH paths; the boss stack
+    // rides on top. Counts the route the soul walked (visitedRoomIds, lit by
+    // enterRoom as it routes), not the flat currentRoomIdx — the branching map's
+    // flat index runs past the parallel nodes a route skips, so the old formula
+    // over-credited depth. The entry node is seeded free, so the credit is the
+    // count beyond it; legacy linear delves keep no trail and fall back to the
+    // index. A clear walks its whole route and fells every boss, so it still
+    // tops even the deepest death by construction (clear > deep > shallow holds).
+    const roomsVisited = s.delve.visitedRoomIds?.length;
+    const roomsReached =
+      roomsVisited !== undefined
+        ? Math.max(0, roomsVisited - 1)
+        : s.delve.currentRoomIdx;
+    const depthRenown = RENOWN_PER_ROOM_REACHED * roomsReached;
     const renownBase =
       (wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE) +
       RENOWN_PER_CHAPTER_BOSS * bossesKilled +

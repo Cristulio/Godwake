@@ -389,24 +389,6 @@ const RAW: Upgrade[] = [
     kind: 'delveStart',
   },
   {
-    id: 'wayfarers-map',
-    category: 'spirit',
-    name: "Wayfarer's Map",
-    flavor:
-      'Mielikki is the Lady of the forest paths — she laid the trails and knows where each one bends. She leans close and names the next turning before your boot finds it.',
-    effectAtRank: (r) =>
-      r === 1
-        ? 'Reveal what kind of room waits at the next turn of the road.'
-        : `Reveal what kind of room waits at the next ${r} turns of the road.`,
-    costForRank: (r) => rankCost(35, r),
-    maxRank: 2,
-    // No-op marker: RoomHeader reads the owned rank from unlockedUpgrades
-    // directly and reveals that many upcoming room KINDS. It never shows the
-    // total room count — delve depth stays hidden by design.
-    apply: (c) => c,
-    kind: 'delveStart',
-  },
-  {
     id: 'tymoras-wager',
     category: 'spirit',
     name: "Tymora's Wager",
