@@ -273,9 +273,10 @@ export function createAthkatlaDelve(seed: number = randomSeed()): DelveState {
  * The flat `rooms` array holds every node in chapter-major, layer-minor order
  * (boss last in each chapter, camp right after), so the renown/boss bookkeeping
  * in `finishDelve` — which slices `rooms` up to `currentRoomIdx` — still counts
- * the convergence bosses correctly. Combat compositions and event picks share
- * one seeded RNG so a delve seed locks the encounters; the map TOPOLOGY is
- * fixed per chapter (the routing choices are what vary, not the shape).
+ * the convergence bosses correctly. The whole map — encounters, event picks AND
+ * the per-chapter topology (column count, widths, kind placement, edges) — is
+ * rolled from one seeded RNG, so a delve seed locks the entire road, but each
+ * new run draws a genuinely different shape.
  */
 export interface GodwakeDelveOptions {
   /** Seed for the encounter pool RNG. */
@@ -298,24 +299,111 @@ type SlotKind =
   | 'boss';
 
 /**
- * The per-chapter layer plan. Each row is one column on the map; multiple
- * entries in a row are parallel nodes the player chooses between, so an earlier
- * pick narrows what's reachable later (real routing). The last two rows
- * (intel → boss) are always single nodes — the convergence point. Per chapter
- * this yields 1 warmup, 2 early-mid, 4 mid, 2 elite, 1 shop, 2 shrines, 2 rests
- * and 1 event, which keeps the chained-delve count invariants comfortably met.
+ * Sane bounds for the procedurally-laid-out chapter. Every chapter is always
+ * entry(warmup) → [middle columns] → intel → boss; only the middle varies by
+ * seed — its column count, each column's width, which kinds sit where, and the
+ * edge fan between columns. The special beats sit on a fixed budget plus a pad
+ * of extra fights, so fights stay the majority and the count invariants
+ * (≥2 shrines, ≥1 rest, ≥1 event, a shop and an elite per chapter) always hold.
  */
-const CHAPTER_LAYER_PLAN: SlotKind[][] = [
-  ['warmup'],
-  ['earlyMid', 'shrine'],
-  ['event', 'earlyMid', 'rest'],
-  ['mid', 'shop'],
-  ['shrine', 'mid', 'elite'],
-  ['rest', 'mid'],
-  ['elite', 'mid'],
-  ['intel'],
-  ['boss'],
-];
+const FORK_MIN_WIDTH = 2; // the chapter entry must open onto a real choice
+const COLUMN_MAX_WIDTH = 3; // widest parallel column on the map
+const COMBAT_PAD_MIN = 5; // extra fights beyond the special budget
+const COMBAT_PAD_MAX = 7;
+
+/** Inclusive integer roll in [min, max] off the seeded RNG. */
+function roll(rng: Rng, min: number, max: number): number {
+  return min + Math.floor(rng.next() * (max - min + 1));
+}
+
+interface SlotBudget {
+  eliteCount: number;
+  restCount: number;
+  eventCount: number;
+  shrineCount: number;
+  shopCount: number;
+}
+
+/**
+ * Procedurally lay out one chapter's columns for the given seed-state RNG.
+ * Returns rows of slot kinds (row = column on the map, multiple entries =
+ * parallel nodes the player routes between). The first row is the lone warmup
+ * entry and the last two are the intel→boss convergence; everything between is
+ * randomized in width, kind placement and (later, via wireLayers) edge fan, so
+ * each seed draws a genuinely different road.
+ *
+ * Budget per chapter: 2 shrines, 1–2 rests, 1 shop, 1–2 elites, 1–2 events,
+ * the rest fights. Elites and the shop sit late (risk ramps toward the boss); a
+ * shrine is seeded early so an opening route always has an altar in reach.
+ */
+function generateChapterPlan(rng: Rng): SlotKind[][] {
+  const budget: SlotBudget = {
+    eliteCount: roll(rng, 1, 2),
+    restCount: roll(rng, 1, 2),
+    eventCount: roll(rng, 1, 2),
+    shrineCount: 2,
+    shopCount: 1,
+  };
+  const specials =
+    budget.eliteCount +
+    budget.restCount +
+    budget.eventCount +
+    budget.shrineCount +
+    budget.shopCount;
+  const middle = specials + roll(rng, COMBAT_PAD_MIN, COMBAT_PAD_MAX);
+
+  // Column widths: the first middle column always forks; the rest vary, summing
+  // to exactly `middle` so the flat kind list slices cleanly back into columns.
+  const widths: number[] = [Math.min(middle, roll(rng, FORK_MIN_WIDTH, COLUMN_MAX_WIDTH))];
+  let placed = widths[0];
+  while (placed < middle) {
+    widths.push(Math.min(middle - placed, roll(rng, 1, COLUMN_MAX_WIDTH)));
+    placed += widths[widths.length - 1];
+  }
+
+  const kinds = assignSlotKinds(rng, middle, budget);
+  const middleColumns: SlotKind[][] = [];
+  let cursor = 0;
+  for (const w of widths) {
+    middleColumns.push(kinds.slice(cursor, cursor + w));
+    cursor += w;
+  }
+
+  return [['warmup'], ...middleColumns, ['intel'], ['boss']];
+}
+
+/**
+ * Place the special beats into `n` flat middle slots (slot 0 sits just after
+ * the entry, slot n-1 just before intel), then fill the rest with fights graded
+ * by position: early slots draw the early-mid pool, later slots the mid pool.
+ * Each beat reserves a slot inside a position window so the difficulty ramp
+ * roughly holds; a full window falls back to any open slot so the whole budget
+ * always lands (n is sized to leave plenty of room).
+ */
+function assignSlotKinds(rng: Rng, n: number, budget: SlotBudget): SlotKind[] {
+  const slots: (SlotKind | null)[] = new Array(n).fill(null);
+
+  const reserve = (loFrac: number, hiFrac: number, kind: SlotKind): void => {
+    const lo = Math.floor(loFrac * n);
+    const hi = Math.min(n - 1, Math.max(lo, Math.ceil(hiFrac * n) - 1));
+    const free: number[] = [];
+    for (let i = lo; i <= hi; i++) if (slots[i] === null) free.push(i);
+    if (free.length === 0) for (let i = 0; i < n; i++) if (slots[i] === null) free.push(i);
+    if (free.length === 0) return;
+    slots[free[Math.floor(rng.next() * free.length)]] = kind;
+  };
+
+  for (let k = 0; k < budget.eliteCount; k++) reserve(0.55, 1, 'elite');
+  for (let k = 0; k < budget.shopCount; k++) reserve(0.4, 0.95, 'shop');
+  for (let k = 0; k < budget.shrineCount; k++) reserve(k === 0 ? 0 : 0.45, k === 0 ? 0.55 : 1, 'shrine');
+  for (let k = 0; k < budget.restCount; k++) reserve(0.2, 0.85, 'rest');
+  for (let k = 0; k < budget.eventCount; k++) reserve(0.1, 0.9, 'event');
+
+  for (let i = 0; i < n; i++) {
+    if (slots[i] === null) slots[i] = i / n < 0.45 ? 'earlyMid' : 'mid';
+  }
+  return slots as SlotKind[];
+}
 
 interface RoomFlavor {
   title: string;
@@ -408,25 +496,31 @@ interface ChapterContent {
 }
 
 /**
- * Build one chapter's branching node graph: fill every slot in the layer plan
- * (combat from pre-drawn distinct pool queues so a chapter never repeats a
- * composition), set `layer`/`chapter` for the map, then wire the columns. The
- * boss's outgoing edge is left for the caller to point at the camp (or leave
- * terminal for the final chapter). Returned flat in chapter-major layer order.
+ * Build one chapter's branching node graph: roll a fresh layout for the chapter
+ * (column count, widths, kind placement), draw exactly as many distinct combat
+ * compositions per tier as the layout calls for (so a chapter never repeats a
+ * fight unless its pool is exhausted), set `layer`/`chapter` for the map, then
+ * wire the columns into a forward-fanning DAG. The boss's outgoing edge is left
+ * for the caller to point at the camp (or terminal for the final chapter).
+ * Returned flat in chapter-major, column-minor order.
  */
 function buildChapterNodes(
   rng: Rng,
   content: ChapterContent,
   nextEvent: (id: string, chapter: number) => RoomSpec,
 ): RoomSpec[] {
-  const warmupQ = [pick(rng, content.pools.warmup)];
-  const emQ = pickN(rng, content.pools.earlyMid, 2);
-  const midQ = pickN(rng, content.pools.mid, 4);
-  const eliteQ = pickN(rng, content.pools.elite, 2);
+  const plan = generateChapterPlan(rng);
+  const slotCount = (kind: SlotKind): number =>
+    plan.reduce((sum, col) => sum + col.filter((s) => s === kind).length, 0);
+
+  const warmupQ = pickN(rng, content.pools.warmup, slotCount('warmup'));
+  const emQ = pickN(rng, content.pools.earlyMid, slotCount('earlyMid'));
+  const midQ = pickN(rng, content.pools.mid, slotCount('mid'));
+  const eliteQ = pickN(rng, content.pools.elite, slotCount('elite'));
   let shrineI = 0;
   let restI = 0;
 
-  const layers: RoomSpec[][] = CHAPTER_LAYER_PLAN.map((slots, layer) =>
+  const layers: RoomSpec[][] = plan.map((slots, layer) =>
     slots.map((slot, slotIdx) => {
       const id = `${content.prefix}-l${layer}-s${slotIdx}`;
       let node: RoomSpec;
