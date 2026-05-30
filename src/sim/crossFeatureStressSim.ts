@@ -166,7 +166,7 @@ const SCENARIOS: Record<ScenarioId, ScenarioSpec> = {
     campBoons: [
       'stillness-of-the-mind',
       'steel-of-the-brave',
-      'eyes-of-the-lich',  // intel-only, no combat effect
+      'eyes-of-the-lich',  // +1 attack, crit on 19-20
     ],
     mantleBump: false,
     vigorBump: false,

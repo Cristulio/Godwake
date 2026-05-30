@@ -103,9 +103,9 @@ describe('eligibleAffixes — class gating', () => {
 
 describe('rolledItemName', () => {
   it('weaves prefix and suffix around the base name', () => {
-    expect(rolledItemName('Longsword', ['keen', 'leeching'])).toBe('Keen Longsword of the Leech');
+    expect(rolledItemName('Longsword', ['keen', 'mending'])).toBe('Keen Longsword of Mending');
     expect(rolledItemName('Longsword', ['keen'])).toBe('Keen Longsword');
-    expect(rolledItemName('Longsword', ['leeching'])).toBe('Longsword of the Leech');
+    expect(rolledItemName('Longsword', ['mending'])).toBe('Longsword of Mending');
     expect(rolledItemName('Longsword', [])).toBe('Longsword');
   });
 });

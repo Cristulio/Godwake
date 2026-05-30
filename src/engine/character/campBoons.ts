@@ -18,6 +18,8 @@ export interface CampBoonModifiers {
   wisSaveBonus?: number;
   /** Blade of the Vow grants 1 lowest-die reroll per combat. */
   weaponDamageRerollPerCombat?: number;
+  /** Eyes of the Lich: widen crit range by N (stacks with affix/blessing bonuses). */
+  critRangeBonus?: number;
 }
 
 export function aggregateCampBoonMods(boonIds: readonly string[]): CampBoonModifiers {
@@ -49,8 +51,12 @@ export function aggregateCampBoonMods(boonIds: readonly string[]): CampBoonModif
       case 'vow-of-the-tome':
         acc.spellDamageBonus = (acc.spellDamageBonus ?? 0) + 1;
         break;
-      // vigor / mantle / patience / eyes-of-the-lich are applied at pick-time
-      // (HP bumps, stabilise budget, preview flag). They never read here.
+      case 'eyes-of-the-lich':
+        acc.attackBonus = (acc.attackBonus ?? 0) + 1;
+        acc.critRangeBonus = (acc.critRangeBonus ?? 0) + 1;
+        break;
+      // vigor / mantle / patience are applied at pick-time (HP bumps, stabilise
+      // budget). They never read here.
       default:
         break;
     }

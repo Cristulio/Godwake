@@ -13,6 +13,7 @@ import { modifierFor } from '../character/derived';
 import { skillCheck, type SkillCheckResult } from '../character/skillCheck';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { getItem } from '../../content/items';
+import { rolledItemName } from '../items/rollItem';
 
 /** Plain-text record of a single effect that landed. Useful for UI summaries. */
 export interface AppliedEffect {
@@ -331,16 +332,27 @@ export function applyEventOutcome(
             ? effect.randomFrom[roller.roll('1d100').total % effect.randomFrom.length]
             : undefined);
         if (itemId) {
-          let name = itemId;
+          let baseName = itemId;
           try {
-            name = getItem(itemId).name;
+            baseName = getItem(itemId).name;
           } catch {
             // unknown id falls back to the literal id
           }
-          next = { ...next, inventory: [...next.inventory, { itemId }] };
+          let ref: { itemId: string; rolled?: { baseId: string; rarity: 'green' | 'blue' | 'purple' | 'white' | 'legendary'; affixes: string[]; name: string } } = { itemId };
+          if (effect.affixIds && effect.affixIds.length > 0) {
+            const rolledName = rolledItemName(baseName, effect.affixIds);
+            const rarity: 'green' | 'blue' | 'purple' =
+              effect.affixIds.length >= 3 ? 'purple' : effect.affixIds.length === 2 ? 'blue' : 'green';
+            ref = {
+              itemId,
+              rolled: { baseId: itemId, rarity, affixes: effect.affixIds, name: rolledName },
+            };
+            baseName = rolledName;
+          }
+          next = { ...next, inventory: [...next.inventory, ref] };
           effectsApplied.push({
             kind: effect.kind,
-            detail: `gained ${name} — equip it from your pack`,
+            detail: `gained ${baseName} — equip it from your pack`,
           });
         }
         break;

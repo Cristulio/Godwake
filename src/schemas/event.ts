@@ -17,6 +17,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
     kind: z.literal('grant_item'),
     itemId: z.string().optional(),
     randomFrom: z.array(z.string()).min(1).optional(),
+    /** Pre-bake these affix ids onto the granted item (makes it a named rolled piece). */
+    affixIds: z.array(z.string()).optional(),
   }),
   /**
    * Bonus gold scaled by the character's effective CHA modifier — the payoff

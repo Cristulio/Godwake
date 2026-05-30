@@ -273,14 +273,10 @@ export function playerAttack(
       bonusDamage += flatBonus;
       onTypeParts.push({ amount: flatBonus, label: 'blessing' });
     }
-    // Weapon affixes: a flat damage roll (Cruel) and an on-hit bleed.
+    // Weapon affixes: flat damage bonus (Cruel). Bleed is a DOT applied below.
     if (affixMods.damageBonus) {
       bonusDamage += affixMods.damageBonus;
       onTypeParts.push({ amount: affixMods.damageBonus, label: 'gear' });
-    }
-    if (affixMods.bleedDamage) {
-      bonusDamage += affixMods.bleedDamage;
-      onTypeParts.push({ amount: affixMods.bleedDamage, label: 'bleed' });
     }
     const holyBonus = blessingMods.holyDamageBonus ?? 0;
     if (holyBonus) {
@@ -476,10 +472,9 @@ export function playerAttack(
     const vfxKind = colossusFiredFlag ? 'colossus' : weaponVfxKind(w);
     nextState = attachCombatVfx(nextState, vfxKind, 'player', targetId);
 
-    // "of the Leech" weapon affix: heal for a fraction of the damage dealt,
-    // capped at max HP. Based on the full rolled damage, not the post-clamp
-    // overkill, so a finishing blow still feeds the wielder. Rage shuts the
-    // valve — no healing of any kind while the fury burns.
+    // Lifesteal (VAMPIRIC accessory affix, Heartwood Talisman legendary, etc.):
+    // heal for a fraction of the damage dealt, capped at max HP. Rage shuts
+    // the valve — no healing of any kind while the fury burns.
     if (
       affixMods.lifestealPct > 0 &&
       !isRaging(nextCharacter) &&
@@ -496,6 +491,43 @@ export function playerAttack(
           text: `${nextCharacter.name} drains ${after - before} HP from the wound.`,
         });
       }
+    }
+
+    // "of Mending" weapon affix: on every hit, refresh the regen clock to 3
+    // turns. The actual healing ticks in turn.ts at the start of the player's
+    // turn. Rage suppresses regen (consistent with lifesteal).
+    if (affixMods.regenPerTurn > 0 && !isRaging(nextCharacter)) {
+      nextState = { ...nextState, playerRegenStacks: 3 };
+      nextState = appendLog(nextState, {
+        id: nextLogId(nextState),
+        kind: 'system',
+        text: `${nextCharacter.name} feels the wound mend — regen kindled (${affixMods.regenPerTurn} HP/turn × 3).`,
+      });
+    }
+
+    // "of Bloodletting" weapon affix (+ Gauntlets of the Titan legendary):
+    // apply a bleed DOT to the target. Each stack refreshes to 3 turns — the
+    // damage ticks at the start of the player's next turn in turn.ts.
+    if (affixMods.bleedDamage > 0 && target.kind === 'monster') {
+      nextState = {
+        ...nextState,
+        combatants: nextState.combatants.map((c) => {
+          if (c.kind !== 'monster' || c.id !== targetId) return c;
+          return {
+            ...c,
+            instance: {
+              ...c.instance,
+              bleedDamagePerTurn: affixMods.bleedDamage,
+              bleedTurnsRemaining: 3,
+            },
+          };
+        }),
+      };
+      nextState = appendLog(nextState, {
+        id: nextLogId(nextState),
+        kind: 'system',
+        text: `${displayName(target, nextCharacter)} begins to bleed (${affixMods.bleedDamage}/turn).`,
+      });
     }
   }
 

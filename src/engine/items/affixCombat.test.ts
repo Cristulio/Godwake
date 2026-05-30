@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from '../combat/createCombat';
 import { playerAttack } from '../combat/attack';
+import { endTurn } from '../combat/turn';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
 import type { Character } from '../../types/character';
@@ -117,12 +118,15 @@ describe('weapon affixes in playerAttack', () => {
     expect(followUp.state.log.find((l) => l.kind === 'damage')?.text).toContain('3 Relentless');
   });
 
-  it('a Leeching affix heals the wounded wielder on a hit', () => {
+  it('a Mending affix sets regen stacks on hit and decrements them on player turn', () => {
+    // Find a seed where the longsword hits AND the goblin survives (so combat stays active).
     let hitSeed: string | null = null;
     for (let i = 0; i < 40 && !hitSeed; i++) {
-      const plain = attackOnce({ itemId: 'longsword' }, `leech-${i}`);
+      const plain = attackOnce({ itemId: 'longsword' }, `mend-${i}`);
       const goblin = findMonster(plain.state);
-      if (goblin.instance.hp.current < goblin.instance.hp.max) hitSeed = `leech-${i}`;
+      if (goblin.instance.hp.current > 0 && goblin.instance.hp.current < goblin.instance.hp.max) {
+        hitSeed = `mend-${i}`;
+      }
     }
     expect(hitSeed).not.toBeNull();
 
@@ -130,17 +134,67 @@ describe('weapon affixes in playerAttack', () => {
     const roller = createDiceRoller(hitSeed!);
     const wounded: Character = {
       ...strFighter(),
-      hp: { current: 1, max: 30, temp: 0 },
-      equipped: { mainHand: rolledWeapon(['leeching']), offHand: null, armor: null },
+      hp: { current: 5, max: 30, temp: 0 },
+      equipped: { mainHand: rolledWeapon(['mending']), offHand: null, armor: null },
     };
     const combat = createCombat({ roller, character: wounded, monsters: [{ def: getMonster('goblin') }] });
     const target = findMonster(combat.state);
-    const res = playerAttack(
+    const afterAttack = playerAttack(
       { roller, character: combat.character, state: combat.state },
       target.id,
       'longsword',
     );
-    expect(res.character.hp.current).toBeGreaterThan(1);
-    expect(res.state.log.some((l) => l.text.includes('drains'))).toBe(true);
+    // Regen stacks should be 3 after a hit.
+    expect(afterAttack.state.playerRegenStacks).toBe(3);
+
+    // endTurn once → monster's turn (regen should NOT tick, stacks stay 3).
+    const monsterTurn = endTurn(afterAttack.state, afterAttack.character);
+    expect(monsterTurn.state.playerRegenStacks).toBe(3);
+
+    // endTurn again → back to player's turn (regen DOES tick: stacks go to 2,
+    // log contains 'mend', and HP increases).
+    const playerTurn = endTurn(monsterTurn.state, monsterTurn.character);
+    expect(playerTurn.state.playerRegenStacks).toBe(2);
+    expect(playerTurn.state.log.some((l) => l.text.includes('mend'))).toBe(true);
+    expect(playerTurn.character.hp.current).toBeGreaterThan(afterAttack.character.hp.current);
+  });
+
+  it('a Bloodletting affix applies a bleed DOT — target loses HP over turns', () => {
+    // Need a hit where the goblin survives (so combat stays active for endTurn).
+    let hitSeed: string | null = null;
+    for (let i = 0; i < 40 && !hitSeed; i++) {
+      const res = attackOnce(rolledWeapon(['bloodletting']), `bleed-${i}`);
+      const goblin = findMonster(res.state);
+      if (goblin.instance.hp.current > 0 && (goblin.instance.bleedTurnsRemaining ?? 0) > 0) {
+        hitSeed = `bleed-${i}`;
+      }
+    }
+    expect(hitSeed).not.toBeNull();
+
+    _resetMonsterInstanceCounter();
+    const roller = createDiceRoller(hitSeed!);
+    const character: Character = {
+      ...strFighter(),
+      equipped: { mainHand: rolledWeapon(['bloodletting']), offHand: null, armor: null },
+    };
+    const combat = createCombat({ roller, character, monsters: [{ def: getMonster('goblin') }] });
+    const target = findMonster(combat.state);
+    const afterAttack = playerAttack(
+      { roller, character: combat.character, state: combat.state },
+      target.id,
+      'longsword',
+    );
+    const goblinAfterAttack = findMonster(afterAttack.state);
+    expect(goblinAfterAttack.instance.bleedTurnsRemaining).toBe(3);
+    const hpAfterAttack = goblinAfterAttack.instance.hp.current;
+
+    // endTurn once → monster's turn (no bleed tick yet).
+    // endTurn again → back to player's turn (bleed ticks at start).
+    const monsterTurn = endTurn(afterAttack.state, afterAttack.character);
+    const playerTurn = endTurn(monsterTurn.state, monsterTurn.character);
+    // Bleed ticked: goblin took 2 damage (or died, in which case status is victory).
+    const goblinAfterTick = findMonster(playerTurn.state);
+    expect(goblinAfterTick.instance.hp.current).toBeLessThan(hpAfterAttack);
+    expect(playerTurn.state.log.some((l) => l.text.includes('bleeds'))).toBe(true);
   });
 });

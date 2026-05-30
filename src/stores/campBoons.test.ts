@@ -110,12 +110,11 @@ describe('camp boons — delve store', () => {
     expect(after.hp.current).toBe(50 + 5);
   });
 
-  it('eyes-of-the-lich sets the preview flag on delve', () => {
+  it('eyes-of-the-lich adds the boon to campBoons (no flag on delve)', () => {
     reset(makeFighter());
     useGameStore.getState().pickCampBoon(3, 'eyes-of-the-lich');
-    expect(useDelveStore.getState().delve!.lichEyesAvailable).toBe(true);
-    useGameStore.getState().consumeLichEyes();
-    expect(useDelveStore.getState().delve!.lichEyesAvailable).toBe(false);
+    const boons = useCharacterStore.getState().character!.campBoons;
+    expect(boons).toContain('eyes-of-the-lich');
   });
 
   it('failDelve (reincarnation) clears campBoons on the soul', () => {

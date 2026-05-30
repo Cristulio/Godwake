@@ -749,41 +749,41 @@ const POOL: EventTemplate[] = [
     eventType: 'bargain',
     title: 'A Smith on the Pilgrim Road',
     flavor:
-      "A travelling smith has set his portable anvil in the lee of a milestone, a rack of finished blades cooling on a leather roll beside him. \"Bound for the dark, walker? You'll want steel that bites back. Forty for the rapier on the roll — or talk me round, if your tongue's as keen as my edges.\"",
+      "A travelling smith has set his portable anvil in the lee of a milestone, a rack of finished blades cooling on a leather roll beside him. \"Bound for the dark, walker? You'll want steel that bites back. Fifty for the rapier on the roll — she crits on a nineteen and opens wounds that don't close. Talk me round and she's cheaper.\"",
     minChapter: 2,
     choices: [
       {
         id: 'buy-blade',
         label: 'Buy the rapier off the roll',
-        hint: 'A fair price for honest steel.',
-        requiresGold: 40,
+        hint: 'A keen blade that crits on 19 and bleeds the target for 3 turns.',
+        requiresGold: 50,
         outcome: {
           resolution:
-            'He sights down the blade, then lays it across your palms hilt-first. "Waukeen keep your edge keen, walker." The balance is clean. It goes to your hip like it has always lived there.',
+            'He sights down the blade, then lays it across your palms hilt-first. "Waukeen keep your edge keen, walker." The balance is clean and the edge is hungry. It goes to your hip like it has always lived there.',
           effects: [
-            { kind: 'gold_delta', amount: -40 },
-            { kind: 'grant_item', itemId: 'rapier' },
+            { kind: 'gold_delta', amount: -50 },
+            { kind: 'grant_item', itemId: 'rapier', affixIds: ['keen', 'bloodletting'] },
           ],
         },
       },
       {
         id: 'haggle-smith',
         label: '[Persuasion] Talk him round',
-        hint: 'Same blade, lighter bill — if the tongue is sharp enough. Lose him and forty stays forty.',
-        requiresGold: 25,
+        hint: 'Same blade, lighter bill — if the tongue is sharp enough.',
+        requiresGold: 30,
         skillCheck: { skill: 'persuasion', dc: 13 },
         outcome: {
           resolution:
-            'You name three smiths you have never met and a war you were never in, and somewhere in the telling his price softens like hot iron. "Aye — for a walker who knows the trade." The longer you keep him laughing, the more he knocks off the bill, and the rapier goes to your hip at a friend\'s rate.',
+            'You name three smiths you have never met and a war you were never in, and somewhere in the telling his price softens like hot iron. "Aye — for a walker who knows the trade." The rapier goes to your hip at a friend\'s rate.',
           effects: [
-            { kind: 'gold_delta', amount: -25 },
+            { kind: 'gold_delta', amount: -30 },
             { kind: 'cha_scaled_gold', perPoint: 3 },
-            { kind: 'grant_item', itemId: 'rapier' },
+            { kind: 'grant_item', itemId: 'rapier', affixIds: ['keen', 'bloodletting'] },
           ],
         },
         failureOutcome: {
           resolution:
-            'He lets you talk yourself out, then sights down the blade and shakes his head. "Fair words, walker. But forty\'s the price and forty stays." He lays the rapier back on the roll and turns to the anvil. You keep your coin and your old steel both.',
+            'He lets you talk yourself out, then sights down the blade and shakes his head. "Fair words, walker. But fifty\'s the price and fifty stays." He lays the rapier back on the roll and turns to the anvil. You keep your coin and your old steel both.',
           effects: [],
         },
       },

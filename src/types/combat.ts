@@ -74,6 +74,9 @@ export interface MonsterInstance {
    * while the monster is paralyzed (it has no honest move to telegraph).
    */
   intent?: MonsterIntent;
+  /** Bleed DOT: damage dealt at the start of each player turn for bleedTurnsRemaining turns. */
+  bleedDamagePerTurn?: number;
+  bleedTurnsRemaining?: number;
 }
 
 export interface PlayerCombatant {
@@ -255,4 +258,10 @@ export interface CombatState {
    * rehydrate (absent = 0).
    */
   rangedEvasionRemaining?: number;
+  /**
+   * Regen stacks remaining (of Mending affix). At the start of each player turn,
+   * if > 0, heal regenPerTurn HP and decrement. Refreshed to 3 on every hit with
+   * a regen weapon. Optional so legacy saves rehydrate (absent = 0).
+   */
+  playerRegenStacks?: number;
 }
