@@ -20,8 +20,8 @@ import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
 export interface BossIntelCard {
   /** Monster def id this card foreshadows. Matches the boss room's monster. */
   bossDefId: string;
-  /** Chapter index (1-5). Scales the `battle-plan` temp-HP gird. */
-  chapter: 1 | 2 | 3 | 4 | 5;
+  /** Chapter index (1-6). Scales the `battle-plan` temp-HP gird. */
+  chapter: 1 | 2 | 3 | 4 | 5 | 6;
   /** Title shown on the intel event room. */
   roomTitle: string;
   /** Diegetic flavor text for the intel room — pre-boss BG2/FromSoft tone. */
@@ -122,6 +122,21 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     walkPastResolution:
       "You leave the reliquary as you found it and the litany unread. Somewhere far up the climb, a vast and tired thing marks the going, almost glad. The Hollow Dawn's hoard — the coin of every pilgrim it ever turned and sent back — will weigh a touch heavier when the morning finally ends.",
     coinCost: bossIntelCoinCost(5),
+  },
+  // ─── Ch6 · The Unmade (Beyond the Godwake) ────────────────────────────
+  {
+    bossDefId: 'the-unmade',
+    chapter: 6,
+    roomTitle: 'A Worn Place on the Rim',
+    roomFlavor:
+      "A hand's breadth of the rim where the wheel turns slow enough to read. The thread comes off the axle here and you can see, for once, the pattern of the turning: the long still beat where nothing moves, and then the hand coming round. Scored into the rim by something that climbed this far before you and got no further, two words in a hand worn almost smooth: BE SOMETHING. Below them, where the same hand pressed too hard at the end: the still point does not move — STAND IN IT.",
+    weakSpotResolution:
+      "You read the rim the way a thing reads a millrace it means to walk against. The Unmade does not strike first — it withdraws first, and the unmaking comes in the still beat before the hand. Knowing where the beat falls, your opening blow lands in the gap it leaves while it is not yet looking at you.",
+    battlePlanResolution:
+      "You read the whole turning: the unmaking first, in the still beat, to empty you out — then the hand of the wheel, round and round, twice to the stroke — and the moment past half when it stops turning the wheel by habit and turns it by will. You walk into the still centre with your mind braced against the unmaking and your first strike already set for the gap before the hand comes round.",
+    walkPastResolution:
+      "You leave the worn place unread and the warning un-heeded. Whatever climbed this far before you scored its last thought into the rim and you step over it without stopping. The thing at the centre marks the going — the bold take the still point on their own terms, and what the wheel sheds for you will weigh a touch heavier when the hand stops.",
+    coinCost: bossIntelCoinCost(6),
   },
 ];
 

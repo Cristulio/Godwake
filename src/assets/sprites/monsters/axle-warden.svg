@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 32 36"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Axle-Warden"
+    >
+      <circle cx="16" cy="20" r="13" fill="none" stroke="#5a4624" stroke-width="1.5" opacity="0.5" />
+      <circle cx="16" cy="20" r="9" fill="none" stroke="#6a5424" stroke-width="1" opacity="0.5" />
+      <line x1="16" y1="7" x2="16" y2="33" stroke="#5a4624" stroke-width="0.6" opacity="0.5" />
+      <line x1="3" y1="20" x2="29" y2="20" stroke="#5a4624" stroke-width="0.6" opacity="0.5" />
+      <line x1="7" y1="11" x2="25" y2="29" stroke="#5a4624" stroke-width="0.6" opacity="0.5" />
+      <line x1="25" y1="11" x2="7" y2="29" stroke="#5a4624" stroke-width="0.6" opacity="0.5" />
+
+      <rect x="10" y="3" width="12" height="9" fill="#8a6a2a" />
+      <rect x="10" y="3" width="12" height="1" fill="#6a4e1a" />
+      <circle cx="16" cy="8" r="3" fill="#b08840" />
+      <rect x="15" y="5" width="2" height="3" fill="#3a2c10" />
+      <rect x="15" y="8" width="3" height="2" fill="#3a2c10" />
+      <rect x="16" y="8" width="1" height="1" fill="#f4d042" />
+
+      <rect x="8" y="12" width="16" height="14" fill="#7a5e24" />
+      <rect x="8" y="12" width="16" height="1" fill="#5a4418" />
+      <rect x="14" y="13" width="4" height="13" fill="#9a7a30" />
+      <rect x="10" y="14" width="2" height="11" fill="#6a5020" />
+      <rect x="20" y="14" width="2" height="11" fill="#6a5020" />
+
+      <rect x="4" y="14" width="4" height="3" fill="#8a6a2a" />
+      <rect x="2" y="13" width="3" height="2" fill="#b08840" />
+      <rect x="24" y="14" width="4" height="9" fill="#8a6a2a" />
+      <rect x="26" y="6" width="3" height="10" fill="#5a4418" />
+      <rect x="25" y="3" width="5" height="4" fill="#9a7a30" />
+      <rect x="25" y="3" width="5" height="1" fill="#b08840" />
+
+      <rect x="8" y="26" width="6" height="9" fill="#6a5020" />
+      <rect x="18" y="26" width="6" height="9" fill="#6a5020" />
+      <rect x="8" y="33" width="6" height="2" fill="#3a2c10" />
+      <rect x="18" y="33" width="6" height="2" fill="#3a2c10" />
+    </svg>

@@ -56,6 +56,15 @@ import { APOSTLE_OF_STILLNESS } from './apostle-of-stillness';
 import { STARFLENSED_MAWN } from './starflensed-mawn';
 import { FALLEN_ARCHON } from './fallen-archon';
 import { HOLLOW_DAWN } from './hollow-dawn';
+// ─── Chapter 6 · Beyond the Godwake (bestiary; wiring deferred) ───────────
+import { THREADBARE_PENITENT } from './threadbare-penitent';
+import { CYCLE_REVENANT } from './cycle-revenant';
+import { FATE_SPINNER } from './fate-spinner';
+import { LOOM_APOSTLE } from './loom-apostle';
+import { KARMIC_ECHO } from './karmic-echo';
+import { THE_UNWOUND } from './the-unwound';
+import { AXLE_WARDEN } from './axle-warden';
+import { THE_UNMADE } from './the-unmade';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -115,6 +124,15 @@ const ALL_MONSTERS: Monster[] = [
   STARFLENSED_MAWN,
   FALLEN_ARCHON,
   HOLLOW_DAWN,
+  // ─── Chapter 6 · Beyond the Godwake ─────────────────────────────────────
+  THREADBARE_PENITENT,
+  CYCLE_REVENANT,
+  FATE_SPINNER,
+  LOOM_APOSTLE,
+  KARMIC_ECHO,
+  THE_UNWOUND,
+  AXLE_WARDEN,
+  THE_UNMADE,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -189,4 +207,13 @@ export {
   STARFLENSED_MAWN,
   FALLEN_ARCHON,
   HOLLOW_DAWN,
+  // ─── Chapter 6 · Beyond the Godwake ─────────────────────────────────────
+  THREADBARE_PENITENT,
+  CYCLE_REVENANT,
+  FATE_SPINNER,
+  LOOM_APOSTLE,
+  KARMIC_ECHO,
+  THE_UNWOUND,
+  AXLE_WARDEN,
+  THE_UNMADE,
 };

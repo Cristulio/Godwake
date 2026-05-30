@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 26 32"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Karmic Echo"
+    >
+      <rect x="3" y="6" width="12" height="22" fill="#3a2a5a" opacity="0.3" />
+      <rect x="6" y="4" width="12" height="24" fill="#4a3a6a" opacity="0.4" />
+      <rect x="9" y="3" width="12" height="25" fill="#5a4a7a" opacity="0.5" />
+
+      <rect x="10" y="3" width="8" height="7" fill="#6a5a8c" />
+      <rect x="10" y="3" width="8" height="1" fill="#4a3a6a" />
+      <rect x="11" y="5" width="2" height="2" fill="#a48ee0" />
+      <rect x="15" y="5" width="2" height="2" fill="#a48ee0" />
+      <rect x="11" y="5" width="1" height="1" fill="#e8d4ff" />
+      <rect x="15" y="5" width="1" height="1" fill="#e8d4ff" />
+      <rect x="12" y="8" width="4" height="1" fill="#2a1c40" />
+
+      <rect x="8" y="10" width="12" height="15" fill="#5a4a7a" />
+      <rect x="8" y="10" width="12" height="1" fill="#3a2a5a" />
+      <rect x="13" y="11" width="2" height="14" fill="#7a6a9c" opacity="0.7" />
+
+      <rect x="5" y="13" width="3" height="8" fill="#4a3a6a" opacity="0.7" />
+      <rect x="20" y="13" width="3" height="8" fill="#6a5a8c" />
+
+      <rect x="9" y="6" width="2" height="2" fill="#a48ee0" opacity="0.35" />
+      <rect x="6" y="8" width="2" height="2" fill="#a48ee0" opacity="0.25" />
+
+      <polygon points="8,25 11,30 14,25" fill="#5a4a7a" />
+      <polygon points="13,25 16,30 19,25" fill="#5a4a7a" />
+      <polygon points="11,25 14,28 17,25" fill="#6a5a8c" opacity="0.6" />
+    </svg>

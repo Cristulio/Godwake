@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 28 32"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="The Unwound"
+    >
+      <rect x="10" y="2" width="7" height="7" fill="#7a5a4a" />
+      <rect x="10" y="2" width="7" height="1" fill="#5a3e30" />
+      <rect x="11" y="4" width="2" height="2" fill="#f48030" />
+      <rect x="14" y="4" width="2" height="2" fill="#f48030" />
+      <rect x="11" y="4" width="1" height="1" fill="#ffd060" />
+      <rect x="14" y="4" width="1" height="1" fill="#ffd060" />
+      <rect x="12" y="7" width="3" height="1" fill="#2a1a14" />
+
+      <rect x="9" y="9" width="9" height="11" fill="#6a4a3a" />
+      <rect x="9" y="9" width="9" height="1" fill="#4a3024" />
+      <rect x="12" y="10" width="2" height="9" fill="#8a6450" opacity="0.6" />
+
+      <rect x="16" y="11" width="2" height="2" fill="#7a5a4a" />
+      <rect x="9" y="13" width="2" height="2" fill="#7a5a4a" />
+
+      <line x1="18" y1="10" x2="27" y2="5" stroke="#8a6450" stroke-width="0.8" />
+      <line x1="18" y1="12" x2="28" y2="13" stroke="#8a6450" stroke-width="0.8" />
+      <line x1="9" y1="11" x2="1" y2="7" stroke="#8a6450" stroke-width="0.8" />
+      <line x1="9" y1="15" x2="0" y2="17" stroke="#8a6450" stroke-width="0.8" />
+      <line x1="17" y1="18" x2="26" y2="24" stroke="#8a6450" stroke-width="0.8" />
+      <line x1="10" y1="19" x2="3" y2="26" stroke="#8a6450" stroke-width="0.8" />
+
+      <polygon points="9,20 11,28 13,20" fill="#6a4a3a" />
+      <polygon points="14,20 16,28 18,20" fill="#6a4a3a" />
+      <line x1="11" y1="28" x2="9" y2="32" stroke="#8a6450" stroke-width="0.7" />
+      <line x1="16" y1="28" x2="18" y2="32" stroke="#8a6450" stroke-width="0.7" />
+      <line x1="13" y1="24" x2="13" y2="31" stroke="#8a6450" stroke-width="0.6" />
+    </svg>

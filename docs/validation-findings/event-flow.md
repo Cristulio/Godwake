@@ -85,23 +85,23 @@ Per cell: 50 delves, identical seeds across (class, level) so event pool is stab
 
 | Cell | Runs | Events seen | Reroll events | Reroll chosen | Fallback fired | +5g triggered | Waukeen leaks |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Fighter (human) L1 | 50 | 400 | 38 | 33 | 33 | 33 | 0 |
-| Fighter (human) L3 | 50 | 400 | 38 | 35 | 35 | 35 | 0 |
-| Rogue (wood-elf) L1 | 50 | 400 | 38 | 34 | 34 | 34 | 0 |
-| Rogue (wood-elf) L3 | 50 | 400 | 38 | 35 | 35 | 35 | 0 |
-| Wizard (tiefling, default) L1 | 50 | 400 | 38 | 34 | 34 | 34 | 0 |
-| Wizard (tiefling, default) L3 | 50 | 400 | 38 | 35 | 35 | 35 | 0 |
+| Fighter (human) L1 | 50 | 493 | 56 | 48 | 48 | 48 | 0 |
+| Fighter (human) L3 | 50 | 493 | 56 | 48 | 48 | 48 | 0 |
+| Rogue (wood-elf) L1 | 50 | 493 | 56 | 48 | 48 | 48 | 0 |
+| Rogue (wood-elf) L3 | 50 | 493 | 56 | 49 | 49 | 49 | 0 |
+| Wizard (tiefling, default) L1 | 50 | 493 | 56 | 48 | 48 | 48 | 0 |
+| Wizard (tiefling, default) L3 | 50 | 493 | 56 | 49 | 49 | 49 | 0 |
 
 ### Sample surfaced fallback strings (first per cell)
 
 | Cell | Event | Detail |
 |---|---|---|
-| Fighter (human) L1 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
-| Fighter (human) L3 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
-| Rogue (wood-elf) L1 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
-| Rogue (wood-elf) L3 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
-| Wizard (tiefling, default) L1 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
-| Wizard (tiefling, default) L3 | wounded-captain | His curses follow you down the corridor. You pocket a few silver and a folded letter you cannot read. The road will weigh on you for it. The road finds no bane to shake from you. The captain's curses fade to coughing behind you. |
+| Fighter (human) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
+| Fighter (human) L3 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
+| Rogue (wood-elf) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
+| Rogue (wood-elf) L3 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
+| Wizard (tiefling, default) L1 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
+| Wizard (tiefling, default) L3 | pale-cleric-shrine | You scoop the alms before she lifts her eyes. Her lips move but no sound comes. You walk faster than you mean to. Ilmater finds no bane to shake from you — only a tear briefly cool on your brow. |
 
 ## Sim methodology
 
