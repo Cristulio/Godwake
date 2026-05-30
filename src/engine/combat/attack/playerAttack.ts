@@ -336,6 +336,14 @@ export function playerAttack(
         onTypeParts.push({ amount: affixMods.rageDamageBonus, label: 'Furious' });
       }
     }
+    // Relentless fighter affix: extra damage on each follow-up swing of a
+    // multiattack (the second-and-later strikes of an Extra Attack action).
+    // playerAttacksThisTurn counts strikes already made this turn, so a non-zero
+    // value means this is a follow-up.
+    if (affixMods.followupDamageBonus > 0 && (state.playerAttacksThisTurn ?? 0) >= 1) {
+      bonusDamage += affixMods.followupDamageBonus;
+      onTypeParts.push({ amount: affixMods.followupDamageBonus, label: 'Relentless' });
+    }
     // Vow reroll is already baked into the dice total — a note, not a summand,
     // or the breakdown would double-count it.
     if (bladeOfVowUsed && bladeOfVowDelta > 0) {

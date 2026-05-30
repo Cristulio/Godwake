@@ -84,4 +84,28 @@ describe('affix application in derived stats', () => {
     expect(critRange(keen)).toEqual([19, 20]);
     expect(characterAffixMods(keen).critRangeBonus).toBe(1);
   });
+
+  it('a Pristine affix grants AC only while at full HP', () => {
+    const base = fighter();
+    const armored = (hpFraction: number): Character => ({
+      ...base,
+      hp: { ...base.hp, current: Math.floor(base.hp.max * hpFraction) },
+      equipped: { mainHand: null, offHand: null, armor: rolled('chain-mail', ['pristine']) },
+    });
+    const plain = computeAC({ ...base, equipped: { mainHand: null, offHand: null, armor: { itemId: 'chain-mail' } } });
+    expect(computeAC(armored(1))).toBe(plain + 1); // full HP — bonus applies
+    expect(computeAC(armored(0.4))).toBe(plain); // wounded — no bonus
+  });
+
+  it('a Stalwart affix grants AC only while bloodied', () => {
+    const base = fighter();
+    const armored = (hpFraction: number): Character => ({
+      ...base,
+      hp: { ...base.hp, current: Math.floor(base.hp.max * hpFraction) },
+      equipped: { mainHand: null, offHand: null, armor: rolled('chain-mail', ['stalwart']) },
+    });
+    const plain = computeAC({ ...base, equipped: { mainHand: null, offHand: null, armor: { itemId: 'chain-mail' } } });
+    expect(computeAC(armored(1))).toBe(plain); // full HP — no bonus
+    expect(computeAC(armored(0.4))).toBe(plain + 2); // bloodied — +2 AC
+  });
 });

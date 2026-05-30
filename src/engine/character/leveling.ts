@@ -3,7 +3,7 @@ import { abilityModifier } from '../../types/abilities';
 import { effectiveAbilityScores } from './derived';
 import { getClass } from '../../content/classes';
 import { getRace } from '../../content/races';
-import { wizardSpellSlotsForLevel, barbarianRageMax } from './actions';
+import { wizardSpellSlots, barbarianRageMax } from './actions';
 import { listSpells } from '../../content/spells';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 
@@ -94,7 +94,7 @@ export function applyLevelUp(character: Character): Character {
   // picker at L3 (first 2nd-level slot) and L5 (first 3rd-level slot); the
   // picked id arrives via the `resources.knownSpells` override.
   if (character.classId === 'wizard') {
-    resources.spellSlots = wizardSpellSlotsForLevel(newLevel);
+    resources.spellSlots = wizardSpellSlots({ ...character, level: newLevel });
   }
 
   return {

@@ -83,6 +83,40 @@ describe('weapon affixes in playerAttack', () => {
     expect(cruelDamageLine?.text).toContain('2 gear');
   });
 
+  it('a Relentless affix adds damage only on a follow-up swing', () => {
+    // Find a seed where the longsword lands a hit.
+    let hitSeed: string | null = null;
+    for (let i = 0; i < 40 && !hitSeed; i++) {
+      if (damageTotal(attackOnce(rolledWeapon(['relentless']), `rel-${i}`).state) !== null) {
+        hitSeed = `rel-${i}`;
+      }
+    }
+    expect(hitSeed).not.toBeNull();
+
+    const runAt = (attacksThisTurn: number) => {
+      _resetMonsterInstanceCounter();
+      const roller = createDiceRoller(hitSeed!);
+      const character: Character = {
+        ...strFighter(),
+        equipped: { mainHand: rolledWeapon(['relentless']), offHand: null, armor: null },
+      };
+      const combat = createCombat({ roller, character, monsters: [{ def: getMonster('goblin') }] });
+      const target = findMonster(combat.state);
+      return playerAttack(
+        { roller, character: combat.character, state: { ...combat.state, playerAttacksThisTurn: attacksThisTurn } },
+        target.id,
+        'longsword',
+      );
+    };
+
+    const firstSwing = runAt(0);
+    const followUp = runAt(1);
+    // Same seed → same dice; the only difference is the +3 follow-up bonus.
+    expect(damageTotal(followUp.state)! - damageTotal(firstSwing.state)!).toBe(3);
+    expect(firstSwing.state.log.find((l) => l.kind === 'damage')?.text).not.toContain('Relentless');
+    expect(followUp.state.log.find((l) => l.kind === 'damage')?.text).toContain('3 Relentless');
+  });
+
   it('a Leeching affix heals the wounded wielder on a hit', () => {
     let hitSeed: string | null = null;
     for (let i = 0; i < 40 && !hitSeed; i++) {

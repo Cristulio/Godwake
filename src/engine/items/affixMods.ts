@@ -13,30 +13,44 @@ import { EQUIP_SLOTS } from '../character/equip';
  */
 export interface AffixMods {
   acBonus: number;
+  acBonusWhileFull: number;
+  acBonusWhileBloodied: number;
   attackBonus: number;
   damageBonus: number;
   critRangeBonus: number;
   bleedDamage: number;
   lifestealPct: number;
   tempHpPerCombat: number;
+  spellDcBonus: number;
+  spellDamageBonus: number;
+  spellAttackBonus: number;
+  bonusSpellSlotsL1: number;
   rageDamageBonus: number;
   markDamageBonus: number;
   sneakDamageBonus: number;
+  followupDamageBonus: number;
   resists: DamageType[];
 }
 
 function emptyAffixMods(): AffixMods {
   return {
     acBonus: 0,
+    acBonusWhileFull: 0,
+    acBonusWhileBloodied: 0,
     attackBonus: 0,
     damageBonus: 0,
     critRangeBonus: 0,
     bleedDamage: 0,
     lifestealPct: 0,
     tempHpPerCombat: 0,
+    spellDcBonus: 0,
+    spellDamageBonus: 0,
+    spellAttackBonus: 0,
+    bonusSpellSlotsL1: 0,
     rageDamageBonus: 0,
     markDamageBonus: 0,
     sneakDamageBonus: 0,
+    followupDamageBonus: 0,
     resists: [],
   };
 }
@@ -67,15 +81,22 @@ export function aggregateAffixMods(affixIds: string[]): AffixMods {
     }
     const m = affix.modifiers;
     acc.acBonus += m.acBonus ?? 0;
+    acc.acBonusWhileFull += m.acBonusWhileFull ?? 0;
+    acc.acBonusWhileBloodied += m.acBonusWhileBloodied ?? 0;
     acc.attackBonus += m.attackBonus ?? 0;
     acc.damageBonus += m.damageBonus ?? 0;
     acc.critRangeBonus += m.critRangeBonus ?? 0;
     acc.bleedDamage += m.bleedDamage ?? 0;
     acc.lifestealPct += m.lifestealPct ?? 0;
     acc.tempHpPerCombat += m.tempHpPerCombat ?? 0;
+    acc.spellDcBonus += m.spellDcBonus ?? 0;
+    acc.spellDamageBonus += m.spellDamageBonus ?? 0;
+    acc.spellAttackBonus += m.spellAttackBonus ?? 0;
+    acc.bonusSpellSlotsL1 += m.bonusSpellSlotsL1 ?? 0;
     acc.rageDamageBonus += m.rageDamageBonus ?? 0;
     acc.markDamageBonus += m.markDamageBonus ?? 0;
     acc.sneakDamageBonus += m.sneakDamageBonus ?? 0;
+    acc.followupDamageBonus += m.followupDamageBonus ?? 0;
     if (m.resist && !acc.resists.includes(m.resist)) acc.resists.push(m.resist);
   }
   return acc;
