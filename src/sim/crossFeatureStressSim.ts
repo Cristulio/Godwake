@@ -404,12 +404,15 @@ export interface DelveRunStats {
   encountersFought: number;
   damageDealt: number;
   damageTaken: number;
-  /** True if Matron Mother fight was reached (final boss, room-46). */
+  /** True if the Ch6 final boss (the-unmade) fight was reached. */
   reachedFinalBoss: boolean;
-  /** True if Matron was killed and final delve finished alive. */
+  /** True if the Ch4 Matron Mother was killed (a MID-game milestone now that
+   *  the run is 6 chapters — kept for the historical Ch3→Ch4 wall analysis). */
   killedMatron: boolean;
+  /** True if the Ch6 final boss (the-unmade) was killed — the real clear. */
+  killedFinalBoss: boolean;
   /** Per-chapter boss outcomes: did the character KILL each chapter boss. */
-  bossKills: { ch1: boolean; ch2: boolean; ch3: boolean; ch4: boolean };
+  bossKills: { ch1: boolean; ch2: boolean; ch3: boolean; ch4: boolean; ch5: boolean; ch6: boolean };
 }
 
 export function runDelve(spec: ScenarioSpec, seed: number): DelveRunStats {
@@ -429,7 +432,8 @@ export function runDelve(spec: ScenarioSpec, seed: number): DelveRunStats {
     damageTaken: 0,
     reachedFinalBoss: false,
     killedMatron: false,
-    bossKills: { ch1: false, ch2: false, ch3: false, ch4: false },
+    killedFinalBoss: false,
+    bossKills: { ch1: false, ch2: false, ch3: false, ch4: false, ch5: false, ch6: false },
   };
 
   // Walk one route through the branching map, fork by fork, to the final boss.
@@ -440,7 +444,7 @@ export function runDelve(spec: ScenarioSpec, seed: number): DelveRunStats {
     const chapter = room.chapter ?? 1;
     stats.roomsCleared = steps;
     if (room.kind === 'boss') {
-      if (room.monsters?.[0]?.defId === 'drow-matron-mother') {
+      if (room.monsters?.[0]?.defId === 'the-unmade') {
         stats.reachedFinalBoss = true;
       }
     }
@@ -470,6 +474,10 @@ export function runDelve(spec: ScenarioSpec, seed: number): DelveRunStats {
           else if (chapter === 4) {
             stats.bossKills.ch4 = true;
             stats.killedMatron = true;
+          } else if (chapter === 5) stats.bossKills.ch5 = true;
+          else if (chapter === 6) {
+            stats.bossKills.ch6 = true;
+            stats.killedFinalBoss = true;
           }
           stats.chaptersCleared = chapter;
         }
@@ -503,8 +511,9 @@ export interface ScenarioSummary {
   avgRoomsCleared: number;
   reachedFinalBossRate: number;
   killedMatronRate: number;
-  bossKillRates: { ch1: number; ch2: number; ch3: number; ch4: number };
-  deathByChapter: { ch1: number; ch2: number; ch3: number; ch4: number };
+  killedFinalBossRate: number;
+  bossKillRates: { ch1: number; ch2: number; ch3: number; ch4: number; ch5: number; ch6: number };
+  deathByChapter: { ch1: number; ch2: number; ch3: number; ch4: number; ch5: number; ch6: number };
   avgDamageDealt: number;
   avgDamageTaken: number;
 }
@@ -524,17 +533,22 @@ export function summarize(spec: ScenarioSpec, runs: DelveRunStats[]): ScenarioSu
     avgRoomsCleared: avg((r) => r.roomsCleared),
     reachedFinalBossRate: rate((r) => r.reachedFinalBoss),
     killedMatronRate: rate((r) => r.killedMatron),
+    killedFinalBossRate: rate((r) => r.killedFinalBoss),
     bossKillRates: {
       ch1: rate((r) => r.bossKills.ch1),
       ch2: rate((r) => r.bossKills.ch2),
       ch3: rate((r) => r.bossKills.ch3),
       ch4: rate((r) => r.bossKills.ch4),
+      ch5: rate((r) => r.bossKills.ch5),
+      ch6: rate((r) => r.bossKills.ch6),
     },
     deathByChapter: {
       ch1: rate((r) => r.died && r.deathChapter === 1),
       ch2: rate((r) => r.died && r.deathChapter === 2),
       ch3: rate((r) => r.died && r.deathChapter === 3),
       ch4: rate((r) => r.died && r.deathChapter === 4),
+      ch5: rate((r) => r.died && r.deathChapter === 5),
+      ch6: rate((r) => r.died && r.deathChapter === 6),
     },
     avgDamageDealt: avg((r) => r.damageDealt),
     avgDamageTaken: avg((r) => r.damageTaken),

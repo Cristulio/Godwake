@@ -39,9 +39,10 @@ describe('Immortal hypothesis matrix', () => {
         `verdict: ${verdict.headline}\n`,
     );
 
-    // ── Guard-rails (LOOSE) ────────────────────────────────────────────────
-    // These encode the aggregator-cap invariant, not tuned numbers, so they
-    // survive the in-flight combat/meta changes. Tighten in a later pass.
+    // ── Guard-rails (re-tightened 2026-05-30, full-resim lane) ─────────────
+    // These encode the aggregator-cap invariant, not balance numbers, so they
+    // survive future combat/balance tuning. Bands snugged to the current
+    // full-resim numbers.
     expect(summaries.length).toBe(CLASSES.length * LEVELS.length * LOADOUTS.length);
     for (const s of summaries) {
       expect(s.runs).toBe(RUNS_PER_CELL);
@@ -52,11 +53,17 @@ describe('Immortal hypothesis matrix', () => {
 
     // The aggregator-cap invariant (PR #80): stacking a second temp-HP blessing
     // (loadout C = Lathander + Ilmater) must NOT grant materially more temp HP
-    // than a single source (loadout B = Lathander). If additive stacking is
-    // reintroduced, tHP-C jumps well past tHP-B and these go RED. Margin is
-    // wide today (C ≈ B, both ~2–2.6 tHP/encounter).
+    // than a single source (loadout B = Lathander). Today A≈0, B≈C≈2.1–2.44
+    // tHP/encounter, so the cap holds with a ~0.05 gap. Tightened from +1.5 to
+    // +1.0: additive stacking would push C to ≈ B+2.5, so +1.0 still catches
+    // the regression with wide margin while the snug floor/ceiling below pin
+    // the per-loadout shape.
     for (const p of verdict.perClass) {
-      expect(p.tempHpC).toBeLessThanOrEqual(p.tempHpB + 1.5);
+      // Vacuum (A) grants no renewable temp HP; a single tHP blessing (B) does.
+      expect(p.tempHpA).toBeLessThan(0.5);
+      expect(p.tempHpB).toBeGreaterThan(1.0);
+      // Second tHP source (C) is capped at max-of, not summed.
+      expect(p.tempHpC).toBeLessThanOrEqual(p.tempHpB + 1.0);
     }
 
     // And the rolled-up verdict must stay REFUTED — temp HP does not stack.

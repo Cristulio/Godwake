@@ -387,7 +387,7 @@ function runSingleDelve(
     node = nextNode(delve, room, character);
   }
   if (!died) {
-    stats.chaptersCleared = 4;
+    stats.chaptersCleared = 6;
     stats.roomsCleared = steps;
   }
   stats.finalLevel = character.level;
@@ -522,8 +522,8 @@ export function formatSummary(s: MatrixSummary): string {
   lines.push(`### L${s.startLevel} · ${s.variant} — ${s.runs} runs`);
   lines.push('');
   lines.push(`- **Death rate:** ${(s.deathRate * 100).toFixed(0)}%`);
-  lines.push(`- **Avg chapters cleared:** ${s.avgChaptersCleared.toFixed(2)} / 4`);
-  lines.push(`- **Avg rooms cleared:** ${s.avgRoomsCleared.toFixed(1)} / 50`);
+  lines.push(`- **Avg chapters cleared:** ${s.avgChaptersCleared.toFixed(2)} / 6`);
+  lines.push(`- **Avg rooms cleared:** ${s.avgRoomsCleared.toFixed(1)} / ~65 (routed)`);
   lines.push(`- **Avg encounters fought:** ${s.avgEncountersFought.toFixed(1)}`);
   lines.push(`- **Avg damage dealt:** ${s.avgDamageDealt.toFixed(1)}`);
   lines.push(`- **Avg damage taken:** ${s.avgDamageTaken.toFixed(1)}`);

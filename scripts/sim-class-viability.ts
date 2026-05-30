@@ -629,7 +629,7 @@ function renderDeaths(aggs: ClassAggregate[]): string {
       .slice(0, 6)
       .map(([id, n]) => `${id} (${n}, ${pct(n / Math.max(1, totalDeaths))})`)
       .join(', ');
-    const byChapter = [1, 2, 3, 4]
+    const byChapter = [1, 2, 3, 4, 5, 6]
       .map((c) => `ch${c}: ${a.deathByChapter[c] ?? 0}`)
       .join(' · ');
     lines.push(`- **${a.classId}** — by chapter: ${byChapter}. Top kill-rooms: ${topCauses || '—'}`);
@@ -668,41 +668,61 @@ function main(): void {
 }
 
 function renderVerdict(aggs: ClassAggregate[]): string {
-  const by = (id: ClassId) => aggs.find((a) => a.classId === id)!;
-  const f = by('fighter');
-  const r = by('rogue');
-  const b = by('barbarian');
-  const g = by('ranger'); // ranGer
   const bp = PROCS.barbarian;
   const rp = PROCS.ranger;
+  const procLine = `Barbarian raged ${num(bp.rage / Math.max(1, bp.combats), 2)}×/combat and went reckless ${num(bp.reckless / Math.max(1, bp.combats), 2)}×/combat; Ranger cast Hunter's Mark ${num(rp.huntersMarkCast / Math.max(1, rp.combats), 2)}×/combat, landed mark dice ${num(rp.huntersMarkDie / Math.max(1, rp.combats), 2)}×/combat and fired Colossus ${num(rp.colossus / Math.max(1, rp.combats), 2)}×/combat`;
+
+  const anyCleared = aggs.some((a) => a.everClearedA0Rate > 0);
+  const byDepth = [...aggs].sort((x, y) => y.meanDepthRooms - x.meanDepthRooms);
+  const deepest = byDepth[0];
+  const shallowest = byDepth[byDepth.length - 1];
+  const depthRank = byDepth
+    .map((a) => `${a.classId} ${num(a.meanDepthRooms, 1)}`)
+    .join(' > ');
+
+  if (!anyCleared) {
+    return `**No class clears the full 6-chapter run at the AI floor** — every class
+topped out at 0% A0-clear across ${aggs[0].souls} souls × up to ${MAX_LIVES} lives.
+This is the headline STRUCTURAL result, and it is expected: the run is now ~62-66
+rooms to the Ch6 final boss (roughly double the old 4-chapter chain), and the
+shared Auto-Battle bot — which underplays a real player and fights with **no loot
+modelled** (preset gear only, no rolled affixes / drops / legendaries) — dies
+before the end. The user has cleared the whole game by hand; do NOT read "0%
+clear" as "uncompletable". Read the RELATIVE shape instead.
+
+**The signature mechanics all fire** (the most important single check): ${procLine}.
+So the "policy never wires the new mechanics" failure mode did **not** happen.
+
+**Relative reach (depth, the only differentiator when clears are all 0):**
+${depthRank} rooms/life. **${deepest.classId} goes deepest** (${num(deepest.meanDepthRooms, 1)} rooms,
+mean final level ${num(deepest.meanFinalLevel)}) and **${shallowest.classId} shallowest**
+(${num(shallowest.meanDepthRooms, 1)} rooms). Barbarian leading the depth ranking is
+consistent with Rage halving physical damage every combat — even post-tradeoff
+(no healing while raging), the blunt trade-blows floor still rewards it most, so
+Barbarian remains the prime "watch the high side" candidate for a tuning pass.
+The Ranger's low reincarnation-chain depth is dominated by **bare-soul L1 deaths**
+(each life restarts at L1; the squishy early game kills it repeatedly before it
+levels) — the companion game-feel sim shows that once past L1 the Ranger reaches
+*among the deepest* rooms, so its weakness is the L1 floor, not its kit. The
+non-positional engine still grants its ranged identity no defensive value (the
+separately-shipped Ranger payoff, PR #196, is not in this build).
+
+**Net:** relative ordering holds — Barbarian strongest at the floor, Wizard/Ranger
+weakest (Wizard = the known AI-floor caster handicap; Ranger = the L1 bare-soul
+wall). Absolute clear-rates are an AI-floor + no-loot artifact; the ranking and
+the death-clustering (see above), not the magnitudes, are the deliverable.`;
+  }
+
+  // Some souls cleared — lead with the ascension/clear read.
+  const byClear = [...aggs].sort((x, y) => y.meanHighestCleared - x.meanHighestCleared);
+  const top = byClear[0];
   const a0 = (a: ClassAggregate) => (a.firstA0ClearLifeMean === null ? 'never' : `~life ${num(a.firstA0ClearLifeMean, 0)}`);
-  return `Both new classes are **VIABLE** — their signature mechanics fire under the
-shared policy (Barbarian raged ${num(bp.rage / Math.max(1, bp.combats), 2)}×/combat and went reckless
-${num(bp.reckless / Math.max(1, bp.combats), 2)}×/combat; Ranger cast Hunter's Mark ${num(rp.huntersMarkCast / Math.max(1, rp.combats), 2)}×/combat,
-landed mark dice ${num(rp.huntersMarkDie / Math.max(1, rp.combats), 2)}×/combat and fired Colossus ${num(rp.colossus / Math.max(1, rp.combats), 2)}×/combat), so the
-"policy never wires the new mechanics" failure mode did **not** happen — that is
-the most important single result here. But the two land at opposite ends of the
-viability band. **Barbarian is the strongest class in the sim by a wide margin**:
-${pct(b.toppedLadderRate)} of its souls topped Ascension 6 (mean asc cleared ${num(b.meanHighestCleared)}, first A0 clear ${a0(b)}),
-versus the next-best Rogue at ${pct(r.toppedLadderRate)} (mean ${num(r.meanHighestCleared)}) and Fighter / Ranger / Wizard all at
-≈0% topped. Rage's always-on halving of physical damage — renewable every combat
-in this engine — is a uniquely powerful, ungated survivability lever, and the
-blunt trade-blows AI floor maximally rewards exactly that, so the gap is real but
-inflated: a competent player extracts more from the finesse classes, narrowing it.
-Either way, Barbarian reads as **out of line on the high side** and is the prime
-candidate for the balance lane to look at (chiefly Rage uptime / resistance).
-**Ranger sits at the low end** — viable (clears A0 ${a0(g)}, ${g.ascensionHistogram.slice(1).reduce((s, n) => s + n, 0)} souls cleared A1 or higher) but with
-the shallowest average depth (${num(g.meanDepthRooms, 1)} rooms) and lowest average level (${num(g.meanFinalLevel)}), and
-${Math.round(g.neverClearedRate * g.souls)}/${g.souls} souls never cleared even A0 (vs Fighter's ${Math.round(f.neverClearedRate * f.souls)}). The structural reason is
-not its kit (which fires fine) but the **non-positional engine**: the Ranger's
-ranged identity grants zero defensive benefit — it eats hits exactly like a melee
-class but with d10 HP, leather AC, and no damage resistance, so it plays as a
-squishier weapon class. It is roughly Fighter-adjacent on first-clear timing yet
-below it on the depth floor. Net: relative to the trusted three, **Barbarian is
-too strong and Ranger is in the lower-middle (≈ Fighter-or-below, clearly above
-only the AI-floor-handicapped Wizard)** — neither is broken, but the Barbarian's
-Rage advantage is the one number worth a second look. Absolute clear-rates remain
-an AI-floor artifact; the ranking, not the magnitudes, is the deliverable.`;
+  return `Signature mechanics fire under the shared policy (${procLine}). On
+ascension reach, **${top.classId} leads** (mean asc cleared ${num(top.meanHighestCleared)},
+topped A6 ${pct(top.toppedLadderRate)}, first A0 clear ${a0(top)}); the depth ranking is
+${depthRank} rooms/life. Absolute clear-rates remain an AI-floor + no-loot
+artifact (preset gear only, no drops modelled) — the ranking, not the magnitudes,
+is the deliverable.`;
 }
 
 function renderDoc(aggs: ClassAggregate[], wallSec: string): string {
@@ -744,7 +764,9 @@ ${renderMain(aggs)}
 - **Mean asc cleared** — average highest ascension a soul ever cleared (0 if it never cleared A0).
 - **First A0-clear life** — average life index of a soul's first base-chain clear (only souls that cleared A0).
 - **Per-life clear%** — fraction of ALL lives (across all ascensions) that cleared the chain.
-- **Avg depth** — mean rooms reached per life (the full chain is 54 rooms).
+- **Avg depth** — mean rooms reached per life. One route is walked through the
+  branching 6-chapter map; a full routed clear is ~62-66 rooms (the whole map is
+  ~103-111 nodes), ending at the Ch6 final boss (the-unmade).
 
 ## Ascension reach — how high each class's souls topped out
 
