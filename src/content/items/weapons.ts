@@ -88,22 +88,6 @@ export const RAPIER: Weapon = WeaponSchema.parse({
   attunement: false,
 });
 
-export const ADAMANTINE_SHORTSWORD: Weapon = WeaponSchema.parse({
-  id: 'adamantine-shortsword',
-  kind: 'weapon',
-  name: 'Adamantine Shortsword',
-  category: 'martial',
-  damage: '1d6+1',
-  damageType: 'piercing',
-  properties: ['finesse', 'light'],
-  weight: 2,
-  cost: 320,
-  rarity: 'uncommon',
-  attunement: true,
-  description:
-    'A short, dark-grey blade with a faint blue undertone where the lamplight catches the edge. Adamantine — does not chip, does not dull, and the +1 is not a smith\'s boast, it is the alloy. Strikes for 1d6+1 piercing; finesse and light. Soul-bound — claims an attunement slot.',
-});
-
 export const MACE: Weapon = WeaponSchema.parse({
   id: 'mace',
   kind: 'weapon',
@@ -269,5 +253,4 @@ export const ALL_WEAPONS: Weapon[] = [
   LONGBOW,
   SHORTSWORD,
   HAND_CROSSBOW,
-  ADAMANTINE_SHORTSWORD,
 ];

@@ -7,9 +7,8 @@ import { classWeaponProficient, classArmorProficient } from '../character/equip'
 export type BaseKind = 'weapon' | 'armor';
 
 /**
- * Curated base pools for rolled loot — the plain white bases only. The legacy
- * attunement "magic items" (cloak-of-faerûn, adamantine-shortsword) stay out:
- * they're the old static stat-stick model the affix system replaces.
+ * Curated base pools for rolled loot — the plain white bases the affix roll
+ * builds on. (The old static "magic items" are gone; affixes replace them.)
  */
 const WEAPON_BASE_IDS = [
   'dagger',

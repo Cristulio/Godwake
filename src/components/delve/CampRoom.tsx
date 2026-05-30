@@ -16,6 +16,8 @@ import {
   type CampBoon,
   type CampBoonTier,
 } from '../../content/campBoons';
+import { consumableStockForTier, rollGearStock, type GearStock } from './shopStock';
+import { GearWareRow, ConsumableWareRow } from './MerchantWares';
 
 /** Whether the caravan shop is open. Blessings are granted at shrines, not
  * here — the camp only sells wares. */
@@ -39,72 +41,6 @@ interface CampRoomProps {
   onPressSouth: () => void;
 }
 
-/**
- * Caravan stock, scaled by camp depth. STS rule: gold should always have a
- * worthwhile sink, and later shops carry stronger, pricier wares. The roadside
- * stocks cheap arms and the basic draughts; the Athkatla docks add a greater
- * draught, a hand-crossbow, armour and the adamantine blade; the Upperdark
- * smuggler — last coin-stop before the Matron — fences the dearest gear.
- * Stock is cumulative: a deeper merchant carries everything the shallower ones
- * did, plus more. Every id resolves through `getItem`, so nothing here is
- * orphaned and all of it buys through the existing `purchaseFromMerchant` path.
- */
-const STOCK_BASE = [
-  'potion-of-healing',
-  'antitoxin',
-  'scroll-of-healing-word',
-  'mace',
-  'quarterstaff',
-  'battleaxe',
-  'flail',
-];
-const STOCK_TIER_2 = [
-  'potion-of-greater-healing',
-  'hand-crossbow',
-  'shield',
-  'studded-leather',
-  'chain-mail',
-  'adamantine-shortsword',
-];
-const STOCK_TIER_3 = [
-  'potion-of-heroism', // "Potion of Vitality" — 3d6+6, the dearest draught
-  'half-plate',
-  'cloak-of-faerun',
-];
-
-export function merchantStockForTier(tier: CampBoonTier | null): string[] {
-  const t = tier ?? 1;
-  const ids = [...STOCK_BASE];
-  if (t >= 2) ids.push(...STOCK_TIER_2);
-  if (t >= 3) ids.push(...STOCK_TIER_3);
-  return ids;
-}
-
-/** Grouped, ordered sections for the shop list. */
-const STOCK_GROUPS: Array<{ kind: Item['kind']; label: string }> = [
-  { kind: 'consumable', label: 'Draughts & Charms' },
-  { kind: 'weapon', label: 'Arms' },
-  { kind: 'armor', label: 'Armour' },
-];
-
-/** Most wares carry their own flavour; armour pieces don't, so synthesise a
- * short stat line rather than show a blank row. */
-function itemBlurb(item: Item): string {
-  if (item.description) return item.description;
-  if (item.kind === 'weapon') {
-    const versatile = item.versatileDamage
-      ? `, ${item.versatileDamage} two-handed`
-      : '';
-    return `${item.damage} ${item.damageType}${versatile}.`;
-  }
-  if (item.kind === 'armor') {
-    if (item.category === 'shield') return `A banded shield. +${item.baseAC} AC.`;
-    const cat = item.category.charAt(0).toUpperCase() + item.category.slice(1);
-    return `${cat} armour. Base AC ${item.baseAC}.`;
-  }
-  return '';
-}
-
 export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
@@ -114,6 +50,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const setCharacter = useGameStore((s) => s.setCharacter);
   const addDelveReward = useGameStore((s) => s.addDelveReward);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
+  const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
   const showTaunt = useGameStore((s) => s.showTaunt);
   const goToInventory = useGameStore((s) => s.goToInventory);
 
@@ -137,11 +74,20 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     return boonsForCampTier(campTier, character.classId);
   }, [character, campTier]);
 
-  const stockIds = useMemo(() => merchantStockForTier(campTier), [campTier]);
+  const consumables = useMemo(
+    () => consumableStockForTier(campTier).map(getItem).filter((it) => it.kind === 'consumable'),
+    [campTier],
+  );
+  const classId = character?.classId;
+  const gear = useMemo<GearStock[]>(
+    () => (classId ? rollGearStock(room.id, campTier ?? 1, classId) : []),
+    [room.id, campTier, classId],
+  );
 
   const [expanded, setExpanded] = useState<ForkBranch | null>(null);
   const [riskResult, setRiskResult] = useState<RiskResult | null>(null);
   const [merchantStep, setMerchantStep] = useState<MerchantStep>('closed');
+  const [boughtGearKeys, setBoughtGearKeys] = useState<Set<string>>(new Set());
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
 
   // Imoen whispers when the road opens up.
@@ -242,11 +188,21 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     playSfx('ui_click');
   }
 
-  function buyItem(itemId: string) {
+  function buyConsumable(itemId: string) {
     const r = purchaseFromMerchant(itemId);
     if (r.ok) {
-      const item = getItem(itemId);
-      setPurchaseMessage(`${item.name} added to your pack.`);
+      setPurchaseMessage(`${getItem(itemId).name} added to your pack.`);
+      playSfx('ui_click');
+    } else {
+      setPurchaseMessage(r.reason ?? 'Cannot purchase.');
+    }
+  }
+
+  function buyGear(stock: GearStock, key: string) {
+    const r = purchaseRolledGear(stock.ref, stock.cost);
+    if (r.ok) {
+      setBoughtGearKeys((prev) => new Set(prev).add(key));
+      setPurchaseMessage(`${stock.ref.rolled?.name ?? 'Item'} added to your pack.`);
       playSfx('ui_click');
     } else {
       setPurchaseMessage(r.reason ?? 'Cannot purchase.');
@@ -439,10 +395,13 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
       {merchantStep === 'shop' && (
         <ShopModal
-          stockIds={stockIds}
+          gear={gear}
+          consumables={consumables}
+          boughtGearKeys={boughtGearKeys}
           goldInPocket={character.goldInPocket}
           purchaseMessage={purchaseMessage}
-          onBuy={buyItem}
+          onBuyGear={buyGear}
+          onBuyConsumable={buyConsumable}
           onClose={() => {
             setMerchantStep('closed');
             setPurchaseMessage(null);
@@ -454,21 +413,26 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 }
 
 interface ShopModalProps {
-  stockIds: string[];
+  gear: GearStock[];
+  consumables: Item[];
+  boughtGearKeys: Set<string>;
   goldInPocket: number;
   purchaseMessage: string | null;
-  onBuy: (itemId: string) => void;
+  onBuyGear: (stock: GearStock, key: string) => void;
+  onBuyConsumable: (itemId: string) => void;
   onClose: () => void;
 }
 
 function ShopModal({
-  stockIds,
+  gear,
+  consumables,
+  boughtGearKeys,
   goldInPocket,
   purchaseMessage,
-  onBuy,
+  onBuyGear,
+  onBuyConsumable,
   onClose,
 }: ShopModalProps) {
-  const items = stockIds.map(getItem);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in">
       <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-5">
@@ -506,47 +470,45 @@ function ShopModal({
           </div>
         </header>
 
-        {STOCK_GROUPS.map((group) => {
-          const groupItems = items.filter((it) => it.kind === group.kind);
-          if (groupItems.length === 0) return null;
-          return (
-            <div key={group.kind} className="mb-5">
-              <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
-                {group.label}
-              </div>
-              <div className="grid gap-3">
-                {groupItems.map((item) => {
-                  const tooDear = goldInPocket < item.cost;
-                  return (
-                    <div
-                      key={item.id}
-                      className="border border-[var(--color-border-dim)] p-3 flex items-center gap-4"
-                    >
-                      <div className="flex-1">
-                        <div className="text-[var(--color-text-primary)] text-sm uppercase tracking-wider">
-                          {item.name}
-                        </div>
-                        <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
-                          {itemBlurb(item)}
-                        </div>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <div className="text-[var(--color-accent-gold)] text-sm">{item.cost} gp</div>
-                        <Button
-                          variant={tooDear ? 'secondary' : 'primary'}
-                          disabled={tooDear}
-                          onClick={() => onBuy(item.id)}
-                        >
-                          {tooDear ? `Need ${item.cost - goldInPocket} more` : 'Buy'}
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+        {gear.length > 0 && (
+          <div className="mb-5">
+            <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
+              Arms &amp; Armour
             </div>
-          );
-        })}
+            <div className="grid gap-3">
+              {gear.map((stock, i) => {
+                const key = `gear-${i}`;
+                return (
+                  <GearWareRow
+                    key={key}
+                    stock={stock}
+                    bought={boughtGearKeys.has(key)}
+                    gold={goldInPocket}
+                    onBuy={() => onBuyGear(stock, key)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {consumables.length > 0 && (
+          <div className="mb-5">
+            <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
+              Draughts &amp; Charms
+            </div>
+            <div className="grid gap-3">
+              {consumables.map((item) => (
+                <ConsumableWareRow
+                  key={item.id}
+                  item={item}
+                  gold={goldInPocket}
+                  onBuy={() => onBuyConsumable(item.id)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {purchaseMessage && (
           <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest text-center mb-4">

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ShopRoom } from './ShopRoom';
-import { merchantStockForTier } from './CampRoom';
+import { consumableStockForTier } from './shopStock';
 import { useGameStore } from '../../stores/gameStore';
 import { useCharacterStore } from '../../stores/characterStore';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
@@ -43,15 +43,17 @@ describe('ShopRoom — merchant node', () => {
     useGameStore.setState({ delve: null, combat: null });
   });
 
-  it('lists the chapter-tiered caravan stock and lets the player buy', () => {
-    const stock = merchantStockForTier(2);
+  it('lists the chapter-tiered draughts and rolled arms, and lets the player buy', () => {
+    const consumables = consumableStockForTier(2);
     const startInv = useGameStore.getState().character!.inventory.length;
 
     render(<ShopRoom room={shopRoom} onContinue={() => {}} />);
 
-    // A representative item from the tier-2 stock is shown by name.
-    const sample = getItem(stock[0]);
+    // A representative draught from the tier-2 stock is shown by name.
+    const sample = getItem(consumables[0]);
     expect(screen.getAllByText(new RegExp(sample.name, 'i')).length).toBeGreaterThan(0);
+    // The rolled arms rack is laid out too.
+    expect(screen.getByText(/Arms & Armour/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole('button', { name: /^buy$/i })[0]);
     expect(useGameStore.getState().character!.inventory.length).toBe(startInv + 1);
