@@ -77,13 +77,6 @@ const REROLL_EVENTS: QuirkRerollEntry[] = [
     themeNote: 'bandit deserter, generic road',
   },
   {
-    eventId: 'beggar-at-the-gate',
-    choiceId: 'kick-the-bowl',
-    expectedFlavor: ['waukeen'],
-    waukeenAllowed: true,
-    themeNote: 'Waukeen-flavored — Waukeen is correct here',
-  },
-  {
     eventId: 'mad-prisoner-bargain',
     choiceId: 'take-the-purse',
     expectedFlavor: ['asylum', 'cell'],

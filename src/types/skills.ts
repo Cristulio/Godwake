@@ -52,31 +52,33 @@ export type ProficiencyLevel = 'none' | 'proficient' | 'expert';
 
 /**
  * Per the no-flavor-only rule: only skills with engine consumers surface in the
- * active picker. The enabled set is exactly the skills that event skill-checks
- * roll against (see `content/events` + `engine/character/skillCheck`): the three
- * CHA skills plus the WIS/STR skills the class presets actually grant, so no
- * preset hands out a dead proficiency. Disabled skills stay in the type union so
- * save data and class definitions don't have to be reshuffled if an engine hook
- * later lands; the UI filters by this map.
+ * active picker. The enabled set is exactly the skills an event skill-check
+ * rolls against (see `content/events` + `engine/character/skillCheck`) — every
+ * enabled skill is read by at least one event, and every event check names an
+ * enabled skill. The four still-disabled skills (acrobatics, animal-handling,
+ * nature, performance) have no natural event home and would be contrived to
+ * wire, so they stay off the picker. Disabled skills remain in the type union so
+ * save data and class `skillChoiceFrom` lists don't have to be reshuffled if an
+ * engine hook later lands; the UI filters by this map.
  */
 export const SKILL_ENABLED: Record<SkillName, boolean> = {
   acrobatics: false,
   'animal-handling': false,
-  arcana: false,
+  arcana: true,
   athletics: true,
   deception: true,
-  history: false,
+  history: true,
   insight: true,
   intimidation: true,
-  investigation: false,
+  investigation: true,
   medicine: true,
   nature: false,
   perception: true,
   performance: false,
   persuasion: true,
-  religion: false,
-  'sleight-of-hand': false,
-  stealth: false,
+  religion: true,
+  'sleight-of-hand': true,
+  stealth: true,
   survival: true,
 };
 
