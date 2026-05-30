@@ -295,6 +295,20 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'name-the-dead',
+        label: '[History] Name the dead and honour them',
+        hint: 'Recall whose bones these are and why they were staked. Get it right and the dead steady you; get it wrong and you wake an old grudge.',
+        skillCheck: { skill: 'history', dc: 12 },
+        outcome: {
+          resolution: 'You know this rite — a jailer\'s bones, staked by his own so the cells would remember a cruelty and never repeat it. You speak the old debtors\' words over the jaw and set it straight on the rod. Something in the corridor exhales. You walk on with the dead at your back instead of your throat, steadier for the knowing.',
+          effects: [{ kind: 'temp_hp', amount: 6 }],
+        },
+        failureOutcome: {
+          resolution: 'You reach for the rite and bring up the wrong one — wrong god, wrong dead, wrong words. The jaw seems to tilt. A cold draught finds the back of your neck and sinks its teeth in, and the corridor ahead is longer and meaner than it was.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
+        },
+      },
+      {
         id: 'spit',
         label: 'Spit on it and defy the dead',
         hint: 'A stiff spine, or a cold curse — the dead reward defiance as often as they punish it.',
@@ -408,6 +422,22 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'examine-pack',
+        label: '[Investigation] Study the buckle before you cut',
+        hint: 'Read the flap for a trap before your knife finds one. Spot the rig and the coin is clean; miss it and the blade still bites.',
+        skillCheck: { skill: 'investigation', dc: 12 },
+        outcome: {
+          resolution:
+            'You leave the knife sheathed and look first. The buckle sits a hair too proud — a thief\'s spring-blade waiting under the flap. You ease the catch the long way round, the steel folds harmless into your palm, and the purse comes free without a drop of your own blood in it.',
+          effects: [{ kind: 'gold_delta', amount: 18 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You turn the flap over twice and read it sound. It is not. The spring-blade finds the back of your hand the moment the strap gives, and you come away cursing with a thin red line for your trouble and the pack still on his hip.',
+          effects: [{ kind: 'hp_delta', amount: -4 }],
+        },
+      },
+      {
         id: 'leave',
         label: 'Leave him his steel',
         hint: 'The dead earned their rest the hard way.',
@@ -453,22 +483,16 @@ const POOL: EventTemplate[] = [
         },
       },
       {
-        id: 'kick-the-bowl',
-        label: 'Kick his alms-bowl',
-        hint: 'The coins are yours now — if the city does not see.',
-        successChance: 0.7,
+        id: 'palm-the-takings',
+        label: '[Sleight of Hand] Palm the coins as you pass',
+        hint: 'Lift his takings without a ripple. Clean hands keep the city blind; clumsy ones bring the customs-man running.',
+        skillCheck: { skill: 'sleight-of-hand', dc: 13 },
         outcome: {
-          resolution: "The bowl skitters; coins roll to your boot. He does not cry out — Waukeen does not love a beggar's complaint. You scoop and walk, the city none the wiser.",
-          effects: [
-            { kind: 'gold_delta', amount: 8 },
-            {
-              kind: 'grant_quirk_reroll',
-              fallbackText: 'Waukeen finds no bane to shake from you — her scale tips clean today.',
-            },
-          ],
+          resolution: 'You stoop as if to drop a coin and rise with three of his instead, the bowl never knowing it was lighter. He blesses you for the kindness he thinks you gave. You are half down the alley before the warmth of the theft fades.',
+          effects: [{ kind: 'gold_delta', amount: 8 }],
         },
         failureOutcome: {
-          resolution: "The bowl rings against the cobbles and a customs-man's whistle answers from the arch. Two hands take you by the shoulders and a third by the ribs before you can run. You leave bruised and lighter.",
+          resolution: "Your fingers brush the rim a half-beat too slow and the bowl rings against the cobbles. A customs-man's whistle answers from the arch — two hands take you by the shoulders and a third by the ribs before you can run. You leave bruised and no richer.",
           effects: [{ kind: 'hp_delta', amount: -4 }],
         },
       },
@@ -872,6 +896,22 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'parse-the-script',
+        label: '[Arcana] Parse the script before you speak it',
+        hint: 'Read what the ink is doing before you give it your voice. Name the working and the Weave answers kindly; misread it and it answers anyway.',
+        skillCheck: { skill: 'arcana', dc: 14 },
+        outcome: {
+          resolution:
+            'You trace the line as it writes itself and you know its grammar — a binding-script, half a prayer, hungry for a careless tongue. You speak only the safe clauses and leave the snare unspoken. The page goes warm without teeth, and a clean thread of the Weave folds itself into your chest for the road.',
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'The syntax slips through your fingers — too old, too strange. You guess at the join and guess wrong. The ink flares, the lectern cracks, and a backlash of raw Weave snaps across your hands before the folio falls dark and ordinary.',
+          effects: [{ kind: 'hp_delta', amount: -4 }],
+        },
+      },
+      {
         id: 'tear-out-the-page',
         label: 'Tear out the page',
         hint: 'A folded prize, a debt unpaid.',
@@ -925,6 +965,22 @@ const POOL: EventTemplate[] = [
         outcome: {
           resolution: 'He shrugs and the key vanishes. \"Another walker, then. The Director keeps a long list.\"',
           effects: [],
+        },
+      },
+      {
+        id: 'slip-past-warden',
+        label: '[Stealth] Slip past him to the strongbox',
+        hint: 'Take the hour without buying it — three doors down, unseen. Move clean and the chest is yours; trip a board and his shout brings worse.',
+        skillCheck: { skill: 'stealth', dc: 14 },
+        outcome: {
+          resolution:
+            'You let him keep his key and his hour both. While he watches the wrong end of the corridor you are already past him, counting doors — one, two, three — and the strongbox gives under your hands in the dark. You are gone before he turns, his coin still his and the Director\'s gold now yours.',
+          effects: [{ kind: 'gold_delta', amount: 90 }],
+        },
+        failureOutcome: {
+          resolution:
+            'A board you did not see cants under your heel and sings. The warden does not chase — he only calls, short and sharp, and a second pair of boots answers from the dark ahead of you, between you and the box.',
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['wardens-apprentice', 'slayer-hound'] }],
         },
       },
       {
@@ -1032,6 +1088,22 @@ const POOL: EventTemplate[] = [
             { kind: 'gold_delta', amount: -20 },
             { kind: 'grant_blessing_id', id: 'selunes-veil' },
           ],
+        },
+      },
+      {
+        id: 'observe-the-rite',
+        label: '[Religion] Keep the moon-rite yourself',
+        hint: "Honour Eilistraee the way her hidden faithful do — no coin, only the rite done right. Perform it true and she answers; fumble her secret liturgy and the dark closes cold.",
+        skillCheck: { skill: 'religion', dc: 15 },
+        outcome: {
+          resolution:
+            "You know this faith, outlawed above and below — the sword raised to the unseen moon, the silent step, the words sung under the breath. You give the rite its due without a coin to your name, and the tallow steadies to a clean silver burn. A warmth that has nothing to do with the candle settles into your chest for the rest of the road.",
+          effects: [{ kind: 'grant_blessing_id', id: 'selunes-veil' }],
+        },
+        failureOutcome: {
+          resolution:
+            "You reach for the rite and find only the shape of it — a half-remembered hymn, a gesture turned wrong. The candle gutters as if a breath disapproved. Something silvered closes in the dark of the cleft, and your shoulders go heavy with a grace you reached for and did not earn.",
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
