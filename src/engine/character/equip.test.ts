@@ -78,6 +78,7 @@ vi.mock('../../content/items', async () => {
 
 import {
   equipItem,
+  equipItemToSlot,
   unequipSlot,
   slotForItem,
   canEquipToSlot,
@@ -266,6 +267,39 @@ describe('equipItem', () => {
     const before = baseChar();
     const c = equipItem(before, 0);
     expect(c.inventory).toEqual(before.inventory);
+  });
+});
+
+describe('equipItemToSlot (drag-drop routing)', () => {
+  // inventory: 0 iron-ring, 1 silver-ring, 2 longsword, 3 jade-amulet
+  const ringChar = () =>
+    charOfClass('fighter', ['iron-ring', 'silver-ring', 'longsword', 'jade-amulet']);
+
+  it('ring slots are independent — a 2nd ring on ring2 keeps the 1st', () => {
+    let c = equipItemToSlot(ringChar(), 0, 'ring1');
+    expect(c.equipped.ring1?.itemId).toBe('iron-ring');
+    c = equipItemToSlot(c, 1, 'ring2');
+    expect(c.equipped.ring1?.itemId).toBe('iron-ring'); // not overwritten
+    expect(c.equipped.ring2?.itemId).toBe('silver-ring');
+  });
+
+  it('honours the exact ring band dropped on (ring2 first leaves ring1 empty)', () => {
+    const c = equipItemToSlot(ringChar(), 0, 'ring2');
+    expect(c.equipped.ring2?.itemId).toBe('iron-ring');
+    expect(c.equipped.ring1 ?? null).toBeNull();
+  });
+
+  it('auto-routes a non-matching drop to the item natural slot', () => {
+    // Drop a weapon onto a ring band → it still goes to main hand.
+    const c = equipItemToSlot(ringChar(), 2, 'ring1');
+    expect(c.equipped.mainHand?.itemId).toBe('longsword');
+    expect(c.equipped.ring1 ?? null).toBeNull();
+  });
+
+  it('auto-routes a ring dropped on a non-ring slot to a free ring band', () => {
+    const c = equipItemToSlot(ringChar(), 0, 'amulet');
+    expect(c.equipped.amulet ?? null).toBeNull();
+    expect(c.equipped.ring1?.itemId).toBe('iron-ring');
   });
 });
 

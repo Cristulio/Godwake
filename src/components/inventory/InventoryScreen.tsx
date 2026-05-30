@@ -3,10 +3,9 @@ import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { getItem } from '../../content/items';
-import { computeAC } from '../../engine/character/derived';
+import { computeAC, critRange } from '../../engine/character/derived';
 import {
   slotForItem,
-  canEquipToSlot,
   attunementSlotsCap,
   attunementSlotsUsed,
   canEquip,
@@ -18,6 +17,7 @@ import type { Item, ItemRef } from '../../schemas/item';
 import { ItemIcon } from './ItemIcon';
 import { ItemTooltip } from './ItemTooltip';
 import { GEAR_RARITY_COLOR } from './rarity';
+import { baseStatLine } from './itemDisplay';
 
 const DND_INV_MIME = 'application/x-godwake-inv-idx';
 const DND_SLOT_MIME = 'application/x-godwake-slot';
@@ -46,6 +46,7 @@ export function InventoryScreen() {
   const goToHub = useGameStore((s) => s.goToHub);
   const goToDelve = useGameStore((s) => s.goToDelve);
   const equipFromInventory = useGameStore((s) => s.equipFromInventory);
+  const equipToSlot = useGameStore((s) => s.equipToSlot);
   const unequipSlotAction = useGameStore((s) => s.unequipSlot);
 
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
@@ -56,6 +57,11 @@ export function InventoryScreen() {
   const [isDragging, setIsDragging] = useState(false);
 
   const ac = useMemo(() => (character ? computeAC(character) : 0), [character]);
+  const critLabel = useMemo(() => {
+    if (!character) return '20';
+    const band = critRange(character);
+    return band.length <= 1 ? '20' : `${band[0]}-20`;
+  }, [character]);
   const attUsed = useMemo(() => (character ? attunementSlotsUsed(character) : 0), [character]);
   const attCap = useMemo(() => (character ? attunementSlotsCap(character) : 0), [character]);
 
@@ -138,17 +144,15 @@ export function InventoryScreen() {
     if (Number.isNaN(idx)) return;
     const ref = character?.inventory[idx];
     if (!ref) return;
-    if (!canEquipToSlot(ref.itemId, slot)) {
+    // Auto-route: any equippable item dropped on any slot goes where it belongs
+    // (a helm on the boots well still equips the helm). Rings honour the exact
+    // band they land on, so ring1/ring2 stay independent.
+    if (slotForItem(ref.itemId) === null || (character && !canEquip(character, ref.itemId))) {
       setDragInvalidSlot(slot);
       setTimeout(() => setDragInvalidSlot(null), 320);
       return;
     }
-    if (character && !canEquip(character, ref.itemId)) {
-      setDragInvalidSlot(slot);
-      setTimeout(() => setDragInvalidSlot(null), 320);
-      return;
-    }
-    equipFromInventory(idx);
+    equipToSlot(idx, slot);
   }
 
   function handleListDragOver(e: DragEvent<HTMLDivElement>) {
@@ -185,7 +189,7 @@ export function InventoryScreen() {
             INVENTORY
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1 font-mono">
-            {character.name} · {character.inventory.length} items · AC {ac}
+            {character.name} · {character.inventory.length} items · AC {ac} · Crit {critLabel}
           </p>
         </div>
         {delve ? (
@@ -259,7 +263,7 @@ export function InventoryScreen() {
                           {ref.rolled?.name ?? item.name}
                         </div>
                         <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
-                          {statLine(item)}
+                          {baseStatLine(item)}
                         </div>
                         {attuned && (
                           <div className="text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest font-display mt-1">
@@ -409,7 +413,7 @@ export function InventoryScreen() {
                           )}
                         </div>
                         <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest truncate font-mono mt-0.5">
-                          {statLine(item)}
+                          {baseStatLine(item)}
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
                           {equipped && (
@@ -492,17 +496,4 @@ function groupInventory(inventory: ItemRef[]): InventoryGroup[] {
   if (consumables.size) result.push({ label: 'Consumables', entries: [...consumables.values()] });
   if (other.length) result.push({ label: 'Other', entries: other });
   return result;
-}
-
-function statLine(item: Item): string {
-  switch (item.kind) {
-    case 'weapon':
-      return `${item.damage} ${item.damageType}${item.versatileDamage ? ` (${item.versatileDamage} 2h)` : ''}`;
-    case 'armor':
-      return item.category === 'shield' ? `+${item.baseAC} AC shield` : `${item.category} · AC ${item.baseAC}`;
-    case 'consumable':
-      return item.healDice ? `heal ${item.healDice}` : item.effect;
-    case 'accessory':
-      return `${item.accessorySlot} · affixes only`;
-  }
 }

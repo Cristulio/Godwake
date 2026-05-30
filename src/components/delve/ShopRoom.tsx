@@ -5,14 +5,16 @@ import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { getItem } from '../../content/items';
 import { playSfx } from '../../engine/audio';
+import { EQUIP_SLOTS } from '../../engine/character/equip';
 import {
   consumableStockForTier,
   rollGearStock,
   rollLegendaryOffer,
+  sellValue,
   tierForChapter,
   type GearStock,
 } from './shopStock';
-import { GearWareRow, ConsumableWareRow, LegendaryWareRow } from './MerchantWares';
+import { GearWareRow, ConsumableWareRow, LegendaryWareRow, SellWareRow } from './MerchantWares';
 
 interface ShopRoomProps {
   room: RoomSpec;
@@ -31,6 +33,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
   const purchaseLegendary = useGameStore((s) => s.purchaseLegendary);
+  const sellItem = useGameStore((s) => s.sellItem);
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const goToInventory = useGameStore((s) => s.goToInventory);
   const [message, setMessage] = useState<string | null>(null);
@@ -47,8 +50,8 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   );
 
   const gear = useMemo<GearStock[]>(
-    () => (classId ? rollGearStock(room.id, tier, classId) : []),
-    [room.id, tier, classId],
+    () => (classId ? rollGearStock(room.id, tier, classId, room.layer ?? 0) : []),
+    [room.id, tier, classId, room.layer],
   );
 
   // The rare reliquary offer is rolled deterministically per visit (owned-blind),
@@ -61,6 +64,16 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
 
   if (!character) return null;
   const gold = character.goldInPocket;
+  const equippedRefs = new Set(
+    EQUIP_SLOTS.map((slot) => character.equipped[slot]).filter(Boolean),
+  );
+  const sellable = character.inventory
+    .map((ref, idx) => ({ ref, idx }))
+    .filter(({ ref }) => {
+      if (equippedRefs.has(ref)) return false;
+      const kind = getItem(ref.itemId).kind;
+      return kind === 'weapon' || kind === 'armor' || kind === 'accessory';
+    });
   const showLegendary =
     legendaryOffer != null &&
     !legendaryBought &&
@@ -96,6 +109,16 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
       playSfx('ui_click');
     } else {
       setMessage(r.reason ?? 'Cannot purchase.');
+    }
+  }
+
+  function sell(inventoryIdx: number, name: string) {
+    const r = sellItem(inventoryIdx);
+    if (r.ok) {
+      setMessage(`Sold ${name} for ${r.gold} gp.`);
+      playSfx('ui_click');
+    } else {
+      setMessage(r.reason ?? 'Cannot sell.');
     }
   }
 
@@ -182,6 +205,24 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
                 item={item}
                 gold={gold}
                 onBuy={() => buyConsumable(item.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {sellable.length > 0 && (
+        <div>
+          <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
+            Sell from your Pack
+          </div>
+          <div className="grid gap-3">
+            {sellable.map(({ ref, idx }) => (
+              <SellWareRow
+                key={idx}
+                itemRef={ref}
+                price={sellValue(ref)}
+                onSell={() => sell(idx, ref.rolled?.name ?? getItem(ref.itemId).name)}
               />
             ))}
           </div>

@@ -25,6 +25,8 @@ import { hasPendingLevelUp } from '../engine/character/leveling';
 import { getAscensionLevel } from '../engine/delve/ascension';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
+import { EQUIP_SLOTS } from '../engine/character/equip';
+import { sellValue } from '../components/delve/shopStock';
 import { useCharacterStore } from './characterStore';
 import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
@@ -228,6 +230,15 @@ function reincarnateSoul(character: Character): Character {
   };
 }
 
+/** The post-fight reward tally shown by the loot pane after a combat clear. */
+export interface LootSummary {
+  gold: number;
+  xp: number;
+  items: Array<{ name: string; rarity: GearRarity }>;
+  /** Name of a legendary relic banked to the reliquary this fight, if any. */
+  bankedLegendary?: string;
+}
+
 /**
  * The active run: delve state + the cross-cutting orchestrators that mutate
  * delve, character, combat, screen, and meta together. Session-only — never
@@ -236,12 +247,13 @@ function reincarnateSoul(character: Character): Character {
 interface DelveStoreState {
   delve: DelveState | null;
   /**
-   * The most recent rolled gear drop, surfaced by the loot toast. Session-only;
-   * set on a combat-room clear that drops, cleared on dismiss or the next drop.
-   * `banked` marks a legendary that went to the persistent reliquary (not the
-   * pack) — the toast tells the player to attune it at the hub.
+   * Everything the most recent fight dropped — surfaced by the post-fight loot
+   * pane. Session-only; set on a combat-room clear, cleared on dismiss or the
+   * next fight. Gathers gold + xp + each rolled item, plus a `bankedLegendary`
+   * name when an elite coughs up a relic (which goes to the reliquary, not the
+   * pack — the pane tells the player to attune it at the hub).
    */
-  lastLoot: { name: string; rarity: GearRarity; banked?: boolean } | null;
+  lastLoot: LootSummary | null;
 
   setDelve: (delve: DelveState | null) => void;
   startDelve: (delve: DelveState) => void;
@@ -291,7 +303,12 @@ interface DelveStoreState {
    * run). Caller removes the offer from stock on success.
    */
   purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
-  /** Dismiss the loot toast. */
+  /**
+   * Sell a carried (non-equipped) item to a merchant: removes it from the pack
+   * and credits a fraction of its value. Returns the gold paid on success.
+   */
+  sellItem: (inventoryIdx: number) => { ok: boolean; reason?: string; gold?: number };
+  /** Dismiss the loot pane. */
   clearLastLoot: () => void;
 }
 
@@ -493,10 +510,13 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
           goldDrop = Math.floor(goldDrop * 1.05);
         }
       }
+      const goldBefore = character.goldInPocket;
+      const xpBefore = character.xp ?? 0;
       if (goldDrop || xpDrop) get().addDelveReward(goldDrop, xpDrop);
       // Gear drop: a low-chance rolled item from the combat-room clear (the loot
       // source). Re-read the character so the new item layers onto the gold/xp
       // the reward just credited, not the stale pre-reward snapshot.
+      const droppedItems: LootSummary['items'] = [];
       const dropRarity = rollGearDrop(getActiveRoller(), room.kind);
       if (dropRarity) {
         const cur = useCharacterStore.getState().character;
@@ -507,21 +527,27 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
             inventory: [...cur.inventory, ref],
           });
           if (ref.rolled) {
-            set({ lastLoot: { name: ref.rolled.name, rarity: ref.rolled.rarity } });
+            droppedItems.push({ name: ref.rolled.name, rarity: ref.rolled.rarity });
           }
         }
       }
       // Rare legendary relic drop: very low chance from any combat source. It is
       // BANKED to the persistent collection — it does NOT equip this run; the
       // player attunes it at the hub for a future descent.
+      let bankedLegendary: string | undefined;
       if (rollLegendaryDrop(getActiveRoller(), room.kind)) {
         const bankedId = useMetaStore.getState().grantLegendaryDrop();
-        if (bankedId) {
-          const leg = getLegendary(bankedId);
-          set({
-            lastLoot: { name: leg?.name ?? 'Legendary relic', rarity: 'legendary', banked: true },
-          });
-        }
+        if (bankedId) bankedLegendary = getLegendary(bankedId)?.name ?? 'Legendary relic';
+      }
+      // Tally the fight's rewards into the post-fight loot pane (gold/xp deltas
+      // reflect quirk multipliers and level-feed applied by addDelveReward).
+      const after = useCharacterStore.getState().character;
+      const goldGained = (after?.goldInPocket ?? goldBefore) - goldBefore;
+      const xpGained = (after?.xp ?? xpBefore) - xpBefore;
+      if (goldGained > 0 || xpGained > 0 || droppedItems.length > 0 || bankedLegendary) {
+        set({
+          lastLoot: { gold: goldGained, xp: xpGained, items: droppedItems, bankedLegendary },
+        });
       }
     }
     useCombatStore.getState().setCombat(null);
@@ -881,6 +907,25 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       goldInPocket: character.goldInPocket - cost,
     });
     return { ok: true };
+  },
+
+  sellItem: (inventoryIdx) => {
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!character) return { ok: false, reason: 'No character.' };
+    const ref = character.inventory[inventoryIdx];
+    if (!ref) return { ok: false, reason: 'No such item.' };
+    // Worn gear can't be sold out from under you — unequip it first.
+    if (EQUIP_SLOTS.some((slot) => character.equipped[slot] === ref)) {
+      return { ok: false, reason: 'Unequip it first.' };
+    }
+    const gold = sellValue(ref);
+    charSlice.setCharacter({
+      ...character,
+      inventory: character.inventory.filter((_, i) => i !== inventoryIdx),
+      goldInPocket: character.goldInPocket + gold,
+    });
+    return { ok: true, gold };
   },
 
   clearLastLoot: () => set({ lastLoot: null }),

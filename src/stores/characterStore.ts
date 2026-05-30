@@ -1,7 +1,12 @@
 import { create } from 'zustand';
 import type { Character } from '../types/character';
 import { buildPlayerCharacter, type CharacterCreationInput } from '../engine/character/defaultCharacter';
-import { equipItem as equipItemFn, unequipSlot as unequipSlotFn, type EquipSlot } from '../engine/character/equip';
+import {
+  equipItem as equipItemFn,
+  equipItemToSlot as equipItemToSlotFn,
+  unequipSlot as unequipSlotFn,
+  type EquipSlot,
+} from '../engine/character/equip';
 import { hasPendingLevelUp, applyLevelUp } from '../engine/character/leveling';
 import { useScreenStore } from './screenStore';
 
@@ -21,6 +26,8 @@ interface CharacterStoreState {
   setSaveSeed: (seed: string | null) => void;
   commitCharacterCreation: (input: CharacterCreationInput) => void;
   equipFromInventory: (inventoryIdx: number) => void;
+  /** Equip aimed at a slot: rings honour the exact band, all else auto-routes. */
+  equipToSlot: (inventoryIdx: number, slot: EquipSlot) => void;
   unequipSlot: (slot: EquipSlot) => void;
   addBlessing: (id: string) => void;
   /**
@@ -45,6 +52,11 @@ export const useCharacterStore = create<CharacterStoreState>()((set, get) => ({
 
   equipFromInventory: (inventoryIdx) =>
     set((s) => (s.character ? { character: equipItemFn(s.character, inventoryIdx) } : s)),
+
+  equipToSlot: (inventoryIdx, slot) =>
+    set((s) =>
+      s.character ? { character: equipItemToSlotFn(s.character, inventoryIdx, slot) } : s,
+    ),
 
   unequipSlot: (slot) =>
     set((s) => (s.character ? { character: unequipSlotFn(s.character, slot) } : s)),

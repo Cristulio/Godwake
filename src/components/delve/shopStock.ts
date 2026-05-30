@@ -47,6 +47,17 @@ const GEAR_RARITY_MIX: Record<CampBoonTier, GearRarity[]> = {
   3: ['green', 'blue', 'blue', 'purple', 'purple'],
 };
 
+/** Shop rarity ladder for depth promotion — capped at purple (legendaries are
+ * the hub layer now, never rolled onto shop stock). */
+const SHOP_RARITY_LADDER: GearRarity[] = ['green', 'blue', 'purple'];
+
+function promoteRarity(rarity: GearRarity, steps: number): GearRarity {
+  if (steps <= 0) return rarity;
+  const i = SHOP_RARITY_LADDER.indexOf(rarity);
+  if (i < 0) return rarity;
+  return SHOP_RARITY_LADDER[Math.min(SHOP_RARITY_LADDER.length - 1, i + steps)];
+}
+
 export interface GearStock {
   ref: ItemRef;
   cost: number;
@@ -57,16 +68,35 @@ export interface GearStock {
  * by rarity. Deterministic per `seed` (pass the room id) so re-renders don't
  * reroll the stock. At least one accessory is guaranteed on the rack so the new
  * slots are buyable, not drop-only.
+ *
+ * `depth` is the node's column on the chapter map (`RoomSpec.layer`): deeper
+ * shops within a chapter promote the weaker slots up the rarity ladder, so a
+ * late-chapter merchant stocks strictly richer than the one at the gate.
  */
-export function rollGearStock(seed: string, tier: CampBoonTier, classId: ClassId): GearStock[] {
+export function rollGearStock(
+  seed: string,
+  tier: CampBoonTier,
+  classId: ClassId,
+  depth = 0,
+): GearStock[] {
   const roller = createDiceRoller(`${seed}:gear-shop`);
-  return GEAR_RARITY_MIX[tier].map((rarity, i) => {
+  const promotions = Math.min(5, Math.floor(depth / 2));
+  return GEAR_RARITY_MIX[tier].map((baseRarity, i) => {
+    const rarity = promoteRarity(baseRarity, i < promotions ? 1 : 0);
     const ref = rollItem(
       roller,
       i === 1 ? { rarity, classId, kind: 'accessory' } : { rarity, classId },
     );
     return { ref, cost: rolledItemCost(ref) };
   });
+}
+
+/** Fraction of an item's value the merchant pays back when buying it from you. */
+const SELL_RATE = 0.4;
+
+/** What the merchant pays for a carried item — a fraction of its rolled value. */
+export function sellValue(ref: ItemRef): number {
+  return Math.max(1, Math.round(rolledItemCost(ref) * SELL_RATE));
 }
 
 export interface LegendaryOffer {

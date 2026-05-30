@@ -126,7 +126,7 @@ export function DelveScreen() {
   return (
     <>
       <DelveScreenBody />
-      <LootToast />
+      <LootPane />
     </>
   );
 }
@@ -477,48 +477,86 @@ function DelveTopBar({
 }
 
 /**
- * Fixed-position loot toast for a rolled drop from a combat clear. Self-contained
- * (reads the facade), mounted once above every delve branch. Auto-dismisses; a
- * click jumps to the pack to equip the find.
+ * Post-fight loot pane: everything the cleared fight dropped — gold, xp, each
+ * rolled item, and any legendary banked to the reliquary. Self-contained (reads
+ * the facade), mounted once above every delve branch. Auto-dismisses; "Open
+ * pack" jumps to the inventory to equip the haul.
  */
-function LootToast() {
+function LootPane() {
   const lastLoot = useGameStore((s) => s.lastLoot);
   const clearLastLoot = useGameStore((s) => s.clearLastLoot);
   const goToInventory = useGameStore((s) => s.goToInventory);
 
   useEffect(() => {
     if (!lastLoot) return;
-    const t = setTimeout(() => clearLastLoot(), 6000);
+    const t = setTimeout(() => clearLastLoot(), 8000);
     return () => clearTimeout(t);
   }, [lastLoot, clearLastLoot]);
 
   if (!lastLoot) return null;
-  const color = GEAR_RARITY_COLOR[lastLoot.rarity];
+  const hasItems = lastLoot.items.length > 0 || lastLoot.bankedLegendary != null;
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 animate-room-enter">
-      <button
-        type="button"
-        onClick={() => {
-          clearLastLoot();
-          goToInventory();
-        }}
-        className="flex items-center gap-3 bg-[var(--color-bg-panel)] border-2 px-4 py-2 shadow-[0_4px_18px_rgba(0,0,0,0.6)]"
-        style={{ borderColor: color }}
-        title="Open your pack to equip it"
-      >
-        <span className="text-lg" style={{ color }}>◆</span>
-        <span className="text-left">
-          <span className="block text-[9px] uppercase tracking-[0.3em] text-[var(--color-text-dim)]">
-            {GEAR_RARITY_LABEL[lastLoot.rarity]} drop
+    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 animate-room-enter w-[min(92vw,22rem)]">
+      <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-amber)] shadow-[0_4px_22px_rgba(0,0,0,0.65)]">
+        <div className="flex items-center justify-between px-3 py-1.5 border-b border-[var(--color-border-dim)]">
+          <span className="font-display text-[10px] uppercase tracking-[0.3em] text-[var(--color-accent-amber)]">
+            ◆ Spoils
           </span>
-          <span
-            className="block font-display uppercase tracking-wider text-xs"
-            style={{ color }}
+          <button
+            type="button"
+            onClick={clearLastLoot}
+            className="text-[var(--color-text-dim)] hover:text-[var(--color-text-primary)] text-xs leading-none"
+            title="Dismiss"
           >
-            {lastLoot.name}
-          </span>
-        </span>
-      </button>
+            ✕
+          </button>
+        </div>
+        <div className="px-3 py-2 space-y-1">
+          {(lastLoot.gold > 0 || lastLoot.xp > 0) && (
+            <div className="flex gap-4 font-mono text-xs">
+              {lastLoot.gold > 0 && (
+                <span className="text-[var(--color-accent-gold)]">◈ +{lastLoot.gold} gold</span>
+              )}
+              {lastLoot.xp > 0 && (
+                <span className="text-[var(--color-status-frost)]">✦ +{lastLoot.xp} xp</span>
+              )}
+            </div>
+          )}
+          {lastLoot.items.map((it, i) => (
+            <div
+              key={`${it.name}-${i}`}
+              className="flex items-center gap-2 font-display uppercase tracking-wider text-[11px]"
+              style={{ color: GEAR_RARITY_COLOR[it.rarity] }}
+            >
+              <span>◆</span>
+              <span className="truncate">{it.name}</span>
+              <span className="text-[9px] tracking-widest opacity-70 shrink-0">
+                {GEAR_RARITY_LABEL[it.rarity]}
+              </span>
+            </div>
+          ))}
+          {lastLoot.bankedLegendary && (
+            <div className="text-[11px] leading-snug text-[var(--color-accent-gold)]">
+              ✦ {lastLoot.bankedLegendary}
+              <span className="block text-[9px] uppercase tracking-widest text-[var(--color-text-dim)]">
+                banked — attune it at the hub
+              </span>
+            </div>
+          )}
+        </div>
+        {hasItems && (
+          <button
+            type="button"
+            onClick={() => {
+              clearLastLoot();
+              goToInventory();
+            }}
+            className="w-full px-3 py-1.5 border-t border-[var(--color-border-dim)] text-[10px] uppercase tracking-[0.3em] text-[var(--color-accent-amber)] hover:bg-[var(--color-bg-panel-hover)]"
+          >
+            Open pack →
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -12,12 +12,12 @@ import {
   type CharacterCreationInput,
 } from '../engine/character/defaultCharacter';
 import { type ClassId } from '../schemas/ids';
-import type { ItemRef, GearRarity } from '../schemas/item';
+import type { ItemRef } from '../schemas/item';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
 import { type EquipSlot } from '../engine/character/equip';
 import { createGodwakeDelve } from '../engine/delve';
 import { useCharacterStore } from './characterStore';
-import { useDelveStore } from './delveStore';
+import { useDelveStore, type LootSummary } from './delveStore';
 import { useCombatStore } from './combatStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore, type Screen } from './screenStore';
@@ -117,7 +117,7 @@ interface GameState {
   saveSeed: string | null;
   character: Character | null;
   delve: DelveState | null;
-  lastLoot: { name: string; rarity: GearRarity; banked?: boolean } | null;
+  lastLoot: LootSummary | null;
   combat: CombatState | null;
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number; chapter?: number } | null;
   introSeen: boolean;
@@ -183,6 +183,7 @@ interface GameState {
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
   purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
+  sellItem: (inventoryIdx: number) => { ok: boolean; reason?: string; gold?: number };
   clearLastLoot: () => void;
 
   // Lore overlays
@@ -203,6 +204,7 @@ interface GameState {
   // Inventory
   goToInventory: () => void;
   equipFromInventory: (inventoryIdx: number) => void;
+  equipToSlot: (inventoryIdx: number, slot: EquipSlot) => void;
   unequipSlot: (slot: EquipSlot) => void;
 
   // Blessings
@@ -554,6 +556,7 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().purchaseRolledGear(ref, cost),
         purchaseLegendary: (legendaryId, cost) =>
           useDelveStore.getState().purchaseLegendary(legendaryId, cost),
+        sellItem: (idx) => useDelveStore.getState().sellItem(idx),
         clearLastLoot: () => useDelveStore.getState().clearLastLoot(),
 
         showTaunt: (speaker, context, chapter) =>
@@ -585,6 +588,7 @@ export const useGameStore = create<GameState>()(
 
         equipFromInventory: (idx) =>
           useCharacterStore.getState().equipFromInventory(idx),
+        equipToSlot: (idx, slot) => useCharacterStore.getState().equipToSlot(idx, slot),
         unequipSlot: (slot) => useCharacterStore.getState().unequipSlot(slot),
         addBlessing: (id) => useCharacterStore.getState().addBlessing(id),
 

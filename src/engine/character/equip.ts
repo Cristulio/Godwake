@@ -248,6 +248,34 @@ function countAttuned(equipped: EquipmentSlots): number {
   return n;
 }
 
+/**
+ * Equip the item at `inventoryIdx` aimed at a specific slot — the drag-drop
+ * entry point. A ring honours the exact band it was dropped on, so ring1 and
+ * ring2 stay independent (the playtest bug was a 2nd-ring drop overwriting the
+ * 1st). Every other item AUTO-ROUTES to its natural slot, so dropping a helm
+ * onto the boots well still equips the helm — the player needn't hit the exact
+ * slot. Non-ring cases fall through to `equipItem` for its two-handed clearing
+ * and first-free defaults.
+ */
+export function equipItemToSlot(
+  character: Character,
+  inventoryIdx: number,
+  targetSlot: EquipSlot,
+): Character {
+  const ref = character.inventory[inventoryIdx];
+  if (!ref) return character;
+  const item = getItem(ref.itemId);
+  const ringToBand =
+    item.kind === 'accessory' &&
+    item.accessorySlot === 'ring' &&
+    (targetSlot === 'ring1' || targetSlot === 'ring2');
+  if (!ringToBand) return equipItem(character, inventoryIdx);
+
+  const equipped: EquipmentSlots = { ...character.equipped, [targetSlot]: ref };
+  if (countAttuned(equipped) > attunementSlotsCap(character)) return character;
+  return { ...character, equipped };
+}
+
 /** Clear a single equipment slot. The item stays in inventory. */
 export function unequipSlot(character: Character, slot: EquipSlot): Character {
   if (!character.equipped[slot]) return character;

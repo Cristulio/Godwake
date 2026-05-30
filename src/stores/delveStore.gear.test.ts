@@ -35,6 +35,7 @@ import { useCombatStore } from './combatStore';
 import { createGodwakeDelve } from '../engine/delve';
 import { setActiveRoller } from '../engine/dice';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
+import { sellValue } from '../components/delve/shopStock';
 import type { Character } from '../types/character';
 import type { ItemRef } from '../schemas/item';
 
@@ -139,5 +140,40 @@ describe('delveStore — found/bought gear is intra-delve', () => {
     const c = char();
     expect(hasItem(c.inventory, 'soulpiercer')).toBe(true);
     expect(hasItem(c.inventory, 'greatsword')).toBe(false);
+  });
+});
+
+describe('delveStore — selling to a merchant', () => {
+  beforeEach(() => setActiveRoller('sell-seed'));
+
+  it('removes the item and credits its sell value', () => {
+    const greatsword: ItemRef = { itemId: 'greatsword' };
+    seed(makeFighter({ quirks: [], goldInPocket: 100, inventory: [greatsword] }));
+    const expected = sellValue(greatsword);
+
+    const r = useDelveStore.getState().sellItem(0);
+
+    expect(r.ok).toBe(true);
+    expect(r.gold).toBe(expected);
+    expect(char().goldInPocket).toBe(100 + expected);
+    expect(hasItem(char().inventory, 'greatsword')).toBe(false);
+  });
+
+  it('refuses to sell an equipped item (unequip first)', () => {
+    const sword: ItemRef = { itemId: 'longsword' };
+    seed(
+      makeFighter({
+        quirks: [],
+        goldInPocket: 0,
+        inventory: [sword],
+        equipped: { mainHand: sword, offHand: null, armor: null },
+      }),
+    );
+
+    const r = useDelveStore.getState().sellItem(0);
+
+    expect(r.ok).toBe(false);
+    expect(char().goldInPocket).toBe(0);
+    expect(hasItem(char().inventory, 'longsword')).toBe(true);
   });
 });
