@@ -18,12 +18,10 @@ export interface RageContext {
 
 /**
  * Barbarian Rage. Bonus action: drop into a battle-fury for {@link RAGE_ROUNDS}
- * rounds. While raging, physical damage against the barbarian is halved
- * (monsterAttack) and melee hits land for bonus damage (playerAttack) — but the
- * fury allows no recovery: healing draughts and lifesteal are locked out
- * (useItem / playerAttack gate on isRaging). The tradeoff is the point — commit
- * to the fight, no safety net. Spends one Rage use from the per-combat pool.
- * Re-casting while already raging just refreshes the duration off a fresh charge.
+ * rounds. Physical damage is halved (monsterAttack); melee hits land for bonus
+ * damage (playerAttack). Fury locks out healing — draughts and lifesteal are
+ * suppressed (useItem / playerAttack gate on isRaging). Spends one charge from
+ * the per-rest pool; charges refill at campfire and rest rooms.
  */
 export function useRage(ctx: RageContext): CombatActionResult {
   const { character, state } = ctx;
@@ -41,7 +39,7 @@ export function useRage(ctx: RageContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} gives way to the fury — physical blows glance off and every swing bites deeper, but there is no drinking, no mending now, only the fight.`,
+    text: `${nextCharacter.name} gives way to the fury — physical blows glance off and every swing bites deeper, but no mending until it passes. ${RAGE_ROUNDS} rounds, ${nextCharacter.resources.rageUsesRemaining ?? 0} charge${(nextCharacter.resources.rageUsesRemaining ?? 0) === 1 ? '' : 's'} left.`,
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'rage', 'player'), nextCharacter);
 }

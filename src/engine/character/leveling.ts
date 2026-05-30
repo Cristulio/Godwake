@@ -65,8 +65,7 @@ export function applyLevelUp(character: Character): Character {
     resources.actionSurgeRemaining = 1;
   }
 
-  // Barbarian: Rage activations scale with level (1 → 2 at L3). Refresh the
-  // pool so the new charge is felt at the hub and the next encounter.
+  // Barbarian: refresh rage charges on level-up so gaining a level restores the pool.
   if (character.classId === 'barbarian') {
     resources.rageUsesRemaining = barbarianRageMax({ ...character, level: newLevel });
   }

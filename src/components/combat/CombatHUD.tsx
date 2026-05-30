@@ -377,7 +377,7 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
             <Dot
               key={`rage-${i}`}
               on={i < rageUses}
-              title={i < rageUses ? 'Rage available' : 'Rage spent'}
+              title={i < rageUses ? 'Rage charge available — refills at campfire and rest rooms' : 'Rage charge spent'}
             />
           ))}
           {raging && (
@@ -385,7 +385,7 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
               text={`Fury ${rageRounds}`}
               on
               tone="blood"
-              title={`Raging for ${rageRounds} more round${rageRounds === 1 ? '' : 's'} — physical damage halved, melee hits land harder, but you can't heal until the fury passes.`}
+              title={`Raging — ${rageRounds} round${rageRounds === 1 ? '' : 's'} left. Physical damage halved, melee hits land harder. Healing locked out until fury ends.`}
             />
           )}
         </Section>

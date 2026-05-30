@@ -119,7 +119,7 @@ export function classStartingResources(classId: ClassId) {
     case 'barbarian':
       return {
         rageRoundsRemaining: 0,
-        rageUsesRemaining: 1, // 2 once the level-up reaches L3
+        rageUsesRemaining: 2,
       };
     case 'wizard':
       return {

@@ -25,18 +25,13 @@ function fighterActionSurgeMax(character: Character): number {
   return 0;
 }
 
-/**
- * Barbarian: Rage activations available per combat. Refreshed at the start of
- * every encounter (createCombat) and on rest. Scales gently with level so a
- * hardened barbarian can re-rage if the first one runs out mid-fight.
- */
-export function barbarianRageMax(character: Character): number {
-  if (character.classId !== 'barbarian') return 0;
-  return character.level >= 3 ? 2 : 1;
+/** Rage charges available per rest — refresh at campfire/rest rooms, not per combat. */
+export function barbarianRageMax(_character: Character): number {
+  return 2;
 }
 
-/** Rounds a Rage holds once entered. Covers a full ordinary fight. */
-export const RAGE_ROUNDS = 5;
+/** Rounds a Rage burst lasts once entered — a short window, not a whole-fight state. */
+export const RAGE_ROUNDS = 3;
 
 /** Flat bonus damage on a melee hit while raging. Berserker's Frenzy adds more. */
 export function rageDamageBonus(character: Character): number {
