@@ -933,9 +933,12 @@ describe('Wizard — Shield true reaction', () => {
   it('auto-triggers on an incoming hit that Shield would flip to a miss', () => {
     const goblin = getMonster('goblin');
     // Find a seed where the goblin hits, but a +5 Shield would save the wizard.
+    // Shield is a CLUTCH reaction now — only fires at/below half HP — so the
+    // wizard must already be hurt for the auto-trigger to engage.
     let validated = false;
     for (let seed = 1; seed <= 200 && !validated; seed++) {
       let w = makeWizard();
+      w = { ...w, hp: { ...w.hp, current: 1 } };
       const roller = createDiceRoller(seed);
       const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
       let state = init.state;
@@ -1022,6 +1025,7 @@ describe('Wizard — Shield true reaction', () => {
     let validated = false;
     for (let seed = 1; seed <= 200 && !validated; seed++) {
       let w = makeWizard();
+      w = { ...w, hp: { ...w.hp, current: 1 } }; // hurt → clutch Shield can fire
       const roller = createDiceRoller(seed);
       const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
       let state = init.state;
