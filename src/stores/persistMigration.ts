@@ -52,8 +52,16 @@ import { getQuirk } from '../content/quirks';
  *             (b) `movementRemaining` removed from ActionEconomy (engine is
  *             non-positional; the field was written but never read). Strip from
  *             `character.actionEconomy` on load so old saves rehydrate cleanly.
+ *  v12 → v13: Progressive-unlock ladder (engine/progression/unlocks.ts).
+ *             (a) `delveCount` (account-level descents started) gates the
+ *             onboarding curtain. EXISTING saves are floored to 999 so veterans
+ *             keep everything unlocked — the curtain is for brand-new souls only
+ *             (a fresh New Game inits 0). A present value (incl. a fresh 0) is
+ *             preserved; only a missing/garbage field defaults to 999.
+ *             (b) `seenTutorials` (default []) lets Phase-2 tutorials mark
+ *             themselves shown once per soul.
  */
-export const SAVE_VERSION = 12;
+export const SAVE_VERSION = 13;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -220,6 +228,8 @@ export interface MigratedSnapshot {
   ownedLegendaries: string[];
   activeLegendaries: string[];
   seenDialogueBeats: string[];
+  seenTutorials: string[];
+  delveCount: number;
   // Allow extra fields to ride through (screen, saveSeed, introSeen, etc.).
   [k: string]: unknown;
 }
@@ -337,6 +347,17 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   // v9 → v10: per-soul seen-once dialogue beat tracking.
   if (!Array.isArray(state.seenDialogueBeats)) {
     state.seenDialogueBeats = [];
+  }
+
+  // v12 → v13: progressive-unlock ladder. A MISSING delveCount means a save
+  // that predates onboarding — floor it to 999 so the veteran keeps every
+  // feature unlocked. A present value (incl. a fresh game's 0) is preserved, so
+  // brand-new souls still see the curtain. seenTutorials defaults to [].
+  if (typeof state.delveCount !== 'number' || state.delveCount < 0) {
+    state.delveCount = 999;
+  }
+  if (!Array.isArray(state.seenTutorials)) {
+    state.seenTutorials = [];
   }
 
   // v10 → v11: rageUsesRemaining removed (Rage is now per-combat, not per-rest).

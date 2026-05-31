@@ -198,8 +198,8 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 12', () => {
-    expect(SAVE_VERSION).toBe(12);
+  it('is 13', () => {
+    expect(SAVE_VERSION).toBe(13);
   });
 });
 
@@ -234,6 +234,32 @@ describe('migrateV1ToV2 — v7 → v8 ascension', () => {
 
   it('preserves an existing ascensionUnlocked', () => {
     expect(migrateV1ToV2({ unlockedUpgrades: {}, ascensionUnlocked: 4 }).ascensionUnlocked).toBe(4);
+  });
+});
+
+describe('migrateV1ToV2 — v12 → v13 progressive-unlock ladder', () => {
+  it('floors a missing delveCount to 999 so veterans are not re-gated', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {} });
+    expect(v.delveCount).toBe(999);
+  });
+
+  it('preserves a present delveCount, including a fresh-game 0', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, delveCount: 0 }).delveCount).toBe(0);
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, delveCount: 7 }).delveCount).toBe(7);
+  });
+
+  it('floors a garbage/negative delveCount to 999', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, delveCount: -3 }).delveCount).toBe(999);
+    expect(
+      migrateV1ToV2({ unlockedUpgrades: {}, delveCount: 'x' as unknown as number }).delveCount,
+    ).toBe(999);
+  });
+
+  it('defaults seenTutorials to [] when missing and preserves an existing array', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {} }).seenTutorials).toEqual([]);
+    expect(
+      migrateV1ToV2({ unlockedUpgrades: {}, seenTutorials: ['grove-intro'] }).seenTutorials,
+    ).toEqual(['grove-intro']);
   });
 });
 

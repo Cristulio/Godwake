@@ -137,6 +137,8 @@ interface GameState {
   ascensionUnlocked: number;
   knownNpcs: string[];
   seenDialogueBeats: string[];
+  seenTutorials: string[];
+  delveCount: number;
   ownedLegendaries: string[];
   activeLegendaries: string[];
 
@@ -212,6 +214,7 @@ interface GameState {
   // Tutorials
   markQuirksTutorialSeen: () => void;
   markDialogueBeatSeen: (beatId: string) => void;
+  markTutorialSeen: (tutorialId: string) => void;
 
   // Renown shop
   purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
@@ -250,6 +253,8 @@ interface PersistedSnapshot {
   ascensionUnlocked: number;
   knownNpcs: string[];
   seenDialogueBeats: string[];
+  seenTutorials: string[];
+  delveCount: number;
   ownedLegendaries: string[];
   activeLegendaries: string[];
   __metadata?: SaveSlotMetadata;
@@ -290,6 +295,8 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     ascensionUnlocked: meta.ascensionUnlocked,
     knownNpcs: meta.knownNpcs,
     seenDialogueBeats: meta.seenDialogueBeats,
+    seenTutorials: meta.seenTutorials,
+    delveCount: meta.delveCount,
     ownedLegendaries: meta.ownedLegendaries,
     activeLegendaries: meta.activeLegendaries,
     __metadata: {
@@ -347,6 +354,10 @@ function scatterSnapshot(s: PersistedSnapshot) {
         : 0,
     knownNpcs: Array.isArray(s.knownNpcs) ? s.knownNpcs : [],
     seenDialogueBeats: Array.isArray(s.seenDialogueBeats) ? s.seenDialogueBeats : [],
+    seenTutorials: Array.isArray(s.seenTutorials) ? s.seenTutorials : [],
+    // Post-migration this is always present; the guard only catches malformed
+    // data, never re-gating a veteran (migration floors a missing field to 999).
+    delveCount: typeof s.delveCount === 'number' ? s.delveCount : 0,
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
     activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
   });
@@ -426,6 +437,8 @@ export const useGameStore = create<GameState>()(
           ascensionUnlocked: m.ascensionUnlocked,
           knownNpcs: m.knownNpcs,
           seenDialogueBeats: m.seenDialogueBeats,
+          seenTutorials: m.seenTutorials,
+          delveCount: m.delveCount,
           druidGroveUnlocked: m.druidGroveUnlocked,
           ownedLegendaries: m.ownedLegendaries,
           activeLegendaries: m.activeLegendaries,
@@ -474,6 +487,8 @@ export const useGameStore = create<GameState>()(
         ascensionUnlocked: useMetaStore.getState().ascensionUnlocked,
         knownNpcs: useMetaStore.getState().knownNpcs,
         seenDialogueBeats: useMetaStore.getState().seenDialogueBeats,
+        seenTutorials: useMetaStore.getState().seenTutorials,
+        delveCount: useMetaStore.getState().delveCount,
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
         activeLegendaries: useMetaStore.getState().activeLegendaries,
 
@@ -595,6 +610,9 @@ export const useGameStore = create<GameState>()(
 
         markDialogueBeatSeen: (beatId) =>
           useMetaStore.getState().markDialogueBeatSeen(beatId),
+
+        markTutorialSeen: (tutorialId) =>
+          useMetaStore.getState().markTutorialSeen(tutorialId),
 
         purchaseUpgrade: (upgradeId) =>
           useMetaStore.getState().purchaseUpgrade(upgradeId),
