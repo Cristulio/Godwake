@@ -53,6 +53,7 @@ export function tryShieldReaction(
   if (!character.resources.knownSpells?.includes('shield')) return null;
   if (character.actionEconomy.reactionUsed) return null;
   if (slotsAt(character, 1) <= 0) return null;
+  if (character.resources.shieldAutoFire === false) return null;
   const newAc = ac + SHIELD_AC_BONUS;
   if (attackTotal >= newAc) return null;
 
@@ -63,7 +64,7 @@ export function tryShieldReaction(
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'system',
-    text: `${nextCharacter.name} casts Shield — AC ${ac} → ${newAc}, attack now misses.`,
+    text: `${nextCharacter.name} reacts with Shield — AC ${ac} → ${newAc}, the blow glances off (−1 L1 slot).`,
   });
   nextState = attachSpellEffect(nextState, 'shield', 'player');
   return { state: nextState, character: nextCharacter };

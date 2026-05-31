@@ -525,6 +525,11 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
+  function handleToggleShieldAutoFire() {
+    const current = character.resources.shieldAutoFire !== false;
+    setCharacter({ ...character, resources: { ...character.resources, shieldAutoFire: !current } });
+  }
+
   function handleContinue() {
     onCombatResolved(state.status === 'player-victory' ? 'victory' : 'defeat');
   }
@@ -689,7 +694,11 @@ export function CombatScreen({
               Ending turn — no actions remain.
             </div>
           )}
-          <CombatHUD character={character} state={state} />
+          <CombatHUD
+            character={character}
+            state={state}
+            onToggleShieldAutoFire={handleToggleShieldAutoFire}
+          />
           <ActionBar
             character={character}
             state={state}

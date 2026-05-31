@@ -823,7 +823,7 @@ describe('Wizard — Shield true reaction', () => {
       state = result.state;
       w = result.character;
 
-      const shieldLog = state.log.find((l) => l.text.includes('casts Shield'));
+      const shieldLog = state.log.find((l) => l.text.includes('reacts with Shield'));
       if (!shieldLog) continue;
 
       // Shield triggered: slot consumed, reaction marked, shieldActive set,
@@ -834,7 +834,7 @@ describe('Wizard — Shield true reaction', () => {
       expect(computeAC(w)).toBe(baseAc + 5);
       expect(state.lastAttack?.hit).toBe(false);
       expect(shieldLog.text).toContain(`AC ${baseAc} → ${baseAc + 5}`);
-      expect(shieldLog.text).toContain('attack now misses');
+      expect(shieldLog.text).toContain('glances off');
       validated = true;
     }
     expect(validated).toBe(true);

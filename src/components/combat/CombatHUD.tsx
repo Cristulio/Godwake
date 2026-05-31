@@ -16,6 +16,7 @@ const BLOODIED_RATIO = 0.5;
 interface CombatHUDProps {
   character: Character;
   state: CombatState;
+  onToggleShieldAutoFire?: () => void;
 }
 
 function fighterActionSurgeMax(level: number): number {
@@ -181,7 +182,7 @@ function Pill({
   );
 }
 
-export function CombatHUD({ character, state }: CombatHUDProps) {
+export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHUDProps) {
   const ac = computeAC(character);
 
   const isFighter = character.classId === 'fighter';
@@ -239,6 +240,8 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
         character.resources.mistyStepActive ? 'Misty Step' : null,
       ].filter((b): b is string => b !== null)
     : [];
+  const shieldAutoFire = character.resources.shieldAutoFire !== false;
+  const hasShield = isWizard && character.resources.knownSpells?.includes('shield') === true;
 
   // --- Active blessings (resolve glyphs + tooltips) ---
   interface BlessingEntry {
@@ -365,6 +368,28 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
                 : 'Uncanny Dodge already used this round — resets at end of turn.'
             }
           />
+        </Section>
+      )}
+
+      {hasShield && (
+        <Section title="Reaction">
+          <button
+            type="button"
+            onClick={onToggleShieldAutoFire}
+            disabled={!onToggleShieldAutoFire}
+            title={
+              shieldAutoFire
+                ? 'Shield auto-fires when it would turn a hit into a miss (costs 1 L1 slot). Click to disable.'
+                : 'Shield auto-fire is OFF — the slot is never spent automatically. Click to enable.'
+            }
+            className={`px-1.5 py-0.5 border-2 text-[8px] uppercase tracking-[0.2em] font-bold tabular-nums cursor-pointer ${
+              shieldAutoFire
+                ? 'bg-[var(--color-bg-panel)] border-[var(--color-accent-gold)] text-[var(--color-accent-amber)]'
+                : 'bg-[var(--color-bg-panel)] border-[var(--color-border-dim)] text-[var(--color-text-dim)]'
+            }`}
+          >
+            Shield {shieldAutoFire ? 'Auto' : 'Off'}
+          </button>
         </Section>
       )}
 

@@ -76,6 +76,12 @@ export interface ClassResources {
   mageArmorActive?: boolean;
   /** Wizard: Shield reaction-buff active for the next monster turn (+5 AC). Cleared at start of player's next turn. */
   shieldActive?: boolean;
+  /**
+   * Wizard: whether Shield auto-fires as a reaction when it would flip a hit to
+   * a miss. Default ON (undefined = true). Player can toggle off in the HUD to
+   * preserve slots — the toggle persists in character resources across combats.
+   */
+  shieldAutoFire?: boolean;
   /** Wizard: Misty Step bonus-action displacement active (+2 AC). Cleared at start of player's next turn. */
   mistyStepActive?: boolean;
   /** Wizard: Blur rounds left. While > 0, attackers roll against the player at disadvantage. Decrements at the start of each player turn; reset at combat start. */
