@@ -120,6 +120,8 @@ interface GameState {
   lastLoot: LootSummary | null;
   combat: CombatState | null;
   taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number; chapter?: number } | null;
+  /** Session-only queue of feature ids whose unlock tutorial is pending (head shows first). */
+  tutorialQueue: string[];
   introSeen: boolean;
   hasReincarnated: boolean;
   deathCount: number;
@@ -191,6 +193,8 @@ interface GameState {
   // Lore overlays
   showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext, chapter?: number) => void;
   dismissTaunt: () => void;
+  /** Dismiss the head unlock tutorial: mark it seen (persisted) and shift the queue. */
+  dismissTutorial: () => void;
   markIntroSeen: () => void;
 
   // Codex
@@ -370,6 +374,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
     introSeen: !!s.introSeen,
     quirksTutorialSeen: !!s.quirksTutorialSeen,
     taunt: null,
+    tutorialQueue: [],
     postmortem: null,
   });
   useDelveStore.setState({ delve: null });
@@ -455,6 +460,7 @@ export const useGameStore = create<GameState>()(
           introSeen: sc.introSeen,
           quirksTutorialSeen: sc.quirksTutorialSeen,
           taunt: sc.taunt,
+          tutorialQueue: sc.tutorialQueue,
           postmortem: sc.postmortem,
         });
       };
@@ -474,6 +480,7 @@ export const useGameStore = create<GameState>()(
         lastLoot: useDelveStore.getState().lastLoot,
         combat: useCombatStore.getState().combat,
         taunt: useScreenStore.getState().taunt,
+        tutorialQueue: useScreenStore.getState().tutorialQueue,
         introSeen: useScreenStore.getState().introSeen,
         hasReincarnated: useMetaStore.getState().hasReincarnated,
         deathCount: useMetaStore.getState().deathCount,
@@ -521,6 +528,7 @@ export const useGameStore = create<GameState>()(
             quirksTutorialSeen: false,
             taunt: null,
             tauntQueue: [],
+            tutorialQueue: [],
             postmortem: null,
           });
         },
@@ -580,6 +588,12 @@ export const useGameStore = create<GameState>()(
         showTaunt: (speaker, context, chapter) =>
           useScreenStore.getState().showTaunt(speaker, context, chapter),
         dismissTaunt: () => useScreenStore.getState().dismissTaunt(),
+        dismissTutorial: () => {
+          const sc = useScreenStore.getState();
+          const head = sc.tutorialQueue[0];
+          if (head) useMetaStore.getState().markTutorialSeen(head);
+          sc.shiftTutorial();
+        },
         markIntroSeen: () => {
           useScreenStore.getState().setIntroSeen(true);
           // First incarnation: drop the player straight into the cells.
@@ -678,6 +692,7 @@ export const useGameStore = create<GameState>()(
               quirksTutorialSeen: false,
               taunt: null,
               tauntQueue: [],
+              tutorialQueue: [],
               postmortem: null,
             });
           }

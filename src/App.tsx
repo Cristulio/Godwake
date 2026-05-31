@@ -36,6 +36,11 @@ const LevelUpScreen = lazy(() =>
 const QuirksTutorial = lazy(() =>
   import('./components/lore/QuirksTutorial').then((m) => ({ default: m.QuirksTutorial })),
 );
+const UnlockTutorialCard = lazy(() =>
+  import('./components/system/UnlockTutorialCard').then((m) => ({
+    default: m.UnlockTutorialCard,
+  })),
+);
 // DelveScreen pulls all combat code + the 1.5k-line MonsterPortrait library.
 // Lazy so the title/hub loop loads fast; delve chunk warms when the player
 // first descends.
@@ -64,11 +69,17 @@ function App() {
   const hasReincarnated = useGameStore((s) => s.hasReincarnated);
   const quirksTutorialSeen = useGameStore((s) => s.quirksTutorialSeen);
   const markQuirksTutorialSeen = useGameStore((s) => s.markQuirksTutorialSeen);
+  const tutorialQueue = useGameStore((s) => s.tutorialQueue);
+  const dismissTutorial = useGameStore((s) => s.dismissTutorial);
 
   // Show the quirks tutorial once: after first death has happened, the taunt
   // has dismissed, and the tutorial hasn't been shown yet.
   const showQuirksTutorial =
     hasReincarnated && !quirksTutorialSeen && !taunt && screen === 'hub';
+
+  // Reveal the next unlock tutorial (one at a time, queued on descent). Hold it
+  // behind any active taunt so two modals never stack.
+  const pendingUnlock = !taunt ? tutorialQueue[0] : undefined;
 
   let content;
   switch (screen) {
@@ -131,6 +142,11 @@ function App() {
       {showQuirksTutorial && (
         <Suspense fallback={null}>
           <QuirksTutorial onDismiss={markQuirksTutorialSeen} />
+        </Suspense>
+      )}
+      {pendingUnlock && (
+        <Suspense fallback={null}>
+          <UnlockTutorialCard featureId={pendingUnlock} onDismiss={dismissTutorial} />
         </Suspense>
       )}
       <SettingsButton />
