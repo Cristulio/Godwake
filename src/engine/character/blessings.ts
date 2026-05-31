@@ -42,9 +42,11 @@ export function blessingSignature(b: Blessing): string {
  * blessing keyed only on these levers is mechanically inert, so once the soul
  * owns one it should drop out of future offer rolls. Keep in sync with the
  * `Math.max`/OR branches in `aggregateBlessingModifiers`.
+ *
+ * `acBonus` is intentionally absent: it sums so that Tymora's Gambit's
+ * −1 AC penalty applies correctly (Math.max would silence the negative).
  */
 const NON_STACKING_MODIFIER_KEYS: ReadonlySet<keyof BlessingModifiers> = new Set([
-  'acBonus',
   'damageBonus',
   'holyDamageBonus',
   'extraTempHpPerRoom',
@@ -154,20 +156,17 @@ export function rollBlessingOptions(
  *
  *   - `extraTempHpPerRoom` — 5e RAW: temp HP doesn't stack (PR #80).
  *     Lathander's Dawn +3 + Ilmater's Crown +2 should be +3, not +5.
- *   - `acBonus` — Helm's Aegis + Mystra's Ward + Silvanus's Root reach +3
- *     AC, ≈ what plate gives, ≈ −15% damage taken cumulative.
- *   - `critRangeBonus` — Tempus's Edge + Tymora's Gambit reach +2 (crit
- *     on 18–20), a 3× crit rate that multiplies with damage per hit.
- *   - `damageBonus` — Mystra's Whisper + Silvanus's Thorn reach +2 per
- *     hit, multiplied by attack count (Fighter Extra Attack = +4/round).
- *   - `holyDamageBonus` — Helm's Bulwark + Lathander's Ember reach +2 per
- *     hit; radiant resistance is rare so this is near-full damage.
+ *   - `critRangeBonus` — Tempus's Edge alone should be the max crit lever,
+ *     not compounded with Tymora's Gambit for 18–20 (3× crit rate).
+ *   - `damageBonus` — only one damageBonus blessing exists post-dedup.
+ *   - `holyDamageBonus` — only one holyDamageBonus blessing exists post-dedup.
+ *
+ * `acBonus` sums (additive) so that Tymora's Gambit's −1 AC tradeoff
+ * applies correctly; it is excluded from NON_STACKING_MODIFIER_KEYS.
  *
  * Fields with only one stacking source in the current pool
- * (`firstAttackBonus`, `firstAttackDamage`, `rerollMissesPerEncounter`)
- * keep `sum` — there's nothing to stack with today, but the additive
- * shape is correct if a second source is ever added intentionally.
- * `extraStabiliseCharges` keeps `sum` for the same reason (situational
+ * (`firstAttackBonus`, `firstAttackDamage`, `rerollMissesPerEncounter`,
+ * `acBonus`) keep `sum`. `extraStabiliseCharges` sums too (situational
  * "free deaths"; stacking is the intent if multiple charges are offered).
  *
  * The v2 conditional/scaling levers follow the same split: every temp-HP
@@ -188,7 +187,7 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
     }
     const m = b.modifiers;
     if (m.acBonus !== undefined)
-      acc.acBonus = Math.max(acc.acBonus ?? 0, m.acBonus);
+      acc.acBonus = (acc.acBonus ?? 0) + m.acBonus;
     if (m.firstAttackBonus !== undefined)
       acc.firstAttackBonus = (acc.firstAttackBonus ?? 0) + m.firstAttackBonus;
     if (m.firstAttackDamage !== undefined)

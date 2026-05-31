@@ -131,9 +131,12 @@ describe('character derivation — human fighter', () => {
     expect(computeAC(blessed)).toBe(13);
   });
 
-  it("Silvanus's Root grants +1 AC", () => {
-    const rooted = { ...human, blessings: ['silvanus-root'] };
-    expect(computeAC(rooted)).toBe(13);
+  it("Silvanus's Root grants +1 AC while bloodied, not at full HP", () => {
+    // at full HP the bloodied conditional doesn't fire
+    expect(computeAC({ ...human, blessings: ['silvanus-root'] })).toBe(12);
+    // at 1 HP (bloodied = hp.current ≤ hp.max / 2 = 6) the bonus applies
+    const bloodied = { ...human, blessings: ['silvanus-root'], hp: { ...human.hp, current: 1 } };
+    expect(computeAC(bloodied)).toBe(13);
   });
 
   it("Tempus's Edge widens crit range by 1", () => {

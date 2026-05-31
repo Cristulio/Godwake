@@ -114,20 +114,21 @@ describe('rollBlessingOptions — signature dedup', () => {
 
 describe('rollBlessingOptions — excludes owned non-stacking blessings', () => {
   it('never re-offers a non-stacking blessing (or its signature twin) once owned', () => {
+    // acBonus now sums, so use damageBonus (still max-of / non-stacking) for this check.
     const pool: Blessing[] = [
-      fakeBlessing('ac-a', { acBonus: 1 }),
-      fakeBlessing('ac-b', { acBonus: 1 }),
-      fakeBlessing('dmg', { damageBonus: 1 }),
+      fakeBlessing('dmg-a', { damageBonus: 1 }),
+      fakeBlessing('dmg-b', { damageBonus: 1 }),
+      fakeBlessing('ac', { acBonus: 1 }),
       fakeBlessing('reroll', { rerollMissesPerEncounter: 1 }),
     ];
     withFakePool(pool, () => {
       for (let seed = 0; seed < 200; seed += 1) {
         const roller = createDiceRoller(seed);
-        // Owns one +1 AC card — both AC cards share its signature, so neither
-        // should ever be offered again.
-        const result = rollBlessingOptions(roller, 3, undefined, ['ac-a']);
-        expect(result).not.toContain('ac-a');
-        expect(result).not.toContain('ac-b');
+        // Owns one +1 damage card — both damage cards share its signature, so
+        // neither should ever be offered again (damageBonus is still non-stacking).
+        const result = rollBlessingOptions(roller, 3, undefined, ['dmg-a']);
+        expect(result).not.toContain('dmg-a');
+        expect(result).not.toContain('dmg-b');
       }
     });
   });
@@ -178,7 +179,7 @@ describe('aggregateBlessingModifiers — non-stacking fields take max-of-individ
     });
   });
 
-  it('takes max-of-individual for acBonus (Helm + Mystra + Silvanus would otherwise reach +3)', () => {
+  it('acBonus now sums — three +1 AC blessings reach +3 (positive values additive)', () => {
     const pool: Blessing[] = [
       fakeBlessing('helm', { acBonus: 1 }),
       fakeBlessing('mystra', { acBonus: 1 }),
@@ -186,18 +187,18 @@ describe('aggregateBlessingModifiers — non-stacking fields take max-of-individ
     ];
     withFakePool(pool, () => {
       const mods = aggregateBlessingModifiers(['helm', 'mystra', 'silv']);
-      expect(mods.acBonus).toBe(1);
+      expect(mods.acBonus).toBe(3);
     });
   });
 
-  it('takes max-of-individual for acBonus across uneven grants (picks the larger)', () => {
+  it('acBonus sums negative values — Gambit penalty correctly reduces net AC', () => {
     const pool: Blessing[] = [
-      fakeBlessing('small', { acBonus: 1 }),
-      fakeBlessing('big', { acBonus: 2 }),
+      fakeBlessing('aegis', { acBonus: 1 }),
+      fakeBlessing('gambit', { acBonus: -1, critRangeBonus: 1 }),
     ];
     withFakePool(pool, () => {
-      const mods = aggregateBlessingModifiers(['small', 'big']);
-      expect(mods.acBonus).toBe(2);
+      const mods = aggregateBlessingModifiers(['aegis', 'gambit']);
+      expect(mods.acBonus).toBe(0); // 1 + (-1) = 0: gambit's penalty applies
     });
   });
 
@@ -463,10 +464,13 @@ describe('rollBlessingOptions — real pool', () => {
 });
 
 describe('aggregateBlessingModifiers — max-of-individual stacking guard (PR #80/#86)', () => {
-  it('stacking 3 AC blessings yields the same AC as a single AC blessing', () => {
+  it('post-dedup: three AC blessings use distinct levers and stack at full HP', () => {
+    // De-cloned pool: helms-aegis=acBonus(sum), mystras-ward=acBonusWhileFull(max),
+    // silvanus-root=acBonusWhileBloodied(max). At full HP, stacked > single because
+    // distinct modifier types are intended to add together.
     const single = characterAtLevel('fighter', 5, ['helms-aegis']);
     const stacked = characterAtLevel('fighter', 5, ['helms-aegis', 'mystras-ward', 'silvanus-root']);
-    expect(computeAC(stacked)).toBe(computeAC(single));
+    expect(computeAC(stacked)).toBeGreaterThan(computeAC(single));
   });
 
   it('stacking 2 crit-range blessings yields the same crit range as one', () => {

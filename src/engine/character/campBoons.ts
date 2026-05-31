@@ -55,6 +55,10 @@ export function aggregateCampBoonMods(boonIds: readonly string[]): CampBoonModif
         acc.attackBonus = (acc.attackBonus ?? 0) + 1;
         acc.critRangeBonus = (acc.critRangeBonus ?? 0) + 1;
         break;
+      case 'gaze-of-the-lich':
+        acc.spellAttackBonus = (acc.spellAttackBonus ?? 0) + 1;
+        acc.critRangeBonus = (acc.critRangeBonus ?? 0) + 1;
+        break;
       // vigor / mantle / patience are applied at pick-time (HP bumps, stabilise
       // budget). They never read here.
       default:

@@ -86,11 +86,11 @@ export const BARBARIAN: Class = ClassSchema.parse({
   },
   preset: {
     characterName: 'Korrek Bloodmane',
-    recommendedRaceId: 'human',
+    recommendedRaceId: 'hill-dwarf',
     // STR-first with a heavy CON cushion — Unarmored Defense leans on both DEX
-    // and CON, and a d12 hull wants every point of CON it can hold. With the
-    // Human +1-across, the summary reads STR 16, CON 15, DEX 14, CHA 13, WIS
-    // 11, INT 9.
+    // and CON, and a d12 hull wants every point of CON it can hold. With Hill
+    // Dwarf's +2 CON / +1 WIS the summary reads CON 16, STR 15, DEX 13,
+    // CHA 12, WIS 11, INT 8.
     abilityScores: { str: 15, dex: 13, con: 14, int: 8, wis: 10, cha: 12 },
     recommendedSkills: ['athletics', 'intimidation'],
     flavorBlurb:
