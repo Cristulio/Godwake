@@ -452,20 +452,30 @@ describe('Wizard — Grove caster bonuses', () => {
 describe('Wizard — Misty Step (L3 unlock)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('is picked at L3 by simulateLevelUp (sim default; UI exposes a chooser)', () => {
+  it('is NOT the sim default at L3 — the picker takes Scorching Ray (burst closes fights)', () => {
     let w = makeWizard();
-    expect(w.resources.knownSpells).not.toContain('misty-step');
+    expect(w.resources.knownSpells).not.toContain('scorching-ray');
     w = simulateLevelUp(w); // L2 — no learn tier
+    expect(w.resources.knownSpells).not.toContain('scorching-ray');
+    w = simulateLevelUp(w); // L3 — picker fires, sim auto-picks scorching-ray
+    expect(w.resources.knownSpells).toContain('scorching-ray');
     expect(w.resources.knownSpells).not.toContain('misty-step');
-    w = simulateLevelUp(w); // L3 — picker fires, sim auto-picks misty-step
-    expect(w.resources.knownSpells).toContain('misty-step');
   });
 
   it('costs a bonus action, consumes a 2nd-level slot, and grants +2 AC until next turn', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
     w = simulateLevelUp(w);
-    w = simulateLevelUp(w); // L3 — has 2nd-level slots, knows misty-step
+    w = simulateLevelUp(w); // L3 — has 2nd-level slots
+    // Misty Step is no longer the sim's default L3 pick (Scorching Ray is), so
+    // stamp it explicitly to exercise its cast mechanics.
+    w = {
+      ...w,
+      resources: {
+        ...w.resources,
+        knownSpells: [...(w.resources.knownSpells ?? []), 'misty-step'],
+      },
+    };
     expect(slotsAt(w, 2)).toBe(2);
 
     const roller = createDiceRoller(11);
@@ -505,7 +515,7 @@ describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
     for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L1 → L5
     expect(w.level).toBe(5);
     expect(w.resources.spellSlots?.[3]).toBe(2);
-    expect(w.resources.knownSpells).toContain('misty-step'); // picked at L3
+    expect(w.resources.knownSpells).toContain('scorching-ray'); // picked at L3
     expect(w.resources.knownSpells).toContain('fireball'); // sim priority at L5
     // The L5 picker grants exactly one L3 spell; lightning-bolt isn't learned
     // by default. The Lightning Bolt cast test below stamps it explicitly.

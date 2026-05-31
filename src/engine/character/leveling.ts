@@ -148,16 +148,25 @@ export function availableWizardSpellsForLearn(
  * then utility). Sims, balance tests, and any non-UI caller should use this
  * instead of `applyLevelUp` so spell-learning is not skipped by accident.
  *
- * Tie-break order is deterministic so sim runs stay reproducible:
- *   fireball > lightning-bolt > burning-hands > magic-missile > magic-missile
- *   > hold-person > misty-step > shield > mage-armor > fire-bolt
+ * Tie-break order is deterministic so sim runs stay reproducible. Scorching Ray
+ * ranks above the self-buff 2nd-level spells: with only one 2nd-tier pick (at
+ * L3), a competent caster takes the single-target BURST that closes fights over
+ * Misty Step (a one-turn +2 AC panic that does nothing in a no-positioning
+ * engine). The defensive smears (Blur > Mirror Image) still rank above Misty
+ * Step so the in-game auto-player prefers them too.
+ *   fireball > lightning-bolt > scorching-ray > burning-hands > magic-missile
+ *   > hold-person > blur > mirror-image > misty-step > shield > mage-armor
+ *   > fire-bolt
  */
 const SIM_SPELL_PRIORITY: readonly string[] = [
   'fireball',
   'lightning-bolt',
+  'scorching-ray',
   'burning-hands',
   'magic-missile',
   'hold-person',
+  'blur',
+  'mirror-image',
   'misty-step',
   'shield',
   'mage-armor',

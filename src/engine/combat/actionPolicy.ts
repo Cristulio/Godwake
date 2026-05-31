@@ -59,6 +59,13 @@ const SCORCHING_RAY_WORTH_HP = 22;
 const HOLD_PERSON_THREAT = 8;
 /** Hold Person only on a target too tanky to simply burst this turn. */
 const HOLD_PERSON_MIN_HP = 25;
+/** A single target this beefy (a boss / heavy elite) is worth dropping the
+ *  biggest slot on — Fireball/Lightning single-target CLOSES the fight instead
+ *  of plinking it down with a cantrip (the "deep but never finishes" gap). */
+const BOSS_NUKE_HP = 40;
+/** HP fraction at/below which the wizard smears itself defensively (Blur /
+ *  Mirror Image) once, to survive long enough to keep casting. */
+const WIZARD_DEFENSIVE_HP = 0.5;
 
 // ---- Battlefield reads -----------------------------------------------------
 
@@ -111,6 +118,12 @@ function lowestHpTarget(live: MonsterCombatant[]): MonsterCombatant | undefined 
 function highestThreatTarget(live: MonsterCombatant[]): MonsterCombatant | undefined {
   if (live.length === 0) return undefined;
   return [...live].sort((a, b) => monsterThreat(b) - monsterThreat(a))[0];
+}
+
+/** The toughest living enemy by current HP — the one a fight stalls on. */
+function highestHpTarget(live: MonsterCombatant[]): MonsterCombatant | undefined {
+  if (live.length === 0) return undefined;
+  return [...live].sort((a, b) => b.instance.hp.current - a.instance.hp.current)[0];
 }
 
 /** True only when every living enemy resists OR is immune to this damage type —
@@ -258,7 +271,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
   const canAct = actionFree || (isRogue && character.bonusAttackAvailable === true);
   if (canAct) {
     if (isWizard) {
-      const wizardAction = chooseWizardAction(state, character, live, primary, threat);
+      const wizardAction = chooseWizardAction(character, live, primary, threat);
       if (wizardAction) return wizardAction;
     }
     // Barbarian Reckless Attack: declare it before swinging while healthy
@@ -296,10 +309,13 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
   return { kind: 'end-turn' };
 }
 
-/** Wizard spell selection: AoE for groups, control for a lone bruiser, burst /
- *  guaranteed-finish for single targets, cantrip to preserve slots on trash. */
+/**
+ * Wizard spell selection: smear-to-survive when hurt, AoE for groups, control to
+ * deny the scariest foe a turn, then ASSEMBLE BURST to actually close the fight —
+ * a beefy boss eats the biggest slot instead of being plinked with a cantrip.
+ * A level-1 slot is kept in reserve so the Shield reaction can still fire.
+ */
 function chooseWizardAction(
-  state: CombatState,
   character: Character,
   live: MonsterCombatant[],
   primary: MonsterCombatant | undefined,
@@ -307,6 +323,22 @@ function chooseWizardAction(
 ): PlannedAction | null {
   const enemyCount = live.length;
   const anchor = threat?.id ?? primary?.id;
+  const hpPct = character.hp.current / character.hp.max;
+  const actionFree = !character.actionEconomy.actionUsed;
+  const beefy = highestHpTarget(live);
+
+  // Defensive smear when genuinely hurt: Blur (sustained) or Mirror Image, once,
+  // if nothing already shields us. Surviving to keep casting beats one cantrip.
+  if (
+    actionFree &&
+    hpPct <= WIZARD_DEFENSIVE_HP &&
+    (character.resources.blurRoundsRemaining ?? 0) === 0 &&
+    (character.resources.mirrorImages ?? 0) === 0 &&
+    slotsAt(character, 2) > 0
+  ) {
+    if (knows(character, 'blur')) return { kind: 'cast', spellId: 'blur' };
+    if (knows(character, 'mirror-image')) return { kind: 'cast', spellId: 'mirror-image' };
+  }
 
   // AoE when the room is crowded.
   if (enemyCount >= 3) {
@@ -330,20 +362,9 @@ function chooseWizardAction(
     return { kind: 'cast', spellId: 'burning-hands', targetId: anchor };
   }
 
-  // No AoE available against a crowd: open with a defensive smear if we have it.
+  // Control: deny the scariest live foe its turn — worth it on a lone boss too
+  // (its whole turn vanishes while we assemble the kill), not just a crowd.
   if (
-    enemyCount >= 3 &&
-    state.round === 1 &&
-    !character.actionEconomy.actionUsed &&
-    slotsAt(character, 2) > 0
-  ) {
-    if (knows(character, 'blur')) return { kind: 'cast', spellId: 'blur' };
-    if (knows(character, 'mirror-image')) return { kind: 'cast', spellId: 'mirror-image' };
-  }
-
-  // Control: lock down the scariest enemy while we clear the rest.
-  if (
-    enemyCount >= 2 &&
     knows(character, 'hold-person') &&
     slotsAt(character, 2) > 0 &&
     threat &&
@@ -354,9 +375,25 @@ function chooseWizardAction(
     return { kind: 'cast', spellId: 'hold-person', targetId: threat.id };
   }
 
-  // Guaranteed finish: Magic Missile auto-hits, so a low target dies for sure.
+  // Guaranteed finish: Magic Missile auto-hits, so a low target dies for sure —
+  // worth even the last slot, since removing a foe is also defense.
   if (knows(character, 'magic-missile') && slotsAt(character, 1) > 0 && primary && primary.instance.hp.current <= MAGIC_MISSILE_MIN) {
     return { kind: 'cast', spellId: 'magic-missile', targetId: primary.id };
+  }
+
+  // CLOSE a beefy single target: drop the biggest slot rather than plinking a
+  // boss to death with cantrips. This is the core "deep but never finishes" fix.
+  if (enemyCount <= 2 && beefy && beefy.instance.hp.current >= BOSS_NUKE_HP) {
+    if (knows(character, 'fireball') && slotsAt(character, 3) > 0 && !aoeWasted(live, 'fire')) {
+      return { kind: 'cast', spellId: 'fireball', targetId: beefy.id };
+    }
+    if (
+      knows(character, 'lightning-bolt') &&
+      slotsAt(character, 3) > 0 &&
+      !aoeWasted(live, 'lightning')
+    ) {
+      return { kind: 'cast', spellId: 'lightning-bolt', targetId: beefy.id };
+    }
   }
 
   // Burst a beefy single threat with Scorching Ray.
@@ -370,10 +407,12 @@ function chooseWizardAction(
     return { kind: 'cast', spellId: 'scorching-ray', targetId: threat.id };
   }
 
-  // Spend a level-1 slot (Magic Missile) when a cantrip is too weak to matter.
+  // Spend a level-1 slot (Magic Missile) when a cantrip is too weak to matter —
+  // but keep one slot back for the Shield reaction (it negates a killing blow).
+  const reserveForShield = knows(character, 'shield') ? 1 : 0;
   if (
     knows(character, 'magic-missile') &&
-    slotsAt(character, 1) > 0 &&
+    slotsAt(character, 1) > reserveForShield &&
     primary &&
     primary.instance.hp.current > fireBoltFullAvg(character)
   ) {

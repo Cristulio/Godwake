@@ -247,8 +247,16 @@ describe('nextSaveAdvantage — save-advantage vector', () => {
       skillProficiencies: ['arcana', 'history'],
     });
     w = simulateLevelUp(w); // L2
-    w = simulateLevelUp(w); // L3 — sim picks Misty Step (only L2 spell unknown)
-    return w;
+    w = simulateLevelUp(w); // L3 — opens a 2nd-level slot
+    // The sim's default L3 pick is now Scorching Ray, not Misty Step — stamp
+    // Misty Step explicitly to exercise its mechanics below.
+    return {
+      ...w,
+      resources: {
+        ...w.resources,
+        knownSpells: [...(w.resources.knownSpells ?? []), 'misty-step'],
+      },
+    };
   }
 
   it('Steeled save rolls with advantage and consumes the flag', () => {
