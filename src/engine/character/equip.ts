@@ -124,6 +124,30 @@ export function isWeaponProficient(character: Character, weapon: Weapon): boolea
   return classWeaponProficient(character.classId, weapon);
 }
 
+export interface StatRequirement {
+  ability: 'str' | 'dex';
+  value: number;
+}
+
+/**
+ * The ability gate to wield a weapon, derived from its properties (mirrors the
+ * armour `strRequirement`). Heavy hafts demand STR; finesse blades and ranged
+ * arms demand DEX — ranged wins when a weapon is both (the heavy longbow keys
+ * off DEX). Thresholds bite a little — a low-STR wizard can't swing a greataxe
+ * — without locking out the generalist one-handers (no req). The expansion's
+ * ASIs let a soul grow into higher-req gear over a run. Null = no requirement.
+ */
+export function weaponStatRequirement(weapon: Weapon): StatRequirement | null {
+  const props = weapon.properties;
+  if (props.includes('ammunition') || props.includes('finesse')) {
+    return { ability: 'dex', value: 13 };
+  }
+  if (props.includes('heavy')) {
+    return { ability: 'str', value: 15 };
+  }
+  return null;
+}
+
 /**
  * Whether a class is trained to wear the given armour. Matches if the armour's
  * category is in the class's proficient set. Classes with no `armorProficiency`
@@ -148,8 +172,17 @@ export function isArmorProficient(character: Character, armor: Armor): boolean {
 export function equipDenialReason(character: Character, itemId: string): string | null {
   const item = getItem(itemId);
 
-  if (item.kind === 'weapon' && !isWeaponProficient(character, item)) {
-    return `A ${getClass(character.classId).name} can't wield this`;
+  if (item.kind === 'weapon') {
+    if (!isWeaponProficient(character, item)) {
+      return `A ${getClass(character.classId).name} can't wield this`;
+    }
+    const req = weaponStatRequirement(item);
+    if (req) {
+      const score = effectiveAbilityScores(character)[req.ability] ?? 0;
+      if (score < req.value) {
+        return `Requires ${req.ability.toUpperCase()} ${req.value}`;
+      }
+    }
   }
 
   if (item.kind === 'armor') {
@@ -191,7 +224,13 @@ export function equipItem(character: Character, inventoryIdx: number): Character
   const ref = character.inventory[inventoryIdx];
   if (!ref) return character;
   const item = getItem(ref.itemId);
-  if (item.kind === 'weapon' && !isWeaponProficient(character, item)) return character;
+  if (item.kind === 'weapon') {
+    if (!isWeaponProficient(character, item)) return character;
+    const req = weaponStatRequirement(item);
+    if (req && (effectiveAbilityScores(character)[req.ability] ?? 0) < req.value) {
+      return character;
+    }
+  }
   if (item.kind === 'armor') {
     if (!isArmorProficient(character, item)) return character;
     if (item.strRequirement !== undefined) {

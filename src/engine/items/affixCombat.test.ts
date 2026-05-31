@@ -34,6 +34,13 @@ function rolledWeapon(affixes: string[]): ItemRef {
   };
 }
 
+function enhancedWeapon(enhancement: number): ItemRef {
+  return {
+    itemId: 'longsword',
+    rolled: { baseId: 'longsword', rarity: 'blue', affixes: [], enhancement, name: `+${enhancement} Test Blade` },
+  };
+}
+
 function findMonster(state: CombatState): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
 }
@@ -82,6 +89,23 @@ describe('weapon affixes in playerAttack', () => {
 
     const cruelDamageLine = cruel.state.log.find((l) => l.kind === 'damage');
     expect(cruelDamageLine?.text).toContain('2 gear');
+  });
+
+  it('a +N enhancement adds N to damage on a hit (separate from affixes)', () => {
+    // A +2 weapon should land more hits than a +0 (the +2 to-hit), so search a
+    // seed the PLAIN weapon already hits with — then the only delta is damage.
+    let hitSeed: string | null = null;
+    for (let i = 0; i < 40 && !hitSeed; i++) {
+      if (damageTotal(attackOnce({ itemId: 'longsword' }, `enh-${i}`).state) !== null) {
+        hitSeed = `enh-${i}`;
+      }
+    }
+    expect(hitSeed).not.toBeNull();
+
+    const plain = attackOnce({ itemId: 'longsword' }, hitSeed!);
+    const plus2 = attackOnce(enhancedWeapon(2), hitSeed!);
+    expect(damageTotal(plus2.state)! - damageTotal(plain.state)!).toBe(2);
+    expect(plus2.state.log.find((l) => l.kind === 'damage')?.text).toContain('2 enhancement');
   });
 
   it('a Relentless affix adds damage only on a follow-up swing', () => {

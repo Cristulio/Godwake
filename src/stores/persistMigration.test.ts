@@ -199,7 +199,7 @@ describe('migrateV1ToV2', () => {
 
 describe('SAVE_VERSION', () => {
   it('is 13', () => {
-    expect(SAVE_VERSION).toBe(13);
+    expect(SAVE_VERSION).toBe(14);
   });
 });
 
@@ -260,6 +260,35 @@ describe('migrateV1ToV2 — v12 → v13 progressive-unlock ladder', () => {
     expect(
       migrateV1ToV2({ unlockedUpgrades: {}, seenTutorials: ['grove-intro'] }).seenTutorials,
     ).toEqual(['grove-intro']);
+  });
+});
+
+describe('migrateV1ToV2 — v13 → v14 gear enhancement default-fill', () => {
+  it('default-fills enhancement: 0 on a pre-v14 equipped rolled item', () => {
+    const character = makeBareCharacter({
+      equipped: {
+        mainHand: { itemId: 'longsword', rolled: { baseId: 'longsword', rarity: 'blue', affixes: ['keen'], name: 'Keen Longsword' } },
+        offHand: null,
+        armor: null,
+      },
+    });
+    const v = migrateV1ToV2({ character, unlockedUpgrades: {} });
+    const mh = (v.character as unknown as { equipped: { mainHand: { rolled: { enhancement: number; affixes: string[] } } } }).equipped.mainHand;
+    expect(mh.rolled.enhancement).toBe(0);
+    expect(mh.rolled.affixes).toEqual(['keen']); // known affix kept
+  });
+
+  it('preserves an existing enhancement value', () => {
+    const character = makeBareCharacter({
+      equipped: {
+        mainHand: { itemId: 'longsword', rolled: { baseId: 'longsword', rarity: 'purple', affixes: [], enhancement: 3, name: '+3 Longsword' } },
+        offHand: null,
+        armor: null,
+      },
+    });
+    const v = migrateV1ToV2({ character, unlockedUpgrades: {} });
+    const mh = (v.character as unknown as { equipped: { mainHand: { rolled: { enhancement: number } } } }).equipped.mainHand;
+    expect(mh.rolled.enhancement).toBe(3);
   });
 });
 

@@ -1,6 +1,7 @@
 import type { Item, RolledItem } from '../../schemas/item';
 import type { Rarity } from '../../schemas/ids';
 import { getAffix } from '../../content/items';
+import { weaponStatRequirement } from '../../engine/character/equip';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from './rarity';
 
 interface ItemTooltipProps {
@@ -54,7 +55,7 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, agileTradeoffWarni
       </div>
 
       <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] font-mono">
-        {renderStats(item, rolledCost)}
+        {renderStats(item, rolledCost, rolled)}
       </div>
 
       {isRolled && rolled.affixes.length > 0 && (
@@ -117,23 +118,29 @@ function kindLabel(item: Item): string {
   }
 }
 
-function renderStats(item: Item, rolledCost?: number) {
+function renderStats(item: Item, rolledCost?: number, rolled?: RolledItem) {
   const rows: Array<[string, string]> = [];
+  const enh = rolled?.enhancement ?? 0;
+  const plus = enh > 0 ? ` +${enh}` : '';
   if (item.kind === 'weapon') {
-    rows.push(['Damage', `${item.damage} ${item.damageType}`]);
-    if (item.versatileDamage) rows.push(['Versatile', item.versatileDamage]);
+    rows.push(['Damage', `${item.damage}${plus} ${item.damageType}`]);
+    if (item.versatileDamage) rows.push(['Versatile', `${item.versatileDamage}${plus}`]);
+    if (enh > 0) rows.push(['Enhancement', `+${enh} hit & dmg`]);
     if (item.range) rows.push(['Range', `${item.range[0]}/${item.range[1]} ft`]);
     const displayProps = item.properties.filter((p) => p !== 'special');
     if (displayProps.length > 0) {
       rows.push(['Properties', displayProps.join(', ')]);
     }
+    const req = weaponStatRequirement(item);
+    if (req) rows.push(['Req', `${req.ability.toUpperCase()} ${req.value}`]);
   } else if (item.kind === 'armor') {
     if (item.category === 'shield') {
-      rows.push(['AC bonus', `+${item.baseAC}`]);
+      rows.push(['AC bonus', `+${item.baseAC + enh}`]);
     } else if (item.category === 'robe') {
       rows.push(['Armour', 'none (caster)']);
     } else {
-      rows.push(['Base AC', String(item.baseAC)]);
+      rows.push(['Base AC', String(item.baseAC + enh)]);
+      if (enh > 0) rows.push(['Enhancement', `+${enh} AC`]);
     }
     if (item.strRequirement) rows.push(['Str req', String(item.strRequirement)]);
   } else if (item.kind === 'consumable') {

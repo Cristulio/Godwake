@@ -118,6 +118,94 @@ describe('rolledItemName', () => {
     expect(rolledItemName('Longsword', ['mending'])).toBe('Longsword of Mending');
     expect(rolledItemName('Longsword', [])).toBe('Longsword');
   });
+
+  it('leads the name with the +N enhancement', () => {
+    expect(rolledItemName('Longsword', ['keen'], 2)).toBe('+2 Keen Longsword');
+    expect(rolledItemName('Longsword', [], 3)).toBe('+3 Longsword');
+    expect(rolledItemName('Longsword', ['keen'], 0)).toBe('Keen Longsword');
+  });
+});
+
+describe('enhancement (+N) axis', () => {
+  it('never exceeds the rarity ceiling (green ≤ +1, blue ≤ +2, purple ≤ +3)', () => {
+    const caps: Record<'green' | 'blue' | 'purple', number> = { green: 1, blue: 2, purple: 3 };
+    for (const [rarity, cap] of Object.entries(caps) as Array<['green' | 'blue' | 'purple', number]>) {
+      for (let i = 0; i < 40; i++) {
+        const ref = rollItem(createDiceRoller(`enh-${rarity}-${i}`), {
+          rarity,
+          classId: 'fighter',
+          kind: 'weapon',
+          depth: 6,
+        });
+        expect(ref.rolled?.enhancement ?? 0).toBeLessThanOrEqual(cap);
+      }
+    }
+  });
+
+  it('respects the depth ceiling — Chapter 1 weapons never exceed +1', () => {
+    for (let i = 0; i < 60; i++) {
+      const ref = rollItem(createDiceRoller(`ch1-${i}`), {
+        rarity: 'purple',
+        classId: 'fighter',
+        kind: 'weapon',
+        depth: 1,
+      });
+      expect(ref.rolled?.enhancement ?? 0).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('scales up with depth — deep loot averages a higher +N than shallow', () => {
+    const totalEnh = (depth: number) => {
+      let sum = 0;
+      for (let i = 0; i < 80; i++) {
+        const ref = rollItem(createDiceRoller(`scale-${i}`), {
+          rarity: 'purple',
+          classId: 'fighter',
+          kind: 'weapon',
+          depth,
+        });
+        sum += ref.rolled?.enhancement ?? 0;
+      }
+      return sum;
+    };
+    expect(totalEnh(6)).toBeGreaterThan(totalEnh(1));
+  });
+
+  it('never enhances a robe (no AC) or an accessory (pure affix carrier)', () => {
+    for (let i = 0; i < 30; i++) {
+      const robe = rollItem(createDiceRoller(`robe-${i}`), {
+        rarity: 'purple',
+        classId: 'wizard',
+        kind: 'armor',
+        depth: 6,
+      });
+      expect(robe.rolled?.enhancement ?? 0).toBe(0);
+      const accessory = rollItem(createDiceRoller(`acc-${i}`), {
+        rarity: 'purple',
+        classId: 'fighter',
+        kind: 'accessory',
+        depth: 6,
+      });
+      expect(accessory.rolled?.enhancement ?? 0).toBe(0);
+    }
+  });
+
+  it('deeper chapters surface higher base tiers more often (greatsword/greataxe)', () => {
+    const bigBaseCount = (depth: number) => {
+      let n = 0;
+      for (let i = 0; i < 120; i++) {
+        const ref = rollItem(createDiceRoller(`tier-${i}`), {
+          rarity: 'green',
+          classId: 'fighter',
+          kind: 'weapon',
+          depth,
+        });
+        if (ref.itemId === 'greatsword' || ref.itemId === 'greataxe') n += 1;
+      }
+      return n;
+    };
+    expect(bigBaseCount(6)).toBeGreaterThan(bigBaseCount(1));
+  });
 });
 
 describe('rolledItemCost', () => {
@@ -129,5 +217,14 @@ describe('rolledItemCost', () => {
 
   it('a plain base ref (no rolled payload) costs its base price', () => {
     expect(rolledItemCost({ itemId: 'longsword' })).toBe(getItem('longsword').cost);
+  });
+
+  it('prices up with the +N enhancement (the deep-loot gold sink)', () => {
+    const mk = (enhancement: number) => ({
+      itemId: 'longsword',
+      rolled: { baseId: 'longsword', rarity: 'blue' as const, affixes: [], enhancement, name: 'x' },
+    });
+    expect(rolledItemCost(mk(2))).toBeGreaterThan(rolledItemCost(mk(0)));
+    expect(rolledItemCost(mk(3))).toBeGreaterThan(rolledItemCost(mk(2)));
   });
 });

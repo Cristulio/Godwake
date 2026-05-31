@@ -23,7 +23,7 @@ import { HUNTERS_MARK_DICE } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
 import { characterCampBoonMods } from '../../character/campBoons';
-import { characterAffixMods } from '../../items/affixMods';
+import { characterAffixMods, enhancementOf } from '../../items/affixMods';
 import { getItem } from '../../../content/items';
 import { playerConditionMods } from '../playerConditions';
 import { playSfx, swingSfxForWeapon } from '../../audio';
@@ -123,6 +123,10 @@ export function playerAttack(
   attackBonus += boonMods.attackBonus ?? 0;
   // Honed weapon affix: flat +to-hit.
   attackBonus += affixMods.attackBonus;
+  // Weapon enhancement (+N): a flat axis on the swung main-hand, separate from
+  // affixes — adds to the attack roll here and to damage in the hit block.
+  const weaponEnhancement = enhancementOf(nextCharacter.equipped.mainHand);
+  attackBonus += weaponEnhancement;
   // Weapon accuracy lever: the shortbow's inherent +to-hit, traded for a smaller die.
   attackBonus += w.attackMod ?? 0;
   // Class affinity: a weapon that fits the wielder's hands. The edge is applied
@@ -282,6 +286,12 @@ export function playerAttack(
     if (affixMods.damageBonus) {
       bonusDamage += affixMods.damageBonus;
       onTypeParts.push({ amount: affixMods.damageBonus, label: 'gear' });
+    }
+    // Weapon enhancement (+N): the same flat bonus already added to the attack
+    // roll now lands on damage.
+    if (weaponEnhancement > 0) {
+      bonusDamage += weaponEnhancement;
+      onTypeParts.push({ amount: weaponEnhancement, label: 'enhancement' });
     }
     // Weapon damage lever: the longbow's inherent +damage, paid for in accuracy.
     if (w.damageMod) {
