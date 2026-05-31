@@ -71,8 +71,8 @@ describe('playerAttack — weapon ability selection', () => {
   it('Rogue with shortbow uses DEX, not STR (would-be +1 STR build prints +6 DEX)', () => {
     const rogue = makeRogueDexBuild();
     // Base STR 8, base DEX 17. Human race adds +1 to every stat → STR 9 / DEX 18,
-    // mods -1 / +4. L1 proficiency = +2. So the bow should print +6 (DEX path).
-    // If the bug were still live, it would print +1 (STR path).
+    // mods -1 / +4. L1 proficiency = +2, plus the shortbow's +2 accuracy lever.
+    // So the bow prints +8 (DEX path); the STR path would print +3.
     rogue.baseAbilityScores = {
       str: 8,
       dex: 17,
@@ -91,8 +91,8 @@ describe('playerAttack — weapon ability selection', () => {
     const line = state.log.find((l) => /fires at .* with Shortbow/.test(l.text));
     expect(line).toBeDefined();
     const bonus = extractAttackBonus(line!.text);
-    expect(bonus).toBe(6);
-    expect(bonus).not.toBe(1);
+    expect(bonus).toBe(8);
+    expect(bonus).not.toBe(3);
     void character;
   });
 

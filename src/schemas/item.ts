@@ -31,6 +31,24 @@ export const WeaponSchema = z.object({
   versatileDamage: DiceExpressionStringSchema.optional(),
   /** Range in feet for ranged or thrown weapons: [normal, long]. */
   range: z.tuple([z.number(), z.number()]).optional(),
+  /**
+   * Class this weapon "fits". Wielded by its class it grants a small mechanical
+   * affinity edge (+1 damage). Maps the catalogue across the five classes
+   * (dagger→rogue, bow→ranger, greataxe→barbarian, longsword→fighter,
+   * quarterstaff→wizard). Omitted = no class affinity.
+   */
+  affinity: ClassIdSchema.optional(),
+  /**
+   * Inherent to-hit modifier — the accuracy lever. The accurate weapon of a
+   * redundant pair carries +N here in exchange for a smaller damage die (the
+   * shortbow trades the longbow's larger die for +2 to hit).
+   */
+  attackMod: z.number().optional(),
+  /**
+   * Inherent flat damage modifier — the damage lever. The hard-hitting weapon
+   * of a pair carries +N here (the longbow over the more accurate shortbow).
+   */
+  damageMod: z.number().optional(),
   weight: z.number(),
   cost: z.number(),
   rarity: RaritySchema,
