@@ -129,34 +129,45 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
       ? `0 0 12px ${style.glow}, 0 0 24px rgba(255,71,48,0.6), 3px 3px 0 rgba(0,0,0,0.95), -2px -2px 0 rgba(0,0,0,0.95)`
       : `0 0 9px ${style.glow}, 0 0 4px rgba(0,0,0,0.95), 2px 2px 0 rgba(0,0,0,0.9)`;
 
-  // Measure rendered bounds and shift horizontally to stay within the viewport.
-  // useLayoutEffect fires before paint, so the correction is invisible to the eye.
-  const ref = useRef<HTMLDivElement>(null);
-  const [xClamp, setXClamp] = useState(0);
+  // The CSS animation owns `transform` entirely — inline transform would be
+  // overridden the moment the animation starts and the clamp would have no effect.
+  // Fix: outer div owns the clamped X position via `left` (never touched by the
+  // animation); inner div carries the animation class (translateY + scale only).
+  //
+  // useLayoutEffect + setState triggers a synchronous re-render before the first
+  // browser paint, so the corrected `left` value is what gets painted — no flash.
+  const outerRef = useRef<HTMLDivElement>(null);
+  const [left, setLeft] = useState<string>('50%');
+
   useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const margin = 6;
-    if (rect.right > window.innerWidth - margin) {
-      setXClamp(window.innerWidth - margin - rect.right);
-    } else if (rect.left < margin) {
-      setXClamp(margin - rect.left);
-    }
-  }, [item.id]);
+    const outer = outerRef.current;
+    if (!outer) return;
+    const container = outer.parentElement;
+    if (!container) return;
+    const cRect = container.getBoundingClientRect();
+    const textW = outer.getBoundingClientRect().width;
+    // Reserve space for the peak animation scale so the number stays in bounds
+    // at every frame, not just at rest.
+    const peakScale = item.kind === 'crit' ? 1.7 : 1.4;
+    const halfW = (textW * peakScale) / 2;
+    const margin = 8;
+    const nominalVP = cRect.left + cRect.width / 2 + offsetX;
+    const clampedVP = Math.max(margin + halfW, Math.min(window.innerWidth - margin - halfW, nominalVP));
+    setLeft(`${clampedVP - cRect.left - textW / 2}px`);
+  }, [item.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div
-      ref={ref}
-      className={`absolute top-1/3 font-display font-extrabold ${style.color} ${style.size} ${style.animation} pointer-events-none`}
-      style={{
-        left: '50%',
-        transform: `translate(calc(-50% + ${offsetX + xClamp}px), 0)`,
-        textShadow,
-        letterSpacing: '0.02em',
-      }}
+      ref={outerRef}
+      className="absolute top-1/3 pointer-events-none"
+      style={{ left }}
     >
-      {label}
+      <div
+        className={`font-display font-extrabold whitespace-nowrap ${style.color} ${style.size} ${style.animation}`}
+        style={{ textShadow, letterSpacing: '0.02em' }}
+      >
+        {label}
+      </div>
     </div>
   );
 }
