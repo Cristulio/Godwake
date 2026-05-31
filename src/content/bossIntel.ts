@@ -12,7 +12,7 @@ import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
  *   2. Study the approach (coin)   — `battle-plan`: opening strike + advantage on
  *                                     your first save (the held-opener counter) +
  *                                     a chapter-scaled temp-HP gird.
- *   3. Walk past (free)            — no edge, but boss gold drop +5% on this boss.
+ *   3. Walk past (free)            — no edge, but boss gold drop +10% on this boss.
  *
  * Buff magnitudes are defined here (`bossIntelBuffFor`) and applied at boss
  * combat start in `createCombat`. The intel beat is preparation, not narration.
@@ -226,7 +226,7 @@ export function intelEventIdFor(bossDefId: string): string {
 /**
  * Build the EventTemplate for a boss intel card. Three choices: find the weak
  * spot (free, minor edge), study the approach (coin, bigger edge), walk past
- * (mark bold for +5% gold on that boss). Returned templates are registered
+ * (mark bold for +10% gold on that boss). Returned templates are registered
  * into the main event pool from `content/events/index.ts`.
  */
 export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {

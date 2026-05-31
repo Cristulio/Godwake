@@ -9,6 +9,7 @@ import { playSfx } from '../../audio';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
 import { useMetaStore } from '../../../stores/metaStore';
+import { wearsHeavierThanLight } from '../../character/equip';
 
 const UNCANNY_DODGE_LEVEL = 5;
 
@@ -78,6 +79,7 @@ export function applyDamage(
     nextCharacter.classId === 'rogue' &&
     nextCharacter.level >= UNCANNY_DODGE_LEVEL &&
     !nextCharacter.actionEconomy.reactionUsed &&
+    !wearsHeavierThanLight(nextCharacter) &&
     workingAmount > 0
   ) {
     const halved = Math.floor(workingAmount / 2);

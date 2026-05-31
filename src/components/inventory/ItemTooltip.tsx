@@ -9,6 +9,10 @@ interface ItemTooltipProps {
   hint?: string;
   /** Present for rolled loot — drives the name, rarity colour, and affix list. */
   rolled?: RolledItem;
+  /** Override the displayed value (gp) — use the rolled premium price, not base.cost. */
+  rolledCost?: number;
+  /** Non-null when equipping this item suppresses a class's agile perks. */
+  agileTradeoffWarning?: string;
 }
 
 const RARITY_LABEL: Record<Rarity, string> = {
@@ -29,7 +33,7 @@ const RARITY_COLOR: Record<Rarity, string> = {
   artifact: 'var(--color-accent-blood)',
 };
 
-export function ItemTooltip({ item, hint, rolled }: ItemTooltipProps) {
+export function ItemTooltip({ item, hint, rolled, rolledCost, agileTradeoffWarning }: ItemTooltipProps) {
   const isRolled = rolled !== undefined && rolled.rarity !== 'white';
   const borderColor = isRolled ? GEAR_RARITY_COLOR[rolled.rarity] : 'var(--color-accent-amber)';
   const displayName = rolled?.name ?? item.name;
@@ -50,7 +54,7 @@ export function ItemTooltip({ item, hint, rolled }: ItemTooltipProps) {
       </div>
 
       <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] font-mono">
-        {renderStats(item)}
+        {renderStats(item, rolledCost)}
       </div>
 
       {isRolled && rolled.affixes.length > 0 && (
@@ -72,6 +76,14 @@ export function ItemTooltip({ item, hint, rolled }: ItemTooltipProps) {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {agileTradeoffWarning && (
+        <div className="mt-2 pt-2 border-t border-[var(--color-border-dim)]">
+          <div className="text-[10px] leading-snug text-[var(--color-accent-amber)]">
+            ⚠ {agileTradeoffWarning}
+          </div>
         </div>
       )}
 
@@ -105,7 +117,7 @@ function kindLabel(item: Item): string {
   }
 }
 
-function renderStats(item: Item) {
+function renderStats(item: Item, rolledCost?: number) {
   const rows: Array<[string, string]> = [];
   if (item.kind === 'weapon') {
     rows.push(['Damage', `${item.damage} ${item.damageType}`]);
@@ -128,7 +140,7 @@ function renderStats(item: Item) {
     rows.push(['Action', item.actionCost === 'bonus' ? 'bonus' : 'action']);
     if (item.healDice) rows.push(['Heal', item.healDice]);
   }
-  rows.push(['Value', `${item.cost} gp`]);
+  rows.push(['Value', `${rolledCost ?? item.cost} gp`]);
 
   return rows.map(([label, value]) => (
     <div key={label} className="contents">
