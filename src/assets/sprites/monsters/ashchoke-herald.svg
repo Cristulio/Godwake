@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 28 36"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+    >
+      <rect x="4" y="2" width="2" height="30" fill="#3a3a40" />
+      <rect x="4" y="2" width="6" height="2" fill="#3a3a40" />
+      <rect x="9" y="2" width="3" height="3" fill="#5a4a36" />
+      <rect x="9" y="2" width="3" height="1" fill="#e87820" />
+      <rect x="3" y="0" width="9" height="2" fill="#5a5a64" opacity="0.5" />
+      <rect x="1" y="2" width="11" height="2" fill="#4a4a52" opacity="0.45" />
+      <rect x="2" y="5" width="9" height="2" fill="#5a5a64" opacity="0.35" />
+      <rect x="4" y="8" width="7" height="2" fill="#4a4a52" opacity="0.3" />
+
+      <ellipse cx="18" cy="9" rx="6" ry="7" fill="#2a2832" />
+      <ellipse cx="18" cy="10" rx="4" ry="5" fill="#16141c" />
+      <rect x="16" y="9" width="2" height="2" fill="#f4942a" />
+      <rect x="19" y="9" width="2" height="2" fill="#f4942a" />
+      <rect x="16" y="9" width="1" height="1" fill="#ffd070" />
+      <polygon points="12,9 18,3 24,9" fill="#2a2832" />
+      <polygon points="13,9 18,5 23,9" fill="#3a3742" />
+
+      <rect x="12" y="15" width="13" height="16" fill="#2a2832" />
+      <rect x="12" y="15" width="13" height="1" fill="#3a3742" />
+      <rect x="17" y="16" width="3" height="15" fill="#1c1a24" />
+      <rect x="13" y="18" width="11" height="2" fill="#3a3742" opacity="0.6" />
+      <rect x="14" y="22" width="9" height="1" fill="#5a5a64" opacity="0.4" />
+
+      <rect x="12" y="31" width="13" height="3" fill="#1c1a24" />
+      <polygon points="12,34 15,36 18,34" fill="#2a2832" />
+      <polygon points="18,34 21,36 24,34" fill="#2a2832" />
+
+      <rect x="9" y="16" width="4" height="2" fill="#2a2832" />
+      <rect x="7" y="14" width="3" height="2" fill="#3a3742" />
+      <rect x="6" y="13" width="2" height="2" fill="#e87820" opacity="0.6" />
+    </svg>

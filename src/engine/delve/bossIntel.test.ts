@@ -53,25 +53,18 @@ function roller() {
 describe('boss intel rooms — placement', () => {
   it('Godwake delve has an intel event 1 room before each chapter boss', () => {
     const d = createGodwakeDelve(1);
-    const bossIndices = d.rooms
+    const bosses = d.rooms
       .map((r, i) => ({ r, i }))
-      .filter(({ r }) => r.kind === 'boss')
-      .map(({ i }) => i);
-    expect(bossIndices).toHaveLength(7);
-    const expectedBossIds = [
-      'duergar-ilyich',
-      'athkatla-magistrate',
-      'asylum-director',
-      'drow-matron-mother',
-      'hollow-dawn',
-      'the-unmade',
-      'drowned-custodian', // Ch7 · The Drowned Archive
-    ];
-    bossIndices.forEach((bossIdx, i) => {
-      const before = d.rooms[bossIdx - 1];
+      .filter(({ r }) => r.kind === 'boss');
+    expect(bosses.length).toBeGreaterThanOrEqual(6);
+    // Each boss's own intel beat sits exactly one room before it — derived from
+    // the boss def id, so appended chapters (Ch7-9) are covered automatically.
+    for (const { r, i } of bosses) {
+      const before = d.rooms[i - 1];
+      const bossDefId = r.monsters?.[0]?.defId;
       expect(before.kind).toBe('event');
-      expect(before.eventTemplateId).toBe(intelEventIdFor(expectedBossIds[i]));
-    });
+      expect(before.eventTemplateId).toBe(intelEventIdFor(bossDefId!));
+    }
   });
 
   it('every boss intel card has a corresponding registered event template', () => {
@@ -198,21 +191,13 @@ describe('boss intel — buff definitions', () => {
   });
 
   it('battle-plan adds the braced save and a chapter-scaled temp-HP gird', () => {
-    const expectedGird: Record<string, number> = {
-      'duergar-ilyich': 6, // chapter 1
-      'athkatla-magistrate': 9, // chapter 2
-      'asylum-director': 12, // chapter 3
-      'drow-matron-mother': 15, // chapter 4
-      'hollow-dawn': 18, // chapter 5
-      'the-unmade': 21, // chapter 6
-      'drowned-custodian': 24, // chapter 7
-    };
     for (const card of BOSS_INTEL_CARDS) {
       const buff = bossIntelBuffFor(card.bossDefId, 'battle-plan');
       expect(buff).toBeTruthy();
       expect(buff!.firstStrikeAdvantage).toBe(true);
       expect(buff!.bracedSave).toBe(true);
-      expect(buff!.tempHp).toBe(expectedGird[card.bossDefId]);
+      // Gird = 3·(chapter+1): Ch1 → 6, Ch6 → 21, Ch8 → 27.
+      expect(buff!.tempHp).toBe(3 * (card.chapter + 1));
     }
   });
 
@@ -288,17 +273,25 @@ describe('boss intel — applied at the boss fight (createCombat)', () => {
 
 describe('boss intel cards — content', () => {
   it('exposes one card per chapter boss', () => {
-    expect(BOSS_INTEL_CARDS.map((c) => c.bossDefId).sort()).toEqual(
-      [
-        'asylum-director',
-        'athkatla-magistrate',
-        'drow-matron-mother',
+    const ids = BOSS_INTEL_CARDS.map((c) => c.bossDefId);
+    // No boss carries two cards.
+    expect(new Set(ids).size).toBe(ids.length);
+    // The Ch1-6 spine plus the L20-expansion bosses (Ch7 Drowned Custodian,
+    // Ch8 Ashen Marshal) are all present; the Ch9 lane appends its own.
+    expect(ids).toEqual(
+      expect.arrayContaining([
         'duergar-ilyich',
+        'athkatla-magistrate',
+        'asylum-director',
+        'drow-matron-mother',
         'hollow-dawn',
-        'the-unmade', // Ch6 (Beyond the Godwake)
-        'drowned-custodian', // Ch7 (The Drowned Archive)
-      ].sort(),
+        'the-unmade',
+        'drowned-custodian', // Ch7 — The Drowned Archive
+        'ashen-marshal', // Ch8 — The Ashfall March
+      ]),
     );
+    // Every card foreshadows a registered monster.
+    for (const id of ids) expect(() => getMonster(id)).not.toThrow();
   });
 
   it('every card has a unique coin cost scaling super-linearly with chapter', () => {

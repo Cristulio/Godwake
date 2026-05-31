@@ -74,6 +74,15 @@ import drownedMnemonicUrl from '../../assets/sprites/monsters/drowned-mnemonic.s
 import theUnindexedUrl from '../../assets/sprites/monsters/the-unindexed.svg';
 import tideboundCodexUrl from '../../assets/sprites/monsters/tidebound-codex.svg';
 import drownedCustodianUrl from '../../assets/sprites/monsters/drowned-custodian.svg';
+// ─── Chapter 8 · The Ashfall March ──────────────────────────────────────
+import emberConscriptUrl from '../../assets/sprites/monsters/ember-conscript.svg';
+import cinderwakeHoundUrl from '../../assets/sprites/monsters/cinderwake-hound.svg';
+import slagboundLegionaryUrl from '../../assets/sprites/monsters/slagbound-legionary.svg';
+import ashchokeHeraldUrl from '../../assets/sprites/monsters/ashchoke-herald.svg';
+import gravesmokeRevenantUrl from '../../assets/sprites/monsters/gravesmoke-revenant.svg';
+import pyreChaplainUrl from '../../assets/sprites/monsters/pyre-chaplain.svg';
+import slagColossusUrl from '../../assets/sprites/monsters/slag-colossus.svg';
+import ashenMarshalUrl from '../../assets/sprites/monsters/ashen-marshal.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -170,6 +179,15 @@ const SPRITES: Record<string, SpriteEntry> = {
   'the-unindexed': { url: theUnindexedUrl, label: 'The Unindexed' },
   'tidebound-codex': { url: tideboundCodexUrl, label: 'Tidebound Codex' },
   'drowned-custodian': { url: drownedCustodianUrl, label: 'The Drowned Custodian' },
+  // ─── Chapter 8 · The Ashfall March ──────────────────────────────────────
+  'ember-conscript': { url: emberConscriptUrl, label: 'Ember-Conscript' },
+  'cinderwake-hound': { url: cinderwakeHoundUrl, label: 'Cinderwake Hound' },
+  'slagbound-legionary': { url: slagboundLegionaryUrl, label: 'Slagbound Legionary' },
+  'ashchoke-herald': { url: ashchokeHeraldUrl, label: 'Ashchoke Herald' },
+  'gravesmoke-revenant': { url: gravesmokeRevenantUrl, label: 'Gravesmoke Revenant' },
+  'pyre-chaplain': { url: pyreChaplainUrl, label: 'Pyre-Chaplain' },
+  'slag-colossus': { url: slagColossusUrl, label: 'Slag-Colossus' },
+  'ashen-marshal': { url: ashenMarshalUrl, label: 'Dravok, the Ashen Marshal' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },
