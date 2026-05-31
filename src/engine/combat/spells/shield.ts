@@ -28,6 +28,15 @@ export function castShield(character: Readonly<Character>, state: CombatState): 
 /** AC bonus Shield adds while reactive flag is up. Mirrors 5e RAW. */
 export const SHIELD_AC_BONUS = 5;
 
+/**
+ * HP fraction at/above which the Shield reaction stands down — chip damage on a
+ * healthy wizard is let through so the caster actually feels threatened (the
+ * "too-tanky mage" fix). Below this it auto-fires as the clutch survival wall it
+ * was designed to be. Keeping the slot back at full HP also eases the wizard's
+ * documented sustain lag (fewer L1 slots burnt walling glancing blows).
+ */
+export const SHIELD_REACTION_HP = 0.5;
+
 export interface ShieldReactionTrigger {
   state: CombatState;
   character: Character;
@@ -35,9 +44,10 @@ export interface ShieldReactionTrigger {
 
 /**
  * Try to fire Shield as a reaction in response to an incoming hit. Auto-casts
- * only when the +5 AC would actually turn the hit into a miss — otherwise the
- * slot would be wasted. Returns null if no reaction fires (caller proceeds with
- * the original hit).
+ * only when the wizard is at/below half HP (a clutch wall, not a free per-hit
+ * buff — see {@link SHIELD_REACTION_HP}) AND the +5 AC would actually turn the
+ * hit into a miss — otherwise the slot would be wasted. Returns null if no
+ * reaction fires (caller proceeds with the original hit).
  *
  * Mirrors the Uncanny Dodge pattern (PR #70): no UI picker, reactionUsed flag
  * resets at turn start. Crits (nat 20) bypass Shield by RAW — Shield only
@@ -54,6 +64,9 @@ export function tryShieldReaction(
   if (character.actionEconomy.reactionUsed) return null;
   if (slotsAt(character, 1) <= 0) return null;
   if (character.resources.shieldAutoFire === false) return null;
+  // Clutch only: a healthy wizard eats the glancing blow (feels threatened);
+  // Shield is reserved for when HP actually matters.
+  if (character.hp.current > character.hp.max * SHIELD_REACTION_HP) return null;
   const newAc = ac + SHIELD_AC_BONUS;
   if (attackTotal >= newAc) return null;
 
