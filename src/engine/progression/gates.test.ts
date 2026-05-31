@@ -1,7 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { createGodwakeDelve } from '../delve';
-import { rollGearDrop } from '../items/drops';
-import { createDiceRoller } from '../dice';
 import { rollGearStock } from '../../components/delve/shopStock';
 
 // ── elite-nodes: elite slots downgraded when locked ──────────────────────────
