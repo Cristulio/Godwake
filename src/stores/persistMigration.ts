@@ -32,8 +32,11 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *            `character.legendaryBonuses` stat field is stripped here; the new
  *            `character.legendaryEffects` is re-baked from `activeLegendaries` on
  *            load (scatterSnapshot). Owned/active relic ids are unchanged.
+ *  v10 → v11: Rage is now available every combat (no per-rest charge cap).
+ *             `character.resources.rageUsesRemaining` is stripped — the field
+ *             no longer exists in ClassResources.
  */
-export const SAVE_VERSION = 10;
+export const SAVE_VERSION = 11;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -272,6 +275,18 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   // v9 → v10: per-soul seen-once dialogue beat tracking.
   if (!Array.isArray(state.seenDialogueBeats)) {
     state.seenDialogueBeats = [];
+  }
+
+  // v10 → v11: rageUsesRemaining removed (Rage is now per-combat, not per-rest).
+  if (
+    state.character &&
+    typeof state.character === 'object' &&
+    'resources' in (state.character as object)
+  ) {
+    const resources = (state.character as Record<string, unknown>).resources as
+      | Record<string, unknown>
+      | undefined;
+    if (resources) delete resources.rageUsesRemaining;
   }
 
   return state as MigratedSnapshot;

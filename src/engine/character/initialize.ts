@@ -119,7 +119,6 @@ export function classStartingResources(classId: ClassId) {
     case 'barbarian':
       return {
         rageRoundsRemaining: 0,
-        rageUsesRemaining: 2,
       };
     case 'wizard':
       return {

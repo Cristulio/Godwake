@@ -3,7 +3,7 @@ import { abilityModifier } from '../../types/abilities';
 import { effectiveAbilityScores } from './derived';
 import { getClass } from '../../content/classes';
 import { getRace } from '../../content/races';
-import { wizardSpellSlots, barbarianRageMax } from './actions';
+import { wizardSpellSlots } from './actions';
 import { listSpells } from '../../content/spells';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 
@@ -63,11 +63,6 @@ export function applyLevelUp(character: Character): Character {
 
   if (character.classId === 'fighter' && newLevel >= 2) {
     resources.actionSurgeRemaining = 1;
-  }
-
-  // Barbarian: refresh rage charges on level-up so gaining a level restores the pool.
-  if (character.classId === 'barbarian') {
-    resources.rageUsesRemaining = barbarianRageMax({ ...character, level: newLevel });
   }
 
   // Auto-pick the only available subclass when the class's subclass-pick

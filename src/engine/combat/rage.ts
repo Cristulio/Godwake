@@ -20,26 +20,24 @@ export interface RageContext {
  * Barbarian Rage. Bonus action: drop into a battle-fury for {@link RAGE_ROUNDS}
  * rounds. Physical damage is halved (monsterAttack); melee hits land for bonus
  * damage (playerAttack). Fury locks out healing — draughts and lifesteal are
- * suppressed (useItem / playerAttack gate on isRaging). Spends one charge from
- * the per-rest pool; charges refill at campfire and rest rooms.
+ * suppressed (useItem / playerAttack gate on isRaging). Available every combat;
+ * the 3-turn duration and no-heal tradeoff are the limiters.
  */
 export function useRage(ctx: RageContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.classId !== 'barbarian') return combatResult(state, character);
   if (!characterHasMechanic(character, 'rage')) return combatResult(state, character);
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
-  if ((character.resources.rageUsesRemaining ?? 0) <= 0) return combatResult(state, character);
 
   let nextCharacter: Character = patchResources(character, {
     rageRoundsRemaining: RAGE_ROUNDS,
-    rageUsesRemaining: (character.resources.rageUsesRemaining ?? 0) - 1,
   });
   nextCharacter = patchActionEconomy(nextCharacter, { bonusActionUsed: true });
 
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} gives way to the fury — physical blows glance off and every swing bites deeper, but no mending until it passes. ${RAGE_ROUNDS} rounds, ${nextCharacter.resources.rageUsesRemaining ?? 0} charge${(nextCharacter.resources.rageUsesRemaining ?? 0) === 1 ? '' : 's'} left.`,
+    text: `${nextCharacter.name} gives way to the fury — physical blows glance off and every swing bites deeper, but no mending until it passes. ${RAGE_ROUNDS} rounds.`,
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'rage', 'player'), nextCharacter);
 }

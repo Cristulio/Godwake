@@ -147,7 +147,7 @@ function decisionProfile(state: CombatState, c: Character): DecisionProfile {
       if ((c.resources.cunningActionUsesRemaining ?? 0) > 0) resourceKinds.push('cunning-action');
       break;
     case 'barbarian':
-      if (!isRaging(c) && (c.resources.rageUsesRemaining ?? 0) > 0) resourceKinds.push('rage');
+      if (!isRaging(c)) resourceKinds.push('rage');
       break;
     case 'ranger':
       if (characterHasMechanic(c, 'hunters-mark') && !markOnLiveTarget(state)) {

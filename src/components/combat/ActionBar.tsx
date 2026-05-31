@@ -88,16 +88,13 @@ export function ActionBar({
     cunningRemaining > 0 &&
     !character.actionEconomy.bonusActionUsed;
 
-  // Barbarian Rage (bonus action) — renewable each combat. Disabled once raging
-  // or out of charges.
-  const rageUses = character.resources.rageUsesRemaining ?? 0;
+  // Barbarian Rage (bonus action) — available every combat; disabled while already raging.
   const rageRounds = character.resources.rageRoundsRemaining ?? 0;
   const raging = rageRounds > 0;
   const canRage =
     playersTurn &&
     active &&
     isBarbarian &&
-    rageUses > 0 &&
     !raging &&
     !character.actionEconomy.bonusActionUsed;
 
@@ -239,10 +236,10 @@ export function ActionBar({
             variant={canRage ? 'primary' : 'secondary'}
             onClick={onRage}
             disabled={!canRage}
-            title={`Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends. ${rageUses} charge${rageUses === 1 ? '' : 's'} left — refills at campfire and rest rooms.`}
+            title={`Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends.`}
             className="flex-1 min-h-[44px] sm:min-h-0"
           >
-            {raging ? `Raging (${rageRounds})` : `Rage${rageUses > 0 ? ` (${rageUses})` : ''}`}
+            {raging ? `Raging (${rageRounds})` : 'Rage'}
           </Button>
         )}
         {hasReckless && (
