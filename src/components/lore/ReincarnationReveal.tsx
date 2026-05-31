@@ -88,7 +88,7 @@ export function ReincarnationReveal() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-12 gap-8 select-none relative overflow-hidden"
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-8 md:px-6 md:py-12 gap-8 select-none relative overflow-hidden"
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onMouseDown={() => setHolding(true)}

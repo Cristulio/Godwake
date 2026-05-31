@@ -120,8 +120,8 @@ export function CharacterCreationScreen() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-5xl mx-auto animate-room-enter">
-      <header className="flex justify-between items-end mb-6 pb-4 border-b border-[var(--color-border-warm)]">
+    <div className="min-h-screen p-4 md:p-6 max-w-5xl mx-auto animate-room-enter">
+      <header className="flex flex-wrap gap-2 items-start mb-6 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
           <h1
             className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.3em] leading-tight"
@@ -234,7 +234,7 @@ export function CharacterCreationScreen() {
         })}
       </div>
 
-      <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
+      <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
         <div className="font-narrative text-[var(--color-text-dim)] text-sm italic tracking-wide hidden md:block">
           {selected
             ? `${selected.characterName} stands ready.`

@@ -116,12 +116,22 @@ export function ActionBar({
         c.id === state.huntersMarkTargetId &&
         c.instance.hp.current > 0,
     );
+  // Re-marking is a no-op when the mark already rides the only living foe —
+  // there's nowhere to move it. Mirror the AUTO bot's markOnLiveTarget check
+  // (CombatScreen:253) so the button is disabled in that case.
+  const hasOtherMarkableTarget = state.combatants.some(
+    (c) =>
+      c.kind === 'monster' &&
+      c.instance.hp.current > 0 &&
+      c.id !== state.huntersMarkTargetId,
+  );
   const canHuntersMark =
     playersTurn &&
     active &&
     isRanger &&
     characterHasMechanic(character, 'hunters-mark') &&
-    !character.actionEconomy.bonusActionUsed;
+    !character.actionEconomy.bonusActionUsed &&
+    (!isMarkLive || hasOtherMarkableTarget);
 
   const totalSlots =
     slotsAt(character, 1) + slotsAt(character, 2) + slotsAt(character, 3);
