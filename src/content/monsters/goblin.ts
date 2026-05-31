@@ -7,7 +7,7 @@ export const GOBLIN: Monster = MonsterSchema.parse({
   size: 'small',
   creatureType: 'humanoid (goblinoid)',
   ac: 15,
-  maxHp: 7,
+  maxHp: 14,
   speed: 30,
   abilityScores: { str: 8, dex: 14, con: 10, int: 10, wis: 8, cha: 8 },
   passivePerception: 9,

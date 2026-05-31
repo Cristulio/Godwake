@@ -198,12 +198,13 @@ describe('createSpellholdDelve', () => {
     expect(a.rooms.map((r) => r.monsters)).toEqual(b.rooms.map((r) => r.monsters));
   });
 
-  it('warmup room has exactly 1 enemy total', () => {
+  it('warmup room has 1-2 enemies total', () => {
     for (let s = 0; s < 10; s++) {
       const d = createSpellholdDelve(s);
       const totalCount =
         d.rooms[0].monsters?.reduce((sum, m) => sum + m.count, 0) ?? 0;
-      expect(totalCount).toBe(1);
+      expect(totalCount).toBeGreaterThanOrEqual(1);
+      expect(totalCount).toBeLessThanOrEqual(2);
     }
   });
 

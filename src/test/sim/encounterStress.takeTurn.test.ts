@@ -50,15 +50,15 @@ describe('takeTurn harness', () => {
     const { roller, created } = freshEncounter(12345);
     expect(currentCombatantId(created.state)).toBe('player');
     const startHp = monsterHpTotal(created.state);
-    expect(startHp).toBe(7); // goblin
+    expect(startHp).toBe(14); // goblin (re-baselined: HP boosted 7→14 for encounter tension)
 
     const r = takeTurn(roller, created.state, created.character);
     const dmgDealt = startHp - monsterHpTotal(r.state);
 
     expect(r.character.actionEconomy.actionUsed).toBe(true);
-    expect(dmgDealt).toBe(7);
-    expect(liveMonsters(r.state).length).toBe(0);
-    expect(r.state.status).toBe('player-victory');
+    expect(dmgDealt).toBe(11); // re-baselined after goblin HP boost
+    expect(liveMonsters(r.state).length).toBe(1); // survives one hit at 14 HP
+    expect(r.state.status).toBe('active');
   });
 
   it('pins the fighter turn output for a missing seed (action still consumed)', () => {

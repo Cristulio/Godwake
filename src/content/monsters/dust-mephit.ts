@@ -11,7 +11,7 @@ export const DUST_MEPHIT: Monster = MonsterSchema.parse({
   size: 'small',
   creatureType: 'elemental',
   ac: 12,
-  maxHp: 6,
+  maxHp: 14,
   speed: 30,
   abilityScores: { str: 5, dex: 14, con: 10, int: 9, wis: 11, cha: 10 },
   passivePerception: 10,
