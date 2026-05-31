@@ -102,10 +102,9 @@ export function MonsterDetailPanel({
           <div className="flex flex-col gap-4 min-w-0">
             <div>
               <SectionHeader>◆ Stats</SectionHeader>
-              <div className="grid grid-cols-3 gap-2 text-xs font-mono">
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <Stat label="HP" value={String(monster.maxHp)} accentValue />
                 <Stat label="AC" value={String(monster.ac)} accentValue />
-                <Stat label="Speed" value={`${monster.speed} ft`} />
               </div>
 
               <div className="grid grid-cols-6 gap-1 text-[10px] font-mono mt-2">
@@ -217,19 +216,11 @@ function ActionRow({ action, killCount }: { action: MonsterAction; killCount: nu
       </span>
     ) : null;
   if (action.kind === 'attack') {
-    const reachRange = action.range
-      ? `range ${action.range[0]}/${action.range[1]} ft`
-      : `reach ${action.reach ?? 5} ft`;
     const bonus = action.attackBonus >= 0 ? `+${action.attackBonus}` : `${action.attackBonus}`;
     return (
       <div className="panel-etched border border-[var(--color-border-dim)] p-2">
-        <div className="flex items-baseline justify-between gap-2">
-          <div className="font-display text-[var(--color-text-primary)] text-[11px] uppercase tracking-wider">
-            {action.name}
-          </div>
-          <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest font-mono">
-            {reachRange}
-          </div>
+        <div className="font-display text-[var(--color-text-primary)] text-[11px] uppercase tracking-wider">
+          {action.name}
         </div>
         <div className="font-mono text-[11px] text-[var(--color-text-secondary)] mt-1">
           <span className="text-[var(--color-accent-gold)]">{bonus}</span> to hit ·{' '}

@@ -9,7 +9,6 @@ export interface ActionEconomy {
   actionUsed: boolean;
   bonusActionUsed: boolean;
   reactionUsed: boolean;
-  movementRemaining: number;
 }
 
 export interface HitPoints {

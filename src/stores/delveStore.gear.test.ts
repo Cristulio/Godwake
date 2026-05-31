@@ -12,10 +12,8 @@ vi.mock('../content/items', async (importOriginal) => {
     damage: '1d8',
     damageType: 'slashing',
     properties: [],
-    weight: 3,
     cost: 0,
     rarity: 'legendary',
-    attunement: false,
   };
   return {
     ...actual,

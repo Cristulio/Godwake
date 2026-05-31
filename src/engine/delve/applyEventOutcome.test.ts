@@ -501,7 +501,7 @@ describe('event content — road gambles, weapon finds & CHA payoffs', () => {
     expect(haggle?.skillCheck?.skill).toBe('persuasion');
     expect(haggle?.failureOutcome).toBeDefined();
     const haggleEffects = (haggle!.outcome as EventOutcome).effects;
-    expect(haggleEffects.some((e) => e.kind === 'cha_scaled_gold')).toBe(true);
+    expect(haggleEffects.some((e) => e.kind === 'gold_delta' && (e as { kind: 'gold_delta'; amount: number }).amount > 0)).toBe(true);
     expect(
       haggleEffects.some((e) => e.kind === 'grant_item' && e.itemId === 'rapier'),
     ).toBe(true);

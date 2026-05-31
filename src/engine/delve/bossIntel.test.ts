@@ -38,7 +38,6 @@ function dummyCharacter(): Character {
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: 30,
     },
     quirks: [],
     blessings: [],

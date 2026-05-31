@@ -60,7 +60,6 @@ export function spawnMonsterInstance(def: Monster, displayName?: string): Monste
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: def.speed,
     },
   };
 }

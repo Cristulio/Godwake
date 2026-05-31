@@ -12,7 +12,6 @@ export const HALF_ELF: Race = RaceSchema.parse({
     cha: 2,
   },
   speed: 30,
-  size: 'medium',
   validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger'],
   features: [
     {

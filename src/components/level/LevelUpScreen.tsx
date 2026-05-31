@@ -15,6 +15,14 @@ import type { Character } from '../../types/character';
 import { SKILL_DESCRIPTIONS, isSkillEnabled, type SkillName } from '../../types/skills';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 
+function spellScopeLabel(target: Spell['target']): string {
+  switch (target) {
+    case 'area': return 'Hits all enemies';
+    case 'single': return 'Hits one enemy';
+    case 'self': return 'Self only';
+  }
+}
+
 const SCHOOL_LABEL: Record<Spell['school'], string> = {
   abjuration: 'Abjuration',
   conjuration: 'Conjuration',
@@ -345,7 +353,7 @@ export function LevelUpScreen() {
                       </div>
                     </div>
                     <div className="text-[var(--color-text-dim)] text-[11px] mt-1 normal-case tracking-normal">
-                      {sp.range} · {sp.target}
+                      {spellScopeLabel(sp.target)}
                       {sp.damageType ? ` · ${sp.damageType}` : ''}
                     </div>
                     <div className="text-[var(--color-text-secondary)] text-xs mt-1.5 leading-relaxed normal-case tracking-normal">

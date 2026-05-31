@@ -1,7 +1,5 @@
 import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
-import { getMonster } from '../../content/monsters';
-import { getRace } from '../../content/races';
 import { getActiveRoller } from '../dice';
 import {
   combatResult,
@@ -36,7 +34,6 @@ function resetActionEconomyForCurrent(
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: getRace(character.raceId).speed,
     });
     return { state, character: nextCharacter };
   }
@@ -45,7 +42,6 @@ function resetActionEconomyForCurrent(
       ...state,
       combatants: state.combatants.map((c) => {
         if (c.id !== currentId || c.kind !== 'monster') return c;
-        const def = getMonster(c.instance.defId);
         return {
           ...c,
           instance: {
@@ -54,7 +50,6 @@ function resetActionEconomyForCurrent(
               actionUsed: false,
               bonusActionUsed: false,
               reactionUsed: false,
-              movementRemaining: def.speed,
             },
           },
         };

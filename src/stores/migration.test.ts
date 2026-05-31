@@ -38,7 +38,6 @@ describe('save-migration chain — v1 → v2', () => {
           actionUsed: false,
           bonusActionUsed: false,
           reactionUsed: false,
-          movementRemaining: 30,
         },
         quirks: [],
         blessings: [],

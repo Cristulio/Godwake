@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AbilitySchema, ClassIdSchema, DamageTypeSchema, RaceIdSchema, SizeSchema } from './ids';
+import { AbilitySchema, ClassIdSchema, DamageTypeSchema, RaceIdSchema } from './ids';
 
 export const RaceFeatureSchema = z.object({
   id: z.string(),
@@ -12,7 +12,6 @@ export const RaceSchema = z.object({
   name: z.string(),
   abilityScoreBonuses: z.record(AbilitySchema, z.number()),
   speed: z.number().int().positive(),
-  size: SizeSchema,
   features: z.array(RaceFeatureSchema),
   /** Classes this race is permitted to take. See dd-roguelite race-class matrix. */
   validClasses: z.array(ClassIdSchema),

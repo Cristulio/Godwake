@@ -1,7 +1,16 @@
 import type { Character } from '../../types/character';
+import type { Spell } from '../../schemas/spell';
 import { getSpell } from '../../content/spells';
 import { Button } from '../ui/Button';
 import { canCastSpell, slotsAt } from '../../engine/combat/spells';
+
+function spellScopeLabel(target: Spell['target']): string {
+  switch (target) {
+    case 'area': return 'Hits all enemies';
+    case 'single': return 'Hits one enemy';
+    case 'self': return 'Self only';
+  }
+}
 
 interface SpellPickerProps {
   character: Character;
@@ -66,7 +75,7 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
                     {spell.description}
                   </div>
                   <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-2">
-                    {spell.school} · {spell.range} · target: {spell.target}
+                    {spell.school} · {spellScopeLabel(spell.target)}
                     {!ok && check.ok === false && (
                       <span className="ml-2 text-[var(--color-accent-blood)]">
                         — {check.reason}

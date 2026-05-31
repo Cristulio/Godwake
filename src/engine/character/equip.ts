@@ -3,6 +3,7 @@ import type { Armor, ItemRef, Weapon } from '../../schemas/item';
 import type { ClassId } from '../../schemas/ids';
 import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
+import { effectiveAbilityScores } from './derived';
 
 export type EquipSlot = keyof EquipmentSlots;
 
@@ -123,8 +124,16 @@ export function equipDenialReason(character: Character, itemId: string): string 
     return `A ${getClass(character.classId).name} can't wield this`;
   }
 
-  if (item.kind === 'armor' && !isArmorProficient(character, item)) {
-    return `A ${getClass(character.classId).name} can't wear this`;
+  if (item.kind === 'armor') {
+    if (!isArmorProficient(character, item)) {
+      return `A ${getClass(character.classId).name} can't wear this`;
+    }
+    if (item.strRequirement !== undefined) {
+      const str = effectiveAbilityScores(character).str ?? 0;
+      if (str < item.strRequirement) {
+        return `Requires Strength ${item.strRequirement}`;
+      }
+    }
   }
 
   return null;
@@ -155,7 +164,13 @@ export function equipItem(character: Character, inventoryIdx: number): Character
   if (!ref) return character;
   const item = getItem(ref.itemId);
   if (item.kind === 'weapon' && !isWeaponProficient(character, item)) return character;
-  if (item.kind === 'armor' && !isArmorProficient(character, item)) return character;
+  if (item.kind === 'armor') {
+    if (!isArmorProficient(character, item)) return character;
+    if (item.strRequirement !== undefined) {
+      const str = effectiveAbilityScores(character).str ?? 0;
+      if (str < item.strRequirement) return character;
+    }
+  }
   const slot = slotForItem(ref.itemId);
   if (!slot) return character;
 

@@ -12,7 +12,6 @@ export const TIEFLING: Race = RaceSchema.parse({
     cha: 2,
   },
   speed: 30,
-  size: 'medium',
   validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger'],
   damageResistances: ['fire', 'poison'],
   bonusHpPerLevel: 1,

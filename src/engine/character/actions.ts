@@ -1,18 +1,15 @@
 import type { Character, SpellSlots } from '../../types/character';
-import { getRace } from '../../content/races';
 import { characterHasMechanic } from './derived';
 import { characterAffixMods } from '../items/affixMods';
 
 /** Returns a character object with fresh action economy for a new turn. */
 export function withResetActionEconomy(character: Character): Character {
-  const race = getRace(character.raceId);
   return {
     ...character,
     actionEconomy: {
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: race.speed,
     },
   };
 }

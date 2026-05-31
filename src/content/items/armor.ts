@@ -6,11 +6,8 @@ export const LEATHER_ARMOR: Armor = ArmorSchema.parse({
   name: 'Leather Armor',
   category: 'light',
   baseAC: 11,
-  stealthDisadvantage: false,
-  weight: 10,
   cost: 10,
   rarity: 'common',
-  attunement: false,
 });
 
 export const CHAIN_MAIL: Armor = ArmorSchema.parse({
@@ -19,12 +16,9 @@ export const CHAIN_MAIL: Armor = ArmorSchema.parse({
   name: 'Chain Mail',
   category: 'heavy',
   baseAC: 16,
-  stealthDisadvantage: true,
   strRequirement: 13,
-  weight: 55,
   cost: 75,
   rarity: 'common',
-  attunement: false,
 });
 
 export const SHIELD: Armor = ArmorSchema.parse({
@@ -33,11 +27,8 @@ export const SHIELD: Armor = ArmorSchema.parse({
   name: 'Shield',
   category: 'shield',
   baseAC: 2,
-  stealthDisadvantage: false,
-  weight: 6,
   cost: 10,
   rarity: 'common',
-  attunement: false,
 });
 
 export const STUDDED_LEATHER: Armor = ArmorSchema.parse({
@@ -46,11 +37,8 @@ export const STUDDED_LEATHER: Armor = ArmorSchema.parse({
   name: 'Studded Leather',
   category: 'light',
   baseAC: 12,
-  stealthDisadvantage: false,
-  weight: 13,
   cost: 45,
   rarity: 'common',
-  attunement: false,
 });
 
 export const HALF_PLATE: Armor = ArmorSchema.parse({
@@ -59,11 +47,8 @@ export const HALF_PLATE: Armor = ArmorSchema.parse({
   name: 'Half Plate',
   category: 'medium',
   baseAC: 15,
-  stealthDisadvantage: true,
-  weight: 40,
   cost: 750,
   rarity: 'common',
-  attunement: false,
 });
 
 // --- Wave-3 armour breadth --------------------------------------------------
@@ -77,11 +62,8 @@ export const PADDED_ARMOR: Armor = ArmorSchema.parse({
   name: 'Padded Armor',
   category: 'light',
   baseAC: 11,
-  stealthDisadvantage: true,
-  weight: 8,
   cost: 5,
   rarity: 'common',
-  attunement: false,
 });
 
 export const HIDE_ARMOR: Armor = ArmorSchema.parse({
@@ -90,11 +72,8 @@ export const HIDE_ARMOR: Armor = ArmorSchema.parse({
   name: 'Hide Armor',
   category: 'medium',
   baseAC: 12,
-  stealthDisadvantage: false,
-  weight: 12,
   cost: 10,
   rarity: 'common',
-  attunement: false,
 });
 
 export const SCALE_MAIL: Armor = ArmorSchema.parse({
@@ -103,11 +82,8 @@ export const SCALE_MAIL: Armor = ArmorSchema.parse({
   name: 'Scale Mail',
   category: 'medium',
   baseAC: 14,
-  stealthDisadvantage: true,
-  weight: 45,
   cost: 50,
   rarity: 'common',
-  attunement: false,
 });
 
 export const BREASTPLATE: Armor = ArmorSchema.parse({
@@ -116,11 +92,8 @@ export const BREASTPLATE: Armor = ArmorSchema.parse({
   name: 'Breastplate',
   category: 'medium',
   baseAC: 14,
-  stealthDisadvantage: false,
-  weight: 20,
   cost: 400,
   rarity: 'common',
-  attunement: false,
 });
 
 export const RING_MAIL: Armor = ArmorSchema.parse({
@@ -129,11 +102,8 @@ export const RING_MAIL: Armor = ArmorSchema.parse({
   name: 'Ring Mail',
   category: 'heavy',
   baseAC: 14,
-  stealthDisadvantage: true,
-  weight: 40,
   cost: 30,
   rarity: 'common',
-  attunement: false,
 });
 
 export const SPLINT_ARMOR: Armor = ArmorSchema.parse({
@@ -142,12 +112,9 @@ export const SPLINT_ARMOR: Armor = ArmorSchema.parse({
   name: 'Splint Armor',
   category: 'heavy',
   baseAC: 17,
-  stealthDisadvantage: true,
   strRequirement: 15,
-  weight: 60,
   cost: 200,
   rarity: 'common',
-  attunement: false,
 });
 
 export const PLATE_ARMOR: Armor = ArmorSchema.parse({
@@ -156,12 +123,9 @@ export const PLATE_ARMOR: Armor = ArmorSchema.parse({
   name: 'Plate Armor',
   category: 'heavy',
   baseAC: 18,
-  stealthDisadvantage: true,
   strRequirement: 15,
-  weight: 65,
   cost: 1500,
   rarity: 'common',
-  attunement: false,
 });
 
 export const ALL_ARMOR: Armor[] = [

@@ -605,7 +605,7 @@ const POOL: EventTemplate[] = [
             'You spin him a tale about Amnian summers and a sister who married a vintner. He laughs and waves a hand. "Half price for a walker who knows the country, then" — and the longer you keep him laughing, the more coppers he counts back into your palm. The bottle goes into your pack at a thief\'s rate.',
           effects: [
             { kind: 'gold_delta', amount: -8 },
-            { kind: 'cha_scaled_gold', perPoint: 2 },
+            { kind: 'gold_delta', amount: 6 },
             { kind: 'hp_delta', amount: 8 },
           ],
         },
@@ -777,7 +777,7 @@ const POOL: EventTemplate[] = [
             'You name three smiths you have never met and a war you were never in, and somewhere in the telling his price softens like hot iron. "Aye — for a walker who knows the trade." The rapier goes to your hip at a friend\'s rate.',
           effects: [
             { kind: 'gold_delta', amount: -30 },
-            { kind: 'cha_scaled_gold', perPoint: 3 },
+            { kind: 'gold_delta', amount: 9 },
             { kind: 'grant_item', itemId: 'rapier', affixIds: ['keen', 'bloodletting'] },
           ],
         },
@@ -834,7 +834,7 @@ const POOL: EventTemplate[] = [
             'You crouch to his level and speak with the steadiness of a stranger who is not afraid of him. He blinks. Once. Twice. Then he hands the purse through the bars with both hands, like a child returning a borrowed thing — and digs the loose coin from his smock to press after it, the more for how unafraid you were. "Yours, walker. Yours. Not the Director\'s. Not anymore." The weight in your pocket is clean.',
           effects: [
             { kind: 'gold_delta', amount: 40 },
-            { kind: 'cha_scaled_gold', perPoint: 6 },
+            { kind: 'gold_delta', amount: 18 },
           ],
         },
         failureOutcome: {
