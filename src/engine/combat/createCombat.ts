@@ -78,7 +78,13 @@ export interface CreateCombatInput {
   ascension?: number;
   /** True when this is a chapter-boss encounter — applies the boss HP multiplier on top of enemyHpMult. */
   isBoss?: boolean;
+  /** True for an elite encounter — grants the primary foe a smaller legendary-resistance pool. */
+  isElite?: boolean;
 }
+
+/** Legendary-resistance pools (auto-succeeded player control saves per fight). */
+const BOSS_LEGENDARY_RESISTANCES = 3;
+const ELITE_LEGENDARY_RESISTANCES = 1;
 
 /**
  * Initialize a combat encounter: spawn monster instances, set the turn order
@@ -110,14 +116,27 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // content def and never sees a transformed copy.
   const ascension = input.ascension ?? 0;
   const isBoss = input.isBoss ?? false;
+  const isElite = input.isElite ?? false;
+  // Only the primary foe of a boss/elite room legendary-resists control — its
+  // adds stay lockable.
+  const primaryLegendaryResistances = isBoss
+    ? BOSS_LEGENDARY_RESISTANCES
+    : isElite
+      ? ELITE_LEGENDARY_RESISTANCES
+      : 0;
   const enemyDamageBonus = ascensionDamageBonus(ascension);
-  const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }) => {
+  const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }, idx) => {
     const scaledDef = applyAscensionToMonster(def, ascension, isBoss);
     const instance = spawnMonsterInstance(scaledDef, displayName);
+    const legendaryResistances = idx === 0 ? primaryLegendaryResistances : 0;
     return {
       kind: 'monster' as const,
       id: instance.id,
-      instance: enemyDamageBonus > 0 ? { ...instance, bonusDamage: enemyDamageBonus } : instance,
+      instance: {
+        ...instance,
+        ...(enemyDamageBonus > 0 ? { bonusDamage: enemyDamageBonus } : {}),
+        ...(legendaryResistances > 0 ? { legendaryResistances } : {}),
+      },
     };
   });
 

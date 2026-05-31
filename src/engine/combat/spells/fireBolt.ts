@@ -17,6 +17,20 @@ import {
   spellSaveDC,
 } from './helpers';
 
+/**
+ * Fire Bolt scales like a 5e cantrip — more d10s as the caster grows. RAW the
+ * breakpoints are L5/11/17 (2/3/4 dice), but this game caps characters at level
+ * 8, so all four tiers are compressed onto the reachable band (2d10 at L5,
+ * 3d10 at L7, 4d10 at L8). This gives the endgame wizard the sustained at-will
+ * closing power the ascension ladder demands once enemy HP outscales a flat 1d10.
+ */
+export function fireBoltDiceCount(level: number): number {
+  if (level >= 8) return 4;
+  if (level >= 7) return 3;
+  if (level >= 5) return 2;
+  return 1;
+}
+
 export function castFireBolt(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
   let nextCharacter: Character = character;
@@ -32,7 +46,7 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
   const save = roller.d20('normal', 0);
   const saved = save.total >= dc;
 
-  const damageRoll = roller.roll({ count: 1, die: 10, modifier: 0 });
+  const damageRoll = roller.roll({ count: fireBoltDiceCount(nextCharacter.level), die: 10, modifier: 0 });
   const intMod = abilityModifier(effectiveAbilityScores(nextCharacter).int);
   const bonus = spellDamageBonus(nextCharacter) + intMod;
   const fullDamage = damageRoll.total + bonus;
