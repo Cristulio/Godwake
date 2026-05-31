@@ -155,12 +155,15 @@ export function canEquipLegendary(id: string, classId: ClassId): boolean {
  * `characterAffixMods` folds each entry into the shared affix pipeline so the
  * effects ride every channel the engine already reads.
  */
-export function aggregateLegendaryEffects(ids: readonly string[]): AffixModifiers[] {
+export function aggregateLegendaryEffects(
+  ids: readonly string[],
+  includeSets = true,
+): AffixModifiers[] {
   const out: AffixModifiers[] = [];
   for (const id of ids) {
     const leg = BY_ID.get(id);
     if (leg) out.push(leg.effects);
   }
-  out.push(...computeSetBonuses(ids));
+  if (includeSets) out.push(...computeSetBonuses(ids));
   return out;
 }

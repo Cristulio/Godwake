@@ -14,6 +14,7 @@ import {
 } from '../../content/upgrades';
 import type { ClassId } from '../../schemas/ids';
 import { GroveScene } from './GroveScene';
+import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 
 type FlashKind = 'ok' | 'err';
 /** Shared functional tabs plus the active class's own tab. */
@@ -31,6 +32,10 @@ export function DruidGroveScreen() {
   const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
   const purchase = useGameStore((s) => s.purchaseUpgrade);
   const goToHub = useGameStore((s) => s.goToHub);
+  const delveCount = useGameStore((s) => s.delveCount);
+  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
+  const groveDeepUnlocked = isFeatureUnlocked('grove-deep', { delveCount, chaptersCleared, druidGroveUnlocked });
   const [flash, setFlash] = useState<{ kind: FlashKind; msg: string } | null>(null);
   const [pulsing, setPulsing] = useState<string | null>(null);
   const [tab, setTab] = useState<GroveTab>('survival');
@@ -155,7 +160,10 @@ export function DruidGroveScreen() {
             upgrade={u}
             currentRank={unlocked[u.id] ?? 0}
             renown={character.renown}
-            locked={(u.unlock?.ascension ?? 0) > ascensionUnlocked}
+            locked={
+              (u.unlock != null && !groveDeepUnlocked) ||
+              (u.unlock?.ascension ?? 0) > ascensionUnlocked
+            }
             pulsing={pulsing === u.id}
             onBuy={() => tryBuy(u.id)}
           />
