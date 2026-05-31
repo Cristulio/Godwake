@@ -374,6 +374,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     set({ delve });
     useCombatStore.getState().setCombat(null);
     charSlice.setCharacter(withQuirkBudgets);
+    // Account-level: every descent is one delve started. Drives the
+    // progressive-unlock ladder (engine/progression/unlocks.ts).
+    meta.incrementDelveCount();
     useScreenStore.getState().setScreen('delve');
   },
 

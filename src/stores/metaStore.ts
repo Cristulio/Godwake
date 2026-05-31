@@ -20,6 +20,14 @@ import {
 interface MetaStoreState {
   hasReincarnated: boolean;
   deathCount: number;
+  /**
+   * Account-level count of delves STARTED (incremented on every descent, see
+   * delveStore.startDelve). Survives reincarnation like deathCount. Drives the
+   * progressive-unlock ladder (engine/progression/unlocks.ts): features open as
+   * this crosses authored thresholds. A brand-new soul starts at 0; migrated
+   * veterans are floored to 999 so onboarding never re-gates them.
+   */
+  delveCount: number;
   discoveredMonsters: string[];
   monsterEncounters: Record<string, number>;
   /** Times the player has defeated each monster def. */
@@ -59,6 +67,12 @@ interface MetaStoreState {
    */
   seenDialogueBeats: string[];
   /**
+   * Tutorial ids the soul has already been shown. Phase-2 onboarding tutorials
+   * mark themselves seen here so a one-time prompt never replays. Soul-level —
+   * persists across reincarnation, reset only on New Game.
+   */
+  seenTutorials: string[];
+  /**
    * Legendary relics the soul has earned (cross-delve persistent gear, hub-only).
    * Account level — survives reincarnation, reset only on New Game. Earned at the
    * elite node (the fight-the-elite risk path) and the shop reliquary.
@@ -77,6 +91,8 @@ interface MetaStoreState {
   purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
   setHasReincarnated: (v: boolean) => void;
   incrementDeathCount: () => void;
+  /** Bump the account-level delve counter by one (called on every descent). */
+  incrementDelveCount: () => void;
   /**
    * Record that `count` chapters were cleared in a run. Raises the all-time
    * high water mark and keeps the legacy `chapter1Cleared` flag in sync.
@@ -93,6 +109,8 @@ interface MetaStoreState {
   setUnlockedUpgrades: (u: UnlockedUpgrades) => void;
   markNpcKnown: (npcId: string) => void;
   markDialogueBeatSeen: (beatId: string) => void;
+  /** Record that a one-time tutorial has been shown to this soul. */
+  markTutorialSeen: (tutorialId: string) => void;
   /**
    * Bank a RANDOM un-owned legendary (the elite-node drop path). Drops can be any
    * class's relic — off-class ones are stashed until the player runs that class.
@@ -116,6 +134,7 @@ interface MetaStoreState {
 export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   hasReincarnated: false,
   deathCount: 0,
+  delveCount: 0,
   discoveredMonsters: [],
   monsterEncounters: {},
   monsterDefeats: {},
@@ -128,6 +147,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   ascensionUnlocked: 0,
   knownNpcs: [],
   seenDialogueBeats: [],
+  seenTutorials: [],
   ownedLegendaries: [],
   activeLegendaries: [],
 
@@ -217,6 +237,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
 
   setHasReincarnated: (v) => set({ hasReincarnated: v }),
   incrementDeathCount: () => set((s) => ({ deathCount: s.deathCount + 1 })),
+  incrementDelveCount: () => set((s) => ({ delveCount: s.delveCount + 1 })),
   recordChapterCleared: (count) =>
     set((s) => ({
       chaptersCleared: Math.max(s.chaptersCleared, count),
@@ -243,6 +264,13 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       s.seenDialogueBeats.includes(beatId)
         ? s
         : { seenDialogueBeats: [...s.seenDialogueBeats, beatId] },
+    ),
+
+  markTutorialSeen: (tutorialId) =>
+    set((s) =>
+      s.seenTutorials.includes(tutorialId)
+        ? s
+        : { seenTutorials: [...s.seenTutorials, tutorialId] },
     ),
 
   grantLegendaryDrop: () => {
@@ -289,6 +317,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     set({
       hasReincarnated: false,
       deathCount: 0,
+      delveCount: 0,
       discoveredMonsters: [],
       monsterEncounters: {},
       monsterDefeats: {},
@@ -301,6 +330,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       ascensionUnlocked: 0,
       knownNpcs: [],
       seenDialogueBeats: [],
+      seenTutorials: [],
       ownedLegendaries: [],
       activeLegendaries: [],
     }),
