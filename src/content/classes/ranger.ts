@@ -93,17 +93,51 @@ export const RANGER: Class = ClassSchema.parse({
   subclasses: [
     {
       id: 'hunter',
-      name: 'Hunter',
+      name: 'Hunter — Colossus Slayer',
       description:
-        'You stalk the things that prey on the weak and learn the killing of larger quarry. Where the mark falters, the Hunter finishes.',
+        'You learn the killing of larger quarry: finish what the mark begins. Best with single-target, high-crit gear that piles damage onto one wounded foe.',
       featuresByLevel: {
         '3': [
           {
             id: 'colossus-slayer',
             name: 'Hunter’s Prey: Colossus Slayer',
             description:
-              'Your archetype settles into the Hunter — the slayer of larger quarry. Once each turn, a hit on a wounded foe (below its full health) deals an extra 1d8 damage.',
+              'Once each turn, a hit on a wounded foe (below its full health) deals an extra 1d8 damage. Rewards a single-target, crit-leaning build that focuses one quarry down.',
             mechanicKey: 'colossus-slayer',
+          },
+        ],
+      },
+    },
+    {
+      id: 'horde-breaker',
+      name: 'Hunter — Horde Breaker',
+      description:
+        'You learn to loose against a tide, not a single throat. Best with flat-damage and on-hit affix gear that pays out twice when your shot carries on.',
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'horde-breaker',
+            name: 'Hunter’s Prey: Horde Breaker',
+            description:
+              'Once each turn, after you hit, your shot carries into a second enemy — a glancing strike for your weapon dice plus your flat damage bonuses. Rewards flat-damage and on-hit gear that benefits from extra targets.',
+            mechanicKey: 'horde-breaker',
+          },
+        ],
+      },
+    },
+    {
+      id: 'giant-killer',
+      name: 'Hunter — Giant Killer',
+      description:
+        'You hunt the things that tower over lesser prey. Best with a boss-killer build geared for the elite and the named monster.',
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'giant-killer',
+            name: 'Hunter’s Prey: Giant Killer',
+            description:
+              'Your hits against elites and bosses bite an extra 1d10. Rewards a boss-killer build that lives or dies on the room’s biggest threat.',
+            mechanicKey: 'giant-killer',
           },
         ],
       },

@@ -13,6 +13,7 @@ import { baneQuirkCount } from '../character/quirks';
 import { characterCampBoonMods } from '../character/campBoons';
 import { characterAffixMods } from '../items/affixMods';
 import { rogueCunningActionMax } from '../character/actions';
+import { characterHasMechanic } from '../character/derived';
 import {
   combatResult,
   patchHp,
@@ -198,12 +199,16 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // baseline — no slot cost, no action cost). Shield is per-combat reaction-
   // only, so clear stale state.
   if (nextCharacter.classId === 'wizard') {
+    // School of Illusion: walk in already veiled — Blur for the whole fight and
+    // one Mirror Image to soak the first blow (rewards an evasive build). Other
+    // wizards open with these cleared and must spend a slot to raise them.
+    const illusionist = characterHasMechanic(nextCharacter, 'illusionist');
     nextCharacter = patchResources(nextCharacter, {
       mageArmorActive: true,
       shieldActive: false,
       mistyStepActive: false,
-      blurRoundsRemaining: 0,
-      mirrorImages: 0,
+      blurRoundsRemaining: illusionist ? 99 : 0,
+      mirrorImages: illusionist ? 1 : 0,
     });
   }
 
@@ -217,12 +222,22 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // Stoneblood armour affix folds into the same pool (temp HP doesn't stack —
   // the single largest source wins, RAW).
   const affixMods = characterAffixMods(nextCharacter);
+  // Abjurer's Arcane Ward + Totem (Bear) endurance: a per-combat temp-HP layer
+  // scaling with level (2 + level). Temp HP doesn't stack — it joins the same
+  // single-largest-source pool below.
+  const archetypeWardTempHp = characterHasMechanic(nextCharacter, 'defender')
+    ? 3 + nextCharacter.level
+    : characterHasMechanic(nextCharacter, 'abjurer') ||
+        characterHasMechanic(nextCharacter, 'totem-warrior')
+      ? 2 + nextCharacter.level
+      : 0;
   const tempHpGrant = Math.max(
     blessingMods.extraTempHpPerRoom ?? 0,
     (blessingMods.tempHpPerDelveLevel ?? 0) * nextCharacter.level,
     (blessingMods.tempHpPerBaneQuirk ?? 0) * baneQuirkCount(nextCharacter),
     isBoss ? (blessingMods.bossTempHp ?? 0) : 0,
     affixMods.tempHpPerCombat,
+    archetypeWardTempHp,
   );
   if (tempHpGrant > 0) {
     const newTemp = Math.max(nextCharacter.hp.temp, tempHpGrant);

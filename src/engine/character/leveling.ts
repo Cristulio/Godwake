@@ -65,13 +65,16 @@ export function applyLevelUp(character: Character): Character {
     resources.actionSurgeRemaining = 1;
   }
 
-  // Auto-pick the only available subclass when the class's subclass-pick
-  // level is reached. With one subclass per class (current content state),
-  // there's no choice to surface in the UI.
+  // Default the subclass to the class's first archetype when the subclass-pick
+  // level is reached and the player hasn't chosen one. Each class now offers
+  // 2-3 archetypes, so the LevelUpScreen surfaces a real picker; the chosen id
+  // arrives via the `subclassId` override (set on `character` before this runs,
+  // so it is preserved). This fallback keeps headless callers (sims, tests) and
+  // any player who skips the pick on a sensible default archetype.
   let subclassId = character.subclassId;
   if (!subclassId) {
     const cls = getClass(character.classId);
-    if (newLevel >= cls.subclassLevel && cls.subclasses.length === 1) {
+    if (newLevel >= cls.subclassLevel && cls.subclasses.length > 0) {
       subclassId = cls.subclasses[0].id;
     }
   }

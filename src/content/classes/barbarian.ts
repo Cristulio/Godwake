@@ -101,15 +101,32 @@ export const BARBARIAN: Class = ClassSchema.parse({
       id: 'berserker',
       name: 'Path of the Berserker',
       description:
-        'For some barbarians, rage is a means to an end — that end being violence. The Berserker channels the fury into a deeper, deadlier frenzy.',
+        'Rage as a means to an end — that end being violence. Best with lifesteal and aggressive gear that turns extra damage into staying power.',
       featuresByLevel: {
         '3': [
           {
             id: 'frenzy',
             name: 'Primal Path: Berserker',
             description:
-              'Your rage settles into the Berserker’s frenzy — unchecked, joyless fury. While you are raging, every melee hit lands even harder.',
+              'While you are raging, every melee hit lands an extra 1d6. Rewards lifesteal and on-hit gear: the more you swing, the more the fury pays back.',
             mechanicKey: 'frenzy',
+          },
+        ],
+      },
+    },
+    {
+      id: 'totem-warrior',
+      name: 'Path of the Totem Warrior (Bear)',
+      description:
+        'The bear-spirit lends its hide to those who walk into the worst of it. Best with tank gear that stacks atop the hardened guard.',
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'totem-warrior',
+            name: 'Primal Path: Totem Warrior',
+            description:
+              'The bear’s endurance is yours: you begin every combat with temporary hit points equal to 2 + your level, soaking the first blows. Rewards CON and max-HP tank gear — the bear out-lasts what the Berserker out-hits.',
+            mechanicKey: 'totem-warrior',
           },
         ],
       },

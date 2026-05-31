@@ -376,7 +376,21 @@ export function playerAttack(
     // Dagger synergy: a Rogue's quick blade always finds the gap — Sneak Attack
     // can fire with a dagger even without advantage or a wounded mark.
     const wieldsDagger = w.id === 'dagger';
-    const sneakTriggers = advantage === 'advantage' || targetWounded || wieldsDagger;
+    // Roguish archetypes loosen the Sneak Attack trigger:
+    //  - Swashbuckler needs no setup at all — the gap is always there (rewards
+    //    steady, consistent flat-damage gear).
+    //  - Assassin finds it against any foe still at full health — the opener
+    //    (rewards burst / first-strike gear).
+    const targetFullHp =
+      target.kind === 'monster' && target.instance.hp.current >= target.instance.hp.max;
+    const swashbucklerSneak = characterHasMechanic(nextCharacter, 'swashbuckler');
+    const assassinSneak = characterHasMechanic(nextCharacter, 'assassin') && targetFullHp;
+    const sneakTriggers =
+      advantage === 'advantage' ||
+      targetWounded ||
+      wieldsDagger ||
+      swashbucklerSneak ||
+      assassinSneak;
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
       sneakDice =
         sneakAttackDiceForLevel(nextCharacter.level) +
@@ -433,6 +447,51 @@ export function playerAttack(
       colossusDamage = colossusRoll.total;
       bonusDamage += colossusDamage;
       colossusFiredFlag = true;
+    }
+
+    // Rogue (Assassin): the opening strike on a full-health foe drives an extra
+    // 2d6 home — burst that front-loads the kill before the target can act.
+    let assassinDamage = 0;
+    if (
+      characterHasMechanic(nextCharacter, 'assassin') &&
+      target.kind === 'monster' &&
+      target.instance.hp.current >= target.instance.hp.max
+    ) {
+      const assassinRoll = roller.roll({ count: 2 * (crit ? 2 : 1), die: 6, modifier: 0 });
+      assassinDamage = assassinRoll.total;
+      bonusDamage += assassinDamage;
+      onTypeParts.push({ amount: assassinDamage, label: 'assassinate' });
+    }
+
+    // Ranger (Giant Killer): bigger quarry bleeds harder. The primary foe of a
+    // boss/elite room carries a legendary-resistance pool — a stable "this is
+    // the room's giant" flag for a ranger, who casts no control to spend it.
+    let giantKillerDamage = 0;
+    if (
+      characterHasMechanic(nextCharacter, 'giant-killer') &&
+      target.kind === 'monster' &&
+      (target.instance.legendaryResistances ?? 0) > 0
+    ) {
+      const gkRoll = roller.roll({ count: crit ? 2 : 1, die: 10, modifier: 0 });
+      giantKillerDamage = gkRoll.total;
+      bonusDamage += giantKillerDamage;
+      onTypeParts.push({ amount: giantKillerDamage, label: 'giant-killer' });
+    }
+
+    // Fighter (Battle Master): the first strike of the fight becomes a measured
+    // maneuver — bonus weapon dice now, plus a bleeding wound applied below.
+    let maneuverDamage = 0;
+    const battleMasterManeuver =
+      characterHasMechanic(nextCharacter, 'battle-master') && isFirstAttack;
+    if (battleMasterManeuver) {
+      const maneuverRoll = roller.roll({
+        count: damageExpr.count * (crit ? 2 : 1),
+        die: damageExpr.die,
+        modifier: 0,
+      });
+      maneuverDamage = maneuverRoll.total;
+      bonusDamage += maneuverDamage;
+      onTypeParts.push({ amount: maneuverDamage, label: 'maneuver' });
     }
 
     // Weakened: a flat reduction to outgoing weapon damage. Folded into the
@@ -551,6 +610,61 @@ export function playerAttack(
         kind: 'system',
         text: `${displayName(target, nextCharacter)} begins to bleed (${affixMods.bleedDamage}/turn).`,
       });
+    }
+
+    // Fighter (Battle Master): the maneuver also opens a bleeding wound — 3
+    // damage a turn for 3 turns — if the target still stands after the strike.
+    if (battleMasterManeuver && target.kind === 'monster') {
+      const stillAlive = nextState.combatants.some(
+        (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
+      );
+      if (stillAlive) {
+        nextState = {
+          ...nextState,
+          combatants: nextState.combatants.map((c) => {
+            if (c.kind !== 'monster' || c.id !== targetId) return c;
+            return {
+              ...c,
+              instance: { ...c.instance, bleedDamagePerTurn: 3, bleedTurnsRemaining: 3 },
+            };
+          }),
+        };
+        nextState = appendLog(nextState, {
+          id: nextLogId(nextState),
+          kind: 'system',
+          text: `${displayName(target, nextCharacter)} reels from the maneuver — a wound opens (3/turn).`,
+        });
+      }
+    }
+
+    // Ranger (Horde Breaker): once each turn, the shot carries into a second
+    // foe — a glancing strike of weapon dice plus flat damage bonuses (no
+    // ability mod, no crit). playerAttacksThisTurn is 0 on the turn's first
+    // swing, so the splash fires once per turn even with Extra Attack.
+    if (
+      characterHasMechanic(nextCharacter, 'horde-breaker') &&
+      (state.playerAttacksThisTurn ?? 0) === 0
+    ) {
+      const second = nextState.combatants.find(
+        (c) => c.kind === 'monster' && c.id !== targetId && c.instance.hp.current > 0,
+      );
+      if (second && second.kind === 'monster') {
+        const splashRoll = roller.roll({
+          count: damageExpr.count,
+          die: damageExpr.die,
+          modifier: 0,
+        });
+        const splashDamage = Math.max(1, splashRoll.total + (affixMods.damageBonus ?? 0));
+        const splashed = applyDamage(nextState, second.id, splashDamage, nextCharacter);
+        nextState = splashed.state;
+        nextCharacter = splashed.character;
+        nextState = appendLog(nextState, {
+          id: nextLogId(nextState),
+          kind: 'damage',
+          text: `${nextCharacter.name}'s shot carries into ${second.instance.displayName} for ${splashDamage} ${weapon.damageType}.`,
+        });
+        nextState = attachCombatVfx(nextState, weaponVfxKind(w), 'player', second.id);
+      }
     }
   }
 
