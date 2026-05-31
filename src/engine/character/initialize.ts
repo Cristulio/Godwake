@@ -63,7 +63,6 @@ export function createCharacter(input: CreateCharacterInput): Character {
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: race.speed,
     },
     quirks: [],
     blessings: [],

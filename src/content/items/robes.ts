@@ -11,21 +11,19 @@ import { ArmorSchema, type Armor } from '../../schemas/item';
  * "this is a richer find" feel as the chapters climb.
  */
 
-function robe(data: { id: string; name: string; cost: number; weight: number }): Armor {
+function robe(data: { id: string; name: string; cost: number }): Armor {
   return ArmorSchema.parse({
     kind: 'armor',
     category: 'robe',
     baseAC: 0,
-    stealthDisadvantage: false,
     rarity: 'common',
-    attunement: false,
     ...data,
   });
 }
 
 export const ALL_ROBES: Armor[] = [
-  robe({ id: 'apprentice-robe', name: 'Apprentice Robe', cost: 15, weight: 4 }),
-  robe({ id: 'silk-robe', name: 'Silk Robe', cost: 45, weight: 3 }),
-  robe({ id: 'spellweave-robe', name: 'Spellweave Robe', cost: 110, weight: 4 }),
-  robe({ id: 'archmagus-vestments', name: 'Archmagus Vestments', cost: 240, weight: 5 }),
+  robe({ id: 'apprentice-robe', name: 'Apprentice Robe', cost: 15 }),
+  robe({ id: 'silk-robe', name: 'Silk Robe', cost: 45 }),
+  robe({ id: 'spellweave-robe', name: 'Spellweave Robe', cost: 110 }),
+  robe({ id: 'archmagus-vestments', name: 'Archmagus Vestments', cost: 240 }),
 ];

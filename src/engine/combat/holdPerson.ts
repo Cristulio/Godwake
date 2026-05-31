@@ -137,7 +137,6 @@ export function lockOutActionEconomy(character: Readonly<Character>): Character 
     actionUsed: true,
     bonusActionUsed: true,
     reactionUsed: true,
-    movementRemaining: 0,
   });
 }
 

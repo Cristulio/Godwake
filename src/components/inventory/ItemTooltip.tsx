@@ -111,8 +111,9 @@ function renderStats(item: Item) {
     rows.push(['Damage', `${item.damage} ${item.damageType}`]);
     if (item.versatileDamage) rows.push(['Versatile', item.versatileDamage]);
     if (item.range) rows.push(['Range', `${item.range[0]}/${item.range[1]} ft`]);
-    if (item.properties.length > 0) {
-      rows.push(['Properties', item.properties.join(', ')]);
+    const displayProps = item.properties.filter((p) => p !== 'special');
+    if (displayProps.length > 0) {
+      rows.push(['Properties', displayProps.join(', ')]);
     }
   } else if (item.kind === 'armor') {
     if (item.category === 'shield') {
@@ -122,17 +123,12 @@ function renderStats(item: Item) {
     } else {
       rows.push(['Base AC', String(item.baseAC)]);
     }
-    if (item.stealthDisadvantage) rows.push(['Stealth', 'disadvantage']);
     if (item.strRequirement) rows.push(['Str req', String(item.strRequirement)]);
   } else if (item.kind === 'consumable') {
     rows.push(['Action', item.actionCost === 'bonus' ? 'bonus' : 'action']);
     if (item.healDice) rows.push(['Heal', item.healDice]);
   }
-  rows.push(['Weight', `${item.weight} lb`]);
   rows.push(['Value', `${item.cost} gp`]);
-  if (item.kind !== 'consumable' && item.attunement) {
-    rows.push(['Soul-bound', 'required']);
-  }
 
   return rows.map(([label, value]) => (
     <div key={label} className="contents">

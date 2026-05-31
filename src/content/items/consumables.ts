@@ -7,7 +7,6 @@ export const POTION_OF_HEALING: Consumable = ConsumableSchema.parse({
   effect: 'heal',
   healDice: '2d4+2',
   cost: 50,
-  weight: 0.5,
   rarity: 'common',
   actionCost: 'bonus',
   description:
@@ -21,7 +20,6 @@ export const POTION_OF_GREATER_HEALING: Consumable = ConsumableSchema.parse({
   effect: 'heal',
   healDice: '4d4+4',
   cost: 150,
-  weight: 0.5,
   rarity: 'uncommon',
   actionCost: 'bonus',
   description:
@@ -34,7 +32,6 @@ export const ANTITOXIN: Consumable = ConsumableSchema.parse({
   name: 'Antitoxin',
   effect: 'utility',
   cost: 50,
-  weight: 0.5,
   rarity: 'common',
   actionCost: 'bonus',
   description:
@@ -48,7 +45,6 @@ export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
   effect: 'heal',
   healDice: '3d6+6',
   cost: 180,
-  weight: 0.5,
   rarity: 'uncommon',
   actionCost: 'bonus',
   description:

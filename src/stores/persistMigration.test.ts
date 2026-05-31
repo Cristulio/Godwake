@@ -338,7 +338,6 @@ function makeBareCharacter(overrides: Record<string, unknown>): Record<string, u
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: 30,
     },
     quirks: [],
     blessings: [],

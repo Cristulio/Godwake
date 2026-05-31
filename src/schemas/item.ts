@@ -5,7 +5,6 @@ export const WeaponPropertySchema = z.enum([
   'light',
   'heavy',
   'finesse',
-  'thrown',
   'two-handed',
   'versatile',
   'reach',
@@ -49,10 +48,8 @@ export const WeaponSchema = z.object({
    * of a pair carries +N here (the longbow over the more accurate shortbow).
    */
   damageMod: z.number().optional(),
-  weight: z.number(),
   cost: z.number(),
   rarity: RaritySchema,
-  attunement: z.boolean(),
   description: z.string().optional(),
 });
 export type Weapon = z.infer<typeof WeaponSchema>;
@@ -70,12 +67,9 @@ export const ArmorSchema = z.object({
   category: z.enum(['light', 'medium', 'heavy', 'shield', 'robe']),
   /** Base AC value (for shield, this is +N bonus; 0 for a robe). */
   baseAC: z.number(),
-  stealthDisadvantage: z.boolean(),
   strRequirement: z.number().optional(),
-  weight: z.number(),
   cost: z.number(),
   rarity: RaritySchema,
-  attunement: z.boolean(),
   description: z.string().optional(),
 });
 export type Armor = z.infer<typeof ArmorSchema>;
@@ -90,7 +84,6 @@ export const ConsumableSchema = z.object({
   healDice: DiceExpressionStringSchema.optional(),
   /** Cost in gp when bought. */
   cost: z.number(),
-  weight: z.number(),
   rarity: RaritySchema,
   /** Action economy required: 'action' or 'bonus'. */
   actionCost: z.enum(['action', 'bonus']),
@@ -114,10 +107,8 @@ export const AccessorySchema = z.object({
   name: z.string(),
   /** Which body slot this accessory occupies. Rings fill either ring slot. */
   accessorySlot: AccessorySlotSchema,
-  weight: z.number(),
   cost: z.number(),
   rarity: RaritySchema,
-  attunement: z.boolean(),
   description: z.string().optional(),
 });
 export type Accessory = z.infer<typeof AccessorySchema>;

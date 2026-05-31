@@ -44,10 +44,14 @@ import { getQuirk } from '../content/quirks';
  *             (non-refunded). `attunementSlotsBonus` is stripped from the
  *             character. Legendary relics now have no slot cap — all owned relics
  *             can be equipped at the hub simultaneously.
- *  v11 → v12: Prune dead affix/blessing/quirk ids from persisted character data
- *             so renamed or removed content ids don't silently drop effects on
- *             load. Equipped item rolled.affixes, character.blessings, and
- *             character.quirks are filtered to only known ids.
+ *  v11 → v12: Two changes shipped in one bump.
+ *             (a) Prune dead affix/blessing/quirk ids from persisted character data
+ *             so renamed or removed content ids don't silently drop effects on load.
+ *             Equipped item rolled.affixes, character.blessings, and character.quirks
+ *             are filtered to only known ids.
+ *             (b) `movementRemaining` removed from ActionEconomy (engine is
+ *             non-positional; the field was written but never read). Strip from
+ *             `character.actionEconomy` on load so old saves rehydrate cleanly.
  */
 export const SAVE_VERSION = 12;
 
@@ -123,6 +127,10 @@ export function migrateCharacter(
   delete c.legendaryBonuses;
   // v10 → v11: attunement cap removed; Sage's Pact bonus field is dead.
   delete c.attunementSlotsBonus;
+  // v11 → v12: movementRemaining removed from ActionEconomy (non-positional engine).
+  if (c.actionEconomy && typeof c.actionEconomy === 'object') {
+    delete (c.actionEconomy as unknown as Record<string, unknown>).movementRemaining;
+  }
 
   // Re-derive HP bonus for legacy chars that owned Mantle/Iron Will but
   // never had the field set (v0 → v1 migration). This must run AFTER the

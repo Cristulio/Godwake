@@ -607,7 +607,13 @@ function markPlayerActionUsed(
   };
 }
 
-/** Fighter L5 Extra Attack grants 2 attacks per Attack action. */
+/** Fighter/Ranger L5 Extra Attack grants 2 attacks, but loading weapons cap at 1 per action. */
 function maxAttacksPerAction(character: Readonly<Character>): number {
-  return characterHasMechanic(character, 'extra-attack') ? 2 : 1;
+  if (!characterHasMechanic(character, 'extra-attack')) return 1;
+  const mainHand = character.equipped.mainHand;
+  if (mainHand) {
+    const item = getItem(mainHand.itemId);
+    if (item.kind === 'weapon' && item.properties.includes('loading')) return 1;
+  }
+  return 2;
 }

@@ -26,7 +26,6 @@ function bareCharacter(overrides: Partial<Character> = {}): Character {
       actionUsed: false,
       bonusActionUsed: false,
       reactionUsed: false,
-      movementRemaining: 30,
     },
     quirks: [],
     blessings: [],
@@ -161,7 +160,6 @@ describe('buildPostmortem', () => {
         actionUsed: false,
         bonusActionUsed: false,
         reactionUsed: true,
-        movementRemaining: 0,
       },
     });
     const p = buildPostmortem(bareState(), ch, null);
@@ -182,8 +180,7 @@ describe('buildPostmortem', () => {
         actionUsed: false,
         bonusActionUsed: false,
         reactionUsed: false,
-        movementRemaining: 30,
-      },
+        },
     });
     const p = buildPostmortem(bareState(), ch, null);
     expect(p.unspentResources).toContain('Action');
@@ -200,8 +197,7 @@ describe('buildPostmortem', () => {
         actionUsed: false,
         bonusActionUsed: false,
         reactionUsed: false,
-        movementRemaining: 30,
-      },
+        },
     });
     const p = buildPostmortem(bareState(), ch, null);
     expect(p.unspentResources).toContain('Bonus Action');
@@ -216,8 +212,7 @@ describe('buildPostmortem', () => {
         actionUsed: false,
         bonusActionUsed: false,
         reactionUsed: false,
-        movementRemaining: 30,
-      },
+        },
     });
     const p = buildPostmortem(bareState(), ch, null);
     expect(p.unspentResources).toContain('Reaction');
