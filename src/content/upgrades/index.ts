@@ -378,18 +378,6 @@ const RAW: Upgrade[] = [
 
   // ─── SOUL (shared) — the thread the wheel cannot cut ─────────────────────
   {
-    id: 'sages-pact',
-    category: 'soul',
-    name: "Sage's Pact",
-    flavor:
-      "An old druid presses her thumb to your sternum and whispers a word from before the gods. The world makes a little more room for you.",
-    effectAtRank: (r) => `+${r} legendary soul-bind slot${r === 1 ? '' : 's'} at the hub, permanent.`,
-    costForRank: (r) => rankCost(180, r),
-    maxRank: 2,
-    apply: (c) => ({ ...c, attunementSlotsBonus: (c.attunementSlotsBonus ?? 0) + 1 }),
-    kind: 'permanent',
-  },
-  {
     id: 'soul-marrow',
     category: 'soul',
     name: 'Soul Marrow',

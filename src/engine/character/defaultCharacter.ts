@@ -191,7 +191,6 @@ export function carrySoulProgress(fresh: Character, soul: Character): Character 
     permanentWoundedTargetDamage: soul.permanentWoundedTargetDamage,
     permanentCritDamageBonus: soul.permanentCritDamageBonus,
     permanentRenownBonusPerBane: soul.permanentRenownBonusPerBane,
-    attunementSlotsBonus: soul.attunementSlotsBonus,
     wheelturnerUnlocked: soul.wheelturnerUnlocked,
     hp: { current: max, max, temp: 0 },
   };

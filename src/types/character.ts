@@ -201,12 +201,6 @@ export interface Character {
    * undefined = no relics equipped.
    */
   legendaryEffects?: AffixModifiers[];
-  /**
-   * Extra attunement slots above the default. Bumped by Sage's Pact. The cap
-   * lives in `attunementSlotsCap()`; this field is only the additive bonus so
-   * legacy saves with `undefined` rehydrate to the default cap.
-   */
-  attunementSlotsBonus?: number;
   /** Grove upgrade: +N damage on the first attack of each combat. */
   permanentFirstAttackDamage?: number;
   /** Grove upgrade: +N damage against wounded targets (HP at half or less). */
