@@ -6,8 +6,6 @@ import { getItem } from '../../content/items';
 import { computeAC, critRange } from '../../engine/character/derived';
 import {
   slotForItem,
-  attunementSlotsCap,
-  attunementSlotsUsed,
   canEquip,
   equipDenialReason,
   EQUIP_SLOTS,
@@ -62,8 +60,6 @@ export function InventoryScreen() {
     const band = critRange(character);
     return band.length <= 1 ? '20' : `${band[0]}-20`;
   }, [character]);
-  const attUsed = useMemo(() => (character ? attunementSlotsUsed(character) : 0), [character]);
-  const attCap = useMemo(() => (character ? attunementSlotsCap(character) : 0), [character]);
 
   if (!character) {
     return (
@@ -95,24 +91,6 @@ export function InventoryScreen() {
 
   function isEquippedIdx(idx: number): boolean {
     return equippedIdxSet.has(idx);
-  }
-
-  function hasAttunementEquipped(): boolean {
-    for (const slot of EQUIP_SLOTS) {
-      const ref = character?.equipped[slot];
-      if (!ref) continue;
-      const item = getItem(ref.itemId);
-      if (item.kind !== 'consumable' && (item as { attunement: boolean }).attunement) return true;
-    }
-    return false;
-  }
-
-  function attunementOnSlot(slot: EquipSlot): boolean {
-    const ref = character?.equipped[slot];
-    if (!ref) return false;
-    const item = getItem(ref.itemId);
-    if (item.kind === 'consumable') return false;
-    return (item as { attunement: boolean }).attunement;
   }
 
   function handleDragStart(e: DragEvent<HTMLDivElement>, inventoryIdx: number) {
@@ -176,8 +154,6 @@ export function InventoryScreen() {
     e.dataTransfer.effectAllowed = 'move';
   }
 
-  const attAtCap = attUsed >= attCap;
-
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-6xl mx-auto animate-room-enter">
       <header className="flex flex-wrap gap-2 items-start mb-6 pb-4 border-b border-[var(--color-border-warm)]">
@@ -203,7 +179,7 @@ export function InventoryScreen() {
         )}
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] gap-4 mb-6">
+      <div className="mb-6">
         <Panel title="Equipped" tone="warm">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {SLOTS.map((s) => {
@@ -215,7 +191,6 @@ export function InventoryScreen() {
                 ? slotForItem(character.inventory[hoverIdx]?.itemId ?? '')
                 : null;
               void itemTargetSlot;
-              const attuned = attunementOnSlot(s.slot);
               return (
                 <div
                   key={s.slot}
@@ -231,11 +206,9 @@ export function InventoryScreen() {
                       ? 'border-[var(--color-accent-blood)] animate-shake-soft scale-105'
                       : isOver
                         ? 'border-[var(--color-accent-amber)] scale-[1.04] shadow-[0_0_22px_rgba(244,167,66,0.45)]'
-                        : attuned
-                          ? 'border-[var(--color-accent-gold)] shadow-[0_0_14px_rgba(212,176,98,0.25)]'
-                          : ref
-                            ? 'border-[var(--color-border-warm)]'
-                            : 'border-dashed border-[var(--color-border-dim)]'}
+                        : ref
+                          ? 'border-[var(--color-border-warm)]'
+                          : 'border-dashed border-[var(--color-border-dim)]'}
                   `}
                 >
                   <div className="font-display text-[var(--color-accent-amber)] text-[9px] uppercase tracking-widest mb-2 flex items-center gap-1">
@@ -265,11 +238,6 @@ export function InventoryScreen() {
                         <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
                           {baseStatLine(item)}
                         </div>
-                        {attuned && (
-                          <div className="text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest font-display mt-1">
-                            ◆ Soul-bound
-                          </div>
-                        )}
                       </div>
                     </div>
                   ) : (
@@ -295,36 +263,6 @@ export function InventoryScreen() {
           </div>
         </Panel>
 
-        <div
-          title={`Some items bind to your soul — only ${attCap} can be equipped at once. Unlocked via the Grove.`}
-          className={`
-            panel-etched-warm border-2 p-4 flex flex-col justify-center
-            ${attAtCap
-              ? 'border-[var(--color-accent-gold)] animate-pulse-glow'
-              : 'border-[var(--color-border-warm)]'}
-          `}
-        >
-          <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 flex items-center gap-1">
-            <span className="text-[var(--color-accent-gold)]">◆</span>
-            Soul-bound
-          </div>
-          <div
-            className={`font-mono text-2xl ${
-              attAtCap ? 'text-[var(--color-accent-gold)]' : 'text-[var(--color-accent-amber)]'
-            }`}
-            style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.7), 0 0 10px rgba(244,167,66,0.3)' }}
-          >
-            {attUsed} <span className="text-[var(--color-text-dim)]">/</span> {attCap}
-          </div>
-          <div className="font-mono text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mt-1">
-            {attAtCap ? 'slots full' : `${attCap - attUsed} free`}
-          </div>
-          {hasAttunementEquipped() && (
-            <div className="mt-2 text-[9px] uppercase tracking-widest text-[var(--color-accent-gold)] font-display">
-              ◆ Soul-bound items active
-            </div>
-          )}
-        </div>
       </div>
 
       <Panel
@@ -357,8 +295,6 @@ export function InventoryScreen() {
                   const denial =
                     equippable && !equipped ? equipDenialReason(character!, item.id) : null;
                   const blocked = denial !== null;
-                  const isAttunement =
-                    item.kind !== 'consumable' && (item as { attunement: boolean }).attunement;
                   const hint = equipped
                     ? 'Equipped'
                     : denial
@@ -421,11 +357,6 @@ export function InventoryScreen() {
                               ✓ equipped
                             </div>
                           )}
-                          {isAttunement && (
-                            <div className="font-display text-[var(--color-accent-gold)] text-[9px] uppercase tracking-widest">
-                              ◆ Soul-bound
-                            </div>
-                          )}
                         </div>
                       </div>
                       {hoverIdx === idx && !isDragging && (
@@ -461,8 +392,8 @@ interface InventoryGroup {
 }
 
 function groupInventory(inventory: ItemRef[]): InventoryGroup[] {
-  // Stack consumables by id (visible as ×N); keep weapons/armor as discrete
-  // rows so the player can equip a specific instance and see attunement etc.
+  // Stack consumables by id (visible as ×N); keep weapons/armor/accessories as
+  // discrete rows so the player can equip a specific instance.
   const weapons: InventoryEntry[] = [];
   const armor: InventoryEntry[] = [];
   const accessories: InventoryEntry[] = [];

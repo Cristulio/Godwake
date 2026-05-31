@@ -32,9 +32,15 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *            `character.legendaryBonuses` stat field is stripped here; the new
  *            `character.legendaryEffects` is re-baked from `activeLegendaries` on
  *            load (scatterSnapshot). Owned/active relic ids are unchanged.
- *  v10 → v11: Rage is now available every combat (no per-rest charge cap).
- *             `character.resources.rageUsesRemaining` is stripped — the field
- *             no longer exists in ClassResources.
+ *  v10 → v11: Two changes shipped in one bump.
+ *             (a) Rage is now available every combat (no per-rest charge cap).
+ *             `character.resources.rageUsesRemaining` is stripped — the field no
+ *             longer exists in ClassResources.
+ *             (b) Attunement / soul-bind slot cap removed. The Sage's Pact Grove
+ *             node (id `sages-pact`) is deleted; owners keep their renown spend
+ *             (non-refunded). `attunementSlotsBonus` is stripped from the
+ *             character. Legendary relics now have no slot cap — all owned relics
+ *             can be equipped at the hub simultaneously.
  */
 export const SAVE_VERSION = 11;
 
@@ -108,6 +114,8 @@ export function migrateCharacter(
   // v9 → v10: legendaries became effect-only. Drop the dead stat-bonus field;
   // scatterSnapshot re-bakes character.legendaryEffects from activeLegendaries.
   delete c.legendaryBonuses;
+  // v10 → v11: attunement cap removed; Sage's Pact bonus field is dead.
+  delete c.attunementSlotsBonus;
 
   // Re-derive HP bonus for legacy chars that owned Mantle/Iron Will but
   // never had the field set (v0 → v1 migration). This must run AFTER the
@@ -184,12 +192,13 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   // 1. unlockedUpgrades: array → record
   const unlockedUpgrades = migrateUnlockedUpgrades(state.unlockedUpgrades);
   // v3 → v4: Pinchpurse Insurance was consolidated into Coin in the Pocket.
-  // Drop the obsolete rank entry so applyDelveStartUpgrades doesn't iterate
-  // a now-undefined upgrade. Renown spent on it is not refunded — the
-  // upgrade was a non-decision next to Coin in the Pocket and we'd rather
-  // ship clean than over-correct.
+  // v10 → v11: Sage's Pact (attunement slot upgrade) removed with the cap.
+  // Both: drop the obsolete rank entry; renown is not refunded.
   if ('pinchpurse-insurance' in unlockedUpgrades) {
     delete unlockedUpgrades['pinchpurse-insurance'];
+  }
+  if ('sages-pact' in unlockedUpgrades) {
+    delete unlockedUpgrades['sages-pact'];
   }
   state.unlockedUpgrades = unlockedUpgrades;
 

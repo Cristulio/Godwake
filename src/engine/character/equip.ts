@@ -6,11 +6,7 @@ import { getClass } from '../../content/classes';
 
 export type EquipSlot = keyof EquipmentSlots;
 
-/**
- * Every equipment slot, in display order. The three combat slots come first,
- * then the Wave-2 accessory slots. Iterate this anywhere that needs to sweep
- * all equipped items (attunement counting, affix aggregation, UI).
- */
+/** Every equipment slot, in display order. */
 export const EQUIP_SLOTS: EquipSlot[] = [
   'mainHand',
   'offHand',
@@ -22,14 +18,6 @@ export const EQUIP_SLOTS: EquipSlot[] = [
   'belt',
   'boots',
 ];
-
-/**
- * Default attunement cap. Set below the 3-slot equipment count on purpose:
- * the player has mainHand / offHand / armor (3 slots), so a default of 2 means
- * the gate actually bites when 3 attuned items are owned, and Sage's Pact
- * (which restores parity at 3) feels like a real unlock instead of a no-op.
- */
-export const DEFAULT_ATTUNEMENT_SLOTS = 2;
 
 /**
  * Which slot, if any, an item kind can occupy. Consumables aren't equippable —
@@ -87,11 +75,6 @@ export function wieldsRangedWeapon(character: Character): boolean {
   return item.kind === 'weapon' && isRangedWeapon(item);
 }
 
-function requiresAttunement(itemId: string): boolean {
-  const item = getItem(itemId);
-  return (item.kind === 'weapon' || item.kind === 'armor') && item.attunement;
-}
-
 /**
  * Whether a class is trained to wield the given weapon. A weapon matches if its
  * category is in the class's proficient set, it carries one of the proficient
@@ -128,26 +111,10 @@ export function isArmorProficient(character: Character, armor: Armor): boolean {
   return classArmorProficient(character.classId, armor);
 }
 
-/** Maximum number of attuned items the soul can bind at once. */
-export function attunementSlotsCap(character: Character): number {
-  return DEFAULT_ATTUNEMENT_SLOTS + (character.attunementSlotsBonus ?? 0);
-}
-
-/** Count of currently-equipped items that require attunement. */
-export function attunementSlotsUsed(character: Character): number {
-  let used = 0;
-  for (const slot of EQUIP_SLOTS) {
-    const ref = character.equipped[slot];
-    if (ref && requiresAttunement(ref.itemId)) used += 1;
-  }
-  return used;
-}
-
 /**
- * Why the given item can't be equipped right now, or `null` if it can. The UI
- * surfaces this string directly so the player sees the actual cause (wrong
- * class for the weapon vs. no free soul-bind slot). `equipItem` is the
- * authoritative enforcement point; this mirrors its gates for pre-emptive UI.
+ * Why the given item can't be equipped right now, or `null` if it can.
+ * `equipItem` is the authoritative enforcement point; this mirrors its gates
+ * for pre-emptive UI.
  */
 export function equipDenialReason(character: Character, itemId: string): string | null {
   const item = getItem(itemId);
@@ -158,19 +125,6 @@ export function equipDenialReason(character: Character, itemId: string): string 
 
   if (item.kind === 'armor' && !isArmorProficient(character, item)) {
     return `A ${getClass(character.classId).name} can't wear this`;
-  }
-
-  if (requiresAttunement(itemId)) {
-    // Would this attune a NEW item, or replace an already-attuned one?
-    const targetSlot = slotForItem(itemId);
-    if (targetSlot) {
-      const currentlyInSlot = character.equipped[targetSlot];
-      const replacingAttuned =
-        currentlyInSlot != null && requiresAttunement(currentlyInSlot.itemId);
-      if (!replacingAttuned && attunementSlotsUsed(character) >= attunementSlotsCap(character)) {
-        return `No free Soul-bind slot (${attunementSlotsUsed(character)}/${attunementSlotsCap(character)})`;
-      }
-    }
   }
 
   return null;
@@ -228,24 +182,7 @@ export function equipItem(character: Character, inventoryIdx: number): Character
     equipped[slot] = ref;
   }
 
-  // Attunement cap is checked against the resulting equipped set so that
-  // two-handed swaps that *free* an off-hand (and any item swap that
-  // replaces an attuned item with another attuned item) compute correctly.
-  const usedAfter = countAttuned(equipped);
-  if (usedAfter > attunementSlotsCap(character)) {
-    return character;
-  }
-
   return { ...character, equipped };
-}
-
-function countAttuned(equipped: EquipmentSlots): number {
-  let n = 0;
-  for (const slot of EQUIP_SLOTS) {
-    const ref = equipped[slot];
-    if (ref && requiresAttunement(ref.itemId)) n += 1;
-  }
-  return n;
 }
 
 /**
@@ -272,7 +209,6 @@ export function equipItemToSlot(
   if (!ringToBand) return equipItem(character, inventoryIdx);
 
   const equipped: EquipmentSlots = { ...character.equipped, [targetSlot]: ref };
-  if (countAttuned(equipped) > attunementSlotsCap(character)) return character;
   return { ...character, equipped };
 }
 

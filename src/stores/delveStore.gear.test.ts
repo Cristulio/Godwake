@@ -1,8 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-// Inject a single legendary-rarity weapon so the cross-delve carry path can be
-// exercised — no legendary items exist in content yet. Every real id still
-// resolves through the actual registry.
+// Inject a synthetic legendary-rarity weapon to verify it gets reset with the
+// rest of the run gear. Every real id still resolves through the actual registry.
 vi.mock('../content/items', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../content/items')>();
   const legendary = {
@@ -107,7 +106,7 @@ describe('delveStore — found/bought gear is intra-delve', () => {
     expect(hasItem(char().inventory, 'longsword')).toBe(true);
   });
 
-  it('a legendary-tagged item survives the kit reset on descent', () => {
+  it('legendary-rarity gear resets to kit on descent (no cross-delve carry)', () => {
     const legendaryRef: ItemRef = { itemId: 'soulpiercer' };
     seed(
       makeFighter({
@@ -120,14 +119,12 @@ describe('delveStore — found/bought gear is intra-delve', () => {
     useDelveStore.getState().startDelve(createGodwakeDelve(1));
 
     const c = char();
-    // The legendary rides the wheel; the mundane road drop does not.
-    expect(hasItem(c.inventory, 'soulpiercer')).toBe(true);
+    // All run gear resets to the class kit — legendary-rarity gear is not special.
+    expect(hasItem(c.inventory, 'soulpiercer')).toBe(false);
     expect(hasItem(c.inventory, 'greatsword')).toBe(false);
-    // It stays equipped over the kit's default main-hand.
-    expect(c.equipped.mainHand?.itemId).toBe('soulpiercer');
   });
 
-  it('a legendary-tagged item survives reincarnation on death', () => {
+  it('legendary-rarity gear resets to kit on death (no cross-delve carry)', () => {
     seed(
       makeFighter({
         quirks: [],
@@ -138,7 +135,8 @@ describe('delveStore — found/bought gear is intra-delve', () => {
     useDelveStore.getState().failDelve();
 
     const c = char();
-    expect(hasItem(c.inventory, 'soulpiercer')).toBe(true);
+    // All run gear resets to the class kit — legendary-rarity gear is not special.
+    expect(hasItem(c.inventory, 'soulpiercer')).toBe(false);
     expect(hasItem(c.inventory, 'greatsword')).toBe(false);
   });
 });

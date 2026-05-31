@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Character, EquipmentSlots } from '../types/character';
+import type { Character } from '../types/character';
 import type { DelveState, RoomSpec } from '../types/delve';
 import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
@@ -72,50 +72,23 @@ function level1HpMax(ch: Character): number {
   return cls.hitDie + conMod + raceBonusHp + classBonusHp + permanentHp;
 }
 
-/** Rarities that ride the wheel: legendary gear is the lone cross-delve item. */
-const LEGENDARY_RARITIES = new Set(['legendary', 'artifact']);
-
-/**
- * Whether an inventory entry is a persistent legendary item. No legendary items
- * exist in content yet (see [[dd-roguelite-legendary-items]]), so this is a
- * ready no-op today — the carry path is wired for when they land.
- */
-function isLegendaryRef(ref: ItemRef): boolean {
-  try {
-    return LEGENDARY_RARITIES.has(getItem(ref.itemId).rarity);
-  } catch {
-    return false;
-  }
-}
-
 /**
  * Found/bought gear is INTRA-DELVE: descent (`startDelve`) and reincarnation
  * (`reincarnateSoul`) reset inventory + equipped to the class starting kit so
- * shop weapons and road drops never carry across lives. The lone exception is
- * legendary-tagged gear, which survives the reset (Hades-style permanent items).
+ * shop weapons and road drops never carry across lives.
  * Returns only the gear fields — gold and HP are owned by the callers.
  */
 function gearResetToKit(
   character: Character,
 ): Pick<Character, 'inventory' | 'equipped'> {
-  let kitInventory: ItemRef[];
-  let kitEquipped: EquipmentSlots;
   try {
     const fresh = buildPlayerCharacter(presetCreationInput(character.classId));
-    kitInventory = fresh.inventory;
-    kitEquipped = fresh.equipped;
+    return { inventory: fresh.inventory, equipped: fresh.equipped };
   } catch {
     // Non-playable class with no preset — leave gear untouched rather than
     // strip the soul bare.
     return { inventory: character.inventory, equipped: character.equipped };
   }
-  const carriedLegendaries = character.inventory.filter(isLegendaryRef);
-  const equipped: EquipmentSlots = { ...kitEquipped };
-  for (const slot of ['mainHand', 'offHand', 'armor'] as const) {
-    const ref = character.equipped[slot];
-    if (ref && isLegendaryRef(ref)) equipped[slot] = ref;
-  }
-  return { inventory: [...kitInventory, ...carriedLegendaries], equipped };
 }
 
 /**
