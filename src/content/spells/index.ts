@@ -133,7 +133,7 @@ export const FIREBALL: Spell = SpellSchema.parse({
   target: 'area',
   damageType: 'fire',
   description:
-    'A bead of ember leaves your fingertip and blooms — 8d6 fire damage to every enemy in the room. A successful Dexterity save halves the burn.',
+    'A bead of ember blooms into a roar — 8d6 fire to every enemy. DEX save halves. Enemies that fail ignite: 1d6 fire at the start of your next turn.',
   effectKey: 'fireball',
 });
 
@@ -146,7 +146,7 @@ export const LIGHTNING_BOLT: Spell = SpellSchema.parse({
   target: 'area',
   damageType: 'lightning',
   description:
-    'A jagged arc of white lightning leaps from your palm and carves the room — 8d6 lightning damage to every enemy. A successful Dexterity save halves the strike.',
+    'A jagged arc sears the room — 6d6 lightning to every enemy. DEX save halves. Even on a successful save, each target takes 1d6 lightning — the arc finds you.',
   effectKey: 'lightning-bolt',
 });
 

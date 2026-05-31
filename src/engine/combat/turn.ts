@@ -255,6 +255,47 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     nextCharacter = ended.character;
   }
 
+  // Burn DOT (Fireball ignite): tick at the start of the player's turn.
+  if (order[nextIndex] === 'player' && nextState.status === 'active') {
+    for (const combatant of nextState.combatants) {
+      if (combatant.kind !== 'monster') continue;
+      const mc = combatant as MonsterCombatant;
+      if (
+        mc.instance.hp.current <= 0 ||
+        !mc.instance.burnTurnsRemaining ||
+        mc.instance.burnTurnsRemaining <= 0
+      ) continue;
+      const burnDmg = mc.instance.burnDamagePerTurn ?? 0;
+      if (burnDmg <= 0) continue;
+      const remainingTemp = Math.max(0, mc.instance.hp.temp - burnDmg);
+      const overflow = Math.max(0, burnDmg - mc.instance.hp.temp);
+      const newHp = Math.max(0, mc.instance.hp.current - overflow);
+      const newTurns = mc.instance.burnTurnsRemaining - 1;
+      nextState = {
+        ...nextState,
+        combatants: nextState.combatants.map((c) => {
+          if (c.kind !== 'monster' || c.id !== mc.id) return c;
+          return {
+            ...c,
+            instance: {
+              ...c.instance,
+              hp: { ...c.instance.hp, current: newHp, temp: remainingTemp },
+              burnTurnsRemaining: newTurns,
+            },
+          };
+        }),
+      };
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'damage',
+        text: `${mc.instance.displayName} burns for ${burnDmg} fire.`,
+      });
+    }
+    const burnEnded = evaluateCombatEnd(nextState, nextCharacter);
+    nextState = burnEnded.state;
+    nextCharacter = burnEnded.character;
+  }
+
   // enemy-telegraph: re-select every monster's intent at the top of the
   // player's turn, against the post-housekeeping state, so the badge reflects
   // exactly what the player is now deciding against.

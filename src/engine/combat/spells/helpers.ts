@@ -10,7 +10,6 @@ import { getMonster } from '../../../content/monsters';
 import { applyDamage, evaluateCombatEnd as evaluateCombatEndShared } from '../attack';
 import { abilityModifier } from '../../../types/abilities';
 import {
-  characterHasMechanic,
   effectiveAbilityScores,
   proficiencyBonus,
 } from '../../character/derived';
@@ -169,57 +168,6 @@ export function evaluateCombatEndFull(
   character: Readonly<Character>,
 ): { state: CombatState; character: Character } {
   return evaluateCombatEndShared(state, character);
-}
-
-/**
- * Shared AoE evocation handler — Fireball and Lightning Bolt both roll 8d6
- * against every living monster, with a DEX save for half (mirrors 5e RAW for
- * the shape; the engine has no terrain so cone/line/sphere collapse to "all").
- */
-export function castAreaEvocation(
-  ctx: CastSpellContext,
-  effect: 'fireball' | 'lightning-bolt',
-): CastResult {
-  const { character, state, roller } = ctx;
-  let nextCharacter: Character = consumeSlot(character, 3);
-
-  const damageType: 'fire' | 'lightning' = effect === 'fireball' ? 'fire' : 'lightning';
-  const flavor =
-    effect === 'fireball'
-      ? `${nextCharacter.name} flicks an ember — it blooms into a roar of flame`
-      : `${nextCharacter.name} hurls a white arc of lightning across the room`;
-
-  const aliveMonsters = state.combatants.filter(
-    (c) => c.kind === 'monster' && c.instance.hp.current > 0,
-  ) as MonsterCombatant[];
-
-  // Sculpt Spells reflavor — Evocation subclass burns one die hotter on AoEs.
-  const evoker = characterHasMechanic(nextCharacter, 'sculpt-spells');
-  const dice = evoker ? 9 : 8;
-  const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
-  const fullDmg = damageRoll.total;
-  const dc = spellSaveDC(nextCharacter);
-
-  let nextState: CombatState = appendLog(state, {
-    id: nextLogId(state),
-    kind: 'roll',
-    text: `${flavor}. ${damageRoll.rolls.join('+')} = ${fullDmg} ${damageType}${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half.`,
-  });
-
-  nextState = attachSpellEffect(nextState, effect, 'player', aliveMonsters[0]?.id);
-
-  const resolved = applyAreaSaveForHalf(nextState, nextCharacter, aliveMonsters, {
-    roller,
-    fullDmg,
-    dc,
-    damageType,
-  });
-  nextState = resolved.state;
-  nextCharacter = resolved.character;
-
-  nextCharacter = markActionUsed(nextCharacter);
-  const ended = evaluateCombatEndFull(nextState, nextCharacter);
-  return { state: ended.state, character: ended.character, cast: true };
 }
 
 /**
