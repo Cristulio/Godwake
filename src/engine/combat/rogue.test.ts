@@ -169,6 +169,34 @@ describe('Rogue — Sneak Attack', () => {
     expect(observed).toBe(true);
   });
 
+  it('fires on the first attack of combat with no Hide, no bloodied, no dagger (opening strike)', () => {
+    // The rogue steps from shadow on the opener — no setup required.
+    // Use a rapier so the dagger synergy path is closed.
+    let observed = false;
+    for (let seed = 1; seed <= 60 && !observed; seed++) {
+      const goblin = getMonster('goblin');
+      let rogue = makeRogue({
+        inventory: [{ itemId: 'rapier' }],
+        equipped: { mainHand: { itemId: 'rapier' }, offHand: null, armor: null },
+      });
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+      let state = init.state;
+      rogue = init.character;
+      // No Hide, goblin at full HP — only isFirstAttack should fire sneak.
+      const goblinId = findMonster(state).id;
+      const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'rapier');
+      state = atk.state;
+      rogue = atk.character;
+      const sneakLog = state.log.find((l) => l.text.includes('sneak ('));
+      if (sneakLog) {
+        observed = true;
+        expect(state.sneakAttackUsedThisTurn).toBe(true);
+      }
+    }
+    expect(observed).toBe(true);
+  });
+
   it('fires on a wounded (bloodied) target without advantage', () => {
     let observed = false;
     for (let seed = 1; seed <= 60 && !observed; seed++) {

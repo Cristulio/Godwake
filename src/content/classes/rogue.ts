@@ -32,7 +32,7 @@ export const ROGUE: Class = ClassSchema.parse({
         id: 'sneak-attack',
         name: 'Sneak Attack',
         description:
-          'Once per turn, when you hit a target with advantage — or when the target is already bloodied (HP at half or less) — your strike finds the gap. Damage scales: +1d6 at L1, +2d6 at L3, +3d6 at L5, +4d6 at L7.',
+          'Once per turn, your first strike of each combat always finds the gap. After the opener, advantage (from Hide) or a bloodied target (HP ≤ half) keeps the knife working. Damage scales: +1d6 at L1, +2d6 at L3, +3d6 at L5, +4d6 at L7.',
         mechanicKey: 'sneak-attack',
       },
       {

@@ -395,12 +395,16 @@ export function playerAttack(
       target.kind === 'monster' && target.instance.hp.current >= target.instance.hp.max;
     const swashbucklerSneak = characterHasMechanic(nextCharacter, 'swashbuckler');
     const assassinSneak = characterHasMechanic(nextCharacter, 'assassin') && targetFullHp;
+    // Opening strike: the first attack of each combat always finds the gap —
+    // the rogue steps from shadow even without setting up Hide first.
+    const openingStrike = isFirstAttack;
     const sneakTriggers =
       advantage === 'advantage' ||
       targetWounded ||
       wieldsDagger ||
       swashbucklerSneak ||
-      assassinSneak;
+      assassinSneak ||
+      openingStrike;
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
       sneakDice =
         sneakAttackDiceForLevel(nextCharacter.level) +
