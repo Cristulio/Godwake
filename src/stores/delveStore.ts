@@ -29,10 +29,26 @@ import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
 import { EQUIP_SLOTS } from '../engine/character/equip';
 import { sellValue } from '../components/delve/shopStock';
+import { newlyUnlocked } from '../engine/progression';
 import { useCharacterStore } from './characterStore';
 import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
 import { useMetaStore } from './metaStore';
+
+/**
+ * Queue the one-time unlock tutorial for every feature whose ladder threshold
+ * the descent just crossed AND that this soul hasn't been taught yet. Kept its
+ * own function so the feature-gating and lore lanes can hang their own
+ * delve-transition hooks alongside it without entangling. Migrated veterans
+ * (delveCount floored to 999) never cross a threshold, so they see nothing.
+ */
+function queueUnlockTutorials(prevDelveCount: number, nextDelveCount: number) {
+  const seen = useMetaStore.getState().seenTutorials;
+  const fresh = newlyUnlocked(prevDelveCount, nextDelveCount).filter(
+    (id) => !seen.includes(id),
+  );
+  if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
+}
 
 /** Renown granted per successful delve clear (boss killed). */
 export const RENOWN_PER_DELVE_CLEAR = 50;
@@ -376,7 +392,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     charSlice.setCharacter(withQuirkBudgets);
     // Account-level: every descent is one delve started. Drives the
     // progressive-unlock ladder (engine/progression/unlocks.ts).
+    const prevDelveCount = meta.delveCount;
     meta.incrementDelveCount();
+    // Reveal-on-unlock: fire a one-time tutorial for any feature this descent
+    // just opened. Reads the post-increment count off the captured prev value.
+    queueUnlockTutorials(prevDelveCount, prevDelveCount + 1);
     useScreenStore.getState().setScreen('delve');
   },
 

@@ -41,6 +41,13 @@ interface ScreenStoreState {
    */
   tauntQueue: Taunt[];
   postmortem: Postmortem | null;
+  /**
+   * Feature ids whose one-time unlock tutorial is waiting to be shown, in
+   * reveal order. Session-only (not persisted) — the persisted record of what's
+   * already been taught is metaStore.seenTutorials. The delve-count trigger
+   * fills this; App shows the head and dismissing it shifts to the next.
+   */
+  tutorialQueue: string[];
 
   setScreen: (screen: Screen) => void;
   goToTitle: () => void;
@@ -54,6 +61,10 @@ interface ScreenStoreState {
   dismissTaunt: () => void;
   setIntroSeen: (v: boolean) => void;
   markQuirksTutorialSeen: () => void;
+  /** Append unlock-tutorial ids to the reveal queue, skipping any already queued. */
+  enqueueTutorials: (ids: string[]) => void;
+  /** Drop the current tutorial off the front of the queue (after it's dismissed). */
+  shiftTutorial: () => void;
   setPostmortem: (p: Postmortem | null) => void;
   clearPostmortem: () => void;
 }
@@ -65,6 +76,7 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
   taunt: null,
   tauntQueue: [],
   postmortem: null,
+  tutorialQueue: [],
 
   setScreen: (screen) => set({ screen }),
   goToTitle: () => set({ screen: 'title' }),
@@ -96,6 +108,12 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
     }),
   setIntroSeen: (v) => set({ introSeen: v }),
   markQuirksTutorialSeen: () => set({ quirksTutorialSeen: true }),
+  enqueueTutorials: (ids) =>
+    set((s) => {
+      const fresh = ids.filter((id) => !s.tutorialQueue.includes(id));
+      return fresh.length ? { tutorialQueue: [...s.tutorialQueue, ...fresh] } : s;
+    }),
+  shiftTutorial: () => set((s) => ({ tutorialQueue: s.tutorialQueue.slice(1) })),
   setPostmortem: (p) => set({ postmortem: p }),
   clearPostmortem: () => set({ postmortem: null }),
 }));
