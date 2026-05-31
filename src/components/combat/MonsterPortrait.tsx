@@ -83,6 +83,15 @@ import gravesmokeRevenantUrl from '../../assets/sprites/monsters/gravesmoke-reve
 import pyreChaplainUrl from '../../assets/sprites/monsters/pyre-chaplain.svg';
 import slagColossusUrl from '../../assets/sprites/monsters/slag-colossus.svg';
 import ashenMarshalUrl from '../../assets/sprites/monsters/ashen-marshal.svg';
+// ─── Chapter 9 · The Court of Masks ───────────────────────────────────────
+import masqueWispUrl from '../../assets/sprites/monsters/masque-wisp.svg';
+import mirrorDoubleUrl from '../../assets/sprites/monsters/mirror-double.svg';
+import veilswornCourtierUrl from '../../assets/sprites/monsters/veilsworn-courtier.svg';
+import glasswrightDuelistUrl from '../../assets/sprites/monsters/glasswright-duelist.svg';
+import paleFavouriteUrl from '../../assets/sprites/monsters/pale-favourite.svg';
+import masqueradeWardenUrl from '../../assets/sprites/monsters/masquerade-warden.svg';
+import maskChamberlainUrl from '../../assets/sprites/monsters/mask-chamberlain.svg';
+import theHollowPretenderUrl from '../../assets/sprites/monsters/the-hollow-pretender.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -188,6 +197,15 @@ const SPRITES: Record<string, SpriteEntry> = {
   'pyre-chaplain': { url: pyreChaplainUrl, label: 'Pyre-Chaplain' },
   'slag-colossus': { url: slagColossusUrl, label: 'Slag-Colossus' },
   'ashen-marshal': { url: ashenMarshalUrl, label: 'Dravok, the Ashen Marshal' },
+  // ─── Chapter 9 · The Court of Masks ───────────────────────────────────────
+  'masque-wisp': { url: masqueWispUrl, label: 'Masque-Wisp' },
+  'mirror-double': { url: mirrorDoubleUrl, label: 'Mirror-Double' },
+  'veilsworn-courtier': { url: veilswornCourtierUrl, label: 'Veilsworn Courtier' },
+  'glasswright-duelist': { url: glasswrightDuelistUrl, label: 'Glasswright-Duelist' },
+  'pale-favourite': { url: paleFavouriteUrl, label: 'Pale Favourite' },
+  'masquerade-warden': { url: masqueradeWardenUrl, label: 'Masquerade-Warden' },
+  'mask-chamberlain': { url: maskChamberlainUrl, label: 'The Mask-Chamberlain' },
+  'the-hollow-pretender': { url: theHollowPretenderUrl, label: 'The Hollow Pretender' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },

@@ -86,6 +86,15 @@ import { GRAVESMOKE_REVENANT } from './gravesmoke-revenant';
 import { PYRE_CHAPLAIN } from './pyre-chaplain';
 import { SLAG_COLOSSUS } from './slag-colossus';
 import { ASHEN_MARSHAL } from './ashen-marshal';
+// ─── Chapter 9 · The Court of Masks ───────────────────────────────────────
+import { MASQUE_WISP } from './masque-wisp';
+import { MIRROR_DOUBLE } from './mirror-double';
+import { VEILSWORN_COURTIER } from './veilsworn-courtier';
+import { GLASSWRIGHT_DUELIST } from './glasswright-duelist';
+import { PALE_FAVOURITE } from './pale-favourite';
+import { MASQUERADE_WARDEN } from './masquerade-warden';
+import { MASK_CHAMBERLAIN } from './mask-chamberlain';
+import { THE_HOLLOW_PRETENDER } from './the-hollow-pretender';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -176,6 +185,15 @@ const ALL_MONSTERS: Monster[] = [
   PYRE_CHAPLAIN,
   SLAG_COLOSSUS,
   ASHEN_MARSHAL,
+  // ─── Chapter 9 · The Court of Masks ─────────────────────────────────────
+  MASQUE_WISP,
+  MIRROR_DOUBLE,
+  VEILSWORN_COURTIER,
+  GLASSWRIGHT_DUELIST,
+  PALE_FAVOURITE,
+  MASQUERADE_WARDEN,
+  MASK_CHAMBERLAIN,
+  THE_HOLLOW_PRETENDER,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -281,4 +299,13 @@ export {
   PYRE_CHAPLAIN,
   SLAG_COLOSSUS,
   ASHEN_MARSHAL,
+  // ─── Chapter 9 · The Court of Masks ─────────────────────────────────────
+  MASQUE_WISP,
+  MIRROR_DOUBLE,
+  VEILSWORN_COURTIER,
+  GLASSWRIGHT_DUELIST,
+  PALE_FAVOURITE,
+  MASQUERADE_WARDEN,
+  MASK_CHAMBERLAIN,
+  THE_HOLLOW_PRETENDER,
 };
