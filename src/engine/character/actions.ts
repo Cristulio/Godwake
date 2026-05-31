@@ -25,11 +25,6 @@ function fighterActionSurgeMax(character: Character): number {
   return 0;
 }
 
-/** Rage charges available per rest — refresh at campfire/rest rooms, not per combat. */
-export function barbarianRageMax(_character: Character): number {
-  return 2;
-}
-
 /** Rounds a Rage burst lasts once entered — a short window, not a whole-fight state. */
 export const RAGE_ROUNDS = 3;
 
@@ -97,7 +92,6 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
         character.classId === 'rogue'
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
-      rageUsesRemaining: barbarianRageMax(character),
       rageRoundsRemaining: 0,
       spellSlots: isWizard
         ? wizardSpellSlots(character)
@@ -124,7 +118,6 @@ export function longRest(character: Character): Character {
         character.classId === 'rogue'
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
-      rageUsesRemaining: barbarianRageMax(character),
       rageRoundsRemaining: 0,
       spellSlots: isWizard
         ? wizardSpellSlots(character)

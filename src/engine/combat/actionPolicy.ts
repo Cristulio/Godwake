@@ -210,14 +210,8 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
       return { kind: 'second-wind' };
     }
 
-    // Barbarian Rage: open every fight in a fury when a charge is available.
-    // Charges are per-rest; the resistance + bonus damage are worth spending one.
-    if (
-      isBarbarian &&
-      !isRaging(character) &&
-      (character.resources.rageUsesRemaining ?? 0) > 0 &&
-      characterHasMechanic(character, 'rage')
-    ) {
+    // Barbarian Rage: open every fight in a fury — available every combat.
+    if (isBarbarian && !isRaging(character) && characterHasMechanic(character, 'rage')) {
       return { kind: 'rage' };
     }
 

@@ -5,7 +5,6 @@ import { computeAC, characterHasMechanic } from '../../engine/character/derived'
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
-  barbarianRageMax,
 } from '../../engine/character/actions';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { getBlessing } from '../../content/blessings';
@@ -192,8 +191,6 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
   const isRanger = character.classId === 'ranger';
 
   // --- Barbarian resources ---
-  const rageMax = barbarianRageMax(character);
-  const rageUses = character.resources.rageUsesRemaining ?? 0;
   const rageRounds = character.resources.rageRoundsRemaining ?? 0;
   const raging = rageRounds > 0;
   const hasReckless = isBarbarian && characterHasMechanic(character, 'reckless-attack');
@@ -371,23 +368,14 @@ export function CombatHUD({ character, state }: CombatHUDProps) {
         </Section>
       )}
 
-      {isBarbarian && (
+      {isBarbarian && raging && (
         <Section title="Rage">
-          {Array.from({ length: Math.max(rageMax, rageUses) }).map((_, i) => (
-            <Dot
-              key={`rage-${i}`}
-              on={i < rageUses}
-              title={i < rageUses ? 'Rage charge available — refills at campfire and rest rooms' : 'Rage charge spent'}
-            />
-          ))}
-          {raging && (
-            <Pill
-              text={`Fury ${rageRounds}`}
-              on
-              tone="blood"
-              title={`Raging — ${rageRounds} round${rageRounds === 1 ? '' : 's'} left. Physical damage halved, melee hits land harder. Healing locked out until fury ends.`}
-            />
-          )}
+          <Pill
+            text={`Fury ${rageRounds}`}
+            on
+            tone="blood"
+            title={`Raging — ${rageRounds} round${rageRounds === 1 ? '' : 's'} left. Physical damage halved, melee hits land harder. Healing locked out until fury ends.`}
+          />
         </Section>
       )}
 

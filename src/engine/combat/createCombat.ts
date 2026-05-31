@@ -171,7 +171,6 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   }
 
   // Barbarian: clear stale fury and reckless stance from the prior fight.
-  // Rage charges are per-rest (campfire/rest room) — not refreshed here.
   if (nextCharacter.classId === 'barbarian') {
     nextCharacter = { ...nextCharacter, recklessActive: false };
     nextCharacter = patchResources(nextCharacter, { rageRoundsRemaining: 0 });

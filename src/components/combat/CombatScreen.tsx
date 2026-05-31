@@ -244,7 +244,6 @@ export function CombatScreen({
       !character.actionEconomy.bonusActionUsed;
     const hasUsableRage =
       character.classId === 'barbarian' &&
-      (character.resources.rageUsesRemaining ?? 0) > 0 &&
       (character.resources.rageRoundsRemaining ?? 0) <= 0 &&
       !character.actionEconomy.bonusActionUsed;
     // Worth waiting on only if the mark isn't already riding a live quarry —
@@ -297,7 +296,6 @@ export function CombatScreen({
     character.resources.secondWindBonusRemaining,
     character.resources.actionSurgeRemaining,
     character.resources.cunningActionUsesRemaining,
-    character.resources.rageUsesRemaining,
     character.resources.rageRoundsRemaining,
     character.hp.current,
     state.currentTurnIndex,

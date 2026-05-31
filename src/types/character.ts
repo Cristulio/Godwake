@@ -88,12 +88,6 @@ export interface ClassResources {
    * start of each player turn; reset to 0 at combat start.
    */
   rageRoundsRemaining?: number;
-  /**
-   * Barbarian: Rage activations left this combat. Refreshed to the per-level
-   * max at the start of every encounter (mirrors the Fighter's Second Wind
-   * cadence), so the brute always opens with a rage in hand.
-   */
-  rageUsesRemaining?: number;
 }
 
 /**
