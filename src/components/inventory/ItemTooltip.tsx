@@ -95,7 +95,9 @@ function kindLabel(item: Item): string {
     case 'weapon':
       return `${item.category} weapon`;
     case 'armor':
-      return item.category === 'shield' ? 'shield' : `${item.category} armor`;
+      if (item.category === 'shield') return 'shield';
+      if (item.category === 'robe') return 'robe';
+      return `${item.category} armor`;
     case 'consumable':
       return `${item.effect} consumable`;
     case 'accessory':
@@ -115,6 +117,8 @@ function renderStats(item: Item) {
   } else if (item.kind === 'armor') {
     if (item.category === 'shield') {
       rows.push(['AC bonus', `+${item.baseAC}`]);
+    } else if (item.category === 'robe') {
+      rows.push(['Armour', 'none (caster)']);
     } else {
       rows.push(['Base AC', String(item.baseAC)]);
     }

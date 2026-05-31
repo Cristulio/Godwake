@@ -71,7 +71,9 @@ export function computeAC(character: Character): number {
 
   if (equipped.armor) {
     const item = getItem(equipped.armor.itemId);
-    if (item.kind === 'armor' && item.category !== 'shield') {
+    // A robe sits in the body slot but is not armour: it sets no AC base and
+    // stays invisible here, so Mage Armour's `!bodyArmor` +3 still lands.
+    if (item.kind === 'armor' && item.category !== 'shield' && item.category !== 'robe') {
       bodyArmor = item;
       if (item.category === 'light') {
         base = item.baseAC + dexMod;
