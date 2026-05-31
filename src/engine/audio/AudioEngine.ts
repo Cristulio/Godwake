@@ -104,8 +104,12 @@ class _AudioEngine {
     const ctx = this.ensureContext();
     if (!ctx || !this.sfxBus) return;
     if (ctx.state === 'suspended') {
-      // Don't block; the auto-resume listener will pick up the next gesture.
+      // Context is paused — resume it but DROP this sound rather than scheduling
+      // at the frozen ctx.currentTime. Queuing at a stale timestamp causes a
+      // burst of every pending sound the moment the context resumes, which is
+      // what produces SFX arriving seconds after the action that triggered them.
       void ctx.resume();
+      return;
     }
     renderer(ctx, this.sfxBus, ctx.currentTime);
   }
