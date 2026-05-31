@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createDiceRoller } from '../dice';
 import { BlessingSchema, type Blessing } from '../../schemas/blessing';
-import { aggregateBlessingModifiers, blessingSignature, rollBlessingOptions } from './blessings';
+import { aggregateBlessingModifiers, blessingSignature, characterBlessingMods, rollBlessingOptions } from './blessings';
+import { computeAC, critRange } from './derived';
+import { characterAtLevel } from '../../test/sim/encounterStress';
 
 const mocks = vi.hoisted(() => ({
   useFakePool: false,
@@ -457,5 +459,31 @@ describe('rollBlessingOptions — real pool', () => {
       const result = rollBlessingOptions(roller, 3);
       expect(new Set(result).size).toBe(result.length);
     }
+  });
+});
+
+describe('aggregateBlessingModifiers — max-of-individual stacking guard (PR #80/#86)', () => {
+  it('stacking 3 AC blessings yields the same AC as a single AC blessing', () => {
+    const single = characterAtLevel('fighter', 5, ['helms-aegis']);
+    const stacked = characterAtLevel('fighter', 5, ['helms-aegis', 'mystras-ward', 'silvanus-root']);
+    expect(computeAC(stacked)).toBe(computeAC(single));
+  });
+
+  it('stacking 2 crit-range blessings yields the same crit range as one', () => {
+    const single = characterAtLevel('fighter', 5, ['tempus-edge']);
+    const stacked = characterAtLevel('fighter', 5, ['tempus-edge', 'tymoras-gambit']);
+    expect(critRange(stacked).length).toBe(critRange(single).length);
+  });
+
+  it('stacking 2 damage blessings yields the same damage bonus as one', () => {
+    const single = characterAtLevel('rogue', 5, ['mystras-whisper']);
+    const stacked = characterAtLevel('rogue', 5, ['mystras-whisper', 'silvanus-thorn']);
+    expect(characterBlessingMods(stacked).damageBonus).toBe(characterBlessingMods(single).damageBonus);
+  });
+
+  it('stacking 2 holy-damage blessings yields the same holy bonus as one', () => {
+    const single = characterAtLevel('fighter', 5, ['helms-bulwark']);
+    const stacked = characterAtLevel('fighter', 5, ['helms-bulwark', 'lathanders-ember']);
+    expect(characterBlessingMods(stacked).holyDamageBonus).toBe(characterBlessingMods(single).holyDamageBonus);
   });
 });

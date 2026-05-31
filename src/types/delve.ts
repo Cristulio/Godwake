@@ -81,7 +81,7 @@ export interface DelveState {
    * Cleared on every room entry (and on delve end) so each camp offers a fresh
    * fork — the per-camp boon resolution lives in `campBoons`, keyed by tier.
    */
-  campChoice?: 'rest' | 'sharpen' | 'prayer';
+  campChoice?: 'rest';
   /**
    * Elite node risk/reward gate. Undefined while the decision is pending (the
    * EliteRoom panel shows); set true once the player chooses to FIGHT, which

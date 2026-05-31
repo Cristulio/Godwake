@@ -149,8 +149,7 @@ export function rollBlessingOptions(
  * **Non-stacking fields take max-of-individual, not sum.** This carve-out
  * exists because several pool blessings target the same mechanical lever,
  * and summing them compounds into the dominant build (the "always pick
- * this" trap) instead of a meaningful choice. The immortal-hypothesis sim
- * (`src/sim/immortalHypothesisSim.ts`) caught `extraTempHpPerRoom` first;
+ * this" trap) instead of a meaningful choice. The immortal-hypothesis sim caught `extraTempHpPerRoom` first;
  * the audit follow-up flagged four more reachable-in-the-pool cases:
  *
  *   - `extraTempHpPerRoom` — 5e RAW: temp HP doesn't stack (PR #80).

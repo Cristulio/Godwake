@@ -79,12 +79,6 @@ export const EventChoiceSchema = z.object({
   requiresGold: z.number().optional(),
   requiresHpAtLeast: z.number().optional(),
   /**
-   * Minimum effective CHA modifier required to take this option (BG2-style
-   * [Persuade] gate). Threshold is compared against `modifierFor(c, 'cha')`,
-   * which includes racial bonuses. UI hides/disables the option below it.
-   */
-  requiresCha: z.number().optional(),
-  /**
    * Probability in [0,1] that `outcome` fires. When undefined, the choice is
    * deterministic and `outcome` always fires. When set, the UI shows a chance
    * chip and the engine rolls: pass → `outcome`, fail → `failureOutcome`

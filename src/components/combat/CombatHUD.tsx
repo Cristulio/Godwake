@@ -43,17 +43,10 @@ function blessingGlyph(god: Blessing['god']): string {
 function conditionGlyph(name: string): string {
   switch (name) {
     case 'paralyzed': return '⛓';
-    case 'prone': return '↓';
     case 'blinded': return '◐';
     case 'poisoned': return '☣';
     case 'frightened': return '!';
     case 'restrained': return '⊠';
-    case 'grappled': return '✊';
-    case 'stunned': return '✦';
-    case 'incapacitated': return '⊘';
-    case 'charmed': return '♥';
-    case 'unconscious': return 'z';
-    case 'exhausted': return '⊝';
     default: return '◇';
   }
 }

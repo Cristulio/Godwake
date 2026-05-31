@@ -456,47 +456,11 @@ describe('canTakeChoice — gate evaluation', () => {
     if (!a.ok) expect(a.gate).toBe('hp');
   });
 
-  it('cha gate: blocks when effective CHA mod is below threshold', () => {
-    // STANDARD_ARRAY = [15,14,13,12,10,8]. makeChar maps cha=STANDARD_ARRAY[4]=10 → mod 0.
-    // Human race grants +1 to every stat → cha 11 → mod 0.
-    const dull = makeChar();
-    const gated = choice({ requiresCha: 1 });
-    const a = canTakeChoice(dull, gated);
-    expect(a.ok).toBe(false);
-    if (!a.ok) {
-      expect(a.gate).toBe('cha');
-      expect(a.reason).toContain('CHA');
-    }
-  });
-
-  it('cha gate: allows when effective CHA mod meets threshold (Half-Elf-style build)', () => {
-    // Put 15 (the top of the standard array) into cha; race +1 → 16 → mod +3.
-    const silverTongue = createCharacter({
-      id: 'silver',
-      name: 'Silver',
-      raceId: 'human',
-      classId: 'fighter',
-      baseAbilityScores: {
-        str: STANDARD_ARRAY[1],
-        dex: STANDARD_ARRAY[2],
-        con: STANDARD_ARRAY[3],
-        int: STANDARD_ARRAY[5],
-        wis: STANDARD_ARRAY[4],
-        cha: STANDARD_ARRAY[0],
-      },
-      skillProficiencies: ['athletics', 'perception'],
-    });
-    expect(canTakeChoice(silverTongue, choice({ requiresCha: 3 })).ok).toBe(true);
-    const tooHard = canTakeChoice(silverTongue, choice({ requiresCha: 4 }));
-    expect(tooHard.ok).toBe(false);
-    if (!tooHard.ok) expect(tooHard.gate).toBe('cha');
-  });
-
-  it('gate priority: gold checked before hp before cha (first failure surfaces)', () => {
+  it('gate priority: gold checked before hp (first failure surfaces)', () => {
     const broke = makeChar({ goldInPocket: 0 });
     broke.hp = { current: 1, max: 20, temp: 0 };
-    const triple = choice({ requiresGold: 5, requiresHpAtLeast: 10, requiresCha: 5 });
-    const a = canTakeChoice(broke, triple);
+    const both = choice({ requiresGold: 5, requiresHpAtLeast: 10 });
+    const a = canTakeChoice(broke, both);
     expect(a.ok).toBe(false);
     if (!a.ok) expect(a.gate).toBe('gold');
   });
