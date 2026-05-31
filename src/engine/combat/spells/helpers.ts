@@ -135,10 +135,13 @@ export function canCastSpell(
   const known = character.resources.knownSpells ?? [];
   if (!known.includes(spellId)) return { ok: false, reason: 'Spell not prepared.' };
   const spell = getSpell(spellId);
-  // Bonus-action spells (Misty Step) gate on the bonus-action slot, not action.
   if (spell.effectKey === 'misty-step') {
     if (character.actionEconomy.bonusActionUsed) {
       return { ok: false, reason: 'Bonus action already used.' };
+    }
+  } else if (spell.effectKey === 'shield') {
+    if (character.actionEconomy.reactionUsed) {
+      return { ok: false, reason: 'Reaction already used.' };
     }
   } else if (character.actionEconomy.actionUsed) {
     return { ok: false, reason: 'Action already used.' };

@@ -60,12 +60,11 @@ describe('robes — wizard body-slot caster gear', () => {
     // The robe itself adds no AC.
     expect(computeAC(robed)).toBe(computeAC(bare));
 
-    // Mage Armour's +3 still lands over a robe (a robe is not body armour).
-    const robedMage: Character = {
-      ...robed,
-      resources: { ...robed.resources, mageArmorActive: true },
-    };
-    expect(computeAC(robedMage)).toBe(computeAC(robed) + 3);
+    // Mage Armour is now a class passive (+3 when no body armour). Both bare
+    // and robed wizard get it — the robe does not count as body armour.
+    // DEX 14 → +2. Expected: 10 + 2 + 3 = 15.
+    expect(computeAC(bare)).toBe(15);
+    expect(computeAC(robed)).toBe(15);
   });
 
   it("applies the robe's caster affixes from the body slot", () => {

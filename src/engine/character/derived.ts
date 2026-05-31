@@ -124,7 +124,7 @@ export function computeAC(character: Character): number {
   base += (blessingMods.acBonusPerBaneQuirk ?? 0) * baneQuirkCount(character);
 
   // Wizard buffs.
-  if (character.resources.mageArmorActive && !bodyArmor) {
+  if (character.classId === 'wizard' && !bodyArmor) {
     base += 3;
   }
   if (character.resources.shieldActive) {

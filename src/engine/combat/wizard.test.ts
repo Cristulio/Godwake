@@ -191,11 +191,13 @@ describe('Wizard — Fire Bolt save-for-half', () => {
 });
 
 describe('Wizard — Mage Armor', () => {
-  it('adds +3 AC when no body armor is worn', () => {
+  it('adds +3 AC as a class passive when no body armor is worn', () => {
     const w = makeWizard();
-    const baseAC = computeAC(w);
-    w.resources = { ...w.resources, mageArmorActive: true };
-    expect(computeAC(w)).toBe(baseAC + 3);
+    // DEX 12 → +1. Passive baseline: 10 + 1 + 3 = 14.
+    expect(computeAC(w)).toBe(14);
+    // The mageArmorActive flag no longer drives AC; clearing it has no effect.
+    w.resources = { ...w.resources, mageArmorActive: false };
+    expect(computeAC(w)).toBe(14);
   });
 });
 

@@ -1,5 +1,8 @@
 import type { Character } from '../types/character';
 import type { UnlockedUpgrades } from '../engine/character/upgrades';
+import { getAffix } from '../content/items';
+import { getBlessing } from '../content/blessings';
+import { getQuirk } from '../content/quirks';
 
 /**
  * Current persisted save shape version.
@@ -41,8 +44,12 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
  *             (non-refunded). `attunementSlotsBonus` is stripped from the
  *             character. Legendary relics now have no slot cap — all owned relics
  *             can be equipped at the hub simultaneously.
+ *  v11 → v12: Prune dead affix/blessing/quirk ids from persisted character data
+ *             so renamed or removed content ids don't silently drop effects on
+ *             load. Equipped item rolled.affixes, character.blessings, and
+ *             character.quirks are filtered to only known ids.
  */
-export const SAVE_VERSION = 11;
+export const SAVE_VERSION = 12;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -148,6 +155,44 @@ export function migrateCharacter(
   }
 
   return c as Character;
+}
+
+function isKnownAffix(id: string): boolean {
+  try { getAffix(id); return true; } catch { return false; }
+}
+function isKnownBlessing(id: string): boolean {
+  try { getBlessing(id); return true; } catch { return false; }
+}
+function isKnownQuirk(id: string): boolean {
+  try { getQuirk(id); return true; } catch { return false; }
+}
+
+function pruneItemAffixes<T extends { rolled?: { affixes?: string[] } } | null>(
+  ref: T,
+): T {
+  if (!ref || !ref.rolled?.affixes) return ref;
+  const pruned = ref.rolled.affixes.filter(isKnownAffix);
+  if (pruned.length === ref.rolled.affixes.length) return ref;
+  return { ...ref, rolled: { ...ref.rolled, affixes: pruned } };
+}
+
+function pruneDeadContentIds(character: Character): Character {
+  const eq = character.equipped;
+  const nextEquipped = {
+    ...eq,
+    mainHand: pruneItemAffixes(eq.mainHand),
+    offHand: pruneItemAffixes(eq.offHand),
+    armor: pruneItemAffixes(eq.armor),
+    helm: pruneItemAffixes(eq.helm ?? null),
+    amulet: pruneItemAffixes(eq.amulet ?? null),
+    ring1: pruneItemAffixes(eq.ring1 ?? null),
+    ring2: pruneItemAffixes(eq.ring2 ?? null),
+    belt: pruneItemAffixes(eq.belt ?? null),
+    boots: pruneItemAffixes(eq.boots ?? null),
+  };
+  const nextBlessings = (character.blessings ?? []).filter(isKnownBlessing);
+  const nextQuirks = (character.quirks ?? []).filter(isKnownQuirk);
+  return { ...character, equipped: nextEquipped, blessings: nextBlessings, quirks: nextQuirks };
 }
 
 export interface MigratedSnapshot {
@@ -296,6 +341,12 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
       | Record<string, unknown>
       | undefined;
     if (resources) delete resources.rageUsesRemaining;
+  }
+
+  // v11 → v12: prune dead affix/blessing/quirk ids so renamed or removed
+  // content never silently drops effects — unknown ids are filtered here.
+  if (state.character) {
+    state.character = pruneDeadContentIds(state.character as Character) as Character;
   }
 
   return state as MigratedSnapshot;
