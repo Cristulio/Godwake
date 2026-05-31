@@ -33,6 +33,7 @@ import { useCharacterStore } from './characterStore';
 import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
 import { useMetaStore } from './metaStore';
+import { isFeatureUnlocked } from '../engine/progression/unlocks';
 
 /** Renown granted per successful delve clear (boss killed). */
 export const RENOWN_PER_DELVE_CLEAR = 50;
@@ -513,7 +514,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       if (goldDrop || xpDrop) get().addDelveReward(goldDrop, xpDrop, true);
       // Gear drop: a low-chance rolled item from the combat-room clear. Re-read
       // the character so the new item layers onto the gold/xp just credited.
-      const dropRarity = rollGearDrop(getActiveRoller(), room.kind);
+      // Cap rarity to what the progression ladder has unlocked so far.
+      const meta = useMetaStore.getState();
+      let dropRarity: GearRarity | null = rollGearDrop(getActiveRoller(), room.kind);
+      if (dropRarity === 'purple' && !isFeatureUnlocked('affixes-epic', meta)) {
+        dropRarity = isFeatureUnlocked('affixes-rare', meta) ? 'blue' : 'green';
+      } else if (dropRarity === 'blue' && !isFeatureUnlocked('affixes-rare', meta)) {
+        dropRarity = 'green';
+      }
       if (dropRarity) {
         const cur = useCharacterStore.getState().character;
         if (cur) {
@@ -538,7 +546,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         }
       }
       // Rare legendary relic drop: banked to the collection, not equipped this run.
-      if (rollLegendaryDrop(getActiveRoller(), room.kind)) {
+      // Gate: elite legendary drops are only available once the legendaries feature is unlocked.
+      if (isFeatureUnlocked('legendaries', meta) && rollLegendaryDrop(getActiveRoller(), room.kind)) {
         const bankedId = useMetaStore.getState().grantLegendaryDrop();
         if (bankedId) bankedLegendary = getLegendary(bankedId)?.name ?? 'Legendary relic';
       }

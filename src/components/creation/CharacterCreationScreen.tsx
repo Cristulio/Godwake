@@ -11,6 +11,7 @@ import {
   type AbilityName,
 } from '../../types/abilities';
 import type { SkillName } from '../../types/skills';
+import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 
 const ABILITY_SHORT: Record<AbilityName, string> = {
   str: 'STR',
@@ -100,13 +101,22 @@ export function CharacterCreationScreen() {
   const goToTitle = useGameStore((s) => s.goToTitle);
   const goToHub = useGameStore((s) => s.goToHub);
   const existing = useGameStore((s) => s.character);
+  const delveCount = useGameStore((s) => s.delveCount);
+  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
 
   // A soul already in the world means this is a hub swap, not first creation.
   // Swapping keeps renown / Grove / quirks and returns to Phandalin; first
   // creation runs the intro → first-delve handoff.
   const isSwap = existing != null;
+  const rosterUnlocked = isFeatureUnlocked('class-roster', { delveCount, chaptersCleared, druidGroveUnlocked });
 
-  const options = useMemo(buildSoulOptions, []);
+  const allOptions = useMemo(buildSoulOptions, []);
+  // Before class-roster unlocks: on a hub swap, only the current class is selectable.
+  // On first creation the full roster is always shown (no character exists yet to restrict to).
+  const options = isSwap && !rosterUnlocked
+    ? allOptions.filter((o) => o.classId === existing?.classId)
+    : allOptions;
   const [selectedClassId, setSelectedClassId] = useState<ClassId | null>(null);
   const selected = options.find((o) => o.classId === selectedClassId) ?? null;
 
@@ -232,6 +242,28 @@ export function CharacterCreationScreen() {
             </button>
           );
         })}
+        {/* When class-roster is locked on a hub swap, show sealed placeholders for the other souls. */}
+        {isSwap && !rosterUnlocked && allOptions
+          .filter((o) => o.classId !== existing?.classId)
+          .map((o) => (
+            <div
+              key={o.classId}
+              className="relative p-4 border-2 border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] opacity-60 flex flex-col gap-2"
+            >
+              <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
+                ⚿ Sealed
+              </div>
+              <div className="font-display text-[var(--color-text-dim)] text-base tracking-wide">
+                {o.className}
+              </div>
+              <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
+                This soul awaits a deeper walker. The wheel turns further, and they will come.
+              </p>
+              <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-widest mt-auto">
+                Unlocks at delve 16
+              </div>
+            </div>
+          ))}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">

@@ -14,6 +14,7 @@ import { PhandalinScene } from './PhandalinScene';
 import { LegendaryScreen } from './LegendaryScreen';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
+import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 
 export function HubScreen() {
   const character = useGameStore((s) => s.character);
@@ -27,6 +28,12 @@ export function HubScreen() {
   const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const activeLegendaries = useGameStore((s) => s.activeLegendaries);
+  const delveCount = useGameStore((s) => s.delveCount);
+  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const progressionMeta = { delveCount, chaptersCleared, druidGroveUnlocked };
+  const groveUnlocked = isFeatureUnlocked('grove', progressionMeta);
+  const legendariesUnlocked = isFeatureUnlocked('legendaries', progressionMeta);
+  const elitesEnabled = isFeatureUnlocked('elite-nodes', progressionMeta);
   const [view, setView] = useState<'hub' | 'relics'>('hub');
   // Default to the hardest unlocked rung; the player may dial it down (Spire-style).
   const [selectedAscension, setSelectedAscension] = useState(() => ascensionUnlocked);
@@ -55,7 +62,7 @@ export function HubScreen() {
     // Hades-style: one delve, every run. All chapters chain. Chapters
     // unlock progressively within the run, not via separate hub entries.
     void chapter1Cleared; // referenced for future "skip already-cleared" flag
-    const delve = createGodwakeDelve({ ascension: selected });
+    const delve = createGodwakeDelve({ ascension: selected, elitesEnabled });
     startDelve(delve);
   }
 
@@ -90,7 +97,7 @@ export function HubScreen() {
         </Button>
       </header>
 
-      <PhandalinScene druidGroveUnlocked={druidGroveUnlocked} />
+      <PhandalinScene druidGroveUnlocked={groveUnlocked} />
 
       <Panel tone="glow" className="mb-6">
         <div className="flex flex-wrap items-center gap-4">
@@ -168,27 +175,27 @@ export function HubScreen() {
           </Button>
         </Panel>
         <Panel
-          tone={druidGroveUnlocked ? 'glow' : 'default'}
+          tone={groveUnlocked ? 'glow' : 'default'}
           title="The Druid Grove"
         >
           <p className="text-[var(--color-text-secondary)] text-sm mb-4 leading-relaxed">
-            {druidGroveUnlocked
+            {groveUnlocked
               ? 'The circle of Mielikki tends the Wellspring. They will return you to life when you fall — and shape what comes back. Spend renown here.'
               : 'A clearing past the treeline. Smoke drifts from somewhere within, but no path opens for you. Renown enough to barter has not yet reached the keepers.'}
           </p>
           <Button
-            variant={druidGroveUnlocked ? 'primary' : 'secondary'}
-            disabled={!druidGroveUnlocked}
+            variant={groveUnlocked ? 'primary' : 'secondary'}
+            disabled={!groveUnlocked}
             onClick={goToDruidGrove}
           >
-            {druidGroveUnlocked ? '◆ Tend the Soul' : 'Sealed to you'}
+            {groveUnlocked ? '◆ Tend the Soul' : 'Sealed to you'}
           </Button>
         </Panel>
       </div>
 
       <div
         className={`mt-8 grid gap-3 text-center ${
-          ownedLegendaries.length > 0 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'
+          legendariesUnlocked && ownedLegendaries.length > 0 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'
         }`}
       >
         <StatTile label="Renown" value={character.renown} accent="amber" glyph="◆" />
@@ -216,7 +223,7 @@ export function HubScreen() {
             Open →
           </div>
         </button>
-        {ownedLegendaries.length > 0 && (
+        {legendariesUnlocked && ownedLegendaries.length > 0 && (
           <button
             type="button"
             onClick={() => setView('relics')}

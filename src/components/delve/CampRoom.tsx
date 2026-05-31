@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { RoomSpec } from '../../types/delve';
-import type { Item } from '../../schemas/item';
+import type { GearRarity, Item } from '../../schemas/item';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { BlessingCard } from '../ui/BlessingCard';
@@ -19,6 +19,7 @@ import {
 } from '../../content/campBoons';
 import { consumableStockForTier, rollGearStock, type GearStock } from './shopStock';
 import { GearWareRow, ConsumableWareRow } from './MerchantWares';
+import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 
 /** Whether the caravan shop is open. Blessings are granted at shrines, not
  * here — the camp only sells wares. */
@@ -80,9 +81,18 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     [campTier],
   );
   const classId = character?.classId;
+  const delveCount = useGameStore((s) => s.delveCount);
+  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
+  const campMaxRarity: GearRarity = isFeatureUnlocked('affixes-epic', { delveCount, chaptersCleared, druidGroveUnlocked })
+    ? 'purple'
+    : isFeatureUnlocked('affixes-rare', { delveCount, chaptersCleared, druidGroveUnlocked })
+      ? 'blue'
+      : 'green';
   const gear = useMemo<GearStock[]>(
-    () => (classId ? rollGearStock(room.id, campTier ?? 1, classId) : []),
-    [room.id, campTier, classId],
+    () => (classId ? rollGearStock(room.id, campTier ?? 1, classId, 0, campMaxRarity) : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [room.id, campTier, classId, campMaxRarity],
   );
 
   const [expanded, setExpanded] = useState<ForkBranch | null>(null);

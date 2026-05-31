@@ -21,6 +21,7 @@ import type { SkillName } from '../../types/skills';
 import type { Character } from '../../types/character';
 import { playSfx } from '../../engine/audio';
 import type { EventChoice } from '../../schemas/event';
+import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 
 function skillLabel(skill: SkillName): string {
   return skill
@@ -57,8 +58,44 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   }, [room.eventTemplateId]);
 
   const [resolved, setResolved] = useState<ResolvedTurn | null>(null);
+  const delveCount = useGameStore((s) => s.delveCount);
+  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
+  const progressionMeta = { delveCount, chaptersCleared, druidGroveUnlocked };
+  const bossIntelUnlocked = isFeatureUnlocked('boss-intel', progressionMeta);
 
   if (!character) return null;
+
+  // Boss-intel rooms are event-kind rooms whose template id starts with
+  // "boss-intel-". Before the feature unlocks, the preparation choices are
+  // hidden: the player just walks past with a locked-room notice.
+  const isBossIntelRoom =
+    room.eventTemplateId != null && room.eventTemplateId.startsWith('boss-intel-');
+  if (isBossIntelRoom && !bossIntelUnlocked) {
+    return (
+      <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
+        <Panel>
+          <p className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-2">
+            ⚿ Sealed
+          </p>
+          <h2 className="font-display text-[var(--color-accent-amber)] text-lg uppercase tracking-wider mb-3">
+            {room.title}
+          </h2>
+          <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed font-narrative italic">
+            {room.flavorText}
+          </p>
+          <p className="text-[var(--color-text-dim)] text-xs mt-4 italic">
+            The signs are here, but the art of reading them is not yet yours. Descend deeper into the dark to learn it.
+          </p>
+        </Panel>
+        <div className="flex justify-center">
+          <Button variant="primary" onClick={onContinue}>
+            Press On →
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (!template) {
     return (

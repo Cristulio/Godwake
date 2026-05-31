@@ -9,6 +9,7 @@ import {
 } from '../../content/legendaries';
 import { SETS, setProgress } from '../../content/sets';
 import { getClass } from '../../content/classes';
+import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 
 interface LegendaryScreenProps {
   onBack: () => void;
@@ -26,6 +27,10 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
   const active = useGameStore((s) => s.activeLegendaries);
   const setActive = useGameStore((s) => s.setActiveLegendaries);
   const classId = useGameStore((s) => s.character?.classId) ?? null;
+  const delveCount = useGameStore((s) => s.delveCount);
+  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
+  const setsUnlocked = isFeatureUnlocked('sets', { delveCount, chaptersCleared, druidGroveUnlocked });
   const [flash, setFlash] = useState<string | null>(null);
 
   function toggle(relic: Legendary) {
@@ -111,7 +116,7 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
         )}
       </div>
 
-      <SetsPanel active={active} owned={owned} />
+      {setsUnlocked && <SetsPanel active={active} owned={owned} />}
     </div>
   );
 }

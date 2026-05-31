@@ -10,6 +10,7 @@ import {
   aggregateLegendaryEffects,
   canEquipLegendary,
 } from '../content/legendaries';
+import { isFeatureUnlocked } from '../engine/progression/unlocks';
 
 /**
  * Long-term progress that survives reincarnation but resets on New Game:
@@ -306,9 +307,10 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (character) {
+      const setsUnlocked = isFeatureUnlocked('sets', get());
       charSlice.setCharacter({
         ...character,
-        legendaryEffects: aggregateLegendaryEffects(valid),
+        legendaryEffects: aggregateLegendaryEffects(valid, setsUnlocked),
       });
     }
   },

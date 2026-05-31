@@ -78,17 +78,27 @@ export function rollGearStock(
   tier: CampBoonTier,
   classId: ClassId,
   depth = 0,
+  maxRarity: GearRarity = 'purple',
 ): GearStock[] {
   const roller = createDiceRoller(`${seed}:gear-shop`);
   const promotions = Math.min(5, Math.floor(depth / 2));
   return GEAR_RARITY_MIX[tier].map((baseRarity, i) => {
-    const rarity = promoteRarity(baseRarity, i < promotions ? 1 : 0);
+    let rarity = promoteRarity(baseRarity, i < promotions ? 1 : 0);
+    rarity = capRarity(rarity, maxRarity);
     const ref = rollItem(
       roller,
       i === 1 ? { rarity, classId, kind: 'accessory' } : { rarity, classId },
     );
     return { ref, cost: rolledItemCost(ref) };
   });
+}
+
+/** Clamp `rarity` to not exceed `max` on the green → blue → purple ladder. */
+function capRarity(rarity: GearRarity, max: GearRarity): GearRarity {
+  const order: GearRarity[] = ['white', 'green', 'blue', 'purple', 'legendary'];
+  const ri = order.indexOf(rarity);
+  const mi = order.indexOf(max);
+  return mi < 0 || ri <= mi ? rarity : max;
 }
 
 /** Fraction of an item's value the merchant pays back when buying it from you. */

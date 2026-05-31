@@ -152,6 +152,12 @@ export interface GodwakeDelveOptions {
   seed?: number;
   /** Ascension level to play this run at (0 = base). Scales enemies + payout. */
   ascension?: number;
+  /**
+   * Whether elite nodes are unlocked for this soul. When false, elite slots in
+   * the procedural plan are downgraded to mid-tier combat so a new player never
+   * hits a locked-but-present node.
+   */
+  elitesEnabled?: boolean;
 }
 
 /** A chapter-map column slot. Combat slots draw from the chapter's themed pools. */
@@ -377,6 +383,7 @@ function buildChapterNodes(
   rng: Rng,
   content: ChapterContent,
   nextEvent: (id: string, chapter: number) => RoomSpec,
+  elitesEnabled = true,
 ): RoomSpec[] {
   const plan = generateChapterPlan(rng);
   const slotCount = (kind: SlotKind): number =>
@@ -384,8 +391,11 @@ function buildChapterNodes(
 
   const warmupQ = pickN(rng, content.pools.warmup, slotCount('warmup'));
   const emQ = pickN(rng, content.pools.earlyMid, slotCount('earlyMid'));
-  const midQ = pickN(rng, content.pools.mid, slotCount('mid'));
-  const eliteQ = pickN(rng, content.pools.elite, slotCount('elite'));
+  // When elites are locked, their slots are downgraded to mid-tier combat; pre-
+  // allocate enough mid entries to cover both the real mid slots and the extras.
+  const eliteSlots = slotCount('elite');
+  const midQ = pickN(rng, content.pools.mid, slotCount('mid') + (elitesEnabled ? 0 : eliteSlots));
+  const eliteQ = pickN(rng, content.pools.elite, elitesEnabled ? eliteSlots : 0);
   let shrineI = 0;
   let restI = 0;
 
@@ -404,7 +414,11 @@ function buildChapterNodes(
           node = combatRoom(id, midQ.shift()!);
           break;
         case 'elite':
-          node = eliteRoom(id, eliteQ.shift()!, content.chapter);
+          if (elitesEnabled) {
+            node = eliteRoom(id, eliteQ.shift()!, content.chapter);
+          } else {
+            node = combatRoom(id, midQ.shift()!);
+          }
           break;
         case 'shop':
           node = shopRoom(id, content.shop);
@@ -741,7 +755,8 @@ export function createGodwakeDelve(
     return room;
   }
 
-  const chapters = GODWAKE_CHAPTERS.map((c) => buildChapterNodes(rng, c, nextEvent));
+  const elitesEnabled = opts.elitesEnabled ?? true;
+  const chapters = GODWAKE_CHAPTERS.map((c) => buildChapterNodes(rng, c, nextEvent, elitesEnabled));
   const camps = GODWAKE_CAMPS.map((f, i) => campNode(`camp-${i + 1}`, i + 1, f));
 
   // Stitch the chapters together through the camp seams: each chapter boss
