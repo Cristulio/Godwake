@@ -382,6 +382,14 @@ export function CombatScreen({
       (c) => c.kind === 'monster' && c.instance.hp.current > 0,
     );
     if (aliveMonsters.length === 0) return;
+    // Ranger with a live mark: lock to the quarry — no target-picker.
+    if (character.classId === 'ranger' && state.huntersMarkTargetId != null) {
+      const quarryAlive = aliveMonsters.some((c) => c.id === state.huntersMarkTargetId);
+      if (quarryAlive) {
+        doAttack(state.huntersMarkTargetId);
+        return;
+      }
+    }
     if (aliveMonsters.length === 1) {
       doAttack(aliveMonsters[0].id);
     } else {
