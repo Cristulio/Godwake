@@ -70,9 +70,9 @@ const RAW: Quirk[] = [
     name: 'Cursed Coin',
     sentiment: 'odd',
     flavor:
-      'A copper that always comes back. The face on it is not one of the gods you know.',
-    effect: 'Start each delve with +10 gold. Cannot be sold or discarded.',
-    modifiers: { startBonusGold: 10 },
+      'A copper that always comes back. The face on it is not one of the gods you know, and it is always warm.',
+    effect: 'Start each delve with +30 gold. Cannot be sold or discarded.',
+    modifiers: { startBonusGold: 30 },
   }),
   QuirkSchema.parse({
     id: 'bardic-memory',
