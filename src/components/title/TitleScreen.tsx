@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/Button';
-import { useGameStore, hasAnySave, getSlotMetadata } from '../../stores/gameStore';
+import { useGameStore, hasAnySave, hasAutosave, getSlotMetadata } from '../../stores/gameStore';
 
 export function TitleScreen() {
   const startNewGame = useGameStore((s) => s.startNewGame);
+  const loadFromSlot = useGameStore((s) => s.loadFromSlot);
   const [glow, setGlow] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const activeSave = hasAutosave();
+  const saveMeta = activeSave ? getSlotMetadata(0) : null;
 
   useEffect(() => {
     const t = setTimeout(() => setGlow(true), 200);
@@ -23,6 +26,10 @@ export function TitleScreen() {
       return;
     }
     beginNewGame();
+  }
+
+  function handleContinue() {
+    loadFromSlot(0);
   }
 
   return (
@@ -67,8 +74,24 @@ export function TitleScreen() {
       </div>
 
       <div className="relative z-10 flex flex-col gap-3 w-80 animate-fade-in-slow">
-        <Button variant="primary" size="lg" onClick={handleNewGame}>
-          ▸ New Game
+        {activeSave && (
+          <div className="flex flex-col gap-1">
+            <Button variant="primary" size="lg" onClick={handleContinue}>
+              ▸ Continue
+            </Button>
+            {saveMeta && (
+              <div className="text-center text-[10px] font-display text-[var(--color-text-dim)] tracking-[0.2em] uppercase">
+                {saveMeta.characterName} · Lv {saveMeta.characterLevel} · {saveMeta.location}
+              </div>
+            )}
+          </div>
+        )}
+        <Button
+          variant={activeSave ? 'ghost' : 'primary'}
+          size="lg"
+          onClick={handleNewGame}
+        >
+          {activeSave ? '+ New Game' : '▸ New Game'}
         </Button>
       </div>
 

@@ -421,6 +421,12 @@ export function hasAnySave(): boolean {
   });
 }
 
+/** True only when the autosave (slot 0) holds an active soul. */
+export function hasAutosave(): boolean {
+  const meta = getSlotMetadata(0);
+  return meta != null && meta.characterLevel >= 1;
+}
+
 export const useGameStore = create<GameState>()(
   persist(
     (set) => {
