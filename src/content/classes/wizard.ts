@@ -34,7 +34,7 @@ export const WIZARD: Class = ClassSchema.parse({
         id: 'arcane-cantrips',
         name: 'Arcane Cantrips',
         description:
-          'You wield Fire Bolt (1d10 fire, at-will) — a mote of flame flung from the fingertips, yours to throw as often as the fight demands.',
+          'You wield Fire Bolt (1d10 fire, at-will) — a mote of flame flung from the fingertips, yours to throw as often as the fight demands. The bolt grows with you: 2d10 at level 5, 3d10 at level 7, 4d10 at level 8.',
         mechanicKey: 'arcane-cantrips',
       },
     ],

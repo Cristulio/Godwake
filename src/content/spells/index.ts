@@ -9,7 +9,7 @@ export const FIRE_BOLT: Spell = SpellSchema.parse({
   target: 'single',
   damageType: 'fire',
   description:
-    'A mote of fire streaks at one target you can see. On a hit, 1d10 + your Intelligence modifier as fire damage.',
+    'A mote of fire streaks at one target you can see. Deals d10 fire damage + your Intelligence modifier, the bolt growing brighter as you do — 1d10, then 2d10 at level 5, 3d10 at level 7, 4d10 at level 8. A Dexterity save halves the burn.',
   effectKey: 'fire-bolt',
 });
 

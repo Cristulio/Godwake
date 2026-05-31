@@ -187,6 +187,7 @@ function DelveScreenBody() {
       monsters,
       ascension: delve.ascensionLevel ?? 0,
       isBoss: room.kind === 'boss',
+      isElite: room.kind === 'elite',
     });
     setCharacter(newCombat.character);
     setCombat(newCombat.state);

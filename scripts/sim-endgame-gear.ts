@@ -428,11 +428,12 @@ function runCombatRoom(
 ): { character: Character; victory: boolean } {
   _resetMonsterInstanceCounter();
   const isBoss = room.kind === 'boss';
+  const isElite = room.kind === 'elite';
   const monsterRefs = (room.monsters ?? []).flatMap((rm) => {
     const def = getMonster(rm.defId);
     return Array.from({ length: rm.count }, () => ({ def, displayName: rm.displayPrefix }));
   });
-  const init = createCombat({ roller, character: characterIn, monsters: monsterRefs, ascension, isBoss });
+  const init = createCombat({ roller, character: characterIn, monsters: monsterRefs, ascension, isBoss, isElite });
   let state: CombatState = init.state;
   let character: Character = init.character;
 

@@ -77,6 +77,13 @@ export interface MonsterInstance {
   /** Bleed DOT: damage dealt at the start of each player turn for bleedTurnsRemaining turns. */
   bleedDamagePerTurn?: number;
   bleedTurnsRemaining?: number;
+  /**
+   * Legendary-resistance pool: the number of times this monster auto-succeeds a
+   * player-applied control save (Hold Person) before the condition can land.
+   * Stamped on the primary monster of a boss/elite encounter at spawn so a lone
+   * boss can't be chain-paralyze-locked. Absent on rank-and-file monsters.
+   */
+  legendaryResistances?: number;
 }
 
 export interface PlayerCombatant {

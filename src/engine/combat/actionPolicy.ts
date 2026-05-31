@@ -12,6 +12,7 @@ import { getBlessing } from '../../content/blessings';
 import type { Blessing, BlessingModifiers } from '../../schemas/blessing';
 import { playerAttack } from './attack';
 import { castSpell, slotsAt } from './spells';
+import { fireBoltDiceCount } from './spells/fireBolt';
 import { useConsumable } from './useItem';
 import { useSecondWind } from './secondWind';
 import { useActionSurge } from './actionSurge';
@@ -162,7 +163,9 @@ function bestHealPotionIdx(character: Character): number {
 
 function fireBoltFullAvg(character: Character): number {
   const intMod = abilityModifier(effectiveAbilityScores(character).int);
-  return 5.5 + intMod; // 1d10 + INT, ignoring the half-on-save downside (an upper estimate)
+  // Track Fire Bolt's level-scaled dice so the bot keeps choosing cantrip vs
+  // slot accurately as the cantrip grows. Ignores the half-on-save downside (an upper estimate).
+  return fireBoltDiceCount(character.level) * 5.5 + intMod;
 }
 
 // ---- The policy ------------------------------------------------------------

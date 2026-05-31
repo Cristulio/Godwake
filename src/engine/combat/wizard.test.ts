@@ -2,9 +2,11 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { castSpell, slotsAt, canCastSpell } from './spells';
+import { fireBoltDiceCount } from './spells/fireBolt';
 import { monsterAttack } from './attack';
 import { endTurn } from './turn';
-import { createDiceRoller } from '../dice';
+import { createDiceRoller, type DiceRoller } from '../dice';
+import type { RollResult } from '../../types/dice';
 import { getMonster } from '../../content/monsters';
 import { longRest, wizardSpellSlotsForLevel } from '../character/actions';
 import { applyLevelUp, simulateLevelUp } from '../character/leveling';
@@ -113,6 +115,30 @@ describe('Wizard — Fire Bolt cantrip', () => {
     w = cast.character;
     expect(slotsAt(w, 1)).toBe(before);
     expect(w.actionEconomy.actionUsed).toBe(true);
+  });
+});
+
+describe('Wizard — Fire Bolt level scaling', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('gains a d10 at levels 5, 7, and 8 (compressed for the L8 cap)', () => {
+    expect(fireBoltDiceCount(1)).toBe(1);
+    expect(fireBoltDiceCount(4)).toBe(1);
+    expect(fireBoltDiceCount(5)).toBe(2);
+    expect(fireBoltDiceCount(7)).toBe(3);
+    expect(fireBoltDiceCount(8)).toBe(4);
+  });
+
+  it('an L8 caster rolls 4 fire dice in the damage breakdown', () => {
+    const goblin = getMonster('goblin');
+    const w: Character = { ...makeWizard(), level: 8 };
+    const init = createCombat({ roller: createDiceRoller(3), character: w, monsters: [{ def: goblin }] });
+    const targetId = findMonster(init.state).id;
+    const result = castSpell({ roller: createDiceRoller(3), character: init.character, state: init.state, spellId: 'fire-bolt', targetId });
+    const dmgLine = result.state.log.find((l) => l.kind === 'damage' && l.text.includes('fire'))!;
+    // Breakdown is "d+d+d(+bonus) = N fire" — three dice means two inner '+'.
+    const breakdown = dmgLine.text.match(/Damage: ([\d+]+)/)![1];
+    expect(breakdown.split('+').filter(Boolean).length).toBeGreaterThanOrEqual(4);
   });
 });
 
@@ -323,6 +349,109 @@ describe('Wizard — Hold Person', () => {
     // -1 and +3 is ~20% on a d20 — assert at least a 10% margin to stay
     // robust to seed variance.
     expect(goblinRate).toBeGreaterThan(sageRate + 0.1);
+  });
+});
+
+describe('Boss legendary resistance vs Hold Person', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  // d20 that always rolls a 2 — every WIS save fails, so the boss is held only
+  // when its legendary-resistance pool is exhausted (no seed-sweeping needed).
+  function failRoller(): DiceRoller {
+    return {
+      d20(advantage: 'normal' | 'advantage' | 'disadvantage' = 'normal', modifier = 0): RollResult {
+        return {
+          expression: { count: 1, die: 20, modifier },
+          rolls: [2],
+          modifier,
+          total: 2 + modifier,
+          natural20: false,
+          natural1: false,
+          advantage,
+        };
+      },
+      roll() {
+        throw new Error('failRoller only implements d20');
+      },
+      serialize() {
+        return { state: 0 };
+      },
+    };
+  }
+
+  it('a boss auto-succeeds its first 3 control saves, then can be bound', () => {
+    const goblin = getMonster('goblin'); // WIS 8 — the save fails on the stubbed 2
+    let w: Character = { ...makeWizard(), level: 8 };
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: w,
+      monsters: [{ def: goblin }],
+      isBoss: true,
+    });
+    let state = init.state;
+    w = init.character;
+    const targetId = findMonster(state).id;
+    expect(findMonster(state).instance.legendaryResistances).toBe(3);
+
+    const castHold = () => {
+      w = {
+        ...w,
+        actionEconomy: { ...w.actionEconomy, actionUsed: false },
+        resources: { ...w.resources, spellSlots: wizardSpellSlotsForLevel(8) },
+      };
+      const r = castSpell({ roller: failRoller(), character: w, state, spellId: 'hold-person', targetId });
+      state = r.state;
+      w = r.character;
+      return findMonster(state).instance;
+    };
+
+    for (let expected = 2; expected >= 0; expected--) {
+      const inst = castHold();
+      expect(inst.conditions.some((c) => c.name === 'paralyzed')).toBe(false);
+      expect(inst.legendaryResistances).toBe(expected);
+    }
+    expect(state.log.some((l) => l.text.includes('legendary resistance'))).toBe(true);
+
+    const bound = castHold();
+    expect(bound.conditions.some((c) => c.name === 'paralyzed')).toBe(true);
+    expect(bound.legendaryResistances).toBe(0);
+  });
+
+  it('an elite auto-succeeds exactly one control save', () => {
+    const goblin = getMonster('goblin');
+    const baseW = makeWizard();
+    let w: Character = { ...baseW, level: 8, resources: { ...baseW.resources, spellSlots: wizardSpellSlotsForLevel(8) } };
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: w,
+      monsters: [{ def: goblin }],
+      isElite: true,
+    });
+    let state = init.state;
+    w = init.character;
+    const targetId = findMonster(state).id;
+    expect(findMonster(state).instance.legendaryResistances).toBe(1);
+
+    const r1 = castSpell({ roller: failRoller(), character: w, state, spellId: 'hold-person', targetId });
+    state = r1.state;
+    const afterFirst = findMonster(state).instance;
+    expect(afterFirst.conditions.some((c) => c.name === 'paralyzed')).toBe(false);
+    expect(afterFirst.legendaryResistances).toBe(0);
+
+    const w2 = { ...r1.character, actionEconomy: { ...r1.character.actionEconomy, actionUsed: false }, resources: { ...r1.character.resources, spellSlots: wizardSpellSlotsForLevel(8) } };
+    const r2 = castSpell({ roller: failRoller(), character: w2, state, spellId: 'hold-person', targetId });
+    expect(findMonster(r2.state).instance.conditions.some((c) => c.name === 'paralyzed')).toBe(true);
+  });
+
+  it('a rank-and-file monster has no legendary resistance and is bound on the first failed save', () => {
+    const goblin = getMonster('goblin');
+    const baseW = makeWizard();
+    const w: Character = { ...baseW, level: 3, resources: { ...baseW.resources, spellSlots: wizardSpellSlotsForLevel(3) } };
+    const init = createCombat({ roller: createDiceRoller(1), character: w, monsters: [{ def: goblin }] });
+    const targetId = findMonster(init.state).id;
+    expect(findMonster(init.state).instance.legendaryResistances).toBeUndefined();
+    const r = castSpell({ roller: failRoller(), character: init.character, state: init.state, spellId: 'hold-person', targetId });
+    expect(findMonster(r.state).instance.conditions.some((c) => c.name === 'paralyzed')).toBe(true);
   });
 });
 
