@@ -18,7 +18,7 @@ export const HALF_ELF: Race = RaceSchema.parse({
       id: 'half-elf-versatility',
       name: 'Two-World Walker',
       description:
-        "Walkers between two worlds. +2 Charisma, plus +1 to your class's primary ability and +1 to a secondary stat (Dexterity for martials, Constitution for casters) — the half-blood adapts to whatever calling claims it.",
+        "+2 Charisma (always). At character creation, +1 to your class's primary ability and +1 to a secondary stat (Dexterity for martials, Constitution for casters) — the half-blood adapts to whatever calling claims it.",
     },
   ],
 });

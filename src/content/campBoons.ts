@@ -106,6 +106,16 @@ const ALL_BOONS: CampBoon[] = [
     description: '+1 to all weapon attack rolls and crits land on 19-20 for the rest of the delve.',
     flavor: 'A glance behind eyes that have long ceased to blink. You see where the living are weak.',
   },
+  {
+    // Wizard-side parallel to Eyes of the Lich. Weapon attack bonus / physical
+    // crit range are dead for Wizard (spells either auto-hit or force saves).
+    // Match-power swap: +1 spell attack bonus + widen spell-attack crit range.
+    id: 'gaze-of-the-lich',
+    tier: 3,
+    name: 'Gaze of the Lich',
+    description: '+1 to all spell attack rolls and crits on spell attacks land on 19–20 for the rest of the delve.',
+    flavor: 'A borrowed blink, cold and lidless. Through those eyes the gaps in the mortal weave are obvious.',
+  },
 ];
 
 const BY_ID: Record<string, CampBoon> = Object.fromEntries(
@@ -123,11 +133,10 @@ export function listCampBoons(): CampBoon[] {
 }
 
 /**
- * The three boons offered at the given camp tier. Every tier swaps its
- * weapon-attack-keyed slot for a spell-keyed equivalent when the character
- * is a Wizard, mirroring the Sharpen/Whet camp-choice pattern. Power tier
- * is matched 1:1 — the wizard variant grants an equivalent magnitude lever
- * on the spell side.
+ * The three boons offered at the given camp tier. Weapon-attack-keyed slots
+ * swap to spell-keyed equivalents for Wizard. Tier 3 swaps both the middle
+ * slot (blade/vow) and the last slot (eyes/gaze of the lich). Power is
+ * matched 1:1 — each wizard variant grants an equivalent magnitude lever.
  */
 export function boonsForCampTier(tier: CampBoonTier, classId: ClassId): CampBoon[] {
   if (tier === 1) {
@@ -153,9 +162,12 @@ export function boonsForCampTier(tier: CampBoonTier, classId: ClassId): CampBoon
   const middle = classId === 'wizard'
     ? getCampBoon('vow-of-the-tome')
     : getCampBoon('blade-of-the-vow');
+  const last = classId === 'wizard'
+    ? getCampBoon('gaze-of-the-lich')
+    : getCampBoon('eyes-of-the-lich');
   return [
     getCampBoon('mantle-of-the-slain'),
     middle,
-    getCampBoon('eyes-of-the-lich'),
+    last,
   ];
 }

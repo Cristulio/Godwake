@@ -177,21 +177,30 @@ function battlePlanTempHp(chapter: BossIntelCard['chapter']): number {
 /**
  * Resolve the combat edge for a boss + tier. Returns null for an unknown boss
  * (defensive — the room only ever offers cards that exist).
+ *
+ * Pass `classId` at runtime (createCombat) to get the class-appropriate
+ * weak-spot: weapon classes get firstStrikeAdvantage, Wizard gets bracedSave
+ * (advantage on the first save vs the boss's opener) since Wizard spells
+ * either save-for-half or auto-hit and rarely lead with a spell attack roll.
  */
 export function bossIntelBuffFor(
   bossDefId: string,
   tier: BossIntelBuffTier,
+  classId?: string,
 ): BossIntelBuff | null {
   const card = getBossIntelCard(bossDefId);
   if (!card) return null;
   if (tier === 'weak-spot') {
+    const isCaster = classId === 'wizard';
     return {
       tier,
       label: 'Weak Spot',
-      description: 'Advantage on your opening strike against the boss.',
+      description: isCaster
+        ? "You have read the boss's opener — advantage on your first saving throw."
+        : 'Advantage on your opening strike against the boss.',
       tempHp: 0,
-      firstStrikeAdvantage: true,
-      bracedSave: false,
+      firstStrikeAdvantage: !isCaster,
+      bracedSave: isCaster,
     };
   }
   const gird = battlePlanTempHp(card.chapter);
@@ -221,7 +230,6 @@ export function intelEventIdFor(bossDefId: string): string {
  * into the main event pool from `content/events/index.ts`.
  */
 export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {
-  const weakSpot = bossIntelBuffFor(card.bossDefId, 'weak-spot')!;
   const battlePlan = bossIntelBuffFor(card.bossDefId, 'battle-plan')!;
   return EventTemplateSchema.parse({
     id: intelEventIdFor(card.bossDefId),
@@ -231,7 +239,7 @@ export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {
       {
         id: 'find-weak-spot',
         label: 'Find the weak spot',
-        hint: `Free. ${weakSpot.description}`,
+        hint: `Free. Advantage on your opening attack (weapon) or first saving throw (caster).`,
         outcome: {
           resolution: card.weakSpotResolution,
           effects: [

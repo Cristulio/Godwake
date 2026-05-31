@@ -72,9 +72,9 @@ const POOL: Blessing[] = [
     id: 'silvanus-root',
     name: "Silvanus's Root",
     god: 'silvanus',
-    flavor: 'The bark of the world clings to your skin. Heavier in the stance, harder to fell.',
-    effect: '+1 AC.',
-    modifiers: { acBonus: 1 },
+    flavor: 'The bark hardens most where it has bled. A wound only makes the wood denser.',
+    effect: '+1 AC while bloodied (at half HP or less).',
+    modifiers: { acBonusWhileBloodied: 1 },
   }),
   BlessingSchema.parse({
     id: 'tempus-edge',
@@ -89,17 +89,17 @@ const POOL: Blessing[] = [
     id: 'tymoras-wink',
     name: "Tymora's Wink",
     god: 'tymora',
-    flavor: 'The lady leans in close. When the floor would catch you, her coin slips between your spine and the stone.',
-    effect: 'Once per delve, if you would fall, you stabilise at 1 HP instead.',
-    modifiers: { extraStabiliseCharges: 1 },
+    flavor: "The lady's luck has no patience for careful aim. Once per encounter the dice owe you one.",
+    effect: 'Once per encounter, reroll any missed attack roll (weapon or spell).',
+    modifiers: { rerollMissesPerEncounter: 1 },
   }),
   BlessingSchema.parse({
     id: 'tymoras-gambit',
     name: "Tymora's Gambit",
     god: 'tymora',
-    flavor: 'A reckless prayer answered. The dice know which way to fall.',
-    effect: 'Crit range extends by 1.',
-    modifiers: { critRangeBonus: 1 },
+    flavor: 'A reckless prayer answered. The dice tip one way — but your guard tips the other.',
+    effect: 'Crit range extends by 1, but you lose 1 AC. Tymora deals what she deals.',
+    modifiers: { critRangeBonus: 1, acBonus: -1 },
     classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
@@ -112,21 +112,12 @@ const POOL: Blessing[] = [
     classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
-    id: 'tempus-charge',
-    name: "Tempus's Charge",
-    god: 'tempus',
-    flavor: 'The first step into the room is the bravest. Tempus rewards that step.',
-    effect: 'Advantage on your first attack each combat.',
-    modifiers: { firstAttackAdvantage: true },
-    classRelevance: [...WEAPON_CLASSES],
-  }),
-  BlessingSchema.parse({
     id: 'mystras-ward',
     name: "Mystra's Ward",
     god: 'mystra',
-    flavor: 'The Weave parts around you, gentle as a curtain, brief as a breath. Steel finds less of you than it meant to.',
-    effect: '+1 AC.',
-    modifiers: { acBonus: 1 },
+    flavor: 'The Weave holds closest when you are untouched. The first wound unravels the spell.',
+    effect: '+1 AC while at full HP.',
+    modifiers: { acBonusWhileFull: 1 },
   }),
   BlessingSchema.parse({
     id: 'mystras-veil',
@@ -141,10 +132,9 @@ const POOL: Blessing[] = [
     id: 'lathanders-ember',
     name: "Lathander's Ember",
     god: 'lathander',
-    flavor: 'A speck of dawn rides your blade. The dark flinches where it touches.',
-    effect: '+1 radiant damage on hits.',
-    modifiers: { holyDamageBonus: 1 },
-    classRelevance: [...WEAPON_CLASSES],
+    flavor: 'A speck of dawn settles in the chest and does not go out. The morning mends even the stubborn wound.',
+    effect: 'Regenerate 1 HP at the start of each combat.',
+    modifiers: { regenPerCombat: 1 },
   }),
   BlessingSchema.parse({
     id: 'ilmaters-crown',
@@ -158,9 +148,9 @@ const POOL: Blessing[] = [
     id: 'silvanus-thorn',
     name: "Silvanus's Thorn",
     god: 'silvanus',
-    flavor: 'A briar has grown into the seam of your glove. It bites for you when you bite.',
-    effect: '+1 damage on all attacks.',
-    modifiers: { damageBonus: 1 },
+    flavor: 'The briar reaches where the blade hesitates. Wild things do not miss the opening.',
+    effect: '+1 to your first attack roll each combat.',
+    modifiers: { firstAttackBonus: 1 },
     classRelevance: [...WEAPON_CLASSES],
   }),
   // --- v2 pool: relic-style conditional / scaling / synergy blessings ---
@@ -251,12 +241,11 @@ const POOL: Blessing[] = [
 ];
 
 /**
- * Broad effect-type buckets. The pool is AC-heavy — six defensive cards
- * (flat / while-full / while-bloodied / per-bane) — so without a spread a
- * single offer can show three near-identical AC blessings. `rollBlessingOptions`
- * uses the category to favour one card per bucket per offer. Category is
- * derived from the blessing's modifier lever, so a new blessing is bucketed
- * automatically with no separate tag list to keep in sync.
+ * Broad effect-type buckets. Each blessing now uses a distinct lever, so
+ * offers are varied by design. This bucketing is a secondary safeguard: it
+ * prevents the same broad category (e.g. defense) from filling all three
+ * offer slots in a single shrine. Category is derived from the blessing's
+ * modifier lever, so a new blessing is bucketed automatically.
  */
 export type BlessingCategory =
   | 'defense'

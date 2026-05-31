@@ -4,7 +4,7 @@ import { characterAtLevel } from '../../test/sim/encounterStress';
 
 // Blessing ids referenced (see content/blessings):
 //   helms-aegis      -> { acBonus: 1 }
-//   silvanus-root    -> { acBonus: 1 }            (same signature as helms-aegis)
+//   tempus-edge      -> { critRangeBonus: 1 }     (weapon-keyed, non-stacking)
 //   mystras-whisper  -> { damageBonus: 1 }        (weapon-keyed)
 //   tymoras-coin     -> { rerollMissesPerEncounter: 1 } (weapon-keyed)
 //   ilmaters-patience-> { extraStabiliseCharges: 1 }
@@ -35,9 +35,9 @@ describe('scoreBlessing', () => {
   });
 
   it('treats a non-stacking lever already owned as a dead pick', () => {
-    const f = characterAtLevel('fighter', 3, ['helms-aegis']); // already +1 AC
-    // silvanus-root is also { acBonus: 1 } — same signature, so it is inert now.
-    expect(scoreBlessing('silvanus-root', f)).toBe(-1);
+    const f = characterAtLevel('fighter', 3, ['tempus-edge']); // already crit +1
+    // tempus-edge is { critRangeBonus: 1 } — same signature, so it is inert now.
+    expect(scoreBlessing('tempus-edge', f)).toBe(-1);
   });
 
   it('credits only the marginal temp HP over the best source already held', () => {
@@ -67,8 +67,8 @@ describe('chooseBlessing', () => {
   });
 
   it('avoids an owned non-stacking duplicate in favour of a fresh option', () => {
-    const f = characterAtLevel('fighter', 3, ['helms-aegis']);
-    // silvanus-root is inert (dup AC); mystras-whisper still adds damage.
-    expect(chooseBlessing(['silvanus-root', 'mystras-whisper'], f)).toBe('mystras-whisper');
+    const f = characterAtLevel('fighter', 3, ['tempus-edge']);
+    // tempus-edge is inert (dup crit); mystras-whisper still adds damage.
+    expect(chooseBlessing(['tempus-edge', 'mystras-whisper'], f)).toBe('mystras-whisper');
   });
 });
