@@ -5,7 +5,9 @@ import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
 import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
 import { rollItem, rollGearDrop, rollLegendaryDrop } from '../engine/items';
+import { getAffix } from '../content/items';
 import { getLegendary } from '../content/legendaries';
+import { baseStatLine } from '../components/inventory/itemDisplay';
 import { classStartingResources } from '../engine/character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
 import { effectiveAbilityScores } from '../engine/character/derived';
@@ -203,11 +205,11 @@ function reincarnateSoul(character: Character): Character {
   };
 }
 
-/** The post-fight reward tally shown by the loot pane after a combat clear. */
+/** The post-fight reward tally shown by the spoils screen after a combat clear. */
 export interface LootSummary {
   gold: number;
   xp: number;
-  items: Array<{ name: string; rarity: GearRarity }>;
+  items: Array<{ name: string; rarity: GearRarity; description: string }>;
   /** Name of a legendary relic banked to the reliquary this fight, if any. */
   bankedLegendary?: string;
 }
@@ -220,13 +222,17 @@ export interface LootSummary {
 interface DelveStoreState {
   delve: DelveState | null;
   /**
-   * Everything the most recent fight dropped — surfaced by the post-fight loot
-   * pane. Session-only; set on a combat-room clear, cleared on dismiss or the
-   * next fight. Gathers gold + xp + each rolled item, plus a `bankedLegendary`
-   * name when an elite coughs up a relic (which goes to the reliquary, not the
-   * pack — the pane tells the player to attune it at the hub).
+   * Everything the most recent fight dropped — shown on the blocking spoils
+   * screen before the player may advance. Session-only; set on a combat-room
+   * clear, cleared by acceptSpoils. Gathers gold + xp + each rolled item, plus
+   * a `bankedLegendary` name when an elite coughs up a relic.
    */
   lastLoot: LootSummary | null;
+  /**
+   * The room just cleared, held until the player accepts the spoils. Used by
+   * acceptSpoils to fire boss taunts and chapter bookkeeping after advancing.
+   */
+  pendingSpoilsRoom: RoomSpec | null;
 
   setDelve: (delve: DelveState | null) => void;
   startDelve: (delve: DelveState) => void;
@@ -237,7 +243,12 @@ interface DelveStoreState {
   advanceRoom: () => void;
   /** Step the run into a chosen reachable next node from the route map. */
   chooseRoom: (nextId: string) => void;
-  addDelveReward: (gold: number, xp: number) => void;
+  /**
+   * Credit gold/xp from a combat or non-combat source. Pass `skipLevelUpRoute`
+   * when the caller will gate progression behind the spoils screen — the level-up
+   * check should fire from acceptSpoils after the room has advanced, not here.
+   */
+  addDelveReward: (gold: number, xp: number, skipLevelUpRoute?: boolean) => void;
   /** Credit gold from a non-combat source (e.g. Shrine Tithe) to purse + ledger. */
   grantTitheGold: (amount: number) => void;
   /**
@@ -279,13 +290,20 @@ interface DelveStoreState {
    * and credits a fraction of its value. Returns the gold paid on success.
    */
   sellItem: (inventoryIdx: number) => { ok: boolean; reason?: string; gold?: number };
-  /** Dismiss the loot pane. */
+  /**
+   * Accept the spoils screen: advance the room, fire boss taunts/bookkeeping,
+   * then route to level-up (if the fight leveled up the character) or back to
+   * the delve. This is the ONLY way to proceed past a combat victory.
+   */
+  acceptSpoils: () => void;
+  /** Clear the loot summary without advancing (internal / legacy). */
   clearLastLoot: () => void;
 }
 
 export const useDelveStore = create<DelveStoreState>()((set, get) => ({
   delve: null,
   lastLoot: null,
+  pendingSpoilsRoom: null,
 
   setDelve: (delve) => set({ delve }),
 
@@ -405,7 +423,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       return { delve: enterRoom(s.delve, nextId) };
     }),
 
-  addDelveReward: (gold, xp) => {
+  addDelveReward: (gold, xp, skipLevelUpRoute = false) => {
     const s = get();
     if (!s.delve) return;
     const charSlice = useCharacterStore.getState();
@@ -436,7 +454,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       xp: (character.xp ?? 0) + finalXp,
     };
     charSlice.setCharacter(nextChar);
-    if (hasPendingLevelUp(nextChar)) {
+    if (!skipLevelUpRoute && hasPendingLevelUp(nextChar)) {
       useScreenStore.getState().setScreen('level-up');
     }
   },
@@ -464,11 +482,16 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (!s.delve || !character) return;
     const isBossRoom = room.kind === 'boss';
     const isRegularCombat = room.kind === 'combat' || room.kind === 'elite' || isBossRoom;
+
+    let goldGained = 0;
+    let xpGained = 0;
+    const droppedItems: LootSummary['items'] = [];
+    let bankedLegendary: string | undefined;
+
     if (isRegularCombat) {
       const roomGold = room.goldReward ?? 0;
       const xpDrop = room.xpReward ?? 0;
-      // Per-monster CR-scaled gold drops, on top of any fixed room-level
-      // goldReward. Each instance drops independently.
+      // Per-monster CR-scaled gold drops, on top of any fixed room-level goldReward.
       const monsterDefIds = (room.monsters ?? []).flatMap((m) =>
         Array.from({ length: m.count }, () => m.defId),
       );
@@ -483,11 +506,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       }
       const goldBefore = character.goldInPocket;
       const xpBefore = character.xp ?? 0;
-      if (goldDrop || xpDrop) get().addDelveReward(goldDrop, xpDrop);
-      // Gear drop: a low-chance rolled item from the combat-room clear (the loot
-      // source). Re-read the character so the new item layers onto the gold/xp
-      // the reward just credited, not the stale pre-reward snapshot.
-      const droppedItems: LootSummary['items'] = [];
+      // Skip level-up routing — acceptSpoils handles that after the room advances.
+      if (goldDrop || xpDrop) get().addDelveReward(goldDrop, xpDrop, true);
+      // Gear drop: a low-chance rolled item from the combat-room clear. Re-read
+      // the character so the new item layers onto the gold/xp just credited.
       const dropRarity = rollGearDrop(getActiveRoller(), room.kind);
       if (dropRarity) {
         const cur = useCharacterStore.getState().character;
@@ -498,62 +520,83 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
             inventory: [...cur.inventory, ref],
           });
           if (ref.rolled) {
-            droppedItems.push({ name: ref.rolled.name, rarity: ref.rolled.rarity });
+            // Build a one-liner: affix effects joined with ·, or fall back to
+            // the base stat line when no affixes rolled (white-tier base items).
+            let description = '';
+            if (ref.rolled.affixes.length > 0) {
+              description = ref.rolled.affixes.map((id) => getAffix(id).effect).join(' · ');
+            } else {
+              try {
+                description = baseStatLine(getItem(ref.itemId));
+              } catch { /* ignore */ }
+            }
+            droppedItems.push({ name: ref.rolled.name, rarity: ref.rolled.rarity, description });
           }
         }
       }
-      // Rare legendary relic drop: very low chance from any combat source. It is
-      // BANKED to the persistent collection — it does NOT equip this run; the
-      // player attunes it at the hub for a future descent.
-      let bankedLegendary: string | undefined;
+      // Rare legendary relic drop: banked to the collection, not equipped this run.
       if (rollLegendaryDrop(getActiveRoller(), room.kind)) {
         const bankedId = useMetaStore.getState().grantLegendaryDrop();
         if (bankedId) bankedLegendary = getLegendary(bankedId)?.name ?? 'Legendary relic';
       }
-      // Tally the fight's rewards into the post-fight loot pane (gold/xp deltas
-      // reflect quirk multipliers and level-feed applied by addDelveReward).
+      // Tally actual deltas (quirk multipliers applied by addDelveReward).
       const after = useCharacterStore.getState().character;
-      const goldGained = (after?.goldInPocket ?? goldBefore) - goldBefore;
-      const xpGained = (after?.xp ?? xpBefore) - xpBefore;
-      if (goldGained > 0 || xpGained > 0 || droppedItems.length > 0 || bankedLegendary) {
-        set({
-          lastLoot: { gold: goldGained, xp: xpGained, items: droppedItems, bankedLegendary },
-        });
-      }
+      goldGained = (after?.goldInPocket ?? character.goldInPocket) - goldBefore;
+      xpGained = (after?.xp ?? character.xp ?? xpBefore) - xpBefore;
     }
+
     useCombatStore.getState().setCombat(null);
+    // Store the cleared room so acceptSpoils can fire boss taunts / bookkeeping.
+    // Always show the spoils screen — the rhythm beat fires even on a 0/0 drop.
+    set({
+      lastLoot: { gold: goldGained, xp: xpGained, items: droppedItems, bankedLegendary },
+      pendingSpoilsRoom: room,
+    });
+    useScreenStore.getState().setScreen('spoils');
+  },
+
+  acceptSpoils: () => {
+    const s = get();
+    const room = s.pendingSpoilsRoom;
+    set({ lastLoot: null, pendingSpoilsRoom: null });
+
     get().advanceRoom();
+
     // Imoen whispers on the FIRST cleared room of the run.
     const d = get().delve;
     if (d && d.roomsCleared === 0) {
       useScreenStore.getState().showTaunt('imoen', 'first-blood');
     }
     // Irenicus taunts after a boss clear. Delay so the victory beat lands
-    // before the overlay steals the moment. The chapter just cleared is the
-    // count of boss rooms up to and including this one (rooms run in chapter
-    // order in the chained delve) — metaStore.chaptersCleared is only the prior
-    // high-water mark until finishDelve, so it can't name the current chapter.
-    if (isBossRoom) {
-      const bossIdx = s.delve.rooms.findIndex((r) => r.id === room.id);
-      const clearedChapter = s.delve.rooms
-        .slice(0, bossIdx + 1)
-        .filter((r) => r.kind === 'boss').length;
+    // before the overlay steals the moment.
+    if (room?.kind === 'boss') {
+      const bossIdx = s.delve?.rooms.findIndex((r) => r.id === room.id) ?? -1;
+      const clearedChapter =
+        bossIdx >= 0
+          ? (s.delve?.rooms.slice(0, bossIdx + 1).filter((r) => r.kind === 'boss').length ?? 1)
+          : 1;
       setTimeout(() => {
         useScreenStore.getState().showTaunt('irenicus', 'chapter-clear', clearedChapter);
       }, 1500);
       get().creditChapterClearGold();
     }
-    // Chained Godwake delve: Ilyich is the Ch1 boss, not the final. Flag the
-    // kill (by boss identity, not a hard-coded room id — the branching map
-    // numbers nodes differently) so the chapter1Cleared flip survives a death
-    // deeper in the run. Also the reveal beat — the Voice steps forward with a name.
+    // Chained Godwake delve: Ilyich is the Ch1 boss. Flag the kill and reveal
+    // the Voice's name.
     if (
-      isBossRoom &&
+      room?.kind === 'boss' &&
       room.monsters?.[0]?.defId === 'duergar-ilyich' &&
-      s.delve.chapterId === 'godwake'
+      s.delve?.chapterId === 'godwake'
     ) {
       get().markChapter1BossKilled();
       useMetaStore.getState().markNpcKnown('irenicus');
+    }
+
+    // Level up or return to the delve (room already advanced above).
+    const updatedChar = useCharacterStore.getState().character;
+    if (updatedChar && hasPendingLevelUp(updatedChar)) {
+      useScreenStore.getState().setScreen('level-up');
+    } else {
+      useScreenStore.getState().setScreen('delve');
     }
   },
 

@@ -167,7 +167,7 @@ interface GameState {
   startDelve: (delve: DelveState) => void;
   advanceRoom: () => void;
   chooseRoom: (nextId: string) => void;
-  addDelveReward: (gold: number, xp: number) => void;
+  addDelveReward: (gold: number, xp: number, skipLevelUpRoute?: boolean) => void;
   grantTitheGold: (amount: number) => void;
   resolveRoomVictory: (room: RoomSpec) => void;
   finishDelve: () => void;
@@ -183,6 +183,7 @@ interface GameState {
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
   purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
   sellItem: (inventoryIdx: number) => { ok: boolean; reason?: string; gold?: number };
+  acceptSpoils: () => void;
   clearLastLoot: () => void;
 
   // Lore overlays
@@ -267,7 +268,10 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
   const meta = useMetaStore.getState();
   const screenForSave =
     screenOverride ??
-    (screen.screen === 'delve' || screen.screen === 'reincarnation' || screen.screen === 'level-up'
+    (screen.screen === 'delve' ||
+    screen.screen === 'spoils' ||
+    screen.screen === 'reincarnation' ||
+    screen.screen === 'level-up'
       ? 'hub'
       : screen.screen);
   return {
@@ -527,8 +531,8 @@ export const useGameStore = create<GameState>()(
         startDelve: (delve) => useDelveStore.getState().startDelve(delve),
         advanceRoom: () => useDelveStore.getState().advanceRoom(),
         chooseRoom: (nextId) => useDelveStore.getState().chooseRoom(nextId),
-        addDelveReward: (gold, xp) =>
-          useDelveStore.getState().addDelveReward(gold, xp),
+        addDelveReward: (gold, xp, skipLevelUpRoute) =>
+          useDelveStore.getState().addDelveReward(gold, xp, skipLevelUpRoute),
         grantTitheGold: (amount) =>
           useDelveStore.getState().grantTitheGold(amount),
         resolveRoomVictory: (room) =>
@@ -555,6 +559,7 @@ export const useGameStore = create<GameState>()(
         purchaseLegendary: (legendaryId, cost) =>
           useDelveStore.getState().purchaseLegendary(legendaryId, cost),
         sellItem: (idx) => useDelveStore.getState().sellItem(idx),
+        acceptSpoils: () => useDelveStore.getState().acceptSpoils(),
         clearLastLoot: () => useDelveStore.getState().clearLastLoot(),
 
         showTaunt: (speaker, context, chapter) =>
