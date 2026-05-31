@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { useGameStore } from '../../stores/gameStore';
@@ -46,6 +46,9 @@ interface CombatScreenProps {
   decoration?: BattlefieldDecoration;
 }
 
+const BATTLEFIELD_W = 824;
+const BATTLEFIELD_H = 420;
+
 export function CombatScreen({
   character,
   state,
@@ -75,6 +78,26 @@ export function CombatScreen({
   const [pickingSpell, setPickingSpell] = useState(false);
   const [castingSpellId, setCastingSpellId] = useState<string | null>(null);
   const bedChoiceRef = useRef<MusicId | null>(null);
+
+  // The battlefield is an absolutely-positioned, fixed-geometry stage
+  // (BATTLEFIELD_W × BATTLEFIELD_H). On desktop its column is pinned to the
+  // natural width so it renders 1:1; on a phone the column is full-width, so we
+  // scale the whole stage down to fit instead of clipping the right-side
+  // enemies (which would make them untappable under body{overflow-x:hidden}).
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [bfScale, setBfScale] = useState(1);
+  useLayoutEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const measure = () => {
+      const avail = el.clientWidth;
+      if (avail > 0) setBfScale(Math.min(1, avail / BATTLEFIELD_W));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // Mount dice overlay whenever a new attack event arrives
   useEffect(() => {
@@ -527,7 +550,7 @@ export function CombatScreen({
           }}
         />
       )}
-      <header className="flex justify-between items-baseline pb-3 border-b border-[var(--color-border-warm)]">
+      <header className="flex flex-wrap gap-2 justify-between items-baseline pb-3 border-b border-[var(--color-border-warm)]">
         <div>
           <h1
             className="font-display text-lg md:text-xl text-[var(--color-accent-amber)] tracking-[0.1em]"
@@ -578,24 +601,33 @@ export function CombatScreen({
 
       <TurnOrderTracker state={state} character={character} />
 
-      <div
-        className="flex gap-3 items-stretch shrink-0"
-        style={{ height: '420px' }}
-      >
-        <div style={{ width: '824px', flexShrink: 0 }}>
-          <Battlefield
-            character={character}
-            state={state}
-            scene={scene}
-            decoration={decoration}
-            selectingTarget={selectingTarget}
-            onSelectTarget={(id) => doAttack(id)}
-          />
+      <div className="flex flex-col lg:flex-row gap-3 lg:items-stretch shrink-0">
+        <div
+          ref={stageRef}
+          className="w-full lg:w-[824px] lg:shrink-0 overflow-hidden"
+          style={{ height: BATTLEFIELD_H * bfScale }}
+        >
+          <div
+            style={{
+              width: BATTLEFIELD_W,
+              height: BATTLEFIELD_H,
+              transform: `scale(${bfScale})`,
+              transformOrigin: 'top left',
+            }}
+          >
+            <Battlefield
+              character={character}
+              state={state}
+              scene={scene}
+              decoration={decoration}
+              selectingTarget={selectingTarget}
+              onSelectTarget={(id) => doAttack(id)}
+            />
+          </div>
         </div>
 
         <aside
-          className="relative bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] flex flex-col items-center justify-center p-1.5"
-          style={{ width: '140px', flexShrink: 0, height: '420px' }}
+          className="relative bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] flex flex-col items-center justify-center p-1.5 w-full min-h-[72px] lg:w-[140px] lg:shrink-0 lg:h-[420px]"
         >
           {overlayActive && state.lastAttack ? (
             <DiceRollOverlay

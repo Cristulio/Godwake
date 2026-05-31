@@ -184,7 +184,7 @@ export function ActionBar({
           variant="primary"
           onClick={onAttack}
           disabled={!canAttack}
-          className="flex-1"
+          className="flex-1 min-h-[44px] sm:min-h-0"
         >
           {attackLabel}
         </Button>
@@ -195,7 +195,7 @@ export function ActionBar({
             onClick={onSecondWind}
             disabled={!canSecondWind}
             title="Bonus action: heal 1d10 + level. Once per short rest."
-            className="flex-1"
+            className="flex-1 min-h-[44px] sm:min-h-0"
           >
             Second Wind{secondWindCount > 1 ? ` (${secondWindCount})` : ''}
           </Button>
@@ -206,7 +206,7 @@ export function ActionBar({
             onClick={onActionSurge}
             disabled={!canActionSurge}
             title="Free Action: regain your action this turn. Once per short rest."
-            className="flex-1"
+            className="flex-1 min-h-[44px] sm:min-h-0"
           >
             Action Surge{surgeRemaining > 0 && ` (${surgeRemaining})`}
           </Button>
@@ -218,7 +218,7 @@ export function ActionBar({
             onClick={onCunningAction}
             disabled={!canCunningAction}
             title="Bonus action: Hide (advantage on next attack), Dash (a quick second strike this turn), or Disengage (2 damage reduction on next incoming hit)."
-            className="flex-1"
+            className="flex-1 min-h-[44px] sm:min-h-0"
           >
             Cunning Action{cunningRemaining > 0 && ` (${cunningRemaining})`}
           </Button>
@@ -230,7 +230,7 @@ export function ActionBar({
             onClick={onRage}
             disabled={!canRage}
             title={`Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends. ${rageUses} charge${rageUses === 1 ? '' : 's'} left — refills at campfire and rest rooms.`}
-            className="flex-1"
+            className="flex-1 min-h-[44px] sm:min-h-0"
           >
             {raging ? `Raging (${rageRounds})` : `Rage${rageUses > 0 ? ` (${rageUses})` : ''}`}
           </Button>
@@ -241,7 +241,7 @@ export function ActionBar({
             onClick={onRecklessAttack}
             disabled={!canReckless}
             title="Free: your melee attacks this turn roll with advantage, but attacks against you have advantage until your next turn."
-            className="flex-1"
+            className="flex-1 min-h-[44px] sm:min-h-0"
           >
             {reckless ? 'Reckless ✓' : 'Reckless'}
           </Button>
@@ -253,7 +253,7 @@ export function ActionBar({
             onClick={onHuntersMark}
             disabled={!canHuntersMark}
             title="Bonus action: brand a target as your quarry — every hit on it deals extra damage. Re-cast to move the mark."
-            className="flex-1"
+            className="flex-1 min-h-[44px] sm:min-h-0"
           >
             {isMarkLive ? 'Re-mark' : "Hunter's Mark"}
           </Button>
@@ -265,7 +265,7 @@ export function ActionBar({
             onClick={onSpells}
             disabled={!canSpells}
             title="Action: pick a prepared spell."
-            className="flex-1"
+            className="flex-1 min-h-[44px] sm:min-h-0"
           >
             ✦ Spells ({totalSlots})
           </Button>
@@ -277,7 +277,7 @@ export function ActionBar({
           variant={canUseItem ? 'primary' : 'secondary'}
           onClick={onUseItem}
           disabled={!canUseItem}
-          className="flex-1"
+          className="flex-1 min-h-[44px] sm:min-h-0"
         >
           Item {consumableCount > 0 && `(${consumableCount})`}
         </Button>
@@ -285,7 +285,7 @@ export function ActionBar({
           variant="secondary"
           onClick={onEndTurn}
           disabled={!canEndTurn}
-          className="flex-1"
+          className="flex-1 min-h-[44px] sm:min-h-0"
         >
           End Turn
         </Button>

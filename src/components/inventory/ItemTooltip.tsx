@@ -36,7 +36,7 @@ export function ItemTooltip({ item, hint, rolled }: ItemTooltipProps) {
   return (
     <div
       role="tooltip"
-      className="w-64 bg-[var(--color-bg-panel)] border-2 p-3 shadow-[0_4px_16px_rgba(0,0,0,0.6)] pointer-events-none select-none"
+      className="w-64 max-w-[calc(100vw-1.5rem)] bg-[var(--color-bg-panel)] border-2 p-3 shadow-[0_4px_16px_rgba(0,0,0,0.6)] pointer-events-none select-none"
       style={{ borderColor }}
     >
       <div className="text-[var(--color-text-primary)] font-bold uppercase tracking-wider text-sm leading-tight">

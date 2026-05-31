@@ -79,7 +79,7 @@ export function CodexScreen() {
             font-mono bg-[var(--color-bg-deep)] border-2 border-[var(--color-border-warm)]
             px-3 py-1.5 text-xs text-[var(--color-text-primary)] placeholder-[var(--color-text-dim)]
             focus:outline-none focus:border-[var(--color-accent-amber)]
-            min-w-[220px] uppercase tracking-widest
+            w-full sm:w-auto sm:min-w-[220px] uppercase tracking-widest
           "
           aria-label="Search bestiary by monster name"
         />

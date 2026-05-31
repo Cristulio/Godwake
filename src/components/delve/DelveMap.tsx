@@ -125,7 +125,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
 
   return (
     <div className="min-h-screen p-6 max-w-5xl mx-auto flex flex-col gap-4 animate-fade-in">
-      <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
+      <header className="pb-3 border-b border-[var(--color-border-warm)] flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-display text-xl text-[var(--color-accent-amber)] tracking-wider uppercase">
             Choose Your Road

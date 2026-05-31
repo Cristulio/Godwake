@@ -93,7 +93,7 @@ export function HubScreen() {
       <PhandalinScene druidGroveUnlocked={druidGroveUnlocked} />
 
       <Panel tone="glow" className="mb-6">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <div className="w-16 h-16 panel-etched border border-[var(--color-border-warm)] flex items-center justify-center text-3xl shrink-0">
             <span aria-hidden>🛡️</span>
           </div>
