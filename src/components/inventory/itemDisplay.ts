@@ -13,9 +13,9 @@ export function baseStatLine(item: Item): string {
     case 'weapon':
       return `${item.damage} ${item.damageType}${item.versatileDamage ? ` (${item.versatileDamage} 2h)` : ''}`;
     case 'armor':
-      return item.category === 'shield'
-        ? `+${item.baseAC} AC shield`
-        : `${item.category} · AC ${item.baseAC}`;
+      if (item.category === 'shield') return `+${item.baseAC} AC shield`;
+      if (item.category === 'robe') return 'robe · no AC';
+      return `${item.category} · AC ${item.baseAC}`;
     case 'consumable':
       return item.healDice ? `heal ${item.healDice}` : item.effect;
     case 'accessory':
@@ -29,7 +29,9 @@ export function itemTypeLabel(item: Item): string {
     case 'weapon':
       return 'Weapon';
     case 'armor':
-      return item.category === 'shield' ? 'Shield' : `${cap(item.category)} armor`;
+      if (item.category === 'shield') return 'Shield';
+      if (item.category === 'robe') return 'Robe';
+      return `${cap(item.category)} armor`;
     case 'consumable':
       return 'Consumable';
     case 'accessory':

@@ -41,6 +41,13 @@ const ARMOR_BASE_IDS = [
   'splint-armor',
   'plate-armor',
   'shield',
+  // Robes share the armour kind/slot but gate to the Wizard alone, so a wizard
+  // rolling "armour" only ever finds these (real armour is filtered out by
+  // proficiency) and the martials never see one.
+  'apprentice-robe',
+  'silk-robe',
+  'spellweave-robe',
+  'archmagus-vestments',
 ] as const;
 
 /** Accessory bases — class-agnostic affix carriers (helm/amulet/ring/belt/boots). */

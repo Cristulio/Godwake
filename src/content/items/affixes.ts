@@ -132,15 +132,16 @@ const PRISTINE: Affix = AffixSchema.parse({
 });
 
 // --- Caster-flavoured affixes (Wizard) --------------------------------------
-// The wizard wears no armour, so these ride weapons (staff/dagger) and
-// accessories — finally giving casters gear worth chasing. Class-gated so a
-// fighter never rolls a spell-DC staff (off-class drops, Diablo-style).
+// These ride the wizard's gear: simple weapons (staff/dagger), accessories, and
+// robes (the body-slot caster gear — `armor` kind, wizard-gated). Class-gated so
+// a fighter never rolls a spell-DC staff or sees a robe (off-class drops,
+// Diablo-style).
 
 const ARCANE: Affix = AffixSchema.parse({
   id: 'arcane',
   namePart: { kind: 'prefix', word: 'Arcane' },
   effect: '+1 to your spell save DC.',
-  appliesTo: ['weapon', 'accessory'],
+  appliesTo: ['weapon', 'armor', 'accessory'],
   classGate: ['wizard'],
   modifiers: { spellDcBonus: 1 },
 });
@@ -149,7 +150,7 @@ const ARCHMAGE: Affix = AffixSchema.parse({
   id: 'archmage',
   namePart: { kind: 'suffix', word: 'of the Archmage' },
   effect: '+2 spell damage.',
-  appliesTo: ['weapon', 'accessory'],
+  appliesTo: ['weapon', 'armor', 'accessory'],
   classGate: ['wizard'],
   modifiers: { spellDamageBonus: 2 },
 });
@@ -158,7 +159,7 @@ const LUCID: Affix = AffixSchema.parse({
   id: 'lucid',
   namePart: { kind: 'suffix', word: 'of Lucidity' },
   effect: '+1 to spell attack rolls.',
-  appliesTo: ['weapon', 'accessory'],
+  appliesTo: ['weapon', 'armor', 'accessory'],
   classGate: ['wizard'],
   modifiers: { spellAttackBonus: 1 },
 });
@@ -167,7 +168,7 @@ const RUNIC: Affix = AffixSchema.parse({
   id: 'runic',
   namePart: { kind: 'prefix', word: 'Runic' },
   effect: '+1 level-1 spell slot (refills on rest).',
-  appliesTo: ['weapon', 'accessory'],
+  appliesTo: ['weapon', 'armor', 'accessory'],
   classGate: ['wizard'],
   modifiers: { bonusSpellSlotsL1: 1 },
 });

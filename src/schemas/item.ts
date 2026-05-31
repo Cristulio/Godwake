@@ -61,8 +61,14 @@ export const ArmorSchema = z.object({
   id: z.string(),
   kind: z.literal('armor'),
   name: z.string(),
-  category: z.enum(['light', 'medium', 'heavy', 'shield']),
-  /** Base AC value (for shield, this is +N bonus). */
+  /**
+   * `robe` is the Wizard's body-slot gear: it occupies the armour slot but does
+   * NOT count as armour for AC. It grants no `baseAC` and is invisible to
+   * Mage Armour's `!bodyArmor` check, so a robed wizard keeps Mage Armour's +3.
+   * Its value is the rolled caster affixes it carries.
+   */
+  category: z.enum(['light', 'medium', 'heavy', 'shield', 'robe']),
+  /** Base AC value (for shield, this is +N bonus; 0 for a robe). */
   baseAC: z.number(),
   stealthDisadvantage: z.boolean(),
   strRequirement: z.number().optional(),

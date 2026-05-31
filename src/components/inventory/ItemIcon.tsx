@@ -164,13 +164,22 @@ function weaponGlyph(id: string) {
   }
 }
 
-function armorGlyph(id: string, category: 'light' | 'medium' | 'heavy' | 'shield') {
+function armorGlyph(id: string, category: 'light' | 'medium' | 'heavy' | 'shield' | 'robe') {
   if (category === 'shield' || id === 'shield') {
     return (
       <g fill="none" stroke={stroke} strokeWidth="1.6" strokeLinejoin="round">
         <path d="M 16 4 L 26 8 L 26 17 Q 26 25 16 28 Q 6 25 6 17 L 6 8 Z" />
         <line x1="16" y1="4" x2="16" y2="28" stroke={accent} />
         <line x1="6" y1="14" x2="26" y2="14" stroke={accent} />
+      </g>
+    );
+  }
+  if (category === 'robe') {
+    // A hooded, flowing robe — distinct from the plated armour silhouette.
+    return (
+      <g fill="none" stroke={stroke} strokeWidth="1.6" strokeLinejoin="round">
+        <path d="M 16 4 Q 11 6 11 11 L 6 26 L 12 26 L 16 16 L 20 26 L 26 26 L 21 11 Q 21 6 16 4 Z" />
+        <path d="M 13 8 Q 16 11 19 8" stroke={accent} fill="none" />
       </g>
     );
   }
