@@ -42,6 +42,14 @@ import {
   ELITE_POOL as LOOM_ELITE_POOL,
   CHAPTER6_FLAVOR,
 } from './chapter6Pools';
+// ─── Chapter 7 · The Drowned Archive (first chapter of the L20 expansion) ──
+import {
+  WARMUP_POOL as ARCHIVE_WARMUP_POOL,
+  EARLY_MID_POOL as ARCHIVE_EARLY_MID_POOL,
+  MID_POOL as ARCHIVE_MID_POOL,
+  ELITE_POOL as ARCHIVE_ELITE_POOL,
+  CHAPTER7_FLAVOR,
+} from './chapter7Pools';
 
 interface Rng {
   next(): number;
@@ -709,6 +717,26 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     bossDefId: CHAPTER6_FLAVOR.bossDefId,
     boss: CHAPTER6_FLAVOR.boss,
   },
+  // ─── Chapter 7 · The Drowned Archive — the flooded vault of forbidden
+  // knowledge that opens the L20 descent toward the captor, sunk below the
+  // wheel. All non-combat flavor + the boss ship ready-to-wire in
+  // CHAPTER7_FLAVOR; this entry only binds them to the pools. (Append-only:
+  // sibling Ch8/Ch9 lanes add their entries after this one — keep-both.)
+  {
+    chapter: CHAPTER7_FLAVOR.chapter,
+    prefix: CHAPTER7_FLAVOR.prefix,
+    pools: {
+      warmup: ARCHIVE_WARMUP_POOL,
+      earlyMid: ARCHIVE_EARLY_MID_POOL,
+      mid: ARCHIVE_MID_POOL,
+      elite: ARCHIVE_ELITE_POOL,
+    },
+    shrines: CHAPTER7_FLAVOR.shrines,
+    rests: CHAPTER7_FLAVOR.rests,
+    shop: CHAPTER7_FLAVOR.shop,
+    bossDefId: CHAPTER7_FLAVOR.bossDefId,
+    boss: CHAPTER7_FLAVOR.boss,
+  },
 ];
 
 const GODWAKE_CAMPS: RoomFlavor[] = [
@@ -736,6 +764,13 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
     title: 'A Stillness Before the Wheel',
     flavorText:
       "Aurelach is dead, or as dead as a god of endings can be made, and the dawn it held has gone out. Where the light failed there is one last seam of quiet — no merchant here, only a guttering thing that was a pilgrim once, tending a fire out of habit at the rim of something too large to see the curve of. It pours you a cup with a hand worn nearly smooth. \"Past here the road only goes round,\" it says. \"You will want to be rested when you reach the part that turns.\"",
+  },
+  // ─── Chapter 7 seam · the descent below the wheel begins ──────────────────
+  // (Append-only: sibling Ch8/Ch9 lanes add their camp seams after this one.)
+  {
+    title: 'The Lip of the Long Descent',
+    flavorText:
+      "The wheel is stopped — broken or refused, it makes no difference now — and where it stood the floor of the world has cracked open onto a stair that goes down, and down, into a dark that smells of cold salt water. Someone keeps a fire at the lip of it: a deep-salvager with a coil of sounding-rope and a lamp shuttered against the damp, who has lowered others into the drowned places below and hauled most of them back up empty. \"There's a library down there,\" she says, not looking at you, paying out rope hand over hand into the black. \"Sunk on purpose, by the one you're going down to find. They drowned it rather than let anyone read it. Whatever you think is waiting at the bottom — it knew you'd come this far. Rest while the lamp holds. The water doesn't care how tired you are.\"",
   },
 ];
 

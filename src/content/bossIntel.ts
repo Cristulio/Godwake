@@ -20,8 +20,8 @@ import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
 export interface BossIntelCard {
   /** Monster def id this card foreshadows. Matches the boss room's monster. */
   bossDefId: string;
-  /** Chapter index (1-6). Scales the `battle-plan` temp-HP gird. */
-  chapter: 1 | 2 | 3 | 4 | 5 | 6;
+  /** Chapter index (1-7+; widened per L20-expansion chapter lane). Scales the `battle-plan` temp-HP gird. */
+  chapter: 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /** Title shown on the intel event room. */
   roomTitle: string;
   /** Diegetic flavor text for the intel room — pre-boss BG2/FromSoft tone. */
@@ -137,6 +137,22 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     walkPastResolution:
       "You leave the worn place unread and the warning un-heeded. Whatever climbed this far before you scored its last thought into the rim and you step over it without stopping. The thing at the centre marks the going — the bold take the still point on their own terms, and what the wheel sheds for you will weigh a touch heavier when the hand stops.",
     coinCost: bossIntelCoinCost(6),
+  },
+  // ─── Ch7 · The Drowned Custodian (The Drowned Archive) ─────────────────
+  // (Append-only: sibling Ch8/Ch9 lanes add their cards after this one.)
+  {
+    bossDefId: 'drowned-custodian',
+    chapter: 7,
+    roomTitle: 'A Salvaged Reading-Slate',
+    roomFlavor:
+      "A dry shelf above the waterline where a junior keeper, before it drowned, laid out the one lesson it thought worth saving: a slate, a stub of chalk, and a diagram of the great rotunda scratched in a careful hand. The floodgate-wheel is marked at the centre, and the deep water around it, and a figure rising out of the deep — and beside the figure, underlined three times until the chalk snapped: IT READS YOU FIRST. Below, smaller, where the hand had begun to shake: don't let it find the name. don't be still. the closing comes in twos.",
+    weakSpotResolution:
+      "You read the slate the way the keeper meant it to be read. The Custodian does not strike first — it reads first, in the still breath before the hands come round, and the reading empties you. Knowing where that still breath falls, your opening blow lands in the gap it leaves while it is still looking for your name.",
+    battlePlanResolution:
+      "You read the whole drowned routine off the slate: the reading first, to file you under your own forgotten name and still you with it — then the hands of the keeper closing twice to the stroke, like a book put away — and the moment past half when it stops cataloguing you and simply commits to closing you for good. You wade into the deep with your mind braced against your own name and your first strike already set for the gap before the hands come round.",
+    walkPastResolution:
+      "You leave the slate unread and the keeper's warning un-heeded. Down in the black rotunda something that has filed a thousand readers marks the going, almost glad of the company. The bold take the deep on their own terms — and what the drowned vault sheds for you will weigh a touch heavier when the water finally closes.",
+    coinCost: bossIntelCoinCost(7),
   },
 ];
 

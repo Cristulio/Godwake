@@ -65,6 +65,15 @@ import karmicEchoUrl from '../../assets/sprites/monsters/karmic-echo.svg';
 import theUnwoundUrl from '../../assets/sprites/monsters/the-unwound.svg';
 import axleWardenUrl from '../../assets/sprites/monsters/axle-warden.svg';
 import theUnmadeUrl from '../../assets/sprites/monsters/the-unmade.svg';
+// ─── Chapter 7 · The Drowned Archive ──────────────────────────────────────
+import drownedAcolyteUrl from '../../assets/sprites/monsters/drowned-acolyte.svg';
+import pageWraithUrl from '../../assets/sprites/monsters/page-wraith.svg';
+import inkDrownedScholarUrl from '../../assets/sprites/monsters/ink-drowned-scholar.svg';
+import brineArchivistUrl from '../../assets/sprites/monsters/brine-archivist.svg';
+import drownedMnemonicUrl from '../../assets/sprites/monsters/drowned-mnemonic.svg';
+import theUnindexedUrl from '../../assets/sprites/monsters/the-unindexed.svg';
+import tideboundCodexUrl from '../../assets/sprites/monsters/tidebound-codex.svg';
+import drownedCustodianUrl from '../../assets/sprites/monsters/drowned-custodian.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -152,6 +161,15 @@ const SPRITES: Record<string, SpriteEntry> = {
   'the-unwound': { url: theUnwoundUrl, label: 'The Unwound' },
   'axle-warden': { url: axleWardenUrl, label: 'Axle-Warden' },
   'the-unmade': { url: theUnmadeUrl, label: 'The Unmade' },
+  // ─── Chapter 7 · The Drowned Archive ──────────────────────────────────
+  'drowned-acolyte': { url: drownedAcolyteUrl, label: 'Drowned Acolyte' },
+  'page-wraith': { url: pageWraithUrl, label: 'Page-Wraith' },
+  'ink-drowned-scholar': { url: inkDrownedScholarUrl, label: 'Ink-Drowned Scholar' },
+  'brine-archivist': { url: brineArchivistUrl, label: 'Brine-Archivist' },
+  'drowned-mnemonic': { url: drownedMnemonicUrl, label: 'Drowned Mnemonic' },
+  'the-unindexed': { url: theUnindexedUrl, label: 'The Unindexed' },
+  'tidebound-codex': { url: tideboundCodexUrl, label: 'Tidebound Codex' },
+  'drowned-custodian': { url: drownedCustodianUrl, label: 'The Drowned Custodian' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },
