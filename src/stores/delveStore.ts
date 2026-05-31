@@ -27,6 +27,7 @@ import { hasPendingLevelUp } from '../engine/character/leveling';
 import { getAscensionLevel } from '../engine/delve/ascension';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
+import { nextLoreBeat } from '../content/loreBeats';
 import { EQUIP_SLOTS } from '../engine/character/equip';
 import { sellValue } from '../components/delve/shopStock';
 import { newlyUnlocked } from '../engine/progression';
@@ -192,10 +193,10 @@ function reincarnateSoul(character: Character): Character {
 
   const meta = useMetaStore.getState();
   meta.setHasReincarnated(true);
-  // First turn of the wheel = Imoen reveal beat. Whispered through the falling
-  // (or the triumph), by the time the soul wakes again she has a name.
-  // Idempotent — only the first life triggers it.
-  meta.markNpcKnown('imoen');
+  // The soul-bond name reveals are no longer wired to the wheel — they now ride
+  // the progressive lore arc (content/loreBeats.ts): Imoen introduces herself in
+  // an early beat, the antagonist is not named until the post-Chapter-2 beat. A
+  // reincarnation alone reveals nothing.
 
   // Refill the body to the LEVEL-1 ceiling the soul will actually descend with,
   // not the dead life's leveled max. This is the same number startDelve rebuilds
@@ -316,6 +317,24 @@ interface DelveStoreState {
   clearLastLoot: () => void;
 }
 
+/**
+ * Advance the progressive soul-bond story by at most one beat. Called on every
+ * descent (the calm transition) AFTER the delve counter has been bumped, so the
+ * milestone read is fresh. Plays the single next in-order, unseen, eligible beat
+ * (content/loreBeats.ts), marks it seen, and — for the two reveal beats — flips
+ * the named NPC to known so their real name appears from then on. One beat per
+ * descent means a returning veteran walks the arc one step at a time, never a
+ * wall of text. Own function — additive to the other startDelve descent hooks.
+ */
+function playNextLoreBeat(): void {
+  const meta = useMetaStore.getState();
+  const beat = nextLoreBeat(meta);
+  if (!beat) return;
+  useScreenStore.getState().playLoreBeat(beat.speaker, beat.context, beat.text);
+  meta.markDialogueBeatSeen(beat.id);
+  if (beat.reveals) meta.markNpcKnown(beat.reveals);
+}
+
 export const useDelveStore = create<DelveStoreState>()((set, get) => ({
   delve: null,
   lastLoot: null,
@@ -398,6 +417,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // just opened. Reads the post-increment count off the captured prev value.
     queueUnlockTutorials(prevDelveCount, prevDelveCount + 1);
     useScreenStore.getState().setScreen('delve');
+    // The descent is the calm beat-trigger moment: drip the next story beat
+    // (and any name reveal it carries) now that the delve counter is current.
+    playNextLoreBeat();
   },
 
   advanceRoom: () =>
@@ -603,15 +625,15 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       }, 1500);
       get().creditChapterClearGold();
     }
-    // Chained Godwake delve: Ilyich is the Ch1 boss. Flag the kill and reveal
-    // the Voice's name.
+    // Chained Godwake delve: Ilyich is the Ch1 boss. Flag the kill. The Voice is
+    // NOT named here — the antagonist's name stays hidden until the post-Chapter-2
+    // lore beat (content/loreBeats.ts) reveals it; a Chapter-1 clear is too early.
     if (
       room?.kind === 'boss' &&
       room.monsters?.[0]?.defId === 'duergar-ilyich' &&
       s.delve?.chapterId === 'godwake'
     ) {
       get().markChapter1BossKilled();
-      useMetaStore.getState().markNpcKnown('irenicus');
     }
 
     // Level up or return to the delve (room already advanced above).

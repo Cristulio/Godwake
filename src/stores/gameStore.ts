@@ -119,7 +119,13 @@ interface GameState {
   delve: DelveState | null;
   lastLoot: LootSummary | null;
   combat: CombatState | null;
-  taunt: { speaker: SoulVoiceSpeaker; context: TauntContext; seed: number; chapter?: number } | null;
+  taunt: {
+    speaker: SoulVoiceSpeaker;
+    context: TauntContext;
+    seed: number;
+    chapter?: number;
+    line?: string;
+  } | null;
   /** Session-only queue of feature ids whose unlock tutorial is pending (head shows first). */
   tutorialQueue: string[];
   introSeen: boolean;
