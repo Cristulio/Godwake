@@ -12,7 +12,7 @@ export const ROGUE: Class = ClassSchema.parse({
   // Stays light to stay quiet — leather and studded leather only, no shield.
   armorProficiency: { categories: ['light'] },
   skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1, '7': 1 },
+  skillGrantsByLevel: { '3': 1, '5': 1, '7': 1, '11': 1, '15': 1 },
   skillChoiceFrom: [
     'acrobatics',
     'athletics',
@@ -77,6 +77,60 @@ export const ROGUE: Class = ClassSchema.parse({
         description:
           'You can increase one ability score by 2, or two ability scores by 1 each.',
         mechanicKey: 'asi',
+      },
+    ],
+    '9': [
+      {
+        id: 'cunning-mastery',
+        name: 'Cunning Mastery',
+        description:
+          'Your hands and feet outpace the room entirely — you gain an additional Cunning Action each combat (Hide, Dash, or Disengage).',
+        mechanicKey: 'cunning-mastery',
+      },
+    ],
+    '12': [
+      {
+        id: 'asi-12',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '13': [
+      {
+        id: 'deadly-finesse',
+        name: 'Deadly Finesse',
+        description:
+          'You read the gap before it opens — your weapon attacks score a critical hit on a roll of 19 or 20, and every point of Sneak Attack rides the wider window.',
+        mechanicKey: 'deadly-finesse',
+      },
+    ],
+    '16': [
+      {
+        id: 'asi-16',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '19': [
+      {
+        id: 'asi-19',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '20': [
+      {
+        id: 'death-strike',
+        name: 'Death Strike',
+        description:
+          'Your killing blow finds the artery every time — your Sneak Attack deals an extra 2d6 damage. The capstone of the assassin\'s art.',
+        mechanicKey: 'death-strike',
       },
     ],
   },

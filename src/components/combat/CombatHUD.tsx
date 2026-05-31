@@ -443,7 +443,7 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
 
       {isWizard && slotsMax && (
         <>
-          {([1, 2, 3] as const).map((lvl) => {
+          {([1, 2, 3, 4, 5, 6, 7, 8, 9] as const).map((lvl) => {
             const max = slotsMax[lvl] ?? 0;
             if (max <= 0) return null;
             const now = slotsNow[lvl] ?? 0;

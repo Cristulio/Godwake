@@ -9,6 +9,7 @@ import { characterQuirkMods, baneQuirkCount } from './quirks';
 import { characterBlessingMods } from './blessings';
 import { characterCampBoonMods } from './campBoons';
 import { characterAffixMods, enhancementOf } from '../items/affixMods';
+import { APOTHEOSIS_AC_BONUS, isAscendant } from '../combat/apotheosis';
 
 /**
  * Proficiency bonus by character level (PHB Table: Proficiency Bonus).
@@ -136,6 +137,10 @@ export function computeAC(character: Character): number {
   if (character.resources.mistyStepActive) {
     base += 2;
   }
+  // Apotheosis: the ascendant form turns blows aside.
+  if (isAscendant(character)) {
+    base += APOTHEOSIS_AC_BONUS;
+  }
 
   return base;
 }
@@ -183,7 +188,12 @@ export function critRange(character: Character): number[] {
   // affixBonus folds in hub legendary crit effects via characterAffixMods.
   const affixBonus = characterAffixMods(character).critRangeBonus;
   const boonBonus = characterCampBoonMods(character).critRangeBonus ?? 0;
-  const low = Math.max(2, base - blessingBonus - upgradeBonus - affixBonus - boonBonus);
+  // Rogue Deadly Finesse (L13): the finisher's eye widens the crit window.
+  const classBonus = characterHasMechanic(character, 'deadly-finesse') ? 1 : 0;
+  const low = Math.max(
+    2,
+    base - blessingBonus - upgradeBonus - affixBonus - boonBonus - classBonus,
+  );
   const result: number[] = [];
   for (let n = low; n <= 20; n++) result.push(n);
   return result;

@@ -149,6 +149,15 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       blurRoundsRemaining: (nextCharacter.resources.blurRoundsRemaining ?? 0) - 1,
     });
   }
+  // Wizard: the Apotheosis transformation burns down one round per player turn.
+  if (
+    order[nextIndex] === 'player' &&
+    (nextCharacter.resources.ascendantRoundsRemaining ?? 0) > 0
+  ) {
+    nextCharacter = patchResources(nextCharacter, {
+      ascendantRoundsRemaining: (nextCharacter.resources.ascendantRoundsRemaining ?? 0) - 1,
+    });
+  }
   // Barbarian: the Reckless stance (and the advantage it hands enemies) clears
   // at the start of the barbarian's next turn; Rage burns down one round each
   // time that turn comes around.

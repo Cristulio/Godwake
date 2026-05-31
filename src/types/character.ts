@@ -42,12 +42,20 @@ export interface EquipmentSlots {
   boots?: ItemRef | null;
 }
 
+/** A castable spell-slot tier. Cantrips (level 0) cost no slot. */
+export type SpellSlotLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+
 /** Wizard spell slots by level. Missing entries treated as 0. */
 export interface SpellSlots {
   1?: number;
   2?: number;
   3?: number;
   4?: number;
+  5?: number;
+  6?: number;
+  7?: number;
+  8?: number;
+  9?: number;
 }
 
 /** Per-class run-state resources (Second Wind charges, Action Surge uses, rage, etc.). */
@@ -87,6 +95,13 @@ export interface ClassResources {
   blurRoundsRemaining?: number;
   /** Wizard: Mirror Image duplicates left. Each absorbs one blow that would otherwise hit the player; cleared at combat start. */
   mirrorImages?: number;
+  /**
+   * Wizard: rounds the Apotheosis transformation holds (9th-level capstone).
+   * While > 0 the caster is ascendant — every attack (weapon and spell) bites
+   * for {@link APOTHEOSIS_BONUS_DAMAGE} more and AC rises by 2. Decrements at
+   * the start of each player turn; reset to 0 at combat start.
+   */
+  ascendantRoundsRemaining?: number;
   /**
    * Barbarian: rounds the current Rage holds. While > 0 the barbarian is
    * raging (physical-damage resistance + bonus melee damage). Decrements at the

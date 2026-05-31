@@ -8,19 +8,21 @@ import { listSpells } from '../../content/spells';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 
 /**
- * XP-to-level table, capped at level 8. Index 0 = level 1 = 0 xp.
+ * XP-to-level table, extended to level 20. Index 0 = level 1 = 0 xp.
  *
- * Tuned for ROUTED play. The branching map walks ~one node per layer, so a
- * single route is far fewer fights than the old all-rooms delve and feeds
- * roughly half the XP. The previous curve (tuned for the all-rooms count) left
- * a routed run chronically under-levelled — bosses fought 2-3 levels light, and
- * the L3→L4 cliff (600→2000) alone stranded players at L3 through most of a run.
- * The upper bands are pulled down ~half and the cliff flattened so a normal
- * route reaches the level the content expects (≈L3-4 by the Ch1 boss, L5 by Ch2,
- * L6 by Ch3, L7-8 in Ch4 — a clean full clear tops out at the cap right at the
- * Matron). The L2/L3 bands stay an early grind on purpose.
+ * The L1-8 band is unchanged — it was tuned for ROUTED play (the branching map
+ * walks ~one node per layer, so a single route feeds roughly half the XP of the
+ * old all-rooms delve; the L3→L4 cliff is flattened so a normal route reaches
+ * the level the content expects). The L9-20 continuation carries that curve out
+ * across the planned 14-chapter expansion: each level needs progressively more,
+ * with deltas that grow smoothly (≈3.5k at L9 climbing to ≈18k at L20) so the
+ * back half is a steady climb rather than a wall. A full scaled run tops out at
+ * the L20 cap (≈126k total) right at the Irenicus finale.
  */
-const XP_TABLE = [0, 250, 550, 1100, 2200, 4000, 6200, 9000] as const;
+const XP_TABLE = [
+  0, 250, 550, 1100, 2200, 4000, 6200, 9000, 12500, 16800, 22000, 28000, 35500,
+  44000, 54000, 65000, 78000, 92000, 108000, 126000,
+] as const;
 
 export const MAX_LEVEL = XP_TABLE.length;
 
@@ -62,7 +64,8 @@ export function applyLevelUp(character: Character): Character {
   const resources = { ...character.resources };
 
   if (character.classId === 'fighter' && newLevel >= 2) {
-    resources.actionSurgeRemaining = 1;
+    // Improved Action Surge (L17) opens a second charge.
+    resources.actionSurgeRemaining = newLevel >= 17 ? 2 : 1;
   }
 
   // Default the subclass to the class's first archetype when the subclass-pick
@@ -116,13 +119,23 @@ export function applyLevelUp(character: Character): Character {
  * The spell-tier a wizard unlocks for the *first time* at the given new
  * level. Returns null when the level is not a learning milestone.
  *
- * L3 unlocks the first 2nd-level slot; L5 unlocks the first 3rd-level slot.
- * Past L5, slot counts grow but no new tier opens — no further pickers.
+ * Each odd level from 3 opens the next slot tier and surfaces a picker for a
+ * working to fill it: L3→2nd, L5→3rd, L7→4th, L9→5th, L11→6th, L13→7th,
+ * L15→8th, L17→9th (the reality-warping capstones). Even levels grow slot
+ * counts but open no new tier, so no picker fires.
  */
 export function wizardSpellLearnTierForLevel(newLevel: number): SpellLevel | null {
-  if (newLevel === 3) return 2;
-  if (newLevel === 5) return 3;
-  return null;
+  const tierByLevel: Record<number, SpellLevel> = {
+    3: 2,
+    5: 3,
+    7: 4,
+    9: 5,
+    11: 6,
+    13: 7,
+    15: 8,
+    17: 9,
+  };
+  return tierByLevel[newLevel] ?? null;
 }
 
 /**
@@ -157,6 +170,21 @@ export function availableWizardSpellsForLearn(
  *   > fire-bolt
  */
 const SIM_SPELL_PRIORITY: readonly string[] = [
+  // 9th-level capstones first — a reachable slot here is the deepest pick.
+  'unmake',
+  'apotheosis',
+  // High-tier blasts, biggest dice first (AoE outranks single-target at parity).
+  'cataclysm',
+  'stormcrash',
+  'sunfire-burst',
+  'glacial-cone',
+  'rime-blast',
+  'wither',
+  'dissolution',
+  'void-ray',
+  'force-lance',
+  'soul-snare',
+  // The original cap-8 picks.
   'fireball',
   'lightning-bolt',
   'scorching-ray',
