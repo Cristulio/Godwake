@@ -5,7 +5,7 @@ import { isPlayerTurn } from '../../engine/combat';
 import { characterHasMechanic } from '../../engine/character/derived';
 import { RAGE_ROUNDS } from '../../engine/character/actions';
 import { getItem } from '../../content/items';
-import { slotsAt } from '../../engine/combat/spells';
+import { slotsAt, canCastSpell } from '../../engine/combat/spells';
 
 interface ActionBarProps {
   character: Character;
@@ -132,16 +132,14 @@ export function ActionBar({
 
   const totalSlots =
     slotsAt(character, 1) + slotsAt(character, 2) + slotsAt(character, 3);
-  const knownSpellCount = (character.resources.knownSpells ?? []).length;
-  // Wizards always have at least one cantrip on the list, so as long as the
-  // book isn't empty the button stays available — SpellPicker gates each
-  // entry per slot.
+  const knownSpells = character.resources.knownSpells ?? [];
+  // Button stays open as long as at least one known spell (action, bonus, or
+  // reaction) can be cast right now — SpellPicker greys out individual entries.
   const canSpells =
     playersTurn &&
     active &&
     isWizard &&
-    knownSpellCount > 0 &&
-    !character.actionEconomy.actionUsed;
+    knownSpells.some((id) => canCastSpell(character, id).ok);
 
   const consumableCount = character.inventory.filter((ref) => {
     try {

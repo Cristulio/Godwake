@@ -198,8 +198,8 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 11', () => {
-    expect(SAVE_VERSION).toBe(11);
+  it('is 12', () => {
+    expect(SAVE_VERSION).toBe(12);
   });
 });
 
@@ -272,6 +272,47 @@ describe('loadFromSlot — backward-compat v1 wrapper', () => {
     expect(useMetaStore.getState().monsterEncounters).toEqual({ goblin: 1 });
     expect(useMetaStore.getState().deathCount).toBe(1);
     expect(useMetaStore.getState().druidGroveUnlocked).toBe(true);
+  });
+});
+
+describe('migrateV1ToV2 — v11 → v12 dead content id pruning', () => {
+  it('removes unknown affix ids from equipped item rolled.affixes', () => {
+    const character = makeBareCharacter({
+      equipped: {
+        mainHand: {
+          itemId: 'dagger',
+          rolled: { baseId: 'dagger', rarity: 'green', affixes: ['keen', '__dead-affix__'], name: 'Keen Dagger' },
+        },
+        offHand: null,
+        armor: null,
+      },
+    });
+    const v = migrateV1ToV2({ character, unlockedUpgrades: {} });
+    const mainHand = v.character?.equipped.mainHand as Record<string, unknown> | null | undefined;
+    const rolled = mainHand?.rolled as { affixes: string[] } | undefined;
+    expect(rolled?.affixes).toEqual(['keen']);
+  });
+
+  it('removes unknown blessing ids from character.blessings', () => {
+    const character = makeBareCharacter({ blessings: ['tymoras-coin', '__dead-blessing__'] });
+    const v = migrateV1ToV2({ character, unlockedUpgrades: {} });
+    expect(v.character?.blessings).toEqual(['tymoras-coin']);
+  });
+
+  it('removes unknown quirk ids from character.quirks', () => {
+    const character = makeBareCharacter({ quirks: ['tymoras-eye', '__dead-quirk__'] });
+    const v = migrateV1ToV2({ character, unlockedUpgrades: {} });
+    expect(v.character?.quirks).toEqual(['tymoras-eye']);
+  });
+
+  it('preserves all-valid affix/blessing/quirk ids unchanged', () => {
+    const character = makeBareCharacter({
+      blessings: ['tymoras-coin'],
+      quirks: ['tymoras-eye'],
+    });
+    const v = migrateV1ToV2({ character, unlockedUpgrades: {} });
+    expect(v.character?.blessings).toEqual(['tymoras-coin']);
+    expect(v.character?.quirks).toEqual(['tymoras-eye']);
   });
 });
 

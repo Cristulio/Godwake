@@ -267,7 +267,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
   const meta = useMetaStore.getState();
   const screenForSave =
     screenOverride ??
-    (screen.screen === 'delve' || screen.screen === 'reincarnation'
+    (screen.screen === 'delve' || screen.screen === 'reincarnation' || screen.screen === 'level-up'
       ? 'hub'
       : screen.screen);
   return {
