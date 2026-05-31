@@ -723,6 +723,131 @@ describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
   });
 });
 
+describe('Fireball — ignite rider on failed saves', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('survivors that failed their DEX save ignite and burn at the start of the next turn', () => {
+    // hollow-sage: 36 HP, DEX 13 — tanky enough to survive many Fireball rolls.
+    const sage = getMonster('hollow-sage');
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5
+
+    let validated = false;
+    for (let seed = 1; seed <= 200 && !validated; seed++) {
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: w, monsters: [{ def: sage }] });
+      let { state, character: fw } = init;
+
+      const result = castSpell({ roller, character: fw, state, spellId: 'fireball' });
+      state = result.state; fw = result.character;
+
+      const monsters = state.combatants.filter((c) => c.kind === 'monster') as MonsterCombatant[];
+      const burning = monsters.filter((m) => m.instance.hp.current > 0 && (m.instance.burnTurnsRemaining ?? 0) > 0);
+      if (burning.length === 0) continue;
+
+      expect(state.log.some((l) => l.text.includes('ignite'))).toBe(true);
+
+      // Advance to next player turn and confirm burn ticks.
+      fw = { ...fw, actionEconomy: { ...fw.actionEconomy, actionUsed: true } };
+      let et = endTurn(state, fw);
+      state = et.state; fw = et.character;
+      et = endTurn(state, fw);
+      state = et.state; fw = et.character;
+
+      expect(state.log.some((l) => l.text.includes('burns for') && l.text.includes('fire'))).toBe(true);
+      validated = true;
+    }
+    expect(validated).toBe(true);
+  });
+
+  it('monsters that succeed their DEX save are NOT ignited', () => {
+    const sage = getMonster('hollow-sage');
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w);
+
+    // Script a high d20 face so the sage succeeds its DEX save.
+    const baseRoller = createDiceRoller(1);
+    let d20Calls = 0;
+    const roller = {
+      ...baseRoller,
+      d20(adv: Parameters<typeof baseRoller.d20>[0] = 'normal', mod = 0) {
+        d20Calls++;
+        if (d20Calls === 1) {
+          return { ...baseRoller.d20(adv, mod), rolls: [20], total: 20 + mod, natural20: true, natural1: false };
+        }
+        return baseRoller.d20(adv, mod);
+      },
+    };
+
+    const init = createCombat({ roller: baseRoller, character: w, monsters: [{ def: sage }] });
+    const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'fireball' });
+
+    const monsters = result.state.combatants.filter((c) => c.kind === 'monster') as MonsterCombatant[];
+    for (const m of monsters) {
+      expect(m.instance.burnTurnsRemaining ?? 0).toBe(0);
+    }
+  });
+});
+
+describe('Lightning Bolt — pierce on successful saves', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('non-evoker wizard rolls 6d6 base (vs Fireball 8d6) — lower burst', () => {
+    const sage = getMonster('hollow-sage');
+    // Use a raw L1 wizard with manually bumped slots + known spell to bypass
+    // the Evocation subclass (which adds a sculpt die at L2+).
+    const w: Character = {
+      ...makeWizard(),
+      resources: {
+        ...makeWizard().resources,
+        spellSlots: { 1: 4, 2: 3, 3: 2, 4: 0 },
+        knownSpells: [...(makeWizard().resources.knownSpells ?? []), 'lightning-bolt'],
+      },
+    };
+    const roller = createDiceRoller(50);
+    const init = createCombat({ roller, character: w, monsters: [{ def: sage }] });
+    const cast = castSpell({ roller, character: init.character, state: init.state, spellId: 'lightning-bolt' });
+    const roll = cast.state.log.find((l) => l.text.includes('white arc of lightning'))!;
+    const diceCount = roll.text.split(' = ')[0].split('+').length;
+    expect(diceCount).toBe(6);
+  });
+
+  it('a surviving monster that succeeds the save takes an additional arc hit', () => {
+    const sage = getMonster('hollow-sage');
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w);
+    w = { ...w, resources: { ...w.resources, knownSpells: [...(w.resources.knownSpells ?? []), 'lightning-bolt'] } };
+
+    // Script the sage to succeed its DEX save, with low main damage so it survives.
+    const baseRoller = createDiceRoller(7);
+    let d20Call = 0;
+    const roller = {
+      ...baseRoller,
+      d20(adv: Parameters<typeof baseRoller.d20>[0] = 'normal', mod = 0) {
+        d20Call++;
+        if (d20Call === 1) {
+          return { ...baseRoller.d20(adv, mod), rolls: [20], total: 20 + mod, natural20: true, natural1: false };
+        }
+        return baseRoller.d20(adv, mod);
+      },
+      roll(expr: Parameters<typeof baseRoller.roll>[0]) {
+        const e = typeof expr === 'string' ? { count: 6, die: 6, modifier: 0 } : expr;
+        if (e.count >= 6) {
+          // Force low main damage so sage survives.
+          return { ...baseRoller.roll(expr), rolls: Array(e.count).fill(1), total: e.count + e.modifier };
+        }
+        return baseRoller.roll(expr);
+      },
+    };
+
+    const init = createCombat({ roller: baseRoller, character: w, monsters: [{ def: sage }] });
+    const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'lightning-bolt' });
+
+    expect(result.state.log.some((l) => l.text.includes('(arc)'))).toBe(true);
+    expect(result.state.log.some((l) => l.text.includes('half + arc'))).toBe(true);
+  });
+});
+
 describe('Wizard — Sculpt Spells (Evocation L2)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
@@ -775,7 +900,7 @@ describe('Wizard — Sculpt Spells (Evocation L2)', () => {
     expect(roll.text).toContain('Sculpt Spells');
   });
 
-  it('L5 evoker rolls 9d6 Lightning Bolt', () => {
+  it('L5 evoker rolls 7d6 Lightning Bolt (6d6 base + 1 from Sculpt Spells)', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
     for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5
@@ -797,7 +922,7 @@ describe('Wizard — Sculpt Spells (Evocation L2)', () => {
     state = cast.state;
     const roll = state.log.find((l) => l.text.includes('white arc of lightning'))!;
     const diceCount = roll.text.split(' = ')[0].split('+').length;
-    expect(diceCount).toBe(9);
+    expect(diceCount).toBe(7);
     expect(roll.text).toContain('Sculpt Spells');
   });
 });

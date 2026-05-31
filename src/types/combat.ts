@@ -77,6 +77,9 @@ export interface MonsterInstance {
   /** Bleed DOT: damage dealt at the start of each player turn for bleedTurnsRemaining turns. */
   bleedDamagePerTurn?: number;
   bleedTurnsRemaining?: number;
+  /** Burn DOT (Fireball ignite): fire damage at the start of each player turn. */
+  burnDamagePerTurn?: number;
+  burnTurnsRemaining?: number;
   /**
    * Legendary-resistance pool: the number of times this monster auto-succeeds a
    * player-applied control save (Hold Person) before the condition can land.

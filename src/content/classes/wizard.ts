@@ -74,13 +74,13 @@ export const WIZARD: Class = ClassSchema.parse({
         id: 'learn-fireball',
         name: 'Fireball',
         description:
-          'A bead of ember from your fingertip blooms into a roar — 8d6 fire to every enemy in the room. A successful Dexterity save halves the burn.',
+          'A bead of ember blooms into a roar — 8d6 fire to every enemy. DEX save halves. Enemies that fail ignite: 1d6 fire at the start of your next turn.',
       },
       {
         id: 'learn-lightning-bolt',
         name: 'Lightning Bolt',
         description:
-          'A jagged white arc carves the room — 8d6 lightning to every enemy. A successful Dexterity save halves the strike.',
+          'A jagged arc sears the room — 6d6 lightning to every enemy. DEX save halves. Even on a successful save, targets take 1d6 lightning — the arc finds you.',
       },
     ],
     '6': [
@@ -125,7 +125,7 @@ export const WIZARD: Class = ClassSchema.parse({
             id: 'sculpt-spells',
             name: 'Arcane Tradition: Evocation',
             description:
-              'Your study settles into the School of Evocation — raw arcane force, shaped past the page. Burning Hands, Fireball, and Lightning Bolt each burn one die hotter.',
+              'Your study settles into the School of Evocation — raw arcane force, shaped past the page. Burning Hands, Fireball (8d6→9d6), and Lightning Bolt (6d6→7d6) each deal one die more.',
             mechanicKey: 'sculpt-spells',
           },
         ],
