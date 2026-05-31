@@ -40,5 +40,5 @@ export function Imoen(props: PortraitProps) {
 }
 
 export function Irenicus(props: PortraitProps) {
-  return <PortraitImg url={irenicusUrl} fallbackLabel="Velnaris" {...props} />;
+  return <PortraitImg url={irenicusUrl} fallbackLabel="Irenicus" {...props} />;
 }

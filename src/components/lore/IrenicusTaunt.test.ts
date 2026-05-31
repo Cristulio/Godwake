@@ -83,7 +83,7 @@ describe('selectSoulVoiceLine — chapter-clear matches the cleared chapter', ()
     }
   });
 
-  it('Velnaris names the right chapter (Athkatla for ch2, Ust Natha for ch4)', () => {
+  it('Irenicus names the right chapter (Athkatla for ch2, Ust Natha for ch4)', () => {
     const ch2 = selectSoulVoiceLine('irenicus', 'chapter-clear', {
       ...base,
       clearedChapter: 2,
