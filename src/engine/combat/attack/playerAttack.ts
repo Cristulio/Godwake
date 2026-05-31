@@ -123,6 +123,11 @@ export function playerAttack(
   attackBonus += boonMods.attackBonus ?? 0;
   // Honed weapon affix: flat +to-hit.
   attackBonus += affixMods.attackBonus;
+  // Weapon accuracy lever: the shortbow's inherent +to-hit, traded for a smaller die.
+  attackBonus += w.attackMod ?? 0;
+  // Class affinity: a weapon that fits the wielder's hands. The edge is applied
+  // as bonus damage in the hit block below (accuracy is the tradeoff lever's job).
+  const hasAffinity = w.affinity === nextCharacter.classId;
   // Ranger Fighting Style: Archery — +2 to attack rolls with ranged weapons.
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   if (isFirstAttack) {
@@ -278,6 +283,16 @@ export function playerAttack(
       bonusDamage += affixMods.damageBonus;
       onTypeParts.push({ amount: affixMods.damageBonus, label: 'gear' });
     }
+    // Weapon damage lever: the longbow's inherent +damage, paid for in accuracy.
+    if (w.damageMod) {
+      bonusDamage += w.damageMod;
+      onTypeParts.push({ amount: w.damageMod, label: 'weapon' });
+    }
+    // Class affinity: the matched weapon bites a little deeper in its owner's hands.
+    if (hasAffinity) {
+      bonusDamage += 1;
+      onTypeParts.push({ amount: 1, label: 'affinity' });
+    }
     const holyBonus = blessingMods.holyDamageBonus ?? 0;
     if (holyBonus) {
       bonusDamage += holyBonus;
@@ -332,6 +347,11 @@ export function playerAttack(
         bonusDamage += affixMods.rageDamageBonus;
         onTypeParts.push({ amount: affixMods.rageDamageBonus, label: 'Furious' });
       }
+      // Heavy two-handed synergy: a great weapon swung in a rage hits harder.
+      if (w.properties.includes('heavy') && w.properties.includes('two-handed')) {
+        bonusDamage += 2;
+        onTypeParts.push({ amount: 2, label: 'heavy haft' });
+      }
     }
     // Relentless fighter affix: extra damage on each follow-up swing of a
     // multiattack (the second-and-later strikes of an Extra Attack action).
@@ -353,7 +373,10 @@ export function playerAttack(
     // clause: there are no allies here, but a wounded foe is leaning.
     const sneakAlreadyUsed = state.sneakAttackUsedThisTurn === true;
     const isRogue = nextCharacter.classId === 'rogue';
-    const sneakTriggers = advantage === 'advantage' || targetWounded;
+    // Dagger synergy: a Rogue's quick blade always finds the gap — Sneak Attack
+    // can fire with a dagger even without advantage or a wounded mark.
+    const wieldsDagger = w.id === 'dagger';
+    const sneakTriggers = advantage === 'advantage' || targetWounded || wieldsDagger;
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
       sneakDice =
         sneakAttackDiceForLevel(nextCharacter.level) +

@@ -50,6 +50,14 @@ export function ActionBar({
   const isBarbarian = character.classId === 'barbarian';
   const isRanger = character.classId === 'ranger';
 
+  // Multiattack commitment: once a character with Extra Attack has begun their
+  // Attack action (a swing down, the action not yet fully spent), every OTHER
+  // action is locked until the remaining swing(s) land — no interleaving.
+  const hasExtraAttack = characterHasMechanic(character, 'extra-attack');
+  const attacksThisTurn = state.playerAttacksThisTurn ?? 0;
+  const midMultiattack =
+    hasExtraAttack && !character.actionEconomy.actionUsed && attacksThisTurn > 0;
+
   const secondWindBonus = character.resources.secondWindBonusRemaining ?? 0;
   const secondWindHasCharge =
     character.resources.secondWindAvailable === true || secondWindBonus > 0;
@@ -58,7 +66,7 @@ export function ActionBar({
     secondWindHasCharge &&
     !character.actionEconomy.bonusActionUsed &&
     character.hp.current < character.hp.max;
-  const canSecondWind = playersTurn && active && secondWindUsable;
+  const canSecondWind = playersTurn && active && secondWindUsable && !midMultiattack;
   const secondWindCount =
     (character.resources.secondWindAvailable === true ? 1 : 0) + secondWindBonus;
 
@@ -152,14 +160,12 @@ export function ActionBar({
       ? !character.actionEconomy.bonusActionUsed
       : !character.actionEconomy.actionUsed;
   });
-  const canUseItem = playersTurn && active && hasUsableConsumable;
+  const canUseItem = playersTurn && active && hasUsableConsumable && !midMultiattack;
 
-  const canEndTurn = playersTurn && active;
+  const canEndTurn = playersTurn && active && !midMultiattack;
 
   // Fighter L5 Extra Attack: two swings per Action. Show progress on the
   // button so the player knows the second swing is queued.
-  const hasExtraAttack = characterHasMechanic(character, 'extra-attack');
-  const attacksThisTurn = state.playerAttacksThisTurn ?? 0;
   const dashSwingPending = hasBonusAttack && character.actionEconomy.actionUsed;
   const attackLabel = dashSwingPending
     ? '► Attack (Dash)'

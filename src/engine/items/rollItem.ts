@@ -121,11 +121,48 @@ export function eligibleAffixes(kind: BaseKind, classId: ClassId): Affix[] {
   );
 }
 
-/** Weave the Diablo-style display name: [prefix] Base [suffix]. */
+/**
+ * "Dominance" of an affix for naming. A class-gated signature affix (Furious,
+ * Shadowed, …) defines a weapon's identity and outranks a generic effect, which
+ * outranks a plain stat-stick — so the woven name leads with the affix that
+ * actually matters ("Furious Greataxe", not "Honed Greataxe").
+ */
+function affixDominance(affix: Affix): number {
+  const m = affix.modifiers;
+  const gated = affix.classGate && affix.classGate.length > 0 ? 1000 : 0;
+  const signature =
+    (m.rageDamageBonus ?? 0) +
+    (m.markDamageBonus ?? 0) +
+    (m.sneakDamageBonus ?? 0) +
+    (m.followupDamageBonus ?? 0) +
+    (m.lifestealPct ?? 0) +
+    (m.bleedDamage ?? 0) +
+    (m.critRangeBonus ?? 0) +
+    (m.tempHpPerCombat ?? 0) +
+    (m.spellDcBonus ?? 0) +
+    (m.spellDamageBonus ?? 0) +
+    (m.spellAttackBonus ?? 0) +
+    (m.bonusSpellSlotsL1 ?? 0) +
+    (m.acBonusWhileFull ?? 0) +
+    (m.acBonusWhileBloodied ?? 0) +
+    (m.resist ? 1 : 0);
+  const flat = (m.attackBonus ?? 0) + (m.damageBonus ?? 0) + (m.acBonus ?? 0);
+  return gated + signature * 100 + flat;
+}
+
+/**
+ * Weave the Diablo-style display name: [prefix] Base [suffix]. Each slot takes
+ * its most DOMINANT affix (not just the first rolled), so the name reflects the
+ * item's defining modifier.
+ */
 export function rolledItemName(baseName: string, affixIds: string[]): string {
   const affixes = affixIds.map(getAffix);
-  const prefix = affixes.find((a) => a.namePart.kind === 'prefix');
-  const suffix = affixes.find((a) => a.namePart.kind === 'suffix');
+  const dominant = (kind: 'prefix' | 'suffix'): Affix | undefined =>
+    affixes
+      .filter((a) => a.namePart.kind === kind)
+      .sort((a, b) => affixDominance(b) - affixDominance(a))[0];
+  const prefix = dominant('prefix');
+  const suffix = dominant('suffix');
   let name = baseName;
   if (prefix) name = `${prefix.namePart.word} ${name}`;
   if (suffix) name = `${name} ${suffix.namePart.word}`;
