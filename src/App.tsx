@@ -136,6 +136,7 @@ function App() {
           context={taunt.context}
           seed={taunt.seed}
           chapter={taunt.chapter}
+          line={taunt.line}
           onDismiss={dismissTaunt}
         />
       )}

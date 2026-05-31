@@ -403,12 +403,18 @@ interface SoulVoiceProps {
   seed?: number;
   /** Chapter just cleared (1-4), threaded for the 'chapter-clear' context only. */
   chapter?: number;
+  /**
+   * An explicit, verbatim line — set by progressive lore beats (content/
+   * loreBeats.ts). When present it overrides the seeded arc-pool selection;
+   * `context` then only frames the palette/side.
+   */
+  line?: string;
 }
 
 const BASE_TICK = 28;
 const FAST_TICK = 4;
 
-export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter }: SoulVoiceProps) {
+export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, line }: SoulVoiceProps) {
   const chaptersCleared = useMetaStore((s) => s.chaptersCleared);
   const deathCount = useMetaStore((s) => s.deathCount);
   const hasReincarnated = useMetaStore((s) => s.hasReincarnated);
@@ -417,6 +423,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter }
 
   const quote = useMemo(
     () =>
+      line ??
       selectSoulVoiceLine(speaker, context, {
         chaptersCleared,
         deathCount,
@@ -424,7 +431,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter }
         clearedChapter: chapter,
         seed,
       }),
-    [speaker, context, chaptersCleared, deathCount, hasReincarnated, chapter, seed],
+    [line, speaker, context, chaptersCleared, deathCount, hasReincarnated, chapter, seed],
   );
 
   const [typed, setTyped] = useState('');

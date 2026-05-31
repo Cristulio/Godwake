@@ -20,6 +20,8 @@ export interface Taunt {
   context: TauntContext;
   seed: number;
   chapter?: number;
+  /** Verbatim line for a progressive lore beat (overrides the seeded pool). */
+  line?: string;
 }
 
 /**
@@ -58,6 +60,11 @@ interface ScreenStoreState {
   goToCodex: () => void;
   goToInventory: () => void;
   showTaunt: (speaker: SoulVoiceSpeaker, context: TauntContext, chapter?: number) => void;
+  /**
+   * Enqueue a progressive lore beat (content/loreBeats.ts) with a verbatim line.
+   * Queues behind the active overlay exactly like {@link showTaunt}.
+   */
+  playLoreBeat: (speaker: SoulVoiceSpeaker, context: TauntContext, line: string) => void;
   dismissTaunt: () => void;
   setIntroSeen: (v: boolean) => void;
   markQuirksTutorialSeen: () => void;
@@ -100,6 +107,11 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
       return s.taunt
         ? { tauntQueue: [...s.tauntQueue, next] }
         : { taunt: next };
+    }),
+  playLoreBeat: (speaker, context, line) =>
+    set((s) => {
+      const next: Taunt = { speaker, context, seed: 0, line };
+      return s.taunt ? { tauntQueue: [...s.tauntQueue, next] } : { taunt: next };
     }),
   dismissTaunt: () =>
     set((s) => {
