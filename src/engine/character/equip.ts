@@ -77,6 +77,34 @@ export function wieldsRangedWeapon(character: Character): boolean {
 }
 
 /**
+ * True when the character is wearing armor heavier than light (medium or heavy
+ * category) in the body slot. Shields and robes are excluded.
+ *
+ * Used to gate agile-class perks: a Ranger or Rogue in medium/heavy armor
+ * trades protection for agility — Opening Volley, Ranged Evasion, Cunning
+ * Action, and Uncanny Dodge are all suppressed while the heavier armor is worn.
+ * Swap back to light and they return.
+ */
+export function wearsHeavierThanLight(character: Character): boolean {
+  const armorRef = character.equipped.armor;
+  if (!armorRef) return false;
+  const item = getItem(armorRef.itemId);
+  if (item.kind !== 'armor') return false;
+  return item.category === 'medium' || item.category === 'heavy';
+}
+
+/**
+ * Warning text for the item tooltip when equipping an armor piece would
+ * suppress a class's agile perks. Returns null when no suppression applies.
+ */
+export function agileTradeoffWarning(classId: ClassId, armor: { category: string }): string | null {
+  if (armor.category !== 'medium' && armor.category !== 'heavy') return null;
+  if (classId === 'ranger') return 'Suppresses Opening Volley and Ranged Evasion while worn.';
+  if (classId === 'rogue') return 'Suppresses Cunning Action and Uncanny Dodge while worn.';
+  return null;
+}
+
+/**
  * Whether a class is trained to wield the given weapon. A weapon matches if its
  * category is in the class's proficient set, it carries one of the proficient
  * properties (a Rogue and any `finesse`/`light` blade), or its id is named

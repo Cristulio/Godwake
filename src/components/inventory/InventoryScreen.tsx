@@ -10,7 +10,9 @@ import {
   equipDenialReason,
   EQUIP_SLOTS,
   type EquipSlot,
+  agileTradeoffWarning,
 } from '../../engine/character/equip';
+import { rolledItemCost } from '../../engine/items/rollItem';
 import type { Item, ItemRef } from '../../schemas/item';
 import { ItemIcon } from './ItemIcon';
 import { ItemTooltip } from './ItemTooltip';
@@ -253,6 +255,12 @@ export function InventoryScreen() {
                       <ItemTooltip
                         item={item}
                         rolled={ref?.rolled}
+                        rolledCost={ref?.rolled ? rolledItemCost(ref) : undefined}
+                        agileTradeoffWarning={
+                          character && item.kind === 'armor'
+                            ? agileTradeoffWarning(character.classId, item) ?? undefined
+                            : undefined
+                        }
                         hint="Double-click or drag down to unequip"
                       />
                     </div>
@@ -361,7 +369,17 @@ export function InventoryScreen() {
                       </div>
                       {hoverIdx === idx && !isDragging && (
                         <div className="absolute z-30 left-full top-0 ml-2">
-                          <ItemTooltip item={item} rolled={ref.rolled} hint={hint} />
+                          <ItemTooltip
+                            item={item}
+                            rolled={ref.rolled}
+                            rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
+                            agileTradeoffWarning={
+                              character && item.kind === 'armor'
+                                ? agileTradeoffWarning(character.classId, item) ?? undefined
+                                : undefined
+                            }
+                            hint={hint}
+                          />
                         </div>
                       )}
                     </div>

@@ -23,7 +23,7 @@ import { isPlayerParalyzed } from './holdPerson';
 import { resolvePlayerParalyzedTurn } from './turn';
 import { refreshMonsterIntents } from './attack/monsterIntent';
 import { playerAttack } from './attack/playerAttack';
-import { wieldsRangedWeapon } from '../character/equip';
+import { wieldsRangedWeapon, wearsHeavierThanLight } from '../character/equip';
 import { getActiveRoller } from '../dice';
 import { applyAscensionToMonster, ascensionDamageBonus } from '../delve/ascension';
 import { bossIntelBuffFor } from '../../content/bossIntel';
@@ -172,7 +172,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     };
     nextCharacter = patchResources(nextCharacter, {
       sneakAttackUsedThisTurn: false,
-      cunningActionUsesRemaining: rogueCunningActionMax(nextCharacter),
+      cunningActionUsesRemaining: wearsHeavierThanLight(nextCharacter) ? 0 : rogueCunningActionMax(nextCharacter),
     });
   }
 
@@ -295,8 +295,10 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     playerAttacksThisTurn: 0,
     bladeOfVowRerollsRemaining: boonMods.weaponDamageRerollPerCombat ?? 0,
     // Ranged "kept at range": the first enemy swing comes at disadvantage while
-    // a bow is in hand. Consumed by the first enemy attack (monsterAttack).
-    rangedEvasionRemaining: wieldsRangedWeapon(nextCharacter) ? 1 : 0,
+    // a bow is in hand and the Ranger isn't encumbered by medium/heavy armor.
+    // Consumed by the first enemy attack (monsterAttack).
+    rangedEvasionRemaining:
+      wieldsRangedWeapon(nextCharacter) && !wearsHeavierThanLight(nextCharacter) ? 1 : 0,
   };
 
   // Player goes first. If they walk in already paralyzed (Magistrate held
@@ -344,6 +346,8 @@ function resolveRangedOpeningVolley(
   if (state.status !== 'active') return { state, character };
   if (isPlayerParalyzed(character)) return { state, character };
   if (!wieldsRangedWeapon(character)) return { state, character };
+  // Heavier armor suppresses agile perks — no free shot in half plate.
+  if (wearsHeavierThanLight(character)) return { state, character };
   const mainHand = character.equipped.mainHand;
   if (!mainHand) return { state, character };
   const target = state.combatants.find(

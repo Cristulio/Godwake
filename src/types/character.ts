@@ -304,7 +304,7 @@ export interface Character {
   bossIntel?: Record<string, 'weak-spot' | 'battle-plan'>;
   /**
    * Bosses the player chose to walk past without intel. Each entry grants a
-   * +5% gold bonus on that specific boss's drop ("the gods reward the bold").
+   * +10% gold bonus on that specific boss's drop ("the gods reward the bold").
    * Cleared at delve end.
    */
   boldApproachBosses?: string[];

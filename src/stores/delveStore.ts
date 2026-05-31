@@ -542,11 +542,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       );
       const mobGold = rollRoomGoldDrops(getActiveRoller(), monsterDefIds);
       let goldDrop = roomGold + mobGold;
-      // Boss intel "walk past" reward: +5% gold from that specific boss.
+      // Boss intel "walk past" reward: +10% gold from that specific boss.
       if (isBossRoom) {
         const bossDefId = room.monsters?.[0]?.defId;
         if (bossDefId && character.boldApproachBosses?.includes(bossDefId)) {
-          goldDrop = Math.floor(goldDrop * 1.05);
+          goldDrop = Math.floor(goldDrop * 1.10);
         }
       }
       const goldBefore = character.goldInPocket;
