@@ -23,7 +23,7 @@ const PRE_REVEAL_LABEL: Record<SoulVoiceSpeaker, string> = {
   imoen: 'A Whisper',
 };
 const REAL_NAME: Record<SoulVoiceSpeaker, string> = {
-  irenicus: 'Velnaris',
+  irenicus: 'Irenicus',
   imoen: 'Imoen',
 };
 
@@ -32,7 +32,7 @@ const REAL_NAME: Record<SoulVoiceSpeaker, string> = {
  * `chaptersCleared` (the all-time high-water mark on metaStore) is the arc
  * axis: 0 = still in the Iron Cells, 4 = the whole chain has fallen.
  *
- *   Velnaris: clinical curiosity → genuine investment → revealing the bond.
+ *   Irenicus: clinical curiosity → genuine investment → revealing the bond.
  *   Imoen:    distant frightened whisper → "I can almost see you" → "you're
  *             close, find me."
  */
