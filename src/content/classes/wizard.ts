@@ -93,9 +93,90 @@ export const WIZARD: Class = ClassSchema.parse({
         mechanicKey: 'asi',
       },
     ],
+    '7': [
+      {
+        id: 'fourth-level-slots',
+        name: 'Fourth-Level Slots',
+        description:
+          'Your spellbook opens to 4th-level workings — Rime Blast, Force Lance, and the deeper craft to come.',
+        mechanicKey: 'fourth-level-slots',
+      },
+    ],
     '8': [
       {
         id: 'asi-8',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '9': [
+      {
+        id: 'fifth-level-slots',
+        name: 'Fifth-Level Slots',
+        description:
+          'You can now anchor 5th-level workings — the room-clearing cones and the ruinous single-target rays.',
+        mechanicKey: 'fifth-level-slots',
+      },
+    ],
+    '11': [
+      {
+        id: 'sixth-level-slots',
+        name: 'Sixth-Level Slots',
+        description:
+          'The threshold of greater magic opens — you can hold 6th-level workings.',
+        mechanicKey: 'sixth-level-slots',
+      },
+    ],
+    '12': [
+      {
+        id: 'asi-12',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '13': [
+      {
+        id: 'seventh-level-slots',
+        name: 'Seventh-Level Slots',
+        description:
+          'You can now anchor 7th-level workings — the storms that fall indoors.',
+        mechanicKey: 'seventh-level-slots',
+      },
+    ],
+    '15': [
+      {
+        id: 'eighth-level-slots',
+        name: 'Eighth-Level Slots',
+        description:
+          'You can now anchor 8th-level workings — cataclysm and the unmaking of years.',
+        mechanicKey: 'eighth-level-slots',
+      },
+    ],
+    '16': [
+      {
+        id: 'asi-16',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '17': [
+      {
+        id: 'ninth-level-slots',
+        name: 'Ninth-Level Workings',
+        description:
+          'The deepest threshold of all opens to you — reality-warping 9th-level magic. You can remake a foe, or remake yourself.',
+        mechanicKey: 'ninth-level-slots',
+      },
+    ],
+    '19': [
+      {
+        id: 'asi-19',
         name: 'Ability Score Improvement',
         description:
           'You can increase one ability score by 2, or two ability scores by 1 each.',

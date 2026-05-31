@@ -18,6 +18,7 @@ import {
   proficiencyBonus,
 } from '../../character/derived';
 import { rageDamageBonus } from '../../character/actions';
+import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { isRangedWeapon } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
@@ -134,6 +135,8 @@ export function playerAttack(
   const hasAffinity = w.affinity === nextCharacter.classId;
   // Ranger Fighting Style: Archery — +2 to attack rolls with ranged weapons.
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
+  // Fighter Weapon Mastery (L9): +1 to hit on every weapon strike.
+  if (characterHasMechanic(nextCharacter, 'weapon-mastery')) attackBonus += 1;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
@@ -237,9 +240,13 @@ export function playerAttack(
     const offHandEmpty = !nextCharacter.equipped.offHand;
     const damageExpr = parseDiceExpression(weaponDamageDice(w, offHandEmpty));
     // On crit, double the dice (not the modifier).
+    // Barbarian Brutal Critical (L9): a critical strike rolls one extra weapon
+    // die on top of the doubled dice — the savage spike on top of the crit.
+    const brutalCritDie =
+      crit && characterHasMechanic(nextCharacter, 'brutal-critical') ? 1 : 0;
     const damageRoll = roller.roll(
       {
-        count: damageExpr.count * (crit ? 2 : 1),
+        count: damageExpr.count * (crit ? 2 : 1) + brutalCritDie,
         die: damageExpr.die,
         modifier: 0,
       },
@@ -322,6 +329,16 @@ export function playerAttack(
     if (whetstone) {
       bonusDamage += whetstone;
       onTypeParts.push({ amount: whetstone, label: 'Whetstone' });
+    }
+    // Fighter Weapon Mastery (L9): a flat edge on every weapon strike.
+    if (characterHasMechanic(nextCharacter, 'weapon-mastery')) {
+      bonusDamage += 1;
+      onTypeParts.push({ amount: 1, label: 'mastery' });
+    }
+    // Apotheosis: the ascendant caster's every blow bites for far more.
+    if (isAscendant(nextCharacter)) {
+      bonusDamage += APOTHEOSIS_BONUS_DAMAGE;
+      onTypeParts.push({ amount: APOTHEOSIS_BONUS_DAMAGE, label: 'ascendant' });
     }
     if (isFirstAttack && (nextCharacter.permanentFirstAttackDamage ?? 0) > 0) {
       const fc = nextCharacter.permanentFirstAttackDamage ?? 0;
@@ -408,7 +425,8 @@ export function playerAttack(
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
       sneakDice =
         sneakAttackDiceForLevel(nextCharacter.level) +
-        (nextCharacter.permanentBonuses?.sneakAttackDice ?? 0);
+        (nextCharacter.permanentBonuses?.sneakAttackDice ?? 0) +
+        (characterHasMechanic(nextCharacter, 'death-strike') ? 2 : 0);
       const sneakRoll = roller.roll({
         count: sneakDice * (crit ? 2 : 1),
         die: 6,
@@ -431,8 +449,12 @@ export function playerAttack(
       characterHasMechanic(nextCharacter, 'hunters-mark')
     ) {
       const markExpr = parseDiceExpression(HUNTERS_MARK_DICE);
+      // Ranger Improved Mark (L11) / Foe Slayer (L20): the brand bites for extra dice.
+      const markBonusDice =
+        (characterHasMechanic(nextCharacter, 'improved-mark') ? 1 : 0) +
+        (characterHasMechanic(nextCharacter, 'foe-slayer') ? 2 : 0);
       const markRoll = roller.roll({
-        count: markExpr.count * (crit ? 2 : 1),
+        count: (markExpr.count + markBonusDice) * (crit ? 2 : 1),
         die: markExpr.die,
         modifier: 0,
       });
@@ -735,13 +757,19 @@ function markPlayerActionUsed(
   };
 }
 
-/** Fighter/Ranger L5 Extra Attack grants 2 attacks, but loading weapons cap at 1 per action. */
-function maxAttacksPerAction(character: Readonly<Character>): number {
+/**
+ * Attacks per Attack action. Extra Attack (L5) grants 2; the Fighter's later
+ * martial milestones push it to 3 (Relentless Assault, L11) and 4 (Unstoppable,
+ * L20). Loading weapons cap at 1 regardless — the reload is the bottleneck.
+ */
+export function maxAttacksPerAction(character: Readonly<Character>): number {
   if (!characterHasMechanic(character, 'extra-attack')) return 1;
   const mainHand = character.equipped.mainHand;
   if (mainHand) {
     const item = getItem(mainHand.itemId);
     if (item.kind === 'weapon' && item.properties.includes('loading')) return 1;
   }
+  if (characterHasMechanic(character, 'extra-attack-3')) return 4;
+  if (characterHasMechanic(character, 'extra-attack-2')) return 3;
   return 2;
 }

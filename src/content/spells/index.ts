@@ -150,6 +150,162 @@ export const LIGHTNING_BOLT: Spell = SpellSchema.parse({
   effectKey: 'lightning-bolt',
 });
 
+// --- Higher tiers (level 4-9) — the L8→20 progression's deeper book. -------
+
+export const RIME_BLAST: Spell = SpellSchema.parse({
+  id: 'rime-blast',
+  name: 'Rime Blast',
+  level: 4,
+  school: 'evocation',
+  range: '60 ft',
+  target: 'area',
+  damageType: 'cold',
+  description:
+    'A pressure-wave of killing frost detonates across the room — 7d6 cold to every enemy. A Dexterity save halves the bite.',
+  effectKey: 'rime-blast',
+});
+
+export const FORCE_LANCE: Spell = SpellSchema.parse({
+  id: 'force-lance',
+  name: 'Force Lance',
+  level: 4,
+  school: 'evocation',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'force',
+  description:
+    'A spear of hardened force punches clean through one target — 6d8 force damage. No attack roll, no save; it simply lands.',
+  effectKey: 'force-lance',
+});
+
+export const GLACIAL_CONE: Spell = SpellSchema.parse({
+  id: 'glacial-cone',
+  name: 'Glacial Cone',
+  level: 5,
+  school: 'evocation',
+  range: 'Self (60-ft cone)',
+  target: 'area',
+  damageType: 'cold',
+  description:
+    'A roaring fan of glacier-cold sweeps the room — 9d8 cold to every enemy. A Dexterity save halves it.',
+  effectKey: 'glacial-cone',
+});
+
+export const VOID_RAY: Spell = SpellSchema.parse({
+  id: 'void-ray',
+  name: 'Void Ray',
+  level: 5,
+  school: 'necromancy',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'necrotic',
+  description:
+    'A thread of un-light bores into one target — a spell attack for 10d6 necrotic on a hit, and the wound refuses to close.',
+  effectKey: 'void-ray',
+});
+
+export const SUNFIRE_BURST: Spell = SpellSchema.parse({
+  id: 'sunfire-burst',
+  name: 'Sunfire Burst',
+  level: 6,
+  school: 'evocation',
+  range: '150 ft',
+  target: 'area',
+  damageType: 'fire',
+  description:
+    'A second sun blooms and gutters — 11d6 fire to every enemy. A Dexterity save halves the blaze.',
+  effectKey: 'sunfire-burst',
+});
+
+export const DISSOLUTION: Spell = SpellSchema.parse({
+  id: 'dissolution',
+  name: 'Dissolution',
+  level: 6,
+  school: 'transmutation',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'force',
+  description:
+    'Matter unknits at a word — 12d6+24 force to one target. A Constitution save halves it; a foe reduced to nothing is simply gone.',
+  effectKey: 'dissolution',
+});
+
+export const STORMCRASH: Spell = SpellSchema.parse({
+  id: 'stormcrash',
+  name: 'Stormcrash',
+  level: 7,
+  school: 'evocation',
+  range: '120 ft',
+  target: 'area',
+  damageType: 'lightning',
+  description:
+    'The sky falls indoors — 13d6 lightning to every enemy. A Dexterity save halves it; even a clean save still draws an arc.',
+  effectKey: 'stormcrash',
+});
+
+export const SOUL_SNARE: Spell = SpellSchema.parse({
+  id: 'soul-snare',
+  name: 'Soul Snare',
+  level: 7,
+  school: 'enchantment',
+  range: '60 ft',
+  target: 'single',
+  description:
+    'Bindings of pure will seize one target — a Wisdom save or be paralyzed for the next 3 rounds. The grip is far harder to break than a lesser binding.',
+  effectKey: 'soul-snare',
+});
+
+export const CATACLYSM: Spell = SpellSchema.parse({
+  id: 'cataclysm',
+  name: 'Cataclysm',
+  level: 8,
+  school: 'evocation',
+  range: '150 ft',
+  target: 'area',
+  damageType: 'fire',
+  description:
+    'A column of ruin descends and the floor cracks — 15d6 fire to every enemy. A Dexterity save halves the devastation.',
+  effectKey: 'cataclysm',
+});
+
+export const WITHER: Spell = SpellSchema.parse({
+  id: 'wither',
+  name: 'Wither',
+  level: 8,
+  school: 'necromancy',
+  range: '90 ft',
+  target: 'single',
+  damageType: 'necrotic',
+  description:
+    'Years drain from one target in a heartbeat — 16d6 necrotic, and the survivor is left weakened (its blows land softer) for the rest of the fight.',
+  effectKey: 'wither',
+});
+
+export const APOTHEOSIS: Spell = SpellSchema.parse({
+  id: 'apotheosis',
+  name: 'Apotheosis',
+  level: 9,
+  school: 'transmutation',
+  range: 'Self',
+  target: 'self',
+  description:
+    'You shed the limits of flesh and burn as something greater. For 4 rounds you gain 30 temporary hit points, +2 AC, and every attack you make — blade or spell — bites for far more.',
+  effectKey: 'apotheosis',
+});
+
+export const UNMAKE: Spell = SpellSchema.parse({
+  id: 'unmake',
+  name: 'Unmake',
+  level: 9,
+  school: 'transmutation',
+  range: '90 ft',
+  target: 'single',
+  damageType: 'necrotic',
+  description:
+    'You speak one enemy half-out of existence — its form buckles for 18d8 necrotic and it is remade into something helpless, paralyzed for 2 rounds. A Constitution save resists the binding, not the unmaking.',
+  effectKey: 'unmake',
+});
+
 const ALL_SPELLS: Spell[] = [
   FIRE_BOLT,
   MAGIC_MISSILE,
@@ -163,6 +319,18 @@ const ALL_SPELLS: Spell[] = [
   MIRROR_IMAGE,
   FIREBALL,
   LIGHTNING_BOLT,
+  RIME_BLAST,
+  FORCE_LANCE,
+  GLACIAL_CONE,
+  VOID_RAY,
+  SUNFIRE_BURST,
+  DISSOLUTION,
+  STORMCRASH,
+  SOUL_SNARE,
+  CATACLYSM,
+  WITHER,
+  APOTHEOSIS,
+  UNMAKE,
 ];
 
 const SPELL_BY_ID: Map<string, Spell> = new Map(ALL_SPELLS.map((s) => [s.id, s]));

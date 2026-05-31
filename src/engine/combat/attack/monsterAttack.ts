@@ -399,7 +399,16 @@ function resolveSingleAttack(
     });
     const rageBonus = raging ? 2 : 0;
     const ascensionBonus = attacker.instance.bonusDamage ?? 0;
-    const rawDamage = damageRoll.total + damageExpr.modifier + rageBonus + ascensionBonus;
+    // Wither (8th wizard) leaves a monster 'weakened' — a flat cut to its OWN
+    // outgoing damage (the one self-debuff the monster turn reads against
+    // itself). A landed hit still grazes for at least 1.
+    const selfWeakened = attacker.instance.conditions
+      .filter((c) => c.name === 'weakened')
+      .reduce((sum, c) => sum + (c.level ?? DEFAULT_WEAKENED_AMOUNT), 0);
+    const rawBeforeWeaken =
+      damageRoll.total + damageExpr.modifier + rageBonus + ascensionBonus;
+    const rawDamage =
+      selfWeakened > 0 ? Math.max(1, rawBeforeWeaken - selfWeakened) : rawBeforeWeaken;
 
     const quirkMods = characterQuirkMods(nextCharacter);
     const immune =

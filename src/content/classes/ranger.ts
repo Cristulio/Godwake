@@ -11,7 +11,7 @@ export const RANGER: Class = ClassSchema.parse({
   // Travels light to travel far — light/medium armour and a shield, no heavy plate.
   armorProficiency: { categories: ['light', 'medium', 'shield'] },
   skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1 },
+  skillGrantsByLevel: { '3': 1, '5': 1, '9': 1, '13': 1 },
   skillChoiceFrom: [
     'animal-handling',
     'athletics',
@@ -76,6 +76,51 @@ export const RANGER: Class = ClassSchema.parse({
         description:
           'You can increase one ability score by 2, or two ability scores by 1 each.',
         mechanicKey: 'asi',
+      },
+    ],
+    '11': [
+      {
+        id: 'improved-mark',
+        name: 'Improved Mark',
+        description:
+          'The brand bites deeper — every hit you land on your Hunter\'s Mark quarry deals an extra die of damage on top of the mark.',
+        mechanicKey: 'improved-mark',
+      },
+    ],
+    '12': [
+      {
+        id: 'asi-12',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '16': [
+      {
+        id: 'asi-16',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '19': [
+      {
+        id: 'asi-19',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '20': [
+      {
+        id: 'foe-slayer',
+        name: 'Foe Slayer',
+        description:
+          'No quarry outlives your focus — your Hunter\'s Mark now drives two extra dice home on every hit against the marked foe. The hunt always ends one way.',
+        mechanicKey: 'foe-slayer',
       },
     ],
   },

@@ -1,6 +1,36 @@
 import { describe, it, expect } from 'vitest';
-import { applyLevelUp, hasPendingLevelUp, xpForLevel } from './leveling';
+import {
+  applyLevelUp,
+  hasPendingLevelUp,
+  xpForLevel,
+  MAX_LEVEL,
+  wizardSpellLearnTierForLevel,
+  availableWizardSpellsForLearn,
+  simulateLevelUp,
+} from './leveling';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
+import {
+  wizardSpellSlotsForLevel,
+  rageDamageBonus,
+  rogueCunningActionMax,
+} from './actions';
+import { characterHasMechanic } from './derived';
+import { presetCreationInput } from './defaultCharacter';
+import { maxAttacksPerAction } from '../combat/attack/playerAttack';
+import { getClass } from '../../content/classes';
+import type { Character } from '../../types/character';
+import type { ClassId } from '../../schemas/ids';
+
+/**
+ * A preset character of the given class, force-set to a level with the first
+ * archetype selected (the default a sim or skipped-pick player lands on).
+ */
+function charAt(classId: ClassId, level: number): Character {
+  const input = presetCreationInput(classId);
+  const base = createCharacter({ id: 't', ...input });
+  const firstArchetype = getClass(classId).subclasses[0]?.id ?? null;
+  return { ...base, level, subclassId: base.subclassId ?? firstArchetype };
+}
 
 const SIR_BRICK = createCharacter({
   id: 'test-sir-brick',
@@ -42,8 +72,11 @@ describe('hasPendingLevelUp', () => {
   it('true at or above next-level threshold', () => {
     expect(hasPendingLevelUp({ ...SIR_BRICK, xp: 300 })).toBe(true);
   });
-  it('false once level cap reached', () => {
-    expect(hasPendingLevelUp({ ...SIR_BRICK, level: 8, xp: 99999 })).toBe(false);
+  it('still pending at the old L8 cap now that the ladder runs to 20', () => {
+    expect(hasPendingLevelUp({ ...SIR_BRICK, level: 8, xp: 99999 })).toBe(true);
+  });
+  it('false once the level-20 cap is reached', () => {
+    expect(hasPendingLevelUp({ ...SIR_BRICK, level: 20, xp: 999999 })).toBe(false);
   });
 });
 
@@ -81,5 +114,114 @@ describe('applyLevelUp', () => {
       baseAbilityScores: { ...c.baseAbilityScores, str: c.baseAbilityScores.str + 2 },
     });
     expect(l4.baseAbilityScores.str).toBe(SIR_BRICK.baseAbilityScores.str + 2);
+  });
+});
+
+describe('XP table → level 20', () => {
+  it('caps at level 20', () => {
+    expect(MAX_LEVEL).toBe(20);
+  });
+
+  it('hits the target totals at the key bands', () => {
+    expect(xpForLevel(9)).toBe(12500);
+    expect(xpForLevel(20)).toBe(126000);
+  });
+
+  it('is strictly increasing with non-shrinking deltas in the back half', () => {
+    let prevDelta = 0;
+    for (let lvl = 9; lvl <= MAX_LEVEL; lvl++) {
+      const delta = xpForLevel(lvl) - xpForLevel(lvl - 1);
+      expect(delta).toBeGreaterThan(0);
+      expect(delta).toBeGreaterThanOrEqual(prevDelta);
+      prevDelta = delta;
+    }
+  });
+
+  it('clamps requests past the cap to the L20 threshold', () => {
+    expect(xpForLevel(21)).toBe(126000);
+  });
+});
+
+describe('wizard slot progression to 9th level', () => {
+  it('opens each higher tier on schedule', () => {
+    expect(wizardSpellSlotsForLevel(7)[4]).toBe(1);
+    expect(wizardSpellSlotsForLevel(9)[5]).toBe(1);
+    expect(wizardSpellSlotsForLevel(11)[6]).toBe(1);
+    expect(wizardSpellSlotsForLevel(13)[7]).toBe(1);
+    expect(wizardSpellSlotsForLevel(15)[8]).toBe(1);
+    expect(wizardSpellSlotsForLevel(17)[9]).toBe(1);
+  });
+
+  it('reaches the full L20 table', () => {
+    expect(wizardSpellSlotsForLevel(20)).toEqual({
+      1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1,
+    });
+  });
+
+  it('leaves the cap-8 band untouched', () => {
+    expect(wizardSpellSlotsForLevel(5)).toEqual({ 1: 4, 2: 3, 3: 2 });
+  });
+});
+
+describe('wizard spell-learn cadence', () => {
+  it('opens a picker tier on each odd level from 3 to 17', () => {
+    expect(wizardSpellLearnTierForLevel(3)).toBe(2);
+    expect(wizardSpellLearnTierForLevel(7)).toBe(4);
+    expect(wizardSpellLearnTierForLevel(9)).toBe(5);
+    expect(wizardSpellLearnTierForLevel(17)).toBe(9);
+  });
+
+  it('opens no picker on even levels', () => {
+    expect(wizardSpellLearnTierForLevel(10)).toBeNull();
+    expect(wizardSpellLearnTierForLevel(16)).toBeNull();
+  });
+
+  it('offers real picks at every authored higher tier', () => {
+    const wiz = charAt('wizard', 1);
+    const fresh: Character = { ...wiz, resources: { ...wiz.resources, knownSpells: [] } };
+    for (const tier of [4, 5, 6, 7, 8, 9] as const) {
+      expect(availableWizardSpellsForLearn(fresh, tier).length).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('learns a 9th-level capstone when one is rolled headless at L17', () => {
+    const wiz = charAt('wizard', 16);
+    const cleared: Character = { ...wiz, resources: { ...wiz.resources, knownSpells: [] } };
+    const after = simulateLevelUp(cleared); // L16 → L17 opens the 9th tier
+    const known = after.resources.knownSpells ?? [];
+    expect(known.some((id) => id === 'unmake' || id === 'apotheosis')).toBe(true);
+  });
+});
+
+describe('high-level martial feature grants', () => {
+  it('gives the Fighter a third attack at 11 and a fourth at 20', () => {
+    expect(maxAttacksPerAction(charAt('fighter', 8))).toBe(2);
+    expect(maxAttacksPerAction(charAt('fighter', 11))).toBe(3);
+    expect(maxAttacksPerAction(charAt('fighter', 20))).toBe(4);
+  });
+
+  it('does not hand a third attack to non-fighters', () => {
+    expect(maxAttacksPerAction(charAt('ranger', 20))).toBe(2);
+  });
+
+  it('deepens Barbarian rage damage at 15 and 20', () => {
+    // Berserker (first archetype) adds +2 Frenzy from L3, so the L9 base is 4.
+    expect(rageDamageBonus(charAt('barbarian', 9))).toBe(4);
+    expect(rageDamageBonus(charAt('barbarian', 15))).toBe(6); // + persistent-rage
+    expect(rageDamageBonus(charAt('barbarian', 20))).toBe(9); // + primal-champion
+  });
+
+  it('adds a Cunning Action to the Rogue at 9', () => {
+    // Thief (first archetype) already grants a second use from L3.
+    expect(rogueCunningActionMax(charAt('rogue', 8))).toBe(2);
+    expect(rogueCunningActionMax(charAt('rogue', 9))).toBe(3);
+  });
+
+  it('grants the capstone mechanics at the right level', () => {
+    expect(characterHasMechanic(charAt('rogue', 19), 'death-strike')).toBe(false);
+    expect(characterHasMechanic(charAt('rogue', 20), 'death-strike')).toBe(true);
+    expect(characterHasMechanic(charAt('ranger', 20), 'foe-slayer')).toBe(true);
+    expect(characterHasMechanic(charAt('fighter', 9), 'weapon-mastery')).toBe(true);
+    expect(characterHasMechanic(charAt('fighter', 8), 'weapon-mastery')).toBe(false);
   });
 });

@@ -1,8 +1,9 @@
 import type { DiceRoller } from '../dice';
 import { parseDiceExpression } from '../dice';
-import type { Character } from '../../types/character';
+import type { Character, SpellSlotLevel } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import { abilityModifier } from '../../types/abilities';
+import { getSpell } from '../../content/spells';
 import { effectiveAbilityScores, characterHasMechanic, isRaging } from '../character/derived';
 import { baneQuirkCount } from '../character/quirks';
 import { isNonStackingBlessing, blessingSignature } from '../character/blessings';
@@ -139,6 +140,33 @@ function aoeWasted(live: MonsterCombatant[], type: 'fire' | 'lightning'): boolea
 function knows(character: Character, spellId: string): boolean {
   return (character.resources.knownSpells ?? []).includes(spellId);
 }
+
+/**
+ * First spell in the ranked list the wizard both knows and can pay for right now
+ * (a free slot at its tier). Used to reach for the biggest affordable working —
+ * the highest AoE for a crowd, the heaviest nuke for a boss — before falling
+ * back to the cap-8 kit.
+ */
+function bestAffordable(character: Character, ids: readonly string[]): string | null {
+  for (const id of ids) {
+    if (!knows(character, id)) continue;
+    const lvl = getSpell(id).level;
+    if (lvl === 0 || slotsAt(character, lvl as SpellSlotLevel) > 0) return id;
+  }
+  return null;
+}
+
+/** AoE blasts, biggest dice first. */
+const HIGH_AOE_PRIORITY = [
+  'cataclysm',
+  'stormcrash',
+  'sunfire-burst',
+  'glacial-cone',
+  'rime-blast',
+] as const;
+
+/** Single-target nukes, biggest first. */
+const HIGH_NUKE_PRIORITY = ['wither', 'dissolution', 'void-ray', 'force-lance'] as const;
 
 /** Index of the strongest healing consumable in inventory, or -1. */
 function bestHealPotionIdx(character: Character): number {
@@ -337,6 +365,26 @@ function chooseWizardAction(
     if (knows(character, 'mirror-image')) return { kind: 'cast', spellId: 'mirror-image' };
   }
 
+  // Boss finisher: against a genuinely beefy single threat, reach for the
+  // deepest working first — transform to grind it down, unmake to nuke-and-lock
+  // it, or the biggest affordable single-target nuke. Spending the high slots on
+  // the room's real threat is the correct slot economy.
+  if (beefy && beefy.instance.hp.current >= BOSS_NUKE_HP) {
+    if (
+      actionFree &&
+      knows(character, 'apotheosis') &&
+      slotsAt(character, 9) > 0 &&
+      (character.resources.ascendantRoundsRemaining ?? 0) === 0
+    ) {
+      return { kind: 'cast', spellId: 'apotheosis' };
+    }
+    if (knows(character, 'unmake') && slotsAt(character, 9) > 0) {
+      return { kind: 'cast', spellId: 'unmake', targetId: beefy.id };
+    }
+    const nuke = bestAffordable(character, HIGH_NUKE_PRIORITY);
+    if (nuke) return { kind: 'cast', spellId: nuke, targetId: beefy.id };
+  }
+
   // AoE when the room is crowded.
   if (enemyCount >= 3) {
     if (knows(character, 'fireball') && slotsAt(character, 3) > 0 && !aoeWasted(live, 'fire')) {
@@ -349,6 +397,9 @@ function chooseWizardAction(
     ) {
       return { kind: 'cast', spellId: 'lightning-bolt', targetId: anchor };
     }
+    // Fall back to a higher-tier blast when the 3rd-level slots are spent.
+    const aoe = bestAffordable(character, HIGH_AOE_PRIORITY);
+    if (aoe) return { kind: 'cast', spellId: aoe, targetId: anchor };
   }
   if (
     enemyCount >= 2 &&

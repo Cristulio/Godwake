@@ -12,6 +12,21 @@ import { castBlur } from './blur';
 import { castMirrorImage } from './mirrorImage';
 import { castFireball } from './fireball';
 import { castLightningBolt } from './lightningBolt';
+import {
+  castCataclysm,
+  castGlacialCone,
+  castRimeBlast,
+  castStormcrash,
+  castSunfireBurst,
+} from './highLevelBlasts';
+import {
+  castDissolution,
+  castForceLance,
+  castSoulSnare,
+  castVoidRay,
+  castWither,
+} from './highLevelStrikes';
+import { castApotheosis, castUnmake } from './ninthLevel';
 
 /**
  * Cast a known spell. Spell-by-spell switch — slot consumption and action
@@ -49,6 +64,30 @@ export function castSpell(ctx: CastSpellContext): CastResult {
       return castFireball(ctx);
     case 'lightning-bolt':
       return castLightningBolt(ctx);
+    case 'rime-blast':
+      return castRimeBlast(ctx);
+    case 'force-lance':
+      return castForceLance(ctx);
+    case 'glacial-cone':
+      return castGlacialCone(ctx);
+    case 'void-ray':
+      return castVoidRay(ctx);
+    case 'sunfire-burst':
+      return castSunfireBurst(ctx);
+    case 'dissolution':
+      return castDissolution(ctx);
+    case 'stormcrash':
+      return castStormcrash(ctx);
+    case 'soul-snare':
+      return castSoulSnare(ctx);
+    case 'cataclysm':
+      return castCataclysm(ctx);
+    case 'wither':
+      return castWither(ctx);
+    case 'apotheosis':
+      return castApotheosis(character, state);
+    case 'unmake':
+      return castUnmake(ctx);
     default:
       // Exhaustive guard — if a new effectKey is added, this branch becomes
       // unreachable but keeps the switch honest.

@@ -84,6 +84,78 @@ export const FIGHTER: Class = ClassSchema.parse({
         mechanicKey: 'asi',
       },
     ],
+    '9': [
+      {
+        id: 'weapon-mastery',
+        name: 'Weapon Mastery',
+        description:
+          'Years on the line sharpen every motion — your weapon attacks gain +1 to hit and +1 damage. A flat edge that compounds with everything else you swing.',
+        mechanicKey: 'weapon-mastery',
+      },
+    ],
+    '11': [
+      {
+        id: 'extra-attack-2',
+        name: 'Relentless Assault',
+        description:
+          'Your Attack action now strikes three times instead of twice. The pressure never lets up.',
+        mechanicKey: 'extra-attack-2',
+      },
+    ],
+    '12': [
+      {
+        id: 'asi-12',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '14': [
+      {
+        id: 'asi-14',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each. A soldier\'s extra dedication to the craft.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '16': [
+      {
+        id: 'asi-16',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '17': [
+      {
+        id: 'improved-action-surge',
+        name: 'Improved Action Surge',
+        description:
+          'Your second wind of momentum runs deeper — you can call on Action Surge twice per combat instead of once.',
+        mechanicKey: 'improved-action-surge',
+      },
+    ],
+    '19': [
+      {
+        id: 'asi-19',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '20': [
+      {
+        id: 'extra-attack-3',
+        name: 'Unstoppable',
+        description:
+          'The pinnacle of the soldier\'s craft: your Attack action strikes four times. Few things on two legs survive a full turn of it.',
+        mechanicKey: 'extra-attack-3',
+      },
+    ],
   },
   preset: {
     characterName: 'Sir Brick',

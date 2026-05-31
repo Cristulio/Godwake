@@ -1,5 +1,5 @@
 import type { DiceRoller } from '../../dice';
-import type { Character } from '../../../types/character';
+import type { Character, SpellSlotLevel } from '../../../types/character';
 import type {
   CombatState,
   MonsterCombatant,
@@ -15,6 +15,7 @@ import {
 } from '../../character/derived';
 import { characterCampBoonMods } from '../../character/campBoons';
 import { characterAffixMods } from '../../items/affixMods';
+import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchSpellSlots } from '../types';
 import { attachCombatVfx } from '../vfx';
@@ -73,9 +74,11 @@ export function spellSaveDC(character: Readonly<Character>): number {
 
 export function spellDamageBonus(character: Readonly<Character>): number {
   const boonBonus = characterCampBoonMods(character).spellDamageBonus ?? 0;
+  const ascendantBonus = isAscendant(character) ? APOTHEOSIS_BONUS_DAMAGE : 0;
   return (
     (character.permanentBonuses?.spellDamage ?? 0) +
     boonBonus +
+    ascendantBonus +
     characterAffixMods(character).spellDamageBonus
   );
 }
@@ -92,7 +95,7 @@ export function attachSpellEffect(
 /**
  * Returns the count of slots available at level n, treating undefined as 0.
  */
-export function slotsAt(character: Readonly<Character>, level: 1 | 2 | 3 | 4): number {
+export function slotsAt(character: Readonly<Character>, level: SpellSlotLevel): number {
   return character.resources.spellSlots?.[level] ?? 0;
 }
 
@@ -102,7 +105,7 @@ export function slotsAt(character: Readonly<Character>, level: 1 | 2 | 3 | 4): n
  */
 export function consumeSlot(
   character: Readonly<Character>,
-  level: 1 | 2 | 3 | 4,
+  level: SpellSlotLevel,
 ): Character {
   const current = character.resources.spellSlots?.[level] ?? 0;
   return patchSpellSlots(character, { [level]: Math.max(0, current - 1) });
@@ -147,7 +150,7 @@ export function canCastSpell(
     return { ok: false, reason: 'Action already used.' };
   }
   if (spell.level === 0) return { ok: true };
-  const lvl = spell.level as 1 | 2 | 3;
+  const lvl = spell.level as SpellSlotLevel;
   if (slotsAt(character, lvl) <= 0) return { ok: false, reason: `No level-${lvl} slot remaining.` };
   return { ok: true };
 }

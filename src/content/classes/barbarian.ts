@@ -83,6 +83,69 @@ export const BARBARIAN: Class = ClassSchema.parse({
         mechanicKey: 'asi',
       },
     ],
+    '9': [
+      {
+        id: 'brutal-critical',
+        name: 'Brutal Critical',
+        description:
+          'When you land a critical hit, you roll one extra weapon die on top of the doubled dice — the savage spike that ends fights early.',
+        mechanicKey: 'brutal-critical',
+      },
+    ],
+    '11': [
+      {
+        id: 'relentless-rage',
+        name: 'Relentless Rage',
+        description:
+          'The fury no longer burns out fast — your Rage now holds for two rounds longer, carrying through the long fights that used to outlast it.',
+        mechanicKey: 'relentless-rage',
+      },
+    ],
+    '12': [
+      {
+        id: 'asi-12',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '15': [
+      {
+        id: 'persistent-rage',
+        name: 'Persistent Rage',
+        description:
+          'The wells of your anger run deeper than ever — while raging, every melee hit lands for an additional +2 damage.',
+        mechanicKey: 'persistent-rage',
+      },
+    ],
+    '16': [
+      {
+        id: 'asi-16',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '19': [
+      {
+        id: 'asi-19',
+        name: 'Ability Score Improvement',
+        description:
+          'You can increase one ability score by 2, or two ability scores by 1 each.',
+        mechanicKey: 'asi',
+      },
+    ],
+    '20': [
+      {
+        id: 'primal-champion',
+        name: 'Primal Champion',
+        description:
+          'You become the apex of the primal path — while raging, your melee hits land for a further +3 damage. The fury is no longer a state you enter; it is what you are.',
+        mechanicKey: 'primal-champion',
+      },
+    ],
   },
   preset: {
     characterName: 'Korrek Bloodmane',

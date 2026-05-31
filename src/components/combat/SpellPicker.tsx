@@ -1,8 +1,20 @@
-import type { Character } from '../../types/character';
+import type { Character, SpellSlotLevel } from '../../types/character';
 import type { Spell } from '../../schemas/spell';
 import { getSpell } from '../../content/spells';
 import { Button } from '../ui/Button';
 import { canCastSpell, slotsAt } from '../../engine/combat/spells';
+import { wizardSpellSlotsForLevel } from '../../engine/character/actions';
+
+const SLOT_TIERS: SpellSlotLevel[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+function ordinal(n: number): string {
+  switch (n) {
+    case 1: return '1st';
+    case 2: return '2nd';
+    case 3: return '3rd';
+    default: return `${n}th`;
+  }
+}
 
 function spellScopeLabel(target: Spell['target']): string {
   switch (target) {
@@ -21,6 +33,10 @@ interface SpellPickerProps {
 
 export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
   const known = character.resources.knownSpells ?? [];
+  const maxSlots = wizardSpellSlotsForLevel(character.level);
+  const slotSummary = SLOT_TIERS.filter((lvl) => (maxSlots[lvl] ?? 0) > 0)
+    .map((lvl) => `${ordinal(lvl)}: ${slotsAt(character, lvl)}`)
+    .join(' · ');
 
   return (
     <div
@@ -35,7 +51,7 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
           ✦ Cast a Spell
         </div>
         <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest mb-3">
-          Slots — 1st: {slotsAt(character, 1)} · 2nd: {slotsAt(character, 2)} · 3rd: {slotsAt(character, 3)}
+          Slots — {slotSummary}
         </div>
         {known.length === 0 ? (
           <div className="text-[var(--color-text-secondary)] text-sm italic mb-4">

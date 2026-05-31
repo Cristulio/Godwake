@@ -6,6 +6,12 @@ export const SpellLevelSchema = z.union([
   z.literal(1),
   z.literal(2),
   z.literal(3),
+  z.literal(4),
+  z.literal(5),
+  z.literal(6),
+  z.literal(7),
+  z.literal(8),
+  z.literal(9),
 ]);
 export type SpellLevel = z.infer<typeof SpellLevelSchema>;
 
@@ -37,6 +43,19 @@ export const SpellEffectKeySchema = z.enum([
   'mirror-image',
   'fireball',
   'lightning-bolt',
+  // Higher-tier workings (level 4-9) authored for the L8→20 progression.
+  'rime-blast', // 4: cold AoE
+  'force-lance', // 4: single-target force, auto-lands
+  'glacial-cone', // 5: cold AoE
+  'void-ray', // 5: single-target necrotic ray (attack roll)
+  'sunfire-burst', // 6: fire AoE
+  'dissolution', // 6: single-target force, CON save for half
+  'stormcrash', // 7: lightning AoE
+  'soul-snare', // 7: single-target binding (paralysis)
+  'cataclysm', // 8: fire AoE
+  'wither', // 8: single-target necrotic + weaken
+  'apotheosis', // 9: transform-self power buff (capstone)
+  'unmake', // 9: remake-the-enemy (capstone)
 ]);
 export type SpellEffectKey = z.infer<typeof SpellEffectKeySchema>;
 

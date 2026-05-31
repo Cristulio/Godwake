@@ -459,10 +459,11 @@ describe('Boss legendary resistance vs Hold Person', () => {
 
 describe('Wizard — spell-slot table and level-up', () => {
   it('scales slots up at L3 (adds 2nd-level) and L5 (adds 3rd-level)', () => {
-    expect(wizardSpellSlotsForLevel(1)).toEqual({ 1: 2, 2: 0, 3: 0, 4: 0 });
-    expect(wizardSpellSlotsForLevel(2)).toEqual({ 1: 3, 2: 0, 3: 0, 4: 0 });
-    expect(wizardSpellSlotsForLevel(3)).toEqual({ 1: 4, 2: 2, 3: 0, 4: 0 });
-    expect(wizardSpellSlotsForLevel(5)).toEqual({ 1: 4, 2: 3, 3: 2, 4: 0 });
+    // The table is sparse now — unlocked tiers only; missing reads as 0.
+    expect(wizardSpellSlotsForLevel(1)).toEqual({ 1: 2 });
+    expect(wizardSpellSlotsForLevel(2)).toEqual({ 1: 3 });
+    expect(wizardSpellSlotsForLevel(3)).toEqual({ 1: 4, 2: 2 });
+    expect(wizardSpellSlotsForLevel(5)).toEqual({ 1: 4, 2: 3, 3: 2 });
   });
 
   it('applyLevelUp refills slots to the new level table', () => {

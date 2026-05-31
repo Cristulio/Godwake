@@ -23,6 +23,18 @@ function spellScopeLabel(target: Spell['target']): string {
   }
 }
 
+/** "1st", "2nd", "3rd", "4th"… for the slot-tier reveal copy. */
+function ordinal(n: number): string {
+  const tens = n % 100;
+  if (tens >= 11 && tens <= 13) return `${n}th`;
+  switch (n % 10) {
+    case 1: return `${n}st`;
+    case 2: return `${n}nd`;
+    case 3: return `${n}rd`;
+    default: return `${n}th`;
+  }
+}
+
 const SCHOOL_LABEL: Record<Spell['school'], string> = {
   abjuration: 'Abjuration',
   conjuration: 'Conjuration',
@@ -379,9 +391,8 @@ export function LevelUpScreen() {
             tone="warm"
           >
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
-              {spellLearnTier === 2
-                ? "Your first 2nd-level slot opens — a spell to fill it."
-                : "Your first 3rd-level slot opens — a spell to fill it."}
+              {spellLearnTier !== null &&
+                `Your first ${ordinal(spellLearnTier)}-level slot opens — a working to fill it.`}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {availableSpells.map((sp) => {

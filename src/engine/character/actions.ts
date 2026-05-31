@@ -22,37 +22,82 @@ function fighterActionSurgeMax(character: Character): number {
   return 0;
 }
 
-/** Rounds a Rage burst lasts once entered — a short window, not a whole-fight state. */
+/** Base rounds a Rage burst lasts once entered — a short window, not a whole-fight state. */
 export const RAGE_ROUNDS = 3;
 
-/** Flat bonus damage on a melee hit while raging. Berserker's Frenzy adds more. */
-export function rageDamageBonus(character: Character): number {
-  if (character.classId !== 'barbarian') return 0;
-  const frenzy = characterHasMechanic(character, 'frenzy') ? 2 : 0;
-  return 2 + frenzy;
-}
-
-/** Rogue: Cunning Action uses per combat. Thief (L3+) gets a second use via Fast Hands. */
-export function rogueCunningActionMax(character: Character): number {
-  if (character.classId !== 'rogue') return 0;
-  const base = character.subclassId === 'thief' && character.level >= 3 ? 2 : 1;
-  return base + (character.permanentBonuses?.cunningAction ?? 0);
+/**
+ * Rounds the Rage holds for this barbarian. Relentless Rage (L11) deepens the
+ * fury so it carries through longer fights.
+ */
+export function rageRoundsFor(character: Character): number {
+  return RAGE_ROUNDS + (characterHasMechanic(character, 'relentless-rage') ? 2 : 0);
 }
 
 /**
- * Wizard slot table. Scaled-down 5e curve so the L1-5 ramp lands cleanly
- * inside Godwake's 8-level cap. Levels past 5 add slowly — full RAW gets
- * silly at this scope.
- *
- *   L1: 2/0/0    L2: 3/0/0    L3: 4/2/0    L4: 4/3/0    L5: 4/3/2
- *   L6: 4/3/3    L7: 4/3/3    L8: 4/3/3
+ * Flat bonus damage on a melee hit while raging. Berserker's Frenzy, plus the
+ * high-level Rage milestones (Persistent Rage L15, Primal Champion L20), each
+ * deepen the cut — a raging capstone barbarian hits substantially harder.
  */
+export function rageDamageBonus(character: Character): number {
+  if (character.classId !== 'barbarian') return 0;
+  const frenzy = characterHasMechanic(character, 'frenzy') ? 2 : 0;
+  const persistent = characterHasMechanic(character, 'persistent-rage') ? 2 : 0;
+  const primal = characterHasMechanic(character, 'primal-champion') ? 3 : 0;
+  return 2 + frenzy + persistent + primal;
+}
+
+/** Rogue: Cunning Action uses per combat. Thief (L3+) gets a second use via Fast Hands; Cunning Mastery (L11) adds another. */
+export function rogueCunningActionMax(character: Character): number {
+  if (character.classId !== 'rogue') return 0;
+  const base = character.subclassId === 'thief' && character.level >= 3 ? 2 : 1;
+  const mastery = characterHasMechanic(character, 'cunning-mastery') ? 1 : 0;
+  return base + mastery + (character.permanentBonuses?.cunningAction ?? 0);
+}
+
+/**
+ * Wizard slot table — the full-caster curve across the L1→20 climb. The L1-6
+ * band is unchanged from the old cap-8 table (it already matched the standard
+ * full-caster progression); from L7 the higher tiers open as the soul deepens,
+ * carrying the wizard to 9th-level workings at L17. Each row is the refilled
+ * pool at that level; missing tiers read as 0.
+ *
+ *   L1  2                     L11 4/3/3/3/2/1
+ *   L2  3                     L12 4/3/3/3/2/1
+ *   L3  4/2                   L13 4/3/3/3/2/1/1
+ *   L4  4/3                   L14 4/3/3/3/2/1/1
+ *   L5  4/3/2                 L15 4/3/3/3/2/1/1/1
+ *   L6  4/3/3                 L16 4/3/3/3/2/1/1/1
+ *   L7  4/3/3/1               L17 4/3/3/3/2/1/1/1/1
+ *   L8  4/3/3/2               L18 4/3/3/3/3/1/1/1/1
+ *   L9  4/3/3/3/1             L19 4/3/3/3/3/2/1/1/1
+ *   L10 4/3/3/3/2             L20 4/3/3/3/3/2/2/1/1
+ */
+const WIZARD_SLOT_TABLE: Record<number, SpellSlots> = {
+  1: { 1: 2 },
+  2: { 1: 3 },
+  3: { 1: 4, 2: 2 },
+  4: { 1: 4, 2: 3 },
+  5: { 1: 4, 2: 3, 3: 2 },
+  6: { 1: 4, 2: 3, 3: 3 },
+  7: { 1: 4, 2: 3, 3: 3, 4: 1 },
+  8: { 1: 4, 2: 3, 3: 3, 4: 2 },
+  9: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 1 },
+  10: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  11: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1 },
+  12: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1 },
+  13: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1 },
+  14: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1 },
+  15: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1 },
+  16: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1 },
+  17: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1, 9: 1 },
+  18: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 1, 7: 1, 8: 1, 9: 1 },
+  19: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 1, 8: 1, 9: 1 },
+  20: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1 },
+};
+
 export function wizardSpellSlotsForLevel(level: number): SpellSlots {
-  if (level >= 5) return { 1: 4, 2: 3, 3: level >= 6 ? 3 : 2, 4: 0 };
-  if (level === 4) return { 1: 4, 2: 3, 3: 0, 4: 0 };
-  if (level === 3) return { 1: 4, 2: 2, 3: 0, 4: 0 };
-  if (level === 2) return { 1: 3, 2: 0, 3: 0, 4: 0 };
-  return { 1: 2, 2: 0, 3: 0, 4: 0 };
+  const clamped = Math.max(1, Math.min(20, Math.floor(level)));
+  return { ...WIZARD_SLOT_TABLE[clamped] };
 }
 
 /**
