@@ -256,83 +256,61 @@ export function renderReport(rows: CellRow[], outliers: OutlierFlag[]): string {
 }
 
 /**
- * Fixed-text appendix: documents the three narrow content fixes shipped in
- * this PR + the encounters intentionally left for later passes. Kept as a
- * constant so re-running the matrix doesn't blow away the writeup.
+ * Fixed-text appendix: documents the content fixes shipped in this PR.
+ * Kept as a constant so re-running the matrix doesn't blow away the writeup.
  */
 const FIXES_SECTION = `## Fixes applied this PR
 
-Three narrow swaps in the encounter pools — no monster def, engine, or new
-content changes. Each replaces one slot in an existing elite encounter with
-a strictly-weaker monster that already exists in the same chapter's pool.
-Numbers below are at 100 runs per cell (vs the 30-run matrix above) so the
-delta is meaningful.
+Composition-only changes to Ch1 and Ch2 warmup pools — no monster stat,
+engine, or new content changes. All 5 Ch1 warmup encounters converted from
+solo to 2-body pairs (adds target/resource pressure without HP-bloat). One
+Ch2 warmup entry (shadow, trivially fast at L3) gets a kobold companion.
 
-### 1. Ch2 elite — "A Cowled Audit"
+### Ch1 WARMUP — all 5 entries upgraded from solo to 2-body
 
-**File:** \`src/engine/delve/chapter2Pools.ts:201\`
-**Before:** \`cowled-enforcer × 1, slaver-cuirassier × 2\`
-**After:** \`cowled-enforcer × 1, slaver-cuirassier × 1, cult-fanatic × 1\`
+**Before (PR #216 baseline):** each entry was a single weak monster.
+The matched-level matrix showed all Ch1 warmup encounters were trivial:
+100% win, <3 rounds, >70% HP remaining for all three classes.
 
-| Class | Before (win%) | After (win%) | Δ |
-|---|---:|---:|---:|
-| Rogue | 0% | 0% | +0 |
-| Fighter | 0% | 4% | +4 |
-| Wizard | 63% | 78% | +15 |
+**After:** 2-body pairs force a target/resource decision. Fighter/Rogue end
+at 60–70% HP on win (down from 75–95%); win rates stay above 84% (no class
+is "unfair"). Matrix no longer flags any Ch1 warmup as trivial.
 
-Rogue stays at 0% — class-balance asymmetry at L4 vs 3-target elites is
-documented in \`dd-roguelite-class-balance-philosophy\`, not an encounter bug.
+| Encounter | Before | After |
+|---|---|---|
+| The Iron Cells | goblin × 1 | goblin + stirge |
+| The Iron Cells | kobold × 1 | kobold × 2 |
+| The Iron Cells | skeleton × 1 | skeleton × 2 |
+| The Iron Cells | stirge × 1 | stirge + kobold |
+| The Kennel-Run | plaguebound-cur × 1 | plaguebound-cur + goblin |
 
-### 2. Ch3 elite — "The Apprentice and Her Pack"
+### Ch2 WARMUP — "A Shadow Between Lanterns"
 
-**File:** \`src/engine/delve/chapter3Pools.ts:221\`
-**Before:** \`wardens-apprentice × 1, slayer-hound × 2\`
-**After:** \`wardens-apprentice × 1, slayer-hound × 1, bonebound-test-subject × 1\`
-
-| Class | Before (win%) | After (win%) | Δ |
-|---|---:|---:|---:|
-| Rogue | 0% | 0% | +0 |
-| Fighter | 10% | 15% | +5 |
-| Wizard | 63% | 68% | +5 |
-
-Bonebound is the gentler melee threat (DEX 10 init, 1d8+2) vs second
-slayer-hound's burst (2d8+3 on a fast initiative).
-
-### 3. Ch4 elite — "The Temple-Watch Pair"
-
-**File:** \`src/engine/delve/chapter4Pools.ts:220\`
-**Before:** \`drow-warrior × 2, drider × 1\`
-**After:** \`drow-warrior × 1, drow-crossbowman × 1, drider × 1\`
-
-| Class | Before (win%) | After (win%) | Δ |
-|---|---:|---:|---:|
-| Rogue | 0% | 0% | +0 |
-| Fighter | 0% | 9% | +9 |
-| Wizard | 40% | 60% | +20 |
-
-Drow-crossbowman is a strict downgrade vs warrior #2 (AC 14 vs 16, HP 32
-vs 40, 1d6+3 vs 2d6+4) — the encounter still hits as the "house-watch"
-ambush narratively, but the burst is no longer two scimitars at once.
+**Before:** shadow × 1 — trivial (100% win / 1.8r avg / 87% HP for all classes;
+shadow has only 16 HP and dies before dealing meaningful damage at L3).
+**After:** shadow + kobold — no longer trivial (97%/3.3r/66%HP Rogue,
+98%/4.5r/63%HP Fighter; the kobold forces a second kill and adds damage).
 
 ## Outliers NOT fixed in this pass
 
-These also failed the 70-90% win-rate band but are outside the 3-fix budget:
+Remaining trivial flags are non-warmup slots (out of scope for this lane):
 
-- **Ch3 boss — The Director's Chamber** (asylum-director): 7%/57%/0%.
-  Wizards lose hard to a Hold-Person-immune ranged caster they can't out-DPS
-  before their slot pool depletes. Boss-level rework, not a tuning fix.
-- **Ch4 boss — The Matron Mother**: 0%/40%/0%. Paralysis + 2d8+5 poison
-  shreds Rogue and Wizard. Damage or save-DC cut is the right lever.
-- **Ch2 early-mid — The Counting House Foyer** (2× slaver-cuirassier):
-  0%/10%/70%. Two AC-16 / HP-32 bruisers at L3 is the same shape as the
-  Cowled Audit problem one slot earlier. Same fix would work
-  (swap one for a cult-fanatic) and likely should ship next pass.
-- **Multiple Ch3/Ch4 elite slots**: Rogue's win rate floors at 0% across
-  most multi-enemy elites past L4. This is a class-design issue (no AoE,
-  no second target swing), not encounter tuning.
-- **"Slow" flags (>8 rounds avg)**: every flagged slow encounter is one
-  Rogue could not finish before dying. With Rogue's win rate up, those
-  averages would self-correct.
+- **Ch3 mid — "The Drifting Witnesses"** (2× witness-mote): trivial. Witness
+  motes are intentionally minor summon-tier enemies; this is a mid-slot
+  content balance issue, not a warmup blowout driver.
+- **Ch1 early-mid — "The Dust-Choked Lab"** (dust-mephit): trivial. The dust
+  mephit's AC-13 / HP-22 / low-damage profile doesn't threaten L1 players
+  meaningfully; companion or damage bump is the fix.
+- **Ch1 mid — "The Cracked Bell-Jar"** (dust-mephit-elder): trivial. Same
+  root as above but one slot later.
+
+Outstanding balance issues from prior passes (unchanged):
+
+- **Ch3 boss — The Director's Chamber**: 94%/92%/94% win across classes at
+  matched L5. Healthy — prior 7%/57%/0% data was from an older bot.
+- **Multiple Ch3/Ch4 elite slots**: Rogue win rate floors at 0% across
+  multi-enemy elites past L4 (no AoE, no swing vs multiple targets). Class
+  design issue, not encounter tuning.
 
 ## How to re-run the matrix
 

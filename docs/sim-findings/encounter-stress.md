@@ -8,218 +8,227 @@ Cell format: `winRate% / avgRounds / avgHP%-on-win`.
 
 | Ch | Slot | Lv | Encounter | Composition | Rogue | Fighter | Wizard |
 |---:|---|---:|---|---|---|---|---|
-| 1 | warmup | 1 | The Iron Cells | goblin | 97%/3.8r/73%HP | 100%/2.2r/88%HP | 100%/1.1r/91%HP |
-| 1 | warmup | 1 | The Iron Cells | kobold | 100%/1.7r/85%HP | 100%/1.6r/92%HP | 100%/1.0r/89%HP |
-| 1 | warmup | 1 | The Iron Cells | skeleton | 97%/4.4r/62%HP | 97%/3.9r/78%HP | 100%/2.3r/78%HP |
-| 1 | warmup | 1 | The Iron Cells | stirge | 100%/1.7r/81%HP | 100%/2.3r/80%HP | 100%/1.1r/85%HP |
-| 1 | warmup | 1 | The Iron Cells | bone-stalker | 70%/4.9r/59%HP | 97%/4.8r/62%HP | 97%/2.7r/84%HP |
-| 1 | early-mid | 1 | The Watch Post | goblin, kobold | 80%/4.8r/45%HP | 87%/4.4r/72%HP | 100%/1.4r/81%HP |
-| 1 | early-mid | 1 | The Kobold Den | 2× kobold | 93%/3.8r/62%HP | 93%/3.1r/79%HP | 100%/1.0r/91%HP |
-| 1 | early-mid | 1 | The Bone-Pit | skeleton, stirge | 73%/5.8r/46%HP | 80%/6.1r/56%HP | 90%/2.4r/65%HP |
-| 1 | early-mid | 1 | The Dust-Choked Lab | dust-mephit | 100%/2.0r/89%HP | 100%/1.7r/92%HP | 100%/1.0r/94%HP |
-| 1 | early-mid | 1 | The Tomb-Yard | skeleton, bone-stalker | 17%/5.0r/42%HP | 47%/6.5r/67%HP | 77%/3.7r/56%HP |
-| 1 | early-mid | 1 | The Stirge Loft | 2× stirge | 70%/4.1r/58%HP | 87%/4.3r/65%HP | 100%/1.1r/89%HP |
-| 1 | mid | 2 | The Vault Guardian | animated-armor | 97%/4.9r/59%HP | 100%/3.9r/76%HP | 100%/2.1r/79%HP |
-| 1 | mid | 2 | The Tomb-Larder | ghoul, skeleton | 43%/7.2r/29%HP | 90%/6.0r/59%HP | 93%/2.2r/70%HP |
-| 1 | mid | 2 | The Goblin Warren | 2× goblin, stirge | 17%/5.2r/16%HP | 73%/6.2r/45%HP | 100%/1.2r/70%HP |
-| 1 | mid | 2 | The Mephit Cages | imp, dust-mephit | 90%/5.0r/51%HP | 100%/3.8r/72%HP | 100%/1.0r/88%HP |
-| 1 | mid | 2 | The Cracked Bell-Jar | dust-mephit-elder | 90%/4.1r/60%HP | 97%/3.1r/74%HP | 100%/2.1r/75%HP |
-| 1 | mid | 2 | The Warden's Reserve | goblin-warden, goblin | 60%/6.2r/29%HP | 93%/6.5r/56%HP | 100%/1.8r/72%HP |
-| 1 | elite | 2 | The Bugbear's Trove | bugbear | 83%/6.2r/43%HP | 97%/4.8r/68%HP | 100%/2.9r/65%HP |
-| 1 | elite | 2 | The Hobgoblin Picket | hobgoblin, goblin | 57%/7.4r/36%HP | 87%/7.9r/57%HP | 100%/1.7r/78%HP |
-| 1 | elite | 2 | The Imp's Court | imp, 2× kobold | 57%/5.7r/27%HP | 100%/5.3r/53%HP | 97%/1.2r/77%HP |
-| 1 | elite | 2 | The Sentinel & The Hunger | animated-armor, ghoul | 47%/7.3r/30%HP | 67%/7.8r/43%HP | 100%/2.3r/66%HP |
-| 1 | elite | 2 | The Hangman's Pit | bone-stalker, skeleton | 43%/6.8r/28%HP | 80%/8.1r/34%HP | 90%/2.5r/64%HP |
-| 1 | elite | 2 | The Master-at-Arms | goblin-warden, hobgoblin | 30%/8.4r/23%HP | 70%/8.6r/47%HP | 97%/1.9r/72%HP |
-| 1 | elite | 2 | The Bugbear and His Hound | bugbear, ghoul | 30%/8.3r/25%HP | 70%/8.7r/51%HP | 97%/2.8r/62%HP |
-| 1 | boss | 3 | Ilyich's Hall (boss) | duergar-ilyich | 40%/7.5r/32%HP | 70%/8.7r/34%HP | 87%/4.2r/48%HP |
-| 2 | warmup | 3 | A Back Alley off the Trade Way | cult-fanatic | 100%/4.4r/66%HP | 100%/4.1r/74%HP | 100%/2.7r/81%HP |
-| 2 | warmup | 3 | The Customs Gate | slaver-cuirassier | 90%/7.8r/33%HP | 97%/7.9r/46%HP | 93%/4.2r/52%HP |
-| 2 | warmup | 3 | A Hobgoblin and His Knife | hobgoblin, cult-fanatic | 50%/9.8r/22%HP | 87%/9.0r/47%HP | 100%/2.3r/73%HP |
-| 2 | warmup | 3 | A Shadow Between Lanterns | shadow | 93%/3.7r/62%HP | 100%/3.5r/76%HP | 97%/2.2r/75%HP |
-| 2 | warmup | 3 | The Slaver Kennel | shadow-hound | 93%/4.2r/58%HP | 100%/3.6r/68%HP | 100%/2.1r/81%HP |
-| 2 | warmup | 3 | A Bandit Lookout | bandit-captain | 90%/6.8r/37%HP | 93%/6.6r/49%HP | 100%/2.9r/68%HP |
-| 2 | early-mid | 3 | The Counting House Foyer | 2× slaver-cuirassier | 0%/6.1r/0%HP | 10%/8.9r/17%HP | 70%/3.3r/49%HP |
-| 2 | early-mid | 3 | The Cult Cell | 2× cult-fanatic | 63%/9.3r/23%HP | 90%/9.3r/56%HP | 100%/2.1r/66%HP |
-| 2 | early-mid | 3 | A Hobgoblin Picket | hobgoblin, slaver-cuirassier | 7%/7.8r/31%HP | 47%/10.7r/32%HP | 93%/3.3r/58%HP |
-| 2 | early-mid | 3 | The Lamp-Yard | shadow, cult-fanatic | 53%/7.1r/33%HP | 87%/7.2r/60%HP | 97%/2.4r/67%HP |
-| 2 | early-mid | 3 | The Bandit Captain's Hold | bandit-captain, cult-fanatic | 30%/7.8r/13%HP | 77%/11.2r/25%HP | 90%/2.5r/65%HP |
-| 2 | early-mid | 3 | The Kennel-Gate | shadow-hound, slaver-cuirassier | 17%/7.5r/9%HP | 30%/10.1r/35%HP | 93%/3.7r/46%HP |
-| 2 | mid | 3 | The Cowled Patrol | cowled-enforcer, slaver-cuirassier | 7%/5.3r/38%HP | 40%/10.4r/34%HP | 90%/3.5r/46%HP |
-| 2 | mid | 3 | The Graveyard Wall | 2× shadow | 40%/5.8r/24%HP | 70%/7.5r/33%HP | 87%/2.4r/46%HP |
-| 2 | mid | 3 | The Cult Vigil | 2× cult-fanatic, hobgoblin | 3%/6.5r/25%HP | 40%/10.9r/27%HP | 100%/2.4r/56%HP |
-| 2 | mid | 3 | The Stockade Run | 2× slaver-cuirassier, cult-fanatic | 0%/4.8r/0%HP | 3%/7.5r/4%HP | 53%/3.5r/48%HP |
-| 2 | mid | 3 | The Captain and the Hound | bandit-captain, shadow-hound | 27%/6.9r/9%HP | 70%/9.0r/23%HP | 97%/2.8r/56%HP |
-| 2 | mid | 3 | The Lantern-Yard Patrol | shadow, slaver-cuirassier | 30%/7.5r/11%HP | 70%/10.5r/29%HP | 97%/3.9r/41%HP |
-| 2 | elite | 4 | A Cowled Audit | cowled-enforcer, slaver-cuirassier, cult-fanatic | 0%/4.9r/0%HP | 13%/8.4r/15%HP | 83%/3.4r/45%HP |
-| 2 | elite | 4 | The Twin Cowls | 2× cowled-enforcer | 10%/6.0r/3%HP | 33%/7.4r/41%HP | 87%/2.6r/49%HP |
-| 2 | elite | 4 | The Black Carriage | cult-fanatic, slaver-cuirassier, shadow | 10%/7.1r/3%HP | 23%/11.9r/27%HP | 93%/3.1r/49%HP |
-| 2 | elite | 4 | The Rooftop Chase | cowled-enforcer, hobgoblin | 30%/7.1r/16%HP | 67%/9.3r/34%HP | 100%/2.5r/58%HP |
-| 2 | elite | 4 | The Bandit Captain's Brace | bandit-captain, cult-fanatic, slaver-cuirassier | 0%/5.5r/0%HP | 10%/10.2r/3%HP | 63%/3.6r/45%HP |
-| 2 | elite | 4 | The Cowled Kennel-Master | cowled-enforcer, 2× shadow-hound | 3%/5.8r/3%HP | 23%/8.2r/31%HP | 83%/2.7r/57%HP |
-| 2 | boss | 4 | The Magistrate's Hall (boss) | athkatla-magistrate | 7%/7.8r/3%HP | 7%/8.7r/3%HP | 27%/7.3r/14%HP |
-| 3 | warmup | 4 | A Cell Door Left Ajar | mad-mage-prisoner | 100%/4.0r/71%HP | 100%/3.9r/79%HP | 100%/2.5r/84%HP |
-| 3 | warmup | 4 | The Stitched Subject | bonebound-test-subject | 100%/5.5r/53%HP | 100%/5.6r/67%HP | 100%/3.1r/69%HP |
-| 3 | warmup | 4 | The Kennel-Corridor | slayer-hound | 67%/6.3r/27%HP | 80%/6.7r/30%HP | 93%/4.7r/39%HP |
-| 3 | warmup | 4 | The Reciting Inmate | mad-mage-prisoner | 100%/3.8r/72%HP | 100%/3.9r/75%HP | 100%/2.5r/87%HP |
-| 3 | warmup | 4 | A Hound at the Cell-Block End | slayer-hound | 70%/6.5r/19%HP | 77%/7.6r/31%HP | 83%/4.6r/43%HP |
-| 3 | warmup | 4 | An Apprentice's First Patrol | wardens-apprentice | 37%/8.9r/21%HP | 63%/10.7r/23%HP | 90%/5.1r/43%HP |
-| 3 | early-mid | 4 | Two Inmates of the Same Cell | 2× mad-mage-prisoner | 87%/9.2r/25%HP | 100%/7.3r/60%HP | 100%/2.1r/75%HP |
-| 3 | early-mid | 4 | The Vivisection Ward | bonebound-test-subject, mad-mage-prisoner | 53%/9.8r/13%HP | 77%/11.4r/36%HP | 100%/2.6r/63%HP |
-| 3 | early-mid | 4 | The Bone Drift | 2× bonebound-test-subject | 30%/9.1r/25%HP | 67%/10.1r/32%HP | 97%/3.3r/54%HP |
-| 3 | early-mid | 4 | A Hound on a Long Leash | slayer-hound, mad-mage-prisoner | 7%/6.5r/18%HP | 47%/9.2r/17%HP | 83%/3.7r/43%HP |
-| 3 | early-mid | 4 | The Apprentice's Subject | wardens-apprentice, bonebound-test-subject | 3%/7.1r/3%HP | 10%/9.8r/5%HP | 83%/4.0r/40%HP |
-| 3 | early-mid | 4 | The Kennel-Pair | 2× slayer-hound | 7%/4.7r/3%HP | 7%/5.9r/13%HP | 43%/3.9r/27%HP |
-| 3 | mid | 5 | The Sage in the Reading Room | hollow-sage | 97%/6.5r/45%HP | 100%/3.5r/78%HP | 100%/4.7r/58%HP |
-| 3 | mid | 5 | The Warden's Apprentice | wardens-apprentice | 47%/8.6r/26%HP | 100%/5.5r/55%HP | 100%/4.8r/45%HP |
-| 3 | mid | 5 | The Pair of Hollows | 2× hollow-sage | 20%/7.4r/15%HP | 87%/7.2r/49%HP | 83%/4.5r/34%HP |
-| 3 | mid | 5 | The Hound-Pack | 2× slayer-hound | 0%/5.1r/0%HP | 67%/5.7r/45%HP | 60%/3.9r/39%HP |
-| 3 | mid | 5 | The Reading-Room Ambush | hollow-sage, mad-mage-prisoner | 43%/8.8r/21%HP | 100%/5.2r/62%HP | 97%/3.7r/61%HP |
-| 3 | mid | 5 | The Apprentice's Final | wardens-apprentice, 2× bonebound-test-subject | 0%/4.8r/0%HP | 23%/8.2r/20%HP | 87%/3.0r/47%HP |
-| 3 | elite | 5 | The Warden's Patrol | wardens-apprentice, slayer-hound | 0%/4.9r/0%HP | 70%/6.5r/38%HP | 70%/3.7r/54%HP |
-| 3 | elite | 5 | The Sage-Lock | hollow-sage, wardens-apprentice | 13%/8.2r/14%HP | 67%/6.9r/40%HP | 77%/4.4r/40%HP |
-| 3 | elite | 5 | The Test-Pit | hollow-sage, 2× bonebound-test-subject | 0%/5.8r/0%HP | 40%/8.3r/30%HP | 87%/2.9r/64%HP |
-| 3 | elite | 5 | The Apprentice and Her Pack | wardens-apprentice, slayer-hound, bonebound-test-subject | 0%/3.9r/0%HP | 7%/6.4r/2%HP | 83%/2.8r/56%HP |
-| 3 | elite | 5 | The Sages' Conference | 2× hollow-sage, wardens-apprentice | 0%/4.2r/0%HP | 23%/7.8r/16%HP | 60%/3.3r/47%HP |
-| 3 | elite | 5 | The Examiner and His Subject | hollow-sage, slayer-hound | 3%/5.6r/32%HP | 77%/6.4r/44%HP | 83%/4.1r/34%HP |
-| 3 | boss | 5 | The Director's Chamber (boss) | asylum-director | 7%/8.7r/3%HP | 57%/9.3r/14%HP | 3%/9.2r/3%HP |
-| 4 | warmup | 5 | The Tunnel-Watcher | drow-crossbowman | 97%/6.2r/50%HP | 100%/3.5r/75%HP | 100%/3.5r/65%HP |
-| 4 | warmup | 5 | The Lone House-Guard | drow-warrior | 33%/8.1r/15%HP | 97%/4.6r/62%HP | 80%/5.9r/25%HP |
-| 4 | warmup | 5 | A Brood Underfoot | 2× driderling | 63%/8.5r/17%HP | 100%/3.8r/72%HP | 97%/2.1r/67%HP |
-| 4 | warmup | 5 | The Cull-Brood | 3× driderling | 0%/6.4r/0%HP | 93%/6.4r/50%HP | 100%/1.8r/71%HP |
-| 4 | warmup | 5 | The Crossbow at the Turn | drow-crossbowman | 100%/5.3r/62%HP | 100%/3.4r/78%HP | 100%/3.5r/70%HP |
-| 4 | warmup | 5 | A Brood and a Bowman | drow-crossbowman, driderling | 40%/9.5r/15%HP | 100%/5.4r/62%HP | 100%/3.0r/58%HP |
-| 4 | early-mid | 6 | A Patrol of Two Houses | drow-warrior, drow-crossbowman | 0%/6.8r/0%HP | 83%/7.5r/35%HP | 83%/4.3r/33%HP |
-| 4 | early-mid | 6 | The Web-Mouth | 3× driderling | 3%/7.0r/2%HP | 100%/6.0r/60%HP | 97%/1.9r/77%HP |
-| 4 | early-mid | 6 | The Crossbow Pair | 2× drow-crossbowman | 40%/9.7r/9%HP | 100%/6.2r/57%HP | 100%/3.2r/50%HP |
-| 4 | early-mid | 6 | The Brood and Their Handler | drow-warrior, 2× driderling | 0%/5.4r/0%HP | 73%/9.2r/24%HP | 97%/3.5r/44%HP |
-| 4 | early-mid | 6 | A Mind-Touched Drow | mind-flayer-fragment, drow-warrior | 0%/5.4r/0%HP | 23%/7.5r/3%HP | 27%/6.2r/12%HP |
-| 4 | early-mid | 6 | Two Warriors at the Arch | 2× drow-warrior | 0%/5.1r/0%HP | 53%/7.8r/27%HP | 53%/4.5r/30%HP |
-| 4 | mid | 6 | The Lone Drider in the Rafters | drider | 80%/10.4r/23%HP | 100%/6.3r/56%HP | 73%/10.1r/19%HP |
-| 4 | mid | 6 | A Fragment from the Higher Tunnels | mind-flayer-fragment | 30%/9.4r/9%HP | 97%/6.2r/49%HP | 43%/9.7r/7%HP |
-| 4 | mid | 6 | The Spider-Watch | drow-warrior, 2× driderling | 0%/5.3r/0%HP | 60%/9.0r/32%HP | 93%/3.5r/46%HP |
-| 4 | mid | 6 | The Drider's Brood | drider, 2× driderling | 0%/6.6r/0%HP | 70%/11.4r/23%HP | 83%/5.8r/35%HP |
-| 4 | mid | 6 | The Twin Crossbowmen | 2× drow-crossbowman | 33%/9.3r/16%HP | 97%/6.6r/55%HP | 100%/3.0r/56%HP |
-| 4 | mid | 6 | A Web in the Audience-Hall | drider, drow-warrior | 0%/6.0r/0%HP | 50%/9.0r/26%HP | 23%/6.2r/26%HP |
-| 4 | elite | 6 | The Drider and the Bowman | drider, drow-crossbowman | 3%/8.7r/2%HP | 93%/9.6r/36%HP | 77%/7.2r/27%HP |
-| 4 | elite | 6 | The Fragment and Its Kept Drow | mind-flayer-fragment, drow-warrior | 0%/5.2r/0%HP | 23%/7.5r/15%HP | 23%/5.1r/31%HP |
-| 4 | elite | 6 | The Temple-Watch Pair | drow-warrior, drow-crossbowman, drider | 0%/4.3r/0%HP | 7%/7.7r/2%HP | 50%/3.8r/39%HP |
-| 4 | elite | 6 | The Crossfire | drider, 2× drow-crossbowman | 0%/5.4r/0%HP | 33%/9.8r/19%HP | 87%/4.4r/44%HP |
-| 4 | elite | 6 | The Fragment Among the Brood | mind-flayer-fragment, 3× driderling | 0%/4.2r/0%HP | 3%/6.6r/2%HP | 80%/5.2r/35%HP |
-| 4 | elite | 6 | The House-Watch in Full | drow-warrior, drow-crossbowman, drider | 0%/4.4r/0%HP | 7%/8.0r/22%HP | 50%/4.5r/38%HP |
-| 4 | boss | 7 | The Matron Mother's Audience (boss) | drow-matron-mother | 0%/9.9r/0%HP | 50%/11.8r/12%HP | 0%/9.7r/0%HP |
+| 1 | warmup | 1 | The Iron Cells | goblin, stirge | 88%/4.7r/71%HP | 88%/6.1r/62%HP | 98%/2.8r/88%HP |
+| 1 | warmup | 1 | The Iron Cells | 2× kobold | 93%/3.6r/68%HP | 97%/4.5r/75%HP | 100%/2.3r/90%HP |
+| 1 | warmup | 1 | The Iron Cells | 2× skeleton | 83%/4.9r/65%HP | 90%/6.0r/68%HP | 100%/3.0r/84%HP |
+| 1 | warmup | 1 | The Iron Cells | stirge, kobold | 97%/3.8r/69%HP | 95%/5.0r/69%HP | 100%/2.4r/88%HP |
+| 1 | warmup | 1 | The Kennel-Run | plaguebound-cur, goblin | 88%/7.2r/60%HP | 93%/8.5r/67%HP | 100%/3.3r/86%HP |
+| 1 | early-mid | 1 | The Watch Post | goblin, kobold | 95%/4.8r/67%HP | 93%/5.5r/69%HP | 100%/2.7r/89%HP |
+| 1 | early-mid | 1 | The Kobold Den | 2× kobold | 98%/3.7r/62%HP | 100%/4.6r/77%HP | 100%/2.3r/88%HP |
+| 1 | early-mid | 1 | The Bone-Pit | skeleton, stirge | 87%/4.6r/65%HP | 97%/5.8r/61%HP | 100%/2.9r/86%HP |
+| 1 | early-mid | 1 | The Dust-Choked Lab | dust-mephit | 100%/2.1r/86%HP | 100%/2.9r/88%HP | 100%/2.0r/95%HP |
+| 1 | early-mid | 1 | The Tomb-Yard | skeleton, bone-stalker | 78%/5.3r/51%HP | 77%/6.2r/63%HP | 93%/3.6r/81%HP |
+| 1 | early-mid | 1 | The Stirge Loft | 2× stirge | 92%/4.2r/65%HP | 93%/4.8r/67%HP | 100%/2.3r/87%HP |
+| 1 | early-mid | 1 | The Feeding Pit | famished-ghast | 93%/3.3r/69%HP | 93%/4.2r/75%HP | 100%/3.2r/82%HP |
+| 1 | early-mid | 1 | The Sick-Run | plaguebound-cur, kobold | 98%/6.0r/75%HP | 98%/6.7r/75%HP | 100%/3.5r/92%HP |
+| 1 | mid | 2 | The Vault Guardian | animated-armor | 100%/2.4r/84%HP | 100%/3.3r/78%HP | 100%/2.0r/90%HP |
+| 1 | mid | 2 | The Tomb-Larder | ghoul, skeleton | 97%/5.2r/53%HP | 100%/5.5r/64%HP | 100%/2.5r/80%HP |
+| 1 | mid | 2 | The Goblin Warren | goblin-warden, stirge | 95%/5.2r/51%HP | 100%/5.4r/65%HP | 100%/2.2r/87%HP |
+| 1 | mid | 2 | The Mephit Cages | imp, dust-mephit | 97%/4.8r/72%HP | 100%/4.6r/80%HP | 100%/2.0r/92%HP |
+| 1 | mid | 2 | The Cracked Bell-Jar | dust-mephit-elder | 100%/2.2r/78%HP | 100%/2.9r/80%HP | 100%/1.9r/93%HP |
+| 1 | mid | 2 | The Warden's Reserve | goblin-warden, goblin | 80%/5.9r/41%HP | 90%/6.3r/61%HP | 100%/2.3r/80%HP |
+| 1 | mid | 2 | The Dead Cell | cell-wight | 100%/4.6r/81%HP | 100%/6.0r/77%HP | 100%/3.6r/96%HP |
+| 1 | mid | 2 | The Hungry Dark | famished-ghast, goblin | 62%/5.8r/43%HP | 90%/6.4r/57%HP | 100%/2.9r/70%HP |
+| 1 | elite | 2 | The Bugbear's Trove | bugbear | 98%/3.6r/68%HP | 100%/4.0r/70%HP | 100%/2.8r/77%HP |
+| 1 | elite | 2 | The Hobgoblin Picket | hobgoblin, goblin | 85%/7.8r/41%HP | 95%/7.0r/63%HP | 100%/2.2r/86%HP |
+| 1 | elite | 2 | The Imp's Court | imp, hobgoblin | 88%/6.8r/47%HP | 100%/7.4r/60%HP | 100%/2.1r/89%HP |
+| 1 | elite | 2 | The Sentinel & The Hunger | animated-armor, ghoul | 90%/5.5r/47%HP | 93%/6.7r/55%HP | 100%/2.4r/77%HP |
+| 1 | elite | 2 | The Hangman's Pit | bone-stalker, skeleton | 92%/5.2r/52%HP | 97%/5.0r/63%HP | 100%/2.4r/80%HP |
+| 1 | elite | 2 | The Master-at-Arms | goblin-warden, hobgoblin | 68%/7.9r/34%HP | 93%/8.4r/61%HP | 100%/2.2r/85%HP |
+| 1 | elite | 2 | The Bugbear and His Hound | bugbear, ghoul | 88%/6.8r/36%HP | 92%/7.3r/54%HP | 98%/2.8r/79%HP |
+| 1 | elite | 2 | The Taskmaster of the Block | duergar-taskmaster | 2%/6.4r/47%HP | 3%/8.8r/13%HP | 78%/5.6r/51%HP |
+| 1 | elite | 2 | The Withering Ward | cell-wight, famished-ghast | 70%/7.9r/49%HP | 87%/9.8r/56%HP | 98%/4.2r/71%HP |
+| 1 | boss | 3 | Ilyich's Hall (boss) | duergar-ilyich | 97%/3.4r/60%HP | 95%/6.5r/50%HP | 100%/4.8r/75%HP |
+| 2 | warmup | 3 | A Back Alley off the Trade Way | cult-fanatic, kobold | 100%/4.3r/68%HP | 100%/5.9r/74%HP | 100%/2.6r/92%HP |
+| 2 | warmup | 3 | The Customs Gate | slaver-cuirassier | 100%/4.1r/61%HP | 100%/6.8r/59%HP | 100%/3.4r/76%HP |
+| 2 | warmup | 3 | A Hobgoblin and His Knife | hobgoblin, cult-fanatic | 85%/6.2r/52%HP | 95%/9.4r/53%HP | 100%/2.8r/90%HP |
+| 2 | warmup | 3 | A Shadow Between Lanterns | shadow, kobold | 97%/3.3r/66%HP | 98%/4.5r/63%HP | 100%/2.1r/86%HP |
+| 2 | warmup | 3 | The Slaver Kennel | shadow-hound, kobold | 100%/3.8r/65%HP | 100%/5.5r/63%HP | 100%/2.3r/89%HP |
+| 2 | warmup | 3 | A Bandit Lookout | bandit-captain | 100%/3.1r/70%HP | 100%/4.6r/65%HP | 100%/2.8r/82%HP |
+| 2 | warmup | 3 | The Coffle-Road | lash-captain | 100%/5.9r/72%HP | 100%/9.9r/64%HP | 100%/5.5r/93%HP |
+| 2 | early-mid | 3 | The Counting House Foyer | slaver-cuirassier, cult-fanatic | 83%/7.7r/28%HP | 75%/10.9r/32%HP | 100%/3.8r/71%HP |
+| 2 | early-mid | 3 | The Cult Cell | 2× cult-fanatic | 98%/5.5r/54%HP | 98%/7.3r/59%HP | 100%/3.0r/83%HP |
+| 2 | early-mid | 3 | A Hobgoblin Picket | hobgoblin, slaver-cuirassier | 78%/7.2r/41%HP | 80%/10.6r/32%HP | 100%/3.7r/76%HP |
+| 2 | early-mid | 3 | The Lamp-Yard | shadow, cult-fanatic | 95%/4.7r/59%HP | 98%/6.0r/65%HP | 100%/2.6r/84%HP |
+| 2 | early-mid | 3 | The Bandit Captain's Hold | bandit-captain, cult-fanatic | 87%/6.4r/35%HP | 88%/8.6r/42%HP | 100%/3.5r/71%HP |
+| 2 | early-mid | 3 | The Kennel-Gate | shadow-hound, slaver-cuirassier | 73%/6.5r/37%HP | 83%/9.8r/36%HP | 100%/3.5r/70%HP |
+| 2 | early-mid | 3 | The Driving-Line | lash-captain, cult-fanatic | 98%/10.4r/48%HP | 97%/14.0r/54%HP | 100%/4.4r/77%HP |
+| 2 | mid | 3 | The Cowled Patrol | cowled-enforcer, slaver-cuirassier | 80%/7.0r/27%HP | 73%/9.4r/29%HP | 98%/3.6r/62%HP |
+| 2 | mid | 3 | The Graveyard Wall | 2× shadow | 92%/3.6r/62%HP | 93%/5.2r/57%HP | 100%/4.7r/63%HP |
+| 2 | mid | 3 | The Cult Vigil | cult-fanatic, hobgoblin | 88%/5.9r/58%HP | 90%/9.2r/53%HP | 100%/2.7r/84%HP |
+| 2 | mid | 3 | The Stockade Run | slaver-cuirassier, cult-fanatic | 85%/7.5r/34%HP | 78%/10.6r/31%HP | 100%/3.8r/66%HP |
+| 2 | mid | 3 | The Captain and the Hound | bandit-captain, shadow-hound | 90%/5.6r/45%HP | 88%/8.1r/41%HP | 100%/3.2r/73%HP |
+| 2 | mid | 3 | The Lantern-Yard Patrol | shadow, slaver-cuirassier | 80%/5.9r/44%HP | 92%/8.9r/43%HP | 100%/3.5r/69%HP |
+| 2 | mid | 3 | The Conjurer in the Counting-House | cowled-conjurer | 92%/4.8r/51%HP | 88%/7.2r/39%HP | 100%/4.8r/75%HP |
+| 2 | mid | 3 | The Warded Escort | cowled-wardpriest, slaver-cuirassier | 50%/7.8r/27%HP | 10%/10.7r/11%HP | 93%/5.8r/56%HP |
+| 2 | elite | 4 | A Cowled Audit | cowled-enforcer, slaver-cuirassier | 90%/7.3r/35%HP | 88%/10.6r/38%HP | 97%/3.7r/63%HP |
+| 2 | elite | 4 | The Twin Cowls | 2× cowled-enforcer | 90%/5.2r/40%HP | 87%/7.2r/39%HP | 100%/4.6r/61%HP |
+| 2 | elite | 4 | The Black Carriage | slaver-cuirassier, shadow | 92%/6.8r/42%HP | 88%/10.0r/40%HP | 100%/3.4r/77%HP |
+| 2 | elite | 4 | The Rooftop Chase | cowled-enforcer, hobgoblin | 82%/5.7r/45%HP | 82%/7.7r/47%HP | 100%/2.9r/82%HP |
+| 2 | elite | 4 | The Bandit Captain's Brace | bandit-captain, slaver-cuirassier | 80%/7.4r/31%HP | 85%/10.8r/28%HP | 100%/4.1r/58%HP |
+| 2 | elite | 4 | The Cowled Kennel-Master | cowled-enforcer, shadow-hound | 100%/4.8r/44%HP | 92%/7.2r/46%HP | 100%/3.0r/79%HP |
+| 2 | elite | 4 | The Conjurer and His Brute | cowled-conjurer, slaver-cuirassier | 37%/7.6r/13%HP | 25%/8.8r/11%HP | 90%/4.8r/51%HP |
+| 2 | elite | 4 | The Wardpriest's Line | cowled-wardpriest, hobgoblin | 78%/7.0r/49%HP | 60%/12.1r/31%HP | 100%/4.0r/75%HP |
+| 2 | boss | 4 | The Magistrate's Hall (boss) | athkatla-magistrate | 77%/5.8r/34%HP | 60%/8.2r/32%HP | 90%/8.0r/48%HP |
+| 3 | warmup | 4 | A Cell Door Left Ajar | mad-mage-prisoner, stirge | 100%/4.0r/78%HP | 100%/5.6r/70%HP | 100%/2.5r/88%HP |
+| 3 | warmup | 4 | The Stitched Subject | bonebound-test-subject, stirge | 98%/5.1r/57%HP | 100%/7.5r/55%HP | 100%/3.3r/79%HP |
+| 3 | warmup | 4 | The Kennel-Corridor | slayer-hound | 97%/3.1r/60%HP | 100%/4.9r/53%HP | 98%/4.8r/78%HP |
+| 3 | warmup | 4 | The Reciting Inmate | mad-mage-prisoner | 100%/2.1r/92%HP | 100%/3.7r/84%HP | 100%/2.1r/95%HP |
+| 3 | warmup | 4 | A Hound at the Cell-Block End | slayer-hound | 95%/2.9r/70%HP | 93%/5.3r/51%HP | 100%/5.1r/71%HP |
+| 3 | warmup | 4 | An Apprentice's First Patrol | wardens-apprentice | 90%/6.0r/45%HP | 87%/8.4r/32%HP | 100%/6.3r/73%HP |
+| 3 | warmup | 4 | The Thing on the Slab | mind-leech | 92%/4.4r/61%HP | 62%/8.0r/53%HP | 98%/5.3r/74%HP |
+| 3 | early-mid | 4 | Two Inmates of the Same Cell | 2× mad-mage-prisoner | 100%/5.0r/62%HP | 100%/6.8r/60%HP | 100%/2.9r/82%HP |
+| 3 | early-mid | 4 | The Vivisection Ward | bonebound-test-subject, mad-mage-prisoner | 98%/5.8r/50%HP | 98%/8.8r/47%HP | 100%/3.5r/73%HP |
+| 3 | early-mid | 4 | The Bone Drift | 2× bonebound-test-subject | 92%/6.9r/40%HP | 82%/10.2r/31%HP | 100%/4.2r/61%HP |
+| 3 | early-mid | 4 | A Hound on a Long Leash | slayer-hound, mad-mage-prisoner | 78%/5.9r/28%HP | 80%/8.5r/31%HP | 100%/4.1r/57%HP |
+| 3 | early-mid | 4 | The Apprentice's Subject | wardens-apprentice, bonebound-test-subject | 55%/8.4r/13%HP | 27%/10.5r/18%HP | 95%/5.0r/50%HP |
+| 3 | early-mid | 4 | The Kennel-Pair | 2× slayer-hound | 33%/5.5r/17%HP | 25%/7.3r/14%HP | 93%/4.7r/41%HP |
+| 3 | early-mid | 4 | The Babbling Cell | gibbering-husk | 100%/4.1r/75%HP | 100%/6.8r/62%HP | 100%/5.3r/85%HP |
+| 3 | early-mid | 4 | The Leech and Its Keeper | mind-leech, mad-mage-prisoner | 68%/7.2r/31%HP | 68%/10.2r/31%HP | 97%/4.5r/61%HP |
+| 3 | mid | 5 | The Sage in the Reading Room | hollow-sage | 100%/2.7r/91%HP | 100%/3.3r/86%HP | 100%/5.2r/83%HP |
+| 3 | mid | 5 | The Warden's Apprentice | wardens-apprentice | 100%/4.3r/77%HP | 100%/4.4r/64%HP | 100%/5.7r/77%HP |
+| 3 | mid | 5 | The Pair of Hollows | 2× hollow-sage | 100%/7.0r/59%HP | 100%/5.7r/62%HP | 100%/4.9r/54%HP |
+| 3 | mid | 5 | The Hound-Pack | 2× slayer-hound | 95%/5.8r/49%HP | 95%/4.9r/51%HP | 95%/4.3r/45%HP |
+| 3 | mid | 5 | The Reading-Room Ambush | hollow-sage, mad-mage-prisoner | 100%/5.3r/73%HP | 100%/4.3r/76%HP | 100%/4.1r/72%HP |
+| 3 | mid | 5 | The Apprentice's Final | wardens-apprentice, bonebound-test-subject | 97%/7.4r/54%HP | 100%/6.3r/48%HP | 100%/4.3r/59%HP |
+| 3 | mid | 5 | The Reknitting Ward | sphere-aberration | 100%/4.0r/79%HP | 100%/4.6r/70%HP | 100%/4.6r/95%HP |
+| 3 | mid | 5 | The Babble and the Stitch | gibbering-husk, bonebound-test-subject | 100%/7.7r/59%HP | 98%/5.9r/64%HP | 100%/4.0r/66%HP |
+| 3 | mid | 5 | The Drifting Witnesses | 2× witness-mote | 100%/2.7r/93%HP | 100%/2.6r/87%HP | 100%/2.0r/93%HP |
+| 3 | mid | 5 | The Eye in the Stairwell | gloaming-eye, witness-mote | 100%/5.3r/93%HP | 100%/4.0r/94%HP | 100%/3.1r/94%HP |
+| 3 | elite | 5 | The Warden's Patrol | wardens-apprentice, slayer-hound | 98%/7.8r/48%HP | 100%/6.1r/46%HP | 97%/4.5r/43%HP |
+| 3 | elite | 5 | The Sage-Lock | hollow-sage, wardens-apprentice | 90%/9.1r/41%HP | 95%/7.1r/46%HP | 100%/4.6r/56%HP |
+| 3 | elite | 5 | The Test-Pit | hollow-sage, bonebound-test-subject | 98%/5.8r/68%HP | 100%/5.6r/60%HP | 100%/4.2r/64%HP |
+| 3 | elite | 5 | The Apprentice and Her Subject | wardens-apprentice, mad-mage-prisoner | 100%/6.7r/59%HP | 100%/5.6r/58%HP | 100%/4.2r/58%HP |
+| 3 | elite | 5 | The Sages' Conference | 2× hollow-sage | 100%/6.7r/59%HP | 100%/5.8r/60%HP | 98%/4.8r/57%HP |
+| 3 | elite | 5 | The Examiner and His Subject | hollow-sage, bonebound-test-subject | 100%/5.9r/64%HP | 100%/5.3r/63%HP | 100%/4.2r/64%HP |
+| 3 | elite | 5 | The Fleshwright at Work | asylum-fleshwright | 42%/10.4r/58%HP | 70%/9.4r/43%HP | 93%/7.2r/60%HP |
+| 3 | elite | 5 | The Horror and the Leech | sphere-aberration, mind-leech | 88%/9.1r/38%HP | 88%/6.8r/48%HP | 95%/6.6r/46%HP |
+| 3 | elite | 5 | The Hollow Gaze | hollow-gaze | 22%/22.6r/68%HP | 85%/16.4r/66%HP | 100%/8.9r/80%HP |
+| 3 | elite | 5 | The Gaze and Its Witnesses | hollow-gaze, gloaming-eye | 0%/24.9r/0%HP | 77%/20.3r/56%HP | 100%/8.0r/76%HP |
+| 3 | boss | 5 | The Director's Chamber (boss) | asylum-director | 88%/7.2r/43%HP | 95%/7.0r/36%HP | 97%/7.8r/55%HP |
+| 4 | warmup | 5 | The Tunnel-Watcher | drow-crossbowman | 100%/2.6r/92%HP | 100%/3.1r/82%HP | 100%/3.0r/85%HP |
+| 4 | warmup | 5 | The Lone House-Guard | drow-warrior | 100%/3.4r/80%HP | 100%/4.2r/66%HP | 100%/4.3r/83%HP |
+| 4 | warmup | 5 | A Brood Underfoot | 2× driderling | 100%/4.3r/80%HP | 100%/3.5r/79%HP | 100%/2.9r/85%HP |
+| 4 | warmup | 5 | The Cull-Brood | 2× driderling | 100%/4.3r/80%HP | 100%/3.7r/75%HP | 100%/3.0r/79%HP |
+| 4 | warmup | 5 | The Crossbow at the Turn | drow-crossbowman | 100%/2.7r/93%HP | 100%/3.0r/83%HP | 100%/3.3r/84%HP |
+| 4 | warmup | 5 | A Brood and a Bowman | drow-crossbowman, driderling | 100%/5.1r/72%HP | 100%/4.1r/76%HP | 100%/3.6r/73%HP |
+| 4 | warmup | 5 | The Web-Mouth | cavern-hunting-spider | 100%/3.3r/83%HP | 100%/3.7r/74%HP | 100%/4.7r/92%HP |
+| 4 | early-mid | 6 | A Patrol of Two Houses | drow-warrior, drow-crossbowman | 95%/8.5r/45%HP | 100%/6.7r/47%HP | 97%/5.0r/50%HP |
+| 4 | early-mid | 6 | The Web-Mouth | 2× driderling | 100%/4.4r/82%HP | 100%/3.8r/80%HP | 100%/3.0r/85%HP |
+| 4 | early-mid | 6 | The Crossbow Pair | 2× drow-crossbowman | 100%/6.0r/69%HP | 100%/5.5r/64%HP | 100%/4.1r/72%HP |
+| 4 | early-mid | 6 | The Brood and Their Handler | drow-warrior, driderling | 100%/7.4r/54%HP | 100%/5.5r/57%HP | 100%/4.6r/56%HP |
+| 4 | early-mid | 6 | A Mind-Touched Drow | mind-flayer-fragment, drow-warrior | 60%/10.2r/24%HP | 82%/8.3r/24%HP | 65%/6.7r/19%HP |
+| 4 | early-mid | 6 | Two Warriors at the Arch | 2× drow-warrior | 82%/9.7r/34%HP | 85%/7.2r/30%HP | 87%/5.5r/33%HP |
+| 4 | early-mid | 6 | The Web and the Brood | cavern-hunting-spider, driderling | 97%/6.8r/63%HP | 100%/5.2r/66%HP | 100%/3.8r/67%HP |
+| 4 | early-mid | 6 | The Priestess and Her Blade | drow-war-priestess, drow-warrior | 35%/12.2r/37%HP | 27%/10.2r/31%HP | 87%/9.0r/30%HP |
+| 4 | mid | 6 | The Lone Drider in the Rafters | drider | 100%/6.3r/69%HP | 100%/5.3r/69%HP | 100%/5.8r/84%HP |
+| 4 | mid | 6 | A Fragment from the Higher Tunnels | mind-flayer-fragment | 100%/4.6r/73%HP | 100%/5.3r/61%HP | 100%/5.8r/75%HP |
+| 4 | mid | 6 | The Spider-Watch | drow-warrior, driderling | 98%/7.2r/53%HP | 100%/6.0r/55%HP | 100%/4.4r/59%HP |
+| 4 | mid | 6 | The Drider's Brood | drider, driderling | 97%/9.4r/47%HP | 100%/6.8r/55%HP | 98%/7.1r/48%HP |
+| 4 | mid | 6 | The Twin Crossbowmen | 2× drow-crossbowman | 100%/6.4r/66%HP | 100%/5.3r/69%HP | 100%/4.0r/69%HP |
+| 4 | mid | 6 | A Web in the Audience-Hall | drider, drow-warrior | 73%/11.0r/27%HP | 93%/8.8r/27%HP | 82%/7.2r/24%HP |
+| 4 | mid | 6 | The Priestess and Her Bow | drow-war-priestess, drow-crossbowman | 55%/12.7r/52%HP | 88%/9.2r/45%HP | 100%/7.8r/47%HP |
+| 4 | mid | 6 | The Stalker in the Gallery | cavern-hunting-spider, drow-warrior | 90%/9.0r/42%HP | 77%/7.3r/41%HP | 93%/5.2r/39%HP |
+| 4 | elite | 6 | The Drider and the Bowman | drider, drow-crossbowman | 97%/9.4r/45%HP | 100%/8.3r/43%HP | 97%/6.8r/37%HP |
+| 4 | elite | 6 | The Fragment and Its Kept Drow | mind-flayer-fragment, drow-warrior | 60%/9.5r/24%HP | 60%/8.0r/26%HP | 65%/6.7r/23%HP |
+| 4 | elite | 6 | The Temple-Watch Pair | drow-warrior, drider | 78%/10.9r/34%HP | 80%/8.5r/33%HP | 92%/7.3r/30%HP |
+| 4 | elite | 6 | The Crossfire | drider, drow-crossbowman | 92%/10.2r/44%HP | 98%/7.7r/53%HP | 97%/7.1r/42%HP |
+| 4 | elite | 6 | The Fragment Among the Brood | mind-flayer-fragment, driderling | 93%/8.3r/47%HP | 100%/7.1r/41%HP | 100%/6.8r/44%HP |
+| 4 | elite | 6 | The House-Watch in Full | drow-crossbowman, drider | 98%/10.1r/44%HP | 100%/7.7r/51%HP | 98%/7.0r/39%HP |
+| 4 | elite | 6 | The Brood-Warren | spider-broodmother | 0%/6.5r/0%HP | 0%/7.5r/0%HP | 98%/6.7r/72%HP |
+| 4 | elite | 6 | The Priestess and Her Drider | drow-war-priestess, drider | 70%/13.2r/30%HP | 88%/10.2r/30%HP | 95%/9.2r/37%HP |
+| 4 | boss | 7 | The Matron Mother's Audience (boss) | drow-matron-mother | 77%/10.4r/36%HP | 70%/10.0r/17%HP | 98%/8.3r/51%HP |
 
 ## Top 5 unfair encounters
 
 | Ch | Slot | Encounter | Composition | Detail |
 |---:|---|---|---|---|
-| 2 | early-mid | The Counting House Foyer | 2× slaver-cuirassier | rogue win rate 0% |
-| 2 | mid | The Stockade Run | 2× slaver-cuirassier, cult-fanatic | rogue win rate 0% |
-| 2 | elite | A Cowled Audit | cowled-enforcer, slaver-cuirassier, cult-fanatic | rogue win rate 0% |
-| 2 | elite | The Bandit Captain's Brace | bandit-captain, cult-fanatic, slaver-cuirassier | rogue win rate 0% |
-| 3 | mid | The Hound-Pack | 2× slayer-hound | rogue win rate 0% |
+| 3 | elite | The Gaze and Its Witnesses | hollow-gaze, gloaming-eye | rogue win rate 0% |
+| 4 | elite | The Brood-Warren | spider-broodmother | rogue win rate 0% |
+| 1 | elite | The Taskmaster of the Block | duergar-taskmaster | rogue win rate 2% |
+| 2 | mid | The Warded Escort | cowled-wardpriest, slaver-cuirassier | fighter win rate 10% |
+| 3 | elite | The Hollow Gaze | hollow-gaze | rogue win rate 22% |
 
 ## Top 5 lethal encounters
 
 | Ch | Slot | Encounter | Composition | Detail |
 |---:|---|---|---|---|
-| 2 | early-mid | The Counting House Foyer | 2× slaver-cuirassier | max death% 100% |
-| 2 | mid | The Stockade Run | 2× slaver-cuirassier, cult-fanatic | max death% 100% |
-| 2 | elite | A Cowled Audit | cowled-enforcer, slaver-cuirassier, cult-fanatic | max death% 100% |
-| 2 | elite | The Bandit Captain's Brace | bandit-captain, cult-fanatic, slaver-cuirassier | max death% 100% |
-| 3 | mid | The Hound-Pack | 2× slayer-hound | max death% 100% |
+| 3 | elite | The Gaze and Its Witnesses | hollow-gaze, gloaming-eye | max death% 100% |
+| 4 | elite | The Brood-Warren | spider-broodmother | max death% 100% |
+| 1 | elite | The Taskmaster of the Block | duergar-taskmaster | max death% 98% |
+| 2 | mid | The Warded Escort | cowled-wardpriest, slaver-cuirassier | max death% 90% |
+| 3 | elite | The Hollow Gaze | hollow-gaze | max death% 78% |
 
 ## Top 5 slow encounters
 
 | Ch | Slot | Encounter | Composition | Detail |
 |---:|---|---|---|---|
-| 2 | elite | The Black Carriage | cult-fanatic, slaver-cuirassier, shadow | max avg rounds 11.9 |
-| 4 | boss | The Matron Mother's Audience (boss) | drow-matron-mother | max avg rounds 11.8 |
-| 3 | early-mid | The Vivisection Ward | bonebound-test-subject, mad-mage-prisoner | max avg rounds 11.4 |
-| 4 | mid | The Drider's Brood | drider, 2× driderling | max avg rounds 11.4 |
-| 2 | early-mid | The Bandit Captain's Hold | bandit-captain, cult-fanatic | max avg rounds 11.2 |
+| 3 | elite | The Gaze and Its Witnesses | hollow-gaze, gloaming-eye | max avg rounds 24.9 |
+| 3 | elite | The Hollow Gaze | hollow-gaze | max avg rounds 22.6 |
+| 2 | early-mid | The Driving-Line | lash-captain, cult-fanatic | max avg rounds 14.0 |
+| 4 | elite | The Priestess and Her Drider | drow-war-priestess, drider | max avg rounds 13.2 |
+| 4 | mid | The Priestess and Her Bow | drow-war-priestess, drow-crossbowman | max avg rounds 12.7 |
 
 ## Top 5 trivial encounters
 
 | Ch | Slot | Encounter | Composition | Detail |
 |---:|---|---|---|---|
+| 3 | mid | The Drifting Witnesses | 2× witness-mote | all classes 100% win, <3 rounds, >70% HP left |
 | 1 | early-mid | The Dust-Choked Lab | dust-mephit | all classes 100% win, <3 rounds, >70% HP left |
-| 1 | warmup | The Iron Cells | kobold | all classes 100% win, <3 rounds, >70% HP left |
-| 1 | warmup | The Iron Cells | stirge | all classes 100% win, <3 rounds, >70% HP left |
+| 1 | mid | The Cracked Bell-Jar | dust-mephit-elder | all classes 100% win, <3 rounds, >70% HP left |
 
 ## Fixes applied this PR
 
-Three narrow swaps in the encounter pools — no monster def, engine, or new
-content changes. Each replaces one slot in an existing elite encounter with
-a strictly-weaker monster that already exists in the same chapter's pool.
-Numbers below are at 100 runs per cell (vs the 30-run matrix above) so the
-delta is meaningful.
+Composition-only changes to Ch1 and Ch2 warmup pools — no monster stat,
+engine, or new content changes. All 5 Ch1 warmup encounters converted from
+solo to 2-body pairs (adds target/resource pressure without HP-bloat). One
+Ch2 warmup entry (shadow, trivially fast at L3) gets a kobold companion.
 
-### 1. Ch2 elite — "A Cowled Audit"
+### Ch1 WARMUP — all 5 entries upgraded from solo to 2-body
 
-**File:** `src/engine/delve/chapter2Pools.ts:201`
-**Before:** `cowled-enforcer × 1, slaver-cuirassier × 2`
-**After:** `cowled-enforcer × 1, slaver-cuirassier × 1, cult-fanatic × 1`
+**Before (PR #216 baseline):** each entry was a single weak monster.
+The matched-level matrix showed all Ch1 warmup encounters were trivial:
+100% win, <3 rounds, >70% HP remaining for all three classes.
 
-| Class | Before (win%) | After (win%) | Δ |
-|---|---:|---:|---:|
-| Rogue | 0% | 0% | +0 |
-| Fighter | 0% | 4% | +4 |
-| Wizard | 63% | 78% | +15 |
+**After:** 2-body pairs force a target/resource decision. Fighter/Rogue end
+at 60–70% HP on win (down from 75–95%); win rates stay above 84% (no class
+is "unfair"). Matrix no longer flags any Ch1 warmup as trivial.
 
-Rogue stays at 0% — class-balance asymmetry at L4 vs 3-target elites is
-documented in `dd-roguelite-class-balance-philosophy`, not an encounter bug.
+| Encounter | Before | After |
+|---|---|---|
+| The Iron Cells | goblin × 1 | goblin + stirge |
+| The Iron Cells | kobold × 1 | kobold × 2 |
+| The Iron Cells | skeleton × 1 | skeleton × 2 |
+| The Iron Cells | stirge × 1 | stirge + kobold |
+| The Kennel-Run | plaguebound-cur × 1 | plaguebound-cur + goblin |
 
-### 2. Ch3 elite — "The Apprentice and Her Pack"
+### Ch2 WARMUP — "A Shadow Between Lanterns"
 
-**File:** `src/engine/delve/chapter3Pools.ts:221`
-**Before:** `wardens-apprentice × 1, slayer-hound × 2`
-**After:** `wardens-apprentice × 1, slayer-hound × 1, bonebound-test-subject × 1`
-
-| Class | Before (win%) | After (win%) | Δ |
-|---|---:|---:|---:|
-| Rogue | 0% | 0% | +0 |
-| Fighter | 10% | 15% | +5 |
-| Wizard | 63% | 68% | +5 |
-
-Bonebound is the gentler melee threat (DEX 10 init, 1d8+2) vs second
-slayer-hound's burst (2d8+3 on a fast initiative).
-
-### 3. Ch4 elite — "The Temple-Watch Pair"
-
-**File:** `src/engine/delve/chapter4Pools.ts:220`
-**Before:** `drow-warrior × 2, drider × 1`
-**After:** `drow-warrior × 1, drow-crossbowman × 1, drider × 1`
-
-| Class | Before (win%) | After (win%) | Δ |
-|---|---:|---:|---:|
-| Rogue | 0% | 0% | +0 |
-| Fighter | 0% | 9% | +9 |
-| Wizard | 40% | 60% | +20 |
-
-Drow-crossbowman is a strict downgrade vs warrior #2 (AC 14 vs 16, HP 32
-vs 40, 1d6+3 vs 2d6+4) — the encounter still hits as the "house-watch"
-ambush narratively, but the burst is no longer two scimitars at once.
+**Before:** shadow × 1 — trivial (100% win / 1.8r avg / 87% HP for all classes;
+shadow has only 16 HP and dies before dealing meaningful damage at L3).
+**After:** shadow + kobold — no longer trivial (97%/3.3r/66%HP Rogue,
+98%/4.5r/63%HP Fighter; the kobold forces a second kill and adds damage).
 
 ## Outliers NOT fixed in this pass
 
-These also failed the 70-90% win-rate band but are outside the 3-fix budget:
+Remaining trivial flags are non-warmup slots (out of scope for this lane):
 
-- **Ch3 boss — The Director's Chamber** (asylum-director): 7%/57%/0%.
-  Wizards lose hard to a Hold-Person-immune ranged caster they can't out-DPS
-  before their slot pool depletes. Boss-level rework, not a tuning fix.
-- **Ch4 boss — The Matron Mother**: 0%/40%/0%. Paralysis + 2d8+5 poison
-  shreds Rogue and Wizard. Damage or save-DC cut is the right lever.
-- **Ch2 early-mid — The Counting House Foyer** (2× slaver-cuirassier):
-  0%/10%/70%. Two AC-16 / HP-32 bruisers at L3 is the same shape as the
-  Cowled Audit problem one slot earlier. Same fix would work
-  (swap one for a cult-fanatic) and likely should ship next pass.
-- **Multiple Ch3/Ch4 elite slots**: Rogue's win rate floors at 0% across
-  most multi-enemy elites past L4. This is a class-design issue (no AoE,
-  no second target swing), not encounter tuning.
-- **"Slow" flags (>8 rounds avg)**: every flagged slow encounter is one
-  Rogue could not finish before dying. With Rogue's win rate up, those
-  averages would self-correct.
+- **Ch3 mid — "The Drifting Witnesses"** (2× witness-mote): trivial. Witness
+  motes are intentionally minor summon-tier enemies; this is a mid-slot
+  content balance issue, not a warmup blowout driver.
+- **Ch1 early-mid — "The Dust-Choked Lab"** (dust-mephit): trivial. The dust
+  mephit's AC-13 / HP-22 / low-damage profile doesn't threaten L1 players
+  meaningfully; companion or damage bump is the fix.
+- **Ch1 mid — "The Cracked Bell-Jar"** (dust-mephit-elder): trivial. Same
+  root as above but one slot later.
+
+Outstanding balance issues from prior passes (unchanged):
+
+- **Ch3 boss — The Director's Chamber**: 94%/92%/94% win across classes at
+  matched L5. Healthy — prior 7%/57%/0% data was from an older bot.
+- **Multiple Ch3/Ch4 elite slots**: Rogue win rate floors at 0% across
+  multi-enemy elites past L4 (no AoE, no swing vs multiple targets). Class
+  design issue, not encounter tuning.
 
 ## How to re-run the matrix
 
