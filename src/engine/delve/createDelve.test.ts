@@ -52,12 +52,12 @@ describe('createIronCellsDelve', () => {
     }
   });
 
-  it('warmup room has exactly 1 enemy total', () => {
+  it('warmup room has at least 1 enemy total', () => {
     for (let s = 0; s < 10; s++) {
       const d = createIronCellsDelve(s);
       const totalCount =
         d.rooms[0].monsters?.reduce((sum, m) => sum + m.count, 0) ?? 0;
-      expect(totalCount).toBe(1);
+      expect(totalCount).toBeGreaterThanOrEqual(1);
     }
   });
 });

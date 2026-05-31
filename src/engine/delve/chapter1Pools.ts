@@ -29,37 +29,37 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Iron Cells',
     flavorText:
-      'A goblin scout has been left to keep watch — and to die slow if it fails. It draws a chipped blade and grins all the way to its ears.',
-    monsters: [{ defId: 'goblin', count: 1 }],
-    xpReward: 60,
+      'A goblin scout draws a chipped blade and grins all the way to its ears — and the rafters above shift at the same moment, a stirge dropping out of the dark with its proboscis already open.',
+    monsters: [{ defId: 'goblin', count: 1 }, { defId: 'stirge', count: 1 }],
+    xpReward: 90,
   },
   {
     title: 'The Iron Cells',
     flavorText:
-      'A kobold skitters at the edge of the lantern light. Smaller than you, and meaner for it. The thing actually hisses.',
-    monsters: [{ defId: 'kobold', count: 1 }],
-    xpReward: 48,
+      'Two kobolds skitter at the edge of the lantern light. Smaller than you, and meaner in pairs — they have already agreed who comes from which angle.',
+    monsters: [{ defId: 'kobold', count: 2, displayPrefix: 'Kobold' }],
+    xpReward: 90,
   },
   {
     title: 'The Iron Cells',
     flavorText:
-      'Bone clatters on stone — a skeleton rises from a heap of armor scraps. Whatever the master kept down here, he forgot to bury this one twice.',
-    monsters: [{ defId: 'skeleton', count: 1 }],
-    xpReward: 60,
+      'Bone clatters on stone — and then again, a heartbeat later. Two heaps of armor scraps rise at once. Whatever the master kept down here, he forgot to bury this pair twice.',
+    monsters: [{ defId: 'skeleton', count: 2, displayPrefix: 'Skeleton' }],
+    xpReward: 96,
   },
   {
     title: 'The Iron Cells',
     flavorText:
-      'The rafters above are thick with shapes. One drops first, proboscis already drinking the air.',
-    monsters: [{ defId: 'stirge', count: 1 }],
-    xpReward: 48,
+      'The rafters above are thick with shapes. One drops first, proboscis open for whoever stands in the lantern light — a kobold below draws a blade, less from courage than from not wanting to share its meal.',
+    monsters: [{ defId: 'stirge', count: 1 }, { defId: 'kobold', count: 1 }],
+    xpReward: 84,
   },
   {
     title: 'The Kennel-Run',
     flavorText:
-      'A gaol-dog comes off its chain and down the run at a dead sprint. Its gums are black and the cough that precedes it smells of the grave.',
-    monsters: [{ defId: 'plaguebound-cur', count: 1 }],
-    xpReward: 66,
+      'A gaol-dog comes off its chain at a dead sprint — and the goblin handler who lost hold of it comes running after, too embarrassed not to finish what the dog started.',
+    monsters: [{ defId: 'plaguebound-cur', count: 1 }, { defId: 'goblin', count: 1 }],
+    xpReward: 102,
   },
 ];
 

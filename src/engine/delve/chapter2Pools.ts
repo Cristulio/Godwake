@@ -47,9 +47,10 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'A Shadow Between Lanterns',
     flavorText:
-      "Something tall and thin uncoils from the wall where no wall casts a shadow. It does not blot out the lamplight — the lamplight goes around it.",
-    monsters: [{ defId: 'shadow', count: 1 }],
-    xpReward: 130,
+      "Something tall and thin uncoils from the wall where no wall casts a shadow. The lamplight goes around it. A kobold at its heel has been paid a copper to make noise — it does not understand what it is running beside.",
+    monsters: [{ defId: 'shadow', count: 1 }, { defId: 'kobold', count: 1 }],
+    xpReward: 165,
+    goldReward: 8,
   },
   {
     title: 'The Slaver Kennel',
