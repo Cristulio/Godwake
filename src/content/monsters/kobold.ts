@@ -7,7 +7,7 @@ export const KOBOLD: Monster = MonsterSchema.parse({
   size: 'small',
   creatureType: 'humanoid (kobold)',
   ac: 12,
-  maxHp: 5,
+  maxHp: 10,
   speed: 30,
   abilityScores: { str: 7, dex: 15, con: 9, int: 8, wis: 7, cha: 8 },
   passivePerception: 8,

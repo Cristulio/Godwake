@@ -182,6 +182,7 @@ interface TurnRecord {
 interface FightRecord {
   roomTitle: string;
   isBoss: boolean;
+  chapter: number;
   enemyDefIds: string[];
   enemyInstanceDefIds: string[];
   compositionKey: string;
@@ -227,6 +228,7 @@ function runFight(
   characterIn: Character,
   room: RoomSpec,
   diary: string[] | null,
+  chapter = 0,
 ): { fight: FightRecord; character: Character } {
   _resetMonsterInstanceCounter();
   const monsterRefs = (room.monsters ?? []).flatMap((rm) => {
@@ -334,6 +336,7 @@ function runFight(
     fight: {
       roomTitle: room.title,
       isBoss,
+      chapter,
       enemyDefIds,
       enemyInstanceDefIds,
       compositionKey,
@@ -423,7 +426,7 @@ function runOneDelve(
     } else if (room.kind === 'treasure') {
       // no-op
     } else {
-      const { fight, character: after } = runFight(roller, character, room, diary);
+      const { fight, character: after } = runFight(roller, character, room, diary, room.chapter ?? 0);
       character = after;
       rec.fights.push(fight);
       rec.enemyInstanceSeq.push(...fight.enemyInstanceDefIds);
@@ -632,6 +635,34 @@ function main(): void {
     else minHpBuckets['80-100%'] += 1;
   }
 
+  // Blowout rate per chapter (non-boss fights only, to isolate trash-fight texture).
+  const chapterBlowouts = new Map<number, { wins: number; blowouts: number }>();
+  for (const f of fights) {
+    if (f.isBoss) continue;
+    const ch = f.chapter;
+    const b = chapterBlowouts.get(ch) ?? { wins: 0, blowouts: 0 };
+    if (f.victory) {
+      b.wins += 1;
+      if (f.minHpPct >= BLOWOUT_FLOOR) b.blowouts += 1;
+    }
+    chapterBlowouts.set(ch, b);
+  }
+
+  // Top blowout compositions: rank by blowout count, show rate.
+  interface CompAgg { wins: number; blowouts: number; rounds: number }
+  const compAgg = new Map<string, CompAgg>();
+  for (const f of wins) {
+    const a = compAgg.get(f.compositionKey) ?? { wins: 0, blowouts: 0, rounds: 0 };
+    a.wins += 1;
+    a.rounds += f.rounds;
+    if (f.minHpPct >= BLOWOUT_FLOOR) a.blowouts += 1;
+    compAgg.set(f.compositionKey, a);
+  }
+  const topBlowoutComps = [...compAgg.entries()]
+    .filter(([, a]) => a.wins >= 5)
+    .sort((a, b) => b[1].blowouts / b[1].wins - a[1].blowouts / a[1].wins)
+    .slice(0, 20);
+
   // ── VARIETY: action entropy + button share by class ──
   const actionByClass = new Map<ClassId, Record<string, number>>();
   for (const cls of CLASSES) actionByClass.set(cls, {});
@@ -831,6 +862,19 @@ function main(): void {
   L.push('|----------------|-------:|------:|');
   for (const [k, v] of Object.entries(minHpBuckets)) {
     L.push(`| ${k} | ${v} | ${pct(v / Math.max(1, fights.length))} |`);
+  }
+  L.push('\n- **Blowout rate by chapter** (non-boss fights only — shows where trivial fights concentrate):\n');
+  L.push('| Chapter | Wins | Blowouts | Blowout % |');
+  L.push('|--------:|-----:|---------:|----------:|');
+  for (const ch of [...chapterBlowouts.keys()].sort((a, b) => a - b)) {
+    const b = chapterBlowouts.get(ch)!;
+    L.push(`| Ch${ch} | ${b.wins} | ${b.blowouts} | ${pct(b.blowouts / Math.max(1, b.wins))} |`);
+  }
+  L.push('\n- **Top blowout compositions** (≥5 wins, ranked by blowout %; avg rounds/fight):\n');
+  L.push('| Composition | Wins | Blowout % | Avg rounds |');
+  L.push('|-------------|-----:|----------:|-----------:|');
+  for (const [key, a] of topBlowoutComps) {
+    L.push(`| \`${key}\` | ${a.wins} | ${pct(a.blowouts / a.wins)} | ${f2(a.rounds / a.wins)} |`);
   }
 
   // INTENT

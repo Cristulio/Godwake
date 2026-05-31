@@ -21,9 +21,9 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'A Back Alley off the Trade Way',
     flavorText:
-      "Two figures break from a doorway, daggers already drawn — a robed fanatic with the cult-circle bloodied at his collar, and a thug paid for the morning's work.",
-    monsters: [{ defId: 'cult-fanatic', count: 1 }],
-    xpReward: 140,
+      "Two figures break from a doorway, daggers already drawn — a robed fanatic with the cult-circle bloodied at his collar, and a kobold thug paid for the morning's work.",
+    monsters: [{ defId: 'cult-fanatic', count: 1 }, { defId: 'kobold', count: 1 }],
+    xpReward: 165,
     goldReward: 12,
   },
   {
@@ -54,9 +54,9 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Slaver Kennel',
     flavorText:
-      "A shadow-hound slips its handler's grip and pads down the alley with the easy stride of a thing that knows its own collar will not be required for this work.",
-    monsters: [{ defId: 'shadow-hound', count: 1 }],
-    xpReward: 140,
+      "A shadow-hound slips its kobold handler's grip and pads down the alley. The handler scrambles after, knife out, furious that you've seen either of them.",
+    monsters: [{ defId: 'shadow-hound', count: 1 }, { defId: 'kobold', count: 1 }],
+    xpReward: 165,
     goldReward: 10,
   },
   {

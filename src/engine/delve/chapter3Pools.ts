@@ -23,17 +23,17 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'A Cell Door Left Ajar',
     flavorText:
-      "The door of your cell hangs open on one hinge — and so does the next. A prisoner in a soiled robe stands in the corridor reciting the same three sigils to no one. He sees you and the recitation does not stop.",
-    monsters: [{ defId: 'mad-mage-prisoner', count: 1 }],
-    xpReward: 210,
+      "The door of your cell hangs open on one hinge — and so does the next. A prisoner in a soiled robe stands in the corridor reciting the same three sigils to no one. A stirge has been feeding on him long enough that he no longer notices it. He sees you and the recitation does not stop.",
+    monsters: [{ defId: 'mad-mage-prisoner', count: 1 }, { defId: 'stirge', count: 1 }],
+    xpReward: 258,
     goldReward: 18,
   },
   {
     title: 'The Stitched Subject',
     flavorText:
-      "A body in a stained smock is propped against the corridor wall, the seams along its arms healed too straight to be natural. The mouth is sewn shut. It pushes off the stone when it sees you and walks.",
-    monsters: [{ defId: 'bonebound-test-subject', count: 1 }],
-    xpReward: 220,
+      "A body in a stained smock is propped against the corridor wall, the seams along its arms healed too straight to be natural. The mouth is sewn shut, and a stirge clings to its collar, fattening on whatever passes for warmth in the thing. It pushes off the stone when it sees you and walks.",
+    monsters: [{ defId: 'bonebound-test-subject', count: 1 }, { defId: 'stirge', count: 1 }],
+    xpReward: 268,
   },
   {
     title: 'The Kennel-Corridor',
