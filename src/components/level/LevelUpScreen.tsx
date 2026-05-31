@@ -161,7 +161,7 @@ export function LevelUpScreen() {
   const eff = effectiveAbilityScores(c);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 gap-8 relative overflow-hidden animate-fade-in-slow">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 md:px-6 md:py-12 gap-6 md:gap-8 relative overflow-hidden animate-fade-in-slow">
       <ForgeBackdrop />
       <div className="relative z-10 w-full max-w-3xl flex flex-col gap-6">
         <div className="text-center animate-scale-in">
@@ -224,7 +224,7 @@ export function LevelUpScreen() {
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
               +2 to one ability, or +1 to two. ({plannedTotal}/2 placed)
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {ABILITY_ORDER.map((ab) => {
                 const base = c.baseAbilityScores[ab];
                 const planned = asiPlan[ab] ?? 0;
@@ -283,7 +283,7 @@ export function LevelUpScreen() {
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
               Already-trained skills are unavailable.
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
               {cls.skillChoiceFrom.filter(isSkillEnabled).map((s) => {
                 const owned = c.skillProficiencies.includes(s);
                 const selected = pickedSkills.includes(s);

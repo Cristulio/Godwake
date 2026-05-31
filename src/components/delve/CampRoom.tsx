@@ -215,7 +215,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.10),transparent_60%)]">
+    <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.10),transparent_60%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
@@ -440,7 +440,7 @@ function ShopModal({
 }: ShopModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in">
-      <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-5">
+      <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-4 md:p-5">
         <header className="sticky top-0 z-10 -mx-5 -mt-5 px-5 pt-5 pb-3 mb-4 bg-[var(--color-bg-base)] flex justify-between items-center border-b border-[var(--color-border-warm)]">
           <div>
             <h2 className="font-display text-lg text-[var(--color-accent-amber)] uppercase tracking-[0.15em]">

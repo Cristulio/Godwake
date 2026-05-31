@@ -43,8 +43,8 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-6xl mx-auto animate-room-enter">
-      <header className="flex justify-between items-end mb-4 pb-4 border-b border-[var(--color-border-warm)]">
+    <div className="min-h-screen p-4 md:p-6 max-w-6xl mx-auto animate-room-enter">
+      <header className="flex flex-wrap gap-2 items-start mb-4 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
           <h1
             className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.15em]"
