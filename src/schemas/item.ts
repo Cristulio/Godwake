@@ -217,7 +217,14 @@ export interface RolledItem {
   rarity: GearRarity;
   /** Affix ids rolled onto the base. */
   affixes: string[];
-  /** Pre-rendered display name, e.g. "Keen Longsword of the Leech". */
+  /**
+   * Flat enhancement bonus (+N) — a SEPARATE power axis from affixes and rarity.
+   * On a weapon it adds to attack rolls AND damage; on armour/shield it adds to
+   * AC. Absent / 0 on plain bases and on robes/accessories. Scales with depth:
+   * early chapters cap at +0/+1, deep chapters reach +2/+3.
+   */
+  enhancement?: number;
+  /** Pre-rendered display name, e.g. "+2 Keen Longsword of the Leech". */
   name: string;
 }
 

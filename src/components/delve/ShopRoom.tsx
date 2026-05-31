@@ -61,9 +61,12 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   );
 
   const gear = useMemo<GearStock[]>(
-    () => (classId ? rollGearStock(room.id, tier, classId, room.layer ?? 0, shopMaxRarity) : []),
+    () =>
+      classId
+        ? rollGearStock(room.id, tier, classId, room.layer ?? 0, shopMaxRarity, room.chapter ?? tier)
+        : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [room.id, tier, classId, room.layer, shopMaxRarity],
+    [room.id, tier, classId, room.layer, shopMaxRarity, room.chapter],
   );
 
   // The rare reliquary offer is rolled deterministically per visit (owned-blind),

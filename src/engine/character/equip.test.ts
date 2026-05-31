@@ -9,6 +9,7 @@ import {
   canEquip,
   equipDenialReason,
   isWeaponProficient,
+  weaponStatRequirement,
 } from './equip';
 import { computeAC } from './derived';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
@@ -118,6 +119,95 @@ describe('weapon proficiency', () => {
     const rog = charOfClass('rogue', []);
     expect(equipDenialReason(rog, 'greatsword')).toBe("A Rogue can't wield this");
     expect(equipDenialReason(rog, 'rapier')).toBeNull();
+  });
+});
+
+describe('weapon stat requirements', () => {
+  // Human (+1 all) over explicit base scores, so effective = base + 1.
+  function fighterScores(str: number, dex: number): Character {
+    return createCharacter({
+      id: 'sr',
+      name: 'SR',
+      raceId: 'human',
+      classId: 'fighter',
+      baseAbilityScores: { str, dex, con: 14, int: 10, wis: 10, cha: 10 },
+      skillProficiencies: [],
+    });
+  }
+
+  it('derives the gate from properties — heavy → STR, finesse/ranged → DEX', () => {
+    expect(weaponStatRequirement(weapon('greataxe'))).toEqual({ ability: 'str', value: 15 });
+    expect(weaponStatRequirement(weapon('greatsword'))).toEqual({ ability: 'str', value: 15 });
+    // Ranged wins when a weapon is both heavy and ammunition (the longbow).
+    expect(weaponStatRequirement(weapon('longbow'))).toEqual({ ability: 'dex', value: 13 });
+    expect(weaponStatRequirement(weapon('shortbow'))).toEqual({ ability: 'dex', value: 13 });
+    expect(weaponStatRequirement(weapon('rapier'))).toEqual({ ability: 'dex', value: 13 });
+    // Generalist one-handers stay unrestricted.
+    expect(weaponStatRequirement(weapon('longsword'))).toBeNull();
+    expect(weaponStatRequirement(weapon('mace'))).toBeNull();
+  });
+
+  it('denies a heavy weapon below the STR threshold (real reason)', () => {
+    const c = fighterScores(10, 13); // eff STR 11, DEX 14
+    expect(equipDenialReason(c, 'greataxe')).toBe('Requires STR 15');
+    expect(canEquip(c, 'greataxe')).toBe(false);
+    // The DEX-fine fighter can still take a dagger.
+    expect(equipDenialReason(c, 'dagger')).toBeNull();
+  });
+
+  it('denies a finesse/ranged weapon below the DEX threshold', () => {
+    const c = fighterScores(15, 10); // eff STR 16, DEX 11
+    expect(equipDenialReason(c, 'rapier')).toBe('Requires DEX 13');
+    expect(equipDenialReason(c, 'shortbow')).toBe('Requires DEX 13');
+    // The STR-fine fighter still wields the unrestricted longsword.
+    expect(equipDenialReason(c, 'longsword')).toBeNull();
+  });
+
+  it('equipItem refuses an under-statted weapon and keeps identity', () => {
+    const c = { ...fighterScores(10, 13), inventory: [{ itemId: 'greataxe' }] };
+    const after = equipItem(c, 0);
+    expect(after).toBe(c);
+    expect(after.equipped.mainHand ?? null).toBeNull();
+  });
+
+  it('proficiency is checked before the stat gate', () => {
+    // A wizard fails on proficiency, not the (incidental) stat requirement.
+    const wiz = charOfClass('wizard', []);
+    expect(equipDenialReason(wiz, 'greataxe')).toBe("A Wizard can't wield this");
+  });
+});
+
+describe('armor / shield enhancement (+N) AC', () => {
+  function withArmor(baseId: string, enhancement: number): Character {
+    return {
+      ...baseChar(),
+      equipped: {
+        mainHand: null,
+        offHand: null,
+        armor: { itemId: baseId, rolled: { baseId, rarity: 'blue', affixes: [], enhancement, name: 'x' } },
+      },
+    };
+  }
+
+  it('a +N body armour adds N to AC', () => {
+    expect(computeAC(withArmor('leather-armor', 2)) - computeAC(withArmor('leather-armor', 0))).toBe(2);
+  });
+
+  it('a +N shield adds N on top of its base bonus', () => {
+    const base = baseChar();
+    const plain: Character = {
+      ...base,
+      equipped: { mainHand: null, offHand: { itemId: 'shield' }, armor: null },
+    };
+    const enhanced: Character = {
+      ...base,
+      equipped: {
+        mainHand: null,
+        offHand: { itemId: 'shield', rolled: { baseId: 'shield', rarity: 'green', affixes: [], enhancement: 1, name: 'x' } },
+        armor: null,
+      },
+    };
+    expect(computeAC(enhanced) - computeAC(plain)).toBe(1);
   });
 });
 

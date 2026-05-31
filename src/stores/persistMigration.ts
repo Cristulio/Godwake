@@ -60,8 +60,12 @@ import { getQuirk } from '../content/quirks';
  *             preserved; only a missing/garbage field defaults to 999.
  *             (b) `seenTutorials` (default []) lets Phase-2 tutorials mark
  *             themselves shown once per soul.
+ *  v13 → v14: Gear enhancement axis. Rolled items gained an optional `+N`
+ *             `enhancement` (weapons: attack+damage; armour/shield: AC). Equipped
+ *             rolled items are default-filled to `enhancement: 0` so old loot is a
+ *             plain base on the new axis (the engine also reads it with `?? 0`).
  */
-export const SAVE_VERSION = 13;
+export const SAVE_VERSION = 14;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -183,13 +187,19 @@ function isKnownQuirk(id: string): boolean {
   try { getQuirk(id); return true; } catch { return false; }
 }
 
-function pruneItemAffixes<T extends { rolled?: { affixes?: string[] } } | null>(
-  ref: T,
-): T {
-  if (!ref || !ref.rolled?.affixes) return ref;
-  const pruned = ref.rolled.affixes.filter(isKnownAffix);
-  if (pruned.length === ref.rolled.affixes.length) return ref;
-  return { ...ref, rolled: { ...ref.rolled, affixes: pruned } };
+function pruneItemAffixes<
+  T extends { rolled?: { affixes?: string[]; enhancement?: number } } | null,
+>(ref: T): T {
+  if (!ref || !ref.rolled) return ref;
+  const affixes = ref.rolled.affixes ?? [];
+  const pruned = affixes.filter(isKnownAffix);
+  // v13 → v14: default-fill the new enhancement axis on pre-v14 rolled loot.
+  const needsEnhancement = ref.rolled.enhancement === undefined;
+  if (pruned.length === affixes.length && !needsEnhancement) return ref;
+  return {
+    ...ref,
+    rolled: { ...ref.rolled, affixes: pruned, enhancement: ref.rolled.enhancement ?? 0 },
+  };
 }
 
 function pruneDeadContentIds(character: Character): Character {

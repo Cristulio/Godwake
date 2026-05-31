@@ -8,7 +8,7 @@ import { getClass } from '../../content/classes';
 import { characterQuirkMods, baneQuirkCount } from './quirks';
 import { characterBlessingMods } from './blessings';
 import { characterCampBoonMods } from './campBoons';
-import { characterAffixMods } from '../items/affixMods';
+import { characterAffixMods, enhancementOf } from '../items/affixMods';
 
 /**
  * Proficiency bonus by character level (PHB Table: Proficiency Bonus).
@@ -82,6 +82,8 @@ export function computeAC(character: Character): number {
       } else if (item.category === 'heavy') {
         base = item.baseAC;
       }
+      // Armour enhancement (+N): a flat bonus to the body-armour AC.
+      base += enhancementOf(equipped.armor);
     }
   }
 
@@ -94,7 +96,8 @@ export function computeAC(character: Character): number {
   if (equipped.offHand) {
     const item = getItem(equipped.offHand.itemId);
     if (item.kind === 'armor' && item.category === 'shield') {
-      base += item.baseAC;
+      // A +N shield carries its enhancement onto the AC bonus it grants.
+      base += item.baseAC + enhancementOf(equipped.offHand);
     }
   }
 

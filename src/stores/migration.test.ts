@@ -78,6 +78,6 @@ describe('save-migration chain — v1 → v2', () => {
 
   it('SAVE_VERSION is exposed and pins the current chain endpoint', () => {
     // Sanity check the chain endpoint so the v3 todo above is unambiguous.
-    expect(SAVE_VERSION).toBe(13);
+    expect(SAVE_VERSION).toBe(14);
   });
 });

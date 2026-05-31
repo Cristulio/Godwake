@@ -567,7 +567,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       if (dropRarity) {
         const cur = useCharacterStore.getState().character;
         if (cur) {
-          const ref = rollItem(getActiveRoller(), { rarity: dropRarity, classId: cur.classId });
+          const ref = rollItem(getActiveRoller(), {
+            rarity: dropRarity,
+            classId: cur.classId,
+            depth: room.chapter ?? 1,
+          });
           useCharacterStore.getState().setCharacter({
             ...cur,
             inventory: [...cur.inventory, ref],

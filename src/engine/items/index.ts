@@ -1,6 +1,7 @@
 export {
   type AffixMods,
   affixIdsForRef,
+  enhancementOf,
   equippedAffixIds,
   aggregateAffixMods,
   characterAffixMods,

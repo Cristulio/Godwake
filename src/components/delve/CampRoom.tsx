@@ -90,9 +90,12 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
       ? 'blue'
       : 'green';
   const gear = useMemo<GearStock[]>(
-    () => (classId ? rollGearStock(room.id, campTier ?? 1, classId, 0, campMaxRarity) : []),
+    () =>
+      classId
+        ? rollGearStock(room.id, campTier ?? 1, classId, 0, campMaxRarity, room.chapter ?? campTier ?? 1)
+        : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [room.id, campTier, classId, campMaxRarity],
+    [room.id, campTier, classId, campMaxRarity, room.chapter],
   );
 
   const [expanded, setExpanded] = useState<ForkBranch | null>(null);

@@ -62,6 +62,14 @@ export function affixIdsForRef(ref: ItemRef | null | undefined): string[] {
   return ref?.rolled?.affixes ?? [];
 }
 
+/**
+ * The flat +N enhancement on a carried item (0 for plain bases). A weapon's +N
+ * is read by playerAttack (attack + damage); an armour/shield's by computeAC.
+ */
+export function enhancementOf(ref: ItemRef | null | undefined): number {
+  return ref?.rolled?.enhancement ?? 0;
+}
+
 /** Every affix id across the character's equipped slots (incl. accessories). */
 export function equippedAffixIds(character: Character): string[] {
   const ids: string[] = [];

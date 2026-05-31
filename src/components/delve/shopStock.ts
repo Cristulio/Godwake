@@ -72,6 +72,10 @@ export interface GearStock {
  * `depth` is the node's column on the chapter map (`RoomSpec.layer`): deeper
  * shops within a chapter promote the weaker slots up the rarity ladder, so a
  * late-chapter merchant stocks strictly richer than the one at the gate.
+ *
+ * `chapter` (1–6) feeds the gear's depth axis (base tier + enhancement ceiling)
+ * so deep-chapter racks carry stronger, pricier arms. Defaults to the stock
+ * `tier` so the legacy call shape stays stable.
  */
 export function rollGearStock(
   seed: string,
@@ -79,6 +83,7 @@ export function rollGearStock(
   classId: ClassId,
   depth = 0,
   maxRarity: GearRarity = 'purple',
+  chapter: number = tier,
 ): GearStock[] {
   const roller = createDiceRoller(`${seed}:gear-shop`);
   const promotions = Math.min(5, Math.floor(depth / 2));
@@ -87,7 +92,7 @@ export function rollGearStock(
     rarity = capRarity(rarity, maxRarity);
     const ref = rollItem(
       roller,
-      i === 1 ? { rarity, classId, kind: 'accessory' } : { rarity, classId },
+      i === 1 ? { rarity, classId, kind: 'accessory', depth: chapter } : { rarity, classId, depth: chapter },
     );
     return { ref, cost: rolledItemCost(ref) };
   });

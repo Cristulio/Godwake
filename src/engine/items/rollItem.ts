@@ -1,4 +1,5 @@
 import type { DiceRoller } from '../dice';
+import { parseDiceExpression } from '../dice';
 import type { ClassId } from '../../schemas/ids';
 import type { Affix, GearRarity, ItemRef, Weapon, Armor, Accessory } from '../../schemas/item';
 import { getItem, getAffix, listAffixes } from '../../content/items';
@@ -83,11 +84,25 @@ const RARITY_PRICE_MULT: Record<GearRarity, number> = {
   legendary: 6,
 };
 
+/** Hard +N ceiling by rarity — a green never out-enhances a purple. */
+const RARITY_ENHANCE_CAP: Record<GearRarity, number> = {
+  white: 0,
+  green: 1,
+  blue: 2,
+  purple: 3,
+  legendary: 3,
+};
+
 export interface RollItemOptions {
   rarity: GearRarity;
   classId: ClassId;
   /** Force a base kind. Omitted = the roller picks weapon or armour. */
   kind?: BaseKind;
+  /**
+   * Story depth (chapter, 1–6) this loot drops at. Drives the depth axis: deeper
+   * chapters surface higher base tiers and a higher +N ceiling. Default 1.
+   */
+  depth?: number;
 }
 
 /** Deterministic non-negative pick in [0, n) from the seeded roller. */
@@ -102,6 +117,72 @@ function affixCountFor(roller: DiceRoller, rarity: GearRarity): number {
     return lo + pickIndex(roller, hi - lo + 1);
   }
   return spec;
+}
+
+/**
+ * Crude power tier (1–3) of a base, read off weapon damage / armour AC. Drives
+ * the depth bias — deeper chapters surface higher-tier bases more often — and is
+ * intentionally coarse: it only orders the pool, the +N axis carries the rest.
+ */
+function baseTier(base: Weapon | Armor | Accessory): number {
+  if (base.kind === 'weapon') {
+    const d = parseDiceExpression(base.damage);
+    const avg = d.count * (d.die + 1) / 2 + d.modifier;
+    if (avg >= 6.5) return 3; // greataxe (1d12), greatsword (2d6)
+    if (avg >= 4.5) return 2; // d8/d10 martials
+    return 1; // d4/d6 simples
+  }
+  if (base.kind === 'armor') {
+    if (base.category === 'shield' || base.category === 'robe') return 1;
+    if (base.baseAC >= 16) return 3;
+    if (base.baseAC >= 13) return 2;
+    return 1;
+  }
+  return 1; // accessories are tierless
+}
+
+/**
+ * Pick a base, biased toward higher tiers by depth. Deeper chapters take the
+ * best of several draws, so big bases surface more often — but a low-tier base
+ * is never excluded, so thin pools (the wizard's simple weapons / robes) never
+ * starve. Deterministic.
+ */
+function pickBaseWithDepth<T extends Weapon | Armor | Accessory>(
+  roller: DiceRoller,
+  bases: T[],
+  depth: number,
+): T {
+  const draws = depth >= 6 ? 3 : depth >= 3 ? 2 : 1;
+  let best = bases[pickIndex(roller, bases.length)];
+  for (let i = 1; i < draws; i++) {
+    const cand = bases[pickIndex(roller, bases.length)];
+    if (baseTier(cand) > baseTier(best)) best = cand;
+  }
+  return best;
+}
+
+/** +N ceiling by story depth: Ch1-2 modest, mid modest-plus, deep richest. */
+function depthEnhanceCap(depth: number): number {
+  if (depth >= 5) return 3;
+  if (depth >= 3) return 2;
+  return 1;
+}
+
+/**
+ * Roll the flat +N enhancement. Capped by BOTH rarity and depth, and each
+ * successive pip is a separate, progressively-rarer gate — so a deep purple
+ * climbs toward +3 while an early green mostly sits at +0/+1. Deterministic.
+ */
+function rollEnhancement(roller: DiceRoller, rarity: GearRarity, depth: number): number {
+  const cap = Math.min(RARITY_ENHANCE_CAP[rarity], depthEnhanceCap(depth));
+  if (cap <= 0) return 0;
+  let plus = 0;
+  for (let step = 0; step < cap; step++) {
+    const chance = Math.max(10, 45 - step * 15 + depth * 5);
+    if (roller.roll('1d100').total <= chance) plus += 1;
+    else break;
+  }
+  return plus;
 }
 
 /** Bases of a kind the class is trained to use. Accessories have no gate. */
@@ -162,7 +243,7 @@ function affixDominance(affix: Affix): number {
  * its most DOMINANT affix (not just the first rolled), so the name reflects the
  * item's defining modifier.
  */
-export function rolledItemName(baseName: string, affixIds: string[]): string {
+export function rolledItemName(baseName: string, affixIds: string[], enhancement = 0): string {
   const affixes = affixIds.map(getAffix);
   const dominant = (kind: 'prefix' | 'suffix'): Affix | undefined =>
     affixes
@@ -173,15 +254,24 @@ export function rolledItemName(baseName: string, affixIds: string[]): string {
   let name = baseName;
   if (prefix) name = `${prefix.namePart.word} ${name}`;
   if (suffix) name = `${name} ${suffix.namePart.word}`;
+  // The +N leads the whole name, Diablo-style: "+2 Keen Longsword of Mending".
+  if (enhancement > 0) name = `+${enhancement} ${name}`;
   return name;
 }
 
-/** Shop/value price for a rolled item: base cost + per-affix premium × rarity. */
+/**
+ * Shop/value price for a rolled item: base cost + per-affix premium + an
+ * enhancement premium that climbs super-linearly (+1 ≈ 50, +2 ≈ 140, +3 ≈ 270
+ * before the rarity multiplier), all scaled by rarity. The +N premium is what
+ * makes deep loot cost more — the gold sink that soaks mid-game inflation.
+ */
 export function rolledItemCost(ref: ItemRef): number {
   const base = getItem(ref.itemId);
   const affixCount = ref.rolled?.affixes.length ?? 0;
   const rarity = ref.rolled?.rarity ?? 'white';
-  return Math.round((base.cost + 18 * affixCount) * RARITY_PRICE_MULT[rarity]);
+  const enh = ref.rolled?.enhancement ?? 0;
+  const enhancePremium = enh * 30 + enh * enh * 20;
+  return Math.round((base.cost + 18 * affixCount + enhancePremium) * RARITY_PRICE_MULT[rarity]);
 }
 
 /**
@@ -192,6 +282,7 @@ export function rolledItemCost(ref: ItemRef): number {
  */
 export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
   const { rarity, classId } = opts;
+  const depth = opts.depth ?? 1;
   let kind: BaseKind;
   if (opts.kind) {
     kind = opts.kind;
@@ -207,7 +298,7 @@ export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
     kind = 'weapon';
     bases = legalBases(kind, classId);
   }
-  const base = bases[pickIndex(roller, bases.length)];
+  const base = pickBaseWithDepth(roller, bases, depth);
 
   const count = affixCountFor(roller, rarity);
   const pool = eligibleAffixes(kind, classId);
@@ -222,13 +313,20 @@ export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
     affixes.push(candidate.id);
   }
 
+  // The +N axis rides weapons and real armour/shields only; robes (no AC) and
+  // accessories (pure affix carriers) never carry an enhancement.
+  const carriesEnhancement =
+    base.kind === 'weapon' || (base.kind === 'armor' && base.category !== 'robe');
+  const enhancement = carriesEnhancement ? rollEnhancement(roller, rarity, depth) : 0;
+
   return {
     itemId: base.id,
     rolled: {
       baseId: base.id,
       rarity,
       affixes,
-      name: rolledItemName(base.name, affixes),
+      enhancement,
+      name: rolledItemName(base.name, affixes, enhancement),
     },
   };
 }
