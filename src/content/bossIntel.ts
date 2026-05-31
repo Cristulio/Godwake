@@ -170,6 +170,21 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       "You leave the command-post unread and the chart un-studied, and step over the adjutant's last warning without stopping. Somewhere down the line a tall burnt shape marks a thing moving through his field and does not yet call it the enemy. The bold take the centre on their own terms — and what the march sheds for you will weigh a touch heavier when the line finally breaks.",
     coinCost: bossIntelCoinCost(8),
   },
+  // ─── Ch9 · The Hollow Pretender (The Court of Masks) ──────────────────
+  {
+    bossDefId: 'the-hollow-pretender',
+    chapter: 9,
+    roomTitle: 'A Discarded Mask in the Antechamber',
+    roomFlavor:
+      "An ante-room before the throne, where someone who climbed this far ahead of you stopped to think. On a dressing-table among the dust lies a single mask, set down face-up and never taken up again — and propped behind it, a sheaf of court-portraits, every painted ruler of this hall, each face crossed through in the same shaking hand until the last sheet, which is blank. Scored into the table's edge with a knife-point, four words: THERE IS NO FACE. Below, smaller, where the hand pressed through the wood: it opens by showing you the nothing — don't look in — keep your own name.",
+    weakSpotResolution:
+      "You read the dressing-table the way the one who left it meant you to. The Pretender does not strike first — it unmasks first, lifting the face to show you the absence behind it, and the absence is the snare. Knowing the empty look is the opener, you set your first cut for the half-beat before the mask comes up, while it still expects you to want to see.",
+    battlePlanResolution:
+      "You read the whole hollow routine off the crossed-out portraits: the unmasking first, to fix you with the nothing where a face should be — then the borrowed two-stroke of every dead duellist it ever wore, no rhythm to read because there is no one behind it — and the moment past half when you crack the mask expecting the kill and find nothing under it, and the nothing fights hardest. You walk into the empty hall with your mind braced against the absence and your own name held close, and your first strike already set for the gap before the mask lifts.",
+    walkPastResolution:
+      "You leave the mask where it lies and the warning unread, and step past the dressing-table without slowing. On the empty throne ahead a courtly shape inclines its head, charmed, as though you have already agreed to something. The bold take the throne-room on their own terms — and what the Court sheds for you will weigh a touch heavier when the last mask finally comes off and there is nothing beneath it after all.",
+    coinCost: bossIntelCoinCost(9),
+  },
 ];
 
 const BY_BOSS_DEF: Map<string, BossIntelCard> = new Map(

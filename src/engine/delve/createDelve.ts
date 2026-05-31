@@ -58,6 +58,14 @@ import {
   ELITE_POOL as ASH_ELITE_POOL,
   CHAPTER8_FLAVOR,
 } from './chapter8Pools';
+// ─── Chapter 9 · The Court of Masks ──────────────────────────────────────
+import {
+  WARMUP_POOL as MASK_WARMUP_POOL,
+  EARLY_MID_POOL as MASK_EARLY_MID_POOL,
+  MID_POOL as MASK_MID_POOL,
+  ELITE_POOL as MASK_ELITE_POOL,
+  CHAPTER9_FLAVOR,
+} from './chapter9Pools';
 
 interface Rng {
   next(): number;
@@ -764,6 +772,25 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     bossDefId: CHAPTER8_FLAVOR.bossDefId,
     boss: CHAPTER8_FLAVOR.boss,
   },
+  // Ch9 · The Court of Masks — the captor's fallen seat of liars and illusions,
+  // deeper still on the descent: a ruined hall where nothing wears its true face.
+  // All non-combat flavor + the boss ship ready-to-wire in CHAPTER9_FLAVOR; this
+  // entry only binds them to the pools. (Append-only — terminal chapter for now.)
+  {
+    chapter: CHAPTER9_FLAVOR.chapter,
+    prefix: CHAPTER9_FLAVOR.prefix,
+    pools: {
+      warmup: MASK_WARMUP_POOL,
+      earlyMid: MASK_EARLY_MID_POOL,
+      mid: MASK_MID_POOL,
+      elite: MASK_ELITE_POOL,
+    },
+    shrines: CHAPTER9_FLAVOR.shrines,
+    rests: CHAPTER9_FLAVOR.rests,
+    shop: CHAPTER9_FLAVOR.shop,
+    bossDefId: CHAPTER9_FLAVOR.bossDefId,
+    boss: CHAPTER9_FLAVOR.boss,
+  },
 ];
 
 const GODWAKE_CAMPS: RoomFlavor[] = [
@@ -806,6 +833,14 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
     title: 'A Fire Where the Water Ends',
     flavorText:
       "The drowned stacks are behind you and below, and the water gives out all at once — the road lifts clear of the cold black into an air gone dry and bitter, tasting of grit and old burning before you can see what burns. At the last wet stone someone keeps a fire that has no business staying lit, a figure in the rags of a uniform you do not know, warming hands that long ago stopped feeling the warmth. \"You'll hear them before you see them,\" it says, not looking up — \"the drums, and the cadence, and a man who won't be told the war is over. There's a field ahead that has burned for a hundred years and an army on it that was never stood down. Dry off. Sleep if the cold will let you. You go into the ashfall come morning, and there's no morning down there to wake to.\"",
+  },
+  // Ch8→Ch9 seam: past the ashfields the road drops into a fallen palace of
+  // mirrors and masks — the captor's own old court. The last fire before the
+  // hall of liars. (Append-only — terminal seam for now; no chapter follows.)
+  {
+    title: 'A Fire Among the Broken Mirrors',
+    flavorText:
+      "The ashfield is behind you and the march has lost your beat, and the road tips down out of the grit into marble — a grand fallen stair, the burnt smell giving way to dust and old perfume and the faint, sourceless sound of music a hundred years stopped. Someone keeps a small fire on a cracked dance-floor, sat among shards of mirror that throw a dozen of your tired faces back at you, a hooded figure who does not turn round and whose reflection, you notice, does not quite match the back of its head. \"You're nearly down to it now,\" it says, watching you in the glass instead of over its shoulder. \"This was the captor's own house, before it was anything else — where it learned to be whatever a room needed, and rule by it. Everything past here will wear a face you trust. None of them mean it. Rest while you still know which face is yours; it's the one thing the Court will try hardest to take, and the only thing you can't climb the rest of the way down without.\"",
   },
 ];
 

@@ -38,10 +38,11 @@ describe('createGodwakeDelve', () => {
       expect(bosses[i].monsters?.[0].defId).toBe(id);
     });
     // L20-expansion chapters append after the spine: Ch7 Drowned Archive, then
-    // Ch8 The Ashfall March.
+    // Ch8 The Ashfall March, then Ch9 The Court of Masks.
     const bossIds = bosses.map((b) => b.monsters?.[0]?.defId);
     expect(bossIds).toContain('drowned-custodian');
     expect(bossIds).toContain('ashen-marshal');
+    expect(bossIds).toContain('the-hollow-pretender');
   });
 
   it('has at least six event rooms threaded through the chapters', () => {

@@ -277,7 +277,7 @@ describe('boss intel cards — content', () => {
     // No boss carries two cards.
     expect(new Set(ids).size).toBe(ids.length);
     // The Ch1-6 spine plus the L20-expansion bosses (Ch7 Drowned Custodian,
-    // Ch8 Ashen Marshal) are all present; the Ch9 lane appends its own.
+    // Ch8 Ashen Marshal, Ch9 Hollow Pretender) are all present.
     expect(ids).toEqual(
       expect.arrayContaining([
         'duergar-ilyich',
@@ -288,6 +288,7 @@ describe('boss intel cards — content', () => {
         'the-unmade',
         'drowned-custodian', // Ch7 — The Drowned Archive
         'ashen-marshal', // Ch8 — The Ashfall March
+        'the-hollow-pretender', // Ch9 — The Court of Masks
       ]),
     );
     // Every card foreshadows a registered monster.
