@@ -50,6 +50,14 @@ import {
   ELITE_POOL as ARCHIVE_ELITE_POOL,
   CHAPTER7_FLAVOR,
 } from './chapter7Pools';
+// ─── Chapter 8 · The Ashfall March ──────────────────────────────────────
+import {
+  WARMUP_POOL as ASH_WARMUP_POOL,
+  EARLY_MID_POOL as ASH_EARLY_MID_POOL,
+  MID_POOL as ASH_MID_POOL,
+  ELITE_POOL as ASH_ELITE_POOL,
+  CHAPTER8_FLAVOR,
+} from './chapter8Pools';
 
 interface Rng {
   next(): number;
@@ -737,6 +745,25 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     bossDefId: CHAPTER7_FLAVOR.bossDefId,
     boss: CHAPTER7_FLAVOR.boss,
   },
+  // Ch8 · The Ashfall March — the war-burnt waste further down the descent
+  // toward the captor, past the drowned archive. All non-combat flavor + the
+  // boss ship ready-to-wire in CHAPTER8_FLAVOR; this entry only binds them to
+  // the pools. (Sibling Ch9 lane appends after this one — keep-both, no reorder.)
+  {
+    chapter: CHAPTER8_FLAVOR.chapter,
+    prefix: CHAPTER8_FLAVOR.prefix,
+    pools: {
+      warmup: ASH_WARMUP_POOL,
+      earlyMid: ASH_EARLY_MID_POOL,
+      mid: ASH_MID_POOL,
+      elite: ASH_ELITE_POOL,
+    },
+    shrines: CHAPTER8_FLAVOR.shrines,
+    rests: CHAPTER8_FLAVOR.rests,
+    shop: CHAPTER8_FLAVOR.shop,
+    bossDefId: CHAPTER8_FLAVOR.bossDefId,
+    boss: CHAPTER8_FLAVOR.boss,
+  },
 ];
 
 const GODWAKE_CAMPS: RoomFlavor[] = [
@@ -771,6 +798,14 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
     title: 'The Lip of the Long Descent',
     flavorText:
       "The wheel is stopped — broken or refused, it makes no difference now — and where it stood the floor of the world has cracked open onto a stair that goes down, and down, into a dark that smells of cold salt water. Someone keeps a fire at the lip of it: a deep-salvager with a coil of sounding-rope and a lamp shuttered against the damp, who has lowered others into the drowned places below and hauled most of them back up empty. \"There's a library down there,\" she says, not looking at you, paying out rope hand over hand into the black. \"Sunk on purpose, by the one you're going down to find. They drowned it rather than let anyone read it. Whatever you think is waiting at the bottom — it knew you'd come this far. Rest while the lamp holds. The water doesn't care how tired you are.\"",
+  },
+  // Ch7→Ch8 seam: up out of the drowned stacks, the water gives way to ash and
+  // the smell of old burning. The last fire before the ashfields. (Sibling Ch9
+  // lane appends its seam after this one — keep-both, do not reorder.)
+  {
+    title: 'A Fire Where the Water Ends',
+    flavorText:
+      "The drowned stacks are behind you and below, and the water gives out all at once — the road lifts clear of the cold black into an air gone dry and bitter, tasting of grit and old burning before you can see what burns. At the last wet stone someone keeps a fire that has no business staying lit, a figure in the rags of a uniform you do not know, warming hands that long ago stopped feeling the warmth. \"You'll hear them before you see them,\" it says, not looking up — \"the drums, and the cadence, and a man who won't be told the war is over. There's a field ahead that has burned for a hundred years and an army on it that was never stood down. Dry off. Sleep if the cold will let you. You go into the ashfall come morning, and there's no morning down there to wake to.\"",
   },
 ];
 

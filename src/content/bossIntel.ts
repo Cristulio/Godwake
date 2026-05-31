@@ -20,8 +20,8 @@ import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
 export interface BossIntelCard {
   /** Monster def id this card foreshadows. Matches the boss room's monster. */
   bossDefId: string;
-  /** Chapter index (1-7+; widened per L20-expansion chapter lane). Scales the `battle-plan` temp-HP gird. */
-  chapter: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  /** Chapter index (1-9; widened per L20-expansion chapter lane). Scales the `battle-plan` temp-HP gird. */
+  chapter: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   /** Title shown on the intel event room. */
   roomTitle: string;
   /** Diegetic flavor text for the intel room — pre-boss BG2/FromSoft tone. */
@@ -153,6 +153,22 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     walkPastResolution:
       "You leave the slate unread and the keeper's warning un-heeded. Down in the black rotunda something that has filed a thousand readers marks the going, almost glad of the company. The bold take the deep on their own terms — and what the drowned vault sheds for you will weigh a touch heavier when the water finally closes.",
     coinCost: bossIntelCoinCost(7),
+  },
+  // ─── Ch8 · The Ashen Marshal (The Ashfall March) ──────────────────────
+  // (Append-only: sibling Ch9 lane adds its card after this one.)
+  {
+    bossDefId: 'ashen-marshal',
+    chapter: 8,
+    roomTitle: "A Marshal's Order, Still Pinned",
+    roomFlavor:
+      "A command-post dug into the ash at the edge of the old line — a folding map-table half-melted to slag, a campaign chart pinned to a board the fire warped but did not take. The dispositions are all still marked in a precise hand: the line to hold, the reserve, the order of the march. Every unit on the chart has been crossed through in char but two. Scored into the table's edge by some adjutant's last act before the burning reached him, three words in a soldier's blocky capitals: HE WON'T HALT.",
+    weakSpotResolution:
+      "You read the chart the way an aide-de-camp reads it, and you find the shape of him in it: he opens with the order, never the blade — 'hold the line,' and your own body answers before your mind can. Knowing the command comes first, you set your opening strike for the half-beat before he gives it, while he still expects you to fall in.",
+    battlePlanResolution:
+      "You read the whole campaign off the warped board: the order to root you first, drilled so deep it works on a thing that was never a soldier; then the long practised two-stroke of a man who fought a real war; and the moment past half when the old fight reignites in him and the economy goes out of it. You walk into the centre of the line with your mind set against the command and your first cut already aimed at the gap his drill leaves open.",
+    walkPastResolution:
+      "You leave the command-post unread and the chart un-studied, and step over the adjutant's last warning without stopping. Somewhere down the line a tall burnt shape marks a thing moving through his field and does not yet call it the enemy. The bold take the centre on their own terms — and what the march sheds for you will weigh a touch heavier when the line finally breaks.",
+    coinCost: bossIntelCoinCost(8),
   },
 ];
 

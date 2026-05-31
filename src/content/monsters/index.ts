@@ -77,6 +77,15 @@ import { DROWNED_MNEMONIC } from './drowned-mnemonic';
 import { THE_UNINDEXED } from './the-unindexed';
 import { TIDEBOUND_CODEX } from './tidebound-codex';
 import { DROWNED_CUSTODIAN } from './drowned-custodian';
+// ─── Chapter 8 · The Ashfall March (bestiary) ─────────────────────────────
+import { EMBER_CONSCRIPT } from './ember-conscript';
+import { CINDERWAKE_HOUND } from './cinderwake-hound';
+import { SLAGBOUND_LEGIONARY } from './slagbound-legionary';
+import { ASHCHOKE_HERALD } from './ashchoke-herald';
+import { GRAVESMOKE_REVENANT } from './gravesmoke-revenant';
+import { PYRE_CHAPLAIN } from './pyre-chaplain';
+import { SLAG_COLOSSUS } from './slag-colossus';
+import { ASHEN_MARSHAL } from './ashen-marshal';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -158,6 +167,15 @@ const ALL_MONSTERS: Monster[] = [
   THE_UNINDEXED,
   TIDEBOUND_CODEX,
   DROWNED_CUSTODIAN,
+  // ─── Chapter 8 · The Ashfall March ──────────────────────────────────────
+  EMBER_CONSCRIPT,
+  CINDERWAKE_HOUND,
+  SLAGBOUND_LEGIONARY,
+  ASHCHOKE_HERALD,
+  GRAVESMOKE_REVENANT,
+  PYRE_CHAPLAIN,
+  SLAG_COLOSSUS,
+  ASHEN_MARSHAL,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -254,4 +272,13 @@ export {
   THE_UNINDEXED,
   TIDEBOUND_CODEX,
   DROWNED_CUSTODIAN,
+  // ─── Chapter 8 · The Ashfall March ──────────────────────────────────────
+  EMBER_CONSCRIPT,
+  CINDERWAKE_HOUND,
+  SLAGBOUND_LEGIONARY,
+  ASHCHOKE_HERALD,
+  GRAVESMOKE_REVENANT,
+  PYRE_CHAPLAIN,
+  SLAG_COLOSSUS,
+  ASHEN_MARSHAL,
 };

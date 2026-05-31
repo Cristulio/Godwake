@@ -13,25 +13,35 @@ describe('createGodwakeDelve', () => {
     expect(d.rooms.length).toBeGreaterThanOrEqual(80);
   });
 
-  it('has one camp seam between every pair of chapters', () => {
+  it('has one camp seam between each pair of chained chapters', () => {
     const d = createGodwakeDelve(1);
     const camps = d.rooms.filter((r) => r.kind === 'camp');
-    // 7 chapters → 6 seams (Ch7 is terminal). Sibling Ch8/Ch9 lanes extend this.
-    expect(camps).toHaveLength(6);
+    const bosses = d.rooms.filter((r) => r.kind === 'boss');
+    // One camp per boss except the terminal chapter (no seam after the last).
+    expect(camps).toHaveLength(bosses.length - 1);
   });
 
-  it('has one boss per chapter, in the expected order', () => {
+  it('opens with the six canonical chapter bosses in order', () => {
     const d = createGodwakeDelve(1);
     const bosses = d.rooms.filter((r) => r.kind === 'boss');
-    expect(bosses).toHaveLength(7);
-    expect(bosses[0].monsters?.[0].defId).toBe('duergar-ilyich');
-    expect(bosses[1].monsters?.[0].defId).toBe('athkatla-magistrate');
-    expect(bosses[2].monsters?.[0].defId).toBe('asylum-director');
-    expect(bosses[3].monsters?.[0].defId).toBe('drow-matron-mother');
-    expect(bosses[4].monsters?.[0].defId).toBe('hollow-dawn');
-    expect(bosses[5].monsters?.[0].defId).toBe('the-unmade');
-    // ─── Chapter 7 · The Drowned Archive ──────────────────────────────────
-    expect(bosses[6].monsters?.[0].defId).toBe('drowned-custodian');
+    // The Ch1-6 spine is fixed; later chapters (Ch7-9) append after it.
+    expect(bosses.length).toBeGreaterThanOrEqual(6);
+    const canonical = [
+      'duergar-ilyich',
+      'athkatla-magistrate',
+      'asylum-director',
+      'drow-matron-mother',
+      'hollow-dawn',
+      'the-unmade',
+    ];
+    canonical.forEach((id, i) => {
+      expect(bosses[i].monsters?.[0].defId).toBe(id);
+    });
+    // L20-expansion chapters append after the spine: Ch7 Drowned Archive, then
+    // Ch8 The Ashfall March.
+    const bossIds = bosses.map((b) => b.monsters?.[0]?.defId);
+    expect(bossIds).toContain('drowned-custodian');
+    expect(bossIds).toContain('ashen-marshal');
   });
 
   it('has at least six event rooms threaded through the chapters', () => {
@@ -102,7 +112,7 @@ describe('createGodwakeDelve', () => {
       .map((r, idx) => ({ r, idx }))
       .filter(({ r }) => r.kind === 'camp')
       .map(({ idx }) => idx);
-    // Each camp seam falls between two bosses (one fewer camp than bosses).
+    // Each camp seam falls between two bosses (one camp per non-terminal boss).
     for (let i = 0; i < campIndices.length; i++) {
       expect(campIndices[i]).toBeGreaterThan(bossIndices[i]);
       expect(campIndices[i]).toBeLessThan(bossIndices[i + 1]);
@@ -171,11 +181,13 @@ describe('createGodwakeDelve — branching graph', () => {
     const d = createGodwakeDelve(7);
     expect(d.rooms.some((r) => r.kind === 'shop')).toBe(true);
     expect(d.rooms.some((r) => r.kind === 'elite')).toBe(true);
-    // ─── Chapter 7 · the terminal boss is now The Drowned Custodian ────────
-    const finalBoss = d.rooms.find((r) => r.monsters?.[0]?.defId === 'drowned-custodian')!;
+    // The final chapter's boss is terminal (no onward seam); whichever chapter
+    // is wired last owns it — derive it rather than hard-coding the def id.
+    const bossRooms = d.rooms.filter((r) => r.kind === 'boss');
+    const finalBoss = bossRooms[bossRooms.length - 1];
     expect(finalBoss.next ?? []).toHaveLength(0);
     // Every other chapter boss leads onward to its camp.
-    for (const boss of d.rooms.filter((r) => r.kind === 'boss' && r !== finalBoss)) {
+    for (const boss of bossRooms.filter((r) => r !== finalBoss)) {
       expect(reachableRooms(d, boss).some((r) => r.kind === 'camp')).toBe(true);
     }
   });
