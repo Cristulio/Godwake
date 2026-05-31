@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { AttackEvent } from '../../types/combat';
 
 export interface FloatingDamageItem {
@@ -128,12 +129,29 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
       ? `0 0 12px ${style.glow}, 0 0 24px rgba(255,71,48,0.6), 3px 3px 0 rgba(0,0,0,0.95), -2px -2px 0 rgba(0,0,0,0.95)`
       : `0 0 9px ${style.glow}, 0 0 4px rgba(0,0,0,0.95), 2px 2px 0 rgba(0,0,0,0.9)`;
 
+  // Measure rendered bounds and shift horizontally to stay within the viewport.
+  // useLayoutEffect fires before paint, so the correction is invisible to the eye.
+  const ref = useRef<HTMLDivElement>(null);
+  const [xClamp, setXClamp] = useState(0);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const margin = 6;
+    if (rect.right > window.innerWidth - margin) {
+      setXClamp(window.innerWidth - margin - rect.right);
+    } else if (rect.left < margin) {
+      setXClamp(margin - rect.left);
+    }
+  }, [item.id]);
+
   return (
     <div
+      ref={ref}
       className={`absolute top-1/3 font-display font-extrabold ${style.color} ${style.size} ${style.animation} pointer-events-none`}
       style={{
         left: '50%',
-        transform: `translate(calc(-50% + ${offsetX}px), 0)`,
+        transform: `translate(calc(-50% + ${offsetX + xClamp}px), 0)`,
         textShadow,
         letterSpacing: '0.02em',
       }}

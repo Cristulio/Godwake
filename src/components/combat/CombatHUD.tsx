@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
-import { computeAC, characterHasMechanic } from '../../engine/character/derived';
+import { computeAC, characterHasMechanic, critRange } from '../../engine/character/derived';
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
@@ -177,6 +177,9 @@ function Pill({
 
 export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHUDProps) {
   const ac = computeAC(character);
+  const critBand = critRange(character);
+  // Only surface the crit window when it's widened from the default 20-only.
+  const critLabel = critBand.length > 1 ? `${critBand[0]}-20` : null;
 
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
@@ -293,6 +296,17 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
           <HpBar current={character.hp.current} max={character.hp.max} temp={character.hp.temp} />
         </div>
       </Section>
+
+      {critLabel && (
+        <Section title="Crit">
+          <Pill
+            text={critLabel}
+            on
+            tone="amber"
+            title={`Critical range: a natural ${critLabel} on the d20 scores a critical hit (doubled damage dice).`}
+          />
+        </Section>
+      )}
 
       {isFighter && (
         <Section title="Second Wind">

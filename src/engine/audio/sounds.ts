@@ -31,13 +31,27 @@ export type MusicId =
   | 'hub_bed'
   | 'hub_ambient';
 
+// Cache noise buffers per context + duration so we don't re-allocate and
+// re-fill on every sound play. The same broadband noise texture is
+// inaudibly repeated; the filter sweep that follows is what shapes timbre.
+const _noiseCache = new WeakMap<AudioContext, Map<number, AudioBuffer>>();
+
 function noiseBuffer(ctx: AudioContext, ms: number): AudioBuffer {
-  const sampleRate = ctx.sampleRate;
-  const length = Math.max(1, Math.floor((ms / 1000) * sampleRate));
-  const buf = ctx.createBuffer(1, length, sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < length; i++) {
-    data[i] = Math.random() * 2 - 1;
+  let byCtx = _noiseCache.get(ctx);
+  if (!byCtx) {
+    byCtx = new Map();
+    _noiseCache.set(ctx, byCtx);
+  }
+  let buf = byCtx.get(ms);
+  if (!buf) {
+    const sampleRate = ctx.sampleRate;
+    const length = Math.max(1, Math.floor((ms / 1000) * sampleRate));
+    buf = ctx.createBuffer(1, length, sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < length; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    byCtx.set(ms, buf);
   }
   return buf;
 }

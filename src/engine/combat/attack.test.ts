@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack, weaponDamageDice } from './attack';
+import { critRange } from '../character/derived';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
 import { getItem } from '../../content/items';
@@ -249,5 +250,76 @@ describe('versatile weapons — two-handed die (item 16)', () => {
     // Empty off-hand → 1d10, so 9 or 10 shows up. Shield → 1d8, capped at 8.
     expect(Math.max(...twoHanded)).toBeGreaterThan(8);
     expect(Math.max(...oneHanded)).toBeLessThanOrEqual(8);
+  });
+});
+
+describe('widened crit range — mechanic verification', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('critRange() returns the correct band when permanentBonuses.critRange widens it', () => {
+    const fighter = makeFighterStrBuild();
+    // +2 widens base 20 down to 18 → [18,19,20]
+    fighter.permanentBonuses = { critRange: 2 };
+    const band = critRange(fighter);
+    expect(band).toEqual([18, 19, 20]);
+  });
+
+  it('a fighter with 18-20 crit window crits on natural 18 or 19, not just 20', () => {
+    const goblin = getMonster('goblin');
+    const critsByNatural: number[] = [];
+    const missedCrits: number[] = [];
+
+    for (let seed = 1; seed <= 400; seed++) {
+      _resetMonsterInstanceCounter();
+      const fighter = makeFighterStrBuild();
+      fighter.baseAbilityScores = { str: 16, dex: 12, con: 14, int: 8, wis: 10, cha: 10 };
+      fighter.permanentBonuses = { critRange: 2 }; // 18-20 window
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
+      const goblinId = findMonster(init.state).id;
+      const { state } = playerAttack(
+        { roller, character: init.character, state: init.state },
+        goblinId,
+        'longsword',
+      );
+      if (!state.lastAttack) continue;
+      const nat = state.lastAttack.natural;
+      if (nat >= 18 && nat <= 20) {
+        if (state.lastAttack.crit) critsByNatural.push(nat);
+        else missedCrits.push(nat);
+      }
+    }
+
+    // Every roll in the 18-20 window must be flagged as a crit.
+    expect(missedCrits).toHaveLength(0);
+    // We must have seen natural 18 or 19 crits (confirms the window is actually wider).
+    expect(critsByNatural.some((n) => n === 18 || n === 19)).toBe(true);
+  });
+
+  it('a base fighter (20-only) does NOT crit on natural 18 or 19', () => {
+    const goblin = getMonster('goblin');
+    const falseCrits: number[] = [];
+
+    for (let seed = 1; seed <= 400; seed++) {
+      _resetMonsterInstanceCounter();
+      const fighter = makeFighterStrBuild();
+      fighter.baseAbilityScores = { str: 16, dex: 12, con: 14, int: 8, wis: 10, cha: 10 };
+      // No crit-range bonus — default 20-only.
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: fighter, monsters: [{ def: goblin }] });
+      const goblinId = findMonster(init.state).id;
+      const { state } = playerAttack(
+        { roller, character: init.character, state: init.state },
+        goblinId,
+        'longsword',
+      );
+      if (!state.lastAttack) continue;
+      const nat = state.lastAttack.natural;
+      if ((nat === 18 || nat === 19) && state.lastAttack.crit) {
+        falseCrits.push(nat);
+      }
+    }
+
+    expect(falseCrits).toHaveLength(0);
   });
 });
