@@ -166,11 +166,6 @@ function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
   const availability = canTakeChoice(character, choice);
   const disabled = !availability.ok;
   const disabledReason = !availability.ok ? availability.reason : null;
-  const chaTag =
-    choice.requiresCha !== undefined
-      ? `CHA +${choice.requiresCha}`
-      : null;
-
   let skillTag: { skill: SkillName; dc: number; bonus: number; proficient: boolean } | null = null;
   if (choice.skillCheck) {
     const bonus = skillBonus(character, choice.skillCheck.skill);
@@ -221,14 +216,6 @@ function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
               className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest border border-[var(--color-border-warm)] px-1.5 py-0.5"
             >
               {Math.round(choice.successChance * 100)}%
-            </div>
-          )}
-          {chaTag && (
-            <div
-              data-testid="cha-badge"
-              className="text-[var(--color-accent-amber)] text-[10px] uppercase tracking-widest border border-[var(--color-accent-amber)]/60 px-1.5 py-0.5"
-            >
-              {chaTag}
             </div>
           )}
           {choice.requiresGold !== undefined && (

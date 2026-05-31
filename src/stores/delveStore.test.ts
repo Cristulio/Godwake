@@ -274,29 +274,6 @@ describe('delveStore.abandonDelve — wipe without reincarnation', () => {
   });
 });
 
-describe('delveStore.pickCampChoice — class-aware prayer', () => {
-  beforeEach(() => {
-    setActiveRoller('prayer-seed');
-    seedRun({ quirks: [] });
-  });
-
-  it('prayer rolls and returns a blessing id, and locks the camp choice', () => {
-    const granted = useDelveStore.getState().pickCampChoice('prayer');
-    expect(typeof granted).toBe('string');
-    expect(granted).toBeTruthy();
-    expect(useDelveStore.getState().delve!.campChoice).toBe('prayer');
-    // The granted blessing is mirrored onto the character.
-    expect(char().blessings).toContain(granted);
-  });
-
-  it('a second camp choice is ignored once one is taken', () => {
-    useDelveStore.getState().pickCampChoice('prayer');
-    const second = useDelveStore.getState().pickCampChoice('rest');
-    expect(second).toBeNull();
-    expect(useDelveStore.getState().delve!.campChoice).toBe('prayer');
-  });
-});
-
 describe('delveStore — gold stacking', () => {
   beforeEach(() => {
     setActiveRoller('gold-seed');

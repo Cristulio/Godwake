@@ -176,7 +176,7 @@ interface GameState {
   markChapter1BossKilled: () => void;
   creditChapterClearGold: () => void;
   concludeDelveAtCamp: () => void;
-  pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => string | null;
+  pickCampChoice: (choice: 'rest') => string | null;
   pickEliteChoice: (choice: 'fight' | 'gold') => void;
   pickCampBoon: (tier: number, boonId: string | null) => void;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };

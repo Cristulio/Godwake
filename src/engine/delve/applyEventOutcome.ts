@@ -43,7 +43,7 @@ export interface EventOutcomeResult {
  */
 export type ChoiceAvailability =
   | { ok: true }
-  | { ok: false; reason: string; gate: 'gold' | 'hp' | 'cha' };
+  | { ok: false; reason: string; gate: 'gold' | 'hp' };
 
 /**
  * Check whether the character meets every gate on a choice: gold cost, HP
@@ -64,18 +64,6 @@ export function canTakeChoice(character: Character, choice: EventChoice): Choice
       gate: 'hp',
       reason: `needs ${choice.requiresHpAtLeast} HP (you have ${character.hp.current})`,
     };
-  }
-  if (choice.requiresCha !== undefined) {
-    const chaMod = modifierFor(character, 'cha');
-    if (chaMod < choice.requiresCha) {
-      const sign = choice.requiresCha >= 0 ? '+' : '';
-      const youSign = chaMod >= 0 ? '+' : '';
-      return {
-        ok: false,
-        gate: 'cha',
-        reason: `needs CHA ${sign}${choice.requiresCha} (you have ${youSign}${chaMod})`,
-      };
-    }
   }
   return { ok: true };
 }

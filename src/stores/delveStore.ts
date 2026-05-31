@@ -251,8 +251,8 @@ interface DelveStoreState {
   markChapter1BossKilled: () => void;
   creditChapterClearGold: () => void;
   concludeDelveAtCamp: () => void;
-  /** Resolve a camp choice. Returns the granted blessing id for 'prayer', else null. */
-  pickCampChoice: (choice: 'rest' | 'sharpen' | 'prayer') => string | null;
+  /** Resolve a camp choice. Returns null (rest grants no blessing). */
+  pickCampChoice: (choice: 'rest') => string | null;
   /**
    * Resolve the elite node's risk/reward decision. 'fight' engages the encounter
    * (the spawn-on-enter effect builds it; a win may yield a legendary relic);
@@ -710,39 +710,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (s.delve.campChoice) return null;
 
     let nextCharacter = character;
-    let grantedBlessingId: string | null = null;
+    const grantedBlessingId: string | null = null;
     if (choice === 'rest') {
       nextCharacter = longRest(character);
-    } else if (choice === 'sharpen') {
-      // Class-aware Sharpen: wizards bump spell attack rolls (Whet the Mind);
-      // martials bump weapon attack rolls (Sharpen the Blade). Same magnitude,
-      // class-appropriate lever — see CampRoom.tsx for the labels.
-      nextCharacter =
-        character.classId === 'wizard'
-          ? {
-              ...character,
-              delveSpellAttackBonus: (character.delveSpellAttackBonus ?? 0) + 1,
-            }
-          : {
-              ...character,
-              delveAttackBonus: (character.delveAttackBonus ?? 0) + 1,
-            };
-    } else if (choice === 'prayer') {
-      // Class-aware roll, matching the shrine/merchant rolls. Single source of
-      // truth — the view just reads back the granted id to name the god.
-      const [rolled] = rollBlessingOptions(
-        getActiveRoller(),
-        1,
-        character.classId,
-        character.blessings,
-      );
-      if (rolled) {
-        grantedBlessingId = rolled;
-        nextCharacter = {
-          ...character,
-          blessings: [...character.blessings, rolled],
-        };
-      }
     }
 
     charSlice.setCharacter(nextCharacter);

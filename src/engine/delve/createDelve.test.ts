@@ -1,66 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import {
-  createIronCellsDelve,
   createGodwakeDelve,
-  createSpellholdDelve,
-  createUstNathaDelve,
   reachableRooms,
   roomById,
 } from './createDelve';
 import { getMonster } from '../../content/monsters';
 import type { DelveState } from '../../types/delve';
-
-describe('createIronCellsDelve', () => {
-  it('produces 11 rooms in the expected slot pattern (intel room before boss)', () => {
-    const d = createIronCellsDelve(1);
-    expect(d.rooms).toHaveLength(11);
-    expect(d.rooms[0].kind).toBe('combat'); // warmup
-    expect(d.rooms[1].kind).toBe('shrine');
-    expect(d.rooms[2].kind).toBe('combat'); // early-mid
-    expect(d.rooms[3].kind).toBe('combat'); // early-mid
-    expect(d.rooms[4].kind).toBe('rest');
-    expect(d.rooms[5].kind).toBe('combat'); // mid
-    expect(d.rooms[6].kind).toBe('combat'); // mid
-    expect(d.rooms[7].kind).toBe('shrine');
-    expect(d.rooms[8].kind).toBe('combat'); // elite
-    expect(d.rooms[9].kind).toBe('event');  // boss intel
-    expect(d.rooms[10].kind).toBe('boss');
-  });
-
-  it('is deterministic per seed', () => {
-    const a = createIronCellsDelve(42);
-    const b = createIronCellsDelve(42);
-    expect(a.rooms.map((r) => r.title)).toEqual(b.rooms.map((r) => r.title));
-    expect(a.rooms.map((r) => r.monsters)).toEqual(b.rooms.map((r) => r.monsters));
-  });
-
-  it('produces different compositions across seeds', () => {
-    // Sample 30 seeds; at least 4 distinct warmup compositions should appear
-    // (warmup pool has 4 entries, so with 30 picks variance should hit them all).
-    const warmupTitles = new Set<string>();
-    for (let s = 0; s < 30; s++) {
-      const d = createIronCellsDelve(s * 7919);
-      warmupTitles.add(d.rooms[0].monsters?.map((m) => m.defId).join(',') ?? '');
-    }
-    expect(warmupTitles.size).toBeGreaterThanOrEqual(3);
-  });
-
-  it('boss is always Ilyich', () => {
-    for (let s = 0; s < 10; s++) {
-      const d = createIronCellsDelve(s);
-      expect(d.rooms[10].monsters?.[0].defId).toBe('duergar-ilyich');
-    }
-  });
-
-  it('warmup room has at least 1 enemy total', () => {
-    for (let s = 0; s < 10; s++) {
-      const d = createIronCellsDelve(s);
-      const totalCount =
-        d.rooms[0].monsters?.reduce((sum, m) => sum + m.count, 0) ?? 0;
-      expect(totalCount).toBeGreaterThanOrEqual(1);
-    }
-  });
-});
 
 describe('createGodwakeDelve', () => {
   it('emits at least 80 rooms across the six-chapter chained run', () => {
@@ -158,113 +103,6 @@ describe('createGodwakeDelve', () => {
     for (let i = 0; i < 5; i++) {
       expect(campIndices[i]).toBeGreaterThan(bossIndices[i]);
       expect(campIndices[i]).toBeLessThan(bossIndices[i + 1]);
-    }
-  });
-});
-
-describe('createSpellholdDelve', () => {
-  it('produces 11 rooms in the warmup-shrine-mid-rest-elite-shrine-mid-shrine-elite-intel-boss pattern', () => {
-    const d = createSpellholdDelve(1);
-    expect(d.rooms).toHaveLength(11);
-    expect(d.rooms[0].kind).toBe('combat');
-    expect(d.rooms[1].kind).toBe('shrine');
-    expect(d.rooms[2].kind).toBe('combat');
-    expect(d.rooms[3].kind).toBe('rest');
-    expect(d.rooms[4].kind).toBe('combat');
-    expect(d.rooms[5].kind).toBe('shrine');
-    expect(d.rooms[6].kind).toBe('combat');
-    expect(d.rooms[7].kind).toBe('shrine');
-    expect(d.rooms[8].kind).toBe('combat');
-    expect(d.rooms[9].kind).toBe('event');
-    expect(d.rooms[10].kind).toBe('boss');
-  });
-
-  it('chapterId is chapter-3', () => {
-    const d = createSpellholdDelve(42);
-    expect(d.chapterId).toBe('chapter-3');
-  });
-
-  it('boss is always the Asylum Director', () => {
-    for (let s = 0; s < 10; s++) {
-      const d = createSpellholdDelve(s);
-      expect(d.rooms[10].monsters?.[0].defId).toBe('asylum-director');
-    }
-  });
-
-  it('is deterministic per seed', () => {
-    const a = createSpellholdDelve(42);
-    const b = createSpellholdDelve(42);
-    expect(a.rooms.map((r) => r.title)).toEqual(b.rooms.map((r) => r.title));
-    expect(a.rooms.map((r) => r.monsters)).toEqual(b.rooms.map((r) => r.monsters));
-  });
-
-  it('warmup room has 1-2 enemies total', () => {
-    for (let s = 0; s < 10; s++) {
-      const d = createSpellholdDelve(s);
-      const totalCount =
-        d.rooms[0].monsters?.reduce((sum, m) => sum + m.count, 0) ?? 0;
-      expect(totalCount).toBeGreaterThanOrEqual(1);
-      expect(totalCount).toBeLessThanOrEqual(2);
-    }
-  });
-
-  it('boss has battle-rage mechanic and a Hold Person action', () => {
-    const director = getMonster('asylum-director');
-    expect(director.bossMechanic).toBe('battle-rage');
-    expect(director.actions.some((a) => a.kind === 'paralyze' && a.name === 'Hold Person')).toBe(true);
-  });
-});
-
-describe('createUstNathaDelve', () => {
-  it('produces 11 rooms in the warmup-shrine-early-mid-early-mid-rest-mid-mid-shrine-elite-intel-boss pattern', () => {
-    const d = createUstNathaDelve(1);
-    expect(d.rooms).toHaveLength(11);
-    expect(d.rooms[0].kind).toBe('combat');
-    expect(d.rooms[1].kind).toBe('shrine');
-    expect(d.rooms[2].kind).toBe('combat');
-    expect(d.rooms[3].kind).toBe('combat');
-    expect(d.rooms[4].kind).toBe('rest');
-    expect(d.rooms[5].kind).toBe('combat');
-    expect(d.rooms[6].kind).toBe('combat');
-    expect(d.rooms[7].kind).toBe('shrine');
-    expect(d.rooms[8].kind).toBe('combat');
-    expect(d.rooms[9].kind).toBe('event');
-    expect(d.rooms[10].kind).toBe('boss');
-  });
-
-  it('chapterId is chapter-4', () => {
-    const d = createUstNathaDelve(42);
-    expect(d.chapterId).toBe('chapter-4');
-  });
-
-  it('boss is always the Matron Mother', () => {
-    for (let s = 0; s < 10; s++) {
-      const d = createUstNathaDelve(s);
-      expect(d.rooms[10].monsters?.[0].defId).toBe('drow-matron-mother');
-    }
-  });
-
-  it('is deterministic per seed', () => {
-    const a = createUstNathaDelve(42);
-    const b = createUstNathaDelve(42);
-    expect(a.rooms.map((r) => r.title)).toEqual(b.rooms.map((r) => r.title));
-    expect(a.rooms.map((r) => r.monsters)).toEqual(b.rooms.map((r) => r.monsters));
-  });
-
-  it('boss has battle-rage mechanic and a Hold Person action', () => {
-    const matron = getMonster('drow-matron-mother');
-    expect(matron.bossMechanic).toBe('battle-rage');
-    expect(matron.actions.some((a) => a.kind === 'paralyze')).toBe(true);
-  });
-
-  it('every monster id referenced in pools resolves via getMonster', () => {
-    for (let s = 0; s < 8; s++) {
-      const d = createUstNathaDelve(s);
-      for (const room of d.rooms) {
-        for (const m of room.monsters ?? []) {
-          expect(() => getMonster(m.defId)).not.toThrow();
-        }
-      }
     }
   });
 });

@@ -2,30 +2,17 @@ import type { AbilityName } from './abilities';
 
 export type ConditionName =
   | 'blinded'
-  | 'charmed'
-  | 'deafened'
   | 'frightened'
-  | 'grappled'
-  | 'incapacitated'
-  | 'invisible'
   | 'paralyzed'
-  | 'petrified'
   | 'poisoned'
-  | 'prone'
   | 'restrained'
-  | 'stunned'
-  | 'unconscious'
-  | 'exhausted'
   // Not a 5e condition. Godwake-local: the target's blows land softer — a flat
   // reduction to outgoing weapon damage (amount stored in ActiveCondition.level).
   // Models sapping/withering effects (Cell Wight grip, energy drain).
   | 'weakened';
 
 export const CONDITION_NAMES: readonly ConditionName[] = [
-  'blinded', 'charmed', 'deafened', 'frightened', 'grappled',
-  'incapacitated', 'invisible', 'paralyzed', 'petrified',
-  'poisoned', 'prone', 'restrained', 'stunned', 'unconscious', 'exhausted',
-  'weakened',
+  'blinded', 'frightened', 'paralyzed', 'poisoned', 'restrained', 'weakened',
 ] as const;
 
 export type DurationKind =

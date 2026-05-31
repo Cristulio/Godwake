@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import {
-  createIronCellsDelve,
-  createAthkatlaDelve,
-  createSpellholdDelve,
-  createUstNathaDelve,
   createGodwakeDelve,
 } from './createDelve';
 import { applyEventOutcome } from './applyEventOutcome';
@@ -56,39 +52,6 @@ function roller() {
 }
 
 describe('boss intel rooms — placement', () => {
-  it('Ch1 (Iron Cells) has an intel event exactly 1 room before Ilyich', () => {
-    const d = createIronCellsDelve(1);
-    const bossIdx = d.rooms.findIndex((r) => r.kind === 'boss');
-    expect(bossIdx).toBeGreaterThan(0);
-    const before = d.rooms[bossIdx - 1];
-    expect(before.kind).toBe('event');
-    expect(before.eventTemplateId).toBe(intelEventIdFor('duergar-ilyich'));
-  });
-
-  it('Ch2 (Athkatla) has an intel event 1 room before the Magistrate', () => {
-    const d = createAthkatlaDelve(1);
-    const bossIdx = d.rooms.findIndex((r) => r.kind === 'boss');
-    const before = d.rooms[bossIdx - 1];
-    expect(before.kind).toBe('event');
-    expect(before.eventTemplateId).toBe(intelEventIdFor('athkatla-magistrate'));
-  });
-
-  it('Ch3 (Spellhold) has an intel event 1 room before the Director', () => {
-    const d = createSpellholdDelve(1);
-    const bossIdx = d.rooms.findIndex((r) => r.kind === 'boss');
-    const before = d.rooms[bossIdx - 1];
-    expect(before.kind).toBe('event');
-    expect(before.eventTemplateId).toBe(intelEventIdFor('asylum-director'));
-  });
-
-  it('Ch4 (Ust Natha) has an intel event 1 room before the Matron Mother', () => {
-    const d = createUstNathaDelve(1);
-    const bossIdx = d.rooms.findIndex((r) => r.kind === 'boss');
-    const before = d.rooms[bossIdx - 1];
-    expect(before.kind).toBe('event');
-    expect(before.eventTemplateId).toBe(intelEventIdFor('drow-matron-mother'));
-  });
-
   it('Godwake delve has an intel event 1 room before each of its 6 bosses', () => {
     const d = createGodwakeDelve(1);
     const bossIndices = d.rooms
