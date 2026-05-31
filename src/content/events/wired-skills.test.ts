@@ -38,6 +38,22 @@ const NEWLY_WIRED: { skill: SkillName; eventId: string; choiceId: string }[] = [
   { skill: 'arcana', eventId: 'hollow-library', choiceId: 'parse-the-script' },
   { skill: 'stealth', eventId: 'warden-deal', choiceId: 'slip-past-warden' },
   { skill: 'religion', eventId: 'eilistraee-shrine', choiceId: 'observe-the-rite' },
+  // Skills-depth additions (this lane)
+  { skill: 'arcana', eventId: 'cracked-mirror', choiceId: 'read-the-reflection' },
+  { skill: 'athletics', eventId: 'whispering-door', choiceId: 'shoulder-the-door' },
+  { skill: 'perception', eventId: 'rats-in-the-grain', choiceId: 'scan-the-mess' },
+  { skill: 'history', eventId: 'beggar-at-the-gate', choiceId: 'recall-waukeens-prayer' },
+  { skill: 'medicine', eventId: 'street-orphan', choiceId: 'tend-the-cut' },
+  { skill: 'sleight-of-hand', eventId: 'pilgrim-road-smith', choiceId: 'pocket-tools' },
+  { skill: 'survival', eventId: 'soldier-left-to-die', choiceId: 'assess-his-state' },
+  { skill: 'perception', eventId: 'soldier-left-to-die', choiceId: 'notice-what-hes-holding' },
+  { skill: 'medicine', eventId: 'soldier-left-to-die', choiceId: 'bind-the-wound' },
+  { skill: 'investigation', eventId: 'dropped-ledger', choiceId: 'decode-the-cipher' },
+  { skill: 'history', eventId: 'dropped-ledger', choiceId: 'identify-the-house' },
+  { skill: 'insight', eventId: 'dropped-ledger', choiceId: 'read-the-margins' },
+  { skill: 'religion', eventId: 'forgotten-offering-table', choiceId: 'honour-the-god' },
+  { skill: 'arcana', eventId: 'forgotten-offering-table', choiceId: 'read-the-weave' },
+  { skill: 'stealth', eventId: 'forgotten-offering-table', choiceId: 'pocket-the-trinkets' },
 ];
 
 describe('newly wired skill checks — the roll drives both branches', () => {

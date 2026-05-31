@@ -105,6 +105,22 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'read-the-reflection',
+        label: '[Arcana] Read the enchantment in the glass',
+        hint: 'Name the working before you touch it — get it right and take its gift clean; guess wrong and the reflection bites.',
+        skillCheck: { skill: 'arcana', dc: 11 },
+        outcome: {
+          resolution:
+            'You trace the fracture with your eyes and you know what it is — a reflection-binding, half-made, looking for a willing caster. You offer it only the safe clauses and it folds a thread of cold light into your palm without teeth.',
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'The working is too strange, too half-made to parse. You reach for it anyway and the reflection lunges — a cold hand through the glass that finds your chest before you step back. It does not follow past the frame.',
+          effects: [{ kind: 'hp_delta', amount: -4 }],
+        },
+      },
+      {
         id: 'shatter',
         label: 'Shatter the glass',
         hint: 'Seven years\' bad luck — or a god\'s favour.',
@@ -254,6 +270,22 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'shoulder-the-door',
+        label: '[Athletics] Put your shoulder to it',
+        hint: 'Force the latch before whatever waits can use it. Muscle it clear and the road is yours.',
+        skillCheck: { skill: 'athletics', dc: 12 },
+        outcome: {
+          resolution:
+            'You take two steps and drive your shoulder into the grain. The frame shrieks and the latch snaps cold off the wood. The corridor beyond is empty and yours. The effort hardens something in your chest.',
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }],
+        },
+        failureOutcome: {
+          resolution:
+            'The door does not move — the wood is harder than stone and the latch holds. When you stagger back, the corridor turns cold and a knot of small green shapes tumbles out of the gap at the seam.',
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['goblin', 'goblin'] }],
+        },
+      },
+      {
         id: 'walk-on',
         label: 'Walk on',
         hint: 'Some latches are not for lifting.',
@@ -371,6 +403,21 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'scan-the-mess',
+        label: '[Perception] Scan the area for something else useful',
+        hint: "A guard's sack is never just a sack.",
+        skillCheck: { skill: 'perception', dc: 11 },
+        outcome: {
+          resolution:
+            'The sack drew your eye but not your attention. A second look catches a coin wedged in a floor crack and a wrapped heel of bread jammed behind a loose stone — the guard\'s private cache, forgotten in a hurry.',
+          effects: [{ kind: 'gold_delta', amount: 8 }, { kind: 'temp_hp', amount: 3 }],
+        },
+        failureOutcome: {
+          resolution: 'You turn once, see what you expected, and stop looking. The corridor holds its secrets.',
+          effects: [],
+        },
+      },
+      {
         id: 'leave',
         label: 'Leave the rats their dinner',
         hint: 'No fight worth the bite of a sick rat.',
@@ -474,6 +521,22 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'recall-waukeens-prayer',
+        label: "[History] Speak Waukeen's prayer of passage",
+        hint: 'Know the old words — the ones a true supplicant of the merchant queen gives before crossing a threshold.',
+        skillCheck: { skill: 'history', dc: 11 },
+        outcome: {
+          resolution:
+            "You pause and find the old Waukeen passage-prayer — the seven-syllable one the gate-merchants still use in Calimshan. His eyes open. He murmurs the response and presses his own blessing into your hand. \"A walker who knows the road before the last road — she marks you herself.\"",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'You reach for the prayer and come up empty. He watches you quietly and folds his hands. You leave him to his bowl.',
+          effects: [],
+        },
+      },
+      {
         id: 'walk-past',
         label: 'Walk past him',
         hint: 'A coin saved is a coin.',
@@ -489,7 +552,7 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'sleight-of-hand', dc: 13 },
         outcome: {
           resolution: 'You stoop as if to drop a coin and rise with three of his instead, the bowl never knowing it was lighter. He blesses you for the kindness he thinks you gave. You are half down the alley before the warmth of the theft fades.',
-          effects: [{ kind: 'gold_delta', amount: 8 }],
+          effects: [{ kind: 'gold_delta', amount: 15 }],
         },
         failureOutcome: {
           resolution: "Your fingers brush the rim a half-beat too slow and the bowl rings against the cobbles. A customs-man's whistle answers from the arch — two hands take you by the shoulders and a third by the ribs before you can run. You leave bruised and no richer.",
@@ -666,6 +729,22 @@ const POOL: EventTemplate[] = [
         },
       },
       {
+        id: 'tend-the-cut',
+        label: '[Medicine] Tend the cut on his hand',
+        hint: "The knife nicked him too. Treat it and he remembers what a stranger's kindness costs.",
+        skillCheck: { skill: 'medicine', dc: 12 },
+        outcome: {
+          resolution:
+            'You stop moving. He does too — surprised by the stillness. You take his hand and close the cut with a strip from your sleeve, quick and sure. He does not run. When you let go he presses something cold into your palm and is gone before you can speak. A thin ring, probably stolen. Probably the most he had.',
+          effects: [{ kind: 'temp_hp', amount: 5 }, { kind: 'gold_delta', amount: 6 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You reach for his hand and he flinches back hard. Whatever trust the moment held is gone. He bolts, and the knife catches your forearm on its way past.',
+          effects: [{ kind: 'hp_delta', amount: -2 }],
+        },
+      },
+      {
         id: 'intimidate',
         label: '[Intimidation] Snarl him into the gutter',
         hint: 'Cow the boy and he drops everything and runs — but a child of Athkatla has been threatened by worse.',
@@ -673,7 +752,7 @@ const POOL: EventTemplate[] = [
         outcome: {
           resolution:
             'You take one step and put the whole of the corridor into your voice. The knife clatters from his hand; he bolts so fast a torn lining spills silver across the cobbles behind him. You pocket the coins without looking up.',
-          effects: [{ kind: 'gold_delta', amount: 6 }],
+          effects: [{ kind: 'gold_delta', amount: 12 }],
         },
         failureOutcome: {
           resolution:
@@ -724,7 +803,7 @@ const POOL: EventTemplate[] = [
         outcome: {
           resolution:
             'You give him a war you never fought and a love you never lost, and you give it well — the cadence, the catch in the voice at the right line. His pen flies. "A road worth the ink, walker." He pays for the telling, never the truth, and the purse he counts out is heavier for the craft of the lie.',
-          effects: [{ kind: 'gold_delta', amount: 12 }],
+          effects: [{ kind: 'gold_delta', amount: 25 }],
         },
         failureOutcome: {
           resolution:
@@ -785,6 +864,22 @@ const POOL: EventTemplate[] = [
           resolution:
             'He lets you talk yourself out, then sights down the blade and shakes his head. "Fair words, walker. But fifty\'s the price and fifty stays." He lays the rapier back on the roll and turns to the anvil. You keep your coin and your old steel both.',
           effects: [],
+        },
+      },
+      {
+        id: 'pocket-tools',
+        label: "[Sleight of Hand] Pocket a tool from the rack while he's talking",
+        hint: "His eyes are on the blade, not the rack. A quick hand finds something the road will use.",
+        skillCheck: { skill: 'sleight-of-hand', dc: 12 },
+        outcome: {
+          resolution:
+            "He extols the rapier's reach and you let him. Your hand moves once, unhurried, and a small punch-chisel vanishes into your pack before he turns back. He never notices. You walk on with a little more than you arrived with.",
+          effects: [{ kind: 'gold_delta', amount: 14 }],
+        },
+        failureOutcome: {
+          resolution:
+            "He turns mid-sentence and your hand is still in the wrong place. He picks up the hammer without hurrying. \"Off my rack, walker.\" The steel catches your knuckles on the way past, and he watches until you've cleared the milestone.",
+          effects: [{ kind: 'hp_delta', amount: -4 }],
         },
       },
       {
@@ -1129,6 +1224,218 @@ const POOL: EventTemplate[] = [
         outcome: {
           resolution: 'You ease back into the corridor. The candle keeps its steady burn behind you. A small kindness goes on in the dark without you.',
           effects: [],
+        },
+      },
+    ],
+  }),
+  // ─── Chapter 1 additions ──────────────────────────────────────────────
+  EventTemplateSchema.parse({
+    id: 'soldier-left-to-die',
+    eventType: 'stranger',
+    title: 'A Soldier Left to Die',
+    flavor:
+      'A footsoldier in a blue-and-grey tabard leans against the wall at a fork, a hand pressed to a wound in his side. His colours match nobody here. He does not reach for his weapon when he hears you. "They left me," he says, without explaining who or why.',
+    minChapter: 1,
+    choices: [
+      {
+        id: 'assess-his-state',
+        label: '[Survival] Assess how long he has',
+        hint: "Read him the way you'd read a field — what's left, what's done, where the line is.",
+        skillCheck: { skill: 'survival', dc: 11 },
+        outcome: {
+          resolution:
+            "You take one look and understand the shape of it — hours, not minutes, if he keeps still. He reads your face and knows you read his. \"Then sit with me a moment.\" He empties his kit between you, calm as a man doing inventory, and you take what will do you more good on the road than in the dark.",
+          effects: [{ kind: 'temp_hp', amount: 6 }, { kind: 'gold_delta', amount: 12 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You misread the colour of it — reach to close the wound wrong. His hand finds your wrist. \"That's not — stop.\" A moment of sharp hands before you both go still. You leave the way you came.",
+          effects: [{ kind: 'hp_delta', amount: -2 }],
+        },
+      },
+      {
+        id: 'notice-what-hes-holding',
+        label: "[Perception] Notice what he's still clutching",
+        hint: 'The hand pressed to the wound is not empty.',
+        skillCheck: { skill: 'perception', dc: 11 },
+        outcome: {
+          resolution:
+            "The light catches it — a purse under the pressing hand, tucked there long before you arrived. He reads your eyes and sighs. \"Take it. The wall's not going to spend it.\" You press a coin back into his palm and pocket the rest.",
+          effects: [{ kind: 'gold_delta', amount: 16 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You look, find nothing you didn't already know, and walk on. He does not call after you.",
+          effects: [],
+        },
+      },
+      {
+        id: 'bind-the-wound',
+        label: '[Medicine] Bind the wound',
+        hint: 'Stop the bleeding and he has time to be grateful.',
+        skillCheck: { skill: 'medicine', dc: 12 },
+        outcome: {
+          resolution:
+            "You pack the wound the right way — not tight enough to seize, not loose enough to slide. He breathes through his teeth, then easier. \"Better. That's — better.\" He reaches into his tabard and hands you a small purse and a flask.",
+          effects: [{ kind: 'gold_delta', amount: 22 }, { kind: 'temp_hp', amount: 5 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You pack the wound but it finds a way around. He takes over with his own hands, patient, and you step back. He does not offer what he has. Some things you have to earn.',
+          effects: [],
+        },
+      },
+      {
+        id: 'take-his-kit',
+        label: 'Take his kit',
+        hint: "He won't need it where this road leads.",
+        outcome: {
+          resolution:
+            "He watches you go through the pack without stopping you. \"At least someone gets the road out of it.\" You pocket the coin and the hard bread and leave him the wall.",
+          effects: [{ kind: 'gold_delta', amount: 8 }],
+        },
+      },
+    ],
+  }),
+
+  // ─── Chapter 2 additions ──────────────────────────────────────────────
+  EventTemplateSchema.parse({
+    id: 'dropped-ledger',
+    eventType: 'treasure',
+    title: "A Dropped Merchant's Ledger",
+    flavor:
+      "A leather-bound folio, flat in the gutter, its pages swollen with coin-columns and a line of cipher where the names should be. Someone dropped this in a hurry — or threw it down to run faster.",
+    minChapter: 2,
+    choices: [
+      {
+        id: 'decode-the-cipher',
+        label: '[Investigation] Break the cipher',
+        hint: 'A coded column is a hiding place with a lock on it. Find the key.',
+        skillCheck: { skill: 'investigation', dc: 12 },
+        outcome: {
+          resolution:
+            "The cipher yields on the third attempt — a basic shift with a Calimshite salt the last column gives away. Behind it: a supplier address and a debt that was never settled. You fold the ledger back in the gutter and walk with the address on a loose page in your pocket.",
+          effects: [{ kind: 'gold_delta', amount: 28 }],
+        },
+        failureOutcome: {
+          resolution:
+            "The cipher is tighter than you took it for. You reach in and pull a thread that was load-bearing, and the folio goes warm in your hands before you drop it — a contact ward, tripped.",
+          effects: [{ kind: 'hp_delta', amount: -3 }],
+        },
+      },
+      {
+        id: 'identify-the-house',
+        label: '[History] Name the merchant house',
+        hint: 'The crest on the cover is old money. Someone in the city still honours it.',
+        skillCheck: { skill: 'history', dc: 12 },
+        outcome: {
+          resolution:
+            "The seal is a nine-pointed star on ochre — Yhaunn salt-merchant guild, third tier. They pay a bounty for any ledger recovered in Athkatla: not coin but favour, and favour in the right hands pays faster. You present it at a side-door three alleys over and the factor counts out the standing rate without blinking.",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'The crest is familiar the way a word mispronounced once becomes unfamiliar — you reach for it and find nothing solid. You leave the folio where it fell.',
+          effects: [],
+        },
+      },
+      {
+        id: 'read-the-margins',
+        label: '[Insight] Read between the columns',
+        hint: 'Ledgers show what happened. The margins show what the writer thought of it.',
+        skillCheck: { skill: 'insight', dc: 12 },
+        outcome: {
+          resolution:
+            "The numbers are clean but the margin notes are not — blotted words, second thoughts, a name crossed out and written in again two pages later, more carefully. Someone owed someone something they could not name in a column. A name is a key, and a key can be sold.",
+          effects: [{ kind: 'gold_delta', amount: 22 }],
+        },
+        failureOutcome: {
+          resolution:
+            'The marginal scrawl is just scrawl — a tired clerk who hated the job. You read three pages of it and put the folio down none the richer.',
+          effects: [],
+        },
+      },
+      {
+        id: 'sell-it-outright',
+        label: 'Sell it to the nearest paper-buyer',
+        hint: "Cipher or not, a folio has weight and paper has a price.",
+        outcome: {
+          resolution:
+            "The paper-merchant barely glances before counting out small coins. \"Cipher on the names — never good. But the binding's fine and the vellum's usable.\" You leave with the modest proceeds of someone else's misfortune.",
+          effects: [{ kind: 'gold_delta', amount: 12 }],
+        },
+      },
+    ],
+  }),
+
+  // ─── Chapter 3 additions ──────────────────────────────────────────────
+  EventTemplateSchema.parse({
+    id: 'forgotten-offering-table',
+    eventType: 'ruin',
+    title: 'A Forgotten Offering Table',
+    flavor:
+      "A side-chamber behind a slipped stone door, not on any Spellhold record you have heard of. Inside: a low table of old black granite, still bearing trinkets — a carved bowl, a copper figure, dead flowers pressed flat. Whatever god this was, the keepers have been gone a long time.",
+    minChapter: 3,
+    choices: [
+      {
+        id: 'honour-the-god',
+        label: '[Religion] Identify the god and honour them properly',
+        hint: 'A forgotten altar is not an abandoned one. Know whose it is and give it the right words.',
+        skillCheck: { skill: 'religion', dc: 13 },
+        outcome: {
+          resolution:
+            'The copper figure is Shaundakul — the Rider of the East Wind, patron of explorers and those who vanish on purpose. The rite is three words and a breath turned south-east. The dead flowers stand straight for a moment. A warmth, road-warm, settles between your shoulder-blades and stays.',
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'You reach for the rite and mistake the figure — give it a Lathander dawn-prayer instead. The flowers do not move. Something small and patient in the room folds away from you. The corridor ahead sits heavier.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
+        },
+      },
+      {
+        id: 'read-the-weave',
+        label: '[Arcana] Read the residual enchantment',
+        hint: 'Old offerings draw old magic. Read the Weave in the room before it fades.',
+        skillCheck: { skill: 'arcana', dc: 13 },
+        outcome: {
+          resolution:
+            'The room is still breathing — faint, but there. You trace the channels in the granite and find a thread of old blessing-magic, spent but not gone, the kind that settles into stone over decades of faithful use. You cup it carefully and draw it in. Your hands will remember this for a while.',
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }, { kind: 'temp_hp', amount: 8 }],
+        },
+        failureOutcome: {
+          resolution:
+            'The Weave here is layered too deep — old magic folded over older magic, each one reading as noise to the next. You pull a thread that was load-bearing and the room goes cold all at once, a breath of raw backlash up both arms.',
+          effects: [{ kind: 'hp_delta', amount: -5 }],
+        },
+      },
+      {
+        id: 'pocket-the-trinkets',
+        label: '[Stealth] Pocket the trinkets without disturbing the offering',
+        hint: 'The room is quiet and the god is old. Move like the room is still watched.',
+        skillCheck: { skill: 'stealth', dc: 13 },
+        outcome: {
+          resolution:
+            "You take each piece with two fingers, set nothing down, reset the dead flowers to their exact angle. The room does not stir. You leave with copper in your pack and the god none the wiser — or too old to argue.",
+          effects: [{ kind: 'gold_delta', amount: 35 }],
+        },
+        failureOutcome: {
+          resolution:
+            'The carved bowl catches your sleeve and rings once against the granite floor, sharp and final. The room goes cold. From the chamber door, two pairs of boots come at a flat run.',
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['wardens-apprentice', 'slayer-hound'] }],
+        },
+      },
+      {
+        id: 'take-the-offerings',
+        label: 'Take the obvious offerings',
+        hint: "Whatever bargain the last keeper made is not yours to keep.",
+        outcome: {
+          resolution:
+            "You pocket the copper figure and the bowl and step back into the corridor. Two alleys later your boot catches a stone that was flush with the floor a moment ago, and your shin rings hard. The figure is lighter than it should be.",
+          effects: [
+            { kind: 'gold_delta', amount: 20 },
+            { kind: 'grant_quirk_reroll', fallbackText: "Shaundakul finds no bane to shake from you — only the wind at your back for a moment." },
+          ],
         },
       },
     ],
