@@ -12,11 +12,14 @@ interface EliteRoomProps {
  * The elite node's risk/reward decision, shown before the fight. Taking the
  * elite-risk path (Fight) is how legendary relics are earned — a win has a real
  * chance to yield one, banked to the hub reliquary. The safe path (Take the
- * gold) skips the fight for a guaranteed purse, with no loot and no relic.
+ * gold) skips the fight for a guaranteed purse, but the guardian's parting
+ * blow costs HP, and you forgo XP, loot, and any chance at a relic.
  */
 export function EliteRoom({ room }: EliteRoomProps) {
   const pickEliteChoice = useGameStore((s) => s.pickEliteChoice);
+  const character = useGameStore((s) => s.character);
   const bounty = room.goldReward ?? 0;
+  const partingBlow = character ? Math.max(2, Math.floor(character.hp.max * 0.2)) : null;
 
   const defId = room.monsters?.[0]?.defId;
   let eliteName = 'An elite foe';
@@ -41,9 +44,10 @@ export function EliteRoom({ room }: EliteRoomProps) {
               ⚔ Fight the elite
             </div>
             <p className="text-[var(--color-text-secondary)] text-xs mb-3 leading-relaxed flex-1">
-              Risk the harder battle. A victory may yield a{' '}
-              <span className="text-[var(--color-accent-gold)]">legendary relic</span> — kept by the
-              soul, equipped at the hub — on top of its gold and loot.
+              Risk the harder battle. A victory yields{' '}
+              <span className="text-[var(--color-accent-gold)]">XP + gold + loot</span>, and may
+              add a <span className="text-[var(--color-accent-gold)]">legendary relic</span> to the
+              reliquary.
             </p>
             <Button variant="primary" onClick={() => pickEliteChoice('fight')} className="w-full">
               ⚔ Face it
@@ -57,12 +61,16 @@ export function EliteRoom({ room }: EliteRoomProps) {
               Slip past with the coin it guards
               {bounty > 0 ? (
                 <>
-                  {' '}— <span className="text-[var(--color-accent-gold)]">{bounty} gold</span>
+                  {' '}(<span className="text-[var(--color-accent-gold)]">{bounty} gold</span>)
                 </>
+              ) : null}
+              . The guardian takes a parting swipe —{' '}
+              {partingBlow !== null ? (
+                <span className="text-[var(--color-accent-blood)]">lose {partingBlow} HP</span>
               ) : (
-                ''
-              )}
-              . Safe, but no relic and no loot.
+                <span className="text-[var(--color-accent-blood)]">lose HP</span>
+              )}{' '}
+              entering the next room. No XP, no loot, no relic.
             </p>
             <Button variant="secondary" onClick={() => pickEliteChoice('gold')} className="w-full">
               ◆ Take it and go
