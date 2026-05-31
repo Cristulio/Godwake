@@ -8,6 +8,7 @@ export type Screen =
   | 'intro'
   | 'hub'
   | 'delve'
+  | 'spoils'
   | 'reincarnation'
   | 'codex'
   | 'inventory'

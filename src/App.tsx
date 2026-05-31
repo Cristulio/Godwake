@@ -42,6 +42,9 @@ const QuirksTutorial = lazy(() =>
 const DelveScreen = lazy(() =>
   import('./components/delve/DelveScreen').then((m) => ({ default: m.DelveScreen })),
 );
+const SpoilsScreen = lazy(() =>
+  import('./components/spoils/SpoilsScreen').then((m) => ({ default: m.SpoilsScreen })),
+);
 
 function ScreenFallback() {
   return (
@@ -86,6 +89,9 @@ function App() {
       break;
     case 'delve':
       content = <DelveScreen />;
+      break;
+    case 'spoils':
+      content = <SpoilsScreen />;
       break;
     case 'codex':
       content = <CodexScreen />;
