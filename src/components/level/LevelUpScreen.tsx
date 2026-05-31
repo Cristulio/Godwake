@@ -73,6 +73,7 @@ export function LevelUpScreen() {
   const [asiPlan, setAsiPlan] = useState<Partial<Record<AbilityName, number>>>({});
   const [pickedSkills, setPickedSkills] = useState<SkillName[]>([]);
   const [pickedSpellId, setPickedSpellId] = useState<string | null>(null);
+  const [pickedArchetypeId, setPickedArchetypeId] = useState<string | null>(null);
 
   useEffect(() => {
     playSfx('level_up_sting');
@@ -120,6 +121,14 @@ export function LevelUpScreen() {
   const needsSpellPick = spellLearnTier !== null && availableSpells.length > 0;
   const spellValid = !needsSpellPick || pickedSpellId !== null;
 
+  // Archetype pick: at the class's subclass level, when the player hasn't yet
+  // committed to one and the class offers more than one. The chosen id is
+  // applied via the subclassId override; applyLevelUp preserves it (and falls
+  // back to the first archetype for any caller that skips the pick).
+  const needsArchetypePick =
+    nextLevel >= cls.subclassLevel && !c.subclassId && cls.subclasses.length > 1;
+  const archetypeValid = !needsArchetypePick || pickedArchetypeId !== null;
+
   function bump(ability: AbilityName, delta: number) {
     setAsiPlan((prev) => {
       const current = prev[ability] ?? 0;
@@ -142,8 +151,11 @@ export function LevelUpScreen() {
   }
 
   function handleContinue() {
-    if (!asiValid || !skillsValid || !spellValid) return;
+    if (!asiValid || !skillsValid || !spellValid || !archetypeValid) return;
     const overrides: Partial<Character> = {};
+    if (needsArchetypePick && pickedArchetypeId) {
+      overrides.subclassId = pickedArchetypeId;
+    }
     if (isAsiLevel) {
       const prev = c.runAsiGains ?? {};
       const next: Partial<AbilityScores> = { ...prev };
@@ -321,6 +333,46 @@ export function LevelUpScreen() {
           </Panel>
         )}
 
+        {needsArchetypePick && (
+          <Panel
+            title={`Choose your Archetype — pick 1 (${pickedArchetypeId ? 1 : 0}/1)`}
+            tone="glow"
+          >
+            <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
+              A lasting path — it shapes which gear and playstyle reward you. This choice sticks for the run.
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {cls.subclasses.map((sub) => {
+                const selected = pickedArchetypeId === sub.id;
+                const feat = sub.featuresByLevel[String(cls.subclassLevel)]?.[0];
+                return (
+                  <button
+                    key={sub.id}
+                    onClick={() => setPickedArchetypeId(selected ? null : sub.id)}
+                    className={`text-left px-3 py-2 border text-sm transition-colors ${
+                      selected
+                        ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
+                        : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
+                    }`}
+                  >
+                    <div className="font-display text-[var(--color-text-primary)] text-[12px] uppercase tracking-[0.18em]">
+                      {sub.name}
+                    </div>
+                    {feat && (
+                      <div className="text-[var(--color-text-secondary)] text-xs mt-1.5 leading-relaxed normal-case tracking-normal">
+                        {feat.description}
+                      </div>
+                    )}
+                    <div className="text-[var(--color-text-dim)] text-[11px] mt-1.5 italic normal-case tracking-normal">
+                      {sub.description}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </Panel>
+        )}
+
         {needsSpellPick && (
           <Panel
             title={`Learn a New Spell — pick 1 (${pickedSpellId ? 1 : 0}/1)`}
@@ -371,9 +423,11 @@ export function LevelUpScreen() {
             variant="primary"
             size="lg"
             onClick={handleContinue}
-            disabled={!asiValid || !skillsValid || !spellValid}
+            disabled={!asiValid || !skillsValid || !spellValid || !archetypeValid}
           >
-            {isAsiLevel && !asiValid
+            {!archetypeValid
+              ? 'Choose an archetype'
+              : isAsiLevel && !asiValid
               ? `Place ${2 - plannedTotal} more point${2 - plannedTotal === 1 ? '' : 's'}`
               : !skillsValid
                 ? `Pick ${Math.min(skillGrants, availableSkills.length) - pickedSkills.length} more skill${

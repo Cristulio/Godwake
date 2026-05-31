@@ -99,15 +99,50 @@ export const FIGHTER: Class = ClassSchema.parse({
     {
       id: 'champion',
       name: 'Champion',
-      description: 'A martial archetype focused on the raw physical power honed to deadly perfection.',
+      description:
+        'Raw physical power honed to deadly perfection. Best with crit-range and big-die weapon gear that turns a widened crit window into reliable spikes.',
       featuresByLevel: {
         '2': [
           {
             id: 'improved-critical',
             name: 'Martial Archetype: Champion',
             description:
-              'Your training settles into the Champion’s path — raw power, honed to a killing edge. Your weapon attacks now score a critical hit on a roll of 19 or 20.',
+              'Your weapon attacks score a critical hit on a roll of 19 or 20. Rewards crit-range and large-die weapons — every point of crit chance is worth more.',
             mechanicKey: 'improved-critical',
+          },
+        ],
+      },
+    },
+    {
+      id: 'battle-master',
+      name: 'Battle Master',
+      description:
+        'A student of maneuvers who opens fights with a measured, crippling strike. Best with on-hit and effect gear that compounds the wounds you start.',
+      featuresByLevel: {
+        '2': [
+          {
+            id: 'battle-master',
+            name: 'Martial Archetype: Battle Master',
+            description:
+              'Once per combat, your first hit becomes a precise maneuver: bonus damage equal to your weapon dice and a bleeding wound (3 damage each turn for 3 turns). Rewards on-hit and bleed gear that builds on the opening cut.',
+            mechanicKey: 'battle-master',
+          },
+        ],
+      },
+    },
+    {
+      id: 'defender',
+      name: 'Defender',
+      description:
+        'A bulwark who braces for the first blow of every fight. Best with high-HP, tank gear that deepens the cushion he walks in with.',
+      featuresByLevel: {
+        '2': [
+          {
+            id: 'defender',
+            name: 'Martial Archetype: Defender',
+            description:
+              'You brace behind armour and shield: at the start of each combat you gain temporary hit points equal to 3 + your level, soaking damage before your own. Rewards max-HP and tank gear that wants a deeper cushion to work behind.',
+            mechanicKey: 'defender',
           },
         ],
       },

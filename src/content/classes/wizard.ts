@@ -119,15 +119,49 @@ export const WIZARD: Class = ClassSchema.parse({
       id: 'evocation',
       name: 'School of Evocation',
       description:
-        'You shape raw arcane force into directed harm. Your evocations bite a touch deeper than the page suggests.',
+        'You shape raw arcane force into directed harm. Best with spell-damage and spell-DC gear that scales every blast you throw.',
       featuresByLevel: {
         '2': [
           {
             id: 'sculpt-spells',
             name: 'Arcane Tradition: Evocation',
             description:
-              'Your study settles into the School of Evocation — raw arcane force, shaped past the page. Burning Hands, Fireball (8d6→9d6), and Lightning Bolt (6d6→7d6) each deal one die more.',
+              'Your evocations bite past the page: Fireball (8d6→9d6) and Lightning Bolt (6d6→7d6) each deal one die more. Rewards spell-damage and spell-DC gear that compounds the bonus dice.',
             mechanicKey: 'sculpt-spells',
+          },
+        ],
+      },
+    },
+    {
+      id: 'abjuration',
+      name: 'School of Abjuration',
+      description:
+        'You weave a ward that drinks the first blows of every fight. Best with survivability gear that buys the squishy caster more turns.',
+      featuresByLevel: {
+        '2': [
+          {
+            id: 'abjurer',
+            name: 'Arcane Tradition: Abjuration',
+            description:
+              'An Arcane Ward forms at the start of each combat, granting temporary hit points equal to 2 + your level that soak damage before your own. Rewards survivability gear — every extra turn alive is another spell cast.',
+            mechanicKey: 'abjurer',
+          },
+        ],
+      },
+    },
+    {
+      id: 'illusion',
+      name: 'School of Illusion',
+      description:
+        'You step behind a veil of false images the moment steel is drawn. Best with an evasive build that turns near-misses into untouchability.',
+      featuresByLevel: {
+        '2': [
+          {
+            id: 'illusionist',
+            name: 'Arcane Tradition: Illusion',
+            description:
+              'You begin every combat already blurred (attackers strike with disadvantage) and with one mirror image to soak a blow. Rewards an evasive build that leans on never being hit.',
+            mechanicKey: 'illusionist',
           },
         ],
       },

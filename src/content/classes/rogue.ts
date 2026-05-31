@@ -97,15 +97,49 @@ export const ROGUE: Class = ClassSchema.parse({
       id: 'thief',
       name: 'Thief',
       description:
-        'A specialist of locks, ledges, and the quick exit. Fast hands turn the bonus action into a second use of Cunning Action.',
+        'A specialist of locks, ledges, and the quick exit. Best with tempo and utility gear that turns extra Cunning Actions into board control.',
       featuresByLevel: {
         '3': [
           {
             id: 'fast-hands',
             name: 'Roguish Archetype: Thief',
             description:
-              'Your path settles into the Thief’s — locks, ledges, and the quick exit. Your hands move faster than the room can follow: you gain a second Cunning Action each combat.',
+              'Your hands move faster than the room can follow: you gain a second Cunning Action each combat. Rewards tempo and utility gear that wants more bonus actions to spend.',
             mechanicKey: 'fast-hands',
+          },
+        ],
+      },
+    },
+    {
+      id: 'assassin',
+      name: 'Assassin',
+      description:
+        'A killer who ends fights on the opening breath. Best with burst and first-strike gear that front-loads everything into the first cut.',
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'assassin',
+            name: 'Roguish Archetype: Assassin',
+            description:
+              'Against a foe still at full health your strike always finds the gap — it lands Sneak Attack and an extra 2d6. Rewards burst and first-strike gear: kill them before they bleed.',
+            mechanicKey: 'assassin',
+          },
+        ],
+      },
+    },
+    {
+      id: 'swashbuckler',
+      name: 'Swashbuckler',
+      description:
+        'A duelist who needs no shadow to find the gap. Best with consistent flat-damage gear that pays out every single turn.',
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'swashbuckler',
+            name: 'Roguish Archetype: Swashbuckler',
+            description:
+              'Your Sneak Attack triggers every turn with no advantage or bloodied target required. Rewards steady, consistent-damage gear — the bonus is always online.',
+            mechanicKey: 'swashbuckler',
           },
         ],
       },
