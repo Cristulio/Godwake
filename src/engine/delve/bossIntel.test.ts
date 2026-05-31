@@ -51,13 +51,13 @@ function roller() {
 }
 
 describe('boss intel rooms — placement', () => {
-  it('Godwake delve has an intel event 1 room before each of its 6 bosses', () => {
+  it('Godwake delve has an intel event 1 room before each chapter boss', () => {
     const d = createGodwakeDelve(1);
     const bossIndices = d.rooms
       .map((r, i) => ({ r, i }))
       .filter(({ r }) => r.kind === 'boss')
       .map(({ i }) => i);
-    expect(bossIndices).toHaveLength(6);
+    expect(bossIndices).toHaveLength(7);
     const expectedBossIds = [
       'duergar-ilyich',
       'athkatla-magistrate',
@@ -65,6 +65,7 @@ describe('boss intel rooms — placement', () => {
       'drow-matron-mother',
       'hollow-dawn',
       'the-unmade',
+      'drowned-custodian', // Ch7 · The Drowned Archive
     ];
     bossIndices.forEach((bossIdx, i) => {
       const before = d.rooms[bossIdx - 1];
@@ -204,6 +205,7 @@ describe('boss intel — buff definitions', () => {
       'drow-matron-mother': 15, // chapter 4
       'hollow-dawn': 18, // chapter 5
       'the-unmade': 21, // chapter 6
+      'drowned-custodian': 24, // chapter 7
     };
     for (const card of BOSS_INTEL_CARDS) {
       const buff = bossIntelBuffFor(card.bossDefId, 'battle-plan');
@@ -293,7 +295,8 @@ describe('boss intel cards — content', () => {
         'drow-matron-mother',
         'duergar-ilyich',
         'hollow-dawn',
-        'the-unmade', // Ch6 (Beyond the Godwake) — wiring deferred
+        'the-unmade', // Ch6 (Beyond the Godwake)
+        'drowned-custodian', // Ch7 (The Drowned Archive)
       ].sort(),
     );
   });

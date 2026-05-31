@@ -68,6 +68,15 @@ import { KARMIC_ECHO } from './karmic-echo';
 import { THE_UNWOUND } from './the-unwound';
 import { AXLE_WARDEN } from './axle-warden';
 import { THE_UNMADE } from './the-unmade';
+// ─── Chapter 7 · The Drowned Archive ──────────────────────────────────────
+import { DROWNED_ACOLYTE } from './drowned-acolyte';
+import { PAGE_WRAITH } from './page-wraith';
+import { INK_DROWNED_SCHOLAR } from './ink-drowned-scholar';
+import { BRINE_ARCHIVIST } from './brine-archivist';
+import { DROWNED_MNEMONIC } from './drowned-mnemonic';
+import { THE_UNINDEXED } from './the-unindexed';
+import { TIDEBOUND_CODEX } from './tidebound-codex';
+import { DROWNED_CUSTODIAN } from './drowned-custodian';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -140,6 +149,15 @@ const ALL_MONSTERS: Monster[] = [
   THE_UNWOUND,
   AXLE_WARDEN,
   THE_UNMADE,
+  // ─── Chapter 7 · The Drowned Archive ────────────────────────────────────
+  DROWNED_ACOLYTE,
+  PAGE_WRAITH,
+  INK_DROWNED_SCHOLAR,
+  BRINE_ARCHIVIST,
+  DROWNED_MNEMONIC,
+  THE_UNINDEXED,
+  TIDEBOUND_CODEX,
+  DROWNED_CUSTODIAN,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -227,4 +245,13 @@ export {
   THE_UNWOUND,
   AXLE_WARDEN,
   THE_UNMADE,
+  // ─── Chapter 7 · The Drowned Archive ────────────────────────────────────
+  DROWNED_ACOLYTE,
+  PAGE_WRAITH,
+  INK_DROWNED_SCHOLAR,
+  BRINE_ARCHIVIST,
+  DROWNED_MNEMONIC,
+  THE_UNINDEXED,
+  TIDEBOUND_CODEX,
+  DROWNED_CUSTODIAN,
 };
