@@ -464,10 +464,23 @@ interface ProcCounters {
   huntersMarkCast: number;
   colossus: number;
   huntersMarkDie: number;
+  rogueTurns: number;
+  sneakAttack: number;
+  hide: number;
 }
 
 function freshProcs(): ProcCounters {
-  return { combats: 0, rage: 0, reckless: 0, huntersMarkCast: 0, colossus: 0, huntersMarkDie: 0 };
+  return {
+    combats: 0,
+    rage: 0,
+    reckless: 0,
+    huntersMarkCast: 0,
+    colossus: 0,
+    huntersMarkDie: 0,
+    rogueTurns: 0,
+    sneakAttack: 0,
+    hide: 0,
+  };
 }
 
 // Per-class proc accumulator, shared across all of that class's souls so each
@@ -497,6 +510,7 @@ function runPlayerTurnInstrumented(
 ): { state: CombatState; character: Character } {
   let s = state;
   let ch = character;
+  if (ch.classId === 'rogue') pc.rogueTurns += 1;
   for (let i = 0; i < 16; i++) {
     if (s.status !== 'active') break;
     const action = chooseCombatAction(s, ch, ARCHETYPE);
@@ -504,14 +518,17 @@ function runPlayerTurnInstrumented(
     if (action.kind === 'rage') pc.rage += 1;
     else if (action.kind === 'reckless-attack') pc.reckless += 1;
     else if (action.kind === 'hunters-mark') pc.huntersMarkCast += 1;
+    else if (action.kind === 'cunning-action' && action.choice === 'hide') pc.hide += 1;
 
     const colossusBefore = s.colossusSlayerUsedThisTurn === true;
+    const sneakBefore = s.sneakAttackUsedThisTurn === true;
     const logLenBefore = s.log.length;
     const r = applyPlannedAction({ roller, state: s, character: ch }, action);
     if (r.state === s && r.character === ch) break; // engine refused — stop
 
     if (action.kind === 'attack') {
       if (!colossusBefore && r.state.colossusSlayerUsedThisTurn === true) pc.colossus += 1;
+      if (!sneakBefore && r.state.sneakAttackUsedThisTurn === true) pc.sneakAttack += 1;
       const appendedCount = r.state.log.length - logLenBefore;
       const fresh =
         appendedCount > 0 ? r.state.log.slice(logLenBefore) : r.state.log.slice(-4);
@@ -865,15 +882,17 @@ function renderAscensionHistogram(aggs: ClassAggregate[]): string {
 function renderProcs(): string {
   const lines: string[] = [];
   lines.push(
-    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat |',
+    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat |',
   );
-  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|');
+  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|');
   for (const classId of CLASSES) {
     const p = PROCS[classId];
     const per = (n: number) => (p.combats ? num(n / p.combats, 2) : '—');
+    const perTurn = (n: number) => (p.rogueTurns ? num(n / p.rogueTurns, 2) : '—');
     const relevant = (s: string, when: boolean) => (when ? s : '·');
+    const isRogue = classId === 'rogue';
     lines.push(
-      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} |`,
+      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} |`,
     );
   }
   return lines.join('\n');
