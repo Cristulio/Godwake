@@ -26,74 +26,74 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
   grove: {
     title: "The Druid Grove",
     body: [
-      "Every soul that descends earns Renown — a weight the wheel cannot strip away. The druids who tend the roots beyond the hub will trade it for something rarer than steel: permanence. More blood in the body, a sharper hand, tricks the dark does not know to take from you.",
-      "Spend it. A soul that spends its Renown between lives descends the next time a little harder to kill than the last.",
+      "Every descent scores a mark on the soul — Renown, the one thing the wheel cannot burn away when it hauls you back to be born again. Past the hub, on older ground, the druids keep a grove that will take that Renown in trade.",
+      "What they give back does not wash off in death: more blood to spill before you fall, a truer arm, a deeper well of whatever your kind calls its art. Hoarded, Renown only sits there. Spent, it makes every life after this one harder to put down.",
     ],
-    key: "Renown is yours after death — spend it at the Grove for upgrades that never reset.",
+    key: "Renown outlives death — trade it at the Grove for gains to body, blade, and art that never reset.",
   },
   "affixes-rare": {
-    title: "Rare Finds",
+    title: "Rare Spoils",
     body: [
-      "The deep dark gives up stranger things now. A Rare piece of gear — blue-edged, humming with old intent — carries two magical affixes where common iron carries one.",
-      "These are not raw numbers. They are behaviours: a blade that drinks blood on every hit, a cuirass that shrugs the killing blow once, a ring that makes every crit a little more final. The affix is the point.",
+      "The deep dark has started parting with better things. A Rare find — its edge lit cold and blue — wakes with two enchantments worked into it, where common iron carries only one.",
+      "And these are not tallies of plus-this and plus-that. They are deeds the metal performs: a blade that opens a wound which will not close, mail that turns the one blow meant to end you, a band that makes each killing strike crueler still. Read what a piece does, not what it weighs.",
     ],
-    key: "Rare gear carries two affixes — the effects are what matters, not the metal.",
+    key: "Rare gear wakes with two affixes — and an affix is a deed the gear performs, not a number it adds.",
   },
   "elite-nodes": {
-    title: "Elite Terrors",
+    title: "The Marked",
     body: [
-      "Something marked walks the route ahead — an Elite: a creature set apart from its kin by cruelty, power, or sheer refusal to die. It will be on the map. You choose whether to cross its path.",
-      "The toll is heavier than a common fight. The prize is too: richer gold, finer spoils, and the only way a Legendary relic falls into living hands.",
+      "Some things in the dark stand apart from their kin — larger, older, wrong in ways that make the rest give them room. The route ahead will show you where such a one waits. Whether you walk its way is yours to choose.",
+      "It costs more than a common kill: more blood, more cunning, more luck held. It pays more in turn — heavier gold, finer spoils, and the only door through which a Legendary relic ever falls into a living hand.",
     ],
-    key: "Elite encounters are the hardest fights on the map — and the only source of Legendary drops.",
+    key: "Elites are the route's hardest fights — and the only kills that ever yield a Legendary relic.",
   },
   "boss-intel": {
-    title: "A Study in Dread",
+    title: "What Waits Below",
     body: [
-      "Before you press the final seal of a chapter, gold can now buy something more useful than another sword: knowledge. Spend it to study the thing waiting beyond the door — its habits, its hungers, the opener it always throws.",
-      "The cost climbs with the darkness. Weigh the coin carefully. But a soul that knows what it is walking into dies less often.",
+      "At the last seal of a chapter, gold buys something keener than another blade — it buys foreknowledge. Lay the coin down and you may study the thing coiled behind that door before you face it: how it opens, what it hungers for, the trick it saves for the moment you believe you've won.",
+      "The deeper the chapter, the steeper the asking price. Weigh it against the iron that coin would buy instead. But a soul that walks in already knowing the shape of the horror walks back out far more often.",
     ],
-    key: "Spend gold before a boss fight to learn its patterns and enter with an edge.",
+    key: "Pay gold at the chapter's seal to study its warden — learn its patterns before the door opens.",
   },
   legendaries: {
     title: "Legendary Relics",
     body: [
-      "A relic has surfaced — something older and stranger than anything the dark usually gives up. Unlike the gear you carry into a run, relics belong to the soul itself. They endure every death, every wipe, every new descent. Equip them at the hub between delves.",
-      "They lend no armor and swing no blade. What they do is reshape how the soul moves through a fight. Some answer only to a particular kind of soul — the wrong hands hold them cold.",
+      "A relic has surfaced from somewhere far beneath the reach of common plunder — older than the chapters, stranger than anything the dark gives up willingly. Where the gear you carry rots away with each fallen body, a relic binds to the soul beneath it. It endures every death, every emptied run, every new skin you wear. Set it at the hub before you descend.",
+      "It hangs no armor on you and puts no edge in your hand. What it does is bend the way a soul fights — quietly, and whole. Some relics answer to one kind of soul alone; in the wrong hands they stay dead stone.",
     ],
-    key: "Relics are account-level and persist through every death — equip them at the hub.",
+    key: "Relics bind to the soul, not the body — they outlast every death and are set at the hub.",
   },
   "affixes-epic": {
-    title: "Epic Finds",
+    title: "Epic Spoils",
     body: [
-      "The deep dark is yielding its better secrets. An Epic piece — purple-marked, restless with layered enchantment — carries three or four affixes where a Rare piece carries two.",
-      "The danger of so many effects on one item is in missing how they speak to each other. Find the piece whose affixes all pull in the same direction as your soul, and a single drop can define a whole descent.",
+      "The dark is giving up its deeper secrets now. An Epic find — marked in restless purple, layered with enchantment that will not lie still — carries three, sometimes four deeds where a Rare carries two.",
+      "With that many effects crowded onto a single piece, the waste lies in failing to see how they answer one another. Find the one whose every deed pulls the way your soul already fights, and a lone drop can carry an entire descent.",
     ],
-    key: "Epic gear carries three or four affixes — hunt for pieces whose effects reinforce each other.",
+    key: "Epic gear carries three or four affixes — seek the piece whose deeds answer one another and your soul.",
   },
   "class-roster": {
     title: "A New Soul",
     body: [
-      "Another body waits at the hub. You may step into it between descents — a different soul, a different way of moving through the dark. The Renown you have earned carries with you; it belongs to the account, not the skin.",
-      "But the Grove remembers which soul did the work. Upgrades spent on one body do nothing for another. Choose the soul you mean to push and spend accordingly.",
+      "Another body waits unworn at the hub, and the wheel will let you step into it before the next descent — a wholly different soul, a different way of cutting through the dark. The Renown you have gathered comes with you whichever skin you choose; it answers to the account, not the flesh.",
+      "But the Grove keeps its ledgers by soul. What you bought for one body buys nothing for another — its blood, its art, its tricks all stay behind with it. Pick the soul you mean to carry deep, and pour your Renown into that one.",
     ],
-    key: "Renown carries across all souls; Grove upgrades are tracked per class — spend wisely.",
+    key: "Renown follows you across every soul; Grove gains are kept per soul — commit your spending to one.",
   },
   sets: {
     title: "Relic Sets",
     body: [
-      "Some relics were not made alone. Equip two or more pieces of the same set and the stones wake to each other — bonus effects that none of them carries on its own begin to stir.",
-      "Partial sets already count. Each additional matching piece you wear deepens what the set does. Building toward one is a commitment worth making across runs.",
+      "Not every relic was forged alone. Some were made in company, and when two or more of a kindred set rest on the same soul, the stones begin to answer one another — powers stir that no single piece holds by itself.",
+      "You need not gather the whole set for it to wake; a partial binding already counts, and each matching piece you add presses the bond deeper. A set is a thing worth building toward across many runs.",
     ],
-    key: "Equip matching set relics together for compounding bonuses beyond each piece alone.",
+    key: "Wear two or more relics of one set and they wake shared powers — partial sets already count.",
   },
   "grove-deep": {
-    title: "The Grove’s Hidden Roots",
+    title: "Deeper Roots",
     body: [
-      "The druids have opened a lower chamber — tiers of the Grove that were locked to untested souls. The power here is of a different order: mastery-shaped, hard-won, the kind that lets a veteran push past the walls that stop a fresh soul cold.",
-      "It was always there. The Grove merely waits to see who earns the right to ask for it.",
+      "The druids have unsealed a chamber that stays shut to untried souls — tiers of the Grove that root far below the ones you know. The power waiting there is of another order entirely: mastery-shaped, dearly bought, the kind that carries a veteran past the walls that stop a green soul cold.",
+      "It lay beneath your feet the whole time. The Grove simply opens its lower roots only to a soul that has shown it can use them.",
     ],
-    key: "Deeper Grove tiers are now open — stronger upgrades earned by souls who have proven themselves.",
+    key: "Deeper Grove tiers have opened — costlier, stronger gains for a soul that has proven itself.",
   },
 };
 
