@@ -137,9 +137,12 @@ export interface LegendaryOffer {
 }
 
 /** Chance (percent) the merchant has a legendary relic for sale, by chapter — it
- * climbs as the run goes deep, and there's no reliquary before chapter 3.
+ * climbs as the run goes deep, and there's no reliquary before chapter 3. It
+ * plateaus at 15 across Ch7-9, then climbs again through the endgame so a deep
+ * Throne-of-Bhaal visit has the best reliquary odds in the game (Ch14 ≈ 45%).
  * Both vendors (ShopRoom + CampRoom) draw from this, so per-visit odds are small. */
 function legendaryOfferChance(chapter: number): number {
+  if (chapter >= 10) return 15 + (chapter - 9) * 6; // ch10 21 → ch14 45
   if (chapter >= 7) return 15;
   if (chapter >= 5) return 10;
   if (chapter >= 3) return 6;

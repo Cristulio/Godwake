@@ -84,13 +84,15 @@ const RARITY_PRICE_MULT: Record<GearRarity, number> = {
   legendary: 6,
 };
 
-/** Hard +N ceiling by rarity — a green never out-enhances a purple. */
+/** Hard +N ceiling by rarity — a green never out-enhances a purple. Purple's
+ * ceiling is +5, but only the endgame depth band (Ch10+) actually reaches past
+ * +3; depthEnhanceCap keeps every chapter through Ch9 capped at +3. */
 const RARITY_ENHANCE_CAP: Record<GearRarity, number> = {
   white: 0,
   green: 1,
   blue: 2,
-  purple: 3,
-  legendary: 3,
+  purple: 5,
+  legendary: 5,
 };
 
 export interface RollItemOptions {
@@ -99,8 +101,10 @@ export interface RollItemOptions {
   /** Force a base kind. Omitted = the roller picks weapon or armour. */
   kind?: BaseKind;
   /**
-   * Story depth (chapter, 1–6) this loot drops at. Drives the depth axis: deeper
-   * chapters surface higher base tiers and a higher +N ceiling. Default 1.
+   * Story depth (chapter, 1–14) this loot drops at. Drives the depth axis: deeper
+   * chapters surface higher base tiers and a higher +N ceiling, and the endgame
+   * band (Ch10+) keeps climbing past the Ch8 ceiling so a Throne-of-Bhaal rack is
+   * the richest in the game. Default 1.
    */
   depth?: number;
 }
@@ -152,7 +156,7 @@ function pickBaseWithDepth<T extends Weapon | Armor | Accessory>(
   bases: T[],
   depth: number,
 ): T {
-  const draws = depth >= 6 ? 3 : depth >= 3 ? 2 : 1;
+  const draws = depth >= 13 ? 5 : depth >= 10 ? 4 : depth >= 6 ? 3 : depth >= 3 ? 2 : 1;
   let best = bases[pickIndex(roller, bases.length)];
   for (let i = 1; i < draws; i++) {
     const cand = bases[pickIndex(roller, bases.length)];
@@ -161,8 +165,11 @@ function pickBaseWithDepth<T extends Weapon | Armor | Accessory>(
   return best;
 }
 
-/** +N ceiling by story depth: Ch1-2 modest, mid modest-plus, deep richest. */
+/** +N ceiling by story depth: Ch1-2 modest, mid modest-plus, Ch5-9 at +3, and
+ * the endgame band climbing past it — Ch10-12 to +4, Ch13-14 to +5. */
 function depthEnhanceCap(depth: number): number {
+  if (depth >= 13) return 5;
+  if (depth >= 10) return 4;
   if (depth >= 5) return 3;
   if (depth >= 3) return 2;
   return 1;
