@@ -138,6 +138,10 @@ import murderHeraldUrl from '../../assets/sprites/monsters/murder-herald.svg';
 import slayerEchoUrl from '../../assets/sprites/monsters/slayer-echo.svg';
 import throneAbishaiUrl from '../../assets/sprites/monsters/throne-abishai.svg';
 import melissanUrl from '../../assets/sprites/monsters/melissan.svg';
+// ─── Ascension-only elites (Ascension ≥ 2; mixed into every chapter) ──────
+import ascendantSlayerUrl from '../../assets/sprites/monsters/ascendant-slayer.svg';
+import voidWardenUrl from '../../assets/sprites/monsters/void-warden.svg';
+import deathlessAscendantUrl from '../../assets/sprites/monsters/deathless-ascendant.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -298,6 +302,10 @@ const SPRITES: Record<string, SpriteEntry> = {
   'slayer-echo': { url: slayerEchoUrl, label: 'Slayer-Echo' },
   'throne-abishai': { url: throneAbishaiUrl, label: 'Throne Abishai' },
   melissan: { url: melissanUrl, label: 'Melissan' },
+  // ─── Ascension-only elites (Ascension ≥ 2) ──────────────────────────────
+  'ascendant-slayer': { url: ascendantSlayerUrl, label: 'Ascendant Slayer' },
+  'void-warden': { url: voidWardenUrl, label: 'Void-Warden' },
+  'deathless-ascendant': { url: deathlessAscendantUrl, label: 'Deathless Ascendant' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },

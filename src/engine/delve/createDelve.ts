@@ -1,6 +1,7 @@
 import type { DelveState, RoomSpec } from '../../types/delve';
 import { createRng, randomSeed } from '../dice/rng';
-import { clampAscension } from './ascension';
+import { clampAscension, ascensionEliteVariants } from './ascension';
+import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
 import { eventsForChapter } from '../../content/events';
 import { intelEventIdFor, getBossIntelCard } from '../../content/bossIntel';
 import type { EventTemplate } from '../../schemas/event';
@@ -448,6 +449,7 @@ function buildChapterNodes(
   content: ChapterContent,
   nextEvent: (id: string, chapter: number) => RoomSpec,
   elitesEnabled = true,
+  ascension = 0,
 ): RoomSpec[] {
   const plan = generateChapterPlan(rng);
   const slotCount = (kind: SlotKind): number =>
@@ -459,7 +461,13 @@ function buildChapterNodes(
   // allocate enough mid entries to cover both the real mid slots and the extras.
   const eliteSlots = slotCount('elite');
   const midQ = pickN(rng, content.pools.mid, slotCount('mid') + (elitesEnabled ? 0 : eliteSlots));
-  const eliteQ = pickN(rng, content.pools.elite, elitesEnabled ? eliteSlots : 0);
+  // At Ascension ≥ 2 the ascendant horrors are mixed INTO the chapter's own elite
+  // pool (augment, never replace), so an elite detour can now field a tougher,
+  // chapter-agnostic threat — ascension changes what you fight, not just its HP.
+  const elitePool = ascensionEliteVariants(ascension)
+    ? [...content.pools.elite, ...ASCENDANT_ELITE_POOL]
+    : content.pools.elite;
+  const eliteQ = pickN(rng, elitePool, elitesEnabled ? eliteSlots : 0);
   let shrineI = 0;
   let restI = 0;
 
@@ -1034,7 +1042,10 @@ export function createGodwakeDelve(
   }
 
   const elitesEnabled = opts.elitesEnabled ?? true;
-  const chapters = GODWAKE_CHAPTERS.map((c) => buildChapterNodes(rng, c, nextEvent, elitesEnabled));
+  const ascension = clampAscension(opts.ascension ?? 0);
+  const chapters = GODWAKE_CHAPTERS.map((c) =>
+    buildChapterNodes(rng, c, nextEvent, elitesEnabled, ascension),
+  );
   const camps = GODWAKE_CAMPS.map((f, i) => campNode(`camp-${i + 1}`, i + 1, f));
 
   // Stitch the chapters together through the camp seams: each chapter boss
@@ -1063,7 +1074,7 @@ export function createGodwakeDelve(
     roomsCleared: 0,
     goldEarned: 0,
     xpEarned: 0,
-    ascensionLevel: clampAscension(opts.ascension ?? 0),
+    ascensionLevel: ascension,
   };
 }
 
