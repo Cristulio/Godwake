@@ -141,6 +141,10 @@ import { MURDER_HERALD } from './murder-herald';
 import { SLAYER_ECHO } from './slayer-echo';
 import { THRONE_ABISHAI } from './throne-abishai';
 import { MELISSAN } from './melissan';
+// ─── Ascension-only elites (Ascension ≥ 2; mixed into every chapter) ──────
+import { ASCENDANT_SLAYER } from './ascendant-slayer';
+import { VOID_WARDEN } from './void-warden';
+import { DEATHLESS_ASCENDANT } from './deathless-ascendant';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -286,6 +290,10 @@ const ALL_MONSTERS: Monster[] = [
   SLAYER_ECHO,
   THRONE_ABISHAI,
   MELISSAN,
+  // ─── Ascension-only elites (Ascension ≥ 2) ──────────────────────────────
+  ASCENDANT_SLAYER,
+  VOID_WARDEN,
+  DEATHLESS_ASCENDANT,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -446,4 +454,8 @@ export {
   SLAYER_ECHO,
   THRONE_ABISHAI,
   MELISSAN,
+  // ─── Ascension-only elites (Ascension ≥ 2) ──────────────────────────────
+  ASCENDANT_SLAYER,
+  VOID_WARDEN,
+  DEATHLESS_ASCENDANT,
 };

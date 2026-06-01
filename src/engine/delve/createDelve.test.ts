@@ -4,6 +4,7 @@ import {
   reachableRooms,
   roomById,
 } from './createDelve';
+import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
 import { getMonster } from '../../content/monsters';
 import { getBossIntelCard, BOSS_INTEL_CARDS } from '../../content/bossIntel';
 import type { DelveState } from '../../types/delve';
@@ -150,6 +151,53 @@ describe('createGodwakeDelve', () => {
       expect(campIndices[i]).toBeGreaterThan(bossIndices[i]);
       expect(campIndices[i]).toBeLessThan(bossIndices[i + 1]);
     }
+  });
+});
+
+describe('createGodwakeDelve — ascension elite variants', () => {
+  const ASCENDANT_DEF_IDS = new Set(
+    ASCENDANT_ELITE_POOL.flatMap((e) => e.monsters.map((m) => m.defId)),
+  );
+
+  const eliteRooms = (d: DelveState) => d.rooms.filter((r) => r.kind === 'elite');
+  const ascendantBearingRooms = (d: DelveState) =>
+    d.rooms.filter((r) => (r.monsters ?? []).some((m) => ASCENDANT_DEF_IDS.has(m.defId)));
+
+  it('never fields an ascendant elite at Ascension 0 or 1', () => {
+    for (const ascension of [0, 1]) {
+      for (let seed = 0; seed < 24; seed++) {
+        const d = createGodwakeDelve({ seed, ascension });
+        expect(ascendantBearingRooms(d)).toHaveLength(0);
+      }
+    }
+  });
+
+  it('mixes ascendant elites into elite rooms at Ascension >= 2', () => {
+    // Probabilistic per seed (they share the elite pool with the chapter's own
+    // elites), so assert in aggregate across a span of seeds.
+    let withAscendant = 0;
+    for (let seed = 0; seed < 24; seed++) {
+      const d = createGodwakeDelve({ seed, ascension: 2 });
+      if (ascendantBearingRooms(d).length > 0) withAscendant++;
+    }
+    expect(withAscendant).toBeGreaterThan(0);
+  });
+
+  it('only ever places ascendant horrors in elite rooms (never plain combat)', () => {
+    for (let seed = 0; seed < 24; seed++) {
+      const d = createGodwakeDelve({ seed, ascension: 6 });
+      for (const room of ascendantBearingRooms(d)) {
+        expect(room.kind).toBe('elite');
+      }
+    }
+  });
+
+  it('augments rather than replaces the chapter elite pool (ordinary elites still appear)', () => {
+    const d = createGodwakeDelve({ seed: 3, ascension: 6 });
+    const ordinaryElites = eliteRooms(d).filter(
+      (r) => !(r.monsters ?? []).some((m) => ASCENDANT_DEF_IDS.has(m.defId)),
+    );
+    expect(ordinaryElites.length).toBeGreaterThan(0);
   });
 });
 
