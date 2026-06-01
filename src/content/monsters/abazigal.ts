@@ -12,11 +12,11 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 export const ABAZIGAL: Monster = MonsterSchema.parse({
   id: 'abazigal',
   name: 'Abazigal',
-  cr: '16',
+  cr: '17',
   size: 'huge',
   creatureType: 'dragon (Bhaalspawn)',
   ac: 22,
-  maxHp: 360,
+  maxHp: 390,
   speed: 40,
   abilityScores: { str: 24, dex: 12, con: 22, int: 16, wis: 15, cha: 19 },
   passivePerception: 17,

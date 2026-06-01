@@ -16,11 +16,11 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 export const YAGA_SHURA: Monster = MonsterSchema.parse({
   id: 'yaga-shura',
   name: 'Yaga-Shura',
-  cr: '15',
+  cr: '16',
   size: 'huge',
   creatureType: 'giant (bhaalspawn)',
   ac: 22,
-  maxHp: 312,
+  maxHp: 350,
   speed: 40,
   abilityScores: { str: 27, dex: 13, con: 23, int: 14, wis: 17, cha: 18 },
   passivePerception: 17,

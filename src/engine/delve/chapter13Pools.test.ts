@@ -58,9 +58,9 @@ describe('chapter 13 — bestiary', () => {
     }
   });
 
-  it('the boss (Abazigal) carries an apex CR 16 stat block a band above Ch9', () => {
+  it('the boss (Abazigal) carries an apex CR 17 stat block ramping toward Melissan', () => {
     expect(ABAZIGAL.id).toBe(CH13_BOSS_ID);
-    expect(ABAZIGAL.cr).toBe('16');
+    expect(ABAZIGAL.cr).toBe('17');
     expect(ABAZIGAL.bossMechanic).toBe('battle-rage');
     // A clear band above the Ch9 boss (the Hollow Pretender: 240 HP / AC 21).
     expect(ABAZIGAL.maxHp).toBeGreaterThan(240);
