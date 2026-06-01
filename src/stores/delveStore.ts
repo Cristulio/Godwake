@@ -25,7 +25,7 @@ import {
 import { applyDelveStartUpgrades } from '../engine/character/upgrades';
 import { hasPendingLevelUp } from '../engine/character/leveling';
 import { getAscensionLevel, ascensionAscendantLoot } from '../engine/delve/ascension';
-import { TOTAL_CHAPTERS } from '../engine/delve/createDelve';
+import { TOTAL_CHAPTERS } from '../engine/delve/constants';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
 import { nextLoreBeat } from '../content/loreBeats';

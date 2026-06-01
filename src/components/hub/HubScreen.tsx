@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { useGameStore } from '../../stores/gameStore';
-import { createGodwakeDelve } from '../../engine/delve';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { playMusic, stopMusic } from '../../engine/audio';
@@ -51,12 +50,15 @@ export function HubScreen() {
   const race = getRace(character.raceId);
   const cls = getClass(character.classId);
 
-  function handleEnterDungeon() {
+  async function handleEnterDungeon() {
     // Hades-style: one delve, every run. All chapters chain. Chapters
     // unlock progressively within the run, not via separate hub entries.
     void chapter1Cleared; // referenced for future "skip already-cleared" flag
     // Ascension is chosen in the title's New Game+ launcher and stored on the
     // soul; every descent of the run (incl. post-death re-descents) reuses it.
+    // createGodwakeDelve pulls the full chapter/bestiary graph — load it on
+    // descend so it stays out of the initial bundle.
+    const { createGodwakeDelve } = await import('../../engine/delve');
     const delve = createGodwakeDelve({ ascension: selectedAscension, elitesEnabled });
     startDelve(delve);
   }

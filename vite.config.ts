@@ -10,6 +10,16 @@ export default defineConfig({
     // whole refactor. Everything else keeps the Vite default (≤4 KB inline).
     assetsInlineLimit: (filePath) =>
       filePath.includes('/assets/sprites/') ? false : undefined,
+    rollupOptions: {
+      output: {
+        // Pin the rarely-changing vendor runtime (React/Zustand/Zod) into its
+        // own chunk. It loads on first paint like the app code, but stays
+        // cached across the frequent Cloudflare redeploys — repeat visitors
+        // only re-download the app chunk, not the framework.
+        manualChunks: (id) =>
+          /node_modules\/(react|react-dom|scheduler|zustand|zod)\//.test(id) ? 'vendor' : undefined,
+      },
+    },
   },
   test: {
     environment: 'jsdom',

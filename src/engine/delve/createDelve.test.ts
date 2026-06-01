@@ -3,6 +3,7 @@ import {
   createGodwakeDelve,
   reachableRooms,
   roomById,
+  TOTAL_CHAPTERS,
 } from './createDelve';
 import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
 import { getMonster } from '../../content/monsters';
@@ -56,7 +57,10 @@ describe('createGodwakeDelve', () => {
     const d = createGodwakeDelve(1);
     const bosses = d.rooms.filter((r) => r.kind === 'boss');
     // Fourteen chapters → fourteen distinct chapter bosses, in order 1..14.
-    expect(bosses).toHaveLength(14);
+    // TOTAL_CHAPTERS is the standalone constant delveStore reads; assert the
+    // generated chain matches it so the two can never drift.
+    expect(TOTAL_CHAPTERS).toBe(14);
+    expect(bosses).toHaveLength(TOTAL_CHAPTERS);
     const chapters = bosses.map((b) => b.chapter);
     expect(chapters).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
 
