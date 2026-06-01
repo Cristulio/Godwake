@@ -475,6 +475,8 @@ interface ProcCounters {
   rogueTurns: number;
   sneakAttack: number;
   hide: number;
+  wildShape: number;
+  spellCast: number;
 }
 
 function freshProcs(): ProcCounters {
@@ -488,6 +490,8 @@ function freshProcs(): ProcCounters {
     rogueTurns: 0,
     sneakAttack: 0,
     hide: 0,
+    wildShape: 0,
+    spellCast: 0,
   };
 }
 
@@ -528,6 +532,8 @@ function runPlayerTurnInstrumented(
     else if (action.kind === 'reckless-attack') pc.reckless += 1;
     else if (action.kind === 'hunters-mark') pc.huntersMarkCast += 1;
     else if (action.kind === 'cunning-action' && action.choice === 'hide') pc.hide += 1;
+    else if (action.kind === 'wild-shape') pc.wildShape += 1;
+    else if (action.kind === 'cast') pc.spellCast += 1;
 
     const colossusBefore = s.colossusSlayerUsedThisTurn === true;
     const sneakBefore = s.sneakAttackUsedThisTurn === true;
@@ -566,7 +572,7 @@ function runCombatRoom(
     const def = getMonster(rm.defId);
     return Array.from({ length: rm.count }, () => ({ def, displayName: rm.displayPrefix }));
   });
-  const init = createCombat({ roller, character: characterIn, monsters: monsterRefs, ascension, isBoss, isElite });
+  const init = createCombat({ roller, character: characterIn, monsters: monsterRefs, ascension, isBoss, isElite, twistId: room.twistId });
   let state: CombatState = init.state;
   let character: Character = init.character;
   pc.combats += 1;
@@ -891,17 +897,18 @@ function renderAscensionHistogram(aggs: ClassAggregate[]): string {
 function renderProcs(): string {
   const lines: string[] = [];
   lines.push(
-    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat |',
+    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat |',
   );
-  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|');
+  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|');
   for (const classId of CLASSES) {
     const p = PROCS[classId];
     const per = (n: number) => (p.combats ? num(n / p.combats, 2) : '—');
     const perTurn = (n: number) => (p.rogueTurns ? num(n / p.rogueTurns, 2) : '—');
     const relevant = (s: string, when: boolean) => (when ? s : '·');
     const isRogue = classId === 'rogue';
+    const isCaster = classId === 'wizard' || classId === 'druid';
     lines.push(
-      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} |`,
+      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} |`,
     );
   }
   return lines.join('\n');
