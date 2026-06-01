@@ -29,8 +29,8 @@ function walk(m: LoreBeatMeta, steps = 100): string[] {
 
 describe('LORE_BEATS registry invariants', () => {
   it('has a sane size and unique, stable ids', () => {
-    expect(LORE_BEATS.length).toBeGreaterThanOrEqual(14);
-    expect(LORE_BEATS.length).toBeLessThanOrEqual(20);
+    expect(LORE_BEATS.length).toBeGreaterThanOrEqual(28);
+    expect(LORE_BEATS.length).toBeLessThanOrEqual(36);
     const ids = LORE_BEATS.map((b) => b.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
@@ -112,7 +112,7 @@ describe('nextLoreBeat — name reveal gating', () => {
   });
 
   it('reveals Irenicus once Chapter 2 is cleared and the arc is walked', () => {
-    const played = walk(meta({ delveCount: 999, chaptersCleared: 4 }));
+    const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
     const irenicusReveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
     expect(played).toContain(irenicusReveal.id);
     // Fully maxed → the whole arc eventually plays, in registry order.
@@ -120,9 +120,48 @@ describe('nextLoreBeat — name reveal gating', () => {
   });
 });
 
+describe('LORE_BEATS — the arc spans the whole chapter chain (1→14)', () => {
+  it('chapter gates are non-decreasing in registry order (strict in-order holds)', () => {
+    let prev = 0;
+    for (const b of LORE_BEATS) {
+      const gate = b.minChapters ?? 0;
+      expect(gate).toBeGreaterThanOrEqual(prev);
+      prev = gate;
+    }
+  });
+
+  it('every chapter band 1→14 has at least one beat gated to it (no narrative gaps)', () => {
+    const gates = new Set(LORE_BEATS.map((b) => b.minChapters ?? 0));
+    for (let c = 1; c <= 14; c++) {
+      expect(gates.has(c)).toBe(true);
+    }
+  });
+
+  it('the through-line reaches the finale (a beat gated to clearing Chapter 14)', () => {
+    const finale = LORE_BEATS.filter((b) => (b.minChapters ?? 0) === 14);
+    expect(finale.length).toBeGreaterThanOrEqual(1);
+    // It is the last beat in the arc — it hands off to the ending, nothing after.
+    const lastGate = LORE_BEATS[LORE_BEATS.length - 1].minChapters ?? 0;
+    expect(lastGate).toBe(14);
+  });
+
+  it('clearing the whole chain unfolds the full back half, one beat per descent', () => {
+    // A veteran who has cleared all 14 chapters walks every beat, in order, and
+    // each call hands back exactly one (the trigger marks it seen to advance).
+    const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
+    expect(played).toEqual(LORE_BEATS.map((b) => b.id));
+    // A run that has only cleared Chapter 9 sees the Godwake bridge but never the
+    // Suldanessellar reveal or anything past it.
+    const mid = walk(meta({ delveCount: 999, chaptersCleared: 9 }));
+    expect(mid).toContain('lore-22-no-seam');
+    expect(mid).not.toContain('lore-24-the-vein-named');
+    expect(mid).not.toContain('lore-30-choose-it-as-yourself');
+  });
+});
+
 describe('nextLoreBeat — veterans get one beat per descent, never a wall', () => {
   it('a maxed veteran is handed exactly one beat per call', () => {
-    const m = meta({ delveCount: 999, chaptersCleared: 4 });
+    const m = meta({ delveCount: 999, chaptersCleared: 14 });
     const a = nextLoreBeat(m)!;
     expect(a.id).toBe(LORE_BEATS[0].id);
     // The selector itself never returns more than one; the trigger must mark
@@ -133,6 +172,6 @@ describe('nextLoreBeat — veterans get one beat per descent, never a wall', () 
 
   it('once every beat is seen, returns null', () => {
     const all = LORE_BEATS.map((b) => b.id);
-    expect(nextLoreBeat(meta({ delveCount: 999, chaptersCleared: 4, seenDialogueBeats: all }))).toBeNull();
+    expect(nextLoreBeat(meta({ delveCount: 999, chaptersCleared: 14, seenDialogueBeats: all }))).toBeNull();
   });
 });
