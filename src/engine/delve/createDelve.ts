@@ -113,11 +113,6 @@ interface Rng {
   next(): number;
 }
 
-function pick<T>(rng: Rng, pool: T[]): T {
-  if (pool.length === 0) throw new Error('Empty encounter pool');
-  return pool[Math.floor(rng.next() * pool.length)];
-}
-
 /**
  * Draw `count` distinct entries from a pool via the seeded RNG. Used by the
  * longer Ch2–4 spans, which fill a fifth combat slot from the mid-tier pool and
@@ -156,15 +151,31 @@ function combatRoom(id: string, e: EncounterEntry): RoomSpec {
  * seeded RNG that composes the combat slots, so a delve seed locks events too.
  */
 function eventRoom(id: string, rng: Rng, chapter: number, excludeIds: Set<string>): { room: RoomSpec; templateId: string } {
-  const pool = eventsForChapter(chapter).filter((e) => !excludeIds.has(e.id));
-  if (pool.length === 0) {
-    // Fall back to the unfiltered chapter pool if exclusion empties it (small chapter pools).
-    const fallback = eventsForChapter(chapter);
-    const tpl = pick(rng, fallback);
-    return { room: eventRoomFromTemplate(id, tpl), templateId: tpl.id };
-  }
-  const tpl = pick(rng, pool);
+  const eligible = eventsForChapter(chapter);
+  const pool = eligible.filter((e) => !excludeIds.has(e.id));
+  // Fall back to the unfiltered chapter pool if exclusion empties it (small chapter pools).
+  const tpl = pickEventByRecency(rng, pool.length > 0 ? pool : eligible, chapter);
   return { room: eventRoomFromTemplate(id, tpl), templateId: tpl.id };
+}
+
+/**
+ * Weighted draw that prefers events authored for the current chapter band over
+ * older ones. `eventsForChapter` is cumulative (every event at or below the
+ * chapter is eligible), so without this a Throne-of-Bhaal event room would
+ * mostly serve Ch1 roadside fare by sheer count. Weight halves per chapter of
+ * age (`2^-(chapter - minChapter)`), so the deep endgame is dominated by
+ * deep-chapter events while the early game still mixes its small pools freely.
+ */
+function pickEventByRecency(rng: Rng, pool: EventTemplate[], chapter: number): EventTemplate {
+  if (pool.length === 0) throw new Error('Empty event pool');
+  const weights = pool.map((e) => 2 ** -(chapter - (e.minChapter ?? 1)));
+  const total = weights.reduce((a, w) => a + w, 0);
+  let roll = rng.next() * total;
+  for (let i = 0; i < pool.length; i++) {
+    roll -= weights[i];
+    if (roll < 0) return pool[i];
+  }
+  return pool[pool.length - 1];
 }
 
 function eventRoomFromTemplate(id: string, tpl: EventTemplate): RoomSpec {
