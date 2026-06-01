@@ -20,6 +20,9 @@
 # Pass --brief-file <path> to start the new Claude session with the file's
 # contents as the first user message — the agent reads the brief and gets
 # to work immediately instead of waiting for an initial prompt.
+#
+# Pass --model <model> and/or --effort <level> to forward those flags to the
+# launched claude session (sets the spawned session's model and effort level).
 
 set -euo pipefail
 
@@ -27,6 +30,7 @@ NAME=""
 LAUNCH=0
 BRIEF_FILE=""
 MODEL=""
+EFFORT=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --launch)
@@ -38,6 +42,15 @@ while [ $# -gt 0 ]; do
       MODEL="${1:-}"
       if [ -z "$MODEL" ]; then
         echo "Error: --model requires an argument" >&2
+        exit 1
+      fi
+      shift
+      ;;
+    --effort)
+      shift
+      EFFORT="${1:-}"
+      if [ -z "$EFFORT" ]; then
+        echo "Error: --effort requires an argument" >&2
         exit 1
       fi
       shift
@@ -72,6 +85,8 @@ if [ -z "$NAME" ]; then
   echo ""
   echo "  --launch       Opens claude in the worktree (iTerm2 split pane, or Terminal.app)."
   echo "  --brief-file   Path to a markdown brief; sent as the agent's first message."
+  echo "  --model        Model for the launched claude session (forwarded as --model)."
+  echo "  --effort       Effort level for the launched claude session (forwarded as --effort)."
   exit 1
 fi
 
@@ -124,9 +139,9 @@ if [ "$LAUNCH" -eq 1 ]; then
     # then run claude with the brief contents as the first user message.
     # \\\" → literal \" (AppleScript-escaped " inside the string)
     # \$   → literal $ (AppleScript has no $ interpolation, just pass it through)
-    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL} \\\"\$(cat .briefing.md)\\\""
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL} ${EFFORT:+--effort $EFFORT} \\\"\$(cat .briefing.md)\\\""
   else
-    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL}"
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL} ${EFFORT:+--effort $EFFORT}"
   fi
   if [ -d "/Applications/iTerm.app" ]; then
     echo ""
