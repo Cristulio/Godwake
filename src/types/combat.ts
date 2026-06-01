@@ -59,6 +59,12 @@ export interface MonsterInstance {
   actionEconomy: ActionEconomy;
   /** Set true the first time a 'battle-rage' boss drops to/below half HP. Sticks for the rest of combat. */
   bossRageActive?: boolean;
+  /**
+   * Ascension extra-phase (Asc >= 3): armed at spawn on the primary boss. The
+   * first time the boss takes its turn while bloodied it spends one immediate
+   * extra action (a second wind), then this clears so it fires once per fight.
+   */
+  bossExtraPhaseArmed?: boolean;
   /** Flat damage added to each of this monster's landed attacks (ascension scaling). Set at spawn. */
   bonusDamage?: number;
   /**

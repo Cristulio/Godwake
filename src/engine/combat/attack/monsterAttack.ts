@@ -12,6 +12,7 @@ import type {
   SpellEffectKind,
 } from '../../../types/combat';
 import type {
+  MonsterAction,
   MonsterAttack,
   MonsterDebuff,
   MonsterSummon,
@@ -152,43 +153,18 @@ export function monsterAttack(
   // for an add summoned mid-round that has no intent yet.
   const action = resolveIntentAction(monsterDef, attacker.instance, state, character);
 
-  let result: { state: CombatState; character: Character };
-  switch (action.kind) {
-    case 'paralyze':
-      result = monsterCastParalyze(
-        state,
-        attackerId,
-        attacker.instance.displayName,
-        character,
-        roller,
-        action,
-      );
-      break;
-    case 'debuff':
-      result = monsterCastDebuff(
-        state,
-        attackerId,
-        attacker.instance.displayName,
-        character,
-        roller,
-        action,
-      );
-      break;
-    case 'summon':
-      result = monsterSummon(state, attackerId, character, action);
-      break;
-    case 'sustain':
-      result = monsterSustain(state, attackerId, character, roller, action);
-      break;
-    case 'multiattack':
-      result = monsterMultiattack(state, attackerId, character, roller);
-      break;
-    case 'attack':
-      result = resolveSingleAttack(state, character, attackerId, action, roller);
-      break;
-    default:
-      result = { state, character };
-  }
+  let result = resolveMonsterChosenAction(
+    state,
+    character,
+    attackerId,
+    attacker.instance.displayName,
+    action,
+    roller,
+  );
+
+  // Ascension extra-phase (Asc >= 3): the first time a boss takes its turn
+  // while bloodied it draws on a second wind and re-fires its action once.
+  result = maybeBossExtraPhase(result, attackerId, action, roller);
 
   const marked = markMonsterActionUsed(result.state, attackerId);
   // Re-pick this monster's intent now that the turn's action is spent (the
@@ -197,6 +173,78 @@ export function monsterAttack(
   const repicked = repickActingIntent(marked, attackerId, result.character);
   const ended = evaluateCombatEnd(repicked, result.character);
   return combatResult(ended.state, ended.character);
+}
+
+/** Resolve a single chosen monster action through the per-kind handlers. */
+function resolveMonsterChosenAction(
+  state: CombatState,
+  character: Readonly<Character>,
+  attackerId: string,
+  displayName: string,
+  action: MonsterAction,
+  roller: DiceRoller,
+): { state: CombatState; character: Character } {
+  switch (action.kind) {
+    case 'paralyze':
+      return monsterCastParalyze(state, attackerId, displayName, character, roller, action);
+    case 'debuff':
+      return monsterCastDebuff(state, attackerId, displayName, character, roller, action);
+    case 'summon':
+      return monsterSummon(state, attackerId, character, action);
+    case 'sustain':
+      return monsterSustain(state, attackerId, character, roller, action);
+    case 'multiattack':
+      return monsterMultiattack(state, attackerId, character, roller);
+    case 'attack':
+      return resolveSingleAttack(state, character, attackerId, action, roller);
+    default:
+      return { state, character: character as Character };
+  }
+}
+
+/**
+ * Ascension extra-phase second wind. When the primary boss of a high-ascension
+ * room (armed at spawn — see createCombat) first acts while at or below half
+ * HP, it spends one immediate extra action re-firing the move it just made,
+ * then disarms so it triggers exactly once per fight. Skipped if the boss died
+ * or the fight already ended on its main action. Generic: rides on whatever the
+ * boss's signature action is, so it reads on any chapter boss with no per-boss
+ * authoring.
+ */
+function maybeBossExtraPhase(
+  result: { state: CombatState; character: Character },
+  attackerId: string,
+  action: MonsterAction,
+  roller: DiceRoller,
+): { state: CombatState; character: Character } {
+  if (result.state.status !== 'active') return result;
+  if (result.character.hp.current <= 0) return result;
+  const boss = result.state.combatants.find(
+    (c): c is MonsterCombatant => c.id === attackerId && c.kind === 'monster',
+  );
+  if (!boss || !boss.instance.bossExtraPhaseArmed) return result;
+  const inst = boss.instance;
+  const bloodied = inst.hp.current * 2 <= inst.hp.max;
+  if (inst.hp.current <= 0 || !bloodied) return result;
+
+  let state = patchMonsterInstance(result.state, attackerId, (i) => ({
+    ...i,
+    bossExtraPhaseArmed: false,
+  }));
+  state = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'system',
+    text: `${inst.displayName} refuses to fall — a furious second wind drives it to strike again.`,
+  });
+  state = attachEnemyEffect(state, 'enemy-frenzy', attackerId);
+  return resolveMonsterChosenAction(
+    state,
+    result.character,
+    attackerId,
+    inst.displayName,
+    action,
+    roller,
+  );
 }
 
 /** Re-select the just-acted monster's intent (or clear it if it's now dead). */
