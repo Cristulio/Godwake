@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { getActiveRoller } from '../../engine/dice';
 import { getEvent } from '../../content/events';
-import { EventMotif } from './EventMotif';
+import { EventIllustration } from './EventIllustration';
 import {
   applyEventOutcome,
   canTakeChoice,
@@ -74,6 +74,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   if (isBossIntelRoom && !bossIntelUnlocked) {
     return (
       <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
+        <EventIllustration explicit={template?.illustration} chapter={room.chapter} />
         <Panel>
           <p className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-2">
             ⚿ Sealed
@@ -100,6 +101,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   if (!template) {
     return (
       <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
+        <EventIllustration chapter={room.chapter} />
         <Panel>
           <p className="text-[var(--color-text-secondary)] text-sm">
             Nothing of note here. The corridor goes on.
@@ -139,7 +141,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
 
   return (
     <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(212,176,98,0.07),transparent_55%)]">
-      <EventMotif type={template.eventType} />
+      <EventIllustration explicit={template.illustration} chapter={room.chapter} />
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid slice" aria-label="An Omen on the Road">
+  <rect width="96" height="48" fill="#0A0805" />
+  <rect width="96" height="32" fill="#15100B" />
+  <ellipse cx="48" cy="14" rx="20" ry="12" fill="#F4A742" opacity="0.10" />
+  <g fill="#D4B062" opacity="0.7"><rect x="46" y="3" width="2" height="3" /><rect x="46" y="22" width="2" height="3" /><rect x="34" y="13" width="3" height="2" /><rect x="59" y="13" width="3" height="2" /></g>
+  <path d="M34 14 L48 7 L62 14 L48 21 Z" fill="#231C15" stroke="#6B4A2E" stroke-width="1" />
+  <circle cx="48" cy="14" r="4" fill="#9B6FCF" />
+  <circle cx="48" cy="14" r="2" fill="#0A0805" />
+  <circle cx="49" cy="13" r="0.7" fill="#FFB347" />
+  <rect x="0" y="32" width="96" height="16" fill="#1A1410" />
+  <rect x="0" y="32" width="96" height="1" fill="#3A2E22" />
+  <polygon points="40,48 44,32 52,32 56,48" fill="#241B14" />
+  <g fill="#3A2E22"><rect x="46" y="34" width="4" height="2" /><rect x="44" y="40" width="8" height="2" /><rect x="42" y="46" width="12" height="2" /></g>
+  <rect x="14" y="26" width="6" height="14" fill="#2A2017" /><rect x="13" y="24" width="8" height="3" fill="#3A2E22" />
+  <rect x="76" y="28" width="6" height="12" fill="#2A2017" /><rect x="75" y="26" width="8" height="3" fill="#3A2E22" />
+</svg>

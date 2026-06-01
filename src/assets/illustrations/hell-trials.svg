@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid slice" aria-label="The Trials of the Pit">
+  <rect width="96" height="48" fill="#0E0503" />
+  <rect width="96" height="32" fill="#1A0705" />
+  <ellipse cx="48" cy="44" rx="46" ry="20" fill="#FF6B2B" opacity="0.18" />
+  <ellipse cx="48" cy="46" rx="30" ry="12" fill="#FFB347" opacity="0.20" />
+  <g fill="#2A0A06">
+    <polygon points="0,32 14,32 8,8" /><polygon points="22,32 34,32 28,14" /><polygon points="62,32 74,32 68,12" /><polygon points="84,32 96,32 90,10" />
+  </g>
+  <g fill="#3A0F08">
+    <polygon points="14,32 28,32 21,18" /><polygon points="74,32 88,32 81,16" />
+  </g>
+  <rect x="0" y="32" width="96" height="16" fill="#1A0705" />
+  <ellipse cx="48" cy="36" rx="20" ry="5" fill="#8B1F1B" />
+  <ellipse cx="48" cy="36" rx="13" ry="3" fill="#C8332E" />
+  <ellipse cx="48" cy="36" rx="6" ry="2" fill="#FF6B2B" />
+  <g fill="#FF6B2B" opacity="0.8"><rect x="20" y="40" width="2" height="2" /><rect x="72" y="42" width="2" height="2" /><rect x="34" y="44" width="2" height="2" /><rect x="60" y="44" width="2" height="2" /></g>
+  <g fill="#FFB347" opacity="0.5"><rect x="30" y="6" width="1" height="2" /><rect x="66" y="4" width="1" height="2" /><rect x="48" y="2" width="1" height="2" /></g>
+</svg>
