@@ -250,6 +250,13 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     }
   }
 
+  // Show the reliquary offer only for an un-owned, not-yet-bought relic — same
+  // gate as ShopRoom.
+  const showLegendary =
+    legendaryOffer != null &&
+    !legendaryBought &&
+    !ownedLegendaries.includes(legendaryOffer.legendaryId);
+
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.10),transparent_60%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
@@ -439,13 +446,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
         <ShopModal
           gear={gear}
           consumables={consumables}
-          legendaryOffer={
-            legendaryOffer != null &&
-            !legendaryBought &&
-            !ownedLegendaries.includes(legendaryOffer.legendaryId)
-              ? legendaryOffer
-              : null
-          }
+          legendaryOffer={showLegendary ? legendaryOffer : null}
           legendaryBought={legendaryBought}
           boughtGearKeys={boughtGearKeys}
           goldInPocket={character.goldInPocket}
