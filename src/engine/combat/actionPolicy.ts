@@ -68,6 +68,16 @@ const BOSS_NUKE_HP = 40;
 /** HP fraction at/below which the wizard smears itself defensively (Blur /
  *  Mirror Image) once, to survive long enough to keep casting. */
 const WIZARD_DEFENSIVE_HP = 0.5;
+/** HP fraction at/below which the wizard reaches for a life-drain (damage that
+ *  also heals) over a bare nuke — turning slots into staying power. */
+const WIZARD_DRAIN_HP = 0.6;
+/** A single target this beefy is a TRUE boss — worth an 8th/9th-level capstone
+ *  slot. Below it a beefy elite gets a mid-tier focused nuke, so the capstone is
+ *  saved for the fight that actually needs it. */
+const CAPSTONE_NUKE_HP = 90;
+/** A boss at/above this HP is worth a 7th-level hard lock (Soul Snare's 3-round
+ *  paralyze) over the cheaper Hold Person. */
+const SOUL_SNARE_HP = 70;
 
 // ---- Battlefield reads -----------------------------------------------------
 
@@ -156,7 +166,9 @@ function bestAffordable(character: Character, ids: readonly string[]): string | 
   return null;
 }
 
-/** AoE blasts, biggest dice first. */
+/** AoE blasts that hit EVERY enemy, biggest dice first — the crowd-clear pool.
+ *  Lightning Bolt is deliberately absent: it only forks to one extra foe, so it
+ *  is a focused nuke, not a pack-clear. */
 const HIGH_AOE_PRIORITY = [
   'cataclysm',
   'stormcrash',
@@ -165,8 +177,18 @@ const HIGH_AOE_PRIORITY = [
   'rime-blast',
 ] as const;
 
-/** Single-target nukes, biggest first. */
-const HIGH_NUKE_PRIORITY = ['wither', 'dissolution', 'void-ray', 'force-lance'] as const;
+/** Single-target capstones (8th/6th), biggest first — reserved for a genuine
+ *  boss; never spent on a mere elite. */
+const CAPSTONE_NUKE_PRIORITY = ['wither', 'dissolution'] as const;
+
+/** Mid-tier focused nukes (≤5th), biggest first — the right slot for a beefy
+ *  elite that doesn't merit a capstone. Lightning Bolt (full + one half-fork)
+ *  belongs here, not with the AoE. */
+const MID_NUKE_PRIORITY = ['void-ray', 'force-lance', 'lightning-bolt'] as const;
+
+/** Life-drains, CHEAPEST first — when hurt, the lowest slot that still heals
+ *  banks the deeper slots for damage. */
+const DRAIN_PRIORITY = ['vampiric-touch', 'exsanguinate'] as const;
 
 /** Index of the strongest healing consumable in inventory, or -1. */
 function bestHealPotionIdx(character: Character): number {
@@ -296,7 +318,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
   const canAct = actionFree || (isRogue && character.bonusAttackAvailable === true);
   if (canAct) {
     if (isWizard) {
-      const wizardAction = chooseWizardAction(character, live, primary, threat);
+      const wizardAction = chooseWizardAction(state, character, live, primary, threat);
       if (wizardAction) return wizardAction;
     }
     // Barbarian Reckless Attack: declare it before swinging while healthy
@@ -341,6 +363,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
  * A level-1 slot is kept in reserve so the Shield reaction can still fire.
  */
 function chooseWizardAction(
+  state: CombatState,
   character: Character,
   live: MonsterCombatant[],
   primary: MonsterCombatant | undefined,
@@ -351,6 +374,17 @@ function chooseWizardAction(
   const hpPct = character.hp.current / character.hp.max;
   const actionFree = !character.actionEconomy.actionUsed;
   const beefy = highestHpTarget(live);
+
+  // Life-drain when hurt: a necrotic drain removes a foe AND knits the caster's
+  // own wounds — strictly better than a bare nuke or a one-off smear when we're
+  // bleeding. Hit the beefiest target (the heal is half the damage ROLLED, so
+  // overkill wastes nothing, and a healthy target wastes no damage) with the
+  // CHEAPEST affordable drain, banking deeper slots. A real pack is better
+  // thinned by AoE, so only drain when not facing a crowd.
+  if (actionFree && hpPct <= WIZARD_DRAIN_HP && enemyCount <= 2) {
+    const drain = bestAffordable(character, DRAIN_PRIORITY);
+    if (drain && beefy) return { kind: 'cast', spellId: drain, targetId: beefy.id };
+  }
 
   // Defensive smear when genuinely hurt: Blur (sustained) or Mirror Image, once,
   // if nothing already shields us. Surviving to keep casting beats one cantrip.
@@ -366,41 +400,56 @@ function chooseWizardAction(
   }
 
   // Boss finisher: against a genuinely beefy single threat, reach for the
-  // deepest working first — transform to grind it down, unmake to nuke-and-lock
-  // it, or the biggest affordable single-target nuke. Spending the high slots on
-  // the room's real threat is the correct slot economy.
+  // deepest working — but MATCH the slot tier to how big the target really is. A
+  // true boss (huge HP) merits the 9th/8th-level capstones (transform, unmake,
+  // or the biggest single-target nuke); a mere elite gets a mid-tier focused
+  // nuke, keeping the capstone for the fight that needs it. This both closes
+  // fights (the "deep but never finishes" gap) and stops the bot dumping a
+  // 9th-level slot on trash.
   if (beefy && beefy.instance.hp.current >= BOSS_NUKE_HP) {
-    if (
-      actionFree &&
-      knows(character, 'apotheosis') &&
-      slotsAt(character, 9) > 0 &&
-      (character.resources.ascendantRoundsRemaining ?? 0) === 0
-    ) {
-      return { kind: 'cast', spellId: 'apotheosis' };
+    if (beefy.instance.hp.current >= CAPSTONE_NUKE_HP) {
+      if (
+        actionFree &&
+        knows(character, 'apotheosis') &&
+        slotsAt(character, 9) > 0 &&
+        (character.resources.ascendantRoundsRemaining ?? 0) === 0
+      ) {
+        return { kind: 'cast', spellId: 'apotheosis' };
+      }
+      if (knows(character, 'unmake') && slotsAt(character, 9) > 0) {
+        return { kind: 'cast', spellId: 'unmake', targetId: beefy.id };
+      }
+      const capstone = bestAffordable(character, CAPSTONE_NUKE_PRIORITY);
+      if (capstone) return { kind: 'cast', spellId: capstone, targetId: beefy.id };
     }
-    if (knows(character, 'unmake') && slotsAt(character, 9) > 0) {
-      return { kind: 'cast', spellId: 'unmake', targetId: beefy.id };
-    }
-    const nuke = bestAffordable(character, HIGH_NUKE_PRIORITY);
+    const nuke = bestAffordable(character, MID_NUKE_PRIORITY);
     if (nuke) return { kind: 'cast', spellId: nuke, targetId: beefy.id };
   }
 
-  // AoE when the room is crowded.
+  // AoE when the room is crowded — Fireball, then a higher-tier blast once the
+  // 3rd-level slots are spent. Every spell here hits the whole pack.
   if (enemyCount >= 3) {
     if (knows(character, 'fireball') && slotsAt(character, 3) > 0 && !aoeWasted(live, 'fire')) {
       return { kind: 'cast', spellId: 'fireball', targetId: anchor };
     }
-    if (
-      knows(character, 'lightning-bolt') &&
-      slotsAt(character, 3) > 0 &&
-      !aoeWasted(live, 'lightning')
-    ) {
-      return { kind: 'cast', spellId: 'lightning-bolt', targetId: anchor };
-    }
-    // Fall back to a higher-tier blast when the 3rd-level slots are spent.
     const aoe = bestAffordable(character, HIGH_AOE_PRIORITY);
     if (aoe) return { kind: 'cast', spellId: aoe, targetId: anchor };
   }
+
+  // A beefy PAIR: Lightning Bolt strikes the tougher in full and forks to the
+  // other for half — more total damage than Fireball on exactly two, and it
+  // concentrates the kill. Only when the pair is tanky enough to merit the slot.
+  if (
+    enemyCount === 2 &&
+    knows(character, 'lightning-bolt') &&
+    slotsAt(character, 3) > 0 &&
+    !aoeWasted(live, 'lightning') &&
+    beefy &&
+    beefy.instance.hp.current >= SCORCHING_RAY_WORTH_HP
+  ) {
+    return { kind: 'cast', spellId: 'lightning-bolt', targetId: beefy.id };
+  }
+
   if (
     enemyCount >= 2 &&
     knows(character, 'burning-hands') &&
@@ -411,37 +460,36 @@ function chooseWizardAction(
   }
 
   // Control: deny the scariest live foe its turn — worth it on a lone boss too
-  // (its whole turn vanishes while we assemble the kill), not just a crowd.
+  // (its whole turn vanishes while we assemble the kill), not just a crowd. A
+  // true boss is worth a 7th-level hard lock (Soul Snare's 3-round paralyze);
+  // a lesser dangerous foe gets the cheaper Hold Person.
   if (
-    knows(character, 'hold-person') &&
-    slotsAt(character, 2) > 0 &&
     threat &&
     !isMonsterParalyzed(threat) &&
     monsterThreat(threat) >= HOLD_PERSON_THREAT &&
     threat.instance.hp.current > HOLD_PERSON_MIN_HP
   ) {
-    return { kind: 'cast', spellId: 'hold-person', targetId: threat.id };
+    if (
+      knows(character, 'soul-snare') &&
+      slotsAt(character, 7) > 0 &&
+      threat.instance.hp.current >= SOUL_SNARE_HP
+    ) {
+      return { kind: 'cast', spellId: 'soul-snare', targetId: threat.id };
+    }
+    if (knows(character, 'hold-person') && slotsAt(character, 2) > 0) {
+      return { kind: 'cast', spellId: 'hold-person', targetId: threat.id };
+    }
   }
 
   // Guaranteed finish: Magic Missile auto-hits, so a low target dies for sure —
   // worth even the last slot, since removing a foe is also defense.
-  if (knows(character, 'magic-missile') && slotsAt(character, 1) > 0 && primary && primary.instance.hp.current <= MAGIC_MISSILE_MIN) {
+  if (
+    knows(character, 'magic-missile') &&
+    slotsAt(character, 1) > 0 &&
+    primary &&
+    primary.instance.hp.current <= MAGIC_MISSILE_MIN
+  ) {
     return { kind: 'cast', spellId: 'magic-missile', targetId: primary.id };
-  }
-
-  // CLOSE a beefy single target: drop the biggest slot rather than plinking a
-  // boss to death with cantrips. This is the core "deep but never finishes" fix.
-  if (enemyCount <= 2 && beefy && beefy.instance.hp.current >= BOSS_NUKE_HP) {
-    if (knows(character, 'fireball') && slotsAt(character, 3) > 0 && !aoeWasted(live, 'fire')) {
-      return { kind: 'cast', spellId: 'fireball', targetId: beefy.id };
-    }
-    if (
-      knows(character, 'lightning-bolt') &&
-      slotsAt(character, 3) > 0 &&
-      !aoeWasted(live, 'lightning')
-    ) {
-      return { kind: 'cast', spellId: 'lightning-bolt', targetId: beefy.id };
-    }
   }
 
   // Burst a beefy single threat with Scorching Ray.
@@ -455,9 +503,28 @@ function chooseWizardAction(
     return { kind: 'cast', spellId: 'scorching-ray', targetId: threat.id };
   }
 
+  // Mage Armor opener: a squishy (unarmored) wizard pre-buffs +3 AC for the rest
+  // of the fight — but only on the opening turn of a sustained fight (a real
+  // boss present) and only when nothing more urgent fired above. At low levels,
+  // with no big nuke yet, this durable AC is exactly what carries the early-game
+  // caster past the fights it currently dies in. Keep a slot back for Shield.
+  const reserveForShield = knows(character, 'shield') ? 1 : 0;
+  if (
+    actionFree &&
+    state.round === 1 &&
+    knows(character, 'mage-armor') &&
+    character.resources.mageArmorActive !== true &&
+    !character.equipped.armor &&
+    beefy &&
+    beefy.instance.hp.current >= BOSS_NUKE_HP &&
+    enemyCount <= 2 &&
+    slotsAt(character, 1) > reserveForShield
+  ) {
+    return { kind: 'cast', spellId: 'mage-armor' };
+  }
+
   // Spend a level-1 slot (Magic Missile) when a cantrip is too weak to matter —
   // but keep one slot back for the Shield reaction (it negates a killing blow).
-  const reserveForShield = knows(character, 'shield') ? 1 : 0;
   if (
     knows(character, 'magic-missile') &&
     slotsAt(character, 1) > reserveForShield &&
