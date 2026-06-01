@@ -20,12 +20,21 @@ function resetStore() {
 describe('CharacterCreationScreen — selection', () => {
   beforeEach(resetStore);
 
-  it('renders all three soul cards', () => {
+  it('offers the three easy starters as choosable souls', () => {
     render(<CharacterCreationScreen />);
     expect(screen.getByRole('heading', { name: /choose a soul/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /sir brick/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /maelis vell/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /veyra ash/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sir brick/i })).toBeInTheDocument(); // Fighter
+    expect(screen.getByRole('button', { name: /korrek bloodmane/i })).toBeInTheDocument(); // Barbarian
+    expect(screen.getByRole('button', { name: /faelar quill/i })).toBeInTheDocument(); // Ranger
+  });
+
+  it('seals the harder souls (Wizard, Rogue) on a fresh soul — not choosable', () => {
+    render(<CharacterCreationScreen />);
+    // The sealed placeholders name only the class, never the character, and are
+    // not buttons — a fresh walker cannot forge Veyra Ash or Maelis Vell.
+    expect(screen.queryByRole('button', { name: /veyra ash/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
+    expect(screen.getAllByText(/wakes once you have felled/i).length).toBe(2);
   });
 
   it('has no point-buy or multi-step controls', () => {
@@ -38,9 +47,9 @@ describe('CharacterCreationScreen — selection', () => {
   it('confirm is disabled until a soul is picked', () => {
     render(<CharacterCreationScreen />);
     expect(screen.getByRole('button', { name: /choose a soul/i })).toBeDisabled();
-    fireEvent.click(screen.getByRole('button', { name: /maelis vell/i }));
+    fireEvent.click(screen.getByRole('button', { name: /korrek bloodmane/i }));
     expect(
-      screen.getByRole('button', { name: /begin as maelis vell/i }),
+      screen.getByRole('button', { name: /begin as korrek bloodmane/i }),
     ).not.toBeDisabled();
   });
 
@@ -59,13 +68,13 @@ describe('CharacterCreationScreen — selection', () => {
     );
   });
 
-  it('picking Veyra Ash commits the fixed Wizard INT block + Tiefling', () => {
+  it('picking Korrek Bloodmane commits the fixed Barbarian block', () => {
     render(<CharacterCreationScreen />);
-    fireEvent.click(screen.getByRole('button', { name: /veyra ash/i }));
+    fireEvent.click(screen.getByRole('button', { name: /korrek bloodmane/i }));
     fireEvent.click(screen.getByRole('button', { name: /begin/i }));
     const char = useGameStore.getState().character!;
-    const preset = getClass('wizard').preset!;
-    expect(char.classId).toBe('wizard');
+    const preset = getClass('barbarian').preset!;
+    expect(char.classId).toBe('barbarian');
     expect(char.raceId).toBe(preset.recommendedRaceId);
     expect(char.baseAbilityScores).toEqual(preset.abilityScores);
   });
