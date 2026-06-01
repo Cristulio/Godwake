@@ -23,8 +23,14 @@ export type TwistId =
  * Every field is neutral when absent, so an empty object is "no twist".
  */
 export interface TwistCombatEffect {
-  /** Flat damage the hero takes at the start of each of their turns this fight. */
-  cursedGroundChip?: number;
+  /**
+   * Fraction of the hero's max HP they bleed at the start of each of their
+   * turns this fight. Resolved to an absolute per-turn chip in createCombat so
+   * the curse pressures every build proportionally instead of death-spiralling
+   * the low-HP ones (a flat chip is HP-agnostic and only the lone twist that
+   * outright kills — see the #286 validation sim).
+   */
+  cursedGroundChipPct?: number;
   /** The hero's first attack of the fight is rolled at disadvantage. */
   firstAttackDisadvantage?: boolean;
   /** Flat damage added to every enemy attack that lands (stacks with ascension). */
@@ -47,10 +53,10 @@ export interface DungeonTwist {
 }
 
 /**
- * The starter set. First-pass magnitudes sit in the "noticeable but fair,
- * endgame-only" band (sim-checkable later): a 4-HP chip per turn, a single
- * first-strike disadvantage, +2 enemy damage on top of ascension's own bonus,
- * blessings switched off, or the enemy moving first.
+ * The starter set. Magnitudes sit in the "noticeable but fair, endgame-only"
+ * band (sim-tuned): a 5%-of-max-HP chip per turn, a first-strike disadvantage
+ * paired with a slight +1 enemy-damage edge in the dark, +2 enemy damage on top
+ * of ascension's own bonus, blessings switched off, or the enemy moving first.
  */
 export const DUNGEON_TWISTS: DungeonTwist[] = [
   {
@@ -59,15 +65,15 @@ export const DUNGEON_TWISTS: DungeonTwist[] = [
     flavorText:
       'The stone here is sown with old hate — it drinks a little of whoever stands on it.',
     telegraph: 'The ground bleeds those who stand on it.',
-    effect: { cursedGroundChip: 4 },
+    effect: { cursedGroundChipPct: 0.05 },
   },
   {
     id: 'gloom',
     name: 'Gloom',
     flavorText:
-      'A thick dark hangs in this room that the eye never quite adjusts to. The first blow goes wide.',
+      'A thick dark hangs in this room that the eye never quite adjusts to. The first blow goes wide, and the ones you never see cut deeper.',
     telegraph: 'A blinding dark swallows the first blow.',
-    effect: { firstAttackDisadvantage: true },
+    effect: { firstAttackDisadvantage: true, enemyDamageBonus: 1 },
   },
   {
     id: 'bloodscent',

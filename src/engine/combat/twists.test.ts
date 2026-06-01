@@ -48,20 +48,38 @@ function recordingRoller(base: DiceRoller): {
 describe('dungeon twist combat effects', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('Cursed Ground chips the hero on turn 0 (createCombat) and on later turns (helper)', () => {
+  it('Cursed Ground chips the hero by a fraction of max HP on turn 0 and later turns', () => {
     const before = makeFighter();
+    // The curse scales to the build: 5% of max HP per turn, floored at 1.
+    const chip = Math.max(1, Math.round(before.hp.max * 0.05));
     const init = createCombat({
       character: before,
       monsters: [{ def: getDef('goblin') }],
       twistId: 'cursed-ground',
     });
-    expect(init.state.cursedGroundChip).toBe(4);
+    expect(init.state.cursedGroundChip).toBe(chip);
     // Turn 0 never travels through endTurn — createCombat applies the chip once.
-    expect(init.character.hp.current).toBe(before.hp.max - 4);
+    expect(init.character.hp.current).toBe(before.hp.max - chip);
 
     // The start-of-player-turn helper (called from endTurn) chips again.
     const ticked = applyCursedGroundChip(init.state, init.character);
-    expect(ticked.character.hp.current).toBe(before.hp.max - 8);
+    expect(ticked.character.hp.current).toBe(before.hp.max - chip * 2);
+  });
+
+  it('Cursed Ground scales the per-turn chip with the hero max HP', () => {
+    const tanky = createCombat({
+      character: makeFighter({ hp: { current: 200, max: 200, temp: 0 } }),
+      monsters: [{ def: getDef('goblin') }],
+      twistId: 'cursed-ground',
+    });
+    expect(tanky.state.cursedGroundChip).toBe(10); // 5% of 200
+
+    const frail = createCombat({
+      character: makeFighter({ hp: { current: 10, max: 10, temp: 0 } }),
+      monsters: [{ def: getDef('goblin') }],
+      twistId: 'cursed-ground',
+    });
+    expect(frail.state.cursedGroundChip).toBe(1); // 5% of 10 = 0.5, floored at 1
   });
 
   it('Cursed Ground drains temp HP before real HP', () => {
@@ -72,6 +90,21 @@ describe('dungeon twist combat effects', () => {
     );
     expect(ticked.character.hp.temp).toBe(0);
     expect(ticked.character.hp.current).toBe(29); // 4 chip - 3 temp = 1 to current
+  });
+
+  it('Cursed Ground is non-lethal — it floors the hero at 1 HP, never kills', () => {
+    const c = makeFighter({ hp: { current: 3, max: 40, temp: 0 } });
+    const ticked = applyCursedGroundChip(
+      {
+        cursedGroundChip: 10,
+        status: 'active',
+        log: [],
+        combatants: [],
+      } as unknown as CombatState,
+      c,
+    );
+    expect(ticked.character.hp.current).toBe(1);
+    expect(ticked.state.status).toBe('active'); // the curse alone never ends the fight
   });
 
   it('Gloom rolls the first attack at disadvantage, then a normal roll', () => {
@@ -99,6 +132,15 @@ describe('dungeon twist combat effects', () => {
       'longsword',
     );
     expect(rec2.d20Advantages[0]).toBe('normal');
+  });
+
+  it('Gloom also stamps a slight +1 enemy damage edge (blows unseen in the dark)', () => {
+    const init = createCombat({
+      character: makeFighter(),
+      monsters: [{ def: getDef('goblin') }],
+      twistId: 'gloom',
+    });
+    expect(primary(init.state).instance.bonusDamage).toBe(1);
   });
 
   it('Gloom does NOT impose disadvantage without the twist', () => {
