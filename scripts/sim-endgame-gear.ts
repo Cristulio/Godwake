@@ -69,7 +69,11 @@ import {
 import { findUpgrade } from '../src/content/upgrades';
 import { buildPlayerCharacter, presetCreationInput } from '../src/engine/character/defaultCharacter';
 import { rollQuirks, renownSoulMarkMultiplier } from '../src/engine/character/quirks';
-import { MAX_ASCENSION, getAscensionLevel } from '../src/engine/delve/ascension';
+import {
+  MAX_ASCENSION,
+  getAscensionLevel,
+  ascensionAscendantLoot,
+} from '../src/engine/delve/ascension';
 import { computeAC } from '../src/engine/character/derived';
 import { equipItem } from '../src/engine/character/equip';
 import { characterAffixMods } from '../src/engine/items/affixMods';
@@ -77,9 +81,10 @@ import { rollGearDrop, rollLegendaryDrop } from '../src/engine/items/drops';
 import { rollItem } from '../src/engine/items/rollItem';
 import { rollRoomGoldDrops } from '../src/engine/combat/goldDrop';
 import {
-  legendaryDropPool,
+  legendaryBankPool,
   aggregateLegendaryEffects,
   canEquipLegendary,
+  getLegendary,
 } from '../src/content/legendaries';
 import { rollGearStock, rollLegendaryOffer, tierForChapter } from '../src/components/delve/shopStock';
 import type { Character } from '../src/types/character';
@@ -243,6 +248,11 @@ function chooseActiveLegendaries(owned: string[], classId: ClassId): string[] {
   return owned.filter((id) => canEquipLegendary(id, classId as SchemaClassId));
 }
 
+/** Count how many of these relics are the apex "ascendant" tier. */
+function countAscendant(ids: readonly string[]): number {
+  return ids.reduce((n, id) => n + (getLegendary(id)?.ascendant ? 1 : 0), 0);
+}
+
 // ─── In-run affix gear: a comparative loadout score for greedy equipping ─────
 
 function avgDice(expr: string): number {
@@ -304,13 +314,18 @@ function tryEquipDrop(c: Character, ref: ItemRef): Character {
 
 // ─── Loot loop at a cleared combat room ──────────────────────────────────────
 
-/** Replicates metaStore.grantLegendaryDrop without the store: a random un-owned eligible relic. */
+/**
+ * Replicates metaStore.grantLegendaryDrop: an elite-node drop banks a random
+ * un-owned relic from the ANY-CLASS bank pool (off-class relics are stashed until
+ * the soul runs that class — the equip gate handles use). The apex ascendant tier
+ * enters the pool only when allowAscendant (Ascension >= 3).
+ */
 function bankRandomLegendary(
   roller: DiceRoller,
-  classId: SchemaClassId,
   owned: string[],
+  allowAscendant: boolean,
 ): string | null {
-  const pool = legendaryDropPool(classId).filter((id) => !owned.includes(id));
+  const pool = legendaryBankPool(allowAscendant).filter((id) => !owned.includes(id));
   if (pool.length === 0) return null;
   return pool[(roller.roll('1d100').total - 1) % pool.length];
 }
@@ -326,6 +341,7 @@ function resolveCombatLoot(
   character: Character,
   room: RoomSpec,
   ownedLegendaries: string[],
+  ascension: number,
 ): RoomLoot {
   let c = character;
   const newLegendaries: string[] = [];
@@ -344,7 +360,11 @@ function resolveCombatLoot(
   }
   // Rare legendary drop → banked to the persistent collection.
   if (rollLegendaryDrop(roller, room.kind)) {
-    const banked = bankRandomLegendary(roller, c.classId, [...ownedLegendaries, ...newLegendaries]);
+    const banked = bankRandomLegendary(
+      roller,
+      [...ownedLegendaries, ...newLegendaries],
+      ascensionAscendantLoot(ascension),
+    );
     if (banked) newLegendaries.push(banked);
   }
   return { character: c, gold, newLegendaries };
@@ -360,6 +380,7 @@ function visitShop(
   room: RoomSpec,
   lifeIdx: number,
   ownedLegendaries: string[],
+  ascension: number,
 ): { character: Character; goldSpent: number; newLegendaries: string[] } {
   let c = character;
   let gold = c.goldInPocket;
@@ -367,7 +388,7 @@ function visitShop(
   const tier = tierForChapter(room.chapter);
   const seed = `${room.id}:${lifeIdx}`;
 
-  const offer = rollLegendaryOffer(seed, tier, c.classId, [...ownedLegendaries, ...newLegendaries]);
+  const offer = rollLegendaryOffer(seed, tier, c.classId, [...ownedLegendaries, ...newLegendaries], ascension);
   if (offer && gold >= offer.cost) {
     newLegendaries.push(offer.legendaryId);
     gold -= offer.cost;
@@ -425,7 +446,7 @@ function runCombatRoom(
   characterIn: Character,
   room: RoomSpec,
   ascension: number,
-): { character: Character; victory: boolean } {
+): { character: Character; victory: boolean; minHpPct: number } {
   _resetMonsterInstanceCounter();
   const isBoss = room.kind === 'boss';
   const isElite = room.kind === 'elite';
@@ -436,6 +457,7 @@ function runCombatRoom(
   const init = createCombat({ roller, character: characterIn, monsters: monsterRefs, ascension, isBoss, isElite });
   let state: CombatState = init.state;
   let character: Character = init.character;
+  let minHpPct = character.hp.max > 0 ? character.hp.current / character.hp.max : 0;
 
   let turns = 0;
   while (state.status === 'active' && turns < MAX_TURNS_PER_FIGHT * 4) {
@@ -443,6 +465,7 @@ function runCombatRoom(
       const turn = runPlayerTurn(roller, state, character);
       state = turn.state;
       character = turn.character;
+      minHpPct = Math.min(minHpPct, character.hp.current / character.hp.max);
       if (state.status !== 'active') break;
       const ended = endTurn(state, character);
       state = ended.state;
@@ -454,6 +477,7 @@ function runCombatRoom(
       );
       state = r.state;
       character = r.character;
+      minHpPct = Math.min(minHpPct, character.hp.current / character.hp.max);
       if (state.status !== 'active') break;
       const ended = endTurn(state, character);
       state = ended.state;
@@ -461,7 +485,7 @@ function runCombatRoom(
     }
     turns += 1;
   }
-  return { character, victory: state.status === 'player-victory' };
+  return { character, victory: state.status === 'player-victory', minHpPct };
 }
 
 // ─── Soul / life ─────────────────────────────────────────────────────────────
@@ -507,11 +531,20 @@ interface LifeOutcome {
   // Meta state AT DESCENT (for the gate buckets).
   legendariesOwnedAtDescent: number;
   activeLegendariesAtDescent: number;
+  ascendantOwnedAtDescent: number; // apex relics equippable by this class, at descent
   groveRanksAtDescent: number;
   reachedCh5: boolean;
   reachedCh6: boolean;
   clearedCh5Boss: boolean; // hollow-dawn down (5th chapter boss)
+  // Combat tension over the life (for the apex-relic runaway check).
+  wonFights: number;
+  blowoutFights: number; // won fights whose min-HP never fell below BLOWOUT_FLOOR
+  minHpSum: number; // Σ min-HP fraction over every fight entered (avg = /fightsEntered)
+  fightsEntered: number;
 }
+
+/** A won fight whose HP never dipped below this fraction was a zero-tension blowout. */
+const BLOWOUT_FLOOR = 0.8;
 
 function chapterClearGoldFor(c: Character): number {
   return (c.chapterClearGoldBonus ?? 0) + (c.permanentBonuses?.chapterClearGold ?? 0);
@@ -527,15 +560,21 @@ function liveOneLife(
   const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
   const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension });
   const groveRanks = Object.values(soul.unlockedUpgrades).reduce((a, b) => a + b, 0);
-  const activeCount = MODEL_GEAR
-    ? chooseActiveLegendaries(soul.ownedLegendaries, soul.classId).length
-    : 0;
+  const activeLegendaries = MODEL_GEAR
+    ? chooseActiveLegendaries(soul.ownedLegendaries, soul.classId)
+    : [];
+  const activeCount = activeLegendaries.length;
+  const ascendantOwnedAtDescent = countAscendant(activeLegendaries);
 
   let bossesKilled = 0;
   let finalRoomIdx = 0;
   let maxChapter = 1;
   let deathRoomLabel: string | null = null;
   let died = false;
+  let wonFights = 0;
+  let blowoutFights = 0;
+  let minHpSum = 0;
+  let fightsEntered = 0;
   const newLegendaries: string[] = [];
 
   const byId = new Map(delve.rooms.map((r) => [r.id, r] as const));
@@ -558,7 +597,7 @@ function liveOneLife(
       character = pickBlessingAtShrine(roller, character);
     } else if (room.kind === 'shop') {
       if (MODEL_GEAR) {
-        const shop = visitShop(character, room, lifeIdx, [...soul.ownedLegendaries, ...newLegendaries]);
+        const shop = visitShop(character, room, lifeIdx, [...soul.ownedLegendaries, ...newLegendaries], soul.ascension);
         character = shop.character;
         newLegendaries.push(...shop.newLegendaries);
       }
@@ -570,14 +609,18 @@ function liveOneLife(
       const isBoss = room.kind === 'boss';
       const result = runCombatRoom(roller, character, room, soul.ascension);
       character = result.character;
+      fightsEntered += 1;
+      minHpSum += result.minHpPct;
       if (!result.victory) {
         died = true;
         deathRoomLabel = `${room.id} (ch${room.chapter ?? '?'})`;
         break;
       }
+      wonFights += 1;
+      if (result.minHpPct >= BLOWOUT_FLOOR) blowoutFights += 1;
       if (isBoss) bossesKilled += 1;
       // Loot: gold + gear + legendary, then chapter-clear gold + XP.
-      const loot = resolveCombatLoot(roller, character, room, [...soul.ownedLegendaries, ...newLegendaries]);
+      const loot = resolveCombatLoot(roller, character, room, [...soul.ownedLegendaries, ...newLegendaries], soul.ascension);
       character = { ...loot.character, goldInPocket: loot.character.goldInPocket + loot.gold };
       newLegendaries.push(...loot.newLegendaries);
       if (isBoss) {
@@ -626,10 +669,15 @@ function liveOneLife(
       deathRoomLabel,
       legendariesOwnedAtDescent: soul.ownedLegendaries.length,
       activeLegendariesAtDescent: activeCount,
+      ascendantOwnedAtDescent,
       groveRanksAtDescent: groveRanks,
       reachedCh5: maxChapter >= 5,
       reachedCh6: maxChapter >= 6,
       clearedCh5Boss: bossesKilled >= 5,
+      wonFights,
+      blowoutFights,
+      minHpSum,
+      fightsEntered,
     },
     newLegendaries,
   };
@@ -830,6 +878,85 @@ function renderBareGate(aggs: ClassAggregate[]): string {
   return lines.join('\n');
 }
 
+// ── Q2: apex (ascendant) relic runaway check ────────────────────────────────
+// Ascendant relics only exist at Ascension >= 3, so the bucket is computed over
+// HIGH-ascension lives (asc >= 3). A runaway shows as clear%→~100 / deaths→0 /
+// blowout→~100 as the ascendant-relic count piles up.
+const ASCENDANT_BUCKETS: { label: string; test: (n: number) => boolean }[] = [
+  { label: '0', test: (n) => n === 0 },
+  { label: '1', test: (n) => n === 1 },
+  { label: '2', test: (n) => n === 2 },
+  { label: '3+', test: (n) => n >= 3 },
+];
+
+function renderAscendantBuckets(allLives: LifeOutcome[]): { doc: string; console: string[] } {
+  const highAsc = allLives.filter((l) => l.ascension >= 3);
+  const docLines = [
+    'High-ascension lives (Ascension ≥ 3, where the apex tier exists), bucketed by',
+    'the count of equippable ascendant relics carried at descent:\n',
+    '| Ascendant relics | Lives | Clear % | Deaths/100 | Blowout % (of won fights) | Mean min-HP/fight | Mean depth (rooms) |',
+    '|------------------|------:|--------:|-----------:|--------------------------:|------------------:|-------------------:|',
+  ];
+  const consoleLines: string[] = [];
+  for (const b of ASCENDANT_BUCKETS) {
+    const cell = highAsc.filter((l) => b.test(l.ascendantOwnedAtDescent));
+    const n = cell.length;
+    if (n === 0) {
+      docLines.push(`| ${b.label} | 0 | — | — | — | — | — |`);
+      consoleLines.push(`  asc-relics ${b.label.padStart(2)}: n0`);
+      continue;
+    }
+    const clears = cell.filter((l) => l.cleared).length;
+    const wonFights = cell.reduce((a, l) => a + l.wonFights, 0);
+    const blowouts = cell.reduce((a, l) => a + l.blowoutFights, 0);
+    const minHpSum = cell.reduce((a, l) => a + l.minHpSum, 0);
+    const fights = cell.reduce((a, l) => a + l.fightsEntered, 0);
+    const depth = mean(cell.map((l) => l.finalRoomIdx));
+    const clearPct = clears / n;
+    const blowPct = blowouts / Math.max(1, wonFights);
+    const minHp = minHpSum / Math.max(1, fights);
+    docLines.push(
+      `| ${b.label} | ${n} | ${pct(clearPct)} | ${num((1 - clearPct) * 100, 1)} | ${pct(blowPct)} | ${pct(minHp)} | ${num(depth, 1)} |`,
+    );
+    consoleLines.push(
+      `  asc-relics ${b.label.padStart(2)}: n${n} clr ${pct(clearPct)} d/100 ${num((1 - clearPct) * 100, 1)} blow ${pct(blowPct)} minHP ${pct(minHp)} depth ${num(depth, 1)}`,
+    );
+  }
+  return { doc: docLines.join('\n'), console: consoleLines };
+}
+
+// ── Q4: renown reward tracks ascension effort ────────────────────────────────
+// Mean renown earned per life by ascension level, with the ratio vs A0 — should
+// track the tuned renownMult ladder (×1.25 → ×2.45), composed multiplicatively
+// with the per-life soul-mark.
+function renderRenownByAscension(allLives: LifeOutcome[]): { doc: string; console: string[] } {
+  const docLines = [
+    'Mean renown earned per life by ascension level (the soul-mark multiplier rides',
+    'on top, so absolute values exceed the bare ladder multiplier):\n',
+    '| Ascension | Lives | Mean renown/life | Ratio vs A0 | Ladder renownMult |',
+    '|----------:|------:|-----------------:|------------:|------------------:|',
+  ];
+  const consoleLines: string[] = [];
+  const a0 = allLives.filter((l) => l.ascension === 0);
+  const a0Mean = mean(a0.map((l) => l.renownEarned));
+  for (let lvl = 0; lvl <= MAX_ASCENSION; lvl++) {
+    const cell = allLives.filter((l) => l.ascension === lvl);
+    if (cell.length === 0) {
+      docLines.push(`| A${lvl} | 0 | — | — | ${num(getAscensionLevel(lvl).renownMult, 2)} |`);
+      continue;
+    }
+    const m = mean(cell.map((l) => l.renownEarned));
+    const ratio = a0Mean > 0 ? m / a0Mean : 0;
+    docLines.push(
+      `| A${lvl} | ${cell.length} | ${num(m, 1)} | ${num(ratio, 2)}× | ${num(getAscensionLevel(lvl).renownMult, 2)} |`,
+    );
+    consoleLines.push(
+      `  A${lvl}: n${cell.length} meanRenown ${num(m, 1)} ratio ${num(ratio, 2)}× (ladder ${num(getAscensionLevel(lvl).renownMult, 2)})`,
+    );
+  }
+  return { doc: docLines.join('\n'), console: consoleLines };
+}
+
 function main(): void {
   const tWall0 = Date.now();
   console.log(
@@ -837,6 +964,7 @@ function main(): void {
   );
 
   const aggs: ClassAggregate[] = [];
+  const allLives: LifeOutcome[] = [];
   for (const classId of CLASSES) {
     const t0 = Date.now();
     const souls: SoulResult[] = [];
@@ -844,6 +972,7 @@ function main(): void {
       const seed = (SEED_BASE ^ (classId.charCodeAt(0) * 7919) ^ (i * 104729)) >>> 0;
       souls.push(runSoul(classId, seed));
     }
+    for (const s of souls) allLives.push(...s.lives);
     const a = aggregate(classId, souls);
     aggs.push(a);
     const dt = ((Date.now() - t0) / 1000).toFixed(1);
@@ -853,15 +982,24 @@ function main(): void {
     );
   }
 
+  // ── Q2: apex-relic runaway check (high-ascension lives, bucketed by ascendant count)
+  const ascRows = renderAscendantBuckets(allLives);
+  console.log('\n=== APEX RELIC BUCKETS (ascension ≥ 3 lives) ===');
+  for (const r of ascRows.console) console.log(r);
+  // ── Q4: renown reward tracks effort
+  const renRows = renderRenownByAscension(allLives);
+  console.log('\n=== RENOWN BY ASCENSION ===');
+  for (const r of renRows.console) console.log(r);
+
   const dtTotal = ((Date.now() - tWall0) / 1000).toFixed(1);
-  const doc = renderDoc(aggs, dtTotal);
+  const doc = renderDoc(aggs, dtTotal, ascRows.doc, renRows.doc);
   const outPath = resolve(process.cwd(), 'docs/sim-findings/endgame-gear.md');
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, doc, 'utf8');
   console.log(`\nWrote findings → ${outPath}  (${dtTotal}s wall)`);
 }
 
-function renderDoc(aggs: ClassAggregate[], wallSec: string): string {
+function renderDoc(aggs: ClassAggregate[], wallSec: string, ascendantDoc: string, renownDoc: string): string {
   return `# Gear-aware endgame meta sim — the Hades gate (auto-generated tables)
 
 > Auto-generated by \`scripts/sim-endgame-gear.ts\`. Re-run with
@@ -895,6 +1033,14 @@ ${renderHeadline(aggs)}
 - **First A0-clear life** = runs-to-first-Ch6-clear (the Hades milestone): the
   life index at which a soul first clears the base six-chapter chain (terminal
   boss = the-unmade). "—" = never cleared within ${MAX_LIVES} lives.
+
+## Apex (ascendant) relic runaway check — Ascension ≥ 3
+
+${ascendantDoc}
+
+## Renown reward by ascension level
+
+${renownDoc}
 
 ## The gate — does meta-power open Ch5/Ch6? (Ascension 0)
 
