@@ -28,6 +28,22 @@ export const BLESSING_GOD_LABEL: Record<BlessingGod, string> = {
 };
 
 /**
+ * A god's holy symbol, as a single 8-bit-dark glyph. Blessings wear their
+ * god's mark on the combat HUD so the player can read which powers ride them
+ * at a glance — every blessing of a god shares that god's symbol.
+ */
+export const BLESSING_GOD_GLYPH: Record<BlessingGod, string> = {
+  tymora: '◉', // lucky coin
+  helm: '⛨', // the Watcher's shield
+  tempus: '⚔', // crossed swords of war
+  mystra: '✦', // star of the Weave
+  lathander: '☀', // the rising sun
+  selune: '☾', // the moon's crescent
+  ilmater: '✚', // the bound cross of suffering
+  silvanus: '❦', // the oak leaf of the wild
+};
+
+/**
  * Mechanical hooks a blessing can apply. Engine code reads these where
  * relevant. Unset = flavor-only.
  */
