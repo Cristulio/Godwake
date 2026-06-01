@@ -11,6 +11,7 @@ import { getBlessing } from '../../content/blessings';
 import type { Blessing } from '../../schemas/blessing';
 
 const UNCANNY_DODGE_LEVEL = 5;
+const NIMBLE_DODGE_MAX_LEVEL = 4;
 const BLOODIED_RATIO = 0.5;
 
 interface CombatHUDProps {
@@ -215,6 +216,8 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const cunningRemaining = character.resources.cunningActionUsesRemaining ?? 0;
   const hasUncannyDodge = isRogue && character.level >= UNCANNY_DODGE_LEVEL;
   const uncannyReady = hasUncannyDodge && !character.actionEconomy.reactionUsed;
+  const hasNimbleDodge = isRogue && character.level <= NIMBLE_DODGE_MAX_LEVEL;
+  const nimbleReady = hasNimbleDodge && !character.actionEconomy.reactionUsed;
   const sneakUsed = state.sneakAttackUsedThisTurn === true;
   const hasBloodiedLiveTarget = state.combatants.some((c) => {
     if (c.kind !== 'monster') return false;
@@ -373,6 +376,21 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               uncannyReady
                 ? 'Uncanny Dodge: halves the first hit you take this round.'
                 : 'Uncanny Dodge already used this round — resets at end of turn.'
+            }
+          />
+        </Section>
+      )}
+
+      {hasNimbleDodge && (
+        <Section title="Reaction">
+          <Pill
+            text={nimbleReady ? 'Nimble Ready' : 'Nimble Used'}
+            on={nimbleReady}
+            tone="gold"
+            title={
+              nimbleReady
+                ? 'Nimble Dodge: the first attack against you this round is made at disadvantage.'
+                : 'Nimble Dodge already used this round — resets at end of turn.'
             }
           />
         </Section>

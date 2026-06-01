@@ -36,6 +36,13 @@ export const ROGUE: Class = ClassSchema.parse({
         mechanicKey: 'sneak-attack',
       },
       {
+        id: 'nimble-dodge',
+        name: 'Nimble Dodge',
+        description:
+          'You read the opening strike before it lands. Once per round, the first attack against you is made at disadvantage. This early reflex sharpens into Uncanny Dodge at L5 and steps aside for it.',
+        mechanicKey: 'nimble-dodge',
+      },
+      {
         id: 'cunning-action',
         name: 'Cunning Action',
         description:

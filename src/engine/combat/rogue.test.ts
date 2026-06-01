@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
-import { playerAttack, applyDamage, sneakAttackDiceForLevel } from './attack';
+import { playerAttack, applyDamage, monsterAttack, sneakAttackDiceForLevel } from './attack';
 import { useCunningAction } from './cunningAction';
 import { endTurn } from './turn';
 import { createDiceRoller } from '../dice';
@@ -475,6 +475,89 @@ describe('Rogue — Uncanny Dodge', () => {
     rogue = dmg.character;
     expect(rogue.actionEconomy.reactionUsed).toBe(false);
     expect(state.log.find((l) => l.text.includes('Uncanny Dodge'))).toBeUndefined();
+  });
+});
+
+describe('Rogue — Nimble Dodge', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function goblinAttacks(character: Character) {
+    const roller = createDiceRoller(1);
+    const init = createCombat({
+      roller,
+      character,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const goblinId = findMonster(init.state).id;
+    return monsterAttack({ roller, character: init.character, state: init.state }, goblinId);
+  }
+
+  function nimbleNote(state: CombatState) {
+    return state.log.find((l) => l.text.includes('disadvantage — nimble dodge'));
+  }
+
+  it('imposes disadvantage and spends the reaction at L1', () => {
+    const res = goblinAttacks(makeRogue({ level: 1 }));
+    expect(nimbleNote(res.state)).toBeDefined();
+    expect(res.state.log.find((l) => l.text.includes('twists low'))).toBeDefined();
+    expect(res.character.actionEconomy.reactionUsed).toBe(true);
+  });
+
+  it('still fires at L4 (boundary)', () => {
+    const res = goblinAttacks(makeRogue({ level: 4 }));
+    expect(nimbleNote(res.state)).toBeDefined();
+    expect(res.character.actionEconomy.reactionUsed).toBe(true);
+  });
+
+  it('is inactive at L5 — Uncanny Dodge takes over', () => {
+    const res = goblinAttacks(makeRogue({ level: 5 }));
+    expect(nimbleNote(res.state)).toBeUndefined();
+  });
+
+  it('never fires for a non-Rogue at L1', () => {
+    const fighter: Character = {
+      ...createCharacter({
+        id: 'test-fighter-nimble',
+        name: 'Brick',
+        raceId: 'human',
+        classId: 'fighter',
+        baseAbilityScores: {
+          str: STANDARD_ARRAY[0],
+          dex: STANDARD_ARRAY[2],
+          con: STANDARD_ARRAY[1],
+          int: STANDARD_ARRAY[5],
+          wis: STANDARD_ARRAY[3],
+          cha: STANDARD_ARRAY[4],
+        },
+        skillProficiencies: ['athletics', 'perception'],
+      }),
+      inventory: [{ itemId: 'longsword' }],
+      equipped: { mainHand: { itemId: 'longsword' }, offHand: null, armor: null },
+    };
+    const res = goblinAttacks(fighter);
+    expect(nimbleNote(res.state)).toBeUndefined();
+  });
+
+  it('only the first attack of the round dodges — a second swing lands clean', () => {
+    const roller = createDiceRoller(1);
+    const init = createCombat({
+      roller,
+      character: makeRogue({ level: 1 }),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const goblinId = findMonster(init.state).id;
+    const first = monsterAttack(
+      { roller, character: init.character, state: init.state },
+      goblinId,
+    );
+    expect(first.character.actionEconomy.reactionUsed).toBe(true);
+    const before = first.state.log.length;
+    const second = monsterAttack(
+      { roller, character: first.character, state: first.state },
+      goblinId,
+    );
+    const newLines = second.state.log.slice(before);
+    expect(newLines.find((l) => l.text.includes('disadvantage — nimble dodge'))).toBeUndefined();
   });
 });
 
