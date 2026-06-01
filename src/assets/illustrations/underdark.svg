@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid slice" aria-label="The Underdark">
+  <rect width="96" height="48" fill="#050302" />
+  <ellipse cx="48" cy="26" rx="40" ry="20" fill="#5E3A8F" opacity="0.16" />
+  <ellipse cx="48" cy="26" rx="22" ry="11" fill="#9B6FCF" opacity="0.14" />
+  <g fill="#231C15">
+    <polygon points="0,0 12,0 6,16" /><polygon points="20,0 30,0 26,12" /><polygon points="44,0 56,0 50,18" /><polygon points="68,0 78,0 73,13" /><polygon points="86,0 96,0 91,15" />
+  </g>
+  <g fill="#2A2017">
+    <polygon points="4,48 16,48 10,30" /><polygon points="30,48 42,48 36,34" /><polygon points="80,48 92,48 86,32" />
+  </g>
+  <rect x="0" y="42" width="96" height="6" fill="#1A1410" />
+  <g stroke="#9B6FCF" stroke-width="0.5" opacity="0.5" fill="none">
+    <path d="M60 4 L72 16 L60 28 L72 28" /><path d="M84 4 L72 16 L84 28" />
+    <line x1="66" y1="10" x2="78" y2="10" /><line x1="64" y1="22" x2="80" y2="22" />
+  </g>
+  <circle cx="72" cy="16" r="2" fill="#9B6FCF" />
+  <g fill="#9B6FCF" opacity="0.6"><rect x="20" y="24" width="1" height="1" /><rect x="40" y="20" width="1" height="1" /><rect x="50" y="30" width="1" height="1" /><rect x="14" y="32" width="1" height="1" /></g>
+  <ellipse cx="24" cy="38" rx="3" ry="1.5" fill="#5E3A8F" opacity="0.7" />
+  <circle cx="24" cy="37" r="1" fill="#9B6FCF" />
+</svg>

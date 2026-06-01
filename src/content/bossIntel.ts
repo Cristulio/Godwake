@@ -1,4 +1,8 @@
-import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
+import {
+  EventTemplateSchema,
+  type EventTemplate,
+  type IllustrationCategory,
+} from '../schemas/event';
 import { CHAPTER10_BOSS_INTEL } from '../engine/delve/chapter10Pools';
 import { CHAPTER11_BOSS_INTEL } from '../engine/delve/chapter11Pools';
 import { CHAPTER12_BOSS_INTEL } from '../engine/delve/chapter12Pools';
@@ -39,6 +43,11 @@ export interface BossIntelCard {
   walkPastResolution: string;
   /** Coin cost of the paid edge. Set via {@link bossIntelCoinCost}: 25 / 60 / 105 / 160. */
   coinCost: number;
+  /**
+   * Optional bespoke illustration override. Unset cards fall back to the
+   * chapter's region illustration (the representative-set default).
+   */
+  illustration?: IllustrationCategory;
 }
 
 /**
@@ -295,6 +304,7 @@ export function buildIntelEventTemplate(card: BossIntelCard): EventTemplate {
     id: intelEventIdFor(card.bossDefId),
     title: card.roomTitle,
     flavor: card.roomFlavor,
+    illustration: card.illustration,
     choices: [
       {
         id: 'find-weak-spot',

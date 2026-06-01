@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid slice" aria-label="The Siege of Saradush">
+  <rect width="96" height="48" fill="#140A06" />
+  <rect width="96" height="32" fill="#20100A" />
+  <ellipse cx="60" cy="20" rx="34" ry="18" fill="#FF6B2B" opacity="0.14" />
+  <g fill="#2A2017">
+    <rect x="4" y="18" width="88" height="20" />
+  </g>
+  <g fill="#3A2E22">
+    <rect x="4" y="14" width="6" height="6" /><rect x="14" y="14" width="6" height="6" /><rect x="24" y="14" width="6" height="6" /><rect x="34" y="14" width="6" height="6" /><rect x="44" y="14" width="6" height="6" /><rect x="54" y="14" width="6" height="6" /><rect x="64" y="14" width="6" height="6" /><rect x="74" y="14" width="6" height="6" /><rect x="84" y="14" width="6" height="6" />
+  </g>
+  <rect x="40" y="6" width="14" height="14" fill="#3A2E22" />
+  <g fill="#1A1008"><rect x="20" y="24" width="5" height="8" /><rect x="44" y="24" width="6" height="10" /><rect x="68" y="24" width="5" height="8" /></g>
+  <g fill="#6B4A2E"><rect x="4" y="18" width="88" height="1" /></g>
+  <polygon points="58,12 54,4 62,4" fill="#FF6B2B" />
+  <polygon points="58,12 55,5 61,5" fill="#FFB347" />
+  <polygon points="30,16 27,9 33,9" fill="#FF6B2B" opacity="0.8" />
+  <rect x="0" y="38" width="96" height="10" fill="#160C07" />
+  <rect x="0" y="38" width="96" height="1" fill="#3A2E22" />
+  <g fill="#FF6B2B" opacity="0.7"><rect x="16" y="42" width="2" height="2" /><rect x="76" y="44" width="2" height="2" /><rect x="48" y="43" width="2" height="2" /></g>
+</svg>
