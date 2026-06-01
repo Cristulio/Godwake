@@ -1440,6 +1440,1137 @@ const POOL: EventTemplate[] = [
       },
     ],
   }),
+
+  // ─── Chapter 5–9: The Godwake descent — cycle, loom, drowned archive,
+  //     ashfall, court of masks. The world bleaches out of the mortal and into
+  //     the machinery of reincarnation as the climb goes down. ──────────────
+
+  // Ch5 · The Godwake — Aurelach's fixed dawn, the wheel that turns souls back.
+  EventTemplateSchema.parse({
+    id: 'pilgrim-turned-back',
+    eventType: 'stranger',
+    title: 'A Pilgrim the Morning Turned Back',
+    flavor:
+      "A figure in sun-bleached pilgrim's grey sits on a step the dawn has scoured white, climbing nowhere. \"I reached the top,\" it says, without looking up. \"Aurelach said my name and broke the morning on me, and I woke at the bottom again, climbing. You'll do the same. Sit. Or take what I no longer need — I won't carry it round another turn.\"",
+    minChapter: 5,
+    choices: [
+      {
+        id: 'hear-the-climb',
+        label: '[Insight] Read what the climb has left of it',
+        hint: 'Some part of this pilgrim still remembers the road up. Find it and it gives the road freely.',
+        skillCheck: { skill: 'insight', dc: 15 },
+        outcome: {
+          resolution:
+            "You hold its gaze and find, under the bleaching, a person who climbed this exact stair before it was scoured. It tells you where the light thins and where the choir loses the tune. The knowing settles into your hands like a second blade.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }, { kind: 'temp_hp', amount: 12 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You search its face and find nothing climbing behind the eyes — only the habit of climbing, worn smooth. It keeps talking past you, to a stair you cannot see, and the words are no road at all.",
+          effects: [],
+        },
+      },
+      {
+        id: 'take-the-castoffs',
+        label: 'Take what it sets down',
+        hint: 'A dead pilgrim carries dead pilgrim coin. It will not turn the wheel for it.',
+        outcome: {
+          resolution:
+            "You gather the cast-offs heaped at its feet — coin gone soft at the edges, a phial of light long cold. It watches without grief. \"Lighter,\" it says, almost grateful. \"Lighter for the next turn.\"",
+          effects: [{ kind: 'gold_delta', amount: 70 }],
+        },
+      },
+      {
+        id: 'name-the-god',
+        label: '[Religion] Name the dawn-god and refuse its mercy',
+        hint: "Speak Aurelach's name as a curse, not a prayer — claim a surface god's stay against the cycle. Get the rite right and the small mercy holds; get it wrong and the choir hears you.",
+        skillCheck: { skill: 'religion', dc: 16 },
+        outcome: {
+          resolution:
+            "You name Aurelach the way you would name a thief, and over it you set the sign of one of the small surface gods who let the dead stay dead. The bleaching light flinches off you for a moment. You climb on wearing a mercy the morning cannot reach.",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            "You reach for the surface god's sign and your hand makes the dawn's instead. The choir turns its tune toward the sound of you, and something risen unfolds from the white stair to carry you back down the easy way.",
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['cycle-revenant', 'reborn-husk'] }],
+        },
+      },
+      {
+        id: 'climb-past',
+        label: 'Climb past it',
+        hint: 'Its turn is not yours. Not yet.',
+        outcome: {
+          resolution: 'You step around it and climb. It does not mark you go. Two steps up, the stair behind you is empty and white, and you cannot say it was ever there.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'choir-of-first-light',
+    eventType: 'omen',
+    title: 'The Choir of First Light',
+    flavor:
+      "The corridor opens on a gallery of hollow seraphs frozen mid-hymn, mouths wide, throats full of the first light there ever was. The song is not sound — it is a tune trying to find the shape of you, to fit you back into the wheel where you came loose.",
+    minChapter: 5,
+    choices: [
+      {
+        id: 'hold-the-tune',
+        label: '[Religion] Answer the hymn with a truer one',
+        hint: "Set a surface god's hymn against the cycle's chord — the small gods who let their dead lie still. Hold the counter-rite and the tune loses you; falter and the chord swallows the prayer.",
+        skillCheck: { skill: 'religion', dc: 16 },
+        outcome: {
+          resolution:
+            "You raise the plain hymn of one of the small gods who let the dead stay dead, and you hold it against the choir's endless chord. The tune cannot make a verse of you while you sing another's. You walk the gallery wearing a song that is only yours, and it steadies your hand the length of the road.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You reach for a note outside the chord and the chord swallows it whole. For a breath you forget which death was yours and which the song's. The forgetting costs you something on the way out.",
+          effects: [{ kind: 'hp_delta', amount: -10 }],
+        },
+      },
+      {
+        id: 'study-the-throats',
+        label: '[Arcana] Read how the light is bound in their throats',
+        hint: 'The seraphs are reliquaries of held dawn. Parse the binding and a thread of it is yours; misread it and it spends itself on you.',
+        skillCheck: { skill: 'arcana', dc: 16 },
+        outcome: {
+          resolution:
+            "You trace the working that holds the first light caged in dead throats — old, vast, and for all its scale, simple at the join. You draw a clean thread of it off into your palm. The grace of it rides with you, unasked-for and unrepentant.",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            "You pull at the binding and it is older than your reading of it. The light in the nearest throat lets go all at once, a soundless white blow across your eyes, and the gallery is just statues when you can see again.",
+          effects: [{ kind: 'hp_delta', amount: -9 }],
+        },
+      },
+      {
+        id: 'walk-the-gallery',
+        label: 'Walk the gallery with your ears stopped',
+        hint: 'Some hymns are only dangerous to those who listen.',
+        outcome: {
+          resolution: 'You press the heels of your hands to your ears and walk the long gallery looking at the floor. The tune frays against the silence you keep. You come out the far end still yourself, which is the whole of the prize.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  // Ch6 · Beyond the Godwake — the Loom of Souls, the wheel itself.
+  EventTemplateSchema.parse({
+    id: 'loose-thread-on-the-loom',
+    eventType: 'omen',
+    title: 'A Loose Thread on the Loom',
+    flavor:
+      "The walls here are not walls — they are warp and weft, every thread a life being woven back into the world. One thread near you hangs loose from the pattern, frayed at the end, your own colour. The Loom has not yet decided what to do with you.",
+    minChapter: 6,
+    choices: [
+      {
+        id: 'tie-it-off',
+        label: '[Sleight of Hand] Tie your thread off yourself',
+        hint: 'Finish the weave on your own terms before the Loom does it for you. A sure hand binds it clean; a clumsy one snarls the whole row.',
+        skillCheck: { skill: 'sleight-of-hand', dc: 16 },
+        outcome: {
+          resolution:
+            "You take your own loose thread between two fingers and tie it off in a knot the Loom did not plan — small, stubborn, yours. The pattern accepts it without unpicking the rest. You walk on woven by your own hand, which is a kind of armour.",
+          effects: [{ kind: 'temp_hp', amount: 16 }],
+        },
+        failureOutcome: {
+          resolution:
+            "Your fingers fumble the knot and the snarl spreads up the row before you can stop it. The Loom corrects the error the only way it knows — a sharp tug that runs the length of you, fraying something it cannot quite replace.",
+          effects: [{ kind: 'hp_delta', amount: -11 }],
+        },
+      },
+      {
+        id: 'pull-the-thread',
+        label: 'Pull the thread and see what unravels',
+        hint: "A whole life's weave is a great deal of thread — and the Loom does not forgive a thief of its work.",
+        outcome: {
+          random: [
+            {
+              weight: 55,
+              outcome: {
+                resolution: 'You pull, and a life not yet woven comes loose into your hand as bright coin and brighter grace — a soul the wheel will simply have to spin again. You pocket what unravels and walk on richer than the dead.',
+                effects: [{ kind: 'gold_delta', amount: 80 }, { kind: 'grant_blessing', random: true }],
+              },
+            },
+            {
+              weight: 45,
+              outcome: {
+                resolution: 'You pull, and the thread pulls back — it is fastened to you further up than you knew. The Loom snaps the slack taut and something behind the weave steps through the gap you tore to mend it.',
+                effects: [{ kind: 'spawn_ambush', monsterDefIds: ['loom-apostle', 'threadbare-penitent'] }],
+              },
+            },
+          ],
+        },
+      },
+      {
+        id: 'read-the-pattern',
+        label: '[Investigation] Read where the pattern wants you',
+        hint: 'The weave is a map of every life it has rewoven. Find your own row in it and you find a way through.',
+        skillCheck: { skill: 'investigation', dc: 16 },
+        outcome: {
+          resolution:
+            "You step back and read the whole field of it — the repeats, the rhymes, the place your colour keeps returning. You find the row that leads out instead of round, and you take it. The knowing of the way pays better than any coin.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }, { kind: 'temp_hp', amount: 10 }],
+        },
+        failureOutcome: {
+          resolution:
+            'The pattern is too vast and too patient to read at the pace you have. You trace a false row, lose it, and step back none the wiser, the loose thread still hanging, the Loom still deciding.',
+          effects: [],
+        },
+      },
+      {
+        id: 'leave-it-loose',
+        label: 'Leave the thread loose and walk on',
+        hint: 'An undecided fate is still a free one.',
+        outcome: {
+          resolution: 'You leave your thread hanging and walk past the loom of it. Better undecided than rewoven. The corridor takes you on, and your colour stays out of the pattern a little longer.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'the-unwound-soul',
+    eventType: 'ruin',
+    title: 'A Soul Cut from the Wheel',
+    flavor:
+      "Something hangs in the air where the threads thin — a person unwound, a life pulled out of the weave and left to drift, neither dead nor dying nor anything the wheel still has a use for. It turns toward you with the slow attention of a thing that has nothing left but time.",
+    minChapter: 6,
+    choices: [
+      {
+        id: 'speak-to-it',
+        label: '[Persuasion] Speak it back toward itself',
+        hint: 'There is still a person in the drift, if you can call them up. Reach them and they thank you in the only coin the unwound keep.',
+        skillCheck: { skill: 'persuasion', dc: 16 },
+        outcome: {
+          resolution:
+            "You speak to it the way you would speak to someone half-woken from drowning — slow, by name it does not have, by the shape of a life it almost remembers. For a moment it gathers, grateful, and presses into your hands the one thing the unwound still hold: the memory of how to refuse the wheel.",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            "Your words find nothing to land on. The drift takes them, and takes the warmth out of the air, and the cold of an unmade thing settles into your chest before you step back out of its reach.",
+          effects: [{ kind: 'hp_delta', amount: -8 }],
+        },
+      },
+      {
+        id: 'gather-the-drift',
+        label: '[Arcana] Gather what spills off it',
+        hint: 'An unwound soul sheds power it can no longer hold. Catch it clean, or let it earth itself through you.',
+        skillCheck: { skill: 'arcana', dc: 15 },
+        outcome: {
+          resolution:
+            "You cup your hands under the drift the way you would catch rain and let what spills off it pool in your palms — raw, unwoven potency the wheel has no further claim on. It is yours now, for as long as the road lasts.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You misjudge the gathering and the power finds the shortest road to the ground, which is through you. It earths itself out of your boots and leaves you scorched and emptier than you came.",
+          effects: [{ kind: 'hp_delta', amount: -10 }],
+        },
+      },
+      {
+        id: 'let-it-drift',
+        label: 'Let it drift and pass',
+        hint: 'Some unmakings are not yours to undo.',
+        outcome: {
+          resolution: 'You lower your eyes and pass beneath the drift of it. It does not follow — it has nowhere to follow to. Behind you the air stays cold and the person who was never quite there goes on not-being.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  // Ch7 · The Drowned Archive — the flooded vault of forbidden knowledge.
+  EventTemplateSchema.parse({
+    id: 'page-that-will-not-drown',
+    eventType: 'lore',
+    title: 'A Page That Will Not Drown',
+    flavor:
+      "The water in the stacks stands black and still to your chest. One page floats on its surface, dry — impossibly dry, repelling the flood like oil, ink crawling across it in a hand that writes faster the longer you watch. The Archive drowned everything but this.",
+    minChapter: 7,
+    choices: [
+      {
+        id: 'read-before-touch',
+        label: '[Arcana] Parse the script before you lift it',
+        hint: 'A page the flood will not take is a page that wants taking. Read what it is doing before you give it your hands.',
+        skillCheck: { skill: 'arcana', dc: 16 },
+        outcome: {
+          resolution:
+            "You read it where it floats, never touching — and you see the hook in it, the clause that drowns the reader in the writer's place. You take only the clean knowledge and leave the hook unswallowed. The page goes blank and sinks, its work undone, its gift kept.",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            "The hand writes faster than you can read and the meaning slips its leash. You reach to steady the page and the flood that spared it remembers you instead — black water closes over your head for a heartbeat that lasts too long, and lets you go heavier.",
+          effects: [{ kind: 'hp_delta', amount: -10 }],
+        },
+      },
+      {
+        id: 'name-the-author',
+        label: '[History] Name the hand that writes it',
+        hint: 'Forbidden things were forbidden by someone. Know whose hand this is and you know what it is worth.',
+        skillCheck: { skill: 'history', dc: 16 },
+        outcome: {
+          resolution:
+            "You know the cramped, hurried hand — a custodian who sealed this knowledge by drowning the room around it, and kept on writing after the water took everything else. A page in that hand, surfaced, is worth a small fortune to those who still hunt the Archive's leavings. You fold it dry into your coat.",
+          effects: [{ kind: 'gold_delta', amount: 90 }],
+        },
+        failureOutcome: {
+          resolution:
+            'The hand is familiar the way a drowned face is familiar — close enough to ache, too far gone to name. You watch it write three more lines and recognise none of them, and you leave the page to its endless sentence.',
+          effects: [],
+        },
+      },
+      {
+        id: 'snatch-it',
+        label: 'Snatch the page and run',
+        hint: 'Dry paper in a drowned room is a prize. The room may disagree.',
+        outcome: {
+          resolution:
+            "You close your fist on the page and turn for the door. The water, which spared it, does not spare the taking — it rises at your back in a single black wall, and shapes that were custodians come surfacing out of the stacks between you and the dry corridor.",
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['drowned-custodian', 'drowned-mnemonic'] }],
+        },
+      },
+      {
+        id: 'leave-it-floating',
+        label: 'Leave the page to its endless sentence',
+        hint: 'Some things were drowned on purpose.',
+        outcome: {
+          resolution: 'You wade past, the black water lapping cold at your ribs, and leave the page writing itself out across the flood. Whatever it had to say, the Archive already decided no one should hear it. You climb out the far stair dry of its ink.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'flooded-reliquary-dive',
+    eventType: 'treasure',
+    title: 'A Reliquary Below the Black Water',
+    flavor:
+      "Through the standing flood you can make out a sunken reliquary on the drowned floor, its lid sprung, something inside it catching what little light there is and throwing it back gold. The water above it is deep, and cold, and very still.",
+    minChapter: 7,
+    choices: [
+      {
+        id: 'dive-clean',
+        label: '[Athletics] Dive for it on one breath',
+        hint: 'Down, open, up, before the cold and the dark close in. Strong lungs win the prize; tired ones pay the water.',
+        skillCheck: { skill: 'athletics', dc: 16 },
+        outcome: {
+          resolution:
+            "You fill your lungs and go down into the black in three hard strokes, get a hand into the reliquary, and come up streaming before the cold can argue. What you surface clutching was worth the dark — a custodian's hoard, gone to no one for a long time.",
+          effects: [{ kind: 'gold_delta', amount: 110 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You go down too slow and the cold gets its hands on you first — locks your chest, turns the dark around. You come up where you went down with nothing but a chestful of black water you cough out for a long time after.",
+          effects: [{ kind: 'hp_delta', amount: -12 }],
+        },
+      },
+      {
+        id: 'read-the-current',
+        label: '[Survival] Read the water before you go in',
+        hint: 'Still water is rarely only still. Find the cold drag under the surface and you can ride it down and back.',
+        skillCheck: { skill: 'survival', dc: 15 },
+        outcome: {
+          resolution:
+            "You read the flood the way you would read a winter river — find the slow cold current circling the reliquary, let it carry you down and hand you back. You break the surface unhurried, the hoard in your fist and your breath barely spent.",
+          effects: [{ kind: 'gold_delta', amount: 95 }, { kind: 'temp_hp', amount: 10 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You read the water still and safe. It is neither. Something cold turns under the surface as you wade in, and you back out fast, the reliquary still glinting on the floor below, untaken.',
+          effects: [],
+        },
+      },
+      {
+        id: 'leave-it-sunk',
+        label: 'Leave it on the drowned floor',
+        hint: 'Gold is no use to the drowned, and the drowned guard it best.',
+        outcome: {
+          resolution: 'You weigh the cold and the dark against the gold and find the gold wanting. You wade on past, and the reliquary keeps throwing its small light up through the black, for no one.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  // Ch8 · The Ashfall March — the war-burnt waste.
+  EventTemplateSchema.parse({
+    id: 'soldier-in-the-ash',
+    eventType: 'stranger',
+    title: 'A Soldier Who Will Not Fall',
+    flavor:
+      "A figure stands in the grey fall of ash where a battle-line once was, still at attention, still holding a spear at the guard, burnt past the point a body keeps standing. It does not attack. It is waiting for an order that the war that made it will never give again.",
+    minChapter: 8,
+    choices: [
+      {
+        id: 'give-the-order',
+        label: '[Intimidation] Give it the order to stand down',
+        hint: 'A soldier waits for a voice with the weight of command. Carry it and the war lets one of its dead rest; falter and it takes you for the enemy.',
+        skillCheck: { skill: 'intimidation', dc: 16 },
+        outcome: {
+          resolution:
+            "You put the whole of a captain's authority into two words — at ease — and mean them down to the bone. The spear lowers. The burnt thing sags, finally, gratefully, out of its long attention, and presses its kit into your hands as a soldier hands off to relief.",
+          effects: [{ kind: 'gold_delta', amount: 60 }, { kind: 'apply_attack_bonus_run', amount: 1 }],
+        },
+        failureOutcome: {
+          resolution:
+            "Your command comes out a half-beat unsure, and a soldier knows the sound of a voice that does not believe itself. The spear comes up. It has waited a long time for an enemy, and you will do.",
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['ember-conscript', 'gravesmoke-revenant'] }],
+        },
+      },
+      {
+        id: 'tend-the-burns',
+        label: '[Medicine] Tend what the fire left of it',
+        hint: 'There may be enough soldier left under the char to ease. Treat it gently and it remembers a kindness; hurt it and it remembers an attack.',
+        skillCheck: { skill: 'medicine', dc: 15 },
+        outcome: {
+          resolution:
+            "You work salve into the cracked char with a field-surgeon's care, asking nothing, naming the wounds aloud the way the dying like to hear. Something behind the burns eases. It cannot heal, but it can be grateful, and it points you down the ash-lane to where its company's stores still lie buried.",
+          effects: [{ kind: 'temp_hp', amount: 14 }, { kind: 'gold_delta', amount: 40 }],
+        },
+        failureOutcome: {
+          resolution:
+            'Your hands find a wound too deep and it flinches the whole burnt length of itself. The spear-butt catches you across the ribs before it settles back to its endless guard. You leave it to its war.',
+          effects: [{ kind: 'hp_delta', amount: -7 }],
+        },
+      },
+      {
+        id: 'take-the-kit',
+        label: 'Strip its kit and leave it standing',
+        hint: "It will not stop you. It is waiting for a different enemy.",
+        outcome: {
+          resolution:
+            "You work the field-kit and coin-pouch off the burnt frame while it holds its guard, eyes fixed on a charge that will never come. It lets you. You walk off down the ash-lane with the dead soldier's pay and the dead soldier still standing.",
+          effects: [{ kind: 'gold_delta', amount: 45 }],
+        },
+      },
+      {
+        id: 'march-past',
+        label: 'March past it',
+        hint: 'Leave the dead their post.',
+        outcome: {
+          resolution: 'You give it the wide berth you would give a sentry of your own side and march on through the falling grey. It does not turn to watch. It is watching for someone else, forever.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'altar-under-ash',
+    eventType: 'shrine',
+    title: 'An Altar Half-Drowned in Ash',
+    flavor:
+      "A war-shrine stands hip-deep in the grey fall, its god's name burned off the lintel, its offering-bowl heaped with ash instead of coin. Someone knelt here once before the fire came. The kneeling-stone is still worn smooth, still waiting.",
+    minChapter: 8,
+    choices: [
+      {
+        id: 'clear-the-bowl',
+        label: '[Religion] Clear the bowl and guess the god',
+        hint: "A war-god burned out of its own shrine still answers a soldier's prayer. Name it right and it girds you; name it wrong and the ash takes the offering and gives nothing.",
+        skillCheck: { skill: 'religion', dc: 16 },
+        outcome: {
+          resolution:
+            "You sweep the ash from the bowl and read the shrine by its bones — a frontier war-god, the kind soldiers pray to in the half-hour before a charge. You give it the soldier's prayer, blunt and true, and it answers the way it always did: not with comfort, but with an edge.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }, { kind: 'temp_hp', amount: 12 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You clear the bowl and offer up the wrong god's words. The ash drifts back over the stone as you speak, slow and final, burying the offering and the asking both. The shrine keeps its silence and its god keeps its name.",
+          effects: [],
+        },
+      },
+      {
+        id: 'sift-the-ash',
+        label: '[Investigation] Sift the offering-ash for what the fire spared',
+        hint: 'Soldiers leave coin and steel at a war-altar. Fire takes the flesh first and the metal last. Find what is left.',
+        skillCheck: { skill: 'investigation', dc: 15 },
+        outcome: {
+          resolution:
+            "You sink your fingers into the cold ash and sift it slow. The fire took the prayers and the offerers; it could not take the brass and silver they left. You come up with a fistful of war-shrine coin, fused and blackened but spendable, and the ash gives it up without complaint.",
+          effects: [{ kind: 'gold_delta', amount: 75 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You dig too deep too fast and your hand closes on a coal that never went out under the ash-blanket. The burn runs up your wrist before you snatch back, and the bowl keeps the rest of its secrets.',
+          effects: [{ kind: 'hp_delta', amount: -8 }],
+        },
+      },
+      {
+        id: 'kneel',
+        label: 'Kneel a moment, god or no god',
+        hint: 'Someone should, before the ash buries it for good.',
+        outcome: {
+          resolution: 'You put a knee on the worn stone and bow your head to a god whose name the fire ate. No grace answers. But the quiet does, and you rise out of it steadier than you knelt, for having stopped at all.',
+          effects: [{ kind: 'temp_hp', amount: 8 }],
+        },
+      },
+    ],
+  }),
+
+  // Ch9 · The Court of Masks — the captor's seat of liars where nothing wears
+  //     its true face.
+  EventTemplateSchema.parse({
+    id: 'face-that-is-not-yours',
+    eventType: 'omen',
+    title: 'A Face That Is Not Yours',
+    flavor:
+      "A tall glass in a gilt frame stands at a turn of the ruined court, and the figure it shows is wearing your clothes, your wounds, your tired walk — and a stranger's face above the collar, smiling at you with a courtier's ease. \"There you are,\" it says, through the glass. \"I've kept your seat warm at the table.\"",
+    minChapter: 9,
+    choices: [
+      {
+        id: 'name-the-lie',
+        label: '[Insight] Name which of you is the lie',
+        hint: 'The court runs on stolen faces. See through the swap and the reflection forfeits what it stole; miss it and you trade more than a glance.',
+        skillCheck: { skill: 'insight', dc: 16 },
+        outcome: {
+          resolution:
+            "You hold its eyes and find the seam in the performance — the half-beat where the smile arrives before the feeling. \"You,\" you tell it, \"are the lie.\" The glass cracks down its smiling middle, and what it stole from you to wear comes back across the break and settles, rightfully, into your hands.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }, { kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            "You search for the seam and the seam is in you — you blink first, and a blink is all it needs. It wears a little more of you out of the glass than it did before, and you walk on feeling the lighter for a theft you cannot name.",
+          effects: [{ kind: 'hp_delta', amount: -9 }],
+        },
+      },
+      {
+        id: 'lie-better',
+        label: '[Deception] Out-lie it for its place at the table',
+        hint: 'In a court of masks the better liar keeps the seat. Sell it a face it believes and the table is yours; slip and the host notices a fraud at its board.',
+        skillCheck: { skill: 'deception', dc: 17 },
+        outcome: {
+          resolution:
+            "You meet its smile with a wider one and a name grander than the one it stole, and you sell the whole counterfeit so well the glass itself believes you. The reflection bows to a better fraud and steps aside. You take the warm seat, and what sits at the court's table eats well.",
+          effects: [{ kind: 'gold_delta', amount: 85 }, { kind: 'temp_hp', amount: 12 }],
+        },
+        failureOutcome: {
+          resolution:
+            "Your lie is good. The court has heard better. The host of masks notices a fraud at its board who is not one of its own, and the courtiers turn their borrowed faces toward you all at once.",
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['veilsworn-courtier', 'mask-chamberlain'] }],
+        },
+      },
+      {
+        id: 'shatter-the-glass',
+        label: 'Shatter the glass and refuse the seat',
+        hint: 'No reflection, no theft. No table, no trap.',
+        outcome: {
+          resolution: 'You drive your fist through the smiling face before it can finish its courtesy. The glass comes down in a gilt rain and the stranger-face with it. The stolen wounds are yours again, the smile is no one\'s, and the court is one liar quieter.',
+          effects: [{ kind: 'hp_delta', amount: -4 }, { kind: 'temp_hp', amount: 10 }],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'masked-hosts-invitation',
+    eventType: 'bargain',
+    title: "The Masked Host's Invitation",
+    flavor:
+      "A courtier in a mask of beaten silver bars the gallery with a bow so deep it is almost mockery. \"The court is at table, walker, and a place is open. Wear a face of ours and dine as one of us — we ask only the small thing beneath your own. A name, a memory, a death you're done with. Surely you've a spare.\"",
+    minChapter: 9,
+    choices: [
+      {
+        id: 'haggle-the-price',
+        label: '[Persuasion] Haggle the toll down to nothing',
+        hint: 'Everything at this table is negotiable, even the price of sitting. Talk it down and you dine free; misjudge the room and the host names its own price.',
+        skillCheck: { skill: 'persuasion', dc: 16 },
+        outcome: {
+          resolution:
+            "You meet the bow with a courtier's own logic — that a walker who has died as often as you carries more spare deaths than the whole court combined, and so should be paid to sit, not charged. The silver mask tilts, delighted by the cheek of it, and waves you to the board for free. The court's wine is realer than it has any right to be.",
+          effects: [{ kind: 'temp_hp', amount: 16 }, { kind: 'gold_delta', amount: 50 }],
+        },
+        failureOutcome: {
+          resolution:
+            "Your argument is clever and the host is cleverer. \"A walker who counts his deaths so closely,\" it murmurs, \"must value the last one most.\" It reaches past your guard and takes a measure of you for the seat anyway, and you sit down poorer in a way you cannot count.",
+          effects: [{ kind: 'hp_delta', amount: -10 }],
+        },
+      },
+      {
+        id: 'pay-a-memory',
+        label: 'Pay it a death you are done with',
+        hint: 'You have died often. One more spent buys a seat at a warm table.',
+        outcome: {
+          resolution:
+            'You give it one of your deaths — an old one, worn smooth, that you will not miss. The silver mask folds it away like a calling-card and seats you with every courtesy. The food is a lie and the warmth is a lie, but lies in this place still fill a belly, and you rise from the table fed.',
+          effects: [{ kind: 'temp_hp', amount: 18 }],
+        },
+      },
+      {
+        id: 'unmask-it',
+        label: '[Perception] Look under the silver before you answer',
+        hint: 'A host who hides its face is hiding its terms. See what wears the mask and you see the trap whole.',
+        skillCheck: { skill: 'perception', dc: 16 },
+        outcome: {
+          resolution:
+            "You let your eyes slide past the silver to the join at the jaw, and you see there is no face under the mask at all — only the offer, hungry and hollow, that would have worn yours by the soup course. You step back out of the bow's reach, and the host does not press a guest who has seen the kitchen.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You look and see only your own reflection in the beaten silver, smiling back with someone else\'s ease. By the time you understand the mask was showing you the price, the bow has straightened and the gallery is colder by a degree you paid for.',
+          effects: [{ kind: 'hp_delta', amount: -6 }],
+        },
+      },
+      {
+        id: 'decline-the-seat',
+        label: 'Decline the seat and walk the gallery',
+        hint: 'A meal in this court is never only a meal.',
+        outcome: {
+          resolution: 'You return the bow exactly as deep and step around it down the gallery. The host does not stop you — a guest who will not sit is no use to the table. The smell of a feast that does not exist follows you to the stair.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  // ─── Chapter 10: Suldanessellar — the elven city stormed and burning,
+  //     climbed toward the Tree of Life. ─────────────────────────────────────
+  EventTemplateSchema.parse({
+    id: 'burning-bough',
+    eventType: 'ruin',
+    title: 'A Burning Bough of the Tree',
+    flavor:
+      "A limb of the Tree of Life has come down across the golden stair, still alight with a fire that does not consume — it burns the way grief burns, slow and without end. Sap runs from the broken wood like blood, and where it pools, the gold of the city is going black.",
+    minChapter: 10,
+    choices: [
+      {
+        id: 'tend-the-tree',
+        label: '[Medicine] Splint the broken limb',
+        hint: "The Tree is dying by inches and the city with it. Dress the wound right and it spares you a leaf's worth of its old strength; do it wrong and the grief-fire finds you.",
+        skillCheck: { skill: 'medicine', dc: 16 },
+        outcome: {
+          resolution:
+            "You pack the broken wood with its own fallen leaves and bind it with a strip of your own cloth, the way you would splint a living thing — because it is one. The slow fire gutters where you work. The Tree cannot thank you, but a single leaf falls into your open hand still green, and green things from this Tree do not easily die.",
+          effects: [{ kind: 'grant_blessing', random: true }, { kind: 'temp_hp', amount: 12 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You reach into the broken wood and the grief-fire reaches back — it is not heat but loss, and it pours up your arms and takes from you something you did not know you still had. You stagger back from the bough lighter and colder, the limb still burning.",
+          effects: [{ kind: 'hp_delta', amount: -12 }],
+        },
+      },
+      {
+        id: 'gather-the-sap',
+        label: '[Survival] Gather the running sap',
+        hint: "The Tree's blood is worth more than the city's gold to those who know it. Catch it clean before the black takes it.",
+        skillCheck: { skill: 'survival', dc: 15 },
+        outcome: {
+          resolution:
+            "You read which runnels of sap still run gold and which have gone to rot, and you catch the living amber in a flask before it blackens. A vial of the Tree's own blood is a fortune above and a medicine below. You stopper it and climb.",
+          effects: [{ kind: 'gold_delta', amount: 100 }, { kind: 'temp_hp', amount: 8 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You gather too slow and the sap you catch has already turned — it eats through the flask and stings your palm black before you fling it down. You climb on past the bough empty-handed and smarting.',
+          effects: [{ kind: 'hp_delta', amount: -7 }],
+        },
+      },
+      {
+        id: 'climb-the-bough',
+        label: 'Climb over the burning limb and go on',
+        hint: 'The Tree is not your war. The stair is.',
+        outcome: {
+          resolution: 'You pick your way over the fallen bough, quick where the slow fire licks closest, and gain the golden stair above. Behind you the limb burns on, grieving in the only language a Tree has left. You do not look back.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'elf-at-the-last-stair',
+    eventType: 'stranger',
+    title: 'An Elf at the Last Stair',
+    flavor:
+      "A bladesinger of Suldanessellar sits with her back to a shattered column, sword across her knees, watching the smoke climb. She does not rise. \"You're going up,\" she says. \"To the Tree. To him.\" Her city burns below the both of you. \"Then you'll want to know how the dragon at the top likes to open. Or you can walk past, and learn it the way I learned it.\"",
+    minChapter: 10,
+    choices: [
+      {
+        id: 'win-her-trust',
+        label: '[Persuasion] Convince her you can finish it',
+        hint: 'She will spend her last knowledge on someone she believes can use it. Earn that belief and she arms you; fail and she keeps her counsel for the smoke.',
+        skillCheck: { skill: 'persuasion', dc: 16 },
+        outcome: {
+          resolution:
+            "You tell her, without grandeur, exactly what you mean to do to the thing that did this to her city — and she hears in it the flatness of a promise that will be kept. She nods once, and gives you the dragon's tells: the wing-set before the breath, the half-second its guard opens after. Knowing the opening is half of taking it.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }],
+        },
+        failureOutcome: {
+          resolution:
+            "She listens, and somewhere in your words hears only another walker climbing to die at the top of her stair. \"Go on then,\" she says, and turns back to the smoke. You climb with nothing she could have told you.",
+          effects: [],
+        },
+      },
+      {
+        id: 'tend-her-wounds',
+        label: '[Medicine] Tend the wounds she is hiding',
+        hint: 'She holds the sword still to keep from showing how she bleeds. Treat it and she has the breath to give you more than tells.',
+        skillCheck: { skill: 'medicine', dc: 15 },
+        outcome: {
+          resolution:
+            "You see past the steady sword to the dark spreading under her gambeson and kneel without asking. She lets you — too tired to refuse, too proud to ask. When the bleeding slows she presses her own warpriest's charm into your hand. \"It kept me alive to this column. Let it get you to the Tree.\"",
+          effects: [{ kind: 'grant_blessing', random: true }, { kind: 'temp_hp', amount: 10 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You reach for the wound and she catches your wrist with the old reflex of a duelist. "Leave it. It is the only thing holding me up." You take your hand back. She keeps her wound and her counsel both, and you climb.',
+          effects: [],
+        },
+      },
+      {
+        id: 'sit-with-her',
+        label: 'Sit a moment and watch the smoke with her',
+        hint: 'She has held this stair alone. Hold it with her, even for a breath.',
+        outcome: {
+          resolution: 'You sit, and say nothing, and watch her city burn beside her. After a while she names a few of the dead, quietly, so that someone else has heard them. When you rise she touches two fingers to your brow in the old way, and the climb feels less like dying.',
+          effects: [{ kind: 'temp_hp', amount: 10 }],
+        },
+      },
+    ],
+  }),
+
+  // ─── Chapter 11: The Trials of the Pit — Irenicus's hells, each trial a sin
+  //     made flesh. ──────────────────────────────────────────────────────────
+  EventTemplateSchema.parse({
+    id: 'trial-of-pride',
+    eventType: 'omen',
+    title: 'The Trial of Pride',
+    flavor:
+      "The hell arranges itself into a simple test: a figure of cold flame in your own shape stands across a narrow span, and a voice with the captor's cadence says, \"Bow your head to me and cross freely. Or keep your pride, and carry it across yourself — every ounce of it, the whole weight you've never set down.\"",
+    minChapter: 11,
+    choices: [
+      {
+        id: 'refuse-to-bow',
+        label: '[Athletics] Carry your pride across unbowed',
+        hint: "The trial weighs what you will not put down. Bear the whole of it over the span and the hell concedes the strength; let it break your stride and the fall is real.",
+        skillCheck: { skill: 'athletics', dc: 17 },
+        outcome: {
+          resolution:
+            "You do not bow. You take the full weight the trial heaps on you — every cruelty survived, every death walked off — and you carry it across the span one grinding step at a time, and you do not kneel. The figure of cold flame goes out. The hell, which feeds on the bending, finds you unbent, and the refusing of it leaves you harder than before.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }, { kind: 'temp_hp', amount: 12 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You take the weight and your knees take it for you — halfway across, your stride breaks and the load drives you down to one knee on the span. Not a bow, but the hell counts it close enough, and the span drops you the rest of the way before you can rise.",
+          effects: [{ kind: 'hp_delta', amount: -14 }],
+        },
+      },
+      {
+        id: 'see-the-trick',
+        label: '[Insight] See what the trial is really asking',
+        hint: "A test of pride is rarely about pride. Read the captor's hand behind it and you find the third door.",
+        skillCheck: { skill: 'insight', dc: 17 },
+        outcome: {
+          resolution:
+            "You look past the figure and the span and the offered bow, and you see the trial for the captor's small cruelty it is — a thing that only has power if you agree it is a test at all. You do not bow and you do not strain. You simply stop believing the span is there, and walk the ground that was always under it.",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'You hunt for the trick and the trial lets you hunt, patient, while the cold-flame figure mirrors your every searching turn. There is a third door and you do not find it, and the hell takes a measure of your certainty as the price of looking.',
+          effects: [{ kind: 'hp_delta', amount: -8 }],
+        },
+      },
+      {
+        id: 'bow-and-cross',
+        label: 'Bow your head and cross freely',
+        hint: 'Pride is a heavy thing to carry through a hell. Set it down and walk.',
+        outcome: {
+          resolution: 'You bow — to a hell, to a dead man\'s cadence, to nothing that deserves it — and the span lets you across without a fight. The crossing is easy. The taste it leaves is not. You walk on lighter by exactly what you set down.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'trial-of-greed',
+    eventType: 'bargain',
+    title: 'The Trial of Greed',
+    flavor:
+      "The hell shows you a vault: more gold than the surface holds, relics that would make a god jealous, every want you ever swallowed, heaped to the burning ceiling. \"Take all you can carry,\" the captor's voice offers. \"The trial is only this — that what you take, you carry out on your own back, and the back has a limit you will find.\"",
+    minChapter: 11,
+    choices: [
+      {
+        id: 'take-only-what-you-need',
+        label: '[Insight] Take only what you can truly bear',
+        hint: 'The trial of greed is won by the one who knows their own limit. Judge it right and you walk out laden and whole; misjudge it and the weight stays in the hell with you.',
+        skillCheck: { skill: 'insight', dc: 16 },
+        outcome: {
+          resolution:
+            "You read your own back honestly — what it will carry to the far door and no more — and you load exactly that and not a coin past it. The hell, which fattens on the last greedy handful, gets none from you. You walk out under a fair weight of someone else's want, and the door holds open for a measured man.",
+          effects: [{ kind: 'gold_delta', amount: 120 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You misjudge the heap and the back both — pile on a fortune and find, three steps from the door, that the trial set no limit on the gold and every limit on you. You shed it all just to reach the exit, and stagger out with nothing but the lesson.",
+          effects: [{ kind: 'hp_delta', amount: -10 }],
+        },
+      },
+      {
+        id: 'leave-the-vault',
+        label: 'Walk out of the vault with empty hands',
+        hint: 'The only sure way past a trial of greed is to want nothing it offers.',
+        outcome: {
+          resolution:
+            'You look at more than you could spend in ten lives and you turn your back on it and walk to the door empty-handed. The captor\'s voice has nothing to say to that. The hell cannot weigh a man who carries nothing, and it lets you go almost insulted, and you go lighter for wanting less.',
+          effects: [{ kind: 'temp_hp', amount: 16 }],
+        },
+      },
+      {
+        id: 'grab-everything',
+        label: 'Take all of it',
+        hint: 'It is right there. What is a trial to a soul that has died this often?',
+        outcome: {
+          resolution:
+            "You load your arms and your back and your fists until you cannot see the door for the gold, and you make it three heaving steps before the hoard's own keepers peel up out of the heap to collect the toll on a greed that overreached.",
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['hoarding-fiend-of-greed', 'spined-abishai'] }],
+        },
+      },
+    ],
+  }),
+
+  // ─── Chapter 12: The Siege of Saradush — the besieged city, Yaga-Shura's
+  //     fire giants at the walls. ────────────────────────────────────────────
+  EventTemplateSchema.parse({
+    id: 'breach-in-the-wall',
+    eventType: 'ruin',
+    title: 'A Breach in the Saradush Wall',
+    flavor:
+      "A fire-giant's boulder has stove a hole clean through the curtain wall, and through it the siege glares orange — Yaga-Shura's host moving in the smoke. Two of the city's defenders are trying to shore the breach with rubble and dead men's shields, and losing. One of them sees you. \"Walker — hands, or get clear.\"",
+    minChapter: 12,
+    choices: [
+      {
+        id: 'shore-the-breach',
+        label: '[Athletics] Put your back into the breach',
+        hint: 'The wall holds if enough strong arms hold it. Set the keystone right and the defenders owe you; let it slip and the rubble takes a price in fingers.',
+        skillCheck: { skill: 'athletics', dc: 17 },
+        outcome: {
+          resolution:
+            "You get your shoulder under the fallen lintel-stone the defenders cannot lift between them and walk it up into the gap by main force, holding it the long, screaming moment it takes them to wedge it true. The breach holds. The defenders, who expected to die in it, share out what their dead no longer need, and call you by a soldier's name.",
+          effects: [{ kind: 'gold_delta', amount: 70 }, { kind: 'apply_attack_bonus_run', amount: 1 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You take the lintel's weight and your grip is a hair short of it — the stone twists, catches your hand against the rubble, and the breach sloughs the half-built shore back into the gap. You drag your hand free torn, and the defenders fall back from a wall that will not hold.",
+          effects: [{ kind: 'hp_delta', amount: -13 }],
+        },
+      },
+      {
+        id: 'read-the-siege',
+        label: '[Investigation] Read the siege-lines through the breach',
+        hint: "A hole in the wall is also a window. Map the giant host's order through it and you climb knowing where it is thin.",
+        skillCheck: { skill: 'investigation', dc: 16 },
+        outcome: {
+          resolution:
+            "You hold at the breach and read the host moving in the smoke — where the fire-giants mass, where the conscripts are only meant to look like a line, where the warlord keeps his flank lazy because nothing has ever turned it. The knowing of the ground is worth more than a held wall. You climb with the siege mapped behind your eyes.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You linger at the gap too long, reading smoke as if it were order, and the host reads you back. A fire-giant\'s sling answers the silhouette in the breach, and you throw yourself clear of a stone that takes the wall where your head was.',
+          effects: [{ kind: 'hp_delta', amount: -9 }],
+        },
+      },
+      {
+        id: 'loot-the-fallen',
+        label: 'Strip the fallen at the breach and go',
+        hint: 'The dead in the gap are past needing it. The defenders are too busy dying to stop you.',
+        outcome: {
+          resolution:
+            "You work fast among the bodies wedged in the rubble while the two defenders strain at the breach they cannot hold — coin, a fire-blackened ring, a captain's purse. The living are too spent to curse you properly. You climb away from a wall that falls behind you.",
+          effects: [{ kind: 'gold_delta', amount: 55 }],
+        },
+      },
+      {
+        id: 'get-clear',
+        label: 'Get clear of the breach',
+        hint: 'The wall is the city\'s war, not yours. The stair is yours.',
+        outcome: {
+          resolution: 'You take the defender at his word and get clear, leaving the breach to the men holding it and the giants who will take it anyway. The orange glare follows you up the inner stair. Somewhere below, the wall gives.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'marauders-bargain',
+    eventType: 'stranger',
+    title: "A Marauder's Bargain",
+    flavor:
+      "A Saradush marauder leans in a doorway off the burning street, not fighting anyone, a sack at his feet and a half-giant's mace propped easy on his shoulder. \"City's lost, walker. Yaga-Shura's heart's somewhere it can't be killed, so the wall's coming down whatever the fools at the breach think. I've a sack of what the dead won't miss. Trade, or move along — I'm done bleeding for Saradush.\"",
+    minChapter: 12,
+    choices: [
+      {
+        id: 'haggle-the-sack',
+        label: '[Persuasion] Talk him out of the better half',
+        hint: "He is a deserter, not a merchant — his prices are pure nerve. Out-talk the nerve and the sack is yours cheap; lose the exchange and the mace remembers what it's for.",
+        skillCheck: { skill: 'persuasion', dc: 16 },
+        outcome: {
+          resolution:
+            "You point out, reasonably, that loot is worth nothing to a dead deserter and that you are the only buyer who is not currently on fire. He weighs it, weighs you, and decides a friend on the stair beats a sack on his back. He hands over the good half and a tip on where the warlord's outriders cached their pay.",
+          effects: [{ kind: 'gold_delta', amount: 90 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You push the bargain a shade too hard and he decides he liked the sack better than your company. The half-giant's mace comes off his shoulder. \"Should've just moved along, walker.\"",
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['saradush-marauder', 'half-giant-siegebreaker'] }],
+        },
+      },
+      {
+        id: 'read-the-deserter',
+        label: '[Insight] Read whether he means to deal straight',
+        hint: 'A man who has stopped bleeding for his city may have stopped bleeding for anything. See if the trade is a trade or a trap.',
+        skillCheck: { skill: 'insight', dc: 15 },
+        outcome: {
+          resolution:
+            "You watch his free hand, not his mouth — and his free hand is open, tired, done. He means the trade. You take the sack at his asking price without flinching at the dark doorway behind him, because you have already seen there is no one in it. Honest loot from an honest coward.",
+          effects: [{ kind: 'gold_delta', amount: 65 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You misjudge the tiredness for honesty and reach for the sack — and the second marauder you did not clock steps out of the dark doorway as the first one grins. You break off the deal fast and poorer, a blade having found you in the bad light.',
+          effects: [{ kind: 'hp_delta', amount: -8 }],
+        },
+      },
+      {
+        id: 'move-along',
+        label: 'Move along',
+        hint: 'A looter in a burning city is a fight you can decline.',
+        outcome: {
+          resolution: 'You leave him his sack and his doorway and his certainty that the city is lost. He watches you to the corner, then goes back to waiting out the end of Saradush in the shade. The mace never leaves his shoulder.',
+          effects: [],
+        },
+      },
+    ],
+  }),
+
+  // ─── Chapter 13–14: The last Bhaalspawn lords and the Throne of Bhaal —
+  //     the taint, the essence, the choice at the wheel's true centre. ────────
+  EventTemplateSchema.parse({
+    id: 'bhaalspawn-shrine',
+    eventType: 'shrine',
+    title: 'A Shrine Built of Bhaalspawn Bone',
+    flavor:
+      "One of the Five raised this before you killed your way to it — an altar of fused bone and old blood, every fragment a sibling of yours, a child of the Lord of Murder rendered down to its essence and stacked toward a god that is dead and will not stay dead. The taint in your own blood leans toward it like iron to a lodestone.",
+    minChapter: 13,
+    choices: [
+      {
+        id: 'master-the-taint',
+        label: '[Religion] Take the essence on your own terms',
+        hint: "Bhaal's blood in you answers the altar whether you will it or not. Master the calling and the essence is fuel; lose to it and it burns through you toward the dead god.",
+        skillCheck: { skill: 'religion', dc: 17 },
+        outcome: {
+          resolution:
+            "You let the taint reach for the altar and then you take hold of it — name it yours, not the dead god's, and draw the rendered essence of your siblings up your own arm on your own terms. It is a terrible inheritance and you spend it like coin. The Lord of Murder gets nothing. You get the edge of every death stacked here.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }, { kind: 'temp_hp', amount: 14 }],
+        },
+        failureOutcome: {
+          resolution:
+            "The taint slips your grip and the altar takes the slack — it pulls the essence through you toward the god-shaped hole at its centre, and for a roaring moment you are only a conduit, only a fragment among the fragments. You wrench free before it stacks you on the pile, but it keeps a piece on the way out.",
+          effects: [{ kind: 'hp_delta', amount: -14 }],
+        },
+      },
+      {
+        id: 'read-the-essence',
+        label: '[Arcana] Read the working that binds the bone',
+        hint: 'One of the Five thought this would raise a dead god. Parse the spell and you parse their plan; misread it and the binding spends its backlash on the nearest heir.',
+        skillCheck: { skill: 'arcana', dc: 17 },
+        outcome: {
+          resolution:
+            "You trace the binding through the stacked bone — an ascension-engine, crude and enormous, meant to pour a thousand siblings into one risen throat. You read its flaw, and in reading it you understand the whole shape of what waits at the top of this climb. Knowing the engine is knowing how to break it.",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'The working is layered past your reading — sibling-essence folded over sibling-essence, each a different death. You pull a thread that was load-bearing and the altar discharges its surplus through the nearest source of Bhaal\'s blood, which is you.',
+          effects: [{ kind: 'hp_delta', amount: -11 }],
+        },
+      },
+      {
+        id: 'break-the-altar',
+        label: 'Break the altar and scatter the bone',
+        hint: 'Whatever it was raising, it should not rise. Let your siblings rest.',
+        outcome: {
+          resolution:
+            'You take the altar apart with your hands and your heel — unstack the rendered dead, scatter the fused bone, break the lodestone pull of it. The taint in your blood quiets, almost grateful. Whatever the Five meant to raise here will have to be raised somewhere else, by someone with fewer dead siblings on the pile.',
+          effects: [{ kind: 'temp_hp', amount: 12 }],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'dragons-hoard-toll',
+    eventType: 'bargain',
+    title: "A Dragon's Hoard-Toll",
+    flavor:
+      "The half-dragon steward of the last lord's hoard coils across the only stair up, a treasure of conquered cities heaped at its back. \"Bhaalspawn,\" it says, tasting the word. \"My master will have your essence soon enough. Until then — the hoard takes a toll of all who climb. Pay it in coin, or pay it in the old way, in blood, and I'll let the doomed amuse me a while longer.\"",
+    minChapter: 13,
+    choices: [
+      {
+        id: 'riddle-the-dragon',
+        label: '[Deception] Convince it you are already promised elsewhere',
+        hint: "Dragons hoard, but they also fear a rival claim. Sell it that your essence is spoken for by something it dares not cross, and the toll waives itself. Slip, and it tastes the lie.",
+        skillCheck: { skill: 'deception', dc: 17 },
+        outcome: {
+          resolution:
+            "You tell it, with a heir's weary certainty, exactly which greater power has already laid claim to what runs in your blood — and you name something even a half-dragon flatters before it crosses. The great head draws back a fraction. \"...Then climb. I'll not spend my master's quarrel for a toll.\" It uncoils from the stair, and you keep your blood and your coin both.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }, { kind: 'temp_hp', amount: 10 }],
+        },
+        failureOutcome: {
+          resolution:
+            "The lie is bold and the dragon is old, and old things taste a fresh lie the way you taste salt. \"No one has claimed you, little heir. I'll take the toll in the old way, and the lie as interest.\" It comes off the hoard in a rush of scale and fury.",
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['half-dragon-reaver', 'stormscale-drake'] }],
+        },
+      },
+      {
+        id: 'pay-the-toll',
+        label: 'Pay the toll in coin',
+        hint: 'A hoard the size of cities can be bought past. You have climbed too far to bleed for a stair.',
+        requiresGold: 80,
+        outcome: {
+          resolution:
+            'You count the toll out onto the bottom stair, coin by coin, and the half-dragon watches each one fall onto its own heap with a miser\'s satisfaction. "Sensible, for the doomed." It draws aside its coils. You climb past a fortune you will never see again, your blood still your own.',
+          effects: [{ kind: 'gold_delta', amount: -80 }],
+        },
+      },
+      {
+        id: 'spot-the-hoard',
+        label: '[Perception] Spot the prize the steward overlooks',
+        hint: "A hoard this vast has corners even its keeper forgets. Find the one piece worth the climb while it postures, and pay the toll out of its own gold.",
+        skillCheck: { skill: 'perception', dc: 16 },
+        outcome: {
+          resolution:
+            "You let it monologue and let your eye travel the heap behind it — and there, half-buried where a careless steward let it slide, something older and finer than the rest. While it savours the word doomed, your hand is already closing on the overlooked piece. You pay its toll, when it remembers to ask, out of its own forgotten gold.",
+          effects: [{ kind: 'gold_delta', amount: 95 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You search the hoard with your eyes and the steward catches the searching. "Counting my gold, little heir?" The tail sweeps the stair and catches you across the chest, and you reel back from a treasure that is very well guarded after all.',
+          effects: [{ kind: 'hp_delta', amount: -10 }],
+        },
+      },
+    ],
+  }),
+
+  // Ch14 · The Throne of Bhaal — the Pocket Plane, the dead god's seat, the
+  //     choice at the centre of the wheel.
+  EventTemplateSchema.parse({
+    id: 'throne-that-waits',
+    eventType: 'omen',
+    title: 'The Throne That Waits',
+    flavor:
+      "The Pocket Plane folds open on it: the Throne of Bhaal, vast and empty and patient, the seat of the dead Lord of Murder waiting for an heir to fill it. The taint in your blood roars toward the empty chair. To sit is to become a god of slaughter. The Throne does not command. It only waits, as it has waited through every life you have spent climbing to it.",
+    minChapter: 14,
+    choices: [
+      {
+        id: 'refuse-the-throne',
+        label: '[Insight] See the Throne for the trap it is',
+        hint: 'Everything in you that the taint built wants to sit. See clearly what sitting makes of you and you walk past it harder than any god; let the blood decide and the seat takes what it is owed.',
+        skillCheck: { skill: 'insight', dc: 18 },
+        outcome: {
+          resolution:
+            "You look at the empty seat and, under the roar of the blood, you see plainly what it is: not a reward at the top of the climb but the climb's whole purpose, a god-shaped hunger that would wear your face and call it ascension. You turn your back on the inheritance of every murder in your line. The refusing of it is the strongest thing you have ever done, and it leaves you stronger.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }, { kind: 'temp_hp', amount: 18 }],
+        },
+        failureOutcome: {
+          resolution:
+            "You mean to refuse and the blood means otherwise — for one long, roaring moment you are halfway to the seat before you understand your feet have moved. You wrench yourself back from the edge of becoming, and the Throne takes its small toll for the closeness of it, a tithe of you left on the steps.",
+          effects: [{ kind: 'hp_delta', amount: -15 }],
+        },
+      },
+      {
+        id: 'commune-with-the-dead-god',
+        label: '[Religion] Take the measure of the dead god',
+        hint: 'A throne is a god rendered into furniture. Read what is left of Bhaal in it and you read what truly waits at the climb\'s end; misjudge the dead god and its remnant answers.',
+        skillCheck: { skill: 'religion', dc: 18 },
+        outcome: {
+          resolution:
+            "You kneel — not to the Throne but at it, the way a physician kneels at a body — and take the measure of what murder made and death unmade. You learn the shape of the dead god's last hunger, and the learning of it girds you for the thing wearing borrowed divinity that waits beyond. Knowledge of a god is half a weapon against one.",
+          effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'You reach for the measure of it and the dead god is not so dead as that — the remnant in the seat turns its last attention on the heir who came reading, and the weight of a slain god\'s regard drives you back off the steps, scoured by the touch of it.',
+          effects: [{ kind: 'hp_delta', amount: -13 }],
+        },
+      },
+      {
+        id: 'leave-the-throne-empty',
+        label: 'Leave the Throne empty and walk on',
+        hint: 'Some seats are best left cold. The climb does not end here, whatever the blood says.',
+        outcome: {
+          resolution: 'You set your eyes on the far door and walk the length of the Pocket Plane without once looking at the empty seat, though the blood screams it the whole way. Behind you the Throne goes on waiting, patient as the wheel, for an heir who will not be you. Not this life.',
+          effects: [{ kind: 'temp_hp', amount: 10 }],
+        },
+      },
+    ],
+  }),
+
+  EventTemplateSchema.parse({
+    id: 'voice-in-the-pocket-plane',
+    eventType: 'stranger',
+    title: 'A Voice in the Pocket Plane',
+    flavor:
+      "The folded space gives up a figure of hard, clean light — a solar, or the memory of one, standing between you and the last door. \"Child of murder,\" it says, and there is no contempt in it, which is worse. \"You have climbed to the place where the lie at the centre of all this waits in a borrowed crown. Before the door — answer me one thing, and answer it true. What will you do with what you are?\"",
+    minChapter: 14,
+    choices: [
+      {
+        id: 'answer-true',
+        label: '[Persuasion] Answer it with the truth of your road',
+        hint: 'The solar weighs heirs and finds most of them wanting. Give it the true measure of why you climb and it arms you for the last door; give it a flinch and it lets you pass unblessed.',
+        skillCheck: { skill: 'persuasion', dc: 17 },
+        outcome: {
+          resolution:
+            "You give it no grand vow and no plea — only the flat, hard truth of every life you have spent climbing to unmake the thing at the top, and what you mean to do when you reach it. The light does not soften, but it inclines, and lays a blessing on you that weighs like a verdict. \"Then go and finish it, child. I will hold the door behind you.\"",
+          effects: [{ kind: 'grant_blessing', random: true }, { kind: 'temp_hp', amount: 16 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You reach for the truth and find a flinch where it should be — some last reluctance the solar reads in the half-second before you speak. It steps aside without judgement and without grace. "Pass, then. We will both learn what you are at the door." You go on unblessed.',
+          effects: [],
+        },
+      },
+      {
+        id: 'read-the-light',
+        label: '[Arcana] Read what the solar truly is',
+        hint: 'A figure of light in the dead god\'s plane is not nothing, and may not be what it seems. Parse it and you parse the last ground before the door; misread it and the reading costs you.',
+        skillCheck: { skill: 'arcana', dc: 17 },
+        outcome: {
+          resolution:
+            "You read the working that holds the figure together and find it true — a real fragment of something that still cares whether you fall, snagged in the folds of the Plane to wait for you. You take the measure of its grace and the lay of the ground it guards, and step toward the door knowing the last room before you enter it.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }],
+        },
+        failureOutcome: {
+          resolution:
+            'You parse the light and the light is brighter than your reading — it flares as you trace it, a clean blaze that is not unkind but is far too much, and you blink the Plane back into focus a step further from the door than you stood, scoured and slower.',
+          effects: [{ kind: 'hp_delta', amount: -11 }],
+        },
+      },
+      {
+        id: 'pass-in-silence',
+        label: 'Pass it in silence',
+        hint: 'You owe the last question no answer but the door.',
+        outcome: {
+          resolution: 'You meet the clean light\'s gaze and give it nothing — no vow, no truth, no flinch it can read. After a long moment it steps aside. "Some answer with the doing," it allows, almost to itself. You walk to the last door carrying only what you brought.',
+          effects: [],
+        },
+      },
+    ],
+  }),
 ];
 
 // Boss-intel templates are looked up by id (the pre-boss slot picks them
