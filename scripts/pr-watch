@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+#
+# pr-watch — orchestrator's PR-creation watcher.
+#
+# Polls until EVERY given feature branch has an OPEN pull request, then prints
+# each branch's PR number + CI state and exits 0. Run it as a background
+# command so the orchestrator is re-invoked the moment its agents have opened
+# their PRs.
+#
+# Hard-won lessons baked in:
+#   - Poll --state open, NEVER --state all: a stale MERGED PR from a prior
+#     session can reuse a branch name and falsely satisfy an --state all query.
+#   - Fire on PR CREATION, not on CI completion: waiting for CI-terminal left
+#     freshly-opened PRs sitting unacknowledged. The orchestrator decides merge
+#     timing; this tool only detects + reports.
+#   - A branch with no PR yet (agent still working) is normal: keep polling.
+
+set -uo pipefail
+
+timeout_min=90
+interval_sec=30
+branches=()
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/pr-watch [--timeout-min N] [--interval-sec S] <branch> [<branch> ...]
+
+Polls until every <branch> has an OPEN pull request, then prints each branch's
+PR number + CI state (pass|pending|fail) and exits 0. Exits 1 on timeout.
+
+Options:
+  --timeout-min N    give up after N minutes   (default: 90)
+  --interval-sec S   seconds between polls      (default: 30)
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --timeout-min)
+      timeout_min="${2:-}"; shift 2 ;;
+    --interval-sec)
+      interval_sec="${2:-}"; shift 2 ;;
+    -h|--help)
+      usage; exit 0 ;;
+    --)
+      shift; branches+=("$@"); break ;;
+    -*)
+      echo "pr-watch: unknown option: $1" >&2; usage >&2; exit 2 ;;
+    *)
+      branches+=("$1"); shift ;;
+  esac
+done
+
+if [[ ${#branches[@]} -eq 0 ]]; then
+  echo "pr-watch: no branches given" >&2
+  usage >&2
+  exit 2
+fi
+
+# CI state for a PR number, derived from `gh pr checks` exit code:
+#   0 = pass, 8 = pending, anything else = fail (incl. "no checks" -> treat as pass-ish fail).
+ci_state() {
+  local num="$1"
+  gh pr checks "$num" >/dev/null 2>&1
+  case $? in
+    0) echo "pass" ;;
+    8) echo "pending" ;;
+    *) echo "fail" ;;
+  esac
+}
+
+deadline=$(( $(date +%s) + timeout_min * 60 ))
+
+echo "pr-watch: watching ${#branches[@]} branch(es) for open PRs (timeout ${timeout_min}m, interval ${interval_sec}s)"
+echo "pr-watch: branches: ${branches[*]}"
+
+while true; do
+  nums=()
+  missing=()
+  all_found=true
+
+  for b in "${branches[@]}"; do
+    num=$(gh pr list --head "$b" --state open --json number -q '.[0].number' 2>/dev/null)
+    nums+=("$num")
+    if [[ -z "$num" ]]; then
+      all_found=false
+      missing+=("$b")
+    fi
+  done
+
+  if $all_found; then
+    echo ""
+    echo "pr-watch: all ${#branches[@]} branch(es) have an open PR:"
+    i=0
+    for b in "${branches[@]}"; do
+      num="${nums[$i]}"
+      state=$(ci_state "$num")
+      echo "  $b -> PR #${num} [${state}]"
+      i=$(( i + 1 ))
+    done
+    exit 0
+  fi
+
+  now=$(date +%s)
+  if [[ $now -ge $deadline ]]; then
+    echo ""
+    echo "pr-watch: TIMEOUT after ${timeout_min}m — ${#missing[@]} branch(es) still lack an open PR:"
+    for b in "${missing[@]}"; do
+      echo "  $b"
+    done
+    exit 1
+  fi
+
+  echo "pr-watch: still waiting on ${#missing[@]} branch(es): ${missing[*]} (next poll in ${interval_sec}s)"
+  sleep "$interval_sec"
+done
