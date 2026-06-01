@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { computeAC, characterHasMechanic, critRange } from '../../engine/character/derived';
@@ -8,7 +8,7 @@ import {
 } from '../../engine/character/actions';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { getBlessing } from '../../content/blessings';
-import type { Blessing } from '../../schemas/blessing';
+import { BLESSING_GOD_GLYPH, type Blessing } from '../../schemas/blessing';
 
 const UNCANNY_DODGE_LEVEL = 5;
 const NIMBLE_DODGE_MAX_LEVEL = 4;
@@ -24,21 +24,6 @@ function fighterActionSurgeMax(level: number): number {
   if (level >= 17) return 2;
   if (level >= 2) return 1;
   return 0;
-}
-
-function blessingGlyph(god: Blessing['god']): string {
-  // Single-character marks per god — readable at 14px without needing a sprite.
-  switch (god) {
-    case 'tymora': return '◉';
-    case 'helm': return '⛨';
-    case 'tempus': return '⚔';
-    case 'mystra': return '✦';
-    case 'lathander': return '☀';
-    case 'selune': return '☾';
-    case 'ilmater': return '✚';
-    case 'silvanus': return '❦';
-    default: return '✧';
-  }
 }
 
 function conditionGlyph(name: string): string {
@@ -172,6 +157,54 @@ function Pill({
       className={`px-1.5 py-0.5 border-2 text-[8px] uppercase tracking-[0.2em] font-bold tabular-nums ${toneClass}`}
     >
       {text}
+    </span>
+  );
+}
+
+function BlessingBadge({
+  name,
+  effect,
+  god,
+}: {
+  name: string;
+  effect: string;
+  god: Blessing['god'];
+}) {
+  // Each blessing carries its OWN tooltip — hover on desktop, tap on touch
+  // (prior validation flagged title= as touch-inaccessible), focus for
+  // keyboard. The panel shows only this blessing's name + effect, never the
+  // whole concatenated strip.
+  const [open, setOpen] = useState(false);
+  const label = `${name} — ${effect}`;
+  return (
+    <span className="relative inline-flex">
+      <button
+        type="button"
+        aria-label={label}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onPointerDown={(e) => {
+          if (e.pointerType === 'touch') setOpen((o) => !o);
+        }}
+        className="inline-flex items-center justify-center w-4 h-4 border border-[var(--color-accent-gold)] bg-[var(--color-bg-elevated)] text-[var(--color-accent-amber)] text-[10px] leading-none cursor-help"
+      >
+        {BLESSING_GOD_GLYPH[god]}
+      </button>
+      {open && (
+        <span
+          role="tooltip"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 z-50 w-44 max-w-[60vw] p-2 border-2 border-[var(--color-accent-gold)] bg-[var(--color-bg-panel)] shadow-[0_4px_16px_rgba(0,0,0,0.6)] pointer-events-none normal-case tracking-normal text-left"
+        >
+          <span className="block text-[var(--color-accent-amber)] font-bold text-[11px] leading-tight">
+            {name}
+          </span>
+          <span className="block mt-0.5 text-[var(--color-text-secondary)] text-[10px] leading-snug">
+            {effect}
+          </span>
+        </span>
+      )}
     </span>
   );
 }
@@ -505,18 +538,12 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
 
       {blessingEntries.length > 0 && (
         <Section title="Blessings">
-          {/* Show every blessing — each glyph carries its own tooltip. Wrap to a
-              second row only when the icons actually run out of horizontal room. */}
+          {/* Each blessing is its own badge wearing its god's mark, with its own
+              hover/tap tooltip — never the whole strip concatenated. Wrap to a
+              second row only when the marks run out of horizontal room. */}
           <div className="flex flex-wrap items-center gap-1 max-w-[220px]">
             {blessingEntries.map((b) => (
-              <span
-                key={b.id}
-                title={`${b.name} — ${b.effect}`}
-                aria-label={`${b.name} — ${b.effect}`}
-                className="inline-flex items-center justify-center w-4 h-4 border border-[var(--color-accent-gold)] bg-[var(--color-bg-elevated)] text-[var(--color-accent-amber)] text-[10px] leading-none"
-              >
-                {blessingGlyph(b.god)}
-              </span>
+              <BlessingBadge key={b.id} name={b.name} effect={b.effect} god={b.god} />
             ))}
           </div>
         </Section>
