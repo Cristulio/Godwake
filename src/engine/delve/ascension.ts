@@ -60,62 +60,62 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
   {
     level: 1,
     name: 'Ascension 1',
-    newModifier: 'Every enemy carries +10% HP.',
-    enemyHpMult: 1.1,
+    newModifier: 'Every enemy carries +15% HP.',
+    enemyHpMult: 1.15,
     enemyDamageBonus: 0,
     bossHpMult: 1,
     startingGoldMult: 1,
-    renownMult: 1.15,
+    renownMult: 1.25,
   },
   {
     level: 2,
     name: 'Ascension 2',
     newModifier: 'Enemy blows land for +1 damage.',
-    enemyHpMult: 1.1,
+    enemyHpMult: 1.15,
     enemyDamageBonus: 1,
     bossHpMult: 1,
     startingGoldMult: 1,
-    renownMult: 1.3,
+    renownMult: 1.45,
   },
   {
     level: 3,
     name: 'Ascension 3',
     newModifier: 'Chapter bosses gain +25% HP.',
-    enemyHpMult: 1.1,
+    enemyHpMult: 1.15,
     enemyDamageBonus: 1,
     bossHpMult: 1.25,
     startingGoldMult: 1,
-    renownMult: 1.5,
+    renownMult: 1.65,
   },
   {
     level: 4,
     name: 'Ascension 4',
-    newModifier: 'Enemies +20% HP; you descend with a quarter less gold.',
-    enemyHpMult: 1.2,
+    newModifier: 'Enemies +25% HP; you descend with a quarter less gold.',
+    enemyHpMult: 1.25,
     enemyDamageBonus: 1,
-    bossHpMult: 1.25,
-    startingGoldMult: 0.75,
-    renownMult: 1.7,
-  },
-  {
-    level: 5,
-    name: 'Ascension 5',
-    newModifier: 'Enemy blows land for +2 damage.',
-    enemyHpMult: 1.2,
-    enemyDamageBonus: 2,
     bossHpMult: 1.25,
     startingGoldMult: 0.75,
     renownMult: 1.9,
   },
   {
+    level: 5,
+    name: 'Ascension 5',
+    newModifier: 'Enemy blows land for +2 damage.',
+    enemyHpMult: 1.25,
+    enemyDamageBonus: 2,
+    bossHpMult: 1.25,
+    startingGoldMult: 0.75,
+    renownMult: 2.15,
+  },
+  {
     level: 6,
     name: 'Ascension 6',
-    newModifier: 'Bosses gain +50% HP; you descend with half the gold.',
-    enemyHpMult: 1.25,
+    newModifier: 'Enemies +30% HP; bosses gain +50% HP; you descend with half the gold.',
+    enemyHpMult: 1.3,
     enemyDamageBonus: 2,
     bossHpMult: 1.5,
     startingGoldMult: 0.5,
-    renownMult: 2.15,
+    renownMult: 2.45,
   },
 ];
 
@@ -150,4 +150,35 @@ export function ascensionDamageBonus(level: number): number {
 export function applyAscensionToMonster(def: Monster, level: number, isBoss: boolean): Monster {
   if (clampAscension(level) === 0) return def;
   return { ...def, maxHp: ascensionMonsterHp(def.maxHp, level, isBoss) };
+}
+
+/**
+ * Content-gating thresholds: the ascension level at which each layer of
+ * ascension-only content switches on. Authored here as the single source of
+ * truth so the content lanes ask via the predicate helpers below rather than
+ * scattering `level >= n` literals across the codebase.
+ */
+export const ELITE_VARIANTS_FROM = 2;
+export const BOSS_EXTRA_PHASE_FROM = 3;
+export const DUNGEON_TWISTS_FROM = 4;
+export const ASCENDANT_LOOT_FROM = 3;
+
+/** Whether ascension-only elite variants enter the encounter pool at this level. */
+export function ascensionEliteVariants(level: number): boolean {
+  return clampAscension(level) >= ELITE_VARIANTS_FROM;
+}
+
+/** Whether chapter bosses gain an extra mechanic/phase at this level. */
+export function ascensionBossExtraPhase(level: number): boolean {
+  return clampAscension(level) >= BOSS_EXTRA_PHASE_FROM;
+}
+
+/** Whether per-room twists/hazards are active at this level. */
+export function ascensionDungeonTwists(level: number): boolean {
+  return clampAscension(level) >= DUNGEON_TWISTS_FROM;
+}
+
+/** Whether the "ascendant" legendary tier is obtainable at this level. */
+export function ascensionAscendantLoot(level: number): boolean {
+  return clampAscension(level) >= ASCENDANT_LOOT_FROM;
 }
