@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 40"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Kuo-Toa Deepguard"
+    >
+      <polygon points="6,5 9,1 9,7" fill="#3a6a5a" />
+      <polygon points="18,5 15,1 15,7" fill="#3a6a5a" />
+      <rect x="8" y="2" width="8" height="9" fill="#4a7a66" />
+      <rect x="8" y="2" width="8" height="2" fill="#62977f" />
+      <ellipse cx="10" cy="7" rx="2" ry="2" fill="#e8e0c4" />
+      <ellipse cx="14" cy="7" rx="2" ry="2" fill="#e8e0c4" />
+      <rect x="9" y="6" width="2" height="2" fill="#1a2418" />
+      <rect x="13" y="6" width="2" height="2" fill="#1a2418" />
+      <rect x="10" y="9" width="4" height="2" fill="#2a3a2e" />
+
+      <rect x="6" y="11" width="12" height="12" fill="#3a6a5a" />
+      <rect x="6" y="11" width="12" height="2" fill="#4a7a66" />
+      <rect x="9" y="13" width="6" height="9" fill="#62977f" opacity="0.5" />
+      <line x1="7" y1="15" x2="17" y2="15" stroke="#2a4a3e" stroke-width="0.5" />
+      <line x1="7" y1="19" x2="17" y2="19" stroke="#2a4a3e" stroke-width="0.5" />
+
+      <rect x="3" y="0" width="2" height="22" fill="#5a4030" />
+      <rect x="3" y="0" width="1" height="22" fill="#6e5038" />
+      <polygon points="2,1 4,-2 6,1" fill="#8a8a86" />
+      <polygon points="2,1 6,1 5,3 3,3" fill="#6b6a66" />
+      <rect x="3" y="12" width="2" height="3" fill="#4a7a66" />
+
+      <rect x="17" y="12" width="4" height="3" fill="#4a7a66" />
+      <rect x="20" y="14" width="3" height="9" fill="#3a6a5a" />
+
+      <rect x="7" y="23" width="4" height="10" fill="#3a6a5a" />
+      <rect x="13" y="23" width="4" height="10" fill="#3a6a5a" />
+      <polygon points="5,33 11,33 8,36" fill="#2a4a3e" />
+      <polygon points="13,33 19,33 16,36" fill="#2a4a3e" />
+
+      <rect x="9" y="14" width="1" height="1" fill="#a0e0c0" opacity="0.6" />
+      <rect x="14" y="17" width="1" height="1" fill="#a0e0c0" opacity="0.5" />
+    </svg>
