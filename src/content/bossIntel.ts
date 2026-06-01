@@ -1,4 +1,9 @@
 import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
+import { CHAPTER10_BOSS_INTEL } from '../engine/delve/chapter10Pools';
+import { CHAPTER11_BOSS_INTEL } from '../engine/delve/chapter11Pools';
+import { CHAPTER12_BOSS_INTEL } from '../engine/delve/chapter12Pools';
+import { CHAPTER13_BOSS_INTEL } from '../engine/delve/chapter13Pools';
+import { CHAPTER14_BOSS_INTEL } from '../engine/delve/chapter14Pools';
 
 /**
  * Boss intel cards — the tactical edge a player can ready 1 room before each
@@ -20,8 +25,8 @@ import { EventTemplateSchema, type EventTemplate } from '../schemas/event';
 export interface BossIntelCard {
   /** Monster def id this card foreshadows. Matches the boss room's monster. */
   bossDefId: string;
-  /** Chapter index (1-9; widened per L20-expansion chapter lane). Scales the `battle-plan` temp-HP gird. */
-  chapter: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  /** Chapter index (1-14, the full chain through the Throne of Bhaal finale). Scales the `battle-plan` temp-HP gird. */
+  chapter: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
   /** Title shown on the intel event room. */
   roomTitle: string;
   /** Diegetic flavor text for the intel room — pre-boss BG2/FromSoft tone. */
@@ -185,6 +190,14 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       "You leave the mask where it lies and the warning unread, and step past the dressing-table without slowing. On the empty throne ahead a courtly shape inclines its head, charmed, as though you have already agreed to something. The bold take the throne-room on their own terms — and what the Court sheds for you will weigh a touch heavier when the last mask finally comes off and there is nothing beneath it after all.",
     coinCost: bossIntelCoinCost(9),
   },
+  // ─── Ch10-14 · the BG2 endgame (Suldanessellar → the Throne of Bhaal) ──
+  // Authored alongside their pools and folded in here; the chapter union above
+  // is widened to 14 to admit them. Each follows the same 5·ch²+20·ch cost curve.
+  CHAPTER10_BOSS_INTEL,
+  CHAPTER11_BOSS_INTEL,
+  CHAPTER12_BOSS_INTEL,
+  CHAPTER13_BOSS_INTEL,
+  CHAPTER14_BOSS_INTEL,
 ];
 
 const BY_BOSS_DEF: Map<string, BossIntelCard> = new Map(

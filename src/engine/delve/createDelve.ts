@@ -66,6 +66,46 @@ import {
   ELITE_POOL as MASK_ELITE_POOL,
   CHAPTER9_FLAVOR,
 } from './chapter9Pools';
+// ─── Chapter 10 · Suldanessellar (the Tree of Life) ───────────────────────
+import {
+  WARMUP_POOL as SULD_WARMUP_POOL,
+  EARLY_MID_POOL as SULD_EARLY_MID_POOL,
+  MID_POOL as SULD_MID_POOL,
+  ELITE_POOL as SULD_ELITE_POOL,
+  CHAPTER10_FLAVOR,
+} from './chapter10Pools';
+// ─── Chapter 11 · The Trials of the Pit (Hell + Irenicus) ─────────────────
+import {
+  WARMUP_POOL as PIT_WARMUP_POOL,
+  EARLY_MID_POOL as PIT_EARLY_MID_POOL,
+  MID_POOL as PIT_MID_POOL,
+  ELITE_POOL as PIT_ELITE_POOL,
+  CHAPTER11_FLAVOR,
+} from './chapter11Pools';
+// ─── Chapter 12 · The Siege of Saradush (Yaga-Shura) ──────────────────────
+import {
+  WARMUP_POOL as SARA_WARMUP_POOL,
+  EARLY_MID_POOL as SARA_EARLY_MID_POOL,
+  MID_POOL as SARA_MID_POOL,
+  ELITE_POOL as SARA_ELITE_POOL,
+  CHAPTER12_FLAVOR,
+} from './chapter12Pools';
+// ─── Chapter 13 · The Last of the Five (Sendai + Abazigal) ────────────────
+import {
+  WARMUP_POOL as FIVE_WARMUP_POOL,
+  EARLY_MID_POOL as FIVE_EARLY_MID_POOL,
+  MID_POOL as FIVE_MID_POOL,
+  ELITE_POOL as FIVE_ELITE_POOL,
+  CHAPTER13_FLAVOR,
+} from './chapter13Pools';
+// ─── Chapter 14 · The Throne of Bhaal (Melissan) — the L20 finale ─────────
+import {
+  WARMUP_POOL as THRONE_WARMUP_POOL,
+  EARLY_MID_POOL as THRONE_EARLY_MID_POOL,
+  MID_POOL as THRONE_MID_POOL,
+  ELITE_POOL as THRONE_ELITE_POOL,
+  CHAPTER14_FLAVOR,
+} from './chapter14Pools';
 
 interface Rng {
   next(): number;
@@ -775,7 +815,7 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
   // Ch9 · The Court of Masks — the captor's fallen seat of liars and illusions,
   // deeper still on the descent: a ruined hall where nothing wears its true face.
   // All non-combat flavor + the boss ship ready-to-wire in CHAPTER9_FLAVOR; this
-  // entry only binds them to the pools. (Append-only — terminal chapter for now.)
+  // entry only binds them to the pools.
   {
     chapter: CHAPTER9_FLAVOR.chapter,
     prefix: CHAPTER9_FLAVOR.prefix,
@@ -790,6 +830,95 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     shop: CHAPTER9_FLAVOR.shop,
     bossDefId: CHAPTER9_FLAVOR.bossDefId,
     boss: CHAPTER9_FLAVOR.boss,
+  },
+  // Ch10 · Suldanessellar — the hidden elven city stormed and burning as the
+  // player climbs it toward the Tree of Life; Irenicus's green dragon guards the
+  // last stair. All non-combat flavor + the boss ship in CHAPTER10_FLAVOR.
+  {
+    chapter: CHAPTER10_FLAVOR.chapter,
+    prefix: CHAPTER10_FLAVOR.prefix,
+    pools: {
+      warmup: SULD_WARMUP_POOL,
+      earlyMid: SULD_EARLY_MID_POOL,
+      mid: SULD_MID_POOL,
+      elite: SULD_ELITE_POOL,
+    },
+    shrines: CHAPTER10_FLAVOR.shrines,
+    rests: CHAPTER10_FLAVOR.rests,
+    shop: CHAPTER10_FLAVOR.shop,
+    bossDefId: CHAPTER10_FLAVOR.bossDefId,
+    boss: CHAPTER10_FLAVOR.boss,
+  },
+  // Ch11 · The Trials of the Pit — Irenicus's hells, each trial a sin made flesh,
+  // ending in the captor himself (the SoA climax). Flavor + boss in CHAPTER11_FLAVOR.
+  {
+    chapter: CHAPTER11_FLAVOR.chapter,
+    prefix: CHAPTER11_FLAVOR.prefix,
+    pools: {
+      warmup: PIT_WARMUP_POOL,
+      earlyMid: PIT_EARLY_MID_POOL,
+      mid: PIT_MID_POOL,
+      elite: PIT_ELITE_POOL,
+    },
+    shrines: CHAPTER11_FLAVOR.shrines,
+    rests: CHAPTER11_FLAVOR.rests,
+    shop: CHAPTER11_FLAVOR.shop,
+    bossDefId: CHAPTER11_FLAVOR.bossDefId,
+    boss: CHAPTER11_FLAVOR.boss,
+  },
+  // Ch12 · The Siege of Saradush — ToB opens: the besieged city and the
+  // fire-giant warlord Yaga-Shura whose heart is hidden away. Flavor + boss in
+  // CHAPTER12_FLAVOR.
+  {
+    chapter: CHAPTER12_FLAVOR.chapter,
+    prefix: CHAPTER12_FLAVOR.prefix,
+    pools: {
+      warmup: SARA_WARMUP_POOL,
+      earlyMid: SARA_EARLY_MID_POOL,
+      mid: SARA_MID_POOL,
+      elite: SARA_ELITE_POOL,
+    },
+    shrines: CHAPTER12_FLAVOR.shrines,
+    rests: CHAPTER12_FLAVOR.rests,
+    shop: CHAPTER12_FLAVOR.shop,
+    bossDefId: CHAPTER12_FLAVOR.bossDefId,
+    boss: CHAPTER12_FLAVOR.boss,
+  },
+  // Ch13 · The Last of the Five — Sendai's Enclave and Abazigal's Lair, the last
+  // Bhaalspawn lords before the throne. Flavor + boss in CHAPTER13_FLAVOR.
+  {
+    chapter: CHAPTER13_FLAVOR.chapter,
+    prefix: CHAPTER13_FLAVOR.prefix,
+    pools: {
+      warmup: FIVE_WARMUP_POOL,
+      earlyMid: FIVE_EARLY_MID_POOL,
+      mid: FIVE_MID_POOL,
+      elite: FIVE_ELITE_POOL,
+    },
+    shrines: CHAPTER13_FLAVOR.shrines,
+    rests: CHAPTER13_FLAVOR.rests,
+    shop: CHAPTER13_FLAVOR.shop,
+    bossDefId: CHAPTER13_FLAVOR.bossDefId,
+    boss: CHAPTER13_FLAVOR.boss,
+  },
+  // Ch14 · The Throne of Bhaal — the finale: the Pocket Plane throne and
+  // Melissan, the biggest statblock in the game. The final chapter of the chain;
+  // its boss room is left terminal by the stitcher below. Flavor + boss in
+  // CHAPTER14_FLAVOR.
+  {
+    chapter: CHAPTER14_FLAVOR.chapter,
+    prefix: CHAPTER14_FLAVOR.prefix,
+    pools: {
+      warmup: THRONE_WARMUP_POOL,
+      earlyMid: THRONE_EARLY_MID_POOL,
+      mid: THRONE_MID_POOL,
+      elite: THRONE_ELITE_POOL,
+    },
+    shrines: CHAPTER14_FLAVOR.shrines,
+    rests: CHAPTER14_FLAVOR.rests,
+    shop: CHAPTER14_FLAVOR.shop,
+    bossDefId: CHAPTER14_FLAVOR.bossDefId,
+    boss: CHAPTER14_FLAVOR.boss,
   },
 ];
 
@@ -836,11 +965,48 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
   },
   // Ch8→Ch9 seam: past the ashfields the road drops into a fallen palace of
   // mirrors and masks — the captor's own old court. The last fire before the
-  // hall of liars. (Append-only — terminal seam for now; no chapter follows.)
+  // hall of liars.
   {
     title: 'A Fire Among the Broken Mirrors',
     flavorText:
       "The ashfield is behind you and the march has lost your beat, and the road tips down out of the grit into marble — a grand fallen stair, the burnt smell giving way to dust and old perfume and the faint, sourceless sound of music a hundred years stopped. Someone keeps a small fire on a cracked dance-floor, sat among shards of mirror that throw a dozen of your tired faces back at you, a hooded figure who does not turn round and whose reflection, you notice, does not quite match the back of its head. \"You're nearly down to it now,\" it says, watching you in the glass instead of over its shoulder. \"This was the captor's own house, before it was anything else — where it learned to be whatever a room needed, and rule by it. Everything past here will wear a face you trust. None of them mean it. Rest while you still know which face is yours; it's the one thing the Court will try hardest to take, and the only thing you can't climb the rest of the way down without.\"",
+  },
+  // Ch9→Ch10 seam: out of the hall of masks the road climbs again, up toward a
+  // burning elven city and the Tree of Life the captor means to drain.
+  {
+    title: 'A Fire Beneath the Burning Boughs',
+    flavorText:
+      "The last mask is behind you and the music has stopped for good, and the broken stair turns upward — out of the captor's old house and into the open dark under a canopy lit orange from above, where a whole city is burning slow in the crowns of the trees. At the forest's edge a fugitive elf keeps a low fire that throws no light past its own ring, a bow unstrung across its knees because its hands have stopped being steady. \"That was Suldanessellar,\" it says, not taking its eyes from the glow. \"The hidden city. He has it now — charmed its watch, turned its woodland, loosed a dragon in the temple of the tree-father — and he is climbing it to the Tree of Life, to drain what the elves stripped from him and take back his godhood by the root. You can still beat him to the top. Rest. The climb is steep, and everything on it that was ours will try to kill you with our own hands.\"",
+  },
+  // Ch10→Ch11 seam: the Tree is reached too late — the captor drains it and
+  // strikes you down, and you wake falling into his hells. No surface fire here;
+  // a held breath on the threshold of the Pit.
+  {
+    title: 'A Breath on the Threshold of the Pit',
+    flavorText:
+      "You reach the Tree of Life with the dragon's blood still on you and you are too late by a held breath — the captor takes the last of its light as you watch, and takes yours with it, and the world tips out from under you into a long red falling. You come to rest on a ledge that is not a place so much as a held idea of one, hung over a pit that breathes. There is no merchant, no kettle; only a guttering soul-light someone left burning, and scratched beside it in a hand that shook: HE BUILT THIS OUT OF YOU. Below, smaller: each trial is a thing you carry — pride, greed, wrath, fear, the killer under your skin — and at the bottom of all of them, him. Breathe. Steady the thing you are before the Pit names it back to you.",
+  },
+  // Ch11→Ch12 seam: the captor is felled in his own hell and the Pit lets you go.
+  // The descent ends; ToB opens with a Bhaalspawn war and a besieged city afire.
+  {
+    title: 'A Fire at the Edge of the Burning Siege',
+    flavorText:
+      "The captor is dead in the heart of his own hell and the Pit, having no further use for you, spits you back into a world that has moved on without you — and gone to war while it did. The road comes out of the dark onto a ridge above a walled city ringed in fire and giants, and at the ridge a refugee keeps a thin fire among others who fled the same gates. \"You've been gone a long while,\" an old woman says, feeding the flames a broken chair-leg. \"It's the Children now — the dead god's blood, all of us hunted for the divinity in it, and one of them means to make himself whole by murdering every brother and sister he can find. That's Saradush, burning. He's put a fire-giant warlord at its throat — Yaga-Shura, and they say his heart isn't in his body to be reached. You carry the same blood they're dying for. Rest while the wall still holds. After this the road only runs toward the throne.\"",
+  },
+  // Ch12→Ch13 seam: Saradush relieved, the warlord felled; the hunt narrows to
+  // the last two Bhaalspawn lords before the throne stands open.
+  {
+    title: 'A Fire Between the Last Two Doors',
+    flavorText:
+      "Yaga-Shura's fire is finally out and Saradush, what's left of it, will stand. The road past the siege forks once and runs down toward two dark doors — a drow enclave sunk under a mountain and a dragon's lair in the deep waste — and between them a Harper agent keeps a watch-fire and a short list, two names left uncrossed. \"Sendai and Abazigal,\" she says, turning a blade over in the firelight. \"The last of the Five strong enough to matter. She's a drow matron with a petrified garden of everyone who came at her before; he's half a dragon and twice as proud. Kill them and there's no one left between you and the throne the dead god left empty — only the one already sitting on it, pretending to be your friend. Rest. You'll want both hands steady for the last two.\"",
+  },
+  // Ch13→Ch14 seam: the last lords fall and the Pocket Plane opens for the end.
+  // The final fire before the Throne of Bhaal and the betrayer Melissan.
+  // (Append-only — terminal seam; the finale chapter follows, then nothing.)
+  {
+    title: 'A Fire in the Pocket Plane',
+    flavorText:
+      "Sendai is stone among her own statues and Abazigal's pride has cooled at last, and the world thins around you until there is only the small folded plane that has been yours since the first death — your own pocket of the dead god's making, where the road has always come to rest. The fire here needs no keeper; it has been burning the whole way, waiting. Across it sits the only ally who came the whole distance with you, and for the first time will not meet your eye. \"It was her,\" your guide says quietly. \"Melissan — Amelyssan — the one who gathered the Five and set them killing each other, the one who has been steering you down this road from the start. She means to take all of it, every drop of the god's blood, and wake as Bhaal reborn. There is one door left, and the throne behind it. Rest, if you can. Everything has been for this, and there is no chapter after.\"",
   },
 ];
 
@@ -866,7 +1032,7 @@ export function createGodwakeDelve(
 
   // Stitch the chapters together through the camp seams: each chapter boss
   // points at its camp, each camp at the next chapter's entry node. The final
-  // boss (the Unmade) is left terminal.
+  // boss (Melissan, Ch14) is left terminal.
   const rooms: RoomSpec[] = [];
   chapters.forEach((nodes, i) => {
     rooms.push(...nodes);

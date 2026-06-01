@@ -92,6 +92,52 @@ import paleFavouriteUrl from '../../assets/sprites/monsters/pale-favourite.svg';
 import masqueradeWardenUrl from '../../assets/sprites/monsters/masquerade-warden.svg';
 import maskChamberlainUrl from '../../assets/sprites/monsters/mask-chamberlain.svg';
 import theHollowPretenderUrl from '../../assets/sprites/monsters/the-hollow-pretender.svg';
+// ─── Chapter 10 · Suldanessellar ──────────────────────────────────────────
+import bodhiSpawnUrl from '../../assets/sprites/monsters/bodhi-spawn.svg';
+import suldanessellarArcherUrl from '../../assets/sprites/monsters/suldanessellar-archer.svg';
+import suldanessellarBladesingerUrl from '../../assets/sprites/monsters/suldanessellar-bladesinger.svg';
+import suldanessellarWarpriestUrl from '../../assets/sprites/monsters/suldanessellar-warpriest.svg';
+import defiledDryadUrl from '../../assets/sprites/monsters/defiled-dryad.svg';
+import defiledTreantUrl from '../../assets/sprites/monsters/defiled-treant.svg';
+import palaceGolemUrl from '../../assets/sprites/monsters/palace-golem.svg';
+import rakshasaUrl from '../../assets/sprites/monsters/rakshasa.svg';
+import nizidramaniiytUrl from '../../assets/sprites/monsters/nizidramaniiyt.svg';
+// ─── Chapter 11 · The Trials of the Pit ───────────────────────────────────
+import mirrorOfPrideUrl from '../../assets/sprites/monsters/mirror-of-pride.svg';
+import devourerOfSelfishnessUrl from '../../assets/sprites/monsters/devourer-of-selfishness.svg';
+import hoardingFiendOfGreedUrl from '../../assets/sprites/monsters/hoarding-fiend-of-greed.svg';
+import avatarOfWrathUrl from '../../assets/sprites/monsters/avatar-of-wrath.svg';
+import wraithOfFearUrl from '../../assets/sprites/monsters/wraith-of-fear.svg';
+import slayerShadeUrl from '../../assets/sprites/monsters/slayer-shade.svg';
+import spinedAbishaiUrl from '../../assets/sprites/monsters/spined-abishai.svg';
+import irenicusUrl from '../../assets/sprites/monsters/irenicus.svg';
+// ─── Chapter 12 · The Siege of Saradush ───────────────────────────────────
+import saradushMarauderUrl from '../../assets/sprites/monsters/saradush-marauder.svg';
+import burningDeadUrl from '../../assets/sprites/monsters/burning-dead.svg';
+import fireGiantUrl from '../../assets/sprites/monsters/fire-giant.svg';
+import fireGiantShamanUrl from '../../assets/sprites/monsters/fire-giant-shaman.svg';
+import fireGiantWarlordUrl from '../../assets/sprites/monsters/fire-giant-warlord.svg';
+import halfGiantSiegebreakerUrl from '../../assets/sprites/monsters/half-giant-siegebreaker.svg';
+import gromnirDefenderUrl from '../../assets/sprites/monsters/gromnir-defender.svg';
+import yagaShuraUrl from '../../assets/sprites/monsters/yaga-shura.svg';
+// ─── Chapter 13 · The Last of the Five ────────────────────────────────────
+import sendaiHandmaidenUrl from '../../assets/sprites/monsters/sendai-handmaiden.svg';
+import kuoToaDeepguardUrl from '../../assets/sprites/monsters/kuo-toa-deepguard.svg';
+import petrifiedAmbusherUrl from '../../assets/sprites/monsters/petrified-ambusher.svg';
+import blueWyrmlingUrl from '../../assets/sprites/monsters/blue-wyrmling.svg';
+import stormscaleDrakeUrl from '../../assets/sprites/monsters/stormscale-drake.svg';
+import halfDragonReaverUrl from '../../assets/sprites/monsters/half-dragon-reaver.svg';
+import sendaiUrl from '../../assets/sprites/monsters/sendai.svg';
+import abazigalUrl from '../../assets/sprites/monsters/abazigal.svg';
+// ─── Chapter 14 · The Throne of Bhaal ─────────────────────────────────────
+import bhaalEssenceMoteUrl from '../../assets/sprites/monsters/bhaal-essence-mote.svg';
+import bloodFiendUrl from '../../assets/sprites/monsters/blood-fiend.svg';
+import essenceWardenUrl from '../../assets/sprites/monsters/essence-warden.svg';
+import marilithWardenUrl from '../../assets/sprites/monsters/marilith-warden.svg';
+import murderHeraldUrl from '../../assets/sprites/monsters/murder-herald.svg';
+import slayerEchoUrl from '../../assets/sprites/monsters/slayer-echo.svg';
+import throneAbishaiUrl from '../../assets/sprites/monsters/throne-abishai.svg';
+import melissanUrl from '../../assets/sprites/monsters/melissan.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -206,11 +252,62 @@ const SPRITES: Record<string, SpriteEntry> = {
   'masquerade-warden': { url: masqueradeWardenUrl, label: 'Masquerade-Warden' },
   'mask-chamberlain': { url: maskChamberlainUrl, label: 'The Mask-Chamberlain' },
   'the-hollow-pretender': { url: theHollowPretenderUrl, label: 'The Hollow Pretender' },
+  // ─── Chapter 10 · Suldanessellar ────────────────────────────────────────
+  'bodhi-spawn': { url: bodhiSpawnUrl, label: "Bodhi's Spawn" },
+  'suldanessellar-archer': { url: suldanessellarArcherUrl, label: 'Charmed Suldanessellar Archer' },
+  'suldanessellar-bladesinger': { url: suldanessellarBladesingerUrl, label: 'Corrupted Bladesinger' },
+  'suldanessellar-warpriest': { url: suldanessellarWarpriestUrl, label: 'Corrupted War-Priest' },
+  'defiled-dryad': { url: defiledDryadUrl, label: 'Defiled Dryad' },
+  'defiled-treant': { url: defiledTreantUrl, label: 'Defiled Treant' },
+  'palace-golem': { url: palaceGolemUrl, label: 'Rillifane Palace Golem' },
+  rakshasa: { url: rakshasaUrl, label: 'Rakshasa' },
+  nizidramaniiyt: { url: nizidramaniiytUrl, label: "Nizidramanii'yt" },
+  // ─── Chapter 11 · The Trials of the Pit ─────────────────────────────────
+  'mirror-of-pride': { url: mirrorOfPrideUrl, label: 'Mirror of Pride' },
+  'devourer-of-selfishness': { url: devourerOfSelfishnessUrl, label: 'Devourer of Selfishness' },
+  'hoarding-fiend-of-greed': { url: hoardingFiendOfGreedUrl, label: 'Hoarding Fiend of Greed' },
+  'avatar-of-wrath': { url: avatarOfWrathUrl, label: 'Avatar of Wrath' },
+  'wraith-of-fear': { url: wraithOfFearUrl, label: 'Wraith of Fear' },
+  'slayer-shade': { url: slayerShadeUrl, label: 'Slayer-Shade' },
+  'spined-abishai': { url: spinedAbishaiUrl, label: 'Spined Abishai' },
+  irenicus: { url: irenicusUrl, label: 'Jon Irenicus' },
+  // ─── Chapter 12 · The Siege of Saradush ─────────────────────────────────
+  'saradush-marauder': { url: saradushMarauderUrl, label: 'Saradush Marauder' },
+  'burning-dead': { url: burningDeadUrl, label: 'Burning Dead' },
+  'fire-giant': { url: fireGiantUrl, label: 'Fire Giant' },
+  'fire-giant-shaman': { url: fireGiantShamanUrl, label: 'Fire-Giant Shaman' },
+  'fire-giant-warlord': { url: fireGiantWarlordUrl, label: 'Fire-Giant Warlord' },
+  'half-giant-siegebreaker': { url: halfGiantSiegebreakerUrl, label: 'Half-Giant Siegebreaker' },
+  'gromnir-defender': { url: gromnirDefenderUrl, label: "Gromnir's Defender" },
+  'yaga-shura': { url: yagaShuraUrl, label: 'Yaga-Shura' },
+  // ─── Chapter 13 · The Last of the Five ──────────────────────────────────
+  'sendai-handmaiden': { url: sendaiHandmaidenUrl, label: "Sendai's Handmaiden" },
+  'kuo-toa-deepguard': { url: kuoToaDeepguardUrl, label: 'Kuo-Toa Deepguard' },
+  'petrified-ambusher': { url: petrifiedAmbusherUrl, label: 'Petrified Ambusher' },
+  'blue-wyrmling': { url: blueWyrmlingUrl, label: 'Blue Wyrmling' },
+  'stormscale-drake': { url: stormscaleDrakeUrl, label: 'Stormscale Drake' },
+  'half-dragon-reaver': { url: halfDragonReaverUrl, label: 'Half-Dragon Reaver' },
+  sendai: { url: sendaiUrl, label: 'Sendai' },
+  abazigal: { url: abazigalUrl, label: 'Abazigal' },
+  // ─── Chapter 14 · The Throne of Bhaal ───────────────────────────────────
+  'bhaal-essence-mote': { url: bhaalEssenceMoteUrl, label: 'Bhaal-Essence Mote' },
+  'blood-fiend': { url: bloodFiendUrl, label: 'Blood-Fiend' },
+  'essence-warden': { url: essenceWardenUrl, label: 'Warden of the Pools' },
+  'marilith-warden': { url: marilithWardenUrl, label: 'Marilith of the Throne' },
+  'murder-herald': { url: murderHeraldUrl, label: 'Herald of the Bhaalspawn' },
+  'slayer-echo': { url: slayerEchoUrl, label: 'Slayer-Echo' },
+  'throne-abishai': { url: throneAbishaiUrl, label: 'Throne Abishai' },
+  melissan: { url: melissanUrl, label: 'Melissan' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },
   'wardens-apprentice': { url: cowledEnforcerUrl, label: "Warden's Apprentice" },
 };
+
+/** Whether a monster def id has its own sprite entry (vs. the goblin fallback). */
+export function hasMonsterSprite(defId: string): boolean {
+  return defId in SPRITES;
+}
 
 export function MonsterPortrait({ defId, className = '' }: MonsterPortraitProps) {
   const entry = SPRITES[defId] ?? SPRITES.goblin;

@@ -50,7 +50,7 @@ export interface UnlockCondition {
    * Progression gate: opens once the soul's deepest run has cleared this many
    * chapters (the {@link ProgressionMeta.chaptersCleared} high-water mark). This
    * is the mastery axis — power unlocks are earned by reaching new depths, not by
-   * grinding delves. `chaptersCleared: 9` is the full chain = game completion.
+   * grinding delves. `chaptersCleared: 14` is the full chain = game completion.
    */
   chaptersCleared?: number;
   /**
@@ -68,7 +68,7 @@ export interface UnlockCondition {
  *    chance, before they've cleared a single chapter.
  *  - CHAPTERS CLEARED (progression/mastery): the power unlocks. The game is hard;
  *    reaching a new depth is what opens the next advantage, culminating in relic
- *    sets at game completion (the full nine-chapter chain).
+ *    sets at game completion (the full fourteen-chapter chain).
  * All editable data — tune freely, keep the shape.
  */
 export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
@@ -83,7 +83,7 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   'class-roster': { chaptersCleared: 2 },
   'affixes-epic': { chaptersCleared: 3 },
   legendaries: { chaptersCleared: 5 },
-  sets: { chaptersCleared: 9 }, // the whole chain felled — game completion
+  sets: { chaptersCleared: 14 }, // the whole chain felled (Melissan) — game completion
   // Deeper Grove tiers — a mastery reward, also chapter-gated.
   'grove-deep': { chaptersCleared: 4 },
 };

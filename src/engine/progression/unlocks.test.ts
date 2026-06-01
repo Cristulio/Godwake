@@ -28,10 +28,10 @@ describe('UNLOCKS registry', () => {
     expect(UNLOCKS.grove.delveCount).toBe(2);
     expect(UNLOCKS['affixes-rare'].delveCount).toBe(3);
     expect(UNLOCKS['elite-nodes'].delveCount).toBe(5);
-    // Power: earned by clearing deeper chapters; sets land at completion (ch 9).
+    // Power: earned by clearing deeper chapters; sets land at completion (ch 14).
     expect(UNLOCKS['boss-intel'].chaptersCleared).toBe(1);
     expect(UNLOCKS.legendaries.chaptersCleared).toBe(5);
-    expect(UNLOCKS.sets.chaptersCleared).toBe(9);
+    expect(UNLOCKS.sets.chaptersCleared).toBe(14);
     // Power features carry no delve gate — depth is the only way in.
     expect(UNLOCKS.legendaries.delveCount).toBeUndefined();
     expect(UNLOCKS.sets.delveCount).toBeUndefined();
@@ -52,7 +52,7 @@ describe('isFeatureUnlocked', () => {
     expect(isFeatureUnlocked('class-roster', meta)).toBe(true); // @2
     expect(isFeatureUnlocked('affixes-epic', meta)).toBe(true); // @3
     expect(isFeatureUnlocked('legendaries', meta)).toBe(true); // @5
-    expect(isFeatureUnlocked('sets', meta)).toBe(false); // @9 (completion)
+    expect(isFeatureUnlocked('sets', meta)).toBe(false); // @14 (completion)
   });
 
   it('a brand-new soul (delve 0, no clears) has none of the gated features', () => {
@@ -99,7 +99,7 @@ describe('newlyUnlockedByChapter (progression axis)', () => {
   it('returns the power feature whose chapter threshold the clear crossed', () => {
     expect(newlyUnlockedByChapter(0, 1)).toEqual(['boss-intel']);
     expect(newlyUnlockedByChapter(4, 5)).toEqual(['legendaries']);
-    expect(newlyUnlockedByChapter(8, 9)).toEqual(['sets']);
+    expect(newlyUnlockedByChapter(13, 14)).toEqual(['sets']);
   });
 
   it('returns every chapter threshold crossed in a multi-chapter jump, in ladder order', () => {
@@ -138,7 +138,7 @@ describe('class unlocks (chapter axis)', () => {
 describe('unlockedFeatures', () => {
   it('is empty for a fresh soul and lists everything for one that cleared the chain', () => {
     expect(unlockedFeatures(mkMeta())).toEqual([]);
-    expect(unlockedFeatures(mkMeta({ delveCount: 999, chaptersCleared: 9 }))).toEqual([
+    expect(unlockedFeatures(mkMeta({ delveCount: 999, chaptersCleared: 14 }))).toEqual([
       ...FEATURE_IDS,
     ]);
   });
@@ -156,7 +156,7 @@ describe('nextLockedFeature', () => {
       axis: 'delve',
       threshold: 3,
     });
-    expect(nextLockedFeature(mkMeta({ delveCount: 999, chaptersCleared: 9 }))).toBeNull();
+    expect(nextLockedFeature(mkMeta({ delveCount: 999, chaptersCleared: 14 }))).toBeNull();
   });
 });
 
@@ -173,7 +173,7 @@ describe('migration ↔ unlock ladder', () => {
   });
 
   it('a veteran who has cleared the full chain has everything', () => {
-    expect(unlockedFeatures(mkMeta({ delveCount: 999, chaptersCleared: 9 }))).toEqual([
+    expect(unlockedFeatures(mkMeta({ delveCount: 999, chaptersCleared: 14 }))).toEqual([
       ...FEATURE_IDS,
     ]);
   });
