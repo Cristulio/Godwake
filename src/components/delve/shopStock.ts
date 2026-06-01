@@ -4,6 +4,7 @@ import type { CampBoonTier } from '../../content/campBoons';
 import { createDiceRoller } from '../../engine/dice';
 import { rollItem, rolledItemCost } from '../../engine/items';
 import { legendaryDropPool, getLegendary } from '../../content/legendaries';
+import { ascensionAscendantLoot } from '../../engine/delve/ascension';
 
 /**
  * Shared merchant stock for both the camp caravan (CampRoom) and the route-map
@@ -166,12 +167,17 @@ export function rollLegendaryOffer(
   chapter: number,
   classId: ClassId,
   ownedIds: readonly string[],
+  ascensionLevel = 0,
 ): LegendaryOffer | null {
   const chance = legendaryOfferChance(chapter);
   if (chance <= 0) return null;
   const roller = createDiceRoller(`${seed}:legendary-offer`);
   if (roller.roll('1d100').total > chance) return null;
-  const pool = legendaryDropPool(classId).filter((id) => !ownedIds.includes(id));
+  // The apex ascendant tier is offered ONLY at Ascension >= 3; at lower levels
+  // it never enters the reliquary pool.
+  const pool = legendaryDropPool(classId, ascensionAscendantLoot(ascensionLevel)).filter(
+    (id) => !ownedIds.includes(id),
+  );
   if (pool.length === 0) return null;
   const id = pool[(roller.roll('1d100').total - 1) % pool.length];
   const leg = getLegendary(id);

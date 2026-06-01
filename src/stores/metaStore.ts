@@ -7,6 +7,7 @@ import { useCharacterStore } from './characterStore';
 import { getActiveRoller } from '../engine/dice';
 import {
   LEGENDARY_ORDER,
+  legendaryBankPool,
   aggregateLegendaryEffects,
   canEquipLegendary,
 } from '../content/legendaries';
@@ -135,7 +136,7 @@ interface MetaStoreState {
    * Returns the banked id, or null when none remain. Banks to the collection
    * only; the player equips it at the hub for a future descent.
    */
-  grantLegendaryDrop: () => string | null;
+  grantLegendaryDrop: (allowAscendant: boolean) => string | null;
   /**
    * Bank a SPECIFIC legendary by id (the shop "reliquary" purchase). Adds it to
    * the collection if it's a real, un-owned relic. Returns whether it banked.
@@ -300,11 +301,12 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
         : { seenTutorials: [...s.seenTutorials, tutorialId] },
     ),
 
-  grantLegendaryDrop: () => {
+  grantLegendaryDrop: (allowAscendant) => {
     const owned = get().ownedLegendaries;
     // Elite-node drops can yield ANY class's relic; off-class relics are stashed
-    // until the player runs that class (the equip gate handles use).
-    const pool = LEGENDARY_ORDER.filter((id) => !owned.includes(id));
+    // until the player runs that class (the equip gate handles use). The apex
+    // ascendant tier only enters this pool at Ascension >= 3 (allowAscendant).
+    const pool = legendaryBankPool(allowAscendant).filter((id) => !owned.includes(id));
     if (pool.length === 0) return null;
     const pick = pool[(getActiveRoller().roll('1d100').total - 1) % pool.length];
     set({ ownedLegendaries: [...owned, pick] });

@@ -24,7 +24,7 @@ import {
 } from '../engine/character/quirks';
 import { applyDelveStartUpgrades } from '../engine/character/upgrades';
 import { hasPendingLevelUp } from '../engine/character/leveling';
-import { getAscensionLevel } from '../engine/delve/ascension';
+import { getAscensionLevel, ascensionAscendantLoot } from '../engine/delve/ascension';
 import { TOTAL_CHAPTERS } from '../engine/delve/createDelve';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
@@ -615,7 +615,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       // Rare legendary relic drop: banked to the collection, not equipped this run.
       // Gate: elite legendary drops are only available once the legendaries feature is unlocked.
       if (isFeatureUnlocked('legendaries', meta) && rollLegendaryDrop(getActiveRoller(), room.kind)) {
-        const bankedId = useMetaStore.getState().grantLegendaryDrop();
+        const allowAscendant = ascensionAscendantLoot(s.delve.ascensionLevel ?? 0);
+        const bankedId = useMetaStore.getState().grantLegendaryDrop(allowAscendant);
         if (bankedId) bankedLegendary = getLegendary(bankedId)?.name ?? 'Legendary relic';
       }
       // Tally actual deltas (quirk multipliers applied by addDelveReward).

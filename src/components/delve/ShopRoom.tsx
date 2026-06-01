@@ -45,6 +45,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   const tier = tierForChapter(room.chapter);
   const classId = character?.classId;
   const delveCount = useGameStore((s) => s.delveCount);
+  const ascensionLevel = useGameStore((s) => s.delve?.ascensionLevel ?? 0);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
   const progressionMeta = { delveCount, chaptersCleared, druidGroveUnlocked };
@@ -74,8 +75,8 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   // then hidden at render if the rolled relic is already owned or just bought —
   // so buying it doesn't churn a fresh offer into view.
   const legendaryOffer = useMemo(
-    () => (classId ? rollLegendaryOffer(room.id, chapter, classId, []) : null),
-    [room.id, chapter, classId],
+    () => (classId ? rollLegendaryOffer(room.id, chapter, classId, [], ascensionLevel) : null),
+    [room.id, chapter, classId, ascensionLevel],
   );
 
   if (!character) return null;
