@@ -41,36 +41,26 @@ export type PlannedAction =
   | { kind: 'end-turn' };
 
 // ---- Tunables --------------------------------------------------------------
+//
+// Two kinds of constant live here. The block below is MECHANICAL: damage
+// breakpoints and slot-tiering keyed to the actual numbers of the kit (a Magic
+// Missile's floor, how beefy "boss" is). Those don't vary by how a player feels
+// about risk. The risk/aggression dials — the HP% at which the bot heals,
+// retreats, goes reckless, or trades control for burst — live in
+// {@link ArchetypeProfile} instead, so a suite can sweep them.
 
-/** HP fraction at/below which we reach for a potion. */
-const EMERGENCY_HP = 0.35;
-/** HP fraction at/below which a Fighter spends Second Wind (renewable, so used freely). */
-const SECOND_WIND_HP = 0.5;
-/** Fighter Action Surge only when still hurt at/below this, or outnumbered. */
-const SURGE_HP = 0.7;
-/** Barbarian fights recklessly only while healthy enough to wear the return blows. */
-const RECKLESS_HP = 0.5;
 /** Magic Missile guaranteed minimum (3 darts × min 1d4+1 = 6). A target at or
  *  below this dies for certain — no attack roll, no save. */
 const MAGIC_MISSILE_MIN = 6;
 /** Scorching Ray is worth a 2nd-level slot only on a target too beefy to fall
  *  to a cantrip / single Magic Missile. ~3 rays × 2d6 ≈ 21 average. */
 const SCORCHING_RAY_WORTH_HP = 22;
-/** A monster is "dangerous" enough to lock down (Hold Person) at/above this
- *  average per-attack damage. */
-const HOLD_PERSON_THREAT = 8;
 /** Hold Person only on a target too tanky to simply burst this turn. */
 const HOLD_PERSON_MIN_HP = 25;
 /** A single target this beefy (a boss / heavy elite) is worth dropping the
  *  biggest slot on — Fireball/Lightning single-target CLOSES the fight instead
  *  of plinking it down with a cantrip (the "deep but never finishes" gap). */
 const BOSS_NUKE_HP = 40;
-/** HP fraction at/below which the wizard smears itself defensively (Blur /
- *  Mirror Image) once, to survive long enough to keep casting. */
-const WIZARD_DEFENSIVE_HP = 0.5;
-/** HP fraction at/below which the wizard reaches for a life-drain (damage that
- *  also heals) over a bare nuke — turning slots into staying power. */
-const WIZARD_DRAIN_HP = 0.6;
 /** A single target this beefy is a TRUE boss — worth an 8th/9th-level capstone
  *  slot. Below it a beefy elite gets a mid-tier focused nuke, so the capstone is
  *  saved for the fight that actually needs it. */
@@ -78,6 +68,76 @@ const CAPSTONE_NUKE_HP = 90;
 /** A boss at/above this HP is worth a 7th-level hard lock (Soul Snare's 3-round
  *  paralyze) over the cheaper Hold Person. */
 const SOUL_SNARE_HP = 70;
+
+// ---- Playstyle archetypes --------------------------------------------------
+
+/**
+ * Real players don't all play one way, so a single policy line under-represents
+ * the spread of outcomes. An archetype is a set of risk/aggression DIALS on the
+ * same heuristics — not a different bot. `balanced` is the baseline (the
+ * behaviour the in-game Auto runs and the existing tests pin); `cautious` and
+ * `aggressive` move every dial in one coherent direction.
+ */
+export type Archetype = 'cautious' | 'balanced' | 'aggressive';
+
+export const ARCHETYPES: readonly Archetype[] = ['cautious', 'balanced', 'aggressive'] as const;
+
+export interface ArchetypeProfile {
+  /** HP fraction at/below which we reach for a (finite) potion. */
+  emergencyHp: number;
+  /** HP fraction at/below which a Fighter spends Second Wind (renewable). */
+  secondWindHp: number;
+  /** Fighter Action Surge fires when still hurt at/below this (or outnumbered).
+   *  Higher = spend the charge more freely. */
+  surgeHp: number;
+  /** Barbarian goes Reckless only while ABOVE this HP fraction — it hands
+   *  enemies advantage back, so the bar is "healthy enough to wear the blows".
+   *  Lower = press recklessly even while hurt. */
+  recklessHp: number;
+  /** HP fraction at/below which the wizard smears itself defensively
+   *  (Blur / Mirror Image). */
+  wizardDefensiveHp: number;
+  /** HP fraction at/below which the wizard prefers a life-drain over a bare
+   *  nuke, trading slots into staying power. */
+  wizardDrainHp: number;
+  /** Per-attack average damage at/above which a foe is worth a control slot
+   *  (Hold Person) instead of pure burst. Higher = trade less for control. */
+  holdPersonThreat: number;
+}
+
+/** `balanced` reproduces the pre-archetype constants verbatim — the contract is
+ *  that an unparameterised call behaves exactly as before. */
+const BALANCED: ArchetypeProfile = {
+  emergencyHp: 0.35,
+  secondWindHp: 0.5,
+  surgeHp: 0.7,
+  recklessHp: 0.5,
+  wizardDefensiveHp: 0.5,
+  wizardDrainHp: 0.6,
+  holdPersonThreat: 8,
+};
+
+export const PROFILES: Record<Archetype, ArchetypeProfile> = {
+  cautious: {
+    emergencyHp: 0.5,
+    secondWindHp: 0.7,
+    surgeHp: 0.5,
+    recklessHp: 0.7,
+    wizardDefensiveHp: 0.65,
+    wizardDrainHp: 0.75,
+    holdPersonThreat: 6,
+  },
+  balanced: BALANCED,
+  aggressive: {
+    emergencyHp: 0.2,
+    secondWindHp: 0.35,
+    surgeHp: 1,
+    recklessHp: 0.25,
+    wizardDefensiveHp: 0.35,
+    wizardDrainHp: 0.45,
+    holdPersonThreat: 12,
+  },
+};
 
 // ---- Battlefield reads -----------------------------------------------------
 
@@ -230,7 +290,12 @@ function fireBoltFullAvg(character: Character): number {
  * Used by both the player-facing Auto-Battle loop and the sim bots, so the AI a
  * player watches is exactly the AI the balance sims run.
  */
-export function chooseCombatAction(state: CombatState, character: Character): PlannedAction {
+export function chooseCombatAction(
+  state: CombatState,
+  character: Character,
+  archetype: Archetype = 'balanced',
+): PlannedAction {
+  const profile = PROFILES[archetype];
   if (state.status !== 'active') return { kind: 'end-turn' };
   const live = liveMonstersOf(state);
   if (live.length === 0) return { kind: 'end-turn' };
@@ -258,7 +323,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
       isFighter &&
       secondWindCharge &&
       character.hp.current < character.hp.max &&
-      hpPct <= SECOND_WIND_HP
+      hpPct <= profile.secondWindHp
     ) {
       return { kind: 'second-wind' };
     }
@@ -281,7 +346,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
 
     // Emergency potion (bonus action) for anyone genuinely low. Rage locks out
     // healing, so a raging barbarian can't reach for it — keep swinging instead.
-    if (hpPct <= EMERGENCY_HP && !isRaging(character)) {
+    if (hpPct <= profile.emergencyHp && !isRaging(character)) {
       const healIdx = bestHealPotionIdx(character);
       if (healIdx >= 0) return { kind: 'item', inventoryIndex: healIdx };
     }
@@ -305,7 +370,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
     // and save advantage is better than nothing.
     if (
       isWizard &&
-      hpPct <= EMERGENCY_HP &&
+      hpPct <= profile.emergencyHp &&
       knows(character, 'misty-step') &&
       slotsAt(character, 2) > 0 &&
       bestHealPotionIdx(character) < 0
@@ -318,7 +383,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
   const canAct = actionFree || (isRogue && character.bonusAttackAvailable === true);
   if (canAct) {
     if (isWizard) {
-      const wizardAction = chooseWizardAction(state, character, live, primary, threat);
+      const wizardAction = chooseWizardAction(state, character, live, primary, threat, profile);
       if (wizardAction) return wizardAction;
     }
     // Barbarian Reckless Attack: declare it before swinging while healthy
@@ -329,7 +394,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
       actionFree &&
       character.recklessActive !== true &&
       characterHasMechanic(character, 'reckless-attack') &&
-      hpPct > RECKLESS_HP &&
+      hpPct > profile.recklessHp &&
       primary
     ) {
       return { kind: 'reckless-attack' };
@@ -348,7 +413,7 @@ export function chooseCombatAction(state: CombatState, character: Character): Pl
     isFighter &&
     character.actionEconomy.actionUsed &&
     (character.resources.actionSurgeRemaining ?? 0) > 0 &&
-    (live.length >= 2 || hpPct <= SURGE_HP)
+    (live.length >= 2 || hpPct <= profile.surgeHp)
   ) {
     return { kind: 'action-surge' };
   }
@@ -368,6 +433,7 @@ function chooseWizardAction(
   live: MonsterCombatant[],
   primary: MonsterCombatant | undefined,
   threat: MonsterCombatant | undefined,
+  profile: ArchetypeProfile,
 ): PlannedAction | null {
   const enemyCount = live.length;
   const anchor = threat?.id ?? primary?.id;
@@ -381,7 +447,7 @@ function chooseWizardAction(
   // overkill wastes nothing, and a healthy target wastes no damage) with the
   // CHEAPEST affordable drain, banking deeper slots. A real pack is better
   // thinned by AoE, so only drain when not facing a crowd.
-  if (actionFree && hpPct <= WIZARD_DRAIN_HP && enemyCount <= 2) {
+  if (actionFree && hpPct <= profile.wizardDrainHp && enemyCount <= 2) {
     const drain = bestAffordable(character, DRAIN_PRIORITY);
     if (drain && beefy) return { kind: 'cast', spellId: drain, targetId: beefy.id };
   }
@@ -390,7 +456,7 @@ function chooseWizardAction(
   // if nothing already shields us. Surviving to keep casting beats one cantrip.
   if (
     actionFree &&
-    hpPct <= WIZARD_DEFENSIVE_HP &&
+    hpPct <= profile.wizardDefensiveHp &&
     (character.resources.blurRoundsRemaining ?? 0) === 0 &&
     (character.resources.mirrorImages ?? 0) === 0 &&
     slotsAt(character, 2) > 0
@@ -466,7 +532,7 @@ function chooseWizardAction(
   if (
     threat &&
     !isMonsterParalyzed(threat) &&
-    monsterThreat(threat) >= HOLD_PERSON_THREAT &&
+    monsterThreat(threat) >= profile.holdPersonThreat &&
     threat.instance.hp.current > HOLD_PERSON_MIN_HP
   ) {
     if (
@@ -620,12 +686,13 @@ export function runAutoTurn(
   roller: DiceRoller,
   state: CombatState,
   character: Character,
+  archetype: Archetype = 'balanced',
 ): { state: CombatState; character: Character } {
   let s = state;
   let ch = character;
   for (let i = 0; i < 16; i++) {
     if (s.status !== 'active') break;
-    const action = chooseCombatAction(s, ch);
+    const action = chooseCombatAction(s, ch, archetype);
     if (action.kind === 'end-turn') break;
     const r = applyPlannedAction({ roller, state: s, character: ch }, action);
     if (r.state === s && r.character === ch) break; // engine refused — stop
