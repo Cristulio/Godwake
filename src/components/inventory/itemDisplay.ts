@@ -23,6 +23,23 @@ export function baseStatLine(item: Item): string {
   }
 }
 
+/**
+ * The flat +N enhancement as a plain-English effect line — what the "+N" in the
+ * name actually does. Weapons add it to attack and damage, armour/shields to AC.
+ * Null when there's no enhancement (or the kind can't carry one).
+ */
+export function enhancementLine(item: Item, enhancement: number): string | null {
+  if (enhancement <= 0) return null;
+  switch (item.kind) {
+    case 'weapon':
+      return `+${enhancement} to attack and damage rolls`;
+    case 'armor':
+      return item.category === 'robe' ? null : `+${enhancement} Armor Class`;
+    default:
+      return null;
+  }
+}
+
 /** Short "what it is / what slot it fills" tag — the equip target in words. */
 export function itemTypeLabel(item: Item): string {
   switch (item.kind) {

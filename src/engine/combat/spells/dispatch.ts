@@ -26,6 +26,7 @@ import {
   castVoidRay,
   castWither,
 } from './highLevelStrikes';
+import { castExsanguinate, castVampiricTouch } from './lifeDrain';
 import { castApotheosis, castUnmake } from './ninthLevel';
 
 /**
@@ -84,6 +85,10 @@ export function castSpell(ctx: CastSpellContext): CastResult {
       return castCataclysm(ctx);
     case 'wither':
       return castWither(ctx);
+    case 'vampiric-touch':
+      return castVampiricTouch(ctx);
+    case 'exsanguinate':
+      return castExsanguinate(ctx);
     case 'apotheosis':
       return castApotheosis(character, state);
     case 'unmake':

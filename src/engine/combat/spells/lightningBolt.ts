@@ -11,23 +11,36 @@ import {
   attachSpellEffect,
   consumeSlot,
   evaluateCombatEndFull,
+  findMonster,
+  firstLiveMonsterId,
   markActionUsed,
   nextLogId,
   spellSaveDC,
 } from './helpers';
 
+/**
+ * Lightning Bolt — the FOCUSED counterpart to Fireball's crowd-clear. A single
+ * line: it strikes the chosen target in full and forks to ONE more for half,
+ * touching nothing beyond. Bigger dice than Fireball (10d6, 11 for an evoker) so
+ * it out-damages the AoE against a lone boss or a boss-plus-adjutant, while
+ * Fireball stays king against a pack. DEX save halves on each target hit.
+ */
 export function castLightningBolt(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
   let nextCharacter: Character = consumeSlot(character, 3);
 
-  const aliveMonsters = state.combatants.filter(
-    (c) => c.kind === 'monster' && c.instance.hp.current > 0,
-  ) as MonsterCombatant[];
+  const primaryId = ctx.targetId ?? firstLiveMonsterId(state);
+  if (!primaryId) return { state, character: nextCharacter, cast: false };
+  const primary = findMonster(state, primaryId);
+  if (!primary) return { state, character: nextCharacter, cast: false };
 
-  // 6d6 base (7 for Evocation evoker) — lower burst than Fireball, but the arc
-  // finds even those who dodge: a successful save still takes 1d6 lightning.
+  // The fork: the next living foe other than the primary. Hits nothing else.
+  const secondary = (state.combatants.find(
+    (c) => c.kind === 'monster' && c.id !== primaryId && c.instance.hp.current > 0,
+  ) ?? null) as MonsterCombatant | null;
+
   const evoker = characterHasMechanic(nextCharacter, 'sculpt-spells');
-  const dice = evoker ? 7 : 6;
+  const dice = evoker ? 11 : 10;
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
   const fullDmg = damageRoll.total;
   const dc = spellSaveDC(nextCharacter);
@@ -35,65 +48,69 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} hurls a white arc of lightning across the room. ${damageRoll.rolls.join('+')} = ${fullDmg} lightning${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half; successes still take 1d6.`,
+    text: `${nextCharacter.name} looses a spear of lightning at ${primary.instance.displayName}. ${damageRoll.rolls.join('+')} = ${fullDmg} lightning${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half${secondary ? '; the bolt forks to a second for half' : ''}.`,
   });
+  nextState = attachSpellEffect(nextState, 'lightning-bolt', 'player', primaryId);
 
-  nextState = attachSpellEffect(nextState, 'lightning-bolt', 'player', aliveMonsters[0]?.id);
-
-  const savedIds = new Set<string>();
-
-  for (const m of aliveMonsters) {
-    const monsterDef = getMonster(m.instance.defId);
-    const dexMod = abilityModifier(monsterDef.abilityScores.dex ?? 10);
+  // Primary takes the full bolt (save halves).
+  {
+    const def = getMonster(primary.instance.defId);
+    const dexMod = abilityModifier(def.abilityScores.dex ?? 10);
     const save = roller.d20('normal', dexMod);
     const success = save.total >= dc;
     const dmg = success ? Math.floor(fullDmg / 2) : fullDmg;
-    if (success) savedIds.add(m.id);
-
-    nextState = {
-      ...nextState,
-      combatants: nextState.combatants.map((c) => {
-        if (c.kind !== 'monster' || c.id !== m.id) return c;
-        if (c.instance.acRevealed) return c;
-        return { ...c, instance: { ...c.instance, acRevealed: true } };
-      }),
-    };
+    nextState = revealAc(nextState, primaryId);
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `${m.instance.displayName} DEX save: d20${dexMod >= 0 ? '+' : ''}${dexMod} = ${save.total} vs DC ${dc} — ${success ? 'success (half + arc)' : 'fail (full)'}.`,
+      text: `${primary.instance.displayName} DEX save: d20${dexMod >= 0 ? '+' : ''}${dexMod} = ${save.total} vs DC ${dc} — ${success ? 'success (half)' : 'fail (full)'}.`,
     });
-    const damaged = applyDamage(nextState, m.id, dmg, nextCharacter);
+    const damaged = applyDamage(nextState, primaryId, dmg, nextCharacter);
     nextState = damaged.state;
     nextCharacter = damaged.character;
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `${m.instance.displayName} takes ${dmg} lightning.`,
+      text: `${primary.instance.displayName} takes ${dmg} lightning.`,
     });
   }
 
-  // Pierce: the arc clips even those who saved — 1d6 lightning, no save.
-  const arcSurvivors = nextState.combatants.filter(
-    (c): c is MonsterCombatant =>
-      c.kind === 'monster' && savedIds.has(c.id) && c.instance.hp.current > 0,
-  );
-  if (arcSurvivors.length > 0) {
-    const arcRoll = roller.roll({ count: 1, die: 6, modifier: 0 });
-    const arcDmg = arcRoll.total;
-    for (const m of arcSurvivors) {
-      const pierced = applyDamage(nextState, m.id, arcDmg, nextCharacter);
-      nextState = pierced.state;
-      nextCharacter = pierced.character;
-      nextState = appendLog(nextState, {
-        id: nextLogId(nextState),
-        kind: 'damage',
-        text: `${m.instance.displayName} takes ${arcDmg} lightning (arc).`,
-      });
-    }
+  // The fork: a second foe takes HALF the bolt (its own DEX save halves again).
+  if (secondary) {
+    const base = Math.floor(fullDmg / 2);
+    const def = getMonster(secondary.instance.defId);
+    const dexMod = abilityModifier(def.abilityScores.dex ?? 10);
+    const save = roller.d20('normal', dexMod);
+    const success = save.total >= dc;
+    const dmg = success ? Math.floor(base / 2) : base;
+    nextState = revealAc(nextState, secondary.id);
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'roll',
+      text: `The bolt forks to ${secondary.instance.displayName}. DEX save: d20${dexMod >= 0 ? '+' : ''}${dexMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+    });
+    const damaged = applyDamage(nextState, secondary.id, dmg, nextCharacter);
+    nextState = damaged.state;
+    nextCharacter = damaged.character;
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'damage',
+      text: `${secondary.instance.displayName} takes ${dmg} lightning (fork).`,
+    });
   }
 
   nextCharacter = markActionUsed(nextCharacter);
   const ended = evaluateCombatEndFull(nextState, nextCharacter);
   return { state: ended.state, character: ended.character, cast: true };
+}
+
+function revealAc(state: CombatState, id: string): CombatState {
+  return {
+    ...state,
+    combatants: state.combatants.map((c) =>
+      c.kind === 'monster' && c.id === id && !c.instance.acRevealed
+        ? { ...c, instance: { ...c.instance, acRevealed: true } }
+        : c,
+    ),
+  };
 }

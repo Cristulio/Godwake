@@ -1,3 +1,5 @@
+import type { ClassId } from '../../schemas/ids';
+
 /**
  * The progressive-unlock ladder — ONE source of truth for which features are
  * curtained off from a brand-new soul and when they open up.
@@ -38,42 +40,89 @@ type LegacyUnlockFlag = 'druidGroveUnlocked';
 
 export interface UnlockCondition {
   /**
-   * Primary onboarding gate: the feature opens once the soul has STARTED this
-   * many delves. The whole ladder is editable data — tune these freely.
+   * Onboarding gate: opens once the soul has STARTED this many delves. Used for
+   * the early "here's how the game works" reveals a new walker needs before
+   * they've cleared anything. A feature gates on delveCount OR chaptersCleared
+   * (whichever it declares) — meeting any declared threshold opens it.
    */
-  delveCount: number;
+  delveCount?: number;
   /**
-   * Optional milestone alternative: also open once the soul has cleared at least
-   * this many chapters, even below the delveCount threshold. Use where reaching
-   * the content is itself proof of readiness (reads better than a raw counter).
+   * Progression gate: opens once the soul's deepest run has cleared this many
+   * chapters (the {@link ProgressionMeta.chaptersCleared} high-water mark). This
+   * is the mastery axis — power unlocks are earned by reaching new depths, not by
+   * grinding delves. `chaptersCleared: 9` is the full chain = game completion.
    */
   chaptersCleared?: number;
   /**
    * Optional legacy boolean on the meta that ALSO satisfies this gate. Reconciles
    * a pre-existing unlock flag so the helper never contradicts an unlock the
    * player already earned by the old path (see the `grove` / `druidGroveUnlocked`
-   * pairing — the delve ladder is primary, this just prevents a regression).
+   * pairing — this just prevents a regression).
    */
   legacyFlag?: LegacyUnlockFlag;
 }
 
 /**
- * The ladder. Starred entries (`legendaries` @ 10, `sets` @ 20) are LOCKED by
- * design; the rest are pacing — edit the numbers, keep the shape.
+ * The ladder. TWO axes by design:
+ *  - DELVE COUNT (onboarding): the early reveals a fresh soul needs to stand a
+ *    chance, before they've cleared a single chapter.
+ *  - CHAPTERS CLEARED (progression/mastery): the power unlocks. The game is hard;
+ *    reaching a new depth is what opens the next advantage, culminating in relic
+ *    sets at game completion (the full nine-chapter chain).
+ * All editable data — tune freely, keep the shape.
  */
 export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
+  // Onboarding reveals — delve-count paced.
   grove: { delveCount: 2, legacyFlag: 'druidGroveUnlocked' },
   'affixes-rare': { delveCount: 3 },
   'elite-nodes': { delveCount: 5 },
-  'boss-intel': { delveCount: 7 },
-  legendaries: { delveCount: 10 },
-  'affixes-epic': { delveCount: 13 },
-  'class-roster': { delveCount: 16 },
-  sets: { delveCount: 20 },
-  // Deeper Grove tiers are a mastery reward — clearing a good chunk of the chain
-  // opens them even before the delve count would.
-  'grove-deep': { delveCount: 25, chaptersCleared: 4 },
+  // Power unlocks — earned by clearing deeper chapters.
+  'boss-intel': { chaptersCleared: 1 },
+  // The roster "you can swap souls now" reveal fires when the first alternate
+  // class opens (see CLASS_UNLOCK_CHAPTER). Classes stagger in individually after.
+  'class-roster': { chaptersCleared: 2 },
+  'affixes-epic': { chaptersCleared: 3 },
+  legendaries: { chaptersCleared: 5 },
+  sets: { chaptersCleared: 9 }, // the whole chain felled — game completion
+  // Deeper Grove tiers — a mastery reward, also chapter-gated.
+  'grove-deep': { chaptersCleared: 4 },
 };
+
+/**
+ * Per-class unlock thresholds, in CHAPTERS CLEARED (the deepest-chapter high-
+ * water mark). Staggered by how forgiving the class is to play: Wizard is the
+ * starting soul (always available); the alternates open easiest-first so a new
+ * walker meets simpler kits before the fiddly ones. You earn a new body by
+ * pushing deeper, not by grinding delves. Editable data.
+ */
+export const CLASS_UNLOCK_CHAPTER: Record<ClassId, number> = {
+  wizard: 0,
+  fighter: 2,
+  barbarian: 4,
+  ranger: 6,
+  rogue: 8,
+  // Not yet a playable class (absent from the roster); threshold is a placeholder.
+  cleric: 9,
+};
+
+/** Is `classId` available to select given the soul's deepest cleared chapter? */
+export function isClassUnlocked(classId: ClassId, chaptersCleared: number): boolean {
+  return chaptersCleared >= CLASS_UNLOCK_CHAPTER[classId];
+}
+
+/**
+ * Classes whose chapter threshold was crossed strictly between `prevChapters`
+ * (exclusive) and `nextChapters` (inclusive) — the souls just earned by reaching
+ * a new depth. Drives the per-class "a new soul surfaced" reveal in finishDelve.
+ * The starter (wizard, threshold 0) never crosses; callers filter to classes that
+ * actually have a reveal card.
+ */
+export function newlyUnlockedClasses(prevChapters: number, nextChapters: number): ClassId[] {
+  return (Object.keys(CLASS_UNLOCK_CHAPTER) as ClassId[]).filter((id) => {
+    const threshold = CLASS_UNLOCK_CHAPTER[id];
+    return threshold > prevChapters && threshold <= nextChapters;
+  });
+}
 
 /**
  * The slice of meta the unlock helpers read. metaStore's state is a structural
@@ -89,7 +138,7 @@ export interface ProgressionMeta {
 export function isFeatureUnlocked(featureId: FeatureId, meta: ProgressionMeta): boolean {
   const cond = UNLOCKS[featureId];
   if (!cond) return true;
-  if (meta.delveCount >= cond.delveCount) return true;
+  if (cond.delveCount !== undefined && meta.delveCount >= cond.delveCount) return true;
   if (cond.chaptersCleared !== undefined && meta.chaptersCleared >= cond.chaptersCleared) {
     return true;
   }
@@ -98,16 +147,29 @@ export function isFeatureUnlocked(featureId: FeatureId, meta: ProgressionMeta): 
 }
 
 /**
- * Features whose delve threshold was crossed strictly between `prevDelveCount`
- * (exclusive) and `nextDelveCount` (inclusive) — i.e. the ones that just opened
- * on this descent. Phase-2 tutorials and lore beats fire on these. Keyed purely
- * off the delve counter (the milestone/legacy alternatives are not "crossed" by
- * a delve increment).
+ * Delve-gated features whose threshold was crossed strictly between
+ * `prevDelveCount` (exclusive) and `nextDelveCount` (inclusive) — the onboarding
+ * reveals that just opened on this descent. The reveal-tutorial trigger fires on
+ * these in startDelve. Chapter-gated features are handled by
+ * {@link newlyUnlockedByChapter} on a clear instead.
  */
 export function newlyUnlocked(prevDelveCount: number, nextDelveCount: number): FeatureId[] {
   return FEATURE_IDS.filter((id) => {
     const threshold = UNLOCKS[id].delveCount;
-    return threshold > prevDelveCount && threshold <= nextDelveCount;
+    return threshold !== undefined && threshold > prevDelveCount && threshold <= nextDelveCount;
+  });
+}
+
+/**
+ * Chapter-gated features whose threshold was crossed strictly between
+ * `prevChapters` (exclusive) and `nextChapters` (inclusive) — the power unlocks
+ * just earned by reaching a new depth. The reveal-tutorial trigger fires on these
+ * in finishDelve when the chaptersCleared high-water mark advances.
+ */
+export function newlyUnlockedByChapter(prevChapters: number, nextChapters: number): FeatureId[] {
+  return FEATURE_IDS.filter((id) => {
+    const threshold = UNLOCKS[id].chaptersCleared;
+    return threshold !== undefined && threshold > prevChapters && threshold <= nextChapters;
   });
 }
 
@@ -117,17 +179,23 @@ export function unlockedFeatures(meta: ProgressionMeta): FeatureId[] {
 }
 
 /**
- * The next still-locked feature and the delve it opens at (lowest threshold
- * first), or null when everything is unlocked. Drives an optional "next unlock
- * at delve N" UI hint.
+ * The next still-locked feature, the axis it opens on, and its threshold (lowest
+ * threshold first within each axis, delve-gated reveals preferred), or null when
+ * everything is unlocked. Drives an optional "next unlock at…" UI hint.
  */
 export function nextLockedFeature(
   meta: ProgressionMeta,
-): { featureId: FeatureId; delveCount: number } | null {
-  const locked = FEATURE_IDS.filter((id) => !isFeatureUnlocked(id, meta)).map((id) => ({
-    featureId: id,
-    delveCount: UNLOCKS[id].delveCount,
-  }));
+): { featureId: FeatureId; axis: 'delve' | 'chapter'; threshold: number } | null {
+  const locked = FEATURE_IDS.filter((id) => !isFeatureUnlocked(id, meta)).map((id) => {
+    const cond = UNLOCKS[id];
+    return cond.delveCount !== undefined
+      ? { featureId: id, axis: 'delve' as const, threshold: cond.delveCount }
+      : { featureId: id, axis: 'chapter' as const, threshold: cond.chaptersCleared ?? Infinity };
+  });
   if (locked.length === 0) return null;
-  return locked.reduce((lo, f) => (f.delveCount < lo.delveCount ? f : lo));
+  // Onboarding reveals (delve axis) come first, then the lowest threshold.
+  return locked.reduce((lo, f) => {
+    if (f.axis !== lo.axis) return f.axis === 'delve' ? f : lo;
+    return f.threshold < lo.threshold ? f : lo;
+  });
 }

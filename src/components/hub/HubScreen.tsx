@@ -195,7 +195,7 @@ export function HubScreen() {
 
       <div
         className={`mt-8 grid gap-3 text-center ${
-          legendariesUnlocked && ownedLegendaries.length > 0 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'
+          legendariesUnlocked ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'
         }`}
       >
         <StatTile label="Renown" value={character.renown} accent="amber" glyph="◆" />
@@ -223,7 +223,7 @@ export function HubScreen() {
             Open →
           </div>
         </button>
-        {legendariesUnlocked && ownedLegendaries.length > 0 && (
+        {legendariesUnlocked && (
           <button
             type="button"
             onClick={() => setView('relics')}
@@ -233,7 +233,7 @@ export function HubScreen() {
               ✦ Relics
             </div>
             <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
-              {activeLegendaries.length} equipped →
+              {ownedLegendaries.length > 0 ? `${activeLegendaries.length} equipped →` : 'Open →'}
             </div>
           </button>
         )}

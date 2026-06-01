@@ -85,29 +85,27 @@ export function castVoidRay(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} bores a Void Ray at ${target.instance.displayName}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} — ${crit ? 'CRITICAL HIT' : hit ? 'hit' : 'miss'}.`,
+      text: `${nextCharacter.name} bores a Void Ray at ${target.instance.displayName}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} — ${crit ? 'CRITICAL HIT' : hit ? 'hit' : 'miss (graze)'}.`,
     },
   );
   nextState = attachSpellEffect(nextState, 'fire-bolt', 'player', targetId);
 
-  if (hit) {
-    const roll = roller.roll({ count: 10 * (crit ? 2 : 1), die: 6, modifier: 0 });
-    const dealt = roll.total + intMod(nextCharacter) + spellDamageBonus(nextCharacter);
-    const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
-    nextState = damaged.state;
-    nextCharacter = damaged.character;
-    nextState = appendLog(nextState, {
-      id: nextLogId(nextState),
-      kind: 'damage',
-      text: `The wound refuses to close — ${dealt} necrotic.`,
-    });
-  } else {
-    nextState = appendLog(nextState, {
-      id: nextLogId(nextState),
-      kind: 'system',
-      text: `The ray gutters wide of ${target.instance.displayName}.`,
-    });
-  }
+  // A hit bores full (a crit doubles the dice); a clean miss still GRAZES for
+  // half — the beam of un-light leaves its mark even off-true, so a 5th-level
+  // slot is never wholly wasted on one bad roll.
+  const roll = roller.roll({ count: 10 * (crit ? 2 : 1), die: 6, modifier: 0 });
+  const full = roll.total + intMod(nextCharacter) + spellDamageBonus(nextCharacter);
+  const dealt = hit ? full : Math.floor(full / 2);
+  const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
+  nextState = damaged.state;
+  nextCharacter = damaged.character;
+  nextState = appendLog(nextState, {
+    id: nextLogId(nextState),
+    kind: 'damage',
+    text: hit
+      ? `The wound refuses to close — ${dealt} necrotic.`
+      : `The ray grazes ${target.instance.displayName} — ${dealt} necrotic.`,
+  });
 
   nextCharacter = markActionUsed(nextCharacter);
   const ended = evaluateCombatEndFull(nextState, nextCharacter);
@@ -225,8 +223,9 @@ export function castWither(ctx: CastSpellContext): CastResult {
 
 /**
  * Soul Snare (7th) — bindings of pure will. WIS save or paralyzed 3 rounds; a
- * far harder grip than the 2nd-level binding. Legendary resistance still buys a
- * boss one auto-success, so a lone boss can't be chain-locked indefinitely.
+ * far harder grip than the 2nd-level binding. A boss's resolute will rolls the
+ * save with advantage rather than auto-negating, so even a lone boss can be
+ * snared on a bad roll — control is a gamble, not a guaranteed waste.
  */
 export function castSoulSnare(ctx: CastSpellContext): CastResult {
   const { state, roller } = ctx;
@@ -239,34 +238,18 @@ export function castSoulSnare(ctx: CastSpellContext): CastResult {
   const dc = spellSaveDC(nextCharacter);
   const monsterDef = getMonster(target.instance.defId);
   const wisMod = abilityModifier(monsterDef.abilityScores.wis ?? 10);
-  const save = roller.d20('normal', wisMod);
+  const resoluteWill = (target.instance.legendaryResistances ?? 0) > 0;
+  const save = roller.d20(resoluteWill ? 'advantage' : 'normal', wisMod);
   const success = save.total >= dc;
 
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} casts Soul Snare at ${target.instance.displayName}. WIS save: d20${wisMod >= 0 ? '+' : ''}${wisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+    text: `${nextCharacter.name} casts Soul Snare at ${target.instance.displayName}. WIS save${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${wisMod >= 0 ? '+' : ''}${wisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
   });
   nextState = attachSpellEffect(nextState, 'hold-person', 'player', targetId);
 
-  const legendaryResistances = target.instance.legendaryResistances ?? 0;
-  if (!success && legendaryResistances > 0) {
-    nextState = appendLog(
-      {
-        ...nextState,
-        combatants: nextState.combatants.map((c) =>
-          c.kind === 'monster' && c.id === targetId
-            ? { ...c, instance: { ...c.instance, legendaryResistances: legendaryResistances - 1 } }
-            : c,
-        ),
-      },
-      {
-        id: nextLogId(nextState),
-        kind: 'system',
-        text: `${target.instance.displayName} tears free of the snare — legendary resistance (${legendaryResistances - 1} left).`,
-      },
-    );
-  } else if (!success) {
+  if (!success) {
     nextState = appendLog(
       {
         ...nextState,

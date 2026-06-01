@@ -30,7 +30,8 @@ import { getCampBoon } from '../content/campBoons';
 import { nextLoreBeat } from '../content/loreBeats';
 import { EQUIP_SLOTS } from '../engine/character/equip';
 import { sellValue } from '../components/delve/shopStock';
-import { newlyUnlocked } from '../engine/progression';
+import { newlyUnlocked, newlyUnlockedByChapter, newlyUnlockedClasses } from '../engine/progression';
+import { getTutorial } from '../content/tutorials';
 import { useCharacterStore } from './characterStore';
 import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
@@ -49,6 +50,25 @@ function queueUnlockTutorials(prevDelveCount: number, nextDelveCount: number) {
   const fresh = newlyUnlocked(prevDelveCount, nextDelveCount).filter(
     (id) => !seen.includes(id),
   );
+  if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
+}
+
+/**
+ * Reveal-on-unlock for the PROGRESSION axis: any power feature whose chapter
+ * threshold the soul just crossed by clearing a new deepest chapter. Fires in
+ * finishDelve when the chaptersCleared high-water mark advances.
+ */
+function queueChapterUnlockTutorials(prevChapters: number, nextChapters: number) {
+  if (nextChapters <= prevChapters) return;
+  const seen = useMetaStore.getState().seenTutorials;
+  // Power-feature reveals plus the per-class "a new soul surfaced" cards. Class
+  // ids share the tutorial-queue / seenTutorials namespace; keep only the ones
+  // that actually have copy (skips the starter and the not-yet-playable cleric).
+  const featureCards = newlyUnlockedByChapter(prevChapters, nextChapters);
+  const classCards = newlyUnlockedClasses(prevChapters, nextChapters).filter(
+    (id) => getTutorial(id) !== undefined,
+  );
+  const fresh = [...featureCards, ...classCards].filter((id) => !seen.includes(id));
   if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
 }
 
@@ -733,7 +753,12 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     useCombatStore.getState().setCombat(null);
     useScreenStore.getState().setScreen('hub');
     if (chaptersThisRun > 0) {
+      const prevChapters = meta.chaptersCleared;
       meta.recordChapterCleared(chaptersThisRun);
+      // Reaching a new depth opens the next advantage — fire the reveal for any
+      // power feature this clear just unlocked (boss-intel, class swapping, epic
+      // gear, legendaries, sets at completion).
+      queueChapterUnlockTutorials(prevChapters, useMetaStore.getState().chaptersCleared);
     }
     // A clear of the full chain advances the world: clearing at the current
     // highest unlocked ascension opens the next rung. Replaying a lower level

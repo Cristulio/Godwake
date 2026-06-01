@@ -26,10 +26,20 @@ set -euo pipefail
 NAME=""
 LAUNCH=0
 BRIEF_FILE=""
+MODEL=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --launch)
       LAUNCH=1
+      shift
+      ;;
+    --model)
+      shift
+      MODEL="${1:-}"
+      if [ -z "$MODEL" ]; then
+        echo "Error: --model requires an argument" >&2
+        exit 1
+      fi
       shift
       ;;
     --brief-file)
@@ -114,9 +124,9 @@ if [ "$LAUNCH" -eq 1 ]; then
     # then run claude with the brief contents as the first user message.
     # \\\" → literal \" (AppleScript-escaped " inside the string)
     # \$   → literal $ (AppleScript has no $ interpolation, just pass it through)
-    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude \\\"\$(cat .briefing.md)\\\""
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL} \\\"\$(cat .briefing.md)\\\""
   else
-    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude"
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL}"
   fi
   if [ -d "/Applications/iTerm.app" ]; then
     echo ""

@@ -120,7 +120,7 @@ function NewGameConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfi
   }, [onCancel]);
 
   const soulLabel = meta
-    ? `${meta.characterName} · level ${meta.characterLevel} · ${meta.location}`
+    ? `${meta.characterName} · level ${meta.characterLevel} · ${meta.characterClass ?? '—'}`
     : 'an existing soul';
 
   return (
