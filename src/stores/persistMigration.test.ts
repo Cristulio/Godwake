@@ -198,31 +198,47 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 15', () => {
-    expect(SAVE_VERSION).toBe(15);
+  it('is 16', () => {
+    expect(SAVE_VERSION).toBe(16);
   });
 });
 
-describe('migrateV1ToV2 — v14 → v15 true-ending capstone', () => {
-  it('defaults gameCompleted to false and endingChosen to null when missing', () => {
+describe('migrateV1ToV2 — v14 → v15 ending capstone flag', () => {
+  it('defaults gameCompleted to false when missing', () => {
     const v = migrateV1ToV2({ unlockedUpgrades: {} });
     expect(v.gameCompleted).toBe(false);
-    expect(v.endingChosen).toBeNull();
   });
 
-  it('preserves a recorded ending choice across migration', () => {
+  it('preserves a set gameCompleted across migration', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {}, gameCompleted: true });
+    expect(v.gameCompleted).toBe(true);
+  });
+});
+
+describe('migrateV1ToV2 — v15 → v16 flavor ending + ascension run-config', () => {
+  it('drops the legacy endingChosen branch cleanly', () => {
     const v = migrateV1ToV2({
       unlockedUpgrades: {},
       gameCompleted: true,
       endingChosen: 'ascend',
     });
     expect(v.gameCompleted).toBe(true);
-    expect(v.endingChosen).toBe('ascend');
+    expect('endingChosen' in v).toBe(false);
   });
 
-  it('coerces a garbage endingChosen back to null', () => {
-    const v = migrateV1ToV2({ unlockedUpgrades: {}, endingChosen: 'wishful' });
-    expect(v.endingChosen).toBeNull();
+  it('defaults selectedAscension to 0 when missing', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {} });
+    expect(v.selectedAscension).toBe(0);
+  });
+
+  it('preserves a present selectedAscension', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {}, selectedAscension: 3 });
+    expect(v.selectedAscension).toBe(3);
+  });
+
+  it('coerces a garbage selectedAscension back to 0', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {}, selectedAscension: -4 });
+    expect(v.selectedAscension).toBe(0);
   });
 });
 

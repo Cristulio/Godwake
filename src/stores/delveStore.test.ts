@@ -152,12 +152,12 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
   beforeEach(() => {
     setActiveRoller('ending-seed');
     seedRun({ quirks: [] });
-    useMetaStore.setState({ gameCompleted: false, endingChosen: null });
+    useMetaStore.setState({ gameCompleted: false });
   });
 
   it('the first full-chain clear detours to the ending BEFORE settling anything', () => {
     seedRun({ quirks: [], level: 6, renown: 0 });
-    useMetaStore.setState({ gameCompleted: false, endingChosen: null });
+    useMetaStore.setState({ gameCompleted: false });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
     useDelveStore.getState().finishDelve();
@@ -171,17 +171,18 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     expect(useMetaStore.getState().gameCompleted).toBe(false);
   });
 
-  it('recording the choice + re-entering finishDelve runs the normal clear path', () => {
+  it('concluding the flavor ending (markGameCompleted + re-entry) runs the normal clear path', () => {
     seedRun({ quirks: [], level: 6, renown: 0 });
-    useMetaStore.setState({ gameCompleted: false, endingChosen: null });
+    useMetaStore.setState({ gameCompleted: false });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
     // First pass: the ending fires.
     useDelveStore.getState().finishDelve();
     expect(useScreenStore.getState().screen).toBe('ending');
 
-    // The ending screen records the choice, then re-enters finishDelve.
-    useMetaStore.getState().recordEnding('ascend');
+    // The flavor-only ending records no choice — it just marks the chain cleared,
+    // then re-enters finishDelve (the screen then routes on to the title).
+    useMetaStore.getState().markGameCompleted();
     useDelveStore.getState().finishDelve();
 
     // Second pass settles: reincarnated, renown paid, depth recorded, hub.
@@ -191,19 +192,18 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     expect(char().renown).toBeGreaterThan(0);
     expect(useMetaStore.getState().chaptersCleared).toBe(TOTAL_CHAPTERS);
     expect(useMetaStore.getState().hasReincarnated).toBe(true);
-    expect(useMetaStore.getState().endingChosen).toBe('ascend');
     expect(useMetaStore.getState().gameCompleted).toBe(true);
   });
 
   it('does NOT replay the ending on a later full clear', () => {
-    useMetaStore.setState({ gameCompleted: true, endingChosen: 'mortal' });
+    useMetaStore.setState({ gameCompleted: true });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
     useDelveStore.getState().finishDelve();
 
     expect(useScreenStore.getState().screen).toBe('hub');
     expect(useDelveStore.getState().delve).toBeNull();
-    expect(useMetaStore.getState().endingChosen).toBe('mortal');
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
   });
 
   it('does NOT fire on a non-final clear (fewer than all chapters felled)', () => {
@@ -227,14 +227,13 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     expect(useMetaStore.getState().gameCompleted).toBe(false);
   });
 
-  it('recordEnding marks the game completed and is idempotent on the choice', () => {
+  it('markGameCompleted marks the chain cleared and is idempotent', () => {
     expect(useMetaStore.getState().gameCompleted).toBe(false);
-    useMetaStore.getState().recordEnding('ascend');
+    useMetaStore.getState().markGameCompleted();
     expect(useMetaStore.getState().gameCompleted).toBe(true);
-    expect(useMetaStore.getState().endingChosen).toBe('ascend');
-    // A second answer does not overwrite the recorded capstone.
-    useMetaStore.getState().recordEnding('mortal');
-    expect(useMetaStore.getState().endingChosen).toBe('ascend');
+    // Replaying the finale never un-sets it.
+    useMetaStore.getState().markGameCompleted();
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
   });
 });
 

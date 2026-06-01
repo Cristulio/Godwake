@@ -16,6 +16,11 @@ const CharacterCreationScreen = lazy(() =>
     default: m.CharacterCreationScreen,
   })),
 );
+const AscensionSelectScreen = lazy(() =>
+  import('./components/title/AscensionSelectScreen').then((m) => ({
+    default: m.AscensionSelectScreen,
+  })),
+);
 const DruidGroveScreen = lazy(() =>
   import('./components/hub/DruidGroveScreen').then((m) => ({ default: m.DruidGroveScreen })),
 );
@@ -90,6 +95,9 @@ function App() {
   switch (screen) {
     case 'title':
       content = <TitleScreen />;
+      break;
+    case 'ascension-select':
+      content = <AscensionSelectScreen />;
       break;
     case 'character-creation':
       content = <CharacterCreationScreen />;

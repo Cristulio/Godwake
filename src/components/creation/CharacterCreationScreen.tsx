@@ -98,14 +98,21 @@ function buildSoulOptions(): SoulOption[] {
 export function CharacterCreationScreen() {
   const commit = useGameStore((s) => s.commitCharacterCreation);
   const selectCharacter = useGameStore((s) => s.selectCharacter);
+  const selectCharacterAndDescend = useGameStore((s) => s.selectCharacterAndDescend);
   const goToTitle = useGameStore((s) => s.goToTitle);
   const goToHub = useGameStore((s) => s.goToHub);
+  const goToAscensionSelect = useGameStore((s) => s.goToAscensionSelect);
+  const newGamePlusFlow = useGameStore((s) => s.newGamePlusFlow);
+  const selectedAscension = useGameStore((s) => s.selectedAscension);
   const existing = useGameStore((s) => s.character);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
 
-  // A soul already in the world means this is a hub swap, not first creation.
-  // Swapping keeps renown / Grove / quirks and returns to Phandalin; first
-  // creation runs the intro → first-delve handoff.
+  // Three modes share this screen:
+  //  - New Game+ (run-launcher): pick/keep a soul and descend straight into the
+  //    next run at the chosen ascension.
+  //  - Hub swap: a soul already in the world, picked between runs → returns to
+  //    Phandalin keeping renown / Grove / quirks.
+  //  - First creation: no soul yet → runs the intro → first-delve handoff.
   const isSwap = existing != null;
 
   // A class is selectable if you've cleared deep enough to earn it, or it's the
@@ -124,7 +131,9 @@ export function CharacterCreationScreen() {
 
   function confirm() {
     if (!selectedClassId) return;
-    if (isSwap) {
+    if (newGamePlusFlow) {
+      selectCharacterAndDescend(selectedClassId);
+    } else if (isSwap) {
       selectCharacter(selectedClassId);
     } else {
       commit(presetCreationInput(selectedClassId));
@@ -145,13 +154,18 @@ export function CharacterCreationScreen() {
             CHOOSE A SOUL
           </h1>
           <p className="font-narrative text-[var(--color-text-secondary)] text-sm italic mt-2 tracking-wide">
-            {isSwap
-              ? 'Step into a different body for the next descent. Your renown, your marks, and the keepers’ gifts all follow you.'
-              : 'Three souls wait at the wheel. Pick the one you will wear into the dark.'}
+            {newGamePlusFlow
+              ? `Pick the soul you will wear into the dark${selectedAscension > 0 ? ` at Ascension ${selectedAscension}` : ''}. Your renown, your marks, and the keepers’ gifts all follow you down.`
+              : isSwap
+                ? 'Step into a different body for the next descent. Your renown, your marks, and the keepers’ gifts all follow you.'
+                : 'Three souls wait at the wheel. Pick the one you will wear into the dark.'}
           </p>
         </div>
-        <Button variant="ghost" onClick={isSwap ? goToHub : goToTitle}>
-          {isSwap ? '← Phandalin' : '← Title'}
+        <Button
+          variant="ghost"
+          onClick={newGamePlusFlow ? goToAscensionSelect : isSwap ? goToHub : goToTitle}
+        >
+          {newGamePlusFlow ? '← Ascension' : isSwap ? '← Phandalin' : '← Title'}
         </Button>
       </header>
 
@@ -280,9 +294,11 @@ export function CharacterCreationScreen() {
           onClick={confirm}
         >
           {selected
-            ? isSwap
-              ? `Become ${selected.characterName} ▸`
-              : `Begin as ${selected.characterName} ▸`
+            ? newGamePlusFlow
+              ? `Descend as ${selected.characterName} ▸`
+              : isSwap
+                ? `Become ${selected.characterName} ▸`
+                : `Begin as ${selected.characterName} ▸`
             : 'Choose a soul'}
         </Button>
       </div>

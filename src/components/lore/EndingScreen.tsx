@@ -1,61 +1,46 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
-import { playSfx } from '../../engine/audio';
 
 const BASE_TICK = 34;
 const FAST_TICK = 4;
 
-type EndingChoice = 'ascend' | 'mortal';
-type Stage = 'offer' | 'epilogue' | 'credits';
+type Stage = 'offer' | 'credits';
 
+// The finale poses the ascend-or-mortal dilemma as flavor and leaves it hanging.
+// The soul makes no choice here — the answer is whatever the player carries into
+// their next descent (the New Game+ ascension they take, or the mortal rest of
+// not descending again).
 const SOLAR_OFFER = [
   "Amelyssan is unmade. The harvest she spent an age gathering spills back into the dark, and above its cooling pools the Throne of Bhaal stands empty — empty, and waiting, and turned toward you.",
   "A Solar descends through the red light on wings the colour of a struck bell, and does not draw her blade. \"Child of the dead god,\" she says. \"The portfolio of Murder has no holder, and you are the last vessel left whole enough to take it up. The choice the Father never offered you is yours alone now.\"",
   "\"Reach into the Throne, and the divinity is yours. You will rise as the new God of Murder, and the wheel that has turned you life into life will turn for you no longer — you will be the hand that turns it for others. Or refuse it. Let the taint burn out of your blood, and the godhood with it, and walk back down into the world a mortal thing that bleeds and ages and ends.\"",
-  "\"Choose. The blood is already deciding without you.\"",
+  "She does not press you. The wheel that spun you through a hundred lives slows beneath your feet, and waits — as it has always waited — to see which way a Child of Bhaal will turn, now that the turning is finally its own.",
 ];
-
-const EPILOGUE: Record<EndingChoice, string[]> = {
-  ascend: [
-    "You set your hand into the Throne, and the empty seat fills.",
-    "The last of the essence does not pour into you so much as recognise you — every measure Amelyssan reaped, every death you died on the long road, all of it rising at once to a single owner. The mortal thing you were thins to a rumour. Far off, the world's killers turn in their sleep toward a master they cannot name; a knife is lifted in a dark room a thousand miles away, and you answer the lifting of it before you have decided to. There is no cruelty in it, and no mercy either — only the cold arithmetic of endings, and you are the sum of it now.",
-    "The Solar bows her bright head. Not in worship. In the grief of a thing that has watched this happen before. Beneath your feet the wheel that spun you through a hundred lives goes still, and does not start again. It does not need to. The God of Murder does not reincarnate. He presides.",
-    "Below, in the world, they will not learn your name. They will only feel the cold when they raise the blade, and call it by older names, and never once guess that their god learned its patience in an iron cell — life, after life, after life.",
-  ],
-  mortal: [
-    "You take your hand back from the Throne, and the empty seat stays empty.",
-    "It costs more than the reaching would have. Divinity does not leave a vessel gently; it tears the way a hook tears, and every life the wheel ever spun you through goes out at once, like lamps down a long hall — the iron cell, the cold road, the hundred deaths — all of it burning away to leave a thing small enough to die. When it is done you are kneeling in the cooling blood of a god, and you are only a person, and your knees ache, and you are gloriously, ordinarily cold.",
-    "The Solar smiles — the first wholly mortal expression to cross a divine face in all this hall — and the red light lifts. The wheel is broken. There will be no waking again in the grove with the flesh made new; there will be one life now, the way there is for everyone, and an end to it that stays an end.",
-    "You walk back down out of the Pocket Plane into a morning that belongs to no god at all. Somewhere south the Trade Way is dusty and unremarkable and yours. You have a great deal of it left to walk — and for the first time, the certainty that the walking will not come round again.",
-  ],
-};
 
 const CREDITS = [
   "The soul remembers. The flesh forgets.",
-  "This one chose. Whether it climbed onto the Throne or turned its back upon it, the chain that bound it to the wheel is ended — and that, of all the things a Child of Bhaal might do, was the rarest of them.",
-  "Here the tale of this soul closes.",
+  "Whatever it makes of the empty seat — climbs onto it, or turns its back and walks — the chain that bound this soul to the wheel has been carried, at the last, to the place where such things are decided. That, of all the deeds a Child of Bhaal might do, was ever the rarest.",
+  "Here the tale of this soul rests.",
 ];
 
-function paragraphsFor(stage: Stage, choice: EndingChoice | null): string[] {
-  if (stage === 'offer') return SOLAR_OFFER;
-  if (stage === 'credits') return CREDITS;
-  return choice ? EPILOGUE[choice] : [];
+function paragraphsFor(stage: Stage): string[] {
+  return stage === 'offer' ? SOLAR_OFFER : CREDITS;
 }
 
 export function EndingScreen() {
-  const recordEnding = useGameStore((s) => s.recordEnding);
+  const markGameCompleted = useGameStore((s) => s.markGameCompleted);
   const finishDelve = useGameStore((s) => s.finishDelve);
+  const goToTitle = useGameStore((s) => s.goToTitle);
 
   const [stage, setStage] = useState<Stage>('offer');
-  const [choice, setChoice] = useState<EndingChoice | null>(null);
   const [typed, setTyped] = useState('');
   const [done, setDone] = useState(false);
   const [holding, setHolding] = useState(false);
   const indexRef = useRef(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const fullText = paragraphsFor(stage, choice).join('\n\n');
+  const fullText = paragraphsFor(stage).join('\n\n');
 
   // Typewriter for the active stage's block, with hold-to-speed. Re-runs whenever
   // the stage (and thus fullText) changes; resetTyper zeroes the index on a switch.
@@ -93,30 +78,26 @@ export function EndingScreen() {
     setDone(true);
   }
 
-  function pick(c: EndingChoice) {
-    playSfx('ui_click');
-    // Record now (sets gameCompleted) so the deferred finishDelve() re-entry on
-    // the credits button skips the capstone gate and runs the normal settle.
-    recordEnding(c);
-    setChoice(c);
-    setStage('epilogue');
-    resetTyper();
-  }
-
-  function advanceToCredits() {
-    setStage('credits');
-    resetTyper();
-  }
-
-  // A click skips the typewriter to the end; once a non-offer stage has finished
-  // typing, a further click steps to the next stage. The offer waits for a
-  // deliberate choice instead of advancing on click.
+  // A click skips the typewriter to the end; once the offer has finished typing,
+  // a further click steps on to the closing credits beat.
   function handleClick() {
     if (!done) {
       completeNow();
       return;
     }
-    if (stage === 'epilogue') advanceToCredits();
+    if (stage === 'offer') {
+      setStage('credits');
+      resetTyper();
+    }
+  }
+
+  function concludeEnding() {
+    // Mark the chain cleared so the deferred finishDelve() re-entry skips the
+    // capstone gate and runs the normal settle (renown, reincarnation, the next
+    // ascension rung), then leave on the title — the finale is a full stop.
+    markGameCompleted();
+    finishDelve();
+    goToTitle();
   }
 
   function handleDoubleClick(e: React.MouseEvent) {
@@ -141,13 +122,7 @@ export function EndingScreen() {
 
       <div className="relative z-10 max-w-2xl w-full flex flex-col items-center gap-8">
         <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.4em] animate-fade-in-slow">
-          {stage === 'credits'
-            ? '◆ The wheel, ended ◆'
-            : stage === 'epilogue'
-              ? choice === 'ascend'
-                ? '◆ Apotheosis ◆'
-                : '◆ The taint released ◆'
-              : '◆ The Throne of Bhaal ◆'}
+          {stage === 'credits' ? '◆ The wheel, at its turning ◆' : '◆ The Throne of Bhaal ◆'}
         </div>
 
         <div className="text-center flex flex-col gap-5 min-h-[12rem] justify-center">
@@ -170,31 +145,6 @@ export function EndingScreen() {
 
         <div className="mt-2 flex flex-col items-center gap-3 min-h-[5rem]">
           {stage === 'offer' && done && (
-            <div className="animate-fade-in flex flex-col sm:flex-row items-stretch gap-3 w-full">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  pick('ascend');
-                }}
-              >
-                Take up the portfolio — Ascend
-              </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  pick('mortal');
-                }}
-              >
-                Let it burn away — Walk back mortal
-              </Button>
-            </div>
-          )}
-
-          {stage === 'epilogue' && done && (
             <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic animate-fade-in">
               click to go on
             </div>
@@ -207,13 +157,10 @@ export function EndingScreen() {
                 size="lg"
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Re-enter the clear path: the delve is still 'completed' and
-                  // gameCompleted is now true, so finishDelve settles renown,
-                  // reincarnates the soul, and lands at the hub.
-                  finishDelve();
+                  concludeEnding();
                 }}
               >
-                Walk back into Phandalin →
+                Let the wheel turn →
               </Button>
             </div>
           )}

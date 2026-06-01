@@ -87,18 +87,21 @@ interface MetaStoreState {
   activeLegendaries: string[];
   /**
    * Whether the soul has cleared the whole chain (felled Melissan) at least once.
-   * Set the first time the final chapter is cleared, alongside `endingChosen`.
-   * Gates the one-time Throne-of-Bhaal ending capstone — later full clears fall
-   * straight through to the normal reincarnation flow. Account-level: survives
-   * reincarnation, reset only on New Game.
+   * Set the first time the final chapter is cleared. Gates the one-time
+   * Throne-of-Bhaal ending capstone — later full clears fall straight through to
+   * the normal reincarnation flow — and unlocks the title's New Game+ entry (the
+   * ascension-select run-launcher). Account-level: survives reincarnation AND a
+   * New Game (the mastery is permanent), reset only by deleting the save.
    */
   gameCompleted: boolean;
   /**
-   * The ending the player chose at the Throne of Bhaal: ascend to the godhead
-   * (the new God of Murder) or refuse it and burn the taint away as a mortal.
-   * `null` until the chain is first cleared. Persisted capstone payload.
+   * The ascension level the soul's current run is being played at. Chosen in the
+   * New Game+ flow's ascension-select step and reused by every descent of that
+   * run (incl. post-death hub re-descents), so the whole replay stays at one
+   * difficulty. 0 = base chain. Clamped to `ascensionUnlocked`. Reset to 0 on a
+   * fresh base New Game. Persisted.
    */
-  endingChosen: 'ascend' | 'mortal' | null;
+  selectedAscension: number;
 
   discoverMonster: (defId: string) => void;
   recordMonsterDefeat: (defId: string) => void;
@@ -144,11 +147,12 @@ interface MetaStoreState {
    */
   setActiveLegendaries: (ids: string[]) => void;
   /**
-   * Record the one-time Throne-of-Bhaal ending choice: marks the chain cleared
-   * (`gameCompleted`) and stores the branch. Idempotent on the flag — the first
-   * recorded choice is the soul's tale; replaying the finale never overwrites it.
+   * Mark the whole chain cleared (felled Melissan). Set once the Throne-of-Bhaal
+   * ending capstone has played; idempotent. Unlocks the title's New Game+ entry.
    */
-  recordEnding: (choice: 'ascend' | 'mortal') => void;
+  markGameCompleted: () => void;
+  /** Set the run's ascension level, clamped to 0..ascensionUnlocked. */
+  setSelectedAscension: (level: number) => void;
   resetMeta: () => void;
 }
 
@@ -172,7 +176,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   ownedLegendaries: [],
   activeLegendaries: [],
   gameCompleted: false,
-  endingChosen: null,
+  selectedAscension: 0,
 
   discoverMonster: (defId) =>
     set((s) => {
@@ -337,12 +341,13 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     }
   },
 
-  recordEnding: (choice) =>
-    set((s) =>
-      s.gameCompleted
-        ? s
-        : { gameCompleted: true, endingChosen: choice },
-    ),
+  markGameCompleted: () =>
+    set((s) => (s.gameCompleted ? s : { gameCompleted: true })),
+
+  setSelectedAscension: (level) =>
+    set((s) => ({
+      selectedAscension: Math.max(0, Math.min(Math.floor(level), s.ascensionUnlocked)),
+    })),
 
   resetMeta: () =>
     set({
@@ -365,6 +370,6 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       ownedLegendaries: [],
       activeLegendaries: [],
       gameCompleted: false,
-      endingChosen: null,
+      selectedAscension: 0,
     }),
 }));

@@ -5,10 +5,16 @@ import { useGameStore, hasAnySave, hasAutosave, getSlotMetadata } from '../../st
 export function TitleScreen() {
   const startNewGame = useGameStore((s) => s.startNewGame);
   const loadFromSlot = useGameStore((s) => s.loadFromSlot);
+  const goToAscensionSelect = useGameStore((s) => s.goToAscensionSelect);
+  const gameCompleted = useGameStore((s) => s.gameCompleted);
   const [glow, setGlow] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const activeSave = hasAutosave();
   const saveMeta = activeSave ? getSlotMetadata(0) : null;
+  // Beating the chain once opens New Game+ — the title-launched run-launcher that
+  // lets the soul descend again at a chosen ascension. The mastery persists, so
+  // the entry stays even after starting a fresh base game.
+  const newGamePlusAvailable = activeSave && gameCompleted;
 
   useEffect(() => {
     const t = setTimeout(() => setGlow(true), 200);
@@ -93,6 +99,11 @@ export function TitleScreen() {
         >
           {activeSave ? '+ New Game' : '▸ New Game'}
         </Button>
+        {newGamePlusAvailable && (
+          <Button variant="ghost" size="lg" onClick={goToAscensionSelect}>
+            ▲ New Game+
+          </Button>
+        )}
       </div>
 
       <div className="absolute bottom-4 right-4 text-[var(--color-text-muted)] text-[9px] font-mono tracking-widest uppercase opacity-60">

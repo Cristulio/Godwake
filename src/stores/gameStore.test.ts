@@ -559,3 +559,69 @@ describe('startDelve — fresh descent resets run-scoped state', () => {
     expect(useCharacterStore.getState().character!.goldInPocket).toBe(25);
   });
 });
+
+describe('New Game+ run-launcher flow', () => {
+  beforeEach(() => {
+    resetStores();
+    // A completed soul sitting at the title.
+    useCharacterStore.setState({ character: makeFighter({ quirks: [], renown: 80 }) });
+    useDelveStore.setState({ delve: null });
+    useMetaStore.setState({ gameCompleted: true, ascensionUnlocked: 3, selectedAscension: 0 });
+    useScreenStore.setState({ screen: 'title', newGamePlusFlow: false });
+  });
+
+  it('goToAscensionSelect opens the launcher before character select', () => {
+    useGameStore.getState().goToAscensionSelect();
+    expect(useScreenStore.getState().screen).toBe('ascension-select');
+    expect(useGameStore.getState().newGamePlusFlow).toBe(true);
+  });
+
+  it('confirmAscensionSelection stores the level and advances to character select, keeping the flow', () => {
+    useGameStore.getState().goToAscensionSelect();
+    useGameStore.getState().confirmAscensionSelection(2);
+    expect(useMetaStore.getState().selectedAscension).toBe(2);
+    expect(useScreenStore.getState().screen).toBe('character-creation');
+    expect(useGameStore.getState().newGamePlusFlow).toBe(true);
+  });
+
+  it('the selectable level is clamped to the unlock ladder', () => {
+    useMetaStore.getState().setSelectedAscension(99);
+    expect(useMetaStore.getState().selectedAscension).toBe(3); // ascensionUnlocked
+    useMetaStore.getState().setSelectedAscension(-1);
+    expect(useMetaStore.getState().selectedAscension).toBe(0);
+  });
+
+  it('selectCharacterAndDescend descends straight into a run at the chosen ascension', () => {
+    useGameStore.getState().goToAscensionSelect();
+    useGameStore.getState().confirmAscensionSelection(2);
+    useGameStore.getState().selectCharacterAndDescend('fighter');
+
+    expect(useScreenStore.getState().screen).toBe('delve');
+    expect(useGameStore.getState().newGamePlusFlow).toBe(false);
+    const delve = useDelveStore.getState().delve;
+    expect(delve).not.toBeNull();
+    expect(delve!.ascensionLevel).toBe(2);
+    // Carries the soul's renown across the launcher.
+    expect(useCharacterStore.getState().character!.renown).toBe(80);
+  });
+
+  it('a pre-first-clear soul has no New Game+: gameCompleted false, ascension 0', () => {
+    useMetaStore.setState({ gameCompleted: false, ascensionUnlocked: 0, selectedAscension: 0 });
+    expect(useGameStore.getState().gameCompleted).toBe(false);
+    // The ladder offers nothing above the base chain.
+    useMetaStore.getState().setSelectedAscension(2);
+    expect(useMetaStore.getState().selectedAscension).toBe(0);
+  });
+
+  it('a fresh base New Game keeps the clear-unlock flags but resets the soul + ascension', () => {
+    useMetaStore.setState({ gameCompleted: true, ascensionUnlocked: 3, selectedAscension: 2 });
+    useGameStore.getState().startNewGame('ng-seed');
+
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
+    expect(useMetaStore.getState().ascensionUnlocked).toBe(3);
+    expect(useMetaStore.getState().selectedAscension).toBe(0);
+    expect(useCharacterStore.getState().character).toBeNull();
+    expect(useScreenStore.getState().screen).toBe('character-creation');
+    expect(useGameStore.getState().newGamePlusFlow).toBe(false);
+  });
+});
