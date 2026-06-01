@@ -20,6 +20,7 @@ import type {
 } from '../../../schemas/monster';
 import type { ConditionName } from '../../../types/conditions';
 import { computeAC, isRaging } from '../../character/derived';
+import { wearsHeavierThanLight } from '../../character/equip';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterAffixMods } from '../../items/affixMods';
 import { getMonster } from '../../../content/monsters';
@@ -43,10 +44,20 @@ import {
 } from './monsterIntent';
 import { tryShieldReaction } from '../spells/shield';
 import { MIRROR_IMAGE_SEE_THROUGH_DC } from '../spells/mirrorImage';
-import { combatResult, patchResources, type CombatActionResult } from '../types';
+import {
+  combatResult,
+  patchActionEconomy,
+  patchResources,
+  type CombatActionResult,
+} from '../types';
 import { appendLog } from '../log';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
 import type { AttackContext } from './playerAttack';
+
+// Nimble Dodge: a low-level Rogue reads the first strike of the round and slips
+// it, imposing disadvantage. Fades at level 5 when the real Uncanny Dodge (a
+// damage halve) comes online — see attack/damage.ts (UNCANNY_DODGE_LEVEL = 5).
+const NIMBLE_DODGE_MAX_LEVEL = 4;
 
 function findCombatant(state: CombatState, id: string): Combatant | undefined {
   return state.combatants.find((c) => c.id === id);
@@ -343,8 +354,19 @@ function resolveSingleAttack(
   // recklessly; disadvantage from Blur smearing the player's outline.
   const blurActive = (nextCharacter.resources.blurRoundsRemaining ?? 0) > 0;
   const recklessPlayer = nextCharacter.recklessActive === true;
+  // Nimble Dodge (Rogue L1-4): the first incoming attack each round resolves at
+  // disadvantage as the rogue slips aside. Spends the reaction, so a second
+  // swing that round lands clean. Refreshes when the rogue's turn comes back.
+  // Off while pinned (paralyzed / blinded / restrained) — no footwork to give,
+  // and it must not cancel the advantage those conditions grant the attacker.
+  const nimbleDodge =
+    nextCharacter.classId === 'rogue' &&
+    nextCharacter.level <= NIMBLE_DODGE_MAX_LEVEL &&
+    !nextCharacter.actionEconomy.reactionUsed &&
+    !playerVulnerable &&
+    !wearsHeavierThanLight(nextCharacter);
   const hasAdvantage = playerVulnerable || recklessPlayer;
-  const hasDisadvantage = blurActive || rangedEvasion;
+  const hasDisadvantage = blurActive || rangedEvasion || nimbleDodge;
   const attackAdvantage: 'normal' | 'advantage' | 'disadvantage' =
     hasAdvantage && hasDisadvantage
       ? 'normal'
@@ -367,13 +389,26 @@ function resolveSingleAttack(
       : attackAdvantage === 'disadvantage'
         ? blurActive
           ? ' (disadvantage — Blur)'
-          : ' (disadvantage — kept at range)'
+          : rangedEvasion
+            ? ' (disadvantage — kept at range)'
+            : ' (disadvantage — nimble dodge)'
         : '';
   workingState = appendLog(workingState, {
     id: nextLogId(workingState),
     kind: 'roll',
     text: `${attacker.instance.displayName} attacks ${nextCharacter.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}${advantageNote}.`,
   });
+
+  // Spend the reaction on the dodge whether or not the strike still lands — the
+  // rogue reacted. Logged as in-world movement, not a mechanic readout.
+  if (nimbleDodge) {
+    nextCharacter = patchActionEconomy(nextCharacter, { reactionUsed: true });
+    workingState = appendLog(workingState, {
+      id: nextLogId(workingState),
+      kind: 'system',
+      text: `${nextCharacter.name} twists low under the opening swing.`,
+    });
+  }
 
   // Shield reaction (wizard): a non-crit hit that Shield would flip to a miss
   // burns a level-1 slot + reaction. Crits bypass Shield.
