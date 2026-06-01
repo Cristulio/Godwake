@@ -95,6 +95,52 @@ import { PALE_FAVOURITE } from './pale-favourite';
 import { MASQUERADE_WARDEN } from './masquerade-warden';
 import { MASK_CHAMBERLAIN } from './mask-chamberlain';
 import { THE_HOLLOW_PRETENDER } from './the-hollow-pretender';
+// ─── Chapter 10 · Suldanessellar (the Tree of Life) ───────────────────────
+import { BODHI_SPAWN } from './bodhi-spawn';
+import { SULDANESSELLAR_ARCHER } from './suldanessellar-archer';
+import { SULDANESSELLAR_BLADESINGER } from './suldanessellar-bladesinger';
+import { SULDANESSELLAR_WARPRIEST } from './suldanessellar-warpriest';
+import { DEFILED_DRYAD } from './defiled-dryad';
+import { DEFILED_TREANT } from './defiled-treant';
+import { PALACE_GOLEM } from './palace-golem';
+import { RAKSHASA } from './rakshasa';
+import { NIZIDRAMANIIYT } from './nizidramaniiyt';
+// ─── Chapter 11 · The Trials of the Pit (Hell + Irenicus) ─────────────────
+import { MIRROR_OF_PRIDE } from './mirror-of-pride';
+import { DEVOURER_OF_SELFISHNESS } from './devourer-of-selfishness';
+import { HOARDING_FIEND_OF_GREED } from './hoarding-fiend-of-greed';
+import { AVATAR_OF_WRATH } from './avatar-of-wrath';
+import { WRAITH_OF_FEAR } from './wraith-of-fear';
+import { SLAYER_SHADE } from './slayer-shade';
+import { SPINED_ABISHAI } from './spined-abishai';
+import { IRENICUS } from './irenicus';
+// ─── Chapter 12 · The Siege of Saradush (Yaga-Shura) ──────────────────────
+import { SARADUSH_MARAUDER } from './saradush-marauder';
+import { BURNING_DEAD } from './burning-dead';
+import { FIRE_GIANT } from './fire-giant';
+import { FIRE_GIANT_SHAMAN } from './fire-giant-shaman';
+import { FIRE_GIANT_WARLORD } from './fire-giant-warlord';
+import { HALF_GIANT_SIEGEBREAKER } from './half-giant-siegebreaker';
+import { GROMNIR_DEFENDER } from './gromnir-defender';
+import { YAGA_SHURA } from './yaga-shura';
+// ─── Chapter 13 · The Last of the Five (Sendai + Abazigal) ────────────────
+import { SENDAI_HANDMAIDEN } from './sendai-handmaiden';
+import { KUO_TOA_DEEPGUARD } from './kuo-toa-deepguard';
+import { PETRIFIED_AMBUSHER } from './petrified-ambusher';
+import { BLUE_WYRMLING } from './blue-wyrmling';
+import { STORMSCALE_DRAKE } from './stormscale-drake';
+import { HALF_DRAGON_REAVER } from './half-dragon-reaver';
+import { SENDAI } from './sendai';
+import { ABAZIGAL } from './abazigal';
+// ─── Chapter 14 · The Throne of Bhaal (Melissan) ──────────────────────────
+import { BHAAL_ESSENCE_MOTE } from './bhaal-essence-mote';
+import { BLOOD_FIEND } from './blood-fiend';
+import { ESSENCE_WARDEN } from './essence-warden';
+import { MARILITH_WARDEN } from './marilith-warden';
+import { MURDER_HERALD } from './murder-herald';
+import { SLAYER_ECHO } from './slayer-echo';
+import { THRONE_ABISHAI } from './throne-abishai';
+import { MELISSAN } from './melissan';
 
 const ALL_MONSTERS: Monster[] = [
   GOBLIN,
@@ -194,6 +240,52 @@ const ALL_MONSTERS: Monster[] = [
   MASQUERADE_WARDEN,
   MASK_CHAMBERLAIN,
   THE_HOLLOW_PRETENDER,
+  // ─── Chapter 10 · Suldanessellar ────────────────────────────────────────
+  BODHI_SPAWN,
+  SULDANESSELLAR_ARCHER,
+  SULDANESSELLAR_BLADESINGER,
+  SULDANESSELLAR_WARPRIEST,
+  DEFILED_DRYAD,
+  DEFILED_TREANT,
+  PALACE_GOLEM,
+  RAKSHASA,
+  NIZIDRAMANIIYT,
+  // ─── Chapter 11 · The Trials of the Pit ─────────────────────────────────
+  MIRROR_OF_PRIDE,
+  DEVOURER_OF_SELFISHNESS,
+  HOARDING_FIEND_OF_GREED,
+  AVATAR_OF_WRATH,
+  WRAITH_OF_FEAR,
+  SLAYER_SHADE,
+  SPINED_ABISHAI,
+  IRENICUS,
+  // ─── Chapter 12 · The Siege of Saradush ─────────────────────────────────
+  SARADUSH_MARAUDER,
+  BURNING_DEAD,
+  FIRE_GIANT,
+  FIRE_GIANT_SHAMAN,
+  FIRE_GIANT_WARLORD,
+  HALF_GIANT_SIEGEBREAKER,
+  GROMNIR_DEFENDER,
+  YAGA_SHURA,
+  // ─── Chapter 13 · The Last of the Five ──────────────────────────────────
+  SENDAI_HANDMAIDEN,
+  KUO_TOA_DEEPGUARD,
+  PETRIFIED_AMBUSHER,
+  BLUE_WYRMLING,
+  STORMSCALE_DRAKE,
+  HALF_DRAGON_REAVER,
+  SENDAI,
+  ABAZIGAL,
+  // ─── Chapter 14 · The Throne of Bhaal ───────────────────────────────────
+  BHAAL_ESSENCE_MOTE,
+  BLOOD_FIEND,
+  ESSENCE_WARDEN,
+  MARILITH_WARDEN,
+  MURDER_HERALD,
+  SLAYER_ECHO,
+  THRONE_ABISHAI,
+  MELISSAN,
 ];
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
@@ -308,4 +400,50 @@ export {
   MASQUERADE_WARDEN,
   MASK_CHAMBERLAIN,
   THE_HOLLOW_PRETENDER,
+  // ─── Chapter 10 · Suldanessellar ────────────────────────────────────────
+  BODHI_SPAWN,
+  SULDANESSELLAR_ARCHER,
+  SULDANESSELLAR_BLADESINGER,
+  SULDANESSELLAR_WARPRIEST,
+  DEFILED_DRYAD,
+  DEFILED_TREANT,
+  PALACE_GOLEM,
+  RAKSHASA,
+  NIZIDRAMANIIYT,
+  // ─── Chapter 11 · The Trials of the Pit ─────────────────────────────────
+  MIRROR_OF_PRIDE,
+  DEVOURER_OF_SELFISHNESS,
+  HOARDING_FIEND_OF_GREED,
+  AVATAR_OF_WRATH,
+  WRAITH_OF_FEAR,
+  SLAYER_SHADE,
+  SPINED_ABISHAI,
+  IRENICUS,
+  // ─── Chapter 12 · The Siege of Saradush ─────────────────────────────────
+  SARADUSH_MARAUDER,
+  BURNING_DEAD,
+  FIRE_GIANT,
+  FIRE_GIANT_SHAMAN,
+  FIRE_GIANT_WARLORD,
+  HALF_GIANT_SIEGEBREAKER,
+  GROMNIR_DEFENDER,
+  YAGA_SHURA,
+  // ─── Chapter 13 · The Last of the Five ──────────────────────────────────
+  SENDAI_HANDMAIDEN,
+  KUO_TOA_DEEPGUARD,
+  PETRIFIED_AMBUSHER,
+  BLUE_WYRMLING,
+  STORMSCALE_DRAKE,
+  HALF_DRAGON_REAVER,
+  SENDAI,
+  ABAZIGAL,
+  // ─── Chapter 14 · The Throne of Bhaal ───────────────────────────────────
+  BHAAL_ESSENCE_MOTE,
+  BLOOD_FIEND,
+  ESSENCE_WARDEN,
+  MARILITH_WARDEN,
+  MURDER_HERALD,
+  SLAYER_ECHO,
+  THRONE_ABISHAI,
+  MELISSAN,
 };

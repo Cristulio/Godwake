@@ -276,8 +276,8 @@ describe('boss intel cards — content', () => {
     const ids = BOSS_INTEL_CARDS.map((c) => c.bossDefId);
     // No boss carries two cards.
     expect(new Set(ids).size).toBe(ids.length);
-    // The Ch1-6 spine plus the L20-expansion bosses (Ch7 Drowned Custodian,
-    // Ch8 Ashen Marshal, Ch9 Hollow Pretender) are all present.
+    // The Ch1-6 spine plus the L20-expansion bosses (Ch7 Drowned Custodian
+    // through the BG2 endgame Ch14 Melissan) are all present.
     expect(ids).toEqual(
       expect.arrayContaining([
         'duergar-ilyich',
@@ -289,6 +289,11 @@ describe('boss intel cards — content', () => {
         'drowned-custodian', // Ch7 — The Drowned Archive
         'ashen-marshal', // Ch8 — The Ashfall March
         'the-hollow-pretender', // Ch9 — The Court of Masks
+        'nizidramaniiyt', // Ch10 — Suldanessellar
+        'irenicus', // Ch11 — The Trials of the Pit
+        'yaga-shura', // Ch12 — The Siege of Saradush
+        'abazigal', // Ch13 — The Last of the Five
+        'melissan', // Ch14 — The Throne of Bhaal
       ]),
     );
     // Every card foreshadows a registered monster.

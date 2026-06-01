@@ -5,10 +5,11 @@ import {
   roomById,
 } from './createDelve';
 import { getMonster } from '../../content/monsters';
+import { getBossIntelCard, BOSS_INTEL_CARDS } from '../../content/bossIntel';
 import type { DelveState } from '../../types/delve';
 
 describe('createGodwakeDelve', () => {
-  it('emits at least 80 rooms across the six-chapter chained run', () => {
+  it('emits at least 80 rooms across the fourteen-chapter chained run', () => {
     const d = createGodwakeDelve(1);
     expect(d.rooms.length).toBeGreaterThanOrEqual(80);
   });
@@ -38,11 +39,42 @@ describe('createGodwakeDelve', () => {
       expect(bosses[i].monsters?.[0].defId).toBe(id);
     });
     // L20-expansion chapters append after the spine: Ch7 Drowned Archive, then
-    // Ch8 The Ashfall March, then Ch9 The Court of Masks.
+    // Ch8 The Ashfall March, Ch9 The Court of Masks, and the BG2 endgame Ch10-14.
     const bossIds = bosses.map((b) => b.monsters?.[0]?.defId);
     expect(bossIds).toContain('drowned-custodian');
     expect(bossIds).toContain('ashen-marshal');
     expect(bossIds).toContain('the-hollow-pretender');
+    expect(bossIds).toContain('nizidramaniiyt'); // Ch10 — Suldanessellar
+    expect(bossIds).toContain('irenicus'); // Ch11 — The Trials of the Pit
+    expect(bossIds).toContain('yaga-shura'); // Ch12 — The Siege of Saradush
+    expect(bossIds).toContain('abazigal'); // Ch13 — The Last of the Five
+    expect(bossIds).toContain('melissan'); // Ch14 — The Throne of Bhaal
+  });
+
+  it('is the full fourteen-chapter chain ending at Melissan, every boss wired', () => {
+    const d = createGodwakeDelve(1);
+    const bosses = d.rooms.filter((r) => r.kind === 'boss');
+    // Fourteen chapters → fourteen distinct chapter bosses, in order 1..14.
+    expect(bosses).toHaveLength(14);
+    const chapters = bosses.map((b) => b.chapter);
+    expect(chapters).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+
+    // Each boss def resolves to a registered monster and has exactly one intel card.
+    for (const boss of bosses) {
+      const defId = boss.monsters?.[0]?.defId;
+      expect(defId).toBeTruthy();
+      expect(() => getMonster(defId!)).not.toThrow();
+      expect(getBossIntelCard(defId!)).not.toBeNull();
+      const cards = BOSS_INTEL_CARDS.filter((c) => c.bossDefId === defId);
+      expect(cards).toHaveLength(1);
+    }
+
+    // The very last room of the chain is the Ch14 Melissan boss — the finale.
+    const finalRoom = d.rooms[d.rooms.length - 1];
+    expect(finalRoom.kind).toBe('boss');
+    expect(finalRoom.chapter).toBe(14);
+    expect(finalRoom.monsters?.[0]?.defId).toBe('melissan');
+    expect(finalRoom.next ?? []).toHaveLength(0);
   });
 
   it('has at least six event rooms threaded through the chapters', () => {

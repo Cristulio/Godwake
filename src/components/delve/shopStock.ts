@@ -36,11 +36,15 @@ export function tierForChapter(chapter: number | undefined): CampBoonTier {
 }
 
 /**
- * The five-slot rarity mix the merchant lays out, by CHAPTER (1–9). The rack
+ * The five-slot rarity mix the merchant lays out, by CHAPTER (1–14). The rack
  * climbs from green-heavy at the gate to all-purple in the deep chapters, so a
- * late-game merchant is visibly richer than an early one. Indexed 1-based; clamp
- * out-of-range. (Enhancement +N and base power ride the same chapter axis via
- * rollItem's depth.) Magnitudes are by judgment — a sim pass tunes them.
+ * late-game merchant is visibly richer than an early one. The rarity ladder tops
+ * out at purple (legendaries are the hub layer, never rolled onto shop stock), so
+ * the mix saturates at all-purple from Ch8 on; deeper chapters keep climbing on
+ * the OTHER axis — enhancement +N and base power via rollItem's depth, which
+ * takes the raw chapter (10–14 included) uncapped. Indexed 1-based; clamp
+ * out-of-range so 10–14 take the all-purple top row. Magnitudes are by judgment —
+ * a sim pass tunes them.
  */
 const GEAR_RARITY_MIX_BY_CHAPTER: GearRarity[][] = [
   ['green', 'green', 'green', 'blue', 'blue'], // ch1
@@ -50,8 +54,7 @@ const GEAR_RARITY_MIX_BY_CHAPTER: GearRarity[][] = [
   ['blue', 'blue', 'purple', 'purple', 'purple'], // ch5
   ['blue', 'blue', 'purple', 'purple', 'purple'], // ch6
   ['blue', 'purple', 'purple', 'purple', 'purple'], // ch7
-  ['purple', 'purple', 'purple', 'purple', 'purple'], // ch8
-  ['purple', 'purple', 'purple', 'purple', 'purple'], // ch9+
+  ['purple', 'purple', 'purple', 'purple', 'purple'], // ch8–14 (rarity ceiling; depth still climbs)
 ];
 
 function gearRarityMixForChapter(chapter: number): GearRarity[] {
@@ -81,9 +84,11 @@ export interface GearStock {
  * reroll the stock. At least one accessory is guaranteed on the rack so the new
  * slots are buyable, not drop-only.
  *
- * `chapter` (1–9) is the power axis: it sets the rarity mix AND feeds rollItem's
+ * `chapter` (1–14) is the power axis: it sets the rarity mix AND feeds rollItem's
  * depth (base tier + the +1/+2/+3 enhancement ceiling), so a deep-chapter rack
- * carries stronger, pricier arms.
+ * carries stronger, pricier arms. The rarity mix saturates at all-purple from
+ * Ch8 on (purple is the shop ceiling); past that, depth alone keeps the endgame
+ * rack climbing.
  *
  * `layer` is the node's column on the chapter map (`RoomSpec.layer`): deeper
  * shops within a chapter promote the weaker slots one rarity step, so a

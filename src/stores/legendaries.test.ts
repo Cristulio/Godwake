@@ -94,11 +94,11 @@ describe('legendary equip (effect-only, no slot cap)', () => {
 
 describe('legendary effects apply through the affix pipeline', () => {
   it('a completed 2-piece set stacks its bonus on top of the pieces', () => {
-    // Sets unlock at game completion (chaptersCleared 9).
+    // Sets unlock at game completion (chaptersCleared 14).
     useMetaStore.setState({
       ownedLegendaries: ['vigil-helm', 'vigil-mantle'],
       delveCount: 999,
-      chaptersCleared: 9,
+      chaptersCleared: 14,
     });
     useMetaStore.getState().setActiveLegendaries(['vigil-helm', 'vigil-mantle']);
     const mods = characterAffixMods(useCharacterStore.getState().character!);
