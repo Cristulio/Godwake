@@ -119,7 +119,10 @@ export const CLASS_UNLOCK_CHAPTER: Record<ClassId, number> = {
   ranger: 2,
   // The harder souls, staggered deeper.
   wizard: 4,
-  // druid: 6,  // reserved — Druid's own lane inserts its threshold here.
+  // The Druid: a Wisdom caster whose survivability rides on Wild Shape rather
+  // than armour — squishy in the bare-soul early game, like the Wizard before
+  // it. Opens between Wizard (4) and Rogue (8).
+  druid: 6,
   rogue: 8,
   // Not yet a playable class (absent from the roster); threshold is a placeholder.
   cleric: 99,

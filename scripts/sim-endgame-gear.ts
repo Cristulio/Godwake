@@ -93,8 +93,8 @@ import type { ItemRef } from '../src/schemas/item';
 import type { ClassId as SchemaClassId } from '../src/schemas/ids';
 import type { RoomSpec } from '../src/types/delve';
 
-type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger';
-const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger'];
+type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid';
+const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid'];
 
 const SOULS_PER_CLASS = Number(process.env.SOULS_PER_CLASS ?? 60);
 const MAX_LIVES = Number(process.env.MAX_LIVES ?? 140);
@@ -150,6 +150,11 @@ const CLASS_DAMAGE: Record<ClassId, GroveNode[]> = {
     { id: 'fellfast-strike', maxAtRank: 3 },
   ],
   wizard: [
+    { id: 'burning-tongue', maxAtRank: 5 },
+    { id: 'arcane-focus', maxAtRank: 3 },
+    { id: 'sigil-of-the-wakened-mind', maxAtRank: 3 },
+  ],
+  druid: [
     { id: 'burning-tongue', maxAtRank: 5 },
     { id: 'arcane-focus', maxAtRank: 3 },
     { id: 'sigil-of-the-wakened-mind', maxAtRank: 3 },

@@ -150,6 +150,30 @@ export function isRaging(character: Character): boolean {
   return (character.resources.rageRoundsRemaining ?? 0) > 0;
 }
 
+/**
+ * Classes that cast off the shared full-caster spell engine — the same slot
+ * ladder, prepared/known kit, and DC/attack scaling. The Wizard casts on
+ * Intelligence; the Druid on Wisdom (see {@link spellcastingAbility}).
+ */
+export function isFullCaster(classId: Character['classId']): boolean {
+  return classId === 'wizard' || classId === 'druid';
+}
+
+/** The ability a caster keys spells off: Wisdom for the Druid, Intelligence otherwise. */
+export function spellcastingAbility(character: Readonly<Character>): AbilityName {
+  return character.classId === 'druid' ? 'wis' : 'int';
+}
+
+/** The caster's spellcasting ability modifier (Wisdom for Druid, Intelligence for Wizard). */
+export function spellcastingMod(character: Readonly<Character>): number {
+  return abilityModifier(effectiveAbilityScores(character)[spellcastingAbility(character)]);
+}
+
+/** True while the Druid wears a beast form (Wild Shape) — claws out, vitality up. */
+export function isWildShaped(character: Readonly<Character>): boolean {
+  return (character.resources.wildShapeRoundsRemaining ?? 0) > 0;
+}
+
 export function characterHasMechanic(character: Character, mechanicKey: string): boolean {
   const cls = getClass(character.classId);
   for (let lv = 1; lv <= character.level; lv++) {

@@ -172,6 +172,24 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     }
   }
 
+  // Druid: the Wild Shape burns down one round each time the druid's turn comes
+  // around, and reverts the moment the form runs out — either the duration ends
+  // or the beast's vitality (temp HP) has been spent through.
+  if (order[nextIndex] === 'player' && (nextCharacter.resources.wildShapeRoundsRemaining ?? 0) > 0) {
+    const remaining = (nextCharacter.resources.wildShapeRoundsRemaining ?? 0) - 1;
+    const vitalitySpent = nextCharacter.hp.temp <= 0;
+    if (remaining <= 0 || vitalitySpent) {
+      nextCharacter = patchResources(nextCharacter, { wildShapeRoundsRemaining: 0 });
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'narration',
+        text: `${nextCharacter.name} lets the beast's shape fall away.`,
+      });
+    } else {
+      nextCharacter = patchResources(nextCharacter, { wildShapeRoundsRemaining: remaining });
+    }
+  }
+
   // Tick down monster-debuff conditions (poisoned/frightened/blinded/restrained/
   // weakened) at the start of the player's turn, dropping any that expire.
   // Paralyzed is skipped here — its save-each-turn resolver below owns it.

@@ -13,10 +13,94 @@ export function PlayerPortrait({ classId, className = '' }: PlayerPortraitProps)
       return <BarbarianSvg className={className} />;
     case 'ranger':
       return <RangerSvg className={className} />;
+    case 'druid':
+      return <DruidSvg className={className} />;
     case 'fighter':
     default:
       return <FighterSvg className={className} />;
   }
+}
+
+function DruidSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 40"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Druid"
+    >
+      {/* Ground-contact shadow */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.5" fill="#000" opacity="0.38" />
+      {/* Antlered crown rising from the hood */}
+      <rect x="6" y="1" width="1" height="2" fill="#7a5a36" />
+      <rect x="5" y="0" width="1" height="2" fill="#7a5a36" />
+      <rect x="7" y="2" width="1" height="1" fill="#8c6a40" />
+      <rect x="17" y="1" width="1" height="2" fill="#7a5a36" />
+      <rect x="18" y="0" width="1" height="2" fill="#7a5a36" />
+      <rect x="16" y="2" width="1" height="1" fill="#8c6a40" />
+      {/* Leaf-and-bark hood */}
+      <rect x="9" y="2" width="6" height="1" fill="#2e4327" />
+      <rect x="8" y="3" width="8" height="2" fill="#345029" />
+      <rect x="7" y="4" width="1" height="4" fill="#223818" />
+      <rect x="16" y="4" width="1" height="4" fill="#223818" />
+      {/* Hood rim catch-light (upper-left) */}
+      <rect x="8" y="3" width="3" height="1" fill="#4a6b3a" />
+      {/* Face in the hood shadow — weathered, bearded */}
+      <rect x="8" y="5" width="8" height="4" fill="#c2a47e" />
+      <rect x="8" y="5" width="1" height="4" fill="#9c7c54" />
+      {/* Calm green eyes */}
+      <rect x="9" y="6" width="2" height="1" fill="#2f5a28" />
+      <rect x="13" y="6" width="2" height="1" fill="#2f5a28" />
+      {/* Grey-green beard / moss */}
+      <rect x="8" y="9" width="8" height="3" fill="#7d8a6a" />
+      <rect x="9" y="10" width="6" height="2" fill="#909c7a" />
+      <rect x="10" y="12" width="4" height="1" fill="#7d8a6a" />
+      {/* Mantle of leaves over the shoulders */}
+      <rect x="5" y="12" width="14" height="2" fill="#2e4a22" />
+      <rect x="5" y="12" width="2" height="3" fill="#223818" />
+      <rect x="17" y="12" width="2" height="3" fill="#223818" />
+      <rect x="7" y="12" width="2" height="1" fill="#4a6b3a" />
+      {/* Earth-brown robe body */}
+      <rect x="6" y="14" width="12" height="14" fill="#4a3a26" />
+      <rect x="6" y="14" width="1" height="14" fill="#33271a" />
+      <rect x="17" y="14" width="1" height="14" fill="#33271a" />
+      {/* Green sash / vine wrap */}
+      <rect x="6" y="18" width="12" height="1" fill="#3a5a2c" />
+      <rect x="9" y="19" width="6" height="1" fill="#4a6b3a" />
+      {/* Stitched leaf motif on the chest */}
+      <rect x="11" y="15" width="2" height="3" fill="#3a5a2c" />
+      <rect x="10" y="16" width="4" height="1" fill="#3a5a2c" />
+      {/* Left arm cradled across the body */}
+      <rect x="6" y="15" width="2" height="2" fill="#4a3a26" />
+      <rect x="5" y="17" width="2" height="5" fill="#4a3a26" />
+      <rect x="6" y="22" width="2" height="1" fill="#c2a47e" />
+      {/* Right arm holding the gnarled staff */}
+      <rect x="16" y="15" width="2" height="2" fill="#4a3a26" />
+      <rect x="17" y="17" width="2" height="6" fill="#4a3a26" />
+      <rect x="18" y="22" width="2" height="2" fill="#c2a47e" />
+      {/* Gnarled wooden staff */}
+      <rect x="20" y="3" width="2" height="31" fill="#5a3f24" />
+      <rect x="20" y="3" width="1" height="31" fill="#7a5a36" />
+      <rect x="20" y="13" width="2" height="1" fill="#33271a" />
+      <rect x="20" y="23" width="2" height="1" fill="#33271a" />
+      {/* Living sprig bound at the staff-head */}
+      <rect x="19" y="1" width="1" height="2" fill="#4a6b3a" />
+      <rect x="20" y="0" width="2" height="2" fill="#5a8a3a" />
+      <rect x="22" y="1" width="1" height="2" fill="#4a6b3a" />
+      <rect x="20" y="2" width="2" height="1" fill="#7aa84a" />
+      {/* Robe lower hem */}
+      <rect x="6" y="28" width="12" height="2" fill="#33271a" />
+      {/* Legs */}
+      <rect x="8" y="30" width="3" height="4" fill="#3a2e22" />
+      <rect x="13" y="30" width="3" height="4" fill="#3a2e22" />
+      {/* Bare, earth-stained feet */}
+      <rect x="7" y="34" width="5" height="4" fill="#9c7c54" />
+      <rect x="7" y="38" width="5" height="1" fill="#6b4a2e" />
+      <rect x="12" y="34" width="5" height="4" fill="#9c7c54" />
+      <rect x="12" y="38" width="5" height="1" fill="#6b4a2e" />
+    </svg>
+  );
 }
 
 function FighterSvg({ className }: { className?: string }) {

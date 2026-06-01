@@ -12,7 +12,7 @@ export const WOOD_ELF: Race = RaceSchema.parse({
     cha: 0,
   },
   speed: 35,
-  validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger'],
+  validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger', 'druid'],
   bonusHpPerLevel: 1,
   features: [
     {

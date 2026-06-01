@@ -332,6 +332,165 @@ export const UNMAKE: Spell = SpellSchema.parse({
   effectKey: 'unmake',
 });
 
+// --- Druid: the nature book (Silvanus's craft). A curated set spanning every
+// slot tier so no slot the climb opens is left dead. Each maps onto an EXISTING
+// spell-effect handler (no new engine kinds) — the flavor is the Druid's, the
+// machinery is shared with the arcane book. Cantrip + tiers 1–9.
+
+export const PRODUCE_FLAME: Spell = SpellSchema.parse({
+  id: 'produce-flame',
+  name: 'Produce Flame',
+  level: 0,
+  school: 'conjuration',
+  range: '60 ft',
+  target: 'single',
+  damageType: 'fire',
+  description:
+    'A flickering flame kindles in your cupped hand and leaps at one target — d10 fire + your Wisdom modifier, growing as you do (2d10 at level 5, 3d10 at 7, 4d10 at 8). A Dexterity save halves the burn. The light never leaves you wanting for a torch.',
+  effectKey: 'fire-bolt',
+});
+
+export const THORNLASH: Spell = SpellSchema.parse({
+  id: 'thornlash',
+  name: 'Thornlash',
+  level: 1,
+  school: 'conjuration',
+  range: '90 ft',
+  target: 'single',
+  damageType: 'force',
+  description:
+    'Barbed tendrils whip from the ground and lash one target — 1d4+1 each, no attack roll and no save: they simply find skin. Three lashes to start, and more as you grow. The answer to a foe too armoured or too quick to strike clean.',
+  effectKey: 'magic-missile',
+});
+
+export const ENTANGLING_ROOTS: Spell = SpellSchema.parse({
+  id: 'entangling-roots',
+  name: 'Entangling Roots',
+  level: 2,
+  school: 'transmutation',
+  range: '60 ft',
+  target: 'single',
+  description:
+    'Grasping roots erupt and seize one target — a Wisdom save or be rooted fast, helpless, for the next 2 rounds.',
+  effectKey: 'hold-person',
+});
+
+export const MOONFIRE: Spell = SpellSchema.parse({
+  id: 'moonfire',
+  name: 'Moonfire',
+  level: 2,
+  school: 'evocation',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'fire',
+  description:
+    'Lances of cold silver flame streak from your hand at one target — each its own attack roll, 2d6 on a hit. Three to start, and more as you grow. Every lance a fresh chance to crit; a hard target rarely shrugs off the whole volley.',
+  effectKey: 'scorching-ray',
+});
+
+export const CALL_LIGHTNING: Spell = SpellSchema.parse({
+  id: 'call-lightning',
+  name: 'Call Lightning',
+  level: 3,
+  school: 'conjuration',
+  range: '100 ft',
+  target: 'single',
+  damageType: 'lightning',
+  description:
+    'You haul a bolt down out of the air onto one target for 10d6 — and it forks to a second foe for half, and no further. A Dexterity save halves it on each. The focused strike to Wildfire’s crowd-clear.',
+  effectKey: 'lightning-bolt',
+});
+
+export const WILDFIRE: Spell = SpellSchema.parse({
+  id: 'wildfire',
+  name: 'Wildfire',
+  level: 3,
+  school: 'evocation',
+  range: '150 ft',
+  target: 'area',
+  damageType: 'fire',
+  description:
+    'A wall of brushfire roars up and sweeps the room — 8d6 fire to every enemy. DEX save halves. Enemies that fail keep burning: 1d6 fire at the start of your next turn.',
+  effectKey: 'fireball',
+});
+
+export const ICE_STORM: Spell = SpellSchema.parse({
+  id: 'ice-storm',
+  name: 'Ice Storm',
+  level: 4,
+  school: 'evocation',
+  range: '60 ft',
+  target: 'area',
+  damageType: 'cold',
+  description:
+    'A squall of jagged hail batters the room — 7d6 cold to every enemy. A Dexterity save halves the bite.',
+  effectKey: 'rime-blast',
+});
+
+export const AVALANCHE: Spell = SpellSchema.parse({
+  id: 'avalanche',
+  name: 'Avalanche',
+  level: 5,
+  school: 'transmutation',
+  range: 'Self (60-ft cone)',
+  target: 'area',
+  damageType: 'cold',
+  description:
+    'The mountain comes down at your word — a roaring fan of ice and stone sweeps the room for 9d8 cold. A Dexterity save halves it.',
+  effectKey: 'glacial-cone',
+});
+
+export const FIRE_STORM: Spell = SpellSchema.parse({
+  id: 'fire-storm',
+  name: 'Fire Storm',
+  level: 6,
+  school: 'evocation',
+  range: '150 ft',
+  target: 'area',
+  damageType: 'fire',
+  description:
+    'Sheets of roaring flame bloom where you will them — 11d6 fire to every enemy. A Dexterity save halves the blaze.',
+  effectKey: 'sunfire-burst',
+});
+
+export const SUMMON_TEMPEST: Spell = SpellSchema.parse({
+  id: 'summon-tempest',
+  name: 'Summon Tempest',
+  level: 7,
+  school: 'conjuration',
+  range: '120 ft',
+  target: 'area',
+  damageType: 'lightning',
+  description:
+    'You call a thunderhead down indoors — 13d6 lightning to every enemy. A Dexterity save halves it; even a clean save still draws an arc.',
+  effectKey: 'stormcrash',
+});
+
+export const WRATH_OF_SILVANUS: Spell = SpellSchema.parse({
+  id: 'wrath-of-silvanus',
+  name: 'Wrath of Silvanus',
+  level: 8,
+  school: 'evocation',
+  range: '150 ft',
+  target: 'area',
+  damageType: 'fire',
+  description:
+    'The Oak Father answers — the ground splits and a column of wildfire and ruin descends. 15d6 fire to every enemy. A Dexterity save halves the devastation.',
+  effectKey: 'cataclysm',
+});
+
+export const AVATAR_OF_THE_WILDS: Spell = SpellSchema.parse({
+  id: 'avatar-of-the-wilds',
+  name: 'Avatar of the Wilds',
+  level: 9,
+  school: 'transmutation',
+  range: 'Self',
+  target: 'self',
+  description:
+    'You let the wild pour through you whole and stand as something primeval. For 4 rounds you gain 30 temporary hit points, +2 AC, and every strike — claw or spell — bites for far more.',
+  effectKey: 'apotheosis',
+});
+
 const ALL_SPELLS: Spell[] = [
   FIRE_BOLT,
   MAGIC_MISSILE,
@@ -359,6 +518,19 @@ const ALL_SPELLS: Spell[] = [
   WITHER,
   APOTHEOSIS,
   UNMAKE,
+  // Druid book.
+  PRODUCE_FLAME,
+  THORNLASH,
+  ENTANGLING_ROOTS,
+  MOONFIRE,
+  CALL_LIGHTNING,
+  WILDFIRE,
+  ICE_STORM,
+  AVALANCHE,
+  FIRE_STORM,
+  SUMMON_TEMPEST,
+  WRATH_OF_SILVANUS,
+  AVATAR_OF_THE_WILDS,
 ];
 
 const SPELL_BY_ID: Map<string, Spell> = new Map(ALL_SPELLS.map((s) => [s.id, s]));

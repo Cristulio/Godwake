@@ -1,6 +1,6 @@
 import type { Character } from '../../types/character';
 import { abilityModifier } from '../../types/abilities';
-import { effectiveAbilityScores } from './derived';
+import { effectiveAbilityScores, isFullCaster } from './derived';
 import { getClass } from '../../content/classes';
 import { getRace } from '../../content/races';
 import { wizardSpellSlots } from './actions';
@@ -88,12 +88,12 @@ export function applyLevelUp(character: Character): Character {
     resources.cunningActionUsesRemaining = 2;
   }
 
-  // Wizard: slots scale with level. Granting via the slot table also refills
-  // the well — leveling reads as a long rest in narrative terms. Spell
-  // learning is no longer auto-granted here — the LevelUpScreen surfaces a
-  // picker at L3 (first 2nd-level slot) and L5 (first 3rd-level slot); the
-  // picked id arrives via the `resources.knownSpells` override.
-  if (character.classId === 'wizard') {
+  // Full casters (Wizard / Druid): slots scale with level on the shared ladder.
+  // Granting via the slot table also refills the well — leveling reads as a long
+  // rest in narrative terms. The Wizard surfaces a spell-learn picker at the odd
+  // levels (the picked id arrives via the `resources.knownSpells` override); the
+  // Druid prepares a fixed nature book, so no picker fires for it.
+  if (isFullCaster(character.classId)) {
     resources.spellSlots = wizardSpellSlots({ ...character, level: newLevel });
   }
 

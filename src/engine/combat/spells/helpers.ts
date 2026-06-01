@@ -10,8 +10,9 @@ import { getMonster } from '../../../content/monsters';
 import { applyDamage, evaluateCombatEnd as evaluateCombatEndShared } from '../attack';
 import { abilityModifier } from '../../../types/abilities';
 import {
-  effectiveAbilityScores,
+  isFullCaster,
   proficiencyBonus,
+  spellcastingMod,
 } from '../../character/derived';
 import { characterCampBoonMods } from '../../character/campBoons';
 import { characterAffixMods } from '../../items/affixMods';
@@ -42,10 +43,9 @@ export function nextLogId(state: CombatState): number {
 }
 
 export function spellAttackBonus(character: Readonly<Character>): number {
-  const scores = effectiveAbilityScores(character);
   const boonBonus = characterCampBoonMods(character).spellAttackBonus ?? 0;
   return (
-    abilityModifier(scores.int) +
+    spellcastingMod(character) +
     proficiencyBonus(character.level) +
     (character.permanentBonuses?.spellAttack ?? 0) +
     (character.delveSpellAttackBonus ?? 0) +
@@ -55,15 +55,14 @@ export function spellAttackBonus(character: Readonly<Character>): number {
 }
 
 export function spellSaveDC(character: Readonly<Character>): number {
-  const scores = effectiveAbilityScores(character);
-  // Wizards get +1 baseline ("Focused Casting") so save-or-suck spells like
-  // Burning Hands actually land — without this, DC 12 vs typical +2/+3 DEX
+  // Full casters get a +1 baseline ("Focused Casting") so save-or-suck spells
+  // like Burning Hands actually land — without this, DC 12 vs typical +2/+3 DEX
   // saves means ~55% save rate and AoE feels useless.
-  const classBonus = character.classId === 'wizard' ? 1 : 0;
+  const classBonus = isFullCaster(character.classId) ? 1 : 0;
   const boonBonus = characterCampBoonMods(character).spellDcBonus ?? 0;
   return (
     8 +
-    abilityModifier(scores.int) +
+    spellcastingMod(character) +
     proficiencyBonus(character.level) +
     classBonus +
     (character.permanentBonuses?.spellDc ?? 0) +

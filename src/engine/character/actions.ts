@@ -1,5 +1,5 @@
 import type { Character, SpellSlots } from '../../types/character';
-import { characterHasMechanic } from './derived';
+import { characterHasMechanic, isFullCaster } from './derived';
 import { characterAffixMods } from '../items/affixMods';
 
 /** Returns a character object with fresh action economy for a new turn. */
@@ -120,7 +120,7 @@ export function wizardSpellSlots(character: Readonly<Character>): SpellSlots {
  *  cantripping by room 4. Camp rests + rest rooms are the wizard's recovery.
  */
 export function shortRestHeal(character: Character, healAmount: number): Character {
-  const isWizard = character.classId === 'wizard';
+  const isCaster = isFullCaster(character.classId);
   const newHp = Math.min(character.hp.max, character.hp.current + healAmount);
   return {
     ...character,
@@ -135,7 +135,7 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
       rageRoundsRemaining: 0,
-      spellSlots: isWizard
+      spellSlots: isCaster
         ? wizardSpellSlots(character)
         : character.resources.spellSlots,
     },
@@ -145,6 +145,7 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
 /** Full long rest: full HP + full resources + conditions cleared. Used at hub between delves. */
 export function longRest(character: Character): Character {
   const isWizard = character.classId === 'wizard';
+  const isCaster = isFullCaster(character.classId);
   return withResetActionEconomy({
     ...character,
     hp: { ...character.hp, current: character.hp.max, temp: 0 },
@@ -161,7 +162,7 @@ export function longRest(character: Character): Character {
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
       rageRoundsRemaining: 0,
-      spellSlots: isWizard
+      spellSlots: isCaster
         ? wizardSpellSlots(character)
         : character.resources.spellSlots,
       mageArmorActive: isWizard ? false : character.resources.mageArmorActive,
