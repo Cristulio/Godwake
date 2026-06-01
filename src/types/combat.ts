@@ -280,4 +280,23 @@ export interface CombatState {
    * a regen weapon. Optional so legacy saves rehydrate (absent = 0).
    */
   playerRegenStacks?: number;
+  /**
+   * Ascension dungeon twist — Cursed Ground: flat damage the hero takes at the
+   * start of each of their turns this fight. Set at combat start from the room's
+   * twist; absent/0 means no curse. Applied in createCombat (turn-0 player) and
+   * endTurn (every subsequent player turn).
+   */
+  cursedGroundChip?: number;
+  /**
+   * Ascension dungeon twist — Gloom: the hero's first attack of the fight rolls
+   * at disadvantage. Read by playerAttack on the first attack (naturally one-
+   * shot via playerHasAttacked). Absent means no gloom.
+   */
+  gloomActive?: boolean;
+  /**
+   * Ascension dungeon twist — Sealed Wards: blessing modifiers are inert this
+   * fight. createCombat skips blessing start effects; playerAttack skips the
+   * blessing first-attack bonus/advantage. Absent means blessings apply.
+   */
+  blessingsSealed?: boolean;
 }

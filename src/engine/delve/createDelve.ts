@@ -1,6 +1,7 @@
 import type { DelveState, RoomSpec } from '../../types/delve';
 import { createRng, randomSeed } from '../dice/rng';
-import { clampAscension, ascensionEliteVariants } from './ascension';
+import { clampAscension, ascensionEliteVariants, ascensionDungeonTwists } from './ascension';
+import { rollRoomTwist } from './twists';
 import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
 import { eventsForChapter } from '../../content/events';
 import { intelEventIdFor, getBossIntelCard } from '../../content/bossIntel';
@@ -468,6 +469,10 @@ function buildChapterNodes(
     ? [...content.pools.elite, ...ASCENDANT_ELITE_POOL]
     : content.pools.elite;
   const eliteQ = pickN(rng, elitePool, elitesEnabled ? eliteSlots : 0);
+  // Ascension dungeon twists ride a fraction of the routed combat rooms only at
+  // Ascension >= 4. The roll consumes RNG only when twists are live, so low-
+  // ascension maps draw the exact same stream they always did.
+  const twistsLive = ascensionDungeonTwists(ascension);
   let shrineI = 0;
   let restI = 0;
 
@@ -515,6 +520,12 @@ function buildChapterNodes(
       }
       node.layer = layer;
       node.chapter = content.chapter;
+      // Twist the routed mid-road fights (not the warmup opener, elites or the
+      // boss), so a chapter holds a few telegraphed hazard rooms.
+      if (twistsLive && (slot === 'earlyMid' || slot === 'mid')) {
+        const twistId = rollRoomTwist(rng);
+        if (twistId) node.twistId = twistId;
+      }
       return node;
     }),
   );

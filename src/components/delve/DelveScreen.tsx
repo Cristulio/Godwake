@@ -182,6 +182,7 @@ function DelveScreenBody() {
       ascension: delve.ascensionLevel ?? 0,
       isBoss: room.kind === 'boss',
       isElite: room.kind === 'elite',
+      twistId: room.twistId,
     });
     setCharacter(newCombat.character);
     setCombat(newCombat.state);

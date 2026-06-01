@@ -1,7 +1,7 @@
 import { useMemo, useState, type CSSProperties } from 'react';
 import type { Character } from '../../types/character';
 import type { DelveState, RoomKind, RoomSpec } from '../../types/delve';
-import { chapterMapNodes } from '../../engine/delve';
+import { chapterMapNodes, getTwist } from '../../engine/delve';
 import { useGameStore } from '../../stores/gameStore';
 import { playSfx } from '../../engine/audio';
 import { Button } from '../ui/Button';
@@ -237,6 +237,14 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                 title={room.title}
               >
                 <span className="bm-node-tag">{tag}</span>
+                {room.twistId && (
+                  <span
+                    className="absolute -top-1 -right-1 text-[var(--color-accent-blood)] text-xs leading-none"
+                    aria-label="twisted"
+                  >
+                    ✦
+                  </span>
+                )}
               </button>
             );
           })}
@@ -252,6 +260,11 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
             <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
               {KIND_BLURB[detail.kind]}
             </div>
+            {getTwist(detail.twistId) && (
+              <div className="text-[var(--color-accent-blood)] text-xs italic mt-1 leading-relaxed">
+                ✦ {getTwist(detail.twistId)!.telegraph}
+              </div>
+            )}
           </>
         ) : (
           <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic">
