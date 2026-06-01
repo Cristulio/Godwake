@@ -164,6 +164,112 @@ export const LORE_BEATS: LoreBeat[] = [
     minChapters: 4,
     text: 'The last door. Past it the dead god wakes, and one of us holds its leash. I made you for this moment. I no longer know whether I want to win it. Walk in anyway. Let us both see what you have become.',
   },
+  // ── Ch5-9 · the Godwake reframed as his god-making engine ──────────────────
+  // The captor drags the bound soul down through his own works toward the
+  // divinity he covets; Imoen tracks the descent; the soul-bond strains.
+  {
+    id: 'lore-17-my-own-machine',
+    speaker: 'irenicus',
+    context: 'descent',
+    minChapters: 5,
+    text: 'You think these deeps are the world\'s own dark. They are mine. Every floor below the cage is a furnace I built to render the god out of you — the dawn that will not break, the wheel, the drowned stacks. I am walking you through my own machine, and it is nearly finished.',
+  },
+  {
+    id: 'lore-18-up-is-me',
+    speaker: 'imoen',
+    context: 'descent',
+    minChapters: 5,
+    text: "We're past anywhere I have a name for. He's taking you down through things he MADE — I can feel the walls remember his hands. Don't lose which way is up. Up is me. Keep coming up to me, even while he drags you down.",
+  },
+  {
+    id: 'lore-19-the-wheel-turns',
+    speaker: 'irenicus',
+    context: 'idle',
+    minChapters: 6,
+    text: 'Do you feel the wheel turning under your feet? I did not build that one — but I learned to read it, and it spins on the very blood I draw from you. The divinity at its hub was always meant for a hand to close on it. It will be mine. You are how I reach it.',
+  },
+  {
+    id: 'lore-20-the-rope-pays-out',
+    speaker: 'imoen',
+    context: 'rest',
+    minChapters: 7,
+    text: "He drowned a whole library down here rather than let a soul read what he learned. That's what we're walking through — his secrets, held under black water. And the bond between us is stretching thin as a rope paid out too far. Don't let your end go. I've got mine in both hands.",
+  },
+  {
+    id: 'lore-21-never-stood-down',
+    speaker: 'irenicus',
+    context: 'descent',
+    minChapters: 8,
+    text: 'An army that marches a hundred years because no one told it the war was won. I understand them better than they know. I too will not be told the work is finished — and it is not finished, not until the dead god in your blood stands up at last and wears my face out into the light.',
+  },
+  {
+    id: 'lore-22-no-seam',
+    speaker: 'irenicus',
+    context: 'idle',
+    minChapters: 9,
+    text: 'This was my house once, before the elves cut the soul out of me. Here I learned that a face is only what the room expects, worn well. You wear mine a little more with every death. Soon there will be no seam between captor and captive. That was always the design, child.',
+  },
+  {
+    id: 'lore-23-which-thoughts-are-mine',
+    speaker: 'imoen',
+    context: 'low-hp',
+    minChapters: 9,
+    text: "I can't always tell your thoughts from his down here, and that frightens me worse than anything he's done. Hold on to the one who stole books off the high shelves with me. That one is ours. Don't let his masks have it. Don't let them have you.",
+  },
+  // ── Ch10 · Suldanessellar / the Tree of Life — the reveal ──────────────────
+  {
+    id: 'lore-24-the-vein-named',
+    speaker: 'irenicus',
+    context: 'boss-approach',
+    minChapters: 10,
+    text: 'Now you see the whole of it. The Tree gives back the soul the elves tore out of me — but a soul is not a godhood. For that I need the murdered god in YOUR blood, the essence I have distilled from you one death at a time. You carried it all the way up here for me. I am grateful. Truly.',
+  },
+  {
+    id: 'lore-25-take-it-back',
+    speaker: 'imoen',
+    context: 'victory',
+    minChapters: 10,
+    text: "He needs something that lives IN you — I heard it plain this time. The thing he's bled you for, life after life. Whatever it is, it's yours, do you hear me, not his. Reach me first. We take it back together, before he can close his hand.",
+  },
+  // ── Ch11 · the Trials of the Pit — the confrontation, the captor falls ─────
+  {
+    id: 'lore-26-end-what-the-cage-began',
+    speaker: 'irenicus',
+    context: 'boss-approach',
+    minChapters: 11,
+    text: 'Down through every work of mine, and back up to me. The cold thing in your hand is the one mercy I left in all my Hell — the one piece of you I cannot take. So. No more measuring. Be still for me a final time, child of Murder. Or do not. Let us end what the cage began.',
+  },
+  {
+    id: 'lore-27-the-voice-is-gone',
+    speaker: 'imoen',
+    context: 'victory',
+    minChapters: 11,
+    text: "He's down. He's DOWN — the Voice is gone, there's only quiet where it lived all this time. You came the whole way down and pulled him under with you. And — oh. Oh, you're truly here. I have your hand. I have it. I am never letting it go again.",
+  },
+  // ── Ch12-14 · Throne of Bhaal — the Voice is silenced; the Bhaalspawn truth
+  // surfaces, Melissan's harvest is unmasked, and the arc hands off to the
+  // ascend-or-mortal ending (EndingScreen) rather than resolving it here. ─────
+  {
+    id: 'lore-28-child-of-bhaal',
+    speaker: 'imoen',
+    context: 'descent',
+    minChapters: 12,
+    text: "The Voice is dead, and the truth it hid is standing up in its place. You're a Child of Bhaal — the dead Lord of Murder — and so is every soul burning in that city, all of you hunted for the god in your blood. And something whispers now where Irenicus used to. It wants you to swing. Don't.",
+  },
+  {
+    id: 'lore-29-the-kind-womans-smile',
+    speaker: 'imoen',
+    context: 'rest',
+    minChapters: 13,
+    text: "The kind woman guiding us — Melissan — she set the Five to murdering each other. I've watched her smile a long while now, and I've started to dread it. She wants them all dead, and she wants your hand to do it. I just can't yet see what she means to take once the last of them falls.",
+  },
+  {
+    id: 'lore-30-choose-it-as-yourself',
+    speaker: 'imoen',
+    context: 'boss-approach',
+    minChapters: 14,
+    text: "I have the whole shape of it now. Melissan — Amelyssan — was Bhaal's own priestess, and the harvest was always hers: every death, every drop, gathered to wake HER as the god of Murder reborn. One door left, an empty throne behind it. End her. Then the seat is yours — to take, or to turn from. Choose it as yourself. I'll be with you at the wheel.",
+  },
 ];
 
 /** The slice of meta {@link nextLoreBeat} reads. metaStore is a structural superset. */
