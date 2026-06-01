@@ -1,53 +1,62 @@
 #!/usr/bin/env bash
 #
-# pr-watch — orchestrator's PR-creation watcher.
+# pr-watch — orchestrator's PR-creation + stall watcher.
 #
-# Polls until EVERY given feature branch has an OPEN pull request, then prints
-# each branch's PR number + CI state and exits 0. Run it as a background
-# command so the orchestrator is re-invoked the moment its agents have opened
-# their PRs.
+# Polls the given feature branches and exits when one of three things is true:
+#   - exit 0: EVERY branch has an OPEN pull request (the happy path).
+#   - exit 3: at least one branch STALLED — its worktree has had no file
+#             activity for --stall-min minutes and still has no PR. Reports
+#             which branches are ready (with PR#) and which are stuck, so the
+#             orchestrator can merge the ready ones and intervene on the stuck
+#             one immediately instead of blocking on a 90-minute timeout.
+#   - exit 1: hard timeout (--timeout-min) with branches still PR-less and not
+#             yet flagged as stalled.
+# Run it as a background command so the orchestrator is re-invoked the moment
+# its agents open PRs OR a lane goes dark.
 #
 # Hard-won lessons baked in:
 #   - Poll --state open, NEVER --state all: a stale MERGED PR from a prior
 #     session can reuse a branch name and falsely satisfy an --state all query.
-#   - Fire on PR CREATION, not on CI completion: waiting for CI-terminal left
-#     freshly-opened PRs sitting unacknowledged. The orchestrator decides merge
+#   - Fire on PR CREATION, not on CI completion: the orchestrator decides merge
 #     timing; this tool only detects + reports.
-#   - A branch with no PR yet (agent still working) is normal: keep polling.
+#   - A branch with no PR yet is normal WHILE its worktree is still being
+#     written. Silence (no writes for --stall-min) is the stall signal — catches
+#     a dead/zombie lane in minutes, not at the 90m wall (see
+#     feedback-no-duplicate-lane-same-worktree / the relaunch trap).
 
 set -uo pipefail
 
 timeout_min=90
 interval_sec=30
+stall_min=12
 branches=()
 
 usage() {
   cat <<'EOF'
-Usage: scripts/pr-watch [--timeout-min N] [--interval-sec S] <branch> [<branch> ...]
+Usage: scripts/pr-watch [--timeout-min N] [--interval-sec S] [--stall-min M] <branch> [<branch> ...]
 
-Polls until every <branch> has an OPEN pull request, then prints each branch's
-PR number + CI state (pass|pending|fail) and exits 0. Exits 1 on timeout.
+Polls until every <branch> has an OPEN PR (exit 0), a branch STALLS (exit 3), or
+timeout (exit 1). Prints each branch's PR number + CI state on the happy path,
+and the ready/stuck split on a stall.
 
 Options:
-  --timeout-min N    give up after N minutes   (default: 90)
-  --interval-sec S   seconds between polls      (default: 30)
+  --timeout-min N    hard give-up after N minutes        (default: 90)
+  --interval-sec S   seconds between polls                (default: 30)
+  --stall-min M      flag a PR-less branch as stalled after
+                     M minutes with no worktree file activity (default: 12)
+                     Set 0 to disable stall detection (legacy behaviour).
 EOF
 }
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --timeout-min)
-      timeout_min="${2:-}"; shift 2 ;;
-    --interval-sec)
-      interval_sec="${2:-}"; shift 2 ;;
-    -h|--help)
-      usage; exit 0 ;;
-    --)
-      shift; branches+=("$@"); break ;;
-    -*)
-      echo "pr-watch: unknown option: $1" >&2; usage >&2; exit 2 ;;
-    *)
-      branches+=("$1"); shift ;;
+    --timeout-min) timeout_min="${2:-}"; shift 2 ;;
+    --interval-sec) interval_sec="${2:-}"; shift 2 ;;
+    --stall-min) stall_min="${2:-}"; shift 2 ;;
+    -h|--help) usage; exit 0 ;;
+    --) shift; branches+=("$@"); break ;;
+    -*) echo "pr-watch: unknown option: $1" >&2; usage >&2; exit 2 ;;
+    *) branches+=("$1"); shift ;;
   esac
 done
 
@@ -57,35 +66,58 @@ if [[ ${#branches[@]} -eq 0 ]]; then
   exit 2
 fi
 
-# CI state for a PR number, derived from `gh pr checks` exit code:
-#   0 = pass, 8 = pending, anything else = fail (incl. "no checks" -> treat as pass-ish fail).
+# CI state for a PR number, derived from `gh pr checks` exit code.
 ci_state() {
-  local num="$1"
-  gh pr checks "$num" >/dev/null 2>&1
-  case $? in
-    0) echo "pass" ;;
-    8) echo "pending" ;;
-    *) echo "fail" ;;
-  esac
+  gh pr checks "$1" >/dev/null 2>&1
+  case $? in 0) echo "pass" ;; 8) echo "pending" ;; *) echo "fail" ;; esac
+}
+
+# Resolve a branch name (feat/foo) to its checked-out worktree path, or "" if none.
+worktree_for() {
+  local target="$1" path="" br=""
+  while IFS= read -r line; do
+    case "$line" in
+      "worktree "*) path="${line#worktree }" ;;
+      "branch "*)
+        br="${line#branch }"; br="${br#refs/heads/}"
+        [[ "$br" == "$target" ]] && { echo "$path"; return 0; }
+        ;;
+    esac
+  done < <(git worktree list --porcelain 2>/dev/null)
+  echo ""
+}
+
+# Has the worktree seen any file write in the last $stall_min minutes?
+# Excludes node_modules/.git. Returns 0 (active) / 1 (quiet). Unknown worktree => active (can't judge).
+worktree_active() {
+  local wt="$1"
+  [[ -z "$wt" || ! -d "$wt" ]] && return 0
+  local hit
+  hit=$(find "$wt" -type f -not -path '*/node_modules/*' -not -path '*/.git/*' \
+        -newermt "-${stall_min} min" -print -quit 2>/dev/null)
+  [[ -n "$hit" ]]
 }
 
 deadline=$(( $(date +%s) + timeout_min * 60 ))
 
-echo "pr-watch: watching ${#branches[@]} branch(es) for open PRs (timeout ${timeout_min}m, interval ${interval_sec}s)"
+echo "pr-watch: watching ${#branches[@]} branch(es) (timeout ${timeout_min}m, interval ${interval_sec}s, stall ${stall_min}m)"
 echo "pr-watch: branches: ${branches[*]}"
 
 while true; do
-  nums=()
-  missing=()
-  all_found=true
+  nums=(); missing=(); stalled=(); all_found=true
 
+  i=0
   for b in "${branches[@]}"; do
     num=$(gh pr list --head "$b" --state open --json number -q '.[0].number' 2>/dev/null)
     nums+=("$num")
     if [[ -z "$num" ]]; then
       all_found=false
       missing+=("$b")
+      if [[ "$stall_min" -gt 0 ]] && ! worktree_active "$(worktree_for "$b")"; then
+        stalled+=("$b")
+      fi
     fi
+    i=$(( i + 1 ))
   done
 
   if $all_found; then
@@ -93,24 +125,34 @@ while true; do
     echo "pr-watch: all ${#branches[@]} branch(es) have an open PR:"
     i=0
     for b in "${branches[@]}"; do
-      num="${nums[$i]}"
-      state=$(ci_state "$num")
-      echo "  $b -> PR #${num} [${state}]"
+      echo "  $b -> PR #${nums[$i]} [$(ci_state "${nums[$i]}")]"
       i=$(( i + 1 ))
     done
     exit 0
+  fi
+
+  if [[ ${#stalled[@]} -gt 0 ]]; then
+    echo ""
+    echo "pr-watch: STALL — ${#stalled[@]} branch(es) quiet >${stall_min}m with no PR:"
+    for b in "${stalled[@]}"; do echo "  STALLED: $b"; done
+    echo "pr-watch: ready in the meantime:"
+    i=0; any_ready=false
+    for b in "${branches[@]}"; do
+      if [[ -n "${nums[$i]}" ]]; then echo "  $b -> PR #${nums[$i]} [$(ci_state "${nums[$i]}")]"; any_ready=true; fi
+      i=$(( i + 1 ))
+    done
+    $any_ready || echo "  (none)"
+    exit 3
   fi
 
   now=$(date +%s)
   if [[ $now -ge $deadline ]]; then
     echo ""
     echo "pr-watch: TIMEOUT after ${timeout_min}m — ${#missing[@]} branch(es) still lack an open PR:"
-    for b in "${missing[@]}"; do
-      echo "  $b"
-    done
+    for b in "${missing[@]}"; do echo "  $b"; done
     exit 1
   fi
 
-  echo "pr-watch: still waiting on ${#missing[@]} branch(es): ${missing[*]} (next poll in ${interval_sec}s)"
+  echo "pr-watch: waiting on ${#missing[@]}: ${missing[*]} (next poll ${interval_sec}s)"
   sleep "$interval_sec"
 done
