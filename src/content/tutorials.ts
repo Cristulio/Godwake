@@ -26,8 +26,8 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
   grove: {
     title: "The Druid Grove",
     body: [
-      "Every descent scores a mark on the soul — Renown, the one thing the wheel cannot burn away when it hauls you back to be born again. Past the hub, on older ground, the druids keep a grove that will take that Renown in trade.",
-      "What they give back does not wash off in death: more blood to spill before you fall, a truer arm, a deeper well of whatever your kind calls its art. Hoarded, Renown only sits there. Spent, it makes every life after this one harder to put down.",
+      "Every descent scores a mark on the soul — Renown, the one thing the wheel cannot burn away when it hauls you back to be born again. Past the hub, on older ground, the druids keep a grove that will trade it for something rarer than steel: permanence.",
+      "More blood to spill before you fall, a truer arm, tricks the dark does not know how to take from you. Hoarded, Renown only sits there. Spent, it makes every life after this one harder to put down.",
     ],
     key: "Renown outlives death — trade it at the Grove for gains to body, blade, and art that never reset.",
   },
@@ -48,7 +48,7 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Elites are the route's hardest fights — and the only kills that ever yield a Legendary relic.",
   },
   "boss-intel": {
-    title: "What Waits Below",
+    title: "A Study in Dread",
     body: [
       "At the last seal of a chapter, gold buys something keener than another blade — it buys foreknowledge. Lay the coin down and you may study the thing coiled behind that door before you face it: how it opens, what it hungers for, the trick it saves for the moment you believe you've won.",
       "The deeper the chapter, the steeper the asking price. Weigh it against the iron that coin would buy instead. But a soul that walks in already knowing the shape of the horror walks back out far more often.",
