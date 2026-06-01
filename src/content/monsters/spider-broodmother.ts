@@ -13,7 +13,7 @@ export const SPIDER_BROODMOTHER: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'monstrosity',
   ac: 15,
-  maxHp: 75,
+  maxHp: 80,
   speed: 40,
   abilityScores: { str: 16, dex: 15, con: 16, int: 4, wis: 12, cha: 6 },
   passivePerception: 11,

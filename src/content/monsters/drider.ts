@@ -12,8 +12,8 @@ export const DRIDER: Monster = MonsterSchema.parse({
   cr: '4',
   size: 'large',
   creatureType: 'monstrosity',
-  ac: 15,
-  maxHp: 56,
+  ac: 16,
+  maxHp: 70,
   speed: 30,
   abilityScores: { str: 16, dex: 14, con: 14, int: 13, wis: 14, cha: 9 },
   passivePerception: 14,
@@ -30,8 +30,8 @@ export const DRIDER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Fang and Sickle',
-      attackBonus: 6,
-      damage: '2d6+3',
+      attackBonus: 7,
+      damage: '2d8+3',
       damageType: 'piercing',
       reach: 5,
       description:

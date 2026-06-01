@@ -12,8 +12,8 @@ export const DROW_WAR_PRIESTESS: Monster = MonsterSchema.parse({
   cr: '4',
   size: 'medium',
   creatureType: 'humanoid (elf)',
-  ac: 16,
-  maxHp: 44,
+  ac: 17,
+  maxHp: 58,
   speed: 30,
   abilityScores: { str: 11, dex: 15, con: 13, int: 13, wis: 16, cha: 15 },
   passivePerception: 13,
@@ -32,8 +32,8 @@ export const DROW_WAR_PRIESTESS: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Serpent Scourge',
-      attackBonus: 6,
-      damage: '2d6+3',
+      attackBonus: 7,
+      damage: '2d8+3',
       damageType: 'piercing',
       reach: 10,
       description:

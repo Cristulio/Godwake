@@ -12,8 +12,8 @@ export const BONEBOUND_TEST_SUBJECT: Monster = MonsterSchema.parse({
   cr: '2',
   size: 'medium',
   creatureType: 'undead',
-  ac: 13,
-  maxHp: 30,
+  ac: 15,
+  maxHp: 50,
   speed: 25,
   abilityScores: { str: 14, dex: 10, con: 14, int: 4, wis: 8, cha: 5 },
   passivePerception: 9,
@@ -21,8 +21,8 @@ export const BONEBOUND_TEST_SUBJECT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Stitched Claw',
-      attackBonus: 5,
-      damage: '1d8+2',
+      attackBonus: 6,
+      damage: '2d6+4',
       damageType: 'slashing',
       reach: 5,
       description:
