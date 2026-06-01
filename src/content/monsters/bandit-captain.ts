@@ -11,8 +11,8 @@ export const BANDIT_CAPTAIN: Monster = MonsterSchema.parse({
   cr: '2',
   size: 'medium',
   creatureType: 'humanoid (human)',
-  ac: 14,
-  maxHp: 26,
+  ac: 16,
+  maxHp: 46,
   speed: 30,
   abilityScores: { str: 12, dex: 16, con: 12, int: 11, wis: 11, cha: 14 },
   passivePerception: 12,
@@ -20,8 +20,8 @@ export const BANDIT_CAPTAIN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Duelist\'s Rapier',
-      attackBonus: 5,
-      damage: '1d8+3',
+      attackBonus: 6,
+      damage: '2d8+5',
       damageType: 'piercing',
       reach: 5,
       description:

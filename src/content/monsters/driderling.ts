@@ -11,8 +11,8 @@ export const DRIDERLING: Monster = MonsterSchema.parse({
   cr: '2',
   size: 'small',
   creatureType: 'monstrosity',
-  ac: 13,
-  maxHp: 22,
+  ac: 15,
+  maxHp: 34,
   speed: 40,
   abilityScores: { str: 11, dex: 16, con: 12, int: 4, wis: 10, cha: 5 },
   passivePerception: 12,
@@ -20,8 +20,8 @@ export const DRIDERLING: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Venomous Bite',
-      attackBonus: 5,
-      damage: '1d6+3',
+      attackBonus: 6,
+      damage: '2d6+3',
       damageType: 'poison',
       reach: 5,
       description:

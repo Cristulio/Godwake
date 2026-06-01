@@ -14,7 +14,7 @@ export const MIND_FLAYER_FRAGMENT: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'aberration',
   ac: 14,
-  maxHp: 58,
+  maxHp: 62,
   speed: 30,
   abilityScores: { str: 11, dex: 12, con: 12, int: 18, wis: 16, cha: 14 },
   passivePerception: 15,

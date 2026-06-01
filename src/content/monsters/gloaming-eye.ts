@@ -13,8 +13,8 @@ export const GLOAMING_EYE: Monster = MonsterSchema.parse({
   cr: '2',
   size: 'small',
   creatureType: 'aberration',
-  ac: 13,
-  maxHp: 26,
+  ac: 15,
+  maxHp: 44,
   speed: 0,
   abilityScores: { str: 8, dex: 14, con: 13, int: 7, wis: 13, cha: 9 },
   passivePerception: 12,
@@ -33,8 +33,8 @@ export const GLOAMING_EYE: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Searing Glance',
-      attackBonus: 4,
-      damage: '1d8+2',
+      attackBonus: 5,
+      damage: '2d6+3',
       damageType: 'psychic',
       range: [30, 60],
       description:

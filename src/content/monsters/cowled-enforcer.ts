@@ -11,8 +11,8 @@ export const COWLED_ENFORCER: Monster = MonsterSchema.parse({
   cr: '2',
   size: 'medium',
   creatureType: 'humanoid (human)',
-  ac: 12,
-  maxHp: 24,
+  ac: 14,
+  maxHp: 44,
   speed: 30,
   abilityScores: { str: 9, dex: 14, con: 11, int: 17, wis: 12, cha: 11 },
   passivePerception: 11,
@@ -20,8 +20,8 @@ export const COWLED_ENFORCER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Force Bolt',
-      attackBonus: 5,
-      damage: '2d6+3',
+      attackBonus: 6,
+      damage: '2d8+4',
       damageType: 'force',
       range: [60, 120],
       description:

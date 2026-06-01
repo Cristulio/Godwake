@@ -13,8 +13,8 @@ export const WARDENS_APPRENTICE: Monster = MonsterSchema.parse({
   cr: '3',
   size: 'medium',
   creatureType: 'humanoid (human)',
-  ac: 17,
-  maxHp: 38,
+  ac: 18,
+  maxHp: 58,
   speed: 30,
   abilityScores: { str: 10, dex: 14, con: 13, int: 16, wis: 12, cha: 11 },
   passivePerception: 11,
@@ -22,8 +22,8 @@ export const WARDENS_APPRENTICE: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Dispelling Bolt',
-      attackBonus: 6,
-      damage: '2d6+3',
+      attackBonus: 7,
+      damage: '2d6+4',
       damageType: 'force',
       range: [60, 120],
       description:

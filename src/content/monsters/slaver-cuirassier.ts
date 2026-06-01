@@ -11,8 +11,8 @@ export const SLAVER_CUIRASSIER: Monster = MonsterSchema.parse({
   cr: '2',
   size: 'medium',
   creatureType: 'humanoid (human)',
-  ac: 16,
-  maxHp: 32,
+  ac: 17,
+  maxHp: 52,
   speed: 25,
   abilityScores: { str: 15, dex: 11, con: 14, int: 10, wis: 11, cha: 9 },
   passivePerception: 10,
@@ -20,8 +20,8 @@ export const SLAVER_CUIRASSIER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Heavy Mace',
-      attackBonus: 5,
-      damage: '1d8+3',
+      attackBonus: 6,
+      damage: '2d8+5',
       damageType: 'bludgeoning',
       reach: 5,
       description:

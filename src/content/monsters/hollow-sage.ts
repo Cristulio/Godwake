@@ -12,8 +12,8 @@ export const HOLLOW_SAGE: Monster = MonsterSchema.parse({
   cr: '3',
   size: 'medium',
   creatureType: 'humanoid (human)',
-  ac: 12,
-  maxHp: 36,
+  ac: 14,
+  maxHp: 56,
   speed: 30,
   abilityScores: { str: 9, dex: 13, con: 12, int: 14, wis: 16, cha: 8 },
   passivePerception: 13,
@@ -30,8 +30,8 @@ export const HOLLOW_SAGE: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Withering Touch',
-      attackBonus: 5,
-      damage: '2d6+2',
+      attackBonus: 6,
+      damage: '2d6+3',
       damageType: 'necrotic',
       reach: 5,
       description:
