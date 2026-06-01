@@ -168,6 +168,88 @@ describe('chooseCombatAction', () => {
     expect(action.kind).toBe('action-surge');
   });
 
+  it('drains (Vampiric Touch) when hurt — damage that also heals beats plinking', () => {
+    const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'goblin', count: 1 }]);
+    const hurt: Character = {
+      ...character,
+      hp: { ...character.hp, current: Math.floor(character.hp.max * 0.5) },
+      resources: {
+        ...character.resources,
+        knownSpells: ['fire-bolt', 'vampiric-touch'],
+        spellSlots: { 1: 2, 2: 0, 3: 2, 4: 0 },
+      },
+    };
+    const action = chooseCombatAction(state, hurt);
+    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'vampiric-touch' }));
+  });
+
+  it('uses a FOCUSED nuke (Lightning Bolt) on a lone beefy boss — never AoE on one target', () => {
+    const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'goblin', count: 1 }]);
+    const ctrl: Character = {
+      ...character,
+      resources: {
+        ...character.resources,
+        knownSpells: ['fire-bolt', 'fireball', 'lightning-bolt'],
+        spellSlots: { 1: 0, 2: 0, 3: 2, 4: 0 },
+      },
+    };
+    const boss = state.combatants.find((c) => c.kind === 'monster');
+    if (boss?.kind === 'monster') boss.instance.hp.current = 60; // beefy, below capstone bar
+    const action = chooseCombatAction(state, ctrl);
+    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'lightning-bolt' }));
+    if (action.kind === 'cast') expect(action.targetId).toBe(boss?.id);
+  });
+
+  it('saves the 9th-level capstone for a TRUE boss; a mid elite gets a mid-tier nuke', () => {
+    const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'goblin', count: 1 }]);
+    const ctrl: Character = {
+      ...character,
+      resources: {
+        ...character.resources,
+        knownSpells: ['fire-bolt', 'lightning-bolt', 'unmake'],
+        spellSlots: { 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 1 },
+      },
+    };
+    const m = state.combatants.find((c) => c.kind === 'monster');
+    if (m?.kind === 'monster') m.instance.hp.current = 60; // elite, below capstone bar
+    expect(chooseCombatAction(state, ctrl)).toEqual(
+      expect.objectContaining({ spellId: 'lightning-bolt' }),
+    );
+    if (m?.kind === 'monster') m.instance.hp.current = 120; // true boss
+    expect(chooseCombatAction(state, ctrl)).toEqual(expect.objectContaining({ spellId: 'unmake' }));
+  });
+
+  it('hard-locks a true boss with Soul Snare when it cannot be burst', () => {
+    const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'the-unmade', count: 1 }]);
+    const ctrl: Character = {
+      ...character,
+      resources: {
+        ...character.resources,
+        knownSpells: ['fire-bolt', 'soul-snare'],
+        spellSlots: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 1 },
+      },
+    };
+    const action = chooseCombatAction(state, ctrl);
+    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'soul-snare' }));
+  });
+
+  it('opens a boss fight with Mage Armor when unarmored and no nuke is ready', () => {
+    const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'the-unmade', count: 1 }]);
+    const ctrl: Character = {
+      ...character,
+      equipped: { ...character.equipped, armor: null },
+      resources: {
+        ...character.resources,
+        knownSpells: ['fire-bolt', 'mage-armor'],
+        mageArmorActive: false,
+        spellSlots: { 1: 1, 2: 0, 3: 0, 4: 0 },
+      },
+    };
+    expect(state.round).toBe(1);
+    const action = chooseCombatAction(state, ctrl);
+    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'mage-armor' }));
+  });
+
   it('ends the turn when nothing productive remains', () => {
     const { state, character } = startCombat(fighter(), [{ defId: 'goblin', count: 1 }]);
     const spent: Character = {
