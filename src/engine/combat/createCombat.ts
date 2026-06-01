@@ -26,7 +26,11 @@ import { refreshMonsterIntents } from './attack/monsterIntent';
 import { playerAttack } from './attack/playerAttack';
 import { wieldsRangedWeapon, wearsHeavierThanLight } from '../character/equip';
 import { getActiveRoller } from '../dice';
-import { applyAscensionToMonster, ascensionDamageBonus } from '../delve/ascension';
+import {
+  applyAscensionToMonster,
+  ascensionBossExtraPhase,
+  ascensionDamageBonus,
+} from '../delve/ascension';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 
 /**
@@ -125,6 +129,8 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       ? ELITE_LEGENDARY_RESISTANCES
       : 0;
   const enemyDamageBonus = ascensionDamageBonus(ascension);
+  // Ascension extra-phase arms only the primary foe of a boss room (idx 0).
+  const bossExtraPhase = isBoss && ascensionBossExtraPhase(ascension);
   const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }, idx) => {
     const scaledDef = applyAscensionToMonster(def, ascension, isBoss);
     const instance = spawnMonsterInstance(scaledDef, displayName);
@@ -136,6 +142,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
         ...instance,
         ...(enemyDamageBonus > 0 ? { bonusDamage: enemyDamageBonus } : {}),
         ...(legendaryResistances > 0 ? { legendaryResistances } : {}),
+        ...(bossExtraPhase && idx === 0 ? { bossExtraPhaseArmed: true } : {}),
       },
     };
   });
