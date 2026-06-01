@@ -33,6 +33,7 @@ import { EQUIP_SLOTS } from '../engine/character/equip';
 import { sellValue } from '../components/delve/shopStock';
 import { newlyUnlocked, newlyUnlockedByChapter, newlyUnlockedClasses } from '../engine/progression';
 import { getTutorial } from '../content/tutorials';
+import type { ClassId } from '../schemas/ids';
 import { useCharacterStore } from './characterStore';
 import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
@@ -59,15 +60,20 @@ function queueUnlockTutorials(prevDelveCount: number, nextDelveCount: number) {
  * threshold the soul just crossed by clearing a new deepest chapter. Fires in
  * finishDelve when the chaptersCleared high-water mark advances.
  */
-function queueChapterUnlockTutorials(prevChapters: number, nextChapters: number) {
+function queueChapterUnlockTutorials(
+  prevChapters: number,
+  nextChapters: number,
+  currentClassId: ClassId,
+) {
   if (nextChapters <= prevChapters) return;
   const seen = useMetaStore.getState().seenTutorials;
   // Power-feature reveals plus the per-class "a new soul surfaced" cards. Class
   // ids share the tutorial-queue / seenTutorials namespace; keep only the ones
-  // that actually have copy (skips the starter and the not-yet-playable cleric).
+  // that actually have copy (skips the not-yet-playable cleric) and drop the
+  // soul's own class — it crosses its threshold but is already worn, not found.
   const featureCards = newlyUnlockedByChapter(prevChapters, nextChapters);
   const classCards = newlyUnlockedClasses(prevChapters, nextChapters).filter(
-    (id) => getTutorial(id) !== undefined,
+    (id) => id !== currentClassId && getTutorial(id) !== undefined,
   );
   const fresh = [...featureCards, ...classCards].filter((id) => !seen.includes(id));
   if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
@@ -770,7 +776,11 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       // Reaching a new depth opens the next advantage — fire the reveal for any
       // power feature this clear just unlocked (boss-intel, class swapping, epic
       // gear, legendaries, sets at completion).
-      queueChapterUnlockTutorials(prevChapters, useMetaStore.getState().chaptersCleared);
+      queueChapterUnlockTutorials(
+        prevChapters,
+        useMetaStore.getState().chaptersCleared,
+        settled.classId,
+      );
     }
     // A clear of the full chain advances the world: clearing at the current
     // highest unlocked ascension opens the next rung. Replaying a lower level

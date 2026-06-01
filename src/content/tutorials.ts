@@ -101,7 +101,8 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
  * Per-class "a new soul has surfaced" reveals, fired when a class crosses its
  * chapter unlock (engine/progression CLASS_UNLOCK_CHAPTER). Keyed by ClassId,
  * which doubles as the seenTutorials key. In-world flavor + the soul's hallmark.
- * Wizard is the starting soul and cleric isn't playable yet — neither gets one.
+ * Every roster soul gets one (the card is suppressed for the body already worn);
+ * cleric isn't playable yet, so it has none.
  */
 export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
   fighter: {
@@ -127,6 +128,14 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
       'It marks its quarry and does not miss twice.',
     ],
     key: "The Ranger: Hunter's Mark stacks bonus damage on a target, Archery sharpens every shot.",
+  },
+  wizard: {
+    title: 'A Soul of the Art',
+    body: [
+      'A frailer soul has risen to the wheel — thin-skinned, soft-boned, a single bad step from the dark. Worn too early it breaks; worn by a walker who has banked the keepers’ gifts, it bends whole fights with a word.',
+      'It carries no real steel. What it carries is fire, and force, and the patience to spend them well.',
+    ],
+    key: 'The Wizard: Fire Bolt and Magic Missile to open, Fireball at L5 — and almost no armor to hide behind.',
   },
   rogue: {
     title: 'A Soul in the Dark',

@@ -89,20 +89,40 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
 };
 
 /**
+ * The souls a brand-new walker may forge at the wheel — the three most forgiving
+ * bodies (the sim's strongest bare-soul floors), so a first life can't be spent
+ * on a fragile trap. A fresh soul picks exactly ONE of these; every other class,
+ * INCLUDING the two of these it didn't pick, is then earned by clearing chapters
+ * (see {@link CLASS_UNLOCK_CHAPTER}). Editable data.
+ */
+export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'barbarian', 'ranger'];
+
+/**
  * Per-class unlock thresholds, in CHAPTERS CLEARED (the deepest-chapter high-
- * water mark). Staggered by how forgiving the class is to play: Wizard is the
- * starting soul (always available); the alternates open easiest-first so a new
- * walker meets simpler kits before the fiddly ones. You earn a new body by
- * pushing deeper, not by grinding delves. Editable data.
+ * water mark) — the bar a soul must reach before it can CHANGE INTO that body at
+ * the hub. There is no always-available starter: a fresh walker forges one of the
+ * three {@link STARTER_CLASSES} and is then locked to it until it has earned the
+ * others by pushing deeper.
+ *
+ * Ordered by how forgiving the class is to play:
+ *  - the two remaining easy souls open first, on a low bar (chapters 1–2);
+ *  - the harder bodies stagger deeper, so renown is banked to pad their fragility
+ *    before one is worn — Wizard, then [Druid ~6, reserved for its own lane],
+ *    then Rogue last (the most fragile floor even after Nimble Dodge).
+ * Editable data.
  */
 export const CLASS_UNLOCK_CHAPTER: Record<ClassId, number> = {
-  wizard: 0,
-  fighter: 2,
-  barbarian: 4,
-  ranger: 6,
+  // The three easy souls — choosable from the first life, but the two not started
+  // with must still be earned, opening across the first chapters.
+  fighter: 1,
+  barbarian: 1,
+  ranger: 2,
+  // The harder souls, staggered deeper.
+  wizard: 4,
+  // druid: 6,  // reserved — Druid's own lane inserts its threshold here.
   rogue: 8,
   // Not yet a playable class (absent from the roster); threshold is a placeholder.
-  cleric: 9,
+  cleric: 99,
 };
 
 /** Is `classId` available to select given the soul's deepest cleared chapter? */
@@ -114,8 +134,8 @@ export function isClassUnlocked(classId: ClassId, chaptersCleared: number): bool
  * Classes whose chapter threshold was crossed strictly between `prevChapters`
  * (exclusive) and `nextChapters` (inclusive) — the souls just earned by reaching
  * a new depth. Drives the per-class "a new soul surfaced" reveal in finishDelve.
- * The starter (wizard, threshold 0) never crosses; callers filter to classes that
- * actually have a reveal card.
+ * Callers filter to classes that actually have a reveal card, and drop the soul's
+ * own class (it crosses its own threshold but is already worn, not "newly" found).
  */
 export function newlyUnlockedClasses(prevChapters: number, nextChapters: number): ClassId[] {
   return (Object.keys(CLASS_UNLOCK_CHAPTER) as ClassId[]).filter((id) => {

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   FEATURE_IDS,
   UNLOCKS,
+  STARTER_CLASSES,
   isFeatureUnlocked,
   newlyUnlocked,
   newlyUnlockedByChapter,
@@ -112,26 +113,43 @@ describe('newlyUnlockedByChapter (progression axis)', () => {
 });
 
 describe('class unlocks (chapter axis)', () => {
-  it('staggers the alternates easiest-first; wizard is always available', () => {
-    expect(isClassUnlocked('wizard', 0)).toBe(true);
-    expect(isClassUnlocked('fighter', 1)).toBe(false);
-    expect(isClassUnlocked('fighter', 2)).toBe(true);
+  it('lets a fresh soul forge exactly the three easy starters', () => {
+    expect([...STARTER_CLASSES].sort()).toEqual(['barbarian', 'fighter', 'ranger']);
+  });
+
+  it('locks every class behind a chapter clear — none open on a fresh soul', () => {
+    // No always-available starter: at chaptersCleared 0 the table opens nothing.
+    // A fresh soul reaches the three starters via STARTER_CLASSES, not this gate.
+    for (const id of STARTER_CLASSES) expect(isClassUnlocked(id, 0)).toBe(false);
+    expect(isClassUnlocked('wizard', 0)).toBe(false);
+    expect(isClassUnlocked('rogue', 0)).toBe(false);
+  });
+
+  it('opens the two unchosen easy souls on a low bar, then the hard souls deeper', () => {
+    // Easy souls — chapters 1–2.
+    expect(isClassUnlocked('fighter', 1)).toBe(true);
+    expect(isClassUnlocked('barbarian', 1)).toBe(true);
+    expect(isClassUnlocked('ranger', 1)).toBe(false);
+    expect(isClassUnlocked('ranger', 2)).toBe(true);
+    // Hard souls — staggered deeper (wizard @4; [druid ~6, reserved]; rogue @8).
+    expect(isClassUnlocked('wizard', 3)).toBe(false);
+    expect(isClassUnlocked('wizard', 4)).toBe(true);
     expect(isClassUnlocked('rogue', 7)).toBe(false);
     expect(isClassUnlocked('rogue', 8)).toBe(true);
   });
 
   it('reports the alternate(s) whose chapter threshold a clear just crossed', () => {
-    expect(newlyUnlockedClasses(1, 2)).toEqual(['fighter']);
-    expect(newlyUnlockedClasses(3, 4)).toEqual(['barbarian']);
-    // Wizard (threshold 0) never crosses for a soul that has cleared anything.
-    expect(newlyUnlockedClasses(0, 1)).toEqual([]);
+    expect(newlyUnlockedClasses(0, 1)).toEqual(['fighter', 'barbarian']);
+    expect(newlyUnlockedClasses(1, 2)).toEqual(['ranger']);
+    expect(newlyUnlockedClasses(3, 4)).toEqual(['wizard']);
+    expect(newlyUnlockedClasses(7, 8)).toEqual(['rogue']);
   });
 
-  it('every staggered alternate has a reveal card; the starter does not', () => {
-    for (const id of ['fighter', 'barbarian', 'ranger', 'rogue'] as const) {
+  it('every roster soul has a reveal card; the unplayable cleric does not', () => {
+    for (const id of ['fighter', 'barbarian', 'ranger', 'wizard', 'rogue'] as const) {
       expect(getTutorial(id)).toBeDefined();
     }
-    expect(getTutorial('wizard')).toBeUndefined();
+    expect(getTutorial('cleric')).toBeUndefined();
   });
 });
 

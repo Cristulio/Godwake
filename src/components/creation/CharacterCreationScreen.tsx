@@ -11,7 +11,11 @@ import {
   type AbilityName,
 } from '../../types/abilities';
 import type { SkillName } from '../../types/skills';
-import { isClassUnlocked, CLASS_UNLOCK_CHAPTER } from '../../engine/progression/unlocks';
+import {
+  isClassUnlocked,
+  CLASS_UNLOCK_CHAPTER,
+  STARTER_CLASSES,
+} from '../../engine/progression/unlocks';
 
 const ABILITY_SHORT: Record<AbilityName, string> = {
   str: 'STR',
@@ -115,17 +119,19 @@ export function CharacterCreationScreen() {
   //  - First creation: no soul yet → runs the intro → first-delve handoff.
   const isSwap = existing != null;
 
-  // A class is selectable if you've cleared deep enough to earn it, or it's the
-  // soul you're already wearing (you can always keep your current body on a swap).
-  // Classes stagger in easiest-first; the rest show as sealed placeholders below.
+  // Selectability has two regimes:
+  //  - First creation: a fresh soul may forge ONLY one of the three easy starters;
+  //    the rest show as sealed, earned later by clearing chapters.
+  //  - Hub swap: the body already worn is always selectable, plus any class the
+  //    soul has cleared deep enough to unlock. The rest stay sealed.
   const isSelectable = (classId: ClassId) =>
-    classId === existing?.classId || isClassUnlocked(classId, chaptersCleared);
+    isSwap
+      ? classId === existing?.classId || isClassUnlocked(classId, chaptersCleared)
+      : STARTER_CLASSES.includes(classId);
 
   const allOptions = useMemo(buildSoulOptions, []);
-  // First creation shows the full roster (the starting soul is forged here); on a
-  // hub swap, locked alternates are curtained off until a deeper clear opens them.
-  const options = isSwap ? allOptions.filter((o) => isSelectable(o.classId)) : allOptions;
-  const sealedOptions = isSwap ? allOptions.filter((o) => !isSelectable(o.classId)) : [];
+  const options = allOptions.filter((o) => isSelectable(o.classId));
+  const sealedOptions = allOptions.filter((o) => !isSelectable(o.classId));
   const [selectedClassId, setSelectedClassId] = useState<ClassId | null>(null);
   const selected = options.find((o) => o.classId === selectedClassId) ?? null;
 
@@ -259,7 +265,7 @@ export function CharacterCreationScreen() {
           );
         })}
         {/* Souls not yet open to this walker show as sealed placeholders, each
-            naming the delve it unlocks at. */}
+            naming the chapter whose warden must fall before it can be worn. */}
         {sealedOptions.map((o) => (
           <div
             key={o.classId}
@@ -275,7 +281,7 @@ export function CharacterCreationScreen() {
               This soul awaits a deeper walker. The wheel turns further, and they will come.
             </p>
             <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-widest mt-auto">
-              Unlocks at chapter {CLASS_UNLOCK_CHAPTER[o.classId]}
+              Wakes once you have felled the warden of Chapter {CLASS_UNLOCK_CHAPTER[o.classId]}
             </div>
           </div>
         ))}
