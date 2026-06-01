@@ -68,8 +68,13 @@ import { getQuirk } from '../content/quirks';
  *             and `endingChosen` (default null) added to the meta snapshot. Old
  *             saves haven't seen the finale — a returning player still gets the
  *             one-time ending on their next full-chain clear.
+ *  v15 → v16: Ending became flavor-only (no ascend/mortal choice) and the
+ *             ascension picker moved into the title's New Game+ run-launcher.
+ *             `endingChosen` is dropped (the soul's tale no longer records a
+ *             branch); `gameCompleted` stays (now also unlocks New Game+).
+ *             `selectedAscension` (the run's ascension level, default 0) is added.
  */
-export const SAVE_VERSION = 15;
+export const SAVE_VERSION = 16;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -245,7 +250,7 @@ export interface MigratedSnapshot {
   seenTutorials: string[];
   delveCount: number;
   gameCompleted: boolean;
-  endingChosen: 'ascend' | 'mortal' | null;
+  selectedAscension: number;
   // Allow extra fields to ride through (screen, saveSeed, introSeen, etc.).
   [k: string]: unknown;
 }
@@ -381,8 +386,13 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   if (typeof state.gameCompleted !== 'boolean') {
     state.gameCompleted = false;
   }
-  if (state.endingChosen !== 'ascend' && state.endingChosen !== 'mortal') {
-    state.endingChosen = null;
+
+  // v15 → v16: the ending is flavor-only now — drop the recorded ascend/mortal
+  // branch cleanly. The ascension picker moved to the title's New Game+ flow;
+  // `selectedAscension` (the run's ascension level) defaults to the base chain.
+  delete state.endingChosen;
+  if (typeof state.selectedAscension !== 'number' || state.selectedAscension < 0) {
+    state.selectedAscension = 0;
   }
 
   // v10 → v11: rageUsesRemaining removed (Rage is now per-combat, not per-rest).

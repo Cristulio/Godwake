@@ -4,6 +4,7 @@ import type { Postmortem } from '../types/postmortem';
 
 export type Screen =
   | 'title'
+  | 'ascension-select'
   | 'character-creation'
   | 'intro'
   | 'hub'
@@ -35,6 +36,14 @@ interface ScreenStoreState {
   screen: Screen;
   introSeen: boolean;
   quirksTutorialSeen: boolean;
+  /**
+   * Session-only: the player is inside the New Game+ run-launcher
+   * (ascension-select → character-select → descend). It steers the shared
+   * character-select screen to descend on confirm instead of returning to the
+   * hub, and its back buttons to step back through the flow. Cleared whenever
+   * navigation lands on the hub or title.
+   */
+  newGamePlusFlow: boolean;
   /** The soul-voice line currently on screen (queue head), or null if none. */
   taunt: Taunt | null;
   /**
@@ -55,6 +64,8 @@ interface ScreenStoreState {
   setScreen: (screen: Screen) => void;
   goToTitle: () => void;
   goToHub: () => void;
+  /** Enter the New Game+ run-launcher at its ascension-select step. */
+  goToAscensionSelect: () => void;
   goToDelve: () => void;
   goToReincarnation: () => void;
   goToDruidGrove: () => void;
@@ -81,14 +92,16 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
   screen: 'title',
   introSeen: false,
   quirksTutorialSeen: false,
+  newGamePlusFlow: false,
   taunt: null,
   tauntQueue: [],
   postmortem: null,
   tutorialQueue: [],
 
   setScreen: (screen) => set({ screen }),
-  goToTitle: () => set({ screen: 'title' }),
-  goToHub: () => set({ screen: 'hub' }),
+  goToTitle: () => set({ screen: 'title', newGamePlusFlow: false }),
+  goToHub: () => set({ screen: 'hub', newGamePlusFlow: false }),
+  goToAscensionSelect: () => set({ screen: 'ascension-select', newGamePlusFlow: true }),
   goToDelve: () => set({ screen: 'delve' }),
   // deathCount lives on metaStore; goToReincarnation in the facade increments
   // it. This slice just flips the screen.

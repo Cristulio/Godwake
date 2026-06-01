@@ -23,6 +23,7 @@ import { useCombatStore } from './combatStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore, type Screen } from './screenStore';
 import { migrateV1ToV2, SAVE_VERSION } from './persistMigration';
+import { isFeatureUnlocked } from '../engine/progression/unlocks';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
 export type { Screen };
@@ -152,7 +153,9 @@ interface GameState {
   ownedLegendaries: string[];
   activeLegendaries: string[];
   gameCompleted: boolean;
-  endingChosen: 'ascend' | 'mortal' | null;
+  selectedAscension: number;
+  /** Session-only: inside the New Game+ run-launcher (see screenStore). */
+  newGamePlusFlow: boolean;
 
   // Navigation
   goToTitle: () => void;
@@ -161,6 +164,8 @@ interface GameState {
   goToReincarnation: () => void;
   goToDruidGrove: () => void;
   goToCharacterSelect: () => void;
+  /** Enter the New Game+ run-launcher (ascension-select → character-select → descend). */
+  goToAscensionSelect: () => void;
 
   // Lifecycle
   startNewGame: (seed: string) => void;
@@ -172,6 +177,12 @@ interface GameState {
    * left untouched; the new character starts a fresh L1 run on the next descent.
    */
   selectCharacter: (classId: ClassId) => void;
+  /**
+   * New Game+ confirm: adopt the chosen class-soul (carrying renown/Grove/relics
+   * like {@link selectCharacter}) and descend straight into a fresh run at the
+   * stored `selectedAscension`, instead of returning to the hub.
+   */
+  selectCharacterAndDescend: (classId: ClassId) => void;
 
   // Character + combat
   setCharacter: (character: Character) => void;
@@ -238,7 +249,15 @@ interface GameState {
   setActiveLegendaries: (ids: string[]) => void;
 
   // Ending capstone
-  recordEnding: (choice: 'ascend' | 'mortal') => void;
+  markGameCompleted: () => void;
+
+  // Ascension run-config (New Game+ flow)
+  /**
+   * New Game+ ascension-select confirm: store the run's ascension level and
+   * advance to character-select, keeping the run-launcher flow active so the
+   * char-select confirm descends rather than returning to the hub.
+   */
+  confirmAscensionSelection: (level: number) => void;
 
   // Leveling
   applyPendingLevelUp: (overrides?: Partial<Character>) => void;
@@ -276,7 +295,7 @@ interface PersistedSnapshot {
   ownedLegendaries: string[];
   activeLegendaries: string[];
   gameCompleted: boolean;
-  endingChosen: 'ascend' | 'mortal' | null;
+  selectedAscension: number;
   __metadata?: SaveSlotMetadata;
 }
 
@@ -324,7 +343,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     ownedLegendaries: meta.ownedLegendaries,
     activeLegendaries: meta.activeLegendaries,
     gameCompleted: meta.gameCompleted,
-    endingChosen: meta.endingChosen,
+    selectedAscension: meta.selectedAscension,
     __metadata: {
       savedAt: new Date().toISOString(),
       characterName: ch.character?.name ?? '—',
@@ -388,13 +407,16 @@ function scatterSnapshot(s: PersistedSnapshot) {
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
     activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
     gameCompleted: !!s.gameCompleted,
-    endingChosen:
-      s.endingChosen === 'ascend' || s.endingChosen === 'mortal' ? s.endingChosen : null,
+    selectedAscension:
+      typeof s.selectedAscension === 'number' && s.selectedAscension >= 0
+        ? s.selectedAscension
+        : 0,
   });
   useScreenStore.setState({
     screen: (s.screen ?? 'hub') as Screen,
     introSeen: !!s.introSeen,
     quirksTutorialSeen: !!s.quirksTutorialSeen,
+    newGamePlusFlow: false,
     taunt: null,
     tutorialQueue: [],
     postmortem: null,
@@ -406,6 +428,22 @@ function scatterSnapshot(s: PersistedSnapshot) {
   // (and drop any off-class relics the current class can't equip). Idempotent
   // for current saves; for pre-v10 saves it converts the stripped stat field to
   // the new effect form so equipped relics actually apply.
+  useMetaStore.getState().setActiveLegendaries(useMetaStore.getState().activeLegendaries);
+}
+
+/**
+ * Adopt a class-soul: build a fresh vessel from the class preset and carry the
+ * existing soul's renown / Grove payloads / quirks onto it (or use it bare for a
+ * brand-new soul), then re-validate equipped relics against the new class. Shared
+ * by the hub swap ({@link GameState.selectCharacter}) and the New Game+ descend
+ * launcher ({@link GameState.selectCharacterAndDescend}).
+ */
+function adoptSoul(classId: ClassId) {
+  const charSlice = useCharacterStore.getState();
+  const soul = charSlice.character;
+  const fresh = buildPlayerCharacter(presetCreationInput(classId));
+  charSlice.setCharacter(soul ? carrySoulProgress(fresh, soul) : fresh);
+  // Class-bound relics the new body can't wield drop; the effect payloads re-bake.
   useMetaStore.getState().setActiveLegendaries(useMetaStore.getState().activeLegendaries);
 }
 
@@ -480,7 +518,7 @@ export const useGameStore = create<GameState>()(
           ownedLegendaries: m.ownedLegendaries,
           activeLegendaries: m.activeLegendaries,
           gameCompleted: m.gameCompleted,
-          endingChosen: m.endingChosen,
+          selectedAscension: m.selectedAscension,
         });
       };
       const mirrorScreen = () => {
@@ -489,6 +527,7 @@ export const useGameStore = create<GameState>()(
           screen: sc.screen,
           introSeen: sc.introSeen,
           quirksTutorialSeen: sc.quirksTutorialSeen,
+          newGamePlusFlow: sc.newGamePlusFlow,
           taunt: sc.taunt,
           tutorialQueue: sc.tutorialQueue,
           postmortem: sc.postmortem,
@@ -533,7 +572,8 @@ export const useGameStore = create<GameState>()(
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
         activeLegendaries: useMetaStore.getState().activeLegendaries,
         gameCompleted: useMetaStore.getState().gameCompleted,
-        endingChosen: useMetaStore.getState().endingChosen,
+        selectedAscension: useMetaStore.getState().selectedAscension,
+        newGamePlusFlow: useScreenStore.getState().newGamePlusFlow,
 
         goToTitle: () => useScreenStore.getState().goToTitle(),
         goToHub: () => useScreenStore.getState().goToHub(),
@@ -544,20 +584,29 @@ export const useGameStore = create<GameState>()(
         },
         goToDruidGrove: () => useScreenStore.getState().goToDruidGrove(),
         goToCharacterSelect: () =>
-          useScreenStore.getState().setScreen('character-creation'),
+          useScreenStore.setState({ screen: 'character-creation', newGamePlusFlow: false }),
+        goToAscensionSelect: () => useScreenStore.getState().goToAscensionSelect(),
         goToCodex: () => useScreenStore.getState().goToCodex(),
         goToInventory: () => useScreenStore.getState().goToInventory(),
 
         startNewGame: (seed) => {
           setActiveRoller(seed);
+          // Account-level mastery is permanent: beating the chain once keeps the
+          // New Game+ entry + ascension ladder open across a fresh base run. Carry
+          // those two flags over the wipe; everything else (soul, renown, Grove,
+          // selectedAscension) resets to a clean Ascension-0 start.
+          const prevMeta = useMetaStore.getState();
+          const { gameCompleted, ascensionUnlocked } = prevMeta;
           useCharacterStore.setState({ character: null, saveSeed: seed });
           useDelveStore.setState({ delve: null });
           useCombatStore.setState({ combat: null });
-          useMetaStore.getState().resetMeta();
+          prevMeta.resetMeta();
+          useMetaStore.setState({ gameCompleted, ascensionUnlocked });
           useScreenStore.setState({
             screen: 'character-creation',
             introSeen: false,
             quirksTutorialSeen: false,
+            newGamePlusFlow: false,
             taunt: null,
             tauntQueue: [],
             tutorialQueue: [],
@@ -569,14 +618,24 @@ export const useGameStore = create<GameState>()(
           useCharacterStore.getState().commitCharacterCreation(input),
 
         selectCharacter: (classId) => {
-          const charSlice = useCharacterStore.getState();
-          const soul = charSlice.character;
-          const fresh = buildPlayerCharacter(presetCreationInput(classId));
-          charSlice.setCharacter(soul ? carrySoulProgress(fresh, soul) : fresh);
-          // Re-validate equipped relics for the new class — class-bound relics the
-          // new body can't wield drop, and the effect payloads re-bake onto it.
-          useMetaStore.getState().setActiveLegendaries(useMetaStore.getState().activeLegendaries);
+          adoptSoul(classId);
           useScreenStore.getState().setScreen('hub');
+        },
+
+        selectCharacterAndDescend: (classId) => {
+          adoptSoul(classId);
+          const meta = useMetaStore.getState();
+          const elitesEnabled = isFeatureUnlocked('elite-nodes', {
+            delveCount: meta.delveCount,
+            chaptersCleared: meta.chaptersCleared,
+            druidGroveUnlocked: meta.druidGroveUnlocked,
+          });
+          const delve = createGodwakeDelve({
+            ascension: meta.selectedAscension,
+            elitesEnabled,
+          });
+          useScreenStore.setState({ newGamePlusFlow: false });
+          useDelveStore.getState().startDelve(delve);
         },
 
         setCharacter: (character) =>
@@ -671,7 +730,12 @@ export const useGameStore = create<GameState>()(
         setActiveLegendaries: (ids) =>
           useMetaStore.getState().setActiveLegendaries(ids),
 
-        recordEnding: (choice) => useMetaStore.getState().recordEnding(choice),
+        markGameCompleted: () => useMetaStore.getState().markGameCompleted(),
+
+        confirmAscensionSelection: (level) => {
+          useMetaStore.getState().setSelectedAscension(level);
+          useScreenStore.setState({ screen: 'character-creation', newGamePlusFlow: true });
+        },
 
         applyPendingLevelUp: (overrides) => {
           // Mid-delve level-ups resume the delve screen; out-of-delve fall
