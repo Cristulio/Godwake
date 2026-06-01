@@ -48,6 +48,7 @@ import {
   type Archetype,
 } from '../src/engine/combat/actionPolicy';
 import { isRaging, characterHasMechanic } from '../src/engine/character/derived';
+import { clampAscension } from '../src/engine/delve/ascension';
 import { simulateLevelUp, xpForLevel, MAX_LEVEL } from '../src/engine/character/leveling';
 import { shortRestHeal, longRest, withResetActionEconomy } from '../src/engine/character/actions';
 import { characterAtLevel, pickBlessingAtShrine } from '../src/test/sim/encounterStress';
@@ -64,6 +65,12 @@ const RUNS_PER_CELL = Number(process.env.RUNS ?? 40);
 const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.env.ARCHETYPE ?? '')
   ? (process.env.ARCHETYPE as Archetype)
   : 'balanced';
+// Difficulty-ladder knob (mirrors the ARCHETYPE pattern): fix the whole run to a
+// single ascension level so a sweep isolates how difficulty scales with it. The
+// character config is held fixed (characterAtLevel, no meta-power), so the only
+// thing varying across an ASCENSION sweep is the ascension modifier set + the
+// ascension-gated threats (ascendant elites @≥2, boss second-wind @≥3).
+const ASCENSION = clampAscension(Number(process.env.ASCENSION ?? 0));
 const SEED_BASE = 0xfee1 >>> 0;
 const MAX_ROUNDS = 25;
 const MAX_STEPS = MAX_ROUNDS * 8;
@@ -187,6 +194,7 @@ interface TurnRecord {
 interface FightRecord {
   roomTitle: string;
   isBoss: boolean;
+  isElite: boolean;
   chapter: number;
   enemyDefIds: string[];
   enemyInstanceDefIds: string[];
@@ -248,11 +256,14 @@ function runFight(
   // combat entry (you get a full fresh turn), so do the same here — otherwise
   // a fight's round-1 turn inherits a spent action from the prior fight.
   const isBoss = room.kind === 'boss';
+  const isElite = room.kind === 'elite';
   const init = createCombat({
     roller,
     character: withResetActionEconomy(characterIn),
     monsters: monsterRefs,
+    ascension: ASCENSION,
     isBoss,
+    isElite,
   });
   let s = init.state;
   let ch = init.character;
@@ -341,6 +352,7 @@ function runFight(
     fight: {
       roomTitle: room.title,
       isBoss,
+      isElite,
       chapter,
       enemyDefIds,
       enemyInstanceDefIds,
@@ -370,7 +382,7 @@ function runOneDelve(
   const roller = createDiceRoller(seed);
   setActiveRoller(seed);
   let character = characterAtLevel(classId, startLevel);
-  const delve = createGodwakeDelve({ seed });
+  const delve = createGodwakeDelve({ seed, ascension: ASCENSION });
 
   const rec: RunRecord = {
     classId,
@@ -759,6 +771,38 @@ function main(): void {
     cells.set(key, c);
   }
 
+  // ── ASCENSION difficulty summary + per-kind breakout (the ladder lane) ──
+  // Headline difficulty read for the current ASCENSION level, plus a normal /
+  // elite / boss split so the ascension-gated threats (ascendant elites @≥2,
+  // boss second-wind @≥3) can be isolated against the flat HP/damage ramp.
+  const clearedRuns = runs.filter((r) => r.cleared).length;
+  const clearRate = clearedRuns / Math.max(1, nRuns);
+  const deathsPer100 = (1 - clearRate) * 100;
+  const meanRoomsReached = avg((r) => r.roomsReached);
+  const meanMinHpAll = fights.reduce((a, f) => a + f.minHpPct, 0) / Math.max(1, fights.length);
+  const overallBlowoutPct = blowouts / Math.max(1, wins.length);
+
+  interface KindAgg { fights: number; wins: number; blowouts: number; rounds: number; minHpSum: number; winMinHpSum: number }
+  const kindAgg: Record<'normal' | 'elite' | 'boss', KindAgg> = {
+    normal: { fights: 0, wins: 0, blowouts: 0, rounds: 0, minHpSum: 0, winMinHpSum: 0 },
+    elite: { fights: 0, wins: 0, blowouts: 0, rounds: 0, minHpSum: 0, winMinHpSum: 0 },
+    boss: { fights: 0, wins: 0, blowouts: 0, rounds: 0, minHpSum: 0, winMinHpSum: 0 },
+  };
+  for (const f of fights) {
+    const k = f.isBoss ? 'boss' : f.isElite ? 'elite' : 'normal';
+    const a = kindAgg[k];
+    a.fights += 1;
+    a.rounds += f.rounds;
+    a.minHpSum += f.minHpPct;
+    if (f.victory) {
+      a.wins += 1;
+      a.winMinHpSum += f.minHpPct;
+      if (f.minHpPct >= BLOWOUT_FLOOR) a.blowouts += 1;
+    }
+  }
+  const kindRow = (label: string, a: KindAgg) =>
+    `| ${label} | ${a.fights} | ${pct(a.wins / Math.max(1, a.fights))} | ${pct(a.blowouts / Math.max(1, a.wins))} | ${pct(a.winMinHpSum / Math.max(1, a.wins))} | ${pct(a.minHpSum / Math.max(1, a.fights))} | ${f2(a.rounds / Math.max(1, a.fights))} |`;
+
   // ── Narrated representative run ──
   const diary: string[] = [];
   const narrSeed = (SEED_BASE * 2654435761 + 5 * 7919) >>> 0;
@@ -776,6 +820,18 @@ function main(): void {
   L.push(
     `\n**Read relatively, not absolutely.** Reach / clear / win counts are the AI-floor artifact flagged in the balance memory; this lane measures the SHAPE of the experience.`,
   );
+
+  // ASCENSION SUMMARY
+  L.push(`\n## 0. Ascension difficulty summary (ASCENSION=${ASCENSION})\n`);
+  L.push(`- **Clear rate:** ${pct(clearRate)}  ·  **Deaths/100 runs:** ${f1(deathsPer100)}`);
+  L.push(`- **Mean rooms reached:** ${f1(meanRoomsReached)}  ·  **Mean min-HP across all fights:** ${pct(meanMinHpAll)}`);
+  L.push(`- **Overall blowout rate** (won, HP never < ${Math.round(BLOWOUT_FLOOR * 100)}%): ${pct(overallBlowoutPct)}`);
+  L.push('\n**Per fight-kind breakout** (isolates ascendant elites @≥2 + boss second-wind @≥3 vs the flat ramp):\n');
+  L.push('| Kind | Fights | Win rate | Blowout % (of wins) | Mean min-HP (wins) | Mean min-HP (all) | Avg rounds |');
+  L.push('|------|-------:|---------:|--------------------:|-------------------:|------------------:|-----------:|');
+  L.push(kindRow('normal', kindAgg.normal));
+  L.push(kindRow('elite', kindAgg.elite));
+  L.push(kindRow('boss', kindAgg.boss));
 
   // PACING
   L.push('\n## 1. Pacing — rounds per fight, dead turns\n');
@@ -927,6 +983,11 @@ function main(): void {
   console.log(`Path choices/run: ${f2(avg((r) => r.pathChoices))} | shop nodes/run ${f2(avg((r) => r.shopSites))} | shrine picks/run ${f2(avg((r) => r.blessingPicks))} | combat real-decision turns/run ${f1(realDecisionTurnsPerRun)}`);
   console.log(`Blowouts ${pct(blowouts / Math.max(1, wins.length))} | near-death-recover ${pct(nearDeathRecover / Math.max(1, wins.length))}`);
   console.log(`Intent-bearing enemy turns ${pct(intentEnemyTurns / Math.max(1, totalEnemyTurns))} | dead-turns next to intent ${pct(deadAdjIntent / Math.max(1, deadTurns))}`);
+  console.log(`\n=== ASC ${ASCENSION} SUMMARY ===`);
+  console.log(`clear% ${pct(clearRate)} | deaths/100 ${f1(deathsPer100)} | meanRooms ${f1(meanRoomsReached)} | meanMinHP ${pct(meanMinHpAll)} | blowout% ${pct(overallBlowoutPct)}`);
+  console.log(`  normal: n${kindAgg.normal.fights} win${pct(kindAgg.normal.wins / Math.max(1, kindAgg.normal.fights))} blow${pct(kindAgg.normal.blowouts / Math.max(1, kindAgg.normal.wins))} minHP(all)${pct(kindAgg.normal.minHpSum / Math.max(1, kindAgg.normal.fights))} rds${f2(kindAgg.normal.rounds / Math.max(1, kindAgg.normal.fights))}`);
+  console.log(`  elite : n${kindAgg.elite.fights} win${pct(kindAgg.elite.wins / Math.max(1, kindAgg.elite.fights))} blow${pct(kindAgg.elite.blowouts / Math.max(1, kindAgg.elite.wins))} minHP(all)${pct(kindAgg.elite.minHpSum / Math.max(1, kindAgg.elite.fights))} rds${f2(kindAgg.elite.rounds / Math.max(1, kindAgg.elite.fights))}`);
+  console.log(`  boss  : n${kindAgg.boss.fights} win${pct(kindAgg.boss.wins / Math.max(1, kindAgg.boss.fights))} blow${pct(kindAgg.boss.blowouts / Math.max(1, kindAgg.boss.wins))} minHP(all)${pct(kindAgg.boss.minHpSum / Math.max(1, kindAgg.boss.fights))} rds${f2(kindAgg.boss.rounds / Math.max(1, kindAgg.boss.fights))}`);
   console.log(`\nWrote → ${outPath}`);
 }
 
