@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 36 42"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Half-Giant Siegebreaker"
+    >
+      <ellipse cx="18" cy="22" rx="16" ry="20" fill="#16100a" opacity="0.35" />
+
+      <rect x="13" y="3" width="10" height="9" fill="#6a5240" />
+      <rect x="13" y="3" width="10" height="2" fill="#7e6450" />
+      <rect x="14" y="6" width="3" height="2" fill="#1f1208" />
+      <rect x="20" y="6" width="3" height="2" fill="#1f1208" />
+      <rect x="14" y="6" width="1" height="1" fill="#c4641a" opacity="0.7" />
+      <rect x="20" y="6" width="1" height="1" fill="#c4641a" opacity="0.7" />
+      <rect x="15" y="10" width="6" height="1" fill="#3a2414" />
+
+      <rect x="7" y="12" width="22" height="17" fill="#4a3a2c" />
+      <rect x="7" y="12" width="22" height="2" fill="#5e4a38" />
+      <rect x="11" y="15" width="14" height="11" fill="#33281c" />
+      <rect x="12" y="17" width="12" height="1" fill="#6a4a2a" opacity="0.5" />
+      <rect x="12" y="21" width="12" height="1" fill="#6a4a2a" opacity="0.45" />
+      <rect x="8" y="13" width="1" height="15" fill="#5e4a38" opacity="0.5" />
+
+      <rect x="2" y="13" width="5" height="13" fill="#4a3a2c" />
+      <rect x="29" y="13" width="5" height="13" fill="#4a3a2c" />
+      <rect x="2" y="24" width="5" height="3" fill="#b89868" opacity="0.85" />
+
+      <rect x="29" y="2" width="3" height="24" fill="#5a4232" />
+      <rect x="26" y="0" width="9" height="8" fill="#564a40" />
+      <rect x="26" y="0" width="9" height="2" fill="#6e6052" />
+      <rect x="27" y="2" width="2" height="5" fill="#3a3028" opacity="0.6" />
+      <rect x="32" y="2" width="2" height="5" fill="#3a3028" opacity="0.6" />
+
+      <rect x="11" y="29" width="6" height="12" fill="#33281c" />
+      <rect x="19" y="29" width="6" height="12" fill="#33281c" />
+      <rect x="10" y="39" width="8" height="3" fill="#120c06" />
+      <rect x="19" y="39" width="8" height="3" fill="#120c06" />
+    </svg>

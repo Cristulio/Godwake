@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 34 44"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Gromnir's Defender"
+    >
+      <ellipse cx="17" cy="24" rx="13" ry="19" fill="#180a0a" opacity="0.4" />
+
+      <rect x="12" y="3" width="10" height="10" fill="#3a3640" />
+      <rect x="12" y="3" width="10" height="2" fill="#4e4a56" />
+      <rect x="16" y="2" width="2" height="3" fill="#8a2a1a" />
+      <rect x="14" y="7" width="2" height="2" fill="#e84028" />
+      <rect x="19" y="7" width="2" height="2" fill="#e84028" />
+      <rect x="14" y="7" width="1" height="1" fill="#ff8060" />
+      <rect x="19" y="7" width="1" height="1" fill="#ff8060" />
+      <rect x="15" y="10" width="5" height="2" fill="#0c0608" />
+      <rect x="13" y="4" width="1" height="8" fill="#5a5662" opacity="0.5" />
+
+      <rect x="10" y="13" width="15" height="16" fill="#2e2a34" />
+      <rect x="10" y="13" width="15" height="2" fill="#403c48" />
+      <rect x="13" y="15" width="9" height="11" fill="#201d26" />
+      <rect x="16" y="15" width="2" height="11" fill="#8a2a1a" opacity="0.7" />
+      <rect x="13" y="18" width="9" height="1" fill="#4e4a56" opacity="0.5" />
+      <rect x="11" y="14" width="1" height="13" fill="#403c48" opacity="0.5" />
+
+      <rect x="6" y="14" width="4" height="11" fill="#2e2a34" />
+      <rect x="25" y="14" width="4" height="11" fill="#2e2a34" />
+      <rect x="25" y="23" width="4" height="3" fill="#9a8478" opacity="0.8" />
+
+      <rect x="3" y="3" width="2" height="22" fill="#5a4636" />
+      <rect x="2" y="1" width="4" height="3" fill="#7a4632" />
+      <polygon points="2,3 5,3 5,28 3.5,30 2,28" fill="#b4bcc6" />
+      <polygon points="3.5,3 5,3 5,28 3.5,30" fill="#8a929c" />
+      <rect x="2" y="5" width="2" height="2" fill="#e0ecf4" opacity="0.6" />
+      <rect x="2" y="12" width="2" height="2" fill="#e84028" opacity="0.4" />
+
+      <rect x="11" y="29" width="5" height="11" fill="#201d26" />
+      <rect x="19" y="29" width="5" height="11" fill="#201d26" />
+      <rect x="10" y="38" width="7" height="3" fill="#0c0810" />
+      <rect x="19" y="38" width="7" height="3" fill="#0c0810" />
+    </svg>
