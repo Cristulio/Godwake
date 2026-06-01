@@ -61,7 +61,12 @@ import { createCombat, _resetMonsterInstanceCounter } from '../src/engine/combat
 import { monsterAttack } from '../src/engine/combat/attack/monsterAttack';
 import { weaponDamageDice } from '../src/engine/combat/attack/playerAttack';
 import { endTurn, isPlayerTurn } from '../src/engine/combat/turn';
-import { chooseCombatAction, applyPlannedAction } from '../src/engine/combat/actionPolicy';
+import {
+  chooseCombatAction,
+  applyPlannedAction,
+  ARCHETYPES,
+  type Archetype,
+} from '../src/engine/combat/actionPolicy';
 import { pickBlessingAtShrine } from '../src/test/sim/encounterStress';
 import {
   applyPermanentUpgrade,
@@ -97,6 +102,9 @@ const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger']
 
 const SOULS_PER_CLASS = Number(process.env.SOULS_PER_CLASS ?? 150);
 const MAX_LIVES = Number(process.env.MAX_LIVES ?? 150);
+const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.env.ARCHETYPE ?? '')
+  ? (process.env.ARCHETYPE as Archetype)
+  : 'balanced';
 const MAX_TURNS_PER_FIGHT = 200;
 const SEED_BASE = 0xc1a55 >>> 0;
 
@@ -491,7 +499,7 @@ function runPlayerTurnInstrumented(
   let ch = character;
   for (let i = 0; i < 16; i++) {
     if (s.status !== 'active') break;
-    const action = chooseCombatAction(s, ch);
+    const action = chooseCombatAction(s, ch, ARCHETYPE);
     if (action.kind === 'end-turn') break;
     if (action.kind === 'rage') pc.rage += 1;
     else if (action.kind === 'reckless-attack') pc.reckless += 1;
@@ -891,7 +899,7 @@ function renderDeaths(aggs: ClassAggregate[]): string {
 function main(): void {
   const tWall0 = Date.now();
   console.log(
-    `Class-viability sim — ${CLASSES.length} classes × ${SOULS_PER_CLASS} souls, MAX_LIVES=${MAX_LIVES}\n`,
+    `Class-viability sim — ${CLASSES.length} classes × ${SOULS_PER_CLASS} souls, MAX_LIVES=${MAX_LIVES}, archetype=${ARCHETYPE}\n`,
   );
 
   const aggs: ClassAggregate[] = [];
