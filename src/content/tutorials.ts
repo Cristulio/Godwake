@@ -48,10 +48,10 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Elites are the map's hardest fights — richer rewards, and the only source of Legendary drops.",
   },
   "boss-intel": {
-    title: "Know the Beast",
+    title: "A Study in Dread",
     body: [
       "A keeper waits behind a chapter's last seal, and for once you may learn it before you bleed for the lesson. Lay down gold and what is known of the thing becomes yours — how it opens, what it hungers for, where it is slow.",
-      "Knowing costs coin you might rather spend on steel. But a soul that walks in blind seldom walks back out.",
+      "Knowing costs coin you might rather spend on steel, and the deeper the keeper waits, the dearer the telling. But a soul that walks in blind seldom walks back out.",
     ],
     key: "Pay gold to study a chapter's boss before the fight, and learn how it kills.",
   },
@@ -88,7 +88,7 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Equip two or more relics of one set for shared powers — partial sets already count.",
   },
   "grove-deep": {
-    title: "The Lower Grove",
+    title: "The Grove's Hidden Roots",
     body: [
       "The druids have unbarred a chamber that was shut to you before — older tiers of the Grove, kept back from souls that had not yet proven their depth. The power there is of another grade: heavier, dearer, the kind that lets a seasoned soul push through walls a fresh one only breaks against.",
       "It was always down there. The Grove was only waiting to see which souls earned the right to ask.",
