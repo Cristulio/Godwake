@@ -365,7 +365,9 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       wieldsRangedWeapon(nextCharacter) && !wearsHeavierThanLight(nextCharacter) ? 1 : 0,
     // Ascension dungeon twist state — neutral fields are omitted so untwisted
     // fights (and every fight below Asc 4) carry no extra combat-state weight.
-    ...(twist.cursedGroundChip ? { cursedGroundChip: twist.cursedGroundChip } : {}),
+    ...(twist.cursedGroundChipPct
+      ? { cursedGroundChip: Math.max(1, Math.round(nextCharacter.hp.max * twist.cursedGroundChipPct)) }
+      : {}),
     ...(twist.firstAttackDisadvantage ? { gloomActive: true } : {}),
     ...(twist.suppressBlessings ? { blessingsSealed: true } : {}),
   };

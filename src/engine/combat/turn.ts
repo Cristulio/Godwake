@@ -338,12 +338,16 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
 }
 
 /**
- * Cursed Ground twist (Ascension >= 4): deal the flat per-turn chip to the
- * player, draining temp HP first, then real HP. No-op when the curse is absent
+ * Cursed Ground twist (Ascension >= 4): bleed the per-turn chip from the
+ * player, draining temp HP first, then real HP. Non-lethal by design — the
+ * curse can drain a hero to 1 HP but never delivers the killing blow itself
+ * (an enemy has to finish them). A flat lethal chip was HP-agnostic and the
+ * lone twist that death-spiralled low-HP builds outright (the #286 validation
+ * outlier); pressuring without auto-killing keeps the tension and lifts the win
+ * rate back into the twist band. No-op when the curse is absent
  * (state.cursedGroundChip falsy), the fight is over, or the player is already
- * down. Evaluates combat end so the chip can itself be lethal. Shared by
- * createCombat (the hero's turn-0, which never travels through endTurn) and the
- * start-of-player-turn block above.
+ * down. Shared by createCombat (the hero's turn-0, which never travels through
+ * endTurn) and the start-of-player-turn block above.
  */
 export function applyCursedGroundChip(
   state: CombatState,
@@ -357,14 +361,14 @@ export function applyCursedGroundChip(
   const overflow = chip - fromTemp;
   const nextCharacter = patchHp(character, {
     temp: character.hp.temp - fromTemp,
-    current: Math.max(0, character.hp.current - overflow),
+    current: Math.max(1, character.hp.current - overflow),
   });
   const logged = appendLog(state, {
     id: state.log.length + 1,
     kind: 'damage',
     text: `The cursed ground bites ${nextCharacter.name} for ${chip} damage.`,
   });
-  return evaluateCombatEnd(logged, nextCharacter);
+  return { state: logged, character: nextCharacter };
 }
 
 function conditionEndText(name: ConditionName): string {
