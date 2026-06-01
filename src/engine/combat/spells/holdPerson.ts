@@ -1,6 +1,7 @@
 import type { Character } from '../../../types/character';
 import type { CombatState, CombatLogEntry } from '../../../types/combat';
 import { getMonster } from '../../../content/monsters';
+import { getSpell } from '../../../content/spells';
 import { abilityModifier } from '../../../types/abilities';
 import { appendLog } from '../log';
 import {
@@ -39,7 +40,7 @@ export function castHoldPerson(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} weaves Hold Person at ${target.instance.displayName}. WIS save${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${targetWisMod >= 0 ? '+' : ''}${targetWisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+      text: `${nextCharacter.name} weaves ${getSpell(ctx.spellId).name} at ${target.instance.displayName}. WIS save${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${targetWisMod >= 0 ? '+' : ''}${targetWisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
     },
   ];
 

@@ -1,7 +1,7 @@
 import type { Character } from '../../../types/character';
 import type { CombatState, CombatLogEntry } from '../../../types/combat';
-import { effectiveAbilityScores } from '../../character/derived';
-import { abilityModifier } from '../../../types/abilities';
+import { spellcastingMod } from '../../character/derived';
+import { getSpell } from '../../../content/spells';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
 import {
@@ -47,8 +47,8 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
   const saved = save.total >= dc;
 
   const damageRoll = roller.roll({ count: fireBoltDiceCount(nextCharacter.level), die: 10, modifier: 0 });
-  const intMod = abilityModifier(effectiveAbilityScores(nextCharacter).int);
-  const bonus = spellDamageBonus(nextCharacter) + intMod;
+  const castMod = spellcastingMod(nextCharacter);
+  const bonus = spellDamageBonus(nextCharacter) + castMod;
   const fullDamage = damageRoll.total + bonus;
   const dealt = saved ? Math.floor(fullDamage / 2) : fullDamage;
 
@@ -57,7 +57,7 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} hurls a Fire Bolt at ${target.instance.displayName}. DEX save DC ${dc}: ${save.total} (${saved ? 'saved' : 'failed'}).`,
+      text: `${nextCharacter.name} looses ${getSpell(ctx.spellId).name} at ${target.instance.displayName}. DEX save DC ${dc}: ${save.total} (${saved ? 'saved' : 'failed'}).`,
     },
   ];
 

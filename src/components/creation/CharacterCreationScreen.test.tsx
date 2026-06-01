@@ -28,13 +28,15 @@ describe('CharacterCreationScreen — selection', () => {
     expect(screen.getByRole('button', { name: /faelar quill/i })).toBeInTheDocument(); // Ranger
   });
 
-  it('seals the harder souls (Wizard, Rogue) on a fresh soul — not choosable', () => {
+  it('seals the harder souls (Wizard, Druid, Rogue) on a fresh soul — not choosable', () => {
     render(<CharacterCreationScreen />);
     // The sealed placeholders name only the class, never the character, and are
-    // not buttons — a fresh walker cannot forge Veyra Ash or Maelis Vell.
+    // not buttons — a fresh walker cannot forge Veyra Ash, Lureth Oakshadow, or
+    // Maelis Vell.
     expect(screen.queryByRole('button', { name: /veyra ash/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /lureth oakshadow/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
-    expect(screen.getAllByText(/wakes once you have felled/i).length).toBe(2);
+    expect(screen.getAllByText(/wakes once you have felled/i).length).toBe(3);
   });
 
   it('has no point-buy or multi-step controls', () => {

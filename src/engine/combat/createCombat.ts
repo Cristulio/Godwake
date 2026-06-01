@@ -32,6 +32,7 @@ import {
   ascensionDamageBonus,
 } from '../delve/ascension';
 import { bossIntelBuffFor } from '../../content/bossIntel';
+import { wildShapeUsesMax } from './wildShape';
 
 /**
  * Max entries retained in CombatState.log. The renderer (CombatLog.tsx) tails
@@ -200,6 +201,15 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   if (nextCharacter.classId === 'barbarian') {
     nextCharacter = { ...nextCharacter, recklessActive: false };
     nextCharacter = patchResources(nextCharacter, { rageRoundsRemaining: 0 });
+  }
+
+  // Druid: drop any stale beast form and refresh Wild Shape uses — the change
+  // is available every encounter (mirrors the Fighter's Second Wind cadence).
+  if (nextCharacter.classId === 'druid') {
+    nextCharacter = patchResources(nextCharacter, {
+      wildShapeRoundsRemaining: 0,
+      wildShapeUsesRemaining: wildShapeUsesMax(nextCharacter),
+    });
   }
 
   // Wizards walk into every fight already wrapped in Mage Armor (passive class

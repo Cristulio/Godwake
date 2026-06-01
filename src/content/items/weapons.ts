@@ -226,6 +226,56 @@ export const HAND_CROSSBOW: Weapon = WeaponSchema.parse({
     'A compact crossbow built for one hand and close work — a bolt slipped in, a quick draw, a precise shot. 1d6+1 piercing; loading means one shot per action, but each shot counts.',
 });
 
+export const SICKLE: Weapon = WeaponSchema.parse({
+  id: 'sickle',
+  kind: 'weapon',
+  name: 'Sickle',
+  affinity: 'druid',
+  category: 'simple',
+  damage: '1d4',
+  damageType: 'slashing',
+  properties: ['light'],
+  cost: 4,
+  rarity: 'common',
+  description:
+    'A short curved blade, as much a harvest tool as a weapon. 1d4 slashing — the druid keeps one to hand, though the real work is done with word and claw.',
+});
+
+// Wild Shape natural weapons — never sold or rolled (absent from the loot/shop
+// pools, which draw from explicit id lists). Resolved only when the engine swaps
+// the druid's attack to its beast profile. Finesse so the claw rides the druid's
+// DEX rather than its dumped STR; affinity grants the matched-weapon edge.
+export const BEAST_CLAWS: Weapon = WeaponSchema.parse({
+  id: 'beast-claws',
+  kind: 'weapon',
+  name: 'Beast Claws',
+  affinity: 'druid',
+  attackMod: 1,
+  category: 'simple',
+  damage: '1d6',
+  damageType: 'slashing',
+  properties: ['finesse', 'light'],
+  cost: 0,
+  rarity: 'common',
+  description: 'Tooth and talon — the natural arms of the borrowed form.',
+});
+
+export const DIRE_CLAWS: Weapon = WeaponSchema.parse({
+  id: 'dire-claws',
+  kind: 'weapon',
+  name: 'Dire Claws',
+  affinity: 'druid',
+  attackMod: 1,
+  damageMod: 2,
+  category: 'martial',
+  damage: '1d8',
+  damageType: 'slashing',
+  properties: ['finesse'],
+  cost: 0,
+  rarity: 'common',
+  description: 'The heavier predators a Circle of the Moon druid can wear — a deeper, surer rend.',
+});
+
 export const ALL_WEAPONS: Weapon[] = [
   LONGSWORD,
   DAGGER,
@@ -242,4 +292,7 @@ export const ALL_WEAPONS: Weapon[] = [
   LONGBOW,
   SHORTSWORD,
   HAND_CROSSBOW,
+  SICKLE,
+  BEAST_CLAWS,
+  DIRE_CLAWS,
 ];

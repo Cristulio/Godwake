@@ -95,6 +95,28 @@ function startingKitFor(classId: ClassId): StartingKit {
         goldInPocket: 20,
       };
     }
+    case 'druid': {
+      // A sickle for when something gets close before a spell can answer, and
+      // hide leather to keep a little skin on. Produce Flame opens at range;
+      // Wild Shape is the real melee answer. Two potions — the squishy caster
+      // wants the cushion.
+      const sickle: ItemRef = { itemId: 'sickle' };
+      const leatherArmor: ItemRef = { itemId: 'leather-armor' };
+      return {
+        inventory: [
+          sickle,
+          leatherArmor,
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: sickle,
+          offHand: null,
+          armor: leatherArmor,
+        },
+        goldInPocket: 20,
+      };
+    }
     case 'ranger': {
       // Longbow opens the room; the shortsword is for when something closes.
       // Light armor keeps the archer mobile. (Ammunition isn't tracked — the

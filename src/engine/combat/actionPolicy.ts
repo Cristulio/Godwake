@@ -4,7 +4,13 @@ import type { Character, SpellSlotLevel } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import { abilityModifier } from '../../types/abilities';
 import { getSpell } from '../../content/spells';
-import { effectiveAbilityScores, characterHasMechanic, isRaging } from '../character/derived';
+import {
+  effectiveAbilityScores,
+  characterHasMechanic,
+  isRaging,
+  isWildShaped,
+  spellcastingMod,
+} from '../character/derived';
 import { baneQuirkCount } from '../character/quirks';
 import { isNonStackingBlessing, blessingSignature } from '../character/blessings';
 import { getMonster } from '../../content/monsters';
@@ -20,6 +26,7 @@ import { useActionSurge } from './actionSurge';
 import { useCunningAction, type CunningActionChoice } from './cunningAction';
 import { useRage, useRecklessAttack } from './rage';
 import { useHuntersMark } from './huntersMark';
+import { useWildShape, beastWeaponId } from './wildShape';
 
 /**
  * A single structured combat decision. Callers map it onto the real engine
@@ -38,6 +45,7 @@ export type PlannedAction =
   | { kind: 'rage' }
   | { kind: 'reckless-attack' }
   | { kind: 'hunters-mark'; targetId: string }
+  | { kind: 'wild-shape' }
   | { kind: 'end-turn' };
 
 // ---- Tunables --------------------------------------------------------------
@@ -250,6 +258,18 @@ const MID_NUKE_PRIORITY = ['void-ray', 'force-lance', 'lightning-bolt'] as const
  *  banks the deeper slots for damage. */
 const DRAIN_PRIORITY = ['vampiric-touch', 'exsanguinate'] as const;
 
+/** Druid AoE blasts that hit EVERY enemy, biggest dice first — the crowd-clear
+ *  pool. Call Lightning is deliberately absent: it forks to just one extra foe,
+ *  so it is a focused nuke, not a pack-clear. */
+const DRUID_AOE_PRIORITY = [
+  'wrath-of-silvanus',
+  'summon-tempest',
+  'fire-storm',
+  'avalanche',
+  'ice-storm',
+  'wildfire',
+] as const;
+
 /** Index of the strongest healing consumable in inventory, or -1. */
 function bestHealPotionIdx(character: Character): number {
   let bestIdx = -1;
@@ -308,6 +328,7 @@ export function chooseCombatAction(
   const isWizard = character.classId === 'wizard';
   const isBarbarian = character.classId === 'barbarian';
   const isRanger = character.classId === 'ranger';
+  const isDruid = character.classId === 'druid';
 
   const primary = lowestHpTarget(live);
   const threat = highestThreatTarget(live);
@@ -342,6 +363,20 @@ export function chooseCombatAction(
       !markIsOnLiveTarget(state, live)
     ) {
       return { kind: 'hunters-mark', targetId: primary.id };
+    }
+
+    // Druid Wild Shape: shed into a beast form for a temp-HP cushion + claws.
+    // Commit to it either as a survival button (hurt) or when the offensive
+    // book is spent down to cantrips (the claw out-damages plinking, and the
+    // vitality buys turns). Skip if already shaped or out of changes.
+    if (
+      isDruid &&
+      characterHasMechanic(character, 'wild-shape') &&
+      !isWildShaped(character) &&
+      (character.resources.wildShapeUsesRemaining ?? 0) > 0 &&
+      (hpPct <= profile.wizardDefensiveHp || !druidHasOffensiveSlot(character))
+    ) {
+      return { kind: 'wild-shape' };
     }
 
     // Emergency potion (bonus action) for anyone genuinely low. Rage locks out
@@ -385,6 +420,15 @@ export function chooseCombatAction(
     if (isWizard) {
       const wizardAction = chooseWizardAction(state, character, live, primary, threat, profile);
       if (wizardAction) return wizardAction;
+    }
+    if (isDruid) {
+      // In beast form the druid fights with claws — the attack dispatch swaps in
+      // the natural weapon. Out of beast form it casts the nature book.
+      if (isWildShaped(character) && primary) {
+        return { kind: 'attack', targetId: primary.id };
+      }
+      const druidAction = chooseDruidAction(character, live, primary, threat, profile);
+      if (druidAction) return druidAction;
     }
     // Barbarian Reckless Attack: declare it before swinging while healthy
     // enough to eat the return blows. Free stance — costs no action — so it
@@ -608,6 +652,132 @@ function chooseWizardAction(
   return null;
 }
 
+/** True while the druid still holds any spell slot — i.e. has a real working to
+ *  spend rather than only the at-will cantrip. Drives the "beast-form when the
+ *  book is empty" read. */
+function druidHasOffensiveSlot(character: Character): boolean {
+  for (let lvl = 1 as SpellSlotLevel; lvl <= 9; lvl = (lvl + 1) as SpellSlotLevel) {
+    if (slotsAt(character, lvl) > 0) return true;
+  }
+  return false;
+}
+
+function produceFlameFullAvg(character: Character): number {
+  return fireBoltDiceCount(character.level) * 5.5 + spellcastingMod(character);
+}
+
+/**
+ * Druid spell selection — the Wisdom-caster mirror of {@link chooseWizardAction}.
+ * The defensive lever is Wild Shape (handled in the bonus-action block), so this
+ * is pure offense: a self-buff capstone for a true boss, AoE for a crowd, a
+ * focused fork for a pair, control to deny the scariest foe, then assemble burst
+ * down to the at-will cantrip.
+ */
+function chooseDruidAction(
+  character: Character,
+  live: MonsterCombatant[],
+  primary: MonsterCombatant | undefined,
+  threat: MonsterCombatant | undefined,
+  profile: ArchetypeProfile,
+): PlannedAction | null {
+  const enemyCount = live.length;
+  const anchor = threat?.id ?? primary?.id;
+  const beefy = highestHpTarget(live);
+
+  // Boss finisher: against a true boss, blaze into the Avatar of the Wilds
+  // (the 9th-level self-buff) — temp HP, +AC, and far harder strikes for the
+  // assembled kill. Only when not already transformed.
+  if (
+    beefy &&
+    beefy.instance.hp.current >= CAPSTONE_NUKE_HP &&
+    knows(character, 'avatar-of-the-wilds') &&
+    slotsAt(character, 9) > 0 &&
+    (character.resources.ascendantRoundsRemaining ?? 0) === 0
+  ) {
+    return { kind: 'cast', spellId: 'avatar-of-the-wilds' };
+  }
+
+  // AoE when the room is crowded — biggest affordable blast that hits the pack.
+  if (enemyCount >= 3) {
+    const aoe = bestAffordable(character, DRUID_AOE_PRIORITY);
+    if (aoe && !aoeWastedAny(live, aoe)) {
+      return { kind: 'cast', spellId: aoe, targetId: anchor };
+    }
+  }
+
+  // A beefy pair / single boss: Call Lightning strikes one in full and forks to a
+  // second for half — the focused nuke that actually closes the fight.
+  if (
+    beefy &&
+    beefy.instance.hp.current >= BOSS_NUKE_HP &&
+    enemyCount <= 2 &&
+    knows(character, 'call-lightning') &&
+    slotsAt(character, 3) > 0
+  ) {
+    return { kind: 'cast', spellId: 'call-lightning', targetId: beefy.id };
+  }
+
+  // Control: root the scariest live foe so its whole turn vanishes while the
+  // kill assembles — worth it on a lone boss too, not just a crowd.
+  if (
+    threat &&
+    !isMonsterParalyzed(threat) &&
+    monsterThreat(threat) >= profile.holdPersonThreat &&
+    threat.instance.hp.current > HOLD_PERSON_MIN_HP &&
+    knows(character, 'entangling-roots') &&
+    slotsAt(character, 2) > 0
+  ) {
+    return { kind: 'cast', spellId: 'entangling-roots', targetId: threat.id };
+  }
+
+  // Guaranteed finish: Thornlash auto-hits, so a low target dies for sure.
+  if (
+    knows(character, 'thornlash') &&
+    slotsAt(character, 1) > 0 &&
+    primary &&
+    primary.instance.hp.current <= MAGIC_MISSILE_MIN
+  ) {
+    return { kind: 'cast', spellId: 'thornlash', targetId: primary.id };
+  }
+
+  // Burst a beefy single threat with Moonfire's volley of lances.
+  if (
+    enemyCount <= 2 &&
+    knows(character, 'moonfire') &&
+    slotsAt(character, 2) > 0 &&
+    threat &&
+    threat.instance.hp.current >= SCORCHING_RAY_WORTH_HP
+  ) {
+    return { kind: 'cast', spellId: 'moonfire', targetId: threat.id };
+  }
+
+  // Spend a level-1 slot (Thornlash) when the cantrip is too weak to matter.
+  if (
+    knows(character, 'thornlash') &&
+    slotsAt(character, 1) > 0 &&
+    primary &&
+    primary.instance.hp.current > produceFlameFullAvg(character)
+  ) {
+    return { kind: 'cast', spellId: 'thornlash', targetId: primary.id };
+  }
+
+  // Cantrip — trivial target, or out of slots.
+  if (knows(character, 'produce-flame') && primary) {
+    return { kind: 'cast', spellId: 'produce-flame', targetId: primary.id };
+  }
+
+  return null;
+}
+
+/** AoE-waste guard for the druid pool: only fire/lightning/cold blasts can be
+ *  fully resisted by the whole room. Reads the spell's damage type and reuses
+ *  the shared resist check for the two types {@link aoeWasted} knows. */
+function aoeWastedAny(live: MonsterCombatant[], spellId: string): boolean {
+  const type = getSpell(spellId).damageType;
+  if (type === 'fire' || type === 'lightning') return aoeWasted(live, type);
+  return false;
+}
+
 // ---- Dispatch --------------------------------------------------------------
 
 export interface ApplyActionContext {
@@ -629,7 +799,11 @@ export function applyPlannedAction(
   const { roller, state, character } = ctx;
   switch (action.kind) {
     case 'attack': {
-      const weaponId = character.equipped.mainHand?.itemId ?? 'dagger';
+      // A wild-shaped druid strikes with its beast profile (claws/bite), not the
+      // weapon hanging at its side.
+      const weaponId = isWildShaped(character)
+        ? beastWeaponId(character)
+        : (character.equipped.mainHand?.itemId ?? 'dagger');
       const r = playerAttack({ roller, character, state }, action.targetId, weaponId);
       return { state: r.state, character: r.character };
     }
@@ -669,6 +843,10 @@ export function applyPlannedAction(
     }
     case 'hunters-mark': {
       const r = useHuntersMark({ character, state, targetId: action.targetId });
+      return { state: r.state, character: r.character };
+    }
+    case 'wild-shape': {
+      const r = useWildShape({ character, state });
       return { state: r.state, character: r.character };
     }
     case 'end-turn':

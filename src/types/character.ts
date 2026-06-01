@@ -108,6 +108,20 @@ export interface ClassResources {
    * start of each player turn; reset to 0 at combat start.
    */
   rageRoundsRemaining?: number;
+  /**
+   * Druid: rounds the current Wild Shape holds. While > 0 the druid wears a
+   * beast form — it fights with a natural claw/bite profile and carries the
+   * beast's vitality as temp HP. Decrements at the start of each player turn;
+   * reverts when it hits 0 or the beast vitality (temp HP) is spent. Reset to 0
+   * at combat start.
+   */
+  wildShapeRoundsRemaining?: number;
+  /**
+   * Druid: Wild Shape uses left this combat. 1 base, 2 for Circle of the Moon.
+   * Refreshes at the start of every encounter (createCombat), like the Fighter's
+   * Second Wind and the Rogue's Cunning Action.
+   */
+  wildShapeUsesRemaining?: number;
 }
 
 /**

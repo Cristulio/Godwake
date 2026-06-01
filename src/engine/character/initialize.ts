@@ -119,6 +119,33 @@ export function classStartingResources(classId: ClassId) {
       return {
         rageRoundsRemaining: 0,
       };
+    case 'druid':
+      return {
+        spellSlots: { 1: 2 },
+        // The whole nature book is prepared from L1 — higher tiers are simply
+        // uncastable until a slot of that level arrives (canCastSpell gates on
+        // the slot, not a per-level "prepared at" flag), exactly as the Wizard's
+        // Hold Person sits unusable until L3.
+        knownSpells: [
+          'produce-flame',
+          'thornlash',
+          'entangling-roots',
+          'moonfire',
+          'call-lightning',
+          'wildfire',
+          'ice-storm',
+          'avalanche',
+          'fire-storm',
+          'summon-tempest',
+          'wrath-of-silvanus',
+          'avatar-of-the-wilds',
+        ],
+        // Wild Shape refreshes each combat (createCombat); Circle of the Moon
+        // grants a second use. Set the L2 baseline here so a fresh druid that
+        // somehow enters combat pre-L2 carries no stale uses.
+        wildShapeUsesRemaining: 0,
+        wildShapeRoundsRemaining: 0,
+      };
     case 'wizard':
       return {
         spellSlots: { 1: 2, 2: 0, 3: 0, 4: 0 },

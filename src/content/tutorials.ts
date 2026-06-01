@@ -137,6 +137,14 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
     ],
     key: 'The Wizard: Fire Bolt and Magic Missile to open, Fireball at L5 — and almost no armor to hide behind.',
   },
+  druid: {
+    title: 'A Soul of the Old Faith',
+    body: [
+      'A soul older than the new gods’ war has surfaced — one that kept the groves while the rest knelt to thrones. Thin-skinned in its own shape, a single bad step from the dark, like the Art-souls before it.',
+      'But it does not always keep its own shape. When the spells run dry it sheds the body and wears the beast, and the beast does not bleed so easily.',
+    ],
+    key: 'The Druid: Produce Flame and the storm to open, Wild Shape into a beast’s vitality and claws when the fight closes in.',
+  },
   rogue: {
     title: 'A Soul in the Dark',
     body: [
