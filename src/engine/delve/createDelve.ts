@@ -946,7 +946,7 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
  * means the whole chain fell to Melissan (Ch14) — the condition the first-clear
  * ending capstone gates on (delveStore.finishDelve).
  */
-export const TOTAL_CHAPTERS = GODWAKE_CHAPTERS.length;
+export { TOTAL_CHAPTERS } from './constants';
 
 const GODWAKE_CAMPS: RoomFlavor[] = [
   {

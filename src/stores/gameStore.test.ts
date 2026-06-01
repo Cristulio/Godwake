@@ -591,10 +591,10 @@ describe('New Game+ run-launcher flow', () => {
     expect(useMetaStore.getState().selectedAscension).toBe(0);
   });
 
-  it('selectCharacterAndDescend descends straight into a run at the chosen ascension', () => {
+  it('selectCharacterAndDescend descends straight into a run at the chosen ascension', async () => {
     useGameStore.getState().goToAscensionSelect();
     useGameStore.getState().confirmAscensionSelection(2);
-    useGameStore.getState().selectCharacterAndDescend('fighter');
+    await useGameStore.getState().selectCharacterAndDescend('fighter');
 
     expect(useScreenStore.getState().screen).toBe('delve');
     expect(useGameStore.getState().newGamePlusFlow).toBe(false);

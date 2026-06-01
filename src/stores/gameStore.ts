@@ -16,7 +16,6 @@ import { getClass } from '../content/classes';
 import type { ItemRef } from '../schemas/item';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
 import { type EquipSlot } from '../engine/character/equip';
-import { createGodwakeDelve } from '../engine/delve';
 import { useCharacterStore } from './characterStore';
 import { useDelveStore, type LootSummary } from './delveStore';
 import { useCombatStore } from './combatStore';
@@ -622,7 +621,7 @@ export const useGameStore = create<GameState>()(
           useScreenStore.getState().setScreen('hub');
         },
 
-        selectCharacterAndDescend: (classId) => {
+        selectCharacterAndDescend: async (classId) => {
           adoptSoul(classId);
           const meta = useMetaStore.getState();
           const elitesEnabled = isFeatureUnlocked('elite-nodes', {
@@ -630,6 +629,7 @@ export const useGameStore = create<GameState>()(
             chaptersCleared: meta.chaptersCleared,
             druidGroveUnlocked: meta.druidGroveUnlocked,
           });
+          const { createGodwakeDelve } = await import('../engine/delve');
           const delve = createGodwakeDelve({
             ascension: meta.selectedAscension,
             elitesEnabled,
@@ -685,7 +685,7 @@ export const useGameStore = create<GameState>()(
           if (head) useMetaStore.getState().markTutorialSeen(head);
           sc.shiftTutorial();
         },
-        markIntroSeen: () => {
+        markIntroSeen: async () => {
           useScreenStore.getState().setIntroSeen(true);
           // First incarnation: drop the player straight into the cells.
           // On subsequent reincarnations the intro doesn't replay, so this
@@ -693,6 +693,7 @@ export const useGameStore = create<GameState>()(
           const meta = useMetaStore.getState();
           const ch = useCharacterStore.getState().character;
           if (!meta.hasReincarnated && ch) {
+            const { createGodwakeDelve } = await import('../engine/delve');
             useDelveStore.getState().startDelve(createGodwakeDelve());
           } else {
             useScreenStore.getState().setScreen('hub');
