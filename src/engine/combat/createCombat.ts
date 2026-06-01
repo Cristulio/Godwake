@@ -21,7 +21,7 @@ import {
   type CombatActionResult,
 } from './types';
 import { isPlayerParalyzed } from './holdPerson';
-import { resolvePlayerParalyzedTurn } from './turn';
+import { resolvePlayerParalyzedTurn, applyCursedGroundChip } from './turn';
 import { refreshMonsterIntents } from './attack/monsterIntent';
 import { playerAttack } from './attack/playerAttack';
 import { wieldsRangedWeapon, wearsHeavierThanLight } from '../character/equip';
@@ -31,6 +31,7 @@ import {
   ascensionBossExtraPhase,
   ascensionDamageBonus,
 } from '../delve/ascension';
+import { getTwist, twistCombatEffect } from '../delve/twists';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 
 /**
@@ -84,6 +85,12 @@ export interface CreateCombatInput {
   isBoss?: boolean;
   /** True for an elite encounter — grants the primary foe a smaller legendary-resistance pool. */
   isElite?: boolean;
+  /**
+   * Ascension dungeon twist riding this room (id into engine/delve/twists). Only
+   * set at Ascension >= 4; resolved here into combat effects (chip damage, first-
+   * strike disadvantage, +enemy damage, sealed blessings, enemy-first initiative).
+   */
+  twistId?: string;
 }
 
 /** Legendary-resistance pools (auto-succeeded player control saves per fight). */
@@ -128,7 +135,11 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     : isElite
       ? ELITE_LEGENDARY_RESISTANCES
       : 0;
-  const enemyDamageBonus = ascensionDamageBonus(ascension);
+  // Ascension dungeon twist for this room (Asc >= 4 only). Resolved up-front so
+  // its knobs feed the spawn (Bloodscent enemy damage) and the combat state
+  // (Cursed Ground chip, Gloom first-strike, Sealed Wards, Quickening order).
+  const twist = twistCombatEffect(input.twistId);
+  const enemyDamageBonus = ascensionDamageBonus(ascension) + (twist.enemyDamageBonus ?? 0);
   // Ascension extra-phase arms only the primary foe of a boss room (idx 0).
   const bossExtraPhase = isBoss && ascensionBossExtraPhase(ascension);
   const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }, idx) => {
@@ -160,7 +171,15 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // and the per-combat "who rolled higher" coin-flip just hid the decisions
   // the player was actually making. Future "extra turn" mechanics (time-stop)
   // hook into endTurn(), not this list.
-  const turnOrder = combatants.map((c) => c.id);
+  //
+  // Quickening twist: the dwellers win initiative — monsters take the order
+  // first, the player last. The monster-turn auto-driver fires off the opening
+  // currentTurnIndex (0), so seeding the index at the first monster makes the
+  // enemy act before the hero.
+  const enemiesActFirst = twist.enemiesActFirst === true && monsterCombatants.length > 0;
+  const turnOrder = enemiesActFirst
+    ? [...monsterCombatants.map((c) => c.id), playerCombatant.id]
+    : combatants.map((c) => c.id);
 
   const log = [
     {
@@ -169,6 +188,17 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       text: 'Combat begins.',
     },
   ];
+
+  // Telegraph the twist into the combat log opener so it never lies — the omen
+  // the player read on the door is named again as the fight begins.
+  const activeTwist = getTwist(input.twistId);
+  if (activeTwist) {
+    log.push({
+      id: log.length + 1,
+      kind: 'system' as const,
+      text: `${activeTwist.name}. ${activeTwist.telegraph}`,
+    });
+  }
 
   // Rogue: refresh per-combat resources. Stale Hide from before combat is
   // dropped; Cunning Action pool refills.
@@ -225,7 +255,9 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // (Mystra's Reserve), and a boss-only gird (Helm's Bastion). Temp HP doesn't
   // stack — take the single largest source, then the higher of that and any
   // temp HP already on the sheet (RAW).
-  const blessingMods = characterBlessingMods(nextCharacter);
+  // Sealed Wards twist: blessing modifiers are inert this fight — fall back to a
+  // neutral (empty) mod set so the start-of-combat gird/regen/reroll never seed.
+  const blessingMods = twist.suppressBlessings ? {} : characterBlessingMods(nextCharacter);
   // Stoneblood armour affix folds into the same pool (temp HP doesn't stack —
   // the single largest source wins, RAW).
   const affixMods = characterAffixMods(nextCharacter);
@@ -321,26 +353,45 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     // Consumed by the first enemy attack (monsterAttack).
     rangedEvasionRemaining:
       wieldsRangedWeapon(nextCharacter) && !wearsHeavierThanLight(nextCharacter) ? 1 : 0,
+    // Ascension dungeon twist state — neutral fields are omitted so untwisted
+    // fights (and every fight below Asc 4) carry no extra combat-state weight.
+    ...(twist.cursedGroundChip ? { cursedGroundChip: twist.cursedGroundChip } : {}),
+    ...(twist.firstAttackDisadvantage ? { gloomActive: true } : {}),
+    ...(twist.suppressBlessings ? { blessingsSealed: true } : {}),
   };
 
-  // Player goes first. If they walk in already paralyzed (Magistrate held
-  // them through the prior encounter's tail), resolve the save up-front —
-  // endTurn would otherwise never see turn 0 and the player would get a
-  // free action while held. Same resolver the round-trip path uses.
-  if (isPlayerParalyzed(nextCharacter)) {
-    const resolved = resolvePlayerParalyzedTurn(state, nextCharacter);
-    state = resolved.state;
-    nextCharacter = resolved.character;
-  }
+  // The entry player-turn resolutions below assume the hero acts first. Under
+  // Quickening the dwellers take the order, so the player's first turn arrives
+  // through endTurn instead — skip the up-front paralyzed-save, opening volley
+  // and turn-0 chip here and let the round-trip path own them.
+  if (!enemiesActFirst) {
+    // Player goes first. If they walk in already paralyzed (Magistrate held
+    // them through the prior encounter's tail), resolve the save up-front —
+    // endTurn would otherwise never see turn 0 and the player would get a
+    // free action while held. Same resolver the round-trip path uses.
+    if (isPlayerParalyzed(nextCharacter)) {
+      const resolved = resolvePlayerParalyzedTurn(state, nextCharacter);
+      state = resolved.state;
+      nextCharacter = resolved.character;
+    }
 
-  // Ranged opening volley: a bow-wielder looses a free shot before the enemy
-  // can close the distance. Resolved here (after the entry paralyzed-save, so a
-  // held player can't fire) and before intents are seeded, so a kill is already
-  // reflected when the survivors telegraph.
-  {
-    const volley = resolveRangedOpeningVolley(state, nextCharacter, input.roller);
-    state = volley.state;
-    nextCharacter = volley.character;
+    // Cursed Ground twist: the hero takes the chip at the start of THIS turn
+    // too — turn 0 never travels through endTurn, so apply it here once.
+    {
+      const cursed = applyCursedGroundChip(state, nextCharacter);
+      state = cursed.state;
+      nextCharacter = cursed.character;
+    }
+
+    // Ranged opening volley: a bow-wielder looses a free shot before the enemy
+    // can close the distance. Resolved here (after the entry paralyzed-save, so
+    // a held player can't fire) and before intents are seeded, so a kill is
+    // already reflected when the survivors telegraph.
+    if (state.status === 'active') {
+      const volley = resolveRangedOpeningVolley(state, nextCharacter, input.roller);
+      state = volley.state;
+      nextCharacter = volley.character;
+    }
   }
 
   // enemy-telegraph: seed each monster's round-1 intent (after the entry

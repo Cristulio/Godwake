@@ -43,6 +43,13 @@ export interface RoomSpec {
   layer?: number;
   /** Which chapter (1–6) this node belongs to. Set by the branching generator. */
   chapter?: number;
+  /**
+   * Ascension dungeon twist riding this combat room (id into the twist
+   * registry, see engine/delve/twists.ts). Assigned to a fraction of combat
+   * rooms only at Ascension >= 4; absent otherwise. Telegraphed before the
+   * fight and resolved into combat effects by createCombat.
+   */
+  twistId?: string;
 }
 
 export type DelvePhase = 'in-room' | 'between-rooms' | 'completed' | 'failed';

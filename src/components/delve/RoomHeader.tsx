@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { DelveState } from '../../types/delve';
+import { getTwist } from '../../engine/delve';
 import { BlessingCard } from '../ui/BlessingCard';
 import { QuirkCard } from '../ui/QuirkCard';
 
@@ -21,6 +22,7 @@ interface RoomHeaderProps {
 export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeaderProps) {
   const [open, setOpen] = useState(false);
   const total = blessingIds.length + quirkIds.length;
+  const twist = getTwist(delve.rooms[delve.currentRoomIdx]?.twistId);
 
   useEffect(() => {
     if (!open) return;
@@ -63,6 +65,20 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
           </button>
         )}
       </div>
+
+      {twist && (
+        <div className="mt-2 border border-[var(--color-accent-deep-blood)] bg-[var(--color-bg-panel)] px-3 py-2 flex items-start gap-2">
+          <span className="text-[var(--color-accent-blood)] text-sm leading-none mt-0.5">✦</span>
+          <div>
+            <div className="font-display text-[var(--color-accent-blood)] text-[10px] uppercase tracking-[0.3em]">
+              {twist.name}
+            </div>
+            <p className="text-[var(--color-text-secondary)] text-xs italic mt-0.5 leading-snug">
+              {twist.flavorText}
+            </p>
+          </div>
+        </div>
+      )}
 
       {open && (
         <div

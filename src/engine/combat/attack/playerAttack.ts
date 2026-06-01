@@ -108,7 +108,9 @@ export function playerAttack(
   const profBonus = proficiencyBonus(nextCharacter.level);
 
   const quirkMods = characterQuirkMods(nextCharacter);
-  const blessingMods = characterBlessingMods(nextCharacter);
+  // Sealed Wards twist: blessings are inert this fight — every blessing-sourced
+  // to-hit/damage/advantage line below reads off a neutral (empty) mod set.
+  const blessingMods = state.blessingsSealed ? {} : characterBlessingMods(nextCharacter);
   const boonMods = characterCampBoonMods(nextCharacter);
   const affixMods = characterAffixMods(nextCharacter);
   const isFirstAttack = !state.playerHasAttacked;
@@ -160,7 +162,10 @@ export function playerAttack(
   const recklessAdvantage = nextCharacter.recklessActive === true && !isRanged;
   const hasAdvantage =
     (isFirstAttack && !!blessingMods.firstAttackAdvantage) || hideAdvantage || recklessAdvantage;
-  const hasDisadvantage = condMods.attackDisadvantage;
+  // Gloom twist: the first attack of the fight rolls at disadvantage (one-shot —
+  // gated on isFirstAttack, which flips off once the player has swung).
+  const gloomDisadvantage = isFirstAttack && state.gloomActive === true;
+  const hasDisadvantage = condMods.attackDisadvantage || gloomDisadvantage;
   const advantage: 'normal' | 'advantage' | 'disadvantage' =
     hasAdvantage === hasDisadvantage ? 'normal' : hasAdvantage ? 'advantage' : 'disadvantage';
   // One-shot: consume Hide and any pending flat-to-hit bonus on the actual

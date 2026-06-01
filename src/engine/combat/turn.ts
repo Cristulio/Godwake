@@ -193,6 +193,15 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     nextCharacter = resolved.character;
   }
 
+  // Cursed Ground twist: the hero takes a flat chip at the start of each of
+  // their turns. Damage at turn-start lands regardless of paralysis (5e), so it
+  // sits after the save resolution above and can itself end the fight.
+  if (order[nextIndex] === 'player') {
+    const cursed = applyCursedGroundChip(nextState, nextCharacter);
+    nextState = cursed.state;
+    nextCharacter = cursed.character;
+  }
+
   // Regen (of Mending affix): tick one stack at the start of the player's
   // turn. Suppressed while raging (consistent with lifesteal).
   if (
@@ -308,6 +317,36 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
   }
 
   return combatResult(nextState, nextCharacter);
+}
+
+/**
+ * Cursed Ground twist (Ascension >= 4): deal the flat per-turn chip to the
+ * player, draining temp HP first, then real HP. No-op when the curse is absent
+ * (state.cursedGroundChip falsy), the fight is over, or the player is already
+ * down. Evaluates combat end so the chip can itself be lethal. Shared by
+ * createCombat (the hero's turn-0, which never travels through endTurn) and the
+ * start-of-player-turn block above.
+ */
+export function applyCursedGroundChip(
+  state: CombatState,
+  character: Readonly<Character>,
+): { state: CombatState; character: Character } {
+  const chip = state.cursedGroundChip ?? 0;
+  if (chip <= 0 || state.status !== 'active' || character.hp.current <= 0) {
+    return { state, character: character as Character };
+  }
+  const fromTemp = Math.min(character.hp.temp, chip);
+  const overflow = chip - fromTemp;
+  const nextCharacter = patchHp(character, {
+    temp: character.hp.temp - fromTemp,
+    current: Math.max(0, character.hp.current - overflow),
+  });
+  const logged = appendLog(state, {
+    id: state.log.length + 1,
+    kind: 'damage',
+    text: `The cursed ground bites ${nextCharacter.name} for ${chip} damage.`,
+  });
+  return evaluateCombatEnd(logged, nextCharacter);
 }
 
 function conditionEndText(name: ConditionName): string {
