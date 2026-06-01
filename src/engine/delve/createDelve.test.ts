@@ -8,7 +8,9 @@ import {
 import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
 import { getMonster } from '../../content/monsters';
 import { getBossIntelCard, BOSS_INTEL_CARDS } from '../../content/bossIntel';
-import type { DelveState } from '../../types/delve';
+import { xpForLevel } from '../character/leveling';
+import { createRng } from '../dice/rng';
+import type { DelveState, RoomSpec } from '../../types/delve';
 
 describe('createGodwakeDelve', () => {
   it('emits at least 80 rooms across the fourteen-chapter chained run', () => {
@@ -155,6 +157,70 @@ describe('createGodwakeDelve', () => {
       expect(campIndices[i]).toBeGreaterThan(bossIndices[i]);
       expect(campIndices[i]).toBeLessThan(bossIndices[i + 1]);
     }
+  });
+});
+
+describe('createGodwakeDelve — realized XP curve lands L20 in the Ch12-13 band', () => {
+  // Route ONE node per map column (the branching layout — a player walks a
+  // single path, not every room), summing xpReward per chapter, then find the
+  // chapter at which cumulative XP first crosses the L20 threshold. The route is
+  // neutral (a uniformly random reachable node each step), seeded off the delve
+  // RNG so each seed is deterministic — this models the MEDIAN run the XP_TABLE
+  // is fit to (an XP-greedy route is the higher upper bound, ~one chapter sooner).
+
+  /** Cumulative XP banked at the END of each chapter (index = chapter number). */
+  function cumXpByChapter(d: DelveState, routeSeed: number): number[] {
+    const rng = createRng(routeSeed);
+    const perChapter = new Array(TOTAL_CHAPTERS + 1).fill(0);
+    let room: RoomSpec | undefined = d.rooms[0];
+    const seen = new Set<string>();
+    while (room && !seen.has(room.id)) {
+      seen.add(room.id);
+      if (room.xpReward && room.chapter) perChapter[room.chapter] += room.xpReward;
+      const nexts = reachableRooms(d, room);
+      if (nexts.length === 0) break;
+      room = nexts[Math.floor(rng.next() * nexts.length)];
+    }
+    const cum = new Array(TOTAL_CHAPTERS + 1).fill(0);
+    for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) cum[ch] = cum[ch - 1] + perChapter[ch];
+    return cum;
+  }
+
+  /** First chapter whose cumulative XP reaches the L20 threshold (Infinity if never). */
+  function chapterReachingCap(cum: number[]): number {
+    const cap = xpForLevel(20);
+    for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) if (cum[ch] >= cap) return ch;
+    return Infinity;
+  }
+
+  function median(xs: number[]): number {
+    const s = [...xs].sort((a, b) => a - b);
+    return s[Math.floor(s.length / 2)];
+  }
+
+  it('a median clear reaches the L20 cap at the end of Ch12-13 (not Ch8-10, not past Ch14)', () => {
+    const landings: number[] = [];
+    let cumCh8Sum = 0;
+    for (let seed = 0; seed < 60; seed++) {
+      const d = createGodwakeDelve({ seed, ascension: 0, elitesEnabled: true });
+      const cum = cumXpByChapter(d, seed + 1);
+      landings.push(chapterReachingCap(cum));
+      // No median run should be at cap by the end of Ch8 (the early-cap failure mode).
+      expect(cum[8]).toBeLessThan(xpForLevel(20));
+      cumCh8Sum += cum[8];
+    }
+    const med = median(landings);
+    expect(med).toBeGreaterThanOrEqual(12);
+    expect(med).toBeLessThanOrEqual(13);
+    // And the chain always banks enough to have hit L20 by the Ch14 finale.
+    for (let seed = 0; seed < 60; seed++) {
+      const d = createGodwakeDelve({ seed, ascension: 0, elitesEnabled: true });
+      const cum = cumXpByChapter(d, seed + 1);
+      expect(cum[TOTAL_CHAPTERS]).toBeGreaterThanOrEqual(xpForLevel(20));
+    }
+    // Sanity: the Ch8 average is well short of cap (catches a regression that
+    // front-loads the whole curve into the first half).
+    expect(cumCh8Sum / 60).toBeLessThan(xpForLevel(20));
   });
 });
 

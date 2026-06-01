@@ -10,18 +10,20 @@ import type { Spell, SpellLevel } from '../../schemas/spell';
 /**
  * XP-to-level table, extended to level 20. Index 0 = level 1 = 0 xp.
  *
- * The L1-8 band is unchanged — it was tuned for ROUTED play (the branching map
- * walks ~one node per layer, so a single route feeds roughly half the XP of the
- * old all-rooms delve; the L3→L4 cliff is flattened so a normal route reaches
- * the level the content expects). The L9-20 continuation carries that curve out
- * across the planned 14-chapter expansion: each level needs progressively more,
- * with deltas that grow smoothly (≈3.5k at L9 climbing to ≈18k at L20) so the
- * back half is a steady climb rather than a wall. A full scaled run tops out at
- * the L20 cap (≈126k total) right at the Irenicus finale.
+ * Re-stretched across the full 14-chapter chain. The curve is fit to the
+ * REALIZED cumulative XP a typical median run banks per chapter (one routed
+ * node per map column — see scripts/sim-xp-curve.ts), not to the all-rooms
+ * pool total. Each chapter's pooled XP grows smoothly (≈1k at Ch1 to ≈16k at
+ * Ch12), so a roughly constant ~1.4 levels/chapter falls out as level deltas
+ * that grow monotonically (≈300 at L2 climbing to ≈14.5k at L19→20). The L20
+ * cap (104k total) lands at the END of Chapter 12 for a median clear, so the
+ * Throne-of-Bhaal climax (Ch13 Sendai/Abazigal, Ch14 Melissan) is fought at
+ * cap against the hardest content. Front-loaded slightly faster (L3 by end of
+ * Ch1) and slowing in the back so the level curve tracks the boss-CR spine.
  */
 const XP_TABLE = [
-  0, 250, 550, 1100, 2200, 4000, 6200, 9000, 12500, 16800, 22000, 28000, 35500,
-  44000, 54000, 65000, 78000, 92000, 108000, 126000,
+  0, 300, 750, 1400, 2400, 3800, 5700, 8100, 11000, 14500, 18700, 23700, 29600,
+  36500, 44500, 53700, 64200, 76100, 89500, 104000,
 ] as const;
 
 export const MAX_LEVEL = XP_TABLE.length;
