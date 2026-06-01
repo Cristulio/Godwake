@@ -103,9 +103,12 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   // Rolled deterministically per-visit (owned-blind), then hidden at render if
   // the relic is already owned or just bought — same pattern as ShopRoom.
   const legendaryOffer = useMemo<LegendaryOffer | null>(
-    () => (classId ? rollLegendaryOffer(room.id, room.chapter ?? 1, classId, []) : null),
+    () =>
+      classId
+        ? rollLegendaryOffer(room.id, room.chapter ?? 1, classId, [], delve?.ascensionLevel ?? 0)
+        : null,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [room.id, room.chapter, classId],
+    [room.id, room.chapter, classId, delve?.ascensionLevel],
   );
 
   const [expanded, setExpanded] = useState<ForkBranch | null>(null);

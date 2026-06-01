@@ -274,7 +274,7 @@ describe('persist round-trip — fresh boot rehydrates the meta loop', () => {
 describe('legendary drop sanity', () => {
   it('banks an un-owned relic from the elite-drop pool', () => {
     useMetaStore.setState({ ownedLegendaries: [] });
-    const id = useMetaStore.getState().grantLegendaryDrop();
+    const id = useMetaStore.getState().grantLegendaryDrop(false);
     expect(id).not.toBeNull();
     expect(useMetaStore.getState().ownedLegendaries).toContain(id!);
   });

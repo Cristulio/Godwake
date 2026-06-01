@@ -5,7 +5,10 @@ import {
   getLegendary,
   canEquipLegendary,
   aggregateLegendaryEffects,
+  legendaryDropPool,
+  legendaryBankPool,
 } from './legendaries';
+import { ascensionAscendantLoot, ASCENDANT_LOOT_FROM } from '../engine/delve/ascension';
 
 describe('legendary content', () => {
   it('has a stable id list matching the set, no duplicates', () => {
@@ -58,5 +61,36 @@ describe('legendary content', () => {
   it('looks relics up by id', () => {
     expect(getLegendary('bulwark-sigil')?.name).toBe('Bulwark Sigil');
     expect(getLegendary('nope')).toBeUndefined();
+  });
+});
+
+describe('ascendant legendary tier (Ascension >= 3 gate)', () => {
+  const ascendantIds = LEGENDARIES.filter((l) => l.ascendant).map((l) => l.id);
+
+  it('defines a non-empty apex tier, all flagged ascendant', () => {
+    expect(ascendantIds.length).toBeGreaterThanOrEqual(3);
+    for (const id of ascendantIds) {
+      expect(getLegendary(id)?.ascendant).toBe(true);
+    }
+  });
+
+  it('the bank (elite-drop) pool excludes the ascendant tier below Asc 3 and includes it at/above', () => {
+    const belowLevels = [0, ASCENDANT_LOOT_FROM - 1];
+    for (const lvl of belowLevels) {
+      const pool = legendaryBankPool(ascensionAscendantLoot(lvl));
+      for (const id of ascendantIds) expect(pool).not.toContain(id);
+    }
+    const atOrAbove = [ASCENDANT_LOOT_FROM, ASCENDANT_LOOT_FROM + 1];
+    for (const lvl of atOrAbove) {
+      const pool = legendaryBankPool(ascensionAscendantLoot(lvl));
+      for (const id of ascendantIds) expect(pool).toContain(id);
+    }
+  });
+
+  it('the class offer (reliquary) pool excludes the ascendant tier below Asc 3 and includes it at/above', () => {
+    const below = legendaryDropPool('fighter', ascensionAscendantLoot(ASCENDANT_LOOT_FROM - 1));
+    for (const id of ascendantIds) expect(below).not.toContain(id);
+    const at = legendaryDropPool('fighter', ascensionAscendantLoot(ASCENDANT_LOOT_FROM));
+    for (const id of ascendantIds) expect(at).toContain(id);
   });
 });

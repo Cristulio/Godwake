@@ -4,7 +4,7 @@ import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
 import { useCombatStore } from './combatStore';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
-import { LEGENDARIES } from '../content/legendaries';
+import { legendaryBankPool } from '../content/legendaries';
 import { rollLegendaryOffer } from '../components/delve/shopStock';
 import { setActiveRoller } from '../engine/dice';
 import type { DelveState } from '../types/delve';
@@ -36,7 +36,7 @@ beforeEach(() => {
 describe('legendary drop banks, does not equip mid-run', () => {
   it('banks to the collection without touching inventory, equipped, or active', () => {
     const beforeInv = useCharacterStore.getState().character!.inventory.length;
-    const id = useMetaStore.getState().grantLegendaryDrop();
+    const id = useMetaStore.getState().grantLegendaryDrop(false);
     expect(id).not.toBeNull();
     expect(useMetaStore.getState().ownedLegendaries).toContain(id!);
     // Banked only — the run's gear and the active attunements are untouched.
@@ -49,18 +49,19 @@ describe('legendary drop banks, does not equip mid-run', () => {
     useMetaStore.setState({ ownedLegendaries: [] });
     const banked: string[] = [];
     for (let i = 0; i < 60; i++) {
-      const id = useMetaStore.getState().grantLegendaryDrop();
+      const id = useMetaStore.getState().grantLegendaryDrop(false);
       if (!id) break;
       banked.push(id);
     }
-    // The whole pool is reachable regardless of class — Fighter-bound relics
-    // included (they're stashed until the player runs a Fighter).
+    // The whole base pool is reachable regardless of class — Fighter-bound relics
+    // included (they're stashed until the player runs a Fighter). The apex
+    // ascendant tier is excluded here (Asc 0): allowAscendant === false.
     expect(banked).toContain('warsong-gauntlet');
-    expect(banked).toHaveLength(LEGENDARIES.length);
+    expect(banked).toHaveLength(legendaryBankPool(false).length);
   });
 
   it('a banked drop survives a clear (the wheel)', () => {
-    const id = useMetaStore.getState().grantLegendaryDrop();
+    const id = useMetaStore.getState().grantLegendaryDrop(false);
     useDelveStore.setState({ delve: completedDelve() });
     useDelveStore.getState().finishDelve();
     expect(useMetaStore.getState().ownedLegendaries).toContain(id!);

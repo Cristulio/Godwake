@@ -27,6 +27,13 @@ export interface Legendary {
   setId?: string;
   /** Class-bound: drops for any class, equippable only while playing this one. */
   classGate?: ClassId;
+  /**
+   * Apex "ascendant" tier: only enters the drop/reliquary candidate pool once the
+   * run qualifies (Ascension >= 3, engine/delve/ascension.ts ascensionAscendantLoot).
+   * Climbing ascension is the SOLE way to earn these — at Asc 0-2 they never drop
+   * or get offered. They persist (banked) once earned: the cross-run carrot.
+   */
+  ascendant?: true;
 }
 
 /**
@@ -122,6 +129,42 @@ export const LEGENDARIES: readonly Legendary[] = [
     setId: 'warsong',
     classGate: 'fighter',
   },
+
+  // --- Ascendant tier: apex relics, Ascension >= 3 only --------------------
+  // The reward for climbing the ladder. Magnitudes sit a clear step above the
+  // base legendaries; sims tune the exact numbers later.
+  {
+    id: 'crom-faeyr',
+    name: 'Crom Faeyr',
+    flavor: 'A dwarven warhammer quenched in giant-blood and bound with the smith-runes of Clangeddin.',
+    effect: 'Your blows rend for +6 bleed damage; +4 on each follow-up swing',
+    effects: { bleedDamage: 6, followupDamageBonus: 4 },
+    ascendant: true,
+  },
+  {
+    id: 'robe-of-vecna',
+    name: 'Robe of Vecna',
+    flavor: 'Stitched from the burial shroud of a god of secrets; the weave drinks the cold between spells.',
+    effect: '+2 spell save DC and +4 spell damage',
+    effects: { spellDcBonus: 2, spellDamageBonus: 4 },
+    ascendant: true,
+  },
+  {
+    id: 'ring-of-gaxx',
+    name: 'Ring of Gaxx',
+    flavor: 'Torn from the finger of the demilich Kangaxx; the wound it leaves never stops closing.',
+    effect: 'Gain 12 temporary HP each fight and regenerate 3 HP per turn',
+    effects: { tempHpPerCombat: 12, regenPerTurn: 3 },
+    ascendant: true,
+  },
+  {
+    id: 'carsomyr',
+    name: 'Carsomyr',
+    flavor: 'The Holy Avenger, shorn to a shard of radiant steel that thirsts for the unclean.',
+    effect: 'Heal 15% of the damage you deal; critical hits land on 19–20',
+    effects: { lifestealPct: 15, critRangeBonus: 1 },
+    ascendant: true,
+  },
 ];
 
 /** Canonical relic id list — stable iteration + drop/validity checks. */
@@ -135,11 +178,24 @@ export function getLegendary(id: string): Legendary | undefined {
 
 /**
  * Relic ids appropriate to OFFER a given class (the shop reliquary): every
- * class-agnostic relic plus that class's own bound relics. Elite-node DROPS use
- * a wider any-class pool (off-class relics are stashed) — see metaStore.
+ * class-agnostic relic plus that class's own bound relics. The apex ascendant
+ * tier is folded in ONLY when `allowAscendant` (the run is at Ascension >= 3);
+ * at lower ascension those relics are never offered. Elite-node DROPS use a
+ * wider any-class pool (off-class relics are stashed) — see legendaryBankPool.
  */
-export function legendaryDropPool(classId: ClassId): string[] {
-  return LEGENDARIES.filter((l) => !l.classGate || l.classGate === classId).map((l) => l.id);
+export function legendaryDropPool(classId: ClassId, allowAscendant = false): string[] {
+  return LEGENDARIES.filter(
+    (l) => (!l.classGate || l.classGate === classId) && (allowAscendant || !l.ascendant),
+  ).map((l) => l.id);
+}
+
+/**
+ * The any-class pool an elite-node DROP banks from (off-class relics are stashed
+ * until the player runs that class). The apex ascendant tier is included ONLY
+ * when `allowAscendant` (Ascension >= 3); otherwise those relics never drop.
+ */
+export function legendaryBankPool(allowAscendant: boolean): string[] {
+  return LEGENDARIES.filter((l) => allowAscendant || !l.ascendant).map((l) => l.id);
 }
 
 /** Whether a relic may be EQUIPPED by a character of the given class (class-bound gate). */
