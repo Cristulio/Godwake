@@ -85,6 +85,20 @@ interface MetaStoreState {
    * `setActiveLegendaries`; class-bound relics only stick while playing that class.
    */
   activeLegendaries: string[];
+  /**
+   * Whether the soul has cleared the whole chain (felled Melissan) at least once.
+   * Set the first time the final chapter is cleared, alongside `endingChosen`.
+   * Gates the one-time Throne-of-Bhaal ending capstone — later full clears fall
+   * straight through to the normal reincarnation flow. Account-level: survives
+   * reincarnation, reset only on New Game.
+   */
+  gameCompleted: boolean;
+  /**
+   * The ending the player chose at the Throne of Bhaal: ascend to the godhead
+   * (the new God of Murder) or refuse it and burn the taint away as a mortal.
+   * `null` until the chain is first cleared. Persisted capstone payload.
+   */
+  endingChosen: 'ascend' | 'mortal' | null;
 
   discoverMonster: (defId: string) => void;
   recordMonsterDefeat: (defId: string) => void;
@@ -129,6 +143,12 @@ interface MetaStoreState {
    * gate; no slot cap) and bake their effect payloads onto the active character.
    */
   setActiveLegendaries: (ids: string[]) => void;
+  /**
+   * Record the one-time Throne-of-Bhaal ending choice: marks the chain cleared
+   * (`gameCompleted`) and stores the branch. Idempotent on the flag — the first
+   * recorded choice is the soul's tale; replaying the finale never overwrites it.
+   */
+  recordEnding: (choice: 'ascend' | 'mortal') => void;
   resetMeta: () => void;
 }
 
@@ -151,6 +171,8 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   seenTutorials: [],
   ownedLegendaries: [],
   activeLegendaries: [],
+  gameCompleted: false,
+  endingChosen: null,
 
   discoverMonster: (defId) =>
     set((s) => {
@@ -315,6 +337,13 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     }
   },
 
+  recordEnding: (choice) =>
+    set((s) =>
+      s.gameCompleted
+        ? s
+        : { gameCompleted: true, endingChosen: choice },
+    ),
+
   resetMeta: () =>
     set({
       hasReincarnated: false,
@@ -335,5 +364,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       seenTutorials: [],
       ownedLegendaries: [],
       activeLegendaries: [],
+      gameCompleted: false,
+      endingChosen: null,
     }),
 }));

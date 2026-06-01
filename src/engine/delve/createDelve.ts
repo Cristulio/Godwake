@@ -922,6 +922,13 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
   },
 ];
 
+/**
+ * Length of the continuous chain. Clearing this many chapter bosses in one run
+ * means the whole chain fell to Melissan (Ch14) — the condition the first-clear
+ * ending capstone gates on (delveStore.finishDelve).
+ */
+export const TOTAL_CHAPTERS = GODWAKE_CHAPTERS.length;
+
 const GODWAKE_CAMPS: RoomFlavor[] = [
   {
     title: 'A Roadside Fire',

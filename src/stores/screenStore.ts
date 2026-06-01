@@ -10,6 +10,7 @@ export type Screen =
   | 'delve'
   | 'spoils'
   | 'reincarnation'
+  | 'ending'
   | 'codex'
   | 'inventory'
   | 'druid-grove'
