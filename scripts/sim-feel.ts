@@ -195,6 +195,8 @@ interface FightRecord {
   roomTitle: string;
   isBoss: boolean;
   isElite: boolean;
+  /** Ascension dungeon twist riding this room, or undefined when clean. */
+  twistId?: string;
   chapter: number;
   enemyDefIds: string[];
   enemyInstanceDefIds: string[];
@@ -264,6 +266,7 @@ function runFight(
     ascension: ASCENSION,
     isBoss,
     isElite,
+    twistId: room.twistId,
   });
   let s = init.state;
   let ch = init.character;
@@ -353,6 +356,7 @@ function runFight(
       roomTitle: room.title,
       isBoss,
       isElite,
+      twistId: room.twistId,
       chapter,
       enemyDefIds,
       enemyInstanceDefIds,
@@ -803,6 +807,34 @@ function main(): void {
   const kindRow = (label: string, a: KindAgg) =>
     `| ${label} | ${a.fights} | ${pct(a.wins / Math.max(1, a.fights))} | ${pct(a.blowouts / Math.max(1, a.wins))} | ${pct(a.winMinHpSum / Math.max(1, a.wins))} | ${pct(a.minHpSum / Math.max(1, a.fights))} | ${f2(a.rounds / Math.max(1, a.fights))} |`;
 
+  // ── Twist breakout (Ascension >= 4) ──
+  // Twists ride only the routed early-mid/mid NORMAL combat rooms, so isolate
+  // the twisted-vs-clean read on NON-boss/NON-elite fights to keep the
+  // comparison fair (the flat HP/damage ramp is common to both buckets).
+  const normalFights = fights.filter((f) => !f.isBoss && !f.isElite);
+  const cleanNormal = normalFights.filter((f) => !f.twistId);
+  const twistedNormal = normalFights.filter((f) => f.twistId);
+  const bucketAgg = (fs: FightRecord[]): KindAgg => {
+    const a: KindAgg = { fights: 0, wins: 0, blowouts: 0, rounds: 0, minHpSum: 0, winMinHpSum: 0 };
+    for (const f of fs) {
+      a.fights += 1;
+      a.rounds += f.rounds;
+      a.minHpSum += f.minHpPct;
+      if (f.victory) {
+        a.wins += 1;
+        a.winMinHpSum += f.minHpPct;
+        if (f.minHpPct >= BLOWOUT_FLOOR) a.blowouts += 1;
+      }
+    }
+    return a;
+  };
+  const perTwist = new Map<string, FightRecord[]>();
+  for (const f of twistedNormal) {
+    const arr = perTwist.get(f.twistId!) ?? [];
+    arr.push(f);
+    perTwist.set(f.twistId!, arr);
+  }
+
   // ── Narrated representative run ──
   const diary: string[] = [];
   const narrSeed = (SEED_BASE * 2654435761 + 5 * 7919) >>> 0;
@@ -832,6 +864,23 @@ function main(): void {
   L.push(kindRow('normal', kindAgg.normal));
   L.push(kindRow('elite', kindAgg.elite));
   L.push(kindRow('boss', kindAgg.boss));
+
+  // TWIST BREAKOUT
+  L.push('\n**Twist breakout** (normal fights only — twisted rooms ride early-mid/mid normal combats at Asc ≥ 4):\n');
+  L.push('| Bucket | Fights | Win rate | Blowout % (of wins) | Mean min-HP (wins) | Mean min-HP (all) | Avg rounds |');
+  L.push('|--------|-------:|---------:|--------------------:|-------------------:|------------------:|-----------:|');
+  L.push(kindRow('clean normal', bucketAgg(cleanNormal)));
+  L.push(kindRow('twisted normal', bucketAgg(twistedNormal)));
+  if (twistedNormal.length > 0) {
+    L.push('\n**Per-twist** (each is one twist id riding a normal room):\n');
+    L.push('| Twist | Fights | Win rate | Blowout % (of wins) | Mean min-HP (wins) | Mean min-HP (all) | Avg rounds |');
+    L.push('|-------|-------:|---------:|--------------------:|-------------------:|------------------:|-----------:|');
+    for (const [id, fs] of [...perTwist.entries()].sort()) {
+      L.push(kindRow(id, bucketAgg(fs)));
+    }
+  } else {
+    L.push(`\n_No twisted rooms rolled at ASCENSION=${ASCENSION} (twists are gated to Asc ≥ 4)._`);
+  }
 
   // PACING
   L.push('\n## 1. Pacing — rounds per fight, dead turns\n');
@@ -988,6 +1037,14 @@ function main(): void {
   console.log(`  normal: n${kindAgg.normal.fights} win${pct(kindAgg.normal.wins / Math.max(1, kindAgg.normal.fights))} blow${pct(kindAgg.normal.blowouts / Math.max(1, kindAgg.normal.wins))} minHP(all)${pct(kindAgg.normal.minHpSum / Math.max(1, kindAgg.normal.fights))} rds${f2(kindAgg.normal.rounds / Math.max(1, kindAgg.normal.fights))}`);
   console.log(`  elite : n${kindAgg.elite.fights} win${pct(kindAgg.elite.wins / Math.max(1, kindAgg.elite.fights))} blow${pct(kindAgg.elite.blowouts / Math.max(1, kindAgg.elite.wins))} minHP(all)${pct(kindAgg.elite.minHpSum / Math.max(1, kindAgg.elite.fights))} rds${f2(kindAgg.elite.rounds / Math.max(1, kindAgg.elite.fights))}`);
   console.log(`  boss  : n${kindAgg.boss.fights} win${pct(kindAgg.boss.wins / Math.max(1, kindAgg.boss.fights))} blow${pct(kindAgg.boss.blowouts / Math.max(1, kindAgg.boss.wins))} minHP(all)${pct(kindAgg.boss.minHpSum / Math.max(1, kindAgg.boss.fights))} rds${f2(kindAgg.boss.rounds / Math.max(1, kindAgg.boss.fights))}`);
+  const ca = bucketAgg(cleanNormal);
+  const ta = bucketAgg(twistedNormal);
+  console.log(`  clean-norm : n${ca.fights} win${pct(ca.wins / Math.max(1, ca.fights))} blow${pct(ca.blowouts / Math.max(1, ca.wins))} minHP(all)${pct(ca.minHpSum / Math.max(1, ca.fights))} rds${f2(ca.rounds / Math.max(1, ca.fights))}`);
+  console.log(`  twist-norm : n${ta.fights} win${pct(ta.wins / Math.max(1, ta.fights))} blow${pct(ta.blowouts / Math.max(1, ta.wins))} minHP(all)${pct(ta.minHpSum / Math.max(1, ta.fights))} rds${f2(ta.rounds / Math.max(1, ta.fights))}`);
+  for (const [id, fs] of [...perTwist.entries()].sort()) {
+    const a = bucketAgg(fs);
+    console.log(`    ${id.padEnd(14)}: n${a.fights} win${pct(a.wins / Math.max(1, a.fights))} blow${pct(a.blowouts / Math.max(1, a.wins))} minHP(all)${pct(a.minHpSum / Math.max(1, a.fights))} rds${f2(a.rounds / Math.max(1, a.fights))}`);
+  }
   console.log(`\nWrote → ${outPath}`);
 }
 
