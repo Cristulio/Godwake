@@ -9,7 +9,7 @@ import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore } from './screenStore';
 import { useCombatStore } from './combatStore';
-import { createGodwakeDelve, getAscensionLevel, MAX_ASCENSION } from '../engine/delve';
+import { createGodwakeDelve, getAscensionLevel, MAX_ASCENSION, TOTAL_CHAPTERS } from '../engine/delve';
 import { setActiveRoller } from '../engine/dice';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
 import { presetCreationInput } from '../engine/character/defaultCharacter';
@@ -137,6 +137,104 @@ describe('delveStore.finishDelve — reincarnate on clear', () => {
     const c = char();
     expect(c.quirks[0]).toBe('glass-jaw');
     expect(c.quirks.length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe('delveStore.finishDelve — true-ending capstone', () => {
+  /** Index of the chain's terminal Melissan boss room (all 14 bosses behind it). */
+  function melissanIdx(): number {
+    const rooms = useDelveStore.getState().delve!.rooms;
+    const idx = rooms.findIndex((r) => r.monsters?.[0]?.defId === 'melissan');
+    expect(idx).toBeGreaterThanOrEqual(0);
+    return idx;
+  }
+
+  beforeEach(() => {
+    setActiveRoller('ending-seed');
+    seedRun({ quirks: [] });
+    useMetaStore.setState({ gameCompleted: false, endingChosen: null });
+  });
+
+  it('the first full-chain clear detours to the ending BEFORE settling anything', () => {
+    seedRun({ quirks: [], level: 6, renown: 0 });
+    useMetaStore.setState({ gameCompleted: false, endingChosen: null });
+    setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
+
+    useDelveStore.getState().finishDelve();
+
+    // Routed to the capstone; nothing settled yet — the delve is held 'completed'
+    // so the ending screen's finishDelve() re-entry resolves it.
+    expect(useScreenStore.getState().screen).toBe('ending');
+    expect(useDelveStore.getState().delve).not.toBeNull();
+    expect(char().level).toBe(6);
+    expect(char().renown).toBe(0);
+    expect(useMetaStore.getState().gameCompleted).toBe(false);
+  });
+
+  it('recording the choice + re-entering finishDelve runs the normal clear path', () => {
+    seedRun({ quirks: [], level: 6, renown: 0 });
+    useMetaStore.setState({ gameCompleted: false, endingChosen: null });
+    setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
+
+    // First pass: the ending fires.
+    useDelveStore.getState().finishDelve();
+    expect(useScreenStore.getState().screen).toBe('ending');
+
+    // The ending screen records the choice, then re-enters finishDelve.
+    useMetaStore.getState().recordEnding('ascend');
+    useDelveStore.getState().finishDelve();
+
+    // Second pass settles: reincarnated, renown paid, depth recorded, hub.
+    expect(useScreenStore.getState().screen).toBe('hub');
+    expect(useDelveStore.getState().delve).toBeNull();
+    expect(char().level).toBe(1);
+    expect(char().renown).toBeGreaterThan(0);
+    expect(useMetaStore.getState().chaptersCleared).toBe(TOTAL_CHAPTERS);
+    expect(useMetaStore.getState().hasReincarnated).toBe(true);
+    expect(useMetaStore.getState().endingChosen).toBe('ascend');
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
+  });
+
+  it('does NOT replay the ending on a later full clear', () => {
+    useMetaStore.setState({ gameCompleted: true, endingChosen: 'mortal' });
+    setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(useScreenStore.getState().screen).toBe('hub');
+    expect(useDelveStore.getState().delve).toBeNull();
+    expect(useMetaStore.getState().endingChosen).toBe('mortal');
+  });
+
+  it('does NOT fire on a non-final clear (fewer than all chapters felled)', () => {
+    const rooms = useDelveStore.getState().delve!.rooms;
+    const ch1Boss = rooms.findIndex((r) => r.monsters?.[0]?.defId === 'duergar-ilyich');
+    expect(ch1Boss).toBeGreaterThanOrEqual(0);
+    setDelve({ phase: 'completed', currentRoomIdx: ch1Boss });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(useScreenStore.getState().screen).toBe('hub');
+    expect(useMetaStore.getState().gameCompleted).toBe(false);
+  });
+
+  it('does NOT fire on death, even standing in the Melissan room', () => {
+    setDelve({ phase: 'failed', currentRoomIdx: melissanIdx() });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(useScreenStore.getState().screen).toBe('hub');
+    expect(useMetaStore.getState().gameCompleted).toBe(false);
+  });
+
+  it('recordEnding marks the game completed and is idempotent on the choice', () => {
+    expect(useMetaStore.getState().gameCompleted).toBe(false);
+    useMetaStore.getState().recordEnding('ascend');
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
+    expect(useMetaStore.getState().endingChosen).toBe('ascend');
+    // A second answer does not overwrite the recorded capstone.
+    useMetaStore.getState().recordEnding('mortal');
+    expect(useMetaStore.getState().endingChosen).toBe('ascend');
   });
 });
 

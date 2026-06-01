@@ -151,6 +151,8 @@ interface GameState {
   delveCount: number;
   ownedLegendaries: string[];
   activeLegendaries: string[];
+  gameCompleted: boolean;
+  endingChosen: 'ascend' | 'mortal' | null;
 
   // Navigation
   goToTitle: () => void;
@@ -235,6 +237,9 @@ interface GameState {
   // Legendary relics
   setActiveLegendaries: (ids: string[]) => void;
 
+  // Ending capstone
+  recordEnding: (choice: 'ascend' | 'mortal') => void;
+
   // Leveling
   applyPendingLevelUp: (overrides?: Partial<Character>) => void;
 
@@ -270,6 +275,8 @@ interface PersistedSnapshot {
   delveCount: number;
   ownedLegendaries: string[];
   activeLegendaries: string[];
+  gameCompleted: boolean;
+  endingChosen: 'ascend' | 'mortal' | null;
   __metadata?: SaveSlotMetadata;
 }
 
@@ -288,6 +295,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     (screen.screen === 'delve' ||
     screen.screen === 'spoils' ||
     screen.screen === 'reincarnation' ||
+    screen.screen === 'ending' ||
     screen.screen === 'level-up'
       ? 'hub'
       : screen.screen);
@@ -315,6 +323,8 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     delveCount: meta.delveCount,
     ownedLegendaries: meta.ownedLegendaries,
     activeLegendaries: meta.activeLegendaries,
+    gameCompleted: meta.gameCompleted,
+    endingChosen: meta.endingChosen,
     __metadata: {
       savedAt: new Date().toISOString(),
       characterName: ch.character?.name ?? '—',
@@ -377,6 +387,9 @@ function scatterSnapshot(s: PersistedSnapshot) {
     delveCount: typeof s.delveCount === 'number' ? s.delveCount : 0,
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
     activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
+    gameCompleted: !!s.gameCompleted,
+    endingChosen:
+      s.endingChosen === 'ascend' || s.endingChosen === 'mortal' ? s.endingChosen : null,
   });
   useScreenStore.setState({
     screen: (s.screen ?? 'hub') as Screen,
@@ -466,6 +479,8 @@ export const useGameStore = create<GameState>()(
           druidGroveUnlocked: m.druidGroveUnlocked,
           ownedLegendaries: m.ownedLegendaries,
           activeLegendaries: m.activeLegendaries,
+          gameCompleted: m.gameCompleted,
+          endingChosen: m.endingChosen,
         });
       };
       const mirrorScreen = () => {
@@ -517,6 +532,8 @@ export const useGameStore = create<GameState>()(
         delveCount: useMetaStore.getState().delveCount,
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
         activeLegendaries: useMetaStore.getState().activeLegendaries,
+        gameCompleted: useMetaStore.getState().gameCompleted,
+        endingChosen: useMetaStore.getState().endingChosen,
 
         goToTitle: () => useScreenStore.getState().goToTitle(),
         goToHub: () => useScreenStore.getState().goToHub(),
@@ -653,6 +670,8 @@ export const useGameStore = create<GameState>()(
 
         setActiveLegendaries: (ids) =>
           useMetaStore.getState().setActiveLegendaries(ids),
+
+        recordEnding: (choice) => useMetaStore.getState().recordEnding(choice),
 
         applyPendingLevelUp: (overrides) => {
           // Mid-delve level-ups resume the delve screen; out-of-delve fall

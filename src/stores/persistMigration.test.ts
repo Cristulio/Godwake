@@ -198,8 +198,31 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 13', () => {
-    expect(SAVE_VERSION).toBe(14);
+  it('is 15', () => {
+    expect(SAVE_VERSION).toBe(15);
+  });
+});
+
+describe('migrateV1ToV2 — v14 → v15 true-ending capstone', () => {
+  it('defaults gameCompleted to false and endingChosen to null when missing', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {} });
+    expect(v.gameCompleted).toBe(false);
+    expect(v.endingChosen).toBeNull();
+  });
+
+  it('preserves a recorded ending choice across migration', () => {
+    const v = migrateV1ToV2({
+      unlockedUpgrades: {},
+      gameCompleted: true,
+      endingChosen: 'ascend',
+    });
+    expect(v.gameCompleted).toBe(true);
+    expect(v.endingChosen).toBe('ascend');
+  });
+
+  it('coerces a garbage endingChosen back to null', () => {
+    const v = migrateV1ToV2({ unlockedUpgrades: {}, endingChosen: 'wishful' });
+    expect(v.endingChosen).toBeNull();
   });
 });
 

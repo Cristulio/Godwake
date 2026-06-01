@@ -64,8 +64,12 @@ import { getQuirk } from '../content/quirks';
  *             `enhancement` (weapons: attack+damage; armour/shield: AC). Equipped
  *             rolled items are default-filled to `enhancement: 0` so old loot is a
  *             plain base on the new axis (the engine also reads it with `?? 0`).
+ *  v14 → v15: Throne-of-Bhaal ending capstone. `gameCompleted` (default false)
+ *             and `endingChosen` (default null) added to the meta snapshot. Old
+ *             saves haven't seen the finale — a returning player still gets the
+ *             one-time ending on their next full-chain clear.
  */
-export const SAVE_VERSION = 14;
+export const SAVE_VERSION = 15;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -240,6 +244,8 @@ export interface MigratedSnapshot {
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
+  gameCompleted: boolean;
+  endingChosen: 'ascend' | 'mortal' | null;
   // Allow extra fields to ride through (screen, saveSeed, introSeen, etc.).
   [k: string]: unknown;
 }
@@ -368,6 +374,15 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   }
   if (!Array.isArray(state.seenTutorials)) {
     state.seenTutorials = [];
+  }
+
+  // v14 → v15: Throne-of-Bhaal ending capstone. Old saves haven't seen the
+  // finale, so the one-time ending fires on their next full-chain clear.
+  if (typeof state.gameCompleted !== 'boolean') {
+    state.gameCompleted = false;
+  }
+  if (state.endingChosen !== 'ascend' && state.endingChosen !== 'mortal') {
+    state.endingChosen = null;
   }
 
   // v10 → v11: rageUsesRemaining removed (Rage is now per-combat, not per-rest).

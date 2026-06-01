@@ -30,6 +30,11 @@ const ReincarnationReveal = lazy(() =>
     default: m.ReincarnationReveal,
   })),
 );
+const EndingScreen = lazy(() =>
+  import('./components/lore/EndingScreen').then((m) => ({
+    default: m.EndingScreen,
+  })),
+);
 const LevelUpScreen = lazy(() =>
   import('./components/level/LevelUpScreen').then((m) => ({ default: m.LevelUpScreen })),
 );
@@ -112,6 +117,9 @@ function App() {
       break;
     case 'reincarnation':
       content = <ReincarnationReveal />;
+      break;
+    case 'ending':
+      content = <EndingScreen />;
       break;
     case 'level-up':
       content = <LevelUpScreen />;

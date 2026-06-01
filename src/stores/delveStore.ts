@@ -25,6 +25,7 @@ import {
 import { applyDelveStartUpgrades } from '../engine/character/upgrades';
 import { hasPendingLevelUp } from '../engine/character/leveling';
 import { getAscensionLevel } from '../engine/delve/ascension';
+import { TOTAL_CHAPTERS } from '../engine/delve/createDelve';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
 import { nextLoreBeat } from '../content/loreBeats';
@@ -696,6 +697,23 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const bossesKilled = s.delve.rooms
       .slice(0, bossLimitIdx)
       .filter((r) => r.kind === 'boss').length;
+    const ch1Killed = s.delve.chapter1BossKilled === true;
+    // Beating the final boss = the whole chain fell. Mid-run deaths credit the
+    // chapter bosses actually killed. The room-10 flag is a belt-and-braces
+    // floor for chapter 1 (it's set the instant Ilyich dies).
+    const chaptersThisRun = wonBoss
+      ? Math.max(bossesKilled, 1)
+      : Math.max(bossesKilled, ch1Killed ? 1 : 0);
+    // First-ever clear of the WHOLE chain (Melissan felled) → the one-time
+    // Throne-of-Bhaal ending capstone fires BEFORE the normal settle. The ending
+    // screen records the choice (sets gameCompleted) then calls finishDelve()
+    // again; on that second pass gameCompleted is true, so this gate is skipped
+    // and the standard reincarnate/renown/hub path below runs. Nothing is
+    // settled here — the delve stays 'completed' so the re-entry resolves it.
+    if (wonBoss && chaptersThisRun >= TOTAL_CHAPTERS && !meta.gameCompleted) {
+      useScreenStore.getState().setScreen('ending');
+      return;
+    }
     // Depth credit pays per room ACTUALLY VISITED on BOTH paths; the boss stack
     // rides on top. Counts the route the soul walked (visitedRoomIds, lit by
     // enterRoom as it routes), not the flat currentRoomIdx — the branching map's
@@ -741,13 +759,6 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
           bossIntel: {},
           boldApproachBosses: [],
         };
-    const ch1Killed = s.delve.chapter1BossKilled === true;
-    // Beating the final boss = the whole chain fell. Mid-run deaths credit the
-    // chapter bosses actually killed. The room-10 flag is a belt-and-braces
-    // floor for chapter 1 (it's set the instant Ilyich dies).
-    const chaptersThisRun = wonBoss
-      ? Math.max(bossesKilled, 1)
-      : Math.max(bossesKilled, ch1Killed ? 1 : 0);
     charSlice.setCharacter(settled);
     set({ delve: null });
     useCombatStore.getState().setCombat(null);
