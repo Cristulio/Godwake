@@ -7,6 +7,14 @@ import {
   ascensionMonsterHp,
   ascensionDamageBonus,
   applyAscensionToMonster,
+  ELITE_VARIANTS_FROM,
+  BOSS_EXTRA_PHASE_FROM,
+  DUNGEON_TWISTS_FROM,
+  ASCENDANT_LOOT_FROM,
+  ascensionEliteVariants,
+  ascensionBossExtraPhase,
+  ascensionDungeonTwists,
+  ascensionAscendantLoot,
 } from './ascension';
 import { createCombat, _resetMonsterInstanceCounter } from '../combat/createCombat';
 import { getMonster } from '../../content/monsters';
@@ -59,6 +67,28 @@ describe('ascension config integrity', () => {
   });
 });
 
+describe('ascension content-gating predicates', () => {
+  it('each helper is false one level below its threshold and true at it', () => {
+    const cases: Array<[number, (l: number) => boolean]> = [
+      [ELITE_VARIANTS_FROM, ascensionEliteVariants],
+      [BOSS_EXTRA_PHASE_FROM, ascensionBossExtraPhase],
+      [DUNGEON_TWISTS_FROM, ascensionDungeonTwists],
+      [ASCENDANT_LOOT_FROM, ascensionAscendantLoot],
+    ];
+    for (const [from, fn] of cases) {
+      expect(fn(from - 1)).toBe(false);
+      expect(fn(from)).toBe(true);
+      expect(fn(MAX_ASCENSION)).toBe(true);
+    }
+  });
+
+  it('clamps fractional and out-of-range inputs before comparing', () => {
+    expect(ascensionEliteVariants(ELITE_VARIANTS_FROM - 0.1)).toBe(false);
+    expect(ascensionEliteVariants(99)).toBe(true);
+    expect(ascensionAscendantLoot(-3)).toBe(false);
+  });
+});
+
 describe('clampAscension', () => {
   it('clamps below 0, above MAX, and floors fractionals; defaults NaN to 0', () => {
     expect(clampAscension(-3)).toBe(0);
@@ -76,11 +106,11 @@ describe('ascension monster scaling helpers', () => {
   });
 
   it('applies the boss multiplier on top of the enemy HP multiplier', () => {
-    // Ascension 6: enemyHpMult 1.25, bossHpMult 1.5.
+    // Ascension 6: enemyHpMult 1.30, bossHpMult 1.5.
     const regular = ascensionMonsterHp(100, 6, false);
     const boss = ascensionMonsterHp(100, 6, true);
-    expect(regular).toBe(Math.round(100 * 1.25));
-    expect(boss).toBe(Math.round(100 * 1.25 * 1.5));
+    expect(regular).toBe(Math.round(100 * 1.3));
+    expect(boss).toBe(Math.round(100 * 1.3 * 1.5));
     expect(boss).toBeGreaterThan(regular);
   });
 
