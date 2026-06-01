@@ -20,6 +20,18 @@
  * Barbarian Rage and Ranger Hunter's Mark fire automatically IF the policy
  * wires them — which this sim instruments and reports.
  *
+ * FULL LOOT/CAMP LOOP ([[feedback-sims-model-full-player-experience]]): this
+ * sim is no longer loot-blind. It models the same complete player economy that
+ * scripts/sim-endgame-gear.ts does — combat / elite / boss clears roll gold
+ * (rollRoomGoldDrops) + a low-chance rolled affix item (rollGearDrop → rollItem)
+ * greedily equipped if it improves the loadout + a rare legendary
+ * (rollLegendaryDrop) banked to the soul's persistent collection; shop rooms
+ * spend gold on the rolled arms rack (rollGearStock), the reliquary legendary
+ * offer (rollLegendaryOffer), and healing potions; the legendary collection
+ * accumulates across lives and is attuned onto the vessel (set bonuses applied)
+ * before each descent. Camps run the real 3-choice rest fork (Rest / Attune a
+ * boon / Tempt the Dark) heuristically instead of a free auto-heal.
+ *
  * Sanity instrumentation (THE headline guard): counts how often Barbarian
  * enters Rage / Reckless and how often Ranger casts Hunter's Mark / fires
  * Colossus + Hunter's-Mark dice, per combat. If these are ~0 the policy isn't
@@ -39,13 +51,15 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 
-import { createDiceRoller, setActiveRoller, type DiceRoller } from '../src/engine/dice';
+import { createDiceRoller, setActiveRoller, parseDiceExpression, type DiceRoller } from '../src/engine/dice';
 import { getMonster } from '../src/content/monsters';
+import { getItem } from '../src/content/items';
 import { simulateLevelUp, xpForLevel, MAX_LEVEL } from '../src/engine/character/leveling';
 import { shortRestHeal, longRest } from '../src/engine/character/actions';
 import { createGodwakeDelve } from '../src/engine/delve/createDelve';
 import { createCombat, _resetMonsterInstanceCounter } from '../src/engine/combat/createCombat';
 import { monsterAttack } from '../src/engine/combat/attack/monsterAttack';
+import { weaponDamageDice } from '../src/engine/combat/attack/playerAttack';
 import { endTurn, isPlayerTurn } from '../src/engine/combat/turn';
 import { chooseCombatAction, applyPlannedAction } from '../src/engine/combat/actionPolicy';
 import { pickBlessingAtShrine } from '../src/test/sim/encounterStress';
@@ -58,8 +72,24 @@ import { findUpgrade } from '../src/content/upgrades';
 import { buildPlayerCharacter, presetCreationInput } from '../src/engine/character/defaultCharacter';
 import { rollQuirks, renownSoulMarkMultiplier } from '../src/engine/character/quirks';
 import { MAX_ASCENSION, getAscensionLevel } from '../src/engine/delve/ascension';
+import { computeAC } from '../src/engine/character/derived';
+import { equipItem } from '../src/engine/character/equip';
+import { characterAffixMods } from '../src/engine/items/affixMods';
+import { rollGearDrop, rollLegendaryDrop } from '../src/engine/items/drops';
+import { rollItem } from '../src/engine/items/rollItem';
+import { rollRoomGoldDrops } from '../src/engine/combat/goldDrop';
+import {
+  legendaryDropPool,
+  aggregateLegendaryEffects,
+  canEquipLegendary,
+} from '../src/content/legendaries';
+import { rollGearStock, rollLegendaryOffer, tierForChapter } from '../src/components/delve/shopStock';
+import { boonsForCampTier, type CampBoon, type CampBoonTier } from '../src/content/campBoons';
+import { rollBlessingOptions } from '../src/engine/character/blessings';
 import type { Character } from '../src/types/character';
 import type { CombatState } from '../src/types/combat';
+import type { ItemRef } from '../src/schemas/item';
+import type { ClassId as SchemaClassId } from '../src/schemas/ids';
 import type { RoomSpec, DelveState } from '../src/types/delve';
 
 type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger';
@@ -193,30 +223,227 @@ function applyPermanentUpgrades(c: Character, unlocked: UnlockedUpgrades): Chara
   return ch;
 }
 
+// ─── Loot loop (ported from sim-endgame-gear.ts) ─────────────────────────────
+// The full player economy: in-run rolled affix gear (greedy-equip-if-better),
+// gold drops, shop spending, and the persistent legendary collection attuned
+// across lives. Same helpers/approach the engine reads at runtime, so equipping
+// rolled gear feeds combat with zero extra plumbing.
+
+/** Every owned relic the class can equip rides into the run (effect-only, no slot cap). */
+function chooseActiveLegendaries(owned: string[], classId: ClassId): string[] {
+  return owned.filter((id) => canEquipLegendary(id, classId as SchemaClassId));
+}
+
+function avgDice(expr: string): number {
+  try {
+    const { count, die, modifier } = parseDiceExpression(expr);
+    return (count * (die + 1)) / 2 + modifier;
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * A consistent "effective power" score of the character's CURRENT loadout —
+ * weapon damage + AC + every affix channel the engine reads. Only used to
+ * COMPARE before/after equipping a candidate, so the weights need only be
+ * monotonic, not calibrated (guards against downgrading a longsword to a green
+ * dagger).
+ */
+function loadoutScore(c: Character): number {
+  let score = 0;
+  const mh = c.equipped.mainHand;
+  if (mh) {
+    const w = getItem(mh.itemId);
+    if (w.kind === 'weapon') {
+      const offEmpty = !c.equipped.offHand;
+      score += avgDice(weaponDamageDice(w, offEmpty)) * 1.6;
+    }
+  }
+  score += computeAC(c) * 2.5;
+  const m = characterAffixMods(c);
+  score += m.attackBonus * 2.5;
+  score += m.damageBonus * 1.6;
+  score += m.bleedDamage * 1.3;
+  score += m.lifestealPct * 0.06;
+  score += m.tempHpPerCombat * 0.35;
+  score += m.critRangeBonus * 1.8;
+  score += (m.rageDamageBonus + m.markDamageBonus + m.sneakDamageBonus + m.followupDamageBonus) * 0.6;
+  score += m.resists.length * 1.0;
+  score += m.spellDcBonus * 2.6 + m.spellDamageBonus * 1.6 + m.spellAttackBonus * 2.6 + m.bonusSpellSlotsL1 * 3;
+  return score;
+}
+
+/** Equip a rolled drop, keeping it only if it strictly improves the loadout. */
+function tryEquipDrop(c: Character, ref: ItemRef): Character {
+  const idx = c.inventory.length;
+  const withItem: Character = { ...c, inventory: [...c.inventory, ref] };
+  const equipped = equipItem(withItem, idx);
+  if (equipped === withItem) return c; // equip refused (class-illegal / no slot) — discard
+  if (loadoutScore(equipped) > loadoutScore(c) + 0.01) return equipped;
+  return c; // not an upgrade — don't hoard it
+}
+
+/** A random un-owned eligible relic (mirrors metaStore.grantLegendaryDrop). */
+function bankRandomLegendary(roller: DiceRoller, classId: SchemaClassId, owned: string[]): string | null {
+  const pool = legendaryDropPool(classId).filter((id) => !owned.includes(id));
+  if (pool.length === 0) return null;
+  return pool[(roller.roll('1d100').total - 1) % pool.length];
+}
+
+interface RoomLoot {
+  character: Character;
+  gold: number;
+  newLegendaries: string[];
+}
+
+/** Gold + rolled affix gear + rare legendary on a cleared combat/elite/boss room. */
+function resolveCombatLoot(
+  roller: DiceRoller,
+  character: Character,
+  room: RoomSpec,
+  ownedLegendaries: string[],
+): RoomLoot {
+  let c = character;
+  const newLegendaries: string[] = [];
+  const defIds = (room.monsters ?? []).flatMap((m) => Array.from({ length: m.count }, () => m.defId));
+  const gold = (room.goldReward ?? 0) + rollRoomGoldDrops(roller, defIds);
+
+  const dropRarity = rollGearDrop(roller, room.kind);
+  if (dropRarity) {
+    const ref = rollItem(roller, { rarity: dropRarity, classId: c.classId });
+    c = tryEquipDrop(c, ref);
+  }
+  if (rollLegendaryDrop(roller, room.kind)) {
+    const banked = bankRandomLegendary(roller, c.classId, [...ownedLegendaries, ...newLegendaries]);
+    if (banked) newLegendaries.push(banked);
+  }
+  return { character: c, gold, newLegendaries };
+}
+
+/** Spend gold at a shop: reliquary offer, then strictly-better arms-rack gear, then potions. */
+function visitShop(
+  character: Character,
+  room: RoomSpec,
+  lifeIdx: number,
+  ownedLegendaries: string[],
+): { character: Character; newLegendaries: string[] } {
+  let c = character;
+  let gold = c.goldInPocket;
+  const newLegendaries: string[] = [];
+  const tier = tierForChapter(room.chapter);
+  const seed = `${room.id}:${lifeIdx}`;
+
+  const offer = rollLegendaryOffer(seed, tier, c.classId, [...ownedLegendaries, ...newLegendaries]);
+  if (offer && gold >= offer.cost) {
+    newLegendaries.push(offer.legendaryId);
+    gold -= offer.cost;
+  }
+
+  const stock = rollGearStock(seed, tier, c.classId)
+    .slice()
+    .sort((a, b) => b.cost - a.cost); // try the richest first
+  for (const { ref, cost } of stock) {
+    if (gold < cost) continue;
+    const after = tryEquipDrop(c, ref);
+    if (after !== c) {
+      c = after;
+      gold -= cost;
+    }
+  }
+
+  const potion = getItem('potion-of-healing');
+  let safety = 0;
+  while (gold >= potion.cost && safety < 6) {
+    c = { ...c, inventory: [...c.inventory, { itemId: 'potion-of-healing' }] };
+    gold -= potion.cost;
+    safety += 1;
+  }
+
+  c = { ...c, goldInPocket: gold };
+  return { character: c, newLegendaries };
+}
+
+function chapterClearGoldFor(c: Character): number {
+  return (c.chapterClearGoldBonus ?? 0) + (c.permanentBonuses?.chapterClearGold ?? 0);
+}
+
+// ─── Camp 3-choice rest fork (Rest / Attune / Tempt the Dark) ────────────────
+// Replaces the old free auto-heal. Survival-first heuristic: rest when hurt;
+// otherwise bind a boon (so the lasting-boon path is traversed), and occasionally
+// gamble at the fire when flush with health. Mirrors CampRoom + delveStore.pickCampBoon.
+
+/** Apply a camp boon's pick-time side effects (the rest are read off character.campBoons). */
+function applyCampBoon(character: Character, boon: CampBoon): Character {
+  let c: Character = { ...character, campBoons: [...(character.campBoons ?? []), boon.id] };
+  if (boon.id === 'vigor-of-the-road') {
+    const bump = Math.max(1, Math.floor(c.hp.max * 0.05));
+    c = { ...c, hp: { ...c.hp, max: c.hp.max + bump, current: c.hp.current + bump } };
+  } else if (boon.id === 'mantle-of-the-slain') {
+    const bump = c.level;
+    c = { ...c, hp: { ...c.hp, max: c.hp.max + bump, current: c.hp.current + bump } };
+  } else if (boon.id === 'patience-of-ilmater') {
+    c = { ...c, delveStabiliseBonus: (c.delveStabiliseBonus ?? 0) + 1 };
+  }
+  return c;
+}
+
+/** One throw of the bones (mirrors CampRoom.resolveRisk): d20≥11 → blessing + gold; else lose 25% max HP. */
+function temptTheDark(roller: DiceRoller, character: Character, tier: number): Character {
+  const roll = roller.roll('1d20').total;
+  if (roll >= 11) {
+    const [blessingId] = rollBlessingOptions(roller, 1, character.classId, character.blessings);
+    const gold = blessingId ? 15 * tier : 50 * tier;
+    let c = character;
+    if (blessingId) c = { ...c, blessings: [...c.blessings, blessingId] };
+    return { ...c, goldInPocket: c.goldInPocket + gold };
+  }
+  const dmg = Math.max(1, Math.floor(character.hp.max * 0.25));
+  return { ...character, hp: { ...character.hp, current: Math.max(1, character.hp.current - dmg) } };
+}
+
+/** Walk the campfire fork heuristically. `campCount` is 1-based (which camp this is). */
+function resolveCamp(roller: DiceRoller, character: Character, classId: ClassId, campCount: number): Character {
+  const hpFrac = character.hp.max > 0 ? character.hp.current / character.hp.max : 1;
+  const validTier = campCount >= 1 && campCount <= 3;
+  const boonOptions = validTier ? boonsForCampTier(campCount as CampBoonTier, classId as SchemaClassId) : [];
+  const riskTier = validTier ? campCount : 1;
+
+  if (hpFrac < 0.6) return longRest(character); // hurt → rest the wounds shut
+  if (hpFrac > 0.8 && roller.roll('1d6').total <= 2) return temptTheDark(roller, character, riskTier);
+  if (boonOptions.length > 0) {
+    // The middle slot is the class's offensive boon (class-swapped for Wizard).
+    return applyCampBoon(character, boonOptions[1] ?? boonOptions[0]);
+  }
+  return longRest(character);
+}
+
 interface SoulState {
   classId: ClassId;
   renown: number;
   unlockedUpgrades: UnlockedUpgrades;
-  inventory: Character['inventory'];
   quirks: string[];
   ascension: number; // highest unlocked = what this soul plays next
+  ownedLegendaries: string[]; // persists across lives, attuned each descent
 }
 
 function freshSoul(classId: ClassId): SoulState {
-  return { classId, renown: 0, unlockedUpgrades: {}, inventory: [], quirks: [], ascension: 0 };
+  return { classId, renown: 0, unlockedUpgrades: {}, quirks: [], ascension: 0, ownedLegendaries: [] };
 }
 
-/** Build the L1 vessel that descends, mirroring delveStore.startDelve. */
+/** Build the L1 vessel that descends, mirroring delveStore.startDelve + gear. */
 function descend(roller: DiceRoller, soul: SoulState): Character {
   let c = buildPlayerCharacter(presetCreationInput(soul.classId));
   c = applyPermanentUpgrades(c, soul.unlockedUpgrades);
   c = applyDelveStartUpgrades(c, soul.unlockedUpgrades);
-  if (soul.inventory.length > 0) {
-    const merged = soul.inventory.length > c.inventory.length ? soul.inventory : c.inventory;
-    c = { ...c, inventory: [...merged] };
-  }
   c = { ...c, quirks: rollQuirks(roller, 2) };
-  c = { ...c, hp: { ...c.hp, current: c.hp.max } };
+  // Attune every owned relic the class can wield (no slot cap); bake the effects.
+  const active = chooseActiveLegendaries(soul.ownedLegendaries, soul.classId);
+  c = { ...c, legendaryEffects: aggregateLegendaryEffects(active) };
+  // Seed the purse (Coin in Pocket × ascension gold mult).
+  const goldMult = getAscensionLevel(soul.ascension).startingGoldMult;
+  const startingGold = Math.round((c.permanentBonuses?.startingGold ?? 0) * goldMult);
+  c = { ...c, goldInPocket: startingGold, hp: { ...c.hp, current: c.hp.max } };
   return longRest(c);
 }
 
@@ -368,7 +595,7 @@ function liveOneLife(
   lifeIdx: number,
   seedBase: number,
   pc: ProcCounters,
-): { outcome: LifeOutcome; finalCharacter: Character } {
+): { outcome: LifeOutcome; finalCharacter: Character; newLegendaries: string[] } {
   let character = descend(roller, soul);
   const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
   const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension });
@@ -378,6 +605,8 @@ function liveOneLife(
   let deathCause: string | null = null;
   let deathRoomLabel: string | null = null;
   let died = false;
+  let campCount = 0;
+  const newLegendaries: string[] = [];
 
   // Route ONE path through the branching map (not every parallel node).
   const byId = new Map(delve.rooms.map((r) => [r.id, r] as const));
@@ -394,11 +623,18 @@ function liveOneLife(
     if (room.kind === 'rest') {
       character = shortRestHeal(character, Math.floor(character.hp.max * 0.7));
     } else if (room.kind === 'camp') {
-      character = longRest(character);
+      campCount += 1;
+      character = resolveCamp(roller, character, soul.classId, campCount);
     } else if (room.kind === 'shrine') {
       character = pickBlessingAtShrine(roller, character);
-    } else if (room.kind === 'event' || room.kind === 'shop' || room.kind === 'treasure') {
-      // sim skips these
+    } else if (room.kind === 'shop') {
+      const shop = visitShop(character, room, lifeIdx, [...soul.ownedLegendaries, ...newLegendaries]);
+      character = shop.character;
+      newLegendaries.push(...shop.newLegendaries);
+    } else if (room.kind === 'treasure') {
+      character = { ...character, goldInPocket: character.goldInPocket + (room.goldReward ?? 0) };
+    } else if (room.kind === 'event') {
+      // sim skips events
     } else {
       const isBoss = room.kind === 'boss';
       const result = runCombatRoom(roller, character, room, soul.ascension, pc);
@@ -410,6 +646,13 @@ function liveOneLife(
         break;
       }
       if (isBoss) bossesKilled += 1;
+      // Loot: gold + gear + legendary, then chapter-clear gold + XP.
+      const loot = resolveCombatLoot(roller, character, room, [...soul.ownedLegendaries, ...newLegendaries]);
+      character = { ...loot.character, goldInPocket: loot.character.goldInPocket + loot.gold };
+      newLegendaries.push(...loot.newLegendaries);
+      if (isBoss) {
+        character = { ...character, goldInPocket: character.goldInPocket + chapterClearGoldFor(character) };
+      }
       const rXp = room.xpReward ?? 0;
       if (rXp > 0) {
         character = { ...character, xp: character.xp + rXp };
@@ -456,6 +699,7 @@ function liveOneLife(
       deathRoomLabel,
     },
     finalCharacter: character,
+    newLegendaries,
   };
 }
 
@@ -479,14 +723,20 @@ function runSoul(classId: ClassId, seedBase: number): SoulResult {
   let firstA0ClearLife: number | null = null;
 
   for (let life = 0; life < MAX_LIVES; life++) {
-    const { outcome, finalCharacter } = liveOneLife(roller, soul, life, seedBase, PROCS[classId]);
+    const { outcome, finalCharacter, newLegendaries } = liveOneLife(
+      roller,
+      soul,
+      life,
+      seedBase,
+      PROCS[classId],
+    );
     lives.push(outcome);
 
     soul = {
       ...soul,
       renown: soul.renown + outcome.renownEarned,
-      inventory: finalCharacter.inventory,
       quirks: finalCharacter.quirks,
+      ownedLegendaries: [...soul.ownedLegendaries, ...newLegendaries],
     };
 
     if (outcome.cleared) {
@@ -686,8 +936,8 @@ function renderVerdict(aggs: ClassAggregate[]): string {
 topped out at 0% A0-clear across ${aggs[0].souls} souls × up to ${MAX_LIVES} lives.
 This is the headline STRUCTURAL result, and it is expected: the run is now ~62-66
 rooms to the Ch6 final boss (roughly double the old 4-chapter chain), and the
-shared Auto-Battle bot — which underplays a real player and fights with **no loot
-modelled** (preset gear only, no rolled affixes / drops / legendaries) — dies
+shared Auto-Battle bot — which underplays a real player even with the full
+loot/camp loop modelled (drops, shop buys, banked legendaries, rest-fork) — dies
 before the end. The user has cleared the whole game by hand; do NOT read "0%
 clear" as "uncompletable". Read the RELATIVE shape instead.
 
@@ -710,8 +960,9 @@ separately-shipped Ranger payoff, PR #196, is not in this build).
 
 **Net:** relative ordering holds — Barbarian strongest at the floor, Wizard/Ranger
 weakest (Wizard = the known AI-floor caster handicap; Ranger = the L1 bare-soul
-wall). Absolute clear-rates are an AI-floor + no-loot artifact; the ranking and
-the death-clustering (see above), not the magnitudes, are the deliverable.`;
+wall). Absolute clear-rates remain an AI-floor artifact (the bot underplays even
+with loot modelled); the ranking and the death-clustering (see above), not the
+magnitudes, are the deliverable.`;
   }
 
   // Some souls cleared — lead with the ascension/clear read.
@@ -721,9 +972,9 @@ the death-clustering (see above), not the magnitudes, are the deliverable.`;
   return `Signature mechanics fire under the shared policy (${procLine}). On
 ascension reach, **${top.classId} leads** (mean asc cleared ${num(top.meanHighestCleared)},
 topped A6 ${pct(top.toppedLadderRate)}, first A0 clear ${a0(top)}); the depth ranking is
-${depthRank} rooms/life. Absolute clear-rates remain an AI-floor + no-loot
-artifact (preset gear only, no drops modelled) — the ranking, not the magnitudes,
-is the deliverable.`;
+${depthRank} rooms/life. Absolute clear-rates remain an AI-floor artifact (the
+bot underplays even with the full loot/camp loop modelled) — the ranking, not the
+magnitudes, is the deliverable.`;
 }
 
 function renderDoc(aggs: ClassAggregate[], wallSec: string): string {
@@ -747,6 +998,15 @@ Grove priority list between deaths. Every class runs the SAME harness, the SAME
 seed schedule, and the SAME shared action policy that drives the in-game
 Auto-Battle (so Barbarian Rage and Ranger Hunter's Mark fire automatically iff
 the policy wires them — which the proc table below verifies).
+
+This run models the **full loot/camp loop** (no longer loot-blind, per
+\`feedback-sims-model-full-player-experience\`): combat/elite/boss clears roll
+gold + a low-chance rolled affix item (greedily equipped if it improves the
+loadout) + a rare legendary banked to the persistent collection; shop rooms
+spend gold on rolled gear, the reliquary offer, and potions; banked legendaries
+accumulate across lives and are attuned (with set bonuses) before each descent;
+and camps run the real 3-choice rest fork (Rest / Attune a boon / Tempt the
+Dark) heuristically instead of a free auto-heal.
 
 > ⚠️ **Read this RELATIVE, not absolute.** The bot underplays a real player, so
 > absolute clear-rates and life-counts are an AI-floor artifact, not game truth
