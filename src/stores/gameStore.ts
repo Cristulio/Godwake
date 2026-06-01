@@ -12,6 +12,7 @@ import {
   type CharacterCreationInput,
 } from '../engine/character/defaultCharacter';
 import { type ClassId } from '../schemas/ids';
+import { getClass } from '../content/classes';
 import type { ItemRef } from '../schemas/item';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
 import { type EquipSlot } from '../engine/character/equip';
@@ -47,6 +48,7 @@ export interface SaveSlotMetadata {
   savedAt: string;
   characterName: string;
   characterLevel: number;
+  characterClass: string;
   location: string;
   chapterCleared: number;
 }
@@ -317,6 +319,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
       savedAt: new Date().toISOString(),
       characterName: ch.character?.name ?? '—',
       characterLevel: ch.character?.level ?? 0,
+      characterClass: ch.character ? getClass(ch.character.classId).name : '—',
       location: locationLabel(screen.screen),
       chapterCleared: meta.chaptersCleared,
     },

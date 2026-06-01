@@ -54,6 +54,8 @@ export const SpellEffectKeySchema = z.enum([
   'soul-snare', // 7: single-target binding (paralysis)
   'cataclysm', // 8: fire AoE
   'wither', // 8: single-target necrotic + weaken
+  'vampiric-touch', // 3: single-target necrotic drain, heals caster for half
+  'exsanguinate', // 6: heavier single-target necrotic drain, heals caster for half
   'apotheosis', // 9: transform-self power buff (capstone)
   'unmake', // 9: remake-the-enemy (capstone)
 ]);

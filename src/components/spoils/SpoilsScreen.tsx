@@ -83,9 +83,6 @@ export function SpoilsScreen() {
             <div className="font-display text-lg text-[var(--color-accent-amber)] uppercase tracking-[0.4em]">
               ◆ Level Up → {nextLevel} ◆
             </div>
-            <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-[0.25em] mt-1">
-              Choose your path — after you accept
-            </div>
           </div>
         )}
 

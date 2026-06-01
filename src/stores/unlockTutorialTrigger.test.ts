@@ -52,7 +52,7 @@ describe('unlock-tutorial trigger (startDelve)', () => {
   });
 
   it('queues nothing on a descent that crosses no threshold', () => {
-    primeSoul(10); // 10 -> 11 sits in a gap (next is affixes-epic @13)
+    primeSoul(10); // 10 -> 11: no delve-gated reveal sits above elite-nodes @5
     descend();
     expect(useScreenStore.getState().tutorialQueue).toEqual([]);
   });
@@ -70,24 +70,24 @@ describe('unlock-tutorial trigger (startDelve)', () => {
   });
 
   it('dismissing the head marks it seen (persisted) and shifts the queue', () => {
-    primeSoul(9); // 9 -> 10 crosses legendaries (@10)
+    primeSoul(4); // 4 -> 5 crosses elite-nodes (@5)
     descend();
-    expect(useScreenStore.getState().tutorialQueue).toEqual(['legendaries']);
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['elite-nodes']);
 
     useGameStore.getState().dismissTutorial();
     expect(useScreenStore.getState().tutorialQueue).toEqual([]);
-    expect(useMetaStore.getState().seenTutorials).toContain('legendaries');
+    expect(useMetaStore.getState().seenTutorials).toContain('elite-nodes');
   });
 
   it('a re-run after dismissal does not re-show the same card', () => {
-    primeSoul(9);
+    primeSoul(4);
     descend();
     useGameStore.getState().dismissTutorial();
-    expect(useMetaStore.getState().seenTutorials).toContain('legendaries');
+    expect(useMetaStore.getState().seenTutorials).toContain('elite-nodes');
 
     // Reincarnate and descend again from the same threshold — already seen.
     useScreenStore.setState({ tutorialQueue: [] });
-    useMetaStore.setState({ delveCount: 9 });
+    useMetaStore.setState({ delveCount: 4 });
     descend();
     expect(useScreenStore.getState().tutorialQueue).toEqual([]);
   });

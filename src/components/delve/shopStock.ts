@@ -36,16 +36,28 @@ export function tierForChapter(chapter: number | undefined): CampBoonTier {
 }
 
 /**
- * The rarity mix the merchant lays out by depth. Wave 2 widens the rack to five
- * slots drawn from the big rolled pool (weapons / armour / accessories), so the
- * stock rotates meaningfully each visit (seeded by the room id) — richer and
- * deeper as the chapters climb.
+ * The five-slot rarity mix the merchant lays out, by CHAPTER (1–9). The rack
+ * climbs from green-heavy at the gate to all-purple in the deep chapters, so a
+ * late-game merchant is visibly richer than an early one. Indexed 1-based; clamp
+ * out-of-range. (Enhancement +N and base power ride the same chapter axis via
+ * rollItem's depth.) Magnitudes are by judgment — a sim pass tunes them.
  */
-const GEAR_RARITY_MIX: Record<CampBoonTier, GearRarity[]> = {
-  1: ['green', 'green', 'green', 'blue', 'blue'],
-  2: ['green', 'green', 'blue', 'blue', 'purple'],
-  3: ['green', 'blue', 'blue', 'purple', 'purple'],
-};
+const GEAR_RARITY_MIX_BY_CHAPTER: GearRarity[][] = [
+  ['green', 'green', 'green', 'blue', 'blue'], // ch1
+  ['green', 'green', 'blue', 'blue', 'blue'], // ch2
+  ['green', 'blue', 'blue', 'blue', 'purple'], // ch3
+  ['green', 'blue', 'blue', 'purple', 'purple'], // ch4
+  ['blue', 'blue', 'purple', 'purple', 'purple'], // ch5
+  ['blue', 'blue', 'purple', 'purple', 'purple'], // ch6
+  ['blue', 'purple', 'purple', 'purple', 'purple'], // ch7
+  ['purple', 'purple', 'purple', 'purple', 'purple'], // ch8
+  ['purple', 'purple', 'purple', 'purple', 'purple'], // ch9+
+];
+
+function gearRarityMixForChapter(chapter: number): GearRarity[] {
+  const i = Math.max(1, Math.min(GEAR_RARITY_MIX_BY_CHAPTER.length, chapter)) - 1;
+  return GEAR_RARITY_MIX_BY_CHAPTER[i];
+}
 
 /** Shop rarity ladder for depth promotion — capped at purple (legendaries are
  * the hub layer now, never rolled onto shop stock). */
@@ -69,25 +81,24 @@ export interface GearStock {
  * reroll the stock. At least one accessory is guaranteed on the rack so the new
  * slots are buyable, not drop-only.
  *
- * `depth` is the node's column on the chapter map (`RoomSpec.layer`): deeper
- * shops within a chapter promote the weaker slots up the rarity ladder, so a
- * late-chapter merchant stocks strictly richer than the one at the gate.
+ * `chapter` (1–9) is the power axis: it sets the rarity mix AND feeds rollItem's
+ * depth (base tier + the +1/+2/+3 enhancement ceiling), so a deep-chapter rack
+ * carries stronger, pricier arms.
  *
- * `chapter` (1–6) feeds the gear's depth axis (base tier + enhancement ceiling)
- * so deep-chapter racks carry stronger, pricier arms. Defaults to the stock
- * `tier` so the legacy call shape stays stable.
+ * `layer` is the node's column on the chapter map (`RoomSpec.layer`): deeper
+ * shops within a chapter promote the weaker slots one rarity step, so a
+ * late-chapter merchant stocks strictly richer than the one at the gate.
  */
 export function rollGearStock(
   seed: string,
-  tier: CampBoonTier,
+  chapter: number,
   classId: ClassId,
-  depth = 0,
+  layer = 0,
   maxRarity: GearRarity = 'purple',
-  chapter: number = tier,
 ): GearStock[] {
   const roller = createDiceRoller(`${seed}:gear-shop`);
-  const promotions = Math.min(5, Math.floor(depth / 2));
-  return GEAR_RARITY_MIX[tier].map((baseRarity, i) => {
+  const promotions = Math.min(5, Math.floor(layer / 2));
+  return gearRarityMixForChapter(chapter).map((baseRarity, i) => {
     let rarity = promoteRarity(baseRarity, i < promotions ? 1 : 0);
     rarity = capRarity(rarity, maxRarity);
     const ref = rollItem(
@@ -120,8 +131,20 @@ export interface LegendaryOffer {
   cost: number;
 }
 
-/** Per-tier chance (percent) the merchant has a legendary relic for sale. */
-const LEGENDARY_OFFER_CHANCE: Record<CampBoonTier, number> = { 1: 0, 2: 15, 3: 30 };
+/** Chance (percent) the merchant has a legendary relic for sale, by chapter — it
+ * climbs as the run goes deep, and there's no reliquary before chapter 3.
+ * Both vendors (ShopRoom + CampRoom) draw from this, so per-visit odds are small. */
+function legendaryOfferChance(chapter: number): number {
+  if (chapter >= 7) return 15;
+  if (chapter >= 5) return 10;
+  if (chapter >= 3) return 6;
+  return 0;
+}
+
+/** The reliquary price climbs with depth — a real late-game gold sink. By judgment. */
+function legendaryOfferCost(chapter: number): number {
+  return 500 + Math.max(0, chapter - 3) * 250;
+}
 
 /**
  * Maybe lay out a single legendary relic for sale — the "reliquary" offer. Rare,
@@ -132,11 +155,11 @@ const LEGENDARY_OFFER_CHANCE: Record<CampBoonTier, number> = { 1: 0, 2: 15, 3: 3
  */
 export function rollLegendaryOffer(
   seed: string,
-  tier: CampBoonTier,
+  chapter: number,
   classId: ClassId,
   ownedIds: readonly string[],
 ): LegendaryOffer | null {
-  const chance = LEGENDARY_OFFER_CHANCE[tier];
+  const chance = legendaryOfferChance(chapter);
   if (chance <= 0) return null;
   const roller = createDiceRoller(`${seed}:legendary-offer`);
   if (roller.roll('1d100').total > chance) return null;
@@ -145,5 +168,5 @@ export function rollLegendaryOffer(
   const id = pool[(roller.roll('1d100').total - 1) % pool.length];
   const leg = getLegendary(id);
   if (!leg) return null;
-  return { legendaryId: id, name: leg.name, cost: 350 * tier };
+  return { legendaryId: id, name: leg.name, cost: legendaryOfferCost(chapter) };
 }

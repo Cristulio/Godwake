@@ -32,8 +32,15 @@ interface SpellPickerProps {
 }
 
 export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
-  const known = character.resources.knownSpells ?? [];
   const maxSlots = wizardSpellSlotsForLevel(character.level);
+  // Only surface spells the character can actually cast at this level: cantrips
+  // always, leveled spells once their slot tier has opened. Higher-tier spells
+  // sitting in the book (e.g. Hold Person known from L1) stay hidden until the
+  // slot exists — they appear, greyed for "no slot remaining", only once real.
+  const known = (character.resources.knownSpells ?? []).filter((id) => {
+    const spell = getSpell(id);
+    return spell.level === 0 || (maxSlots[spell.level as SpellSlotLevel] ?? 0) > 0;
+  });
   const slotSummary = SLOT_TIERS.filter((lvl) => (maxSlots[lvl] ?? 0) > 0)
     .map((lvl) => `${ordinal(lvl)}: ${slotsAt(character, lvl)}`)
     .join(' · ');

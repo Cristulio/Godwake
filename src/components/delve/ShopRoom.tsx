@@ -60,21 +60,22 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     [tier],
   );
 
+  const chapter = room.chapter ?? 1;
   const gear = useMemo<GearStock[]>(
     () =>
       classId
-        ? rollGearStock(room.id, tier, classId, room.layer ?? 0, shopMaxRarity, room.chapter ?? tier)
+        ? rollGearStock(room.id, chapter, classId, room.layer ?? 0, shopMaxRarity)
         : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [room.id, tier, classId, room.layer, shopMaxRarity, room.chapter],
+    [room.id, chapter, classId, room.layer, shopMaxRarity],
   );
 
   // The rare reliquary offer is rolled deterministically per visit (owned-blind),
   // then hidden at render if the rolled relic is already owned or just bought —
   // so buying it doesn't churn a fresh offer into view.
   const legendaryOffer = useMemo(
-    () => (classId ? rollLegendaryOffer(room.id, tier, classId, []) : null),
-    [room.id, tier, classId],
+    () => (classId ? rollLegendaryOffer(room.id, chapter, classId, []) : null),
+    [room.id, chapter, classId],
   );
 
   if (!character) return null;

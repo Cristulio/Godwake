@@ -17,8 +17,8 @@ import {
   type CampBoon,
   type CampBoonTier,
 } from '../../content/campBoons';
-import { consumableStockForTier, rollGearStock, type GearStock } from './shopStock';
-import { GearWareRow, ConsumableWareRow } from './MerchantWares';
+import { consumableStockForTier, rollGearStock, rollLegendaryOffer, type GearStock, type LegendaryOffer } from './shopStock';
+import { GearWareRow, ConsumableWareRow, LegendaryWareRow } from './MerchantWares';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 
 /** Whether the caravan shop is open. Blessings are granted at shrines, not
@@ -53,6 +53,8 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const addDelveReward = useGameStore((s) => s.addDelveReward);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
+  const purchaseLegendary = useGameStore((s) => s.purchaseLegendary);
+  const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const showTaunt = useGameStore((s) => s.showTaunt);
   const goToInventory = useGameStore((s) => s.goToInventory);
 
@@ -92,16 +94,25 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const gear = useMemo<GearStock[]>(
     () =>
       classId
-        ? rollGearStock(room.id, campTier ?? 1, classId, 0, campMaxRarity, room.chapter ?? campTier ?? 1)
+        ? rollGearStock(room.id, room.chapter ?? 1, classId, room.layer ?? 0, campMaxRarity)
         : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [room.id, campTier, classId, campMaxRarity, room.chapter],
+    [room.id, room.chapter, room.layer, classId, campMaxRarity],
+  );
+
+  // Rolled deterministically per-visit (owned-blind), then hidden at render if
+  // the relic is already owned or just bought — same pattern as ShopRoom.
+  const legendaryOffer = useMemo<LegendaryOffer | null>(
+    () => (classId ? rollLegendaryOffer(room.id, room.chapter ?? 1, classId, []) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [room.id, room.chapter, classId],
   );
 
   const [expanded, setExpanded] = useState<ForkBranch | null>(null);
   const [riskResult, setRiskResult] = useState<RiskResult | null>(null);
   const [merchantStep, setMerchantStep] = useState<MerchantStep>('closed');
   const [boughtGearKeys, setBoughtGearKeys] = useState<Set<string>>(new Set());
+  const [legendaryBought, setLegendaryBought] = useState(false);
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
 
   // Imoen whispers when the road opens up — once per soul (never replays on re-entry or in future runs).
@@ -227,6 +238,18 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     }
   }
 
+  function buyLegendary() {
+    if (!legendaryOffer) return;
+    const r = purchaseLegendary(legendaryOffer.legendaryId, legendaryOffer.cost);
+    if (r.ok) {
+      setLegendaryBought(true);
+      setPurchaseMessage(`${legendaryOffer.name} bound to your reliquary — attune it at the hub.`);
+      playSfx('ui_click');
+    } else {
+      setPurchaseMessage(r.reason ?? 'Cannot purchase.');
+    }
+  }
+
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.10),transparent_60%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
@@ -310,6 +333,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
           }
           buttonLabel="Throw the bones ↓"
           onPick={() => toggleBranch('risk')}
+          takenTone={riskResult?.outcome === 'loss' ? 'bad' : 'good'}
           takenSummary={
             riskResult
               ? riskResult.outcome === 'win'
@@ -415,11 +439,20 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
         <ShopModal
           gear={gear}
           consumables={consumables}
+          legendaryOffer={
+            legendaryOffer != null &&
+            !legendaryBought &&
+            !ownedLegendaries.includes(legendaryOffer.legendaryId)
+              ? legendaryOffer
+              : null
+          }
+          legendaryBought={legendaryBought}
           boughtGearKeys={boughtGearKeys}
           goldInPocket={character.goldInPocket}
           purchaseMessage={purchaseMessage}
           onBuyGear={buyGear}
           onBuyConsumable={buyConsumable}
+          onBuyLegendary={buyLegendary}
           onClose={() => {
             setMerchantStep('closed');
             setPurchaseMessage(null);
@@ -433,22 +466,28 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 interface ShopModalProps {
   gear: GearStock[];
   consumables: Item[];
+  legendaryOffer: LegendaryOffer | null;
+  legendaryBought: boolean;
   boughtGearKeys: Set<string>;
   goldInPocket: number;
   purchaseMessage: string | null;
   onBuyGear: (stock: GearStock, key: string) => void;
   onBuyConsumable: (itemId: string) => void;
+  onBuyLegendary: () => void;
   onClose: () => void;
 }
 
 function ShopModal({
   gear,
   consumables,
+  legendaryOffer,
+  legendaryBought,
   boughtGearKeys,
   goldInPocket,
   purchaseMessage,
   onBuyGear,
   onBuyConsumable,
+  onBuyLegendary,
   onClose,
 }: ShopModalProps) {
   return (
@@ -510,6 +549,22 @@ function ShopModal({
           </div>
         )}
 
+        {legendaryOffer && (
+          <div className="mb-5">
+            <div className="text-[var(--color-accent-gold)] text-[10px] uppercase tracking-[0.3em] mb-2">
+              ✦ Reliquary
+            </div>
+            <div className="grid gap-3">
+              <LegendaryWareRow
+                offer={legendaryOffer}
+                bought={legendaryBought}
+                gold={goldInPocket}
+                onBuy={onBuyLegendary}
+              />
+            </div>
+          </div>
+        )}
+
         {consumables.length > 0 && (
           <div className="mb-5">
             <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
@@ -553,6 +608,8 @@ interface ForkCardProps {
   buttonLabel: string;
   onPick: () => void;
   takenSummary?: ReactNode;
+  /** Colors the taken-summary: a cost paid (bad) reads blood-red, a boon (good) green. */
+  takenTone?: 'good' | 'bad';
   disabled?: boolean;
 }
 
@@ -563,6 +620,7 @@ function ForkCard({
   buttonLabel,
   onPick,
   takenSummary,
+  takenTone = 'good',
   disabled = false,
 }: ForkCardProps) {
   const panelClass = [
@@ -583,7 +641,13 @@ function ForkCard({
         {flavor}
       </p>
       {state === 'taken' ? (
-        <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest leading-relaxed">
+        <div
+          className={`text-xs uppercase tracking-widest leading-relaxed ${
+            takenTone === 'bad'
+              ? 'text-[var(--color-accent-blood)]'
+              : 'text-[var(--color-status-poison)]'
+          }`}
+        >
           {takenSummary}
         </div>
       ) : state === 'closed' ? (

@@ -4,10 +4,14 @@ import {
   UNLOCKS,
   isFeatureUnlocked,
   newlyUnlocked,
+  newlyUnlockedByChapter,
+  newlyUnlockedClasses,
+  isClassUnlocked,
   unlockedFeatures,
   nextLockedFeature,
   type ProgressionMeta,
 } from './unlocks';
+import { getTutorial } from '../../content/tutorials';
 import { migrateV1ToV2 } from '../../stores/persistMigration';
 
 function mkMeta(overrides: Partial<ProgressionMeta> = {}): ProgressionMeta {
@@ -19,22 +23,40 @@ describe('UNLOCKS registry', () => {
     expect(Object.keys(UNLOCKS).sort()).toEqual([...FEATURE_IDS].sort());
   });
 
-  it('keeps the two starred thresholds locked by design', () => {
-    expect(UNLOCKS.legendaries.delveCount).toBe(10);
-    expect(UNLOCKS.sets.delveCount).toBe(20);
+  it('gates the onboarding reveals on delve count and the power unlocks on chapters', () => {
+    // Onboarding: paced by raw delve count.
+    expect(UNLOCKS.grove.delveCount).toBe(2);
+    expect(UNLOCKS['affixes-rare'].delveCount).toBe(3);
+    expect(UNLOCKS['elite-nodes'].delveCount).toBe(5);
+    // Power: earned by clearing deeper chapters; sets land at completion (ch 9).
+    expect(UNLOCKS['boss-intel'].chaptersCleared).toBe(1);
+    expect(UNLOCKS.legendaries.chaptersCleared).toBe(5);
+    expect(UNLOCKS.sets.chaptersCleared).toBe(9);
+    // Power features carry no delve gate — depth is the only way in.
+    expect(UNLOCKS.legendaries.delveCount).toBeUndefined();
+    expect(UNLOCKS.sets.delveCount).toBeUndefined();
   });
 });
 
 describe('isFeatureUnlocked', () => {
-  it('a delve-7 soul has elite-nodes and boss-intel but not legendaries', () => {
+  it('a delve-7 soul with no clears has the onboarding reveals but no power unlocks', () => {
     const meta = mkMeta({ delveCount: 7 });
-    expect(isFeatureUnlocked('elite-nodes', meta)).toBe(true); // @5
-    expect(isFeatureUnlocked('boss-intel', meta)).toBe(true); // @7 (boundary is inclusive)
-    expect(isFeatureUnlocked('legendaries', meta)).toBe(false); // @10
+    expect(isFeatureUnlocked('elite-nodes', meta)).toBe(true); // delve @5
+    expect(isFeatureUnlocked('boss-intel', meta)).toBe(false); // chapter @1
+    expect(isFeatureUnlocked('legendaries', meta)).toBe(false); // chapter @5
   });
 
-  it('a brand-new soul (delve 0) has none of the gated features', () => {
-    const meta = mkMeta({ delveCount: 0 });
+  it('power features open on chapters cleared regardless of delve count', () => {
+    const meta = mkMeta({ delveCount: 0, chaptersCleared: 5 });
+    expect(isFeatureUnlocked('boss-intel', meta)).toBe(true); // @1
+    expect(isFeatureUnlocked('class-roster', meta)).toBe(true); // @2
+    expect(isFeatureUnlocked('affixes-epic', meta)).toBe(true); // @3
+    expect(isFeatureUnlocked('legendaries', meta)).toBe(true); // @5
+    expect(isFeatureUnlocked('sets', meta)).toBe(false); // @9 (completion)
+  });
+
+  it('a brand-new soul (delve 0, no clears) has none of the gated features', () => {
+    const meta = mkMeta();
     for (const id of FEATURE_IDS) expect(isFeatureUnlocked(id, meta)).toBe(false);
   });
 
@@ -50,61 +72,113 @@ describe('isFeatureUnlocked', () => {
     expect(isFeatureUnlocked('grove', meta)).toBe(true);
   });
 
-  it('grove-deep opens via the chaptersCleared milestone before its delve threshold', () => {
-    const meta = mkMeta({ delveCount: 5, chaptersCleared: 4 });
-    expect(isFeatureUnlocked('grove-deep', meta)).toBe(true); // @25 delves, or 4 chapters
-    expect(isFeatureUnlocked('grove-deep', mkMeta({ delveCount: 5, chaptersCleared: 3 }))).toBe(
-      false,
-    );
+  it('grove-deep opens on the chaptersCleared milestone', () => {
+    expect(isFeatureUnlocked('grove-deep', mkMeta({ chaptersCleared: 4 }))).toBe(true);
+    expect(isFeatureUnlocked('grove-deep', mkMeta({ chaptersCleared: 3 }))).toBe(false);
   });
 });
 
-describe('newlyUnlocked', () => {
-  it('returns the single feature whose threshold the descent crossed', () => {
-    expect(newlyUnlocked(9, 10)).toEqual(['legendaries']);
-    expect(newlyUnlocked(19, 20)).toEqual(['sets']);
+describe('newlyUnlocked (delve axis)', () => {
+  it('returns the single onboarding feature whose threshold the descent crossed', () => {
+    expect(newlyUnlocked(1, 2)).toEqual(['grove']);
+    expect(newlyUnlocked(4, 5)).toEqual(['elite-nodes']);
   });
 
-  it('returns every threshold crossed in a multi-step jump, in ladder order', () => {
-    expect(newlyUnlocked(4, 7)).toEqual(['elite-nodes', 'boss-intel']);
+  it('returns every onboarding threshold crossed in a multi-step jump, in ladder order', () => {
+    expect(newlyUnlocked(2, 5)).toEqual(['affixes-rare', 'elite-nodes']);
   });
 
-  it('returns nothing when no threshold sits in the interval', () => {
-    expect(newlyUnlocked(10, 12)).toEqual([]);
+  it('never fires the chapter-gated power features', () => {
+    // No delve threshold above elite-nodes @5, so a deep delve jump opens nothing.
+    expect(newlyUnlocked(5, 30)).toEqual([]);
     expect(newlyUnlocked(7, 7)).toEqual([]);
   });
 });
 
+describe('newlyUnlockedByChapter (progression axis)', () => {
+  it('returns the power feature whose chapter threshold the clear crossed', () => {
+    expect(newlyUnlockedByChapter(0, 1)).toEqual(['boss-intel']);
+    expect(newlyUnlockedByChapter(4, 5)).toEqual(['legendaries']);
+    expect(newlyUnlockedByChapter(8, 9)).toEqual(['sets']);
+  });
+
+  it('returns every chapter threshold crossed in a multi-chapter jump, in ladder order', () => {
+    expect(newlyUnlockedByChapter(0, 3)).toEqual(['boss-intel', 'affixes-epic', 'class-roster']);
+  });
+
+  it('never fires the delve-gated onboarding reveals', () => {
+    expect(newlyUnlockedByChapter(5, 5)).toEqual([]);
+  });
+});
+
+describe('class unlocks (chapter axis)', () => {
+  it('staggers the alternates easiest-first; wizard is always available', () => {
+    expect(isClassUnlocked('wizard', 0)).toBe(true);
+    expect(isClassUnlocked('fighter', 1)).toBe(false);
+    expect(isClassUnlocked('fighter', 2)).toBe(true);
+    expect(isClassUnlocked('rogue', 7)).toBe(false);
+    expect(isClassUnlocked('rogue', 8)).toBe(true);
+  });
+
+  it('reports the alternate(s) whose chapter threshold a clear just crossed', () => {
+    expect(newlyUnlockedClasses(1, 2)).toEqual(['fighter']);
+    expect(newlyUnlockedClasses(3, 4)).toEqual(['barbarian']);
+    // Wizard (threshold 0) never crosses for a soul that has cleared anything.
+    expect(newlyUnlockedClasses(0, 1)).toEqual([]);
+  });
+
+  it('every staggered alternate has a reveal card; the starter does not', () => {
+    for (const id of ['fighter', 'barbarian', 'ranger', 'rogue'] as const) {
+      expect(getTutorial(id)).toBeDefined();
+    }
+    expect(getTutorial('wizard')).toBeUndefined();
+  });
+});
+
 describe('unlockedFeatures', () => {
-  it('is empty for a fresh soul and lists everything for a deep one', () => {
-    expect(unlockedFeatures(mkMeta({ delveCount: 0 }))).toEqual([]);
-    expect(unlockedFeatures(mkMeta({ delveCount: 999 }))).toEqual([...FEATURE_IDS]);
+  it('is empty for a fresh soul and lists everything for one that cleared the chain', () => {
+    expect(unlockedFeatures(mkMeta())).toEqual([]);
+    expect(unlockedFeatures(mkMeta({ delveCount: 999, chaptersCleared: 9 }))).toEqual([
+      ...FEATURE_IDS,
+    ]);
   });
 });
 
 describe('nextLockedFeature', () => {
-  it('points at the lowest-threshold locked feature, then null when all unlocked', () => {
-    expect(nextLockedFeature(mkMeta({ delveCount: 0 }))).toEqual({ featureId: 'grove', delveCount: 2 });
+  it('points at the lowest-threshold locked onboarding reveal, then null when all unlocked', () => {
+    expect(nextLockedFeature(mkMeta())).toEqual({
+      featureId: 'grove',
+      axis: 'delve',
+      threshold: 2,
+    });
     expect(nextLockedFeature(mkMeta({ delveCount: 2 }))).toEqual({
       featureId: 'affixes-rare',
-      delveCount: 3,
+      axis: 'delve',
+      threshold: 3,
     });
-    expect(nextLockedFeature(mkMeta({ delveCount: 999 }))).toBeNull();
+    expect(nextLockedFeature(mkMeta({ delveCount: 999, chaptersCleared: 9 }))).toBeNull();
   });
 });
 
 describe('migration ↔ unlock ladder', () => {
-  it('a migrated veteran save (delveCount 999) has everything unlocked', () => {
+  it('a migrated veteran (delveCount 999) keeps the onboarding reveals; power gates on depth', () => {
     const migrated = migrateV1ToV2({ unlockedUpgrades: {} });
-    const meta = mkMeta({
-      delveCount: migrated.delveCount,
-      chaptersCleared: 0,
-      druidGroveUnlocked: false,
-    });
-    expect(unlockedFeatures(meta)).toEqual([...FEATURE_IDS]);
+    const meta = mkMeta({ delveCount: migrated.delveCount, chaptersCleared: 0 });
+    // The 999 floor opens the delve-gated onboarding reveals...
+    expect(isFeatureUnlocked('grove', meta)).toBe(true);
+    expect(isFeatureUnlocked('elite-nodes', meta)).toBe(true);
+    // ...but power features are earned by reaching new depths, not by delve count.
+    expect(isFeatureUnlocked('legendaries', meta)).toBe(false);
+    expect(isFeatureUnlocked('sets', meta)).toBe(false);
   });
 
-  it('a fresh soul (delveCount 0) is gated', () => {
-    expect(unlockedFeatures(mkMeta({ delveCount: 0 }))).toEqual([]);
+  it('a veteran who has cleared the full chain has everything', () => {
+    expect(unlockedFeatures(mkMeta({ delveCount: 999, chaptersCleared: 9 }))).toEqual([
+      ...FEATURE_IDS,
+    ]);
+  });
+
+  it('a fresh soul (delveCount 0, no clears) is gated', () => {
+    expect(unlockedFeatures(mkMeta())).toEqual([]);
   });
 });

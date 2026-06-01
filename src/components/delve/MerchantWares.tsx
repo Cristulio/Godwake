@@ -3,7 +3,7 @@ import { Button } from '../ui/Button';
 import { getItem, getAffix } from '../../content/items';
 import { getLegendary } from '../../content/legendaries';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
-import { baseStatLine, itemTypeLabel } from '../inventory/itemDisplay';
+import { baseStatLine, enhancementLine, itemTypeLabel } from '../inventory/itemDisplay';
 import type { GearStock, LegendaryOffer } from './shopStock';
 
 /** Most wares carry their own flavour; synthesise a short line for the rest. */
@@ -47,6 +47,11 @@ export function GearWareRow({ stock, bought, gold, onBuy }: GearWareRowProps) {
           </div>
         )}
         <div className="mt-1 space-y-0.5">
+          {rolled?.enhancement && enhancementLine(base, rolled.enhancement) && (
+            <div className="text-[11px] italic leading-snug" style={{ color }}>
+              ◆ {enhancementLine(base, rolled.enhancement)}
+            </div>
+          )}
           {(rolled?.affixes ?? []).map((id) => {
             let effect = id;
             try {

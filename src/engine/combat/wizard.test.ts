@@ -381,68 +381,85 @@ describe('Boss legendary resistance vs Hold Person', () => {
     };
   }
 
-  it('a boss auto-succeeds its first 3 control saves, then can be bound', () => {
-    const goblin = getMonster('goblin'); // WIS 8 — the save fails on the stubbed 2
-    let w: Character = { ...makeWizard(), level: 8 };
+  // A d20 that always rolls high (19) — every save lands, even at a WIS penalty.
+  function passRoller(): DiceRoller {
+    return {
+      d20(advantage: 'normal' | 'advantage' | 'disadvantage' = 'normal', modifier = 0): RollResult {
+        return {
+          expression: { count: 1, die: 20, modifier },
+          rolls: [19],
+          modifier,
+          total: 19 + modifier,
+          natural20: false,
+          natural1: false,
+          advantage,
+        };
+      },
+      roll() {
+        throw new Error('passRoller only implements d20');
+      },
+      serialize() {
+        return { state: 0 };
+      },
+    };
+  }
+
+  it('a boss rolls its control save with advantage, but can still be bound — no auto-negate', () => {
+    const goblin = getMonster('goblin'); // WIS 8 — fails on the stubbed 2
+    const baseW = makeWizard();
+    const w: Character = { ...baseW, level: 8, resources: { ...baseW.resources, spellSlots: wizardSpellSlotsForLevel(8) } };
     const init = createCombat({
       roller: createDiceRoller(1),
       character: w,
       monsters: [{ def: goblin }],
       isBoss: true,
     });
-    let state = init.state;
-    w = init.character;
-    const targetId = findMonster(state).id;
-    expect(findMonster(state).instance.legendaryResistances).toBe(3);
+    const targetId = findMonster(init.state).id;
+    expect(findMonster(init.state).instance.legendaryResistances).toBe(3);
 
-    const castHold = () => {
-      w = {
-        ...w,
-        actionEconomy: { ...w.actionEconomy, actionUsed: false },
-        resources: { ...w.resources, spellSlots: wizardSpellSlotsForLevel(8) },
-      };
-      const r = castSpell({ roller: failRoller(), character: w, state, spellId: 'hold-person', targetId });
-      state = r.state;
-      w = r.character;
-      return findMonster(state).instance;
-    };
-
-    for (let expected = 2; expected >= 0; expected--) {
-      const inst = castHold();
-      expect(inst.conditions.some((c) => c.name === 'paralyzed')).toBe(false);
-      expect(inst.legendaryResistances).toBe(expected);
-    }
-    expect(state.log.some((l) => l.text.includes('legendary resistance'))).toBe(true);
-
-    const bound = castHold();
-    expect(bound.conditions.some((c) => c.name === 'paralyzed')).toBe(true);
-    expect(bound.legendaryResistances).toBe(0);
+    // failRoller fails even the advantaged save → the boss is bound on the FIRST
+    // cast (no auto-success), and its resolve pool is NOT consumed (persistent
+    // trait, not a counter).
+    const r = castSpell({ roller: failRoller(), character: w, state: init.state, spellId: 'hold-person', targetId });
+    const inst = findMonster(r.state).instance;
+    expect(inst.conditions.some((c) => c.name === 'paralyzed')).toBe(true);
+    expect(inst.legendaryResistances).toBe(3);
+    expect(r.state.log.some((l) => l.text.includes('resolute will — advantage'))).toBe(true);
   });
 
-  it('an elite auto-succeeds exactly one control save', () => {
+  it('a boss whose advantaged save lands high resists the binding', () => {
     const goblin = getMonster('goblin');
     const baseW = makeWizard();
-    let w: Character = { ...baseW, level: 8, resources: { ...baseW.resources, spellSlots: wizardSpellSlotsForLevel(8) } };
+    const w: Character = { ...baseW, level: 8, resources: { ...baseW.resources, spellSlots: wizardSpellSlotsForLevel(8) } };
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: w,
+      monsters: [{ def: goblin }],
+      isBoss: true,
+    });
+    const targetId = findMonster(init.state).id;
+    const r = castSpell({ roller: passRoller(), character: w, state: init.state, spellId: 'hold-person', targetId });
+    expect(findMonster(r.state).instance.conditions.some((c) => c.name === 'paralyzed')).toBe(false);
+  });
+
+  it('an elite also rolls control saves with advantage and is not auto-negated', () => {
+    const goblin = getMonster('goblin');
+    const baseW = makeWizard();
+    const w: Character = { ...baseW, level: 8, resources: { ...baseW.resources, spellSlots: wizardSpellSlotsForLevel(8) } };
     const init = createCombat({
       roller: createDiceRoller(1),
       character: w,
       monsters: [{ def: goblin }],
       isElite: true,
     });
-    let state = init.state;
-    w = init.character;
-    const targetId = findMonster(state).id;
-    expect(findMonster(state).instance.legendaryResistances).toBe(1);
+    const targetId = findMonster(init.state).id;
+    expect(findMonster(init.state).instance.legendaryResistances).toBe(1);
 
-    const r1 = castSpell({ roller: failRoller(), character: w, state, spellId: 'hold-person', targetId });
-    state = r1.state;
-    const afterFirst = findMonster(state).instance;
-    expect(afterFirst.conditions.some((c) => c.name === 'paralyzed')).toBe(false);
-    expect(afterFirst.legendaryResistances).toBe(0);
-
-    const w2 = { ...r1.character, actionEconomy: { ...r1.character.actionEconomy, actionUsed: false }, resources: { ...r1.character.resources, spellSlots: wizardSpellSlotsForLevel(8) } };
-    const r2 = castSpell({ roller: failRoller(), character: w2, state, spellId: 'hold-person', targetId });
-    expect(findMonster(r2.state).instance.conditions.some((c) => c.name === 'paralyzed')).toBe(true);
+    const r = castSpell({ roller: failRoller(), character: w, state: init.state, spellId: 'hold-person', targetId });
+    const inst = findMonster(r.state).instance;
+    expect(inst.conditions.some((c) => c.name === 'paralyzed')).toBe(true);
+    expect(inst.legendaryResistances).toBe(1);
+    expect(r.state.log.some((l) => l.text.includes('resolute will — advantage'))).toBe(true);
   });
 
   it('a rank-and-file monster has no legendary resistance and is bound on the first failed save', () => {
@@ -639,6 +656,50 @@ describe('Wizard — Misty Step (L3 unlock)', () => {
   });
 });
 
+describe('Wizard — Vampiric Touch life-drain (L5 has the slot)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('damages the target, heals the caster for half, consumes a 3rd-level slot', () => {
+    const sage = getMonster('hollow-sage'); // 36 HP — survives 5d6 to keep the drain alive
+    let w = makeWizard();
+    for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5 → 3rd-level slots
+    w = {
+      ...w,
+      // Stamp the spell (sim picks Fireball at L5) and drop HP so the heal-back
+      // is observable below max rather than clipped at the cap.
+      resources: { ...w.resources, knownSpells: [...(w.resources.knownSpells ?? []), 'vampiric-touch'] },
+      hp: { ...w.hp, current: 1 },
+    };
+
+    const roller = createDiceRoller(13);
+    const init = createCombat({ roller, character: w, monsters: [{ def: sage }] });
+    let state = init.state;
+    w = init.character;
+    const slotsBefore = slotsAt(w, 3);
+    const targetId = findMonster(state).id;
+    const monsterHpBefore = findMonster(state).instance.hp.current;
+    const casterHpBefore = w.hp.current;
+
+    const result = castSpell({ roller, character: w, state, spellId: 'vampiric-touch', targetId });
+    expect(result.cast).toBe(true);
+    state = result.state;
+    w = result.character;
+
+    expect(slotsAt(w, 3)).toBe(slotsBefore - 1);
+    expect(w.actionEconomy.actionUsed).toBe(true);
+
+    const monsterHpAfter = findMonster(state).instance.hp.current;
+    const dealt = monsterHpBefore - monsterHpAfter;
+    expect(dealt).toBeGreaterThan(0);
+
+    // The caster's HP rises by floor(dealt / 2), capped at max.
+    const expectedHeal = Math.min(w.hp.max - casterHpBefore, Math.floor(dealt / 2));
+    expect(w.hp.current).toBe(casterHpBefore + expectedHeal);
+    expect(w.hp.current).toBeGreaterThan(casterHpBefore);
+    expect(state.log.some((l) => l.text.includes('HP restored'))).toBe(true);
+  });
+});
+
 describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
@@ -686,7 +747,7 @@ describe('Wizard — Fireball / Lightning Bolt (L5 unlock)', () => {
     }
   });
 
-  it('Lightning Bolt damages every living monster and consumes a 3rd-level slot', () => {
+  it('Lightning Bolt hits the primary and forks to a second, consuming a 3rd-level slot', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
     for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5
@@ -795,7 +856,7 @@ describe('Fireball — ignite rider on failed saves', () => {
 describe('Lightning Bolt — pierce on successful saves', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('non-evoker wizard rolls 6d6 base (vs Fireball 8d6) — lower burst', () => {
+  it('non-evoker wizard rolls 10d6 (more dice than Fireball 8d6 — the focused strike)', () => {
     const sage = getMonster('hollow-sage');
     // Use a raw L1 wizard with manually bumped slots + known spell to bypass
     // the Evocation subclass (which adds a sculpt die at L2+).
@@ -810,44 +871,37 @@ describe('Lightning Bolt — pierce on successful saves', () => {
     const roller = createDiceRoller(50);
     const init = createCombat({ roller, character: w, monsters: [{ def: sage }] });
     const cast = castSpell({ roller, character: init.character, state: init.state, spellId: 'lightning-bolt' });
-    const roll = cast.state.log.find((l) => l.text.includes('white arc of lightning'))!;
+    const roll = cast.state.log.find((l) => l.text.includes('spear of lightning'))!;
     const diceCount = roll.text.split(' = ')[0].split('+').length;
-    expect(diceCount).toBe(6);
+    expect(diceCount).toBe(10);
   });
 
-  it('a surviving monster that succeeds the save takes an additional arc hit', () => {
+  it('forks to a second foe for half, and touches no third', () => {
     const sage = getMonster('hollow-sage');
     let w = makeWizard();
     for (let i = 0; i < 4; i++) w = simulateLevelUp(w);
     w = { ...w, resources: { ...w.resources, knownSpells: [...(w.resources.knownSpells ?? []), 'lightning-bolt'] } };
 
-    // Script the sage to succeed its DEX save, with low main damage so it survives.
-    const baseRoller = createDiceRoller(7);
-    let d20Call = 0;
-    const roller = {
-      ...baseRoller,
-      d20(adv: Parameters<typeof baseRoller.d20>[0] = 'normal', mod = 0) {
-        d20Call++;
-        if (d20Call === 1) {
-          return { ...baseRoller.d20(adv, mod), rolls: [20], total: 20 + mod, natural20: true, natural1: false };
-        }
-        return baseRoller.d20(adv, mod);
-      },
-      roll(expr: Parameters<typeof baseRoller.roll>[0]) {
-        const e = typeof expr === 'string' ? { count: 6, die: 6, modifier: 0 } : expr;
-        if (e.count >= 6) {
-          // Force low main damage so sage survives.
-          return { ...baseRoller.roll(expr), rolls: Array(e.count).fill(1), total: e.count + e.modifier };
-        }
-        return baseRoller.roll(expr);
-      },
-    };
+    const roller = createDiceRoller(7);
+    const init = createCombat({
+      roller,
+      character: w,
+      monsters: [{ def: sage }, { def: sage, displayName: 'Sage B' }, { def: sage, displayName: 'Sage C' }],
+    });
+    const before = init.state.combatants
+      .filter((c) => c.kind === 'monster')
+      .map((c) => (c as MonsterCombatant).instance.hp.current);
 
-    const init = createCombat({ roller: baseRoller, character: w, monsters: [{ def: sage }] });
     const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'lightning-bolt' });
+    const after = result.state.combatants
+      .filter((c) => c.kind === 'monster')
+      .map((c) => (c as MonsterCombatant).instance.hp.current);
 
-    expect(result.state.log.some((l) => l.text.includes('(arc)'))).toBe(true);
-    expect(result.state.log.some((l) => l.text.includes('half + arc'))).toBe(true);
+    // Primary and the fork take damage; the third foe is untouched.
+    expect(after[0]).toBeLessThan(before[0]);
+    expect(after[1]).toBeLessThan(before[1]);
+    expect(after[2]).toBe(before[2]);
+    expect(result.state.log.some((l) => l.text.includes('(fork)'))).toBe(true);
   });
 });
 
@@ -903,7 +957,7 @@ describe('Wizard — Sculpt Spells (Evocation L2)', () => {
     expect(roll.text).toContain('Sculpt Spells');
   });
 
-  it('L5 evoker rolls 7d6 Lightning Bolt (6d6 base + 1 from Sculpt Spells)', () => {
+  it('L5 evoker rolls 11d6 Lightning Bolt (10d6 base + 1 from Sculpt Spells)', () => {
     const goblin = getMonster('goblin');
     let w = makeWizard();
     for (let i = 0; i < 4; i++) w = simulateLevelUp(w); // L5
@@ -923,9 +977,9 @@ describe('Wizard — Sculpt Spells (Evocation L2)', () => {
     const cast = castSpell({ roller, character: w, state, spellId: 'lightning-bolt' });
     expect(cast.cast).toBe(true);
     state = cast.state;
-    const roll = state.log.find((l) => l.text.includes('white arc of lightning'))!;
+    const roll = state.log.find((l) => l.text.includes('spear of lightning'))!;
     const diceCount = roll.text.split(' = ')[0].split('+').length;
-    expect(diceCount).toBe(7);
+    expect(diceCount).toBe(11);
     expect(roll.text).toContain('Sculpt Spells');
   });
 });

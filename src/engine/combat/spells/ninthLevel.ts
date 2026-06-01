@@ -58,8 +58,9 @@ export function castApotheosis(
 /**
  * Unmake (9th) — the remake-the-enemy capstone. One foe is spoken half-out of
  * existence: 18d8 necrotic that always lands (the unmaking), then a CON save or
- * be paralyzed for 2 rounds (the binding — remade into something helpless).
- * Legendary resistance can refuse the binding, never the damage.
+ * be paralyzed for 2 rounds (the binding — remade into something helpless). A
+ * boss's resolute will rolls that save with advantage, never auto-negates it —
+ * the damage always lands, and the binding can still take hold on a bad roll.
  */
 export function castUnmake(ctx: CastSpellContext): CastResult {
   const { state, roller } = ctx;
@@ -88,33 +89,17 @@ export function castUnmake(ctx: CastSpellContext): CastResult {
   if (survivor && survivor.instance.hp.current > 0) {
     const monsterDef = getMonster(survivor.instance.defId);
     const conMod = abilityModifier(monsterDef.abilityScores.con ?? 10);
-    const save = roller.d20('normal', conMod);
+    const resoluteWill = (survivor.instance.legendaryResistances ?? 0) > 0;
+    const save = roller.d20(resoluteWill ? 'advantage' : 'normal', conMod);
     const resisted = save.total >= dc;
-    const legendaryResistances = survivor.instance.legendaryResistances ?? 0;
 
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `${survivor.instance.displayName} CON save vs the binding: d20${conMod >= 0 ? '+' : ''}${conMod} = ${save.total} vs DC ${dc} — ${resisted ? 'resists' : 'fails'}.`,
+      text: `${survivor.instance.displayName} CON save vs the binding${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${conMod >= 0 ? '+' : ''}${conMod} = ${save.total} vs DC ${dc} — ${resisted ? 'resists' : 'fails'}.`,
     });
 
-    if (!resisted && legendaryResistances > 0) {
-      nextState = appendLog(
-        {
-          ...nextState,
-          combatants: nextState.combatants.map((c) =>
-            c.kind === 'monster' && c.id === targetId
-              ? { ...c, instance: { ...c.instance, legendaryResistances: legendaryResistances - 1 } }
-              : c,
-          ),
-        },
-        {
-          id: nextLogId(nextState),
-          kind: 'system',
-          text: `${survivor.instance.displayName} refuses the remaking — legendary resistance (${legendaryResistances - 1} left).`,
-        },
-      );
-    } else if (!resisted) {
+    if (!resisted) {
       nextState = appendLog(
         {
           ...nextState,

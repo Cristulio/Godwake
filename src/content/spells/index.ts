@@ -22,7 +22,7 @@ export const MAGIC_MISSILE: Spell = SpellSchema.parse({
   target: 'single',
   damageType: 'force',
   description:
-    'Three darts of force lance from your fingertips. Each strikes for 1d4+1 force damage. No attack roll, no save — it simply lands.',
+    'Darts of force lance from your fingertips — 1d4+1 each, no attack roll and no save: they simply land. Three to start, and another as you grow (4 at level 5, 5 at level 8, on up). The answer to a foe too armoured or too slippery to hit.',
   effectKey: 'magic-missile',
 });
 
@@ -96,7 +96,7 @@ export const SCORCHING_RAY: Spell = SpellSchema.parse({
   target: 'single',
   damageType: 'fire',
   description:
-    'Three searing rays streak from your hand at one target. Each is its own attack roll — 2d6 fire on a hit. Miss with one and the others still burn.',
+    'Searing rays streak from your hand at one target — each its own attack roll, 2d6 fire on a hit. Three to start, and more as you grow (4 at level 6, 5 at level 9, on up). Every ray is a fresh chance to crit; a hard target rarely shrugs off the whole volley.',
   effectKey: 'scorching-ray',
 });
 
@@ -143,11 +143,24 @@ export const LIGHTNING_BOLT: Spell = SpellSchema.parse({
   level: 3,
   school: 'evocation',
   range: '100 ft line',
-  target: 'area',
+  target: 'single',
   damageType: 'lightning',
   description:
-    'A jagged arc sears the room — 6d6 lightning to every enemy. DEX save halves. Even on a successful save, each target takes 1d6 lightning — the arc finds you.',
+    'A spear of lightning hammers one target for 10d6 and forks to a second foe for half — and no further. A Dexterity save halves it on each. More dice than Fireball, but it picks its marks: the focused strike to Fireball’s crowd-clear.',
   effectKey: 'lightning-bolt',
+});
+
+export const VAMPIRIC_TOUCH: Spell = SpellSchema.parse({
+  id: 'vampiric-touch',
+  name: 'Vampiric Touch',
+  level: 3,
+  school: 'necromancy',
+  range: 'Self (touch)',
+  target: 'single',
+  damageType: 'necrotic',
+  description:
+    'Your hand goes grave-cold and you drag the warmth out of one target — 5d6 necrotic, no attack roll and no save. Half of that stolen life knits your own wounds closed. Slots spent for blood become slots that keep you standing.',
+  effectKey: 'vampiric-touch',
 });
 
 // --- Higher tiers (level 4-9) — the L8→20 progression's deeper book. -------
@@ -200,7 +213,7 @@ export const VOID_RAY: Spell = SpellSchema.parse({
   target: 'single',
   damageType: 'necrotic',
   description:
-    'A thread of un-light bores into one target — a spell attack for 10d6 necrotic on a hit, and the wound refuses to close.',
+    'A thread of un-light bores into one target — a spell attack for 10d6 necrotic on a hit, and even a miss grazes for half. The wound refuses to close.',
   effectKey: 'void-ray',
 });
 
@@ -215,6 +228,19 @@ export const SUNFIRE_BURST: Spell = SpellSchema.parse({
   description:
     'A second sun blooms and gutters — 11d6 fire to every enemy. A Dexterity save halves the blaze.',
   effectKey: 'sunfire-burst',
+});
+
+export const EXSANGUINATE: Spell = SpellSchema.parse({
+  id: 'exsanguinate',
+  name: 'Exsanguinate',
+  level: 6,
+  school: 'necromancy',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'necrotic',
+  description:
+    'You close a fist in the air and one target empties from across the room — 10d6 necrotic torn loose, no attack roll and no save. Half of the spilled life pours back into you. The drain taken to its limit; it pays for itself in blood.',
+  effectKey: 'exsanguinate',
 });
 
 export const DISSOLUTION: Spell = SpellSchema.parse({
@@ -319,11 +345,13 @@ const ALL_SPELLS: Spell[] = [
   MIRROR_IMAGE,
   FIREBALL,
   LIGHTNING_BOLT,
+  VAMPIRIC_TOUCH,
   RIME_BLAST,
   FORCE_LANCE,
   GLACIAL_CONE,
   VOID_RAY,
   SUNFIRE_BURST,
+  EXSANGUINATE,
   DISSOLUTION,
   STORMCRASH,
   SOUL_SNARE,

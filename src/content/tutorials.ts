@@ -1,4 +1,5 @@
 import type { FeatureId } from '../engine/progression/unlocks';
+import type { ClassId } from '../schemas/ids';
 
 /**
  * The teaching copy shown the first time a gated feature unlocks on the
@@ -23,80 +24,124 @@ export interface TutorialContent {
  */
 export const TUTORIALS: Record<FeatureId, TutorialContent> = {
   grove: {
-    title: 'The Druid Grove',
+    title: "The Druid Grove",
     body: [
-      'Delving earns Renown — a soul-currency that survives death. Back at the hub you can now spend it at the Druid Grove on permanent upgrades: more health, sharper attacks, class tricks.',
-      'Grove upgrades are forever. Every one you buy makes every future life a little stronger, so a soul that keeps dying still keeps climbing.',
+      "Every soul that descends earns Renown — a weight the wheel cannot strip away. The druids who tend the roots beyond the hub will trade it for something rarer than steel: permanence. More blood in the body, a sharper hand, tricks the dark does not know to take from you.",
+      "Spend it. A soul that spends its Renown between lives descends the next time a little harder to kill than the last.",
     ],
-    key: 'Renown buys permanent power at the Grove — it never resets on death.',
+    key: "Renown is yours after death — spend it at the Grove for upgrades that never reset.",
   },
-  'affixes-rare': {
-    title: 'Rare Gear',
+  "affixes-rare": {
+    title: "Rare Finds",
     body: [
-      'Loot now rolls up to Rare (blue). Where Uncommon gear carries one magical affix, a Rare piece carries two.',
-      'Affixes are effects, not just bigger numbers — bleed on hit, bonus crit, resistances. Read what a drop actually does and equip the pieces that fit how you fight.',
+      "The deep dark gives up stranger things now. A Rare piece of gear — blue-edged, humming with old intent — carries two magical affixes where common iron carries one.",
+      "These are not raw numbers. They are behaviours: a blade that drinks blood on every hit, a cuirass that shrugs the killing blow once, a ring that makes every crit a little more final. The affix is the point.",
     ],
-    key: 'Rare = two affixes. Build around the effects, not the rarity colour.',
+    key: "Rare gear carries two affixes — the effects are what matters, not the metal.",
   },
-  'elite-nodes': {
-    title: 'Elite Encounters',
+  "elite-nodes": {
+    title: "Elite Terrors",
     body: [
-      'The route map now offers Elite rooms — marked, optional fights against a tougher foe. You choose whether to take the path through one.',
-      'Elites hit harder but pay better: more gold, better gear, and the chance at a Legendary relic. Skip them when you are hurt; take them when you are strong.',
+      "Something marked walks the route ahead — an Elite: a creature set apart from its kin by cruelty, power, or sheer refusal to die. It will be on the map. You choose whether to cross its path.",
+      "The toll is heavier than a common fight. The prize is too: richer gold, finer spoils, and the only way a Legendary relic falls into living hands.",
     ],
-    key: 'Elites are opt-in risk for the best loot in the chapter.',
+    key: "Elite encounters are the hardest fights on the map — and the only source of Legendary drops.",
   },
-  'boss-intel': {
-    title: 'Boss Intel',
+  "boss-intel": {
+    title: "A Study in Dread",
     body: [
-      'Before a chapter boss you can now spend gold to study its approach. The intel buys a concrete edge for that fight — a weakness exposed, an opener blunted.',
-      'It is a real cost, and it scales up by chapter, so weigh the coin against the boss in front of you rather than buying it on reflex.',
+      "Before you press the final seal of a chapter, gold can now buy something more useful than another sword: knowledge. Spend it to study the thing waiting beyond the door — its habits, its hungers, the opener it always throws.",
+      "The cost climbs with the darkness. Weigh the coin carefully. But a soul that knows what it is walking into dies less often.",
     ],
-    key: 'Pay gold before a boss to study it and enter with an advantage.',
+    key: "Spend gold before a boss fight to learn its patterns and enter with an edge.",
   },
   legendaries: {
-    title: 'Legendary Relics',
+    title: "Legendary Relics",
     body: [
-      'Legendary relics now drop — earned at Elite encounters and offered in the shop reliquary. Unlike ordinary loot, relics are account-level: they persist through every death and every run.',
-      'Equip them at the hub between delves. Their effects reshape how your class plays, not just its stats. Some are class-bound and only work in the right hands.',
+      "A relic has surfaced — something older and stranger than anything the dark usually gives up. Unlike the gear you carry into a run, relics belong to the soul itself. They endure every death, every wipe, every new descent. Equip them at the hub between delves.",
+      "They lend no armor and swing no blade. What they do is reshape how the soul moves through a fight. Some answer only to a particular kind of soul — the wrong hands hold them cold.",
     ],
-    key: 'Relics are permanent and equipped at the hub — they carry across all your runs.',
+    key: "Relics are account-level and persist through every death — equip them at the hub.",
   },
-  'affixes-epic': {
-    title: 'Epic Gear',
+  "affixes-epic": {
+    title: "Epic Finds",
     body: [
-      'Loot can now roll up to Epic (purple) — three or four affixes stacked on a single item.',
-      'This is the strongest gear short of a Legendary. The payoff is in the combinations: an Epic that lines up several affixes with your class can carry a whole run.',
+      "The deep dark is yielding its better secrets. An Epic piece — purple-marked, restless with layered enchantment — carries three or four affixes where a Rare piece carries two.",
+      "The danger of so many effects on one item is in missing how they speak to each other. Find the piece whose affixes all pull in the same direction as your soul, and a single drop can define a whole descent.",
     ],
-    key: 'Epic = three or four affixes. Hunt for pieces whose effects combo.',
+    key: "Epic gear carries three or four affixes — hunt for pieces whose effects reinforce each other.",
   },
-  'class-roster': {
-    title: 'Change Your Class',
+  "class-roster": {
+    title: "A New Soul",
     body: [
-      'You can now swap to a different class at the hub between runs. Your Renown comes with you to the new body.',
-      'But Grove upgrades are tracked per class — Renown spent on a Fighter does nothing for a Wizard. Pick the class you mean to climb with and commit your spending to it.',
+      "Another body waits at the hub. You may step into it between descents — a different soul, a different way of moving through the dark. The Renown you have earned carries with you; it belongs to the account, not the skin.",
+      "But the Grove remembers which soul did the work. Upgrades spent on one body do nothing for another. Choose the soul you mean to push and spend accordingly.",
     ],
-    key: 'Renown carries between classes; Grove upgrades do not — commit to one.',
+    key: "Renown carries across all souls; Grove upgrades are tracked per class — spend wisely.",
   },
   sets: {
-    title: 'Relic Sets',
+    title: "Relic Sets",
     body: [
-      'Some Legendary relics belong to a Set. Equip two or more pieces of the same set and you unlock bonus effects on top of what each relic already does.',
-      'Partial sets count — every matching piece you add deepens the bonus. Building toward a set is a payoff worth chasing across runs.',
+      "Some relics were not made alone. Equip two or more pieces of the same set and the stones wake to each other — bonus effects that none of them carries on its own begin to stir.",
+      "Partial sets already count. Each additional matching piece you wear deepens what the set does. Building toward one is a commitment worth making across runs.",
     ],
-    key: 'Stack pieces of one set for bonuses beyond each relic alone.',
+    key: "Equip matching set relics together for compounding bonuses beyond each piece alone.",
   },
-  'grove-deep': {
-    title: 'Deeper Grove Tiers',
+  "grove-deep": {
+    title: "The Grove’s Hidden Roots",
     body: [
-      'Your mastery has opened the Grove’s deeper tiers — stronger upgrades gated behind Ascension, for souls who have proven themselves.',
-      'This is the serious, late-game power that lets a veteran soul push further up the Ascension ladder than a fresh one ever could.',
+      "The druids have opened a lower chamber — tiers of the Grove that were locked to untested souls. The power here is of a different order: mastery-shaped, hard-won, the kind that lets a veteran push past the walls that stop a fresh soul cold.",
+      "It was always there. The Grove merely waits to see who earns the right to ask for it.",
     ],
-    key: 'The deepest Grove upgrades are how veterans climb the Ascension ladder.',
+    key: "Deeper Grove tiers are now open — stronger upgrades earned by souls who have proven themselves.",
   },
 };
 
-/** Look up tutorial copy by id (the FeatureId, also the seenTutorials key). */
+/**
+ * Per-class "a new soul has surfaced" reveals, fired when a class crosses its
+ * chapter unlock (engine/progression CLASS_UNLOCK_CHAPTER). Keyed by ClassId,
+ * which doubles as the seenTutorials key. In-world flavor + the soul's hallmark.
+ * Wizard is the starting soul and cleric isn't playable yet — neither gets one.
+ */
+export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
+  fighter: {
+    title: 'A Soul of Sword and Shield',
+    body: [
+      'Another body has surfaced from the wheel. A soldier’s soul — scarred, steady, hard to put down. It will answer at the hub when you next change skins.',
+      'No spells, no tricks. Just steel that does not tire and a will that refuses the killing blow.',
+    ],
+    key: 'The Fighter: Second Wind to heal, Action Surge for a second strike, crits on 19–20.',
+  },
+  barbarian: {
+    title: 'A Soul That Will Not Fall',
+    body: [
+      'Something older and angrier has clawed its way up. It feels no fear and little pain — it simply keeps swinging until one of you is gone.',
+      'It wears no armor and needs none. The rage is the armor.',
+    ],
+    key: 'The Barbarian: Rage halves the harm done to you, Reckless Attack trades safety for blood.',
+  },
+  ranger: {
+    title: 'A Soul That Hunts',
+    body: [
+      'A quiet soul has stepped to the wheel’s edge — patient, far-eyed, deadliest before the enemy ever closes the distance.',
+      'It marks its quarry and does not miss twice.',
+    ],
+    key: "The Ranger: Hunter's Mark stacks bonus damage on a target, Archery sharpens every shot.",
+  },
+  rogue: {
+    title: 'A Soul in the Dark',
+    body: [
+      'The last of the sealed souls has slipped free — a knife-hand that prefers the wound nobody saw coming. The hardest body to wear, and the cruelest in the right hands.',
+      'Strike from the shadow and one cut does the work of three.',
+    ],
+    key: 'The Rogue: Sneak Attack rewards the unseen strike, Cunning Action keeps you slippery.',
+  },
+};
+
+/**
+ * Look up reveal copy by id — a FeatureId card (feature ladder) or a ClassId card
+ * (soul unlock). Both share the seenTutorials key namespace; they never collide.
+ */
 export function getTutorial(id: string): TutorialContent | undefined {
-  return TUTORIALS[id as FeatureId];
+  return TUTORIALS[id as FeatureId] ?? CLASS_TUTORIALS[id as ClassId];
 }

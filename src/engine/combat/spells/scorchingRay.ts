@@ -16,7 +16,15 @@ import {
   spellDamageBonus,
 } from './helpers';
 
-const RAY_COUNT = 3;
+/**
+ * Scorching Ray gains rays as the caster grows, so the L2 slot scales past a
+ * free Fire Bolt instead of being eclipsed by it: 3 rays, +1 every third level
+ * from 6th (4 @ L6, 5 @ L9, … 8 @ L18). Its niche is the multi-roll — more rays
+ * mean more chances to crit, and a hard target rarely shrugs off all of them.
+ */
+export function scorchingRayCount(level: number): number {
+  return 3 + Math.max(0, Math.floor((level - 3) / 3));
+}
 
 export function castScorchingRay(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
@@ -29,6 +37,7 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
   nextCharacter = consumeSlot(nextCharacter, 2);
   const attackBonus = spellAttackBonus(nextCharacter);
   const ac = target.instance.ac;
+  const rayCount = scorchingRayCount(nextCharacter.level);
 
   // Each ray is its own attack roll. Damage from hitting rays is summed and
   // applied once so a target that drops mid-volley doesn't desync the log.
@@ -37,12 +46,12 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
     {
       id: baseId,
       kind: 'narration',
-      text: `${nextCharacter.name} levels three scorching rays at ${target.instance.displayName}.`,
+      text: `${nextCharacter.name} levels ${rayCount} scorching rays at ${target.instance.displayName}.`,
     },
   ];
   let hits = 0;
   let rayDamage = 0;
-  for (let i = 0; i < RAY_COUNT; i++) {
+  for (let i = 0; i < rayCount; i++) {
     const toHit = roller.d20('normal', attackBonus);
     const crit = toHit.rolls[0] === 20;
     const hit = crit || (toHit.total >= ac && !toHit.natural1);
@@ -81,7 +90,7 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `${hits} of ${RAY_COUNT} ray${hits === 1 ? '' : 's'} land${hits === 1 ? 's' : ''} — ${totalDamage} fire.`,
+      text: `${hits} of ${rayCount} ray${hits === 1 ? '' : 's'} land${hits === 1 ? 's' : ''} — ${totalDamage} fire.`,
     });
   } else {
     nextState = appendLog(nextState, {
