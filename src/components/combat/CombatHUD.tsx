@@ -8,6 +8,7 @@ import {
 } from '../../engine/character/actions';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { getBlessing } from '../../content/blessings';
+import { bossIntelBuffFor } from '../../content/bossIntel';
 import { BLESSING_GOD_GLYPH, type Blessing } from '../../schemas/blessing';
 
 const UNCANNY_DODGE_LEVEL = 5;
@@ -294,6 +295,27 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   // --- Status conditions (skip duration noise — just the names) ---
   const conditions = character.conditions;
 
+  // --- Boss-intel edge (readied in the pre-boss room; spent this fight) ---
+  // Surfaced only when a monster in this encounter is the very boss the edge
+  // was readied against. "Set" while the opener advantage is still live,
+  // "Spent" once it has been struck — honest, like the Sneak/Reaction pills.
+  const bossEdge = (() => {
+    const intel = character.bossIntel;
+    if (!intel) return null;
+    for (const c of state.combatants) {
+      if (c.kind !== 'monster') continue;
+      const tier = intel[c.instance.defId];
+      if (!tier) continue;
+      const buff = bossIntelBuffFor(c.instance.defId, tier, character.classId);
+      if (!buff) continue;
+      const live =
+        (buff.firstStrikeAdvantage && character.nextAttackAdvantage === true) ||
+        (buff.bracedSave && character.nextSaveAdvantage === true);
+      return { buff, bossName: c.instance.displayName, live };
+    }
+    return null;
+  })();
+
   const hpPct = character.hp.max > 0 ? character.hp.current / character.hp.max : 0;
   const hpTone =
     hpPct <= 0.25
@@ -340,6 +362,17 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
             on
             tone="amber"
             title={`Critical range: a natural ${critLabel} on the d20 scores a critical hit (doubled damage dice).`}
+          />
+        </Section>
+      )}
+
+      {bossEdge && (
+        <Section title={bossEdge.buff.label}>
+          <Pill
+            text={bossEdge.live ? 'Set' : 'Spent'}
+            on={bossEdge.live}
+            tone="amber"
+            title={`${bossEdge.buff.description} (readied against ${bossEdge.bossName})`}
           />
         </Section>
       )}
