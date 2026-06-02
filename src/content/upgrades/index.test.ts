@@ -2,8 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
   findUpgrade,
   getUpgrade,
+  groveUpgradeCost,
   listUpgrades,
 } from './index';
+import { MAX_ASCENSION } from '../../engine/delve/ascension';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
 
 const BASE_CHAR = createCharacter({
@@ -20,6 +22,21 @@ const BASE_CHAR = createCharacter({
     cha: STANDARD_ARRAY[4],
   },
   skillProficiencies: ['athletics', 'perception'],
+});
+
+describe('groveUpgradeCost — ascension price scaling', () => {
+  const up = getUpgrade('mantle-of-the-wakened');
+
+  it('equals the base curve at Ascension 0', () => {
+    expect(groveUpgradeCost(up, 1, 0)).toBe(up.costForRank(1));
+    expect(groveUpgradeCost(up, 3, 0)).toBe(up.costForRank(3));
+  });
+
+  it('costs strictly more as ascension standing climbs', () => {
+    for (let i = 1; i <= MAX_ASCENSION; i++) {
+      expect(groveUpgradeCost(up, 2, i)).toBeGreaterThan(groveUpgradeCost(up, 2, i - 1));
+    }
+  });
 });
 
 describe('upgrade catalog — economy tuning', () => {

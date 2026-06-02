@@ -34,6 +34,15 @@ export interface Legendary {
    * or get offered. They persist (banked) once earned: the cross-run carrot.
    */
   ascendant?: true;
+  /**
+   * Ascension-EXCLUSIVE: only enters the drop/reliquary pool on a New Game+ run
+   * (Ascension >= 1, engine/delve/ascension.ascensionExclusiveLoot). A first /
+   * normal playthrough never rolls or is offered these — they are the standing
+   * reward for leaving the first chain behind. All signature class sets and the
+   * new global sets carry this flag. Distinct from (and weaker-gated than) the
+   * apex `ascendant` tier, which needs Ascension >= 3.
+   */
+  ascensionExclusive?: true;
 }
 
 /**
@@ -130,6 +139,264 @@ export const LEGENDARIES: readonly Legendary[] = [
     classGate: 'fighter',
   },
 
+  // ========================================================================
+  // ASCENSION-EXCLUSIVE SETS — New Game+ only (Ascension >= 1). None of the
+  // relics below ever drop or get offered on a first/normal run; the gate lives
+  // in legendaryDropPool / legendaryBankPool (allowExclusive). Each signature
+  // class set is also class-BOUND (classGate), so it only drops for, themes to,
+  // and equips on its own class.
+  // ========================================================================
+
+  // --- Set: Ironclad Vow (Fighter-bound, 3 pieces) -------------------------
+  {
+    id: 'ironclad-helm',
+    name: 'Ironclad Helm',
+    flavor: 'A line-captain’s greathelm, the visor worn smooth by oaths sworn through it.',
+    effect: '+2 damage on each follow-up swing',
+    effects: { followupDamageBonus: 2 },
+    setId: 'ironclad',
+    classGate: 'fighter',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'ironclad-greaves',
+    name: 'Ironclad Greaves',
+    flavor: 'Sabatons that have held a line no enemy crossed, dented but never turned.',
+    effect: 'Gain 6 temporary HP at the start of each fight',
+    effects: { tempHpPerCombat: 6 },
+    setId: 'ironclad',
+    classGate: 'fighter',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'ironclad-banner',
+    name: 'Ironclad Banner',
+    flavor: 'A war-standard half-burned and never lowered; the cloth still snaps in dead air.',
+    effect: 'Critical hits land on 19–20',
+    effects: { critRangeBonus: 1 },
+    setId: 'ironclad',
+    classGate: 'fighter',
+    ascensionExclusive: true,
+  },
+
+  // --- Set: Bloodrage Pelts (Barbarian-bound, 3 pieces) --------------------
+  {
+    id: 'bloodrage-pelt',
+    name: 'Bloodrage Pelt',
+    flavor: 'The hide of a thing that died screaming, and screams a little still when the rage takes you.',
+    effect: '+3 melee damage while Rage burns',
+    effects: { rageDamageBonus: 3 },
+    setId: 'bloodrage',
+    classGate: 'barbarian',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'bloodrage-fang',
+    name: 'Bloodrage Fang',
+    flavor: 'A tusk torn from a dire beast and lashed to the haft; the wounds it opens do not close.',
+    effect: 'Your blows rend for +3 bleed damage',
+    effects: { bleedDamage: 3 },
+    setId: 'bloodrage',
+    classGate: 'barbarian',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'bloodrage-totem',
+    name: 'Bloodrage Totem',
+    flavor: 'Bone and red ochre bound with sinew — the ancestors lean close when it is carried into the dark.',
+    effect: 'Gain 6 temporary HP at the start of each fight',
+    effects: { tempHpPerCombat: 6 },
+    setId: 'bloodrage',
+    classGate: 'barbarian',
+    ascensionExclusive: true,
+  },
+
+  // --- Set: Wildstalker's Garb (Ranger-bound, 3 pieces) --------------------
+  {
+    id: 'wildstalker-cowl',
+    name: 'Wildstalker Cowl',
+    flavor: 'A hood of oiled leaf and shadow; under it, the marked quarry never quite leaves your sight.',
+    effect: '+3 damage against your Hunter’s Mark target',
+    effects: { markDamageBonus: 3 },
+    setId: 'wildstalker',
+    classGate: 'ranger',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'wildstalker-quiver',
+    name: 'Wildstalker Quiver',
+    flavor: 'Fletched with feathers from birds that hunt in silence; the draw finds the gap of its own accord.',
+    effect: 'Critical hits land on 19–20',
+    effects: { critRangeBonus: 1 },
+    setId: 'wildstalker',
+    classGate: 'ranger',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'wildstalker-pelt',
+    name: 'Wildstalker Pelt',
+    flavor: 'A predator’s hide that drinks a little of every kill and gives some warmth back.',
+    effect: 'Heal 8% of the damage you deal',
+    effects: { lifestealPct: 8 },
+    setId: 'wildstalker',
+    classGate: 'ranger',
+    ascensionExclusive: true,
+  },
+
+  // --- Set: Vestments of the Archmagi (Wizard-bound, 3 pieces) -------------
+  {
+    id: 'archmagi-vestments',
+    name: 'Vestments of the Archmagi',
+    flavor: 'Indigo silk sewn with cold-burning sigils; the weave thins the wall between word and ruin.',
+    effect: '+3 spell damage',
+    effects: { spellDamageBonus: 3 },
+    setId: 'archmagi',
+    classGate: 'wizard',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'archmagi-amulet',
+    name: 'Amulet of the Archmagi',
+    flavor: 'A pendant of glass that holds a fixed star; the eye behind the spell never wavers.',
+    effect: '+1 spell attack rolls',
+    effects: { spellAttackBonus: 1 },
+    setId: 'archmagi',
+    classGate: 'wizard',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'archmagi-orb',
+    name: 'Orb of the Archmagi',
+    flavor: 'A sphere of frozen quintessence; spoken law settles into the world a fraction harder around it.',
+    effect: '+1 spell save DC',
+    effects: { spellDcBonus: 1 },
+    setId: 'archmagi',
+    classGate: 'wizard',
+    ascensionExclusive: true,
+  },
+
+  // --- Set: Greenwarden's Mantle (Druid-bound, 3 pieces) -------------------
+  {
+    id: 'greenwarden-mantle',
+    name: 'Greenwarden Mantle',
+    flavor: 'Living moss and bark grown into a cloak; it knits the wearer’s hurts as it does the forest’s.',
+    effect: 'Regenerate 2 HP at the start of each turn',
+    effects: { regenPerTurn: 2 },
+    setId: 'greenwarden',
+    classGate: 'druid',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'greenwarden-circlet',
+    name: 'Greenwarden Circlet',
+    flavor: 'A ring of braided green wood that never dries; the old growl of the wild speaks louder through it.',
+    effect: '+3 spell damage',
+    effects: { spellDamageBonus: 3 },
+    setId: 'greenwarden',
+    classGate: 'druid',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'greenwarden-seed',
+    name: 'Greenwarden Seed',
+    flavor: 'A seed that quickens against the skin; what it takes from the foe, it returns to the bearer as sap.',
+    effect: 'Heal 8% of the damage you deal',
+    effects: { lifestealPct: 8 },
+    setId: 'greenwarden',
+    classGate: 'druid',
+    ascensionExclusive: true,
+  },
+
+  // --- Set: Shadowdancer's Suite (Rogue-bound, 3 pieces) -------------------
+  {
+    id: 'shadowdancer-cowl',
+    name: 'Shadowdancer Cowl',
+    flavor: 'A cowl woven from the dark between torches; the killing strike finds the seam every time.',
+    effect: '+3 damage on the strike Sneak Attack fires',
+    effects: { sneakDamageBonus: 3 },
+    setId: 'shadowdancer',
+    classGate: 'rogue',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'shadowdancer-cloak',
+    name: 'Shadowdancer Cloak',
+    flavor: 'It pools like spilled ink and pays the wearer back a little life for every wound dealt.',
+    effect: 'Heal 8% of the damage you deal',
+    effects: { lifestealPct: 8 },
+    setId: 'shadowdancer',
+    classGate: 'rogue',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'shadowdancer-blade',
+    name: 'Shadowdancer Blade',
+    flavor: 'A fang of black glass that drinks the light off its own edge; it bites true more often than it should.',
+    effect: 'Critical hits land on 19–20',
+    effects: { critRangeBonus: 1 },
+    setId: 'shadowdancer',
+    classGate: 'rogue',
+    ascensionExclusive: true,
+  },
+
+  // --- Global Set: Revenant's Resolve (class-agnostic, 3 pieces) -----------
+  {
+    id: 'revenant-heart',
+    name: 'Revenant Heart',
+    flavor: 'A heart of cold iron that beats only when its bearer has died at least once. It has.',
+    effect: 'Gain 6 temporary HP at the start of each fight',
+    effects: { tempHpPerCombat: 6 },
+    setId: 'revenant',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'revenant-shroud',
+    name: 'Revenant Shroud',
+    flavor: 'Grave-linen that refused to stay in the grave; the wounds beneath it close on their own.',
+    effect: 'Regenerate 2 HP at the start of each turn',
+    effects: { regenPerTurn: 2 },
+    setId: 'revenant',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'revenant-chain',
+    name: 'Revenant Chain',
+    flavor: 'A length of funeral chain that binds a fragment of the wheel to the one who carries it.',
+    effect: 'Heal 8% of the damage you deal',
+    effects: { lifestealPct: 8 },
+    setId: 'revenant',
+    ascensionExclusive: true,
+  },
+
+  // --- Global Set: Conqueror's Wake (class-agnostic, 3 pieces) -------------
+  {
+    id: 'conqueror-crown',
+    name: 'Conqueror Crown',
+    flavor: 'Beaten from the melted crowns of kings who fell to the chain. It weighs more than gold should.',
+    effect: 'Your blows rend for +4 bleed damage',
+    effects: { bleedDamage: 4 },
+    setId: 'conqueror',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'conqueror-gauntlet',
+    name: 'Conqueror Gauntlet',
+    flavor: 'A gauntlet that has closed on a hundred surrenders; the killing eye comes easy to its hand.',
+    effect: 'Critical hits land on 19–20',
+    effects: { critRangeBonus: 1 },
+    setId: 'conqueror',
+    ascensionExclusive: true,
+  },
+  {
+    id: 'conqueror-sigil',
+    name: 'Conqueror Sigil',
+    flavor: 'A war-seal that drinks the field’s spilled strength back into the one who holds the ground.',
+    effect: 'Heal 8% of the damage you deal',
+    effects: { lifestealPct: 8 },
+    setId: 'conqueror',
+    ascensionExclusive: true,
+  },
+
   // --- Ascendant tier: apex relics, Ascension >= 3 only --------------------
   // The reward for climbing the ladder. Magnitudes sit a clear step above the
   // base legendaries; sims tune the exact numbers later.
@@ -183,9 +450,16 @@ export function getLegendary(id: string): Legendary | undefined {
  * at lower ascension those relics are never offered. Elite-node DROPS use a
  * wider any-class pool (off-class relics are stashed) — see legendaryBankPool.
  */
-export function legendaryDropPool(classId: ClassId, allowAscendant = false): string[] {
+export function legendaryDropPool(
+  classId: ClassId,
+  allowAscendant = false,
+  allowExclusive = false,
+): string[] {
   return LEGENDARIES.filter(
-    (l) => (!l.classGate || l.classGate === classId) && (allowAscendant || !l.ascendant),
+    (l) =>
+      (!l.classGate || l.classGate === classId) &&
+      (allowAscendant || !l.ascendant) &&
+      (allowExclusive || !l.ascensionExclusive),
   ).map((l) => l.id);
 }
 
@@ -194,8 +468,10 @@ export function legendaryDropPool(classId: ClassId, allowAscendant = false): str
  * until the player runs that class). The apex ascendant tier is included ONLY
  * when `allowAscendant` (Ascension >= 3); otherwise those relics never drop.
  */
-export function legendaryBankPool(allowAscendant: boolean): string[] {
-  return LEGENDARIES.filter((l) => allowAscendant || !l.ascendant).map((l) => l.id);
+export function legendaryBankPool(allowAscendant: boolean, allowExclusive = false): string[] {
+  return LEGENDARIES.filter(
+    (l) => (allowAscendant || !l.ascendant) && (allowExclusive || !l.ascensionExclusive),
+  ).map((l) => l.id);
 }
 
 /** Whether a relic may be EQUIPPED by a character of the given class (class-bound gate). */
