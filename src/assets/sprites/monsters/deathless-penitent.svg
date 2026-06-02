@@ -4,38 +4,58 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Deathless Penitent"
     >
-      <!-- bowed head, low (kneeling pose) -->
-      <rect x="9" y="13" width="7" height="6" fill="#8a8078" />
-      <rect x="9" y="13" width="7" height="1" fill="#6a6058" />
-      <rect x="10" y="16" width="2" height="1" fill="#1a1418" />
-      <rect x="13" y="16" width="2" height="1" fill="#1a1418" />
+      <!-- Cold grave-light backlight + worn floor shadow -->
+      <ellipse cx="12" cy="26" rx="12" ry="11" fill="#4a8278" opacity="0.07" />
+      <ellipse cx="12" cy="37" rx="10" ry="2" fill="#000" opacity="0.4" />
 
+      <!-- Bowed head — ashen ramp, key upper-left -->
+      <rect x="9" y="13" width="7" height="6" fill="#7a746c" />
+      <rect x="9" y="13" width="7" height="1" fill="#8a847c" />
+      <rect x="9" y="13" width="2" height="6" fill="#8a847c" />
+      <rect x="14" y="13" width="2" height="6" fill="#5a544c" />
+      <rect x="10" y="16" width="2" height="1" fill="#14101a" />
+      <rect x="13" y="16" width="2" height="1" fill="#14101a" />
       <!-- cold-light seam sealing the brow -->
-      <rect x="9" y="15" width="7" height="1" fill="#7ad8c8" opacity="0.7" />
+      <rect x="9" y="15" width="7" height="1" fill="#7ad8c8" opacity="0.75" />
+      <rect x="10" y="15" width="2" height="1" fill="#c8f4ec" opacity="0.7" />
 
-      <!-- hunched, kneeling torso -->
+      <!-- Hunched kneeling torso — armour ramp -->
       <polygon points="7,19 17,19 19,31 5,31" fill="#5a544c" />
       <polygon points="8,19 16,19 17,28 7,28" fill="#6a645c" />
+      <polygon points="8,19 11,19 11,28 7,27" fill="#7a746c" />
+      <polygon points="15,19 17,19 18,30 16,29" fill="#4a443c" />
       <!-- reknitting wound-seams -->
-      <rect x="9" y="22" width="5" height="1" fill="#7ad8c8" opacity="0.75" />
-      <rect x="11" y="25" width="4" height="1" fill="#7ad8c8" opacity="0.6" />
+      <rect x="9" y="22" width="5" height="1" fill="#7ad8c8" opacity="0.8" />
+      <rect x="11" y="25" width="4" height="1" fill="#7ad8c8" opacity="0.65" />
+      <rect x="10" y="22" width="1" height="1" fill="#c8f4ec" opacity="0.7" />
+      <!-- plate dither -->
+      <rect x="10" y="20" width="1" height="1" fill="#7a746c" />
+      <rect x="14" y="27" width="1" height="1" fill="#4a443c" />
 
-      <!-- bared back / shoulder -->
+      <!-- Bared back / shoulder -->
       <rect x="6" y="20" width="3" height="3" fill="#7a746c" />
+      <rect x="6" y="20" width="3" height="1" fill="#8a847c" />
+      <rect x="6" y="20" width="1" height="3" fill="#928c84" />
 
-      <!-- arm raising the flail -->
+      <!-- Arm raising the flail -->
       <rect x="16" y="19" width="3" height="4" fill="#7a746c" />
       <rect x="18" y="14" width="2" height="6" fill="#7a746c" />
-      <!-- flail chain + heads -->
+      <rect x="18" y="14" width="1" height="6" fill="#8a847c" />
+      <rect x="16" y="19" width="1" height="4" fill="#8a847c" />
+
+      <!-- Flail chain + iron heads + specular -->
       <line x1="19" y1="14" x2="21" y2="6" stroke="#5a554c" stroke-width="0.8" />
       <rect x="20" y="3" width="3" height="3" fill="#3a3430" />
-      <rect x="20" y="3" width="3" height="1" fill="#5a554c" />
+      <rect x="20" y="3" width="3" height="1" fill="#6a645c" />
+      <rect x="20" y="3" width="1" height="3" fill="#7a746c" />
+      <rect x="21" y="3" width="1" height="1" fill="#b4bcc8" />
       <rect x="19" y="6" width="2" height="2" fill="#3a3430" />
+      <rect x="19" y="6" width="1" height="1" fill="#7a746c" />
 
-      <!-- kneeling legs folded under -->
+      <!-- Kneeling legs folded under -->
       <rect x="5" y="31" width="14" height="4" fill="#4a443c" />
+      <rect x="5" y="31" width="14" height="1" fill="#5a544c" />
       <polygon points="5,35 9,31 9,35" fill="#5a544c" />
       <polygon points="15,35 19,31 19,35" fill="#5a544c" />
-      <!-- worn hollow in the floor -->
-      <ellipse cx="12" cy="37" rx="10" ry="2" fill="#2a2620" />
+      <polygon points="5,35 9,31 8,35" fill="#6a645c" opacity="0.7" />
     </svg>
