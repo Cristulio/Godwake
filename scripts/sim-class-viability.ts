@@ -97,8 +97,8 @@ import type { ItemRef } from '../src/schemas/item';
 import type { ClassId as SchemaClassId } from '../src/schemas/ids';
 import type { RoomSpec } from '../src/types/delve';
 
-type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid';
-const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid'];
+type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid' | 'monk';
+const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid', 'monk'];
 
 const SOULS_PER_CLASS = Number(process.env.SOULS_PER_CLASS ?? 150);
 const MAX_LIVES = Number(process.env.MAX_LIVES ?? 150);
@@ -176,6 +176,17 @@ const CLASS_PRIORITY: Record<ClassId, { id: string; maxAtRank: number }[]> = {
     { id: 'first-cut', maxAtRank: 3 },
     { id: 'bleed-out', maxAtRank: 2 },
     { id: 'killers-eye', maxAtRank: 2 },
+  ],
+  // DEX/Ki flurry-striker with no bespoke Grove node (like Barbarian/Ranger):
+  // draws the same generic weapon-edge tree. Whether the per-HIT edge nodes
+  // multiply correctly across flurry's extra unarmed strikes is itself a thing
+  // worth flagging for a tuning pass.
+  monk: [
+    { id: 'whetstone-resolve', maxAtRank: 4 },
+    { id: 'heirloom-blade', maxAtRank: 4 },
+    { id: 'first-cut', maxAtRank: 3 },
+    { id: 'killers-eye', maxAtRank: 2 },
+    { id: 'fellfast-strike', maxAtRank: 3 },
   ],
 };
 
@@ -477,6 +488,10 @@ interface ProcCounters {
   hide: number;
   wildShape: number;
   spellCast: number;
+  flurry: number;
+  patientDefense: number;
+  stunningStrike: number;
+  powerAttack: number;
 }
 
 function freshProcs(): ProcCounters {
@@ -492,6 +507,10 @@ function freshProcs(): ProcCounters {
     hide: 0,
     wildShape: 0,
     spellCast: 0,
+    flurry: 0,
+    patientDefense: 0,
+    stunningStrike: 0,
+    powerAttack: 0,
   };
 }
 
@@ -504,6 +523,7 @@ const PROCS: Record<ClassId, ProcCounters> = {
   barbarian: freshProcs(),
   ranger: freshProcs(),
   druid: freshProcs(),
+  monk: freshProcs(),
 };
 
 /**
@@ -534,6 +554,10 @@ function runPlayerTurnInstrumented(
     else if (action.kind === 'cunning-action' && action.choice === 'hide') pc.hide += 1;
     else if (action.kind === 'wild-shape') pc.wildShape += 1;
     else if (action.kind === 'cast') pc.spellCast += 1;
+    else if (action.kind === 'flurry-of-blows') pc.flurry += 1;
+    else if (action.kind === 'patient-defense') pc.patientDefense += 1;
+    else if (action.kind === 'stunning-strike') pc.stunningStrike += 1;
+    else if (action.kind === 'power-attack') pc.powerAttack += 1;
 
     const colossusBefore = s.colossusSlayerUsedThisTurn === true;
     const sneakBefore = s.sneakAttackUsedThisTurn === true;
@@ -886,9 +910,9 @@ function renderAscensionHistogram(aggs: ClassAggregate[]): string {
 function renderProcs(): string {
   const lines: string[] = [];
   lines.push(
-    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat |',
+    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat | Flurry/combat | StunStrike/combat | PatientDef/combat | PowerAtk/combat |',
   );
-  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|');
+  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|------------:|----------------:|----------------:|--------------:|');
   for (const classId of CLASSES) {
     const p = PROCS[classId];
     const per = (n: number) => (p.combats ? num(n / p.combats, 2) : '—');
@@ -896,8 +920,9 @@ function renderProcs(): string {
     const relevant = (s: string, when: boolean) => (when ? s : '·');
     const isRogue = classId === 'rogue';
     const isCaster = classId === 'wizard' || classId === 'druid';
+    const isMonk = classId === 'monk';
     lines.push(
-      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} |`,
+      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} | ${relevant(per(p.flurry), isMonk)} | ${relevant(per(p.stunningStrike), isMonk)} | ${relevant(per(p.patientDefense), isMonk)} | ${relevant(per(p.powerAttack), classId === 'fighter')} |`,
     );
   }
   return lines.join('\n');
@@ -1012,7 +1037,7 @@ magnitudes, is the deliverable.`;
 function renderDoc(aggs: ClassAggregate[], wallSec: string): string {
   const rp = PROCS.ranger;
   const bp = PROCS.barbarian;
-  return `# Five-class viability on current content — sim findings
+  return `# ${aggs.length}-class viability on current content — sim findings
 
 > Auto-generated tables by \`scripts/sim-class-viability.ts\`. Re-run with
 > \`SOULS_PER_CLASS=${SOULS_PER_CLASS} MAX_LIVES=${MAX_LIVES} npx tsx scripts/sim-class-viability.ts\`.
@@ -1049,7 +1074,7 @@ Dark) heuristically instead of a free auto-heal.
 > (Fighter, Rogue, Wizard) on identical content. No balance numbers were tuned
 > in this lane — this reports, it does not adjust.
 
-## Headline — all five classes
+## Headline — all ${aggs.length} classes
 
 ${renderMain(aggs)}
 
