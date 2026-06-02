@@ -162,8 +162,6 @@ export function computeDelveRenown(delve: DelveState, character: Character): Ren
 
 /** Renown threshold that reveals the Druid Grove on the hub. */
 export const GROVE_UNLOCK_THRESHOLD = 30;
-/** Renown threshold required to unlock the road to Athkatla (Chapter 2). */
-export const RENOWN_FOR_CHAPTER_2 = 500;
 
 /**
  * The level-1 HP ceiling a soul descends with: class hit die + CON mod +
