@@ -94,6 +94,12 @@ export function computeAC(character: Character): number {
     base = 10 + dexMod + modifierFor(character, 'con');
   }
 
+  // Monk Unarmored Defense: with no body armor, the guard is breath and read —
+  // AC becomes 10 + DEX + WIS. (Distinct from the Barbarian's CON-keyed version.)
+  if (!bodyArmor && characterHasMechanic(character, 'unarmored-defense-wis')) {
+    base = 10 + dexMod + modifierFor(character, 'wis');
+  }
+
   if (equipped.offHand) {
     const item = getItem(equipped.offHand.itemId);
     if (item.kind === 'armor' && item.category === 'shield') {

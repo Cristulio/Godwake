@@ -6,6 +6,7 @@ export * from './actionSurge';
 export * from './fighterManeuvers';
 export * from './cunningAction';
 export * from './rage';
+export * from './monk';
 export * from './huntersMark';
 export * from './vfx';
 export * from './spells';

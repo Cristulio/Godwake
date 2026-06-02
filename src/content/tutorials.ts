@@ -166,6 +166,15 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
     ],
     key: 'The Druid: Produce Flame and the storm to open, Wild Shape into a beast’s vitality and claws when the fight closes in.',
   },
+  monk: {
+    unlocked: 'The Monk — a new soul',
+    title: 'A Soul of the Empty Hand',
+    body: [
+      'A soul honed on a long discipline has stepped to the wheel — swift, certain, carrying no blade because it learned long ago it is the blade. Thin-skinned for all that: it lives or dies on the read, not the guard.',
+      'It pours its inner force into a storm of fists, faster than a foe can answer — and the right blow drops a thing where it stands.',
+    ],
+    key: 'The Monk: Martial Arts strikes ride your fists, Flurry of Blows spends Ki for extra strikes, Stunning Strike steals a foe’s turn.',
+  },
   rogue: {
     unlocked: 'The Rogue — a new soul',
     title: 'A Soul in the Dark',

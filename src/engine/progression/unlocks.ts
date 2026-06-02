@@ -110,9 +110,8 @@ export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'barbarian', 'ran
  *  - Fighter from the first delve (the soldier — always a safe re-pick);
  *  - the remaining easy souls next (Barbarian, then Ranger);
  *  - the harder bodies stagger deeper, so renown is banked to pad their
- *    fragility before one is worn — Wizard, then Druid, then Rogue last (the
- *    most fragile floor even after Nimble Dodge).
- * Delve 15 is deliberately left open — reserved for the Monk (added later).
+ *    fragility before one is worn — Wizard, then Druid, then Monk, then Rogue
+ *    last (the most fragile floor even after Nimble Dodge).
  * Editable data.
  */
 export const CLASS_UNLOCK_DELVE: Record<ClassId, number> = {
@@ -120,11 +119,14 @@ export const CLASS_UNLOCK_DELVE: Record<ClassId, number> = {
   fighter: 1,
   barbarian: 3,
   ranger: 6,
-  // The harder souls, staggered deeper. (15 reserved for the Monk.)
+  // The harder souls, staggered deeper.
   wizard: 9,
   // The Druid: a Wisdom caster whose survivability rides on Wild Shape rather
   // than armour — squishy in the bare-soul early game, like the Wizard before it.
   druid: 12,
+  // The Monk: a DEX/Ki flurry striker with no armour — high tempo and burst, but
+  // a thin guard that punishes a careless turn.
+  monk: 15,
   rogue: 18,
   // Not yet a playable class (absent from the roster); threshold is a placeholder.
   cleric: 999,

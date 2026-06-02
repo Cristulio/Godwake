@@ -140,6 +140,13 @@ export interface ClassResources {
    * Second Wind and the Rogue's Cunning Action.
    */
   wildShapeUsesRemaining?: number;
+  /**
+   * Monk: Ki points left. The whole monk economy — Flurry of Blows, Patient
+   * Defense, and Stunning Strike each spend from this pool. Refreshes to its max
+   * (monkKiMax — the monk's level, +2 at the L20 capstone) at the start of every
+   * encounter (createCombat), like the Fighter's Second Wind.
+   */
+  kiPointsRemaining?: number;
 }
 
 /**
@@ -342,6 +349,28 @@ export interface Character {
    * the next turn and on combat start.
    */
   knockdownActive?: boolean;
+  /**
+   * Monk Flurry of Blows. Extra unarmed strikes funded by Ki and spent after the
+   * Attack action: while > 0 the monk can keep striking even with the action
+   * spent (each swing decrements it in playerAttack). 2 base, 3 at L9, 4 at the
+   * L20 capstone. Cleared at turn end and on combat start.
+   */
+  flurryStrikesRemaining?: number;
+  /**
+   * Monk Patient Defense stance. Set when the monk spends Ki on a flowing guard:
+   * attacks against the monk roll at disadvantage until the start of its next
+   * turn (read in monsterAttack), when it is cleared in `endTurn`. Cleared on
+   * combat start.
+   */
+  patientDefenseActive?: boolean;
+  /**
+   * Monk Stunning Strike stance. Set when the monk arms a staggering blow with
+   * Ki: the next unarmed hit forces a CON save or the target is staggered (loses
+   * its next turn) — resolved and cleared on the connecting hit in playerAttack.
+   * A clean miss leaves it armed. Cleared at the start of the next turn and on
+   * combat start.
+   */
+  stunningStrikeActive?: boolean;
   /**
    * One-shot extra attack this turn, funded by Rogue's Cunning Action: Dash.
    * When set, the player can swing again even after the Action is spent. The

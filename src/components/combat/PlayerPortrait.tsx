@@ -25,10 +25,125 @@ export function PlayerPortrait({ classId, className = '' }: PlayerPortraitProps)
       return <RangerSvg className={className} />;
     case 'druid':
       return <DruidSvg className={className} />;
+    case 'monk':
+      return <MonkSvg className={className} />;
     case 'fighter':
     default:
       return <FighterSvg className={className} />;
   }
+}
+
+function MonkSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 40"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Monk"
+    >
+      {/* Atmospheric backlight — warm saffron calm */}
+      <ellipse cx="12" cy="17" rx="13" ry="18" fill="#c87a2a" opacity="0.08" />
+      <ellipse cx="12" cy="14" rx="9" ry="12" fill="#e8a020" opacity="0.05" />
+      {/* Ground-contact shadow */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.6" fill="#000" opacity="0.42" />
+
+      {/* Shaved scalp — skin ramp with a lit crown */}
+      <rect x="9" y="1" width="6" height="2" fill="#a07c50" />
+      <rect x="9" y="1" width="6" height="1" fill="#c2a47e" />
+      <rect x="10" y="0" width="4" height="1" fill="#d8bd92" />
+      <rect x="8" y="2" width="1" height="2" fill="#8a6a44" />
+      <rect x="15" y="2" width="1" height="2" fill="#7a5a36" />
+      {/* Face — weathered, ramped */}
+      <rect x="8" y="3" width="8" height="5" fill="#c2a47e" />
+      <rect x="8" y="3" width="1" height="5" fill="#8a6a44" />
+      <rect x="9" y="3" width="6" height="1" fill="#d8bd92" />
+      <rect x="15" y="4" width="1" height="4" fill="#9c7c54" />
+      {/* Calm, focused eyes */}
+      <rect x="9" y="5" width="2" height="1" fill="#3a2a18" />
+      <rect x="13" y="5" width="2" height="1" fill="#3a2a18" />
+      <rect x="10" y="5" width="1" height="1" fill="#e8a020" />
+      <rect x="14" y="5" width="1" height="1" fill="#e8a020" />
+      {/* Jaw shadow */}
+      <rect x="9" y="8" width="6" height="1" fill="#9c7c54" />
+      {/* Forehead ash mark */}
+      <rect x="11" y="3" width="2" height="1" fill="#5a4630" opacity="0.6" />
+
+      {/* Bare shoulders, sash over one — skin ramp */}
+      <rect x="5" y="9" width="14" height="2" fill="#c2a47e" />
+      <rect x="5" y="9" width="14" height="1" fill="#d8bd92" />
+      <rect x="5" y="9" width="2" height="2" fill="#9c7c54" />
+      <rect x="17" y="9" width="2" height="2" fill="#8a6a44" />
+      {/* Bare chest — skin ramp + ab shading */}
+      <rect x="6" y="11" width="12" height="7" fill="#c2a47e" />
+      <rect x="6" y="11" width="1" height="7" fill="#9c7c54" />
+      <rect x="17" y="11" width="1" height="7" fill="#8a6a44" />
+      <rect x="7" y="11" width="3" height="2" fill="#d8bd92" />
+      <rect x="11" y="12" width="1" height="6" fill="#a88858" />
+      <rect x="8" y="15" width="2" height="1" fill="#a88858" />
+      <rect x="14" y="15" width="2" height="1" fill="#a88858" />
+      {/* Saffron sash across the chest — orange ramp */}
+      <rect x="5" y="11" width="3" height="8" fill="#c25a1a" />
+      <rect x="6" y="12" width="3" height="7" fill="#e07820" />
+      <rect x="6" y="12" width="1" height="6" fill="#f49a3a" />
+      <rect x="7" y="13" width="1" height="1" fill="#ffc060" />
+      {/* Knotted belt — deep saffron */}
+      <rect x="6" y="18" width="12" height="2" fill="#a84818" />
+      <rect x="6" y="18" width="12" height="1" fill="#c25a1a" />
+      <rect x="11" y="18" width="2" height="2" fill="#7a3210" />
+
+      {/* Right arm — raised in a guarding fist */}
+      <rect x="18" y="10" width="2" height="2" fill="#c2a47e" />
+      <rect x="19" y="8" width="2" height="3" fill="#c2a47e" />
+      <rect x="19" y="8" width="1" height="3" fill="#9c7c54" />
+      {/* Wrist wrap */}
+      <rect x="19" y="7" width="2" height="2" fill="#d8c098" />
+      <rect x="19" y="7" width="2" height="1" fill="#ece0c0" />
+      {/* Raised fist */}
+      <rect x="19" y="5" width="3" height="2" fill="#c2a47e" />
+      <rect x="19" y="5" width="3" height="1" fill="#d8bd92" />
+      <rect x="21" y="5" width="1" height="2" fill="#9c7c54" />
+
+      {/* Left arm — drawn back, coiled fist at the hip */}
+      <rect x="4" y="11" width="2" height="2" fill="#c2a47e" />
+      <rect x="3" y="13" width="2" height="5" fill="#c2a47e" />
+      <rect x="3" y="13" width="1" height="5" fill="#9c7c54" />
+      {/* Wrist wrap + coiled fist */}
+      <rect x="3" y="17" width="2" height="1" fill="#d8c098" />
+      <rect x="2" y="18" width="3" height="2" fill="#c2a47e" />
+      <rect x="2" y="18" width="3" height="1" fill="#d8bd92" />
+      <rect x="2" y="18" width="1" height="2" fill="#9c7c54" />
+
+      {/* Saffron wrap skirt — orange ramp + center light */}
+      <rect x="6" y="20" width="12" height="9" fill="#c25a1a" />
+      <rect x="6" y="20" width="1" height="9" fill="#8a3810" />
+      <rect x="7" y="20" width="1" height="9" fill="#a84818" />
+      <rect x="17" y="20" width="1" height="9" fill="#8a3810" />
+      <rect x="11" y="20" width="2" height="9" fill="#e07820" />
+      {/* Skirt dither */}
+      <rect x="9" y="24" width="1" height="1" fill="#e07820" />
+      <rect x="14" y="26" width="1" height="1" fill="#8a3810" />
+      <rect x="10" y="27" width="1" height="1" fill="#a84818" />
+      {/* Hem */}
+      <rect x="6" y="29" width="12" height="1" fill="#7a3210" />
+
+      {/* Legs — bare, set in a wide stance; skin ramp */}
+      <rect x="7" y="30" width="3" height="4" fill="#c2a47e" />
+      <rect x="7" y="30" width="1" height="4" fill="#9c7c54" />
+      <rect x="14" y="30" width="3" height="4" fill="#c2a47e" />
+      <rect x="14" y="30" width="1" height="4" fill="#9c7c54" />
+      {/* Ankle wraps */}
+      <rect x="7" y="33" width="3" height="1" fill="#d8c098" />
+      <rect x="14" y="33" width="3" height="1" fill="#d8c098" />
+      {/* Bare feet, planted */}
+      <rect x="6" y="34" width="5" height="4" fill="#a07c50" />
+      <rect x="6" y="34" width="5" height="1" fill="#c2a47e" />
+      <rect x="6" y="38" width="5" height="1" fill="#5a3f24" />
+      <rect x="13" y="34" width="5" height="4" fill="#a07c50" />
+      <rect x="13" y="34" width="5" height="1" fill="#c2a47e" />
+      <rect x="13" y="38" width="5" height="1" fill="#5a3f24" />
+    </svg>
+  );
 }
 
 function DruidSvg({ className }: { className?: string }) {

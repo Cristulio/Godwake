@@ -109,6 +109,13 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     nextCharacter = { ...nextCharacter, bonusAttackAvailable: false };
   }
 
+  // Monk Flurry of Blows: queued flurry strikes are "burst" — fire them this
+  // turn or lose them. Drop any unspent strikes so they can't bank into next
+  // round.
+  if ((nextCharacter.flurryStrikesRemaining ?? 0) > 0) {
+    nextCharacter = { ...nextCharacter, flurryStrikesRemaining: 0 };
+  }
+
   let nextState: CombatState = appendLog(
     {
       ...state,
@@ -171,6 +178,15 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     }
     if (nextCharacter.knockdownActive) {
       nextCharacter = { ...nextCharacter, knockdownActive: false };
+    }
+    // Monk: the Patient Defense guard (and the disadvantage it imposes) holds
+    // through the enemy phase and lifts at the start of the monk's next turn;
+    // an armed-but-unspent Stunning Strike also clears here.
+    if (nextCharacter.patientDefenseActive) {
+      nextCharacter = { ...nextCharacter, patientDefenseActive: false };
+    }
+    if (nextCharacter.stunningStrikeActive) {
+      nextCharacter = { ...nextCharacter, stunningStrikeActive: false };
     }
   }
 

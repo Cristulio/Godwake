@@ -34,6 +34,7 @@ import {
 import { getTwist, twistCombatEffect } from '../delve/twists';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { wildShapeUsesMax } from './wildShape';
+import { monkKiMax } from './monk';
 
 /**
  * Max entries retained in CombatState.log. The renderer (CombatLog.tsx) tails
@@ -254,6 +255,20 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     });
   }
 
+  // Monk: refill the Ki well each encounter (mirrors the Fighter's Second Wind
+  // cadence) and clear any stale flurry / stances from the prior fight.
+  if (nextCharacter.classId === 'monk') {
+    nextCharacter = {
+      ...nextCharacter,
+      flurryStrikesRemaining: 0,
+      patientDefenseActive: false,
+      stunningStrikeActive: false,
+    };
+    nextCharacter = patchResources(nextCharacter, {
+      kiPointsRemaining: monkKiMax(nextCharacter),
+    });
+  }
+
   // Wizards walk into every fight already wrapped in Mage Armor (passive class
   // baseline — no slot cost, no action cost). Shield is per-combat reaction-
   // only, so clear stale state.
@@ -288,10 +303,12 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // single-largest-source pool below.
   const archetypeWardTempHp = characterHasMechanic(nextCharacter, 'defender')
     ? 3 + nextCharacter.level
-    : characterHasMechanic(nextCharacter, 'abjurer') ||
-        characterHasMechanic(nextCharacter, 'totem-warrior')
-      ? 2 + nextCharacter.level
-      : 0;
+    : characterHasMechanic(nextCharacter, 'wholeness-of-body')
+      ? 2 * nextCharacter.level
+      : characterHasMechanic(nextCharacter, 'abjurer') ||
+          characterHasMechanic(nextCharacter, 'totem-warrior')
+        ? 2 + nextCharacter.level
+        : 0;
   const tempHpGrant = Math.max(
     blessingMods.extraTempHpPerRoom ?? 0,
     (blessingMods.tempHpPerDelveLevel ?? 0) * nextCharacter.level,

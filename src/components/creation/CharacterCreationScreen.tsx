@@ -50,6 +50,7 @@ const CLASS_KIT: Record<ClassId, string> = {
   barbarian: 'Greataxe, no armor · 2 healing potions · 20 gold',
   ranger: 'Longbow, shortsword & leather armor · 1 healing potion · 15 gold',
   druid: 'Sickle & leather armor · 2 healing potions · 20 gold',
+  monk: 'Bare fists & shortsword, no armor · 2 healing potions · 15 gold',
 };
 
 const CLASS_HALLMARKS: Record<ClassId, string> = {
@@ -60,6 +61,7 @@ const CLASS_HALLMARKS: Record<ClassId, string> = {
   barbarian: 'Rage · Reckless Attack · Berserker Frenzy',
   ranger: "Hunter's Mark · Archery · Colossus Slayer",
   druid: 'Produce Flame · Wild Shape · Circle of the Moon',
+  monk: 'Martial Arts · Flurry of Blows · Stunning Strike',
 };
 
 function skillLabel(s: SkillName): string {

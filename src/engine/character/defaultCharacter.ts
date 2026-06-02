@@ -117,6 +117,27 @@ function startingKitFor(classId: ClassId): StartingKit {
         goldInPocket: 20,
       };
     }
+    case 'monk': {
+      // No armour — Unarmored Defense (DEX + WIS) does the work, and steel would
+      // only cost the stance. The fists are the weapon; the shortsword is the one
+      // martial arm the schools permit, kept for reach. Two potions for the
+      // squishy striker's cushion.
+      const fists: ItemRef = { itemId: 'monk-fists' };
+      return {
+        inventory: [
+          fists,
+          { itemId: 'shortsword' },
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: fists,
+          offHand: null,
+          armor: null,
+        },
+        goldInPocket: 15,
+      };
+    }
     case 'ranger': {
       // Longbow opens the room; the shortsword is for when something closes.
       // Light armor keeps the archer mobile. (Ammunition isn't tracked — the
