@@ -1,10 +1,10 @@
-# Five-class viability on current content — sim findings
+# 7-class viability on current content — sim findings
 
 > Auto-generated tables by `scripts/sim-class-viability.ts`. Re-run with
-> `SOULS_PER_CLASS=150 MAX_LIVES=150 npx tsx scripts/sim-class-viability.ts`.
+> `SOULS_PER_CLASS=20 MAX_LIVES=40 npx tsx scripts/sim-class-viability.ts`.
 
-**Souls / class:** 150. **Max lives / soul:** 150.
-**Wall clock:** 154.4s.
+**Souls / class:** 20. **Max lives / soul:** 40.
+**Wall clock:** 3.8s.
 
 ## What this measures
 
@@ -17,6 +17,15 @@ seed schedule, and the SAME shared action policy that drives the in-game
 Auto-Battle (so Barbarian Rage and Ranger Hunter's Mark fire automatically iff
 the policy wires them — which the proc table below verifies).
 
+This run models the **full loot/camp loop** (no longer loot-blind, per
+`feedback-sims-model-full-player-experience`): combat/elite/boss clears roll
+gold + a low-chance rolled affix item (greedily equipped if it improves the
+loadout) + a rare legendary banked to the persistent collection; shop rooms
+spend gold on rolled gear, the reliquary offer, and potions; banked legendaries
+accumulate across lives and are attuned (with set bonuses) before each descent;
+and camps run the real 3-choice rest fork (Rest / Attune a boon / Tempt the
+Dark) heuristically instead of a free auto-heal.
+
 > ⚠️ **Read this RELATIVE, not absolute.** The bot underplays a real player, so
 > absolute clear-rates and life-counts are an AI-floor artifact, not game truth
 > (same caveat as the `character-order` and `rogue-meta-journey-sim2` memory
@@ -26,17 +35,19 @@ the policy wires them — which the proc table below verifies).
 > (Fighter, Rogue, Wizard) on identical content. No balance numbers were tuned
 > in this lane — this reports, it does not adjust.
 
-## Headline — all five classes
+## Headline — all 7 classes
 
 | Class | Souls | Lives/soul | Topped A6 | Mean asc cleared | Ever cleared A0 | First A0-clear life | Per-life clear% | Avg depth (rooms) | Avg final lvl |
 |------|------:|----------:|--------:|----------------:|---------------:|-------------------:|---------------:|-----------------:|-------------:|
-| fighter | 150 | 150.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 22.2 | 4.62 |
-| rogue | 150 | 150.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 13.7 | 3.21 |
-| wizard | 150 | 150.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 24.9 | 5.02 |
-| barbarian | 150 | 150.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 35.2 | 6.55 |
-| ranger | 150 | 150.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 37.1 | 6.82 |
+| fighter | 20 | 40.0 | 0.0% | 0.00 | 10.0% | 35.5 | 0.3% | 7.6 | 2.04 |
+| rogue | 20 | 40.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 5.4 | 1.67 |
+| wizard | 20 | 40.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 7.0 | 2.00 |
+| barbarian | 20 | 40.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 9.1 | 2.50 |
+| ranger | 20 | 40.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 8.7 | 2.35 |
+| druid | 20 | 40.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 5.6 | 1.64 |
+| monk | 20 | 40.0 | 0.0% | 0.00 | 5.0% | 34.0 | 0.1% | 7.1 | 1.96 |
 
-- **Topped A6** — share of souls that cleared the full chain at Ascension 6 within 150 lives.
+- **Topped A6** — share of souls that cleared the full chain at Ascension 6 within 40 lives.
 - **Mean asc cleared** — average highest ascension a soul ever cleared (0 if it never cleared A0).
 - **First A0-clear life** — average life index of a soul's first base-chain clear (only souls that cleared A0).
 - **Per-life clear%** — fraction of ALL lives (across all ascensions) that cleared the chain.
@@ -47,15 +58,17 @@ the policy wires them — which the proc table below verifies).
 ## Ascension reach — how high each class's souls topped out
 
 Soul counts bucketed by the highest ascension level they ever cleared
-("never" = never cleared even A0 within 150 lives).
+("never" = never cleared even A0 within 40 lives).
 
 | Class | never | A0 | A1 | A2 | A3 | A4 | A5 | A6 |
 |------|------:|------:|------:|------:|------:|------:|------:|------:|
-| fighter | 150 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| rogue | 150 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| wizard | 150 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| barbarian | 150 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| ranger | 150 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| fighter | 18 | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| rogue | 20 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| wizard | 20 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| barbarian | 20 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| ranger | 20 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| druid | 20 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| monk | 19 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 ## Proc instrumentation — do the new mechanics actually fire?
 
@@ -64,58 +77,38 @@ that class. Activations (Rage, Reckless, Hunter's-Mark cast) are exact;
 Colossus is exact (once-per-turn flag); the Hunter's-Mark 1d6 per-hit die is
 read off the damage log (approximate only in rare 200+-entry fights).
 
-| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat |
-|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|
-| fighter | 282080 | · | · | · | · | · |
-| rogue | 178538 | · | · | · | · | · |
-| wizard | 314053 | · | · | · | · | · |
-| barbarian | 438444 | 1.65 | 1.84 | · | · | · |
-| ranger | 461680 | · | · | 1.56 | 1.86 | 3.08 |
+| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat | Flurry/combat | StunStrike/combat | PatientDef/combat | PowerAtk/combat |
+|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|------------:|----------------:|----------------:|--------------:|
+| fighter | 3314 | · | · | · | · | · | · | · | · | · | · | · | · | · | 0.78 |
+| rogue | 2514 | · | · | · | · | · | 2.31 | 0.40 | 1.49 | · | · | · | · | · | · |
+| wizard | 3111 | · | · | · | · | · | · | · | · | · | 3.89 | · | · | · | · |
+| barbarian | 3967 | 2.13 | 1.12 | · | · | · | · | · | · | · | · | · | · | · | · |
+| ranger | 3809 | · | · | 1.64 | 1.29 | 3.41 | · | · | · | · | · | · | · | · | · |
+| druid | 2558 | · | · | · | · | · | · | · | · | 0.49 | 3.86 | · | · | · | · |
+| monk | 3132 | · | · | · | · | · | · | · | · | · | · | 1.35 | 0.38 | 0.33 | · |
 
-**Sanity check:** Barbarian raged **1.65**×/combat and went reckless
-**1.84**×/combat. Ranger cast Hunter's Mark
-**1.56**×/combat, landed mark dice
-**3.08**×/combat, and fired Colossus
-**1.86**×/combat (Colossus is gated behind the L3 Hunter
+**Sanity check:** Barbarian raged **2.13**×/combat and went reckless
+**1.12**×/combat. Ranger cast Hunter's Mark
+**1.64**×/combat, landed mark dice
+**3.41**×/combat, and fired Colossus
+**1.29**×/combat (Colossus is gated behind the L3 Hunter
 subclass, so its rate also reflects how often the ranger reaches L3 within a life).
 
 ## Where deaths cluster
 
-- **fighter** — by chapter: ch1: 6106 · ch2: 9290 · ch3: 956 · ch4: 2625 · ch5: 3325 · ch6: 197. Top kill-rooms: duergar-taskmaster (1794, 8.0%), athkatla-magistrate (1309, 5.8%), duergar-ilyich (1094, 4.9%), cowled-wardpriest+slaver-cuirassier (1016, 4.5%), slaver-cuirassier+cult-fanatic (869, 3.9%), drow-matron-mother (833, 3.7%)
-- **rogue** — by chapter: ch1: 12101 · ch2: 7162 · ch3: 1310 · ch4: 944 · ch5: 948 · ch6: 35. Top kill-rooms: duergar-ilyich (1689, 7.5%), duergar-taskmaster (1183, 5.3%), athkatla-magistrate (982, 4.4%), famished-ghast+goblin (890, 4.0%), skeleton+bone-stalker (825, 3.7%), slaver-cuirassier+cult-fanatic (713, 3.2%)
-- **wizard** — by chapter: ch1: 4371 · ch2: 8261 · ch3: 4001 · ch4: 2082 · ch5: 3368 · ch6: 417. Top kill-rooms: athkatla-magistrate (1978, 8.8%), asylum-director (1187, 5.3%), hollow-dawn (1163, 5.2%), duergar-ilyich (872, 3.9%), cowled-wardpriest+slaver-cuirassier (698, 3.1%), cowled-enforcer+slaver-cuirassier (624, 2.8%)
-- **barbarian** — by chapter: ch1: 3623 · ch2: 5358 · ch3: 429 · ch4: 1928 · ch5: 9026 · ch6: 2123. Top kill-rooms: hollow-dawn (3764, 16.7%), athkatla-magistrate (1368, 6.1%), duergar-taskmaster (1055, 4.7%), spider-broodmother (922, 4.1%), hollow-seraph (766, 3.4%), drow-matron-mother (658, 2.9%)
-- **ranger** — by chapter: ch1: 4141 · ch2: 3903 · ch3: 262 · ch4: 2175 · ch5: 7602 · ch6: 4332. Top kill-rooms: hollow-dawn (3698, 16.4%), duergar-taskmaster (1354, 6.0%), spider-broodmother (1237, 5.5%), fate-spinner+threadbare-penitent (1008, 4.5%), hollow-seraph (565, 2.5%), athkatla-magistrate (532, 2.4%)
+- **fighter** — by chapter: ch1: 523 · ch2: 260 · ch3: 4 · ch4: 2 · ch5: 0 · ch6: 0. Top kill-rooms: duergar-ilyich (52, 6.5%), skeleton+bone-stalker (41, 5.1%), duergar-taskmaster (36, 4.5%), skeleton+stirge (34, 4.3%), famished-ghast (31, 3.9%), cell-wight+famished-ghast (29, 3.6%)
+- **rogue** — by chapter: ch1: 624 · ch2: 167 · ch3: 5 · ch4: 0 · ch5: 1 · ch6: 0. Top kill-rooms: duergar-ilyich (52, 6.5%), skeleton+bone-stalker (41, 5.1%), famished-ghast (39, 4.9%), cell-wight+famished-ghast (36, 4.5%), skeleton+stirge (35, 4.4%), goblin+kobold (33, 4.1%)
+- **wizard** — by chapter: ch1: 495 · ch2: 290 · ch3: 10 · ch4: 3 · ch5: 1 · ch6: 0. Top kill-rooms: duergar-ilyich (57, 7.1%), skeleton+bone-stalker (47, 5.9%), famished-ghast (39, 4.9%), skeleton+stirge (36, 4.5%), stirge (32, 4.0%), shadow-hound+slaver-cuirassier (32, 4.0%)
+- **barbarian** — by chapter: ch1: 382 · ch2: 382 · ch3: 16 · ch4: 4 · ch5: 5 · ch6: 3. Top kill-rooms: slaver-cuirassier+cult-fanatic (41, 5.1%), duergar-ilyich (33, 4.1%), shadow+cult-fanatic (33, 4.1%), bandit-captain+cult-fanatic (31, 3.9%), duergar-taskmaster (31, 3.9%), shadow-hound+slaver-cuirassier (31, 3.9%)
+- **ranger** — by chapter: ch1: 463 · ch2: 303 · ch3: 8 · ch4: 4 · ch5: 1 · ch6: 1. Top kill-rooms: duergar-taskmaster (46, 5.8%), duergar-ilyich (41, 5.1%), slaver-cuirassier+cult-fanatic (39, 4.9%), skeleton+bone-stalker (38, 4.8%), hobgoblin+cult-fanatic (33, 4.1%), skeleton+stirge (26, 3.3%)
+- **druid** — by chapter: ch1: 590 · ch2: 204 · ch3: 6 · ch4: 0 · ch5: 0 · ch6: 0. Top kill-rooms: skeleton+bone-stalker (74, 9.3%), famished-ghast (41, 5.1%), kobold (41, 5.1%), skeleton+stirge (38, 4.8%), duergar-taskmaster (34, 4.3%), duergar-ilyich (33, 4.1%)
+- **monk** — by chapter: ch1: 559 · ch2: 218 · ch3: 9 · ch4: 4 · ch5: 1 · ch6: 1. Top kill-rooms: duergar-ilyich (58, 7.3%), famished-ghast (37, 4.6%), skeleton+bone-stalker (35, 4.4%), goblin-warden+hobgoblin (32, 4.0%), imp+hobgoblin (31, 3.9%), duergar-taskmaster (31, 3.9%)
 
 ## Verdict
 
-**No class clears the full 6-chapter run at the AI floor** — every class
-topped out at 0% A0-clear across 150 souls × up to 150 lives.
-This is the headline STRUCTURAL result, and it is expected: the run is now ~62-66
-rooms to the Ch6 final boss (roughly double the old 4-chapter chain), and the
-shared Auto-Battle bot — which underplays a real player and fights with **no loot
-modelled** (preset gear only, no rolled affixes / drops / legendaries) — dies
-before the end. The user has cleared the whole game by hand; do NOT read "0%
-clear" as "uncompletable". Read the RELATIVE shape instead.
-
-**The signature mechanics all fire** (the most important single check): Barbarian raged 1.65×/combat and went reckless 1.84×/combat; Ranger cast Hunter's Mark 1.56×/combat, landed mark dice 3.08×/combat and fired Colossus 1.86×/combat.
-So the "policy never wires the new mechanics" failure mode did **not** happen.
-
-**Relative reach (depth, the only differentiator when clears are all 0):**
-ranger 37.1 > barbarian 35.2 > wizard 24.9 > fighter 22.2 > rogue 13.7 rooms/life. **ranger goes deepest** (37.1 rooms,
-mean final level 6.82) and **rogue shallowest**
-(13.7 rooms). Barbarian leading the depth ranking is
-consistent with Rage halving physical damage every combat — even post-tradeoff
-(no healing while raging), the blunt trade-blows floor still rewards it most, so
-Barbarian remains the prime "watch the high side" candidate for a tuning pass.
-The Ranger's low reincarnation-chain depth is dominated by **bare-soul L1 deaths**
-(each life restarts at L1; the squishy early game kills it repeatedly before it
-levels) — the companion game-feel sim shows that once past L1 the Ranger reaches
-*among the deepest* rooms, so its weakness is the L1 floor, not its kit. The
-non-positional engine still grants its ranged identity no defensive value (the
-separately-shipped Ranger payoff, PR #196, is not in this build).
-
-**Net:** relative ordering holds — Barbarian strongest at the floor, Wizard/Ranger
-weakest (Wizard = the known AI-floor caster handicap; Ranger = the L1 bare-soul
-wall). Absolute clear-rates are an AI-floor + no-loot artifact; the ranking and
-the death-clustering (see above), not the magnitudes, are the deliverable.
+Signature mechanics fire under the shared policy (Barbarian raged 2.13×/combat and went reckless 1.12×/combat; Ranger cast Hunter's Mark 1.64×/combat, landed mark dice 3.41×/combat and fired Colossus 1.29×/combat). On
+ascension reach, **fighter leads** (mean asc cleared 0.00,
+topped A6 0.0%, first A0 clear ~life 36); the depth ranking is
+barbarian 9.1 > ranger 8.7 > fighter 7.6 > monk 7.1 > wizard 7.0 > druid 5.6 > rogue 5.4 rooms/life. Absolute clear-rates remain an AI-floor artifact (the
+bot underplays even with the full loot/camp loop modelled) — the ranking, not the
+magnitudes, is the deliverable.
