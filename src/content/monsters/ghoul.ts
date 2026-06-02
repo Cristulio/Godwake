@@ -23,6 +23,17 @@ export const GHOUL: Monster = MonsterSchema.parse({
       description:
         'The ghoul rakes with split nails caked in something the dungeon would rather not name. Each scrape stings long after the cut closes.',
     },
+    {
+      kind: 'debuff',
+      name: 'Carrion Sickness',
+      condition: 'weakened',
+      saveDC: 11,
+      saveAbility: 'con',
+      durationRounds: 2,
+      amount: 2,
+      description:
+        'The filth worked into the wound goes to work in turn — a grey fever creeps up the arm and the strength drains out behind it.',
+    },
   ],
   flavorText:
     'It was a person once. The skin is grey and rope-tight over the bones; the jaw is unhinged from too many bites. It smells of rotted apples and old grease.',

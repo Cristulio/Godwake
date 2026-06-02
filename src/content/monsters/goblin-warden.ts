@@ -22,6 +22,16 @@ export const GOBLIN_WARDEN: Monster = MonsterSchema.parse({
       description:
         'A massive jagged blade he drags across the stone — and then plants and swings with both hands.',
     },
+    {
+      kind: 'summon',
+      name: 'Sound the Block',
+      summonDefId: 'goblin',
+      count: 1,
+      maxActive: 1,
+      once: true,
+      description:
+        'He sets two fingers to his teeth and whistles down the cell-row — and a goblin that had been hanging back comes scrambling to the blade.',
+    },
   ],
   flavorText:
     'The warden of the Iron Cells. Bigger, meaner, and harder to kill than its kin. The chain coils about its shoulder, the blade scrapes sparks across the floor.',

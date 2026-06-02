@@ -2,9 +2,11 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Reborn Husk — Ch5 warmup chaff + summon-fodder. A soul the cycle pulled back
- * one time too many: the body remembers being alive but not why. Plain melee,
- * no special — it exists to be the thing the Cycle-Shepherd (and the boss
- * mechanic-flavour) spills onto the field. The cheapest body in the Godwake.
+ * one time too many: the body remembers being alive but not why. Its grasping
+ * claw drinks warmth back (the shared `lifeDrain` feeder rider), so even
+ * out-levelled it claws a little HP back off you — it exists to be the thing the
+ * Cycle-Shepherd (and the boss mechanic-flavour) spills onto the field. The
+ * cheapest body in the Godwake.
  */
 export const REBORN_HUSK: Monster = MonsterSchema.parse({
   id: 'reborn-husk',
@@ -26,6 +28,7 @@ export const REBORN_HUSK: Monster = MonsterSchema.parse({
       damage: '2d6+4',
       damageType: 'necrotic',
       reach: 5,
+      lifeDrain: 0.5,
       description:
         'It reaches the way a drowning man reaches, all want and no aim, and where the fingers close the warmth goes out of you and into it.',
     },

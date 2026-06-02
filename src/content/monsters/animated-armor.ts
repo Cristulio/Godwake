@@ -19,7 +19,7 @@ export const ANIMATED_ARMOR: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Iron Slam',
-      attackBonus: 5,
+      attackBonus: 6,
       damage: '1d10+3',
       damageType: 'bludgeoning',
       reach: 5,

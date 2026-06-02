@@ -2,9 +2,9 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Shadow — undead lurker from the alleys behind the counting houses. Light
- * resists everything, drains Strength on hit. (We don't yet have stat-drain
- * wired, so Shadow ships as a hard-to-hit necrotic striker — flavor reads as
- * "the blade goes through it.")
+ * resists everything. Its cold grip saps the strength from your arm ('weakened'
+ * debuff — every weapon hit lands for less), the shared sapper behavior it
+ * lends Ch2, then it engulfs with a necrotic touch.
  */
 export const SHADOW: Monster = MonsterSchema.parse({
   id: 'shadow',
@@ -19,14 +19,25 @@ export const SHADOW: Monster = MonsterSchema.parse({
   passivePerception: 10,
   actions: [
     {
-      kind: 'attack',
+      kind: 'debuff',
       name: 'Strength Drain',
+      condition: 'weakened',
+      saveDC: 12,
+      saveAbility: 'con',
+      durationRounds: 2,
+      amount: 3,
+      description:
+        "It lays a cold hand across your shoulder and comes away with something that was warm — and the next swing you take is slower, weaker, as if the arm were borrowed.",
+    },
+    {
+      kind: 'attack',
+      name: 'Engulfing Touch',
       attackBonus: 6,
       damage: '2d8+4',
       damageType: 'necrotic',
       reach: 5,
       description:
-        "The shadow flows up the blade like ink in water and lays a cold hand across your shoulder. It comes away with something that was warm.",
+        "The shadow flows up the blade like ink in water and presses flat against you, and the cold of it sinks past the skin.",
     },
   ],
   resistances: ['acid', 'cold', 'fire', 'lightning', 'thunder', 'bludgeoning', 'piercing', 'slashing'],
