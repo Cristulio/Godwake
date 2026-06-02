@@ -3,6 +3,7 @@ export * from './attack';
 export * from './turn';
 export * from './secondWind';
 export * from './actionSurge';
+export * from './fighterManeuvers';
 export * from './cunningAction';
 export * from './rage';
 export * from './huntersMark';

@@ -47,6 +47,15 @@ export const BARBARIAN: Class = ClassSchema.parse({
         mechanicKey: 'reckless-attack',
       },
     ],
+    '3': [
+      {
+        id: 'cleave',
+        name: 'Cleave',
+        description:
+          'While the fury is on you, a wide swing carries clean through. Declare it on your turn: your first melee hit this turn spills a glancing blow into a second enemy beside your mark. Worth it whenever the room is crowded.',
+        mechanicKey: 'cleave',
+      },
+    ],
     '4': [
       {
         id: 'asi-4',
@@ -81,6 +90,15 @@ export const BARBARIAN: Class = ClassSchema.parse({
         description:
           'You can increase one ability score by 2, or two ability scores by 1 each.',
         mechanicKey: 'asi',
+      },
+    ],
+    '7': [
+      {
+        id: 'knockdown',
+        name: 'Knockdown',
+        description:
+          'A raging shoulder behind the blade puts a foe on the ground. Once per combat, while raging, arm a staggering strike — when it lands, the target loses its next turn. Save it for the thing you least want to act.',
+        mechanicKey: 'knockdown',
       },
     ],
     '9': [

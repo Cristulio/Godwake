@@ -222,15 +222,27 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // Rogue's Cunning Action cadence and gives the Fighter a real clutch heal
   // in every fight. Action Surge stays on short-rest (still a "burst" button).
   if (nextCharacter.classId === 'fighter') {
+    nextCharacter = { ...nextCharacter, powerAttackActive: false };
     nextCharacter = patchResources(nextCharacter, {
       secondWindAvailable: true,
+      // Brace refreshes per encounter, like Second Wind.
+      braceAvailable: true,
     });
   }
 
-  // Barbarian: clear stale fury and reckless stance from the prior fight.
+  // Barbarian: clear stale fury and stances from the prior fight; the Knockdown
+  // charge refreshes per encounter (Cleave needs no charge — rage gates it).
   if (nextCharacter.classId === 'barbarian') {
-    nextCharacter = { ...nextCharacter, recklessActive: false };
-    nextCharacter = patchResources(nextCharacter, { rageRoundsRemaining: 0 });
+    nextCharacter = {
+      ...nextCharacter,
+      recklessActive: false,
+      cleaveActive: false,
+      knockdownActive: false,
+    };
+    nextCharacter = patchResources(nextCharacter, {
+      rageRoundsRemaining: 0,
+      knockdownAvailable: true,
+    });
   }
 
   // Druid: drop any stale beast form and refresh Wild Shape uses — the change

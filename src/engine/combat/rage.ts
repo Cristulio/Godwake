@@ -1,6 +1,6 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
-import { characterHasMechanic } from '../character/derived';
+import { characterHasMechanic, isRaging } from '../character/derived';
 import { RAGE_ROUNDS } from '../character/actions';
 import {
   combatResult,
@@ -66,6 +66,59 @@ export function useRecklessAttack(ctx: RecklessAttackContext): CombatActionResul
     id: state.log.length + 1,
     kind: 'narration',
     text: `${nextCharacter.name} throws the guard away — strikes land with advantage, but so do the blows that answer.`,
+  };
+  return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
+}
+
+export interface BarbarianManeuverContext {
+  character: Character;
+  state: CombatState;
+}
+
+/**
+ * Barbarian Cleave. A free, rage-gated stance: this turn's first melee hit
+ * spills a glancing blow into a second foe (resolved in playerAttack). Declared
+ * before the action is spent so it rides the swing; cleared at the start of the
+ * barbarian's next turn. No-op unless raging and a second enemy stands.
+ */
+export function useCleave(ctx: BarbarianManeuverContext): CombatActionResult {
+  const { character, state } = ctx;
+  if (character.classId !== 'barbarian') return combatResult(state, character);
+  if (!characterHasMechanic(character, 'cleave')) return combatResult(state, character);
+  if (!isRaging(character)) return combatResult(state, character);
+  if (character.cleaveActive === true) return combatResult(state, character);
+  if (character.actionEconomy.actionUsed) return combatResult(state, character);
+
+  const nextCharacter: Character = { ...character, cleaveActive: true };
+  const log: CombatLogEntry = {
+    id: state.log.length + 1,
+    kind: 'narration',
+    text: `${nextCharacter.name} winds up a wide, sweeping swing — wide enough to catch two.`,
+  };
+  return combatResult(attachCombatVfx(appendLog(state, log), 'rage', 'player'), nextCharacter);
+}
+
+/**
+ * Barbarian Knockdown. A free, rage-gated stance that ARMS a staggering strike:
+ * the next melee hit fells the target (it loses its next turn) — only then is
+ * the per-combat charge spent (in playerAttack). Declared before the action is
+ * spent; cleared at the start of the next turn. No-op unless raging with a
+ * charge in hand.
+ */
+export function useKnockdown(ctx: BarbarianManeuverContext): CombatActionResult {
+  const { character, state } = ctx;
+  if (character.classId !== 'barbarian') return combatResult(state, character);
+  if (!characterHasMechanic(character, 'knockdown')) return combatResult(state, character);
+  if (!isRaging(character)) return combatResult(state, character);
+  if (character.resources.knockdownAvailable !== true) return combatResult(state, character);
+  if (character.knockdownActive === true) return combatResult(state, character);
+  if (character.actionEconomy.actionUsed) return combatResult(state, character);
+
+  const nextCharacter: Character = { ...character, knockdownActive: true };
+  const log: CombatLogEntry = {
+    id: state.log.length + 1,
+    kind: 'narration',
+    text: `${nextCharacter.name} drops a shoulder behind the next blow — aiming to put something on the ground.`,
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
 }

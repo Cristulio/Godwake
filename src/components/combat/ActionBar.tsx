@@ -13,9 +13,13 @@ interface ActionBarProps {
   onAttack: () => void;
   onSecondWind: () => void;
   onActionSurge: () => void;
+  onPowerAttack: () => void;
+  onBrace: () => void;
   onCunningAction: () => void;
   onRage: () => void;
   onRecklessAttack: () => void;
+  onCleave: () => void;
+  onKnockdown: () => void;
   onHuntersMark: () => void;
   onSpells: () => void;
   onUseItem: () => void;
@@ -28,9 +32,13 @@ export function ActionBar({
   onAttack,
   onSecondWind,
   onActionSurge,
+  onPowerAttack,
+  onBrace,
   onCunningAction,
   onRage,
   onRecklessAttack,
+  onCleave,
+  onKnockdown,
   onHuntersMark,
   onSpells,
   onUseItem,
@@ -80,6 +88,22 @@ export function ActionBar({
     surgeRemaining > 0 &&
     character.actionEconomy.actionUsed;
 
+  // Fighter Power Attack — a free stance declared before the swing (L1).
+  const hasPowerAttack = isFighter && characterHasMechanic(character, 'power-attack');
+  const powerAttacking = character.powerAttackActive === true;
+  const canPowerAttack =
+    playersTurn && active && hasPowerAttack && !powerAttacking && !character.actionEconomy.actionUsed;
+
+  // Fighter Brace — a bonus-action set, once per combat (L3).
+  const hasBrace = isFighter && characterHasMechanic(character, 'brace');
+  const canBrace =
+    playersTurn &&
+    active &&
+    hasBrace &&
+    character.resources.braceAvailable === true &&
+    !character.actionEconomy.bonusActionUsed &&
+    !midMultiattack;
+
   const cunningRemaining = character.resources.cunningActionUsesRemaining ?? 0;
   const canCunningAction =
     playersTurn &&
@@ -103,6 +127,33 @@ export function ActionBar({
   const reckless = character.recklessActive === true;
   const canReckless =
     playersTurn && active && hasReckless && !reckless && !character.actionEconomy.actionUsed;
+
+  // Barbarian Cleave — a free rage-gated stance (L3); needs a second foe to bite.
+  const liveEnemyCount = state.combatants.filter(
+    (c) => c.kind === 'monster' && c.instance.hp.current > 0,
+  ).length;
+  const hasCleave = isBarbarian && characterHasMechanic(character, 'cleave');
+  const cleaving = character.cleaveActive === true;
+  const canCleave =
+    playersTurn &&
+    active &&
+    hasCleave &&
+    raging &&
+    !cleaving &&
+    liveEnemyCount >= 2 &&
+    !character.actionEconomy.actionUsed;
+
+  // Barbarian Knockdown — a free rage-gated stance, one charge per combat (L7).
+  const hasKnockdown = isBarbarian && characterHasMechanic(character, 'knockdown');
+  const knockingDown = character.knockdownActive === true;
+  const canKnockdown =
+    playersTurn &&
+    active &&
+    hasKnockdown &&
+    raging &&
+    character.resources.knockdownAvailable === true &&
+    !knockingDown &&
+    !character.actionEconomy.actionUsed;
 
   // Ranger Hunter's Mark (bonus action) — brand or re-brand a quarry.
   const isMarkLive =
@@ -216,6 +267,28 @@ export function ActionBar({
             Action Surge{surgeRemaining > 0 && ` (${surgeRemaining})`}
           </Button>
         )}
+        {hasPowerAttack && (
+          <Button
+            variant={canPowerAttack ? 'primary' : 'secondary'}
+            onClick={onPowerAttack}
+            disabled={!canPowerAttack}
+            title="Free: this turn's melee swings take -2 to hit but land for +4 damage. Best when the hit was landing anyway."
+            className="flex-1 min-h-[44px] sm:min-h-0"
+          >
+            {powerAttacking ? 'Power Attack ✓' : 'Power Attack'}
+          </Button>
+        )}
+        {hasBrace && (
+          <Button
+            variant={canBrace ? 'primary' : 'secondary'}
+            onClick={onBrace}
+            disabled={!canBrace}
+            title="Bonus action, once per combat: set your guard — the next hit you take is blunted by 3 + half your level."
+            className="flex-1 min-h-[44px] sm:min-h-0"
+          >
+            Brace
+          </Button>
+        )}
 
         {isRogue && (
           <Button
@@ -249,6 +322,28 @@ export function ActionBar({
             className="flex-1 min-h-[44px] sm:min-h-0"
           >
             {reckless ? 'Reckless ✓' : 'Reckless'}
+          </Button>
+        )}
+        {hasCleave && (
+          <Button
+            variant={canCleave ? 'primary' : 'secondary'}
+            onClick={onCleave}
+            disabled={!canCleave}
+            title="Free, while raging: this turn's first melee hit also catches a second enemy for a glancing blow."
+            className="flex-1 min-h-[44px] sm:min-h-0"
+          >
+            {cleaving ? 'Cleave ✓' : 'Cleave'}
+          </Button>
+        )}
+        {hasKnockdown && (
+          <Button
+            variant={canKnockdown ? 'primary' : 'secondary'}
+            onClick={onKnockdown}
+            disabled={!canKnockdown}
+            title="Free, while raging, once per combat: arm a staggering strike — the next hit knocks the target down and costs it its next turn."
+            className="flex-1 min-h-[44px] sm:min-h-0"
+          >
+            {knockingDown ? 'Knockdown ✓' : 'Knockdown'}
           </Button>
         )}
 

@@ -17,7 +17,12 @@ import {
   isRaging,
   proficiencyBonus,
 } from '../../character/derived';
-import { rageDamageBonus } from '../../character/actions';
+import {
+  rageDamageBonus,
+  POWER_ATTACK_TO_HIT_PENALTY,
+  POWER_ATTACK_DAMAGE_BONUS,
+  KNOCKDOWN_STAGGER_TURNS,
+} from '../../character/actions';
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { isRangedWeapon } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
@@ -139,6 +144,10 @@ export function playerAttack(
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   // Fighter Weapon Mastery (L9): +1 to hit on every weapon strike.
   if (characterHasMechanic(nextCharacter, 'weapon-mastery')) attackBonus += 1;
+  // Fighter Power Attack: a heavy melee swing trades to-hit for flat damage
+  // (the damage half lands in the hit block). Melee only — a bow can't muscle.
+  const powerAttack = nextCharacter.powerAttackActive === true && !isRanged;
+  if (powerAttack) attackBonus -= POWER_ATTACK_TO_HIT_PENALTY;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
@@ -339,6 +348,12 @@ export function playerAttack(
     if (characterHasMechanic(nextCharacter, 'weapon-mastery')) {
       bonusDamage += 1;
       onTypeParts.push({ amount: 1, label: 'mastery' });
+    }
+    // Fighter Power Attack: the damage half of the heavy-swing trade — a flat
+    // spike on each melee strike this turn, paid for by the to-hit penalty above.
+    if (powerAttack) {
+      bonusDamage += POWER_ATTACK_DAMAGE_BONUS;
+      onTypeParts.push({ amount: POWER_ATTACK_DAMAGE_BONUS, label: 'power' });
     }
     // Apotheosis: the ascendant caster's every blow bites for far more.
     if (isAscendant(nextCharacter)) {
@@ -705,6 +720,73 @@ export function playerAttack(
           text: `${nextCharacter.name}'s shot carries into ${second.instance.displayName} for ${splashDamage} ${weapon.damageType}.`,
         });
         nextState = attachCombatVfx(nextState, weaponVfxKind(w), 'player', second.id);
+      }
+    }
+
+    // Barbarian Cleave: while raging, the turn's first melee swing spills a
+    // glancing blow into a second foe — weapon dice plus flat bonuses, no
+    // ability mod, no crit (the same shape as Horde Breaker). Once per turn:
+    // playerAttacksThisTurn is 0 on the opening swing, so Extra Attack doesn't
+    // multiply it.
+    if (
+      nextCharacter.cleaveActive === true &&
+      isRaging(nextCharacter) &&
+      !isRanged &&
+      (state.playerAttacksThisTurn ?? 0) === 0
+    ) {
+      const second = nextState.combatants.find(
+        (c) => c.kind === 'monster' && c.id !== targetId && c.instance.hp.current > 0,
+      );
+      if (second && second.kind === 'monster') {
+        const cleaveRoll = roller.roll({
+          count: damageExpr.count,
+          die: damageExpr.die,
+          modifier: 0,
+        });
+        const cleaveDamage = Math.max(1, cleaveRoll.total + (affixMods.damageBonus ?? 0));
+        const cleaved = applyDamage(nextState, second.id, cleaveDamage, nextCharacter);
+        nextState = cleaved.state;
+        nextCharacter = cleaved.character;
+        nextState = appendLog(nextState, {
+          id: nextLogId(nextState),
+          kind: 'damage',
+          text: `${nextCharacter.name}'s swing cleaves on into ${second.instance.displayName} for ${cleaveDamage} ${weapon.damageType}.`,
+        });
+        nextState = attachCombatVfx(nextState, weaponVfxKind(w), 'player', second.id);
+      }
+    }
+
+    // Barbarian Knockdown: an armed staggering strike fells the target — it
+    // loses its next turn. The per-combat charge is only spent here, on the blow
+    // that actually lands on a foe still standing; a clean miss or a kill leaves
+    // the stance armed for the next swing.
+    if (
+      nextCharacter.knockdownActive === true &&
+      isRaging(nextCharacter) &&
+      !isRanged &&
+      target.kind === 'monster'
+    ) {
+      const stillStanding = nextState.combatants.some(
+        (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
+      );
+      if (stillStanding) {
+        nextState = {
+          ...nextState,
+          combatants: nextState.combatants.map((c) => {
+            if (c.kind !== 'monster' || c.id !== targetId) return c;
+            return { ...c, instance: { ...c.instance, staggeredTurns: KNOCKDOWN_STAGGER_TURNS } };
+          }),
+        };
+        nextCharacter = {
+          ...nextCharacter,
+          knockdownActive: false,
+          resources: { ...nextCharacter.resources, knockdownAvailable: false },
+        };
+        nextState = appendLog(nextState, {
+          id: nextLogId(nextState),
+          kind: 'system',
+          text: `${displayName(target, nextCharacter)} is knocked off its feet — it will lose its next turn.`,
+        });
       }
     }
   }

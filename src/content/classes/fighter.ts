@@ -38,6 +38,13 @@ export const FIGHTER: Class = ClassSchema.parse({
           'On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. Refreshes at the start of every combat encounter.',
         mechanicKey: 'second-wind',
       },
+      {
+        id: 'power-attack',
+        name: 'Power Attack',
+        description:
+          'Set your feet and swing for the kill. On your turn you can fight with a heavy hand: every melee strike this turn takes -2 to hit but lands for +4 damage. A trade, not a freebie — worth it when the blow was going to land anyway.',
+        mechanicKey: 'power-attack',
+      },
     ],
     '2': [
       {
@@ -46,6 +53,15 @@ export const FIGHTER: Class = ClassSchema.parse({
         description:
           'On your turn, you can take one additional action. Once per short or long rest.',
         mechanicKey: 'action-surge',
+      },
+    ],
+    '3': [
+      {
+        id: 'brace',
+        name: 'Brace',
+        description:
+          'Read the incoming blow and plant the shield against it. Once per combat, a bonus action sets your guard — the next hit you take is blunted by 3 plus half your level. Spent best on the swing you can see coming.',
+        mechanicKey: 'brace',
       },
     ],
     '4': [

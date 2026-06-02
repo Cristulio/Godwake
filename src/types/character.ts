@@ -71,6 +71,18 @@ export interface ClassResources {
   secondWindBonusRemaining?: number;
   /** Fighter: Action Surge (1 use at lv2, 2 at lv17). */
   actionSurgeRemaining?: number;
+  /**
+   * Fighter: Brace charge available this combat — a defensive set that blunts
+   * the next incoming hit (see `useBrace`). Refreshes at the start of every
+   * encounter, mirroring Second Wind's per-combat cadence.
+   */
+  braceAvailable?: boolean;
+  /**
+   * Barbarian: Knockdown charge available this combat — one staggering blow
+   * that costs a foe its next turn. Refreshes at the start of every encounter;
+   * the charge is only spent when the staggering strike actually lands.
+   */
+  knockdownAvailable?: boolean;
   /** Rogue: Sneak Attack already fired this turn (true once spent, reset on turn change). */
   sneakAttackUsedThisTurn?: boolean;
   /** Rogue: Cunning Action uses left this combat. 1 base, 2 for Thief subclass. Refreshes on encounter start + short/long rest. */
@@ -304,6 +316,26 @@ export interface Character {
    * cleared in `endTurn`). Cleared on combat start.
    */
   recklessActive?: boolean;
+  /**
+   * Fighter Power Attack stance. Set true when the fighter swings heavy: this
+   * turn's melee strikes take a flat to-hit penalty for a flat damage spike.
+   * Free to declare; cleared at the start of the fighter's next turn (in
+   * `endTurn`) and on combat start.
+   */
+  powerAttackActive?: boolean;
+  /**
+   * Barbarian Cleave stance. Set true when the raging barbarian declares a wide
+   * swing: this turn's first melee hit spills a glancing blow into a second foe.
+   * Free to declare; cleared at the start of the next turn and on combat start.
+   */
+  cleaveActive?: boolean;
+  /**
+   * Barbarian Knockdown stance. Set true when a raging barbarian arms a
+   * staggering strike: the next melee hit fells the target (it loses its next
+   * turn) and only then spends the per-combat charge. Cleared at the start of
+   * the next turn and on combat start.
+   */
+  knockdownActive?: boolean;
   /**
    * One-shot extra attack this turn, funded by Rogue's Cunning Action: Dash.
    * When set, the player can swing again even after the Action is spent. The
