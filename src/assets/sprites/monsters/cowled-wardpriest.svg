@@ -4,35 +4,54 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Cowled Wardpriest"
     >
-      <!-- ward-light radiating from raised hand -->
-      <rect x="1" y="8" width="4" height="4" fill="#9a9aaa" opacity="0.35" />
-      <rect x="2" y="9" width="2" height="2" fill="#c8c8d8" opacity="0.5" />
+      <!-- Cool ward backlight + ground shadow -->
+      <ellipse cx="11" cy="17" rx="10" ry="15" fill="#7a8aaa" opacity="0.07" />
+      <ellipse cx="11" cy="32" rx="7" ry="1.3" fill="#000" opacity="0.4" />
 
-      <!-- pointed cowl -->
+      <!-- Ward-light radiating from raised hand -->
+      <rect x="0" y="7" width="6" height="6" fill="#9a9aaa" opacity="0.28" />
+      <rect x="1" y="8" width="4" height="4" fill="#c8c8d8" opacity="0.4" />
+      <rect x="2" y="9" width="2" height="2" fill="#e8e8f4" opacity="0.6" />
+
+      <!-- Pointed cowl — grey ramp, key upper-left -->
       <polygon points="11,1 5,9 17,9" fill="#43434e" />
+      <polygon points="11,1 5,9 11,9" fill="#53535e" />
+      <polygon points="11,1 7,7 11,9" fill="#5e5e6a" opacity="0.7" />
       <polygon points="11,1 11,9 17,9" fill="#33333c" />
+      <line x1="11" y1="1" x2="5" y2="9" stroke="#9a9aaa" stroke-width="0.4" opacity="0.5" />
 
-      <!-- shadowed face -->
+      <!-- Shadowed face — hooded dark with cold eyes -->
       <rect x="7" y="6" width="8" height="5" fill="#15151a" />
       <rect x="9" y="8" width="1" height="1" fill="#8aaad0" />
       <rect x="12" y="8" width="1" height="1" fill="#8aaad0" />
+      <rect x="9" y="8" width="1" height="1" fill="#d0e0f4" opacity="0.6" />
 
-      <!-- robe -->
+      <!-- Robe — grey ramp, lit edge + shadow flank -->
       <rect x="5" y="10" width="12" height="14" fill="#43434e" />
-      <rect x="5" y="10" width="12" height="1" fill="#53535e" />
+      <rect x="5" y="10" width="12" height="1" fill="#5e5e6a" />
       <rect x="7" y="10" width="8" height="1" fill="#9a9aaa" />
-      <rect x="10" y="10" width="2" height="14" fill="#33333c" />
+      <rect x="5" y="10" width="2" height="14" fill="#4e4e58" />
+      <rect x="5" y="10" width="1" height="14" fill="#9a9aaa" opacity="0.5" />
+      <rect x="15" y="10" width="2" height="14" fill="#33333c" />
+      <rect x="10" y="10" width="2" height="14" fill="#2d2d35" />
+      <!-- robe dither -->
+      <rect x="8" y="15" width="1" height="1" fill="#53535e" />
+      <rect x="13" y="19" width="1" height="1" fill="#33333c" />
 
-      <!-- raised warding arm -->
+      <!-- Raised warding arm + bone hand -->
       <rect x="3" y="11" width="3" height="3" fill="#43434e" />
+      <rect x="3" y="11" width="3" height="1" fill="#53535e" />
       <rect x="2" y="9" width="2" height="3" fill="#c8c4b8" />
+      <rect x="2" y="9" width="1" height="3" fill="#e0dccc" />
 
-      <!-- other arm at side -->
+      <!-- Other arm at side -->
       <rect x="16" y="12" width="3" height="7" fill="#43434e" />
+      <rect x="18" y="12" width="1" height="7" fill="#33333c" />
 
-      <!-- hem -->
+      <!-- Hem -->
       <polygon points="5,24 4,32 9,32" fill="#43434e" />
-      <polygon points="17,24 18,32 11,32" fill="#43434e" />
+      <polygon points="17,24 18,32 11,32" fill="#3a3a44" />
       <rect x="9" y="24" width="4" height="8" fill="#33333c" />
+      <rect x="9" y="24" width="1" height="8" fill="#4e4e58" />
       <rect x="4" y="31" width="14" height="1" fill="#23232a" />
     </svg>
