@@ -148,6 +148,13 @@ export function classStartingResources(classId: ClassId) {
         wildShapeUsesRemaining: 0,
         wildShapeRoundsRemaining: 0,
       };
+    case 'monk':
+      return {
+        // The Ki well refills to its max (monkKiMax — the monk's level) at the
+        // start of every encounter (createCombat). Seed the L1 value here so a
+        // fresh monk reads one point before its first fight.
+        kiPointsRemaining: 1,
+      };
     case 'wizard':
       return {
         spellSlots: { 1: 2, 2: 0, 3: 0, 4: 0 },

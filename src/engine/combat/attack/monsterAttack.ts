@@ -374,6 +374,9 @@ function resolveSingleAttack(
   // player (paralyzed / blinded / restrained) or a Barbarian fighting
   // recklessly; disadvantage from Blur smearing the player's outline.
   const blurActive = (nextCharacter.resources.blurRoundsRemaining ?? 0) > 0;
+  // Monk Patient Defense: the flowing guard makes the monk hard to hit until its
+  // next turn — incoming attacks roll at disadvantage.
+  const patientDefense = nextCharacter.patientDefenseActive === true;
   const recklessPlayer = nextCharacter.recklessActive === true;
   // Nimble Dodge (Rogue L1-4): the first incoming attack each round resolves at
   // disadvantage as the rogue slips aside. Spends the reaction, so a second
@@ -387,7 +390,7 @@ function resolveSingleAttack(
     !playerVulnerable &&
     !wearsHeavierThanLight(nextCharacter);
   const hasAdvantage = playerVulnerable || recklessPlayer;
-  const hasDisadvantage = blurActive || rangedEvasion || nimbleDodge;
+  const hasDisadvantage = blurActive || rangedEvasion || nimbleDodge || patientDefense;
   const attackAdvantage: 'normal' | 'advantage' | 'disadvantage' =
     hasAdvantage && hasDisadvantage
       ? 'normal'
@@ -412,7 +415,9 @@ function resolveSingleAttack(
           ? ' (disadvantage — Blur)'
           : rangedEvasion
             ? ' (disadvantage — kept at range)'
-            : ' (disadvantage — nimble dodge)'
+            : patientDefense
+              ? ' (disadvantage — patient defense)'
+              : ' (disadvantage — nimble dodge)'
         : '';
   workingState = appendLog(workingState, {
     id: nextLogId(workingState),

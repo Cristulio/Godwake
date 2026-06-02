@@ -125,7 +125,7 @@ describe('class unlocks (delve-count axis)', () => {
     expect(isClassUnlocked('barbarian', 0)).toBe(false);
   });
 
-  it('staggers the souls across delve counts (3 / 6 / 9 / 12 / 18, with 15 reserved)', () => {
+  it('staggers the souls across delve counts (3 / 6 / 9 / 12 / 15 / 18)', () => {
     expect(isClassUnlocked('barbarian', 2)).toBe(false);
     expect(isClassUnlocked('barbarian', 3)).toBe(true);
     expect(isClassUnlocked('ranger', 5)).toBe(false);
@@ -134,12 +134,14 @@ describe('class unlocks (delve-count axis)', () => {
     expect(isClassUnlocked('wizard', 9)).toBe(true);
     expect(isClassUnlocked('druid', 11)).toBe(false);
     expect(isClassUnlocked('druid', 12)).toBe(true);
+    expect(isClassUnlocked('monk', 14)).toBe(false);
+    expect(isClassUnlocked('monk', 15)).toBe(true);
     expect(isClassUnlocked('rogue', 17)).toBe(false);
     expect(isClassUnlocked('rogue', 18)).toBe(true);
   });
 
-  it('leaves delve 15 open — reserved for the Monk, no existing class sits there', () => {
-    expect(newlyUnlockedClasses(14, 15)).toEqual([]);
+  it('opens the Monk at delve 15', () => {
+    expect(newlyUnlockedClasses(14, 15)).toEqual(['monk']);
   });
 
   it('reports the alternate(s) whose delve threshold a descent just crossed', () => {
@@ -148,6 +150,7 @@ describe('class unlocks (delve-count axis)', () => {
     expect(newlyUnlockedClasses(5, 6)).toEqual(['ranger']);
     expect(newlyUnlockedClasses(8, 9)).toEqual(['wizard']);
     expect(newlyUnlockedClasses(11, 12)).toEqual(['druid']);
+    expect(newlyUnlockedClasses(14, 15)).toEqual(['monk']);
     expect(newlyUnlockedClasses(17, 18)).toEqual(['rogue']);
   });
 

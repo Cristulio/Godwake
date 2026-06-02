@@ -20,6 +20,9 @@ interface ActionBarProps {
   onRecklessAttack: () => void;
   onCleave: () => void;
   onKnockdown: () => void;
+  onFlurry: () => void;
+  onPatientDefense: () => void;
+  onStunningStrike: () => void;
   onHuntersMark: () => void;
   onSpells: () => void;
   onUseItem: () => void;
@@ -39,6 +42,9 @@ export function ActionBar({
   onRecklessAttack,
   onCleave,
   onKnockdown,
+  onFlurry,
+  onPatientDefense,
+  onStunningStrike,
   onHuntersMark,
   onSpells,
   onUseItem,
@@ -49,14 +55,20 @@ export function ActionBar({
   // Cunning Action: Dash queues a free swing the player can fire even after
   // the Action is spent.
   const hasBonusAttack = character.bonusAttackAvailable === true;
+  // Monk: a queued Flurry of Blows lets the monk keep striking after the Attack
+  // action is spent.
+  const hasFlurryStrike = (character.flurryStrikesRemaining ?? 0) > 0;
   const canAttack =
-    playersTurn && active && (!character.actionEconomy.actionUsed || hasBonusAttack);
+    playersTurn &&
+    active &&
+    (!character.actionEconomy.actionUsed || hasBonusAttack || hasFlurryStrike);
 
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
   const isWizard = character.classId === 'wizard';
   const isBarbarian = character.classId === 'barbarian';
   const isRanger = character.classId === 'ranger';
+  const isMonk = character.classId === 'monk';
 
   // Multiattack commitment: once a character with Extra Attack has begun their
   // Attack action (a swing down, the action not yet fully spent), every OTHER
@@ -188,6 +200,40 @@ export function ActionBar({
     !character.actionEconomy.bonusActionUsed &&
     (!isMarkLive || hasOtherMarkableTarget);
 
+  // Monk Ki actions. Flurry of Blows / Patient Defense are bonus-action Ki
+  // spends; Stunning Strike is a free stance armed before the swing. All gate on
+  // a Ki point in the well.
+  const ki = character.resources.kiPointsRemaining ?? 0;
+  const hasFlurry = isMonk && characterHasMechanic(character, 'flurry-of-blows');
+  const flurryQueued = hasFlurryStrike;
+  const canFlurry =
+    playersTurn &&
+    active &&
+    hasFlurry &&
+    ki > 0 &&
+    !flurryQueued &&
+    !character.actionEconomy.bonusActionUsed &&
+    !midMultiattack;
+  const hasPatientDefense = isMonk && characterHasMechanic(character, 'patient-defense');
+  const patientActive = character.patientDefenseActive === true;
+  const canPatientDefense =
+    playersTurn &&
+    active &&
+    hasPatientDefense &&
+    ki > 0 &&
+    !patientActive &&
+    !character.actionEconomy.bonusActionUsed &&
+    !midMultiattack;
+  const hasStunningStrike = isMonk && characterHasMechanic(character, 'stunning-strike');
+  const stunningArmed = character.stunningStrikeActive === true;
+  const canStunningStrike =
+    playersTurn &&
+    active &&
+    hasStunningStrike &&
+    ki > 0 &&
+    !stunningArmed &&
+    !character.actionEconomy.actionUsed;
+
   const totalSlots =
     slotsAt(character, 1) + slotsAt(character, 2) + slotsAt(character, 3);
   const knownSpells = character.resources.knownSpells ?? [];
@@ -230,11 +276,14 @@ export function ActionBar({
   // Fighter L5 Extra Attack: two swings per Action. Show progress on the
   // button so the player knows the second swing is queued.
   const dashSwingPending = hasBonusAttack && character.actionEconomy.actionUsed;
-  const attackLabel = dashSwingPending
-    ? '► Attack (Dash)'
-    : hasExtraAttack
-      ? `► Attack (${Math.min(attacksThisTurn + 1, 2)}/2)`
-      : '► Attack';
+  const flurrySwingPending = hasFlurryStrike && character.actionEconomy.actionUsed;
+  const attackLabel = flurrySwingPending
+    ? `► Strike (Flurry ${character.flurryStrikesRemaining})`
+    : dashSwingPending
+      ? '► Attack (Dash)'
+      : hasExtraAttack
+        ? `► Attack (${Math.min(attacksThisTurn + 1, 2)}/2)`
+        : '► Attack';
 
   // Two-row layout. Row 1 = the heavy hitters (Attack + class-specific
   // actions + Spells when applicable). Row 2 = universal utility (Item /
@@ -363,6 +412,40 @@ export function ActionBar({
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {isMarkLive ? 'Re-mark' : "Hunter's Mark"}
+          </Button>
+        )}
+
+        {hasFlurry && (
+          <Button
+            variant={canFlurry ? 'primary' : 'secondary'}
+            onClick={onFlurry}
+            disabled={!canFlurry}
+            title="Bonus action, 1 Ki: rain extra unarmed strikes this turn — keep hitting after your Attack action is spent."
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {flurryQueued ? `Flurry ✓ (${character.flurryStrikesRemaining})` : `Flurry (${ki} Ki)`}
+          </Button>
+        )}
+        {hasPatientDefense && (
+          <Button
+            variant={canPatientDefense ? 'primary' : 'secondary'}
+            onClick={onPatientDefense}
+            disabled={!canPatientDefense}
+            title="Bonus action, 1 Ki: flow into a yielding guard — attacks against you roll at disadvantage until your next turn."
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {patientActive ? 'Patient ✓' : 'Patient Defense'}
+          </Button>
+        )}
+        {hasStunningStrike && (
+          <Button
+            variant={canStunningStrike ? 'primary' : 'secondary'}
+            onClick={onStunningStrike}
+            disabled={!canStunningStrike}
+            title="Free, 1 Ki: arm a staggering blow — your next unarmed hit forces a save or the target loses its next turn."
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {stunningArmed ? 'Stunning ✓' : 'Stunning Strike'}
           </Button>
         )}
 

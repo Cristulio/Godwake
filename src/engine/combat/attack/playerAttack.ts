@@ -23,6 +23,8 @@ import {
   KNOCKDOWN_STAGGER_TURNS,
 } from '../../character/actions';
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
+import { monkKiSaveDC } from '../monk';
+import { getMonster } from '../../../content/monsters';
 import { isRangedWeapon } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
@@ -168,8 +170,14 @@ export function playerAttack(
   // Advantage + disadvantage cancel to a straight roll (5e).
   const condMods = playerConditionMods(nextCharacter);
   const recklessAdvantage = nextCharacter.recklessActive === true && !isRanged;
+  // Monk (Way of Shadow): the unseen opener — the first strike of the fight
+  // lands with advantage.
+  const shadowOpener = isFirstAttack && characterHasMechanic(nextCharacter, 'shadow-strike');
   const hasAdvantage =
-    (isFirstAttack && !!blessingMods.firstAttackAdvantage) || hideAdvantage || recklessAdvantage;
+    (isFirstAttack && !!blessingMods.firstAttackAdvantage) ||
+    hideAdvantage ||
+    recklessAdvantage ||
+    shadowOpener;
   // Gloom twist: the first attack of the fight rolls at disadvantage (one-shot —
   // gated on isFirstAttack, which flips off once the player has swung).
   const gloomDisadvantage = isFirstAttack && state.gloomActive === true;
@@ -353,6 +361,25 @@ export function playerAttack(
     if (powerAttack) {
       bonusDamage += POWER_ATTACK_DAMAGE_BONUS;
       onTypeParts.push({ amount: POWER_ATTACK_DAMAGE_BONUS, label: 'power' });
+    }
+    // Monk Ki-Empowered Strikes (L6): channelled Ki rides every unarmed blow.
+    if (characterHasMechanic(nextCharacter, 'ki-empowered') && !isRanged) {
+      bonusDamage += 1;
+      onTypeParts.push({ amount: 1, label: 'ki' });
+    }
+    // Monk (Open Hand): a flurry batters the guard open — extra bite on the
+    // strikes that fall while a flurry is still pouring out.
+    if (
+      characterHasMechanic(nextCharacter, 'open-hand-technique') &&
+      (nextCharacter.flurryStrikesRemaining ?? 0) > 0
+    ) {
+      bonusDamage += 2;
+      onTypeParts.push({ amount: 2, label: 'open hand' });
+    }
+    // Monk (Shadow): the unseen opener drives extra Ki-charged damage home.
+    if (isFirstAttack && characterHasMechanic(nextCharacter, 'shadow-strike')) {
+      bonusDamage += 3;
+      onTypeParts.push({ amount: 3, label: 'shadow' });
     }
     // Apotheosis: the ascendant caster's every blow bites for far more.
     if (isAscendant(nextCharacter)) {
@@ -788,6 +815,45 @@ export function playerAttack(
         });
       }
     }
+
+    // Monk Stunning Strike: an armed unarmed blow that lands forces a CON save —
+    // on a fail the target is staggered (loses its next turn). Boss/elite foes
+    // roll the save with advantage (resolute will) rather than being immune. The
+    // Ki was already spent to arm the stance; it clears once a blow connects (a
+    // clean miss leaves it armed for the next swing).
+    if (nextCharacter.stunningStrikeActive === true && target.kind === 'monster') {
+      const stillStanding = nextState.combatants.some(
+        (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
+      );
+      if (stillStanding) {
+        const dc = monkKiSaveDC(nextCharacter);
+        const def = getMonster(target.instance.defId);
+        const conMod = abilityModifier(def.abilityScores.con ?? 10);
+        const resoluteWill = (target.instance.legendaryResistances ?? 0) > 0;
+        const save = roller.d20(resoluteWill ? 'advantage' : 'normal', conMod);
+        const success = save.total >= dc;
+        nextState = appendLog(nextState, {
+          id: nextLogId(nextState),
+          kind: 'roll',
+          text: `${displayName(target, nextCharacter)} reels from the strike — CON save${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${conMod >= 0 ? '+' : ''}${conMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+        });
+        if (!success) {
+          nextState = {
+            ...nextState,
+            combatants: nextState.combatants.map((c) => {
+              if (c.kind !== 'monster' || c.id !== targetId) return c;
+              return { ...c, instance: { ...c.instance, staggeredTurns: 1 } };
+            }),
+          };
+          nextState = appendLog(nextState, {
+            id: nextLogId(nextState),
+            kind: 'system',
+            text: `${displayName(target, nextCharacter)} is stunned — it will lose its next turn.`,
+          });
+        }
+        nextCharacter = { ...nextCharacter, stunningStrikeActive: false };
+      }
+    }
   }
 
   // Mark action used for the player
@@ -828,6 +894,17 @@ function markPlayerActionUsed(
   // bonus one. Burn the flag, don't tick the per-Action attack counter.
   if (character.actionEconomy.actionUsed && character.bonusAttackAvailable) {
     return { state, character: { ...character, bonusAttackAvailable: false } };
+  }
+  // Monk Flurry of Blows: a queued flurry strike fires after the Attack action
+  // is spent — burn one queued strike, don't tick the per-Action counter.
+  if (character.actionEconomy.actionUsed && (character.flurryStrikesRemaining ?? 0) > 0) {
+    return {
+      state,
+      character: {
+        ...character,
+        flurryStrikesRemaining: (character.flurryStrikesRemaining ?? 0) - 1,
+      },
+    };
   }
   const attacksMade = (state.playerAttacksThisTurn ?? 0) + 1;
   const maxAttacks = maxAttacksPerAction(character);

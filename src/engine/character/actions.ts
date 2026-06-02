@@ -162,6 +162,10 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
       rageRoundsRemaining: 0,
+      kiPointsRemaining:
+        character.classId === 'monk'
+          ? character.level + (character.level >= 20 ? 2 : 0)
+          : character.resources.kiPointsRemaining,
       spellSlots: isCaster
         ? wizardSpellSlots(character)
         : character.resources.spellSlots,
@@ -193,6 +197,10 @@ export function longRest(character: Character): Character {
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
       rageRoundsRemaining: 0,
+      kiPointsRemaining:
+        character.classId === 'monk'
+          ? character.level + (character.level >= 20 ? 2 : 0)
+          : character.resources.kiPointsRemaining,
       spellSlots: isCaster
         ? wizardSpellSlots(character)
         : character.resources.spellSlots,

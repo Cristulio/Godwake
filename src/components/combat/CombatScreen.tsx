@@ -20,6 +20,10 @@ import {
   useCleave,
   useKnockdown,
   useHuntersMark,
+  useFlurryOfBlows,
+  usePatientDefense,
+  useStunningStrike,
+  martialArtsWeaponId,
   useConsumable,
   castSpell,
   chooseCombatAction,
@@ -418,12 +422,17 @@ export function CombatScreen({
       return;
     }
     const roller = getActiveRoller();
-    const equippedWeaponId = character.equipped.mainHand?.itemId;
-    if (!equippedWeaponId) return;
+    // A monk always strikes unarmed with its level-scaled Martial Arts die, not
+    // the weapon hanging at its side.
+    const weaponId =
+      character.classId === 'monk'
+        ? martialArtsWeaponId(character)
+        : character.equipped.mainHand?.itemId;
+    if (!weaponId) return;
     const result = playerAttack(
       { roller, character, state },
       targetId,
-      equippedWeaponId,
+      weaponId,
     );
     setSelectingTarget(false);
     setCharacter(result.character);
@@ -536,6 +545,27 @@ export function CombatScreen({
   function handleKnockdown() {
     cancelTargeting();
     const result = useKnockdown({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleFlurry() {
+    cancelTargeting();
+    const result = useFlurryOfBlows({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handlePatientDefense() {
+    cancelTargeting();
+    const result = usePatientDefense({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleStunningStrike() {
+    cancelTargeting();
+    const result = useStunningStrike({ character, state });
     setCharacter(result.character);
     setCombat(result.state);
   }
@@ -757,6 +787,9 @@ export function CombatScreen({
             onRecklessAttack={handleRecklessAttack}
             onCleave={handleCleave}
             onKnockdown={handleKnockdown}
+            onFlurry={handleFlurry}
+            onPatientDefense={handlePatientDefense}
+            onStunningStrike={handleStunningStrike}
             onHuntersMark={handleHuntersMarkClick}
             onSpells={() => setPickingSpell(true)}
             onUseItem={() => setPickingItem(true)}

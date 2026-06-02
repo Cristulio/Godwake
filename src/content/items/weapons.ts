@@ -276,6 +276,67 @@ export const DIRE_CLAWS: Weapon = WeaponSchema.parse({
   description: 'The heavier predators a Circle of the Moon druid can wear — a deeper, surer rend.',
 });
 
+// Monk Martial Arts fists — never sold or rolled (absent from loot/shop pools,
+// which draw from explicit id lists). The engine swaps the monk's attack to the
+// level-appropriate die via martialArtsWeaponId. Finesse so the strike rides the
+// monk's DEX; affinity grants the matched edge. The die grows with the school:
+// d6 → d8 (L5) → d10 (L11) → d12 (L17).
+export const MONK_FISTS: Weapon = WeaponSchema.parse({
+  id: 'monk-fists',
+  kind: 'weapon',
+  name: 'Fists',
+  affinity: 'monk',
+  category: 'simple',
+  damage: '1d6',
+  damageType: 'bludgeoning',
+  properties: ['finesse', 'light'],
+  cost: 0,
+  rarity: 'common',
+  description: 'The empty hand — the monk’s only weapon, and the one that never leaves.',
+});
+
+export const MONK_FISTS_ADEPT: Weapon = WeaponSchema.parse({
+  id: 'monk-fists-adept',
+  kind: 'weapon',
+  name: 'Fists',
+  affinity: 'monk',
+  category: 'simple',
+  damage: '1d8',
+  damageType: 'bludgeoning',
+  properties: ['finesse', 'light'],
+  cost: 0,
+  rarity: 'common',
+  description: 'Strikes honed past a novice’s — the form deepening into the body.',
+});
+
+export const MONK_FISTS_MASTER: Weapon = WeaponSchema.parse({
+  id: 'monk-fists-master',
+  kind: 'weapon',
+  name: 'Fists',
+  affinity: 'monk',
+  category: 'simple',
+  damage: '1d10',
+  damageType: 'bludgeoning',
+  properties: ['finesse', 'light'],
+  cost: 0,
+  rarity: 'common',
+  description: 'A master’s hands — bone and discipline that crack a guard like kindling.',
+});
+
+export const MONK_FISTS_GRANDMASTER: Weapon = WeaponSchema.parse({
+  id: 'monk-fists-grandmaster',
+  kind: 'weapon',
+  name: 'Fists',
+  affinity: 'monk',
+  category: 'simple',
+  damage: '1d12',
+  damageType: 'bludgeoning',
+  properties: ['finesse', 'light'],
+  cost: 0,
+  rarity: 'common',
+  description: 'The body perfected into a weapon — every strike a falling beam.',
+});
+
 export const ALL_WEAPONS: Weapon[] = [
   LONGSWORD,
   DAGGER,
@@ -295,4 +356,8 @@ export const ALL_WEAPONS: Weapon[] = [
   SICKLE,
   BEAST_CLAWS,
   DIRE_CLAWS,
+  MONK_FISTS,
+  MONK_FISTS_ADEPT,
+  MONK_FISTS_MASTER,
+  MONK_FISTS_GRANDMASTER,
 ];

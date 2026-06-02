@@ -90,6 +90,12 @@ export function applyLevelUp(character: Character): Character {
     resources.cunningActionUsesRemaining = 2;
   }
 
+  // Monk: the Ki well deepens by one each level (+2 more at the L20 capstone) and
+  // refills on the level-up, narratively a long rest. Mirrors monkKiMax.
+  if (character.classId === 'monk') {
+    resources.kiPointsRemaining = newLevel + (newLevel >= 20 ? 2 : 0);
+  }
+
   // Full casters (Wizard / Druid): slots scale with level on the shared ladder.
   // Granting via the slot table also refills the well — leveling reads as a long
   // rest in narrative terms. The Wizard surfaces a spell-learn picker at the odd

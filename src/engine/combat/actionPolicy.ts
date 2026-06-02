@@ -28,6 +28,12 @@ import { useCunningAction, type CunningActionChoice } from './cunningAction';
 import { useRage, useRecklessAttack, useCleave, useKnockdown } from './rage';
 import { useHuntersMark } from './huntersMark';
 import { useWildShape, beastWeaponId } from './wildShape';
+import {
+  useFlurryOfBlows,
+  usePatientDefense,
+  useStunningStrike,
+  martialArtsWeaponId,
+} from './monk';
 
 /**
  * A single structured combat decision. Callers map it onto the real engine
@@ -51,6 +57,9 @@ export type PlannedAction =
   | { kind: 'knockdown' }
   | { kind: 'hunters-mark'; targetId: string }
   | { kind: 'wild-shape' }
+  | { kind: 'flurry-of-blows' }
+  | { kind: 'patient-defense' }
+  | { kind: 'stunning-strike' }
   | { kind: 'end-turn' };
 
 // ---- Tunables --------------------------------------------------------------
@@ -363,6 +372,7 @@ export function chooseCombatAction(
   const isBarbarian = character.classId === 'barbarian';
   const isRanger = character.classId === 'ranger';
   const isDruid = character.classId === 'druid';
+  const isMonk = character.classId === 'monk';
 
   const primary = lowestHpTarget(live);
   const threat = highestThreatTarget(live);
@@ -434,6 +444,26 @@ export function chooseCombatAction(
       if (healIdx >= 0) return { kind: 'item', inventoryIndex: healIdx };
     }
 
+    // Monk: spend the bonus action and a Ki point on tempo. Patient Defense when
+    // hurt enough to want the flowing guard (a turn to be weathered); otherwise
+    // pour a Flurry of Blows into the strikes to come — the signature deluge.
+    if (isMonk && (character.resources.kiPointsRemaining ?? 0) > 0) {
+      if (
+        characterHasMechanic(character, 'patient-defense') &&
+        character.patientDefenseActive !== true &&
+        hpPct <= profile.wizardDefensiveHp
+      ) {
+        return { kind: 'patient-defense' };
+      }
+      if (
+        characterHasMechanic(character, 'flurry-of-blows') &&
+        (character.flurryStrikesRemaining ?? 0) === 0 &&
+        primary
+      ) {
+        return { kind: 'flurry-of-blows' };
+      }
+    }
+
     // Rogue Cunning Action: Hide → next attack lands with advantage → Sneak
     // Attack. Only worth the scarce charge when it actually enables Sneak this
     // turn: skip if the action is already spent (nothing to set up) or the
@@ -463,7 +493,12 @@ export function chooseCombatAction(
   }
 
   // === Main action ========================================================
-  const canAct = actionFree || (isRogue && character.bonusAttackAvailable === true);
+  // The monk keeps swinging while a flurry is queued, even after the Attack
+  // action is spent (each swing burns one queued strike in playerAttack).
+  const canAct =
+    actionFree ||
+    (isRogue && character.bonusAttackAvailable === true) ||
+    (isMonk && (character.flurryStrikesRemaining ?? 0) > 0);
   if (canAct) {
     if (isWizard) {
       const wizardAction = chooseWizardAction(state, character, live, primary, threat, profile);
@@ -540,6 +575,22 @@ export function chooseCombatAction(
       wieldsMelee(character)
     ) {
       return { kind: 'knockdown' };
+    }
+    // Monk Stunning Strike: arm a staggering blow against the most dangerous foe
+    // when Ki is flush enough to still afford a flurry. A free stance, so the
+    // same turn proceeds to the swing that carries it.
+    if (
+      isMonk &&
+      actionFree &&
+      character.stunningStrikeActive !== true &&
+      characterHasMechanic(character, 'stunning-strike') &&
+      (character.resources.kiPointsRemaining ?? 0) >= 2 &&
+      primary &&
+      threat &&
+      primary.id === threat.id &&
+      monsterThreat(threat) >= profile.holdPersonThreat
+    ) {
+      return { kind: 'stunning-strike' };
     }
     // Weapon classes (and a wizard with no castable option) swing at the
     // focus-fire target.
@@ -897,11 +948,14 @@ export function applyPlannedAction(
   const { roller, state, character } = ctx;
   switch (action.kind) {
     case 'attack': {
-      // A wild-shaped druid strikes with its beast profile (claws/bite), not the
-      // weapon hanging at its side.
+      // A wild-shaped druid strikes with its beast profile (claws/bite); a monk
+      // always strikes unarmed with its level-scaled Martial Arts die — neither
+      // swings the weapon hanging at its side.
       const weaponId = isWildShaped(character)
         ? beastWeaponId(character)
-        : (character.equipped.mainHand?.itemId ?? 'dagger');
+        : character.classId === 'monk'
+          ? martialArtsWeaponId(character)
+          : (character.equipped.mainHand?.itemId ?? 'dagger');
       const r = playerAttack({ roller, character, state }, action.targetId, weaponId);
       return { state: r.state, character: r.character };
     }
@@ -961,6 +1015,18 @@ export function applyPlannedAction(
     }
     case 'wild-shape': {
       const r = useWildShape({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'flurry-of-blows': {
+      const r = useFlurryOfBlows({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'patient-defense': {
+      const r = usePatientDefense({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'stunning-strike': {
+      const r = useStunningStrike({ character, state });
       return { state: r.state, character: r.character };
     }
     case 'end-turn':
@@ -1064,7 +1130,8 @@ export function scoreBlessing(blessingId: string, character: Character): number 
     isFighter ||
     isRogue ||
     character.classId === 'barbarian' ||
-    character.classId === 'ranger';
+    character.classId === 'ranger' ||
+    character.classId === 'monk';
   const banes = baneQuirkCount(character);
   const attacks = characterHasMechanic(character, 'extra-attack') ? 2 : 1;
 
