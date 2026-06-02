@@ -196,7 +196,8 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
 
           {placed.map(({ room, cx, cy }) => {
             const isCurrent = room.id === current?.id;
-            const isReachable = reachable.has(room.id);
+            const isLocked = !!room.locked;
+            const isReachable = reachable.has(room.id) && !isLocked;
             const isVisited = visited.has(room.id);
             const tag =
               room.kind === 'event' &&
@@ -206,13 +207,15 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                 ? 'INTEL'
                 : KIND_TAG[room.kind];
             const accent = kindColor(room.kind);
-            const stateClass = isReachable
-              ? 'bm-node-reachable'
-              : isCurrent
-                ? 'bm-node-current'
-                : isVisited
-                  ? 'bm-node-visited'
-                  : 'bm-node-locked';
+            const stateClass = isLocked
+              ? 'bm-node-blocked'
+              : isReachable
+                ? 'bm-node-reachable'
+                : isCurrent
+                  ? 'bm-node-current'
+                  : isVisited
+                    ? 'bm-node-visited'
+                    : 'bm-node-locked';
             return (
               <button
                 key={room.id}
@@ -238,6 +241,14 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                 title={room.title}
               >
                 <span className="bm-node-tag">{tag}</span>
+                {isLocked && (
+                  <span
+                    className="absolute -bottom-1 -right-1 text-[var(--color-text-dim)] text-xs leading-none"
+                    aria-label="barred"
+                  >
+                    ⚿
+                  </span>
+                )}
                 {room.twistId && (
                   <span
                     className="absolute -top-1 -right-1 text-[var(--color-accent-blood)] text-xs leading-none"
@@ -261,6 +272,11 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
             <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
               {KIND_BLURB[detail.kind]}
             </div>
+            {detail.locked && (
+              <div className="text-[var(--color-text-dim)] text-xs italic mt-1 leading-relaxed">
+                ⚿ This road is barred to a soul so young. Walk it once you have earned the mark.
+              </div>
+            )}
             {detailTwist && (
               <div className="text-[var(--color-accent-blood)] text-xs italic mt-1 leading-relaxed">
                 ✦ {detailTwist.telegraph}

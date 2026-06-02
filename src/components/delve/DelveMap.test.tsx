@@ -64,6 +64,21 @@ describe('DelveMap — route choice UI', () => {
     expect(screen.getByRole('button', { name: /pack/i })).toBeInTheDocument();
   });
 
+  it('renders a locked elite greyed and unselectable, not hidden', () => {
+    const delve = { ...createGodwakeDelve({ seed: 1, elitesEnabled: false }), phase: 'between-rooms' as const };
+    // Chapter 1 carries at least one locked elite (rendered, not hidden).
+    const ch1Elites = delve.rooms.filter((r) => r.chapter === 1 && r.kind === 'elite');
+    expect(ch1Elites.length).toBeGreaterThan(0);
+    expect(ch1Elites.every((r) => r.locked)).toBe(true);
+
+    const { container } = render(
+      <DelveMap delve={delve} character={useGameStore.getState().character!} />,
+    );
+    const blocked = container.querySelectorAll('button.bm-node-blocked');
+    expect(blocked.length).toBe(ch1Elites.length);
+    blocked.forEach((b) => expect((b as HTMLButtonElement).disabled).toBe(true));
+  });
+
   it('hovering a node with an unresolved twistId does not throw', () => {
     const delve = useDelveStore.getState().delve!;
     const targetId = delve.rooms[delve.currentRoomIdx].next![0];

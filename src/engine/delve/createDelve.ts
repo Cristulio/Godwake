@@ -230,9 +230,10 @@ export interface GodwakeDelveOptions {
   /** Ascension level to play this run at (0 = base). Scales enemies + payout. */
   ascension?: number;
   /**
-   * Whether elite nodes are unlocked for this soul. When false, elite slots in
-   * the procedural plan are downgraded to mid-tier combat so a new player never
-   * hits a locked-but-present node.
+   * Whether elite nodes are unlocked for this soul. When false, elite nodes are
+   * still laid out and rendered — greyed and unselectable (`locked`) — rather
+   * than hidden or swapped, so the player sees what is there and routes around
+   * it. The generator guarantees a selectable alternate at every step.
    */
   elitesEnabled?: boolean;
 }
@@ -304,14 +305,9 @@ function generateChapterPlan(rng: Rng): SlotKind[][] {
     budget.shopCount;
   const middle = specials + roll(rng, COMBAT_PAD_MIN, COMBAT_PAD_MAX);
 
-  // Column widths: the first middle column always forks; the rest vary, summing
-  // to exactly `middle` so the flat kind list slices cleanly back into columns.
-  const widths: number[] = [Math.min(middle, roll(rng, FORK_MIN_WIDTH, COLUMN_MAX_WIDTH))];
-  let placed = widths[0];
-  while (placed < middle) {
-    widths.push(Math.min(middle - placed, roll(rng, 1, COLUMN_MAX_WIDTH)));
-    placed += widths[widths.length - 1];
-  }
+  // Every middle column is at least FORK_MIN_WIDTH wide, so the player can always
+  // route around any single node (an elite especially) — no forced bottleneck.
+  const widths = rollColumnWidths(rng, middle);
 
   const kinds = assignSlotKinds(rng, middle, budget);
   const middleColumns: SlotKind[][] = [];
@@ -321,7 +317,60 @@ function generateChapterPlan(rng: Rng): SlotKind[][] {
     cursor += w;
   }
 
+  // At most one elite per column: with elites locked (new souls) a node renders
+  // greyed, and two greyed elites sharing a column could leave it with nothing
+  // selectable. Relocate any surplus onto a plain combat slot elsewhere.
+  spreadElites(middleColumns);
+
   return [['warmup'], ...middleColumns, ['intel'], ['boss']];
+}
+
+/**
+ * Split `total` middle slots into columns, each at least FORK_MIN_WIDTH wide and
+ * at most COLUMN_MAX_WIDTH, summing exactly to `total`. The minimum-2 floor is
+ * the alternate-route guarantee: no middle column is ever a single forced node.
+ * Column count is rolled within the bounds that keep the floor satisfiable, then
+ * the surplus over the floor is sprinkled across random columns.
+ */
+function rollColumnWidths(rng: Rng, total: number): number[] {
+  const minCols = Math.max(1, Math.ceil(total / COLUMN_MAX_WIDTH));
+  const maxCols = Math.max(1, Math.floor(total / FORK_MIN_WIDTH));
+  const cols = roll(rng, minCols, maxCols);
+  const widths = new Array<number>(cols).fill(FORK_MIN_WIDTH);
+  let extra = total - FORK_MIN_WIDTH * cols;
+  const order = [...widths.keys()];
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rng.next() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  for (const c of order) {
+    if (extra <= 0) break;
+    const add = Math.min(COLUMN_MAX_WIDTH - widths[c], extra);
+    widths[c] += add;
+    extra -= add;
+  }
+  return widths;
+}
+
+/**
+ * Move any surplus elite past the first in a column onto a plain combat slot in
+ * an elite-free column, so no column holds more than one elite. Preserves the
+ * total elite and combat counts — only swaps which slot is which.
+ */
+function spreadElites(columns: SlotKind[][]): void {
+  const hasElite = (col: SlotKind[]): boolean => col.some((s) => s === 'elite');
+  for (const col of columns) {
+    while (col.filter((s) => s === 'elite').length > 1) {
+      const surplusIdx = col.indexOf('elite', col.indexOf('elite') + 1);
+      const target = columns.find(
+        (c) => c !== col && !hasElite(c) && c.some((s) => s === 'earlyMid' || s === 'mid'),
+      );
+      if (!target) break;
+      const slotIdx = target.findIndex((s) => s === 'earlyMid' || s === 'mid');
+      col[surplusIdx] = target[slotIdx];
+      target[slotIdx] = 'elite';
+    }
+  }
 }
 
 /**
@@ -409,9 +458,16 @@ function bossRoomNode(id: string, content: ChapterContent): RoomSpec {
 
 /**
  * Wire two adjacent map columns into a forward-fanning DAG. Each prev node
- * connects to its aligned next node and the one to its right, so paths fan out
- * without crossing (Slay-the-Spire style); a coverage pass guarantees every
- * next node is reachable and the column stays fully connected to the boss.
+ * connects to its aligned next node and one neighbour, so paths fan out without
+ * crossing (Slay-the-Spire style); a coverage pass guarantees every next node is
+ * reachable and the column stays fully connected to the boss.
+ *
+ * Whenever the next column has 2+ nodes, every prev node gets two distinct
+ * targets (the last node fans left instead of right), so no node ever offers a
+ * single forced step except at the intel→boss convergence (width 1). Combined
+ * with the at-most-one-elite-per-column rule, that means at least one of a prev
+ * node's targets is always a selectable (non-locked) node — a locked elite can
+ * never be the only way forward.
  */
 function wireLayers(prev: RoomSpec[], next: RoomSpec[]): void {
   const a = prev.length;
@@ -419,7 +475,7 @@ function wireLayers(prev: RoomSpec[], next: RoomSpec[]): void {
   for (let i = 0; i < a; i++) {
     const j = Math.min(b - 1, Math.floor((i * b) / a));
     const targets = [j];
-    if (j + 1 < b) targets.push(j + 1);
+    if (b >= 2) targets.push(j + 1 < b ? j + 1 : j - 1);
     prev[i].next = targets.map((t) => next[t].id);
   }
   for (let j = 0; j < b; j++) {
@@ -469,17 +525,19 @@ function buildChapterNodes(
 
   const warmupQ = pickN(rng, content.pools.warmup, slotCount('warmup'));
   const emQ = pickN(rng, content.pools.earlyMid, slotCount('earlyMid'));
-  // When elites are locked, their slots are downgraded to mid-tier combat; pre-
-  // allocate enough mid entries to cover both the real mid slots and the extras.
   const eliteSlots = slotCount('elite');
-  const midQ = pickN(rng, content.pools.mid, slotCount('mid') + (elitesEnabled ? 0 : eliteSlots));
+  const midQ = pickN(rng, content.pools.mid, slotCount('mid'));
   // At Ascension ≥ 2 the ascendant horrors are mixed INTO the chapter's own elite
   // pool (augment, never replace), so an elite detour can now field a tougher,
   // chapter-agnostic threat — ascension changes what you fight, not just its HP.
   const elitePool = ascensionEliteVariants(ascension)
     ? [...content.pools.elite, ...ASCENDANT_ELITE_POOL]
     : content.pools.elite;
-  const eliteQ = pickN(rng, elitePool, elitesEnabled ? eliteSlots : 0);
+  // Elite slots are always laid out and filled; when the elite-reveal unlock has
+  // not fired for this soul they render greyed (locked) rather than vanishing or
+  // being swapped for another room type. The map is byte-identical either way —
+  // only the `locked` flag differs — so the route never silently reshapes.
+  const eliteQ = pickN(rng, elitePool, eliteSlots);
   // Ascension dungeon twists ride a fraction of the routed combat rooms only at
   // Ascension >= 4. The roll consumes RNG only when twists are live, so low-
   // ascension maps draw the exact same stream they always did.
@@ -502,11 +560,8 @@ function buildChapterNodes(
           node = combatRoom(id, midQ.shift()!);
           break;
         case 'elite':
-          if (elitesEnabled) {
-            node = eliteRoom(id, eliteQ.shift()!, content.chapter);
-          } else {
-            node = combatRoom(id, midQ.shift()!);
-          }
+          node = eliteRoom(id, eliteQ.shift()!, content.chapter);
+          if (!elitesEnabled) node.locked = true;
           break;
         case 'shop':
           node = shopRoom(id, content.shop);
