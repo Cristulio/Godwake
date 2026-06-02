@@ -4,39 +4,56 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Mind Flayer Fragment"
     >
+      <!-- Psionic backlight + faint ground glow -->
+      <ellipse cx="11" cy="14" rx="11" ry="14" fill="#5a3a98" opacity="0.1" />
+      <ellipse cx="11" cy="28" rx="7" ry="1.4" fill="#1a0a28" opacity="0.35" />
 
-      <ellipse cx="11" cy="6" rx="7" ry="5" fill="#5a3a78" />
-      <ellipse cx="11" cy="5" rx="6" ry="4" fill="#7a5a98" />
-      <ellipse cx="11" cy="3" rx="5" ry="2" fill="#a48ee0" opacity="0.5" />
+      <!-- Bulbous cranium — purple ramp, key light upper-left -->
+      <ellipse cx="11" cy="6" rx="7" ry="5" fill="#3a2858" />
+      <ellipse cx="11" cy="6" rx="6.5" ry="4.6" fill="#5a3a78" />
+      <ellipse cx="10" cy="5" rx="5" ry="3.4" fill="#7a5a98" />
+      <ellipse cx="9" cy="3" rx="3" ry="1.6" fill="#a48ee0" opacity="0.6" />
+      <ellipse cx="14" cy="8" rx="4" ry="2.5" fill="#2a1840" opacity="0.6" />
+      <rect x="8" y="2" width="2" height="1" fill="#c4b0f0" opacity="0.6" />
 
-      <rect x="7" y="6" width="2" height="2" fill="#1a0a28" />
-      <rect x="13" y="6" width="2" height="2" fill="#1a0a28" />
+      <!-- Blank white eyes + spec -->
+      <rect x="7" y="6" width="2" height="2" fill="#150820" />
+      <rect x="13" y="6" width="2" height="2" fill="#150820" />
       <rect x="7" y="6" width="1" height="1" fill="#ffffff" />
       <rect x="13" y="6" width="1" height="1" fill="#ffffff" />
+      <rect x="8" y="7" width="1" height="1" fill="#a48ee0" opacity="0.6" />
 
+      <!-- Mouth ring above the tentacles -->
       <rect x="6" y="10" width="10" height="3" fill="#3a2858" />
       <rect x="6" y="10" width="10" height="1" fill="#1a0a28" />
+      <rect x="6" y="12" width="10" height="1" fill="#150820" />
 
-      <polygon points="6,11 4,16 5,18" fill="#5a3a78" />
-      <polygon points="6,11 4,16 5,18" stroke="#3a2858" stroke-width="0.3" fill="none" />
-      <polygon points="8,12 7,18 9,20" fill="#5a3a78" />
+      <!-- Facial tentacles — ramped, curling down -->
+      <polygon points="6,11 4,16 5,18" fill="#4a3470" />
+      <polygon points="8,12 7,18 9,20" fill="#4a3470" />
       <polygon points="10,13 10,21 12,22" fill="#5a3a78" />
-      <polygon points="12,13 13,21 14,22" fill="#5a3a78" />
-      <polygon points="14,12 15,18 16,20" fill="#5a3a78" />
-      <polygon points="16,11 18,16 17,18" fill="#5a3a78" />
-
+      <polygon points="12,13 13,21 14,22" fill="#4a3470" />
+      <polygon points="14,12 15,18 16,20" fill="#3a2858" />
+      <polygon points="16,11 18,16 17,18" fill="#3a2858" />
+      <polygon points="10,13 10,21 11,21" fill="#7a5a98" opacity="0.6" />
+      <polygon points="8,12 7,18 8,18" fill="#5a3a78" opacity="0.6" />
+      <!-- Pale suckers -->
       <rect x="4" y="13" width="2" height="2" fill="#7a5a98" opacity="0.6" />
       <rect x="6" y="15" width="2" height="2" fill="#7a5a98" opacity="0.6" />
-      <rect x="8" y="17" width="2" height="2" fill="#7a5a98" opacity="0.6" />
+      <rect x="8" y="17" width="2" height="2" fill="#8a6aa8" opacity="0.6" />
       <rect x="12" y="17" width="2" height="2" fill="#7a5a98" opacity="0.6" />
-      <rect x="14" y="15" width="2" height="2" fill="#7a5a98" opacity="0.6" />
-      <rect x="16" y="13" width="2" height="2" fill="#7a5a98" opacity="0.6" />
+      <rect x="14" y="15" width="2" height="2" fill="#5a3a78" opacity="0.6" />
+      <rect x="16" y="13" width="2" height="2" fill="#5a3a78" opacity="0.6" />
 
+      <!-- Dissolving fragment tail — fading psionic ectoplasm -->
       <ellipse cx="11" cy="25" rx="6" ry="3" fill="#3a2858" opacity="0.5" />
       <ellipse cx="11" cy="27" rx="5" ry="2" fill="#a48ee0" opacity="0.3" />
       <ellipse cx="11" cy="29" rx="7" ry="1.5" fill="#a48ee0" opacity="0.15" />
 
+      <!-- Drifting psi-motes -->
       <circle cx="5" cy="2" r="1" fill="#a48ee0" opacity="0.6" />
-      <circle cx="17" cy="2" r="1" fill="#a48ee0" opacity="0.6" />
+      <circle cx="17" cy="2" r="1" fill="#a48ee0" opacity="0.55" />
       <circle cx="11" cy="0" r="0.6" fill="#e8d4ff" />
+      <rect x="3" y="9" width="1" height="1" fill="#c4b0f0" opacity="0.5" />
+      <rect x="18" y="9" width="1" height="1" fill="#c4b0f0" opacity="0.45" />
     </svg>
