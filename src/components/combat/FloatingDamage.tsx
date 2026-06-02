@@ -5,6 +5,8 @@ export interface FloatingDamageItem {
   id: number;
   amount: number;
   kind: 'damage' | 'heal' | 'miss' | 'crit' | 'block';
+  /** Element of the blow (fire/cold/...) — tints the number. Physical/absent = default. */
+  damageType?: string;
 }
 
 /** Which combatant a sprite represents, for matching against an attack event. */
@@ -12,11 +14,19 @@ export type FloatSelf =
   | { kind: 'player' }
   | { kind: 'monster'; displayName: string };
 
-function attackLandsOn(lastAttack: AttackEvent, self: FloatSelf): boolean {
-  if (!lastAttack.hit) return false;
+/**
+ * True when `lastAttack` is aimed at this sprite, regardless of whether it
+ * connected. `attackLandsOn` adds the hit requirement on top; the sprite reads
+ * the aim-only form to float a "MISS" whiff on a swing that whistled past.
+ */
+export function attackAimedAt(lastAttack: AttackEvent, self: FloatSelf): boolean {
   return self.kind === 'player'
     ? lastAttack.attackerKind === 'monster'
     : lastAttack.attackerKind === 'player' && lastAttack.targetName === self.displayName;
+}
+
+function attackLandsOn(lastAttack: AttackEvent, self: FloatSelf): boolean {
+  return lastAttack.hit && attackAimedAt(lastAttack, self);
 }
 
 /**
@@ -110,8 +120,31 @@ const KIND_STYLE: Record<
   },
 };
 
+/**
+ * Per-element tint for the floating number, keyed off `lastAttack.damageType`.
+ * Physical types (slashing/piercing/bludgeoning) and absent types fall through
+ * to the kind's default colour so a sword swing keeps the familiar amber/red.
+ */
+const ELEMENT_TINT: Record<string, { color: string; glow: string }> = {
+  fire: { color: '#ff7a3a', glow: 'rgba(255,107,43,0.75)' },
+  cold: { color: '#8fe6ff', glow: 'rgba(143,230,255,0.75)' },
+  lightning: { color: '#ffe066', glow: 'rgba(255,224,102,0.8)' },
+  poison: { color: '#b6f04a', glow: 'rgba(146,200,30,0.7)' },
+  acid: { color: '#caf04a', glow: 'rgba(170,210,40,0.7)' },
+  necrotic: { color: '#b07ad8', glow: 'rgba(176,122,216,0.72)' },
+  radiant: { color: '#ffe9a8', glow: 'rgba(255,220,120,0.85)' },
+  force: { color: '#c9a8ff', glow: 'rgba(201,168,255,0.78)' },
+  psychic: { color: '#ff8ae0', glow: 'rgba(255,138,224,0.72)' },
+};
+
 function DamageNumber({ item }: { item: FloatingDamageItem }) {
   const style = KIND_STYLE[item.kind];
+  // Damage / crit floats tint to their element when one is present; heals,
+  // misses, and blocks keep their semantic colour.
+  const tint =
+    (item.kind === 'damage' || item.kind === 'crit') && item.damageType
+      ? ELEMENT_TINT[item.damageType]
+      : undefined;
   const label =
     item.kind === 'miss'
       ? 'MISS'
@@ -122,12 +155,13 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
   // Spread numbers slightly so back-to-back hits don't perfectly overlap.
   const offsetX = ((item.id % 5) - 2) * 14;
 
+  const glow = tint?.glow ?? style.glow;
   // Crit keeps the dramatic dual-glow + thick outline; everything else gets a
   // tighter coloured halo over a hard black edge so it pops on any background.
   const textShadow =
     item.kind === 'crit'
-      ? `0 0 12px ${style.glow}, 0 0 24px rgba(255,71,48,0.6), 3px 3px 0 rgba(0,0,0,0.95), -2px -2px 0 rgba(0,0,0,0.95)`
-      : `0 0 9px ${style.glow}, 0 0 4px rgba(0,0,0,0.95), 2px 2px 0 rgba(0,0,0,0.9)`;
+      ? `0 0 12px ${glow}, 0 0 24px ${tint?.glow ?? 'rgba(255,71,48,0.6)'}, 3px 3px 0 rgba(0,0,0,0.95), -2px -2px 0 rgba(0,0,0,0.95)`
+      : `0 0 9px ${glow}, 0 0 4px rgba(0,0,0,0.95), 2px 2px 0 rgba(0,0,0,0.9)`;
 
   // The CSS animation owns `transform` entirely — inline transform would be
   // overridden the moment the animation starts and the clamp would have no effect.
@@ -163,8 +197,8 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
       style={{ left }}
     >
       <div
-        className={`font-display font-extrabold whitespace-nowrap ${style.color} ${style.size} ${style.animation}`}
-        style={{ textShadow, letterSpacing: '0.02em' }}
+        className={`font-display font-extrabold whitespace-nowrap ${tint ? '' : style.color} ${style.size} ${style.animation}`}
+        style={{ textShadow, letterSpacing: '0.02em', ...(tint ? { color: tint.color } : null) }}
       >
         {label}
       </div>

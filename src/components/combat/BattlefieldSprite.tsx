@@ -4,7 +4,7 @@ import type { MonsterInstance, AttackEvent } from '../../types/combat';
 import { computeAC } from '../../engine/character/derived';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
-import { FloatingDamage, resolveSpriteFloat, type FloatingDamageItem, type FloatSelf } from './FloatingDamage';
+import { FloatingDamage, resolveSpriteFloat, attackAimedAt, type FloatingDamageItem, type FloatSelf } from './FloatingDamage';
 import { MirrorImages } from './SpellEffect';
 import { IntentBadge } from './IntentBadge';
 
@@ -131,6 +131,35 @@ function monsterSpriteWidth(defId: string): string {
   }
 }
 
+/** Spark colour for an impact burst, keyed off the blow's damage type. Physical
+ *  and absent types use the default torch amber so a sword hit reads as steel. */
+function sparkTint(damageType: string | undefined): { color: string; glow: string } {
+  switch (damageType) {
+    case 'fire':
+      return { color: '#ff7a3a', glow: '0 0 6px rgba(255,107,43,0.95)' };
+    case 'cold':
+      return { color: '#8fe6ff', glow: '0 0 6px rgba(143,230,255,0.95)' };
+    case 'lightning':
+      return { color: '#ffe066', glow: '0 0 6px rgba(255,224,102,0.95)' };
+    case 'poison':
+    case 'acid':
+      return { color: '#b6f04a', glow: '0 0 6px rgba(146,200,30,0.95)' };
+    case 'necrotic':
+      return { color: '#b07ad8', glow: '0 0 6px rgba(176,122,216,0.95)' };
+    case 'radiant':
+      return { color: '#ffe9a8', glow: '0 0 6px rgba(255,220,120,0.95)' };
+    case 'force':
+      return { color: '#c9a8ff', glow: '0 0 6px rgba(201,168,255,0.95)' };
+    case 'psychic':
+      return { color: '#ff8ae0', glow: '0 0 6px rgba(255,138,224,0.95)' };
+    default:
+      return {
+        color: 'var(--color-accent-torch)',
+        glow: '0 0 6px rgba(255,179,71,0.95), 0 0 14px rgba(255,71,48,0.6)',
+      };
+  }
+}
+
 function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   const hpCurrent =
     props.kind === 'player' ? props.character.hp.current : props.instance.hp.current;
@@ -152,7 +181,9 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   const [damageFloats, setDamageFloats] = useState<FloatingDamageItem[]>([]);
   const [hitFlash, setHitFlash] = useState<'normal' | 'crit' | null>(null);
   const [hitPause, setHitPause] = useState(false);
-  const [sparks, setSparks] = useState<Array<{ id: number; dx: number; dy: number }>>([]);
+  const [sparks, setSparks] = useState<
+    Array<{ id: number; dx: number; dy: number; color: string; glow: string; size: number }>
+  >([]);
   const [knockback, setKnockback] = useState<'left' | 'right' | null>(null);
   const [lunge, setLunge] = useState(false);
   const lastAttackPulse = useRef(props.attackPulse);
@@ -176,10 +207,26 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
     const float = resolveSpriteFloat({ lastAttack: props.lastAttack, self, hpDelta, isNewAttack });
     prevHp.current = hpCurrent;
     if (attackId !== undefined) lastSeenAttackId.current = attackId;
-    if (!float) return;
+
+    if (!float) {
+      // Whiff — a fresh swing aimed at this sprite that missed floats a faint
+      // MISS so a dodged blow still reads on the battlefield.
+      if (isNewAttack && props.lastAttack && !props.lastAttack.hit && attackAimedAt(props.lastAttack, self)) {
+        const id = Date.now() + Math.random();
+        setDamageFloats((d) => [...d, { id, amount: 0, kind: 'miss' }]);
+        setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1000);
+      }
+      return;
+    }
+
+    // The cues below (flash, recoil, sparks) read as a struck blow, so only
+    // arm them for a fresh landed attack — not a poison/bleed tick that fell
+    // back to the HP delta.
+    const fromAttack = isNewAttack && !!props.lastAttack?.hit;
+    const damageType = fromAttack && float.kind !== 'heal' ? props.lastAttack?.damageType : undefined;
 
     const id = Date.now() + Math.random();
-    setDamageFloats((d) => [...d, { id, amount: float.amount, kind: float.kind }]);
+    setDamageFloats((d) => [...d, { id, amount: float.amount, kind: float.kind, damageType }]);
 
     if (float.kind === 'heal') {
       setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1500);
@@ -204,15 +251,25 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
     setKnockback(recoil);
     setTimeout(() => setKnockback((k) => (k === recoil ? null : k)), 300);
 
-    if (isCrit) {
-      // Crit spark burst — 8 particles radiating outward
-      const burst = Array.from({ length: 8 }, (_, i) => {
-        const angle = (i / 8) * Math.PI * 2 + Math.random() * 0.5;
-        const dist = 36 + Math.random() * 20;
+    // Impact spark burst at the point of contact, tinted by the blow's element.
+    // Crits throw a wide radial shower; ordinary landed hits still kick a few
+    // sparks so every connecting blow pops. DoT/environment ticks stay quiet.
+    if (isCrit || fromAttack) {
+      const { color, glow } = sparkTint(damageType);
+      const count = isCrit ? 8 : 4;
+      const minDist = isCrit ? 36 : 22;
+      const spreadDist = isCrit ? 20 : 14;
+      const size = isCrit ? 6 : 4;
+      const burst = Array.from({ length: count }, (_, i) => {
+        const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
+        const dist = minDist + Math.random() * spreadDist;
         return {
           id: id + i + 1,
           dx: Math.cos(angle) * dist,
           dy: Math.sin(angle) * dist - 8,
+          color,
+          glow,
+          size,
         };
       });
       setSparks((s) => [...s, ...burst]);
@@ -314,16 +371,23 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
             {hitFlash === 'crit' && (
               <div className="absolute inset-0 pointer-events-none animate-hit-flash-crit" />
             )}
+            {/* Hurt tint — a bloodied sprite reads as wounded, slow throb so it
+                feels like labored breathing rather than a static recolour. */}
+            {!dead && healthRatio <= 0.3 && (
+              <div className="absolute inset-0 bg-[var(--color-accent-blood)] mix-blend-multiply pointer-events-none animate-hurt-tint" />
+            )}
           </div>
         </div>
-        {/* Crit sparks */}
+        {/* Impact sparks — element-tinted, sized by hit weight */}
         {sparks.map((s) => (
           <div
             key={s.id}
-            className="absolute left-1/2 top-1/2 w-1.5 h-1.5 bg-[var(--color-accent-torch)] pointer-events-none animate-spark rounded-[1px]"
+            className="absolute left-1/2 top-1/2 pointer-events-none animate-spark rounded-[1px]"
             style={{
-              boxShadow:
-                '0 0 6px rgba(255,179,71,0.95), 0 0 14px rgba(255,71,48,0.6)',
+              width: s.size,
+              height: s.size,
+              background: s.color,
+              boxShadow: s.glow,
               ['--spark-dest' as string]: `translate(${s.dx}px, ${s.dy}px)`,
             }}
           />

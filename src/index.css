@@ -276,12 +276,22 @@ img, svg.pixel {
 }
 .animate-lunge-left { animation: godwake-lunge-left 460ms cubic-bezier(0.34, 1.56, 0.64, 1); }
 
+/* Death beat — a white flash of the killing blow, then the body desaturates,
+   topples and sinks as it fades. Reads as a real death, not a plain vanish. */
 @keyframes godwake-die-fall {
-  0% { transform: translateY(0) rotate(0); opacity: 1; filter: brightness(1); }
-  30% { transform: translateY(4px) rotate(-8deg); filter: brightness(1.5); }
-  100% { transform: translateY(50px) rotate(-30deg); opacity: 0; filter: brightness(0.5); }
+  0% { transform: translateY(0) rotate(0) scaleX(1); opacity: 1; filter: brightness(1) saturate(1); }
+  18% { transform: translateY(-3px) rotate(-3deg) scaleX(1.04); filter: brightness(2.4) saturate(0.4); }
+  40% { transform: translateY(6px) rotate(-10deg) scaleX(0.98); filter: brightness(1.1) saturate(0.55); }
+  100% { transform: translateY(54px) rotate(-32deg) scaleX(0.9); opacity: 0; filter: brightness(0.35) saturate(0) blur(1px); }
 }
-.animate-die-fall { animation: godwake-die-fall 800ms cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards; }
+.animate-die-fall { animation: godwake-die-fall 850ms cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards; }
+
+/* Low-HP hurt tint — a slow throb of blood over a wounded sprite. */
+@keyframes godwake-hurt-tint {
+  0%, 100% { opacity: 0.14; }
+  50% { opacity: 0.3; }
+}
+.animate-hurt-tint { animation: godwake-hurt-tint 1.6s ease-in-out infinite; }
 
 /* Damage number float — bigger arc, rotation, gravity */
 @keyframes godwake-damage-float {
@@ -1049,4 +1059,46 @@ img, svg.pixel {
 @keyframes bm-node-beckon {
   0%, 100% { box-shadow: 0 0 0 1px var(--bm-accent, var(--color-accent-amber)), 2px 2px 0 rgba(0, 0, 0, 0.6); }
   50% { box-shadow: 0 0 12px var(--bm-accent, var(--color-accent-amber)), 2px 2px 0 rgba(0, 0, 0, 0.6); }
+}
+
+/* === Reduced motion ===
+   Honour prefers-reduced-motion for the combat juice: strip the screen shake,
+   hit-stop jolt, knockback/lunge displacement, idle loop, spark travel and the
+   death topple. The informational cues stay — the coloured hit-flash overlays,
+   the hurt tint, and the floating damage numbers still read, just without the
+   camera/sprite motion that can trigger vestibular discomfort. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shake,
+  .animate-shake-soft,
+  .animate-hit-pause,
+  .animate-knockback-left,
+  .animate-knockback-right,
+  .animate-lunge-left,
+  .animate-lunge-right,
+  .animate-idle-breath {
+    animation: none !important;
+  }
+  /* Sparks fade in place instead of flying outward. */
+  .animate-spark {
+    animation: godwake-spark-fade 360ms ease-out forwards !important;
+  }
+  /* Death dissolves in place rather than toppling across the field. */
+  .animate-die-fall {
+    animation: godwake-die-fade 600ms ease forwards !important;
+  }
+  /* Hurt tint holds at a steady low alpha — no throb. */
+  .animate-hurt-tint {
+    animation: none !important;
+    opacity: 0.2;
+  }
+}
+
+@keyframes godwake-spark-fade {
+  0% { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+@keyframes godwake-die-fade {
+  0% { opacity: 1; filter: brightness(1) saturate(1); }
+  100% { opacity: 0; filter: brightness(0.4) saturate(0); }
 }
