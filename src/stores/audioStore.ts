@@ -7,6 +7,8 @@ interface AudioState {
   sfxVolume: number;
   musicVolume: number;
   muted: boolean;
+  // One-time guard: the default-on music lift fires at most once (see initAudio).
+  musicInitialized: boolean;
 
   setMasterVolume: (v: number) => void;
   setSfxVolume: (v: number) => void;
@@ -36,6 +38,7 @@ export const useAudioStore = create<AudioState>()(
       sfxVolume: 1.0,
       musicVolume: 0.35,
       muted: false,
+      musicInitialized: false,
 
       setMasterVolume: (v) => {
         set({ masterVolume: clamp01(v) });
@@ -62,16 +65,11 @@ export const useAudioStore = create<AudioState>()(
       name: 'godwake-audio',
       storage: createJSONStorage(() => localStorage),
       version: 3,
-      migrate: (persistedState, version) => {
-        const s = (persistedState ?? {}) as Partial<AudioState>;
-        // v3 turns music ON by default. Earlier versions persisted music at 0
-        // (drone-only era); lift silenced saves to the new default so the new
-        // chiptune tracks are audible, while respecting a user who nudged it.
-        if (version < 3) {
-          const lifted = !s.musicVolume ? 0.35 : s.musicVolume;
-          return { ...s, musicVolume: lifted } as AudioState;
-        }
-        return s as AudioState;
+      migrate: (persistedState) => {
+        // The default-on music lift is owned by initAudio's musicInitialized
+        // guard, not a version branch. Pass persisted state through; persist's
+        // merge fills musicInitialized: false for pre-flag saves.
+        return (persistedState ?? {}) as AudioState;
       },
       onRehydrateStorage: () => (state) => {
         if (state) pushToEngine(state);
@@ -85,6 +83,16 @@ export const useAudioStore = create<AudioState>()(
  * sync persisted volumes into the engine, and wire the autoplay-gate listener.
  */
 export function initAudio() {
+  const state = useAudioStore.getState();
+  if (!state.musicInitialized) {
+    // One-time default-on: pre-music saves persisted musicVolume at 0 (drone
+    // era). Lift a silenced save to the chiptune default exactly once; from now
+    // on musicInitialized is true, so an intentional mute via Settings sticks.
+    useAudioStore.setState({
+      musicVolume: state.musicVolume || 0.35,
+      musicInitialized: true,
+    });
+  }
   pushToEngine(useAudioStore.getState());
   audioEngine.attachAutoResume();
 }

@@ -305,6 +305,11 @@ export function CombatScreen({
     state.currentTurnIndex,
     overlayActive,
     autoBattle,
+    // Re-run when the spell flow opens/closes so the mid-spell-pick guard above
+    // actually cancels a pending auto-end instead of letting it fire under the
+    // open picker.
+    pickingSpell,
+    castingSpellId,
   ]);
 
   // Auto-Battle: when on, the shared action policy plays the player's turn one
