@@ -640,7 +640,14 @@ interface LifeOutcome {
   renownEarned: number;
   deathCause: string | null;
   deathRoomLabel: string | null;
+  /** Measurement-only: mobs felled this life (for the live renown formula). */
+  mobsKilled: number;
+  /** Measurement-only: rooms reached this life (depth credit in live formula). */
+  roomsReached: number;
 }
+
+/** Measurement-only sink: every life's structure, dumped for live-formula renown analysis. */
+export const LIFE_RECORDS: LifeOutcome[] = [];
 
 function liveOneLife(
   roller: DiceRoller,
@@ -653,6 +660,7 @@ function liveOneLife(
   const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
   const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension });
   let bossesKilled = 0;
+  let mobsKilled = 0;
   let finalRoomIdx = 0;
   let finalChapter = 1;
   let deathCause: string | null = null;
@@ -699,6 +707,7 @@ function liveOneLife(
         break;
       }
       if (isBoss) bossesKilled += 1;
+      mobsKilled += (room.monsters ?? []).reduce((n, m) => n + m.count, 0);
       // Loot: gold + gear + legendary, then chapter-clear gold + XP.
       const loot = resolveCombatLoot(roller, character, room, [...soul.ownedLegendaries, ...newLegendaries]);
       character = { ...loot.character, goldInPocket: loot.character.goldInPocket + loot.gold };
@@ -739,21 +748,21 @@ function liveOneLife(
     renownBase * asc.renownMult * renownSoulMarkMultiplier(character),
   );
 
-  return {
-    outcome: {
-      cleared,
-      finalRoomIdx,
-      finalChapter,
-      finalLevel: character.level,
-      bossesKilled,
-      ascension: soul.ascension,
-      renownEarned,
-      deathCause,
-      deathRoomLabel,
-    },
-    finalCharacter: character,
-    newLegendaries,
+  const outcome: LifeOutcome = {
+    cleared,
+    finalRoomIdx,
+    finalChapter,
+    finalLevel: character.level,
+    bossesKilled,
+    ascension: soul.ascension,
+    renownEarned,
+    deathCause,
+    deathRoomLabel,
+    mobsKilled,
+    roomsReached: Math.max(0, finalRoomIdx - 1),
   };
+  LIFE_RECORDS.push(outcome);
+  return { outcome, finalCharacter: character, newLegendaries };
 }
 
 // ─── One soul (a continuous reincarnation chain up the ladder) ───────────────
@@ -973,6 +982,11 @@ function main(): void {
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, doc, 'utf8');
   console.log(`\nWrote findings → ${outPath}  (${dtTotal}s wall)`);
+
+  // Measurement-only: dump every life's structure for the live-formula renown analysis.
+  const recPath = resolve(process.cwd(), 'docs/sim-findings/life-records.json');
+  writeFileSync(recPath, JSON.stringify(LIFE_RECORDS), 'utf8');
+  console.log(`Wrote ${LIFE_RECORDS.length} life records → ${recPath}`);
 }
 
 function renderVerdict(aggs: ClassAggregate[]): string {
