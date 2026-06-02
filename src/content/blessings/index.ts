@@ -6,6 +6,13 @@ import { BlessingSchema, type Blessing, type BlessingModifiers } from '../../sch
 // here lets shrines and camps filter the offer pool by class.
 const WEAPON_CLASSES = ['fighter', 'rogue', 'barbarian', 'ranger'] as const;
 
+// Classes whose primary action is a spell. Their offer pool was the lone gap:
+// 11 blessings were weapon-keyed and ZERO were caster-keyed, so a Wizard/Druid
+// only ever saw the universal cards. Caster blessings tag this list so the
+// spell levers (DC / spell damage / spell attack) surface only for them — those
+// fields are inert for martials, the mirror of the weapon/caster split.
+const CASTER_CLASSES = ['wizard', 'druid'] as const;
+
 const POOL: Blessing[] = [
   BlessingSchema.parse({
     id: 'tymoras-coin',
@@ -238,6 +245,128 @@ const POOL: Blessing[] = [
     effect: 'Gain 6 temporary HP at the start of a chapter-boss fight.',
     modifiers: { bossTempHp: 6 },
   }),
+  // --- caster pool: spell-keyed blessings (wizard/druid only) ---
+  BlessingSchema.parse({
+    id: 'mystras-acuity',
+    name: "Mystra's Acuity",
+    god: 'mystra',
+    flavor: 'The Weave sharpens to a point behind your eyes. Where it touches, no ward holds clean.',
+    effect: '+1 to your spell save DC.',
+    modifiers: { spellDcBonus: 1 },
+    classRelevance: [...CASTER_CLASSES],
+  }),
+  BlessingSchema.parse({
+    id: 'mystras-surge',
+    name: "Mystra's Surge",
+    god: 'mystra',
+    flavor: 'The current runs fuller through you than the spell was meant to carry. It spills over into the world.',
+    effect: '+2 damage on all spells.',
+    modifiers: { spellDamageBonus: 2 },
+    classRelevance: [...CASTER_CLASSES],
+  }),
+  BlessingSchema.parse({
+    id: 'mystras-precision',
+    name: "Mystra's Precision",
+    god: 'mystra',
+    flavor: 'The Weave does not let your aim wander. The bolt goes where the will points.',
+    effect: '+1 to spell attack rolls.',
+    modifiers: { spellAttackBonus: 1 },
+    classRelevance: [...CASTER_CLASSES],
+  }),
+  BlessingSchema.parse({
+    id: 'mystras-apex',
+    name: "Mystra's Apex",
+    god: 'mystra',
+    flavor: 'For a breath the Lady of Mysteries casts through you, and the spell remembers what it was at the dawn of the Art.',
+    effect: '+1 spell save DC and +1 spell damage.',
+    modifiers: { spellDcBonus: 1, spellDamageBonus: 1 },
+    classRelevance: [...CASTER_CLASSES],
+  }),
+  BlessingSchema.parse({
+    id: 'selunes-beacon',
+    name: "Selûne's Beacon",
+    god: 'selune',
+    flavor: 'Her light marks the target before the spell leaves your hand. You strike a thing already lit.',
+    effect: '+1 to spell attack rolls and +1 spell damage.',
+    modifiers: { spellAttackBonus: 1, spellDamageBonus: 1 },
+    classRelevance: [...CASTER_CLASSES],
+  }),
+  BlessingSchema.parse({
+    id: 'silvanus-wrath',
+    name: "Silvanus's Wrath",
+    god: 'silvanus',
+    flavor: 'The wild lends its weight to your calling — root, storm, and fang behind every word.',
+    effect: '+1 damage on all spells.',
+    modifiers: { spellDamageBonus: 1 },
+    classRelevance: [...CASTER_CLASSES],
+  }),
+  BlessingSchema.parse({
+    id: 'silvanus-insight',
+    name: "Silvanus's Insight",
+    god: 'silvanus',
+    flavor: 'You read the quarry as the oak reads the season — its weakness plain, its dodging already foreseen.',
+    effect: '+1 spell save DC and +1 to spell attack rolls.',
+    modifiers: { spellDcBonus: 1, spellAttackBonus: 1 },
+    classRelevance: [...CASTER_CLASSES],
+  }),
+  BlessingSchema.parse({
+    id: 'lathanders-mantle',
+    name: "Lathander's Mantle",
+    god: 'lathander',
+    flavor: 'Dawn cloaks the caster — fire to throw, warmth to wear. The morning does not send its own out cold.',
+    effect: '+1 spell damage and 3 temporary HP at the start of each combat.',
+    modifiers: { spellDamageBonus: 1, extraTempHpPerRoom: 3 },
+    classRelevance: [...CASTER_CLASSES],
+  }),
+  // --- universal pool: class-agnostic depth so every soul cycles fewer repeats ---
+  BlessingSchema.parse({
+    id: 'tymoras-fortune',
+    name: "Tymora's Fortune",
+    god: 'tymora',
+    flavor: 'The Lady leans close and palms the dice twice. What you fumble, she hands back — and once more besides.',
+    effect: 'Reroll up to 2 missed attack rolls per encounter (weapon or spell).',
+    modifiers: { rerollMissesPerEncounter: 2 },
+  }),
+  BlessingSchema.parse({
+    id: 'lathanders-renewal',
+    name: "Lathander's Renewal",
+    god: 'lathander',
+    flavor: 'Each threshold you cross, the dawn closes a little more of what the last room opened.',
+    effect: 'Heal 3 HP at the start of each combat.',
+    modifiers: { regenPerCombat: 3 },
+  }),
+  BlessingSchema.parse({
+    id: 'helms-rampart',
+    name: "Helm's Rampart",
+    god: 'helm',
+    flavor: 'The Watcher sets a wall at your shoulder and braces it hardest where the worst is coming.',
+    effect: '+1 AC, and 6 temporary HP at the start of a chapter-boss fight.',
+    modifiers: { acBonus: 1, bossTempHp: 6 },
+  }),
+  BlessingSchema.parse({
+    id: 'helms-resolve',
+    name: "Helm's Resolve",
+    god: 'helm',
+    flavor: 'Bleeding, the Watch stands harder, not softer. A breached wall is the one He guards closest.',
+    effect: '+3 AC while bloodied (at half HP or less).',
+    modifiers: { acBonusWhileBloodied: 3 },
+  }),
+  BlessingSchema.parse({
+    id: 'ilmaters-solace',
+    name: "Ilmater's Solace",
+    god: 'ilmater',
+    flavor: 'The Crying God takes a measure of the hurt between each trial, and you walk into the next less broken than you left the last.',
+    effect: 'Heal 15% of your maximum HP at the start of each combat.',
+    modifiers: { regenPctPerCombat: 15 },
+  }),
+  BlessingSchema.parse({
+    id: 'silvanus-communion',
+    name: "Silvanus's Communion",
+    god: 'silvanus',
+    flavor: 'The deeper you root into the dark, the more the wild pours into you. The descent itself becomes your armour.',
+    effect: 'At the start of each combat, gain temporary HP equal to twice your current delve level.',
+    modifiers: { tempHpPerDelveLevel: 2 },
+  }),
 ];
 
 /**
@@ -254,7 +383,8 @@ export type BlessingCategory =
   | 'offense'
   | 'precision'
   | 'crit'
-  | 'fortune';
+  | 'fortune'
+  | 'spellcraft';
 
 /** Modifier lever → effect bucket. Order is the multi-lever tie-break; the
  * current pool is single-lever, so each blessing maps by its one modifier. */
@@ -266,6 +396,12 @@ const CATEGORY_BY_MODIFIER: Partial<Record<keyof BlessingModifiers, BlessingCate
   damageBonus: 'offense',
   holyDamageBonus: 'offense',
   firstAttackDamage: 'offense',
+  // Spell levers, grouped before the weapon-crit keys so multi-lever caster
+  // blessings tie-break sensibly: a DC combo reads 'spellcraft', a spell-attack
+  // combo reads 'precision', a pure spell-damage card reads 'offense'.
+  spellDcBonus: 'spellcraft',
+  spellAttackBonus: 'precision',
+  spellDamageBonus: 'offense',
   critRangeBonus: 'crit',
   critRangeBonusWhileFull: 'crit',
   critRangeBonusWhileBloodied: 'crit',

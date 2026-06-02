@@ -3,6 +3,8 @@ import { createDiceRoller } from '../dice';
 import { BlessingSchema, type Blessing } from '../../schemas/blessing';
 import { aggregateBlessingModifiers, blessingSignature, characterBlessingMods, rollBlessingOptions } from './blessings';
 import { computeAC, critRange } from './derived';
+import { blessingsForClass } from './blessings';
+import { spellSaveDC, spellDamageBonus, spellAttackBonus } from '../combat/spells/helpers';
 import { characterAtLevel } from '../../test/sim/encounterStress';
 
 const mocks = vi.hoisted(() => ({
@@ -489,5 +491,55 @@ describe('aggregateBlessingModifiers — max-of-individual stacking guard (PR #8
     const single = characterAtLevel('fighter', 5, ['helms-bulwark']);
     const stacked = characterAtLevel('fighter', 5, ['helms-bulwark', 'lathanders-ember']);
     expect(characterBlessingMods(stacked).holyDamageBonus).toBe(characterBlessingMods(single).holyDamageBonus);
+  });
+});
+
+describe('caster blessing pool — variety expansion', () => {
+  it('the caster pool is meaningfully deeper than the old universal-only floor', async () => {
+    const { listBlessings } = await import('../../content/blessings');
+    const universalOnly = listBlessings().filter(
+      (b) => !b.classRelevance || b.classRelevance.length === 0,
+    ).length;
+    for (const classId of ['wizard', 'druid'] as const) {
+      const pool = blessingsForClass(classId);
+      // Was 16 (universal-only) before this lane. The deeper pool is the fix
+      // for casters cycling a tiny set fast and feeling repetitive.
+      expect(pool.length).toBeGreaterThanOrEqual(25);
+      expect(pool.length).toBeGreaterThan(universalOnly);
+    }
+  });
+
+  it('martials never see a caster blessing on their offer pool', async () => {
+    const { getBlessing } = await import('../../content/blessings');
+    for (const classId of ['fighter', 'rogue', 'barbarian', 'ranger'] as const) {
+      for (const b of blessingsForClass(classId)) {
+        const m = getBlessing(b.id).modifiers;
+        expect(m.spellDcBonus ?? m.spellDamageBonus ?? m.spellAttackBonus).toBeUndefined();
+      }
+    }
+  });
+
+  it('every caster blessing is mechanically live — its spell lever moves an engine value', async () => {
+    const { listBlessings } = await import('../../content/blessings');
+    const casterBlessings = listBlessings().filter((b) => b.classRelevance?.includes('wizard'));
+    expect(casterBlessings.length).toBeGreaterThanOrEqual(8);
+
+    const base = characterAtLevel('wizard', 5);
+    for (const b of casterBlessings) {
+      const m = b.modifiers;
+      // Each carries at least one spell lever — assert that lever is read.
+      const withIt = characterAtLevel('wizard', 5, [b.id]);
+      if (m.spellDcBonus !== undefined)
+        expect(spellSaveDC(withIt)).toBe(spellSaveDC(base) + m.spellDcBonus);
+      if (m.spellDamageBonus !== undefined)
+        expect(spellDamageBonus(withIt)).toBe(spellDamageBonus(base) + m.spellDamageBonus);
+      if (m.spellAttackBonus !== undefined)
+        expect(spellAttackBonus(withIt)).toBe(spellAttackBonus(base) + m.spellAttackBonus);
+      const hasSpellLever =
+        m.spellDcBonus !== undefined ||
+        m.spellDamageBonus !== undefined ||
+        m.spellAttackBonus !== undefined;
+      expect(hasSpellLever).toBe(true);
+    }
   });
 });

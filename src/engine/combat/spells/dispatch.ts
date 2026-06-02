@@ -35,64 +35,74 @@ import { castApotheosis, castUnmake } from './ninthLevel';
  * Shield as a future reaction) stay flexible. Returns updated combat state.
  */
 export function castSpell(ctx: CastSpellContext): CastResult {
-  const { character, state, spellId, roller } = ctx;
-  const check = canCastSpell(character, spellId);
-  if (!check.ok) return { state, character, cast: false };
+  const check = canCastSpell(ctx.character, ctx.spellId);
+  if (!check.ok) return { state: ctx.state, character: ctx.character, cast: false };
+
+  // Sealed Wards twist: blessings are inert this fight. Cast against a
+  // blessing-stripped view of the character so the caster's spell blessings
+  // (DC / damage / attack) don't fire — parity with the martial seal in
+  // playerAttack. No other blessing mod is read during a cast, so an empty
+  // blessing list is the whole effect.
+  const sealed = ctx.state.blessingsSealed ?? false;
+  const cc: CastSpellContext = sealed
+    ? { ...ctx, character: { ...ctx.character, blessings: [] } }
+    : ctx;
+  const { character, state, spellId, roller } = cc;
 
   const spell = getSpell(spellId);
   switch (spell.effectKey) {
     case 'fire-bolt':
-      return castFireBolt(ctx);
+      return castFireBolt(cc);
     case 'magic-missile':
-      return castMagicMissile(ctx);
+      return castMagicMissile(cc);
     case 'burning-hands':
-      return castBurningHands(ctx);
+      return castBurningHands(cc);
     case 'shield':
       return castShield(character, state);
     case 'mage-armor':
       return castMageArmor(character, state);
     case 'hold-person':
-      return castHoldPerson(ctx);
+      return castHoldPerson(cc);
     case 'misty-step':
       return castMistyStep(character, state);
     case 'scorching-ray':
-      return castScorchingRay(ctx);
+      return castScorchingRay(cc);
     case 'blur':
       return castBlur(character, state);
     case 'mirror-image':
       return castMirrorImage(character, state);
     case 'fireball':
-      return castFireball(ctx);
+      return castFireball(cc);
     case 'lightning-bolt':
-      return castLightningBolt(ctx);
+      return castLightningBolt(cc);
     case 'rime-blast':
-      return castRimeBlast(ctx);
+      return castRimeBlast(cc);
     case 'force-lance':
-      return castForceLance(ctx);
+      return castForceLance(cc);
     case 'glacial-cone':
-      return castGlacialCone(ctx);
+      return castGlacialCone(cc);
     case 'void-ray':
-      return castVoidRay(ctx);
+      return castVoidRay(cc);
     case 'sunfire-burst':
-      return castSunfireBurst(ctx);
+      return castSunfireBurst(cc);
     case 'dissolution':
-      return castDissolution(ctx);
+      return castDissolution(cc);
     case 'stormcrash':
-      return castStormcrash(ctx);
+      return castStormcrash(cc);
     case 'soul-snare':
-      return castSoulSnare(ctx);
+      return castSoulSnare(cc);
     case 'cataclysm':
-      return castCataclysm(ctx);
+      return castCataclysm(cc);
     case 'wither':
-      return castWither(ctx);
+      return castWither(cc);
     case 'vampiric-touch':
-      return castVampiricTouch(ctx);
+      return castVampiricTouch(cc);
     case 'exsanguinate':
-      return castExsanguinate(ctx);
+      return castExsanguinate(cc);
     case 'apotheosis':
       return castApotheosis(character, state);
     case 'unmake':
-      return castUnmake(ctx);
+      return castUnmake(cc);
     default:
       // Exhaustive guard — if a new effectKey is added, this branch becomes
       // unreachable but keeps the switch honest.
