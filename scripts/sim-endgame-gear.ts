@@ -354,7 +354,7 @@ function resolveCombatLoot(
   const defIds = (room.monsters ?? []).flatMap((m) =>
     Array.from({ length: m.count }, () => m.defId),
   );
-  let gold = (room.goldReward ?? 0) + rollRoomGoldDrops(roller, defIds);
+  const gold = (room.goldReward ?? 0) + rollRoomGoldDrops(roller, defIds);
   if (!MODEL_GEAR) return { character: c, gold, newLegendaries };
 
   // Rolled affix gear drop (greedy-equip-if-better).

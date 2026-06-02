@@ -316,7 +316,7 @@ export const CHAPTER10_FLAVOR = {
     {
       title: 'A Bough Still Green',
       flavorText:
-        "Where the burning has not yet reached, one low branch of the Tree of Life still holds its colour — a single bough of living silver-green in a city going to ash, the last unspoiled reach of the thing the captor means to drain. The light off it is faint and tired, but it is the Tree\'s own, and it remembers what the city was before this night. Stand under it a moment. It is glad, in the dim way a dying thing is glad, that someone came.",
+        "Where the burning has not yet reached, one low branch of the Tree of Life still holds its colour — a single bough of living silver-green in a city going to ash, the last unspoiled reach of the thing the captor means to drain. The light off it is faint and tired, but it is the Tree's own, and it remembers what the city was before this night. Stand under it a moment. It is glad, in the dim way a dying thing is glad, that someone came.",
     },
     {
       title: "Rillifane's Untaken Altar",
@@ -333,7 +333,7 @@ export const CHAPTER10_FLAVOR = {
     {
       title: 'The Hollow of a Great Root',
       flavorText:
-        "Where one of the Tree\'s vast roots breaks the surface of the slope it leaves a dry hollow beneath, floored with old leaf-fall and out of the wind. The defiling has not reached this deep yet; down here the wood still smells of living sap and not of rot. The roots of the Tree of Life held this whole city up for an age. For one night\'s rest they will hold you too.",
+        "Where one of the Tree's vast roots breaks the surface of the slope it leaves a dry hollow beneath, floored with old leaf-fall and out of the wind. The defiling has not reached this deep yet; down here the wood still smells of living sap and not of rot. The roots of the Tree of Life held this whole city up for an age. For one night's rest they will hold you too.",
     },
   ] as ChapterRoomFlavor[],
   shop: {
@@ -345,7 +345,7 @@ export const CHAPTER10_FLAVOR = {
   boss: {
     title: 'The Temple of Rillifane, Defiled',
     flavorText:
-      "The temple stair ends in the great house of the tree-father, and it has been made a reptile\'s den. The altar of Rillifane is smashed and draped across with a sprawl of green-gold scale; the incense of three hundred years lies under a reek of swamp-rot and crushed gold. The captor did not trust the broken city to hold this last door, so he loosed a dragon in the holy place — Nizidramanii\'yt, a green wyrm old enough to remember the planting of the lesser groves, coiled now between you and the way up to the Tree itself. It opens one slitted eye the colour of stagnant water as you come, and does not bother to rise, because nothing has yet climbed this stair worth standing up for, and it does not expect you to be the first.",
+      "The temple stair ends in the great house of the tree-father, and it has been made a reptile's den. The altar of Rillifane is smashed and draped across with a sprawl of green-gold scale; the incense of three hundred years lies under a reek of swamp-rot and crushed gold. The captor did not trust the broken city to hold this last door, so he loosed a dragon in the holy place — Nizidramanii'yt, a green wyrm old enough to remember the planting of the lesser groves, coiled now between you and the way up to the Tree itself. It opens one slitted eye the colour of stagnant water as you come, and does not bother to rise, because nothing has yet climbed this stair worth standing up for, and it does not expect you to be the first.",
     xpReward: 4200,
     goldReward: 600,
   },
@@ -362,12 +362,12 @@ export const CHAPTER10_BOSS_INTEL: Omit<BossIntelCard, 'chapter'> & { chapter: 1
   chapter: 10,
   roomTitle: 'A Druid\'s Last Reckoning',
   roomFlavor:
-    "A reader\'s nook in the temple wall where one of Rillifane\'s druids stopped, before it died, to set down what it had learned of the thing in the holy place. A slate, a stub of chalk, and a sketch of the great wyrm coiled on the altar — the long neck marked, the reach of the bite traced out twice the body\'s length, and the temple floor washed over with a single scrawled cloud. Beside the cloud, underlined until the chalk snapped: IT BREATHES FIRST. Below, smaller, where the hand had begun to fail: don\'t stand in the green fog · the neck reaches further than it lies · the old worm slows, then it does not — it wakes when it bleeds.",
+    "A reader's nook in the temple wall where one of Rillifane's druids stopped, before it died, to set down what it had learned of the thing in the holy place. A slate, a stub of chalk, and a sketch of the great wyrm coiled on the altar — the long neck marked, the reach of the bite traced out twice the body's length, and the temple floor washed over with a single scrawled cloud. Beside the cloud, underlined until the chalk snapped: IT BREATHES FIRST. Below, smaller, where the hand had begun to fail: don't stand in the green fog · the neck reaches further than it lies · the old worm slows, then it does not — it wakes when it bleeds.",
   weakSpotResolution:
     "You read the slate the way the dying druid meant it to be read. The wyrm does not strike first — it breathes first, rolling the green rot across the temple floor to sicken you before the neck comes down. Knowing where that fog will fall, your opening blow lands in the gap it leaves while it is still drawing the breath.",
   battlePlanResolution:
-    "You read the whole shape of the fight off the druid\'s slate: the poison breath first, to fill your lungs and slow your arm — then the long neck reaching twice its body\'s length, bite and coil out of two directions at once — and the moment past half when the old worm stops fighting from habit and wakes in earnest, every wound feeding the rage. You climb into the temple with your mind braced against the fog and your first strike already set for the gap before the breath rolls out.",
+    "You read the whole shape of the fight off the druid's slate: the poison breath first, to fill your lungs and slow your arm — then the long neck reaching twice its body's length, bite and coil out of two directions at once — and the moment past half when the old worm stops fighting from habit and wakes in earnest, every wound feeding the rage. You climb into the temple with your mind braced against the fog and your first strike already set for the gap before the breath rolls out.",
   walkPastResolution:
-    "You leave the slate unread and the druid\'s last reckoning un-studied, and step past the nook toward the reek of swamp and gold. On the smashed altar ahead a slitted eye the colour of stagnant water opens a fraction and does not trouble to rise. The bold take the temple on their own terms — and what the old worm hoards beneath its coils will weigh a touch heavier when it finally bothers to stand.",
+    "You leave the slate unread and the druid's last reckoning un-studied, and step past the nook toward the reek of swamp and gold. On the smashed altar ahead a slitted eye the colour of stagnant water opens a fraction and does not trouble to rise. The bold take the temple on their own terms — and what the old worm hoards beneath its coils will weigh a touch heavier when it finally bothers to stand.",
   coinCost: 5 * 10 * 10 + 20 * 10,
 };

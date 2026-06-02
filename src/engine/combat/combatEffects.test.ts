@@ -74,7 +74,7 @@ describe('combat effects — temp HP absorbs damage', () => {
     let blessed = makeHuman({ blessings: ['lathanders-dawn'] });
     const roller = createDiceRoller(11);
     const init = createCombat({ roller, character: blessed, monsters: [{ def: goblin }] });
-    let initial = init.state;
+    const initial = init.state;
     blessed = init.character;
     expect(blessed.hp.temp).toBe(3);
     const startCurrent = blessed.hp.current;
@@ -386,7 +386,6 @@ describe('combat effects — stabilise (death-save replacement)', () => {
     expect(hero.delveBudgets?.stabilisesUsed).toBe(3);
 
     dmg = applyDamage(state, 'player', 5, hero);
-    state = dmg.state;
     hero = dmg.character;
     expect(hero.hp.current).toBe(0);
   });

@@ -507,7 +507,7 @@ export function playerAttack(
 
     // Rogue (Assassin): the opening strike on a full-health foe drives an extra
     // 2d6 home — burst that front-loads the kill before the target can act.
-    let assassinDamage = 0;
+    let assassinDamage;
     if (
       characterHasMechanic(nextCharacter, 'assassin') &&
       target.kind === 'monster' &&
@@ -522,7 +522,7 @@ export function playerAttack(
     // Ranger (Giant Killer): bigger quarry bleeds harder. The primary foe of a
     // boss/elite room carries a legendary-resistance pool — a stable "this is
     // the room's giant" flag for a ranger, who casts no control to spend it.
-    let giantKillerDamage = 0;
+    let giantKillerDamage;
     if (
       characterHasMechanic(nextCharacter, 'giant-killer') &&
       target.kind === 'monster' &&
@@ -536,7 +536,7 @@ export function playerAttack(
 
     // Fighter (Battle Master): the first strike of the fight becomes a measured
     // maneuver — bonus weapon dice now, plus a bleeding wound applied below.
-    let maneuverDamage = 0;
+    let maneuverDamage;
     const battleMasterManeuver =
       characterHasMechanic(nextCharacter, 'battle-master') && isFirstAttack;
     if (battleMasterManeuver) {

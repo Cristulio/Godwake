@@ -716,7 +716,7 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'insight', dc: 13 },
         outcome: {
           resolution:
-            'You see it in his eyes before his hand moves — terror, not malice. You catch his wrist soft and turn the blade aside. He stares at his empty hand for a long beat. \"Eat,\" you say, and press a coin into the palm. He runs. Something in your chest unclenches.',
+            'You see it in his eyes before his hand moves — terror, not malice. You catch his wrist soft and turn the blade aside. He stares at his empty hand for a long beat. "Eat," you say, and press a coin into the palm. He runs. Something in your chest unclenches.',
           effects: [
             { kind: 'gold_delta', amount: -2 },
             { kind: 'temp_hp', amount: 4 },
@@ -1058,7 +1058,7 @@ const POOL: EventTemplate[] = [
         label: 'Refuse the deal',
         hint: "A warden's mercy is a wizard's leash.",
         outcome: {
-          resolution: 'He shrugs and the key vanishes. \"Another walker, then. The Director keeps a long list.\"',
+          resolution: 'He shrugs and the key vanishes. "Another walker, then. The Director keeps a long list."',
           effects: [],
         },
       },
