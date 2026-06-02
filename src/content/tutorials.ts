@@ -9,7 +9,14 @@ import type { ClassId } from '../schemas/ids';
  * how to use it well — not story (the lore beats live elsewhere).
  */
 export interface TutorialContent {
-  /** The thing being unlocked, as a noun phrase ("Legendary Relics"). */
+  /**
+   * The thing unlocked, named plainly and prominently — the big in-world banner
+   * at the top of the card so WHAT opened is never buried in flavor. For souls
+   * this is the class ("The Rogue"); for features the system ("Legendary
+   * Relics"). Kept short — it is rendered large.
+   */
+  unlocked: string;
+  /** The card's flavor title — an evocative phrase under the headline. */
   title: string;
   /** Plain-English explanation, a paragraph or two — what it is, how it works. */
   body: string[];
@@ -24,7 +31,8 @@ export interface TutorialContent {
  */
 export const TUTORIALS: Record<FeatureId, TutorialContent> = {
   grove: {
-    title: "The Druid Grove",
+    unlocked: "The Druid Grove",
+    title: "Permanence, Bought in Blood",
     body: [
       "Every descent scores a mark on the soul — Renown, the one thing the wheel cannot burn away when it hauls you back to be born again. Past the hub, on older ground, the druids keep a grove that will trade it for something rarer than steel: permanence.",
       "More blood to spill before you fall, a truer arm, tricks the dark does not know how to take from you. Hoarded, Renown only sits there. Spent, it makes every life after this one harder to put down.",
@@ -32,7 +40,8 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Renown outlives death — trade it at the Grove for gains to body, blade, and art that never reset.",
   },
   "affixes-rare": {
-    title: "Rare Spoils",
+    unlocked: "Rare Spoils",
+    title: "The Cold Blue Edge",
     body: [
       "The deep dark has started parting with better things. A Rare find — its edge lit cold and blue — wakes with two enchantments worked into it, where common iron carries only one.",
       "And these are not tallies of plus-this and plus-that. They are deeds the metal performs: a blade that opens a wound which will not close, mail that turns the one blow meant to end you, a band that makes each killing strike crueler still. Read what a piece does, not what it weighs.",
@@ -40,6 +49,7 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Rare gear wakes with two affixes — and an affix is a deed the gear performs, not a number it adds.",
   },
   "elite-nodes": {
+    unlocked: "Elite Foes",
     title: "The Marked",
     body: [
       "Some things in the dark stand apart from their kin — larger, older, wrong in ways that make the rest give them room. The route ahead will show you where such a one waits. Whether you walk its way is yours to choose.",
@@ -48,6 +58,7 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Elites are the route's hardest fights — and the only kills that ever yield a Legendary relic.",
   },
   "boss-intel": {
+    unlocked: "Warden Study",
     title: "A Study in Dread",
     body: [
       "At the last seal of a chapter, gold buys something keener than another blade — it buys foreknowledge. Lay the coin down and you may study the thing coiled behind that door before you face it: how it opens, what it hungers for, the trick it saves for the moment you believe you've won.",
@@ -56,7 +67,8 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Pay gold at the chapter's seal to study its warden — learn its patterns before the door opens.",
   },
   legendaries: {
-    title: "Legendary Relics",
+    unlocked: "Legendary Relics",
+    title: "Bound to the Soul",
     body: [
       "A relic has surfaced from somewhere far beneath the reach of common plunder — older than the chapters, stranger than anything the dark gives up willingly. Where the gear you carry rots away with each fallen body, a relic binds to the soul beneath it. It endures every death, every emptied run, every new skin you wear. Set it at the hub before you descend.",
       "It hangs no armor on you and puts no edge in your hand. What it does is bend the way a soul fights — quietly, and whole. Some relics answer to one kind of soul alone; in the wrong hands they stay dead stone.",
@@ -64,7 +76,8 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Relics bind to the soul, not the body — they outlast every death and are set at the hub.",
   },
   "affixes-epic": {
-    title: "Epic Spoils",
+    unlocked: "Epic Spoils",
+    title: "Restless Purple",
     body: [
       "The dark is giving up its deeper secrets now. An Epic find — marked in restless purple, layered with enchantment that will not lie still — carries three, sometimes four deeds where a Rare carries two.",
       "With that many effects crowded onto a single piece, the waste lies in failing to see how they answer one another. Find the one whose every deed pulls the way your soul already fights, and a lone drop can carry an entire descent.",
@@ -72,6 +85,7 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Epic gear carries three or four affixes — seek the piece whose deeds answer one another and your soul.",
   },
   "class-roster": {
+    unlocked: "Soul-Swapping",
     title: "A New Soul",
     body: [
       "Another body waits unworn at the hub, and the wheel will let you step into it before the next descent — a wholly different soul, a different way of cutting through the dark. The Renown you have gathered comes with you whichever skin you choose; it answers to the account, not the flesh.",
@@ -80,7 +94,8 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Renown follows you across every soul; Grove gains are kept per soul — commit your spending to one.",
   },
   sets: {
-    title: "Relic Sets",
+    unlocked: "Relic Sets",
+    title: "Forged in Company",
     body: [
       "Not every relic was forged alone. Some were made in company, and when two or more of a kindred set rest on the same soul, the stones begin to answer one another — powers stir that no single piece holds by itself.",
       "You need not gather the whole set for it to wake; a partial binding already counts, and each matching piece you add presses the bond deeper. A set is a thing worth building toward across many runs.",
@@ -88,6 +103,7 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Wear two or more relics of one set and they wake shared powers — partial sets already count.",
   },
   "grove-deep": {
+    unlocked: "Deeper Grove Tiers",
     title: "Deeper Roots",
     body: [
       "The druids have unsealed a chamber that stays shut to untried souls — tiers of the Grove that root far below the ones you know. The power waiting there is of another order entirely: mastery-shaped, dearly bought, the kind that carries a veteran past the walls that stop a green soul cold.",
@@ -106,6 +122,7 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
  */
 export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
   fighter: {
+    unlocked: 'The Fighter — a new soul',
     title: 'A Soul of Sword and Shield',
     body: [
       'Another body has surfaced from the wheel. A soldier’s soul — scarred, steady, hard to put down. It will answer at the hub when you next change skins.',
@@ -114,6 +131,7 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
     key: 'The Fighter: Second Wind to heal, Action Surge for a second strike, crits on 19–20.',
   },
   barbarian: {
+    unlocked: 'The Barbarian — a new soul',
     title: 'A Soul That Will Not Fall',
     body: [
       'Something older and angrier has clawed its way up. It feels no fear and little pain — it simply keeps swinging until one of you is gone.',
@@ -122,6 +140,7 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
     key: 'The Barbarian: Rage halves the harm done to you, Reckless Attack trades safety for blood.',
   },
   ranger: {
+    unlocked: 'The Ranger — a new soul',
     title: 'A Soul That Hunts',
     body: [
       'A quiet soul has stepped to the wheel’s edge — patient, far-eyed, deadliest before the enemy ever closes the distance.',
@@ -130,6 +149,7 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
     key: "The Ranger: Hunter's Mark stacks bonus damage on a target, Archery sharpens every shot.",
   },
   wizard: {
+    unlocked: 'The Wizard — a new soul',
     title: 'A Soul of the Art',
     body: [
       'A frailer soul has risen to the wheel — thin-skinned, soft-boned, a single bad step from the dark. Worn too early it breaks; worn by a walker who has banked the keepers’ gifts, it bends whole fights with a word.',
@@ -138,6 +158,7 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
     key: 'The Wizard: Fire Bolt and Magic Missile to open, Fireball at L5 — and almost no armor to hide behind.',
   },
   druid: {
+    unlocked: 'The Druid — a new soul',
     title: 'A Soul of the Old Faith',
     body: [
       'A soul older than the new gods’ war has surfaced — one that kept the groves while the rest knelt to thrones. Thin-skinned in its own shape, a single bad step from the dark, like the Art-souls before it.',
@@ -146,6 +167,7 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
     key: 'The Druid: Produce Flame and the storm to open, Wild Shape into a beast’s vitality and claws when the fight closes in.',
   },
   rogue: {
+    unlocked: 'The Rogue — a new soul',
     title: 'A Soul in the Dark',
     body: [
       'The last of the sealed souls has slipped free — a knife-hand that prefers the wound nobody saw coming. The hardest body to wear, and the cruelest in the right hands.',

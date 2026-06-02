@@ -36,7 +36,7 @@ describe('CharacterCreationScreen — selection', () => {
     expect(screen.queryByRole('button', { name: /veyra ash/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /lureth oakshadow/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
-    expect(screen.getAllByText(/wakes once you have felled/i).length).toBe(3);
+    expect(screen.getAllByText(/unlocks at delve/i).length).toBe(3);
   });
 
   it('has no point-buy or multi-step controls', () => {

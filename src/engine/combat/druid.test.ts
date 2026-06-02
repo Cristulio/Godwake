@@ -5,7 +5,7 @@ import { spellSaveDC } from './spells';
 import { isWildShaped, characterHasMechanic } from '../character/derived';
 import { wildShapeUsesMax, beastWeaponId, WILD_SHAPE_ROUNDS } from './wildShape';
 import {
-  CLASS_UNLOCK_CHAPTER,
+  CLASS_UNLOCK_DELVE,
   STARTER_CLASSES,
   isClassUnlocked,
 } from '../progression/unlocks';
@@ -56,11 +56,11 @@ describe('Druid — class definition + registry', () => {
   });
 });
 
-describe('Druid — Ch6 unlock (not a starter)', () => {
-  it('unlocks only once six chapters are cleared', () => {
-    expect(CLASS_UNLOCK_CHAPTER.druid).toBe(6);
-    expect(isClassUnlocked('druid', 5)).toBe(false);
-    expect(isClassUnlocked('druid', 6)).toBe(true);
+describe('Druid — delve-12 unlock (not a starter)', () => {
+  it('unlocks only once twelve delves are logged', () => {
+    expect(CLASS_UNLOCK_DELVE.druid).toBe(12);
+    expect(isClassUnlocked('druid', 11)).toBe(false);
+    expect(isClassUnlocked('druid', 12)).toBe(true);
   });
 
   it('is never a fresh-soul starter', () => {

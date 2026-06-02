@@ -29,12 +29,21 @@ export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardP
         className="max-w-xl w-full bg-[#1a140e] border-2 border-[var(--color-accent-amber)] shadow-[0_0_32px_rgba(244,167,66,0.35)] p-5 md:p-7 select-none"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] font-bold mb-3 animate-pulse-glow">
+        <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] font-bold mb-2 animate-pulse-glow">
           ◆ New — Unlocked
         </div>
-        <h2 className="text-[var(--color-text-primary)] text-xl uppercase tracking-wider mb-4">
-          {tutorial.title}
+        <h2
+          className="font-display text-[var(--color-accent-amber)] text-2xl md:text-3xl uppercase tracking-wider leading-tight mb-1"
+          style={{
+            textShadow:
+              '0 0 18px rgba(244,167,66,0.55), 0 0 6px rgba(244,167,66,0.85), 0 2px 0 rgba(0,0,0,0.9)',
+          }}
+        >
+          {tutorial.unlocked}
         </h2>
+        <p className="font-narrative text-[var(--color-text-secondary)] text-sm italic tracking-wide mb-4">
+          {tutorial.title}
+        </p>
         {tutorial.body.map((para, i) => (
           <p
             key={i}

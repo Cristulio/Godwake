@@ -79,7 +79,7 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   // Power unlocks — earned by clearing deeper chapters.
   'boss-intel': { chaptersCleared: 1 },
   // The roster "you can swap souls now" reveal fires when the first alternate
-  // class opens (see CLASS_UNLOCK_CHAPTER). Classes stagger in individually after.
+  // class opens (see CLASS_UNLOCK_DELVE). Classes stagger in individually after.
   'class-roster': { chaptersCleared: 2 },
   'affixes-epic': { chaptersCleared: 3 },
   legendaries: { chaptersCleared: 5 },
@@ -92,58 +92,60 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
  * The souls a brand-new walker may forge at the wheel — the three most forgiving
  * bodies (the sim's strongest bare-soul floors), so a first life can't be spent
  * on a fragile trap. A fresh soul picks exactly ONE of these; every other class,
- * INCLUDING the two of these it didn't pick, is then earned by clearing chapters
- * (see {@link CLASS_UNLOCK_CHAPTER}). Editable data.
+ * INCLUDING the two of these it didn't pick, is then earned by logging delves
+ * (see {@link CLASS_UNLOCK_DELVE}). Editable data.
  */
 export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'barbarian', 'ranger'];
 
 /**
- * Per-class unlock thresholds, in CHAPTERS CLEARED (the deepest-chapter high-
- * water mark) — the bar a soul must reach before it can CHANGE INTO that body at
- * the hub. There is no always-available starter: a fresh walker forges one of the
- * three {@link STARTER_CLASSES} and is then locked to it until it has earned the
- * others by pushing deeper.
+ * Per-class unlock thresholds, in DELVE COUNT (the account-level tally of delves
+ * STARTED, which survives reincarnation) — the bar a soul must reach before it
+ * can CHANGE INTO that body at the hub. There is no always-available starter: a
+ * fresh walker forges one of the three {@link STARTER_CLASSES} and is then locked
+ * to it until it has logged enough delves to earn the others.
  *
- * Ordered by how forgiving the class is to play:
- *  - the two remaining easy souls open first, on a low bar (chapters 1–2);
- *  - the harder bodies stagger deeper, so renown is banked to pad their fragility
- *    before one is worn — Wizard, then [Druid ~6, reserved for its own lane],
- *    then Rogue last (the most fragile floor even after Nimble Dodge).
+ * Delve-paced so the roster opens on time served, not on a depth wall a green
+ * soul may never reach. Ordered by how forgiving the class is to play, and
+ * staggered so each new soul lands with room to breathe before the next:
+ *  - Fighter from the first delve (the soldier — always a safe re-pick);
+ *  - the remaining easy souls next (Barbarian, then Ranger);
+ *  - the harder bodies stagger deeper, so renown is banked to pad their
+ *    fragility before one is worn — Wizard, then Druid, then Rogue last (the
+ *    most fragile floor even after Nimble Dodge).
+ * Delve 15 is deliberately left open — reserved for the Monk (added later).
  * Editable data.
  */
-export const CLASS_UNLOCK_CHAPTER: Record<ClassId, number> = {
-  // The three easy souls — choosable from the first life, but the two not started
-  // with must still be earned, opening across the first chapters.
+export const CLASS_UNLOCK_DELVE: Record<ClassId, number> = {
+  // The three easy souls — Fighter from the first life, the other two close behind.
   fighter: 1,
-  barbarian: 1,
-  ranger: 2,
-  // The harder souls, staggered deeper.
-  wizard: 4,
+  barbarian: 3,
+  ranger: 6,
+  // The harder souls, staggered deeper. (15 reserved for the Monk.)
+  wizard: 9,
   // The Druid: a Wisdom caster whose survivability rides on Wild Shape rather
-  // than armour — squishy in the bare-soul early game, like the Wizard before
-  // it. Opens between Wizard (4) and Rogue (8).
-  druid: 6,
-  rogue: 8,
+  // than armour — squishy in the bare-soul early game, like the Wizard before it.
+  druid: 12,
+  rogue: 18,
   // Not yet a playable class (absent from the roster); threshold is a placeholder.
-  cleric: 99,
+  cleric: 999,
 };
 
-/** Is `classId` available to select given the soul's deepest cleared chapter? */
-export function isClassUnlocked(classId: ClassId, chaptersCleared: number): boolean {
-  return chaptersCleared >= CLASS_UNLOCK_CHAPTER[classId];
+/** Is `classId` available to select given the soul's delve count? */
+export function isClassUnlocked(classId: ClassId, delveCount: number): boolean {
+  return delveCount >= CLASS_UNLOCK_DELVE[classId];
 }
 
 /**
- * Classes whose chapter threshold was crossed strictly between `prevChapters`
- * (exclusive) and `nextChapters` (inclusive) — the souls just earned by reaching
- * a new depth. Drives the per-class "a new soul surfaced" reveal in finishDelve.
+ * Classes whose delve threshold was crossed strictly between `prevDelveCount`
+ * (exclusive) and `nextDelveCount` (inclusive) — the souls just earned by logging
+ * another delve. Drives the per-class "a new soul surfaced" reveal in startDelve.
  * Callers filter to classes that actually have a reveal card, and drop the soul's
  * own class (it crosses its own threshold but is already worn, not "newly" found).
  */
-export function newlyUnlockedClasses(prevChapters: number, nextChapters: number): ClassId[] {
-  return (Object.keys(CLASS_UNLOCK_CHAPTER) as ClassId[]).filter((id) => {
-    const threshold = CLASS_UNLOCK_CHAPTER[id];
-    return threshold > prevChapters && threshold <= nextChapters;
+export function newlyUnlockedClasses(prevDelveCount: number, nextDelveCount: number): ClassId[] {
+  return (Object.keys(CLASS_UNLOCK_DELVE) as ClassId[]).filter((id) => {
+    const threshold = CLASS_UNLOCK_DELVE[id];
+    return threshold > prevDelveCount && threshold <= nextDelveCount;
   });
 }
 

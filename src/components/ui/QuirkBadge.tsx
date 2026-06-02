@@ -1,11 +1,22 @@
 import { getQuirk } from '../../content/quirks';
 
+/** Base soul-mark bonus a single (unit-weight) bane earns, as a percent. */
+export const SOUL_MARK_PCT_PER_BANE = 20;
+
 interface QuirkBadgeProps {
   quirkId: string;
   size?: 'sm' | 'md';
+  /**
+   * The whole soul's bane count and its already-resolved soul-mark percent
+   * (weighted — harsh banes count for more). When given, the badge shows the
+   * soul's actual total instead of the per-bane rate (e.g. "your 2 marks earn
+   * +40%", not "+20% per bane").
+   */
+  baneCount?: number;
+  soulMarkPct?: number;
 }
 
-export function QuirkBadge({ quirkId, size = 'sm' }: QuirkBadgeProps) {
+export function QuirkBadge({ quirkId, size = 'sm', baneCount, soulMarkPct }: QuirkBadgeProps) {
   let q;
   try {
     q = getQuirk(quirkId);
@@ -26,10 +37,15 @@ export function QuirkBadge({ quirkId, size = 'sm' }: QuirkBadgeProps) {
       : 'text-xs px-2 py-1';
 
   // Banes contribute to the soul-mark reward bonus (+20% gold/xp/renown each).
-  // Surface that in the tooltip so the player understands the trade.
+  // Surface that in the tooltip so the player understands the trade — resolved
+  // to this soul's actual total when the bane count is known, not the rate.
   const tooltipParts = [`${q.name} — ${q.effect}`, q.flavor];
   if (q.sentiment === 'bane') {
-    tooltipParts.splice(1, 0, 'Soul-mark: +20% gold, XP, and renown earned per bane.');
+    const soulMarkLine =
+      baneCount && baneCount > 0 && soulMarkPct !== undefined
+        ? `Soul-mark: your ${baneCount} ${baneCount === 1 ? 'mark earns' : 'marks earn'} +${soulMarkPct}% gold, XP, and renown.`
+        : `Soul-mark: +${SOUL_MARK_PCT_PER_BANE}% gold, XP, and renown earned per bane.`;
+    tooltipParts.splice(1, 0, soulMarkLine);
   }
 
   return (
@@ -55,10 +71,27 @@ export function QuirkRow({ quirkIds, emptyText = 'No quirks' }: QuirkRowProps) {
       </span>
     );
   }
+  // Resolve the soul's soul-mark total here (the row sees every mark), weighting
+  // harsh banes the way the reward engine does, so each bane badge can show the
+  // soul's real bonus rather than the bare per-bane rate.
+  let baneCount = 0;
+  let weightedBanes = 0;
+  for (const id of quirkIds) {
+    try {
+      const q = getQuirk(id);
+      if (q.sentiment === 'bane') {
+        baneCount += 1;
+        weightedBanes += q.soulMarkWeight ?? 1.0;
+      }
+    } catch {
+      continue;
+    }
+  }
+  const soulMarkPct = Math.round(weightedBanes * SOUL_MARK_PCT_PER_BANE);
   return (
     <div className="flex flex-wrap gap-1">
       {quirkIds.map((id) => (
-        <QuirkBadge key={id} quirkId={id} />
+        <QuirkBadge key={id} quirkId={id} baneCount={baneCount} soulMarkPct={soulMarkPct} />
       ))}
     </div>
   );

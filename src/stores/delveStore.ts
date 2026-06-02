@@ -47,11 +47,21 @@ import { isFeatureUnlocked } from '../engine/progression/unlocks';
  * delve-transition hooks alongside it without entangling. Migrated veterans
  * (delveCount floored to 999) never cross a threshold, so they see nothing.
  */
-function queueUnlockTutorials(prevDelveCount: number, nextDelveCount: number) {
+function queueUnlockTutorials(
+  prevDelveCount: number,
+  nextDelveCount: number,
+  currentClassId: ClassId,
+) {
   const seen = useMetaStore.getState().seenTutorials;
-  const fresh = newlyUnlocked(prevDelveCount, nextDelveCount).filter(
-    (id) => !seen.includes(id),
+  // Delve-gated feature reveals plus the per-class "a new soul surfaced" cards —
+  // souls now open on delve count, not depth. Class ids share the tutorial-queue /
+  // seenTutorials namespace; keep only the ones with copy (skips the not-yet-
+  // playable cleric) and drop the soul's own class (already worn, not "found").
+  const featureCards = newlyUnlocked(prevDelveCount, nextDelveCount);
+  const classCards = newlyUnlockedClasses(prevDelveCount, nextDelveCount).filter(
+    (id) => id !== currentClassId && getTutorial(id) !== undefined,
   );
+  const fresh = [...featureCards, ...classCards].filter((id) => !seen.includes(id));
   if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
 }
 
@@ -60,22 +70,14 @@ function queueUnlockTutorials(prevDelveCount: number, nextDelveCount: number) {
  * threshold the soul just crossed by clearing a new deepest chapter. Fires in
  * finishDelve when the chaptersCleared high-water mark advances.
  */
-function queueChapterUnlockTutorials(
-  prevChapters: number,
-  nextChapters: number,
-  currentClassId: ClassId,
-) {
+function queueChapterUnlockTutorials(prevChapters: number, nextChapters: number) {
   if (nextChapters <= prevChapters) return;
   const seen = useMetaStore.getState().seenTutorials;
-  // Power-feature reveals plus the per-class "a new soul surfaced" cards. Class
-  // ids share the tutorial-queue / seenTutorials namespace; keep only the ones
-  // that actually have copy (skips the not-yet-playable cleric) and drop the
-  // soul's own class — it crosses its threshold but is already worn, not found.
-  const featureCards = newlyUnlockedByChapter(prevChapters, nextChapters);
-  const classCards = newlyUnlockedClasses(prevChapters, nextChapters).filter(
-    (id) => id !== currentClassId && getTutorial(id) !== undefined,
+  // Power-feature reveals only — the per-class "a new soul surfaced" cards now
+  // fire on the delve-count axis (see queueUnlockTutorials), not on depth.
+  const fresh = newlyUnlockedByChapter(prevChapters, nextChapters).filter(
+    (id) => !seen.includes(id),
   );
-  const fresh = [...featureCards, ...classCards].filter((id) => !seen.includes(id));
   if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
 }
 
@@ -443,7 +445,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     meta.incrementDelveCount();
     // Reveal-on-unlock: fire a one-time tutorial for any feature this descent
     // just opened. Reads the post-increment count off the captured prev value.
-    queueUnlockTutorials(prevDelveCount, prevDelveCount + 1);
+    queueUnlockTutorials(prevDelveCount, prevDelveCount + 1, withQuirkBudgets.classId);
     useScreenStore.getState().setScreen('delve');
     // The descent is the calm beat-trigger moment: drip the next story beat
     // (and any name reveal it carries) now that the delve counter is current.
@@ -776,11 +778,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       // Reaching a new depth opens the next advantage — fire the reveal for any
       // power feature this clear just unlocked (boss-intel, class swapping, epic
       // gear, legendaries, sets at completion).
-      queueChapterUnlockTutorials(
-        prevChapters,
-        useMetaStore.getState().chaptersCleared,
-        settled.classId,
-      );
+      queueChapterUnlockTutorials(prevChapters, useMetaStore.getState().chaptersCleared);
     }
     // A clear of the full chain advances the world: clearing at the current
     // highest unlocked ascension opens the next rung. Replaying a lower level
