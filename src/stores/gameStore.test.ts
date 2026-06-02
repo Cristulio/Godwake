@@ -5,6 +5,7 @@ import {
   RENOWN_PER_DELVE_FAILURE,
   RENOWN_PER_CHAPTER_BOSS,
   RENOWN_PER_ROOM_REACHED,
+  RENOWN_PER_MOB_KILLED,
   GROVE_UNLOCK_THRESHOLD,
 } from './gameStore';
 import { useCharacterStore } from './characterStore';
@@ -212,14 +213,16 @@ describe('addDelveReward — XP propagation (Hades-style within-run)', () => {
 describe('finishDelve — renown economy', () => {
   beforeEach(() => resetStores());
 
-  it('death awards 15 renown (soul-mark = 0)', () => {
-    expect(RENOWN_PER_DELVE_FAILURE).toBe(15);
+  it('a shallow death pays only the tiny failure floor (soul-mark = 0)', () => {
+    expect(RENOWN_PER_DELVE_FAILURE).toBe(3);
     useDelveStore.setState({
       delve: { ...useDelveStore.getState().delve!, phase: 'failed' },
     });
     const startingRenown = useCharacterStore.getState().character!.renown;
     useGameStore.getState().finishDelve();
-    expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + 15);
+    expect(useCharacterStore.getState().character!.renown).toBe(
+      startingRenown + RENOWN_PER_DELVE_FAILURE,
+    );
   });
 
   it('clear awards 50 renown (soul-mark = 0)', () => {
@@ -233,7 +236,7 @@ describe('finishDelve — renown economy', () => {
   });
 
   it('death mid-Ch2 after Ilyich-kill stacks failure base + 1 boss + depth', () => {
-    expect(RENOWN_PER_CHAPTER_BOSS).toBe(10);
+    expect(RENOWN_PER_CHAPTER_BOSS).toBe(25);
     const delve = useDelveStore.getState().delve!;
     // currentRoomIdx 20 → slice(0, 20) counts Ilyich (idx 12) for the boss stack;
     // depth credits the route ACTUALLY VISITED (entry node seeded free).
@@ -246,6 +249,27 @@ describe('finishDelve — renown economy', () => {
     const expectedGain =
       RENOWN_PER_DELVE_FAILURE +
       RENOWN_PER_CHAPTER_BOSS * 1 +
+      RENOWN_PER_ROOM_REACHED * (visited.length - 1);
+    expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
+  });
+
+  it('mobs felled this run are paid on top of the floor + depth', () => {
+    const delve = useDelveStore.getState().delve!;
+    const visited = delve.rooms.slice(0, 5).map((r) => r.id);
+    useDelveStore.setState({
+      delve: {
+        ...delve,
+        currentRoomIdx: 5,
+        phase: 'failed',
+        visitedRoomIds: visited,
+        mobsKilled: 9,
+      },
+    });
+    const startingRenown = useCharacterStore.getState().character!.renown;
+    useGameStore.getState().finishDelve();
+    const expectedGain =
+      RENOWN_PER_DELVE_FAILURE +
+      RENOWN_PER_MOB_KILLED * 9 +
       RENOWN_PER_ROOM_REACHED * (visited.length - 1);
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + expectedGain);
   });
@@ -417,7 +441,7 @@ describe('Druid Grove unlock threshold', () => {
 
   it('does not unlock at 29 renown after a death', () => {
     useCharacterStore.setState({
-      character: { ...useCharacterStore.getState().character!, renown: 14 },
+      character: { ...useCharacterStore.getState().character!, renown: 26 },
     });
     useDelveStore.setState({
       delve: { ...useDelveStore.getState().delve!, phase: 'failed' },
@@ -430,7 +454,7 @@ describe('Druid Grove unlock threshold', () => {
 
   it('unlocks at exactly 30 renown after a death', () => {
     useCharacterStore.setState({
-      character: { ...useCharacterStore.getState().character!, renown: 15 },
+      character: { ...useCharacterStore.getState().character!, renown: 27 },
     });
     useDelveStore.setState({
       delve: { ...useDelveStore.getState().delve!, phase: 'failed' },

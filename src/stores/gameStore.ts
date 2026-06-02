@@ -30,10 +30,12 @@ export type { Screen };
 export {
   RENOWN_PER_DELVE_CLEAR,
   RENOWN_PER_DELVE_FAILURE,
+  RENOWN_PER_MOB_KILLED,
   RENOWN_PER_CHAPTER_BOSS,
   RENOWN_PER_ROOM_REACHED,
   GROVE_UNLOCK_THRESHOLD,
   RENOWN_FOR_CHAPTER_2,
+  computeDelveRenown,
 } from './delveStore';
 
 /** Save-slot ids. 0 = autosave, 1 & 2 = manual slots. */

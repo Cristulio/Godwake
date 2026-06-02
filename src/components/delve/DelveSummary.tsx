@@ -1,14 +1,9 @@
 import type { DelveState } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
-import {
-  RENOWN_PER_DELVE_CLEAR,
-  RENOWN_PER_DELVE_FAILURE,
-  useGameStore,
-} from '../../stores/gameStore';
+import { computeDelveRenown, useGameStore } from '../../stores/gameStore';
 import {
   baneQuirkCount,
-  soulMarkMultiplier,
   SOUL_MARK_PER_BANE,
 } from '../../engine/character/quirks';
 import { getAscensionLevel, MAX_ASCENSION } from '../../engine/delve';
@@ -24,12 +19,10 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
   const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
   const victorious = outcome === 'completed';
   const banes = character ? baneQuirkCount(character) : 0;
-  const soulMark = character ? soulMarkMultiplier(character) : 1;
   const ascensionLevel = delve.ascensionLevel ?? 0;
   const ascension = getAscensionLevel(ascensionLevel);
-  const renownBase = victorious ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE;
-  // Mirrors finishDelve: soul-mark and ascension multipliers stack multiplicatively.
-  const renownEarned = Math.floor(renownBase * soulMark * ascension.renownMult);
+  // Single source of truth — exactly what finishDelve will bank.
+  const renownEarned = character ? computeDelveRenown(delve, character).total : 0;
   // A clear at the current highest rung opens the next (see unlockNextAscension).
   // ascensionUnlocked hasn't incremented yet — finishDelve runs on Return.
   const willUnlockAscension =

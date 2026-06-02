@@ -67,7 +67,23 @@ export function SpoilsScreen() {
               </span>
             </div>
           )}
-          {lastLoot.gold === 0 && lastLoot.xp === 0 && (
+          {lastLoot.renown > 0 && (
+            <div className="flex items-baseline gap-2 animate-pop-in">
+              <span className="font-display text-[var(--color-accent-amber)] text-xl tracking-wider">
+                ◆
+              </span>
+              <span
+                className="font-display text-2xl tracking-widest"
+                style={{ color: 'var(--color-accent-amber)' }}
+              >
+                +{lastLoot.renown}
+              </span>
+              <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
+                renown
+              </span>
+            </div>
+          )}
+          {lastLoot.gold === 0 && lastLoot.xp === 0 && lastLoot.renown === 0 && (
             <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-[0.3em]">
               No reward
             </div>
