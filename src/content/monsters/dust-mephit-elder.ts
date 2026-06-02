@@ -27,6 +27,16 @@ export const DUST_MEPHIT_ELDER: Monster = MonsterSchema.parse({
       description:
         'It draws a long breath through teeth that aren\'t there and exhales a cone of chalk-grey dust. The air in your lungs goes powdery and refuses to come back out.',
     },
+    {
+      kind: 'debuff',
+      name: 'Settling Dust',
+      condition: 'poisoned',
+      saveDC: 11,
+      saveAbility: 'con',
+      durationRounds: 2,
+      description:
+        'The grey dust hangs and settles where you stand, and every breath drawn through it comes back thinner. The room swims at the edges.',
+    },
   ],
   immunities: ['poison'],
   flavorText:

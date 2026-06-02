@@ -19,8 +19,8 @@ export const HOBGOBLIN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Longsword',
-      attackBonus: 5,
-      damage: '1d10+2',
+      attackBonus: 6,
+      damage: '1d10+3',
       damageType: 'slashing',
       reach: 5,
       description:

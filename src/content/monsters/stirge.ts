@@ -19,8 +19,9 @@ export const STIRGE: Monster = MonsterSchema.parse({
       damage: '1d6+3',
       damageType: 'piercing',
       reach: 5,
+      lifeDrain: 0.5,
       description:
-        'The stirge fixes its proboscis to soft flesh and drinks. The puncture is shallow but it will not let go.',
+        'The stirge fixes its proboscis to soft flesh and drinks. The puncture is shallow but it will not let go, and it swells visibly redder as it feeds.',
     },
   ],
   flavorText:
