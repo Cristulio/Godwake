@@ -181,5 +181,5 @@ console.log(`Income model B: bot-floor mean = ${botMean.toFixed(1)} renown/run (
 for (const a of [0, 3, 6]) {
   const tree = treeCostAtAsc(repTree, a);
   const clrInc = liveRenown({ cleared: true, mobs: clrMobs, bosses: clrBosses, rooms: clrRooms, soulMark: 1.4, renownMult: getAscensionLevel(a).renownMult });
-  console.log(`  Asc${a}: tree ${tree} | clear-income ${clrInc}/run → first upgrade(25) in ${(25 * ascensionUpgradeCostMult(a) / clrInc).toFixed(2)} runs, MAX tree in ${(tree / clrInc).toFixed(1)} runs`);
+  console.log(`  Asc${a}: tree ${tree} | clear-income ${clrInc}/run → first upgrade(${firstUpgrade}) in ${(firstUpgrade * ascensionUpgradeCostMult(a) / clrInc).toFixed(2)} runs, MAX tree in ${(tree / clrInc).toFixed(1)} runs`);
 }
