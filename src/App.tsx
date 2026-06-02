@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react';
 import { useGameStore } from './stores/gameStore';
 import { TitleScreen } from './components/title/TitleScreen';
 import { HubScreen } from './components/hub/HubScreen';
-import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
 import { SettingsButton } from './components/ui/SettingsButton';
 import { useCombatAudio } from './hooks/useCombatAudio';
 
@@ -51,6 +50,9 @@ const UnlockTutorialCard = lazy(() =>
   import('./components/system/UnlockTutorialCard').then((m) => ({
     default: m.UnlockTutorialCard,
   })),
+);
+const IrenicusTaunt = lazy(() =>
+  import('./components/lore/IrenicusTaunt').then((m) => ({ default: m.IrenicusTaunt })),
 );
 // DelveScreen pulls all combat code + the 1.5k-line MonsterPortrait library.
 // Lazy so the title/hub loop loads fast; delve chunk warms when the player
@@ -152,14 +154,16 @@ function App() {
         </div>
       </Suspense>
       {taunt && (
-        <IrenicusTaunt
-          speaker={taunt.speaker}
-          context={taunt.context}
-          seed={taunt.seed}
-          chapter={taunt.chapter}
-          line={taunt.line}
-          onDismiss={dismissTaunt}
-        />
+        <Suspense fallback={null}>
+          <IrenicusTaunt
+            speaker={taunt.speaker}
+            context={taunt.context}
+            seed={taunt.seed}
+            chapter={taunt.chapter}
+            line={taunt.line}
+            onDismiss={dismissTaunt}
+          />
+        </Suspense>
       )}
       {showQuirksTutorial && (
         <Suspense fallback={null}>
