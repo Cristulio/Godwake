@@ -4,38 +4,68 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Sendai's Handmaiden"
     >
-      <polygon points="8,2 16,2 17,6 7,6" fill="#3a2a52" />
-      <rect x="9" y="0" width="6" height="2" fill="#5a4858" />
-      <rect x="11" y="-1" width="2" height="2" fill="#a48ee0" />
+      <!-- Drow-violet backlight + ground shadow -->
+      <ellipse cx="12" cy="20" rx="12" ry="18" fill="#6a3a9a" opacity="0.08" />
+      <ellipse cx="12" cy="37" rx="8" ry="1.4" fill="#000" opacity="0.4" />
 
+      <!-- Hood crest + gem -->
+      <polygon points="8,2 16,2 17,6 7,6" fill="#3a2a52" />
+      <polygon points="8,2 12,2 11,6 7,6" fill="#4a3a62" opacity="0.7" />
+      <rect x="9" y="0" width="6" height="2" fill="#5a4858" />
+      <rect x="9" y="0" width="6" height="1" fill="#6e5c6c" />
+      <rect x="11" y="-1" width="2" height="2" fill="#a48ee0" />
+      <rect x="11" y="-1" width="1" height="1" fill="#e8d4ff" />
+
+      <!-- Dark drow face — ramp + red eyes -->
       <rect x="7" y="6" width="10" height="6" fill="#5a4858" />
+      <rect x="7" y="6" width="2" height="6" fill="#6e5c6c" />
+      <rect x="7" y="6" width="1" height="4" fill="#7e6c7c" />
+      <rect x="16" y="6" width="1" height="6" fill="#3a2838" />
       <rect x="8" y="7" width="2" height="2" fill="#b53c4a" />
       <rect x="14" y="7" width="2" height="2" fill="#b53c4a" />
       <rect x="9" y="7" width="1" height="1" fill="#f4d042" />
       <rect x="15" y="7" width="1" height="1" fill="#f4d042" />
       <rect x="9" y="10" width="6" height="1" fill="#3a2838" />
 
+      <!-- Robe torso — purple ramp -->
       <rect x="5" y="12" width="14" height="14" fill="#2a0a48" />
       <rect x="5" y="12" width="14" height="2" fill="#3a1858" />
+      <rect x="5" y="12" width="2" height="14" fill="#341254" />
+      <rect x="5" y="12" width="1" height="14" fill="#4a2a6a" opacity="0.6" />
+      <rect x="17" y="12" width="2" height="14" fill="#1a0428" />
+      <rect x="8" y="16" width="1" height="1" fill="#3a1858" />
+      <rect x="16" y="22" width="1" height="1" fill="#1a0428" />
+
+      <!-- Holy symbol — bloodstone in amethyst -->
       <rect x="9" y="15" width="6" height="9" fill="#5a1208" />
+      <rect x="9" y="15" width="6" height="1" fill="#7a201a" />
       <rect x="11" y="16" width="2" height="7" fill="#8c2010" />
       <rect x="10" y="18" width="4" height="3" fill="#a48ee0" />
       <rect x="11" y="19" width="2" height="1" fill="#e8d4ff" />
+      <rect x="12" y="20" width="1" height="1" fill="#c8b0ff" opacity="0.7" />
 
+      <!-- Right arm -->
+      <rect x="19" y="13" width="3" height="3" fill="#3a2a52" />
+      <rect x="21" y="13" width="1" height="3" fill="#2a1a32" />
+
+      <!-- Left arm + serpent scourge -->
       <rect x="2" y="13" width="3" height="3" fill="#3a2a52" />
+      <rect x="2" y="13" width="1" height="3" fill="#4a3a62" />
       <rect x="0" y="6" width="2" height="12" fill="#2a2228" />
+      <rect x="0" y="6" width="1" height="12" fill="#3a3238" />
       <line x1="1" y1="6" x2="3" y2="9" stroke="#4a3a2a" stroke-width="0.5" />
       <line x1="1" y1="9" x2="3" y2="12" stroke="#4a3a2a" stroke-width="0.5" />
       <line x1="1" y1="12" x2="3" y2="15" stroke="#4a3a2a" stroke-width="0.5" />
       <circle cx="1" cy="5" r="1.4" fill="#4a7022" />
+      <rect x="0" y="4" width="1" height="1" fill="#9aca5a" />
 
-      <rect x="19" y="13" width="3" height="3" fill="#3a2a52" />
-
+      <!-- Robe skirt + hem -->
       <rect x="5" y="26" width="14" height="2" fill="#1a0428" />
       <polygon points="5,28 8,34 11,28" fill="#2a0a48" />
       <polygon points="13,28 16,34 19,28" fill="#2a0a48" />
+      <polygon points="5,28 8,33 8,28" fill="#341254" opacity="0.6" />
       <rect x="7" y="34" width="3" height="3" fill="#1a1410" />
       <rect x="14" y="34" width="3" height="3" fill="#1a1410" />
-
-      <rect x="12" y="20" width="1" height="1" fill="#c8b0ff" opacity="0.6" />
+      <rect x="7" y="34" width="3" height="1" fill="#3a2a3a" />
+      <rect x="14" y="34" width="3" height="1" fill="#3a2a3a" />
     </svg>

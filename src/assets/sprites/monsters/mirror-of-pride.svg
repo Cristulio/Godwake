@@ -4,33 +4,50 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Mirror of Pride"
     >
-      <ellipse cx="15" cy="41" rx="11" ry="1.8" fill="#0a0610" opacity="0.45" />
+      <!-- Cold scrying glow + ground shadow -->
+      <ellipse cx="15" cy="20" rx="13" ry="20" fill="#5a78a0" opacity="0.08" />
+      <ellipse cx="15" cy="41" rx="11" ry="1.8" fill="#0a0610" opacity="0.5" />
 
+      <!-- Gilt frame — gold ramp, key upper-left, specular -->
       <polygon points="6,2 24,2 27,38 3,38" fill="#7a5e1a" />
+      <polygon points="6,2 9,2 5,38 3,38" fill="#c0a040" />
+      <polygon points="6,2 7,2 4,38 3,38" fill="#e4c860" opacity="0.7" />
+      <polygon points="21,2 24,2 27,38 25,38" fill="#5a4612" />
       <polygon points="5,1 25,1 26,4 4,4" fill="#c0a040" />
-      <polygon points="5,1 25,1 26,4 4,4" fill="#f4d042" opacity="0.4" />
+      <polygon points="5,1 25,1 25,2 5,2" fill="#f4d042" opacity="0.6" />
       <rect x="3" y="37" width="24" height="3" fill="#5a4612" />
+      <rect x="3" y="37" width="24" height="1" fill="#7a5e1a" />
       <polygon points="14,-1 16,-1 17,2 13,2" fill="#f4d042" />
+      <rect x="14" y="-1" width="1" height="1" fill="#fff0b0" />
+      <rect x="8" y="3" width="1" height="1" fill="#fff0b0" opacity="0.6" />
 
+      <!-- Dark glass — layered depth -->
       <polygon points="8,5 22,5 24,35 6,35" fill="#0c0a14" />
       <polygon points="8,5 22,5 24,35 6,35" fill="#1a1828" opacity="0.6" />
-      <polygon points="9,6 14,6 11,34 8,34" fill="#2a3050" opacity="0.35" />
+      <polygon points="9,6 14,6 11,34 8,34" fill="#2a3050" opacity="0.4" />
       <polygon points="17,7 20,7 22,33 19,33" fill="#3a4068" opacity="0.25" />
 
-      <rect x="12" y="9" width="6" height="6" fill="#46506e" opacity="0.7" />
-      <rect x="12" y="9" width="6" height="1" fill="#5a648a" opacity="0.7" />
-      <rect x="13" y="11" width="1" height="2" fill="#7ac0e0" opacity="0.6" />
-      <rect x="16" y="11" width="1" height="2" fill="#7ac0e0" opacity="0.6" />
-      <polygon points="11,15 19,15 20,30 10,30" fill="#3a4068" opacity="0.5" />
-      <polygon points="13,15 17,15 17,30 13,30" fill="#56608a" opacity="0.4" />
-      <rect x="14" y="17" width="2" height="11" fill="#7ac0e0" opacity="0.25" />
+      <!-- Reflected proud face — cool ramp -->
+      <rect x="12" y="9" width="6" height="6" fill="#46506e" opacity="0.8" />
+      <rect x="12" y="9" width="6" height="1" fill="#5a648a" opacity="0.8" />
+      <rect x="12" y="9" width="2" height="6" fill="#56608a" opacity="0.7" />
+      <rect x="13" y="11" width="1" height="2" fill="#7ac0e0" opacity="0.7" />
+      <rect x="16" y="11" width="1" height="2" fill="#7ac0e0" opacity="0.7" />
+      <rect x="13" y="11" width="1" height="1" fill="#c8e8f8" opacity="0.6" />
+      <!-- reflected torso -->
+      <polygon points="11,15 19,15 20,30 10,30" fill="#3a4068" opacity="0.55" />
+      <polygon points="13,15 17,15 17,30 13,30" fill="#56608a" opacity="0.45" />
+      <rect x="14" y="17" width="2" height="11" fill="#7ac0e0" opacity="0.3" />
 
+      <!-- Surface streaks + cracks -->
       <line x1="9" y1="8" x2="20" y2="32" stroke="#aac4e0" stroke-width="0.5" opacity="0.5" />
       <line x1="20" y1="10" x2="11" y2="30" stroke="#aac4e0" stroke-width="0.4" opacity="0.4" />
       <line x1="14" y1="6" x2="16" y2="34" stroke="#8aa4c0" stroke-width="0.3" opacity="0.4" />
 
+      <!-- Glints -->
       <rect x="10" y="33" width="3" height="2" fill="#7ac0e0" opacity="0.4" />
       <rect x="18" y="33" width="3" height="2" fill="#7ac0e0" opacity="0.4" />
-      <rect x="11" y="20" width="1" height="1" fill="#fff0c0" opacity="0.5" />
-      <rect x="19" y="14" width="1" height="1" fill="#f4d042" opacity="0.5" />
+      <rect x="11" y="20" width="1" height="1" fill="#fff0c0" opacity="0.6" />
+      <rect x="19" y="14" width="1" height="1" fill="#f4d042" opacity="0.55" />
+      <rect x="10" y="7" width="1" height="1" fill="#d0e8f8" opacity="0.5" />
     </svg>

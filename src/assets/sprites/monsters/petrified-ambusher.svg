@@ -4,35 +4,64 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Petrified Ambusher"
     >
+      <!-- Cool stone backlight + ground shadow -->
+      <ellipse cx="12" cy="20" rx="11" ry="17" fill="#6a7a86" opacity="0.06" />
+      <ellipse cx="12" cy="38" rx="8" ry="1.4" fill="#000" opacity="0.4" />
+
+      <!-- Head — granite ramp, key upper-left, red gem eye -->
       <rect x="9" y="2" width="6" height="6" fill="#6b6a66" />
       <rect x="9" y="2" width="6" height="2" fill="#86857f" />
+      <rect x="9" y="2" width="2" height="6" fill="#7c7b75" />
+      <rect x="9" y="2" width="1" height="3" fill="#9a9992" />
+      <rect x="14" y="3" width="1" height="5" fill="#4a4a46" />
       <rect x="10" y="4" width="2" height="2" fill="#3a3a36" />
-      <rect x="13" y="4" width="2" height="2" fill="#b53c4a" opacity="0.8" />
+      <rect x="13" y="4" width="2" height="2" fill="#b53c4a" />
+      <rect x="13" y="4" width="1" height="1" fill="#e85a4a" />
       <rect x="9" y="8" width="6" height="2" fill="#4a4a46" />
+      <rect x="9" y="8" width="6" height="1" fill="#5a5a56" />
 
+      <!-- Torso — granite ramp + fracture lines -->
       <rect x="7" y="10" width="10" height="13" fill="#6b6a66" />
       <rect x="7" y="10" width="10" height="2" fill="#86857f" />
       <rect x="7" y="10" width="2" height="13" fill="#7c7b75" />
+      <rect x="7" y="10" width="1" height="8" fill="#8a8982" />
       <rect x="15" y="10" width="2" height="13" fill="#4a4a46" />
       <line x1="9" y1="14" x2="15" y2="18" stroke="#3a3a36" stroke-width="0.6" />
       <line x1="8" y1="19" x2="14" y2="22" stroke="#3a3a36" stroke-width="0.6" />
+      <rect x="11" y="9" width="2" height="1" fill="#9a9992" opacity="0.6" />
+      <rect x="10" y="16" width="1" height="1" fill="#86857f" />
 
+      <!-- Raised left arm + fist -->
       <rect x="2" y="11" width="5" height="3" fill="#6b6a66" />
+      <rect x="2" y="11" width="5" height="1" fill="#86857f" />
       <rect x="1" y="13" width="3" height="9" fill="#5a5a56" />
+      <rect x="1" y="13" width="1" height="9" fill="#6b6a66" />
       <rect x="0" y="20" width="4" height="3" fill="#7c7b75" />
       <rect x="0" y="20" width="4" height="1" fill="#9a9992" />
 
+      <!-- Right arm -->
       <rect x="17" y="11" width="5" height="3" fill="#5a5a56" />
+      <rect x="17" y="11" width="5" height="1" fill="#6b6a66" />
       <rect x="20" y="13" width="3" height="10" fill="#4a4a46" />
+      <rect x="22" y="13" width="1" height="10" fill="#3a3a36" />
 
+      <!-- Legs -->
       <rect x="7" y="23" width="4" height="10" fill="#5a5a56" />
       <rect x="13" y="23" width="4" height="10" fill="#5a5a56" />
       <rect x="7" y="23" width="4" height="2" fill="#6b6a66" />
       <rect x="13" y="23" width="4" height="2" fill="#6b6a66" />
+      <rect x="7" y="23" width="1" height="10" fill="#7c7b75" />
+      <rect x="13" y="23" width="1" height="10" fill="#7c7b75" />
+      <rect x="10" y="23" width="1" height="10" fill="#4a4a46" />
+      <rect x="16" y="23" width="1" height="10" fill="#4a4a46" />
+
+      <!-- Feet -->
       <rect x="6" y="33" width="6" height="3" fill="#3a3a36" />
       <rect x="12" y="33" width="6" height="3" fill="#3a3a36" />
+      <rect x="6" y="33" width="6" height="1" fill="#5a5a56" />
+      <rect x="12" y="33" width="6" height="1" fill="#5a5a56" />
 
-      <rect x="4" y="28" width="1" height="2" fill="#86857f" opacity="0.6" />
-      <rect x="19" y="16" width="1" height="2" fill="#86857f" opacity="0.5" />
-      <rect x="11" y="9" width="2" height="1" fill="#9a9992" opacity="0.5" />
+      <!-- Lichen specks -->
+      <rect x="4" y="28" width="1" height="1" fill="#6a7a5a" opacity="0.5" />
+      <rect x="19" y="16" width="1" height="1" fill="#86857f" opacity="0.5" />
     </svg>

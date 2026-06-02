@@ -4,16 +4,25 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Burning Dead"
     >
-      <ellipse cx="17" cy="24" rx="12" ry="19" fill="#2a0e04" opacity="0.4" />
+      <!-- Pyre backlight — layered fire bloom + ground shadow -->
+      <ellipse cx="17" cy="22" rx="15" ry="20" fill="#5a1c06" opacity="0.22" />
+      <ellipse cx="17" cy="22" rx="10" ry="15" fill="#c0401a" opacity="0.13" />
+      <ellipse cx="17" cy="24" rx="6" ry="11" fill="#e8a020" opacity="0.08" />
+      <ellipse cx="17" cy="42" rx="11" ry="1.8" fill="#1a0a04" opacity="0.5" />
 
+      <!-- Rising flame tongues -->
       <rect x="6" y="2" width="2" height="3" fill="#f4942a" opacity="0.7" />
+      <rect x="6" y="2" width="1" height="2" fill="#ffd070" opacity="0.7" />
       <rect x="26" y="4" width="2" height="3" fill="#e87820" opacity="0.6" />
-      <rect x="11" y="0" width="2" height="3" fill="#ffd070" opacity="0.7" />
+      <rect x="11" y="0" width="2" height="3" fill="#ffd070" opacity="0.75" />
       <rect x="22" y="1" width="2" height="3" fill="#ffb04a" opacity="0.6" />
 
-      <rect x="13" y="5" width="8" height="9" fill="#241812" />
+      <!-- Charred skull — ramp with ember light -->
+      <rect x="13" y="5" width="8" height="9" fill="#1f1410" />
       <rect x="13" y="5" width="8" height="2" fill="#3a2418" />
+      <rect x="13" y="5" width="2" height="9" fill="#2e1d14" />
       <polygon points="13,5 17,2 21,5" fill="#3a2418" />
+      <polygon points="13,5 17,3 19,5" fill="#4a3020" opacity="0.7" />
       <rect x="14" y="8" width="2" height="3" fill="#f4942a" />
       <rect x="18" y="8" width="2" height="3" fill="#f4942a" />
       <rect x="14" y="8" width="1" height="1" fill="#ffd070" />
@@ -22,22 +31,35 @@
       <rect x="13" y="4" width="2" height="2" fill="#e87820" opacity="0.6" />
       <rect x="20" y="3" width="2" height="2" fill="#f4942a" opacity="0.6" />
 
+      <!-- Smouldering torso — charred ramp + ember dither -->
       <rect x="10" y="14" width="14" height="15" fill="#1f1410" />
-      <rect x="12" y="16" width="3" height="2" fill="#d4641a" opacity="0.8" />
-      <rect x="19" y="19" width="3" height="2" fill="#e87820" opacity="0.8" />
-      <rect x="14" y="22" width="4" height="2" fill="#f4942a" opacity="0.7" />
-      <rect x="11" y="24" width="2" height="2" fill="#a83a14" opacity="0.7" />
       <rect x="10" y="14" width="14" height="1" fill="#3a2418" />
+      <rect x="10" y="14" width="2" height="15" fill="#2e1d14" />
+      <rect x="22" y="14" width="2" height="15" fill="#160d0a" />
+      <rect x="12" y="16" width="3" height="2" fill="#d4641a" opacity="0.85" />
+      <rect x="19" y="19" width="3" height="2" fill="#e87820" opacity="0.85" />
+      <rect x="14" y="22" width="4" height="2" fill="#f4942a" opacity="0.75" />
+      <rect x="11" y="24" width="2" height="2" fill="#a83a14" opacity="0.7" />
+      <rect x="16" y="17" width="1" height="1" fill="#ffd070" opacity="0.8" />
+      <rect x="13" y="20" width="1" height="1" fill="#ffb04a" opacity="0.6" />
+      <rect x="20" y="25" width="1" height="1" fill="#d4641a" opacity="0.6" />
 
+      <!-- Burning arms -->
       <rect x="5" y="15" width="5" height="3" fill="#1f1410" />
+      <rect x="5" y="15" width="5" height="1" fill="#3a2418" />
       <rect x="3" y="12" width="3" height="6" fill="#241812" />
-      <rect x="3" y="12" width="2" height="2" fill="#e87820" opacity="0.7" />
+      <rect x="3" y="12" width="1" height="6" fill="#3a2418" />
+      <rect x="3" y="12" width="2" height="2" fill="#e87820" opacity="0.8" />
       <rect x="24" y="15" width="5" height="3" fill="#1f1410" />
+      <rect x="24" y="15" width="5" height="1" fill="#3a2418" />
       <rect x="28" y="13" width="3" height="6" fill="#241812" />
-      <rect x="28" y="13" width="2" height="2" fill="#f4942a" opacity="0.7" />
+      <rect x="28" y="13" width="2" height="2" fill="#f4942a" opacity="0.8" />
 
+      <!-- Cinder legs -->
       <rect x="11" y="29" width="4" height="11" fill="#1f1410" />
       <rect x="19" y="29" width="4" height="11" fill="#1f1410" />
+      <rect x="11" y="29" width="1" height="11" fill="#2e1d14" />
+      <rect x="19" y="29" width="1" height="11" fill="#2e1d14" />
       <rect x="10" y="38" width="6" height="3" fill="#0c0402" />
       <rect x="19" y="38" width="6" height="3" fill="#0c0402" />
       <rect x="12" y="32" width="1" height="2" fill="#d4641a" opacity="0.7" />
