@@ -19,7 +19,6 @@ import {
 } from '../../character/derived';
 import {
   rageDamageBonus,
-  POWER_ATTACK_TO_HIT_PENALTY,
   POWER_ATTACK_DAMAGE_BONUS,
   KNOCKDOWN_STAGGER_TURNS,
 } from '../../character/actions';
@@ -144,10 +143,10 @@ export function playerAttack(
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   // Fighter Weapon Mastery (L9): +1 to hit on every weapon strike.
   if (characterHasMechanic(nextCharacter, 'weapon-mastery')) attackBonus += 1;
-  // Fighter Power Attack: a heavy melee swing trades to-hit for flat damage
-  // (the damage half lands in the hit block). Melee only — a bow can't muscle.
+  // Fighter Power Attack: a heavy melee swing that lands for flat bonus damage
+  // (applied in the hit block). Consumable — the charge was spent to set the
+  // stance, so there's no accuracy cost. Melee only — a bow can't muscle.
   const powerAttack = nextCharacter.powerAttackActive === true && !isRanged;
-  if (powerAttack) attackBonus -= POWER_ATTACK_TO_HIT_PENALTY;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
@@ -349,8 +348,8 @@ export function playerAttack(
       bonusDamage += 1;
       onTypeParts.push({ amount: 1, label: 'mastery' });
     }
-    // Fighter Power Attack: the damage half of the heavy-swing trade — a flat
-    // spike on each melee strike this turn, paid for by the to-hit penalty above.
+    // Fighter Power Attack: the flat spike on each melee strike this turn,
+    // paid for by the charge spent to set the stance (no accuracy cost).
     if (powerAttack) {
       bonusDamage += POWER_ATTACK_DAMAGE_BONUS;
       onTypeParts.push({ amount: POWER_ATTACK_DAMAGE_BONUS, label: 'power' });

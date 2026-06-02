@@ -26,13 +26,15 @@ function fighterActionSurgeMax(character: Character): number {
 export const RAGE_ROUNDS = 3;
 
 /**
- * Fighter Power Attack: the accuracy/damage trade. A heavy swing this turn takes
- * the flat to-hit penalty and lands for the flat damage spike. Modest by design
- * — the swing only pays off when the hit was going to land anyway, and the spike
- * compounds with Extra Attack (it applies per strike). Magnitudes are sim-tuned.
+ * Fighter Power Attack: a consumable heavy swing. Spending one charge sets a
+ * stance that adds a flat damage spike to this turn's melee strikes — no
+ * accuracy cost. The pool is the limiter, not a to-hit gamble: charges refresh
+ * only on rest/camp, so the Fighter chooses which turns are worth the burst.
+ * The spike applies per strike, so it compounds with Extra Attack.
  */
-export const POWER_ATTACK_TO_HIT_PENALTY = 2;
 export const POWER_ATTACK_DAMAGE_BONUS = 4;
+/** Power Attack charges restored on each rest/camp. */
+export const POWER_ATTACK_CHARGES = 3;
 
 /** Barbarian Knockdown: turns the staggered foe loses (one whole turn). */
 export const KNOCKDOWN_STAGGER_TURNS = 1;
@@ -150,6 +152,10 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
       ...character.resources,
       secondWindAvailable: true,
       actionSurgeRemaining: fighterActionSurgeMax(character),
+      powerAttackChargesRemaining:
+        character.classId === 'fighter'
+          ? POWER_ATTACK_CHARGES
+          : character.resources.powerAttackChargesRemaining,
       sneakAttackUsedThisTurn: false,
       cunningActionUsesRemaining:
         character.classId === 'rogue'
@@ -177,6 +183,10 @@ export function longRest(character: Character): Character {
       ...character.resources,
       secondWindAvailable: true,
       actionSurgeRemaining: fighterActionSurgeMax(character),
+      powerAttackChargesRemaining:
+        character.classId === 'fighter'
+          ? POWER_ATTACK_CHARGES
+          : character.resources.powerAttackChargesRemaining,
       sneakAttackUsedThisTurn: false,
       cunningActionUsesRemaining:
         character.classId === 'rogue'

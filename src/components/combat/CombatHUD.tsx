@@ -6,11 +6,17 @@ import { computeAC, characterHasMechanic, critRange } from '../../engine/charact
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
+  POWER_ATTACK_CHARGES,
 } from '../../engine/character/actions';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { getBlessing } from '../../content/blessings';
 import { bossIntelBuffFor } from '../../content/bossIntel';
-import { BLESSING_GOD_GLYPH, type Blessing } from '../../schemas/blessing';
+import { baneQuirkCount } from '../../engine/character/quirks';
+import {
+  BLESSING_GOD_GLYPH,
+  type Blessing,
+  type BlessingModifiers,
+} from '../../schemas/blessing';
 
 const UNCANNY_DODGE_LEVEL = 5;
 const NIMBLE_DODGE_MAX_LEVEL = 4;
@@ -53,6 +59,34 @@ function wizardBuffDescription(name: string): string {
     default:
       return `${name} active`;
   }
+}
+
+/**
+ * Resolve a blessing's run-scaling levers into the concrete totals for THIS
+ * run, so the HUD shows "+4 temp HP" instead of the "+2 per soul-mark" formula.
+ * Mirrors how createCombat/derived fold these same fields (N × bane count, N ×
+ * delve level). Returns null for blessings with no run-scaling lever — their
+ * `effect` line already reads as a fixed number.
+ */
+export function resolveBlessingRunValue(
+  modifiers: BlessingModifiers,
+  character: Character,
+): string | null {
+  const banes = baneQuirkCount(character);
+  const parts: string[] = [];
+  const tempHpPerBane = modifiers.tempHpPerBaneQuirk ?? 0;
+  if (tempHpPerBane > 0) {
+    parts.push(`+${tempHpPerBane * banes} temp HP (${banes} soul-mark${banes === 1 ? '' : 's'})`);
+  }
+  const tempHpPerLevel = modifiers.tempHpPerDelveLevel ?? 0;
+  if (tempHpPerLevel > 0) {
+    parts.push(`+${tempHpPerLevel * character.level} temp HP (level ${character.level})`);
+  }
+  const acPerBane = modifiers.acBonusPerBaneQuirk ?? 0;
+  if (acPerBane > 0) {
+    parts.push(`+${acPerBane * banes} AC (${banes} soul-mark${banes === 1 ? '' : 's'})`);
+  }
+  return parts.length > 0 ? parts.join(', ') : null;
 }
 
 function HpBar({
@@ -169,16 +203,21 @@ function BlessingBadge({
   name,
   effect,
   god,
+  runValue,
 }: {
   name: string;
   effect: string;
   god: Blessing['god'];
+  /** Resolved per-run total for this run (e.g. "+4 temp HP"), or null when the
+   *  effect is a fixed number with nothing to compute. */
+  runValue: string | null;
 }) {
   // Each blessing carries its OWN tooltip — hover on desktop, tap on touch
   // (prior validation flagged title= as touch-inaccessible), focus for
   // keyboard. The panel shows only this blessing's name + effect, never the
-  // whole concatenated strip.
-  const label = `${name} — ${effect}`;
+  // whole concatenated strip. Run-scaling blessings lead with the COMPUTED
+  // total for this run; the formula stays as the secondary line.
+  const label = runValue ? `${name} — ${runValue}` : `${name} — ${effect}`;
   return (
     <TouchTooltip
       label={label}
@@ -188,6 +227,11 @@ function BlessingBadge({
           <span className="block text-[var(--color-accent-amber)] font-bold text-[11px] leading-tight">
             {name}
           </span>
+          {runValue && (
+            <span className="block mt-0.5 text-[var(--color-accent-gold)] font-bold text-[10px] leading-snug tabular-nums">
+              This run: {runValue}
+            </span>
+          )}
           <span className="block mt-0.5 text-[var(--color-text-secondary)] text-[10px] leading-snug">
             {effect}
           </span>
@@ -233,6 +277,9 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const secondWindBonus = character.resources.secondWindBonusRemaining ?? 0;
   const surgeMax = fighterActionSurgeMax(character.level);
   const surgeRemaining = character.resources.actionSurgeRemaining ?? 0;
+  const hasPowerAttack = isFighter && characterHasMechanic(character, 'power-attack');
+  const powerAttackCharges = character.resources.powerAttackChargesRemaining ?? 0;
+  const powerAttacking = character.powerAttackActive === true;
 
   // --- Rogue resources ---
   const cunningMax = rogueCunningActionMax(character);
@@ -271,12 +318,19 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
     name: string;
     god: Blessing['god'];
     effect: string;
+    runValue: string | null;
   }
   const blessingEntries: BlessingEntry[] = [];
   for (const id of character.blessings) {
     try {
       const b = getBlessing(id);
-      blessingEntries.push({ id, name: b.name, god: b.god, effect: b.effect });
+      blessingEntries.push({
+        id,
+        name: b.name,
+        god: b.god,
+        effect: b.effect,
+        runValue: resolveBlessingRunValue(b.modifiers, character),
+      });
     } catch {
       // Unknown blessing id — skip rather than crash the HUD.
     }
@@ -387,6 +441,32 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               title={i < surgeRemaining ? 'Action Surge available' : 'Action Surge spent'}
             />
           ))}
+        </Section>
+      )}
+
+      {hasPowerAttack && (
+        <Section title="Power Attack">
+          {Array.from({ length: Math.max(POWER_ATTACK_CHARGES, powerAttackCharges) }).map(
+            (_, i) => (
+              <Dot
+                key={`pa-${i}`}
+                on={i < powerAttackCharges}
+                title={
+                  i < powerAttackCharges
+                    ? 'Power Attack charge ready — +4 damage to this turn\'s melee swings (refreshes on rest).'
+                    : 'Power Attack charge spent — refreshes on rest.'
+                }
+              />
+            ),
+          )}
+          {powerAttacking && (
+            <Pill
+              text="Heavy"
+              on
+              tone="amber"
+              title="Heavy stance set — this turn's melee swings land for +4 damage."
+            />
+          )}
         </Section>
       )}
 
@@ -565,7 +645,13 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               second row only when the marks run out of horizontal room. */}
           <div className="flex flex-wrap items-center gap-1 max-w-[220px]">
             {blessingEntries.map((b) => (
-              <BlessingBadge key={b.id} name={b.name} effect={b.effect} god={b.god} />
+              <BlessingBadge
+                key={b.id}
+                name={b.name}
+                effect={b.effect}
+                god={b.god}
+                runValue={b.runValue}
+              />
             ))}
           </div>
         </Section>

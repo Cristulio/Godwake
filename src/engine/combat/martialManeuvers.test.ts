@@ -8,7 +8,7 @@ import { useCleave, useKnockdown, useRage } from './rage';
 import { chooseCombatAction } from './actionPolicy';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
-import { braceDamageReduction } from '../character/actions';
+import { braceDamageReduction, shortRestHeal, POWER_ATTACK_CHARGES } from '../character/actions';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import type { Character } from '../../types/character';
 
@@ -69,18 +69,36 @@ function damageLines(state: CombatState): string[] {
 describe('Fighter Power Attack', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('declares a free stance — sets the flag, spends no action', () => {
+  it('declares a free stance — sets the flag, spends a charge, no action', () => {
     const init = createCombat({
       roller: createDiceRoller(1),
       character: fighter(1),
       monsters: [{ def: getMonster('goblin') }],
     });
+    const before = init.character.resources.powerAttackChargesRemaining ?? 0;
+    expect(before).toBeGreaterThan(0);
     const r = usePowerAttack({ character: init.character, state: init.state });
     expect(r.character.powerAttackActive).toBe(true);
     expect(r.character.actionEconomy.actionUsed).toBe(false);
+    expect(r.character.resources.powerAttackChargesRemaining).toBe(before - 1);
   });
 
-  it('trades -2 to hit for +4 damage on the swing', () => {
+  it('does nothing at zero charges — flag stays off, no spend', () => {
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: fighter(1),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const drained: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, powerAttackChargesRemaining: 0 },
+    };
+    const r = usePowerAttack({ character: drained, state: init.state });
+    expect(r.character.powerAttackActive).not.toBe(true);
+    expect(r.character.resources.powerAttackChargesRemaining).toBe(0);
+  });
+
+  it('adds +4 flat damage with NO to-hit penalty', () => {
     const init = createCombat({
       roller: createDiceRoller(5),
       character: fighter(1),
@@ -96,12 +114,12 @@ describe('Fighter Power Attack', () => {
       'longsword',
     );
     const toHit = state.log.find((l) => /attacks .* with Longsword/.test(l.text))!;
-    // STR 16 (+3) + prof +2 = +5, minus the power-attack penalty = +3.
-    expect(toHit.text).toMatch(/d20\+3 /);
+    // STR 16 (+3) + prof +2 = +5, with no accuracy cost — the charge is the price.
+    expect(toHit.text).toMatch(/d20\+5 /);
     expect(damageLines(state).some((t) => /\+ 4 power/.test(t))).toBe(true);
   });
 
-  it('bot swings heavy at a soft guard, but not a hard one (balanced)', () => {
+  it('bot spends a charge on a meaty target, hoards it on a near-dead one (balanced)', () => {
     const init = createCombat({
       roller: createDiceRoller(1),
       character: fighter(1),
@@ -109,11 +127,26 @@ describe('Fighter Power Attack', () => {
     });
     const goblin = monsters(init.state)[0];
 
-    goblin.instance.ac = 12; // soft enough that -2 still lands ~half the time
+    goblin.instance.hp = { ...goblin.instance.hp, current: 30, max: 30 }; // worth the spike
     expect(chooseCombatAction(init.state, init.character).kind).toBe('power-attack');
 
-    goblin.instance.ac = 18; // a hard guard — don't throw accuracy away
+    goblin.instance.hp = { ...goblin.instance.hp, current: 3 }; // wasted overkill — just swing
     expect(chooseCombatAction(init.state, init.character).kind).toBe('attack');
+  });
+
+  it('bot will not power-attack with no charges left', () => {
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: fighter(1),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const goblin = monsters(init.state)[0];
+    goblin.instance.hp = { ...goblin.instance.hp, current: 30, max: 30 };
+    const drained: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, powerAttackChargesRemaining: 0 },
+    };
+    expect(chooseCombatAction(init.state, drained).kind).toBe('attack');
   });
 
   it('bot does not re-declare once the stance is up — it swings', () => {
@@ -123,9 +156,19 @@ describe('Fighter Power Attack', () => {
       monsters: [{ def: getMonster('goblin') }],
     });
     const goblin = monsters(init.state)[0];
-    goblin.instance.ac = 12;
+    goblin.instance.hp = { ...goblin.instance.hp, current: 30, max: 30 };
     const armed: Character = { ...init.character, powerAttackActive: true };
     expect(chooseCombatAction(init.state, armed).kind).toBe('attack');
+  });
+
+  it('refreshes charges on a short rest', () => {
+    const f = fighter(1);
+    const spent: Character = {
+      ...f,
+      resources: { ...f.resources, powerAttackChargesRemaining: 0 },
+    };
+    const rested = shortRestHeal(spent, 0);
+    expect(rested.resources.powerAttackChargesRemaining).toBe(POWER_ATTACK_CHARGES);
   });
 });
 

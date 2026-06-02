@@ -17,10 +17,12 @@ export interface FighterManeuverContext {
 }
 
 /**
- * Fighter Power Attack. A free stance declared on the turn (no action cost):
- * this turn's melee strikes trade accuracy for a damage spike (read in
- * playerAttack). Declared before the action is spent so the trade rides every
- * swing of the Attack action. Cleared at the start of the fighter's next turn.
+ * Fighter Power Attack. A consumable stance declared on the turn (no action
+ * cost): spending one charge sets a heavy stance that adds flat damage to this
+ * turn's melee strikes (read in playerAttack) — no accuracy cost. Declared
+ * before the action is spent so the spike rides every swing of the Attack
+ * action. Cleared at the start of the fighter's next turn; the spent charge
+ * only returns on rest/camp.
  */
 export function usePowerAttack(ctx: FighterManeuverContext): CombatActionResult {
   const { character, state } = ctx;
@@ -28,12 +30,17 @@ export function usePowerAttack(ctx: FighterManeuverContext): CombatActionResult 
   if (!characterHasMechanic(character, 'power-attack')) return combatResult(state, character);
   if (character.powerAttackActive === true) return combatResult(state, character);
   if (character.actionEconomy.actionUsed) return combatResult(state, character);
+  const charges = character.resources.powerAttackChargesRemaining ?? 0;
+  if (charges <= 0) return combatResult(state, character);
 
-  const nextCharacter: Character = { ...character, powerAttackActive: true };
+  let nextCharacter: Character = { ...character, powerAttackActive: true };
+  nextCharacter = patchResources(nextCharacter, {
+    powerAttackChargesRemaining: charges - 1,
+  });
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} sets both hands and swings heavy — slower to land, but it will hurt.`,
+    text: `${nextCharacter.name} sets both hands and swings heavy — the next blows will bite deeper.`,
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
 }

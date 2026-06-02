@@ -6,6 +6,7 @@ import type { Class } from '../../schemas/class';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { effectiveAbilityScores } from './derived';
+import { POWER_ATTACK_CHARGES } from './actions';
 import { abilityModifier } from '../../types/abilities';
 
 export const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8] as const;
@@ -109,6 +110,7 @@ export function classStartingResources(classId: ClassId) {
       return {
         secondWindAvailable: true,
         actionSurgeRemaining: 0, // 1 at lv2, 2 at lv17
+        powerAttackChargesRemaining: POWER_ATTACK_CHARGES,
       };
     case 'rogue':
       return {
