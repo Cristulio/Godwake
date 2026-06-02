@@ -15,7 +15,7 @@ interface RoomHeaderProps {
  * player should not know how deep the delve goes. The room's flavor title
  * (shown in the combat header) is their only spatial cue.
  *
- * The Soul-marks button opens an any-time review of both quirks and
+ * The Soul Ledger button opens an any-time review of both quirks and
  * blessings — the two persistent run-flavors the player can re-read from
  * any room type without leaving.
  */
@@ -51,7 +51,7 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
             "
             title="Show all active quirks and blessings"
           >
-            <span>◆ Soul-marks</span>
+            <span>◆ Soul Ledger</span>
             {quirkIds.length > 0 && (
               <span className="text-[var(--color-accent-amber)]">
                 ◉ {quirkIds.length}
@@ -92,7 +92,7 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
             <div className="flex items-center justify-between gap-3 p-4 border-b border-[var(--color-border-warm)]">
               <div>
                 <h2 className="font-display text-[var(--color-accent-amber)] text-base uppercase tracking-[0.2em]">
-                  ◆ Soul-marks
+                  ◆ The Soul's Ledger
                 </h2>
                 <p className="text-[var(--color-text-dim)] text-xs italic mt-1 normal-case tracking-normal">
                   Quirks are scars of the soul — they survive the wheel. Blessings belong to the body and end with it.

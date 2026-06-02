@@ -90,6 +90,9 @@ export function HubScreen() {
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
             Sword Coast · Chapter I · The Mage's Cells
           </p>
+          <p className="text-[var(--color-text-dim)] text-[10px] italic tracking-widest mt-1">
+            The wheel has turned for you {delveCount} {delveCount === 1 ? 'life' : 'lives'}
+          </p>
         </div>
         <Button variant="ghost" onClick={goToTitle}>
           ← Title
