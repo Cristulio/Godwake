@@ -411,7 +411,7 @@ describe('Soul-mark renown + Pinchpurse gold stacking', () => {
     useScreenStore.setState({ screen: 'hub' });
   });
 
-  it('failed delve pays floor(15 * 1.4) = 21 renown with 2 banes (Pinchpurse + vertigo)', () => {
+  it('failed delve pays floor(3 * 1.4) = 4 renown with 2 banes (Pinchpurse + vertigo)', () => {
     const fighter: Character = {
       ...createCharacter({
         id: 'twobane',
@@ -437,7 +437,7 @@ describe('Soul-mark renown + Pinchpurse gold stacking', () => {
 
     useGameStore.getState().finishDelve();
 
-    expect(useCharacterStore.getState().character!.renown).toBe(21);
+    expect(useCharacterStore.getState().character!.renown).toBe(4);
   });
 
   it('addDelveReward stacks goldMultiplier 0.85 with soul-mark 1.4 → floor(100 * 1.19) = 119', () => {

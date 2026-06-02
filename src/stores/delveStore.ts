@@ -79,16 +79,26 @@ function queueChapterUnlockTutorials(
   if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
 }
 
-/** Renown granted per successful delve clear (boss killed). */
+/** Renown granted per successful delve clear (final boss felled). */
 export const RENOWN_PER_DELVE_CLEAR = 50;
-/** Renown granted on a failed delve — small consolation for the soul. */
-export const RENOWN_PER_DELVE_FAILURE = 15;
 /**
- * Hades-style partial credit: bonus renown per chapter boss killed in a
- * failed delve. Dying at the Matron's door is worth more than dying to a
- * goblin in room 1.
+ * Flat consolation for a failed delve. Deliberately tiny — an early death
+ * should pay almost nothing. Real renown comes from PROGRESS (mobs felled,
+ * bosses broken, depth reached), not from showing up and dying in room one.
  */
-export const RENOWN_PER_CHAPTER_BOSS = 10;
+export const RENOWN_PER_DELVE_FAILURE = 3;
+/**
+ * Progress credit: renown for every monster felled this run. The bread of the
+ * payout — a run that actually fought its way deep banks far more than one
+ * that died shallow, regardless of the flat floor.
+ */
+export const RENOWN_PER_MOB_KILLED = 2;
+/**
+ * Hades-style partial credit: a fat bonus per chapter boss broken. Dying at
+ * the Matron's door is worth far more than dying to a goblin in room one — and
+ * a boss is worth many trash mobs.
+ */
+export const RENOWN_PER_CHAPTER_BOSS = 25;
 /**
  * Depth credit: renown per room reached this run, paid on BOTH clear and
  * death. Rewards pushing deeper even between bosses, so dying at the Ch2 boss
@@ -96,6 +106,54 @@ export const RENOWN_PER_CHAPTER_BOSS = 10;
  * old flat-failure formula where only boss kills moved the needle.
  */
 export const RENOWN_PER_ROOM_REACHED = 1;
+
+/** Renown a single cleared room contributes, before run-end multipliers. */
+export function roomRenownReward(room: Pick<RoomSpec, 'kind' | 'monsters'>): number {
+  const isCombat =
+    room.kind === 'combat' || room.kind === 'elite' || room.kind === 'boss';
+  if (!isCombat) return 0;
+  const mobs = (room.monsters ?? []).reduce((n, m) => n + m.count, 0);
+  const bossBonus = room.kind === 'boss' ? RENOWN_PER_CHAPTER_BOSS : 0;
+  return RENOWN_PER_MOB_KILLED * mobs + bossBonus;
+}
+
+export interface RenownBreakdown {
+  /** Pre-multiplier sum: clear/fail floor + mobs + bosses + depth. */
+  base: number;
+  /** Soul-mark × ascension multiplier folded together. */
+  multiplier: number;
+  /** Final renown banked: floor(base × multiplier). */
+  total: number;
+}
+
+/**
+ * The single source of truth for a run's renown payout. `finishDelve` banks
+ * exactly this, and `DelveSummary` displays exactly this — they must never
+ * drift. Pays for PROGRESS: mobs felled + bosses broken + depth reached, on
+ * top of a tiny clear/fail floor, then scaled by soul-mark and ascension.
+ */
+export function computeDelveRenown(delve: DelveState, character: Character): RenownBreakdown {
+  const wonBoss = delve.phase === 'completed';
+  const bossLimitIdx = wonBoss ? delve.currentRoomIdx + 1 : delve.currentRoomIdx;
+  const bossesKilled = delve.rooms
+    .slice(0, bossLimitIdx)
+    .filter((r) => r.kind === 'boss').length;
+  const roomsVisited = delve.visitedRoomIds?.length;
+  const roomsReached =
+    roomsVisited !== undefined ? Math.max(0, roomsVisited - 1) : delve.currentRoomIdx;
+  const mobsKilled = delve.mobsKilled ?? 0;
+  const base =
+    (wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE) +
+    RENOWN_PER_MOB_KILLED * mobsKilled +
+    RENOWN_PER_CHAPTER_BOSS * bossesKilled +
+    RENOWN_PER_ROOM_REACHED * roomsReached;
+  // Soul-mark and ascension reward multipliers compose MULTIPLICATIVELY.
+  const multiplier =
+    renownSoulMarkMultiplier(character) *
+    getAscensionLevel(delve.ascensionLevel ?? 0).renownMult;
+  return { base, multiplier, total: Math.floor(base * multiplier) };
+}
+
 /** Renown threshold that reveals the Druid Grove on the hub. */
 export const GROVE_UNLOCK_THRESHOLD = 30;
 /** Renown threshold required to unlock the road to Athkatla (Chapter 2). */
@@ -257,6 +315,12 @@ export interface LootSummary {
   items: Array<{ name: string; rarity: GearRarity; description: string }>;
   /** Name of a legendary relic banked to the reliquary this fight, if any. */
   bankedLegendary?: string;
+  /**
+   * Renown this fight earned toward the run total (mobs felled + boss bonus,
+   * pre run-end multipliers). Surfaced on the spoils screen so the player sees
+   * progress accrue; the full multiplied total settles on DelveSummary.
+   */
+  renown: number;
 }
 
 /**
@@ -632,12 +696,28 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     }
 
     useCombatStore.getState().setCombat(null);
+    // Progress-renown: every mob this room held is now dead. Tally them onto the
+    // run ledger (computeDelveRenown reads delve.mobsKilled at finish) and surface
+    // this fight's slice on the spoils screen.
+    const mobsThisRoom = isRegularCombat
+      ? (room.monsters ?? []).reduce((n, m) => n + m.count, 0)
+      : 0;
+    const fightRenown = roomRenownReward(room);
     // Store the cleared room so acceptSpoils can fire boss taunts / bookkeeping.
     // Always show the spoils screen — the rhythm beat fires even on a 0/0 drop.
-    set({
-      lastLoot: { gold: goldGained, xp: xpGained, items: droppedItems, bankedLegendary },
+    set((cur) => ({
+      lastLoot: {
+        gold: goldGained,
+        xp: xpGained,
+        items: droppedItems,
+        bankedLegendary,
+        renown: fightRenown,
+      },
       pendingSpoilsRoom: room,
-    });
+      delve: cur.delve
+        ? { ...cur.delve, mobsKilled: (cur.delve.mobsKilled ?? 0) + mobsThisRoom }
+        : cur.delve,
+    }));
     useScreenStore.getState().setScreen('spoils');
   },
 
@@ -721,33 +801,12 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       useScreenStore.getState().setScreen('ending');
       return;
     }
-    // Depth credit pays per room ACTUALLY VISITED on BOTH paths; the boss stack
-    // rides on top. Counts the route the soul walked (visitedRoomIds, lit by
-    // enterRoom as it routes), not the flat currentRoomIdx — the branching map's
-    // flat index runs past the parallel nodes a route skips, so the old formula
-    // over-credited depth. The entry node is seeded free, so the credit is the
-    // count beyond it; legacy linear delves keep no trail and fall back to the
-    // index. A clear walks its whole route and fells every boss, so it still
-    // tops even the deepest death by construction (clear > deep > shallow holds).
-    const roomsVisited = s.delve.visitedRoomIds?.length;
-    const roomsReached =
-      roomsVisited !== undefined
-        ? Math.max(0, roomsVisited - 1)
-        : s.delve.currentRoomIdx;
-    const depthRenown = RENOWN_PER_ROOM_REACHED * roomsReached;
-    const renownBase =
-      (wonBoss ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE) +
-      RENOWN_PER_CHAPTER_BOSS * bossesKilled +
-      depthRenown;
-    // Ascension reward multiplier composes MULTIPLICATIVELY with the soul-mark
-    // (audit flagged multiplier-stacking as a past bug-class — both apply here).
-    // Soul-mark reads the quirks the soul carried THIS run, so settle renown
-    // BEFORE the wheel turns.
-    const ascensionLevel = s.delve.ascensionLevel ?? 0;
-    const ascensionMult = getAscensionLevel(ascensionLevel).renownMult;
-    const renownGain = Math.floor(
-      renownBase * renownSoulMarkMultiplier(character) * ascensionMult,
-    );
+    // Renown pays for PROGRESS — mobs felled + bosses broken + depth reached —
+    // on top of a tiny clear/fail floor, then scaled by soul-mark and ascension.
+    // computeDelveRenown is the shared source of truth so DelveSummary's display
+    // and this banked amount can never drift apart. Settled BEFORE the wheel
+    // turns, since the soul-mark reads the quirks carried THIS run.
+    const renownGain = computeDelveRenown(s.delve, character).total;
     const withRenown: Character = {
       ...character,
       renown: character.renown + renownGain,
@@ -786,7 +845,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // highest unlocked ascension opens the next rung. Replaying a lower level
     // unlocks nothing new (Spire-style).
     if (wonBoss) {
-      meta.unlockNextAscension(ascensionLevel);
+      meta.unlockNextAscension(s.delve.ascensionLevel ?? 0);
       // Legendaries are no longer a guaranteed per-clear grant (Wave 2): they
       // drop rarely from any combat source mid-run and bank to the collection
       // (see resolveRoomVictory). Clearing the chain only advances ascension.
@@ -933,14 +992,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       return;
     }
     // 'gold': slip past with the hush-money — gold granted, then a parting blow
-    // (20% of max HP, cannot kill). No fight, no XP, no loot, no relic.
+    // (15% of max HP, cannot kill). No fight, no XP, no loot, no relic.
     const room = s.delve.rooms[s.delve.currentRoomIdx];
     const bounty = room?.goldReward ?? 0;
     if (bounty > 0) get().addDelveReward(bounty, 0);
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (character) {
-      const blow = Math.max(2, Math.floor(character.hp.max * 0.2));
+      const blow = Math.max(1, Math.round(character.hp.max * 0.15));
       const newCurrent = Math.max(1, character.hp.current - blow);
       charSlice.setCharacter({
         ...character,

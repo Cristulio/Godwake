@@ -77,6 +77,12 @@ export interface DelveState {
   goldEarned: number;
   xpEarned: number;
   /**
+   * Count of monsters felled this run (every mob in every combat/elite/boss
+   * room cleared, the boss included). Feeds the progress-scaled renown payout
+   * so a run that actually fought pays more than one that walked past rooms.
+   */
+  mobsKilled?: number;
+  /**
    * Set true the moment the Ch1 boss (Ilyich) is killed inside a combined
    * Godwake delve. Lets us credit `chapter1Cleared` even if the player then
    * presses south, dies in Ch2, and the delve technically fails.

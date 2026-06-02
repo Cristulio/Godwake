@@ -19,7 +19,7 @@ export function EliteRoom({ room }: EliteRoomProps) {
   const pickEliteChoice = useGameStore((s) => s.pickEliteChoice);
   const character = useGameStore((s) => s.character);
   const bounty = room.goldReward ?? 0;
-  const partingBlow = character ? Math.max(2, Math.floor(character.hp.max * 0.2)) : null;
+  const partingBlow = character ? Math.max(1, Math.round(character.hp.max * 0.15)) : null;
 
   const defId = room.monsters?.[0]?.defId;
   let eliteName = 'An elite foe';
@@ -64,7 +64,8 @@ export function EliteRoom({ room }: EliteRoomProps) {
                   {' '}(<span className="text-[var(--color-accent-gold)]">{bounty} gold</span>)
                 </>
               ) : null}
-              . The guardian takes a parting swipe —{' '}
+              . The guardian's blade still finds you on the way out — a wound that cuts
+              deeper the more life you carry,{' '}
               {partingBlow !== null ? (
                 <span className="text-[var(--color-accent-blood)]">lose {partingBlow} HP</span>
               ) : (
