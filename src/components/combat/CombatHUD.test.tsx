@@ -135,6 +135,47 @@ describe('CombatHUD', () => {
     expect(screen.getByLabelText(/Helm's Aegis/)).toBeInTheDocument();
   });
 
+  it('telegraphs the readied boss-intel edge — Set while the opener is live, Spent once struck', () => {
+    const bossCombatant = {
+      kind: 'monster' as const,
+      id: 'm1',
+      instance: {
+        id: 'm1',
+        defId: 'duergar-ilyich',
+        displayName: 'Ilyich',
+        hp: { current: 40, max: 40, temp: 0 },
+        ac: 14,
+        acRevealed: false,
+        conditions: [],
+        actionEconomy: { actionUsed: false, bonusActionUsed: false, reactionUsed: false },
+      },
+    };
+    const state = emptyState({ combatants: [bossCombatant] });
+
+    const armed: Character = {
+      ...makeChar('fighter'),
+      bossIntel: { 'duergar-ilyich': 'weak-spot' },
+      nextAttackAdvantage: true,
+    };
+    const { rerender } = render(<CombatHUD character={armed} state={state} />);
+    expect(screen.getByText(/Weak Spot/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Set$/)).toBeInTheDocument();
+
+    const spent: Character = { ...armed, nextAttackAdvantage: false };
+    rerender(<CombatHUD character={spent} state={state} />);
+    expect(screen.getByText(/^Spent$/)).toBeInTheDocument();
+  });
+
+  it('does not telegraph a boss edge readied against a foe absent from this fight', () => {
+    const c: Character = {
+      ...makeChar('fighter'),
+      bossIntel: { 'asylum-director': 'battle-plan' },
+      nextAttackAdvantage: true,
+    };
+    render(<CombatHUD character={c} state={emptyState()} />);
+    expect(screen.queryByText(/Battle Plan/i)).toBeNull();
+  });
+
   it('Shows status condition pill when held / paralyzed', () => {
     const c: Character = {
       ...makeChar('fighter'),
