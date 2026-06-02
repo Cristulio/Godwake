@@ -8,20 +8,22 @@ import { listSpells } from '../../content/spells';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 
 /**
- * XP-to-level table, extended to level 20. Index 0 = level 1 = 0 xp.
+ * XP-to-level table, fit to level 20. Index 0 = level 1 = 0 xp.
  *
- * The L1-8 band is unchanged — it was tuned for ROUTED play (the branching map
- * walks ~one node per layer, so a single route feeds roughly half the XP of the
- * old all-rooms delve; the L3→L4 cliff is flattened so a normal route reaches
- * the level the content expects). The L9-20 continuation carries that curve out
- * across the planned 14-chapter expansion: each level needs progressively more,
- * with deltas that grow smoothly (≈3.5k at L9 climbing to ≈18k at L20) so the
- * back half is a steady climb rather than a wall. A full scaled run tops out at
- * the L20 cap (≈126k total) right at the Irenicus finale.
+ * Re-fit for the tighter chapters: each chapter now draws ~⅓ fewer combat rooms
+ * (the encounter pools are untouched — just fewer fights drawn per chapter), so
+ * a routed clear banks ~16% less XP per chapter than the old layout. The whole
+ * curve is lowered to match (L20 cap ≈98k, down from ≈126k) so a median routed
+ * clear still lands L20 in the Ch12-13 band — the realized-XP target measured by
+ * scripts/sim-xp-curve.ts, NOT the authored pool sums (which overcount ~2.5×
+ * because a player walks one node per column, not every room).
+ *
+ * The L9-20 back half keeps non-shrinking deltas (≈4k at L9 climbing to ≈12k at
+ * L20) so it reads as a steady climb rather than a wall.
  */
 const XP_TABLE = [
-  0, 250, 550, 1100, 2200, 4000, 6200, 9000, 12500, 16800, 22000, 28000, 35500,
-  44000, 54000, 65000, 78000, 92000, 108000, 126000,
+  0, 200, 500, 1000, 1900, 3200, 5000, 7400, 10000, 14000, 18800, 24400, 30800,
+  38000, 46000, 54800, 64400, 74800, 86000, 98000,
 ] as const;
 
 export const MAX_LEVEL = XP_TABLE.length;

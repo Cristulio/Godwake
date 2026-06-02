@@ -260,8 +260,8 @@ type SlotKind =
  */
 const FORK_MIN_WIDTH = 2; // the chapter entry must open onto a real choice
 const COLUMN_MAX_WIDTH = 3; // widest parallel column on the map
-const COMBAT_PAD_MIN = 5; // extra fights beyond the special budget
-const COMBAT_PAD_MAX = 7;
+const COMBAT_PAD_MIN = 3; // extra fights beyond the special budget
+const COMBAT_PAD_MAX = 4;
 
 /** Inclusive integer roll in [min, max] off the seeded RNG. */
 function roll(rng: Rng, min: number, max: number): number {

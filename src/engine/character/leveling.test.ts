@@ -53,15 +53,15 @@ describe('xpForLevel', () => {
     expect(xpForLevel(1)).toBe(0);
   });
   it('matches routed-play thresholds for levels 2-5 (cliff flattened so a route reaches the expected level)', () => {
-    expect(xpForLevel(2)).toBe(250);
-    expect(xpForLevel(3)).toBe(550);
-    expect(xpForLevel(4)).toBe(1100);
-    expect(xpForLevel(5)).toBe(2200);
+    expect(xpForLevel(2)).toBe(200);
+    expect(xpForLevel(3)).toBe(500);
+    expect(xpForLevel(4)).toBe(1000);
+    expect(xpForLevel(5)).toBe(1900);
   });
   it('uses routed-play thresholds for levels 6-8', () => {
-    expect(xpForLevel(6)).toBe(4000);
-    expect(xpForLevel(7)).toBe(6200);
-    expect(xpForLevel(8)).toBe(9000);
+    expect(xpForLevel(6)).toBe(3200);
+    expect(xpForLevel(7)).toBe(5000);
+    expect(xpForLevel(8)).toBe(7400);
   });
 });
 
@@ -123,8 +123,8 @@ describe('XP table → level 20', () => {
   });
 
   it('hits the target totals at the key bands', () => {
-    expect(xpForLevel(9)).toBe(12500);
-    expect(xpForLevel(20)).toBe(126000);
+    expect(xpForLevel(9)).toBe(10000);
+    expect(xpForLevel(20)).toBe(98000);
   });
 
   it('is strictly increasing with non-shrinking deltas in the back half', () => {
@@ -138,7 +138,7 @@ describe('XP table → level 20', () => {
   });
 
   it('clamps requests past the cap to the L20 threshold', () => {
-    expect(xpForLevel(21)).toBe(126000);
+    expect(xpForLevel(21)).toBe(98000);
   });
 });
 

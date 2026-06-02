@@ -92,6 +92,24 @@ describe('createGodwakeDelve', () => {
     }
   });
 
+  it('draws the tightened combat budget — 4-5 plain fights + 1-2 elites per chapter', () => {
+    // The pools are untouched (same distinct fights); the layout just draws
+    // fewer per chapter so chapters are less grindy. Plain combat = the lone
+    // warmup entry + the 3-4 combat pad; elites stay the 1-2 invariant.
+    for (let seed = 0; seed < 24; seed++) {
+      const d = createGodwakeDelve({ seed, ascension: 0 });
+      for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+        const inCh = d.rooms.filter((r) => r.chapter === ch);
+        const combat = inCh.filter((r) => r.kind === 'combat').length;
+        const elite = inCh.filter((r) => r.kind === 'elite').length;
+        expect(combat).toBeGreaterThanOrEqual(4);
+        expect(combat).toBeLessThanOrEqual(5);
+        expect(elite).toBeGreaterThanOrEqual(1);
+        expect(elite).toBeLessThanOrEqual(2);
+      }
+    }
+  });
+
   it('has at least two shrines per chapter span', () => {
     const d = createGodwakeDelve(1);
     const shrines = d.rooms.filter((r) => r.kind === 'shrine');
