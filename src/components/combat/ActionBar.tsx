@@ -4,6 +4,15 @@ import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
 import { characterHasMechanic } from '../../engine/character/derived';
 import { RAGE_ROUNDS } from '../../engine/character/actions';
+import {
+  martialFlavor,
+  martialPointsLeft,
+  martialOffenseDamage,
+  martialDefenseReduction,
+  MARTIAL_OFFENSE_COST,
+  MARTIAL_DEFENSE_COST,
+  MARTIAL_DISRUPT_COST,
+} from '../../engine/combat/martialResource';
 import { getItem } from '../../content/items';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
 
@@ -13,13 +22,12 @@ interface ActionBarProps {
   onAttack: () => void;
   onSecondWind: () => void;
   onActionSurge: () => void;
-  onPowerAttack: () => void;
-  onBrace: () => void;
+  onMartialOffense: () => void;
+  onMartialDefense: () => void;
+  onMartialDisrupt: () => void;
   onCunningAction: () => void;
   onRage: () => void;
   onRecklessAttack: () => void;
-  onCleave: () => void;
-  onKnockdown: () => void;
   onFlurry: () => void;
   onPatientDefense: () => void;
   onStunningStrike: () => void;
@@ -35,13 +43,12 @@ export function ActionBar({
   onAttack,
   onSecondWind,
   onActionSurge,
-  onPowerAttack,
-  onBrace,
+  onMartialOffense,
+  onMartialDefense,
+  onMartialDisrupt,
   onCunningAction,
   onRage,
   onRecklessAttack,
-  onCleave,
-  onKnockdown,
   onFlurry,
   onPatientDefense,
   onStunningStrike,
@@ -100,28 +107,43 @@ export function ActionBar({
     surgeRemaining > 0 &&
     character.actionEconomy.actionUsed;
 
-  // Fighter Power Attack — a consumable stance declared before the swing (L1).
-  // Charges refresh on rest/camp; the button greys out at 0.
-  const hasPowerAttack = isFighter && characterHasMechanic(character, 'power-attack');
-  const powerAttacking = character.powerAttackActive === true;
-  const powerAttackCharges = character.resources.powerAttackChargesRemaining ?? 0;
-  const canPowerAttack =
+  // Martial resource pool (Fighter Resolve / Barbarian Fury / Ranger Focus):
+  // the shared OFFENSE / DEFENSE / DISRUPT spends. At most one point's-worth a
+  // turn (martialSpentThisTurn). The flavor strings drive the in-world labels.
+  const martial = martialFlavor(character);
+  const martialPoints = martialPointsLeft(character);
+  const martialSpent = character.martialSpentThisTurn === true;
+  const offenseUp = character.martialOffenseActive === true;
+  const disruptArmed = character.martialDisruptActive === true;
+  const hasMartialOffense = martial != null && characterHasMechanic(character, 'martial-offense');
+  const hasMartialDefense = martial != null && characterHasMechanic(character, 'martial-defense');
+  const hasMartialDisrupt = martial != null && characterHasMechanic(character, 'martial-disrupt');
+  // OFFENSE / DISRUPT are declared before the swing (gate on the action);
+  // DEFENSE only needs to land before the enemy turn, so it stays open until the
+  // multiattack chain is done.
+  const canMartialOffense =
     playersTurn &&
     active &&
-    hasPowerAttack &&
-    !powerAttacking &&
-    powerAttackCharges > 0 &&
+    hasMartialOffense &&
+    !martialSpent &&
+    !offenseUp &&
+    martialPoints >= MARTIAL_OFFENSE_COST &&
     !character.actionEconomy.actionUsed;
-
-  // Fighter Brace — a bonus-action set, once per combat (L3).
-  const hasBrace = isFighter && characterHasMechanic(character, 'brace');
-  const canBrace =
+  const canMartialDefense =
     playersTurn &&
     active &&
-    hasBrace &&
-    character.resources.braceAvailable === true &&
-    !character.actionEconomy.bonusActionUsed &&
+    hasMartialDefense &&
+    !martialSpent &&
+    martialPoints >= MARTIAL_DEFENSE_COST &&
     !midMultiattack;
+  const canMartialDisrupt =
+    playersTurn &&
+    active &&
+    hasMartialDisrupt &&
+    !martialSpent &&
+    !disruptArmed &&
+    martialPoints >= MARTIAL_DISRUPT_COST &&
+    !character.actionEconomy.actionUsed;
 
   const cunningRemaining = character.resources.cunningActionUsesRemaining ?? 0;
   const canCunningAction =
@@ -146,33 +168,6 @@ export function ActionBar({
   const reckless = character.recklessActive === true;
   const canReckless =
     playersTurn && active && hasReckless && !reckless && !character.actionEconomy.actionUsed;
-
-  // Barbarian Cleave — a free rage-gated stance (L3); needs a second foe to bite.
-  const liveEnemyCount = state.combatants.filter(
-    (c) => c.kind === 'monster' && c.instance.hp.current > 0,
-  ).length;
-  const hasCleave = isBarbarian && characterHasMechanic(character, 'cleave');
-  const cleaving = character.cleaveActive === true;
-  const canCleave =
-    playersTurn &&
-    active &&
-    hasCleave &&
-    raging &&
-    !cleaving &&
-    liveEnemyCount >= 2 &&
-    !character.actionEconomy.actionUsed;
-
-  // Barbarian Knockdown — a free rage-gated stance, one charge per combat (L7).
-  const hasKnockdown = isBarbarian && characterHasMechanic(character, 'knockdown');
-  const knockingDown = character.knockdownActive === true;
-  const canKnockdown =
-    playersTurn &&
-    active &&
-    hasKnockdown &&
-    raging &&
-    character.resources.knockdownAvailable === true &&
-    !knockingDown &&
-    !character.actionEconomy.actionUsed;
 
   // Ranger Hunter's Mark (bonus action) — brand or re-brand a quarry.
   const isMarkLive =
@@ -323,26 +318,37 @@ export function ActionBar({
             Action Surge{surgeRemaining > 0 && ` (${surgeRemaining})`}
           </Button>
         )}
-        {hasPowerAttack && (
+        {hasMartialOffense && martial && (
           <Button
-            variant={canPowerAttack ? 'primary' : 'secondary'}
-            onClick={onPowerAttack}
-            disabled={!canPowerAttack}
-            title="Free, costs 1 charge: this turn's melee swings land for +4 damage, no accuracy cost. Charges refresh on rest."
+            variant={canMartialOffense ? 'primary' : 'secondary'}
+            onClick={onMartialOffense}
+            disabled={!canMartialOffense}
+            title={`Costs ${MARTIAL_OFFENSE_COST} ${martial.pool}: this turn's strikes land for +${martialOffenseDamage(character)} damage${character.classId === 'barbarian' ? ', and cleave into a second foe' : ''}.`}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {powerAttacking ? 'Power Attack ✓' : `Power Attack (${powerAttackCharges})`}
+            {offenseUp ? `${martial.offense} ✓` : `${martial.offense} (${MARTIAL_OFFENSE_COST})`}
           </Button>
         )}
-        {hasBrace && (
+        {hasMartialDefense && martial && (
           <Button
-            variant={canBrace ? 'primary' : 'secondary'}
-            onClick={onBrace}
-            disabled={!canBrace}
-            title="Bonus action, once per combat: set your guard — the next hit you take is blunted by 3 + half your level."
+            variant={canMartialDefense ? 'primary' : 'secondary'}
+            onClick={onMartialDefense}
+            disabled={!canMartialDefense}
+            title={`Costs ${MARTIAL_DEFENSE_COST} ${martial.pool}: blunt the next hit you take by ${martialDefenseReduction(character)}. Hold it for a blow you can see coming.`}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            Brace
+            {`${martial.defense} (${MARTIAL_DEFENSE_COST})`}
+          </Button>
+        )}
+        {hasMartialDisrupt && martial && (
+          <Button
+            variant={canMartialDisrupt ? 'primary' : 'secondary'}
+            onClick={onMartialDisrupt}
+            disabled={!canMartialDisrupt}
+            title={`Costs ${MARTIAL_DISRUPT_COST} ${martial.pool}: arm a staggering strike — the next hit fells its target and costs it its next turn.`}
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {disruptArmed ? `${martial.disrupt} ✓` : `${martial.disrupt} (${MARTIAL_DISRUPT_COST})`}
           </Button>
         )}
 
@@ -380,29 +386,6 @@ export function ActionBar({
             {reckless ? 'Reckless ✓' : 'Reckless'}
           </Button>
         )}
-        {hasCleave && (
-          <Button
-            variant={canCleave ? 'primary' : 'secondary'}
-            onClick={onCleave}
-            disabled={!canCleave}
-            title="Free, while raging: this turn's first melee hit also catches a second enemy for a glancing blow."
-            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
-          >
-            {cleaving ? 'Cleave ✓' : 'Cleave'}
-          </Button>
-        )}
-        {hasKnockdown && (
-          <Button
-            variant={canKnockdown ? 'primary' : 'secondary'}
-            onClick={onKnockdown}
-            disabled={!canKnockdown}
-            title="Free, while raging, once per combat: arm a staggering strike — the next hit knocks the target down and costs it its next turn."
-            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
-          >
-            {knockingDown ? 'Knockdown ✓' : 'Knockdown'}
-          </Button>
-        )}
-
         {isRanger && (
           <Button
             variant={canHuntersMark ? 'primary' : 'secondary'}

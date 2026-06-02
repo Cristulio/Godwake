@@ -35,13 +35,11 @@ import { getTwist, twistCombatEffect, CURSED_GROUND_DECAY_TURNS } from '../delve
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { wildShapeUsesMax } from './wildShape';
 import { monkKiMax } from './monk';
+import { MARTIAL_POOL_MAX } from './martialResource';
 
-/**
- * Max entries retained in CombatState.log. The renderer (CombatLog.tsx) tails
- * the last 80 for display; this cap protects engine memory and the persisted
- * save blob during long fights where hundreds of entries could accumulate.
- */
-export const MAX_COMBAT_LOG = 200;
+// MAX_COMBAT_LOG now lives in the leaf log module (breaking the createCombat ⇄
+// log import cycle); re-exported here so existing importers keep working.
+export { MAX_COMBAT_LOG } from './log';
 
 let monsterInstanceCounter = 0;
 
@@ -238,26 +236,45 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // Rogue's Cunning Action cadence and gives the Fighter a real clutch heal
   // in every fight. Action Surge stays on short-rest (still a "burst" button).
   if (nextCharacter.classId === 'fighter') {
-    nextCharacter = { ...nextCharacter, powerAttackActive: false };
+    nextCharacter = {
+      ...nextCharacter,
+      martialOffenseActive: false,
+      martialDisruptActive: false,
+      martialSpentThisTurn: false,
+    };
     nextCharacter = patchResources(nextCharacter, {
       secondWindAvailable: true,
-      // Brace refreshes per encounter, like Second Wind.
-      braceAvailable: true,
+      // Resolve pool refreshes per encounter, like Second Wind.
+      martialPointsRemaining: MARTIAL_POOL_MAX,
     });
   }
 
-  // Barbarian: clear stale fury and stances from the prior fight; the Knockdown
-  // charge refreshes per encounter (Cleave needs no charge — rage gates it).
+  // Barbarian: clear stale fury and martial stances from the prior fight; the
+  // Fury pool refreshes per encounter.
   if (nextCharacter.classId === 'barbarian') {
     nextCharacter = {
       ...nextCharacter,
       recklessActive: false,
-      cleaveActive: false,
-      knockdownActive: false,
+      martialOffenseActive: false,
+      martialDisruptActive: false,
+      martialSpentThisTurn: false,
     };
     nextCharacter = patchResources(nextCharacter, {
       rageRoundsRemaining: 0,
-      knockdownAvailable: true,
+      martialPointsRemaining: MARTIAL_POOL_MAX,
+    });
+  }
+
+  // Ranger: clear stale martial stances and refresh the Focus pool per encounter.
+  if (nextCharacter.classId === 'ranger') {
+    nextCharacter = {
+      ...nextCharacter,
+      martialOffenseActive: false,
+      martialDisruptActive: false,
+      martialSpentThisTurn: false,
+    };
+    nextCharacter = patchResources(nextCharacter, {
+      martialPointsRemaining: MARTIAL_POOL_MAX,
     });
   }
 

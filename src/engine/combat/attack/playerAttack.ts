@@ -17,11 +17,8 @@ import {
   isRaging,
   proficiencyBonus,
 } from '../../character/derived';
-import {
-  rageDamageBonus,
-  POWER_ATTACK_DAMAGE_BONUS,
-  KNOCKDOWN_STAGGER_TURNS,
-} from '../../character/actions';
+import { rageDamageBonus } from '../../character/actions';
+import { martialOffenseDamage, MARTIAL_DISRUPT_STAGGER_TURNS } from '../martialResource';
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { monkKiSaveDC, monkFightsUnarmed, MONK_UNARMED_DAMAGE_EDGE } from '../monk';
 import { getMonster } from '../../../content/monsters';
@@ -150,10 +147,10 @@ export function playerAttack(
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   // Fighter Weapon Mastery (L9): +1 to hit on every weapon strike.
   if (characterHasMechanic(nextCharacter, 'weapon-mastery')) attackBonus += 1;
-  // Fighter Power Attack: a heavy melee swing that lands for flat bonus damage
-  // (applied in the hit block). Consumable — the charge was spent to set the
-  // stance, so there's no accuracy cost. Melee only — a bow can't muscle.
-  const powerAttack = nextCharacter.powerAttackActive === true && !isRanged;
+  // Martial OFFENSE: a heavy/aimed strike that lands for flat bonus damage
+  // (applied in the hit block). The point was spent to set the stance, so
+  // there's no accuracy cost. Works melee or ranged (the Ranger's Aimed Shot).
+  const offenseStrike = nextCharacter.martialOffenseActive === true;
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
@@ -362,11 +359,12 @@ export function playerAttack(
       bonusDamage += 1;
       onTypeParts.push({ amount: 1, label: 'mastery' });
     }
-    // Fighter Power Attack: the flat spike on each melee strike this turn,
-    // paid for by the charge spent to set the stance (no accuracy cost).
-    if (powerAttack) {
-      bonusDamage += POWER_ATTACK_DAMAGE_BONUS;
-      onTypeParts.push({ amount: POWER_ATTACK_DAMAGE_BONUS, label: 'power' });
+    // Martial OFFENSE: the flat spike on each strike this turn, paid for by the
+    // martial point spent to set the stance (no accuracy cost).
+    if (offenseStrike) {
+      const spike = martialOffenseDamage(nextCharacter);
+      bonusDamage += spike;
+      onTypeParts.push({ amount: spike, label: 'heavy' });
     }
     // Monk unarmed damage edge — the reward for going weaponless. Rides every
     // unarmed / monk-weapon strike (each Flurry strike included); dark with an
@@ -763,14 +761,14 @@ export function playerAttack(
       }
     }
 
-    // Barbarian Cleave: while raging, the turn's first melee swing spills a
-    // glancing blow into a second foe — weapon dice plus flat bonuses, no
-    // ability mod, no crit (the same shape as Horde Breaker). Once per turn:
-    // playerAttacksThisTurn is 0 on the opening swing, so Extra Attack doesn't
-    // multiply it.
+    // Barbarian Savage Cleave: the OFFENSE spend's signature — the turn's first
+    // melee swing spills a glancing blow into a second foe (weapon dice plus
+    // flat bonuses, no ability mod, no crit — the same shape as Horde Breaker).
+    // Once per turn: playerAttacksThisTurn is 0 on the opening swing, so Extra
+    // Attack doesn't multiply it.
     if (
-      nextCharacter.cleaveActive === true &&
-      isRaging(nextCharacter) &&
+      nextCharacter.martialOffenseActive === true &&
+      nextCharacter.classId === 'barbarian' &&
       !isRanged &&
       (state.playerAttacksThisTurn ?? 0) === 0
     ) {
@@ -796,16 +794,11 @@ export function playerAttack(
       }
     }
 
-    // Barbarian Knockdown: an armed staggering strike fells the target — it
-    // loses its next turn. The per-combat charge is only spent here, on the blow
-    // that actually lands on a foe still standing; a clean miss or a kill leaves
-    // the stance armed for the next swing.
-    if (
-      nextCharacter.knockdownActive === true &&
-      isRaging(nextCharacter) &&
-      !isRanged &&
-      target.kind === 'monster'
-    ) {
+    // Martial DISRUPT: an armed staggering strike fells the target — it loses
+    // its next turn. The martial point was already spent on declaration; the
+    // stance clears here, on the blow that actually lands on a foe still
+    // standing. A clean miss or a kill leaves it armed for the next swing.
+    if (nextCharacter.martialDisruptActive === true && target.kind === 'monster') {
       const stillStanding = nextState.combatants.some(
         (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
       );
@@ -814,18 +807,17 @@ export function playerAttack(
           ...nextState,
           combatants: nextState.combatants.map((c) => {
             if (c.kind !== 'monster' || c.id !== targetId) return c;
-            return { ...c, instance: { ...c.instance, staggeredTurns: KNOCKDOWN_STAGGER_TURNS } };
+            return {
+              ...c,
+              instance: { ...c.instance, staggeredTurns: MARTIAL_DISRUPT_STAGGER_TURNS },
+            };
           }),
         };
-        nextCharacter = {
-          ...nextCharacter,
-          knockdownActive: false,
-          resources: { ...nextCharacter.resources, knockdownAvailable: false },
-        };
+        nextCharacter = { ...nextCharacter, martialDisruptActive: false };
         nextState = appendLog(nextState, {
           id: nextLogId(nextState),
           kind: 'system',
-          text: `${displayName(target, nextCharacter)} is knocked off its feet — it will lose its next turn.`,
+          text: `${displayName(target, nextCharacter)} is staggered — it will lose its next turn.`,
         });
       }
     }

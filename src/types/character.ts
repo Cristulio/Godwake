@@ -72,23 +72,13 @@ export interface ClassResources {
   /** Fighter: Action Surge (1 use at lv2, 2 at lv17). */
   actionSurgeRemaining?: number;
   /**
-   * Fighter: Power Attack charges left. Each spends one charge to set a heavy
-   * stance that adds flat damage to this turn's melee swings (no accuracy cost).
-   * A limited pool that refreshes only on rest/camp — not per encounter.
+   * Martial resource pool (Fighter Resolve / Barbarian Fury / Ranger Focus).
+   * The shared per-fight currency these three classes spend on their OFFENSE /
+   * DEFENSE / DISRUPT abilities. Refreshes to {@link MARTIAL_POOL_MAX} at the
+   * start of every encounter (createCombat); at most one point's-worth is spent
+   * per turn (see `martialSpentThisTurn`).
    */
-  powerAttackChargesRemaining?: number;
-  /**
-   * Fighter: Brace charge available this combat — a defensive set that blunts
-   * the next incoming hit (see `useBrace`). Refreshes at the start of every
-   * encounter, mirroring Second Wind's per-combat cadence.
-   */
-  braceAvailable?: boolean;
-  /**
-   * Barbarian: Knockdown charge available this combat — one staggering blow
-   * that costs a foe its next turn. Refreshes at the start of every encounter;
-   * the charge is only spent when the staggering strike actually lands.
-   */
-  knockdownAvailable?: boolean;
+  martialPointsRemaining?: number;
   /** Rogue: Sneak Attack already fired this turn (true once spent, reset on turn change). */
   sneakAttackUsedThisTurn?: boolean;
   /** Rogue: Cunning Action uses left this combat. 1 base, 2 for Thief subclass. Refreshes on encounter start + short/long rest. */
@@ -330,25 +320,28 @@ export interface Character {
    */
   recklessActive?: boolean;
   /**
-   * Fighter Power Attack stance. Set true when the fighter swings heavy: this
-   * turn's melee strikes take a flat to-hit penalty for a flat damage spike.
-   * Free to declare; cleared at the start of the fighter's next turn (in
-   * `endTurn`) and on combat start.
+   * Martial OFFENSE stance (Fighter/Barbarian/Ranger). Set true when a martial
+   * spends from the pool on a heavy/aimed strike: this turn's weapon strikes
+   * land for {@link martialOffenseDamage} more (and the Barbarian's swing also
+   * cleaves into a second foe). Free to declare; cleared at the start of the
+   * next turn (in `endTurn`) and on combat start.
    */
-  powerAttackActive?: boolean;
+  martialOffenseActive?: boolean;
   /**
-   * Barbarian Cleave stance. Set true when the raging barbarian declares a wide
-   * swing: this turn's first melee hit spills a glancing blow into a second foe.
-   * Free to declare; cleared at the start of the next turn and on combat start.
+   * Martial DISRUPT stance (Fighter/Barbarian/Ranger). Set true when a martial
+   * spends from the pool to arm a staggering strike: the next weapon hit fells
+   * the target (it loses its next turn), resolved in playerAttack. The point is
+   * already spent on declaration; cleared on the connecting hit, at the start of
+   * the next turn, and on combat start.
    */
-  cleaveActive?: boolean;
+  martialDisruptActive?: boolean;
   /**
-   * Barbarian Knockdown stance. Set true when a raging barbarian arms a
-   * staggering strike: the next melee hit fells the target (it loses its next
-   * turn) and only then spends the per-combat charge. Cleared at the start of
-   * the next turn and on combat start.
+   * True once a martial point has been spent this turn (OFFENSE / DEFENSE /
+   * DISRUPT). Caps the pool to one spend per turn so it is paced across the
+   * fight rather than dumped at once. Cleared at the start of the player's next
+   * turn and on combat start.
    */
-  knockdownActive?: boolean;
+  martialSpentThisTurn?: boolean;
   /**
    * Monk Flurry of Blows. Extra unarmed strikes funded by Ki and spent after the
    * Attack action: while > 0 the monk can keep striking even with the action

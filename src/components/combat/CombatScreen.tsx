@@ -11,14 +11,13 @@ import {
   playerAttack,
   useSecondWind,
   useActionSurge,
-  usePowerAttack,
-  useBrace,
+  useMartialOffense,
+  useMartialDefense,
+  useMartialDisrupt,
   useCunningAction,
   type CunningActionChoice,
   useRage,
   useRecklessAttack,
-  useCleave,
-  useKnockdown,
   useHuntersMark,
   useFlurryOfBlows,
   usePatientDefense,
@@ -509,16 +508,16 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
-  function handlePowerAttack() {
+  function handleMartialOffense() {
     cancelTargeting();
-    const result = usePowerAttack({ character, state });
+    const result = useMartialOffense({ character, state });
     setCharacter(result.character);
     setCombat(result.state);
   }
 
-  function handleBrace() {
+  function handleMartialDefense() {
     cancelTargeting();
-    const result = useBrace({ character, state });
+    const result = useMartialDefense({ character, state });
     setCharacter(result.character);
     setCombat(result.state);
   }
@@ -537,16 +536,9 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
-  function handleCleave() {
+  function handleMartialDisrupt() {
     cancelTargeting();
-    const result = useCleave({ character, state });
-    setCharacter(result.character);
-    setCombat(result.state);
-  }
-
-  function handleKnockdown() {
-    cancelTargeting();
-    const result = useKnockdown({ character, state });
+    const result = useMartialDisrupt({ character, state });
     setCharacter(result.character);
     setCombat(result.state);
   }
@@ -782,13 +774,12 @@ export function CombatScreen({
             onAttack={handleAttackClick}
             onSecondWind={handleSecondWind}
             onActionSurge={handleActionSurge}
-            onPowerAttack={handlePowerAttack}
-            onBrace={handleBrace}
+            onMartialOffense={handleMartialOffense}
+            onMartialDefense={handleMartialDefense}
+            onMartialDisrupt={handleMartialDisrupt}
             onCunningAction={() => setPickingCunning(true)}
             onRage={handleRage}
             onRecklessAttack={handleRecklessAttack}
-            onCleave={handleCleave}
-            onKnockdown={handleKnockdown}
             onFlurry={handleFlurry}
             onPatientDefense={handlePatientDefense}
             onStunningStrike={handleStunningStrike}

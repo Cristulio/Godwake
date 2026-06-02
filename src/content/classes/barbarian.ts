@@ -37,6 +37,13 @@ export const BARBARIAN: Class = ClassSchema.parse({
           'You wear no armor and need none — your guard is bone and instinct. While unarmored, your Armor Class is 10 + your Dexterity and Constitution both.',
         mechanicKey: 'unarmored-defense',
       },
+      {
+        id: 'savage-cleave',
+        name: 'Savage Cleave',
+        description:
+          'Your Fury — three points of bloodlust that refresh each fight, spent at most one a turn. Savage Cleave is the offense: a wide swing that bites harder and spills clean through into a second foe beside your mark. Costs 2 Fury.',
+        mechanicKey: 'martial-offense',
+      },
     ],
     '2': [
       {
@@ -46,14 +53,21 @@ export const BARBARIAN: Class = ClassSchema.parse({
           'You can fight with abandon: your melee attacks this turn roll with advantage, but every attack against you has advantage until your next turn. Throw the guard away to make the kill.',
         mechanicKey: 'reckless-attack',
       },
+      {
+        id: 'bloodied-guard',
+        name: 'Bloodied Guard',
+        description:
+          'Take the blow on a braced shoulder and let it bounce. Spend 1 Fury to blunt the next hit you take by 4 plus half your level — the staying power the fury alone never gave you.',
+        mechanicKey: 'martial-defense',
+      },
     ],
     '3': [
       {
-        id: 'cleave',
-        name: 'Cleave',
+        id: 'knockdown',
+        name: 'Knockdown',
         description:
-          'While the fury is on you, a wide swing carries clean through. Declare it on your turn: your first melee hit this turn spills a glancing blow into a second enemy beside your mark. Worth it whenever the room is crowded.',
-        mechanicKey: 'cleave',
+          'A shoulder behind the blade puts a foe on the ground. Spend 1 Fury to arm a staggering strike — when it lands, the target loses its next turn. Save it for the thing you least want to act.',
+        mechanicKey: 'martial-disrupt',
       },
     ],
     '4': [
@@ -90,15 +104,6 @@ export const BARBARIAN: Class = ClassSchema.parse({
         description:
           'You can increase one ability score by 2, or two ability scores by 1 each.',
         mechanicKey: 'asi',
-      },
-    ],
-    '7': [
-      {
-        id: 'knockdown',
-        name: 'Knockdown',
-        description:
-          'A raging shoulder behind the blade puts a foe on the ground. Once per combat, while raging, arm a staggering strike — when it lands, the target loses its next turn. Save it for the thing you least want to act.',
-        mechanicKey: 'knockdown',
       },
     ],
     '9': [

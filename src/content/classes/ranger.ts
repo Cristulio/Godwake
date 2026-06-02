@@ -32,6 +32,13 @@ export const RANGER: Class = ClassSchema.parse({
           'A bonus action brands one enemy as your quarry. Every hit you land on a marked target bites deeper, until it falls — then you brand the next one.',
         mechanicKey: 'hunters-mark',
       },
+      {
+        id: 'aimed-shot',
+        name: 'Aimed Shot',
+        description:
+          'Your Focus — three points of steady aim that refresh each fight, spent at most one a turn. Aimed Shot is the offense: draw a breath and place the shot, and every strike this turn drives deeper. Costs 2 Focus.',
+        mechanicKey: 'martial-offense',
+      },
     ],
     '2': [
       {
@@ -40,6 +47,22 @@ export const RANGER: Class = ClassSchema.parse({
         description:
           'You have drilled the bow until the shot is second nature. You gain a +2 bonus to attack rolls you make with ranged weapons.',
         mechanicKey: 'archery',
+      },
+      {
+        id: 'set-stance',
+        name: 'Set Stance',
+        description:
+          'Plant your feet and read the charge. Spend 1 Focus to blunt the next hit you take by 4 plus half your level — a moment of footing for when the quarry closes the distance.',
+        mechanicKey: 'martial-defense',
+      },
+    ],
+    '3': [
+      {
+        id: 'crippling-shot',
+        name: 'Crippling Shot',
+        description:
+          'Put an arrow through a knee or a wing. Spend 1 Focus to arm a crippling shot — the next hit hamstrings its target and costs it its next turn. The hunt is patience, then a single ruinous moment.',
+        mechanicKey: 'martial-disrupt',
       },
     ],
     '4': [

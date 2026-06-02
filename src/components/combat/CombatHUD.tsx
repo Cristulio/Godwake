@@ -6,8 +6,12 @@ import { computeAC, characterHasMechanic, critRange } from '../../engine/charact
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
-  POWER_ATTACK_CHARGES,
 } from '../../engine/character/actions';
+import {
+  martialFlavor,
+  martialPointsLeft,
+  MARTIAL_POOL_MAX,
+} from '../../engine/combat/martialResource';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { getBlessing } from '../../content/blessings';
 import { bossIntelBuffFor } from '../../content/bossIntel';
@@ -277,9 +281,12 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const secondWindBonus = character.resources.secondWindBonusRemaining ?? 0;
   const surgeMax = fighterActionSurgeMax(character.level);
   const surgeRemaining = character.resources.actionSurgeRemaining ?? 0;
-  const hasPowerAttack = isFighter && characterHasMechanic(character, 'power-attack');
-  const powerAttackCharges = character.resources.powerAttackChargesRemaining ?? 0;
-  const powerAttacking = character.powerAttackActive === true;
+
+  // --- Martial resource pool (Fighter Resolve / Barbarian Fury / Ranger Focus) ---
+  const martial = martialFlavor(character);
+  const martialPoints = martialPointsLeft(character);
+  const offenseUp = character.martialOffenseActive === true;
+  const disruptArmed = character.martialDisruptActive === true;
 
   // --- Rogue resources ---
   const cunningMax = rogueCunningActionMax(character);
@@ -444,27 +451,33 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
         </Section>
       )}
 
-      {hasPowerAttack && (
-        <Section title="Power Attack">
-          {Array.from({ length: Math.max(POWER_ATTACK_CHARGES, powerAttackCharges) }).map(
-            (_, i) => (
-              <Dot
-                key={`pa-${i}`}
-                on={i < powerAttackCharges}
-                title={
-                  i < powerAttackCharges
-                    ? 'Power Attack charge ready — +4 damage to this turn\'s melee swings (refreshes on rest).'
-                    : 'Power Attack charge spent — refreshes on rest.'
-                }
-              />
-            ),
-          )}
-          {powerAttacking && (
+      {martial && (
+        <Section title={martial.pool}>
+          {Array.from({ length: MARTIAL_POOL_MAX }).map((_, i) => (
+            <Dot
+              key={`mp-${i}`}
+              on={i < martialPoints}
+              title={
+                i < martialPoints
+                  ? `${martial.pool} to spend — fuels ${martial.offense}, ${martial.defense}, ${martial.disrupt}. Refreshes each fight.`
+                  : `${martial.pool} spent.`
+              }
+            />
+          ))}
+          {offenseUp && (
             <Pill
               text="Heavy"
               on
               tone="amber"
-              title="Heavy stance set — this turn's melee swings land for +4 damage."
+              title={`${martial.offense} set — this turn's strikes land for bonus damage.`}
+            />
+          )}
+          {disruptArmed && (
+            <Pill
+              text="Armed"
+              on
+              tone="amber"
+              title={`${martial.disrupt} armed — the next hit staggers its target.`}
             />
           )}
         </Section>
