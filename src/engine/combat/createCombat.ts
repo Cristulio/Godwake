@@ -31,7 +31,7 @@ import {
   ascensionBossExtraPhase,
   ascensionDamageBonus,
 } from '../delve/ascension';
-import { getTwist, twistCombatEffect } from '../delve/twists';
+import { getTwist, twistCombatEffect, CURSED_GROUND_DECAY_TURNS } from '../delve/twists';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { wildShapeUsesMax } from './wildShape';
 import { monkKiMax } from './monk';
@@ -98,6 +98,21 @@ export interface CreateCombatInput {
 /** Legendary-resistance pools (auto-succeeded player control saves per fight). */
 const BOSS_LEGENDARY_RESISTANCES = 3;
 const ELITE_LEGENDARY_RESISTANCES = 1;
+
+/**
+ * Resolve the Cursed Ground twist to its opening chip and per-turn decay. The
+ * opening bite is a fraction of max HP (floored at 1); the decay steps it down
+ * over {@link CURSED_GROUND_DECAY_TURNS} turns so the total drain is front-
+ * loaded and bounded instead of compounding with fight length.
+ */
+function resolveCursedGround(
+  maxHp: number,
+  chipPct: number,
+): { cursedGroundChip: number; cursedGroundChipDecay: number } {
+  const opening = Math.max(1, Math.round(maxHp * chipPct));
+  const decay = Math.max(1, Math.round(opening / CURSED_GROUND_DECAY_TURNS));
+  return { cursedGroundChip: opening, cursedGroundChipDecay: decay };
+}
 
 /**
  * Initialize a combat encounter: spawn monster instances, set the turn order
@@ -394,9 +409,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       wieldsRangedWeapon(nextCharacter) && !wearsHeavierThanLight(nextCharacter) ? 1 : 0,
     // Ascension dungeon twist state — neutral fields are omitted so untwisted
     // fights (and every fight below Asc 4) carry no extra combat-state weight.
-    ...(twist.cursedGroundChipPct
-      ? { cursedGroundChip: Math.max(1, Math.round(nextCharacter.hp.max * twist.cursedGroundChipPct)) }
-      : {}),
+    ...(twist.cursedGroundChipPct ? resolveCursedGround(nextCharacter.hp.max, twist.cursedGroundChipPct) : {}),
     ...(twist.firstAttackDisadvantage ? { gloomActive: true } : {}),
     ...(twist.suppressBlessings ? { blessingsSealed: true } : {}),
   };

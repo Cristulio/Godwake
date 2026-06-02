@@ -370,16 +370,20 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
 }
 
 /**
- * Cursed Ground twist (Ascension >= 4): bleed the per-turn chip from the
- * player, draining temp HP first, then real HP. Non-lethal by design — the
- * curse can drain a hero to 1 HP but never delivers the killing blow itself
- * (an enemy has to finish them). A flat lethal chip was HP-agnostic and the
- * lone twist that death-spiralled low-HP builds outright (the #286 validation
- * outlier); pressuring without auto-killing keeps the tension and lifts the win
- * rate back into the twist band. No-op when the curse is absent
- * (state.cursedGroundChip falsy), the fight is over, or the player is already
- * down. Shared by createCombat (the hero's turn-0, which never travels through
- * endTurn) and the start-of-player-turn block above.
+ * Cursed Ground twist (Ascension >= 4): bleed the current turn's chip from the
+ * player, draining temp HP first, then real HP, then step the chip down by its
+ * decay so the curse spends itself over the opening few turns. Front-loaded and
+ * bounded on purpose — the old flat per-turn chip COMPOUNDED with fight length,
+ * so tanky/defensive/slow builds and long elite/boss fights bled far more and
+ * got ground to 1 HP (the lone twist that dropped the win rate, four sim passes
+ * running). A front-loaded spike that decays to nothing keeps the tension — a
+ * race to stabilize off the cursed stone — without taxing fights that run long.
+ *
+ * Non-lethal by design — the curse can drain a hero to 1 HP but never delivers
+ * the killing blow itself (an enemy has to finish them). No-op when the curse is
+ * absent or spent (state.cursedGroundChip falsy), the fight is over, or the
+ * player is already down. Shared by createCombat (the hero's turn-0, which never
+ * travels through endTurn) and the start-of-player-turn block above.
  */
 export function applyCursedGroundChip(
   state: CombatState,
@@ -395,11 +399,14 @@ export function applyCursedGroundChip(
     temp: character.hp.temp - fromTemp,
     current: Math.max(1, character.hp.current - overflow),
   });
-  const logged = appendLog(state, {
-    id: state.log.length + 1,
-    kind: 'damage',
-    text: `The cursed ground bites ${nextCharacter.name} for ${chip} damage.`,
-  });
+  const logged = appendLog(
+    { ...state, cursedGroundChip: Math.max(0, chip - (state.cursedGroundChipDecay ?? chip)) },
+    {
+      id: state.log.length + 1,
+      kind: 'damage',
+      text: `The cursed ground bites ${nextCharacter.name} for ${chip} damage.`,
+    },
+  );
   return { state: logged, character: nextCharacter };
 }
 

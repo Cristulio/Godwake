@@ -24,11 +24,11 @@ export type TwistId =
  */
 export interface TwistCombatEffect {
   /**
-   * Fraction of the hero's max HP they bleed at the start of each of their
-   * turns this fight. Resolved to an absolute per-turn chip in createCombat so
-   * the curse pressures every build proportionally instead of death-spiralling
-   * the low-HP ones (a flat chip is HP-agnostic and only the lone twist that
-   * outright kills — see the #286 validation sim).
+   * Fraction of the hero's max HP the curse bites on the OPENING turn. Resolved
+   * to an absolute chip in createCombat (proportional to the build, never HP-
+   * agnostic) that then decays to nothing over {@link CURSED_GROUND_DECAY_TURNS}
+   * turns — see that constant for why the drain is front-loaded and bounded
+   * rather than a per-turn grind that compounds with fight length.
    */
   cursedGroundChipPct?: number;
   /** The hero's first attack of the fight is rolled at disadvantage. */
@@ -54,7 +54,8 @@ export interface DungeonTwist {
 
 /**
  * The starter set. Magnitudes sit in the "noticeable but fair, endgame-only"
- * band (sim-tuned): a 5%-of-max-HP chip per turn, a first-strike disadvantage
+ * band (sim-tuned): a front-loaded curse bite that opens at 10% of max HP and
+ * decays to nothing over the first few turns, a first-strike disadvantage
  * paired with a slight +1 enemy-damage edge in the dark, +2 enemy damage on top
  * of ascension's own bonus, blessings switched off, or the enemy moving first.
  */
@@ -63,9 +64,9 @@ export const DUNGEON_TWISTS: DungeonTwist[] = [
     id: 'cursed-ground',
     name: 'Cursed Ground',
     flavorText:
-      'The stone here is sown with old hate — it drinks a little of whoever stands on it.',
+      'The stone here is sown with old hate — it drinks deep of whoever first sets foot on it, then loses its thirst.',
     telegraph: 'The ground bleeds those who stand on it.',
-    effect: { cursedGroundChipPct: 0.05 },
+    effect: { cursedGroundChipPct: 0.1 },
   },
   {
     id: 'gloom',
@@ -100,6 +101,20 @@ export const DUNGEON_TWISTS: DungeonTwist[] = [
     effect: { enemiesActFirst: true },
   },
 ];
+
+/**
+ * Cursed Ground spends itself over this many of the hero's turns: the opening
+ * chip (see {@link TwistCombatEffect.cursedGroundChipPct}) steps down by a fixed
+ * amount each turn until it reaches zero. This is the whole point of the twist's
+ * redesign — the old flat per-turn chip COMPOUNDED with fight length, so tanky/
+ * defensive/slow builds and long elite/boss fights bled far more than fast ones
+ * and got ground to 1 HP (the lone twist that dropped the win rate, four sim
+ * passes running). Front-loading and bounding the total (opening + decay sums to
+ * roughly a quarter of max HP, all in the first few rounds) keeps it the highest-
+ * tension twist — a race to stabilize off the cursed stone — without taxing the
+ * fights that simply run long.
+ */
+export const CURSED_GROUND_DECAY_TURNS = 4;
 
 const TWIST_BY_ID: Record<string, DungeonTwist> = Object.fromEntries(
   DUNGEON_TWISTS.map((t) => [t.id, t]),
