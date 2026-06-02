@@ -15,6 +15,7 @@ import {
   spellcastingMod,
 } from '../../character/derived';
 import { characterCampBoonMods } from '../../character/campBoons';
+import { characterBlessingMods } from '../../character/blessings';
 import { characterAffixMods } from '../../items/affixMods';
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { appendLog } from '../log';
@@ -44,12 +45,14 @@ export function nextLogId(state: CombatState): number {
 
 export function spellAttackBonus(character: Readonly<Character>): number {
   const boonBonus = characterCampBoonMods(character).spellAttackBonus ?? 0;
+  const blessingBonus = characterBlessingMods(character).spellAttackBonus ?? 0;
   return (
     spellcastingMod(character) +
     proficiencyBonus(character.level) +
     (character.permanentBonuses?.spellAttack ?? 0) +
     (character.delveSpellAttackBonus ?? 0) +
     boonBonus +
+    blessingBonus +
     characterAffixMods(character).spellAttackBonus
   );
 }
@@ -60,6 +63,7 @@ export function spellSaveDC(character: Readonly<Character>): number {
   // saves means ~55% save rate and AoE feels useless.
   const classBonus = isFullCaster(character.classId) ? 1 : 0;
   const boonBonus = characterCampBoonMods(character).spellDcBonus ?? 0;
+  const blessingBonus = characterBlessingMods(character).spellDcBonus ?? 0;
   return (
     8 +
     spellcastingMod(character) +
@@ -67,16 +71,19 @@ export function spellSaveDC(character: Readonly<Character>): number {
     classBonus +
     (character.permanentBonuses?.spellDc ?? 0) +
     boonBonus +
+    blessingBonus +
     characterAffixMods(character).spellDcBonus
   );
 }
 
 export function spellDamageBonus(character: Readonly<Character>): number {
   const boonBonus = characterCampBoonMods(character).spellDamageBonus ?? 0;
+  const blessingBonus = characterBlessingMods(character).spellDamageBonus ?? 0;
   const ascendantBonus = isAscendant(character) ? APOTHEOSIS_BONUS_DAMAGE : 0;
   return (
     (character.permanentBonuses?.spellDamage ?? 0) +
     boonBonus +
+    blessingBonus +
     ascendantBonus +
     characterAffixMods(character).spellDamageBonus
   );

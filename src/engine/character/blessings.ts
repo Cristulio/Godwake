@@ -64,6 +64,13 @@ const NON_STACKING_MODIFIER_KEYS: ReadonlySet<keyof BlessingModifiers> = new Set
   'acBonusPerBaneQuirk',
   'critRangeBonusWhileFull',
   'critRangeBonusWhileBloodied',
+  // Caster levers. Max-of (like damageBonus) so a second copy is a dead pick and
+  // drops from future offers — the whole point of this lane is fresher caster
+  // offers, not a +1/+1/+1 stacking build. The blessing total still ADDS to the
+  // affix/boon/permanent spell sources in the spell helpers.
+  'spellDcBonus',
+  'spellDamageBonus',
+  'spellAttackBonus',
 ]);
 
 /**
@@ -235,6 +242,14 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
         acc.critRangeBonusWhileBloodied ?? 0,
         m.critRangeBonusWhileBloodied,
       );
+    // Caster levers — max-of (a duplicate adds nothing), folded into the spell
+    // helpers as one more additive source alongside affixes/boons/permanents.
+    if (m.spellDcBonus !== undefined)
+      acc.spellDcBonus = Math.max(acc.spellDcBonus ?? 0, m.spellDcBonus);
+    if (m.spellDamageBonus !== undefined)
+      acc.spellDamageBonus = Math.max(acc.spellDamageBonus ?? 0, m.spellDamageBonus);
+    if (m.spellAttackBonus !== undefined)
+      acc.spellAttackBonus = Math.max(acc.spellAttackBonus ?? 0, m.spellAttackBonus);
   }
   return acc;
 }

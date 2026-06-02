@@ -105,6 +105,20 @@ export const BlessingModifiersSchema = z
     extraStabiliseCharges: z.number().optional(),
     /** Crit range expansion (e.g. +1 means crit on 19-20 stacks to 18-20). */
     critRangeBonus: z.number().optional(),
+    /**
+     * Caster levers. These join the same additive spell sources the engine
+     * already reads (camp boons, gear affixes, permanent bonuses) inside
+     * `spellSaveDC` / `spellDamageBonus` / `spellAttackBonus` — they are NOT a
+     * new effect kind, just blessings as another contributing source. Weapon
+     * classes never cast, so caster blessings carry `classRelevance` for
+     * wizard/druid and stay off martial offer screens.
+     */
+    /** +N to the caster's spell save DC (save-or-suck spells land more often). */
+    spellDcBonus: z.number().optional(),
+    /** +N to spell damage rolls (every damaging spell, flat). */
+    spellDamageBonus: z.number().optional(),
+    /** +N to spell attack rolls (Fire Bolt, Scorching Ray, et al.). */
+    spellAttackBonus: z.number().optional(),
   })
   .default({});
 export type BlessingModifiers = z.infer<typeof BlessingModifiersSchema>;
