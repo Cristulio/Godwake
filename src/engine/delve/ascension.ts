@@ -74,7 +74,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1,
     startingGoldMult: 1,
     renownMult: 1.25,
-    upgradeCostMult: 1.1,
+    upgradeCostMult: 1.2,
   },
   {
     level: 2,
@@ -85,7 +85,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1,
     startingGoldMult: 1,
     renownMult: 1.45,
-    upgradeCostMult: 1.2,
+    upgradeCostMult: 1.4,
   },
   {
     level: 3,
@@ -96,7 +96,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1.25,
     startingGoldMult: 1,
     renownMult: 1.65,
-    upgradeCostMult: 1.35,
+    upgradeCostMult: 1.6,
   },
   {
     level: 4,
@@ -107,7 +107,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1.25,
     startingGoldMult: 0.75,
     renownMult: 1.9,
-    upgradeCostMult: 1.5,
+    upgradeCostMult: 1.85,
   },
   {
     level: 5,
@@ -118,7 +118,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1.25,
     startingGoldMult: 0.75,
     renownMult: 2.15,
-    upgradeCostMult: 1.7,
+    upgradeCostMult: 2.1,
   },
   {
     level: 6,
@@ -129,7 +129,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1.5,
     startingGoldMult: 0.5,
     renownMult: 2.45,
-    upgradeCostMult: 2,
+    upgradeCostMult: 2.4,
   },
 ];
 

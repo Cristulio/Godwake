@@ -108,10 +108,13 @@ const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.
 const MAX_TURNS_PER_FIGHT = 200;
 const SEED_BASE = 0xc1a55 >>> 0;
 
-// Mirrors delveStore.ts constants.
+// Mirrors delveStore.ts constants (live renown formula:
+// (clear?50:3) + 2·mobs + 25·bosses + 1·rooms, ×soulMark×renownMult).
 const RENOWN_PER_DELVE_CLEAR = 50;
-const RENOWN_PER_DELVE_FAILURE = 15;
-const RENOWN_PER_CHAPTER_BOSS = 10;
+const RENOWN_PER_DELVE_FAILURE = 3;
+const RENOWN_PER_MOB_KILLED = 2;
+const RENOWN_PER_CHAPTER_BOSS = 25;
+const RENOWN_PER_ROOM_REACHED = 1;
 const GROVE_UNLOCK_THRESHOLD = 30;
 
 // ─── Grove purchase priorities ───────────────────────────────────────────────
@@ -741,9 +744,14 @@ function liveOneLife(
 
   const cleared = !died;
   const asc = getAscensionLevel(soul.ascension);
-  const renownBase = cleared
-    ? RENOWN_PER_DELVE_CLEAR
-    : RENOWN_PER_DELVE_FAILURE + RENOWN_PER_CHAPTER_BOSS * bossesKilled;
+  const roomsReached = Math.max(0, finalRoomIdx - 1);
+  // Live formula (computeDelveRenown): progress credit on BOTH clear and fail —
+  // floor + per-mob + per-boss + per-room, scaled by soul-mark × renownMult.
+  const renownBase =
+    (cleared ? RENOWN_PER_DELVE_CLEAR : RENOWN_PER_DELVE_FAILURE) +
+    RENOWN_PER_MOB_KILLED * mobsKilled +
+    RENOWN_PER_CHAPTER_BOSS * bossesKilled +
+    RENOWN_PER_ROOM_REACHED * roomsReached;
   const renownEarned = Math.floor(
     renownBase * asc.renownMult * renownSoulMarkMultiplier(character),
   );
@@ -759,7 +767,7 @@ function liveOneLife(
     deathCause,
     deathRoomLabel,
     mobsKilled,
-    roomsReached: Math.max(0, finalRoomIdx - 1),
+    roomsReached,
   };
   LIFE_RECORDS.push(outcome);
   return { outcome, finalCharacter: character, newLegendaries };

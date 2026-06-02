@@ -34,7 +34,6 @@ export {
   RENOWN_PER_CHAPTER_BOSS,
   RENOWN_PER_ROOM_REACHED,
   GROVE_UNLOCK_THRESHOLD,
-  RENOWN_FOR_CHAPTER_2,
   computeDelveRenown,
 } from './delveStore';
 
