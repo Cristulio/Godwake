@@ -1033,6 +1033,16 @@ img, svg.pixel {
   opacity: 0.32;
   filter: grayscale(0.6);
 }
+/* Barred node: exists on the route but not yet available to this soul (e.g. an
+   elite before the reveal). Greyed and visible — not hidden — so the player sees
+   what is there and routes around it. Dimmer than reachable, clearer than the
+   not-yet-walked dark nodes; the dashed border reads as "locked", not "missing". */
+.bm-node-blocked {
+  opacity: 0.5;
+  filter: grayscale(0.85);
+  border-style: dashed;
+  cursor: not-allowed;
+}
 .bm-node-visited {
   opacity: 0.82;
   background: var(--color-bg-elevated);

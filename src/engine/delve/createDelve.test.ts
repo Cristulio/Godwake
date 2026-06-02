@@ -8,7 +8,7 @@ import {
 import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
 import { getMonster } from '../../content/monsters';
 import { getBossIntelCard, BOSS_INTEL_CARDS } from '../../content/bossIntel';
-import type { DelveState } from '../../types/delve';
+import type { DelveState, RoomSpec } from '../../types/delve';
 
 describe('createGodwakeDelve', () => {
   it('emits at least 80 rooms across the fourteen-chapter chained run', () => {
@@ -278,6 +278,86 @@ describe('createGodwakeDelve — branching graph', () => {
       return false;
     };
     expect(d.rooms.every((r) => reachesBoss(r.id))).toBe(true);
+  });
+
+  // ── alternate-route invariant: never trap the player on one node ──────────
+  //
+  // The map must never force the player onto a single node they can't or won't
+  // take. Two guarantees, checked across many seeds and every chapter:
+  //   1. Every middle column (between the lone warmup entry and the intel→boss
+  //      convergence) holds at least two nodes — a real choice at every step.
+  //   2. Even with elites locked (a new soul), the boss is reachable from the
+  //      entry using only selectable (non-locked) nodes — a greyed elite can
+  //      never be the only way forward.
+
+  /** Group a chapter's non-camp nodes by their layer (= map column). */
+  function columnsOf(d: DelveState, chapter: number): RoomSpec[][] {
+    const byLayer = new Map<number, RoomSpec[]>();
+    for (const r of d.rooms.filter((n) => n.chapter === chapter && n.kind !== 'camp')) {
+      const l = r.layer ?? 0;
+      if (!byLayer.has(l)) byLayer.set(l, []);
+      byLayer.get(l)!.push(r);
+    }
+    return [...byLayer.keys()].sort((a, b) => a - b).map((l) => byLayer.get(l)!);
+  }
+
+  it('every middle column offers at least two nodes (no forced single-node bottleneck)', () => {
+    for (let seed = 0; seed < 40; seed++) {
+      const d = createGodwakeDelve({ seed });
+      for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+        const cols = columnsOf(d, ch);
+        // First column = warmup entry (1), last two = intel (1) then boss (1):
+        // those are the legitimate convergence/terminal nodes. Everything in
+        // between must be at least two wide.
+        const middle = cols.slice(1, cols.length - 2);
+        for (const col of middle) {
+          expect(col.length).toBeGreaterThanOrEqual(2);
+        }
+      }
+    }
+  });
+
+  it('no column holds more than one elite', () => {
+    for (let seed = 0; seed < 40; seed++) {
+      const d = createGodwakeDelve({ seed });
+      for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+        for (const col of columnsOf(d, ch)) {
+          expect(col.filter((r) => r.kind === 'elite').length).toBeLessThanOrEqual(1);
+        }
+      }
+    }
+  });
+
+  it('with elites locked, the boss is still reachable using only selectable nodes', () => {
+    for (let seed = 0; seed < 40; seed++) {
+      const d = createGodwakeDelve({ seed, elitesEnabled: false });
+      // Walk forward from the entry, only ever stepping onto non-locked nodes,
+      // and confirm a boss is always within reach — i.e. the locked elites
+      // never wall off the road.
+      const reachesBossUnlocked = (start: string): boolean => {
+        const seen = new Set<string>();
+        const stack = [start];
+        while (stack.length) {
+          const id = stack.pop()!;
+          if (seen.has(id)) continue;
+          seen.add(id);
+          const r = roomById(d, id);
+          if (!r || r.locked) continue;
+          if (r.kind === 'boss') return true;
+          for (const n of r.next ?? []) stack.push(n);
+        }
+        return false;
+      };
+      expect(reachesBossUnlocked(d.rooms[0].id)).toBe(true);
+      // And at every selectable node short of the convergence there is at least
+      // one selectable next step.
+      for (const r of d.rooms) {
+        if (r.locked || r.kind === 'boss' || r.kind === 'camp') continue;
+        const onward = (r.next ?? []).map((id) => roomById(d, id)).filter(Boolean);
+        if (onward.length === 0) continue; // terminal final boss already excluded
+        expect(onward.some((n) => !n!.locked)).toBe(true);
+      }
+    }
   });
 
   it('offers shop and elite route nodes, and the final boss is terminal', () => {

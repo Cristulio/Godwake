@@ -50,6 +50,14 @@ export interface RoomSpec {
    * fight and resolved into combat effects by createCombat.
    */
   twistId?: string;
+  /**
+   * Branching map: the node exists on the route but is not yet available to this
+   * soul (e.g. an ELITE node before the elite-reveal unlock). Rendered greyed and
+   * unselectable rather than hidden, so the player can see what is there and
+   * route around it. The map generator guarantees a selectable alternate at every
+   * step, so a locked node never traps the run.
+   */
+  locked?: boolean;
 }
 
 export type DelvePhase = 'in-room' | 'between-rooms' | 'completed' | 'failed';
