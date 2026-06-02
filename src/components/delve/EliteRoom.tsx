@@ -32,7 +32,7 @@ export function EliteRoom({ room }: EliteRoomProps) {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6">
+    <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6">
       <Panel tone="warm" title="An Elite Bars the Way">
         <p className="text-[var(--color-text-secondary)] text-sm italic mb-4 leading-relaxed font-narrative">
           {eliteName} holds this ground — scarred, deadly, and guarding something the dark does not

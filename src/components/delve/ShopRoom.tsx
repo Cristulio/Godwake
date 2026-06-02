@@ -140,7 +140,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-5 [background-image:radial-gradient(circle_at_50%_25%,rgba(212,176,98,0.10),transparent_60%)]">
+    <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-5 [background-image:radial-gradient(circle_at_50%_25%,rgba(212,176,98,0.10),transparent_60%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-display text-xl text-[var(--color-accent-gold)] tracking-wider uppercase">

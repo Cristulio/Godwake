@@ -279,7 +279,7 @@ function DelveScreenBody() {
     const isEliteRoom = room.kind === 'elite';
     return (
       <div className="flex flex-col">
-        <div className="max-w-6xl w-full mx-auto px-6 pt-4">
+        <div className="max-w-6xl w-full mx-auto px-4 md:px-6 pt-4">
           <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
         </div>
         <CombatScreen
@@ -404,7 +404,7 @@ function DelveScreenBody() {
   if (room.kind === 'camp') {
     return (
       <div key={room.id} className="animate-room-enter">
-        <div className="max-w-3xl w-full mx-auto px-6 pt-4">
+        <div className="max-w-3xl w-full mx-auto px-4 md:px-6 pt-4">
           <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
         </div>
         <CampRoom
@@ -433,7 +433,7 @@ function DelveTopBar({
 }) {
   const goToInventory = useGameStore((s) => s.goToInventory);
   return (
-    <div className="max-w-3xl w-full mx-auto px-6 pt-4">
+    <div className="max-w-3xl w-full mx-auto px-4 md:px-6 pt-4">
       <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
       <div className="flex justify-end mt-2">
         <Button variant="ghost" onClick={goToInventory}>
