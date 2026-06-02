@@ -235,12 +235,12 @@ export function ActionBar({
   // 3-button one — avoids empty grid cells when a class has fewer actions.
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button
           variant="primary"
           onClick={onAttack}
           disabled={!canAttack}
-          className="flex-1 min-h-[44px] sm:min-h-0"
+          className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
         >
           {attackLabel}
         </Button>
@@ -251,7 +251,7 @@ export function ActionBar({
             onClick={onSecondWind}
             disabled={!canSecondWind}
             title="Bonus action: heal 1d10 + level. Once per short rest."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             Second Wind{secondWindCount > 1 ? ` (${secondWindCount})` : ''}
           </Button>
@@ -262,7 +262,7 @@ export function ActionBar({
             onClick={onActionSurge}
             disabled={!canActionSurge}
             title="Free Action: regain your action this turn. Once per short rest."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             Action Surge{surgeRemaining > 0 && ` (${surgeRemaining})`}
           </Button>
@@ -273,7 +273,7 @@ export function ActionBar({
             onClick={onPowerAttack}
             disabled={!canPowerAttack}
             title="Free: this turn's melee swings take -2 to hit but land for +4 damage. Best when the hit was landing anyway."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {powerAttacking ? 'Power Attack ✓' : 'Power Attack'}
           </Button>
@@ -284,7 +284,7 @@ export function ActionBar({
             onClick={onBrace}
             disabled={!canBrace}
             title="Bonus action, once per combat: set your guard — the next hit you take is blunted by 3 + half your level."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             Brace
           </Button>
@@ -296,7 +296,7 @@ export function ActionBar({
             onClick={onCunningAction}
             disabled={!canCunningAction}
             title="Bonus action: Hide (advantage on next attack), Dash (a quick second strike this turn), or Disengage (2 damage reduction on next incoming hit)."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             Cunning Action{cunningRemaining > 0 && ` (${cunningRemaining})`}
           </Button>
@@ -308,7 +308,7 @@ export function ActionBar({
             onClick={onRage}
             disabled={!canRage}
             title={`Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends.`}
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {raging ? `Raging (${rageRounds})` : 'Rage'}
           </Button>
@@ -319,7 +319,7 @@ export function ActionBar({
             onClick={onRecklessAttack}
             disabled={!canReckless}
             title="Free: your melee attacks this turn roll with advantage, but attacks against you have advantage until your next turn."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {reckless ? 'Reckless ✓' : 'Reckless'}
           </Button>
@@ -330,7 +330,7 @@ export function ActionBar({
             onClick={onCleave}
             disabled={!canCleave}
             title="Free, while raging: this turn's first melee hit also catches a second enemy for a glancing blow."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {cleaving ? 'Cleave ✓' : 'Cleave'}
           </Button>
@@ -341,7 +341,7 @@ export function ActionBar({
             onClick={onKnockdown}
             disabled={!canKnockdown}
             title="Free, while raging, once per combat: arm a staggering strike — the next hit knocks the target down and costs it its next turn."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {knockingDown ? 'Knockdown ✓' : 'Knockdown'}
           </Button>
@@ -353,7 +353,7 @@ export function ActionBar({
             onClick={onHuntersMark}
             disabled={!canHuntersMark}
             title="Bonus action: brand a target as your quarry — every hit on it deals extra damage. Re-cast to move the mark."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {isMarkLive ? 'Re-mark' : "Hunter's Mark"}
           </Button>
@@ -365,19 +365,19 @@ export function ActionBar({
             onClick={onSpells}
             disabled={!canSpells}
             title="Action: pick a prepared spell."
-            className="flex-1 min-h-[44px] sm:min-h-0"
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             ✦ Spells ({totalSlots})
           </Button>
         )}
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button
           variant={canUseItem ? 'primary' : 'secondary'}
           onClick={onUseItem}
           disabled={!canUseItem}
-          className="flex-1 min-h-[44px] sm:min-h-0"
+          className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
         >
           Item {consumableCount > 0 && `(${consumableCount})`}
         </Button>
@@ -385,7 +385,7 @@ export function ActionBar({
           variant="secondary"
           onClick={onEndTurn}
           disabled={!canEndTurn}
-          className="flex-1 min-h-[44px] sm:min-h-0"
+          className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
         >
           End Turn
         </Button>
