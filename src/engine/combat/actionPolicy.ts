@@ -9,10 +9,8 @@ import {
   characterHasMechanic,
   isRaging,
   isWildShaped,
-  proficiencyBonus,
   spellcastingMod,
 } from '../character/derived';
-import { POWER_ATTACK_TO_HIT_PENALTY } from '../character/actions';
 import { baneQuirkCount } from '../character/quirks';
 import { isNonStackingBlessing, blessingSignature } from '../character/blessings';
 import { getMonster } from '../../content/monsters';
@@ -320,27 +318,14 @@ function wieldsMelee(character: Character): boolean {
   }
 }
 
-/** Rough to-hit a melee swing lands with right now — enough for the bot to judge
- *  whether a Power Attack's accuracy penalty still leaves a likely hit. Mirrors
- *  the load-bearing terms of playerAttack's roll (best melee ability + prof +
- *  flat bonuses), not every affix. */
-function estimatedMeleeAttackBonus(character: Character): number {
-  const scores = effectiveAbilityScores(character);
-  const abil = Math.max(abilityModifier(scores.str), abilityModifier(scores.dex));
-  let b = abil + proficiencyBonus(character.level);
-  b += character.permanentBonuses?.attack ?? 0;
-  b += character.delveAttackBonus ?? 0;
-  if (characterHasMechanic(character, 'weapon-mastery')) b += 1;
-  return b;
-}
-
-/** The d20 the player must roll to land a Power-Attack swing against a target.
- *  The bot swings heavy only when this floor sits at or under an archetype bar —
- *  cautious wants a near-certain hit, aggressive trades accuracy freely. */
-const POWER_ATTACK_NEED_ROLL: Record<Archetype, number> = {
-  cautious: 8,
-  balanced: 11,
-  aggressive: 14,
+/** Minimum remaining HP on the focus target before the bot spends a Power
+ *  Attack charge. Charges are a limited rest/camp pool now (no accuracy cost),
+ *  so the bot hoards them for targets meaty enough that the flat spike isn't
+ *  wasted overkill — cautious saves for real threats, aggressive spends freely. */
+const POWER_ATTACK_MIN_TARGET_HP: Record<Archetype, number> = {
+  cautious: 30,
+  balanced: 22,
+  aggressive: 12,
 };
 
 /** A single incoming hit averaging at least this much is "big" — worth a
@@ -506,23 +491,22 @@ export function chooseCombatAction(
     ) {
       return { kind: 'reckless-attack' };
     }
-    // Fighter Power Attack: swing heavy when the focus target's guard is soft
-    // enough that the hit lands even after the accuracy penalty. Declared free
-    // before the swing, so the same turn proceeds to the attack.
+    // Fighter Power Attack: spend a charge to swing heavy when the focus target
+    // is meaty enough that the flat spike pays off (no accuracy cost now — the
+    // charge is the price). Declared free before the swing, so the same turn
+    // proceeds to the attack. Charges refresh only on rest/camp, so the bot
+    // hoards them for worthwhile targets per its archetype.
     if (
       isFighter &&
       actionFree &&
       character.powerAttackActive !== true &&
+      (character.resources.powerAttackChargesRemaining ?? 0) > 0 &&
       characterHasMechanic(character, 'power-attack') &&
       primary &&
-      wieldsMelee(character)
+      wieldsMelee(character) &&
+      primary.instance.hp.current >= POWER_ATTACK_MIN_TARGET_HP[archetype]
     ) {
-      const needRoll =
-        primary.instance.ac -
-        (estimatedMeleeAttackBonus(character) - POWER_ATTACK_TO_HIT_PENALTY);
-      if (needRoll <= POWER_ATTACK_NEED_ROLL[archetype]) {
-        return { kind: 'power-attack' };
-      }
+      return { kind: 'power-attack' };
     }
     // Barbarian Cleave: a wide rage swing when the room is crowded — the splash
     // only pays off with a second foe to catch.

@@ -88,11 +88,18 @@ export function ActionBar({
     surgeRemaining > 0 &&
     character.actionEconomy.actionUsed;
 
-  // Fighter Power Attack — a free stance declared before the swing (L1).
+  // Fighter Power Attack — a consumable stance declared before the swing (L1).
+  // Charges refresh on rest/camp; the button greys out at 0.
   const hasPowerAttack = isFighter && characterHasMechanic(character, 'power-attack');
   const powerAttacking = character.powerAttackActive === true;
+  const powerAttackCharges = character.resources.powerAttackChargesRemaining ?? 0;
   const canPowerAttack =
-    playersTurn && active && hasPowerAttack && !powerAttacking && !character.actionEconomy.actionUsed;
+    playersTurn &&
+    active &&
+    hasPowerAttack &&
+    !powerAttacking &&
+    powerAttackCharges > 0 &&
+    !character.actionEconomy.actionUsed;
 
   // Fighter Brace — a bonus-action set, once per combat (L3).
   const hasBrace = isFighter && characterHasMechanic(character, 'brace');
@@ -272,10 +279,10 @@ export function ActionBar({
             variant={canPowerAttack ? 'primary' : 'secondary'}
             onClick={onPowerAttack}
             disabled={!canPowerAttack}
-            title="Free: this turn's melee swings take -2 to hit but land for +4 damage. Best when the hit was landing anyway."
+            title="Free, costs 1 charge: this turn's melee swings land for +4 damage, no accuracy cost. Charges refresh on rest."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {powerAttacking ? 'Power Attack ✓' : 'Power Attack'}
+            {powerAttacking ? 'Power Attack ✓' : `Power Attack (${powerAttackCharges})`}
           </Button>
         )}
         {hasBrace && (

@@ -1,6 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { resolveSpriteFloat, type FloatSelf } from './FloatingDamage';
-import type { AttackEvent } from '../../types/combat';
+import type { AttackEvent, MonsterCombatant } from '../../types/combat';
+import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
+import { createCombat, _resetMonsterInstanceCounter } from '../../engine/combat/createCombat';
+import { playerAttack } from '../../engine/combat/attack';
+import { createDiceRoller } from '../../engine/dice';
+import { getMonster } from '../../content/monsters';
 
 function playerHit(over: Partial<AttackEvent> = {}): AttackEvent {
   return {
@@ -117,5 +122,112 @@ describe('resolveSpriteFloat', () => {
       isNewAttack: true,
     });
     expect(float).toBeNull();
+  });
+});
+
+// Integration guard for the reported bug: the float over a struck enemy must
+// read the DAMAGE DEALT, never the target's remaining HP. Drives the real
+// engine so a regression in playerAttack's `damageDealt` plumbing is caught at
+// the same surface the battlefield sprite renders from.
+describe('floating number reflects damage dealt, not remaining HP (real attack)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function brick() {
+    return {
+      ...createCharacter({
+        id: 'f1',
+        name: 'Brick',
+        raceId: 'human',
+        classId: 'fighter',
+        baseAbilityScores: {
+          str: STANDARD_ARRAY[0],
+          con: STANDARD_ARRAY[1],
+          dex: STANDARD_ARRAY[2],
+          wis: STANDARD_ARRAY[3],
+          cha: STANDARD_ARRAY[4],
+          int: STANDARD_ARRAY[5],
+        },
+        skillProficiencies: ['athletics', 'perception'],
+      }),
+      inventory: [{ itemId: 'longsword' }],
+      equipped: { mainHand: { itemId: 'longsword' }, offHand: null, armor: null },
+    };
+  }
+
+  it('shows the rolled damage over a high-HP foe, not its leftover HP', () => {
+    const init = createCombat({
+      roller: createDiceRoller(5),
+      character: brick(),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const goblin = init.state.combatants.find(
+      (c): c is MonsterCombatant => c.kind === 'monster',
+    )!;
+    // Fat HP pool + soft guard: the hit lands but leaves plenty of HP, so a
+    // "remaining HP" bug would surface a large wrong number.
+    goblin.instance.ac = 2;
+    goblin.instance.hp = { ...goblin.instance.hp, current: 200, max: 200 };
+
+    const before = goblin.instance.hp.current;
+    const { state } = playerAttack(
+      { roller: createDiceRoller(5), character: init.character, state: init.state },
+      goblin.id,
+      'longsword',
+    );
+    const attack = state.lastAttack!;
+    const struck = state.combatants.find(
+      (c): c is MonsterCombatant => c.kind === 'monster' && c.id === goblin.id,
+    )!;
+    const remaining = struck.instance.hp.current;
+    const dealt = before - remaining;
+
+    expect(attack.hit).toBe(true);
+    expect(attack.damageDealt).toBe(dealt);
+
+    const float = resolveSpriteFloat({
+      lastAttack: attack,
+      self: { kind: 'monster', displayName: goblin.instance.displayName },
+      hpDelta: dealt,
+      isNewAttack: true,
+    });
+    expect(float?.amount).toBe(dealt);
+    expect(float?.amount).not.toBe(remaining);
+  });
+
+  it('shows the full crit damage even when it overkills (HP clamps, number does not)', () => {
+    let attack: AttackEvent | undefined;
+    // Roll until we land a crit (nat 20 widens via critRange) on a 1-HP goblin —
+    // the HP delta clamps to 1, but the float must show the full rolled damage.
+    for (let seed = 1; seed < 80; seed++) {
+      const c = createCombat({
+        roller: createDiceRoller(seed),
+        character: brick(),
+        monsters: [{ def: getMonster('goblin') }],
+      });
+      const g = c.state.combatants.find(
+        (m): m is MonsterCombatant => m.kind === 'monster',
+      )!;
+      g.instance.ac = 2;
+      g.instance.hp = { ...g.instance.hp, current: 1, max: 1 };
+      const { state } = playerAttack(
+        { roller: createDiceRoller(seed), character: c.character, state: c.state },
+        g.id,
+        'longsword',
+      );
+      if (state.lastAttack?.crit) {
+        attack = state.lastAttack;
+        break;
+      }
+    }
+    expect(attack).toBeDefined();
+    // The overkill: damageDealt is well above the 1 HP the goblin had.
+    expect(attack!.damageDealt!).toBeGreaterThan(1);
+    const float = resolveSpriteFloat({
+      lastAttack: attack!,
+      self: { kind: 'monster', displayName: 'Goblin' },
+      hpDelta: 1, // clamped HP delta
+      isNewAttack: true,
+    });
+    expect(float).toEqual({ amount: attack!.damageDealt, kind: 'crit' });
   });
 });

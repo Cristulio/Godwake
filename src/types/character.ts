@@ -72,6 +72,12 @@ export interface ClassResources {
   /** Fighter: Action Surge (1 use at lv2, 2 at lv17). */
   actionSurgeRemaining?: number;
   /**
+   * Fighter: Power Attack charges left. Each spends one charge to set a heavy
+   * stance that adds flat damage to this turn's melee swings (no accuracy cost).
+   * A limited pool that refreshes only on rest/camp — not per encounter.
+   */
+  powerAttackChargesRemaining?: number;
+  /**
    * Fighter: Brace charge available this combat — a defensive set that blunts
    * the next incoming hit (see `useBrace`). Refreshes at the start of every
    * encounter, mirroring Second Wind's per-combat cadence.
