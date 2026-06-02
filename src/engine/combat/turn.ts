@@ -158,6 +158,22 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       ascendantRoundsRemaining: (nextCharacter.resources.ascendantRoundsRemaining ?? 0) - 1,
     });
   }
+  // Per-turn martial stances clear at the start of the hero's next turn: the
+  // Fighter's Power Attack and the Barbarian's Cleave / armed Knockdown are
+  // single-turn declarations (the Knockdown charge is only spent when the blow
+  // actually lands — see playerAttack).
+  if (order[nextIndex] === 'player') {
+    if (nextCharacter.powerAttackActive) {
+      nextCharacter = { ...nextCharacter, powerAttackActive: false };
+    }
+    if (nextCharacter.cleaveActive) {
+      nextCharacter = { ...nextCharacter, cleaveActive: false };
+    }
+    if (nextCharacter.knockdownActive) {
+      nextCharacter = { ...nextCharacter, knockdownActive: false };
+    }
+  }
+
   // Barbarian: the Reckless stance (and the advantage it hands enemies) clears
   // at the start of the barbarian's next turn; Rage burns down one round each
   // time that turn comes around.

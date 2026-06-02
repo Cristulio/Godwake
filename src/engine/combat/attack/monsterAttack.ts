@@ -126,6 +126,27 @@ export function monsterAttack(
   const attacker = findCombatant(state, attackerId);
   if (!attacker || attacker.kind !== 'monster') return combatResult(state, character);
 
+  // Staggered (Barbarian Knockdown): the foe is on the ground — tick the counter
+  // and lose the action. No save; the fury put it down.
+  if ((attacker.instance.staggeredTurns ?? 0) > 0) {
+    const remaining = (attacker.instance.staggeredTurns ?? 0) - 1;
+    return combatResult(
+      appendLog(
+        patchMonsterInstance(state, attackerId, (inst) => ({
+          ...inst,
+          staggeredTurns: remaining,
+          actionEconomy: { ...inst.actionEconomy, actionUsed: true },
+        })),
+        {
+          id: nextLogId(state),
+          kind: 'system',
+          text: `${attacker.instance.displayName} is knocked down — the turn is lost.`,
+        },
+      ),
+      character,
+    );
+  }
+
   // Paralyzed monster: tick down its own duration and lose the action. No save
   // (Wizard spends a 2nd-level slot for a guaranteed shutdown).
   const paralyzed = attacker.instance.conditions.find((c) => c.name === 'paralyzed');

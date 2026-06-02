@@ -26,6 +26,27 @@ function fighterActionSurgeMax(character: Character): number {
 export const RAGE_ROUNDS = 3;
 
 /**
+ * Fighter Power Attack: the accuracy/damage trade. A heavy swing this turn takes
+ * the flat to-hit penalty and lands for the flat damage spike. Modest by design
+ * — the swing only pays off when the hit was going to land anyway, and the spike
+ * compounds with Extra Attack (it applies per strike). Magnitudes are sim-tuned.
+ */
+export const POWER_ATTACK_TO_HIT_PENALTY = 2;
+export const POWER_ATTACK_DAMAGE_BONUS = 4;
+
+/** Barbarian Knockdown: turns the staggered foe loses (one whole turn). */
+export const KNOCKDOWN_STAGGER_TURNS = 1;
+
+/**
+ * Damage a Fighter's Brace blunts off the next incoming hit: a flat base plus
+ * half the fighter's level, so the set stays relevant as enemy hits grow. Once
+ * per combat, so it never trivialises sustained pressure.
+ */
+export function braceDamageReduction(character: Character): number {
+  return 3 + Math.floor(character.level / 2);
+}
+
+/**
  * Rounds the Rage holds for this barbarian. Relentless Rage (L11) deepens the
  * fury so it carries through longer fights.
  */

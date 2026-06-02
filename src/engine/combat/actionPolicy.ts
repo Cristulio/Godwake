@@ -9,8 +9,10 @@ import {
   characterHasMechanic,
   isRaging,
   isWildShaped,
+  proficiencyBonus,
   spellcastingMod,
 } from '../character/derived';
+import { POWER_ATTACK_TO_HIT_PENALTY } from '../character/actions';
 import { baneQuirkCount } from '../character/quirks';
 import { isNonStackingBlessing, blessingSignature } from '../character/blessings';
 import { getMonster } from '../../content/monsters';
@@ -23,8 +25,9 @@ import { fireBoltDiceCount } from './spells/fireBolt';
 import { useConsumable } from './useItem';
 import { useSecondWind } from './secondWind';
 import { useActionSurge } from './actionSurge';
+import { usePowerAttack, useBrace } from './fighterManeuvers';
 import { useCunningAction, type CunningActionChoice } from './cunningAction';
-import { useRage, useRecklessAttack } from './rage';
+import { useRage, useRecklessAttack, useCleave, useKnockdown } from './rage';
 import { useHuntersMark } from './huntersMark';
 import { useWildShape, beastWeaponId } from './wildShape';
 
@@ -44,6 +47,10 @@ export type PlannedAction =
   | { kind: 'cunning-action'; choice: CunningActionChoice }
   | { kind: 'rage' }
   | { kind: 'reckless-attack' }
+  | { kind: 'power-attack' }
+  | { kind: 'brace' }
+  | { kind: 'cleave' }
+  | { kind: 'knockdown' }
   | { kind: 'hunters-mark'; targetId: string }
   | { kind: 'wild-shape' }
   | { kind: 'end-turn' };
@@ -298,6 +305,48 @@ function fireBoltFullAvg(character: Character): number {
   return fireBoltDiceCount(character.level) * 5.5 + intMod;
 }
 
+// ---- Martial maneuver reads ------------------------------------------------
+
+/** True when the equipped main-hand is a melee weapon. The maneuvers that read
+ *  the swing — Power Attack, Cleave, Knockdown — are melee-only. */
+function wieldsMelee(character: Character): boolean {
+  const mh = character.equipped.mainHand;
+  if (!mh) return false;
+  try {
+    const item = getItem(mh.itemId);
+    return item.kind === 'weapon' && !item.properties.includes('ammunition');
+  } catch {
+    return false;
+  }
+}
+
+/** Rough to-hit a melee swing lands with right now — enough for the bot to judge
+ *  whether a Power Attack's accuracy penalty still leaves a likely hit. Mirrors
+ *  the load-bearing terms of playerAttack's roll (best melee ability + prof +
+ *  flat bonuses), not every affix. */
+function estimatedMeleeAttackBonus(character: Character): number {
+  const scores = effectiveAbilityScores(character);
+  const abil = Math.max(abilityModifier(scores.str), abilityModifier(scores.dex));
+  let b = abil + proficiencyBonus(character.level);
+  b += character.permanentBonuses?.attack ?? 0;
+  b += character.delveAttackBonus ?? 0;
+  if (characterHasMechanic(character, 'weapon-mastery')) b += 1;
+  return b;
+}
+
+/** The d20 the player must roll to land a Power-Attack swing against a target.
+ *  The bot swings heavy only when this floor sits at or under an archetype bar —
+ *  cautious wants a near-certain hit, aggressive trades accuracy freely. */
+const POWER_ATTACK_NEED_ROLL: Record<Archetype, number> = {
+  cautious: 8,
+  balanced: 11,
+  aggressive: 14,
+};
+
+/** A single incoming hit averaging at least this much is "big" — worth a
+ *  Fighter's once-per-combat Brace. */
+const BRACE_THREAT_MIN = 12;
+
 // ---- The policy ------------------------------------------------------------
 
 /**
@@ -347,6 +396,20 @@ export function chooseCombatAction(
       hpPct <= profile.secondWindHp
     ) {
       return { kind: 'second-wind' };
+    }
+
+    // Fighter Brace: blunt a big incoming hit. Spent while healthy enough that
+    // the heal (Second Wind, above) isn't the priority — brace BEFORE the blow
+    // lands. The once-per-combat charge keeps it from becoming spam.
+    if (
+      isFighter &&
+      characterHasMechanic(character, 'brace') &&
+      character.resources.braceAvailable === true &&
+      hpPct > profile.emergencyHp &&
+      threat &&
+      monsterThreat(threat) >= BRACE_THREAT_MIN
+    ) {
+      return { kind: 'brace' };
     }
 
     // Barbarian Rage: open every fight in a fury — available every combat.
@@ -442,6 +505,57 @@ export function chooseCombatAction(
       primary
     ) {
       return { kind: 'reckless-attack' };
+    }
+    // Fighter Power Attack: swing heavy when the focus target's guard is soft
+    // enough that the hit lands even after the accuracy penalty. Declared free
+    // before the swing, so the same turn proceeds to the attack.
+    if (
+      isFighter &&
+      actionFree &&
+      character.powerAttackActive !== true &&
+      characterHasMechanic(character, 'power-attack') &&
+      primary &&
+      wieldsMelee(character)
+    ) {
+      const needRoll =
+        primary.instance.ac -
+        (estimatedMeleeAttackBonus(character) - POWER_ATTACK_TO_HIT_PENALTY);
+      if (needRoll <= POWER_ATTACK_NEED_ROLL[archetype]) {
+        return { kind: 'power-attack' };
+      }
+    }
+    // Barbarian Cleave: a wide rage swing when the room is crowded — the splash
+    // only pays off with a second foe to catch.
+    if (
+      isBarbarian &&
+      actionFree &&
+      character.cleaveActive !== true &&
+      characterHasMechanic(character, 'cleave') &&
+      isRaging(character) &&
+      live.length >= 2 &&
+      primary &&
+      wieldsMelee(character)
+    ) {
+      return { kind: 'cleave' };
+    }
+    // Barbarian Knockdown: stagger a lone dangerous foe (or the focus target
+    // when it IS the threat) to steal its turn — a boss/elite tempo play, wasted
+    // on a pack where a clean kill is the better use of the swing.
+    if (
+      isBarbarian &&
+      actionFree &&
+      character.knockdownActive !== true &&
+      characterHasMechanic(character, 'knockdown') &&
+      isRaging(character) &&
+      character.resources.knockdownAvailable === true &&
+      primary &&
+      threat &&
+      primary.id === threat.id &&
+      live.length <= 2 &&
+      monsterThreat(threat) >= profile.holdPersonThreat &&
+      wieldsMelee(character)
+    ) {
+      return { kind: 'knockdown' };
     }
     // Weapon classes (and a wizard with no castable option) swing at the
     // focus-fire target.
@@ -827,6 +941,22 @@ export function applyPlannedAction(
     }
     case 'action-surge': {
       const r = useActionSurge({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'power-attack': {
+      const r = usePowerAttack({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'brace': {
+      const r = useBrace({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'cleave': {
+      const r = useCleave({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'knockdown': {
+      const r = useKnockdown({ character, state });
       return { state: r.state, character: r.character };
     }
     case 'cunning-action': {

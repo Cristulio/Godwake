@@ -93,6 +93,12 @@ export interface MonsterInstance {
    * boss can't be chain-paralyze-locked. Absent on rank-and-file monsters.
    */
   legendaryResistances?: number;
+  /**
+   * Staggered: turns this monster will lose to a Barbarian's Knockdown. Each of
+   * its turns decrements the count and is skipped while > 0. Absent on monsters
+   * that haven't been knocked down.
+   */
+  staggeredTurns?: number;
 }
 
 export interface PlayerCombatant {

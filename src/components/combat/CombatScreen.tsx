@@ -11,10 +11,14 @@ import {
   playerAttack,
   useSecondWind,
   useActionSurge,
+  usePowerAttack,
+  useBrace,
   useCunningAction,
   type CunningActionChoice,
   useRage,
   useRecklessAttack,
+  useCleave,
+  useKnockdown,
   useHuntersMark,
   useConsumable,
   castSpell,
@@ -489,6 +493,20 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
+  function handlePowerAttack() {
+    cancelTargeting();
+    const result = usePowerAttack({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleBrace() {
+    cancelTargeting();
+    const result = useBrace({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
   function handleRage() {
     cancelTargeting();
     const result = useRage({ character, state });
@@ -499,6 +517,20 @@ export function CombatScreen({
   function handleRecklessAttack() {
     cancelTargeting();
     const result = useRecklessAttack({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleCleave() {
+    cancelTargeting();
+    const result = useCleave({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleKnockdown() {
+    cancelTargeting();
+    const result = useKnockdown({ character, state });
     setCharacter(result.character);
     setCombat(result.state);
   }
@@ -713,9 +745,13 @@ export function CombatScreen({
             onAttack={handleAttackClick}
             onSecondWind={handleSecondWind}
             onActionSurge={handleActionSurge}
+            onPowerAttack={handlePowerAttack}
+            onBrace={handleBrace}
             onCunningAction={() => setPickingCunning(true)}
             onRage={handleRage}
             onRecklessAttack={handleRecklessAttack}
+            onCleave={handleCleave}
+            onKnockdown={handleKnockdown}
             onHuntersMark={handleHuntersMarkClick}
             onSpells={() => setPickingSpell(true)}
             onUseItem={() => setPickingItem(true)}
