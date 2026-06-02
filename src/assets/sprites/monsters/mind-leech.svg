@@ -4,26 +4,44 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Mind Leech"
     >
-      <!-- bulbous body -->
-      <ellipse cx="10" cy="8" rx="7" ry="5" fill="#5a4a5a" />
+      <!-- Psychic backlight + ground shadow -->
+      <ellipse cx="10" cy="8" rx="9" ry="7" fill="#7a6ad0" opacity="0.1" />
+      <ellipse cx="10" cy="14" rx="7" ry="1.4" fill="#000" opacity="0.38" />
+
+      <!-- Bulbous body — violet ramp, lit upper-left -->
+      <ellipse cx="10" cy="8" rx="7" ry="5" fill="#4a3a4a" />
+      <ellipse cx="10" cy="7" rx="6.5" ry="4.5" fill="#5a4a5a" />
       <ellipse cx="10" cy="7" rx="6" ry="4" fill="#6a5a6a" />
-      <ellipse cx="9" cy="6" rx="3" ry="2" fill="#7a6a7a" />
+      <ellipse cx="9" cy="6" rx="3.5" ry="2.5" fill="#7a6a7a" />
+      <ellipse cx="8" cy="5" rx="1.6" ry="1" fill="#8e7e8e" />
+      <!-- Shadowed lower flank -->
+      <ellipse cx="12" cy="10" rx="5" ry="2.5" fill="#3a2c3a" opacity="0.6" />
 
-      <!-- segmentation -->
-      <rect x="6" y="4" width="1" height="7" fill="#4a3a4a" opacity="0.6" />
-      <rect x="10" y="3" width="1" height="9" fill="#4a3a4a" opacity="0.6" />
-      <rect x="14" y="4" width="1" height="7" fill="#4a3a4a" opacity="0.6" />
+      <!-- Segmentation seams -->
+      <rect x="6" y="4" width="1" height="7" fill="#3a2c3a" opacity="0.7" />
+      <rect x="10" y="3" width="1" height="9" fill="#3a2c3a" opacity="0.7" />
+      <rect x="14" y="4" width="1" height="7" fill="#3a2c3a" opacity="0.7" />
+      <!-- Lit seam ridges -->
+      <rect x="7" y="4" width="1" height="6" fill="#7a6a7a" opacity="0.5" />
+      <rect x="11" y="3" width="1" height="8" fill="#6a5a6a" opacity="0.5" />
 
-      <!-- underside mouth -->
+      <!-- Dither at the body edge -->
+      <rect x="4" y="8" width="1" height="1" fill="#5a4a5a" />
+      <rect x="16" y="7" width="1" height="1" fill="#4a3a4a" />
+
+      <!-- Underside mouth -->
       <ellipse cx="10" cy="12" rx="4" ry="2" fill="#1a0a14" />
+      <ellipse cx="10" cy="11.5" rx="2.5" ry="1" fill="#2a0e1e" />
       <rect x="8" y="11" width="1" height="2" fill="#a85a6a" />
       <rect x="11" y="11" width="1" height="2" fill="#a85a6a" />
+      <rect x="9" y="11" width="1" height="1" fill="#c47080" />
 
-      <!-- feeding tendrils -->
-      <line x1="6" y1="12" x2="4" y2="15" stroke="#4a3a4a" stroke-width="0.8" />
-      <line x1="10" y1="13" x2="10" y2="16" stroke="#4a3a4a" stroke-width="0.8" />
-      <line x1="14" y1="12" x2="16" y2="15" stroke="#4a3a4a" stroke-width="0.8" />
+      <!-- Feeding tendrils -->
+      <line x1="6" y1="12" x2="4" y2="15" stroke="#3a2c3a" stroke-width="0.8" />
+      <line x1="10" y1="13" x2="10" y2="16" stroke="#3a2c3a" stroke-width="0.8" />
+      <line x1="14" y1="12" x2="16" y2="15" stroke="#3a2c3a" stroke-width="0.8" />
 
-      <!-- pale psychic shine -->
-      <rect x="7" y="5" width="2" height="1" fill="#9aa8d0" opacity="0.6" />
+      <!-- Pale psychic shine + specular -->
+      <rect x="7" y="5" width="2" height="1" fill="#9aa8d0" opacity="0.7" />
+      <rect x="7" y="5" width="1" height="1" fill="#d4dcf0" />
     </svg>

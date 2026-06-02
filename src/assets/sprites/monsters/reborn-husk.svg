@@ -4,41 +4,68 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Reborn Husk"
     >
-      <!-- bowed grey head -->
-      <rect x="8" y="3" width="8" height="7" fill="#9a958c" />
-      <rect x="8" y="3" width="8" height="1" fill="#7a756c" />
-      <rect x="8" y="5" width="2" height="2" fill="#1a2024" />
-      <rect x="14" y="5" width="2" height="2" fill="#1a2024" />
+      <!-- Cold reanimation backlight + ground shadow -->
+      <ellipse cx="12" cy="20" rx="12" ry="17" fill="#4aa89a" opacity="0.07" />
+      <ellipse cx="12" cy="38" rx="8" ry="1.4" fill="#000" opacity="0.42" />
+
+      <!-- Bowed grey head — ramp, key upper-left -->
+      <rect x="8" y="3" width="8" height="7" fill="#8a857c" />
+      <rect x="8" y="3" width="8" height="1" fill="#a8a39a" />
+      <rect x="8" y="3" width="2" height="6" fill="#9a958c" />
+      <rect x="8" y="3" width="1" height="5" fill="#b0aaa0" />
+      <rect x="14" y="4" width="2" height="6" fill="#6a655c" />
+      <rect x="15" y="4" width="1" height="6" fill="#56524a" />
+      <!-- Sunken eyes — cold-light spark -->
+      <rect x="8" y="5" width="2" height="2" fill="#14181c" />
+      <rect x="14" y="5" width="2" height="2" fill="#14181c" />
       <rect x="9" y="5" width="1" height="1" fill="#a4e8e0" />
       <rect x="15" y="5" width="1" height="1" fill="#a4e8e0" />
-      <rect x="10" y="8" width="4" height="1" fill="#5a554c" />
+      <rect x="9" y="5" width="1" height="1" fill="#d4fffa" opacity="0.6" />
+      <rect x="10" y="8" width="4" height="1" fill="#56524a" />
 
-      <!-- cold-light stitch at the throat -->
-      <rect x="7" y="10" width="10" height="1" fill="#7ad8c8" opacity="0.85" />
+      <!-- Cold-light stitch at the throat -->
+      <rect x="7" y="10" width="10" height="1" fill="#7ad8c8" opacity="0.9" />
+      <rect x="7" y="10" width="10" height="1" fill="#c4fff0" opacity="0.4" />
 
-      <!-- hunched torso, ash skin -->
-      <rect x="6" y="11" width="12" height="13" fill="#7a756c" />
-      <rect x="6" y="11" width="12" height="1" fill="#5a554c" />
+      <!-- Hunched torso — ash ramp -->
+      <rect x="6" y="11" width="12" height="13" fill="#6a655c" />
+      <rect x="6" y="11" width="12" height="1" fill="#8a857c" />
+      <rect x="6" y="11" width="2" height="12" fill="#7a756c" />
+      <rect x="6" y="11" width="1" height="11" fill="#9a958c" />
+      <rect x="16" y="11" width="2" height="12" fill="#56524a" />
+      <rect x="17" y="11" width="1" height="12" fill="#46423a" />
       <rect x="9" y="13" width="6" height="9" fill="#8a857c" />
-      <rect x="10" y="15" width="1" height="6" fill="#7ad8c8" opacity="0.5" />
+      <rect x="9" y="13" width="3" height="9" fill="#9a958c" />
+      <!-- Glowing chest seam + dither -->
+      <rect x="10" y="15" width="1" height="6" fill="#7ad8c8" opacity="0.55" />
+      <rect x="8" y="18" width="1" height="1" fill="#56524a" />
+      <rect x="14" y="16" width="1" height="1" fill="#9a958c" />
 
-      <!-- reaching arms -->
+      <!-- Reaching arms — ramp -->
       <rect x="3" y="13" width="3" height="3" fill="#7a756c" />
-      <rect x="1" y="15" width="3" height="3" fill="#7a756c" />
+      <rect x="3" y="13" width="3" height="1" fill="#9a958c" />
+      <rect x="1" y="15" width="3" height="3" fill="#6a655c" />
       <rect x="0" y="17" width="3" height="2" fill="#9a958c" />
-      <rect x="18" y="13" width="3" height="3" fill="#7a756c" />
-      <rect x="20" y="15" width="3" height="3" fill="#7a756c" />
-      <rect x="21" y="17" width="3" height="2" fill="#9a958c" />
-      <!-- stitched wrists -->
-      <rect x="0" y="16" width="3" height="1" fill="#7ad8c8" opacity="0.7" />
+      <rect x="0" y="17" width="3" height="1" fill="#b0aaa0" />
+      <rect x="18" y="13" width="3" height="3" fill="#6a655c" />
+      <rect x="18" y="13" width="3" height="1" fill="#7a756c" />
+      <rect x="20" y="15" width="3" height="3" fill="#56524a" />
+      <rect x="21" y="17" width="3" height="2" fill="#8a857c" />
+      <!-- Stitched wrists -->
+      <rect x="0" y="16" width="3" height="1" fill="#7ad8c8" opacity="0.75" />
       <rect x="21" y="16" width="3" height="1" fill="#7ad8c8" opacity="0.7" />
 
-      <!-- ragged legs -->
-      <rect x="6" y="24" width="12" height="2" fill="#5a554c" />
+      <!-- Ragged legs -->
+      <rect x="6" y="24" width="12" height="2" fill="#46423a" />
+      <rect x="6" y="24" width="12" height="1" fill="#6a655c" />
       <rect x="6" y="26" width="5" height="10" fill="#6a655c" />
-      <rect x="13" y="26" width="5" height="10" fill="#6a655c" />
+      <rect x="6" y="26" width="1" height="10" fill="#8a857c" />
+      <rect x="13" y="26" width="5" height="10" fill="#56524a" />
+      <rect x="13" y="26" width="1" height="10" fill="#6a655c" />
       <rect x="9" y="28" width="1" height="6" fill="#7ad8c8" opacity="0.4" />
 
+      <!-- Feet -->
       <rect x="6" y="36" width="5" height="3" fill="#1a1410" />
-      <rect x="13" y="36" width="5" height="3" fill="#1a1410" />
+      <rect x="13" y="36" width="5" height="3" fill="#140e0a" />
+      <rect x="6" y="36" width="5" height="1" fill="#3a3430" />
     </svg>

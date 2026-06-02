@@ -4,41 +4,66 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Fire Giant"
     >
-      <ellipse cx="19" cy="20" rx="18" ry="20" fill="#1c0c04" opacity="0.4" />
+      <!-- Forge backlight + ground shadow -->
+      <ellipse cx="19" cy="20" rx="18" ry="20" fill="#5a2208" opacity="0.32" />
+      <ellipse cx="19" cy="20" rx="13" ry="16" fill="#e87820" opacity="0.07" />
+      <ellipse cx="19" cy="39" rx="14" ry="2" fill="#000" opacity="0.42" />
 
-      <rect x="13" y="2" width="11" height="9" fill="#9a4a26" />
+      <!-- Head — scorched-red ramp, key upper-left -->
+      <rect x="13" y="2" width="11" height="9" fill="#7a3418" />
       <rect x="13" y="2" width="11" height="2" fill="#b85e30" />
+      <rect x="13" y="2" width="3" height="8" fill="#9a4a26" />
+      <rect x="13" y="2" width="1" height="6" fill="#c46a36" />
+      <rect x="22" y="3" width="2" height="8" fill="#5a2410" />
+      <rect x="12" y="1" width="13" height="1" fill="#6a3418" />
+      <!-- Fire eyes + spark -->
       <rect x="14" y="5" width="3" height="2" fill="#ffd070" />
       <rect x="20" y="5" width="3" height="2" fill="#ffd070" />
       <rect x="14" y="5" width="1" height="1" fill="#fff0c0" />
       <rect x="20" y="5" width="1" height="1" fill="#fff0c0" />
+      <rect x="14" y="6" width="3" height="1" fill="#f4942a" />
+      <rect x="20" y="6" width="3" height="1" fill="#f4942a" />
       <rect x="15" y="9" width="7" height="1" fill="#5a2410" />
-      <rect x="12" y="1" width="13" height="1" fill="#6a3418" />
 
-      <rect x="6" y="11" width="25" height="18" fill="#33281f" />
+      <!-- Torso — charcoal ramp + ember cracks -->
+      <rect x="6" y="11" width="25" height="18" fill="#2e241b" />
       <rect x="6" y="11" width="25" height="2" fill="#4a3a2e" />
-      <rect x="6" y="11" width="25" height="1" fill="#6a3418" opacity="0.6" />
-      <rect x="10" y="14" width="17" height="12" fill="#2a201a" />
+      <rect x="6" y="11" width="25" height="1" fill="#5a4636" />
+      <rect x="6" y="11" width="2" height="17" fill="#3a2e22" />
+      <rect x="6" y="11" width="1" height="16" fill="#4a3a2e" />
+      <rect x="29" y="12" width="2" height="16" fill="#1f1812" />
+      <rect x="10" y="14" width="17" height="12" fill="#241c14" />
+      <!-- Ember cracks -->
       <rect x="7" y="13" width="1" height="14" fill="#e87820" opacity="0.5" />
       <rect x="29" y="13" width="1" height="14" fill="#d4641a" opacity="0.45" />
       <rect x="13" y="15" width="11" height="1" fill="#a83a14" opacity="0.6" />
       <rect x="11" y="19" width="15" height="1" fill="#e87820" opacity="0.4" />
       <rect x="14" y="23" width="9" height="1" fill="#f4942a" opacity="0.35" />
+      <rect x="18" y="17" width="1" height="1" fill="#ffb050" opacity="0.6" />
 
-      <rect x="1" y="13" width="6" height="14" fill="#33281f" />
-      <rect x="31" y="13" width="6" height="14" fill="#33281f" />
-      <rect x="1" y="25" width="6" height="3" fill="#c08850" opacity="0.85" />
+      <!-- Left arm + fist -->
+      <rect x="1" y="13" width="6" height="14" fill="#2e241b" />
+      <rect x="1" y="13" width="6" height="1" fill="#4a3a2e" />
+      <rect x="1" y="13" width="1" height="14" fill="#3a2e22" />
+      <rect x="5" y="14" width="1" height="12" fill="#1f1812" />
+      <rect x="1" y="25" width="6" height="3" fill="#9a4a26" />
+      <rect x="1" y="25" width="6" height="1" fill="#b85e30" />
 
+      <!-- Great flaming blade -->
       <rect x="33" y="0" width="3" height="14" fill="#3a2a1a" />
+      <rect x="33" y="0" width="1" height="14" fill="#4a3a2a" />
       <polygon points="30,14 39,14 39,2 33,-2 30,2" fill="#5a4636" />
-      <polygon points="33,14 39,14 39,2 33,-2" fill="#403228" />
-      <rect x="32" y="4" width="6" height="1" fill="#e87820" opacity="0.7" />
+      <polygon points="33,14 39,14 39,2 33,-2" fill="#3a2e22" />
+      <rect x="32" y="4" width="6" height="1" fill="#e87820" opacity="0.75" />
       <rect x="32" y="8" width="6" height="1" fill="#f4942a" opacity="0.6" />
+      <rect x="34" y="0" width="1" height="13" fill="#fff0c0" opacity="0.4" />
 
-      <rect x="10" y="29" width="7" height="11" fill="#2a201a" />
-      <rect x="20" y="29" width="7" height="11" fill="#2a201a" />
-      <rect x="9" y="38" width="9" height="2" fill="#100a06" />
-      <rect x="20" y="38" width="9" height="2" fill="#100a06" />
+      <!-- Legs -->
+      <rect x="10" y="29" width="7" height="11" fill="#2a2118" />
+      <rect x="20" y="29" width="7" height="11" fill="#241c14" />
+      <rect x="10" y="29" width="1" height="11" fill="#3a2e22" />
       <rect x="12" y="31" width="1" height="5" fill="#d4641a" opacity="0.4" />
       <rect x="22" y="31" width="1" height="5" fill="#d4641a" opacity="0.4" />
+      <rect x="9" y="38" width="9" height="2" fill="#100a06" />
+      <rect x="20" y="38" width="9" height="2" fill="#0a0604" />
     </svg>

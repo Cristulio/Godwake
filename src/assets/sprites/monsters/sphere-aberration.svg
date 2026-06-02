@@ -4,31 +4,49 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Reknitting Horror"
     >
-      <!-- slumped mass of fused flesh -->
-      <ellipse cx="13" cy="16" rx="11" ry="7" fill="#5a5358" />
+      <!-- Sickly backlight + ground shadow -->
+      <ellipse cx="13" cy="14" rx="12" ry="9" fill="#a85a6a" opacity="0.08" />
+      <ellipse cx="13" cy="22" rx="11" ry="2" fill="#000" opacity="0.4" />
+
+      <!-- Slumped mass of fused flesh — grey-mauve ramp -->
+      <ellipse cx="13" cy="16" rx="11" ry="7" fill="#4a444a" />
+      <ellipse cx="13" cy="15" rx="10.5" ry="6.5" fill="#5a5358" />
       <ellipse cx="13" cy="14" rx="9" ry="6" fill="#6a6068" />
       <ellipse cx="11" cy="12" rx="5" ry="4" fill="#766a72" />
+      <ellipse cx="10" cy="11" rx="2.5" ry="1.6" fill="#86787e" />
+      <!-- Shadowed underbelly -->
+      <ellipse cx="15" cy="19" rx="9" ry="3" fill="#332e34" opacity="0.6" />
 
-      <!-- knitting scars / seams that close -->
+      <!-- Knitting scars / seams that close -->
       <rect x="7" y="13" width="5" height="1" fill="#3a3038" />
       <rect x="14" y="11" width="4" height="1" fill="#3a3038" />
       <rect x="9" y="17" width="6" height="1" fill="#3a3038" />
       <rect x="16" y="15" width="4" height="1" fill="#3a3038" />
+      <!-- Lit scar lips -->
+      <rect x="7" y="12" width="5" height="1" fill="#86787e" opacity="0.5" />
+      <rect x="9" y="16" width="6" height="1" fill="#766a72" opacity="0.45" />
 
-      <!-- scattered dim eyes -->
+      <!-- Dither at the rim -->
+      <rect x="3" y="14" width="1" height="1" fill="#5a5358" />
+      <rect x="22" y="14" width="1" height="1" fill="#4a444a" />
+      <rect x="6" y="18" width="1" height="1" fill="#5a5358" />
+
+      <!-- Scattered dim eyes + spark -->
       <rect x="9" y="10" width="1" height="1" fill="#a85a6a" />
-      <rect x="13" y="9" width="1" height="1" fill="#a85a6a" />
+      <rect x="13" y="9" width="1" height="1" fill="#c47080" />
       <rect x="17" y="11" width="1" height="1" fill="#a85a6a" />
+      <rect x="13" y="9" width="1" height="1" fill="#e0a0ac" opacity="0.5" />
 
-      <!-- lashing pseudopod, rising -->
-      <rect x="20" y="4" width="2" height="8" fill="#6a6068" />
+      <!-- Lashing pseudopod, rising -->
+      <rect x="20" y="4" width="2" height="8" fill="#5a5358" />
+      <rect x="20" y="4" width="1" height="8" fill="#6a6068" />
       <rect x="20" y="3" width="3" height="2" fill="#766a72" />
-      <rect x="21" y="2" width="1" height="2" fill="#a85a6a" opacity="0.7" />
+      <rect x="21" y="2" width="1" height="2" fill="#a85a6a" />
+      <rect x="21" y="2" width="1" height="1" fill="#c47080" />
 
-      <!-- a second forming limb -->
-      <rect x="3" y="10" width="2" height="6" fill="#6a6068" />
+      <!-- Second forming limb -->
+      <rect x="3" y="10" width="2" height="6" fill="#5a5358" />
+      <rect x="3" y="10" width="1" height="6" fill="#6a6068" />
       <rect x="2" y="9" width="3" height="2" fill="#766a72" />
-
-      <!-- base shadow -->
-      <ellipse cx="13" cy="22" rx="11" ry="2" fill="#2a2428" />
+      <rect x="2" y="9" width="1" height="1" fill="#86787e" />
     </svg>
