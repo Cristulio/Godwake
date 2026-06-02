@@ -47,7 +47,7 @@ export function GearWareRow({ stock, bought, gold, onBuy }: GearWareRowProps) {
           </div>
         )}
         <div className="mt-1 space-y-0.5">
-          {rolled?.enhancement && enhancementLine(base, rolled.enhancement) && (
+          {!!rolled?.enhancement && enhancementLine(base, rolled.enhancement) && (
             <div className="text-[11px] italic leading-snug" style={{ color }}>
               ◆ {enhancementLine(base, rolled.enhancement)}
             </div>
