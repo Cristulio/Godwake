@@ -33,6 +33,7 @@ import {
   usePatientDefense,
   useStunningStrike,
   martialArtsWeaponId,
+  monkFightsUnarmed,
 } from './monk';
 
 /**
@@ -373,6 +374,9 @@ export function chooseCombatAction(
   const isRanger = character.classId === 'ranger';
   const isDruid = character.classId === 'druid';
   const isMonk = character.classId === 'monk';
+  // The monk's Ki kit (Flurry / Patient Defense / Stunning Strike) only fires
+  // when fighting unarmed-style; an ordinary weapon in hand turns it dark.
+  const monkKit = isMonk && monkFightsUnarmed(character);
 
   const primary = lowestHpTarget(live);
   const threat = highestThreatTarget(live);
@@ -447,7 +451,7 @@ export function chooseCombatAction(
     // Monk: spend the bonus action and a Ki point on tempo. Patient Defense when
     // hurt enough to want the flowing guard (a turn to be weathered); otherwise
     // pour a Flurry of Blows into the strikes to come — the signature deluge.
-    if (isMonk && (character.resources.kiPointsRemaining ?? 0) > 0) {
+    if (monkKit && (character.resources.kiPointsRemaining ?? 0) > 0) {
       if (
         characterHasMechanic(character, 'patient-defense') &&
         character.patientDefenseActive !== true &&
@@ -580,7 +584,7 @@ export function chooseCombatAction(
     // when Ki is flush enough to still afford a flurry. A free stance, so the
     // same turn proceeds to the swing that carries it.
     if (
-      isMonk &&
+      monkKit &&
       actionFree &&
       character.stunningStrikeActive !== true &&
       characterHasMechanic(character, 'stunning-strike') &&
@@ -953,7 +957,7 @@ export function applyPlannedAction(
       // swings the weapon hanging at its side.
       const weaponId = isWildShaped(character)
         ? beastWeaponId(character)
-        : character.classId === 'monk'
+        : character.classId === 'monk' && monkFightsUnarmed(character)
           ? martialArtsWeaponId(character)
           : (character.equipped.mainHand?.itemId ?? 'dagger');
       const r = playerAttack({ roller, character, state }, action.targetId, weaponId);

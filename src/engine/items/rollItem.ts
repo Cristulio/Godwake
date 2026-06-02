@@ -29,6 +29,18 @@ const WEAPON_BASE_IDS = [
   'javelin',
 ] as const;
 
+/**
+ * Monk weapons count as unarmed — they carry the affix + enhancement rolls a
+ * bare-handed striker has no main-hand slot for. A monk's rolled weapon loot is
+ * drawn from these alone (the generic rack above is non-unarmed, so it'd turn the
+ * kit dark); no other class ever rolls one.
+ */
+const MONK_WEAPON_BASE_IDS = [
+  'monk-war-staff',
+  'monk-paired-kama',
+  'monk-temple-glaive',
+] as const;
+
 const ARMOR_BASE_IDS = [
   'padded-armor',
   'leather-armor',
@@ -195,9 +207,10 @@ function rollEnhancement(roller: DiceRoller, rarity: GearRarity, depth: number):
 /** Bases of a kind the class is trained to use. Accessories have no gate. */
 function legalBases(kind: BaseKind, classId: ClassId): Array<Weapon | Armor | Accessory> {
   if (kind === 'weapon') {
-    return WEAPON_BASE_IDS.map((id) => getItem(id) as Weapon).filter((w) =>
-      classWeaponProficient(classId, w),
-    );
+    const ids = classId === 'monk' ? MONK_WEAPON_BASE_IDS : WEAPON_BASE_IDS;
+    return ids
+      .map((id) => getItem(id) as Weapon)
+      .filter((w) => classWeaponProficient(classId, w));
   }
   if (kind === 'accessory') {
     return ACCESSORY_BASE_IDS.map((id) => getItem(id) as Accessory);

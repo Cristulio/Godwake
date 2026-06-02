@@ -23,7 +23,7 @@ import {
   KNOCKDOWN_STAGGER_TURNS,
 } from '../../character/actions';
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
-import { monkKiSaveDC } from '../monk';
+import { monkKiSaveDC, monkFightsUnarmed, MONK_UNARMED_DAMAGE_EDGE } from '../monk';
 import { getMonster } from '../../../content/monsters';
 import { isRangedWeapon } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
@@ -113,6 +113,11 @@ export function playerAttack(
   const abilMod = abilityModifier(scores[attackAbility]);
   const profBonus = proficiencyBonus(nextCharacter.level);
 
+  // A monk strikes "unarmed-style" — bare hands or a monk weapon — only then does
+  // the Martial Arts kit (and the unarmed damage edge below) ride the blow. An
+  // ordinary weapon in hand turns it all off: a plain swing.
+  const monkUnarmedStrike = monkFightsUnarmed(nextCharacter);
+
   const quirkMods = characterQuirkMods(nextCharacter);
   // Sealed Wards twist: blessings are inert this fight — every blessing-sourced
   // to-hit/damage/advantage line below reads off a neutral (empty) mod set.
@@ -172,7 +177,8 @@ export function playerAttack(
   const recklessAdvantage = nextCharacter.recklessActive === true && !isRanged;
   // Monk (Way of Shadow): the unseen opener — the first strike of the fight
   // lands with advantage.
-  const shadowOpener = isFirstAttack && characterHasMechanic(nextCharacter, 'shadow-strike');
+  const shadowOpener =
+    isFirstAttack && monkUnarmedStrike && characterHasMechanic(nextCharacter, 'shadow-strike');
   const hasAdvantage =
     (isFirstAttack && !!blessingMods.firstAttackAdvantage) ||
     hideAdvantage ||
@@ -362,14 +368,22 @@ export function playerAttack(
       bonusDamage += POWER_ATTACK_DAMAGE_BONUS;
       onTypeParts.push({ amount: POWER_ATTACK_DAMAGE_BONUS, label: 'power' });
     }
+    // Monk unarmed damage edge — the reward for going weaponless. Rides every
+    // unarmed / monk-weapon strike (each Flurry strike included); dark with an
+    // ordinary weapon in hand.
+    if (monkUnarmedStrike) {
+      bonusDamage += MONK_UNARMED_DAMAGE_EDGE;
+      onTypeParts.push({ amount: MONK_UNARMED_DAMAGE_EDGE, label: 'martial arts' });
+    }
     // Monk Ki-Empowered Strikes (L6): channelled Ki rides every unarmed blow.
-    if (characterHasMechanic(nextCharacter, 'ki-empowered') && !isRanged) {
+    if (monkUnarmedStrike && characterHasMechanic(nextCharacter, 'ki-empowered')) {
       bonusDamage += 1;
       onTypeParts.push({ amount: 1, label: 'ki' });
     }
     // Monk (Open Hand): a flurry batters the guard open — extra bite on the
     // strikes that fall while a flurry is still pouring out.
     if (
+      monkUnarmedStrike &&
       characterHasMechanic(nextCharacter, 'open-hand-technique') &&
       (nextCharacter.flurryStrikesRemaining ?? 0) > 0
     ) {
@@ -377,7 +391,7 @@ export function playerAttack(
       onTypeParts.push({ amount: 2, label: 'open hand' });
     }
     // Monk (Shadow): the unseen opener drives extra Ki-charged damage home.
-    if (isFirstAttack && characterHasMechanic(nextCharacter, 'shadow-strike')) {
+    if (isFirstAttack && monkUnarmedStrike && characterHasMechanic(nextCharacter, 'shadow-strike')) {
       bonusDamage += 3;
       onTypeParts.push({ amount: 3, label: 'shadow' });
     }
@@ -821,7 +835,7 @@ export function playerAttack(
     // roll the save with advantage (resolute will) rather than being immune. The
     // Ki was already spent to arm the stance; it clears once a blow connects (a
     // clean miss leaves it armed for the next swing).
-    if (nextCharacter.stunningStrikeActive === true && target.kind === 'monster') {
+    if (nextCharacter.stunningStrikeActive === true && monkUnarmedStrike && target.kind === 'monster') {
       const stillStanding = nextState.combatants.some(
         (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
       );
