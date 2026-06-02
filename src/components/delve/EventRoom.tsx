@@ -73,7 +73,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
     room.eventTemplateId != null && room.eventTemplateId.startsWith('boss-intel-');
   if (isBossIntelRoom && !bossIntelUnlocked) {
     return (
-      <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
+      <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
         <EventIllustration explicit={template?.illustration} chapter={room.chapter} />
         <Panel>
           <p className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-2">
@@ -100,7 +100,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
 
   if (!template) {
     return (
-      <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
+      <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
         <EventIllustration chapter={room.chapter} />
         <Panel>
           <p className="text-[var(--color-text-secondary)] text-sm">
@@ -140,7 +140,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(212,176,98,0.07),transparent_55%)]">
+    <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(212,176,98,0.07),transparent_55%)]">
       <EventIllustration explicit={template.illustration} chapter={room.chapter} />
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
         <div>
@@ -230,11 +230,11 @@ function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
           : 'panel-etched-warm border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] hover:bg-[var(--color-bg-panel-hover)] cursor-pointer'}
       `}
     >
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1.5">
         <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
           {choice.label}
         </div>
-        <div className="flex items-baseline gap-2 shrink-0">
+        <div className="flex flex-wrap items-baseline gap-2 shrink-0">
           {skillTag && (
             <div
               data-testid="skillcheck-badge"

@@ -31,10 +31,10 @@ export function GearWareRow({ stock, bought, gold, onBuy }: GearWareRowProps) {
   const tooDear = gold < stock.cost;
   return (
     <div
-      className="border p-3 flex items-center gap-4"
+      className="border p-3 flex items-center gap-3"
       style={{ borderColor: bought ? 'var(--color-border-dim)' : color, opacity: bought ? 0.5 : 1 }}
     >
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider" style={{ color }}>
           {rolled?.name ?? base.name}
         </div>
@@ -99,10 +99,10 @@ export function LegendaryWareRow({ offer, bought, gold, onBuy }: LegendaryWareRo
   const effect = getLegendary(offer.legendaryId)?.effect ?? 'A relic that death cannot take.';
   return (
     <div
-      className="border-2 p-3 flex items-center gap-4"
+      className="border-2 p-3 flex items-center gap-3"
       style={{ borderColor: bought ? 'var(--color-border-dim)' : gold700, opacity: bought ? 0.5 : 1 }}
     >
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider" style={{ color: gold700 }}>
           ✦ {offer.name}
         </div>
@@ -137,8 +137,8 @@ interface ConsumableWareRowProps {
 export function ConsumableWareRow({ item, gold, onBuy }: ConsumableWareRowProps) {
   const tooDear = gold < item.cost;
   return (
-    <div className="border border-[var(--color-border-dim)] p-3 flex items-center gap-4">
-      <div className="flex-1">
+    <div className="border border-[var(--color-border-dim)] p-3 flex items-center gap-3">
+      <div className="flex-1 min-w-0">
         <div className="text-[var(--color-text-primary)] text-sm uppercase tracking-wider">
           {item.name}
         </div>

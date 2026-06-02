@@ -497,7 +497,7 @@ function ShopModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in">
       <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-4 md:p-5">
-        <header className="sticky top-0 z-10 -mx-5 -mt-5 px-5 pt-5 pb-3 mb-4 bg-[var(--color-bg-base)] flex justify-between items-center border-b border-[var(--color-border-warm)]">
+        <header className="sticky top-0 z-10 -mx-4 -mt-4 px-4 pt-4 md:-mx-5 md:-mt-5 md:px-5 md:pt-5 pb-3 mb-4 bg-[var(--color-bg-base)] flex flex-wrap justify-between items-center gap-3 border-b border-[var(--color-border-warm)]">
           <div>
             <h2 className="font-display text-lg text-[var(--color-accent-amber)] uppercase tracking-[0.15em]">
               The Caravan-Merchant
@@ -593,7 +593,7 @@ function ShopModal({
           </div>
         )}
 
-        <div className="sticky bottom-0 -mx-5 -mb-5 mt-5 px-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-end">
+        <div className="sticky bottom-0 -mx-4 -mb-4 px-4 md:-mx-5 md:-mb-5 md:px-5 mt-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-end">
           <Button variant="primary" onClick={onClose}>
             Done trading →
           </Button>

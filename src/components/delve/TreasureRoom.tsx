@@ -32,7 +32,7 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
   }, []);
 
   return (
-    <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_40%,rgba(212,176,98,0.10),transparent_55%)]">
+    <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_40%,rgba(212,176,98,0.10),transparent_55%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)]">
         <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
           {room.title.toUpperCase()}

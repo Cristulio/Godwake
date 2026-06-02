@@ -38,7 +38,7 @@ export function CodexScreen() {
   const openMonster = openId ? getMonster(openId) : null;
 
   return (
-    <div className="min-h-screen p-6 max-w-6xl mx-auto animate-room-enter">
+    <div className="min-h-screen p-4 md:p-6 max-w-6xl mx-auto animate-room-enter">
       <header className="flex flex-wrap justify-between items-end gap-3 mb-6 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
           <h1
@@ -57,7 +57,7 @@ export function CodexScreen() {
       </header>
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <div className="flex gap-1">
+        <div className="flex flex-wrap gap-1">
           <FilterTab active={filter === 'all'} onClick={() => setFilter('all')} label="All" />
           <FilterTab
             active={filter === 'encountered'}
