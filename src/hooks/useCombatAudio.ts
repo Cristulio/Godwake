@@ -1,0 +1,70 @@
+import { useEffect } from 'react';
+import { useCombatStore } from '../stores/combatStore';
+import { playSfx, type SfxId } from '../engine/audio';
+import type { SpellEffectKind } from '../types/combat';
+
+/**
+ * Maps every battlefield VFX event to a sound. The `spellEffectEvent` bus
+ * already carries spell casts, class-ability signatures, and enemy abilities,
+ * so reacting to it covers the half of combat that the attack-roll path
+ * (DiceRollOverlay swing/hit/crit/miss + damage.ts monster_death) does not.
+ *
+ * Weapon-swing kinds (slash/pierce/bludgeon/arrow/multiattack-flurry) are
+ * deliberately absent: those already sound via `playerAttack`/DiceRollOverlay,
+ * and adding them here would double up.
+ */
+const SPELL_EFFECT_SFX: Partial<Record<SpellEffectKind, SfxId>> = {
+  // Spell casts — element-flavored.
+  'magic-missile': 'spell_arcane',
+  'misty-step': 'spell_arcane',
+  'mage-armor': 'spell_arcane',
+  'fire-bolt': 'spell_fire',
+  'burning-hands': 'spell_fire',
+  fireball: 'spell_fire',
+  'lightning-bolt': 'spell_lightning',
+  shield: 'armor_clang',
+  'hold-person': 'spell_debuff',
+  // Class-ability signatures.
+  rage: 'buff_surge',
+  reckless: 'buff_surge',
+  'hunters-mark': 'buff_surge',
+  colossus: 'buff_surge',
+  'cunning-action': 'buff_surge',
+  'action-surge': 'buff_surge',
+  'second-wind': 'second_wind',
+  // Enemy abilities.
+  'enemy-summon': 'enemy_cast',
+  'enemy-frenzy': 'boss_phase',
+  'debuff-poison': 'spell_debuff',
+  'debuff-frighten': 'spell_ice',
+  'debuff-blind': 'spell_debuff',
+  'debuff-weaken': 'spell_debuff',
+  'debuff-restrain': 'spell_debuff',
+  'sustain-heal': 'spell_holy',
+  'sustain-ward': 'armor_clang',
+  'sustain-drain': 'spell_debuff',
+};
+
+/** Resolve the SFX for a VFX kind. Exported for testing. */
+export function sfxForSpellEffect(kind: SpellEffectKind): SfxId | undefined {
+  return SPELL_EFFECT_SFX[kind];
+}
+
+/**
+ * Subscribe-and-play audio reaction. Mount once near the app root. Reads the
+ * combat store directly (never touches CombatScreen's JSX) so it stays disjoint
+ * from the combat-visuals lane and keeps firing across every screen.
+ */
+export function useCombatAudio(): void {
+  useEffect(() => {
+    let lastEventId = useCombatStore.getState().combat?.spellEffectEvent?.id ?? 0;
+    const unsub = useCombatStore.subscribe((state) => {
+      const event = state.combat?.spellEffectEvent;
+      if (!event || event.id === lastEventId) return;
+      lastEventId = event.id;
+      const sfx = SPELL_EFFECT_SFX[event.kind];
+      if (sfx) playSfx(sfx);
+    });
+    return unsub;
+  }, []);
+}

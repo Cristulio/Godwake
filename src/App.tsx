@@ -4,6 +4,7 @@ import { TitleScreen } from './components/title/TitleScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { IrenicusTaunt } from './components/lore/IrenicusTaunt';
 import { SettingsButton } from './components/ui/SettingsButton';
+import { useCombatAudio } from './hooks/useCombatAudio';
 
 // Lazy-load screens that aren't on the critical path. Cuts the initial bundle
 // and lets Cloudflare serve gameplay faster — the title/hub/delve loop covers
@@ -81,6 +82,10 @@ function App() {
   const markQuirksTutorialSeen = useGameStore((s) => s.markQuirksTutorialSeen);
   const tutorialQueue = useGameStore((s) => s.tutorialQueue);
   const dismissTutorial = useGameStore((s) => s.dismissTutorial);
+
+  // Combat SFX reaction — fires spell/ability/enemy sounds off the combat
+  // event stream regardless of which screen is mounted.
+  useCombatAudio();
 
   // Show the quirks tutorial once: after first death has happened, the taunt
   // has dismissed, and the tutorial hasn't been shown yet.

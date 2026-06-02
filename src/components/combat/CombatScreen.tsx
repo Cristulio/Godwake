@@ -143,10 +143,10 @@ export function CombatScreen({
     }
 
     if (scene === 'boss') {
-      bedChoiceRef.current = 'combat_bed_bossly';
+      bedChoiceRef.current = 'boss_theme';
       playSfx('boss_intro');
       const introTimer = setTimeout(() => {
-        playMusic('combat_bed_bossly');
+        playMusic('boss_theme');
       }, 2800);
       return () => {
         clearTimeout(introTimer);
@@ -156,7 +156,7 @@ export function CombatScreen({
 
     if (!bedChoiceRef.current) {
       bedChoiceRef.current =
-        Math.random() < 0.5 ? 'combat_bed' : 'combat_bed_tense';
+        Math.random() < 0.5 ? 'combat_theme' : 'combat_theme_tense';
     }
     playMusic(bedChoiceRef.current);
     return () => {

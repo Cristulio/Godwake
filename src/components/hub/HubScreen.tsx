@@ -32,7 +32,7 @@ export function HubScreen() {
   const [view, setView] = useState<'hub' | 'relics'>('hub');
 
   useEffect(() => {
-    playMusic('hub_ambient');
+    playMusic('hub_theme');
     return () => {
       stopMusic();
     };
