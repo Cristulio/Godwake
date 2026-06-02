@@ -286,6 +286,7 @@ export const MONK_FISTS: Weapon = WeaponSchema.parse({
   kind: 'weapon',
   name: 'Fists',
   affinity: 'monk',
+  monkWeapon: true,
   category: 'simple',
   damage: '1d6',
   damageType: 'bludgeoning',
@@ -300,6 +301,7 @@ export const MONK_FISTS_ADEPT: Weapon = WeaponSchema.parse({
   kind: 'weapon',
   name: 'Fists',
   affinity: 'monk',
+  monkWeapon: true,
   category: 'simple',
   damage: '1d8',
   damageType: 'bludgeoning',
@@ -314,6 +316,7 @@ export const MONK_FISTS_MASTER: Weapon = WeaponSchema.parse({
   kind: 'weapon',
   name: 'Fists',
   affinity: 'monk',
+  monkWeapon: true,
   category: 'simple',
   damage: '1d10',
   damageType: 'bludgeoning',
@@ -328,6 +331,7 @@ export const MONK_FISTS_GRANDMASTER: Weapon = WeaponSchema.parse({
   kind: 'weapon',
   name: 'Fists',
   affinity: 'monk',
+  monkWeapon: true,
   category: 'simple',
   damage: '1d12',
   damageType: 'bludgeoning',
@@ -335,6 +339,58 @@ export const MONK_FISTS_GRANDMASTER: Weapon = WeaponSchema.parse({
   cost: 0,
   rarity: 'common',
   description: 'The body perfected into a weapon — every strike a falling beam.',
+});
+
+// Bespoke monk arms — themed weapons that COUNT AS UNARMED (monkWeapon). Wielding
+// one keeps the full kit and the unarmed damage edge while letting the monk carry
+// rolled affixes + a +N enhancement on the main-hand (the per-hit gear a bare-
+// handed striker otherwise has no slot for). The strike still rides the level-
+// scaled Martial Arts die, not the listed damage — these dice are the off-the-
+// rack fallback for any non-monk who somehow swings one. Rollable monk loot.
+export const MONK_WAR_STAFF: Weapon = WeaponSchema.parse({
+  id: 'monk-war-staff',
+  kind: 'weapon',
+  name: 'War Staff',
+  affinity: 'monk',
+  monkWeapon: true,
+  category: 'simple',
+  damage: '1d6',
+  versatileDamage: '1d8',
+  damageType: 'bludgeoning',
+  properties: ['finesse', 'versatile'],
+  cost: 30,
+  rarity: 'common',
+  description: 'A hardwood staff spun in the forms — an extension of the empty hand, not a crutch for it.',
+});
+
+export const MONK_PAIRED_KAMA: Weapon = WeaponSchema.parse({
+  id: 'monk-paired-kama',
+  kind: 'weapon',
+  name: 'Paired Kama',
+  affinity: 'monk',
+  monkWeapon: true,
+  category: 'simple',
+  damage: '1d4',
+  damageType: 'slashing',
+  properties: ['finesse', 'light'],
+  cost: 30,
+  rarity: 'common',
+  description: 'Twin short blades that flow with the flurry — they cut where a fist would only bruise.',
+});
+
+export const MONK_TEMPLE_GLAIVE: Weapon = WeaponSchema.parse({
+  id: 'monk-temple-glaive',
+  kind: 'weapon',
+  name: 'Temple Glaive',
+  affinity: 'monk',
+  monkWeapon: true,
+  category: 'simple',
+  damage: '1d6',
+  damageType: 'slashing',
+  properties: ['finesse', 'reach'],
+  cost: 35,
+  rarity: 'common',
+  description: 'A reaching haft the gate-guardians drilled with — distance folded into the form.',
 });
 
 export const ALL_WEAPONS: Weapon[] = [
@@ -360,4 +416,7 @@ export const ALL_WEAPONS: Weapon[] = [
   MONK_FISTS_ADEPT,
   MONK_FISTS_MASTER,
   MONK_FISTS_GRANDMASTER,
+  MONK_WAR_STAFF,
+  MONK_PAIRED_KAMA,
+  MONK_TEMPLE_GLAIVE,
 ];

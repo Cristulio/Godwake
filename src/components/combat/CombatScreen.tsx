@@ -24,6 +24,7 @@ import {
   usePatientDefense,
   useStunningStrike,
   martialArtsWeaponId,
+  monkFightsUnarmed,
   useConsumable,
   castSpell,
   chooseCombatAction,
@@ -422,10 +423,11 @@ export function CombatScreen({
       return;
     }
     const roller = getActiveRoller();
-    // A monk always strikes unarmed with its level-scaled Martial Arts die, not
-    // the weapon hanging at its side.
+    // A monk fighting unarmed-style (bare hands or a monk weapon) strikes with
+    // its level-scaled Martial Arts die; a monk who took up an ordinary weapon
+    // swings that weapon plainly, kit dark.
     const weaponId =
-      character.classId === 'monk'
+      character.classId === 'monk' && monkFightsUnarmed(character)
         ? martialArtsWeaponId(character)
         : character.equipped.mainHand?.itemId;
     if (!weaponId) return;

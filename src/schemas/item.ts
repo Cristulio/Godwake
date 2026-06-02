@@ -38,6 +38,14 @@ export const WeaponSchema = z.object({
    */
   affinity: ClassIdSchema.optional(),
   /**
+   * Counts as unarmed for a Monk: wielding it grants the full Martial Arts kit
+   * (level-scaled die, Flurry, Stunning Strike, all Ki spends) and the unarmed
+   * damage edge, exactly as fighting bare-handed. An ordinary weapon (this flag
+   * unset) is a plain swing for a monk — the kit goes dark. Ignored by every
+   * other class.
+   */
+  monkWeapon: z.boolean().optional(),
+  /**
    * Inherent to-hit modifier — the accuracy lever. The accurate weapon of a
    * redundant pair carries +N here in exchange for a smaller damage die (the
    * shortbow trades the longbow's larger die for +2 to hit).

@@ -10,6 +10,8 @@ import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
+  monkFightsUnarmed,
+  isMonkWeaponId,
 } from './monk';
 import {
   CLASS_UNLOCK_DELVE,
@@ -30,6 +32,16 @@ function makeMonk(level = 1, subclassId: string | null = null): Character {
   const base = buildPlayerCharacter(presetCreationInput('monk'));
   const c: Character = { ...base, level, subclassId };
   return { ...c, resources: { ...c.resources, kiPointsRemaining: monkKiMax(c) } };
+}
+
+function withMainHand(c: Character, itemId: string | null, enhancement = 0): Character {
+  const mainHand =
+    itemId === null
+      ? null
+      : enhancement > 0
+        ? { itemId, rolled: { baseId: itemId, rarity: 'green' as const, affixes: [], enhancement, name: itemId } }
+        : { itemId };
+  return { ...c, equipped: { ...c.equipped, mainHand } };
 }
 
 function monsterOf(state: CombatState): MonsterCombatant {
@@ -283,6 +295,75 @@ describe('Monk — combat wiring', () => {
     expect(m.instance.staggeredTurns).toBe(1);
     expect(r.character.stunningStrikeActive ?? false).toBe(false);
     expect(kiAfterArm).toBe((init.character.resources.kiPointsRemaining ?? 0) - 1);
+  });
+});
+
+describe('Monk — unarmed gating (kit + damage edge)', () => {
+  it('counts bare hands and monk weapons as unarmed, ordinary weapons not', () => {
+    expect(isMonkWeaponId('monk-fists')).toBe(true);
+    expect(isMonkWeaponId('monk-war-staff')).toBe(true);
+    expect(isMonkWeaponId('shortsword')).toBe(false);
+
+    expect(monkFightsUnarmed(withMainHand(makeMonk(5), null))).toBe(true);
+    expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'monk-war-staff'))).toBe(true);
+    expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'shortsword'))).toBe(false);
+  });
+
+  it('lands the unarmed damage edge bare-handed and with a monk weapon', () => {
+    const roller = scriptRoller([18]);
+    for (const itemId of [null, 'monk-war-staff'] as const) {
+      const monk = withMainHand(makeMonk(5), itemId);
+      const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('goblin') }] });
+      const targetId = monsterOf(init.state).id;
+      const r = playerAttack(
+        { roller, character: init.character, state: init.state },
+        targetId,
+        martialArtsWeaponId(init.character),
+      );
+      expect(r.state.log.some((e) => /martial arts/i.test(e.text))).toBe(true);
+    }
+  });
+
+  it('turns the kit dark with an ordinary weapon — no flurry, no damage edge', () => {
+    const roller = scriptRoller([18]);
+    const monk = withMainHand(makeMonk(5), 'shortsword');
+    const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('goblin') }] });
+
+    // Flurry of Blows refuses to arm and spends no Ki.
+    const flurried = useFlurryOfBlows({ character: init.character, state: init.state });
+    expect(flurried.character.flurryStrikesRemaining ?? 0).toBe(0);
+    expect(flurried.character.resources.kiPointsRemaining).toBe(
+      init.character.resources.kiPointsRemaining,
+    );
+
+    // A plain shortsword swing carries no martial-arts / ki edge.
+    const targetId = monsterOf(init.state).id;
+    const r = playerAttack({ roller, character: init.character, state: init.state }, targetId, 'shortsword');
+    expect(r.state.log.some((e) => /martial arts/i.test(e.text))).toBe(false);
+  });
+
+  it('carries per-hit Grove edges + enhancement onto every Flurry strike', () => {
+    // Force three landing hits; Whetstone (+3 Grove damage) and a +2 monk-weapon
+    // enhancement must ride the bonus flurry strikes, not just the first swing.
+    const roller = scriptRoller([18, 18, 18]);
+    const base = withMainHand(makeMonk(1), 'monk-war-staff', 2);
+    const monk: Character = { ...base, permanentBonuses: { ...base.permanentBonuses, damage: 3 } };
+    const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('blue-wyrmling') }] });
+    const targetId = monsterOf(init.state).id;
+
+    const flurried = useFlurryOfBlows({ character: init.character, state: init.state });
+    expect(flurried.character.flurryStrikesRemaining).toBe(2);
+
+    const weaponId = martialArtsWeaponId(flurried.character);
+    // Strike 1 spends the action; strikes 2 & 3 are the bonus flurry strikes.
+    let r = playerAttack({ roller, character: flurried.character, state: flurried.state }, targetId, weaponId);
+    r = playerAttack({ roller, character: r.character, state: r.state }, targetId, weaponId);
+    expect(r.character.flurryStrikesRemaining).toBe(1);
+    const damageLines = r.state.log.filter((e) => e.kind === 'damage');
+    const lastFlurryLine = damageLines[damageLines.length - 1].text;
+    expect(lastFlurryLine).toMatch(/Whetstone/);
+    expect(lastFlurryLine).toMatch(/enhancement/);
+    expect(lastFlurryLine).toMatch(/martial arts/);
   });
 });
 
