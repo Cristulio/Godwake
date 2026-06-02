@@ -121,6 +121,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
   }, [placed, byId, visited, reachable, current]);
 
   const detail = hovered;
+  const detailTwist = detail ? getTwist(detail.twistId) : undefined;
   const chapterName = delve.rooms.find((r) => r.chapter === chapter && r.kind === 'boss')?.title;
 
   return (
@@ -260,9 +261,9 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
             <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
               {KIND_BLURB[detail.kind]}
             </div>
-            {getTwist(detail.twistId) && (
+            {detailTwist && (
               <div className="text-[var(--color-accent-blood)] text-xs italic mt-1 leading-relaxed">
-                ✦ {getTwist(detail.twistId)!.telegraph}
+                ✦ {detailTwist.telegraph}
               </div>
             )}
           </>

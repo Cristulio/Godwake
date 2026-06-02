@@ -23,6 +23,7 @@ import { useMetaStore } from './metaStore';
 import { useScreenStore, type Screen } from './screenStore';
 import { migrateV1ToV2, SAVE_VERSION } from './persistMigration';
 import { isFeatureUnlocked } from '../engine/progression/unlocks';
+import { loadDelveFactory } from '../engine/delve/loadDelveFactory';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
 export type { Screen };
@@ -629,7 +630,8 @@ export const useGameStore = create<GameState>()(
             chaptersCleared: meta.chaptersCleared,
             druidGroveUnlocked: meta.druidGroveUnlocked,
           });
-          const { createGodwakeDelve } = await import('../engine/delve');
+          const createGodwakeDelve = await loadDelveFactory();
+          if (!createGodwakeDelve) return; // chunk load failed — recovery reload in flight
           const delve = createGodwakeDelve({
             ascension: meta.selectedAscension,
             elitesEnabled,
@@ -693,7 +695,8 @@ export const useGameStore = create<GameState>()(
           const meta = useMetaStore.getState();
           const ch = useCharacterStore.getState().character;
           if (!meta.hasReincarnated && ch) {
-            const { createGodwakeDelve } = await import('../engine/delve');
+            const createGodwakeDelve = await loadDelveFactory();
+            if (!createGodwakeDelve) return; // chunk load failed — recovery reload in flight
             useDelveStore.getState().startDelve(createGodwakeDelve());
           } else {
             useScreenStore.getState().setScreen('hub');

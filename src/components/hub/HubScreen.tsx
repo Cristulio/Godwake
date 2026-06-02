@@ -10,6 +10,7 @@ import { LegendaryScreen } from './LegendaryScreen';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
+import { loadDelveFactory } from '../../engine/delve/loadDelveFactory';
 
 export function HubScreen() {
   const character = useGameStore((s) => s.character);
@@ -58,7 +59,8 @@ export function HubScreen() {
     // soul; every descent of the run (incl. post-death re-descents) reuses it.
     // createGodwakeDelve pulls the full chapter/bestiary graph — load it on
     // descend so it stays out of the initial bundle.
-    const { createGodwakeDelve } = await import('../../engine/delve');
+    const createGodwakeDelve = await loadDelveFactory();
+    if (!createGodwakeDelve) return; // chunk load failed — recovery reload in flight
     const delve = createGodwakeDelve({ ascension: selectedAscension, elitesEnabled });
     startDelve(delve);
   }
