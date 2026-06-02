@@ -4,34 +4,54 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Godsblood Welter"
     >
-      <!-- base shadow -->
-      <ellipse cx="14" cy="22" rx="13" ry="2" fill="#3a2a18" />
+      <!-- Divine backlight + ground shadow -->
+      <ellipse cx="14" cy="14" rx="13" ry="11" fill="#f0c870" opacity="0.1" />
+      <ellipse cx="14" cy="22" rx="13" ry="2" fill="#000" opacity="0.38" />
 
-      <!-- welling luminous mass -->
-      <ellipse cx="14" cy="16" rx="12" ry="7" fill="#b88838" />
+      <!-- Welling luminous mass — gold ramp, lit upper-left -->
+      <ellipse cx="14" cy="16" rx="12" ry="7" fill="#9a6e2a" />
+      <ellipse cx="14" cy="15" rx="11" ry="6.5" fill="#b88838" />
       <ellipse cx="14" cy="14" rx="10" ry="6" fill="#d4a850" />
       <ellipse cx="12" cy="13" rx="6" ry="4" fill="#f0c870" />
-      <ellipse cx="11" cy="12" rx="3" ry="2" fill="#fff0c0" opacity="0.8" />
+      <ellipse cx="11" cy="12" rx="3" ry="2" fill="#fff0c0" />
+      <!-- Shadowed underbelly -->
+      <ellipse cx="16" cy="19" rx="9" ry="3" fill="#6a4a18" opacity="0.6" />
 
-      <!-- inner glow / divinity -->
-      <circle cx="13" cy="14" r="2" fill="#fff8e0" opacity="0.7" />
+      <!-- Inner divine core -->
+      <circle cx="13" cy="14" r="2.2" fill="#fff8e0" />
+      <circle cx="12.5" cy="13.5" r="1" fill="#ffffff" />
 
-      <!-- dripping edges -->
-      <rect x="5" y="19" width="2" height="3" fill="#b88838" />
+      <!-- Dither at the tone boundary -->
+      <rect x="6" y="15" width="1" height="1" fill="#d4a850" />
+      <rect x="21" y="15" width="1" height="1" fill="#9a6e2a" />
+      <rect x="9" y="18" width="1" height="1" fill="#b88838" />
+      <rect x="18" y="11" width="1" height="1" fill="#f0c870" />
+
+      <!-- Dripping edges — ramped -->
+      <rect x="5" y="19" width="2" height="3" fill="#9a6e2a" />
+      <rect x="5" y="19" width="1" height="2" fill="#b88838" />
       <rect x="10" y="20" width="2" height="3" fill="#d4a850" />
-      <rect x="18" y="20" width="2" height="3" fill="#d4a850" />
-      <rect x="22" y="19" width="2" height="2" fill="#b88838" />
+      <rect x="10" y="20" width="1" height="2" fill="#f0c870" />
+      <rect x="18" y="20" width="2" height="3" fill="#b88838" />
+      <rect x="22" y="19" width="2" height="2" fill="#9a6e2a" />
 
-      <!-- rising dissolving pseudopod -->
-      <rect x="20" y="4" width="3" height="10" fill="#d4a850" />
+      <!-- Rising dissolving pseudopod -->
+      <rect x="20" y="4" width="3" height="10" fill="#b88838" />
+      <rect x="20" y="4" width="1" height="10" fill="#d4a850" />
+      <rect x="22" y="5" width="1" height="9" fill="#8a5e22" />
       <rect x="20" y="3" width="4" height="3" fill="#f0c870" />
-      <rect x="21" y="1" width="2" height="2" fill="#fff0c0" opacity="0.85" />
-      <!-- a second forming limb -->
-      <rect x="5" y="9" width="2" height="6" fill="#c89840" />
-      <rect x="4" y="8" width="3" height="2" fill="#e0b860" />
+      <rect x="21" y="1" width="2" height="2" fill="#fff0c0" />
+      <rect x="21" y="1" width="1" height="1" fill="#fffaf0" />
 
-      <!-- scattered bright motes -->
+      <!-- Second forming limb -->
+      <rect x="5" y="9" width="2" height="6" fill="#b88838" />
+      <rect x="5" y="9" width="1" height="6" fill="#d4a850" />
+      <rect x="4" y="8" width="3" height="2" fill="#e0b860" />
+      <rect x="4" y="8" width="1" height="1" fill="#fff0c0" />
+
+      <!-- Scattered bright motes -->
       <rect x="8" y="15" width="1" height="1" fill="#fff8e0" />
       <rect x="17" y="13" width="1" height="1" fill="#fff8e0" />
       <rect x="15" y="17" width="1" height="1" fill="#fff8e0" />
+      <rect x="24" y="9" width="1" height="1" fill="#ffe8b0" opacity="0.7" />
     </svg>

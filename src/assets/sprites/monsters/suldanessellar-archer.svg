@@ -4,39 +4,65 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Charmed Suldanessellar Archer"
     >
-      <ellipse cx="13" cy="29" rx="10" ry="5" fill="#0e1a12" opacity="0.35" />
+      <!-- Sylvan backlight + ground shadow -->
+      <ellipse cx="13" cy="17" rx="11" ry="15" fill="#3a7a3a" opacity="0.07" />
+      <ellipse cx="13" cy="29" rx="9" ry="1.6" fill="#000" opacity="0.4" />
 
-      <rect x="9" y="3" width="7" height="8" fill="#cdbd9a" />
+      <!-- Head — tan ramp, key upper-left + pointed ears -->
+      <rect x="9" y="3" width="7" height="8" fill="#b09a76" />
       <rect x="9" y="3" width="7" height="1" fill="#dccba6" />
-      <rect x="9" y="10" width="7" height="1" fill="#b09a76" />
-      <rect x="10" y="6" width="2" height="1" fill="#3a5a3a" />
-      <rect x="13" y="6" width="2" height="1" fill="#3a5a3a" />
+      <rect x="9" y="3" width="2" height="7" fill="#cdbd9a" />
+      <rect x="9" y="3" width="1" height="6" fill="#e6d6b0" />
+      <rect x="14" y="4" width="2" height="6" fill="#a08858" />
+      <rect x="15" y="4" width="1" height="6" fill="#8a7448" />
+      <rect x="9" y="10" width="7" height="1" fill="#a08858" />
+      <polygon points="9,4 6,2 9,7" fill="#cdbd9a" />
+      <polygon points="9,4 7,3 9,6" fill="#dccba6" />
+      <polygon points="16,4 19,2 16,7" fill="#a08858" />
+      <!-- Headband -->
+      <rect x="9" y="2" width="7" height="2" fill="#243e24" />
+      <rect x="9" y="2" width="7" height="1" fill="#34543a" />
+      <rect x="11" y="1" width="3" height="1" fill="#3a5a3a" />
+      <!-- Green eyes + spark -->
+      <rect x="10" y="6" width="2" height="1" fill="#2e4a2e" />
+      <rect x="13" y="6" width="2" height="1" fill="#2e4a2e" />
       <rect x="10" y="6" width="1" height="1" fill="#7ad07a" />
       <rect x="13" y="6" width="1" height="1" fill="#7ad07a" />
-      <polygon points="9,4 6,2 9,7" fill="#cdbd9a" />
-      <polygon points="16,4 19,2 16,7" fill="#cdbd9a" />
-      <rect x="9" y="2" width="7" height="2" fill="#2e4a2e" />
-      <rect x="11" y="1" width="3" height="1" fill="#3a5a3a" />
 
-      <rect x="9" y="11" width="8" height="12" fill="#27402a" />
-      <rect x="9" y="11" width="8" height="1" fill="#34543a" />
-      <polygon points="9,11 17,11 15,23 11,23" fill="#1c3020" opacity="0.6" />
-      <rect x="12" y="12" width="2" height="11" fill="#3a5a3a" opacity="0.55" />
-      <rect x="10" y="14" width="6" height="1" fill="#6a8a5a" opacity="0.4" />
+      <!-- Tunic torso — leaf-green ramp -->
+      <rect x="9" y="11" width="8" height="12" fill="#243a26" />
+      <rect x="9" y="11" width="8" height="1" fill="#3a5a3a" />
+      <rect x="9" y="11" width="2" height="11" fill="#27402a" />
+      <rect x="9" y="11" width="1" height="10" fill="#34543a" />
+      <rect x="15" y="12" width="2" height="11" fill="#1c3020" />
+      <rect x="12" y="12" width="2" height="11" fill="#34543a" opacity="0.6" />
+      <rect x="10" y="14" width="6" height="1" fill="#6a8a5a" opacity="0.45" />
+      <!-- Dither -->
+      <rect x="11" y="18" width="1" height="1" fill="#34543a" />
+      <rect x="14" y="20" width="1" height="1" fill="#1c3020" />
 
+      <!-- Arms + tan hands -->
       <rect x="15" y="12" width="4" height="2" fill="#27402a" />
+      <rect x="15" y="12" width="4" height="1" fill="#34543a" />
       <rect x="19" y="13" width="2" height="2" fill="#cdbd9a" />
-      <rect x="5" y="12" width="4" height="2" fill="#27402a" />
+      <rect x="19" y="13" width="2" height="1" fill="#dccba6" />
+      <rect x="5" y="12" width="4" height="2" fill="#243a26" />
       <rect x="3" y="13" width="2" height="3" fill="#cdbd9a" />
+      <rect x="3" y="13" width="2" height="1" fill="#dccba6" />
 
-      <path d="M 4 4 Q -1 16 4 28" fill="none" stroke="#8a6a3a" stroke-width="1.2" />
-      <path d="M 4 4 Q 1 16 4 28" fill="none" stroke="#c8a85a" stroke-width="0.4" />
+      <!-- Longbow + nocked arrow -->
+      <path d="M 4 4 Q -1 16 4 28" fill="none" stroke="#7a5e34" stroke-width="1.2" />
+      <path d="M 4 4 Q 0 16 4 28" fill="none" stroke="#c8a85a" stroke-width="0.4" />
       <line x1="4" y1="4" x2="4" y2="28" stroke="#e8e2d2" stroke-width="0.4" opacity="0.7" />
       <line x1="4" y1="16" x2="20" y2="16" stroke="#d8cdb0" stroke-width="0.6" />
       <polygon points="20,16 18,15 18,17" fill="#e8e2d2" />
+      <rect x="19" y="15" width="1" height="1" fill="#ffffff" opacity="0.7" />
 
+      <!-- Legs -->
       <rect x="9" y="23" width="3" height="7" fill="#22361f" />
-      <rect x="14" y="23" width="3" height="7" fill="#22361f" />
+      <rect x="9" y="23" width="1" height="7" fill="#2e4a2e" />
+      <rect x="14" y="23" width="3" height="7" fill="#1a2c18" />
+      <rect x="14" y="23" width="1" height="7" fill="#22361f" />
       <rect x="9" y="29" width="4" height="1" fill="#0e1a12" />
       <rect x="14" y="29" width="4" height="1" fill="#0e1a12" />
       <rect x="6" y="9" width="1" height="1" fill="#7ad07a" opacity="0.5" />

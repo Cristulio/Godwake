@@ -4,29 +4,48 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Driderling"
     >
+      <!-- Webbed-dark backlight + ground shadow -->
+      <ellipse cx="11" cy="11" rx="10" ry="7" fill="#6a2a5a" opacity="0.08" />
+      <ellipse cx="11" cy="17" rx="7" ry="1.3" fill="#000" opacity="0.36" />
 
-      <ellipse cx="11" cy="12" rx="7" ry="5" fill="#1a0a18" />
+      <!-- Legs — chitin lines with a paler upper-edge highlight -->
+      <line x1="4" y1="10" x2="1" y2="6" stroke="#160a14" stroke-width="0.9" />
+      <line x1="4" y1="12" x2="1" y2="11" stroke="#160a14" stroke-width="0.9" />
+      <line x1="4" y1="14" x2="1" y2="15" stroke="#160a14" stroke-width="0.9" />
+      <line x1="4" y1="15" x2="1" y2="18" stroke="#160a14" stroke-width="0.9" />
+      <line x1="4" y1="10" x2="1.5" y2="7" stroke="#3a1830" stroke-width="0.3" />
+      <line x1="4" y1="12" x2="1.5" y2="11" stroke="#3a1830" stroke-width="0.3" />
+
+      <line x1="18" y1="10" x2="21" y2="6" stroke="#120810" stroke-width="0.9" />
+      <line x1="18" y1="12" x2="21" y2="11" stroke="#120810" stroke-width="0.9" />
+      <line x1="18" y1="14" x2="21" y2="15" stroke="#120810" stroke-width="0.9" />
+      <line x1="18" y1="15" x2="21" y2="18" stroke="#120810" stroke-width="0.9" />
+
+      <!-- Leg-tip claws -->
+      <polygon points="1,6 0,4 2,6" fill="#160a14" />
+      <polygon points="21,6 22,4 20,6" fill="#120810" />
+      <polygon points="1,18 0,20 2,18" fill="#160a14" />
+      <polygon points="21,18 22,20 20,18" fill="#120810" />
+
+      <!-- Abdomen — purple-black ramp, lit upper-left -->
+      <ellipse cx="11" cy="12" rx="7" ry="5" fill="#160a14" />
       <ellipse cx="11" cy="11" rx="6" ry="4" fill="#2a1024" />
+      <ellipse cx="10" cy="10" rx="4" ry="2.5" fill="#3a1830" />
+      <ellipse cx="9" cy="9.5" rx="2" ry="1.2" fill="#4a2440" />
+      <!-- Spinneret sheen + dither -->
+      <rect x="9" y="9" width="1" height="1" fill="#5a3050" />
+      <rect x="6" y="12" width="1" height="1" fill="#2a1024" />
+      <rect x="15" y="11" width="1" height="1" fill="#160a14" />
 
+      <!-- Clustered eyes — red with amber spark -->
       <rect x="8" y="9" width="2" height="1" fill="#b53c4a" />
       <rect x="12" y="9" width="2" height="1" fill="#b53c4a" />
       <rect x="8" y="9" width="1" height="1" fill="#f4d042" />
       <rect x="12" y="9" width="1" height="1" fill="#f4d042" />
+      <rect x="9" y="10" width="1" height="1" fill="#7a1828" />
+      <rect x="13" y="10" width="1" height="1" fill="#7a1828" />
 
+      <!-- Fanged maw -->
       <rect x="10" y="11" width="2" height="1" fill="#5a1208" />
-
-      <line x1="4" y1="10" x2="1" y2="6" stroke="#1a0a18" stroke-width="0.8" />
-      <line x1="4" y1="12" x2="1" y2="11" stroke="#1a0a18" stroke-width="0.8" />
-      <line x1="4" y1="14" x2="1" y2="15" stroke="#1a0a18" stroke-width="0.8" />
-      <line x1="4" y1="15" x2="1" y2="18" stroke="#1a0a18" stroke-width="0.8" />
-
-      <line x1="18" y1="10" x2="21" y2="6" stroke="#1a0a18" stroke-width="0.8" />
-      <line x1="18" y1="12" x2="21" y2="11" stroke="#1a0a18" stroke-width="0.8" />
-      <line x1="18" y1="14" x2="21" y2="15" stroke="#1a0a18" stroke-width="0.8" />
-      <line x1="18" y1="15" x2="21" y2="18" stroke="#1a0a18" stroke-width="0.8" />
-
-      <polygon points="1,6 0,4 2,6" fill="#1a0a18" />
-      <polygon points="21,6 22,4 20,6" fill="#1a0a18" />
-      <polygon points="1,18 0,20 2,18" fill="#1a0a18" />
-      <polygon points="21,18 22,20 20,18" fill="#1a0a18" />
+      <rect x="10" y="12" width="1" height="1" fill="#e8dcc4" opacity="0.6" />
     </svg>
