@@ -4,26 +4,47 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Threadbare Penitent"
     >
-      <ellipse cx="12" cy="8" rx="6" ry="6" fill="#6a6478" />
-      <ellipse cx="12" cy="9" rx="4" ry="5" fill="#2a2438" />
-      <rect x="11" y="8" width="2" height="2" fill="#9a90b0" opacity="0.7" />
+      <!-- Mournful backlight + ground shadow -->
+      <ellipse cx="12" cy="16" rx="11" ry="15" fill="#6a6488" opacity="0.08" />
+      <ellipse cx="12" cy="30" rx="7" ry="1.4" fill="#0a0810" opacity="0.32" />
 
+      <!-- Drawn hood — ramp + hollow face -->
+      <ellipse cx="12" cy="8" rx="6" ry="6" fill="#6a6478" />
+      <ellipse cx="11" cy="7" rx="5" ry="5" fill="#7a7488" opacity="0.7" />
+      <ellipse cx="12" cy="9" rx="4" ry="5" fill="#2a2438" />
+      <ellipse cx="12" cy="9" rx="2.5" ry="3.5" fill="#181222" />
+      <!-- Dim sorrow-eyes -->
+      <rect x="10" y="8" width="1" height="1" fill="#9a90b0" opacity="0.8" />
+      <rect x="13" y="8" width="1" height="1" fill="#9a90b0" opacity="0.8" />
+      <rect x="11" y="8" width="2" height="2" fill="#9a90b0" opacity="0.5" />
+
+      <!-- Ragged robe — ramp + dither -->
       <rect x="6" y="13" width="12" height="13" fill="#5a5468" />
+      <rect x="6" y="13" width="3" height="13" fill="#6a6478" />
+      <rect x="6" y="13" width="1" height="13" fill="#7a7488" />
+      <rect x="16" y="13" width="2" height="13" fill="#4a4458" />
       <rect x="6" y="13" width="12" height="1" fill="#3a3548" />
       <rect x="11" y="14" width="2" height="12" fill="#4a4458" />
       <rect x="8" y="16" width="1" height="9" fill="#6a6478" opacity="0.6" />
-      <rect x="15" y="16" width="1" height="9" fill="#6a6478" opacity="0.6" />
+      <rect x="15" y="16" width="1" height="9" fill="#4a4458" opacity="0.7" />
+      <rect x="9" y="18" width="1" height="1" fill="#6a6478" />
+      <rect x="14" y="22" width="1" height="1" fill="#3a3548" />
 
+      <!-- Withered arms -->
       <rect x="2" y="17" width="4" height="2" fill="#7a7488" />
-      <rect x="18" y="17" width="4" height="2" fill="#7a7488" />
+      <rect x="2" y="17" width="4" height="1" fill="#8a8498" />
+      <rect x="18" y="17" width="4" height="2" fill="#6a6478" />
       <rect x="0" y="18" width="2" height="1" fill="#8a8498" />
-      <rect x="22" y="18" width="2" height="1" fill="#8a8498" />
+      <rect x="22" y="18" width="2" height="1" fill="#7a7488" />
 
+      <!-- Tattered hem -->
       <polygon points="6,26 7,30 8,26" fill="#5a5468" />
       <polygon points="9,26 10,29 11,26" fill="#5a5468" />
-      <polygon points="13,26 14,30 15,26" fill="#5a5468" />
-      <polygon points="16,26 17,29 18,26" fill="#5a5468" />
+      <polygon points="13,26 14,30 15,26" fill="#4a4458" />
+      <polygon points="16,26 17,29 18,26" fill="#4a4458" />
+      <polygon points="6,26 7,29 7,26" fill="#6a6478" opacity="0.6" />
 
+      <!-- Frayed threads -->
       <line x1="7" y1="30" x2="6" y2="32" stroke="#7a7488" stroke-width="0.5" />
       <line x1="14" y1="30" x2="15" y2="32" stroke="#7a7488" stroke-width="0.5" />
       <line x1="1" y1="19" x2="0" y2="22" stroke="#7a7488" stroke-width="0.5" />

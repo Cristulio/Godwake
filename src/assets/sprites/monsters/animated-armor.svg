@@ -4,75 +4,114 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Animated Armor"
     >
+      <!-- Binding-magic backlight + ground shadow -->
+      <ellipse cx="11" cy="20" rx="11" ry="18" fill="#3a8c5a" opacity="0.06" />
+      <ellipse cx="11" cy="39" rx="8" ry="1.6" fill="#000" opacity="0.42" />
 
+      <!-- Crest ember -->
       <rect x="10" y="0" width="2" height="1" fill="#b5302c" />
-      <rect x="11" y="-1" width="1" height="1" fill="#b5302c" />
+      <rect x="11" y="-1" width="1" height="1" fill="#d8584a" />
 
-      <rect x="7" y="1" width="8" height="2" fill="#6a625a" />
+      <!-- Helm dome — steel ramp, key upper-left + cool rim -->
+      <rect x="7" y="1" width="8" height="2" fill="#5a5248" />
       <rect x="6" y="2" width="10" height="6" fill="#7a7268" />
-      <rect x="5" y="3" width="1" height="5" fill="#5a5248" />
-      <rect x="16" y="3" width="1" height="5" fill="#5a5248" />
+      <rect x="6" y="2" width="3" height="6" fill="#9a928a" />
+      <rect x="6" y="2" width="1" height="4" fill="#b4aca0" />
+      <rect x="14" y="2" width="2" height="6" fill="#5a5248" />
+      <rect x="5" y="3" width="1" height="5" fill="#3a3228" />
+      <rect x="16" y="3" width="1" height="5" fill="#6a7280" />
+      <rect x="7" y="1" width="4" height="1" fill="#8a8278" />
 
+      <!-- Visor slit — hollow with green soul-fire + spark -->
       <rect x="7" y="5" width="8" height="2" fill="#0a0606" />
       <rect x="8" y="5" width="1" height="1" fill="#3a8c5a" />
       <rect x="13" y="5" width="1" height="1" fill="#3a8c5a" />
+      <rect x="8" y="5" width="1" height="1" fill="#a8d042" opacity="0.7" />
 
+      <!-- Lower face guard -->
       <rect x="7" y="7" width="8" height="2" fill="#5a5248" />
-
+      <rect x="7" y="7" width="3" height="1" fill="#7a7268" />
       <rect x="9" y="9" width="4" height="1" fill="#0a0606" />
 
+      <!-- Pauldrons — domed steel + spikes + specular -->
       <rect x="2" y="10" width="5" height="4" fill="#5a5248" />
       <rect x="15" y="10" width="5" height="4" fill="#5a5248" />
       <rect x="3" y="11" width="3" height="2" fill="#7a7268" />
       <rect x="16" y="11" width="3" height="2" fill="#7a7268" />
-
+      <rect x="3" y="11" width="2" height="1" fill="#9a928a" />
+      <rect x="2" y="10" width="5" height="1" fill="#6a7280" />
       <polygon points="2,10 1,8 3,10" fill="#3a3228" />
       <polygon points="20,10 21,8 19,10" fill="#3a3228" />
 
+      <!-- Breastplate — ramp + central groove -->
       <rect x="6" y="11" width="10" height="11" fill="#6a625a" />
       <rect x="5" y="12" width="12" height="9" fill="#7a7268" />
+      <rect x="5" y="12" width="3" height="9" fill="#9a928a" />
+      <rect x="5" y="12" width="1" height="9" fill="#b4aca0" />
+      <rect x="15" y="12" width="2" height="9" fill="#5a5248" />
       <rect x="5" y="12" width="12" height="1" fill="#5a5248" />
-
-      <rect x="10" y="13" width="2" height="8" fill="#5a5248" />
-
+      <rect x="10" y="13" width="2" height="8" fill="#4a443c" />
+      <!-- Soul-core — green binding flame -->
+      <rect x="9" y="16" width="4" height="2" fill="#1a4028" />
       <rect x="9" y="16" width="4" height="2" fill="#3a8c5a" />
       <rect x="10" y="17" width="2" height="1" fill="#a8d042" />
+      <rect x="10" y="16" width="1" height="1" fill="#d4f078" />
+      <!-- Plate dither -->
+      <rect x="8" y="14" width="1" height="1" fill="#9a928a" />
+      <rect x="13" y="19" width="1" height="1" fill="#4a443c" />
 
+      <!-- Faulds belt -->
       <rect x="5" y="22" width="12" height="3" fill="#5a5248" />
       <rect x="5" y="22" width="12" height="1" fill="#3a3228" />
+      <rect x="5" y="24" width="12" height="1" fill="#2a241c" />
       <rect x="7" y="23" width="1" height="2" fill="#3a3228" />
       <rect x="10" y="23" width="1" height="2" fill="#3a3228" />
       <rect x="13" y="23" width="1" height="2" fill="#3a3228" />
 
+      <!-- Arms — vambraces ramp -->
       <rect x="3" y="14" width="3" height="3" fill="#7a7268" />
       <rect x="16" y="14" width="3" height="3" fill="#7a7268" />
+      <rect x="3" y="14" width="1" height="3" fill="#9a928a" />
+      <rect x="18" y="14" width="1" height="3" fill="#6a7280" />
       <rect x="3" y="17" width="2" height="1" fill="#3a3228" />
       <rect x="17" y="17" width="2" height="1" fill="#3a3228" />
       <rect x="3" y="18" width="3" height="5" fill="#7a7268" />
       <rect x="16" y="18" width="3" height="5" fill="#7a7268" />
+      <rect x="3" y="18" width="1" height="5" fill="#9a928a" />
+      <rect x="18" y="18" width="1" height="5" fill="#5a5248" />
 
+      <!-- Gauntlet cuffs -->
       <rect x="2" y="23" width="5" height="3" fill="#3a3228" />
       <rect x="15" y="23" width="5" height="3" fill="#3a3228" />
       <rect x="3" y="24" width="3" height="1" fill="#7a7268" />
       <rect x="16" y="24" width="3" height="1" fill="#7a7268" />
 
-      <rect x="18" y="6" width="2" height="18" fill="#3a2e22" />
+      <!-- Floating greatsword — steel ramp + specular edge -->
+      <rect x="18" y="6" width="2" height="18" fill="#5a5248" />
+      <rect x="18" y="6" width="1" height="18" fill="#9aa0ac" />
+      <rect x="18" y="8" width="1" height="3" fill="#e8eef8" />
       <rect x="17" y="3" width="4" height="4" fill="#5a5248" />
+      <rect x="17" y="3" width="1" height="4" fill="#7a7268" />
       <rect x="16" y="4" width="6" height="2" fill="#3a3228" />
       <rect x="17" y="2" width="1" height="1" fill="#3a3228" />
       <rect x="20" y="2" width="1" height="1" fill="#3a3228" />
       <rect x="18" y="1" width="2" height="2" fill="#3a3228" />
 
+      <!-- Cuisses / greaves -->
       <rect x="6" y="25" width="4" height="9" fill="#7a7268" />
       <rect x="12" y="25" width="4" height="9" fill="#7a7268" />
-      <rect x="6" y="25" width="1" height="9" fill="#5a5248" />
+      <rect x="6" y="25" width="1" height="9" fill="#9a928a" />
+      <rect x="9" y="25" width="1" height="9" fill="#4a443c" />
       <rect x="12" y="25" width="1" height="9" fill="#5a5248" />
-
+      <rect x="15" y="25" width="1" height="9" fill="#4a443c" />
       <rect x="6" y="29" width="4" height="2" fill="#3a3228" />
       <rect x="12" y="29" width="4" height="2" fill="#3a3228" />
 
+      <!-- Sabatons -->
       <rect x="5" y="34" width="6" height="4" fill="#3a3228" />
       <rect x="11" y="34" width="6" height="4" fill="#3a3228" />
-      <polygon points="5,38 7,40 11,38" fill="#3a3228" />
-      <polygon points="11,38 13,40 17,38" fill="#3a3228" />
+      <rect x="5" y="34" width="6" height="1" fill="#5a5248" />
+      <rect x="11" y="34" width="6" height="1" fill="#4a443c" />
+      <polygon points="5,38 7,40 11,38" fill="#2a241c" />
+      <polygon points="11,38 13,40 17,38" fill="#2a241c" />
     </svg>

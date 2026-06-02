@@ -4,66 +4,91 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Ghoul"
     >
+      <!-- Sickly carrion backlight + ground-contact shadow -->
+      <ellipse cx="11" cy="16" rx="10" ry="15" fill="#4a7a52" opacity="0.07" />
+      <ellipse cx="11" cy="33" rx="7" ry="1.4" fill="#000" opacity="0.4" />
 
+      <!-- Tufts of dead hair -->
       <rect x="7" y="1" width="1" height="2" fill="#2a1a10" />
       <rect x="11" y="0" width="2" height="2" fill="#2a1a10" />
       <rect x="14" y="2" width="1" height="1" fill="#2a1a10" />
 
-      <rect x="6" y="2" width="10" height="9" fill="#8a8a78" />
-      <rect x="6" y="2" width="10" height="1" fill="#6a6a58" />
-      <rect x="5" y="4" width="1" height="5" fill="#6a6a58" />
-      <rect x="16" y="4" width="1" height="5" fill="#6a6a58" />
+      <!-- Skull-tight head — pallid grey-green ramp, key upper-left -->
+      <rect x="6" y="2" width="10" height="9" fill="#6a6a58" />
+      <rect x="6" y="2" width="10" height="1" fill="#44443a" />
+      <rect x="6" y="3" width="3" height="7" fill="#8a8a78" />
+      <rect x="6" y="3" width="1" height="5" fill="#a4a48e" />
+      <rect x="14" y="3" width="2" height="7" fill="#52524a" />
+      <rect x="5" y="4" width="1" height="5" fill="#44443a" />
+      <rect x="16" y="4" width="1" height="5" fill="#3a3a32" />
 
-      <rect x="6" y="7" width="2" height="2" fill="#5a5a48" />
-      <rect x="14" y="7" width="2" height="2" fill="#5a5a48" />
+      <!-- Sunken temples -->
+      <rect x="6" y="7" width="2" height="2" fill="#52524a" />
+      <rect x="14" y="7" width="2" height="2" fill="#3a3a32" />
 
+      <!-- Hollow eye sockets — gold ember + spark -->
       <rect x="7" y="4" width="3" height="3" fill="#0a0a08" />
       <rect x="12" y="4" width="3" height="3" fill="#0a0a08" />
-
       <rect x="8" y="5" width="1" height="1" fill="#c4a430" />
       <rect x="13" y="5" width="1" height="1" fill="#c4a430" />
+      <rect x="8" y="5" width="1" height="1" fill="#fff0a0" opacity="0.6" />
 
+      <!-- Pinched nasal hole -->
       <rect x="10" y="7" width="1" height="1" fill="#1a1410" />
       <rect x="11" y="7" width="1" height="1" fill="#1a1410" />
 
+      <!-- Gnashing maw — bright fangs in a dark mouth -->
       <rect x="6" y="9" width="10" height="3" fill="#1a1410" />
-      <rect x="7" y="9" width="1" height="2" fill="#d4c8a8" />
-      <rect x="9" y="9" width="1" height="3" fill="#d4c8a8" />
+      <rect x="7" y="9" width="1" height="2" fill="#e8dcc4" />
+      <rect x="9" y="9" width="1" height="3" fill="#e8dcc4" />
       <rect x="11" y="9" width="1" height="2" fill="#d4c8a8" />
       <rect x="13" y="9" width="1" height="3" fill="#d4c8a8" />
-
       <rect x="8" y="11" width="1" height="1" fill="#d4c8a8" />
       <rect x="10" y="11" width="1" height="1" fill="#d4c8a8" />
-      <rect x="12" y="11" width="1" height="1" fill="#d4c8a8" />
-
+      <rect x="12" y="11" width="1" height="1" fill="#b8ac90" />
       <rect x="9" y="12" width="1" height="2" fill="#a8c478" opacity="0.7" />
 
-      <rect x="9" y="11" width="4" height="2" fill="#6a6a58" />
+      <!-- Scrawny neck -->
+      <rect x="9" y="11" width="4" height="2" fill="#52524a" />
 
-      <rect x="3" y="13" width="16" height="2" fill="#8a8a78" />
-      <rect x="3" y="13" width="3" height="2" fill="#6a6a58" />
-      <rect x="16" y="13" width="3" height="2" fill="#6a6a58" />
+      <!-- Bony shoulders -->
+      <rect x="3" y="13" width="16" height="2" fill="#6a6a58" />
+      <rect x="3" y="13" width="16" height="1" fill="#8a8a78" />
+      <rect x="3" y="13" width="3" height="2" fill="#44443a" />
+      <rect x="16" y="13" width="3" height="2" fill="#3a3a32" />
+      <rect x="5" y="13" width="3" height="1" fill="#a4a48e" />
 
-      <rect x="5" y="15" width="12" height="9" fill="#8a8a78" />
-      <rect x="6" y="16" width="10" height="1" fill="#6a6a58" />
-      <rect x="6" y="18" width="10" height="1" fill="#6a6a58" />
-      <rect x="6" y="20" width="10" height="1" fill="#6a6a58" />
+      <!-- Gaunt ribbed torso — ramp + lit rib bars -->
+      <rect x="5" y="15" width="12" height="9" fill="#6a6a58" />
+      <rect x="5" y="15" width="3" height="9" fill="#8a8a78" />
+      <rect x="5" y="15" width="1" height="9" fill="#a4a48e" />
+      <rect x="15" y="15" width="2" height="9" fill="#52524a" />
+      <rect x="10" y="15" width="2" height="9" fill="#44443a" />
+      <rect x="6" y="16" width="9" height="1" fill="#52524a" />
+      <rect x="6" y="18" width="9" height="1" fill="#52524a" />
+      <rect x="6" y="20" width="9" height="1" fill="#3a3a32" />
+      <rect x="6" y="16" width="2" height="1" fill="#8a8a78" />
+      <rect x="6" y="18" width="2" height="1" fill="#8a8a78" />
+      <!-- Belly shadow + dither -->
+      <rect x="5" y="22" width="12" height="1" fill="#2e2e26" />
+      <rect x="9" y="17" width="1" height="1" fill="#52524a" />
+      <rect x="13" y="19" width="1" height="1" fill="#52524a" />
 
-      <rect x="10" y="15" width="2" height="9" fill="#5a5a48" />
+      <!-- Wasted arms -->
+      <rect x="2" y="15" width="3" height="9" fill="#6a6a58" />
+      <rect x="2" y="15" width="1" height="9" fill="#8a8a78" />
+      <rect x="4" y="15" width="1" height="9" fill="#44443a" />
+      <rect x="17" y="15" width="3" height="9" fill="#6a6a58" />
+      <rect x="19" y="15" width="1" height="9" fill="#3a3a32" />
+      <rect x="17" y="15" width="1" height="9" fill="#52524a" />
+      <rect x="3" y="17" width="1" height="1" fill="#a4a48e" />
+      <rect x="18" y="19" width="1" height="1" fill="#52524a" />
 
-      <rect x="5" y="17" width="12" height="1" fill="#3a2e22" />
-
-      <rect x="2" y="15" width="3" height="9" fill="#8a8a78" />
-      <rect x="17" y="15" width="3" height="9" fill="#8a8a78" />
-      <rect x="2" y="15" width="1" height="9" fill="#6a6a58" />
-      <rect x="19" y="15" width="1" height="9" fill="#6a6a58" />
-
-      <rect x="3" y="17" width="1" height="1" fill="#5a5a48" />
-      <rect x="18" y="19" width="1" height="1" fill="#5a5a48" />
-
-      <rect x="1" y="23" width="4" height="2" fill="#8a8a78" />
-      <rect x="17" y="23" width="4" height="2" fill="#8a8a78" />
-
+      <!-- Clawed hands -->
+      <rect x="1" y="23" width="4" height="2" fill="#6a6a58" />
+      <rect x="1" y="23" width="4" height="1" fill="#8a8a78" />
+      <rect x="17" y="23" width="4" height="2" fill="#6a6a58" />
+      <rect x="17" y="23" width="4" height="1" fill="#7a7a66" />
       <polygon points="1,25 0,28 2,26" fill="#3a3228" />
       <polygon points="3,25 2,28 4,26" fill="#3a3228" />
       <polygon points="5,25 5,28 6,26" fill="#3a3228" />
@@ -71,21 +96,27 @@
       <polygon points="19,25 18,26 20,28" fill="#3a3228" />
       <polygon points="21,25 20,26 21,28" fill="#3a3228" />
 
+      <!-- Tattered loincloth -->
       <rect x="5" y="24" width="12" height="3" fill="#3a2e22" />
-      <rect x="6" y="26" width="1" height="2" fill="#3a2e22" />
-      <rect x="9" y="26" width="1" height="3" fill="#3a2e22" />
-      <rect x="13" y="26" width="1" height="2" fill="#3a2e22" />
+      <rect x="5" y="24" width="12" height="1" fill="#52402e" />
+      <rect x="6" y="26" width="1" height="2" fill="#2a1f16" />
+      <rect x="9" y="26" width="1" height="3" fill="#2a1f16" />
+      <rect x="13" y="26" width="1" height="2" fill="#2a1f16" />
 
-      <rect x="6" y="27" width="3" height="5" fill="#8a8a78" />
-      <rect x="13" y="27" width="3" height="5" fill="#8a8a78" />
-      <rect x="6" y="27" width="1" height="5" fill="#6a6a58" />
-      <rect x="15" y="27" width="1" height="5" fill="#6a6a58" />
+      <!-- Spindly legs -->
+      <rect x="6" y="27" width="3" height="5" fill="#6a6a58" />
+      <rect x="13" y="27" width="3" height="5" fill="#6a6a58" />
+      <rect x="6" y="27" width="1" height="5" fill="#8a8a78" />
+      <rect x="8" y="27" width="1" height="5" fill="#44443a" />
+      <rect x="15" y="27" width="1" height="5" fill="#3a3a32" />
+      <rect x="6" y="29" width="3" height="1" fill="#52524a" />
+      <rect x="13" y="29" width="3" height="1" fill="#52524a" />
 
-      <rect x="6" y="29" width="3" height="1" fill="#5a5a48" />
-      <rect x="13" y="29" width="3" height="1" fill="#5a5a48" />
-
-      <rect x="5" y="32" width="5" height="2" fill="#8a8a78" />
-      <rect x="12" y="32" width="5" height="2" fill="#8a8a78" />
+      <!-- Splayed clawed feet -->
+      <rect x="5" y="32" width="5" height="2" fill="#6a6a58" />
+      <rect x="12" y="32" width="5" height="2" fill="#6a6a58" />
+      <rect x="5" y="32" width="5" height="1" fill="#8a8a78" />
+      <rect x="12" y="32" width="5" height="1" fill="#7a7a66" />
       <polygon points="5,34 4,33 6,34" fill="#3a3228" />
       <polygon points="9,34 9,33 11,34" fill="#3a3228" />
       <polygon points="13,34 12,33 14,34" fill="#3a3228" />

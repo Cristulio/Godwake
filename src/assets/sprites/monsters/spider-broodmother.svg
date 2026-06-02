@@ -4,36 +4,51 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Spider Broodmother"
     >
-      <!-- legs, splayed wide -->
+      <!-- Brood-glow backlight + ground shadow -->
+      <ellipse cx="16" cy="14" rx="14" ry="9" fill="#6a2a4a" opacity="0.08" />
+      <ellipse cx="15" cy="22" rx="11" ry="1.6" fill="#000" opacity="0.38" />
+
+      <!-- Legs, splayed wide — dark with chitin glints -->
       <line x1="9" y1="14" x2="2" y2="6" stroke="#1a0a18" stroke-width="1" />
       <line x1="9" y1="16" x2="1" y2="13" stroke="#1a0a18" stroke-width="1" />
       <line x1="9" y1="18" x2="2" y2="21" stroke="#1a0a18" stroke-width="1" />
       <line x1="21" y1="14" x2="28" y2="6" stroke="#1a0a18" stroke-width="1" />
       <line x1="21" y1="16" x2="29" y2="13" stroke="#1a0a18" stroke-width="1" />
       <line x1="21" y1="18" x2="28" y2="21" stroke="#1a0a18" stroke-width="1" />
+      <line x1="9" y1="14" x2="5" y2="10" stroke="#3a1530" stroke-width="0.5" opacity="0.7" />
+      <line x1="21" y1="14" x2="25" y2="10" stroke="#3a1530" stroke-width="0.5" opacity="0.7" />
 
-      <!-- swollen egg-laden abdomen -->
+      <!-- Swollen egg-laden abdomen — ramp, lit upper-left -->
       <ellipse cx="20" cy="15" rx="9" ry="7" fill="#1a0a18" />
       <ellipse cx="20" cy="14" rx="8" ry="6" fill="#2a1024" />
-      <!-- egg-sac glow markings -->
+      <ellipse cx="18" cy="12" rx="5" ry="4" fill="#3a1530" opacity="0.8" />
+      <ellipse cx="17" cy="11" rx="2" ry="2" fill="#4a1c40" opacity="0.6" />
+      <!-- Egg-sac glow markings + sparks -->
       <rect x="17" y="12" width="2" height="2" fill="#6a2a4a" />
       <rect x="21" y="11" width="2" height="2" fill="#6a2a4a" />
       <rect x="19" y="15" width="2" height="2" fill="#6a2a4a" />
-      <rect x="23" y="14" width="2" height="2" fill="#6a2a4a" />
+      <rect x="23" y="14" width="2" height="2" fill="#5a2440" />
       <rect x="18" y="12" width="1" height="1" fill="#b53c4a" />
-      <rect x="22" y="11" width="1" height="1" fill="#b53c4a" />
+      <rect x="22" y="11" width="1" height="1" fill="#d8586a" />
+      <rect x="20" y="15" width="1" height="1" fill="#b53c4a" />
+      <!-- abdomen dither -->
+      <rect x="24" y="17" width="1" height="1" fill="#1a0a18" />
+      <rect x="16" y="9" width="1" height="1" fill="#3a1530" />
 
-      <!-- cephalothorax -->
+      <!-- Cephalothorax — ramp -->
       <ellipse cx="9" cy="15" rx="6" ry="5" fill="#2a1024" />
       <ellipse cx="8" cy="14" rx="4" ry="3" fill="#3a1530" />
+      <ellipse cx="7" cy="13" rx="2" ry="1.5" fill="#4a1c40" opacity="0.7" />
 
-      <!-- cluster of eyes -->
+      <!-- Cluster of eyes — gold + red + spark -->
       <rect x="5" y="13" width="2" height="1" fill="#f4d042" />
       <rect x="8" y="12" width="2" height="1" fill="#f4d042" />
+      <rect x="5" y="13" width="1" height="1" fill="#fff0a0" />
       <rect x="5" y="15" width="1" height="1" fill="#b53c4a" />
       <rect x="9" y="14" width="1" height="1" fill="#b53c4a" />
 
-      <!-- fangs -->
+      <!-- Fangs -->
       <polygon points="4,17 3,20 5,18" fill="#5a1208" />
       <polygon points="6,17 5,20 7,18" fill="#5a1208" />
+      <rect x="4" y="17" width="1" height="1" fill="#8c2818" />
     </svg>
