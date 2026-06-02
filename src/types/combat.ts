@@ -287,12 +287,22 @@ export interface CombatState {
    */
   playerRegenStacks?: number;
   /**
-   * Ascension dungeon twist — Cursed Ground: flat damage the hero takes at the
-   * start of each of their turns this fight. Set at combat start from the room's
-   * twist; absent/0 means no curse. Applied in createCombat (turn-0 player) and
-   * endTurn (every subsequent player turn).
+   * Ascension dungeon twist — Cursed Ground: the damage the hero takes at the
+   * start of their CURRENT turn this fight. Front-loaded: set at combat start
+   * from the room's twist, then decayed by {@link cursedGroundChipDecay} after
+   * each application until it reaches 0, so the curse is a bounded opening spike
+   * rather than a per-turn grind. Absent/0 means no curse (or it has spent
+   * itself). Applied in createCombat (turn-0 player) and endTurn (every
+   * subsequent player turn).
    */
   cursedGroundChip?: number;
+  /**
+   * Ascension dungeon twist — Cursed Ground: the flat amount {@link
+   * cursedGroundChip} steps down by after each turn's bite, draining the curse
+   * to nothing over a fixed few turns. Set alongside cursedGroundChip at combat
+   * start; absent means no curse.
+   */
+  cursedGroundChipDecay?: number;
   /**
    * Ascension dungeon twist — Gloom: the hero's first attack of the fight rolls
    * at disadvantage. Read by playerAttack on the first attack (naturally one-

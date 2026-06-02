@@ -48,38 +48,72 @@ function recordingRoller(base: DiceRoller): {
 describe('dungeon twist combat effects', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('Cursed Ground chips the hero by a fraction of max HP on turn 0 and later turns', () => {
+  it('Cursed Ground opens with a front-loaded chip on turn 0, then decays', () => {
     const before = makeFighter();
-    // The curse scales to the build: 5% of max HP per turn, floored at 1.
-    const chip = Math.max(1, Math.round(before.hp.max * 0.05));
+    // The opening bite scales to the build: 10% of max HP, floored at 1.
+    const opening = Math.max(1, Math.round(before.hp.max * 0.1));
+    const decay = Math.max(1, Math.round(opening / 4));
     const init = createCombat({
       character: before,
       monsters: [{ def: getDef('goblin') }],
       twistId: 'cursed-ground',
     });
-    expect(init.state.cursedGroundChip).toBe(chip);
-    // Turn 0 never travels through endTurn — createCombat applies the chip once.
-    expect(init.character.hp.current).toBe(before.hp.max - chip);
+    expect(init.state.cursedGroundChipDecay).toBe(decay);
+    // Turn 0 never travels through endTurn — createCombat bites the opening chip
+    // once and steps it down for the next turn, so the returned state already
+    // carries the decayed chip.
+    expect(init.character.hp.current).toBe(before.hp.max - opening);
+    expect(init.state.cursedGroundChip).toBe(Math.max(0, opening - decay));
 
-    // The start-of-player-turn helper (called from endTurn) chips again.
+    // The start-of-player-turn helper (called from endTurn) bites the now-smaller
+    // chip — the second bite is lighter than the opening, never heavier.
+    const second = init.state.cursedGroundChip ?? 0;
     const ticked = applyCursedGroundChip(init.state, init.character);
-    expect(ticked.character.hp.current).toBe(before.hp.max - chip * 2);
+    expect(second).toBeLessThan(opening);
+    expect(ticked.character.hp.current).toBe(before.hp.max - opening - second);
+    expect(ticked.state.cursedGroundChip).toBe(Math.max(0, second - decay));
   });
 
-  it('Cursed Ground scales the per-turn chip with the hero max HP', () => {
+  it('Cursed Ground total drain is bounded and stops — it does not compound with fight length', () => {
+    const maxHp = 100;
+    const init = createCombat({
+      character: makeFighter({ hp: { current: maxHp, max: maxHp, temp: 0 } }),
+      monsters: [{ def: getDef('goblin') }],
+      twistId: 'cursed-ground',
+    });
+    // createCombat already bit once (turn 0); keep ticking until the curse spends
+    // itself and confirm the bites stop well short of grinding the hero down.
+    let state = init.state;
+    let character = init.character;
+    for (let i = 0; i < 30; i++) {
+      const t = applyCursedGroundChip(state, character);
+      state = t.state;
+      character = t.character;
+    }
+    expect(state.cursedGroundChip).toBe(0); // the curse has spent itself
+    // A 30-turn fight on the old flat 5%/turn chip would have drained ~150% of
+    // max HP (floored at 1). Bounded, it stays a front-loaded spike: ~a quarter.
+    const totalDrained = maxHp - character.hp.current;
+    expect(totalDrained).toBeLessThanOrEqual(Math.round(maxHp * 0.3));
+    expect(totalDrained).toBeGreaterThan(Math.round(maxHp * 0.1)); // still a real opening bite
+  });
+
+  it('Cursed Ground scales the opening chip with the hero max HP', () => {
+    // The opening bite (turn 0) is what the hero's HP drop measures — the state's
+    // chip has already decayed once by the time createCombat returns.
     const tanky = createCombat({
       character: makeFighter({ hp: { current: 200, max: 200, temp: 0 } }),
       monsters: [{ def: getDef('goblin') }],
       twistId: 'cursed-ground',
     });
-    expect(tanky.state.cursedGroundChip).toBe(10); // 5% of 200
+    expect(200 - tanky.character.hp.current).toBe(20); // 10% of 200
 
     const frail = createCombat({
       character: makeFighter({ hp: { current: 10, max: 10, temp: 0 } }),
       monsters: [{ def: getDef('goblin') }],
       twistId: 'cursed-ground',
     });
-    expect(frail.state.cursedGroundChip).toBe(1); // 5% of 10 = 0.5, floored at 1
+    expect(10 - frail.character.hp.current).toBe(1); // 10% of 10 = 1
   });
 
   it('Cursed Ground drains temp HP before real HP', () => {
