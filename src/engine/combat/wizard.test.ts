@@ -106,12 +106,11 @@ describe('Wizard — Fire Bolt cantrip', () => {
     let w = makeWizard();
     const roller = createDiceRoller(3);
     const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
-    let state = init.state;
+    const state = init.state;
     w = init.character;
     const before = slotsAt(w, 1);
     const goblinId = findMonster(state).id;
     const cast = castSpell({ roller, character: w, state, spellId: 'fire-bolt', targetId: goblinId });
-    state = cast.state;
     w = cast.character;
     expect(slotsAt(w, 1)).toBe(before);
     expect(w.actionEconomy.actionUsed).toBe(true);
@@ -227,7 +226,6 @@ describe('Wizard — Shield reaction-buff', () => {
     // ensure shield persists for that turn.
     expect(computeAC(w)).toBe(baseAC + 5);
     et = endTurn(state, w);
-    state = et.state;
     w = et.character;
     // Back to player — shield expires.
     expect(w.resources.shieldActive).toBeFalsy();
@@ -305,7 +303,6 @@ describe('Wizard — Hold Person', () => {
       // Run the goblin's turn — it should lose the attack.
       const ma = monsterAttack({ roller, character: w, state }, goblinId);
       state = ma.state;
-      w = ma.character;
       const log = state.log[state.log.length - 1];
       expect(log.text).toContain('paralyzed');
       validated = true;
@@ -649,7 +646,6 @@ describe('Wizard — Misty Step (L3 unlock)', () => {
     state = et.state;
     w = et.character;
     et = endTurn(state, w);
-    state = et.state;
     w = et.character;
     expect(w.resources.mistyStepActive).toBeFalsy();
     expect(computeAC(w)).toBe(baseAC);
@@ -816,7 +812,7 @@ describe('Fireball — ignite rider on failed saves', () => {
       let et = endTurn(state, fw);
       state = et.state; fw = et.character;
       et = endTurn(state, fw);
-      state = et.state; fw = et.character;
+      state = et.state;
 
       expect(state.log.some((l) => l.text.includes('burns for') && l.text.includes('fire'))).toBe(true);
       validated = true;
@@ -1039,7 +1035,6 @@ describe('Wizard — Shield true reaction', () => {
 
       const result = monsterAttack({ roller, character: w, state }, goblinId);
       state = result.state;
-      w = result.character;
 
       const shieldLog = state.log.find((l) => l.text.includes('casts Shield'));
       expect(shieldLog).toBeUndefined();
@@ -1099,7 +1094,6 @@ describe('Wizard — Shield true reaction', () => {
       state = et.state;
       w = et.character;
       et = endTurn(state, w);
-      state = et.state;
       w = et.character;
       expect(w.actionEconomy.reactionUsed).toBe(false);
       validated = true;

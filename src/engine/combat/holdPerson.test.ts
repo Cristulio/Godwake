@@ -312,14 +312,13 @@ describe('nextSaveAdvantage — save-advantage vector', () => {
     let w = makeWizardL3();
     const roller = createDiceRoller(11);
     const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
-    let state = init.state;
+    const state = init.state;
     w = init.character;
     expect(w.nextSaveAdvantage).toBeFalsy();
     expect(w.resources.mistyStepActive).toBeFalsy();
 
     const cast = castSpell({ roller, character: w, state, spellId: 'misty-step' });
     expect(cast.cast).toBe(true);
-    state = cast.state;
     w = cast.character;
     expect(w.resources.mistyStepActive).toBe(true);
     expect(w.nextSaveAdvantage).toBe(true);

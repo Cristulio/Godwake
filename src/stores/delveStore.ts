@@ -877,7 +877,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (existing.some((e) => e.tier === tier)) return;
 
     let nextCharacter: Character = character;
-    let nextDelve: DelveState = {
+    const nextDelve: DelveState = {
       ...s.delve,
       campBoons: [...existing, { tier, boonId }],
     };

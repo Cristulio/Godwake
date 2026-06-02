@@ -100,7 +100,7 @@ const intentCache = new Map<string, boolean>();
 function isIntentBearing(defId: string): boolean {
   const hit = intentCache.get(defId);
   if (hit !== undefined) return hit;
-  let v = false;
+  let v;
   try {
     v = getMonster(defId).actions.some((a) => INTENT_KINDS.has(a.kind));
   } catch {

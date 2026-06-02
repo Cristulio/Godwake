@@ -179,7 +179,6 @@ describe('Sneak Attack scaling stacks with Knife in the Dark', () => {
       const goblinId = findMonsterCombatant(state).id;
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
-      rogue = atk.character;
       const log = state.log.find((l) => l.text.includes('sneak ('));
       if (log) return log.text;
     }
@@ -327,7 +326,6 @@ describe('Mage Armor passive + Shield reaction AC stack', () => {
     // Now it's the monster's turn (or another non-player slot). Shield is
     // still active until the next player turn.
     et = endTurn(state, wizard);
-    state = et.state;
     wizard = et.character;
     // Should be back on the player. Shield expired in the turn-start branch.
     expect(wizard.resources.shieldActive).toBe(false);

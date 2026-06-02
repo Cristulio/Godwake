@@ -66,7 +66,6 @@ describe('Rogue — Sneak Attack scaling in combat', () => {
       const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
-      rogue = atk.character;
       const log = state.log.find((l) => l.text.includes('sneak ('));
       if (log) return log.text;
     }
@@ -109,7 +108,6 @@ describe('Rogue — Knife in the Dark (permanentBonuses.sneakAttackDice)', () =>
       const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
-      rogue = atk.character;
       const log = state.log.find((l) => l.text.includes('sneak ('));
       if (log) return log.text;
     }
@@ -187,7 +185,6 @@ describe('Rogue — Sneak Attack', () => {
       const goblinId = findMonster(state).id;
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'rapier');
       state = atk.state;
-      rogue = atk.character;
       const sneakLog = state.log.find((l) => l.text.includes('sneak ('));
       if (sneakLog) {
         observed = true;
@@ -218,7 +215,6 @@ describe('Rogue — Sneak Attack', () => {
       const goblinId = findMonster(state).id;
       const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
-      rogue = atk.character;
       const sneakLog = state.log.find((l) => l.text.includes('sneak ('));
       if (sneakLog) {
         observed = true;
@@ -267,7 +263,6 @@ describe('Rogue — Sneak Attack', () => {
 
       const atk2 = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk2.state;
-      rogue = atk2.character;
       const totalSneak = state.log.filter((l) => l.text.includes('sneak (')).length;
       expect(totalSneak).toBe(1);
       validated = true;
@@ -454,7 +449,6 @@ describe('Rogue — Uncanny Dodge', () => {
 
     const hpBefore = rogue.hp.current;
     dmg = applyDamage(state, 'player', 6, rogue);
-    state = dmg.state;
     rogue = dmg.character;
     expect(rogue.hp.current).toBe(hpBefore - 3);
     expect(rogue.actionEconomy.reactionUsed).toBe(true);
@@ -699,7 +693,6 @@ describe('Rogue — Cunning Action', () => {
       if (state.status !== 'active') continue;
       atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
       state = atk.state;
-      rogue = atk.character;
       const sneakLines = state.log.filter((l) => l.text.includes('sneak ('));
       const attackLines = state.log.filter((l) => l.text.includes('attacks Goblin'));
       if (attackLines.length < 2) continue;

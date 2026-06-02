@@ -95,7 +95,7 @@ import type { Character } from '../src/types/character';
 import type { CombatState } from '../src/types/combat';
 import type { ItemRef } from '../src/schemas/item';
 import type { ClassId as SchemaClassId } from '../src/schemas/ids';
-import type { RoomSpec, DelveState } from '../src/types/delve';
+import type { RoomSpec } from '../src/types/delve';
 
 type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid';
 const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid'];
@@ -616,17 +616,6 @@ interface LifeOutcome {
   renownEarned: number;
   deathCause: string | null;
   deathRoomLabel: string | null;
-}
-
-/** Assign each room a 1-based chapter, incrementing after each camp seam. */
-function chapterIndex(delve: DelveState): number[] {
-  let ch = 1;
-  const out: number[] = [];
-  for (const room of delve.rooms) {
-    out.push(ch);
-    if (room.kind === 'camp') ch += 1;
-  }
-  return out;
 }
 
 function liveOneLife(
