@@ -6,31 +6,46 @@
     >
       <ellipse cx="18" cy="43" rx="15" ry="2" fill="#06040a" opacity="0.5" />
 
+      <!-- Devouring-void aura — layered -->
       <ellipse cx="18" cy="24" rx="17" ry="21" fill="#0e0816" opacity="0.5" />
       <ellipse cx="18" cy="24" rx="14" ry="18" fill="#160e22" opacity="0.6" />
+      <ellipse cx="18" cy="24" rx="9" ry="11" fill="#3a1a2a" opacity="0.18" />
 
-      <polygon points="4,18 1,8 7,14 6,4 12,12 18,2 24,12 30,4 29,14 35,8 32,18 34,30 28,28 30,40 22,34 18,44 14,34 6,40 8,28 2,30" fill="#1a1024" opacity="0.92" />
-      <polygon points="8,18 18,8 28,18 26,32 18,38 10,32" fill="#241634" opacity="0.85" />
+      <!-- Radiating jagged mass — ramp, lit upper-left points -->
+      <polygon points="4,18 1,8 7,14 6,4 12,12 18,2 24,12 30,4 29,14 35,8 32,18 34,30 28,28 30,40 22,34 18,44 14,34 6,40 8,28 2,30" fill="#160e22" opacity="0.94" />
+      <polygon points="6,4 12,12 18,2 24,12 18,8" fill="#2c1d44" opacity="0.6" />
+      <polygon points="8,18 18,8 28,18 26,32 18,38 10,32" fill="#241634" opacity="0.88" />
+      <polygon points="8,18 18,8 18,14 12,20" fill="#3a2a52" opacity="0.55" />
 
+      <!-- Central maw — bottomless void -->
       <ellipse cx="18" cy="24" rx="8" ry="9" fill="#060308" />
       <ellipse cx="18" cy="24" rx="6" ry="7" fill="#020104" />
+      <ellipse cx="15" cy="20" rx="3" ry="3" fill="#160e22" opacity="0.6" />
+
+      <!-- Inward fangs + bleeding rim -->
       <polygon points="12,22 14,26 12,28" fill="#3a1a2a" />
       <polygon points="24,22 22,26 24,28" fill="#3a1a2a" />
       <polygon points="14,20 18,18 22,20 21,23 18,21 15,23" fill="#7a2030" opacity="0.6" />
       <polygon points="15,28 18,31 21,28 20,30 18,32 16,30" fill="#7a2030" opacity="0.6" />
 
-      <rect x="14" y="22" width="2" height="2" fill="#c43048" opacity="0.7" />
-      <rect x="20" y="22" width="2" height="2" fill="#c43048" opacity="0.7" />
+      <!-- Hungering eyes + spark -->
+      <rect x="14" y="22" width="2" height="2" fill="#c43048" opacity="0.85" />
+      <rect x="20" y="22" width="2" height="2" fill="#c43048" opacity="0.85" />
       <rect x="14" y="22" width="1" height="1" fill="#f06080" />
       <rect x="20" y="22" width="1" height="1" fill="#f06080" />
+      <rect x="14" y="22" width="1" height="1" fill="#ffb0c0" opacity="0.5" />
       <rect x="17" y="26" width="2" height="1" fill="#9a2838" opacity="0.6" />
 
-      <polygon points="3,16 5,22 8,20" fill="#2c1d44" opacity="0.5" />
-      <polygon points="33,16 31,22 28,20" fill="#2c1d44" opacity="0.5" />
+      <!-- Limb facets — rim-lit -->
+      <polygon points="3,16 5,22 8,20" fill="#2c1d44" opacity="0.55" />
+      <polygon points="3,16 5,22 5,18" fill="#3a2a52" opacity="0.4" />
+      <polygon points="33,16 31,22 28,20" fill="#241634" opacity="0.5" />
       <polygon points="10,38 12,42 15,38" fill="#160e22" opacity="0.7" />
       <polygon points="26,38 24,42 21,38" fill="#160e22" opacity="0.7" />
 
+      <!-- Drifting void-motes -->
       <rect x="5" y="14" width="1" height="1" fill="#f06080" opacity="0.4" />
       <rect x="30" y="28" width="1" height="1" fill="#c43048" opacity="0.4" />
       <rect x="18" y="40" width="1" height="1" fill="#7a2030" opacity="0.4" />
+      <rect x="9" y="10" width="1" height="1" fill="#3a2a52" opacity="0.5" />
     </svg>

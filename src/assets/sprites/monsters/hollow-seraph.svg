@@ -3,42 +3,76 @@
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
     aria-label="Hollow Seraph">
-      <!-- stub wings of soot-light -->
-      <polygon points="6,12 1,8 2,16 6,17" fill="#5a5048" />
-      <polygon points="18,12 23,8 22,16 18,17" fill="#5a5048" />
+      <!-- Faded-halo backlight + ground shadow -->
+      <ellipse cx="12" cy="20" rx="12" ry="19" fill="#c8b878" opacity="0.08" />
+      <ellipse cx="12" cy="38" rx="8" ry="1.4" fill="#000" opacity="0.42" />
+
+      <!-- Stub wings of soot-light — ramped -->
+      <polygon points="6,12 1,8 2,16 6,17" fill="#3a352e" />
+      <polygon points="6,12 1,8 2,16 6,17" fill="#5a5048" opacity="0.7" />
       <polygon points="6,12 2,10 3,15 6,15" fill="#6a6058" opacity="0.6" />
-      <polygon points="18,12 22,10 21,15 18,15" fill="#6a6058" opacity="0.6" />
+      <polygon points="6,12 2,10 4,12 6,13" fill="#8a8070" opacity="0.4" />
+      <polygon points="18,12 23,8 22,16 18,17" fill="#3a352e" />
+      <polygon points="18,12 23,8 22,16 18,17" fill="#4a443c" opacity="0.6" />
+      <polygon points="18,12 22,10 21,15 18,15" fill="#5a5048" opacity="0.5" />
 
-      <!-- helm, smooth absent face -->
-      <rect x="8" y="3" width="8" height="8" fill="#a89860" />
+      <!-- Helm — gold ramp, key light upper-left, absent face -->
+      <rect x="8" y="3" width="8" height="8" fill="#8a7a48" />
       <rect x="8" y="3" width="8" height="1" fill="#c8b878" />
-      <rect x="8" y="3" width="1" height="8" fill="#7a6c40" />
-      <rect x="15" y="3" width="1" height="8" fill="#7a6c40" />
+      <rect x="8" y="3" width="3" height="8" fill="#9a8850" />
+      <rect x="8" y="3" width="1" height="6" fill="#b8a868" />
+      <rect x="15" y="3" width="1" height="8" fill="#5a4c28" />
+      <rect x="14" y="4" width="1" height="7" fill="#7a6c40" />
       <rect x="9" y="6" width="6" height="3" fill="#0a0c10" />
+      <rect x="9" y="6" width="6" height="1" fill="#05070a" />
       <rect x="10" y="7" width="4" height="1" fill="#3a3430" opacity="0.5" />
+      <!-- Faint cold ember in the void face -->
+      <rect x="11" y="7" width="1" height="1" fill="#6a90b0" opacity="0.5" />
 
-      <!-- soot-gold cuirass -->
-      <rect x="6" y="11" width="12" height="13" fill="#9a8850" />
+      <!-- Cuirass — gold ramp + dither + chest seam -->
+      <rect x="6" y="11" width="12" height="13" fill="#8a7a48" />
       <rect x="6" y="11" width="12" height="1" fill="#c8b878" />
-      <rect x="6" y="11" width="2" height="13" fill="#7a6c40" />
-      <rect x="16" y="11" width="2" height="13" fill="#7a6c40" />
+      <rect x="6" y="11" width="3" height="13" fill="#9a8850" />
+      <rect x="6" y="11" width="1" height="11" fill="#b8a868" />
+      <rect x="16" y="11" width="2" height="13" fill="#5a4c28" />
       <rect x="11" y="12" width="2" height="11" fill="#7a6c40" />
+      <rect x="8" y="15" width="1" height="1" fill="#d4c488" opacity="0.6" />
+      <rect x="14" y="18" width="1" height="1" fill="#5a4c28" />
+      <rect x="9" y="20" width="1" height="1" fill="#5a4c28" />
 
-      <!-- left arm (shield-side) -->
+      <!-- Left arm (shield-side) -->
       <rect x="3" y="13" width="3" height="9" fill="#8a7a48" />
-      <rect x="2" y="20" width="4" height="3" fill="#b8a868" />
+      <rect x="3" y="13" width="1" height="9" fill="#b8a868" />
+      <rect x="5" y="13" width="1" height="9" fill="#5a4c28" />
+      <rect x="2" y="20" width="4" height="3" fill="#9a8850" />
+      <rect x="2" y="20" width="4" height="1" fill="#b8a868" />
 
-      <!-- right arm raising the cold-light blade -->
+      <!-- Right arm raising the cold-light blade -->
       <rect x="18" y="12" width="3" height="6" fill="#8a7a48" />
-      <rect x="20" y="8" width="2" height="5" fill="#b8a868" />
-      <rect x="20" y="-2" width="2" height="11" fill="#cfe8ff" opacity="0.85" />
+      <rect x="18" y="12" width="1" height="6" fill="#b8a868" />
+      <rect x="20" y="8" width="2" height="5" fill="#9a8850" />
+      <rect x="20" y="8" width="2" height="1" fill="#b8a868" />
+      <!-- Blade — cold light, hot core + specular -->
+      <rect x="19" y="-2" width="4" height="11" fill="#8aa0c0" opacity="0.4" />
+      <rect x="20" y="-2" width="2" height="11" fill="#cfe8ff" opacity="0.9" />
       <rect x="20" y="-2" width="1" height="11" fill="#ffffff" />
+      <rect x="20" y="-2" width="1" height="3" fill="#ffffff" />
       <rect x="19" y="8" width="4" height="1" fill="#8aa0c0" />
+      <rect x="19" y="8" width="4" height="1" fill="#d4e4f4" opacity="0.5" />
 
-      <!-- fauld + legs -->
+      <!-- Fauld + legs — ramp -->
       <rect x="6" y="24" width="12" height="3" fill="#7a6c40" />
+      <rect x="6" y="24" width="12" height="1" fill="#9a8850" />
       <rect x="6" y="27" width="5" height="9" fill="#8a7a48" />
       <rect x="13" y="27" width="5" height="9" fill="#8a7a48" />
+      <rect x="6" y="27" width="1" height="9" fill="#b8a868" />
+      <rect x="13" y="27" width="1" height="9" fill="#9a8850" />
+      <rect x="10" y="27" width="1" height="9" fill="#5a4c28" />
+      <rect x="17" y="27" width="1" height="9" fill="#5a4c28" />
+
+      <!-- Sabatons -->
       <rect x="6" y="36" width="5" height="3" fill="#1a1410" />
       <rect x="13" y="36" width="5" height="3" fill="#1a1410" />
+      <rect x="6" y="36" width="5" height="1" fill="#5a4c28" />
+      <rect x="13" y="36" width="5" height="1" fill="#5a4c28" />
     </svg>
