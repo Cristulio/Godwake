@@ -14,7 +14,7 @@ export const ASHEN_CHORISTER: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'celestial',
   ac: 14,
-  maxHp: 46,
+  maxHp: 54,
   speed: 30,
   abilityScores: { str: 11, dex: 14, con: 14, int: 12, wis: 16, cha: 17 },
   passivePerception: 13,
@@ -33,8 +33,8 @@ export const ASHEN_CHORISTER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Hymn-Fire',
-      attackBonus: 7,
-      damage: '2d6+3',
+      attackBonus: 8,
+      damage: '2d8+3',
       damageType: 'radiant',
       range: [40, 80],
       description:

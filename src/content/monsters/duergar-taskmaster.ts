@@ -14,7 +14,7 @@ export const DUERGAR_TASKMASTER: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (duergar)',
   ac: 16,
-  maxHp: 32,
+  maxHp: 46,
   speed: 25,
   abilityScores: { str: 16, dex: 11, con: 14, int: 11, wis: 10, cha: 9 },
   passivePerception: 10,
@@ -23,8 +23,8 @@ export const DUERGAR_TASKMASTER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Iron Maul',
-      attackBonus: 5,
-      damage: '1d10+3',
+      attackBonus: 6,
+      damage: '2d6+4',
       damageType: 'bludgeoning',
       reach: 5,
       description:

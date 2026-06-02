@@ -13,7 +13,7 @@ export const REBORN_HUSK: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'undead',
   ac: 13,
-  maxHp: 38,
+  maxHp: 46,
   speed: 30,
   abilityScores: { str: 14, dex: 11, con: 15, int: 6, wis: 9, cha: 5 },
   passivePerception: 9,
@@ -22,8 +22,8 @@ export const REBORN_HUSK: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Grasping Claw',
-      attackBonus: 6,
-      damage: '1d8+3',
+      attackBonus: 7,
+      damage: '2d6+4',
       damageType: 'necrotic',
       reach: 5,
       description:

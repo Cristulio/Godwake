@@ -14,7 +14,7 @@ export const DROW_WARRIOR: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (elf)',
   ac: 17,
-  maxHp: 54,
+  maxHp: 62,
   speed: 30,
   abilityScores: { str: 12, dex: 18, con: 12, int: 11, wis: 11, cha: 12 },
   passivePerception: 12,
@@ -22,8 +22,8 @@ export const DROW_WARRIOR: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Mithral Scimitar',
-      attackBonus: 7,
-      damage: '2d8+4',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'slashing',
       reach: 5,
       description:

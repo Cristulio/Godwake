@@ -14,7 +14,7 @@ export const HOLLOW_SERAPH: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'celestial',
   ac: 16,
-  maxHp: 60,
+  maxHp: 68,
   speed: 30,
   abilityScores: { str: 17, dex: 15, con: 16, int: 8, wis: 13, cha: 12 },
   passivePerception: 13,
@@ -31,7 +31,7 @@ export const HOLLOW_SERAPH: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Cold-Light Blade',
       attackBonus: 8,
-      damage: '2d6+4',
+      damage: '2d8+4',
       damageType: 'radiant',
       reach: 5,
       description:

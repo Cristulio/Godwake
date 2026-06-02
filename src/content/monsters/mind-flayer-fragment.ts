@@ -14,7 +14,7 @@ export const MIND_FLAYER_FRAGMENT: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'aberration',
   ac: 14,
-  maxHp: 62,
+  maxHp: 72,
   speed: 30,
   abilityScores: { str: 11, dex: 12, con: 12, int: 18, wis: 16, cha: 14 },
   passivePerception: 15,
@@ -31,8 +31,8 @@ export const MIND_FLAYER_FRAGMENT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Tentacle Drive',
-      attackBonus: 7,
-      damage: '2d8+4',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'psychic',
       reach: 5,
       description:

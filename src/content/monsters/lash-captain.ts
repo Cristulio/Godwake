@@ -13,7 +13,7 @@ export const LASH_CAPTAIN: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (human)',
   ac: 16,
-  maxHp: 60,
+  maxHp: 74,
   speed: 30,
   abilityScores: { str: 15, dex: 14, con: 14, int: 10, wis: 13, cha: 14 },
   passivePerception: 11,
@@ -21,8 +21,8 @@ export const LASH_CAPTAIN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Spiked Whip',
-      attackBonus: 7,
-      damage: '2d8+5',
+      attackBonus: 8,
+      damage: '2d8+6',
       damageType: 'slashing',
       reach: 10,
       description:

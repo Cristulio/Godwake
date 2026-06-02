@@ -11,7 +11,7 @@ export const HOBGOBLIN: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (goblinoid)',
   ac: 18,
-  maxHp: 16,
+  maxHp: 24,
   speed: 30,
   abilityScores: { str: 13, dex: 12, con: 12, int: 10, wis: 10, cha: 9 },
   passivePerception: 10,
@@ -19,8 +19,8 @@ export const HOBGOBLIN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Longsword',
-      attackBonus: 3,
-      damage: '1d8+1',
+      attackBonus: 5,
+      damage: '1d10+2',
       damageType: 'slashing',
       reach: 5,
       description:

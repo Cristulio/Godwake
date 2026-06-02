@@ -12,7 +12,7 @@ export const BUGBEAR: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (goblinoid)',
   ac: 14,
-  maxHp: 22,
+  maxHp: 32,
   speed: 30,
   abilityScores: { str: 15, dex: 12, con: 13, int: 8, wis: 11, cha: 9 },
   passivePerception: 10,
@@ -20,8 +20,8 @@ export const BUGBEAR: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Morningstar',
-      attackBonus: 4,
-      damage: '1d8+2',
+      attackBonus: 5,
+      damage: '2d6+3',
       damageType: 'piercing',
       reach: 5,
       description:

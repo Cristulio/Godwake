@@ -29,7 +29,7 @@ export const HOLLOW_GAZE: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'aberration',
   ac: 16,
-  maxHp: 74,
+  maxHp: 77,
   speed: 0,
   abilityScores: { str: 10, dex: 14, con: 16, int: 17, wis: 18, cha: 16 },
   passivePerception: 18,
@@ -88,8 +88,8 @@ export const HOLLOW_GAZE: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Baleful Eye',
-      attackBonus: 7,
-      damage: '2d8+4',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'psychic',
       range: [60, 120],
       description:

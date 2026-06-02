@@ -12,7 +12,7 @@ export const IMP: Monster = MonsterSchema.parse({
   size: 'tiny',
   creatureType: 'fiend (devil)',
   ac: 13,
-  maxHp: 10,
+  maxHp: 16,
   speed: 20,
   abilityScores: { str: 6, dex: 17, con: 13, int: 11, wis: 12, cha: 14 },
   passivePerception: 11,
@@ -21,7 +21,7 @@ export const IMP: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Sting',
       attackBonus: 5,
-      damage: '1d4+3',
+      damage: '1d6+3',
       damageType: 'piercing',
       reach: 5,
       description:

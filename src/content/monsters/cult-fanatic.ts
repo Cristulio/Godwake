@@ -11,7 +11,7 @@ export const CULT_FANATIC: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (human)',
   ac: 15,
-  maxHp: 40,
+  maxHp: 52,
   speed: 30,
   abilityScores: { str: 11, dex: 14, con: 12, int: 10, wis: 13, cha: 14 },
   passivePerception: 11,
@@ -19,8 +19,8 @@ export const CULT_FANATIC: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Sacrificial Dagger',
-      attackBonus: 5,
-      damage: '2d8+5',
+      attackBonus: 6,
+      damage: '2d8+6',
       damageType: 'piercing',
       reach: 5,
       description:

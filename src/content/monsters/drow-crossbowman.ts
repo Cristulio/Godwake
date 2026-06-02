@@ -15,7 +15,7 @@ export const DROW_CROSSBOWMAN: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (elf)',
   ac: 16,
-  maxHp: 56,
+  maxHp: 64,
   speed: 30,
   abilityScores: { str: 10, dex: 17, con: 12, int: 11, wis: 12, cha: 11 },
   passivePerception: 13,
@@ -23,8 +23,8 @@ export const DROW_CROSSBOWMAN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Venomed Bolt',
-      attackBonus: 7,
-      damage: '2d6+5',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'poison',
       range: [80, 320],
       description:

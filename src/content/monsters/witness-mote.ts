@@ -14,7 +14,7 @@ export const WITNESS_MOTE: Monster = MonsterSchema.parse({
   size: 'small',
   creatureType: 'aberration',
   ac: 15,
-  maxHp: 24,
+  maxHp: 28,
   speed: 0,
   abilityScores: { str: 6, dex: 15, con: 12, int: 6, wis: 12, cha: 7 },
   passivePerception: 11,
@@ -23,7 +23,7 @@ export const WITNESS_MOTE: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Glimmer-Ray',
       attackBonus: 5,
-      damage: '1d8+2',
+      damage: '1d8+3',
       damageType: 'psychic',
       range: [30, 60],
       description:

@@ -14,7 +14,7 @@ export const ASYLUM_FLESHWRIGHT: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (human)',
   ac: 15,
-  maxHp: 72,
+  maxHp: 76,
   speed: 30,
   abilityScores: { str: 12, dex: 14, con: 14, int: 16, wis: 13, cha: 10 },
   passivePerception: 12,
@@ -22,8 +22,8 @@ export const ASYLUM_FLESHWRIGHT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Bone-Saw',
-      attackBonus: 7,
-      damage: '2d6+3',
+      attackBonus: 8,
+      damage: '2d8+4',
       damageType: 'slashing',
       reach: 5,
       description:

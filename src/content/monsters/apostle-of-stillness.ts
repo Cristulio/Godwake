@@ -14,7 +14,7 @@ export const APOSTLE_OF_STILLNESS: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'celestial',
   ac: 16,
-  maxHp: 70,
+  maxHp: 82,
   speed: 30,
   abilityScores: { str: 14, dex: 14, con: 16, int: 13, wis: 18, cha: 18 },
   passivePerception: 14,
@@ -32,8 +32,8 @@ export const APOSTLE_OF_STILLNESS: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Radiant Judgement',
-      attackBonus: 8,
-      damage: '2d8+4',
+      attackBonus: 9,
+      damage: '2d8+5',
       damageType: 'radiant',
       reach: 5,
       description:
