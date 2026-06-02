@@ -4,31 +4,44 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Starflensed Mawn"
     >
-      <!-- base shadow -->
-      <ellipse cx="14" cy="26" rx="13" ry="2" fill="#0a0a18" />
+      <!-- Wrong-light backlight + base shadow -->
+      <ellipse cx="14" cy="14" rx="14" ry="13" fill="#5a80c0" opacity="0.1" />
+      <ellipse cx="14" cy="26" rx="13" ry="2" fill="#0a0a18" opacity="0.55" />
 
-      <!-- bulk of luminous meat around the wound -->
-      <ellipse cx="14" cy="15" rx="13" ry="11" fill="#3a3050" />
-      <ellipse cx="14" cy="15" rx="11" ry="10" fill="#4a4068" />
-      <ellipse cx="14" cy="15" rx="9" ry="8" fill="#5a5080" />
+      <!-- Bulk of luminous meat — cold violet ramp, lit upper-left -->
+      <ellipse cx="14" cy="15" rx="13" ry="11" fill="#2a2042" />
+      <ellipse cx="14" cy="15" rx="11.5" ry="10" fill="#3a3050" />
+      <ellipse cx="13.5" cy="14.5" rx="10" ry="8.6" fill="#4a4068" />
+      <ellipse cx="13" cy="14" rx="8.4" ry="7.2" fill="#5a5080" />
+      <ellipse cx="12.5" cy="13.5" rx="6.6" ry="5.6" fill="#6a60a0" />
+      <!-- Meat-fold dither at the rim -->
+      <rect x="3" y="11" width="1" height="1" fill="#5a5080" />
+      <rect x="24" y="17" width="1" height="1" fill="#2a2042" />
+      <rect x="6" y="22" width="1" height="1" fill="#2a2042" />
+      <rect x="22" y="9" width="1" height="1" fill="#4a4068" />
 
-      <!-- the hole where a star was: wrong-coloured light -->
-      <circle cx="14" cy="14" r="6.5" fill="#80c0ff" />
-      <circle cx="14" cy="14" r="5" fill="#b0e0ff" />
-      <circle cx="14" cy="14" r="2.6" fill="#ffffff" />
+      <!-- The hole where a star was — wrong-coloured light ramp -->
+      <circle cx="14" cy="14" r="6.8" fill="#4a78c8" />
+      <circle cx="14" cy="14" r="6" fill="#80c0ff" />
+      <circle cx="14" cy="14" r="4.4" fill="#b0e0ff" />
+      <circle cx="14" cy="14" r="2.6" fill="#e0f4ff" />
+      <circle cx="13.5" cy="13.5" r="1.3" fill="#ffffff" />
 
-      <!-- ring of teeth around the maw -->
+      <!-- Ring of teeth around the maw — shaded -->
       <polygon points="14,7 13,11 15,11" fill="#e0e8f0" />
-      <polygon points="20,10 17,12 18,14" fill="#e0e8f0" />
-      <polygon points="21,15 18,15 19,17" fill="#e0e8f0" />
-      <polygon points="19,20 17,17 16,19" fill="#e0e8f0" />
+      <polygon points="14,7 13.5,11 14,11" fill="#f4f8ff" />
+      <polygon points="20,10 17,12 18,14" fill="#d0d8e4" />
+      <polygon points="21,15 18,15 19,17" fill="#c4ccd8" />
+      <polygon points="19,20 17,17 16,19" fill="#cdd5e1" />
       <polygon points="14,22 13,18 15,18" fill="#e0e8f0" />
-      <polygon points="9,20 11,17 12,19" fill="#e0e8f0" />
-      <polygon points="7,15 10,15 9,17" fill="#e0e8f0" />
-      <polygon points="8,10 11,12 10,14" fill="#e0e8f0" />
+      <polygon points="9,20 11,17 12,19" fill="#dde5f1" />
+      <polygon points="7,15 10,15 9,17" fill="#e8f0f8" />
+      <polygon points="8,10 11,12 10,14" fill="#eef4fc" />
 
-      <!-- spilled light / glare -->
+      <!-- Spilled light / glare rays -->
       <rect x="13" y="0" width="2" height="6" fill="#b0e0ff" opacity="0.5" />
+      <rect x="13" y="0" width="1" height="6" fill="#e0f4ff" opacity="0.5" />
       <rect x="0" y="14" width="6" height="2" fill="#b0e0ff" opacity="0.4" />
       <rect x="22" y="14" width="6" height="2" fill="#b0e0ff" opacity="0.4" />
+      <rect x="13" y="0" width="1" height="2" fill="#ffffff" opacity="0.6" />
     </svg>

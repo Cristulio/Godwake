@@ -4,41 +4,73 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Drow War-Priestess"
     >
-      <!-- white hair -->
-      <rect x="5" y="2" width="10" height="3" fill="#d8d4e0" />
-      <rect x="4" y="3" width="2" height="7" fill="#c8c4d4" />
-      <rect x="14" y="3" width="2" height="7" fill="#c8c4d4" />
+      <!-- Lolth-violet backlight + ground shadow -->
+      <ellipse cx="11" cy="17" rx="10" ry="16" fill="#7a2450" opacity="0.1" />
+      <ellipse cx="11" cy="32" rx="8" ry="1.6" fill="#000" opacity="0.4" />
 
-      <!-- dark drow face -->
+      <!-- Spilled white hair — pale ramp -->
+      <rect x="5" y="2" width="10" height="3" fill="#c8c4d4" />
+      <rect x="5" y="2" width="10" height="1" fill="#e8e4f0" />
+      <rect x="6" y="1" width="8" height="1" fill="#d8d4e0" />
+      <rect x="4" y="3" width="2" height="7" fill="#bcb8cc" />
+      <rect x="4" y="3" width="1" height="7" fill="#d4d0e0" />
+      <rect x="14" y="3" width="2" height="7" fill="#a8a4ba" />
+      <rect x="15" y="3" width="1" height="7" fill="#9a96ac" />
+
+      <!-- Drow face — dusk-violet ramp -->
       <rect x="6" y="4" width="8" height="6" fill="#42344e" />
+      <rect x="6" y="4" width="3" height="6" fill="#4e4058" />
+      <rect x="6" y="4" width="1" height="5" fill="#5a4c64" />
+      <rect x="12" y="4" width="2" height="6" fill="#32263c" />
+      <rect x="13" y="5" width="1" height="5" fill="#281e30" />
+      <!-- Burning eyes + spark -->
       <rect x="7" y="6" width="2" height="1" fill="#d44a6a" />
       <rect x="11" y="6" width="2" height="1" fill="#d44a6a" />
+      <rect x="7" y="6" width="1" height="1" fill="#f08aa0" />
+      <rect x="11" y="6" width="1" height="1" fill="#f08aa0" />
       <rect x="9" y="8" width="2" height="1" fill="#2a1e30" />
 
-      <!-- robe with spider sigil -->
+      <!-- Robe — dark plum ramp + dither -->
       <rect x="5" y="10" width="12" height="13" fill="#3a1a2a" />
       <rect x="5" y="10" width="12" height="1" fill="#4a2436" />
+      <rect x="5" y="10" width="2" height="13" fill="#442032" />
+      <rect x="5" y="10" width="1" height="13" fill="#52283c" />
+      <rect x="15" y="11" width="2" height="12" fill="#2a1220" />
+      <rect x="16" y="11" width="1" height="12" fill="#220c1a" />
       <rect x="10" y="10" width="2" height="13" fill="#2a1220" />
-      <!-- eight-pointed Lolth sigil -->
+      <rect x="8" y="17" width="1" height="1" fill="#52283c" />
+      <rect x="13" y="20" width="1" height="1" fill="#220c1a" />
+
+      <!-- Eight-legged Lolth sigil -->
       <rect x="9" y="14" width="4" height="1" fill="#b53c4a" />
       <rect x="10" y="13" width="2" height="3" fill="#b53c4a" />
+      <rect x="10" y="13" width="2" height="1" fill="#d44a6a" />
       <rect x="9" y="13" width="1" height="1" fill="#d44a6a" />
       <rect x="12" y="15" width="1" height="1" fill="#d44a6a" />
+      <rect x="10" y="13" width="1" height="1" fill="#f08aa0" />
 
-      <!-- raised mending hand, web-light -->
+      <!-- Raised mending hand, web-light -->
       <rect x="2" y="10" width="3" height="3" fill="#3a1a2a" />
-      <rect x="1" y="8" width="2" height="3" fill="#6a5470" />
-      <rect x="0" y="7" width="2" height="2" fill="#9a84a0" opacity="0.55" />
+      <rect x="2" y="10" width="3" height="1" fill="#4a2436" />
+      <rect x="1" y="8" width="2" height="3" fill="#5a4c64" />
+      <rect x="1" y="8" width="2" height="1" fill="#6a5c74" />
+      <ellipse cx="1" cy="7" rx="2" ry="1.6" fill="#c8b4d0" opacity="0.45" />
+      <rect x="1" y="7" width="1" height="1" fill="#e8d8f0" opacity="0.7" />
 
-      <!-- serpent-flail arm -->
+      <!-- Serpent-flail arm — venom-green ramp -->
       <rect x="16" y="11" width="3" height="6" fill="#3a1a2a" />
+      <rect x="16" y="11" width="1" height="6" fill="#442032" />
       <rect x="18" y="9" width="1" height="9" fill="#2a2e22" />
       <rect x="17" y="9" width="3" height="2" fill="#3a5a2a" />
+      <rect x="17" y="9" width="3" height="1" fill="#5e9a36" />
       <rect x="18" y="7" width="1" height="2" fill="#4a7a2a" />
+      <rect x="18" y="7" width="1" height="1" fill="#7eba46" />
 
-      <!-- hem -->
+      <!-- Robe hem -->
       <polygon points="5,23 4,32 9,32" fill="#3a1a2a" />
-      <polygon points="17,23 18,32 11,32" fill="#3a1a2a" />
+      <polygon points="5,23 4,31 7,31" fill="#442032" opacity="0.7" />
+      <polygon points="17,23 18,32 11,32" fill="#2a1220" />
       <rect x="9" y="23" width="4" height="9" fill="#2a1220" />
+      <rect x="9" y="23" width="1" height="9" fill="#34182a" />
       <rect x="4" y="31" width="14" height="1" fill="#1a0a14" />
     </svg>

@@ -4,35 +4,56 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Masque-Wisp"
     >
-      <ellipse cx="12" cy="16" rx="9" ry="13" fill="#241a30" opacity="0.3" />
+      <!-- Pale spectral backlight + faint ground glow -->
+      <ellipse cx="12" cy="16" rx="10" ry="14" fill="#9a84c0" opacity="0.1" />
+      <ellipse cx="12" cy="29" rx="8" ry="2" fill="#241a30" opacity="0.32" />
 
-      <rect x="8" y="3" width="8" height="11" fill="#e8e0d4" />
+      <!-- Porcelain mask — pale ramp, key light upper-left -->
+      <rect x="8" y="3" width="8" height="11" fill="#d8cebe" />
       <rect x="8" y="3" width="8" height="1" fill="#f4eee4" />
-      <rect x="9" y="2" width="6" height="1" fill="#d8cebe" />
-      <rect x="8" y="13" width="8" height="1" fill="#c4b8a4" />
+      <rect x="9" y="2" width="6" height="1" fill="#e8e0d4" />
+      <rect x="8" y="3" width="3" height="11" fill="#e2dacb" />
+      <rect x="8" y="3" width="1" height="9" fill="#f4eee4" />
+      <rect x="14" y="4" width="2" height="9" fill="#c0b49e" />
+      <rect x="15" y="4" width="1" height="9" fill="#aea28c" />
+      <rect x="8" y="13" width="8" height="1" fill="#a89878" />
+      <!-- Hollow eyes + cold glint -->
       <rect x="9" y="7" width="2" height="2" fill="#1a1220" />
       <rect x="13" y="7" width="2" height="2" fill="#1a1220" />
       <rect x="9" y="7" width="1" height="1" fill="#a0c0d0" />
       <rect x="13" y="7" width="1" height="1" fill="#a0c0d0" />
+      <rect x="9" y="8" width="1" height="1" fill="#d8eef8" opacity="0.7" />
+      <!-- Painted mouth + gold cheek marks -->
       <rect x="11" y="10" width="2" height="2" fill="#9a3a3a" />
-      <rect x="11" y="3" width="1" height="9" fill="#cabfae" opacity="0.6" />
+      <rect x="11" y="10" width="1" height="1" fill="#c45a5a" />
+      <rect x="11" y="3" width="1" height="9" fill="#f0e8db" opacity="0.6" />
       <rect x="7" y="4" width="1" height="3" fill="#c0a040" />
-      <rect x="16" y="4" width="1" height="3" fill="#c0a040" />
+      <rect x="16" y="4" width="1" height="3" fill="#9a7e2e" />
 
-      <polygon points="9,14 15,14 17,26 12,30 7,26" fill="#2c2240" opacity="0.85" />
+      <!-- Wraith body — violet ramp dissolving into tatters -->
+      <polygon points="9,14 15,14 17,26 12,30 7,26" fill="#241a30" />
+      <polygon points="9,14 15,14 16,24 12,28 8,24" fill="#2c2240" opacity="0.92" />
       <polygon points="11,14 13,14 13,28 12,30 11,28" fill="#3a2c52" opacity="0.7" />
       <rect x="9" y="16" width="1" height="8" fill="#4a3a64" opacity="0.5" />
-      <rect x="14" y="16" width="1" height="8" fill="#4a3a64" opacity="0.5" />
+      <rect x="14" y="16" width="1" height="8" fill="#1e1530" opacity="0.6" />
+      <rect x="11" y="20" width="1" height="1" fill="#4a3a64" opacity="0.5" />
 
-      <rect x="16" y="14" width="2" height="2" fill="#2c2240" opacity="0.8" />
+      <!-- Trailing arms -->
+      <rect x="16" y="14" width="2" height="2" fill="#2c2240" opacity="0.85" />
+      <rect x="6" y="15" width="2" height="2" fill="#2c2240" opacity="0.85" />
+
+      <!-- Candle-wisp it carries — light source ramp -->
       <rect x="18" y="13" width="1" height="9" fill="#c8d8e0" />
       <rect x="18" y="13" width="1" height="5" fill="#e0eef4" />
-      <polygon points="18,12 19,9 20,13" fill="#eef6fa" opacity="0.8" />
-      <rect x="6" y="15" width="2" height="2" fill="#2c2240" opacity="0.8" />
+      <polygon points="18,12 19,9 20,13" fill="#eef6fa" opacity="0.85" />
+      <polygon points="18,11 19,9 20,12" fill="#fff8e0" opacity="0.7" />
+      <rect x="18" y="9" width="1" height="1" fill="#ffffff" />
 
-      <polygon points="7,26 8,31 9,26" fill="#241a34" opacity="0.7" />
+      <!-- Dissolving tatters + motes -->
+      <polygon points="7,26 8,31 9,26" fill="#1e1530" opacity="0.7" />
       <polygon points="11,28 12,32 13,28" fill="#2c2240" opacity="0.6" />
-      <polygon points="15,26 16,31 17,26" fill="#241a34" opacity="0.7" />
+      <polygon points="15,26 16,31 17,26" fill="#1e1530" opacity="0.7" />
       <rect x="4" y="20" width="1" height="1" fill="#c0a040" opacity="0.5" />
       <rect x="20" y="24" width="1" height="1" fill="#a0c0d0" opacity="0.5" />
+      <rect x="6" y="11" width="1" height="1" fill="#9a84c0" opacity="0.5" />
     </svg>

@@ -4,34 +4,75 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Half-Dragon Reaver"
     >
+      <!-- Storm backlight + ground shadow -->
+      <ellipse cx="13" cy="20" rx="13" ry="19" fill="#3a64aa" opacity="0.08" />
+      <ellipse cx="12" cy="38" rx="10" ry="1.8" fill="#000" opacity="0.42" />
+
+      <!-- Horns -->
       <polygon points="7,4 9,0 10,5" fill="#16305c" />
-      <polygon points="17,4 15,0 16,5" fill="#16305c" />
+      <polygon points="7,4 8,1 9,5" fill="#244a86" opacity="0.7" />
+      <polygon points="17,4 15,0 16,5" fill="#14254a" />
+
+      <!-- Draconic head — scale ramp, lit upper-left -->
       <rect x="8" y="3" width="8" height="8" fill="#244a86" />
       <rect x="8" y="3" width="8" height="2" fill="#3a64aa" />
+      <rect x="8" y="3" width="3" height="1" fill="#5a84cc" />
+      <rect x="8" y="3" width="2" height="8" fill="#2a4e8e" />
+      <rect x="14" y="4" width="2" height="7" fill="#1a3460" />
+      <rect x="15" y="4" width="1" height="7" fill="#16305c" />
       <polygon points="8,11 12,14 16,11" fill="#1e3a6e" />
+      <!-- Lightning eyes + spark -->
       <rect x="9" y="6" width="2" height="2" fill="#f4d042" />
       <rect x="13" y="6" width="2" height="2" fill="#f4d042" />
+      <rect x="9" y="6" width="1" height="1" fill="#fff0b0" />
+      <rect x="13" y="6" width="1" height="1" fill="#fff0b0" />
+      <rect x="10" y="7" width="1" height="1" fill="#e89a20" />
       <line x1="9" y1="9" x2="15" y2="9" stroke="#e8e0c4" stroke-width="0.6" />
 
+      <!-- Scaled torso — ramp + plate seam + spine ridges -->
       <rect x="6" y="11" width="14" height="13" fill="#1e3a6e" />
       <rect x="6" y="11" width="14" height="2" fill="#2a4e8e" />
+      <rect x="6" y="11" width="3" height="13" fill="#244a86" />
+      <rect x="6" y="11" width="1" height="13" fill="#2e548e" />
+      <rect x="18" y="12" width="2" height="12" fill="#16305c" />
+      <rect x="19" y="12" width="1" height="12" fill="#122850" />
       <polygon points="8,11 10,8 12,11" fill="#2a4e8e" />
-      <polygon points="14,11 16,8 18,11" fill="#2a4e8e" />
+      <polygon points="14,11 16,8 18,11" fill="#244a86" />
       <rect x="10" y="14" width="6" height="8" fill="#16305c" />
+      <rect x="11" y="13" width="2" height="2" fill="#7ec8ff" opacity="0.6" />
+      <rect x="9" y="16" width="1" height="1" fill="#3a64aa" />
+      <rect x="16" y="19" width="1" height="1" fill="#122850" />
 
+      <!-- Left arm -->
       <rect x="2" y="12" width="4" height="3" fill="#244a86" />
+      <rect x="2" y="12" width="4" height="1" fill="#3a64aa" />
       <rect x="1" y="14" width="3" height="9" fill="#1e3a6e" />
-      <rect x="20" y="12" width="4" height="3" fill="#1e3a6e" />
+      <rect x="1" y="14" width="1" height="9" fill="#244a86" />
+
+      <!-- Right arm + greataxe -->
+      <rect x="20" y="12" width="4" height="3" fill="#1a3460" />
       <rect x="22" y="0" width="2" height="15" fill="#5a4a38" />
+      <rect x="22" y="0" width="1" height="15" fill="#6e5a44" />
       <polygon points="19,-2 27,-2 24,6 22,6" fill="#8a9298" />
       <polygon points="20,-1 26,-1 24,4" fill="#aeb6bc" />
+      <polygon points="20,-1 23,-1 22,2" fill="#cfd6dc" />
       <rect x="20" y="2" width="6" height="1" fill="#7ec8ff" opacity="0.6" />
+      <rect x="21" y="-1" width="1" height="1" fill="#ffffff" />
 
+      <!-- Legs + clawed feet -->
       <rect x="7" y="24" width="4" height="10" fill="#1e3a6e" />
-      <rect x="15" y="24" width="4" height="10" fill="#1e3a6e" />
+      <rect x="7" y="24" width="1" height="10" fill="#244a86" />
+      <rect x="10" y="24" width="1" height="10" fill="#16305c" />
+      <rect x="15" y="24" width="4" height="10" fill="#1a3460" />
+      <rect x="18" y="24" width="1" height="10" fill="#122850" />
       <polygon points="5,34 11,34 8,37" fill="#14254a" />
-      <polygon points="13,34 19,34 16,37" fill="#14254a" />
+      <rect x="5" y="34" width="1" height="2" fill="#b8c4e0" />
+      <rect x="8" y="34" width="1" height="2" fill="#9aa8cc" />
+      <polygon points="13,34 19,34 16,37" fill="#11203f" />
+      <rect x="13" y="34" width="1" height="2" fill="#9aa8cc" />
 
-      <rect x="11" y="13" width="2" height="2" fill="#7ec8ff" opacity="0.6" />
+      <!-- Lightning crackle -->
+      <polygon points="11,23 13,25 11,25 13,28" fill="#7ec8ff" opacity="0.65" />
       <rect x="3" y="18" width="1" height="2" fill="#7ec8ff" opacity="0.5" />
+      <rect x="24" y="8" width="1" height="1" fill="#7ec8ff" opacity="0.5" />
     </svg>
