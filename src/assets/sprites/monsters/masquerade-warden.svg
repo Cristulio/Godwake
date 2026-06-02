@@ -4,40 +4,67 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Masquerade-Warden"
     >
-      <ellipse cx="14" cy="27" rx="12" ry="6" fill="#1a1226" opacity="0.3" />
+      <!-- Candlelit-hall backlight + ground shadow -->
+      <ellipse cx="14" cy="18" rx="13" ry="16" fill="#7a5e9a" opacity="0.07" />
+      <ellipse cx="14" cy="32" rx="11" ry="2" fill="#1a1226" opacity="0.42" />
 
-      <rect x="3" y="4" width="4" height="5" fill="#d8cdbc" opacity="0.45" />
-      <rect x="3" y="4" width="4" height="1" fill="#ece2d2" opacity="0.5" />
-      <rect x="21" y="2" width="4" height="5" fill="#d8cdbc" opacity="0.4" />
-      <rect x="22" y="10" width="3" height="4" fill="#cabfae" opacity="0.35" />
-      <rect x="2" y="13" width="3" height="4" fill="#cabfae" opacity="0.35" />
+      <!-- Drifting mask shards — porcelain, lit edge -->
+      <rect x="3" y="4" width="4" height="5" fill="#c8bca6" opacity="0.5" />
+      <rect x="3" y="4" width="4" height="1" fill="#f6eede" opacity="0.6" />
+      <rect x="21" y="2" width="4" height="5" fill="#b8ac98" opacity="0.45" />
+      <rect x="21" y="2" width="4" height="1" fill="#ece2d0" opacity="0.5" />
+      <rect x="22" y="10" width="3" height="4" fill="#c8bca6" opacity="0.4" />
+      <rect x="2" y="13" width="3" height="4" fill="#c8bca6" opacity="0.4" />
 
-      <rect x="10" y="3" width="8" height="10" fill="#ece2d0" />
+      <!-- Porcelain mask — ramp, key light upper-left -->
+      <rect x="10" y="3" width="8" height="10" fill="#d8cdbc" />
       <rect x="10" y="3" width="8" height="1" fill="#f6eede" />
+      <rect x="10" y="3" width="3" height="10" fill="#ece2d0" />
+      <rect x="10" y="3" width="1" height="8" fill="#ffffff" />
+      <rect x="17" y="3" width="1" height="10" fill="#b8ac98" />
       <rect x="10" y="12" width="8" height="1" fill="#c6b9a2" />
+      <!-- Dark crown + jewelled cheeks -->
       <polygon points="10,3 14,1 18,3" fill="#33254a" />
+      <polygon points="11,3 14,1.5 17,3" fill="#473460" opacity="0.6" />
       <rect x="10" y="3" width="2" height="2" fill="#5a2638" />
       <rect x="16" y="3" width="2" height="2" fill="#5a2638" />
+      <!-- Eye holes — void + gold spark -->
       <rect x="11" y="6" width="2" height="2" fill="#160e1e" />
       <rect x="15" y="6" width="2" height="2" fill="#160e1e" />
       <rect x="11" y="6" width="1" height="1" fill="#c0a040" />
       <rect x="15" y="6" width="1" height="1" fill="#c0a040" />
+      <rect x="11" y="6" width="1" height="1" fill="#f4d042" opacity="0.6" />
+      <!-- Painted mouth -->
       <rect x="13" y="9" width="2" height="2" fill="#7a2a2a" />
+      <rect x="13" y="9" width="2" height="1" fill="#9a3a3a" />
 
+      <!-- Robe — purple ramp + gold trim + dither -->
       <polygon points="9,13 19,13 22,32 6,32" fill="#2a1d3e" />
       <polygon points="9,13 19,13 20,21 8,21" fill="#3a2a54" />
-      <rect x="13" y="13" width="2" height="19" fill="#473460" opacity="0.7" />
+      <polygon points="9,13 13,13 12,21 8,21" fill="#473460" opacity="0.7" />
+      <rect x="13" y="13" width="2" height="19" fill="#473460" opacity="0.6" />
+      <rect x="9" y="14" width="1" height="16" fill="#52406f" opacity="0.4" />
+      <rect x="19" y="14" width="1" height="16" fill="#1a1226" opacity="0.7" />
       <rect x="8" y="23" width="12" height="1" fill="#c0a040" opacity="0.6" />
       <rect x="7" y="28" width="14" height="1" fill="#9a7e2e" opacity="0.5" />
+      <rect x="11" y="18" width="1" height="1" fill="#52406f" opacity="0.5" />
+      <rect x="16" y="26" width="1" height="1" fill="#1a1226" />
 
+      <!-- Sleeves / arms -->
       <rect x="5" y="14" width="4" height="2" fill="#2a1d3e" />
       <rect x="3" y="13" width="3" height="2" fill="#33254a" />
+      <rect x="3" y="13" width="3" height="1" fill="#473460" />
       <rect x="19" y="14" width="4" height="2" fill="#2a1d3e" />
       <rect x="22" y="12" width="3" height="2" fill="#33254a" />
+
+      <!-- Staff + gold finial + specular -->
       <rect x="24" y="2" width="1" height="11" fill="#6a5a3a" />
+      <rect x="24" y="2" width="1" height="11" fill="#8a7448" opacity="0.5" />
       <rect x="23" y="1" width="3" height="2" fill="#c0a040" />
       <rect x="23" y="1" width="3" height="1" fill="#f4d042" />
+      <rect x="23" y="1" width="1" height="1" fill="#fff4c0" />
 
+      <!-- Hem + drifting gilt motes -->
       <rect x="6" y="32" width="16" height="1" fill="#160e1e" />
       <rect x="5" y="20" width="1" height="1" fill="#ece2d0" opacity="0.5" />
       <rect x="23" y="24" width="1" height="1" fill="#f4d042" opacity="0.5" />

@@ -4,55 +4,82 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Cell Wight"
     >
-      <!-- head -->
-      <rect x="7" y="2" width="8" height="8" fill="#7a7a6a" />
-      <rect x="7" y="2" width="8" height="1" fill="#5a5a4a" />
-      <rect x="6" y="4" width="1" height="4" fill="#5a5a4a" />
-      <rect x="15" y="4" width="1" height="4" fill="#5a5a4a" />
+      <!-- Cold dungeon backlight + ground shadow -->
+      <ellipse cx="11" cy="16" rx="11" ry="16" fill="#4a82a4" opacity="0.07" />
+      <ellipse cx="11" cy="33" rx="8" ry="1.3" fill="#000" opacity="0.4" />
 
-      <!-- sunken eyes, cold light -->
+      <!-- Gaunt head — corpse ramp, key light upper-left -->
+      <rect x="7" y="2" width="8" height="8" fill="#5a5a48" />
+      <rect x="7" y="2" width="8" height="1" fill="#7a7a6a" />
+      <rect x="7" y="2" width="3" height="7" fill="#6a6a5a" />
+      <rect x="7" y="2" width="1" height="5" fill="#8e8e7c" />
+      <rect x="13" y="3" width="2" height="6" fill="#3a3a2c" />
+      <rect x="6" y="4" width="1" height="4" fill="#3a3a2c" />
+      <rect x="15" y="4" width="1" height="4" fill="#2a2a22" />
+
+      <!-- Sunken eyes — cold corpse-light + spark -->
       <rect x="8" y="4" width="2" height="2" fill="#0a0a08" />
       <rect x="12" y="4" width="2" height="2" fill="#0a0a08" />
       <rect x="8" y="4" width="1" height="1" fill="#6aa0c4" />
       <rect x="12" y="4" width="1" height="1" fill="#6aa0c4" />
-
+      <rect x="8" y="4" width="1" height="1" fill="#a0d0e8" opacity="0.6" />
+      <!-- Hollow cheeks + grimace -->
+      <rect x="8" y="6" width="1" height="2" fill="#3a3a2c" opacity="0.7" />
+      <rect x="13" y="6" width="1" height="2" fill="#2a2a22" opacity="0.7" />
       <rect x="9" y="7" width="4" height="1" fill="#1a1a14" />
 
-      <!-- torso -->
-      <rect x="5" y="10" width="12" height="11" fill="#6a6a5a" />
-      <rect x="6" y="11" width="10" height="1" fill="#5a5a48" />
-      <rect x="10" y="10" width="2" height="11" fill="#5a5a48" />
-      <rect x="5" y="14" width="12" height="1" fill="#3a3228" />
+      <!-- Wasted torso — ramp + rib hollow + dither -->
+      <rect x="5" y="10" width="12" height="11" fill="#5a5a48" />
+      <rect x="5" y="10" width="12" height="1" fill="#7a7a6a" />
+      <rect x="5" y="10" width="2" height="11" fill="#6a6a5a" />
+      <rect x="5" y="10" width="1" height="9" fill="#8e8e7c" />
+      <rect x="15" y="10" width="2" height="11" fill="#3a3a2c" />
+      <rect x="6" y="11" width="10" height="1" fill="#4a4a3a" />
+      <rect x="9" y="10" width="2" height="11" fill="#4a4a3a" opacity="0.8" />
+      <rect x="5" y="14" width="12" height="1" fill="#2a2a22" />
+      <rect x="8" y="16" width="1" height="1" fill="#3a3a2c" />
+      <rect x="12" y="18" width="1" height="1" fill="#3a3a2c" />
 
-      <!-- left arm (normal claw) -->
-      <rect x="2" y="11" width="3" height="8" fill="#6a6a5a" />
-      <rect x="2" y="11" width="1" height="8" fill="#5a5a48" />
+      <!-- Left arm + claw -->
+      <rect x="2" y="11" width="3" height="8" fill="#5a5a48" />
+      <rect x="2" y="11" width="1" height="8" fill="#6a6a5a" />
+      <rect x="4" y="11" width="1" height="8" fill="#3a3a2c" />
       <polygon points="2,19 1,21 3,20" fill="#3a3228" />
       <polygon points="4,19 3,21 5,20" fill="#3a3228" />
+      <rect x="2" y="19" width="1" height="1" fill="#8e8e7c" opacity="0.5" />
 
-      <!-- right arm, fused manacle -->
-      <rect x="17" y="11" width="3" height="6" fill="#6a6a5a" />
+      <!-- Right arm, fused manacle + rusted iron -->
+      <rect x="17" y="11" width="3" height="6" fill="#5a5a48" />
+      <rect x="17" y="11" width="1" height="6" fill="#6a6a5a" />
       <rect x="17" y="16" width="4" height="3" fill="#2a2a30" />
-      <rect x="18" y="17" width="2" height="1" fill="#4a4a52" />
+      <rect x="17" y="16" width="4" height="1" fill="#4a4a52" />
+      <rect x="18" y="17" width="2" height="1" fill="#5a5a64" />
+      <rect x="20" y="16" width="1" height="3" fill="#16161c" />
       <polygon points="17,19 16,21 18,20" fill="#3a3228" />
       <polygon points="20,19 19,21 21,20" fill="#3a3228" />
 
-      <!-- withering glow at the grip hand -->
-      <rect x="16" y="20" width="2" height="2" fill="#6aa0c4" opacity="0.5" />
+      <!-- Withering grip-glow -->
+      <ellipse cx="17" cy="21" rx="3" ry="2.4" fill="#6aa0c4" opacity="0.18" />
+      <rect x="16" y="20" width="2" height="2" fill="#6aa0c4" opacity="0.55" />
+      <rect x="16" y="20" width="1" height="1" fill="#a0d0e8" opacity="0.7" />
 
-      <!-- legs -->
-      <rect x="6" y="21" width="4" height="9" fill="#6a6a5a" />
-      <rect x="12" y="21" width="4" height="9" fill="#6a6a5a" />
-      <rect x="6" y="21" width="1" height="9" fill="#5a5a48" />
-      <rect x="15" y="21" width="1" height="9" fill="#5a5a48" />
-      <rect x="6" y="25" width="4" height="1" fill="#3a3228" />
-      <rect x="12" y="25" width="4" height="1" fill="#3a3228" />
+      <!-- Legs — ramp -->
+      <rect x="6" y="21" width="4" height="9" fill="#5a5a48" />
+      <rect x="12" y="21" width="4" height="9" fill="#5a5a48" />
+      <rect x="6" y="21" width="1" height="9" fill="#6a6a5a" />
+      <rect x="12" y="21" width="1" height="9" fill="#6a6a5a" />
+      <rect x="9" y="21" width="1" height="9" fill="#3a3a2c" />
+      <rect x="15" y="21" width="1" height="9" fill="#3a3a2c" />
+      <rect x="6" y="25" width="4" height="1" fill="#2a2a22" />
+      <rect x="12" y="25" width="4" height="1" fill="#2a2a22" />
 
-      <!-- feet -->
-      <rect x="5" y="30" width="5" height="3" fill="#5a5a48" />
-      <rect x="12" y="30" width="5" height="3" fill="#5a5a48" />
-      <polygon points="5,33 4,32 6,33" fill="#3a3228" />
-      <polygon points="9,33 9,32 11,33" fill="#3a3228" />
-      <polygon points="12,33 11,32 13,33" fill="#3a3228" />
-      <polygon points="16,33 15,32 17,33" fill="#3a3228" />
+      <!-- Cracked feet -->
+      <rect x="5" y="30" width="5" height="3" fill="#4a4a3a" />
+      <rect x="12" y="30" width="5" height="3" fill="#4a4a3a" />
+      <rect x="5" y="30" width="5" height="1" fill="#6a6a5a" />
+      <rect x="12" y="30" width="5" height="1" fill="#6a6a5a" />
+      <polygon points="5,33 4,32 6,33" fill="#2a2a22" />
+      <polygon points="9,33 9,32 11,33" fill="#2a2a22" />
+      <polygon points="12,33 11,32 13,33" fill="#2a2a22" />
+      <polygon points="16,33 15,32 17,33" fill="#2a2a22" />
     </svg>

@@ -4,23 +4,39 @@
       preserveAspectRatio="xMidYMax meet"
     aria-label="Gloaming Eye"
     >
-      <!-- floating cyclopean eye -->
-      <ellipse cx="9" cy="8" rx="7" ry="6" fill="#2a2438" />
-      <ellipse cx="9" cy="8" rx="6" ry="5" fill="#3a3450" />
-      <ellipse cx="9" cy="8" rx="4.5" ry="3.8" fill="#cdd3e6" />
+      <!-- Witch-light backlight + floating shadow -->
+      <ellipse cx="9" cy="8" rx="9" ry="8" fill="#7a6ec0" opacity="0.08" />
+      <ellipse cx="9" cy="17" rx="6" ry="1" fill="#1a1626" opacity="0.6" />
 
-      <!-- narrowed slit pupil -->
+      <!-- Eyeball — fleshy ramp shell, key light upper-left -->
+      <ellipse cx="9" cy="8" rx="7" ry="6" fill="#1f1a2e" />
+      <ellipse cx="9" cy="8" rx="6.4" ry="5.4" fill="#2a2438" />
+      <ellipse cx="8" cy="6.5" rx="4" ry="3" fill="#3a3450" opacity="0.8" />
+      <ellipse cx="9" cy="9.5" rx="5" ry="3" fill="#15101e" opacity="0.5" />
+
+      <!-- Sclera — bright, with rim falloff -->
+      <ellipse cx="9" cy="8" rx="4.5" ry="3.8" fill="#aab2cc" />
+      <ellipse cx="9" cy="8" rx="4.5" ry="3.8" fill="#cdd3e6" opacity="0.6" />
+      <ellipse cx="8" cy="6.8" rx="2.6" ry="1.8" fill="#e8ecf6" opacity="0.7" />
+      <ellipse cx="10" cy="9.4" rx="3" ry="1.4" fill="#8a90ac" opacity="0.5" />
+
+      <!-- Blood vessels -->
+      <rect x="13" y="8" width="1" height="1" fill="#7a3040" opacity="0.5" />
+      <rect x="4" y="9" width="1" height="1" fill="#7a3040" opacity="0.4" />
+      <rect x="11" y="11" width="1" height="1" fill="#7a3040" opacity="0.4" />
+
+      <!-- Narrowed slit pupil + speculars -->
       <ellipse cx="9" cy="8" rx="1.3" ry="3" fill="#15101e" />
       <rect x="9" y="6" width="1" height="1" fill="#e8d27a" />
-      <rect x="8" y="5" width="1" height="1" fill="#ffffff" opacity="0.6" />
+      <rect x="8" y="5" width="1" height="1" fill="#ffffff" opacity="0.75" />
+      <rect x="10" y="9" width="1" height="1" fill="#7a6ec0" opacity="0.5" />
 
-      <!-- grey lash-tendrils -->
-      <rect x="2" y="13" width="1" height="3" fill="#3a3450" />
-      <rect x="1" y="15" width="1" height="1" fill="#3a3450" opacity="0.7" />
-      <rect x="8" y="14" width="1" height="3" fill="#3a3450" />
-      <rect x="15" y="13" width="1" height="3" fill="#3a3450" />
-      <rect x="16" y="15" width="1" height="1" fill="#3a3450" opacity="0.7" />
-
-      <!-- base shadow -->
-      <ellipse cx="9" cy="17" rx="6" ry="1" fill="#1a1626" />
+      <!-- Lash-tendrils — ramped -->
+      <rect x="2" y="13" width="1" height="3" fill="#2a2438" />
+      <rect x="2" y="13" width="1" height="1" fill="#3a3450" />
+      <rect x="1" y="15" width="1" height="1" fill="#2a2438" opacity="0.7" />
+      <rect x="8" y="14" width="1" height="3" fill="#2a2438" />
+      <rect x="8" y="14" width="1" height="1" fill="#3a3450" />
+      <rect x="15" y="13" width="1" height="3" fill="#241f33" />
+      <rect x="16" y="15" width="1" height="1" fill="#241f33" opacity="0.7" />
     </svg>
