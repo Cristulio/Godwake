@@ -4,38 +4,51 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Cavern Hunting-Spider"
     >
-      <!-- web strands behind -->
+      <!-- Cold cavern backlight + web strands -->
+      <ellipse cx="15" cy="13" rx="13" ry="8" fill="#3a4632" opacity="0.07" />
       <line x1="2" y1="2" x2="26" y2="4" stroke="#4a4a52" stroke-width="0.4" opacity="0.5" />
       <line x1="3" y1="6" x2="25" y2="3" stroke="#4a4a52" stroke-width="0.4" opacity="0.5" />
 
-      <!-- legs -->
-      <line x1="11" y1="12" x2="3" y2="4" stroke="#1a120f" stroke-width="0.9" />
-      <line x1="11" y1="13" x2="2" y2="9" stroke="#1a120f" stroke-width="0.9" />
-      <line x1="11" y1="15" x2="2" y2="16" stroke="#1a120f" stroke-width="0.9" />
-      <line x1="11" y1="16" x2="3" y2="20" stroke="#1a120f" stroke-width="0.9" />
-      <line x1="17" y1="12" x2="25" y2="4" stroke="#1a120f" stroke-width="0.9" />
-      <line x1="17" y1="13" x2="26" y2="9" stroke="#1a120f" stroke-width="0.9" />
-      <line x1="17" y1="15" x2="26" y2="16" stroke="#1a120f" stroke-width="0.9" />
-      <line x1="17" y1="16" x2="25" y2="20" stroke="#1a120f" stroke-width="0.9" />
+      <!-- Legs — dark chitin with a thin lit highlight pass -->
+      <line x1="11" y1="12" x2="3" y2="4" stroke="#160f0c" stroke-width="0.9" />
+      <line x1="11" y1="13" x2="2" y2="9" stroke="#160f0c" stroke-width="0.9" />
+      <line x1="11" y1="15" x2="2" y2="16" stroke="#160f0c" stroke-width="0.9" />
+      <line x1="11" y1="16" x2="3" y2="20" stroke="#160f0c" stroke-width="0.9" />
+      <line x1="17" y1="12" x2="25" y2="4" stroke="#160f0c" stroke-width="0.9" />
+      <line x1="17" y1="13" x2="26" y2="9" stroke="#160f0c" stroke-width="0.9" />
+      <line x1="17" y1="15" x2="26" y2="16" stroke="#160f0c" stroke-width="0.9" />
+      <line x1="17" y1="16" x2="25" y2="20" stroke="#160f0c" stroke-width="0.9" />
+      <line x1="11" y1="12" x2="5" y2="6" stroke="#342820" stroke-width="0.3" opacity="0.7" />
+      <line x1="17" y1="12" x2="23" y2="6" stroke="#342820" stroke-width="0.3" opacity="0.7" />
 
-      <!-- abdomen -->
-      <ellipse cx="18" cy="14" rx="7" ry="5" fill="#241a14" />
-      <ellipse cx="18" cy="13" rx="6" ry="4" fill="#342820" />
-      <!-- pale chevron markings -->
-      <polygon points="18,10 16,13 20,13" fill="#5a4632" />
+      <!-- Abdomen — chitin ramp, lit top-left -->
+      <ellipse cx="18" cy="14" rx="7" ry="5" fill="#1f160f" />
+      <ellipse cx="18" cy="14" rx="6.4" ry="4.4" fill="#2e2218" />
+      <ellipse cx="17" cy="13" rx="5" ry="3.4" fill="#3e3022" />
+      <ellipse cx="16" cy="12" rx="2.6" ry="1.6" fill="#4e3c2a" />
+      <!-- Pale chevron markings + speckle -->
+      <polygon points="18,10 16,13 20,13" fill="#6e5840" />
       <rect x="17" y="14" width="2" height="1" fill="#5a4632" />
+      <rect x="20" y="15" width="1" height="1" fill="#5a4632" />
+      <rect x="15" y="11" width="1" height="1" fill="#7e6848" />
 
-      <!-- cephalothorax + head -->
-      <ellipse cx="10" cy="14" rx="5" ry="4" fill="#342820" />
-      <ellipse cx="8" cy="13" rx="3" ry="2" fill="#443628" />
+      <!-- Cephalothorax + head — ramp -->
+      <ellipse cx="10" cy="14" rx="5" ry="4" fill="#2a2018" />
+      <ellipse cx="10" cy="13.5" rx="4.2" ry="3.2" fill="#3a2c20" />
+      <ellipse cx="8" cy="12.5" rx="3" ry="2" fill="#4a3a28" />
+      <ellipse cx="7" cy="12" rx="1.6" ry="1" fill="#5e4a32" />
 
-      <!-- eyes -->
+      <!-- Eye cluster — gleaming with sparks -->
       <rect x="6" y="12" width="1" height="1" fill="#f4d042" />
       <rect x="8" y="11" width="1" height="1" fill="#f4d042" />
       <rect x="6" y="14" width="1" height="1" fill="#c4a430" />
       <rect x="9" y="13" width="1" height="1" fill="#c4a430" />
+      <rect x="6" y="12" width="1" height="1" fill="#fff0a0" opacity="0.8" />
+      <rect x="7" y="13" width="1" height="1" fill="#9a7a20" />
 
-      <!-- fangs -->
-      <polygon points="5,15 4,18 6,16" fill="#1a120f" />
-      <polygon points="7,15 6,18 8,16" fill="#1a120f" />
+      <!-- Fangs — chitin with specular tip -->
+      <polygon points="5,15 4,18 6,16" fill="#160f0c" />
+      <polygon points="7,15 6,18 8,16" fill="#160f0c" />
+      <rect x="4" y="17" width="1" height="1" fill="#5a4632" />
+      <rect x="6" y="17" width="1" height="1" fill="#5a4632" />
     </svg>

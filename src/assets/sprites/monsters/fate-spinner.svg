@@ -4,6 +4,11 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Fate-Spinner"
     >
+      <!-- Threads-of-fate backlight + ground shadow -->
+      <ellipse cx="14" cy="16" rx="13" ry="15" fill="#c0901a" opacity="0.07" />
+      <ellipse cx="14" cy="30" rx="9" ry="1.6" fill="#000" opacity="0.38" />
+
+      <!-- Radiating threads of fate -->
       <line x1="14" y1="14" x2="2" y2="2" stroke="#f4d042" stroke-width="0.5" opacity="0.7" />
       <line x1="14" y1="14" x2="26" y2="2" stroke="#f4d042" stroke-width="0.5" opacity="0.7" />
       <line x1="14" y1="14" x2="0" y2="14" stroke="#f4d042" stroke-width="0.5" opacity="0.7" />
@@ -11,30 +16,52 @@
       <line x1="14" y1="14" x2="3" y2="28" stroke="#f4d042" stroke-width="0.5" opacity="0.6" />
       <line x1="14" y1="14" x2="25" y2="28" stroke="#f4d042" stroke-width="0.5" opacity="0.6" />
 
-      <rect x="10" y="3" width="8" height="7" fill="#3a2a48" />
+      <!-- Hooded head — violet ramp + three eyes -->
+      <rect x="10" y="3" width="8" height="7" fill="#2a1c3a" />
+      <rect x="10" y="3" width="8" height="1" fill="#3a2a48" />
+      <rect x="10" y="3" width="3" height="7" fill="#34243f" />
+      <rect x="10" y="3" width="1" height="6" fill="#42345a" />
+      <rect x="16" y="4" width="2" height="6" fill="#1e1430" />
+      <rect x="17" y="4" width="1" height="6" fill="#181024" />
       <rect x="10" y="3" width="8" height="1" fill="#241830" />
       <rect x="11" y="5" width="2" height="2" fill="#f4d042" />
       <rect x="15" y="5" width="2" height="2" fill="#f4d042" />
-      <rect x="13" y="5" width="2" height="2" fill="#f4d042" opacity="0.7" />
+      <rect x="13" y="5" width="2" height="2" fill="#c4a430" />
+      <rect x="11" y="5" width="1" height="1" fill="#fff4b0" />
+      <rect x="15" y="5" width="1" height="1" fill="#fff4b0" />
+      <rect x="13" y="5" width="1" height="1" fill="#fff4b0" opacity="0.6" />
       <rect x="12" y="7" width="4" height="1" fill="#1a1020" />
 
-      <ellipse cx="14" cy="16" rx="6" ry="7" fill="#2a1c3a" />
-      <ellipse cx="14" cy="16" rx="6" ry="7" fill="none" />
+      <!-- Spindle body — violet ramp + lit thread core -->
+      <ellipse cx="14" cy="16" rx="6" ry="7" fill="#241830" />
+      <ellipse cx="13" cy="15" rx="4.6" ry="5.6" fill="#2e2040" />
+      <ellipse cx="12.5" cy="14" rx="2.6" ry="3.4" fill="#3a2a48" />
       <rect x="12" y="13" width="4" height="6" fill="#3a2a48" />
-      <rect x="13" y="14" width="2" height="4" fill="#5a4470" opacity="0.6" />
+      <rect x="13" y="14" width="2" height="4" fill="#5a4470" opacity="0.7" />
+      <rect x="13" y="14" width="1" height="2" fill="#7a64a0" opacity="0.6" />
+      <rect x="11" y="18" width="1" height="1" fill="#1a1020" />
+      <rect x="16" y="13" width="1" height="1" fill="#42345a" />
 
-      <rect x="4" y="10" width="6" height="2" fill="#3a2a48" />
-      <rect x="18" y="10" width="6" height="2" fill="#3a2a48" />
-      <rect x="2" y="13" width="6" height="2" fill="#3a2a48" />
-      <rect x="20" y="13" width="6" height="2" fill="#3a2a48" />
-      <rect x="4" y="18" width="5" height="2" fill="#3a2a48" />
-      <rect x="19" y="18" width="5" height="2" fill="#3a2a48" />
-
+      <!-- Spinning arms reaching to the threads -->
+      <rect x="4" y="10" width="6" height="2" fill="#2a1c3a" />
+      <rect x="4" y="10" width="6" height="1" fill="#3a2a48" />
+      <rect x="18" y="10" width="6" height="2" fill="#241830" />
+      <rect x="18" y="10" width="6" height="1" fill="#332544" />
+      <rect x="2" y="13" width="6" height="2" fill="#2a1c3a" />
+      <rect x="2" y="13" width="6" height="1" fill="#3a2a48" />
+      <rect x="20" y="13" width="6" height="2" fill="#241830" />
+      <rect x="4" y="18" width="5" height="2" fill="#2a1c3a" />
+      <rect x="19" y="18" width="5" height="2" fill="#241830" />
+      <!-- Spindle fingers gripping threads -->
       <rect x="2" y="9" width="2" height="2" fill="#4a3458" />
-      <rect x="24" y="9" width="2" height="2" fill="#4a3458" />
+      <rect x="2" y="9" width="1" height="1" fill="#5a4470" />
+      <rect x="24" y="9" width="2" height="2" fill="#3a2a48" />
       <rect x="0" y="13" width="2" height="2" fill="#4a3458" />
-      <rect x="26" y="13" width="2" height="2" fill="#4a3458" />
+      <rect x="0" y="13" width="1" height="1" fill="#5a4470" />
+      <rect x="26" y="13" width="2" height="2" fill="#3a2a48" />
 
-      <polygon points="9,22 11,29 14,22" fill="#2a1c3a" />
-      <polygon points="14,22 17,29 19,22" fill="#2a1c3a" />
+      <!-- Hem -->
+      <polygon points="9,22 11,29 14,22" fill="#241830" />
+      <polygon points="9,22 11,28 13,22" fill="#2a1c3a" opacity="0.7" />
+      <polygon points="14,22 17,29 19,22" fill="#1e1430" />
     </svg>

@@ -4,40 +4,75 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Slayer-Echo"
     >
-      <ellipse cx="15" cy="24" rx="13" ry="19" fill="#1a0610" opacity="0.45" />
-      <polygon points="15,42 4,40 6,30 15,32 24,30 26,40" fill="#0e0408" opacity="0.5" />
+      <!-- Cold void backlight + smoke pool -->
+      <ellipse cx="15" cy="22" rx="14" ry="20" fill="#5a1010" opacity="0.13" />
+      <ellipse cx="15" cy="24" rx="13" ry="19" fill="#1a0610" opacity="0.4" />
+      <polygon points="15,42 4,40 6,30 15,32 24,30 26,40" fill="#0e0408" opacity="0.55" />
 
-      <rect x="11" y="3" width="8" height="9" fill="#1a0a10" />
+      <!-- Horned head — shadow ramp, faint cold rim upper-left -->
+      <rect x="11" y="3" width="8" height="9" fill="#160810" />
+      <rect x="11" y="3" width="3" height="8" fill="#241016" />
+      <rect x="11" y="3" width="1" height="6" fill="#3a1620" />
+      <rect x="17" y="4" width="2" height="7" fill="#0a0408" />
       <polygon points="11,3 9,-2 13,2" fill="#0e0408" />
-      <polygon points="19,3 21,-2 17,2" fill="#0e0408" />
+      <polygon points="11,3 10,-1 12,2" fill="#241016" />
+      <polygon points="19,3 21,-2 17,2" fill="#080306" />
+
+      <!-- Burning eyes — the only colour -->
+      <rect x="11" y="5" width="4" height="1" fill="#3a0a08" />
+      <rect x="15" y="5" width="4" height="1" fill="#3a0a08" />
       <rect x="12" y="6" width="2" height="2" fill="#e23030" />
       <rect x="16" y="6" width="2" height="2" fill="#e23030" />
       <rect x="12" y="6" width="1" height="1" fill="#ff7a5a" />
       <rect x="16" y="6" width="1" height="1" fill="#ff7a5a" />
-      <rect x="11" y="10" width="8" height="1" fill="#b53c4a" />
-      <rect x="12" y="10" width="1" height="1" fill="#e8e0d4" />
-      <rect x="14" y="10" width="1" height="1" fill="#e8e0d4" />
-      <rect x="16" y="10" width="1" height="1" fill="#e8e0d4" />
-      <rect x="18" y="10" width="1" height="1" fill="#e8e0d4" />
+      <rect x="13" y="7" width="1" height="1" fill="#b51c14" />
+      <rect x="17" y="7" width="1" height="1" fill="#b51c14" />
 
-      <polygon points="9,12 21,12 23,24 18,30 12,30 7,24" fill="#241016" />
-      <polygon points="11,14 19,14 20,23 15,28 10,23" fill="#3a1620" />
-      <rect x="14" y="14" width="2" height="14" fill="#5a1208" opacity="0.7" />
+      <!-- Fanged maw -->
+      <rect x="11" y="9" width="8" height="2" fill="#0a0408" />
+      <rect x="12" y="10" width="1" height="1" fill="#c8b8a8" />
+      <rect x="14" y="10" width="1" height="1" fill="#c8b8a8" />
+      <rect x="16" y="10" width="1" height="1" fill="#a89878" />
+      <rect x="11" y="9" width="8" height="1" fill="#5a1208" opacity="0.7" />
 
-      <polygon points="9,13 3,18 1,26 5,24 9,18" fill="#1a0a10" />
-      <polygon points="0,25 4,23 1,29" fill="#0e0408" />
+      <!-- Torso — black ramp, ember seam down centre -->
+      <polygon points="9,12 21,12 23,24 18,30 12,30 7,24" fill="#0e0408" />
+      <polygon points="10,13 20,13 21,23 17,29 11,23" fill="#1a0a10" />
+      <polygon points="11,14 19,14 20,22 15,27 11,22" fill="#241016" />
+      <polygon points="9,12 8,23 12,29 12,12" fill="#060206" opacity="0.6" />
+      <rect x="14" y="14" width="2" height="14" fill="#5a1208" opacity="0.6" />
+      <rect x="14" y="14" width="1" height="8" fill="#8c2010" opacity="0.5" />
+      <!-- Dither -->
+      <rect x="12" y="18" width="1" height="1" fill="#3a1620" />
+      <rect x="18" y="19" width="1" height="1" fill="#060206" />
+      <rect x="11" y="22" width="1" height="1" fill="#3a1620" />
+
+      <!-- Left ragged blade-arm -->
+      <polygon points="9,13 3,18 1,26 5,24 9,18" fill="#0e0408" />
+      <polygon points="9,13 4,17 2,25 5,23 9,17" fill="#1a0a10" />
+      <polygon points="0,25 4,23 1,29" fill="#080306" />
       <polygon points="1,28 3,27 2,31" fill="#0e0408" />
       <polygon points="3,30 5,29 4,33" fill="#0e0408" />
-      <polygon points="21,13 27,18 29,26 25,24 21,18" fill="#1a0a10" />
-      <polygon points="30,25 26,23 29,29" fill="#0e0408" />
-      <polygon points="29,28 27,27 28,31" fill="#0e0408" />
-      <polygon points="27,30 25,29 26,33" fill="#0e0408" />
 
+      <!-- Right ragged blade-arm — deeper shadow -->
+      <polygon points="21,13 27,18 29,26 25,24 21,18" fill="#080306" />
+      <polygon points="21,13 26,17 28,25 25,23 21,17" fill="#160810" />
+      <polygon points="30,25 26,23 29,29" fill="#060206" />
+      <polygon points="29,28 27,27 28,31" fill="#080306" />
+      <polygon points="27,30 25,29 26,33" fill="#080306" />
+
+      <!-- Legs -->
       <rect x="11" y="30" width="3" height="10" fill="#1a0a10" />
-      <rect x="16" y="30" width="3" height="10" fill="#1a0a10" />
-      <polygon points="9,40 14,40 13,43 10,43" fill="#0e0408" />
-      <polygon points="16,40 21,40 20,43 17,43" fill="#0e0408" />
+      <rect x="11" y="30" width="1" height="10" fill="#241016" />
+      <rect x="13" y="30" width="1" height="10" fill="#080306" />
+      <rect x="16" y="30" width="3" height="10" fill="#160810" />
+      <rect x="18" y="30" width="1" height="10" fill="#060206" />
+      <polygon points="9,40 14,40 13,43 10,43" fill="#080306" />
+      <polygon points="16,40 21,40 20,43 17,43" fill="#060206" />
 
+      <!-- Embers bleeding out -->
       <rect x="13" y="20" width="1" height="1" fill="#e23030" opacity="0.6" />
       <rect x="16" y="24" width="1" height="1" fill="#5a1208" opacity="0.7" />
+      <rect x="6" y="16" width="1" height="1" fill="#b51c14" opacity="0.5" />
+      <rect x="24" y="20" width="1" height="1" fill="#5a1208" opacity="0.5" />
     </svg>
