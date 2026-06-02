@@ -55,7 +55,7 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-md">
             {room.flavorText}
           </p>
-          {revealed && room.goldReward && (
+          {revealed && !!room.goldReward && (
             <div className="text-2xl font-mono text-[var(--color-accent-gold)] animate-fade-in">
               +{actualGold} gold
               {actualGold > (room.goldReward ?? 0) && (
