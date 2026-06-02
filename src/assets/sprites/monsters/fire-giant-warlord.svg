@@ -4,46 +4,76 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Fire-Giant Warlord"
     >
-      <ellipse cx="19" cy="20" rx="18" ry="20" fill="#200c04" opacity="0.45" />
+      <!-- Forge backlight + ground shadow -->
+      <ellipse cx="19" cy="20" rx="18" ry="20" fill="#a83a14" opacity="0.1" />
+      <ellipse cx="19" cy="38" rx="14" ry="1.8" fill="#000" opacity="0.45" />
 
+      <!-- Head — lava-rock skin ramp, key light upper-left -->
       <rect x="12" y="3" width="13" height="9" fill="#a85028" />
       <rect x="12" y="3" width="13" height="2" fill="#c46834" />
+      <rect x="12" y="3" width="3" height="9" fill="#b85e30" />
+      <rect x="12" y="3" width="1" height="6" fill="#e07840" />
+      <rect x="23" y="3" width="2" height="9" fill="#8a3a18" />
+      <rect x="24" y="4" width="1" height="7" fill="#5a2410" />
+      <!-- Gold crown horns + gem tips -->
       <polygon points="12,3 11,-1 14,2" fill="#c0a040" />
       <polygon points="25,3 26,-1 23,2" fill="#c0a040" />
+      <polygon points="12,3 11,-1 13,1" fill="#f4d042" opacity="0.7" />
       <rect x="11" y="-1" width="2" height="2" fill="#f4d042" />
       <rect x="24" y="-1" width="2" height="2" fill="#f4d042" />
-      <rect x="13" y="6" width="3" height="2" fill="#fff0c0" />
-      <rect x="21" y="6" width="3" height="2" fill="#fff0c0" />
-      <rect x="13" y="6" width="1" height="1" fill="#ffffff" />
-      <rect x="21" y="6" width="1" height="1" fill="#ffffff" />
+      <rect x="11" y="-1" width="1" height="1" fill="#fff0c0" />
+      <!-- Molten eyes + spec -->
+      <rect x="13" y="6" width="3" height="2" fill="#ffb04a" />
+      <rect x="21" y="6" width="3" height="2" fill="#ffb04a" />
+      <rect x="13" y="6" width="1" height="1" fill="#fff0c0" />
+      <rect x="21" y="6" width="1" height="1" fill="#fff0c0" />
       <rect x="15" y="10" width="7" height="1" fill="#5a2410" />
 
+      <!-- Blackened plate cuirass — iron ramp -->
       <rect x="5" y="12" width="27" height="18" fill="#352a20" />
       <rect x="5" y="12" width="27" height="2" fill="#52402e" />
+      <rect x="5" y="12" width="27" height="1" fill="#6a5240" />
+      <rect x="5" y="12" width="2" height="18" fill="#46362a" />
+      <rect x="30" y="13" width="2" height="17" fill="#2a201a" />
+      <!-- Gold gorget -->
       <rect x="13" y="11" width="11" height="3" fill="#c0a040" />
       <rect x="13" y="11" width="11" height="1" fill="#f4d042" />
+      <rect x="13" y="11" width="2" height="3" fill="#d4b850" />
+      <!-- Molten core through the breastplate -->
       <rect x="9" y="15" width="19" height="12" fill="#2a201a" />
       <rect x="6" y="14" width="1" height="15" fill="#f4942a" opacity="0.55" />
       <rect x="30" y="14" width="1" height="15" fill="#e87820" opacity="0.5" />
-      <rect x="12" y="16" width="13" height="1" fill="#a83a14" opacity="0.6" />
-      <rect x="10" y="20" width="17" height="1" fill="#f4942a" opacity="0.45" />
-      <rect x="14" y="24" width="9" height="1" fill="#ffb04a" opacity="0.4" />
+      <rect x="12" y="16" width="13" height="1" fill="#a83a14" opacity="0.65" />
+      <rect x="10" y="20" width="17" height="1" fill="#f4942a" opacity="0.5" />
+      <rect x="14" y="24" width="9" height="1" fill="#ffb04a" opacity="0.45" />
+      <rect x="18" y="18" width="2" height="2" fill="#ffd070" opacity="0.4" />
 
+      <!-- Pauldrons -->
       <rect x="0" y="13" width="6" height="15" fill="#352a20" />
+      <rect x="0" y="13" width="6" height="1" fill="#52402e" />
+      <rect x="0" y="13" width="1" height="15" fill="#46362a" />
       <rect x="32" y="13" width="6" height="15" fill="#352a20" />
-      <rect x="0" y="26" width="6" height="3" fill="#c89058" opacity="0.85" />
+      <rect x="37" y="13" width="1" height="15" fill="#2a201a" />
+      <rect x="0" y="26" width="6" height="3" fill="#c46834" opacity="0.85" />
 
+      <!-- Flaming greatsword on the right -->
       <rect x="34" y="-2" width="3" height="16" fill="#3a2a1a" />
+      <rect x="34" y="-2" width="1" height="16" fill="#52402e" />
       <polygon points="30,14 39,14 39,0 35,-4 30,0" fill="#6a5240" />
       <polygon points="35,14 39,14 39,0 35,-4" fill="#46362a" />
+      <!-- Banded flame on the blade -->
       <rect x="31" y="3" width="7" height="1" fill="#f4942a" opacity="0.8" />
-      <rect x="31" y="7" width="7" height="1" fill="#ffb04a" opacity="0.7" />
-      <rect x="31" y="11" width="7" height="1" fill="#e87820" opacity="0.6" />
+      <rect x="31" y="7" width="7" height="1" fill="#ffb04a" opacity="0.75" />
+      <rect x="31" y="11" width="7" height="1" fill="#e87820" opacity="0.65" />
+      <rect x="34" y="1" width="2" height="1" fill="#fff0c0" opacity="0.7" />
 
+      <!-- Legs — plate with molten cracks -->
       <rect x="9" y="30" width="8" height="10" fill="#2a201a" />
       <rect x="20" y="30" width="8" height="10" fill="#2a201a" />
+      <rect x="9" y="30" width="1" height="10" fill="#46362a" />
+      <rect x="20" y="30" width="1" height="10" fill="#46362a" />
+      <rect x="11" y="32" width="1" height="5" fill="#e87820" opacity="0.5" />
+      <rect x="23" y="32" width="1" height="5" fill="#e87820" opacity="0.45" />
       <rect x="8" y="38" width="10" height="2" fill="#120a06" />
       <rect x="20" y="38" width="10" height="2" fill="#120a06" />
-      <rect x="11" y="32" width="1" height="5" fill="#e87820" opacity="0.45" />
-      <rect x="23" y="32" width="1" height="5" fill="#e87820" opacity="0.45" />
     </svg>

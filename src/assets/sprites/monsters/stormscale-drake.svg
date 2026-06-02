@@ -4,34 +4,76 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Stormscale Drake"
     >
-      <polygon points="2,6 12,12 12,22 4,18" fill="#1a2e52" opacity="0.85" />
-      <polygon points="3,8 11,13 11,18" fill="#243e6e" opacity="0.6" />
+      <!-- Storm backlight + ground shadow -->
+      <ellipse cx="17" cy="18" rx="16" ry="15" fill="#3a64aa" opacity="0.08" />
+      <ellipse cx="17" cy="32" rx="12" ry="1.6" fill="#000" opacity="0.42" />
 
+      <!-- Far wing membrane — ribbed, behind the body -->
+      <polygon points="2,6 12,12 12,22 4,18" fill="#16305c" />
+      <polygon points="3,8 11,13 11,18" fill="#1e3a6e" opacity="0.7" />
+      <polygon points="4,9 10,13 10,16" fill="#244a86" opacity="0.5" />
+      <rect x="5" y="9" width="1" height="9" fill="#14254a" />
+      <rect x="8" y="11" width="1" height="9" fill="#14254a" />
+
+      <!-- Body — scale ramp, lit top-left -->
       <rect x="10" y="14" width="16" height="11" fill="#1e3866" />
       <rect x="10" y="14" width="16" height="2" fill="#2e5290" />
+      <rect x="10" y="14" width="6" height="1" fill="#5a84cc" />
+      <rect x="10" y="14" width="2" height="10" fill="#243e6e" />
+      <rect x="24" y="15" width="2" height="10" fill="#16305c" />
+      <rect x="10" y="24" width="16" height="1" fill="#14254a" />
       <line x1="12" y1="18" x2="24" y2="18" stroke="#14254a" stroke-width="0.5" />
       <line x1="12" y1="21" x2="24" y2="21" stroke="#14254a" stroke-width="0.5" />
-      <polygon points="14,14 16,10 18,14" fill="#2e5290" />
-      <polygon points="19,14 21,10 23,14" fill="#2e5290" />
+      <!-- Dorsal ridge -->
+      <polygon points="14,14 16,10 18,14" fill="#16305c" />
+      <polygon points="19,14 21,10 23,14" fill="#1e3a6e" />
+      <polygon points="14,14 16,10 17,14" fill="#2e5290" opacity="0.6" />
+      <!-- Scale speckle highlights -->
+      <rect x="13" y="16" width="1" height="1" fill="#5a84cc" />
+      <rect x="18" y="17" width="1" height="1" fill="#4a74ba" />
+      <rect x="21" y="16" width="1" height="1" fill="#5a84cc" />
 
+      <!-- Head to the right — ramped -->
       <rect x="24" y="8" width="9" height="8" fill="#243e6e" />
       <rect x="24" y="8" width="9" height="2" fill="#2e5290" />
+      <rect x="24" y="8" width="3" height="1" fill="#5a84cc" />
+      <rect x="24" y="14" width="9" height="2" fill="#16305c" />
       <polygon points="33,9 30,15 33,16" fill="#1e3866" />
+      <!-- Brow horn -->
+      <polygon points="25,8 27,4 28,9" fill="#16305c" />
+      <polygon points="25,8 27,4 27,8" fill="#244a86" opacity="0.6" />
+      <!-- Lightning eye + spec -->
       <rect x="27" y="11" width="3" height="2" fill="#f4d042" />
       <rect x="28" y="11" width="1" height="2" fill="#fff0b0" />
+      <rect x="27" y="11" width="1" height="1" fill="#e89a20" />
+      <!-- Jaw + fangs -->
       <polygon points="26,16 24,20 22,16" fill="#1e3866" />
       <polygon points="32,16 30,19 28,16" fill="#1e3866" />
-      <polygon points="30,18 33,20 28,20" fill="#7ec8ff" opacity="0.4" />
+      <polygon points="24,16 25,19 22,17" fill="#d8e0f0" />
+      <polygon points="30,16 31,18 28,17" fill="#d8e0f0" />
+      <!-- Breath crackle -->
+      <polygon points="30,18 33,20 28,20" fill="#7ec8ff" opacity="0.45" />
 
+      <!-- Legs + claws -->
       <rect x="9" y="25" width="4" height="7" fill="#1e3866" />
       <rect x="15" y="25" width="4" height="7" fill="#1e3866" />
       <rect x="21" y="25" width="4" height="7" fill="#1e3866" />
+      <rect x="9" y="25" width="1" height="7" fill="#244a86" />
+      <rect x="15" y="25" width="1" height="7" fill="#244a86" />
+      <rect x="21" y="25" width="1" height="7" fill="#243e6e" />
       <polygon points="8,32 13,32 10,34" fill="#14254a" />
       <polygon points="14,32 19,32 16,34" fill="#14254a" />
       <polygon points="20,32 25,32 22,34" fill="#14254a" />
+      <rect x="8" y="32" width="1" height="2" fill="#b8c4e0" />
+      <rect x="14" y="32" width="1" height="2" fill="#b8c4e0" />
+      <rect x="20" y="32" width="1" height="2" fill="#9aa8cc" />
 
-      <polygon points="26,20 34,23 27,24" fill="#1a2e52" opacity="0.7" />
+      <!-- Tail -->
+      <polygon points="26,20 34,23 27,24" fill="#1a2e52" opacity="0.8" />
+      <polygon points="26,20 32,22 27,23" fill="#243e6e" opacity="0.6" />
 
+      <!-- Lightning crackle -->
+      <polygon points="22,18 24,20 22,20 24,23" fill="#7ec8ff" opacity="0.7" />
       <rect x="13" y="11" width="2" height="2" fill="#7ec8ff" opacity="0.6" />
       <rect x="18" y="16" width="1" height="1" fill="#7ec8ff" opacity="0.7" />
       <rect x="27" y="15" width="2" height="1" fill="#7ec8ff" opacity="0.5" />

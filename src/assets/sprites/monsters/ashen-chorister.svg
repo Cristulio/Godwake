@@ -4,36 +4,74 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Ashen Chorister"
     >
-      <!-- soot halo -->
-      <circle cx="12" cy="2" r="6" fill="none" stroke="#4a4348" stroke-width="1.2" />
-      <circle cx="12" cy="2" r="6" fill="none" stroke="#6a6058" stroke-width="0.4" />
+      <!-- Ashen backlight + ground shadow -->
+      <ellipse cx="12" cy="22" rx="13" ry="18" fill="#7a6838" opacity="0.07" />
+      <ellipse cx="12" cy="38" rx="9" ry="1.5" fill="#000" opacity="0.4" />
 
-      <!-- ash head, mouth open in song -->
-      <rect x="8" y="3" width="8" height="8" fill="#b8b0a8" />
-      <rect x="8" y="3" width="8" height="1" fill="#8a8278" />
-      <rect x="9" y="5" width="2" height="1" fill="#2a2428" />
-      <rect x="13" y="5" width="2" height="1" fill="#2a2428" />
-      <rect x="10" y="8" width="4" height="3" fill="#2a2428" />
-      <rect x="11" y="9" width="2" height="2" fill="#8a3848" opacity="0.6" />
+      <!-- Soot halo — double ring with a lit upper arc -->
+      <circle cx="12" cy="2" r="6" fill="none" stroke="#3a3438" stroke-width="1.4" />
+      <circle cx="12" cy="2" r="6" fill="none" stroke="#6a6058" stroke-width="0.5" />
+      <path d="M7 0 A6 6 0 0 1 15 -2" fill="none" stroke="#9a8248" stroke-width="0.5" opacity="0.7" />
 
-      <!-- ashen robe -->
+      <!-- Ash head — stone ramp, key light upper-left -->
+      <rect x="8" y="3" width="8" height="8" fill="#8a8278" />
+      <rect x="8" y="3" width="8" height="1" fill="#b8b0a8" />
+      <rect x="8" y="3" width="2" height="8" fill="#a39a90" />
+      <rect x="8" y="3" width="1" height="5" fill="#c4bcb4" />
+      <rect x="14" y="3" width="2" height="8" fill="#5a524e" />
+      <rect x="15" y="4" width="1" height="6" fill="#4a4348" />
+      <!-- Hollow eyes with ember glow -->
+      <rect x="9" y="5" width="2" height="2" fill="#1a1418" />
+      <rect x="13" y="5" width="2" height="2" fill="#1a1418" />
+      <rect x="9" y="5" width="1" height="1" fill="#e8862a" opacity="0.8" />
+      <rect x="13" y="5" width="1" height="1" fill="#e8862a" opacity="0.8" />
+      <!-- Mouth open in song — ember-lit throat -->
+      <rect x="10" y="8" width="4" height="3" fill="#1a1418" />
+      <rect x="11" y="9" width="2" height="2" fill="#a83a2a" opacity="0.7" />
+      <rect x="11" y="9" width="1" height="1" fill="#f4942a" opacity="0.6" />
+
+      <!-- Ashen robe — grey ramp, lit left edge + cool right rim -->
       <polygon points="6,12 18,12 21,38 3,38" fill="#6a6058" />
-      <polygon points="6,12 18,12 19,24 5,24" fill="#7a7068" />
-      <rect x="11" y="12" width="2" height="24" fill="#8a8078" />
+      <polygon points="6,12 16,12 17,26 5,26" fill="#7a7068" />
+      <polygon points="6,12 11,12 9,38 4,38" fill="#8a8078" opacity="0.55" />
+      <polygon points="16,12 18,12 21,38 18,38" fill="#4a4348" opacity="0.7" />
+      <rect x="11" y="12" width="2" height="24" fill="#9a9088" opacity="0.7" />
+      <!-- Robe dither texture -->
+      <rect x="9" y="22" width="1" height="1" fill="#5a524e" />
+      <rect x="15" y="28" width="1" height="1" fill="#4a4348" />
+      <rect x="13" y="32" width="1" height="1" fill="#7a7068" />
 
-      <!-- soot-gold stole -->
-      <rect x="9" y="12" width="2" height="20" fill="#7a6838" opacity="0.7" />
-      <rect x="13" y="12" width="2" height="20" fill="#7a6838" opacity="0.7" />
+      <!-- Soot-gold stole — gold ramp + specular -->
+      <rect x="9" y="12" width="2" height="20" fill="#7a6838" />
+      <rect x="9" y="12" width="1" height="20" fill="#9a8248" />
+      <rect x="13" y="12" width="2" height="20" fill="#7a6838" />
+      <rect x="14" y="12" width="1" height="20" fill="#5a4824" />
+      <rect x="9" y="14" width="1" height="1" fill="#c0a040" />
+      <rect x="13" y="18" width="1" height="1" fill="#c0a040" />
 
-      <!-- raised hand casting hymn-fire -->
-      <rect x="18" y="13" width="3" height="3" fill="#b8b0a8" />
-      <rect x="20" y="10" width="3" height="3" fill="#b8b0a8" />
-      <circle cx="22" cy="8" r="2.5" fill="#f4e8c0" opacity="0.85" />
-      <circle cx="22" cy="8" r="1.2" fill="#fff8e0" />
+      <!-- Left arm at the hem -->
       <rect x="3" y="14" width="3" height="9" fill="#6a6058" />
+      <rect x="3" y="14" width="1" height="9" fill="#8a8078" />
+      <rect x="5" y="14" width="1" height="9" fill="#4a4348" />
 
-      <!-- hem -->
-      <polygon points="3,38 6,34 9,38" fill="#4a4348" />
-      <polygon points="9,38 12,34 15,38" fill="#4a4348" />
-      <polygon points="15,38 18,34 21,38" fill="#4a4348" />
+      <!-- Raised hand casting hymn-fire -->
+      <rect x="18" y="13" width="3" height="3" fill="#8a8278" />
+      <rect x="18" y="13" width="3" height="1" fill="#b8b0a8" />
+      <rect x="20" y="10" width="3" height="3" fill="#8a8278" />
+      <rect x="20" y="10" width="3" height="1" fill="#a39a90" />
+      <!-- Hymn-fire — layered radiant bloom + specular -->
+      <circle cx="22" cy="8" r="3" fill="#c0a040" opacity="0.45" />
+      <circle cx="22" cy="8" r="2" fill="#f4e8c0" opacity="0.9" />
+      <circle cx="22" cy="8" r="1" fill="#fff8e0" />
+      <rect x="22" y="8" width="1" height="1" fill="#ffffff" />
+
+      <!-- Hem — torn ash teeth -->
+      <polygon points="3,38 6,34 9,38" fill="#3a3438" />
+      <polygon points="9,38 12,34 15,38" fill="#3a3438" />
+      <polygon points="15,38 18,34 21,38" fill="#3a3438" />
+      <polygon points="3,38 6,35 9,38" fill="#5a524e" opacity="0.6" />
+
+      <!-- Drifting ash motes -->
+      <rect x="5" y="20" width="1" height="1" fill="#9a8248" opacity="0.5" />
+      <rect x="19" y="18" width="1" height="1" fill="#c0a040" opacity="0.45" />
     </svg>

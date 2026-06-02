@@ -4,33 +4,65 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Drowned Acolyte"
     >
+      <!-- Drowned-deep backlight + ground shadow -->
+      <ellipse cx="12" cy="16" rx="12" ry="15" fill="#2a6a7a" opacity="0.09" />
+      <ellipse cx="12" cy="30" rx="9" ry="1.4" fill="#000" opacity="0.38" />
+
+      <!-- Bloated head — drowned-flesh ramp, key light upper-left -->
       <rect x="7" y="3" width="9" height="8" fill="#7a8a86" />
       <rect x="7" y="3" width="9" height="1" fill="#9aa6a0" />
-      <rect x="8" y="5" width="2" height="2" fill="#1a2a2e" />
-      <rect x="13" y="5" width="2" height="2" fill="#1a2a2e" />
-      <rect x="8" y="5" width="1" height="1" fill="#6aa0a0" opacity="0.8" />
-      <rect x="13" y="5" width="1" height="1" fill="#6aa0a0" opacity="0.8" />
-      <rect x="10" y="8" width="3" height="1" fill="#2a3a3a" />
+      <rect x="7" y="3" width="2" height="8" fill="#8a9a94" />
+      <rect x="7" y="3" width="1" height="5" fill="#b4c0ba" />
+      <rect x="14" y="3" width="2" height="8" fill="#5a6864" />
+      <rect x="15" y="4" width="1" height="6" fill="#4a5854" />
+      <!-- Sunken eyes with cold glow -->
+      <rect x="8" y="5" width="2" height="2" fill="#102224" />
+      <rect x="13" y="5" width="2" height="2" fill="#102224" />
+      <rect x="8" y="5" width="1" height="1" fill="#6aa0a0" />
+      <rect x="13" y="5" width="1" height="1" fill="#6aa0a0" />
+      <rect x="8" y="5" width="1" height="1" fill="#a8e0e0" opacity="0.6" />
+      <!-- Slack mouth -->
+      <rect x="10" y="8" width="3" height="1" fill="#1a2a2a" />
 
+      <!-- Sodden robe — sea-teal ramp, lit left + cold right rim -->
       <rect x="5" y="11" width="13" height="15" fill="#2a4a4a" />
-      <rect x="5" y="11" width="13" height="1" fill="#1a3232" />
-      <rect x="11" y="12" width="2" height="14" fill="#356060" opacity="0.7" />
+      <rect x="5" y="11" width="13" height="1" fill="#356060" />
+      <rect x="5" y="11" width="2" height="15" fill="#326060" />
+      <rect x="5" y="11" width="1" height="15" fill="#3a6a6a" />
+      <rect x="16" y="12" width="2" height="14" fill="#14282a" />
+      <rect x="11" y="12" width="2" height="14" fill="#3a6a6a" opacity="0.7" />
       <rect x="7" y="13" width="1" height="12" fill="#1e3838" />
-      <rect x="15" y="13" width="1" height="12" fill="#1e3838" />
+      <rect x="15" y="13" width="1" height="12" fill="#1a3232" />
+      <!-- Robe dither -->
+      <rect x="9" y="18" width="1" height="1" fill="#1e3838" />
+      <rect x="14" y="22" width="1" height="1" fill="#356060" />
 
+      <!-- Arms + waterlogged pale hands -->
       <rect x="2" y="15" width="4" height="3" fill="#2a4a4a" />
+      <rect x="2" y="15" width="4" height="1" fill="#356060" />
       <rect x="1" y="17" width="3" height="2" fill="#7a8a86" />
-      <rect x="0" y="18" width="2" height="2" fill="#8a9a92" />
+      <rect x="0" y="18" width="2" height="2" fill="#9aa6a0" />
+      <rect x="0" y="18" width="2" height="1" fill="#b4c0ba" />
       <rect x="17" y="15" width="4" height="3" fill="#2a4a4a" />
       <rect x="19" y="17" width="3" height="2" fill="#7a8a86" />
-      <rect x="21" y="18" width="2" height="2" fill="#8a9a92" />
+      <rect x="21" y="18" width="2" height="2" fill="#9aa6a0" />
 
-      <rect x="9" y="14" width="6" height="4" fill="#cfc7ad" opacity="0.85" />
+      <!-- Offered relic — bone ramp + specular -->
+      <rect x="9" y="14" width="6" height="4" fill="#cfc7ad" />
       <rect x="9" y="14" width="6" height="1" fill="#e6dec4" />
-      <rect x="12" y="14" width="1" height="4" fill="#9a9278" />
+      <rect x="9" y="14" width="1" height="4" fill="#e6dec4" />
+      <rect x="14" y="14" width="1" height="4" fill="#9a9278" />
+      <rect x="11" y="15" width="1" height="1" fill="#fff4e0" />
 
+      <!-- Legs -->
       <rect x="6" y="26" width="5" height="6" fill="#1e3838" />
       <rect x="13" y="26" width="5" height="6" fill="#1e3838" />
+      <rect x="6" y="26" width="1" height="6" fill="#2a4a4a" />
+      <rect x="13" y="26" width="1" height="6" fill="#2a4a4a" />
+
+      <!-- Pooling brine + cold sheen -->
       <rect x="2" y="29" width="20" height="3" fill="#0a1822" opacity="0.7" />
       <rect x="2" y="29" width="20" height="1" fill="#14323e" opacity="0.6" />
+      <rect x="5" y="30" width="3" height="1" fill="#2a6a7a" opacity="0.4" />
+      <rect x="14" y="30" width="3" height="1" fill="#2a6a7a" opacity="0.35" />
     </svg>

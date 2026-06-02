@@ -4,39 +4,56 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Slayer-Shade"
     >
-      <ellipse cx="12" cy="31" rx="8" ry="1.5" fill="#0a0e0c" opacity="0.4" />
+      <!-- Spectral backlight + ground shadow -->
+      <ellipse cx="12" cy="17" rx="11" ry="16" fill="#4a7a6a" opacity="0.1" />
+      <ellipse cx="12" cy="17" rx="9" ry="14" fill="#2a3430" opacity="0.22" />
+      <ellipse cx="12" cy="31" rx="8" ry="1.4" fill="#0a0e0c" opacity="0.4" />
 
-      <ellipse cx="12" cy="17" rx="9" ry="14" fill="#2a3430" opacity="0.25" />
-
-      <rect x="8" y="2" width="8" height="8" fill="#6a746e" />
+      <!-- Horned helm — ghost-steel ramp, key light upper-left -->
+      <rect x="8" y="2" width="8" height="8" fill="#56605a" />
       <rect x="8" y="2" width="8" height="1" fill="#8a948e" />
+      <rect x="8" y="2" width="2" height="8" fill="#6a746e" />
+      <rect x="8" y="2" width="1" height="5" fill="#7a847e" />
+      <rect x="15" y="2" width="1" height="8" fill="#3a443e" />
       <polygon points="8,2 7,-1 10,1" fill="#4a5450" />
-      <polygon points="16,2 17,-1 14,1" fill="#4a5450" />
+      <polygon points="16,2 17,-1 14,1" fill="#3a443e" />
+      <polygon points="8,2 7,-1 9,1" fill="#6a746e" opacity="0.7" />
+      <!-- Burning red eyes + spec -->
       <rect x="9" y="5" width="2" height="2" fill="#b02828" />
       <rect x="13" y="5" width="2" height="2" fill="#b02828" />
       <rect x="9" y="5" width="1" height="1" fill="#f04040" />
       <rect x="13" y="5" width="1" height="1" fill="#f04040" />
+      <rect x="9" y="5" width="1" height="1" fill="#ff8a6a" opacity="0.6" />
       <rect x="10" y="8" width="4" height="1" fill="#2a3430" />
 
+      <!-- Cuirass — spectral ramp, semi-translucent -->
       <polygon points="8,10 16,10 18,26 12,30 6,26" fill="#56605a" opacity="0.92" />
       <polygon points="10,10 14,10 15,24 12,28 9,24" fill="#6a746e" opacity="0.7" />
+      <polygon points="8,10 11,10 9,26 7,24" fill="#7a847e" opacity="0.45" />
       <rect x="11" y="12" width="2" height="12" fill="#3a443e" opacity="0.6" />
+      <rect x="9" y="14" width="1" height="1" fill="#8a948e" opacity="0.7" />
 
+      <!-- Arms + clawed gauntlets -->
       <rect x="6" y="11" width="3" height="9" fill="#56605a" opacity="0.9" />
+      <rect x="6" y="11" width="1" height="9" fill="#6a746e" opacity="0.9" />
       <polygon points="4,20 6,18 8,20 7,24 5,24" fill="#7a847e" />
       <polygon points="4,24 3,27 5,25" fill="#1a201c" />
       <polygon points="6,24 5,27 7,25" fill="#1a201c" />
-
       <rect x="15" y="11" width="3" height="9" fill="#56605a" opacity="0.9" />
-      <polygon points="16,20 18,18 20,20 19,24 17,24" fill="#7a847e" />
+      <rect x="17" y="11" width="1" height="9" fill="#3a443e" opacity="0.9" />
+      <polygon points="16,20 18,18 20,20 19,24 17,24" fill="#6a746e" />
       <polygon points="17,24 16,28 18,26" fill="#1a201c" />
       <polygon points="19,24 18,28 20,26" fill="#1a201c" />
 
+      <!-- Legs + clawed feet -->
       <rect x="9" y="26" width="3" height="5" fill="#4a5450" opacity="0.9" />
       <rect x="12" y="26" width="3" height="5" fill="#4a5450" opacity="0.9" />
+      <rect x="9" y="26" width="1" height="5" fill="#6a746e" opacity="0.8" />
       <polygon points="8,31 12,31 10,33" fill="#1a201c" />
       <polygon points="13,31 17,31 15,33" fill="#1a201c" />
 
+      <!-- Floating ember motes -->
       <rect x="4" y="16" width="1" height="1" fill="#f04040" opacity="0.5" />
       <rect x="20" y="22" width="1" height="1" fill="#b02828" opacity="0.5" />
+      <rect x="18" y="13" width="1" height="1" fill="#f04040" opacity="0.4" />
     </svg>
