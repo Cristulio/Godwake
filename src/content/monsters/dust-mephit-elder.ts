@@ -12,7 +12,7 @@ export const DUST_MEPHIT_ELDER: Monster = MonsterSchema.parse({
   size: 'small',
   creatureType: 'elemental',
   ac: 13,
-  maxHp: 14,
+  maxHp: 20,
   speed: 30,
   abilityScores: { str: 7, dex: 15, con: 11, int: 10, wis: 11, cha: 11 },
   passivePerception: 11,
@@ -20,8 +20,8 @@ export const DUST_MEPHIT_ELDER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Choking Breath',
-      attackBonus: 4,
-      damage: '2d6',
+      attackBonus: 5,
+      damage: '2d6+2',
       damageType: 'poison',
       reach: 5,
       description:

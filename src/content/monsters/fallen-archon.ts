@@ -15,7 +15,7 @@ export const FALLEN_ARCHON: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'celestial',
   ac: 17,
-  maxHp: 88,
+  maxHp: 100,
   speed: 30,
   abilityScores: { str: 19, dex: 14, con: 18, int: 12, wis: 15, cha: 16 },
   passivePerception: 14,
@@ -33,7 +33,7 @@ export const FALLEN_ARCHON: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Greatsword of the Last Host',
       attackBonus: 9,
-      damage: '2d8+5',
+      damage: '2d8+6',
       damageType: 'radiant',
       reach: 10,
       description:

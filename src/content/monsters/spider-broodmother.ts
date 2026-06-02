@@ -13,7 +13,7 @@ export const SPIDER_BROODMOTHER: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'monstrosity',
   ac: 15,
-  maxHp: 80,
+  maxHp: 92,
   speed: 40,
   abilityScores: { str: 16, dex: 15, con: 16, int: 4, wis: 12, cha: 6 },
   passivePerception: 11,
@@ -22,8 +22,8 @@ export const SPIDER_BROODMOTHER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Venom Bite',
-      attackBonus: 7,
-      damage: '2d8+4',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'poison',
       reach: 5,
       description:

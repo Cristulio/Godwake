@@ -12,7 +12,7 @@ export const BONE_STALKER: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'undead',
   ac: 12,
-  maxHp: 19,
+  maxHp: 28,
   speed: 25,
   abilityScores: { str: 14, dex: 10, con: 13, int: 5, wis: 8, cha: 5 },
   passivePerception: 9,
@@ -20,8 +20,8 @@ export const BONE_STALKER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Knotted Cudgel',
-      attackBonus: 4,
-      damage: '1d10+2',
+      attackBonus: 5,
+      damage: '1d10+3',
       damageType: 'bludgeoning',
       reach: 5,
       description:

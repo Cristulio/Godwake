@@ -60,9 +60,9 @@ describe('enemy-intent telegraph', () => {
     const intent = monster(init.state, 'famished-ghast').instance.intent;
     expect(intent!.kind).toBe('multiattack');
     expect(intent!.hits).toBe(2);
-    // Ravening Claws is 1d4+2 → per-hit range 3–6 (badge shows "2× 3–6").
-    expect(intent!.damageMin).toBe(3);
-    expect(intent!.damageMax).toBe(6);
+    // Ravening Claws is 1d6+3 → per-hit range 4–9 (badge shows "2× 4–9").
+    expect(intent!.damageMin).toBe(4);
+    expect(intent!.damageMax).toBe(9);
   });
 
   it("telegraphs a boss's round-1 paralyze opener", () => {

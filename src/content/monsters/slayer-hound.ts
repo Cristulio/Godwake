@@ -14,7 +14,7 @@ export const SLAYER_HOUND: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'beast (magical)',
   ac: 15,
-  maxHp: 54,
+  maxHp: 62,
   speed: 50,
   abilityScores: { str: 17, dex: 15, con: 14, int: 3, wis: 12, cha: 6 },
   passivePerception: 14,
@@ -22,8 +22,8 @@ export const SLAYER_HOUND: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Rending Bite',
-      attackBonus: 7,
-      damage: '2d8+5',
+      attackBonus: 8,
+      damage: '2d8+6',
       damageType: 'piercing',
       reach: 5,
       description:

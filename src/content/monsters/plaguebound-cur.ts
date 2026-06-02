@@ -13,7 +13,7 @@ export const PLAGUEBOUND_CUR: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'beast',
   ac: 13,
-  maxHp: 19,
+  maxHp: 28,
   speed: 40,
   abilityScores: { str: 14, dex: 13, con: 14, int: 3, wis: 12, cha: 6 },
   passivePerception: 13,
@@ -22,8 +22,8 @@ export const PLAGUEBOUND_CUR: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Rotting Bite',
-      attackBonus: 4,
-      damage: '1d6+2',
+      attackBonus: 5,
+      damage: '1d8+3',
       damageType: 'piercing',
       reach: 5,
       description:

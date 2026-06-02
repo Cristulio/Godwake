@@ -14,7 +14,7 @@ export const MAD_MAGE_PRISONER: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (human)',
   ac: 13,
-  maxHp: 42,
+  maxHp: 50,
   speed: 30,
   abilityScores: { str: 8, dex: 12, con: 11, int: 16, wis: 8, cha: 9 },
   passivePerception: 9,
@@ -23,7 +23,7 @@ export const MAD_MAGE_PRISONER: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Magic Missile',
       attackBonus: 8,
-      damage: '3d4+2',
+      damage: '3d4+4',
       damageType: 'force',
       range: [120, 120],
       description:

@@ -14,7 +14,7 @@ export const DEATHLESS_PENITENT: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'undead',
   ac: 15,
-  maxHp: 54,
+  maxHp: 62,
   speed: 30,
   abilityScores: { str: 16, dex: 12, con: 17, int: 7, wis: 14, cha: 8 },
   passivePerception: 12,
@@ -24,8 +24,8 @@ export const DEATHLESS_PENITENT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Penitent\'s Flail',
-      attackBonus: 7,
-      damage: '2d8+3',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'necrotic',
       reach: 5,
       description:

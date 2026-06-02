@@ -14,7 +14,7 @@ export const GODSBLOOD_WELTER: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'ooze',
   ac: 14,
-  maxHp: 62,
+  maxHp: 72,
   speed: 20,
   abilityScores: { str: 16, dex: 8, con: 18, int: 3, wis: 10, cha: 5 },
   passivePerception: 10,
@@ -34,8 +34,8 @@ export const GODSBLOOD_WELTER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Dissolving Pseudopod',
-      attackBonus: 7,
-      damage: '2d8+3',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'acid',
       reach: 10,
       description:

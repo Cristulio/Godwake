@@ -14,7 +14,7 @@ export const SPHERE_ABERRATION: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'aberration',
   ac: 15,
-  maxHp: 66,
+  maxHp: 76,
   speed: 20,
   abilityScores: { str: 17, dex: 9, con: 16, int: 4, wis: 10, cha: 6 },
   passivePerception: 10,
@@ -24,8 +24,8 @@ export const SPHERE_ABERRATION: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Lashing Pseudopod',
-      attackBonus: 7,
-      damage: '2d8+3',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'bludgeoning',
       reach: 10,
       description:

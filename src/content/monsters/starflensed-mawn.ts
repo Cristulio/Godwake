@@ -14,7 +14,7 @@ export const STARFLENSED_MAWN: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'aberration',
   ac: 15,
-  maxHp: 76,
+  maxHp: 88,
   speed: 40,
   abilityScores: { str: 19, dex: 13, con: 18, int: 4, wis: 11, cha: 6 },
   passivePerception: 11,
@@ -40,8 +40,8 @@ export const STARFLENSED_MAWN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Rending Maw',
-      attackBonus: 8,
-      damage: '2d8+4',
+      attackBonus: 9,
+      damage: '2d8+5',
       damageType: 'piercing',
       reach: 5,
       description:

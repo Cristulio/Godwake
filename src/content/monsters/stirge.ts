@@ -7,7 +7,7 @@ export const STIRGE: Monster = MonsterSchema.parse({
   size: 'tiny',
   creatureType: 'beast',
   ac: 14,
-  maxHp: 10,
+  maxHp: 14,
   speed: 10,
   abilityScores: { str: 4, dex: 16, con: 11, int: 2, wis: 8, cha: 6 },
   passivePerception: 9,
@@ -16,7 +16,7 @@ export const STIRGE: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Blood Drain',
       attackBonus: 5,
-      damage: '1d4+3',
+      damage: '1d6+3',
       damageType: 'piercing',
       reach: 5,
       description:

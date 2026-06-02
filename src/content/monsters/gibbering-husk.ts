@@ -14,7 +14,7 @@ export const GIBBERING_HUSK: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'aberration',
   ac: 14,
-  maxHp: 56,
+  maxHp: 66,
   speed: 20,
   abilityScores: { str: 14, dex: 10, con: 14, int: 6, wis: 13, cha: 8 },
   passivePerception: 11,
@@ -23,8 +23,8 @@ export const GIBBERING_HUSK: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Raking Slam',
-      attackBonus: 6,
-      damage: '2d6+3',
+      attackBonus: 7,
+      damage: '2d8+5',
       damageType: 'bludgeoning',
       reach: 5,
       description:

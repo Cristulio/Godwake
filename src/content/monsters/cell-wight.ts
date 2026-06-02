@@ -13,7 +13,7 @@ export const CELL_WIGHT: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'undead',
   ac: 13,
-  maxHp: 30,
+  maxHp: 42,
   speed: 30,
   abilityScores: { str: 15, dex: 11, con: 14, int: 8, wis: 11, cha: 12 },
   passivePerception: 10,
@@ -23,8 +23,8 @@ export const CELL_WIGHT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Grave-Iron Claw',
-      attackBonus: 4,
-      damage: '1d8+2',
+      attackBonus: 6,
+      damage: '2d6+3',
       damageType: 'slashing',
       reach: 5,
       description:

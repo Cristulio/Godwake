@@ -13,7 +13,7 @@ export const SHADOW: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'undead',
   ac: 14,
-  maxHp: 36,
+  maxHp: 44,
   speed: 40,
   abilityScores: { str: 6, dex: 14, con: 13, int: 6, wis: 10, cha: 8 },
   passivePerception: 10,
@@ -21,8 +21,8 @@ export const SHADOW: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Strength Drain',
-      attackBonus: 5,
-      damage: '2d8+3',
+      attackBonus: 6,
+      damage: '2d8+4',
       damageType: 'necrotic',
       reach: 5,
       description:

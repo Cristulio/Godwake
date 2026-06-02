@@ -13,7 +13,7 @@ export const CYCLE_SHEPHERD: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'celestial',
   ac: 14,
-  maxHp: 58,
+  maxHp: 68,
   speed: 30,
   abilityScores: { str: 12, dex: 14, con: 15, int: 15, wis: 18, cha: 14 },
   passivePerception: 14,
@@ -32,8 +32,8 @@ export const CYCLE_SHEPHERD: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Soul-Hook',
-      attackBonus: 7,
-      damage: '2d6+3',
+      attackBonus: 8,
+      damage: '2d8+5',
       damageType: 'necrotic',
       reach: 10,
       description:

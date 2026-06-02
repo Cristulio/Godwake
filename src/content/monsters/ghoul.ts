@@ -7,7 +7,7 @@ export const GHOUL: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'undead',
   ac: 12,
-  maxHp: 18,
+  maxHp: 26,
   speed: 30,
   abilityScores: { str: 13, dex: 15, con: 10, int: 7, wis: 10, cha: 6 },
   passivePerception: 10,
@@ -16,8 +16,8 @@ export const GHOUL: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Filthy Claws',
-      attackBonus: 4,
-      damage: '1d6+2',
+      attackBonus: 5,
+      damage: '1d8+3',
       damageType: 'slashing',
       reach: 5,
       description:

@@ -60,7 +60,14 @@ import type { ClassId } from '../src/schemas/ids';
 // ─── Config ────────────────────────────────────────────────────────────────
 
 const CLASSES: ClassId[] = ['rogue', 'fighter', 'wizard', 'barbarian', 'ranger'];
-const START_LEVELS = [1, 3, 5, 7];
+// Start levels swept per class. Override with e.g. `LEVELS=1` or `LEVELS=1,3` to
+// isolate on-level vs over-levelled early-chapter texture (a high start level
+// walks the early chapters several levels too strong, flooring their blowout
+// rate no matter the statblocks — the LEVELS knob exposes that).
+const START_LEVELS = (process.env.LEVELS ?? '1,3,5,7')
+  .split(',')
+  .map((s) => Number(s.trim()))
+  .filter((n) => Number.isFinite(n) && n > 0);
 const RUNS_PER_CELL = Number(process.env.RUNS ?? 40);
 const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.env.ARCHETYPE ?? '')
   ? (process.env.ARCHETYPE as Archetype)
