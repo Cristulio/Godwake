@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { Character } from '../types/character';
 import { applyPermanentUpgrade, type UnlockedUpgrades } from '../engine/character/upgrades';
-import { getUpgrade } from '../content/upgrades';
+import { getUpgrade, groveUpgradeCost } from '../content/upgrades';
 import { MAX_ASCENSION } from '../engine/delve/ascension';
 import { useCharacterStore } from './characterStore';
 import { getActiveRoller } from '../engine/dice';
@@ -136,7 +136,7 @@ interface MetaStoreState {
    * Returns the banked id, or null when none remain. Banks to the collection
    * only; the player equips it at the hub for a future descent.
    */
-  grantLegendaryDrop: (allowAscendant: boolean) => string | null;
+  grantLegendaryDrop: (allowAscendant: boolean, allowExclusive?: boolean) => string | null;
   /**
    * Bank a SPECIFIC legendary by id (the shop "reliquary" purchase). Adds it to
    * the collection if it's a real, un-owned relic. Returns whether it banked.
@@ -232,7 +232,9 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       return { ok: false, reason: 'Already at max rank.' };
     }
     const nextRank = currentRank + 1;
-    const cost = up.costForRank(nextRank);
+    // Price scales with the soul's ascension STANDING — same value the Grove
+    // screen displays via groveUpgradeCost(ascensionUnlocked).
+    const cost = groveUpgradeCost(up, nextRank, get().ascensionUnlocked);
     if (character.renown < cost) return { ok: false, reason: 'Not enough Renown.' };
     let next: Character = { ...character, renown: character.renown - cost };
     if (up.kind === 'permanent') {
@@ -301,12 +303,15 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
         : { seenTutorials: [...s.seenTutorials, tutorialId] },
     ),
 
-  grantLegendaryDrop: (allowAscendant) => {
+  grantLegendaryDrop: (allowAscendant, allowExclusive = false) => {
     const owned = get().ownedLegendaries;
     // Elite-node drops can yield ANY class's relic; off-class relics are stashed
     // until the player runs that class (the equip gate handles use). The apex
-    // ascendant tier only enters this pool at Ascension >= 3 (allowAscendant).
-    const pool = legendaryBankPool(allowAscendant).filter((id) => !owned.includes(id));
+    // ascendant tier only enters this pool at Ascension >= 3 (allowAscendant); the
+    // ascension-exclusive sets only on a New Game+ run (allowExclusive, Asc >= 1).
+    const pool = legendaryBankPool(allowAscendant, allowExclusive).filter(
+      (id) => !owned.includes(id),
+    );
     if (pool.length === 0) return null;
     const pick = pool[(getActiveRoller().roll('1d100').total - 1) % pool.length];
     set({ ownedLegendaries: [...owned, pick] });

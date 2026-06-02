@@ -17,6 +17,13 @@ export interface AscensionModifiers {
   startingGoldMult: number;
   /** Multiplier on renown earned from the run. Composes MULTIPLICATIVELY with the soul-mark. */
   renownMult: number;
+  /**
+   * Multiplier on the renown PRICE of every Grove upgrade. Climbs with the ladder
+   * so a higher standing soul pays more to deepen the Wellspring — the cost side
+   * of the same coin as `renownMult` (you earn more, the Grove asks more). Applied
+   * in content/upgrades.groveUpgradeCost; 1 at Ascension 0.
+   */
+  upgradeCostMult: number;
 }
 
 export interface AscensionLevel extends AscensionModifiers {
@@ -56,6 +63,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1,
     startingGoldMult: 1,
     renownMult: 1,
+    upgradeCostMult: 1,
   },
   {
     level: 1,
@@ -66,6 +74,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1,
     startingGoldMult: 1,
     renownMult: 1.25,
+    upgradeCostMult: 1.1,
   },
   {
     level: 2,
@@ -76,6 +85,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1,
     startingGoldMult: 1,
     renownMult: 1.45,
+    upgradeCostMult: 1.2,
   },
   {
     level: 3,
@@ -86,6 +96,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1.25,
     startingGoldMult: 1,
     renownMult: 1.65,
+    upgradeCostMult: 1.35,
   },
   {
     level: 4,
@@ -96,6 +107,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1.25,
     startingGoldMult: 0.75,
     renownMult: 1.9,
+    upgradeCostMult: 1.5,
   },
   {
     level: 5,
@@ -106,6 +118,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1.25,
     startingGoldMult: 0.75,
     renownMult: 2.15,
+    upgradeCostMult: 1.7,
   },
   {
     level: 6,
@@ -116,6 +129,7 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     bossHpMult: 1.5,
     startingGoldMult: 0.5,
     renownMult: 2.45,
+    upgradeCostMult: 2,
   },
 ];
 
@@ -162,6 +176,14 @@ export const ELITE_VARIANTS_FROM = 2;
 export const BOSS_EXTRA_PHASE_FROM = 3;
 export const DUNGEON_TWISTS_FROM = 4;
 export const ASCENDANT_LOOT_FROM = 3;
+/**
+ * The whole ascension-exclusive loot layer (class signature sets + the new global
+ * sets) switches on the moment a soul leaves the first chain behind. A first /
+ * normal playthrough (Ascension 0) never rolls or is offered any of it; every
+ * New Game+ run can. The apex `ascendant` tier sits ABOVE this, at
+ * ASCENDANT_LOOT_FROM.
+ */
+export const ASCENSION_EXCLUSIVE_LOOT_FROM = 1;
 
 /** Whether ascension-only elite variants enter the encounter pool at this level. */
 export function ascensionEliteVariants(level: number): boolean {
@@ -181,4 +203,18 @@ export function ascensionDungeonTwists(level: number): boolean {
 /** Whether the "ascendant" legendary tier is obtainable at this level. */
 export function ascensionAscendantLoot(level: number): boolean {
   return clampAscension(level) >= ASCENDANT_LOOT_FROM;
+}
+
+/**
+ * Whether the ascension-EXCLUSIVE loot layer (signature class sets + new global
+ * sets) is obtainable at this level. False on a first/normal run (Ascension 0),
+ * true on every New Game+ run.
+ */
+export function ascensionExclusiveLoot(level: number): boolean {
+  return clampAscension(level) >= ASCENSION_EXCLUSIVE_LOOT_FROM;
+}
+
+/** Renown-price multiplier on Grove upgrades at the given ascension standing. */
+export function ascensionUpgradeCostMult(level: number): number {
+  return getAscensionLevel(level).upgradeCostMult;
 }

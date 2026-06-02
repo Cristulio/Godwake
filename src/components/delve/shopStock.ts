@@ -4,7 +4,7 @@ import type { CampBoonTier } from '../../content/campBoons';
 import { createDiceRoller } from '../../engine/dice';
 import { rollItem, rolledItemCost } from '../../engine/items';
 import { legendaryDropPool, getLegendary } from '../../content/legendaries';
-import { ascensionAscendantLoot } from '../../engine/delve/ascension';
+import { ascensionAscendantLoot, ascensionExclusiveLoot } from '../../engine/delve/ascension';
 
 /**
  * Shared merchant stock for both the camp caravan (CampRoom) and the route-map
@@ -173,11 +173,14 @@ export function rollLegendaryOffer(
   if (chance <= 0) return null;
   const roller = createDiceRoller(`${seed}:legendary-offer`);
   if (roller.roll('1d100').total > chance) return null;
-  // The apex ascendant tier is offered ONLY at Ascension >= 3; at lower levels
-  // it never enters the reliquary pool.
-  const pool = legendaryDropPool(classId, ascensionAscendantLoot(ascensionLevel)).filter(
-    (id) => !ownedIds.includes(id),
-  );
+  // The ascension-exclusive sets enter the reliquary ONLY on a New Game+ run
+  // (Asc >= 1); the apex ascendant tier ONLY at Asc >= 3. A first/normal run
+  // sees neither.
+  const pool = legendaryDropPool(
+    classId,
+    ascensionAscendantLoot(ascensionLevel),
+    ascensionExclusiveLoot(ascensionLevel),
+  ).filter((id) => !ownedIds.includes(id));
   if (pool.length === 0) return null;
   const id = pool[(roller.roll('1d100').total - 1) % pool.length];
   const leg = getLegendary(id);

@@ -15,6 +15,9 @@ import {
   ascensionBossExtraPhase,
   ascensionDungeonTwists,
   ascensionAscendantLoot,
+  ASCENSION_EXCLUSIVE_LOOT_FROM,
+  ascensionExclusiveLoot,
+  ascensionUpgradeCostMult,
 } from './ascension';
 import { createCombat, _resetMonsterInstanceCounter } from '../combat/createCombat';
 import { getMonster } from '../../content/monsters';
@@ -52,6 +55,7 @@ describe('ascension config integrity', () => {
     expect(base.bossHpMult).toBe(1);
     expect(base.startingGoldMult).toBe(1);
     expect(base.renownMult).toBe(1);
+    expect(base.upgradeCostMult).toBe(1);
   });
 
   it('escalates monotonically — renown reward and difficulty never regress', () => {
@@ -63,6 +67,15 @@ describe('ascension config integrity', () => {
       expect(cur.enemyDamageBonus).toBeGreaterThanOrEqual(prev.enemyDamageBonus);
       expect(cur.bossHpMult).toBeGreaterThanOrEqual(prev.bossHpMult);
       expect(cur.startingGoldMult).toBeLessThanOrEqual(prev.startingGoldMult);
+      expect(cur.upgradeCostMult).toBeGreaterThan(prev.upgradeCostMult);
+    }
+  });
+
+  it('Grove upgrade prices scale up with ascension standing, neutral at 0', () => {
+    expect(ascensionUpgradeCostMult(0)).toBe(1);
+    expect(ascensionUpgradeCostMult(MAX_ASCENSION)).toBeGreaterThan(1);
+    for (let i = 1; i <= MAX_ASCENSION; i++) {
+      expect(ascensionUpgradeCostMult(i)).toBeGreaterThan(ascensionUpgradeCostMult(i - 1));
     }
   });
 });
@@ -74,6 +87,7 @@ describe('ascension content-gating predicates', () => {
       [BOSS_EXTRA_PHASE_FROM, ascensionBossExtraPhase],
       [DUNGEON_TWISTS_FROM, ascensionDungeonTwists],
       [ASCENDANT_LOOT_FROM, ascensionAscendantLoot],
+      [ASCENSION_EXCLUSIVE_LOOT_FROM, ascensionExclusiveLoot],
     ];
     for (const [from, fn] of cases) {
       expect(fn(from - 1)).toBe(false);

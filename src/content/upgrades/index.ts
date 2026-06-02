@@ -1,5 +1,6 @@
 import type { Character } from '../../types/character';
 import type { ClassId } from '../../schemas/ids';
+import { ascensionUpgradeCostMult } from '../../engine/delve/ascension';
 
 /**
  * Druid Grove upgrades. The Wellspring of Mielikki blesses the soul, not the
@@ -574,6 +575,19 @@ const RAW: Upgrade[] = [
 ];
 
 const BY_ID = new Map(RAW.map((u) => [u.id, u]));
+
+/**
+ * The renown price to buy `rank` of `upgrade`, scaled by the soul's ascension
+ * STANDING (metaStore.ascensionUnlocked). The base curve is `costForRank`; a
+ * higher standing soul earns more renown per run (ascension.renownMult) and the
+ * Grove asks correspondingly more for the same depth. At Ascension 0 the
+ * multiplier is 1, so a first-chain price is unchanged. This is the single source
+ * of truth for the scaled price — both the purchase path (metaStore) and the
+ * Grove display read it.
+ */
+export function groveUpgradeCost(upgrade: Upgrade, rank: number, ascensionLevel: number): number {
+  return Math.round(upgrade.costForRank(rank) * ascensionUpgradeCostMult(ascensionLevel));
+}
 
 export function getUpgrade(id: string): Upgrade {
   const u = BY_ID.get(id);
