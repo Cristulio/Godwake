@@ -62,8 +62,10 @@ export function DiceRollOverlay({
     const revealTimer = setTimeout(() => {
       if (!mounted) return;
       setRevealedResult(true);
+      // A blow landing ON the player reads differently from the player's hits:
+      // monster hits play the pained `player_hurt`, the player's land as `hit_thud`.
       if (crit) playSfx('crit_hit');
-      else if (hit) playSfx('hit_thud');
+      else if (hit) playSfx(attackerKind === 'monster' ? 'player_hurt' : 'hit_thud');
       else playSfx('miss_whiff');
     }, t(330));
 

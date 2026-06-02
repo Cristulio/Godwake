@@ -34,7 +34,7 @@ export const useAudioStore = create<AudioState>()(
     (set, get) => ({
       masterVolume: 0.7,
       sfxVolume: 1.0,
-      musicVolume: 0,
+      musicVolume: 0.35,
       muted: false,
 
       setMasterVolume: (v) => {
@@ -61,11 +61,15 @@ export const useAudioStore = create<AudioState>()(
     {
       name: 'godwake-audio',
       storage: createJSONStorage(() => localStorage),
-      version: 2,
+      version: 3,
       migrate: (persistedState, version) => {
         const s = (persistedState ?? {}) as Partial<AudioState>;
-        if (version < 2) {
-          return { ...s, musicVolume: 0 } as AudioState;
+        // v3 turns music ON by default. Earlier versions persisted music at 0
+        // (drone-only era); lift silenced saves to the new default so the new
+        // chiptune tracks are audible, while respecting a user who nudged it.
+        if (version < 3) {
+          const lifted = !s.musicVolume ? 0.35 : s.musicVolume;
+          return { ...s, musicVolume: lifted } as AudioState;
         }
         return s as AudioState;
       },

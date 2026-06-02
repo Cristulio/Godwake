@@ -10,6 +10,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: Size;
   /** Set false to suppress the default ui_click sound. */
   clickSound?: boolean;
+  /** Set false to suppress the default ui_hover sound. */
+  hoverSound?: boolean;
 }
 
 const variantClass: Record<Variant, string> = {
@@ -35,17 +37,24 @@ export function Button({
   size = 'md',
   className = '',
   clickSound = true,
+  hoverSound = true,
   onClick,
+  onMouseEnter,
   ...rest
 }: ButtonProps) {
   function handleClick(e: MouseEvent<HTMLButtonElement>) {
     if (clickSound && !rest.disabled) playSfx('ui_click');
     onClick?.(e);
   }
+  function handleMouseEnter(e: MouseEvent<HTMLButtonElement>) {
+    if (hoverSound && !rest.disabled) playSfx('ui_hover');
+    onMouseEnter?.(e);
+  }
   return (
     <button
       {...rest}
       onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
       className={`btn-chunky relative border-2 uppercase tracking-wider font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none ${variantClass[variant]} ${sizeClass[size]} ${className}`}
     >
       {children}

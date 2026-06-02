@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/Button';
 import { useGameStore, hasAnySave, hasAutosave, getSlotMetadata } from '../../stores/gameStore';
+import { playMusic, stopMusic } from '../../engine/audio';
 
 export function TitleScreen() {
   const startNewGame = useGameStore((s) => s.startNewGame);
@@ -19,6 +20,14 @@ export function TitleScreen() {
   useEffect(() => {
     const t = setTimeout(() => setGlow(true), 200);
     return () => clearTimeout(t);
+  }, []);
+
+  // The title shares the hub theme — same wistful bed the soul rests in.
+  useEffect(() => {
+    playMusic('hub_theme');
+    return () => {
+      stopMusic();
+    };
   }, []);
 
   function beginNewGame() {

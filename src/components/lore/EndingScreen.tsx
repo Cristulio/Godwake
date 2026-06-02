@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
+import { playMusic, stopMusic } from '../../engine/audio';
 
 const BASE_TICK = 34;
 const FAST_TICK = 4;
@@ -41,6 +42,14 @@ export function EndingScreen() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fullText = paragraphsFor(stage).join('\n\n');
+
+  // Triumphant fanfare under the finale — the one bright theme in the game.
+  useEffect(() => {
+    playMusic('victory_theme');
+    return () => {
+      stopMusic();
+    };
+  }, []);
 
   // Typewriter for the active stage's block, with hold-to-speed. Re-runs whenever
   // the stage (and thus fullText) changes; resetTyper zeroes the index on a switch.
