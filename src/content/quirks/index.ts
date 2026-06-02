@@ -233,6 +233,143 @@ const RAW: Quirk[] = [
     effect: '−10% to gold rewards from delves.',
     modifiers: { goldMultiplier: 0.9 },
   }),
+  QuirkSchema.parse({
+    id: 'stonehide',
+    name: 'Stonehide',
+    sentiment: 'boon',
+    flavor:
+      'The skin remembers a hardness the bones never asked for. Blades meet it and think twice.',
+    effect: '+1 AC.',
+    modifiers: { acMod: 1 },
+  }),
+  QuirkSchema.parse({
+    id: 'quickdraw',
+    name: 'Quickdraw',
+    sentiment: 'boon',
+    flavor:
+      'The first blow is already on its way before the room agrees a fight has started. The soul is always early.',
+    effect: '+2 to-hit on your first attack each combat.',
+    modifiers: { firstTurnAttackBonus: 2 },
+  }),
+  QuirkSchema.parse({
+    id: 'coinblessed',
+    name: 'Coinblessed',
+    sentiment: 'boon',
+    flavor:
+      'Some small god of small fortunes keeps an eye on your purse. Nothing grand. Just a little more, always.',
+    effect: '+10% to gold rewards from delves.',
+    modifiers: { goldMultiplier: 1.1 },
+  }),
+  QuirkSchema.parse({
+    id: 'deep-pockets',
+    name: 'Deep Pockets',
+    sentiment: 'boon',
+    flavor:
+      'You came back with coin you do not remember earning. Every life the lining holds a little more.',
+    effect: 'Start each delve with +15 gold.',
+    modifiers: { startBonusGold: 15 },
+  }),
+  QuirkSchema.parse({
+    id: 'headhunter',
+    name: 'Headhunter',
+    sentiment: 'boon',
+    flavor:
+      'A wounded thing is a finished thing to you. The soul learned the difference between hurting a man and ending one.',
+    effect: '+2 to-hit vs wounded enemies (below half HP).',
+    modifiers: { woundedAttackBonus: 2 },
+  }),
+  QuirkSchema.parse({
+    id: 'brittle-boned',
+    name: 'Brittle-Boned',
+    sentiment: 'bane',
+    flavor:
+      'The frame came back wrong — too thin at the joints, too eager to give. Every fall is the last one, until it isn\'t.',
+    effect: '−2 AC.',
+    modifiers: { acMod: -2 },
+    soulMarkWeight: 1.4,
+  }),
+  QuirkSchema.parse({
+    id: 'slow-to-rouse',
+    name: 'Slow to Rouse',
+    sentiment: 'bane',
+    flavor:
+      'The body wakes a beat behind the danger. By the time the hand answers, the first swing is already a memory of a mistake.',
+    effect: '−2 to your first attack roll each combat.',
+    modifiers: { firstAttackPenalty: -2 },
+    soulMarkWeight: 1.3,
+  }),
+  QuirkSchema.parse({
+    id: 'empty-purse',
+    name: 'Empty Purse',
+    sentiment: 'bane',
+    flavor:
+      'Coin avoids you the way water avoids oil. It is there, then it is owed to someone, then it is simply gone.',
+    effect: '−20% to gold rewards from delves.',
+    modifiers: { goldMultiplier: 0.8 },
+  }),
+  QuirkSchema.parse({
+    id: 'squeamish',
+    name: 'Squeamish',
+    sentiment: 'bane',
+    flavor:
+      'You can open a man easily enough. It is the closing — the gurgle, the eyes — that makes the hand slow when it should not.',
+    effect: '−1 to-hit vs wounded enemies (below half HP).',
+    modifiers: { woundedAttackBonus: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'faint-hearted',
+    name: 'Faint-Hearted',
+    sentiment: 'bane',
+    flavor:
+      'Pain does not sharpen you. It hollows you out. The worse the wound, the smaller the swing that answers it.',
+    effect: '−1 to damage rolls when you are at or below half HP.',
+    modifiers: { hangryDamageBonus: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'berserkers-patience',
+    name: "Berserker's Patience",
+    sentiment: 'odd',
+    flavor:
+      'You fight loose and open until the blood comes — yours, theirs, it stops mattering. Then the soul finds its teeth.',
+    effect: '+2 to damage rolls when at or below half HP. −1 AC.',
+    modifiers: { hangryDamageBonus: 2, acMod: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'cowards-guard',
+    name: "Coward's Guard",
+    sentiment: 'odd',
+    flavor:
+      'You flinch first and commit late. It looks like fear. It has kept this soul breathing through more lives than courage ever did.',
+    effect: '+1 AC. −1 to your first attack roll each combat.',
+    modifiers: { acMod: 1, firstAttackPenalty: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'plaguebound',
+    name: 'Plaguebound',
+    sentiment: 'odd',
+    flavor:
+      'Something rotten settled in the marrow and made a home of it. Venom is family now. The rest of you pays the rent.',
+    effect: 'Immune to poison damage. −1 AC.',
+    modifiers: { poisonImmune: true, acMod: -1 },
+  }),
+  QuirkSchema.parse({
+    id: 'gamblers-soul',
+    name: "Gambler's Soul",
+    sentiment: 'odd',
+    flavor:
+      'Luck pools in the hand that holds the blade and drains from the one that holds the purse. You stopped fighting the trade lives ago.',
+    effect: 'Reroll a missed attack once per delve. −15% to gold rewards.',
+    modifiers: { rerollMissesPerDelve: 1, goldMultiplier: 0.85 },
+  }),
+  QuirkSchema.parse({
+    id: 'vultures-patience',
+    name: "Vulture's Patience",
+    sentiment: 'odd',
+    flavor:
+      'You waste no strength on the strong. Let the fight wear them down — the soul knows the kill is owed and is content to wait for it.',
+    effect: '−1 to your first attack each combat. +2 to-hit vs wounded enemies.',
+    modifiers: { firstAttackPenalty: -1, woundedAttackBonus: 2 },
+  }),
 ];
 
 const POOL: Quirk[] = RAW;
