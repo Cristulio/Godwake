@@ -8,6 +8,6 @@ export {
   nextLockedFeature,
   isClassUnlocked,
   newlyUnlockedClasses,
-  CLASS_UNLOCK_CHAPTER,
+  CLASS_UNLOCK_DELVE,
 } from './unlocks';
 export type { FeatureId, UnlockCondition, ProgressionMeta } from './unlocks';

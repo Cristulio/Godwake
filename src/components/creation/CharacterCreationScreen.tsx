@@ -13,7 +13,7 @@ import {
 import type { SkillName } from '../../types/skills';
 import {
   isClassUnlocked,
-  CLASS_UNLOCK_CHAPTER,
+  CLASS_UNLOCK_DELVE,
   STARTER_CLASSES,
 } from '../../engine/progression/unlocks';
 
@@ -111,7 +111,7 @@ export function CharacterCreationScreen() {
   const newGamePlusFlow = useGameStore((s) => s.newGamePlusFlow);
   const selectedAscension = useGameStore((s) => s.selectedAscension);
   const existing = useGameStore((s) => s.character);
-  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const delveCount = useGameStore((s) => s.delveCount);
 
   // Three modes share this screen:
   //  - New Game+ (run-launcher): pick/keep a soul and descend straight into the
@@ -125,10 +125,10 @@ export function CharacterCreationScreen() {
   //  - First creation: a fresh soul may forge ONLY one of the three easy starters;
   //    the rest show as sealed, earned later by clearing chapters.
   //  - Hub swap: the body already worn is always selectable, plus any class the
-  //    soul has cleared deep enough to unlock. The rest stay sealed.
+  //    soul has logged enough delves to unlock. The rest stay sealed.
   const isSelectable = (classId: ClassId) =>
     isSwap
-      ? classId === existing?.classId || isClassUnlocked(classId, chaptersCleared)
+      ? classId === existing?.classId || isClassUnlocked(classId, delveCount)
       : STARTER_CLASSES.includes(classId);
 
   const allOptions = useMemo(buildSoulOptions, []);
@@ -267,26 +267,39 @@ export function CharacterCreationScreen() {
           );
         })}
         {/* Souls not yet open to this walker show as sealed placeholders, each
-            naming the chapter whose warden must fall before it can be worn. */}
-        {sealedOptions.map((o) => (
-          <div
-            key={o.classId}
-            className="relative p-4 border-2 border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] opacity-60 flex flex-col gap-2"
-          >
-            <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
-              ⚿ Sealed
+            naming the delve count at which it will wake — and how many turns of
+            the wheel remain — so the path to it is never a mystery. */}
+        {sealedOptions.map((o) => {
+          const threshold = CLASS_UNLOCK_DELVE[o.classId];
+          const remaining = Math.max(0, threshold - delveCount);
+          return (
+            <div
+              key={o.classId}
+              className="relative p-4 border-2 border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] opacity-60 flex flex-col gap-2"
+            >
+              <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
+                ⚿ Sealed
+              </div>
+              <div className="font-display text-[var(--color-text-dim)] text-base tracking-wide">
+                {o.className}
+              </div>
+              <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
+                This soul will not wake until the wheel has turned for you{' '}
+                {threshold} {threshold === 1 ? 'time' : 'times'}.
+                {remaining > 0 && (
+                  <>
+                    {' '}
+                    {remaining} {remaining === 1 ? 'more descent' : 'more descents'} and it is
+                    yours to wear.
+                  </>
+                )}
+              </p>
+              <div className="text-[var(--color-accent-amber)] text-[9px] uppercase tracking-widest mt-auto">
+                Unlocks at delve {threshold}
+              </div>
             </div>
-            <div className="font-display text-[var(--color-text-dim)] text-base tracking-wide">
-              {o.className}
-            </div>
-            <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
-              This soul awaits a deeper walker. The wheel turns further, and they will come.
-            </p>
-            <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-widest mt-auto">
-              Wakes once you have felled the warden of Chapter {CLASS_UNLOCK_CHAPTER[o.classId]}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">

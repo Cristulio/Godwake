@@ -5,6 +5,7 @@ import { BlessingCard } from '../ui/BlessingCard';
 import { useGameStore } from '../../stores/gameStore';
 import { getActiveRoller } from '../../engine/dice';
 import { rollBlessingOptions } from '../../engine/character/blessings';
+import { baneQuirkCount } from '../../engine/character/quirks';
 import { playSfx } from '../../engine/audio';
 
 interface ShrineRoomProps {
@@ -18,6 +19,9 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   const shrineOptionBonus = useGameStore((s) => s.character?.shrineOptionBonus ?? 0);
   const shrineTitheGold = useGameStore((s) => s.character?.shrineTitheGold ?? 0);
   const classId = useGameStore((s) => s.character?.classId);
+  const character = useGameStore((s) => s.character);
+  const baneCount = character ? baneQuirkCount(character) : 0;
+  const delveLevel = character?.level ?? 1;
   const [options, setOptions] = useState<string[]>([]);
   const [chosen, setChosen] = useState<string | null>(null);
 
@@ -70,7 +74,14 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
           </div>
           <div className="grid md:grid-cols-3 gap-4 items-stretch">
             {options.map((id) => (
-              <BlessingCard key={id} blessingId={id} pickable onPick={() => pick(id)} />
+              <BlessingCard
+                key={id}
+                blessingId={id}
+                pickable
+                onPick={() => pick(id)}
+                baneCount={baneCount}
+                delveLevel={delveLevel}
+              />
             ))}
           </div>
           <div className="flex justify-center">
@@ -89,7 +100,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
             ◆ The god accepts the bargain
           </div>
           <div className="w-full max-w-md">
-            <BlessingCard blessingId={chosen} />
+            <BlessingCard blessingId={chosen} baneCount={baneCount} delveLevel={delveLevel} />
           </div>
           <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
             walking deeper...
