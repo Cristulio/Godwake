@@ -16,6 +16,7 @@ import { rolledItemCost } from '../../engine/items/rollItem';
 import type { Item, ItemRef } from '../../schemas/item';
 import { ItemIcon } from './ItemIcon';
 import { ItemTooltip } from './ItemTooltip';
+import { TouchTooltip } from '../ui/TouchTooltip';
 import { GEAR_RARITY_COLOR } from './rarity';
 import { baseStatLine } from './itemDisplay';
 
@@ -251,7 +252,7 @@ export function InventoryScreen() {
                     </div>
                   )}
                   {hoverSlot === s.slot && item && !isDragging && (
-                    <div className="absolute z-30 left-full top-0 ml-2">
+                    <div className="absolute z-30 left-full top-0 ml-2 hidden md:block">
                       <ItemTooltip
                         item={item}
                         rolled={ref?.rolled}
@@ -263,6 +264,31 @@ export function InventoryScreen() {
                         }
                         hint="Double-click or drag down to unequip"
                       />
+                    </div>
+                  )}
+                  {item && ref && (
+                    <div className="md:hidden absolute top-2 right-2 z-30">
+                      <TouchTooltip
+                        bare
+                        placement="bottom"
+                        label={`${ref.rolled?.name ?? item.name} details`}
+                        className="flex items-center justify-center w-8 h-8 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
+                        content={
+                          <ItemTooltip
+                            item={item}
+                            rolled={ref.rolled}
+                            rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
+                            agileTradeoffWarning={
+                              character && item.kind === 'armor'
+                                ? agileTradeoffWarning(character.classId, item) ?? undefined
+                                : undefined
+                            }
+                            hint="Double-tap the slot to unequip"
+                          />
+                        }
+                      >
+                        i
+                      </TouchTooltip>
                     </div>
                   )}
                 </div>
@@ -368,7 +394,7 @@ export function InventoryScreen() {
                         </div>
                       </div>
                       {hoverIdx === idx && !isDragging && (
-                        <div className="absolute z-30 left-full top-0 ml-2">
+                        <div className="absolute z-30 left-full top-0 ml-2 hidden md:block">
                           <ItemTooltip
                             item={item}
                             rolled={ref.rolled}
@@ -382,6 +408,29 @@ export function InventoryScreen() {
                           />
                         </div>
                       )}
+                      <div className="md:hidden shrink-0">
+                        <TouchTooltip
+                          bare
+                          placement="bottom"
+                          label={`${ref.rolled?.name ?? item.name} details`}
+                          className="flex items-center justify-center w-8 h-8 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
+                          content={
+                            <ItemTooltip
+                              item={item}
+                              rolled={ref.rolled}
+                              rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
+                              agileTradeoffWarning={
+                                character && item.kind === 'armor'
+                                  ? agileTradeoffWarning(character.classId, item) ?? undefined
+                                  : undefined
+                              }
+                              hint={hint}
+                            />
+                          }
+                        >
+                          i
+                        </TouchTooltip>
+                      </div>
                     </div>
                   );
                 })}

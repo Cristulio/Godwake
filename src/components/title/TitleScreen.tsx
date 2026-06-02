@@ -68,10 +68,10 @@ export function TitleScreen() {
 
       {/* Twin torch icons flanking the title */}
       <div className="relative z-10 text-center animate-fade-in-slow">
-        <div className="flex items-center justify-center gap-8 mb-2">
+        <div className="flex items-center justify-center gap-3 sm:gap-8 mb-2">
           <Torch />
           <h1
-            className={`font-display text-5xl md:text-7xl tracking-[0.15em] text-[var(--color-accent-amber)] transition-all duration-1000 ${
+            className={`font-display text-4xl sm:text-5xl md:text-7xl tracking-[0.15em] text-[var(--color-accent-amber)] transition-all duration-1000 ${
               glow ? 'drop-shadow-[0_0_42px_rgba(244,167,66,0.55)]' : 'drop-shadow-[0_0_8px_rgba(244,167,66,0.2)]'
             }`}
             style={{ textShadow: '0 0 12px rgba(255,179,71,0.4), 4px 4px 0 rgba(0,0,0,0.85)' }}

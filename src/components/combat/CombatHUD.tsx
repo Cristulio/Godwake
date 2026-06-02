@@ -1,5 +1,6 @@
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import type { Character } from '../../types/character';
+import { TouchTooltip } from '../ui/TouchTooltip';
 import type { CombatState } from '../../types/combat';
 import { computeAC, characterHasMechanic, critRange } from '../../engine/character/derived';
 import {
@@ -151,15 +152,17 @@ function Pill({
         ? 'bg-[var(--color-bg-panel)] border-[var(--color-accent-gold)] text-[var(--color-accent-amber)]'
         : 'bg-[var(--color-accent-amber)] border-[var(--color-accent-gold)] text-[var(--color-bg-base)]'
     : 'bg-[var(--color-bg-panel)] border-[var(--color-border-dim)] text-[var(--color-text-dim)]';
-  return (
-    <span
-      title={title}
-      aria-label={title}
-      className={`px-1.5 py-0.5 border-2 text-[8px] uppercase tracking-[0.2em] font-bold tabular-nums ${toneClass}`}
-    >
-      {text}
-    </span>
-  );
+  const chipClass = `px-1.5 py-0.5 border-2 text-[8px] uppercase tracking-[0.2em] font-bold tabular-nums ${toneClass}`;
+  // The chip's short label needs its tooltip to read the full effect/numbers —
+  // hover-locked text is invisible on touch, so make it tap-toggleable too.
+  if (title) {
+    return (
+      <TouchTooltip label={`${text}: ${title}`} content={title} className={chipClass}>
+        {text}
+      </TouchTooltip>
+    );
+  }
+  return <span className={chipClass}>{text}</span>;
 }
 
 function BlessingBadge({
@@ -175,38 +178,24 @@ function BlessingBadge({
   // (prior validation flagged title= as touch-inaccessible), focus for
   // keyboard. The panel shows only this blessing's name + effect, never the
   // whole concatenated strip.
-  const [open, setOpen] = useState(false);
   const label = `${name} — ${effect}`;
   return (
-    <span className="relative inline-flex">
-      <button
-        type="button"
-        aria-label={label}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        onFocus={() => setOpen(true)}
-        onBlur={() => setOpen(false)}
-        onPointerDown={(e) => {
-          if (e.pointerType === 'touch') setOpen((o) => !o);
-        }}
-        className="inline-flex items-center justify-center w-4 h-4 border border-[var(--color-accent-gold)] bg-[var(--color-bg-elevated)] text-[var(--color-accent-amber)] text-[10px] leading-none cursor-help"
-      >
-        {BLESSING_GOD_GLYPH[god]}
-      </button>
-      {open && (
-        <span
-          role="tooltip"
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 z-50 w-44 max-w-[60vw] p-2 border-2 border-[var(--color-accent-gold)] bg-[var(--color-bg-panel)] shadow-[0_4px_16px_rgba(0,0,0,0.6)] pointer-events-none normal-case tracking-normal text-left"
-        >
+    <TouchTooltip
+      label={label}
+      className="inline-flex items-center justify-center w-4 h-4 border border-[var(--color-accent-gold)] bg-[var(--color-bg-elevated)] text-[var(--color-accent-amber)] text-[10px] leading-none cursor-help"
+      content={
+        <>
           <span className="block text-[var(--color-accent-amber)] font-bold text-[11px] leading-tight">
             {name}
           </span>
           <span className="block mt-0.5 text-[var(--color-text-secondary)] text-[10px] leading-snug">
             {effect}
           </span>
-        </span>
-      )}
-    </span>
+        </>
+      }
+    >
+      {BLESSING_GOD_GLYPH[god]}
+    </TouchTooltip>
   );
 }
 
