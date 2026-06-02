@@ -63,4 +63,25 @@ describe('DelveMap — route choice UI', () => {
     expect(screen.getByText(/choose your road/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /pack/i })).toBeInTheDocument();
   });
+
+  it('hovering a node with an unresolved twistId does not throw', () => {
+    const delve = useDelveStore.getState().delve!;
+    const targetId = delve.rooms[delve.currentRoomIdx].next![0];
+    const withBogusTwist: typeof delve = {
+      ...delve,
+      rooms: delve.rooms.map((r) =>
+        r.id === targetId ? { ...r, twistId: '__nonexistent_twist__' } : r,
+      ),
+    };
+
+    const { container } = render(
+      <DelveMap delve={withBogusTwist} character={useGameStore.getState().character!} />,
+    );
+    const target = container.querySelector(
+      'button.bm-node:not([disabled])',
+    ) as HTMLButtonElement;
+    expect(() => fireEvent.mouseEnter(target)).not.toThrow();
+    // The unresolved twist simply renders no telegraph line.
+    expect(container.textContent).not.toContain('✦ ');
+  });
 });
