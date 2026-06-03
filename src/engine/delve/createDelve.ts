@@ -1954,3 +1954,18 @@ export function reachableRooms(state: DelveState, room: RoomSpec): RoomSpec[] {
 export function chapterMapNodes(state: DelveState, chapter: number): RoomSpec[] {
   return state.rooms.filter((r) => r.chapter === chapter && r.kind !== 'camp');
 }
+
+/**
+ * Breadcrumb label naming a chapter by its number and title, e.g.
+ * "Chapter 1 — Ilyich's Hall". A chapter's name is the title of its boss room
+ * — there is no separate name. Reads as a chapter title rather than a heading
+ * ("toward …") so it stays true at the post-boss camp seam too. Falls back to
+ * the bare number when the boss node can't be resolved. Shared by the route
+ * map and the in-delve room header so every screen names the chapter alike.
+ */
+export function chapterLabel(state: DelveState, chapter: number): string {
+  const bossTitle = state.rooms.find(
+    (r) => r.chapter === chapter && r.kind === 'boss',
+  )?.title;
+  return bossTitle ? `Chapter ${chapter} — ${bossTitle}` : `Chapter ${chapter}`;
+}

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   createGodwakeDelve,
+  chapterLabel,
   reachableRooms,
   roomById,
   REST_MAX_GAP,
@@ -629,5 +630,17 @@ describe('createGodwakeDelve — base game vs New Game+ chain split', () => {
   it('names the dungeon for its arc (Pit for base, Throne for NG+)', () => {
     expect(createGodwakeDelve(1).dungeonName).toContain('Pit');
     expect(createGodwakeDelve({ seed: 1, fullChain: true }).dungeonName).toContain('Throne');
+  });
+});
+
+describe('chapterLabel', () => {
+  it('names a chapter by its number and boss-room title (no "toward" — stays true post-boss)', () => {
+    const d = createGodwakeDelve(1);
+    expect(chapterLabel(d, 1)).toBe("Chapter 1 — Ilyich's Hall");
+  });
+
+  it('falls back to the bare number when the chapter has no boss node', () => {
+    const d = createGodwakeDelve(1);
+    expect(chapterLabel(d, 999)).toBe('Chapter 999');
   });
 });

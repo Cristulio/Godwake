@@ -456,7 +456,7 @@ export function applyEventOutcome(
         }
         effectsApplied.push({
           kind: effect.kind,
-          detail: '+5% gold on the boss',
+          detail: '+10% gold on the boss',
         });
         break;
       }
