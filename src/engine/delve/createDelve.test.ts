@@ -84,44 +84,61 @@ describe('createGodwakeDelve', () => {
     expect(finalRoom.next ?? []).toHaveLength(0);
   });
 
-  it('has at least six event rooms threaded through the chapters', () => {
+  it('threads exactly one omen + one pre-boss intel beat per chapter', () => {
+    // Both render as event-kind RoomSpecs, but the OMEN is the budget's lone
+    // `event` slot (cut 1-2 -> 1, so the player walks past fewer omens) and the
+    // INTEL is the deterministic pre-boss beat (untouched). The intel sits alone
+    // in the next-to-last column of its chapter, just before the boss.
     const d = createGodwakeDelve(1);
     const events = d.rooms.filter((r) => r.kind === 'event');
-    expect(events.length).toBeGreaterThanOrEqual(6);
     // Every event room must resolve against the registry — no orphan ids.
     for (const e of events) {
       expect(e.eventTemplateId).toBeTruthy();
     }
+    for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+      const inCh = d.rooms.filter((r) => r.chapter === ch);
+      const eventKind = inCh.filter((r) => r.kind === 'event');
+      const bossLayer = Math.max(...inCh.map((r) => r.layer ?? 0));
+      const intel = eventKind.filter((r) => (r.layer ?? 0) === bossLayer - 1);
+      const omens = eventKind.filter((r) => (r.layer ?? 0) !== bossLayer - 1);
+      expect(intel).toHaveLength(1); // one pre-boss intel beat, always
+      expect(omens).toHaveLength(1); // one omen, down from up to two
+    }
   });
 
-  it('draws the tightened combat budget — 4-5 plain fights + 1-2 elites per chapter', () => {
-    // The pools are untouched (same distinct fights); the layout just draws
-    // fewer per chapter so chapters are less grindy. Plain combat = the lone
-    // warmup entry + the 3-4 combat pad; elites stay the 1-2 invariant.
+  it('draws the fight-dense combat budget — 6-7 plain fights + 1-2 elites per chapter', () => {
+    // The playtest wanted more fighting and fewer shrines/omens, so the combat
+    // pad was bumped back up (5-6). Plain combat = the lone warmup entry + the
+    // 5-6 combat pad; elites stay the 1-2 invariant. Fights are a clear majority
+    // of the middle (6-7 plain + 1-2 elite vs at most 5 non-combat specials).
     for (let seed = 0; seed < 24; seed++) {
       const d = createGodwakeDelve({ seed, ascension: 0 });
       for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
         const inCh = d.rooms.filter((r) => r.chapter === ch);
         const combat = inCh.filter((r) => r.kind === 'combat').length;
         const elite = inCh.filter((r) => r.kind === 'elite').length;
-        expect(combat).toBeGreaterThanOrEqual(4);
-        expect(combat).toBeLessThanOrEqual(5);
+        expect(combat).toBeGreaterThanOrEqual(6);
+        expect(combat).toBeLessThanOrEqual(7);
         expect(elite).toBeGreaterThanOrEqual(1);
         expect(elite).toBeLessThanOrEqual(2);
       }
     }
   });
 
-  it('has at least two shrines per chapter span', () => {
-    const d = createGodwakeDelve(1);
-    const shrines = d.rooms.filter((r) => r.kind === 'shrine');
-    expect(shrines.length).toBeGreaterThanOrEqual(12);
+  it('has exactly one shrine per chapter span (lean, per the playtest)', () => {
+    // Shrines were cut 2 -> 1 per chapter: the player kept being routed past
+    // altars instead of fights. One per chapter, every chapter, every seed.
+    for (let seed = 0; seed < 12; seed++) {
+      const d = createGodwakeDelve({ seed });
+      const shrines = d.rooms.filter((r) => r.kind === 'shrine');
+      expect(shrines.length).toBe(TOTAL_CHAPTERS);
+    }
   });
 
   it('has at least one rest room per chapter span', () => {
     const d = createGodwakeDelve(1);
     const rests = d.rooms.filter((r) => r.kind === 'rest');
-    expect(rests.length).toBeGreaterThanOrEqual(6);
+    expect(rests.length).toBeGreaterThanOrEqual(TOTAL_CHAPTERS);
   });
 
   it('chapterId is godwake', () => {
@@ -314,6 +331,31 @@ describe('createGodwakeDelve — branching graph', () => {
         const middle = cols.slice(1, cols.length - 2);
         for (const col of middle) {
           expect(col.length).toBeGreaterThanOrEqual(2);
+        }
+      }
+    }
+  });
+
+  it('every middle column offers at least one fight (no all-non-combat choice column)', () => {
+    // The playtest's core frustration: a choice column of OMEN / SHRINE / REST,
+    // with no fight to pick. Every column the player routes through (i.e. every
+    // middle column — the warmup entry and the intel/boss convergence aside)
+    // must hold at least one combat or elite node.
+    const COMBAT_KINDS = new Set(['combat', 'elite']);
+    for (let seed = 0; seed < 40; seed++) {
+      for (const elitesEnabled of [true, false]) {
+        const d = createGodwakeDelve({ seed, elitesEnabled });
+        for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+          const cols = columnsOf(d, ch);
+          const middle = cols.slice(1, cols.length - 2);
+          for (const col of middle) {
+            expect(
+              col.some((r) => COMBAT_KINDS.has(r.kind)),
+              `chapter ${ch} seed ${seed}: column [${col
+                .map((r) => r.kind)
+                .join(', ')}] offers no fight`,
+            ).toBe(true);
+          }
         }
       }
     }

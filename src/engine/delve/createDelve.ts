@@ -256,13 +256,21 @@ type SlotKind =
  * entry(warmup) → [middle columns] → intel → boss; only the middle varies by
  * seed — its column count, each column's width, which kinds sit where, and the
  * edge fan between columns. The special beats sit on a fixed budget plus a pad
- * of extra fights, so fights stay the majority and the count invariants
- * (≥2 shrines, ≥1 rest, ≥1 event, a shop and an elite per chapter) always hold.
+ * of extra fights, so fights are a clear majority of the middle and the count
+ * invariants (1 shrine, ≥1 rest, ≥1 event, a shop and an elite per chapter)
+ * always hold. On top of the counts, ensureCombatPerColumn then guarantees every
+ * choice column the player routes through offers at least one fight — so a step
+ * is never all shrine/rest/omen.
+ *
+ * The pad upper bound is held so the middle never exceeds 13 slots: with each
+ * column 2–3 wide that caps the column count at 6, the regime the rest cadence
+ * (chooseCadenceColumns) is proven satisfiable in. specials max 7 (2 elite +
+ * 2 rest + 1 event + 1 shrine + 1 shop) + pad max 6 = 13.
  */
 const FORK_MIN_WIDTH = 2; // the chapter entry must open onto a real choice
 const COLUMN_MAX_WIDTH = 3; // widest parallel column on the map
-const COMBAT_PAD_MIN = 3; // extra fights beyond the special budget
-const COMBAT_PAD_MAX = 4;
+const COMBAT_PAD_MIN = 5; // extra fights beyond the special budget — fights dominate the middle
+const COMBAT_PAD_MAX = 6;
 
 /**
  * Rest cadence (applied after the rest of the layout is settled, so the spacing
@@ -302,9 +310,11 @@ interface SlotBudget {
  * randomized in width, kind placement and (later, via wireLayers) edge fan, so
  * each seed draws a genuinely different road.
  *
- * Budget per chapter: 2 shrines, 1–2 rests, 1 shop, 1–2 elites, 1–2 events,
- * the rest fights. Elites and the shop sit late (risk ramps toward the boss); a
- * shrine is seeded early so an opening route always has an altar in reach.
+ * Budget per chapter: 1 shrine, 1–2 rests, 1 shop, 1–2 elites, 1 event (the
+ * map's "omen"), the rest fights. Elites and the shop sit late (risk ramps
+ * toward the boss); the lone shrine is seeded early so an opening route always
+ * has an altar in reach. The shrine and event budgets are deliberately lean —
+ * the player wants to be fighting, not walking past altars and omens.
  *
  * The budget rests are placed and deduped exactly as they always were, then
  * placeRestCadence re-homes them onto a spacing that guarantees the rest cadence
@@ -315,8 +325,8 @@ function generateChapterPlan(rng: Rng): SlotKind[][] {
   const budget: SlotBudget = {
     eliteCount: roll(rng, 1, 2),
     restCount: roll(rng, 1, 2),
-    eventCount: roll(rng, 1, 2),
-    shrineCount: 2,
+    eventCount: 1,
+    shrineCount: 1,
     shopCount: 1,
   };
   const specials =
@@ -357,7 +367,122 @@ function generateChapterPlan(rng: Rng): SlotKind[][] {
   // still hold) and consumes NO RNG, leaving the shared delve stream unchanged.
   placeRestCadence(plan);
 
+  // Guarantee every choice column offers a fight — no step is ever all
+  // shrine/rest/omen. Preserves the dedupe rules, the rest cadence and the
+  // one-elite rule (see ensureCombatPerColumn). RNG-free.
+  ensureCombatPerColumn(plan);
+
+  // Densifying the middle can expose a map whose lone rest is unreachable from a
+  // shallow node on the actual DAG; repair it (edge-aware, RNG-free, rare).
+  enforceRecoveryCadence(plan);
+
   return plan;
+}
+
+/**
+ * Guarantee every middle column the player routes through offers at least one
+ * fight — no column is all shrine/rest/event(omen)/shop. This is the
+ * distribution complement to the count cuts: even when the budget drops a
+ * fightless cluster (the opening OMEN/SHRINE/REST step the playtest flagged),
+ * the player is never handed a step with no fight to pick.
+ *
+ * Runs after dedupe and the rest cadence. For each fightless middle column it
+ * swaps a NON-REST special out for a plain-combat fight drawn from a donor column
+ * that can spare one (≥2 fights, so it stays non-fightless), landing the special
+ * where it breaks neither sequencing rule:
+ *  - Rests never move here, so the column-heuristic cadence is left in place. Note
+ *    that turning a free special into a fight CAN lengthen a route's fights-to-
+ *    recovery (the column bound has edge-reachability holes); enforceRecoveryCadence
+ *    runs right after to repair the rare map where that tips a node over REST_MAX_GAP.
+ *  - The fight dropped into the fightless column is sequencing-exempt, so it never
+ *    conflicts; the displaced special is tried shrine/shop first — each unique per
+ *    chapter, so it has no same-kind twin anywhere to clash with — and the
+ *    conflict check steers it clear of edges/columns regardless.
+ *  - Donors give up only a PLAIN combat and keep ≥1 fight, so the one-elite rule
+ *    and every column's fight-presence both survive the left-to-right sweep.
+ *
+ * The greedy swap clears all but one corner: a fightless [rest, omen] column whose
+ * only fight-donor sits beside the event-kind intel beat (so the omen can't follow
+ * the fight there without doubling the intel). For that residue, fall back to the
+ * exact placement search with rests pinned to their cadence columns and the
+ * combat-per-column constraint on — a full valid arrangement always exists (the
+ * fights outnumber the columns), so the bounded backtrack finds one.
+ */
+function ensureCombatPerColumn(plan: SlotKind[][]): void {
+  const isPlainCombat = (s: SlotKind): boolean => s === 'mid' || s === 'earlyMid';
+  const combatCount = (col: SlotKind[]): number => col.filter((s) => COMBAT_SLOTS.has(s)).length;
+  const M = plan.length - 3; // middle columns are plan[1 .. M]
+
+  for (let c = 1; c <= M; c++) {
+    if (combatCount(plan[c]) > 0) continue;
+    // Candidate specials to evict, rests excluded (they hold the cadence); try
+    // the always-conflict-free shrine/shop before the omen, which can clash with
+    // the intel beat.
+    const candidates = plan[c]
+      .map((s, i) => ({ s, i }))
+      .filter(({ s }) => s !== 'rest')
+      .sort((a, b) => (a.s === 'event' ? 1 : 0) - (b.s === 'event' ? 1 : 0));
+
+    let placed = false;
+    for (const { s: special, i: evictIdx } of candidates) {
+      for (let dl = 1; dl <= M && !placed; dl++) {
+        if (dl === c || combatCount(plan[dl]) < 2) continue;
+        for (let di = 0; di < plan[dl].length; di++) {
+          if (!isPlainCombat(plan[dl][di])) continue;
+          const combat = plan[dl][di];
+          plan[c][evictIdx] = combat;
+          plan[dl][di] = special;
+          if (!conflictsAt(plan, dl, di, special) && !columnConflictsAt(plan, dl, di, special)) {
+            placed = true;
+            break;
+          }
+          plan[dl][di] = combat;
+          plan[c][evictIdx] = special;
+        }
+      }
+      if (placed) break;
+    }
+  }
+
+  // Exact-search backstop for the one corner the greedy swap can't reach.
+  const fightless = (): boolean => {
+    for (let c = 1; c <= M; c++) if (combatCount(plan[c]) === 0) return true;
+    return false;
+  };
+  if (fightless()) {
+    const restColumns = new Set<number>();
+    for (let c = 1; c <= M; c++) if (plan[c].includes('rest')) restColumns.add(c);
+    resolveRoomKindsBySearch(plan, { restColumns, requireCombatPerColumn: true });
+  }
+}
+
+/**
+ * Repair the rare map whose rest cadence fails on the ACTUAL layered DAG even
+ * though the column heuristic was satisfied: densifying the middle (more fights,
+ * fewer free specials) can leave a shallow node whose only reachable recovery is
+ * the distant boss, because the lone rest sits on a branch that node can't route
+ * to. The column-distance bound the cadence reasons in doesn't see that.
+ *
+ * Runs last. When worstFightsToRecovery exceeds REST_MAX_GAP, re-place the movable
+ * rooms via the exact search with edge-aware recovery + min-spacing + a fight in
+ * every column all enforced together — rests free to move to a reachable slot.
+ * This is count-preserving in practice (a valid arrangement of the SAME rooms
+ * almost always exists — only the slots move); the extraRests escalation is a
+ * belt-and-braces path for any map that genuinely needs another recovery point.
+ */
+function enforceRecoveryCadence(plan: SlotKind[][]): void {
+  if (worstFightsToRecovery(plan) <= REST_MAX_GAP) return;
+  for (let extraRests = 0; extraRests <= 3; extraRests++) {
+    if (
+      resolveRoomKindsBySearch(plan, {
+        requireCombatPerColumn: true,
+        requireRecovery: true,
+        extraRests,
+      })
+    ) {
+      return;
+    }
+  }
 }
 
 /**
@@ -442,28 +567,39 @@ function placeRestCadence(plan: SlotKind[][]): void {
   const count = restCols.length;
   if (count === 0) return;
 
+  // The worst column-stretch between recovery points for a rest-column set: the
+  // entry→first-rest run, the gaps between consecutive rests, and the last-rest→
+  // boss run. A route takes one node per column, so this upper-bounds the fights
+  // between recoveries — and because ensureCombatPerColumn later fills every
+  // column with a fight, the bound must hold in COLUMNS, not just in fights.
+  const worstStretch = (s: number[]): number => {
+    let worst = s[0];
+    for (let i = 1; i < s.length; i++) worst = Math.max(worst, s[i] - s[i - 1] - 1);
+    return Math.max(worst, M - s[s.length - 1]);
+  };
+
   // Spaced rest-column sets of the right size, best (most even, smallest stretch)
-  // first. `worst` upper-bounds the fights between recovery points.
+  // first.
   const ideal = chooseCadenceColumns(M, count);
   const rankSpacedSets = (cols: number[]): number[][] =>
     kSubsets(cols, count)
       .filter((s) => s.every((c, i) => i === 0 || c - s[i - 1] >= REST_MIN_SPACING))
       .map((s) => {
-        let worst = s[0];
-        for (let i = 1; i < s.length; i++) worst = Math.max(worst, s[i] - s[i - 1] - 1);
-        worst = Math.max(worst, M - s[s.length - 1]);
         const drift = s.reduce((d, c, i) => d + Math.abs(c - (ideal[i] ?? c)), 0);
-        return { s, score: worst * 100 + drift };
+        return { s, score: worstStretch(s) * 100 + drift };
       })
       .sort((a, b) => a.score - b.score)
       .map((x) => x.s);
 
   // Fast path: clean rest↔combat swaps onto the best spaced set of swap-reachable
   // columns (those holding a combat, plus the columns already holding a rest).
+  // Only taken when that set keeps every column-stretch within REST_MAX_GAP; a
+  // sparser swap-reachable set that would leave a 4-column run defers to the
+  // search, which ranges over all columns and can reach a tighter placement.
   const swapCols: number[] = [];
   for (let c = 1; c <= M; c++) if (plan[c].includes('rest') || combatSlot(c) !== -1) swapCols.push(c);
   const swapTarget = rankSpacedSets(swapCols)[0];
-  if (swapTarget) {
+  if (swapTarget && worstStretch(swapTarget) <= REST_MAX_GAP) {
     const targetSet = new Set(swapTarget);
     const toAdd = swapTarget.filter((c) => !restCols.includes(c));
     const toRemove = restCols.filter((c) => !targetSet.has(c));
@@ -477,7 +613,7 @@ function placeRestCadence(plan: SlotKind[][]): void {
 
   // Fallback: search the full column range, rests confined to a spaced cadence.
   for (const target of rankSpacedSets([...Array(M)].map((_, i) => i + 1))) {
-    if (resolveRoomKindsBySearch(plan, new Set(target))) return;
+    if (resolveRoomKindsBySearch(plan, { restColumns: new Set(target) })) return;
   }
 }
 
@@ -759,6 +895,34 @@ function dedupeRoomKinds(plan: SlotKind[][]): void {
   if (hasNonCombatConflict(plan)) resolveRoomKindsBySearch(plan);
 }
 
+/**
+ * The worst (largest) fights-to-recovery over the plan's layered DAG: for every
+ * slot, the fewest fights the best forward route passes before a rest or the boss
+ * (combat/elite cost 1, everything else 0), maximised across all slots. Mirrors
+ * the test's metric exactly — it walks the same layerEdges fan — so it sees real
+ * edge reachability, not just column distance, which the column heuristic can't.
+ */
+function worstFightsToRecovery(plan: SlotKind[][]): number {
+  const f = plan.map((col) => col.map(() => Infinity as number));
+  let worst = 0;
+  for (let l = plan.length - 1; l >= 0; l--) {
+    const edges = l < plan.length - 1 ? layerEdges(plan[l].length, plan[l + 1].length) : null;
+    for (let i = 0; i < plan[l].length; i++) {
+      const k = plan[l][i];
+      if (k === 'rest' || k === 'boss') {
+        f[l][i] = 0;
+        continue;
+      }
+      const cost = COMBAT_SLOTS.has(k) ? 1 : 0;
+      let best = Infinity;
+      if (edges) for (const j of edges[i]) best = Math.min(best, f[l + 1][j]);
+      f[l][i] = best === Infinity ? cost : cost + best;
+      if (f[l][i] > worst) worst = f[l][i];
+    }
+  }
+  return worst;
+}
+
 /** True if any room shares its non-combat kind with a column-mate or edge neighbour. */
 function hasNonCombatConflict(plan: SlotKind[][]): boolean {
   for (let l = 0; l < plan.length; l++) {
@@ -781,16 +945,40 @@ function hasNonCombatConflict(plan: SlotKind[][]): boolean {
  * backtrack is cheap. Combat fills collapse to a single kind for the search and
  * are written back as `mid` (the grading is cosmetic and this path is rare).
  *
- * Two callers: the dedupe fallback (no `restColumns`, rests free to land
- * anywhere clean) and the rest-cadence fallback, which passes the cadence columns
- * so rests may land ONLY there — one per column, since the multiset holds exactly
- * that many rests and the column rule bars two in one column. Returns whether a
- * full arrangement was found; on failure the plan is left untouched, so the
- * cadence caller can try the next candidate column-set.
+ * Four callers, via SearchConstraints: the dedupe fallback (no constraints, rests
+ * free to land anywhere clean); the rest-cadence fallback (`restColumns` pins
+ * rests to the cadence columns — one per column, since the multiset holds exactly
+ * that many rests and the column rule bars two in one column); the
+ * combat-per-column fallback (pins rests to their settled cadence columns AND sets
+ * `requireCombatPerColumn` so every middle column ends with a fight); and the
+ * recovery repair (`requireRecovery` + optional `extraRests`, rests free to move
+ * to an edge-reachable slot). Returns whether a full arrangement was found; on
+ * failure the plan is left untouched, so a caller can try the next candidate.
  */
+interface SearchConstraints {
+  /** Rests may land only in these columns (cadence pinning). */
+  restColumns?: ReadonlySet<number>;
+  /** Every middle column must end with a fight (no all-non-combat step). */
+  requireCombatPerColumn?: boolean;
+  /**
+   * Rests must end ≥ REST_MIN_SPACING columns apart AND the ACTUAL layered-DAG
+   * fights-to-recovery must be ≤ REST_MAX_GAP from every node — a stronger,
+   * edge-aware check than the column heuristic, used to repair the rare map where
+   * a lone rest sits on a branch a shallow node can't route to.
+   */
+  requireRecovery?: boolean;
+  /** Convert this many combat fills into extra rests before placing (repair escalation). */
+  extraRests?: number;
+}
+
 function resolveRoomKindsBySearch(
   plan: SlotKind[][],
-  restColumns?: ReadonlySet<number>,
+  {
+    restColumns,
+    requireCombatPerColumn = false,
+    requireRecovery = false,
+    extraRests = 0,
+  }: SearchConstraints = {},
 ): boolean {
   const positions: [number, number][] = [];
   plan.forEach((col, l) => col.forEach((_, i) => positions.push([l, i])));
@@ -817,6 +1005,14 @@ function resolveRoomKindsBySearch(
     const k: SlotKind = raw === 'earlyMid' ? 'mid' : raw;
     remaining.set(k, (remaining.get(k) ?? 0) + 1);
   }
+  // Repair escalation: trade combat fills for extra rests so a map whose recovery
+  // can't be met by relocating the existing rests alone still resolves.
+  if (extraRests > 0) {
+    const mids = remaining.get('mid') ?? 0;
+    if (mids < extraRests) return false;
+    remaining.set('mid', mids - extraRests);
+    remaining.set('rest', (remaining.get('rest') ?? 0) + extraRests);
+  }
 
   // Working assignment: fixed nodes keep their kind, movable start empty.
   const assign: (SlotKind | null)[] = positions.map(([l, i]) =>
@@ -830,8 +1026,42 @@ function resolveRoomKindsBySearch(
     return !related[idx].some((r) => assign[r] !== null && adjacencyKind(assign[r]!) === ak);
   };
 
+  // Every middle column (plan[1 .. length-3]) carries a combat in the final
+  // assignment — the no-all-non-combat-column guarantee, checked once the
+  // multiset is fully placed. Fixed elites already satisfy their column.
+  const everyMiddleColumnHasFight = (): boolean => {
+    for (let l = 1; l <= plan.length - 3; l++) {
+      const hasFight = plan[l].some((_, i) => {
+        const a = assign[indexOf.get(`${l},${i}`)!];
+        return a !== null && COMBAT_SLOTS.has(a);
+      });
+      if (!hasFight) return false;
+    }
+    return true;
+  };
+
+  // Rests spaced ≥ REST_MIN_SPACING apart and the actual layered-DAG recovery
+  // within REST_MAX_GAP from every node, validated on the fully-assigned map.
+  const restsSpacedAndRecovered = (): boolean => {
+    const restCols: number[] = [];
+    for (let l = 1; l <= plan.length - 3; l++) {
+      if (plan[l].some((_, i) => assign[indexOf.get(`${l},${i}`)!] === 'rest')) restCols.push(l);
+    }
+    for (let k = 1; k < restCols.length; k++) {
+      if (restCols[k] - restCols[k - 1] < REST_MIN_SPACING) return false;
+    }
+    const assigned: SlotKind[][] = plan.map((col, l) =>
+      col.map((_, i) => assign[indexOf.get(`${l},${i}`)!]!),
+    );
+    return worstFightsToRecovery(assigned) <= REST_MAX_GAP;
+  };
+
   const place = (t: number): boolean => {
-    if (t === movable.length) return true;
+    if (t === movable.length) {
+      if (requireCombatPerColumn && !everyMiddleColumnHasFight()) return false;
+      if (requireRecovery && !restsSpacedAndRecovered()) return false;
+      return true;
+    }
     const idx = movable[t];
     for (const [kind, count] of remaining) {
       if (count <= 0 || !fits(idx, kind)) continue;
