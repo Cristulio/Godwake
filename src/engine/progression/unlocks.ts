@@ -91,7 +91,7 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   // Power unlocks — earned by clearing deeper chapters.
   'boss-intel': { chaptersCleared: 1 },
   // The roster "you can swap souls now" reveal fires when the first alternate
-  // class opens (see classUnlockDelve). Classes stagger in individually after.
+  // class opens (see classUnlockRenown). Classes stagger in individually after.
   'class-roster': { chaptersCleared: 2 },
   'affixes-epic': { chaptersCleared: 3 },
   legendaries: { chaptersCleared: 5 },
@@ -102,78 +102,103 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
 
 /**
  * The three archetypes a brand-new walker may forge at the wheel — the soul's
- * possible ORIGINS. A fresh soul picks exactly ONE of these; the other two open
- * EARLY (the relative ladder below), then the four non-starters follow. Order
- * here is stable and drives which of the two non-origin starters opens first.
- * Editable data.
+ * possible ORIGINS. A fresh soul picks exactly ONE of these; it becomes the
+ * soul's permanent anchor for the renown-spent class ladder below. Order here is
+ * stable and feeds the per-origin orders. Editable data.
  */
 export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'wizard', 'ranger'];
 
 /**
- * The non-starter souls, in the order they stagger in AFTER all three starters.
- * Every starter opens before any of these, for every possible origin. Order is
- * the relative reveal order (barbarian first, monk last). Editable data.
+ * The four non-starter souls, in the order they stagger in AFTER all three
+ * starters — barbarian first, monk last. They fill the tail of every per-origin
+ * order, so every starter opens before any of these for every origin. Editable.
  */
 export const NON_STARTER_ORDER: readonly ClassId[] = ['barbarian', 'rogue', 'druid', 'monk'];
 
-/** Delve gap between consecutive rungs of the relative unlock ladder. */
-const UNLOCK_STEP = 3;
+/** A soul's possible origin — always one of the three forged starters. */
+type StarterClass = 'fighter' | 'wizard' | 'ranger';
 
 /**
- * The soul's full unlock ORDER given the starter it originally forged: the origin
- * first (always its own body), then the other two starters in
- * {@link STARTER_CLASSES} order, then the non-starters in {@link NON_STARTER_ORDER}.
- * Position in this list times {@link UNLOCK_STEP} is the class's delve threshold,
- * so the origin sits at 0, the other starters at 3 / 6, the rest at 9 / 12 / 15 / 18.
+ * The order the OTHER six souls open in, PER ORIGIN — index 0 is the first unlock
+ * (slot 2), index 5 the last (slot 7). The two non-origin starters lead (Fighter
+ * is the early one for a Mage or Hunter origin), then the four non-starters fill
+ * the tail in {@link NON_STARTER_ORDER}. All three starters precede every
+ * non-starter for every origin. The one source of truth for the unlock order —
+ * editable data.
  */
-function relativeClassOrder(originClass: ClassId): ClassId[] {
-  const otherStarters = STARTER_CLASSES.filter((c) => c !== originClass);
-  const nonStarters = NON_STARTER_ORDER.filter((c) => c !== originClass);
-  return [originClass, ...otherStarters, ...nonStarters];
+const UNLOCK_ORDER_BY_ORIGIN: Record<StarterClass, readonly ClassId[]> = {
+  fighter: ['ranger', 'wizard', ...NON_STARTER_ORDER],
+  wizard: ['fighter', 'ranger', ...NON_STARTER_ORDER],
+  ranger: ['fighter', 'wizard', ...NON_STARTER_ORDER],
+};
+
+/**
+ * Cumulative RENOWN-SPENT bars for unlock slots 2..7 (the origin holds slot 1 and
+ * is always worn — bar 0). Slot 2 opens on ANY spend, the first Grove offering,
+ * modelled as `>= 1` since renown is only ever spent in positive whole numbers.
+ * Editable data.
+ */
+export const SLOT_RENOWN_THRESHOLDS: readonly number[] = [1, 100, 200, 300, 450, 600];
+
+/**
+ * The soul's full unlock ORDER given the starter it forged: the origin first
+ * (always its own body), then the other six in {@link UNLOCK_ORDER_BY_ORIGIN}.
+ * Position drives the renown-spent bar — the origin at slot 1, the rest at 2..7.
+ * A non-starter origin can't be forged; we still return a sane order (origin, the
+ * starters, then the non-starters) rather than throw on a malformed save.
+ */
+export function relativeClassOrder(originClass: ClassId): ClassId[] {
+  const tail = UNLOCK_ORDER_BY_ORIGIN[originClass as StarterClass];
+  if (tail) return [originClass, ...tail];
+  const others = [...STARTER_CLASSES, ...NON_STARTER_ORDER].filter((c) => c !== originClass);
+  return [originClass, ...others];
 }
 
-/** Every class the relative ladder paces, in no particular order (used to scan thresholds). */
+/** Every class the renown ladder paces (cleric is unplayable, never on the ladder). */
 const LADDER_CLASSES: readonly ClassId[] = [...STARTER_CLASSES, ...NON_STARTER_ORDER];
 
 /**
- * The DELVE COUNT (the account-level tally of delves STARTED, which survives
- * reincarnation) at which `classId` opens for a soul whose origin starter is
- * `originClass` — the bar it must reach before it can CHANGE INTO that body at the
- * hub. RELATIVE to the origin: whatever you first forged is always yours (0), the
- * other two starters open at 3 / 6, and the four non-starters at 9 / 12 / 15 / 18.
- * The not-yet-playable cleric stays a 999 placeholder. Delve-paced so the roster
- * opens on time served, not on a depth wall a green soul may never reach.
+ * The cumulative RENOWN SPENT on the Grove (metaStore.renownSpent — account-level,
+ * survives reincarnation) at which `classId` opens for a soul whose origin starter
+ * is `originClass`: the bar it must reach before it can CHANGE INTO that body at
+ * the hub. RELATIVE to the origin — the worn origin is always free (0); the other
+ * two starters and the four non-starters open as renown spent crosses the slot
+ * bars (slot 2 = first offering, then 100 / 200 / 300 / 450 / 600). The unplayable
+ * cleric never opens (Infinity). Spend-paced so the roster opens on tribute laid
+ * down, not on a depth wall a green soul may never reach.
  */
-export function classUnlockDelve(classId: ClassId, originClass: ClassId): number {
-  if (classId === 'cleric') return 999;
+export function classUnlockRenown(classId: ClassId, originClass: ClassId): number {
+  if (classId === 'cleric') return Infinity;
   const idx = relativeClassOrder(originClass).indexOf(classId);
-  return idx < 0 ? 999 : idx * UNLOCK_STEP;
+  if (idx < 0) return Infinity;
+  if (idx === 0) return 0; // the origin — always worn
+  return SLOT_RENOWN_THRESHOLDS[idx - 1] ?? Infinity;
 }
 
-/** Is `classId` available to select given the soul's delve count and origin starter? */
+/** Is `classId` available to select given the soul's renown spent and origin starter? */
 export function isClassUnlocked(
   classId: ClassId,
-  delveCount: number,
+  renownSpent: number,
   originClass: ClassId,
 ): boolean {
-  return delveCount >= classUnlockDelve(classId, originClass);
+  return renownSpent >= classUnlockRenown(classId, originClass);
 }
 
 /**
- * Classes whose RELATIVE delve threshold was crossed strictly between
- * `prevDelveCount` (exclusive) and `nextDelveCount` (inclusive) — the souls just
- * earned by logging another delve, in ladder (ascending-threshold) order. Drives
- * the per-class "a new soul surfaced" reveal in startDelve. Callers filter to
- * classes that actually have a reveal card, and drop the soul's own class (it
- * crosses its own threshold but is already worn, not "newly" found).
+ * Classes whose RELATIVE renown-spent bar was crossed strictly between
+ * `prevRenownSpent` (exclusive) and `nextRenownSpent` (inclusive) — the souls a
+ * Grove purchase just earned, in ladder (ascending-bar) order. Drives the
+ * per-class "a new soul surfaced" reveal fired from the Grove-purchase action.
+ * Callers filter to classes that actually have a reveal card, and drop the soul's
+ * own class (already worn, not "newly" found).
  */
 export function newlyUnlockedClasses(
-  prevDelveCount: number,
-  nextDelveCount: number,
+  prevRenownSpent: number,
+  nextRenownSpent: number,
   originClass: ClassId,
 ): ClassId[] {
-  return LADDER_CLASSES.map((id) => ({ id, threshold: classUnlockDelve(id, originClass) }))
-    .filter(({ threshold }) => threshold > prevDelveCount && threshold <= nextDelveCount)
+  return LADDER_CLASSES.map((id) => ({ id, threshold: classUnlockRenown(id, originClass) }))
+    .filter(({ threshold }) => threshold > prevRenownSpent && threshold <= nextRenownSpent)
     .sort((a, b) => a.threshold - b.threshold)
     .map(({ id }) => id);
 }

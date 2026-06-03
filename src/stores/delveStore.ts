@@ -35,9 +35,8 @@ import { getCampBoon } from '../content/campBoons';
 import { nextLoreBeat } from '../content/loreBeats';
 import { EQUIP_SLOTS } from '../engine/character/equip';
 import { sellValue } from '../components/delve/shopStock';
-import { newlyUnlocked, newlyUnlockedByChapter, newlyUnlockedClasses } from '../engine/progression';
-import { getTutorial, FIRST_GEAR_TUTORIAL_ID } from '../content/tutorials';
-import type { ClassId } from '../schemas/ids';
+import { newlyUnlocked, newlyUnlockedByChapter } from '../engine/progression';
+import { FIRST_GEAR_TUTORIAL_ID } from '../content/tutorials';
 import { useCharacterStore } from './characterStore';
 import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
@@ -45,29 +44,17 @@ import { useMetaStore } from './metaStore';
 import { isFeatureUnlocked } from '../engine/progression/unlocks';
 
 /**
- * Queue the one-time unlock tutorial for every feature whose ladder threshold
- * the descent just crossed AND that this soul hasn't been taught yet. Kept its
- * own function so the feature-gating and lore lanes can hang their own
- * delve-transition hooks alongside it without entangling. Migrated veterans
- * (delveCount floored to 999) never cross a threshold, so they see nothing.
+ * Queue the one-time unlock tutorial for every FEATURE whose delve-count threshold
+ * the descent just crossed AND that this soul hasn't been taught yet. Kept its own
+ * function so the feature-gating and lore lanes can hang their own delve-transition
+ * hooks alongside it without entangling. Migrated veterans (delveCount floored to
+ * 999) never cross a threshold, so they see nothing. The per-class "a new soul
+ * surfaced" cards no longer ride a descent — they fire on the RENOWN-SPENT axis off
+ * a Grove purchase (gameStore.purchaseUpgrade).
  */
-function queueUnlockTutorials(
-  prevDelveCount: number,
-  nextDelveCount: number,
-  currentClassId: ClassId,
-) {
+function queueUnlockTutorials(prevDelveCount: number, nextDelveCount: number) {
   const seen = useMetaStore.getState().seenTutorials;
-  // Delve-gated feature reveals plus the per-class "a new soul surfaced" cards —
-  // souls now open on delve count, not depth, RELATIVE to the origin starter (the
-  // worn class is the fallback before one is stamped). Class ids share the
-  // tutorial-queue / seenTutorials namespace; keep only the ones with copy (skips
-  // the not-yet-playable cleric) and drop the soul's own class (already worn).
-  const originClass = useMetaStore.getState().originClass ?? currentClassId;
-  const featureCards = newlyUnlocked(prevDelveCount, nextDelveCount);
-  const classCards = newlyUnlockedClasses(prevDelveCount, nextDelveCount, originClass).filter(
-    (id) => id !== currentClassId && getTutorial(id) !== undefined,
-  );
-  const fresh = [...featureCards, ...classCards].filter((id) => !seen.includes(id));
+  const fresh = newlyUnlocked(prevDelveCount, nextDelveCount).filter((id) => !seen.includes(id));
   // Hub-surfaced (not in-delve): these onboarding reveals show at the hub before
   // the descent, never over the delve. startDelve holds the screen flip while any
   // are queued; App gates this queue to the hub. The in-delve chapter/first-gear
@@ -543,7 +530,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // These are hub-surfaced (delve-count axis): if this descent crossed a
     // threshold, hold at the hub so the card(s) show BEFORE the delve — the
     // descent resumes into the delve once the last one is dismissed.
-    queueUnlockTutorials(prevDelveCount, prevDelveCount + 1, withQuirkBudgets.classId);
+    queueUnlockTutorials(prevDelveCount, prevDelveCount + 1);
     const screenStore = useScreenStore.getState();
     if (screenStore.hubUnlockQueue.length > 0) {
       screenStore.holdForHubUnlock();

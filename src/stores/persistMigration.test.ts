@@ -200,8 +200,25 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 16', () => {
-    expect(SAVE_VERSION).toBe(16);
+  it('is 17', () => {
+    expect(SAVE_VERSION).toBe(17);
+  });
+});
+
+describe('migrateV1ToV2 — v16 → v17 renown-spent tracker', () => {
+  it('defaults renownSpent to 0 when missing (no back-credit for past spends)', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {} }).renownSpent).toBe(0);
+  });
+
+  it('preserves a present renownSpent', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, renownSpent: 250 }).renownSpent).toBe(250);
+  });
+
+  it('coerces a garbage/negative renownSpent back to 0', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, renownSpent: -10 }).renownSpent).toBe(0);
+    expect(
+      migrateV1ToV2({ unlockedUpgrades: {}, renownSpent: 'x' as unknown as number }).renownSpent,
+    ).toBe(0);
   });
 });
 

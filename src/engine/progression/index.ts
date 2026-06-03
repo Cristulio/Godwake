@@ -8,7 +8,9 @@ export {
   nextLockedFeature,
   isClassUnlocked,
   newlyUnlockedClasses,
-  classUnlockDelve,
+  classUnlockRenown,
+  relativeClassOrder,
+  SLOT_RENOWN_THRESHOLDS,
   STARTER_CLASSES,
   NON_STARTER_ORDER,
 } from './unlocks';

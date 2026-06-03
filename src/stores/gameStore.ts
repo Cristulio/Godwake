@@ -22,7 +22,8 @@ import { useCombatStore } from './combatStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore, type Screen } from './screenStore';
 import { migrateV1ToV2, SAVE_VERSION } from './persistMigration';
-import { isFeatureUnlocked } from '../engine/progression/unlocks';
+import { isFeatureUnlocked, newlyUnlockedClasses } from '../engine/progression/unlocks';
+import { getTutorial } from '../content/tutorials';
 import { loadDelveFactory } from '../engine/delve/loadDelveFactory';
 import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from '../engine/delve/constants';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
@@ -154,6 +155,7 @@ interface GameState {
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
+  renownSpent: number;
   originClass: ClassId | null;
   ownedLegendaries: string[];
   activeLegendaries: string[];
@@ -301,6 +303,7 @@ interface PersistedSnapshot {
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
+  renownSpent: number;
   originClass: ClassId | null;
   ownedLegendaries: string[];
   activeLegendaries: string[];
@@ -352,6 +355,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     seenDialogueBeats: meta.seenDialogueBeats,
     seenTutorials: meta.seenTutorials,
     delveCount: meta.delveCount,
+    renownSpent: meta.renownSpent,
     originClass: meta.originClass,
     ownedLegendaries: meta.ownedLegendaries,
     activeLegendaries: meta.activeLegendaries,
@@ -423,6 +427,9 @@ function scatterSnapshot(s: PersistedSnapshot) {
     // Post-migration this is always present (a veteran's missing field floors
     // to 999, a fresh/wiped save to 0); the guard only catches malformed data.
     delveCount: typeof s.delveCount === 'number' ? s.delveCount : 0,
+    // Cumulative renown spent paces the class-unlock ladder. Older saves predate
+    // it → 0 (no back-credit for past spends; saves are disposable in dev).
+    renownSpent: typeof s.renownSpent === 'number' && s.renownSpent >= 0 ? s.renownSpent : 0,
     // Origin starter anchors the relative unlock ladder. Pre-relative saves lack
     // it → fall back to the worn body's class (null with no soul yet, so the
     // first forge stamps it cleanly).
@@ -480,6 +487,26 @@ function adoptSoul(classId: ClassId) {
   charSlice.setCharacter(soul ? carrySoulProgress(fresh, soul) : fresh);
   // Class-bound relics the new body can't wield drop; the effect payloads re-bake.
   useMetaStore.getState().setActiveLegendaries(useMetaStore.getState().activeLegendaries);
+}
+
+/**
+ * Queue the one-time "a new soul surfaced" reveal for every class whose
+ * renown-spent bar a Grove purchase just crossed (prevSpent → nextSpent), relative
+ * to the soul's origin starter. Deduped against seenTutorials and the worn class;
+ * surfaced on the general tutorial queue so the card pops right at the Grove. The
+ * delve-axis FEATURE reveals stay in delveStore (queueUnlockTutorials).
+ */
+function queueClassUnlockReveals(prevSpent: number, nextSpent: number) {
+  if (nextSpent <= prevSpent) return;
+  const meta = useMetaStore.getState();
+  const currentClass = useCharacterStore.getState().character?.classId;
+  const origin = meta.originClass ?? currentClass ?? null;
+  if (!origin) return;
+  const seen = meta.seenTutorials;
+  const reveals = newlyUnlockedClasses(prevSpent, nextSpent, origin).filter(
+    (id) => id !== currentClass && getTutorial(id) !== undefined && !seen.includes(id),
+  );
+  if (reveals.length > 0) useScreenStore.getState().enqueueTutorials(reveals);
 }
 
 function readSlotWrapper(slot: SaveSlotId): SlotWrapper | null {
@@ -549,6 +576,7 @@ export const useGameStore = create<GameState>()(
           seenDialogueBeats: m.seenDialogueBeats,
           seenTutorials: m.seenTutorials,
           delveCount: m.delveCount,
+          renownSpent: m.renownSpent,
           originClass: m.originClass,
           druidGroveUnlocked: m.druidGroveUnlocked,
           ownedLegendaries: m.ownedLegendaries,
@@ -609,6 +637,7 @@ export const useGameStore = create<GameState>()(
         seenDialogueBeats: useMetaStore.getState().seenDialogueBeats,
         seenTutorials: useMetaStore.getState().seenTutorials,
         delveCount: useMetaStore.getState().delveCount,
+        renownSpent: useMetaStore.getState().renownSpent,
         originClass: useMetaStore.getState().originClass,
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
         activeLegendaries: useMetaStore.getState().activeLegendaries,
@@ -791,8 +820,14 @@ export const useGameStore = create<GameState>()(
         markTutorialSeen: (tutorialId) =>
           useMetaStore.getState().markTutorialSeen(tutorialId),
 
-        purchaseUpgrade: (upgradeId) =>
-          useMetaStore.getState().purchaseUpgrade(upgradeId),
+        purchaseUpgrade: (upgradeId) => {
+          // A Grove purchase is the only renown sink, so it's the one place the
+          // class-unlock ladder can advance — fire any soul reveal it just earned.
+          const prevSpent = useMetaStore.getState().renownSpent;
+          const res = useMetaStore.getState().purchaseUpgrade(upgradeId);
+          if (res.ok) queueClassUnlockReveals(prevSpent, useMetaStore.getState().renownSpent);
+          return res;
+        },
 
         setActiveLegendaries: (ids) =>
           useMetaStore.getState().setActiveLegendaries(ids),

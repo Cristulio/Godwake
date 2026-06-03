@@ -76,8 +76,12 @@ import { getQuirk } from '../content/quirks';
  *             `endingChosen` is dropped (the soul's tale no longer records a
  *             branch); `gameCompleted` stays (now also unlocks New Game+).
  *             `selectedAscension` (the run's ascension level, default 0) is added.
+ *  v16 → v17: Class unlocks moved from delve count to RENOWN SPENT. `renownSpent`
+ *             (cumulative renown spent on Grove upgrades, default 0) added to the
+ *             meta snapshot. Old saves get no back-credit for past spends — the
+ *             roster re-opens as they spend renown again (saves disposable in dev).
  */
-export const SAVE_VERSION = 16;
+export const SAVE_VERSION = 17;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -252,6 +256,7 @@ export interface MigratedSnapshot {
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
+  renownSpent: number;
   originClass: ClassId | null;
   gameCompleted: boolean;
   selectedAscension: number;
@@ -399,6 +404,12 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   }
   if (!Array.isArray(state.seenTutorials)) {
     state.seenTutorials = [];
+  }
+
+  // v16 → v17: class unlocks moved to renown spent. Old saves predate the tracker
+  // → 0 (no back-credit; the roster re-opens as renown is spent again).
+  if (typeof state.renownSpent !== 'number' || state.renownSpent < 0) {
+    state.renownSpent = 0;
   }
 
   // originClass anchors the relative class-unlock ladder. Pre-relative saves
