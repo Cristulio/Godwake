@@ -177,6 +177,61 @@ describe('weapon stat requirements', () => {
   });
 });
 
+describe('armor stat requirements', () => {
+  // Human (+1 all) over explicit base scores, so effective STR = base + 1.
+  function charWithStr(classId: ClassId, baseStr: number, inventory: string[]): Character {
+    return {
+      ...createCharacter({
+        id: 'asr',
+        name: 'ASR',
+        raceId: 'human',
+        classId,
+        baseAbilityScores: { str: baseStr, dex: 14, con: 14, int: 10, wis: 10, cha: 10 },
+        skillProficiencies: [],
+      }),
+      inventory: inventory.map((itemId) => ({ itemId })),
+      equipped: { mainHand: null, offHand: null, armor: null },
+    };
+  }
+
+  it('gates medium body armour behind STR 13 — a low-STR Ranger can no longer free-wear half plate', () => {
+    // The Ranger is medium-armour proficient, so STR is the only remaining gate
+    // (this is the playtest bug: half plate used to carry no requirement).
+    const weakling = charWithStr('ranger', 10, ['half-plate']); // eff STR 11
+    expect(equipDenialReason(weakling, 'half-plate')).toBe('Requires Strength 13');
+    expect(canEquip(weakling, 'half-plate')).toBe(false);
+
+    const invested = charWithStr('ranger', 14, ['half-plate']); // eff STR 15
+    expect(equipDenialReason(invested, 'half-plate')).toBeNull();
+    expect(canEquip(invested, 'half-plate')).toBe(true);
+  });
+
+  it('equipItem refuses an under-STR medium armour and keeps identity', () => {
+    const weakling = charWithStr('ranger', 10, ['half-plate']); // eff STR 11
+    const after = equipItem(weakling, 0);
+    expect(after).toBe(weakling);
+    expect(after.equipped.armor).toBeNull();
+  });
+
+  it('heavy armour demands more STR than medium — STR 13 wears half plate but not chain mail', () => {
+    // Fighter is proficient in every armour category, so STR alone gates here.
+    const mid = charWithStr('fighter', 12, ['half-plate', 'chain-mail']); // eff STR 13
+    expect(equipDenialReason(mid, 'half-plate')).toBeNull(); // medium req 13 — ok
+    expect(equipDenialReason(mid, 'chain-mail')).toBe('Requires Strength 15'); // heavy req 15 — no
+    expect(canEquip(mid, 'chain-mail')).toBe(false);
+
+    const strong = charWithStr('fighter', 14, ['chain-mail']); // eff STR 15
+    expect(equipDenialReason(strong, 'chain-mail')).toBeNull();
+    expect(canEquip(strong, 'chain-mail')).toBe(true);
+  });
+
+  it('light armour stays free — a low-STR DEX build keeps its natural armour', () => {
+    const dex = charWithStr('rogue', 8, ['leather-armor']); // eff STR 9
+    expect(equipDenialReason(dex, 'leather-armor')).toBeNull();
+    expect(canEquip(dex, 'leather-armor')).toBe(true);
+  });
+});
+
 describe('armor / shield enhancement (+N) AC', () => {
   function withArmor(baseId: string, enhancement: number): Character {
     return {
