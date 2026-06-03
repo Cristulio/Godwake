@@ -155,34 +155,37 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     useMetaStore.setState({ gameCompleted: false });
   });
 
-  it('the first full-chain clear detours to the ending BEFORE settling anything', () => {
+  it('records completion at the WIN MOMENT, then detours to the ending before settling', () => {
     seedRun({ quirks: [], level: 6, renown: 0 });
     useMetaStore.setState({ gameCompleted: false });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
     useDelveStore.getState().finishDelve();
 
-    // Routed to the capstone; nothing settled yet — the delve is held 'completed'
-    // so the ending screen's finishDelve() re-entry resolves it.
+    // gameCompleted is locked in HERE — before the lazy ending screen renders —
+    // so a crashed ending chunk can't cost the player the clear / New Game+.
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
+    // Routed to the capstone; the soul's settle is still deferred — the delve is
+    // held 'completed' so the ending screen's finishDelve() re-entry resolves it.
     expect(useScreenStore.getState().screen).toBe('ending');
     expect(useDelveStore.getState().delve).not.toBeNull();
     expect(char().level).toBe(6);
     expect(char().renown).toBe(0);
-    expect(useMetaStore.getState().gameCompleted).toBe(false);
   });
 
-  it('concluding the flavor ending (markGameCompleted + re-entry) runs the normal clear path', () => {
+  it('concluding the flavor ending (finishDelve re-entry) runs the normal clear path', () => {
     seedRun({ quirks: [], level: 6, renown: 0 });
     useMetaStore.setState({ gameCompleted: false });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
-    // First pass: the ending fires.
+    // First pass: completion is recorded and the ending fires.
     useDelveStore.getState().finishDelve();
     expect(useScreenStore.getState().screen).toBe('ending');
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
 
-    // The flavor-only ending records no choice — it just marks the chain cleared,
-    // then re-enters finishDelve (the screen then routes on to the title).
-    useMetaStore.getState().markGameCompleted();
+    // The flavor-only ending records nothing itself — it just re-enters
+    // finishDelve (which now falls through the capstone gate), then the screen
+    // routes on to the title.
     useDelveStore.getState().finishDelve();
 
     // Second pass settles: reincarnated, renown paid, depth recorded, hub.

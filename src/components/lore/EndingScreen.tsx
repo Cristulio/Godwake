@@ -30,7 +30,6 @@ function paragraphsFor(stage: Stage): string[] {
 }
 
 export function EndingScreen() {
-  const markGameCompleted = useGameStore((s) => s.markGameCompleted);
   const finishDelve = useGameStore((s) => s.finishDelve);
   const goToTitle = useGameStore((s) => s.goToTitle);
 
@@ -101,10 +100,10 @@ export function EndingScreen() {
   }
 
   function concludeEnding() {
-    // Mark the chain cleared so the deferred finishDelve() re-entry skips the
-    // capstone gate and runs the normal settle (renown, reincarnation, the next
-    // ascension rung), then leave on the title — the finale is a full stop.
-    markGameCompleted();
+    // Completion was already locked in at the win moment (finishDelve, before
+    // this screen rendered), so the gate is already cleared. This re-entry just
+    // runs the normal settle — renown, reincarnation, the next ascension rung —
+    // then leaves on the title. The finale is a full stop.
     finishDelve();
     goToTitle();
   }

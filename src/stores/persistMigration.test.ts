@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { TOTAL_CHAPTERS } from '../engine/delve/constants';
 import { migrateV1ToV2, migrateUnlockedUpgrades, SAVE_VERSION } from './persistMigration';
 import { useGameStore, SAVE_SLOT_KEY_PREFIX } from './gameStore';
 import { useCharacterStore } from './characterStore';
@@ -406,6 +407,46 @@ describe('loadFromSlot — backward-compat v1 wrapper', () => {
     expect(useMetaStore.getState().monsterEncounters).toEqual({ goblin: 1 });
     expect(useMetaStore.getState().deathCount).toBe(1);
     expect(useMetaStore.getState().druidGroveUnlocked).toBe(true);
+  });
+});
+
+describe('loadFromSlot — completion recovery for a crashed ending', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    useMetaStore.getState().resetMeta();
+  });
+
+  function writeSlot(stateOverrides: Record<string, unknown>) {
+    localStorage.setItem(
+      `${SAVE_SLOT_KEY_PREFIX}1`,
+      JSON.stringify({
+        version: SAVE_VERSION,
+        state: { screen: 'hub', character: null, ...stateOverrides },
+      }),
+    );
+  }
+
+  it('a save with the whole chain cleared but gameCompleted false recovers to true', () => {
+    // The exact shape an older build left behind when the lazy ending screen
+    // crashed before recording completion.
+    writeSlot({ chaptersCleared: TOTAL_CHAPTERS, gameCompleted: false });
+
+    expect(useGameStore.getState().loadFromSlot(1).ok).toBe(true);
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
+  });
+
+  it('does NOT spuriously complete a save that never felled the whole chain', () => {
+    writeSlot({ chaptersCleared: TOTAL_CHAPTERS - 1, gameCompleted: false });
+
+    expect(useGameStore.getState().loadFromSlot(1).ok).toBe(true);
+    expect(useMetaStore.getState().gameCompleted).toBe(false);
+  });
+
+  it('leaves an already-completed save completed', () => {
+    writeSlot({ chaptersCleared: TOTAL_CHAPTERS, gameCompleted: true });
+
+    expect(useGameStore.getState().loadFromSlot(1).ok).toBe(true);
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
   });
 });
 
