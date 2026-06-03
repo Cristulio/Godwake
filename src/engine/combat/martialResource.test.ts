@@ -134,19 +134,22 @@ describe('Martial pool — refresh + spend rules', () => {
 describe('Martial pool — mid-fight regen', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('Fighter regenerates a point every round, capped at its deeper max', () => {
+  it('Fighter regenerates every OTHER round (3,5,7…), capped at its deeper max', () => {
     const spent: Character = {
       ...fighter(3),
       resources: { ...fighter(3).resources, martialPointsRemaining: 1 },
     };
-    // Round 1 is the fresh-fight refresh — no extra tick.
+    // Round 1 is the fresh-fight refresh; even rounds do not tick.
     expect(regenMartialPoolForRound(spent, 1).resources.martialPointsRemaining).toBe(1);
-    const r2 = regenMartialPoolForRound(spent, 2);
-    expect(r2.resources.martialPointsRemaining).toBe(2);
-    const r3 = regenMartialPoolForRound(r2, 3);
-    expect(r3.resources.martialPointsRemaining).toBe(3);
-    const r4 = regenMartialPoolForRound(r3, 4);
-    expect(r4.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX_FIGHTER);
+    expect(regenMartialPoolForRound(spent, 2).resources.martialPointsRemaining).toBe(1);
+    const r3 = regenMartialPoolForRound(spent, 3);
+    expect(r3.resources.martialPointsRemaining).toBe(2);
+    // Round 4 does not tick either — +1 every OTHER round, not every round.
+    expect(regenMartialPoolForRound(r3, 4).resources.martialPointsRemaining).toBe(2);
+    const r5 = regenMartialPoolForRound(r3, 5);
+    expect(r5.resources.martialPointsRemaining).toBe(3);
+    const r7 = regenMartialPoolForRound(r5, 7);
+    expect(r7.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX_FIGHTER);
   });
 
   it('Barbarian/Ranger regenerate every OTHER round', () => {
@@ -282,7 +285,7 @@ describe('Martial DEFENSE — brace/guard', () => {
 describe('Martial DISRUPT — staggering strike', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('arms the stance and spends one point (Fighter/Barbarian baseline cost)', () => {
+  it('arms the stance and spends one point (Barbarian baseline cost)', () => {
     const init = createCombat({
       roller: createDiceRoller(1),
       character: barbarian(3),
@@ -291,6 +294,18 @@ describe('Martial DISRUPT — staggering strike', () => {
     const r = useMartialDisrupt({ character: init.character, state: init.state });
     expect(r.character.martialDisruptActive).toBe(true);
     expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - 1);
+  });
+
+  it("the Fighter's Shield Bash costs 2 Resolve — spent from its deeper pool", () => {
+    expect(martialDisruptCost(fighter(3))).toBe(2);
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: fighter(3),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const r = useMartialDisrupt({ character: init.character, state: init.state });
+    expect(r.character.martialDisruptActive).toBe(true);
+    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX_FIGHTER - 2);
   });
 
   it('a connecting hit fells the foe, which then loses its turn', () => {
@@ -382,11 +397,11 @@ describe('Ranger Focus — rebalanced spend costs', () => {
     expect(r.character.resources.martialPointsRemaining).toBe(1);
   });
 
-  it('leaves the Fighter and Barbarian spend costs unchanged (OFFENSE 2 / DISRUPT 1)', () => {
+  it('leaves the Fighter/Barbarian OFFENSE (2) and the Barbarian DISRUPT (1) untouched', () => {
     for (const c of [fighter(3), barbarian(3)]) {
       expect(martialOffenseCost(c)).toBe(2);
-      expect(martialDisruptCost(c)).toBe(1);
     }
+    expect(martialDisruptCost(barbarian(3))).toBe(1);
   });
 });
 

@@ -180,10 +180,10 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     if (nextCharacter.martialSpentThisTurn) {
       nextCharacter = { ...nextCharacter, martialSpentThisTurn: false };
     }
-    // Martial pool regen: top the well back up mid-fight (Fighter every round,
-    // Barbarian/Ranger every other round), capped at the class max — so a lever
-    // stays live across the whole fight, not just the opening. Reads `round`,
-    // which has already advanced to this turn's value above.
+    // Martial pool regen: top the well back up mid-fight (every other round for
+    // all three martial classes), capped at the class max — so a lever stays
+    // live across the whole fight, not just the opening. Reads `round`, which
+    // has already advanced to this turn's value above.
     if (isMartialClass(nextCharacter)) {
       const regened = regenMartialPoolForRound(nextCharacter, round);
       if (regened !== nextCharacter) {
