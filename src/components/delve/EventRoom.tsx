@@ -60,8 +60,9 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   const [resolved, setResolved] = useState<ResolvedTurn | null>(null);
   const delveCount = useGameStore((s) => s.delveCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const renownSpent = useGameStore((s) => s.renownSpent);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
-  const progressionMeta = { delveCount, chaptersCleared, druidGroveUnlocked };
+  const progressionMeta = { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked };
   const bossIntelUnlocked = isFeatureUnlocked('boss-intel', progressionMeta);
 
   if (!character) return null;

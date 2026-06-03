@@ -85,10 +85,12 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const classId = character?.classId;
   const delveCount = useGameStore((s) => s.delveCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const renownSpent = useGameStore((s) => s.renownSpent);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
-  const campMaxRarity: GearRarity = isFeatureUnlocked('affixes-epic', { delveCount, chaptersCleared, druidGroveUnlocked })
+  const progressionMeta = { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked };
+  const campMaxRarity: GearRarity = isFeatureUnlocked('affixes-epic', progressionMeta)
     ? 'purple'
-    : isFeatureUnlocked('affixes-rare', { delveCount, chaptersCleared, druidGroveUnlocked })
+    : isFeatureUnlocked('affixes-rare', progressionMeta)
       ? 'blue'
       : 'green';
   const gear = useMemo<GearStock[]>(
