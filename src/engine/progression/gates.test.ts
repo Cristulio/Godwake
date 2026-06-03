@@ -31,17 +31,17 @@ describe('elite-nodes gate (createGodwakeDelve)', () => {
 // ── affixes-rare / affixes-epic: rarity cap in shop stock ────────────────────
 
 describe('affixes-rare gate (rollGearStock maxRarity)', () => {
-  it('caps all stock at green when maxRarity=green', () => {
+  it('caps all stock at or below green when maxRarity=green (white floor allowed)', () => {
     const stock = rollGearStock('test-room', 3, 'fighter', 0, 'green');
     for (const item of stock) {
-      expect(item.ref.rolled?.rarity).toBe('green');
+      expect(['white', 'green']).toContain(item.ref.rolled?.rarity);
     }
   });
 
   it('allows blue when maxRarity=blue', () => {
     const stock = rollGearStock('test-room', 3, 'fighter', 0, 'blue');
     const rarities = stock.map((s) => s.ref.rolled?.rarity);
-    expect(rarities.every((r) => r === 'green' || r === 'blue')).toBe(true);
+    expect(rarities.every((r) => r === 'white' || r === 'green' || r === 'blue')).toBe(true);
     expect(rarities.some((r) => r === 'blue')).toBe(true);
   });
 

@@ -85,8 +85,8 @@ describe('rollGearStock', () => {
     }
   });
 
-  it('stocks five pieces per visit (Wave 2 widened rack)', () => {
-    expect(rollGearStock('count', 1, 'ranger')).toHaveLength(5);
+  it('stocks four pieces per visit (trimmed rack)', () => {
+    expect(rollGearStock('count', 1, 'ranger')).toHaveLength(4);
   });
 
   it('omitting depth matches depth 0 (backward-compatible signature)', () => {
@@ -107,6 +107,23 @@ describe('rollGearStock', () => {
         expect(ref.rolled?.rarity).not.toBe('legendary');
       }
     }
+  });
+
+  it('never saturates to all-purple — lower rarities stay on the rack at any depth', () => {
+    for (let chapter = 1; chapter <= 14; chapter++) {
+      for (const layer of [0, 4, 12, 30]) {
+        const rarities = rollGearStock(`flat-${chapter}-${layer}`, chapter, 'fighter', layer).map(
+          (s) => s.ref.rolled?.rarity ?? 'white',
+        );
+        expect(rarities.filter((r) => r === 'purple').length).toBeLessThanOrEqual(2);
+        expect(rarities.filter((r) => r !== 'purple').length).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+
+  it('opens the ladder at white in the early chapters', () => {
+    const rarities = rollGearStock('white-floor', 1, 'fighter').map((s) => s.ref.rolled?.rarity);
+    expect(rarities).toContain('white');
   });
 });
 
