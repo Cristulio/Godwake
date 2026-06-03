@@ -117,14 +117,29 @@ export function martialPointsLeft(character: Readonly<Character>): number {
 }
 
 /**
- * Flat bonus damage an OFFENSE strike adds to EACH weapon strike this turn —
- * scales with level so the spike stays relevant as enemy HP climbs. Applies per
- * strike, so it compounds with Extra Attack. Tuned UP from its first pass: at 2
- * points it has to clearly out-earn two 1-point spends, or the bot (and the
- * player) just never commit it — OFFENSE was near-inert in the sims.
+ * Flat bonus damage an OFFENSE strike adds to EACH weapon strike this turn,
+ * applied per strike so it rides Extra Attack.
+ *
+ * The Fighter's Power Attack is the reliability spend — it trades the big flat
+ * spike for a small +2 bite paired with a +2 to-hit ({@link
+ * martialOffenseAttackBonus}). A class that misses often wants the blow to LAND
+ * surer, not just hit harder. The Barbarian (Savage Cleave) and Ranger (Aimed
+ * Shot) keep the level-scaled spike — tuned UP so at 2 points it clearly
+ * out-earns two 1-point spends.
  */
 export function martialOffenseDamage(character: Readonly<Character>): number {
+  if (character.classId === 'fighter') return 2;
   return 6 + Math.floor(character.level / 2);
+}
+
+/**
+ * To-hit bonus the OFFENSE strike adds to every swing this turn. Only the
+ * Fighter's Power Attack carries one (+2) — its whole point is reliability. The
+ * Barbarian/Ranger OFFENSE keeps no accuracy axis (Savage Cleave spills a second
+ * blow; Aimed Shot rides the flat spike), so they read zero.
+ */
+export function martialOffenseAttackBonus(character: Readonly<Character>): number {
+  return character.classId === 'fighter' ? 2 : 0;
 }
 
 /** Damage a DEFENSE guard blunts off the next incoming hit. */
@@ -162,10 +177,14 @@ export function useMartialOffense(ctx: MartialContext): CombatActionResult {
   next = patchResources(next, {
     martialPointsRemaining: martialPointsLeft(character) - MARTIAL_OFFENSE_COST,
   });
+  const offenseText =
+    next.classId === 'fighter'
+      ? `${next.name} commits to a ${flavor.offense} — this turn's strikes land surer (+${martialOffenseAttackBonus(next)} to hit) and bite for ${martialOffenseDamage(next)} more.`
+      : `${next.name} commits to a ${flavor.offense} — this turn's strikes bite for ${martialOffenseDamage(next)} more.`;
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${next.name} commits to a ${flavor.offense} — this turn's strikes bite for ${martialOffenseDamage(next)} more.`,
+    text: offenseText,
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), next);
 }

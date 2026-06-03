@@ -8,6 +8,7 @@ import {
   martialFlavor,
   martialPointsLeft,
   martialOffenseDamage,
+  martialOffenseAttackBonus,
   martialDefenseReduction,
   MARTIAL_OFFENSE_COST,
   MARTIAL_DEFENSE_COST,
@@ -323,7 +324,7 @@ export function ActionBar({
             variant={canMartialOffense ? 'primary' : 'secondary'}
             onClick={onMartialOffense}
             disabled={!canMartialOffense}
-            title={`Costs ${MARTIAL_OFFENSE_COST} ${martial.pool}: this turn's strikes land for +${martialOffenseDamage(character)} damage${character.classId === 'barbarian' ? ', and cleave into a second foe' : ''}.`}
+            title={`Costs ${MARTIAL_OFFENSE_COST} ${martial.pool}: this turn's strikes ${character.classId === 'fighter' ? `land surer (+${martialOffenseAttackBonus(character)} to hit) and bite for +${martialOffenseDamage(character)} damage` : `land for +${martialOffenseDamage(character)} damage`}${character.classId === 'barbarian' ? ', and cleave into a second foe' : ''}.`}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {offenseUp ? `${martial.offense} ✓` : `${martial.offense} (${MARTIAL_OFFENSE_COST})`}
