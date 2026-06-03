@@ -12,6 +12,7 @@ import { useCombatStore } from './combatStore';
 import { createGodwakeDelve, getAscensionLevel, MAX_ASCENSION, TOTAL_CHAPTERS } from '../engine/delve';
 import { isFeatureUnlocked } from '../engine/progression/unlocks';
 import { setActiveRoller } from '../engine/dice';
+import type { RoomSpec } from '../types/delve';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
 import { presetCreationInput } from '../engine/character/defaultCharacter';
 import { renownSoulMarkMultiplier } from '../engine/character/quirks';
@@ -618,5 +619,77 @@ describe('delveStore — ASI gains do not persist across lives', () => {
     // Descent resets the run-scoped gain — the new run starts clean.
     expect(char().runAsiGains).toBeUndefined();
     expect(char().baseAbilityScores.str).toBe(presetStr);
+  });
+});
+
+describe('delveStore.acceptSpoils — mid-run chapter-unlock reveals', () => {
+  /** Boss rooms in chain order; [0] = chapter 1, [4] = chapter 5, … */
+  function bossRooms(): RoomSpec[] {
+    return useDelveStore.getState().delve!.rooms.filter((r) => r.kind === 'boss');
+  }
+
+  /** Stage the run so the next acceptSpoils() resolves `room` as the cleared room. */
+  function stageClear(room: RoomSpec) {
+    const idx = useDelveStore.getState().delve!.rooms.findIndex((r) => r.id === room.id);
+    setDelve({ currentRoomIdx: idx, currentRoomId: room.id });
+    useDelveStore.setState({ pendingSpoilsRoom: room });
+  }
+
+  beforeEach(() => {
+    setActiveRoller('midrun-unlock-seed');
+    seedRun({ quirks: [] });
+    useMetaStore.setState({ seenTutorials: [], chaptersCleared: 0 });
+    useScreenStore.setState({ tutorialQueue: [], taunt: null, tauntQueue: [] });
+  });
+
+  it('enqueues the chapter-unlock reveal the instant the chapter falls, before any finishDelve', () => {
+    stageClear(bossRooms()[0]); // felling the ch1 boss crosses boss-intel (@1)
+
+    useDelveStore.getState().acceptSpoils();
+
+    // Card queued and the high-water bumped — both WITHOUT a finishDelve.
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['boss-intel']);
+    expect(useMetaStore.getState().chaptersCleared).toBe(1);
+  });
+
+  it('advances the high-water mid-run so the unlocked feature goes LIVE for the rest of the run', () => {
+    // Sitting at a ch4 high-water, felling the ch5 boss crosses legendaries (@5).
+    useMetaStore.setState({ chaptersCleared: 4, seenTutorials: [] });
+    expect(isFeatureUnlocked('legendaries', useMetaStore.getState())).toBe(false);
+
+    stageClear(bossRooms()[4]);
+    useDelveStore.getState().acceptSpoils();
+
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['legendaries']);
+    expect(useMetaStore.getState().chaptersCleared).toBe(5);
+    // The whole point: legendary drops are live for the REST of this run now.
+    expect(isFeatureUnlocked('legendaries', useMetaStore.getState())).toBe(true);
+  });
+
+  it('a later finishDelve does NOT re-enqueue a card already revealed mid-run (no double-fire)', () => {
+    const ch1Boss = bossRooms()[0];
+    const idx = useDelveStore.getState().delve!.rooms.findIndex((r) => r.id === ch1Boss.id);
+    stageClear(ch1Boss);
+
+    useDelveStore.getState().acceptSpoils();
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['boss-intel']);
+
+    // Run ends on that same ch1 clear: finishDelve re-runs the chapter bookkeeping,
+    // but the high-water is already 1, so it enqueues nothing new.
+    setDelve({ phase: 'completed', currentRoomIdx: idx });
+    useDelveStore.getState().finishDelve();
+
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['boss-intel']);
+    expect(useMetaStore.getState().chaptersCleared).toBe(1);
+  });
+
+  it('a non-boss room clear queues no chapter card and leaves the high-water untouched', () => {
+    const combat = useDelveStore.getState().delve!.rooms.find((r) => r.kind === 'combat')!;
+    stageClear(combat);
+
+    useDelveStore.getState().acceptSpoils();
+
+    expect(useScreenStore.getState().tutorialQueue).toEqual([]);
+    expect(useMetaStore.getState().chaptersCleared).toBe(0);
   });
 });
