@@ -760,6 +760,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         bossIdx >= 0
           ? (s.delve?.rooms.slice(0, bossIdx + 1).filter((r) => r.kind === 'boss').length ?? 1)
           : 1;
+      // Fire the chapter-unlock reveal the INSTANT this chapter falls — and advance
+      // the chaptersCleared high-water now so whatever this clear just unlocked
+      // (legendary drops, epic affixes, …) goes live for the REST of this run, not
+      // only the next one. recordChapterCleared is an idempotent Math.max and
+      // seenTutorials dedupes, so finishDelve's run-end re-fire stays a no-op.
+      const prevChapters = useMetaStore.getState().chaptersCleared;
+      useMetaStore.getState().recordChapterCleared(clearedChapter);
+      queueChapterUnlockTutorials(prevChapters, useMetaStore.getState().chaptersCleared);
       setTimeout(() => {
         useScreenStore.getState().showTaunt('irenicus', 'chapter-clear', clearedChapter);
       }, 1500);
