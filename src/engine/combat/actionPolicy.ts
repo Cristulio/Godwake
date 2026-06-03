@@ -30,9 +30,9 @@ import {
   isMartialClass,
   martialPointsLeft,
   martialPoolMax,
-  MARTIAL_OFFENSE_COST,
+  martialOffenseCost,
+  martialDisruptCost,
   MARTIAL_DEFENSE_COST,
-  MARTIAL_DISRUPT_COST,
 } from './martialResource';
 import { useCunningAction, type CunningActionChoice } from './cunningAction';
 import { useRage, useRecklessAttack } from './rage';
@@ -616,6 +616,8 @@ function chooseMartialAction(
   const hasOffense = characterHasMechanic(character, 'martial-offense');
   const hasDefense = characterHasMechanic(character, 'martial-defense');
   const hasDisrupt = characterHasMechanic(character, 'martial-disrupt');
+  const offenseCost = martialOffenseCost(character);
+  const disruptCost = martialDisruptCost(character);
 
   const poolFull = points >= martialPoolMax(character);
   const controlTelegraphed = live.some(telegraphsControl);
@@ -631,7 +633,7 @@ function chooseMartialAction(
   // it is meaty enough to survive the blow (staggering a corpse wastes the point).
   if (
     hasDisrupt &&
-    points >= MARTIAL_DISRUPT_COST &&
+    points >= disruptCost &&
     character.martialDisruptActive !== true &&
     threat &&
     primary.id === threat.id &&
@@ -650,7 +652,7 @@ function chooseMartialAction(
   if (
     hasOffense &&
     poolFull &&
-    points >= MARTIAL_OFFENSE_COST &&
+    points >= offenseCost &&
     character.martialOffenseActive !== true &&
     targetWorthSpike &&
     !controlTelegraphed
@@ -676,7 +678,7 @@ function chooseMartialAction(
   // still spike a worthwhile target rather than hoard the points into oblivion.
   if (
     hasOffense &&
-    points >= MARTIAL_OFFENSE_COST &&
+    points >= offenseCost &&
     character.martialOffenseActive !== true &&
     targetWorthSpike
   ) {

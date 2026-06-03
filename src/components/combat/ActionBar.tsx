@@ -10,9 +10,9 @@ import {
   martialOffenseDamage,
   martialOffenseAttackBonus,
   martialDefenseReduction,
-  MARTIAL_OFFENSE_COST,
+  martialOffenseCost,
+  martialDisruptCost,
   MARTIAL_DEFENSE_COST,
-  MARTIAL_DISRUPT_COST,
 } from '../../engine/combat/martialResource';
 import { getItem } from '../../content/items';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
@@ -113,6 +113,8 @@ export function ActionBar({
   // turn (martialSpentThisTurn). The flavor strings drive the in-world labels.
   const martial = martialFlavor(character);
   const martialPoints = martialPointsLeft(character);
+  const offenseCost = martialOffenseCost(character);
+  const disruptCost = martialDisruptCost(character);
   const martialSpent = character.martialSpentThisTurn === true;
   const offenseUp = character.martialOffenseActive === true;
   const disruptArmed = character.martialDisruptActive === true;
@@ -128,7 +130,7 @@ export function ActionBar({
     hasMartialOffense &&
     !martialSpent &&
     !offenseUp &&
-    martialPoints >= MARTIAL_OFFENSE_COST &&
+    martialPoints >= offenseCost &&
     !character.actionEconomy.actionUsed;
   const canMartialDefense =
     playersTurn &&
@@ -143,7 +145,7 @@ export function ActionBar({
     hasMartialDisrupt &&
     !martialSpent &&
     !disruptArmed &&
-    martialPoints >= MARTIAL_DISRUPT_COST &&
+    martialPoints >= disruptCost &&
     !character.actionEconomy.actionUsed;
 
   const cunningRemaining = character.resources.cunningActionUsesRemaining ?? 0;
@@ -324,10 +326,10 @@ export function ActionBar({
             variant={canMartialOffense ? 'primary' : 'secondary'}
             onClick={onMartialOffense}
             disabled={!canMartialOffense}
-            title={`Costs ${MARTIAL_OFFENSE_COST} ${martial.pool}: this turn's strikes ${character.classId === 'fighter' ? `land surer (+${martialOffenseAttackBonus(character)} to hit) and bite for +${martialOffenseDamage(character)} damage` : `land for +${martialOffenseDamage(character)} damage`}${character.classId === 'barbarian' ? ', and cleave into a second foe' : ''}.`}
+            title={`Costs ${offenseCost} ${martial.pool}: this turn's strikes ${character.classId === 'fighter' ? `land surer (+${martialOffenseAttackBonus(character)} to hit) and bite for +${martialOffenseDamage(character)} damage` : `land for +${martialOffenseDamage(character)} damage`}${character.classId === 'barbarian' ? ', and cleave into a second foe' : ''}.`}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {offenseUp ? `${martial.offense} ✓` : `${martial.offense} (${MARTIAL_OFFENSE_COST})`}
+            {offenseUp ? `${martial.offense} ✓` : `${martial.offense} (${offenseCost})`}
           </Button>
         )}
         {hasMartialDefense && martial && (
@@ -346,10 +348,10 @@ export function ActionBar({
             variant={canMartialDisrupt ? 'primary' : 'secondary'}
             onClick={onMartialDisrupt}
             disabled={!canMartialDisrupt}
-            title={`Costs ${MARTIAL_DISRUPT_COST} ${martial.pool}: arm a staggering strike — the next hit fells its target and costs it its next turn.`}
+            title={`Costs ${disruptCost} ${martial.pool}: arm a staggering strike — the next hit fells its target and costs it its next turn.`}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {disruptArmed ? `${martial.disrupt} ✓` : `${martial.disrupt} (${MARTIAL_DISRUPT_COST})`}
+            {disruptArmed ? `${martial.disrupt} ✓` : `${martial.disrupt} (${disruptCost})`}
           </Button>
         )}
 

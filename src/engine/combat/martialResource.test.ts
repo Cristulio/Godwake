@@ -11,11 +11,12 @@ import {
   martialDefenseReduction,
   martialOffenseDamage,
   martialOffenseAttackBonus,
+  martialOffenseCost,
+  martialDisruptCost,
   martialPoolMax,
   regenMartialPoolForRound,
   MARTIAL_POOL_MAX,
   MARTIAL_POOL_MAX_FIGHTER,
-  MARTIAL_OFFENSE_COST,
 } from './martialResource';
 import { chooseCombatAction } from './actionPolicy';
 import { endTurn } from './turn';
@@ -93,7 +94,7 @@ describe('Martial pool — refresh + spend rules', () => {
     const r = useMartialOffense({ character: init.character, state: init.state });
     expect(r.character.martialOffenseActive).toBe(true);
     expect(r.character.resources.martialPointsRemaining).toBe(
-      martialPoolMax(init.character) - MARTIAL_OFFENSE_COST,
+      martialPoolMax(init.character) - martialOffenseCost(init.character),
     );
     expect(r.character.martialSpentThisTurn).toBe(true);
     // No action-economy tax — the only cost is the point.
@@ -110,7 +111,7 @@ describe('Martial pool — refresh + spend rules', () => {
     const second = useMartialDefense({ character: first.character, state: first.state });
     expect(second.character.incomingDamageReduction ?? 0).toBe(0);
     expect(second.character.resources.martialPointsRemaining).toBe(
-      martialPoolMax(init.character) - MARTIAL_OFFENSE_COST,
+      martialPoolMax(init.character) - martialOffenseCost(init.character),
     );
   });
 
@@ -281,10 +282,10 @@ describe('Martial DEFENSE — brace/guard', () => {
 describe('Martial DISRUPT — staggering strike', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('arms the stance and spends one point', () => {
+  it('arms the stance and spends one point (Fighter/Barbarian baseline cost)', () => {
     const init = createCombat({
       roller: createDiceRoller(1),
-      character: ranger(3),
+      character: barbarian(3),
       monsters: [{ def: getMonster('goblin') }],
     });
     const r = useMartialDisrupt({ character: init.character, state: init.state });
@@ -311,6 +312,64 @@ describe('Martial DISRUPT — staggering strike', () => {
     const turn = monsterAttack({ roller, character: hit.character, state: hit.state }, foe.id);
     expect(turn.state.log.some((l) => /knocked down — the turn is lost/.test(l.text))).toBe(true);
     expect(monsters(turn.state)[0].instance.staggeredTurns).toBe(0);
+  });
+});
+
+describe('Ranger Focus — rebalanced spend costs', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('Aimed Shot is a 1-point spend (down from 2)', () => {
+    expect(martialOffenseCost(ranger())).toBe(1);
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: ranger(3),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const r = useMartialOffense({ character: init.character, state: init.state });
+    expect(r.character.martialOffenseActive).toBe(true);
+    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - 1);
+  });
+
+  it('Aimed Shot deals about half the Barbarian spike at each level', () => {
+    for (const lvl of [1, 3, 8, 20]) {
+      const fullSpike = 6 + Math.floor(lvl / 2); // the Barbarian's 2-point spike
+      expect(martialOffenseDamage(barbarian(lvl))).toBe(fullSpike);
+      expect(martialOffenseDamage(ranger(lvl))).toBe(Math.floor(fullSpike / 2));
+    }
+  });
+
+  it('Crippling Shot costs 2 Focus (up from 1) — the strong stagger', () => {
+    expect(martialDisruptCost(ranger())).toBe(2);
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: ranger(3),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const r = useMartialDisrupt({ character: init.character, state: init.state });
+    expect(r.character.martialDisruptActive).toBe(true);
+    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - 2);
+  });
+
+  it('Crippling Shot is refused with only 1 Focus left (needs 2)', () => {
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: ranger(3),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const oneLeft: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, martialPointsRemaining: 1 },
+    };
+    const r = useMartialDisrupt({ character: oneLeft, state: init.state });
+    expect(r.character.martialDisruptActive).not.toBe(true);
+    expect(r.character.resources.martialPointsRemaining).toBe(1);
+  });
+
+  it('leaves the Fighter and Barbarian spend costs unchanged (OFFENSE 2 / DISRUPT 1)', () => {
+    for (const c of [fighter(3), barbarian(3)]) {
+      expect(martialOffenseCost(c)).toBe(2);
+      expect(martialDisruptCost(c)).toBe(1);
+    }
   });
 });
 
