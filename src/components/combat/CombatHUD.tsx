@@ -24,6 +24,7 @@ import {
 
 const UNCANNY_DODGE_LEVEL = 5;
 const NIMBLE_DODGE_MAX_LEVEL = 4;
+const GUARD_MAX_LEVEL = 4;
 const BLOODIED_RATIO = 0.5;
 
 interface CombatHUDProps {
@@ -296,6 +297,11 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const uncannyReady = hasUncannyDodge && !character.actionEconomy.reactionUsed;
   const hasNimbleDodge = isRogue && character.level <= NIMBLE_DODGE_MAX_LEVEL;
   const nimbleReady = hasNimbleDodge && !character.actionEconomy.reactionUsed;
+  // Fighter Guard (L1-4): the passive first-hit cushion, auto-spent like the
+  // rogue's dodges. It rides the same reaction flag, so it reads Ready/Used the
+  // same way — no button, just a status the new player can watch work.
+  const hasGuard = isFighter && character.level <= GUARD_MAX_LEVEL;
+  const guardReady = hasGuard && !character.actionEconomy.reactionUsed;
   const sneakUsed = state.sneakAttackUsedThisTurn === true;
   const hasBloodiedLiveTarget = state.combatants.some((c) => {
     if (c.kind !== 'monster') return false;
@@ -540,6 +546,21 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               nimbleReady
                 ? 'Nimble Dodge: the first attack against you this round is made at disadvantage.'
                 : 'Nimble Dodge already used this round — resets at end of turn.'
+            }
+          />
+        </Section>
+      )}
+
+      {hasGuard && (
+        <Section title="Reaction">
+          <Pill
+            text={guardReady ? 'Guard Ready' : 'Guard Used'}
+            on={guardReady}
+            tone="gold"
+            title={
+              guardReady
+                ? 'Guard: the first hit you take this round is blunted by 2.'
+                : 'Guard already blunted a blow this round — resets at the start of your turn.'
             }
           />
         </Section>

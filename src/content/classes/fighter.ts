@@ -32,6 +32,13 @@ export const FIGHTER: Class = ClassSchema.parse({
         mechanicKey: 'fighting-style-defense',
       },
       {
+        id: 'guard',
+        name: 'Guard',
+        description:
+          'A trained soldier rolls with the first blow rather than taking it square. The first hit against you each round is blunted by 2 — a strike still bites for at least 1. The instinct that carries a green recruit through the opening rounds; by 5th level your drilled guard and second strike make it second nature, and it fades.',
+        mechanicKey: 'guard',
+      },
+      {
         id: 'second-wind',
         name: 'Second Wind',
         description:
