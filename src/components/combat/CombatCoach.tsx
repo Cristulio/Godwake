@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { CSSProperties } from 'react';
 import type { ClassId } from '../../schemas/ids';
 import { STARTER_CLASSES } from '../../engine/progression/unlocks';
@@ -52,15 +53,18 @@ const PROMPT: Record<CoachStep, string> = {
   abilities: "Your class's special moves live here.",
 };
 
-interface Box {
+export interface Box {
   top: number;
   left: number;
   width: number;
   height: number;
 }
 
+/** Padding baked around the target so the cutout never clips the control. */
+const PAD = 10;
+
 /** The viewport bounding box enclosing every element matching the selector. */
-function unionBox(els: Element[]): Box | null {
+export function unionBox(els: Element[]): Box | null {
   let top = Infinity;
   let left = Infinity;
   let right = -Infinity;
@@ -75,6 +79,38 @@ function unionBox(els: Element[]): Box | null {
   }
   if (!Number.isFinite(top)) return null;
   return { top, left, width: right - left, height: bottom - top };
+}
+
+/** The padded cutout rectangle, in viewport pixels, clamped to the screen. */
+export interface Spotlight {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * Resolve the cutout geometry from the target box, or null when masking would
+ * be unsafe. The coach must NEVER trap the screen, so a null/zero-area/wholly-
+ * offscreen target yields null — the caller then renders no blocking overlay
+ * rather than a full-screen dim with the hole out of view. When the target is
+ * present the cutout is its rect grown by PAD and clamped to the viewport, so
+ * the hole always sits over the live control and the dim panels never cover it.
+ */
+export function spotlightGeometry(box: Box | null, vw: number, vh: number): Spotlight | null {
+  if (!box) return null;
+  if (box.width <= 0 || box.height <= 0) return null;
+  const right = box.left + box.width;
+  const bottom = box.top + box.height;
+  if (box.left >= vw || box.top >= vh || right <= 0 || bottom <= 0) return null;
+  const x0 = Math.max(0, box.left - PAD);
+  const y0 = Math.max(0, box.top - PAD);
+  const x1 = Math.min(vw, right + PAD);
+  const y1 = Math.min(vh, bottom + PAD);
+  if (x1 <= x0 || y1 <= y0) return null;
+  return { x0, y0, x1, y1, w: x1 - x0, h: y1 - y0 };
 }
 
 function boxChanged(a: Box | null, b: Box | null): boolean {
@@ -124,17 +160,15 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
     return () => cancelAnimationFrame(raf);
   }, [selector]);
 
-  if (!box) return null;
-
-  const PAD = 10;
-  const x0 = Math.max(0, box.left - PAD);
-  const y0 = Math.max(0, box.top - PAD);
-  const w = box.width + PAD * 2;
-  const h = box.height + PAD * 2;
-  const x1 = x0 + w;
-  const y1 = y0 + h;
-
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 0;
+  // Fail-safe: a missing, zero-area, or offscreen target yields no geometry, so
+  // the coach renders nothing blocking rather than dimming the screen with the
+  // hole out of view. The player is never trapped.
+  const spot = spotlightGeometry(box, vw, vh);
+  if (!spot) return null;
+  const { x0, y0, x1, y1, w, h } = spot;
+
   // Put the bubble on the side of the cutout with more room: above a low
   // control (the action bar), below a high one (the battlefield).
   const placeAbove = y0 > vh * 0.5;
@@ -144,7 +178,7 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
 
   const dimPanel = 'absolute bg-black/70 pointer-events-auto';
 
-  return (
+  const overlay = (
     <div className="fixed inset-0 z-[60] pointer-events-none" role="dialog" aria-label="Combat tutorial">
       {/* Four dim panels frame the cutout and absorb stray taps, gently funnel-
           ing attention to the lit control. The hole itself is left uncovered so
@@ -201,4 +235,12 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
       </div>
     </div>
   );
+
+  // Portal to <body> so the fixed overlay is positioned against the viewport,
+  // not a transformed ancestor. CombatScreen's root carries a persisted
+  // transform (animate-room-enter's forwards fill, plus animate-shake while it
+  // plays); a transformed ancestor becomes the containing block for fixed
+  // descendants, which would skew every getBoundingClientRect-derived coord and
+  // slide the cutout off the control.
+  return typeof document === 'undefined' ? overlay : createPortal(overlay, document.body);
 }
