@@ -1,4 +1,5 @@
 import { Button } from '../ui/Button';
+import { useInputBlock } from '../ui/useInputBlock';
 
 interface QuirksTutorialProps {
   onDismiss: () => void;
@@ -9,14 +10,17 @@ interface QuirksTutorialProps {
  * system so the new badges in the hub make sense.
  */
 export function QuirksTutorial({ onDismiss }: QuirksTutorialProps) {
+  const overlayRef = useInputBlock<HTMLDivElement>();
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/85 p-4 animate-fade-in"
-      onClick={onDismiss}
+      ref={overlayRef}
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/85 p-4 animate-fade-in outline-none"
     >
       <div
         className="max-w-xl w-full bg-[#1a140e] border-2 border-[var(--color-accent-amber)] shadow-[0_0_32px_rgba(244,167,66,0.35)] p-5 md:p-7 select-none"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] font-bold mb-3">
           ◆ The Druid Speaks

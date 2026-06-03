@@ -1,5 +1,6 @@
 import { Button } from '../ui/Button';
 import { getTutorial } from '../../content/tutorials';
+import { useInputBlock } from '../ui/useInputBlock';
 
 interface UnlockTutorialCardProps {
   /** The feature id that just unlocked — also its seenTutorials key. */
@@ -13,6 +14,7 @@ interface UnlockTutorialCardProps {
  * "Got it" dismiss; the trigger marks it seen so it never replays.
  */
 export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardProps) {
+  const overlayRef = useInputBlock<HTMLDivElement>();
   const tutorial = getTutorial(featureId);
   // Defensive: an unknown id has no copy to show — dismiss rather than wedge.
   if (!tutorial) {
@@ -22,12 +24,14 @@ export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardP
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/85 p-4 animate-fade-in"
-      onClick={onDismiss}
+      ref={overlayRef}
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/85 p-4 animate-fade-in outline-none"
     >
       <div
         className="max-w-xl w-full bg-[#1a140e] border-2 border-[var(--color-accent-amber)] shadow-[0_0_32px_rgba(244,167,66,0.35)] p-5 md:p-7 select-none"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] font-bold mb-2 animate-pulse-glow">
           ◆ New — Unlocked
