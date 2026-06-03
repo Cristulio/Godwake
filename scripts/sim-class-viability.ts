@@ -494,7 +494,12 @@ interface ProcCounters {
   flurry: number;
   patientDefense: number;
   stunningStrike: number;
-  powerAttack: number;
+  /** New per-fight martial pool (#338) — Fighter Resolve / Barb Fury / Ranger Focus. */
+  martialOffense: number;
+  martialDefense: number;
+  martialDisrupt: number;
+  /** Combats fought by a martial-pool class (denominator for the spend rates). */
+  martialCombats: number;
 }
 
 function freshProcs(): ProcCounters {
@@ -513,7 +518,10 @@ function freshProcs(): ProcCounters {
     flurry: 0,
     patientDefense: 0,
     stunningStrike: 0,
-    powerAttack: 0,
+    martialOffense: 0,
+    martialDefense: 0,
+    martialDisrupt: 0,
+    martialCombats: 0,
   };
 }
 
@@ -560,7 +568,9 @@ function runPlayerTurnInstrumented(
     else if (action.kind === 'flurry-of-blows') pc.flurry += 1;
     else if (action.kind === 'patient-defense') pc.patientDefense += 1;
     else if (action.kind === 'stunning-strike') pc.stunningStrike += 1;
-    else if (action.kind === 'power-attack') pc.powerAttack += 1;
+    else if (action.kind === 'martial-offense') pc.martialOffense += 1;
+    else if (action.kind === 'martial-defense') pc.martialDefense += 1;
+    else if (action.kind === 'martial-disrupt') pc.martialDisrupt += 1;
 
     const colossusBefore = s.colossusSlayerUsedThisTurn === true;
     const sneakBefore = s.sneakAttackUsedThisTurn === true;
@@ -603,6 +613,9 @@ function runCombatRoom(
   let state: CombatState = init.state;
   let character: Character = init.character;
   pc.combats += 1;
+  if (characterIn.classId === 'fighter' || characterIn.classId === 'barbarian' || characterIn.classId === 'ranger') {
+    pc.martialCombats += 1;
+  }
 
   let turns = 0;
   while (state.status === 'active' && turns < MAX_TURNS_PER_FIGHT * 4) {
@@ -927,19 +940,22 @@ function renderAscensionHistogram(aggs: ClassAggregate[]): string {
 function renderProcs(): string {
   const lines: string[] = [];
   lines.push(
-    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat | Flurry/combat | StunStrike/combat | PatientDef/combat | PowerAtk/combat |',
+    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat | Flurry/combat | StunStrike/combat | PatientDef/combat | Martial OFF/combat | Martial DEF/combat | Martial DIS/combat | Martial total/combat |',
   );
-  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|------------:|----------------:|----------------:|--------------:|');
+  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|------------:|----------------:|----------------:|----------------:|----------------:|----------------:|-----------------:|');
   for (const classId of CLASSES) {
     const p = PROCS[classId];
     const per = (n: number) => (p.combats ? num(n / p.combats, 2) : '—');
+    const perMartial = (n: number) => (p.martialCombats ? num(n / p.martialCombats, 2) : '—');
     const perTurn = (n: number) => (p.rogueTurns ? num(n / p.rogueTurns, 2) : '—');
     const relevant = (s: string, when: boolean) => (when ? s : '·');
     const isRogue = classId === 'rogue';
     const isCaster = classId === 'wizard' || classId === 'druid';
     const isMonk = classId === 'monk';
+    const isMartial = classId === 'fighter' || classId === 'barbarian' || classId === 'ranger';
+    const martialTotal = p.martialOffense + p.martialDefense + p.martialDisrupt;
     lines.push(
-      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} | ${relevant(per(p.flurry), isMonk)} | ${relevant(per(p.stunningStrike), isMonk)} | ${relevant(per(p.patientDefense), isMonk)} | ${relevant(per(p.powerAttack), classId === 'fighter')} |`,
+      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} | ${relevant(per(p.flurry), isMonk)} | ${relevant(per(p.stunningStrike), isMonk)} | ${relevant(per(p.patientDefense), isMonk)} | ${relevant(perMartial(p.martialOffense), isMartial)} | ${relevant(perMartial(p.martialDefense), isMartial)} | ${relevant(perMartial(p.martialDisrupt), isMartial)} | ${relevant(perMartial(martialTotal), isMartial)} |`,
     );
   }
   return lines.join('\n');
@@ -1056,6 +1072,20 @@ bot underplays even with the full loot/camp loop modelled) — the ranking, not 
 magnitudes, is the deliverable.`;
 }
 
+function martialSpendLine(): string {
+  const classes: ClassId[] = ['fighter', 'barbarian', 'ranger'];
+  const parts = classes.map((c) => {
+    const p = PROCS[c];
+    const denom = Math.max(1, p.martialCombats);
+    const off = p.martialOffense / denom;
+    const def = p.martialDefense / denom;
+    const dis = p.martialDisrupt / denom;
+    const total = off + def + dis;
+    return `**${c}** ${num(total, 2)}/combat (OFF ${num(off, 2)} · DEF ${num(def, 2)} · DIS ${num(dis, 2)})`;
+  });
+  return parts.join('; ');
+}
+
 function renderDoc(aggs: ClassAggregate[], wallSec: string): string {
   const rp = PROCS.ranger;
   const bp = PROCS.barbarian;
@@ -1130,6 +1160,11 @@ ${renderProcs()}
 **${rp.combats ? num(rp.huntersMarkDie / rp.combats, 2) : '—'}**×/combat, and fired Colossus
 **${rp.combats ? num(rp.colossus / rp.combats, 2) : '—'}**×/combat (Colossus is gated behind the L3 Hunter
 subclass, so its rate also reflects how often the ranger reaches L3 within a life).
+
+**Martial pool (#338) firing check** — the headline guard for THIS lane. The new
+per-fight pool (Fighter Resolve / Barbarian Fury / Ranger Focus; 3 pts, ≤1 spend
+per turn) spends per combat: ${martialSpendLine()}. If any of these were ~0 the
+new kit would be inert in the sim and the band read meaningless; they are not.
 
 ## Where deaths cluster
 
