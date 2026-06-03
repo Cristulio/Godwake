@@ -198,6 +198,30 @@ describe('monster summon action', () => {
     const r3 = monsterAttack({ roller, character: ch, state: s }, bid);
     expect(monstersOf(r3.state, 'driderling').length).toBe(4);
   });
+
+  it('Goblin Warden waits — attacks on round 1, summons only from round 2', () => {
+    const roller = createDiceRoller(7);
+    const init = createCombat({ roller, character: makeFighter(), monsters: [{ def: getDef('goblin-warden') }] });
+    expect(init.state.round).toBe(1);
+    const wid = monstersOf(init.state, 'goblin-warden')[0].id;
+    const before = init.state.combatants.length;
+
+    // Round 1: the telegraphed intent is the greatsword, not the summon, and
+    // resolving the turn spawns no goblin — the field is unchanged.
+    expect(monstersOf(init.state, 'goblin-warden')[0].instance.intent?.kind).toBe('attack');
+    const r1 = monsterAttack({ roller, character: init.character, state: init.state }, wid);
+    expect(monstersOf(r1.state, 'goblin').length).toBe(0);
+    expect(r1.state.combatants.length).toBe(before);
+
+    // Round 2: re-plan the intent against the later round (as the
+    // start-of-player-turn refresh does) — now the summon is live and fires.
+    const s = refreshMonsterIntents({ ...init.state, round: 2 }, init.character);
+    expect(monstersOf(s, 'goblin-warden')[0].instance.intent?.kind).toBe('summon');
+    const r2 = monsterAttack({ roller, character: init.character, state: s }, wid);
+    expect(monstersOf(r2.state, 'goblin').length).toBe(1);
+    expect(r2.state.combatants.length).toBe(before + 1);
+    expect(r2.state.log.some((l) => /calls a Goblin/.test(l.text))).toBe(true);
+  });
 });
 
 describe('monster multiattack action', () => {

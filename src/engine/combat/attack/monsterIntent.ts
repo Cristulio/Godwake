@@ -53,6 +53,7 @@ function summonAvailable(
   instance: MonsterInstance,
   state: CombatState,
 ): boolean {
+  if (action.minRound !== undefined && state.round < action.minRound) return false;
   if (specialOnCooldown(instance, action.name, action.once, action.cooldownRounds, state.round)) {
     return false;
   }
