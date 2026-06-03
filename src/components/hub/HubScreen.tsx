@@ -145,7 +145,11 @@ export function HubScreen() {
               <QuirkRow quirkIds={character.quirks} emptyText="The soul wears no marks this life" />
             </div>
           </div>
-          <Button variant="secondary" onClick={goToCharacterSelect} className="shrink-0 self-start">
+          <Button
+            variant="secondary"
+            onClick={goToCharacterSelect}
+            className="shrink-0 self-start basis-full w-full sm:basis-auto sm:w-auto"
+          >
             ⇄ Change Character
           </Button>
         </div>

@@ -613,6 +613,11 @@ export function CombatScreen({
   }
 
   const isResolved = state.status !== 'active';
+  // The dice readout is a fixed side panel on desktop. On a phone an idle
+  // "awaiting roll" panel is dead space and a per-attack one shifts the layout,
+  // so below `lg` it only appears — as a compact overlay pinned to the
+  // battlefield's top-right — while a roll is actually resolving.
+  const diceRolling = overlayActive && state.lastAttack != null;
 
   return (
     <div
@@ -682,7 +687,7 @@ export function CombatScreen({
 
       <TurnOrderTracker state={state} character={character} />
 
-      <div className="flex flex-col lg:flex-row gap-3 lg:items-stretch shrink-0">
+      <div className="relative flex flex-col lg:flex-row gap-3 lg:items-stretch shrink-0">
         <div
           ref={stageRef}
           className="w-full lg:w-[824px] lg:shrink-0 overflow-hidden"
@@ -708,9 +713,11 @@ export function CombatScreen({
         </div>
 
         <aside
-          className="relative bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] flex flex-col items-center justify-center p-1.5 w-full min-h-[72px] lg:w-[140px] lg:shrink-0 lg:h-[420px]"
+          className={`bg-[var(--color-bg-elevated)] border-2 border-[var(--color-border-dim)] flex-col items-center justify-center p-1.5 absolute top-1 right-1 w-32 z-20 pointer-events-none lg:relative lg:top-auto lg:right-auto lg:w-[140px] lg:shrink-0 lg:h-[420px] lg:min-h-[72px] lg:z-auto lg:pointer-events-auto ${
+            diceRolling ? 'flex' : 'hidden lg:flex'
+          }`}
         >
-          {overlayActive && state.lastAttack ? (
+          {diceRolling && state.lastAttack ? (
             <DiceRollOverlay
               key={state.lastAttack.id}
               attackerName={state.lastAttack.attackerName}
