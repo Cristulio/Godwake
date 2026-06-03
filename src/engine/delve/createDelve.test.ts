@@ -360,6 +360,33 @@ describe('createGodwakeDelve — branching graph', () => {
     }
   });
 
+  it('never joins two same-kind non-combat rooms by an edge (fights may repeat)', () => {
+    // The room you step into is always a different non-combat kind from the one
+    // you just left — except fights, which may repeat (combat→combat, and the
+    // tougher elite fight, are exempt).
+    const COMBAT_KINDS = new Set(['combat', 'elite']);
+    for (let seed = 0; seed < 60; seed++) {
+      for (const elitesEnabled of [true, false]) {
+        const d = createGodwakeDelve({ seed, elitesEnabled });
+        let sawCombatChain = false;
+        for (const room of d.rooms) {
+          for (const id of room.next ?? []) {
+            const nxt = roomById(d, id);
+            if (!nxt) continue;
+            if (room.kind === 'combat' && nxt.kind === 'combat') sawCombatChain = true;
+            if (COMBAT_KINDS.has(room.kind) || COMBAT_KINDS.has(nxt.kind)) continue;
+            expect(
+              room.kind === nxt.kind,
+              `${room.id} (${room.kind}) → ${id} (${nxt.kind}) repeats a non-combat kind [seed ${seed}]`,
+            ).toBe(false);
+          }
+        }
+        // Sanity: the exemption is real — fight→fight adjacency does occur.
+        expect(sawCombatChain).toBe(true);
+      }
+    }
+  });
+
   it('offers shop and elite route nodes, and the final boss is terminal', () => {
     const d = createGodwakeDelve(7);
     expect(d.rooms.some((r) => r.kind === 'shop')).toBe(true);

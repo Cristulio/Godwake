@@ -322,7 +322,154 @@ function generateChapterPlan(rng: Rng): SlotKind[][] {
   // selectable. Relocate any surplus onto a plain combat slot elsewhere.
   spreadElites(middleColumns);
 
-  return [['warmup'], ...middleColumns, ['intel'], ['boss']];
+  const plan: SlotKind[][] = [['warmup'], ...middleColumns, ['intel'], ['boss']];
+
+  // No two edge-adjacent non-combat rooms of the same kind: the room you step
+  // into is always a different non-combat kind from the one you just left.
+  // Fights (warmup/earlyMid/mid/elite) are exempt and may repeat.
+  dedupeAdjacentNonCombat(plan);
+
+  return plan;
+}
+
+/**
+ * The forward edges wireLayers draws between a column of `a` nodes and the next
+ * of `b`: `targets[i]` is the list of next-column indices prev node `i` points
+ * at. Single source of truth shared by the actual wiring and the adjacency
+ * dedupe, so the two can never disagree on what counts as adjacent.
+ */
+function layerEdges(a: number, b: number): number[][] {
+  const targets: number[][] = [];
+  for (let i = 0; i < a; i++) {
+    const j = Math.min(b - 1, Math.floor((i * b) / a));
+    const t = [j];
+    if (b >= 2) t.push(j + 1 < b ? j + 1 : j - 1);
+    targets.push(t);
+  }
+  for (let j = 0; j < b; j++) {
+    if (targets.some((t) => t.includes(j))) continue;
+    const i = b === 1 ? a - 1 : Math.min(a - 1, Math.floor((j * a) / b));
+    targets[i].push(j);
+  }
+  return targets;
+}
+
+/** Combat/fight slots — exempt from the no-repeat rule (fight→fight is fine). */
+const COMBAT_SLOTS: ReadonlySet<SlotKind> = new Set<SlotKind>([
+  'warmup',
+  'earlyMid',
+  'mid',
+  'elite',
+]);
+/**
+ * Slots the dedupe may move when breaking a same-kind adjacency. Plain combat
+ * and the non-combat specials are all fair game; warmup (the fixed entry),
+ * elite (held to one-per-column by spreadElites), and the intel→boss
+ * convergence stay put so the layout invariants are untouched.
+ */
+const MOVABLE_SLOTS: ReadonlySet<SlotKind> = new Set<SlotKind>([
+  'earlyMid',
+  'mid',
+  'shop',
+  'rest',
+  'shrine',
+  'event',
+]);
+
+/**
+ * The kind two adjacent rooms are compared on. Combat slots collapse to null
+ * (exempt). `intel` rooms are built as `event`-kind RoomSpecs, so they share the
+ * comparison kind of an `event` — an event sitting just before the intel beat
+ * would otherwise read as two events in a row.
+ */
+function adjacencyKind(slot: SlotKind): SlotKind | null {
+  if (COMBAT_SLOTS.has(slot)) return null;
+  return slot === 'intel' ? 'event' : slot;
+}
+
+/** Adjacency kinds of every node sharing an edge with column `l`, slot `idx`. */
+function neighborKinds(plan: SlotKind[][], l: number, idx: number): Set<SlotKind> {
+  const out = new Set<SlotKind>();
+  const add = (k: SlotKind | null): void => {
+    if (k !== null) out.add(k);
+  };
+  if (l > 0) {
+    const back = layerEdges(plan[l - 1].length, plan[l].length);
+    for (let i = 0; i < plan[l - 1].length; i++) {
+      if (back[i].includes(idx)) add(adjacencyKind(plan[l - 1][i]));
+    }
+  }
+  if (l < plan.length - 1) {
+    const fwd = layerEdges(plan[l].length, plan[l + 1].length);
+    for (const j of fwd[idx]) add(adjacencyKind(plan[l + 1][j]));
+  }
+  return out;
+}
+
+/** True if dropping `kind` into (l, idx) sits it beside a same-kind room. */
+function conflictsAt(plan: SlotKind[][], l: number, idx: number, kind: SlotKind): boolean {
+  const ak = adjacencyKind(kind);
+  return ak !== null && neighborKinds(plan, l, idx).has(ak);
+}
+
+/**
+ * Resolve a same-kind adjacency by swapping the non-combat special at (cl, ci)
+ * with another movable slot, so the room mix and per-kind counts are unchanged.
+ * Accepts the first swap that leaves neither endpoint beside a same-kind room
+ * (a plain-combat partner trivially satisfies its own end, so combat is the
+ * usual landing spot; a special↔special swap covers the tighter maps). Returns
+ * false only if no swap clears it — combat is the bulk of the map, so there is
+ * effectively always slack.
+ */
+function relocateSpecial(plan: SlotKind[][], cl: number, ci: number): boolean {
+  const kind = plan[cl][ci];
+  for (let tl = 0; tl < plan.length; tl++) {
+    for (let ti = 0; ti < plan[tl].length; ti++) {
+      if (!MOVABLE_SLOTS.has(plan[tl][ti])) continue;
+      if (tl === cl && ti === ci) continue;
+      const other = plan[tl][ti];
+      if (other === kind) continue;
+      plan[cl][ci] = other;
+      plan[tl][ti] = kind;
+      if (!conflictsAt(plan, cl, ci, other) && !conflictsAt(plan, tl, ti, kind)) return true;
+      plan[cl][ci] = kind;
+      plan[tl][ti] = other;
+    }
+  }
+  return false;
+}
+
+/**
+ * Enforce the no-same-non-combat-kind-back-to-back rule: for every edge A→B in
+ * the column DAG, A and B must not be the same non-combat kind (fights exempt).
+ * Walks every edge and, on a violation, relocates the movable endpoint onto a
+ * plain-combat slot (preserving the mix). The intel beat is fixed in place, so a
+ * conflict against it is resolved by moving the offending middle event instead.
+ * Each successful relocation strictly removes a violation and creates none, so
+ * the bounded sweep always converges.
+ */
+function dedupeAdjacentNonCombat(plan: SlotKind[][]): void {
+  for (let pass = 0; pass < plan.length * 4; pass++) {
+    let changed = false;
+    for (let l = 0; l < plan.length - 1; l++) {
+      const edges = layerEdges(plan[l].length, plan[l + 1].length);
+      for (let i = 0; i < plan[l].length; i++) {
+        const ki = adjacencyKind(plan[l][i]);
+        if (ki === null) continue;
+        for (const j of edges[i]) {
+          if (adjacencyKind(plan[l + 1][j]) !== ki) continue;
+          // Prefer moving the downstream node; if it is the fixed intel beat,
+          // move the upstream event instead.
+          const moved =
+            plan[l + 1][j] === 'intel'
+              ? relocateSpecial(plan, l, i)
+              : relocateSpecial(plan, l + 1, j) || relocateSpecial(plan, l, i);
+          if (moved) changed = true;
+        }
+      }
+    }
+    if (!changed) return;
+  }
 }
 
 /**
@@ -470,20 +617,9 @@ function bossRoomNode(id: string, content: ChapterContent): RoomSpec {
  * never be the only way forward.
  */
 function wireLayers(prev: RoomSpec[], next: RoomSpec[]): void {
-  const a = prev.length;
-  const b = next.length;
-  for (let i = 0; i < a; i++) {
-    const j = Math.min(b - 1, Math.floor((i * b) / a));
-    const targets = [j];
-    if (b >= 2) targets.push(j + 1 < b ? j + 1 : j - 1);
-    prev[i].next = targets.map((t) => next[t].id);
-  }
-  for (let j = 0; j < b; j++) {
-    const covered = prev.some((p) => p.next?.includes(next[j].id));
-    if (!covered) {
-      const i = b === 1 ? a - 1 : Math.min(a - 1, Math.floor((j * a) / b));
-      prev[i].next = [...(prev[i].next ?? []), next[j].id];
-    }
+  const targets = layerEdges(prev.length, next.length);
+  for (let i = 0; i < prev.length; i++) {
+    prev[i].next = targets[i].map((t) => next[t].id);
   }
 }
 
