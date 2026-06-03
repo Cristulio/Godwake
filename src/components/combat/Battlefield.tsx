@@ -96,6 +96,7 @@ export function Battlefield({
         {monsterCombatants.map((c, idx) => (
           <div
             key={c.id}
+            data-tutorial="targets"
             className="absolute bottom-8 w-[96px] flex justify-center"
             style={{ right: `${40 + idx * 116}px` }}
           >

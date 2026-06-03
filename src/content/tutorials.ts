@@ -195,6 +195,16 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
 export const FIRST_GEAR_TUTORIAL_ID = 'first-gear';
 
 /**
+ * The seenTutorials key for the first-combat coach — the spotlight/coachmark
+ * onboarding shown ONCE, on a brand-new soul's very first combat (see
+ * CombatCoach). Shares the seenTutorials keyspace so a single markTutorialSeen
+ * call makes it never repeat (across reincarnations and class swaps). It drives
+ * an in-combat overlay, not a queued reveal card, so it has no TutorialContent
+ * entry — the id is only ever used as the seen-once gate.
+ */
+export const COMBAT_INTRO_TUTORIAL_ID = 'combat-intro';
+
+/**
  * One-off reveals not tied to the feature ladder or a soul unlock, keyed by a
  * bare seenTutorials id. Shares the same queue + seen-once machinery as the
  * ladder cards; resolved by getTutorial after the typed registries.

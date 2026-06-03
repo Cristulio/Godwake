@@ -43,6 +43,9 @@ import { Battlefield, type BattlefieldDecoration } from './Battlefield';
 import { TurnOrderTracker } from './TurnOrderTracker';
 import { playMusic, stopMusic, playSfx, type MusicId } from '../../engine/audio';
 import { useBlockingModalOpen } from '../ui/useInputBlock';
+import { CombatCoach, combatIntroEligible, type CoachStep } from './CombatCoach';
+import { useMetaStore } from '../../stores/metaStore';
+import { COMBAT_INTRO_TUTORIAL_ID } from '../../content/tutorials';
 
 interface CombatScreenProps {
   character: Character;
@@ -90,6 +93,24 @@ export function CombatScreen({
   const [pickingSpell, setPickingSpell] = useState(false);
   const [castingSpellId, setCastingSpellId] = useState<string | null>(null);
   const bedChoiceRef = useRef<MusicId | null>(null);
+
+  // First-combat coach: a one-time spotlight onboarding for a brand-new soul's
+  // very first fight (see CombatCoach). Eligibility is locked in on mount — the
+  // overlay writes the seen-flag on dismiss, which would otherwise flip the gate
+  // mid-fight. 'done' = inactive/finished; the overlay never renders then.
+  const [coachActive] = useState(() =>
+    combatIntroEligible({
+      hasReincarnated: useMetaStore.getState().hasReincarnated,
+      seenTutorials: useMetaStore.getState().seenTutorials,
+      classId: character.classId,
+      scene,
+    }),
+  );
+  const [coachStep, setCoachStep] = useState<CoachStep | 'done'>('attack');
+  function finishCoach() {
+    setCoachStep('done');
+    useMetaStore.getState().markTutorialSeen(COMBAT_INTRO_TUTORIAL_ID);
+  }
 
   // The battlefield is an absolutely-positioned, fixed-geometry stage
   // (BATTLEFIELD_W × BATTLEFIELD_H). On desktop its column is pinned to the
@@ -241,6 +262,9 @@ export function CombatScreen({
     if (!isPlayerTurn(state)) return;
     if (overlayActive) return;
     if (blockingModalOpen) return;
+    // Hold the turn open on the coach's informational final step so the player
+    // can read it before the turn auto-ends out from under them.
+    if (coachActive && coachStep === 'abilities') return;
     if (!character.actionEconomy.actionUsed) return;
 
     const hasUsableBonus =
@@ -321,6 +345,10 @@ export function CombatScreen({
     // open picker.
     pickingSpell,
     castingSpellId,
+    // Re-run when the coach reaches/leaves its informational step so the hold
+    // above engages and releases.
+    coachActive,
+    coachStep,
   ]);
 
   // Auto-Battle: when on, the shared action policy plays the player's turn one
@@ -415,6 +443,8 @@ export function CombatScreen({
     if (aliveMonsters.length === 1) {
       doAttack(aliveMonsters[0].id);
     } else {
+      // Coach: tapping Attack with multiple foes opens target-selection.
+      if (coachActive && coachStep === 'attack') setCoachStep('target');
       setSelectingTarget(true);
     }
   }
@@ -447,6 +477,10 @@ export function CombatScreen({
     setSelectingTarget(false);
     setCharacter(result.character);
     setCombat(result.state);
+    // Coach: the swing has landed — point the player at their class actions.
+    if (coachActive && (coachStep === 'attack' || coachStep === 'target')) {
+      setCoachStep('abilities');
+    }
   }
 
   function handleSpellPicked(spellId: string) {
@@ -858,6 +892,16 @@ export function CombatScreen({
           </div>
         </div>
       )}
+
+      {/* First-combat coach (one-time, brand-new soul). The attack step waits
+          for the player's turn so it never spotlights a disabled control while
+          the enemy is acting. */}
+      {coachActive &&
+        coachStep !== 'done' &&
+        !isResolved &&
+        (coachStep !== 'attack' || isPlayerTurn(state)) && (
+          <CombatCoach step={coachStep} onSkip={finishCoach} onDismiss={finishCoach} />
+        )}
     </div>
   );
 }

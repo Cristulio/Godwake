@@ -294,6 +294,7 @@ export function ActionBar({
           variant="primary"
           onClick={onAttack}
           disabled={!canAttack}
+          data-tutorial="attack"
           className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
         >
           {attackLabel}
@@ -304,6 +305,7 @@ export function ActionBar({
             variant={canSecondWind ? 'primary' : 'secondary'}
             onClick={onSecondWind}
             disabled={!canSecondWind}
+            data-tutorial="abilities"
             title="Bonus action: heal 1d10 + level. Once per short rest."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
@@ -372,6 +374,7 @@ export function ActionBar({
             variant={canRage ? 'primary' : 'secondary'}
             onClick={onRage}
             disabled={!canRage}
+            data-tutorial="abilities"
             title={`Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends.`}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
@@ -394,6 +397,7 @@ export function ActionBar({
             variant={canHuntersMark ? 'primary' : 'secondary'}
             onClick={onHuntersMark}
             disabled={!canHuntersMark}
+            data-tutorial="abilities"
             title="Bonus action: brand a target as your quarry — every hit on it deals extra damage. Re-cast to move the mark."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
