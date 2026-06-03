@@ -638,7 +638,10 @@ describe('delveStore.acceptSpoils — mid-run chapter-unlock reveals', () => {
   beforeEach(() => {
     setActiveRoller('midrun-unlock-seed');
     seedRun({ quirks: [] });
-    useMetaStore.setState({ seenTutorials: [], chaptersCleared: 0 });
+    // hasReincarnated: true keeps the first-reincarnation Grove reveal (fired in
+    // reincarnateSoul on a won finishDelve) from polluting these chapter-card
+    // assertions — grove-on-first-death is covered in its own suite.
+    useMetaStore.setState({ seenTutorials: [], chaptersCleared: 0, hasReincarnated: true });
     useScreenStore.setState({ tutorialQueue: [], taunt: null, tauntQueue: [] });
   });
 
