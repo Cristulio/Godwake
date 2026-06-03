@@ -123,4 +123,13 @@ export interface DelveState {
    * starting-gold scaling, and the renown payout on clear/death.
    */
   ascensionLevel?: number;
+  /**
+   * How many chapters THIS run spans — the base game's Cells→Irenicus arc
+   * (`BASE_GAME_CHAPTERS` = 11) or the full New Game+ chain to the Throne
+   * (`TOTAL_CHAPTERS` = 14). Stamped at delve creation so finishDelve fires the
+   * win when the run beats its OWN final chapter instead of a global constant:
+   * a base run ends on Irenicus, a NG+ run on Melissan. Absent on legacy
+   * hand-built delves, which fall back to the full chain.
+   */
+  chapterCount?: number;
 }

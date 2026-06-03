@@ -563,7 +563,7 @@ function liveOneLife(
 ): { outcome: LifeOutcome; newLegendaries: string[] } {
   let character = descend(roller, soul);
   const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
-  const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension });
+  const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension, fullChain: true });
   const groveRanks = Object.values(soul.unlockedUpgrades).reduce((a, b) => a + b, 0);
   const activeLegendaries = MODEL_GEAR
     ? chooseActiveLegendaries(soul.ownedLegendaries, soul.classId)

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { TOTAL_CHAPTERS } from '../engine/delve/constants';
+import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from '../engine/delve/constants';
 import { migrateV1ToV2, migrateUnlockedUpgrades, SAVE_VERSION } from './persistMigration';
 import { useGameStore, SAVE_SLOT_KEY_PREFIX } from './gameStore';
 import { useCharacterStore } from './characterStore';
@@ -438,8 +438,10 @@ describe('loadFromSlot — completion recovery for a crashed ending', () => {
     expect(useMetaStore.getState().gameCompleted).toBe(true);
   });
 
-  it('does NOT spuriously complete a save that never felled the whole chain', () => {
-    writeSlot({ chaptersCleared: TOTAL_CHAPTERS - 1, gameCompleted: false });
+  it('does NOT spuriously complete a save that never felled the base chain (Irenicus)', () => {
+    // Base completion = clearing through Ch11 (Irenicus). A save short of that
+    // stays incomplete — the recovery floor is BASE_GAME_CHAPTERS, not TOTAL.
+    writeSlot({ chaptersCleared: BASE_GAME_CHAPTERS - 1, gameCompleted: false });
 
     expect(useGameStore.getState().loadFromSlot(1).ok).toBe(true);
     expect(useMetaStore.getState().gameCompleted).toBe(false);

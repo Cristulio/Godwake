@@ -822,24 +822,38 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       .slice(0, bossLimitIdx)
       .filter((r) => r.kind === 'boss').length;
     const ch1Killed = s.delve.chapter1BossKilled === true;
-    // Beating the final boss = the whole chain fell. Mid-run deaths credit the
+    // Beating the run's final boss = its chain fell. Mid-run deaths credit the
     // chapter bosses actually killed. The room-10 flag is a belt-and-braces
     // floor for chapter 1 (it's set the instant Ilyich dies).
     const chaptersThisRun = wonBoss
       ? Math.max(bossesKilled, 1)
       : Math.max(bossesKilled, ch1Killed ? 1 : 0);
-    // First-ever clear of the WHOLE chain (Melissan felled) → the one-time
-    // Throne-of-Bhaal ending capstone fires BEFORE the normal settle. The delve
-    // stays 'completed' so the ending's finishDelve() re-entry resolves it; on
-    // that second pass gameCompleted is true, so this gate is skipped and the
-    // standard reincarnate/renown/hub path below runs.
-    //
-    // Completion is recorded HERE, at the win moment — not in the ending screen.
-    // The ending is lazy-loaded, so a stale-chunk deploy can make its JS fail to
-    // load; if it owned `gameCompleted`, a crashed finale would silently rob the
-    // player of their clear (and the New Game+ it unlocks). Recording it before
-    // the screen renders makes completion independent of the ending loading at all.
-    if (wonBoss && chaptersThisRun >= TOTAL_CHAPTERS && !meta.gameCompleted) {
+    // The win fires when the run beats ITS OWN final chapter — Irenicus at Ch11
+    // for a base run, Melissan at Ch14 for New Game+ — read off the delve's own
+    // chapterCount, not a global constant, so a base run can win before the
+    // Throne chapters exist in the chain at all.
+    const chapterCount = s.delve.chapterCount ?? TOTAL_CHAPTERS;
+    const isFullChain = chapterCount >= TOTAL_CHAPTERS;
+    const beatFinalChapter = wonBoss && chaptersThisRun >= chapterCount;
+    // Each ending fires once, gated by its own completion flag — which doubles
+    // as the re-entry breaker: the ending screen calls finishDelve() again on
+    // conclude, and by then the flag is set, so this falls through to the normal
+    // settle instead of bouncing back. Completion is recorded HERE, at the win
+    // moment — not in the lazy-loaded ending screen (#366): a stale ending chunk
+    // can fail to load, and it must never cost the player their clear (or the
+    // New Game+ it unlocks).
+    if (beatFinalChapter && isFullChain && !meta.throneCompleted) {
+      // New Game+ capstone — the Throne fell. gameCompleted is already true
+      // going in; mark it idempotently (never regress it) and bank the Throne
+      // milestone, which gates this ending and breaks the re-entry.
+      meta.markGameCompleted();
+      meta.markThroneCompleted();
+      useScreenStore.getState().setScreen('ending');
+      return;
+    }
+    if (beatFinalChapter && !isFullChain && !meta.gameCompleted) {
+      // Base game won — Irenicus is dead in the heart of his own hell. This is
+      // the clear that unlocks New Game+.
       meta.markGameCompleted();
       useScreenStore.getState().setScreen('ending');
       return;

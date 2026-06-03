@@ -393,7 +393,7 @@ function runOneDelve(
   const roller = createDiceRoller(seed);
   setActiveRoller(seed);
   let character = characterAtLevel(classId, startLevel);
-  const delve = createGodwakeDelve({ seed, ascension: ASCENSION });
+  const delve = createGodwakeDelve({ seed, ascension: ASCENSION, fullChain: true });
 
   const rec: RunRecord = {
     classId,

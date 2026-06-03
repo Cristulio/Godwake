@@ -58,7 +58,7 @@ function run(policy: Policy): number[] {
   const cumSamples: number[][] = Array.from({ length: TOTAL_CHAPTERS + 1 }, () => []);
   for (let i = 0; i < RUNS; i++) {
     const seed = randomSeed();
-    const state = createGodwakeDelve({ seed, ascension: 0, elitesEnabled: true });
+    const state = createGodwakeDelve({ seed, ascension: 0, elitesEnabled: true, fullChain: true });
     const rand = () => Math.random();
     const per = routeXpByChapter(state, policy, rand);
     let cum = 0;

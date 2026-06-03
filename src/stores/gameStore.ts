@@ -24,7 +24,7 @@ import { useScreenStore, type Screen } from './screenStore';
 import { migrateV1ToV2, SAVE_VERSION } from './persistMigration';
 import { isFeatureUnlocked } from '../engine/progression/unlocks';
 import { loadDelveFactory } from '../engine/delve/loadDelveFactory';
-import { TOTAL_CHAPTERS } from '../engine/delve/constants';
+import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from '../engine/delve/constants';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
 export type { Screen };
@@ -156,6 +156,8 @@ interface GameState {
   activeLegendaries: string[];
   gameCompleted: boolean;
   selectedAscension: number;
+  newGamePlusActive: boolean;
+  throneCompleted: boolean;
   /** Session-only: inside the New Game+ run-launcher (see screenStore). */
   newGamePlusFlow: boolean;
 
@@ -298,6 +300,8 @@ interface PersistedSnapshot {
   activeLegendaries: string[];
   gameCompleted: boolean;
   selectedAscension: number;
+  newGamePlusActive: boolean;
+  throneCompleted: boolean;
   __metadata?: SaveSlotMetadata;
 }
 
@@ -346,6 +350,8 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     activeLegendaries: meta.activeLegendaries,
     gameCompleted: meta.gameCompleted,
     selectedAscension: meta.selectedAscension,
+    newGamePlusActive: meta.newGamePlusActive,
+    throneCompleted: meta.throneCompleted,
     __metadata: {
       savedAt: new Date().toISOString(),
       characterName: ch.character?.name ?? '—',
@@ -366,7 +372,8 @@ function scatterSnapshot(s: PersistedSnapshot) {
     saveSeed: s.saveSeed ?? null,
   });
   // High-water chapter mark, deriving from the legacy chapter1Cleared boolean
-  // for pre-progression saves. `>= TOTAL_CHAPTERS` means the whole chain fell.
+  // for pre-progression saves. `>= BASE_GAME_CHAPTERS` means the base chain fell
+  // (Irenicus); `>= TOTAL_CHAPTERS` means the Throne fell too.
   const chaptersClearedValue =
     typeof s.chaptersCleared === 'number'
       ? s.chaptersCleared
@@ -411,11 +418,17 @@ function scatterSnapshot(s: PersistedSnapshot) {
     delveCount: typeof s.delveCount === 'number' ? s.delveCount : 0,
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
     activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
-    // Recovery: a save that felled the whole chain but never flipped
-    // gameCompleted (e.g. an older build whose lazy ending screen crashed before
-    // recording it) is a completed game. Restore the flag on load so the player
-    // gets their New Game+ and isn't dropped back into a finished run.
-    gameCompleted: !!s.gameCompleted || chaptersClearedValue >= TOTAL_CHAPTERS,
+    // Recovery: a save whose deepest run cleared the BASE chain (Irenicus, Ch11)
+    // but never flipped gameCompleted — e.g. an older build whose lazy ending
+    // screen crashed before recording it — has beaten the base game. Restore the
+    // flag on load so the player gets their New Game+ and isn't dropped back into
+    // a finished run. A run that cleared the full chain (Melissan, Ch14) likewise
+    // recovers the Throne milestone.
+    gameCompleted: !!s.gameCompleted || chaptersClearedValue >= BASE_GAME_CHAPTERS,
+    throneCompleted: !!s.throneCompleted || chaptersClearedValue >= TOTAL_CHAPTERS,
+    // Campaign mode is per-campaign, not mastery: an old save defaults to a base
+    // campaign (the player re-enters NG+ from the title, which re-sets this).
+    newGamePlusActive: !!s.newGamePlusActive,
     selectedAscension:
       typeof s.selectedAscension === 'number' && s.selectedAscension >= 0
         ? s.selectedAscension
@@ -528,6 +541,8 @@ export const useGameStore = create<GameState>()(
           activeLegendaries: m.activeLegendaries,
           gameCompleted: m.gameCompleted,
           selectedAscension: m.selectedAscension,
+          newGamePlusActive: m.newGamePlusActive,
+          throneCompleted: m.throneCompleted,
         });
       };
       const mirrorScreen = () => {
@@ -582,6 +597,8 @@ export const useGameStore = create<GameState>()(
         activeLegendaries: useMetaStore.getState().activeLegendaries,
         gameCompleted: useMetaStore.getState().gameCompleted,
         selectedAscension: useMetaStore.getState().selectedAscension,
+        newGamePlusActive: useMetaStore.getState().newGamePlusActive,
+        throneCompleted: useMetaStore.getState().throneCompleted,
         newGamePlusFlow: useScreenStore.getState().newGamePlusFlow,
 
         goToTitle: () => useScreenStore.getState().goToTitle(),
@@ -600,17 +617,19 @@ export const useGameStore = create<GameState>()(
 
         startNewGame: (seed) => {
           setActiveRoller(seed);
-          // Account-level mastery is permanent: beating the chain once keeps the
-          // New Game+ entry + ascension ladder open across a fresh base run. Carry
-          // those two flags over the wipe; everything else (soul, renown, Grove,
-          // selectedAscension) resets to a clean Ascension-0 start.
+          // Account-level mastery is permanent: beating the base game (and the
+          // Throne) once keeps the New Game+ entry + ascension ladder open across
+          // a fresh base run. Carry those mastery flags over the wipe. Everything
+          // else resets to a clean Ascension-0 start — including the campaign
+          // mode: resetMeta drops newGamePlusActive to false, so a New Game is a
+          // BASE run (Cells→Irenicus) even for a veteran.
           const prevMeta = useMetaStore.getState();
-          const { gameCompleted, ascensionUnlocked } = prevMeta;
+          const { gameCompleted, ascensionUnlocked, throneCompleted } = prevMeta;
           useCharacterStore.setState({ character: null, saveSeed: seed });
           useDelveStore.setState({ delve: null });
           useCombatStore.setState({ combat: null });
           prevMeta.resetMeta();
-          useMetaStore.setState({ gameCompleted, ascensionUnlocked });
+          useMetaStore.setState({ gameCompleted, ascensionUnlocked, throneCompleted });
           useScreenStore.setState({
             screen: 'character-creation',
             introSeen: false,
@@ -634,6 +653,10 @@ export const useGameStore = create<GameState>()(
         selectCharacterAndDescend: async (classId) => {
           adoptSoul(classId);
           const meta = useMetaStore.getState();
+          // The New Game+ launcher's descent: mark the campaign NG+ so every later
+          // hub re-descent (after a death) also builds the full chain, and build
+          // the full Cells→Throne chain for this first New Game+ life.
+          meta.setNewGamePlusActive(true);
           const elitesEnabled = isFeatureUnlocked('elite-nodes', {
             delveCount: meta.delveCount,
             chaptersCleared: meta.chaptersCleared,
@@ -644,6 +667,7 @@ export const useGameStore = create<GameState>()(
           const delve = createGodwakeDelve({
             ascension: meta.selectedAscension,
             elitesEnabled,
+            fullChain: true,
           });
           useScreenStore.setState({ newGamePlusFlow: false });
           useDelveStore.getState().startDelve(delve);
