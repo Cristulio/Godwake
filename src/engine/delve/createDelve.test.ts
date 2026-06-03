@@ -3,6 +3,8 @@ import {
   createGodwakeDelve,
   reachableRooms,
   roomById,
+  REST_MAX_GAP,
+  REST_MIN_SPACING,
   TOTAL_CHAPTERS,
 } from './createDelve';
 import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
@@ -410,6 +412,86 @@ describe('createGodwakeDelve — branching graph', () => {
         }
         // Sanity: the exemption is real — columns with 2+ fights do occur.
         expect(sawCombatColumn).toBe(true);
+      }
+    }
+  });
+
+  // ── rest cadence: recovery is always close, and rests never bunch ─────────
+  //
+  // Two guarantees, checked across many seeds and every chapter (the structure
+  // is ascension-independent, so ascension 0 covers it).
+  //   (a) Max gap: from EVERY node, the best route reaches a rest — or the boss,
+  //       whose camp seam restores — within REST_MAX_GAP fights. So no route can
+  //       be forced through more than that many fights without recovery in reach.
+  //   (b) Min spacing: consecutive rest columns sit at least REST_MIN_SPACING
+  //       columns apart, so two rests never share or neighbour a column — they
+  //       never bunch (atop #348's no rest→rest edge and #353's no doubled column).
+
+  /**
+   * For every node, the fewest fights the player must pass — choosing the best
+   * forward route — before reaching a rest or the boss (a fight node counts 1;
+   * a rest or boss is recovery and counts 0). Computed bottom-up over the layered
+   * DAG. The max over all nodes is the worst unavoidable gap to recovery.
+   */
+  const fightsToRecovery = (nodes: RoomSpec[]): Map<string, number> => {
+    const f = new Map<string, number>();
+    for (const r of [...nodes].sort((a, b) => (b.layer ?? 0) - (a.layer ?? 0))) {
+      if (r.kind === 'rest' || r.kind === 'boss') {
+        f.set(r.id, 0);
+        continue;
+      }
+      const cost = r.kind === 'combat' || r.kind === 'elite' ? 1 : 0;
+      let best = Infinity;
+      for (const id of r.next ?? []) {
+        const v = f.get(id);
+        if (v !== undefined) best = Math.min(best, v);
+      }
+      f.set(r.id, best === Infinity ? cost : cost + best);
+    }
+    return f;
+  };
+
+  it('keeps a reachable rest within REST_MAX_GAP fights from every node (max-gap)', () => {
+    expect(REST_MAX_GAP).toBe(3);
+    for (let seed = 0; seed < 60; seed++) {
+      for (const elitesEnabled of [true, false]) {
+        const d = createGodwakeDelve({ seed, elitesEnabled });
+        for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+          const nodes = d.rooms.filter((r) => r.chapter === ch && r.kind !== 'camp');
+          // Every chapter offers recovery, so the guarantee is meaningful.
+          expect(
+            nodes.some((r) => r.kind === 'rest'),
+            `chapter ${ch} seed ${seed}: no rest at all`,
+          ).toBe(true);
+          const f = fightsToRecovery(nodes);
+          for (const r of nodes) {
+            expect(
+              f.get(r.id)!,
+              `chapter ${ch} seed ${seed}: ${r.id} (${r.kind}) is ${f.get(r.id)} fights from any reachable rest`,
+            ).toBeLessThanOrEqual(REST_MAX_GAP);
+          }
+        }
+      }
+    }
+  });
+
+  it('never clusters rests — rest columns stay at least REST_MIN_SPACING apart', () => {
+    expect(REST_MIN_SPACING).toBe(2);
+    for (let seed = 0; seed < 60; seed++) {
+      for (const elitesEnabled of [true, false]) {
+        const d = createGodwakeDelve({ seed, elitesEnabled });
+        for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+          const restCols = columnsOf(d, ch)
+            .map((col, i) => ({ col, i }))
+            .filter(({ col }) => col.some((r) => r.kind === 'rest'))
+            .map(({ i }) => i);
+          for (let k = 1; k < restCols.length; k++) {
+            expect(
+              restCols[k] - restCols[k - 1],
+              `chapter ${ch} seed ${seed}: rest columns ${restCols[k - 1]} and ${restCols[k]} too close`,
+            ).toBeGreaterThanOrEqual(REST_MIN_SPACING);
+          }
+        }
       }
     }
   });
