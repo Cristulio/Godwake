@@ -143,12 +143,12 @@ describe('Monk — class definition + registry', () => {
   });
 });
 
-describe('Monk — delve-15 unlock (not a starter)', () => {
-  it('is sealed until fifteen delves are logged', () => {
-    expect(CLASS_UNLOCK_DELVE.monk).toBe(15);
+describe('Monk — delve-18 unlock (not a starter)', () => {
+  it('is sealed until eighteen delves are logged', () => {
+    expect(CLASS_UNLOCK_DELVE.monk).toBe(18);
     expect(STARTER_CLASSES).not.toContain('monk');
-    expect(isClassUnlocked('monk', 14)).toBe(false);
-    expect(isClassUnlocked('monk', 15)).toBe(true);
+    expect(isClassUnlocked('monk', 17)).toBe(false);
+    expect(isClassUnlocked('monk', 18)).toBe(true);
   });
 });
 

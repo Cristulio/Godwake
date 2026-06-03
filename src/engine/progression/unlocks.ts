@@ -107,27 +107,27 @@ export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'barbarian', 'ran
  * Delve-paced so the roster opens on time served, not on a depth wall a green
  * soul may never reach. Ordered by how forgiving the class is to play, and
  * staggered so each new soul lands with room to breathe before the next:
- *  - Fighter from the first delve (the soldier — always a safe re-pick);
- *  - the remaining easy souls next (Barbarian, then Ranger);
+ *  - two steady souls first (Fighter from the first delve, then Ranger), so a
+ *    fresh walker banks a couple of even-keeled lives before the wild ones;
  *  - the harder bodies stagger deeper, so renown is banked to pad their
- *    fragility before one is worn — Wizard, then Druid, then Monk, then Rogue
- *    last (the most fragile floor even after Nimble Dodge).
+ *    fragility before one is worn — Wizard, then Barbarian, then Rogue, then
+ *    Druid, then Monk last.
  * Editable data.
  */
 export const CLASS_UNLOCK_DELVE: Record<ClassId, number> = {
-  // The three easy souls — Fighter from the first life, the other two close behind.
-  fighter: 1,
-  barbarian: 3,
-  ranger: 6,
+  // Two steady souls first — Fighter from the first life, Ranger close behind.
+  fighter: 0,
+  ranger: 3,
   // The harder souls, staggered deeper.
-  wizard: 9,
+  wizard: 6,
+  barbarian: 9,
+  rogue: 12,
   // The Druid: a Wisdom caster whose survivability rides on Wild Shape rather
   // than armour — squishy in the bare-soul early game, like the Wizard before it.
-  druid: 12,
+  druid: 15,
   // The Monk: a DEX/Ki flurry striker with no armour — high tempo and burst, but
   // a thin guard that punishes a careless turn.
-  monk: 15,
-  rogue: 18,
+  monk: 18,
   // Not yet a playable class (absent from the roster); threshold is a placeholder.
   cleric: 999,
 };

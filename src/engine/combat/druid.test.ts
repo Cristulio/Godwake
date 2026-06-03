@@ -56,11 +56,11 @@ describe('Druid — class definition + registry', () => {
   });
 });
 
-describe('Druid — delve-12 unlock (not a starter)', () => {
-  it('unlocks only once twelve delves are logged', () => {
-    expect(CLASS_UNLOCK_DELVE.druid).toBe(12);
-    expect(isClassUnlocked('druid', 11)).toBe(false);
-    expect(isClassUnlocked('druid', 12)).toBe(true);
+describe('Druid — delve-15 unlock (not a starter)', () => {
+  it('unlocks only once fifteen delves are logged', () => {
+    expect(CLASS_UNLOCK_DELVE.druid).toBe(15);
+    expect(isClassUnlocked('druid', 14)).toBe(false);
+    expect(isClassUnlocked('druid', 15)).toBe(true);
   });
 
   it('is never a fresh-soul starter', () => {
