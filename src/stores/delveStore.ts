@@ -36,7 +36,7 @@ import { nextLoreBeat } from '../content/loreBeats';
 import { EQUIP_SLOTS } from '../engine/character/equip';
 import { sellValue } from '../components/delve/shopStock';
 import { newlyUnlocked, newlyUnlockedByChapter, newlyUnlockedClasses } from '../engine/progression';
-import { getTutorial } from '../content/tutorials';
+import { getTutorial, FIRST_GEAR_TUTORIAL_ID } from '../content/tutorials';
 import type { ClassId } from '../schemas/ids';
 import { useCharacterStore } from './characterStore';
 import { useCombatStore } from './combatStore';
@@ -83,6 +83,19 @@ function queueChapterUnlockTutorials(prevChapters: number, nextChapters: number)
     (id) => !seen.includes(id),
   );
   if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
+}
+
+/**
+ * Fire the one-time first-gear reveal the moment a found/bought piece enters the
+ * pack — pointing a green soul at the Pack where gear is read and worn. Gated by
+ * seenTutorials so it shows once per account; the enqueue dedupes if two pieces
+ * arrive before the card is dismissed. Called from every inventory-add path
+ * (road drop, merchant buy, rolled-gear buy); the class starting kit is seeded
+ * by buildPlayerCharacter, never through these, so it doesn't trip the reveal.
+ */
+function queueFirstGearTutorial() {
+  if (useMetaStore.getState().seenTutorials.includes(FIRST_GEAR_TUTORIAL_ID)) return;
+  useScreenStore.getState().enqueueTutorials([FIRST_GEAR_TUTORIAL_ID]);
 }
 
 /** Renown granted per successful delve clear (final boss felled). */
@@ -671,6 +684,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
             ...cur,
             inventory: [...cur.inventory, ref],
           });
+          queueFirstGearTutorial();
           if (ref.rolled) {
             // Build a one-liner: affix effects joined with ·, or fall back to
             // the base stat line when no affixes rolled (white-tier base items).
@@ -1028,6 +1042,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       goldInPocket: character.goldInPocket - item.cost,
       inventory: [...character.inventory, { itemId }],
     });
+    queueFirstGearTutorial();
     return { ok: true };
   },
 
@@ -1043,6 +1058,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       goldInPocket: character.goldInPocket - cost,
       inventory: [...character.inventory, ref],
     });
+    queueFirstGearTutorial();
     return { ok: true };
   },
 
