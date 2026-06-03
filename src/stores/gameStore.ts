@@ -154,6 +154,7 @@ interface GameState {
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
+  originClass: ClassId | null;
   ownedLegendaries: string[];
   activeLegendaries: string[];
   gameCompleted: boolean;
@@ -300,6 +301,7 @@ interface PersistedSnapshot {
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
+  originClass: ClassId | null;
   ownedLegendaries: string[];
   activeLegendaries: string[];
   gameCompleted: boolean;
@@ -350,6 +352,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     seenDialogueBeats: meta.seenDialogueBeats,
     seenTutorials: meta.seenTutorials,
     delveCount: meta.delveCount,
+    originClass: meta.originClass,
     ownedLegendaries: meta.ownedLegendaries,
     activeLegendaries: meta.activeLegendaries,
     gameCompleted: meta.gameCompleted,
@@ -420,6 +423,10 @@ function scatterSnapshot(s: PersistedSnapshot) {
     // Post-migration this is always present (a veteran's missing field floors
     // to 999, a fresh/wiped save to 0); the guard only catches malformed data.
     delveCount: typeof s.delveCount === 'number' ? s.delveCount : 0,
+    // Origin starter anchors the relative unlock ladder. Pre-relative saves lack
+    // it → fall back to the worn body's class (null with no soul yet, so the
+    // first forge stamps it cleanly).
+    originClass: s.originClass ?? s.character?.classId ?? null,
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
     activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
     // Recovery: a save whose deepest run cleared the BASE chain (Irenicus, Ch11)
@@ -542,6 +549,7 @@ export const useGameStore = create<GameState>()(
           seenDialogueBeats: m.seenDialogueBeats,
           seenTutorials: m.seenTutorials,
           delveCount: m.delveCount,
+          originClass: m.originClass,
           druidGroveUnlocked: m.druidGroveUnlocked,
           ownedLegendaries: m.ownedLegendaries,
           activeLegendaries: m.activeLegendaries,
@@ -601,6 +609,7 @@ export const useGameStore = create<GameState>()(
         seenDialogueBeats: useMetaStore.getState().seenDialogueBeats,
         seenTutorials: useMetaStore.getState().seenTutorials,
         delveCount: useMetaStore.getState().delveCount,
+        originClass: useMetaStore.getState().originClass,
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
         activeLegendaries: useMetaStore.getState().activeLegendaries,
         gameCompleted: useMetaStore.getState().gameCompleted,
@@ -652,8 +661,12 @@ export const useGameStore = create<GameState>()(
           });
         },
 
-        commitCharacterCreation: (input) =>
-          useCharacterStore.getState().commitCharacterCreation(input),
+        commitCharacterCreation: (input) => {
+          useCharacterStore.getState().commitCharacterCreation(input);
+          // Stamp the soul's origin starter ONCE — it anchors the relative
+          // unlock ladder and rides every reincarnation (write-once setter).
+          useMetaStore.getState().setOriginClass(input.classId);
+        },
 
         selectCharacter: (classId) => {
           adoptSoul(classId);

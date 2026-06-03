@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CharacterCreationScreen } from './CharacterCreationScreen';
 import { useGameStore } from '../../stores/gameStore';
+import { useMetaStore } from '../../stores/metaStore';
 import { getClass } from '../../content/classes';
 
 function resetStore() {
@@ -15,28 +16,31 @@ function resetStore() {
     hasReincarnated: false,
     deathCount: 0,
   });
+  // originClass is write-once and lives in the metaStore (a singleton across
+  // tests in this file) — clear it so each first-creation case stamps fresh.
+  useMetaStore.setState({ originClass: null });
 }
 
 describe('CharacterCreationScreen — selection', () => {
   beforeEach(resetStore);
 
-  it('offers the three easy starters as choosable souls', () => {
+  it('offers the three starters (Fighter, Mage, Hunter) as choosable souls', () => {
     render(<CharacterCreationScreen />);
     expect(screen.getByRole('heading', { name: /choose a soul/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sir brick/i })).toBeInTheDocument(); // Fighter
-    expect(screen.getByRole('button', { name: /korrek bloodmane/i })).toBeInTheDocument(); // Barbarian
-    expect(screen.getByRole('button', { name: /faelar quill/i })).toBeInTheDocument(); // Ranger
+    expect(screen.getByRole('button', { name: /veyra ash/i })).toBeInTheDocument(); // Wizard (Mage)
+    expect(screen.getByRole('button', { name: /faelar quill/i })).toBeInTheDocument(); // Ranger (Hunter)
   });
 
-  it('seals the harder souls (Wizard, Druid, Monk, Rogue) on a fresh soul — not choosable', () => {
+  it('seals the non-starter souls (Barbarian, Rogue, Druid, Monk) on a fresh soul — not choosable', () => {
     render(<CharacterCreationScreen />);
     // The sealed placeholders name only the class, never the character, and are
-    // not buttons — a fresh walker cannot forge Veyra Ash, Lureth Oakshadow,
-    // Shen Ironroot, or Maelis Vell.
-    expect(screen.queryByRole('button', { name: /veyra ash/i })).not.toBeInTheDocument();
+    // not buttons — a fresh walker cannot forge Korrek Bloodmane, Maelis Vell,
+    // Lureth Oakshadow, or Shen Ironroot. Barbarian is no longer a starter.
+    expect(screen.queryByRole('button', { name: /korrek bloodmane/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /lureth oakshadow/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /shen ironroot/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
     expect(screen.getAllByText(/unlocks at delve/i).length).toBe(4);
   });
 
@@ -50,9 +54,9 @@ describe('CharacterCreationScreen — selection', () => {
   it('confirm is disabled until a soul is picked', () => {
     render(<CharacterCreationScreen />);
     expect(screen.getByRole('button', { name: /choose a soul/i })).toBeDisabled();
-    fireEvent.click(screen.getByRole('button', { name: /korrek bloodmane/i }));
+    fireEvent.click(screen.getByRole('button', { name: /veyra ash/i }));
     expect(
-      screen.getByRole('button', { name: /begin as korrek bloodmane/i }),
+      screen.getByRole('button', { name: /begin as veyra ash/i }),
     ).not.toBeDisabled();
   });
 
@@ -71,14 +75,21 @@ describe('CharacterCreationScreen — selection', () => {
     );
   });
 
-  it('picking Korrek Bloodmane commits the fixed Barbarian block', () => {
+  it('picking Veyra Ash commits the fixed Wizard (Mage) block', () => {
     render(<CharacterCreationScreen />);
-    fireEvent.click(screen.getByRole('button', { name: /korrek bloodmane/i }));
+    fireEvent.click(screen.getByRole('button', { name: /veyra ash/i }));
     fireEvent.click(screen.getByRole('button', { name: /begin/i }));
     const char = useGameStore.getState().character!;
-    const preset = getClass('barbarian').preset!;
-    expect(char.classId).toBe('barbarian');
+    const preset = getClass('wizard').preset!;
+    expect(char.classId).toBe('wizard');
     expect(char.raceId).toBe(preset.recommendedRaceId);
     expect(char.baseAbilityScores).toEqual(preset.abilityScores);
+  });
+
+  it('stamps originClass once on first creation (anchors the relative unlock ladder)', () => {
+    render(<CharacterCreationScreen />);
+    fireEvent.click(screen.getByRole('button', { name: /veyra ash/i }));
+    fireEvent.click(screen.getByRole('button', { name: /begin/i }));
+    expect(useGameStore.getState().originClass).toBe('wizard');
   });
 });

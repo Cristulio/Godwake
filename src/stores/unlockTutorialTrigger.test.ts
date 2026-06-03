@@ -38,7 +38,9 @@ function primeSoul(delveCount: number, seenTutorials: string[] = []) {
     hubUnlockQueue: [],
     pendingDescent: false,
   });
-  useMetaStore.setState({ delveCount, seenTutorials });
+  // A fighter-origin soul: the relative ladder opens the Mage at delve 3, the
+  // Hunter at 6, then the non-starters at 9/12/15/18.
+  useMetaStore.setState({ delveCount, seenTutorials, originClass: 'fighter' });
 }
 
 function descend() {
@@ -139,16 +141,16 @@ describe('delve-count unlocks surface at the HUB, never over the delve', () => {
   });
 
   it('holds the descent until EVERY crossed unlock is dismissed', () => {
-    primeSoul(2); // 2 -> 3 crosses affixes-rare (@3) AND the Ranger soul (class @3)
+    primeSoul(2); // 2 -> 3 crosses affixes-rare (@3) AND the Mage soul (class @3 for a fighter origin)
     descend();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['affixes-rare', 'ranger']);
+    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['affixes-rare', 'wizard']);
     expect(useScreenStore.getState().screen).toBe('hub');
 
     useGameStore.getState().dismissHubTutorial(); // affixes-rare
-    expect(useScreenStore.getState().screen).toBe('hub'); // still parked for the Ranger card
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['ranger']);
+    expect(useScreenStore.getState().screen).toBe('hub'); // still parked for the Mage card
+    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['wizard']);
 
-    useGameStore.getState().dismissHubTutorial(); // ranger
+    useGameStore.getState().dismissHubTutorial(); // wizard
     expect(useScreenStore.getState().screen).toBe('delve');
     expect(useScreenStore.getState().pendingDescent).toBe(false);
   });

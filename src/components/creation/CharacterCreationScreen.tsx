@@ -13,7 +13,7 @@ import {
 import type { SkillName } from '../../types/skills';
 import {
   isClassUnlocked,
-  CLASS_UNLOCK_DELVE,
+  classUnlockDelve,
   STARTER_CLASSES,
 } from '../../engine/progression/unlocks';
 
@@ -114,6 +114,12 @@ export function CharacterCreationScreen() {
   const selectedAscension = useGameStore((s) => s.selectedAscension);
   const existing = useGameStore((s) => s.character);
   const delveCount = useGameStore((s) => s.delveCount);
+  const originClass = useGameStore((s) => s.originClass);
+  // The starter the soul forged anchors the RELATIVE unlock ladder. Before one is
+  // stamped (first creation) fall back to the worn body, then to fighter — the
+  // non-starter thresholds (9/12/15/18) are origin-invariant, so a fresh soul's
+  // sealed cards read correctly whichever default is used.
+  const soulOrigin = originClass ?? existing?.classId ?? 'fighter';
 
   // Three modes share this screen:
   //  - New Game+ (run-launcher): pick/keep a soul and descend straight into the
@@ -130,7 +136,7 @@ export function CharacterCreationScreen() {
   //    soul has logged enough delves to unlock. The rest stay sealed.
   const isSelectable = (classId: ClassId) =>
     isSwap
-      ? classId === existing?.classId || isClassUnlocked(classId, delveCount)
+      ? classId === existing?.classId || isClassUnlocked(classId, delveCount, soulOrigin)
       : STARTER_CLASSES.includes(classId);
 
   const allOptions = useMemo(buildSoulOptions, []);
@@ -272,7 +278,7 @@ export function CharacterCreationScreen() {
             naming the delve count at which it will wake — and how many turns of
             the wheel remain — so the path to it is never a mystery. */}
         {sealedOptions.map((o) => {
-          const threshold = CLASS_UNLOCK_DELVE[o.classId];
+          const threshold = classUnlockDelve(o.classId, soulOrigin);
           const remaining = Math.max(0, threshold - delveCount);
           return (
             <div

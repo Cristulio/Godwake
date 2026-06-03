@@ -1,4 +1,5 @@
 import type { Character } from '../types/character';
+import type { ClassId } from '../schemas/ids';
 import type { UnlockedUpgrades } from '../engine/character/upgrades';
 import { getAffix } from '../content/items';
 import { getBlessing } from '../content/blessings';
@@ -251,6 +252,7 @@ export interface MigratedSnapshot {
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
+  originClass: ClassId | null;
   gameCompleted: boolean;
   selectedAscension: number;
   // Allow extra fields to ride through (screen, saveSeed, introSeen, etc.).
@@ -397,6 +399,13 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   }
   if (!Array.isArray(state.seenTutorials)) {
     state.seenTutorials = [];
+  }
+
+  // originClass anchors the relative class-unlock ladder. Pre-relative saves
+  // lack it → leave null here; scatterSnapshot fills it from the worn body so a
+  // veteran keeps its origin, and a fresh forge stamps it on first creation.
+  if (typeof state.originClass !== 'string') {
+    state.originClass = null;
   }
 
   // v14 → v15: Throne-of-Bhaal ending capstone. Old saves haven't seen the

@@ -5,7 +5,7 @@ import { spellSaveDC } from './spells';
 import { isWildShaped, characterHasMechanic } from '../character/derived';
 import { wildShapeUsesMax, beastWeaponId, WILD_SHAPE_ROUNDS } from './wildShape';
 import {
-  CLASS_UNLOCK_DELVE,
+  classUnlockDelve,
   STARTER_CLASSES,
   isClassUnlocked,
 } from '../progression/unlocks';
@@ -57,10 +57,13 @@ describe('Druid — class definition + registry', () => {
 });
 
 describe('Druid — delve-15 unlock (not a starter)', () => {
-  it('unlocks only once fifteen delves are logged', () => {
-    expect(CLASS_UNLOCK_DELVE.druid).toBe(15);
-    expect(isClassUnlocked('druid', 14)).toBe(false);
-    expect(isClassUnlocked('druid', 15)).toBe(true);
+  it('unlocks only once fifteen delves are logged (third non-starter, origin-invariant)', () => {
+    // The non-starters open at 9/12/15/18 regardless of which starter is the
+    // origin, so the Druid is always the delve-15 soul.
+    expect(classUnlockDelve('druid', 'fighter')).toBe(15);
+    expect(classUnlockDelve('druid', 'ranger')).toBe(15);
+    expect(isClassUnlocked('druid', 14, 'fighter')).toBe(false);
+    expect(isClassUnlocked('druid', 15, 'fighter')).toBe(true);
   });
 
   it('is never a fresh-soul starter', () => {
