@@ -822,8 +822,10 @@ export function playerAttack(
 
     // Martial DISRUPT: an armed staggering strike fells the target — it loses
     // its next turn. The martial point was already spent on declaration; the
-    // stance clears here, on the blow that actually lands on a foe still
-    // standing. A clean miss or a kill leaves it armed for the next swing.
+    // stance clears here, on the blow that lands on a foe still standing. A
+    // kill leaves it armed for the next swing — an overkill blow still landed,
+    // so the shot isn't wasted. A clean MISS is the gamble: it burns both the
+    // stagger and the spent point (cleared in the miss branch below).
     if (nextCharacter.martialDisruptActive === true && target.kind === 'monster') {
       const stillStanding = nextState.combatants.some(
         (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
@@ -886,6 +888,17 @@ export function playerAttack(
         nextCharacter = { ...nextCharacter, stunningStrikeActive: false };
       }
     }
+  } else if (nextCharacter.martialDisruptActive === true) {
+    // Missed DISRUPT: the staggering strike must connect. A clean whiff burns
+    // both the stagger and the martial point spent to arm it — the stance does
+    // not carry to the next swing (a landing hit clears it above; only a miss
+    // spends it for nothing).
+    nextCharacter = { ...nextCharacter, martialDisruptActive: false };
+    nextState = appendLog(nextState, {
+      id: nextLogId(nextState),
+      kind: 'system',
+      text: `${nextCharacter.name}'s staggering strike goes wide — the opening is lost.`,
+    });
   }
 
   // Mark action used for the player

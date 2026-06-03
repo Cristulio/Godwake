@@ -248,7 +248,9 @@ export function useMartialDefense(ctx: MartialContext): CombatActionResult {
  * DISRUPT — a control strike that interrupts a foe's wind-up. Free: spends
  * {@link martialDisruptCost} point(s) to arm a staggering strike. The next weapon
  * hit fells its target — it loses its next turn (resolved in playerAttack). The
- * point is spent on declaration; the stagger only lands on a connecting hit.
+ * point is spent on declaration and the strike is a ONE-SHOT that must connect:
+ * a landing hit staggers, but a clean MISS burns both the stagger and the spent
+ * point — the stance does not carry to the next swing.
  */
 export function useMartialDisrupt(ctx: MartialContext): CombatActionResult {
   const { character, state } = ctx;
@@ -266,7 +268,7 @@ export function useMartialDisrupt(ctx: MartialContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${next.name} winds up a ${flavor.disrupt} — the next hit will stagger its mark.`,
+    text: `${next.name} winds up a ${flavor.disrupt} — the next blow must land to stagger its mark.`,
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), next);
 }
