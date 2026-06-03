@@ -387,6 +387,33 @@ describe('createGodwakeDelve — branching graph', () => {
     }
   });
 
+  it('never offers two same-kind non-combat nodes in one column (same-kind combat is allowed)', () => {
+    // Within a single column the parallel choices must differ: two rests (or two
+    // shrines/events/shops) side by side is a fake choice. Combat is exempt — a
+    // column may field several fights/elites.
+    const COMBAT_KINDS = new Set(['combat', 'elite']);
+    for (let seed = 0; seed < 60; seed++) {
+      for (const elitesEnabled of [true, false]) {
+        const d = createGodwakeDelve({ seed, elitesEnabled });
+        let sawCombatColumn = false;
+        for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+          for (const col of columnsOf(d, ch)) {
+            const nonCombatKinds = col
+              .filter((r) => !COMBAT_KINDS.has(r.kind))
+              .map((r) => r.kind);
+            expect(
+              new Set(nonCombatKinds).size,
+              `column [${col.map((r) => r.kind).join(', ')}] repeats a non-combat kind [seed ${seed}]`,
+            ).toBe(nonCombatKinds.length);
+            if (col.filter((r) => COMBAT_KINDS.has(r.kind)).length >= 2) sawCombatColumn = true;
+          }
+        }
+        // Sanity: the exemption is real — columns with 2+ fights do occur.
+        expect(sawCombatColumn).toBe(true);
+      }
+    }
+  });
+
   it('offers shop and elite route nodes, and the final boss is terminal', () => {
     const d = createGodwakeDelve(7);
     expect(d.rooms.some((r) => r.kind === 'shop')).toBe(true);
