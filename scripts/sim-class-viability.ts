@@ -663,6 +663,11 @@ interface LifeOutcome {
   mobsKilled: number;
   /** Measurement-only: rooms reached this life (depth credit in live formula). */
   roomsReached: number;
+  /** Measurement-only (Q1 — martial-pool depth correlation): OFFENSE+DEFENSE+DISRUPT
+   *  pool spends this life, and combats fought this life, so spends/combat can be
+   *  correlated against this life's depth/clear within a martial class. */
+  martialSpendsThisLife: number;
+  combatsThisLife: number;
 }
 
 /** Measurement-only sink: every life's structure, dumped for live-formula renown analysis. */
@@ -676,6 +681,10 @@ function liveOneLife(
   pc: ProcCounters,
 ): { outcome: LifeOutcome; finalCharacter: Character; newLegendaries: string[] } {
   let character = descend(roller, soul);
+  // Q1 instrumentation: snapshot the shared per-class proc counters so this life's
+  // martial-pool spends + combats are a delta (RNG-neutral — reads counters only).
+  const martialSpends0 = pc.martialOffense + pc.martialDefense + pc.martialDisrupt;
+  const combats0 = pc.combats;
   const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
   const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension, fullChain: FULL_CHAIN });
   let bossesKilled = 0;
@@ -784,6 +793,9 @@ function liveOneLife(
     deathRoomLabel,
     mobsKilled,
     roomsReached,
+    martialSpendsThisLife:
+      pc.martialOffense + pc.martialDefense + pc.martialDisrupt - martialSpends0,
+    combatsThisLife: pc.combats - combats0,
   };
   LIFE_RECORDS.push(outcome);
   return { outcome, finalCharacter: character, newLegendaries };
@@ -981,6 +993,39 @@ function renderDeaths(aggs: ClassAggregate[]): string {
   return lines.join('\n');
 }
 
+/**
+ * Q1 — does spending the martial pool correlate with surviving deeper, or does it
+ * just tick at a fixed per-combat rate? Splits a martial class's lives by outcome
+ * (cleared vs died) and by depth quartile, reporting spends/combat for each. Pool
+ * SIZE is flat (MARTIAL_POOL_MAX 3, Fighter 4) and does NOT scale with level — so
+ * spends/combat is bounded by fight length + regen, not level; the level-band row
+ * exposes that confound. Prints to stdout (captured by the lane), not the doc.
+ */
+function reportMartialDepthCorrelation(classId: ClassId, souls: SoulResult[]): void {
+  if (classId !== 'fighter' && classId !== 'barbarian' && classId !== 'ranger') return;
+  const lives = souls.flatMap((s) => s.lives).filter((l) => l.combatsThisLife > 0);
+  if (lives.length === 0) return;
+  const spc = (l: LifeOutcome) => l.martialSpendsThisLife / Math.max(1, l.combatsThisLife);
+  const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+  const fmt = (label: string, ls: LifeOutcome[]) =>
+    `${label}: n=${String(ls.length).padStart(5)} spends/combat=${mean(ls.map(spc)).toFixed(2)} meanLvl=${mean(ls.map((l) => l.finalLevel)).toFixed(1)} meanDepth=${mean(ls.map((l) => l.finalRoomIdx)).toFixed(1)}`;
+
+  const byDepth = [...lives].sort((a, b) => a.finalRoomIdx - b.finalRoomIdx);
+  const q = (i: number) =>
+    byDepth.slice(Math.floor((i * byDepth.length) / 4), Math.floor(((i + 1) * byDepth.length) / 4));
+  const quart = [0, 1, 2, 3].map((i) => mean(q(i).map(spc)).toFixed(2)).join(' · ');
+
+  const band = (lo: number, hi: number) => lives.filter((l) => l.finalLevel >= lo && l.finalLevel <= hi);
+  const bands = [[1, 3], [4, 7], [8, 12], [13, 20]] as const;
+  const bandStr = bands.map(([lo, hi]) => `L${lo}-${hi}=${mean(band(lo, hi).map(spc)).toFixed(2)}`).join(' · ');
+
+  console.log(`[MARTIAL-CORR] ${classId} (FULL_CHAIN=${FULL_CHAIN}, n=${lives.length} lives w/ combat)`);
+  console.log(`  ${fmt('cleared', lives.filter((l) => l.cleared))}`);
+  console.log(`  ${fmt('died   ', lives.filter((l) => !l.cleared))}`);
+  console.log(`  spends/combat by depth quartile (shallow→deep): ${quart}`);
+  console.log(`  spends/combat by level band (confound):         ${bandStr}`);
+}
+
 function main(): void {
   const tWall0 = Date.now();
   console.log(
@@ -997,6 +1042,7 @@ function main(): void {
     }
     const a = aggregate(classId, souls);
     aggs.push(a);
+    reportMartialDepthCorrelation(classId, souls);
     const dt = Date.now() - t0;
     console.log(
       `${classId.padEnd(10)} topA6 ${pct(a.toppedLadderRate).padStart(6)}  meanAsc ${num(a.meanHighestCleared).padStart(5)}  A0life ${(a.firstA0ClearLifeMean === null ? '—' : num(a.firstA0ClearLifeMean, 1)).padStart(5)}  clr% ${pct(a.perLifeClearRate).padStart(6)}  depth ${num(a.meanDepthRooms, 1).padStart(5)}  lvl ${num(a.meanFinalLevel).padStart(4)}  ${(dt / 1000).toFixed(1)}s`,
