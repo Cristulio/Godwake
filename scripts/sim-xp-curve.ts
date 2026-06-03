@@ -19,6 +19,10 @@ import type { DelveState, RoomSpec } from '../src/types/delve';
 
 const RUNS = 4000;
 const TOTAL_CHAPTERS = 14;
+// Default true preserves the canonical full-chain (NG+) measurement; FULL_CHAIN=0
+// measures the BASE game (Cells→Irenicus, 11 chapters) the split now ships.
+const FULL_CHAIN = process.env.FULL_CHAIN !== '0';
+const CHAPTERS = FULL_CHAIN ? TOTAL_CHAPTERS : 11;
 
 type Policy = 'random' | 'combat';
 
@@ -58,11 +62,11 @@ function run(policy: Policy): number[] {
   const cumSamples: number[][] = Array.from({ length: TOTAL_CHAPTERS + 1 }, () => []);
   for (let i = 0; i < RUNS; i++) {
     const seed = randomSeed();
-    const state = createGodwakeDelve({ seed, ascension: 0, elitesEnabled: true, fullChain: true });
+    const state = createGodwakeDelve({ seed, ascension: 0, elitesEnabled: true, fullChain: FULL_CHAIN });
     const rand = () => Math.random();
     const per = routeXpByChapter(state, policy, rand);
     let cum = 0;
-    for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+    for (let ch = 1; ch <= CHAPTERS; ch++) {
       cum += per[ch];
       cumSamples[ch].push(cum);
     }
@@ -84,9 +88,9 @@ const bossCR = [2, 4, 5, 6, 8, 10, 11, 12, 13, 13, 14, 15, 16, 17];
 
 for (const policy of ['random', 'combat'] as Policy[]) {
   const cum = run(policy);
-  console.log(`\n=== policy: ${policy} (median of ${RUNS} runs, Asc0, elites on) ===`);
+  console.log(`\n=== policy: ${policy} (median of ${RUNS} runs, Asc0, elites on, ${FULL_CHAIN ? 'FULL CHAIN 14ch' : 'BASE 11ch'}) ===`);
   console.log('Ch | cumXP   | curLvl@end | bossCR');
-  for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+  for (let ch = 1; ch <= CHAPTERS; ch++) {
     console.log(
       `${String(ch).padStart(2)} | ${String(cum[ch]).padStart(7)} | ${String(
         levelForXp(cum[ch]),

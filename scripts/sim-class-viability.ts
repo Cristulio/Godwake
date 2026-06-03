@@ -107,6 +107,9 @@ const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.
   : 'balanced';
 const MAX_TURNS_PER_FIGHT = 200;
 const SEED_BASE = 0xc1a55 >>> 0;
+// Default true preserves the canonical full-chain (NG+) viability run; FULL_CHAIN=0
+// measures the BASE game (Cells→Irenicus, 11 chapters) the campaign split ships.
+const FULL_CHAIN = process.env.FULL_CHAIN !== '0';
 
 // Mirrors delveStore.ts constants (live renown formula:
 // (clear?50:3) + 2·mobs + 25·bosses + 1·rooms, ×soulMark×renownMult).
@@ -674,7 +677,7 @@ function liveOneLife(
 ): { outcome: LifeOutcome; finalCharacter: Character; newLegendaries: string[] } {
   let character = descend(roller, soul);
   const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
-  const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension, fullChain: true });
+  const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension, fullChain: FULL_CHAIN });
   let bossesKilled = 0;
   let mobsKilled = 0;
   let finalRoomIdx = 0;

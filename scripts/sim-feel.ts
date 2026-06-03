@@ -78,6 +78,9 @@ const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.
 // thing varying across an ASCENSION sweep is the ascension modifier set + the
 // ascension-gated threats (ascendant elites @≥2, boss second-wind @≥3).
 const ASCENSION = clampAscension(Number(process.env.ASCENSION ?? 0));
+// Default true preserves the canonical full-chain feel run; FULL_CHAIN=0 measures
+// the BASE game (Cells→Irenicus, 11 chapters) the campaign split ships.
+const FULL_CHAIN = process.env.FULL_CHAIN !== '0';
 const SEED_BASE = 0xfee1 >>> 0;
 const MAX_ROUNDS = 25;
 const MAX_STEPS = MAX_ROUNDS * 8;
@@ -393,7 +396,7 @@ function runOneDelve(
   const roller = createDiceRoller(seed);
   setActiveRoller(seed);
   let character = characterAtLevel(classId, startLevel);
-  const delve = createGodwakeDelve({ seed, ascension: ASCENSION, fullChain: true });
+  const delve = createGodwakeDelve({ seed, ascension: ASCENSION, fullChain: FULL_CHAIN });
 
   const rec: RunRecord = {
     classId,
