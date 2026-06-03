@@ -50,7 +50,7 @@ export function QuirkBadge({ quirkId, size = 'sm', baneCount, soulMarkPct }: Qui
 
   return (
     <span
-      className={`inline-block border ${colorClass} ${sizeClass} uppercase tracking-widest font-bold bg-[var(--color-bg-panel)]/80`}
+      className={`inline-block border ${colorClass} ${sizeClass} uppercase tracking-widest font-bold bg-[var(--color-bg-panel)]/80 whitespace-nowrap`}
       title={tooltipParts.join('\n\n')}
     >
       {q.name}
