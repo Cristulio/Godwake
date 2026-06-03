@@ -16,6 +16,11 @@ export function TitleScreen() {
   // lets the soul descend again at a chosen ascension. The mastery persists, so
   // the entry stays even after starting a fresh base game.
   const newGamePlusAvailable = activeSave && gameCompleted;
+  // Continue resumes only an UNFINISHED campaign. Once the chain has been cleared
+  // the run is over — the way on is New Game+, not resuming a finished (already
+  // won) delve. So a completed save routes through the ascension launcher instead
+  // of dropping the soul back into a dead run.
+  const canContinue = activeSave && !gameCompleted;
 
   useEffect(() => {
     const t = setTimeout(() => setGlow(true), 200);
@@ -89,7 +94,7 @@ export function TitleScreen() {
       </div>
 
       <div className="relative z-10 flex flex-col gap-3 w-80 animate-fade-in-slow">
-        {activeSave && (
+        {canContinue && (
           <div className="flex flex-col gap-1">
             <Button variant="primary" size="lg" onClick={handleContinue}>
               ▸ Continue
@@ -101,18 +106,22 @@ export function TitleScreen() {
             )}
           </div>
         )}
+        {newGamePlusAvailable && (
+          <Button
+            variant={canContinue ? 'ghost' : 'primary'}
+            size="lg"
+            onClick={goToAscensionSelect}
+          >
+            ▲ New Game+
+          </Button>
+        )}
         <Button
-          variant={activeSave ? 'ghost' : 'primary'}
+          variant={canContinue || newGamePlusAvailable ? 'ghost' : 'primary'}
           size="lg"
           onClick={handleNewGame}
         >
           {activeSave ? '+ New Game' : '▸ New Game'}
         </Button>
-        {newGamePlusAvailable && (
-          <Button variant="ghost" size="lg" onClick={goToAscensionSelect}>
-            ▲ New Game+
-          </Button>
-        )}
       </div>
 
       <div className="absolute bottom-4 right-4 text-[var(--color-text-muted)] text-[9px] font-mono tracking-widest uppercase opacity-60">

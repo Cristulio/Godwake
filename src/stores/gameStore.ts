@@ -24,6 +24,7 @@ import { useScreenStore, type Screen } from './screenStore';
 import { migrateV1ToV2, SAVE_VERSION } from './persistMigration';
 import { isFeatureUnlocked } from '../engine/progression/unlocks';
 import { loadDelveFactory } from '../engine/delve/loadDelveFactory';
+import { TOTAL_CHAPTERS } from '../engine/delve/constants';
 import type { TauntContext, SoulVoiceSpeaker } from '../components/lore/IrenicusTaunt';
 
 export type { Screen };
@@ -364,6 +365,14 @@ function scatterSnapshot(s: PersistedSnapshot) {
     character: s.character ?? null,
     saveSeed: s.saveSeed ?? null,
   });
+  // High-water chapter mark, deriving from the legacy chapter1Cleared boolean
+  // for pre-progression saves. `>= TOTAL_CHAPTERS` means the whole chain fell.
+  const chaptersClearedValue =
+    typeof s.chaptersCleared === 'number'
+      ? s.chaptersCleared
+      : s.chapter1Cleared
+        ? 1
+        : 0;
   useMetaStore.setState({
     hasReincarnated: !!s.hasReincarnated,
     deathCount: typeof s.deathCount === 'number' ? s.deathCount : 0,
@@ -387,12 +396,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
     unlockedUpgrades: s.unlockedUpgrades ?? {},
     // Old saves predate the progression model — derive the high-water mark
     // from the legacy boolean so a prior chapter-1 clear isn't lost.
-    chaptersCleared:
-      typeof s.chaptersCleared === 'number'
-        ? s.chaptersCleared
-        : s.chapter1Cleared
-          ? 1
-          : 0,
+    chaptersCleared: chaptersClearedValue,
     chapter1Cleared: !!s.chapter1Cleared,
     druidGroveUnlocked: !!s.druidGroveUnlocked,
     ascensionUnlocked:
@@ -407,7 +411,11 @@ function scatterSnapshot(s: PersistedSnapshot) {
     delveCount: typeof s.delveCount === 'number' ? s.delveCount : 0,
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
     activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
-    gameCompleted: !!s.gameCompleted,
+    // Recovery: a save that felled the whole chain but never flipped
+    // gameCompleted (e.g. an older build whose lazy ending screen crashed before
+    // recording it) is a completed game. Restore the flag on load so the player
+    // gets their New Game+ and isn't dropped back into a finished run.
+    gameCompleted: !!s.gameCompleted || chaptersClearedValue >= TOTAL_CHAPTERS,
     selectedAscension:
       typeof s.selectedAscension === 'number' && s.selectedAscension >= 0
         ? s.selectedAscension

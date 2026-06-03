@@ -819,12 +819,18 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       ? Math.max(bossesKilled, 1)
       : Math.max(bossesKilled, ch1Killed ? 1 : 0);
     // First-ever clear of the WHOLE chain (Melissan felled) → the one-time
-    // Throne-of-Bhaal ending capstone fires BEFORE the normal settle. The ending
-    // screen records the choice (sets gameCompleted) then calls finishDelve()
-    // again; on that second pass gameCompleted is true, so this gate is skipped
-    // and the standard reincarnate/renown/hub path below runs. Nothing is
-    // settled here — the delve stays 'completed' so the re-entry resolves it.
+    // Throne-of-Bhaal ending capstone fires BEFORE the normal settle. The delve
+    // stays 'completed' so the ending's finishDelve() re-entry resolves it; on
+    // that second pass gameCompleted is true, so this gate is skipped and the
+    // standard reincarnate/renown/hub path below runs.
+    //
+    // Completion is recorded HERE, at the win moment — not in the ending screen.
+    // The ending is lazy-loaded, so a stale-chunk deploy can make its JS fail to
+    // load; if it owned `gameCompleted`, a crashed finale would silently rob the
+    // player of their clear (and the New Game+ it unlocks). Recording it before
+    // the screen renders makes completion independent of the ending loading at all.
     if (wonBoss && chaptersThisRun >= TOTAL_CHAPTERS && !meta.gameCompleted) {
+      meta.markGameCompleted();
       useScreenStore.getState().setScreen('ending');
       return;
     }
