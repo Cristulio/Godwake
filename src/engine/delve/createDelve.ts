@@ -324,10 +324,10 @@ function generateChapterPlan(rng: Rng): SlotKind[][] {
 
   const plan: SlotKind[][] = [['warmup'], ...middleColumns, ['intel'], ['boss']];
 
-  // No two edge-adjacent non-combat rooms of the same kind: the room you step
-  // into is always a different non-combat kind from the one you just left.
-  // Fights (warmup/earlyMid/mid/elite) are exempt and may repeat.
-  dedupeAdjacentNonCombat(plan);
+  // No two same-kind non-combat rooms back-to-back along an edge, and none
+  // sharing a column (parallel choices must differ). Fights (warmup/earlyMid/
+  // mid/elite) are exempt and may repeat both ways.
+  dedupeRoomKinds(plan);
 
   return plan;
 }
@@ -387,21 +387,28 @@ function adjacencyKind(slot: SlotKind): SlotKind | null {
   return slot === 'intel' ? 'event' : slot;
 }
 
-/** Adjacency kinds of every node sharing an edge with column `l`, slot `idx`. */
-function neighborKinds(plan: SlotKind[][], l: number, idx: number): Set<SlotKind> {
-  const out = new Set<SlotKind>();
-  const add = (k: SlotKind | null): void => {
-    if (k !== null) out.add(k);
-  };
+/** Positions of every node sharing an edge with column `l`, slot `idx`. */
+function neighborPositions(plan: SlotKind[][], l: number, idx: number): [number, number][] {
+  const out: [number, number][] = [];
   if (l > 0) {
     const back = layerEdges(plan[l - 1].length, plan[l].length);
     for (let i = 0; i < plan[l - 1].length; i++) {
-      if (back[i].includes(idx)) add(adjacencyKind(plan[l - 1][i]));
+      if (back[i].includes(idx)) out.push([l - 1, i]);
     }
   }
   if (l < plan.length - 1) {
     const fwd = layerEdges(plan[l].length, plan[l + 1].length);
-    for (const j of fwd[idx]) add(adjacencyKind(plan[l + 1][j]));
+    for (const j of fwd[idx]) out.push([l + 1, j]);
+  }
+  return out;
+}
+
+/** Adjacency kinds of every node sharing an edge with column `l`, slot `idx`. */
+function neighborKinds(plan: SlotKind[][], l: number, idx: number): Set<SlotKind> {
+  const out = new Set<SlotKind>();
+  for (const [nl, ni] of neighborPositions(plan, l, idx)) {
+    const k = adjacencyKind(plan[nl][ni]);
+    if (k !== null) out.add(k);
   }
   return out;
 }
@@ -413,62 +420,167 @@ function conflictsAt(plan: SlotKind[][], l: number, idx: number, kind: SlotKind)
 }
 
 /**
- * Resolve a same-kind adjacency by swapping the non-combat special at (cl, ci)
- * with another movable slot, so the room mix and per-kind counts are unchanged.
- * Accepts the first swap that leaves neither endpoint beside a same-kind room
- * (a plain-combat partner trivially satisfies its own end, so combat is the
- * usual landing spot; a special↔special swap covers the tighter maps). Returns
- * false only if no swap clears it — combat is the bulk of the map, so there is
- * effectively always slack.
+ * True if dropping `kind` into column `l` puts a second node of the same
+ * non-combat kind in that one column — i.e. the parallel choices at the step
+ * would offer two identical non-combat rooms. Combat kinds collapse to null and
+ * are exempt (a column may hold several fights/elites).
  */
-function relocateSpecial(plan: SlotKind[][], cl: number, ci: number): boolean {
-  const kind = plan[cl][ci];
-  for (let tl = 0; tl < plan.length; tl++) {
-    for (let ti = 0; ti < plan[tl].length; ti++) {
-      if (!MOVABLE_SLOTS.has(plan[tl][ti])) continue;
-      if (tl === cl && ti === ci) continue;
-      const other = plan[tl][ti];
-      if (other === kind) continue;
-      plan[cl][ci] = other;
-      plan[tl][ti] = kind;
-      if (!conflictsAt(plan, cl, ci, other) && !conflictsAt(plan, tl, ti, kind)) return true;
-      plan[cl][ci] = kind;
-      plan[tl][ti] = other;
-    }
+function columnConflictsAt(plan: SlotKind[][], l: number, idx: number, kind: SlotKind): boolean {
+  const ak = adjacencyKind(kind);
+  if (ak === null) return false;
+  for (let i = 0; i < plan[l].length; i++) {
+    if (i === idx) continue;
+    if (adjacencyKind(plan[l][i]) === ak) return true;
   }
   return false;
 }
 
 /**
- * Enforce the no-same-non-combat-kind-back-to-back rule: for every edge A→B in
- * the column DAG, A and B must not be the same non-combat kind (fights exempt).
- * Walks every edge and, on a violation, relocates the movable endpoint onto a
- * plain-combat slot (preserving the mix). The intel beat is fixed in place, so a
- * conflict against it is resolved by moving the offending middle event instead.
- * Each successful relocation strictly removes a violation and creates none, so
- * the bounded sweep always converges.
+ * Resolve a same-kind clash by swapping the non-combat special at (cl, ci) with
+ * another movable slot, so the room mix and per-kind counts are unchanged.
+ * Accepts a swap that leaves both endpoints clear of the edge rule AND the
+ * column rule — a plain-combat partner trivially satisfies both at its own end,
+ * so combat is the usual landing spot; a special↔special swap covers the tighter
+ * maps. When the destination's only remaining edge conflict is a movable
+ * same-kind neighbour (e.g. the duplicate's own sibling fanning into the same
+ * next column, so every direct landing is event-adjacent), it recursively pushes
+ * that blocker aside first — so a clash that genuinely needs two moves still
+ * resolves. `frozen` holds the positions mid-relocation, which both breaks
+ * cycles and bounds the recursion. Returns false only if no chain clears it.
  */
-function dedupeAdjacentNonCombat(plan: SlotKind[][]): void {
-  for (let pass = 0; pass < plan.length * 4; pass++) {
-    let changed = false;
-    for (let l = 0; l < plan.length - 1; l++) {
-      const edges = layerEdges(plan[l].length, plan[l + 1].length);
-      for (let i = 0; i < plan[l].length; i++) {
-        const ki = adjacencyKind(plan[l][i]);
-        if (ki === null) continue;
-        for (const j of edges[i]) {
-          if (adjacencyKind(plan[l + 1][j]) !== ki) continue;
-          // Prefer moving the downstream node; if it is the fixed intel beat,
-          // move the upstream event instead.
-          const moved =
-            plan[l + 1][j] === 'intel'
-              ? relocateSpecial(plan, l, i)
-              : relocateSpecial(plan, l + 1, j) || relocateSpecial(plan, l, i);
-          if (moved) changed = true;
-        }
+function relocateSpecial(
+  plan: SlotKind[][],
+  cl: number,
+  ci: number,
+  frozen: Set<string> = new Set(),
+): boolean {
+  const kind = plan[cl][ci];
+  const srcKey = `${cl},${ci}`;
+  frozen.add(srcKey);
+  for (let tl = 0; tl < plan.length; tl++) {
+    for (let ti = 0; ti < plan[tl].length; ti++) {
+      if (frozen.has(`${tl},${ti}`)) continue;
+      if (!MOVABLE_SLOTS.has(plan[tl][ti])) continue;
+      const other = plan[tl][ti];
+      if (other === kind) continue;
+      plan[cl][ci] = other;
+      plan[tl][ti] = kind;
+      // The vacated source endpoint takes `other`; it must end clean outright
+      // (no chaining on the side we are trying to settle), and neither endpoint
+      // may break the column rule.
+      const srcClean =
+        !conflictsAt(plan, cl, ci, other) &&
+        !columnConflictsAt(plan, cl, ci, other) &&
+        !columnConflictsAt(plan, tl, ti, kind);
+      if (srcClean && clearEdgeByChaining(plan, tl, ti, frozen)) {
+        frozen.delete(srcKey);
+        return true;
+      }
+      plan[cl][ci] = kind;
+      plan[tl][ti] = other;
+    }
+  }
+  frozen.delete(srcKey);
+  return false;
+}
+
+/**
+ * Make the node now sitting at (l, idx) satisfy the edge rule, recursively
+ * relocating any movable same-kind neighbour that blocks it. Returns true once
+ * no same-kind neighbour remains (trivially true when there were none).
+ */
+function clearEdgeByChaining(
+  plan: SlotKind[][],
+  l: number,
+  idx: number,
+  frozen: Set<string>,
+): boolean {
+  const ak = adjacencyKind(plan[l][idx]);
+  if (ak === null) return true;
+  const selfKey = `${l},${idx}`;
+  frozen.add(selfKey);
+  for (const [nl, ni] of neighborPositions(plan, l, idx)) {
+    if (adjacencyKind(plan[nl][ni]) !== ak) continue;
+    if (frozen.has(`${nl},${ni}`) || !MOVABLE_SLOTS.has(plan[nl][ni]) || !relocateSpecial(plan, nl, ni, frozen)) {
+      frozen.delete(selfKey);
+      return false;
+    }
+  }
+  frozen.delete(selfKey);
+  return !conflictsAt(plan, l, idx, plan[l][idx]);
+}
+
+/**
+ * One sweep of the edge rule: for every edge A→B in the column DAG, A and B
+ * must not be the same non-combat kind (fights exempt). On a violation,
+ * relocates the movable endpoint onto a plain-combat slot (preserving the mix).
+ * The intel beat is fixed in place, so a conflict against it is resolved by
+ * moving the offending upstream event instead. Returns whether anything moved.
+ */
+function dedupeAdjacentNonCombatPass(plan: SlotKind[][]): boolean {
+  let changed = false;
+  for (let l = 0; l < plan.length - 1; l++) {
+    const edges = layerEdges(plan[l].length, plan[l + 1].length);
+    for (let i = 0; i < plan[l].length; i++) {
+      const ki = adjacencyKind(plan[l][i]);
+      if (ki === null) continue;
+      for (const j of edges[i]) {
+        if (adjacencyKind(plan[l + 1][j]) !== ki) continue;
+        // Prefer moving the downstream node; if it is the fixed intel beat,
+        // move the upstream event instead.
+        const moved =
+          plan[l + 1][j] === 'intel'
+            ? relocateSpecial(plan, l, i)
+            : relocateSpecial(plan, l + 1, j) || relocateSpecial(plan, l, i);
+        if (moved) changed = true;
       }
     }
-    if (!changed) return;
+  }
+  return changed;
+}
+
+/**
+ * One sweep of the column rule: within a single column, no two nodes may be the
+ * same non-combat kind — the parallel choices at a step must differ (two rests
+ * side by side is a fake choice). Combat is exempt (a column may hold several
+ * fights/elites). On a duplicate, relocates the second occurrence onto a movable
+ * slot elsewhere. Returns whether anything moved.
+ */
+function dedupeSameColumnNonCombatPass(plan: SlotKind[][]): boolean {
+  let changed = false;
+  for (let l = 0; l < plan.length; l++) {
+    const seen = new Set<SlotKind>();
+    for (let i = 0; i < plan[l].length; i++) {
+      const k = adjacencyKind(plan[l][i]);
+      if (k === null) continue;
+      if (!seen.has(k)) {
+        seen.add(k);
+        continue;
+      }
+      if (relocateSpecial(plan, l, i)) {
+        // The swapped-in kind may itself now collide; rescan this column.
+        changed = true;
+        seen.clear();
+        i = -1;
+      }
+    }
+  }
+  return changed;
+}
+
+/**
+ * Enforce both room-sequencing rules together until the layout is stable: no
+ * two same-kind non-combat rooms back-to-back along an edge (#348), and no two
+ * same-kind non-combat rooms sharing a column (the parallel-choice complement).
+ * Each successful relocation passes both checks at both endpoints, so it removes
+ * one violation and introduces neither kind — the two passes converge jointly
+ * and the bounded sweep always terminates.
+ */
+function dedupeRoomKinds(plan: SlotKind[][]): void {
+  for (let pass = 0; pass < plan.length * 8; pass++) {
+    const edgeChanged = dedupeAdjacentNonCombatPass(plan);
+    const columnChanged = dedupeSameColumnNonCombatPass(plan);
+    if (!edgeChanged && !columnChanged) return;
   }
 }
 
