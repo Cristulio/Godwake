@@ -148,8 +148,14 @@ function App() {
       <Suspense fallback={<ScreenFallback />}>
         {/* Keyed on `screen` so each route change remounts and replays the
             scene fade — the only thing that gives moving between hub/map/
-            delve/level-up an intentional beat. Opacity-only (see index.css). */}
-        <div key={screen} className="animate-scene-in">
+            delve/level-up an intentional beat. Opacity-only (see index.css).
+            `pt-12` below `lg` reserves a top safe-area so the fixed Sound/
+            Settings cluster never paints over a screen header on narrow
+            phones/tablets; desktop leaves the corner empty, so no gutter. */}
+        <div
+          key={screen}
+          className={`animate-scene-in${screen === 'title' ? '' : ' pt-12 lg:pt-0'}`}
+        >
           {content}
         </div>
       </Suspense>
