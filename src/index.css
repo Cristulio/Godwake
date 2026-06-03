@@ -1034,14 +1034,47 @@ img, svg.pixel {
   filter: grayscale(0.6);
 }
 /* Barred node: exists on the route but not yet available to this soul (e.g. an
-   elite before the reveal). Greyed and visible — not hidden — so the player sees
-   what is there and routes around it. Dimmer than reachable, clearer than the
-   not-yet-walked dark nodes; the dashed border reads as "locked", not "missing". */
+   elite before the reveal). Drained of colour and dashed so it reads as sealed,
+   but kept at full opacity — the SEALED badge and unlock hint riding on it must
+   stay legible (parent opacity would dim the badge too). */
 .bm-node-blocked {
-  opacity: 0.5;
-  filter: grayscale(0.85);
   border-style: dashed;
+  border-color: var(--color-border-dim) !important;
+  background: var(--color-bg-deep);
+  color: var(--color-text-dim);
   cursor: not-allowed;
+}
+/* SEALED ribbon across the top of a barred node — modelled on the Grove's
+   "⚿ Sealed" corner badge so the locked state reads at a glance. */
+.bm-node-seal {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-display, inherit);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-bg-base);
+  background: var(--color-border-warm);
+  padding: 2px 5px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+}
+/* Short unlock-condition line under the badge. */
+.bm-node-seal-hint {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-display, inherit);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
 }
 .bm-node-visited {
   opacity: 0.82;

@@ -107,14 +107,15 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
   }, [delve, chapter]);
 
   const edges = useMemo(() => {
-    const lines: Array<{ x1: number; y1: number; x2: number; y2: number; lit: boolean; open: boolean }> = [];
+    const lines: Array<{ x1: number; y1: number; x2: number; y2: number; lit: boolean; open: boolean; locked: boolean }> = [];
     for (const p of placed) {
       for (const nid of p.room.next ?? []) {
         const t = byId.get(nid);
         if (!t) continue; // cross-chapter edge (boss→camp) — not drawn
-        const open = p.room.id === current?.id && reachable.has(nid);
+        const locked = !!t.room.locked;
+        const open = !locked && p.room.id === current?.id && reachable.has(nid);
         const lit = visited.has(p.room.id) && visited.has(nid);
-        lines.push({ x1: p.cx, y1: p.cy, x2: t.cx, y2: t.cy, lit, open });
+        lines.push({ x1: p.cx, y1: p.cy, x2: t.cx, y2: t.cy, lit, open, locked });
       }
     }
     return lines;
@@ -188,8 +189,9 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                       : 'var(--color-border-dim)'
                 }
                 strokeWidth={e.open ? 3 : e.lit ? 2.5 : 1.5}
-                strokeDasharray={e.open || e.lit ? undefined : '3 5'}
-                opacity={e.open ? 0.95 : e.lit ? 0.7 : 0.35}
+                strokeDasharray={e.locked ? '1 7' : e.open || e.lit ? undefined : '3 5'}
+                strokeLinecap={e.locked ? 'round' : undefined}
+                opacity={e.open ? 0.95 : e.lit ? 0.7 : e.locked ? 0.18 : 0.35}
               />
             ))}
           </svg>
@@ -242,12 +244,12 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
               >
                 <span className="bm-node-tag">{tag}</span>
                 {isLocked && (
-                  <span
-                    className="absolute -bottom-1 -right-1 text-[var(--color-text-dim)] text-xs leading-none"
-                    aria-label="barred"
-                  >
-                    ⚿
-                  </span>
+                  <>
+                    <span className="bm-node-seal" aria-label="sealed">
+                      ⚿ Sealed
+                    </span>
+                    <span className="bm-node-seal-hint">Sealed yet</span>
+                  </>
                 )}
                 {room.twistId && (
                   <span
