@@ -12,6 +12,14 @@ import { useMetaStore } from '../../../stores/metaStore';
 import { wearsHeavierThanLight } from '../../character/equip';
 
 const UNCANNY_DODGE_LEVEL = 5;
+// Fighter Guard: a green soldier rolls with the first blow each round, shaving a
+// flat GUARD_DAMAGE_REDUCTION off the first hit that lands. Active L1-4 only and
+// fades at level 5 (GUARD_MAX_LEVEL = UNCANNY_DODGE_LEVEL - 1), when Extra Attack
+// and the practiced L2+ Brace make the opening-round cushion unnecessary. The
+// best-armoured class at L1 (AC 16) dies to BURST, not attrition — this is the
+// missing first-hit cushion, sized partial on purpose (see fighter-l1-diagnostic).
+const GUARD_MAX_LEVEL = 4;
+const GUARD_DAMAGE_REDUCTION = 2;
 
 export function nextLogId(state: CombatState): number {
   return state.log.length + 1;
@@ -89,6 +97,28 @@ export function applyDamage(
       text: `${nextCharacter.name} uses Uncanny Dodge — damage halved (${workingAmount} → ${halved}).`,
     });
     workingAmount = halved;
+    nextCharacter = patchActionEconomy(nextCharacter, { reactionUsed: true });
+  }
+  // Fighter Guard (L1-4): a trained soldier rolls with the first blow of the
+  // round rather than taking it square, blunting the first hit that lands by a
+  // flat GUARD_DAMAGE_REDUCTION (a strike still bites for at least 1). Auto, like
+  // the Rogue's first-hit dodges above: it spends the reaction so only the FIRST
+  // hit each round is cushioned, and the reaction resets when the Fighter's turn
+  // comes back around. No light-armour gate — this is a plated brace, not the
+  // rogue's footwork. Fades at level 5 (GUARD_MAX_LEVEL).
+  if (
+    nextCharacter.classId === 'fighter' &&
+    nextCharacter.level <= GUARD_MAX_LEVEL &&
+    !nextCharacter.actionEconomy.reactionUsed &&
+    workingAmount > 0
+  ) {
+    const guarded = Math.max(1, workingAmount - GUARD_DAMAGE_REDUCTION);
+    next = appendLog(next, {
+      id: next.log.length + 1,
+      kind: 'system',
+      text: `${nextCharacter.name} rolls with the first blow — Guard turns it aside (${workingAmount} → ${guarded}).`,
+    });
+    workingAmount = guarded;
     nextCharacter = patchActionEconomy(nextCharacter, { reactionUsed: true });
   }
   const remainingTemp = Math.max(0, nextCharacter.hp.temp - workingAmount);
