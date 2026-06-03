@@ -23,9 +23,10 @@ import { attachCombatVfx } from './vfx';
  *    while the average fight runs ~4, so the tail reverted to auto-attack).
  *  - Three spends — OFFENSE (a heavy/aimed strike), DEFENSE (a guard that blunts
  *    the next incoming hit, costs 1), DISRUPT (a stagger that costs a telegraphing
- *    foe its next turn). The Fighter and Barbarian pay 2 / 1 / 1; the Ranger's
- *    Focus is re-weighted — Aimed Shot is a cheap 1-point poke (half the spike)
- *    and Crippling Shot costs 2, since denying a whole turn is the strong effect
+ *    foe its next turn). The Barbarian pays 2 / 1 / 1; the Fighter pays 2 / 1 / 2
+ *    — its Shield Bash stagger costs 2, since denying a whole turn is the pool's
+ *    strongest effect. The Ranger's Focus is re-weighted to 1 / 1 / 2 — Aimed
+ *    Shot is a cheap 1-point poke (half the spike) and Crippling Shot costs 2 too
  *    (see {@link martialOffenseCost} / {@link martialDisruptCost}).
  *  - At most ONE spend per turn (`martialSpentThisTurn`), so the pool is paced
  *    across the fight's key turns rather than dumped on turn one. Cap + one-per-
@@ -34,9 +35,10 @@ import { attachCombatVfx } from './vfx';
  *  - Spending is pure upside — the only cost is a point. No accuracy/defense
  *    tax.
  *
- * The Fighter carries a DEEPER well and regenerates it FASTER: it has no Rage /
- * Hunter's-Mark damage multiplier to lean on between spends, so the pool is its
- * whole turn-to-turn lever.
+ * The Fighter carries a DEEPER well — it has no Rage / Hunter's-Mark damage
+ * multiplier to lean on between spends, so the pool is its whole turn-to-turn
+ * lever — but tops it up on the same slow cadence as the others, so it stays a
+ * scarce, save-it resource rather than one that refills as fast as it is spent.
  */
 
 export const MARTIAL_POOL_MAX = 3;
@@ -48,6 +50,13 @@ export const MARTIAL_POOL_MAX_FIGHTER = 4;
 export const MARTIAL_DEFENSE_COST = 1;
 /** Turns a foe felled by a DISRUPT strike loses (one whole turn). */
 export const MARTIAL_DISRUPT_STAGGER_TURNS = 1;
+/**
+ * Rounds between mid-fight regen ticks — every OTHER round for ALL three pools.
+ * The pool refreshes full at the start of each fight (createCombat); this paces
+ * the mid-fight top-up so Resolve / Fury / Focus stays a scarce, save-it resource
+ * rather than one that refills as fast as it is spent.
+ */
+export const MARTIAL_REGEN_INTERVAL = 2;
 
 const MARTIAL_CLASSES: ReadonlySet<ClassId> = new Set(['fighter', 'barbarian', 'ranger']);
 
@@ -67,21 +76,12 @@ export function martialPoolMax(character: Readonly<Character>): number {
 }
 
 /**
- * Rounds between mid-fight regen ticks. The Fighter tops up every round; the
- * Barbarian and Ranger every OTHER round (they have a damage multiplier — Rage /
- * Hunter's Mark — to ride between spends, so they don't need the pool as often).
- */
-export function martialRegenInterval(character: Readonly<Character>): number {
-  return character.classId === 'fighter' ? 1 : 2;
-}
-
-/**
  * Mid-fight pool regen. Called at the start of each of the hero's turns (endTurn).
  * Adds one point on a regen-tick round, capped at the class max. The pool already
- * refreshes full on round 1 (createCombat), so ticks begin the next time the hero
- * acts: rounds 2,3,4,… for the Fighter (interval 1); rounds 3,5,7,… for the
- * Barbarian/Ranger (interval 2). Returns the SAME reference when nothing changes,
- * so callers can cheaply detect a real top-up.
+ * refreshes full on round 1 (createCombat), so ticks begin on rounds 3,5,7,… for
+ * every martial class ({@link MARTIAL_REGEN_INTERVAL}) — the Fighter just tops up
+ * into a deeper pool. Returns the SAME reference when nothing changes, so callers
+ * can cheaply detect a real top-up.
  */
 export function regenMartialPoolForRound(
   character: Readonly<Character>,
@@ -89,8 +89,7 @@ export function regenMartialPoolForRound(
 ): Character {
   const self = character as Character;
   if (!isMartialClass(character)) return self;
-  const interval = martialRegenInterval(character);
-  if (round <= 1 || (round - 1) % interval !== 0) return self;
+  if (round <= 1 || (round - 1) % MARTIAL_REGEN_INTERVAL !== 0) return self;
   const max = martialPoolMax(character);
   const current = martialPointsLeft(character);
   if (current >= max) return self;
@@ -131,12 +130,12 @@ export function martialOffenseCost(character: Readonly<Character>): number {
 }
 
 /**
- * Pool cost to arm a DISRUPT strike. The Fighter and Barbarian pay 1; the
- * Ranger's Crippling Shot denies a whole enemy turn — the strongest effect in
- * the pool — so it costs 2.
+ * Pool cost to arm a DISRUPT strike. Only the Barbarian's Knockdown pays 1; the
+ * Fighter's Shield Bash and the Ranger's Crippling Shot each cost 2, because
+ * denying a foe a whole turn is the pool's strongest effect.
  */
 export function martialDisruptCost(character: Readonly<Character>): number {
-  return character.classId === 'ranger' ? 2 : 1;
+  return character.classId === 'barbarian' ? 1 : 2;
 }
 
 /**

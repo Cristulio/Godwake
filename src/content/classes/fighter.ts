@@ -74,7 +74,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'shield-bash',
         name: 'Shield Bash',
         description:
-          'Drive the shield into a foe mid-wind-up. Spend 1 Resolve to arm a staggering strike — the next hit knocks the target down and costs it its next turn. Save it for the blow you least want answered.',
+          'Drive the shield into a foe mid-wind-up. Spend 2 Resolve to arm a staggering strike — the next hit knocks the target down and costs it its next turn. Save it for the blow you least want answered.',
         mechanicKey: 'martial-disrupt',
       },
     ],
