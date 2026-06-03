@@ -23,9 +23,18 @@ import { fireBoltDiceCount } from './spells/fireBolt';
 import { useConsumable } from './useItem';
 import { useSecondWind } from './secondWind';
 import { useActionSurge } from './actionSurge';
-import { usePowerAttack, useBrace } from './fighterManeuvers';
+import {
+  useMartialOffense,
+  useMartialDefense,
+  useMartialDisrupt,
+  isMartialClass,
+  martialPointsLeft,
+  MARTIAL_OFFENSE_COST,
+  MARTIAL_DEFENSE_COST,
+  MARTIAL_DISRUPT_COST,
+} from './martialResource';
 import { useCunningAction, type CunningActionChoice } from './cunningAction';
-import { useRage, useRecklessAttack, useCleave, useKnockdown } from './rage';
+import { useRage, useRecklessAttack } from './rage';
 import { useHuntersMark } from './huntersMark';
 import { useWildShape, beastWeaponId } from './wildShape';
 import {
@@ -52,10 +61,9 @@ export type PlannedAction =
   | { kind: 'cunning-action'; choice: CunningActionChoice }
   | { kind: 'rage' }
   | { kind: 'reckless-attack' }
-  | { kind: 'power-attack' }
-  | { kind: 'brace' }
-  | { kind: 'cleave' }
-  | { kind: 'knockdown' }
+  | { kind: 'martial-offense' }
+  | { kind: 'martial-defense' }
+  | { kind: 'martial-disrupt' }
   | { kind: 'hunters-mark'; targetId: string }
   | { kind: 'wild-shape' }
   | { kind: 'flurry-of-blows' }
@@ -313,34 +321,46 @@ function fireBoltFullAvg(character: Character): number {
   return fireBoltDiceCount(character.level) * 5.5 + intMod;
 }
 
-// ---- Martial maneuver reads ------------------------------------------------
+// ---- Martial resource reads ------------------------------------------------
 
-/** True when the equipped main-hand is a melee weapon. The maneuvers that read
- *  the swing — Power Attack, Cleave, Knockdown — are melee-only. */
-function wieldsMelee(character: Character): boolean {
-  const mh = character.equipped.mainHand;
-  if (!mh) return false;
-  try {
-    const item = getItem(mh.itemId);
-    return item.kind === 'weapon' && !item.properties.includes('ammunition');
-  } catch {
-    return false;
-  }
+/**
+ * How much damage a foe is TELEGRAPHING this turn (the value the bot reads off
+ * the intent badge — the same telegraph the player sees). A multiattack's
+ * per-hit range is multiplied by the hit count; control intents carry no damage
+ * (their danger is handled by {@link telegraphsControl}). Falls back to the
+ * def-derived threat when no intent is seeded (a freshly summoned add).
+ */
+function telegraphedDamage(m: MonsterCombatant): number {
+  const it = m.instance.intent;
+  if (!it) return monsterThreat(m);
+  if (it.kind === 'attack' || it.kind === 'drain') return it.damageMax ?? monsterThreat(m);
+  if (it.kind === 'multiattack') return (it.damageMax ?? monsterThreat(m)) * (it.hits ?? 1);
+  return 0;
 }
 
-/** Minimum remaining HP on the focus target before the bot spends a Power
- *  Attack charge. Charges are a limited rest/camp pool now (no accuracy cost),
- *  so the bot hoards them for targets meaty enough that the flat spike isn't
- *  wasted overkill — cautious saves for real threats, aggressive spends freely. */
-const POWER_ATTACK_MIN_TARGET_HP: Record<Archetype, number> = {
+/** True when a foe is telegraphing a non-damage but dangerous action worth
+ *  denying outright — a paralyze, a summon, or an inflicted debuff. */
+function telegraphsControl(m: MonsterCombatant): boolean {
+  const it = m.instance.intent;
+  return !!it && (it.kind === 'paralyze' || it.kind === 'summon' || it.kind === 'debuff');
+}
+
+/** A telegraphed hit of at least this much is "big" — worth spending a martial
+ *  DEFENSE (or denying with DISRUPT) over taking it on the chin. */
+const MARTIAL_THREAT_MIN = 12;
+
+/** Minimum target HP before the bot spends OFFENSE: the spike shouldn't be
+ *  wasted as overkill on a near-dead foe. Cautious hoards for real threats,
+ *  aggressive spends freely. */
+const OFFENSE_MIN_TARGET_HP: Record<Archetype, number> = {
   cautious: 30,
   balanced: 22,
   aggressive: 12,
 };
 
-/** A single incoming hit averaging at least this much is "big" — worth a
- *  Fighter's once-per-combat Brace. */
-const BRACE_THREAT_MIN = 12;
+/** A DISRUPT only pays off on a foe meaty enough to still be standing to act —
+ *  staggering something we'd kill outright wastes the point. */
+const DISRUPT_MIN_TARGET_HP = 15;
 
 // ---- The policy ------------------------------------------------------------
 
@@ -395,20 +415,6 @@ export function chooseCombatAction(
       hpPct <= profile.secondWindHp
     ) {
       return { kind: 'second-wind' };
-    }
-
-    // Fighter Brace: blunt a big incoming hit. Spent while healthy enough that
-    // the heal (Second Wind, above) isn't the priority — brace BEFORE the blow
-    // lands. The once-per-combat charge keeps it from becoming spam.
-    if (
-      isFighter &&
-      characterHasMechanic(character, 'brace') &&
-      character.resources.braceAvailable === true &&
-      hpPct > profile.emergencyHp &&
-      threat &&
-      monsterThreat(threat) >= BRACE_THREAT_MIN
-    ) {
-      return { kind: 'brace' };
     }
 
     // Barbarian Rage: open every fight in a fury — available every combat.
@@ -530,55 +536,13 @@ export function chooseCombatAction(
     ) {
       return { kind: 'reckless-attack' };
     }
-    // Fighter Power Attack: spend a charge to swing heavy when the focus target
-    // is meaty enough that the flat spike pays off (no accuracy cost now — the
-    // charge is the price). Declared free before the swing, so the same turn
-    // proceeds to the attack. Charges refresh only on rest/camp, so the bot
-    // hoards them for worthwhile targets per its archetype.
-    if (
-      isFighter &&
-      actionFree &&
-      character.powerAttackActive !== true &&
-      (character.resources.powerAttackChargesRemaining ?? 0) > 0 &&
-      characterHasMechanic(character, 'power-attack') &&
-      primary &&
-      wieldsMelee(character) &&
-      primary.instance.hp.current >= POWER_ATTACK_MIN_TARGET_HP[archetype]
-    ) {
-      return { kind: 'power-attack' };
-    }
-    // Barbarian Cleave: a wide rage swing when the room is crowded — the splash
-    // only pays off with a second foe to catch.
-    if (
-      isBarbarian &&
-      actionFree &&
-      character.cleaveActive !== true &&
-      characterHasMechanic(character, 'cleave') &&
-      isRaging(character) &&
-      live.length >= 2 &&
-      primary &&
-      wieldsMelee(character)
-    ) {
-      return { kind: 'cleave' };
-    }
-    // Barbarian Knockdown: stagger a lone dangerous foe (or the focus target
-    // when it IS the threat) to steal its turn — a boss/elite tempo play, wasted
-    // on a pack where a clean kill is the better use of the swing.
-    if (
-      isBarbarian &&
-      actionFree &&
-      character.knockdownActive !== true &&
-      characterHasMechanic(character, 'knockdown') &&
-      isRaging(character) &&
-      character.resources.knockdownAvailable === true &&
-      primary &&
-      threat &&
-      primary.id === threat.id &&
-      live.length <= 2 &&
-      monsterThreat(threat) >= profile.holdPersonThreat &&
-      wieldsMelee(character)
-    ) {
-      return { kind: 'knockdown' };
+    // Martial resource (Fighter / Barbarian / Ranger): read the enemy telegraph
+    // and spend the pool WELL — deny a dangerous wind-up, brace a big incoming
+    // hit, or spike a worthwhile target. Declared free before the swing, so the
+    // same turn proceeds to the attack.
+    if (isMartialClass(character)) {
+      const martial = chooseMartialAction(character, live, primary, threat, profile, archetype);
+      if (martial) return martial;
     }
     // Monk Stunning Strike: arm a staggering blow against the most dangerous foe
     // when Ki is flush enough to still afford a flurry. A free stance, so the
@@ -616,6 +580,88 @@ export function chooseCombatAction(
   }
 
   return { kind: 'end-turn' };
+}
+
+/**
+ * Spend the martial resource pool strategically (Fighter Resolve / Barbarian
+ * Fury / Ranger Focus). Reads the enemy telegraph the same way the player does
+ * and picks at most ONE spend per turn:
+ *
+ *  - DISRUPT the focus foe when IT is the scariest threat and is telegraphing
+ *    something nasty (a heavy hit or a control) — staggering denies the whole
+ *    turn — provided it is meaty enough to survive the blow (else a clean kill
+ *    is the better use of the swing).
+ *  - DEFENSE when a big hit is telegraphed and we aren't denying it outright.
+ *  - OFFENSE when nothing needs defending and a worthwhile target stands (meaty,
+ *    or an elite/boss) — so the points aren't hoarded into oblivion.
+ *  - Otherwise conserve (return null → a plain swing).
+ *
+ * Returns null on a non-spend so the caller falls through to the attack.
+ */
+function chooseMartialAction(
+  character: Character,
+  live: MonsterCombatant[],
+  primary: MonsterCombatant | undefined,
+  threat: MonsterCombatant | undefined,
+  profile: ArchetypeProfile,
+  archetype: Archetype,
+): PlannedAction | null {
+  if (character.martialSpentThisTurn === true) return null;
+  if (character.actionEconomy.actionUsed) return null;
+  if (!primary || !character.equipped.mainHand) return null;
+  const points = martialPointsLeft(character);
+  if (points <= 0) return null;
+
+  const hasOffense = characterHasMechanic(character, 'martial-offense');
+  const hasDefense = characterHasMechanic(character, 'martial-defense');
+  const hasDisrupt = characterHasMechanic(character, 'martial-disrupt');
+
+  // DISRUPT — deny the focus foe its telegraphed turn. Only when the foe we are
+  // about to hit IS the scariest one (so the stagger lands where it matters) and
+  // it is meaty enough to survive the blow (staggering a corpse wastes the point).
+  if (
+    hasDisrupt &&
+    points >= MARTIAL_DISRUPT_COST &&
+    character.martialDisruptActive !== true &&
+    threat &&
+    primary.id === threat.id &&
+    primary.instance.hp.current >= DISRUPT_MIN_TARGET_HP &&
+    (telegraphedDamage(primary) >= MARTIAL_THREAT_MIN || telegraphsControl(primary))
+  ) {
+    return { kind: 'martial-disrupt' };
+  }
+
+  // DEFENSE — a big hit is telegraphed somewhere on the field and we didn't deny
+  // it; brace before it lands. Skip if we're so low the bonus-action heal/potion
+  // is the real answer (handled earlier in the turn).
+  const incomingHeavy = live.reduce((mx, m) => Math.max(mx, telegraphedDamage(m)), 0);
+  const hpPct = character.hp.current / character.hp.max;
+  if (
+    hasDefense &&
+    points >= MARTIAL_DEFENSE_COST &&
+    hpPct > profile.emergencyHp &&
+    incomingHeavy >= MARTIAL_THREAT_MIN
+  ) {
+    return { kind: 'martial-defense' };
+  }
+
+  // OFFENSE — nothing pressing to defend; spike a worthwhile target. Meaty foes
+  // (the spike isn't overkill) or an elite/boss (legendary-resistance pool) are
+  // worth the 2 points; a near-dead trash mob is not.
+  const targetWorthSpike =
+    primary.instance.hp.current >= OFFENSE_MIN_TARGET_HP[archetype] ||
+    (primary.instance.legendaryResistances ?? 0) > 0 ||
+    (threat ? (threat.instance.legendaryResistances ?? 0) > 0 : false);
+  if (
+    hasOffense &&
+    points >= MARTIAL_OFFENSE_COST &&
+    character.martialOffenseActive !== true &&
+    targetWorthSpike
+  ) {
+    return { kind: 'martial-offense' };
+  }
+
+  return null;
 }
 
 /**
@@ -985,20 +1031,16 @@ export function applyPlannedAction(
       const r = useActionSurge({ character, state });
       return { state: r.state, character: r.character };
     }
-    case 'power-attack': {
-      const r = usePowerAttack({ character, state });
+    case 'martial-offense': {
+      const r = useMartialOffense({ character, state });
       return { state: r.state, character: r.character };
     }
-    case 'brace': {
-      const r = useBrace({ character, state });
+    case 'martial-defense': {
+      const r = useMartialDefense({ character, state });
       return { state: r.state, character: r.character };
     }
-    case 'cleave': {
-      const r = useCleave({ character, state });
-      return { state: r.state, character: r.character };
-    }
-    case 'knockdown': {
-      const r = useKnockdown({ character, state });
+    case 'martial-disrupt': {
+      const r = useMartialDisrupt({ character, state });
       return { state: r.state, character: r.character };
     }
     case 'cunning-action': {

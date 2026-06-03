@@ -42,8 +42,8 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'power-attack',
         name: 'Power Attack',
         description:
-          'Set your feet and swing for the kill. On your turn you can fight with a heavy hand: every melee strike this turn takes -2 to hit but lands for +4 damage. A trade, not a freebie — worth it when the blow was going to land anyway.',
-        mechanicKey: 'power-attack',
+          'Your Resolve — three points of grit that refresh each fight, spent at most one a turn on the blows that matter. Power Attack is the offense: set your feet and swing heavy, and every strike this turn bites deeper. Costs 2 Resolve.',
+        mechanicKey: 'martial-offense',
       },
     ],
     '2': [
@@ -54,14 +54,21 @@ export const FIGHTER: Class = ClassSchema.parse({
           'On your turn, you can take one additional action. Once per short or long rest.',
         mechanicKey: 'action-surge',
       },
-    ],
-    '3': [
       {
         id: 'brace',
         name: 'Brace',
         description:
-          'Read the incoming blow and plant the shield against it. Once per combat, a bonus action sets your guard — the next hit you take is blunted by 3 plus half your level. Spent best on the swing you can see coming.',
-        mechanicKey: 'brace',
+          'Read the incoming blow and plant the shield against it. Spend 1 Resolve to set your guard — the next hit you take is blunted by 4 plus half your level. Hold it for the swing you can see coming.',
+        mechanicKey: 'martial-defense',
+      },
+    ],
+    '3': [
+      {
+        id: 'shield-bash',
+        name: 'Shield Bash',
+        description:
+          'Drive the shield into a foe mid-wind-up. Spend 1 Resolve to arm a staggering strike — the next hit knocks the target down and costs it its next turn. Save it for the blow you least want answered.',
+        mechanicKey: 'martial-disrupt',
       },
     ],
     '4': [

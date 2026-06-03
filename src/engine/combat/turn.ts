@@ -166,18 +166,18 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     });
   }
   // Per-turn martial stances clear at the start of the hero's next turn: the
-  // Fighter's Power Attack and the Barbarian's Cleave / armed Knockdown are
-  // single-turn declarations (the Knockdown charge is only spent when the blow
-  // actually lands — see playerAttack).
+  // OFFENSE spike and the armed DISRUPT are single-turn declarations (DISRUPT's
+  // point is spent on declaration but the stagger lands on the hit — see
+  // playerAttack). The one-spend-per-turn gate also resets here.
   if (order[nextIndex] === 'player') {
-    if (nextCharacter.powerAttackActive) {
-      nextCharacter = { ...nextCharacter, powerAttackActive: false };
+    if (nextCharacter.martialOffenseActive) {
+      nextCharacter = { ...nextCharacter, martialOffenseActive: false };
     }
-    if (nextCharacter.cleaveActive) {
-      nextCharacter = { ...nextCharacter, cleaveActive: false };
+    if (nextCharacter.martialDisruptActive) {
+      nextCharacter = { ...nextCharacter, martialDisruptActive: false };
     }
-    if (nextCharacter.knockdownActive) {
-      nextCharacter = { ...nextCharacter, knockdownActive: false };
+    if (nextCharacter.martialSpentThisTurn) {
+      nextCharacter = { ...nextCharacter, martialSpentThisTurn: false };
     }
     // Monk: the Patient Defense guard (and the disadvantage it imposes) holds
     // through the enemy phase and lifts at the start of the monk's next turn;

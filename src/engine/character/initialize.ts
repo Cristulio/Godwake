@@ -6,7 +6,7 @@ import type { Class } from '../../schemas/class';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { effectiveAbilityScores } from './derived';
-import { POWER_ATTACK_CHARGES } from './actions';
+import { MARTIAL_POOL_MAX } from '../combat/martialResource';
 import { abilityModifier } from '../../types/abilities';
 
 export const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8] as const;
@@ -110,7 +110,8 @@ export function classStartingResources(classId: ClassId) {
       return {
         secondWindAvailable: true,
         actionSurgeRemaining: 0, // 1 at lv2, 2 at lv17
-        powerAttackChargesRemaining: POWER_ATTACK_CHARGES,
+        // Resolve pool — refreshed every encounter by createCombat.
+        martialPointsRemaining: MARTIAL_POOL_MAX,
       };
     case 'rogue':
       return {
@@ -120,6 +121,13 @@ export function classStartingResources(classId: ClassId) {
     case 'barbarian':
       return {
         rageRoundsRemaining: 0,
+        // Fury pool — refreshed every encounter by createCombat.
+        martialPointsRemaining: MARTIAL_POOL_MAX,
+      };
+    case 'ranger':
+      return {
+        // Focus pool — refreshed every encounter by createCombat.
+        martialPointsRemaining: MARTIAL_POOL_MAX,
       };
     case 'druid':
       return {
