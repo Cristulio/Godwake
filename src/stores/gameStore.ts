@@ -402,8 +402,8 @@ function scatterSnapshot(s: PersistedSnapshot) {
     knownNpcs: Array.isArray(s.knownNpcs) ? s.knownNpcs : [],
     seenDialogueBeats: Array.isArray(s.seenDialogueBeats) ? s.seenDialogueBeats : [],
     seenTutorials: Array.isArray(s.seenTutorials) ? s.seenTutorials : [],
-    // Post-migration this is always present; the guard only catches malformed
-    // data, never re-gating a veteran (migration floors a missing field to 999).
+    // Post-migration this is always present (a veteran's missing field floors
+    // to 999, a fresh/wiped save to 0); the guard only catches malformed data.
     delveCount: typeof s.delveCount === 'number' ? s.delveCount : 0,
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
     activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],

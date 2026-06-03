@@ -21,9 +21,12 @@ import { attachCombatVfx } from './vfx';
  *    ticked in endTurn), capped at the class max — so a lever stays live across the
  *    WHOLE fight, not just the opening rounds (the pool used to empty by round 3
  *    while the average fight runs ~4, so the tail reverted to auto-attack).
- *  - Three spends — OFFENSE (a heavy/aimed strike, costs 2), DEFENSE (a guard
- *    that blunts the next incoming hit, costs 1), DISRUPT (a stagger that costs
- *    a telegraphing foe its next turn, costs 1).
+ *  - Three spends — OFFENSE (a heavy/aimed strike), DEFENSE (a guard that blunts
+ *    the next incoming hit, costs 1), DISRUPT (a stagger that costs a telegraphing
+ *    foe its next turn). The Fighter and Barbarian pay 2 / 1 / 1; the Ranger's
+ *    Focus is re-weighted — Aimed Shot is a cheap 1-point poke (half the spike)
+ *    and Crippling Shot costs 2, since denying a whole turn is the strong effect
+ *    (see {@link martialOffenseCost} / {@link martialDisruptCost}).
  *  - At most ONE spend per turn (`martialSpentThisTurn`), so the pool is paced
  *    across the fight's key turns rather than dumped on turn one. Cap + one-per-
  *    turn + slow regen keep it save-vs-spend (bank one or two, pick the moment),
@@ -39,9 +42,10 @@ import { attachCombatVfx } from './vfx';
 export const MARTIAL_POOL_MAX = 3;
 /** The Fighter's deeper pool — it leans hardest on the resource (no Rage/Mark). */
 export const MARTIAL_POOL_MAX_FIGHTER = 4;
-export const MARTIAL_OFFENSE_COST = 2;
+/** DEFENSE costs the same single point for all three martial classes. OFFENSE
+ *  and DISRUPT vary by class — see {@link martialOffenseCost} /
+ *  {@link martialDisruptCost}. */
 export const MARTIAL_DEFENSE_COST = 1;
-export const MARTIAL_DISRUPT_COST = 1;
 /** Turns a foe felled by a DISRUPT strike loses (one whole turn). */
 export const MARTIAL_DISRUPT_STAGGER_TURNS = 1;
 
@@ -117,19 +121,39 @@ export function martialPointsLeft(character: Readonly<Character>): number {
 }
 
 /**
+ * Pool cost to declare an OFFENSE strike. The Fighter and Barbarian pay 2 for
+ * the heavy spike; the Ranger's Aimed Shot is a cheap 1-point poke that lands
+ * for half the spike ({@link martialOffenseDamage}) — a small recurring bite,
+ * not a 2-point burst.
+ */
+export function martialOffenseCost(character: Readonly<Character>): number {
+  return character.classId === 'ranger' ? 1 : 2;
+}
+
+/**
+ * Pool cost to arm a DISRUPT strike. The Fighter and Barbarian pay 1; the
+ * Ranger's Crippling Shot denies a whole enemy turn — the strongest effect in
+ * the pool — so it costs 2.
+ */
+export function martialDisruptCost(character: Readonly<Character>): number {
+  return character.classId === 'ranger' ? 2 : 1;
+}
+
+/**
  * Flat bonus damage an OFFENSE strike adds to EACH weapon strike this turn,
  * applied per strike so it rides Extra Attack.
  *
  * The Fighter's Power Attack is the reliability spend — it trades the big flat
  * spike for a small +2 bite paired with a +2 to-hit ({@link
  * martialOffenseAttackBonus}). A class that misses often wants the blow to LAND
- * surer, not just hit harder. The Barbarian (Savage Cleave) and Ranger (Aimed
- * Shot) keep the level-scaled spike — tuned UP so at 2 points it clearly
- * out-earns two 1-point spends.
+ * surer, not just hit harder. The Barbarian (Savage Cleave) keeps the full
+ * level-scaled spike at its 2-point cost. The Ranger's Aimed Shot is a cheap
+ * 1-point poke ({@link martialOffenseCost}), so it lands for HALF that spike.
  */
 export function martialOffenseDamage(character: Readonly<Character>): number {
   if (character.classId === 'fighter') return 2;
-  return 6 + Math.floor(character.level / 2);
+  const spike = 6 + Math.floor(character.level / 2);
+  return character.classId === 'ranger' ? Math.floor(spike / 2) : spike;
 }
 
 /**
@@ -161,7 +185,7 @@ function canSpend(character: Readonly<Character>, mechanicKey: string, cost: num
 
 /**
  * OFFENSE — a heavy/aimed strike. A free stance declared before the swing:
- * spends {@link MARTIAL_OFFENSE_COST} points to add {@link martialOffenseDamage}
+ * spends {@link martialOffenseCost} points to add {@link martialOffenseDamage}
  * to every strike this turn (read in playerAttack). For the Barbarian the same
  * declaration also cleaves a glancing blow into a second foe.
  */
@@ -169,13 +193,14 @@ export function useMartialOffense(ctx: MartialContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.martialOffenseActive === true) return combatResult(state, character);
   if (character.actionEconomy.actionUsed) return combatResult(state, character);
-  if (!canSpend(character, 'martial-offense', MARTIAL_OFFENSE_COST)) {
+  const cost = martialOffenseCost(character);
+  if (!canSpend(character, 'martial-offense', cost)) {
     return combatResult(state, character);
   }
   const flavor = martialFlavor(character)!;
   let next: Character = { ...character, martialOffenseActive: true, martialSpentThisTurn: true };
   next = patchResources(next, {
-    martialPointsRemaining: martialPointsLeft(character) - MARTIAL_OFFENSE_COST,
+    martialPointsRemaining: martialPointsLeft(character) - cost,
   });
   const offenseText =
     next.classId === 'fighter'
@@ -221,26 +246,29 @@ export function useMartialDefense(ctx: MartialContext): CombatActionResult {
 
 /**
  * DISRUPT — a control strike that interrupts a foe's wind-up. Free: spends
- * {@link MARTIAL_DISRUPT_COST} point to arm a staggering strike. The next weapon
+ * {@link martialDisruptCost} point(s) to arm a staggering strike. The next weapon
  * hit fells its target — it loses its next turn (resolved in playerAttack). The
- * point is spent on declaration; the stagger only lands on a connecting hit.
+ * point is spent on declaration and the strike is a ONE-SHOT that must connect:
+ * a landing hit staggers, but a clean MISS burns both the stagger and the spent
+ * point — the stance does not carry to the next swing.
  */
 export function useMartialDisrupt(ctx: MartialContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.martialDisruptActive === true) return combatResult(state, character);
   if (character.actionEconomy.actionUsed) return combatResult(state, character);
-  if (!canSpend(character, 'martial-disrupt', MARTIAL_DISRUPT_COST)) {
+  const cost = martialDisruptCost(character);
+  if (!canSpend(character, 'martial-disrupt', cost)) {
     return combatResult(state, character);
   }
   const flavor = martialFlavor(character)!;
   let next: Character = { ...character, martialDisruptActive: true, martialSpentThisTurn: true };
   next = patchResources(next, {
-    martialPointsRemaining: martialPointsLeft(character) - MARTIAL_DISRUPT_COST,
+    martialPointsRemaining: martialPointsLeft(character) - cost,
   });
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${next.name} winds up a ${flavor.disrupt} — the next hit will stagger its mark.`,
+    text: `${next.name} winds up a ${flavor.disrupt} — the next blow must land to stagger its mark.`,
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), next);
 }

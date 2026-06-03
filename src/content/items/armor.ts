@@ -1,5 +1,13 @@
 import { ArmorSchema, type Armor } from '../../schemas/item';
 
+// Body armour carries a STR gate by weight, mirroring the weapon stat-reqs
+// (`weaponStatRequirement`): light = free (DEX builds keep their natural armour),
+// medium = STR 13, heavy = STR 15. This is gameplay-over-RAW — 5e half-plate has
+// no STR req — so that armour weight expresses build identity: a low-STR DEX
+// archer can't free-wear half-plate, but a STR build (or one who banks ASIs over
+// a run) grows into it. Shields and robes are unweighted. Enforced at equip via
+// `equipDenialReason` / `equipItem`.
+
 export const LEATHER_ARMOR: Armor = ArmorSchema.parse({
   id: 'leather-armor',
   kind: 'armor',
@@ -16,7 +24,7 @@ export const CHAIN_MAIL: Armor = ArmorSchema.parse({
   name: 'Chain Mail',
   category: 'heavy',
   baseAC: 16,
-  strRequirement: 13,
+  strRequirement: 15,
   cost: 75,
   rarity: 'common',
 });
@@ -47,6 +55,7 @@ export const HALF_PLATE: Armor = ArmorSchema.parse({
   name: 'Half Plate',
   category: 'medium',
   baseAC: 15,
+  strRequirement: 13,
   cost: 750,
   rarity: 'common',
 });
@@ -72,6 +81,7 @@ export const HIDE_ARMOR: Armor = ArmorSchema.parse({
   name: 'Hide Armor',
   category: 'medium',
   baseAC: 12,
+  strRequirement: 13,
   cost: 10,
   rarity: 'common',
 });
@@ -82,6 +92,7 @@ export const SCALE_MAIL: Armor = ArmorSchema.parse({
   name: 'Scale Mail',
   category: 'medium',
   baseAC: 14,
+  strRequirement: 13,
   cost: 50,
   rarity: 'common',
 });
@@ -92,6 +103,7 @@ export const BREASTPLATE: Armor = ArmorSchema.parse({
   name: 'Breastplate',
   category: 'medium',
   baseAC: 14,
+  strRequirement: 13,
   cost: 400,
   rarity: 'common',
 });
@@ -102,6 +114,7 @@ export const RING_MAIL: Armor = ArmorSchema.parse({
   name: 'Ring Mail',
   category: 'heavy',
   baseAC: 14,
+  strRequirement: 15,
   cost: 30,
   rarity: 'common',
 });

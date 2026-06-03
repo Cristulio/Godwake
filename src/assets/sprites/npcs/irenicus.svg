@@ -1,41 +1,84 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 40" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet" aria-label="Velnaris">
-      <rect x="2" y="18" width="20" height="22" fill="#1a0a14" />
-      <rect x="3" y="17" width="18" height="2" fill="#2a0a1c" />
+      <!-- Cold soul-glow backlight + ground shadow -->
+      <ellipse cx="12" cy="20" rx="12" ry="18" fill="#5a3a7a" opacity="0.11" />
+      <ellipse cx="13" cy="15" rx="8" ry="11" fill="#3a6a72" opacity="0.06" />
+      <ellipse cx="12" cy="39" rx="8" ry="1.5" fill="#000" opacity="0.42" />
 
-      <rect x="8" y="16" width="8" height="4" fill="#0a0408" />
-      <polygon points="6,20 8,16 8,22" fill="#2a0a1c" />
-      <polygon points="18,20 16,16 16,22" fill="#2a0a1c" />
+      <!-- Long black hair — cool charcoal ramp, rim-lit upper-left -->
+      <rect x="6" y="3" width="12" height="4" fill="#0e0a14" />
+      <rect x="5" y="5" width="14" height="13" fill="#0e0a14" />
+      <rect x="6" y="3" width="12" height="1" fill="#241a30" />
+      <rect x="5" y="5" width="2" height="13" fill="#16101f" />
+      <rect x="5" y="5" width="1" height="9" fill="#2a2038" />
+      <rect x="17" y="5" width="2" height="13" fill="#0a0710" />
+      <rect x="5" y="5" width="1" height="4" fill="#4a5a72" opacity="0.6" />
+      <rect x="6" y="4" width="2" height="1" fill="#3a4a62" opacity="0.6" />
 
-      <rect x="6" y="3" width="12" height="3" fill="#0a0408" />
-      <rect x="5" y="5" width="14" height="4" fill="#0a0408" />
+      <!-- Gaunt face — cool-pale skin ramp -->
+      <rect x="8" y="6" width="8" height="11" fill="#c4b6a4" />
+      <rect x="8" y="6" width="3" height="11" fill="#d4c8b6" />
+      <rect x="8" y="6" width="1" height="9" fill="#e2d6c4" />
+      <rect x="14" y="7" width="2" height="10" fill="#a89a86" />
+      <rect x="15" y="8" width="1" height="9" fill="#94866f" />
+      <!-- Hollow cheeks + brow occlusion + gaunt dither -->
+      <rect x="8" y="13" width="8" height="2" fill="#a89a86" />
+      <rect x="8" y="15" width="8" height="1" fill="#7e7060" />
+      <rect x="8" y="6" width="8" height="1" fill="#94866f" opacity="0.5" />
+      <rect x="9" y="11" width="1" height="2" fill="#a89a86" />
+      <rect x="14" y="11" width="1" height="2" fill="#94866f" />
+      <rect x="8" y="10" width="1" height="1" fill="#9c8e7a" />
+      <rect x="15" y="12" width="1" height="1" fill="#7e7060" />
 
-      <rect x="8" y="6" width="8" height="11" fill="#d6c4b0" />
+      <!-- Brows -->
+      <rect x="9" y="8" width="2" height="1" fill="#2a2038" />
+      <rect x="13" y="8" width="2" height="1" fill="#2a2038" />
+      <!-- Soulless eyes — violet bloom + bright core -->
+      <ellipse cx="10" cy="9.5" rx="2.2" ry="1.6" fill="#a86ad0" opacity="0.32" />
+      <ellipse cx="14" cy="9.5" rx="2.2" ry="1.6" fill="#a86ad0" opacity="0.32" />
+      <rect x="9" y="9" width="2" height="2" fill="#160a22" />
+      <rect x="13" y="9" width="2" height="2" fill="#160a22" />
+      <rect x="9" y="9" width="1" height="1" fill="#c89af0" />
+      <rect x="13" y="9" width="1" height="1" fill="#c89af0" />
+      <rect x="10" y="10" width="1" height="1" fill="#8a50b8" />
+      <rect x="14" y="10" width="1" height="1" fill="#8a50b8" />
 
-      <rect x="8" y="13" width="8" height="2" fill="#a89880" />
-      <rect x="8" y="15" width="8" height="1" fill="#7a6856" />
-      <rect x="8" y="11" width="1" height="2" fill="#a89880" />
-      <rect x="15" y="11" width="1" height="2" fill="#a89880" />
+      <!-- Sharp nose + grim mouth -->
+      <rect x="11" y="11" width="2" height="2" fill="#b4a692" />
+      <rect x="11" y="11" width="1" height="2" fill="#c4b6a4" />
+      <rect x="10" y="14" width="4" height="1" fill="#3a2430" />
+      <rect x="11" y="15" width="2" height="1" fill="#5a3a48" opacity="0.7" />
 
-      <rect x="9" y="8" width="2" height="1" fill="#5a4030" />
-      <rect x="13" y="8" width="2" height="1" fill="#5a4030" />
+      <!-- High robe collar -->
+      <rect x="5" y="17" width="14" height="2" fill="#1a1226" />
+      <rect x="5" y="17" width="14" height="1" fill="#2a1d3a" />
+      <rect x="8" y="17" width="8" height="3" fill="#0a0710" />
+      <polygon points="6,19 8,17 8,23" fill="#241a30" />
+      <polygon points="18,19 16,17 16,23" fill="#1a1226" />
 
-      <rect x="9" y="9" width="2" height="2" fill="#1a0a1a" />
-      <rect x="10" y="9" width="1" height="1" fill="#6a4090" />
-      <rect x="13" y="9" width="2" height="2" fill="#1a0a1a" />
-      <rect x="14" y="9" width="1" height="1" fill="#6a4090" />
+      <!-- Dark sorcerer's robe — charcoal-violet ramp, lit left, dither -->
+      <rect x="4" y="19" width="16" height="21" fill="#221733" />
+      <rect x="4" y="19" width="1" height="21" fill="#0e0818" />
+      <rect x="5" y="19" width="1" height="21" fill="#160e22" />
+      <rect x="18" y="19" width="2" height="21" fill="#0e0818" />
+      <rect x="6" y="19" width="2" height="19" fill="#2a1d3e" />
+      <rect x="6" y="19" width="1" height="8" fill="#352447" />
+      <rect x="11" y="27" width="2" height="13" fill="#1a1228" />
+      <rect x="8" y="30" width="1" height="1" fill="#2a1d3e" />
+      <rect x="15" y="33" width="1" height="1" fill="#160e22" />
+      <rect x="9" y="35" width="1" height="1" fill="#160e22" />
+      <rect x="14" y="24" width="1" height="1" fill="#2a1d3e" />
 
-      <rect x="11" y="11" width="2" height="2" fill="#a89880" />
+      <!-- Soul-shard pendant — glowing bloom + bright core -->
+      <ellipse cx="12" cy="24" rx="4" ry="4" fill="#7a4ab0" opacity="0.24" />
+      <line x1="12" y1="19" x2="12" y2="22" stroke="#2a1d3a" stroke-width="0.5" />
+      <rect x="11" y="22" width="2" height="4" fill="#3a1850" />
+      <rect x="10" y="23" width="4" height="2" fill="#3a1850" />
+      <rect x="11" y="23" width="2" height="2" fill="#8a50c0" />
+      <rect x="11" y="23" width="1" height="1" fill="#d4b0f8" />
+      <rect x="11" y="22" width="1" height="4" fill="#a86ad0" opacity="0.6" />
 
-      <rect x="10" y="14" width="4" height="1" fill="#3a1820" />
-
-      <rect x="11" y="16" width="2" height="1" fill="#5a3a30" />
-
-      <rect x="11" y="22" width="2" height="2" fill="#3a1230" />
-      <rect x="10" y="23" width="4" height="1" fill="#3a1230" />
-      <rect x="11" y="22" width="2" height="3" fill="#7a3060" opacity="0.6" />
-      <line x1="12" y1="20" x2="12" y2="22" stroke="#3a2030" stroke-width="0.5" />
-
-      <rect x="5" y="24" width="1" height="14" fill="#2a1020" />
-      <rect x="18" y="24" width="1" height="14" fill="#2a1020" />
-      <rect x="11" y="26" width="2" height="12" fill="#0a0408" />
+      <!-- Robe shoulder seams + lower hem -->
+      <rect x="6" y="24" width="1" height="14" fill="#160e22" />
+      <rect x="17" y="24" width="1" height="14" fill="#0e0818" />
+      <rect x="4" y="38" width="16" height="2" fill="#0e0818" />
 </svg>

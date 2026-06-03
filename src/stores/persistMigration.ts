@@ -54,10 +54,12 @@ import { getQuirk } from '../content/quirks';
  *             `character.actionEconomy` on load so old saves rehydrate cleanly.
  *  v12 → v13: Progressive-unlock ladder (engine/progression/unlocks.ts).
  *             (a) `delveCount` (account-level descents started) gates the
- *             onboarding curtain. EXISTING saves are floored to 999 so veterans
- *             keep everything unlocked — the curtain is for brand-new souls only
- *             (a fresh New Game inits 0). A present value (incl. a fresh 0) is
- *             preserved; only a missing/garbage field defaults to 999.
+ *             onboarding curtain. A present value (incl. a fresh New Game's 0) is
+ *             preserved. A missing/garbage field is floored to 999 ONLY when the
+ *             save carries prior progression (cleared chapters, bought upgrades,
+ *             a finished game, a death, or a non-empty codex) — a real veteran,
+ *             never re-gated. With no such marker it's a fresh / wiped / partial
+ *             save → 0, so the curtain shows and elites lock until delve 5.
  *             (b) `seenTutorials` (default []) lets Phase-2 tutorials mark
  *             themselves shown once per soul.
  *  v13 → v14: Gear enhancement axis. Rolled items gained an optional `+N`
@@ -370,12 +372,28 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
     state.seenDialogueBeats = [];
   }
 
-  // v12 → v13: progressive-unlock ladder. A MISSING delveCount means a save
-  // that predates onboarding — floor it to 999 so the veteran keeps every
-  // feature unlocked. A present value (incl. a fresh game's 0) is preserved, so
-  // brand-new souls still see the curtain. seenTutorials defaults to [].
+  // v12 → v13: progressive-unlock ladder. A PRESENT delveCount (incl. a fresh
+  // game's 0) is preserved verbatim. A MISSING/garbage one is ambiguous: it can
+  // be a real pre-onboarding veteran OR a brand-new / wiped / partial save. Only
+  // a veteran carries prior progression — a cleared chapter, a bought upgrade, a
+  // finished game, a death, or a non-empty codex. With any such marker we floor
+  // to 999 so onboarding never re-gates a veteran; with NONE it's a fresh soul →
+  // 0, so the curtain shows and elites stay locked until delve 5. seenTutorials
+  // defaults to []. (Before this, a missing field always floored to 999, so a
+  // wiped save masqueraded as a 999-delve veteran and unlocked everything.)
   if (typeof state.delveCount !== 'number' || state.delveCount < 0) {
-    state.delveCount = 999;
+    const encounters = state.monsterEncounters;
+    const hasPriorProgression =
+      (typeof state.chaptersCleared === 'number' && state.chaptersCleared > 0) ||
+      Object.keys(unlockedUpgrades).length > 0 ||
+      state.gameCompleted === true ||
+      (typeof state.deathCount === 'number' && state.deathCount > 0) ||
+      (Array.isArray(state.discoveredMonsters) && state.discoveredMonsters.length > 0) ||
+      (!!encounters &&
+        typeof encounters === 'object' &&
+        !Array.isArray(encounters) &&
+        Object.keys(encounters as Record<string, unknown>).length > 0);
+    state.delveCount = hasPriorProgression ? 999 : 0;
   }
   if (!Array.isArray(state.seenTutorials)) {
     state.seenTutorials = [];
