@@ -75,6 +75,9 @@ const MonsterSummonSchema = z.object({
   maxActive: z.number().int().positive().optional(),
   /** If true, this monster summons at most once per encounter. */
   once: z.boolean().optional(),
+  /** Earliest round this summon may fire. Before it the monster takes a normal
+   *  action (e.g. an attack) instead of calling reinforcements. Default 1 (no delay). */
+  minRound: z.number().int().positive().optional(),
   /** Minimum rounds between summons (the picker alternates with attacks). Default 2. */
   cooldownRounds: z.number().int().positive().optional(),
   description: z.string().optional(),

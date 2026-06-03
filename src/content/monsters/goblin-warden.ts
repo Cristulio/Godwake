@@ -29,6 +29,7 @@ export const GOBLIN_WARDEN: Monster = MonsterSchema.parse({
       count: 1,
       maxActive: 1,
       once: true,
+      minRound: 2,
       description:
         'He sets two fingers to his teeth and whistles down the cell-row — and a goblin that had been hanging back comes scrambling to the blade.',
     },
