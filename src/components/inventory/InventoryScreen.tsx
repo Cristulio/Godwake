@@ -56,6 +56,21 @@ export function InventoryScreen() {
   const [dragInvalidSlot, setDragInvalidSlot] = useState<EquipSlot | null>(null);
   const [dragOverList, setDragOverList] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  // A tall tooltip (an epic with many affixes) anchored to a near-bottom row
+  // used to run off the viewport, spawn a page scrollbar, reflow the list, and
+  // re-fire the row's hover → an endless jitter. Anchor to whichever vertical
+  // side of the row has more room and cap the height to that space, so the
+  // absolute panel can never extend past the viewport.
+  const [tip, setTip] = useState<{ flip: boolean; maxH: number }>({ flip: false, maxH: 600 });
+
+  function placeTip(el: HTMLElement) {
+    const rect = el.getBoundingClientRect();
+    const pad = 12;
+    const below = window.innerHeight - rect.top - pad;
+    const above = rect.bottom - pad;
+    const flip = above > below;
+    setTip({ flip, maxH: Math.max(160, Math.floor(flip ? above : below)) });
+  }
 
   const ac = useMemo(() => (character ? computeAC(character) : 0), [character]);
   const critLabel = useMemo(() => {
@@ -200,7 +215,10 @@ export function InventoryScreen() {
                   onDragOver={(e) => handleSlotDragOver(e, s.slot)}
                   onDragLeave={() => setDragOverSlot((c) => (c === s.slot ? null : c))}
                   onDrop={(e) => handleSlotDrop(e, s.slot)}
-                  onMouseEnter={() => setHoverSlot(s.slot)}
+                  onMouseEnter={(e) => {
+                    setHoverSlot(s.slot);
+                    placeTip(e.currentTarget);
+                  }}
                   onMouseLeave={() => setHoverSlot((c) => (c === s.slot ? null : c))}
                   className={`
                     relative w-full min-h-[124px] p-3 border-2 transition-all
@@ -252,7 +270,10 @@ export function InventoryScreen() {
                     </div>
                   )}
                   {hoverSlot === s.slot && item && !isDragging && (
-                    <div className="absolute z-30 left-full top-0 ml-2 hidden md:block">
+                    <div
+                      className={`absolute z-30 left-full ml-2 hidden md:block pointer-events-none overflow-y-auto ${tip.flip ? 'bottom-0' : 'top-0'}`}
+                      style={{ maxHeight: tip.maxH }}
+                    >
                       <ItemTooltip
                         item={item}
                         rolled={ref?.rolled}
@@ -344,7 +365,10 @@ export function InventoryScreen() {
                       draggable={equippable && !equipped && !blocked}
                       onDragStart={(e) => handleDragStart(e, idx)}
                       onDragEnd={handleDragEnd}
-                      onMouseEnter={() => setHoverIdx(idx)}
+                      onMouseEnter={(e) => {
+                        setHoverIdx(idx);
+                        placeTip(e.currentTarget);
+                      }}
                       onMouseLeave={() => setHoverIdx((c) => (c === idx ? null : c))}
                       onClick={() => {
                         if (equippable && !equipped && !blocked) equipFromInventory(idx);
@@ -394,7 +418,10 @@ export function InventoryScreen() {
                         </div>
                       </div>
                       {hoverIdx === idx && !isDragging && (
-                        <div className="absolute z-30 left-full top-0 ml-2 hidden md:block">
+                        <div
+                          className={`absolute z-30 left-full ml-2 hidden md:block pointer-events-none overflow-y-auto ${tip.flip ? 'bottom-0' : 'top-0'}`}
+                          style={{ maxHeight: tip.maxH }}
+                        >
                           <ItemTooltip
                             item={item}
                             rolled={ref.rolled}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { DelveState } from '../../types/delve';
-import { getTwist } from '../../engine/delve';
+import { chapterLabel, getTwist } from '../../engine/delve';
 import { BlessingCard } from '../ui/BlessingCard';
 import { QuirkCard } from '../ui/QuirkCard';
 
@@ -23,6 +23,7 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
   const [open, setOpen] = useState(false);
   const total = blessingIds.length + quirkIds.length;
   const twist = getTwist(delve.rooms[delve.currentRoomIdx]?.twistId);
+  const chapter = delve.rooms[delve.currentRoomIdx]?.chapter;
 
   useEffect(() => {
     if (!open) return;
@@ -38,6 +39,7 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
       <div className="flex items-center justify-between gap-3">
         <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
           {delve.dungeonName}
+          {chapter ? ` · ${chapterLabel(delve, chapter)}` : ''}
         </div>
         {total > 0 && (
           <button

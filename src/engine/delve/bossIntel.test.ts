@@ -177,6 +177,19 @@ describe('boss intel rooms — choices', () => {
     );
     expect(after.character.boldApproachBosses).toEqual(['duergar-ilyich']);
   });
+
+  it('reports the walk-past reward as +10% gold (matches the applied 1.10x multiplier)', () => {
+    const after = applyEventOutcome(
+      dummyCharacter(),
+      {
+        resolution: '',
+        effects: [{ kind: 'mark_bold_approach', bossDefId: 'duergar-ilyich' }],
+      },
+      roller(),
+    );
+    const detail = after.effectsApplied.find((e) => e.kind === 'mark_bold_approach')?.detail;
+    expect(detail).toBe('+10% gold on the boss');
+  });
 });
 
 describe('boss intel — buff definitions', () => {

@@ -1,7 +1,7 @@
 import { useMemo, useState, type CSSProperties } from 'react';
 import type { Character } from '../../types/character';
 import type { DelveState, RoomKind, RoomSpec } from '../../types/delve';
-import { chapterMapNodes, getTwist } from '../../engine/delve';
+import { chapterLabel, chapterMapNodes, getTwist } from '../../engine/delve';
 import { useGameStore } from '../../stores/gameStore';
 import { playSfx } from '../../engine/audio';
 import { Button } from '../ui/Button';
@@ -123,7 +123,6 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
 
   const detail = hovered;
   const detailTwist = detail ? getTwist(detail.twistId) : undefined;
-  const chapterName = delve.rooms.find((r) => r.chapter === chapter && r.kind === 'boss')?.title;
 
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-5xl mx-auto flex flex-col gap-4 animate-fade-in">
@@ -133,8 +132,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
             Choose Your Road
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-            {delve.dungeonName} · Chapter {chapter}
-            {chapterName ? ` — toward ${chapterName}` : ''}
+            {delve.dungeonName} · {chapterLabel(delve, chapter)}
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
