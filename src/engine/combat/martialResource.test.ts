@@ -10,6 +10,7 @@ import {
   useMartialDisrupt,
   martialDefenseReduction,
   martialOffenseDamage,
+  martialOffenseAttackBonus,
   martialPoolMax,
   regenMartialPoolForRound,
   MARTIAL_POOL_MAX,
@@ -197,7 +198,7 @@ describe('Martial pool — mid-fight regen', () => {
 describe('Martial OFFENSE — heavy/aimed strike', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('adds the flat spike to the hit with NO accuracy cost (Fighter)', () => {
+  it("Fighter's Power Attack lands surer (+2 to hit) AND bites for +2 damage", () => {
     const init = createCombat({
       roller: createDiceRoller(5),
       character: fighter(1),
@@ -206,16 +207,19 @@ describe('Martial OFFENSE — heavy/aimed strike', () => {
     const goblin = monsters(init.state)[0];
     goblin.instance.ac = 2; // guarantee the hit so the breakdown is present
     const character: Character = { ...init.character, martialOffenseActive: true };
+
+    expect(martialOffenseAttackBonus(character)).toBe(2);
+    expect(martialOffenseDamage(character)).toBe(2);
+
     const { state } = playerAttack(
       { roller: createDiceRoller(5), character, state: init.state },
       goblin.id,
       'longsword',
     );
     const toHit = state.log.find((l) => /attacks .* with Longsword/.test(l.text))!;
-    // STR 16 (+3) + prof +2 = +5, with no accuracy cost.
-    expect(toHit.text).toMatch(/d20\+5 /);
-    const spike = martialOffenseDamage(character); // 6 at L1
-    expect(damageLines(state).some((t) => new RegExp(`\\+ ${spike} heavy`).test(t))).toBe(true);
+    // STR 16 (+3) + prof +2 = +5 base, plus the +2 Power Attack to-hit = +7.
+    expect(toHit.text).toMatch(/d20\+7 /);
+    expect(damageLines(state).some((t) => /\+ 2 heavy/.test(t))).toBe(true);
   });
 
   it("the Barbarian's offense cleaves into a second foe", () => {

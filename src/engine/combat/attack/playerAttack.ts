@@ -18,7 +18,11 @@ import {
   proficiencyBonus,
 } from '../../character/derived';
 import { rageDamageBonus } from '../../character/actions';
-import { martialOffenseDamage, MARTIAL_DISRUPT_STAGGER_TURNS } from '../martialResource';
+import {
+  martialOffenseDamage,
+  martialOffenseAttackBonus,
+  MARTIAL_DISRUPT_STAGGER_TURNS,
+} from '../martialResource';
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { monkKiSaveDC, monkFightsUnarmed, MONK_UNARMED_DAMAGE_EDGE } from '../monk';
 import { getMonster } from '../../../content/monsters';
@@ -147,10 +151,12 @@ export function playerAttack(
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   // Fighter Weapon Mastery (L9): +1 to hit on every weapon strike.
   if (characterHasMechanic(nextCharacter, 'weapon-mastery')) attackBonus += 1;
-  // Martial OFFENSE: a heavy/aimed strike that lands for flat bonus damage
-  // (applied in the hit block). The point was spent to set the stance, so
-  // there's no accuracy cost. Works melee or ranged (the Ranger's Aimed Shot).
+  // Martial OFFENSE: a heavy/aimed strike. For the Barbarian (Savage Cleave) and
+  // Ranger (Aimed Shot) it lands for flat bonus damage only (applied in the hit
+  // block), no accuracy cost. The Fighter's Power Attack also SHARPENS the swing
+  // — +2 to hit — so a class that misses often lands surer, not just harder.
   const offenseStrike = nextCharacter.martialOffenseActive === true;
+  if (offenseStrike) attackBonus += martialOffenseAttackBonus(nextCharacter);
   if (isFirstAttack) {
     attackBonus += quirkMods.firstTurnAttackBonus ?? 0;
     attackBonus += quirkMods.firstAttackPenalty ?? 0;
