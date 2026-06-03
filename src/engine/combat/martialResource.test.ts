@@ -313,6 +313,23 @@ describe('Martial DISRUPT — staggering strike', () => {
     expect(turn.state.log.some((l) => /knocked down — the turn is lost/.test(l.text))).toBe(true);
     expect(monsters(turn.state)[0].instance.staggeredTurns).toBe(0);
   });
+
+  it('a clean miss burns the armed stance — no stagger lands and the charge is lost', () => {
+    const init = createCombat({
+      roller: createDiceRoller(3),
+      character: barbarian(3),
+      monsters: [{ def: getMonster('hobgoblin') }],
+    });
+    const foe = monsters(init.state)[0];
+    foe.instance.ac = 99; // unhittable barring a nat-20 — force the whiff
+    const character: Character = { ...init.character, martialDisruptActive: true };
+    const roller = createDiceRoller(3);
+    const miss = playerAttack({ roller, character, state: init.state }, foe.id, 'greataxe');
+    expect(miss.state.lastAttack?.hit).toBe(false); // guard: the strike really missed
+    expect(miss.character.martialDisruptActive).toBe(false); // the spent point is gone
+    expect(monsters(miss.state)[0].instance.staggeredTurns ?? 0).toBe(0); // no stagger applied
+    expect(miss.state.log.some((l) => /staggering strike goes wide/.test(l.text))).toBe(true);
+  });
 });
 
 describe('Ranger Focus — rebalanced spend costs', () => {
