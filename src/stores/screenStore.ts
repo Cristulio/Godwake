@@ -60,6 +60,21 @@ interface ScreenStoreState {
    * fills this; App shows the head and dismissing it shifts to the next.
    */
   tutorialQueue: string[];
+  /**
+   * Onboarding (DELVE-COUNT axis) unlock cards — a soul opening up, rare affixes,
+   * elite nodes. Surfaced at the HUB before a descent and never over the delve
+   * (App gates this queue to the hub; the descent is held until it drains, see
+   * {@link pendingDescent}). Kept apart from {@link tutorialQueue}, which carries
+   * the in-delve reveals (chapter unlocks, first-gear) meant to fire mid-run.
+   * Session-only.
+   */
+  hubUnlockQueue: string[];
+  /**
+   * A descent is armed and waiting on {@link hubUnlockQueue} to drain: startDelve
+   * queued a hub unlock card and parked the screen at the hub instead of flipping
+   * to the delve. Dismissing the last hub card proceeds into the delve.
+   */
+  pendingDescent: boolean;
 
   setScreen: (screen: Screen) => void;
   goToTitle: () => void;
@@ -84,6 +99,12 @@ interface ScreenStoreState {
   enqueueTutorials: (ids: string[]) => void;
   /** Drop the current tutorial off the front of the queue (after it's dismissed). */
   shiftTutorial: () => void;
+  /** Append hub-surfaced unlock-card ids (delve-count axis), skipping any already queued. */
+  enqueueHubUnlocks: (ids: string[]) => void;
+  /** Drop the current hub unlock card; if it was the last and a descent is armed, enter the delve. */
+  shiftHubUnlock: () => void;
+  /** Park a descent at the hub so its just-queued unlock card(s) show before the delve. */
+  holdForHubUnlock: () => void;
   setPostmortem: (p: Postmortem | null) => void;
   clearPostmortem: () => void;
 }
@@ -97,6 +118,8 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
   tauntQueue: [],
   postmortem: null,
   tutorialQueue: [],
+  hubUnlockQueue: [],
+  pendingDescent: false,
 
   setScreen: (screen) => set({ screen }),
   goToTitle: () => set({ screen: 'title', newGamePlusFlow: false }),
@@ -140,6 +163,20 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
       return fresh.length ? { tutorialQueue: [...s.tutorialQueue, ...fresh] } : s;
     }),
   shiftTutorial: () => set((s) => ({ tutorialQueue: s.tutorialQueue.slice(1) })),
+  enqueueHubUnlocks: (ids) =>
+    set((s) => {
+      const fresh = ids.filter((id) => !s.hubUnlockQueue.includes(id));
+      return fresh.length ? { hubUnlockQueue: [...s.hubUnlockQueue, ...fresh] } : s;
+    }),
+  shiftHubUnlock: () =>
+    set((s) => {
+      const next = s.hubUnlockQueue.slice(1);
+      // Last hub card dismissed and a descent was parked here — proceed into the delve.
+      return next.length === 0 && s.pendingDescent
+        ? { hubUnlockQueue: next, screen: 'delve', pendingDescent: false }
+        : { hubUnlockQueue: next };
+    }),
+  holdForHubUnlock: () => set({ screen: 'hub', pendingDescent: true }),
   setPostmortem: (p) => set({ postmortem: p }),
   clearPostmortem: () => set({ postmortem: null }),
 }));

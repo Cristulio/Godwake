@@ -84,6 +84,8 @@ function App() {
   const markQuirksTutorialSeen = useGameStore((s) => s.markQuirksTutorialSeen);
   const tutorialQueue = useGameStore((s) => s.tutorialQueue);
   const dismissTutorial = useGameStore((s) => s.dismissTutorial);
+  const hubUnlockQueue = useGameStore((s) => s.hubUnlockQueue);
+  const dismissHubTutorial = useGameStore((s) => s.dismissHubTutorial);
 
   // Combat SFX reaction — fires spell/ability/enemy sounds off the combat
   // event stream regardless of which screen is mounted.
@@ -94,9 +96,16 @@ function App() {
   const showQuirksTutorial =
     hasReincarnated && !quirksTutorialSeen && !taunt && screen === 'hub';
 
-  // Reveal the next unlock tutorial (one at a time, queued on descent). Hold it
-  // behind any active taunt so two modals never stack.
+  // In-delve unlock reveals (chapter unlocks, first-gear) — fire mid-run and
+  // render over whatever screen is up. Held behind any active taunt so two
+  // modals never stack.
   const pendingUnlock = !taunt ? tutorialQueue[0] : undefined;
+  // Onboarding (delve-count) unlock cards are HUB-ONLY: a descent that crosses a
+  // threshold is parked at the hub until these are dismissed, so they never paint
+  // over the delve. Gate to the hub (like showQuirksTutorial) and hold behind a
+  // taunt or an in-delve card so at most one modal shows.
+  const pendingHubUnlock =
+    !taunt && !pendingUnlock && screen === 'hub' ? hubUnlockQueue[0] : undefined;
 
   let content;
   switch (screen) {
@@ -179,6 +188,11 @@ function App() {
       {pendingUnlock && (
         <Suspense fallback={null}>
           <UnlockTutorialCard featureId={pendingUnlock} onDismiss={dismissTutorial} />
+        </Suspense>
+      )}
+      {pendingHubUnlock && (
+        <Suspense fallback={null}>
+          <UnlockTutorialCard featureId={pendingHubUnlock} onDismiss={dismissHubTutorial} />
         </Suspense>
       )}
       <SettingsButton />

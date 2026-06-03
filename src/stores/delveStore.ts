@@ -66,7 +66,11 @@ function queueUnlockTutorials(
     (id) => id !== currentClassId && getTutorial(id) !== undefined,
   );
   const fresh = [...featureCards, ...classCards].filter((id) => !seen.includes(id));
-  if (fresh.length > 0) useScreenStore.getState().enqueueTutorials(fresh);
+  // Hub-surfaced (not in-delve): these onboarding reveals show at the hub before
+  // the descent, never over the delve. startDelve holds the screen flip while any
+  // are queued; App gates this queue to the hub. The in-delve chapter/first-gear
+  // reveals stay on the separate tutorialQueue.
+  if (fresh.length > 0) useScreenStore.getState().enqueueHubUnlocks(fresh);
 }
 
 /**
@@ -534,8 +538,16 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     meta.incrementDelveCount();
     // Reveal-on-unlock: fire a one-time tutorial for any feature this descent
     // just opened. Reads the post-increment count off the captured prev value.
+    // These are hub-surfaced (delve-count axis): if this descent crossed a
+    // threshold, hold at the hub so the card(s) show BEFORE the delve — the
+    // descent resumes into the delve once the last one is dismissed.
     queueUnlockTutorials(prevDelveCount, prevDelveCount + 1, withQuirkBudgets.classId);
-    useScreenStore.getState().setScreen('delve');
+    const screenStore = useScreenStore.getState();
+    if (screenStore.hubUnlockQueue.length > 0) {
+      screenStore.holdForHubUnlock();
+    } else {
+      screenStore.setScreen('delve');
+    }
     // The descent is the calm beat-trigger moment: drip the next story beat
     // (and any name reveal it carries) now that the delve counter is current.
     playNextLoreBeat();

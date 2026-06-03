@@ -108,6 +108,9 @@ function resetStores(extra: ResetSlices = {}) {
     introSeen: true,
     quirksTutorialSeen: false,
     taunt: null,
+    tutorialQueue: [],
+    hubUnlockQueue: [],
+    pendingDescent: false,
   });
 }
 
@@ -587,10 +590,17 @@ describe('startDelve — fresh descent resets run-scoped state', () => {
 describe('New Game+ run-launcher flow', () => {
   beforeEach(() => {
     resetStores();
-    // A completed soul sitting at the title.
+    // A completed soul sitting at the title — a veteran by now, so a descent
+    // crosses no onboarding (delve-count) unlock threshold and isn't parked at
+    // the hub to show an unlock card before the run starts.
     useCharacterStore.setState({ character: makeFighter({ quirks: [], renown: 80 }) });
     useDelveStore.setState({ delve: null });
-    useMetaStore.setState({ gameCompleted: true, ascensionUnlocked: 3, selectedAscension: 0 });
+    useMetaStore.setState({
+      gameCompleted: true,
+      ascensionUnlocked: 3,
+      selectedAscension: 0,
+      delveCount: 30,
+    });
     useScreenStore.setState({ screen: 'title', newGamePlusFlow: false });
   });
 

@@ -131,8 +131,10 @@ interface GameState {
     chapter?: number;
     line?: string;
   } | null;
-  /** Session-only queue of feature ids whose unlock tutorial is pending (head shows first). */
+  /** Session-only queue of in-delve unlock tutorials pending (chapter reveals, first-gear; head shows first). */
   tutorialQueue: string[];
+  /** Session-only queue of hub-surfaced unlock cards (delve-count axis); shown at the hub before a descent. */
+  hubUnlockQueue: string[];
   introSeen: boolean;
   hasReincarnated: boolean;
   deathCount: number;
@@ -220,6 +222,8 @@ interface GameState {
   dismissTaunt: () => void;
   /** Dismiss the head unlock tutorial: mark it seen (persisted) and shift the queue. */
   dismissTutorial: () => void;
+  /** Dismiss the head HUB unlock card: mark it seen and shift; the parked descent resumes once the last clears. */
+  dismissHubTutorial: () => void;
   markIntroSeen: () => void;
 
   // Codex
@@ -441,6 +445,8 @@ function scatterSnapshot(s: PersistedSnapshot) {
     newGamePlusFlow: false,
     taunt: null,
     tutorialQueue: [],
+    hubUnlockQueue: [],
+    pendingDescent: false,
     postmortem: null,
   });
   useDelveStore.setState({ delve: null });
@@ -554,6 +560,7 @@ export const useGameStore = create<GameState>()(
           newGamePlusFlow: sc.newGamePlusFlow,
           taunt: sc.taunt,
           tutorialQueue: sc.tutorialQueue,
+          hubUnlockQueue: sc.hubUnlockQueue,
           postmortem: sc.postmortem,
         });
       };
@@ -574,6 +581,7 @@ export const useGameStore = create<GameState>()(
         combat: useCombatStore.getState().combat,
         taunt: useScreenStore.getState().taunt,
         tutorialQueue: useScreenStore.getState().tutorialQueue,
+        hubUnlockQueue: useScreenStore.getState().hubUnlockQueue,
         introSeen: useScreenStore.getState().introSeen,
         hasReincarnated: useMetaStore.getState().hasReincarnated,
         deathCount: useMetaStore.getState().deathCount,
@@ -638,6 +646,8 @@ export const useGameStore = create<GameState>()(
             taunt: null,
             tauntQueue: [],
             tutorialQueue: [],
+            hubUnlockQueue: [],
+            pendingDescent: false,
             postmortem: null,
           });
         },
@@ -719,6 +729,13 @@ export const useGameStore = create<GameState>()(
           const head = sc.tutorialQueue[0];
           if (head) useMetaStore.getState().markTutorialSeen(head);
           sc.shiftTutorial();
+        },
+        dismissHubTutorial: () => {
+          const sc = useScreenStore.getState();
+          const head = sc.hubUnlockQueue[0];
+          if (head) useMetaStore.getState().markTutorialSeen(head);
+          // Resumes a parked descent into the delve when the last hub card clears.
+          sc.shiftHubUnlock();
         },
         markIntroSeen: async () => {
           useScreenStore.getState().setIntroSeen(true);
@@ -828,6 +845,8 @@ export const useGameStore = create<GameState>()(
               taunt: null,
               tauntQueue: [],
               tutorialQueue: [],
+              hubUnlockQueue: [],
+              pendingDescent: false,
               postmortem: null,
             });
           }
