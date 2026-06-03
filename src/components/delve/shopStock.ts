@@ -37,25 +37,25 @@ export function tierForChapter(chapter: number | undefined): CampBoonTier {
 }
 
 /**
- * The five-slot rarity mix the merchant lays out, by CHAPTER (1–14). The rack
- * climbs from green-heavy at the gate to all-purple in the deep chapters, so a
- * late-game merchant is visibly richer than an early one. The rarity ladder tops
- * out at purple (legendaries are the hub layer, never rolled onto shop stock), so
- * the mix saturates at all-purple from Ch8 on; deeper chapters keep climbing on
- * the OTHER axis — enhancement +N and base power via rollItem's depth, which
- * takes the raw chapter (10–14 included) uncapped. Indexed 1-based; clamp
- * out-of-range so 10–14 take the all-purple top row. Magnitudes are by judgment —
- * a sim pass tunes them.
+ * The four-slot rarity mix the merchant lays out, by CHAPTER (1–14). The rack
+ * trends richer with depth — the purple share and the top rarity climb — but it
+ * never saturates: every rack keeps at least two slots at white/green/blue, and
+ * purple is capped at one slot in the base mix (deep layers occasionally show a
+ * second, see rollGearStock) so the lower rarities are always on the rack. From
+ * Ch8 on the rarity SPREAD holds steady; deeper chapters keep climbing on the
+ * OTHER axis — enhancement +N and base power via rollItem's depth, which takes
+ * the raw chapter (10–14 included) uncapped. Indexed 1-based; clamp out-of-range
+ * so 10–14 take the Ch8 row. Magnitudes are by judgment — a sim pass tunes them.
  */
 const GEAR_RARITY_MIX_BY_CHAPTER: GearRarity[][] = [
-  ['green', 'green', 'green', 'blue', 'blue'], // ch1
-  ['green', 'green', 'blue', 'blue', 'blue'], // ch2
-  ['green', 'blue', 'blue', 'blue', 'purple'], // ch3
-  ['green', 'blue', 'blue', 'purple', 'purple'], // ch4
-  ['blue', 'blue', 'purple', 'purple', 'purple'], // ch5
-  ['blue', 'blue', 'purple', 'purple', 'purple'], // ch6
-  ['blue', 'purple', 'purple', 'purple', 'purple'], // ch7
-  ['purple', 'purple', 'purple', 'purple', 'purple'], // ch8–14 (rarity ceiling; depth still climbs)
+  ['white', 'white', 'green', 'green'], // ch1
+  ['white', 'green', 'green', 'blue'], // ch2
+  ['white', 'green', 'blue', 'blue'], // ch3
+  ['white', 'green', 'blue', 'blue'], // ch4
+  ['white', 'green', 'blue', 'purple'], // ch5
+  ['green', 'blue', 'blue', 'purple'], // ch6
+  ['green', 'blue', 'blue', 'purple'], // ch7
+  ['green', 'blue', 'blue', 'purple'], // ch8–14 (spread holds; depth still climbs)
 ];
 
 function gearRarityMixForChapter(chapter: number): GearRarity[] {
@@ -63,9 +63,14 @@ function gearRarityMixForChapter(chapter: number): GearRarity[] {
   return GEAR_RARITY_MIX_BY_CHAPTER[i];
 }
 
-/** Shop rarity ladder for depth promotion — capped at purple (legendaries are
- * the hub layer now, never rolled onto shop stock). */
-const SHOP_RARITY_LADDER: GearRarity[] = ['green', 'blue', 'purple'];
+/** Shop rarity ladder for depth promotion — white floor up to a purple ceiling
+ * (legendaries are the hub layer now, never rolled onto shop stock). */
+const SHOP_RARITY_LADDER: GearRarity[] = ['white', 'green', 'blue', 'purple'];
+
+/** The flattened rack never saturates to all-purple: at most this many of the
+ * four slots are purple, even when deep-layer promotion would push more. Keeps
+ * white/green/blue always present. */
+const MAX_PURPLE_PER_RACK = 2;
 
 function promoteRarity(rarity: GearRarity, steps: number): GearRarity {
   if (steps <= 0) return rarity;
@@ -87,13 +92,13 @@ export interface GearStock {
  *
  * `chapter` (1–14) is the power axis: it sets the rarity mix AND feeds rollItem's
  * depth (base tier + the +1/+2/+3 enhancement ceiling), so a deep-chapter rack
- * carries stronger, pricier arms. The rarity mix saturates at all-purple from
- * Ch8 on (purple is the shop ceiling); past that, depth alone keeps the endgame
- * rack climbing.
+ * carries stronger, pricier arms. The rarity SPREAD stops climbing at Ch8 (the
+ * mix flattens out); past that, depth alone keeps the endgame rack richer.
  *
  * `layer` is the node's column on the chapter map (`RoomSpec.layer`): deeper
  * shops within a chapter promote the weaker slots one rarity step, so a
- * late-chapter merchant stocks strictly richer than the one at the gate.
+ * late-chapter merchant stocks richer than the one at the gate — but purples stay
+ * capped (`MAX_PURPLE_PER_RACK`), so the rack never saturates to all-purple.
  */
 export function rollGearStock(
   seed: string,
@@ -103,10 +108,18 @@ export function rollGearStock(
   maxRarity: GearRarity = 'purple',
 ): GearStock[] {
   const roller = createDiceRoller(`${seed}:gear-shop`);
-  const promotions = Math.min(5, Math.floor(layer / 2));
-  return gearRarityMixForChapter(chapter).map((baseRarity, i) => {
+  const mix = gearRarityMixForChapter(chapter);
+  const promotions = Math.min(mix.length, Math.floor(layer / 2));
+  let purples = 0;
+  return mix.map((baseRarity, i) => {
     let rarity = promoteRarity(baseRarity, i < promotions ? 1 : 0);
     rarity = capRarity(rarity, maxRarity);
+    // Deep-layer promotion can push extra slots to purple; cap them so the rack
+    // never saturates and the lower rarities are always present.
+    if (rarity === 'purple') {
+      if (purples >= MAX_PURPLE_PER_RACK) rarity = 'blue';
+      else purples += 1;
+    }
     const ref = rollItem(
       roller,
       i === 1 ? { rarity, classId, kind: 'accessory', depth: chapter } : { rarity, classId, depth: chapter },
