@@ -117,22 +117,28 @@ export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'barbarian', 'ran
  * to it until it has logged enough delves to earn the others.
  *
  * Delve-paced so the roster opens on time served, not on a depth wall a green
- * soul may never reach. Ordered by how forgiving the class is to play, and
- * staggered so each new soul lands with room to breathe before the next:
- *  - two steady souls first (Fighter from the first delve, then Ranger), so a
- *    fresh walker banks a couple of even-keeled lives before the wild ones;
- *  - the harder bodies stagger deeper, so renown is banked to pad their
- *    fragility before one is worn — Wizard, then Barbarian, then Rogue, then
- *    Druid, then Monk last.
- * Editable data.
+ * soul may never reach. The three {@link STARTER_CLASSES} take the three LOWEST
+ * thresholds, so every starter unlocks before any non-starter body — a fresh
+ * walker fills out the easy, forgiving souls it could have forged first, before
+ * the game hands it a fragile one:
+ *  - the three starters first (Fighter from the first delve, then the other two
+ *    starters Ranger and Barbarian), so a walker banks even-keeled lives before
+ *    the wild ones;
+ *  - then the non-starter bodies, staggered deeper so renown is banked to pad
+ *    their fragility before one is worn — Wizard, then Rogue, then Druid, then
+ *    Monk last.
+ * Invariant: max(starter threshold) <= min(non-starter threshold) — see the
+ * unlocks test. Editable data.
  */
 export const CLASS_UNLOCK_DELVE: Record<ClassId, number> = {
-  // Two steady souls first — Fighter from the first life, Ranger close behind.
+  // The three starters take the three lowest thresholds, so every starter opens
+  // before any non-starter body — Fighter from the first life, then Ranger, then
+  // Barbarian.
   fighter: 0,
   ranger: 3,
-  // The harder souls, staggered deeper.
-  wizard: 6,
-  barbarian: 9,
+  barbarian: 6,
+  // The non-starter bodies, staggered deeper so renown pads their fragility.
+  wizard: 9,
   rogue: 12,
   // The Druid: a Wisdom caster whose survivability rides on Wild Shape rather
   // than armour — squishy in the bare-soul early game, like the Wizard before it.

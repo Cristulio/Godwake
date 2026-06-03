@@ -8,6 +8,7 @@ import {
   newlyUnlockedByChapter,
   newlyUnlockedClasses,
   isClassUnlocked,
+  CLASS_UNLOCK_DELVE,
   unlockedFeatures,
   nextLockedFeature,
   type ProgressionMeta,
@@ -132,6 +133,22 @@ describe('class unlocks (delve-count axis)', () => {
     expect([...STARTER_CLASSES].sort()).toEqual(['barbarian', 'fighter', 'ranger']);
   });
 
+  it('opens every starter before any non-starter (starters-first invariant)', () => {
+    // The three STARTER_CLASSES must take the three lowest thresholds, so the
+    // swap screen never offers a non-starter body before a starter one is still
+    // locked. Guards against the old Fighter>Ranger>Wizard>Barbarian ordering,
+    // where Barbarian (a starter) opened after Wizard (a non-starter).
+    const starterSet = new Set<string>(STARTER_CLASSES);
+    const entries = Object.entries(CLASS_UNLOCK_DELVE);
+    const starterMax = Math.max(
+      ...entries.filter(([id]) => starterSet.has(id)).map(([, t]) => t),
+    );
+    const nonStarterMin = Math.min(
+      ...entries.filter(([id]) => !starterSet.has(id)).map(([, t]) => t),
+    );
+    expect(starterMax).toBeLessThanOrEqual(nonStarterMin);
+  });
+
   it('opens Fighter from the first delve, the rest staggered behind', () => {
     // Fighter is available from delve 0; the other two starters are reached via
     // STARTER_CLASSES at the wheel but still gate-locked until their thresholds.
@@ -143,10 +160,11 @@ describe('class unlocks (delve-count axis)', () => {
   it('staggers the souls across delve counts (3 / 6 / 9 / 12 / 15 / 18)', () => {
     expect(isClassUnlocked('ranger', 2)).toBe(false);
     expect(isClassUnlocked('ranger', 3)).toBe(true);
-    expect(isClassUnlocked('wizard', 5)).toBe(false);
-    expect(isClassUnlocked('wizard', 6)).toBe(true);
-    expect(isClassUnlocked('barbarian', 8)).toBe(false);
-    expect(isClassUnlocked('barbarian', 9)).toBe(true);
+    // Barbarian (a starter) opens at 6, before the first non-starter Wizard at 9.
+    expect(isClassUnlocked('barbarian', 5)).toBe(false);
+    expect(isClassUnlocked('barbarian', 6)).toBe(true);
+    expect(isClassUnlocked('wizard', 8)).toBe(false);
+    expect(isClassUnlocked('wizard', 9)).toBe(true);
     expect(isClassUnlocked('rogue', 11)).toBe(false);
     expect(isClassUnlocked('rogue', 12)).toBe(true);
     expect(isClassUnlocked('druid', 14)).toBe(false);
@@ -161,8 +179,8 @@ describe('class unlocks (delve-count axis)', () => {
 
   it('reports the alternate(s) whose delve threshold a descent just crossed', () => {
     expect(newlyUnlockedClasses(2, 3)).toEqual(['ranger']);
-    expect(newlyUnlockedClasses(5, 6)).toEqual(['wizard']);
-    expect(newlyUnlockedClasses(8, 9)).toEqual(['barbarian']);
+    expect(newlyUnlockedClasses(5, 6)).toEqual(['barbarian']);
+    expect(newlyUnlockedClasses(8, 9)).toEqual(['wizard']);
     expect(newlyUnlockedClasses(11, 12)).toEqual(['rogue']);
     expect(newlyUnlockedClasses(14, 15)).toEqual(['druid']);
     expect(newlyUnlockedClasses(17, 18)).toEqual(['monk']);
