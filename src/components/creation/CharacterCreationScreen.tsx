@@ -13,7 +13,9 @@ import {
 import type { SkillName } from '../../types/skills';
 import {
   isClassUnlocked,
-  classUnlockDelve,
+  classUnlockRenown,
+  relativeClassOrder,
+  SLOT_RENOWN_THRESHOLDS,
   STARTER_CLASSES,
 } from '../../engine/progression/unlocks';
 
@@ -113,11 +115,11 @@ export function CharacterCreationScreen() {
   const newGamePlusFlow = useGameStore((s) => s.newGamePlusFlow);
   const selectedAscension = useGameStore((s) => s.selectedAscension);
   const existing = useGameStore((s) => s.character);
-  const delveCount = useGameStore((s) => s.delveCount);
+  const renownSpent = useGameStore((s) => s.renownSpent);
   const originClass = useGameStore((s) => s.originClass);
   // The starter the soul forged anchors the RELATIVE unlock ladder. Before one is
   // stamped (first creation) fall back to the worn body, then to fighter — the
-  // non-starter thresholds (9/12/15/18) are origin-invariant, so a fresh soul's
+  // non-starter bars (200/300/450/600) are origin-invariant, so a fresh soul's
   // sealed cards read correctly whichever default is used.
   const soulOrigin = originClass ?? existing?.classId ?? 'fighter';
 
@@ -131,17 +133,23 @@ export function CharacterCreationScreen() {
 
   // Selectability has two regimes:
   //  - First creation: a fresh soul may forge ONLY one of the three easy starters;
-  //    the rest show as sealed, earned later by clearing chapters.
+  //    the rest show as sealed, earned later by spending renown at the Grove.
   //  - Hub swap: the body already worn is always selectable, plus any class the
-  //    soul has logged enough delves to unlock. The rest stay sealed.
+  //    soul has spent enough renown to unlock. The rest stay sealed.
   const isSelectable = (classId: ClassId) =>
     isSwap
-      ? classId === existing?.classId || isClassUnlocked(classId, delveCount, soulOrigin)
+      ? classId === existing?.classId || isClassUnlocked(classId, renownSpent, soulOrigin)
       : STARTER_CLASSES.includes(classId);
 
   const allOptions = useMemo(buildSoulOptions, []);
-  const options = allOptions.filter((o) => isSelectable(o.classId));
-  const sealedOptions = allOptions.filter((o) => !isSelectable(o.classId));
+  // Present every soul in the origin's unlock order: the worn origin first, then
+  // the rest in the order the renown-spent ladder opens them (slots 2..7).
+  const ordered = useMemo(() => {
+    const order = relativeClassOrder(soulOrigin);
+    return [...allOptions].sort((a, b) => order.indexOf(a.classId) - order.indexOf(b.classId));
+  }, [allOptions, soulOrigin]);
+  const options = ordered.filter((o) => isSelectable(o.classId));
+  const sealedOptions = ordered.filter((o) => !isSelectable(o.classId));
   const [selectedClassId, setSelectedClassId] = useState<ClassId | null>(null);
   const selected = options.find((o) => o.classId === selectedClassId) ?? null;
 
@@ -275,11 +283,12 @@ export function CharacterCreationScreen() {
           );
         })}
         {/* Souls not yet open to this walker show as sealed placeholders, each
-            naming the delve count at which it will wake — and how many turns of
-            the wheel remain — so the path to it is never a mystery. */}
+            naming the renown it must be given at the Wellspring before it wakes —
+            and how much remains — so the path to it is never a mystery. */}
         {sealedOptions.map((o) => {
-          const threshold = classUnlockDelve(o.classId, soulOrigin);
-          const remaining = Math.max(0, threshold - delveCount);
+          const threshold = classUnlockRenown(o.classId, soulOrigin);
+          const firstOffering = threshold === SLOT_RENOWN_THRESHOLDS[0];
+          const remaining = Math.max(0, threshold - renownSpent);
           return (
             <div
               key={o.classId}
@@ -292,18 +301,25 @@ export function CharacterCreationScreen() {
                 {o.className}
               </div>
               <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
-                This soul will not wake until the wheel has turned for you{' '}
-                {threshold} {threshold === 1 ? 'time' : 'times'}.
-                {remaining > 0 && (
+                {firstOffering ? (
+                  'This soul stirs the moment you first lay tribute at the Wellspring of the Grove.'
+                ) : (
                   <>
-                    {' '}
-                    {remaining} {remaining === 1 ? 'more descent' : 'more descents'} and it is
-                    yours to wear.
+                    This soul will not wake until you have given {threshold} Renown to the
+                    Wellspring.
+                    {remaining > 0 && (
+                      <>
+                        {' '}
+                        {remaining} more to spend and it is yours to wear.
+                      </>
+                    )}
                   </>
                 )}
               </p>
               <div className="text-[var(--color-accent-amber)] text-[9px] uppercase tracking-widest mt-auto">
-                Unlocks at delve {threshold}
+                {firstOffering
+                  ? 'After your first offering'
+                  : `Unlocks at ${threshold} renown spent`}
               </div>
             </div>
           );

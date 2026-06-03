@@ -9,7 +9,9 @@ import {
   newlyUnlockedByChapter,
   newlyUnlockedClasses,
   isClassUnlocked,
-  classUnlockDelve,
+  classUnlockRenown,
+  relativeClassOrder,
+  SLOT_RENOWN_THRESHOLDS,
   unlockedFeatures,
   nextLockedFeature,
   type ProgressionMeta,
@@ -129,7 +131,12 @@ describe('newlyUnlockedByChapter (progression axis)', () => {
   });
 });
 
-describe('class unlocks (relative to the origin starter)', () => {
+describe('class unlocks (relative to the origin starter, paced by renown spent)', () => {
+  /** The classes unlocked for `origin` after `spent` renown, in the origin's order. */
+  function unlockedAt(origin: 'fighter' | 'wizard' | 'ranger', spent: number) {
+    return relativeClassOrder(origin).filter((c) => isClassUnlocked(c, spent, origin));
+  }
+
   it('lets a fresh soul forge exactly the three starters: fighter, wizard (Mage), ranger (Hunter)', () => {
     expect([...STARTER_CLASSES].sort()).toEqual(['fighter', 'ranger', 'wizard']);
     // Barbarian is no longer a starter — it is sealed at first creation now,
@@ -138,81 +145,121 @@ describe('class unlocks (relative to the origin starter)', () => {
     expect(NON_STARTER_ORDER).toEqual(['barbarian', 'rogue', 'druid', 'monk']);
   });
 
-  it('keeps the origin always unlocked at delve 0 — the worn body is yours, whichever it is', () => {
+  it('exposes the slot bars: first offering (>0), then 100 / 200 / 300 / 450 / 600', () => {
+    expect(SLOT_RENOWN_THRESHOLDS).toEqual([1, 100, 200, 300, 450, 600]);
+  });
+
+  it('keeps the origin always unlocked at 0 renown — the worn body is yours, whichever it is', () => {
     for (const origin of STARTER_CLASSES) {
-      expect(classUnlockDelve(origin, origin)).toBe(0);
+      expect(classUnlockRenown(origin, origin)).toBe(0);
       expect(isClassUnlocked(origin, 0, origin)).toBe(true);
     }
   });
 
-  it('origin=wizard: fighter & ranger open at 3 / 6, the non-starters at 9 / 12 / 15 / 18', () => {
-    expect(classUnlockDelve('fighter', 'wizard')).toBe(3);
-    expect(classUnlockDelve('ranger', 'wizard')).toBe(6);
-    expect(classUnlockDelve('barbarian', 'wizard')).toBe(9);
-    expect(classUnlockDelve('rogue', 'wizard')).toBe(12);
-    expect(classUnlockDelve('druid', 'wizard')).toBe(15);
-    expect(classUnlockDelve('monk', 'wizard')).toBe(18);
-    // Boundary behaviour through isClassUnlocked.
-    expect(isClassUnlocked('fighter', 2, 'wizard')).toBe(false);
-    expect(isClassUnlocked('fighter', 3, 'wizard')).toBe(true);
-    expect(isClassUnlocked('ranger', 5, 'wizard')).toBe(false);
-    expect(isClassUnlocked('ranger', 6, 'wizard')).toBe(true);
-    expect(isClassUnlocked('monk', 17, 'wizard')).toBe(false);
-    expect(isClassUnlocked('monk', 18, 'wizard')).toBe(true);
+  it('per-origin ORDER: Fighter leads for a Mage/Hunter origin; ranger/wizard swap for a Fighter origin', () => {
+    expect(relativeClassOrder('fighter')).toEqual(
+      ['fighter', 'ranger', 'wizard', 'barbarian', 'rogue', 'druid', 'monk'],
+    );
+    expect(relativeClassOrder('wizard')).toEqual(
+      ['wizard', 'fighter', 'ranger', 'barbarian', 'rogue', 'druid', 'monk'],
+    );
+    expect(relativeClassOrder('ranger')).toEqual(
+      ['ranger', 'fighter', 'wizard', 'barbarian', 'rogue', 'druid', 'monk'],
+    );
   });
 
-  it('origin=fighter: wizard & ranger open at 3 / 6, the non-starters at 9 / 12 / 15 / 18', () => {
-    expect(classUnlockDelve('wizard', 'fighter')).toBe(3);
-    expect(classUnlockDelve('ranger', 'fighter')).toBe(6);
-    expect(classUnlockDelve('barbarian', 'fighter')).toBe(9);
-    expect(classUnlockDelve('rogue', 'fighter')).toBe(12);
-    expect(classUnlockDelve('druid', 'fighter')).toBe(15);
-    expect(classUnlockDelve('monk', 'fighter')).toBe(18);
+  it('origin=fighter: ranger on first spend, wizard@100, then barbarian/rogue/druid/monk', () => {
+    expect(classUnlockRenown('fighter', 'fighter')).toBe(0);
+    expect(classUnlockRenown('ranger', 'fighter')).toBe(1);
+    expect(classUnlockRenown('wizard', 'fighter')).toBe(100);
+    expect(classUnlockRenown('barbarian', 'fighter')).toBe(200);
+    expect(classUnlockRenown('rogue', 'fighter')).toBe(300);
+    expect(classUnlockRenown('druid', 'fighter')).toBe(450);
+    expect(classUnlockRenown('monk', 'fighter')).toBe(600);
+    // renownSpent 0 unlocks only fighter; each bar adds exactly the next soul.
+    expect(unlockedAt('fighter', 0)).toEqual(['fighter']);
+    expect(unlockedAt('fighter', 1)).toEqual(['fighter', 'ranger']);
+    expect(unlockedAt('fighter', 100)).toEqual(['fighter', 'ranger', 'wizard']);
+    expect(unlockedAt('fighter', 200)).toEqual(['fighter', 'ranger', 'wizard', 'barbarian']);
+    expect(unlockedAt('fighter', 300)).toEqual(
+      ['fighter', 'ranger', 'wizard', 'barbarian', 'rogue'],
+    );
+    expect(unlockedAt('fighter', 450)).toEqual(
+      ['fighter', 'ranger', 'wizard', 'barbarian', 'rogue', 'druid'],
+    );
+    expect(unlockedAt('fighter', 600)).toEqual(
+      ['fighter', 'ranger', 'wizard', 'barbarian', 'rogue', 'druid', 'monk'],
+    );
+    // Boundary behaviour: a bar opens AT its value, not one short.
+    expect(isClassUnlocked('ranger', 0, 'fighter')).toBe(false);
+    expect(isClassUnlocked('ranger', 1, 'fighter')).toBe(true);
+    expect(isClassUnlocked('wizard', 99, 'fighter')).toBe(false);
+    expect(isClassUnlocked('wizard', 100, 'fighter')).toBe(true);
+    expect(isClassUnlocked('monk', 599, 'fighter')).toBe(false);
+    expect(isClassUnlocked('monk', 600, 'fighter')).toBe(true);
   });
 
-  it('origin=ranger: fighter & wizard open at 3 / 6, the non-starters at 9 / 12 / 15 / 18', () => {
-    expect(classUnlockDelve('fighter', 'ranger')).toBe(3);
-    expect(classUnlockDelve('wizard', 'ranger')).toBe(6);
-    expect(classUnlockDelve('barbarian', 'ranger')).toBe(9);
-    expect(classUnlockDelve('rogue', 'ranger')).toBe(12);
-    expect(classUnlockDelve('druid', 'ranger')).toBe(15);
-    expect(classUnlockDelve('monk', 'ranger')).toBe(18);
+  it('origin=wizard: fighter at the first purchase, ranger@100, then the non-starters', () => {
+    expect(classUnlockRenown('fighter', 'wizard')).toBe(1);
+    expect(classUnlockRenown('ranger', 'wizard')).toBe(100);
+    expect(classUnlockRenown('barbarian', 'wizard')).toBe(200);
+    expect(classUnlockRenown('rogue', 'wizard')).toBe(300);
+    expect(classUnlockRenown('druid', 'wizard')).toBe(450);
+    expect(classUnlockRenown('monk', 'wizard')).toBe(600);
+    expect(unlockedAt('wizard', 0)).toEqual(['wizard']);
+    expect(unlockedAt('wizard', 1)).toEqual(['wizard', 'fighter']);
+    expect(unlockedAt('wizard', 100)).toEqual(['wizard', 'fighter', 'ranger']);
+    expect(unlockedAt('wizard', 600)).toEqual(
+      ['wizard', 'fighter', 'ranger', 'barbarian', 'rogue', 'druid', 'monk'],
+    );
   });
 
-  it('the unplayable cleric stays a 999 placeholder for every origin', () => {
+  it('origin=ranger: fighter at the first purchase, wizard@100, then the non-starters', () => {
+    expect(classUnlockRenown('fighter', 'ranger')).toBe(1);
+    expect(classUnlockRenown('wizard', 'ranger')).toBe(100);
+    expect(classUnlockRenown('barbarian', 'ranger')).toBe(200);
+    expect(classUnlockRenown('rogue', 'ranger')).toBe(300);
+    expect(classUnlockRenown('druid', 'ranger')).toBe(450);
+    expect(classUnlockRenown('monk', 'ranger')).toBe(600);
+    expect(unlockedAt('ranger', 1)).toEqual(['ranger', 'fighter']);
+    expect(unlockedAt('ranger', 100)).toEqual(['ranger', 'fighter', 'wizard']);
+  });
+
+  it('the unplayable cleric never opens for any origin (Infinity bar)', () => {
     for (const origin of STARTER_CLASSES) {
-      expect(classUnlockDelve('cleric', origin)).toBe(999);
+      expect(classUnlockRenown('cleric', origin)).toBe(Infinity);
+      expect(isClassUnlocked('cleric', 1_000_000, origin)).toBe(false);
     }
   });
 
   it('INVARIANT: every starter unlocks before every non-starter, for every origin', () => {
     for (const origin of STARTER_CLASSES) {
-      const starterThresholds = STARTER_CLASSES.map((c) => classUnlockDelve(c, origin));
-      const nonStarterThresholds = NON_STARTER_ORDER.map((c) => classUnlockDelve(c, origin));
-      expect(Math.max(...starterThresholds)).toBeLessThan(Math.min(...nonStarterThresholds));
+      const starterBars = STARTER_CLASSES.map((c) => classUnlockRenown(c, origin));
+      const nonStarterBars = NON_STARTER_ORDER.map((c) => classUnlockRenown(c, origin));
+      expect(Math.max(...starterBars)).toBeLessThan(Math.min(...nonStarterBars));
     }
   });
 
-  it('reports the soul whose relative threshold a descent just crossed (origin=fighter)', () => {
-    expect(newlyUnlockedClasses(2, 3, 'fighter')).toEqual(['wizard']);
-    expect(newlyUnlockedClasses(5, 6, 'fighter')).toEqual(['ranger']);
-    expect(newlyUnlockedClasses(8, 9, 'fighter')).toEqual(['barbarian']);
-    expect(newlyUnlockedClasses(11, 12, 'fighter')).toEqual(['rogue']);
-    expect(newlyUnlockedClasses(14, 15, 'fighter')).toEqual(['druid']);
-    expect(newlyUnlockedClasses(17, 18, 'fighter')).toEqual(['monk']);
+  it('reports the soul whose renown-spent bar a Grove purchase just crossed (origin=fighter)', () => {
+    expect(newlyUnlockedClasses(0, 1, 'fighter')).toEqual(['ranger']);
+    expect(newlyUnlockedClasses(1, 100, 'fighter')).toEqual(['wizard']);
+    expect(newlyUnlockedClasses(100, 200, 'fighter')).toEqual(['barbarian']);
+    expect(newlyUnlockedClasses(200, 300, 'fighter')).toEqual(['rogue']);
+    expect(newlyUnlockedClasses(300, 450, 'fighter')).toEqual(['druid']);
+    expect(newlyUnlockedClasses(450, 600, 'fighter')).toEqual(['monk']);
   });
 
-  it('reorders the early reveals by origin — a wizard soul opens the Fighter at delve 3', () => {
-    expect(newlyUnlockedClasses(2, 3, 'wizard')).toEqual(['fighter']);
-    expect(newlyUnlockedClasses(5, 6, 'wizard')).toEqual(['ranger']);
+  it('reorders the early reveals by origin — a wizard soul opens the Fighter on its first spend', () => {
+    expect(newlyUnlockedClasses(0, 1, 'wizard')).toEqual(['fighter']);
+    expect(newlyUnlockedClasses(1, 100, 'wizard')).toEqual(['ranger']);
   });
 
-  it('returns every threshold crossed in a multi-step jump, in ladder order', () => {
-    expect(newlyUnlockedClasses(0, 9, 'fighter')).toEqual(['wizard', 'ranger', 'barbarian']);
+  it('returns every bar crossed in one big spend, in ladder order', () => {
+    expect(newlyUnlockedClasses(0, 200, 'fighter')).toEqual(['ranger', 'wizard', 'barbarian']);
   });
 
-  it('never reports the origin itself as newly unlocked (it is worn from delve 0)', () => {
-    expect(newlyUnlockedClasses(0, 18, 'wizard')).not.toContain('wizard');
+  it('never reports the origin itself as newly unlocked (it is worn from 0 renown)', () => {
+    expect(newlyUnlockedClasses(0, 600, 'wizard')).not.toContain('wizard');
   });
 
   it('every roster soul has a reveal card; the unplayable cleric does not', () => {

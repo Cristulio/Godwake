@@ -4,6 +4,7 @@ import { CharacterCreationScreen } from './CharacterCreationScreen';
 import { useGameStore } from '../../stores/gameStore';
 import { useMetaStore } from '../../stores/metaStore';
 import { getClass } from '../../content/classes';
+import { buildPlayerCharacter, presetCreationInput } from '../../engine/character/defaultCharacter';
 
 function resetStore() {
   // No existing character = first-life creation (commit → intro), not a swap.
@@ -16,9 +17,10 @@ function resetStore() {
     hasReincarnated: false,
     deathCount: 0,
   });
-  // originClass is write-once and lives in the metaStore (a singleton across
-  // tests in this file) — clear it so each first-creation case stamps fresh.
-  useMetaStore.setState({ originClass: null });
+  // originClass is write-once and renownSpent paces the class ladder — both live
+  // in the metaStore (a singleton across tests in this file). Clear them so each
+  // first-creation case starts from a fresh, unspent soul.
+  useMetaStore.setState({ originClass: null, renownSpent: 0 });
 }
 
 describe('CharacterCreationScreen — selection', () => {
@@ -41,7 +43,29 @@ describe('CharacterCreationScreen — selection', () => {
     expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /lureth oakshadow/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /shen ironroot/i })).not.toBeInTheDocument();
-    expect(screen.getAllByText(/unlocks at delve/i).length).toBe(4);
+    // The four sealed non-starters (barbarian/rogue/druid/monk) sit at 200/300/
+    // 450/600 renown spent for every origin — none is the first-offering slot.
+    expect(screen.getAllByText(/unlocks at \d+ renown spent/i).length).toBe(4);
+  });
+
+  it('renders sealed souls in the origin order, each naming its renown-spent bar (origin=wizard swap)', () => {
+    // A wizard-origin soul mid-swap with nothing spent yet: only the worn Mage is
+    // choosable; the other six are sealed in the wizard order — Fighter first (on
+    // the first offering), then Hunter@100, then the non-starters at 200..600.
+    useGameStore.setState({ character: buildPlayerCharacter(presetCreationInput('wizard')) });
+    useMetaStore.setState({ originClass: 'wizard', renownSpent: 0 });
+    render(<CharacterCreationScreen />);
+    const bars = screen
+      .getAllByText(/renown spent|after your first offering/i)
+      .map((el) => el.textContent);
+    expect(bars).toEqual([
+      'After your first offering',
+      'Unlocks at 100 renown spent',
+      'Unlocks at 200 renown spent',
+      'Unlocks at 300 renown spent',
+      'Unlocks at 450 renown spent',
+      'Unlocks at 600 renown spent',
+    ]);
   });
 
   it('has no point-buy or multi-step controls', () => {

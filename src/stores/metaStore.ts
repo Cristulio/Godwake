@@ -32,6 +32,15 @@ interface MetaStoreState {
    */
   delveCount: number;
   /**
+   * Cumulative RENOWN ever SPENT on Grove upgrades (account-level, survives
+   * reincarnation like delveCount). Incremented by the purchase cost every time
+   * renown is deducted in purchaseUpgrade. Drives the RELATIVE class-unlock ladder
+   * (engine/progression/unlocks.ts): alternate souls open as this crosses the slot
+   * bars (first offering, then 100 / 200 / 300 / 450 / 600). A brand-new soul
+   * starts at 0; older saves default to 0 (no back-credit for past spends).
+   */
+  renownSpent: number;
+  /**
    * The starter archetype the soul ORIGINALLY forged (fighter / wizard / ranger),
    * stamped once at first creation and never overwritten — it survives every
    * reincarnation. Anchors the RELATIVE class-unlock ladder
@@ -199,6 +208,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   hasReincarnated: false,
   deathCount: 0,
   delveCount: 0,
+  renownSpent: 0,
   originClass: null,
   discoveredMonsters: [],
   monsterEncounters: {},
@@ -302,6 +312,8 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     useCharacterStore.getState().setCharacter(next);
     set({
       unlockedUpgrades: { ...get().unlockedUpgrades, [upgradeId]: nextRank },
+      // Cumulative renown spent paces the class-unlock ladder — credit this spend.
+      renownSpent: get().renownSpent + cost,
     });
     return { ok: true };
   },
@@ -409,6 +421,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       hasReincarnated: false,
       deathCount: 0,
       delveCount: 0,
+      renownSpent: 0,
       originClass: null,
       discoveredMonsters: [],
       monsterEncounters: {},

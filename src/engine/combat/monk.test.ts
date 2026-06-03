@@ -14,7 +14,7 @@ import {
   isMonkWeaponId,
 } from './monk';
 import {
-  classUnlockDelve,
+  classUnlockRenown,
   STARTER_CLASSES,
   isClassUnlocked,
 } from '../progression/unlocks';
@@ -143,14 +143,14 @@ describe('Monk — class definition + registry', () => {
   });
 });
 
-describe('Monk — delve-18 unlock (not a starter)', () => {
-  it('is sealed until eighteen delves are logged (last non-starter, origin-invariant)', () => {
-    // Always the deepest rung — delve 18 — whichever starter the soul forged.
-    expect(classUnlockDelve('monk', 'fighter')).toBe(18);
-    expect(classUnlockDelve('monk', 'wizard')).toBe(18);
+describe('Monk — renown-600 unlock (not a starter)', () => {
+  it('is sealed until 600 renown has been spent (last non-starter, origin-invariant)', () => {
+    // Always the deepest rung — 600 renown spent — whichever starter the soul forged.
+    expect(classUnlockRenown('monk', 'fighter')).toBe(600);
+    expect(classUnlockRenown('monk', 'wizard')).toBe(600);
     expect(STARTER_CLASSES).not.toContain('monk');
-    expect(isClassUnlocked('monk', 17, 'fighter')).toBe(false);
-    expect(isClassUnlocked('monk', 18, 'fighter')).toBe(true);
+    expect(isClassUnlocked('monk', 599, 'fighter')).toBe(false);
+    expect(isClassUnlocked('monk', 600, 'fighter')).toBe(true);
   });
 });
 

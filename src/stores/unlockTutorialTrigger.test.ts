@@ -140,17 +140,18 @@ describe('delve-count unlocks surface at the HUB, never over the delve', () => {
     expect(after.pendingDescent).toBe(false);
   });
 
-  it('holds the descent until EVERY crossed unlock is dismissed', () => {
-    primeSoul(2); // 2 -> 3 crosses affixes-rare (@3) AND the Mage soul (class @3 for a fighter origin)
+  it('queues only the FEATURE card on a descent — class reveals moved off the delve axis', () => {
+    // 2 -> 3 crosses affixes-rare (@3). The Mage soul used to ride this very step
+    // on the old delve ladder; it now opens on RENOWN SPENT (a Grove purchase), so
+    // the descent must no longer queue it — only the feature card shows, and
+    // dismissing that single card releases the held descent.
+    primeSoul(2);
     descend();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['affixes-rare', 'wizard']);
+    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['affixes-rare']);
+    expect(useScreenStore.getState().hubUnlockQueue).not.toContain('wizard');
     expect(useScreenStore.getState().screen).toBe('hub');
 
     useGameStore.getState().dismissHubTutorial(); // affixes-rare
-    expect(useScreenStore.getState().screen).toBe('hub'); // still parked for the Mage card
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['wizard']);
-
-    useGameStore.getState().dismissHubTutorial(); // wizard
     expect(useScreenStore.getState().screen).toBe('delve');
     expect(useScreenStore.getState().pendingDescent).toBe(false);
   });
@@ -183,5 +184,49 @@ describe('screenStore tutorial queue', () => {
     useScreenStore.setState({ tutorialQueue: ['grove', 'legendaries'] });
     useScreenStore.getState().shiftTutorial();
     expect(useScreenStore.getState().tutorialQueue).toEqual(['legendaries']);
+  });
+});
+
+describe('class reveals fire on RENOWN SPENT (a Grove purchase), not on a descent', () => {
+  /** A fighter-origin soul at the Grove with renown to spend and nothing unlocked. */
+  function primeGroveSoul(renownSpent = 0, seenTutorials: string[] = []) {
+    useCharacterStore.setState({ character: makeFighter({ renown: 1000 }), saveSeed: null });
+    useScreenStore.setState({
+      screen: 'druid-grove',
+      tutorialQueue: [],
+      hubUnlockQueue: [],
+      pendingDescent: false,
+    });
+    // Fighter origin: the Hunter opens on the first offering (>0), the Mage at 100.
+    useMetaStore.setState({
+      originClass: 'fighter',
+      renownSpent,
+      seenTutorials,
+      unlockedUpgrades: {},
+      ascensionUnlocked: 0,
+      druidGroveUnlocked: true,
+    });
+  }
+
+  it('the first Grove offering surfaces the first alternate soul (Hunter for a fighter origin)', () => {
+    primeGroveSoul();
+    const res = useGameStore.getState().purchaseUpgrade('pilgrims-boots'); // 25 renown — clears the >0 bar
+    expect(res.ok).toBe(true);
+    expect(useMetaStore.getState().renownSpent).toBe(25);
+    // Surfaces on the general tutorial queue (pops at the Grove), not the hub-descent queue.
+    expect(useScreenStore.getState().tutorialQueue).toContain('ranger');
+    expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
+  });
+
+  it('does not re-surface a soul already in seenTutorials', () => {
+    primeGroveSoul(0, ['ranger']);
+    useGameStore.getState().purchaseUpgrade('pilgrims-boots');
+    expect(useScreenStore.getState().tutorialQueue).not.toContain('ranger');
+  });
+
+  it('crossing no new class bar surfaces nothing (already past the first offering)', () => {
+    primeGroveSoul(50); // already > 0: the Hunter is open, nothing new at this spend
+    useGameStore.getState().purchaseUpgrade('pilgrims-boots'); // 50 -> 75, no bar between
+    expect(useScreenStore.getState().tutorialQueue).toEqual([]);
   });
 });
