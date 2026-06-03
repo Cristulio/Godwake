@@ -12,7 +12,7 @@ const FRESH_STARTER: CombatIntroGate = {
 describe('combatIntroEligible — first-combat coach gate', () => {
   it('fires on a brand-new soul’s first combat, for every starter class', () => {
     expect(combatIntroEligible(FRESH_STARTER)).toBe(true);
-    expect(combatIntroEligible({ ...FRESH_STARTER, classId: 'barbarian' })).toBe(true);
+    expect(combatIntroEligible({ ...FRESH_STARTER, classId: 'wizard' })).toBe(true);
     expect(combatIntroEligible({ ...FRESH_STARTER, classId: 'ranger' })).toBe(true);
   });
 
@@ -27,7 +27,7 @@ describe('combatIntroEligible — first-combat coach gate', () => {
   });
 
   it('never fires for a non-starter class', () => {
-    expect(combatIntroEligible({ ...FRESH_STARTER, classId: 'wizard' })).toBe(false);
+    expect(combatIntroEligible({ ...FRESH_STARTER, classId: 'barbarian' })).toBe(false);
     expect(combatIntroEligible({ ...FRESH_STARTER, classId: 'rogue' })).toBe(false);
     expect(combatIntroEligible({ ...FRESH_STARTER, classId: 'druid' })).toBe(false);
   });
