@@ -295,7 +295,17 @@ function reincarnateSoul(character: Character): Character {
   const newQuirks = rollReincarnationQuirks(carry);
 
   const meta = useMetaStore.getState();
+  const firstReincarnation = !meta.hasReincarnated;
   meta.setHasReincarnated(true);
+  // The Druid Grove opens the first time the wheel hauls the soul back: Renown
+  // only means something once there's a life-after to spend it on. Fire its
+  // one-time reveal here, on that first return — not on an early delve step (it
+  // is no longer delve-gated, see engine/progression/unlocks.ts). Seen-once via
+  // seenTutorials; the `firstReincarnation` guard keeps veterans (already past
+  // their first death) from ever re-triggering it.
+  if (firstReincarnation && !meta.seenTutorials.includes('grove')) {
+    useScreenStore.getState().enqueueTutorials(['grove']);
+  }
   // The soul-bond name reveals are no longer wired to the wheel — they now ride
   // the progressive lore arc (content/loreBeats.ts): Imoen introduces herself in
   // an early beat, the antagonist is not named until the post-Chapter-2 beat. A

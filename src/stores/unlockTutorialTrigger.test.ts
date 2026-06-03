@@ -46,9 +46,15 @@ describe('unlock-tutorial trigger (startDelve)', () => {
   });
 
   it('queues the feature whose threshold the descent crosses', () => {
-    primeSoul(1); // 1 -> 2 crosses grove (@2)
+    primeSoul(4); // 4 -> 5 crosses elite-nodes (@5), with no class unlock there
     descend();
-    expect(useScreenStore.getState().tutorialQueue).toEqual(['grove']);
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['elite-nodes']);
+  });
+
+  it('never queues the Grove on a descent — it is reincarnation-gated now', () => {
+    primeSoul(1); // crossing the old delve-2 step must no longer fire the Grove
+    descend();
+    expect(useScreenStore.getState().tutorialQueue).not.toContain('grove');
   });
 
   it('queues nothing on a descent that crosses no threshold', () => {
@@ -58,7 +64,7 @@ describe('unlock-tutorial trigger (startDelve)', () => {
   });
 
   it('never re-fires a tutorial already in seenTutorials', () => {
-    primeSoul(1, ['grove']); // 1 -> 2 would cross grove, but it's already seen
+    primeSoul(4, ['elite-nodes']); // 4 -> 5 would cross elite-nodes, but it's already seen
     descend();
     expect(useScreenStore.getState().tutorialQueue).toEqual([]);
   });

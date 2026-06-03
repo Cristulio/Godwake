@@ -10,6 +10,7 @@ import { useMetaStore } from './metaStore';
 import { useScreenStore } from './screenStore';
 import { useCombatStore } from './combatStore';
 import { createGodwakeDelve, getAscensionLevel, MAX_ASCENSION, TOTAL_CHAPTERS } from '../engine/delve';
+import { isFeatureUnlocked } from '../engine/progression/unlocks';
 import { setActiveRoller } from '../engine/dice';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
 import { presetCreationInput } from '../engine/character/defaultCharacter';
@@ -271,6 +272,63 @@ describe('delveStore.failDelve — reincarnation', () => {
     useDelveStore.getState().failDelve();
 
     expect(char().quirks.length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe('delveStore — Druid Grove arrives at the first reincarnation', () => {
+  beforeEach(() => {
+    setActiveRoller('grove-intro-seed');
+    seedRun({ quirks: [] });
+    useScreenStore.setState({ tutorialQueue: [] });
+    useMetaStore.setState({ seenTutorials: [] });
+  });
+
+  it('is locked before the first death and unlocked after the first reincarnation', () => {
+    // A fresh soul: never died, no legacy flag.
+    expect(useMetaStore.getState().hasReincarnated).toBe(false);
+    expect(isFeatureUnlocked('grove', useMetaStore.getState())).toBe(false);
+
+    useDelveStore.getState().failDelve();
+
+    expect(useMetaStore.getState().hasReincarnated).toBe(true);
+    expect(isFeatureUnlocked('grove', useMetaStore.getState())).toBe(true);
+  });
+
+  it('enqueues the grove tutorial exactly once, on the first death', () => {
+    useDelveStore.getState().failDelve();
+
+    const queue = useScreenStore.getState().tutorialQueue;
+    expect(queue.filter((id) => id === 'grove')).toEqual(['grove']);
+
+    // A later death does not replay it: mark it seen (as the dismiss would) and
+    // clear the session queue, then die again — the wheel has already turned.
+    useMetaStore.getState().markTutorialSeen('grove');
+    useScreenStore.setState({ tutorialQueue: [] });
+    useDelveStore.getState().failDelve();
+    expect(useScreenStore.getState().tutorialQueue).not.toContain('grove');
+  });
+
+  it('does NOT enqueue the grove tutorial on the old delve-2 descent', () => {
+    // Crossing the former delve-2 threshold must no longer fire the Grove card —
+    // it rides the reincarnation event now, not the onboarding ladder.
+    useMetaStore.setState({ delveCount: 1, hasReincarnated: false, seenTutorials: [] });
+    useScreenStore.setState({ tutorialQueue: [] });
+
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+
+    expect(useScreenStore.getState().tutorialQueue).not.toContain('grove');
+  });
+
+  it('a veteran who already turned the wheel never re-triggers the grove card', () => {
+    // hasReincarnated already true, the card already seen: a clear-driven
+    // reincarnation must stay silent.
+    useMetaStore.setState({ hasReincarnated: true, seenTutorials: ['grove'] });
+    useScreenStore.setState({ tutorialQueue: [] });
+    setDelve({ phase: 'completed', currentRoomIdx: 36 });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(useScreenStore.getState().tutorialQueue).not.toContain('grove');
   });
 });
 

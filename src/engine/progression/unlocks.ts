@@ -54,6 +54,13 @@ export interface UnlockCondition {
    */
   chaptersCleared?: number;
   /**
+   * Reincarnation gate: opens the first time the soul dies and the wheel turns
+   * ({@link ProgressionMeta.hasReincarnated}). Reserved for the Grove — it sells
+   * permanence BETWEEN lives, so it stays curtained until the player has died
+   * once and come back with Renown to spend (see {@link UNLOCKS}.grove).
+   */
+  reincarnated?: boolean;
+  /**
    * Optional legacy boolean on the meta that ALSO satisfies this gate. Reconciles
    * a pre-existing unlock flag so the helper never contradicts an unlock the
    * player already earned by the old path (see the `grove` / `druidGroveUnlocked`
@@ -63,17 +70,22 @@ export interface UnlockCondition {
 }
 
 /**
- * The ladder. TWO axes by design:
+ * The ladder. THREE triggers by design:
  *  - DELVE COUNT (onboarding): the early reveals a fresh soul needs to stand a
  *    chance, before they've cleared a single chapter.
  *  - CHAPTERS CLEARED (progression/mastery): the power unlocks. The game is hard;
  *    reaching a new depth is what opens the next advantage, culminating in relic
  *    sets at game completion (the full fourteen-chapter chain).
+ *  - FIRST REINCARNATION (the Grove alone): the renown shop sits BETWEEN lives,
+ *    so it opens the first time the soul dies and the wheel hauls it back.
  * All editable data — tune freely, keep the shape.
  */
 export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
+  // The Grove opens at the FIRST reincarnation — it trades Renown for permanence
+  // between lives, useless until the soul has died once and come back. The legacy
+  // flag keeps any veteran who earned it the old way (renown) unlocked.
+  grove: { reincarnated: true, legacyFlag: 'druidGroveUnlocked' },
   // Onboarding reveals — delve-count paced.
-  grove: { delveCount: 2, legacyFlag: 'druidGroveUnlocked' },
   'affixes-rare': { delveCount: 3 },
   'elite-nodes': { delveCount: 5 },
   // Power unlocks — earned by clearing deeper chapters.
@@ -159,6 +171,14 @@ export interface ProgressionMeta {
   delveCount: number;
   chaptersCleared: number;
   druidGroveUnlocked: boolean;
+  /**
+   * Has the soul died and turned the wheel at least once? Gates the Grove (see
+   * {@link UNLOCKS}.grove). Optional so the many call sites that only probe
+   * delve/chapter features need not thread it; metaStore (a structural superset)
+   * supplies the real value, and the one UI that gates the Grove (HubScreen)
+   * passes it through.
+   */
+  hasReincarnated?: boolean;
 }
 
 /** Is `featureId` available given the soul's current meta? Ungated ids are always true. */
@@ -169,6 +189,7 @@ export function isFeatureUnlocked(featureId: FeatureId, meta: ProgressionMeta): 
   if (cond.chaptersCleared !== undefined && meta.chaptersCleared >= cond.chaptersCleared) {
     return true;
   }
+  if (cond.reincarnated && meta.hasReincarnated) return true;
   if (cond.legacyFlag && meta[cond.legacyFlag]) return true;
   return false;
 }
@@ -205,20 +226,35 @@ export function unlockedFeatures(meta: ProgressionMeta): FeatureId[] {
   return FEATURE_IDS.filter((id) => isFeatureUnlocked(id, meta));
 }
 
+/** A locked feature surfaced as a "next unlock at…" hint (numeric-threshold axes only). */
+export interface LockedFeatureHint {
+  featureId: FeatureId;
+  axis: 'delve' | 'chapter';
+  threshold: number;
+}
+
 /**
  * The next still-locked feature, the axis it opens on, and its threshold (lowest
  * threshold first within each axis, delve-gated reveals preferred), or null when
- * everything is unlocked. Drives an optional "next unlock at…" UI hint.
+ * everything is unlocked. Drives an optional "next unlock at…" UI hint. Event-
+ * gated features (the Grove's first-reincarnation trigger) carry no numeric
+ * threshold, so they are omitted from the hint.
  */
 export function nextLockedFeature(
   meta: ProgressionMeta,
-): { featureId: FeatureId; axis: 'delve' | 'chapter'; threshold: number } | null {
-  const locked = FEATURE_IDS.filter((id) => !isFeatureUnlocked(id, meta)).map((id) => {
-    const cond = UNLOCKS[id];
-    return cond.delveCount !== undefined
-      ? { featureId: id, axis: 'delve' as const, threshold: cond.delveCount }
-      : { featureId: id, axis: 'chapter' as const, threshold: cond.chaptersCleared ?? Infinity };
-  });
+): LockedFeatureHint | null {
+  const locked = FEATURE_IDS.filter((id) => !isFeatureUnlocked(id, meta)).flatMap(
+    (id): LockedFeatureHint[] => {
+      const cond = UNLOCKS[id];
+      if (cond.delveCount !== undefined) {
+        return [{ featureId: id, axis: 'delve', threshold: cond.delveCount }];
+      }
+      if (cond.chaptersCleared !== undefined) {
+        return [{ featureId: id, axis: 'chapter', threshold: cond.chaptersCleared }];
+      }
+      return [];
+    },
+  );
   if (locked.length === 0) return null;
   // Onboarding reveals (delve axis) come first, then the lowest threshold.
   return locked.reduce((lo, f) => {
