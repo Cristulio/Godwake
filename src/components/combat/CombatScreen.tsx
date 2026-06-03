@@ -42,6 +42,7 @@ import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
 import { TurnOrderTracker } from './TurnOrderTracker';
 import { playMusic, stopMusic, playSfx, type MusicId } from '../../engine/audio';
+import { useBlockingModalOpen } from '../ui/useInputBlock';
 
 interface CombatScreenProps {
   character: Character;
@@ -76,6 +77,9 @@ export function CombatScreen({
   const setAutoBattle = useSettingsStore((s) => s.setAutoBattle);
   const [selectingTarget, setSelectingTarget] = useState(false);
   const [overlayActive, setOverlayActive] = useState(false);
+  // A blocking reveal/notice (IrenicusTaunt, UnlockTutorialCard, etc.) is up —
+  // freeze every auto-advance timer behind it so the fight doesn't auto-play.
+  const blockingModalOpen = useBlockingModalOpen();
   const [shake, setShake] = useState<'hard' | 'soft' | null>(null);
   const [screenFlash, setScreenFlash] = useState<'player-crit' | 'enemy-crit' | null>(null);
   const [confirmAbandon, setConfirmAbandon] = useState(false);
@@ -192,6 +196,7 @@ export function CombatScreen({
   // Monster turns auto-advance with timing that respects speed multiplier
   useEffect(() => {
     if (state.status !== 'active') return;
+    if (blockingModalOpen) return;
     if (isPlayerTurn(state)) return;
     const currentId = state.turnOrder[state.currentTurnIndex];
 
@@ -226,7 +231,7 @@ export function CombatScreen({
       clearTimeout(advanceTimer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.currentTurnIndex, state.status]);
+  }, [state.currentTurnIndex, state.status, blockingModalOpen]);
 
   // Auto-end the player's turn when their action and any usable bonus are spent.
   // Disabled while Auto-Battle drives the turn — that loop ends the turn itself.
@@ -235,6 +240,7 @@ export function CombatScreen({
     if (state.status !== 'active') return;
     if (!isPlayerTurn(state)) return;
     if (overlayActive) return;
+    if (blockingModalOpen) return;
     if (!character.actionEconomy.actionUsed) return;
 
     const hasUsableBonus =
@@ -308,6 +314,7 @@ export function CombatScreen({
     character.hp.current,
     state.currentTurnIndex,
     overlayActive,
+    blockingModalOpen,
     autoBattle,
     // Re-run when the spell flow opens/closes so the mid-spell-pick guard above
     // actually cancels a pending auto-end instead of letting it fire under the
@@ -327,6 +334,7 @@ export function CombatScreen({
     if (state.status !== 'active') return;
     if (!isPlayerTurn(state)) return;
     if (overlayActive) return;
+    if (blockingModalOpen) return;
     if (
       selectingTarget ||
       markingTarget ||
@@ -380,6 +388,7 @@ export function CombatScreen({
     state,
     character,
     overlayActive,
+    blockingModalOpen,
     selectingTarget,
     markingTarget,
     pickingItem,

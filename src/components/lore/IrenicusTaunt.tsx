@@ -481,7 +481,6 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
   }
 
   const isIrenicus = speaker === 'irenicus';
-  const sideClass = isIrenicus ? 'justify-end' : 'justify-start';
   const accentClass = isIrenicus
     ? 'text-[var(--color-accent-blood)]'
     : 'text-[var(--color-accent-amber)]';
@@ -518,7 +517,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
       tabIndex={-1}
       role="dialog"
       aria-modal="true"
-      className={`fixed inset-0 z-50 flex items-end ${sideClass} bg-[var(--color-bg-base)]/85 p-4 md:p-10 animate-fade-in outline-none`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/85 p-4 md:p-10 animate-fade-in outline-none`}
       onClick={handleClick}
       onMouseDown={() => setHolding(true)}
       onMouseUp={() => setHolding(false)}
