@@ -306,9 +306,12 @@ describe('migrateV1ToV2 — v12 → v13 progressive-unlock ladder', () => {
     // The curtain is ON: elites and the Grove stay locked for a brand-new soul.
     expect(isFeatureUnlocked('elite-nodes', meta)).toBe(false);
     expect(isFeatureUnlocked('grove', meta)).toBe(false);
-    // Sanity: the old 999 floor would have opened both.
+    // Sanity: the 999 floor still opens the delve-paced reveals (elites)...
     expect(isFeatureUnlocked('elite-nodes', { ...meta, delveCount: 999 })).toBe(true);
-    expect(isFeatureUnlocked('grove', { ...meta, delveCount: 999 })).toBe(true);
+    // ...but the Grove no longer rides delve count — it is reincarnation-gated now,
+    // so a 999 floor alone does NOT open it; the legacy flag (or a reincarnation) does.
+    expect(isFeatureUnlocked('grove', { ...meta, delveCount: 999 })).toBe(false);
+    expect(isFeatureUnlocked('grove', { ...meta, druidGroveUnlocked: true })).toBe(true);
   });
 
   it('preserves a present delveCount, including a fresh-game 0', () => {

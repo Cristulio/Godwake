@@ -26,7 +26,7 @@ export function HubScreen() {
   const activeLegendaries = useGameStore((s) => s.activeLegendaries);
   const delveCount = useGameStore((s) => s.delveCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
-  const progressionMeta = { delveCount, chaptersCleared, druidGroveUnlocked };
+  const progressionMeta = { delveCount, chaptersCleared, druidGroveUnlocked, hasReincarnated };
   const groveUnlocked = isFeatureUnlocked('grove', progressionMeta);
   const legendariesUnlocked = isFeatureUnlocked('legendaries', progressionMeta);
   const elitesEnabled = isFeatureUnlocked('elite-nodes', progressionMeta);
