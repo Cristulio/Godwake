@@ -674,7 +674,7 @@ function liveOneLife(
 ): { outcome: LifeOutcome; finalCharacter: Character; newLegendaries: string[] } {
   let character = descend(roller, soul);
   const delveSeed = ((seedBase + lifeIdx * 7919) ^ (soul.classId.charCodeAt(0) * 1009)) >>> 0;
-  const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension });
+  const delve = createGodwakeDelve({ seed: delveSeed, ascension: soul.ascension, fullChain: true });
   let bossesKilled = 0;
   let mobsKilled = 0;
   let finalRoomIdx = 0;

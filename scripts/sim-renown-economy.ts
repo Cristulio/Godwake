@@ -101,7 +101,7 @@ for (const a of [0, 1, 2, 3, 4, 5, 6]) {
 
 // ── Competent full-clear run: route ONE path through a fresh delve to the end ──
 function routeFullClear(seed: number): { rooms: number; mobs: number; bosses: number } {
-  const delve = createGodwakeDelve({ seed, ascension: 0 });
+  const delve = createGodwakeDelve({ seed, ascension: 0, fullChain: true });
   const byId = new Map(delve.rooms.map((r) => [r.id, r] as const));
   let curId: string | undefined = delve.rooms[0]?.id;
   const guard = new Set<string>();

@@ -1,4 +1,5 @@
 import type { DelveState, RoomSpec } from '../../types/delve';
+import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from './constants';
 import { createRng, randomSeed } from '../dice/rng';
 import { clampAscension, ascensionEliteVariants, ascensionDungeonTwists } from './ascension';
 import { rollRoomTwist } from './twists';
@@ -229,6 +230,14 @@ export interface GodwakeDelveOptions {
   seed?: number;
   /** Ascension level to play this run at (0 = base). Scales enemies + payout. */
   ascension?: number;
+  /**
+   * Build the full New Game+ chain (all {@link TOTAL_CHAPTERS} = 14 chapters,
+   * Cells→Irenicus→Throne) instead of the base game. Default false: a base run
+   * spans only the Cells→Irenicus arc ({@link BASE_GAME_CHAPTERS} = 11 chapters
+   * + 10 camp seams), ending on Irenicus. NG+ extends it through Yaga-Shura,
+   * Abazigal and Melissan. Set true only by the post-completion NG+ launcher.
+   */
+  fullChain?: boolean;
   /**
    * Whether elite nodes are unlocked for this soul. When false, elite nodes are
    * still laid out and rendered — greyed and unselectable (`locked`) — rather
@@ -1751,11 +1760,12 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
 ];
 
 /**
- * Length of the continuous chain. Clearing this many chapter bosses in one run
- * means the whole chain fell to Melissan (Ch14) — the condition the first-clear
- * ending capstone gates on (delveStore.finishDelve).
+ * Chapter-count constants, re-exported for consumers that import them from the
+ * delve barrel. TOTAL_CHAPTERS (14) is the full NG+ chain to Melissan;
+ * BASE_GAME_CHAPTERS (11) is where the base game ends, on Irenicus. finishDelve
+ * fires the win against the delve's OWN chapterCount, not these globals.
  */
-export { TOTAL_CHAPTERS } from './constants';
+export { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS };
 
 const GODWAKE_CAMPS: RoomFlavor[] = [
   {
@@ -1863,14 +1873,23 @@ export function createGodwakeDelve(
 
   const elitesEnabled = opts.elitesEnabled ?? true;
   const ascension = clampAscension(opts.ascension ?? 0);
-  const chapters = GODWAKE_CHAPTERS.map((c) =>
+  // Base run = the Cells→Irenicus arc (11 chapters); New Game+ = the full chain
+  // to the Throne (14). Slice chapters AND camps together: the chain needs
+  // exactly chapterCount-1 camp seams between bosses or the room graph silently
+  // disconnects — the build stays green and only the reachability test catches
+  // it (camp-seam invariant).
+  const chapterCount = opts.fullChain ? TOTAL_CHAPTERS : BASE_GAME_CHAPTERS;
+  const chapters = GODWAKE_CHAPTERS.slice(0, chapterCount).map((c) =>
     buildChapterNodes(rng, c, nextEvent, elitesEnabled, ascension),
   );
-  const camps = GODWAKE_CAMPS.map((f, i) => campNode(`camp-${i + 1}`, i + 1, f));
+  const camps = GODWAKE_CAMPS.slice(0, chapterCount - 1).map((f, i) =>
+    campNode(`camp-${i + 1}`, i + 1, f),
+  );
 
   // Stitch the chapters together through the camp seams: each chapter boss
-  // points at its camp, each camp at the next chapter's entry node. The final
-  // boss (Melissan, Ch14) is left terminal.
+  // points at its camp, each camp at the next chapter's entry node. The run's
+  // final boss (Irenicus at Ch11 for a base run, Melissan at Ch14 for NG+) is
+  // left terminal.
   const rooms: RoomSpec[] = [];
   chapters.forEach((nodes, i) => {
     rooms.push(...nodes);
@@ -1884,8 +1903,14 @@ export function createGodwakeDelve(
 
   const entry = rooms[0];
   return {
-    dungeonName: 'Godwake — From the Cells to the Spider',
+    // The base game bookends in Irenicus's domain — out of his Iron Cells, down
+    // into the Pit of his own hell. New Game+ runs the road past it, all the way
+    // to the empty Throne of Bhaal.
+    dungeonName: opts.fullChain
+      ? 'Godwake — From the Cells to the Throne'
+      : 'Godwake — From the Cells to the Pit',
     chapterId: 'godwake',
+    chapterCount,
     rooms,
     currentRoomIdx: 0,
     currentRoomId: entry.id,

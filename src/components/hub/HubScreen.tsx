@@ -22,6 +22,7 @@ export function HubScreen() {
   const hasReincarnated = useGameStore((s) => s.hasReincarnated);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
   const selectedAscension = useGameStore((s) => s.selectedAscension);
+  const newGamePlusActive = useGameStore((s) => s.newGamePlusActive);
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const activeLegendaries = useGameStore((s) => s.activeLegendaries);
   const delveCount = useGameStore((s) => s.delveCount);
@@ -61,7 +62,14 @@ export function HubScreen() {
     // descend so it stays out of the initial bundle.
     const createGodwakeDelve = await loadDelveFactory();
     if (!createGodwakeDelve) return; // chunk load failed — recovery reload in flight
-    const delve = createGodwakeDelve({ ascension: selectedAscension, elitesEnabled });
+    // A New Game+ campaign builds the full Cells→Throne chain on every descent,
+    // including these post-death hub re-descents; a base campaign builds only the
+    // Cells→Irenicus arc.
+    const delve = createGodwakeDelve({
+      ascension: selectedAscension,
+      elitesEnabled,
+      fullChain: newGamePlusActive,
+    });
     startDelve(delve);
   }
 

@@ -103,6 +103,24 @@ interface MetaStoreState {
    * fresh base New Game. Persisted.
    */
   selectedAscension: number;
+  /**
+   * Is the CURRENT campaign a New Game+ run? Set when the soul descends through
+   * the post-completion NG+ launcher (selectCharacterAndDescend); cleared by a
+   * fresh base New Game. Drives whether each descent — including the post-death
+   * hub re-descents — builds the base Cells→Irenicus chain (11 chapters) or the
+   * full chain to the Throne (14). Distinct from {@link gameCompleted}, the
+   * PERMANENT mastery flag: a veteran can start a base New Game with NG+ still
+   * unlocked on the title. Persisted, so the campaign mode survives a hub reload.
+   */
+  newGamePlusActive: boolean;
+  /**
+   * Whether the soul has felled Melissan at the Throne (the NG+ capstone) at
+   * least once. Gates the one-time Throne ending and, exactly as
+   * {@link gameCompleted} does for the base Irenicus ending, doubles as the
+   * re-entry breaker the ending screen's finishDelve() relies on. Permanent
+   * mastery: survives reincarnation and a New Game, reset only by save deletion.
+   */
+  throneCompleted: boolean;
 
   discoverMonster: (defId: string) => void;
   recordMonsterDefeat: (defId: string) => void;
@@ -152,6 +170,10 @@ interface MetaStoreState {
    * ending capstone has played; idempotent. Unlocks the title's New Game+ entry.
    */
   markGameCompleted: () => void;
+  /** Record the Throne (Melissan / NG+ capstone) felled — gates the Throne ending. */
+  markThroneCompleted: () => void;
+  /** Mark the current campaign a New Game+ run (full chain) or a base run. */
+  setNewGamePlusActive: (active: boolean) => void;
   /** Set the run's ascension level, clamped to 0..ascensionUnlocked. */
   setSelectedAscension: (level: number) => void;
   resetMeta: () => void;
@@ -178,6 +200,8 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   activeLegendaries: [],
   gameCompleted: false,
   selectedAscension: 0,
+  newGamePlusActive: false,
+  throneCompleted: false,
 
   discoverMonster: (defId) =>
     set((s) => {
@@ -351,6 +375,11 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   markGameCompleted: () =>
     set((s) => (s.gameCompleted ? s : { gameCompleted: true })),
 
+  markThroneCompleted: () =>
+    set((s) => (s.throneCompleted ? s : { throneCompleted: true })),
+
+  setNewGamePlusActive: (active) => set({ newGamePlusActive: active }),
+
   setSelectedAscension: (level) =>
     set((s) => ({
       selectedAscension: Math.max(0, Math.min(Math.floor(level), s.ascensionUnlocked)),
@@ -378,5 +407,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       activeLegendaries: [],
       gameCompleted: false,
       selectedAscension: 0,
+      newGamePlusActive: false,
+      throneCompleted: false,
     }),
 }));

@@ -9,7 +9,12 @@ import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore } from './screenStore';
 import { useCombatStore } from './combatStore';
-import { createGodwakeDelve, getAscensionLevel, MAX_ASCENSION, TOTAL_CHAPTERS } from '../engine/delve';
+import {
+  createGodwakeDelve,
+  getAscensionLevel,
+  MAX_ASCENSION,
+  TOTAL_CHAPTERS,
+} from '../engine/delve';
 import { isFeatureUnlocked } from '../engine/progression/unlocks';
 import { setActiveRoller } from '../engine/dice';
 import type { RoomSpec } from '../types/delve';
@@ -63,6 +68,8 @@ function seedRun(overrides: Partial<Character> = {}) {
     chaptersCleared: 0,
     chapter1Cleared: false,
     druidGroveUnlocked: false,
+    gameCompleted: false,
+    throneCompleted: false,
     knownNpcs: [],
   });
   useScreenStore.setState({ screen: 'delve' });
@@ -151,14 +158,22 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     return idx;
   }
 
+  /** Seed a run on the FULL chain — the Melissan capstone only exists there
+   *  (base ends at Irenicus, Ch11). */
+  function seedCapstoneRun(overrides: Partial<Character> = {}) {
+    const c = seedRun(overrides);
+    useDelveStore.setState({ delve: createGodwakeDelve({ seed: 1, fullChain: true }) });
+    return c;
+  }
+
   beforeEach(() => {
     setActiveRoller('ending-seed');
-    seedRun({ quirks: [] });
+    seedCapstoneRun({ quirks: [] });
     useMetaStore.setState({ gameCompleted: false });
   });
 
   it('records completion at the WIN MOMENT, then detours to the ending before settling', () => {
-    seedRun({ quirks: [], level: 6, renown: 0 });
+    seedCapstoneRun({ quirks: [], level: 6, renown: 0 });
     useMetaStore.setState({ gameCompleted: false });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
@@ -176,7 +191,7 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
   });
 
   it('concluding the flavor ending (finishDelve re-entry) runs the normal clear path', () => {
-    seedRun({ quirks: [], level: 6, renown: 0 });
+    seedCapstoneRun({ quirks: [], level: 6, renown: 0 });
     useMetaStore.setState({ gameCompleted: false });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
@@ -201,7 +216,8 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
   });
 
   it('does NOT replay the ending on a later full clear', () => {
-    useMetaStore.setState({ gameCompleted: true });
+    // A veteran who already felled the Throne — the capstone must not replay.
+    useMetaStore.setState({ gameCompleted: true, throneCompleted: true });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
     useDelveStore.getState().finishDelve();

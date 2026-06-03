@@ -6,6 +6,7 @@ import {
   REST_MAX_GAP,
   REST_MIN_SPACING,
   TOTAL_CHAPTERS,
+  BASE_GAME_CHAPTERS,
 } from './createDelve';
 import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
 import { getMonster } from '../../content/monsters';
@@ -13,8 +14,10 @@ import { getBossIntelCard, BOSS_INTEL_CARDS } from '../../content/bossIntel';
 import type { DelveState, RoomSpec } from '../../types/delve';
 
 describe('createGodwakeDelve', () => {
-  it('emits at least 80 rooms across the fourteen-chapter chained run', () => {
+  it('emits a deep room graph for the base chained run (the default)', () => {
     const d = createGodwakeDelve(1);
+    // Default is the base game (Cells→Irenicus, 11 chapters) — still a deep graph.
+    expect(d.chapterCount).toBe(BASE_GAME_CHAPTERS);
     expect(d.rooms.length).toBeGreaterThanOrEqual(80);
   });
 
@@ -27,7 +30,7 @@ describe('createGodwakeDelve', () => {
   });
 
   it('opens with the six canonical chapter bosses in order', () => {
-    const d = createGodwakeDelve(1);
+    const d = createGodwakeDelve({ seed: 1, fullChain: true });
     const bosses = d.rooms.filter((r) => r.kind === 'boss');
     // The Ch1-6 spine is fixed; later chapters (Ch7-9) append after it.
     expect(bosses.length).toBeGreaterThanOrEqual(6);
@@ -56,7 +59,7 @@ describe('createGodwakeDelve', () => {
   });
 
   it('is the full fourteen-chapter chain ending at Melissan, every boss wired', () => {
-    const d = createGodwakeDelve(1);
+    const d = createGodwakeDelve({ seed: 1, fullChain: true });
     const bosses = d.rooms.filter((r) => r.kind === 'boss');
     // Fourteen chapters → fourteen distinct chapter bosses, in order 1..14.
     // TOTAL_CHAPTERS is the standalone constant delveStore reads; assert the
@@ -95,7 +98,7 @@ describe('createGodwakeDelve', () => {
     for (const e of events) {
       expect(e.eventTemplateId).toBeTruthy();
     }
-    for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+    for (let ch = 1; ch <= d.chapterCount!; ch++) {
       const inCh = d.rooms.filter((r) => r.chapter === ch);
       const eventKind = inCh.filter((r) => r.kind === 'event');
       const bossLayer = Math.max(...inCh.map((r) => r.layer ?? 0));
@@ -113,7 +116,7 @@ describe('createGodwakeDelve', () => {
     // of the middle (6-7 plain + 1-2 elite vs at most 5 non-combat specials).
     for (let seed = 0; seed < 24; seed++) {
       const d = createGodwakeDelve({ seed, ascension: 0 });
-      for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+      for (let ch = 1; ch <= d.chapterCount!; ch++) {
         const inCh = d.rooms.filter((r) => r.chapter === ch);
         const combat = inCh.filter((r) => r.kind === 'combat').length;
         const elite = inCh.filter((r) => r.kind === 'elite').length;
@@ -131,14 +134,14 @@ describe('createGodwakeDelve', () => {
     for (let seed = 0; seed < 12; seed++) {
       const d = createGodwakeDelve({ seed });
       const shrines = d.rooms.filter((r) => r.kind === 'shrine');
-      expect(shrines.length).toBe(TOTAL_CHAPTERS);
+      expect(shrines.length).toBe(d.chapterCount);
     }
   });
 
   it('has at least one rest room per chapter span', () => {
     const d = createGodwakeDelve(1);
     const rests = d.rooms.filter((r) => r.kind === 'rest');
-    expect(rests.length).toBeGreaterThanOrEqual(TOTAL_CHAPTERS);
+    expect(rests.length).toBeGreaterThanOrEqual(d.chapterCount!);
   });
 
   it('chapterId is godwake', () => {
@@ -323,7 +326,7 @@ describe('createGodwakeDelve — branching graph', () => {
   it('every middle column offers at least two nodes (no forced single-node bottleneck)', () => {
     for (let seed = 0; seed < 40; seed++) {
       const d = createGodwakeDelve({ seed });
-      for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+      for (let ch = 1; ch <= d.chapterCount!; ch++) {
         const cols = columnsOf(d, ch);
         // First column = warmup entry (1), last two = intel (1) then boss (1):
         // those are the legitimate convergence/terminal nodes. Everything in
@@ -345,7 +348,7 @@ describe('createGodwakeDelve — branching graph', () => {
     for (let seed = 0; seed < 40; seed++) {
       for (const elitesEnabled of [true, false]) {
         const d = createGodwakeDelve({ seed, elitesEnabled });
-        for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+        for (let ch = 1; ch <= d.chapterCount!; ch++) {
           const cols = columnsOf(d, ch);
           const middle = cols.slice(1, cols.length - 2);
           for (const col of middle) {
@@ -364,7 +367,7 @@ describe('createGodwakeDelve — branching graph', () => {
   it('no column holds more than one elite', () => {
     for (let seed = 0; seed < 40; seed++) {
       const d = createGodwakeDelve({ seed });
-      for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+      for (let ch = 1; ch <= d.chapterCount!; ch++) {
         for (const col of columnsOf(d, ch)) {
           expect(col.filter((r) => r.kind === 'elite').length).toBeLessThanOrEqual(1);
         }
@@ -440,7 +443,7 @@ describe('createGodwakeDelve — branching graph', () => {
       for (const elitesEnabled of [true, false]) {
         const d = createGodwakeDelve({ seed, elitesEnabled });
         let sawCombatColumn = false;
-        for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+        for (let ch = 1; ch <= d.chapterCount!; ch++) {
           for (const col of columnsOf(d, ch)) {
             const nonCombatKinds = col
               .filter((r) => !COMBAT_KINDS.has(r.kind))
@@ -498,7 +501,7 @@ describe('createGodwakeDelve — branching graph', () => {
     for (let seed = 0; seed < 60; seed++) {
       for (const elitesEnabled of [true, false]) {
         const d = createGodwakeDelve({ seed, elitesEnabled });
-        for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+        for (let ch = 1; ch <= d.chapterCount!; ch++) {
           const nodes = d.rooms.filter((r) => r.chapter === ch && r.kind !== 'camp');
           // Every chapter offers recovery, so the guarantee is meaningful.
           expect(
@@ -522,7 +525,7 @@ describe('createGodwakeDelve — branching graph', () => {
     for (let seed = 0; seed < 60; seed++) {
       for (const elitesEnabled of [true, false]) {
         const d = createGodwakeDelve({ seed, elitesEnabled });
-        for (let ch = 1; ch <= TOTAL_CHAPTERS; ch++) {
+        for (let ch = 1; ch <= d.chapterCount!; ch++) {
           const restCols = columnsOf(d, ch)
             .map((col, i) => ({ col, i }))
             .filter(({ col }) => col.some((r) => r.kind === 'rest'))
@@ -551,5 +554,80 @@ describe('createGodwakeDelve — branching graph', () => {
     for (const boss of bossRooms.filter((r) => r !== finalBoss)) {
       expect(reachableRooms(d, boss).some((r) => r.kind === 'camp')).toBe(true);
     }
+  });
+});
+
+describe('createGodwakeDelve — base game vs New Game+ chain split', () => {
+  /** Forward-reachable id set from the entry node. */
+  function reachableFromEntry(d: DelveState): Set<string> {
+    const seen = new Set<string>();
+    const stack = [d.rooms[0].id];
+    while (stack.length) {
+      const id = stack.pop()!;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      for (const n of roomById(d, id)?.next ?? []) stack.push(n);
+    }
+    return seen;
+  }
+
+  const bossDefIds = (d: DelveState) =>
+    d.rooms.filter((r) => r.kind === 'boss').map((r) => r.monsters?.[0]?.defId);
+
+  it('default build is the BASE game: 11 chapters, the Cells→Irenicus arc', () => {
+    const d = createGodwakeDelve(1);
+    expect(BASE_GAME_CHAPTERS).toBe(11);
+    expect(d.chapterCount).toBe(BASE_GAME_CHAPTERS);
+    const bosses = d.rooms.filter((r) => r.kind === 'boss');
+    expect(bosses).toHaveLength(BASE_GAME_CHAPTERS);
+    expect(bosses.map((b) => b.chapter)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    // Ends on Irenicus, in the heart of his own hell — the base-game final boss.
+    const finalRoom = d.rooms[d.rooms.length - 1];
+    expect(finalRoom.kind).toBe('boss');
+    expect(finalRoom.chapter).toBe(11);
+    expect(finalRoom.monsters?.[0]?.defId).toBe('irenicus');
+    expect(finalRoom.next ?? []).toHaveLength(0);
+    // The Throne-of-Bhaal arc is New Game+ only — absent from a base run.
+    const ids = bossDefIds(d);
+    expect(ids).not.toContain('yaga-shura');
+    expect(ids).not.toContain('abazigal');
+    expect(ids).not.toContain('melissan');
+  });
+
+  it('full-chain build is New Game+: 14 chapters ending at Melissan', () => {
+    const d = createGodwakeDelve({ seed: 1, fullChain: true });
+    expect(d.chapterCount).toBe(TOTAL_CHAPTERS);
+    const bosses = d.rooms.filter((r) => r.kind === 'boss');
+    expect(bosses).toHaveLength(TOTAL_CHAPTERS);
+    const finalRoom = d.rooms[d.rooms.length - 1];
+    expect(finalRoom.monsters?.[0]?.defId).toBe('melissan');
+    expect(finalRoom.next ?? []).toHaveLength(0);
+    // Irenicus (Ch11) is still in the chain — now a mid-run boss, not the finale.
+    expect(bossDefIds(d)).toContain('irenicus');
+  });
+
+  // The camp-seam invariant for BOTH ranges: exactly chapters-1 camp seams, and
+  // every node reachable from the entry (no orphans when the chain is sliced).
+  it('keeps the camp-seam invariant (chapters-1 camps, no orphans) for BOTH ranges', () => {
+    const cases: Array<{ delve: DelveState; chapters: number }> = [
+      { delve: createGodwakeDelve(1), chapters: BASE_GAME_CHAPTERS },
+      { delve: createGodwakeDelve({ seed: 1, fullChain: true }), chapters: TOTAL_CHAPTERS },
+    ];
+    for (const { delve: d, chapters } of cases) {
+      const camps = d.rooms.filter((r) => r.kind === 'camp');
+      const bosses = d.rooms.filter((r) => r.kind === 'boss');
+      expect(bosses).toHaveLength(chapters);
+      expect(camps).toHaveLength(chapters - 1);
+      // Whole flat list reachable through the boss→camp→next-chapter seams.
+      expect(reachableFromEntry(d).size).toBe(d.rooms.length);
+      for (const room of d.rooms) {
+        for (const id of room.next ?? []) expect(roomById(d, id)).toBeDefined();
+      }
+    }
+  });
+
+  it('names the dungeon for its arc (Pit for base, Throne for NG+)', () => {
+    expect(createGodwakeDelve(1).dungeonName).toContain('Pit');
+    expect(createGodwakeDelve({ seed: 1, fullChain: true }).dungeonName).toContain('Throne');
   });
 });
