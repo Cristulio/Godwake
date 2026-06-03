@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { CombatHUD } from './CombatHUD';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
 import { applyLevelUp } from '../../engine/character/leveling';
+import { critRange } from '../../engine/character/derived';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import type { ClassId } from '../../schemas/ids';
@@ -174,6 +175,27 @@ describe('CombatHUD', () => {
     };
     render(<CombatHUD character={c} state={emptyState()} />);
     expect(screen.queryByText(/Battle Plan/i)).toBeNull();
+  });
+
+  it('surfaces the LIVE crit-range chip reflecting critRange low end when widened', () => {
+    const base = makeChar('fighter');
+    const c: Character = {
+      ...base,
+      permanentBonuses: { ...base.permanentBonuses, critRange: 5 },
+    };
+    const band = critRange(c);
+    expect(band.length).toBeGreaterThan(1);
+    const low = band[0]; // base 20 - 5 = 15
+    render(<CombatHUD character={c} state={emptyState()} />);
+    // Chip is self-labelled "CRIT 15–20" so the actual stacked range is legible.
+    expect(screen.getByText(new RegExp(`^CRIT\\s+${low}`))).toBeInTheDocument();
+  });
+
+  it('hides the crit chip when the range is the default 20-only', () => {
+    const c = makeChar('fighter');
+    expect(critRange(c).length).toBe(1);
+    render(<CombatHUD character={c} state={emptyState()} />);
+    expect(screen.queryByText(/^CRIT\s/)).toBeNull();
   });
 
   it('Shows status condition pill when held / paralyzed', () => {

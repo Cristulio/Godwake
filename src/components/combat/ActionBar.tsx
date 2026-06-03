@@ -2,6 +2,7 @@ import { Button } from '../ui/Button';
 import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
+import { maxAttacksPerAction } from '../../engine/combat/attack/playerAttack';
 import { characterHasMechanic } from '../../engine/character/derived';
 import { RAGE_ROUNDS } from '../../engine/character/actions';
 import {
@@ -271,16 +272,19 @@ export function ActionBar({
 
   const canEndTurn = playersTurn && active && !midMultiattack;
 
-  // Fighter L5 Extra Attack: two swings per Action. Show progress on the
-  // button so the player knows the second swing is queued.
+  // Extra Attack progress on the button so the player knows another swing is
+  // queued. Use the REAL swing count — Extra Attack is 2 at L5 but climbs to 3
+  // (Relentless Assault, L11) and 4 (Unstoppable, L20), and a loading weapon
+  // caps it back to 1 — so mirror maxAttacksPerAction rather than hardcoding /2.
   const dashSwingPending = hasBonusAttack && character.actionEconomy.actionUsed;
   const flurrySwingPending = hasFlurryStrike && character.actionEconomy.actionUsed;
+  const maxAttacks = maxAttacksPerAction(character);
   const attackLabel = flurrySwingPending
     ? `► Strike (Flurry ${character.flurryStrikesRemaining})`
     : dashSwingPending
       ? '► Attack (Dash)'
-      : hasExtraAttack
-        ? `► Attack (${Math.min(attacksThisTurn + 1, 2)}/2)`
+      : maxAttacks > 1
+        ? `► Attack (${Math.min(attacksThisTurn + 1, maxAttacks)}/${maxAttacks})`
         : '► Attack';
 
   // Two-row layout. Row 1 = the heavy hitters (Attack + class-specific
