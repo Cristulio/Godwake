@@ -108,6 +108,33 @@ describe('weapon affixes in playerAttack', () => {
     expect(plus2.state.log.find((l) => l.kind === 'damage')?.text).toContain('2 enhancement');
   });
 
+  it('a +3 white out-powers a +0 blue — enhancement is a real power axis (rule 3)', () => {
+    // 3 enhancement, 0 affixes vs 0 enhancement, the strongest generic 2-affix
+    // blue (Cruel +2 dmg, Honed +1 atk). Same seeds → same dice/initiative, so the
+    // only deltas are the +3's accuracy (more hits land) and per-hit damage.
+    const white3: ItemRef = {
+      itemId: 'longsword',
+      rolled: { baseId: 'longsword', rarity: 'white', affixes: [], enhancement: 3, name: '+3 Longsword' },
+    };
+    const blue0: ItemRef = {
+      itemId: 'longsword',
+      rolled: { baseId: 'longsword', rarity: 'blue', affixes: ['cruel', 'honed'], enhancement: 0, name: 'Cruel Longsword of —' },
+    };
+    let whiteTotal = 0;
+    let blueTotal = 0;
+    let whiteHits = 0;
+    let blueHits = 0;
+    for (let i = 0; i < 300; i++) {
+      const w = damageTotal(attackOnce(white3, `r3-${i}`).state);
+      const b = damageTotal(attackOnce(blue0, `r3-${i}`).state);
+      if (w !== null) { whiteTotal += w; whiteHits += 1; }
+      if (b !== null) { blueTotal += b; blueHits += 1; }
+    }
+    // The +3 white wins on BOTH axes: it lands more hits and each hit bites harder.
+    expect(whiteHits).toBeGreaterThan(blueHits);
+    expect(whiteTotal).toBeGreaterThan(blueTotal);
+  });
+
   it('a Relentless affix adds damage only on a follow-up swing', () => {
     // Find a seed where the longsword lands a hit.
     let hitSeed: string | null = null;

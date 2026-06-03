@@ -76,7 +76,7 @@ import {
 } from '../src/engine/delve/ascension';
 import { computeAC } from '../src/engine/character/derived';
 import { equipItem } from '../src/engine/character/equip';
-import { characterAffixMods } from '../src/engine/items/affixMods';
+import { characterAffixMods, enhancementOf } from '../src/engine/items/affixMods';
 import { rollGearDrop, rollLegendaryDrop } from '../src/engine/items/drops';
 import { rollItem } from '../src/engine/items/rollItem';
 import { rollRoomGoldDrops } from '../src/engine/combat/goldDrop';
@@ -285,6 +285,10 @@ function loadoutScore(c: Character): number {
     if (w.kind === 'weapon') {
       const offEmpty = !c.equipped.offHand;
       score += avgDice(weaponDamageDice(w, offEmpty)) * 1.6;
+      // Weapon +N rides BOTH attack (2.5) and damage (1.6) — the channel
+      // characterAffixMods doesn't carry. Without this the greedy-equip is blind
+      // to a +3 white and would keep a 0-enhancement blue over it.
+      score += enhancementOf(mh) * 4.1;
     }
   }
   // computeAC already folds armour base + affix acBonus + legendary + permanent.
@@ -357,10 +361,12 @@ function resolveCombatLoot(
   const gold = (room.goldReward ?? 0) + rollRoomGoldDrops(roller, defIds);
   if (!MODEL_GEAR) return { character: c, gold, newLegendaries };
 
-  // Rolled affix gear drop (greedy-equip-if-better).
-  const dropRarity = rollGearDrop(roller, room.kind);
+  // Rolled affix gear drop (greedy-equip-if-better). Chapter drives BOTH the drop
+  // rarity and rollItem's depth, so a drop is chapter-appropriate (≈ the rack).
+  const chapter = room.chapter ?? 1;
+  const dropRarity = rollGearDrop(roller, room.kind, chapter);
   if (dropRarity) {
-    const ref = rollItem(roller, { rarity: dropRarity, classId: c.classId });
+    const ref = rollItem(roller, { rarity: dropRarity, classId: c.classId, depth: chapter });
     c = tryEquipDrop(c, ref);
   }
   // Rare legendary drop → banked to the persistent collection.

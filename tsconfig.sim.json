@@ -27,6 +27,7 @@
     "scripts/sim-blessing-fidelity.ts",
     "scripts/sim-feel.ts",
     "scripts/sim-endgame-gear.ts",
+    "scripts/sim-gear-rebalance.ts",
     "scripts/sim-structural-integrity.ts"
   ]
 }
