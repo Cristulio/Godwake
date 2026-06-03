@@ -308,15 +308,34 @@ export function playerAttack(
     const onTypeParts: { amount: number; label: string }[] = [];
     const offTypeParts: { amount: number; type: string }[] = [];
     const damageNotes: string[] = [];
+
+    // Monk Flurry compounding guard. A Flurry strike fires AFTER the Attack
+    // action is spent (a bonus-action extra), so on entry the action is already
+    // used — that's the signal this swing is an extra unarmed strike, not a
+    // primary one. Those extras take only HALF the per-hit Grove edge (Whetstone)
+    // and gear damage affixes, so Flurry × per-hit-edge no longer COMPOUNDS up the
+    // ascension ladder (where Grove tiers + affixes are biggest, and the Monk —
+    // alone — was topping Asc 6). The intrinsic Martial Arts kit (unarmed edge,
+    // Ki, Open Hand, Shadow) still rides every strike in full — the kit fires;
+    // only the stacked external edge is rationed on the extra strikes.
+    const diminishedExtraEdge =
+      monkUnarmedStrike && nextCharacter.actionEconomy.actionUsed === true;
+    const scaleExtraEdge = (v: number): number =>
+      diminishedExtraEdge ? Math.floor(v / 2) : v;
+
     const flatBonus = blessingMods.damageBonus ?? 0;
     if (flatBonus) {
       bonusDamage += flatBonus;
       onTypeParts.push({ amount: flatBonus, label: 'blessing' });
     }
     // Weapon affixes: flat damage bonus (Cruel). Bleed is a DOT applied below.
+    // Halved on a Monk's Flurry extras so the gear edge doesn't multiply per strike.
     if (affixMods.damageBonus) {
-      bonusDamage += affixMods.damageBonus;
-      onTypeParts.push({ amount: affixMods.damageBonus, label: 'gear' });
+      const gear = scaleExtraEdge(affixMods.damageBonus);
+      if (gear > 0) {
+        bonusDamage += gear;
+        onTypeParts.push({ amount: gear, label: 'gear' });
+      }
     }
     // Weapon enhancement (+N): the same flat bonus already added to the attack
     // roll now lands on damage.
@@ -348,8 +367,9 @@ export function playerAttack(
       bonusDamage += blessingMods.firstAttackDamage;
       onTypeParts.push({ amount: blessingMods.firstAttackDamage, label: 'first strike' });
     }
-    // Grove upgrades — permanent damage bonuses baked into the soul.
-    const whetstone = nextCharacter.permanentBonuses?.damage ?? 0;
+    // Grove upgrades — permanent damage bonuses baked into the soul. Halved on a
+    // Monk's Flurry extras so the per-hit Grove edge doesn't compound per strike.
+    const whetstone = scaleExtraEdge(nextCharacter.permanentBonuses?.damage ?? 0);
     if (whetstone) {
       bonusDamage += whetstone;
       onTypeParts.push({ amount: whetstone, label: 'Whetstone' });

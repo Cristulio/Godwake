@@ -10,7 +10,7 @@ import {
 import {
   martialFlavor,
   martialPointsLeft,
-  MARTIAL_POOL_MAX,
+  martialPoolMax,
 } from '../../engine/combat/martialResource';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { getBlessing } from '../../content/blessings';
@@ -285,6 +285,7 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   // --- Martial resource pool (Fighter Resolve / Barbarian Fury / Ranger Focus) ---
   const martial = martialFlavor(character);
   const martialPoints = martialPointsLeft(character);
+  const martialMax = martialPoolMax(character);
   const offenseUp = character.martialOffenseActive === true;
   const disruptArmed = character.martialDisruptActive === true;
 
@@ -453,13 +454,13 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
 
       {martial && (
         <Section title={martial.pool}>
-          {Array.from({ length: MARTIAL_POOL_MAX }).map((_, i) => (
+          {Array.from({ length: martialMax }).map((_, i) => (
             <Dot
               key={`mp-${i}`}
               on={i < martialPoints}
               title={
                 i < martialPoints
-                  ? `${martial.pool} to spend — fuels ${martial.offense}, ${martial.defense}, ${martial.disrupt}. Refreshes each fight.`
+                  ? `${martial.pool} to spend — fuels ${martial.offense}, ${martial.defense}, ${martial.disrupt}. Refreshes each fight, regenerates through it.`
                   : `${martial.pool} spent.`
               }
             />

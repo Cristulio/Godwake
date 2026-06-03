@@ -10,10 +10,14 @@ import {
   useMartialDisrupt,
   martialDefenseReduction,
   martialOffenseDamage,
+  martialPoolMax,
+  regenMartialPoolForRound,
   MARTIAL_POOL_MAX,
+  MARTIAL_POOL_MAX_FIGHTER,
   MARTIAL_OFFENSE_COST,
 } from './martialResource';
 import { chooseCombatAction } from './actionPolicy';
+import { endTurn } from './turn';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
@@ -68,8 +72,15 @@ describe('Martial pool — refresh + spend rules', () => {
         character: c,
         monsters: [{ def: getMonster('goblin') }],
       });
-      expect(init.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX);
+      expect(init.character.resources.martialPointsRemaining).toBe(martialPoolMax(c));
     }
+  });
+
+  it('gives the Fighter a deeper pool than the Barbarian/Ranger baseline', () => {
+    expect(martialPoolMax(fighter(3))).toBe(MARTIAL_POOL_MAX_FIGHTER);
+    expect(martialPoolMax(barbarian(3))).toBe(MARTIAL_POOL_MAX);
+    expect(martialPoolMax(ranger(3))).toBe(MARTIAL_POOL_MAX);
+    expect(MARTIAL_POOL_MAX_FIGHTER).toBeGreaterThan(MARTIAL_POOL_MAX);
   });
 
   it('a spend depletes the pool and arms the stance', () => {
@@ -80,7 +91,9 @@ describe('Martial pool — refresh + spend rules', () => {
     });
     const r = useMartialOffense({ character: init.character, state: init.state });
     expect(r.character.martialOffenseActive).toBe(true);
-    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - MARTIAL_OFFENSE_COST);
+    expect(r.character.resources.martialPointsRemaining).toBe(
+      martialPoolMax(init.character) - MARTIAL_OFFENSE_COST,
+    );
     expect(r.character.martialSpentThisTurn).toBe(true);
     // No action-economy tax — the only cost is the point.
     expect(r.character.actionEconomy.actionUsed).toBe(false);
@@ -96,7 +109,7 @@ describe('Martial pool — refresh + spend rules', () => {
     const second = useMartialDefense({ character: first.character, state: first.state });
     expect(second.character.incomingDamageReduction ?? 0).toBe(0);
     expect(second.character.resources.martialPointsRemaining).toBe(
-      MARTIAL_POOL_MAX - MARTIAL_OFFENSE_COST,
+      martialPoolMax(init.character) - MARTIAL_OFFENSE_COST,
     );
   });
 
@@ -113,6 +126,71 @@ describe('Martial pool — refresh + spend rules', () => {
     const r = useMartialOffense({ character: oneLeft, state: init.state }); // costs 2
     expect(r.character.martialOffenseActive).not.toBe(true);
     expect(r.character.resources.martialPointsRemaining).toBe(1);
+  });
+});
+
+describe('Martial pool — mid-fight regen', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('Fighter regenerates a point every round, capped at its deeper max', () => {
+    const spent: Character = {
+      ...fighter(3),
+      resources: { ...fighter(3).resources, martialPointsRemaining: 1 },
+    };
+    // Round 1 is the fresh-fight refresh — no extra tick.
+    expect(regenMartialPoolForRound(spent, 1).resources.martialPointsRemaining).toBe(1);
+    const r2 = regenMartialPoolForRound(spent, 2);
+    expect(r2.resources.martialPointsRemaining).toBe(2);
+    const r3 = regenMartialPoolForRound(r2, 3);
+    expect(r3.resources.martialPointsRemaining).toBe(3);
+    const r4 = regenMartialPoolForRound(r3, 4);
+    expect(r4.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX_FIGHTER);
+  });
+
+  it('Barbarian/Ranger regenerate every OTHER round', () => {
+    for (const c of [barbarian(3), ranger(3)]) {
+      const spent: Character = {
+        ...c,
+        resources: { ...c.resources, martialPointsRemaining: 0 },
+      };
+      // Even rounds do not tick; rounds 3 and 5 each return a point.
+      expect(regenMartialPoolForRound(spent, 2).resources.martialPointsRemaining).toBe(0);
+      expect(regenMartialPoolForRound(spent, 3).resources.martialPointsRemaining).toBe(1);
+      expect(regenMartialPoolForRound(spent, 5).resources.martialPointsRemaining).toBe(1);
+    }
+  });
+
+  it('never regenerates past the cap (returns the same reference)', () => {
+    const full: Character = {
+      ...fighter(3),
+      resources: { ...fighter(3).resources, martialPointsRemaining: MARTIAL_POOL_MAX_FIGHTER },
+    };
+    expect(regenMartialPoolForRound(full, 2)).toBe(full);
+  });
+
+  it('regens the pool live across a multi-round fight (endTurn-driven)', () => {
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: fighter(3),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    // Drain the pool to empty, then walk the turn order back to the player a few
+    // times — the pool must climb back up rather than stay at zero.
+    let state = init.state;
+    let character: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, martialPointsRemaining: 0 },
+    };
+    let lastSeen = 0;
+    for (let i = 0; i < 6; i++) {
+      const r = endTurn(state, character);
+      state = r.state;
+      character = r.character;
+      if (state.turnOrder[state.currentTurnIndex] === 'player') {
+        lastSeen = character.resources.martialPointsRemaining ?? 0;
+      }
+    }
+    expect(lastSeen).toBeGreaterThan(0);
   });
 });
 
@@ -136,7 +214,7 @@ describe('Martial OFFENSE — heavy/aimed strike', () => {
     const toHit = state.log.find((l) => /attacks .* with Longsword/.test(l.text))!;
     // STR 16 (+3) + prof +2 = +5, with no accuracy cost.
     expect(toHit.text).toMatch(/d20\+5 /);
-    const spike = martialOffenseDamage(character); // 4 at L1
+    const spike = martialOffenseDamage(character); // 6 at L1
     expect(damageLines(state).some((t) => new RegExp(`\\+ ${spike} heavy`).test(t))).toBe(true);
   });
 
@@ -173,7 +251,7 @@ describe('Martial DEFENSE — brace/guard', () => {
     });
     const r = useMartialDefense({ character: init.character, state: init.state });
     expect(r.character.incomingDamageReduction).toBe(martialDefenseReduction(init.character));
-    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - 1);
+    expect(r.character.resources.martialPointsRemaining).toBe(martialPoolMax(init.character) - 1);
   });
 
   it('blunts the next incoming hit, then is consumed', () => {
@@ -290,6 +368,21 @@ describe('Strategic bot — reads the telegraph and spends well', () => {
     goblin.instance.hp = { ...goblin.instance.hp, current: 3 }; // overkill — don't spike
     const state = withIntents(init.state, init.character);
     expect(chooseCombatAction(state, init.character).kind).toBe('attack');
+  });
+
+  it('does not hoard a full pool — commits OFFENSE on a worthwhile (legendary) foe', () => {
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: fighter(3),
+      monsters: [{ def: getMonster('goblin') }],
+      isElite: true, // primary foe gets a legendary-resistance pool — worth the spike
+    });
+    const goblin = monsters(init.state)[0];
+    // Small HP (below the meaty threshold) but a long elite fight: the legendary
+    // pool makes it worth committing the heavy spike rather than banking points.
+    goblin.instance.hp = { ...goblin.instance.hp, current: 14, max: 14 };
+    const state = withIntents(init.state, init.character);
+    expect(chooseCombatAction(state, init.character).kind).toBe('martial-offense');
   });
 
   it('does not spend twice — once a point is spent this turn, it swings', () => {

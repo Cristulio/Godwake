@@ -23,6 +23,7 @@ import type { ConditionName } from '../../types/conditions';
 import { characterAffixMods } from '../items/affixMods';
 import { evaluateCombatEnd } from './attack/damage';
 import { isRaging } from '../character/derived';
+import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './martialResource';
 
 function resetActionEconomyForCurrent(
   state: CombatState,
@@ -178,6 +179,24 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     }
     if (nextCharacter.martialSpentThisTurn) {
       nextCharacter = { ...nextCharacter, martialSpentThisTurn: false };
+    }
+    // Martial pool regen: top the well back up mid-fight (Fighter every round,
+    // Barbarian/Ranger every other round), capped at the class max — so a lever
+    // stays live across the whole fight, not just the opening. Reads `round`,
+    // which has already advanced to this turn's value above.
+    if (isMartialClass(nextCharacter)) {
+      const regened = regenMartialPoolForRound(nextCharacter, round);
+      if (regened !== nextCharacter) {
+        nextCharacter = regened;
+        const flavor = martialFlavor(nextCharacter);
+        if (flavor) {
+          nextState = appendLog(nextState, {
+            id: nextState.log.length + 1,
+            kind: 'narration',
+            text: `${nextCharacter.name}'s ${flavor.pool} gathers — a point returns.`,
+          });
+        }
+      }
     }
     // Monk: the Patient Defense guard (and the disadvantage it imposes) holds
     // through the enemy phase and lifts at the start of the monk's next turn;

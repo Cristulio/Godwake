@@ -29,6 +29,7 @@ import {
   useMartialDisrupt,
   isMartialClass,
   martialPointsLeft,
+  martialPoolMax,
   MARTIAL_OFFENSE_COST,
   MARTIAL_DEFENSE_COST,
   MARTIAL_DISRUPT_COST,
@@ -616,6 +617,15 @@ function chooseMartialAction(
   const hasDefense = characterHasMechanic(character, 'martial-defense');
   const hasDisrupt = characterHasMechanic(character, 'martial-disrupt');
 
+  const poolFull = points >= martialPoolMax(character);
+  const controlTelegraphed = live.some(telegraphsControl);
+  // A worthwhile OFFENSE target: meaty enough that the spike isn't overkill, or a
+  // legendary-resisting elite/boss (a long fight where the burst really tells).
+  const targetWorthSpike =
+    primary.instance.hp.current >= OFFENSE_MIN_TARGET_HP[archetype] ||
+    (primary.instance.legendaryResistances ?? 0) > 0 ||
+    (threat ? (threat.instance.legendaryResistances ?? 0) > 0 : false);
+
   // DISRUPT — deny the focus foe its telegraphed turn. Only when the foe we are
   // about to hit IS the scariest one (so the stagger lands where it matters) and
   // it is meaty enough to survive the blow (staggering a corpse wastes the point).
@@ -629,6 +639,23 @@ function chooseMartialAction(
     (telegraphedDamage(primary) >= MARTIAL_THREAT_MIN || telegraphsControl(primary))
   ) {
     return { kind: 'martial-disrupt' };
+  }
+
+  // OFFENSE (don't hoard) — when the well is at the cap, its regen is wasted if
+  // the points just sit there. With a worthwhile target standing and nothing
+  // telegraphing a deny-worthy control, commit the heavy spike NOW instead of
+  // banking points that can't grow. This is what makes the 2-point OFFENSE a real
+  // recurring choice (with the mid-fight regen the pool brims often) rather than
+  // a near-inert button the bot never reaches.
+  if (
+    hasOffense &&
+    poolFull &&
+    points >= MARTIAL_OFFENSE_COST &&
+    character.martialOffenseActive !== true &&
+    targetWorthSpike &&
+    !controlTelegraphed
+  ) {
+    return { kind: 'martial-offense' };
   }
 
   // DEFENSE — a big hit is telegraphed somewhere on the field and we didn't deny
@@ -645,13 +672,8 @@ function chooseMartialAction(
     return { kind: 'martial-defense' };
   }
 
-  // OFFENSE — nothing pressing to defend; spike a worthwhile target. Meaty foes
-  // (the spike isn't overkill) or an elite/boss (legendary-resistance pool) are
-  // worth the 2 points; a near-dead trash mob is not.
-  const targetWorthSpike =
-    primary.instance.hp.current >= OFFENSE_MIN_TARGET_HP[archetype] ||
-    (primary.instance.legendaryResistances ?? 0) > 0 ||
-    (threat ? (threat.instance.legendaryResistances ?? 0) > 0 : false);
+  // OFFENSE (fallback) — nothing pressing to defend and the pool isn't full;
+  // still spike a worthwhile target rather than hoard the points into oblivion.
   if (
     hasOffense &&
     points >= MARTIAL_OFFENSE_COST &&
