@@ -251,8 +251,11 @@ function BlessingBadge({
 export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHUDProps) {
   const ac = computeAC(character);
   const critBand = critRange(character);
-  // Only surface the crit window when it's widened from the default 20-only.
-  const critLabel = critBand.length > 1 ? `${critBand[0]}-20` : null;
+  // Surface the player's LIVE crit window — the stacked Champion + blessing +
+  // upgrade + affix + boon range — whenever it widens past the default 20-only,
+  // so they read their ACTUAL range here instead of a blessing's static "e.g."
+  // example. critBand[0] is the low end (e.g. 15 → a natural 15-20 crits).
+  const critRangeText = critBand.length > 1 ? `${critBand[0]}–20` : null;
 
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
@@ -412,13 +415,13 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
         </div>
       </Section>
 
-      {critLabel && (
+      {critRangeText && (
         <Section title="Crit">
           <Pill
-            text={critLabel}
+            text={`CRIT ${critRangeText}`}
             on
             tone="amber"
-            title={`Critical range: a natural ${critLabel} on the d20 scores a critical hit (doubled damage dice).`}
+            title={`Critical range: a natural ${critRangeText} on the d20 scores a critical hit (doubled damage dice).`}
           />
         </Section>
       )}
