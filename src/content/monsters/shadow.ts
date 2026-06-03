@@ -13,7 +13,7 @@ export const SHADOW: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'undead',
   ac: 14,
-  maxHp: 44,
+  maxHp: 34,
   speed: 40,
   abilityScores: { str: 6, dex: 14, con: 13, int: 6, wis: 10, cha: 8 },
   passivePerception: 10,
@@ -33,7 +33,7 @@ export const SHADOW: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Engulfing Touch',
       attackBonus: 6,
-      damage: '2d8+4',
+      damage: '2d6+4',
       damageType: 'necrotic',
       reach: 5,
       description:

@@ -13,7 +13,7 @@ export const COWLED_WARDPRIEST: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (human)',
   ac: 15,
-  maxHp: 66,
+  maxHp: 52,
   speed: 30,
   abilityScores: { str: 9, dex: 13, con: 13, int: 16, wis: 14, cha: 12 },
   passivePerception: 12,
@@ -32,7 +32,7 @@ export const COWLED_WARDPRIEST: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Mind Lance',
       attackBonus: 7,
-      damage: '2d8+5',
+      damage: '2d6+5',
       damageType: 'psychic',
       range: [60, 120],
       description:

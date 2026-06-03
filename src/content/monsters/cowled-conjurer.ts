@@ -13,7 +13,7 @@ export const COWLED_CONJURER: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'humanoid (human)',
   ac: 14,
-  maxHp: 66,
+  maxHp: 52,
   speed: 30,
   abilityScores: { str: 9, dex: 14, con: 12, int: 16, wis: 12, cha: 13 },
   passivePerception: 11,
@@ -33,7 +33,7 @@ export const COWLED_CONJURER: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Arcane Bolt',
       attackBonus: 7,
-      damage: '2d8+5',
+      damage: '2d6+5',
       damageType: 'force',
       range: [60, 120],
       description:
