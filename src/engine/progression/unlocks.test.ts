@@ -117,41 +117,40 @@ describe('class unlocks (delve-count axis)', () => {
     expect([...STARTER_CLASSES].sort()).toEqual(['barbarian', 'fighter', 'ranger']);
   });
 
-  it('opens nothing before the first delve, then Fighter from delve 1', () => {
-    // At delveCount 0 the table opens nothing; a fresh soul reaches the three
-    // starters via STARTER_CLASSES, not this gate. Fighter opens at delve 1.
-    for (const id of STARTER_CLASSES) expect(isClassUnlocked(id, 0)).toBe(false);
-    expect(isClassUnlocked('fighter', 1)).toBe(true);
+  it('opens Fighter from the first delve, the rest staggered behind', () => {
+    // Fighter is available from delve 0; the other two starters are reached via
+    // STARTER_CLASSES at the wheel but still gate-locked until their thresholds.
+    expect(isClassUnlocked('fighter', 0)).toBe(true);
+    expect(isClassUnlocked('ranger', 0)).toBe(false);
     expect(isClassUnlocked('barbarian', 0)).toBe(false);
   });
 
   it('staggers the souls across delve counts (3 / 6 / 9 / 12 / 15 / 18)', () => {
-    expect(isClassUnlocked('barbarian', 2)).toBe(false);
-    expect(isClassUnlocked('barbarian', 3)).toBe(true);
-    expect(isClassUnlocked('ranger', 5)).toBe(false);
-    expect(isClassUnlocked('ranger', 6)).toBe(true);
-    expect(isClassUnlocked('wizard', 8)).toBe(false);
-    expect(isClassUnlocked('wizard', 9)).toBe(true);
-    expect(isClassUnlocked('druid', 11)).toBe(false);
-    expect(isClassUnlocked('druid', 12)).toBe(true);
-    expect(isClassUnlocked('monk', 14)).toBe(false);
-    expect(isClassUnlocked('monk', 15)).toBe(true);
-    expect(isClassUnlocked('rogue', 17)).toBe(false);
-    expect(isClassUnlocked('rogue', 18)).toBe(true);
+    expect(isClassUnlocked('ranger', 2)).toBe(false);
+    expect(isClassUnlocked('ranger', 3)).toBe(true);
+    expect(isClassUnlocked('wizard', 5)).toBe(false);
+    expect(isClassUnlocked('wizard', 6)).toBe(true);
+    expect(isClassUnlocked('barbarian', 8)).toBe(false);
+    expect(isClassUnlocked('barbarian', 9)).toBe(true);
+    expect(isClassUnlocked('rogue', 11)).toBe(false);
+    expect(isClassUnlocked('rogue', 12)).toBe(true);
+    expect(isClassUnlocked('druid', 14)).toBe(false);
+    expect(isClassUnlocked('druid', 15)).toBe(true);
+    expect(isClassUnlocked('monk', 17)).toBe(false);
+    expect(isClassUnlocked('monk', 18)).toBe(true);
   });
 
-  it('opens the Monk at delve 15', () => {
-    expect(newlyUnlockedClasses(14, 15)).toEqual(['monk']);
+  it('opens the Monk at delve 18', () => {
+    expect(newlyUnlockedClasses(17, 18)).toEqual(['monk']);
   });
 
   it('reports the alternate(s) whose delve threshold a descent just crossed', () => {
-    expect(newlyUnlockedClasses(0, 1)).toEqual(['fighter']);
-    expect(newlyUnlockedClasses(2, 3)).toEqual(['barbarian']);
-    expect(newlyUnlockedClasses(5, 6)).toEqual(['ranger']);
-    expect(newlyUnlockedClasses(8, 9)).toEqual(['wizard']);
-    expect(newlyUnlockedClasses(11, 12)).toEqual(['druid']);
-    expect(newlyUnlockedClasses(14, 15)).toEqual(['monk']);
-    expect(newlyUnlockedClasses(17, 18)).toEqual(['rogue']);
+    expect(newlyUnlockedClasses(2, 3)).toEqual(['ranger']);
+    expect(newlyUnlockedClasses(5, 6)).toEqual(['wizard']);
+    expect(newlyUnlockedClasses(8, 9)).toEqual(['barbarian']);
+    expect(newlyUnlockedClasses(11, 12)).toEqual(['rogue']);
+    expect(newlyUnlockedClasses(14, 15)).toEqual(['druid']);
+    expect(newlyUnlockedClasses(17, 18)).toEqual(['monk']);
   });
 
   it('every roster soul has a reveal card; the unplayable cleric does not', () => {
