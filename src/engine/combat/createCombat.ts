@@ -57,6 +57,7 @@ export function spawnMonsterInstance(def: Monster, displayName?: string): Monste
   return {
     id: nextMonsterInstanceId(def.id),
     defId: def.id,
+    size: def.size,
     displayName: displayName ?? def.name,
     hp: { current: def.maxHp, max: def.maxHp, temp: 0 },
     ac: def.ac,

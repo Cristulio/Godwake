@@ -4,6 +4,7 @@ import type { MonsterInstance, AttackEvent } from '../../types/combat';
 import { computeAC } from '../../engine/character/derived';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
+import { spriteSizeScale } from './spriteScale';
 import { FloatingDamage, resolveSpriteFloat, attackAimedAt, type FloatingDamageItem, type FloatSelf } from './FloatingDamage';
 import { MirrorImages } from './SpellEffect';
 import { IntentBadge } from './IntentBadge';
@@ -31,104 +32,129 @@ type MonsterProps = CommonProps & {
 
 export type BattlefieldSpriteProps = PlayerProps | MonsterProps;
 
-function monsterSpriteWidth(defId: string): string {
+/**
+ * Hand-tuned base footprint per sprite (px), independent of lore size — it
+ * encodes how much of each SVG's viewBox the art fills (a wide spider vs. a
+ * narrow humanoid). Size scaling rides on top of this. Sprites without an entry
+ * (most of Chapter 5+, including the giants and dragons) use the medium
+ * baseline and lean entirely on the size factor.
+ */
+function monsterSpriteBaseWidth(defId: string): number {
   switch (defId) {
     case 'goblin-warden':
     case 'duergar-ilyich':
-      return '80px';
+      return 80;
     case 'bugbear':
-      return '92px';
+      return 92;
     case 'animated-armor':
-      return '84px';
+      return 84;
     case 'skeleton':
-      return '70px';
+      return 70;
     case 'dust-mephit':
-      return '72px';
+      return 72;
     case 'imp':
-      return '64px';
+      return 64;
     case 'kobold':
-      return '50px';
+      return 50;
     case 'goblin':
-      return '56px';
+      return 56;
     case 'hobgoblin':
-      return '82px';
+      return 82;
     case 'ghoul':
-      return '72px';
+      return 72;
     case 'stirge':
-      return '60px';
+      return 60;
     case 'cult-fanatic':
-      return '76px';
+      return 76;
     case 'shadow':
-      return '78px';
+      return 78;
     case 'cowled-enforcer':
-      return '80px';
+      return 80;
     case 'slaver-cuirassier':
-      return '88px';
+      return 88;
     case 'athkatla-magistrate':
-      return '92px';
+      return 92;
     case 'bandit-captain':
-      return '84px';
+      return 84;
     case 'dust-mephit-elder':
-      return '84px';
+      return 84;
     case 'bone-stalker':
-      return '78px';
+      return 78;
     case 'shadow-hound':
-      return '88px';
+      return 88;
     case 'bonebound-test-subject':
-      return '78px';
+      return 78;
     case 'hollow-sage':
-      return '78px';
+      return 78;
     case 'mad-mage-prisoner':
-      return '76px';
+      return 76;
     case 'drow-warrior':
-      return '80px';
+      return 80;
     case 'drow-crossbowman':
-      return '78px';
+      return 78;
     case 'drow-matron-mother':
-      return '92px';
+      return 92;
     case 'drider':
-      return '110px';
+      return 110;
     case 'driderling':
-      return '54px';
+      return 54;
     case 'mind-flayer-fragment':
-      return '74px';
+      return 74;
     case 'slayer-hound':
-      return '92px';
+      return 92;
     case 'asylum-director':
-      return '96px';
+      return 96;
     case 'wardens-apprentice':
-      return '80px';
+      return 80;
     case 'plaguebound-cur':
-      return '84px';
+      return 84;
     case 'cell-wight':
-      return '76px';
+      return 76;
     case 'famished-ghast':
-      return '74px';
+      return 74;
     case 'duergar-taskmaster':
-      return '82px';
+      return 82;
     case 'cowled-conjurer':
-      return '80px';
+      return 80;
     case 'lash-captain':
-      return '84px';
+      return 84;
     case 'cowled-wardpriest':
-      return '80px';
+      return 80;
     case 'gibbering-husk':
-      return '78px';
+      return 78;
     case 'mind-leech':
-      return '54px';
+      return 54;
     case 'sphere-aberration':
-      return '96px';
+      return 96;
     case 'asylum-fleshwright':
-      return '82px';
+      return 82;
     case 'spider-broodmother':
-      return '112px';
+      return 112;
     case 'drow-war-priestess':
-      return '80px';
+      return 80;
     case 'cavern-hunting-spider':
-      return '100px';
+      return 100;
     default:
-      return '60px';
+      return 60;
   }
+}
+
+/**
+ * Widest a sprite may render. The broodmother already sits here (112px) and
+ * composes in the 96px battlefield slot plus its inter-slot gap, so capping
+ * here keeps a scaled-up huge creature from clipping the HP bar or its
+ * neighbour. A floor keeps a shrunk tiny creature from collapsing to a sliver.
+ */
+const SPRITE_MAX_WIDTH = 112;
+const SPRITE_MIN_WIDTH = 36;
+
+/** On-field sprite width: art base scaled by lore size, clamped to slot bounds.
+ *  Because the sprite is bottom-anchored above its HP bar, the extra height of a
+ *  scaled-up creature grows UPWARD from the same ground line — bigger reads as
+ *  taller, not as a centred zoom. */
+function monsterSpriteWidth(instance: MonsterInstance): number {
+  const scaled = monsterSpriteBaseWidth(instance.defId) * spriteSizeScale(instance.size);
+  return Math.max(SPRITE_MIN_WIDTH, Math.min(SPRITE_MAX_WIDTH, scaled));
 }
 
 /** Spark colour for an impact burst, keyed off the blow's damage type. Physical
@@ -336,7 +362,7 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
           ${selectable ? 'drop-shadow-[0_0_18px_rgba(244,167,66,0.55)] hover:scale-[1.06] transition-transform' : ''}
           ${props.isActiveTurn && !dead ? 'drop-shadow-[0_0_18px_rgba(255,179,71,0.55)]' : ''}
         `}
-        style={{ width: props.kind === 'player' ? '84px' : monsterSpriteWidth(props.instance.defId) }}
+        style={{ width: props.kind === 'player' ? '84px' : `${monsterSpriteWidth(props.instance)}px` }}
       >
         {props.kind === 'player' && !dead && (
           <MirrorImages

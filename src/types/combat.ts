@@ -1,6 +1,7 @@
 import type { ActiveCondition, ConditionName } from './conditions';
 import type { ActionEconomy, HitPoints } from './character';
 import type { MonsterAction } from '../schemas/monster';
+import type { Size } from '../schemas/ids';
 
 // === enemy-telegraph === Slay-the-Spire-style enemy intent. Each live monster
 // carries the action it will take on its NEXT turn, selected ahead of the
@@ -49,6 +50,12 @@ export interface MonsterInstance {
   id: string;
   /** Monster definition id — looks up the stat block. */
   defId: string;
+  /**
+   * Lore size, copied from the def at spawn. Drives the on-field sprite scale
+   * so a huge giant towers over a medium soldier. Optional so a legacy combat
+   * persisted before this field rehydrates (renders at the medium baseline).
+   */
+  size?: Size;
   /** Display name for the combat log ("Goblin A", "Goblin B" when duplicated). */
   displayName: string;
   hp: HitPoints;
