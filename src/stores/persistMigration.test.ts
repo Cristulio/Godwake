@@ -3,6 +3,7 @@ import { migrateV1ToV2, migrateUnlockedUpgrades, SAVE_VERSION } from './persistM
 import { useGameStore, SAVE_SLOT_KEY_PREFIX } from './gameStore';
 import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
+import { isFeatureUnlocked } from '../engine/progression/unlocks';
 
 describe('migrateUnlockedUpgrades', () => {
   it('converts a v0 string[] to Record<id, 1>', () => {
@@ -277,21 +278,60 @@ describe('migrateV1ToV2 — v7 → v8 ascension', () => {
 });
 
 describe('migrateV1ToV2 — v12 → v13 progressive-unlock ladder', () => {
-  it('floors a missing delveCount to 999 so veterans are not re-gated', () => {
+  it('floors a missing delveCount to 999 when the save shows prior progression (veteran not re-gated)', () => {
+    // Any ONE progression marker is enough to read a missing delveCount as a veteran.
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, chaptersCleared: 3 }).delveCount).toBe(999);
+    expect(migrateV1ToV2({ unlockedUpgrades: { 'heirloom-blade': 1 } }).delveCount).toBe(999);
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, gameCompleted: true }).delveCount).toBe(999);
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, deathCount: 2 }).delveCount).toBe(999);
+    // hasReincarnated seeds deathCount → 1, which also reads as a veteran.
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, hasReincarnated: true }).delveCount).toBe(999);
+    expect(
+      migrateV1ToV2({ unlockedUpgrades: {}, discoveredMonsters: ['goblin'] }).delveCount,
+    ).toBe(999);
+    expect(
+      migrateV1ToV2({ unlockedUpgrades: {}, monsterEncounters: { goblin: 4 } }).delveCount,
+    ).toBe(999);
+  });
+
+  it('defaults a missing delveCount to 0 for a fresh/wiped save with no markers (onboarding gates stay closed)', () => {
     const v = migrateV1ToV2({ unlockedUpgrades: {} });
-    expect(v.delveCount).toBe(999);
+    expect(v.delveCount).toBe(0);
+    const meta = {
+      delveCount: v.delveCount,
+      chaptersCleared: typeof v.chaptersCleared === 'number' ? v.chaptersCleared : 0,
+      druidGroveUnlocked: v.druidGroveUnlocked === true,
+    };
+    // The curtain is ON: elites and the Grove stay locked for a brand-new soul.
+    expect(isFeatureUnlocked('elite-nodes', meta)).toBe(false);
+    expect(isFeatureUnlocked('grove', meta)).toBe(false);
+    // Sanity: the old 999 floor would have opened both.
+    expect(isFeatureUnlocked('elite-nodes', { ...meta, delveCount: 999 })).toBe(true);
+    expect(isFeatureUnlocked('grove', { ...meta, delveCount: 999 })).toBe(true);
   });
 
   it('preserves a present delveCount, including a fresh-game 0', () => {
     expect(migrateV1ToV2({ unlockedUpgrades: {}, delveCount: 0 }).delveCount).toBe(0);
     expect(migrateV1ToV2({ unlockedUpgrades: {}, delveCount: 7 }).delveCount).toBe(7);
+    // A present 0 wins even beside veteran markers — an explicit count is authoritative.
+    expect(
+      migrateV1ToV2({
+        unlockedUpgrades: { 'heirloom-blade': 1 },
+        delveCount: 0,
+        chaptersCleared: 5,
+      }).delveCount,
+    ).toBe(0);
   });
 
-  it('floors a garbage/negative delveCount to 999', () => {
-    expect(migrateV1ToV2({ unlockedUpgrades: {}, delveCount: -3 }).delveCount).toBe(999);
+  it('treats a garbage/negative delveCount like a missing one: 999 with markers, 0 without', () => {
     expect(
-      migrateV1ToV2({ unlockedUpgrades: {}, delveCount: 'x' as unknown as number }).delveCount,
+      migrateV1ToV2({ unlockedUpgrades: {}, delveCount: -3, chaptersCleared: 2 }).delveCount,
     ).toBe(999);
+    expect(
+      migrateV1ToV2({ unlockedUpgrades: {}, delveCount: 'x' as unknown as number, deathCount: 1 })
+        .delveCount,
+    ).toBe(999);
+    expect(migrateV1ToV2({ unlockedUpgrades: {}, delveCount: -3 }).delveCount).toBe(0);
   });
 
   it('defaults seenTutorials to [] when missing and preserves an existing array', () => {

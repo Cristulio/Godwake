@@ -188,7 +188,9 @@ describe('nextLockedFeature', () => {
 
 describe('migration ↔ unlock ladder', () => {
   it('a migrated veteran (delveCount 999) keeps the onboarding reveals; power gates on depth', () => {
-    const migrated = migrateV1ToV2({ unlockedUpgrades: {} });
+    // A pre-v13 save with prior progression (a death logged) floors to 999.
+    const migrated = migrateV1ToV2({ unlockedUpgrades: {}, deathCount: 1 });
+    expect(migrated.delveCount).toBe(999);
     const meta = mkMeta({ delveCount: migrated.delveCount, chaptersCleared: 0 });
     // The 999 floor opens the delve-gated onboarding reveals...
     expect(isFeatureUnlocked('grove', meta)).toBe(true);
