@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { Character } from '../types/character';
+import type { ClassId } from '../schemas/ids';
 import { applyPermanentUpgrade, type UnlockedUpgrades } from '../engine/character/upgrades';
 import { getUpgrade, groveUpgradeCost } from '../content/upgrades';
 import { MAX_ASCENSION } from '../engine/delve/ascension';
@@ -30,6 +31,15 @@ interface MetaStoreState {
    * veterans are floored to 999 so onboarding never re-gates them.
    */
   delveCount: number;
+  /**
+   * The starter archetype the soul ORIGINALLY forged (fighter / wizard / ranger),
+   * stamped once at first creation and never overwritten — it survives every
+   * reincarnation. Anchors the RELATIVE class-unlock ladder
+   * (engine/progression/unlocks.ts): the origin is always yours, the other two
+   * starters open at delve 3 / 6, the rest at 9 / 12 / 15 / 18. `null` only before
+   * the first soul is forged; a New Game clears it back to null for the next soul.
+   */
+  originClass: ClassId | null;
   discoveredMonsters: string[];
   monsterEncounters: Record<string, number>;
   /** Times the player has defeated each monster def. */
@@ -131,6 +141,12 @@ interface MetaStoreState {
   /** Bump the account-level delve counter by one (called on every descent). */
   incrementDelveCount: () => void;
   /**
+   * Stamp the soul's origin starter on first creation. Write-once: a no-op once
+   * set, so reincarnation never re-anchors the relative unlock ladder. Cleared
+   * to null only by resetMeta (a New Game forges a fresh soul).
+   */
+  setOriginClass: (classId: ClassId) => void;
+  /**
    * Record that `count` chapters were cleared in a run. Raises the all-time
    * high water mark and keeps the legacy `chapter1Cleared` flag in sync.
    */
@@ -183,6 +199,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   hasReincarnated: false,
   deathCount: 0,
   delveCount: 0,
+  originClass: null,
   discoveredMonsters: [],
   monsterEncounters: {},
   monsterDefeats: {},
@@ -292,6 +309,8 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   setHasReincarnated: (v) => set({ hasReincarnated: v }),
   incrementDeathCount: () => set((s) => ({ deathCount: s.deathCount + 1 })),
   incrementDelveCount: () => set((s) => ({ delveCount: s.delveCount + 1 })),
+  setOriginClass: (classId) =>
+    set((s) => (s.originClass == null ? { originClass: classId } : s)),
   recordChapterCleared: (count) =>
     set((s) => ({
       chaptersCleared: Math.max(s.chaptersCleared, count),
@@ -390,6 +409,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       hasReincarnated: false,
       deathCount: 0,
       delveCount: 0,
+      originClass: null,
       discoveredMonsters: [],
       monsterEncounters: {},
       monsterDefeats: {},

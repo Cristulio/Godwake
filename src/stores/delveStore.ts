@@ -58,11 +58,13 @@ function queueUnlockTutorials(
 ) {
   const seen = useMetaStore.getState().seenTutorials;
   // Delve-gated feature reveals plus the per-class "a new soul surfaced" cards —
-  // souls now open on delve count, not depth. Class ids share the tutorial-queue /
-  // seenTutorials namespace; keep only the ones with copy (skips the not-yet-
-  // playable cleric) and drop the soul's own class (already worn, not "found").
+  // souls now open on delve count, not depth, RELATIVE to the origin starter (the
+  // worn class is the fallback before one is stamped). Class ids share the
+  // tutorial-queue / seenTutorials namespace; keep only the ones with copy (skips
+  // the not-yet-playable cleric) and drop the soul's own class (already worn).
+  const originClass = useMetaStore.getState().originClass ?? currentClassId;
   const featureCards = newlyUnlocked(prevDelveCount, nextDelveCount);
-  const classCards = newlyUnlockedClasses(prevDelveCount, nextDelveCount).filter(
+  const classCards = newlyUnlockedClasses(prevDelveCount, nextDelveCount, originClass).filter(
     (id) => id !== currentClassId && getTutorial(id) !== undefined,
   );
   const fresh = [...featureCards, ...classCards].filter((id) => !seen.includes(id));

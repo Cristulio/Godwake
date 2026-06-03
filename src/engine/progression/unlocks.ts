@@ -91,7 +91,7 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   // Power unlocks — earned by clearing deeper chapters.
   'boss-intel': { chaptersCleared: 1 },
   // The roster "you can swap souls now" reveal fires when the first alternate
-  // class opens (see CLASS_UNLOCK_DELVE). Classes stagger in individually after.
+  // class opens (see classUnlockDelve). Classes stagger in individually after.
   'class-roster': { chaptersCleared: 2 },
   'affixes-epic': { chaptersCleared: 3 },
   legendaries: { chaptersCleared: 5 },
@@ -101,66 +101,81 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
 };
 
 /**
- * The souls a brand-new walker may forge at the wheel — the three most forgiving
- * bodies (the sim's strongest bare-soul floors), so a first life can't be spent
- * on a fragile trap. A fresh soul picks exactly ONE of these; every other class,
- * INCLUDING the two of these it didn't pick, is then earned by logging delves
- * (see {@link CLASS_UNLOCK_DELVE}). Editable data.
- */
-export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'barbarian', 'ranger'];
-
-/**
- * Per-class unlock thresholds, in DELVE COUNT (the account-level tally of delves
- * STARTED, which survives reincarnation) — the bar a soul must reach before it
- * can CHANGE INTO that body at the hub. There is no always-available starter: a
- * fresh walker forges one of the three {@link STARTER_CLASSES} and is then locked
- * to it until it has logged enough delves to earn the others.
- *
- * Delve-paced so the roster opens on time served, not on a depth wall a green
- * soul may never reach. Ordered by how forgiving the class is to play, and
- * staggered so each new soul lands with room to breathe before the next:
- *  - two steady souls first (Fighter from the first delve, then Ranger), so a
- *    fresh walker banks a couple of even-keeled lives before the wild ones;
- *  - the harder bodies stagger deeper, so renown is banked to pad their
- *    fragility before one is worn — Wizard, then Barbarian, then Rogue, then
- *    Druid, then Monk last.
+ * The three archetypes a brand-new walker may forge at the wheel — the soul's
+ * possible ORIGINS. A fresh soul picks exactly ONE of these; the other two open
+ * EARLY (the relative ladder below), then the four non-starters follow. Order
+ * here is stable and drives which of the two non-origin starters opens first.
  * Editable data.
  */
-export const CLASS_UNLOCK_DELVE: Record<ClassId, number> = {
-  // Two steady souls first — Fighter from the first life, Ranger close behind.
-  fighter: 0,
-  ranger: 3,
-  // The harder souls, staggered deeper.
-  wizard: 6,
-  barbarian: 9,
-  rogue: 12,
-  // The Druid: a Wisdom caster whose survivability rides on Wild Shape rather
-  // than armour — squishy in the bare-soul early game, like the Wizard before it.
-  druid: 15,
-  // The Monk: a DEX/Ki flurry striker with no armour — high tempo and burst, but
-  // a thin guard that punishes a careless turn.
-  monk: 18,
-  // Not yet a playable class (absent from the roster); threshold is a placeholder.
-  cleric: 999,
-};
+export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'wizard', 'ranger'];
 
-/** Is `classId` available to select given the soul's delve count? */
-export function isClassUnlocked(classId: ClassId, delveCount: number): boolean {
-  return delveCount >= CLASS_UNLOCK_DELVE[classId];
+/**
+ * The non-starter souls, in the order they stagger in AFTER all three starters.
+ * Every starter opens before any of these, for every possible origin. Order is
+ * the relative reveal order (barbarian first, monk last). Editable data.
+ */
+export const NON_STARTER_ORDER: readonly ClassId[] = ['barbarian', 'rogue', 'druid', 'monk'];
+
+/** Delve gap between consecutive rungs of the relative unlock ladder. */
+const UNLOCK_STEP = 3;
+
+/**
+ * The soul's full unlock ORDER given the starter it originally forged: the origin
+ * first (always its own body), then the other two starters in
+ * {@link STARTER_CLASSES} order, then the non-starters in {@link NON_STARTER_ORDER}.
+ * Position in this list times {@link UNLOCK_STEP} is the class's delve threshold,
+ * so the origin sits at 0, the other starters at 3 / 6, the rest at 9 / 12 / 15 / 18.
+ */
+function relativeClassOrder(originClass: ClassId): ClassId[] {
+  const otherStarters = STARTER_CLASSES.filter((c) => c !== originClass);
+  const nonStarters = NON_STARTER_ORDER.filter((c) => c !== originClass);
+  return [originClass, ...otherStarters, ...nonStarters];
+}
+
+/** Every class the relative ladder paces, in no particular order (used to scan thresholds). */
+const LADDER_CLASSES: readonly ClassId[] = [...STARTER_CLASSES, ...NON_STARTER_ORDER];
+
+/**
+ * The DELVE COUNT (the account-level tally of delves STARTED, which survives
+ * reincarnation) at which `classId` opens for a soul whose origin starter is
+ * `originClass` — the bar it must reach before it can CHANGE INTO that body at the
+ * hub. RELATIVE to the origin: whatever you first forged is always yours (0), the
+ * other two starters open at 3 / 6, and the four non-starters at 9 / 12 / 15 / 18.
+ * The not-yet-playable cleric stays a 999 placeholder. Delve-paced so the roster
+ * opens on time served, not on a depth wall a green soul may never reach.
+ */
+export function classUnlockDelve(classId: ClassId, originClass: ClassId): number {
+  if (classId === 'cleric') return 999;
+  const idx = relativeClassOrder(originClass).indexOf(classId);
+  return idx < 0 ? 999 : idx * UNLOCK_STEP;
+}
+
+/** Is `classId` available to select given the soul's delve count and origin starter? */
+export function isClassUnlocked(
+  classId: ClassId,
+  delveCount: number,
+  originClass: ClassId,
+): boolean {
+  return delveCount >= classUnlockDelve(classId, originClass);
 }
 
 /**
- * Classes whose delve threshold was crossed strictly between `prevDelveCount`
- * (exclusive) and `nextDelveCount` (inclusive) — the souls just earned by logging
- * another delve. Drives the per-class "a new soul surfaced" reveal in startDelve.
- * Callers filter to classes that actually have a reveal card, and drop the soul's
- * own class (it crosses its own threshold but is already worn, not "newly" found).
+ * Classes whose RELATIVE delve threshold was crossed strictly between
+ * `prevDelveCount` (exclusive) and `nextDelveCount` (inclusive) — the souls just
+ * earned by logging another delve, in ladder (ascending-threshold) order. Drives
+ * the per-class "a new soul surfaced" reveal in startDelve. Callers filter to
+ * classes that actually have a reveal card, and drop the soul's own class (it
+ * crosses its own threshold but is already worn, not "newly" found).
  */
-export function newlyUnlockedClasses(prevDelveCount: number, nextDelveCount: number): ClassId[] {
-  return (Object.keys(CLASS_UNLOCK_DELVE) as ClassId[]).filter((id) => {
-    const threshold = CLASS_UNLOCK_DELVE[id];
-    return threshold > prevDelveCount && threshold <= nextDelveCount;
-  });
+export function newlyUnlockedClasses(
+  prevDelveCount: number,
+  nextDelveCount: number,
+  originClass: ClassId,
+): ClassId[] {
+  return LADDER_CLASSES.map((id) => ({ id, threshold: classUnlockDelve(id, originClass) }))
+    .filter(({ threshold }) => threshold > prevDelveCount && threshold <= nextDelveCount)
+    .sort((a, b) => a.threshold - b.threshold)
+    .map(({ id }) => id);
 }
 
 /**
