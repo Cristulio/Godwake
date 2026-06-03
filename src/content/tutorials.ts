@@ -187,9 +187,39 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
 };
 
 /**
- * Look up reveal copy by id — a FeatureId card (feature ladder) or a ClassId card
- * (soul unlock). Both share the seenTutorials key namespace; they never collide.
+ * The seenTutorials key for the first-gear reveal — fired once, the first time
+ * any weapon/armour/accessory enters the pack (a road drop or a shop buy), to
+ * point a green soul at the Pack where gear is read and worn. Not on the feature
+ * ladder (no FeatureId), so it lives in its own keyspace alongside the others.
+ */
+export const FIRST_GEAR_TUTORIAL_ID = 'first-gear';
+
+/**
+ * One-off reveals not tied to the feature ladder or a soul unlock, keyed by a
+ * bare seenTutorials id. Shares the same queue + seen-once machinery as the
+ * ladder cards; resolved by getTutorial after the typed registries.
+ */
+export const STANDALONE_TUTORIALS: Record<string, TutorialContent> = {
+  [FIRST_GEAR_TUTORIAL_ID]: {
+    unlocked: 'Spoils of the Dark',
+    title: 'A Find Worth Carrying',
+    body: [
+      'The dark has parted with something you can use — a piece of war-gear, claimed and stowed. It has not vanished; it has gone into the Pack, where everything you scavenge is kept until you decide its worth.',
+      'Open the Pack and the find waits there to be read and worn. A blade does nothing slung over your shoulder; gear earns its keep only once it is on your body. Weigh each piece against what you already carry, then equip what serves the descent.',
+    ],
+    key: 'Found gear goes to the Pack — open it to read each piece and equip what you mean to use.',
+  },
+};
+
+/**
+ * Look up reveal copy by id — a FeatureId card (feature ladder), a ClassId card
+ * (soul unlock), or a standalone one-off. All share the seenTutorials key
+ * namespace; they never collide.
  */
 export function getTutorial(id: string): TutorialContent | undefined {
-  return TUTORIALS[id as FeatureId] ?? CLASS_TUTORIALS[id as ClassId];
+  return (
+    TUTORIALS[id as FeatureId] ??
+    CLASS_TUTORIALS[id as ClassId] ??
+    STANDALONE_TUTORIALS[id]
+  );
 }
