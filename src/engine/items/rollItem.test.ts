@@ -15,16 +15,17 @@ describe('rollItem', () => {
     expect(a).toEqual(b);
   });
 
-  it('rolls the affix count for each rarity', () => {
+  it('rolls the affix count for each rarity (white 0, green 1, blue 2, purple 3)', () => {
+    const white = rollItem(createDiceRoller('w'), { rarity: 'white', classId: 'fighter' });
     const green = rollItem(createDiceRoller('g'), { rarity: 'green', classId: 'fighter' });
     const blue = rollItem(createDiceRoller('b'), { rarity: 'blue', classId: 'fighter' });
+    expect(white.rolled?.affixes).toHaveLength(0);
     expect(green.rolled?.affixes).toHaveLength(1);
     expect(blue.rolled?.affixes).toHaveLength(2);
-    // Purple rolls 3 or 4.
-    for (const seed of ['p1', 'p2', 'p3', 'p4', 'p5']) {
+    // Purple rolls EXACTLY 3 (no longer 3-or-4) — items gave too many bonuses.
+    for (const seed of ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8']) {
       const purple = rollItem(createDiceRoller(seed), { rarity: 'purple', classId: 'fighter' });
-      expect(purple.rolled?.affixes.length).toBeGreaterThanOrEqual(3);
-      expect(purple.rolled?.affixes.length).toBeLessThanOrEqual(4);
+      expect(purple.rolled?.affixes).toHaveLength(3);
     }
   });
 
@@ -127,30 +128,37 @@ describe('rolledItemName', () => {
 });
 
 describe('enhancement (+N) axis', () => {
-  it('never exceeds the rarity ceiling (green ≤ +1, blue ≤ +2, purple ≤ +3)', () => {
-    const caps: Record<'green' | 'blue' | 'purple', number> = { green: 1, blue: 2, purple: 3 };
-    for (const [rarity, cap] of Object.entries(caps) as Array<['green' | 'blue' | 'purple', number]>) {
-      for (let i = 0; i < 40; i++) {
-        const ref = rollItem(createDiceRoller(`enh-${rarity}-${i}`), {
+  const RARITIES = ['white', 'green', 'blue', 'purple'] as const;
+
+  it('is gated by DEPTH, not rarity — every rarity (incl. white) reaches +3 at a deep chapter', () => {
+    // depthEnhanceCap(6) = 3. A white now carries the SAME +N ceiling as a purple:
+    // enhancement is its own power axis, decoupled from rarity.
+    const reachesPlus3 = (rarity: (typeof RARITIES)[number]) => {
+      for (let i = 0; i < 150; i++) {
+        const ref = rollItem(createDiceRoller(`enh3-${rarity}-${i}`), {
           rarity,
           classId: 'fighter',
           kind: 'weapon',
           depth: 6,
         });
-        expect(ref.rolled?.enhancement ?? 0).toBeLessThanOrEqual(cap);
+        if ((ref.rolled?.enhancement ?? 0) >= 3) return true;
       }
-    }
+      return false;
+    };
+    for (const rarity of RARITIES) expect(reachesPlus3(rarity)).toBe(true);
   });
 
-  it('respects the depth ceiling — Chapter 1 weapons never exceed +1', () => {
-    for (let i = 0; i < 60; i++) {
-      const ref = rollItem(createDiceRoller(`ch1-${i}`), {
-        rarity: 'purple',
-        classId: 'fighter',
-        kind: 'weapon',
-        depth: 1,
-      });
-      expect(ref.rolled?.enhancement ?? 0).toBeLessThanOrEqual(1);
+  it('respects the DEPTH ceiling — Chapter 1 weapons never exceed +1 (any rarity)', () => {
+    for (const rarity of RARITIES) {
+      for (let i = 0; i < 60; i++) {
+        const ref = rollItem(createDiceRoller(`ch1-${rarity}-${i}`), {
+          rarity,
+          classId: 'fighter',
+          kind: 'weapon',
+          depth: 1,
+        });
+        expect(ref.rolled?.enhancement ?? 0).toBeLessThanOrEqual(1);
+      }
     }
   });
 

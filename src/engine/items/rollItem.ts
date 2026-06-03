@@ -78,12 +78,13 @@ const ACCESSORY_BASE_IDS = [
   'leather-cap',
 ] as const;
 
-/** Affix count by rarity. Purple rolls 3 or 4; legendary is Wave 2 (treat as 4). */
-const AFFIX_COUNT: Record<GearRarity, number | [number, number]> = {
+/** Affix count by rarity: white 0, green 1, blue 2, purple 3. Legendary is the
+ * hub layer (Wave 2); treat as 4 if one is ever rolled through here. */
+const AFFIX_COUNT: Record<GearRarity, number> = {
   white: 0,
   green: 1,
   blue: 2,
-  purple: [3, 4],
+  purple: 3,
   legendary: 4,
 };
 
@@ -94,17 +95,6 @@ const RARITY_PRICE_MULT: Record<GearRarity, number> = {
   blue: 2.1,
   purple: 3.2,
   legendary: 6,
-};
-
-/** Hard +N ceiling by rarity — a green never out-enhances a purple. Purple's
- * ceiling is +5, but only the endgame depth band (Ch10+) actually reaches past
- * +3; depthEnhanceCap keeps every chapter through Ch9 capped at +3. */
-const RARITY_ENHANCE_CAP: Record<GearRarity, number> = {
-  white: 0,
-  green: 1,
-  blue: 2,
-  purple: 5,
-  legendary: 5,
 };
 
 export interface RollItemOptions {
@@ -124,15 +114,6 @@ export interface RollItemOptions {
 /** Deterministic non-negative pick in [0, n) from the seeded roller. */
 function pickIndex(roller: DiceRoller, n: number): number {
   return roller.roll('1d100').total % n;
-}
-
-function affixCountFor(roller: DiceRoller, rarity: GearRarity): number {
-  const spec = AFFIX_COUNT[rarity];
-  if (Array.isArray(spec)) {
-    const [lo, hi] = spec;
-    return lo + pickIndex(roller, hi - lo + 1);
-  }
-  return spec;
 }
 
 /**
@@ -188,12 +169,14 @@ function depthEnhanceCap(depth: number): number {
 }
 
 /**
- * Roll the flat +N enhancement. Capped by BOTH rarity and depth, and each
- * successive pip is a separate, progressively-rarer gate — so a deep purple
- * climbs toward +3 while an early green mostly sits at +0/+1. Deterministic.
+ * Roll the flat +N enhancement, gated by DEPTH ALONE — rarity no longer caps it,
+ * so a deep-chapter white can reach the same +N as a purple (enhancement is its
+ * own power axis, separate from rarity and affixes). Each successive pip is a
+ * separate, progressively-rarer gate, so deep loot climbs toward the depth cap
+ * while early loot mostly sits at +0/+1. Deterministic.
  */
-function rollEnhancement(roller: DiceRoller, rarity: GearRarity, depth: number): number {
-  const cap = Math.min(RARITY_ENHANCE_CAP[rarity], depthEnhanceCap(depth));
+function rollEnhancement(roller: DiceRoller, depth: number): number {
+  const cap = depthEnhanceCap(depth);
   if (cap <= 0) return 0;
   let plus = 0;
   for (let step = 0; step < cap; step++) {
@@ -320,7 +303,7 @@ export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
   }
   const base = pickBaseWithDepth(roller, bases, depth);
 
-  const count = affixCountFor(roller, rarity);
+  const count = AFFIX_COUNT[rarity];
   const pool = eligibleAffixes(kind, classId);
   const affixes: string[] = [];
   const seen = new Set<string>();
@@ -337,7 +320,7 @@ export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
   // accessories (pure affix carriers) never carry an enhancement.
   const carriesEnhancement =
     base.kind === 'weapon' || (base.kind === 'armor' && base.category !== 'robe');
-  const enhancement = carriesEnhancement ? rollEnhancement(roller, rarity, depth) : 0;
+  const enhancement = carriesEnhancement ? rollEnhancement(roller, depth) : 0;
 
   return {
     itemId: base.id,

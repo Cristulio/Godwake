@@ -677,7 +677,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       // the character so the new item layers onto the gold/xp just credited.
       // Cap rarity to what the progression ladder has unlocked so far.
       const meta = useMetaStore.getState();
-      let dropRarity: GearRarity | null = rollGearDrop(getActiveRoller(), room.kind);
+      let dropRarity: GearRarity | null = rollGearDrop(getActiveRoller(), room.kind, room.chapter ?? 1);
       if (dropRarity === 'purple' && !isFeatureUnlocked('affixes-epic', meta)) {
         dropRarity = isFeatureUnlocked('affixes-rare', meta) ? 'blue' : 'green';
       } else if (dropRarity === 'blue' && !isFeatureUnlocked('affixes-rare', meta)) {
