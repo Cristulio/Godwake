@@ -12,7 +12,7 @@ export const FAMISHED_GHAST: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'undead',
   ac: 13,
-  maxHp: 30,
+  maxHp: 20,
   speed: 30,
   abilityScores: { str: 14, dex: 15, con: 12, int: 7, wis: 10, cha: 6 },
   passivePerception: 10,
