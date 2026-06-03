@@ -29,8 +29,9 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
   const classId = useGameStore((s) => s.character?.classId) ?? null;
   const delveCount = useGameStore((s) => s.delveCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const renownSpent = useGameStore((s) => s.renownSpent);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
-  const setsUnlocked = isFeatureUnlocked('sets', { delveCount, chaptersCleared, druidGroveUnlocked });
+  const setsUnlocked = isFeatureUnlocked('sets', { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked });
   const [flash, setFlash] = useState<string | null>(null);
 
   function toggle(relic: Legendary) {

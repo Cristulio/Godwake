@@ -318,6 +318,7 @@ describe('migrateV1ToV2 — v12 → v13 progressive-unlock ladder', () => {
     const meta = {
       delveCount: v.delveCount,
       chaptersCleared: typeof v.chaptersCleared === 'number' ? v.chaptersCleared : 0,
+      renownSpent: typeof v.renownSpent === 'number' ? v.renownSpent : 0,
       druidGroveUnlocked: v.druidGroveUnlocked === true,
     };
     // The curtain is ON: elites and the Grove stay locked for a brand-new soul.

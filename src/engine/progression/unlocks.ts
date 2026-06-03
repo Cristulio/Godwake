@@ -4,10 +4,11 @@ import type { ClassId } from '../../schemas/ids';
  * The progressive-unlock ladder — ONE source of truth for which features are
  * curtained off from a brand-new soul and when they open up.
  *
- * A soul accumulates DELVES (account-level, survives reincarnation). Features
- * unlock as that count crosses authored thresholds, gradually revealing the
- * game's systems instead of dumping all of them on a first-time player. This
- * module is the shared CONTRACT only: the counter lives in metaStore, and the
+ * A soul accumulates progress on several account-level axes that survive
+ * reincarnation — delves started, chapters cleared, renown spent. Features unlock
+ * as those cross authored thresholds (see {@link UNLOCKS}), gradually revealing
+ * the game's systems instead of dumping all of them on a first-time player. This
+ * module is the shared CONTRACT only: the counters live in metaStore, and the
  * Phase-2 lanes (feature-gating / tutorials / lore) consume these helpers to
  * gate components, fire tutorials, and advance lore beats — none of that is
  * wired here.
@@ -42,8 +43,8 @@ export interface UnlockCondition {
   /**
    * Onboarding gate: opens once the soul has STARTED this many delves. Used for
    * the early "here's how the game works" reveals a new walker needs before
-   * they've cleared anything. A feature gates on delveCount OR chaptersCleared
-   * (whichever it declares) — meeting any declared threshold opens it.
+   * they've cleared anything. A feature gates on delveCount OR chaptersCleared OR
+   * renownSpent (whichever it declares) — meeting ANY declared threshold opens it.
    */
   delveCount?: number;
   /**
@@ -53,6 +54,13 @@ export interface UnlockCondition {
    * grinding delves. `chaptersCleared: 14` is the full chain = game completion.
    */
   chaptersCleared?: number;
+  /**
+   * Spend gate: opens once the soul has SPENT this much Renown at the Grove
+   * (the {@link ProgressionMeta.renownSpent} account-level total). The tribute
+   * axis — earned by laying Renown down between lives, not by depth or delve
+   * count. Paces the roster reveal (the first offering) and the deeper Grove.
+   */
+  renownSpent?: number;
   /**
    * Reincarnation gate: opens the first time the soul dies and the wheel turns
    * ({@link ProgressionMeta.hasReincarnated}). Reserved for the Grove — it sells
@@ -70,7 +78,7 @@ export interface UnlockCondition {
 }
 
 /**
- * The ladder. THREE triggers by design:
+ * The ladder. FOUR triggers by design:
  *  - DELVE COUNT (onboarding): the early reveals a fresh soul needs to stand a
  *    chance, before they've cleared a single chapter.
  *  - CHAPTERS CLEARED (progression/mastery): the power unlocks. The game is hard;
@@ -78,6 +86,8 @@ export interface UnlockCondition {
  *    sets at game completion (the full fourteen-chapter chain).
  *  - FIRST REINCARNATION (the Grove alone): the renown shop sits BETWEEN lives,
  *    so it opens the first time the soul dies and the wheel hauls it back.
+ *  - RENOWN SPENT (tribute): the roster reveal opens on the first Grove offering;
+ *    the deeper Grove on a heavier total. Earned by laying Renown down, not depth.
  * All editable data — tune freely, keep the shape.
  */
 export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
@@ -85,19 +95,21 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   // between lives, useless until the soul has died once and come back. The legacy
   // flag keeps any veteran who earned it the old way (renown) unlocked.
   grove: { reincarnated: true, legacyFlag: 'druidGroveUnlocked' },
-  // Onboarding reveals — delve-count paced.
-  'affixes-rare': { delveCount: 3 },
+  // Onboarding reveal — delve-count paced.
   'elite-nodes': { delveCount: 5 },
-  // Power unlocks — earned by clearing deeper chapters.
+  // Power unlocks — earned by clearing deeper chapters. Blue gear opens once the
+  // soul's deepest run has cleared 3 chapters, purple at 5.
   'boss-intel': { chaptersCleared: 1 },
-  // The roster "you can swap souls now" reveal fires when the first alternate
-  // class opens (see classUnlockRenown). Classes stagger in individually after.
-  'class-roster': { chaptersCleared: 2 },
-  'affixes-epic': { chaptersCleared: 3 },
+  'affixes-rare': { chaptersCleared: 3 },
+  'affixes-epic': { chaptersCleared: 5 },
   legendaries: { chaptersCleared: 5 },
   sets: { chaptersCleared: 14 }, // the whole chain felled (Melissan) — game completion
-  // Deeper Grove tiers — a mastery reward, also chapter-gated.
-  'grove-deep': { chaptersCleared: 4 },
+  // The roster "you can swap souls now" reveal opens on the FIRST Grove offering
+  // (slot-2 bar, SLOT_RENOWN_THRESHOLDS[0]) — the moment the first alternate soul
+  // actually surfaces. Fired (named) from the Grove-purchase path, not a trigger.
+  'class-roster': { renownSpent: 1 },
+  // Deeper Grove tiers — a mastery reward, gated on Renown laid down at the Grove.
+  'grove-deep': { renownSpent: 700 },
 };
 
 /**
@@ -210,6 +222,12 @@ export function newlyUnlockedClasses(
 export interface ProgressionMeta {
   delveCount: number;
   chaptersCleared: number;
+  /**
+   * Cumulative Renown SPENT at the Grove (account-level, survives reincarnation).
+   * The tribute axis — gates the roster reveal and the deeper Grove (see
+   * {@link UNLOCKS}). Lives on metaStore.renownSpent; every caller threads it.
+   */
+  renownSpent: number;
   druidGroveUnlocked: boolean;
   /**
    * Has the soul died and turned the wheel at least once? Gates the Grove (see
@@ -229,6 +247,7 @@ export function isFeatureUnlocked(featureId: FeatureId, meta: ProgressionMeta): 
   if (cond.chaptersCleared !== undefined && meta.chaptersCleared >= cond.chaptersCleared) {
     return true;
   }
+  if (cond.renownSpent !== undefined && meta.renownSpent >= cond.renownSpent) return true;
   if (cond.reincarnated && meta.hasReincarnated) return true;
   if (cond.legacyFlag && meta[cond.legacyFlag]) return true;
   return false;
@@ -269,16 +288,19 @@ export function unlockedFeatures(meta: ProgressionMeta): FeatureId[] {
 /** A locked feature surfaced as a "next unlock at…" hint (numeric-threshold axes only). */
 export interface LockedFeatureHint {
   featureId: FeatureId;
-  axis: 'delve' | 'chapter';
+  axis: 'delve' | 'chapter' | 'renown';
   threshold: number;
 }
 
+/** Reveal-order rank across the (incomparable-unit) numeric axes. */
+const AXIS_RANK: Record<LockedFeatureHint['axis'], number> = { delve: 0, chapter: 1, renown: 2 };
+
 /**
  * The next still-locked feature, the axis it opens on, and its threshold (lowest
- * threshold first within each axis, delve-gated reveals preferred), or null when
- * everything is unlocked. Drives an optional "next unlock at…" UI hint. Event-
- * gated features (the Grove's first-reincarnation trigger) carry no numeric
- * threshold, so they are omitted from the hint.
+ * threshold first within each axis; axes ranked onboarding-delve → chapter →
+ * renown), or null when everything is unlocked. Drives an optional "next unlock
+ * at…" UI hint. Event-gated features (the Grove's first-reincarnation trigger)
+ * carry no numeric threshold, so they are omitted from the hint.
  */
 export function nextLockedFeature(
   meta: ProgressionMeta,
@@ -292,13 +314,17 @@ export function nextLockedFeature(
       if (cond.chaptersCleared !== undefined) {
         return [{ featureId: id, axis: 'chapter', threshold: cond.chaptersCleared }];
       }
+      if (cond.renownSpent !== undefined) {
+        return [{ featureId: id, axis: 'renown', threshold: cond.renownSpent }];
+      }
       return [];
     },
   );
   if (locked.length === 0) return null;
-  // Onboarding reveals (delve axis) come first, then the lowest threshold.
+  // Lower-ranked axis wins across axes (units aren't comparable); within an axis,
+  // the lowest threshold.
   return locked.reduce((lo, f) => {
-    if (f.axis !== lo.axis) return f.axis === 'delve' ? f : lo;
+    if (f.axis !== lo.axis) return AXIS_RANK[f.axis] < AXIS_RANK[lo.axis] ? f : lo;
     return f.threshold < lo.threshold ? f : lo;
   });
 }

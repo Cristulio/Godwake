@@ -47,8 +47,9 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   const delveCount = useGameStore((s) => s.delveCount);
   const ascensionLevel = useGameStore((s) => s.delve?.ascensionLevel ?? 0);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const renownSpent = useGameStore((s) => s.renownSpent);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
-  const progressionMeta = { delveCount, chaptersCleared, druidGroveUnlocked };
+  const progressionMeta = { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked };
   const shopMaxRarity: GearRarity = isFeatureUnlocked('affixes-epic', progressionMeta)
     ? 'purple'
     : isFeatureUnlocked('affixes-rare', progressionMeta)

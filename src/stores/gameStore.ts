@@ -495,6 +495,11 @@ function adoptSoul(classId: ClassId) {
  * to the soul's origin starter. Deduped against seenTutorials and the worn class;
  * surfaced on the general tutorial queue so the card pops right at the Grove. The
  * delve-axis FEATURE reveals stay in delveStore (queueUnlockTutorials).
+ *
+ * The 'class-roster' soul-swapping explainer rides ALONG WITH the very first
+ * alternate soul that ever surfaces (combined, first time only) — so it lands the
+ * instant a roster body actually opens, naming it, never as a premature teaser.
+ * Once seen it's done; later unlocks just name the new soul.
  */
 function queueClassUnlockReveals(prevSpent: number, nextSpent: number) {
   if (nextSpent <= prevSpent) return;
@@ -506,7 +511,10 @@ function queueClassUnlockReveals(prevSpent: number, nextSpent: number) {
   const reveals = newlyUnlockedClasses(prevSpent, nextSpent, origin).filter(
     (id) => id !== currentClass && getTutorial(id) !== undefined && !seen.includes(id),
   );
-  if (reveals.length > 0) useScreenStore.getState().enqueueTutorials(reveals);
+  if (reveals.length === 0) return;
+  const withRoster =
+    seen.includes('class-roster') ? reveals : ['class-roster', ...reveals];
+  useScreenStore.getState().enqueueTutorials(withRoster);
 }
 
 function readSlotWrapper(slot: SaveSlotId): SlotWrapper | null {
@@ -712,6 +720,7 @@ export const useGameStore = create<GameState>()(
           const elitesEnabled = isFeatureUnlocked('elite-nodes', {
             delveCount: meta.delveCount,
             chaptersCleared: meta.chaptersCleared,
+            renownSpent: meta.renownSpent,
             druidGroveUnlocked: meta.druidGroveUnlocked,
           });
           const createGodwakeDelve = await loadDelveFactory();

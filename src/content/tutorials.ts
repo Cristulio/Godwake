@@ -115,9 +115,11 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
 
 /**
  * Per-class "a new soul has surfaced" reveals, fired when a class crosses its
- * chapter unlock (engine/progression CLASS_UNLOCK_CHAPTER). Keyed by ClassId,
- * which doubles as the seenTutorials key. In-world flavor + the soul's hallmark.
- * Every roster soul gets one (the card is suppressed for the body already worn);
+ * RENOWN-SPENT bar at the Grove (engine/progression classUnlockRenown), from the
+ * purchase path (gameStore queueClassUnlockReveals). Keyed by ClassId, which
+ * doubles as the seenTutorials key. In-world flavor + the soul's hallmark. Every
+ * roster soul gets one (the card is suppressed for the body already worn); the
+ * first ever to surface rides the 'class-roster' soul-swapping explainer with it.
  * cleric isn't playable yet, so it has none.
  */
 export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {

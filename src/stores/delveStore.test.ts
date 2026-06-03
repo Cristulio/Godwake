@@ -675,14 +675,15 @@ describe('delveStore.acceptSpoils — mid-run chapter-unlock reveals', () => {
   });
 
   it('advances the high-water mid-run so the unlocked feature goes LIVE for the rest of the run', () => {
-    // Sitting at a ch4 high-water, felling the ch5 boss crosses legendaries (@5).
+    // Sitting at a ch4 high-water, felling the ch5 boss crosses legendaries AND
+    // purple gear (both @5), in FEATURE_IDS order.
     useMetaStore.setState({ chaptersCleared: 4, seenTutorials: [] });
     expect(isFeatureUnlocked('legendaries', useMetaStore.getState())).toBe(false);
 
     stageClear(bossRooms()[4]);
     useDelveStore.getState().acceptSpoils();
 
-    expect(useScreenStore.getState().tutorialQueue).toEqual(['legendaries']);
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['legendaries', 'affixes-epic']);
     expect(useMetaStore.getState().chaptersCleared).toBe(5);
     // The whole point: legendary drops are live for the REST of this run now.
     expect(isFeatureUnlocked('legendaries', useMetaStore.getState())).toBe(true);
@@ -713,5 +714,19 @@ describe('delveStore.acceptSpoils — mid-run chapter-unlock reveals', () => {
 
     expect(useScreenStore.getState().tutorialQueue).toEqual([]);
     expect(useMetaStore.getState().chaptersCleared).toBe(0);
+  });
+
+  it('clearing chapter 2 fires NO soul-swapping card — the roster reveal is renown-paced now', () => {
+    // Sitting at a ch1 high-water, felling the ch2 boss crosses chapter 2. The old
+    // ladder fired 'class-roster' here (a nameless, premature soul teaser); it now
+    // opens on the first Grove offering instead, so the chapter step fires nothing.
+    useMetaStore.setState({ chaptersCleared: 1, seenTutorials: [] });
+    stageClear(bossRooms()[1]);
+
+    useDelveStore.getState().acceptSpoils();
+
+    expect(useMetaStore.getState().chaptersCleared).toBe(2);
+    expect(useScreenStore.getState().tutorialQueue).not.toContain('class-roster');
+    expect(useScreenStore.getState().tutorialQueue).toEqual([]);
   });
 });

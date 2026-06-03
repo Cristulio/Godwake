@@ -34,8 +34,9 @@ export function DruidGroveScreen() {
   const goToHub = useGameStore((s) => s.goToHub);
   const delveCount = useGameStore((s) => s.delveCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
+  const renownSpent = useGameStore((s) => s.renownSpent);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
-  const groveDeepUnlocked = isFeatureUnlocked('grove-deep', { delveCount, chaptersCleared, druidGroveUnlocked });
+  const groveDeepUnlocked = isFeatureUnlocked('grove-deep', { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked });
   const [flash, setFlash] = useState<{ kind: FlashKind; msg: string } | null>(null);
   const [pulsing, setPulsing] = useState<string | null>(null);
   const [tab, setTab] = useState<GroveTab>('survival');

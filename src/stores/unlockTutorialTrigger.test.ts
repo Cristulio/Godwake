@@ -141,17 +141,16 @@ describe('delve-count unlocks surface at the HUB, never over the delve', () => {
   });
 
   it('queues only the FEATURE card on a descent — class reveals moved off the delve axis', () => {
-    // 2 -> 3 crosses affixes-rare (@3). The Mage soul used to ride this very step
-    // on the old delve ladder; it now opens on RENOWN SPENT (a Grove purchase), so
-    // the descent must no longer queue it — only the feature card shows, and
-    // dismissing that single card releases the held descent.
-    primeSoul(2);
+    // 4 -> 5 crosses elite-nodes (@5), the lone delve-paced reveal. Class souls open
+    // on RENOWN SPENT (a Grove purchase), never a descent — so the hub holds only the
+    // feature card, and dismissing that single card releases the held descent.
+    primeSoul(4);
     descend();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['affixes-rare']);
+    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['elite-nodes']);
     expect(useScreenStore.getState().hubUnlockQueue).not.toContain('wizard');
     expect(useScreenStore.getState().screen).toBe('hub');
 
-    useGameStore.getState().dismissHubTutorial(); // affixes-rare
+    useGameStore.getState().dismissHubTutorial(); // elite-nodes
     expect(useScreenStore.getState().screen).toBe('delve');
     expect(useScreenStore.getState().pendingDescent).toBe(false);
   });
@@ -208,20 +207,32 @@ describe('class reveals fire on RENOWN SPENT (a Grove purchase), not on a descen
     });
   }
 
-  it('the first Grove offering surfaces the first alternate soul (Hunter for a fighter origin)', () => {
+  it('the first Grove offering surfaces the soul-swapping explainer AND names the first alternate soul', () => {
     primeGroveSoul();
     const res = useGameStore.getState().purchaseUpgrade('pilgrims-boots'); // 25 renown — clears the >0 bar
     expect(res.ok).toBe(true);
     expect(useMetaStore.getState().renownSpent).toBe(25);
-    // Surfaces on the general tutorial queue (pops at the Grove), not the hub-descent queue.
-    expect(useScreenStore.getState().tutorialQueue).toContain('ranger');
+    // Combined, first time only: the 'class-roster' explainer leads, then the named
+    // soul (Hunter for a fighter origin). On the general queue (pops at the Grove).
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['class-roster', 'ranger']);
     expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
   });
 
-  it('does not re-surface a soul already in seenTutorials', () => {
+  it('the soul-swapping explainer rides only the FIRST unlock — later purchases just name the soul', () => {
+    // class-roster already seen, the Hunter already open; this purchase crosses the
+    // Mage bar (@100). Only the named soul surfaces — no second explainer.
+    primeGroveSoul(99, ['class-roster', 'ranger']);
+    const res = useGameStore.getState().purchaseUpgrade('pilgrims-boots'); // 99 -> 124, crosses wizard @100
+    expect(res.ok).toBe(true);
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['wizard']);
+  });
+
+  it('does not re-surface a soul already in seenTutorials (and no lone explainer without a soul)', () => {
     primeGroveSoul(0, ['ranger']);
     useGameStore.getState().purchaseUpgrade('pilgrims-boots');
     expect(useScreenStore.getState().tutorialQueue).not.toContain('ranger');
+    // The explainer only ever rides WITH a surfacing soul — none here, so none fires.
+    expect(useScreenStore.getState().tutorialQueue).not.toContain('class-roster');
   });
 
   it('crossing no new class bar surfaces nothing (already past the first offering)', () => {
