@@ -13,7 +13,7 @@ export const SHADOW_HOUND: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'fey (beast)',
   ac: 15,
-  maxHp: 44,
+  maxHp: 34,
   speed: 40,
   abilityScores: { str: 14, dex: 15, con: 12, int: 4, wis: 13, cha: 6 },
   passivePerception: 13,
@@ -22,7 +22,7 @@ export const SHADOW_HOUND: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Lunging Bite',
       attackBonus: 6,
-      damage: '2d8+5',
+      damage: '2d6+4',
       damageType: 'piercing',
       reach: 5,
       description:
