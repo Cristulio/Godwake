@@ -7,7 +7,7 @@ export const GOBLIN_WARDEN: Monster = MonsterSchema.parse({
   size: 'small',
   creatureType: 'humanoid (goblinoid)',
   ac: 15,
-  maxHp: 26,
+  maxHp: 18,
   speed: 30,
   abilityScores: { str: 13, dex: 12, con: 12, int: 10, wis: 10, cha: 10 },
   passivePerception: 10,
