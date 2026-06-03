@@ -365,6 +365,34 @@ describe('Monk — unarmed gating (kit + damage edge)', () => {
     expect(lastFlurryLine).toMatch(/enhancement/);
     expect(lastFlurryLine).toMatch(/martial arts/);
   });
+
+  it('halves the per-hit Grove edge on Flurry extras so it no longer compounds', () => {
+    // Whetstone +6 (Grove). The PRIMARY strike takes the full edge; the bonus
+    // Flurry strikes take only half — Flurry × per-hit-edge must not multiply (the
+    // Monk's lone ascension-ladder runaway). The intrinsic martial-arts edge still
+    // rides every strike (the kit fires).
+    const roller = scriptRoller([18, 18, 18]);
+    const base = withMainHand(makeMonk(1), null); // bare hands — no enhancement noise
+    const monk: Character = { ...base, permanentBonuses: { ...base.permanentBonuses, damage: 6 } };
+    const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('blue-wyrmling') }] });
+    const targetId = monsterOf(init.state).id;
+
+    const flurried = useFlurryOfBlows({ character: init.character, state: init.state });
+    const weaponId = martialArtsWeaponId(flurried.character);
+
+    // Strike 1 — the Attack action: full Grove edge.
+    let r = playerAttack({ roller, character: flurried.character, state: flurried.state }, targetId, weaponId);
+    const afterFirst = r.state.log.filter((e) => e.kind === 'damage');
+    expect(afterFirst[afterFirst.length - 1].text).toMatch(/\+ 6 Whetstone/);
+    expect(afterFirst[afterFirst.length - 1].text).toMatch(/martial arts/);
+
+    // Strike 2 — a bonus Flurry strike: half the Grove edge (6 → 3).
+    r = playerAttack({ roller, character: r.character, state: r.state }, targetId, weaponId);
+    expect(r.character.flurryStrikesRemaining).toBe(1);
+    const afterSecond = r.state.log.filter((e) => e.kind === 'damage');
+    expect(afterSecond[afterSecond.length - 1].text).toMatch(/\+ 3 Whetstone/);
+    expect(afterSecond[afterSecond.length - 1].text).toMatch(/martial arts/);
+  });
 });
 
 describe('Monk — bot policy', () => {

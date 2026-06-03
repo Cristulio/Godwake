@@ -16,17 +16,29 @@ import { attachCombatVfx } from './vfx';
  * pool, IDENTICAL rules for all three; only the flavor (pool name + ability
  * names) differs per class.
  *
- *  - A small pool that REFRESHES at the start of every encounter (createCombat).
+ *  - A pool that REFRESHES at the start of every encounter (createCombat) AND
+ *    REGENERATES one point on a cadence through the fight (regenMartialPoolForRound,
+ *    ticked in endTurn), capped at the class max — so a lever stays live across the
+ *    WHOLE fight, not just the opening rounds (the pool used to empty by round 3
+ *    while the average fight runs ~4, so the tail reverted to auto-attack).
  *  - Three spends — OFFENSE (a heavy/aimed strike, costs 2), DEFENSE (a guard
  *    that blunts the next incoming hit, costs 1), DISRUPT (a stagger that costs
  *    a telegraphing foe its next turn, costs 1).
  *  - At most ONE spend per turn (`martialSpentThisTurn`), so the pool is paced
- *    across the fight's key turns rather than dumped on turn one.
+ *    across the fight's key turns rather than dumped on turn one. Cap + one-per-
+ *    turn + slow regen keep it save-vs-spend (bank one or two, pick the moment),
+ *    never spam.
  *  - Spending is pure upside — the only cost is a point. No accuracy/defense
  *    tax.
+ *
+ * The Fighter carries a DEEPER well and regenerates it FASTER: it has no Rage /
+ * Hunter's-Mark damage multiplier to lean on between spends, so the pool is its
+ * whole turn-to-turn lever.
  */
 
 export const MARTIAL_POOL_MAX = 3;
+/** The Fighter's deeper pool — it leans hardest on the resource (no Rage/Mark). */
+export const MARTIAL_POOL_MAX_FIGHTER = 4;
 export const MARTIAL_OFFENSE_COST = 2;
 export const MARTIAL_DEFENSE_COST = 1;
 export const MARTIAL_DISRUPT_COST = 1;
@@ -38,6 +50,47 @@ const MARTIAL_CLASSES: ReadonlySet<ClassId> = new Set(['fighter', 'barbarian', '
 /** True for the three classes that wield the martial resource pool. */
 export function isMartialClass(character: Readonly<Character>): boolean {
   return MARTIAL_CLASSES.has(character.classId);
+}
+
+/**
+ * The class's pool ceiling — both the per-fight refresh target and the regen cap.
+ * The Fighter's is deeper ({@link MARTIAL_POOL_MAX_FIGHTER}); Barbarian and Ranger
+ * share the baseline ({@link MARTIAL_POOL_MAX}). Zero for non-martial classes.
+ */
+export function martialPoolMax(character: Readonly<Character>): number {
+  if (!isMartialClass(character)) return 0;
+  return character.classId === 'fighter' ? MARTIAL_POOL_MAX_FIGHTER : MARTIAL_POOL_MAX;
+}
+
+/**
+ * Rounds between mid-fight regen ticks. The Fighter tops up every round; the
+ * Barbarian and Ranger every OTHER round (they have a damage multiplier — Rage /
+ * Hunter's Mark — to ride between spends, so they don't need the pool as often).
+ */
+export function martialRegenInterval(character: Readonly<Character>): number {
+  return character.classId === 'fighter' ? 1 : 2;
+}
+
+/**
+ * Mid-fight pool regen. Called at the start of each of the hero's turns (endTurn).
+ * Adds one point on a regen-tick round, capped at the class max. The pool already
+ * refreshes full on round 1 (createCombat), so ticks begin the next time the hero
+ * acts: rounds 2,3,4,… for the Fighter (interval 1); rounds 3,5,7,… for the
+ * Barbarian/Ranger (interval 2). Returns the SAME reference when nothing changes,
+ * so callers can cheaply detect a real top-up.
+ */
+export function regenMartialPoolForRound(
+  character: Readonly<Character>,
+  round: number,
+): Character {
+  const self = character as Character;
+  if (!isMartialClass(character)) return self;
+  const interval = martialRegenInterval(character);
+  if (round <= 1 || (round - 1) % interval !== 0) return self;
+  const max = martialPoolMax(character);
+  const current = martialPointsLeft(character);
+  if (current >= max) return self;
+  return patchResources(self, { martialPointsRemaining: current + 1 });
 }
 
 export interface MartialFlavor {
@@ -66,10 +119,12 @@ export function martialPointsLeft(character: Readonly<Character>): number {
 /**
  * Flat bonus damage an OFFENSE strike adds to EACH weapon strike this turn —
  * scales with level so the spike stays relevant as enemy HP climbs. Applies per
- * strike, so it compounds with Extra Attack.
+ * strike, so it compounds with Extra Attack. Tuned UP from its first pass: at 2
+ * points it has to clearly out-earn two 1-point spends, or the bot (and the
+ * player) just never commit it — OFFENSE was near-inert in the sims.
  */
 export function martialOffenseDamage(character: Readonly<Character>): number {
-  return 4 + Math.floor(character.level / 2);
+  return 6 + Math.floor(character.level / 2);
 }
 
 /** Damage a DEFENSE guard blunts off the next incoming hit. */

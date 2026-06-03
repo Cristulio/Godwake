@@ -35,7 +35,7 @@ import { getTwist, twistCombatEffect, CURSED_GROUND_DECAY_TURNS } from '../delve
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { wildShapeUsesMax } from './wildShape';
 import { monkKiMax } from './monk';
-import { MARTIAL_POOL_MAX } from './martialResource';
+import { martialPoolMax } from './martialResource';
 
 // MAX_COMBAT_LOG now lives in the leaf log module (breaking the createCombat ⇄
 // log import cycle); re-exported here so existing importers keep working.
@@ -244,8 +244,9 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     };
     nextCharacter = patchResources(nextCharacter, {
       secondWindAvailable: true,
-      // Resolve pool refreshes per encounter, like Second Wind.
-      martialPointsRemaining: MARTIAL_POOL_MAX,
+      // Resolve pool refreshes per encounter, like Second Wind (deeper for the
+      // Fighter — it has no damage multiplier to lean on between spends).
+      martialPointsRemaining: martialPoolMax(nextCharacter),
     });
   }
 
@@ -261,7 +262,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     };
     nextCharacter = patchResources(nextCharacter, {
       rageRoundsRemaining: 0,
-      martialPointsRemaining: MARTIAL_POOL_MAX,
+      martialPointsRemaining: martialPoolMax(nextCharacter),
     });
   }
 
@@ -274,7 +275,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       martialSpentThisTurn: false,
     };
     nextCharacter = patchResources(nextCharacter, {
-      martialPointsRemaining: MARTIAL_POOL_MAX,
+      martialPointsRemaining: martialPoolMax(nextCharacter),
     });
   }
 
