@@ -3,6 +3,7 @@ import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
 import { QuirkCard } from '../ui/QuirkCard';
 import { playSfx } from '../../engine/audio';
+import { useInputBlock } from '../ui/useInputBlock';
 
 const HEADLINE = 'You wake again. The flesh is new. The soul remembers.';
 const BASE_TICK = 36;
@@ -20,6 +21,7 @@ export function ReincarnationReveal() {
   const indexRef = useRef(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastSfxCountRef = useRef(0);
+  const overlayRef = useInputBlock<HTMLDivElement>();
 
   // Typewriter for the headline, with hold-to-speed.
   useEffect(() => {
@@ -88,7 +90,11 @@ export function ReincarnationReveal() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-4 py-8 md:px-6 md:py-12 gap-8 select-none relative overflow-hidden"
+      ref={overlayRef}
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-8 md:px-6 md:py-12 gap-8 select-none relative overflow-hidden outline-none"
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onMouseDown={() => setHolding(true)}

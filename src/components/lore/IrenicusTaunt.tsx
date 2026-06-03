@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '../ui/Button';
 import { Imoen, Irenicus as IrenicusPortrait } from './NpcPortrait';
 import { useMetaStore } from '../../stores/metaStore';
+import { useInputBlock } from '../ui/useInputBlock';
 
 export type TauntContext =
   | 'death'
@@ -473,17 +474,10 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
     setDone(true);
   }
 
+  // Clicking the backdrop only fast-forwards the typewriter — never dismisses.
+  // The voice holds the screen until the explicit Continue button is pressed.
   function handleClick() {
-    if (!done) {
-      completeNow();
-      return;
-    }
-    onDismiss();
-  }
-
-  function handleDoubleClick(e: React.MouseEvent) {
-    e.preventDefault();
-    onDismiss();
+    if (!done) completeNow();
   }
 
   const isIrenicus = speaker === 'irenicus';
@@ -509,6 +503,8 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
 
   const PortraitGlyph = isIrenicus ? IrenicusPortrait : Imoen;
 
+  const overlayRef = useInputBlock<HTMLDivElement>();
+
   // Tail / arrow points from the bubble back toward the portrait. For
   // Irenicus the portrait sits on the right, so the tail points right.
   const tailSide = isIrenicus ? 'right-[12.5rem]' : 'left-[12.5rem]';
@@ -518,9 +514,12 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-end ${sideClass} bg-[var(--color-bg-base)]/85 p-4 md:p-10 animate-fade-in`}
+      ref={overlayRef}
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      className={`fixed inset-0 z-50 flex items-end ${sideClass} bg-[var(--color-bg-base)]/85 p-4 md:p-10 animate-fade-in outline-none`}
       onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
       onMouseDown={() => setHolding(true)}
       onMouseUp={() => setHolding(false)}
       onMouseLeave={() => setHolding(false)}
@@ -580,7 +579,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
                   ? '▶▶ holding to speed'
                   : done
                     ? ''
-                    : 'click skip · hold speed · 2× dismiss'}
+                    : 'click skip · hold speed'}
               </div>
               <Button
                 variant={done ? buttonVariant : 'secondary'}
