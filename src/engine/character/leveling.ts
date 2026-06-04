@@ -157,7 +157,11 @@ export function availableWizardSpellsForLearn(
 ): Spell[] {
   const known = new Set(character.resources.knownSpells ?? []);
   return listSpells().filter(
-    (s) => s.level === tier && s.enabled !== false && !known.has(s.id),
+    (s) =>
+      s.book === 'wizard' &&
+      s.level === tier &&
+      s.enabled !== false &&
+      !known.has(s.id),
   );
 }
 

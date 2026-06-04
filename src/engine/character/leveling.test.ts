@@ -193,6 +193,45 @@ describe('wizard spell-learn cadence', () => {
   });
 });
 
+describe('wizard spell-learn picker is class-filtered', () => {
+  const wiz = charAt('wizard', 1);
+  const fresh: Character = { ...wiz, resources: { ...wiz.resources, knownSpells: [] } };
+
+  it('offers only the wizard-book level-3 spells, not the druid reskins', () => {
+    const ids = availableWizardSpellsForLearn(fresh, 3).map((s) => s.id).sort();
+    expect(ids).toEqual(['fireball', 'lightning-bolt', 'vampiric-touch']);
+    expect(ids).not.toContain('wildfire');
+    expect(ids).not.toContain('call-lightning');
+  });
+
+  it('never surfaces a druid-book spell at any learn tier', () => {
+    for (const tier of [2, 3, 4, 5, 6, 7, 8, 9] as const) {
+      const pool = availableWizardSpellsForLearn(fresh, tier);
+      expect(pool.every((s) => s.book === 'wizard')).toBe(true);
+    }
+  });
+});
+
+describe('druid nature book', () => {
+  it('a freshly initialized druid knows all 12 nature spells', () => {
+    const known = charAt('druid', 1).resources.knownSpells ?? [];
+    expect(known).toEqual([
+      'produce-flame',
+      'thornlash',
+      'entangling-roots',
+      'moonfire',
+      'call-lightning',
+      'wildfire',
+      'ice-storm',
+      'avalanche',
+      'fire-storm',
+      'summon-tempest',
+      'wrath-of-silvanus',
+      'avatar-of-the-wilds',
+    ]);
+  });
+});
+
 describe('high-level martial feature grants', () => {
   it('gives the Fighter a third attack at 11 and a fourth at 20', () => {
     expect(maxAttacksPerAction(charAt('fighter', 8))).toBe(2);
