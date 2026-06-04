@@ -155,7 +155,10 @@ export function SpoilsScreen() {
           <Button variant="primary" size="lg" onClick={acceptSpoils}>
             {leveledUp ? 'Accept · Level Up →' : 'Accept →'}
           </Button>
-          {hasItems && (
+          {/* A pending level-up must come first — no pack shortcut that would skip
+              it. The dropped items are already in the pack; open it from the route
+              map after leveling. */}
+          {hasItems && !leveledUp && (
             <button
               type="button"
               onClick={() => {

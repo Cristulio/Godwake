@@ -831,3 +831,56 @@ describe('delveStore — dialogue plays BEFORE the fight, never over it', () => 
     expect(useMetaStore.getState().knownNpcs).toEqual(['imoen', 'irenicus']);
   });
 });
+
+describe('delveStore — a pending level-up is forced before the next fight', () => {
+  beforeEach(() => {
+    setActiveRoller('levelup-gate-seed');
+    seedRun({ quirks: [] });
+    useScreenStore.setState({ screen: 'delve', taunt: null, tauntQueue: [], tutorialQueue: [] });
+  });
+
+  it('acceptSpoils routes to the level-up screen when the clear crossed a threshold', () => {
+    // Level 3 carrying L4 XP (xpForLevel(4) = 1000) → a level-up is owed.
+    seedRun({ quirks: [], level: 3, xp: 1000 });
+    const combat = useDelveStore.getState().delve!.rooms.find((r) => r.kind === 'combat')!;
+    const idx = useDelveStore.getState().delve!.rooms.findIndex((r) => r.id === combat.id);
+    setDelve({ currentRoomIdx: idx, currentRoomId: combat.id });
+    useDelveStore.setState({ pendingSpoilsRoom: combat });
+
+    useDelveStore.getState().acceptSpoils();
+
+    expect(useScreenStore.getState().screen).toBe('level-up');
+  });
+
+  it('chooseRoom will not enter a node while a level-up is owed — it routes to level-up and the run stays put', () => {
+    seedRun({ quirks: [], level: 3, xp: 1000 });
+    setDelve({ phase: 'between-rooms', currentRoomIdx: 0 });
+    useScreenStore.setState({ screen: 'delve' });
+    const entry = useDelveStore.getState().delve!.rooms[0];
+    const target = entry.next![0];
+
+    useDelveStore.getState().chooseRoom(target);
+
+    // Sent to level up — and crucially the run did NOT step into the node or
+    // build a combat, so no extra fight can happen before leveling.
+    expect(useScreenStore.getState().screen).toBe('level-up');
+    const d = useDelveStore.getState().delve!;
+    expect(d.phase).toBe('between-rooms');
+    expect(d.currentRoomIdx).toBe(0);
+    expect(useCombatStore.getState().combat).toBeNull();
+  });
+
+  it('chooseRoom steps into the node normally once nothing is owed (gate is transparent)', () => {
+    // Level 3, default xp 0 → no pending level-up.
+    seedRun({ quirks: [] });
+    setDelve({ phase: 'between-rooms', currentRoomIdx: 0 });
+    const entry = useDelveStore.getState().delve!.rooms[0];
+    const target = entry.next![0];
+
+    useDelveStore.getState().chooseRoom(target);
+
+    const d = useDelveStore.getState().delve!;
+    expect(d.phase).toBe('in-room');
+    expect(d.currentRoomId).toBe(target);
+  });
+});
