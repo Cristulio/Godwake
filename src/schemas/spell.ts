@@ -58,6 +58,10 @@ export const SpellEffectKeySchema = z.enum([
   'exsanguinate', // 6: heavier single-target necrotic drain, heals caster for half
   'apotheosis', // 9: transform-self power buff (capstone)
   'unmake', // 9: remake-the-enemy (capstone)
+  // --- Druid signature workings — mechanics the arcane book lacks. ---
+  'regrowth', // 2: self heal-over-time (the Druid's only sustain)
+  'entangle', // 2: AoE root — every enemy saves or loses its next turn
+  'summon-beast', // 7: persistent spirit companion, auto-damage each turn
 ]);
 export type SpellEffectKey = z.infer<typeof SpellEffectKeySchema>;
 

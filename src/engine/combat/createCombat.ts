@@ -286,6 +286,12 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     nextCharacter = patchResources(nextCharacter, {
       wildShapeRoundsRemaining: 0,
       wildShapeUsesRemaining: wildShapeUsesMax(nextCharacter),
+      // Clear any stale signature-spell DOT/HOT carried from the prior fight —
+      // Regrowth and Spirit Beast are per-combat effects.
+      regrowthTurnsRemaining: 0,
+      regrowthHealPerTurn: 0,
+      spiritBeastTurnsRemaining: 0,
+      spiritBeastDamagePerTurn: 0,
     });
   }
 

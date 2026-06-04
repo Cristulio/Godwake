@@ -292,6 +292,29 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     nextState = { ...nextState, playerRegenStacks: (nextState.playerRegenStacks ?? 1) - 1 };
   }
 
+  // Regrowth (Druid HOT): knit a fixed amount at the start of the player's turn
+  // for the ticks the cast banked, then expire. The cast already healed once;
+  // these are the follow-on turns. Decrement even at full HP so the effect runs
+  // down on schedule.
+  if (
+    order[nextIndex] === 'player' &&
+    (nextCharacter.resources.regrowthTurnsRemaining ?? 0) > 0
+  ) {
+    const heal = nextCharacter.resources.regrowthHealPerTurn ?? 0;
+    const remaining = (nextCharacter.resources.regrowthTurnsRemaining ?? 0) - 1;
+    if (heal > 0 && nextCharacter.hp.current > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
+      const before = nextCharacter.hp.current;
+      const after = Math.min(nextCharacter.hp.max, before + heal);
+      nextCharacter = patchHp(nextCharacter, { current: after });
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'system',
+        text: `Regrowth knits ${after - before} HP into ${nextCharacter.name}.${remaining > 0 ? ` (${remaining} turns remaining)` : ''}`,
+      });
+    }
+    nextCharacter = patchResources(nextCharacter, { regrowthTurnsRemaining: remaining });
+  }
+
   // Bleed DOT: tick each bleeding monster at the start of the player's turn.
   if (order[nextIndex] === 'player') {
     for (const combatant of nextState.combatants) {
@@ -376,6 +399,46 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     const burnEnded = evaluateCombatEnd(nextState, nextCharacter);
     nextState = burnEnded.state;
     nextCharacter = burnEnded.character;
+  }
+
+  // Spirit Beast (Druid summon): the persistent companion mauls a foe at the
+  // start of the player's turn for the ticks the cast banked. Re-targets the
+  // lowest-HP living enemy each turn (focus-fire — finish the wounded), applies
+  // typeless auto-damage like the burn/bleed DOTs, then expires.
+  if (
+    order[nextIndex] === 'player' &&
+    nextState.status === 'active' &&
+    (nextCharacter.resources.spiritBeastTurnsRemaining ?? 0) > 0
+  ) {
+    const dmg = nextCharacter.resources.spiritBeastDamagePerTurn ?? 0;
+    const remaining = (nextCharacter.resources.spiritBeastTurnsRemaining ?? 0) - 1;
+    const prey = nextState.combatants
+      .filter((c): c is MonsterCombatant => c.kind === 'monster' && c.instance.hp.current > 0)
+      .sort((a, b) => a.instance.hp.current - b.instance.hp.current)[0];
+    if (dmg > 0 && prey) {
+      const remainingTemp = Math.max(0, prey.instance.hp.temp - dmg);
+      const overflow = Math.max(0, dmg - prey.instance.hp.temp);
+      const newHp = Math.max(0, prey.instance.hp.current - overflow);
+      nextState = {
+        ...nextState,
+        combatants: nextState.combatants.map((c) => {
+          if (c.kind !== 'monster' || c.id !== prey.id) return c;
+          return {
+            ...c,
+            instance: { ...c.instance, hp: { ...c.instance.hp, current: newHp, temp: remainingTemp } },
+          };
+        }),
+      };
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'damage',
+        text: `The spirit beast savages ${prey.instance.displayName} for ${dmg}.${remaining > 0 ? ` (${remaining} turns remaining)` : ''}`,
+      });
+    }
+    nextCharacter = patchResources(nextCharacter, { spiritBeastTurnsRemaining: remaining });
+    const beastEnded = evaluateCombatEnd(nextState, nextCharacter);
+    nextState = beastEnded.state;
+    nextCharacter = beastEnded.character;
   }
 
   // enemy-telegraph: re-select every monster's intent at the top of the

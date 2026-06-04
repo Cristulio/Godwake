@@ -28,6 +28,9 @@ import {
 } from './highLevelStrikes';
 import { castExsanguinate, castVampiricTouch } from './lifeDrain';
 import { castApotheosis, castUnmake } from './ninthLevel';
+import { castRegrowth } from './regrowth';
+import { castEntangle } from './entangle';
+import { castSpiritBeast } from './spiritBeast';
 
 /**
  * Cast a known spell. Spell-by-spell switch — slot consumption and action
@@ -103,6 +106,13 @@ export function castSpell(ctx: CastSpellContext): CastResult {
       return castApotheosis(character, state);
     case 'unmake':
       return castUnmake(cc);
+    // Druid signature workings.
+    case 'regrowth':
+      return castRegrowth(cc);
+    case 'entangle':
+      return castEntangle(cc);
+    case 'summon-beast':
+      return castSpiritBeast(cc);
     default:
       // Exhaustive guard — if a new effectKey is added, this branch becomes
       // unreachable but keeps the switch honest.

@@ -283,11 +283,10 @@ const MID_NUKE_PRIORITY = ['void-ray', 'force-lance', 'lightning-bolt'] as const
 const DRAIN_PRIORITY = ['vampiric-touch', 'exsanguinate'] as const;
 
 /** Druid AoE blasts that hit EVERY enemy, biggest dice first — the crowd-clear
- *  pool. Call Lightning is deliberately absent: it forks to just one extra foe,
- *  so it is a focused nuke, not a pack-clear. */
+ *  pool. Call Lightning is absent (it forks to just one extra foe — a focused
+ *  nuke, not a pack-clear), as is Spirit Beast (now a single-target companion). */
 const DRUID_AOE_PRIORITY = [
   'wrath-of-silvanus',
-  'summon-tempest',
   'fire-storm',
   'avalanche',
   'ice-storm',
@@ -906,6 +905,19 @@ function chooseDruidAction(
   const enemyCount = live.length;
   const anchor = threat?.id ?? primary?.id;
   const beefy = highestHpTarget(live);
+  const hpPct = character.hp.current / character.hp.max;
+
+  // Regrowth: the Druid's one true sustain. When bloodied and the renewal isn't
+  // already running, knit wounds with a 2nd-level slot — the heal-over-time pays
+  // back across the next turns, which beats plinking a cantrip while bleeding.
+  if (
+    hpPct <= profile.wizardDrainHp &&
+    (character.resources.regrowthTurnsRemaining ?? 0) === 0 &&
+    knows(character, 'regrowth') &&
+    slotsAt(character, 2) > 0
+  ) {
+    return { kind: 'cast', spellId: 'regrowth' };
+  }
 
   // Boss finisher: against a true boss, blaze into the Avatar of the Wilds
   // (the 9th-level self-buff) — temp HP, +AC, and far harder strikes for the
@@ -918,6 +930,20 @@ function chooseDruidAction(
     (character.resources.ascendantRoundsRemaining ?? 0) === 0
   ) {
     return { kind: 'cast', spellId: 'avatar-of-the-wilds' };
+  }
+
+  // Spirit Beast: bind a primal companion to a real, sustained threat. Call it
+  // EARLY (the moment a beefy boss/elite stands) so its per-turn maulings stack
+  // across the fight, and only when one isn't already at your side. The 7th-level
+  // slot pays off over the duration, not in one burst.
+  if (
+    beefy &&
+    beefy.instance.hp.current >= BOSS_NUKE_HP &&
+    knows(character, 'spirit-beast') &&
+    slotsAt(character, 7) > 0 &&
+    (character.resources.spiritBeastTurnsRemaining ?? 0) === 0
+  ) {
+    return { kind: 'cast', spellId: 'spirit-beast', targetId: beefy.id };
   }
 
   // AoE when the room is crowded — biggest affordable blast that hits the pack.
@@ -940,17 +966,20 @@ function chooseDruidAction(
     return { kind: 'cast', spellId: 'call-lightning', targetId: beefy.id };
   }
 
-  // Control: root the scariest live foe so its whole turn vanishes while the
-  // kill assembles — worth it on a lone boss too, not just a crowd.
+  // Entangle: the Druid's signature soft control — grasping roots sweep the
+  // whole floor, stripping a turn from everything that fails its save. Reach for
+  // it when the room is crowded (2+ foes) and something meaty still stands, and
+  // nothing is rooted yet (don't waste it re-rooting a held pack or on near-dead
+  // trash). The AoE counterpart to the Wizard's single-target Hold Person.
   if (
-    threat &&
-    !isMonsterParalyzed(threat) &&
-    monsterThreat(threat) >= profile.holdPersonThreat &&
-    threat.instance.hp.current > HOLD_PERSON_MIN_HP &&
+    enemyCount >= 2 &&
     knows(character, 'entangling-roots') &&
-    slotsAt(character, 2) > 0
+    slotsAt(character, 2) > 0 &&
+    threat &&
+    threat.instance.hp.current > HOLD_PERSON_MIN_HP &&
+    !live.some((m) => m.instance.conditions.some((c) => c.name === 'restrained'))
   ) {
-    return { kind: 'cast', spellId: 'entangling-roots', targetId: threat.id };
+    return { kind: 'cast', spellId: 'entangling-roots', targetId: anchor };
   }
 
   // Guaranteed finish: Thornlash auto-hits, so a low target dies for sure.
@@ -961,17 +990,6 @@ function chooseDruidAction(
     primary.instance.hp.current <= MAGIC_MISSILE_MIN
   ) {
     return { kind: 'cast', spellId: 'thornlash', targetId: primary.id };
-  }
-
-  // Burst a beefy single threat with Moonfire's volley of lances.
-  if (
-    enemyCount <= 2 &&
-    knows(character, 'moonfire') &&
-    slotsAt(character, 2) > 0 &&
-    threat &&
-    threat.instance.hp.current >= SCORCHING_RAY_WORTH_HP
-  ) {
-    return { kind: 'cast', spellId: 'moonfire', targetId: threat.id };
   }
 
   // Spend a level-1 slot (Thornlash) when the cantrip is too weak to matter.

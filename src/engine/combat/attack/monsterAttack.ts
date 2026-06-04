@@ -179,6 +179,40 @@ export function monsterAttack(
     );
   }
 
+  // Restrained (Druid Entangle): grasping roots hold the foe fast — tick its own
+  // duration and lose the action, just like paralyzed. At Entangle's 1-round
+  // duration this is a single skipped turn: the foe wrenches free as it spends
+  // the turn. No save (the slot already bought the root on a failed STR save).
+  const restrained = attacker.instance.conditions.find((c) => c.name === 'restrained');
+  if (restrained && restrained.duration.kind === 'rounds') {
+    const next = restrained.duration.value - 1;
+    const expired = next <= 0;
+    const updatedConditions = expired
+      ? attacker.instance.conditions.filter((c) => c.name !== 'restrained')
+      : attacker.instance.conditions.map((c) =>
+          c.name === 'restrained'
+            ? { ...c, duration: { kind: 'rounds' as const, value: next } }
+            : c,
+        );
+    return combatResult(
+      appendLog(
+        patchMonsterInstance(state, attackerId, (inst) => ({
+          ...inst,
+          conditions: updatedConditions,
+          actionEconomy: { ...inst.actionEconomy, actionUsed: true },
+        })),
+        {
+          id: nextLogId(state),
+          kind: 'system',
+          text: expired
+            ? `${attacker.instance.displayName} wrenches free of the grasping roots — the turn is lost.`
+            : `${attacker.instance.displayName} is held fast by roots — the turn is lost.`,
+        },
+      ),
+      character,
+    );
+  }
+
   const monsterDef = getMonster(attacker.instance.defId);
   // Resolve the telegraphed action (selected ahead of the player's turn), so
   // what happens equals the intent the player saw. Falls back to a fresh pick
