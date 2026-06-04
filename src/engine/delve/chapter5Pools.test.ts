@@ -86,9 +86,13 @@ describe('Chapter 5 boss — Aurelach, the Hollow Dawn', () => {
     expect(boss.ac).toBeGreaterThanOrEqual(matron.ac);
   });
 
-  it('carries an escalation mechanic and a held-opener', () => {
-    expect(boss.bossMechanic).toBe('battle-rage');
+  it('carries an escalation mechanic, a held-opener, and the illusion kit', () => {
+    // Escalation folded from battle-rage into a half-HP enrage phase.
+    expect(boss.phases?.some((p) => p.atHpPctBelow <= 50)).toBe(true);
     expect(boss.actions.some((a) => a.kind === 'paralyze')).toBe(true);
+    // Deception kit: a summoned decoy dawn + a concealment debuff.
+    expect(boss.actions.some((a) => a.kind === 'summon')).toBe(true);
+    expect(boss.actions.some((a) => a.kind === 'debuff')).toBe(true);
   });
 
   it('every boss action is reachable by the action picker (has the swing multiattack repeats)', () => {
