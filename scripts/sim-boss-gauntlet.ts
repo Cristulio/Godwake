@@ -46,11 +46,17 @@ import { withResetActionEconomy } from '../src/engine/character/actions';
 import { buildPlayerCharacter, presetCreationInput } from '../src/engine/character/defaultCharacter';
 import { pickBlessingAtShrine } from '../src/test/sim/encounterStress';
 import { clampAscension } from '../src/engine/delve/ascension';
+import { rollItem } from '../src/engine/items/rollItem';
+import { equipItem } from '../src/engine/character/equip';
+import {
+  legendaryDropPool,
+  aggregateLegendaryEffects,
+  canEquipLegendary,
+} from '../src/content/legendaries';
 import { spellcastingMod } from '../src/engine/character/derived';
 import {
   scaleSpellDamage,
   spellDamageMultiplier,
-  spellAcquisitionLevel,
 } from '../src/engine/combat/spells/scaling';
 import { spellDamageBonus } from '../src/engine/combat/spells/helpers';
 import { magicMissileDartCount } from '../src/engine/combat/spells/magicMissile';
@@ -60,6 +66,7 @@ import type { CombatState, MonsterCombatant } from '../src/types/combat';
 import type { Monster, MonsterAction } from '../src/schemas/monster';
 import type { RoomSpec } from '../src/types/delve';
 import type { ClassId } from '../src/schemas/ids';
+import type { GearRarity, BaseKind } from '../src/schemas/item';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -69,6 +76,13 @@ const ASCENSION = clampAscension(Number(process.env.ASCENSION ?? 0));
 const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.env.ARCHETYPE ?? '')
   ? (process.env.ARCHETYPE as Archetype)
   : 'balanced';
+// GEAR=1 brackets the bare-soul floor: the hero also carries a representative
+// rolled loadout (one high-rarity item per slot at the chapter's depth + two
+// attuned class legendaries), mirroring sim-ngplus-tob's gearUpArriving but at
+// THIS gauntlet's correct per-chapter level. The gear-sensitive boss fixes
+// (Ch7 sustain/adds, Ch9 gate) target the geared hero, so this is the lens that
+// shows their payoff; the bare default stays the apples-to-apples floor read.
+const GEAR = process.env.GEAR === '1';
 // Hero level when entering each chapter's boss room (ch1..14). Default is a
 // monotone schedule that lands L20 at Ch14 and ~L18-19 by Ch12-13 — the band the
 // xp-curve sim reports for the realized routed-XP median. Override with BOSS_LEVELS.
@@ -105,9 +119,34 @@ const hashStr = (s: string): number => {
   return h >>> 0;
 };
 
+// Representative loadout slots (matches sim-ngplus-tob.gearUpArriving). Rarity is
+// the slot QUALITY; the per-slot affix magnitudes auto-scale with `depth`, so the
+// same slot set rolled at depth=chapter yields a chapter-appropriate kit — strong
+// for the ToB arc, modest for the lower delve. Brackets the bare floor from above.
+const GEAR_SLOTS: { kind: BaseKind; rarity: GearRarity }[] = [
+  { kind: 'weapon', rarity: 'legendary' },
+  { kind: 'armor', rarity: 'legendary' },
+  { kind: 'accessory', rarity: 'purple' },
+  { kind: 'accessory', rarity: 'purple' },
+];
+function gearUpForChapter(roller: DiceRoller, base: Character, chapter: number): Character {
+  let c = base;
+  for (const { kind, rarity } of GEAR_SLOTS) {
+    const ref = rollItem(roller, { rarity, classId: c.classId, kind, depth: chapter });
+    const idx = c.inventory.length;
+    c = equipItem({ ...c, inventory: [...c.inventory, ref] }, idx);
+  }
+  const relics = legendaryDropPool(c.classId)
+    .filter((id) => canEquipLegendary(id, c.classId))
+    .slice(0, 2);
+  if (relics.length) c = { ...c, legendaryEffects: aggregateLegendaryEffects(relics) };
+  return { ...c, hp: { ...c.hp, current: c.hp.max, temp: 0 } };
+}
+
 /** Hero entering chapter C's boss: at the level schedule + a realistic blessing
  *  loadout (picked by the shared policy, deterministic per class+chapter so the
- *  boss fight is the only variable across seeds). Cached. */
+ *  boss fight is the only variable across seeds). With GEAR=1 it also carries a
+ *  representative depth-scaled loadout. Cached. */
 const heroCache = new Map<string, Character>();
 function heroForChapter(classId: ClassId, chapter: number): Character {
   const level = BOSS_LEVELS[chapter - 1] ?? 20;
@@ -116,9 +155,10 @@ function heroForChapter(classId: ClassId, chapter: number): Character {
   const hit = heroCache.get(key);
   if (hit) return hit;
   let c = heroAtLevel(classId, level);
-  if (nBless > 0) {
+  if (nBless > 0 || GEAR) {
     const setup = createDiceRoller((SEED_BASE ^ hashStr(classId) ^ (chapter * 2654435761)) >>> 0);
     for (let i = 0; i < nBless; i++) c = pickBlessingAtShrine(setup, c);
+    if (GEAR) c = gearUpForChapter(setup, c, chapter);
   }
   heroCache.set(key, c);
   return c;
@@ -383,11 +423,12 @@ function spellScalingTable(): string[] {
   const L: string[] = [];
   L.push('## Caster damage scaling by level (expected values, real helpers)\n');
   L.push(
-    'Fire Bolt is the cantrip arm of the parametric model (1d10 base × levelFactor × ' +
-      'intFactor + weaponEnh, anchored at L1). Magic Missile (darts) and Scorching Ray ' +
-      '(rays) are deliberately left on COUNT scaling — a separate axis. Fireball is the ' +
-      'L3 nuke on the parametric model (8d6 base, acq L5). The OLD Fire Bolt capped at ' +
-      '4d10 ≈ 22 dice at L8+; the new cantrip replaces that step with a smooth climb.\n',
+    'Fire Bolt is the cantrip arm of the parametric model (1d10 base × levelFactor + ' +
+      'weaponEnh, anchored at acquisition; #418 dropped the inert intFactor). The cantrip ' +
+      'rides the steeper CANTRIP_LEVEL_K (0.12) so its L20 dice-core climbs back near the ' +
+      'old 4d10 ≈ 22 cap, while leveled spells keep LEVEL_K (0.05). Magic Missile (darts) ' +
+      'and Scorching Ray (rays) are deliberately left on COUNT scaling — a separate axis. ' +
+      'Fireball is the L3 nuke on the parametric model (8d6 base, acq L5).\n',
   );
   L.push(
     '| Level | castMod | Fire Bolt mult | Fire Bolt dice-core | Fire Bolt full (avg) | Magic Missile (auto) | Scorching Ray (raw) | Fireball dice-core |',
@@ -397,17 +438,20 @@ function spellScalingTable(): string[] {
   const FIREBALL_DICE = 28; // 8d6
   const MM_DART = 3.5; // 1d4+1
   const RAY = 7; // 2d6
-  const acqCantrip = spellAcquisitionLevel(0);
-  const acqFireball = spellAcquisitionLevel(3);
+  // #418 changed the scaler to take the spell TIER (not an acq-level): tier 0
+  // selects the steeper CANTRIP_LEVEL_K, leveled tiers use LEVEL_K. Pass the tier
+  // directly, exactly as the engine call sites (fireBolt.ts) now do.
+  const CANTRIP_TIER = 0; // Fire Bolt
+  const FIREBALL_TIER = 3; // Fireball (8d6, acq L5)
   for (const level of [1, 3, 5, 8, 11, 14, 17, 20]) {
     const wiz = heroAtLevel('wizard', level);
     const castMod = spellcastingMod(wiz);
-    const mult = spellDamageMultiplier(wiz, acqCantrip);
-    const fbDice = scaleSpellDamage(FIRE_BOLT_DICE, wiz, acqCantrip);
+    const mult = spellDamageMultiplier(wiz, CANTRIP_TIER);
+    const fbDice = scaleSpellDamage(FIRE_BOLT_DICE, wiz, CANTRIP_TIER);
     const fbFull = fbDice + spellDamageBonus(wiz) + castMod;
     const mm = magicMissileDartCount(level) * MM_DART + spellDamageBonus(wiz);
     const ray = scorchingRayCount(level) * RAY;
-    const fireball = scaleSpellDamage(FIREBALL_DICE, wiz, acqFireball);
+    const fireball = scaleSpellDamage(FIREBALL_DICE, wiz, FIREBALL_TIER);
     L.push(
       `| ${level} | +${castMod} | ${mult.toFixed(2)}× | ${fbDice} | ${fbFull.toFixed(1)} | ${mm.toFixed(1)} | ${ray.toFixed(0)} | ${fireball} |`,
     );
@@ -449,12 +493,18 @@ function main(): void {
   // ── Report ──
   const L: string[] = [];
   L.push('# Boss gauntlet — per-chapter boss difficulty + mechanic-firing audit\n');
+  const gearClause = GEAR
+    ? `PLUS a representative depth-scaled loadout (GEAR=1: a high-rarity item per slot ` +
+      `rolled at the chapter's depth + two attuned class legendaries) — this BRACKETS the bare ` +
+      `floor from above, so win-rates here are an UPPER read for a realistically-geared hero.`
+    : `BUT preset gear (no shop/legendary/meta power) — so MARTIAL win-rates on the deep bosses ` +
+      `are a LOWER bound (a real L18 hero swings a +N legendary, not a starting weapon).`;
   L.push(
-    `Ascension **${ASCENSION}**, archetype **${ARCHETYPE}**, **${SEEDS}** seeds × ${CLASSES.length} classes per boss ` +
+    `Ascension **${ASCENSION}**, archetype **${ARCHETYPE}**, gear **${GEAR ? 'representative (depth-scaled)' : 'bare floor'}**, ` +
+      `**${SEEDS}** seeds × ${CLASSES.length} classes per boss ` +
       `= **${SEEDS * CLASSES.length}** fights/boss, **${SEEDS * CLASSES.length * bossRooms.length}** total. ` +
-      `Hero = level schedule + a realistic per-chapter blessing loadout, BUT preset gear (no shop/legendary/meta ` +
-      `power) — so MARTIAL win-rates on the deep bosses are a LOWER bound (a real L18 hero swings a +N legendary, ` +
-      `not a starting weapon). Read SHAPE + relative ordering, not magnitudes. Wall: ${((Date.now() - t0) / 1000).toFixed(1)}s.\n`,
+      `Hero = level schedule + a realistic per-chapter blessing loadout, ${gearClause} ` +
+      `Read SHAPE + relative ordering, not magnitudes. Wall: ${((Date.now() - t0) / 1000).toFixed(1)}s.\n`,
   );
   L.push(
     '> Level schedule (ch→L, #blessings): ' +
