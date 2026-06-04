@@ -7,12 +7,15 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * march down toward the captor — a general with no enemy left, who has decided
  * that anything still walking is therefore the enemy.
  *
- * Kit (the proven apex pattern, scaled a clear notch above Chapter 6): a round-1
- * `paralyze` opener — a dead commander's order your body obeys before your mind
- * can refuse — then `multiattack` every round thereafter (the picker falls to
- * multiattack once the opener is spent), swinging his cinder-edged blade.
- * `battle-rage` at half HP: the old war reignites in him and the back half of
- * the fight becomes a race.
+ * boss-framework kit (layered on the apex pattern — paralyze opener, multiattack
+ * filler, battle-rage past half): early he fights economically, but on the order
+ * he raises the marshalled dead in a massed `Marshalled Volley` — a telegraphed
+ * `frightened` that winds up one turn (the ranks levelling their bows) before the
+ * sky goes dark with cinder-shafts and your nerve breaks. At half HP the war he
+ * would not let end REIGNITES (an enrage `phase`): the discipline burns off, he
+ * drops his guard to attack, and the blade stops cauterising and simply BURNS —
+ * a `Cauterising Brand` that cooks the strength out of your arm (`weakened`) so
+ * your blows fall soft while the heat works inward. The back half is a race.
  */
 export const ASHEN_MARSHAL: Monster = MonsterSchema.parse({
   id: 'ashen-marshal',
@@ -38,6 +41,20 @@ export const ASHEN_MARSHAL: Monster = MonsterSchema.parse({
         'He does not shout it. He says it the way a man says a thing that has always been obeyed — hold the line — and some drilled, buried part of you that was never a soldier snaps to it anyway, locks your heels and your spine, and will not let you break ranks even to save your life.',
     },
     {
+      kind: 'debuff',
+      name: 'Marshalled Volley',
+      condition: 'frightened',
+      saveDC: 16,
+      saveAbility: 'wis',
+      durationRounds: 2,
+      telegraph: {
+        chargeText:
+          'He lifts the marshal\'s baton and the ranks at your back go still, then level — a hundred char-black arms drawing as one, the old massed volley, the air filling with the dry creak of dead bows bending toward you.',
+      },
+      description:
+        'The volley comes the way it came on the day the field died: not aimed, simply loosed, a sky going dark with cinder-shafts all at once — and something older than courage in you breaks and wants only to be small, and behind cover, and not here.',
+    },
+    {
       kind: 'multiattack',
       name: 'Old Campaign',
       attacks: 2,
@@ -53,6 +70,29 @@ export const ASHEN_MARSHAL: Monster = MonsterSchema.parse({
       reach: 10,
       description:
         'The blade took the fire and kept it — a long bar of dull, banked heat that lights to orange on the swing. Where it lands it opens the wound and cauterises it in the same stroke, so you bleed heat instead of blood and the field smells of you.',
+    },
+  ],
+  phases: [
+    {
+      atHpPctBelow: 50,
+      name: 'The War Reignites',
+      enterText:
+        'Dravok stops fighting economically. Somewhere under the char a furnace he had banked for a hundred years takes the air again — the war he would not let end reignites in him — and the discipline burns off like dross, leaving only the burning, and a guard he no longer bothers to keep.',
+      acDelta: -2,
+      transform: true,
+      addActions: [
+        {
+          kind: 'debuff',
+          name: 'Cauterising Brand',
+          condition: 'weakened',
+          saveDC: 16,
+          saveAbility: 'con',
+          durationRounds: 3,
+          amount: 4,
+          description:
+            'The blade is all open furnace now, and where it grazes you it no longer cuts and cauterises in one clean stroke — it simply burns, a brand that keeps burning, cooking the strength out of the arm so your own blows fall soft and slow while the heat works its way in.',
+        },
+      ],
     },
   ],
   flavorText:
