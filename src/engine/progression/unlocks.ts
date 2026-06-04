@@ -95,8 +95,13 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   // between lives, useless until the soul has died once and come back. The legacy
   // flag keeps any veteran who earned it the old way (renown) unlocked.
   grove: { reincarnated: true, legacyFlag: 'druidGroveUnlocked' },
-  // Onboarding reveal — delve-count paced.
-  'elite-nodes': { delveCount: 5 },
+  // Elites are intentionally ALWAYS available — players choose the risk from
+  // delve 1. `delveCount: 0` keeps the feature permanently unlocked and fires NO
+  // "Elites unlocked" reveal (a 0 threshold can never be freshly crossed in
+  // newlyUnlocked, where the test is `threshold > prevDelveCount`). Re-enable the
+  // original onboarding gate by restoring the commented line:
+  //   'elite-nodes': { delveCount: 5 },
+  'elite-nodes': { delveCount: 0 },
   // Power unlocks — earned by clearing deeper chapters. Blue gear opens once the
   // soul's deepest run has cleared 3 chapters, purple at 5.
   'boss-intel': { chaptersCleared: 1 },

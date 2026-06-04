@@ -312,7 +312,7 @@ describe('migrateV1ToV2 — v12 → v13 progressive-unlock ladder', () => {
     ).toBe(999);
   });
 
-  it('defaults a missing delveCount to 0 for a fresh/wiped save with no markers (onboarding gates stay closed)', () => {
+  it('defaults a missing delveCount to 0 for a fresh/wiped save with no markers (Grove stays locked)', () => {
     const v = migrateV1ToV2({ unlockedUpgrades: {} });
     expect(v.delveCount).toBe(0);
     const meta = {
@@ -321,13 +321,14 @@ describe('migrateV1ToV2 — v12 → v13 progressive-unlock ladder', () => {
       renownSpent: typeof v.renownSpent === 'number' ? v.renownSpent : 0,
       druidGroveUnlocked: v.druidGroveUnlocked === true,
     };
-    // The curtain is ON: elites and the Grove stay locked for a brand-new soul.
-    expect(isFeatureUnlocked('elite-nodes', meta)).toBe(false);
+    // Elites are intentionally always available now (the delve gate is disabled), so
+    // they read unlocked even for a brand-new soul; the Grove stays curtained.
+    expect(isFeatureUnlocked('elite-nodes', meta)).toBe(true);
     expect(isFeatureUnlocked('grove', meta)).toBe(false);
-    // Sanity: the 999 floor still opens the delve-paced reveals (elites)...
+    // Elites ignore the delve count entirely — unlocked at any floor.
     expect(isFeatureUnlocked('elite-nodes', { ...meta, delveCount: 999 })).toBe(true);
-    // ...but the Grove no longer rides delve count — it is reincarnation-gated now,
-    // so a 999 floor alone does NOT open it; the legacy flag (or a reincarnation) does.
+    // The Grove no longer rides delve count — it is reincarnation-gated now, so a
+    // 999 floor alone does NOT open it; the legacy flag (or a reincarnation) does.
     expect(isFeatureUnlocked('grove', { ...meta, delveCount: 999 })).toBe(false);
     expect(isFeatureUnlocked('grove', { ...meta, druidGroveUnlocked: true })).toBe(true);
   });
