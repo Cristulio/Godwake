@@ -391,6 +391,8 @@ export const THORNLASH: Spell = SpellSchema.parse({
   effectKey: 'magic-missile',
 });
 
+// Signature: AoE soft-control, distinct from the Wizard's single-target
+// Hold Person — every foe saves or loses a turn (effectKey 'entangle').
 export const ENTANGLING_ROOTS: Spell = SpellSchema.parse({
   id: 'entangling-roots',
   book: 'druid',
@@ -398,24 +400,24 @@ export const ENTANGLING_ROOTS: Spell = SpellSchema.parse({
   level: 2,
   school: 'transmutation',
   range: '60 ft',
-  target: 'single',
+  target: 'area',
   description:
-    'Grasping roots erupt and seize one target — a Wisdom save or be rooted fast, helpless, for the next 2 rounds.',
-  effectKey: 'hold-person',
+    'Grasping roots erupt across the whole floor — every enemy must win a Strength save or be rooted fast, losing its next turn as it tears free. A whole room held for a beat, where a binding word holds only one.',
+  effectKey: 'entangle',
 });
 
-export const MOONFIRE: Spell = SpellSchema.parse({
-  id: 'moonfire',
+// Signature: heal-over-time — the Druid's ONLY sustain (effectKey 'regrowth').
+export const REGROWTH: Spell = SpellSchema.parse({
+  id: 'regrowth',
   book: 'druid',
-  name: 'Moonfire',
+  name: 'Regrowth',
   level: 2,
-  school: 'evocation',
-  range: '120 ft',
-  target: 'single',
-  damageType: 'fire',
+  school: 'transmutation',
+  range: 'Self',
+  target: 'self',
   description:
-    'Lances of cold silver flame streak from your hand at one target — each its own attack roll, 2d6 on a hit. Three to start, and more as you grow. Every lance a fresh chance to crit; a hard target rarely shrugs off the whole volley.',
-  effectKey: 'scorching-ray',
+    'Green life wells up through you and keeps welling — your wounds knit now and again at the start of each of your next two turns. The slow, certain mending of the wild; the only healing the nature book holds.',
+  effectKey: 'regrowth',
 });
 
 export const CALL_LIGHTNING: Spell = SpellSchema.parse({
@@ -488,18 +490,21 @@ export const FIRE_STORM: Spell = SpellSchema.parse({
   effectKey: 'sunfire-burst',
 });
 
-export const SUMMON_TEMPEST: Spell = SpellSchema.parse({
-  id: 'summon-tempest',
+// Signature: a persistent companion — a spirit beast that mauls a foe each turn
+// for several rounds (effectKey 'summon-beast'). No ally-combatant entity; it is
+// modelled as an auto-damage effect that ticks at the start of your turns.
+export const SPIRIT_BEAST: Spell = SpellSchema.parse({
+  id: 'spirit-beast',
   book: 'druid',
-  name: 'Summon Tempest',
+  name: 'Spirit Beast',
   level: 7,
   school: 'conjuration',
-  range: '120 ft',
-  target: 'area',
-  damageType: 'lightning',
+  range: '60 ft',
+  target: 'single',
+  damageType: 'force',
   description:
-    'You call a thunderhead down indoors — 13d6 lightning to every enemy. A Dexterity save halves it; even a clean save still draws an arc.',
-  effectKey: 'stormcrash',
+    'You call a great spirit of the wild to your side — fang and claw given form. It savages your foe now and again at the start of each of your next two turns, tearing into whichever enemy is closest to falling. A hunter that fights on while you work.',
+  effectKey: 'summon-beast',
 });
 
 export const WRATH_OF_SILVANUS: Spell = SpellSchema.parse({
@@ -560,13 +565,13 @@ const ALL_SPELLS: Spell[] = [
   PRODUCE_FLAME,
   THORNLASH,
   ENTANGLING_ROOTS,
-  MOONFIRE,
+  REGROWTH,
   CALL_LIGHTNING,
   WILDFIRE,
   ICE_STORM,
   AVALANCHE,
   FIRE_STORM,
-  SUMMON_TEMPEST,
+  SPIRIT_BEAST,
   WRATH_OF_SILVANUS,
   AVATAR_OF_THE_WILDS,
 ];

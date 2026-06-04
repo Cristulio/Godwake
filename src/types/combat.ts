@@ -217,7 +217,10 @@ export type SpellEffectKind =
   | 'sustain-ward' // amber protective bubble over the warded monster
   | 'sustain-drain' // life-drain tether pulling motes target→attacker
   | 'multiattack-flurry' // flurry of fast strike streaks on the player
-  | 'enemy-frenzy'; // red battle-rage aura flash on the monster
+  | 'enemy-frenzy' // red battle-rage aura flash on the monster
+  // === druid-signature === bespoke effects for the Druid's signature kit.
+  | 'regrowth' // leafy green renewal blooming up over the caster (Regrowth HOT)
+  | 'summon-beast'; // a spirit beast pouncing on the struck enemy (Spirit Beast)
 
 /** Alias spelling out that the union is the canonical combat-VFX kind set. */
 export type CombatVfxKind = SpellEffectKind;

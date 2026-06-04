@@ -131,6 +131,23 @@ export interface ClassResources {
    */
   wildShapeUsesRemaining?: number;
   /**
+   * Druid (Regrowth): player turns of healing left, and the HP knit at the
+   * start of each. The cast heals once immediately, then ticks for
+   * {@link regrowthTurnsRemaining} more player-turn-starts (turn.ts). The
+   * Druid's only sustain. Both reset to 0 at combat start (createCombat).
+   */
+  regrowthTurnsRemaining?: number;
+  regrowthHealPerTurn?: number;
+  /**
+   * Druid (Spirit Beast): player turns the summoned companion keeps mauling,
+   * and the damage it deals to a live foe at the start of each. The cast strikes
+   * once immediately, then ticks for {@link spiritBeastTurnsRemaining} more
+   * player-turn-starts (turn.ts). A persistent-effect companion — no ally
+   * combatant entity. Both reset to 0 at combat start (createCombat).
+   */
+  spiritBeastTurnsRemaining?: number;
+  spiritBeastDamagePerTurn?: number;
+  /**
    * Monk: Ki points left. The whole monk economy — Flurry of Blows, Patient
    * Defense, and Stunning Strike each spend from this pool. Refreshes to its max
    * (monkKiMax — the monk's level, +2 at the L20 capstone) at the start of every

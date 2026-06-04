@@ -254,8 +254,12 @@ export function refreshMonsterIntents(
     if (c.kind !== 'monster') return c;
     const inst = c.instance;
     if (inst.hp.current <= 0) return c;
-    const paralyzed = inst.conditions.some((cond) => cond.name === 'paralyzed');
-    const next = paralyzed ? undefined : selectMonsterIntent(inst, state, character);
+    // A held foe (paralyzed by Hold Person, or rooted by Entangle) carries no
+    // intent — it will lose its turn, so telegraphing an attack would lie.
+    const held = inst.conditions.some(
+      (cond) => cond.name === 'paralyzed' || cond.name === 'restrained',
+    );
+    const next = held ? undefined : selectMonsterIntent(inst, state, character);
     if (intentsEqual(inst.intent, next)) return c;
     changed = true;
     return { ...c, instance: { ...inst, intent: next } };

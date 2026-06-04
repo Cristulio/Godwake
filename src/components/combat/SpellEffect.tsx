@@ -143,6 +143,11 @@ export function SpellEffect({ kind, origin, target, onDone }: SpellEffectProps) 
       return <FlurryEffect origin={origin} target={target} onDone={onDone} />;
     case 'enemy-frenzy':
       return <FrenzyEffect origin={origin} onDone={onDone} />;
+    // === druid-signature ===
+    case 'regrowth':
+      return <RegrowthEffect origin={origin} onDone={onDone} />;
+    case 'summon-beast':
+      return <SummonBeastEffect target={target} onDone={onDone} />;
     default:
       return null;
   }
@@ -2034,6 +2039,137 @@ function FrenzyWisp() {
         </linearGradient>
       </defs>
       <path d="M 0 22 Q -8 4 -2 -8 Q 2 -18 0 -22 Q -2 -16 4 -6 Q 8 6 0 22 Z" fill="url(#frenzy-wisp-grad)" />
+    </svg>
+  );
+}
+
+// ---------- Druid: Regrowth (heal-over-time) ----------
+
+function RegrowthEffect({ origin, onDone }: SelfProps) {
+  useDoneTimer(1050, onDone);
+  const [motes] = useState(() => scatter(9, { min: 12, max: 34, up: 44, spread: 0.5 }));
+  return (
+    <div className="absolute" style={{ left: origin.x, top: origin.y, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-heal-glow"
+        style={{ left: -30, top: -60, width: 60, height: 92, transformOrigin: 'bottom center' }}
+      >
+        <LeafBloom />
+      </div>
+      {motes.map((m) => (
+        <EffectMote
+          key={m.id}
+          dx={m.dx}
+          dy={m.dy}
+          delay={m.delay}
+          animClass="animate-heal-mote"
+          background="radial-gradient(circle, #eaffd6 0%, #6fd954 55%, rgba(63,150,60,0) 80%)"
+          glow="0 0 6px rgba(120,217,84,0.85)"
+        />
+      ))}
+    </div>
+  );
+}
+
+function LeafBloom() {
+  return (
+    <svg width="60" height="92" viewBox="0 0 60 92" style={{ overflow: 'visible' }}>
+      <defs>
+        <linearGradient id="regrowth-col" x1="0.5" y1="1" x2="0.5" y2="0">
+          <stop offset="0%" stopColor="var(--color-dmg-heal)" stopOpacity="0.7" />
+          <stop offset="65%" stopColor="#a8f59a" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#a8f59a" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="regrowth-leaf" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stopColor="#3f9640" />
+          <stop offset="100%" stopColor="#8fe06a" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="30" cy="88" rx="26" ry="9" fill="var(--color-dmg-heal)" opacity="0.3" />
+      <path d="M 24 90 Q 28 40 30 10 Q 32 40 36 90 Z" fill="url(#regrowth-col)" />
+      {/* Curling vine up the centre */}
+      <path
+        d="M 30 88 Q 22 60 30 40 Q 38 22 30 8"
+        fill="none"
+        stroke="#5fb84a"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        opacity="0.9"
+      />
+      {/* Sprung leaves */}
+      <g fill="url(#regrowth-leaf)" opacity="0.95">
+        <path d="M 30 58 Q 14 52 8 62 Q 22 66 30 58 Z" />
+        <path d="M 30 44 Q 46 38 52 48 Q 38 52 30 44 Z" />
+        <path d="M 30 30 Q 16 26 12 36 Q 24 38 30 30 Z" />
+        <path d="M 30 16 Q 44 12 48 22 Q 36 24 30 16 Z" />
+      </g>
+    </svg>
+  );
+}
+
+// ---------- Druid: Spirit Beast (summoned companion) ----------
+
+function SummonBeastEffect({ target, onDone }: TargetAnchorProps) {
+  useDoneTimer(1000, onDone);
+  const [motes] = useState(() => scatter(10, { min: 14, max: 40, up: 10, spread: 0.6 }));
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y - 8, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-pop-in"
+        style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <BeastForm />
+      </div>
+      {motes.map((m) => (
+        <EffectMote
+          key={m.id}
+          dx={m.dx}
+          dy={m.dy}
+          delay={m.delay}
+          animClass="animate-rift-mote"
+          background="radial-gradient(circle, #d6fff0 0%, #5fbfa0 55%, rgba(47,107,79,0) 80%)"
+          glow="0 0 6px rgba(120,230,190,0.85)"
+        />
+      ))}
+    </div>
+  );
+}
+
+function BeastForm() {
+  return (
+    <svg
+      width="150"
+      height="120"
+      viewBox="-75 -60 150 120"
+      style={{ position: 'absolute', left: -75, top: -60, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="beast-aura" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#bfffe6" stopOpacity="0.35" />
+          <stop offset="70%" stopColor="#2f6b4f" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#2f6b4f" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="beast-claw" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#eafff6" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#5fbfa0" stopOpacity="0.6" />
+        </linearGradient>
+      </defs>
+      <circle cx="0" cy="0" r="56" fill="url(#beast-aura)" />
+      {/* Spectral beast-head silhouette */}
+      <g fill="#3f8f6e" opacity="0.55">
+        <path d="M -30 -6 Q -26 -34 -6 -34 Q 0 -44 6 -34 Q 26 -34 30 -6 Q 24 6 14 2 Q 10 14 0 14 Q -10 14 -14 2 Q -24 6 -30 -6 Z" />
+      </g>
+      {/* Burning eyes */}
+      <g fill="#eafff6">
+        <circle cx="-10" cy="-12" r="3" />
+        <circle cx="10" cy="-12" r="3" />
+      </g>
+      {/* Three claw gashes raking the foe */}
+      <g stroke="url(#beast-claw)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.92">
+        <path d="M -34 -24 L 30 30" />
+        <path d="M -22 -30 L 40 22" />
+        <path d="M -10 -34 L 48 16" />
+      </g>
     </svg>
   );
 }
