@@ -1,5 +1,6 @@
 import type { Character } from '../../../types/character';
 import { spellcastingMod } from '../../character/derived';
+import { enhancementOf } from '../../items/affixMods';
 
 /**
  * Parametric spell-damage scaling — ONE place, called by every damage handler.
@@ -9,10 +10,17 @@ import { spellcastingMod } from '../../character/derived';
  * that base by a multiplier that climbs with character level and the caster's
  * spellcasting modifier:
  *
- *     final = round(diceTotal × levelFactor × intFactor)
+ *     final = round(diceTotal × levelFactor × intFactor) + weaponEnhancement
  *
  *   levelFactor = 1 + LEVEL_K × max(0, level − acqLevel)   (anchored at acquisition)
  *   intFactor   = 1 + INT_K   × (castingMod − REF_CASTING_MOD)
+ *
+ * weaponEnhancement is the +N on the equipped main-hand (the same flat axis
+ * playerAttack adds to a weapon swing) — a caster's +N staff/dagger now adds
+ * that many points of flat damage to every spell that routes through here. It is
+ * a FLAT rider added AFTER the multiplier, so it never scales or doubles on a
+ * crit (crit doubles the dice upstream, before this is called), exactly mirroring
+ * how a martial enhancement lands once per hit and is not doubled on a crit.
  *
  * At level == acqLevel and castingMod == REF_CASTING_MOD the multiplier is exactly
  * 1, so a spell is precisely as strong as it is today the moment you gain it
@@ -66,9 +74,10 @@ export function spellDamageMultiplier(
 }
 
 /**
- * Scale a rolled base-dice total for a spell acquired at `acqLevel`. Returns the
- * grown total to deal. A zero roll (e.g. every Scorching Ray missed) stays zero;
- * a real hit never rounds away to nothing.
+ * Scale a rolled base-dice total for a spell acquired at `acqLevel`, then add the
+ * equipped weapon's flat +N enhancement. Returns the grown total to deal. A zero
+ * roll (e.g. every Scorching Ray missed) stays zero — a miss deals nothing, so no
+ * enhancement rides it; a real hit never rounds away to nothing.
  */
 export function scaleSpellDamage(
   diceTotal: number,
@@ -76,5 +85,6 @@ export function scaleSpellDamage(
   acqLevel: number,
 ): number {
   if (diceTotal <= 0) return 0;
-  return Math.max(1, Math.round(diceTotal * spellDamageMultiplier(character, acqLevel)));
+  const scaled = Math.max(1, Math.round(diceTotal * spellDamageMultiplier(character, acqLevel)));
+  return scaled + enhancementOf(character.equipped.mainHand);
 }

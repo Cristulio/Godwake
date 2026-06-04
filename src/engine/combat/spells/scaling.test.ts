@@ -121,9 +121,11 @@ describe('spell scaling — tier ordering preserved', () => {
 
 // --- Invariant 4 + worked examples (handler-level) --------------------------
 
-/** Damage dice all show `dieFace`; every d20 is a natural 1 so saves fail and
- *  the cast lands full — isolating the level multiplier from save variance. */
-function failedSaveRoller(dieFace: number): DiceRoller {
+/** A deterministic roller: every damage die shows `dieFace`, every d20 shows
+ *  `d20Roll`. The caller picks the d20 outcome — 1 fails a save / misses, 20
+ *  forces a crit, 19 is a clean non-crit hit — while the damage dice stay fixed
+ *  so the level multiplier is isolated from roll variance. */
+function fixedRoller(dieFace: number, d20Roll: number): DiceRoller {
   return {
     roll(expression: string | DiceExpression): RollResult {
       const expr =
@@ -142,11 +144,11 @@ function failedSaveRoller(dieFace: number): DiceRoller {
     d20(advantage: RollAdvantage = 'normal', modifier = 0): RollResult {
       return {
         expression: { count: 1, die: 20, modifier },
-        rolls: [1],
+        rolls: [d20Roll],
         modifier,
-        total: 1 + modifier,
-        natural20: false,
-        natural1: true,
+        total: d20Roll + modifier,
+        natural20: d20Roll === 20,
+        natural1: d20Roll === 1,
         advantage,
       };
     },
@@ -156,19 +158,58 @@ function failedSaveRoller(dieFace: number): DiceRoller {
   };
 }
 
-function castDamage(spellId: string, level: number, dieFace: number): number {
+/** Every d20 a natural 1 so saves fail and the cast lands full. */
+const failedSaveRoller = (dieFace: number): DiceRoller => fixedRoller(dieFace, 1);
+/** A nat-20 spell attack roll — forces the crit branch (doubled dice). */
+const critRoller = (dieFace: number): DiceRoller => fixedRoller(dieFace, 20);
+/** A clean non-crit hit (d20 19 clears a goblin's AC) — no dice doubling. */
+const normalHitRoller = (dieFace: number): DiceRoller => fixedRoller(dieFace, 19);
+
+/** Equip a +N main-hand — the flat enhancement axis playerAttack reads for a
+ *  weapon swing, now also read by the shared spell scaler. */
+function equipWeapon(c: Character, enhancement: number): Character {
+  return {
+    ...c,
+    equipped: {
+      ...c.equipped,
+      mainHand: {
+        itemId: 'quarterstaff',
+        rolled: {
+          baseId: 'quarterstaff',
+          rarity: 'white',
+          affixes: [],
+          enhancement,
+          name: `+${enhancement} Quarterstaff`,
+        },
+      },
+    },
+  };
+}
+
+function castDamage(
+  spellId: string,
+  level: number,
+  dieFace: number,
+  opts: { weaponEnh?: number; roller?: DiceRoller } = {},
+): number {
   const goblin = getMonster('goblin');
-  // Generous slots at every tier + a high-HP target so the damage line is the
-  // full pre-clamp number regardless of the foe's HP.
+  const roller = opts.roller ?? failedSaveRoller(dieFace);
+  // Generous slots at every tier + the cast spell forced known, so any tier is
+  // castable; the damage LINE reports the full pre-clamp number regardless of HP.
   let w = caster(level, REF_CASTING_MOD);
   w = {
     ...w,
-    resources: { ...w.resources, spellSlots: { 1: 5, 2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5, 8: 5, 9: 5 } },
+    resources: {
+      ...w.resources,
+      knownSpells: [...(w.resources.knownSpells ?? []), spellId],
+      spellSlots: { 1: 5, 2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5, 8: 5, 9: 5 },
+    },
   };
-  const init = createCombat({ roller: failedSaveRoller(dieFace), character: w, monsters: [{ def: goblin }] });
+  if (opts.weaponEnh !== undefined) w = equipWeapon(w, opts.weaponEnh);
+  const init = createCombat({ roller, character: w, monsters: [{ def: goblin }] });
   const targetId = init.state.combatants.find((c) => c.kind === 'monster')!.id;
   const result = castSpell({
-    roller: failedSaveRoller(dieFace),
+    roller,
     character: init.character,
     state: init.state,
     spellId,
@@ -198,5 +239,60 @@ describe('spell scaling — worked examples', () => {
     const l20 = castDamage('fire-bolt', 20, 7);
     expect(l14).toBeGreaterThan(l8);
     expect(l20).toBeGreaterThan(l14);
+  });
+});
+
+// --- Invariant 5: equipped weapon enhancement (+N) adds flat spell damage ----
+
+describe('spell scaling — weapon enhancement adds flat spell damage', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('a +N main-hand adds exactly N, floored at 0 with no weapon or a +0', () => {
+    const acq = spellAcquisitionLevel(3);
+    const bare = caster(spellAcquisitionLevel(3), REF_CASTING_MOD); // multiplier == 1
+    expect(scaleSpellDamage(28, bare, acq)).toBe(28); // no weapon -> +0
+    expect(scaleSpellDamage(28, equipWeapon(bare, 0), acq)).toBe(28); // +0 weapon -> +0
+    expect(scaleSpellDamage(28, equipWeapon(bare, 1), acq)).toBe(29);
+    expect(scaleSpellDamage(28, equipWeapon(bare, 3), acq)).toBe(31);
+  });
+
+  it('the +N is flat — it never scales with character level or casting modifier', () => {
+    const acq = spellAcquisitionLevel(1);
+    for (const level of [1, 10, 20]) {
+      for (const intMod of [0, 3, 6]) {
+        const bare = caster(level, intMod);
+        const armed = equipWeapon(bare, 3);
+        // Whatever the level/INT multiplier does to the dice, the +3 lands on top.
+        expect(scaleSpellDamage(40, armed, acq) - scaleSpellDamage(40, bare, acq)).toBe(3);
+      }
+    }
+  });
+
+  it('a miss (zero dice) carries no enhancement', () => {
+    const armed = equipWeapon(caster(10, REF_CASTING_MOD), 3);
+    expect(scaleSpellDamage(0, armed, spellAcquisitionLevel(2))).toBe(0);
+  });
+
+  it('rides a crit once — the +N is never doubled with the dice', () => {
+    // Crit doubles the dice UPSTREAM (a nat 20 sends 10d6 -> 20d6); the scaler
+    // only sees the already-doubled total, so the flat +N must land once on each.
+    const acq = spellAcquisitionLevel(5);
+    const armed = equipWeapon(caster(spellAcquisitionLevel(5), REF_CASTING_MOD), 3); // mult 1
+    expect(scaleSpellDamage(30, armed, acq)).toBe(33); // 10d6 of 3s, +3 once
+    expect(scaleSpellDamage(60, armed, acq)).toBe(63); // doubled dice, +3 once (not +6)
+  });
+
+  it('a +3 staff lands +3 on a real Fire Bolt; +0 / no weapon changes nothing', () => {
+    const plain = castDamage('fire-bolt', 10, 7);
+    expect(castDamage('fire-bolt', 10, 7, { weaponEnh: 3 })).toBe(plain + 3);
+    expect(castDamage('fire-bolt', 10, 7, { weaponEnh: 0 })).toBe(plain);
+  });
+
+  it('a +3 staff adds +3 to a Void Ray crit, and the crit still doubles the dice', () => {
+    const critPlain = castDamage('void-ray', 9, 3, { roller: critRoller(3) });
+    const critArmed = castDamage('void-ray', 9, 3, { roller: critRoller(3), weaponEnh: 3 });
+    const normalHit = castDamage('void-ray', 9, 3, { roller: normalHitRoller(3) });
+    expect(critArmed).toBe(critPlain + 3); // enhancement added once, even on a crit
+    expect(critPlain - normalHit).toBe(30); // crit added a second 10d6 of 3s = +30
   });
 });
