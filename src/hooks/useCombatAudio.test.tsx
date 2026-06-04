@@ -23,13 +23,22 @@ afterEach(() => {
 });
 
 describe('sfxForSpellEffect mapping', () => {
-  it('maps spell casts to element-flavored sounds', () => {
-    expect(sfxForSpellEffect('fireball')).toBe('spell_fire');
-    expect(sfxForSpellEffect('lightning-bolt')).toBe('spell_lightning');
+  it('maps bespoke spell casts to their sounds', () => {
     expect(sfxForSpellEffect('magic-missile')).toBe('spell_arcane');
+    expect(sfxForSpellEffect('burning-hands')).toBe('spell_fire');
     expect(sfxForSpellEffect('shield')).toBe('armor_clang');
     expect(sfxForSpellEffect('second-wind')).toBe('second_wind');
     expect(sfxForSpellEffect('enemy-frenzy')).toBe('boss_phase');
+  });
+
+  it('resolves the element-aware shape kinds off their element', () => {
+    expect(sfxForSpellEffect('spell-burst', 'fire')).toBe('spell_fire');
+    expect(sfxForSpellEffect('spell-fork', 'lightning')).toBe('spell_lightning');
+    expect(sfxForSpellEffect('spell-burst', 'cold')).toBe('spell_ice');
+    expect(sfxForSpellEffect('spell-drain', 'necrotic')).toBe('spell_debuff');
+    expect(sfxForSpellEffect('spell-bolt', 'force')).toBe('spell_arcane');
+    // No element to key off — stays silent rather than guessing.
+    expect(sfxForSpellEffect('spell-bolt')).toBeUndefined();
   });
 
   it('does NOT claim weapon swings — those sound via the attack path', () => {
@@ -47,7 +56,7 @@ describe('useCombatAudio reaction', () => {
 
     act(() => {
       useCombatStore.setState({
-        combat: combatWith({ id: 1, kind: 'fireball', attackerId: 'player' }),
+        combat: combatWith({ id: 1, kind: 'spell-burst', attackerId: 'player', element: 'fire' }),
       });
     });
     expect(playSfx).toHaveBeenCalledWith('spell_fire');
@@ -57,7 +66,7 @@ describe('useCombatAudio reaction', () => {
     renderHook(() => useCombatAudio());
     act(() => {
       useCombatStore.setState({
-        combat: combatWith({ id: 7, kind: 'lightning-bolt', attackerId: 'player' }),
+        combat: combatWith({ id: 7, kind: 'spell-fork', attackerId: 'player', element: 'lightning' }),
       });
     });
     expect(playSfx).toHaveBeenCalledTimes(1);
@@ -65,7 +74,7 @@ describe('useCombatAudio reaction', () => {
     // A new store write that keeps the same event id must not re-trigger.
     act(() => {
       useCombatStore.setState({
-        combat: combatWith({ id: 7, kind: 'lightning-bolt', attackerId: 'player' }),
+        combat: combatWith({ id: 7, kind: 'spell-fork', attackerId: 'player', element: 'lightning' }),
       });
     });
     expect(playSfx).toHaveBeenCalledTimes(1);

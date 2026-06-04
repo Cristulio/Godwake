@@ -17,6 +17,7 @@ import {
   nextLogId,
   spellAttackBonus,
   spellDamageBonus,
+  spellElement,
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
@@ -47,7 +48,7 @@ export function castForceLance(ctx: CastSpellContext): CastResult {
     kind: 'roll',
     text: `${nextCharacter.name} drives a Force Lance through ${target.instance.displayName} — ${dealt} force, unerring.`,
   });
-  nextState = attachSpellEffect(nextState, 'magic-missile', 'player', targetId);
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;
@@ -90,7 +91,7 @@ export function castVoidRay(ctx: CastSpellContext): CastResult {
       text: `${nextCharacter.name} bores a Void Ray at ${target.instance.displayName}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} — ${crit ? 'CRITICAL HIT' : hit ? 'hit' : 'miss (graze)'}.`,
     },
   );
-  nextState = attachSpellEffect(nextState, 'fire-bolt', 'player', targetId);
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
 
   // A hit bores full (a crit doubles the dice); a clean miss still GRAZES for
   // half — the beam of un-light leaves its mark even off-true, so a 5th-level
@@ -153,7 +154,7 @@ export function castDissolution(ctx: CastSpellContext): CastResult {
       text: `${nextCharacter.name} speaks ${target.instance.displayName} half-apart. CON save: d20${conMod >= 0 ? '+' : ''}${conMod} = ${save.total} vs DC ${dc} — ${saved ? 'success (half)' : 'fail (full)'}.`,
     },
   );
-  nextState = attachSpellEffect(nextState, 'fireball', 'player', targetId);
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;
@@ -191,7 +192,7 @@ export function castWither(ctx: CastSpellContext): CastResult {
     kind: 'roll',
     text: `${nextCharacter.name} withers ${target.instance.displayName} — ${dealt} necrotic, and the strength sloughs from its limbs.`,
   });
-  nextState = attachSpellEffect(nextState, 'fire-bolt', 'player', targetId);
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;

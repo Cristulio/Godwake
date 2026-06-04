@@ -1,5 +1,5 @@
 import type { Character } from '../../../types/character';
-import type { CombatState, MonsterCombatant, SpellEffectKind } from '../../../types/combat';
+import type { CombatState, MonsterCombatant, SpellElement } from '../../../types/combat';
 import type { SpellSlotLevel } from '../../../types/character';
 import type { DieSize } from '../../../types/dice';
 import { appendLog } from '../log';
@@ -21,9 +21,7 @@ interface BlastConfig {
   slotLevel: SpellSlotLevel;
   dice: number;
   die: DieSize;
-  damageType: string;
-  /** Reuse an existing combat-VFX kind; high-level blasts don't ship bespoke art. */
-  vfx: SpellEffectKind;
+  damageType: SpellElement;
   flavor: string;
 }
 
@@ -53,7 +51,10 @@ function castAreaBlast(ctx: CastSpellContext, cfg: BlastConfig): CastResult {
     kind: 'roll',
     text: `${nextCharacter.name} ${cfg.flavor} ${damageRoll.rolls.join('+')} = ${fullDmg} ${cfg.damageType}. DEX save DC ${dc} for half.`,
   });
-  nextState = attachSpellEffect(nextState, cfg.vfx, 'player', aliveMonsters[0]?.id);
+  // Lightning AoE arcs as a fork; every other element blooms as a burst across
+  // the enemy line. Element drives the palette either way.
+  const shape = cfg.damageType === 'lightning' ? 'spell-fork' : 'spell-burst';
+  nextState = attachSpellEffect(nextState, shape, 'player', aliveMonsters[0]?.id, cfg.damageType);
 
   const result = applyAreaSaveForHalf(nextState, nextCharacter, aliveMonsters, {
     roller,
@@ -75,7 +76,6 @@ export function castRimeBlast(ctx: CastSpellContext): CastResult {
     dice: 7,
     die: 6,
     damageType: 'cold',
-    vfx: 'lightning-bolt',
     flavor: 'detonates a pressure-wave of killing frost —',
   });
 }
@@ -86,7 +86,6 @@ export function castGlacialCone(ctx: CastSpellContext): CastResult {
     dice: 9,
     die: 8,
     damageType: 'cold',
-    vfx: 'lightning-bolt',
     flavor: 'sweeps the room with a fan of glacier-cold —',
   });
 }
@@ -97,7 +96,6 @@ export function castSunfireBurst(ctx: CastSpellContext): CastResult {
     dice: 11,
     die: 6,
     damageType: 'fire',
-    vfx: 'fireball',
     flavor: 'blooms a second sun —',
   });
 }
@@ -108,7 +106,6 @@ export function castStormcrash(ctx: CastSpellContext): CastResult {
     dice: 13,
     die: 6,
     damageType: 'lightning',
-    vfx: 'lightning-bolt',
     flavor: 'brings the sky down indoors —',
   });
 }
@@ -119,7 +116,6 @@ export function castCataclysm(ctx: CastSpellContext): CastResult {
     dice: 15,
     die: 6,
     damageType: 'fire',
-    vfx: 'fireball',
     flavor: 'calls a column of ruin down —',
   });
 }

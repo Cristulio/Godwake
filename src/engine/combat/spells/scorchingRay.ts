@@ -14,6 +14,7 @@ import {
   nextLogId,
   spellAttackBonus,
   spellDamageBonus,
+  spellElement,
 } from './helpers';
 
 /**
@@ -81,7 +82,7 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
     },
     ...logs,
   );
-  nextState = attachSpellEffect(nextState, 'fire-bolt', 'player', targetId);
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
 
   if (totalDamage > 0) {
     const damaged = applyDamage(nextState, targetId, totalDamage, nextCharacter);

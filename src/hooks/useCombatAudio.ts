@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useCombatStore } from '../stores/combatStore';
 import { playSfx, type SfxId } from '../engine/audio';
-import type { SpellEffectKind } from '../types/combat';
+import type { SpellEffectKind, SpellElement } from '../types/combat';
 
 /**
  * Maps every battlefield VFX event to a sound. The `spellEffectEvent` bus
@@ -14,14 +14,13 @@ import type { SpellEffectKind } from '../types/combat';
  * and adding them here would double up.
  */
 const SPELL_EFFECT_SFX: Partial<Record<SpellEffectKind, SfxId>> = {
-  // Spell casts — element-flavored.
+  // Bespoke spell casts. The element-aware SHAPE kinds (spell-bolt / spell-burst
+  // / spell-fork / spell-drain) are deliberately absent — they resolve by
+  // `element` below so a fire bolt cracks, a cold blast chimes, a fork zaps.
   'magic-missile': 'spell_arcane',
   'misty-step': 'spell_arcane',
   'mage-armor': 'spell_arcane',
-  'fire-bolt': 'spell_fire',
   'burning-hands': 'spell_fire',
-  fireball: 'spell_fire',
-  'lightning-bolt': 'spell_lightning',
   shield: 'armor_clang',
   'hold-person': 'spell_debuff',
   // Class-ability signatures.
@@ -45,9 +44,27 @@ const SPELL_EFFECT_SFX: Partial<Record<SpellEffectKind, SfxId>> = {
   'sustain-drain': 'spell_debuff',
 };
 
-/** Resolve the SFX for a VFX kind. Exported for testing. */
-export function sfxForSpellEffect(kind: SpellEffectKind): SfxId | undefined {
-  return SPELL_EFFECT_SFX[kind];
+/** SFX for the element-aware shape kinds, keyed off the cast's element. */
+const ELEMENT_SFX: Record<SpellElement, SfxId> = {
+  fire: 'spell_fire',
+  cold: 'spell_ice',
+  lightning: 'spell_lightning',
+  thunder: 'spell_lightning',
+  acid: 'spell_debuff',
+  poison: 'spell_debuff',
+  necrotic: 'spell_debuff',
+  radiant: 'spell_holy',
+  force: 'spell_arcane',
+};
+
+/**
+ * Resolve the SFX for a VFX event. Bespoke kinds map directly; the shape kinds
+ * (spell-bolt / spell-burst / spell-fork / spell-drain) carry no fixed sound and
+ * fall back to their `element` so the audio stays element-flavored. Exported for
+ * testing.
+ */
+export function sfxForSpellEffect(kind: SpellEffectKind, element?: SpellElement): SfxId | undefined {
+  return SPELL_EFFECT_SFX[kind] ?? (element ? ELEMENT_SFX[element] : undefined);
 }
 
 /**
@@ -62,7 +79,7 @@ export function useCombatAudio(): void {
       const event = state.combat?.spellEffectEvent;
       if (!event || event.id === lastEventId) return;
       lastEventId = event.id;
-      const sfx = SPELL_EFFECT_SFX[event.kind];
+      const sfx = sfxForSpellEffect(event.kind, event.element);
       if (sfx) playSfx(sfx);
     });
     return unsub;

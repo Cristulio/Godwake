@@ -22,6 +22,7 @@ import {
   markActionUsed,
   nextLogId,
   spellDamageBonus,
+  spellElement,
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
@@ -82,7 +83,9 @@ export function castUnmake(ctx: CastSpellContext): CastResult {
     kind: 'roll',
     text: `${nextCharacter.name} speaks ${target.instance.displayName} half-out of the world — ${dealt} necrotic as its form buckles.`,
   });
-  nextState = attachSpellEffect(nextState, 'hold-person', 'player', targetId);
+  // The unmaking — a heavy necrotic strike — is the headline; the binding it
+  // also lays is narrated below. Show the necrotic bolt, not the control viz.
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;

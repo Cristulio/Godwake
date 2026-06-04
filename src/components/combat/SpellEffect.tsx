@@ -4,6 +4,7 @@ import type {
   MonsterCombatant,
   SpellEffectEvent,
   SpellEffectKind,
+  SpellElement,
 } from '../../types/combat';
 import { PlayerPortrait } from './PlayerPortrait';
 import {
@@ -22,6 +23,8 @@ interface SpellEffectProps {
   kind: SpellEffectKind;
   origin: Anchor;
   target: Anchor;
+  /** Element for the shape kinds — picks the colour ramp + particle style. */
+  element?: SpellElement;
   onDone: () => void;
 }
 
@@ -76,18 +79,28 @@ export function SpellEffectLayer({ state }: SpellEffectLayerProps) {
         kind={active.kind}
         origin={origin}
         target={target}
+        element={active.element}
         onDone={() => setActive(null)}
       />
     </div>
   );
 }
 
-export function SpellEffect({ kind, origin, target, onDone }: SpellEffectProps) {
+export function SpellEffect({ kind, origin, target, element, onDone }: SpellEffectProps) {
   switch (kind) {
     case 'magic-missile':
       return <MagicMissileEffect origin={origin} target={target} onDone={onDone} />;
-    case 'fire-bolt':
-      return <FireBoltEffect origin={origin} target={target} onDone={onDone} />;
+    // === spell-vfx-by-element === shape × element. The palette comes from
+    // `element`; the shape from the kind. Together they keep every damage
+    // school visually distinct.
+    case 'spell-bolt':
+      return <SpellBoltEffect origin={origin} target={target} element={element} onDone={onDone} />;
+    case 'spell-burst':
+      return <SpellBurstEffect target={target} element={element} onDone={onDone} />;
+    case 'spell-fork':
+      return <SpellForkEffect origin={origin} target={target} element={element} onDone={onDone} />;
+    case 'spell-drain':
+      return <SpellDrainEffect origin={origin} target={target} element={element} onDone={onDone} />;
     case 'burning-hands':
       return <BurningHandsEffect origin={origin} onDone={onDone} />;
     case 'shield':
@@ -276,15 +289,80 @@ function ForceBurst() {
   );
 }
 
-// ---------- Fire Bolt ----------
+// ============================================================================
+// === spell-vfx-by-element ===
+// Element-aware spell shapes. Every damage cast routes to one of four SHAPE
+// components — projectile (spell-bolt), AoE burst/cone (spell-burst), chain/fork
+// lightning (spell-fork), or a necrotic drain tether (spell-drain) — each
+// parameterized by an element colour ramp + particle style. So a cold cone, a
+// lightning fork, a necrotic drain, and a fire bolt never share a look, and no
+// damage spell falls through to nothing. Palettes track the combat-juice
+// HIT-spark (BattlefieldSprite.sparkTint) and damage-number
+// (FloatingDamage.ELEMENT_TINT) hues so a cast and its impact read as one element.
+// ============================================================================
 
-function FireBoltEffect({ origin, target, onDone }: ArcProps) {
-  useDoneTimer(800, onDone);
+interface ElementPalette {
+  /** Hot near-white centre. */
+  core: string;
+  /** The element's signature hue — the body of the effect. */
+  mid: string;
+  /** Dark edge the gradient fades into. */
+  deep: string;
+  /** Particle / shadow glow as an rgba() string. */
+  glow: string;
+  /** Secondary hue: fork branches, necrotic rot, ice-shard rims, sun rays. */
+  accent: string;
+}
+
+// Arcane fallback for a damage spell whose element we don't recognise — keeps
+// the "no spell renders nothing" guarantee even for an unmapped damageType.
+const ARCANE_PALETTE: ElementPalette = {
+  core: '#ffffff',
+  mid: '#c9a8ff',
+  deep: '#5e3a8f',
+  glow: 'rgba(201,168,255,0.85)',
+  accent: '#e6d6ff',
+};
+
+const ELEMENT_PALETTES: Record<SpellElement, ElementPalette> = {
+  fire: { core: '#fff8dc', mid: '#ff7a3a', deep: '#8b1f1b', glow: 'rgba(255,107,43,0.9)', accent: '#ffd166' },
+  cold: { core: '#ffffff', mid: '#8fe6ff', deep: '#1f5b86', glow: 'rgba(143,230,255,0.85)', accent: '#e2f7ff' },
+  lightning: { core: '#ffffff', mid: '#ffe066', deep: '#6a3fbf', glow: 'rgba(255,224,102,0.9)', accent: '#b98cff' },
+  thunder: { core: '#eef2ff', mid: '#9fb6d6', deep: '#36456a', glow: 'rgba(159,182,214,0.85)', accent: '#cdd9ee' },
+  acid: { core: '#f6ffd6', mid: '#caf04a', deep: '#4d5f12', glow: 'rgba(170,210,40,0.85)', accent: '#e9ff8a' },
+  poison: { core: '#eaffba', mid: '#b6f04a', deep: '#2f4a08', glow: 'rgba(146,200,30,0.85)', accent: '#d7f06a' },
+  necrotic: { core: '#e6ffe0', mid: '#86d86a', deep: '#241033', glow: 'rgba(140,210,110,0.75)', accent: '#a86fd0' },
+  radiant: { core: '#fffdf0', mid: '#ffe9a8', deep: '#c79a2e', glow: 'rgba(255,220,120,0.9)', accent: '#fff6d0' },
+  force: { core: '#ffffff', mid: '#c9a8ff', deep: '#5e3a8f', glow: 'rgba(201,168,255,0.85)', accent: '#e6d6ff' },
+};
+
+function paletteFor(element: SpellElement | undefined): ElementPalette {
+  return element ? ELEMENT_PALETTES[element] : ARCANE_PALETTE;
+}
+
+interface ElementArcProps {
+  origin: Anchor;
+  target: Anchor;
+  element?: SpellElement;
+  onDone: () => void;
+}
+
+interface ElementTargetProps {
+  target: Anchor;
+  element?: SpellElement;
+  onDone: () => void;
+}
+
+// ---------- Shape: single-target projectile (spell-bolt) ----------
+
+function SpellBoltEffect({ origin, target, element, onDone }: ElementArcProps) {
+  useDoneTimer(820, onDone);
+  const pal = paletteFor(element);
+  const el = element ?? 'arcane';
   const dx = target.x - origin.x;
   const dy = target.y - origin.y;
-
-  // Ghost trail particles — each delayed by 60ms behind the head, riding
-  // the same arc, but with the flame-trail fade-shrink on top.
+  const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+  // Ghost trail particles — each a snapshot behind the head, riding the same arc.
   const trail = [60, 120, 180];
 
   return (
@@ -306,7 +384,7 @@ function FireBoltEffect({ origin, target, onDone }: ArcProps) {
             } as React.CSSProperties
           }
         >
-          <FireBoltTrail />
+          <BoltTrail pal={pal} el={el} />
         </div>
       ))}
       <div
@@ -322,54 +400,417 @@ function FireBoltEffect({ origin, target, onDone }: ArcProps) {
           } as React.CSSProperties
         }
       >
-        <FireBoltHead />
+        <BoltHead pal={pal} el={el} angle={angle} />
       </div>
     </>
   );
 }
 
-function FireBoltHead() {
+function BoltHead({ pal, el, angle }: { pal: ElementPalette; el: string; angle: number }) {
+  const id = `bolt-core-${el}`;
   return (
     <svg
-      width="48"
-      height="48"
-      viewBox="-24 -24 48 48"
-      style={{ position: 'absolute', left: -24, top: -24, overflow: 'visible' }}
+      width="52"
+      height="52"
+      viewBox="-26 -26 52 52"
+      style={{ position: 'absolute', left: -26, top: -26, overflow: 'visible', filter: `drop-shadow(0 0 6px ${pal.glow})` }}
     >
       <defs>
-        <radialGradient id="fb-core" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0%" stopColor="#fff8dc" stopOpacity="1" />
-          <stop offset="35%" stopColor="#ffd166" stopOpacity="1" />
-          <stop offset="65%" stopColor="#ff6b2b" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#8b1f1b" stopOpacity="0" />
+        <radialGradient id={id} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor={pal.core} stopOpacity="1" />
+          <stop offset="38%" stopColor={pal.mid} stopOpacity="1" />
+          <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
         </radialGradient>
       </defs>
-      <circle cx="0" cy="0" r="20" fill="url(#fb-core)" />
-      <circle cx="-3" cy="-2" r="6" fill="#fff8dc" opacity="0.85" />
-      {/* Flame licks */}
-      <g fill="#ff8a3a" opacity="0.7">
-        <path d="M -14 -2 Q -20 -8 -12 -10 Q -10 -4 -14 -2 Z" />
-        <path d="M -16 4 Q -22 8 -12 12 Q -10 6 -16 4 Z" />
+      {/* Flourish sits behind the core and rotates to trail the flight line. */}
+      <g transform={`rotate(${angle})`}>
+        <BoltFlourish pal={pal} el={el} />
       </g>
+      <circle cx="0" cy="0" r="18" fill={`url(#${id})`} />
+      <circle cx="-2" cy="-2" r="6" fill={pal.core} opacity="0.9" />
     </svg>
   );
 }
 
-function FireBoltTrail() {
+/** Element-specific decoration on the projectile head — the per-school read. */
+function BoltFlourish({ pal, el }: { pal: ElementPalette; el: string }) {
+  switch (el) {
+    case 'fire':
+      return (
+        <g fill={pal.accent} opacity="0.78">
+          <path d="M -16 -3 Q -27 -10 -14 -12 Q -11 -5 -16 -3 Z" />
+          <path d="M -18 5 Q -29 11 -14 14 Q -11 7 -18 5 Z" />
+          <path d="M -20 0 Q -31 0 -16 3 Q -13 0 -20 0 Z" />
+        </g>
+      );
+    case 'cold':
+      return (
+        <g fill={pal.accent} stroke={pal.mid} strokeWidth="0.6" opacity="0.92">
+          {[0, 72, 144, 216, 288].map((a) => (
+            <path key={a} transform={`rotate(${a})`} d="M 0 -11 L 4 -23 L -4 -23 Z" />
+          ))}
+        </g>
+      );
+    case 'necrotic':
+      return (
+        <g opacity="0.85">
+          <circle cx="0" cy="0" r="21" fill="none" stroke={pal.accent} strokeWidth="1.5" opacity="0.5" />
+          <path d="M -14 -6 Q -25 -2 -16 7 Q -10 2 -14 -6 Z" fill={pal.mid} opacity="0.6" />
+          <path d="M 13 -8 Q 23 -4 14 7 Q 9 0 13 -8 Z" fill={pal.mid} opacity="0.45" />
+        </g>
+      );
+    case 'radiant':
+      return (
+        <g stroke={pal.accent} strokeWidth="1.7" strokeLinecap="round" opacity="0.82">
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
+            const r = (a * Math.PI) / 180;
+            return <line key={a} x1={Math.cos(r) * 14} y1={Math.sin(r) * 14} x2={Math.cos(r) * 25} y2={Math.sin(r) * 25} />;
+          })}
+        </g>
+      );
+    case 'acid':
+    case 'poison':
+      return (
+        <g fill={pal.accent} opacity="0.85">
+          <circle cx="-13" cy="9" r="3.6" />
+          <circle cx="11" cy="11" r="2.7" />
+          <circle cx="2" cy="15" r="2" />
+        </g>
+      );
+    default:
+      // force / thunder / arcane fallback — concentric kinetic rings.
+      return (
+        <g fill="none" stroke={pal.accent} opacity="0.7">
+          <circle cx="0" cy="0" r="22" strokeWidth="1.4" />
+          <circle cx="0" cy="0" r="15" strokeWidth="1" opacity="0.6" />
+        </g>
+      );
+  }
+}
+
+function BoltTrail({ pal, el }: { pal: ElementPalette; el: string }) {
+  const id = `bolt-trail-${el}`;
   return (
     <svg
-      width="28"
-      height="28"
-      viewBox="-14 -14 28 28"
-      style={{ position: 'absolute', left: -14, top: -14, overflow: 'visible' }}
+      width="30"
+      height="30"
+      viewBox="-15 -15 30 30"
+      style={{ position: 'absolute', left: -15, top: -15, overflow: 'visible' }}
     >
       <defs>
-        <radialGradient id="fb-trail" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0%" stopColor="#ffd166" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#ff6b2b" stopOpacity="0" />
+        <radialGradient id={id} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor={pal.mid} stopOpacity="0.9" />
+          <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
         </radialGradient>
       </defs>
-      <circle cx="0" cy="0" r="12" fill="url(#fb-trail)" />
+      <circle cx="0" cy="0" r="13" fill={`url(#${id})`} />
+    </svg>
+  );
+}
+
+// ---------- Shape: AoE burst / cone (spell-burst) ----------
+
+/** Scatter for the burst — most particles fly along the enemy line (−x toward
+ *  the rest of the foes), a few splash up and out. Stable per mount. */
+function burstScatter(): { id: number; dx: number; dy: number; delay: number }[] {
+  return Array.from({ length: 12 }, (_, i) => {
+    const splash = i % 4 === 0;
+    return {
+      id: i,
+      dx: splash ? (Math.random() - 0.5) * 80 : -(20 + Math.random() * 180),
+      dy: splash ? -(20 + Math.random() * 50) : (Math.random() - 0.5) * 90,
+      delay: Math.round(Math.random() * 150),
+    };
+  });
+}
+
+function SpellBurstEffect({ target, element, onDone }: ElementTargetProps) {
+  useDoneTimer(780, onDone);
+  const pal = paletteFor(element);
+  const el = element ?? 'arcane';
+  const [motes] = useState(() => burstScatter());
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      <div className="absolute animate-spell-bloom" style={{ left: 0, top: 0, width: 0, height: 0 }}>
+        <BurstFlare pal={pal} el={el} />
+      </div>
+      <div className="absolute animate-spell-ring" style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}>
+        <BurstRing pal={pal} el={el} />
+      </div>
+      {motes.map((m) => (
+        <EffectMote
+          key={m.id}
+          dx={m.dx}
+          dy={m.dy}
+          delay={m.delay}
+          animClass="animate-rift-mote"
+          background={`radial-gradient(circle, ${pal.core} 0%, ${pal.mid} 55%, transparent 80%)`}
+          glow={`0 0 6px ${pal.glow}`}
+          size={7}
+        />
+      ))}
+    </div>
+  );
+}
+
+function BurstFlare({ pal, el }: { pal: ElementPalette; el: string }) {
+  const id = `burst-flare-${el}`;
+  return (
+    <svg
+      width="360"
+      height="172"
+      viewBox="-300 -86 360 172"
+      style={{ position: 'absolute', left: -300, top: -86, overflow: 'visible', filter: `drop-shadow(0 0 10px ${pal.glow})` }}
+    >
+      <defs>
+        <radialGradient id={id} cx="0.83" cy="0.5" r="0.6">
+          <stop offset="0%" stopColor={pal.core} stopOpacity="0.95" />
+          <stop offset="32%" stopColor={pal.mid} stopOpacity="0.82" />
+          <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Wide bloom: hot at the primary target (right), sweeping over the line (left). */}
+      <ellipse cx="0" cy="0" rx="290" ry="66" fill={`url(#${id})`} />
+      <circle cx="0" cy="0" r="42" fill={`url(#${id})`} />
+      <BurstAccent pal={pal} el={el} />
+    </svg>
+  );
+}
+
+/** A light per-element touch over the burst body (colour already carries most). */
+function BurstAccent({ pal, el }: { pal: ElementPalette; el: string }) {
+  switch (el) {
+    case 'cold':
+      return (
+        <g fill={pal.accent} stroke={pal.mid} strokeWidth="0.7" opacity="0.85">
+          {[-150, -90, -40, 0].map((cx, i) => (
+            <path key={cx} transform={`translate(${cx} ${i % 2 ? -18 : 22})`} d="M 0 -12 L 5 0 L 0 12 L -5 0 Z" />
+          ))}
+        </g>
+      );
+    case 'fire':
+      return (
+        <g fill={pal.accent} opacity="0.7">
+          <path d="M -10 -30 Q 6 -52 18 -30 Q 6 -24 -10 -30 Z" />
+          <path d="M -30 26 Q -14 50 -2 28 Q -16 22 -30 26 Z" />
+          <path d="M -90 -8 Q -74 -30 -62 -8 Q -76 -2 -90 -8 Z" />
+        </g>
+      );
+    case 'radiant':
+      return (
+        <g stroke={pal.accent} strokeWidth="2" strokeLinecap="round" opacity="0.6">
+          {[200, 240, 280, 320, 160, 120].map((deg) => {
+            const r = (deg * Math.PI) / 180;
+            return <line key={deg} x1={Math.cos(r) * 40} y1={Math.sin(r) * 40} x2={Math.cos(r) * 78} y2={Math.sin(r) * 70} />;
+          })}
+        </g>
+      );
+    default:
+      return null;
+  }
+}
+
+function BurstRing({ pal, el }: { pal: ElementPalette; el: string }) {
+  // Cold gets a jagged frost ring; everything else a smooth shock ring.
+  const jagged = el === 'cold';
+  const pts = jagged
+    ? Array.from({ length: 24 }, (_, i) => {
+        const a = (i / 24) * Math.PI * 2;
+        const r = i % 2 === 0 ? 58 : 46;
+        return `${(Math.cos(a) * r).toFixed(1)},${(Math.sin(a) * r * 0.5).toFixed(1)}`;
+      }).join(' ')
+    : '';
+  return (
+    <svg
+      width="160"
+      height="100"
+      viewBox="-80 -50 160 100"
+      style={{ position: 'absolute', left: -80, top: -50, overflow: 'visible' }}
+    >
+      {jagged ? (
+        <polygon points={pts} fill="none" stroke={pal.mid} strokeWidth="2" opacity="0.7" />
+      ) : (
+        <ellipse cx="0" cy="0" rx="58" ry="28" fill="none" stroke={pal.mid} strokeWidth="3" opacity="0.7" />
+      )}
+      <ellipse cx="0" cy="0" rx="48" ry="22" fill="none" stroke={pal.core} strokeWidth="1" opacity="0.5" />
+    </svg>
+  );
+}
+
+// ---------- Shape: chain / fork lightning (spell-fork) ----------
+
+/** A zig-zag SVG path between two field points, with perpendicular jitter that
+ *  eases toward zero at both ends so the bolt connects cleanly. */
+function jaggedPath(a: Anchor, b: Anchor, segments: number, amp: number): string {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = -dy / len;
+  const ny = dx / len;
+  let d = `M ${a.x.toFixed(1)} ${a.y.toFixed(1)}`;
+  for (let i = 1; i < segments; i++) {
+    const t = i / segments;
+    const taper = 1 - Math.abs(t - 0.5) * 1.4;
+    const jitter = (Math.random() * 2 - 1) * amp * Math.max(0.15, taper);
+    const px = a.x + dx * t + nx * jitter;
+    const py = a.y + dy * t + ny * jitter;
+    d += ` L ${px.toFixed(1)} ${py.toFixed(1)}`;
+  }
+  return `${d} L ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+}
+
+function SpellForkEffect({ origin, target, element, onDone }: ElementArcProps) {
+  useDoneTimer(560, onDone);
+  const pal = paletteFor(element);
+  const el = element ?? 'lightning';
+  // Computed once: a jagged main bolt origin→target, then forks that arc on to
+  // the adjacent enemy slots toward the line (the "and forks to a second foe").
+  const [geom] = useState(() => {
+    const branches: Anchor[] = [];
+    for (let i = 1; i <= 2; i++) {
+      const bx = target.x - i * MONSTER_STEP_X;
+      if (bx > 44) branches.push({ x: bx, y: target.y + (Math.random() * 2 - 1) * 12 });
+    }
+    return {
+      branches,
+      main: jaggedPath(origin, target, 9, 18),
+      forks: branches.map((b) => jaggedPath(target, b, 5, 13)),
+    };
+  });
+  const blurId = `fork-glow-${el}`;
+  return (
+    <>
+      <svg
+        className="absolute animate-spell-fork"
+        width="824"
+        height="420"
+        viewBox="0 0 824 420"
+        style={{ left: 0, top: 0, overflow: 'visible' }}
+      >
+        <defs>
+          <filter id={blurId} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.4" />
+          </filter>
+        </defs>
+        {/* Soft wide glow underlay. */}
+        <path d={geom.main} fill="none" stroke={pal.mid} strokeWidth="6" opacity="0.5" strokeLinecap="round" strokeLinejoin="round" filter={`url(#${blurId})`} />
+        {geom.forks.map((d, i) => (
+          <path key={`g-${i}`} d={d} fill="none" stroke={pal.accent} strokeWidth="4" opacity="0.4" strokeLinecap="round" strokeLinejoin="round" filter={`url(#${blurId})`} />
+        ))}
+        {/* Hot white-hot core over the glow. */}
+        <path d={geom.main} fill="none" stroke={pal.core} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        {geom.forks.map((d, i) => (
+          <path key={`c-${i}`} d={d} fill="none" stroke={pal.core} strokeWidth="1.6" opacity="0.92" strokeLinecap="round" strokeLinejoin="round" />
+        ))}
+      </svg>
+      <ForkFlash x={target.x} y={target.y} pal={pal} el={el} delay={40} />
+      {geom.branches.map((b, i) => (
+        <ForkFlash key={i} x={b.x} y={b.y} pal={pal} el={el} delay={130 + i * 60} />
+      ))}
+    </>
+  );
+}
+
+function ForkFlash({ x, y, pal, el, delay }: { x: number; y: number; pal: ElementPalette; el: string; delay: number }) {
+  const id = `fork-flash-${el}-${Math.round(x)}`;
+  return (
+    <div
+      className="absolute animate-spell-bloom"
+      style={{ left: x, top: y, width: 0, height: 0, animationDelay: `${delay}ms`, opacity: 0 }}
+    >
+      <svg
+        width="84"
+        height="84"
+        viewBox="-42 -42 84 84"
+        style={{ position: 'absolute', left: -42, top: -42, overflow: 'visible' }}
+      >
+        <defs>
+          <radialGradient id={id} cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stopColor={pal.core} stopOpacity="0.95" />
+            <stop offset="45%" stopColor={pal.mid} stopOpacity="0.6" />
+            <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="0" cy="0" r="30" fill={`url(#${id})`} />
+        <g stroke={pal.accent} strokeWidth="1.6" strokeLinecap="round" opacity="0.8">
+          <line x1="0" y1="-22" x2="0" y2="-10" />
+          <line x1="0" y1="10" x2="0" y2="22" />
+          <line x1="-22" y1="0" x2="-10" y2="0" />
+          <line x1="10" y1="0" x2="22" y2="0" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ---------- Shape: necrotic drain tether (spell-drain) ----------
+
+function SpellDrainEffect({ origin, target, element, onDone }: ElementArcProps) {
+  useDoneTimer(1000, onDone);
+  const pal = paletteFor(element ?? 'necrotic');
+  // Motes + tether run FROM the drained monster (target) back INTO the caster
+  // (origin). Anchor at the monster; the vector points at the caster.
+  const dx = origin.x - target.x;
+  const dy = origin.y - target.y;
+  const length = Math.hypot(dx, dy);
+  const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+  const [motes] = useState(() =>
+    Array.from({ length: 7 }, (_, i) => ({ id: i, delay: i * 110 + Math.round(Math.random() * 50) })),
+  );
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-drain-tether"
+        style={{
+          left: 0,
+          top: -3,
+          width: length,
+          height: 6,
+          transformOrigin: '0% 50%',
+          transform: `rotate(${angle}deg)`,
+          borderRadius: 3,
+          background: `linear-gradient(90deg, ${pal.mid} 0%, ${pal.accent} 60%, transparent 100%)`,
+          boxShadow: `0 0 8px ${pal.glow}`,
+        }}
+      />
+      {motes.map((m) => (
+        <EffectMote
+          key={m.id}
+          dx={dx}
+          dy={dy}
+          delay={m.delay}
+          animClass="animate-drain-mote"
+          background={`radial-gradient(circle, ${pal.core} 0%, ${pal.mid} 55%, transparent 80%)`}
+          glow={`0 0 6px ${pal.glow}`}
+        />
+      ))}
+      <div
+        className="absolute animate-drain-feed"
+        style={{ left: dx, top: dy, width: 0, height: 0, transformOrigin: 'center' }}
+      >
+        <DrainFeedBloom pal={pal} />
+      </div>
+    </div>
+  );
+}
+
+function DrainFeedBloom({ pal }: { pal: ElementPalette }) {
+  const id = `drain-feed-${pal.mid.replace('#', '')}`;
+  return (
+    <svg
+      width="78"
+      height="78"
+      viewBox="-39 -39 78 78"
+      style={{ position: 'absolute', left: -39, top: -39, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id={id} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor={pal.core} stopOpacity="0.85" />
+          <stop offset="40%" stopColor={pal.mid} stopOpacity="0.55" />
+          <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="33" fill={`url(#${id})`} />
     </svg>
   );
 }

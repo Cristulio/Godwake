@@ -1,4 +1,4 @@
-import type { CombatState, SpellEffectKind } from '../../types/combat';
+import type { CombatState, SpellEffectKind, SpellElement } from '../../types/combat';
 import type { Weapon } from '../../schemas/item';
 
 /**
@@ -13,12 +13,13 @@ export function attachCombatVfx(
   kind: SpellEffectKind,
   attackerId: string,
   targetId?: string,
+  element?: SpellElement,
 ): CombatState {
   const next = (state.spellEffectCounter ?? 0) + 1;
   return {
     ...state,
     spellEffectCounter: next,
-    spellEffectEvent: { id: next, kind, attackerId, targetId },
+    spellEffectEvent: { id: next, kind, attackerId, targetId, element },
   };
 }
 

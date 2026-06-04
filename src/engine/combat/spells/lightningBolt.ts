@@ -15,6 +15,7 @@ import {
   firstLiveMonsterId,
   markActionUsed,
   nextLogId,
+  spellElement,
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
@@ -51,7 +52,7 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
     kind: 'roll',
     text: `${nextCharacter.name} looses a spear of lightning at ${primary.instance.displayName}. ${damageRoll.rolls.join('+')} = ${fullDmg} lightning${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half${secondary ? '; the bolt forks to a second for half' : ''}.`,
   });
-  nextState = attachSpellEffect(nextState, 'lightning-bolt', 'player', primaryId);
+  nextState = attachSpellEffect(nextState, 'spell-fork', 'player', primaryId, spellElement(ctx.spellId));
 
   // Primary takes the full bolt (save halves).
   {
