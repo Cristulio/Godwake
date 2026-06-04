@@ -4,10 +4,20 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * Abazigal — Chapter 13 boss, the last of the Five met in his lair. A Bhaalspawn
  * who took the shape of his draconic forebears and never gave it back: a great
  * half-blue-dragon, scaled cobalt and storm-charged, immune to the lightning
- * that is his blood. The apex kit at chapter-13 scale: a `multiattack` the picker
- * falls to (rending bite and claws at reach), a lightning-breath `attack`, a
- * `debuff` (frightened) off his thunderous roar, and `battle-rage` past half HP
- * when the god in his blood stops pretending to be a dragon.
+ * that is his blood.
+ *
+ * Boss-framework kit (multi-action, Ch9+):
+ *  - `actionsPerTurn: 2` — he does not trade blows, he overwhelms; two beats a
+ *    turn off one great body.
+ *  - A telegraphed `attack` (Arc-Lightning Breath): his chest swells and lights
+ *    from within a full turn before the storm comes down the gallery — your
+ *    window to close, brace, or hard-control him so the breath collapses uncast.
+ *  - A `debuff` (Thunderous Roar): frighten that lands as thunder, between
+ *    breaths.
+ *  - A half-HP `phase` (The Dragon Unleashed) over the legacy `battle-rage`:
+ *    bloodied, the god in his blood stops pretending to be a dragon — he hits
+ *    harder (battle-rage) and throws his guard away (the phase) to do it.
+ * The Rending Bite and Claws remain his reach profile and flavor.
  */
 export const ABAZIGAL: Monster = MonsterSchema.parse({
   id: 'abazigal',
@@ -23,34 +33,18 @@ export const ABAZIGAL: Monster = MonsterSchema.parse({
   immunities: ['lightning'],
   resistances: ['thunder', 'acid'],
   bossMechanic: 'battle-rage',
+  actionsPerTurn: 2,
+  phases: [
+    {
+      atHpPctBelow: 50,
+      name: 'The Dragon Unleashed',
+      enterText:
+        'Cut deep enough and the dragon-shape stops being a costume. The thing inside the cobalt remembers it was very nearly a god, throws the careful coiled fighting away, and surges at you all storm and appetite — quicker, heavier, and past all caring what you do back.',
+      acDelta: -2,
+      transform: true,
+    },
+  ],
   actions: [
-    {
-      kind: 'attack',
-      name: 'Rending Bite and Claws',
-      attackBonus: 14,
-      damage: '2d10+7',
-      damageType: 'piercing',
-      reach: 10,
-      description:
-        'He comes in over the reach of any blade you carry, jaws and foreclaws both, the bite charged blue along the teeth so it burns the wound even as the claws open it — a half-dragon fighting like the whole dragon he has decided to be.',
-    },
-    {
-      kind: 'multiattack',
-      name: 'Wrath of the Brood-Sire',
-      attacks: 3,
-      description:
-        'He does not trade blows; he overwhelms — bite and claw and claw in a single furious beat, three strokes off one great body before you have recovered from the first, the way every thing he ever sired learned to fight by watching him.',
-    },
-    {
-      kind: 'attack',
-      name: 'Arc-Lightning Breath',
-      attackBonus: 13,
-      damage: '4d10+6',
-      damageType: 'lightning',
-      reach: 15,
-      description:
-        'His chest swells and lights from within, blue-white through the scales, and he looses the storm in a single line of forking lightning down the gallery — the same breath that made him, turned outward to unmake you.',
-    },
     {
       kind: 'debuff',
       name: 'Thunderous Roar',
@@ -60,6 +54,30 @@ export const ABAZIGAL: Monster = MonsterSchema.parse({
       durationRounds: 2,
       description:
         'He throws back his head and roars, and it lands as thunder — a wall of charged sound that shakes the rock loose from the ceiling and tells the marrow of you, with the authority of something almost divine, that you should already be running.',
+    },
+    {
+      kind: 'attack',
+      name: 'Arc-Lightning Breath',
+      attackBonus: 13,
+      damage: '4d10+6',
+      damageType: 'lightning',
+      reach: 15,
+      telegraph: {
+        chargeText:
+          'His chest swells and lights from within, blue-white climbing the seams between the scales, the whole gallery taking on the smell of a coming strike — he is drawing the storm up to loose it in a single line down the rock, and you have one breath to be somewhere it is not.',
+      },
+      description:
+        'His chest swells and lights from within, blue-white through the scales, and he looses the storm in a single line of forking lightning down the gallery — the same breath that made him, turned outward to unmake you.',
+    },
+    {
+      kind: 'attack',
+      name: 'Rending Bite and Claws',
+      attackBonus: 14,
+      damage: '2d10+7',
+      damageType: 'piercing',
+      reach: 10,
+      description:
+        'He comes in over the reach of any blade you carry, jaws and foreclaws both, the bite charged blue along the teeth so it burns the wound even as the claws open it — a half-dragon fighting like the whole dragon he has decided to be.',
     },
   ],
   flavorText:
