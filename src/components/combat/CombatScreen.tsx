@@ -22,7 +22,7 @@ import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
-  monkHasPendingTurnAction,
+  hasRemainingTurnPlay,
   martialArtsWeaponId,
   monkFightsUnarmed,
   useConsumable,
@@ -112,6 +112,19 @@ export function CombatScreen({
     setCoachStep('done');
     useMetaStore.getState().markTutorialSeen(COMBAT_INTRO_TUTORIAL_ID);
   }
+
+  // The coach teaches the core loop ONCE per soul. Write the seen-flag the
+  // moment it's active for this first fight — NOT only on explicit Skip/Dismiss
+  // (finishCoach). A player who just plays the fight through (taps Attack, wins)
+  // without dismissing would otherwise never set it, so the coach re-appeared on
+  // every later fight. coachActive is frozen by the useState initializer above,
+  // so marking seen here does not drop THIS fight's coach; later fights read the
+  // now-set flag and stay ineligible.
+  useEffect(() => {
+    if (coachActive) {
+      useMetaStore.getState().markTutorialSeen(COMBAT_INTRO_TUTORIAL_ID);
+    }
+  }, [coachActive]);
 
   // The battlefield is an absolutely-positioned, fixed-geometry stage
   // (BATTLEFIELD_W × BATTLEFIELD_H). On desktop its column is pinned to the
@@ -263,58 +276,24 @@ export function CombatScreen({
     if (!isPlayerTurn(state)) return;
     if (overlayActive) return;
     if (blockingModalOpen) return;
-    // Hold the turn open on the coach's informational final step so the player
-    // can read it before the turn auto-ends out from under them.
-    if (coachActive && coachStep === 'abilities') return;
-    if (!character.actionEconomy.actionUsed) return;
-
-    const hasUsableBonus =
-      character.classId === 'fighter' &&
-      (character.resources.secondWindAvailable === true ||
-        (character.resources.secondWindBonusRemaining ?? 0) > 0) &&
-      !character.actionEconomy.bonusActionUsed &&
-      character.hp.current < character.hp.max;
-    const hasUsableActionSurge =
-      character.classId === 'fighter' &&
-      (character.resources.actionSurgeRemaining ?? 0) > 0;
-    const hasUsableCunningAction =
-      character.classId === 'rogue' &&
-      (character.resources.cunningActionUsesRemaining ?? 0) > 0 &&
-      !character.actionEconomy.bonusActionUsed;
-    const hasUsableRage =
-      character.classId === 'barbarian' &&
-      (character.resources.rageRoundsRemaining ?? 0) <= 0 &&
-      !character.actionEconomy.bonusActionUsed;
-    // Worth waiting on only if the mark isn't already riding a live quarry —
-    // otherwise re-marking is pointless and the turn should auto-end.
-    const markOnLiveTarget =
-      state.huntersMarkTargetId != null &&
-      state.combatants.some(
-        (c) =>
-          c.kind === 'monster' &&
-          c.id === state.huntersMarkTargetId &&
-          c.instance.hp.current > 0,
-      );
-    const hasUsableHuntersMark =
-      character.classId === 'ranger' &&
-      !character.actionEconomy.bonusActionUsed &&
-      !markOnLiveTarget;
-    // Monk: never auto-end while a Flurry still has queued strikes (the turn-end
-    // would discard them and the Ki spent to queue them), and hold the turn for
-    // an unspent Ki bonus the way a fighter's Second Wind holds it.
-    const monkHoldsTurn = monkHasPendingTurnAction(character);
-    if (
-      hasUsableBonus ||
-      hasUsableActionSurge ||
-      hasUsableCunningAction ||
-      hasUsableRage ||
-      hasUsableHuntersMark ||
-      monkHoldsTurn
-    )
-      return;
+    // Still something to spend — an unused action, or a class bonus/resource
+    // worth holding for (Second Wind, Action Surge, Cunning Action, Rage,
+    // Hunter's Mark, a Monk's queued Flurry / usable Ki)? Hold the turn. Every
+    // class's hold lives in this one predicate.
+    if (hasRemainingTurnPlay(character, state)) return;
     // Don't auto-end mid-spell-pick — the player may have a cantrip queued
     // even after a slot-spell. The Spells modal flow short-circuits this.
     if (pickingSpell || castingSpellId) return;
+    // The first-combat coach's informational 'abilities' step must NOT strand a
+    // player who has nothing left to do — e.g. a mage that has spent its one
+    // action. Finish the coach (marks it seen, clears the step) so it stops
+    // holding the turn, then let the next pass auto-end rather than waiting on a
+    // manual "Got it". (The coach only reaches this point on 'abilities' — an
+    // unused action returns above via hasRemainingTurnPlay.)
+    if (coachActive && coachStep === 'abilities') {
+      finishCoach();
+      return;
+    }
 
     setAutoEndNotice(true);
     const t = setTimeout(() => {
