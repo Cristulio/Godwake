@@ -2,6 +2,7 @@ import { SpellSchema, type Spell } from '../../schemas/spell';
 
 export const FIRE_BOLT: Spell = SpellSchema.parse({
   id: 'fire-bolt',
+  book: 'wizard',
   name: 'Fire Bolt',
   level: 0,
   school: 'evocation',
@@ -15,6 +16,7 @@ export const FIRE_BOLT: Spell = SpellSchema.parse({
 
 export const MAGIC_MISSILE: Spell = SpellSchema.parse({
   id: 'magic-missile',
+  book: 'wizard',
   name: 'Magic Missile',
   level: 1,
   school: 'evocation',
@@ -28,6 +30,7 @@ export const MAGIC_MISSILE: Spell = SpellSchema.parse({
 
 export const BURNING_HANDS: Spell = SpellSchema.parse({
   id: 'burning-hands',
+  book: 'wizard',
   name: 'Burning Hands',
   level: 1,
   school: 'evocation',
@@ -41,6 +44,7 @@ export const BURNING_HANDS: Spell = SpellSchema.parse({
 
 export const SHIELD: Spell = SpellSchema.parse({
   id: 'shield',
+  book: 'wizard',
   name: 'Shield',
   level: 1,
   school: 'abjuration',
@@ -53,6 +57,7 @@ export const SHIELD: Spell = SpellSchema.parse({
 
 export const MAGE_ARMOR: Spell = SpellSchema.parse({
   id: 'mage-armor',
+  book: 'wizard',
   name: 'Mage Armor',
   level: 1,
   school: 'abjuration',
@@ -65,6 +70,7 @@ export const MAGE_ARMOR: Spell = SpellSchema.parse({
 
 export const HOLD_PERSON: Spell = SpellSchema.parse({
   id: 'hold-person',
+  book: 'wizard',
   name: 'Hold Person',
   level: 2,
   school: 'enchantment',
@@ -77,6 +83,7 @@ export const HOLD_PERSON: Spell = SpellSchema.parse({
 
 export const MISTY_STEP: Spell = SpellSchema.parse({
   id: 'misty-step',
+  book: 'wizard',
   name: 'Misty Step',
   level: 2,
   school: 'conjuration',
@@ -89,6 +96,7 @@ export const MISTY_STEP: Spell = SpellSchema.parse({
 
 export const SCORCHING_RAY: Spell = SpellSchema.parse({
   id: 'scorching-ray',
+  book: 'wizard',
   name: 'Scorching Ray',
   level: 2,
   school: 'evocation',
@@ -102,6 +110,7 @@ export const SCORCHING_RAY: Spell = SpellSchema.parse({
 
 export const BLUR: Spell = SpellSchema.parse({
   id: 'blur',
+  book: 'wizard',
   name: 'Blur',
   level: 2,
   school: 'illusion',
@@ -114,6 +123,7 @@ export const BLUR: Spell = SpellSchema.parse({
 
 export const MIRROR_IMAGE: Spell = SpellSchema.parse({
   id: 'mirror-image',
+  book: 'wizard',
   name: 'Mirror Image',
   level: 2,
   school: 'illusion',
@@ -126,6 +136,7 @@ export const MIRROR_IMAGE: Spell = SpellSchema.parse({
 
 export const FIREBALL: Spell = SpellSchema.parse({
   id: 'fireball',
+  book: 'wizard',
   name: 'Fireball',
   level: 3,
   school: 'evocation',
@@ -139,6 +150,7 @@ export const FIREBALL: Spell = SpellSchema.parse({
 
 export const LIGHTNING_BOLT: Spell = SpellSchema.parse({
   id: 'lightning-bolt',
+  book: 'wizard',
   name: 'Lightning Bolt',
   level: 3,
   school: 'evocation',
@@ -152,6 +164,7 @@ export const LIGHTNING_BOLT: Spell = SpellSchema.parse({
 
 export const VAMPIRIC_TOUCH: Spell = SpellSchema.parse({
   id: 'vampiric-touch',
+  book: 'wizard',
   name: 'Vampiric Touch',
   level: 3,
   school: 'necromancy',
@@ -167,6 +180,7 @@ export const VAMPIRIC_TOUCH: Spell = SpellSchema.parse({
 
 export const RIME_BLAST: Spell = SpellSchema.parse({
   id: 'rime-blast',
+  book: 'wizard',
   name: 'Rime Blast',
   level: 4,
   school: 'evocation',
@@ -180,6 +194,7 @@ export const RIME_BLAST: Spell = SpellSchema.parse({
 
 export const FORCE_LANCE: Spell = SpellSchema.parse({
   id: 'force-lance',
+  book: 'wizard',
   name: 'Force Lance',
   level: 4,
   school: 'evocation',
@@ -193,6 +208,7 @@ export const FORCE_LANCE: Spell = SpellSchema.parse({
 
 export const GLACIAL_CONE: Spell = SpellSchema.parse({
   id: 'glacial-cone',
+  book: 'wizard',
   name: 'Glacial Cone',
   level: 5,
   school: 'evocation',
@@ -206,6 +222,7 @@ export const GLACIAL_CONE: Spell = SpellSchema.parse({
 
 export const VOID_RAY: Spell = SpellSchema.parse({
   id: 'void-ray',
+  book: 'wizard',
   name: 'Void Ray',
   level: 5,
   school: 'necromancy',
@@ -219,6 +236,7 @@ export const VOID_RAY: Spell = SpellSchema.parse({
 
 export const SUNFIRE_BURST: Spell = SpellSchema.parse({
   id: 'sunfire-burst',
+  book: 'wizard',
   name: 'Sunfire Burst',
   level: 6,
   school: 'evocation',
@@ -232,6 +250,7 @@ export const SUNFIRE_BURST: Spell = SpellSchema.parse({
 
 export const EXSANGUINATE: Spell = SpellSchema.parse({
   id: 'exsanguinate',
+  book: 'wizard',
   name: 'Exsanguinate',
   level: 6,
   school: 'necromancy',
@@ -245,6 +264,7 @@ export const EXSANGUINATE: Spell = SpellSchema.parse({
 
 export const DISSOLUTION: Spell = SpellSchema.parse({
   id: 'dissolution',
+  book: 'wizard',
   name: 'Dissolution',
   level: 6,
   school: 'transmutation',
@@ -258,6 +278,7 @@ export const DISSOLUTION: Spell = SpellSchema.parse({
 
 export const STORMCRASH: Spell = SpellSchema.parse({
   id: 'stormcrash',
+  book: 'wizard',
   name: 'Stormcrash',
   level: 7,
   school: 'evocation',
@@ -271,6 +292,7 @@ export const STORMCRASH: Spell = SpellSchema.parse({
 
 export const SOUL_SNARE: Spell = SpellSchema.parse({
   id: 'soul-snare',
+  book: 'wizard',
   name: 'Soul Snare',
   level: 7,
   school: 'enchantment',
@@ -283,6 +305,7 @@ export const SOUL_SNARE: Spell = SpellSchema.parse({
 
 export const CATACLYSM: Spell = SpellSchema.parse({
   id: 'cataclysm',
+  book: 'wizard',
   name: 'Cataclysm',
   level: 8,
   school: 'evocation',
@@ -296,6 +319,7 @@ export const CATACLYSM: Spell = SpellSchema.parse({
 
 export const WITHER: Spell = SpellSchema.parse({
   id: 'wither',
+  book: 'wizard',
   name: 'Wither',
   level: 8,
   school: 'necromancy',
@@ -309,6 +333,7 @@ export const WITHER: Spell = SpellSchema.parse({
 
 export const APOTHEOSIS: Spell = SpellSchema.parse({
   id: 'apotheosis',
+  book: 'wizard',
   name: 'Apotheosis',
   level: 9,
   school: 'transmutation',
@@ -321,6 +346,7 @@ export const APOTHEOSIS: Spell = SpellSchema.parse({
 
 export const UNMAKE: Spell = SpellSchema.parse({
   id: 'unmake',
+  book: 'wizard',
   name: 'Unmake',
   level: 9,
   school: 'transmutation',
@@ -339,6 +365,7 @@ export const UNMAKE: Spell = SpellSchema.parse({
 
 export const PRODUCE_FLAME: Spell = SpellSchema.parse({
   id: 'produce-flame',
+  book: 'druid',
   name: 'Produce Flame',
   level: 0,
   school: 'conjuration',
@@ -352,6 +379,7 @@ export const PRODUCE_FLAME: Spell = SpellSchema.parse({
 
 export const THORNLASH: Spell = SpellSchema.parse({
   id: 'thornlash',
+  book: 'druid',
   name: 'Thornlash',
   level: 1,
   school: 'conjuration',
@@ -365,6 +393,7 @@ export const THORNLASH: Spell = SpellSchema.parse({
 
 export const ENTANGLING_ROOTS: Spell = SpellSchema.parse({
   id: 'entangling-roots',
+  book: 'druid',
   name: 'Entangling Roots',
   level: 2,
   school: 'transmutation',
@@ -377,6 +406,7 @@ export const ENTANGLING_ROOTS: Spell = SpellSchema.parse({
 
 export const MOONFIRE: Spell = SpellSchema.parse({
   id: 'moonfire',
+  book: 'druid',
   name: 'Moonfire',
   level: 2,
   school: 'evocation',
@@ -390,6 +420,7 @@ export const MOONFIRE: Spell = SpellSchema.parse({
 
 export const CALL_LIGHTNING: Spell = SpellSchema.parse({
   id: 'call-lightning',
+  book: 'druid',
   name: 'Call Lightning',
   level: 3,
   school: 'conjuration',
@@ -403,6 +434,7 @@ export const CALL_LIGHTNING: Spell = SpellSchema.parse({
 
 export const WILDFIRE: Spell = SpellSchema.parse({
   id: 'wildfire',
+  book: 'druid',
   name: 'Wildfire',
   level: 3,
   school: 'evocation',
@@ -416,6 +448,7 @@ export const WILDFIRE: Spell = SpellSchema.parse({
 
 export const ICE_STORM: Spell = SpellSchema.parse({
   id: 'ice-storm',
+  book: 'druid',
   name: 'Ice Storm',
   level: 4,
   school: 'evocation',
@@ -429,6 +462,7 @@ export const ICE_STORM: Spell = SpellSchema.parse({
 
 export const AVALANCHE: Spell = SpellSchema.parse({
   id: 'avalanche',
+  book: 'druid',
   name: 'Avalanche',
   level: 5,
   school: 'transmutation',
@@ -442,6 +476,7 @@ export const AVALANCHE: Spell = SpellSchema.parse({
 
 export const FIRE_STORM: Spell = SpellSchema.parse({
   id: 'fire-storm',
+  book: 'druid',
   name: 'Fire Storm',
   level: 6,
   school: 'evocation',
@@ -455,6 +490,7 @@ export const FIRE_STORM: Spell = SpellSchema.parse({
 
 export const SUMMON_TEMPEST: Spell = SpellSchema.parse({
   id: 'summon-tempest',
+  book: 'druid',
   name: 'Summon Tempest',
   level: 7,
   school: 'conjuration',
@@ -468,6 +504,7 @@ export const SUMMON_TEMPEST: Spell = SpellSchema.parse({
 
 export const WRATH_OF_SILVANUS: Spell = SpellSchema.parse({
   id: 'wrath-of-silvanus',
+  book: 'druid',
   name: 'Wrath of Silvanus',
   level: 8,
   school: 'evocation',
@@ -481,6 +518,7 @@ export const WRATH_OF_SILVANUS: Spell = SpellSchema.parse({
 
 export const AVATAR_OF_THE_WILDS: Spell = SpellSchema.parse({
   id: 'avatar-of-the-wilds',
+  book: 'druid',
   name: 'Avatar of the Wilds',
   level: 9,
   school: 'transmutation',
