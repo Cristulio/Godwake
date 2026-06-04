@@ -130,10 +130,12 @@ export function EndingScreen() {
   }
 
   function concludeEnding() {
-    // Completion was already locked in at the win moment (finishDelve, before
-    // this screen rendered), so the gate is already cleared. This re-entry just
-    // runs the normal settle — renown, reincarnation, the next ascension rung —
-    // then leaves on the title. The finale is a full stop.
+    // Completion AND renown were both locked in at the win moment (finishDelve,
+    // before this screen rendered), so the gate is cleared and the soul is paid.
+    // This re-entry just runs the deferred settle — reincarnation, the next
+    // ascension rung — then leaves on the title. The finale is a full stop, and
+    // because the renown is already banked, leaving it any other way costs the
+    // player nothing.
     finishDelve();
     goToTitle();
   }

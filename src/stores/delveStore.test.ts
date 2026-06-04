@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import {
   useDelveStore,
+  computeDelveRenown,
   RENOWN_PER_DELVE_CLEAR,
   RENOWN_PER_CHAPTER_BOSS,
   RENOWN_PER_ROOM_REACHED,
@@ -185,22 +186,29 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     useMetaStore.setState({ gameCompleted: false });
   });
 
-  it('records completion at the WIN MOMENT, then detours to the ending before settling', () => {
+  it('records completion AND banks renown at the WIN MOMENT, then detours to the ending before settling', () => {
     seedCapstoneRun({ quirks: [], level: 6, renown: 0 });
     useMetaStore.setState({ gameCompleted: false });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
+
+    // The amount DelveSummary just displayed — the win-moment bank must match it.
+    const expectedGain = computeDelveRenown(useDelveStore.getState().delve!, char()).total;
+    expect(expectedGain).toBeGreaterThan(0);
 
     useDelveStore.getState().finishDelve();
 
     // gameCompleted is locked in HERE — before the lazy ending screen renders —
     // so a crashed ending chunk can't cost the player the clear / New Game+.
     expect(useMetaStore.getState().gameCompleted).toBe(true);
-    // Routed to the capstone; the soul's settle is still deferred — the delve is
-    // held 'completed' so the ending screen's finishDelve() re-entry resolves it.
+    // Routed to the capstone; the soul's settle (reincarnation, hub) is still
+    // deferred — the delve is held 'completed' so the ending's finishDelve()
+    // re-entry resolves it (hence still level 6, delve not null).
     expect(useScreenStore.getState().screen).toBe('ending');
     expect(useDelveStore.getState().delve).not.toBeNull();
     expect(char().level).toBe(6);
-    expect(char().renown).toBe(0);
+    // Renown is banked NOW, not deferred to the conclude re-entry: leaving the
+    // finale any other way (refresh, straight to New Game+) must not lose it.
+    expect(char().renown).toBe(expectedGain);
   });
 
   it('concluding the flavor ending (finishDelve re-entry) runs the normal clear path', () => {
@@ -208,24 +216,57 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     useMetaStore.setState({ gameCompleted: false });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
 
-    // First pass: completion is recorded and the ending fires.
+    // First pass = the win moment: completion recorded, renown banked, ending fires.
     useDelveStore.getState().finishDelve();
     expect(useScreenStore.getState().screen).toBe('ending');
     expect(useMetaStore.getState().gameCompleted).toBe(true);
+    const renownAfterWin = char().renown;
+    expect(renownAfterWin).toBeGreaterThan(0);
 
     // The flavor-only ending records nothing itself — it just re-enters
     // finishDelve (which now falls through the capstone gate), then the screen
     // routes on to the title.
     useDelveStore.getState().finishDelve();
 
-    // Second pass settles: reincarnated, renown paid, depth recorded, hub.
+    // Second pass settles: reincarnated, depth recorded, hub. Renown is NOT
+    // banked again — it stays exactly what the win moment paid (no double-count).
     expect(useScreenStore.getState().screen).toBe('hub');
     expect(useDelveStore.getState().delve).toBeNull();
     expect(char().level).toBe(1);
-    expect(char().renown).toBeGreaterThan(0);
+    expect(char().renown).toBe(renownAfterWin);
     expect(useMetaStore.getState().chaptersCleared).toBe(TOTAL_CHAPTERS);
     expect(useMetaStore.getState().hasReincarnated).toBe(true);
     expect(useMetaStore.getState().gameCompleted).toBe(true);
+  });
+
+  it('base-game clear (Irenicus, Ch11) banks renown at the win moment, no re-entry needed', () => {
+    // A base delve ends on Irenicus at Ch11 — the full chain's Melissan capstone
+    // doesn't exist here. seedRun lays down a base (11-chapter) delve; the same
+    // win-moment bank must hold, gated on gameCompleted rather than throneCompleted.
+    seedRun({ quirks: [], level: 6, renown: 0 });
+    const rooms = useDelveStore.getState().delve!.rooms;
+    const irenicusIdx = rooms.findIndex((r) => r.monsters?.[0]?.defId === 'irenicus');
+    expect(irenicusIdx).toBeGreaterThanOrEqual(0);
+    setDelve({ phase: 'completed', currentRoomIdx: irenicusIdx });
+
+    const expectedGain = computeDelveRenown(useDelveStore.getState().delve!, char()).total;
+    expect(expectedGain).toBeGreaterThan(0);
+
+    // First pass = the win moment: base game marked complete (unlocking New
+    // Game+), renown banked immediately. If the player walks off to the title to
+    // start NG+ instead of concluding, this is the ONLY pass — and renown is safe.
+    useDelveStore.getState().finishDelve();
+    expect(useMetaStore.getState().gameCompleted).toBe(true);
+    expect(useMetaStore.getState().throneCompleted).toBe(false);
+    expect(useScreenStore.getState().screen).toBe('ending');
+    expect(char().renown).toBe(expectedGain);
+
+    // Concluding the finale settles the soul without paying renown a second time.
+    useDelveStore.getState().finishDelve();
+    expect(char().renown).toBe(expectedGain);
+    expect(useScreenStore.getState().screen).toBe('hub');
+    expect(useDelveStore.getState().delve).toBeNull();
+    expect(char().level).toBe(1);
   });
 
   it('does NOT replay the ending on a later full clear', () => {
