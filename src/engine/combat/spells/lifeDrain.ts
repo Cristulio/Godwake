@@ -16,6 +16,7 @@ import {
   nextLogId,
   spellDamageBonus,
 } from './helpers';
+import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
 
 function intMod(character: Readonly<Character>): number {
   return abilityModifier(effectiveAbilityScores(character).int);
@@ -39,7 +40,8 @@ function castDrain(
 
   let nextCharacter: Character = consumeSlot(ctx.character, opts.slot);
   const roll = roller.roll({ count: opts.dice, die: 6, modifier: 0 });
-  const dealt = roll.total + intMod(nextCharacter) + spellDamageBonus(nextCharacter);
+  const scaled = scaleSpellDamage(roll.total, nextCharacter, spellAcquisitionLevel(opts.slot));
+  const dealt = scaled + intMod(nextCharacter) + spellDamageBonus(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),

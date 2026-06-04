@@ -4,6 +4,7 @@ import { spellcastingMod } from '../../character/derived';
 import { getSpell } from '../../../content/spells';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
+import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
 import {
   type CastResult,
   type CastSpellContext,
@@ -18,19 +19,12 @@ import {
 } from './helpers';
 
 /**
- * Fire Bolt scales like a 5e cantrip — more d10s as the caster grows. RAW the
- * breakpoints are L5/11/17 (2/3/4 dice), but this game caps characters at level
- * 8, so all four tiers are compressed onto the reachable band (2d10 at L5,
- * 3d10 at L7, 4d10 at L8). This gives the endgame wizard the sustained at-will
- * closing power the ascension ladder demands once enemy HP outscales a flat 1d10.
+ * Fire Bolt is the cantrip arm of the shared spell-scaling model: one d10 base,
+ * grown smoothly by character level + casting modifier (see scaling.ts). It used
+ * to step its dice discretely (1→4d10, capped at L8), which went stale once the
+ * game reached L20 — the parametric multiplier replaces those breakpoints and
+ * keeps climbing the whole way up. A DEX save still halves the burn.
  */
-export function fireBoltDiceCount(level: number): number {
-  if (level >= 8) return 4;
-  if (level >= 7) return 3;
-  if (level >= 5) return 2;
-  return 1;
-}
-
 export function castFireBolt(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
   let nextCharacter: Character = character;
@@ -46,13 +40,14 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
   const save = roller.d20('normal', 0);
   const saved = save.total >= dc;
 
-  const damageRoll = roller.roll({ count: fireBoltDiceCount(nextCharacter.level), die: 10, modifier: 0 });
+  const damageRoll = roller.roll({ count: 1, die: 10, modifier: 0 });
+  const scaledDice = scaleSpellDamage(damageRoll.total, nextCharacter, spellAcquisitionLevel(0));
   const castMod = spellcastingMod(nextCharacter);
   const bonus = spellDamageBonus(nextCharacter) + castMod;
-  const fullDamage = damageRoll.total + bonus;
+  const fullDamage = scaledDice + bonus;
   const dealt = saved ? Math.floor(fullDamage / 2) : fullDamage;
 
-  const damageBreakdown = `${damageRoll.rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''}`;
+  const damageBreakdown = `${scaledDice}${bonus > 0 ? `+${bonus}` : ''}`;
   const logs: CombatLogEntry[] = [
     {
       id: nextLogId(state),

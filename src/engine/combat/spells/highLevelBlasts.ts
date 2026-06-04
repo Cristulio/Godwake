@@ -15,6 +15,7 @@ import {
   spellDamageBonus,
   spellSaveDC,
 } from './helpers';
+import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
 
 interface BlastConfig {
   slotLevel: SpellSlotLevel;
@@ -43,7 +44,8 @@ function castAreaBlast(ctx: CastSpellContext, cfg: BlastConfig): CastResult {
   ) as MonsterCombatant[];
 
   const damageRoll = roller.roll({ count: cfg.dice, die: cfg.die, modifier: 0 });
-  const fullDmg = damageRoll.total + spellDamageBonus(nextCharacter);
+  const scaledDice = scaleSpellDamage(damageRoll.total, nextCharacter, spellAcquisitionLevel(cfg.slotLevel));
+  const fullDmg = scaledDice + spellDamageBonus(nextCharacter);
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {

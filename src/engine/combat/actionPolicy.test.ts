@@ -100,10 +100,14 @@ describe('chooseCombatAction', () => {
     expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'fireball' }));
   });
 
-  it('does NOT burn a 3rd-level slot on one weak enemy — cantrips instead', () => {
+  it('does NOT burn the 3rd-level slot on one weak enemy — at-will or a cheap finish instead', () => {
     const { state, character } = startCombat(atLevel(wizard, 5), [{ defId: 'goblin', count: 1 }]);
     const action = chooseCombatAction(state, character);
-    expect(action).toEqual(expect.objectContaining({ kind: 'cast', spellId: 'fire-bolt' }));
+    // The big slot is reserved for crowds/bosses. A single weak foe gets the
+    // free cantrip or, when the gently-scaled cantrip can't one-shot it, a
+    // single cheap Magic Missile to remove it a turn sooner — never Fireball.
+    const spellId = (action as { kind: string; spellId?: string }).spellId;
+    expect(['fire-bolt', 'magic-missile']).toContain(spellId);
   });
 
   it('finishes a low-HP target with Magic Missile (guaranteed, no roll)', () => {
