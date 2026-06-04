@@ -30,7 +30,12 @@ beforeEach(() => {
   useCharacterStore.setState({ character: buildPlayerCharacter(presetCreationInput('fighter')) });
   useDelveStore.setState({ delve: null });
   useCombatStore.setState({ combat: null });
-  useMetaStore.setState({ ownedLegendaries: [], activeLegendaries: [], ascensionUnlocked: 0 });
+  useMetaStore.setState({
+    ownedLegendaries: [],
+    equippedRelics: {},
+    ascensionUnlocked: 0,
+    renownSpent: 0,
+  });
 });
 
 describe('legendary drop banks, does not equip mid-run', () => {
@@ -39,9 +44,9 @@ describe('legendary drop banks, does not equip mid-run', () => {
     const id = useMetaStore.getState().grantLegendaryDrop(false);
     expect(id).not.toBeNull();
     expect(useMetaStore.getState().ownedLegendaries).toContain(id!);
-    // Banked only — the run's gear and the active attunements are untouched.
+    // Banked only — the run's gear and the equipped loadout are untouched.
     expect(useCharacterStore.getState().character!.inventory.length).toBe(beforeInv);
-    expect(useMetaStore.getState().activeLegendaries).toEqual([]);
+    expect(useMetaStore.getState().equippedRelics).toEqual({});
   });
 
   it('elite drops can bank ANY class relic — off-class is stashed', () => {
@@ -68,12 +73,18 @@ describe('legendary drop banks, does not equip mid-run', () => {
   });
 });
 
-describe('legendary equip has no slot cap', () => {
-  it('equips every owned class-eligible relic regardless of ascension', () => {
+describe('legendary loadout seats one relic per typed slot', () => {
+  it('seats owned class-eligible relics into their distinct slots', () => {
     const owned = ['heartwood-talisman', 'bulwark-sigil', 'gauntlets-of-the-titan'];
-    useMetaStore.setState({ ascensionUnlocked: 0, ownedLegendaries: owned });
-    useMetaStore.getState().setActiveLegendaries(owned);
-    expect(useMetaStore.getState().activeLegendaries).toHaveLength(3);
+    // Rend (gauntlets) opens at 100 renown spent; Vampire/Aegis are starting slots.
+    useMetaStore.setState({ ascensionUnlocked: 0, ownedLegendaries: owned, renownSpent: 100 });
+    const meta = useMetaStore.getState();
+    owned.forEach((id) => meta.equipRelic(id));
+    const eq = useMetaStore.getState().equippedRelics;
+    expect(eq.vampire).toBe('heartwood-talisman');
+    expect(eq.aegis).toBe('bulwark-sigil');
+    expect(eq.rend).toBe('gauntlets-of-the-titan');
+    expect(Object.keys(eq)).toHaveLength(3);
   });
 });
 

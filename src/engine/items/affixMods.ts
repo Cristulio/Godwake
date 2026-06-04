@@ -120,7 +120,7 @@ export function aggregateAffixMods(affixIds: string[]): AffixMods {
 /**
  * Aggregate affix mods across everything the character has equipped, PLUS the
  * effect payloads of the hub-equipped legendary relics (`legendaryEffects`, baked
- * on by metaStore.setActiveLegendaries). Legendaries are effect-only, so they
+ * on by metaStore.applyRelicLoadout). Legendaries are effect-only, so they
  * ride the very same channels as gear affixes with no extra plumbing.
  */
 export function characterAffixMods(character: Character): AffixMods {

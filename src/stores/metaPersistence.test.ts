@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore, SAVE_SLOT_KEY_PREFIX } from './gameStore';
+import { SAVE_VERSION } from './persistMigration';
 import { useCharacterStore } from './characterStore';
 import { useDelveStore } from './delveStore';
 import { useMetaStore } from './metaStore';
@@ -46,9 +47,10 @@ beforeEach(() => {
     chapter1Cleared: false,
     druidGroveUnlocked: true,
     ascensionUnlocked: 3,
+    renownSpent: 1500, // every relic slot open, so swap tests aren't slot-gated
     knownNpcs: [],
     ownedLegendaries: [],
-    activeLegendaries: [],
+    equippedRelics: {},
   });
   useScreenStore.setState({ screen: 'druid-grove', introSeen: true, quirksTutorialSeen: true });
 });
@@ -105,9 +107,11 @@ describe('Grove HP upgrade — raises live max HP on purchase (the header bug)',
 });
 
 describe('legendaries survive a character swap (account-level, soul-carried)', () => {
-  it('keeps owned + equipped relics and the baked effects across selectCharacter', () => {
+  it('keeps owned relics + the loadout and the baked effects across selectCharacter', () => {
     useMetaStore.setState({ ownedLegendaries: ['heartwood-talisman', 'bulwark-sigil'] });
-    useMetaStore.getState().setActiveLegendaries(['heartwood-talisman', 'bulwark-sigil']);
+    const meta0 = useMetaStore.getState();
+    meta0.equipRelic('heartwood-talisman'); // Vampire
+    meta0.equipRelic('bulwark-sigil'); // Aegis
     // Both relics are class-agnostic → two effect payloads baked on.
     expect(useCharacterStore.getState().character!.legendaryEffects).toHaveLength(2);
 
@@ -115,24 +119,26 @@ describe('legendaries survive a character swap (account-level, soul-carried)', (
 
     const meta = useMetaStore.getState();
     expect(meta.ownedLegendaries).toEqual(['heartwood-talisman', 'bulwark-sigil']);
-    expect(meta.activeLegendaries).toEqual(['heartwood-talisman', 'bulwark-sigil']);
+    expect(meta.equippedRelics).toEqual({ vampire: 'heartwood-talisman', aegis: 'bulwark-sigil' });
     // The baked effects ride carrySoulProgress + the swap re-bake onto the new vessel.
     const after = useCharacterStore.getState().character!;
     expect(after.classId).toBe('wizard');
     expect(after.legendaryEffects).toHaveLength(2);
   });
 
-  it('drops a class-bound relic the new class cannot equip on swap', () => {
+  it('drops a class-bound relic the new class cannot seat on swap', () => {
     useCharacterStore.setState({ character: makeFighter({ renown: 1000 }) });
     useMetaStore.setState({ ownedLegendaries: ['warsong-gauntlet', 'bulwark-sigil'] });
-    useMetaStore.getState().setActiveLegendaries(['warsong-gauntlet', 'bulwark-sigil']);
-    expect(useMetaStore.getState().activeLegendaries).toContain('warsong-gauntlet');
+    const meta0 = useMetaStore.getState();
+    meta0.equipRelic('warsong-gauntlet'); // Cascade (Fighter-bound)
+    meta0.equipRelic('bulwark-sigil'); // Aegis (agnostic)
+    expect(useMetaStore.getState().equippedRelics.cascade).toBe('warsong-gauntlet');
 
     useGameStore.getState().selectCharacter('wizard');
 
-    // The Fighter-bound Warsong gauntlet falls off; the agnostic relic stays.
+    // The Fighter-bound Warsong gauntlet falls out of its slot; the agnostic relic stays.
     const meta = useMetaStore.getState();
-    expect(meta.activeLegendaries).toEqual(['bulwark-sigil']);
+    expect(meta.equippedRelics).toEqual({ aegis: 'bulwark-sigil' });
     expect(meta.ownedLegendaries).toContain('warsong-gauntlet'); // still owned, just stashed
   });
 });
@@ -188,7 +194,7 @@ describe('persist round-trip — fresh boot rehydrates the meta loop', () => {
   function seedAndReload(state: Record<string, unknown>, version: number) {
     useMetaStore.setState({
       ownedLegendaries: [],
-      activeLegendaries: [],
+      equippedRelics: {},
       unlockedUpgrades: {},
       ascensionUnlocked: 0,
       chaptersCleared: 0,
@@ -197,7 +203,7 @@ describe('persist round-trip — fresh boot rehydrates the meta loop', () => {
     return useGameStore.persist.rehydrate();
   }
 
-  it('restores legendaries, Grove upgrades, and ascension from a current-version save', async () => {
+  it('restores relics + loadout, Grove upgrades, and ascension from a current-version save', async () => {
     await seedAndReload(
       {
         screen: 'hub',
@@ -217,16 +223,18 @@ describe('persist round-trip — fresh boot rehydrates the meta loop', () => {
         chapter1Cleared: true,
         druidGroveUnlocked: true,
         ascensionUnlocked: 1,
+        renownSpent: 0,
         knownNpcs: ['imoen'],
         ownedLegendaries: ['heartwood-talisman', 'bulwark-sigil'],
-        activeLegendaries: ['heartwood-talisman'],
+        // heartwood seats in Vampire (a starting slot, open at 0 renown spent).
+        equippedRelics: { vampire: 'heartwood-talisman' },
       },
-      9,
+      SAVE_VERSION,
     );
 
     const meta = useMetaStore.getState();
     expect(meta.ownedLegendaries).toEqual(['heartwood-talisman', 'bulwark-sigil']);
-    expect(meta.activeLegendaries).toEqual(['heartwood-talisman']);
+    expect(meta.equippedRelics).toEqual({ vampire: 'heartwood-talisman' });
     expect(meta.unlockedUpgrades).toEqual({ 'mantle-of-the-wakened': 3 });
     expect(meta.ascensionUnlocked).toBe(1);
     expect(meta.chaptersCleared).toBe(2);

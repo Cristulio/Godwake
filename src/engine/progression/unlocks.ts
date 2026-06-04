@@ -217,6 +217,47 @@ export function newlyUnlockedClasses(
     .map(({ id }) => id);
 }
 
+// ─── Relic loadout slots (renown-spent paced) ────────────────────────────────
+// The nine TYPED relic slots (content/legendaries.RELIC_SLOTS) open
+// PROGRESSIVELY. The first three are free from the start; the remaining six
+// unlock as cumulative Renown spent at the Grove crosses the bars below — the
+// same tribute axis the class ladder rides, paced conservatively so all nine land
+// only over the deep meta. Derived live from renownSpent (the single source of
+// truth), exactly as the class unlocks are — no redundant stored count.
+
+/** Relic slots open from the very start, before any Renown is laid down. */
+export const STARTING_RELIC_SLOTS = 3;
+
+/**
+ * Cumulative RENOWN-SPENT bars that open relic slots 4..9 (slots 1-3 are free).
+ * Paced conservatively so the ninth slot only opens deep into the meta. Editable.
+ */
+export const RELIC_SLOT_RENOWN_THRESHOLDS: readonly number[] = [100, 250, 450, 700, 1050, 1500];
+
+/** How many of the nine typed relic slots are open at this cumulative renown spent (3..9). */
+export function unlockedRelicSlots(renownSpent: number): number {
+  let n = STARTING_RELIC_SLOTS;
+  for (const bar of RELIC_SLOT_RENOWN_THRESHOLDS) {
+    if (renownSpent >= bar) n += 1;
+  }
+  return n;
+}
+
+/**
+ * The cumulative renown-spent bar at which the relic slot at this 0-based index
+ * opens — 0 for the three free starters, then the {@link RELIC_SLOT_RENOWN_THRESHOLDS}
+ * bars, Infinity past the ninth slot. Drives the "opens at…" hint on a locked slot.
+ */
+export function relicSlotUnlockRenown(slotIndex: number): number {
+  if (slotIndex < STARTING_RELIC_SLOTS) return 0;
+  return RELIC_SLOT_RENOWN_THRESHOLDS[slotIndex - STARTING_RELIC_SLOTS] ?? Infinity;
+}
+
+/** Is the relic slot at this 0-based index open at the given cumulative renown spent? */
+export function isRelicSlotUnlocked(slotIndex: number, renownSpent: number): boolean {
+  return slotIndex < unlockedRelicSlots(renownSpent);
+}
+
 /**
  * The slice of meta the unlock helpers read. metaStore's state is a structural
  * superset, so the store can be passed directly.
