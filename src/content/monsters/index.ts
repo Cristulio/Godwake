@@ -298,7 +298,26 @@ const ALL_MONSTERS: Monster[] = [
 
 const MONSTER_BY_ID: Map<string, Monster> = new Map(ALL_MONSTERS.map((m) => [m.id, m]));
 
+/**
+ * Test-only registry overrides. Engine paths re-derive a monster's canonical def
+ * by id (intent resolution, multiattack, the boss-framework gate/phase reads), so
+ * a fixture with bespoke fields must be resolvable by `getMonster`. Tests register
+ * fixtures here and clear them afterwards; production never touches this map.
+ * (Same shape as the `_reset*` counters used elsewhere for deterministic tests.)
+ */
+const TEST_MONSTER_OVERRIDES: Map<string, Monster> = new Map();
+
+export function _setTestMonster(def: Monster): void {
+  TEST_MONSTER_OVERRIDES.set(def.id, def);
+}
+
+export function _clearTestMonsters(): void {
+  TEST_MONSTER_OVERRIDES.clear();
+}
+
 export function getMonster(id: string): Monster {
+  const override = TEST_MONSTER_OVERRIDES.get(id);
+  if (override) return override;
   const monster = MONSTER_BY_ID.get(id);
   if (!monster) {
     throw new Error(`Monster not found: ${id}`);

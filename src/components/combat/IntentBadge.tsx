@@ -80,6 +80,17 @@ const ICONS: Record<string, ReactElement> = {
       strokeLinejoin="round"
     />
   ),
+  // boss-framework: a wind-up hourglass — a big special is charging / incoming.
+  windup: (
+    <path
+      d="M3.5 2 H12.5 M3.5 14 H12.5 M4 2.5 L8 8 L4 13.5 M12 2.5 L8 8 L12 13.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="square"
+      strokeLinejoin="round"
+    />
+  ),
 };
 
 /** "3" when min===max, else "3–6". Null when the intent carries no damage. */
@@ -162,6 +173,14 @@ const STYLES: Record<MonsterIntent['kind'], IntentStyle> = {
     icon: ICONS.ward,
     describe: () => 'Shields itself or an ally with temporary HP that soaks your next hits.',
   },
+  windup: {
+    color: 'var(--color-accent-torch)',
+    icon: ICONS.windup,
+    describe: (i) =>
+      i.imminent
+        ? `INCOMING: ${i.actionName} lands on the enemy's next turn — race its HP down, brace, or stun it to cancel the charge.`
+        : `Winding up ${i.actionName} — a heavy blow is being readied. It lands next turn, not this one.`,
+  },
 };
 
 // Per-condition tint for debuff intents, so a poison read differs from a fear read.
@@ -174,6 +193,9 @@ const DEBUFF_COLORS: Partial<Record<ConditionName, string>> = {
 };
 
 function valueText(intent: MonsterIntent): string | null {
+  // boss-framework: an imminent wind-up flags itself with a bang; a still-
+  // charging one reads from the icon + pulse alone.
+  if (intent.kind === 'windup') return intent.imminent ? '!' : null;
   const range = rangeText(intent);
   if (intent.kind === 'multiattack') return `${intent.hits ?? 2}× ${range ?? '?'}`;
   return range;
@@ -184,13 +206,20 @@ function IntentBadgeImpl({ intent }: IntentBadgeProps) {
   const color =
     intent.kind === 'debuff'
       ? DEBUFF_COLORS[intent.condition ?? 'poisoned'] ?? style.color
-      : style.color;
+      : // boss-framework: an imminent wind-up burns blood-red; one still charging
+        // stays warning-amber.
+        intent.kind === 'windup' && intent.imminent
+        ? 'var(--color-accent-blood)'
+        : style.color;
   const value = valueText(intent);
   const urgent =
     intent.kind === 'attack' ||
     intent.kind === 'multiattack' ||
     intent.kind === 'drain' ||
-    intent.kind === 'paralyze';
+    intent.kind === 'paralyze' ||
+    // An incoming wind-up is the most urgent read on the field; one still
+    // charging is a heads-up, not yet a pulse.
+    (intent.kind === 'windup' && intent.imminent === true);
 
   return (
     <div

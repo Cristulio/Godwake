@@ -5,6 +5,7 @@ import type {
   MonsterCombatant,
 } from '../../../types/combat';
 import { characterBlessingMods } from '../../character/blessings';
+import { getMonster } from '../../../content/monsters';
 import { playSfx } from '../../audio';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
@@ -44,8 +45,34 @@ export function applyDamage(
   if (target.kind === 'monster') {
     const mc = target as MonsterCombatant;
     const wasAlive = mc.instance.hp.current > 0;
-    const remainingTemp = Math.max(0, mc.instance.hp.temp - amount);
-    const overflow = Math.max(0, amount - mc.instance.hp.temp);
+    // boss-framework: a condition gate negates / heavily reduces incoming damage
+    // while its linked add (a hidden heart, a statue, a weak-point) still lives.
+    // The ward line tells the player WHY the blow glanced off — kill the add to
+    // drop the gate, then damage lands in full. Single chokepoint, so it covers
+    // weapon hits, spell damage and splash alike.
+    let effectiveAmount = amount;
+    const gate = getMonster(mc.instance.defId).gate;
+    if (gate && amount > 0) {
+      const addAlive = next.combatants.some(
+        (c) =>
+          c.kind === 'monster' &&
+          c.instance.hp.current > 0 &&
+          c.instance.defId === gate.whileAddAlive,
+      );
+      if (addAlive) {
+        effectiveAmount = Math.floor(amount * (gate.damageTakenPct ?? 0));
+        next = appendLog(next, {
+          id: next.log.length + 1,
+          kind: 'system',
+          text:
+            effectiveAmount <= 0
+              ? `The wards hold — ${mc.instance.displayName} shrugs off the blow (${gate.wardLabel}).`
+              : `Warded — ${mc.instance.displayName} takes only ${effectiveAmount} of ${amount} (${gate.wardLabel}).`,
+        });
+      }
+    }
+    const remainingTemp = Math.max(0, mc.instance.hp.temp - effectiveAmount);
+    const overflow = Math.max(0, effectiveAmount - mc.instance.hp.temp);
     mc.instance = {
       ...mc.instance,
       hp: {

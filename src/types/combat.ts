@@ -18,7 +18,8 @@ export type MonsterIntentKind =
   | 'debuff' // inflict a condition (carries the condition name)
   | 'summon' // call reinforcements onto the field
   | 'sustain-heal' // heal itself or a wounded ally
-  | 'ward'; // gird itself or an ally with temporary HP
+  | 'ward' // gird itself or an ally with temporary HP
+  | 'windup'; // boss-framework: a telegraphed special is charging / about to land
 
 export interface MonsterIntent {
   /** What the badge shows. */
@@ -42,6 +43,13 @@ export interface MonsterIntent {
   hits?: number;
   /** Condition inflicted, for debuff / paralyze intents. */
   condition?: ConditionName;
+  /**
+   * boss-framework: for a 'windup' intent — true when the charged special
+   * RESOLVES on the monster's coming turn (the reactive window: race it,
+   * mitigate, or hard-control to cancel); false/absent while it is still being
+   * wound up. `actionName` names the incoming special.
+   */
+  imminent?: boolean;
 }
 // === end enemy-telegraph ===
 
@@ -106,6 +114,39 @@ export interface MonsterInstance {
    * that haven't been knocked down.
    */
   staggeredTurns?: number;
+  /**
+   * boss-framework: actions this monster resolves per turn. Seeded from the
+   * def's `actionsPerTurn` at spawn (absent = 1); a phase can raise it mid-fight.
+   */
+  actionsPerTurn?: number;
+  /**
+   * boss-framework: indices into the def's `phases` already entered. Phase
+   * transitions are one-time — an index here never re-fires. Absent = none yet.
+   */
+  phasesEntered?: number[];
+  /**
+   * boss-framework: flat bonus damage granted by entered phases (enrage). Kept
+   * separate from the ascension `bonusDamage` so neither clobbers the other, and
+   * so summoned adds don't inherit the boss's phase enrage.
+   */
+  phaseDamageBonus?: number;
+  /**
+   * boss-framework: set true once a `transform` phase has fired — a hook for a
+   * sprite/name swap the content/UI lane can read. Purely a flag; no engine math.
+   */
+  transformed?: boolean;
+  /**
+   * boss-framework: a telegraphed special charged on a prior turn and pending
+   * resolution on this monster's next turn. Cleared when it resolves, or when
+   * the monster loses its turn to hard control (paralyze/stun/knockdown cancels
+   * the charge). Absent = nothing charging.
+   */
+  pendingTelegraph?: {
+    actionKind: MonsterAction['kind'];
+    actionName: string;
+    /** Round the charge is expected to resolve on (informational telemetry). */
+    resolveOnRound: number;
+  };
 }
 
 export interface PlayerCombatant {

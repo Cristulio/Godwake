@@ -29,6 +29,14 @@ type MonsterProps = CommonProps & {
   instance: MonsterInstance;
   selectable: boolean;
   onSelect?: () => void;
+  /**
+   * boss-framework: the active condition-gate ward label ("destroy the heart")
+   * when this boss is currently warded, else undefined. Computed in Battlefield,
+   * which can see the whole field (the linked add).
+   */
+  wardLabel?: string;
+  /** boss-framework: the active phase name once this boss has shifted, else undefined. */
+  phaseLabel?: string;
 };
 
 export type BattlefieldSpriteProps = PlayerProps | MonsterProps;
@@ -357,6 +365,41 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
         {name}
       </div>
 
+      {/* boss-framework: persistent boss-state chips — the active condition gate
+          ("warded — destroy the heart") and the current phase. Static (no
+          animation) so reduced-motion is honoured automatically. */}
+      {props.kind === 'monster' && !dead && (props.wardLabel || props.phaseLabel) && (
+        <div className="flex flex-wrap items-center justify-center gap-1 mb-0.5 max-w-[112px]">
+          {props.wardLabel && (
+            <span
+              className="boss-state-chip boss-state-warded"
+              title={`Warded — ${props.wardLabel}. This enemy takes greatly reduced damage until then.`}
+              aria-label={`Warded — invulnerable until you ${props.wardLabel}.`}
+            >
+              <svg viewBox="0 0 12 12" className="boss-state-chip-icon" aria-hidden="true">
+                <path
+                  d="M6 1 L10 2.5 V6 C10 9 6 11 6 11 C6 11 2 9 2 6 V2.5 Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>{props.wardLabel}</span>
+            </span>
+          )}
+          {props.phaseLabel && (
+            <span
+              className="boss-state-chip boss-state-phase"
+              title={`${props.phaseLabel} — this enemy has entered a new phase.`}
+              aria-label={`Phase: ${props.phaseLabel}.`}
+            >
+              {props.phaseLabel}
+            </span>
+          )}
+        </div>
+      )}
+
       <div
         className={`
           relative flex items-end justify-center isolate
@@ -512,6 +555,10 @@ export const BattlefieldSprite = memo(BattlefieldSpriteImpl, (prev, next) => {
     // doesn't change for a given combatant.
     return (
       prev.selectable === next.selectable &&
+      // boss-framework: ward/phase chips flip on field changes (add dies, boss
+      // shifts) without the instance identity necessarily moving — compare them.
+      prev.wardLabel === next.wardLabel &&
+      prev.phaseLabel === next.phaseLabel &&
       prev.instance.hp.current === next.instance.hp.current &&
       prev.instance.hp.max === next.instance.hp.max &&
       prev.instance.hp.temp === next.instance.hp.temp &&
