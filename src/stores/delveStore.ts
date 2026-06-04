@@ -868,26 +868,33 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const chapterCount = s.delve.chapterCount ?? TOTAL_CHAPTERS;
     const isFullChain = chapterCount >= TOTAL_CHAPTERS;
     const beatFinalChapter = wonBoss && chaptersThisRun >= chapterCount;
-    // Each ending fires once, gated by its own completion flag — which doubles
-    // as the re-entry breaker: the ending screen calls finishDelve() again on
-    // conclude, and by then the flag is set, so this falls through to the normal
-    // settle instead of bouncing back. Completion is recorded HERE, at the win
-    // moment — not in the lazy-loaded ending screen (#366): a stale ending chunk
-    // can fail to load, and it must never cost the player their clear (or the
-    // New Game+ it unlocks).
-    if (beatFinalChapter && isFullChain && !meta.throneCompleted) {
-      // New Game+ capstone — the Throne fell. gameCompleted is already true
-      // going in; mark it idempotently (never regress it) and bank the Throne
-      // milestone, which gates this ending and breaks the re-entry.
+    // Beating the run's OWN final chapter (Irenicus at Ch11 for a base run,
+    // Melissan at Ch14 for New Game+) detours to the narrative finale BEFORE the
+    // soul settles: the ending screen reads the still-'completed' delve, then
+    // re-enters finishDelve() on conclude to run the deferred settle below. The
+    // ending fires once, gated by its completion flag, which doubles as the
+    // re-entry breaker — by the conclude call the flag is set, so this block is
+    // skipped and the run falls through to the settle. Completion is recorded
+    // HERE, at the win moment, not in the lazy-loaded ending screen (#366): a
+    // stale chunk must never cost the player the clear (or the New Game+ it
+    // unlocks).
+    const firstFinalClear =
+      beatFinalChapter && (isFullChain ? !meta.throneCompleted : !meta.gameCompleted);
+    if (firstFinalClear) {
+      // Bank renown NOW, at the win moment — the deferral to the ending screen's
+      // conclude lost the ENTIRE run's renown whenever the player left the finale
+      // any other way (a refresh, or straight on to New Game+): the re-entry that
+      // settled it simply never fired. computeDelveRenown reads the same delve +
+      // soul-marks DelveSummary just displayed, so the banked amount matches what
+      // the player was shown. `renownSettled` marks the held delve so the conclude
+      // re-entry's fall-through settle pays the soul exactly once. Reincarnation
+      // and the move to hub stay deferred to that re-entry (the soul is still
+      // alive on the finale screen).
+      const renownGain = computeDelveRenown(s.delve, character).total;
+      charSlice.setCharacter({ ...character, renown: character.renown + renownGain });
       meta.markGameCompleted();
-      meta.markThroneCompleted();
-      useScreenStore.getState().setScreen('ending');
-      return;
-    }
-    if (beatFinalChapter && !isFullChain && !meta.gameCompleted) {
-      // Base game won — Irenicus is dead in the heart of his own hell. This is
-      // the clear that unlocks New Game+.
-      meta.markGameCompleted();
+      if (isFullChain) meta.markThroneCompleted();
+      set({ delve: { ...s.delve, renownSettled: true } });
       useScreenStore.getState().setScreen('ending');
       return;
     }
@@ -895,8 +902,12 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // on top of a tiny clear/fail floor, then scaled by soul-mark and ascension.
     // computeDelveRenown is the shared source of truth so DelveSummary's display
     // and this banked amount can never drift apart. Settled BEFORE the wheel
-    // turns, since the soul-mark reads the quirks carried THIS run.
-    const renownGain = computeDelveRenown(s.delve, character).total;
+    // turns, since the soul-mark reads the quirks carried THIS run. A run that
+    // already banked at its win moment (the ending re-entry, renownSettled) adds
+    // nothing here so the soul is paid exactly once.
+    const renownGain = s.delve.renownSettled
+      ? 0
+      : computeDelveRenown(s.delve, character).total;
     const withRenown: Character = {
       ...character,
       renown: character.renown + renownGain,

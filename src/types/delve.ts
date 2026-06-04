@@ -132,4 +132,13 @@ export interface DelveState {
    * hand-built delves, which fall back to the full chain.
    */
   chapterCount?: number;
+  /**
+   * Set when a final-chapter WIN banks its renown at the win moment, before the
+   * narrative ending screen. The ending's conclude re-enters `finishDelve` to run
+   * the deferred settle (reincarnation, hub); this flag tells that re-entry the
+   * renown is already paid so it isn't banked twice. Session-only (the delve
+   * never persists), which is all the guard needs — the double-bank window is the
+   * in-session conclude re-entry while the delve is still held 'completed'.
+   */
+  renownSettled?: boolean;
 }
