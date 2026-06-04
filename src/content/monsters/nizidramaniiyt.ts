@@ -4,9 +4,18 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * Nizidramanii'yt — Chapter 10 boss, the green dragon coiled in the desecrated
  * temple of Rillifane, the great set-piece guarding the last stair to the Tree
  * of Life. The captor loosed it in the holy place to keep the way while he works
- * at the roots. Kit: a `multiattack` of rending coils and reach bite (the bite
- * is the repeated swing), and a green-dragon `debuff` breath that leaves the
- * lungs poisoned. `battle-rage` at half HP — a wounded dragon is the worst kind.
+ * at the roots.
+ *
+ * boss-framework kit (Ch10, multi-action): it acts TWICE a turn — coiling melee
+ * plus a second working — so a turn is never one simple swing. Its breath is now
+ * a TELEGRAPHED special: it rears off the altar and gathers the killing fog one
+ * turn (clearly flashed on the dragon + header), and the Breath of the Defiled
+ * Grove lands on its next turn — a full turn to read it and race the wyrm down,
+ * shrug it off, or hard-control it to choke the charge in its throat. Layered
+ * with a Wing Buffet that empties your lungs (weakened) and a half-HP ENRAGE
+ * PHASE (replacing the legacy `battle-rage`): wound it past half and the wyrm
+ * thrashes free of the altar, its guard dropping as its blows turn vicious —
+ * a wounded dragon is the worst kind.
  */
 export const NIZIDRAMANIIYT: Monster = MonsterSchema.parse({
   id: 'nizidramaniiyt',
@@ -21,8 +30,33 @@ export const NIZIDRAMANIIYT: Monster = MonsterSchema.parse({
   passivePerception: 18,
   immunities: ['poison'],
   resistances: ['acid'],
-  bossMechanic: 'battle-rage',
+  actionsPerTurn: 2,
   actions: [
+    {
+      kind: 'debuff',
+      name: 'Breath of the Defiled Grove',
+      condition: 'poisoned',
+      saveDC: 19,
+      saveAbility: 'con',
+      durationRounds: 2,
+      telegraph: {
+        chargeText:
+          'The great neck draws back off the altar and the throat swells with a sick green light, the temple air bending toward it — it is taking the breath. Next turn it lets the grove out of its lungs; a turn to put it down, or be somewhere the fog is not.',
+      },
+      description:
+        'It rears off the altar and breathes, and the temple of the tree-father fills with a rolling green fog that smells of every dead and stagnant thing the forest ever swallowed — it gets into your eyes and your throat and the bottom of your lungs, and the world goes swimming and sick and your every blow comes slow through the haze of it.',
+    },
+    {
+      kind: 'debuff',
+      name: 'Wing Buffet',
+      condition: 'weakened',
+      amount: 4,
+      saveDC: 17,
+      saveAbility: 'str',
+      durationRounds: 2,
+      description:
+        'Without rising it throws one wing — a single contemptuous beat of a sail of green-gold leather — and the whole temple of air slams into you at once, three hundred years of dust and crushed incense driven into a wall of wind that empties your lungs and folds you half over. You keep your feet, barely, but the breath is gone out of you and the next blows you throw fall with the strength of a tired man.',
+    },
     {
       kind: 'multiattack',
       name: 'Rend and Coil',
@@ -40,15 +74,15 @@ export const NIZIDRAMANIIYT: Monster = MonsterSchema.parse({
       description:
         'The head comes down the full length of the temple on a neck like a falling column, and the jaws take you where you stand a clear lunge from where the dragon lay, closing with a sound like the temple doors slamming and a stink of swamp-rot blown through gold.',
     },
+  ],
+  phases: [
     {
-      kind: 'debuff',
-      name: 'Breath of the Defiled Grove',
-      condition: 'poisoned',
-      saveDC: 19,
-      saveAbility: 'con',
-      durationRounds: 2,
-      description:
-        'It rears off the altar and breathes, and the temple of the tree-father fills with a rolling green fog that smells of every dead and stagnant thing the forest ever swallowed — it gets into your eyes and your throat and the bottom of your lungs, and the world goes swimming and sick and your every blow comes slow through the haze of it.',
+      atHpPctBelow: 50,
+      name: 'Cornered Wyrm',
+      enterText:
+        "Something in it changes when the wounds go deep enough — the old contempt curdles into the first real attention it has paid you. Nizidramanii'yt comes off the altar at last, scattering the wreck of Rillifane's shrine, no longer lounging but coiling and uncoiling in a fury that forgets its own guard. A wounded dragon is the worst kind, and it has only just decided you are worth killing.",
+      bonusDamage: 3,
+      acDelta: -1,
     },
   ],
   flavorText:

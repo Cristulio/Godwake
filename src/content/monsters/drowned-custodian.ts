@@ -7,13 +7,16 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * loose, then was drowned with it and bound to catalogue forever, unable to
  * finish and unable to die.
  *
- * Kit (the proven apex pattern, scaled a clear notch above the Ch6 boss): a
- * round-1 `paralyze` opener that reads you out of yourself under the weight of
- * everything it has kept, then `multiattack` every round thereafter (the picker
- * falls to multiattack once the opener is spent), swinging its single drowning
- * blow. `battle-rage` past half turns the back of the fight into the moment it
- * stops cataloguing you and simply commits to closing you, like a book, for
- * good. Highest stat block of the Drowned Archive — the start of the L20 descent.
+ * boss-framework kit (layered on the proven apex pattern — paralyze opener,
+ * multiattack filler, battle-rage past half): the Custodian now fights like the
+ * drowned vault it is. It RAISES the acolytes it filed (a `summon` capped to two
+ * on the field), it DRINKS the deep back to close its own wounds the moment you
+ * bloody it (a self `sustain` you have to out-race), and once a fight it draws
+ * the whole black sea back from the floor and brings it down on you at once — a
+ * telegraphed `Tidal Surge` that winds up one turn (no harm, the deep inhaling)
+ * and on the next floods over you and holds you fast (`restrained`). Race it,
+ * mitigate it, or lock it down in the wind-up to make the vault swallow its own
+ * wave. Highest stat block of the Drowned Archive — the start of the L20 descent.
  */
 export const DROWNED_CUSTODIAN: Monster = MonsterSchema.parse({
   id: 'drowned-custodian',
@@ -37,6 +40,40 @@ export const DROWNED_CUSTODIAN: Monster = MonsterSchema.parse({
       durationRounds: 2,
       description:
         'It opens you the way it opens a book it has read a thousand times, finds the place where your name is written, and reads it aloud in the drowned dark — and hearing yourself read out, filed, catalogued, and shelved, the body forgets for a moment that it was ever anything but a thing kept on a list.',
+    },
+    {
+      kind: 'sustain',
+      name: 'Drink the Deep Back',
+      target: 'self',
+      heal: '3d8',
+      cooldownRounds: 4,
+      description:
+        'The black water it drowned this place with has never once left; at need it simply takes some back, drawing the deep up through itself, and the wounds you opened close over like a page sinking — there was never a tear there, the water says, there was only ever the deep, keeping its own.',
+    },
+    {
+      kind: 'summon',
+      name: 'Read One Up Off the Shelf',
+      summonDefId: 'drowned-acolyte',
+      count: 1,
+      maxActive: 2,
+      minRound: 2,
+      cooldownRounds: 3,
+      description:
+        'It does not call for help — a keeper does not. It consults the list, finds the nearest thing it filed, and reads it up off the shelf: a drowned acolyte rising from between the stacks at the sound of its own catalogued name, still holding the place in the book it died over.',
+    },
+    {
+      kind: 'debuff',
+      name: 'Tidal Surge',
+      condition: 'restrained',
+      saveDC: 17,
+      saveAbility: 'str',
+      durationRounds: 2,
+      telegraph: {
+        chargeText:
+          'The black water draws back off the floor in one long gathering hush — the whole drowned vault inhaling — and you understand, a beat too late, that all forty fathoms of it are about to come down on the place where you stand.',
+      },
+      description:
+        'It brings the deep in over you the way it once brought it in over the library: all at once, an ocean in a heartbeat, and the black water closes around your legs and your arms and holds you the way it holds everything it has ever drowned — patiently, completely, until you stop.',
     },
     {
       kind: 'multiattack',

@@ -61,11 +61,18 @@ describe('chapter 10 — bestiary', () => {
     const boss = BY_ID.get(CH10_BOSS_ID)!;
     expect(boss).toBeDefined();
     expect(boss.cr).toBe('14');
-    expect(boss.bossMechanic).toBe('battle-rage');
+    // boss-framework: the wyrm now escalates via the data-driven framework — it
+    // acts twice a turn and enrages at half HP via a phase (replacing the legacy
+    // `battle-rage`), and its breath telegraphs a turn before it lands.
+    expect(boss.bossMechanic).toBeUndefined();
+    expect(boss.actionsPerTurn).toBe(2);
+    expect(boss.phases?.some((p) => p.atHpPctBelow === 50)).toBe(true);
     const kinds = boss.actions.map((a) => a.kind);
     expect(kinds).toContain('multiattack');
     expect(kinds).toContain('attack');
     expect(kinds).toContain('debuff');
+    // The breath is now a telegraphed wind-up the player can read and race.
+    expect(boss.actions.some((a) => a.telegraph)).toBe(true);
     // The reach bite is the swing a multiattack repeats — it must be the first
     // 'attack' action and actually have reach.
     const firstAttack = boss.actions.find((a) => a.kind === 'attack');

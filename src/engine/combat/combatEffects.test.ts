@@ -1,9 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack, monsterAttack, applyDamage } from './attack';
 import { createDiceRoller } from '../dice';
-import { getMonster } from '../../content/monsters';
+import { getMonster, _setTestMonster, _clearTestMonsters } from '../../content/monsters';
+import { MonsterSchema, type Monster } from '../../schemas/monster';
 import type { MonsterCombatant, CombatState } from '../../types/combat';
 import type { Character } from '../../types/character';
 
@@ -201,71 +202,96 @@ describe('combat effects — rerolls', () => {
   });
 });
 
-describe('combat effects — Battle Rage (Ilyich)', () => {
-  beforeEach(() => _resetMonsterInstanceCounter());
+/**
+ * The `battle-rage` MECHANIC still ships on ~18 monsters, but the Ch1-3 bosses
+ * moved their half-HP turn onto the framework PHASE system (see the Ilyich
+ * berserk-phase block below). This mechanic coverage therefore runs against a
+ * test-local `battle-rage` fixture rather than a real boss, so it stays honest
+ * regardless of how the content bosses evolve.
+ */
+function ragerFixture(): Monster {
+  return MonsterSchema.parse({
+    id: 'test-rager',
+    name: 'Test Rager',
+    cr: '2',
+    size: 'medium',
+    creatureType: 'humanoid (test)',
+    ac: 13,
+    maxHp: 32,
+    speed: 30,
+    abilityScores: { str: 15, dex: 11, con: 14, int: 10, wis: 10, cha: 9 },
+    passivePerception: 10,
+    actions: [
+      { kind: 'attack', name: 'Cleaver', attackBonus: 5, damage: '1d10+3', damageType: 'slashing', reach: 5 },
+    ],
+    bossMechanic: 'battle-rage',
+  });
+}
 
-  function setupRagingIlyich(): { state: CombatState; ilyichId: string; hero: Character; roller: ReturnType<typeof createDiceRoller> } {
-    const ilyich = getMonster('duergar-ilyich');
+function halveHp(state: CombatState, id: string): CombatState {
+  return {
+    ...state,
+    combatants: state.combatants.map((c) =>
+      c.id === id && c.kind === 'monster'
+        ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: Math.floor(c.instance.hp.max / 2) } } }
+        : c,
+    ),
+  };
+}
+
+describe('combat effects — Battle Rage (mechanic)', () => {
+  beforeEach(() => {
+    _resetMonsterInstanceCounter();
+    _setTestMonster(ragerFixture());
+  });
+  afterEach(() => _clearTestMonsters());
+
+  function setupRager(seed = 7): { state: CombatState; ragerId: string; hero: Character; roller: ReturnType<typeof createDiceRoller> } {
+    const def = ragerFixture();
     const hero = makeHuman();
-    const roller = createDiceRoller(7);
-    let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
-    const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-    // Drop Ilyich to half HP so the next monsterAttack triggers rage.
-    state = {
-      ...state,
-      combatants: state.combatants.map((c) =>
-        c.id === ilyichId && c.kind === 'monster'
-          ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: Math.floor(c.instance.hp.max / 2) } } }
-          : c,
-      ),
-    };
-    return { state, ilyichId, hero, roller };
+    const roller = createDiceRoller(seed);
+    let state = createCombat({ roller, character: hero, monsters: [{ def }] }).state;
+    const ragerId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+    // Drop it to half HP so the next monsterAttack triggers rage.
+    state = halveHp(state, ragerId);
+    return { state, ragerId, hero, roller };
   }
 
-  it('Ilyich enters Battle Rage when reduced to half HP', () => {
-    const { state, ilyichId, hero, roller } = setupRagingIlyich();
-    const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
+  it('enters Battle Rage when reduced to half HP', () => {
+    const { state, ragerId, hero, roller } = setupRager();
+    const next = monsterAttack({ roller, character: hero, state }, ragerId).state;
     const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
     expect(rageLog).toBeDefined();
     // Announcement must read as +2 damage only (no advantage clause).
     expect(rageLog!.text).toContain('+2 damage per hit');
     expect(rageLog!.text).not.toContain('advantage');
-    const ilyichAfter = next.combatants.find((c) => c.id === ilyichId);
-    expect(ilyichAfter?.kind === 'monster' && ilyichAfter.instance.bossRageActive).toBe(true);
+    const after = next.combatants.find((c) => c.id === ragerId);
+    expect(after?.kind === 'monster' && after.instance.bossRageActive).toBe(true);
   });
 
-  it('a healthy Ilyich is not raging', () => {
-    const ilyich = getMonster('duergar-ilyich');
+  it('a healthy monster is not raging', () => {
+    const def = ragerFixture();
     const hero = makeHuman();
     const roller = createDiceRoller(7);
-    const state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
-    const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-    const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
-    const rageLog = next.log.find((l) => l.text.includes('Battle Rage'));
-    expect(rageLog).toBeUndefined();
+    const state = createCombat({ roller, character: hero, monsters: [{ def }] }).state;
+    const ragerId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+    const next = monsterAttack({ roller, character: hero, state }, ragerId).state;
+    expect(next.log.find((l) => l.text.includes('Battle Rage'))).toBeUndefined();
   });
 
   it('rage attack roll has no advantage marker (rage no longer grants advantage)', () => {
     // Sweep seeds so we don't depend on a specific roll outcome — every
     // rage-turn attack log line should be free of any "advantage" suffix
-    // (the only advantage source post-rebalance is paralyze, and Ilyich
+    // (the only advantage source post-rebalance is paralyze, and the fixture
     // does not paralyze).
-    const ilyich = getMonster('duergar-ilyich');
     for (let seed = 1; seed <= 10; seed++) {
       const hero = makeHuman();
       const roller = createDiceRoller(seed);
-      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
-      const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-      state = {
-        ...state,
-        combatants: state.combatants.map((c) =>
-          c.id === ilyichId && c.kind === 'monster'
-            ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: Math.floor(c.instance.hp.max / 2) } } }
-            : c,
-        ),
-      };
-      const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
-      const attackLine = next.log.find((l) => l.text.includes('Heavy War Pick'));
+      let state = createCombat({ roller, character: hero, monsters: [{ def: ragerFixture() }] }).state;
+      const ragerId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+      state = halveHp(state, ragerId);
+      const next = monsterAttack({ roller, character: hero, state }, ragerId).state;
+      const attackLine = next.log.find((l) => l.text.includes('Cleaver'));
       expect(attackLine).toBeDefined();
       expect(attackLine!.text).not.toContain('advantage');
     }
@@ -274,25 +300,94 @@ describe('combat effects — Battle Rage (Ilyich)', () => {
   it('rage still adds +2 to damage on hits', () => {
     // Find a seed where the rage-turn attack connects, then assert the
     // damage line carries the "+2 rage" suffix.
-    const ilyich = getMonster('duergar-ilyich');
     let confirmed = false;
     for (let seed = 1; seed <= 200 && !confirmed; seed++) {
       const hero = makeHuman();
       const roller = createDiceRoller(seed);
-      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
-      const ilyichId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
-      state = {
-        ...state,
-        combatants: state.combatants.map((c) =>
-          c.id === ilyichId && c.kind === 'monster'
-            ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: Math.floor(c.instance.hp.max / 2) } } }
-            : c,
-        ),
-      };
-      const next = monsterAttack({ roller, character: hero, state }, ilyichId).state;
+      let state = createCombat({ roller, character: hero, monsters: [{ def: ragerFixture() }] }).state;
+      const ragerId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+      state = halveHp(state, ragerId);
+      const next = monsterAttack({ roller, character: hero, state }, ragerId).state;
       const damageLine = next.log.find((l) => l.kind === 'damage' && l.text.includes('rage'));
       if (damageLine) {
         expect(damageLine.text).toContain('+ 2 rage');
+        confirmed = true;
+      }
+    }
+    expect(confirmed).toBe(true);
+  });
+});
+
+/**
+ * Ilyich's half-HP berserk is now a boss-framework PHASE: above half he trades
+ * plain Heavy War Pick swings; at half the "Stone-Blood Fury" phase swaps his
+ * action list to a telegraphed Overhead Pick, enrages (+2 phase damage), drops
+ * his AC by 2, and flips the transform hook. The charge resolves the turn after
+ * it is read, carrying the phase enrage.
+ */
+describe('combat effects — Berserk phase (Ilyich)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function monsterId(state: CombatState): string {
+    return (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
+  }
+  function instanceOf(state: CombatState, id: string) {
+    return (state.combatants.find((c) => c.id === id) as MonsterCombatant).instance;
+  }
+
+  it('above half HP uses the plain Heavy War Pick with no phase markers', () => {
+    const ilyich = getMonster('duergar-ilyich');
+    const hero = makeHuman();
+    const roller = createDiceRoller(7);
+    const state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
+    const id = monsterId(state);
+    const next = monsterAttack({ roller, character: hero, state }, id).state;
+    expect(next.log.some((l) => l.text.includes('Heavy War Pick'))).toBe(true);
+    expect(next.log.some((l) => /stone-blood fury/i.test(l.text))).toBe(false);
+    expect(instanceOf(next, id).phasesEntered ?? []).toEqual([]);
+  });
+
+  it('at half HP enters Stone-Blood Fury and winds up the Overhead Pick (no hit that turn)', () => {
+    const ilyich = getMonster('duergar-ilyich');
+    const hero = makeHuman();
+    const roller = createDiceRoller(7);
+    let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
+    const id = monsterId(state);
+    state = halveHp(state, id); // 16 → at/below 50% of 32
+    const before = state.attackEventCounter;
+    const next = monsterAttack({ roller, character: hero, state }, id).state;
+    expect(next.log.some((l) => /stone-blood fury/i.test(l.text))).toBe(true);
+    // The wind-up spends the whole turn — no attack resolves yet.
+    expect(next.attackEventCounter - before).toBe(0);
+    const inst = instanceOf(next, id);
+    expect(inst.phasesEntered).toEqual([0]);
+    expect(inst.phaseDamageBonus).toBe(2);
+    expect(inst.transformed).toBe(true);
+    expect(inst.ac).toBe(13); // 15 − 2 (guard dropped)
+    expect(inst.pendingTelegraph?.actionName).toBe('Overhead Pick');
+  });
+
+  it('the charged Overhead Pick lands the next turn, carrying the +2 phase enrage', () => {
+    const ilyich = getMonster('duergar-ilyich');
+    let confirmed = false;
+    for (let seed = 1; seed <= 200 && !confirmed; seed++) {
+      _resetMonsterInstanceCounter();
+      const hero = makeHuman();
+      const roller = createDiceRoller(seed);
+      let state = createCombat({ roller, character: hero, monsters: [{ def: ilyich }] }).state;
+      const id = monsterId(state);
+      state = halveHp(state, id);
+      // Turn 1: enter the phase + begin the charge.
+      const charged = monsterAttack({ roller, character: hero, state }, id);
+      expect(charged.state.log.some((l) => /stone-blood fury/i.test(l.text))).toBe(true);
+      // Turn 2: the charge resolves into one real Overhead Pick.
+      const before = charged.state.attackEventCounter;
+      const resolved = monsterAttack({ roller, character: charged.character, state: charged.state }, id);
+      expect(resolved.state.log.some((l) => /unleashes the charged Overhead Pick/.test(l.text))).toBe(true);
+      expect(resolved.state.attackEventCounter - before).toBe(1);
+      const dmg = resolved.state.log.find((l) => l.kind === 'damage' && l.text.includes('phase'));
+      if (dmg) {
+        expect(dmg.text).toContain('+ 2 phase');
         confirmed = true;
       }
     }

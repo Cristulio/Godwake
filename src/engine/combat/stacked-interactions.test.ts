@@ -210,14 +210,19 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
   it('monster attack rolls with advantage and damage line shows +2 rage', () => {
-    const director = getMonster('asylum-director');
+    // A still-`battle-rage` monster with a plain attack kit stands in for the
+    // mechanic. The chapter bosses now express their half-HP turn as a framework
+    // PHASE (and several carry summons/gates that preempt a round-2 attack), so
+    // they no longer fit this probe; the Avatar of Wrath keeps the flag + a clean
+    // attack, and isn't in the per-chapter boss set so content lanes won't convert it.
+    const rager = getMonster('avatar-of-wrath');
     let wizard = makeHillDwarfWizard();
     const roller = createDiceRoller(3);
-    const init = createCombat({ roller, character: wizard, monsters: [{ def: director }] });
+    const init = createCombat({ roller, character: wizard, monsters: [{ def: rager }] });
     let state = init.state;
     wizard = init.character;
 
-    // Force the director into Battle Rage immediately so we don't have to
+    // Force the boss into Battle Rage immediately so we don't have to
     // chip its HP below half via the engine's own attacks.
     state = {
       ...state,
@@ -228,7 +233,7 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
               instance: {
                 ...c.instance,
                 bossRageActive: true,
-                hp: { current: 30, max: director.maxHp, temp: 0 },
+                hp: { current: 30, max: rager.maxHp, temp: 0 },
               },
             }
           : c,
@@ -240,16 +245,16 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
       rounds: 3,
       saveDC: 13,
       saveAbility: 'wis',
-      source: 'asylum-director',
+      source: 'drow-matron-mother',
     });
 
-    // Set the director's turn so monsterAttack picks the attack action
+    // Set the boss's turn so monsterAttack picks the attack action
     // (round > 1 so paralyze isn't re-cast, and player is already paralyzed).
     state = { ...state, round: 2 };
     // Pick-then-resolve: re-plan the intent against round-2 + paralyzed-player,
-    // dropping the round-1 Hold Person opener for the Glaive attack.
+    // dropping the round-1 paralyze opener for the plain attack.
     state = refreshMonsterIntents(state, paralyzedWizard);
-    const directorId = findMonsterCombatant(state).id;
+    const ragerId = findMonsterCombatant(state).id;
 
     // Try a few seeds to find one where the director hits — the assertion is
     // about *how* the engine logs the hit, not the hit rate.
@@ -259,7 +264,7 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
       const trialRoller = createDiceRoller(seed);
       const after = monsterAttack(
         { roller: trialRoller, character: paralyzedWizard, state },
-        directorId,
+        ragerId,
       ).state;
       const damage = after.log.find((l) => l.kind === 'damage');
       const roll = after.log.find(

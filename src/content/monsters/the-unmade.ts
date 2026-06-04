@@ -1,17 +1,27 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * The Unmade — Chapter 6 boss, the apex of the whole delve. Beyond the false
+ * The Unmade — Chapter 6 boss, the apex of the lower delve. Beyond the false
  * god of the Godwake waits the thing the false god itself feared: the true
  * source of the cycle, the wheel of souls given a single will. The god that was
  * never born and so was never made — and so can never die, only be refused.
  *
- * Kit (the proven apex pattern, scaled past anything below it): a round-1
- * `paralyze` opener that empties the player under the weight of the unmaking,
- * then `multiattack` every round thereafter (the picker falls to multiattack
- * once the opener is spent), swinging its single heavy `attack`. `battle-rage`
- * at half HP turns the back half of the fight into a race. Highest stat block
- * in the game by design — true endgame, a clear notch above Chapter 5.
+ * Boss-framework kit (the "cannot die, only be refused" theme made mechanical):
+ *   - Round 1: the `paralyze` Unmaking is now TELEGRAPHED — it withdraws its
+ *     attention from the fact of you and winds up a full turn before the reality-
+ *     erase lands, giving one round to race it or shut it down (hard control
+ *     cancels the charge).
+ *   - A `summon` sets an ANCHOR: a single fixed mote (reuses the `witness-mote`)
+ *     that pins the never-made thing into a made world. While it lives, a `gate`
+ *     wards off most incoming damage — the Unmade takes only a fifth, because it
+ *     is not, quite, here to be ended. Shatter the anchor-mote to make it mortal.
+ *     (The full flower of Yaga-Shura's heart-gate, five chapters early.)
+ *   - `multiattack`: it turns the wheel both ways at once, two strokes a turn.
+ *   - At half HP a `phase`: refused at last, it turns the wheel faster (+2 damage).
+ *     This folds the old `battle-rage` into the new phase system at equal weight.
+ *
+ * Highest stat block of the lower delve by design — true endgame, a clear notch
+ * above Chapter 5. Ch6 stays single-action; the twice-a-turn bosses begin at Ch9.
  */
 export const THE_UNMADE: Monster = MonsterSchema.parse({
   id: 'the-unmade',
@@ -25,7 +35,6 @@ export const THE_UNMADE: Monster = MonsterSchema.parse({
   abilityScores: { str: 20, dex: 16, con: 19, int: 18, wis: 20, cha: 22 },
   passivePerception: 20,
   resistances: ['force', 'psychic', 'necrotic'],
-  bossMechanic: 'battle-rage',
   actions: [
     {
       kind: 'paralyze',
@@ -33,8 +42,21 @@ export const THE_UNMADE: Monster = MonsterSchema.parse({
       saveDC: 18,
       saveAbility: 'wis',
       durationRounds: 2,
+      telegraph: {
+        chargeText:
+          'The Unmade withdraws its attention from the fact of you — slowly, deliberately, the way a hand draws back before it lets a held thing fall. For this turn you can still feel the floor under you. Next turn it intends for you to have forgotten there was one.',
+        windUpRounds: 1,
+      },
       description:
         'It does not raise a hand. It simply withdraws its attention from the fact of you for a moment — and in that moment you feel how little holds you together, how recently you were nothing and how willing the nothing still is to have you back. The body forgets the argument for moving.',
+    },
+    {
+      kind: 'summon',
+      name: 'Set the Anchor',
+      summonDefId: 'witness-mote',
+      once: true,
+      description:
+        'It cannot be here — a thing never made has no place in a made world — and so it makes one: a single mote of fixed attention, hung in the air at its side, the one nail that pins the wheel to the floor of the world. While the mote holds, the Unmade cannot be ended, because it is not, quite, here to end.',
     },
     {
       kind: 'multiattack',
@@ -52,6 +74,20 @@ export const THE_UNMADE: Monster = MonsterSchema.parse({
       reach: 10,
       description:
         'The hand closes on the line that holds you to the next life and pulls. Where it touches, you are briefly un-decided — neither here nor sent back, and the not-deciding costs you more than any blade.',
+    },
+  ],
+  gate: {
+    damageTakenPct: 0.2,
+    whileAddAlive: 'witness-mote',
+    wardLabel: 'shatter the anchor-mote',
+  },
+  phases: [
+    {
+      atHpPctBelow: 50,
+      name: 'Refused',
+      enterText:
+        'You have hurt a thing that was never born. It regards the wound with what might, in something with a face, have been wonder. "So," it says, with the whole weight of the first silence behind the word. "You will not become me. You will refuse me." And it turns the wheel faster.',
+      bonusDamage: 2,
     },
   ],
   flavorText:
