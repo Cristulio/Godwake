@@ -14,7 +14,7 @@ import {
   markActionUsed,
   nextLogId,
 } from './helpers';
-import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
+import { scaleSpellDamage } from './scaling';
 
 /** Player-turn-start maulings after the immediate one. With the cast's own
  *  strike that is three hits in all (now + the start of the next two turns). */
@@ -42,7 +42,7 @@ export function castSpiritBeast(ctx: CastSpellContext): CastResult {
 
   let nextCharacter: Character = consumeSlot(ctx.character, 7);
   const roll = roller.roll({ count: SPIRIT_BEAST_DICE, die: 8, modifier: 0 });
-  const perTurn = Math.max(1, scaleSpellDamage(roll.total, nextCharacter, spellAcquisitionLevel(7)));
+  const perTurn = Math.max(1, scaleSpellDamage(roll.total, nextCharacter, 7));
   nextCharacter = patchResources(nextCharacter, {
     spiritBeastDamagePerTurn: perTurn,
     spiritBeastTurnsRemaining: SPIRIT_BEAST_TICKS,

@@ -16,7 +16,7 @@ import {
   spellElement,
   spellSaveDC,
 } from './helpers';
-import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
+import { scaleSpellDamage } from './scaling';
 
 export function castFireball(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
@@ -29,7 +29,7 @@ export function castFireball(ctx: CastSpellContext): CastResult {
   const evoker = characterHasMechanic(nextCharacter, 'sculpt-spells');
   const dice = evoker ? 9 : 8;
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
-  const fullDmg = scaleSpellDamage(damageRoll.total, nextCharacter, spellAcquisitionLevel(3));
+  const fullDmg = scaleSpellDamage(damageRoll.total, nextCharacter, 3);
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {

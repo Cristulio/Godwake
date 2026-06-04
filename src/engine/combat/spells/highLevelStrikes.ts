@@ -20,7 +20,7 @@ import {
   spellElement,
   spellSaveDC,
 } from './helpers';
-import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
+import { scaleSpellDamage } from './scaling';
 
 function intMod(character: Readonly<Character>): number {
   return abilityModifier(effectiveAbilityScores(character).int);
@@ -40,7 +40,7 @@ export function castForceLance(ctx: CastSpellContext): CastResult {
 
   let nextCharacter: Character = consumeSlot(ctx.character, 4);
   const roll = roller.roll({ count: 6, die: 8, modifier: 0 });
-  const scaled = scaleSpellDamage(roll.total, nextCharacter, spellAcquisitionLevel(4));
+  const scaled = scaleSpellDamage(roll.total, nextCharacter, 4);
   const dealt = scaled + intMod(nextCharacter) + spellDamageBonus(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {
@@ -97,7 +97,7 @@ export function castVoidRay(ctx: CastSpellContext): CastResult {
   // half — the beam of un-light leaves its mark even off-true, so a 5th-level
   // slot is never wholly wasted on one bad roll.
   const roll = roller.roll({ count: 10 * (crit ? 2 : 1), die: 6, modifier: 0 });
-  const scaled = scaleSpellDamage(roll.total, nextCharacter, spellAcquisitionLevel(5));
+  const scaled = scaleSpellDamage(roll.total, nextCharacter, 5);
   const full = scaled + intMod(nextCharacter) + spellDamageBonus(nextCharacter);
   const dealt = hit ? full : Math.floor(full / 2);
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
@@ -130,7 +130,7 @@ export function castDissolution(ctx: CastSpellContext): CastResult {
 
   let nextCharacter: Character = consumeSlot(ctx.character, 6);
   const roll = roller.roll({ count: 12, die: 6, modifier: 24 });
-  const scaled = scaleSpellDamage(roll.total, nextCharacter, spellAcquisitionLevel(6));
+  const scaled = scaleSpellDamage(roll.total, nextCharacter, 6);
   const full = scaled + spellDamageBonus(nextCharacter);
   const dc = spellSaveDC(nextCharacter);
   const monsterDef = getMonster(target.instance.defId);
@@ -184,7 +184,7 @@ export function castWither(ctx: CastSpellContext): CastResult {
 
   let nextCharacter: Character = consumeSlot(ctx.character, 8);
   const roll = roller.roll({ count: 16, die: 6, modifier: 0 });
-  const scaled = scaleSpellDamage(roll.total, nextCharacter, spellAcquisitionLevel(8));
+  const scaled = scaleSpellDamage(roll.total, nextCharacter, 8);
   const dealt = scaled + intMod(nextCharacter) + spellDamageBonus(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {

@@ -4,7 +4,7 @@ import { spellcastingMod } from '../../character/derived';
 import { getSpell } from '../../../content/spells';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
-import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
+import { scaleSpellDamage } from './scaling';
 import {
   type CastResult,
   type CastSpellContext,
@@ -42,7 +42,7 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
   const saved = save.total >= dc;
 
   const damageRoll = roller.roll({ count: 1, die: 10, modifier: 0 });
-  const scaledDice = scaleSpellDamage(damageRoll.total, nextCharacter, spellAcquisitionLevel(0));
+  const scaledDice = scaleSpellDamage(damageRoll.total, nextCharacter, 0);
   const castMod = spellcastingMod(nextCharacter);
   const bonus = spellDamageBonus(nextCharacter) + castMod;
   const fullDamage = scaledDice + bonus;

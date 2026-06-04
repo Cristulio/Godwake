@@ -18,7 +18,7 @@ import {
   spellElement,
   spellSaveDC,
 } from './helpers';
-import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
+import { scaleSpellDamage } from './scaling';
 
 /**
  * Lightning Bolt — the FOCUSED counterpart to Fireball's crowd-clear. A single
@@ -44,7 +44,7 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
   const evoker = characterHasMechanic(nextCharacter, 'sculpt-spells');
   const dice = evoker ? 11 : 10;
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
-  const fullDmg = scaleSpellDamage(damageRoll.total, nextCharacter, spellAcquisitionLevel(3));
+  const fullDmg = scaleSpellDamage(damageRoll.total, nextCharacter, 3);
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {

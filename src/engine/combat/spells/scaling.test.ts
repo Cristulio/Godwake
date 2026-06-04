@@ -7,16 +7,22 @@ import type { Character } from '../../../types/character';
 import type { DiceExpression, RollAdvantage, RollResult } from '../../../types/dice';
 import type { DiceRoller } from '../../dice';
 import {
-  REF_CASTING_MOD,
   scaleSpellDamage,
   spellAcquisitionLevel,
   spellDamageMultiplier,
 } from './scaling';
 
+/** The canonical full-caster spellcasting modifier (+3 — Veyra INT 16, Lureth
+ *  WIS 16). Spell scaling no longer varies with the casting mod (stats are fixed
+ *  at creation, no ASIs), so this is simply the reference caster the probes are
+ *  built at — its flat cantrip mod and save DCs still key off it. */
+const REF_CASTING_MOD = 3;
+
 /**
  * A wizard with a precise INT modifier and character level. Wood-elf grants no
  * INT, so the effective modifier is exactly abilityModifier(int) = intMod, and a
- * wizard keys spells off INT — so spellcastingMod === intMod here.
+ * wizard keys spells off INT — so spellcastingMod === intMod here. (The scaling
+ * multiplier is INT-independent now; intMod still drives the flat +mod riders.)
  */
 function caster(level: number, intMod: number): Character {
   const base = createCharacter({
@@ -37,17 +43,17 @@ describe('spell scaling — acquisition power preserved', () => {
     for (const tier of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
       const acq = spellAcquisitionLevel(tier);
       const c = caster(acq, REF_CASTING_MOD);
-      expect(spellDamageMultiplier(c, acq)).toBe(1);
+      expect(spellDamageMultiplier(c, tier)).toBe(1);
       // The rolled base passes through untouched (within rounding) — a spell is
       // exactly as strong as today the moment you gain it.
-      expect(scaleSpellDamage(28, c, acq)).toBe(28);
-      expect(scaleSpellDamage(105, c, acq)).toBe(105);
+      expect(scaleSpellDamage(28, c, tier)).toBe(28);
+      expect(scaleSpellDamage(105, c, tier)).toBe(105);
     }
   });
 
   it('a caster below a spell tier still casts it at its printed base (level factor floors at 1)', () => {
     // Force-granting a 9th-level slot to an L1 caster must not amplify it.
-    expect(spellDamageMultiplier(caster(1, REF_CASTING_MOD), spellAcquisitionLevel(9))).toBe(1);
+    expect(spellDamageMultiplier(caster(1, REF_CASTING_MOD), 9)).toBe(1);
   });
 });
 
@@ -55,20 +61,11 @@ describe('spell scaling — acquisition power preserved', () => {
 
 describe('spell scaling — monotonic growth', () => {
   it('expected damage strictly increases with character level', () => {
-    const acq = spellAcquisitionLevel(1);
+    const tier = 1;
+    const acq = spellAcquisitionLevel(tier);
     let prev = -Infinity;
     for (let level = acq; level <= 20; level++) {
-      const m = spellDamageMultiplier(caster(level, REF_CASTING_MOD), acq);
-      expect(m).toBeGreaterThan(prev);
-      prev = m;
-    }
-  });
-
-  it('expected damage strictly increases with the casting modifier', () => {
-    const acq = spellAcquisitionLevel(3);
-    let prev = -Infinity;
-    for (let intMod = 0; intMod <= 6; intMod++) {
-      const m = spellDamageMultiplier(caster(10, intMod), acq);
+      const m = spellDamageMultiplier(caster(level, REF_CASTING_MOD), tier);
       expect(m).toBeGreaterThan(prev);
       prev = m;
     }
@@ -86,34 +83,34 @@ describe('spell scaling — tier ordering preserved', () => {
     { tier: 9, base: 81 },
   ];
 
-  it('a higher-tier spell out-damages a lower-tier one at the same level + INT', () => {
+  it('a higher-tier spell out-damages a lower-tier one at the same level', () => {
     for (const level of [17, 20]) {
       const c = caster(level, REF_CASTING_MOD);
-      const dmg = CHAIN.map((s) => s.base * spellDamageMultiplier(c, spellAcquisitionLevel(s.tier)));
+      const dmg = CHAIN.map((s) => s.base * spellDamageMultiplier(c, s.tier));
       for (let i = 1; i < dmg.length; i++) {
         expect(dmg[i]).toBeGreaterThan(dmg[i - 1]);
       }
     }
   });
 
-  it('Fireball always out-damages Burning Hands, every level and casting mod', () => {
+  it('Fireball always out-damages Burning Hands, every level', () => {
     for (let level = 5; level <= 20; level++) {
-      for (const intMod of [0, 3, 5]) {
-        const c = caster(level, intMod);
-        const fireball = 28 * spellDamageMultiplier(c, spellAcquisitionLevel(3));
-        const burningHands = 10.5 * spellDamageMultiplier(c, spellAcquisitionLevel(1));
-        expect(fireball).toBeGreaterThan(burningHands);
-      }
+      const c = caster(level, REF_CASTING_MOD);
+      const fireball = 28 * spellDamageMultiplier(c, 3);
+      const burningHands = 10.5 * spellDamageMultiplier(c, 1);
+      expect(fireball).toBeGreaterThan(burningHands);
     }
   });
 
-  it('the cantrip never overtakes the cheapest leveled spell it shares a curve with', () => {
-    // Fire Bolt (1d10, acq 1) vs Burning Hands (3d6, acq 1): same anchor, so the
-    // larger base always wins — the cantrip can never eclipse a real slot.
+  it('the cantrip never overtakes the cheapest leveled spell it shares an anchor with', () => {
+    // Fire Bolt (1d10, tier 0) vs Burning Hands (3d6, tier 1): both anchor at L1.
+    // The cantrip's steeper CANTRIP_LEVEL_K narrows the gap as the game climbs, but
+    // the larger base keeps Burning Hands ahead through L20 — a cantrip stays an
+    // at-will opener and never eclipses a real slot.
     for (let level = 1; level <= 20; level++) {
-      const c = caster(level, 5);
-      const fireBolt = 5.5 * spellDamageMultiplier(c, spellAcquisitionLevel(0));
-      const burningHands = 10.5 * spellDamageMultiplier(c, spellAcquisitionLevel(1));
+      const c = caster(level, REF_CASTING_MOD);
+      const fireBolt = 5.5 * spellDamageMultiplier(c, 0);
+      const burningHands = 10.5 * spellDamageMultiplier(c, 1);
       expect(fireBolt).toBeLessThan(burningHands);
     }
   });
@@ -233,10 +230,19 @@ describe('spell scaling — worked examples', () => {
     expect(l20).toBeGreaterThan(l10);
   });
 
-  it('Fire Bolt scales past the old L8 cap with no breakpoint freeze', () => {
+  it('Fire Bolt is a relevant at-will at L20 again — dice-core climbs back near the old 4d10 cap', () => {
+    // Cantrips use the steeper CANTRIP_LEVEL_K so the tiny 1d10 base still grows
+    // meaningfully. dieFace 7 → the 1d10 shows 7; +3 is the flat INT mod the
+    // handler adds. Dice-core = round(7 × (1 + 0.12·(L−1))):
+    //   L8  core 13 → 16 dealt
+    //   L14 core 18 → 21 dealt
+    //   L20 core 23 → 26 dealt   (the flat-K curve had left L20 at only 14 → 17)
     const l8 = castDamage('fire-bolt', 8, 7);
     const l14 = castDamage('fire-bolt', 14, 7);
     const l20 = castDamage('fire-bolt', 20, 7);
+    expect(l8).toBe(16);
+    expect(l14).toBe(21);
+    expect(l20).toBe(26);
     expect(l14).toBeGreaterThan(l8);
     expect(l20).toBeGreaterThan(l14);
   });
@@ -248,38 +254,38 @@ describe('spell scaling — weapon enhancement adds flat spell damage', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
   it('a +N main-hand adds exactly N, floored at 0 with no weapon or a +0', () => {
-    const acq = spellAcquisitionLevel(3);
-    const bare = caster(spellAcquisitionLevel(3), REF_CASTING_MOD); // multiplier == 1
-    expect(scaleSpellDamage(28, bare, acq)).toBe(28); // no weapon -> +0
-    expect(scaleSpellDamage(28, equipWeapon(bare, 0), acq)).toBe(28); // +0 weapon -> +0
-    expect(scaleSpellDamage(28, equipWeapon(bare, 1), acq)).toBe(29);
-    expect(scaleSpellDamage(28, equipWeapon(bare, 3), acq)).toBe(31);
+    const tier = 3;
+    const bare = caster(spellAcquisitionLevel(tier), REF_CASTING_MOD); // multiplier == 1
+    expect(scaleSpellDamage(28, bare, tier)).toBe(28); // no weapon -> +0
+    expect(scaleSpellDamage(28, equipWeapon(bare, 0), tier)).toBe(28); // +0 weapon -> +0
+    expect(scaleSpellDamage(28, equipWeapon(bare, 1), tier)).toBe(29);
+    expect(scaleSpellDamage(28, equipWeapon(bare, 3), tier)).toBe(31);
   });
 
   it('the +N is flat — it never scales with character level or casting modifier', () => {
-    const acq = spellAcquisitionLevel(1);
+    const tier = 1;
     for (const level of [1, 10, 20]) {
       for (const intMod of [0, 3, 6]) {
         const bare = caster(level, intMod);
         const armed = equipWeapon(bare, 3);
-        // Whatever the level/INT multiplier does to the dice, the +3 lands on top.
-        expect(scaleSpellDamage(40, armed, acq) - scaleSpellDamage(40, bare, acq)).toBe(3);
+        // Whatever the level multiplier does to the dice, the +3 lands on top.
+        expect(scaleSpellDamage(40, armed, tier) - scaleSpellDamage(40, bare, tier)).toBe(3);
       }
     }
   });
 
   it('a miss (zero dice) carries no enhancement', () => {
     const armed = equipWeapon(caster(10, REF_CASTING_MOD), 3);
-    expect(scaleSpellDamage(0, armed, spellAcquisitionLevel(2))).toBe(0);
+    expect(scaleSpellDamage(0, armed, 2)).toBe(0);
   });
 
   it('rides a crit once — the +N is never doubled with the dice', () => {
     // Crit doubles the dice UPSTREAM (a nat 20 sends 10d6 -> 20d6); the scaler
     // only sees the already-doubled total, so the flat +N must land once on each.
-    const acq = spellAcquisitionLevel(5);
-    const armed = equipWeapon(caster(spellAcquisitionLevel(5), REF_CASTING_MOD), 3); // mult 1
-    expect(scaleSpellDamage(30, armed, acq)).toBe(33); // 10d6 of 3s, +3 once
-    expect(scaleSpellDamage(60, armed, acq)).toBe(63); // doubled dice, +3 once (not +6)
+    const tier = 5;
+    const armed = equipWeapon(caster(spellAcquisitionLevel(tier), REF_CASTING_MOD), 3); // mult 1
+    expect(scaleSpellDamage(30, armed, tier)).toBe(33); // 10d6 of 3s, +3 once
+    expect(scaleSpellDamage(60, armed, tier)).toBe(63); // doubled dice, +3 once (not +6)
   });
 
   it('a +3 staff lands +3 on a real Fire Bolt; +0 / no weapon changes nothing', () => {
