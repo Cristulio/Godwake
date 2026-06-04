@@ -224,6 +224,25 @@ function highestThreatTarget(live: MonsterCombatant[]): MonsterCombatant | undef
   return [...live].sort((a, b) => monsterThreat(b) - monsterThreat(a))[0];
 }
 
+/**
+ * The add currently WARDING a gated boss: a living boss whose `gate.whileAddAlive`
+ * names a living add (Matron's handmaiden, the Unmade's anchor-mote, the Hollow
+ * Pretender's mirror-double, Yaga-Shura's heart). While that add lives the boss
+ * shrugs off most/all damage, so the bot must drop the ward FIRST — returns the
+ * lowest-HP warding add to focus. Without this the bot reads a gated boss as a
+ * near-invulnerable wall and pours wasted damage into it.
+ */
+function wardingAddTarget(live: MonsterCombatant[]): MonsterCombatant | undefined {
+  for (const boss of live) {
+    const gate = getMonster(boss.instance.defId).gate;
+    if (!gate) continue;
+    const adds = live.filter((m) => m.instance.defId === gate.whileAddAlive);
+    if (adds.length === 0) continue;
+    return adds.sort((a, b) => a.instance.hp.current - b.instance.hp.current)[0];
+  }
+  return undefined;
+}
+
 /** The toughest living enemy by current HP — the one a fight stalls on. */
 function highestHpTarget(live: MonsterCombatant[]): MonsterCombatant | undefined {
   if (live.length === 0) return undefined;
@@ -398,7 +417,10 @@ export function chooseCombatAction(
   // when fighting unarmed-style; an ordinary weapon in hand turns it dark.
   const monkKit = isMonk && monkFightsUnarmed(character);
 
-  const primary = lowestHpTarget(live);
+  // Gate-aware focus: a boss warded by a live add shrugs off blows until the add
+  // dies, so prioritize the warding add as the focus target (drop the ward, then
+  // burst the boss). Falls back to ordinary lowest-HP focus-fire when ungated.
+  const primary = wardingAddTarget(live) ?? lowestHpTarget(live);
   const threat = highestThreatTarget(live);
 
   // === Bonus action: survival + rogue setup ===============================
