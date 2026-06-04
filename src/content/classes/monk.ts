@@ -85,7 +85,7 @@ export const MONK: Class = ClassSchema.parse({
         id: 'stunning-strike',
         name: 'Stunning Strike',
         description:
-          'Arm the blow with 1 Ki: the next unarmed hit that lands forces the target to save against your Ki or be staggered, losing its next turn. The tempo play that opens a window the flurry pours through.',
+          'Arm the blow with 2 Ki: the next unarmed hit that lands forces the target to save against your Ki or be staggered, losing its next turn. The tempo play that opens a window the flurry pours through.',
         mechanicKey: 'stunning-strike',
       },
     ],
@@ -201,7 +201,7 @@ export const MONK: Class = ClassSchema.parse({
             id: 'wholeness-of-body',
             name: 'Wholeness of Body',
             description:
-              'Once each fight you can knit your own wounds — at the start of combat you steady with a cushion of temporary HP equal to twice your level.',
+              'Once each fight you can knit your own wounds — at the start of combat you steady with a cushion of temporary HP equal to your level.',
             mechanicKey: 'wholeness-of-body',
           },
         ],

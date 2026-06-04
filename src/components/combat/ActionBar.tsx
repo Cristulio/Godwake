@@ -229,7 +229,7 @@ export function ActionBar({
     playersTurn &&
     active &&
     hasStunningStrike &&
-    ki > 0 &&
+    ki >= 2 &&
     !stunningArmed &&
     !character.actionEconomy.actionUsed;
 
@@ -436,7 +436,7 @@ export function ActionBar({
             variant={canStunningStrike ? 'primary' : 'secondary'}
             onClick={onStunningStrike}
             disabled={!canStunningStrike}
-            title="Free, 1 Ki: arm a staggering blow — your next unarmed hit forces a save or the target loses its next turn."
+            title="Free, 2 Ki: arm a staggering blow — your next unarmed hit forces a save or the target loses its next turn."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {stunningArmed ? 'Stunning ✓' : 'Stunning Strike'}
