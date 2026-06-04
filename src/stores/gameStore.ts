@@ -124,6 +124,8 @@ interface GameState {
   character: Character | null;
   delve: DelveState | null;
   lastLoot: LootSummary | null;
+  /** Per-shop set of bought stock keys, mirrored from delveStore (session-only). */
+  purchasedShopKeys: Record<string, string[]>;
   combat: CombatState | null;
   taunt: {
     speaker: SoulVoiceSpeaker;
@@ -216,6 +218,7 @@ interface GameState {
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
   purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
+  recordShopPurchase: (roomId: string, key: string) => void;
   sellItem: (inventoryIdx: number) => { ok: boolean; reason?: string; gold?: number };
   acceptSpoils: () => void;
   clearLastLoot: () => void;
@@ -558,7 +561,7 @@ export const useGameStore = create<GameState>()(
       };
       const mirrorDelve = () => {
         const d = useDelveStore.getState();
-        set({ delve: d.delve, lastLoot: d.lastLoot });
+        set({ delve: d.delve, lastLoot: d.lastLoot, purchasedShopKeys: d.purchasedShopKeys });
       };
       const mirrorCombat = () =>
         set({ combat: useCombatStore.getState().combat });
@@ -618,6 +621,7 @@ export const useGameStore = create<GameState>()(
         character: useCharacterStore.getState().character,
         delve: useDelveStore.getState().delve,
         lastLoot: useDelveStore.getState().lastLoot,
+        purchasedShopKeys: useDelveStore.getState().purchasedShopKeys,
         combat: useCombatStore.getState().combat,
         taunt: useScreenStore.getState().taunt,
         tutorialQueue: useScreenStore.getState().tutorialQueue,
@@ -768,6 +772,8 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().purchaseRolledGear(ref, cost),
         purchaseLegendary: (legendaryId, cost) =>
           useDelveStore.getState().purchaseLegendary(legendaryId, cost),
+        recordShopPurchase: (roomId, key) =>
+          useDelveStore.getState().recordShopPurchase(roomId, key),
         sellItem: (idx) => useDelveStore.getState().sellItem(idx),
         acceptSpoils: () => useDelveStore.getState().acceptSpoils(),
         clearLastLoot: () => useDelveStore.getState().clearLastLoot(),

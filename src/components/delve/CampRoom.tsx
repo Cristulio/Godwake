@@ -57,6 +57,11 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const showTaunt = useGameStore((s) => s.showTaunt);
   const goToInventory = useGameStore((s) => s.goToInventory);
+  // Sold-state persists in delveStore (keyed by this room's id) so bought wares
+  // stay gone when the player closes the caravan, opens the pack, and returns.
+  const recordShopPurchase = useGameStore((s) => s.recordShopPurchase);
+  const purchasedKeys = useGameStore((s) => s.purchasedShopKeys[room.id]);
+  const isBought = (key: string) => purchasedKeys?.includes(key) ?? false;
 
   // Which camp is this in the delve sequence? Count camp rooms from the start
   // up to (and including) the current room — the count is the tier index.
@@ -116,8 +121,6 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const [expanded, setExpanded] = useState<ForkBranch | null>(null);
   const [riskResult, setRiskResult] = useState<RiskResult | null>(null);
   const [merchantStep, setMerchantStep] = useState<MerchantStep>('closed');
-  const [boughtGearKeys, setBoughtGearKeys] = useState<Set<string>>(new Set());
-  const [legendaryBought, setLegendaryBought] = useState(false);
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
 
   // Imoen whispers when the road opens up — once per soul (never replays on re-entry or in future runs).
@@ -225,6 +228,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   function buyConsumable(itemId: string) {
     const r = purchaseFromMerchant(itemId);
     if (r.ok) {
+      recordShopPurchase(room.id, itemId);
       setPurchaseMessage(`${getItem(itemId).name} added to your pack.`);
       playSfx('ui_click');
     } else {
@@ -235,7 +239,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   function buyGear(stock: GearStock, key: string) {
     const r = purchaseRolledGear(stock.ref, stock.cost);
     if (r.ok) {
-      setBoughtGearKeys((prev) => new Set(prev).add(key));
+      recordShopPurchase(room.id, key);
       setPurchaseMessage(`${stock.ref.rolled?.name ?? 'Item'} added to your pack.`);
       playSfx('ui_click');
     } else {
@@ -247,7 +251,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     if (!legendaryOffer) return;
     const r = purchaseLegendary(legendaryOffer.legendaryId, legendaryOffer.cost);
     if (r.ok) {
-      setLegendaryBought(true);
+      recordShopPurchase(room.id, 'legendary');
       setPurchaseMessage(`${legendaryOffer.name} bound to your reliquary — attune it at the hub.`);
       playSfx('ui_click');
     } else {
@@ -259,7 +263,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   // gate as ShopRoom.
   const showLegendary =
     legendaryOffer != null &&
-    !legendaryBought &&
+    !isBought('legendary') &&
     !ownedLegendaries.includes(legendaryOffer.legendaryId);
 
   return (
@@ -452,8 +456,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
           gear={gear}
           consumables={consumables}
           legendaryOffer={showLegendary ? legendaryOffer : null}
-          legendaryBought={legendaryBought}
-          boughtGearKeys={boughtGearKeys}
+          purchasedKeys={purchasedKeys ?? NO_SHOP_KEYS}
           goldInPocket={character.goldInPocket}
           purchaseMessage={purchaseMessage}
           onBuyGear={buyGear}
@@ -469,12 +472,15 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   );
 }
 
+/** Stable empty sold-set so a fresh shop doesn't churn a new array each render. */
+const NO_SHOP_KEYS: string[] = [];
+
 interface ShopModalProps {
   gear: GearStock[];
   consumables: Item[];
   legendaryOffer: LegendaryOffer | null;
-  legendaryBought: boolean;
-  boughtGearKeys: Set<string>;
+  /** Bought stock keys for this room (gear slot ids, consumable ids, `legendary`). */
+  purchasedKeys: string[];
   goldInPocket: number;
   purchaseMessage: string | null;
   onBuyGear: (stock: GearStock, key: string) => void;
@@ -487,8 +493,7 @@ function ShopModal({
   gear,
   consumables,
   legendaryOffer,
-  legendaryBought,
-  boughtGearKeys,
+  purchasedKeys,
   goldInPocket,
   purchaseMessage,
   onBuyGear,
@@ -545,7 +550,7 @@ function ShopModal({
                   <GearWareRow
                     key={key}
                     stock={stock}
-                    bought={boughtGearKeys.has(key)}
+                    bought={purchasedKeys.includes(key)}
                     gold={goldInPocket}
                     onBuy={() => onBuyGear(stock, key)}
                   />
@@ -563,7 +568,7 @@ function ShopModal({
             <div className="grid gap-3">
               <LegendaryWareRow
                 offer={legendaryOffer}
-                bought={legendaryBought}
+                bought={purchasedKeys.includes('legendary')}
                 gold={goldInPocket}
                 onBuy={onBuyLegendary}
               />
@@ -581,6 +586,7 @@ function ShopModal({
                 <ConsumableWareRow
                   key={item.id}
                   item={item}
+                  bought={purchasedKeys.includes(item.id)}
                   gold={goldInPocket}
                   onBuy={() => onBuyConsumable(item.id)}
                 />

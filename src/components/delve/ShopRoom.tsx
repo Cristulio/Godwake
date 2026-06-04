@@ -39,8 +39,12 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const goToInventory = useGameStore((s) => s.goToInventory);
   const [message, setMessage] = useState<string | null>(null);
-  const [boughtKeys, setBoughtKeys] = useState<Set<string>>(new Set());
-  const [legendaryBought, setLegendaryBought] = useState(false);
+  // Sold-state lives in delveStore so a bought ware stays gone when the player
+  // steps out to the pack and back (component state reset on unmount, so bought
+  // items used to re-appear and were re-buyable). Keyed by this room's id.
+  const recordShopPurchase = useGameStore((s) => s.recordShopPurchase);
+  const purchasedKeys = useGameStore((s) => s.purchasedShopKeys[room.id]);
+  const isBought = (key: string) => purchasedKeys?.includes(key) ?? false;
 
   const tier = tierForChapter(room.chapter);
   const classId = character?.classId;
@@ -94,12 +98,13 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     });
   const showLegendary =
     legendaryOffer != null &&
-    !legendaryBought &&
+    !isBought('legendary') &&
     !ownedLegendaries.includes(legendaryOffer.legendaryId);
 
   function buyConsumable(itemId: string) {
     const r = purchaseFromMerchant(itemId);
     if (r.ok) {
+      recordShopPurchase(room.id, itemId);
       setMessage(`${getItem(itemId).name} added to your pack.`);
       playSfx('ui_click');
     } else {
@@ -110,7 +115,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   function buyGear(stock: GearStock, key: string) {
     const r = purchaseRolledGear(stock.ref, stock.cost);
     if (r.ok) {
-      setBoughtKeys((prev) => new Set(prev).add(key));
+      recordShopPurchase(room.id, key);
       setMessage(`${stock.ref.rolled?.name ?? 'Item'} added to your pack.`);
       playSfx('ui_click');
     } else {
@@ -122,7 +127,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     if (!legendaryOffer) return;
     const r = purchaseLegendary(legendaryOffer.legendaryId, legendaryOffer.cost);
     if (r.ok) {
-      setLegendaryBought(true);
+      recordShopPurchase(room.id, 'legendary');
       setMessage(`${legendaryOffer.name} bound to your reliquary — attune it at the hub.`);
       playSfx('ui_click');
     } else {
@@ -185,7 +190,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
                 <GearWareRow
                   key={key}
                   stock={stock}
-                  bought={boughtKeys.has(key)}
+                  bought={isBought(key)}
                   gold={gold}
                   onBuy={() => buyGear(stock, key)}
                 />
@@ -203,7 +208,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
           <div className="grid gap-3">
             <LegendaryWareRow
               offer={legendaryOffer}
-              bought={legendaryBought}
+              bought={isBought('legendary')}
               gold={gold}
               onBuy={buyLegendary}
             />
@@ -221,6 +226,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
               <ConsumableWareRow
                 key={item.id}
                 item={item}
+                bought={isBought(item.id)}
                 gold={gold}
                 onBuy={() => buyConsumable(item.id)}
               />

@@ -125,6 +125,39 @@ describe('rollGearStock', () => {
     const rarities = rollGearStock('white-floor', 1, 'fighter').map((s) => s.ref.rolled?.rarity);
     expect(rarities).toContain('white');
   });
+
+  it('caps a monk rack at one weapon, filling the rest with accessories (no weapon spam)', () => {
+    // Monks have no legal body armour, so an unforced roll falls back to a monk
+    // weapon every time and the rack used to show all three. Now: ≤1 weapon, no
+    // armour, the freed slots become accessories — across every depth and layer.
+    for (let chapter = 1; chapter <= 14; chapter++) {
+      for (const layer of [0, 3, 8]) {
+        const kinds = rollGearStock(`monk-${chapter}-${layer}`, chapter, 'monk', layer).map(
+          (s) => getItem(s.ref.itemId).kind,
+        );
+        expect(kinds.filter((k) => k === 'weapon').length).toBeLessThanOrEqual(1);
+        expect(kinds.filter((k) => k === 'armor').length).toBe(0);
+        expect(kinds.filter((k) => k === 'accessory').length).toBeGreaterThanOrEqual(3);
+      }
+    }
+  });
+
+  it('leaves non-monk racks unchanged — fighters still roll armour and multi-weapon racks', () => {
+    // The monk cap must not leak to other classes: a fighter keeps the unforced
+    // weapon-or-armour roll, so across seeds their racks still surface armour and
+    // racks carrying 2+ weapons (neither of which a capped monk rack ever shows).
+    let sawArmor = false;
+    let sawMultiWeapon = false;
+    for (let seed = 0; seed < 40; seed++) {
+      const kinds = rollGearStock(`fighter-unchanged-${seed}`, 3, 'fighter', 0).map(
+        (s) => getItem(s.ref.itemId).kind,
+      );
+      if (kinds.includes('armor')) sawArmor = true;
+      if (kinds.filter((k) => k === 'weapon').length >= 2) sawMultiWeapon = true;
+    }
+    expect(sawArmor).toBe(true);
+    expect(sawMultiWeapon).toBe(true);
+  });
 });
 
 describe('sellValue', () => {
