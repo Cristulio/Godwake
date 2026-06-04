@@ -29,7 +29,6 @@ export const FEATURE_IDS = [
   'boss-intel',
   'legendaries',
   'affixes-epic',
-  'class-roster',
   'sets',
   'grove-deep',
 ] as const;
@@ -58,7 +57,8 @@ export interface UnlockCondition {
    * Spend gate: opens once the soul has SPENT this much Renown at the Grove
    * (the {@link ProgressionMeta.renownSpent} account-level total). The tribute
    * axis — earned by laying Renown down between lives, not by depth or delve
-   * count. Paces the roster reveal (the first offering) and the deeper Grove.
+   * count. Paces the alternate-soul unlock bars (see {@link classUnlockRenown})
+   * and the deeper Grove.
    */
   renownSpent?: number;
   /**
@@ -86,8 +86,9 @@ export interface UnlockCondition {
  *    sets at game completion (the full fourteen-chapter chain).
  *  - FIRST REINCARNATION (the Grove alone): the renown shop sits BETWEEN lives,
  *    so it opens the first time the soul dies and the wheel hauls it back.
- *  - RENOWN SPENT (tribute): the roster reveal opens on the first Grove offering;
- *    the deeper Grove on a heavier total. Earned by laying Renown down, not depth.
+ *  - RENOWN SPENT (tribute): the deeper Grove opens on Renown laid down; the
+ *    alternate-soul unlock bars ride the same axis (see classUnlockRenown). Earned
+ *    by laying Renown down, not depth.
  * All editable data — tune freely, keep the shape.
  */
 export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
@@ -109,10 +110,6 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   'affixes-epic': { chaptersCleared: 5 },
   legendaries: { chaptersCleared: 5 },
   sets: { chaptersCleared: 14 }, // the whole chain felled (Melissan) — game completion
-  // The roster "you can swap souls now" reveal opens on the FIRST Grove offering
-  // (slot-2 bar, SLOT_RENOWN_THRESHOLDS[0]) — the moment the first alternate soul
-  // actually surfaces. Fired (named) from the Grove-purchase path, not a trigger.
-  'class-roster': { renownSpent: 1 },
   // Deeper Grove tiers — a mastery reward, gated on Renown laid down at the Grove.
   'grove-deep': { renownSpent: 700 },
 };

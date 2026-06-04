@@ -729,10 +729,11 @@ describe('delveStore.acceptSpoils — mid-run chapter-unlock reveals', () => {
     expect(useMetaStore.getState().chaptersCleared).toBe(0);
   });
 
-  it('clearing chapter 2 fires NO soul-swapping card — the roster reveal is renown-paced now', () => {
+  it('clearing chapter 2 fires NO soul-swapping card — that generic notice was removed', () => {
     // Sitting at a ch1 high-water, felling the ch2 boss crosses chapter 2. The old
-    // ladder fired 'class-roster' here (a nameless, premature soul teaser); it now
-    // opens on the first Grove offering instead, so the chapter step fires nothing.
+    // ladder fired a 'class-roster' soul-swapping teaser here; it has been removed
+    // entirely (the per-soul unlock cards are the only soul-swap onboarding now), so
+    // the chapter step fires nothing.
     useMetaStore.setState({ chaptersCleared: 1, seenTutorials: [] });
     stageClear(bossRooms()[1]);
 
@@ -796,5 +797,37 @@ describe('delveStore — dialogue plays BEFORE the fight, never over it', () => 
     expect(taunt!.speaker).toBe('irenicus');
     expect(taunt!.context).toBe('chapter-clear');
     expect(fightHeld()).toBe(false);
+  });
+
+  it('a reveal beat on descent flips ONLY its own NPC — Imoen early, Irenicus held to Ch10', () => {
+    const idsBefore = (id: string) =>
+      LORE_BEATS.slice(0, LORE_BEATS.findIndex((b) => b.id === id)).map((b) => b.id);
+    const imoenReveal = LORE_BEATS.find((b) => b.reveals === 'imoen')!;
+    const irenicusReveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
+
+    // The descent that drips Imoen's reveal: every earlier beat already seen, deep
+    // in delves, no chapter cleared. Her name flips; the antagonist stays "The Voice".
+    useMetaStore.setState({
+      delveCount: 999,
+      chaptersCleared: 0,
+      seenDialogueBeats: idsBefore(imoenReveal.id),
+      knownNpcs: [],
+    });
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+    expect(useMetaStore.getState().seenDialogueBeats).toContain(imoenReveal.id);
+    expect(useMetaStore.getState().knownNpcs).toEqual(['imoen']);
+
+    // The descent that drips Irenicus's reveal needs Suldanessellar (Ch10) cleared.
+    // His name flips now — and only now; Imoen was already known, independently.
+    useScreenStore.setState({ taunt: null, tauntQueue: [] });
+    useMetaStore.setState({
+      delveCount: 999,
+      chaptersCleared: 10,
+      seenDialogueBeats: idsBefore(irenicusReveal.id),
+      knownNpcs: ['imoen'],
+    });
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+    expect(useMetaStore.getState().seenDialogueBeats).toContain(irenicusReveal.id);
+    expect(useMetaStore.getState().knownNpcs).toEqual(['imoen', 'irenicus']);
   });
 });

@@ -84,15 +84,6 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     ],
     key: "Epic gear carries three or four affixes — seek the piece whose deeds answer one another and your soul.",
   },
-  "class-roster": {
-    unlocked: "Soul-Swapping",
-    title: "A New Soul",
-    body: [
-      "Another body waits unworn at the hub, and the wheel will let you step into it before the next descent — a wholly different soul, a different way of cutting through the dark. The Renown you have gathered comes with you whichever skin you choose; it answers to the account, not the flesh.",
-      "But the Grove keeps its ledgers by soul. What you bought for one body buys nothing for another — its blood, its art, its tricks all stay behind with it. Pick the soul you mean to carry deep, and pour your Renown into that one.",
-    ],
-    key: "Renown follows you across every soul; Grove gains are kept per soul — commit your spending to one.",
-  },
   sets: {
     unlocked: "Relic Sets",
     title: "Forged in Company",
@@ -118,9 +109,9 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
  * RENOWN-SPENT bar at the Grove (engine/progression classUnlockRenown), from the
  * purchase path (gameStore queueClassUnlockReveals). Keyed by ClassId, which
  * doubles as the seenTutorials key. In-world flavor + the soul's hallmark. Every
- * roster soul gets one (the card is suppressed for the body already worn); the
- * first ever to surface rides the 'class-roster' soul-swapping explainer with it.
- * cleric isn't playable yet, so it has none.
+ * roster soul gets one (the card is suppressed for the body already worn). These
+ * per-soul reveals are the ONLY soul-swap onboarding now — there is no separate
+ * generic "you can swap souls" explainer. cleric isn't playable yet, so it has none.
  */
 export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
   fighter: {

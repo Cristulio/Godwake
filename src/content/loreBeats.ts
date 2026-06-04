@@ -5,9 +5,11 @@
  * strictly in order: a later beat never fires before its predecessor is seen.
  *
  * Two beats also REVEAL a soul-bond NPC's name (`reveals`): Imoen introduces
- * herself early, and the antagonist is not named "Irenicus" to the player until
- * the BG2-equivalent reveal — Imoen overhears it only after Chapter 2 has
- * fallen. Until then every surface shows his pre-reveal label ("The Voice"); see
+ * herself early, near the start of the arc. The antagonist stays "The Voice" far
+ * longer — his name is withheld until the soul has clawed all the way down to
+ * Suldanessellar (cleared Chapter 10), one descent shy of the Chapter 11
+ * confrontation, where Imoen overhears it at last and the boss fight puts a face
+ * to it. Until then every surface shows his pre-reveal label ("The Voice"); see
  * metaStore.knownNpcs and IrenicusTaunt's PRE_REVEAL_LABEL.
  *
  * The beats are triggered on DESCENT (delveStore.startDelve) — a calm transition
@@ -121,21 +123,6 @@ export const LORE_BEATS: LoreBeat[] = [
     text: "I keep remembering things. You, smaller, stealing books with me off the high shelves. Whatever he's made of you down here — that kid is still in there. I'd stake my life on it. I sort of already have.",
   },
   {
-    id: 'lore-11-his-name-is-irenicus',
-    speaker: 'imoen',
-    context: 'idle',
-    minChapters: 2,
-    reveals: 'irenicus',
-    text: "I heard the others say it at last — his name, the one who did this to us both. Irenicus. It tastes like a curse in the mouth. Good. Now we know what to scream when we pull him down.",
-  },
-  {
-    id: 'lore-12-the-hollow-they-made',
-    speaker: 'irenicus',
-    context: 'descent',
-    minChapters: 2,
-    text: 'Yes. Say it, if a name comforts you. I was cast out of a city of immortals and left with nothing — no soul, no death, no end to the wanting. I will take the god out of your blood and fill the hollow they made of me.',
-  },
-  {
     id: 'lore-13-dont-spend-it-all',
     speaker: 'imoen',
     context: 'low-hp',
@@ -216,13 +203,30 @@ export const LORE_BEATS: LoreBeat[] = [
     minChapters: 9,
     text: "I can't always tell your thoughts from his down here, and that frightens me worse than anything he's done. Hold on to the one who stole books off the high shelves with me. That one is ours. Don't let his masks have it. Don't let them have you.",
   },
-  // ── Ch10 · Suldanessellar / the Tree of Life — the reveal ──────────────────
+  // ── Ch10 · Suldanessellar / the Tree of Life — the plan AND the name revealed.
+  // The Voice has narrated the whole descent unnamed; here, one step from the
+  // confrontation, his plan surfaces and Imoen finally catches his name. ─────────
   {
     id: 'lore-24-the-vein-named',
     speaker: 'irenicus',
     context: 'boss-approach',
     minChapters: 10,
     text: 'Now you see the whole of it. The Tree gives back the soul the elves tore out of me — but a soul is not a godhood. For that I need the murdered god in YOUR blood, the essence I have distilled from you one death at a time. You carried it all the way up here for me. I am grateful. Truly.',
+  },
+  {
+    id: 'lore-11-his-name-is-irenicus',
+    speaker: 'imoen',
+    context: 'idle',
+    minChapters: 10,
+    reveals: 'irenicus',
+    text: "I heard the others say it at last — his name, the one who did this to us both. Irenicus. It tastes like a curse in the mouth. Good. Now we know what to scream when we pull him down.",
+  },
+  {
+    id: 'lore-12-the-hollow-they-made',
+    speaker: 'irenicus',
+    context: 'descent',
+    minChapters: 10,
+    text: 'Yes. Say it, if a name comforts you. I was cast out of a city of immortals and left with nothing — no soul, no death, no end to the wanting. I will take the god out of your blood and fill the hollow they made of me.',
   },
   {
     id: 'lore-25-take-it-back',

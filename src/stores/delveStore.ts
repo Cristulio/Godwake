@@ -301,8 +301,9 @@ function reincarnateSoul(character: Character): Character {
   }
   // The soul-bond name reveals are no longer wired to the wheel — they now ride
   // the progressive lore arc (content/loreBeats.ts): Imoen introduces herself in
-  // an early beat, the antagonist is not named until the post-Chapter-2 beat. A
-  // reincarnation alone reveals nothing.
+  // an early beat, the antagonist stays "The Voice" until the soul reaches
+  // Suldanessellar (cleared Chapter 10), one step before the Chapter 11
+  // confrontation. A reincarnation alone reveals nothing.
 
   // Refill the body to the LEVEL-1 ceiling the soul will actually descend with,
   // not the dead life's leveled max. This is the same number startDelve rebuilds
@@ -791,8 +792,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       get().creditChapterClearGold();
     }
     // Chained Godwake delve: Ilyich is the Ch1 boss. Flag the kill. The Voice is
-    // NOT named here — the antagonist's name stays hidden until the post-Chapter-2
-    // lore beat (content/loreBeats.ts) reveals it; a Chapter-1 clear is too early.
+    // NOT named here — the antagonist's name stays hidden until the Chapter-10 lore
+    // beat (content/loreBeats.ts) reveals it; a Chapter-1 clear is far too early.
     if (
       room?.kind === 'boss' &&
       room.monsters?.[0]?.defId === 'duergar-ilyich' &&

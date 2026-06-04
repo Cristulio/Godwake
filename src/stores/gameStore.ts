@@ -496,10 +496,8 @@ function adoptSoul(classId: ClassId) {
  * surfaced on the general tutorial queue so the card pops right at the Grove. The
  * delve-axis FEATURE reveals stay in delveStore (queueUnlockTutorials).
  *
- * The 'class-roster' soul-swapping explainer rides ALONG WITH the very first
- * alternate soul that ever surfaces (combined, first time only) — so it lands the
- * instant a roster body actually opens, naming it, never as a premature teaser.
- * Once seen it's done; later unlocks just name the new soul.
+ * These per-soul cards are the only soul-swap onboarding — each names the body that
+ * just opened. There is no separate generic "you can swap souls" explainer.
  */
 function queueClassUnlockReveals(prevSpent: number, nextSpent: number) {
   if (nextSpent <= prevSpent) return;
@@ -512,9 +510,7 @@ function queueClassUnlockReveals(prevSpent: number, nextSpent: number) {
     (id) => id !== currentClass && getTutorial(id) !== undefined && !seen.includes(id),
   );
   if (reveals.length === 0) return;
-  const withRoster =
-    seen.includes('class-roster') ? reveals : ['class-roster', ...reveals];
-  useScreenStore.getState().enqueueTutorials(withRoster);
+  useScreenStore.getState().enqueueTutorials(reveals);
 }
 
 function readSlotWrapper(slot: SaveSlotId): SlotWrapper | null {
