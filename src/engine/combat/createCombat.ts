@@ -353,7 +353,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   const archetypeWardTempHp = characterHasMechanic(nextCharacter, 'defender')
     ? 3 + nextCharacter.level
     : characterHasMechanic(nextCharacter, 'wholeness-of-body')
-      ? 2 * nextCharacter.level
+      ? nextCharacter.level
       : characterHasMechanic(nextCharacter, 'abjurer') ||
           characterHasMechanic(nextCharacter, 'totem-warrior')
         ? 2 + nextCharacter.level

@@ -22,6 +22,7 @@ import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
+  monkHasPendingTurnAction,
   martialArtsWeaponId,
   monkFightsUnarmed,
   useConsumable,
@@ -298,12 +299,17 @@ export function CombatScreen({
       character.classId === 'ranger' &&
       !character.actionEconomy.bonusActionUsed &&
       !markOnLiveTarget;
+    // Monk: never auto-end while a Flurry still has queued strikes (the turn-end
+    // would discard them and the Ki spent to queue them), and hold the turn for
+    // an unspent Ki bonus the way a fighter's Second Wind holds it.
+    const monkHoldsTurn = monkHasPendingTurnAction(character);
     if (
       hasUsableBonus ||
       hasUsableActionSurge ||
       hasUsableCunningAction ||
       hasUsableRage ||
-      hasUsableHuntersMark
+      hasUsableHuntersMark ||
+      monkHoldsTurn
     )
       return;
     // Don't auto-end mid-spell-pick — the player may have a cantrip queued
@@ -335,6 +341,8 @@ export function CombatScreen({
     character.resources.actionSurgeRemaining,
     character.resources.cunningActionUsesRemaining,
     character.resources.rageRoundsRemaining,
+    character.resources.kiPointsRemaining,
+    character.flurryStrikesRemaining,
     character.hp.current,
     state.currentTurnIndex,
     overlayActive,

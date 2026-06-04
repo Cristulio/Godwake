@@ -10,6 +10,7 @@ import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
+  monkHasPendingTurnAction,
   monkFightsUnarmed,
   isMonkWeaponId,
 } from './monk';
@@ -296,7 +297,102 @@ describe('Monk — combat wiring', () => {
     const m = r.state.combatants.find((c) => c.id === targetId) as MonsterCombatant;
     expect(m.instance.staggeredTurns).toBe(1);
     expect(r.character.stunningStrikeActive ?? false).toBe(false);
-    expect(kiAfterArm).toBe((init.character.resources.kiPointsRemaining ?? 0) - 1);
+    expect(kiAfterArm).toBe((init.character.resources.kiPointsRemaining ?? 0) - 2);
+  });
+
+  it('Stunning Strike costs 2 Ki — armed at 2, refused at 1', () => {
+    const init = createCombat({
+      roller: createDiceRoller(7),
+      character: makeMonk(5),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+
+    // 1 Ki is no longer enough: the stance refuses to arm and spends nothing.
+    const oneKi: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, kiPointsRemaining: 1 },
+    };
+    const refused = useStunningStrike({ character: oneKi, state: init.state });
+    expect(refused.character.stunningStrikeActive ?? false).toBe(false);
+    expect(refused.character.resources.kiPointsRemaining).toBe(1);
+
+    // 2 Ki arms it and drains the pair.
+    const twoKi: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, kiPointsRemaining: 2 },
+    };
+    const armed = useStunningStrike({ character: twoKi, state: init.state });
+    expect(armed.character.stunningStrikeActive).toBe(true);
+    expect(armed.character.resources.kiPointsRemaining).toBe(0);
+  });
+});
+
+describe('Monk — turn auto-end guard (monkHasPendingTurnAction)', () => {
+  it('holds the turn while a Flurry still has queued strikes — even after the bonus is spent', () => {
+    const base = makeMonk(5);
+    const midFlurry: Character = {
+      ...base,
+      flurryStrikesRemaining: 2,
+      actionEconomy: { ...base.actionEconomy, bonusActionUsed: true },
+    };
+    expect(monkHasPendingTurnAction(midFlurry)).toBe(true);
+  });
+
+  it('holds the turn for an unspent Ki bonus', () => {
+    // Fresh L5 monk: Ki in the well, bonus action unspent.
+    expect(monkHasPendingTurnAction(makeMonk(5))).toBe(true);
+  });
+
+  it('releases the turn once the bonus is spent and no strikes remain', () => {
+    const base = makeMonk(5);
+    const spent: Character = {
+      ...base,
+      flurryStrikesRemaining: 0,
+      actionEconomy: { ...base.actionEconomy, bonusActionUsed: true },
+    };
+    expect(monkHasPendingTurnAction(spent)).toBe(false);
+  });
+
+  it('releases the turn when the Ki well is dry and nothing is queued', () => {
+    const base = makeMonk(5);
+    const dry: Character = {
+      ...base,
+      flurryStrikesRemaining: 0,
+      resources: { ...base.resources, kiPointsRemaining: 0 },
+    };
+    expect(monkHasPendingTurnAction(dry)).toBe(false);
+  });
+
+  it('never holds a non-monk', () => {
+    expect(monkHasPendingTurnAction({ ...makeMonk(5), classId: 'fighter' })).toBe(false);
+  });
+});
+
+describe('Monk — Wholeness of Body temp HP', () => {
+  function startTempHp(character: Character): number {
+    const out = createCombat({
+      roller: createDiceRoller(1),
+      character,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    return out.character.hp.temp;
+  }
+
+  it('cushions with temp HP equal to the monk’s level (not twice)', () => {
+    expect(startTempHp(makeMonk(6, 'way-of-the-open-hand'))).toBe(6);
+    expect(startTempHp(makeMonk(10, 'way-of-the-open-hand'))).toBe(10);
+  });
+
+  it('leaves other classes’ start-of-combat temp HP untouched', () => {
+    // Totem Warrior (Bear) still girds with 2 + level.
+    const bear: Character = {
+      ...buildPlayerCharacter(presetCreationInput('barbarian')),
+      level: 5,
+      subclassId: 'totem-warrior',
+    };
+    expect(startTempHp(bear)).toBe(7);
+    // A monk without the Open Hand tradition gets no Wholeness cushion.
+    expect(startTempHp(makeMonk(6))).toBe(0);
   });
 });
 

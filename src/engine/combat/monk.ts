@@ -76,6 +76,24 @@ export function flurryStrikeCount(character: Readonly<Character>): number {
   return 2;
 }
 
+/**
+ * Should the monk's turn be held open rather than auto-ended? True while a Flurry
+ * still has queued strikes to throw — ending the turn would discard them (and the
+ * Ki already spent to queue them) — or while an unspent Ki bonus (Flurry / a
+ * stance) is still affordable this turn. The CombatScreen auto-end guard reads
+ * this so a paused monk doesn't lose a half-thrown flurry, mirroring the fighter
+ * Second Wind / rogue Cunning Action holds.
+ */
+export function monkHasPendingTurnAction(character: Readonly<Character>): boolean {
+  if (character.classId !== 'monk') return false;
+  const pendingFlurry = (character.flurryStrikesRemaining ?? 0) > 0;
+  const usableKi =
+    characterHasMechanic(character, 'flurry-of-blows') &&
+    (character.resources.kiPointsRemaining ?? 0) > 0 &&
+    !character.actionEconomy.bonusActionUsed;
+  return pendingFlurry || usableKi;
+}
+
 export interface MonkActionContext {
   character: Character;
   state: CombatState;
@@ -139,7 +157,7 @@ export function usePatientDefense(ctx: MonkActionContext): CombatActionResult {
 
 /**
  * Monk Stunning Strike. A free stance (no action cost) that ARMS a staggering
- * blow with 1 Ki: the next unarmed hit forces the target to save against the
+ * blow with 2 Ki: the next unarmed hit forces the target to save against the
  * monk's Ki DC or be staggered (it loses its next turn) — resolved on the
  * connecting hit in playerAttack. A clean miss leaves it armed; the Ki was spent
  * to arm it. Cleared at the start of the next turn.
@@ -151,10 +169,10 @@ export function useStunningStrike(ctx: MonkActionContext): CombatActionResult {
   if (!characterHasMechanic(character, 'stunning-strike')) return combatResult(state, character);
   if (character.stunningStrikeActive === true) return combatResult(state, character);
   const ki = character.resources.kiPointsRemaining ?? 0;
-  if (ki <= 0) return combatResult(state, character);
+  if (ki < 2) return combatResult(state, character);
 
   let nextCharacter: Character = { ...character, stunningStrikeActive: true };
-  nextCharacter = patchResources(nextCharacter, { kiPointsRemaining: ki - 1 });
+  nextCharacter = patchResources(nextCharacter, { kiPointsRemaining: ki - 2 });
 
   const log: CombatLogEntry = {
     id: state.log.length + 1,

@@ -552,7 +552,7 @@ export function chooseCombatAction(
       actionFree &&
       character.stunningStrikeActive !== true &&
       characterHasMechanic(character, 'stunning-strike') &&
-      (character.resources.kiPointsRemaining ?? 0) >= 2 &&
+      (character.resources.kiPointsRemaining ?? 0) >= 3 &&
       primary &&
       threat &&
       primary.id === threat.id &&
