@@ -24,6 +24,7 @@ import { characterAffixMods } from '../items/affixMods';
 import { evaluateCombatEnd } from './attack/damage';
 import { isRaging } from '../character/derived';
 import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './martialResource';
+import { monkHasPendingTurnAction } from './monk';
 
 function resetActionEconomyForCurrent(
   state: CombatState,
@@ -606,4 +607,64 @@ export function currentCombatantId(state: CombatState): string {
 
 export function isPlayerTurn(state: CombatState): boolean {
   return currentCombatantId(state) === 'player';
+}
+
+/**
+ * Does the player still have a turn play worth holding the turn open for — an
+ * unused action, or a class bonus/resource they'd want to spend this turn
+ * (Fighter Second Wind / Action Surge, Rogue Cunning Action, Barbarian Rage,
+ * Ranger Hunter's Mark, a Monk's queued Flurry / usable Ki)? When this is false
+ * the player has nothing left to spend, so the turn should auto-end.
+ *
+ * Pure so every class's "nothing left → auto-end" path is unit-testable, the way
+ * {@link monkHasPendingTurnAction} is. The mid-spell-pick/cast flow and the
+ * first-combat coach are UI-only holds CombatScreen layers on top — deliberately
+ * NOT considered here.
+ */
+export function hasRemainingTurnPlay(
+  character: Readonly<Character>,
+  state: CombatState,
+): boolean {
+  if (!character.actionEconomy.actionUsed) return true;
+
+  const hasUsableSecondWind =
+    character.classId === 'fighter' &&
+    (character.resources.secondWindAvailable === true ||
+      (character.resources.secondWindBonusRemaining ?? 0) > 0) &&
+    !character.actionEconomy.bonusActionUsed &&
+    character.hp.current < character.hp.max;
+  const hasUsableActionSurge =
+    character.classId === 'fighter' &&
+    (character.resources.actionSurgeRemaining ?? 0) > 0;
+  const hasUsableCunningAction =
+    character.classId === 'rogue' &&
+    (character.resources.cunningActionUsesRemaining ?? 0) > 0 &&
+    !character.actionEconomy.bonusActionUsed;
+  const hasUsableRage =
+    character.classId === 'barbarian' &&
+    (character.resources.rageRoundsRemaining ?? 0) <= 0 &&
+    !character.actionEconomy.bonusActionUsed;
+  // Worth waiting on only if the mark isn't already riding a live quarry —
+  // otherwise re-marking is pointless and the turn should auto-end.
+  const markOnLiveTarget =
+    state.huntersMarkTargetId != null &&
+    state.combatants.some(
+      (c) =>
+        c.kind === 'monster' &&
+        c.id === state.huntersMarkTargetId &&
+        c.instance.hp.current > 0,
+    );
+  const hasUsableHuntersMark =
+    character.classId === 'ranger' &&
+    !character.actionEconomy.bonusActionUsed &&
+    !markOnLiveTarget;
+
+  return (
+    hasUsableSecondWind ||
+    hasUsableActionSurge ||
+    hasUsableCunningAction ||
+    hasUsableRage ||
+    hasUsableHuntersMark ||
+    monkHasPendingTurnAction(character)
+  );
 }
