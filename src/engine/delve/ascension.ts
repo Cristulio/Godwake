@@ -143,10 +143,24 @@ export function getAscensionLevel(level: number): AscensionLevel {
   return ASCENSION_LEVELS[clampAscension(level)];
 }
 
-/** Scaled max HP for an enemy at the given ascension level. Bosses take the extra boss multiplier. */
+/**
+ * Hard cap on the COMBINED boss HP multiplier (enemyHpMult × bossHpMult). At the
+ * top of the ladder the two compound to 1.95× (Asc6: 1.30 × 1.50), which on an
+ * already-slow boss — the Ch8 Ashen Marshal is a non-threatening 15-round slog at
+ * Asc0 (win min-HP 82%) — balloons the fight past the 30-round timeout into a
+ * STALL rather than a kill (the boss-gauntlet read 45% time-outs there at Asc6).
+ * Capping the product keeps the apex lethal-but-finite while staying strictly
+ * above the Asc5 boss multiplier (1.25 × 1.25 = 1.5625×), so the ladder stays
+ * monotone-harder; only the sponge artifact is removed. Non-boss HP and every
+ * damage knob are untouched. Magnitude pending the validation sim pass.
+ */
+export const MAX_BOSS_HP_MULT = 1.7;
+
+/** Scaled max HP for an enemy at the given ascension level. Bosses take the extra boss multiplier, capped at MAX_BOSS_HP_MULT. */
 export function ascensionMonsterHp(baseHp: number, level: number, isBoss: boolean): number {
   const m = getAscensionLevel(level);
-  const mult = m.enemyHpMult * (isBoss ? m.bossHpMult : 1);
+  const rawMult = m.enemyHpMult * (isBoss ? m.bossHpMult : 1);
+  const mult = isBoss ? Math.min(rawMult, MAX_BOSS_HP_MULT) : rawMult;
   return Math.max(1, Math.round(baseHp * mult));
 }
 

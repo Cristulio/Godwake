@@ -134,7 +134,7 @@ describe('Ch9 — The Hollow Pretender', () => {
     expect(getMonster('the-hollow-pretender').actionsPerTurn).toBe(2);
   });
 
-  it('is warded to a fifth of incoming damage while a Mirror-Double decoy lives', () => {
+  it('is warded to two-fifths of incoming damage while a Mirror-Double decoy lives', () => {
     _resetMonsterInstanceCounter();
     const def = getMonster('the-hollow-pretender');
     const decoy = getMonster('mirror-double');
@@ -142,7 +142,7 @@ describe('Ch9 — The Hollow Pretender', () => {
     const id = primary(init.state).id;
     const before = primary(init.state).instance.hp.current;
     const warded = applyDamage(init.state, id, 100, init.character);
-    expect(before - primary(warded.state).instance.hp.current).toBe(20); // 20% leak
+    expect(before - primary(warded.state).instance.hp.current).toBe(40); // 40% leak
     expect(warded.state.log.some((l) => /Warded|false faces/i.test(l.text))).toBe(true);
   });
 
