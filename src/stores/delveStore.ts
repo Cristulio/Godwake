@@ -363,6 +363,16 @@ interface DelveStoreState {
    * acceptSpoils to fire boss taunts and chapter bookkeeping after advancing.
    */
   pendingSpoilsRoom: RoomSpec | null;
+  /**
+   * Per-shop record of bought stock keys — a gear slot id (`gear-N`), a
+   * consumable's item id, or the `legendary` marker. Lets a merchant rack keep a
+   * purchased ware SOLD when the player steps away to the pack and returns within
+   * the same delve (the buy-state used to live in component state and reset on
+   * unmount, so bought items re-appeared and were re-buyable). Keyed by room id
+   * so each shop tracks its own sold-state and a different shop starts fresh;
+   * cleared on every descent since room ids repeat across delves. Session-only.
+   */
+  purchasedShopKeys: Record<string, string[]>;
 
   setDelve: (delve: DelveState | null) => void;
   startDelve: (delve: DelveState) => void;
@@ -415,6 +425,8 @@ interface DelveStoreState {
    * run). Caller removes the offer from stock on success.
    */
   purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
+  /** Record a shop stock key as bought so the rack disables/hides it on re-entry. */
+  recordShopPurchase: (roomId: string, key: string) => void;
   /**
    * Sell a carried (non-equipped) item to a merchant: removes it from the pack
    * and credits a fraction of its value. Returns the gold paid on success.
@@ -452,6 +464,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
   delve: null,
   lastLoot: null,
   pendingSpoilsRoom: null,
+  purchasedShopKeys: {},
 
   setDelve: (delve) => set({ delve }),
 
@@ -519,7 +532,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       };
     }
 
-    set({ delve });
+    // Fresh rack on every descent: room ids repeat across delves, so a stale
+    // sold-state would carry one run's purchases onto the next run's shops.
+    set({ delve, purchasedShopKeys: {} });
     useCombatStore.getState().setCombat(null);
     charSlice.setCharacter(withQuirkBudgets);
     // Account-level: every descent is one delve started. Drives the
@@ -1132,6 +1147,15 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     });
     return { ok: true };
   },
+
+  recordShopPurchase: (roomId, key) =>
+    set((s) => {
+      const existing = s.purchasedShopKeys[roomId] ?? [];
+      if (existing.includes(key)) return s;
+      return {
+        purchasedShopKeys: { ...s.purchasedShopKeys, [roomId]: [...existing, key] },
+      };
+    }),
 
   sellItem: (inventoryIdx) => {
     const charSlice = useCharacterStore.getState();

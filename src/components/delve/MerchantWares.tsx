@@ -129,15 +129,20 @@ export function LegendaryWareRow({ offer, bought, gold, onBuy }: LegendaryWareRo
 
 interface ConsumableWareRowProps {
   item: Item;
+  bought: boolean;
   gold: number;
   onBuy: () => void;
 }
 
-/** One fixed draught/charm row. */
-export function ConsumableWareRow({ item, gold, onBuy }: ConsumableWareRowProps) {
+/** One fixed draught/charm row. Goes SOLD once bought so the same draught can't
+ * be re-bought after a trip to the pack — the sold-state persists in delveStore. */
+export function ConsumableWareRow({ item, bought, gold, onBuy }: ConsumableWareRowProps) {
   const tooDear = gold < item.cost;
   return (
-    <div className="border border-[var(--color-border-dim)] p-3 flex items-center gap-3">
+    <div
+      className="border border-[var(--color-border-dim)] p-3 flex items-center gap-3"
+      style={{ opacity: bought ? 0.5 : 1 }}
+    >
       <div className="flex-1 min-w-0">
         <div className="text-[var(--color-text-primary)] text-sm uppercase tracking-wider">
           {item.name}
@@ -148,8 +153,12 @@ export function ConsumableWareRow({ item, gold, onBuy }: ConsumableWareRowProps)
       </div>
       <div className="text-right shrink-0">
         <div className="text-[var(--color-accent-gold)] text-sm">{item.cost} gp</div>
-        <Button variant={tooDear ? 'secondary' : 'primary'} disabled={tooDear} onClick={onBuy}>
-          {tooDear ? `Need ${item.cost - gold} more` : 'Buy'}
+        <Button
+          variant={bought || tooDear ? 'secondary' : 'primary'}
+          disabled={bought || tooDear}
+          onClick={onBuy}
+        >
+          {bought ? 'Sold' : tooDear ? `Need ${item.cost - gold} more` : 'Buy'}
         </Button>
       </div>
     </div>

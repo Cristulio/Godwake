@@ -2,7 +2,7 @@ import type { GearRarity, ItemRef } from '../../schemas/item';
 import type { ClassId } from '../../schemas/ids';
 import type { CampBoonTier } from '../../content/campBoons';
 import { createDiceRoller } from '../../engine/dice';
-import { rollItem, rolledItemCost } from '../../engine/items';
+import { rollItem, rolledItemCost, type BaseKind } from '../../engine/items';
 import { legendaryDropPool, getLegendary } from '../../content/legendaries';
 import { ascensionAscendantLoot, ascensionExclusiveLoot } from '../../engine/delve/ascension';
 
@@ -88,7 +88,9 @@ export interface GearStock {
  * Roll the merchant's arms rack: class-legal bases with rolled affixes, priced
  * by rarity. Deterministic per `seed` (pass the room id) so re-renders don't
  * reroll the stock. At least one accessory is guaranteed on the rack so the new
- * slots are buyable, not drop-only.
+ * slots are buyable, not drop-only. A monk (no legal body armour) is capped at a
+ * single weapon slot with the rest accessories, so their rack doesn't collapse
+ * into the three monk weapons — see `stockSlotKind`.
  *
  * `chapter` (1–14) is the power axis: it sets the rarity mix AND feeds rollItem's
  * depth (base tier + the +1/+2/+3 enhancement ceiling), so a deep-chapter rack
@@ -110,6 +112,7 @@ export function rollGearStock(
   const roller = createDiceRoller(`${seed}:gear-shop`);
   const mix = gearRarityMixForChapter(chapter);
   const promotions = Math.min(mix.length, Math.floor(layer / 2));
+  const isMonk = classId === 'monk';
   let purples = 0;
   return mix.map((baseRarity, i) => {
     let rarity = promoteRarity(baseRarity, i < promotions ? 1 : 0);
@@ -120,12 +123,28 @@ export function rollGearStock(
       if (purples >= MAX_PURPLE_PER_RACK) rarity = 'blue';
       else purples += 1;
     }
+    const kind = stockSlotKind(i, isMonk);
     const ref = rollItem(
       roller,
-      i === 1 ? { rarity, classId, kind: 'accessory', depth: chapter } : { rarity, classId, depth: chapter },
+      kind ? { rarity, classId, kind, depth: chapter } : { rarity, classId, depth: chapter },
     );
     return { ref, cost: rolledItemCost(ref) };
   });
+}
+
+/**
+ * The base kind forced for rack slot `i`. Slot 1 is always the guaranteed
+ * accessory. A monk has NO legal body armour (unarmored; robes are wizard-only),
+ * so an unforced roll on the other slots falls back to a weapon every time and
+ * the rack fills with the three monk weapons — pin a monk's slots instead: slot 0
+ * the lone weapon, the rest accessories (≤1 weapon + accessories, no spam). Every
+ * other class leaves the non-accessory slots unforced, so the roller still picks
+ * weapon/armour/accessory exactly as before — their racks are byte-for-byte the same.
+ */
+function stockSlotKind(i: number, isMonk: boolean): BaseKind | undefined {
+  if (i === 1) return 'accessory';
+  if (!isMonk) return undefined;
+  return i === 0 ? 'weapon' : 'accessory';
 }
 
 /** Clamp `rarity` to not exceed `max` on the green → blue → purple ladder. */
