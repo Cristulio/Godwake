@@ -60,7 +60,14 @@ describe('chapter 11 — bestiary registration', () => {
     expect(CH11_BOSS.id).toBe('irenicus');
     expect(CH11_BOSS.name).toBe('Jon Irenicus');
     expect(CH11_BOSS.cr).toBe('16');
-    expect(CH11_BOSS.bossMechanic).toBe('battle-rage');
+    // boss-framework: the captor now escalates via the framework — he acts twice
+    // a turn and at half HP cracks into the Slayer (a transform phase that gains a
+    // third action), replacing the legacy `battle-rage`.
+    expect(CH11_BOSS.bossMechanic).toBeUndefined();
+    expect(CH11_BOSS.actionsPerTurn).toBe(2);
+    expect(
+      CH11_BOSS.phases?.some((p) => p.atHpPctBelow === 50 && p.transform),
+    ).toBe(true);
     // A clear notch above the Ch9 boss (the Hollow Pretender: 240 HP / AC 21).
     expect(CH11_BOSS.maxHp).toBeGreaterThan(240);
     expect(CH11_BOSS.ac).toBeGreaterThanOrEqual(21);
@@ -69,6 +76,8 @@ describe('chapter 11 — bestiary registration', () => {
     expect(kinds).toContain('paralyze');
     expect(kinds).toContain('multiattack');
     expect(kinds).toContain('attack');
+    // The Binding Word is now a telegraphed wind-up.
+    expect(CH11_BOSS.actions.some((a) => a.telegraph)).toBe(true);
   });
 
   it('every summon action points at a monster authored in this chapter', () => {
