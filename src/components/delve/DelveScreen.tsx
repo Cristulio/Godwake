@@ -9,6 +9,7 @@ import { withResetActionEconomy } from '../../engine/character/actions';
 import { playSfx } from '../../engine/audio';
 import { getMonster } from '../../content/monsters';
 import { CombatScreen } from '../combat/CombatScreen';
+import { combatShouldSpawn } from './combatSpawn';
 import type { BattlefieldDecoration } from '../combat/Battlefield';
 import { RestRoom } from './RestRoom';
 import { TreasureRoom } from './TreasureRoom';
@@ -128,6 +129,10 @@ function DelveScreenBody() {
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const combat = useGameStore((s) => s.combat);
+  // An active dialogue (lore beat / soul-voice taunt) holds the next fight: while
+  // one is up we don't build combat, so the dialogue plays BEFORE the room's
+  // combat + first-combat coach instead of stacking over them.
+  const taunt = useGameStore((s) => s.taunt);
   const postmortem = useGameStore((s) => s.postmortem);
   const setCombat = useGameStore((s) => s.setCombat);
   const setCharacter = useGameStore((s) => s.setCharacter);
@@ -156,15 +161,27 @@ function DelveScreenBody() {
   // Spawn combat on entering a combat/boss room.
   useEffect(() => {
     if (!delve || !character || !room) return;
-    if (delve.phase !== 'in-room') return;
-    if (combat) return; // already in combat
-    if (room.kind !== 'combat' && room.kind !== 'boss' && room.kind !== 'elite') return;
-    if (!room.monsters) return;
-    // Elite nodes wait on the player's risk/reward decision — don't build the
-    // fight until they choose to engage (EliteRoom sets delve.eliteEngaged).
-    if (room.kind === 'elite' && !delve.eliteEngaged) return;
+    // One predicate owns the spawn decision — including the dialogue HOLD: while a
+    // lore beat / taunt is up (`taunt !== null`) combat is not built, so the
+    // dialogue precedes the fight and the coach. Re-runs (taunt is in the deps)
+    // the moment the dialogue clears, and the held fight builds then.
+    if (
+      !combatShouldSpawn({
+        phase: delve.phase,
+        hasCombat: combat !== null,
+        roomKind: room.kind,
+        hasMonsters: room.monsters !== undefined,
+        eliteEngaged: delve.eliteEngaged === true,
+        dialogueActive: taunt !== null,
+      })
+    ) {
+      return;
+    }
     const roller = getActiveRoller();
-    const monsters = room.monsters.flatMap((m) =>
+    // combatShouldSpawn already guaranteed monsters; the fallback is only here to
+    // narrow the optional for TypeScript.
+    const roomMonsters = room.monsters ?? [];
+    const monsters = roomMonsters.flatMap((m) =>
       Array.from({ length: m.count }, (_, idx) => {
         const def = getMonster(m.defId);
         const displayName = m.count > 1
@@ -188,11 +205,12 @@ function DelveScreenBody() {
     setCombat(newCombat.state);
     // Codex: unlock each monster type fought.
     const discover = useGameStore.getState().discoverMonster;
-    for (const m of room.monsters) {
+    for (const m of roomMonsters) {
       discover(m.defId);
     }
+    // taunt is a dep so the held fight builds the moment the dialogue clears.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [delve?.currentRoomIdx, delve?.phase, delve?.eliteEngaged]);
+  }, [delve?.currentRoomIdx, delve?.phase, delve?.eliteEngaged, taunt]);
 
   if (!character) {
     return (

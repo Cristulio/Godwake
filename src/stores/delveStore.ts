@@ -531,15 +531,19 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // threshold, hold at the hub so the card(s) show BEFORE the delve — the
     // descent resumes into the delve once the last one is dismissed.
     queueUnlockTutorials(prevDelveCount, prevDelveCount + 1);
+    // The descent is the calm beat-trigger moment: drip the next story beat (and
+    // any name reveal it carries) now that the delve counter is current. Fire it
+    // BEFORE the screen flips to the delve, so the beat is already the active
+    // dialogue when DelveScreen mounts — its spawn-on-enter effect holds the first
+    // fight (and the first-combat coach) behind the dialogue until it's dismissed,
+    // instead of the beat painting over a live combat.
+    playNextLoreBeat();
     const screenStore = useScreenStore.getState();
     if (screenStore.hubUnlockQueue.length > 0) {
       screenStore.holdForHubUnlock();
     } else {
       screenStore.setScreen('delve');
     }
-    // The descent is the calm beat-trigger moment: drip the next story beat
-    // (and any name reveal it carries) now that the delve counter is current.
-    playNextLoreBeat();
   },
 
   advanceRoom: () =>
@@ -758,13 +762,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
 
     get().advanceRoom();
 
-    // Imoen whispers on the FIRST cleared room of the run.
+    // Imoen whispers on the FIRST cleared room of the run. Fired synchronously
+    // at the transition (not deferred), so it's the active dialogue before the
+    // next room mounts — DelveScreen then holds that room's fight behind it.
     const d = get().delve;
     if (d && d.roomsCleared === 0) {
       useScreenStore.getState().showTaunt('imoen', 'first-blood');
     }
-    // Irenicus taunts after a boss clear. Delay so the victory beat lands
-    // before the overlay steals the moment.
+    // Irenicus taunts after a boss clear.
     if (room?.kind === 'boss') {
       const bossIdx = s.delve?.rooms.findIndex((r) => r.id === room.id) ?? -1;
       const clearedChapter =
@@ -779,9 +784,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       const prevChapters = useMetaStore.getState().chaptersCleared;
       useMetaStore.getState().recordChapterCleared(clearedChapter);
       queueChapterUnlockTutorials(prevChapters, useMetaStore.getState().chaptersCleared);
-      setTimeout(() => {
-        useScreenStore.getState().showTaunt('irenicus', 'chapter-clear', clearedChapter);
-      }, 1500);
+      // Synchronous (was a 1.5s setTimeout that landed the overlay AFTER the next
+      // room loaded): fire it now so it precedes the next room rather than
+      // painting over it. The victory beat already played on the spoils screen.
+      useScreenStore.getState().showTaunt('irenicus', 'chapter-clear', clearedChapter);
       get().creditChapterClearGold();
     }
     // Chained Godwake delve: Ilyich is the Ch1 boss. Flag the kill. The Voice is

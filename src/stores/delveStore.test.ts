@@ -26,6 +26,19 @@ import { abilityModifier } from '../types/abilities';
 import { getClass } from '../content/classes';
 import { getRace } from '../content/races';
 import type { Character } from '../types/character';
+import { combatShouldSpawn, type CombatSpawnGate } from '../components/delve/combatSpawn';
+import { LORE_BEATS } from '../content/loreBeats';
+
+/** A combat room ready to fight; `dialogueActive` is filled per-assertion. */
+const READY_FIGHT: Omit<CombatSpawnGate, 'dialogueActive'> = {
+  phase: 'in-room',
+  hasCombat: false,
+  roomKind: 'combat',
+  hasMonsters: true,
+  eliteEngaged: false,
+};
+const fightHeld = () =>
+  combatShouldSpawn({ ...READY_FIGHT, dialogueActive: useScreenStore.getState().taunt !== null });
 
 /** Mirror of delveStore's private level1HpMax — the level-1 descent ceiling. */
 function level1HpMax(ch: Character): number {
@@ -728,5 +741,60 @@ describe('delveStore.acceptSpoils — mid-run chapter-unlock reveals', () => {
     expect(useMetaStore.getState().chaptersCleared).toBe(2);
     expect(useScreenStore.getState().tutorialQueue).not.toContain('class-roster');
     expect(useScreenStore.getState().tutorialQueue).toEqual([]);
+  });
+});
+
+describe('delveStore — dialogue plays BEFORE the fight, never over it', () => {
+  beforeEach(() => {
+    setActiveRoller('dialogue-before-fight-seed');
+    seedRun({ quirks: [] });
+    useScreenStore.setState({ screen: 'hub', taunt: null, tauntQueue: [], hubUnlockQueue: [], pendingDescent: false });
+    // Fresh first-ever soul at the start of the arc: the descent must drip beat 1.
+    useMetaStore.setState({ delveCount: 0, seenDialogueBeats: [], knownNpcs: [] });
+  });
+
+  it('startDelve fires the soul-bond beat as the active dialogue, and HOLDS the first fight behind it', () => {
+    const beat1 = LORE_BEATS[0]; // lore-01-the-cage-held — "So. The cage held…"
+
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+
+    // The beat is the active dialogue the instant we land on the delve screen…
+    const taunt = useScreenStore.getState().taunt;
+    expect(useScreenStore.getState().screen).toBe('delve');
+    expect(taunt).not.toBeNull();
+    expect(taunt!.speaker).toBe(beat1.speaker);
+    expect(taunt!.line).toBe(beat1.text);
+    expect(useMetaStore.getState().seenDialogueBeats).toContain(beat1.id);
+    // …so the first fight is HELD: combat (and the first-combat coach) must not
+    // build while the beat is up. This is the bug fix — the beat precedes combat.
+    expect(fightHeld()).toBe(false);
+  });
+
+  it('dismissing the soul-bond beat then releases the held fight', () => {
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+    expect(fightHeld()).toBe(false);
+
+    useScreenStore.getState().dismissTaunt();
+
+    expect(useScreenStore.getState().taunt).toBeNull();
+    expect(fightHeld()).toBe(true); // combat builds only now, after the dialogue
+  });
+
+  it('a boss clear fires the chapter-clear taunt SYNCHRONOUSLY (no setTimeout), holding the next room', () => {
+    const ch1Boss = useDelveStore.getState().delve!.rooms.filter((r) => r.kind === 'boss')[0];
+    const idx = useDelveStore.getState().delve!.rooms.findIndex((r) => r.id === ch1Boss.id);
+    setDelve({ currentRoomIdx: idx, currentRoomId: ch1Boss.id });
+    useDelveStore.setState({ pendingSpoilsRoom: ch1Boss });
+    useScreenStore.setState({ taunt: null, tauntQueue: [] });
+
+    useDelveStore.getState().acceptSpoils();
+
+    // No fake timers, no await: the taunt is already up right after the call —
+    // it precedes the next room instead of landing on top of it 1.5s later.
+    const taunt = useScreenStore.getState().taunt;
+    expect(taunt).not.toBeNull();
+    expect(taunt!.speaker).toBe('irenicus');
+    expect(taunt!.context).toBe('chapter-clear');
+    expect(fightHeld()).toBe(false);
   });
 });
