@@ -627,9 +627,9 @@ describe('createGodwakeDelve — base game vs New Game+ chain split', () => {
     }
   });
 
-  it('names the dungeon for its arc (Pit for base, Throne for NG+)', () => {
-    expect(createGodwakeDelve(1).dungeonName).toContain('Pit');
-    expect(createGodwakeDelve({ seed: 1, fullChain: true }).dungeonName).toContain('Throne');
+  it('names the dungeon Godwake for both base and NG+', () => {
+    expect(createGodwakeDelve(1).dungeonName).toBe('Godwake');
+    expect(createGodwakeDelve({ seed: 1, fullChain: true }).dungeonName).toBe('Godwake');
   });
 });
 
