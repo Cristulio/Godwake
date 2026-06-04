@@ -198,6 +198,37 @@ describe('CombatHUD', () => {
     expect(screen.queryByText(/^CRIT\s/)).toBeNull();
   });
 
+  it('Monk shows a Ki section with current/max pips that track spends', () => {
+    let m = makeChar('monk');
+    m = applyLevelUp(m); // L2
+    m = applyLevelUp(m); // L3 → 3 Ki max
+    const partial: Character = {
+      ...m,
+      resources: { ...m.resources, kiPointsRemaining: 2 },
+    };
+    const { rerender } = render(<CombatHUD character={partial} state={emptyState()} />);
+    expect(screen.getByText('Ki')).toBeInTheDocument();
+    // 2 of 3 pips lit, 1 spent.
+    expect(screen.getAllByLabelText(/^Ki to spend/)).toHaveLength(2);
+    expect(screen.getAllByLabelText(/^Ki spent/)).toHaveLength(1);
+
+    // Spending another point relights one fewer pip.
+    const drained: Character = { ...m, resources: { ...m.resources, kiPointsRemaining: 0 } };
+    rerender(<CombatHUD character={drained} state={emptyState()} />);
+    expect(screen.queryAllByLabelText(/^Ki to spend/)).toHaveLength(0);
+    expect(screen.getAllByLabelText(/^Ki spent/)).toHaveLength(3);
+  });
+
+  it('Non-monks never show a Ki section', () => {
+    for (const classId of ['fighter', 'rogue', 'wizard'] as const) {
+      const { unmount } = render(
+        <CombatHUD character={makeChar(classId)} state={emptyState()} />,
+      );
+      expect(screen.queryByText('Ki')).toBeNull();
+      unmount();
+    }
+  });
+
   it('Shows status condition pill when held / paralyzed', () => {
     const c: Character = {
       ...makeChar('fighter'),
