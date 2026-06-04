@@ -7,13 +7,19 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * wear another. It took the throne by being whatever the room needed to believe,
  * and it rules a hall of no one by the same lie, forever.
  *
- * Kit (the proven apex pattern, scaled a clear notch above Chapter 8): a round-1
- * `paralyze` opener — it lifts the mask and shows you the nothing behind it, and
- * the nothing fixes you where you stand — then `multiattack` every round after
- * (the picker falls to it once the opener is spent), fighting with the borrowed
- * skill of a hundred dead duellists. `battle-rage` at half HP: crack the mask
- * expecting the kill and find no face under it, and the nothing redoubles — the
- * Court lying even in how it dies.
+ * boss-framework kit (the first ENDGAME boss — it acts TWICE a turn): layered on
+ * the apex pattern (paralyze opener, multiattack, battle-rage past half) it now
+ * fights as the Court itself. It calls your own reflections out of the cracked
+ * glass to attend it (a `summon` of Mirror-Doubles), and while its false court
+ * stands the true Pretender is just one more face in the crowd — a condition
+ * `gate` that drops it to a fifth of incoming damage until you cut the decoys
+ * down. Periodically it works the full `Unmasking` — a telegraphed `frightened`
+ * that winds up one ceremonious turn before the whole Court's nothing is shown at
+ * once. And at half HP the lie redoubles (an enrage `phase`): crack the mask
+ * expecting the kill, find no face under it, and watch it don a fresh rank of
+ * faces — the wards you broke closing over again, the Court lying even in how it
+ * dies. Two actions a turn means it can raise the court AND strike, or wind up
+ * the Unmasking AND close.
  */
 export const THE_HOLLOW_PRETENDER: Monster = MonsterSchema.parse({
   id: 'the-hollow-pretender',
@@ -28,6 +34,12 @@ export const THE_HOLLOW_PRETENDER: Monster = MonsterSchema.parse({
   passivePerception: 16,
   resistances: ['psychic', 'force', 'necrotic'],
   bossMechanic: 'battle-rage',
+  actionsPerTurn: 2,
+  gate: {
+    whileAddAlive: 'mirror-double',
+    damageTakenPct: 0.2,
+    wardLabel: 'cut down the false faces',
+  },
   actions: [
     {
       kind: 'paralyze',
@@ -37,6 +49,30 @@ export const THE_HOLLOW_PRETENDER: Monster = MonsterSchema.parse({
       durationRounds: 2,
       description:
         'It raises a gloved hand to the edge of the mask, courteous, almost shy, and lifts it — and there is nothing there. Not a wound, not a skull: a held, perfect absence, the shape of a face with no face in it, and looking into the nothing your body stops, the way a thing stops at the lip of a height, certain that to move is to fall in.',
+    },
+    {
+      kind: 'summon',
+      name: 'The Court Attends',
+      summonDefId: 'mirror-double',
+      count: 2,
+      maxActive: 2,
+      once: true,
+      description:
+        'It gestures, courteous, to the cracked glass of the hall, and the Court\'s faces step out of the mirrors to attend it — your own shape among them, wearing your stance, because the Court has already taken your measure and found it useful. While its court stands, the Pretender is only one more masked thing in a crowd, and you cannot find the true one to strike.',
+    },
+    {
+      kind: 'debuff',
+      name: 'The Unmasking',
+      condition: 'frightened',
+      saveDC: 17,
+      saveAbility: 'wis',
+      durationRounds: 2,
+      telegraph: {
+        chargeText:
+          'It raises both gloved hands to the edges of the mask, slow, ceremonious, and begins to lift — not the quick flash of the opening but the full Unmasking, peeling the borrowed faces away one after another toward the nothing that wears them all.',
+      },
+      description:
+        'The last mask comes away and there is the absence entire — not a face\'s worth of nothing but the whole Court\'s, every ruler it ever wore subtracted at once — and to stand in front of that much nothing is to feel yourself begin, quietly, to be subtracted too.',
     },
     {
       kind: 'multiattack',
@@ -54,6 +90,31 @@ export const THE_HOLLOW_PRETENDER: Monster = MonsterSchema.parse({
       reach: 10,
       description:
         'The sceptre is a rod of fused regalia, every ruler\'s crown and rod and seal-ring melted into one length of cold gold. Where it touches you it does not break the skin so much as press a verdict through it — you are not of this court, and the court does not keep what is not of it.',
+    },
+  ],
+  phases: [
+    {
+      atHpPctBelow: 50,
+      name: 'The Nothing Redoubles',
+      enterText:
+        'You crack the mask expecting the kill and there is no face under it to kill — only more readiness to wear another. The Pretender does not falter. It dons fresh faces, the Court lying even in how it dies, and the wards you broke begin to close over again.',
+      transform: true,
+      addActions: [
+        {
+          kind: 'summon',
+          name: 'Don Fresh Faces',
+          summonDefId: 'mirror-double',
+          count: 2,
+          maxActive: 2,
+          once: true,
+          telegraph: {
+            chargeText:
+              'It sweeps a gloved hand across the broken mirrors and the whole dead court rises to its face at once — a fresh rank of your reflections stepping out of the glass to stand between you and the nothing on the throne.',
+          },
+          description:
+            'A new court attends, your own face foremost among them, and the wards close. Cut the false faces down again, or never reach the throne.',
+        },
+      ],
     },
   ],
   flavorText:
