@@ -70,12 +70,22 @@ describe('chapter 14 — bestiary', () => {
     // Apex by a clear margin: every prior boss tops out at 240 HP / AC 21.
     expect(CH14_BOSS.maxHp).toBeGreaterThan(300);
     expect(CH14_BOSS.ac).toBeGreaterThanOrEqual(22);
-    // Multi-phase control/summon kit: paralyze opener, summon, multiattack, attack.
+    // Apex boss-framework kit: paralyze opener, blood-fiend summon, a self-heal
+    // sustain to out-race, a telegraphed scepter, and a half-HP ascended phase
+    // that raises the multi-action count to three.
     const kinds = CH14_BOSS.actions.map((a) => a.kind);
     expect(kinds).toContain('paralyze');
     expect(kinds).toContain('summon');
-    expect(kinds).toContain('multiattack');
+    expect(kinds).toContain('sustain');
     expect(kinds).toContain('attack');
+    expect(CH14_BOSS.actionsPerTurn).toBe(2);
+    const ascended = CH14_BOSS.phases?.find((p) => (p.actionsPerTurn ?? 0) >= 3);
+    expect(ascended).toBeDefined();
+    expect(ascended?.transform).toBe(true);
+    const telegraphedScepter = CH14_BOSS.actions.some(
+      (a) => a.kind === 'attack' && !!a.telegraph,
+    );
+    expect(telegraphedScepter).toBe(true);
   });
 
   it('every summon action points at a monster registered in this chapter', () => {

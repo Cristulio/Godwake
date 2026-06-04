@@ -39,8 +39,15 @@ const CH12_MONSTERS = [
 
 const CH12_BOSS = YAGA_SHURA;
 
-/** Every monster def id this chapter is allowed to reference, boss included. */
-const KNOWN_IDS = new Set<string>([...CH12_MONSTERS, CH12_BOSS].map((m) => m.id));
+/**
+ * Every monster def id this chapter is allowed to reference, boss included.
+ * Yaga-Shura's heart-rite gate surfaces a reused small elemental (the dust mephit)
+ * as the destructible weak-point, so it is a legitimate cross-chapter summon target.
+ */
+const KNOWN_IDS = new Set<string>([
+  ...[...CH12_MONSTERS, CH12_BOSS].map((m) => m.id),
+  'dust-mephit',
+]);
 
 const ALL_POOLS: Array<[string, EncounterEntry[]]> = [
   ['warmup', WARMUP_POOL],
@@ -63,9 +70,16 @@ describe('chapter 12 — bestiary', () => {
     expect(CH12_BOSS.ac).toBeGreaterThanOrEqual(21);
     // The heart-rite read as battle-rage: wounds stoke him rather than fell him.
     expect(CH12_BOSS.bossMechanic).toBe('battle-rage');
-    // Kit: multiattack plus a melee fire action and a ranged hurl-rock action.
+    // Boss-framework kit: a multi-action turn, a condition gate (the cut-out heart
+    // surfaced as a summoned weak-point), a telegraphed ranged hurl-rock, a melee
+    // fire action, and a half-HP phase.
     const kinds = CH12_BOSS.actions.map((a) => a.kind);
-    expect(kinds).toContain('multiattack');
+    expect(CH12_BOSS.actionsPerTurn).toBe(2);
+    expect(kinds).toContain('summon');
+    expect(CH12_BOSS.gate?.whileAddAlive).toBe('dust-mephit');
+    expect(CH12_BOSS.phases?.length ?? 0).toBeGreaterThan(0);
+    const telegraphed = CH12_BOSS.actions.some((a) => a.kind === 'attack' && !!a.telegraph);
+    expect(telegraphed).toBe(true);
     expect(kinds.filter((k) => k === 'attack').length).toBeGreaterThanOrEqual(2);
     const hasFire = CH12_BOSS.actions.some(
       (a) => a.kind === 'attack' && a.damageType === 'fire',

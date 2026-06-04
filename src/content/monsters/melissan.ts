@@ -7,13 +7,19 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * empty Throne of Bhaal, to rise as the new God of Murder. At the Throne she
  * draws on the pools of rendered essence and ascends as she is worn down.
  *
- * Apex kit, scaled clearly above every prior boss (CR 18, ~440 HP, AC 23 — the
- * biggest statblock in the game): a round-1 `paralyze` opener (the murder that
- * stops the heart mid-beat), a `summon` that calls Blood-Fiends out of the pools
- * to refill the hall, a three-strike `multiattack`, and a god-scaled scepter at
- * reach. `battle-rage` at half HP reads as the ascension itself — worn past the
- * mortal half of her, she stops fighting like a priestess and starts fighting
- * like the thing she is becoming.
+ * Apex boss-framework kit (the biggest statblock in the game — CR 18, ~440 HP):
+ *  - A round-1 `paralyze` opener (the murder that stops the heart mid-beat).
+ *  - A `summon` (Draw on the Pools): blood-fiends hauled out of the essence to
+ *    devour you — every wound they open runs the wrong way and feeds her cause.
+ *  - A `sustain` (Drink the Harvest): she pulls the gathered divinity back into
+ *    herself and knits her wounds — a self-heal you must out-race once she is low.
+ *  - A telegraphed `attack` (Scepter of the Unspoken God): the harvest made into
+ *    a tool, wound up a full turn before it falls — race it, brace it, or break
+ *    her focus to drop it uncast.
+ *  - `actionsPerTurn: 2`, rising to 3 in her half-HP ASCENDED `phase`: worn past
+ *    the mortal half of her she transforms, takes a third action, and — with the
+ *    legacy `battle-rage` — fights like the god she is becoming rather than the
+ *    priestess she was.
  */
 export const MELISSAN: Monster = MonsterSchema.parse({
   id: 'melissan',
@@ -28,6 +34,17 @@ export const MELISSAN: Monster = MonsterSchema.parse({
   passivePerception: 19,
   resistances: ['necrotic', 'psychic', 'fire', 'cold', 'radiant'],
   bossMechanic: 'battle-rage',
+  actionsPerTurn: 2,
+  phases: [
+    {
+      atHpPctBelow: 50,
+      name: 'Ascendant',
+      enterText:
+        'You wear away the last of the mortal half of her, and what is underneath stops pretending to wear a body at all. The pools at her feet stand up into her; the kind face is gone past even contempt now; and Amelyssan the Blackhearted takes her third stride into godhood mid-fight — faster than a thing with limbs should be, and no longer bothering to stay inside the shape that has limbs.',
+      actionsPerTurn: 3,
+      transform: true,
+    },
+  ],
   actions: [
     {
       kind: 'paralyze',
@@ -36,7 +53,7 @@ export const MELISSAN: Monster = MonsterSchema.parse({
       saveAbility: 'wis',
       durationRounds: 2,
       description:
-        'She lifts one open hand toward you, almost gently, the way she must once have lifted it over a thousand offerings on a thousand altars, and speaks the oldest of the dead god\'s portfolio into the muscle of you — not a wound, a verdict — and your heart simply holds, mid-beat, while she watches it with a priestess\'s mild, professional interest to see whether it will be permitted to start again.',
+        "She lifts one open hand toward you, almost gently, the way she must once have lifted it over a thousand offerings on a thousand altars, and speaks the oldest of the dead god's portfolio into the muscle of you — not a wound, a verdict — and your heart simply holds, mid-beat, while she watches it with a priestess's mild, professional interest to see whether it will be permitted to start again.",
     },
     {
       kind: 'summon',
@@ -49,11 +66,13 @@ export const MELISSAN: Monster = MonsterSchema.parse({
         'She trails her fingers in the nearest pool of essence without looking down, the way a queen reaches for a thing she has never once had to find, and the murder comes up the wrong way to her summons — a blood-fiend hauling itself out of the surface at her shoulder, already four-armed, already reaching, hers for as long as she keeps her hand in the god she is draining.',
     },
     {
-      kind: 'multiattack',
-      name: 'The Ascending Hand',
-      attacks: 3,
+      kind: 'sustain',
+      name: 'Drink the Harvest',
+      target: 'self',
+      heal: '3d10+6',
+      cooldownRounds: 2,
       description:
-        'She fights with more of herself than a body should hold, because she is no longer staying inside the one she was born to — the scepter falling in three places at once, each blow heavier than the body swinging it could account for, the divinity she is stealing already leaking out of her in the form of a reach and a speed that were never hers to have.',
+        'When you finally cost her something, she simply takes it back from the pools — closes a hand in the rendered essence of a hundred dead Children and draws a measure of it up into the wound, where it sets and seals and is hers. Every drop you have made her spend, she means to refill from the same harvest she came here to reap; out-spend the reaping, or she closes faster than you can open her.',
     },
     {
       kind: 'attack',
@@ -62,8 +81,12 @@ export const MELISSAN: Monster = MonsterSchema.parse({
       damage: '3d10+10',
       damageType: 'necrotic',
       reach: 10,
+      telegraph: {
+        chargeText:
+          'She raises the black scepter without hurry and holds it up, and the gathered essence of every death you ever died begins to run down its length and pool at the head of it — she is winding the whole harvest into one falling stroke, and you have a single breath to close, to brace, or to break her attention before it comes down.',
+      },
       description:
-        'The scepter is the harvest made into a tool — every drop of essence she has gathered fused into a single length of black regalia, and where it touches you it presses the dead god\'s whole portfolio through the contact at once: that everything dies, that she will be the one who decides it, and that your death in particular is a foregone administrative matter she is merely seeing to in person.',
+        "The scepter is the harvest made into a tool — every drop of essence she has gathered fused into a single length of black regalia, and where it touches you it presses the dead god's whole portfolio through the contact at once: that everything dies, that she will be the one who decides it, and that your death in particular is a foregone administrative matter she is merely seeing to in person.",
     },
   ],
   flavorText:

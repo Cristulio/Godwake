@@ -65,13 +65,18 @@ describe('chapter 13 — bestiary', () => {
     // A clear band above the Ch9 boss (the Hollow Pretender: 240 HP / AC 21).
     expect(ABAZIGAL.maxHp).toBeGreaterThan(240);
     expect(ABAZIGAL.ac).toBeGreaterThanOrEqual(21);
-    // Kit: a multiattack the picker falls to, a lightning-breath action, reach.
+    // Boss-framework kit: a multi-action turn, a telegraphed lightning-breath
+    // action, a frighten debuff, reach, and a half-HP phase.
     const kinds = ABAZIGAL.actions.map((a) => a.kind);
-    expect(kinds).toContain('multiattack');
+    expect(ABAZIGAL.actionsPerTurn).toBe(2);
+    expect(kinds).toContain('debuff');
+    expect(ABAZIGAL.phases?.length ?? 0).toBeGreaterThan(0);
     const lightningBreath = ABAZIGAL.actions.find(
       (a) => a.kind === 'attack' && a.damageType === 'lightning',
     );
     expect(lightningBreath).toBeDefined();
+    // The breath is the telegraphed wind-up the player races / cancels.
+    expect(lightningBreath?.kind === 'attack' && !!lightningBreath.telegraph).toBe(true);
     const hasReach = ABAZIGAL.actions.some((a) => a.kind === 'attack' && (a.reach ?? 0) >= 10);
     expect(hasReach).toBe(true);
     expect(ABAZIGAL.immunities).toContain('lightning');
