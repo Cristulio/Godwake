@@ -64,6 +64,35 @@ function fighterAt(levelUps: number): Character {
   return f;
 }
 
+function characterOfClass(classId: Character['classId']): Character {
+  return createCharacter({
+    id: `ab-${classId}`,
+    name: 'Test',
+    raceId: 'human',
+    classId,
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[0],
+      dex: STANDARD_ARRAY[2],
+      con: STANDARD_ARRAY[1],
+      int: STANDARD_ARRAY[5],
+      wis: STANDARD_ARRAY[3],
+      cha: STANDARD_ARRAY[4],
+    },
+    skillProficiencies: ['athletics', 'intimidation'],
+  });
+}
+
+function hasSpellsButton(character: Character): boolean {
+  const { container } = render(
+    <ActionBar character={character} state={playerTurnState()} {...handlers} />,
+  );
+  const present = Array.from(container.querySelectorAll('button')).some((b) =>
+    (b.textContent ?? '').includes('Spells'),
+  );
+  cleanup();
+  return present;
+}
+
 function attackLabel(character: Character): string {
   const { container } = render(
     <ActionBar character={character} state={playerTurnState()} {...handlers} />,
@@ -97,5 +126,17 @@ describe('ActionBar attack label', () => {
         expect(label).not.toContain('/');
       }
     }
+  });
+});
+
+describe('ActionBar spell button gating', () => {
+  // The manual cast UI is surfaced for every full caster (Wizard + Druid) —
+  // the Druid was previously locked out and could only cast via AUTO. Martials
+  // never get the button.
+  it('shows the SPELLS button for full casters, not for martials', () => {
+    expect(hasSpellsButton(characterOfClass('wizard'))).toBe(true);
+    expect(hasSpellsButton(characterOfClass('druid'))).toBe(true);
+    expect(hasSpellsButton(characterOfClass('fighter'))).toBe(false);
+    expect(hasSpellsButton(characterOfClass('rogue'))).toBe(false);
   });
 });

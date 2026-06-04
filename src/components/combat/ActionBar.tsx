@@ -3,7 +3,7 @@ import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
 import { maxAttacksPerAction } from '../../engine/combat/attack/playerAttack';
-import { characterHasMechanic } from '../../engine/character/derived';
+import { characterHasMechanic, isFullCaster } from '../../engine/character/derived';
 import { RAGE_ROUNDS } from '../../engine/character/actions';
 import {
   martialFlavor,
@@ -74,7 +74,10 @@ export function ActionBar({
 
   const isFighter = character.classId === 'fighter';
   const isRogue = character.classId === 'rogue';
-  const isWizard = character.classId === 'wizard';
+  // Manual spell UI is surfaced for every full caster (Wizard + Druid), not the
+  // Wizard alone — the engine (canCastSpell/castSpell, WIS- or INT-based DC, the
+  // shared slot ladder) already drives both; this is purely the UI gate.
+  const isFullCasterClass = isFullCaster(character.classId);
   const isBarbarian = character.classId === 'barbarian';
   const isRanger = character.classId === 'ranger';
   const isMonk = character.classId === 'monk';
@@ -241,7 +244,7 @@ export function ActionBar({
   const canSpells =
     playersTurn &&
     active &&
-    isWizard &&
+    isFullCasterClass &&
     knownSpells.some((id) => canCastSpell(character, id).ok);
 
   const consumableCount = character.inventory.filter((ref) => {
@@ -443,7 +446,7 @@ export function ActionBar({
           </Button>
         )}
 
-        {isWizard && (
+        {isFullCasterClass && (
           <Button
             variant={canSpells ? 'primary' : 'secondary'}
             onClick={onSpells}
