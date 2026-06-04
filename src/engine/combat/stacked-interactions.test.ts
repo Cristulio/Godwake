@@ -210,10 +210,12 @@ describe('Paralyzed player taking advantage attacks from a raging boss', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
   it('monster attack rolls with advantage and damage line shows +2 rage', () => {
-    // A still-`battle-rage` boss (the Drow Matron Mother) stands in for the
-    // mechanic: the Ch1-3 bosses now express their half-HP turn as a framework
-    // PHASE rather than the `battle-rage` flag, so they no longer fit this probe.
-    const rager = getMonster('drow-matron-mother');
+    // A still-`battle-rage` monster with a plain attack kit stands in for the
+    // mechanic. The chapter bosses now express their half-HP turn as a framework
+    // PHASE (and several carry summons/gates that preempt a round-2 attack), so
+    // they no longer fit this probe; the Avatar of Wrath keeps the flag + a clean
+    // attack, and isn't in the per-chapter boss set so content lanes won't convert it.
+    const rager = getMonster('avatar-of-wrath');
     let wizard = makeHillDwarfWizard();
     const roller = createDiceRoller(3);
     const init = createCombat({ roller, character: wizard, monsters: [{ def: rager }] });
