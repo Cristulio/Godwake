@@ -49,11 +49,15 @@ describe('chapter 6 — bestiary registration', () => {
 
   it('the boss (The Unmade) carries a strong stat block and a boss mechanic', () => {
     const boss = getMonster(CH6_BOSS_ID);
-    expect(boss.bossMechanic).toBe('battle-rage');
+    // Escalation folded from battle-rage into a half-HP enrage phase; plus the
+    // anchor condition-gate (heavy DR until the summoned anchor-mote dies).
+    expect(boss.phases?.some((p) => p.atHpPctBelow <= 50)).toBe(true);
+    expect(boss.gate).toBeDefined();
+    expect(getMonster(boss.gate!.whileAddAlive).id).toBe(boss.gate!.whileAddAlive);
     // True endgame — a clear notch above the Ch4 boss (Matron Mother: 96 HP / AC 17).
     expect(boss.maxHp).toBeGreaterThan(96);
     expect(boss.ac).toBeGreaterThanOrEqual(17);
-    // Apex kit: a round-1 paralyze opener and a multiattack the picker falls to.
+    // Apex kit: a telegraphed paralyze opener and a multiattack the picker falls to.
     const kinds = boss.actions.map((a) => a.kind);
     expect(kinds).toContain('paralyze');
     expect(kinds).toContain('multiattack');
