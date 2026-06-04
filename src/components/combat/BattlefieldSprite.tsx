@@ -1,9 +1,10 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
 import type { MonsterInstance, AttackEvent } from '../../types/combat';
-import { computeAC } from '../../engine/character/derived';
+import { computeAC, isWildShaped } from '../../engine/character/derived';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
+import { BeastPortrait } from './BeastPortrait';
 import { spriteSizeScale } from './spriteScale';
 import { FloatingDamage, resolveSpriteFloat, attackAimedAt, type FloatingDamageItem, type FloatSelf } from './FloatingDamage';
 import { MirrorImages } from './SpellEffect';
@@ -385,6 +386,11 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
                 defId={props.instance.defId}
                 className="w-full h-auto"
               />
+            ) : isWildShaped(props.character) ? (
+              // Wild Shape swaps the druid's battlefield form for a beast
+              // silhouette — purely visual; reverts when the form spends out
+              // (wildShapeRoundsRemaining → 0 on turn/createCombat reset).
+              <BeastPortrait className="w-full h-auto" />
             ) : (
               <PlayerPortrait
                 classId={props.character.classId}
