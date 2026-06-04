@@ -35,7 +35,7 @@ describe('UNLOCKS registry', () => {
     expect(Object.keys(UNLOCKS).sort()).toEqual([...FEATURE_IDS].sort());
   });
 
-  it('gates onboarding on delve count, power/gear on chapters, roster + deep Grove on renown spent', () => {
+  it('gates onboarding on delve count, power/gear on chapters, deep Grove on renown spent', () => {
     // The Grove rides the first-reincarnation trigger, not a delve count.
     expect(UNLOCKS.grove.reincarnated).toBe(true);
     expect(UNLOCKS.grove.delveCount).toBeUndefined();
@@ -53,9 +53,8 @@ describe('UNLOCKS registry', () => {
     expect(UNLOCKS['affixes-epic'].delveCount).toBeUndefined();
     expect(UNLOCKS.legendaries.delveCount).toBeUndefined();
     expect(UNLOCKS.sets.delveCount).toBeUndefined();
-    // Renown spent: the roster reveal at the first offering, the deeper Grove at 700.
-    expect(UNLOCKS['class-roster'].renownSpent).toBe(1);
-    expect(UNLOCKS['class-roster'].chaptersCleared).toBeUndefined();
+    // Renown spent: the deeper Grove at 700 (the alternate-soul bars ride the same
+    // axis via classUnlockRenown, not UNLOCKS).
     expect(UNLOCKS['grove-deep'].renownSpent).toBe(700);
     expect(UNLOCKS['grove-deep'].chaptersCleared).toBeUndefined();
   });
@@ -77,8 +76,6 @@ describe('isFeatureUnlocked', () => {
     expect(isFeatureUnlocked('affixes-epic', meta)).toBe(true); // @5 (purple)
     expect(isFeatureUnlocked('legendaries', meta)).toBe(true); // @5
     expect(isFeatureUnlocked('sets', meta)).toBe(false); // @14 (completion)
-    // The roster reveal is renown-paced now, not chapters — depth alone leaves it shut.
-    expect(isFeatureUnlocked('class-roster', meta)).toBe(false);
   });
 
   it('gear tiers open on chapter depth: blue at 3, purple at 5, never on delve count', () => {
@@ -88,12 +85,6 @@ describe('isFeatureUnlocked', () => {
     expect(isFeatureUnlocked('affixes-epic', mkMeta({ chaptersCleared: 5 }))).toBe(true);
     expect(isFeatureUnlocked('affixes-rare', mkMeta({ delveCount: 999 }))).toBe(false);
     expect(isFeatureUnlocked('affixes-epic', mkMeta({ delveCount: 999 }))).toBe(false);
-  });
-
-  it('class-roster opens on the first renown spent (the first Grove offering), not chapters', () => {
-    expect(isFeatureUnlocked('class-roster', mkMeta({ renownSpent: 0 }))).toBe(false);
-    expect(isFeatureUnlocked('class-roster', mkMeta({ renownSpent: 1 }))).toBe(true);
-    expect(isFeatureUnlocked('class-roster', mkMeta({ chaptersCleared: 14 }))).toBe(false);
   });
 
   it('a brand-new soul (delve 0, no clears) has none of the gated features except always-on elites', () => {
@@ -172,9 +163,8 @@ describe('newlyUnlockedByChapter (progression axis)', () => {
     // The old soul-swapping step: crossing chapter 2 now fires nothing — the
     // roster reveal moved onto the renown axis (the first Grove offering).
     expect(newlyUnlockedByChapter(1, 2)).toEqual([]);
-    // elite-nodes is delve-paced; class-roster + grove-deep are renown-paced.
+    // elite-nodes is delve-paced; grove-deep is renown-paced — neither fires here.
     expect(newlyUnlockedByChapter(0, 14)).not.toContain('elite-nodes');
-    expect(newlyUnlockedByChapter(0, 14)).not.toContain('class-roster');
     expect(newlyUnlockedByChapter(0, 14)).not.toContain('grove-deep');
   });
 });
@@ -346,11 +336,11 @@ describe('nextLockedFeature', () => {
       axis: 'chapter',
       threshold: 1,
     });
-    // Delve + chapter both done -> the renown axis (class-roster @1, the first offering).
+    // Delve + chapter both done -> the renown axis (grove-deep @700, the deep Grove).
     expect(nextLockedFeature(mkMeta({ delveCount: 999, chaptersCleared: 14 }))).toEqual({
-      featureId: 'class-roster',
+      featureId: 'grove-deep',
       axis: 'renown',
-      threshold: 1,
+      threshold: 700,
     });
     expect(
       nextLockedFeature(

@@ -52,9 +52,11 @@ describe('LORE_BEATS registry invariants', () => {
     expect(irenicusIdx).toBeGreaterThan(imoenIdx);
   });
 
-  it('the Irenicus reveal is gated behind clearing Chapter 2 (BG2-equivalent point)', () => {
+  it('the Irenicus reveal lands just before the Ch11 confrontation (after clearing Ch10)', () => {
     const reveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
-    expect(reveal.minChapters).toBe(2);
+    // Withheld until Suldanessellar (Ch10) is cleared — one descent shy of the
+    // Chapter 11 fight where the boss puts a face to the name.
+    expect(reveal.minChapters).toBe(10);
     // ...and Imoen delivers it (his name learned through her, not from him).
     expect(reveal.speaker).toBe('imoen');
     // The reveal line actually states the name — that IS the reveal moment.
@@ -97,10 +99,10 @@ describe('nextLoreBeat — strict in-order, one at a time', () => {
 });
 
 describe('nextLoreBeat — name reveal gating', () => {
-  it('does not surface the Irenicus reveal before Chapter 2 is cleared', () => {
-    // Maxed delves, only one chapter cleared: the arc advances but never reaches
-    // the post-Ch2 reveal beat.
-    const played = walk(meta({ delveCount: 999, chaptersCleared: 1 }));
+  it('does not surface the Irenicus reveal before Suldanessellar (Chapter 10) is cleared', () => {
+    // Maxed delves, nine chapters cleared: the arc advances deep into his machine
+    // but never reaches the pre-confrontation reveal beat.
+    const played = walk(meta({ delveCount: 999, chaptersCleared: 9 }));
     const irenicusReveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
     expect(played).not.toContain(irenicusReveal.id);
   });
@@ -111,7 +113,7 @@ describe('nextLoreBeat — name reveal gating', () => {
     expect(played).toContain(imoenReveal.id);
   });
 
-  it('reveals Irenicus once Chapter 2 is cleared and the arc is walked', () => {
+  it('reveals Irenicus once the arc is walked into the endgame (Ch10+)', () => {
     const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
     const irenicusReveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
     expect(played).toContain(irenicusReveal.id);

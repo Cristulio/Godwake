@@ -195,31 +195,32 @@ describe('class reveals fire on RENOWN SPENT (a Grove purchase), not on a descen
     });
   }
 
-  it('the first Grove offering surfaces the soul-swapping explainer AND names the first alternate soul', () => {
+  it('the first Grove offering names the first alternate soul — and fires NO generic soul-swap notice', () => {
     primeGroveSoul();
     const res = useGameStore.getState().purchaseUpgrade('pilgrims-boots'); // 25 renown — clears the >0 bar
     expect(res.ok).toBe(true);
     expect(useMetaStore.getState().renownSpent).toBe(25);
-    // Combined, first time only: the 'class-roster' explainer leads, then the named
-    // soul (Hunter for a fighter origin). On the general queue (pops at the Grove).
-    expect(useScreenStore.getState().tutorialQueue).toEqual(['class-roster', 'ranger']);
+    // Only the named soul surfaces (Hunter for a fighter origin) on the general queue
+    // (pops at the Grove). The old 'class-roster' soul-swapping explainer is gone.
+    expect(useScreenStore.getState().tutorialQueue).toEqual(['ranger']);
+    expect(useScreenStore.getState().tutorialQueue).not.toContain('class-roster');
     expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
   });
 
-  it('the soul-swapping explainer rides only the FIRST unlock — later purchases just name the soul', () => {
-    // class-roster already seen, the Hunter already open; this purchase crosses the
-    // Mage bar (@100). Only the named soul surfaces — no second explainer.
-    primeGroveSoul(99, ['class-roster', 'ranger']);
+  it('a later unlock just names the new soul (the Hunter already open)', () => {
+    // The Hunter already surfaced; this purchase crosses the Mage bar (@100). Only
+    // the named soul surfaces.
+    primeGroveSoul(99, ['ranger']);
     const res = useGameStore.getState().purchaseUpgrade('pilgrims-boots'); // 99 -> 124, crosses wizard @100
     expect(res.ok).toBe(true);
     expect(useScreenStore.getState().tutorialQueue).toEqual(['wizard']);
   });
 
-  it('does not re-surface a soul already in seenTutorials (and no lone explainer without a soul)', () => {
+  it('does not re-surface a soul already in seenTutorials, and never fires the removed soul-swap notice', () => {
     primeGroveSoul(0, ['ranger']);
     useGameStore.getState().purchaseUpgrade('pilgrims-boots');
     expect(useScreenStore.getState().tutorialQueue).not.toContain('ranger');
-    // The explainer only ever rides WITH a surfacing soul — none here, so none fires.
+    // The generic 'class-roster' soul-swapping notice was removed — it never fires.
     expect(useScreenStore.getState().tutorialQueue).not.toContain('class-roster');
   });
 
