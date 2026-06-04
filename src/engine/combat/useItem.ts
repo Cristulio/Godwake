@@ -7,6 +7,7 @@ import {
   combatResult,
   patchActionEconomy,
   patchHp,
+  patchResources,
   type CombatActionResult,
 } from './types';
 import { appendLog } from './log';
@@ -57,6 +58,20 @@ export function useConsumable(
     const actuallyHealed = after - before;
     nextCharacter = patchHp(nextCharacter, { current: after });
     logText += ` Rolls ${item.healDice} = ${heal.total} → +${actuallyHealed} HP.`;
+
+    // Potion of Vitality regen tail: beyond the immediate knit above, bank a
+    // slow restore for the next couple of player turns (ticked in turn.ts).
+    // Rolled once here and applied flat each tick (mirrors Regrowth). Writes its
+    // own resource fields — never Mending's stacks or Regrowth's counter — so
+    // drinking it leaves any other active regen untouched.
+    if (item.regenPerTurnDice && item.regenTurns) {
+      const perTurn = roller.roll(item.regenPerTurnDice).total;
+      nextCharacter = patchResources(nextCharacter, {
+        vitalityRegenHealPerTurn: perTurn,
+        vitalityRegenTurnsRemaining: item.regenTurns,
+      });
+      logText += ` A slow vitality settles in — about ${perTurn} HP at the start of each of the next ${item.regenTurns} turns.`;
+    }
   } else if (ref.itemId === 'antitoxin') {
     // Per-combat poison immunity. Mirrors the Iron Stomach quirk's
     // poisonImmune path in applyDamage so the existing immune gate

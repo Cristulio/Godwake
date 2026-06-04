@@ -43,12 +43,14 @@ export const POTION_OF_HEROISM: Consumable = ConsumableSchema.parse({
   kind: 'consumable',
   name: 'Potion of Vitality',
   effect: 'heal',
-  healDice: '3d6+6',
+  healDice: '1d4+2',
+  regenPerTurnDice: '1d6+3',
+  regenTurns: 2,
   cost: 180,
   rarity: 'uncommon',
   actionCost: 'bonus',
   description:
-    'A pale gold liquid that smells of beaten copper and pipe-smoke. A deep restorative — one swallow knits torn flesh and steadies the blood. Restores 3d6+6 hit points. A bonus action.',
+    'A pale gold tonic that smells of beaten copper and pipe-smoke. It mends slow — a first thin warmth as it goes down, then the blood keeps knitting on its own over the moments that follow as the draught settles deep. Sipped, not slammed — a bonus action.',
 });
 
 export const ALL_CONSUMABLES: Consumable[] = [
