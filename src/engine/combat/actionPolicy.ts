@@ -19,7 +19,7 @@ import { getBlessing } from '../../content/blessings';
 import type { Blessing, BlessingModifiers } from '../../schemas/blessing';
 import { playerAttack } from './attack';
 import { castSpell, slotsAt } from './spells';
-import { spellDamageMultiplier, spellAcquisitionLevel } from './spells/scaling';
+import { spellDamageMultiplier } from './spells/scaling';
 import { useConsumable } from './useItem';
 import { useSecondWind } from './secondWind';
 import { useActionSurge } from './actionSurge';
@@ -337,7 +337,7 @@ function fireBoltFullAvg(character: Character): number {
   const intMod = abilityModifier(effectiveAbilityScores(character).int);
   // Track Fire Bolt's parametric scaling so the bot keeps choosing cantrip vs
   // slot accurately as the cantrip grows. Ignores the half-on-save downside (an upper estimate).
-  return 5.5 * spellDamageMultiplier(character, spellAcquisitionLevel(0)) + intMod;
+  return 5.5 * spellDamageMultiplier(character, 0) + intMod;
 }
 
 // ---- Martial resource reads ------------------------------------------------
@@ -907,7 +907,7 @@ function druidHasOffensiveSlot(character: Character): boolean {
 }
 
 function produceFlameFullAvg(character: Character): number {
-  return 5.5 * spellDamageMultiplier(character, spellAcquisitionLevel(0)) + spellcastingMod(character);
+  return 5.5 * spellDamageMultiplier(character, 0) + spellcastingMod(character);
 }
 
 /**
