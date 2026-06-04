@@ -90,6 +90,14 @@ export const ConsumableSchema = z.object({
   effect: z.enum(['heal', 'buff', 'utility']),
   /** Heal expression like "2d4+2". Only present if effect='heal'. */
   healDice: DiceExpressionStringSchema.optional(),
+  /**
+   * Regen tail (Potion of Vitality). On top of the immediate `healDice`, knit
+   * `regenPerTurnDice` HP at the start of each of the next `regenTurns` player
+   * turns — rolled once on drink and applied flat each tick (mirrors the Druid's
+   * Regrowth HOT). Present together or not at all; absent = a plain one-shot heal.
+   */
+  regenPerTurnDice: DiceExpressionStringSchema.optional(),
+  regenTurns: z.number().int().positive().optional(),
   /** Cost in gp when bought. */
   cost: z.number(),
   rarity: RaritySchema,

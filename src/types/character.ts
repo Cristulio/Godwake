@@ -139,6 +139,17 @@ export interface ClassResources {
   regrowthTurnsRemaining?: number;
   regrowthHealPerTurn?: number;
   /**
+   * Potion of Vitality (regen draught): player turns of healing left, and the HP
+   * knit at the start of each. The drink heals once immediately (the potion's
+   * `healDice`), then ticks for {@link vitalityRegenTurnsRemaining} more
+   * player-turn-starts (turn.ts) for {@link vitalityRegenHealPerTurn} each. Runs
+   * independently of the Druid's Regrowth and the Mending affix — all three can
+   * be live at once. Suppressed (but not consumed) while raging, like Mending.
+   * Both reset to 0 at combat start (createCombat), for every class.
+   */
+  vitalityRegenTurnsRemaining?: number;
+  vitalityRegenHealPerTurn?: number;
+  /**
    * Druid (Spirit Beast): player turns the summoned companion keeps mauling,
    * and the damage it deals to a live foe at the start of each. The cast strikes
    * once immediately, then ticks for {@link spiritBeastTurnsRemaining} more

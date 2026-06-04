@@ -315,6 +315,32 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     nextCharacter = patchResources(nextCharacter, { regrowthTurnsRemaining: remaining });
   }
 
+  // Potion of Vitality (regen draught): knit the banked amount at the start of
+  // the player's turn for as many ticks as the drink granted, then expire. Runs
+  // alongside Mending and Regrowth without touching their counters. Suppressed
+  // while raging — Rage is the no-heal tradeoff (consistent with Mending and
+  // lifesteal) — and the ticks PAUSE rather than burn there, so they resume once
+  // the fury passes. A tick at full HP still counts down (runs on schedule).
+  if (
+    order[nextIndex] === 'player' &&
+    (nextCharacter.resources.vitalityRegenTurnsRemaining ?? 0) > 0 &&
+    !isRaging(nextCharacter)
+  ) {
+    const heal = nextCharacter.resources.vitalityRegenHealPerTurn ?? 0;
+    const remaining = (nextCharacter.resources.vitalityRegenTurnsRemaining ?? 0) - 1;
+    if (heal > 0 && nextCharacter.hp.current > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
+      const before = nextCharacter.hp.current;
+      const after = Math.min(nextCharacter.hp.max, before + heal);
+      nextCharacter = patchHp(nextCharacter, { current: after });
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'system',
+        text: `The vitality draught knits ${after - before} HP into ${nextCharacter.name}.${remaining > 0 ? ` (${remaining} turns remaining)` : ''}`,
+      });
+    }
+    nextCharacter = patchResources(nextCharacter, { vitalityRegenTurnsRemaining: remaining });
+  }
+
   // Bleed DOT: tick each bleeding monster at the start of the player's turn.
   if (order[nextIndex] === 'player') {
     for (const combatant of nextState.combatants) {

@@ -137,6 +137,15 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     nextCharacter = { ...nextCharacter, nextSaveAdvantage: false };
   }
 
+  // Potion of Vitality leaves a regen on resources that ANY class can carry, so
+  // clear stale ticks here for everyone — the Druid HOT/DOT resets below are
+  // class-gated and would otherwise let a fighter's half-spent draught bleed
+  // into the next fight.
+  nextCharacter = patchResources(nextCharacter, {
+    vitalityRegenTurnsRemaining: 0,
+    vitalityRegenHealPerTurn: 0,
+  });
+
   // Ascension scaling: HP rides on the (copied) def so spawnMonsterInstance
   // seeds the right max HP; the per-attack damage bonus is stamped on the
   // instance because monsterAttack re-derives its damage from the canonical
