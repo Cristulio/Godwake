@@ -174,6 +174,24 @@ export interface SaveEvent {
 }
 
 /**
+ * The element a damage spell carries — drives the colour ramp + particle style
+ * of the shape components (`spell-bolt` / `spell-burst` / `spell-fork` /
+ * `spell-drain`). A subset of the full DamageType enum: the elemental types a
+ * spell can deal. Threaded onto the VFX event so a cold cone and a lightning
+ * fork never share a palette.
+ */
+export type SpellElement =
+  | 'fire'
+  | 'cold'
+  | 'lightning'
+  | 'thunder'
+  | 'acid'
+  | 'poison'
+  | 'necrotic'
+  | 'radiant'
+  | 'force';
+
+/**
  * Canonical combat-VFX kind union — every bespoke battlefield effect the
  * `SpellEffectLayer` can render. Despite the legacy `SpellEffect*` naming this
  * is no longer spell-only: it also carries weapon swings and class-ability
@@ -183,14 +201,18 @@ export interface SaveEvent {
 export type SpellEffectKind =
   // Spell casts (the original VFX bus).
   | 'magic-missile'
-  | 'fire-bolt'
   | 'burning-hands'
   | 'shield'
   | 'mage-armor'
   | 'hold-person'
   | 'misty-step'
-  | 'fireball'
-  | 'lightning-bolt'
+  // === spell-vfx-by-element === element-aware SHAPE kinds. Every damage cast
+  // routes to one of these and carries an `element` (see SpellEffectEvent); the
+  // shape × element pair drives the look, so the per-spell hardcoding collapses.
+  | 'spell-bolt' // single-target projectile: fire-bolt, scorching-ray, force-lance, void-ray, dissolution, wither, unmake
+  | 'spell-burst' // AoE burst/cone: fireball, rime-blast, glacial-cone, ice-storm, avalanche, sunfire/fire-storm, cataclysm
+  | 'spell-fork' // chain/fork lightning: lightning-bolt, call-lightning, stormcrash
+  | 'spell-drain' // necrotic life-thread, target → caster: vampiric-touch, exsanguinate
   // Weapon attacks (feat/vfx-combat).
   | 'slash'
   | 'pierce'
@@ -233,6 +255,13 @@ export interface SpellEffectEvent {
   attackerId: string;
   /** Combatant id of the target. Undefined for self-effects (shield, rage, second-wind). */
   targetId?: string;
+  /**
+   * Damage element for the shape kinds (`spell-bolt` / `spell-burst` /
+   * `spell-fork` / `spell-drain`) — picks the colour ramp + particle style.
+   * Absent for non-elemental effects (weapon swings, buffs, control), which
+   * carry their look in the kind itself.
+   */
+  element?: SpellElement;
 }
 
 export interface CombatState {

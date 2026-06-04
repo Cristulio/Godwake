@@ -15,6 +15,7 @@ import {
   markActionUsed,
   nextLogId,
   spellDamageBonus,
+  spellElement,
 } from './helpers';
 import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
 
@@ -48,7 +49,7 @@ function castDrain(
     kind: 'roll',
     text: opts.strikeLine(nextCharacter.name, target.instance.displayName, dealt),
   });
-  nextState = attachSpellEffect(nextState, 'fire-bolt', 'player', targetId);
+  nextState = attachSpellEffect(nextState, 'spell-drain', 'player', targetId, spellElement(ctx.spellId));
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;

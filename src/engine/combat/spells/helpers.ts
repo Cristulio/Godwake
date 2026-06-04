@@ -4,6 +4,7 @@ import type {
   CombatState,
   MonsterCombatant,
   SpellEffectKind,
+  SpellElement,
 } from '../../../types/combat';
 import { getSpell } from '../../../content/spells';
 import { getMonster } from '../../../content/monsters';
@@ -94,8 +95,33 @@ export function attachSpellEffect(
   kind: SpellEffectKind,
   attackerId: string,
   targetId?: string,
+  element?: SpellElement,
 ): CombatState {
-  return attachCombatVfx(state, kind, attackerId, targetId);
+  return attachCombatVfx(state, kind, attackerId, targetId, element);
+}
+
+const SPELL_ELEMENTS: ReadonlySet<string> = new Set<SpellElement>([
+  'fire',
+  'cold',
+  'lightning',
+  'thunder',
+  'acid',
+  'poison',
+  'necrotic',
+  'radiant',
+  'force',
+]);
+
+/**
+ * The VFX element for a spell, read off its content `damageType`. Returns
+ * undefined for non-damage spells (no element) — those route to their own
+ * bespoke effects rather than a shape kind, so the shape components never see
+ * a missing palette. Lets every damage handler emit an element-correct shape
+ * straight from the canonical content, no per-spell hardcoding.
+ */
+export function spellElement(spellId: string): SpellElement | undefined {
+  const dt = getSpell(spellId).damageType;
+  return dt && SPELL_ELEMENTS.has(dt) ? (dt as SpellElement) : undefined;
 }
 
 /**

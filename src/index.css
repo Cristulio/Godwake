@@ -455,6 +455,39 @@ img, svg.pixel {
 }
 .animate-flame-trail { animation: godwake-flame-trail 360ms ease-out forwards; }
 
+/* === spell-vfx-by-element === element-aware shape motion. The projectile
+   (spell-bolt) reuses .animate-firebolt-arc + .animate-flame-trail above; the
+   drain (spell-drain) reuses the enemy .animate-drain-* set. These three cover
+   the burst bloom/ring (spell-burst) and the fork flicker (spell-fork). */
+
+/* Burst: bright core/flare bloom across the enemy line */
+@keyframes godwake-spell-bloom {
+  0% { opacity: 0; transform: scale(0.3); }
+  22% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+.animate-spell-bloom { animation: godwake-spell-bloom 540ms ease-out forwards; }
+
+/* Burst: expanding shock ring */
+@keyframes godwake-spell-ring {
+  0% { opacity: 0; transform: scale(0.2); }
+  18% { opacity: 0.9; }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+.animate-spell-ring { animation: godwake-spell-ring 560ms cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+
+/* Fork: the arc snaps in, crackles (opacity flicker, no travel), and is gone */
+@keyframes godwake-spell-fork {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  24% { opacity: 0.4; }
+  40% { opacity: 1; }
+  60% { opacity: 0.7; }
+  80% { opacity: 0.92; }
+  100% { opacity: 0; }
+}
+.animate-spell-fork { animation: godwake-spell-fork 500ms ease-out forwards; }
+
 /* Burning Hands cone — in 100ms, hold 300ms, out 200ms */
 @keyframes godwake-burning-hands {
   0% { opacity: 0; transform: scale(0.5); }
@@ -1134,6 +1167,29 @@ img, svg.pixel {
     animation: none !important;
     opacity: 0.2;
   }
+  /* Element spell shapes settle in place — the projectile flashes at the target
+     instead of arcing across, and the burst bloom/ring fade without expanding.
+     The fork (.animate-spell-fork) is opacity-only already, so it needs no
+     override. Informational colour still reads; only the travel/scale is cut. */
+  .animate-firebolt-arc {
+    animation: godwake-spell-arc-rm 360ms ease-out forwards !important;
+  }
+  .animate-spell-bloom,
+  .animate-spell-ring {
+    animation: godwake-spell-settle 360ms ease-out forwards !important;
+  }
+}
+
+@keyframes godwake-spell-arc-rm {
+  0% { transform: translate(var(--dx), var(--dy)) scale(1.1); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1.3); opacity: 0; }
+}
+
+@keyframes godwake-spell-settle {
+  0% { opacity: 0; transform: scale(1); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1); }
 }
 
 @keyframes godwake-spark-fade {

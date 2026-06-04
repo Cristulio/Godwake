@@ -13,6 +13,7 @@ import {
   evaluateCombatEndFull,
   markActionUsed,
   nextLogId,
+  spellElement,
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
@@ -37,7 +38,7 @@ export function castFireball(ctx: CastSpellContext): CastResult {
     text: `${nextCharacter.name} flicks an ember — it blooms into a roar of flame. ${damageRoll.rolls.join('+')} = ${fullDmg} fire${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half; failures ignite.`,
   });
 
-  nextState = attachSpellEffect(nextState, 'fireball', 'player', aliveMonsters[0]?.id);
+  nextState = attachSpellEffect(nextState, 'spell-burst', 'player', aliveMonsters[0]?.id, spellElement(ctx.spellId));
 
   const failedIds = new Set<string>();
 
