@@ -34,6 +34,34 @@ export function liveMonsters(state: CombatState): MonsterCombatant[] {
   );
 }
 
+/**
+ * boss-framework: the action list the picker chooses from, factoring entered
+ * phases. A phase can extend (append) or replace the base action list; phases
+ * are re-folded from the canonical def each call (only the entered indices are
+ * stored on the instance), so the pool stays light and never drifts. A monster
+ * with no phases returns its def actions unchanged.
+ */
+export function effectiveMonsterActions(def: Monster, instance: MonsterInstance): MonsterAction[] {
+  const entered = instance.phasesEntered;
+  if (!entered?.length || !def.phases?.length) return def.actions;
+  let actions = def.actions;
+  for (const idx of entered) {
+    const phase = def.phases[idx];
+    if (!phase?.addActions?.length) continue;
+    actions = phase.replaceActions ? phase.addActions : [...actions, ...phase.addActions];
+  }
+  return actions;
+}
+
+/**
+ * boss-framework: how many actions this monster resolves on its turn. The
+ * instance value (seeded from the def at spawn, possibly raised by a phase) wins;
+ * falls back to the def then to 1 so every ordinary monster acts exactly once.
+ */
+export function effectiveActionsPerTurn(def: Monster, instance: MonsterInstance): number {
+  return Math.max(1, instance.actionsPerTurn ?? def.actionsPerTurn ?? 1);
+}
+
 function specialOnCooldown(
   instance: MonsterInstance,
   name: string,
@@ -142,7 +170,10 @@ function attackDamageRange(
 ): { min: number; max: number } {
   const expr = parseDiceExpression(action.damage);
   const rage = instance.bossRageActive ? 2 : 0;
-  const flat = expr.modifier + (instance.bonusDamage ?? 0) + rage;
+  // boss-framework: an entered enrage phase adds flat damage; fold it in so the
+  // telegraphed range stays honest once the boss has shifted.
+  const flat =
+    expr.modifier + (instance.bonusDamage ?? 0) + (instance.phaseDamageBonus ?? 0) + rage;
   return {
     min: Math.max(1, expr.count + flat),
     max: Math.max(1, expr.count * expr.die + flat),
@@ -167,7 +198,9 @@ function buildMonsterIntent(
       };
     }
     case 'multiattack': {
-      const swing = def.actions.find((a): a is MonsterAttack => a.kind === 'attack');
+      const swing = effectiveMonsterActions(def, instance).find(
+        (a): a is MonsterAttack => a.kind === 'attack',
+      );
       const range = swing ? attackDamageRange(swing, instance) : undefined;
       return {
         ...base,
@@ -188,6 +221,19 @@ function buildMonsterIntent(
   }
 }
 
+/**
+ * boss-framework: a windup telegraph. `imminent` distinguishes the charged
+ * special that RESOLVES on the coming monster turn (the reactive window) from
+ * one the boss is only just beginning to wind up.
+ */
+function windupIntent(
+  actionKind: MonsterAction['kind'],
+  actionName: string,
+  imminent: boolean,
+): MonsterIntent {
+  return { kind: 'windup', actionKind, actionName, imminent };
+}
+
 /** Choose the monster's next action and package it as a display intent. */
 export function selectMonsterIntent(
   instance: MonsterInstance,
@@ -195,7 +241,24 @@ export function selectMonsterIntent(
   character: Readonly<Character>,
 ): MonsterIntent {
   const def = getMonster(instance.defId);
-  const action = pickMonsterAction(def.actions, instance, state, character);
+  // boss-framework: a charged special outranks any fresh pick — it WILL resolve
+  // on the monster's next turn, so the badge reads it as the incoming threat.
+  if (instance.pendingTelegraph) {
+    return windupIntent(
+      instance.pendingTelegraph.actionKind,
+      instance.pendingTelegraph.actionName,
+      true,
+    );
+  }
+  const action = pickMonsterAction(
+    effectiveMonsterActions(def, instance),
+    instance,
+    state,
+    character,
+  );
+  // A telegraphed action the picker just chose will spend the coming turn
+  // CHARGING (not landing) — surface that lighter "winding up" read.
+  if (action.telegraph) return windupIntent(action.kind, action.name, false);
   return buildMonsterIntent(action, instance, def);
 }
 
@@ -211,14 +274,15 @@ export function resolveIntentAction(
   state: CombatState,
   character: Readonly<Character>,
 ): MonsterAction {
+  const actions = effectiveMonsterActions(def, instance);
   const intent = instance.intent;
   if (intent) {
-    const found = def.actions.find(
+    const found = actions.find(
       (a) => a.kind === intent.actionKind && a.name === intent.actionName,
     );
     if (found) return found;
   }
-  return pickMonsterAction(def.actions, instance, state, character);
+  return pickMonsterAction(actions, instance, state, character);
 }
 
 function intentsEqual(
@@ -234,7 +298,10 @@ function intentsEqual(
     a.damageMin === b.damageMin &&
     a.damageMax === b.damageMax &&
     a.hits === b.hits &&
-    a.condition === b.condition
+    a.condition === b.condition &&
+    // boss-framework: a windup flipping charging→imminent must re-render the
+    // badge even though every other field is identical.
+    a.imminent === b.imminent
   );
 }
 

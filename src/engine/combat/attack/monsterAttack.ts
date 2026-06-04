@@ -12,6 +12,7 @@ import type {
   SpellEffectKind,
 } from '../../../types/combat';
 import type {
+  Monster,
   MonsterAction,
   MonsterAttack,
   MonsterDebuff,
@@ -37,8 +38,11 @@ import {
 } from '../playerConditions';
 import { spawnMonsterInstance } from '../createCombat';
 import {
+  effectiveActionsPerTurn,
+  effectiveMonsterActions,
   liveMonsters,
   pickAllyTarget,
+  pickMonsterAction,
   resolveIntentAction,
   selectMonsterIntent,
 } from './monsterIntent';
@@ -74,6 +78,13 @@ function patchMonsterInstance(
       c.id === id && c.kind === 'monster' ? { ...c, instance: fn(c.instance) } : c,
     ),
   };
+}
+
+function monsterInstanceOf(state: CombatState, id: string): MonsterInstance | undefined {
+  const c = state.combatants.find(
+    (x): x is MonsterCombatant => x.id === id && x.kind === 'monster',
+  );
+  return c?.instance;
 }
 
 /**
@@ -114,9 +125,131 @@ function debuffEffectKind(condition: ConditionName): SpellEffectKind | undefined
 }
 
 /**
+ * boss-framework: evaluate HP-threshold phase transitions at the boss's turn
+ * start. Each phase fires AT MOST once, the first turn the boss is at or below
+ * its `atHpPctBelow` threshold; on entry it can raise actions-per-turn, enrage
+ * (flat damage and/or an AC swing), and flip the `transformed` flag. Phase-added
+ * actions are re-derived from the def via the entered-index list, so only the
+ * indices are stored here. A monster with no `phases` is a no-op pass-through.
+ */
+function applyPhaseTransitions(
+  state: CombatState,
+  attackerId: string,
+  def: Monster,
+): CombatState {
+  if (!def.phases?.length) return state;
+  let s = state;
+  for (let idx = 0; idx < def.phases.length; idx++) {
+    const inst = monsterInstanceOf(s, attackerId);
+    if (!inst || inst.hp.current <= 0) break;
+    if (inst.phasesEntered?.includes(idx)) continue;
+    const phase = def.phases[idx];
+    // Enter when current HP is at or below the threshold percent of max.
+    if (inst.hp.current * 100 > phase.atHpPctBelow * inst.hp.max) continue;
+    s = patchMonsterInstance(s, attackerId, (i) => {
+      const entered = [...(i.phasesEntered ?? []), idx];
+      const apt = Math.max(
+        i.actionsPerTurn ?? def.actionsPerTurn ?? 1,
+        phase.actionsPerTurn ?? 1,
+      );
+      const phaseDamageBonus = (i.phaseDamageBonus ?? 0) + (phase.bonusDamage ?? 0);
+      const ac = phase.acDelta ? Math.max(1, i.ac + phase.acDelta) : i.ac;
+      return {
+        ...i,
+        phasesEntered: entered,
+        actionsPerTurn: apt,
+        ac,
+        ...(phaseDamageBonus !== 0 ? { phaseDamageBonus } : {}),
+        ...(phase.transform ? { transformed: true } : {}),
+      };
+    });
+    const label = phase.name ? ` — ${phase.name}` : '';
+    s = appendLog(s, {
+      id: nextLogId(s),
+      kind: 'system',
+      text: phase.enterText ?? `${inst.displayName}${label} surges with fresh fury.`,
+    });
+    s = attachEnemyEffect(s, 'enemy-frenzy', attackerId);
+  }
+  return s;
+}
+
+/**
+ * boss-framework: begin charging a telegraphed special. No effect lands this
+ * turn — the monster winds up, the charge is logged + flashed, and a pending
+ * marker is parked on the instance to resolve on its next turn. Winding up is
+ * full focus, so the caller ends the monster's turn here.
+ */
+function beginTelegraphCharge(
+  state: CombatState,
+  attackerId: string,
+  displayName: string,
+  action: MonsterAction,
+): CombatState {
+  let s = patchMonsterInstance(state, attackerId, (i) => ({
+    ...i,
+    pendingTelegraph: {
+      actionKind: action.kind,
+      actionName: action.name,
+      resolveOnRound: state.round + (action.telegraph?.windUpRounds ?? 1),
+    },
+  }));
+  s = appendLog(s, {
+    id: nextLogId(s),
+    kind: 'system',
+    text:
+      action.telegraph?.chargeText ??
+      `${displayName} draws itself up, channeling ${action.name} — a devastating blow lands next turn.`,
+  });
+  return attachEnemyEffect(s, 'enemy-frenzy', attackerId);
+}
+
+/** boss-framework: clear the pending charge and announce the special as it lands. */
+function clearTelegraphAndAnnounce(
+  state: CombatState,
+  attackerId: string,
+  ref: NonNullable<MonsterInstance['pendingTelegraph']>,
+): CombatState {
+  const inst = monsterInstanceOf(state, attackerId);
+  const s = patchMonsterInstance(state, attackerId, (i) => ({
+    ...i,
+    pendingTelegraph: undefined,
+  }));
+  return appendLog(s, {
+    id: nextLogId(s),
+    kind: 'system',
+    text: `${inst?.displayName ?? 'The enemy'} unleashes the charged ${ref.actionName}!`,
+  });
+}
+
+/**
+ * boss-framework: cancel a charging special when the monster loses its turn to
+ * hard control (paralyze / stun / knockdown). The wind-up collapses uncast — the
+ * payoff for shutting the boss down in its reactive window.
+ */
+function cancelChargeIfAny(state: CombatState, attackerId: string): CombatState {
+  const inst = monsterInstanceOf(state, attackerId);
+  const pending = inst?.pendingTelegraph;
+  if (!inst || !pending) return state;
+  const cleared = patchMonsterInstance(state, attackerId, (i) => ({
+    ...i,
+    pendingTelegraph: undefined,
+  }));
+  return appendLog(cleared, {
+    id: nextLogId(cleared),
+    kind: 'system',
+    text: `${inst.displayName} loses focus — the building ${pending.actionName} collapses, uncast.`,
+  });
+}
+
+/**
  * Monster takes its turn. Picks an action (the monster-side AI) and resolves
  * it, then centrally marks the action used and evaluates combat end. Half-pure:
  * returns new state + character, never mutates the inputs.
+ *
+ * boss-framework: a turn now resolves `actionsPerTurn` actions in sequence
+ * (default 1 — identical to before); HP-threshold phases are evaluated up front;
+ * a telegraphed action spends the turn charging and resolves on the next.
  */
 export function monsterAttack(
   ctx: AttackContext,
@@ -130,21 +263,20 @@ export function monsterAttack(
   // and lose the action. No save; the fury put it down.
   if ((attacker.instance.staggeredTurns ?? 0) > 0) {
     const remaining = (attacker.instance.staggeredTurns ?? 0) - 1;
-    return combatResult(
-      appendLog(
-        patchMonsterInstance(state, attackerId, (inst) => ({
-          ...inst,
-          staggeredTurns: remaining,
-          actionEconomy: { ...inst.actionEconomy, actionUsed: true },
-        })),
-        {
-          id: nextLogId(state),
-          kind: 'system',
-          text: `${attacker.instance.displayName} is knocked down — the turn is lost.`,
-        },
-      ),
-      character,
+    let lostState = appendLog(
+      patchMonsterInstance(state, attackerId, (inst) => ({
+        ...inst,
+        staggeredTurns: remaining,
+        actionEconomy: { ...inst.actionEconomy, actionUsed: true },
+      })),
+      {
+        id: nextLogId(state),
+        kind: 'system',
+        text: `${attacker.instance.displayName} is knocked down — the turn is lost.`,
+      },
     );
+    lostState = cancelChargeIfAny(lostState, attackerId);
+    return combatResult(lostState, character);
   }
 
   // Paralyzed monster: tick down its own duration and lose the action. No save
@@ -160,23 +292,22 @@ export function monsterAttack(
             ? { ...c, duration: { kind: 'rounds' as const, value: next } }
             : c,
         );
-    return combatResult(
-      appendLog(
-        patchMonsterInstance(state, attackerId, (inst) => ({
-          ...inst,
-          conditions: updatedConditions,
-          actionEconomy: { ...inst.actionEconomy, actionUsed: true },
-        })),
-        {
-          id: nextLogId(state),
-          kind: 'system',
-          text: expired
-            ? `${attacker.instance.displayName} shakes off the binding.`
-            : `${attacker.instance.displayName} is paralyzed — the turn is lost.`,
-        },
-      ),
-      character,
+    let lostState = appendLog(
+      patchMonsterInstance(state, attackerId, (inst) => ({
+        ...inst,
+        conditions: updatedConditions,
+        actionEconomy: { ...inst.actionEconomy, actionUsed: true },
+      })),
+      {
+        id: nextLogId(state),
+        kind: 'system',
+        text: expired
+          ? `${attacker.instance.displayName} shakes off the binding.`
+          : `${attacker.instance.displayName} is paralyzed — the turn is lost.`,
+      },
     );
+    lostState = cancelChargeIfAny(lostState, attackerId);
+    return combatResult(lostState, character);
   }
 
   // Restrained (Druid Entangle): grasping roots hold the foe fast — tick its own
@@ -194,43 +325,114 @@ export function monsterAttack(
             ? { ...c, duration: { kind: 'rounds' as const, value: next } }
             : c,
         );
-    return combatResult(
-      appendLog(
-        patchMonsterInstance(state, attackerId, (inst) => ({
-          ...inst,
-          conditions: updatedConditions,
-          actionEconomy: { ...inst.actionEconomy, actionUsed: true },
-        })),
-        {
-          id: nextLogId(state),
-          kind: 'system',
-          text: expired
-            ? `${attacker.instance.displayName} wrenches free of the grasping roots — the turn is lost.`
-            : `${attacker.instance.displayName} is held fast by roots — the turn is lost.`,
-        },
-      ),
-      character,
+    let lostState = appendLog(
+      patchMonsterInstance(state, attackerId, (inst) => ({
+        ...inst,
+        conditions: updatedConditions,
+        actionEconomy: { ...inst.actionEconomy, actionUsed: true },
+      })),
+      {
+        id: nextLogId(state),
+        kind: 'system',
+        text: expired
+          ? `${attacker.instance.displayName} wrenches free of the grasping roots — the turn is lost.`
+          : `${attacker.instance.displayName} is held fast by roots — the turn is lost.`,
+      },
     );
+    lostState = cancelChargeIfAny(lostState, attackerId);
+    return combatResult(lostState, character);
   }
 
   const monsterDef = getMonster(attacker.instance.defId);
-  // Resolve the telegraphed action (selected ahead of the player's turn), so
-  // what happens equals the intent the player saw. Falls back to a fresh pick
-  // for an add summoned mid-round that has no intent yet.
-  const action = resolveIntentAction(monsterDef, attacker.instance, state, character);
 
-  let result = resolveMonsterChosenAction(
-    state,
-    character,
-    attackerId,
-    attacker.instance.displayName,
-    action,
-    roller,
-  );
+  // boss-framework: evaluate HP-threshold phases at turn start (each once) —
+  // they may raise actions-per-turn, enrage, swing AC, or flip the transform.
+  const phasedState = applyPhaseTransitions(state, attackerId, monsterDef);
+  const startInstance = monsterInstanceOf(phasedState, attackerId);
+  const actionsPerTurn = startInstance
+    ? effectiveActionsPerTurn(monsterDef, startInstance)
+    : 1;
+  const startedWithPending = !!startInstance?.pendingTelegraph;
+
+  let result: { state: CombatState; character: Character } = {
+    state: phasedState,
+    character: character as Character,
+  };
+  // The ascension extra-phase re-fires whatever the boss actually DID, so track
+  // the last action that resolved (a charge resolves nothing — leaves this unset).
+  let lastResolvedAction: MonsterAction | undefined;
+  let pendingResolved = false;
+
+  for (let slot = 0; slot < actionsPerTurn; slot++) {
+    if (result.state.status !== 'active') break;
+    if (result.character.hp.current <= 0) break;
+    const inst = monsterInstanceOf(result.state, attackerId);
+    if (!inst || inst.hp.current <= 0) break;
+
+    // 1) A special charged on a prior turn resolves first — the wind-up the
+    //    player has had a full turn to read and react to.
+    if (startedWithPending && !pendingResolved && inst.pendingTelegraph) {
+      const ref = inst.pendingTelegraph;
+      pendingResolved = true;
+      result = {
+        state: clearTelegraphAndAnnounce(result.state, attackerId, ref),
+        character: result.character,
+      };
+      const charged = effectiveMonsterActions(monsterDef, inst).find(
+        (a) => a.kind === ref.actionKind && a.name === ref.actionName,
+      );
+      if (!charged) continue; // the action was phased out — the charge lapses
+      result = resolveMonsterChosenAction(
+        result.state,
+        result.character,
+        attackerId,
+        inst.displayName,
+        charged,
+        roller,
+      );
+      lastResolvedAction = charged;
+      continue;
+    }
+
+    // 2) Pick this slot's action. The first slot honors the telegraphed intent
+    //    the player saw; later slots (multi-action bosses) pick fresh.
+    const action =
+      slot === 0
+        ? resolveIntentAction(monsterDef, inst, result.state, result.character)
+        : pickMonsterAction(
+            effectiveMonsterActions(monsterDef, inst),
+            inst,
+            result.state,
+            result.character,
+          );
+
+    // 3) A telegraphed action spends the whole turn CHARGING — it lands next
+    //    turn instead, giving the player a window to race / mitigate / cancel it.
+    if (action.telegraph) {
+      result = {
+        state: beginTelegraphCharge(result.state, attackerId, inst.displayName, action),
+        character: result.character,
+      };
+      break;
+    }
+
+    result = resolveMonsterChosenAction(
+      result.state,
+      result.character,
+      attackerId,
+      inst.displayName,
+      action,
+      roller,
+    );
+    lastResolvedAction = action;
+  }
 
   // Ascension extra-phase (Asc >= 3): the first time a boss takes its turn
   // while bloodied it draws on a second wind and re-fires its action once.
-  result = maybeBossExtraPhase(result, attackerId, action, roller);
+  // Skipped on a charge-only turn — there is nothing yet to re-fire.
+  if (lastResolvedAction) {
+    result = maybeBossExtraPhase(result, attackerId, lastResolvedAction, roller);
+  }
 
   const marked = markMonsterActionUsed(result.state, attackerId);
   // Re-pick this monster's intent now that the turn's action is spent (the
@@ -542,6 +744,8 @@ function resolveSingleAttack(
     });
     const rageBonus = raging ? 2 : 0;
     const ascensionBonus = attacker.instance.bonusDamage ?? 0;
+    // boss-framework: flat enrage damage granted by an entered HP phase.
+    const phaseBonus = attacker.instance.phaseDamageBonus ?? 0;
     // Wither (8th wizard) leaves a monster 'weakened' — a flat cut to its OWN
     // outgoing damage (the one self-debuff the monster turn reads against
     // itself). A landed hit still grazes for at least 1.
@@ -549,7 +753,7 @@ function resolveSingleAttack(
       .filter((c) => c.name === 'weakened')
       .reduce((sum, c) => sum + (c.level ?? DEFAULT_WEAKENED_AMOUNT), 0);
     const rawBeforeWeaken =
-      damageRoll.total + damageExpr.modifier + rageBonus + ascensionBonus;
+      damageRoll.total + damageExpr.modifier + rageBonus + ascensionBonus + phaseBonus;
     const rawDamage =
       selfWeakened > 0 ? Math.max(1, rawBeforeWeaken - selfWeakened) : rawBeforeWeaken;
 
@@ -594,6 +798,7 @@ function resolveSingleAttack(
     }
     if (rageBonus > 0) breakdown.push(`+ ${rageBonus} rage`);
     if (ascensionBonus > 0) breakdown.push(`+ ${ascensionBonus} ascension`);
+    if (phaseBonus > 0) breakdown.push(`+ ${phaseBonus} phase`);
     const resistSuffix = resisted
       ? rageResists && !raceResists
         ? ' (rage — physical halved)'
@@ -648,8 +853,9 @@ function monsterMultiattack(
   const attacker = findCombatant(state, attackerId);
   if (!attacker || attacker.kind !== 'monster') return { state, character: character as Character };
   const monsterDef = getMonster(attacker.instance.defId);
-  const multi = monsterDef.actions.find((a) => a.kind === 'multiattack');
-  const attack = monsterDef.actions.find((a): a is MonsterAttack => a.kind === 'attack');
+  const actions = effectiveMonsterActions(monsterDef, attacker.instance);
+  const multi = actions.find((a) => a.kind === 'multiattack');
+  const attack = actions.find((a): a is MonsterAttack => a.kind === 'attack');
   if (!multi || multi.kind !== 'multiattack' || !attack) {
     // Malformed (multiattack with no attack to repeat) — fall back to one swing.
     return attack

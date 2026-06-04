@@ -68,6 +68,9 @@ export function spawnMonsterInstance(def: Monster, displayName?: string): Monste
       bonusActionUsed: false,
       reactionUsed: false,
     },
+    // boss-framework: carry the def's multi-action cadence onto the instance so
+    // the turn resolver reads it directly; a phase can raise it mid-fight.
+    ...(def.actionsPerTurn && def.actionsPerTurn > 1 ? { actionsPerTurn: def.actionsPerTurn } : {}),
   };
 }
 

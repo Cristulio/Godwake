@@ -1035,6 +1035,40 @@ img, svg.pixel {
   50% { box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 8px currentColor; }
 }
 .enemy-intent-urgent { animation: godwake-intent-pulse 1.5s ease-in-out infinite; }
+/* === boss-framework === persistent boss-state chips below the portrait name:
+   the active condition-gate ward and the current phase. Static (no animation),
+   so prefers-reduced-motion needs no special-case here. Append-only block. */
+.boss-state-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 3px;
+  height: 12px;
+  border: 1px solid;
+  border-radius: 2px;
+  background: rgba(8, 6, 5, 0.92);
+  font-family: var(--font-display, var(--font-mono, monospace));
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  pointer-events: auto;
+  cursor: help;
+}
+.boss-state-chip-icon {
+  width: 8px;
+  height: 8px;
+  display: block;
+}
+.boss-state-warded {
+  color: var(--color-accent-arcane, #9ec3ff);
+  border-color: var(--color-accent-arcane, #9ec3ff);
+}
+.boss-state-phase {
+  color: var(--color-accent-blood, #c8332e);
+  border-color: var(--color-accent-blood, #c8332e);
+}
 /* === branching-map === (branching node map / route UI; append-only, own block) */
 .bm-map-frame {
   border: 1px solid var(--color-border-warm);
@@ -1151,7 +1185,10 @@ img, svg.pixel {
   .animate-knockback-right,
   .animate-lunge-left,
   .animate-lunge-right,
-  .animate-idle-breath {
+  .animate-idle-breath,
+  /* boss-framework: the wind-up / urgent intent badge pulse — the colour + icon
+     still read the incoming threat without the breathing animation. */
+  .enemy-intent-urgent {
     animation: none !important;
   }
   /* Sparks fade in place instead of flying outward. */

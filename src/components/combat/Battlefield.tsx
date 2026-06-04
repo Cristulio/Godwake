@@ -1,7 +1,34 @@
 import type { Character } from '../../types/character';
-import type { CombatState, MonsterCombatant } from '../../types/combat';
+import type { CombatState, MonsterCombatant, MonsterInstance } from '../../types/combat';
+import { getMonster } from '../../content/monsters';
 import { BattlefieldSprite } from './BattlefieldSprite';
 import { SpellEffectLayer } from './SpellEffect';
+
+/**
+ * boss-framework: the active condition-gate ward label for a monster, or
+ * undefined when it isn't currently warded. The gate holds while its linked add
+ * lives — a read only the whole-field view here can make, so it's resolved here
+ * and passed down to the (instance-only) sprite.
+ */
+function gateWardLabel(state: CombatState, instance: MonsterInstance): string | undefined {
+  const gate = getMonster(instance.defId).gate;
+  if (!gate) return undefined;
+  const addAlive = state.combatants.some(
+    (c) =>
+      c.kind === 'monster' &&
+      c.instance.hp.current > 0 &&
+      c.instance.defId === gate.whileAddAlive,
+  );
+  return addAlive ? gate.wardLabel : undefined;
+}
+
+/** boss-framework: the active phase name once a monster has shifted, else undefined. */
+function phaseLabel(instance: MonsterInstance): string | undefined {
+  const entered = instance.phasesEntered;
+  if (!entered?.length) return undefined;
+  const last = getMonster(instance.defId).phases?.[entered[entered.length - 1]];
+  return last?.name ?? (instance.transformed ? 'Transformed' : 'Enraged');
+}
 
 export type BattlefieldDecoration =
   | 'iron-cells'
@@ -109,6 +136,8 @@ export function Battlefield({
               onSelect={() => onSelectTarget(c.id)}
               attackPulse={monsterAttackPulseFor(c)}
               lastAttack={state.lastAttack}
+              wardLabel={gateWardLabel(state, c.instance)}
+              phaseLabel={phaseLabel(c.instance)}
             />
           </div>
         ))}
