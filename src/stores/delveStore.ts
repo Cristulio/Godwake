@@ -583,15 +583,25 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       return { delve: { ...d, phase: 'between-rooms', roomsCleared } };
     }),
 
-  chooseRoom: (nextId) =>
-    set((s) => {
-      if (!s.delve) return s;
-      const cur = s.delve.rooms[s.delve.currentRoomIdx];
-      // Only step to a node actually reachable from where we stand.
-      if (cur?.next && !cur.next.includes(nextId)) return s;
-      useCombatStore.getState().setCombat(null);
-      return { delve: enterRoom(s.delve, nextId) };
-    }),
+  chooseRoom: (nextId) => {
+    const s = get();
+    if (!s.delve) return;
+    // Backstop the level-up-before-fight invariant: you cannot step into the
+    // next node — and never into a fight — while a level-up is owed. Route to
+    // the level-up screen instead, regardless of how the player reached the map
+    // (this also catches any path that slipped past the spoils screen). After
+    // leveling, hasPendingLevelUp clears and the pick goes through normally.
+    const character = useCharacterStore.getState().character;
+    if (character && hasPendingLevelUp(character)) {
+      useScreenStore.getState().setScreen('level-up');
+      return;
+    }
+    const cur = s.delve.rooms[s.delve.currentRoomIdx];
+    // Only step to a node actually reachable from where we stand.
+    if (cur?.next && !cur.next.includes(nextId)) return;
+    useCombatStore.getState().setCombat(null);
+    set({ delve: enterRoom(s.delve, nextId) });
+  },
 
   addDelveReward: (gold, xp, skipLevelUpRoute = false) => {
     const s = get();
