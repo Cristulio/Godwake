@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   ASCENSION_LEVELS,
   MAX_ASCENSION,
+  MAX_BOSS_HP_MULT,
   clampAscension,
   getAscensionLevel,
   ascensionMonsterHp,
@@ -119,13 +120,17 @@ describe('ascension monster scaling helpers', () => {
     expect(ascensionDamageBonus(0)).toBe(0);
   });
 
-  it('applies the boss multiplier on top of the enemy HP multiplier', () => {
-    // Ascension 6: enemyHpMult 1.30, bossHpMult 1.5.
+  it('applies the boss multiplier on top of the enemy HP multiplier, capped at the apex', () => {
+    // Ascension 6 raw product is enemyHpMult 1.30 × bossHpMult 1.5 = 1.95×, but
+    // the boss HP is capped at MAX_BOSS_HP_MULT to keep the apex finite (anti-stall).
     const regular = ascensionMonsterHp(100, 6, false);
     const boss = ascensionMonsterHp(100, 6, true);
     expect(regular).toBe(Math.round(100 * 1.3));
-    expect(boss).toBe(Math.round(100 * 1.3 * 1.5));
+    expect(boss).toBe(Math.round(100 * MAX_BOSS_HP_MULT));
+    expect(boss).toBeLessThan(Math.round(100 * 1.3 * 1.5)); // the cap actually engages
     expect(boss).toBeGreaterThan(regular);
+    // …and still strictly above the Asc5 boss (1.25 × 1.25 = 1.5625×) — monotone.
+    expect(boss).toBeGreaterThan(ascensionMonsterHp(100, 5, true));
   });
 
   it('applyAscensionToMonster scales only HP and returns the original def at level 0', () => {

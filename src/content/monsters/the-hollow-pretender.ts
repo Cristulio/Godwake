@@ -12,7 +12,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * fights as the Court itself. It calls your own reflections out of the cracked
  * glass to attend it (a `summon` of Mirror-Doubles), and while its false court
  * stands the true Pretender is just one more face in the crowd — a condition
- * `gate` that drops it to a fifth of incoming damage until you cut the decoys
+ * `gate` that drops it to two-fifths of incoming damage until you cut the decoys
  * down. Periodically it works the full `Unmasking` — a telegraphed `frightened`
  * that winds up one ceremonious turn before the whole Court's nothing is shown at
  * once. And at half HP the lie redoubles (an enrage `phase`): crack the mask
@@ -37,7 +37,7 @@ export const THE_HOLLOW_PRETENDER: Monster = MonsterSchema.parse({
   actionsPerTurn: 2,
   gate: {
     whileAddAlive: 'mirror-double',
-    damageTakenPct: 0.2,
+    damageTakenPct: 0.4,
     wardLabel: 'cut down the false faces',
   },
   actions: [
@@ -54,8 +54,8 @@ export const THE_HOLLOW_PRETENDER: Monster = MonsterSchema.parse({
       kind: 'summon',
       name: 'The Court Attends',
       summonDefId: 'mirror-double',
-      count: 2,
-      maxActive: 2,
+      count: 1,
+      maxActive: 1,
       once: true,
       description:
         'It gestures, courteous, to the cracked glass of the hall, and the Court\'s faces step out of the mirrors to attend it — your own shape among them, wearing your stance, because the Court has already taken your measure and found it useful. While its court stands, the Pretender is only one more masked thing in a crowd, and you cannot find the true one to strike.',
@@ -104,8 +104,8 @@ export const THE_HOLLOW_PRETENDER: Monster = MonsterSchema.parse({
           kind: 'summon',
           name: 'Don Fresh Faces',
           summonDefId: 'mirror-double',
-          count: 2,
-          maxActive: 2,
+          count: 1,
+          maxActive: 1,
           once: true,
           telegraph: {
             chargeText:

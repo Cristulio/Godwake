@@ -6,7 +6,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * itself, or anyone, stay dead. The hardest stat block of the lower delve.
  *
  * Boss-framework kit (illusion / deception, layered on the held opener + blade):
- *   - Round 1: `paralyze` — the divine command to be still (WIS DC 17).
+ *   - Round 1: `paralyze` — the divine command to be still (WIS DC 15, 2 rounds).
  *   - A `summon` casts a SECOND dawn: a hollow seraph wearing its shape (reuses
  *     the chapter's `hollow-seraph`) — a decoy the player must cut down to be
  *     sure which dawn bleeds.
@@ -38,9 +38,9 @@ export const HOLLOW_DAWN: Monster = MonsterSchema.parse({
     {
       kind: 'paralyze',
       name: 'Be Still, the Dawn Commands',
-      saveDC: 17,
+      saveDC: 15,
       saveAbility: 'wis',
-      durationRounds: 3,
+      durationRounds: 2,
       description:
         "It does not roar. It says your name — the one you had before the first death, the one you do not remember — and adds, almost tenderly, \"Be still. You have run the whole cycle to reach me. Rest now.\" And the will to move goes out of you like a tide.",
     },

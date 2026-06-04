@@ -9,7 +9,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  *
  * boss-framework kit (layered on the proven apex pattern — paralyze opener,
  * multiattack filler, battle-rage past half): the Custodian now fights like the
- * drowned vault it is. It RAISES the acolytes it filed (a `summon` capped to two
+ * drowned vault it is. It RAISES the acolytes it filed (a `summon` capped to one
  * on the field), it DRINKS the deep back to close its own wounds the moment you
  * bloody it (a self `sustain` you have to out-race), and once a fight it draws
  * the whole black sea back from the floor and brings it down on you at once — a
@@ -46,7 +46,7 @@ export const DROWNED_CUSTODIAN: Monster = MonsterSchema.parse({
       name: 'Drink the Deep Back',
       target: 'self',
       heal: '3d8',
-      cooldownRounds: 4,
+      cooldownRounds: 6,
       description:
         'The black water it drowned this place with has never once left; at need it simply takes some back, drawing the deep up through itself, and the wounds you opened close over like a page sinking — there was never a tear there, the water says, there was only ever the deep, keeping its own.',
     },
@@ -55,7 +55,7 @@ export const DROWNED_CUSTODIAN: Monster = MonsterSchema.parse({
       name: 'Read One Up Off the Shelf',
       summonDefId: 'drowned-acolyte',
       count: 1,
-      maxActive: 2,
+      maxActive: 1,
       minRound: 2,
       cooldownRounds: 3,
       description:

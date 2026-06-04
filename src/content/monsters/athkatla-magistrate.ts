@@ -9,7 +9,10 @@ import { MonsterSchema, type Monster, type MonsterSummon } from '../../schemas/m
  * power band the player hits with WIS+0/+1, so DC 11 lands at roughly 50/55.
  * Three rounds of guaranteed paralyze + auto-advantage Mind Spike was a
  * save-or-die at DC 14; the playtest-tour synthesis (deaths to Magistrate
- * even for WIS-poor classes) pushed the DC further from 12 → 11.
+ * even for WIS-poor classes) pushed the DC further from 12 → 11. The boss-
+ * gauntlet sim still read low-WIS martials chain-locked (Fighter 25% / Rogue
+ * 18%) at a three-round hold, so the GUARANTEED lockout is cut to two rounds —
+ * the soft DC 11 and the braced-save boss-intel carry the rest, no double-soften.
  *
  * boss-framework content (layered on, stats unchanged):
  *  - A periodic guard summon: from round 2 he calls the court's enforcers
@@ -51,7 +54,7 @@ export const ATHKATLA_MAGISTRATE: Monster = MonsterSchema.parse({
       name: 'Hold Person',
       saveDC: 11,
       saveAbility: 'wis',
-      durationRounds: 3,
+      durationRounds: 2,
       description:
         'The Magistrate raises one gloved hand. The air between you turns to glass. "Stand still for the sentence."',
     },
