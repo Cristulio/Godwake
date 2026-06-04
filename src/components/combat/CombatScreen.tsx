@@ -895,10 +895,14 @@ export function CombatScreen({
 
       {/* First-combat coach (one-time, brand-new soul). The attack step waits
           for the player's turn so it never spotlights a disabled control while
-          the enemy is acting. */}
+          the enemy is acting. Held behind any blocking dialogue (lore beat /
+          taunt) so the coach never co-renders with one — the real sequencing
+          (DelveScreen holds the fight behind a dialogue) means combat usually
+          isn't even built yet, but this is the backstop. */}
       {coachActive &&
         coachStep !== 'done' &&
         !isResolved &&
+        !blockingModalOpen &&
         (coachStep !== 'attack' || isPlayerTurn(state)) && (
           <CombatCoach step={coachStep} onSkip={finishCoach} onDismiss={finishCoach} />
         )}
