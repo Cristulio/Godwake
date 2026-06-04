@@ -26,6 +26,16 @@ describe('elite-nodes gate (createGodwakeDelve)', () => {
     expect(gated.rooms.map((r) => r.kind)).toEqual(open.rooms.map((r) => r.kind));
     expect(gated.rooms.map((r) => r.next)).toEqual(open.rooms.map((r) => r.next));
   });
+
+  it('defaults to selectable elites with no flag — the production contract (elites always available)', () => {
+    // Both live descent paths (gameStore.selectCharacterAndDescend, HubScreen) now
+    // hardcode elitesEnabled=true, mirroring this factory default. A fresh soul never
+    // gets a locked elite.
+    const delve = createGodwakeDelve({ seed: 42 });
+    const elites = delve.rooms.filter((r) => r.kind === 'elite');
+    expect(elites.length).toBeGreaterThan(0);
+    expect(elites.every((r) => r.locked)).toBe(false);
+  });
 });
 
 // ── affixes-rare / affixes-epic: rarity cap in shop stock ────────────────────

@@ -22,7 +22,7 @@ import { useCombatStore } from './combatStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore, type Screen } from './screenStore';
 import { migrateV1ToV2, SAVE_VERSION } from './persistMigration';
-import { isFeatureUnlocked, newlyUnlockedClasses } from '../engine/progression/unlocks';
+import { newlyUnlockedClasses } from '../engine/progression/unlocks';
 import { getTutorial } from '../content/tutorials';
 import { loadDelveFactory } from '../engine/delve/loadDelveFactory';
 import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from '../engine/delve/constants';
@@ -717,12 +717,16 @@ export const useGameStore = create<GameState>()(
           // hub re-descent (after a death) also builds the full chain, and build
           // the full Cells→Throne chain for this first New Game+ life.
           meta.setNewGamePlusActive(true);
-          const elitesEnabled = isFeatureUnlocked('elite-nodes', {
-            delveCount: meta.delveCount,
-            chaptersCleared: meta.chaptersCleared,
-            renownSpent: meta.renownSpent,
-            druidGroveUnlocked: meta.druidGroveUnlocked,
-          });
+          // Elites are intentionally always available (players choose the risk).
+          // Re-enable the delve gate by restoring the `isFeatureUnlocked` import
+          // and the block below.
+          // const elitesEnabled = isFeatureUnlocked('elite-nodes', {
+          //   delveCount: meta.delveCount,
+          //   chaptersCleared: meta.chaptersCleared,
+          //   renownSpent: meta.renownSpent,
+          //   druidGroveUnlocked: meta.druidGroveUnlocked,
+          // });
+          const elitesEnabled = true;
           const createGodwakeDelve = await loadDelveFactory();
           if (!createGodwakeDelve) return; // chunk load failed — recovery reload in flight
           const delve = createGodwakeDelve({

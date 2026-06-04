@@ -57,12 +57,27 @@ describe('unlock-tutorial trigger (startDelve)', () => {
     });
   });
 
-  it('queues the feature whose threshold the descent crosses on the HUB surface', () => {
-    primeSoul(4); // 4 -> 5 crosses elite-nodes (@5), with no class unlock there
+  it('fires NO hub reveal across the old elite-nodes step — elites are always available now', () => {
+    primeSoul(4); // 4 -> 5 used to cross elite-nodes (@5); the delve gate is disabled now
     descend();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['elite-nodes']);
-    // It does NOT land on the in-delve queue (chapter/first-gear reveals).
+    expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
+    // Nothing lands on the in-delve queue either (chapter/first-gear reveals).
     expect(useScreenStore.getState().tutorialQueue).toEqual([]);
+    // Nothing to hold for — the descent drops straight into the delve.
+    expect(useScreenStore.getState().screen).toBe('delve');
+  });
+
+  it('a brand-new soul descends with SELECTABLE elites and no hub hold', () => {
+    primeSoul(0); // first-ever descent: 0 -> 1, no renown, no chapters cleared
+    descend();
+    const sc = useScreenStore.getState();
+    expect(sc.hubUnlockQueue).toEqual([]); // no "Elites unlocked" card
+    expect(sc.screen).toBe('delve');
+    expect(sc.pendingDescent).toBe(false);
+    // The delve itself carries elite rooms, all selectable (never locked).
+    const elites = useDelveStore.getState().delve!.rooms.filter((r) => r.kind === 'elite');
+    expect(elites.length).toBeGreaterThan(0);
+    expect(elites.some((r) => r.locked)).toBe(false);
   });
 
   it('never queues the Grove on a descent — it is reincarnation-gated now', () => {
@@ -71,14 +86,8 @@ describe('unlock-tutorial trigger (startDelve)', () => {
     expect(useScreenStore.getState().hubUnlockQueue).not.toContain('grove');
   });
 
-  it('queues nothing on a descent that crosses no threshold', () => {
-    primeSoul(10); // 10 -> 11: no delve-gated reveal sits above elite-nodes @5
-    descend();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
-  });
-
-  it('never re-fires a tutorial already in seenTutorials', () => {
-    primeSoul(4, ['elite-nodes']); // 4 -> 5 would cross elite-nodes, but it's already seen
+  it('queues nothing on any descent — no delve-paced reveal remains', () => {
+    primeSoul(10);
     descend();
     expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
   });
@@ -88,32 +97,13 @@ describe('unlock-tutorial trigger (startDelve)', () => {
     descend();
     expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
   });
-
-  it('dismissing the head marks it seen (persisted) and shifts the queue', () => {
-    primeSoul(4); // 4 -> 5 crosses elite-nodes (@5)
-    descend();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['elite-nodes']);
-
-    useGameStore.getState().dismissHubTutorial();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
-    expect(useMetaStore.getState().seenTutorials).toContain('elite-nodes');
-  });
-
-  it('a re-run after dismissal does not re-show the same card', () => {
-    primeSoul(4);
-    descend();
-    useGameStore.getState().dismissHubTutorial();
-    expect(useMetaStore.getState().seenTutorials).toContain('elite-nodes');
-
-    // Reincarnate and descend again from the same threshold — already seen.
-    useScreenStore.setState({ screen: 'hub', hubUnlockQueue: [], pendingDescent: false });
-    useMetaStore.setState({ delveCount: 4 });
-    descend();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual([]);
-  });
 });
 
-describe('delve-count unlocks surface at the HUB, never over the delve', () => {
+describe('hub-unlock queue plumbing (hold → dismiss → resume)', () => {
+  // No feature gates on delve count anymore (elites are always available), so nothing
+  // auto-fills the hub-unlock queue. The hold/dismiss/resume plumbing is feature-
+  // agnostic though — drive it directly with arbitrary ids to guard the mechanism for
+  // any future delve-paced reveal.
   beforeEach(() => {
     useScreenStore.setState({
       screen: 'hub',
@@ -121,47 +111,45 @@ describe('delve-count unlocks surface at the HUB, never over the delve', () => {
       hubUnlockQueue: [],
       pendingDescent: false,
     });
+    useMetaStore.setState({ seenTutorials: [] });
   });
 
-  it('parks the descent at the hub while the card is up — the delve has NOT been entered', () => {
-    primeSoul(4); // 4 -> 5 crosses elite-nodes (@5)
-    descend();
-
+  it('parks a held descent at the hub and releases it into the delve on the last dismissal', () => {
     const sc = useScreenStore.getState();
-    expect(sc.hubUnlockQueue).toEqual(['elite-nodes']);
-    expect(sc.screen).toBe('hub'); // not 'delve' — the card shows at the hub first
-    expect(sc.pendingDescent).toBe(true);
+    sc.enqueueHubUnlocks(['elite-nodes']);
+    sc.holdForHubUnlock();
+    expect(useScreenStore.getState().screen).toBe('hub'); // not 'delve' — the card shows first
+    expect(useScreenStore.getState().pendingDescent).toBe(true);
 
-    // Dismissing the card releases the held descent into the delve.
     useGameStore.getState().dismissHubTutorial();
     const after = useScreenStore.getState();
     expect(after.screen).toBe('delve');
     expect(after.hubUnlockQueue).toEqual([]);
     expect(after.pendingDescent).toBe(false);
+    // Dismissal persists the card as seen so it never re-shows.
+    expect(useMetaStore.getState().seenTutorials).toContain('elite-nodes');
   });
 
-  it('queues only the FEATURE card on a descent — class reveals moved off the delve axis', () => {
-    // 4 -> 5 crosses elite-nodes (@5), the lone delve-paced reveal. Class souls open
-    // on RENOWN SPENT (a Grove purchase), never a descent — so the hub holds only the
-    // feature card, and dismissing that single card releases the held descent.
-    primeSoul(4);
-    descend();
-    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['elite-nodes']);
-    expect(useScreenStore.getState().hubUnlockQueue).not.toContain('wizard');
-    expect(useScreenStore.getState().screen).toBe('hub');
+  it('holds the descent until the LAST of several cards is dismissed', () => {
+    const sc = useScreenStore.getState();
+    sc.enqueueHubUnlocks(['elite-nodes', 'boss-intel']);
+    sc.holdForHubUnlock();
 
-    useGameStore.getState().dismissHubTutorial(); // elite-nodes
+    useGameStore.getState().dismissHubTutorial(); // first card — still held
+    expect(useScreenStore.getState().screen).toBe('hub');
+    expect(useScreenStore.getState().pendingDescent).toBe(true);
+    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['boss-intel']);
+
+    useGameStore.getState().dismissHubTutorial(); // last card — resume into the delve
     expect(useScreenStore.getState().screen).toBe('delve');
     expect(useScreenStore.getState().pendingDescent).toBe(false);
   });
 
-  it('a threshold-less descent enters the delve immediately (no hub hold)', () => {
-    primeSoul(10); // crosses nothing
-    descend();
+  it('dedupes ids already queued', () => {
     const sc = useScreenStore.getState();
-    expect(sc.hubUnlockQueue).toEqual([]);
-    expect(sc.screen).toBe('delve');
-    expect(sc.pendingDescent).toBe(false);
+    sc.enqueueHubUnlocks(['elite-nodes']);
+    sc.enqueueHubUnlocks(['elite-nodes', 'boss-intel']);
+    expect(useScreenStore.getState().hubUnlockQueue).toEqual(['elite-nodes', 'boss-intel']);
   });
 });
 

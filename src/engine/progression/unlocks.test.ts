@@ -39,8 +39,9 @@ describe('UNLOCKS registry', () => {
     // The Grove rides the first-reincarnation trigger, not a delve count.
     expect(UNLOCKS.grove.reincarnated).toBe(true);
     expect(UNLOCKS.grove.delveCount).toBeUndefined();
-    // Onboarding: the lone delve-paced reveal.
-    expect(UNLOCKS['elite-nodes'].delveCount).toBe(5);
+    // Elites are always available now — `delveCount: 0` is the always-unlocked,
+    // never-reveal sentinel (the onboarding gate is disabled, not removed).
+    expect(UNLOCKS['elite-nodes'].delveCount).toBe(0);
     // Power + gear: earned by clearing deeper chapters; blue @3, purple @5, sets @14.
     expect(UNLOCKS['boss-intel'].chaptersCleared).toBe(1);
     expect(UNLOCKS['affixes-rare'].chaptersCleared).toBe(3);
@@ -63,7 +64,7 @@ describe('UNLOCKS registry', () => {
 describe('isFeatureUnlocked', () => {
   it('a delve-7 soul with no clears has the onboarding reveal but no power unlocks', () => {
     const meta = mkMeta({ delveCount: 7 });
-    expect(isFeatureUnlocked('elite-nodes', meta)).toBe(true); // delve @5
+    expect(isFeatureUnlocked('elite-nodes', meta)).toBe(true); // always available now
     expect(isFeatureUnlocked('affixes-rare', meta)).toBe(false); // chapter @3, not delve
     expect(isFeatureUnlocked('boss-intel', meta)).toBe(false); // chapter @1
     expect(isFeatureUnlocked('legendaries', meta)).toBe(false); // chapter @5
@@ -95,9 +96,10 @@ describe('isFeatureUnlocked', () => {
     expect(isFeatureUnlocked('class-roster', mkMeta({ chaptersCleared: 14 }))).toBe(false);
   });
 
-  it('a brand-new soul (delve 0, no clears) has none of the gated features', () => {
+  it('a brand-new soul (delve 0, no clears) has none of the gated features except always-on elites', () => {
     const meta = mkMeta();
-    for (const id of FEATURE_IDS) expect(isFeatureUnlocked(id, meta)).toBe(false);
+    // Elites are intentionally always available now; every other gated feature is shut.
+    for (const id of FEATURE_IDS) expect(isFeatureUnlocked(id, meta)).toBe(id === 'elite-nodes');
   });
 
   it('grove opens on the first reincarnation, never on delve count', () => {
@@ -122,10 +124,10 @@ describe('isFeatureUnlocked', () => {
 });
 
 describe('newlyUnlocked (delve axis)', () => {
-  it('returns the single onboarding feature whose threshold the descent crossed', () => {
-    expect(newlyUnlocked(4, 5)).toEqual(['elite-nodes']);
-    // Blue gear moved off the delve axis onto chapter depth (@3) — a delve step
-    // across the old threshold fires nothing here now.
+  it('fires nothing across the old elite-nodes step — elites are always available now', () => {
+    // The lone delve-paced reveal (elite-nodes) is disabled (delveCount 0), so no
+    // descent enqueues a hub reveal. Blue gear is chapter-paced (@3) — also nothing.
+    expect(newlyUnlocked(4, 5)).toEqual([]);
     expect(newlyUnlocked(2, 3)).toEqual([]);
   });
 
@@ -135,13 +137,12 @@ describe('newlyUnlocked (delve axis)', () => {
     expect(newlyUnlocked(0, 9)).not.toContain('grove');
   });
 
-  it('returns every onboarding threshold crossed in a multi-step jump, in ladder order', () => {
-    // elite-nodes (@5) is the lone delve-gated reveal now.
-    expect(newlyUnlocked(2, 5)).toEqual(['elite-nodes']);
+  it('fires nothing even on a multi-step delve jump — no delve-paced reveal remains', () => {
+    expect(newlyUnlocked(2, 5)).toEqual([]);
   });
 
   it('never fires the chapter-gated power features', () => {
-    // No delve threshold above elite-nodes @5, so a deep delve jump opens nothing.
+    // No feature gates on delve count anymore, so any delve jump opens nothing.
     expect(newlyUnlocked(5, 30)).toEqual([]);
     expect(newlyUnlocked(7, 7)).toEqual([]);
   });
@@ -318,8 +319,9 @@ describe('class unlocks (relative to the origin starter, paced by renown spent)'
 });
 
 describe('unlockedFeatures', () => {
-  it('is empty for a fresh soul and lists everything for one that cleared the chain', () => {
-    expect(unlockedFeatures(mkMeta())).toEqual([]);
+  it('lists only always-on elites for a fresh soul and everything for one that cleared the chain', () => {
+    // Elites are always available now, so a fresh soul already carries that one.
+    expect(unlockedFeatures(mkMeta())).toEqual(['elite-nodes']);
     expect(
       unlockedFeatures(
         mkMeta({ delveCount: 999, chaptersCleared: 14, renownSpent: 700, hasReincarnated: true }),
@@ -329,15 +331,16 @@ describe('unlockedFeatures', () => {
 });
 
 describe('nextLockedFeature', () => {
-  it('prefers delve, falls through to chapter then renown, and is null when all unlocked', () => {
+  it('opens on the lowest chapter gate, falls through to renown, and is null when all unlocked', () => {
     // The Grove is event-gated (first reincarnation) with no numeric threshold, so
-    // the hint skips it. Fresh soul: the lone delve-paced reveal (elite-nodes @5) leads.
+    // the hint skips it. Elites are always available now (no delve-paced gate left),
+    // so a fresh soul's next gate is the lowest chapter one: boss-intel @1.
     expect(nextLockedFeature(mkMeta())).toEqual({
-      featureId: 'elite-nodes',
-      axis: 'delve',
-      threshold: 5,
+      featureId: 'boss-intel',
+      axis: 'chapter',
+      threshold: 1,
     });
-    // Delve axis exhausted -> the lowest locked chapter gate (boss-intel @1).
+    // Delve count is irrelevant to the remaining gates -> still the lowest chapter gate.
     expect(nextLockedFeature(mkMeta({ delveCount: 999 }))).toEqual({
       featureId: 'boss-intel',
       axis: 'chapter',
@@ -363,9 +366,9 @@ describe('migration ↔ unlock ladder', () => {
     const migrated = migrateV1ToV2({ unlockedUpgrades: {}, deathCount: 1 });
     expect(migrated.delveCount).toBe(999);
     const meta = mkMeta({ delveCount: migrated.delveCount, chaptersCleared: 0 });
-    // The 999 floor opens the delve-gated onboarding reveals. (The Grove no
-    // longer rides delve count — it is reincarnation-gated, kept for veterans by
-    // hasReincarnated or the legacy flag; see the grove tests above.)
+    // Elites are always available regardless of the floor (the gate is disabled).
+    // (The Grove no longer rides delve count — it is reincarnation-gated, kept for
+    // veterans by hasReincarnated or the legacy flag; see the grove tests above.)
     expect(isFeatureUnlocked('elite-nodes', meta)).toBe(true);
     // ...but power features are earned by reaching new depths, not by delve count.
     expect(isFeatureUnlocked('legendaries', meta)).toBe(false);
@@ -380,7 +383,8 @@ describe('migration ↔ unlock ladder', () => {
     ).toEqual([...FEATURE_IDS]);
   });
 
-  it('a fresh soul (delveCount 0, no clears) is gated', () => {
-    expect(unlockedFeatures(mkMeta())).toEqual([]);
+  it('a fresh soul (delveCount 0, no clears) has only the always-on elites', () => {
+    // Every power/gear/Grove gate is shut; elites are always available now.
+    expect(unlockedFeatures(mkMeta())).toEqual(['elite-nodes']);
   });
 });

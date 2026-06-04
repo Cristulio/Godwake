@@ -31,7 +31,10 @@ export function HubScreen() {
   const progressionMeta = { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked, hasReincarnated };
   const groveUnlocked = isFeatureUnlocked('grove', progressionMeta);
   const legendariesUnlocked = isFeatureUnlocked('legendaries', progressionMeta);
-  const elitesEnabled = isFeatureUnlocked('elite-nodes', progressionMeta);
+  // Elites are intentionally always available (players choose the risk). Re-enable
+  // the delve gate by restoring the line below.
+  // const elitesEnabled = isFeatureUnlocked('elite-nodes', progressionMeta);
+  const elitesEnabled = true;
   const [view, setView] = useState<'hub' | 'relics'>('hub');
 
   useEffect(() => {
