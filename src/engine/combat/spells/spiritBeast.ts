@@ -14,13 +14,14 @@ import {
   markActionUsed,
   nextLogId,
 } from './helpers';
+import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
 
 /** Player-turn-start maulings after the immediate one. With the cast's own
  *  strike that is three hits in all (now + the start of the next two turns). */
 export const SPIRIT_BEAST_TICKS = 2;
 
-/** Damage the beast deals per strike (2d8). Flat — no caster modifier — to keep
- *  the persistent companion conservative for its 7th-level slot. */
+/** Base dice the beast deals per strike (2d8), before the shared level + casting-
+ *  mod scaling (scaling.ts) grows it like every other damage spell. */
 const SPIRIT_BEAST_DICE = 2;
 
 /**
@@ -41,7 +42,7 @@ export function castSpiritBeast(ctx: CastSpellContext): CastResult {
 
   let nextCharacter: Character = consumeSlot(ctx.character, 7);
   const roll = roller.roll({ count: SPIRIT_BEAST_DICE, die: 8, modifier: 0 });
-  const perTurn = Math.max(1, roll.total);
+  const perTurn = Math.max(1, scaleSpellDamage(roll.total, nextCharacter, spellAcquisitionLevel(7)));
   nextCharacter = patchResources(nextCharacter, {
     spiritBeastDamagePerTurn: perTurn,
     spiritBeastTurnsRemaining: SPIRIT_BEAST_TICKS,

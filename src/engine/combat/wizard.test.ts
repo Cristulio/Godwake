@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { castSpell, slotsAt, canCastSpell } from './spells';
-import { fireBoltDiceCount } from './spells/fireBolt';
 import { monsterAttack } from './attack';
 import { endTurn } from './turn';
 import { createDiceRoller, type DiceRoller } from '../dice';
@@ -117,27 +116,60 @@ describe('Wizard — Fire Bolt cantrip', () => {
   });
 });
 
-describe('Wizard — Fire Bolt level scaling', () => {
+describe('Wizard — Fire Bolt parametric scaling', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('gains a d10 at levels 5, 7, and 8 (compressed for the L8 cap)', () => {
-    expect(fireBoltDiceCount(1)).toBe(1);
-    expect(fireBoltDiceCount(4)).toBe(1);
-    expect(fireBoltDiceCount(5)).toBe(2);
-    expect(fireBoltDiceCount(7)).toBe(3);
-    expect(fireBoltDiceCount(8)).toBe(4);
-  });
+  // A roller that fails the DEX save (nat 1, so the cast takes full damage) and
+  // rolls a fixed d10, so the only thing that varies across levels is the
+  // parametric level multiplier — the discrete 1→4d10 breakpoints are gone.
+  function failedSaveRoller(d10Face: number): DiceRoller {
+    return {
+      roll(): RollResult {
+        return {
+          expression: { count: 1, die: 10, modifier: 0 },
+          rolls: [d10Face],
+          modifier: 0,
+          total: d10Face,
+          natural20: false,
+          natural1: false,
+          advantage: 'normal',
+        };
+      },
+      d20(advantage = 'normal', modifier = 0): RollResult {
+        return {
+          expression: { count: 1, die: 20, modifier },
+          rolls: [1],
+          modifier,
+          total: 1 + modifier,
+          natural20: false,
+          natural1: true,
+          advantage,
+        };
+      },
+      serialize() {
+        return { state: 0 };
+      },
+    };
+  }
 
-  it('an L8 caster rolls 4 fire dice in the damage breakdown', () => {
+  function fireBoltDealt(level: number): number {
     const goblin = getMonster('goblin');
-    const w: Character = { ...makeWizard(), level: 8 };
-    const init = createCombat({ roller: createDiceRoller(3), character: w, monsters: [{ def: goblin }] });
+    const w: Character = { ...makeWizard(), level };
+    const init = createCombat({ roller: failedSaveRoller(8), character: w, monsters: [{ def: goblin }] });
     const targetId = findMonster(init.state).id;
-    const result = castSpell({ roller: createDiceRoller(3), character: init.character, state: init.state, spellId: 'fire-bolt', targetId });
+    const result = castSpell({ roller: failedSaveRoller(8), character: init.character, state: init.state, spellId: 'fire-bolt', targetId });
     const dmgLine = result.state.log.find((l) => l.kind === 'damage' && l.text.includes('fire'))!;
-    // Breakdown is "d+d+d(+bonus) = N fire" — three dice means two inner '+'.
-    const breakdown = dmgLine.text.match(/Damage: ([\d+]+)/)![1];
-    expect(breakdown.split('+').filter(Boolean).length).toBeGreaterThanOrEqual(4);
+    return Number(dmgLine.text.match(/= (\d+) fire/)![1]);
+  }
+
+  it('grows smoothly with level and keeps climbing past the old L8 cap', () => {
+    const d1 = fireBoltDealt(1);
+    const d8 = fireBoltDealt(8);
+    const d20 = fireBoltDealt(20);
+    // At acquisition (L1, INT +3 reference) the cantrip reads at its printed base.
+    expect(d8).toBeGreaterThan(d1);
+    // The old model froze at 4d10 from L8; the parametric curve keeps rising.
+    expect(d20).toBeGreaterThan(d8);
   });
 });
 

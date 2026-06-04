@@ -24,6 +24,7 @@ import {
   spellDamageBonus,
   spellSaveDC,
 } from './helpers';
+import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
 
 /**
  * Apotheosis (9th) — the transform-self capstone. The caster sheds the limits of
@@ -72,7 +73,8 @@ export function castUnmake(ctx: CastSpellContext): CastResult {
   let nextCharacter: Character = consumeSlot(ctx.character, 9);
   const roll = roller.roll({ count: 18, die: 8, modifier: 0 });
   const intMod = abilityModifier(effectiveAbilityScores(nextCharacter).int);
-  const dealt = roll.total + intMod + spellDamageBonus(nextCharacter);
+  const scaled = scaleSpellDamage(roll.total, nextCharacter, spellAcquisitionLevel(9));
+  const dealt = scaled + intMod + spellDamageBonus(nextCharacter);
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {

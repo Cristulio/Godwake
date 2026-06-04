@@ -14,6 +14,7 @@ import {
   spellDamageBonus,
   spellSaveDC,
 } from './helpers';
+import { scaleSpellDamage, spellAcquisitionLevel } from './scaling';
 
 export function castBurningHands(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
@@ -29,8 +30,9 @@ export function castBurningHands(ctx: CastSpellContext): CastResult {
   // The cone catches everything in front; each monster rolls a DEX save for
   // half via the shared AoE path so a L1 slot no longer out-values a L3 one.
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
+  const scaledDice = scaleSpellDamage(damageRoll.total, nextCharacter, spellAcquisitionLevel(1));
   const bonus = spellDamageBonus(nextCharacter);
-  const fullDmg = damageRoll.total + bonus;
+  const fullDmg = scaledDice + bonus;
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {
