@@ -1903,12 +1903,7 @@ export function createGodwakeDelve(
 
   const entry = rooms[0];
   return {
-    // The base game bookends in Irenicus's domain — out of his Iron Cells, down
-    // into the Pit of his own hell. New Game+ runs the road past it, all the way
-    // to the empty Throne of Bhaal.
-    dungeonName: opts.fullChain
-      ? 'Godwake — From the Cells to the Throne'
-      : 'Godwake — From the Cells to the Pit',
+    dungeonName: 'Godwake',
     chapterId: 'godwake',
     chapterCount,
     rooms,

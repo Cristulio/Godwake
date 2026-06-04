@@ -51,21 +51,23 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
       onClick={onCancel}
     >
       <div
-        className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-amber)] p-5 max-w-lg w-full"
+        className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-amber)] p-5 max-w-lg w-full max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-[var(--color-accent-amber)] uppercase tracking-[0.3em] text-sm mb-2">
-          ✦ Cast a Spell
-        </div>
-        <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest mb-3">
-          Slots — {slotSummary}
+        <div className="shrink-0">
+          <div className="text-[var(--color-accent-amber)] uppercase tracking-[0.3em] text-sm mb-2">
+            ✦ Cast a Spell
+          </div>
+          <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest mb-3">
+            Slots — {slotSummary}
+          </div>
         </div>
         {known.length === 0 ? (
           <div className="text-[var(--color-text-secondary)] text-sm italic mb-4">
             No spells prepared.
           </div>
         ) : (
-          <div className="flex flex-col gap-2 mb-4">
+          <div className="flex flex-col gap-2 mb-4 flex-1 overflow-y-auto min-h-0 -mr-2 pr-2">
             {known.map((id) => {
               const spell = getSpell(id);
               const check = canCastSpell(character, id);
@@ -110,7 +112,7 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
             })}
           </div>
         )}
-        <div className="flex justify-end">
+        <div className="flex justify-end shrink-0">
           <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>

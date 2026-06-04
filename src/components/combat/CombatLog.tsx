@@ -7,11 +7,14 @@ interface CombatLogProps {
   maxEntries?: number;
 }
 
+// Visual hierarchy by kind: the action beats a player cares about — attack
+// rolls and the damage they land — read big and bright; bookkeeping (turn
+// markers, brace/temp-HP, flavor) shrinks and dims so it recedes.
 const KIND_STYLE: Record<string, string> = {
-  roll: 'text-[var(--color-accent-gold)]',
-  damage: 'text-[var(--color-accent-blood)]',
-  system: 'text-[var(--color-accent-amber)] uppercase tracking-wider font-display text-[10px]',
-  narration: 'text-[var(--color-text-secondary)] italic',
+  roll: 'text-[12px] font-semibold text-[var(--color-accent-gold)]',
+  damage: 'text-[13px] font-bold tracking-wide text-[var(--color-accent-blood)]',
+  system: 'text-[9px] uppercase tracking-wider font-display text-[var(--color-accent-amber)] opacity-60',
+  narration: 'text-[10px] italic text-[var(--color-text-secondary)] opacity-60',
 };
 
 const KIND_GLYPH: Record<string, string> = {
