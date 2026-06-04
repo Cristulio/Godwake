@@ -158,11 +158,13 @@ function pickBaseWithDepth<T extends Weapon | Armor | Accessory>(
   return best;
 }
 
-/** +N ceiling by story depth: Ch1-2 modest, mid modest-plus, Ch5-9 at +3, and
- * the endgame band climbing past it — Ch10-12 to +4, Ch13-14 to +5. */
-function depthEnhanceCap(depth: number): number {
-  if (depth >= 13) return 5;
-  if (depth >= 10) return 4;
+/** +N ceiling by story depth. The base game (Ch1-11) tops out at +3; only the
+ * New Game+ Throne-of-Bhaal chapters climb past it — Ch12-13 to +4, Ch14 to +5.
+ * The ToB band (Ch12-14) is reachable only in a NG+ run, so +4/+5 surface only
+ * there. Takes the raw chapter uncapped, so Ch12-14 flow through. */
+export function depthEnhanceCap(depth: number): number {
+  if (depth >= 14) return 5;
+  if (depth >= 12) return 4;
   if (depth >= 5) return 3;
   if (depth >= 3) return 2;
   return 1;

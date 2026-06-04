@@ -6,6 +6,7 @@ import {
   eligibleAffixes,
   rolledItemName,
   rolledItemCost,
+  depthEnhanceCap,
 } from './rollItem';
 
 describe('rollItem', () => {
@@ -177,6 +178,37 @@ describe('enhancement (+N) axis', () => {
       return sum;
     };
     expect(totalEnh(6)).toBeGreaterThan(totalEnh(1));
+  });
+
+  it('caps the base game (Ch1-11) at +3, with NG+ ToB chapters climbing to +4/+5', () => {
+    // Exact +N ceiling per chapter. The base game tops out at +3; only the NG+
+    // Throne-of-Bhaal chapters (Ch12-14, reachable only in a New Game+ run) go
+    // higher, so +4 (Ch12-13) and +5 (Ch14) are NG+-exclusive.
+    const expected: Record<number, number> = {
+      1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 3, 8: 3, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 5,
+    };
+    for (const [ch, cap] of Object.entries(expected)) {
+      expect(depthEnhanceCap(Number(ch))).toBe(cap);
+    }
+    for (let ch = 1; ch <= 11; ch++) expect(depthEnhanceCap(ch)).toBeLessThanOrEqual(3);
+  });
+
+  it('lets a Ch14 (NG+) item roll +5 while a Ch11 (base-game) item never exceeds +3', () => {
+    const maxEnhancementAt = (depth: number) => {
+      let max = 0;
+      for (let i = 0; i < 200; i++) {
+        const ref = rollItem(createDiceRoller(`ngplus-${depth}-${i}`), {
+          rarity: 'purple',
+          classId: 'fighter',
+          kind: 'weapon',
+          depth,
+        });
+        max = Math.max(max, ref.rolled?.enhancement ?? 0);
+      }
+      return max;
+    };
+    expect(maxEnhancementAt(11)).toBe(3);
+    expect(maxEnhancementAt(14)).toBe(5);
   });
 
   it('never enhances a robe (no AC) or an accessory (pure affix carrier)', () => {
