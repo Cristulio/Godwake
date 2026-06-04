@@ -13,6 +13,7 @@ import {
   martialPoolMax,
 } from '../../engine/combat/martialResource';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
+import { monkKiMax } from '../../engine/combat/monk';
 import { getBlessing } from '../../content/blessings';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { baneQuirkCount } from '../../engine/character/quirks';
@@ -262,6 +263,7 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const isWizard = character.classId === 'wizard';
   const isBarbarian = character.classId === 'barbarian';
   const isRanger = character.classId === 'ranger';
+  const isMonk = character.classId === 'monk';
 
   // --- Barbarian resources ---
   const rageRounds = character.resources.rageRoundsRemaining ?? 0;
@@ -292,6 +294,10 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const martialMax = martialPoolMax(character);
   const offenseUp = character.martialOffenseActive === true;
   const disruptArmed = character.martialDisruptActive === true;
+
+  // --- Monk resources (Ki) ---
+  const kiMax = monkKiMax(character);
+  const kiNow = character.resources.kiPointsRemaining ?? 0;
 
   // --- Rogue resources ---
   const cunningMax = rogueCunningActionMax(character);
@@ -490,6 +496,27 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               title={`${martial.disrupt} armed — the next hit staggers its target.`}
             />
           )}
+        </Section>
+      )}
+
+      {isMonk && kiMax > 0 && (
+        <Section title="Ki">
+          {/* Ki = monk level, so a capstone monk carries 20+ pips — wrap them
+              (like the blessing strip) so the well never overflows the bar on a
+              narrow phone instead of marching off the edge. */}
+          <div className="flex flex-wrap items-center gap-1.5 max-w-[150px]">
+            {Array.from({ length: kiMax }).map((_, i) => (
+              <Dot
+                key={`ki-${i}`}
+                on={i < kiNow}
+                title={
+                  i < kiNow
+                    ? 'Ki to spend — fuels Flurry of Blows, Patient Defense, and Stunning Strike. The well refills as each fight begins.'
+                    : 'Ki spent.'
+                }
+              />
+            ))}
+          </div>
         </Section>
       )}
 
