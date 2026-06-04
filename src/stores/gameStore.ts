@@ -13,6 +13,7 @@ import {
 } from '../engine/character/defaultCharacter';
 import { type ClassId } from '../schemas/ids';
 import { getClass } from '../content/classes';
+import type { RelicSlot } from '../content/legendaries';
 import type { ItemRef } from '../schemas/item';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
 import { type EquipSlot } from '../engine/character/equip';
@@ -160,7 +161,7 @@ interface GameState {
   renownSpent: number;
   originClass: ClassId | null;
   ownedLegendaries: string[];
-  activeLegendaries: string[];
+  equippedRelics: Partial<Record<RelicSlot, string>>;
   gameCompleted: boolean;
   selectedAscension: number;
   newGamePlusActive: boolean;
@@ -260,7 +261,8 @@ interface GameState {
   purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
 
   // Legendary relics
-  setActiveLegendaries: (ids: string[]) => void;
+  equipRelic: (relicId: string) => void;
+  unequipRelicSlot: (slot: RelicSlot) => void;
 
   // Ending capstone
   markGameCompleted: () => void;
@@ -309,7 +311,7 @@ interface PersistedSnapshot {
   renownSpent: number;
   originClass: ClassId | null;
   ownedLegendaries: string[];
-  activeLegendaries: string[];
+  equippedRelics: Partial<Record<RelicSlot, string>>;
   gameCompleted: boolean;
   selectedAscension: number;
   newGamePlusActive: boolean;
@@ -361,7 +363,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     renownSpent: meta.renownSpent,
     originClass: meta.originClass,
     ownedLegendaries: meta.ownedLegendaries,
-    activeLegendaries: meta.activeLegendaries,
+    equippedRelics: meta.equippedRelics,
     gameCompleted: meta.gameCompleted,
     selectedAscension: meta.selectedAscension,
     newGamePlusActive: meta.newGamePlusActive,
@@ -438,7 +440,10 @@ function scatterSnapshot(s: PersistedSnapshot) {
     // first forge stamps it cleanly).
     originClass: s.originClass ?? s.character?.classId ?? null,
     ownedLegendaries: Array.isArray(s.ownedLegendaries) ? s.ownedLegendaries : [],
-    activeLegendaries: Array.isArray(s.activeLegendaries) ? s.activeLegendaries : [],
+    equippedRelics:
+      s.equippedRelics && typeof s.equippedRelics === 'object' && !Array.isArray(s.equippedRelics)
+        ? (s.equippedRelics as Partial<Record<RelicSlot, string>>)
+        : {},
     // Recovery: a save whose deepest run cleared the BASE chain (Irenicus, Ch11)
     // but never flipped gameCompleted — e.g. an older build whose lazy ending
     // screen crashed before recording it — has beaten the base game. Restore the
@@ -473,7 +478,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
   // (and drop any off-class relics the current class can't equip). Idempotent
   // for current saves; for pre-v10 saves it converts the stripped stat field to
   // the new effect form so equipped relics actually apply.
-  useMetaStore.getState().setActiveLegendaries(useMetaStore.getState().activeLegendaries);
+  useMetaStore.getState().applyRelicLoadout();
 }
 
 /**
@@ -489,7 +494,7 @@ function adoptSoul(classId: ClassId) {
   const fresh = buildPlayerCharacter(presetCreationInput(classId));
   charSlice.setCharacter(soul ? carrySoulProgress(fresh, soul) : fresh);
   // Class-bound relics the new body can't wield drop; the effect payloads re-bake.
-  useMetaStore.getState().setActiveLegendaries(useMetaStore.getState().activeLegendaries);
+  useMetaStore.getState().applyRelicLoadout();
 }
 
 /**
@@ -587,7 +592,7 @@ export const useGameStore = create<GameState>()(
           originClass: m.originClass,
           druidGroveUnlocked: m.druidGroveUnlocked,
           ownedLegendaries: m.ownedLegendaries,
-          activeLegendaries: m.activeLegendaries,
+          equippedRelics: m.equippedRelics,
           gameCompleted: m.gameCompleted,
           selectedAscension: m.selectedAscension,
           newGamePlusActive: m.newGamePlusActive,
@@ -648,7 +653,7 @@ export const useGameStore = create<GameState>()(
         renownSpent: useMetaStore.getState().renownSpent,
         originClass: useMetaStore.getState().originClass,
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
-        activeLegendaries: useMetaStore.getState().activeLegendaries,
+        equippedRelics: useMetaStore.getState().equippedRelics,
         gameCompleted: useMetaStore.getState().gameCompleted,
         selectedAscension: useMetaStore.getState().selectedAscension,
         newGamePlusActive: useMetaStore.getState().newGamePlusActive,
@@ -844,8 +849,8 @@ export const useGameStore = create<GameState>()(
           return res;
         },
 
-        setActiveLegendaries: (ids) =>
-          useMetaStore.getState().setActiveLegendaries(ids),
+        equipRelic: (relicId) => useMetaStore.getState().equipRelic(relicId),
+        unequipRelicSlot: (slot) => useMetaStore.getState().unequipRelicSlot(slot),
 
         markGameCompleted: () => useMetaStore.getState().markGameCompleted(),
 

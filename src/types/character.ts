@@ -273,7 +273,7 @@ export interface Character {
   /**
    * Effect payloads of the player's EQUIPPED legendary relics + completed-set
    * bonuses (hub-managed, cross-delve persistent gear). Pure effects — no AC, no
-   * weapon damage. Baked on by `setActiveLegendaries` and carried across the
+   * weapon damage. Baked on by `applyRelicLoadout` and carried across the
    * wheel; folded into the affix pipeline by `characterAffixMods`. Optional;
    * undefined = no relics equipped.
    */

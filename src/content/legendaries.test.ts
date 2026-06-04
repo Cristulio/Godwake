@@ -7,7 +7,13 @@ import {
   aggregateLegendaryEffects,
   legendaryDropPool,
   legendaryBankPool,
+  RELIC_SLOTS,
+  RELIC_SLOT_META,
+  relicsInSlot,
+  relicSlotOf,
+  type RelicSlot,
 } from './legendaries';
+import type { AffixModifiers } from '../schemas/item';
 import {
   ascensionAscendantLoot,
   ascensionExclusiveLoot,
@@ -66,6 +72,52 @@ describe('legendary content', () => {
   it('looks relics up by id', () => {
     expect(getLegendary('bulwark-sigil')?.name).toBe('Bulwark Sigil');
     expect(getLegendary('nope')).toBeUndefined();
+  });
+});
+
+describe('relic slots (the typed 9-slot loadout)', () => {
+  it('assigns every relic exactly one valid slot', () => {
+    for (const relic of LEGENDARIES) {
+      expect(RELIC_SLOTS, `${relic.id} slot`).toContain(relic.slot);
+      expect(relicSlotOf(relic.id)).toBe(relic.slot);
+    }
+  });
+
+  it('fills all nine slots (none empty) and partitions the whole collection', () => {
+    expect(RELIC_SLOTS).toHaveLength(9);
+    for (const slot of RELIC_SLOTS) {
+      expect(relicsInSlot(slot).length, `${slot} is empty`).toBeGreaterThan(0);
+    }
+    const summed = RELIC_SLOTS.reduce((n, s) => n + relicsInSlot(s).length, 0);
+    expect(summed).toBe(LEGENDARIES.length);
+  });
+
+  it('each relic carries its slot’s defining effect channel (its primary effect)', () => {
+    const channelFor: Record<RelicSlot, (e: AffixModifiers) => number> = {
+      vampire: (e) => e.lifestealPct ?? 0,
+      aegis: (e) => e.tempHpPerCombat ?? 0,
+      precision: (e) => e.critRangeBonus ?? 0,
+      rend: (e) => e.bleedDamage ?? 0,
+      cascade: (e) => e.followupDamageBonus ?? 0,
+      renewal: (e) => e.regenPerTurn ?? 0,
+      spellpower: (e) => (e.spellDamageBonus ?? 0) + (e.spellAttackBonus ?? 0),
+      spellfocus: (e) => e.spellDcBonus ?? 0,
+      signature: (e) =>
+        (e.rageDamageBonus ?? 0) + (e.markDamageBonus ?? 0) + (e.sneakDamageBonus ?? 0),
+    };
+    for (const relic of LEGENDARIES) {
+      expect(
+        channelFor[relic.slot](relic.effects),
+        `${relic.id} lacks its ${relic.slot} channel`,
+      ).toBeGreaterThan(0);
+    }
+  });
+
+  it('gives every slot display copy', () => {
+    for (const slot of RELIC_SLOTS) {
+      expect(RELIC_SLOT_META[slot].name.length).toBeGreaterThan(0);
+      expect(RELIC_SLOT_META[slot].blurb.length).toBeGreaterThan(0);
+    }
   });
 });
 

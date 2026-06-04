@@ -24,7 +24,7 @@ export function HubScreen() {
   const selectedAscension = useGameStore((s) => s.selectedAscension);
   const newGamePlusActive = useGameStore((s) => s.newGamePlusActive);
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
-  const activeLegendaries = useGameStore((s) => s.activeLegendaries);
+  const equippedRelics = useGameStore((s) => s.equippedRelics);
   const delveCount = useGameStore((s) => s.delveCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
   const renownSpent = useGameStore((s) => s.renownSpent);
@@ -244,7 +244,9 @@ export function HubScreen() {
               ✦ Relics
             </div>
             <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
-              {ownedLegendaries.length > 0 ? `${activeLegendaries.length} equipped →` : 'Open →'}
+              {ownedLegendaries.length > 0
+                ? `${Object.keys(equippedRelics).length} bound →`
+                : 'Open →'}
             </div>
           </button>
         )}

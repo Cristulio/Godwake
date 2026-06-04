@@ -9,7 +9,7 @@ import type { ClassId } from '../schemas/ids';
  * Set bonuses are pure EFFECTS (the affix payload), like the relics themselves —
  * no armour class, no weapon damage. A class-bound set only DROPS for (and themes
  * to) its class, but any owned piece is stashed regardless; the equip gate lives
- * in metaStore.setActiveLegendaries.
+ * in metaStore.applyRelicLoadout.
  */
 
 export interface SetBonusTier {
@@ -28,7 +28,7 @@ export interface LegendarySet {
   /**
    * A class-bound set only DROPS for (and themes to) this class. Omit for a
    * class-agnostic set. Owned pieces are always stashed; the equip gate is in
-   * metaStore.setActiveLegendaries.
+   * metaStore.applyRelicLoadout.
    */
   classGate?: ClassId;
   /** Relic ids that make up the set, in display order. */

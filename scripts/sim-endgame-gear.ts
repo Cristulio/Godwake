@@ -85,6 +85,8 @@ import {
   aggregateLegendaryEffects,
   canEquipLegendary,
   getLegendary,
+  RELIC_SLOTS,
+  type RelicSlot,
 } from '../src/content/legendaries';
 import { rollGearStock, rollLegendaryOffer, tierForChapter } from '../src/components/delve/shopStock';
 import type { Character } from '../src/types/character';
@@ -244,13 +246,31 @@ function applyPermanentUpgrades(c: Character, unlocked: UnlockedUpgrades): Chara
 
 // ─── Legendary attunement (the persistent meta-power) ────────────────────────
 
+/** Crude power proxy for a relic: the sum of its numeric effect magnitudes. */
+function relicPower(id: string): number {
+  const e = getLegendary(id)?.effects;
+  if (!e) return 0;
+  return Object.values(e).reduce<number>((n, v) => n + (typeof v === 'number' ? v : 0), 0);
+}
+
 /**
- * Every owned relic the class can equip rides into the run — legendaries are
- * effect-only with NO slot cap; class-bound relics only stick for their class
- * (canEquipLegendary). Mirrors metaStore.setActiveLegendaries.
+ * The relics that ride into the run: the strongest owned, class-eligible relic in
+ * each of the nine typed slots (the hub binds at most ONE per slot). Class-bound
+ * relics only stick for their class (canEquipLegendary). Mirrors the cap in
+ * metaStore.applyRelicLoadout; the progressive slot-unlock is left out (this
+ * measures the power ceiling, so every slot is assumed open).
  */
 function chooseActiveLegendaries(owned: string[], classId: ClassId): string[] {
-  return owned.filter((id) => canEquipLegendary(id, classId as SchemaClassId));
+  const bySlot = new Map<RelicSlot, string>();
+  for (const id of owned) {
+    if (!canEquipLegendary(id, classId as SchemaClassId)) continue;
+    const relic = getLegendary(id);
+    if (!relic) continue;
+    const cur = bySlot.get(relic.slot);
+    if (!cur || relicPower(id) > relicPower(cur)) bySlot.set(relic.slot, id);
+  }
+  // Stable slot order keeps the modelled loadout deterministic across runs.
+  return RELIC_SLOTS.map((s) => bySlot.get(s)).filter((id): id is string => !!id);
 }
 
 /** Count how many of these relics are the apex "ascendant" tier. */

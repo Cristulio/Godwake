@@ -4,6 +4,7 @@ import type { UnlockedUpgrades } from '../engine/character/upgrades';
 import { getAffix } from '../content/items';
 import { getBlessing } from '../content/blessings';
 import { getQuirk } from '../content/quirks';
+import type { RelicSlot } from '../content/legendaries';
 
 /**
  * Current persisted save shape version.
@@ -80,8 +81,12 @@ import { getQuirk } from '../content/quirks';
  *             (cumulative renown spent on Grove upgrades, default 0) added to the
  *             meta snapshot. Old saves get no back-credit for past spends — the
  *             roster re-opens as they spend renown again (saves disposable in dev).
+ *  v17 → v18: Relics became a typed 9-slot loadout. The free-equip
+ *             `activeLegendaries` list is dropped; `equippedRelics` (a per-slot
+ *             map, default {}) replaces it. No back-port — owned relics are kept,
+ *             but the player re-equips them into slots at the hub.
  */
-export const SAVE_VERSION = 17;
+export const SAVE_VERSION = 18;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -252,7 +257,7 @@ export interface MigratedSnapshot {
   hasReincarnated: boolean;
   knownNpcs: string[];
   ownedLegendaries: string[];
-  activeLegendaries: string[];
+  equippedRelics: Partial<Record<RelicSlot, string>>;
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
@@ -370,8 +375,17 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
   if (!Array.isArray(state.ownedLegendaries)) {
     state.ownedLegendaries = [];
   }
-  if (!Array.isArray(state.activeLegendaries)) {
-    state.activeLegendaries = [];
+  // v17 → v18: relics became a typed 9-slot loadout. Drop the old free-equip
+  // `activeLegendaries` list (no back-port; saves disposable in dev) — owned
+  // relics are kept, but the player re-equips them into slots. `equippedRelics`
+  // (a per-slot map) starts empty; a present, well-shaped map is preserved.
+  delete state.activeLegendaries;
+  if (
+    !state.equippedRelics ||
+    typeof state.equippedRelics !== 'object' ||
+    Array.isArray(state.equippedRelics)
+  ) {
+    state.equippedRelics = {};
   }
 
   // v9 → v10: per-soul seen-once dialogue beat tracking.

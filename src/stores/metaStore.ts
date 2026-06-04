@@ -11,8 +11,11 @@ import {
   legendaryBankPool,
   aggregateLegendaryEffects,
   canEquipLegendary,
+  getLegendary,
+  RELIC_SLOTS,
+  type RelicSlot,
 } from '../content/legendaries';
-import { isFeatureUnlocked } from '../engine/progression/unlocks';
+import { isFeatureUnlocked, unlockedRelicSlots } from '../engine/progression/unlocks';
 
 /**
  * Long-term progress that survives reincarnation but resets on New Game:
@@ -100,11 +103,13 @@ interface MetaStoreState {
    */
   ownedLegendaries: string[];
   /**
-   * The owned legendaries currently EQUIPPED (no slot cap — they stay on until
-   * changed). Their effect payloads are baked onto the character by
-   * `setActiveLegendaries`; class-bound relics only stick while playing that class.
+   * The equipped relic LOADOUT — at most one relic per typed slot
+   * ({@link RelicSlot}). Equipping a relic fills its slot, replacing whatever sat
+   * there. Their summed effect payloads are baked onto the character by
+   * `applyRelicLoadout`; class-bound relics only stick while playing that class,
+   * and a slot only holds a relic once it has unlocked (renown-spent paced).
    */
-  activeLegendaries: string[];
+  equippedRelics: Partial<Record<RelicSlot, string>>;
   /**
    * Whether the soul has cleared the whole chain (felled Melissan) at least once.
    * Set the first time the final chapter is cleared. Gates the one-time
@@ -186,10 +191,21 @@ interface MetaStoreState {
    */
   bankLegendary: (id: string) => boolean;
   /**
-   * Set the equipped legendaries (validated against ownership + the class-bound
-   * gate; no slot cap) and bake their effect payloads onto the active character.
+   * Equip a relic into ITS typed slot, replacing whatever relic sat there. No-op
+   * if the relic is unknown, un-owned, in a still-locked slot, or class-bound to a
+   * class other than the worn one. Re-bakes the summed effect payloads.
    */
-  setActiveLegendaries: (ids: string[]) => void;
+  equipRelic: (relicId: string) => void;
+  /** Clear a typed slot's relic (back to bare) and re-bake the summed effects. */
+  unequipRelicSlot: (slot: RelicSlot) => void;
+  /**
+   * Re-validate the equipped loadout against the worn class, ownership, and the
+   * unlocked-slot count (dropping anything no longer valid — e.g. a class-bound
+   * relic after a body swap, or a slot that isn't open yet) and bake the summed
+   * effect payloads onto the active character. Idempotent; the re-bake entry point
+   * used on load and on a body swap.
+   */
+  applyRelicLoadout: () => void;
   /**
    * Mark the whole chain cleared (felled Melissan). Set once the Throne-of-Bhaal
    * ending capstone has played; idempotent. Unlocks the title's New Game+ entry.
@@ -224,7 +240,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   seenDialogueBeats: [],
   seenTutorials: [],
   ownedLegendaries: [],
-  activeLegendaries: [],
+  equippedRelics: {},
   gameCompleted: false,
   selectedAscension: 0,
   newGamePlusActive: false,
@@ -380,17 +396,47 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     return true;
   },
 
-  setActiveLegendaries: (ids) => {
+  equipRelic: (relicId) => {
+    const relic = getLegendary(relicId);
+    if (!relic) return;
+    if (!get().ownedLegendaries.includes(relicId)) return;
+    // The slot must have unlocked, and a class-bound relic only fits the worn body.
+    if (RELIC_SLOTS.indexOf(relic.slot) >= unlockedRelicSlots(get().renownSpent)) return;
+    const classId = useCharacterStore.getState().character?.classId;
+    if (classId && !canEquipLegendary(relicId, classId)) return;
+    set({ equippedRelics: { ...get().equippedRelics, [relic.slot]: relicId } });
+    get().applyRelicLoadout();
+  },
+
+  unequipRelicSlot: (slot) => {
+    if (get().equippedRelics[slot] === undefined) return;
+    const next = { ...get().equippedRelics };
+    delete next[slot];
+    set({ equippedRelics: next });
+    get().applyRelicLoadout();
+  },
+
+  applyRelicLoadout: () => {
     const owned = get().ownedLegendaries;
     const classId = useCharacterStore.getState().character?.classId;
-    // Keep only owned ids, dedupe, and drop class-bound relics the current class
-    // can't equip. No slot cap — equipped relics stay on until changed.
-    const valid = [...new Set(ids)].filter(
-      (id) => owned.includes(id) && (!classId || canEquipLegendary(id, classId)),
-    );
-    set({ activeLegendaries: valid });
-    // Bake the effect payloads onto the live character so the affix pipeline
-    // reads them. The field rides reincarnation/descent via object spread
+    const unlocked = unlockedRelicSlots(get().renownSpent);
+    const current = get().equippedRelics;
+    // Re-validate every slotted relic: it must be a real relic that still claims
+    // this slot, owned, in an unlocked slot, and equippable by the worn class.
+    // Anything failing is dropped (e.g. a class-bound relic after a body swap).
+    const next: Partial<Record<RelicSlot, string>> = {};
+    RELIC_SLOTS.forEach((slot, idx) => {
+      const id = current[slot];
+      if (!id || idx >= unlocked) return;
+      const relic = getLegendary(id);
+      if (!relic || relic.slot !== slot) return;
+      if (!owned.includes(id)) return;
+      if (classId && !canEquipLegendary(id, classId)) return;
+      next[slot] = id;
+    });
+    set({ equippedRelics: next });
+    // Bake the summed effect payloads onto the live character so the affix
+    // pipeline reads them. The field rides reincarnation/descent via object spread
     // (reincarnateSoul, startDelve) and a hub swap via carrySoulProgress.
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
@@ -398,7 +444,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       const setsUnlocked = isFeatureUnlocked('sets', get());
       charSlice.setCharacter({
         ...character,
-        legendaryEffects: aggregateLegendaryEffects(valid, setsUnlocked),
+        legendaryEffects: aggregateLegendaryEffects(Object.values(next), setsUnlocked),
       });
     }
   },
@@ -437,7 +483,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       seenDialogueBeats: [],
       seenTutorials: [],
       ownedLegendaries: [],
-      activeLegendaries: [],
+      equippedRelics: {},
       gameCompleted: false,
       selectedAscension: 0,
       newGamePlusActive: false,

@@ -14,6 +14,11 @@ import {
   SLOT_RENOWN_THRESHOLDS,
   unlockedFeatures,
   nextLockedFeature,
+  STARTING_RELIC_SLOTS,
+  RELIC_SLOT_RENOWN_THRESHOLDS,
+  unlockedRelicSlots,
+  relicSlotUnlockRenown,
+  isRelicSlotUnlocked,
   type ProgressionMeta,
 } from './unlocks';
 import { getTutorial } from '../../content/tutorials';
@@ -376,5 +381,43 @@ describe('migration ↔ unlock ladder', () => {
   it('a fresh soul (delveCount 0, no clears) has only the always-on elites', () => {
     // Every power/gear/Grove gate is shut; elites are always available now.
     expect(unlockedFeatures(mkMeta())).toEqual(['elite-nodes']);
+  });
+});
+
+describe('relic loadout slots (renown-spent paced)', () => {
+  it('opens three slots from the start, before any Renown is laid down', () => {
+    expect(STARTING_RELIC_SLOTS).toBe(3);
+    expect(unlockedRelicSlots(0)).toBe(3);
+  });
+
+  it('opens one more slot at each renown-spent bar, never past nine', () => {
+    expect(RELIC_SLOT_RENOWN_THRESHOLDS).toHaveLength(6);
+    expect(unlockedRelicSlots(99)).toBe(3);
+    expect(unlockedRelicSlots(100)).toBe(4);
+    expect(unlockedRelicSlots(250)).toBe(5);
+    expect(unlockedRelicSlots(450)).toBe(6);
+    expect(unlockedRelicSlots(700)).toBe(7);
+    expect(unlockedRelicSlots(1050)).toBe(8);
+    expect(unlockedRelicSlots(1500)).toBe(9);
+    expect(unlockedRelicSlots(99999)).toBe(9);
+  });
+
+  it('grows monotonically with renown spent', () => {
+    let prev = 0;
+    for (const spent of [0, 50, 100, 300, 700, 1050, 1500, 5000]) {
+      const n = unlockedRelicSlots(spent);
+      expect(n).toBeGreaterThanOrEqual(prev);
+      prev = n;
+    }
+  });
+
+  it('reports each slot’s unlock bar; the three starters are free', () => {
+    expect(relicSlotUnlockRenown(0)).toBe(0);
+    expect(relicSlotUnlockRenown(2)).toBe(0);
+    expect(relicSlotUnlockRenown(3)).toBe(100);
+    expect(relicSlotUnlockRenown(8)).toBe(1500);
+    expect(isRelicSlotUnlocked(8, 1499)).toBe(false);
+    expect(isRelicSlotUnlocked(8, 1500)).toBe(true);
+    expect(isRelicSlotUnlocked(2, 0)).toBe(true);
   });
 });

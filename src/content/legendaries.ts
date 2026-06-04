@@ -3,6 +3,54 @@ import type { ClassId } from '../schemas/ids';
 import { computeSetBonuses } from './sets';
 
 /**
+ * The nine TYPED relic slots. Every relic lives in exactly ONE slot, chosen by
+ * its PRIMARY effect — but a relic still grants ALL of its effects when equipped.
+ * The hub loadout holds at most one relic per slot
+ * (metaStore.equippedRelics), and the slots open PROGRESSIVELY as the soul lays
+ * Renown down at the Grove (engine/progression/unlocks.unlockedRelicSlots).
+ *
+ * Array order is the reveal / unlock order: the first three are open from the
+ * very start, the remaining six unlock on the renown-spent bars. The early slots
+ * are the ones a fresh soul can actually fill from the base drop pool; the
+ * caster / signature / renewal slots — whose relics are mostly New-Game+ only —
+ * sit at the deep end of the ladder.
+ */
+export const RELIC_SLOTS = [
+  'vampire',
+  'aegis',
+  'precision',
+  'rend',
+  'spellfocus',
+  'cascade',
+  'spellpower',
+  'signature',
+  'renewal',
+] as const;
+
+export type RelicSlot = (typeof RELIC_SLOTS)[number];
+
+export interface RelicSlotMeta {
+  id: RelicSlot;
+  /** Slot label shown on the loadout (in-world, terse). */
+  name: string;
+  /** One-line description of the gift this slot's relics share. */
+  blurb: string;
+}
+
+/** Display copy for each typed slot. */
+export const RELIC_SLOT_META: Record<RelicSlot, RelicSlotMeta> = {
+  vampire: { id: 'vampire', name: 'Vampire', blurb: 'Drink the life from every wound you deal.' },
+  aegis: { id: 'aegis', name: 'Aegis', blurb: 'A ward of borrowed life at each fight’s first breath.' },
+  precision: { id: 'precision', name: 'Precision', blurb: 'Find the killing seam more often.' },
+  rend: { id: 'rend', name: 'Rend', blurb: 'Leave wounds that go on bleeding.' },
+  spellfocus: { id: 'spellfocus', name: 'Spellfocus', blurb: 'Make your magic harder to refuse.' },
+  cascade: { id: 'cascade', name: 'Cascade', blurb: 'Each follow-up blow lands the harder.' },
+  spellpower: { id: 'spellpower', name: 'Spellpower', blurb: 'Lend your spells a crueler edge.' },
+  signature: { id: 'signature', name: 'Signature', blurb: 'Sharpen what only your kind can do.' },
+  renewal: { id: 'renewal', name: 'Renewal', blurb: 'Knit your hurts closed, turn by turn.' },
+};
+
+/**
  * A legendary relic: cross-delve persistent gear managed only at the Phandalin
  * hub (Hades keepsake/aspect style — separate from the run's affix gear). A relic
  * carries NO armour class and NO weapon damage; it is a pure EFFECT, layered on
@@ -11,8 +59,9 @@ import { computeSetBonuses } from './sets';
  *
  * A relic with a `classGate` is class-BOUND: it can DROP for any class (and is
  * stashed until then) but is only equippable while playing that class — the gate
- * is enforced in metaStore.setActiveLegendaries. `setId` ties a relic to a
- * legendary SET whose completion grants extra effects on top (content/sets.ts).
+ * is enforced in metaStore.applyRelicLoadout. `setId` ties a relic to a legendary
+ * SET whose completion grants extra effects on top (content/sets.ts). `slot` is
+ * the one typed loadout slot the relic occupies (see {@link RelicSlot}).
  */
 export interface Legendary {
   id: string;
@@ -23,6 +72,8 @@ export interface Legendary {
   effect: string;
   /** The relic's mechanical payload — an EFFECT set, applied via the affix path. */
   effects: AffixModifiers;
+  /** The ONE typed loadout slot this relic occupies (chosen by primary effect). */
+  slot: RelicSlot;
   /** Set this relic belongs to, if any (content/sets.ts). */
   setId?: string;
   /** Class-bound: drops for any class, equippable only while playing this one. */
@@ -47,7 +98,8 @@ export interface Legendary {
 
 /**
  * The legendary collection. Effect-only, deliberately modest — sims tune the
- * magnitudes later; the grind to earn them (elite-node drops) stays.
+ * magnitudes later; the grind to earn them (elite-node drops) stays. Each relic's
+ * `slot` is its PRIMARY effect: it still grants every effect it carries.
  */
 export const LEGENDARIES: readonly Legendary[] = [
   {
@@ -56,6 +108,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A knot of livewood cut from Mielikki’s grove, still warm with sap.',
     effect: 'Heal 12% of the damage you deal',
     effects: { lifestealPct: 12 },
+    slot: 'vampire',
   },
   {
     id: 'bulwark-sigil',
@@ -63,6 +116,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A warding glyph hammered into old shield-bronze, cold to the touch.',
     effect: 'Gain 8 temporary HP at the start of each fight',
     effects: { tempHpPerCombat: 8 },
+    slot: 'aegis',
   },
   {
     id: 'gauntlets-of-the-titan',
@@ -70,6 +124,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Oversized vambraces that lend a giant’s pull to a mortal arm.',
     effect: 'Your blows rend for +4 bleed damage',
     effects: { bleedDamage: 4 },
+    slot: 'rend',
   },
   {
     id: 'cloak-of-the-nightwind',
@@ -77,6 +132,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Spun from shadow and a hunting cat’s quiet.',
     effect: 'Critical hits land on 19–20',
     effects: { critRangeBonus: 1 },
+    slot: 'precision',
   },
   {
     id: 'sages-diadem',
@@ -84,6 +140,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A thin circlet that hums faintly against the temples.',
     effect: '+1 spell save DC and +2 spell damage',
     effects: { spellDcBonus: 1, spellDamageBonus: 2 },
+    slot: 'spellfocus',
   },
   {
     id: 'hunters-eye',
@@ -91,6 +148,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A petrified raptor’s eye that never blinks at a weak point.',
     effect: 'Heal 8% of damage dealt; crits land on 19–20',
     effects: { lifestealPct: 8, critRangeBonus: 1 },
+    slot: 'vampire',
   },
 
   // --- Set: Aegis of the Vigil (class-agnostic, 3 pieces) -------------------
@@ -100,6 +158,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A warden’s greathelm, dented by blows that never reached the soul.',
     effect: 'Gain 4 temporary HP at the start of each fight',
     effects: { tempHpPerCombat: 4 },
+    slot: 'aegis',
     setId: 'vigil',
   },
   {
@@ -108,6 +167,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A heavy cloak stitched with the sigils of the wall-watch.',
     effect: 'Gain 4 temporary HP at the start of each fight',
     effects: { tempHpPerCombat: 4 },
+    slot: 'aegis',
     setId: 'vigil',
   },
   {
@@ -116,6 +176,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A locket of clouded amber that steadies a failing pulse.',
     effect: 'Heal 8% of the damage you deal',
     effects: { lifestealPct: 8 },
+    slot: 'vampire',
     setId: 'vigil',
   },
 
@@ -126,6 +187,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A war-leader’s gauntlet, its knuckles scarred from a hundred charges.',
     effect: '+3 damage on each follow-up swing',
     effects: { followupDamageBonus: 3 },
+    slot: 'cascade',
     setId: 'warsong',
     classGate: 'fighter',
   },
@@ -135,6 +197,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A crested helm that turns a battle-cry into something men follow.',
     effect: 'Your blows rend for +3 bleed damage',
     effects: { bleedDamage: 3 },
+    slot: 'rend',
     setId: 'warsong',
     classGate: 'fighter',
   },
@@ -154,6 +217,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A line-captain’s greathelm, the visor worn smooth by oaths sworn through it.',
     effect: '+2 damage on each follow-up swing',
     effects: { followupDamageBonus: 2 },
+    slot: 'cascade',
     setId: 'ironclad',
     classGate: 'fighter',
     ascensionExclusive: true,
@@ -164,6 +228,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Sabatons that have held a line no enemy crossed, dented but never turned.',
     effect: 'Gain 6 temporary HP at the start of each fight',
     effects: { tempHpPerCombat: 6 },
+    slot: 'aegis',
     setId: 'ironclad',
     classGate: 'fighter',
     ascensionExclusive: true,
@@ -174,6 +239,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A war-standard half-burned and never lowered; the cloth still snaps in dead air.',
     effect: 'Critical hits land on 19–20',
     effects: { critRangeBonus: 1 },
+    slot: 'precision',
     setId: 'ironclad',
     classGate: 'fighter',
     ascensionExclusive: true,
@@ -186,6 +252,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'The hide of a thing that died screaming, and screams a little still when the rage takes you.',
     effect: '+3 melee damage while Rage burns',
     effects: { rageDamageBonus: 3 },
+    slot: 'signature',
     setId: 'bloodrage',
     classGate: 'barbarian',
     ascensionExclusive: true,
@@ -196,6 +263,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A tusk torn from a dire beast and lashed to the haft; the wounds it opens do not close.',
     effect: 'Your blows rend for +3 bleed damage',
     effects: { bleedDamage: 3 },
+    slot: 'rend',
     setId: 'bloodrage',
     classGate: 'barbarian',
     ascensionExclusive: true,
@@ -206,6 +274,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Bone and red ochre bound with sinew — the ancestors lean close when it is carried into the dark.',
     effect: 'Gain 6 temporary HP at the start of each fight',
     effects: { tempHpPerCombat: 6 },
+    slot: 'aegis',
     setId: 'bloodrage',
     classGate: 'barbarian',
     ascensionExclusive: true,
@@ -218,6 +287,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A hood of oiled leaf and shadow; under it, the marked quarry never quite leaves your sight.',
     effect: '+3 damage against your Hunter’s Mark target',
     effects: { markDamageBonus: 3 },
+    slot: 'signature',
     setId: 'wildstalker',
     classGate: 'ranger',
     ascensionExclusive: true,
@@ -228,6 +298,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Fletched with feathers from birds that hunt in silence; the draw finds the gap of its own accord.',
     effect: 'Critical hits land on 19–20',
     effects: { critRangeBonus: 1 },
+    slot: 'precision',
     setId: 'wildstalker',
     classGate: 'ranger',
     ascensionExclusive: true,
@@ -238,6 +309,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A predator’s hide that drinks a little of every kill and gives some warmth back.',
     effect: 'Heal 8% of the damage you deal',
     effects: { lifestealPct: 8 },
+    slot: 'vampire',
     setId: 'wildstalker',
     classGate: 'ranger',
     ascensionExclusive: true,
@@ -250,6 +322,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Indigo silk sewn with cold-burning sigils; the weave thins the wall between word and ruin.',
     effect: '+3 spell damage',
     effects: { spellDamageBonus: 3 },
+    slot: 'spellpower',
     setId: 'archmagi',
     classGate: 'wizard',
     ascensionExclusive: true,
@@ -260,6 +333,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A pendant of glass that holds a fixed star; the eye behind the spell never wavers.',
     effect: '+1 spell attack rolls',
     effects: { spellAttackBonus: 1 },
+    slot: 'spellpower',
     setId: 'archmagi',
     classGate: 'wizard',
     ascensionExclusive: true,
@@ -270,6 +344,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A sphere of frozen quintessence; spoken law settles into the world a fraction harder around it.',
     effect: '+1 spell save DC',
     effects: { spellDcBonus: 1 },
+    slot: 'spellfocus',
     setId: 'archmagi',
     classGate: 'wizard',
     ascensionExclusive: true,
@@ -282,6 +357,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Living moss and bark grown into a cloak; it knits the wearer’s hurts as it does the forest’s.',
     effect: 'Regenerate 2 HP at the start of each turn',
     effects: { regenPerTurn: 2 },
+    slot: 'renewal',
     setId: 'greenwarden',
     classGate: 'druid',
     ascensionExclusive: true,
@@ -292,6 +368,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A ring of braided green wood that never dries; the old growl of the wild speaks louder through it.',
     effect: '+3 spell damage',
     effects: { spellDamageBonus: 3 },
+    slot: 'spellpower',
     setId: 'greenwarden',
     classGate: 'druid',
     ascensionExclusive: true,
@@ -302,6 +379,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A seed that quickens against the skin; what it takes from the foe, it returns to the bearer as sap.',
     effect: 'Heal 8% of the damage you deal',
     effects: { lifestealPct: 8 },
+    slot: 'vampire',
     setId: 'greenwarden',
     classGate: 'druid',
     ascensionExclusive: true,
@@ -314,6 +392,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A cowl woven from the dark between torches; the killing strike finds the seam every time.',
     effect: '+3 damage on the strike Sneak Attack fires',
     effects: { sneakDamageBonus: 3 },
+    slot: 'signature',
     setId: 'shadowdancer',
     classGate: 'rogue',
     ascensionExclusive: true,
@@ -324,6 +403,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'It pools like spilled ink and pays the wearer back a little life for every wound dealt.',
     effect: 'Heal 8% of the damage you deal',
     effects: { lifestealPct: 8 },
+    slot: 'vampire',
     setId: 'shadowdancer',
     classGate: 'rogue',
     ascensionExclusive: true,
@@ -334,6 +414,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A fang of black glass that drinks the light off its own edge; it bites true more often than it should.',
     effect: 'Critical hits land on 19–20',
     effects: { critRangeBonus: 1 },
+    slot: 'precision',
     setId: 'shadowdancer',
     classGate: 'rogue',
     ascensionExclusive: true,
@@ -346,6 +427,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A heart of cold iron that beats only when its bearer has died at least once. It has.',
     effect: 'Gain 6 temporary HP at the start of each fight',
     effects: { tempHpPerCombat: 6 },
+    slot: 'aegis',
     setId: 'revenant',
     ascensionExclusive: true,
   },
@@ -355,6 +437,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Grave-linen that refused to stay in the grave; the wounds beneath it close on their own.',
     effect: 'Regenerate 2 HP at the start of each turn',
     effects: { regenPerTurn: 2 },
+    slot: 'renewal',
     setId: 'revenant',
     ascensionExclusive: true,
   },
@@ -364,6 +447,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A length of funeral chain that binds a fragment of the wheel to the one who carries it.',
     effect: 'Heal 8% of the damage you deal',
     effects: { lifestealPct: 8 },
+    slot: 'vampire',
     setId: 'revenant',
     ascensionExclusive: true,
   },
@@ -375,6 +459,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Beaten from the melted crowns of kings who fell to the chain. It weighs more than gold should.',
     effect: 'Your blows rend for +4 bleed damage',
     effects: { bleedDamage: 4 },
+    slot: 'rend',
     setId: 'conqueror',
     ascensionExclusive: true,
   },
@@ -384,6 +469,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A gauntlet that has closed on a hundred surrenders; the killing eye comes easy to its hand.',
     effect: 'Critical hits land on 19–20',
     effects: { critRangeBonus: 1 },
+    slot: 'precision',
     setId: 'conqueror',
     ascensionExclusive: true,
   },
@@ -393,6 +479,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A war-seal that drinks the field’s spilled strength back into the one who holds the ground.',
     effect: 'Heal 8% of the damage you deal',
     effects: { lifestealPct: 8 },
+    slot: 'vampire',
     setId: 'conqueror',
     ascensionExclusive: true,
   },
@@ -406,6 +493,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'A dwarven warhammer quenched in giant-blood and bound with the smith-runes of Clangeddin.',
     effect: 'Your blows rend for +6 bleed damage; +4 on each follow-up swing',
     effects: { bleedDamage: 6, followupDamageBonus: 4 },
+    slot: 'rend',
     ascendant: true,
   },
   {
@@ -414,6 +502,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Stitched from the burial shroud of a god of secrets; the weave drinks the cold between spells.',
     effect: '+2 spell save DC and +4 spell damage',
     effects: { spellDcBonus: 2, spellDamageBonus: 4 },
+    slot: 'spellfocus',
     ascendant: true,
   },
   {
@@ -422,6 +511,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'Torn from the finger of the demilich Kangaxx; the wound it leaves never stops closing.',
     effect: 'Gain 12 temporary HP each fight and regenerate 3 HP per turn',
     effects: { tempHpPerCombat: 12, regenPerTurn: 3 },
+    slot: 'aegis',
     ascendant: true,
   },
   {
@@ -430,6 +520,7 @@ export const LEGENDARIES: readonly Legendary[] = [
     flavor: 'The Holy Avenger, shorn to a shard of radiant steel that thirsts for the unclean.',
     effect: 'Heal 15% of the damage you deal; critical hits land on 19–20',
     effects: { lifestealPct: 15, critRangeBonus: 1 },
+    slot: 'vampire',
     ascendant: true,
   },
 ];
@@ -441,6 +532,16 @@ const BY_ID = new Map(LEGENDARIES.map((l) => [l.id, l]));
 
 export function getLegendary(id: string): Legendary | undefined {
   return BY_ID.get(id);
+}
+
+/** The typed slot a relic occupies, or undefined for an unknown id. */
+export function relicSlotOf(id: string): RelicSlot | undefined {
+  return BY_ID.get(id)?.slot;
+}
+
+/** Every relic that lives in a given typed slot, in collection order. */
+export function relicsInSlot(slot: RelicSlot): Legendary[] {
+  return LEGENDARIES.filter((l) => l.slot === slot);
 }
 
 /**
@@ -483,7 +584,7 @@ export function canEquipLegendary(id: string, classId: ClassId): boolean {
 
 /**
  * The effect payloads of the equipped relics PLUS any completed-set bonuses, as a
- * flat list. `metaStore.setActiveLegendaries` bakes this onto the character;
+ * flat list. `metaStore.applyRelicLoadout` bakes this onto the character;
  * `characterAffixMods` folds each entry into the shared affix pipeline so the
  * effects ride every channel the engine already reads.
  */
