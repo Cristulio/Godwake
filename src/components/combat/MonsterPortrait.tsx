@@ -142,6 +142,15 @@ import melissanUrl from '../../assets/sprites/monsters/melissan.svg';
 import ascendantSlayerUrl from '../../assets/sprites/monsters/ascendant-slayer.svg';
 import voidWardenUrl from '../../assets/sprites/monsters/void-warden.svg';
 import deathlessAscendantUrl from '../../assets/sprites/monsters/deathless-ascendant.svg';
+// ─── Elite-identity pass · bespoke ELITE leaders for Ch1–3 ────────────────
+import bugbearHeadsmanUrl from '../../assets/sprites/monsters/bugbear-headsman.svg';
+import hobgoblinDrillmasterUrl from '../../assets/sprites/monsters/hobgoblin-drillmaster.svg';
+import impNeedlerUrl from '../../assets/sprites/monsters/imp-needler.svg';
+import gallowsWightUrl from '../../assets/sprites/monsters/gallows-wight.svg';
+import cowledMagusUrl from '../../assets/sprites/monsters/cowled-magus.svg';
+import cowledHoundmasterUrl from '../../assets/sprites/monsters/cowled-houndmaster.svg';
+import slaverOverseerUrl from '../../assets/sprites/monsters/slaver-overseer.svg';
+import wardenLictorUrl from '../../assets/sprites/monsters/warden-lictor.svg';
 
 interface MonsterPortraitProps {
   defId: string;
@@ -306,6 +315,16 @@ const SPRITES: Record<string, SpriteEntry> = {
   'ascendant-slayer': { url: ascendantSlayerUrl, label: 'Ascendant Slayer' },
   'void-warden': { url: voidWardenUrl, label: 'Void-Warden' },
   'deathless-ascendant': { url: deathlessAscendantUrl, label: 'Deathless Ascendant' },
+  // ─── Elite-identity pass · bespoke ELITE leaders for Ch1–3 (base art,
+  //     retinted elite backlight) ──────────────────────────────────────────
+  'bugbear-headsman': { url: bugbearHeadsmanUrl, label: 'Bugbear Headsman' },
+  'hobgoblin-drillmaster': { url: hobgoblinDrillmasterUrl, label: 'Hobgoblin Drillmaster' },
+  'imp-needler': { url: impNeedlerUrl, label: 'Imp Needler' },
+  'gallows-wight': { url: gallowsWightUrl, label: 'Gallows Wight' },
+  'cowled-magus': { url: cowledMagusUrl, label: 'Cowled Magus' },
+  'cowled-houndmaster': { url: cowledHoundmasterUrl, label: 'Cowled Houndmaster' },
+  'slaver-overseer': { url: slaverOverseerUrl, label: 'Slaver Overseer' },
+  'warden-lictor': { url: wardenLictorUrl, label: 'Warden Lictor' },
   // Narrative-variant aliases: same sprite reused where the creature is
   // an explicit variant of another (bigger/elder version of the same thing).
   'dust-mephit-elder': { url: dustMephitUrl, label: 'Elder Dust Mephit' },

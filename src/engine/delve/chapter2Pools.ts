@@ -242,9 +242,9 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'A Cowled Audit',
     flavorText:
-      "A senior Cowled enforcer has been waiting for you — robe trim a shade lighter than the rest, mask polished to a mirror. A cuirassier stands at her elbow like a clerk who knows where the ledgers are kept.",
+      "A senior Cowled magus has been waiting for you — robe trim a shade lighter than the rest, mask polished to a mirror. A cuirassier stands at his elbow like a clerk who knows where the ledgers are kept. The magus would rather have processed you; bleed him pale and he stops being careful, and the air in front of his hands begins to fold.",
     monsters: [
-      { defId: 'cowled-enforcer', count: 1 },
+      { defId: 'cowled-magus', count: 1 },
       { defId: 'slaver-cuirassier', count: 1 },
     ],
     xpReward: 460,
@@ -253,8 +253,11 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Twin Cowls',
     flavorText:
-      "Two Cowled Wizards have come down the lane in unison. They do not speak. They do not need to. Where one looks, the other does not.",
-    monsters: [{ defId: 'cowled-enforcer', count: 2, displayPrefix: 'Enforcer' }],
+      "Two Cowled Wizards have come down the lane in unison — a magus a step ahead, an enforcer at his shoulder. They do not speak. They do not need to. Where one looks, the other does not; and when the magus is hurt enough to stop economising, the lane-light starts to lean toward his hands.",
+    monsters: [
+      { defId: 'cowled-magus', count: 1 },
+      { defId: 'cowled-enforcer', count: 1 },
+    ],
     xpReward: 480,
     goldReward: 24,
   },
@@ -272,9 +275,9 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Rooftop Chase',
     flavorText:
-      "You catch them on the tiled roof above the Trade Way — a Cowled Wizard in a hurry, a hobgoblin lieutenant holding the line. The wizard does not turn. The hobgoblin smiles.",
+      "You catch them on the tiled roof above the Trade Way — a Cowled magus in a hurry, a hobgoblin lieutenant holding the line. The magus does not turn; he keeps moving and lobbing grey force back over his shoulder, and when you finally cut him he stops running and turns to settle it in one cast. The hobgoblin smiles.",
     monsters: [
-      { defId: 'cowled-enforcer', count: 1 },
+      { defId: 'cowled-magus', count: 1 },
       { defId: 'hobgoblin', count: 1 },
     ],
     xpReward: 500,
@@ -283,10 +286,10 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: "The Bandit Captain's Brace",
     flavorText:
-      "A bandit-captain has set himself at the lane's mouth with a slaver-cuirassier at his shoulder. They are paid in different coin by different masters, but they have agreed about today.",
+      "A bandit-captain has set himself at the lane's mouth with a slaver-overseer at his shoulder, whip already loose in the overseer's hand. They are paid in different coin by different masters, but they have agreed about today: the captain finds the openings, and the crack of the lash makes sure you flinch into them.",
     monsters: [
       { defId: 'bandit-captain', count: 1 },
-      { defId: 'slaver-cuirassier', count: 1 },
+      { defId: 'slaver-overseer', count: 1 },
     ],
     xpReward: 480,
     goldReward: 32,
@@ -294,9 +297,9 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Cowled Kennel-Master',
     flavorText:
-      "A Cowled enforcer in silver-trim robes walks the lane with a shadow-hound at heel. The hound is not chained. The enforcer does not look at it.",
+      "A Cowled houndmaster in silver-trim robes walks the lane with a shadow-hound at heel. The hound is not chained. He does not look at it — he only opens his hand when the first one falls, and another seam of the dark detaches and lands running. Put him down or the kennel never empties.",
     monsters: [
-      { defId: 'cowled-enforcer', count: 1 },
+      { defId: 'cowled-houndmaster', count: 1 },
       { defId: 'shadow-hound', count: 1 },
     ],
     xpReward: 470,

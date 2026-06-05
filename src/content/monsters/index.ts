@@ -46,6 +46,15 @@ import { ASYLUM_FLESHWRIGHT } from './asylum-fleshwright';
 import { HOLLOW_GAZE } from './hollow-gaze';
 import { WITNESS_MOTE } from './witness-mote';
 import { GLOAMING_EYE } from './gloaming-eye';
+// ─── Elite-identity pass · bespoke ELITE leaders for Ch1–3 ────────────────
+import { BUGBEAR_HEADSMAN } from './bugbear-headsman';
+import { HOBGOBLIN_DRILLMASTER } from './hobgoblin-drillmaster';
+import { IMP_NEEDLER } from './imp-needler';
+import { GALLOWS_WIGHT } from './gallows-wight';
+import { COWLED_MAGUS } from './cowled-magus';
+import { COWLED_HOUNDMASTER } from './cowled-houndmaster';
+import { SLAVER_OVERSEER } from './slaver-overseer';
+import { WARDEN_LICTOR } from './warden-lictor';
 import { SPIDER_BROODMOTHER } from './spider-broodmother';
 import { DROW_WAR_PRIESTESS } from './drow-war-priestess';
 import { CAVERN_HUNTING_SPIDER } from './cavern-hunting-spider';
@@ -208,6 +217,15 @@ const ALL_MONSTERS: Monster[] = [
   STARFLENSED_MAWN,
   FALLEN_ARCHON,
   HOLLOW_DAWN,
+  // ─── Elite-identity pass · bespoke ELITE leaders for Ch1–3 ──────────────
+  BUGBEAR_HEADSMAN,
+  HOBGOBLIN_DRILLMASTER,
+  IMP_NEEDLER,
+  GALLOWS_WIGHT,
+  COWLED_MAGUS,
+  COWLED_HOUNDMASTER,
+  SLAVER_OVERSEER,
+  WARDEN_LICTOR,
   // ─── Chapter 6 · Beyond the Godwake ─────────────────────────────────────
   THREADBARE_PENITENT,
   CYCLE_REVENANT,
@@ -391,6 +409,15 @@ export {
   STARFLENSED_MAWN,
   FALLEN_ARCHON,
   HOLLOW_DAWN,
+  // ─── Elite-identity pass · bespoke ELITE leaders for Ch1–3 ──────────────
+  BUGBEAR_HEADSMAN,
+  HOBGOBLIN_DRILLMASTER,
+  IMP_NEEDLER,
+  GALLOWS_WIGHT,
+  COWLED_MAGUS,
+  COWLED_HOUNDMASTER,
+  SLAVER_OVERSEER,
+  WARDEN_LICTOR,
   // ─── Chapter 6 · Beyond the Godwake ─────────────────────────────────────
   THREADBARE_PENITENT,
   CYCLE_REVENANT,

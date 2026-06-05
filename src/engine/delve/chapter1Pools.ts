@@ -212,17 +212,17 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: "The Bugbear's Trove",
     flavorText:
-      'A side-chamber reeks of damp fur and old blood. A hulking goblinoid crouches over a pile of coin and scavenged trinkets. It hefts a spiked club and grunts a challenge.',
-    monsters: [{ defId: 'bugbear', count: 1 }],
+      'A side-chamber reeks of damp fur and old blood. A hulking goblinoid crouches over a pile of coin and other men\'s teeth. It hefts a spiked maul and grunts a challenge — bored, until you make it bleed, and then it hauls the maul up overhead and stops being bored at all.',
+    monsters: [{ defId: 'bugbear-headsman', count: 1 }],
     xpReward: 240,
     goldReward: 35,
   },
   {
     title: 'The Hobgoblin Picket',
     flavorText:
-      'A hobgoblin in scavenged half-plate stands at parade-rest. A goblin recruit cowers behind it — until the hobgoblin barks an order, and the goblin remembers what it\'s for.',
+      'A hobgoblin drillmaster in shined half-plate stands at parade-rest. A goblin recruit cowers behind it — until the drillmaster\'s flat command-voice lands on you both at once: the goblin remembers what it\'s for, and some trained-in part of your own arm flinches before you can stop it.',
     monsters: [
-      { defId: 'hobgoblin', count: 1 },
+      { defId: 'hobgoblin-drillmaster', count: 1 },
       { defId: 'goblin', count: 1 },
     ],
     xpReward: 216,
@@ -230,9 +230,9 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Imp\'s Court',
     flavorText:
-      'The imp from earlier — or one just like it — is back, this time with a hobgoblin enforcer it has bribed into the role of bodyguard. It points imperiously; the hobgoblin sighs and obliges.',
+      'A barb-tailed imp holds court from the rafters with a hobgoblin enforcer it has bribed into the role of bodyguard. It points imperiously; the hobgoblin sighs and obliges — while the imp keeps flicking its needle of a tail across you, and where it cuts the room starts to swim.',
     monsters: [
-      { defId: 'imp', count: 1 },
+      { defId: 'imp-needler', count: 1 },
       { defId: 'hobgoblin', count: 1 },
     ],
     xpReward: 264,
@@ -250,9 +250,9 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Hangman\'s Pit',
     flavorText:
-      'Two paupers were buried together in this hole and one of them has gotten back up wearing the other. A skeleton stands beside it, less ambitious — content with its own bones.',
+      'Two paupers were buried together in this hole and one of them has gotten back up wearing the other, the hanging-chain still knotted around its wrist. A skeleton stands beside it, less ambitious — content with its own bones — while the wight reaches for you with a hand gone grave-cold, to hold you still for the rest.',
     monsters: [
-      { defId: 'bone-stalker', count: 1 },
+      { defId: 'gallows-wight', count: 1 },
       { defId: 'skeleton', count: 1 },
     ],
     xpReward: 252,
