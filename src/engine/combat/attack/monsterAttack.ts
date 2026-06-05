@@ -658,6 +658,7 @@ function resolveSingleAttack(
   workingState = appendLog(workingState, {
     id: nextLogId(workingState),
     kind: 'roll',
+    source: 'enemy',
     text: `${attacker.instance.displayName} attacks ${nextCharacter.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}${advantageNote}.`,
   });
 
@@ -810,6 +811,7 @@ function resolveSingleAttack(
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
+      source: 'enemy',
       text: damageLine,
     });
 

@@ -9,12 +9,22 @@ interface CombatLogProps {
 
 // Visual hierarchy by kind: the action beats a player cares about — attack
 // rolls and the damage they land — read big and bright; bookkeeping (turn
-// markers, brace/temp-HP, flavor) shrinks and dims so it recedes.
+// markers, brace/temp-HP, flavor) shrinks and dims so it recedes. This is the
+// foe/neutral baseline; the hero's own beats are promoted by PLAYER_KIND_STYLE.
 const KIND_STYLE: Record<string, string> = {
   roll: 'text-[12px] font-semibold text-[var(--color-accent-gold)]',
   damage: 'text-[13px] font-bold tracking-wide text-[var(--color-accent-blood)]',
   system: 'text-[9px] uppercase tracking-wider font-display text-[var(--color-accent-amber)] opacity-60',
   narration: 'text-[10px] italic text-[var(--color-text-secondary)] opacity-60',
+};
+
+// The hero's OWN rolls and the damage THEY deal (entry.source === 'player') read
+// a clear step larger and brighter than the foe's lines, so a glance at the log
+// instantly surfaces what the player just did. Only roll/damage are promoted —
+// system/narration stay recessive whatever the source, so flavor never shouts.
+const PLAYER_KIND_STYLE: Record<string, string> = {
+  roll: 'text-[15px] font-bold text-[var(--color-accent-gold)]',
+  damage: 'text-[17px] font-bold tracking-wide text-[var(--color-accent-blood)] brightness-110',
 };
 
 const KIND_GLYPH: Record<string, string> = {
@@ -51,12 +61,20 @@ export function CombatLog({ entries, maxEntries = 80 }: CombatLogProps) {
       )}
       {tail.map((entry) => {
         const kind = entry.kind ?? 'narration';
+        // The hero's own roll/damage beats render at the promoted size; all else
+        // (the foe's lines, system, narration) keeps the recessive baseline.
+        const isPlayer = entry.source === 'player';
+        const style =
+          (isPlayer ? PLAYER_KIND_STYLE[kind] : undefined) ??
+          KIND_STYLE[kind] ??
+          'text-[var(--color-text-secondary)]';
+        const promoted = isPlayer && PLAYER_KIND_STYLE[kind] !== undefined;
         return (
           <div
             key={entry.id}
-            className={`${KIND_STYLE[kind] ?? 'text-[var(--color-text-secondary)]'} mb-0.5 flex gap-2 items-baseline`}
+            className={`${style} mb-0.5 flex gap-2 items-baseline`}
           >
-            <span className="opacity-50 text-[10px] shrink-0 w-3">
+            <span className={`shrink-0 w-3 ${promoted ? 'opacity-80 text-[12px]' : 'opacity-50 text-[10px]'}`}>
               {KIND_GLYPH[kind] ?? '›'}
             </span>
             <span className="flex-1">{entry.text}</span>

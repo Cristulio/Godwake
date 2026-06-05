@@ -170,6 +170,16 @@ export interface CombatLogEntry {
   text: string;
   /** Bucketing for styling: 'roll', 'damage', 'system', 'narration'. */
   kind?: 'roll' | 'damage' | 'system' | 'narration';
+  /**
+   * Whose beat this is, for log emphasis. 'player' = the hero's own action —
+   * their attack/cast rolls and the damage THEY deal — which the log renders a
+   * clear step larger and brighter so a glance reads "what I just did". Absent
+   * (or 'enemy') = a foe's line or neutral bookkeeping, left at the recessive
+   * size. Only roll/damage entries are promoted; system/narration stay small
+   * whatever the source. Stamped at the player's action choke points
+   * (playerAttack, castSpell) via {@link markPlayerLog}.
+   */
+  source?: 'player' | 'enemy';
 }
 
 export interface AttackEvent {

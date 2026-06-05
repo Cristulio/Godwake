@@ -18,3 +18,27 @@ export function appendLog(state: CombatState, ...entries: CombatLogEntry[]): Com
     log: merged.length > MAX_COMBAT_LOG ? merged.slice(-MAX_COMBAT_LOG) : merged,
   };
 }
+
+/**
+ * Mark the roll/damage log lines a player action just produced as the hero's
+ * own (`source: 'player'`), so CombatLog can render them dominant. Call once at
+ * a player-action choke point (playerAttack, castSpell): pass `before`, the set
+ * of log entries captured BEFORE the action ran — every roll/damage entry not in
+ * it is one the action appended and thus the player's own beat. Identity-based
+ * (entry objects are reused by reference across appendLog's array spreads and
+ * the MAX_COMBAT_LOG clip), so it stays correct even when an overlong fight
+ * clips older lines and shifts indices. System/narration lines are left alone;
+ * already-sourced entries are untouched.
+ */
+export function markPlayerLog(
+  state: CombatState,
+  before: ReadonlySet<CombatLogEntry>,
+): CombatState {
+  let changed = false;
+  const log = state.log.map((e) => {
+    if (before.has(e) || e.source || (e.kind !== 'roll' && e.kind !== 'damage')) return e;
+    changed = true;
+    return { ...e, source: 'player' as const };
+  });
+  return changed ? { ...state, log } : state;
+}

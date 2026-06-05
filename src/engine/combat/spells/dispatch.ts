@@ -1,4 +1,5 @@
 import { getSpell } from '../../../content/spells';
+import { markPlayerLog } from '../log';
 import { type CastResult, type CastSpellContext, canCastSpell } from './helpers';
 import { castFireBolt } from './fireBolt';
 import { castMagicMissile } from './magicMissile';
@@ -33,11 +34,25 @@ import { castEntangle } from './entangle';
 import { castSpiritBeast } from './spiritBeast';
 
 /**
- * Cast a known spell. Spell-by-spell switch — slot consumption and action
- * marking handled inside each branch so spells with unique cost shapes (e.g.,
- * Shield as a future reaction) stay flexible. Returns updated combat state.
+ * Cast a known spell. Stamps every roll/damage line the cast produced as the
+ * player's own (markPlayerLog) so the combat log renders the hero's spell hits
+ * and the damage they deal dominant over the enemy's lines — the choke point
+ * that covers every spell at once, the new ones included.
  */
 export function castSpell(ctx: CastSpellContext): CastResult {
+  const beforeLog = new Set(ctx.state.log);
+  const result = runCast(ctx);
+  return result.cast
+    ? { ...result, state: markPlayerLog(result.state, beforeLog) }
+    : result;
+}
+
+/**
+ * Spell-by-spell switch — slot consumption and action marking handled inside
+ * each branch so spells with unique cost shapes (e.g., Shield as a future
+ * reaction) stay flexible. Returns updated combat state.
+ */
+function runCast(ctx: CastSpellContext): CastResult {
   const check = canCastSpell(ctx.character, ctx.spellId);
   if (!check.ok) return { state: ctx.state, character: ctx.character, cast: false };
 

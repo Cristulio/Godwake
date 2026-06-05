@@ -198,6 +198,17 @@ export const FIRST_GEAR_TUTORIAL_ID = 'first-gear';
 export const COMBAT_INTRO_TUTORIAL_ID = 'combat-intro';
 
 /**
+ * The seenTutorials key for the first-elite coach — the spotlight/coachmark shown
+ * ONCE, the first time a brand-new soul has a SELECTABLE elite node on the route
+ * map (see EliteCoach). Like the combat coach it drives an overlay rather than a
+ * queued reveal card, so it has no TutorialContent entry — the id is only ever
+ * the seen-once gate, written the moment the coach activates so it is strictly
+ * one-time and never reappears on a later map. Distinct from the 'elite-nodes'
+ * ladder card (the now-sentinel feature unlock): this is the in-map onboarding.
+ */
+export const ELITE_INTRO_TUTORIAL_ID = 'elite-intro';
+
+/**
  * One-off reveals not tied to the feature ladder or a soul unlock, keyed by a
  * bare seenTutorials id. Shares the same queue + seen-once machinery as the
  * ladder cards; resolved by getTutorial after the typed registries.

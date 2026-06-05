@@ -41,7 +41,7 @@ import {
   patchDelveBudgets,
   type CombatActionResult,
 } from '../types';
-import { appendLog } from '../log';
+import { appendLog, markPlayerLog } from '../log';
 import { attachCombatVfx, weaponVfxKind } from '../vfx';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
 
@@ -91,6 +91,9 @@ export function playerAttack(
   weaponItemId: string,
 ): CombatActionResult {
   const { roller, character, state } = ctx;
+  // Snapshot the log before the swing so every roll/damage line it appends can
+  // be stamped as the player's own (markPlayerLog) for the log's emphasis.
+  const beforeLog = new Set(state.log);
   let nextCharacter: Character = character;
   const target = findCombatant(state, targetId);
   if (!target) return combatResult(state, nextCharacter);
@@ -928,7 +931,7 @@ export function playerAttack(
   }
 
   const ended = evaluateCombatEnd(nextState, nextCharacter);
-  return combatResult(ended.state, ended.character);
+  return combatResult(markPlayerLog(ended.state, beforeLog), ended.character);
 }
 
 function markPlayerActionUsed(

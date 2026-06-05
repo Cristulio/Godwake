@@ -5,6 +5,7 @@ import { chapterLabel, chapterMapNodes, getTwist } from '../../engine/delve';
 import { useGameStore } from '../../stores/gameStore';
 import { playSfx } from '../../engine/audio';
 import { Button } from '../ui/Button';
+import { EliteCoach, useEliteIntroCoach } from './EliteCoach';
 
 const COL_W = 118;
 const ROW_H = 92;
@@ -121,6 +122,17 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
     return lines;
   }, [placed, byId, visited, reachable, current]);
 
+  // First-elite coach: fires once when a brand-new soul first has a SELECTABLE
+  // (reachable + unlocked) elite on the route. Each between-rooms step re-mounts
+  // DelveMap, so the hook activates on the first such map and the seen-flag it
+  // writes on activation keeps every later map ineligible (#417 lesson).
+  const hasSelectableElite = useMemo(
+    () => placed.some(({ room }) => room.kind === 'elite' && reachable.has(room.id) && !room.locked),
+    [placed, reachable],
+  );
+  const { active: eliteCoachActive, dismiss: dismissEliteCoach } =
+    useEliteIntroCoach(hasSelectableElite);
+
   const detail = hovered;
   const detailTwist = detail ? getTwist(detail.twistId) : undefined;
 
@@ -221,6 +233,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                 key={room.id}
                 type="button"
                 disabled={!isReachable}
+                data-tutorial={room.kind === 'elite' && isReachable ? 'elite' : undefined}
                 onMouseEnter={() => setHovered(room)}
                 onMouseLeave={() => setHovered((h) => (h === room ? null : h))}
                 onFocus={() => setHovered(room)}
@@ -289,6 +302,8 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
           </div>
         )}
       </div>
+
+      {eliteCoachActive && <EliteCoach onDismiss={dismissEliteCoach} />}
     </div>
   );
 }
