@@ -22,6 +22,7 @@ const handlers = {
   onStunningStrike: () => {},
   onHuntersMark: () => {},
   onEntangle: () => {},
+  onWildShape: () => {},
   onSpells: () => {},
   onUseItem: () => {},
   onEndTurn: () => {},
@@ -192,5 +193,72 @@ describe('ActionBar — Druid Entangling Roots (dedicated bonus-action button)',
   it('does not render for non-druids (wizard / fighter)', () => {
     expect(entangleButton(characterOfClass('wizard'))).toBeNull();
     expect(entangleButton(characterOfClass('fighter'))).toBeNull();
+  });
+});
+
+describe('ActionBar — Druid Wild Shape (dedicated bonus-action button)', () => {
+  /** An L2 druid (Wild Shape unlocks at L2) with `uses` changes in the well. */
+  function druidWildShape(
+    opts: { uses?: number; shaped?: boolean; bonusUsed?: boolean } = {},
+  ): Character {
+    const base = characterOfClass('druid');
+    return {
+      ...base,
+      level: 2, // L2 grants the Wild Shape mechanic
+      actionEconomy: {
+        actionUsed: false,
+        bonusActionUsed: opts.bonusUsed ?? false,
+        reactionUsed: false,
+      },
+      resources: {
+        ...base.resources,
+        wildShapeUsesRemaining: opts.uses ?? 1,
+        wildShapeRoundsRemaining: opts.shaped ? 5 : 0,
+      },
+    };
+  }
+
+  function wildShapeButton(character: Character): HTMLButtonElement | null {
+    const { container } = render(
+      <ActionBar character={character} state={playerTurnState()} {...handlers} />,
+    );
+    const btn =
+      Array.from(container.querySelectorAll('button')).find((b) => {
+        const t = b.textContent ?? '';
+        return t.includes('Wild Shape') || t.includes('Beast Form');
+      }) ?? null;
+    cleanup();
+    return (btn as HTMLButtonElement) ?? null;
+  }
+
+  it('renders enabled for an L2 druid holding a change, showing the count', () => {
+    const btn = wildShapeButton(druidWildShape({ uses: 1 }));
+    expect(btn).not.toBeNull();
+    expect(btn?.disabled).toBe(false);
+    expect(btn?.textContent).toContain('Wild Shape (1)');
+  });
+
+  it('is disabled with no changes left this combat', () => {
+    const btn = wildShapeButton(druidWildShape({ uses: 0 }));
+    expect(btn).not.toBeNull();
+    expect(btn?.disabled).toBe(true);
+  });
+
+  it('is disabled once the bonus action is spent', () => {
+    const btn = wildShapeButton(druidWildShape({ uses: 1, bonusUsed: true }));
+    expect(btn?.disabled).toBe(true);
+  });
+
+  it('reads "Beast Form ✓" and is disabled while already shaped', () => {
+    const btn = wildShapeButton(druidWildShape({ uses: 1, shaped: true }));
+    expect(btn).not.toBeNull();
+    expect(btn?.textContent).toContain('Beast Form');
+    expect(btn?.disabled).toBe(true);
+  });
+
+  it('does not render before L2, nor for non-druids', () => {
+    expect(wildShapeButton(characterOfClass('druid'))).toBeNull(); // L1 — no mechanic yet
+    expect(wildShapeButton(characterOfClass('wizard'))).toBeNull();
+    expect(wildShapeButton(characterOfClass('fighter'))).toBeNull();
   });
 });

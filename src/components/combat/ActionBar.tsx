@@ -3,7 +3,7 @@ import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
 import { maxAttacksPerAction } from '../../engine/combat/attack/playerAttack';
-import { characterHasMechanic, isFullCaster } from '../../engine/character/derived';
+import { characterHasMechanic, isFullCaster, isWildShaped } from '../../engine/character/derived';
 import { RAGE_ROUNDS, isRageUnlimited } from '../../engine/character/actions';
 import { rageBrokenByArmor } from '../../engine/character/equip';
 import {
@@ -41,6 +41,7 @@ interface ActionBarProps {
   onStunningStrike: () => void;
   onHuntersMark: () => void;
   onEntangle: () => void;
+  onWildShape: () => void;
   onSpells: () => void;
   onUseItem: () => void;
   onEndTurn: () => void;
@@ -63,6 +64,7 @@ export function ActionBar({
   onStunningStrike,
   onHuntersMark,
   onEntangle,
+  onWildShape,
   onSpells,
   onUseItem,
   onEndTurn,
@@ -263,6 +265,21 @@ export function ActionBar({
   const entangleSlots = slotsAt(character, 2);
   const canEntangle =
     playersTurn && active && hasEntangle && canCastSpell(character, ENTANGLE_SPELL_ID).ok;
+
+  // Druid Wild Shape: a dedicated bonus-action button (the bot already shifts
+  // automatically; this gives a human druid the same lever). Mirrors the engine
+  // gates in useWildShape — druid + the mechanic, a change still in the well, not
+  // already shaped, and a free bonus action.
+  const hasWildShape = isDruid && characterHasMechanic(character, 'wild-shape');
+  const wildShapeUses = character.resources.wildShapeUsesRemaining ?? 0;
+  const isShaped = isWildShaped(character);
+  const canWildShape =
+    playersTurn &&
+    active &&
+    hasWildShape &&
+    !isShaped &&
+    wildShapeUses > 0 &&
+    !character.actionEconomy.bonusActionUsed;
 
   const totalSlots =
     slotsAt(character, 1) + slotsAt(character, 2) + slotsAt(character, 3);
@@ -482,6 +499,24 @@ export function ActionBar({
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {stunningArmed ? 'Stunning ✓' : 'Stunning Strike'}
+          </Button>
+        )}
+
+        {hasWildShape && (
+          <Button
+            variant={canWildShape ? 'primary' : 'secondary'}
+            onClick={onWildShape}
+            disabled={!canWildShape}
+            title={
+              isShaped
+                ? 'Already wearing the beast — claws out until the form spends out or fades.'
+                : wildShapeUses <= 0
+                  ? 'No Wild Shape changes left this combat — they refresh next fight.'
+                  : "Bonus action: shed the body for a beast's shape — gain its vitality as temporary HP and rend with claws for several rounds. Once or twice per combat."
+            }
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {isShaped ? 'Beast Form ✓' : `Wild Shape (${wildShapeUses})`}
           </Button>
         )}
 

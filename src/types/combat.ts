@@ -293,7 +293,11 @@ export type SpellEffectKind =
   | 'enemy-frenzy' // red battle-rage aura flash on the monster
   // === druid-signature === bespoke effects for the Druid's signature kit.
   | 'regrowth' // leafy green renewal blooming up over the caster (Regrowth HOT)
-  | 'summon-beast'; // a spirit beast pouncing on the struck enemy (Spirit Beast)
+  | 'summon-beast' // a spirit beast pouncing on the struck enemy (Spirit Beast)
+  // The Druid's damage at-wills share the wizard's cast handlers (fire-bolt /
+  // magic-missile) but get their OWN nature look so they never read as arcane:
+  | 'nature-flame' // Produce Flame — a wild, leaf-edged flame (vs the clean arcane fire bolt)
+  | 'thorn-lash'; // Thornlash — barbed vine tendrils lashing the foe (vs force darts)
 
 /** Alias spelling out that the union is the canonical combat-VFX kind set. */
 export type CombatVfxKind = SpellEffectKind;

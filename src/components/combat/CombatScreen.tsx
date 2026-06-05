@@ -22,6 +22,7 @@ import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
+  useWildShape,
   hasRemainingTurnPlay,
   martialArtsWeaponId,
   monkFightsUnarmed,
@@ -516,6 +517,16 @@ export function CombatScreen({
     doCastSpell('entangling-roots', aliveMonsters[0].id);
   }
 
+  // Druid Wild Shape: a one-tap bonus-action shift into the beast form (temp-HP
+  // cushion + claws) straight from the ActionBar. Self-targeted, so it clears any
+  // in-progress target pick like the other self actions.
+  function handleWildShape() {
+    cancelTargeting();
+    const result = useWildShape({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
   function handleEndTurn() {
     const result = endTurn(state, character);
     setCharacter(result.character);
@@ -840,6 +851,7 @@ export function CombatScreen({
             onStunningStrike={handleStunningStrike}
             onHuntersMark={handleHuntersMarkClick}
             onEntangle={handleEntangle}
+            onWildShape={handleWildShape}
             onSpells={() => setPickingSpell(true)}
             onUseItem={() => setPickingItem(true)}
             onEndTurn={handleEndTurn}

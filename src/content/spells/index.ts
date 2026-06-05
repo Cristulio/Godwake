@@ -388,7 +388,7 @@ export const THORNLASH: Spell = SpellSchema.parse({
   target: 'single',
   damageType: 'force',
   description:
-    'Barbed tendrils whip from the ground and lash one target — 1d4+1 each, no attack roll and no save: they simply find skin. Three lashes to start, and more as you grow. The answer to a foe too armoured or too quick to strike clean.',
+    'Barbed tendrils whip from the ground and lash one target — 1d6+1 each, no attack roll and no save: they simply find skin. Three lashes to start, and more as you grow. Heavier barbs than a mere arcane dart: a slot well spent over the at-will flame.',
   effectKey: 'magic-missile',
 });
 
