@@ -1,4 +1,5 @@
 import type { Character } from '../../types/character';
+import type { AbilityName, AbilityScores } from '../../types/abilities';
 import { abilityModifier } from '../../types/abilities';
 import { effectiveAbilityScores, isFullCaster } from './derived';
 import { getClass } from '../../content/classes';
@@ -27,6 +28,41 @@ const XP_TABLE = [
 ] as const;
 
 export const MAX_LEVEL = XP_TABLE.length;
+
+/** Points an Ability Score Improvement grants to spend. */
+export const ASI_POINT_BUDGET = 2;
+
+/** Hard ceiling on any ability score — no ASI bump may carry a score past this. */
+export const ABILITY_SCORE_CAP = 20;
+
+/**
+ * Point cost of raising one ability by `steps` (+1 each) starting from
+ * `fromScore`. A +1 that *starts* at 18 or above costs 2 points; every +1 below
+ * 18 costs 1. So 16→18 is 2 points (1+1), 18→19 and 19→20 are 2 points each, and
+ * 17→18 is 1 — a single ASI can lift one 18+ score by one, two sub-18 scores by
+ * one each, or one sub-18 score by two.
+ */
+export function asiBumpCost(fromScore: number, steps: number): number {
+  let cost = 0;
+  for (let i = 0; i < steps; i += 1) {
+    cost += fromScore + i >= 18 ? 2 : 1;
+  }
+  return cost;
+}
+
+/**
+ * Total points an ASI plan spends, given the pre-ASI effective scores it raises
+ * from. Used by the level-up screen to gate the plan against ASI_POINT_BUDGET.
+ */
+export function asiPlanCost(
+  effectiveScores: AbilityScores,
+  plan: Partial<Record<AbilityName, number>>,
+): number {
+  return (Object.keys(plan) as AbilityName[]).reduce(
+    (sum, ability) => sum + asiBumpCost(effectiveScores[ability], plan[ability] ?? 0),
+    0,
+  );
+}
 
 /** XP required to be AT this level. Level 1 = 0, Level 2 = 300, etc. */
 export function xpForLevel(level: number): number {

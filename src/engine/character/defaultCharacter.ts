@@ -1,7 +1,6 @@
 import type { Character } from '../../types/character';
 import type { AbilityScores } from '../../types/abilities';
 import type { ClassId, RaceId } from '../../schemas/ids';
-import type { SkillName } from '../../types/skills';
 import type { ItemRef } from '../../schemas/item';
 import type { EquipmentSlots } from '../../types/character';
 import { getClass } from '../../content/classes';
@@ -12,7 +11,6 @@ export interface CharacterCreationInput {
   raceId: RaceId;
   classId: ClassId;
   baseAbilityScores: AbilityScores;
-  skillProficiencies: SkillName[];
 }
 
 interface StartingKit {
@@ -182,7 +180,6 @@ export function buildPlayerCharacter(input: CharacterCreationInput): Character {
       raceId: input.raceId,
       classId: input.classId,
       baseAbilityScores: input.baseAbilityScores,
-      skillProficiencies: input.skillProficiencies,
     }),
     inventory: kit.inventory,
     equipped: kit.equipped,
@@ -193,9 +190,9 @@ export function buildPlayerCharacter(input: CharacterCreationInput): Character {
 
 /**
  * The fixed, pre-made character for a class. Selection model (Slay-the-Spire
- * "pick a character"): name, race, ability block, and skills come straight
- * from the class preset — no point-buy, no assignment. Picking a class IS
- * choosing this character.
+ * "pick a character"): name, race, and ability block come straight from the
+ * class preset — no point-buy, no assignment. Picking a class IS choosing this
+ * character.
  */
 export function presetCreationInput(classId: ClassId): CharacterCreationInput {
   const preset = getClass(classId).preset;
@@ -207,7 +204,6 @@ export function presetCreationInput(classId: ClassId): CharacterCreationInput {
     raceId: preset.recommendedRaceId,
     classId,
     baseAbilityScores: { ...preset.abilityScores },
-    skillProficiencies: [...preset.recommendedSkills],
   };
 }
 
@@ -252,5 +248,4 @@ export const SIR_BRICK_PRESET: CharacterCreationInput = {
     cha: STANDARD_ARRAY[4], // 10
     int: STANDARD_ARRAY[5], // 8
   },
-  skillProficiencies: ['athletics', 'perception'],
 };

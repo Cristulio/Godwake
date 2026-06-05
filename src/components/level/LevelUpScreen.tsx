@@ -8,11 +8,13 @@ import {
   hpGainForLevelUp,
   availableWizardSpellsForLearn,
   wizardSpellLearnTierForLevel,
+  asiPlanCost,
+  ASI_POINT_BUDGET,
+  ABILITY_SCORE_CAP,
 } from '../../engine/character/leveling';
 import { effectiveAbilityScores } from '../../engine/character/derived';
 import type { AbilityName, AbilityScores } from '../../types/abilities';
 import type { Character } from '../../types/character';
-import { SKILL_DESCRIPTIONS, isSkillEnabled, type SkillName } from '../../types/skills';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 
 function spellScopeLabel(target: Spell['target']): string {
@@ -46,27 +48,6 @@ const SCHOOL_LABEL: Record<Spell['school'], string> = {
   transmutation: 'Transmutation',
 };
 
-const SKILL_LABEL: Record<SkillName, string> = {
-  acrobatics: 'Acrobatics',
-  'animal-handling': 'Animal Handling',
-  arcana: 'Arcana',
-  athletics: 'Athletics',
-  deception: 'Deception',
-  history: 'History',
-  insight: 'Insight',
-  intimidation: 'Intimidation',
-  investigation: 'Investigation',
-  medicine: 'Medicine',
-  nature: 'Nature',
-  perception: 'Perception',
-  performance: 'Performance',
-  persuasion: 'Persuasion',
-  religion: 'Religion',
-  'sleight-of-hand': 'Sleight of Hand',
-  stealth: 'Stealth',
-  survival: 'Survival',
-};
-
 const ABILITY_LABELS: Record<AbilityName, string> = {
   str: 'Strength',
   dex: 'Dexterity',
@@ -83,7 +64,6 @@ export function LevelUpScreen() {
   const applyPendingLevelUp = useGameStore((s) => s.applyPendingLevelUp);
 
   const [asiPlan, setAsiPlan] = useState<Partial<Record<AbilityName, number>>>({});
-  const [pickedSkills, setPickedSkills] = useState<SkillName[]>([]);
   const [pickedSpellId, setPickedSpellId] = useState<string | null>(null);
   const [pickedArchetypeId, setPickedArchetypeId] = useState<string | null>(null);
 
@@ -116,15 +96,12 @@ export function LevelUpScreen() {
   const hpDelta = hpGainForLevelUp(c);
   const isAsiLevel = features.some((f) => f.mechanicKey === 'asi');
 
-  const skillGrants = cls.skillGrantsByLevel?.[String(nextLevel)] ?? 0;
-  // Disabled (unwired) skills don't surface — match character creation.
-  const availableSkills = cls.skillChoiceFrom.filter(
-    (s) => isSkillEnabled(s) && !c.skillProficiencies.includes(s),
-  );
-  const skillsValid = pickedSkills.length === Math.min(skillGrants, availableSkills.length);
-
-  const plannedTotal = Object.values(asiPlan).reduce<number>((a, b) => a + (b ?? 0), 0);
-  const asiValid = !isAsiLevel || plannedTotal === 2;
+  // The score an ASI raises *from* is the current effective value (race + any
+  // prior ASI gains). Cost is weighted: a +1 starting at 18+ eats 2 of the
+  // 2-point budget, so the whole improvement goes into a single high stat.
+  const eff = effectiveAbilityScores(c);
+  const pointsSpent = asiPlanCost(eff, asiPlan);
+  const asiValid = !isAsiLevel || pointsSpent === ASI_POINT_BUDGET;
 
   const spellLearnTier: SpellLevel | null =
     c.classId === 'wizard' ? wizardSpellLearnTierForLevel(nextLevel) : null;
@@ -144,26 +121,18 @@ export function LevelUpScreen() {
   function bump(ability: AbilityName, delta: number) {
     setAsiPlan((prev) => {
       const current = prev[ability] ?? 0;
-      const next = Math.max(0, Math.min(2, current + delta));
-      const others = Object.entries(prev)
-        .filter(([k]) => k !== ability)
-        .reduce<number>((sum, [, v]) => sum + (v ?? 0), 0);
-      if (next + others > 2) return prev;
-      if (next === 2 && others > 0) return prev;
-      return { ...prev, [ability]: next };
-    });
-  }
-
-  function toggleSkill(s: SkillName) {
-    setPickedSkills((prev) => {
-      if (prev.includes(s)) return prev.filter((x) => x !== s);
-      if (prev.length >= skillGrants) return prev;
-      return [...prev, s];
+      // Never carry a score past the cap, and never more than +2 from one ASI.
+      const headroom = Math.max(0, Math.min(2, ABILITY_SCORE_CAP - eff[ability]));
+      const next = Math.max(0, Math.min(headroom, current + delta));
+      const candidate = { ...prev, [ability]: next };
+      // Reject any plan whose weighted cost (1 below 18, 2 at 18+) overspends.
+      if (asiPlanCost(eff, candidate) > ASI_POINT_BUDGET) return prev;
+      return candidate;
     });
   }
 
   function handleContinue() {
-    if (!asiValid || !skillsValid || !spellValid || !archetypeValid) return;
+    if (!asiValid || !spellValid || !archetypeValid) return;
     const overrides: Partial<Character> = {};
     if (needsArchetypePick && pickedArchetypeId) {
       overrides.subclassId = pickedArchetypeId;
@@ -177,9 +146,6 @@ export function LevelUpScreen() {
       }
       overrides.runAsiGains = next;
     }
-    if (pickedSkills.length > 0) {
-      overrides.skillProficiencies = [...c.skillProficiencies, ...pickedSkills];
-    }
     if (needsSpellPick && pickedSpellId) {
       const existing = c.resources.knownSpells ?? [];
       overrides.resources = {
@@ -189,8 +155,6 @@ export function LevelUpScreen() {
     }
     applyPendingLevelUp(Object.keys(overrides).length > 0 ? overrides : undefined);
   }
-
-  const eff = effectiveAbilityScores(c);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 md:px-6 md:py-12 gap-6 md:gap-8 relative overflow-hidden animate-fade-in-slow">
@@ -254,13 +218,18 @@ export function LevelUpScreen() {
         {isAsiLevel && (
           <Panel title="Ability Score Improvement — spend 2 points" tone="warm">
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
-              +2 to one ability, or +1 to two. ({plannedTotal}/2 placed)
+              +2 to one ability, or +1 to two — but a score already at 18+ costs 2 per point. ({pointsSpent}/{ASI_POINT_BUDGET} spent)
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {ABILITY_ORDER.map((ab) => {
                 const base = c.baseAbilityScores[ab];
                 const planned = asiPlan[ab] ?? 0;
                 const finalEffective = eff[ab] + planned;
+                const nextStepCost = eff[ab] + planned >= 18 ? 2 : 1;
+                const canIncrement =
+                  planned < 2 &&
+                  eff[ab] + planned < ABILITY_SCORE_CAP &&
+                  pointsSpent + nextStepCost <= ASI_POINT_BUDGET;
                 return (
                   <div
                     key={ab}
@@ -291,54 +260,13 @@ export function LevelUpScreen() {
                         variant="primary"
                         size="sm"
                         onClick={() => bump(ab, +1)}
-                        disabled={plannedTotal >= 2 || planned >= 2}
+                        disabled={!canIncrement}
                         className="!px-2 !py-0.5"
                       >
                         +
                       </Button>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </Panel>
-        )}
-
-        {skillGrants > 0 && availableSkills.length > 0 && (
-          <Panel
-            title={`New Skill Proficiency — pick ${skillGrants} (${pickedSkills.length}/${Math.min(
-              skillGrants,
-              availableSkills.length,
-            )})`}
-            tone="warm"
-          >
-            <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
-              Already-trained skills are unavailable.
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-              {cls.skillChoiceFrom.filter(isSkillEnabled).map((s) => {
-                const owned = c.skillProficiencies.includes(s);
-                const selected = pickedSkills.includes(s);
-                const disabled =
-                  owned || (!selected && pickedSkills.length >= skillGrants);
-                return (
-                  <button
-                    key={s}
-                    disabled={disabled}
-                    onClick={() => toggleSkill(s)}
-                    className={`text-left px-3 py-2 border text-sm transition-colors ${
-                      selected
-                        ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
-                        : owned
-                          ? 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-dim)] line-through'
-                          : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
-                    } disabled:opacity-40 disabled:cursor-not-allowed`}
-                  >
-                    <div>{SKILL_LABEL[s]}</div>
-                    <div className="text-[var(--color-text-dim)] text-xs mt-1 normal-case tracking-normal">
-                      {SKILL_DESCRIPTIONS[s]}
-                    </div>
-                  </button>
                 );
               })}
             </div>
@@ -434,21 +362,17 @@ export function LevelUpScreen() {
             variant="primary"
             size="lg"
             onClick={handleContinue}
-            disabled={!asiValid || !skillsValid || !spellValid || !archetypeValid}
+            disabled={!asiValid || !spellValid || !archetypeValid}
           >
             {!archetypeValid
               ? 'Choose an archetype'
               : isAsiLevel && !asiValid
-              ? `Place ${2 - plannedTotal} more point${2 - plannedTotal === 1 ? '' : 's'}`
-              : !skillsValid
-                ? `Pick ${Math.min(skillGrants, availableSkills.length) - pickedSkills.length} more skill${
-                    Math.min(skillGrants, availableSkills.length) - pickedSkills.length === 1
-                      ? ''
-                      : 's'
-                  }`
-                : !spellValid
-                  ? 'Pick a spell'
-                  : 'Continue →'}
+              ? `Place ${ASI_POINT_BUDGET - pointsSpent} more point${
+                  ASI_POINT_BUDGET - pointsSpent === 1 ? '' : 's'
+                }`
+              : !spellValid
+                ? 'Pick a spell'
+                : 'Continue →'}
           </Button>
         </div>
       </div>

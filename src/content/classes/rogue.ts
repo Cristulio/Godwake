@@ -11,20 +11,6 @@ export const ROGUE: Class = ClassSchema.parse({
   weaponProficiency: { categories: ['simple'], properties: ['finesse', 'light'] },
   // Stays light to stay quiet — leather and studded leather only, no shield.
   armorProficiency: { categories: ['light'] },
-  skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1, '7': 1, '11': 1, '15': 1 },
-  skillChoiceFrom: [
-    'acrobatics',
-    'athletics',
-    'deception',
-    'insight',
-    'intimidation',
-    'investigation',
-    'perception',
-    'persuasion',
-    'sleight-of-hand',
-    'stealth',
-  ],
   subclassLevel: 3,
   featuresByLevel: {
     '1': [
@@ -149,7 +135,6 @@ export const ROGUE: Class = ClassSchema.parse({
     // primary) / +1 CON (fallback secondary) the summary reads
     // DEX 15, CON 15, WIS 12, INT 12, CHA 12, STR 8.
     abilityScores: { str: 8, dex: 14, con: 14, int: 12, wis: 12, cha: 10 },
-    recommendedSkills: ['insight'],
     flavorBlurb:
       'Quiet boots, quicker hands. Reads a room for exits before she reads it for friends.',
   },

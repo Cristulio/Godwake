@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { buildPlayerCharacter } from './defaultCharacter';
+import { buildPlayerCharacter, presetCreationInput } from './defaultCharacter';
 import { STANDARD_ARRAY } from './initialize';
 import { characterHasMechanic } from './derived';
+import { listClasses } from '../../content/classes';
 
 function baseScores() {
   return {
@@ -14,6 +15,16 @@ function baseScores() {
   };
 }
 
+describe('skills removed from the player flow', () => {
+  for (const cls of listClasses().filter((c) => c.preset)) {
+    it(`${cls.id} forges with zero skill proficiencies`, () => {
+      const c = buildPlayerCharacter(presetCreationInput(cls.id));
+      expect(c.skillProficiencies).toEqual([]);
+      expect(c.expertSkills).toEqual([]);
+    });
+  }
+});
+
 describe('starting kits — safety-net baseline', () => {
   it('Fighter starts with 2 potions of healing', () => {
     const c = buildPlayerCharacter({
@@ -21,7 +32,6 @@ describe('starting kits — safety-net baseline', () => {
       raceId: 'human',
       classId: 'fighter',
       baseAbilityScores: baseScores(),
-      skillProficiencies: ['athletics', 'perception'],
     });
     const potions = c.inventory.filter((i) => i.itemId === 'potion-of-healing');
     expect(potions.length).toBe(2);
@@ -33,7 +43,6 @@ describe('starting kits — safety-net baseline', () => {
       raceId: 'human',
       classId: 'wizard',
       baseAbilityScores: baseScores(),
-      skillProficiencies: ['arcana', 'history'],
     });
     const potions = c.inventory.filter((i) => i.itemId === 'potion-of-healing');
     expect(potions.length).toBe(1);
@@ -45,7 +54,6 @@ describe('starting kits — safety-net baseline', () => {
       raceId: 'human',
       classId: 'rogue',
       baseAbilityScores: baseScores(),
-      skillProficiencies: ['stealth', 'acrobatics'],
     });
     const potions = c.inventory.filter((i) => i.itemId === 'potion-of-healing');
     expect(potions.length).toBe(1);
@@ -63,7 +71,6 @@ describe('Champion Improved Critical — earlier feature gate', () => {
       raceId: 'human',
       classId: 'fighter',
       baseAbilityScores: baseScores(),
-      skillProficiencies: ['athletics', 'perception'],
     });
     const champ2 = { ...c, level: 2, subclassId: 'champion' as const };
     expect(characterHasMechanic(champ2, 'improved-critical')).toBe(true);

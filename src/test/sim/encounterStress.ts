@@ -56,7 +56,6 @@ const ROGUE_ARCHETYPE: ArchetypeBuilder = () => {
       wis: STANDARD_ARRAY[3], // 12
       cha: STANDARD_ARRAY[4], // 10
     },
-    skillProficiencies: ['stealth', 'sleight-of-hand'],
   });
   return {
     ...c,
@@ -90,7 +89,6 @@ const FIGHTER_ARCHETYPE: ArchetypeBuilder = () => {
       cha: STANDARD_ARRAY[4], // 10
       int: STANDARD_ARRAY[5], // 8
     },
-    skillProficiencies: ['athletics', 'perception'],
   });
   return {
     ...c,
@@ -124,7 +122,6 @@ const WIZARD_ARCHETYPE: ArchetypeBuilder = () => {
       cha: STANDARD_ARRAY[4], // 10
       str: STANDARD_ARRAY[5], // 8
     },
-    skillProficiencies: ['arcana', 'investigation'],
   });
   return {
     ...c,
@@ -155,7 +152,6 @@ const BARBARIAN_ARCHETYPE: ArchetypeBuilder = () => {
       wis: STANDARD_ARRAY[4], // 10
       int: STANDARD_ARRAY[5], // 8
     },
-    skillProficiencies: ['athletics', 'intimidation'],
   });
   // No armor — Unarmored Defense — greataxe.
   return {
@@ -187,7 +183,6 @@ const RANGER_ARCHETYPE: ArchetypeBuilder = () => {
       int: STANDARD_ARRAY[4], // 10
       cha: STANDARD_ARRAY[5], // 8
     },
-    skillProficiencies: ['perception', 'survival'],
   });
   return {
     ...c,

@@ -51,15 +51,15 @@ export const SKILL_TO_ABILITY: Record<SkillName, AbilityName> = {
 export type ProficiencyLevel = 'none' | 'proficient' | 'expert';
 
 /**
- * Per the no-flavor-only rule: only skills with engine consumers surface in the
- * active picker. The enabled set is exactly the skills an event skill-check
- * rolls against (see `content/events` + `engine/character/skillCheck`) — every
- * enabled skill is read by at least one event, and every event check names an
- * enabled skill. The four still-disabled skills (acrobatics, animal-handling,
- * nature, performance) have no natural event home and would be contrived to
- * wire, so they stay off the picker. Disabled skills remain in the type union so
- * save data and class `skillChoiceFrom` lists don't have to be reshuffled if an
- * engine hook later lands; the UI filters by this map.
+ * Per the no-flavor-only rule: a skill is "enabled" only if it has an engine
+ * consumer. Skills were removed from the player flow (no creation or level-up
+ * picker), so the enabled set now exists purely to keep the event ↔ skill-check
+ * contract honest: every enabled skill is read by at least one event, and every
+ * event skill-check names an enabled skill (both asserted in `content/events`).
+ * The four still-disabled skills (acrobatics, animal-handling, nature,
+ * performance) have no natural event home and would be contrived to wire, so
+ * they stay disabled. Disabled skills remain in the type union so existing save
+ * data and any future engine hook keep resolving; consumers filter by this map.
  */
 export const SKILL_ENABLED: Record<SkillName, boolean> = {
   acrobatics: false,

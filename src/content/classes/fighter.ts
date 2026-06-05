@@ -10,18 +10,6 @@ export const FIGHTER: Class = ClassSchema.parse({
   weaponProficiency: { categories: ['simple', 'martial'] },
   // The one heavy-armour class — a Fighter wears anything, chain mail included.
   armorProficiency: { categories: ['light', 'medium', 'heavy', 'shield'] },
-  skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1 },
-  skillChoiceFrom: [
-    'acrobatics',
-    'animal-handling',
-    'athletics',
-    'history',
-    'insight',
-    'intimidation',
-    'perception',
-    'survival',
-  ],
   subclassLevel: 2,
   featuresByLevel: {
     '1': [
@@ -193,7 +181,6 @@ export const FIGHTER: Class = ClassSchema.parse({
     // Standard array (15/14/13/12/10/8) tilted into STR/CON. With Human's
     // +1-across the table reads 16/15/14/13/11/9 in the summary.
     abilityScores: { str: 15, dex: 13, con: 14, int: 8, wis: 12, cha: 10 },
-    recommendedSkills: ['insight'],
     flavorBlurb:
       'A blunt instrument with a sword arm. Walks at the front, takes the first hit, lives to grumble about it.',
   },

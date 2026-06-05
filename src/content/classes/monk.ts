@@ -13,16 +13,6 @@ export const MONK: Class = ClassSchema.parse({
   // No armour at all. The guard is breath, stance, and read — Unarmored Defense
   // does the work that plate would, and steel would only slow the flurry.
   armorProficiency: { categories: [] },
-  skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1 },
-  skillChoiceFrom: [
-    'acrobatics',
-    'athletics',
-    'history',
-    'insight',
-    'religion',
-    'stealth',
-  ],
   subclassLevel: 3,
   featuresByLevel: {
     '1': [
@@ -176,7 +166,6 @@ export const MONK: Class = ClassSchema.parse({
     // DEX 17, WIS 15, CON 14, STR 12, INT 10, CHA 8.
     recommendedRaceId: 'wood-elf',
     abilityScores: { str: 12, dex: 15, con: 14, int: 10, wis: 14, cha: 8 },
-    recommendedSkills: ['acrobatics', 'insight'],
     flavorBlurb:
       'Carries no blade and needs none. Reads the breath of a room, then fills it with fists faster than a foe can answer.',
   },

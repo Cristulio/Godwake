@@ -7,7 +7,12 @@ import {
   wizardSpellLearnTierForLevel,
   availableWizardSpellsForLearn,
   simulateLevelUp,
+  asiBumpCost,
+  asiPlanCost,
+  ASI_POINT_BUDGET,
+  ABILITY_SCORE_CAP,
 } from './leveling';
+import type { AbilityScores } from '../../types/abilities';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
 import {
   wizardSpellSlotsForLevel,
@@ -46,6 +51,50 @@ const SIR_BRICK = createCharacter({
     cha: STANDARD_ARRAY[4], // 10
   },
   skillProficiencies: ['athletics', 'perception'],
+});
+
+describe('ASI cost curve — +1 at 18+ costs 2 points', () => {
+  const scores = (over: Partial<AbilityScores>): AbilityScores => ({
+    str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10, ...over,
+  });
+
+  it('a +1 below 18 costs 1 point', () => {
+    expect(asiBumpCost(10, 1)).toBe(1);
+    expect(asiBumpCost(17, 1)).toBe(1); // 17→18 still starts below 18
+  });
+
+  it('a +1 starting at 18 or above costs 2 points', () => {
+    expect(asiBumpCost(18, 1)).toBe(2); // 18→19
+    expect(asiBumpCost(19, 1)).toBe(2); // 19→20
+  });
+
+  it('+2 on a sub-18 score costs 2, but a 17 crossing into 18+ costs 3', () => {
+    expect(asiBumpCost(14, 2)).toBe(2); // 14→16
+    expect(asiBumpCost(16, 2)).toBe(2); // 16→18 (both steps start <18)
+    expect(asiBumpCost(17, 2)).toBe(3); // 17→18 (1) then 18→19 (2)
+  });
+
+  it('raising one stat 18→19 consumes the whole 2-point budget', () => {
+    expect(asiPlanCost(scores({ str: 18 }), { str: 1 })).toBe(ASI_POINT_BUDGET);
+  });
+
+  it('raising two sub-18 stats by 1 each spends exactly the budget', () => {
+    expect(asiPlanCost(scores({}), { str: 1, dex: 1 })).toBe(ASI_POINT_BUDGET);
+  });
+
+  it('raising one sub-18 stat by 2 spends exactly the budget', () => {
+    expect(asiPlanCost(scores({}), { str: 2 })).toBe(ASI_POINT_BUDGET);
+  });
+
+  it('a plan that would overspend reports a cost above the budget', () => {
+    // Three sub-18 +1s = 3 points, and a +1 on an 18 stat plus any other bump.
+    expect(asiPlanCost(scores({}), { str: 1, dex: 1, con: 1 })).toBeGreaterThan(ASI_POINT_BUDGET);
+    expect(asiPlanCost(scores({ str: 18 }), { str: 1, dex: 1 })).toBeGreaterThan(ASI_POINT_BUDGET);
+  });
+
+  it('caps any ability at 20', () => {
+    expect(ABILITY_SCORE_CAP).toBe(20);
+  });
 });
 
 describe('xpForLevel', () => {
