@@ -6,8 +6,9 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * own kin turned to stone, waiting on her word. She is a strong sub-fight, not
  * the chapter boss (that is Abazigal). Her kit is the enclave made flesh: a
  * `paralyze` that catches you the way she catches her statues, a `summon` that
- * wakes the petrified ambushers around her, a `multiattack` with the venom-mace,
- * and `battle-rage` when the matron's pride is finally wounded.
+ * wakes the petrified ambushers around her (one at a time, cooldown 3 — trimmed
+ * so the CR11 adds stop out-walling her own chapter boss), a `multiattack` with
+ * the venom-mace, and `battle-rage` when the matron's pride is finally wounded.
  */
 export const SENDAI: Monster = MonsterSchema.parse({
   id: 'sendai',
@@ -54,8 +55,8 @@ export const SENDAI: Monster = MonsterSchema.parse({
       name: 'Wake, and Serve',
       summonDefId: 'petrified-ambusher',
       count: 1,
-      maxActive: 2,
-      cooldownRounds: 2,
+      maxActive: 1,
+      cooldownRounds: 3,
       description:
         'She does not call for guards — she calls on the statues, and a word from her cracks the grey crust off the nearest of her stone-set kin, which steps down off its pedestal mid-lunge to finish what she points it at.',
     },

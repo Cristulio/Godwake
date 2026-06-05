@@ -4,7 +4,8 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * Slag-Colossus — Chapter 8 ELITE. A siege-engine of war-dead: a whole company
  * caught in one pour of molten iron and cooled into a single lumbering mass that
  * the march drags along to throw bodies at whatever bars the road. It `summon`s
- * Ember-Conscripts off its own fused surface (maxActive 1, cooldown 4) while
+ * Ember-Conscripts off its own fused surface (maxActive 1, first add round 3,
+ * cooldown 6 — trimmed so the adds no longer out-wall its own chapter boss) while
  * crushing from reach with a fist the size of a wagon. A war of attrition — fell
  * the colossus, or be ground down by the ranks it keeps reforging out of itself.
  */
@@ -27,7 +28,8 @@ export const SLAG_COLOSSUS: Monster = MonsterSchema.parse({
       summonDefId: 'ember-conscript',
       count: 1,
       maxActive: 1,
-      cooldownRounds: 4,
+      minRound: 3,
+      cooldownRounds: 6,
       description:
         'A seam in its flank glows and splits, and a soldier-shape pulls itself free of the cooling slag — already armed, already in step, peeled off the colossus the way a casting is broken from its mould.',
     },

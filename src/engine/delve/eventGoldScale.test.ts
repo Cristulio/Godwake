@@ -25,6 +25,26 @@ describe('chapterGoldRamp', () => {
   });
 });
 
+describe('chapterGoldRamp — early slope flattened, Ch5-14 kept on the linear ramp', () => {
+  const linear = (ch: number) => 1 + (ch - 1) * ((EVENT_GOLD_CH14_MULTIPLE - 1) / 13);
+
+  it('keeps Ch5..Ch14 exactly on the original linear ramp', () => {
+    for (let ch = 5; ch <= 14; ch++) {
+      expect(chapterGoldRamp(ch)).toBeCloseTo(linear(ch), 6);
+    }
+  });
+
+  it('bows Ch2..Ch4 below the linear ramp so early events do not out-earn a fight', () => {
+    for (let ch = 2; ch <= 4; ch++) {
+      expect(chapterGoldRamp(ch)).toBeLessThan(linear(ch));
+    }
+  });
+
+  it('cools the hot Ch3 spot: a Ch1-authored event seen at Ch3 scales well under the old ~1.77×', () => {
+    expect(eventGoldScale(3, 1)).toBeLessThan(1.5);
+  });
+});
+
 describe('eventGoldScale — anchored at the event floor', () => {
   it('is exactly 1 when an event fires at its own minChapter', () => {
     expect(eventGoldScale(1, 1)).toBe(1);
