@@ -110,11 +110,12 @@ describe('createGodwakeDelve', () => {
     }
   });
 
-  it('draws the fight-dense combat budget — 6-7 plain fights + 1-2 elites per chapter', () => {
+  it('draws the fight-dense combat budget — 6-7 plain fights + exactly 1 elite per chapter', () => {
     // The playtest wanted more fighting and fewer shrines/omens, so the combat
     // pad was bumped back up (5-6). Plain combat = the lone warmup entry + the
-    // 5-6 combat pad; elites stay the 1-2 invariant. Fights are a clear majority
-    // of the middle (6-7 plain + 1-2 elite vs at most 5 non-combat specials).
+    // 5-6 combat pad; the elite is now exactly one per chapter (was 1-2). Fights
+    // are a clear majority of the middle (6-7 plain + 1 elite vs at most 5
+    // non-combat specials).
     for (let seed = 0; seed < 24; seed++) {
       const d = createGodwakeDelve({ seed, ascension: 0 });
       for (let ch = 1; ch <= d.chapterCount!; ch++) {
@@ -123,8 +124,7 @@ describe('createGodwakeDelve', () => {
         const elite = inCh.filter((r) => r.kind === 'elite').length;
         expect(combat).toBeGreaterThanOrEqual(6);
         expect(combat).toBeLessThanOrEqual(7);
-        expect(elite).toBeGreaterThanOrEqual(1);
-        expect(elite).toBeLessThanOrEqual(2);
+        expect(elite).toBe(1);
       }
     }
   });

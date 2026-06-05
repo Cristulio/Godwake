@@ -271,10 +271,10 @@ type SlotKind =
  * choice column the player routes through offers at least one fight — so a step
  * is never all shrine/rest/omen.
  *
- * The pad upper bound is held so the middle never exceeds 13 slots: with each
+ * The pad upper bound is held so the middle never exceeds 12 slots: with each
  * column 2–3 wide that caps the column count at 6, the regime the rest cadence
- * (chooseCadenceColumns) is proven satisfiable in. specials max 7 (2 elite +
- * 2 rest + 1 event + 1 shrine + 1 shop) + pad max 6 = 13.
+ * (chooseCadenceColumns) is proven satisfiable in. specials max 6 (1 elite +
+ * 2 rest + 1 event + 1 shrine + 1 shop) + pad max 6 = 12.
  */
 const FORK_MIN_WIDTH = 2; // the chapter entry must open onto a real choice
 const COLUMN_MAX_WIDTH = 3; // widest parallel column on the map
@@ -319,8 +319,8 @@ interface SlotBudget {
  * randomized in width, kind placement and (later, via wireLayers) edge fan, so
  * each seed draws a genuinely different road.
  *
- * Budget per chapter: 1 shrine, 1–2 rests, 1 shop, 1–2 elites, 1 event (the
- * map's "omen"), the rest fights. Elites and the shop sit late (risk ramps
+ * Budget per chapter: 1 shrine, 1–2 rests, 1 shop, 1 elite, 1 event (the
+ * map's "omen"), the rest fights. The elite and the shop sit late (risk ramps
  * toward the boss); the lone shrine is seeded early so an opening route always
  * has an altar in reach. The shrine and event budgets are deliberately lean —
  * the player wants to be fighting, not walking past altars and omens.
@@ -331,8 +331,12 @@ interface SlotBudget {
  * reachability / one-elite / sequencing work and the shared RNG stream all stand.
  */
 function generateChapterPlan(rng: Rng): SlotKind[][] {
+  // Exactly one elite per chapter. The historical 1–2 roll is still drawn (and
+  // discarded) so the map RNG stream is unshifted: seeds that used to roll 1 keep
+  // a byte-identical layout, and only seeds that rolled 2 lose their second elite.
+  roll(rng, 1, 2);
   const budget: SlotBudget = {
-    eliteCount: roll(rng, 1, 2),
+    eliteCount: 1,
     restCount: roll(rng, 1, 2),
     eventCount: 1,
     shrineCount: 1,
