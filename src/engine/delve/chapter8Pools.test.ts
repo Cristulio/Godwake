@@ -47,11 +47,15 @@ describe('chapter 8 — bestiary registration', () => {
     }
   });
 
-  it('the boss (the Ashen Marshal) carries an apex stat block a notch above Ch6', () => {
+  it('the boss (the Ashen Marshal) carries an apex stat block a notch above Ch6, clearing Ch7', () => {
     const boss = getMonster(CH8_BOSS_ID);
     expect(boss.bossMechanic).toBe('battle-rage');
-    // A clear notch above the Ch6 boss (The Unmade: 184 HP / AC 19).
+    // A clear notch above the Ch6 boss (The Unmade: 184 HP / AC 19), and post-buff
+    // it also clears the Ch7 boss on the body: the pre-buff clone (212 HP, a hair
+    // over the Drowned Custodian's 210) was the pushover, so lock the curve loud —
+    // a future flat-clone of the Ch7 boss regresses right here.
     expect(boss.maxHp).toBeGreaterThan(184);
+    expect(boss.maxHp).toBeGreaterThan(getMonster('drowned-custodian').maxHp);
     expect(boss.ac).toBeGreaterThanOrEqual(19);
     // Apex kit: a round-1 paralyze opener and a multiattack the picker falls to.
     const kinds = boss.actions.map((a) => a.kind);

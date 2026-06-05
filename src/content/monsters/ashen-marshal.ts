@@ -20,11 +20,11 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 export const ASHEN_MARSHAL: Monster = MonsterSchema.parse({
   id: 'ashen-marshal',
   name: 'Dravok, the Ashen Marshal',
-  cr: '11',
+  cr: '12',
   size: 'medium',
   creatureType: 'undead (warlord)',
-  ac: 20,
-  maxHp: 212,
+  ac: 21,
+  maxHp: 264,
   speed: 30,
   abilityScores: { str: 20, dex: 14, con: 19, int: 13, wis: 16, cha: 18 },
   passivePerception: 16,
@@ -44,7 +44,7 @@ export const ASHEN_MARSHAL: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Marshalled Volley',
       condition: 'frightened',
-      saveDC: 16,
+      saveDC: 18,
       saveAbility: 'wis',
       durationRounds: 2,
       telegraph: {
@@ -57,15 +57,15 @@ export const ASHEN_MARSHAL: Monster = MonsterSchema.parse({
     {
       kind: 'multiattack',
       name: 'Old Campaign',
-      attacks: 2,
+      attacks: 3,
       description:
-        'He fights the way he fought the war that made him: economically, without anger yet, two strokes of a long and practised drill that has cut down better than you on better days than this.',
+        'He fights the way he fought the war that made him: economically, without anger yet, three strokes of a long and practised drill that has cut down better than you on better days than this.',
     },
     {
       kind: 'attack',
       name: "Cinder-Marshal's Blade",
-      attackBonus: 12,
-      damage: '2d10+8',
+      attackBonus: 14,
+      damage: '3d12+12',
       damageType: 'fire',
       reach: 10,
       description:
@@ -85,7 +85,7 @@ export const ASHEN_MARSHAL: Monster = MonsterSchema.parse({
           kind: 'debuff',
           name: 'Cauterising Brand',
           condition: 'weakened',
-          saveDC: 16,
+          saveDC: 18,
           saveAbility: 'con',
           durationRounds: 3,
           amount: 4,

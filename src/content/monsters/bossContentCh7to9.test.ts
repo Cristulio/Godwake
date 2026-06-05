@@ -118,7 +118,7 @@ describe('Ch8 — Ashen Marshal', () => {
     const init = createCombat({ character: fighter(), monsters: [{ def }] });
     const id = primary(init.state).id;
     const acBefore = primary(init.state).instance.ac;
-    const bloodied = setHp(init.state, id, 100); // < half of 212
+    const bloodied = setHp(init.state, id, 100); // < half of 264
     const r = turn(roller, bloodied, init.character, id, 3);
     const inst = primary(r.state).instance;
     expect(inst.phasesEntered).toEqual([0]);
