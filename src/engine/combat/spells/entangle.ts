@@ -3,12 +3,12 @@ import type { CombatState, MonsterCombatant } from '../../../types/combat';
 import { getMonster } from '../../../content/monsters';
 import { abilityModifier } from '../../../types/abilities';
 import { appendLog } from '../log';
+import { patchActionEconomy } from '../types';
 import {
   type CastResult,
   type CastSpellContext,
   attachSpellEffect,
   consumeSlot,
-  markActionUsed,
   nextLogId,
   spellSaveDC,
 } from './helpers';
@@ -89,6 +89,9 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
     });
   }
 
-  nextCharacter = markActionUsed(nextCharacter);
+  // Bonus action, not the main action: the druid roots the whole room AND still
+  // attacks/casts the same turn. The 2nd-level slot already spent above keeps it
+  // bounded — a free every-turn room-wide lock would be overpowered.
+  nextCharacter = patchActionEconomy(nextCharacter, { bonusActionUsed: true });
   return { state: nextState, character: nextCharacter, cast: true };
 }

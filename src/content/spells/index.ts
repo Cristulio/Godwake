@@ -92,6 +92,7 @@ export const MISTY_STEP: Spell = SpellSchema.parse({
   description:
     'You sidestep into a brief fold of silver mist and reappear half a pace askew. +2 AC until the start of your next turn. Cast as a bonus action.',
   effectKey: 'misty-step',
+  castTime: 'bonus',
 });
 
 export const SCORCHING_RAY: Spell = SpellSchema.parse({
@@ -402,8 +403,9 @@ export const ENTANGLING_ROOTS: Spell = SpellSchema.parse({
   range: '60 ft',
   target: 'area',
   description:
-    'Grasping roots erupt across the whole floor — every enemy must win a Strength save or be rooted fast, losing its next turn as it tears free. A whole room held for a beat, where a binding word holds only one.',
+    'Grasping roots erupt across the whole floor — every enemy must win a Strength save or be rooted fast, losing its next turn as it tears free. A whole room held for a beat, where a binding word holds only one. A swift word calls them up — root the floor as a bonus action and still strike the same breath.',
   effectKey: 'entangle',
+  castTime: 'bonus',
 });
 
 // Signature: heal-over-time — the Druid's ONLY sustain (effectKey 'regrowth').

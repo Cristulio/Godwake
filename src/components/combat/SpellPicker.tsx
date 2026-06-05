@@ -38,6 +38,10 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
   // sitting in the book (e.g. Hold Person known from L1) stay hidden until the
   // slot exists — they appear, greyed for "no slot remaining", only once real.
   const known = (character.resources.knownSpells ?? []).filter((id) => {
+    // Entangling Roots has its own dedicated bonus-action button in the
+    // ActionBar — keep it out of the Spells list so it isn't a confusing
+    // double-entry.
+    if (id === 'entangling-roots') return false;
     const spell = getSpell(id);
     return spell.level === 0 || (maxSlots[spell.level as SpellSlotLevel] ?? 0) > 0;
   });

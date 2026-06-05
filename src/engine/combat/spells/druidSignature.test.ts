@@ -3,7 +3,7 @@ import { createCharacter } from '../../character/initialize';
 import { presetCreationInput } from '../../character/defaultCharacter';
 import { spellcastingMod } from '../../character/derived';
 import { createCombat, _resetMonsterInstanceCounter } from '../createCombat';
-import { monsterAttack } from '../attack';
+import { monsterAttack, playerAttack } from '../attack';
 import { endTurn } from '../turn';
 import { castSpell } from './dispatch';
 import { createDiceRoller, setActiveRoller, type DiceRoller } from '../../dice';
@@ -186,11 +186,41 @@ describe('Entangle — AoE root, save-or-lose-a-turn', () => {
     });
     expect(cast.cast).toBe(true);
     expect(cast.character.resources.spellSlots?.[2]).toBe(slotsBefore - 1);
-    expect(cast.character.actionEconomy.actionUsed).toBe(true);
+    // Bonus action, not the main action — the druid can still attack/cast this turn.
+    expect(cast.character.actionEconomy.bonusActionUsed).toBe(true);
+    expect(cast.character.actionEconomy.actionUsed).toBe(false);
 
     const [a, b] = monsters(cast.state);
     expect(a.instance.conditions.some((c) => c.name === 'restrained')).toBe(true);
     expect(b.instance.conditions.some((c) => c.name === 'restrained')).toBe(false);
+  });
+
+  it('spends the BONUS action, leaving the main action free to attack the same turn', () => {
+    const goblin = getMonster('goblin');
+    const druid = makeDruid({ slots: { 2: 1 } });
+    const init = createCombat({ character: druid, monsters: [{ def: goblin }, { def: goblin }] });
+
+    // Entangle (bonus action).
+    const roller = makeScriptedRoller({ d20Faces: [1, 1] });
+    const cast = castSpell({
+      roller,
+      character: init.character,
+      state: init.state,
+      spellId: 'entangling-roots',
+    });
+    expect(cast.cast).toBe(true);
+    expect(cast.character.actionEconomy.bonusActionUsed).toBe(true);
+    expect(cast.character.actionEconomy.actionUsed).toBe(false);
+
+    // …then a weapon swing the SAME turn — the main action is still free.
+    const targetId = monsters(cast.state).find((m) => m.instance.hp.current > 0)!.id;
+    const swing = playerAttack(
+      { roller: createDiceRoller(7), character: cast.character, state: cast.state },
+      targetId,
+      'dagger',
+    );
+    expect(swing.character.actionEconomy.actionUsed).toBe(true);
+    expect(swing.character.actionEconomy.bonusActionUsed).toBe(true);
   });
 
   it('a rooted monster loses its turn and then wrenches free', () => {

@@ -21,6 +21,7 @@ const handlers = {
   onPatientDefense: () => {},
   onStunningStrike: () => {},
   onHuntersMark: () => {},
+  onEntangle: () => {},
   onSpells: () => {},
   onUseItem: () => {},
   onEndTurn: () => {},
@@ -138,5 +139,58 @@ describe('ActionBar spell button gating', () => {
     expect(hasSpellsButton(characterOfClass('druid'))).toBe(true);
     expect(hasSpellsButton(characterOfClass('fighter'))).toBe(false);
     expect(hasSpellsButton(characterOfClass('rogue'))).toBe(false);
+  });
+});
+
+describe('ActionBar — Druid Entangling Roots (dedicated bonus-action button)', () => {
+  /** A druid carrying `level2` second-level slots — Entangle's cost. */
+  function druidWithSlots(level2: number, extra: Partial<Character> = {}): Character {
+    const base = characterOfClass('druid');
+    return {
+      ...base,
+      ...extra,
+      resources: {
+        ...base.resources,
+        spellSlots: { ...(base.resources.spellSlots ?? {}), 2: level2 },
+      },
+    };
+  }
+
+  function entangleButton(character: Character): HTMLButtonElement | null {
+    const { container } = render(
+      <ActionBar character={character} state={playerTurnState()} {...handlers} />,
+    );
+    const btn =
+      Array.from(container.querySelectorAll('button')).find((b) =>
+        (b.textContent ?? '').includes('Entangling Roots'),
+      ) ?? null;
+    cleanup();
+    return (btn as HTMLButtonElement) ?? null;
+  }
+
+  it('renders for a druid and is enabled with a 2nd-level slot on the player turn', () => {
+    const btn = entangleButton(druidWithSlots(1));
+    expect(btn).not.toBeNull();
+    expect(btn?.disabled).toBe(false);
+  });
+
+  it('is disabled with no 2nd-level slot remaining', () => {
+    const btn = entangleButton(druidWithSlots(0));
+    expect(btn).not.toBeNull();
+    expect(btn?.disabled).toBe(true);
+  });
+
+  it('is disabled once the bonus action is already used', () => {
+    const btn = entangleButton(
+      druidWithSlots(1, {
+        actionEconomy: { actionUsed: false, bonusActionUsed: true, reactionUsed: false },
+      }),
+    );
+    expect(btn?.disabled).toBe(true);
+  });
+
+  it('does not render for non-druids (wizard / fighter)', () => {
+    expect(entangleButton(characterOfClass('wizard'))).toBeNull();
+    expect(entangleButton(characterOfClass('fighter'))).toBeNull();
   });
 });

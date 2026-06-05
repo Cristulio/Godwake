@@ -45,11 +45,39 @@ describe('hasRemainingTurnPlay — turn auto-end gate (every class)', () => {
 
   it('casters (wizard/druid) auto-end the moment the action is spent — nothing else to hold for', () => {
     // This is the bug-2 case: a mage that has cast its one action has nothing
-    // left, so the turn must release (the coach must not trap it).
+    // left, so the turn must release (the coach must not trap it). At L1 the
+    // druid has no 2nd-level slot, so its bonus-action Entangle hold can't fire.
     for (const id of ['wizard', 'druid'] as const) {
       const { state, character } = arena(make(id));
       expect(hasRemainingTurnPlay(actionSpent(character), state)).toBe(false);
     }
+  });
+
+  it('druid: holds for a bonus-action Entangle while a 2nd-level slot + the bonus action are free', () => {
+    const { state, character } = arena(make('druid'));
+    const withSlot: Character = {
+      ...actionSpent(character),
+      resources: {
+        ...character.resources,
+        spellSlots: { ...(character.resources.spellSlots ?? {}), 2: 1 },
+      },
+    };
+    // Action spent, but a 2nd-level slot + the bonus action are free → hold for Roots.
+    expect(hasRemainingTurnPlay(withSlot, state)).toBe(true);
+    // Bonus action already spent → nothing left, release.
+    expect(
+      hasRemainingTurnPlay(
+        { ...withSlot, actionEconomy: { ...withSlot.actionEconomy, bonusActionUsed: true } },
+        state,
+      ),
+    ).toBe(false);
+    // No 2nd-level slot (a low-level druid) → release.
+    expect(
+      hasRemainingTurnPlay(
+        { ...withSlot, resources: { ...withSlot.resources, spellSlots: { 1: 2 } } },
+        state,
+      ),
+    ).toBe(false);
   });
 
   it('fighter: holds for an affordable Second Wind / Action Surge, releases once neither is usable', () => {

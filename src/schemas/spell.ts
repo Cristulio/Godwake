@@ -79,6 +79,11 @@ export const SpellSchema = z.object({
   description: z.string(),
   /** Engine handler key. The `castSpell` switch routes off this. */
   effectKey: SpellEffectKeySchema,
+  /** Action economy this spell spends. Omitted reads as the main action;
+   *  'bonus' spends the bonus action instead (Misty Step, Entangling Roots), so
+   *  the caster can still take its main action the same turn. Read at the cast
+   *  gate (`canCastSpell`) and surfaced by the UI/bot. */
+  castTime: z.enum(['action', 'bonus']).optional(),
   /** When false, this spell is excluded from offer pools (level-up picker,
    *  future scroll drops). Code still ships for combat reference. Undefined
    *  reads as true. */

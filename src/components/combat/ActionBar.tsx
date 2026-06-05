@@ -18,6 +18,11 @@ import {
 import { getItem } from '../../content/items';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
 
+/** Entangling Roots is surfaced as its own dedicated bonus-action button (below)
+ *  and pulled from the generic Spells list, so the id is referenced in both
+ *  gates. */
+const ENTANGLE_SPELL_ID = 'entangling-roots';
+
 interface ActionBarProps {
   character: Character;
   state: CombatState;
@@ -34,6 +39,7 @@ interface ActionBarProps {
   onPatientDefense: () => void;
   onStunningStrike: () => void;
   onHuntersMark: () => void;
+  onEntangle: () => void;
   onSpells: () => void;
   onUseItem: () => void;
   onEndTurn: () => void;
@@ -55,6 +61,7 @@ export function ActionBar({
   onPatientDefense,
   onStunningStrike,
   onHuntersMark,
+  onEntangle,
   onSpells,
   onUseItem,
   onEndTurn,
@@ -81,6 +88,7 @@ export function ActionBar({
   const isBarbarian = character.classId === 'barbarian';
   const isRanger = character.classId === 'ranger';
   const isMonk = character.classId === 'monk';
+  const isDruid = character.classId === 'druid';
 
   // Multiattack commitment: once a character with Extra Attack has begun their
   // Attack action (a swing down, the action not yet fully spent), every OTHER
@@ -236,16 +244,28 @@ export function ActionBar({
     !stunningArmed &&
     !character.actionEconomy.actionUsed;
 
+  const knownSpells = character.resources.knownSpells ?? [];
+
+  // Druid Entangling Roots: a dedicated bonus-action button (like the monk's
+  // Ki buttons), so the druid doesn't dig it out of the Spells list. Auto-known
+  // from L1; enabled once a 2nd-level slot is up and the bonus action is free.
+  // canCastSpell carries the exact slot + bonus-action gate the engine enforces.
+  const hasEntangle = isDruid && knownSpells.includes(ENTANGLE_SPELL_ID);
+  const entangleSlots = slotsAt(character, 2);
+  const canEntangle =
+    playersTurn && active && hasEntangle && canCastSpell(character, ENTANGLE_SPELL_ID).ok;
+
   const totalSlots =
     slotsAt(character, 1) + slotsAt(character, 2) + slotsAt(character, 3);
-  const knownSpells = character.resources.knownSpells ?? [];
   // Button stays open as long as at least one known spell (action, bonus, or
   // reaction) can be cast right now — SpellPicker greys out individual entries.
+  // Entangling Roots is excluded: it has its own dedicated button and is pulled
+  // from the Spells list, so it must not be what keeps this one lit.
   const canSpells =
     playersTurn &&
     active &&
     isFullCasterClass &&
-    knownSpells.some((id) => canCastSpell(character, id).ok);
+    knownSpells.some((id) => id !== ENTANGLE_SPELL_ID && canCastSpell(character, id).ok);
 
   const consumableCount = character.inventory.filter((ref) => {
     try {
@@ -443,6 +463,19 @@ export function ActionBar({
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {stunningArmed ? 'Stunning ✓' : 'Stunning Strike'}
+          </Button>
+        )}
+
+        {hasEntangle && (
+          <Button
+            variant={canEntangle ? 'primary' : 'secondary'}
+            onClick={onEntangle}
+            data-tutorial="abilities"
+            disabled={!canEntangle}
+            title="Bonus action, costs a 2nd-level slot: grasping roots sweep the floor — every enemy makes a Strength save or is rooted, losing its next turn. Root the room and still strike the same turn."
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            ✦ Entangling Roots ({entangleSlots})
           </Button>
         )}
 
