@@ -22,8 +22,8 @@ function fighterActionSurgeMax(character: Character): number {
   return 0;
 }
 
-/** Base rounds a Rage burst lasts once entered — a short window, not a whole-fight state. */
-export const RAGE_ROUNDS = 3;
+/** Rounds a Rage burst lasts once entered — a long window now that it's a rationed charge, not an always-on toggle. */
+export const RAGE_ROUNDS = 5;
 
 /**
  * Rounds the Rage holds for this barbarian. Relentless Rage (L11) deepens the
@@ -31,6 +31,33 @@ export const RAGE_ROUNDS = 3;
  */
 export function rageRoundsFor(character: Character): number {
   return RAGE_ROUNDS + (characterHasMechanic(character, 'relentless-rage') ? 2 : 0);
+}
+
+/**
+ * Rage charges the barbarian holds before needing a rest. The fury is a
+ * rationed resource: the pool widens as the soul deepens, and the L20 capstone
+ * (Primal Champion) rages without limit. Charges refill ONLY at a rest (short
+ * or long) — never per fight — so each rage spent is a real choice that has to
+ * carry across the rooms until the next camp.
+ *
+ *   L1-4: 2 · L5-10: 3 · L11-16: 4 · L17-19: 5 · L20: unlimited
+ *
+ * L20 returns +Infinity; pair every read with {@link isRageUnlimited} so a
+ * persisted-then-rehydrated Infinity (JSON renders it null) still rages freely.
+ */
+export function rageChargesMax(character: Character): number {
+  if (character.classId !== 'barbarian') return 0;
+  const level = character.level;
+  if (level >= 20) return Number.POSITIVE_INFINITY;
+  if (level >= 17) return 5;
+  if (level >= 11) return 4;
+  if (level >= 5) return 3;
+  return 2;
+}
+
+/** Whether this barbarian's Rage is bottomless (L20 capstone — entering never spends a charge). */
+export function isRageUnlimited(character: Character): boolean {
+  return character.classId === 'barbarian' && character.level >= 20;
 }
 
 /**
@@ -135,6 +162,10 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
       rageRoundsRemaining: 0,
+      rageChargesRemaining:
+        character.classId === 'barbarian'
+          ? rageChargesMax(character)
+          : character.resources.rageChargesRemaining,
       kiPointsRemaining:
         character.classId === 'monk'
           ? character.level + (character.level >= 20 ? 2 : 0)
@@ -166,6 +197,10 @@ export function longRest(character: Character): Character {
           ? rogueCunningActionMax(character)
           : character.resources.cunningActionUsesRemaining,
       rageRoundsRemaining: 0,
+      rageChargesRemaining:
+        character.classId === 'barbarian'
+          ? rageChargesMax(character)
+          : character.resources.rageChargesRemaining,
       kiPointsRemaining:
         character.classId === 'monk'
           ? character.level + (character.level >= 20 ? 2 : 0)

@@ -11,6 +11,7 @@ import {
   isWildShaped,
   spellcastingMod,
 } from '../character/derived';
+import { isRageUnlimited } from '../character/actions';
 import { baneQuirkCount } from '../character/quirks';
 import { isNonStackingBlessing, blessingSignature } from '../character/blessings';
 import { getMonster } from '../../content/monsters';
@@ -439,9 +440,21 @@ export function chooseCombatAction(
       return { kind: 'second-wind' };
     }
 
-    // Barbarian Rage: open every fight in a fury — available every combat.
+    // Barbarian Rage: a rationed 5-round fury. Spend freely while charges are
+    // plentiful, but hold the LAST one unless the fight earns it — a pack, a foe
+    // as stout as the barbarian, or a turn it's already bloodied. A lone weakling
+    // the axe fells in a swing isn't worth the soul's last rage (charges only
+    // come back at a rest). The L20 capstone rages without limit.
     if (isBarbarian && !isRaging(character) && characterHasMechanic(character, 'rage')) {
-      return { kind: 'rage' };
+      const rageUnlimited = isRageUnlimited(character);
+      const rageCharges = character.resources.rageChargesRemaining ?? 0;
+      const lastCharge = !rageUnlimited && rageCharges <= 1;
+      const liveMaxHpTotal = live.reduce((sum, m) => sum + m.instance.hp.max, 0);
+      const worthLastCharge =
+        live.length >= 2 || liveMaxHpTotal >= character.hp.max || hpPct < 0.6;
+      if ((rageUnlimited || rageCharges > 0) && (!lastCharge || worthLastCharge)) {
+        return { kind: 'rage' };
+      }
     }
 
     // Ranger Hunter's Mark: brand the focus target so every swing bites deeper;

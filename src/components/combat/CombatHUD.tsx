@@ -6,6 +6,8 @@ import { computeAC, characterHasMechanic, critRange } from '../../engine/charact
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
+  rageChargesMax,
+  isRageUnlimited,
 } from '../../engine/character/actions';
 import {
   martialFlavor,
@@ -268,6 +270,9 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   // --- Barbarian resources ---
   const rageRounds = character.resources.rageRoundsRemaining ?? 0;
   const raging = rageRounds > 0;
+  const rageUnlimited = isRageUnlimited(character);
+  const rageCharges = character.resources.rageChargesRemaining ?? 0;
+  const rageChargesCap = rageChargesMax(character);
   const hasReckless = isBarbarian && characterHasMechanic(character, 'reckless-attack');
   const reckless = character.recklessActive === true;
 
@@ -618,14 +623,38 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
         </Section>
       )}
 
-      {isBarbarian && raging && (
+      {isBarbarian && (
         <Section title="Rage">
-          <Pill
-            text={`Fury ${rageRounds}`}
-            on
-            tone="blood"
-            title={`Raging — ${rageRounds} round${rageRounds === 1 ? '' : 's'} left. Physical damage halved, melee hits land harder. Healing locked out until fury ends.`}
-          />
+          <div className="flex flex-wrap items-center gap-1.5 max-w-[150px]">
+            {rageUnlimited ? (
+              <Pill
+                text="∞"
+                on
+                tone="blood"
+                title="Primal Champion — Rage is bottomless. Enter the fury as often as you like; it never spends a charge."
+              />
+            ) : (
+              Array.from({ length: Math.max(rageChargesCap, rageCharges) }).map((_, i) => (
+                <Dot
+                  key={`rage-${i}`}
+                  on={i < rageCharges}
+                  title={
+                    i < rageCharges
+                      ? 'Rage charge ready — a 5-round fury. Charges refill only at a rest, not between fights.'
+                      : 'Rage charge spent — refills at the next rest.'
+                  }
+                />
+              ))
+            )}
+            {raging && (
+              <Pill
+                text={`Fury ${rageRounds}`}
+                on
+                tone="blood"
+                title={`Raging — ${rageRounds} round${rageRounds === 1 ? '' : 's'} left. Physical damage halved, melee hits land harder. Healing locked out until fury ends.`}
+              />
+            )}
+          </div>
         </Section>
       )}
 

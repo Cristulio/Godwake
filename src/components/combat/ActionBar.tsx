@@ -4,7 +4,7 @@ import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
 import { maxAttacksPerAction } from '../../engine/combat/attack/playerAttack';
 import { characterHasMechanic, isFullCaster } from '../../engine/character/derived';
-import { RAGE_ROUNDS } from '../../engine/character/actions';
+import { RAGE_ROUNDS, isRageUnlimited } from '../../engine/character/actions';
 import {
   martialFlavor,
   martialPointsLeft,
@@ -168,14 +168,19 @@ export function ActionBar({
     cunningRemaining > 0 &&
     !character.actionEconomy.bonusActionUsed;
 
-  // Barbarian Rage (bonus action) — available every combat; disabled while already raging.
+  // Barbarian Rage (bonus action) — a rationed charge now: disabled while raging,
+  // while the bonus is spent, and when no charges remain (until a rest refills).
   const rageRounds = character.resources.rageRoundsRemaining ?? 0;
   const raging = rageRounds > 0;
+  const rageUnlimited = isRageUnlimited(character);
+  const rageCharges = character.resources.rageChargesRemaining ?? 0;
+  const hasRageCharge = rageUnlimited || rageCharges > 0;
   const canRage =
     playersTurn &&
     active &&
     isBarbarian &&
     !raging &&
+    hasRageCharge &&
     !character.actionEconomy.bonusActionUsed;
 
   // Barbarian Reckless Attack — a free stance declared before the swing.
@@ -402,10 +407,18 @@ export function ActionBar({
             onClick={onRage}
             disabled={!canRage}
             data-tutorial="abilities"
-            title={`Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends.`}
+            title={
+              !raging && !hasRageCharge
+                ? 'Out of Rage charges — rest at a camp to refill them.'
+                : `Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends. Spends one Rage charge; charges refill only at a rest.`
+            }
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {raging ? `Raging (${rageRounds})` : 'Rage'}
+            {raging
+              ? `Raging (${rageRounds})`
+              : rageUnlimited
+                ? 'Rage (∞)'
+                : `Rage (${rageCharges})`}
           </Button>
         )}
         {hasReckless && (

@@ -1,7 +1,7 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { characterHasMechanic } from '../character/derived';
-import { RAGE_ROUNDS } from '../character/actions';
+import { RAGE_ROUNDS, isRageUnlimited } from '../character/actions';
 import {
   combatResult,
   patchActionEconomy,
@@ -20,17 +20,29 @@ export interface RageContext {
  * Barbarian Rage. Bonus action: drop into a battle-fury for {@link RAGE_ROUNDS}
  * rounds. Physical damage is halved (monsterAttack); melee hits land for bonus
  * damage (playerAttack). Fury locks out healing — draughts and lifesteal are
- * suppressed (useItem / playerAttack gate on isRaging). Available every combat;
- * the 3-turn duration and no-heal tradeoff are the limiters.
+ * suppressed (useItem / playerAttack gate on isRaging).
+ *
+ * Rationed: entering spends one Rage charge (see `rageChargesRemaining` /
+ * `rageChargesMax`), and with none left the barbarian can't rage — the bonus
+ * action does nothing. The L20 capstone rages without spending. Charges come
+ * back only at a rest, not per fight, so the long 5-round window and no-heal
+ * tradeoff ride on a real choice about when to burn one. Re-entry while already
+ * raging is a no-op so a second bonus action can't double-spend.
  */
 export function useRage(ctx: RageContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.classId !== 'barbarian') return combatResult(state, character);
   if (!characterHasMechanic(character, 'rage')) return combatResult(state, character);
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
+  if ((character.resources.rageRoundsRemaining ?? 0) > 0) return combatResult(state, character);
+
+  const unlimited = isRageUnlimited(character);
+  const charges = character.resources.rageChargesRemaining ?? 0;
+  if (!unlimited && charges <= 0) return combatResult(state, character);
 
   let nextCharacter: Character = patchResources(character, {
     rageRoundsRemaining: RAGE_ROUNDS,
+    ...(unlimited ? {} : { rageChargesRemaining: charges - 1 }),
   });
   nextCharacter = patchActionEconomy(nextCharacter, { bonusActionUsed: true });
 

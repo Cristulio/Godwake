@@ -131,16 +131,16 @@ describe('hasRemainingTurnPlay — turn auto-end gate (every class)', () => {
     ).toBe(false);
   });
 
-  it('barbarian: holds to enter Rage, releases once raging (or the bonus is spent)', () => {
+  it('barbarian: holds to enter Rage, releases once raging / bonus spent / out of charges', () => {
     const { state, character } = arena(make('barbarian'));
     const spent = actionSpent(character);
-    // Not yet raging, bonus free → wants to Rage.
+    // Not yet raging, bonus free, a charge in hand → wants to Rage.
     expect(
       hasRemainingTurnPlay(
         {
           ...spent,
           actionEconomy: { ...spent.actionEconomy, bonusActionUsed: false },
-          resources: { ...spent.resources, rageRoundsRemaining: 0 },
+          resources: { ...spent.resources, rageRoundsRemaining: 0, rageChargesRemaining: 1 },
         },
         state,
       ),
@@ -149,6 +149,17 @@ describe('hasRemainingTurnPlay — turn auto-end gate (every class)', () => {
     expect(
       hasRemainingTurnPlay(
         { ...spent, resources: { ...spent.resources, rageRoundsRemaining: 2 } },
+        state,
+      ),
+    ).toBe(false);
+    // Out of charges (not raging) → Rage can't fire, so nothing holds the turn.
+    expect(
+      hasRemainingTurnPlay(
+        {
+          ...spent,
+          actionEconomy: { ...spent.actionEconomy, bonusActionUsed: false },
+          resources: { ...spent.resources, rageRoundsRemaining: 0, rageChargesRemaining: 0 },
+        },
         state,
       ),
     ).toBe(false);
