@@ -12,6 +12,7 @@ import {
   spellcastingMod,
 } from '../character/derived';
 import { isRageUnlimited } from '../character/actions';
+import { rageBrokenByArmor } from '../character/equip';
 import { baneQuirkCount } from '../character/quirks';
 import { isNonStackingBlessing, blessingSignature } from '../character/blessings';
 import { getMonster } from '../../content/monsters';
@@ -445,7 +446,12 @@ export function chooseCombatAction(
     // as stout as the barbarian, or a turn it's already bloodied. A lone weakling
     // the axe fells in a swing isn't worth the soul's last rage (charges only
     // come back at a rest). The L20 capstone rages without limit.
-    if (isBarbarian && !isRaging(character) && characterHasMechanic(character, 'rage')) {
+    if (
+      isBarbarian &&
+      !isRaging(character) &&
+      !rageBrokenByArmor(character) &&
+      characterHasMechanic(character, 'rage')
+    ) {
       const rageUnlimited = isRageUnlimited(character);
       const rageCharges = character.resources.rageChargesRemaining ?? 0;
       const lastCharge = !rageUnlimited && rageCharges <= 1;

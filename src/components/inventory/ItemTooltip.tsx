@@ -12,8 +12,8 @@ interface ItemTooltipProps {
   rolled?: RolledItem;
   /** Override the displayed value (gp) — use the rolled premium price, not base.cost. */
   rolledCost?: number;
-  /** Non-null when equipping this item suppresses a class's agile perks. */
-  agileTradeoffWarning?: string;
+  /** Caveat shown when this class dons this armour (Barbarian rage-break, agile suppression). */
+  equipWarning?: string;
 }
 
 const RARITY_LABEL: Record<Rarity, string> = {
@@ -34,7 +34,7 @@ const RARITY_COLOR: Record<Rarity, string> = {
   artifact: 'var(--color-accent-blood)',
 };
 
-export function ItemTooltip({ item, hint, rolled, rolledCost, agileTradeoffWarning }: ItemTooltipProps) {
+export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: ItemTooltipProps) {
   const isRolled = rolled !== undefined && rolled.rarity !== 'white';
   const borderColor = isRolled ? GEAR_RARITY_COLOR[rolled.rarity] : 'var(--color-accent-amber)';
   const displayName = rolled?.name ?? item.name;
@@ -80,10 +80,10 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, agileTradeoffWarni
         </div>
       )}
 
-      {agileTradeoffWarning && (
+      {equipWarning && (
         <div className="mt-2 pt-2 border-t border-[var(--color-border-dim)]">
           <div className="text-[10px] leading-snug text-[var(--color-accent-amber)]">
-            ⚠ {agileTradeoffWarning}
+            ⚠ {equipWarning}
           </div>
         </div>
       )}

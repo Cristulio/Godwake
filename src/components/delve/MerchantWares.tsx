@@ -1,7 +1,9 @@
 import type { Item, ItemRef } from '../../schemas/item';
+import type { ClassId } from '../../schemas/ids';
 import { Button } from '../ui/Button';
 import { getItem, getAffix } from '../../content/items';
 import { getLegendary } from '../../content/legendaries';
+import { armorEquipWarning } from '../../engine/character/equip';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
 import { baseStatLine, enhancementLine, itemTypeLabel } from '../inventory/itemDisplay';
 import type { GearStock, LegendaryOffer } from './shopStock';
@@ -20,15 +22,19 @@ interface GearWareRowProps {
   bought: boolean;
   gold: number;
   onBuy: () => void;
+  /** Viewing class — drives the armour caveat line (e.g. Barbarian heavy-armour rage-break). */
+  playerClassId?: ClassId;
 }
 
 /** One rolled arms-rack item: rarity-coloured frame, affix-effect list, price. */
-export function GearWareRow({ stock, bought, gold, onBuy }: GearWareRowProps) {
+export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearWareRowProps) {
   const rolled = stock.ref.rolled;
   const base = getItem(stock.ref.itemId);
   const rarity = rolled?.rarity ?? 'white';
   const color = GEAR_RARITY_COLOR[rarity];
   const tooDear = gold < stock.cost;
+  const warning =
+    playerClassId && base.kind === 'armor' ? armorEquipWarning(playerClassId, base) : null;
   return (
     <div
       className="border p-3 flex items-center gap-3"
@@ -66,6 +72,11 @@ export function GearWareRow({ stock, bought, gold, onBuy }: GearWareRowProps) {
             );
           })}
         </div>
+        {warning && (
+          <div className="text-[var(--color-accent-amber)] text-[10px] leading-snug mt-1">
+            ⚠ {warning}
+          </div>
+        )}
       </div>
       <div className="text-right shrink-0">
         <div className="text-[var(--color-accent-gold)] text-sm">{stock.cost} gp</div>

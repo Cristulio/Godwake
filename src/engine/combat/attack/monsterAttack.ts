@@ -21,7 +21,7 @@ import type {
 } from '../../../schemas/monster';
 import type { ConditionName } from '../../../types/conditions';
 import { computeAC, isRaging } from '../../character/derived';
-import { wearsHeavierThanLight } from '../../character/equip';
+import { wearsHeavierThanLight, rageBrokenByArmor } from '../../character/equip';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterAffixMods } from '../../items/affixMods';
 import { getMonster } from '../../../content/monsters';
@@ -770,7 +770,9 @@ function resolveSingleAttack(
       action.damageType === 'bludgeoning' ||
       action.damageType === 'piercing' ||
       action.damageType === 'slashing';
-    const rageResists = isRaging(nextCharacter) && physical;
+    // Heavy armour smothers Rage — plate gives no physical-damage halving
+    // (defense-in-depth alongside the equip-time break and the entry guard).
+    const rageResists = isRaging(nextCharacter) && physical && !rageBrokenByArmor(nextCharacter);
     // Armour resist affix (Salamander / Frostward): halve a matching type.
     const affixResists = characterAffixMods(nextCharacter).resists.includes(action.damageType);
     const resisted = !immune && (raceResists || rageResists || affixResists);

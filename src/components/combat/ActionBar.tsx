@@ -5,6 +5,7 @@ import { isPlayerTurn } from '../../engine/combat';
 import { maxAttacksPerAction } from '../../engine/combat/attack/playerAttack';
 import { characterHasMechanic, isFullCaster } from '../../engine/character/derived';
 import { RAGE_ROUNDS, isRageUnlimited } from '../../engine/character/actions';
+import { rageBrokenByArmor } from '../../engine/character/equip';
 import {
   martialFlavor,
   martialPointsLeft,
@@ -175,11 +176,14 @@ export function ActionBar({
   const rageUnlimited = isRageUnlimited(character);
   const rageCharges = character.resources.rageChargesRemaining ?? 0;
   const hasRageCharge = rageUnlimited || rageCharges > 0;
+  // Heavy plate smothers the fury — Rage can't take hold while it's worn.
+  const rageBlockedByArmor = rageBrokenByArmor(character);
   const canRage =
     playersTurn &&
     active &&
     isBarbarian &&
     !raging &&
+    !rageBlockedByArmor &&
     hasRageCharge &&
     !character.actionEconomy.bonusActionUsed;
 
@@ -408,9 +412,11 @@ export function ActionBar({
             disabled={!canRage}
             data-tutorial="abilities"
             title={
-              !raging && !hasRageCharge
-                ? 'Out of Rage charges — rest at a camp to refill them.'
-                : `Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends. Spends one Rage charge; charges refill only at a rest.`
+              rageBlockedByArmor
+                ? 'Heavy armor smothers your Rage — remove the plate to call the fury.'
+                : !raging && !hasRageCharge
+                  ? 'Out of Rage charges — rest at a camp to refill them.'
+                  : `Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends. Spends one Rage charge; charges refill only at a rest.`
             }
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >

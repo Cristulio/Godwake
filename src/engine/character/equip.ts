@@ -93,6 +93,35 @@ export function wearsHeavierThanLight(character: Character): boolean {
   return item.category === 'medium' || item.category === 'heavy';
 }
 
+/** True when the body slot holds heavy-category armour (plate). */
+export function wearsHeavyArmor(character: Character): boolean {
+  const armorRef = character.equipped.armor;
+  if (!armorRef) return false;
+  const item = getItem(armorRef.itemId);
+  return item.kind === 'armor' && item.category === 'heavy';
+}
+
+/**
+ * BG3 rule: a Barbarian's Rage cannot coexist with heavy armour. While plate is
+ * worn the fury gives nothing — no bonus melee damage and no halved physical
+ * damage — and donning it ends an active Rage outright (see `equipItem`,
+ * `useRage`, and the playerAttack/monsterAttack benefit gates). The brute's
+ * power rides an unburdened body.
+ */
+export function rageBrokenByArmor(character: Character): boolean {
+  return character.classId === 'barbarian' && wearsHeavyArmor(character);
+}
+
+/**
+ * BG3 rule: a Barbarian may physically DON heavy armour despite lacking
+ * proficiency — it's a deliberate trade that costs them their Rage rather than
+ * being hard-blocked at the equip gate (see `rageBrokenByArmor`). No other class
+ * may wear armour it isn't trained in.
+ */
+export function barbarianMayDonHeavy(classId: ClassId, armor: Armor): boolean {
+  return classId === 'barbarian' && armor.category === 'heavy';
+}
+
 /**
  * Warning text for the item tooltip when equipping an armor piece would
  * suppress a class's agile perks. Returns null when no suppression applies.
@@ -102,6 +131,19 @@ export function agileTradeoffWarning(classId: ClassId, armor: { category: string
   if (classId === 'ranger') return 'Suppresses Opening Volley and Ranged Evasion while worn.';
   if (classId === 'rogue') return 'Suppresses Cunning Action and Uncanny Dodge while worn.';
   return null;
+}
+
+/**
+ * The caveat to surface when {@link classId} inspects this armour — the cost of
+ * donning it. A Barbarian sees that heavy plate ends their Rage; agile classes
+ * see their suppressed perks. Mutually exclusive by class, so one line is enough.
+ * Null when the piece carries no caveat for the class.
+ */
+export function armorEquipWarning(classId: ClassId, armor: { category: string }): string | null {
+  if (classId === 'barbarian' && armor.category === 'heavy') {
+    return 'Heavy armor — ends your Rage (no fury bonuses while worn).';
+  }
+  return agileTradeoffWarning(classId, armor);
 }
 
 /**
@@ -186,7 +228,7 @@ export function equipDenialReason(character: Character, itemId: string): string 
   }
 
   if (item.kind === 'armor') {
-    if (!isArmorProficient(character, item)) {
+    if (!isArmorProficient(character, item) && !barbarianMayDonHeavy(character.classId, item)) {
       return `A ${getClass(character.classId).name} can't wear this`;
     }
     if (item.strRequirement !== undefined) {
@@ -232,7 +274,9 @@ export function equipItem(character: Character, inventoryIdx: number): Character
     }
   }
   if (item.kind === 'armor') {
-    if (!isArmorProficient(character, item)) return character;
+    if (!isArmorProficient(character, item) && !barbarianMayDonHeavy(character.classId, item)) {
+      return character;
+    }
     if (item.strRequirement !== undefined) {
       const str = effectiveAbilityScores(character).str ?? 0;
       if (str < item.strRequirement) return character;
@@ -264,7 +308,13 @@ export function equipItem(character: Character, inventoryIdx: number): Character
     equipped[slot] = ref;
   }
 
-  return { ...character, equipped };
+  const next: Character = { ...character, equipped };
+  // BG3: strapping into heavy plate ends a Barbarian's Rage on the spot — no
+  // benefit rides plate, so the fury gutters out. Charges are NOT refunded.
+  if (rageBrokenByArmor(next) && (next.resources.rageRoundsRemaining ?? 0) > 0) {
+    return { ...next, resources: { ...next.resources, rageRoundsRemaining: 0 } };
+  }
+  return next;
 }
 
 /**
