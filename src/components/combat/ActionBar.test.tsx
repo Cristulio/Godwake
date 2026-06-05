@@ -262,3 +262,26 @@ describe('ActionBar — Druid Wild Shape (dedicated bonus-action button)', () =>
     expect(wildShapeButton(characterOfClass('fighter'))).toBeNull();
   });
 });
+
+describe('ActionBar — Fighter Action Surge gates on the L2 mechanic', () => {
+  function hasActionSurgeButton(character: Character): boolean {
+    const { container } = render(
+      <ActionBar character={character} state={playerTurnState()} {...handlers} />,
+    );
+    const present = Array.from(container.querySelectorAll('button')).some((b) =>
+      (b.textContent ?? '').includes('Action Surge'),
+    );
+    cleanup();
+    return present;
+  }
+
+  // The bug: Action Surge rendered (greyed out) on bare `isFighter`, so an L1
+  // fighter saw a feature they don't have until L2.
+  it('does not render the Action Surge button at L1', () => {
+    expect(hasActionSurgeButton(fighterAt(0))).toBe(false);
+  });
+
+  it('renders the Action Surge button at L2', () => {
+    expect(hasActionSurgeButton(fighterAt(1))).toBe(true);
+  });
+});
