@@ -55,6 +55,17 @@ export function sneakAttackDiceForLevel(level: number): number {
   return Math.max(1, Math.ceil(level / 2));
 }
 
+/** Rogue Assassinate (L4): extra Sneak Attack dice on the opening strike of the
+ *  fight, on top of the auto-advantage it also grants. A once-per-combat burst. */
+const ASSASSINATE_BONUS_SNEAK_DICE = 2;
+
+/** Rogue Envenom (L8): the bleed a landed Sneak Attack leaves behind — a small
+ *  damage-over-time that offsets the once-per-turn burst ceiling with sustain.
+ *  Kept below the gear bleed affixes (3/turn × 3) so the kit doesn't overshadow
+ *  the loot; folded max-of so it never weakens a stronger bleed already running. */
+const ENVENOM_BLEED_PER_TURN = 2;
+const ENVENOM_BLEED_TURNS = 2;
+
 /**
  * Which damage dice a weapon rolls. A versatile weapon swung two-handed — i.e.
  * with the off-hand empty (no shield, no second weapon) — rolls its larger
@@ -175,6 +186,10 @@ export function playerAttack(
 
   const ac = targetAC(target, nextCharacter);
   const hideAdvantage = nextCharacter.nextAttackAdvantage === true;
+  // Cunning Action: Feint — a one-shot flag that forces Sneak Attack onto this
+  // strike regardless of advantage / wound / dagger / opener (read in the Sneak
+  // block below). Captured here so it survives the field being consumed.
+  const forceSneak = nextCharacter.nextAttackForceSneak === true;
   // Monster debuffs (poisoned/frightened/blinded/restrained) impose
   // disadvantage on the player's attacks. Advantage comes from Hide, a
   // first-strike blessing, or a Barbarian's Reckless Attack (melee only).
@@ -185,11 +200,16 @@ export function playerAttack(
   // lands with advantage.
   const shadowOpener =
     isFirstAttack && monkUnarmedStrike && characterHasMechanic(nextCharacter, 'shadow-strike');
+  // Rogue Assassinate (L4): the killer opens from the blind side — the first
+  // strike of the fight lands with advantage (and extra Sneak dice, below).
+  const assassinateOpener =
+    isFirstAttack && characterHasMechanic(nextCharacter, 'assassinate');
   const hasAdvantage =
     (isFirstAttack && !!blessingMods.firstAttackAdvantage) ||
     hideAdvantage ||
     recklessAdvantage ||
-    shadowOpener;
+    shadowOpener ||
+    assassinateOpener;
   // Gloom twist: the first attack of the fight rolls at disadvantage (one-shot —
   // gated on isFirstAttack, which flips off once the player has swung).
   const gloomDisadvantage = isFirstAttack && state.gloomActive === true;
@@ -199,6 +219,7 @@ export function playerAttack(
   // One-shot: consume Hide and any pending flat-to-hit bonus on the actual
   // attack roll, hit or miss.
   if (hideAdvantage) nextCharacter = { ...nextCharacter, nextAttackAdvantage: false };
+  if (forceSneak) nextCharacter = { ...nextCharacter, nextAttackForceSneak: false };
   if (nextBonus > 0) nextCharacter = { ...nextCharacter, nextAttackBonus: 0 };
   let toHit = roller.d20(advantage, attackBonus);
   let crit = critRange(nextCharacter).includes(toHit.rolls[0]);
@@ -504,18 +525,22 @@ export function playerAttack(
     // Opening strike: the first attack of each combat always finds the gap —
     // the rogue steps from shadow even without setting up Hide first.
     const openingStrike = isFirstAttack;
+    // Feint guarantees the gap with no setup at all (Cunning Action above).
     const sneakTriggers =
       advantage === 'advantage' ||
       targetWounded ||
       wieldsDagger ||
       swashbucklerSneak ||
       assassinSneak ||
-      openingStrike;
+      openingStrike ||
+      forceSneak;
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
       sneakDice =
         sneakAttackDiceForLevel(nextCharacter.level) +
         (nextCharacter.permanentBonuses?.sneakAttackDice ?? 0) +
-        (characterHasMechanic(nextCharacter, 'death-strike') ? 2 : 0);
+        (characterHasMechanic(nextCharacter, 'death-strike') ? 2 : 0) +
+        // Assassinate front-loads extra dice into the opening strike.
+        (assassinateOpener ? ASSASSINATE_BONUS_SNEAK_DICE : 0);
       const sneakRoll = roller.roll({
         count: sneakDice * (crit ? 2 : 1),
         die: 6,
@@ -735,6 +760,47 @@ export function playerAttack(
         kind: 'system',
         text: `${displayName(target, nextCharacter)} begins to bleed (${affixMods.bleedDamage}/turn).`,
       });
+    }
+
+    // Rogue Envenom (L8): a landed Sneak Attack leaves a bleeding/poisoned wound
+    // — sustained damage that ticks across the next turns (turn.ts), offsetting
+    // the once-per-turn Sneak ceiling. Folded max-of so it never weakens a
+    // stronger gear bleed already running on the target.
+    if (
+      sneakAttackFiredFlag &&
+      characterHasMechanic(nextCharacter, 'envenom') &&
+      target.kind === 'monster'
+    ) {
+      const stillAlive = nextState.combatants.some(
+        (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
+      );
+      if (stillAlive) {
+        nextState = {
+          ...nextState,
+          combatants: nextState.combatants.map((c) => {
+            if (c.kind !== 'monster' || c.id !== targetId) return c;
+            return {
+              ...c,
+              instance: {
+                ...c.instance,
+                bleedDamagePerTurn: Math.max(
+                  c.instance.bleedDamagePerTurn ?? 0,
+                  ENVENOM_BLEED_PER_TURN,
+                ),
+                bleedTurnsRemaining: Math.max(
+                  c.instance.bleedTurnsRemaining ?? 0,
+                  ENVENOM_BLEED_TURNS,
+                ),
+              },
+            };
+          }),
+        };
+        nextState = appendLog(nextState, {
+          id: nextLogId(nextState),
+          kind: 'system',
+          text: `${displayName(target, nextCharacter)} is envenomed — the wound festers (${ENVENOM_BLEED_PER_TURN}/turn).`,
+        });
+      }
     }
 
     // Fighter (Battle Master): the maneuver also opens a bleeding wound — 3

@@ -176,9 +176,9 @@ describe('engine internal purity — character is never mutated in place', () =>
     const before = snapshot(character);
     useCunningAction({ character, state: init.state, choice: 'hide' });
     expect(snapshot(character)).toBe(before);
-    useCunningAction({ character, state: init.state, choice: 'dash' });
+    useCunningAction({ character, state: init.state, choice: 'quick-strike' });
     expect(snapshot(character)).toBe(before);
-    useCunningAction({ character, state: init.state, choice: 'disengage' });
+    useCunningAction({ character, state: init.state, choice: 'feint' });
     expect(snapshot(character)).toBe(before);
   });
 

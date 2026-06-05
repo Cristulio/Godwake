@@ -5,6 +5,7 @@ import type {
   MonsterCombatant,
 } from '../../../types/combat';
 import { characterBlessingMods } from '../../character/blessings';
+import { characterHasMechanic } from '../../character/derived';
 import { getMonster } from '../../../content/monsters';
 import { playSfx } from '../../audio';
 import { appendLog } from '../log';
@@ -110,7 +111,29 @@ export function applyDamage(
       text: `${nextCharacter.name} twists with the blow — ${reduction} damage avoided.`,
     });
   }
+  // Rogue Evasion (L10+): a boss's CHARGED special is telegraphed a full turn
+  // ahead — the rogue reads the wind-up and rolls clear, taking only half. Fires
+  // only inside the charged-special window (set in monsterAttack) and does NOT
+  // spend the reaction, so it stacks with Uncanny Dodge answering an ordinary hit
+  // the same round. When it fires it stands in for Uncanny Dodge on this blow (no
+  // double-halving to a quarter).
+  const evasionApplies =
+    state.evasionWindowActive === true &&
+    nextCharacter.classId === 'rogue' &&
+    characterHasMechanic(nextCharacter, 'evasion') &&
+    !wearsHeavierThanLight(nextCharacter) &&
+    workingAmount > 0;
+  if (evasionApplies) {
+    const evaded = Math.floor(workingAmount / 2);
+    next = appendLog(next, {
+      id: next.log.length + 1,
+      kind: 'system',
+      text: `${nextCharacter.name} reads the wind-up and rolls clear — Evasion halves the blast (${workingAmount} → ${evaded}).`,
+    });
+    workingAmount = evaded;
+  }
   if (
+    !evasionApplies &&
     nextCharacter.classId === 'rogue' &&
     nextCharacter.level >= UNCANNY_DODGE_LEVEL &&
     !nextCharacter.actionEconomy.reactionUsed &&

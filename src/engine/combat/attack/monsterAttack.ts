@@ -20,7 +20,7 @@ import type {
   MonsterSustain,
 } from '../../../schemas/monster';
 import type { ConditionName } from '../../../types/conditions';
-import { computeAC, isRaging } from '../../character/derived';
+import { computeAC, isRaging, characterHasMechanic } from '../../character/derived';
 import { wearsHeavierThanLight, rageBrokenByArmor } from '../../character/equip';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterAffixMods } from '../../items/affixMods';
@@ -56,12 +56,20 @@ import {
 } from '../types';
 import { appendLog } from '../log';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
+import { sneakAttackDiceForLevel } from './playerAttack';
 import type { AttackContext } from './playerAttack';
 
 // Nimble Dodge: a low-level Rogue reads the first strike of the round and slips
 // it, imposing disadvantage. Fades at level 5 when the real Uncanny Dodge (a
 // damage halve) comes online — see attack/damage.ts (UNCANNY_DODGE_LEVEL = 5).
 const NIMBLE_DODGE_MAX_LEVEL = 4;
+
+/** Rogue Opportunist (L12): a foe that swings and misses opens itself to a
+ *  reaction Sneak-Attack jab — half the rogue's Sneak dice (a conservative
+ *  second burst, not a full Sneak), once per round. */
+function opportunistRiposteDice(level: number): number {
+  return Math.max(1, Math.ceil(sneakAttackDiceForLevel(level) / 2));
+}
 
 function findCombatant(state: CombatState, id: string): Combatant | undefined {
   return state.combatants.find((c) => c.id === id);
@@ -382,14 +390,21 @@ export function monsterAttack(
         (a) => a.kind === ref.actionKind && a.name === ref.actionName,
       );
       if (!charged) continue; // the action was phased out — the charge lapses
-      result = resolveMonsterChosenAction(
-        result.state,
+      // Open the Evasion window: a Rogue with Evasion halves this telegraphed
+      // payoff (read in applyDamage). Closed again immediately after so ordinary
+      // hits this turn aren't affected.
+      const chargedResolved = resolveMonsterChosenAction(
+        { ...result.state, evasionWindowActive: true },
         result.character,
         attackerId,
         inst.displayName,
         charged,
         roller,
       );
+      result = {
+        state: { ...chargedResolved.state, evasionWindowActive: false },
+        character: chargedResolved.character,
+      };
       lastResolvedAction = charged;
       continue;
     }
@@ -845,6 +860,34 @@ function resolveSingleAttack(
     }
   }
 
+  // Rogue Opportunist (L12): a foe that swung and MISSED leaves itself open —
+  // once per round the rogue answers with a reaction Sneak-Attack jab. Uses a
+  // dedicated per-round flag (not the reaction), so Uncanny Dodge can still
+  // answer a landed hit the same round, and it's separate from the once-per-turn
+  // main-hand Sneak. A clean miss is the opening; on a hit the rogue is too busy
+  // taking the blow to counter.
+  if (
+    !hit &&
+    nextCharacter.classId === 'rogue' &&
+    characterHasMechanic(nextCharacter, 'opportunist') &&
+    nextCharacter.opportunistUsedThisRound !== true
+  ) {
+    const live = monsterInstanceOf(nextState, attackerId);
+    if (live && live.hp.current > 0) {
+      const diceN = opportunistRiposteDice(nextCharacter.level);
+      const riposte = roller.roll({ count: diceN, die: 6, modifier: 0 });
+      nextCharacter = { ...nextCharacter, opportunistUsedThisRound: true };
+      const dealt = applyDamage(nextState, attackerId, riposte.total, nextCharacter);
+      nextState = dealt.state;
+      nextCharacter = dealt.character;
+      nextState = appendLog(nextState, {
+        id: nextLogId(nextState),
+        kind: 'damage',
+        text: `${attacker.instance.displayName} overreaches — ${nextCharacter.name} ripostes for ${riposte.total} (${diceN}d6 sneak).`,
+      });
+    }
+  }
+
   return { state: nextState, character: nextCharacter };
 }
 
@@ -871,6 +914,10 @@ function monsterMultiattack(
   let workingChar: Character = character as Character;
   for (let i = 0; i < multi.attacks; i++) {
     if (workingChar.hp.current <= 0) break;
+    // An Opportunist riposte (on a missed swing) can fell the attacker mid-flurry
+    // — a dead monster doesn't keep swinging.
+    const atkInst = monsterInstanceOf(workingState, attackerId);
+    if (!atkInst || atkInst.hp.current <= 0) break;
     const r = resolveSingleAttack(workingState, workingChar, attackerId, attack, roller);
     workingState = r.state;
     workingChar = r.character;

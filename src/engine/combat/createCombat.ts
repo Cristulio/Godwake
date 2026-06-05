@@ -235,6 +235,8 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       ...nextCharacter,
       nextAttackAdvantage: false,
       bonusAttackAvailable: false,
+      nextAttackForceSneak: false,
+      opportunistUsedThisRound: false,
     };
     nextCharacter = patchResources(nextCharacter, {
       sneakAttackUsedThisTurn: false,

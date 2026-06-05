@@ -164,9 +164,11 @@ describe('Sneak Attack scaling stacks with Knife in the Dark', () => {
       let state = init.state;
       rogue = init.character;
       // Bloat goblin HP so it survives until the SA line lands, regardless of
-      // dice roll variance.
+      // dice roll variance. Past the opener too, so base Sneak + Knife dice are
+      // isolated from Assassinate's opener-only bonus (dagger still triggers SA).
       state = {
         ...state,
+        playerHasAttacked: true,
         combatants: state.combatants.map((c) =>
           c.kind === 'monster'
             ? { ...c, instance: { ...c.instance, hp: { current: 200, max: 200, temp: 0 } } }
@@ -339,13 +341,13 @@ describe('Mage Armor passive + Shield reaction AC stack', () => {
 });
 
 /**
- * (5) Disengage damage reduction + Hill Dwarf HP pool.
+ * (5) Incoming-damage reduction + Hill Dwarf HP pool.
  *
- * Setup: a Hill Dwarf rogue with incomingDamageReduction = 2 and a Mantle
- * boosted HP pool. A 10-damage hit should subtract 2 (Disengage), then 8
- * comes off HP. Reduction clears.
+ * Setup: a Hill Dwarf rogue with incomingDamageReduction = 2 (the shared
+ * one-shot DR channel, e.g. a martial DEFENSE brace) and a Mantle-boosted HP
+ * pool. A 10-damage hit should subtract 2, then 8 comes off HP. Reduction clears.
  */
-describe('Disengage damage reduction stacks under buffed HP pool', () => {
+describe('incoming-damage reduction stacks under buffed HP pool', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
   it('reduces a 10-damage hit by 2, then subtracts 8 from HP', () => {
@@ -377,9 +379,9 @@ describe('Disengage damage reduction stacks under buffed HP pool', () => {
     let state = init.state;
     rogue = init.character;
 
-    const ca = useCunningAction({ character: rogue, state, choice: 'disengage' });
-    state = ca.state;
-    rogue = ca.character;
+    // Arm the shared one-shot DR channel directly (the martial DEFENSE brace
+    // folds onto this same field; Cunning Action no longer sources it).
+    rogue = { ...rogue, incomingDamageReduction: 2 };
     expect(rogue.incomingDamageReduction).toBe(2);
 
     const before = rogue.hp.current;

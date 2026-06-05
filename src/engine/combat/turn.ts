@@ -33,11 +33,15 @@ function resetActionEconomyForCurrent(
 ): { state: CombatState; character: Character } {
   const currentId = state.turnOrder[state.currentTurnIndex];
   if (currentId === 'player') {
-    const nextCharacter = patchActionEconomy(character, {
-      actionUsed: false,
-      bonusActionUsed: false,
-      reactionUsed: false,
-    });
+    const nextCharacter = {
+      ...patchActionEconomy(character, {
+        actionUsed: false,
+        bonusActionUsed: false,
+        reactionUsed: false,
+      }),
+      // Rogue Opportunist: the once-per-round riposte refreshes with the turn.
+      opportunistUsedThisRound: false,
+    };
     return { state, character: nextCharacter };
   }
   return {

@@ -60,6 +60,9 @@ describe('Rogue — Sneak Attack scaling in combat', () => {
       const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
       let state = init.state;
       rogue = init.character;
+      // Past the opener so base Sneak scaling is isolated from Assassinate's
+      // opener-only bonus dice (Hide + dagger still trigger the Sneak).
+      state = { ...state, playerHasAttacked: true };
       const ca = useCunningAction({ character: rogue, state, choice: 'hide' });
       state = ca.state;
       rogue = ca.character;
@@ -102,6 +105,8 @@ describe('Rogue — Knife in the Dark (permanentBonuses.sneakAttackDice)', () =>
       const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
       let state = init.state;
       rogue = init.character;
+      // Past the opener so base Sneak scaling is isolated from Assassinate.
+      state = { ...state, playerHasAttacked: true };
       const ca = useCunningAction({ character: rogue, state, choice: 'hide' });
       state = ca.state;
       rogue = ca.character;
@@ -578,38 +583,56 @@ describe('Rogue — Cunning Action', () => {
     expect(log.text).toContain('shadow');
   });
 
-  it('Disengage arms incoming-damage reduction and consumes it on the next hit', () => {
+  it('Feint arms a guaranteed Sneak Attack and consumes it on the next strike', () => {
     const goblin = getMonster('goblin');
     let rogue = makeRogue();
     const roller = createDiceRoller(2);
     const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
     let state = init.state;
     rogue = init.character;
-    expect(rogue.incomingDamageReduction ?? 0).toBe(0);
+    expect(rogue.nextAttackForceSneak ?? false).toBe(false);
 
-    const ca = useCunningAction({ character: rogue, state, choice: 'disengage' });
+    const ca = useCunningAction({ character: rogue, state, choice: 'feint' });
     state = ca.state;
     rogue = ca.character;
-    expect(rogue.incomingDamageReduction).toBe(2);
+    expect(rogue.nextAttackForceSneak).toBe(true);
     expect(rogue.actionEconomy.bonusActionUsed).toBe(true);
-
-    // Take a 5-damage hit. Reduction should turn it into 3, then clear.
-    const hpBefore = rogue.hp.current;
-    let dmg = applyDamage(state, 'player', 5, rogue);
-    state = dmg.state;
-    rogue = dmg.character;
-    expect(rogue.hp.current).toBe(hpBefore - 3);
-    expect(rogue.incomingDamageReduction).toBe(0);
-
-    // A second hit gets no discount.
-    dmg = applyDamage(state, 'player', 4, rogue);
-    state = dmg.state;
-    rogue = dmg.character;
-    expect(rogue.hp.current).toBe(hpBefore - 3 - 4);
-    void state;
+    const log = state.log[state.log.length - 1];
+    expect(log.text).toContain('feints');
   });
 
-  it('Dash queues a bonus swing this turn — player can attack again after the Action is spent', () => {
+  it('Feint guarantees Sneak past the opener with no advantage, wound, or dagger', () => {
+    // Use a rapier (no dagger synergy) and advance past the opener so the only
+    // possible Sneak trigger is the Feint force-flag.
+    let observed = false;
+    for (let seed = 1; seed <= 80 && !observed; seed++) {
+      let rogue = makeRogue({
+        inventory: [{ itemId: 'rapier' }],
+        equipped: { mainHand: { itemId: 'rapier' }, offHand: null, armor: null },
+      });
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: rogue, monsters: [{ def: getMonster('goblin') }] });
+      let state: CombatState = { ...init.state, playerHasAttacked: true, sneakAttackUsedThisTurn: false };
+      rogue = init.character;
+      const ca = useCunningAction({ character: rogue, state, choice: 'feint' });
+      state = ca.state;
+      rogue = ca.character;
+      const goblinId = findMonster(state).id;
+      const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'rapier');
+      state = atk.state;
+      rogue = atk.character;
+      const sneakLog = state.log.find((l) => l.text.includes('sneak ('));
+      if (sneakLog) {
+        observed = true;
+        expect(state.sneakAttackUsedThisTurn).toBe(true);
+        // Force-sneak flag consumed by the strike.
+        expect(rogue.nextAttackForceSneak).toBe(false);
+      }
+    }
+    expect(observed).toBe(true);
+  });
+
+  it('Quick Strike queues a bonus swing this turn — player can attack again after the Action is spent', () => {
     const goblin = getMonster('goblin');
     let rogue = makeRogue();
     const roller = createDiceRoller(7);
@@ -628,7 +651,7 @@ describe('Rogue — Cunning Action', () => {
     };
     expect(rogue.bonusAttackAvailable ?? false).toBe(false);
 
-    const ca = useCunningAction({ character: rogue, state, choice: 'dash' });
+    const ca = useCunningAction({ character: rogue, state, choice: 'quick-strike' });
     state = ca.state;
     rogue = ca.character;
     expect(rogue.bonusAttackAvailable).toBe(true);
@@ -642,7 +665,7 @@ describe('Rogue — Cunning Action', () => {
     expect(rogue.actionEconomy.actionUsed).toBe(true);
     expect(rogue.bonusAttackAvailable).toBe(true);
 
-    // Second swing — funded by Dash, action stays spent, flag clears.
+    // Second swing — funded by Quick Strike, action stays spent, flag clears.
     atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
     state = atk.state;
     rogue = atk.character;
@@ -654,7 +677,7 @@ describe('Rogue — Cunning Action', () => {
     expect(attackLines.length).toBe(2);
   });
 
-  it('Dash bonus swing does NOT get Sneak Attack (once-per-turn rule)', () => {
+  it('Quick Strike bonus swing does not double Sneak Attack (once-per-turn rule)', () => {
     // Find a seed where the rogue lands both swings on a wounded goblin so
     // Sneak Attack would trigger on every hit if the gate were broken.
     let validated = false;
@@ -683,7 +706,7 @@ describe('Rogue — Cunning Action', () => {
             : c,
         ),
       };
-      const ca = useCunningAction({ character: rogue, state, choice: 'dash' });
+      const ca = useCunningAction({ character: rogue, state, choice: 'quick-strike' });
       state = ca.state;
       rogue = ca.character;
       const goblinId = findMonster(state).id;
@@ -757,5 +780,210 @@ describe('Rogue — Cunning Action', () => {
     fighter = ca.character;
     expect(state).toBe(before);
     expect(fighter.nextAttackAdvantage).toBeFalsy();
+  });
+});
+
+function bloatGoblinHp(state: CombatState): CombatState {
+  return {
+    ...state,
+    combatants: state.combatants.map((c) =>
+      c.kind === 'monster'
+        ? { ...c, instance: { ...c.instance, hp: { current: 200, max: 200, temp: 0 } } }
+        : c,
+    ),
+  };
+}
+
+describe('Rogue — Assassinate (L4 opener burst)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('drives extra Sneak dice into the opener at L4 (2d6 base + 2d6 = 4d6)', () => {
+    let text: string | undefined;
+    for (let seed = 1; seed <= 80 && !text; seed++) {
+      let rogue = makeRogue({
+        level: 4,
+        inventory: [{ itemId: 'rapier' }],
+        equipped: { mainHand: { itemId: 'rapier' }, offHand: null, armor: null },
+      });
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: rogue, monsters: [{ def: getMonster('goblin') }] });
+      let state = bloatGoblinHp(init.state);
+      rogue = init.character;
+      const goblinId = findMonster(state).id;
+      const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'rapier');
+      state = atk.state;
+      const log = state.log.find((l) => l.text.includes('sneak ('));
+      if (log) text = log.text;
+    }
+    expect(text).toBeDefined();
+    expect(text).toContain('sneak (4d6)');
+  });
+
+  it('the bonus dice are opener-only — a later strike rolls base 2d6 at L4', () => {
+    let text: string | undefined;
+    for (let seed = 1; seed <= 80 && !text; seed++) {
+      let rogue = makeRogue({
+        level: 4,
+        inventory: [{ itemId: 'rapier' }],
+        equipped: { mainHand: { itemId: 'rapier' }, offHand: null, armor: null },
+      });
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: rogue, monsters: [{ def: getMonster('goblin') }] });
+      let state: CombatState = bloatGoblinHp({ ...init.state, playerHasAttacked: true });
+      rogue = init.character;
+      // Hide to enable Sneak on a non-opener strike (Assassinate must not fire).
+      const ca = useCunningAction({ character: rogue, state, choice: 'hide' });
+      state = ca.state;
+      rogue = ca.character;
+      const goblinId = findMonster(state).id;
+      const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'rapier');
+      state = atk.state;
+      const log = state.log.find((l) => l.text.includes('sneak ('));
+      if (log) text = log.text;
+    }
+    expect(text).toBeDefined();
+    expect(text).toContain('sneak (2d6)');
+  });
+});
+
+describe('Rogue — Envenom (L8 bleed on Sneak)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('a landed Sneak leaves a 2/turn bleed for 2 turns at L8', () => {
+    let observed = false;
+    for (let seed = 1; seed <= 80 && !observed; seed++) {
+      let rogue = makeRogue({ level: 8 });
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: rogue, monsters: [{ def: getMonster('goblin') }] });
+      let state = bloatGoblinHp(init.state);
+      rogue = init.character;
+      const goblinId = findMonster(state).id;
+      const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
+      state = atk.state;
+      if (state.log.find((l) => l.text.includes('sneak ('))) {
+        observed = true;
+        const goblin = findMonster(state);
+        expect(goblin.instance.bleedDamagePerTurn ?? 0).toBeGreaterThanOrEqual(2);
+        expect(goblin.instance.bleedTurnsRemaining ?? 0).toBeGreaterThanOrEqual(2);
+        expect(state.log.find((l) => l.text.includes('envenomed'))).toBeDefined();
+      }
+    }
+    expect(observed).toBe(true);
+  });
+
+  it('no bleed without Envenom at L7', () => {
+    let observed = false;
+    for (let seed = 1; seed <= 80 && !observed; seed++) {
+      let rogue = makeRogue({ level: 7 });
+      const roller = createDiceRoller(seed);
+      const init = createCombat({ roller, character: rogue, monsters: [{ def: getMonster('goblin') }] });
+      let state = bloatGoblinHp(init.state);
+      rogue = init.character;
+      const goblinId = findMonster(state).id;
+      const atk = playerAttack({ roller, character: rogue, state }, goblinId, 'dagger');
+      state = atk.state;
+      if (state.log.find((l) => l.text.includes('sneak ('))) {
+        observed = true;
+        expect(findMonster(state).instance.bleedDamagePerTurn ?? 0).toBe(0);
+      }
+    }
+    expect(observed).toBe(true);
+  });
+});
+
+describe('Rogue — Evasion (L10 charged-special)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('halves a charged-special hit without spending the reaction at L10', () => {
+    let rogue = makeRogue({ level: 10 });
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: rogue,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const state: CombatState = { ...init.state, evasionWindowActive: true };
+    rogue = init.character;
+    const before = rogue.hp.current;
+    const dmg = applyDamage(state, 'player', 10, rogue);
+    rogue = dmg.character;
+    expect(rogue.hp.current).toBe(before - 5);
+    // Evasion is footwork, not a reaction — Uncanny Dodge is still available.
+    expect(rogue.actionEconomy.reactionUsed).toBe(false);
+    expect(dmg.state.log.find((l) => l.text.includes('Evasion halves'))).toBeDefined();
+  });
+
+  it('outside the charged window a L10 rogue falls back to Uncanny Dodge (spends reaction)', () => {
+    let rogue = makeRogue({ level: 10 });
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: rogue,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    rogue = init.character;
+    const before = rogue.hp.current;
+    const dmg = applyDamage(init.state, 'player', 10, rogue);
+    rogue = dmg.character;
+    expect(rogue.hp.current).toBe(before - 5);
+    expect(rogue.actionEconomy.reactionUsed).toBe(true);
+    expect(dmg.state.log.find((l) => l.text.includes('Uncanny Dodge'))).toBeDefined();
+  });
+
+  it('a L9 rogue does not Evade — no half, no skip of Uncanny Dodge', () => {
+    let rogue = makeRogue({ level: 9 });
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: rogue,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const state: CombatState = { ...init.state, evasionWindowActive: true };
+    rogue = init.character;
+    const before = rogue.hp.current;
+    const dmg = applyDamage(state, 'player', 10, rogue);
+    rogue = dmg.character;
+    // Uncanny Dodge still halves (spends reaction); the Evasion line never logs.
+    expect(rogue.hp.current).toBe(before - 5);
+    expect(rogue.actionEconomy.reactionUsed).toBe(true);
+    expect(dmg.state.log.find((l) => l.text.includes('Evasion halves'))).toBeUndefined();
+  });
+});
+
+describe('Rogue — Opportunist (L12 reaction riposte)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function goblinSwing(character: Character, seed: number) {
+    const roller = createDiceRoller(seed);
+    const init = createCombat({
+      roller,
+      character,
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const goblinId = findMonster(init.state).id;
+    return monsterAttack({ roller, character: init.character, state: init.state }, goblinId);
+  }
+
+  it('ripostes with a Sneak jab when a foe misses (L12)', () => {
+    let fired = false;
+    for (let seed = 1; seed <= 80 && !fired; seed++) {
+      const res = goblinSwing(makeRogue({ level: 12 }), seed);
+      const missed = res.state.log.find((l) => l.text.includes('— miss'));
+      const riposte = res.state.log.find((l) => l.text.includes('ripostes for'));
+      if (missed && riposte) {
+        fired = true;
+        expect(res.character.opportunistUsedThisRound).toBe(true);
+      }
+    }
+    expect(fired).toBe(true);
+  });
+
+  it('does not riposte for a L11 rogue (no Opportunist yet)', () => {
+    let sawMiss = false;
+    for (let seed = 1; seed <= 80; seed++) {
+      const res = goblinSwing(makeRogue({ level: 11 }), seed);
+      if (res.state.log.find((l) => l.text.includes('— miss'))) {
+        sawMiss = true;
+        expect(res.state.log.find((l) => l.text.includes('ripostes for'))).toBeUndefined();
+      }
+    }
+    expect(sawMiss).toBe(true);
   });
 });

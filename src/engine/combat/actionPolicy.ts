@@ -37,6 +37,7 @@ import {
   MARTIAL_DEFENSE_COST,
 } from './martialResource';
 import { useCunningAction, type CunningActionChoice } from './cunningAction';
+import { playerConditionMods } from './playerConditions';
 import { useRage, useRecklessAttack } from './rage';
 import { useHuntersMark } from './huntersMark';
 import { useWildShape, beastWeaponId } from './wildShape';
@@ -532,18 +533,32 @@ export function chooseCombatAction(
       }
     }
 
-    // Rogue Cunning Action: Hide → next attack lands with advantage → Sneak
-    // Attack. Only worth the scarce charge when it actually enables Sneak this
-    // turn: skip if the action is already spent (nothing to set up) or the
-    // focus target is already bloodied (Sneak fires off the wound anyway).
+    // Rogue Cunning Action (bonus action, one per turn): raise the per-turn
+    // ceiling. If Sneak Attack will land on the coming main strike WITHOUT setup
+    // — the opener, a bloodied mark, or a dagger in hand — spend the bonus action
+    // on a Quick Strike (a second swing) rather than a now-redundant Hide. Else
+    // set up the gap: Hide for advantage (which also enables Sneak), or Feint
+    // when disadvantage would cancel the Hide (a guaranteed Sneak through the
+    // tilt). Skip if the setup is already armed.
     if (
       isRogue &&
       actionFree &&
       (character.resources.cunningActionUsesRemaining ?? 0) > 0 &&
       character.nextAttackAdvantage !== true &&
+      character.nextAttackForceSneak !== true &&
       primary &&
-      primary.instance.hp.current > primary.instance.hp.max / 2
+      character.equipped.mainHand
     ) {
+      const targetBloodied =
+        primary.instance.hp.current <= primary.instance.hp.max / 2;
+      const wieldsDagger = character.equipped.mainHand.itemId === 'dagger';
+      const sneakAlreadyOnline = !state.playerHasAttacked || targetBloodied || wieldsDagger;
+      if (sneakAlreadyOnline) {
+        return { kind: 'cunning-action', choice: 'quick-strike' };
+      }
+      if (playerConditionMods(character).attackDisadvantage) {
+        return { kind: 'cunning-action', choice: 'feint' };
+      }
       return { kind: 'cunning-action', choice: 'hide' };
     }
 

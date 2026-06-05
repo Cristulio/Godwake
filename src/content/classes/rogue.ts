@@ -32,17 +32,17 @@ export const ROGUE: Class = ClassSchema.parse({
         id: 'cunning-action',
         name: 'Cunning Action',
         description:
-          'A bonus action each turn: Hide (advantage on your next attack), Dash (+2 to your next attack roll), or Disengage (2 damage reduction on the next incoming hit).',
+          'A bonus action each turn: Hide (advantage on your next attack, which also lands Sneak), Quick Strike (a second weapon strike this turn — your answer to a fighter’s extra attack), Feint (guarantee Sneak on your next strike with no setup), or Steel Yourself (advantage on your next save).',
         mechanicKey: 'cunning-action',
       },
     ],
     '4': [
       {
-        id: 'asi-4',
-        name: 'Ability Score Improvement',
+        id: 'assassinate',
+        name: 'Assassinate',
         description:
-          'You can increase one ability score by 2, or two ability scores by 1 each.',
-        mechanicKey: 'asi',
+          'You open from the blind side. The first strike of every fight lands with advantage and drives an extra 2d6 of Sneak Attack home — front-load the kill before the mark can act.',
+        mechanicKey: 'assassinate',
       },
     ],
     '5': [
@@ -65,11 +65,11 @@ export const ROGUE: Class = ClassSchema.parse({
     ],
     '8': [
       {
-        id: 'asi-8',
-        name: 'Ability Score Improvement',
+        id: 'envenom',
+        name: 'Envenom',
         description:
-          'You can increase one ability score by 2, or two ability scores by 1 each.',
-        mechanicKey: 'asi',
+          'You work a slow poison into the edge. A landed Sneak Attack leaves the wound festering for 2 damage a turn over the next two turns — sustained bleed that pays out beyond the once-a-turn burst.',
+        mechanicKey: 'envenom',
       },
     ],
     '9': [
@@ -77,17 +77,26 @@ export const ROGUE: Class = ClassSchema.parse({
         id: 'cunning-mastery',
         name: 'Cunning Mastery',
         description:
-          'Your hands and feet outpace the room entirely — you gain an additional Cunning Action each combat (Hide, Dash, or Disengage).',
+          'Your hands and feet outpace the room entirely — you gain an additional Cunning Action each combat (Hide, Quick Strike, Feint, or Steel Yourself).',
         mechanicKey: 'cunning-mastery',
+      },
+    ],
+    '10': [
+      {
+        id: 'evasion',
+        name: 'Evasion',
+        description:
+          'When a foe winds up a telegraphed special, you read it a full turn out and roll clear — the charged blast deals only half. Your footwork answers what your reaction can’t.',
+        mechanicKey: 'evasion',
       },
     ],
     '12': [
       {
-        id: 'asi-12',
-        name: 'Ability Score Improvement',
+        id: 'opportunist',
+        name: 'Opportunist',
         description:
-          'You can increase one ability score by 2, or two ability scores by 1 each.',
-        mechanicKey: 'asi',
+          'A foe that swings and misses you has opened itself up. Once each round you answer with a reaction jab that finds the gap — a second Sneak Attack on top of your own turn’s. It costs you no reaction, so Uncanny Dodge still answers a blow that lands.',
+        mechanicKey: 'opportunist',
       },
     ],
     '13': [
@@ -102,15 +111,6 @@ export const ROGUE: Class = ClassSchema.parse({
     '16': [
       {
         id: 'asi-16',
-        name: 'Ability Score Improvement',
-        description:
-          'You can increase one ability score by 2, or two ability scores by 1 each.',
-        mechanicKey: 'asi',
-      },
-    ],
-    '19': [
-      {
-        id: 'asi-19',
         name: 'Ability Score Improvement',
         description:
           'You can increase one ability score by 2, or two ability scores by 1 each.',
