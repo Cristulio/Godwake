@@ -50,7 +50,9 @@ describe('chapter 9 — bestiary registration', () => {
   it('the boss (The Hollow Pretender) carries an apex stat block a notch above Ch8', () => {
     const boss = getMonster(CH9_BOSS_ID);
     expect(boss.bossMechanic).toBe('battle-rage');
-    // A clear notch above the Ch8 boss (the Ashen Marshal: 212 HP / AC 20).
+    // The Ch8 boss buff lifted the Ashen Marshal to 264 HP / AC 21 — above this
+    // boss on raw HP. Ch9 outranks Ch8 through its multi-action wall (actionsPerTurn
+    // 2), not the body, so this stays a plain apex-HP floor, not a Ch8 comparison.
     expect(boss.maxHp).toBeGreaterThan(212);
     expect(boss.ac).toBeGreaterThanOrEqual(20);
     // Apex kit: a round-1 paralyze opener and a multiattack the picker falls to.
