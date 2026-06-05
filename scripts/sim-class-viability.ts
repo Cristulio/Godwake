@@ -55,7 +55,7 @@ import { createDiceRoller, setActiveRoller, parseDiceExpression, type DiceRoller
 import { getMonster } from '../src/content/monsters';
 import { getItem } from '../src/content/items';
 import { simulateLevelUp, xpForLevel, MAX_LEVEL } from '../src/engine/character/leveling';
-import { shortRestHeal, longRest } from '../src/engine/character/actions';
+import { shortRestHeal, longRest, isRageUnlimited } from '../src/engine/character/actions';
 import { createGodwakeDelve } from '../src/engine/delve/createDelve';
 import { createCombat, _resetMonsterInstanceCounter } from '../src/engine/combat/createCombat';
 import { monsterAttack } from '../src/engine/combat/attack/monsterAttack';
@@ -152,14 +152,20 @@ const CLASS_PRIORITY: Record<ClassId, { id: string; maxAtRank: number }[]> = {
     { id: 'fellfast-strike', maxAtRank: 3 },
   ],
   wizard: [
+    // Wave-2 bespoke caster-slot node (#429): +1st-level slot, seeded at descent.
+    { id: 'wellspring-of-mysteries', maxAtRank: 2 },
     { id: 'burning-tongue', maxAtRank: 5 },
     { id: 'arcane-focus', maxAtRank: 3 },
     { id: 'sigil-of-the-wakened-mind', maxAtRank: 3 },
   ],
   // Druid: a Wisdom full-caster — the same spell-power Grove tree the Wizard
   // banks (spell damage / DC / attack), since the nature book scales on exactly
-  // those levers.
+  // those levers. PLUS the wave-2 druid-bespoke nodes (#429): Primal Reservoir
+  // (+Wild Shape uses), Deep Roots (+1st-level slot), Verdant Wrath (+spell dmg).
   druid: [
+    { id: 'primal-reservoir', maxAtRank: 2 },
+    { id: 'deep-roots', maxAtRank: 2 },
+    { id: 'verdant-wrath', maxAtRank: 4 },
     { id: 'burning-tongue', maxAtRank: 5 },
     { id: 'arcane-focus', maxAtRank: 3 },
     { id: 'sigil-of-the-wakened-mind', maxAtRank: 3 },
@@ -188,6 +194,10 @@ const CLASS_PRIORITY: Record<ClassId, { id: string; maxAtRank: number }[]> = {
   // multiply correctly across flurry's extra unarmed strikes is itself a thing
   // worth flagging for a tuning pass.
   monk: [
+    // Wave-2 monk-bespoke nodes (#429): Brimming Well (+max Ki/combat, seeded at
+    // descent), Pressure Points (+crit damage).
+    { id: 'brimming-well', maxAtRank: 2 },
+    { id: 'pressure-points', maxAtRank: 3 },
     { id: 'whetstone-resolve', maxAtRank: 4 },
     { id: 'heirloom-blade', maxAtRank: 4 },
     { id: 'first-cut', maxAtRank: 3 },
@@ -503,6 +513,13 @@ interface ProcCounters {
   martialDisrupt: number;
   /** Combats fought by a martial-pool class (denominator for the spend rates). */
   martialCombats: number;
+  /** Wave-2 Rage rest-economy (#424): Rage is now rationed charges that refill ONLY
+   *  at a rest, not per fight. Measured at COMBAT ENTRY (barbarian only):
+   *  - rageChargesAtEntry: Σ charges remaining when a barb starts a fight
+   *  - rageStarvedCombats: fights a barb entered with 0 charges (can't rage at all)
+   *  rageStarved/martialCombats = the share of fights the ration left rage-less. */
+  rageChargesAtEntry: number;
+  rageStarvedCombats: number;
 }
 
 function freshProcs(): ProcCounters {
@@ -525,6 +542,8 @@ function freshProcs(): ProcCounters {
     martialDefense: 0,
     martialDisrupt: 0,
     martialCombats: 0,
+    rageChargesAtEntry: 0,
+    rageStarvedCombats: 0,
   };
 }
 
@@ -618,6 +637,15 @@ function runCombatRoom(
   pc.combats += 1;
   if (characterIn.classId === 'fighter' || characterIn.classId === 'barbarian' || characterIn.classId === 'ranger') {
     pc.martialCombats += 1;
+  }
+  // Rage rest-economy (#424): snapshot charges at fight ENTRY. createCombat leaves
+  // rageChargesRemaining untouched (they carry across the delve, refill at rest),
+  // so this reads the rationed pool. A barb entering with 0 (and not the L20
+  // unlimited capstone) literally cannot rage this fight — the ration bit.
+  if (characterIn.classId === 'barbarian') {
+    const charges = characterIn.resources.rageChargesRemaining ?? 0;
+    pc.rageChargesAtEntry += charges;
+    if (charges <= 0 && !isRageUnlimited(characterIn)) pc.rageStarvedCombats += 1;
   }
 
   let turns = 0;
@@ -1209,6 +1237,16 @@ ${renderProcs()}
 **${rp.combats ? num(rp.huntersMarkDie / rp.combats, 2) : '—'}**×/combat, and fired Colossus
 **${rp.combats ? num(rp.colossus / rp.combats, 2) : '—'}**×/combat (Colossus is gated behind the L3 Hunter
 subclass, so its rate also reflects how often the ranger reaches L3 within a life).
+
+**Rage rest-economy (#424) firing check** — Rage is now a rationed pool of charges
+(2/3/4/5 by level band, ∞ at L20) that refill ONLY at a rest, not per fight. If the
+ration bites, a barb enters some fights unable to rage. Measured at fight entry over
+**${bp.combats}** barbarian combats: **${bp.combats ? num(bp.rageChargesAtEntry / bp.combats, 2) : '—'}** avg
+charges in pocket, and **${bp.combats ? pct(bp.rageStarvedCombats / bp.combats) : '—'}** of fights entered
+rage-STARVED (0 charges, pre-L20). Rage fired **${bp.combats ? num(bp.rage / bp.combats, 2) : '—'}**×/combat
+(was effectively ~1×/combat when Rage was unlimited+re-poppable pre-#424) — a sub-1
+rate with a non-zero starved share is the ration working: the barb is no longer
+perma-raging, it is spending a finite pool between camps.
 
 **Martial pool (#338) firing check** — the headline guard for THIS lane. The new
 per-fight pool (Fighter Resolve / Barbarian Fury / Ranger Focus; 3 pts, ≤1 spend
