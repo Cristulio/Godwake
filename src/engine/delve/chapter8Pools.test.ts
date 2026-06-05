@@ -85,6 +85,40 @@ describe('chapter 8 — bestiary registration', () => {
   });
 });
 
+describe('chapter 8 — Slag-Colossus elite sits below its boss', () => {
+  const avgDamage = (d: string): number => {
+    const m = /^(\d+)d(\d+)(?:\+(\d+))?$/.exec(d);
+    if (!m) throw new Error(`unparseable damage: ${d}`);
+    const [, n, faces, bonus] = m;
+    return (Number(n) * (Number(faces) + 1)) / 2 + Number(bonus ?? 0);
+  };
+
+  it('is trimmed below the chapter boss on the BODY (HP + per-hit), summon stays capped', () => {
+    const elite = getMonster('slag-colossus');
+    const boss = getMonster(CH8_BOSS_ID);
+    const legionary = getMonster('slagbound-legionary'); // toughest normal Ch8 mob
+
+    // Below the boss body, but still clearly an elite — well above a normal mob,
+    // and trimmed from the pre-#434 wall (178) so it no longer out-difficulties
+    // its own (easy) chapter boss.
+    expect(elite.maxHp).toBeLessThan(boss.maxHp);
+    expect(elite.maxHp).toBeLessThanOrEqual(160);
+    expect(elite.maxHp).toBeGreaterThan(legionary.maxHp);
+
+    // Softer single fist than the marshal's blade — the body, not the adds, was
+    // the residual wall, so the colossus's lone Siege-Fist hits below the boss.
+    const eliteSlam = elite.actions.find((a) => a.kind === 'attack');
+    const bossSlam = boss.actions.find((a) => a.kind === 'attack');
+    expect(eliteSlam && 'damage' in eliteSlam ? avgDamage(eliteSlam.damage) : Infinity).toBeLessThan(
+      bossSlam && 'damage' in bossSlam ? avgDamage(bossSlam.damage) : 0,
+    );
+
+    // The summon lever stays exhausted (#432): one add at a time, delayed.
+    const summon = elite.actions.find((a) => a.kind === 'summon');
+    expect(summon && 'maxActive' in summon ? summon.maxActive : 99).toBeLessThanOrEqual(1);
+  });
+});
+
 describe('chapter 8 — encounter pools', () => {
   it('all four pools are non-empty', () => {
     for (const [name, pool] of ALL_POOLS) {

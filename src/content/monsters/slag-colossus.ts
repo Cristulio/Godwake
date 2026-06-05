@@ -5,9 +5,15 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * caught in one pour of molten iron and cooled into a single lumbering mass that
  * the march drags along to throw bodies at whatever bars the road. It `summon`s
  * Ember-Conscripts off its own fused surface (maxActive 1, first add round 3,
- * cooldown 6 — trimmed so the adds no longer out-wall its own chapter boss) while
- * crushing from reach with a fist the size of a wagon. A war of attrition — fell
- * the colossus, or be ground down by the ranks it keeps reforging out of itself.
+ * cooldown 6) while crushing from reach with a fist the size of a wagon. A war of
+ * attrition — fell the colossus, or be ground down by the ranks it keeps reforging
+ * out of itself.
+ *
+ * Body trimmed under its chapter boss (the Ashen Marshal). The summon lever was
+ * already exhausted (#432: one add, delayed), so the raw block was the residual
+ * that read harder than its own boss — HP and the single Siege-Fist were shaved.
+ * It stays the chapter's wall (highest non-boss HP/AC, reach, the reforging ranks)
+ * but no longer out-walls the boss it stands in front of.
  */
 export const SLAG_COLOSSUS: Monster = MonsterSchema.parse({
   id: 'slag-colossus',
@@ -16,7 +22,7 @@ export const SLAG_COLOSSUS: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'construct',
   ac: 19,
-  maxHp: 178,
+  maxHp: 152,
   speed: 25,
   abilityScores: { str: 21, dex: 8, con: 20, int: 5, wis: 11, cha: 8 },
   passivePerception: 11,
@@ -37,7 +43,7 @@ export const SLAG_COLOSSUS: Monster = MonsterSchema.parse({
       kind: 'attack',
       name: 'Siege-Fist',
       attackBonus: 11,
-      damage: '2d10+7',
+      damage: '1d10+7',
       damageType: 'bludgeoning',
       reach: 10,
       description:
