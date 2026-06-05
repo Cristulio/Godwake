@@ -4,6 +4,7 @@ import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack } from './attack';
 import { monsterAttack } from './attack/monsterAttack';
 import { useRage, useRecklessAttack } from './rage';
+import { RAGE_ROUNDS, rageChargesMax, shortRestHeal, longRest } from '../character/actions';
 import { useConsumable } from './useItem';
 import { useHuntersMark } from './huntersMark';
 import { endTurn } from './turn';
@@ -80,12 +81,16 @@ describe('Barbarian — Unarmored Defense', () => {
 describe('Barbarian — Rage', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('useRage sets the duration and burns the bonus action', () => {
+  it('useRage sets the 5-round duration, spends a charge, and burns the bonus action', () => {
     const barb = makeBarbarian();
     const roller = createDiceRoller(1);
     const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
+    // A fresh L1 barbarian descends with the full pool (rageChargesMax at L1).
+    expect(init.character.resources.rageChargesRemaining).toBe(2);
     const r = useRage({ character: init.character, state: init.state });
-    expect((r.character.resources.rageRoundsRemaining ?? 0)).toBeGreaterThan(0);
+    expect(r.character.resources.rageRoundsRemaining).toBe(RAGE_ROUNDS);
+    expect(RAGE_ROUNDS).toBe(5);
+    expect(r.character.resources.rageChargesRemaining).toBe(1);
     expect(r.character.actionEconomy.bonusActionUsed).toBe(true);
   });
 
@@ -174,6 +179,84 @@ describe('Barbarian — Rage', () => {
       }
     }
     expect(validated).toBe(true);
+  });
+});
+
+describe('Barbarian — Rage charges (rationed pool)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('with no charges left, Rage is a true no-op — fury and bonus action untouched', () => {
+    const roller = createDiceRoller(1);
+    const barb = makeBarbarian();
+    const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
+    const drained: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, rageChargesRemaining: 0 },
+    };
+    const r = useRage({ character: drained, state: init.state });
+    expect(r.character).toBe(drained);
+    expect(r.state).toBe(init.state);
+    expect(r.character.resources.rageRoundsRemaining ?? 0).toBe(0);
+    expect(r.character.actionEconomy.bonusActionUsed).toBe(false);
+  });
+
+  it("can't re-enter Rage while already raging — no second charge is spent", () => {
+    const roller = createDiceRoller(1);
+    const barb = makeBarbarian();
+    const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
+    const raging: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, rageRoundsRemaining: 3, rageChargesRemaining: 2 },
+      actionEconomy: { ...init.character.actionEconomy, bonusActionUsed: false },
+    };
+    const r = useRage({ character: raging, state: init.state });
+    expect(r.character).toBe(raging);
+    expect(r.character.resources.rageChargesRemaining).toBe(2);
+  });
+
+  it('charges do NOT refill on a new combat, but a rest tops them back up', () => {
+    const roller = createDiceRoller(1);
+    const barb = makeBarbarian({ level: 11 }); // pool of 4 at L11
+    const drained: Character = {
+      ...barb,
+      resources: { ...barb.resources, rageChargesRemaining: 1 },
+    };
+    // A fresh encounter must leave the rationed pool exactly where it was.
+    const nextFight = createCombat({ roller, character: drained, monsters: [{ def: getMonster('goblin') }] });
+    expect(nextFight.character.resources.rageChargesRemaining).toBe(1);
+    // Only a rest (short or long) refills it — to the level's max.
+    expect(shortRestHeal(drained, 0).resources.rageChargesRemaining).toBe(4);
+    expect(longRest(drained).resources.rageChargesRemaining).toBe(4);
+    expect(rageChargesMax(barb)).toBe(4);
+  });
+
+  it('L20 rages without limit — entering never spends a charge', () => {
+    const roller = createDiceRoller(1);
+    const barb = makeBarbarian({ level: 20 });
+    const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
+    // Even with the stored counter at 0, the capstone still rages.
+    const empty: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, rageChargesRemaining: 0 },
+    };
+    const r = useRage({ character: empty, state: init.state });
+    expect(r.character.resources.rageRoundsRemaining).toBe(RAGE_ROUNDS);
+    // The zero counter isn't pushed negative — unlimited skips the spend entirely.
+    expect(r.character.resources.rageChargesRemaining).toBe(0);
+    expect(rageChargesMax(barb)).toBe(Number.POSITIVE_INFINITY);
+  });
+
+  it('charge pool widens by level: 2 / 3 / 4 / 5 / unlimited', () => {
+    const at = (level: number) => rageChargesMax(makeBarbarian({ level }));
+    expect(at(1)).toBe(2);
+    expect(at(4)).toBe(2);
+    expect(at(5)).toBe(3);
+    expect(at(10)).toBe(3);
+    expect(at(11)).toBe(4);
+    expect(at(16)).toBe(4);
+    expect(at(17)).toBe(5);
+    expect(at(19)).toBe(5);
+    expect(at(20)).toBe(Number.POSITIVE_INFINITY);
   });
 });
 

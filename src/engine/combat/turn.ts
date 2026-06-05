@@ -23,6 +23,7 @@ import type { ConditionName } from '../../types/conditions';
 import { characterAffixMods } from '../items/affixMods';
 import { evaluateCombatEnd } from './attack/damage';
 import { isRaging } from '../character/derived';
+import { isRageUnlimited } from '../character/actions';
 import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './martialResource';
 import { monkHasPendingTurnAction } from './monk';
 
@@ -643,6 +644,7 @@ export function hasRemainingTurnPlay(
   const hasUsableRage =
     character.classId === 'barbarian' &&
     (character.resources.rageRoundsRemaining ?? 0) <= 0 &&
+    (isRageUnlimited(character) || (character.resources.rageChargesRemaining ?? 0) > 0) &&
     !character.actionEconomy.bonusActionUsed;
   // Worth waiting on only if the mark isn't already riding a live quarry —
   // otherwise re-marking is pointless and the turn should auto-end.

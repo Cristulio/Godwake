@@ -117,6 +117,15 @@ export interface ClassResources {
    */
   rageRoundsRemaining?: number;
   /**
+   * Barbarian: Rage charges left to spend before a rest. Entering a Rage costs
+   * one (L20 capstone rages free — see `rageChargesMax`/`isRageUnlimited`). The
+   * pool is rationed across the delve: it does NOT refill per fight (createCombat
+   * leaves it alone), only at a short/long rest. Seeded full at L1 by
+   * `classStartingResources`. Optional so legacy saves rehydrate without
+   * migration; an absent value reads as 0 until the first rest tops it up.
+   */
+  rageChargesRemaining?: number;
+  /**
    * Druid: rounds the current Wild Shape holds. While > 0 the druid wears a
    * beast form — it fights with a natural claw/bite profile and carries the
    * beast's vitality as temp HP. Decrements at the start of each player turn;
