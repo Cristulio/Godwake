@@ -62,6 +62,7 @@ import { spellDamageBonus } from '../src/engine/combat/spells/helpers';
 import { magicMissileDartCount } from '../src/engine/combat/spells/magicMissile';
 import { scorchingRayCount } from '../src/engine/combat/spells/scorchingRay';
 import type { Character } from '../src/types/character';
+import type { ConditionName } from '../src/types/conditions';
 import type { CombatState, MonsterCombatant } from '../src/types/combat';
 import type { Monster, MonsterAction } from '../src/schemas/monster';
 import type { RoomSpec } from '../src/types/delve';
@@ -83,6 +84,12 @@ const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.
 // (Ch7 sustain/adds, Ch9 gate) target the geared hero, so this is the lens that
 // shows their payoff; the bare default stays the apples-to-apples floor read.
 const GEAR = process.env.GEAR === '1';
+// MODE=elite re-points the gauntlet at the ONE elite node per chapter (the
+// #423/#425 wave) instead of the boss, and emits an "encounter ladder" — the
+// SAME per-chapter hero run against a normal fight, the elite, and the boss — so
+// the elite reads as harder-than-normal-but-below-boss (or doesn't). Default
+// MODE=boss is byte-identical to the committed boss-gauntlet.raw.md.
+const MODE: 'boss' | 'elite' = process.env.MODE === 'elite' ? 'elite' : 'boss';
 // Hero level when entering each chapter's boss room (ch1..14). Default is a
 // monotone schedule that lands L20 at Ch14 and ~L18-19 by Ch12-13 — the band the
 // xp-curve sim reports for the realized routed-XP median. Override with BOSS_LEVELS.
@@ -172,6 +179,16 @@ interface BossRoom {
   room: RoomSpec;
 }
 
+/** A single encounter to drop the hero into: the room composition plus its
+ *  leader (boss / elite leader / first normal mob) and the createCombat flags. */
+interface Encounter {
+  chapter: number;
+  leaderDefId: string;
+  room: RoomSpec;
+  isBoss: boolean;
+  isElite: boolean;
+}
+
 /** Pull the canonical boss room for every chapter from a full-chain delve. */
 function extractBossRooms(seed: number): BossRoom[] {
   const delve = createGodwakeDelve({ seed, ascension: ASCENSION, fullChain: true });
@@ -187,6 +204,37 @@ function extractBossRooms(seed: number): BossRoom[] {
   }
   return out.sort((a, b) => a.chapter - b.chapter);
 }
+
+/** Pull ONE room of a given kind per chapter (the elite node, or a representative
+ *  normal fight) so the same hero can be run against the whole encounter ladder. */
+function extractRoomsByKind(seed: number, kind: 'combat' | 'elite'): Encounter[] {
+  const delve = createGodwakeDelve({ seed, ascension: ASCENSION, fullChain: true });
+  const out: Encounter[] = [];
+  const seen = new Set<number>();
+  for (const room of delve.rooms) {
+    if (room.kind !== kind) continue;
+    const chapter = room.chapter ?? 0;
+    if (seen.has(chapter)) continue;
+    if (!(room.monsters?.length ?? 0)) continue;
+    seen.add(chapter);
+    out.push({
+      chapter,
+      leaderDefId: room.monsters?.[0]?.defId ?? '',
+      room,
+      isBoss: false,
+      isElite: kind === 'elite',
+    });
+  }
+  return out.sort((a, b) => a.chapter - b.chapter);
+}
+
+const bossAsEncounter = (b: BossRoom): Encounter => ({
+  chapter: b.chapter,
+  leaderDefId: b.bossDefId,
+  room: b.room,
+  isBoss: true,
+  isElite: false,
+});
 
 // ─── Mechanic detection (what a boss HAS, from its def) ───────────────────────
 
@@ -235,6 +283,9 @@ interface FightOutcome {
   gateEngaged: boolean; // boss was warded by a live add at some point
   wardLifted: boolean; // gate add spawned and was fully cleared mid-fight while boss lived
   rageEntered: boolean;
+  // Conditions the PLAYER suffered at any point — captures the elite-leader
+  // debuff/paralyze primitives (#425) that the boss-mechanic flags above miss.
+  conditionsSeen: ConditionName[];
 }
 
 function bossInstanceOf(state: CombatState, bossDefId: string): MonsterCombatant | undefined {
@@ -249,14 +300,14 @@ function liveAddCount(state: CombatState, defId: string): number {
   ).length;
 }
 
-function runBossFight(
+function runEncounterFight(
   roller: DiceRoller,
   hero: Character,
-  bossRoom: BossRoom,
+  enc: Encounter,
 ): FightOutcome {
   _resetMonsterInstanceCounter();
-  const def = getMonster(bossRoom.bossDefId);
-  const monsterRefs = (bossRoom.room.monsters ?? []).flatMap((rm) => {
+  const def = getMonster(enc.leaderDefId);
+  const monsterRefs = (enc.room.monsters ?? []).flatMap((rm) => {
     const d = getMonster(rm.defId);
     return Array.from({ length: rm.count }, (_, i) => ({
       def: d,
@@ -269,8 +320,9 @@ function runBossFight(
     character: withResetActionEconomy(hero),
     monsters: monsterRefs,
     ascension: ASCENSION,
-    isBoss: true,
-    twistId: bossRoom.room.twistId,
+    isBoss: enc.isBoss,
+    isElite: enc.isElite,
+    twistId: enc.room.twistId,
   });
   let s = init.state;
   let ch = init.character;
@@ -286,11 +338,13 @@ function runBossFight(
   let gateAddSpawned = false;
   let wardLifted = false;
   let rageEntered = false;
+  const conditionsSeen = new Set<ConditionName>();
 
   const gateAddId = def.gate?.whileAddAlive;
 
   const observe = () => {
-    const boss = bossInstanceOf(s, bossRoom.bossDefId);
+    for (const c of ch.conditions) conditionsSeen.add(c.name);
+    const boss = bossInstanceOf(s, enc.leaderDefId);
     const bossAlive = (boss?.instance.hp.current ?? 0) > 0;
     if (boss) {
       const pending = !!boss.instance.pendingTelegraph;
@@ -371,6 +425,7 @@ function runBossFight(
     gateEngaged,
     wardLifted,
     rageEntered,
+    conditionsSeen: [...conditionsSeen],
   };
 }
 
@@ -391,12 +446,14 @@ interface Cell {
   gateEngaged: number;
   wardLifted: number;
   rageEntered: number;
+  conditionFights: Map<ConditionName, number>; // # fights the player suffered each condition
 }
 function emptyCell(): Cell {
   return {
     n: 0, wins: 0, losses: 0, stalls: 0, rounds: [], minHp: [],
     telegraphCharged: 0, telegraphCanceled: 0, phaseEnters: [], maxApt: 1,
     summons: [], gateEngaged: 0, wardLifted: 0, rageEntered: 0,
+    conditionFights: new Map(),
   };
 }
 function record(cell: Cell, o: FightOutcome): void {
@@ -413,6 +470,9 @@ function record(cell: Cell, o: FightOutcome): void {
   if (o.gateEngaged) cell.gateEngaged += 1;
   if (o.wardLifted) cell.wardLifted += 1;
   if (o.rageEntered) cell.rageEntered += 1;
+  for (const name of o.conditionsSeen) {
+    cell.conditionFights.set(name, (cell.conditionFights.get(name) ?? 0) + 1);
+  }
 }
 const mean = (a: number[]): number => (a.length ? a.reduce((s, v) => s + v, 0) / a.length : 0);
 const pct = (n: number, d: number): number => (d ? Math.round((100 * n) / d) : 0);
@@ -460,9 +520,192 @@ function spellScalingTable(): string[] {
   return L;
 }
 
+// ─── Elite gauntlet (MODE=elite) ──────────────────────────────────────────────
+//
+// The #423/#425 wave: exactly one elite node per chapter, every elite now led by
+// a mechanic-bearing leader. This lens drops the SAME per-chapter hero
+// (heroForChapter — identical level + blessings as the boss lens) into three
+// encounters per chapter — a normal fight, the elite, the boss — so the elite
+// reads on a ladder. Target shape: normal win% > elite win% > boss win%, the
+// elite a clear notch below the boss, not a second boss.
+
+/** The condition each new Ch1-3 elite leader is built around (#425), for the
+ *  "did the signature debuff fire?" audit. Leaders not listed lean on
+ *  telegraph/phase/summon, already covered by the boss-mechanic flags. */
+const ELITE_SIGNATURE_CONDITION: Record<string, ConditionName> = {
+  'hobgoblin-drillmaster': 'frightened',
+  'imp-needler': 'poisoned',
+  'gallows-wight': 'paralyzed',
+  'slaver-overseer': 'frightened',
+  'warden-lictor': 'weakened',
+};
+
+function mainElite(): void {
+  const t0 = Date.now();
+  const bossRooms = extractBossRooms(SEED_BASE);
+  const chapters = bossRooms.map((b) => b.chapter);
+
+  // Per chapter: three encounter cells (normal / elite / boss), all at the SAME
+  // hero so the only variable is the encounter.
+  type Lane = 'normal' | 'elite' | 'boss';
+  const LANES: Lane[] = ['normal', 'elite', 'boss'];
+  const cells = new Map<number, Map<Lane, Map<ClassId, Cell>>>();
+  const eliteLeaderByChapter = new Map<number, string>();
+  for (const ch of chapters) {
+    const byLane = new Map<Lane, Map<ClassId, Cell>>();
+    for (const lane of LANES) {
+      const m = new Map<ClassId, Cell>();
+      for (const c of CLASSES) m.set(c, emptyCell());
+      byLane.set(lane, m);
+    }
+    cells.set(ch, byLane);
+  }
+
+  for (const bossRoom of bossRooms) {
+    const chapter = bossRoom.chapter;
+    for (const classId of CLASSES) {
+      const hero = heroForChapter(classId, chapter);
+      for (let seed = 0; seed < SEEDS; seed++) {
+        const s = (SEED_BASE + chapter * 7919 + seed * 31) >>> 0;
+        const normal = extractRoomsByKind(s, 'combat').find((e) => e.chapter === chapter);
+        const elite = extractRoomsByKind(s, 'elite').find((e) => e.chapter === chapter);
+        const boss = extractBossRooms(s).find((b) => b.chapter === chapter) ?? bossRoom;
+        if (elite && !eliteLeaderByChapter.has(chapter)) {
+          eliteLeaderByChapter.set(chapter, elite.leaderDefId);
+        }
+        // Each lane gets its OWN fresh roller from the seed so the three fights
+        // are independent; the boss lane uses seed `s` directly, reproducing the
+        // boss lens for the same hero.
+        const fight = (laneSeed: number, hero2: Character, enc: Encounter, lane: Lane) => {
+          const r = createDiceRoller(laneSeed);
+          setActiveRoller(laneSeed);
+          record(cells.get(chapter)!.get(lane)!.get(classId)!, runEncounterFight(r, hero2, enc));
+        };
+        if (normal) fight((s ^ 0x2222_2222) >>> 0, hero, normal, 'normal');
+        if (elite) fight((s ^ 0x1111_1111) >>> 0, hero, elite, 'elite');
+        fight(s, hero, bossAsEncounter(boss), 'boss');
+      }
+    }
+  }
+
+  const laneAgg = (chapter: number, lane: Lane) => {
+    let n = 0, wins = 0, stalls = 0;
+    const rounds: number[] = [];
+    const minHp: number[] = [];
+    for (const c of CLASSES) {
+      const cell = cells.get(chapter)!.get(lane)!.get(c)!;
+      n += cell.n; wins += cell.wins; stalls += cell.stalls;
+      rounds.push(...cell.rounds); minHp.push(...cell.minHp);
+    }
+    return { win: pct(wins, n), stall: pct(stalls, n), rounds: mean(rounds), minHp: Math.round(mean(minHp) * 100), n };
+  };
+
+  const L: string[] = [];
+  L.push('# Elite gauntlet — per-chapter encounter ladder (normal · elite · boss)\n');
+  L.push(
+    `Ascension **${ASCENSION}**, archetype **${ARCHETYPE}**, gear **${GEAR ? 'representative (depth-scaled)' : 'bare floor'}**, ` +
+      `**${SEEDS}** seeds × ${CLASSES.length} classes × 3 lanes per chapter. The SAME per-chapter hero ` +
+      `(level schedule + blessing loadout, identical to the boss lens) is dropped into a normal fight, the chapter's ` +
+      `ONE elite node (#423), and the boss. Target ladder: **normal win% > elite win% > boss win%**, the elite a clear ` +
+      `notch under the boss. Read SHAPE, not magnitudes. Wall: ${((Date.now() - t0) / 1000).toFixed(1)}s.\n`,
+  );
+
+  L.push('## Encounter ladder — win% (all classes) per lane\n');
+  L.push(
+    'Difficulty rises as win% falls. Target band: **boss.win ≤ elite.win ≤ normal.win** ' +
+      '(elite a notch harder than a normal fight, a notch easier than the boss), all at the ' +
+      'SAME boss-level hero — note this UNDERSTATES the elite, which in real play is met by a ' +
+      'lower-level hero, so an elite that still walls a boss-level hero is a genuine overshoot. ' +
+      'TOL=±6 pts absorbs seed noise.\n',
+  );
+  L.push('| Ch | elite leader | normal win% | **elite win%** | boss win% | ladder verdict |');
+  L.push('|---|---|---|---|---|---|');
+  const TOL = 6;
+  for (const chapter of chapters) {
+    const nrm = laneAgg(chapter, 'normal');
+    const elt = laneAgg(chapter, 'elite');
+    const bos = laneAgg(chapter, 'boss');
+    const leader = eliteLeaderByChapter.get(chapter);
+    const leaderName = leader ? getMonster(leader).name : '—';
+    let verdict = '✓ in band';
+    if (elt.win < bos.win - TOL) verdict = '⚠ HARDER than boss (overshoot)';
+    else if (elt.win > nrm.win + TOL) verdict = '⚠ easier than a normal fight';
+    else if (Math.abs(elt.win - bos.win) <= TOL && elt.win <= bos.win) verdict = '~ ties the boss';
+    L.push(
+      `| ${chapter} | ${leaderName} | ${nrm.win} | **${elt.win}** | ${bos.win} | ${verdict} |`,
+    );
+  }
+  L.push('');
+
+  L.push('## Elite detail — rounds, min-HP%, stall%, and leader mechanic firing\n');
+  L.push(
+    'Signature-mechanic column: telegraph/phase/summon come from the boss-framework instrumentation; ' +
+      'debuff/paralyze leaders (#425 Ch1-3) report the share of fights the PLAYER suffered the leader\'s signature condition.\n',
+  );
+  L.push('| Ch | elite leader | elite win% | avg rounds | win min-HP% | stall% | signature | fired% |');
+  L.push('|---|---|---|---|---|---|---|---|');
+  for (const chapter of chapters) {
+    const elt = laneAgg(chapter, 'elite');
+    const leader = eliteLeaderByChapter.get(chapter);
+    if (!leader) { L.push(`| ${chapter} | — | — | — | — | — | — | — |`); continue; }
+    const def = getMonster(leader);
+    const m = cells.get(chapter)!.get('elite')!;
+    let n = 0, telCharged = 0, summSum = 0, summN = 0;
+    const phaseEnters: number[] = [];
+    const condFights = new Map<ConditionName, number>();
+    for (const c of CLASSES) {
+      const cell = m.get(c)!;
+      n += cell.n; telCharged += cell.telegraphCharged;
+      summSum += cell.summons.reduce((a, b) => a + b, 0); summN += cell.summons.length;
+      phaseEnters.push(...cell.phaseEnters);
+      for (const [k, v] of cell.conditionFights) condFights.set(k, (condFights.get(k) ?? 0) + v);
+    }
+    const has = bossHas(def);
+    const sigCond = ELITE_SIGNATURE_CONDITION[leader];
+    let signature = 'attack-only';
+    let firedPct = '—';
+    if (sigCond) {
+      signature = `debuff:${sigCond}`;
+      firedPct = pct(condFights.get(sigCond) ?? 0, n) + '%';
+    } else if (has.telegraph) {
+      signature = 'telegraph';
+      firedPct = pct(telCharged, n) + '%';
+    } else if (has.summon) {
+      signature = 'summon';
+      firedPct = (summN ? (summSum / summN).toFixed(1) : '0') + '/fight';
+    } else if (has.phases) {
+      signature = 'phase';
+      firedPct = mean(phaseEnters).toFixed(1) + ' avg';
+    }
+    L.push(
+      `| ${chapter} | ${def.name} | ${elt.win} | ${elt.rounds.toFixed(1)} | ${elt.minHp} | ${elt.stall} | ${signature} | ${firedPct} |`,
+    );
+  }
+  L.push('');
+
+  L.push('## Per-class elite win% (which classes wall on elites)\n');
+  L.push('| Ch | elite leader | ' + CLASSES.join('% | ') + '% |');
+  L.push('|---|---|' + CLASSES.map(() => '---').join('|') + '|');
+  for (const chapter of chapters) {
+    const leader = eliteLeaderByChapter.get(chapter);
+    const m = cells.get(chapter)!.get('elite')!;
+    const per = CLASSES.map((c) => { const cell = m.get(c)!; return String(pct(cell.wins, cell.n)); });
+    L.push(`| ${chapter} | ${leader ? getMonster(leader).name : '—'} | ${per.join(' | ')} |`);
+  }
+  L.push('');
+
+  const doc = L.join('\n') + '\n';
+  const outPath = resolve(process.cwd(), 'sim-reports/elite-gauntlet.raw.md');
+  mkdirSync(dirname(outPath), { recursive: true });
+  writeFileSync(outPath, doc, 'utf8');
+  process.stdout.write(doc);
+  process.stdout.write(`\n[elite-gauntlet] wrote ${outPath}\n`);
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 function main(): void {
+  if (MODE === 'elite') { mainElite(); return; }
   const t0 = Date.now();
   const bossRooms = extractBossRooms(SEED_BASE);
   const chapters = bossRooms.map((b) => b.chapter);
@@ -485,7 +728,7 @@ function main(): void {
         setActiveRoller(s);
         // Re-extract the boss room on THIS seed so any seed-varied composition is honored.
         const perSeed = extractBossRooms(s).find((b) => b.chapter === bossRoom.chapter) ?? bossRoom;
-        record(cell, runBossFight(roller, hero, perSeed));
+        record(cell, runEncounterFight(roller, hero, bossAsEncounter(perSeed)));
       }
     }
   }
