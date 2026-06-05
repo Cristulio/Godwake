@@ -86,11 +86,11 @@ describe('Barbarian — Rage', () => {
     const roller = createDiceRoller(1);
     const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
     // A fresh L1 barbarian descends with the full pool (rageChargesMax at L1).
-    expect(init.character.resources.rageChargesRemaining).toBe(2);
+    expect(init.character.resources.rageChargesRemaining).toBe(3);
     const r = useRage({ character: init.character, state: init.state });
     expect(r.character.resources.rageRoundsRemaining).toBe(RAGE_ROUNDS);
     expect(RAGE_ROUNDS).toBe(5);
-    expect(r.character.resources.rageChargesRemaining).toBe(1);
+    expect(r.character.resources.rageChargesRemaining).toBe(2);
     expect(r.character.actionEconomy.bonusActionUsed).toBe(true);
   });
 
@@ -216,7 +216,7 @@ describe('Barbarian — Rage charges (rationed pool)', () => {
 
   it('charges do NOT refill on a new combat, but a rest tops them back up', () => {
     const roller = createDiceRoller(1);
-    const barb = makeBarbarian({ level: 11 }); // pool of 4 at L11
+    const barb = makeBarbarian({ level: 11 }); // pool of 5 at L11
     const drained: Character = {
       ...barb,
       resources: { ...barb.resources, rageChargesRemaining: 1 },
@@ -225,9 +225,9 @@ describe('Barbarian — Rage charges (rationed pool)', () => {
     const nextFight = createCombat({ roller, character: drained, monsters: [{ def: getMonster('goblin') }] });
     expect(nextFight.character.resources.rageChargesRemaining).toBe(1);
     // Only a rest (short or long) refills it — to the level's max.
-    expect(shortRestHeal(drained, 0).resources.rageChargesRemaining).toBe(4);
-    expect(longRest(drained).resources.rageChargesRemaining).toBe(4);
-    expect(rageChargesMax(barb)).toBe(4);
+    expect(shortRestHeal(drained, 0).resources.rageChargesRemaining).toBe(5);
+    expect(longRest(drained).resources.rageChargesRemaining).toBe(5);
+    expect(rageChargesMax(barb)).toBe(5);
   });
 
   it('L20 rages without limit — entering never spends a charge', () => {
@@ -246,16 +246,16 @@ describe('Barbarian — Rage charges (rationed pool)', () => {
     expect(rageChargesMax(barb)).toBe(Number.POSITIVE_INFINITY);
   });
 
-  it('charge pool widens by level: 2 / 3 / 4 / 5 / unlimited', () => {
+  it('charge pool widens by level: 3 / 4 / 5 / 6 / unlimited', () => {
     const at = (level: number) => rageChargesMax(makeBarbarian({ level }));
-    expect(at(1)).toBe(2);
-    expect(at(4)).toBe(2);
-    expect(at(5)).toBe(3);
-    expect(at(10)).toBe(3);
-    expect(at(11)).toBe(4);
-    expect(at(16)).toBe(4);
-    expect(at(17)).toBe(5);
-    expect(at(19)).toBe(5);
+    expect(at(1)).toBe(3);
+    expect(at(4)).toBe(3);
+    expect(at(5)).toBe(4);
+    expect(at(10)).toBe(4);
+    expect(at(11)).toBe(5);
+    expect(at(16)).toBe(5);
+    expect(at(17)).toBe(6);
+    expect(at(19)).toBe(6);
     expect(at(20)).toBe(Number.POSITIVE_INFINITY);
   });
 });

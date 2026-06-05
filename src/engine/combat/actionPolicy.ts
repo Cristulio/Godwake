@@ -441,24 +441,19 @@ export function chooseCombatAction(
       return { kind: 'second-wind' };
     }
 
-    // Barbarian Rage: a rationed 5-round fury. Spend freely while charges are
-    // plentiful, but hold the LAST one unless the fight earns it — a pack, a foe
-    // as stout as the barbarian, or a turn it's already bloodied. A lone weakling
-    // the axe fells in a swing isn't worth the soul's last rage (charges only
-    // come back at a rest). The L20 capstone rages without limit.
+    // Barbarian Rage: a rationed 5-round fury. The pool refills only at a rest,
+    // so the level-scaled charge count and the map's rest cadence are what ration
+    // it — not a per-fight hold-back. A charge kept in reserve is just damage and
+    // damage-resistance left unspent, so enter the fury whenever a charge is in
+    // hand (including the last one). The L20 capstone rages without limit.
     if (
       isBarbarian &&
       !isRaging(character) &&
       !rageBrokenByArmor(character) &&
       characterHasMechanic(character, 'rage')
     ) {
-      const rageUnlimited = isRageUnlimited(character);
       const rageCharges = character.resources.rageChargesRemaining ?? 0;
-      const lastCharge = !rageUnlimited && rageCharges <= 1;
-      const liveMaxHpTotal = live.reduce((sum, m) => sum + m.instance.hp.max, 0);
-      const worthLastCharge =
-        live.length >= 2 || liveMaxHpTotal >= character.hp.max || hpPct < 0.6;
-      if ((rageUnlimited || rageCharges > 0) && (!lastCharge || worthLastCharge)) {
+      if (isRageUnlimited(character) || rageCharges > 0) {
         return { kind: 'rage' };
       }
     }
