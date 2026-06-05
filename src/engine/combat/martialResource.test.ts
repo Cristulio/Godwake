@@ -285,15 +285,16 @@ describe('Martial DEFENSE — brace/guard', () => {
 describe('Martial DISRUPT — staggering strike', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('arms the stance and spends one point (Barbarian baseline cost)', () => {
+  it('arms the stance and spends two points (uniform DISRUPT cost — no stunlock)', () => {
     const init = createCombat({
       roller: createDiceRoller(1),
       character: barbarian(3),
       monsters: [{ def: getMonster('goblin') }],
     });
+    expect(martialDisruptCost(barbarian(3))).toBe(2);
     const r = useMartialDisrupt({ character: init.character, state: init.state });
     expect(r.character.martialDisruptActive).toBe(true);
-    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - 1);
+    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - 2);
   });
 
   it("the Fighter's Shield Bash costs 2 Resolve — spent from its deeper pool", () => {
@@ -397,11 +398,11 @@ describe('Ranger Focus — rebalanced spend costs', () => {
     expect(r.character.resources.martialPointsRemaining).toBe(1);
   });
 
-  it('leaves the Fighter/Barbarian OFFENSE (2) and the Barbarian DISRUPT (1) untouched', () => {
+  it('leaves the Fighter/Barbarian OFFENSE (2) untouched — Barbarian DISRUPT now also costs 2', () => {
     for (const c of [fighter(3), barbarian(3)]) {
       expect(martialOffenseCost(c)).toBe(2);
     }
-    expect(martialDisruptCost(barbarian(3))).toBe(1);
+    expect(martialDisruptCost(barbarian(3))).toBe(2);
   });
 });
 

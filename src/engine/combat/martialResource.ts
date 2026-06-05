@@ -23,11 +23,13 @@ import { attachCombatVfx } from './vfx';
  *    while the average fight runs ~4, so the tail reverted to auto-attack).
  *  - Three spends — OFFENSE (a heavy/aimed strike), DEFENSE (a guard that blunts
  *    the next incoming hit, costs 1), DISRUPT (a stagger that costs a telegraphing
- *    foe its next turn). The Barbarian pays 2 / 1 / 1; the Fighter pays 2 / 1 / 2
- *    — its Shield Bash stagger costs 2, since denying a whole turn is the pool's
- *    strongest effect. The Ranger's Focus is re-weighted to 1 / 1 / 2 — Aimed
- *    Shot is a cheap 1-point poke (half the spike) and Crippling Shot costs 2 too
- *    (see {@link martialOffenseCost} / {@link martialDisruptCost}).
+ *    foe its next turn). DISRUPT costs 2 for ALL three classes — denying a whole
+ *    turn is the pool's strongest effect, and at 2 points (against a shallow pool,
+ *    slow regen, and one spend/turn) a stun lands every OTHER turn at best, never
+ *    every turn: no stunlock. So the Barbarian pays 2 / 1 / 2 and the Fighter
+ *    2 / 1 / 2; the Ranger's Focus is 1 / 1 / 2 — Aimed Shot is a cheap 1-point
+ *    poke (half the spike) while Crippling Shot pays the full 2 (see
+ *    {@link martialOffenseCost} / {@link martialDisruptCost}).
  *  - At most ONE spend per turn (`martialSpentThisTurn`), so the pool is paced
  *    across the fight's key turns rather than dumped on turn one. Cap + one-per-
  *    turn + slow regen keep it save-vs-spend (bank one or two, pick the moment),
@@ -130,12 +132,15 @@ export function martialOffenseCost(character: Readonly<Character>): number {
 }
 
 /**
- * Pool cost to arm a DISRUPT strike. Only the Barbarian's Knockdown pays 1; the
- * Fighter's Shield Bash and the Ranger's Crippling Shot each cost 2, because
- * denying a foe a whole turn is the pool's strongest effect.
+ * Pool cost to arm a DISRUPT strike — a uniform 2 for all three martial classes
+ * (Barbarian Knockdown, Fighter Shield Bash, Ranger Crippling Shot). Denying a
+ * foe a whole turn is the pool's strongest effect, so it always pays the top
+ * price: at 2 points against a shallow pool, slow regen, and one spend/turn, a
+ * stun lands every OTHER turn at best — never every turn, so no recoverable
+ * resource buys an every-turn stunlock.
  */
-export function martialDisruptCost(character: Readonly<Character>): number {
-  return character.classId === 'barbarian' ? 1 : 2;
+export function martialDisruptCost(_character: Readonly<Character>): number {
+  return 2;
 }
 
 /**
