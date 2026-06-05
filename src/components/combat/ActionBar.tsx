@@ -353,7 +353,7 @@ export function ActionBar({
           {attackLabel}
         </Button>
 
-        {isFighter && (
+        {isFighter && characterHasMechanic(character, 'second-wind') && (
           <Button
             variant={canSecondWind ? 'primary' : 'secondary'}
             onClick={onSecondWind}
@@ -365,7 +365,7 @@ export function ActionBar({
             Second Wind{secondWindCount > 1 ? ` (${secondWindCount})` : ''}
           </Button>
         )}
-        {isFighter && (
+        {isFighter && characterHasMechanic(character, 'action-surge') && (
           <Button
             variant={canActionSurge ? 'primary' : 'secondary'}
             onClick={onActionSurge}
@@ -410,7 +410,7 @@ export function ActionBar({
           </Button>
         )}
 
-        {isRogue && (
+        {isRogue && characterHasMechanic(character, 'cunning-action') && (
           <Button
             variant={canCunningAction ? 'primary' : 'secondary'}
             onClick={onCunningAction}
@@ -422,7 +422,7 @@ export function ActionBar({
           </Button>
         )}
 
-        {isBarbarian && (
+        {isBarbarian && characterHasMechanic(character, 'rage') && (
           <Button
             variant={canRage ? 'primary' : 'secondary'}
             onClick={onRage}
@@ -455,7 +455,7 @@ export function ActionBar({
             {reckless ? 'Reckless ✓' : 'Reckless'}
           </Button>
         )}
-        {isRanger && (
+        {isRanger && characterHasMechanic(character, 'hunters-mark') && (
           <Button
             variant={canHuntersMark ? 'primary' : 'secondary'}
             onClick={onHuntersMark}
@@ -533,7 +533,7 @@ export function ActionBar({
           </Button>
         )}
 
-        {isFullCasterClass && (
+        {isFullCasterClass && characterHasMechanic(character, 'spellcasting') && (
           <Button
             variant={canSpells ? 'primary' : 'secondary'}
             onClick={onSpells}
