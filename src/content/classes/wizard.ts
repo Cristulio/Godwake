@@ -11,16 +11,6 @@ export const WIZARD: Class = ClassSchema.parse({
   // No true armour — the wizard's shell is Mage Armour. Robes are the lone
   // exception: body-slot caster gear that grants no AC, so Mage Armour holds.
   armorProficiency: { categories: ['robe'] },
-  skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1 },
-  skillChoiceFrom: [
-    'arcana',
-    'history',
-    'insight',
-    'investigation',
-    'medicine',
-    'religion',
-  ],
   subclassLevel: 2,
   featuresByLevel: {
     '1': [
@@ -191,7 +181,6 @@ export const WIZARD: Class = ClassSchema.parse({
     // Tiefling's +1 INT / +2 CHA the summary reads INT 16, DEX 14, CON 13,
     // WIS 12, CHA 10, STR 8.
     abilityScores: { str: 8, dex: 14, con: 13, int: 15, wis: 12, cha: 8 },
-    recommendedSkills: ['insight', 'medicine'],
     flavorBlurb:
       'Scholar of the older pact. Reads grimoires the way most folk read warning signs — slowly, and then twice.',
   },

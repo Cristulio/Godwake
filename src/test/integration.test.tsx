@@ -71,7 +71,6 @@ describe('integration — character creation → first delve via store', () => {
       raceId: SIR_BRICK_PRESET.raceId,
       classId: SIR_BRICK_PRESET.classId,
       baseAbilityScores: { ...SIR_BRICK_PRESET.baseAbilityScores },
-      skillProficiencies: [...SIR_BRICK_PRESET.skillProficiencies],
     });
     const state = useGameStore.getState();
     expect(state.character).not.toBeNull();

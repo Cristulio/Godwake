@@ -18,8 +18,12 @@ export interface CreateCharacterInput {
   classId: ClassId;
   /** The standard array assigned to the six abilities by the player. */
   baseAbilityScores: AbilityScores;
-  /** Skills picked from the class's skillChoiceFrom list. */
-  skillProficiencies: SkillName[];
+  /**
+   * Skill proficiencies to seed. The player flow never passes any — souls start
+   * untrained — but the engine builder keeps this optional seam so tests and
+   * sims can construct a trained character to exercise event skill-checks.
+   */
+  skillProficiencies?: SkillName[];
   /** Subclass picked. Many classes choose at lv1 (cleric), some at lv3 (fighter). */
   subclassId?: string;
 }
@@ -52,7 +56,9 @@ export function createCharacter(input: CreateCharacterInput): Character {
     baseAbilityScores,
     level: 1,
     xp: 0,
-    skillProficiencies: input.skillProficiencies,
+    // Skills were removed from the player flow — every soul starts untrained.
+    // Event skill-checks still run; they simply roll at a flat ability bonus.
+    skillProficiencies: input.skillProficiencies ?? [],
     expertSkills: [],
     hp: { current: 1, max: 1, temp: 0 }, // will be set below
     hitDice: { current: 1, max: 1, die: cls.hitDie },

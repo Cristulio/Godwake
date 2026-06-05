@@ -10,18 +10,6 @@ export const RANGER: Class = ClassSchema.parse({
   weaponProficiency: { categories: ['simple', 'martial'] },
   // Travels light to travel far — light/medium armour and a shield, no heavy plate.
   armorProficiency: { categories: ['light', 'medium', 'shield'] },
-  skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1, '9': 1, '13': 1 },
-  skillChoiceFrom: [
-    'animal-handling',
-    'athletics',
-    'insight',
-    'investigation',
-    'nature',
-    'perception',
-    'stealth',
-    'survival',
-  ],
   subclassLevel: 3,
   featuresByLevel: {
     '1': [
@@ -154,7 +142,6 @@ export const RANGER: Class = ClassSchema.parse({
     // monster that closes. With the Wood Elf +2 DEX / +1 WIS, the summary reads
     // DEX 17, CON 14, WIS 13, STR 12, INT 10, CHA 8.
     abilityScores: { str: 12, dex: 15, con: 14, int: 10, wis: 12, cha: 8 },
-    recommendedSkills: ['perception', 'survival'],
     flavorBlurb:
       'Opens every room from across it. Marks the most dangerous thing in sight and feeds it arrows until it stops moving.',
   },

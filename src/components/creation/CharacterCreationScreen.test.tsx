@@ -75,6 +75,14 @@ describe('CharacterCreationScreen — selection', () => {
     expect(screen.queryByRole('button', { name: /preset/i })).not.toBeInTheDocument();
   });
 
+  it('does not surface skill proficiencies on the soul cards', () => {
+    render(<CharacterCreationScreen />);
+    // The old cards carried a "Skills · …" line off recommendedSkills; skills
+    // were removed from the player flow, so that line is gone. Kit/Hallmarks stay.
+    expect(screen.queryByText(/skills ·/i)).not.toBeInTheDocument();
+    expect(screen.getAllByText(/hallmarks ·/i).length).toBeGreaterThan(0);
+  });
+
   it('confirm is disabled until a soul is picked', () => {
     render(<CharacterCreationScreen />);
     expect(screen.getByRole('button', { name: /choose a soul/i })).toBeDisabled();
@@ -94,9 +102,8 @@ describe('CharacterCreationScreen — selection', () => {
     expect(char.classId).toBe('fighter');
     expect(char.raceId).toBe('human');
     expect(char.baseAbilityScores).toEqual(preset.abilityScores);
-    expect([...char.skillProficiencies].sort()).toEqual(
-      [...preset.recommendedSkills].sort(),
-    );
+    // Skills were removed from the player flow — a fresh soul trains nothing.
+    expect(char.skillProficiencies).toEqual([]);
   });
 
   it('picking Veyra Ash commits the fixed Wizard (Mage) block', () => {

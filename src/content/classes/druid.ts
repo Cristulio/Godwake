@@ -14,18 +14,6 @@ export const DRUID: Class = ClassSchema.parse({
   // by the oath of the Circle. Light armour keeps the squishy caster squishy;
   // Wild Shape is the survival lever, not plate.
   armorProficiency: { categories: ['light', 'shield'] },
-  skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1 },
-  skillChoiceFrom: [
-    'animal-handling',
-    'arcana',
-    'insight',
-    'medicine',
-    'nature',
-    'perception',
-    'religion',
-    'survival',
-  ],
   subclassLevel: 2,
   featuresByLevel: {
     '1': [
@@ -187,7 +175,6 @@ export const DRUID: Class = ClassSchema.parse({
     // WIS 16, DEX 15, CON 14, CHA 12, INT 10, STR 8.
     recommendedRaceId: 'wood-elf',
     abilityScores: { str: 8, dex: 13, con: 14, int: 10, wis: 15, cha: 12 },
-    recommendedSkills: ['nature', 'survival'],
     flavorBlurb:
       'Keeps the old faith where the new gods went to war. Speaks softly to the storm, and wears its teeth when soft words run out.',
   },

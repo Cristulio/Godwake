@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AbilitySchema, ClassIdSchema, RaceIdSchema, SkillSchema } from './ids';
+import { AbilitySchema, ClassIdSchema, RaceIdSchema } from './ids';
 import { WeaponPropertySchema } from './item';
 
 /**
@@ -51,7 +51,6 @@ export const ClassPresetSchema = z.object({
     wis: z.number().int(),
     cha: z.number().int(),
   }),
-  recommendedSkills: z.array(SkillSchema),
   flavorBlurb: z.string(),
 });
 
@@ -65,11 +64,6 @@ export const ClassSchema = z.object({
   weaponProficiency: WeaponProficiencySchema.optional(),
   /** Armour categories the class is trained to wear. Absent = no restriction. */
   armorProficiency: ArmorProficiencySchema.optional(),
-  /** Skills the player can pick from at character creation. */
-  skillChoiceCount: z.number().int().nonnegative(),
-  skillChoiceFrom: z.array(SkillSchema),
-  /** Extra skill picks granted on level-up, keyed by character level. */
-  skillGrantsByLevel: z.record(z.string(), z.number().int().positive()).optional(),
   /** Level at which a subclass is selected. */
   subclassLevel: z.number().int().positive(),
   /** Class features by character level, e.g., {1: [...], 2: [...]}. */

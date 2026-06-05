@@ -10,7 +10,6 @@ import {
   abilityModifier,
   type AbilityName,
 } from '../../types/abilities';
-import type { SkillName } from '../../types/skills';
 import {
   isClassUnlocked,
   classUnlockRenown,
@@ -66,20 +65,12 @@ const CLASS_HALLMARKS: Record<ClassId, string> = {
   monk: 'Martial Arts · Flurry of Blows · Stunning Strike',
 };
 
-function skillLabel(s: SkillName): string {
-  return s
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-}
-
 interface SoulOption {
   classId: ClassId;
   className: string;
   characterName: string;
   raceId: RaceId;
   blurb: string;
-  skills: SkillName[];
   scores: { ability: AbilityName; total: number; mod: number }[];
 }
 
@@ -99,7 +90,6 @@ function buildSoulOptions(): SoulOption[] {
         characterName: preset.characterName,
         raceId: preset.recommendedRaceId,
         blurb: preset.flavorBlurb,
-        skills: preset.recommendedSkills,
         scores,
       };
     });
@@ -268,16 +258,6 @@ export function CharacterCreationScreen() {
                     {CLASS_KIT[opt.classId]}
                   </span>
                 </div>
-                {opt.skills.length > 0 && (
-                  <div>
-                    <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[9px]">
-                      Skills ·{' '}
-                    </span>
-                    <span className="text-[var(--color-text-secondary)]">
-                      {opt.skills.map(skillLabel).join(' · ')}
-                    </span>
-                  </div>
-                )}
               </div>
             </button>
           );

@@ -10,16 +10,6 @@ export const BARBARIAN: Class = ClassSchema.parse({
   weaponProficiency: { categories: ['simple', 'martial'] },
   // No heavy plate — Unarmored Defense is the brute's guard; light/medium + shield only.
   armorProficiency: { categories: ['light', 'medium', 'shield'] },
-  skillChoiceCount: 2,
-  skillGrantsByLevel: { '3': 1, '5': 1 },
-  skillChoiceFrom: [
-    'animal-handling',
-    'athletics',
-    'intimidation',
-    'nature',
-    'perception',
-    'survival',
-  ],
   subclassLevel: 3,
   featuresByLevel: {
     '1': [
@@ -178,7 +168,6 @@ export const BARBARIAN: Class = ClassSchema.parse({
     // Dwarf's +2 CON / +1 WIS the summary reads CON 16, STR 15, DEX 13,
     // CHA 12, WIS 11, INT 8.
     abilityScores: { str: 15, dex: 13, con: 14, int: 8, wis: 10, cha: 12 },
-    recommendedSkills: ['athletics', 'intimidation'],
     flavorBlurb:
       'Carries no shield and wants none. Walks into the worst of it, lets the fury take the wheel, and is still standing when the dust drops.',
   },
