@@ -14,6 +14,7 @@ import { skillCheck, type SkillCheckResult } from '../character/skillCheck';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { getItem } from '../../content/items';
 import { rolledItemName } from '../items/rollItem';
+import { scaleGold } from './eventGoldScale';
 
 /** Plain-text record of a single effect that landed. Useful for UI summaries. */
 export interface AppliedEffect {
@@ -49,14 +50,25 @@ export type ChoiceAvailability =
  * Check whether the character meets every gate on a choice: gold cost, HP
  * threshold, and CHA modifier (BG2-style [Persuade] gate). Returns the first
  * failing gate's reason so the UI can show a single, specific blocker.
+ *
+ * `goldScale` scales the `requiresGold` gate in lockstep with the choice's gold
+ * cost (see `applyEventOutcome`), so a "pay X for Y" event stays a unit at depth:
+ * the gate asks for exactly what the outcome will charge.
  */
-export function canTakeChoice(character: Character, choice: EventChoice): ChoiceAvailability {
-  if (choice.requiresGold !== undefined && character.goldInPocket < choice.requiresGold) {
-    return {
-      ok: false,
-      gate: 'gold',
-      reason: `needs ${choice.requiresGold}g (you have ${character.goldInPocket})`,
-    };
+export function canTakeChoice(
+  character: Character,
+  choice: EventChoice,
+  goldScale = 1,
+): ChoiceAvailability {
+  if (choice.requiresGold !== undefined) {
+    const cost = scaleGold(choice.requiresGold, goldScale);
+    if (character.goldInPocket < cost) {
+      return {
+        ok: false,
+        gate: 'gold',
+        reason: `needs ${cost}g (you have ${character.goldInPocket})`,
+      };
+    }
   }
   if (choice.requiresHpAtLeast !== undefined && character.hp.current < choice.requiresHpAtLeast) {
     return {
@@ -247,11 +259,19 @@ function rerollOneBaneQuirk(
  * Gold changes floor at 0 — a choice that
  * costs more than the player has should have been gated upstream; this is
  * a safety net.
+ *
+ * `goldScale` multiplies every gold reward AND cost in the outcome (`gold_delta`
+ * both signs, `cha_scaled_gold`) by the same chapter factor, so a flat authored
+ * payout stays proportional to the chapter economy and a "pay X for Y" trade
+ * scales as a unit. 1 = unscaled (Ch1 baseline / boss-intel, whose fees already
+ * scale). See `eventGoldScale`. HP and non-gold effects are depth-agnostic and
+ * stay flat.
  */
 export function applyEventOutcome(
   character: Character,
   outcome: EventOutcome,
   roller: DiceRoller,
+  goldScale = 1,
 ): EventOutcomeResult {
   let next: Character = { ...character };
   const effectsApplied: AppliedEffect[] = [];
@@ -292,18 +312,19 @@ export function applyEventOutcome(
         break;
       }
       case 'gold_delta': {
+        const amount = scaleGold(effect.amount, goldScale);
         const before = next.goldInPocket;
-        const after = Math.max(0, before + effect.amount);
+        const after = Math.max(0, before + amount);
         next = { ...next, goldInPocket: after };
         effectsApplied.push({
           kind: effect.kind,
-          detail: `${effect.amount >= 0 ? '+' : ''}${after - before}g`,
+          detail: `${amount >= 0 ? '+' : ''}${after - before}g`,
         });
         break;
       }
       case 'cha_scaled_gold': {
         const chaMod = Math.max(0, modifierFor(next, 'cha'));
-        const bonus = chaMod * effect.perPoint;
+        const bonus = scaleGold(chaMod * effect.perPoint, goldScale);
         if (bonus > 0) {
           next = { ...next, goldInPocket: Math.max(0, next.goldInPocket + bonus) };
           effectsApplied.push({

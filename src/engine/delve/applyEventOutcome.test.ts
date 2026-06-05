@@ -464,6 +464,91 @@ describe('canTakeChoice — gate evaluation', () => {
     expect(a.ok).toBe(false);
     if (!a.ok) expect(a.gate).toBe('gold');
   });
+
+  it('gold gate scales with goldScale, in lockstep with the cost it will charge', () => {
+    const gated = choice({ requiresGold: 5 }); // ×4 → needs 20
+    expect(canTakeChoice(makeChar({ goldInPocket: 19 }), gated, 4).ok).toBe(false);
+    expect(canTakeChoice(makeChar({ goldInPocket: 20 }), gated, 4).ok).toBe(true);
+    const blocked = canTakeChoice(makeChar({ goldInPocket: 19 }), gated, 4);
+    if (!blocked.ok) expect(blocked.reason).toContain('20g'); // shows the scaled cost
+  });
+});
+
+describe('chapter gold scaling — applyEventOutcome goldScale', () => {
+  it('defaults to ×1: omitting goldScale leaves authored amounts untouched', () => {
+    const char = makeChar({ goldInPocket: 50 });
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'gold_delta', amount: 30 }] }),
+      createDiceRoller(1),
+    );
+    expect(r.character.goldInPocket).toBe(80);
+  });
+
+  it('scales a positive gold_delta reward by the chapter factor', () => {
+    const char = makeChar({ goldInPocket: 50 });
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'gold_delta', amount: 10 }] }),
+      createDiceRoller(1),
+      3,
+    );
+    expect(r.character.goldInPocket).toBe(80); // +10 × 3 = +30
+    expect(r.effectsApplied[0].detail).toBe('+30g');
+  });
+
+  it('scales a negative gold_delta cost by the SAME factor', () => {
+    const char = makeChar({ goldInPocket: 100 });
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'gold_delta', amount: -20 }] }),
+      createDiceRoller(1),
+      2,
+    );
+    expect(r.character.goldInPocket).toBe(60); // -20 × 2 = -40
+  });
+
+  it('keeps a "pay X for Y" trade a unit: cost and reward move together', () => {
+    const char = makeChar({ goldInPocket: 100 });
+    const r = applyEventOutcome(
+      char,
+      outcome({
+        effects: [
+          { kind: 'gold_delta', amount: -40 },
+          { kind: 'gold_delta', amount: 90 },
+        ],
+      }),
+      createDiceRoller(1),
+      2,
+    );
+    // pay 80, gain 180 → net +100 on top of the starting 100.
+    expect(r.character.goldInPocket).toBe(200);
+  });
+
+  it('scales cha_scaled_gold too — a silver tongue stays worth it at depth', () => {
+    const char = silverTongue();
+    expect(modifierFor(char, 'cha')).toBe(3);
+    const before = char.goldInPocket;
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'cha_scaled_gold', perPoint: 5 }] }),
+      createDiceRoller(1),
+      2,
+    );
+    expect(r.character.goldInPocket - before).toBe(30); // 3 × 5 × 2
+  });
+
+  it('leaves non-gold effects flat under scaling (hp_delta unaffected)', () => {
+    const char = makeChar();
+    char.hp = { current: 5, max: 40, temp: 0 };
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'hp_delta', amount: 6 }] }),
+      createDiceRoller(1),
+      5,
+    );
+    expect(r.character.hp.current).toBe(11); // +6, not +30
+  });
 });
 
 describe('event content — road gambles, weapon finds & CHA payoffs', () => {
