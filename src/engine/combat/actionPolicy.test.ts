@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import type { Character } from '../../types/character';
+import type { CombatState } from '../../types/combat';
 import type { RaceId } from '../../schemas/ids';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { simulateLevelUp } from '../character/leveling';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
 import { createCombat } from './createCombat';
-import { chooseCombatAction } from './actionPolicy';
+import { chooseCombatAction, applyPlannedAction } from './actionPolicy';
 
 function rogue(): Character {
   const c = createCharacter({
@@ -77,10 +78,46 @@ function wizard(): Character {
   };
 }
 
+function druid(): Character {
+  const c = createCharacter({
+    id: 'p-druid',
+    name: 'Bramble',
+    raceId: 'wood-elf' as RaceId,
+    classId: 'druid',
+    baseAbilityScores: {
+      wis: STANDARD_ARRAY[0],
+      con: STANDARD_ARRAY[1],
+      dex: STANDARD_ARRAY[2],
+      int: STANDARD_ARRAY[3],
+      cha: STANDARD_ARRAY[4],
+      str: STANDARD_ARRAY[5],
+    },
+    skillProficiencies: ['nature', 'survival'],
+  });
+  return {
+    ...c,
+    inventory: [{ itemId: 'dagger' }, { itemId: 'potion-of-healing' }],
+    equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: null },
+  };
+}
+
 function atLevel(builder: () => Character, level: number): Character {
   let c = builder();
   while (c.level < level) c = simulateLevelUp({ ...c, xp: 9_999_999 });
   return c;
+}
+
+/** Raise every living monster's current HP so a control threshold (e.g. the
+ *  Entangle `> HOLD_PERSON_MIN_HP` gate) is met regardless of the trash statblock. */
+function setLiveHp(state: CombatState, hp: number): CombatState {
+  return {
+    ...state,
+    combatants: state.combatants.map((c) =>
+      c.kind === 'monster'
+        ? { ...c, instance: { ...c.instance, hp: { current: hp, max: hp, temp: 0 } } }
+        : c,
+    ),
+  };
 }
 
 /** Spawn a realistic combat-start state (class buffs applied) for `classId`. */
@@ -263,5 +300,62 @@ describe('chooseCombatAction', () => {
     };
     const action = chooseCombatAction(state, spent);
     expect(action.kind).toBe('end-turn');
+  });
+});
+
+describe('chooseCombatAction — Druid Entangling Roots (bonus action)', () => {
+  it('casts Entangle as the BONUS action against a meaty crowd, before the main action', () => {
+    const { state, character } = startCombat(atLevel(druid, 5), [{ defId: 'goblin', count: 2 }]);
+    expect(character.actionEconomy.bonusActionUsed).toBe(false);
+    expect((character.resources.spellSlots?.[2] ?? 0)).toBeGreaterThan(0);
+    // Goblins are too small to clear HOLD_PERSON_MIN_HP — beef them up so the
+    // control gate is met (Entangle isn't wasted on near-dead trash).
+    const beefy = setLiveHp(state, 30);
+    const action = chooseCombatAction(beefy, character);
+    expect(action).toEqual(
+      expect.objectContaining({ kind: 'cast', spellId: 'entangling-roots' }),
+    );
+  });
+
+  it('still spends the MAIN action the same turn after rooting (a cast, not end-turn)', () => {
+    const { state, character } = startCombat(atLevel(druid, 5), [{ defId: 'goblin', count: 2 }]);
+    const beefy = setLiveHp(state, 30);
+
+    // Apply the bonus-action Entangle the policy picks…
+    const first = chooseCombatAction(beefy, character);
+    expect(first).toEqual(expect.objectContaining({ spellId: 'entangling-roots' }));
+    const applied = applyPlannedAction(
+      { roller: createDiceRoller(3), state: beefy, character },
+      first,
+    );
+    expect(applied.character.actionEconomy.bonusActionUsed).toBe(true);
+    expect(applied.character.actionEconomy.actionUsed).toBe(false);
+
+    // …then the next pick is a real main-action play, NOT end-turn and NOT a
+    // second (impossible) Entangle.
+    const second = chooseCombatAction(applied.state, applied.character);
+    expect(second.kind).not.toBe('end-turn');
+    expect((second as { spellId?: string }).spellId).not.toBe('entangling-roots');
+  });
+
+  it('does NOT cast Entangle without a 2nd-level slot', () => {
+    const { state, character } = startCombat(atLevel(druid, 5), [{ defId: 'goblin', count: 2 }]);
+    const beefy = setLiveHp(state, 30);
+    const noSlot: Character = {
+      ...character,
+      resources: {
+        ...character.resources,
+        spellSlots: { ...(character.resources.spellSlots ?? {}), 2: 0 },
+      },
+    };
+    const action = chooseCombatAction(beefy, noSlot);
+    expect((action as { spellId?: string }).spellId).not.toBe('entangling-roots');
+  });
+
+  it('does NOT cast Entangle on a lone foe (no crowd to root)', () => {
+    const { state, character } = startCombat(atLevel(druid, 5), [{ defId: 'goblin', count: 1 }]);
+    const beefy = setLiveHp(state, 30);
+    const action = chooseCombatAction(beefy, character);
+    expect((action as { spellId?: string }).spellId).not.toBe('entangling-roots');
   });
 });

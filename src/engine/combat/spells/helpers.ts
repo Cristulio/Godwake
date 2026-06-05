@@ -170,7 +170,7 @@ export function canCastSpell(
   const known = character.resources.knownSpells ?? [];
   if (!known.includes(spellId)) return { ok: false, reason: 'Spell not prepared.' };
   const spell = getSpell(spellId);
-  if (spell.effectKey === 'misty-step') {
+  if (spell.castTime === 'bonus') {
     if (character.actionEconomy.bonusActionUsed) {
       return { ok: false, reason: 'Bonus action already used.' };
     }

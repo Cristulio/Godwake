@@ -476,6 +476,28 @@ export function chooseCombatAction(
       if (healIdx >= 0) return { kind: 'item', inventoryIndex: healIdx };
     }
 
+    // Druid Entangling Roots — the signature AoE soft-control, now a BONUS
+    // action: grasping roots sweep the floor and everything that fails its save
+    // loses its next turn, AND the druid still takes its main-action attack/cast
+    // the same turn (the tempo win the cast-cost rework unlocks). Reach for it
+    // when the room is crowded (2+ foes) and something meaty still stands, and
+    // nothing is rooted yet (don't waste the slot re-rooting a held pack or on
+    // near-dead trash). Out of beast form only — a wild-shaped druid is a pure
+    // clawer (see the main block). Slot-bounded, so it can't become a free
+    // every-turn room-wide lock.
+    if (
+      isDruid &&
+      !isWildShaped(character) &&
+      knows(character, 'entangling-roots') &&
+      slotsAt(character, 2) > 0 &&
+      live.length >= 2 &&
+      threat &&
+      threat.instance.hp.current > HOLD_PERSON_MIN_HP &&
+      !live.some((m) => m.instance.conditions.some((c) => c.name === 'restrained'))
+    ) {
+      return { kind: 'cast', spellId: 'entangling-roots', targetId: threat.id };
+    }
+
     // Monk: spend the bonus action and a Ki point on tempo. Patient Defense when
     // hurt enough to want the flowing guard (a turn to be weathered); otherwise
     // pour a Flurry of Blows into the strikes to come — the signature deluge.
@@ -988,21 +1010,9 @@ function chooseDruidAction(
     return { kind: 'cast', spellId: 'call-lightning', targetId: beefy.id };
   }
 
-  // Entangle: the Druid's signature soft control — grasping roots sweep the
-  // whole floor, stripping a turn from everything that fails its save. Reach for
-  // it when the room is crowded (2+ foes) and something meaty still stands, and
-  // nothing is rooted yet (don't waste it re-rooting a held pack or on near-dead
-  // trash). The AoE counterpart to the Wizard's single-target Hold Person.
-  if (
-    enemyCount >= 2 &&
-    knows(character, 'entangling-roots') &&
-    slotsAt(character, 2) > 0 &&
-    threat &&
-    threat.instance.hp.current > HOLD_PERSON_MIN_HP &&
-    !live.some((m) => m.instance.conditions.some((c) => c.name === 'restrained'))
-  ) {
-    return { kind: 'cast', spellId: 'entangling-roots', targetId: anchor };
-  }
+  // (Entangling Roots is no longer a main-action cast — it's a BONUS action now,
+  // chosen in the bonus-action block of chooseCombatAction so the druid roots the
+  // room AND still spends its main action here.)
 
   // Guaranteed finish: Thornlash auto-hits, so a low target dies for sure.
   if (
