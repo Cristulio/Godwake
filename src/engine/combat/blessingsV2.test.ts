@@ -34,8 +34,8 @@ const roller = createDiceRoller(7);
 describe('v2 blessings — start-of-combat temp HP (createCombat)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it("Lathander's Ascendance grants temp HP equal to delve level", () => {
-    const hero = makeHuman({ blessings: ['lathanders-ascendance'], level: 5 });
+  it("Silvanus's Communion grants temp HP equal to delve level", () => {
+    const hero = makeHuman({ blessings: ['silvanus-communion'], level: 5 });
     const after = createCombat({ roller, character: hero, monsters: [{ def: goblin }] }).character;
     expect(after.hp.temp).toBe(5);
   });
@@ -70,7 +70,7 @@ describe('v2 blessings — start-of-combat temp HP (createCombat)', () => {
 
   it('temp HP from multiple sources takes the single largest (RAW: no stacking)', () => {
     const hero = makeHuman({
-      blessings: ['lathanders-dawn', 'lathanders-ascendance'],
+      blessings: ['lathanders-dawn', 'silvanus-communion'],
       level: 5,
     });
     // flat 3 vs level-scaled 5 → 5
@@ -79,7 +79,7 @@ describe('v2 blessings — start-of-combat temp HP (createCombat)', () => {
   });
 
   it('does not overwrite a larger existing temp HP pool', () => {
-    let hero = makeHuman({ blessings: ['lathanders-ascendance'], level: 2 });
+    let hero = makeHuman({ blessings: ['silvanus-communion'], level: 2 });
     hero = { ...hero, hp: { ...hero.hp, temp: 9 } };
     const after = createCombat({ roller, character: hero, monsters: [{ def: goblin }] }).character;
     expect(after.hp.temp).toBe(9);
