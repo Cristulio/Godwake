@@ -251,9 +251,9 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: "The Warden's Patrol",
     flavorText:
-      "A Warden's Apprentice has been waiting at the gallery turn with a slayer hound at her hip. The hound is on no leash. The apprentice's wand is already drawn.",
+      "A Warden Lictor has been waiting at the gallery turn with a slayer hound at her hip. The hound is on no leash. Her wand is already drawn — and the first thing it does is set a thumb of grey light to your chest and stamp the strength out of your arm, so the hound meets a swordhand that has gone soft.",
     monsters: [
-      { defId: 'wardens-apprentice', count: 1 },
+      { defId: 'warden-lictor', count: 1 },
       { defId: 'slayer-hound', count: 1 },
     ],
     xpReward: 760,
@@ -282,11 +282,11 @@ export const ELITE_POOL: EncounterEntry[] = [
     goldReward: 30,
   },
   {
-    title: 'The Apprentice and Her Subject',
+    title: 'The Lictor and Her Subject',
     flavorText:
-      "A Warden's Apprentice walks the corridor with a Mad Mage Prisoner three paces behind her, reciting the same syllable her wand-grip is shaped for. She has been grading him for weeks. He has stopped noticing.",
+      "A Warden Lictor walks the corridor with a Mad Mage Prisoner three paces behind her, reciting the same syllable her wand-grip is shaped for. She has been grading him for weeks; when you interrupt the lesson she brands the strength out of you with the same bored authority and lets the subject keep reciting into the gap.",
     monsters: [
-      { defId: 'wardens-apprentice', count: 1 },
+      { defId: 'warden-lictor', count: 1 },
       { defId: 'mad-mage-prisoner', count: 1 },
     ],
     xpReward: 700,
