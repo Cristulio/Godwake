@@ -1,6 +1,7 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { characterHasMechanic } from '../character/derived';
+import { rageBrokenByArmor } from '../character/equip';
 import { RAGE_ROUNDS, isRageUnlimited } from '../character/actions';
 import {
   combatResult,
@@ -33,6 +34,16 @@ export function useRage(ctx: RageContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.classId !== 'barbarian') return combatResult(state, character);
   if (!characterHasMechanic(character, 'rage')) return combatResult(state, character);
+  // Heavy armour smothers the fury — it can't take hold while plate is worn.
+  // Spend nothing (no charge, no bonus action); just say why.
+  if (rageBrokenByArmor(character)) {
+    const log: CombatLogEntry = {
+      id: state.log.length + 1,
+      kind: 'narration',
+      text: `${character.name} reaches for the fury, but the heavy plate smothers it — no rage takes hold until the armor comes off.`,
+    };
+    return combatResult(appendLog(state, log), character);
+  }
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
   if ((character.resources.rageRoundsRemaining ?? 0) > 0) return combatResult(state, character);
 

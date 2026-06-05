@@ -26,7 +26,7 @@ import {
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { monkKiSaveDC, monkFightsUnarmed, MONK_UNARMED_DAMAGE_EDGE } from '../monk';
 import { getMonster } from '../../../content/monsters';
-import { isRangedWeapon } from '../../character/equip';
+import { isRangedWeapon, rageBrokenByArmor } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
@@ -449,8 +449,10 @@ export function playerAttack(
       onTypeParts.push({ amount: mountainBonus, label: 'Mountain' });
     }
     // Barbarian Rage: bonus damage on melee hits while the fury burns
-    // (Berserker's Frenzy folds its extra into rageDamageBonus).
-    if (isRaging(nextCharacter) && !isRanged) {
+    // (Berserker's Frenzy folds its extra into rageDamageBonus). Heavy armour
+    // smothers the fury — no bonus rides plate (defense-in-depth: rage also
+    // ends on donning heavy and can't be entered while worn).
+    if (isRaging(nextCharacter) && !isRanged && !rageBrokenByArmor(nextCharacter)) {
       const rd = rageDamageBonus(nextCharacter);
       if (rd > 0) {
         bonusDamage += rd;

@@ -10,7 +10,7 @@ import {
   equipDenialReason,
   EQUIP_SLOTS,
   type EquipSlot,
-  agileTradeoffWarning,
+  armorEquipWarning,
 } from '../../engine/character/equip';
 import { rolledItemCost } from '../../engine/items/rollItem';
 import type { Item, ItemRef } from '../../schemas/item';
@@ -278,9 +278,9 @@ export function InventoryScreen() {
                         item={item}
                         rolled={ref?.rolled}
                         rolledCost={ref?.rolled ? rolledItemCost(ref) : undefined}
-                        agileTradeoffWarning={
+                        equipWarning={
                           character && item.kind === 'armor'
-                            ? agileTradeoffWarning(character.classId, item) ?? undefined
+                            ? armorEquipWarning(character.classId, item) ?? undefined
                             : undefined
                         }
                         hint="Double-click or drag down to unequip"
@@ -299,9 +299,9 @@ export function InventoryScreen() {
                             item={item}
                             rolled={ref.rolled}
                             rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
-                            agileTradeoffWarning={
+                            equipWarning={
                               character && item.kind === 'armor'
-                                ? agileTradeoffWarning(character.classId, item) ?? undefined
+                                ? armorEquipWarning(character.classId, item) ?? undefined
                                 : undefined
                             }
                             hint="Double-tap the slot to unequip"
@@ -426,9 +426,9 @@ export function InventoryScreen() {
                             item={item}
                             rolled={ref.rolled}
                             rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
-                            agileTradeoffWarning={
+                            equipWarning={
                               character && item.kind === 'armor'
-                                ? agileTradeoffWarning(character.classId, item) ?? undefined
+                                ? armorEquipWarning(character.classId, item) ?? undefined
                                 : undefined
                             }
                             hint={hint}
@@ -446,9 +446,9 @@ export function InventoryScreen() {
                               item={item}
                               rolled={ref.rolled}
                               rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
-                              agileTradeoffWarning={
+                              equipWarning={
                                 character && item.kind === 'armor'
-                                  ? agileTradeoffWarning(character.classId, item) ?? undefined
+                                  ? armorEquipWarning(character.classId, item) ?? undefined
                                   : undefined
                               }
                               hint={hint}
