@@ -409,4 +409,11 @@ export interface CombatState {
    * blessing first-attack bonus/advantage. Absent means blessings apply.
    */
   blessingsSealed?: boolean;
+  /**
+   * Transient window set only while a boss's CHARGED telegraph special is
+   * resolving (monsterAttack sets it true around the wind-up's payoff, then
+   * clears it). A Rogue with Evasion reads it in applyDamage to halve the blast
+   * it had a full turn to see coming. Absent/false outside that window.
+   */
+  evasionWindowActive?: boolean;
 }

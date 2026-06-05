@@ -71,8 +71,8 @@ export function ActionBar({
 }: ActionBarProps) {
   const playersTurn = isPlayerTurn(state);
   const active = state.status === 'active';
-  // Cunning Action: Dash queues a free swing the player can fire even after
-  // the Action is spent.
+  // Cunning Action: Quick Strike queues a second swing the player can fire even
+  // after the Action is spent.
   const hasBonusAttack = character.bonusAttackAvailable === true;
   // Monk: a queued Flurry of Blows lets the monk keep striking after the Attack
   // action is spent.
@@ -325,13 +325,13 @@ export function ActionBar({
   // queued. Use the REAL swing count — Extra Attack is 2 at L5 but climbs to 3
   // (Relentless Assault, L11) and 4 (Unstoppable, L20), and a loading weapon
   // caps it back to 1 — so mirror maxAttacksPerAction rather than hardcoding /2.
-  const dashSwingPending = hasBonusAttack && character.actionEconomy.actionUsed;
+  const quickStrikePending = hasBonusAttack && character.actionEconomy.actionUsed;
   const flurrySwingPending = hasFlurryStrike && character.actionEconomy.actionUsed;
   const maxAttacks = maxAttacksPerAction(character);
   const attackLabel = flurrySwingPending
     ? `► Strike (Flurry ${character.flurryStrikesRemaining})`
-    : dashSwingPending
-      ? '► Attack (Dash)'
+    : quickStrikePending
+      ? '► Quick Strike'
       : maxAttacks > 1
         ? `► Attack (${Math.min(attacksThisTurn + 1, maxAttacks)}/${maxAttacks})`
         : '► Attack';
@@ -415,7 +415,7 @@ export function ActionBar({
             variant={canCunningAction ? 'primary' : 'secondary'}
             onClick={onCunningAction}
             disabled={!canCunningAction}
-            title="Bonus action: Hide (advantage on next attack), Dash (a quick second strike this turn), or Disengage (2 damage reduction on next incoming hit)."
+            title="Bonus action: Hide (advantage on next attack — enables Sneak), Quick Strike (a second strike this turn), Feint (guarantee Sneak on your next strike), or Steel Yourself (advantage on next save)."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             Cunning Action{cunningRemaining > 0 && ` (${cunningRemaining})`}

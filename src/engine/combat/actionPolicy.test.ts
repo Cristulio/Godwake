@@ -175,10 +175,19 @@ describe('chooseCombatAction', () => {
     expect(action.kind).toBe('item');
   });
 
-  it('opens with Cunning Action: Hide to set up Sneak Attack (rogue)', () => {
+  it('opens with Cunning Action: Quick Strike — the opener already lands Sneak (rogue)', () => {
     const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
     expect((character.resources.cunningActionUsesRemaining ?? 0)).toBeGreaterThan(0);
     const action = chooseCombatAction(state, character);
+    expect(action).toEqual({ kind: 'cunning-action', choice: 'quick-strike' });
+  });
+
+  it('sets up with Cunning Action: Hide on a later turn when Sneak needs the angle (rogue)', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    // Past the opener, a full-HP (un-bloodied) mark, a rapier (no dagger
+    // synergy): the only way to land Sneak this turn is to Hide for advantage.
+    const later = { ...state, playerHasAttacked: true };
+    const action = chooseCombatAction(later, character);
     expect(action).toEqual({ kind: 'cunning-action', choice: 'hide' });
   });
 

@@ -10,17 +10,17 @@ const OPTIONS: Array<{ choice: CunningActionChoice; label: string; blurb: string
   {
     choice: 'hide',
     label: 'Hide',
-    blurb: 'Slip into the shadow. Your next attack rolls with advantage.',
+    blurb: 'Slip into the shadow. Your next attack rolls with advantage — and finds the gap for Sneak Attack.',
   },
   {
-    choice: 'disengage',
-    label: 'Disengage',
-    blurb: 'Twist out of the way. The next incoming hit deals 2 less damage.',
+    choice: 'quick-strike',
+    label: 'Quick Strike',
+    blurb: 'Surge forward — take a second weapon strike this turn. Carries Sneak Attack only if the first strike hasn’t already spent it.',
   },
   {
-    choice: 'dash',
-    label: 'Dash',
-    blurb: 'Surge forward — take a quick second strike this turn (no Sneak Attack on the second).',
+    choice: 'feint',
+    label: 'Feint',
+    blurb: 'Bait the guard open. Your next strike lands Sneak Attack with no setup — no advantage, wound, or dagger needed.',
   },
   {
     choice: 'steel',

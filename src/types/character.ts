@@ -350,6 +350,21 @@ export interface Character {
    */
   nextSaveAdvantage?: boolean;
   /**
+   * One-shot guaranteed Sneak Attack on the player's next weapon strike. Set by
+   * Rogue's Cunning Action: Feint — the next attack lands Sneak even with no
+   * advantage, no wound, and no dagger, and even through a dice tilt that would
+   * cancel a Hide. Consumed on the next attack roll (hit or miss). Cleared on
+   * combat start.
+   */
+  nextAttackForceSneak?: boolean;
+  /**
+   * Rogue Opportunist (L12): once-per-round flag for the reaction Sneak-Attack
+   * riposte fired when a foe swings at the rogue and misses. Independent of the
+   * normal reaction (so Uncanny Dodge can still answer a hit the same round).
+   * Reset at the start of the rogue's turn (in `endTurn`); cleared on combat start.
+   */
+  opportunistUsedThisRound?: boolean;
+  /**
    * One-shot +N bonus added to the player's next attack roll. Reserved for
    * future buffs that need flat-to-hit; Dash no longer uses it. Consumed on
    * the actual attack roll, hit or miss. Stacks with nextAttackAdvantage.
@@ -408,17 +423,18 @@ export interface Character {
    */
   stunningStrikeActive?: boolean;
   /**
-   * One-shot extra attack this turn, funded by Rogue's Cunning Action: Dash.
-   * When set, the player can swing again even after the Action is spent. The
-   * Sneak Attack once-per-turn gate (`sneakAttackUsedThisTurn`) still applies,
-   * so the bonus swing does not double Sneak. Cleared on use or at turn end.
+   * One-shot extra attack this turn, funded by Rogue's Cunning Action: Quick
+   * Strike. When set, the player can swing again even after the Action is spent.
+   * The Sneak Attack once-per-turn gate (`sneakAttackUsedThisTurn`) still
+   * applies, so the bonus swing carries Sneak only if the main strike hasn't
+   * already spent it. Cleared on use or at turn end.
    */
   bonusAttackAvailable?: boolean;
   /**
    * One-shot damage reduction applied to the next incoming hit on the player.
-   * Set by Rogue's Cunning Action: Disengage (twisting out of the way). Read
-   * and cleared inside applyDamage. Subtracts from raw damage before temp HP
-   * absorbs the rest; can reduce a hit to 0 but not below.
+   * Set by the martial DEFENSE spend (Fighter/Barbarian/Ranger — braces against
+   * a telegraphed blow). Read and cleared inside applyDamage. Subtracts from raw
+   * damage before temp HP absorbs the rest; can reduce a hit to 0 but not below.
    */
   incomingDamageReduction?: number;
   /**
