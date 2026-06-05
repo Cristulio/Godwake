@@ -125,7 +125,7 @@ export function classStartingResources(classId: ClassId) {
         // fight. Seed the L1 value (rageChargesMax at L1-4); rest tops it up as
         // the barbarian levels. This is the single fresh-life init, shared by
         // character creation, descent, and reincarnation (startDelve).
-        rageChargesRemaining: 2,
+        rageChargesRemaining: 3,
         // Fury pool — refreshed every encounter by createCombat.
         martialPointsRemaining: MARTIAL_POOL_MAX,
       };

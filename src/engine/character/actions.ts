@@ -40,7 +40,7 @@ export function rageRoundsFor(character: Character): number {
  * or long) — never per fight — so each rage spent is a real choice that has to
  * carry across the rooms until the next camp.
  *
- *   L1-4: 2 · L5-10: 3 · L11-16: 4 · L17-19: 5 · L20: unlimited
+ *   L1-4: 3 · L5-10: 4 · L11-16: 5 · L17-19: 6 · L20: unlimited
  *
  * L20 returns +Infinity; pair every read with {@link isRageUnlimited} so a
  * persisted-then-rehydrated Infinity (JSON renders it null) still rages freely.
@@ -49,10 +49,10 @@ export function rageChargesMax(character: Character): number {
   if (character.classId !== 'barbarian') return 0;
   const level = character.level;
   if (level >= 20) return Number.POSITIVE_INFINITY;
-  if (level >= 17) return 5;
-  if (level >= 11) return 4;
-  if (level >= 5) return 3;
-  return 2;
+  if (level >= 17) return 6;
+  if (level >= 11) return 5;
+  if (level >= 5) return 4;
+  return 3;
 }
 
 /** Whether this barbarian's Rage is bottomless (L20 capstone — entering never spends a charge). */
