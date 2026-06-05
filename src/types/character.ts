@@ -274,6 +274,12 @@ export interface Character {
     cunningAction?: number;
     /** Rogue Knife in the Dark: +N bonus Sneak Attack dice. */
     sneakAttackDice?: number;
+    /** Monk Brimming Well: +N max Ki points per combat (folded into monkKiMax). */
+    kiPoints?: number;
+    /** Druid Primal Reservoir: +N Wild Shape uses per combat (folded into wildShapeUsesMax). */
+    wildShapeUses?: number;
+    /** Caster Wellspring of Mysteries / Deep Roots: +N extra 1st-level spell slot (folded into wizardSpellSlots + delve-start seed). */
+    bonusSpellSlotsL1?: number;
     /** Coin in the Pocket: seed gold at delve start. Read by delveStore.startDelve. */
     startingGold?: number;
     /** Coin in the Pocket: gold credited each time a chapter boss falls. Read by creditChapterClearGold (stacks with Quartermaster's Stipend's `chapterClearGoldBonus`). */

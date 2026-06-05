@@ -43,10 +43,12 @@ export function monkFightsUnarmed(character: Readonly<Character>): boolean {
   return isMonkWeaponId(mainHand.itemId);
 }
 
-/** Max Ki points for a monk: one per level, +2 at the L20 capstone (Perfect Self). */
+/** Max Ki points for a monk: one per level, +2 at the L20 capstone (Perfect Self),
+ *  plus any Grove "Brimming Well" reservoir (permanentBonuses.kiPoints). */
 export function monkKiMax(character: Readonly<Character>): number {
   if (character.classId !== 'monk' || !characterHasMechanic(character, 'ki')) return 0;
-  return character.level + (characterHasMechanic(character, 'perfect-self') ? 2 : 0);
+  const grove = character.permanentBonuses?.kiPoints ?? 0;
+  return character.level + (characterHasMechanic(character, 'perfect-self') ? 2 : 0) + grove;
 }
 
 /** The save DC a foe rolls against the monk's Ki effects (Stunning Strike). 8 + prof + WIS. */

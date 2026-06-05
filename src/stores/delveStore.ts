@@ -21,6 +21,7 @@ import {
   characterQuirkMods,
   soulMarkMultiplier,
   renownSoulMarkMultiplier,
+  firstBoonQuirk,
 } from '../engine/character/quirks';
 import { applyDelveStartUpgrades } from '../engine/character/upgrades';
 import { hasPendingLevelUp } from '../engine/character/leveling';
@@ -250,7 +251,7 @@ function applyDelveStartQuirks(character: Character): Character {
 
 /**
  * Roll the next life's quirks, guaranteeing at least two distinct ids. `carry`
- * holds quirks that survive the turn (Wheelturner keeps the first). The bounded
+ * holds quirks that survive the turn (Wheelturner keeps the first boon). The bounded
  * retry tops up one at a time and is capped so a small or exhausted quirk pool
  * can never spin forever.
  */
@@ -269,7 +270,7 @@ function rollReincarnationQuirks(carry: string[]): string[] {
 
 /**
  * Turn the wheel: the soul reincarnates into a fresh life. Quirks reroll (the
- * Wheelturner upgrade carries the first one forward), level/xp reset to the
+ * Wheelturner upgrade carries the first boon forward), level/xp reset to the
  * baseline, and everything that belonged to the life just ended — blessings,
  * camp boons, conditions, delve buffs, boss intel — is left behind.
  *
@@ -283,8 +284,12 @@ function rollReincarnationQuirks(carry: string[]): string[] {
  */
 function reincarnateSoul(character: Character): Character {
   const oldQuirks = character.quirks;
-  const carry =
-    character.wheelturnerUnlocked && oldQuirks.length > 0 ? [oldQuirks[0]] : [];
+  // Wheelturner carries the first BOON forward — never a bane. A soul that paid
+  // 300 renown to keep "one bright thread" should not have that thread be a curse.
+  const carriedBoon = character.wheelturnerUnlocked
+    ? firstBoonQuirk(oldQuirks)
+    : undefined;
+  const carry = carriedBoon ? [carriedBoon] : [];
   const newQuirks = rollReincarnationQuirks(carry);
 
   const meta = useMetaStore.getState();

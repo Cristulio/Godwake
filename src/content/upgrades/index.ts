@@ -396,9 +396,9 @@ const RAW: Upgrade[] = [
     category: 'soul',
     name: 'Wheelturner',
     flavor:
-      "An old druid lays her hand on your chest and says only, 'One thread the wheel will not cut.' Your first quirk survives the turn.",
+      "An old druid lays her hand on your chest and says only, 'One bright thread the wheel will not cut.' The first blessing on your soul survives the turn — the curses she leaves to the wheel.",
     effectAtRank: () =>
-      'On reincarnation, your first current quirk is carried into the new life (the second slot still rerolls).',
+      'On reincarnation, your first boon-quirk is carried into the new life (banes are left behind; the remaining slot rerolls).',
     costForRank: () => 300,
     maxRank: 1,
     apply: (c) => ({ ...c, wheelturnerUnlocked: true }),
@@ -569,6 +569,110 @@ const RAW: Upgrade[] = [
     apply: (c) => {
       if (c.classId !== 'ranger') return c;
       return { ...c, permanentWoundedTargetDamage: (c.permanentWoundedTargetDamage ?? 0) + 1 };
+    },
+    kind: 'permanent',
+  },
+
+  // ─── CLASS: DRUID ────────────────────────────────────────────────────────
+  {
+    id: 'primal-reservoir',
+    category: 'survival',
+    classId: 'druid',
+    name: 'Primal Reservoir',
+    flavor:
+      'The Wellspring pools deeper in a soul that has already worn fur and feather. The beast within answers more readily now — and more often.',
+    effectAtRank: (r) => `+${r} Wild Shape use${r === 1 ? '' : 's'} per combat.`,
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 2,
+    apply: (c, rank) => {
+      if (c.classId !== 'druid') return c;
+      return setPermanentBonus(c, 'wildShapeUses', rank);
+    },
+    kind: 'delveStart',
+  },
+  {
+    id: 'verdant-wrath',
+    category: 'offense',
+    classId: 'druid',
+    name: 'Verdant Wrath',
+    flavor:
+      "Mielikki's anger is the forest's — slow to wake, and ruinous once roused. Your spells carry a little of that old green fury into every life.",
+    effectAtRank: (r) => `+${r} damage to spells, permanent.`,
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 4,
+    apply: (c) => {
+      if (c.classId !== 'druid') return c;
+      return addPermanentBonus(c, 'spellDamage', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'deep-roots',
+    category: 'offense',
+    classId: 'druid',
+    name: 'Deep Roots',
+    flavor:
+      "Your soul sends roots past the Wellspring's floor, into the still water beneath. From it you draw one more breath of the Weave than the body was given.",
+    effectAtRank: (r) =>
+      `+${r} first-level spell slot${r === 1 ? '' : 's'} each delve, permanent.`,
+    costForRank: (r) => rankCost(160, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'druid') return c;
+      return addPermanentBonus(c, 'bonusSpellSlotsL1', 1);
+    },
+    kind: 'permanent',
+  },
+
+  // ─── CLASS: MONK ─────────────────────────────────────────────────────────
+  {
+    id: 'brimming-well',
+    category: 'survival',
+    classId: 'monk',
+    name: 'Brimming Well',
+    flavor:
+      'The masters taught the body to hold its breath. The Wellspring teaches the soul to hold more. Your Ki brims past the old measure.',
+    effectAtRank: (r) => `+${r} maximum Ki point${r === 1 ? '' : 's'} per combat.`,
+    costForRank: (r) => rankCost(110, r),
+    maxRank: 2,
+    apply: (c, rank) => {
+      if (c.classId !== 'monk') return c;
+      return setPermanentBonus(c, 'kiPoints', rank);
+    },
+    kind: 'delveStart',
+  },
+  {
+    id: 'pressure-points',
+    category: 'offense',
+    classId: 'monk',
+    name: 'Pressure Points',
+    flavor:
+      'An old hand guides yours to the places where life runs thin beneath the skin. When the strike lands true, the body forgets for a moment how to stand.',
+    effectAtRank: (r) => `+${r} damage on critical hits, permanent.`,
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'monk') return c;
+      return { ...c, permanentCritDamageBonus: (c.permanentCritDamageBonus ?? 0) + 1 };
+    },
+    kind: 'permanent',
+  },
+
+  // ─── CLASS: WIZARD (caster slot) ─────────────────────────────────────────
+  {
+    id: 'wellspring-of-mysteries',
+    category: 'offense',
+    classId: 'wizard',
+    name: 'Wellspring of Mysteries',
+    flavor:
+      'The Wellspring keeps a page the masters never wrote — a fold of the Weave sewn into the soul, yours to spend and find waiting again.',
+    effectAtRank: (r) =>
+      `+${r} first-level spell slot${r === 1 ? '' : 's'} each delve, permanent.`,
+    costForRank: (r) => rankCost(160, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'wizard') return c;
+      return addPermanentBonus(c, 'bonusSpellSlotsL1', 1);
     },
     kind: 'permanent',
   },

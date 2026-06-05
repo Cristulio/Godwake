@@ -64,6 +64,22 @@ export function characterQuirkMods(character: Character): QuirkModifiers {
 }
 
 /**
+ * The first boon-sentiment quirk in `quirkIds`, or undefined if none is a boon.
+ * Wheelturner carries this one forward across the wheel — a bane (or an odd
+ * mark) is never worth a 300-renown soul-upgrade slot, so they are skipped.
+ */
+export function firstBoonQuirk(quirkIds: readonly string[]): string | undefined {
+  for (const id of quirkIds) {
+    try {
+      if (getQuirk(id).sentiment === 'boon') return id;
+    } catch {
+      continue;
+    }
+  }
+  return undefined;
+}
+
+/**
  * Count of bane-sentiment quirks the character carries. Kept as the raw count
  * for UI / Grove-upgrade descriptions. The actual reward math uses
  * `baneSoulMarkWeight`, which weighs harsher banes more heavily.
