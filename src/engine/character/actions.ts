@@ -136,7 +136,11 @@ export function wizardSpellSlotsForLevel(level: number): SpellSlots {
  */
 export function wizardSpellSlots(character: Readonly<Character>): SpellSlots {
   const slots = wizardSpellSlotsForLevel(character.level);
-  const bonusL1 = characterAffixMods(character).bonusSpellSlotsL1;
+  // Gear "Runic" affix + the Grove caster slot upgrade (Wellspring of Mysteries /
+  // Deep Roots) both widen the 1st-level well; they stack.
+  const bonusL1 =
+    characterAffixMods(character).bonusSpellSlotsL1 +
+    (character.permanentBonuses?.bonusSpellSlotsL1 ?? 0);
   if (bonusL1 > 0) slots[1] = (slots[1] ?? 0) + bonusL1;
   return slots;
 }

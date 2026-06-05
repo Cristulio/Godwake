@@ -151,16 +151,18 @@ describe('delveStore.finishDelve — reincarnate on clear', () => {
     expect(useMetaStore.getState().chapter1Cleared).toBe(true);
   });
 
-  it('Wheelturner carries the first quirk identity through a clear', () => {
-    seedRun({ quirks: ['glass-jaw', 'ironhide'], wheelturnerUnlocked: true });
+  it('Wheelturner carries the first BOON through a clear, skipping a leading bane', () => {
+    // glassbone = bane (skipped), stonehide = boon (the bright thread kept).
+    seedRun({ quirks: ['glassbone', 'stonehide'], wheelturnerUnlocked: true });
     setDelve({ phase: 'completed', currentRoomIdx: 36 });
 
     useDelveStore.getState().finishDelve();
 
     const c = char();
-    expect(c.quirks[0]).toBe('glass-jaw');
+    expect(c.quirks[0]).toBe('stonehide');
     expect(c.quirks.length).toBeGreaterThanOrEqual(2);
   });
+
 });
 
 describe('delveStore.finishDelve — true-ending capstone', () => {

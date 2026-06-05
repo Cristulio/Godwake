@@ -33,12 +33,14 @@ export function wildShapeTempHp(character: Readonly<Character>): number {
 }
 
 /** Wild Shape uses per combat — 1 base, +1 for Circle of the Moon, +1 for the
- *  L20 Archdruid capstone. */
+ *  L20 Archdruid capstone, plus any Grove "Primal Reservoir"
+ *  (permanentBonuses.wildShapeUses). */
 export function wildShapeUsesMax(character: Readonly<Character>): number {
   if (!characterHasMechanic(character, 'wild-shape')) return 0;
   const moon = characterHasMechanic(character, 'circle-of-the-moon') ? 1 : 0;
   const archdruid = characterHasMechanic(character, 'archdruid') ? 1 : 0;
-  return 1 + moon + archdruid;
+  const grove = character.permanentBonuses?.wildShapeUses ?? 0;
+  return 1 + moon + archdruid + grove;
 }
 
 /** Which natural-weapon profile the beast form fights with. Moon druids rend

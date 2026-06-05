@@ -1,5 +1,6 @@
 import type { Character } from '../../types/character';
 import { findUpgrade } from '../../content/upgrades';
+import { isFullCaster } from './derived';
 
 /** Record<upgradeId, currentRank>. Rank 0 / missing = not owned. */
 export type UnlockedUpgrades = Record<string, number>;
@@ -53,6 +54,25 @@ export function applyDelveStartUpgrades(
     if (!up) continue;
     if (up.kind !== 'delveStart') continue;
     c = up.apply(c, rank);
+  }
+
+  // Caster slot upgrade (Wellspring of Mysteries / Deep Roots) bakes a
+  // permanentBonuses.bonusSpellSlotsL1; wizardSpellSlots folds it into every
+  // refill, but combat never refills slots, so seed the extra 1st-level slot
+  // onto the fresh descent here too — otherwise it wouldn't appear until the
+  // first rest.
+  const slotBonus = c.permanentBonuses?.bonusSpellSlotsL1 ?? 0;
+  if (slotBonus > 0 && isFullCaster(c.classId)) {
+    c = {
+      ...c,
+      resources: {
+        ...c.resources,
+        spellSlots: {
+          ...(c.resources.spellSlots ?? {}),
+          1: (c.resources.spellSlots?.[1] ?? 0) + slotBonus,
+        },
+      },
+    };
   }
   return c;
 }
