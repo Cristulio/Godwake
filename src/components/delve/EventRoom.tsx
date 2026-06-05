@@ -9,8 +9,10 @@ import { EventIllustration } from './EventIllustration';
 import {
   applyEventOutcome,
   canTakeChoice,
+  eventGoldScale,
   resolveChoiceOutcome,
   rollChoiceCheck,
+  scaleGold,
   type AppliedEffect,
   type EventOutcomeResult,
 } from '../../engine/delve';
@@ -117,12 +119,21 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
     );
   }
 
+  // Event gold (rewards AND the costs that buy them) scales with chapter depth
+  // so a flat authored payout stays proportional to the chapter economy instead
+  // of going trivial in the late game. Anchored at the event's own minChapter so
+  // already-rich deep events don't double-count into a jackpot. Boss-intel fees
+  // price themselves by chapter already (bossIntelCoinCost), so leave those ×1.
+  const goldScale = isBossIntelRoom
+    ? 1
+    : eventGoldScale(room.chapter ?? 1, template.minChapter ?? 1);
+
   function handlePick(choice: EventChoice) {
     if (!character) return;
     const roller = getActiveRoller();
     const checked = rollChoiceCheck(choice, roller, character);
     const outcome = resolveChoiceOutcome(checked.outcome, roller);
-    const result = applyEventOutcome(character, outcome, roller);
+    const result = applyEventOutcome(character, outcome, roller, goldScale);
     setCharacter(result.character);
     setResolved({ choiceLabel: choice.label, result, check: checked.skillCheck });
     playSfx('ui_click');
@@ -179,6 +190,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
                 key={choice.id}
                 choice={choice}
                 character={character}
+                goldScale={goldScale}
                 onPick={() => handlePick(choice)}
               />
             ))}
@@ -199,11 +211,13 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
 interface ChoiceButtonProps {
   choice: EventChoice;
   character: Character;
+  /** Chapter gold multiplier — scales the displayed cost and the gate check. */
+  goldScale: number;
   onPick: () => void;
 }
 
-function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
-  const availability = canTakeChoice(character, choice);
+function ChoiceButton({ choice, character, goldScale, onPick }: ChoiceButtonProps) {
+  const availability = canTakeChoice(character, choice, goldScale);
   const disabled = !availability.ok;
   const disabledReason = !availability.ok ? availability.reason : null;
   let skillTag: { skill: SkillName; dc: number; bonus: number; proficient: boolean } | null = null;
@@ -260,7 +274,7 @@ function ChoiceButton({ choice, character, onPick }: ChoiceButtonProps) {
           )}
           {choice.requiresGold !== undefined && (
             <div className="text-[var(--color-accent-gold)] text-xs uppercase tracking-widest">
-              {choice.requiresGold}g
+              {scaleGold(choice.requiresGold, goldScale)}g
             </div>
           )}
         </div>
