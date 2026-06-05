@@ -19,20 +19,42 @@ const MIN_CHAPTER = 1;
 const MAX_CHAPTER = 14;
 
 /**
- * Multiple a Ch1-authored gold amount reaches at the deepest chapter. Linear
- * ramp between, so each chapter adds a fixed step. Deliberately modest — a
- * normal fight's gold climbs far steeper, so events never out-earn the fights
- * around them. This is the lever a future economy sim tunes.
+ * Multiple a Ch1-authored gold amount reaches at the deepest chapter. The ramp
+ * climbs linearly from the knee (Ch5) to Ch14 and is bowed flat below it (see
+ * {@link chapterGoldRamp}). Deliberately modest — a normal fight's gold climbs
+ * far steeper, so events never out-earn the fights around them. This is the
+ * lever a future economy sim tunes.
  */
 export const EVENT_GOLD_CH14_MULTIPLE = 6;
 
 /**
- * Linear gold multiplier for a chapter: ×1 at Ch1 climbing to
- * ×EVENT_GOLD_CH14_MULTIPLE at Ch14. Clamped for out-of-range chapters.
+ * Chapter the linear ramp anchors at. From here to Ch14 the multiplier climbs
+ * the plain linear ramp (the sim found this band in-band at ~0.6× a fight);
+ * below it the sub-ramp is bowed flat so early events don't out-earn a
+ * same-chapter fight (see {@link chapterGoldRamp}).
+ */
+const RAMP_KNEE_CHAPTER = 5;
+
+/** The plain linear multiplier: ×1 at Ch1 → ×EVENT_GOLD_CH14_MULTIPLE at Ch14. */
+function linearRamp(chapter: number): number {
+  return 1 + (chapter - 1) * ((EVENT_GOLD_CH14_MULTIPLE - 1) / (MAX_CHAPTER - MIN_CHAPTER));
+}
+
+/**
+ * Gold multiplier for a chapter, clamped to Ch1..Ch14.
+ *
+ * Ch5..Ch14 follow the plain linear ramp. Ch1..Ch5 are bowed DOWN below that
+ * line: early-game fights pay almost nothing by design, so a linearly-scaled
+ * event read as >1× a fight (Ch3 ~1.35×). A convex (quadratic) sub-ramp keeps
+ * the Ch1 and Ch5 endpoints exact while pulling Ch2-4 under the line, so an
+ * early event stays a slice of a fight, not a jackpot.
  */
 export function chapterGoldRamp(chapter: number): number {
   const c = Math.max(MIN_CHAPTER, Math.min(MAX_CHAPTER, chapter));
-  return 1 + (c - 1) * ((EVENT_GOLD_CH14_MULTIPLE - 1) / (MAX_CHAPTER - MIN_CHAPTER));
+  if (c >= RAMP_KNEE_CHAPTER) return linearRamp(c);
+  const kneeValue = linearRamp(RAMP_KNEE_CHAPTER);
+  const t = (c - MIN_CHAPTER) / (RAMP_KNEE_CHAPTER - MIN_CHAPTER);
+  return 1 + (kneeValue - 1) * t * t;
 }
 
 /**

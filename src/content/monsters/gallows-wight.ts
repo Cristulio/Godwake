@@ -3,8 +3,10 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 /**
  * Gallows Wight — Ch1 ELITE leader of "The Hangman's Pit". The pauper that got
  * up wearing the other pauper, and kept the noose. Demonstrates `paralyze` as an
- * elite opener: round one it gets a cold grip on you (Grave-Grip, soft DC 12) and
+ * elite opener: round one it gets a cold grip on you (Grave-Grip, DC 14) and
  * holds you still while the lesser skeleton beside it works — then it strangles.
+ * The paralyze fires round-1 only (engine rule), so the DC sits a notch high to
+ * compensate for the single attempt — it was a near-dead 3%-land at the old DC 12.
  * Hard-control or a made save is the whole game; freeze in its grip with a second
  * blade on you and the pit earns its name.
  */
@@ -23,7 +25,7 @@ export const GALLOWS_WIGHT: Monster = MonsterSchema.parse({
     {
       kind: 'paralyze',
       name: 'Grave-Grip',
-      saveDC: 12,
+      saveDC: 14,
       saveAbility: 'con',
       durationRounds: 2,
       description:

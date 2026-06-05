@@ -2,8 +2,8 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Axle-Warden — Ch6 ELITE summoner. The mechanism that turns the wheel and
- * feeds bodies back onto it. Demonstrates `summon` at the top band: it spins up
- * Threadbare Penitents off the rim (maxActive 2, cooldown 2) while crushing
+ * feeds bodies back onto it. Demonstrates `summon`: it spins up Threadbare
+ * Penitents off the rim (maxActive 1, first add round 2, cooldown 5) while crushing
  * from reach with a wheel-breaker maul. A war of attrition — close the gap and
  * fell the warden, or be ground down by the brood it never stops turning out.
  */
@@ -26,7 +26,8 @@ export const AXLE_WARDEN: Monster = MonsterSchema.parse({
       summonDefId: 'threadbare-penitent',
       count: 1,
       maxActive: 1,
-      cooldownRounds: 4,
+      minRound: 2,
+      cooldownRounds: 5,
       description:
         'It hauls the great axle a quarter-turn and a worn soul slides off the rim where the wheel meets the floor — upright before it has finished arriving, already reaching for you.',
     },
