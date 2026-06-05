@@ -561,6 +561,37 @@ function mainElite(): void {
     cells.set(ch, byLane);
   }
 
+  // Pin ONE canonical elite leader per chapter — the modal leader across the seed
+  // sweep — and run the elite lane ONLY against it. A chapter's elite pool is
+  // multi-leader (the node rolls one of several compositions), so a pool-AVERAGED
+  // elite cell dilutes a single leader's signature: a leader that paralyzes in 57%
+  // of ITS OWN fights reads ~3% once it's averaged with sibling rooms led by
+  // something else. Pinning makes both the win% and the signature-fired% a clean
+  // single-leader read, and targets the marquee elite (e.g. the Slag-Colossus),
+  // not the occasional alternate composition.
+  const pinnedEliteLeader = new Map<number, string>();
+  {
+    const tally = new Map<number, Map<string, number>>();
+    for (const chapter of chapters) {
+      for (let seed = 0; seed < SEEDS; seed++) {
+        const s = (SEED_BASE + chapter * 7919 + seed * 31) >>> 0;
+        const elite = extractRoomsByKind(s, 'elite').find((e) => e.chapter === chapter);
+        if (!elite) continue;
+        const m = tally.get(chapter) ?? new Map<string, number>();
+        m.set(elite.leaderDefId, (m.get(elite.leaderDefId) ?? 0) + 1);
+        tally.set(chapter, m);
+      }
+    }
+    for (const chapter of chapters) {
+      const m = tally.get(chapter);
+      if (!m) continue;
+      let best = '';
+      let bestN = -1;
+      for (const [leader, count] of m) if (count > bestN) { best = leader; bestN = count; }
+      pinnedEliteLeader.set(chapter, best);
+    }
+  }
+
   for (const bossRoom of bossRooms) {
     const chapter = bossRoom.chapter;
     for (const classId of CLASSES) {
@@ -568,8 +599,12 @@ function mainElite(): void {
       for (let seed = 0; seed < SEEDS; seed++) {
         const s = (SEED_BASE + chapter * 7919 + seed * 31) >>> 0;
         const normal = extractRoomsByKind(s, 'combat').find((e) => e.chapter === chapter);
-        const elite = extractRoomsByKind(s, 'elite').find((e) => e.chapter === chapter);
+        const eliteRoom = extractRoomsByKind(s, 'elite').find((e) => e.chapter === chapter);
         const boss = extractBossRooms(s).find((b) => b.chapter === chapter) ?? bossRoom;
+        // Pin the elite lane to the chapter's canonical leader; seeds that roll an
+        // alternate-led elite still run their normal + boss lanes at full N.
+        const elite =
+          eliteRoom && eliteRoom.leaderDefId === pinnedEliteLeader.get(chapter) ? eliteRoom : undefined;
         if (elite && !eliteLeaderByChapter.has(chapter)) {
           eliteLeaderByChapter.set(chapter, elite.leaderDefId);
         }
