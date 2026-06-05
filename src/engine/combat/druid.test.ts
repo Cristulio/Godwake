@@ -2,8 +2,11 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { buildPlayerCharacter, presetCreationInput } from '../character/defaultCharacter';
 import { getClass, listClasses } from '../../content/classes';
 import { spellSaveDC } from './spells';
-import { isWildShaped, characterHasMechanic } from '../character/derived';
-import { wildShapeUsesMax, beastWeaponId, WILD_SHAPE_ROUNDS } from './wildShape';
+import { isWildShaped, characterHasMechanic, spellcastingMod } from '../character/derived';
+import { wildShapeUsesMax, beastWeaponId, wildShapeTempHp, WILD_SHAPE_ROUNDS } from './wildShape';
+import { spellDamageMultiplier } from './spells/scaling';
+import { magicMissileDartCount } from './spells/magicMissile';
+import { getItem } from '../../content/items';
 import {
   classUnlockRenown,
   STARTER_CLASSES,
@@ -162,5 +165,104 @@ describe('Druid — spellcasting', () => {
       { kind: 'cast', spellId: 'produce-flame', targetId: mid },
     );
     expect(monsterHp(cast.state, mid)).toBeLessThan(before);
+  });
+});
+
+describe('Druid — Wild Shape is a worthwhile spike (buffed temp HP + claws)', () => {
+  it('grants a deeper temp-HP cushion than before, scaling with level', () => {
+    // Old formula: (moon ? 6 : 3) + level * (moon ? 2 : 1) → L2 base = 5, moon = 10.
+    expect(wildShapeTempHp(makeDruid(2))).toBeGreaterThan(5);
+    expect(wildShapeTempHp(makeDruid(2, 'circle-of-the-moon'))).toBeGreaterThan(10);
+    // Still climbs with the soul, and the Moon circle still wears the sturdier form.
+    expect(wildShapeTempHp(makeDruid(20))).toBeGreaterThan(wildShapeTempHp(makeDruid(2)));
+    expect(wildShapeTempHp(makeDruid(20, 'circle-of-the-moon'))).toBeGreaterThan(
+      wildShapeTempHp(makeDruid(20)),
+    );
+  });
+
+  it('rends with a heavier beast strike than the simple sickle it drops', () => {
+    const claws = getItem('beast-claws');
+    const dire = getItem('dire-claws');
+    expect(claws.kind).toBe('weapon');
+    expect(dire.kind).toBe('weapon');
+    if (claws.kind === 'weapon') {
+      expect(claws.damage).toBe('1d8'); // was 1d6 — now out-bites the 1d6 sickle
+      expect(claws.damageMod).toBe(1);
+    }
+    if (dire.kind === 'weapon') {
+      expect(dire.damage).toBe('1d10'); // was 1d8
+      expect(dire.damageMod).toBe(3); // was 2
+    }
+  });
+});
+
+describe('Druid — at-will Produce Flame sits clearly below the L1 Thornlash', () => {
+  // A FREE cantrip must read as weaker than a slot-costing L1, at every level, so
+  // the slot is worth spending. Compare the cantrip's FULL damage (an upper bound
+  // — Produce Flame is further halved on a DEX save) against Thornlash's auto-hit
+  // expected: even the upper bound stays below.
+  const THORN_DART_AVG = 4.5; // 1d6+1 per thorn (the druid's heavier barb)
+
+  function produceFlameFull(level: number): number {
+    const d = makeDruid(level);
+    return 5.5 * spellDamageMultiplier(d, 0) + spellcastingMod(d);
+  }
+  function thornlashExpected(level: number): number {
+    return magicMissileDartCount(level) * THORN_DART_AVG;
+  }
+
+  it('Thornlash out-damages Produce Flame at L1 / L5 / L11 / L20', () => {
+    for (const level of [1, 5, 11, 20]) {
+      expect(produceFlameFull(level)).toBeLessThan(thornlashExpected(level));
+    }
+  });
+});
+
+describe('Druid — at-will spells wear a nature look, not the wizard arcane VFX', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function castKind(spellId: string, level: number, slots1 = 0): string | undefined {
+    const roller = createDiceRoller(9);
+    const druid = makeDruid(level);
+    const init = createCombat({ roller, character: druid, monsters: [{ def: getMonster('goblin') }] });
+    const character: Character = slots1
+      ? {
+          ...init.character,
+          resources: {
+            ...init.character.resources,
+            spellSlots: { ...init.character.resources.spellSlots, 1: slots1 },
+          },
+        }
+      : init.character;
+    const cast = applyPlannedAction(
+      { roller, state: init.state, character },
+      { kind: 'cast', spellId, targetId: monsterId(init.state) },
+    );
+    return cast.state.spellEffectEvent?.kind;
+  }
+
+  it('Produce Flame renders as nature-flame (not the wizard spell-bolt)', () => {
+    expect(castKind('produce-flame', 3)).toBe('nature-flame');
+  });
+
+  it('Thornlash renders as thorn-lash (not the wizard magic-missile)', () => {
+    expect(castKind('thornlash', 3, 2)).toBe('thorn-lash');
+  });
+
+  it('the wizard at-wills keep their arcane look', () => {
+    const roller = createDiceRoller(9);
+    const wizard = buildPlayerCharacter(presetCreationInput('wizard'));
+    const init = createCombat({ roller, character: wizard, monsters: [{ def: getMonster('goblin') }] });
+    const mid = monsterId(init.state);
+    const fb = applyPlannedAction(
+      { roller, state: init.state, character: init.character },
+      { kind: 'cast', spellId: 'fire-bolt', targetId: mid },
+    );
+    expect(fb.state.spellEffectEvent?.kind).toBe('spell-bolt');
+    const mm = applyPlannedAction(
+      { roller, state: init.state, character: init.character },
+      { kind: 'cast', spellId: 'magic-missile', targetId: mid },
+    );
+    expect(mm.state.spellEffectEvent?.kind).toBe('magic-missile');
   });
 });

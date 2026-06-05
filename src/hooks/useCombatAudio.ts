@@ -18,6 +18,10 @@ const SPELL_EFFECT_SFX: Partial<Record<SpellEffectKind, SfxId>> = {
   // / spell-fork / spell-drain) are deliberately absent — they resolve by
   // `element` below so a fire bolt cracks, a cold blast chimes, a fork zaps.
   'magic-missile': 'spell_arcane',
+  // Druid at-wills: their own nature look, but lean on the existing fire/arcane
+  // cues so the cast still sounds right (no bespoke nature SFX in the bank).
+  'nature-flame': 'spell_fire',
+  'thorn-lash': 'spell_arcane',
   'misty-step': 'spell_arcane',
   'mage-armor': 'spell_arcane',
   'burning-hands': 'spell_fire',

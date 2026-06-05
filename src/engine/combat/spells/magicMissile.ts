@@ -1,5 +1,6 @@
 import type { Character } from '../../../types/character';
 import type { CombatState } from '../../../types/combat';
+import { getSpell } from '../../../content/spells';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
 import {
@@ -26,19 +27,28 @@ export function magicMissileDartCount(level: number): number {
 }
 
 export function castMagicMissile(ctx: CastSpellContext): CastResult {
-  const { character, state, roller } = ctx;
+  const { character, state, roller, spellId } = ctx;
   let nextCharacter: Character = character;
   const targetId = ctx.targetId ?? firstLiveMonsterId(state);
   if (!targetId) return { state, character: nextCharacter, cast: false };
   const target = findMonster(state, targetId);
   if (!target) return { state, character: nextCharacter, cast: false };
 
+  // The Druid's Thornlash shares this auto-hit machinery but throws heavier
+  // barbed thorns (1d6+1) than the wizard's force darts (1d4+1) — a deliberate
+  // step up so the L1 slot clearly beats the at-will Produce Flame (the cantrip
+  // was reading ~ the slot, so the slot wasn't worth spending). Same dart COUNT
+  // and the same guaranteed minimum (1+1 per dart), so the bot's reads hold; the
+  // wizard's Magic Missile is untouched.
+  const isDruid = getSpell(spellId).book === 'druid';
+  const die = isDruid ? 6 : 4;
+
   nextCharacter = consumeSlot(nextCharacter, 1);
   const darts = magicMissileDartCount(nextCharacter.level);
   const rolls: number[] = [];
   let total = 0;
   for (let i = 0; i < darts; i++) {
-    const r = roller.roll({ count: 1, die: 4, modifier: 1 });
+    const r = roller.roll({ count: 1, die, modifier: 1 });
     rolls.push(r.total);
     total += r.total;
   }
@@ -57,14 +67,14 @@ export function castMagicMissile(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} casts Magic Missile. ${darts} darts streak at ${target.instance.displayName} — ${rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${total} force, auto-hit.`,
+      text: `${nextCharacter.name} casts ${getSpell(spellId).name}. ${darts} ${isDruid ? 'thorns lash' : 'darts streak'} at ${target.instance.displayName} — ${rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${total} force, auto-hit.`,
     },
   );
 
   const damaged = applyDamage(nextState, targetId, total, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;
-  nextState = attachSpellEffect(nextState, 'magic-missile', 'player', targetId);
+  nextState = attachSpellEffect(nextState, isDruid ? 'thorn-lash' : 'magic-missile', 'player', targetId);
   nextCharacter = markActionUsed(nextCharacter);
   const ended = evaluateCombatEndFull(nextState, nextCharacter);
   return { state: ended.state, character: ended.character, cast: true };

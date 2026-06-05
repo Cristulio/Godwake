@@ -19,11 +19,17 @@ export const WILD_SHAPE_ROUNDS = 5;
 /**
  * The beast's vitality, granted as temporary HP on the change. Scales with the
  * druid's level (the form grows with the soul). Circle of the Moon wears the
- * larger, sturdier predators — a deeper cushion that doubles its level scaling.
+ * larger, sturdier predators — a deeper base cushion and a steeper level climb.
+ *
+ * The cushion is intentionally generous (a real power spike for the turns the
+ * form is up, not a token 1-2 hits): a base druid opens the form with a band of
+ * temp HP that buys it a couple of front-line exchanges and grows meaningfully
+ * across the climb. Magnitudes are CONSERVATIVE-but-worthwhile and provisional —
+ * the caster/druid sim pass calibrates them against the band.
  */
 export function wildShapeTempHp(character: Readonly<Character>): number {
   const moon = characterHasMechanic(character, 'circle-of-the-moon');
-  return (moon ? 6 : 3) + character.level * (moon ? 2 : 1);
+  return (moon ? 8 : 4) + character.level * (moon ? 3 : 2);
 }
 
 /** Wild Shape uses per combat — 1 base, +1 for Circle of the Moon, +1 for the

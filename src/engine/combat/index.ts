@@ -7,6 +7,7 @@ export * from './martialResource';
 export * from './cunningAction';
 export * from './rage';
 export * from './monk';
+export * from './wildShape';
 export * from './huntersMark';
 export * from './vfx';
 export * from './spells';

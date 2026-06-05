@@ -161,6 +161,12 @@ export function SpellEffect({ kind, origin, target, element, onDone }: SpellEffe
       return <RegrowthEffect origin={origin} onDone={onDone} />;
     case 'summon-beast':
       return <SummonBeastEffect target={target} onDone={onDone} />;
+    // The Druid's at-will damage spells: a nature look distinct from the
+    // wizard's arcane Fire Bolt / Magic Missile (which they share engine-side).
+    case 'nature-flame':
+      return <NatureFlameEffect origin={origin} target={target} onDone={onDone} />;
+    case 'thorn-lash':
+      return <ThornLashEffect origin={origin} target={target} onDone={onDone} />;
     default:
       return null;
   }
@@ -2610,6 +2616,265 @@ function BeastForm() {
         <path d="M -34 -24 L 30 30" />
         <path d="M -22 -30 L 40 22" />
         <path d="M -10 -34 L 48 16" />
+      </g>
+    </svg>
+  );
+}
+
+// ============================================================================
+// === druid at-will VFX === Produce Flame + Thornlash reuse the wizard's cast
+// handlers (fire-bolt / magic-missile) but route to these bespoke NATURE looks
+// so they never read as arcane. Both ride the reduced-motion-aware shared
+// animation classes (.animate-firebolt-arc / .animate-spell-bloom), which the
+// prefers-reduced-motion block already settles in place.
+// ============================================================================
+
+// A wild flame is amber-hot at the core but green at the root — the wild's own
+// fire, never the wizard's clean evocation bolt.
+const NATURE_FLAME_PALETTE: ElementPalette = {
+  core: '#fff3c0',
+  mid: '#ff9a3a',
+  deep: '#2f5d1c',
+  glow: 'rgba(255,154,58,0.85)',
+  accent: '#9ed85a',
+};
+
+// Living bramble — leaf-green shaft, paler barbs, dark-loam shadow.
+const THORN_PALETTE: ElementPalette = {
+  core: '#eaffc8',
+  mid: '#6fae33',
+  deep: '#243d10',
+  glow: 'rgba(110,174,51,0.85)',
+  accent: '#b6e06a',
+};
+
+// ---------- Druid: Produce Flame (nature-flame) ----------
+
+function NatureFlameEffect({ origin, target, onDone }: ArcProps) {
+  useDoneTimer(880, onDone);
+  const pal = NATURE_FLAME_PALETTE;
+  const dx = target.x - origin.x;
+  const dy = target.y - origin.y;
+  const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+  const trail = [60, 130, 200];
+  return (
+    <>
+      {trail.map((delay, i) => (
+        <div
+          key={`nf-trail-${i}`}
+          className="absolute animate-firebolt-arc"
+          style={
+            {
+              left: origin.x,
+              top: origin.y,
+              width: 0,
+              height: 0,
+              opacity: 0.5 - i * 0.12,
+              ['--dx' as string]: `${dx}px`,
+              ['--dy' as string]: `${dy}px`,
+              animationDelay: `-${delay}ms`,
+            } as React.CSSProperties
+          }
+        >
+          <FlameEmber pal={pal} />
+        </div>
+      ))}
+      <div
+        className="absolute animate-firebolt-arc"
+        style={
+          {
+            left: origin.x,
+            top: origin.y,
+            width: 0,
+            height: 0,
+            ['--dx' as string]: `${dx}px`,
+            ['--dy' as string]: `${dy}px`,
+          } as React.CSSProperties
+        }
+      >
+        <LeafFlameHead pal={pal} angle={angle} />
+      </div>
+      <div
+        className="absolute animate-spell-bloom"
+        style={{ left: target.x, top: target.y, width: 0, height: 0, animationDelay: '300ms', opacity: 0 }}
+      >
+        <FlameScorch pal={pal} />
+      </div>
+    </>
+  );
+}
+
+function LeafFlameHead({ pal, angle }: { pal: ElementPalette; angle: number }) {
+  return (
+    <svg
+      width="56"
+      height="56"
+      viewBox="-28 -28 56 56"
+      style={{ position: 'absolute', left: -28, top: -28, overflow: 'visible', filter: `drop-shadow(0 0 6px ${pal.glow})` }}
+    >
+      <defs>
+        <radialGradient id="godwake-nf-core" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor={pal.core} stopOpacity="1" />
+          <stop offset="42%" stopColor={pal.mid} stopOpacity="1" />
+          <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Organic flame tongues — leaf flickers trailing, a hot lick forward. */}
+      <g transform={`rotate(${angle})`}>
+        <g fill={pal.accent} opacity="0.8">
+          <path d="M -14 -4 Q -28 -10 -18 -14 Q -12 -9 -14 -4 Z" />
+          <path d="M -16 6 Q -30 10 -19 15 Q -12 9 -16 6 Z" />
+        </g>
+        <path d="M 6 0 Q 22 -10 26 0 Q 22 10 6 0 Z" fill={pal.mid} opacity="0.85" />
+      </g>
+      <circle cx="0" cy="0" r="17" fill="url(#godwake-nf-core)" />
+      <circle cx="-2" cy="-2" r="6" fill={pal.core} opacity="0.92" />
+    </svg>
+  );
+}
+
+function FlameEmber({ pal }: { pal: ElementPalette }) {
+  return (
+    <svg
+      width="26"
+      height="26"
+      viewBox="-13 -13 26 26"
+      style={{ position: 'absolute', left: -13, top: -13, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="godwake-nf-trail" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor={pal.accent} stopOpacity="0.9" />
+          <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="11" fill="url(#godwake-nf-trail)" />
+    </svg>
+  );
+}
+
+function FlameScorch({ pal }: { pal: ElementPalette }) {
+  return (
+    <svg
+      width="80"
+      height="80"
+      viewBox="-40 -40 80 80"
+      style={{ position: 'absolute', left: -40, top: -40, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="godwake-nf-scorch" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor={pal.core} stopOpacity="0.95" />
+          <stop offset="40%" stopColor={pal.mid} stopOpacity="0.6" />
+          <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="28" fill="url(#godwake-nf-scorch)" />
+      <g fill={pal.accent} opacity="0.85">
+        <path d="M 0 -22 Q 6 -30 12 -22 Q 6 -18 0 -22 Z" />
+        <path d="M -20 6 Q -28 12 -20 18 Q -16 11 -20 6 Z" />
+        <path d="M 16 10 Q 26 12 24 20 Q 18 16 16 10 Z" />
+      </g>
+    </svg>
+  );
+}
+
+// ---------- Druid: Thornlash (thorn-lash) ----------
+
+function ThornLashEffect({ origin, target, onDone }: ArcProps) {
+  useDoneTimer(1100, onDone);
+  const pal = THORN_PALETTE;
+  const lashes = [0, 110, 220];
+  const targetOffsets = [-12, 2, 14];
+  return (
+    <>
+      {lashes.map((delay, i) => {
+        const tY = target.y + targetOffsets[i];
+        const dx = target.x - origin.x;
+        const dy = tY - origin.y;
+        const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+        return (
+          <div key={`lash-${i}`}>
+            <div
+              className="absolute animate-firebolt-arc"
+              style={
+                {
+                  left: origin.x,
+                  top: origin.y,
+                  width: 0,
+                  height: 0,
+                  ['--dx' as string]: `${dx}px`,
+                  ['--dy' as string]: `${dy}px`,
+                  animationDelay: `${delay}ms`,
+                } as React.CSSProperties
+              }
+            >
+              <ThornBarb pal={pal} angle={angle} />
+            </div>
+            <div
+              className="absolute animate-spell-bloom"
+              style={{ left: target.x, top: tY, width: 0, height: 0, animationDelay: `${delay + 320}ms`, opacity: 0 }}
+            >
+              <ThornBurst pal={pal} />
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+function ThornBarb({ pal, angle }: { pal: ElementPalette; angle: number }) {
+  return (
+    <svg
+      width="56"
+      height="32"
+      viewBox="-28 -16 56 32"
+      style={{ position: 'absolute', left: -28, top: -16, overflow: 'visible', filter: `drop-shadow(0 0 5px ${pal.glow})` }}
+    >
+      <defs>
+        <linearGradient id="godwake-thorn-vine" x1="0" y1="0.5" x2="1" y2="0.5">
+          <stop offset="0%" stopColor={pal.deep} stopOpacity="0" />
+          <stop offset="60%" stopColor={pal.mid} stopOpacity="0.95" />
+          <stop offset="100%" stopColor={pal.core} stopOpacity="1" />
+        </linearGradient>
+      </defs>
+      <g transform={`rotate(${angle})`}>
+        {/* Whipping vine shaft. */}
+        <path d="M -24 0 Q -4 -3 22 0 Q -4 3 -24 0 Z" fill="url(#godwake-thorn-vine)" />
+        {/* Barbs raking off the shaft. */}
+        <g fill={pal.accent} opacity="0.95">
+          <path d="M -6 -2 L -12 -9 L -2 -3 Z" />
+          <path d="M 4 2 L 0 11 L 9 3 Z" />
+          <path d="M 12 -1 L 10 -9 L 17 -2 Z" />
+        </g>
+        {/* Sharp tip. */}
+        <path d="M 18 0 L 27 -3 L 27 3 Z" fill={pal.core} />
+      </g>
+    </svg>
+  );
+}
+
+function ThornBurst({ pal }: { pal: ElementPalette }) {
+  return (
+    <svg
+      width="64"
+      height="64"
+      viewBox="-32 -32 64 64"
+      style={{ position: 'absolute', left: -32, top: -32, overflow: 'visible' }}
+    >
+      <defs>
+        <radialGradient id="godwake-thorn-burst" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor={pal.core} stopOpacity="0.95" />
+          <stop offset="45%" stopColor={pal.mid} stopOpacity="0.5" />
+          <stop offset="100%" stopColor={pal.deep} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="0" cy="0" r="22" fill="url(#godwake-thorn-burst)" />
+      {/* Radiating thorn spikes. */}
+      <g stroke={pal.accent} strokeWidth="1.6" strokeLinecap="round" opacity="0.85">
+        {[0, 60, 120, 180, 240, 300].map((a) => {
+          const r = (a * Math.PI) / 180;
+          return <line key={a} x1={Math.cos(r) * 8} y1={Math.sin(r) * 8} x2={Math.cos(r) * 20} y2={Math.sin(r) * 20} />;
+        })}
       </g>
     </svg>
   );

@@ -245,14 +245,19 @@ export const SICKLE: Weapon = WeaponSchema.parse({
 // pools, which draw from explicit id lists). Resolved only when the engine swaps
 // the druid's attack to its beast profile. Finesse so the claw rides the druid's
 // DEX rather than its dumped STR; affinity grants the matched-weapon edge.
+// The claw is the beast form's whole offense, so it must out-bite the sickle the
+// druid drops to wear it — a 1d8+1 rend (vs the simple 1d6 sickle) makes Wild
+// Shape a real front-line spike rather than a sidegrade. Conservative; the sim
+// calibrates against the druid band.
 export const BEAST_CLAWS: Weapon = WeaponSchema.parse({
   id: 'beast-claws',
   kind: 'weapon',
   name: 'Beast Claws',
   affinity: 'druid',
   attackMod: 1,
+  damageMod: 1,
   category: 'simple',
-  damage: '1d6',
+  damage: '1d8',
   damageType: 'slashing',
   properties: ['finesse', 'light'],
   cost: 0,
@@ -266,9 +271,9 @@ export const DIRE_CLAWS: Weapon = WeaponSchema.parse({
   name: 'Dire Claws',
   affinity: 'druid',
   attackMod: 1,
-  damageMod: 2,
+  damageMod: 3,
   category: 'martial',
-  damage: '1d8',
+  damage: '1d10',
   damageType: 'slashing',
   properties: ['finesse'],
   cost: 0,

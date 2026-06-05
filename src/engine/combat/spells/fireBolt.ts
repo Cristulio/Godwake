@@ -48,6 +48,11 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
   const fullDamage = scaledDice + bonus;
   const dealt = saved ? Math.floor(fullDamage / 2) : fullDamage;
 
+  // The Druid's Produce Flame shares this cantrip handler but wears a wilder,
+  // leaf-edged flame VFX (its own kind), so it never reads as the wizard's clean
+  // arcane bolt. Damage is identical to Fire Bolt — only the look diverges.
+  const isDruid = getSpell(ctx.spellId).book === 'druid';
+
   const damageBreakdown = `${scaledDice}${bonus > 0 ? `+${bonus}` : ''}`;
   const logs: CombatLogEntry[] = [
     {
@@ -68,7 +73,9 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
     },
     ...logs,
   );
-  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
+  nextState = isDruid
+    ? attachSpellEffect(nextState, 'nature-flame', 'player', targetId)
+    : attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
 
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
