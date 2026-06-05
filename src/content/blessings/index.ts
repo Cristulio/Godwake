@@ -162,15 +162,6 @@ const POOL: Blessing[] = [
   }),
   // --- v2 pool: relic-style conditional / scaling / synergy blessings ---
   BlessingSchema.parse({
-    id: 'lathanders-ascendance',
-    name: "Lathander's Ascendance",
-    god: 'lathander',
-    flavor: 'Each dawn you survive leaves more light in you than the last. The deeper you go, the brighter you burn.',
-    effect:
-      'At the start of each combat, gain temporary HP equal to your current delve level.',
-    modifiers: { tempHpPerDelveLevel: 1 },
-  }),
-  BlessingSchema.parse({
     id: 'silvanus-renewal',
     name: "Silvanus's Renewal",
     god: 'silvanus',
@@ -364,8 +355,8 @@ const POOL: Blessing[] = [
     name: "Silvanus's Communion",
     god: 'silvanus',
     flavor: 'The deeper you root into the dark, the more the wild pours into you. The descent itself becomes your armour.',
-    effect: 'At the start of each combat, gain temporary HP equal to twice your current delve level.',
-    modifiers: { tempHpPerDelveLevel: 2 },
+    effect: 'At the start of each combat, gain temporary HP equal to your current delve level.',
+    modifiers: { tempHpPerDelveLevel: 1 },
   }),
 ];
 
