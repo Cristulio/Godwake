@@ -4,7 +4,7 @@ import type { Character } from '../types/character';
 import type { CombatState } from '../types/combat';
 import type { DelveState, RoomSpec } from '../types/delve';
 import type { Postmortem } from '../types/postmortem';
-import { setActiveRoller } from '../engine/dice';
+import { setActiveRoller, setActiveRollerFromState, getActiveRoller } from '../engine/dice';
 import {
   buildPlayerCharacter,
   presetCreationInput,
@@ -78,6 +78,7 @@ function locationLabel(screen: Screen): string {
     case 'level-up':
       return 'Forge of Worlds';
     case 'delve':
+    case 'spoils':
       return 'In delve';
     case 'reincarnation':
       return 'Between lives';
@@ -290,6 +291,13 @@ interface PersistedSnapshot {
   screen: Screen;
   saveSeed: string | null;
   character: Character | null;
+  /** Active run state — session data that now survives a reload (resume in-run). */
+  delve: DelveState | null;
+  lastLoot: LootSummary | null;
+  purchasedShopKeys: Record<string, string[]>;
+  combat: CombatState | null;
+  /** Serialized PRNG cursor so a resumed run continues the exact dice sequence. */
+  rollerState?: number;
   introSeen: boolean;
   hasReincarnated: boolean;
   deathCount: number;
@@ -329,19 +337,25 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
   const ch = useCharacterStore.getState();
   const screen = useScreenStore.getState();
   const meta = useMetaStore.getState();
+  const delveSlice = useDelveStore.getState();
+  // `reincarnation`/`ending` are end-of-run transient lore screens: the run is
+  // already over and meta is recorded, so replaying them on load is wrong —
+  // coerce those to `hub`. `delve`/`spoils`/`level-up` are preserved so a reload
+  // resumes mid-run.
   const screenForSave =
     screenOverride ??
-    (screen.screen === 'delve' ||
-    screen.screen === 'spoils' ||
-    screen.screen === 'reincarnation' ||
-    screen.screen === 'ending' ||
-    screen.screen === 'level-up'
+    (screen.screen === 'reincarnation' || screen.screen === 'ending'
       ? 'hub'
       : screen.screen);
   return {
     screen: screenForSave,
     saveSeed: ch.saveSeed,
     character: ch.character,
+    delve: delveSlice.delve,
+    lastLoot: delveSlice.lastLoot,
+    purchasedShopKeys: delveSlice.purchasedShopKeys,
+    combat: useCombatStore.getState().combat,
+    rollerState: getActiveRoller().serialize().state,
     introSeen: screen.introSeen,
     hasReincarnated: meta.hasReincarnated,
     deathCount: meta.deathCount,
@@ -379,10 +393,32 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
   };
 }
 
+/** Structural guard: a delve worth resuming has rooms and a valid cursor. */
+function isValidDelve(d: DelveState | null | undefined): d is DelveState {
+  if (!d || typeof d !== 'object') return false;
+  return (
+    Array.isArray(d.rooms) &&
+    d.rooms.length > 0 &&
+    typeof d.currentRoomIdx === 'number' &&
+    typeof d.phase === 'string'
+  );
+}
+
+/** Structural guard: a resumable combat has combatants, a turn order, and a player. */
+function isValidCombat(c: CombatState | null | undefined): c is CombatState {
+  if (!c || typeof c !== 'object') return false;
+  return (
+    Array.isArray(c.combatants) &&
+    Array.isArray(c.turnOrder) &&
+    c.turnOrder.length > 0 &&
+    c.combatants.some((cb) => cb && cb.kind === 'player')
+  );
+}
+
 /** Apply a (post-migration) snapshot to the focused stores. */
 function scatterSnapshot(s: PersistedSnapshot) {
   // Settings/audio stores have their own persistence and are not touched by
-  // slot loads. Combat/delve are session-only — always reset.
+  // slot loads.
   useCharacterStore.setState({
     character: s.character ?? null,
     saveSeed: s.saveSeed ?? null,
@@ -460,8 +496,48 @@ function scatterSnapshot(s: PersistedSnapshot) {
         ? s.selectedAscension
         : 0,
   });
+  // Restore the active run. Old/hub saves carry no run → null at the hub. A
+  // structurally broken or incoherent run snapshot (combat with no delve or
+  // character underneath, a run screen with no delve) falls back to a clean hub
+  // rather than white-screening on resume.
+  let restoredDelve: DelveState | null = null;
+  let restoredCombat: CombatState | null = null;
+  let restoredLastLoot: LootSummary | null = null;
+  let restoredShopKeys: Record<string, string[]> = {};
+  let restoredScreen: Screen = (s.screen ?? 'hub') as Screen;
+  try {
+    const delve = isValidDelve(s.delve) ? s.delve : null;
+    const combat = isValidCombat(s.combat) ? s.combat : null;
+    if (combat && (!delve || !s.character)) {
+      throw new Error('combat with no active run');
+    }
+    if (
+      !delve &&
+      (restoredScreen === 'delve' ||
+        restoredScreen === 'spoils' ||
+        restoredScreen === 'level-up')
+    ) {
+      restoredScreen = 'hub';
+    }
+    restoredDelve = delve;
+    restoredCombat = combat;
+    restoredLastLoot = s.lastLoot && typeof s.lastLoot === 'object' ? s.lastLoot : null;
+    restoredShopKeys =
+      s.purchasedShopKeys &&
+      typeof s.purchasedShopKeys === 'object' &&
+      !Array.isArray(s.purchasedShopKeys)
+        ? s.purchasedShopKeys
+        : {};
+  } catch {
+    restoredDelve = null;
+    restoredCombat = null;
+    restoredLastLoot = null;
+    restoredShopKeys = {};
+    restoredScreen = 'hub';
+  }
+
   useScreenStore.setState({
-    screen: (s.screen ?? 'hub') as Screen,
+    screen: restoredScreen,
     introSeen: !!s.introSeen,
     quirksTutorialSeen: !!s.quirksTutorialSeen,
     newGamePlusFlow: false,
@@ -471,9 +547,20 @@ function scatterSnapshot(s: PersistedSnapshot) {
     pendingDescent: false,
     postmortem: null,
   });
-  useDelveStore.setState({ delve: null });
-  useCombatStore.setState({ combat: null });
-  if (s.saveSeed) setActiveRoller(s.saveSeed);
+  useDelveStore.setState({
+    delve: restoredDelve,
+    lastLoot: restoredLastLoot,
+    purchasedShopKeys: restoredShopKeys,
+    pendingSpoilsRoom: null,
+  });
+  useCombatStore.setState({ combat: restoredCombat });
+  // Resume the exact dice cursor when present (no replay/exploit on the resumed
+  // run); old saves with no cursor re-seed from saveSeed.
+  if (typeof s.rollerState === 'number') {
+    setActiveRollerFromState({ state: s.rollerState });
+  } else if (s.saveSeed) {
+    setActiveRoller(s.saveSeed);
+  }
   // Re-bake the equipped-legendary effect payloads onto the loaded character
   // (and drop any off-class relics the current class can't equip). Idempotent
   // for current saves; for pre-v10 saves it converts the stripped stat field to
