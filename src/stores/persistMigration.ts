@@ -85,8 +85,14 @@ import type { RelicSlot } from '../content/legendaries';
  *             `activeLegendaries` list is dropped; `equippedRelics` (a per-slot
  *             map, default {}) replaces it. No back-port — owned relics are kept,
  *             but the player re-equips them into slots at the hub.
+ *  v18 → v19: In-progress runs now survive a reload. The session-only run fields
+ *             (`delve`, `lastLoot`, `purchasedShopKeys`, `combat`) plus the PRNG
+ *             cursor (`rollerState`) join the snapshot, and `delve`/`spoils`/
+ *             `level-up` screens are no longer coerced to `hub` on save. All new
+ *             fields are additive/optional — a veteran's hub save (none of them
+ *             present) loads to the hub with no active run, roller from saveSeed.
  */
-export const SAVE_VERSION = 18;
+export const SAVE_VERSION = 19;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
