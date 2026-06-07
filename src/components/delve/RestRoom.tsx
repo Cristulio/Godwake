@@ -5,6 +5,7 @@ import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { useMetaStore } from '../../stores/metaStore';
 import { shortRestHeal } from '../../engine/character/actions';
+import { useT } from '../../i18n/useT';
 
 interface RestRoomProps {
   room: RoomSpec;
@@ -12,6 +13,7 @@ interface RestRoomProps {
 }
 
 export function RestRoom({ room, onContinue }: RestRoomProps) {
+  const { t } = useT();
   const character = useGameStore((s) => s.character);
   const setCharacter = useGameStore((s) => s.setCharacter);
   const showTaunt = useGameStore((s) => s.showTaunt);
@@ -49,7 +51,7 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
           {room.title.toUpperCase()}
         </h1>
         <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-          Rest · Short
+          {t('delve.rest.label')}
         </p>
       </header>
 
@@ -60,11 +62,10 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
             {room.flavorText}
           </p>
           <p className="text-[var(--color-text-dim)] text-xs italic text-center max-w-md">
-            The wound knits deep, but not whole — true healing waits for the
-            fire at the chapter's edge.
+            {t('delve.rest.knits')}
           </p>
           <div className="text-xs uppercase tracking-widest text-[var(--color-text-dim)]">
-            HP {character.hp.current}/{character.hp.max}
+            {t('delve.common.hpStat', { current: character.hp.current, max: character.hp.max })}
           </div>
         </div>
       </Panel>
@@ -72,15 +73,15 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
       <div className="flex gap-3 justify-center">
         {!rested ? (
           <Button variant="primary" onClick={handleShortRest}>
-            Rest (heal 70%, refresh resources)
+            {t('delve.rest.restButton')}
           </Button>
         ) : (
           <div className="text-[var(--color-status-poison)] text-sm uppercase tracking-widest animate-fade-in">
-            You feel steadied.
+            {t('delve.rest.steadied')}
           </div>
         )}
         <Button variant={rested ? 'primary' : 'secondary'} onClick={onContinue}>
-          Continue Deeper →
+          {t('delve.common.continueDeeper')}
         </Button>
       </div>
     </div>

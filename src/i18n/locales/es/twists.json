@@ -1,0 +1,22 @@
+{
+  "cursed-ground": {
+    "name": "Suelo Maldito",
+    "flavorText": "La piedra aquí está sembrada de odio antiguo — bebe hondo de quien primero la pisa, y luego pierde su sed."
+  },
+  "gloom": {
+    "name": "Penumbra",
+    "flavorText": "Una espesa oscuridad cuelga en esta sala a la que el ojo nunca acaba de acostumbrarse. El primer golpe falla, y los que nunca ves cortan más hondo."
+  },
+  "bloodscent": {
+    "name": "Olor a Sangre",
+    "flavorText": "Algo en el aire ha enardecido a las criaturas de aquí. Golpean para matar."
+  },
+  "sealed-wards": {
+    "name": "Guardas Selladas",
+    "flavorText": "Viejas guardas sellan esta cámara contra lo divino. Ningún dios puede alcanzarte mientras estés en ella."
+  },
+  "quickening": {
+    "name": "Aceleración",
+    "flavorText": "El tiempo corre torcido aquí. Los moradores se mueven primero, y más rápido de lo que tienen derecho."
+  }
+}

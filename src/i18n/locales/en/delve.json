@@ -1,0 +1,209 @@
+{
+  "common": {
+    "continueDeeper": "Continue Deeper →",
+    "pressOn": "Press On →",
+    "openPack": "◆ Open Pack",
+    "gold": "◈ Gold",
+    "goldInPocketTitle": "Gold in pocket",
+    "hpStat": "HP {current}/{max}"
+  },
+  "header": {
+    "chapter": "Chapter {n}",
+    "chapterNamed": "Chapter {n} — {title}",
+    "soulLedger": "◆ Soul Ledger",
+    "soulLedgerTitle": "Show all active quirks and blessings",
+    "ledgerTitle": "◆ The Soul's Ledger",
+    "ledgerSub": "Quirks are scars of the soul — they survive the wheel. Blessings belong to the body and end with it.",
+    "close": "✕ Close",
+    "closeTitle": "Close (Esc)",
+    "quirks": "◉ Quirks",
+    "quirkMarks": {
+      "one": "· {n} mark on the soul",
+      "other": "· {n} marks on the soul"
+    },
+    "blessings": "◇ Blessings",
+    "blessingGifts": {
+      "one": "· {n} gift for the road",
+      "other": "· {n} gifts for the road"
+    }
+  },
+  "rest": {
+    "label": "Rest · Short",
+    "knits": "The wound knits deep, but not whole — true healing waits for the fire at the chapter's edge.",
+    "restButton": "Rest (heal 70%, refresh resources)",
+    "steadied": "You feel steadied."
+  },
+  "shrine": {
+    "label": "Shrine · A god is listening",
+    "chooseBlessing": "► Choose a blessing",
+    "leave": "Leave the altar untouched",
+    "accepts": "◆ The god accepts the bargain",
+    "walkingDeeper": "walking deeper..."
+  },
+  "treasure": {
+    "label": "Treasure",
+    "gold": "+{n} gold",
+    "bargain": "· bargain hunter"
+  },
+  "elite": {
+    "title": "An Elite Bars the Way",
+    "genericName": "An elite foe",
+    "intro": "{name} holds this ground — scarred, deadly, and guarding something the dark does not give up lightly. You can take it on, or take the coin it watches over and slip past.",
+    "fightHead": "⚔ Fight the elite",
+    "fightBodyA": "Risk the harder battle. A victory yields",
+    "fightBodyLoot": "XP + gold + loot",
+    "fightBodyB": ", and may add a",
+    "fightBodyRelic": "legendary relic",
+    "fightBodyC": "to the reliquary.",
+    "fightButton": "⚔ Face it",
+    "goldHead": "◆ Take the gold",
+    "goldBodyA": "Slip past with the coin it guards",
+    "goldBounty": "{n} gold",
+    "goldBodyB": ". The guardian's blade still finds you on the way out — a wound that cuts deeper the more life you carry,",
+    "goldLoseHp": "lose {n} HP",
+    "goldLoseHpUnknown": "lose HP",
+    "goldBodyC": "entering the next room. No XP, no loot, no relic.",
+    "goldButton": "◆ Take it and go"
+  },
+  "camp": {
+    "label": "Camp · A pause on the long road · The deeper dark ahead",
+    "goldTitle": "Gold in pocket — what you can spend at the caravan",
+    "forkIntro": "◆ The campfire — take one, the other two close ◆",
+    "fork": {
+      "passed": "The moment has passed.",
+      "nevermind": "Never mind ✕"
+    },
+    "rest": {
+      "title": "Make Camp at the Fire",
+      "flavor": "A full night by the coals. Wounds close, dice come home to the hand, and what was spent is yours again before dawn.",
+      "button": "Make camp",
+      "taken": "Full rest — HP restored, all resources readied."
+    },
+    "attune": {
+      "title": "Attune by the Coals",
+      "flavor": "A long study of what you carry. Bind one lasting boon into yourself — it holds for the rest of this delve.",
+      "button": "Choose the rite ↓",
+      "noRite": "No rite to attune",
+      "taken": "{name} — attuned. {description}",
+      "panelTitle": "◆ Attune one boon · Camp {tier}",
+      "panelBody": "The road has marked you. Bind one boon to carry south — this is the night's whole gift, so choose with the dark in mind."
+    },
+    "risk": {
+      "title": "Tempt the Dark",
+      "flavor": "Throw the bones into the fire and speak a name. Something out past the light is always listening — and it does not give for free.",
+      "button": "Throw the bones ↓",
+      "winBlessing": "{name} granted, and ",
+      "win": "The dark answered (rolled {roll}). {blessing}+{gold} gold.",
+      "loss": "The dark took its due (rolled {roll}). −{damage} HP.",
+      "panelTitle": "◆ Tempt the Dark",
+      "panelBody": "One throw of the bones. No fight, no flight — only the roll and what it brings.",
+      "highRoll": "11 or higher",
+      "highBody": " — the dark answers: a blessing's whisper and {gold} gold (or {altGold} gold if no blessing is left to give).",
+      "lowRoll": "10 or lower",
+      "lowBody": " — it takes its due: you lose {damage} HP (a quarter of your health), down to no less than 1.",
+      "throwButton": "Throw the bones"
+    },
+    "caravan": {
+      "title": "◆ The Caravan-Merchant",
+      "quote": "\"Coin in this pocket, comfort in the other. The road keeps going — best you're well-stocked before the dark.\"",
+      "open": "Step up to the caravan →",
+      "openPack": "◆ Open your pack"
+    },
+    "pressSouth": "Press on into the dark →",
+    "shop": {
+      "title": "The Caravan-Merchant",
+      "sub": "Coin and a charter, no questions asked.",
+      "close": "Close ×",
+      "arms": "Arms & Armour",
+      "reliquary": "✦ Reliquary",
+      "draughts": "Draughts & Charms",
+      "done": "Done trading →"
+    },
+    "msg": {
+      "added": "{name} added to your pack.",
+      "itemFallback": "Item",
+      "legendaryBound": "{name} bound to your reliquary — attune it at the hub.",
+      "cannotPurchase": "Cannot purchase."
+    }
+  },
+  "event": {
+    "label": "Event · The road pauses",
+    "inPocket": "in pocket",
+    "chooseRoad": "► Choose your road",
+    "sealed": "⚿ Sealed",
+    "sealedNote": "The signs are here, but the art of reading them is not yet yours. Descend deeper into the dark to learn it.",
+    "nothing": "Nothing of note here. The corridor goes on.",
+    "drawSteel": "Draw steel →",
+    "youChose": "you chose · {label}",
+    "success": "Success",
+    "failure": "Failure",
+    "dcBadge": "{skill} DC {dc} · {bonus}",
+    "checkTitle": "{skill} ({ability}) check — your bonus {bonus}{proficient}",
+    "proficientSuffix": ", proficient"
+  },
+  "wares": {
+    "restores": "Restores {dice} HP.",
+    "buy": "Buy",
+    "sold": "Sold",
+    "needMore": "Need {n} more",
+    "sell": "Sell",
+    "priceGp": "{n} gp",
+    "sellPriceGp": "+{n} gp",
+    "legendaryBanks": "Legendary · banks to your reliquary",
+    "relicFallback": "A relic that death cannot take.",
+    "bound": "Bound",
+    "acquire": "Acquire"
+  },
+  "screen": {
+    "noCharacter": "No character.",
+    "hub": "Hub",
+    "noDelve": "No active delve. Return to Phandalin.",
+    "returnToTown": "Return to Phandalin",
+    "preparing": "Preparing encounter...",
+    "bossPrefix": "Boss · ",
+    "elitePrefix": "Elite · ",
+    "round": "Round {n}"
+  },
+  "coach": {
+    "copy": "An Elite — a harder fight than the road around it, and richer for it. The choice to brave it is yours.",
+    "gotIt": "Got it",
+    "skip": "Skip",
+    "aria": "Elite node tutorial"
+  },
+  "campScene": {
+    "1": "A roadside fire under a dusk sky, the road bending south.",
+    "2": "A lamp on a coil of rope at the end of a jetty, the gilded towers of Athkatla across dark water, a smuggler's wherry tied alongside.",
+    "3": "A smokeless chemical-fire in a brass bowl lighting a smuggler's cache in an Underdark cavern, stalactites overhead.",
+    "4": "A cold fire on a rocky shelf at the edge of a rift, pale golden light rising from the crack in the floor ahead.",
+    "5": "A guttering fire at the rim of an immense Wheel in absolute void, a worn pilgrim offering a cup.",
+    "6": "A shuttered lamp at the lip of a stair that drops into cold salt-dark, a deep-salvager paying out sounding-rope toward a library drowned far below.",
+    "7": "A fire on the last wet stone where black water ends and an ashfield begins, a figure in the rags of an unknown uniform warming its hands as ash drifts down.",
+    "8": "A small fire on a cracked marble dance-floor among standing shards of mirror, a hooded figure watching a reflection whose masked face does not match.",
+    "9": "A low fire on the forest floor beneath a canopy burning orange overhead, embers drifting down, a fugitive elf seated with an unstrung bow across its knees.",
+    "10": "A pale soul-light guttering on a narrow ledge above a vast breathing pit in a red hell, words scratched into the rock beside it.",
+    "11": "A thin refugee fire on a ridge above a walled city ringed in flame and giants, smoke rising from Saradush burning below, huddled figures sharing the warmth.",
+    "12": "A watch-fire where the road forks toward two dark doors — a drow gate beneath a mountain on the left, a dragon's lair in the deep waste on the right — a Harper turning a blade in the light.",
+    "13": "A keeperless fire on a folded fragment of plane adrift in the void, a single dark door standing free behind it, an ally seated across the flame with eyes turned away.",
+    "14": "The empty Throne of Bhaal on a dark dais in the void, a thin bloodlight rising behind it, a low fire guttering at the foot of the steps."
+  },
+  "skill": {
+    "acrobatics": "Acrobatics",
+    "animal-handling": "Animal Handling",
+    "arcana": "Arcana",
+    "athletics": "Athletics",
+    "deception": "Deception",
+    "history": "History",
+    "insight": "Insight",
+    "intimidation": "Intimidation",
+    "investigation": "Investigation",
+    "medicine": "Medicine",
+    "nature": "Nature",
+    "perception": "Perception",
+    "performance": "Performance",
+    "persuasion": "Persuasion",
+    "religion": "Religion",
+    "sleight-of-hand": "Sleight of Hand",
+    "stealth": "Stealth",
+    "survival": "Survival"
+  }
+}

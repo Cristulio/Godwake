@@ -1,4 +1,9 @@
 import type { ReactElement } from 'react';
+import { useT } from '../../i18n/useT';
+
+interface SceneProps {
+  label: string;
+}
 
 /**
  * Chapter-keyed camp illustration. Each camp seam between two chapters sits in
@@ -16,7 +21,7 @@ import type { ReactElement } from 'react';
  * share a region band (5/6 the Godwake, 12/13 the war on the Five) still read
  * as distinct places.
  */
-const CAMP_SCENES: Record<number, () => ReactElement> = {
+const CAMP_SCENES: Record<number, (props: SceneProps) => ReactElement> = {
   1: RoadsideFireScene,
   2: HarbourLampScene,
   3: SmugglerFireScene,
@@ -34,20 +39,22 @@ const CAMP_SCENES: Record<number, () => ReactElement> = {
 };
 
 export function CampScene({ chapter }: { chapter: number | undefined }) {
-  const Scene = (chapter != null && CAMP_SCENES[chapter]) || RoadsideFireScene;
-  return <Scene />;
+  const { t } = useT();
+  const key = chapter != null && CAMP_SCENES[chapter] ? chapter : 1;
+  const Scene = CAMP_SCENES[key];
+  return <Scene label={t(`delve.campScene.${key}`)} />;
 }
 
 const SCENE_CLASS = 'w-full max-w-md drop-shadow-[0_0_18px_rgba(244,167,66,0.4)]';
 
 /** Camp 1 — a roadside fire on the Trade Way, the road bending south to Amn. */
-function RoadsideFireScene() {
+function RoadsideFireScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A roadside fire under a dusk sky, the road bending south."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="camp-fire-glow" cx="0.5" cy="0.65" r="0.6">
@@ -111,13 +118,13 @@ function RoadsideFireScene() {
 }
 
 /** Camp 2 — a harbour-lamp at the end of an Athkatla jetty, a wherry alongside. */
-function HarbourLampScene() {
+function HarbourLampScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A lamp on a coil of rope at the end of a jetty, the gilded towers of Athkatla across dark water, a smuggler's wherry tied alongside."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="harbour-lamp-glow" cx="0.5" cy="0.5" r="0.6">
@@ -212,13 +219,13 @@ function HarbourLampScene() {
 }
 
 /** Camp 3 — a smokeless chemical-fire in a brass bowl, deep in the Upperdark. */
-function SmugglerFireScene() {
+function SmugglerFireScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A smokeless chemical-fire in a brass bowl lighting a smuggler's cache in an Underdark cavern, stalactites overhead."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="under-fire-glow" cx="0.5" cy="0.6" r="0.6">
@@ -292,13 +299,13 @@ function SmugglerFireScene() {
  * from a rift in the floor ahead — dawn leaking through the floor of the world.
  * The fire throws no shadow toward the light.
  */
-function EdgeOfLightScene() {
+function EdgeOfLightScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A cold fire on a rocky shelf at the edge of a rift, pale golden light rising from the crack in the floor ahead."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="edge-void" cx="0.5" cy="0.45" r="0.7">
@@ -404,13 +411,13 @@ function EdgeOfLightScene() {
  * tends a guttering fire out of habit. Everything is worn smooth. The great
  * Wheel is barely visible as an arc in the absolute dark behind it all.
  */
-function StillnessBeforeWheelScene() {
+function StillnessBeforeWheelScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A guttering fire at the rim of an immense Wheel in absolute void, a worn pilgrim offering a cup."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="still-void" cx="0.5" cy="0.5" r="0.75">
@@ -493,13 +500,13 @@ function StillnessBeforeWheelScene() {
  * cold salt dark. A deep-salvager keeps a shuttered lamp and pays out
  * sounding-rope toward the drowned library far below. (Region band: the-godwake.)
  */
-function LongDescentScene() {
+function LongDescentScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A shuttered lamp at the lip of a stair that drops into cold salt-dark, a deep-salvager paying out sounding-rope toward a library drowned far below."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="descent-lamp-glow" cx="0.32" cy="0.62" r="0.55">
@@ -582,13 +589,13 @@ function LongDescentScene() {
  * last wet stone, the ashfield waiting ahead. (Region band: drowned-archive →
  * ashfall-march seam.)
  */
-function WaterEndsScene() {
+function WaterEndsScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A fire on the last wet stone where black water ends and an ashfield begins, a figure in the rags of an unknown uniform warming its hands as ash drifts down."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="ashend-fire-glow" cx="0.34" cy="0.62" r="0.55">
@@ -670,13 +677,13 @@ function WaterEndsScene() {
  * glass — and its reflection wears a mask that does not match. (Region band:
  * court-of-masks.)
  */
-function BrokenMirrorsScene() {
+function BrokenMirrorsScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A small fire on a cracked marble dance-floor among standing shards of mirror, a hooded figure watching a reflection whose masked face does not match."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="mirror-fire-glow" cx="0.5" cy="0.62" r="0.55">
@@ -760,13 +767,13 @@ function BrokenMirrorsScene() {
  * throws no light past its ring, an unstrung bow across its knees. (Region
  * band: suldanessellar.)
  */
-function BurningBoughsScene() {
+function BurningBoughsScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A low fire on the forest floor beneath a canopy burning orange overhead, embers drifting down, a fugitive elf seated with an unstrung bow across its knees."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="boughs-fire-glow" cx="0.36" cy="0.66" r="0.5">
@@ -850,13 +857,13 @@ function BurningBoughsScene() {
  * soul-light someone left burning, words scratched in the rock beside it.
  * (Region band: hell-trials.)
  */
-function ThresholdOfPitScene() {
+function ThresholdOfPitScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A pale soul-light guttering on a narrow ledge above a vast breathing pit in a red hell, words scratched into the rock beside it."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="pit-hell" cx="0.5" cy="0.2" r="0.95">
@@ -924,13 +931,13 @@ function ThresholdOfPitScene() {
  * giants — Saradush, burning — a refugee feeds a thin fire a broken chair-leg,
  * others huddled who fled the same gates. (Region band: saradush.)
  */
-function BurningSiegeScene() {
+function BurningSiegeScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A thin refugee fire on a ridge above a walled city ringed in flame and giants, smoke rising from Saradush burning below, huddled figures sharing the warmth."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="siege-fire-glow" cx="0.3" cy="0.62" r="0.55">
@@ -1021,13 +1028,13 @@ function BurningSiegeScene() {
  * between them, turning a blade in the light. (Region band: saradush — distinct
  * from Ch11 by the fork and the two lairs.)
  */
-function LastTwoDoorsScene() {
+function LastTwoDoorsScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A watch-fire where the road forks toward two dark doors — a drow gate beneath a mountain on the left, a dragon's lair in the deep waste on the right — a Harper turning a blade in the light."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="doors-fire-glow" cx="0.5" cy="0.64" r="0.5">
@@ -1112,13 +1119,13 @@ function LastTwoDoorsScene() {
  * it; and the only ally who came the whole way sits across the flame, eyes
  * turned away. (Region band: throne-of-bhaal seam.)
  */
-function PocketPlaneScene() {
+function PocketPlaneScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="A keeperless fire on a folded fragment of plane adrift in the void, a single dark door standing free behind it, an ally seated across the flame with eyes turned away."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="pocket-void" cx="0.5" cy="0.45" r="0.8">
@@ -1184,13 +1191,13 @@ function PocketPlaneScene() {
  * god on a dark dais, a thin bloodlight behind it, a low fire guttering at the
  * foot of the steps. (Region band: throne-of-bhaal.)
  */
-function ThroneOfBhaalScene() {
+function ThroneOfBhaalScene({ label }: SceneProps) {
   return (
     <svg
       viewBox="0 0 320 140"
       className={SCENE_CLASS}
       role="img"
-      aria-label="The empty Throne of Bhaal on a dark dais in the void, a thin bloodlight rising behind it, a low fire guttering at the foot of the steps."
+      aria-label={label}
     >
       <defs>
         <radialGradient id="throne-void" cx="0.5" cy="0.4" r="0.85">
