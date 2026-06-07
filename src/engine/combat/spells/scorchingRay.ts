@@ -1,5 +1,6 @@
 import type { Character } from '../../../types/character';
 import type { CombatState, CombatLogEntry } from '../../../types/combat';
+import { critRange } from '../../character/derived';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
 import {
@@ -39,6 +40,10 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
   const attackBonus = spellAttackBonus(nextCharacter);
   const ac = target.instance.ac;
   const rayCount = scorchingRayCount(nextCharacter.level);
+  // Crit gear (Keen weapon, "of the Predator" ring, Cloak of the Nightwind…)
+  // widens the spell-attack crit window too — a ray is an attack roll, so the
+  // same band the engine reads for weapons makes that loot matter to a caster.
+  const critRolls = critRange(nextCharacter);
 
   // Each ray is its own attack roll. Damage from hitting rays is summed and
   // applied once so a target that drops mid-volley doesn't desync the log.
@@ -54,7 +59,7 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
   let rayDamage = 0;
   for (let i = 0; i < rayCount; i++) {
     const toHit = roller.d20('normal', attackBonus);
-    const crit = toHit.rolls[0] === 20;
+    const crit = critRolls.includes(toHit.rolls[0]);
     const hit = crit || (toHit.total >= ac && !toHit.natural1);
     if (hit) {
       hits += 1;

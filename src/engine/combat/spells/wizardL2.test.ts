@@ -105,6 +105,25 @@ function monsterId(state: ReturnType<typeof createCombat>['state']): string {
   return state.combatants.find((c) => c.kind === 'monster')!.id;
 }
 
+/** Seat a crit affix ("of the Predator", +1 crit range) in a ring slot. */
+function withCritRing(c: Character): Character {
+  return {
+    ...c,
+    equipped: {
+      ...c.equipped,
+      ring1: {
+        itemId: 'silver-ring',
+        rolled: {
+          baseId: 'silver-ring',
+          rarity: 'green',
+          affixes: ['predators'],
+          name: 'Silver Ring of the Predator',
+        },
+      },
+    },
+  };
+}
+
 beforeEach(() => {
   _resetMonsterInstanceCounter();
   setActiveRoller('wizard-l2-test-seed');
@@ -148,6 +167,41 @@ describe('Scorching Ray — three independent attack rolls', () => {
     expect(missLine).toBeDefined();
     const dmgLine = result.state.log.find((l) => l.text.includes('2 of 3 rays'));
     expect(dmgLine?.text).toContain('12 fire');
+  });
+
+  it('crit gear widens the spell-attack crit window for a caster', () => {
+    const goblin = getMonster('goblin'); // AC 15, 7 HP
+    // A natural 19 is a plain hit by default, but a crit once a crit-range ring
+    // is equipped (the "of the Predator" affix any class can roll).
+    const plain = createCombat({
+      character: makeWizardL3Knowing('scorching-ray'),
+      monsters: [{ def: goblin }],
+    });
+    const plainRoller = makeScriptedRoller({ d20Faces: [19, 2, 2], damageRolls: [[6, 6]] });
+    const plainCast = castSpell({
+      roller: plainRoller,
+      character: plain.character,
+      state: plain.state,
+      spellId: 'scorching-ray',
+    });
+    const plainRay1 = plainCast.state.log.find((l) => l.text.startsWith('Ray 1'));
+    expect(plainRay1?.text).toContain('hit');
+    expect(plainRay1?.text).not.toContain('CRITICAL HIT');
+
+    const ringed = createCombat({
+      character: withCritRing(makeWizardL3Knowing('scorching-ray')),
+      monsters: [{ def: goblin }],
+    });
+    // Crit doubles the dice (4d6), so the ring's value is real, not cosmetic.
+    const ringRoller = makeScriptedRoller({ d20Faces: [19, 2, 2], damageRolls: [[6, 6, 6, 6]] });
+    const ringCast = castSpell({
+      roller: ringRoller,
+      character: ringed.character,
+      state: ringed.state,
+      spellId: 'scorching-ray',
+    });
+    const ringRay1 = ringCast.state.log.find((l) => l.text.startsWith('Ray 1'));
+    expect(ringRay1?.text).toContain('CRITICAL HIT');
   });
 });
 

@@ -704,9 +704,9 @@ export function playerAttack(
     const vfxKind = colossusFiredFlag ? 'colossus' : weaponVfxKind(w);
     nextState = attachCombatVfx(nextState, vfxKind, 'player', targetId);
 
-    // Lifesteal (VAMPIRIC accessory affix, Heartwood Talisman legendary, etc.):
-    // heal for a fraction of the damage dealt, capped at max HP. Rage shuts
-    // the valve — no healing of any kind while the fury burns.
+    // Lifesteal (Vampiric weapon affix, Leeching accessory, Heartwood Talisman
+    // legendary, etc.): heal for a fraction of the damage dealt, capped at max
+    // HP. Rage shuts the valve — no healing of any kind while the fury burns.
     if (
       affixMods.lifestealPct > 0 &&
       !isRaging(nextCharacter) &&
