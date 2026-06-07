@@ -19,29 +19,25 @@ import { ItemTooltip } from './ItemTooltip';
 import { TouchTooltip } from '../ui/TouchTooltip';
 import { GEAR_RARITY_COLOR } from './rarity';
 import { baseStatLine } from './itemDisplay';
+import { useT } from '../../i18n/useT';
 
 const DND_INV_MIME = 'application/x-godwake-inv-idx';
 const DND_SLOT_MIME = 'application/x-godwake-slot';
 
-interface SlotMeta {
-  slot: EquipSlot;
-  label: string;
-  hint: string;
-}
-
-const SLOTS: SlotMeta[] = [
-  { slot: 'mainHand', label: 'Main Hand', hint: 'A weapon or one-handed implement.' },
-  { slot: 'offHand', label: 'Off Hand · Shield', hint: 'A shield only — off-hand weapons aren\'t wielded.' },
-  { slot: 'armor', label: 'Body', hint: 'Light, medium, or heavy armor.' },
-  { slot: 'helm', label: 'Helm', hint: 'An affix-bearing helm.' },
-  { slot: 'amulet', label: 'Amulet', hint: 'An affix-bearing amulet.' },
-  { slot: 'belt', label: 'Belt', hint: 'An affix-bearing belt.' },
-  { slot: 'ring1', label: 'Ring I', hint: 'An affix-bearing ring.' },
-  { slot: 'ring2', label: 'Ring II', hint: 'An affix-bearing ring.' },
-  { slot: 'boots', label: 'Boots', hint: 'Affix-bearing boots.' },
+const SLOTS: EquipSlot[] = [
+  'mainHand',
+  'offHand',
+  'armor',
+  'helm',
+  'amulet',
+  'belt',
+  'ring1',
+  'ring2',
+  'boots',
 ];
 
 export function InventoryScreen() {
+  const { t, tc } = useT();
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const goToHub = useGameStore((s) => s.goToHub);
@@ -82,7 +78,7 @@ export function InventoryScreen() {
   if (!character) {
     return (
       <div className="p-8 text-[var(--color-text-primary)]">
-        No character. Return to title.
+        {t('screens.inventory.noCharacter')}
       </div>
     );
   }
@@ -180,46 +176,51 @@ export function InventoryScreen() {
             className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.15em]"
             style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.85), 0 0 18px rgba(244,167,66,0.3)' }}
           >
-            INVENTORY
+            {t('screens.inventory.heading')}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1 font-mono">
-            {character.name} · {character.inventory.length} items · AC {ac} · Crit {critLabel}
+            {t('screens.inventory.subtitle', {
+              name: character.name,
+              n: character.inventory.length,
+              ac,
+              crit: critLabel,
+            })}
           </p>
         </div>
         {delve ? (
           <Button variant="ghost" onClick={goToDelve}>
-            ← Back to the delve
+            {t('screens.inventory.backToDelve')}
           </Button>
         ) : (
           <Button variant="ghost" onClick={goToHub}>
-            ← Phandalin
+            {t('screens.inventory.backPhandalin')}
           </Button>
         )}
       </header>
 
       <div className="mb-6">
-        <Panel title="Equipped" tone="warm">
+        <Panel title={t('screens.inventory.equipped')} tone="warm">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {SLOTS.map((s) => {
-              const ref = character.equipped[s.slot];
+            {SLOTS.map((slot) => {
+              const ref = character.equipped[slot];
               const item = ref ? getItem(ref.itemId) : null;
-              const isOver = dragOverSlot === s.slot;
-              const isInvalid = dragInvalidSlot === s.slot;
+              const isOver = dragOverSlot === slot;
+              const isInvalid = dragInvalidSlot === slot;
               const itemTargetSlot = isDragging && hoverIdx !== null
                 ? slotForItem(character.inventory[hoverIdx]?.itemId ?? '')
                 : null;
               void itemTargetSlot;
               return (
                 <div
-                  key={s.slot}
-                  onDragOver={(e) => handleSlotDragOver(e, s.slot)}
-                  onDragLeave={() => setDragOverSlot((c) => (c === s.slot ? null : c))}
-                  onDrop={(e) => handleSlotDrop(e, s.slot)}
+                  key={slot}
+                  onDragOver={(e) => handleSlotDragOver(e, slot)}
+                  onDragLeave={() => setDragOverSlot((c) => (c === slot ? null : c))}
+                  onDrop={(e) => handleSlotDrop(e, slot)}
                   onMouseEnter={(e) => {
-                    setHoverSlot(s.slot);
+                    setHoverSlot(slot);
                     placeTip(e.currentTarget);
                   }}
-                  onMouseLeave={() => setHoverSlot((c) => (c === s.slot ? null : c))}
+                  onMouseLeave={() => setHoverSlot((c) => (c === slot ? null : c))}
                   className={`
                     relative w-full min-h-[124px] p-3 border-2 transition-all
                     bg-gradient-to-br from-[var(--color-bg-deep)] to-[var(--color-bg-elevated)]
@@ -234,15 +235,15 @@ export function InventoryScreen() {
                 >
                   <div className="font-display text-[var(--color-accent-amber)] text-[9px] uppercase tracking-widest mb-2 flex items-center gap-1">
                     <span className="text-[var(--color-accent-gold)]">◆</span>
-                    {s.label}
+                    {t(`screens.inventory.slot.${slot}`)}
                   </div>
                   {item && ref ? (
                     <div
                       draggable
-                      onDragStart={(e) => handleSlotDragStart(e, s.slot)}
-                      onDoubleClick={() => unequipSlotAction(s.slot)}
+                      onDragStart={(e) => handleSlotDragStart(e, slot)}
+                      onDoubleClick={() => unequipSlotAction(slot)}
                       className="flex items-center gap-3 cursor-grab active:cursor-grabbing"
-                      title="Double-click or drag to inventory to unequip"
+                      title={t('screens.inventory.unequipTitle')}
                     >
                       <ItemIcon item={item} size={56} gearRarity={ref.rolled?.rarity} />
                       <div className="flex-1 min-w-0">
@@ -254,7 +255,7 @@ export function InventoryScreen() {
                               : 'var(--color-text-primary)',
                           }}
                         >
-                          {ref.rolled?.name ?? item.name}
+                          {ref.rolled?.name ?? tc('items', item.id, 'name', item.name)}
                         </div>
                         <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
                           {baseStatLine(item)}
@@ -266,10 +267,10 @@ export function InventoryScreen() {
                       <div className="w-14 h-14 border border-dashed border-[var(--color-border-dim)] flex items-center justify-center text-[var(--color-text-muted)] text-2xl">
                         ◇
                       </div>
-                      <div className="text-[var(--color-text-dim)] text-[10px] italic font-mono leading-snug">{s.hint}</div>
+                      <div className="text-[var(--color-text-dim)] text-[10px] italic font-mono leading-snug">{t(`screens.inventory.slotHint.${slot}`)}</div>
                     </div>
                   )}
-                  {hoverSlot === s.slot && item && !isDragging && (
+                  {hoverSlot === slot && item && !isDragging && (
                     <div
                       className={`absolute z-30 left-full ml-2 hidden md:block pointer-events-none overflow-y-auto ${tip.flip ? 'bottom-0' : 'top-0'}`}
                       style={{ maxHeight: tip.maxH }}
@@ -283,7 +284,7 @@ export function InventoryScreen() {
                             ? armorEquipWarning(character.classId, item) ?? undefined
                             : undefined
                         }
-                        hint="Double-click or drag down to unequip"
+                        hint={t('screens.inventory.unequipHintDesktop')}
                       />
                     </div>
                   )}
@@ -292,7 +293,9 @@ export function InventoryScreen() {
                       <TouchTooltip
                         bare
                         placement="bottom"
-                        label={`${ref.rolled?.name ?? item.name} details`}
+                        label={t('screens.inventory.detailsAria', {
+                          name: ref.rolled?.name ?? tc('items', item.id, 'name', item.name),
+                        })}
                         className="flex items-center justify-center w-8 h-8 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
                         content={
                           <ItemTooltip
@@ -304,7 +307,7 @@ export function InventoryScreen() {
                                 ? armorEquipWarning(character.classId, item) ?? undefined
                                 : undefined
                             }
-                            hint="Double-tap the slot to unequip"
+                            hint={t('screens.inventory.unequipHintTouch')}
                           />
                         }
                       >
@@ -321,7 +324,7 @@ export function InventoryScreen() {
       </div>
 
       <Panel
-        title={`Backpack (${character.inventory.length})`}
+        title={t('screens.inventory.backpack', { n: character.inventory.length })}
         tone="default"
         className={`transition-colors ${dragOverList ? 'border-[var(--color-accent-amber)]' : ''}`}
       >
@@ -332,15 +335,15 @@ export function InventoryScreen() {
         >
           {character.inventory.length === 0 && (
             <div className="text-[var(--color-text-secondary)] text-sm italic py-4 text-center font-narrative">
-              Your backpack is empty.
+              {t('screens.inventory.empty')}
             </div>
           )}
 
           {groups.map((g) => (
-            <div key={g.label} className="mb-4 last:mb-0">
+            <div key={g.key} className="mb-4 last:mb-0">
               <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
                 <span className="text-[var(--color-accent-gold)]/60">◆</span>
-                {g.label}
+                {t(`screens.inventory.group.${g.key}`)}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {g.entries.map(({ ref, idx, item, stackCount }) => {
@@ -351,13 +354,13 @@ export function InventoryScreen() {
                     equippable && !equipped ? equipDenialReason(character!, item.id) : null;
                   const blocked = denial !== null;
                   const hint = equipped
-                    ? 'Equipped'
+                    ? t('screens.inventory.hintEquipped')
                     : denial
                       ? denial
                       : equippable
-                        ? 'Click or drag to equip'
+                        ? t('screens.inventory.hintEquip')
                         : item.kind === 'consumable'
-                          ? 'Use in combat'
+                          ? t('screens.inventory.hintUseInCombat')
                           : '';
                   return (
                     <div
@@ -398,7 +401,7 @@ export function InventoryScreen() {
                                 : 'var(--color-text-primary)',
                             }}
                           >
-                            {ref.rolled?.name ?? item.name}
+                            {ref.rolled?.name ?? tc('items', item.id, 'name', item.name)}
                           </div>
                           {stackCount > 1 && (
                             <div className="text-[var(--color-accent-amber)] font-mono text-xs shrink-0">
@@ -412,7 +415,7 @@ export function InventoryScreen() {
                         <div className="flex items-center gap-2 mt-0.5">
                           {equipped && (
                             <div className="font-display text-[var(--color-accent-amber)] text-[9px] uppercase tracking-widest">
-                              ✓ equipped
+                              {t('screens.inventory.equippedTag')}
                             </div>
                           )}
                         </div>
@@ -439,7 +442,9 @@ export function InventoryScreen() {
                         <TouchTooltip
                           bare
                           placement="bottom"
-                          label={`${ref.rolled?.name ?? item.name} details`}
+                          label={t('screens.inventory.detailsAria', {
+                            name: ref.rolled?.name ?? tc('items', item.id, 'name', item.name),
+                          })}
                           className="flex items-center justify-center w-8 h-8 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
                           content={
                             <ItemTooltip
@@ -466,7 +471,7 @@ export function InventoryScreen() {
           ))}
         </div>
         <div className="mt-4 pt-3 border-t border-[var(--color-border-dim)] text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest text-center font-mono">
-          Drag an equipped item back here to unequip · Or double-click the slot
+          {t('screens.inventory.footer')}
         </div>
       </Panel>
     </div>
@@ -481,7 +486,7 @@ interface InventoryEntry {
 }
 
 interface InventoryGroup {
-  label: string;
+  key: 'weapons' | 'armor' | 'accessories' | 'consumables' | 'other';
   entries: InventoryEntry[];
 }
 
@@ -515,10 +520,10 @@ function groupInventory(inventory: ItemRef[]): InventoryGroup[] {
   });
 
   const result: InventoryGroup[] = [];
-  if (weapons.length) result.push({ label: 'Weapons', entries: weapons });
-  if (armor.length) result.push({ label: 'Armor & Shields', entries: armor });
-  if (accessories.length) result.push({ label: 'Accessories', entries: accessories });
-  if (consumables.size) result.push({ label: 'Consumables', entries: [...consumables.values()] });
-  if (other.length) result.push({ label: 'Other', entries: other });
+  if (weapons.length) result.push({ key: 'weapons', entries: weapons });
+  if (armor.length) result.push({ key: 'armor', entries: armor });
+  if (accessories.length) result.push({ key: 'accessories', entries: accessories });
+  if (consumables.size) result.push({ key: 'consumables', entries: [...consumables.values()] });
+  if (other.length) result.push({ key: 'other', entries: other });
   return result;
 }

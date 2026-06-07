@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Button } from '../ui/Button';
+import { useT } from '../../i18n/useT';
 import { useGameStore } from '../../stores/gameStore';
 import { getRace } from '../../content/races';
 import { listClasses } from '../../content/classes';
@@ -17,53 +18,6 @@ import {
   SLOT_RENOWN_THRESHOLDS,
   STARTER_CLASSES,
 } from '../../engine/progression/unlocks';
-
-const ABILITY_SHORT: Record<AbilityName, string> = {
-  str: 'STR',
-  dex: 'DEX',
-  con: 'CON',
-  int: 'INT',
-  wis: 'WIS',
-  cha: 'CHA',
-};
-
-const RACE_LABEL: Record<RaceId, string> = {
-  human: 'Human',
-  'half-elf': 'Half-Elf',
-  elf: 'Elf',
-  'wood-elf': 'Wood Elf',
-  dwarf: 'Dwarf',
-  'hill-dwarf': 'Hill Dwarf',
-  halfling: 'Halfling',
-  'half-orc': 'Half-Orc',
-  gnome: 'Gnome',
-  tiefling: 'Tiefling',
-};
-
-// The real starting kit per class (mirrors startingKitFor in defaultCharacter),
-// and the signature features the soul already carries or grows into. Both are
-// truthful — no flavor-only filler.
-const CLASS_KIT: Record<ClassId, string> = {
-  fighter: 'Longsword, shield & leather armor · 2 healing potions · 25 gold',
-  rogue: 'Rapier, shortbow & leather armor · 1 healing potion · 15 gold',
-  wizard: 'Dagger & spellbook · 1 healing potion · 20 gold',
-  cleric: '—',
-  barbarian: 'Greataxe, no armor · 2 healing potions · 20 gold',
-  ranger: 'Longbow, shortsword & leather armor · 1 healing potion · 15 gold',
-  druid: 'Sickle & leather armor · 2 healing potions · 20 gold',
-  monk: 'Bare fists & shortsword, no armor · 2 healing potions · 15 gold',
-};
-
-const CLASS_HALLMARKS: Record<ClassId, string> = {
-  fighter: 'Second Wind · Action Surge · Champion crits on 19–20',
-  rogue: 'Sneak Attack · Cunning Action · Uncanny Dodge',
-  wizard: 'Fire Bolt · Magic Missile · Fireball at L5',
-  cleric: '—',
-  barbarian: 'Rage · Reckless Attack · Berserker Frenzy',
-  ranger: "Hunter's Mark · Archery · Colossus Slayer",
-  druid: 'Produce Flame · Wild Shape · Circle of the Moon',
-  monk: 'Martial Arts · Flurry of Blows · Stunning Strike',
-};
 
 interface SoulOption {
   classId: ClassId;
@@ -96,6 +50,7 @@ function buildSoulOptions(): SoulOption[] {
 }
 
 export function CharacterCreationScreen() {
+  const { t, tc } = useT();
   const commit = useGameStore((s) => s.commitCharacterCreation);
   const selectCharacter = useGameStore((s) => s.selectCharacter);
   const selectCharacterAndDescend = useGameStore((s) => s.selectCharacterAndDescend);
@@ -165,21 +120,30 @@ export function CharacterCreationScreen() {
                 '0 0 18px rgba(244,167,66,0.55), 0 0 6px rgba(244,167,66,0.85), 0 2px 0 rgba(0,0,0,0.9)',
             }}
           >
-            CHOOSE A SOUL
+            {t('screens.charCreation.titleHeading')}
           </h1>
           <p className="font-narrative text-[var(--color-text-secondary)] text-sm italic mt-2 tracking-wide">
             {newGamePlusFlow
-              ? `Pick the soul you will wear into the dark${selectedAscension > 0 ? ` at Ascension ${selectedAscension}` : ''}. Your renown, your marks, and the keepers’ gifts all follow you down.`
+              ? t('screens.charCreation.subtitleNgp', {
+                  asc:
+                    selectedAscension > 0
+                      ? t('screens.charCreation.atAscension', { n: selectedAscension })
+                      : '',
+                })
               : isSwap
-                ? 'Step into a different body for the next descent. Your renown, your marks, and the keepers’ gifts all follow you.'
-                : 'Three souls wait at the wheel. Pick the one you will wear into the dark.'}
+                ? t('screens.charCreation.subtitleSwap')
+                : t('screens.charCreation.subtitleFirst')}
           </p>
         </div>
         <Button
           variant="ghost"
           onClick={newGamePlusFlow ? goToAscensionSelect : isSwap ? goToHub : goToTitle}
         >
-          {newGamePlusFlow ? '← Ascension' : isSwap ? '← Phandalin' : '← Title'}
+          {newGamePlusFlow
+            ? t('screens.charCreation.backAscension')
+            : isSwap
+              ? t('screens.charCreation.backPhandalin')
+              : t('screens.charCreation.backTitle')}
         </Button>
       </header>
 
@@ -209,7 +173,8 @@ export function CharacterCreationScreen() {
                     ✦
                   </span>
                   <span className="font-display text-[var(--color-text-primary)] text-base tracking-wide">
-                    {RACE_LABEL[opt.raceId]} {opt.className}
+                    {t(`screens.charCreation.race.${opt.raceId}`)}{' '}
+                    {tc('classes', opt.classId, 'name', opt.className)}
                   </span>
                 </div>
                 <div className="text-[var(--color-text-secondary)] text-[11px] tracking-wide mt-1">
@@ -218,7 +183,7 @@ export function CharacterCreationScreen() {
               </div>
 
               <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
-                {opt.blurb}
+                {tc('classes', opt.classId, 'blurb', opt.blurb)}
               </p>
 
               <div className="grid grid-cols-3 gap-1.5">
@@ -228,7 +193,7 @@ export function CharacterCreationScreen() {
                     className="border border-[var(--color-border-dim)] bg-[var(--color-bg-deep)]/40 px-1.5 py-1 text-center"
                   >
                     <div className="font-display text-[8px] text-[var(--color-accent-amber)] uppercase tracking-widest">
-                      {ABILITY_SHORT[ability]}
+                      {t(`screens.common.abilityShort.${ability}`)}
                     </div>
                     <div className="font-mono text-[var(--color-text-primary)] text-xs tabular-nums">
                       {total}
@@ -244,18 +209,18 @@ export function CharacterCreationScreen() {
               <div className="space-y-1.5 text-[11px] leading-relaxed">
                 <div>
                   <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[9px]">
-                    Hallmarks ·{' '}
+                    {t('screens.charCreation.hallmarksLabel')}
                   </span>
                   <span className="text-[var(--color-text-secondary)]">
-                    {CLASS_HALLMARKS[opt.classId]}
+                    {t(`screens.charCreation.hallmarks.${opt.classId}`)}
                   </span>
                 </div>
                 <div>
                   <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[9px]">
-                    Kit ·{' '}
+                    {t('screens.charCreation.kitLabel')}
                   </span>
                   <span className="text-[var(--color-text-secondary)]">
-                    {CLASS_KIT[opt.classId]}
+                    {t(`screens.charCreation.kit.${opt.classId}`)}
                   </span>
                 </div>
               </div>
@@ -275,31 +240,25 @@ export function CharacterCreationScreen() {
               className="relative p-4 border-2 border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] opacity-60 flex flex-col gap-2"
             >
               <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
-                ⚿ Sealed
+                {t('screens.charCreation.sealed')}
               </div>
               <div className="font-display text-[var(--color-text-dim)] text-base tracking-wide">
-                {o.className}
+                {tc('classes', o.classId, 'name', o.className)}
               </div>
               <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
                 {firstOffering ? (
-                  'This soul stirs the moment you first lay tribute at the Wellspring of the Grove.'
+                  t('screens.charCreation.sealedFirst')
                 ) : (
                   <>
-                    This soul will not wake until you have given {threshold} Renown to the
-                    Wellspring.
-                    {remaining > 0 && (
-                      <>
-                        {' '}
-                        {remaining} more to spend and it is yours to wear.
-                      </>
-                    )}
+                    {t('screens.charCreation.sealedThreshold', { n: threshold })}
+                    {remaining > 0 && t('screens.charCreation.sealedRemaining', { n: remaining })}
                   </>
                 )}
               </p>
               <div className="text-[var(--color-accent-amber)] text-[9px] uppercase tracking-widest mt-auto">
                 {firstOffering
-                  ? 'After your first offering'
-                  : `Unlocks at ${threshold} renown spent`}
+                  ? t('screens.charCreation.afterFirstOffering')
+                  : t('screens.charCreation.unlocksAt', { n: threshold })}
               </div>
             </div>
           );
@@ -309,8 +268,8 @@ export function CharacterCreationScreen() {
       <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
         <div className="font-narrative text-[var(--color-text-dim)] text-sm italic tracking-wide hidden md:block">
           {selected
-            ? `${selected.characterName} stands ready.`
-            : 'Pick a soul to continue.'}
+            ? t('screens.charCreation.standsReady', { name: selected.characterName })
+            : t('screens.charCreation.pickToContinue')}
         </div>
         <Button
           variant="primary"
@@ -320,11 +279,11 @@ export function CharacterCreationScreen() {
         >
           {selected
             ? newGamePlusFlow
-              ? `Descend as ${selected.characterName} ▸`
+              ? t('screens.charCreation.descendAs', { name: selected.characterName })
               : isSwap
-                ? `Become ${selected.characterName} ▸`
-                : `Begin as ${selected.characterName} ▸`
-            : 'Choose a soul'}
+                ? t('screens.charCreation.becomeAs', { name: selected.characterName })
+                : t('screens.charCreation.beginAs', { name: selected.characterName })
+            : t('screens.charCreation.chooseSoul')}
         </Button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { getQuirk } from '../../content/quirks';
+import { useT } from '../../i18n/useT';
 
 /** Base soul-mark bonus a single (unit-weight) bane earns, as a percent. */
 export const SOUL_MARK_PCT_PER_BANE = 20;
@@ -17,12 +18,14 @@ interface QuirkBadgeProps {
 }
 
 export function QuirkBadge({ quirkId, size = 'sm', baneCount, soulMarkPct }: QuirkBadgeProps) {
+  const { t, tc } = useT();
   let q;
   try {
     q = getQuirk(quirkId);
   } catch {
     return null;
   }
+  const name = tc('quirks', q.id, 'name', q.name);
 
   const colorClass =
     q.sentiment === 'boon'
@@ -39,12 +42,16 @@ export function QuirkBadge({ quirkId, size = 'sm', baneCount, soulMarkPct }: Qui
   // Banes contribute to the soul-mark reward bonus (+20% gold/xp/renown each).
   // Surface that in the tooltip so the player understands the trade — resolved
   // to this soul's actual total when the bane count is known, not the rate.
-  const tooltipParts = [`${q.name} — ${q.effect}`, q.flavor];
+  const tooltipParts = [`${name} — ${tc('quirks', q.id, 'effect', q.effect)}`, tc('quirks', q.id, 'flavor', q.flavor)];
   if (q.sentiment === 'bane') {
     const soulMarkLine =
       baneCount && baneCount > 0 && soulMarkPct !== undefined
-        ? `Soul-mark: your ${baneCount} ${baneCount === 1 ? 'mark earns' : 'marks earn'} +${soulMarkPct}% gold, XP, and renown.`
-        : `Soul-mark: +${SOUL_MARK_PCT_PER_BANE}% gold, XP, and renown earned per bane.`;
+        ? t('screens.quirk.soulMarkResolved', {
+            n: baneCount,
+            markWord: baneCount === 1 ? t('screens.quirk.markEarns') : t('screens.quirk.marksEarn'),
+            pct: soulMarkPct,
+          })
+        : t('screens.quirk.soulMarkRate', { pct: SOUL_MARK_PCT_PER_BANE });
     tooltipParts.splice(1, 0, soulMarkLine);
   }
 
@@ -53,7 +60,7 @@ export function QuirkBadge({ quirkId, size = 'sm', baneCount, soulMarkPct }: Qui
       className={`inline-block border ${colorClass} ${sizeClass} uppercase tracking-widest font-bold bg-[var(--color-bg-panel)]/80 whitespace-nowrap`}
       title={tooltipParts.join('\n\n')}
     >
-      {q.name}
+      {name}
     </span>
   );
 }
@@ -63,11 +70,12 @@ interface QuirkRowProps {
   emptyText?: string;
 }
 
-export function QuirkRow({ quirkIds, emptyText = 'No quirks' }: QuirkRowProps) {
+export function QuirkRow({ quirkIds, emptyText }: QuirkRowProps) {
+  const { t } = useT();
   if (quirkIds.length === 0) {
     return (
       <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
-        {emptyText}
+        {emptyText ?? t('screens.quirk.noQuirks')}
       </span>
     );
   }

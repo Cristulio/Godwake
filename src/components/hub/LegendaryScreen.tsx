@@ -19,6 +19,7 @@ import {
 import { SETS, setProgress } from '../../content/sets';
 import { getClass } from '../../content/classes';
 import type { ClassId } from '../../schemas/ids';
+import { useT } from '../../i18n/useT';
 
 interface LegendaryScreenProps {
   onBack: () => void;
@@ -34,6 +35,7 @@ interface LegendaryScreenProps {
  * playing that class. The Reliquary below tracks the whole collection.
  */
 export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
+  const { t } = useT();
   const owned = useGameStore((s) => s.ownedLegendaries);
   const equippedRelics = useGameStore((s) => s.equippedRelics);
   const equipRelic = useGameStore((s) => s.equipRelic);
@@ -61,32 +63,28 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
             className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.15em]"
             style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.85), 0 0 18px rgba(244,167,66,0.3)' }}
           >
-            RELICS OF THE SOUL
+            {t('hub.relicsScreen.title')}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
-            Bound gifts · What death cannot take
+            {t('hub.relicsScreen.subtitle')}
           </p>
         </div>
         <Button variant="ghost" onClick={onBack}>
-          ← Phandalin
+          {t('hub.relicsScreen.backPhandalin')}
         </Button>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-6">
         <Panel tone="glow">
           <p className="text-[var(--color-text-secondary)] text-sm italic leading-relaxed font-narrative">
-            Some things the wheel cannot strip from you. These relics, won from the elites of the deep
-            dark, return with the soul through every death — yet the soul can hold but one gift of
-            each kind. Each keeps to its own nature; bind what you will to the places that have
-            opened, and lay Renown at the Grove to wake those that still sleep. They lend no armour
-            and swing no blade, only their gifts, layered over whatever gear the road provides.
+            {t('hub.relicsScreen.intro')}
           </p>
         </Panel>
         <div className="panel-etched-warm border border-[var(--color-border-warm)] p-4 flex items-center gap-5">
           <div>
             <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 flex items-center gap-1">
               <span className="text-[var(--color-accent-gold)]">✦</span>
-              Slots awake
+              {t('hub.relicsScreen.slotsAwake')}
             </div>
             <div
               className="font-mono text-3xl text-[var(--color-accent-gold)]"
@@ -99,7 +97,7 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
           <div className="h-10 w-px bg-[var(--color-border-dim)]" />
           <div>
             <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1">
-              Relics found
+              {t('hub.relicsScreen.relicsFound')}
             </div>
             <div className="font-mono text-3xl text-[var(--color-accent-amber)]">
               {owned.length}
@@ -144,6 +142,7 @@ interface SlotRowProps {
 }
 
 function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onUnequip }: SlotRowProps) {
+  const { t } = useT();
   const meta = RELIC_SLOT_META[slot];
 
   if (locked) {
@@ -155,14 +154,14 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
             {meta.name}
           </h3>
           <span className="font-display text-[9px] uppercase tracking-widest text-[var(--color-text-dim)]">
-            ⚿ Sealed
+            {t('hub.relicsScreen.sealed')}
           </span>
         </div>
         <p className="text-[var(--color-text-dim)] text-[11px] italic mt-1 font-narrative leading-snug">
           {meta.blurb}
         </p>
         <div className="mt-auto pt-3 text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest font-display">
-          Wakes when {at} Renown lies laid at the Grove
+          {t('hub.relicsScreen.wakesWhen', { n: at })}
         </div>
       </div>
     );
@@ -191,7 +190,7 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
             equipped ? 'text-[var(--color-accent-gold)]' : 'text-[var(--color-text-dim)]'
           }`}
         >
-          {equipped ? '✦ Bound' : '— Bare —'}
+          {equipped ? t('hub.relicsScreen.bound') : t('hub.relicsScreen.bare')}
         </span>
       </div>
       <p className="text-[var(--color-text-secondary)] text-[11px] italic mt-1 font-narrative leading-snug">
@@ -207,7 +206,7 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
       <div className="mt-3 flex flex-wrap gap-1.5">
         {choices.length === 0 ? (
           <span className="text-[var(--color-text-dim)] text-[10px] italic font-narrative">
-            No gift of this kind has come to you yet.
+            {t('hub.relicsScreen.noGift')}
           </span>
         ) : (
           <>
@@ -236,7 +235,7 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
                 onClick={() => onUnequip(slot)}
                 className="px-2 py-1 text-[10px] font-display uppercase tracking-wider border border-[var(--color-border-dim)] text-[var(--color-text-dim)] hover:border-[var(--color-accent-blood)] hover:text-[var(--color-accent-blood)] transition-colors"
               >
-                Unbind
+                {t('hub.relicsScreen.unbind')}
               </button>
             )}
           </>
@@ -247,11 +246,12 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
 }
 
 function SetsPanel({ equipped, owned }: { equipped: string[]; owned: string[] }) {
+  const { t } = useT();
   return (
     <div className="mt-8">
       <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
         <span className="text-[var(--color-accent-gold)]/60">✦</span>
-        Set Bonuses · bind multiple pieces
+        {t('hub.relicsScreen.setBonuses')}
       </div>
       <div className="grid md:grid-cols-2 gap-3">
         {SETS.map((set) => {
@@ -264,7 +264,7 @@ function SetsPanel({ equipped, owned }: { equipped: string[]; owned: string[] })
                   {set.name}
                 </h4>
                 <span className="font-mono text-[10px] text-[var(--color-accent-gold)] shrink-0">
-                  {activeCount}/{set.pieceIds.length} bound
+                  {t('hub.relicsScreen.boundCount', { n: activeCount, total: set.pieceIds.length })}
                 </span>
               </div>
               <p className="text-[var(--color-text-secondary)] text-[10px] italic mt-1 font-narrative leading-snug">
@@ -285,7 +285,7 @@ function SetsPanel({ equipped, owned }: { equipped: string[]; owned: string[] })
                 })}
               </div>
               <div className="mt-1.5 text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
-                {ownedCount}/{set.pieceIds.length} pieces found
+                {t('hub.relicsScreen.piecesFound', { n: ownedCount, total: set.pieceIds.length })}
               </div>
             </div>
           );
@@ -296,11 +296,12 @@ function SetsPanel({ equipped, owned }: { equipped: string[]; owned: string[] })
 }
 
 function Reliquary({ owned }: { owned: string[] }) {
+  const { t } = useT();
   return (
     <div className="mt-8">
       <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
         <span className="text-[var(--color-accent-gold)]/60">✦</span>
-        The Reliquary · {owned.length}/{LEGENDARIES.length} found
+        {t('hub.relicsScreen.reliquary', { n: owned.length, total: LEGENDARIES.length })}
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {LEGENDARIES.map((relic) =>
@@ -316,6 +317,7 @@ function Reliquary({ owned }: { owned: string[] }) {
 }
 
 function CatalogCard({ relic }: { relic: Legendary }) {
+  const { t } = useT();
   const boundClass = relic.classGate ? getClass(relic.classGate).name : null;
   return (
     <div className="panel-etched border border-[var(--color-border-dim)] p-3 flex flex-col">
@@ -333,7 +335,7 @@ function CatalogCard({ relic }: { relic: Legendary }) {
       <div className="text-[var(--color-accent-gold)] text-[10px] font-mono leading-snug">{relic.effect}</div>
       {boundClass && (
         <div className="mt-1.5 text-[var(--color-text-dim)] text-[8px] uppercase tracking-widest font-display">
-          ⚔ Bound · {boundClass}
+          {t('hub.relicsScreen.boundClass', { name: boundClass })}
         </div>
       )}
     </div>
@@ -341,18 +343,19 @@ function CatalogCard({ relic }: { relic: Legendary }) {
 }
 
 function UndiscoveredCard() {
+  const { t } = useT();
   return (
     <div className="panel-etched border border-[var(--color-border-dim)] opacity-60 p-3 flex flex-col">
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-display text-[var(--color-text-dim)] uppercase tracking-wider text-[11px]">
-          ??? ??? ???
+          {t('hub.relicsScreen.undiscoveredName')}
         </h3>
         <span className="font-display text-[8px] uppercase tracking-widest text-[var(--color-text-dim)] shrink-0">
           ⚿
         </span>
       </div>
       <p className="text-[var(--color-text-dim)] text-[10px] italic mt-1.5 leading-snug font-narrative">
-        A relic not yet earned. Brave the elites of the dark, and it may yet be yours.
+        {t('hub.relicsScreen.undiscoveredBody')}
       </p>
     </div>
   );

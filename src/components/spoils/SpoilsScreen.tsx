@@ -2,8 +2,10 @@ import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
 import { hasPendingLevelUp } from '../../engine/character/leveling';
+import { useT } from '../../i18n/useT';
 
 export function SpoilsScreen() {
+  const { t } = useT();
   const lastLoot = useGameStore((s) => s.lastLoot);
   const character = useGameStore((s) => s.character);
   const acceptSpoils = useGameStore((s) => s.acceptSpoils);
@@ -29,7 +31,7 @@ export function SpoilsScreen() {
                 '0 0 28px rgba(244,167,66,0.7), 0 0 10px rgba(244,167,66,0.9), 4px 4px 0 rgba(0,0,0,0.9)',
             }}
           >
-            ◆ Victory ◆
+            {t('screens.spoils.victory')}
           </h1>
         </div>
 
@@ -47,7 +49,7 @@ export function SpoilsScreen() {
                 +{lastLoot.gold}
               </span>
               <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
-                gp
+                {t('screens.spoils.gp')}
               </span>
             </div>
           )}
@@ -63,7 +65,7 @@ export function SpoilsScreen() {
                 +{lastLoot.xp}
               </span>
               <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
-                xp
+                {t('screens.spoils.xp')}
               </span>
             </div>
           )}
@@ -79,13 +81,13 @@ export function SpoilsScreen() {
                 +{lastLoot.renown}
               </span>
               <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
-                renown
+                {t('screens.spoils.renown')}
               </span>
             </div>
           )}
           {lastLoot.gold === 0 && lastLoot.xp === 0 && lastLoot.renown === 0 && (
             <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-[0.3em]">
-              No reward
+              {t('screens.spoils.noReward')}
             </div>
           )}
         </div>
@@ -97,7 +99,7 @@ export function SpoilsScreen() {
             style={{ textShadow: '0 0 18px rgba(244,167,66,0.8)' }}
           >
             <div className="font-display text-lg text-[var(--color-accent-amber)] uppercase tracking-[0.4em]">
-              ◆ Level Up → {nextLevel} ◆
+              {t('screens.spoils.levelUp', { n: nextLevel })}
             </div>
           </div>
         )}
@@ -107,7 +109,7 @@ export function SpoilsScreen() {
           <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] animate-pop-in">
             <div className="px-3 py-1.5 border-b border-[var(--color-border-dim)]">
               <span className="font-display text-[10px] uppercase tracking-[0.3em] text-[var(--color-accent-amber)]">
-                Spoils
+                {t('screens.spoils.spoils')}
               </span>
             </div>
             <div className="px-3 py-2 space-y-2">
@@ -145,7 +147,7 @@ export function SpoilsScreen() {
               ✦ {lastLoot.bankedLegendary}
             </div>
             <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-0.5">
-              Legendary relic banked — attune it at the hub
+              {t('screens.spoils.legendaryBanked')}
             </div>
           </div>
         )}
@@ -153,7 +155,7 @@ export function SpoilsScreen() {
         {/* Actions */}
         <div className="flex flex-col items-center gap-3 mt-2">
           <Button variant="primary" size="lg" onClick={acceptSpoils}>
-            {leveledUp ? 'Accept · Level Up →' : 'Accept →'}
+            {leveledUp ? t('screens.spoils.acceptLevelUp') : t('screens.spoils.accept')}
           </Button>
           {/* A pending level-up must come first — no pack shortcut that would skip
               it. The dropped items are already in the pack; open it from the route
@@ -167,7 +169,7 @@ export function SpoilsScreen() {
               }}
               className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-[0.3em] hover:text-[var(--color-accent-amber)] transition-colors"
             >
-              ◆ Open Pack Instead
+              {t('screens.spoils.openPack')}
             </button>
           )}
         </div>

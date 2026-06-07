@@ -1,10 +1,12 @@
 import { getBlessing } from '../../content/blessings';
+import { useT } from '../../i18n/useT';
 
 interface BlessingBadgeProps {
   blessingId: string;
 }
 
 export function BlessingBadge({ blessingId }: BlessingBadgeProps) {
+  const { tc } = useT();
   let b;
   try {
     b = getBlessing(blessingId);
@@ -12,13 +14,14 @@ export function BlessingBadge({ blessingId }: BlessingBadgeProps) {
     return null;
   }
 
+  const name = tc('blessings', b.id, 'name', b.name);
   return (
     <span
       className="inline-flex items-center gap-1 border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)] text-[10px] uppercase tracking-widest font-bold bg-[var(--color-bg-panel)]/80 px-1.5 py-0.5"
-      title={`${b.name} — ${b.effect}\n\n${b.flavor}`}
+      title={`${name} — ${tc('blessings', b.id, 'effect', b.effect)}\n\n${tc('blessings', b.id, 'flavor', b.flavor)}`}
     >
       <span className="text-[var(--color-accent-amber)]">◆</span>
-      {b.name}
+      {name}
     </span>
   );
 }

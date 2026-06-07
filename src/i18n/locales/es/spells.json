@@ -1,0 +1,154 @@
+{
+  "fire-bolt": {
+    "name": "Rayo de Fuego",
+    "description": "Una mota de fuego surca el aire hacia un objetivo que puedas ver. Inflige d10 de daño de fuego más tu modificador de Inteligencia, y el rayo arde con más fuerza a medida que creces en poder. Una salvación de Destreza reduce la quemadura a la mitad."
+  },
+  "magic-missile": {
+    "name": "Proyectil Mágico",
+    "description": "Dardos de fuerza salen disparados de tus dedos —1d4+1 cada uno, sin tirada de ataque ni salvación: sencillamente impactan. Tres al principio, y otro a medida que creces (4 a nivel 5, 5 a nivel 8, y así). La respuesta a un enemigo demasiado acorazado o demasiado escurridizo para acertarle."
+  },
+  "burning-hands": {
+    "name": "Manos Ardientes",
+    "description": "Un manto de llamas brota rugiendo de tus dedos extendidos —3d6 de daño de fuego. Los magos de Evocación queman un dado más caliente."
+  },
+  "shield": {
+    "name": "Escudo",
+    "description": "Un muro de fuerza invisible se alza de golpe. +5 a la CA hasta tu siguiente turno."
+  },
+  "mage-armor": {
+    "name": "Armadura de Mago",
+    "description": "Una película reluciente de fuerza se asienta sobre ti. +3 a la CA durante el resto de este combate."
+  },
+  "hold-person": {
+    "name": "Inmovilizar Persona",
+    "description": "Una palabra de atadura: el objetivo debe superar una salvación de Sabiduría o quedar paralizado durante los siguientes 2 asaltos."
+  },
+  "misty-step": {
+    "name": "Paso Brumoso",
+    "description": "Te deslizas a un breve pliegue de bruma plateada y reapareces medio paso a un lado. +2 a la CA hasta el inicio de tu siguiente turno. Se lanza como acción adicional."
+  },
+  "scorching-ray": {
+    "name": "Rayo Abrasador",
+    "description": "Rayos abrasadores salen de tu mano hacia un objetivo —cada uno con su propia tirada de ataque, 2d6 de fuego al impactar. Tres al principio, y más a medida que creces (4 a nivel 6, 5 a nivel 9, y así). Cada rayo es una nueva oportunidad de crítico; un objetivo duro rara vez sale ileso de toda la andanada."
+  },
+  "blur": {
+    "name": "Desenfoque",
+    "description": "Tu silueta se difumina y se desdobla. Durante los siguientes 5 asaltos, los atacantes tiran contra ti con desventaja."
+  },
+  "mirror-image": {
+    "name": "Imagen Especular",
+    "description": "Tres duplicados parpadeantes giran a tu alrededor. Cada golpe que fuera a impactarte destroza un duplicado en su lugar, hasta que no queda ninguno."
+  },
+  "fireball": {
+    "name": "Bola de Fuego",
+    "description": "Una cuenta de brasa florece en un rugido —8d6 de fuego a cada enemigo. Una salvación de DES reduce a la mitad. Los enemigos que fallan se incendian: 1d6 de fuego al inicio de tu siguiente turno."
+  },
+  "lightning-bolt": {
+    "name": "Relámpago",
+    "description": "Una lanza de rayo martillea a un objetivo por 10d6 y se bifurca hacia un segundo enemigo por la mitad —y no más allá. Una salvación de Destreza reduce a la mitad en cada uno. Más dados que la Bola de Fuego, pero elige a sus presas: el golpe concentrado frente al barrido de masas de la Bola de Fuego."
+  },
+  "vampiric-touch": {
+    "name": "Toque Vampírico",
+    "description": "Tu mano se vuelve fría como la tumba y arrancas el calor de un objetivo —5d6 de daño necrótico, sin tirada de ataque ni salvación. La mitad de esa vida robada cierra tus propias heridas. Los espacios gastados en sangre se convierten en espacios que te mantienen en pie."
+  },
+  "rime-blast": {
+    "name": "Estallido de Escarcha",
+    "description": "Una onda de presión de escarcha letal detona por toda la sala —7d6 de frío a cada enemigo. Una salvación de Destreza reduce el mordisco a la mitad."
+  },
+  "force-lance": {
+    "name": "Lanza de Fuerza",
+    "description": "Una lanza de fuerza endurecida atraviesa limpiamente a un objetivo —6d8 de daño de fuerza. Sin tirada de ataque, sin salvación; sencillamente impacta."
+  },
+  "glacial-cone": {
+    "name": "Cono Glacial",
+    "description": "Un abanico rugiente de frío glacial barre la sala —9d8 de frío a cada enemigo. Una salvación de Destreza lo reduce a la mitad."
+  },
+  "void-ray": {
+    "name": "Rayo del Vacío",
+    "description": "Un hilo de antiluz taladra a un objetivo —un ataque de conjuro por 10d6 de daño necrótico al impactar, e incluso un fallo roza por la mitad. La herida se niega a cerrarse."
+  },
+  "sunfire-burst": {
+    "name": "Estallido de Fuego Solar",
+    "description": "Un segundo sol florece y se apaga —11d6 de fuego a cada enemigo. Una salvación de Destreza reduce la llamarada a la mitad."
+  },
+  "exsanguinate": {
+    "name": "Desangrar",
+    "description": "Cierras el puño en el aire y un objetivo se vacía desde el otro lado de la sala —10d6 de daño necrótico arrancado de cuajo, sin tirada de ataque ni salvación. La mitad de la vida derramada vuelve a verterse en ti. El drenaje llevado al límite; se paga a sí mismo en sangre."
+  },
+  "dissolution": {
+    "name": "Disolución",
+    "description": "La materia se desteje con una palabra —12d6+24 de daño de fuerza a un objetivo. Una salvación de Constitución lo reduce a la mitad; un enemigo reducido a la nada sencillamente desaparece."
+  },
+  "stormcrash": {
+    "name": "Fragor de Tormenta",
+    "description": "El cielo cae bajo techo —13d6 de relámpago a cada enemigo. Una salvación de Destreza lo reduce a la mitad; incluso una salvación limpia atrae un arco."
+  },
+  "soul-snare": {
+    "name": "Trampa del Alma",
+    "description": "Ataduras de pura voluntad apresan a un objetivo —una salvación de Sabiduría o quedar paralizado durante los siguientes 3 asaltos. La presa es mucho más difícil de romper que una atadura menor."
+  },
+  "cataclysm": {
+    "name": "Cataclismo",
+    "description": "Una columna de ruina desciende y el suelo se agrieta —15d6 de fuego a cada enemigo. Una salvación de Destreza reduce la devastación a la mitad."
+  },
+  "wither": {
+    "name": "Marchitar",
+    "description": "Los años drenan de un objetivo en un latido —16d6 de daño necrótico, y el superviviente queda debilitado (sus golpes impactan con menos fuerza) durante el resto del combate."
+  },
+  "apotheosis": {
+    "name": "Apoteosis",
+    "description": "Te despojas de los límites de la carne y ardes como algo mayor. Durante 4 asaltos ganas 30 puntos de golpe temporales, +2 a la CA, y cada ataque que haces —hoja o conjuro— muerde con mucha más fuerza."
+  },
+  "unmake": {
+    "name": "Deshacer",
+    "description": "Pronuncias a un enemigo medio fuera de la existencia —su forma se quiebra por 18d8 de daño necrótico y queda rehecho en algo indefenso, paralizado durante 2 asaltos. Una salvación de Constitución resiste la atadura, no el deshacer."
+  },
+  "produce-flame": {
+    "name": "Producir Llama",
+    "description": "Una llama trémula prende en el cuenco de tu mano y salta hacia un objetivo —d10 de fuego más tu modificador de Sabiduría, y la llama crece más feroz conforme tú lo haces. Una salvación de Destreza reduce la quemadura a la mitad. La luz nunca te deja sin antorcha."
+  },
+  "thornlash": {
+    "name": "Latigazo de Espinas",
+    "description": "Zarcillos espinosos azotan desde la tierra y golpean a un objetivo —1d6+1 cada uno, sin tirada de ataque ni salvación: sencillamente encuentran la piel. Tres latigazos al principio, y más a medida que creces. Espinas más pesadas que un mero dardo arcano: un espacio bien gastado frente a la llama a voluntad."
+  },
+  "entangling-roots": {
+    "name": "Raíces Enredaderas",
+    "description": "Raíces aferrantes irrumpen por todo el suelo —cada enemigo debe superar una salvación de Fuerza o quedar enraizado, perdiendo su siguiente turno mientras se libera a tirones. Toda una sala retenida por un instante, donde una palabra de atadura solo sujeta a uno. Una palabra ágil las invoca —enraíza el suelo como acción adicional y aún golpea en el mismo aliento."
+  },
+  "regrowth": {
+    "name": "Rebrote",
+    "description": "Vida verde mana a través de ti y sigue manando —tus heridas se cierran de cuando en cuando al inicio de cada uno de tus dos siguientes turnos. La curación lenta y segura de lo silvestre; la única sanación que guarda el libro de la naturaleza."
+  },
+  "call-lightning": {
+    "name": "Convocar Relámpago",
+    "description": "Arrancas un rayo del aire sobre un objetivo por 10d6 —y se bifurca hacia un segundo enemigo por la mitad, y no más allá. Una salvación de Destreza lo reduce a la mitad en cada uno. El golpe concentrado frente al barrido de masas del Fuego Salvaje."
+  },
+  "wildfire": {
+    "name": "Fuego Salvaje",
+    "description": "Un muro de maleza ardiente se alza rugiendo y barre la sala —8d6 de fuego a cada enemigo. Una salvación de DES reduce a la mitad. Los enemigos que fallan siguen ardiendo: 1d6 de fuego al inicio de tu siguiente turno."
+  },
+  "ice-storm": {
+    "name": "Tormenta de Hielo",
+    "description": "Una borrasca de granizo dentado azota la sala —7d6 de frío a cada enemigo. Una salvación de Destreza reduce el mordisco a la mitad."
+  },
+  "avalanche": {
+    "name": "Avalancha",
+    "description": "La montaña se desploma a tu palabra —un abanico rugiente de hielo y piedra barre la sala por 9d8 de frío. Una salvación de Destreza lo reduce a la mitad."
+  },
+  "fire-storm": {
+    "name": "Tormenta de Fuego",
+    "description": "Mantos de llama rugiente florecen donde tú los quieres —11d6 de fuego a cada enemigo. Una salvación de Destreza reduce la llamarada a la mitad."
+  },
+  "spirit-beast": {
+    "name": "Bestia Espiritual",
+    "description": "Llamas a tu lado a un gran espíritu de lo silvestre —colmillo y garra hechos forma. Destroza a tu enemigo de cuando en cuando al inicio de cada uno de tus dos siguientes turnos, desgarrando al que esté más cerca de caer. Un cazador que sigue luchando mientras tú trabajas."
+  },
+  "wrath-of-silvanus": {
+    "name": "Ira de Silvanus",
+    "description": "El Padre Roble responde —el suelo se abre y desciende una columna de fuego salvaje y ruina. 15d6 de fuego a cada enemigo. Una salvación de Destreza reduce la devastación a la mitad."
+  },
+  "avatar-of-the-wilds": {
+    "name": "Avatar de lo Silvestre",
+    "description": "Dejas que lo silvestre te inunde por entero y te alzas como algo primigenio. Durante 4 asaltos ganas 30 puntos de golpe temporales, +2 a la CA, y cada golpe —garra o conjuro— muerde con mucha más fuerza."
+  }
+}
