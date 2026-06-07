@@ -1,42 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useT } from '../../i18n/useT';
 
 interface IntroScreenProps {
   onComplete: () => void;
 }
 
-const SCENES: { speaker?: string; text: string }[] = [
-  {
-    text: 'In the dark, you wake. Iron at your wrists. Salt on your tongue. The stink of the dying nearby.',
-  },
-  {
-    text: 'You remember a forest road. A blade between your ribs. Your sister\'s voice, calling.',
-  },
-  {
-    text: 'You remember the man with the eyes that did not blink — the one who said, "You are mine now."',
-  },
-  {
-    speaker: 'The voice in the dark',
-    text: 'Bhaalspawn. Childe of the slain. You have proven exceptionally resilient. Even your sister\'s screams could not break you. Yet.',
-  },
-  {
-    text: 'The cell door is not locked. He has left it open for you to walk.',
-  },
-  {
-    speaker: 'The voice in the dark',
-    text: 'You will work for me, whether you know it or not. The cellars beneath this place are mine — and so, in time, will be the rest. Walk, child. There is so much you have to learn.',
-  },
-  {
-    text: 'He gave no name. The unblinking eyes did not need one.',
-  },
-  {
-    text: 'You are the work.',
-  },
-];
+const SCENE_COUNT = 8;
+/** The scenes spoken by the unblinking voice rather than narrated. */
+const VOICE_SCENES = new Set([3, 5]);
 
 const BASE_TICK = 22;
 const FAST_TICK = 4;
 
 export function IntroScreen({ onComplete }: IntroScreenProps) {
+  const { t, locale } = useT();
+  const SCENES = useMemo(
+    () =>
+      Array.from({ length: SCENE_COUNT }, (_, i) => ({
+        speaker: VOICE_SCENES.has(i) ? t('screens.intro.voiceSpeaker') : undefined,
+        text: t(`screens.intro.s${i}`),
+      })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [locale],
+  );
   const [idx, setIdx] = useState(0);
   const [typed, setTyped] = useState('');
   const [done, setDone] = useState(false);
@@ -137,7 +123,11 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
             {idx + 1} / {SCENES.length}
           </span>
           <span>
-            {holding ? '▶▶ holding to speed' : done ? '► click to continue' : '► click skips · hold speeds · 2× advances'}
+            {holding
+              ? t('screens.intro.holding')
+              : done
+                ? t('screens.intro.clickContinue')
+                : t('screens.intro.clickHint')}
           </span>
         </div>
       </div>
@@ -146,7 +136,7 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
         onClick={onComplete}
         className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest hover:text-[var(--color-text-secondary)]"
       >
-        Skip intro
+        {t('screens.intro.skip')}
       </button>
     </div>
   );

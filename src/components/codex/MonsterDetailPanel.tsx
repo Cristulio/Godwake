@@ -2,7 +2,11 @@ import { useEffect } from 'react';
 import type { Monster, MonsterAction } from '../../schemas/monster';
 import { getMonster } from '../../content/monsters';
 import { MonsterPortrait } from '../combat/MonsterPortrait';
-import { abilityModifier, ABILITY_NAMES, ABILITY_FULL_NAMES } from '../../types/abilities';
+import { abilityModifier, ABILITY_NAMES } from '../../types/abilities';
+import { useT } from '../../i18n/useT';
+
+type TFn = (key: string, params?: Record<string, string | number>) => string;
+type TcFn = (namespace: string, id: string, field: string, fallbackEnglish: string) => string;
 
 interface MonsterDetailPanelProps {
   monster: Monster;
@@ -21,6 +25,8 @@ export function MonsterDetailPanel({
   killingAbilities,
   onClose,
 }: MonsterDetailPanelProps) {
+  const { t, tc } = useT();
+  const monsterName = tc('monsters', monster.id, 'name', monster.name);
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose();
@@ -35,7 +41,7 @@ export function MonsterDetailPanel({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={`${monster.name} codex entry`}
+      aria-label={t('screens.monsterDetail.entryAria', { name: monsterName })}
     >
       <div
         className="panel-etched-warm border-2 border-[var(--color-accent-gold)] max-w-3xl w-full max-h-[85vh] overflow-y-auto animate-pop-in"
@@ -48,19 +54,23 @@ export function MonsterDetailPanel({
               className="font-display text-[var(--color-accent-amber)] text-lg md:text-xl uppercase tracking-[0.15em]"
               style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.85), 0 0 14px rgba(244,167,66,0.3)' }}
             >
-              {monster.name}
+              {monsterName}
             </h2>
             <p className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest mt-1 font-mono">
-              <span className="text-[var(--color-accent-gold)]">CR {monster.cr}</span> · {monster.size} {monster.creatureType}
+              {t('screens.monsterDetail.subtitle', {
+                cr: monster.cr,
+                size: monster.size,
+                type: monster.creatureType,
+              })}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="font-display text-[var(--color-text-secondary)] hover:text-[var(--color-accent-amber)] text-[10px] uppercase tracking-widest"
-            title="Close (Esc)"
+            title={t('screens.monsterDetail.closeTitle')}
           >
-            ✕ Close
+            {t('screens.monsterDetail.close')}
           </button>
         </div>
 
@@ -72,7 +82,7 @@ export function MonsterDetailPanel({
             <div className="panel-etched border border-[var(--color-border-dim)] px-3 py-2 w-full grid grid-cols-3 gap-2 text-center">
               <div>
                 <div className="font-display text-[var(--color-text-dim)] uppercase tracking-widest text-[8px]">
-                  Met
+                  {t('screens.monsterDetail.met')}
                 </div>
                 <div className="text-[var(--color-accent-gold)] font-mono text-base">
                   {encounters}
@@ -80,7 +90,7 @@ export function MonsterDetailPanel({
               </div>
               <div>
                 <div className="font-display text-[var(--color-text-dim)] uppercase tracking-widest text-[8px]">
-                  Slain
+                  {t('screens.monsterDetail.slain')}
                 </div>
                 <div className="text-[var(--color-status-poison)] font-mono text-base">
                   {defeated}
@@ -88,7 +98,7 @@ export function MonsterDetailPanel({
               </div>
               <div>
                 <div className="font-display text-[var(--color-text-dim)] uppercase tracking-widest text-[8px]">
-                  Felled by
+                  {t('screens.monsterDetail.felledBy')}
                 </div>
                 <div
                   className={`font-mono text-base ${killedByCount > 0 ? 'text-[var(--color-accent-blood)]' : 'text-[var(--color-text-dim)]'}`}
@@ -101,7 +111,7 @@ export function MonsterDetailPanel({
 
           <div className="flex flex-col gap-4 min-w-0">
             <div>
-              <SectionHeader>◆ Stats</SectionHeader>
+              <SectionHeader>{t('screens.monsterDetail.stats')}</SectionHeader>
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <Stat label="HP" value={String(monster.maxHp)} accentValue />
                 <Stat label="AC" value={String(monster.ac)} accentValue />
@@ -115,7 +125,7 @@ export function MonsterDetailPanel({
                     <div
                       key={a}
                       className="text-center panel-etched border border-[var(--color-border-dim)] py-1"
-                      title={ABILITY_FULL_NAMES[a]}
+                      title={t(`ui.level.ability.${a}`)}
                     >
                       <div className="text-[var(--color-text-dim)] uppercase font-display text-[8px]">{a}</div>
                       <div className="text-[var(--color-text-primary)]">{score}</div>
@@ -135,7 +145,7 @@ export function MonsterDetailPanel({
                       key={`v-${d}`}
                       className="bg-[var(--color-accent-blood)]/30 text-[var(--color-accent-blood)] px-2 py-0.5 border border-[var(--color-accent-blood)]/50"
                     >
-                      vuln {d}
+                      {t('screens.monsterDetail.vuln', { d })}
                     </span>
                   ))}
                   {monster.resistances?.map((d) => (
@@ -143,7 +153,7 @@ export function MonsterDetailPanel({
                       key={`r-${d}`}
                       className="bg-[var(--color-status-frost)]/20 text-[var(--color-status-frost)] px-2 py-0.5 border border-[var(--color-status-frost)]/40"
                     >
-                      resist {d}
+                      {t('screens.monsterDetail.resist', { d })}
                     </span>
                   ))}
                   {monster.immunities?.map((d) => (
@@ -151,7 +161,7 @@ export function MonsterDetailPanel({
                       key={`i-${d}`}
                       className="bg-[var(--color-text-dim)]/30 text-[var(--color-text-secondary)] px-2 py-0.5 border border-[var(--color-border-dim)]"
                     >
-                      immune {d}
+                      {t('screens.monsterDetail.immune', { d })}
                     </span>
                   ))}
                 </div>
@@ -159,13 +169,15 @@ export function MonsterDetailPanel({
             </div>
 
             <div>
-              <SectionHeader>◆ Actions</SectionHeader>
+              <SectionHeader>{t('screens.monsterDetail.actions')}</SectionHeader>
               <div className="flex flex-col gap-2">
                 {monster.actions.map((a, i) => (
                   <ActionRow
                     key={`${a.kind}-${a.name}-${i}`}
                     action={a}
                     killCount={killingAbilities[a.name] ?? 0}
+                    t={t}
+                    tc={tc}
                   />
                 ))}
               </div>
@@ -173,9 +185,9 @@ export function MonsterDetailPanel({
 
             {monster.flavorText && (
               <div>
-                <SectionHeader>◆ Lore</SectionHeader>
+                <SectionHeader>{t('screens.monsterDetail.lore')}</SectionHeader>
                 <p className="text-[var(--color-text-secondary)] text-xs italic leading-relaxed font-narrative">
-                  {monster.flavorText}
+                  {tc('monsters', monster.id, 'flavorText', monster.flavorText)}
                 </p>
               </div>
             )}
@@ -183,10 +195,10 @@ export function MonsterDetailPanel({
             {monster.bossMechanic && (
               <div className="bg-[var(--color-accent-blood)]/10 border-2 border-[var(--color-accent-blood)]/40 p-2.5">
                 <div className="font-display text-[var(--color-accent-blood)] text-[10px] uppercase tracking-widest mb-1">
-                  ◆ Boss Mechanic
+                  {t('screens.monsterDetail.bossMechanicHeader')}
                 </div>
                 <p className="text-[var(--color-text-secondary)] text-xs leading-snug">
-                  {bossMechanicText(monster.bossMechanic)}
+                  {t(`screens.monsterDetail.bossMechanic.${monster.bossMechanic}`)}
                 </p>
               </div>
             )}
@@ -205,14 +217,24 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ActionRow({ action, killCount }: { action: MonsterAction; killCount: number }) {
+function ActionRow({
+  action,
+  killCount,
+  t,
+  tc,
+}: {
+  action: MonsterAction;
+  killCount: number;
+  t: TFn;
+  tc: TcFn;
+}) {
   const killBadge =
     killCount > 0 ? (
       <span
         className="bg-[var(--color-accent-blood)]/30 text-[var(--color-accent-blood)] border border-[var(--color-accent-blood)]/50 px-1.5 py-0.5 text-[9px] uppercase tracking-widest font-mono"
-        title="Times this ability has killed you"
+        title={t('screens.monsterDetail.killedYouTitle')}
       >
-        ✗ killed you × {killCount}
+        {t('screens.monsterDetail.killedYou', { n: killCount })}
       </span>
     ) : null;
   if (action.kind === 'attack') {
@@ -223,7 +245,7 @@ function ActionRow({ action, killCount }: { action: MonsterAction; killCount: nu
           {action.name}
         </div>
         <div className="font-mono text-[11px] text-[var(--color-text-secondary)] mt-1">
-          <span className="text-[var(--color-accent-gold)]">{bonus}</span> to hit ·{' '}
+          <span className="text-[var(--color-accent-gold)]">{bonus}</span> {t('screens.monsterDetail.toHit')} ·{' '}
           <span className="text-[var(--color-accent-amber)]">{action.damage}</span> {action.damageType}
         </div>
         {action.description && (
@@ -235,7 +257,7 @@ function ActionRow({ action, killCount }: { action: MonsterAction; killCount: nu
       </div>
     );
   }
-  const { meta, body } = actionSummary(action);
+  const { meta, body } = actionSummary(action, t, tc);
   return (
     <div className="panel-etched border border-[var(--color-border-dim)] p-2">
       <div className="flex items-baseline justify-between gap-2">
@@ -260,40 +282,53 @@ function ActionRow({ action, killCount }: { action: MonsterAction; killCount: nu
 /** One-line meta (right) + body summary for a non-attack monster action. */
 function actionSummary(
   action: Exclude<MonsterAction, { kind: 'attack' }>,
+  t: TFn,
+  tc: TcFn,
 ): { meta: string; body: string } {
   switch (action.kind) {
     case 'paralyze':
       return {
-        meta: `${action.durationRounds} rd`,
-        body: `DC ${action.saveDC} ${action.saveAbility.toUpperCase()} save · paralyze`,
+        meta: t('screens.monsterDetail.rounds', { n: action.durationRounds }),
+        body: `DC ${action.saveDC} ${action.saveAbility.toUpperCase()} ${t('screens.monsterDetail.save')} · ${t('screens.monsterDetail.paralyze')}`,
       };
     case 'debuff':
       return {
-        meta: `${action.durationRounds} rd`,
-        body: `DC ${action.saveDC} ${action.saveAbility.toUpperCase()} save · ${action.condition}`,
+        meta: t('screens.monsterDetail.rounds', { n: action.durationRounds }),
+        body: `DC ${action.saveDC} ${action.saveAbility.toUpperCase()} ${t('screens.monsterDetail.save')} · ${action.condition}`,
       };
     case 'summon': {
-      const name = monsterNameOrId(action.summonDefId);
+      const name = monsterNameOrId(action.summonDefId, tc);
       return {
-        meta: 'summon',
-        body: `summons ${action.count ?? 1}× ${name}`,
+        meta: t('screens.monsterDetail.summon'),
+        body: t('screens.monsterDetail.summons', { n: action.count ?? 1, name }),
       };
     }
     case 'sustain': {
       const bits: string[] = [];
-      if (action.heal) bits.push(`heals ${action.heal}`);
-      if (action.wardTempHp !== undefined) bits.push(`wards +${action.wardTempHp} temp HP`);
-      const who = (action.target ?? 'self') === 'ally' ? 'an ally' : 'itself';
-      return { meta: 'support', body: `${bits.join(' · ') || 'sustains'} (${who})` };
+      if (action.heal) bits.push(t('screens.monsterDetail.heals', { x: action.heal }));
+      if (action.wardTempHp !== undefined)
+        bits.push(t('screens.monsterDetail.wards', { n: action.wardTempHp }));
+      const who =
+        (action.target ?? 'self') === 'ally'
+          ? t('screens.monsterDetail.anAlly')
+          : t('screens.monsterDetail.itself');
+      return {
+        meta: t('screens.monsterDetail.support'),
+        body: `${bits.join(' · ') || t('screens.monsterDetail.sustains')} (${who})`,
+      };
     }
     case 'multiattack':
-      return { meta: `×${action.attacks}`, body: `${action.attacks} attacks in one turn` };
+      return {
+        meta: t('screens.monsterDetail.multiMeta', { n: action.attacks }),
+        body: t('screens.monsterDetail.multiBody', { n: action.attacks }),
+      };
   }
 }
 
-function monsterNameOrId(defId: string): string {
+function monsterNameOrId(defId: string, tc: TcFn): string {
   try {
-    return getMonster(defId).name;
+    const m = getMonster(defId);
+    return tc('monsters', m.id, 'name', m.name);
   } catch {
     return defId;
   }
@@ -312,11 +347,4 @@ function Stat({ label, value, accentValue = false }: { label: string; value: str
       </span>
     </div>
   );
-}
-
-function bossMechanicText(mechanic: 'battle-rage'): string {
-  switch (mechanic) {
-    case 'battle-rage':
-      return 'Battle Rage: when reduced to half HP or less, gains +2 damage per hit for the rest of combat.';
-  }
 }

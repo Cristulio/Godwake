@@ -1,6 +1,7 @@
 import { Button } from '../ui/Button';
 import { getTutorial } from '../../content/tutorials';
 import { useInputBlock } from '../ui/useInputBlock';
+import { useT } from '../../i18n/useT';
 
 interface UnlockTutorialCardProps {
   /** The feature id that just unlocked — also its seenTutorials key. */
@@ -15,6 +16,7 @@ interface UnlockTutorialCardProps {
  */
 export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardProps) {
   const overlayRef = useInputBlock<HTMLDivElement>();
+  const { t, tc } = useT();
   const tutorial = getTutorial(featureId);
   // Defensive: an unknown id has no copy to show — dismiss rather than wedge.
   if (!tutorial) {
@@ -34,7 +36,7 @@ export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardP
         className="max-w-xl w-full bg-[#1a140e] border-2 border-[var(--color-accent-amber)] shadow-[0_0_32px_rgba(244,167,66,0.35)] p-5 md:p-7 select-none"
       >
         <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] font-bold mb-2 animate-pulse-glow">
-          ◆ New — Unlocked
+          {t('screens.unlockTutorial.eyebrow')}
         </div>
         <h2
           className="font-display text-[var(--color-accent-amber)] text-2xl md:text-3xl uppercase tracking-wider leading-tight mb-1"
@@ -43,10 +45,10 @@ export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardP
               '0 0 18px rgba(244,167,66,0.55), 0 0 6px rgba(244,167,66,0.85), 0 2px 0 rgba(0,0,0,0.9)',
           }}
         >
-          {tutorial.unlocked}
+          {tc('tutorials', featureId, 'unlocked', tutorial.unlocked)}
         </h2>
         <p className="font-narrative text-[var(--color-text-secondary)] text-sm italic tracking-wide mb-4">
-          {tutorial.title}
+          {tc('tutorials', featureId, 'title', tutorial.title)}
         </p>
         {tutorial.body.map((para, i) => (
           <p
@@ -58,15 +60,15 @@ export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardP
         ))}
         <div className="bg-[var(--color-bg-elevated)] border border-[var(--color-accent-gold)]/50 p-3 mb-4 flex items-start gap-2">
           <span className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest font-bold shrink-0 mt-0.5">
-            Key
+            {t('screens.unlockTutorial.key')}
           </span>
           <span className="text-[var(--color-text-primary)] text-sm leading-relaxed">
-            {tutorial.key}
+            {tc('tutorials', featureId, 'key', tutorial.key)}
           </span>
         </div>
         <div className="flex justify-end">
           <Button variant="primary" onClick={onDismiss}>
-            Got it
+            {t('screens.unlockTutorial.gotIt')}
           </Button>
         </div>
       </div>

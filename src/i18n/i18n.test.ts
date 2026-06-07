@@ -3,6 +3,8 @@ import { t, getLocalized } from './index';
 import { useSettingsStore } from '../stores/settingsStore';
 import enUi from './locales/en/ui.json';
 import esUi from './locales/es/ui.json';
+import enScreens from './locales/en/screens.json';
+import esScreens from './locales/es/screens.json';
 
 function flatKeys(obj: unknown, prefix = ''): string[] {
   if (obj == null || typeof obj !== 'object') return [prefix];
@@ -26,6 +28,21 @@ describe('ui locale completeness', () => {
   it('es has no keys absent from en (no orphans)', () => {
     const en = new Set(flatKeys(enUi));
     const orphan = flatKeys(esUi).filter((k) => !en.has(k));
+    expect(orphan).toEqual([]);
+  });
+});
+
+describe('screens locale completeness', () => {
+  it('every en key exists in es', () => {
+    const en = flatKeys(enScreens).sort();
+    const es = new Set(flatKeys(esScreens));
+    const missing = en.filter((k) => !es.has(k));
+    expect(missing).toEqual([]);
+  });
+
+  it('es has no keys absent from en (no orphans)', () => {
+    const en = new Set(flatKeys(enScreens));
+    const orphan = flatKeys(esScreens).filter((k) => !en.has(k));
     expect(orphan).toEqual([]);
   });
 });

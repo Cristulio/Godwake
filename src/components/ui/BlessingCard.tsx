@@ -1,5 +1,5 @@
 import { getBlessing } from '../../content/blessings';
-import { BLESSING_GOD_LABEL } from '../../schemas/blessing';
+import { useT } from '../../i18n/useT';
 
 interface BlessingCardProps {
   blessingId: string;
@@ -21,18 +21,19 @@ interface BlessingCardProps {
  */
 function resolvedEffect(
   mods: ReturnType<typeof getBlessing>['modifiers'],
+  t: (key: string, params?: Record<string, string | number>) => string,
   baneCount?: number,
   delveLevel?: number,
 ): string | null {
   const parts: string[] = [];
   if (baneCount !== undefined && mods.acBonusPerBaneQuirk) {
-    parts.push(`+${mods.acBonusPerBaneQuirk * baneCount} AC`);
+    parts.push(t('screens.blessing.acBonus', { n: mods.acBonusPerBaneQuirk * baneCount }));
   }
   if (baneCount !== undefined && mods.tempHpPerBaneQuirk) {
-    parts.push(`+${mods.tempHpPerBaneQuirk * baneCount} temp HP each combat`);
+    parts.push(t('screens.blessing.tempHpEach', { n: mods.tempHpPerBaneQuirk * baneCount }));
   }
   if (delveLevel !== undefined && mods.tempHpPerDelveLevel) {
-    parts.push(`+${mods.tempHpPerDelveLevel * delveLevel} temp HP each combat`);
+    parts.push(t('screens.blessing.tempHpEach', { n: mods.tempHpPerDelveLevel * delveLevel }));
   }
   return parts.length > 0 ? parts.join(' · ') : null;
 }
@@ -44,6 +45,7 @@ export function BlessingCard({
   baneCount,
   delveLevel,
 }: BlessingCardProps) {
+  const { t, tc } = useT();
   let b;
   try {
     b = getBlessing(blessingId);
@@ -51,7 +53,7 @@ export function BlessingCard({
     return null;
   }
 
-  const resolved = resolvedEffect(b.modifiers, baneCount, delveLevel);
+  const resolved = resolvedEffect(b.modifiers, t, baneCount, delveLevel);
 
   const baseClass =
     'bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-gold)]/40 p-4 transition-all h-full flex flex-col';
@@ -63,25 +65,25 @@ export function BlessingCard({
     <>
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="text-[var(--color-accent-amber)] uppercase tracking-wider text-sm font-bold leading-tight">
-          ◆ {b.name}
+          ◆ {tc('blessings', b.id, 'name', b.name)}
         </div>
         <span className="shrink-0 text-[9px] uppercase tracking-widest px-1.5 py-0.5 border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)] whitespace-nowrap">
-          {BLESSING_GOD_LABEL[b.god]}
+          {t(`screens.blessing.god.${b.god}`)}
         </span>
       </div>
       <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-        {b.flavor}
+        {tc('blessings', b.id, 'flavor', b.flavor)}
       </p>
       <p className="text-[var(--color-text-primary)] text-xs mt-auto pt-2 border-t border-[var(--color-border-dim)]">
         <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[10px] mr-1">
-          Effect:
+          {t('screens.blessing.effect')}
         </span>
-        {b.effect}
+        {tc('blessings', b.id, 'effect', b.effect)}
       </p>
       {resolved && (
         <p className="text-[var(--color-accent-amber)] text-xs mt-1">
           <span className="text-[var(--color-text-dim)] uppercase tracking-widest text-[10px] mr-1">
-            For this soul:
+            {t('screens.blessing.forThisSoul')}
           </span>
           {resolved}
         </p>
