@@ -12,9 +12,19 @@ type Registry = Record<string, Record<string, NamespaceData>>;
  * Eagerly load every locale JSON. Built as a glob so a later content-overlay
  * lane only has to drop `es/<namespace>.json` into place — no wiring here.
  */
-const modules = import.meta.glob<{ default: NamespaceData }>('./locales/*/*.json', {
-  eager: true,
-});
+// `import.meta.glob` is a Vite build transform; in the app it's replaced with
+// the eager JSON imports. Under a raw node/tsx run (the balance sims import the
+// engine, which transitively imports this module) it isn't available and throws
+// — fall back to an empty registry so t()/getLocalized just return the English
+// source. The literal call stays intact so Vite still transforms it for the app.
+let modules: Record<string, { default: NamespaceData }> = {};
+try {
+  modules = import.meta.glob<{ default: NamespaceData }>('./locales/*/*.json', {
+    eager: true,
+  });
+} catch {
+  modules = {};
+}
 
 const registry: Registry = {};
 for (const path in modules) {
