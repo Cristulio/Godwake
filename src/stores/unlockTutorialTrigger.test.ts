@@ -158,11 +158,11 @@ describe('screenStore tutorial queue', () => {
 
   it('enqueues in order and dedupes ids already queued', () => {
     const sc = useScreenStore.getState();
-    sc.enqueueTutorials(['grove', 'affixes-rare']);
-    sc.enqueueTutorials(['affixes-rare', 'legendaries']); // affixes-rare already queued
+    sc.enqueueTutorials(['grove', 'boss-intel']);
+    sc.enqueueTutorials(['boss-intel', 'legendaries']); // boss-intel already queued
     expect(useScreenStore.getState().tutorialQueue).toEqual([
       'grove',
-      'affixes-rare',
+      'boss-intel',
       'legendaries',
     ]);
   });

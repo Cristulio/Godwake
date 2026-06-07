@@ -38,25 +38,39 @@ describe('elite-nodes gate (createGodwakeDelve)', () => {
   });
 });
 
-// ── affixes-rare / affixes-epic: rarity cap in shop stock ────────────────────
+// ── rolled gear rarity: gated by the CURRENT chapter, not a meta unlock ───────
+// The shop rack rarity ceiling is intrinsic to the chapter (deep layers and any
+// number of prior runs never push it above the chapter band) — green Ch1-2, blue
+// Ch3-6, purple Ch7+. See engine/items/drops.maxRolledRarityForChapter.
 
-describe('affixes-rare gate (rollGearStock maxRarity)', () => {
-  it('caps all stock at or below green when maxRarity=green (white floor allowed)', () => {
-    const stock = rollGearStock('test-room', 3, 'fighter', 0, 'green');
-    for (const item of stock) {
-      expect(['white', 'green']).toContain(item.ref.rolled?.rarity);
+describe('shop rarity ceiling (rollGearStock, chapter-gated)', () => {
+  const rarities = (chapter: number, layer: number) =>
+    rollGearStock(`rarity-${chapter}-${layer}`, chapter, 'fighter', layer).map(
+      (s) => s.ref.rolled?.rarity ?? 'white',
+    );
+
+  it('caps an early rack (Ch1-2) at green, however deep the layer or seed', () => {
+    for (const chapter of [1, 2]) {
+      for (const layer of [0, 4, 20]) {
+        for (const r of rarities(chapter, layer)) expect(['white', 'green']).toContain(r);
+      }
     }
   });
 
-  it('allows blue when maxRarity=blue', () => {
-    const stock = rollGearStock('test-room', 3, 'fighter', 0, 'blue');
-    const rarities = stock.map((s) => s.ref.rolled?.rarity);
-    expect(rarities.every((r) => r === 'white' || r === 'green' || r === 'blue')).toBe(true);
-    expect(rarities.some((r) => r === 'blue')).toBe(true);
+  it('caps a mid rack (Ch3-6) at blue and never shows purple', () => {
+    for (const chapter of [3, 4, 5, 6]) {
+      for (const layer of [0, 4, 20]) {
+        const rs = rarities(chapter, layer);
+        expect(rs.every((r) => r === 'white' || r === 'green' || r === 'blue')).toBe(true);
+        expect(rs).not.toContain('purple');
+      }
+    }
   });
 
-  it('does not produce purple when maxRarity=blue', () => {
-    const stock = rollGearStock('test-room', 3, 'fighter', 0, 'blue');
-    expect(stock.some((s) => s.ref.rolled?.rarity === 'purple')).toBe(false);
+  it('opens purple only from Ch7 on (the deep-run reward)', () => {
+    for (const chapter of [7, 10, 14]) {
+      const everShowsPurple = [0, 2, 8].some((layer) => rarities(chapter, layer).includes('purple'));
+      expect(everShowsPurple).toBe(true);
+    }
   });
 });

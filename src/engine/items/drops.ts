@@ -17,46 +17,49 @@ const DROP_CHANCE: Record<DropSource, number> = {
 };
 
 /**
- * Rarity weights by RICHNESS TIER (low → high). A drop's tier is its chapter band
- * promoted by the source, so a dropped item tracks the SHOP RACK for the same
- * chapter instead of the old flat, chapter-blind green-heavy mix that fell far
- * below a deep merchant (a Ch14 mob used to drop the same green-72 spread as a
- * Ch1 one). Mirrors shopStock.GEAR_RARITY_MIX_BY_CHAPTER — kept inline so the
- * engine doesn't import a component (and to avoid an items↔shopStock cycle).
- * Weights need not sum to 100; they're normalised at roll time.
+ * The HARD ceiling on rolled gear rarity, by the run's CURRENT chapter (1–14).
+ * Monotonic: greens only early, blue mid, epic late. This is the single axis that
+ * governs rolled rarity — it reads the LIVE chapter, so it resets to greens every
+ * run automatically (a fresh run starts at Ch1). It is NOT meta-persisted: clearing
+ * deep in a prior run grants no rarity head-start in the next one. Legendaries and
+ * set gear keep their own cross-run persistence and are unaffected by this.
+ *
+ * Thresholds (shared with the shop rack, shopStock.GEAR_RARITY_MIX_BY_CHAPTER):
+ *   Ch1–2  → green   (white/green only — early fights stay un-trivialised)
+ *   Ch3–6  → blue
+ *   Ch7–14 → purple  (epic; the deep-run reward)
  */
-const RARITY_TIERS: Array<Array<[GearRarity, number]>> = [
-  // tier 0 — Ch1-2 floor: white/green, a little blue, no purple (rack W/G).
-  [['white', 42], ['green', 44], ['blue', 14]],
-  // tier 1 — Ch3-4: blue-centred, still no purple (rack W/G/B).
-  [['white', 15], ['green', 40], ['blue', 45]],
-  // tier 2 — Ch5-7: purple enters, blue carries (rack first shows purple at Ch5).
-  [['white', 3], ['green', 27], ['blue', 45], ['purple', 25]],
-  // tier 3 — Ch8+: the richest spread (rack flattens to G/B/B/P; depth climbs on).
-  [['green', 20], ['blue', 50], ['purple', 30]],
-];
-
-/** Chapter → base richness tier (the `combat` source). */
-function chapterBand(chapter: number): number {
-  if (chapter >= 8) return 3;
-  if (chapter >= 5) return 2;
-  if (chapter >= 3) return 1;
-  return 0;
+export function maxRolledRarityForChapter(chapter: number): GearRarity {
+  if (chapter >= 7) return 'purple';
+  if (chapter >= 3) return 'blue';
+  return 'green';
 }
 
-/** Tiers a source rolls ABOVE a plain mob — an elite/boss fight skews richer at
- * the same chapter, the way a deeper shop layer promotes the rack. */
-const SOURCE_RICHNESS: Record<DropSource, number> = {
-  combat: 0,
-  elite: 1,
-  boss: 2,
-};
+/** The rarity ladder, lowest → highest. `legendary` never rolls here (hub layer). */
+const RARITY_LADDER: GearRarity[] = ['white', 'green', 'blue', 'purple', 'legendary'];
 
-/** The rarity weight table for a (source, chapter): the chapter band promoted by
- * the source, clamped to the richest tier. */
-function rarityTableFor(source: DropSource, chapter: number): Array<[GearRarity, number]> {
-  const tier = Math.min(RARITY_TIERS.length - 1, chapterBand(chapter) + SOURCE_RICHNESS[source]);
-  return RARITY_TIERS[tier];
+/** Clamp `rarity` so it never exceeds `max` on the white → purple ladder. */
+export function capRarity(rarity: GearRarity, max: GearRarity): GearRarity {
+  const ri = RARITY_LADDER.indexOf(rarity);
+  const mi = RARITY_LADDER.indexOf(max);
+  return mi < 0 || ri <= mi ? rarity : max;
+}
+
+/**
+ * The weighted rarity spread for a REGULAR mob drop at the given chapter — a
+ * distribution within the chapter band (every entry already sits at or below the
+ * band ceiling). Bosses and elites don't use this: they drop AT the ceiling (see
+ * rollGearDrop). Weights need not sum to 100; they're normalised at roll time.
+ */
+function combatRarityTable(chapter: number): Array<[GearRarity, number]> {
+  switch (maxRolledRarityForChapter(chapter)) {
+    case 'purple':
+      return [['green', 20], ['blue', 50], ['purple', 30]]; // Ch7+
+    case 'blue':
+      return [['white', 18], ['green', 42], ['blue', 40]]; // Ch3–6
+    default:
+      return [['white', 45], ['green', 55]]; // Ch1–2, greens only
+  }
 }
 
 /**
@@ -99,10 +102,13 @@ export function dropSourceForRoom(kind: string): DropSource | null {
 }
 
 /**
- * Roll whether a cleared combat room drops loot, and at what rarity. The rarity
- * scales with `chapter` (and the source), so a drop you GET is chapter-appropriate
- * — comparable to the same-chapter shop rack, not far below it. Returns the rolled
- * rarity (white→purple) or null for no drop. Deterministic.
+ * Roll whether a cleared combat room drops loot, and at what rarity. Rarity is
+ * gated by the run's CURRENT `chapter` (maxRolledRarityForChapter) — a fresh run
+ * starts at greens and climbs to epic only deep in. A regular mob rolls a weighted
+ * spread WITHIN the band; an elite or boss drops AT the band ceiling (the top of
+ * the current chapter's allowed rarity — a modest reward, never above it, so no
+ * epic falls from a Ch1 elite). Returns the rolled rarity (white→purple) or null
+ * for no drop. Deterministic.
  */
 export function rollGearDrop(
   roller: DiceRoller,
@@ -112,5 +118,7 @@ export function rollGearDrop(
   const source = dropSourceForRoom(roomKind);
   if (!source) return null;
   if (roller.roll('1d100').total > DROP_CHANCE[source]) return null;
-  return pickWeightedRarity(roller, rarityTableFor(source, chapter));
+  const ceiling = maxRolledRarityForChapter(chapter);
+  if (source === 'elite' || source === 'boss') return ceiling;
+  return capRarity(pickWeightedRarity(roller, combatRarityTable(chapter)), ceiling);
 }
