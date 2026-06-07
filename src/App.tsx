@@ -4,6 +4,7 @@ import { TitleScreen } from './components/title/TitleScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { SettingsButton } from './components/ui/SettingsButton';
 import { useCombatAudio } from './hooks/useCombatAudio';
+import { useT } from './i18n/useT';
 
 // Lazy-load screens that aren't on the critical path. Cuts the initial bundle
 // and lets Cloudflare serve gameplay faster — the title/hub/delve loop covers
@@ -65,10 +66,11 @@ const SpoilsScreen = lazy(() =>
 );
 
 function ScreenFallback() {
+  const { t } = useT();
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="font-display text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] animate-pulse">
-        ◆ Loading
+        ◆ {t('ui.loading')}
       </div>
     </div>
   );
