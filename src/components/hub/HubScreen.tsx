@@ -14,7 +14,7 @@ import { loadDelveFactory } from '../../engine/delve/loadDelveFactory';
 import { useT } from '../../i18n/useT';
 
 export function HubScreen() {
-  const { t } = useT();
+  const { t, tc } = useT();
   const character = useGameStore((s) => s.character);
   const goToTitle = useGameStore((s) => s.goToTitle);
   const startDelve = useGameStore((s) => s.startDelve);
@@ -125,7 +125,7 @@ export function HubScreen() {
               {character.name}
             </div>
             <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest mt-0.5">
-              {race.name} {cls.name} · <span className="text-[var(--color-accent-amber)]">{t('hub.levelInline', { n: character.level })}</span>
+              {tc('races', race.id, 'name', race.name)} {tc('classes', cls.id, 'name', cls.name)} · <span className="text-[var(--color-accent-amber)]">{t('hub.levelInline', { n: character.level })}</span>
             </div>
             <div className="mt-2 flex items-center gap-3">
               <span className="font-display text-[9px] text-[var(--color-text-dim)] tracking-widest">{t('hub.hp')}</span>

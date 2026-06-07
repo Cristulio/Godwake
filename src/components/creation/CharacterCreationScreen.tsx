@@ -173,7 +173,7 @@ export function CharacterCreationScreen() {
                     ✦
                   </span>
                   <span className="font-display text-[var(--color-text-primary)] text-base tracking-wide">
-                    {t(`screens.charCreation.race.${opt.raceId}`)}{' '}
+                    {tc('races', opt.raceId, 'name', getRace(opt.raceId).name)}{' '}
                     {tc('classes', opt.classId, 'name', opt.className)}
                   </span>
                 </div>
