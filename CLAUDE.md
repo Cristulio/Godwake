@@ -107,6 +107,14 @@ Removes the worktree directory. Branch is preserved — delete with
 - Don't push directly to `main` from a feature worktree. Open a PR via
   `gh pr create`.
 - When merging back, prefer squash-merges to keep `main` history readable.
+- **Push and merge when ready — don't ask each time** (user grant,
+  2026-06-07; overrides the global "confirm before push" rule for this
+  project). Use judgment: ship once `npm run build` + tests are green and
+  the change is in scope. Covers `git push` (incl. to `main` in the main
+  repo), opening PRs, and `gh pr merge --squash --delete-branch` of the
+  just-merged branch. Still **confirm first**: `--force` /
+  `--force-with-lease`, `reset --hard`, deleting branches or worktrees you
+  didn't just create, and anything outside the normal ship flow.
 
 ## Coordination rules for parallel agents
 
