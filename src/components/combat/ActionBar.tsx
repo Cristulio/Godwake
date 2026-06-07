@@ -18,6 +18,7 @@ import {
 } from '../../engine/combat/martialResource';
 import { getItem } from '../../content/items';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
+import { useT } from '../../i18n/useT';
 
 /** Entangling Roots is surfaced as its own dedicated bonus-action button (below)
  *  and pulled from the generic Spells list, so the id is referenced in both
@@ -69,6 +70,7 @@ export function ActionBar({
   onUseItem,
   onEndTurn,
 }: ActionBarProps) {
+  const { t } = useT();
   const playersTurn = isPlayerTurn(state);
   const active = state.status === 'active';
   // Cunning Action: Quick Strike queues a second swing the player can fire even
@@ -329,12 +331,12 @@ export function ActionBar({
   const flurrySwingPending = hasFlurryStrike && character.actionEconomy.actionUsed;
   const maxAttacks = maxAttacksPerAction(character);
   const attackLabel = flurrySwingPending
-    ? `► Strike (Flurry ${character.flurryStrikesRemaining})`
+    ? `► ${t('ui.combat.flurryStrikeLabel', { n: character.flurryStrikesRemaining ?? 0 })}`
     : quickStrikePending
-      ? '► Quick Strike'
+      ? `► ${t('ui.combat.quickStrike')}`
       : maxAttacks > 1
-        ? `► Attack (${Math.min(attacksThisTurn + 1, maxAttacks)}/${maxAttacks})`
-        : '► Attack';
+        ? `► ${t('ui.combat.attackProgress', { n: Math.min(attacksThisTurn + 1, maxAttacks), max: maxAttacks })}`
+        : `► ${t('ui.combat.attack')}`;
 
   // Two-row layout. Row 1 = the heavy hitters (Attack + class-specific
   // actions + Spells when applicable). Row 2 = universal utility (Item /
@@ -362,7 +364,7 @@ export function ActionBar({
             title="Bonus action: heal 1d10 + level. Once per short rest."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            Second Wind{secondWindCount > 1 ? ` (${secondWindCount})` : ''}
+            {t('ui.combat.secondWind')}{secondWindCount > 1 ? ` (${secondWindCount})` : ''}
           </Button>
         )}
         {isFighter && characterHasMechanic(character, 'action-surge') && (
@@ -373,7 +375,7 @@ export function ActionBar({
             title="Free Action: regain your action this turn. Once per short rest."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            Action Surge{surgeRemaining > 0 && ` (${surgeRemaining})`}
+            {t('ui.combat.actionSurge')}{surgeRemaining > 0 && ` (${surgeRemaining})`}
           </Button>
         )}
         {hasMartialOffense && martial && (
@@ -418,7 +420,7 @@ export function ActionBar({
             title="Bonus action: Hide (advantage on next attack — enables Sneak), Quick Strike (a second strike this turn), Feint (guarantee Sneak on your next strike), or Steel Yourself (advantage on next save)."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            Cunning Action{cunningRemaining > 0 && ` (${cunningRemaining})`}
+            {t('ui.combat.cunningAction')}{cunningRemaining > 0 && ` (${cunningRemaining})`}
           </Button>
         )}
 
@@ -438,10 +440,10 @@ export function ActionBar({
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {raging
-              ? `Raging (${rageRounds})`
+              ? t('ui.combat.raging', { n: rageRounds })
               : rageUnlimited
-                ? 'Rage (∞)'
-                : `Rage (${rageCharges})`}
+                ? t('ui.combat.rageUnlimited')
+                : t('ui.combat.rage', { n: rageCharges })}
           </Button>
         )}
         {hasReckless && (
@@ -452,7 +454,7 @@ export function ActionBar({
             title="Free: your melee attacks this turn roll with advantage, but attacks against you have advantage until your next turn."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {reckless ? 'Reckless ✓' : 'Reckless'}
+            {reckless ? t('ui.combat.recklessOn') : t('ui.combat.reckless')}
           </Button>
         )}
         {isRanger && characterHasMechanic(character, 'hunters-mark') && (
@@ -464,7 +466,7 @@ export function ActionBar({
             title="Bonus action: brand a target as your quarry — every hit on it deals extra damage. Re-cast to move the mark."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {isMarkLive ? 'Re-mark' : "Hunter's Mark"}
+            {isMarkLive ? t('ui.combat.remark') : t('ui.combat.huntersMark')}
           </Button>
         )}
 
@@ -476,7 +478,7 @@ export function ActionBar({
             title="Bonus action, 1 Ki: rain extra unarmed strikes this turn — keep hitting after your Attack action is spent."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {flurryQueued ? `Flurry ✓ (${character.flurryStrikesRemaining})` : `Flurry (${ki} Ki)`}
+            {flurryQueued ? t('ui.combat.flurryOn', { n: character.flurryStrikesRemaining ?? 0 }) : t('ui.combat.flurry', { n: ki })}
           </Button>
         )}
         {hasPatientDefense && (
@@ -487,7 +489,7 @@ export function ActionBar({
             title="Bonus action, 1 Ki: flow into a yielding guard — attacks against you roll at disadvantage until your next turn."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {patientActive ? 'Patient ✓' : 'Patient Defense'}
+            {patientActive ? t('ui.combat.patientOn') : t('ui.combat.patientDefense')}
           </Button>
         )}
         {hasStunningStrike && (
@@ -498,7 +500,7 @@ export function ActionBar({
             title="Free, 2 Ki: arm a staggering blow — your next unarmed hit forces a save or the target loses its next turn."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {stunningArmed ? 'Stunning ✓' : 'Stunning Strike'}
+            {stunningArmed ? t('ui.combat.stunningOn') : t('ui.combat.stunningStrike')}
           </Button>
         )}
 
@@ -516,7 +518,7 @@ export function ActionBar({
             }
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            {isShaped ? 'Beast Form ✓' : `Wild Shape (${wildShapeUses})`}
+            {isShaped ? t('ui.combat.beastFormOn') : t('ui.combat.wildShape', { n: wildShapeUses })}
           </Button>
         )}
 
@@ -529,7 +531,7 @@ export function ActionBar({
             title="Bonus action, costs a 2nd-level slot: grasping roots sweep the floor — every enemy makes a Strength save or is rooted, losing its next turn. Root the room and still strike the same turn."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            ✦ Entangling Roots ({entangleSlots})
+            ✦ {t('ui.combat.entanglingRoots', { n: entangleSlots })}
           </Button>
         )}
 
@@ -541,7 +543,7 @@ export function ActionBar({
             title="Action: pick a prepared spell."
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
-            ✦ Spells ({totalSlots})
+            ✦ {t('ui.combat.spellsBtn', { n: totalSlots })}
           </Button>
         )}
       </div>
@@ -553,7 +555,7 @@ export function ActionBar({
           disabled={!canUseItem}
           className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
         >
-          Item {consumableCount > 0 && `(${consumableCount})`}
+          {t('ui.combat.item')} {consumableCount > 0 && `(${consumableCount})`}
         </Button>
         <Button
           variant="secondary"
@@ -561,7 +563,7 @@ export function ActionBar({
           disabled={!canEndTurn}
           className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
         >
-          End Turn
+          {t('ui.combat.endTurn')}
         </Button>
       </div>
     </div>

@@ -2,6 +2,7 @@ import type { Postmortem } from '../../types/postmortem';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { MonsterPortrait } from '../combat/MonsterPortrait';
+import { useT } from '../../i18n/useT';
 
 interface PostmortemModalProps {
   postmortem: Postmortem;
@@ -18,6 +19,7 @@ const ABILITY_FULL: Record<string, string> = {
 };
 
 export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalProps) {
+  const { t } = useT();
   const goToCodex = useGameStore((s) => s.goToCodex);
 
   return (
@@ -27,12 +29,12 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
           className="text-3xl md:text-4xl uppercase tracking-[0.4em] mb-2 text-[var(--color-accent-blood)]"
           style={{ textShadow: '0 0 24px rgba(200,51,46,0.4), 2px 2px 0 rgba(0,0,0,0.85)' }}
         >
-          ✶ The Soul Falls ✶
+          ✶ {t('ui.postmortem.soulFalls')} ✶
         </div>
         <div className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest italic">
           {postmortem.dungeonName}
           {postmortem.roomNumber > 0 && (
-            <> · Room {postmortem.roomNumber}</>
+            <> · {t('ui.postmortem.room', { n: postmortem.roomNumber })}</>
           )}
         </div>
       </div>
@@ -52,7 +54,7 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
           )}
           <div className="flex-1 min-w-0">
             <div className="font-display text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1">
-              Slain by
+              {t('ui.postmortem.slainBy')}
             </div>
             <div
               className="font-display text-[var(--color-accent-amber)] text-xl uppercase tracking-wider"
@@ -61,7 +63,7 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
               {postmortem.killerName}
             </div>
             <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 font-narrative">
-              Final blow:{' '}
+              {t('ui.postmortem.finalBlow')}{' '}
               <span className="text-[var(--color-text-primary)] not-italic">
                 {postmortem.attackName}
               </span>
@@ -79,10 +81,10 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
                   )}
                   {postmortem.crit && (
                     <span className="text-[var(--color-accent-blood)] font-display text-[10px] uppercase tracking-widest not-italic ml-2">
-                      ◆ CRIT
+                      ◆ {t('ui.postmortem.crit')}
                     </span>
                   )}
-                  {' damage.'}
+                  {' '}{t('ui.postmortem.damageSuffix')}
                 </>
               )}
             </div>
@@ -92,24 +94,24 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
         {postmortem.failedSave && (
           <div className="border-t border-[var(--color-border-dim)] pt-3">
             <div className="font-display text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1">
-              The save that broke
+              {t('ui.postmortem.saveBroke')}
             </div>
             <div className="text-[var(--color-text-secondary)] text-xs leading-relaxed font-narrative italic">
-              You failed a{' '}
+              {t('ui.postmortem.saveFailedPre')}{' '}
               <span className="text-[var(--color-text-primary)] not-italic">
                 {ABILITY_FULL[postmortem.failedSave.ability] ?? postmortem.failedSave.ability.toUpperCase()}
               </span>{' '}
-              save against{' '}
+              {t('ui.postmortem.saveFailedAgainst')}{' '}
               <span className="text-[var(--color-text-primary)] not-italic">
                 {postmortem.failedSave.sourceName}
               </span>{' '}
-              — rolled{' '}
+              {t('ui.postmortem.saveFailedRolled')}{' '}
               <span className="text-[var(--color-accent-blood)] font-mono not-italic">
                 {postmortem.failedSave.rolled}
                 {postmortem.failedSave.mod >= 0 ? '+' : ''}
                 {postmortem.failedSave.mod}
               </span>{' '}
-              vs DC{' '}
+              {t('ui.postmortem.saveFailedVsDc')}{' '}
               <span className="text-[var(--color-accent-amber)] font-mono not-italic">
                 {postmortem.failedSave.dc}
               </span>
@@ -121,7 +123,7 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
         {postmortem.activeConditions.length > 0 && (
           <div className="border-t border-[var(--color-border-dim)] pt-3">
             <div className="font-display text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1.5">
-              Bound by
+              {t('ui.postmortem.boundBy')}
             </div>
             <div className="flex flex-wrap gap-1.5">
               {postmortem.activeConditions.map((c) => (
@@ -139,7 +141,7 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
         {postmortem.unspentResources.length > 0 && (
           <div className="border-t border-[var(--color-border-dim)] pt-3">
             <div className="font-display text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1.5">
-              You died with
+              {t('ui.postmortem.diedWith')}
             </div>
             <div className="flex flex-wrap gap-1.5">
               {postmortem.unspentResources.map((r) => (
@@ -152,7 +154,7 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
               ))}
             </div>
             <p className="text-[var(--color-text-dim)] text-[10px] italic mt-2 leading-snug">
-              These could have helped. The soul remembers.
+              {t('ui.postmortem.diedWithNote')}
             </p>
           </div>
         )}
@@ -164,12 +166,12 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
           onClick={goToCodex}
           className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic hover:text-[var(--color-accent-amber)]"
         >
-          View {postmortem.killerName} in the Bestiary →
+          {t('ui.postmortem.viewInBestiary', { name: postmortem.killerName })}
         </button>
       )}
 
       <Button variant="primary" size="lg" onClick={onReincarnate}>
-        ↻ Reincarnate
+        ↻ {t('ui.postmortem.reincarnate')}
       </Button>
     </div>
   );

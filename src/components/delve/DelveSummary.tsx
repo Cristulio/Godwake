@@ -7,6 +7,7 @@ import {
   SOUL_MARK_PER_BANE,
 } from '../../engine/character/quirks';
 import { getAscensionLevel, MAX_ASCENSION } from '../../engine/delve';
+import { useT } from '../../i18n/useT';
 
 interface DelveSummaryProps {
   delve: DelveState;
@@ -15,6 +16,7 @@ interface DelveSummaryProps {
 }
 
 export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
+  const { t } = useT();
   const character = useGameStore((s) => s.character);
   const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
   const victorious = outcome === 'completed';
@@ -36,7 +38,7 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
             ${victorious ? 'text-[var(--color-accent-amber)]' : 'text-[var(--color-accent-blood)]'}
           `}
         >
-          {victorious ? 'Delve Complete' : 'You Have Fallen'}
+          {victorious ? t('ui.summary.delveComplete') : t('ui.summary.youFallen')}
         </div>
         <div className="text-[var(--color-text-secondary)] text-sm uppercase tracking-widest">
           {delve.dungeonName}
@@ -45,28 +47,28 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
 
       <Panel className="w-full">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <Stat label="Rooms Cleared" value={String(delve.roomsCleared)} />
-          <Stat label="Gold Earned" value={String(delve.goldEarned)} color="gold" />
-          <Stat label="XP Earned" value={String(delve.xpEarned)} color="amber" />
-          <Stat label={victorious ? 'Renown' : 'Renown (lost)'} value={`+${renownEarned}`} color="amber" />
+          <Stat label={t('ui.summary.roomsCleared')} value={String(delve.roomsCleared)} />
+          <Stat label={t('ui.summary.goldEarned')} value={String(delve.goldEarned)} color="gold" />
+          <Stat label={t('ui.summary.xpEarned')} value={String(delve.xpEarned)} color="amber" />
+          <Stat label={victorious ? t('ui.summary.renown') : t('ui.summary.renownLost')} value={`+${renownEarned}`} color="amber" />
         </div>
         {banes > 0 && (
           <div className="mt-3 pt-3 border-t border-[var(--color-border-dim)] text-center">
             <span className="text-[var(--color-accent-amber)] text-[10px] uppercase tracking-widest">
-              ◆ Soul-mark · +{Math.round(SOUL_MARK_PER_BANE * banes * 100)}%
+              ◆ {t('ui.summary.soulMark', { pct: Math.round(SOUL_MARK_PER_BANE * banes * 100) })}
             </span>
             <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest ml-2">
-              ({banes} bane{banes > 1 ? 's' : ''} · boosts gold, xp, renown)
+              {t(banes > 1 ? 'ui.summary.baneBoostPlural' : 'ui.summary.baneBoost', { n: banes })}
             </span>
           </div>
         )}
         {ascensionLevel > 0 && (
           <div className="mt-3 pt-3 border-t border-[var(--color-border-dim)] text-center">
             <span className="text-[var(--color-accent-blood)] text-[10px] uppercase tracking-widest">
-              ▲ Ascension {ascensionLevel}
+              ▲ {t('ui.summary.ascension', { n: ascensionLevel })}
             </span>
             <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest ml-2">
-              (renown ×{ascension.renownMult.toFixed(2)})
+              {t('ui.summary.renownMult', { mult: ascension.renownMult.toFixed(2) })}
             </span>
           </div>
         )}
@@ -74,19 +76,18 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
 
       {willUnlockAscension && (
         <p className="text-[var(--color-accent-amber)] italic text-sm text-center max-w-md animate-pulse-glow">
-          The world deepens. Ascension {ascensionUnlocked + 1} opens to you — a harder
-          road, and a richer one. The Grove stirs with it.
+          {t('ui.summary.deepens', { n: ascensionUnlocked + 1 })}
         </p>
       )}
 
       {!victorious && (
         <p className="text-[var(--color-text-secondary)] italic text-sm text-center max-w-md">
-          The grove will return you to life. Your soul remembers what your flesh has forgotten.
+          {t('ui.summary.groveReturns')}
         </p>
       )}
 
       <Button variant="primary" onClick={onReturn}>
-        {victorious ? 'Return to Phandalin' : 'Wake at the Grove'}
+        {victorious ? t('ui.summary.returnToTown') : t('ui.summary.wakeAtGrove')}
       </Button>
     </div>
   );

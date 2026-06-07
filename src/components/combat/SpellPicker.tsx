@@ -4,6 +4,7 @@ import { getSpell } from '../../content/spells';
 import { Button } from '../ui/Button';
 import { canCastSpell, slotsAt } from '../../engine/combat/spells';
 import { wizardSpellSlotsForLevel } from '../../engine/character/actions';
+import { useT } from '../../i18n/useT';
 
 const SLOT_TIERS: SpellSlotLevel[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -16,14 +17,6 @@ function ordinal(n: number): string {
   }
 }
 
-function spellScopeLabel(target: Spell['target']): string {
-  switch (target) {
-    case 'area': return 'Hits all enemies';
-    case 'single': return 'Hits one enemy';
-    case 'self': return 'Self only';
-  }
-}
-
 interface SpellPickerProps {
   character: Character;
   /** Picked a spell to cast. Caller resolves target selection (if needed) before applying. */
@@ -32,6 +25,14 @@ interface SpellPickerProps {
 }
 
 export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
+  const { t, tc } = useT();
+  const spellScopeLabel = (target: Spell['target']): string => {
+    switch (target) {
+      case 'area': return t('ui.combat.hitsAll');
+      case 'single': return t('ui.combat.hitsOne');
+      case 'self': return t('ui.combat.selfOnly');
+    }
+  };
   const maxSlots = wizardSpellSlotsForLevel(character.level);
   // Only surface spells the character can actually cast at this level: cantrips
   // always, leveled spells once their slot tier has opened. Higher-tier spells
@@ -60,15 +61,15 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
       >
         <div className="shrink-0">
           <div className="text-[var(--color-accent-amber)] uppercase tracking-[0.3em] text-sm mb-2">
-            ✦ Cast a Spell
+            ✦ {t('ui.combat.castSpell')}
           </div>
           <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest mb-3">
-            Slots — {slotSummary}
+            {t('ui.combat.slots', { summary: slotSummary })}
           </div>
         </div>
         {known.length === 0 ? (
           <div className="text-[var(--color-text-secondary)] text-sm italic mb-4">
-            No spells prepared.
+            {t('ui.combat.noSpellsPrepared')}
           </div>
         ) : (
           <div className="flex flex-col gap-2 mb-4 flex-1 overflow-y-auto min-h-0 -mr-2 pr-2">
@@ -78,8 +79,8 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
               const ok = check.ok;
               const slotLabel =
                 spell.level === 0
-                  ? 'Cantrip · at-will'
-                  : `Level ${spell.level} · costs 1 slot`;
+                  ? t('ui.combat.cantripAtWill')
+                  : t('ui.combat.spellSlotCost', { level: spell.level });
               return (
                 <button
                   key={id}
@@ -94,14 +95,14 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
                 >
                   <div className="flex items-baseline justify-between gap-2">
                     <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
-                      {spell.name}
+                      {tc('spells', spell.id, 'name', spell.name)}
                     </div>
                     <div className="text-[var(--color-accent-amber)] text-[10px] uppercase tracking-widest shrink-0">
                       {slotLabel}
                     </div>
                   </div>
                   <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
-                    {spell.description}
+                    {tc('spells', spell.id, 'description', spell.description)}
                   </div>
                   <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-2">
                     {spell.school} · {spellScopeLabel(spell.target)}
@@ -118,7 +119,7 @@ export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
         )}
         <div className="flex justify-end shrink-0">
           <Button variant="secondary" onClick={onCancel}>
-            Cancel
+            {t('ui.common.cancel')}
           </Button>
         </div>
       </div>
