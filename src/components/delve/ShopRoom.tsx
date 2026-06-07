@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { getItem } from '../../content/items';
 import { playSfx } from '../../engine/audio';
-import { EQUIP_SLOTS } from '../../engine/character/equip';
+import { equippedInventoryIndices } from '../../engine/character/equip';
 import {
   consumableStockForTier,
   rollGearStock,
@@ -88,13 +88,14 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
 
   if (!character) return null;
   const gold = character.goldInPocket;
-  const equippedRefs = new Set(
-    EQUIP_SLOTS.map((slot) => character.equipped[slot]).filter(Boolean),
-  );
+  // Resolve worn items by inventory index (not object identity), so equipped
+  // gear stays out of the sell list even after a reload rehydrates the equipped
+  // refs as distinct objects from the bag entries.
+  const equippedIdx = equippedInventoryIndices(character);
   const sellable = character.inventory
     .map((ref, idx) => ({ ref, idx }))
-    .filter(({ ref }) => {
-      if (equippedRefs.has(ref)) return false;
+    .filter(({ ref, idx }) => {
+      if (equippedIdx.has(idx)) return false;
       const kind = getItem(ref.itemId).kind;
       return kind === 'weapon' || kind === 'armor' || kind === 'accessory';
     });

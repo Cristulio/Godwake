@@ -8,7 +8,7 @@ import {
   slotForItem,
   canEquip,
   equipDenialReason,
-  EQUIP_SLOTS,
+  equippedInventoryIndices,
   type EquipSlot,
   armorEquipWarning,
 } from '../../engine/character/equip';
@@ -85,23 +85,7 @@ export function InventoryScreen() {
 
   const groups = groupInventory(character.inventory);
 
-  // Identity-based comparison breaks across JSON persist/rehydrate AND the
-  // starting kit defines equipped slots with separate object literals from
-  // inventory. Resolve each equipped slot to an inventory index (identity
-  // first, itemId fallback) so equipped items in the bag are highlighted
-  // correctly in every state.
-  const equippedIdxSet = new Set<number>();
-  for (const slot of EQUIP_SLOTS) {
-    const ref = character.equipped[slot];
-    if (!ref) continue;
-    let idx = character.inventory.indexOf(ref);
-    if (idx === -1) {
-      idx = character.inventory.findIndex(
-        (inv, i) => !equippedIdxSet.has(i) && inv.itemId === ref.itemId,
-      );
-    }
-    if (idx !== -1) equippedIdxSet.add(idx);
-  }
+  const equippedIdxSet = equippedInventoryIndices(character);
 
   function isEquippedIdx(idx: number): boolean {
     return equippedIdxSet.has(idx);
