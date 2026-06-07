@@ -14,6 +14,7 @@ import {
   martialPointsLeft,
   martialPoolMax,
 } from '../../engine/combat/martialResource';
+import { turnsUntilCunningRegen } from '../../engine/combat/cunningAction';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { monkKiMax } from '../../engine/combat/monk';
 import { getBlessing } from '../../content/blessings';
@@ -307,6 +308,9 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   // --- Rogue resources ---
   const cunningMax = rogueCunningActionMax(character);
   const cunningRemaining = character.resources.cunningActionUsesRemaining ?? 0;
+  const cunningRegenPending =
+    isRogue && state.status === 'active' && cunningRemaining < cunningMax;
+  const cunningRegenIn = turnsUntilCunningRegen(state.round);
   const hasUncannyDodge = isRogue && character.level >= UNCANNY_DODGE_LEVEL;
   const uncannyReady = hasUncannyDodge && !character.actionEconomy.reactionUsed;
   const hasNimbleDodge = isRogue && character.level <= NIMBLE_DODGE_MAX_LEVEL;
@@ -534,6 +538,14 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               title={i < cunningRemaining ? 'Cunning Action available' : 'Cunning Action spent'}
             />
           ))}
+          {cunningRegenPending && (
+            <Pill
+              text={`+1 in ${cunningRegenIn}`}
+              on={false}
+              tone="amber"
+              title={`A spent Cunning Action returns in ${cunningRegenIn} turn${cunningRegenIn === 1 ? '' : 's'} — the rogue claws one use back every couple of turns.`}
+            />
+          )}
         </Section>
       )}
 

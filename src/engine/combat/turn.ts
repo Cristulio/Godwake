@@ -25,6 +25,7 @@ import { evaluateCombatEnd } from './attack/damage';
 import { isRaging } from '../character/derived';
 import { isRageUnlimited } from '../character/actions';
 import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './martialResource';
+import { regenCunningActionForRound } from './cunningAction';
 import { monkHasPendingTurnAction } from './monk';
 
 function resetActionEconomyForCurrent(
@@ -212,6 +213,22 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     }
     if (nextCharacter.stunningStrikeActive) {
       nextCharacter = { ...nextCharacter, stunningStrikeActive: false };
+    }
+  }
+
+  // Rogue: claw one Cunning Action use back every couple of turns so the kit
+  // stays live across the whole fight, not just the opening — the pool refreshed
+  // full at the start of combat (createCombat); this paces the mid-fight top-up,
+  // capped at the class max. Reads `round`, already advanced to this turn's value.
+  if (order[nextIndex] === 'player') {
+    const regened = regenCunningActionForRound(nextCharacter, round);
+    if (regened !== nextCharacter) {
+      nextCharacter = regened;
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'narration',
+        text: `${nextCharacter.name}'s hands find their rhythm — a Cunning Action returns.`,
+      });
     }
   }
 

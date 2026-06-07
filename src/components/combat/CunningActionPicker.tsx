@@ -53,6 +53,9 @@ export function CunningActionPicker({ onPick, onCancel }: CunningActionPickerPro
             </button>
           ))}
         </div>
+        <div className="text-[var(--color-text-dim)] text-[10px] mt-3 leading-relaxed">
+          Spend freely — a used Cunning Action returns every couple of turns.
+        </div>
         <div className="flex justify-end mt-4">
           <Button variant="secondary" onClick={onCancel}>
             Cancel

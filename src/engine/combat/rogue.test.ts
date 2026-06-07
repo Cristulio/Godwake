@@ -2,7 +2,13 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack, applyDamage, monsterAttack, sneakAttackDiceForLevel } from './attack';
-import { useCunningAction } from './cunningAction';
+import {
+  useCunningAction,
+  regenCunningActionForRound,
+  isCunningRegenRound,
+  turnsUntilCunningRegen,
+  CUNNING_ACTION_REGEN_INTERVAL,
+} from './cunningAction';
 import { endTurn } from './turn';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
@@ -985,5 +991,88 @@ describe('Rogue — Opportunist (L12 reaction riposte)', () => {
       }
     }
     expect(sawMiss).toBe(true);
+  });
+});
+
+describe('Rogue — Cunning Action regen', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('regen ticks every other round starting at round 3', () => {
+    expect(CUNNING_ACTION_REGEN_INTERVAL).toBe(2);
+    expect(isCunningRegenRound(1)).toBe(false);
+    expect(isCunningRegenRound(2)).toBe(false);
+    expect(isCunningRegenRound(3)).toBe(true);
+    expect(isCunningRegenRound(4)).toBe(false);
+    expect(isCunningRegenRound(5)).toBe(true);
+  });
+
+  it('turnsUntilCunningRegen counts down to the next tick', () => {
+    expect(turnsUntilCunningRegen(1)).toBe(2);
+    expect(turnsUntilCunningRegen(2)).toBe(1);
+    expect(turnsUntilCunningRegen(3)).toBe(2);
+    expect(turnsUntilCunningRegen(4)).toBe(1);
+  });
+
+  it('regenCunningActionForRound returns one use on a tick round, capped at max', () => {
+    const spent = makeRogue({ resources: { ...makeRogue().resources, cunningActionUsesRemaining: 0 } });
+    // Not a tick round — no change.
+    expect(regenCunningActionForRound(spent, 2)).toBe(spent);
+    // Tick round — one use returned.
+    const regened = regenCunningActionForRound(spent, 3);
+    expect(regened.resources.cunningActionUsesRemaining).toBe(1);
+    // Already at max — no change (same reference).
+    expect(regenCunningActionForRound(regened, 5)).toBe(regened);
+  });
+
+  it('heavy-than-light armor blocks the regen (kit is locked out)', () => {
+    const heavy = makeRogue({
+      resources: { ...makeRogue().resources, cunningActionUsesRemaining: 0 },
+      equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: { itemId: 'chain-mail' } },
+    });
+    expect(regenCunningActionForRound(heavy, 3)).toBe(heavy);
+  });
+
+  it('spend → wait two turns → regained, in a live fight', () => {
+    const goblin = getMonster('goblin');
+    let rogue = makeRogue();
+    const roller = createDiceRoller(2);
+    const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    let state = init.state;
+    rogue = init.character;
+    expect(state.round).toBe(1);
+    expect(rogue.resources.cunningActionUsesRemaining).toBe(1);
+
+    // Spend the only use on the opening turn (round 1).
+    const ca = useCunningAction({ character: rogue, state, choice: 'hide' });
+    state = ca.state;
+    rogue = ca.character;
+    expect(rogue.resources.cunningActionUsesRemaining).toBe(0);
+
+    // Rotate the turn order: player → monster → player (r2) → monster → player (r3).
+    for (let i = 0; i < 4; i++) {
+      const t = endTurn(state, rogue);
+      state = t.state;
+      rogue = t.character;
+    }
+    expect(state.round).toBe(3);
+    expect(rogue.resources.cunningActionUsesRemaining).toBe(1);
+    expect(state.log.some((l) => l.text.includes('Cunning Action returns'))).toBe(true);
+  });
+
+  it('does not regen past the per-combat max while idling at full', () => {
+    const goblin = getMonster('goblin');
+    let rogue = makeRogue();
+    const roller = createDiceRoller(2);
+    const init = createCombat({ roller, character: rogue, monsters: [{ def: goblin }] });
+    let state = init.state;
+    rogue = init.character;
+    expect(rogue.resources.cunningActionUsesRemaining).toBe(1);
+
+    for (let i = 0; i < 8; i++) {
+      const t = endTurn(state, rogue);
+      state = t.state;
+      rogue = t.character;
+    }
+    expect(rogue.resources.cunningActionUsesRemaining).toBe(1);
   });
 });
