@@ -14,34 +14,47 @@ import {
 } from './types';
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
-import { getItem } from '../../content/items';
 import { t } from '../../i18n';
 
 /**
  * Flat per-hit damage edge a monk earns for going weaponless — the reward for
- * forgoing a martial weapon's bigger die and enhancement. Rides every unarmed /
- * monk-weapon strike (including each Flurry strike), but goes dark the moment a
- * monk picks up an ordinary weapon.
+ * forgoing a weapon's bigger die, affixes, and enhancement. Rides every bare-
+ * handed strike (including each Flurry strike), but goes dark the moment a monk
+ * picks up ANY weapon.
  */
 export const MONK_UNARMED_DAMAGE_EDGE = 2;
 
-/** Whether wielding this weapon counts as unarmed for a monk (full kit + edge). */
-export function isMonkWeaponId(itemId: string): boolean {
-  const item = getItem(itemId);
-  return item.kind === 'weapon' && item.monkWeapon === true;
+/**
+ * The virtual unarmed-strike profiles the engine swaps in at each Martial Arts
+ * tier (see {@link martialArtsWeaponId}). These — and an empty hand — are the
+ * ONLY things that count as "unarmed". A real weapon, even a themed "monk
+ * weapon", does not.
+ */
+const UNARMED_STRIKE_IDS: ReadonlySet<string> = new Set([
+  'monk-fists',
+  'monk-fists-adept',
+  'monk-fists-master',
+  'monk-fists-grandmaster',
+]);
+
+/** Whether this item id is the monk's bare-fist unarmed strike — the only weapon
+ *  id that earns the Martial Arts kit + unarmed damage edge. */
+export function isUnarmedStrikeId(itemId: string): boolean {
+  return UNARMED_STRIKE_IDS.has(itemId);
 }
 
 /**
- * Is this monk fighting unarmed-style — bare-handed or with a monk weapon — and
- * thus entitled to the Martial Arts die, Flurry / Stunning Strike / all Ki
- * spends, and the unarmed damage edge? An ordinary weapon in the main hand turns
- * the kit off: it's a plain swing. Non-monks are never "unarmed" in this sense.
+ * Is this monk striking TRULY unarmed — bare-handed (no weapon, or the virtual
+ * fists) — and thus entitled to the Martial Arts die, Flurry / Stunning Strike /
+ * all Ki spends, and the unarmed damage edge? ANY equipped weapon turns the kit
+ * off, including a themed "monk weapon": the player trades the kit for the
+ * weapon's own die, affixes, and enhancement. Non-monks are never "unarmed".
  */
 export function monkFightsUnarmed(character: Readonly<Character>): boolean {
   if (character.classId !== 'monk') return false;
   const mainHand = character.equipped.mainHand;
   if (!mainHand) return true;
-  return isMonkWeaponId(mainHand.itemId);
+  return isUnarmedStrikeId(mainHand.itemId);
 }
 
 /** Max Ki points for a monk: one per level, +2 at the L20 capstone (Perfect Self),

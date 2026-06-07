@@ -417,7 +417,8 @@ export function chooseCombatAction(
   const isDruid = character.classId === 'druid';
   const isMonk = character.classId === 'monk';
   // The monk's Ki kit (Flurry / Patient Defense / Stunning Strike) only fires
-  // when fighting unarmed-style; an ordinary weapon in hand turns it dark.
+  // when fighting truly bare-handed; ANY weapon in hand (even a monk weapon)
+  // turns it dark.
   const monkKit = isMonk && monkFightsUnarmed(character);
 
   // Gate-aware focus: a boss warded by a live add shrugs off blows until the add
@@ -1101,9 +1102,9 @@ export function applyPlannedAction(
   const { roller, state, character } = ctx;
   switch (action.kind) {
     case 'attack': {
-      // A wild-shaped druid strikes with its beast profile (claws/bite); a monk
-      // always strikes unarmed with its level-scaled Martial Arts die — neither
-      // swings the weapon hanging at its side.
+      // A wild-shaped druid strikes with its beast profile (claws/bite); a
+      // bare-handed monk strikes with its level-scaled Martial Arts die. A monk
+      // who took up a weapon (even a monk weapon) swings that weapon plainly.
       const weaponId = isWildShaped(character)
         ? beastWeaponId(character)
         : character.classId === 'monk' && monkFightsUnarmed(character)

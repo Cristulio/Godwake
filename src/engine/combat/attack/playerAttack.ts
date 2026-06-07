@@ -170,9 +170,9 @@ export function playerAttack(
   const abilMod = abilityModifier(scores[attackAbility]);
   const profBonus = proficiencyBonus(nextCharacter.level);
 
-  // A monk strikes "unarmed-style" — bare hands or a monk weapon — only then does
-  // the Martial Arts kit (and the unarmed damage edge below) ride the blow. An
-  // ordinary weapon in hand turns it all off: a plain swing.
+  // A monk earns the Martial Arts kit (and the unarmed damage edge below) only
+  // when striking truly bare-handed — no weapon equipped. ANY weapon in hand,
+  // even a themed "monk weapon", turns it all off: a plain swing.
   const monkUnarmedStrike = monkFightsUnarmed(nextCharacter);
 
   const quirkMods = characterQuirkMods(nextCharacter);
@@ -477,8 +477,8 @@ export function playerAttack(
       onTypeParts.push({ amount: spike, label: 'heavy' });
     }
     // Monk unarmed damage edge — the reward for going weaponless. Rides every
-    // unarmed / monk-weapon strike (each Flurry strike included); dark with an
-    // ordinary weapon in hand.
+    // bare-handed strike (each Flurry strike included); dark with ANY weapon in
+    // hand.
     if (monkUnarmedStrike) {
       bonusDamage += MONK_UNARMED_DAMAGE_EDGE;
       onTypeParts.push({ amount: MONK_UNARMED_DAMAGE_EDGE, label: 'martial arts' });
