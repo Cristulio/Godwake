@@ -17,6 +17,7 @@ import {
 import { GearWareRow, ConsumableWareRow, LegendaryWareRow, SellWareRow } from './MerchantWares';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import type { GearRarity } from '../../schemas/item';
+import { useT } from '../../i18n/useT';
 
 interface ShopRoomProps {
   room: RoomSpec;
@@ -31,6 +32,7 @@ interface ShopRoomProps {
  * re-renders don't reroll. Keep the coin-lender's diegetic voice.
  */
 export function ShopRoom({ room, onContinue }: ShopRoomProps) {
+  const { t } = useT();
   const character = useGameStore((s) => s.character);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
@@ -105,10 +107,10 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     const r = purchaseFromMerchant(itemId);
     if (r.ok) {
       recordShopPurchase(room.id, itemId);
-      setMessage(`${getItem(itemId).name} added to your pack.`);
+      setMessage(t('ui.shop.addedToPack', { name: getItem(itemId).name }));
       playSfx('ui_click');
     } else {
-      setMessage(r.reason ?? 'Cannot purchase.');
+      setMessage(r.reason ?? t('ui.shop.cannotPurchase'));
     }
   }
 
@@ -116,10 +118,10 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     const r = purchaseRolledGear(stock.ref, stock.cost);
     if (r.ok) {
       recordShopPurchase(room.id, key);
-      setMessage(`${stock.ref.rolled?.name ?? 'Item'} added to your pack.`);
+      setMessage(t('ui.shop.addedToPack', { name: stock.ref.rolled?.name ?? t('ui.shop.itemFallback') }));
       playSfx('ui_click');
     } else {
-      setMessage(r.reason ?? 'Cannot purchase.');
+      setMessage(r.reason ?? t('ui.shop.cannotPurchase'));
     }
   }
 
@@ -128,20 +130,20 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     const r = purchaseLegendary(legendaryOffer.legendaryId, legendaryOffer.cost);
     if (r.ok) {
       recordShopPurchase(room.id, 'legendary');
-      setMessage(`${legendaryOffer.name} bound to your reliquary — attune it at the hub.`);
+      setMessage(t('ui.shop.boundToReliquary', { name: legendaryOffer.name }));
       playSfx('ui_click');
     } else {
-      setMessage(r.reason ?? 'Cannot purchase.');
+      setMessage(r.reason ?? t('ui.shop.cannotPurchase'));
     }
   }
 
   function sell(inventoryIdx: number, name: string) {
     const r = sellItem(inventoryIdx);
     if (r.ok) {
-      setMessage(`Sold ${name} for ${r.gold} gp.`);
+      setMessage(t('ui.shop.soldFor', { name, gold: r.gold ?? 0 }));
       playSfx('ui_click');
     } else {
-      setMessage(r.reason ?? 'Cannot sell.');
+      setMessage(r.reason ?? t('ui.shop.cannotSell'));
     }
   }
 
@@ -153,15 +155,15 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
             {room.title}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-            Merchant · Coin and a charter, no questions asked
+            {t('ui.shop.subtitle')}
           </p>
         </div>
         <div
           className="shrink-0 panel-etched-warm border border-[var(--color-accent-gold)] px-3 py-1.5 text-right"
-          title="Gold in pocket"
+          title={t('ui.shop.goldTitle')}
         >
           <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
-            ◈ Gold
+            ◈ {t('ui.shop.gold')}
           </div>
           <div
             className="font-mono text-lg text-[var(--color-accent-gold)] leading-none"
@@ -181,7 +183,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
       {gear.length > 0 && (
         <div>
           <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
-            Arms &amp; Armour
+            {t('ui.shop.arms')}
           </div>
           <div className="grid gap-3">
             {gear.map((stock, i) => {
@@ -204,7 +206,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
       {showLegendary && legendaryOffer && (
         <div>
           <div className="text-[var(--color-accent-gold)] text-[10px] uppercase tracking-[0.3em] mb-2">
-            ✦ Reliquary
+            ✦ {t('ui.shop.reliquary')}
           </div>
           <div className="grid gap-3">
             <LegendaryWareRow
@@ -220,7 +222,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
       {consumables.length > 0 && (
         <div>
           <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
-            Draughts &amp; Charms
+            {t('ui.shop.draughts')}
           </div>
           <div className="grid gap-3">
             {consumables.map((item) => (
@@ -239,7 +241,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
       {sellable.length > 0 && (
         <div>
           <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
-            Sell from your Pack
+            {t('ui.shop.sellFromPack')}
           </div>
           <div className="grid gap-3">
             {sellable.map(({ ref, idx }) => (
@@ -262,10 +264,10 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
 
       <div className="flex justify-center gap-3 mt-1">
         <Button variant="ghost" onClick={goToInventory}>
-          ◆ Open your pack
+          ◆ {t('ui.shop.openPack')}
         </Button>
         <Button variant="primary" onClick={onContinue}>
-          Move on →
+          {t('ui.shop.moveOn')}
         </Button>
       </div>
     </div>

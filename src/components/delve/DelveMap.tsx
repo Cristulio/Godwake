@@ -6,38 +6,13 @@ import { useGameStore } from '../../stores/gameStore';
 import { playSfx } from '../../engine/audio';
 import { Button } from '../ui/Button';
 import { EliteCoach, useEliteIntroCoach } from './EliteCoach';
+import { useT } from '../../i18n/useT';
 
 const COL_W = 118;
 const ROW_H = 92;
 const PAD_X = 44;
 const PAD_Y = 44;
 const NODE = 60;
-
-/** Short uppercase tag shown inside each node. */
-const KIND_TAG: Record<RoomKind, string> = {
-  combat: 'FIGHT',
-  elite: 'ELITE',
-  boss: 'BOSS',
-  rest: 'REST',
-  shrine: 'SHRINE',
-  event: 'OMEN',
-  shop: 'SHOP',
-  treasure: 'SPOILS',
-  camp: 'CAMP',
-};
-
-/** One-line descriptor surfaced when a node is focused/hovered. */
-const KIND_BLURB: Record<RoomKind, string> = {
-  combat: 'A fight on the road. XP and what the dead were carrying.',
-  elite: 'A dangerous foe — harder than the road around it, and richer for it.',
-  boss: 'The one who holds this chapter. There is no way past but through.',
-  rest: 'A safe pause. Bind your wounds before the dark deepens.',
-  shrine: 'A god still listens here. A blessing for the asking.',
-  event: 'Something waits that is not a fight. Or not only a fight.',
-  shop: 'Coin changes hands. Stock yourself before the road runs out.',
-  treasure: 'Spoils left unguarded. Take what you can carry.',
-  camp: 'A fire on the seam between chapters.',
-};
 
 /** Node accent colour (CSS var) by kind. */
 function kindColor(kind: RoomKind): string {
@@ -71,6 +46,7 @@ interface Placed {
  * clickable, the rest dark. Picking a reachable node steps the run into it.
  */
 export function DelveMap({ delve, character }: { delve: DelveState; character: Character }) {
+  const { t } = useT();
   const chooseRoom = useGameStore((s) => s.chooseRoom);
   const goToInventory = useGameStore((s) => s.goToInventory);
   const [hovered, setHovered] = useState<RoomSpec | null>(null);
@@ -141,7 +117,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-display text-xl text-[var(--color-accent-amber)] tracking-wider uppercase">
-            Choose Your Road
+            {t('ui.map.chooseRoad')}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
             {delve.dungeonName} · {chapterLabel(delve, chapter)}
@@ -150,10 +126,10 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
         <div className="flex items-center gap-2 shrink-0">
           <div
             className="panel-etched-warm border border-[var(--color-accent-gold)] px-3 py-1.5 text-right"
-            title="Health"
+            title={t('ui.map.hpTitle')}
           >
             <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
-              ◇ HP
+              ◇ {t('ui.map.hp')}
             </div>
             <div className="font-mono text-sm text-[var(--color-text-primary)] leading-none">
               {character.hp.current}/{character.hp.max}
@@ -161,17 +137,17 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
           </div>
           <div
             className="panel-etched-warm border border-[var(--color-accent-gold)] px-3 py-1.5 text-right"
-            title="Gold in pocket"
+            title={t('ui.map.goldTitle')}
           >
             <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
-              ◈ Gold
+              ◈ {t('ui.map.gold')}
             </div>
             <div className="font-mono text-sm text-[var(--color-accent-gold)] leading-none">
               {character.goldInPocket}
             </div>
           </div>
           <Button variant="ghost" onClick={goToInventory}>
-            ◆ Pack
+            ◆ {t('ui.map.pack')}
           </Button>
         </div>
       </header>
@@ -216,8 +192,8 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
               (room.next ?? []).some(
                 (id) => delve.rooms.find((r) => r.id === id)?.kind === 'boss',
               )
-                ? 'INTEL'
-                : KIND_TAG[room.kind];
+                ? t('ui.map.tag.intel')
+                : t(`ui.map.tag.${room.kind}`);
             const accent = kindColor(room.kind);
             const stateClass = isLocked
               ? 'bm-node-blocked'
@@ -256,10 +232,10 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                 <span className="bm-node-tag">{tag}</span>
                 {isLocked && (
                   <>
-                    <span className="bm-node-seal" aria-label="sealed">
-                      ⚿ Sealed
+                    <span className="bm-node-seal" aria-label={t('ui.map.sealedAria')}>
+                      ⚿ {t('ui.map.sealed')}
                     </span>
-                    <span className="bm-node-seal-hint">Sealed yet</span>
+                    <span className="bm-node-seal-hint">{t('ui.map.sealedYet')}</span>
                   </>
                 )}
                 {room.twistId && (
@@ -283,11 +259,11 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
               {detail.title}
             </div>
             <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
-              {KIND_BLURB[detail.kind]}
+              {t(`ui.map.blurb.${detail.kind}`)}
             </div>
             {detail.locked && (
               <div className="text-[var(--color-text-dim)] text-xs italic mt-1 leading-relaxed">
-                ⚿ This road is barred to a soul so young. Walk it once you have earned the mark.
+                {t('ui.map.sealedHint')}
               </div>
             )}
             {detailTwist && (
@@ -298,7 +274,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
           </>
         ) : (
           <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic">
-            The lit paths are open to you. Hover a road, then step.
+            {t('ui.map.hoverHint')}
           </div>
         )}
       </div>

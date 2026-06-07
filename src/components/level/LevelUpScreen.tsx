@@ -16,50 +16,19 @@ import { effectiveAbilityScores } from '../../engine/character/derived';
 import type { AbilityName, AbilityScores } from '../../types/abilities';
 import type { Character } from '../../types/character';
 import type { Spell, SpellLevel } from '../../schemas/spell';
-
-function spellScopeLabel(target: Spell['target']): string {
-  switch (target) {
-    case 'area': return 'Hits all enemies';
-    case 'single': return 'Hits one enemy';
-    case 'self': return 'Self only';
-  }
-}
-
-/** "1st", "2nd", "3rd", "4th"… for the slot-tier reveal copy. */
-function ordinal(n: number): string {
-  const tens = n % 100;
-  if (tens >= 11 && tens <= 13) return `${n}th`;
-  switch (n % 10) {
-    case 1: return `${n}st`;
-    case 2: return `${n}nd`;
-    case 3: return `${n}rd`;
-    default: return `${n}th`;
-  }
-}
-
-const SCHOOL_LABEL: Record<Spell['school'], string> = {
-  abjuration: 'Abjuration',
-  conjuration: 'Conjuration',
-  divination: 'Divination',
-  enchantment: 'Enchantment',
-  evocation: 'Evocation',
-  illusion: 'Illusion',
-  necromancy: 'Necromancy',
-  transmutation: 'Transmutation',
-};
-
-const ABILITY_LABELS: Record<AbilityName, string> = {
-  str: 'Strength',
-  dex: 'Dexterity',
-  con: 'Constitution',
-  int: 'Intelligence',
-  wis: 'Wisdom',
-  cha: 'Charisma',
-};
+import { useT } from '../../i18n/useT';
 
 const ABILITY_ORDER: AbilityName[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
 export function LevelUpScreen() {
+  const { t, tc } = useT();
+  const spellScopeLabel = (target: Spell['target']): string => {
+    switch (target) {
+      case 'area': return t('ui.combat.hitsAll');
+      case 'single': return t('ui.combat.hitsOne');
+      case 'self': return t('ui.combat.selfOnly');
+    }
+  };
   const character = useGameStore((s) => s.character);
   const applyPendingLevelUp = useGameStore((s) => s.applyPendingLevelUp);
 
@@ -162,7 +131,7 @@ export function LevelUpScreen() {
       <div className="relative z-10 w-full max-w-3xl flex flex-col gap-6">
         <div className="text-center animate-scale-in">
           <div className="font-narrative text-[var(--color-accent-amber)] text-sm italic tracking-[0.3em] mb-3">
-            The soul tempers
+            {t('ui.level.soulTempers')}
           </div>
           <h1
             className="font-display text-2xl md:text-4xl text-[var(--color-accent-amber)] tracking-[0.25em]"
@@ -171,16 +140,16 @@ export function LevelUpScreen() {
                 '0 0 28px rgba(244,167,66,0.7), 0 0 12px rgba(244,167,66,0.9), 0 3px 0 rgba(0,0,0,0.9)',
             }}
           >
-            ◆ LEVEL {nextLevel} ◆
+            ◆ {t('ui.level.levelN', { n: nextLevel })} ◆
           </h1>
           <div className="text-[var(--color-text-secondary)] text-xs mt-3 uppercase tracking-[0.3em]">
             {c.name} · {cls.name}
           </div>
         </div>
 
-        <Panel title="Body">
+        <Panel title={t('ui.level.body')}>
           <div className="flex items-baseline gap-4 flex-wrap">
-            <div className="text-[var(--color-text-secondary)] text-sm">Maximum HP</div>
+            <div className="text-[var(--color-text-secondary)] text-sm">{t('ui.level.maxHp')}</div>
             <div className="font-display text-[var(--color-text-primary)] text-lg">
               {c.hp.max}{' '}
               <span className="text-[var(--color-accent-amber)]">→ {c.hp.max + hpDelta}</span>
@@ -193,13 +162,13 @@ export function LevelUpScreen() {
                 textShadow: '0 0 14px rgba(111,217,84,0.5)',
               }}
             >
-              +{hpDelta} HP
+              {t('ui.level.hpGain', { n: hpDelta })}
             </div>
           </div>
         </Panel>
 
         {features.length > 0 && (
-          <Panel title="New features" tone="glow" className="animate-scale-in">
+          <Panel title={t('ui.level.newFeatures')} tone="glow" className="animate-scale-in">
             <ul className="flex flex-col gap-3">
               {features.map((f) => (
                 <li key={f.id} className="border-l-2 border-[var(--color-accent-amber)] pl-3">
@@ -216,9 +185,9 @@ export function LevelUpScreen() {
         )}
 
         {isAsiLevel && (
-          <Panel title="Ability Score Improvement — spend 2 points" tone="warm">
+          <Panel title={t('ui.level.asiTitle')} tone="warm">
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
-              +2 to one ability, or +1 to two — but a score already at 18+ costs 2 per point. ({pointsSpent}/{ASI_POINT_BUDGET} spent)
+              {t('ui.level.asiHint', { spent: pointsSpent, budget: ASI_POINT_BUDGET })}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {ABILITY_ORDER.map((ab) => {
@@ -237,7 +206,7 @@ export function LevelUpScreen() {
                   >
                     <div>
                       <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.18em]">
-                        {ABILITY_LABELS[ab]}
+                        {t(`ui.level.ability.${ab}`)}
                       </div>
                       <div className="text-[var(--color-text-dim)] text-xs mt-1 font-mono tabular-nums">
                         {base} → {finalEffective}
@@ -275,11 +244,11 @@ export function LevelUpScreen() {
 
         {needsArchetypePick && (
           <Panel
-            title={`Choose your Archetype — pick 1 (${pickedArchetypeId ? 1 : 0}/1)`}
+            title={t('ui.level.archetypeTitle', { n: pickedArchetypeId ? 1 : 0 })}
             tone="glow"
           >
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
-              A lasting path — it shapes which gear and playstyle reward you. This choice sticks for the run.
+              {t('ui.level.archetypeHint')}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {cls.subclasses.map((sub) => {
@@ -315,12 +284,11 @@ export function LevelUpScreen() {
 
         {needsSpellPick && (
           <Panel
-            title={`Learn a New Spell — pick 1 (${pickedSpellId ? 1 : 0}/1)`}
+            title={t('ui.level.spellTitle', { n: pickedSpellId ? 1 : 0 })}
             tone="warm"
           >
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
-              {spellLearnTier !== null &&
-                `Your first ${ordinal(spellLearnTier)}-level slot opens — a working to fill it.`}
+              {spellLearnTier !== null && t('ui.level.slotOpens', { n: spellLearnTier })}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {availableSpells.map((sp) => {
@@ -337,10 +305,10 @@ export function LevelUpScreen() {
                   >
                     <div className="flex items-baseline justify-between gap-2">
                       <div className="font-display text-[var(--color-text-primary)] text-[12px] uppercase tracking-[0.18em]">
-                        {sp.name}
+                        {tc('spells', sp.id, 'name', sp.name)}
                       </div>
                       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
-                        L{sp.level} · {SCHOOL_LABEL[sp.school]}
+                        L{sp.level} · {t(`ui.level.school.${sp.school}`)}
                       </div>
                     </div>
                     <div className="text-[var(--color-text-dim)] text-[11px] mt-1 normal-case tracking-normal">
@@ -348,7 +316,7 @@ export function LevelUpScreen() {
                       {sp.damageType ? ` · ${sp.damageType}` : ''}
                     </div>
                     <div className="text-[var(--color-text-secondary)] text-xs mt-1.5 leading-relaxed normal-case tracking-normal">
-                      {sp.description}
+                      {tc('spells', sp.id, 'description', sp.description)}
                     </div>
                   </button>
                 );
@@ -365,14 +333,17 @@ export function LevelUpScreen() {
             disabled={!asiValid || !spellValid || !archetypeValid}
           >
             {!archetypeValid
-              ? 'Choose an archetype'
+              ? t('ui.level.chooseArchetype')
               : isAsiLevel && !asiValid
-              ? `Place ${ASI_POINT_BUDGET - pointsSpent} more point${
-                  ASI_POINT_BUDGET - pointsSpent === 1 ? '' : 's'
-                }`
+              ? t(
+                  ASI_POINT_BUDGET - pointsSpent === 1
+                    ? 'ui.level.placePoint'
+                    : 'ui.level.placePoints',
+                  { n: ASI_POINT_BUDGET - pointsSpent },
+                )
               : !spellValid
-                ? 'Pick a spell'
-                : 'Continue →'}
+                ? t('ui.level.pickSpell')
+                : t('ui.level.continueArrow')}
           </Button>
         </div>
       </div>

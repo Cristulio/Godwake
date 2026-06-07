@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Button } from '../ui/Button';
 import { useGameStore, hasAnySave, hasAutosave, getSlotMetadata } from '../../stores/gameStore';
 import { playMusic, stopMusic } from '../../engine/audio';
+import { useT } from '../../i18n/useT';
 
 export function TitleScreen() {
+  const { t } = useT();
   const startNewGame = useGameStore((s) => s.startNewGame);
   const loadFromSlot = useGameStore((s) => s.loadFromSlot);
   const goToAscensionSelect = useGameStore((s) => s.goToAscensionSelect);
@@ -86,10 +88,10 @@ export function TitleScreen() {
           <Torch flipped />
         </div>
         <div className="font-narrative italic text-[var(--color-text-secondary)] text-base md:text-lg tracking-wider mt-6 max-w-md mx-auto leading-relaxed">
-          The soul remembers. The flesh forgets.
+          {t('ui.title.tagline')}
         </div>
         <div className="font-display text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.4em] mt-4">
-          ◆ A roguelite of borrowed lives ◆
+          ◆ {t('ui.title.subtitle')} ◆
         </div>
       </div>
 
@@ -97,11 +99,15 @@ export function TitleScreen() {
         {canContinue && (
           <div className="flex flex-col gap-1">
             <Button variant="primary" size="lg" onClick={handleContinue}>
-              ▸ Continue
+              ▸ {t('ui.title.continue')}
             </Button>
             {saveMeta && (
               <div className="text-center text-[10px] font-display text-[var(--color-text-dim)] tracking-[0.2em] uppercase">
-                {saveMeta.characterName} · Lv {saveMeta.characterLevel} · {saveMeta.location}
+                {t('ui.title.saveSummary', {
+                  name: saveMeta.characterName,
+                  level: saveMeta.characterLevel,
+                  location: saveMeta.location,
+                })}
               </div>
             )}
           </div>
@@ -112,7 +118,7 @@ export function TitleScreen() {
             size="lg"
             onClick={goToAscensionSelect}
           >
-            ▲ New Game+
+            ▲ {t('ui.title.newGamePlus')}
           </Button>
         )}
         <Button
@@ -120,15 +126,15 @@ export function TitleScreen() {
           size="lg"
           onClick={handleNewGame}
         >
-          {activeSave ? '+ New Game' : '▸ New Game'}
+          {activeSave ? `+ ${t('ui.title.newGame')}` : `▸ ${t('ui.title.newGameFresh')}`}
         </Button>
       </div>
 
       <div className="absolute bottom-4 right-4 text-[var(--color-text-muted)] text-[9px] font-mono tracking-widest uppercase opacity-60">
-        v0.1 · early build
+        v0.1 · {t('ui.title.earlyBuild')}
       </div>
       <div className="absolute bottom-4 left-4 text-[var(--color-text-muted)] text-[9px] font-display tracking-[0.3em] uppercase opacity-40">
-        Made for friends
+        {t('ui.title.madeForFriends')}
       </div>
 
       {confirming && (
@@ -139,6 +145,7 @@ export function TitleScreen() {
 }
 
 function NewGameConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
+  const { t } = useT();
   const meta = getSlotMetadata(0);
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -150,7 +157,7 @@ function NewGameConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfi
 
   const soulLabel = meta
     ? `${meta.characterName} · level ${meta.characterLevel} · ${meta.characterClass ?? '—'}`
-    : 'an existing soul';
+    : t('ui.title.confirmNewSoulFallback');
 
   return (
     <div
@@ -161,21 +168,29 @@ function NewGameConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfi
     >
       <div className="panel-etched-warm border-2 border-[var(--color-border-warm)] p-6 w-[min(90vw,420px)] shadow-2xl animate-scale-in">
         <div className="font-display text-[var(--color-accent-amber)] text-[11px] uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
-          <span className="text-[var(--color-accent-gold)]">◆</span> Begin a new game?
+          <span className="text-[var(--color-accent-gold)]">◆</span> {t('ui.title.confirmNewTitle')}
         </div>
         <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed mb-2">
-          Your soul — <span className="text-[var(--color-text-primary)]">{soulLabel}</span> —
-          will be released back to the wheel.
+          {t('ui.title.confirmNewBody')
+            .split("{soul}")
+            .flatMap((part, i) =>
+              i === 0
+                ? [part]
+                : [
+                    <span key="soul" className="text-[var(--color-text-primary)]">{soulLabel}</span>,
+                    part,
+                  ],
+            )}
         </p>
         <p className="text-[var(--color-text-muted)] text-[11px] italic mb-5">
-          Manual save slots are not touched. Only the active autosave is wiped.
+          {t('ui.title.confirmNewNote')}
         </p>
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={onCancel}>
-            Cancel
+            {t('ui.common.cancel')}
           </Button>
           <Button variant="danger" onClick={onConfirm}>
-            Begin
+            {t('ui.title.begin')}
           </Button>
         </div>
       </div>
