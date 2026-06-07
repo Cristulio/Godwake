@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { RoomSpec } from '../../types/delve';
-import type { GearRarity, Item } from '../../schemas/item';
+import type { Item } from '../../schemas/item';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { BlessingCard } from '../ui/BlessingCard';
@@ -17,7 +17,6 @@ import {
 } from '../../content/campBoons';
 import { consumableStockForTier, rollGearStock, rollLegendaryOffer, type GearStock, type LegendaryOffer } from './shopStock';
 import { GearWareRow, ConsumableWareRow, LegendaryWareRow } from './MerchantWares';
-import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import { useT } from '../../i18n/useT';
 
 /** Whether the caravan shop is open. Blessings are granted at shrines, not
@@ -79,23 +78,13 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     [campTier],
   );
   const classId = character?.classId;
-  const delveCount = useGameStore((s) => s.delveCount);
-  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
-  const renownSpent = useGameStore((s) => s.renownSpent);
-  const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
-  const progressionMeta = { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked };
-  const campMaxRarity: GearRarity = isFeatureUnlocked('affixes-epic', progressionMeta)
-    ? 'purple'
-    : isFeatureUnlocked('affixes-rare', progressionMeta)
-      ? 'blue'
-      : 'green';
   const gear = useMemo<GearStock[]>(
     () =>
       classId
-        ? rollGearStock(room.id, room.chapter ?? 1, classId, room.layer ?? 0, campMaxRarity)
+        ? rollGearStock(room.id, room.chapter ?? 1, classId, room.layer ?? 0)
         : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [room.id, room.chapter, room.layer, classId, campMaxRarity],
+    [room.id, room.chapter, room.layer, classId],
   );
 
   // Rolled deterministically per-visit (owned-blind), then hidden at render if

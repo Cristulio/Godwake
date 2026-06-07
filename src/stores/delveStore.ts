@@ -727,14 +727,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       if (goldDrop || xpDrop) get().addDelveReward(goldDrop, xpDrop, true);
       // Gear drop: a low-chance rolled item from the combat-room clear. Re-read
       // the character so the new item layers onto the gold/xp just credited.
-      // Cap rarity to what the progression ladder has unlocked so far.
+      // Rarity is gated by the run's CURRENT chapter inside rollGearDrop (a fresh
+      // run starts at greens, epic only deep in) — no cross-run rarity unlock.
       const meta = useMetaStore.getState();
-      let dropRarity: GearRarity | null = rollGearDrop(getActiveRoller(), room.kind, room.chapter ?? 1);
-      if (dropRarity === 'purple' && !isFeatureUnlocked('affixes-epic', meta)) {
-        dropRarity = isFeatureUnlocked('affixes-rare', meta) ? 'blue' : 'green';
-      } else if (dropRarity === 'blue' && !isFeatureUnlocked('affixes-rare', meta)) {
-        dropRarity = 'green';
-      }
+      const dropRarity: GearRarity | null = rollGearDrop(getActiveRoller(), room.kind, room.chapter ?? 1);
       if (dropRarity) {
         const cur = useCharacterStore.getState().character;
         if (cur) {

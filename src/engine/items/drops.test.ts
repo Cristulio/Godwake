@@ -64,9 +64,25 @@ describe('rollGearDrop', () => {
     expect(meanRarity('combat', 12)).toBeGreaterThan(meanRarity('combat', 1));
   });
 
-  it('a richer source skews richer at the same chapter (combat < elite < boss)', () => {
-    // Ch3: bands don't clamp together, so the chain is strict.
+  it('elites and bosses drop AT the chapter ceiling — richer than a mob, never above the band', () => {
+    // The model: a regular mob rolls a weighted spread within the band; an elite or
+    // boss drops at the TOP of the current chapter's allowed rarity (a modest
+    // reward), so both beat the mob's mean and sit exactly at the ceiling. The
+    // elite/boss difference is drop CHANCE (covered above), not rarity.
+    // Ch3 ceiling = blue (rank 2).
+    expect(meanRarity('elite', 3)).toBe(2);
+    expect(meanRarity('boss', 3)).toBe(2);
     expect(meanRarity('elite', 3)).toBeGreaterThan(meanRarity('combat', 3));
-    expect(meanRarity('boss', 3)).toBeGreaterThan(meanRarity('elite', 3));
+  });
+
+  it('never drops above the chapter ceiling — no epic from a Ch1 elite/boss (rule 3)', () => {
+    // Ch1-2 ceiling is green: an elite or boss there yields green at most, never
+    // blue or purple, however rich the source.
+    for (const kind of ['combat', 'elite', 'boss']) {
+      for (let i = 0; i < 200; i++) {
+        const r = rollGearDrop(createDiceRoller(`ceil-${kind}-${i}`), kind, 1);
+        if (r) expect(['white', 'green']).toContain(r);
+      }
+    }
   });
 });
