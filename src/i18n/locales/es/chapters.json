@@ -1,0 +1,56 @@
+{
+  "1": {
+    "name": "La Sala de Ilyich",
+    "introTitle": "Capítulo I — Celdas de Hierro",
+    "introSubtitle": "Bajo la Mansión Tresendar"
+  },
+  "2": {
+    "name": "La Sala del Magistrado",
+    "introTitle": "Capítulo II — Athkatla",
+    "introSubtitle": "La Ciudad de la Moneda, al anochecer"
+  },
+  "3": {
+    "name": "La Cámara del Director",
+    "introTitle": "Capítulo III — Spellhold",
+    "introSubtitle": "Un asilo en una isla fría"
+  },
+  "4": {
+    "name": "La Audiencia de la Matrona Madre",
+    "introTitle": "Capítulo IV — Ust Natha",
+    "introSubtitle": "Una ciudad drow en la faerzress profunda"
+  },
+  "5": {
+    "name": "Donde la Mañana No Rompe",
+    "introTitle": "Capítulo V — El Despertar del Dios",
+    "introSubtitle": "Donde el dios agonizante tiene su corte"
+  },
+  "6": {
+    "name": "El Centro Quieto de la Rueda",
+    "introTitle": "Capítulo VI — Más Allá del Despertar del Dios",
+    "introSubtitle": "La Rueda. El Deshecho. El final."
+  },
+  "7": {
+    "name": "Donde el Guardián Ahogó la Biblioteca"
+  },
+  "8": {
+    "name": "Donde la Línea Aún Resiste"
+  },
+  "9": {
+    "name": "El Trono Que No Lleva Rostro"
+  },
+  "10": {
+    "name": "El Templo de Rillifane, Profanado"
+  },
+  "11": {
+    "name": "El Rostro al Final de la Voz"
+  },
+  "12": {
+    "name": "En el Corazón del Fuego"
+  },
+  "13": {
+    "name": "El Wyrm en el Fondo de la Oscuridad"
+  },
+  "14": {
+    "name": "El Trono de Bhaal"
+  }
+}
