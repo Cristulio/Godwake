@@ -4,7 +4,7 @@
 > `SOULS_PER_CLASS=80 MAX_LIVES=80 npx tsx scripts/sim-class-viability.ts`.
 
 **Souls / class:** 80. **Max lives / soul:** 80.
-**Wall clock:** 1060.0s.
+**Wall clock:** 474.2s.
 
 ## What this measures
 
@@ -45,7 +45,7 @@ Dark) heuristically instead of a free auto-heal.
 | barbarian | 80 | 80.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 45.1 | 8.83 |
 | ranger | 80 | 80.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 40.2 | 7.99 |
 | druid | 80 | 80.0 | 0.0% | 0.00 | 3.8% | 66.3 | 0.0% | 36.6 | 7.36 |
-| monk | 80 | 78.4 | 15.0% | 3.79 | 98.8% | 56.0 | 6.1% | 49.1 | 9.30 |
+| monk | 80 | 80.0 | 0.0% | 0.00 | 0.0% | — | 0.0% | 18.3 | 4.47 |
 
 - **Topped A6** — share of souls that cleared the full chain at Ascension 6 within 80 lives.
 - **Mean asc cleared** — average highest ascension a soul ever cleared (0 if it never cleared A0).
@@ -68,7 +68,7 @@ Soul counts bucketed by the highest ascension level they ever cleared
 | barbarian | 80 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | ranger | 80 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | druid | 77 | 3 | 0 | 0 | 0 | 0 | 0 | 0 |
-| monk | 1 | 0 | 4 | 11 | 17 | 21 | 14 | 12 |
+| monk | 80 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 ## Proc instrumentation — do the new mechanics actually fire?
 
@@ -83,14 +83,14 @@ read off the damage log (approximate only in rare 200+-entry fights).
 | rogue | 173581 | · | · | · | · | · | 3.72 | 0.66 | 1.44 | · | · | · | · | · | · | · | · | · |
 | wizard | 74410 | · | · | · | · | · | · | · | · | · | 4.33 | · | · | · | · | · | · | · |
 | barbarian | 163609 | 0.86 | 3.83 | · | · | · | · | · | · | · | · | · | · | · | 0.48 | 1.85 | 0.80 | 3.14 |
-| ranger | 145587 | · | · | 1.76 | 3.78 | 5.72 | · | · | · | · | · | · | · | · | 0.99 | 1.90 | 0.83 | 3.72 |
+| ranger | 145587 | · | · | 1.76 | 3.78 | 0.00 | · | · | · | · | · | · | · | · | 0.99 | 1.90 | 0.83 | 3.72 |
 | druid | 132825 | · | · | · | · | · | · | · | · | 0.84 | 5.06 | · | · | · | · | · | · | · |
-| monk | 173226 | · | · | · | · | · | · | · | · | · | · | 2.84 | 2.64 | 0.20 | · | · | · | · |
+| monk | 68026 | · | · | · | · | · | · | · | · | · | · | 0.81 | 0.05 | 0.17 | · | · | · | · |
 
 **Sanity check:** Barbarian raged **0.86**×/combat and went reckless
 **3.83**×/combat. Ranger cast Hunter's Mark
 **1.76**×/combat, landed mark dice
-**5.72**×/combat, and fired Colossus
+**0.00**×/combat, and fired Colossus
 **3.78**×/combat (Colossus is gated behind the L3 Hunter
 subclass, so its rate also reflects how often the ranger reaches L3 within a life).
 
@@ -117,13 +117,13 @@ new kit would be inert in the sim and the band read meaningless; they are not.
 - **barbarian** — by chapter: ch1: 1281 · ch2: 1881 · ch3: 102 · ch4: 139 · ch5: 137 · ch6: 206. Top kill-rooms: mirror-of-pride+avatar-of-wrath (235, 3.7%), mirror-of-pride+slayer-shade (220, 3.4%), athkatla-magistrate (211, 3.3%), slaver-cuirassier+cult-fanatic (207, 3.2%), melissan (191, 3.0%), cowled-houndmaster+shadow-hound (158, 2.5%)
 - **ranger** — by chapter: ch1: 1601 · ch2: 1728 · ch3: 123 · ch4: 183 · ch5: 143 · ch6: 202. Top kill-rooms: slaver-cuirassier+cult-fanatic (215, 3.4%), mirror-of-pride+slayer-shade (171, 2.7%), mask-chamberlain+glasswright-duelist (148, 2.3%), hobgoblin+slaver-cuirassier (146, 2.3%), athkatla-magistrate (144, 2.3%), the-hollow-pretender (139, 2.2%)
 - **druid** — by chapter: ch1: 1781 · ch2: 1541 · ch3: 209 · ch4: 134 · ch5: 127 · ch6: 482. Top kill-rooms: drowned-custodian (523, 8.2%), irenicus (429, 6.7%), the-unmade (242, 3.8%), skeleton+bone-stalker (230, 3.6%), athkatla-magistrate (227, 3.5%), the-hollow-pretender (170, 2.7%)
-- **monk** — by chapter: ch1: 1549 · ch2: 1713 · ch3: 61 · ch4: 52 · ch5: 56 · ch6: 94. Top kill-rooms: melissan (303, 5.1%), fire-giant-shaman+saradush-marauder (261, 4.4%), irenicus (254, 4.3%), palace-golem+suldanessellar-bladesinger (224, 3.8%), slaver-cuirassier+cult-fanatic (207, 3.5%), duergar-ilyich (174, 3.0%)
+- **monk** — by chapter: ch1: 1844 · ch2: 3044 · ch3: 196 · ch4: 178 · ch5: 218 · ch6: 407. Top kill-rooms: slaver-cuirassier+cult-fanatic (311, 4.9%), athkatla-magistrate (279, 4.4%), shadow-hound+slaver-cuirassier (243, 3.8%), bandit-captain+cult-fanatic (237, 3.7%), hobgoblin+slaver-cuirassier (219, 3.4%), duergar-ilyich (206, 3.2%)
 
 ## Verdict
 
-Signature mechanics fire under the shared policy (Barbarian raged 0.86×/combat and went reckless 3.83×/combat; Ranger cast Hunter's Mark 1.76×/combat, landed mark dice 5.72×/combat and fired Colossus 3.78×/combat). On
+Signature mechanics fire under the shared policy (Barbarian raged 0.86×/combat and went reckless 3.83×/combat; Ranger cast Hunter's Mark 1.76×/combat, landed mark dice 0.00×/combat and fired Colossus 3.78×/combat). On
 ascension reach, **fighter leads** (mean asc cleared 6.00,
 topped A6 100.0%, first A0 clear ~life 36); the depth ranking is
-fighter 53.2 > monk 49.1 > rogue 48.2 > barbarian 45.1 > ranger 40.2 > druid 36.6 > wizard 20.1 rooms/life. Absolute clear-rates remain an AI-floor artifact (the
+fighter 53.2 > rogue 48.2 > barbarian 45.1 > ranger 40.2 > druid 36.6 > wizard 20.1 > monk 18.3 rooms/life. Absolute clear-rates remain an AI-floor artifact (the
 bot underplays even with the full loot/camp loop modelled) — the ranking, not the
 magnitudes, is the deliverable.

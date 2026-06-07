@@ -165,12 +165,23 @@ describe('Grove purchase honours the ascension-scaled price', () => {
     expect(useMetaStore.getState().unlockedUpgrades['pilgrims-boots']).toBe(1);
   });
 
-  it('a buy one renown below the scaled cost is refused', () => {
+  it('a buy one renown below the scaled cost is refused with a stable reason code', () => {
     const cost = groveUpgradeCost(up, 1, 1);
     setup(cost - 1, 1);
     const res = useMetaStore.getState().purchaseUpgrade('pilgrims-boots');
     expect(res.ok).toBe(false);
+    expect(res.reason).toBe('insufficient-renown');
     expect(useMetaStore.getState().renownSpent).toBe(0);
+  });
+
+  it('refuses an unknown upgrade and a maxed one with stable reason codes', () => {
+    setup(10_000, 0);
+    expect(useMetaStore.getState().purchaseUpgrade('not-a-real-upgrade').reason).toBe(
+      'unknown-upgrade',
+    );
+    // pilgrims-boots is a single-rank upgrade: buy it, then a second buy is max-rank.
+    expect(useMetaStore.getState().purchaseUpgrade('pilgrims-boots').ok).toBe(true);
+    expect(useMetaStore.getState().purchaseUpgrade('pilgrims-boots').reason).toBe('max-rank');
   });
 
   it('at Ascension 0 the scaled cost equals the base curve (no regression)', () => {

@@ -6,12 +6,14 @@ import {
   listUpgradesByCategory,
   listClassUpgrades,
   listUpgrades,
+  findUpgrade,
   groveUpgradeCost,
   UPGRADE_CATEGORIES,
   type Upgrade,
   type UpgradeCategory,
 } from '../../content/upgrades';
 import type { ClassId } from '../../schemas/ids';
+import type { UpgradePurchaseError } from '../../stores/metaStore';
 import { GroveScene } from './GroveScene';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import { useT } from '../../i18n/useT';
@@ -48,6 +50,26 @@ export function DruidGroveScreen() {
     );
   }
 
+  function purchaseErrorMessage(reason: UpgradePurchaseError | undefined, id: string): string {
+    switch (reason) {
+      case 'no-character':
+        return t('hub.grove.errors.noCharacter');
+      case 'unknown-upgrade':
+        return t('hub.grove.errors.unknownUpgrade');
+      case 'max-rank':
+        return t('hub.grove.errors.maxRank');
+      case 'insufficient-renown':
+        return t('hub.grove.errors.insufficient');
+      case 'locked': {
+        // Speak the upgrade's own gate ("Reach Ascension 3…"), localized.
+        const u = findUpgrade(id);
+        return u?.unlock ? tc('upgrades', id, 'unlockLabel', u.unlock.label) : t('hub.grove.locked');
+      }
+      default:
+        return t('hub.grove.cannotPurchase');
+    }
+  }
+
   function tryBuy(id: string) {
     const res = purchase(id);
     if (res.ok) {
@@ -55,7 +77,7 @@ export function DruidGroveScreen() {
       setPulsing(id);
       setTimeout(() => setPulsing(null), 1400);
     } else {
-      setFlash({ kind: 'err', msg: res.reason ?? t('hub.grove.cannotPurchase') });
+      setFlash({ kind: 'err', msg: purchaseErrorMessage(res.reason, id) });
     }
     setTimeout(() => setFlash(null), 2400);
   }

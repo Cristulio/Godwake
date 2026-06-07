@@ -18,6 +18,18 @@ import {
 import { isFeatureUnlocked, unlockedRelicSlots } from '../engine/progression/unlocks';
 
 /**
+ * Why a Grove purchase was refused. A stable CODE, not display text, so the UI
+ * can localize the message (the `locked` case resolves to the upgrade's own
+ * unlockLabel). `ok: true` carries no reason.
+ */
+export type UpgradePurchaseError =
+  | 'no-character'
+  | 'unknown-upgrade'
+  | 'locked'
+  | 'max-rank'
+  | 'insufficient-renown';
+
+/**
  * Long-term progress that survives reincarnation but resets on New Game:
  * codex discoveries, reincarnation counters, Grove purchases, chapter gates.
  *
@@ -149,7 +161,7 @@ interface MetaStoreState {
   discoverMonster: (defId: string) => void;
   recordMonsterDefeat: (defId: string) => void;
   recordPlayerKilledBy: (defId: string, abilityName?: string) => void;
-  purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
+  purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: UpgradePurchaseError };
   setHasReincarnated: (v: boolean) => void;
   incrementDeathCount: () => void;
   /** Bump the account-level delve counter by one (called on every descent). */
@@ -283,26 +295,26 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
 
   purchaseUpgrade: (upgradeId) => {
     const character = useCharacterStore.getState().character;
-    if (!character) return { ok: false, reason: 'No character.' };
+    if (!character) return { ok: false, reason: 'no-character' };
     let up;
     try {
       up = getUpgrade(upgradeId);
     } catch {
-      return { ok: false, reason: 'Unknown upgrade.' };
+      return { ok: false, reason: 'unknown-upgrade' };
     }
     const requiredAscension = up.unlock?.ascension ?? 0;
     if (get().ascensionUnlocked < requiredAscension) {
-      return { ok: false, reason: up.unlock?.label ?? 'Locked.' };
+      return { ok: false, reason: 'locked' };
     }
     const currentRank = get().unlockedUpgrades[upgradeId] ?? 0;
     if (currentRank >= up.maxRank) {
-      return { ok: false, reason: 'Already at max rank.' };
+      return { ok: false, reason: 'max-rank' };
     }
     const nextRank = currentRank + 1;
     // Price scales with the soul's ascension STANDING — same value the Grove
     // screen displays via groveUpgradeCost(ascensionUnlocked).
     const cost = groveUpgradeCost(up, nextRank, get().ascensionUnlocked);
-    if (character.renown < cost) return { ok: false, reason: 'Not enough Renown.' };
+    if (character.renown < cost) return { ok: false, reason: 'insufficient-renown' };
     let next: Character = { ...character, renown: character.renown - cost };
     if (up.kind === 'permanent') {
       next = applyPermanentUpgrade(next, upgradeId, nextRank);

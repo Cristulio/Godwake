@@ -42,7 +42,13 @@
     "renown": "Renown",
     "ranksBlessed": "{owned} / {total} ranks blessed",
     "tribute": "The Wellspring accepts your tribute.",
-    "cannotPurchase": "Cannot purchase.",
+    "cannotPurchase": "The Wellspring turns you away.",
+    "errors": {
+      "noCharacter": "No soul stands at the pool.",
+      "unknownUpgrade": "The Wellspring knows no such blessing.",
+      "maxRank": "This blessing is already given in full.",
+      "insufficient": "The Wellspring withholds — your Renown falls short."
+    },
     "classTagline": "Blessings only your kind can carry",
     "tabs": {
       "survival": "Survival",
