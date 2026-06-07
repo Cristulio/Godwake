@@ -1,6 +1,18 @@
 import type { Character } from '../../types/character';
 import type { ClassId } from '../../schemas/ids';
 import { ascensionUpgradeCostMult } from '../../engine/delve/ascension';
+import { t } from '../../i18n';
+
+/**
+ * Localized effect text for an upgrade rank. The numbers are computed by each
+ * upgrade's `effectAtRank` (the single source of truth for the maths) and handed
+ * to the `upgrades.<id>.effect` template, which carries the English source and
+ * the Spanish overlay (with `{ one, other }` plural forms where a count appears).
+ * Pass `count` for the countable-noun upgrades so the right plural form is picked.
+ */
+function fx(id: string, params?: Record<string, string | number>): string {
+  return t(`upgrades.${id}.effect`, params);
+}
 
 /**
  * Druid Grove upgrades. The Wellspring of Mielikki blesses the soul, not the
@@ -98,7 +110,7 @@ const RAW: Upgrade[] = [
     name: "Pilgrim's Boots",
     flavor:
       'The druids gift the wakened soul a pair of hide-leather boots before the road. The first mile teaches the back. The hundredth thickens it.',
-    effectAtRank: (r) => `+${r * 2} maximum HP, permanent.`,
+    effectAtRank: (r) => fx('pilgrims-boots', { n: r * 2 }),
     costForRank: () => 25,
     maxRank: 1,
     apply: (c) => addPermanentBonus(c, 'hp', 2),
@@ -110,7 +122,7 @@ const RAW: Upgrade[] = [
     name: 'Iron Will',
     flavor:
       'The Wellspring pulls deeper this time. You wake with breath you did not have before. Whatever the master takes, the soul keeps a little more.',
-    effectAtRank: () => '+5 maximum HP, permanent.',
+    effectAtRank: () => fx('iron-will'),
     costForRank: () => 60,
     maxRank: 1,
     apply: (c) => addPermanentBonus(c, 'hp', 5),
@@ -122,7 +134,7 @@ const RAW: Upgrade[] = [
     name: 'Mantle of the Wakened',
     flavor:
       'The Wellspring keeps something back — a fistful of the old life sewn into the seam of the new. The flesh remembers wounds it has not taken yet.',
-    effectAtRank: (r) => `+${r * 5} maximum HP, permanent across reincarnations.`,
+    effectAtRank: (r) => fx('mantle-of-the-wakened', { n: r * 5 }),
     costForRank: (r) => rankCost(80, r),
     maxRank: 5,
     apply: (c) => addPermanentBonus(c, 'hp', 5),
@@ -134,7 +146,7 @@ const RAW: Upgrade[] = [
     name: 'Hardier Soul',
     flavor:
       "Ilmater's mark pressed beneath the heart. When the body breaks, the soul remembers it can still stand once more.",
-    effectAtRank: (r) => `+${r} stabilise charge${r === 1 ? '' : 's'} per delve (a free self-stabilise when downed).`,
+    effectAtRank: (r) => fx('hardier-soul', { count: r, n: r }),
     costForRank: (r) => rankCost(80, r),
     maxRank: 3,
     apply: (c, rank) => ({
@@ -149,7 +161,7 @@ const RAW: Upgrade[] = [
     name: 'Cloak of the Grove',
     flavor:
       "Spider-silk shot through with fern fronds and the cinder of last winter's fire. It moves when no wind touches it.",
-    effectAtRank: (r) => `+${r} AC, permanent.`,
+    effectAtRank: (r) => fx('cloak-of-the-grove', { n: r }),
     costForRank: (r) => rankCost(150, r),
     maxRank: 3,
     apply: (c) => addPermanentBonus(c, 'ac', 1),
@@ -163,7 +175,7 @@ const RAW: Upgrade[] = [
     name: "Wellspring's Depth",
     flavor:
       "The pool only shows its floor to a soul that has walked the whole road and come back. What it gives now, it could not give before.",
-    effectAtRank: (r) => `+${r * 10} maximum HP, permanent across reincarnations.`,
+    effectAtRank: (r) => fx('wellspring-depths', { n: r * 10 }),
     costForRank: (r) => rankCost(200, r),
     maxRank: 3,
     apply: (c) => addPermanentBonus(c, 'hp', 10),
@@ -178,7 +190,7 @@ const RAW: Upgrade[] = [
     name: 'First Cut',
     flavor:
       'A length of red thread tied to the wrist. The hand it guides moves a half-breath earlier than the others.',
-    effectAtRank: (r) => `+${r} damage on the first attack of each combat, permanent.`,
+    effectAtRank: (r) => fx('first-cut', { n: r }),
     costForRank: (r) => rankCost(90, r),
     maxRank: 3,
     apply: (c) => ({
@@ -193,7 +205,7 @@ const RAW: Upgrade[] = [
     name: 'Bleed-Out',
     flavor:
       "An owl's feather pressed against your collar by a child who would not speak. Wounded things lean toward you, and you toward them.",
-    effectAtRank: (r) => `+${r} damage against wounded targets (HP at half or less), permanent.`,
+    effectAtRank: (r) => fx('bleed-out', { n: r }),
     costForRank: (r) => rankCost(110, r),
     maxRank: 2,
     apply: (c) => ({
@@ -208,7 +220,7 @@ const RAW: Upgrade[] = [
     name: 'Fellfast Strike',
     flavor:
       'A hawk-bone splinter set into the pommel. When the strike lands true, the bone hums and the wound runs deeper than steel should reach.',
-    effectAtRank: (r) => `+${r} damage on critical hits, permanent.`,
+    effectAtRank: (r) => fx('fellfast-strike', { n: r }),
     costForRank: (r) => rankCost(140, r),
     maxRank: 3,
     apply: (c) => ({
@@ -223,7 +235,7 @@ const RAW: Upgrade[] = [
     name: 'Whetstone Resolve',
     flavor:
       "A stone the size of your thumb, oily with old grease and older blood. The edge it gives you doesn't dull.",
-    effectAtRank: (r) => `+${r} damage on all weapon hits, permanent.`,
+    effectAtRank: (r) => fx('whetstone-resolve', { n: r }),
     costForRank: (r) => rankCost(150, r),
     maxRank: 4,
     apply: (c) => addPermanentBonus(c, 'damage', 1),
@@ -235,7 +247,7 @@ const RAW: Upgrade[] = [
     name: 'Heirloom Blade',
     flavor:
       'A blade laid on the Wellspring stones the night of your last death. The grip has been worn smooth by another hand.',
-    effectAtRank: (r) => `+${r} to all attack rolls, permanent.`,
+    effectAtRank: (r) => fx('heirloom-blade', { n: r }),
     costForRank: (r) => rankCost(180, r),
     maxRank: 4,
     apply: (c) => addPermanentBonus(c, 'attack', 1),
@@ -247,7 +259,7 @@ const RAW: Upgrade[] = [
     name: "Killer's Eye",
     flavor:
       'A wolf-tooth necklace. The druids will not say which of the Wellspring children lost it. Your eye sharpens before you know why.',
-    effectAtRank: (r) => `Crit on ${20 - r}-20 instead of 20 only (crit range +${r}), permanent.`,
+    effectAtRank: (r) => fx('killers-eye', { lo: 20 - r, n: r }),
     costForRank: (r) => rankCost(200, r),
     maxRank: 2,
     apply: (c) => addPermanentBonus(c, 'critRange', 1),
@@ -261,7 +273,7 @@ const RAW: Upgrade[] = [
     name: 'Crown of the Returned',
     flavor:
       'Beaten from the ash of cleared chains. Only a soul the wheel has carried back again and again may wear it without burning.',
-    effectAtRank: (r) => `+${r} to all attack rolls and spell-attack rolls, permanent.`,
+    effectAtRank: (r) => fx('crown-of-the-returned', { n: r }),
     costForRank: (r) => rankCost(350, r),
     maxRank: 2,
     apply: (c) => addPermanentBonus(addPermanentBonus(c, 'attack', 1), 'spellAttack', 1),
@@ -276,7 +288,7 @@ const RAW: Upgrade[] = [
     name: "Quartermaster's Stipend",
     flavor:
       'A folded chit, sealed with green wax. Present it at a chapter cleared and the Grove will reimburse, by some accounting only they keep.',
-    effectAtRank: (r) => `Gain +${10 * r} gold each time a chapter boss falls.`,
+    effectAtRank: (r) => fx('quartermasters-stipend', { n: 10 * r }),
     costForRank: (r) => rankCost(70, r),
     maxRank: 3,
     apply: (c, rank) => ({ ...c, chapterClearGoldBonus: 10 * rank }),
@@ -288,7 +300,7 @@ const RAW: Upgrade[] = [
     name: 'Shrine Tithe',
     flavor:
       "The Grove circles a tithe back to you at each altar — coin for coin, blood for blood. It is not generosity. It is bookkeeping.",
-    effectAtRank: (r) => `Gain +${20 * r} gold at each shrine room visited.`,
+    effectAtRank: (r) => fx('shrine-tithe', { n: 20 * r }),
     costForRank: (r) => rankCost(80, r),
     maxRank: 2,
     apply: (c, rank) => ({ ...c, shrineTitheGold: 20 * rank }),
@@ -300,8 +312,7 @@ const RAW: Upgrade[] = [
     name: 'Coin in the Pocket',
     flavor:
       'The Grove keepers tuck a few coppers into the hem of your coat each time the Wellspring releases you — and slip another purse to the quartermaster against the chapters you clear.',
-    effectAtRank: (r) =>
-      `Start each delve with +${r * 25} gold, and gain +${r * 5} gold each time a chapter boss falls.`,
+    effectAtRank: (r) => fx('coin-in-pocket', { n1: r * 25, n2: r * 5 }),
     costForRank: (r) => rankCost(90, r),
     maxRank: 3,
     apply: (c) => {
@@ -315,7 +326,7 @@ const RAW: Upgrade[] = [
     category: 'economy',
     name: "Mielikki's Cache",
     flavor: "A flask stoppered with wax and the Lady's sigil. It tastes of pine sap and summer rain.",
-    effectAtRank: (r) => `Start each delve with +${r} Potion${r === 1 ? '' : 's'} of Healing.`,
+    effectAtRank: (r) => fx('mielikki-cache', { count: r, n: r }),
     costForRank: (r) => rankCost(100, r),
     maxRank: 4,
     apply: (c, rank) => ({
@@ -335,7 +346,7 @@ const RAW: Upgrade[] = [
     name: 'Wider Pantheon',
     flavor:
       "Mielikki nods at her cousins, and they listen. At each altar, more voices speak — and a wider choice is laid before you.",
-    effectAtRank: (r) => `Shrines offer ${3 + r} blessings to choose from (instead of 3).`,
+    effectAtRank: (r) => fx('wider-pantheon', { n: 3 + r }),
     costForRank: (r) => rankCost(40, r),
     maxRank: 2,
     apply: (c, rank) => ({ ...c, shrineOptionBonus: rank }),
@@ -347,8 +358,7 @@ const RAW: Upgrade[] = [
     name: "Pilgrim's Step",
     flavor:
       'You wake from the Wellspring with a god already murmuring at your shoulder. The road begins blessed.',
-    effectAtRank: (r) =>
-      `Start each delve with ${r} random shrine blessing${r === 1 ? '' : 's'} already in hand.`,
+    effectAtRank: (r) => fx('pilgrims-step', { count: r, n: r }),
     costForRank: (r) => rankCost(60, r),
     maxRank: 2,
     // Pilgrim's Step blessings are rolled in gameStore.startDelve (needs the
@@ -363,7 +373,7 @@ const RAW: Upgrade[] = [
     name: "Tymora's Wager",
     flavor:
       "A copper coin pressed into your palm by a laughing priestess. Heads, you live. Tails, you live again. She never lets you see the result.",
-    effectAtRank: (r) => `Start each delve able to reroll +${r} missed attack${r === 1 ? '' : 's'}.`,
+    effectAtRank: (r) => fx('tymoras-wager', { count: r, n: r }),
     costForRank: (r) => rankCost(80, r),
     maxRank: 3,
     apply: (c, rank) => ({
@@ -384,8 +394,7 @@ const RAW: Upgrade[] = [
     name: 'Soul Marrow',
     flavor:
       'The bane-marks bite deeper now, and the Wellspring drinks deeper with them. What hurts your soul makes its return larger.',
-    effectAtRank: (r) =>
-      `Each bane-quirk you carry earns an extra +${5 * r}% renown on top of the soul-mark.`,
+    effectAtRank: (r) => fx('soul-marrow', { n: 5 * r }),
     costForRank: (r) => rankCost(200, r),
     maxRank: 3,
     apply: (c, rank) => ({ ...c, permanentRenownBonusPerBane: 0.05 * rank }),
@@ -397,8 +406,7 @@ const RAW: Upgrade[] = [
     name: 'Wheelturner',
     flavor:
       "An old druid lays her hand on your chest and says only, 'One bright thread the wheel will not cut.' The first blessing on your soul survives the turn — the curses she leaves to the wheel.",
-    effectAtRank: () =>
-      'On reincarnation, your first boon-quirk is carried into the new life (banes are left behind; the remaining slot rerolls).',
+    effectAtRank: () => fx('wheelturner'),
     costForRank: () => 300,
     maxRank: 1,
     apply: (c) => ({ ...c, wheelturnerUnlocked: true }),
@@ -413,7 +421,7 @@ const RAW: Upgrade[] = [
     name: 'Wellspring Vigil',
     flavor:
       "Mielikki's circle keeps a vigil while you sleep. You step into the dark with the second breath already drawn — and a third, and a fourth.",
-    effectAtRank: (r) => `+${r} extra Second Wind charge${r === 1 ? '' : 's'} per delve.`,
+    effectAtRank: (r) => fx('wellspring-vigil', { count: r, n: r }),
     costForRank: (r) => rankCost(100, r),
     maxRank: 3,
     apply: (c, rank) => {
@@ -438,7 +446,7 @@ const RAW: Upgrade[] = [
     name: 'Shadowstep',
     flavor:
       "The Wakeful Mother's blessing — the shadow learns your step before you take it.",
-    effectAtRank: (r) => `+${r} extra Cunning Action use per combat.`,
+    effectAtRank: (r) => fx('shadowstep', { count: r, n: r }),
     costForRank: (r) => rankCost(100, r),
     maxRank: 3,
     apply: (c, rank) => {
@@ -454,7 +462,7 @@ const RAW: Upgrade[] = [
     name: 'Knife in the Dark',
     flavor:
       "Selûne's other face — the wound finds its way home.",
-    effectAtRank: (r) => `+${r}d6 Sneak Attack damage, permanent.`,
+    effectAtRank: (r) => fx('knife-in-the-dark', { n: r }),
     costForRank: (r) => rankCost(150, r),
     maxRank: 3,
     apply: (c, rank) => {
@@ -472,7 +480,7 @@ const RAW: Upgrade[] = [
     name: 'Arcane Focus',
     flavor:
       'A node of the Wellspring set behind your sternum. Spells take aim a little surer.',
-    effectAtRank: (r) => `+${r} to spell attack rolls, permanent.`,
+    effectAtRank: (r) => fx('arcane-focus', { n: r }),
     costForRank: (r) => rankCost(100, r),
     maxRank: 3,
     apply: (c) => addPermanentBonus(c, 'spellAttack', 1),
@@ -485,7 +493,7 @@ const RAW: Upgrade[] = [
     name: 'Burning Tongue',
     flavor:
       'Mielikki burns a word into the back of your throat. Every spell tastes hotter on the way out.',
-    effectAtRank: (r) => `+${r} damage to spells, permanent.`,
+    effectAtRank: (r) => fx('burning-tongue', { n: r }),
     costForRank: (r) => rankCost(140, r),
     maxRank: 5,
     apply: (c) => addPermanentBonus(c, 'spellDamage', 1),
@@ -498,7 +506,7 @@ const RAW: Upgrade[] = [
     name: 'Sigil of the Wakened Mind',
     flavor:
       'An old druid traces a rune over your eyes. The world hears your words louder.',
-    effectAtRank: (r) => `+${r} spell save DC, permanent (enemies save harder against your spells).`,
+    effectAtRank: (r) => fx('sigil-of-the-wakened-mind', { n: r }),
     costForRank: (r) => rankCost(180, r),
     maxRank: 3,
     apply: (c) => addPermanentBonus(c, 'spellDc', 1),
@@ -513,7 +521,7 @@ const RAW: Upgrade[] = [
     name: 'Brutal Scars',
     flavor:
       'Every wound the master gave you healed crooked, into a harder thing. When you land a true blow, the old scars open with it.',
-    effectAtRank: (r) => `+${r} damage on critical hits, permanent.`,
+    effectAtRank: (r) => fx('brutal-scars', { n: r }),
     costForRank: (r) => rankCost(140, r),
     maxRank: 3,
     apply: (c) => {
@@ -529,7 +537,7 @@ const RAW: Upgrade[] = [
     name: 'Reckless Eye',
     flavor:
       'You stopped guarding the openings. Throwing the body wide, you see the kill the careful never will.',
-    effectAtRank: (r) => `Crit on ${20 - r}-20 instead of 20 only (crit range +${r}), permanent.`,
+    effectAtRank: (r) => fx('reckless-eye', { lo: 20 - r, n: r }),
     costForRank: (r) => rankCost(180, r),
     maxRank: 2,
     apply: (c) => {
@@ -547,7 +555,7 @@ const RAW: Upgrade[] = [
     name: 'First Arrow',
     flavor:
       'The arrow is loosed before the foe has a name. The Wellspring keeps your draw-hand sure across every life.',
-    effectAtRank: (r) => `+${r} damage on the first attack of each combat, permanent.`,
+    effectAtRank: (r) => fx('first-arrow', { n: r }),
     costForRank: (r) => rankCost(120, r),
     maxRank: 3,
     apply: (c) => {
@@ -563,7 +571,7 @@ const RAW: Upgrade[] = [
     name: 'Colossus Slayer',
     flavor:
       'You learned which thread, pulled, unmakes the whole tapestry. The bleeding ones never last long under your eye.',
-    effectAtRank: (r) => `+${r} damage against wounded targets (HP at half or less), permanent.`,
+    effectAtRank: (r) => fx('colossus-slayer', { n: r }),
     costForRank: (r) => rankCost(140, r),
     maxRank: 2,
     apply: (c) => {
@@ -581,7 +589,7 @@ const RAW: Upgrade[] = [
     name: 'Primal Reservoir',
     flavor:
       'The Wellspring pools deeper in a soul that has already worn fur and feather. The beast within answers more readily now — and more often.',
-    effectAtRank: (r) => `+${r} Wild Shape use${r === 1 ? '' : 's'} per combat.`,
+    effectAtRank: (r) => fx('primal-reservoir', { count: r, n: r }),
     costForRank: (r) => rankCost(120, r),
     maxRank: 2,
     apply: (c, rank) => {
@@ -597,7 +605,7 @@ const RAW: Upgrade[] = [
     name: 'Verdant Wrath',
     flavor:
       "Mielikki's anger is the forest's — slow to wake, and ruinous once roused. Your spells carry a little of that old green fury into every life.",
-    effectAtRank: (r) => `+${r} damage to spells, permanent.`,
+    effectAtRank: (r) => fx('verdant-wrath', { n: r }),
     costForRank: (r) => rankCost(140, r),
     maxRank: 4,
     apply: (c) => {
@@ -613,8 +621,7 @@ const RAW: Upgrade[] = [
     name: 'Deep Roots',
     flavor:
       "Your soul sends roots past the Wellspring's floor, into the still water beneath. From it you draw one more breath of the Weave than the body was given.",
-    effectAtRank: (r) =>
-      `+${r} first-level spell slot${r === 1 ? '' : 's'} each delve, permanent.`,
+    effectAtRank: (r) => fx('deep-roots', { count: r, n: r }),
     costForRank: (r) => rankCost(160, r),
     maxRank: 2,
     apply: (c) => {
@@ -632,7 +639,7 @@ const RAW: Upgrade[] = [
     name: 'Brimming Well',
     flavor:
       'The masters taught the body to hold its breath. The Wellspring teaches the soul to hold more. Your Ki brims past the old measure.',
-    effectAtRank: (r) => `+${r} maximum Ki point${r === 1 ? '' : 's'} per combat.`,
+    effectAtRank: (r) => fx('brimming-well', { count: r, n: r }),
     costForRank: (r) => rankCost(110, r),
     maxRank: 2,
     apply: (c, rank) => {
@@ -648,7 +655,7 @@ const RAW: Upgrade[] = [
     name: 'Pressure Points',
     flavor:
       'An old hand guides yours to the places where life runs thin beneath the skin. When the strike lands true, the body forgets for a moment how to stand.',
-    effectAtRank: (r) => `+${r} damage on critical hits, permanent.`,
+    effectAtRank: (r) => fx('pressure-points', { n: r }),
     costForRank: (r) => rankCost(140, r),
     maxRank: 3,
     apply: (c) => {
@@ -666,8 +673,7 @@ const RAW: Upgrade[] = [
     name: 'Wellspring of Mysteries',
     flavor:
       'The Wellspring keeps a page the masters never wrote — a fold of the Weave sewn into the soul, yours to spend and find waiting again.',
-    effectAtRank: (r) =>
-      `+${r} first-level spell slot${r === 1 ? '' : 's'} each delve, permanent.`,
+    effectAtRank: (r) => fx('wellspring-of-mysteries', { count: r, n: r }),
     costForRank: (r) => rankCost(160, r),
     maxRank: 2,
     apply: (c) => {
@@ -725,19 +731,3 @@ export const UPGRADE_CATEGORIES: UpgradeCategory[] = [
   'fortune',
   'soul',
 ];
-
-export const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
-  survival: 'Survival',
-  offense: 'Offense',
-  economy: 'Economy',
-  fortune: 'Fortune',
-  soul: 'Soul',
-};
-
-export const CATEGORY_TAGLINES: Record<UpgradeCategory, string> = {
-  survival: 'Flesh that endures',
-  offense: 'Steel that strikes truer',
-  economy: 'Pockets never quite empty',
-  fortune: 'Gods and luck lean closer',
-  soul: 'The thread the wheel cannot cut',
-};

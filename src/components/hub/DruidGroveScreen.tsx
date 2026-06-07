@@ -6,9 +6,8 @@ import {
   listUpgradesByCategory,
   listClassUpgrades,
   listUpgrades,
+  groveUpgradeCost,
   UPGRADE_CATEGORIES,
-  CATEGORY_LABELS,
-  CATEGORY_TAGLINES,
   type Upgrade,
   type UpgradeCategory,
 } from '../../content/upgrades';
@@ -26,7 +25,7 @@ function classLabel(classId: ClassId): string {
 }
 
 export function DruidGroveScreen() {
-  const { t } = useT();
+  const { t, tc } = useT();
   const character = useGameStore((s) => s.character);
   const unlocked = useGameStore((s) => s.unlockedUpgrades);
   const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
@@ -68,8 +67,12 @@ export function DruidGroveScreen() {
   const classUpgrades = listClassUpgrades(character.classId);
   const hasClassTab = classUpgrades.length > 0;
   const shownUpgrades = tab === 'class' ? classUpgrades : listUpgradesByCategory(tab);
-  const tabLabel = tab === 'class' ? classLabel(character.classId) : CATEGORY_LABELS[tab];
-  const tabTagline = tab === 'class' ? t('hub.grove.classTagline') : CATEGORY_TAGLINES[tab];
+  const tabLabel =
+    tab === 'class'
+      ? tc('classes', character.classId, 'name', classLabel(character.classId))
+      : t(`hub.grove.tabs.${tab}`);
+  const tabTagline =
+    tab === 'class' ? t('hub.grove.classTagline') : t(`hub.grove.taglines.${tab}`);
 
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-6xl mx-auto animate-room-enter">
@@ -158,6 +161,7 @@ export function DruidGroveScreen() {
             upgrade={u}
             currentRank={unlocked[u.id] ?? 0}
             renown={character.renown}
+            ascensionUnlocked={ascensionUnlocked}
             locked={
               (u.unlock != null && !groveDeepUnlocked) ||
               (u.unlock?.ascension ?? 0) > ascensionUnlocked
@@ -181,6 +185,7 @@ interface GroveTabsProps {
 }
 
 function GroveTabs({ current, onChange, unlocked, classId, hasClassTab, classUpgrades }: GroveTabsProps) {
+  const { t, tc } = useT();
   const tally = (ups: Upgrade[]) => ({
     owned: ups.reduce((s, u) => s + (unlocked[u.id] ?? 0), 0),
     max: ups.reduce((s, u) => s + u.maxRank, 0),
@@ -193,7 +198,7 @@ function GroveTabs({ current, onChange, unlocked, classId, hasClassTab, classUpg
         return (
           <TabButton
             key={cat}
-            label={CATEGORY_LABELS[cat]}
+            label={t(`hub.grove.tabs.${cat}`)}
             owned={owned}
             max={max}
             active={cat === current}
@@ -205,7 +210,7 @@ function GroveTabs({ current, onChange, unlocked, classId, hasClassTab, classUpg
         const { owned, max } = tally(classUpgrades);
         return (
           <TabButton
-            label={classLabel(classId)}
+            label={tc('classes', classId, 'name', classLabel(classId))}
             owned={owned}
             max={max}
             active={current === 'class'}
@@ -254,16 +259,20 @@ interface UpgradeCardProps {
   upgrade: Upgrade;
   currentRank: number;
   renown: number;
+  ascensionUnlocked: number;
   locked: boolean;
   pulsing: boolean;
   onBuy: () => void;
 }
 
-function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: UpgradeCardProps) {
-  const { t } = useT();
+function UpgradeCard({ upgrade, currentRank, renown, ascensionUnlocked, locked, pulsing, onBuy }: UpgradeCardProps) {
+  const { t, tc } = useT();
   const maxed = currentRank >= upgrade.maxRank;
   const nextRank = currentRank + 1;
-  const nextCost = maxed ? null : upgrade.costForRank(nextRank);
+  // Price the soul actually pays: the ascension-scaled cost the purchase path
+  // (metaStore) charges. Displaying the bare costForRank desynced the button from
+  // the deduction, so an "affordable" buy could fail "Not enough Renown" at Asc≥1.
+  const nextCost = maxed ? null : groveUpgradeCost(upgrade, nextRank, ascensionUnlocked);
   const affordable = !locked && nextCost !== null && renown >= nextCost;
   const owned = currentRank > 0;
   const shortfall = nextCost !== null ? nextCost - renown : 0;
@@ -299,13 +308,13 @@ function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: U
 
       <div className="flex justify-between items-start mb-1 gap-3">
         <h3 className="font-display text-[var(--color-accent-amber)] uppercase tracking-wider text-[12px] leading-tight">
-          {upgrade.name}
+          {tc('upgrades', upgrade.id, 'name', upgrade.name)}
         </h3>
         <RankPips current={currentRank} max={upgrade.maxRank} />
       </div>
 
       <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed font-narrative">
-        {upgrade.flavor}
+        {tc('upgrades', upgrade.id, 'flavor', upgrade.flavor)}
       </p>
 
       <div className="text-[var(--color-text-primary)] text-xs mb-3 font-mono space-y-1">
@@ -330,7 +339,9 @@ function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: U
       <div className="mt-auto">
         {locked ? (
           <div className="font-display text-[10px] uppercase tracking-widest text-[var(--color-text-dim)] text-center py-2 border border-[var(--color-border-dim)] bg-[var(--color-bg-deep)]/40">
-            ⚿ {upgrade.unlock?.label ?? t('hub.grove.locked')}
+            ⚿ {upgrade.unlock
+              ? tc('upgrades', upgrade.id, 'unlockLabel', upgrade.unlock.label)
+              : t('hub.grove.locked')}
           </div>
         ) : maxed ? (
           <div className="font-display text-[10px] uppercase tracking-widest text-[var(--color-accent-amber)]/80 text-center py-2 border border-[var(--color-accent-amber)]/40 bg-[var(--color-bg-deep)]/40">

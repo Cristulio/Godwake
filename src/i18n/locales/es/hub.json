@@ -44,6 +44,20 @@
     "tribute": "El Manantial acepta tu tributo.",
     "cannotPurchase": "No se puede comprar.",
     "classTagline": "Bendiciones que solo los tuyos pueden portar",
+    "tabs": {
+      "survival": "Supervivencia",
+      "offense": "Ofensiva",
+      "economy": "Economía",
+      "fortune": "Fortuna",
+      "soul": "Alma"
+    },
+    "taglines": {
+      "survival": "Carne que perdura",
+      "offense": "Acero que hiere más certero",
+      "economy": "Bolsillos nunca del todo vacíos",
+      "fortune": "Dioses y suerte se acercan",
+      "soul": "El hilo que la rueda no puede cortar"
+    },
     "sealed": "⚿ Sellado",
     "maxRank": "◆ Rango Máx",
     "now": "Ahora ({rank}/{max})",
