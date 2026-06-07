@@ -11,6 +11,8 @@ import {
 import { Button } from './Button';
 import { useT } from '../../i18n/useT';
 import { LOCALES, type Locale } from '../../i18n';
+import { useFeedbackUi } from '../../feedback/feedbackUi';
+import { feedbackEnabled } from '../../feedback/feedback';
 
 interface SettingsModalProps {
   onClose: () => void;
@@ -22,6 +24,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { t } = useT();
   const [section, setSection] = useState<Section>('audio');
   const panelRef = useRef<HTMLDivElement>(null);
+  const openFeedback = useFeedbackUi((s) => s.openFeedback);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -69,6 +72,24 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           {section === 'language' && <LanguageSection />}
           {section === 'save' && <SaveDataSection />}
         </div>
+
+        {feedbackEnabled() && (
+          <footer className="flex items-center justify-between gap-3 border-t border-[var(--color-border-warm)] px-5 py-3">
+            <span className="text-[var(--color-text-muted)] text-[10px] italic leading-tight">
+              {t('ui.feedback.settingsHint')}
+            </span>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                onClose();
+                openFeedback();
+              }}
+            >
+              ✎ {t('ui.feedback.button')}
+            </Button>
+          </footer>
+        )}
       </div>
     </div>
   );
