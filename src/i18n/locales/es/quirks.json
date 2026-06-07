@@ -1,0 +1,202 @@
+{
+  "tymoras-eye": {
+    "name": "Ojo de Tymora",
+    "flavor": "La dama de la suerte te ha prestado una sola moneda de su favor. La sientes presionando contra tus costillas.",
+    "effect": "Repite una tirada de ataque fallida una vez por incursión."
+  },
+  "iron-stomach": {
+    "name": "Estómago de Hierro",
+    "flavor": "Comiste algo en las celdas que te sentó mal y de algún modo ganaste la discusión. Ya nada sabe del todo bien.",
+    "effect": "Inmune al daño de veneno. Las pruebas de Percepción basadas en el olfato son torpes."
+  },
+  "bargain-hunter": {
+    "name": "Cazachollos",
+    "flavor": "Aprendiste dónde guardan los mercaderes la segunda bolsa —esa que jurarían no haber tenido nunca.",
+    "effect": "+25% a las recompensas de oro de las incursiones."
+  },
+  "vertigo": {
+    "name": "Vértigo",
+    "flavor": "El mundo se ladea medio paso cuando no debería. Golpeas más fuerte porque solo ves bien el objetivo una vez.",
+    "effect": "+2 a impactar en tu primer ataque de cada combate, pero −1 a la CA."
+  },
+  "hangry": {
+    "name": "Hambrirritado",
+    "flavor": "El dolor afila. Cuanto más hambriento el lobo, más cruel el mordisco. Esa la aprendiste rápido.",
+    "effect": "+2 a las tiradas de daño cuando estás a la mitad de PG o menos."
+  },
+  "sun-touched": {
+    "name": "Tocado por el Sol",
+    "flavor": "Algo de la superficie te sigue en la oscuridad. Tu piel recuerda un calor que tus huesos nunca conocieron.",
+    "effect": "Sabor — el alma recuerda la luz del sol."
+  },
+  "bloody-minded": {
+    "name": "Sanguinario",
+    "flavor": "Terminas lo que empiezas. Los heridos no merecen piedad y los moribundos son más fáciles de matar.",
+    "effect": "+1 a impactar contra enemigos heridos (por debajo de la mitad de PG). −1 a la CA."
+  },
+  "cursed-coin": {
+    "name": "Moneda Maldita",
+    "flavor": "Un cobre que siempre vuelve. El rostro que lleva no es de ninguno de los dioses que conoces, y siempre está caliente.",
+    "effect": "Empieza cada incursión con +30 de oro. No se puede vender ni descartar."
+  },
+  "bardic-memory": {
+    "name": "Memoria de Bardo",
+    "flavor": "Puedes tararear canciones que nunca has oído. Las palabras vienen en una lengua que nadie en la mesa conoce.",
+    "effect": "Sabor — el alma carga una vieja melodía."
+  },
+  "touched-beyond": {
+    "name": "Tocado por el Más Allá",
+    "flavor": "Cuando parpadeas, ves la sala como era. Los muertos siguen ahí. Están muy ocupados.",
+    "effect": "−1 a tu primera tirada de ataque de cada combate."
+  },
+  "featherlight": {
+    "name": "Ligero como una Pluma",
+    "flavor": "Te mueves antes de proponértelo. Las puertas se abren a salas en las que aún no has decidido entrar.",
+    "effect": "+1 a impactar en tu primer ataque de cada combate."
+  },
+  "late-sleeper": {
+    "name": "Dormilón",
+    "flavor": "El mundo empieza antes que tú. Para cuando te has puesto las botas, alguien ya está gritando.",
+    "effect": "−1 a tu primera tirada de ataque de cada combate."
+  },
+  "silver-tongue": {
+    "name": "Labia de Plata",
+    "flavor": "Las palabras salen fáciles. Las equivocadas en especial —pero esas son las útiles, casi siempre.",
+    "effect": "Sabor — de palabra ágil en las posadas entre muertes."
+  },
+  "plain-face": {
+    "name": "Rostro Anodino",
+    "flavor": "Nadie recuerda tu nombre al primer intento. A veces ni al segundo. Aprendiste a repetirlo sin pestañear.",
+    "effect": "Sabor — fácilmente olvidado por quienes te ven caer."
+  },
+  "glassbone": {
+    "name": "Hueso de Vidrio",
+    "flavor": "Una vieja caída que los huesos aún recuerdan. La nueva alma heredó el dolor y la advertencia por igual.",
+    "effect": "−1 a la CA."
+  },
+  "carrion-eye": {
+    "name": "Ojo de Carroña",
+    "flavor": "Lees a los débiles como un buitre lee un horizonte. Paciente. Certero. Ya comiendo.",
+    "effect": "+1 a impactar contra enemigos heridos (por debajo de la mitad de PG)."
+  },
+  "heavy-pockets": {
+    "name": "Bolsillos Cargados",
+    "flavor": "Siempre rueda una moneda hasta tu bota. Hace mucho que dejaste de preguntarte de quién era.",
+    "effect": "Empieza cada incursión con +5 de oro."
+  },
+  "pinchpurse": {
+    "name": "Bolsa Rota",
+    "flavor": "El oro se escurre entre tus dedos como si la sala supiera que no te debe nada. Cuentas, recuentas —se sigue yendo.",
+    "effect": "−15% a las recompensas de oro de las incursiones."
+  },
+  "cold-touched": {
+    "name": "Tocado por el Frío",
+    "flavor": "Algo de la oscuridad profunda te siguió hacia arriba. No sientes el frío como deberías. Ni el fuego, ya.",
+    "effect": "Sabor — el alma recuerda la oscuridad de abajo."
+  },
+  "beast-marked": {
+    "name": "Marcado por las Bestias",
+    "flavor": "Los perros te adoran. Los lobos guardan su distancia. Algo entre los dos te tiene echado el ojo y puedes sentirlo.",
+    "effect": "Sabor — las bestias leen el alma antes que el cuerpo."
+  },
+  "old-soldier": {
+    "name": "Viejo Soldado",
+    "flavor": "El combate siempre empeora antes de terminar. Lo aprendiste en una muralla cuyo nombre ya no recuerdas, y el alma volvió sabiéndolo también.",
+    "effect": "+1 a impactar en tu primer ataque de cada combate. +1 a impactar contra enemigos heridos."
+  },
+  "limping": {
+    "name": "Cojera",
+    "flavor": "Una vieja herida que el cuerpo no heredó limpiamente. El alma recuerda el ángulo, los huesos no.",
+    "effect": "−1 a la CA. −1 a tu primera tirada de ataque de cada combate."
+  },
+  "crows-favor": {
+    "name": "Favor del Cuervo",
+    "flavor": "Vacilas cuando el combate se abre —y luego golpeas certero en cuanto ves sangre. Los cuervos de las vigas ya han elegido su asiento.",
+    "effect": "−1 a impactar en tu primer ataque de cada combate. +1 a impactar contra enemigos heridos."
+  },
+  "magpies-eye": {
+    "name": "Ojo de Urraca",
+    "flavor": "Ves oro donde otros ven suelo. Las Celdas de Hierro estaban llenas de él, si sabías dónde mirar. Tú sabías.",
+    "effect": "Empieza cada incursión con +5 de oro."
+  },
+  "hollow-coin": {
+    "name": "Moneda Hueca",
+    "flavor": "La bolsa siempre pesa menos que el recuento. Lo has comprobado. El recuento es correcto. La bolsa es la mentirosa.",
+    "effect": "−10% a las recompensas de oro de las incursiones."
+  },
+  "stonehide": {
+    "name": "Piel de Piedra",
+    "flavor": "La piel recuerda una dureza que los huesos nunca pidieron. Las hojas la encuentran y se lo piensan dos veces.",
+    "effect": "+1 a la CA."
+  },
+  "quickdraw": {
+    "name": "Mano Rápida",
+    "flavor": "El primer golpe ya va de camino antes de que la sala acuerde que ha empezado un combate. El alma siempre llega temprano.",
+    "effect": "+2 a impactar en tu primer ataque de cada combate."
+  },
+  "coinblessed": {
+    "name": "Bendecido por la Moneda",
+    "flavor": "Algún pequeño dios de pequeñas fortunas vigila tu bolsa. Nada grandioso. Solo un poco más, siempre.",
+    "effect": "+10% a las recompensas de oro de las incursiones."
+  },
+  "deep-pockets": {
+    "name": "Bolsillos Profundos",
+    "flavor": "Volviste con oro que no recuerdas haber ganado. Cada vida el forro guarda un poco más.",
+    "effect": "Empieza cada incursión con +15 de oro."
+  },
+  "headhunter": {
+    "name": "Cazador de Cabezas",
+    "flavor": "Una cosa herida es una cosa acabada para ti. El alma aprendió la diferencia entre lastimar a un hombre y terminarlo.",
+    "effect": "+2 a impactar contra enemigos heridos (por debajo de la mitad de PG)."
+  },
+  "brittle-boned": {
+    "name": "Huesos Quebradizos",
+    "flavor": "El armazón volvió mal —demasiado delgado en las junturas, demasiado dispuesto a ceder. Cada caída es la última, hasta que no lo es.",
+    "effect": "−2 a la CA."
+  },
+  "slow-to-rouse": {
+    "name": "Lento en Despertar",
+    "flavor": "El cuerpo despierta un latido por detrás del peligro. Para cuando la mano responde, el primer mandoble ya es el recuerdo de un error.",
+    "effect": "−2 a tu primera tirada de ataque de cada combate."
+  },
+  "empty-purse": {
+    "name": "Bolsa Vacía",
+    "flavor": "El oro te evita como el agua evita al aceite. Está ahí, luego se le debe a alguien, luego sencillamente desaparece.",
+    "effect": "−20% a las recompensas de oro de las incursiones."
+  },
+  "squeamish": {
+    "name": "Aprensivo",
+    "flavor": "Abrir a un hombre es bastante fácil. Es el cerrar —el gorgoteo, los ojos— lo que vuelve lenta la mano cuando no debería.",
+    "effect": "−1 a impactar contra enemigos heridos (por debajo de la mitad de PG)."
+  },
+  "faint-hearted": {
+    "name": "Pusilánime",
+    "flavor": "El dolor no te afila. Te vacía por dentro. Cuanto peor la herida, más pequeño el mandoble que la responde.",
+    "effect": "−1 a las tiradas de daño cuando estás a la mitad de PG o menos."
+  },
+  "berserkers-patience": {
+    "name": "Paciencia del Berserker",
+    "flavor": "Luchas suelto y abierto hasta que llega la sangre —la tuya, la suya, deja de importar. Entonces el alma encuentra sus colmillos.",
+    "effect": "+2 a las tiradas de daño cuando estás a la mitad de PG o menos. −1 a la CA."
+  },
+  "cowards-guard": {
+    "name": "Guardia del Cobarde",
+    "flavor": "Te encoges primero y te comprometes tarde. Parece miedo. Ha mantenido a esta alma respirando a través de más vidas de las que el valor logró jamás.",
+    "effect": "+1 a la CA. −1 a tu primera tirada de ataque de cada combate."
+  },
+  "plaguebound": {
+    "name": "Atado a la Plaga",
+    "flavor": "Algo podrido se asentó en la médula e hizo de ella su hogar. La ponzoña es familia ahora. El resto de ti paga el alquiler.",
+    "effect": "Inmune al daño de veneno. −1 a la CA."
+  },
+  "gamblers-soul": {
+    "name": "Alma de Jugador",
+    "flavor": "La suerte se acumula en la mano que sostiene la hoja y drena de la que sostiene la bolsa. Dejaste de pelear ese trato hace vidas.",
+    "effect": "Repite una tirada de ataque fallida una vez por incursión. −15% a las recompensas de oro."
+  },
+  "vultures-patience": {
+    "name": "Paciencia del Buitre",
+    "flavor": "No malgastas fuerza en los fuertes. Deja que el combate los desgaste —el alma sabe que se le debe la muerte y se contenta con esperarla.",
+    "effect": "−1 a tu primer ataque de cada combate. +2 a impactar contra enemigos heridos."
+  }
+}

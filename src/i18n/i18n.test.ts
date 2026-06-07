@@ -54,8 +54,13 @@ describe('getLocalized() content seam', () => {
     expect(getLocalized('spells', 'fire-bolt', 'name', 'Fire Bolt')).toBe('Fire Bolt');
   });
 
-  it('returns the English fallback when no es overlay exists for the namespace', () => {
+  it('returns the English fallback when no es overlay row exists for the id', () => {
     useSettingsStore.setState({ locale: 'es' });
-    expect(getLocalized('spells', 'fire-bolt', 'name', 'Fire Bolt')).toBe('Fire Bolt');
+    expect(getLocalized('spells', '__no_such_spell__', 'name', 'Fire Bolt')).toBe('Fire Bolt');
+  });
+
+  it('returns the Spanish overlay when one exists for the id', () => {
+    useSettingsStore.setState({ locale: 'es' });
+    expect(getLocalized('spells', 'fire-bolt', 'name', 'Fire Bolt')).toBe('Rayo de Fuego');
   });
 });

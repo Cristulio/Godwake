@@ -9,6 +9,7 @@ function Probe() {
     <div>
       <span data-testid="ui">{t('ui.common.cancel')}</span>
       <span data-testid="content">{tc('spells', 'fire-bolt', 'name', 'Fire Bolt')}</span>
+      <span data-testid="content-missing">{tc('spells', '__no_such_spell__', 'name', 'Fire Bolt')}</span>
     </div>
   );
 }
@@ -29,9 +30,10 @@ describe('useT subscription', () => {
     expect(screen.getByTestId('ui').textContent).toBe('Cancel');
   });
 
-  it('content seam falls back to English while no es overlay exists', () => {
+  it('content seam resolves the es overlay when present and falls back when absent', () => {
     render(<Probe />);
     act(() => useSettingsStore.getState().setLocale('es'));
-    expect(screen.getByTestId('content').textContent).toBe('Fire Bolt');
+    expect(screen.getByTestId('content').textContent).toBe('Rayo de Fuego');
+    expect(screen.getByTestId('content-missing').textContent).toBe('Fire Bolt');
   });
 });

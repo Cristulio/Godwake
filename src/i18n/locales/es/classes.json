@@ -1,0 +1,652 @@
+{
+  "fighter": {
+    "name": "Guerrero",
+    "flavorBlurb": "Un instrumento contundente con brazo de espada. Camina al frente, recibe el primer golpe y vive para refunfuñar sobre ello."
+  },
+  "fighter.fighting-style-defense": {
+    "name": "Estilo de Combate: Defensa",
+    "description": "Mientras vistas armadura, obtienes un bonificador de +1 a la CA."
+  },
+  "fighter.guard": {
+    "name": "Guardia",
+    "description": "Un soldado entrenado se deja llevar por el primer golpe en lugar de recibirlo de lleno. El primer impacto contra ti cada asalto se mitiga en 2 —un golpe aún muerde al menos por 1. El instinto que saca a flote a un recluta novato en los asaltos iniciales; hacia el nivel 5 tu guardia entrenada y tu segundo golpe lo vuelven una segunda naturaleza, y se desvanece."
+  },
+  "fighter.second-wind": {
+    "name": "Segundo Aliento",
+    "description": "En tu turno, puedes usar una acción adicional para recuperar puntos de golpe iguales a 1d10 + tu nivel de guerrero. Se renueva al inicio de cada encuentro de combate."
+  },
+  "fighter.power-attack": {
+    "name": "Ataque Poderoso",
+    "description": "Tu Temple —tres puntos de aguante que se renuevan en cada combate, gastados como mucho uno por turno. El Ataque Poderoso es la ofensiva: afianza los pies y golpea con fuerza, y cada golpe de este turno muerde más hondo. Cuesta 2 de Temple."
+  },
+  "fighter.action-surge": {
+    "name": "Oleada de Acción",
+    "description": "En tu turno, puedes realizar una acción adicional. Una vez por descanso corto o largo."
+  },
+  "fighter.brace": {
+    "name": "Afianzarse",
+    "description": "Lee el golpe entrante y planta el escudo contra él. Gasta 1 de Temple para asentar tu guardia —el siguiente impacto que recibas se mitiga en 4 más la mitad de tu nivel. Resérvalo para el golpe que ves venir."
+  },
+  "fighter.shield-bash": {
+    "name": "Golpe de Escudo",
+    "description": "Estrella el escudo contra un enemigo a mitad de su preparación. Gasta 2 de Temple para armar un golpe aturdidor —el siguiente impacto derriba al objetivo y le cuesta su siguiente turno. Resérvalo para el golpe que menos quieres que respondan."
+  },
+  "fighter.asi-4": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "fighter.extra-attack": {
+    "name": "Ataque Adicional",
+    "description": "Puedes atacar dos veces, en lugar de una, siempre que realices la acción de Atacar en tu turno."
+  },
+  "fighter.asi-6": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "fighter.asi-8": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "fighter.weapon-mastery": {
+    "name": "Maestría con Armas",
+    "description": "Años en la línea afilan cada movimiento —tus ataques con arma ganan +1 a impactar y +1 al daño. Una ventaja fija que se acumula con todo lo demás que blandes."
+  },
+  "fighter.extra-attack-2": {
+    "name": "Asalto Implacable",
+    "description": "Tu acción de Atacar golpea ahora tres veces en lugar de dos. La presión no cede nunca."
+  },
+  "fighter.asi-12": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "fighter.asi-14": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una. La dedicación extra de un soldado a su oficio."
+  },
+  "fighter.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "fighter.improved-action-surge": {
+    "name": "Oleada de Acción Mejorada",
+    "description": "Tu segundo aliento de ímpetu corre más hondo —puedes recurrir a la Oleada de Acción dos veces por combate en lugar de una."
+  },
+  "fighter.asi-19": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "fighter.extra-attack-3": {
+    "name": "Imparable",
+    "description": "La cumbre del oficio del soldado: tu acción de Atacar golpea cuatro veces. Pocas cosas sobre dos piernas sobreviven a un turno completo de ello."
+  },
+  "fighter.champion": {
+    "name": "Campeón",
+    "description": "Poder físico bruto pulido hasta la perfección letal. Mejor con equipo de rango de crítico y armas de dado grande que convierten una ventana de crítico ampliada en picos fiables."
+  },
+  "fighter.champion.improved-critical": {
+    "name": "Arquetipo Marcial: Campeón",
+    "description": "Tus ataques con arma logran un crítico con una tirada de 19 o 20. Premia las armas de rango de crítico y dado grande —cada punto de probabilidad de crítico vale más."
+  },
+  "fighter.battle-master": {
+    "name": "Maestro de Batalla",
+    "description": "Un estudioso de las maniobras que abre los combates con un golpe medido y lisiante. Mejor con equipo de efecto al impactar que se acumula sobre las heridas que abres."
+  },
+  "fighter.battle-master.battle-master": {
+    "name": "Arquetipo Marcial: Maestro de Batalla",
+    "description": "Una vez por combate, tu primer impacto se convierte en una maniobra precisa: daño adicional igual a los dados de tu arma y una herida sangrante (3 de daño cada turno durante 3 turnos). Premia el equipo de efecto al impactar y de sangrado que se construye sobre el corte inicial."
+  },
+  "fighter.defender": {
+    "name": "Defensor",
+    "description": "Un baluarte que se afianza ante el primer golpe de cada combate. Mejor con equipo de tanque y mucha vida que profundiza el colchón con el que entra."
+  },
+  "fighter.defender.defender": {
+    "name": "Arquetipo Marcial: Defensor",
+    "description": "Te afianzas tras armadura y escudo: al inicio de cada combate ganas puntos de golpe temporales iguales a 3 + tu nivel, absorbiendo el daño antes que el tuyo propio. Premia el equipo de tanque y máxima vida que quiere un colchón más profundo tras el que trabajar."
+  },
+
+  "rogue": {
+    "name": "Pícaro",
+    "flavorBlurb": "Botas silenciosas, manos más rápidas aún. Lee una sala buscando salidas antes de leerla buscando amigos."
+  },
+  "rogue.sneak-attack": {
+    "name": "Ataque Furtivo",
+    "description": "Una vez por turno, tu primer golpe de cada combate siempre encuentra el hueco. Tras la apertura, la ventaja (por Esconderse) o un objetivo ensangrentado (PG ≤ la mitad) mantienen el cuchillo trabajando. El daño escala: +1d6 a nivel 1, +2d6 a nivel 3, +3d6 a nivel 5, +4d6 a nivel 7."
+  },
+  "rogue.nimble-dodge": {
+    "name": "Esquiva Ágil",
+    "description": "Lees el golpe de apertura antes de que aterrice. Una vez por asalto, el primer ataque contra ti se realiza con desventaja. Este reflejo temprano se afina hasta la Esquiva Asombrosa a nivel 5 y le cede el paso."
+  },
+  "rogue.cunning-action": {
+    "name": "Acción Astuta",
+    "description": "Una acción adicional cada turno: Esconderse (ventaja en tu siguiente ataque, que además inflige Furtivo), Golpe Rápido (un segundo golpe con arma este turno —tu respuesta al ataque adicional de un guerrero), Finta (garantiza Furtivo en tu siguiente golpe sin preparación) o Templarse (ventaja en tu siguiente salvación)."
+  },
+  "rogue.assassinate": {
+    "name": "Asesinar",
+    "description": "Abres desde el flanco ciego. El primer golpe de cada combate aterriza con ventaja e incrusta 2d6 extra de Ataque Furtivo —adelanta la muerte antes de que la presa pueda actuar."
+  },
+  "rogue.uncanny-dodge": {
+    "name": "Esquiva Asombrosa",
+    "description": "Una vez por asalto, cuando un atacante te impacta, tu reacción reduce el daño a la mitad (redondeando hacia abajo). Se activa automáticamente con el primer impacto de cada asalto."
+  },
+  "rogue.asi-6": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "rogue.envenom": {
+    "name": "Emponzoñar",
+    "description": "Trabajas un veneno lento en el filo. Un Ataque Furtivo que aterrice deja la herida supurando por 2 de daño cada turno durante los dos turnos siguientes —sangrado sostenido que paga más allá del estallido único por turno."
+  },
+  "rogue.cunning-mastery": {
+    "name": "Maestría Astuta",
+    "description": "Tus manos y tus pies dejan atrás a la sala entera —obtienes una Acción Astuta adicional cada combate (Esconderse, Golpe Rápido, Finta o Templarse)."
+  },
+  "rogue.evasion": {
+    "name": "Evasión",
+    "description": "Cuando un enemigo prepara un especial telegrafiado, lo lees con un turno entero de antelación y te apartas —la descarga cargada solo inflige la mitad. Tu juego de pies responde a lo que tu reacción no puede."
+  },
+  "rogue.opportunist": {
+    "name": "Oportunista",
+    "description": "Un enemigo que golpea y falla contra ti se ha dejado al descubierto. Una vez por asalto respondes con una estocada de reacción que encuentra el hueco —un segundo Ataque Furtivo sobre el de tu propio turno. No te cuesta la reacción, así que la Esquiva Asombrosa aún responde a un golpe que aterrice."
+  },
+  "rogue.deadly-finesse": {
+    "name": "Sutileza Mortal",
+    "description": "Lees el hueco antes de que se abra —tus ataques con arma logran un crítico con una tirada de 19 o 20, y cada punto de Ataque Furtivo cabalga la ventana más amplia."
+  },
+  "rogue.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "rogue.death-strike": {
+    "name": "Golpe Mortal",
+    "description": "Tu golpe de gracia encuentra la arteria cada vez —tu Ataque Furtivo inflige 2d6 de daño adicional. La culminación del arte del asesino."
+  },
+  "rogue.thief": {
+    "name": "Ladrón",
+    "description": "Un especialista en cerraduras, repechos y la salida rápida. Mejor con equipo de tempo y utilidad que convierte Acciones Astutas extra en control del campo."
+  },
+  "rogue.thief.fast-hands": {
+    "name": "Arquetipo Pícaro: Ladrón",
+    "description": "Tus manos se mueven más rápido de lo que la sala puede seguir: obtienes una segunda Acción Astuta cada combate. Premia el equipo de tempo y utilidad que quiere más acciones adicionales que gastar."
+  },
+  "rogue.assassin": {
+    "name": "Asesino",
+    "description": "Un matador que termina los combates en el primer aliento. Mejor con equipo de estallido y primer golpe que lo adelanta todo al primer corte."
+  },
+  "rogue.assassin.assassin": {
+    "name": "Arquetipo Pícaro: Asesino",
+    "description": "Contra un enemigo aún a plena salud tu golpe siempre encuentra el hueco —inflige Ataque Furtivo y 2d6 extra. Premia el equipo de estallido y primer golpe: mátalos antes de que sangren."
+  },
+  "rogue.swashbuckler": {
+    "name": "Espadachín",
+    "description": "Un duelista que no necesita sombra para encontrar el hueco. Mejor con equipo de daño fijo y constante que rinde cada turno."
+  },
+  "rogue.swashbuckler.swashbuckler": {
+    "name": "Arquetipo Pícaro: Espadachín",
+    "description": "Tu Ataque Furtivo se activa cada turno sin necesidad de ventaja ni objetivo ensangrentado. Premia el equipo de daño constante —el bonificador siempre está activo."
+  },
+
+  "wizard": {
+    "name": "Mago",
+    "flavorBlurb": "Erudito del antiguo pacto. Lee los grimorios como la mayoría lee las señales de peligro: despacio, y luego dos veces."
+  },
+  "wizard.spellcasting": {
+    "name": "Lanzamiento de Conjuros",
+    "description": "Canalizas el saber arcano a través de conjuros preparados y un pequeño caudal de espacios. Un descanso largo rellena el pozo."
+  },
+  "wizard.arcane-cantrips": {
+    "name": "Trucos Arcanos",
+    "description": "Empuñas el Rayo de Fuego (1d10 de fuego, a voluntad) —una mota de llama lanzada desde las puntas de los dedos, tuya para arrojarla tantas veces como el combate exija. El rayo crece contigo: 2d10 a nivel 5, 3d10 a nivel 7, 4d10 a nivel 8."
+  },
+  "wizard.second-level-slots": {
+    "name": "Espacios de Segundo Nivel",
+    "description": "Tu libro de conjuros se ahonda —ahora puedes anclar trabajos de 2.º nivel como Inmovilizar Persona."
+  },
+  "wizard.learn-second-level-spell": {
+    "name": "Trabajo de Segundo Nivel",
+    "description": "Un nuevo trabajo de 2.º nivel entra en tu libro —elige uno: Paso Brumoso (parpadea a un lado), Rayo Abrasador (tres rayos de fuego), Desenfoque (los atacantes golpean con desventaja) o Imagen Especular (los duplicados absorben los golpes)."
+  },
+  "wizard.asi-4": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "wizard.third-level-slots": {
+    "name": "Espacios de Tercer Nivel",
+    "description": "Ahora puedes anclar trabajos de 3.er nivel. El umbral de los conjuros nombrados se ensancha."
+  },
+  "wizard.learn-fireball": {
+    "name": "Bola de Fuego",
+    "description": "Una cuenta de brasa florece en un rugido —8d6 de fuego a cada enemigo. Una salvación de DES reduce a la mitad. Los enemigos que fallan se incendian: 1d6 de fuego al inicio de tu siguiente turno."
+  },
+  "wizard.learn-lightning-bolt": {
+    "name": "Relámpago",
+    "description": "Un arco dentado abrasa la sala —6d6 de relámpago a cada enemigo. Una salvación de DES reduce a la mitad. Incluso con una salvación superada, los objetivos reciben 1d6 de relámpago —el arco te encuentra."
+  },
+  "wizard.asi-6": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "wizard.fourth-level-slots": {
+    "name": "Espacios de Cuarto Nivel",
+    "description": "Tu libro de conjuros se abre a los trabajos de 4.º nivel —Estallido de Escarcha, Lanza de Fuerza y el oficio más hondo que está por venir."
+  },
+  "wizard.asi-8": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "wizard.fifth-level-slots": {
+    "name": "Espacios de Quinto Nivel",
+    "description": "Ahora puedes anclar trabajos de 5.º nivel —los conos que despejan salas y los rayos ruinosos de un solo objetivo."
+  },
+  "wizard.sixth-level-slots": {
+    "name": "Espacios de Sexto Nivel",
+    "description": "El umbral de la magia mayor se abre —puedes sostener trabajos de 6.º nivel."
+  },
+  "wizard.asi-12": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "wizard.seventh-level-slots": {
+    "name": "Espacios de Séptimo Nivel",
+    "description": "Ahora puedes anclar trabajos de 7.º nivel —las tormentas que caen bajo techo."
+  },
+  "wizard.eighth-level-slots": {
+    "name": "Espacios de Octavo Nivel",
+    "description": "Ahora puedes anclar trabajos de 8.º nivel —el cataclismo y el deshacer de los años."
+  },
+  "wizard.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "wizard.ninth-level-slots": {
+    "name": "Trabajos de Noveno Nivel",
+    "description": "El umbral más profundo de todos se te abre —magia de 9.º nivel que deforma la realidad. Puedes rehacer a un enemigo, o rehacerte a ti mismo."
+  },
+  "wizard.asi-19": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "wizard.evocation": {
+    "name": "Escuela de Evocación",
+    "description": "Doblas la fuerza arcana en bruto hacia una ruina dirigida. Mejor con equipo de daño de conjuro y CD de conjuro que afila cada descarga que arrojas."
+  },
+  "wizard.evocation.sculpt-spells": {
+    "name": "Tradición Arcana: Evocación",
+    "description": "Cada evocación que sueltas lleva un dado de daño adicional —tus Manos Ardientes rugen por 4d6 donde un mago menor reúne 3. El mismo dado extra cabalga cada descarga que aprendas después, la Bola de Fuego y el Relámpago entre ellas, y solo muerde más hondo con equipo de daño y CD de conjuro."
+  },
+  "wizard.abjuration": {
+    "name": "Escuela de Abjuración",
+    "description": "Tejes una guarda que bebe los primeros golpes de cada combate. Mejor con equipo de supervivencia que compra más turnos al frágil lanzador."
+  },
+  "wizard.abjuration.abjurer": {
+    "name": "Tradición Arcana: Abjuración",
+    "description": "Una Guarda Arcana se forma al inicio de cada combate, otorgando puntos de golpe temporales iguales a 2 + tu nivel que absorben el daño antes que el tuyo propio. Premia el equipo de supervivencia —cada turno extra con vida es otro conjuro lanzado."
+  },
+  "wizard.illusion": {
+    "name": "Escuela de Ilusión",
+    "description": "Te ocultas tras un velo de imágenes falsas en cuanto se desenvaina el acero. Mejor con una construcción evasiva que convierte los casi-fallos en intangibilidad."
+  },
+  "wizard.illusion.illusionist": {
+    "name": "Tradición Arcana: Ilusión",
+    "description": "Comienzas cada combate ya desenfocado (los atacantes golpean con desventaja) y con una imagen especular para absorber un golpe. Premia una construcción evasiva que se apoya en no ser tocado jamás."
+  },
+
+  "barbarian": {
+    "name": "Bárbaro",
+    "flavorBlurb": "No lleva escudo y no quiere ninguno. Se mete en lo peor, deja que la furia tome el volante y sigue en pie cuando el polvo cae."
+  },
+  "barbarian.rage": {
+    "name": "Furia",
+    "description": "Una acción adicional te sume en un frenesí de batalla durante varios asaltos: los golpes físicos contra ti se reducen a la mitad, y tus impactos cuerpo a cuerpo infligen daño adicional. Una furia por combate al principio, más a medida que te endureces."
+  },
+  "barbarian.unarmored-defense": {
+    "name": "Defensa sin Armadura",
+    "description": "No vistes armadura y no la necesitas —tu guardia es hueso e instinto. Mientras vayas sin armadura, tu Clase de Armadura es 10 + tu Destreza y tu Constitución a la vez."
+  },
+  "barbarian.savage-cleave": {
+    "name": "Tajo Salvaje",
+    "description": "Tu Furor —tres puntos de sed de sangre que se renuevan en cada combate, gastados como mucho uno por turno. El Tajo Salvaje es la ofensiva: un mandoble amplio que muerde más fuerte y se derrama limpiamente hasta un segundo enemigo junto a tu objetivo. Cuesta 2 de Furor."
+  },
+  "barbarian.reckless-attack": {
+    "name": "Ataque Temerario",
+    "description": "Puedes luchar con abandono: tus ataques cuerpo a cuerpo de este turno tiran con ventaja, pero todo ataque contra ti tiene ventaja hasta tu siguiente turno. Tira la guardia para asegurar la muerte."
+  },
+  "barbarian.bloodied-guard": {
+    "name": "Guardia Sangrienta",
+    "description": "Recibe el golpe sobre un hombro afianzado y deja que rebote. Gasta 1 de Furor para mitigar el siguiente impacto que recibas en 4 más la mitad de tu nivel —el aguante que la furia por sí sola nunca te dio."
+  },
+  "barbarian.knockdown": {
+    "name": "Derribo",
+    "description": "Un hombro tras la hoja pone a un enemigo en el suelo. Gasta 1 de Furor para armar un golpe aturdidor —cuando aterrice, el objetivo pierde su siguiente turno. Resérvalo para aquello que menos quieras que actúe."
+  },
+  "barbarian.asi-4": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "barbarian.extra-attack": {
+    "name": "Ataque Adicional",
+    "description": "Puedes atacar dos veces, en lugar de una, siempre que realices la acción de Atacar en tu turno."
+  },
+  "barbarian.asi-6": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "barbarian.asi-8": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "barbarian.brutal-critical": {
+    "name": "Crítico Brutal",
+    "description": "Cuando logras un golpe crítico, tiras un dado de arma adicional sobre los dados doblados —el pico salvaje que termina los combates antes de tiempo."
+  },
+  "barbarian.relentless-rage": {
+    "name": "Furia Implacable",
+    "description": "La furia ya no se consume rápido —tu Furia ahora se sostiene dos asaltos más, llevándote a través de los largos combates que antes la sobrevivían."
+  },
+  "barbarian.asi-12": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "barbarian.persistent-rage": {
+    "name": "Furia Persistente",
+    "description": "Los pozos de tu ira corren más hondos que nunca —mientras enfureces, cada impacto cuerpo a cuerpo inflige +2 de daño adicional."
+  },
+  "barbarian.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "barbarian.asi-19": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "barbarian.primal-champion": {
+    "name": "Campeón Primigenio",
+    "description": "Te conviertes en la cima de la senda primigenia —mientras enfureces, tus impactos cuerpo a cuerpo infligen otros +3 de daño. La furia ya no es un estado en el que entras; es lo que eres."
+  },
+  "barbarian.berserker": {
+    "name": "Senda del Berserker",
+    "description": "La furia como medio para un fin —siendo ese fin la violencia. Mejor con equipo de robo de vida y agresivo que convierte el daño extra en aguante."
+  },
+  "barbarian.berserker.frenzy": {
+    "name": "Senda Primigenia: Berserker",
+    "description": "Mientras enfureces, cada impacto cuerpo a cuerpo inflige 1d6 adicional. Premia el equipo de robo de vida y efecto al impactar: cuanto más golpeas, más devuelve la furia."
+  },
+  "barbarian.totem-warrior": {
+    "name": "Senda del Guerrero Tótem (Oso)",
+    "description": "El espíritu del oso presta su pellejo a quienes se meten en lo peor. Mejor con equipo de tanque que se apila sobre la guardia endurecida."
+  },
+  "barbarian.totem-warrior.totem-warrior": {
+    "name": "Senda Primigenia: Guerrero Tótem",
+    "description": "La resistencia del oso es tuya: comienzas cada combate con puntos de golpe temporales iguales a 2 + tu nivel, absorbiendo los primeros golpes. Premia el equipo de tanque de CON y máxima vida —el oso dura más de lo que el Berserker golpea."
+  },
+
+  "ranger": {
+    "name": "Explorador",
+    "flavorBlurb": "Abre cada sala desde el otro extremo. Marca lo más peligroso a la vista y lo alimenta con flechas hasta que deja de moverse."
+  },
+  "ranger.hunters-mark": {
+    "name": "Marca del Cazador",
+    "description": "Una acción adicional marca a un enemigo como tu presa. Cada impacto que aterrices sobre un objetivo marcado muerde más hondo, hasta que cae —entonces marcas al siguiente."
+  },
+  "ranger.aimed-shot": {
+    "name": "Disparo Apuntado",
+    "description": "Tu Foco —tres puntos de puntería firme que se renuevan en cada combate, gastados como mucho uno por turno. El Disparo Apuntado es la ofensiva: toma aire y coloca el tiro, y cada golpe de este turno cala más hondo. Cuesta 2 de Foco."
+  },
+  "ranger.archery": {
+    "name": "Estilo de Combate: Arquería",
+    "description": "Has entrenado el arco hasta que el disparo es una segunda naturaleza. Obtienes un bonificador de +2 a las tiradas de ataque que hagas con armas a distancia."
+  },
+  "ranger.set-stance": {
+    "name": "Postura Firme",
+    "description": "Planta los pies y lee la carga. Gasta 1 de Foco para mitigar el siguiente impacto que recibas en 4 más la mitad de tu nivel —un instante de apoyo para cuando la presa acorta la distancia."
+  },
+  "ranger.crippling-shot": {
+    "name": "Disparo Lisiante",
+    "description": "Clava una flecha en una rodilla o un ala. Gasta 1 de Foco para armar un disparo lisiante —el siguiente impacto desjarreta a su objetivo y le cuesta su siguiente turno. La caza es paciencia, y luego un único instante ruinoso."
+  },
+  "ranger.asi-4": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "ranger.extra-attack": {
+    "name": "Ataque Adicional",
+    "description": "Puedes atacar dos veces, en lugar de una, siempre que realices la acción de Atacar en tu turno."
+  },
+  "ranger.asi-6": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "ranger.asi-8": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "ranger.improved-mark": {
+    "name": "Marca Mejorada",
+    "description": "La marca muerde más hondo —cada impacto que aterrices sobre tu presa de la Marca del Cazador inflige un dado de daño adicional sobre la marca."
+  },
+  "ranger.asi-12": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "ranger.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "ranger.asi-19": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "ranger.foe-slayer": {
+    "name": "Matador de Enemigos",
+    "description": "Ninguna presa sobrevive a tu foco —tu Marca del Cazador ahora incrusta dos dados adicionales en cada impacto contra el enemigo marcado. La caza siempre termina de una sola manera."
+  },
+  "ranger.hunter": {
+    "name": "Cazador — Matacolosos",
+    "description": "Aprendes la matanza de presas mayores: termina lo que la marca empieza. Mejor con equipo de un solo objetivo y alto crítico que amontona daño sobre un único enemigo herido."
+  },
+  "ranger.hunter.colossus-slayer": {
+    "name": "Presa del Cazador: Matacolosos",
+    "description": "Una vez por turno, un impacto contra un enemigo herido (por debajo de su salud plena) inflige 1d8 de daño adicional. Premia una construcción de un solo objetivo, inclinada al crítico, que abate a una presa."
+  },
+  "ranger.horde-breaker": {
+    "name": "Cazador — Rompehordas",
+    "description": "Aprendes a disparar contra una marea, no contra una sola garganta. Mejor con equipo de daño fijo y efecto al impactar que rinde el doble cuando tu disparo continúa."
+  },
+  "ranger.horde-breaker.horde-breaker": {
+    "name": "Presa del Cazador: Rompehordas",
+    "description": "Una vez por turno, tras impactar, tu disparo continúa hacia un segundo enemigo —un golpe de refilón por los dados de tu arma más tus bonificadores de daño fijo. Premia el equipo de daño fijo y efecto al impactar que se beneficia de objetivos adicionales."
+  },
+  "ranger.giant-killer": {
+    "name": "Cazador — Matagigantes",
+    "description": "Cazas las cosas que se alzan sobre las presas menores. Mejor con una construcción mata-jefes equipada para la élite y el monstruo con nombre."
+  },
+  "ranger.giant-killer.giant-killer": {
+    "name": "Presa del Cazador: Matagigantes",
+    "description": "Tus impactos contra élites y jefes muerden 1d10 adicional. Premia una construcción mata-jefes que vive o muere por la mayor amenaza de la sala."
+  },
+
+  "druid": {
+    "name": "Druida",
+    "flavorBlurb": "Guarda la antigua fe allá donde los nuevos dioses fueron a la guerra. Le habla con suavidad a la tormenta, y viste sus colmillos cuando las palabras suaves se agotan."
+  },
+  "druid.spellcasting": {
+    "name": "Lanzamiento de Conjuros",
+    "description": "Tomas el antiguo poder a través de trabajos preparados y un pequeño caudal de espacios, ligados a tu Sabiduría. Producir Llama responde a voluntad —d10 de fuego desde el cuenco de la mano, creciendo conforme tú lo haces. Un descanso largo rellena el pozo."
+  },
+  "druid.druidic": {
+    "name": "Druídico",
+    "description": "Conoces el Druídico, la lengua secreta de la antigua fe —el habla de la raíz y el nubarrón, el signo de la hoja y el augurio del tiempo. Lo silvestre responde a una voz que reconoce."
+  },
+  "druid.wild-shape": {
+    "name": "Forma Salvaje",
+    "description": "Una acción adicional desprende el cuerpo por la forma de una bestia —ganas la vitalidad de la bestia como puntos de golpe temporales y luchas con diente y garra hasta que la forma se agota o se desvanece. Una vez por combate (el Círculo de la Luna concede un segundo cambio y una bestia más recia). La vitalidad escala a medida que creces."
+  },
+  "druid.second-circle-workings": {
+    "name": "Trabajos de Segundo Círculo",
+    "description": "El libro se ahonda —ahora puedes anclar trabajos de 2.º círculo como Raíces Enredaderas, que sujeta a un enemigo donde está."
+  },
+  "druid.asi-4": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "druid.third-circle-workings": {
+    "name": "Trabajos de Tercer Círculo",
+    "description": "Puedes anclar trabajos de 3.er círculo —Fuego Salvaje para barrer una sala, Convocar Relámpago para martillear al único enemigo que importa. Producir Llama, además, arde más brillante de aquí en adelante."
+  },
+  "druid.asi-6": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "druid.fourth-circle-workings": {
+    "name": "Trabajos de Cuarto Círculo",
+    "description": "El tiempo más hondo se te abre —trabajos de 4.º círculo como la Tormenta de Hielo, una borrasca de granizo letal por toda la sala."
+  },
+  "druid.asi-8": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "druid.fifth-circle-workings": {
+    "name": "Trabajos de Quinto Círculo",
+    "description": "Puedes invocar trabajos de 5.º círculo —la Avalancha, la montaña misma respondiendo a tu palabra."
+  },
+  "druid.sixth-circle-workings": {
+    "name": "Trabajos de Sexto Círculo",
+    "description": "Las tormentas mayores acuden a tu mano —trabajos de 6.º círculo como la Tormenta de Fuego."
+  },
+  "druid.asi-12": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "druid.seventh-circle-workings": {
+    "name": "Trabajos de Séptimo Círculo",
+    "description": "Puedes hacer descender una tempestad bajo techo —trabajos de 7.º círculo, el cielo cayendo donde ningún cielo debería alcanzar."
+  },
+  "druid.eighth-circle-workings": {
+    "name": "Trabajos de Octavo Círculo",
+    "description": "La plena Ira de Silvanus es tuya para gastarla —trabajos de 8.º círculo, la ruina del Padre Roble llamada sobre una sala entera."
+  },
+  "druid.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "druid.ninth-circle-workings": {
+    "name": "Trabajos de Noveno Círculo",
+    "description": "El trabajo más profundo de todos: el Avatar de lo Silvestre. Dejas que lo silvestre te inunde por entero y te alzas como algo primigenio —30 puntos de golpe temporales, +2 a la CA, y cada golpe, garra o conjuro, mordiendo mucho más hondo."
+  },
+  "druid.asi-19": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "druid.archdruid": {
+    "name": "Archidruida",
+    "description": "Te has convertido en guardián de la antigua fe entera. Lo silvestre nunca se te cierra —obtienes una Forma Salvaje adicional cada combate, y la vitalidad de la bestia corre más honda que ninguna. La culminación del largo camino del Círculo."
+  },
+  "druid.circle-of-the-moon": {
+    "name": "Círculo de la Luna",
+    "description": "El Círculo que se mete en el combate vistiendo la bestia. Mejor con una construcción que se apoya en la Forma Salvaje —una forma más recia, un segundo cambio cada combate y las más pesadas Garras Atroces."
+  },
+  "druid.circle-of-the-moon.circle-of-the-moon": {
+    "name": "Círculo Druídico: Círculo de la Luna",
+    "description": "Forma Salvaje de combate: puedes cambiar una segunda vez cada combate, la bestia que vistes lleva una vitalidad mucho más honda, y desgarras con las más pesadas Garras Atroces. Premia una construcción de primera línea que vive en la forma de bestia."
+  },
+  "druid.circle-of-the-moon.primal-strike": {
+    "name": "Golpe Primigenio",
+    "description": "Las garras de tu forma de bestia muerden más allá del pellejo y la guarda por igual —nada se sacude de encima al depredador en que te has convertido."
+  },
+  "druid.circle-of-the-moon.moonbound": {
+    "name": "Vitalidad Sellada por la Luna",
+    "description": "Las formas que vistes se vuelven más viejas y fuertes aún —la vitalidad de la bestia se ahonda con cada nivel de tu propio poder."
+  },
+
+  "monk": {
+    "name": "Monje",
+    "flavorBlurb": "No lleva hoja y no la necesita. Lee el aliento de una sala, y luego la llena de puños más rápido de lo que un enemigo puede responder."
+  },
+  "monk.martial-arts": {
+    "name": "Artes Marciales",
+    "description": "Tus puños son el arma. Los golpes sin armas caen como un d6 y cabalgan tu Destreza, y el dado crece conforme tú lo haces —d8 a nivel 5, d10 a nivel 11, d12 a nivel 17. Toda la escuela está construida para gastar Ki y sepultar a un enemigo bajo una lluvia de golpes."
+  },
+  "monk.unarmored-defense-monk": {
+    "name": "Defensa sin Armadura",
+    "description": "Vestido ligero y de lectura cercana —sin armadura, tu guardia es aliento e instinto: la CA pasa a ser 10 + tu Destreza + tu Sabiduría. El acero solo te costaría la postura."
+  },
+  "monk.ki": {
+    "name": "Ki",
+    "description": "Cargas un pozo de fuerza interior —puntos de Ki iguales a tu nivel, gastados en la Lluvia de Golpes, la Defensa Paciente y los golpes que siguen. El pozo se rellena al comenzar cada combate."
+  },
+  "monk.flurry-of-blows": {
+    "name": "Lluvia de Golpes",
+    "description": "Una acción adicional y 1 de Ki descargan dos golpes sin armas adicionales este turno —el diluvio característico que convierte una sola apertura en una tormenta de puños."
+  },
+  "monk.patient-defense": {
+    "name": "Defensa Paciente",
+    "description": "Una acción adicional y 1 de Ki te asientan en una guardia fluida —todo ataque contra ti hasta tu siguiente turno se tira con desventaja. La respuesta a un turno que esperas capear."
+  },
+  "monk.asi-4": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "monk.extra-attack": {
+    "name": "Ataque Adicional",
+    "description": "Puedes golpear dos veces, en lugar de una, siempre que realices la acción de Atacar —y tu dado de Artes Marciales crece a un d8."
+  },
+  "monk.stunning-strike": {
+    "name": "Golpe Aturdidor",
+    "description": "Arma el golpe con 2 de Ki: el siguiente impacto sin armas que aterrice obliga al objetivo a salvarse contra tu Ki o quedar aturdido, perdiendo su siguiente turno. La jugada de tempo que abre una ventana por la que el diluvio se vierte."
+  },
+  "monk.ki-empowered-strikes": {
+    "name": "Golpes Imbuidos de Ki",
+    "description": "Tus golpes sin armas cargan el peso del Ki canalizado —cada puño inflige +1 de daño de aquí en adelante."
+  },
+  "monk.asi-8": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "monk.relentless-flurry": {
+    "name": "Lluvia Implacable",
+    "description": "El diluvio se ahonda —la Lluvia de Golpes lanza ahora tres golpes adicionales por su único Ki en lugar de dos. Pocas aperturas sobreviven al recuento completo."
+  },
+  "monk.martial-arts-die-d10": {
+    "name": "Puños Afilados",
+    "description": "Años de la forma afilan cada movimiento —tu dado de Artes Marciales crece a un d10."
+  },
+  "monk.asi-12": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "monk.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "monk.martial-arts-die-d12": {
+    "name": "Puños de Hierro",
+    "description": "El cuerpo mismo se convierte en el arma maestra —tu dado de Artes Marciales crece a un d12."
+  },
+  "monk.asi-19": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "monk.perfect-self": {
+    "name": "Ser Perfecto",
+    "description": "El pozo nunca se seca del todo. Tu reserva de Ki se ahonda, y la Lluvia de Golpes lanza un cuarto golpe —un turno entero de puños que ningún cuerpo capea. La culminación del largo camino de la mano vacía."
+  },
+  "monk.way-of-the-open-hand": {
+    "name": "Camino de la Mano Abierta",
+    "description": "La tradición del golpeador puro —cada diluvio puede quitarle el aliento a un enemigo. Mejor con una construcción que se inclina hacia el diluvio de golpes sin armas."
+  },
+  "monk.way-of-the-open-hand.open-hand-technique": {
+    "name": "Tradición Monástica: Mano Abierta",
+    "description": "Tu Lluvia de Golpes machaca la guardia abierta —mientras un diluvio está en juego, tus golpes sin armas muerden por daño adicional, convirtiendo el diluvio en un rematador."
+  },
+  "monk.way-of-the-open-hand.wholeness-of-body": {
+    "name": "Plenitud del Cuerpo",
+    "description": "Una vez por combate puedes cerrar tus propias heridas —al inicio del combate te afianzas con un colchón de PG temporales igual a tu nivel."
+  },
+  "monk.way-of-shadow": {
+    "name": "Camino de la Sombra",
+    "description": "La tradición de la sombra —el primer golpe de un combate es siempre uno mortal. Mejor con una construcción que quiere que su apertura aterrice con la mayor fuerza."
+  },
+  "monk.way-of-shadow.shadow-strike": {
+    "name": "Tradición Monástica: Sombra",
+    "description": "Sales de la oscuridad sin ser visto —el primer golpe sin armas de cada combate aterriza con ventaja e incrusta daño adicional cargado de Ki."
+  }
+}

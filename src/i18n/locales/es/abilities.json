@@ -1,0 +1,20 @@
+{
+  "fighter": {
+    "pool": "Temple",
+    "offense": "Ataque Poderoso",
+    "defense": "Afianzarse",
+    "disrupt": "Golpe de Escudo"
+  },
+  "barbarian": {
+    "pool": "Furor",
+    "offense": "Tajo Salvaje",
+    "defense": "Guardia Sangrienta",
+    "disrupt": "Derribo"
+  },
+  "ranger": {
+    "pool": "Foco",
+    "offense": "Disparo Apuntado",
+    "defense": "Postura Firme",
+    "disrupt": "Disparo Lisiante"
+  }
+}
