@@ -4,12 +4,14 @@ import { Button } from '../ui/Button';
 import { QuirkCard } from '../ui/QuirkCard';
 import { playSfx } from '../../engine/audio';
 import { useInputBlock } from '../ui/useInputBlock';
+import { useT } from '../../i18n/useT';
 
-const HEADLINE = 'You wake again. The flesh is new. The soul remembers.';
 const BASE_TICK = 36;
 const FAST_TICK = 4;
 
 export function ReincarnationReveal() {
+  const { t } = useT();
+  const HEADLINE = t('scenes.reincarnation.headline');
   const character = useGameStore((s) => s.character);
   const deathCount = useGameStore((s) => s.deathCount);
   const finishDelve = useGameStore((s) => s.finishDelve);
@@ -40,7 +42,7 @@ export function ReincarnationReveal() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [holding, headlineDone]);
+  }, [holding, headlineDone, HEADLINE]);
 
   // After the headline completes, stagger-reveal quirks. Each arrival plays
   // a soft ui_click so the soul-mark drop has audible weight.
@@ -108,7 +110,7 @@ export function ReincarnationReveal() {
       <div className="relative z-10 max-w-3xl w-full flex flex-col items-center gap-8">
         {/* Souls-walked counter */}
         <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.4em] animate-fade-in-slow">
-          ◆ Souls walked: {deathCount} ◆
+          {t('scenes.reincarnation.soulsWalked', { n: deathCount })}
         </div>
 
         {/* Headline */}
@@ -131,7 +133,7 @@ export function ReincarnationReveal() {
         {headlineDone && quirkCount > 0 && (
           <div className="w-full flex flex-col gap-3 animate-fade-in">
             <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.4em] text-center mb-1">
-              The soul carries what the flesh forgot
+              {t('scenes.reincarnation.carries')}
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               {character.quirks.slice(0, revealedCount).map((id) => (
@@ -145,7 +147,7 @@ export function ReincarnationReveal() {
 
         {headlineDone && quirkCount === 0 && (
           <div className="font-narrative text-[var(--color-text-secondary)] text-base italic text-center animate-fade-in max-w-md">
-            No quirks this life. The soul comes back clean — for once.
+            {t('scenes.reincarnation.noQuirks')}
           </div>
         )}
 
@@ -161,15 +163,15 @@ export function ReincarnationReveal() {
                   finishDelve();
                 }}
               >
-                Walk back into Phandalin →
+                {t('scenes.reincarnation.walkBack')}
               </Button>
               <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
-                or double-click anywhere
+                {t('scenes.reincarnation.orDoubleClick')}
               </div>
             </div>
           ) : (
             <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
-              {holding ? '▶▶ holding to speed' : 'click skips · hold speeds · 2× completes'}
+              {holding ? t('scenes.reincarnation.holdSpeed') : t('scenes.reincarnation.skipHint')}
             </div>
           )}
         </div>

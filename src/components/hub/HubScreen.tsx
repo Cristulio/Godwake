@@ -11,8 +11,10 @@ import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import { loadDelveFactory } from '../../engine/delve/loadDelveFactory';
+import { useT } from '../../i18n/useT';
 
 export function HubScreen() {
+  const { t } = useT();
   const character = useGameStore((s) => s.character);
   const goToTitle = useGameStore((s) => s.goToTitle);
   const startDelve = useGameStore((s) => s.startDelve);
@@ -47,8 +49,8 @@ export function HubScreen() {
   if (!character) {
     return (
       <div className="p-8 text-[var(--color-text-primary)]">
-        No character. Return to title.
-        <Button onClick={goToTitle}>Title</Button>
+        {t('hub.noCharacter')}
+        <Button onClick={goToTitle}>{t('hub.title')}</Button>
       </div>
     );
   }
@@ -82,7 +84,7 @@ export function HubScreen() {
   // they reload mid-delve and lose the session-only delve state. Keep it
   // minimal: one prompt, one button, no town and no choices.
   if (!hasReincarnated) {
-    return <FirstLifeFallback name={character.name} onDescend={handleEnterDungeon} onTitle={goToTitle} />;
+    return <FirstLifeFallback name={character.name} onDescend={handleEnterDungeon} onTitle={goToTitle} t={t} />;
   }
 
   // The reliquary opens only once the soul has earned a relic (progressive
@@ -100,14 +102,14 @@ export function HubScreen() {
             PHANDALIN
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
-            Sword Coast · Chapter I · The Mage's Cells
+            {t('hub.location')}
           </p>
           <p className="text-[var(--color-text-dim)] text-[10px] italic tracking-widest mt-1">
-            The wheel has turned for you {delveCount} {delveCount === 1 ? 'life' : 'lives'}
+            {t('hub.lives', { count: delveCount })}
           </p>
         </div>
         <Button variant="ghost" onClick={goToTitle}>
-          ← Title
+          {t('hub.backTitle')}
         </Button>
       </header>
 
@@ -123,10 +125,10 @@ export function HubScreen() {
               {character.name}
             </div>
             <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest mt-0.5">
-              {race.name} {cls.name} · <span className="text-[var(--color-accent-amber)]">Level {character.level}</span>
+              {race.name} {cls.name} · <span className="text-[var(--color-accent-amber)]">{t('hub.levelInline', { n: character.level })}</span>
             </div>
             <div className="mt-2 flex items-center gap-3">
-              <span className="font-display text-[9px] text-[var(--color-text-dim)] tracking-widest">HP</span>
+              <span className="font-display text-[9px] text-[var(--color-text-dim)] tracking-widest">{t('hub.hp')}</span>
               <span className="font-mono text-[var(--color-text-primary)] text-sm">{character.hp.current}/{character.hp.max}</span>
               <div className="flex-1 h-2 bg-[var(--color-bg-deep)] border border-[var(--color-border-dim)] overflow-hidden relative max-w-xs">
                 <div
@@ -146,7 +148,7 @@ export function HubScreen() {
               </div>
             </div>
             <div className="mt-3">
-              <QuirkRow quirkIds={character.quirks} emptyText="The soul wears no marks this life" />
+              <QuirkRow quirkIds={character.quirks} emptyText={t('hub.noMarks')} />
             </div>
           </div>
           <Button
@@ -154,16 +156,15 @@ export function HubScreen() {
             onClick={goToCharacterSelect}
             className="shrink-0 self-start basis-full w-full sm:basis-auto sm:w-auto"
           >
-            ⇄ Change Character
+            {t('hub.changeCharacter')}
           </Button>
         </div>
       </Panel>
 
       {character.quirks.length > 0 && (
-        <Panel className="mb-6" title="Quirks of this Incarnation">
+        <Panel className="mb-6" title={t('hub.quirksTitle')}>
           <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-            The soul carries scars and gifts from death to death. These shape the life you wear now —
-            until you fall again, and the wheel turns.
+            {t('hub.quirksIntro')}
           </p>
           <div className="grid md:grid-cols-2 gap-3">
             {character.quirks.map((id) => (
@@ -177,29 +178,29 @@ export function HubScreen() {
           hub. Grove is the only place that takes coin for permanent
           purchases — and it spends renown, not gold. */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Panel tone="warm" title="The Descent">
+        <Panel tone="warm" title={t('hub.descentTitle')}>
           <p className="text-[var(--color-text-secondary)] text-sm mb-4 leading-relaxed">
-            One road, many rooms. The cells beneath Tresendar Manor open onto a longer dark — chapter by chapter, the wheel turns. Gold and XP belong to the road; only renown returns.
+            {t('hub.descentBody')}
           </p>
           <Button variant="primary" size="lg" onClick={handleEnterDungeon}>
-            ▸ Descend{selectedAscension > 0 ? ` · Ascension ${selectedAscension}` : ''}
+            {selectedAscension > 0
+              ? t('hub.descendAscension', { n: selectedAscension })
+              : t('hub.descend')}
           </Button>
         </Panel>
         <Panel
           tone={groveUnlocked ? 'glow' : 'default'}
-          title="The Druid Grove"
+          title={t('hub.groveTitle')}
         >
           <p className="text-[var(--color-text-secondary)] text-sm mb-4 leading-relaxed">
-            {groveUnlocked
-              ? 'The circle of Mielikki tends the Wellspring. They will return you to life when you fall — and shape what comes back. Spend renown here.'
-              : 'A clearing past the treeline. Smoke drifts from somewhere within, but no path opens for you. Renown enough to barter has not yet reached the keepers.'}
+            {groveUnlocked ? t('hub.groveUnlocked') : t('hub.groveLocked')}
           </p>
           <Button
             variant={groveUnlocked ? 'primary' : 'secondary'}
             disabled={!groveUnlocked}
             onClick={goToDruidGrove}
           >
-            {groveUnlocked ? '◆ Tend the Soul' : 'Sealed to you'}
+            {groveUnlocked ? t('hub.tendSoul') : t('hub.groveSealed')}
           </Button>
         </Panel>
       </div>
@@ -209,17 +210,17 @@ export function HubScreen() {
           legendariesUnlocked ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'
         }`}
       >
-        <StatTile label="Renown" value={character.renown} accent="amber" glyph="◆" />
+        <StatTile label={t('hub.renown')} value={character.renown} accent="amber" glyph="◆" />
         <button
           type="button"
           onClick={useGameStore.getState().goToCodex}
           className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
         >
           <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
-            ☥ Bestiary
+            {t('hub.bestiary')}
           </div>
           <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
-            Open →
+            {t('hub.open')}
           </div>
         </button>
         <button
@@ -228,10 +229,10 @@ export function HubScreen() {
           className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
         >
           <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
-            ⛁ Inventory
+            {t('hub.inventory')}
           </div>
           <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
-            Open →
+            {t('hub.open')}
           </div>
         </button>
         {legendariesUnlocked && (
@@ -241,12 +242,12 @@ export function HubScreen() {
             className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
           >
             <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
-              ✦ Relics
+              {t('hub.relics')}
             </div>
             <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
               {ownedLegendaries.length > 0
-                ? `${Object.keys(equippedRelics).length} bound →`
-                : 'Open →'}
+                ? t('hub.relicsBound', { n: Object.keys(equippedRelics).length })
+                : t('hub.open')}
             </div>
           </button>
         )}
@@ -289,35 +290,35 @@ interface FirstLifeFallbackProps {
   name: string;
   onDescend: () => void;
   onTitle: () => void;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
 
-function FirstLifeFallback({ name, onDescend, onTitle }: FirstLifeFallbackProps) {
+function FirstLifeFallback({ name, onDescend, onTitle, t }: FirstLifeFallbackProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 gap-8 text-center">
       <div>
         <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-[0.4em] mb-2">
-          The Iron Cells
+          {t('hub.firstLife.ironCells')}
         </div>
         <h1
           className="text-3xl md:text-4xl text-[var(--color-accent-amber)] italic"
           style={{ textShadow: '0 0 24px rgba(244,167,66,0.4), 0 0 12px rgba(0,0,0,0.8)' }}
         >
-          You wake in the dark, {name}.
+          {t('hub.firstLife.wake', { name })}
         </h1>
         <p className="text-[var(--color-text-secondary)] text-sm italic mt-4 max-w-xl leading-relaxed">
-          The cell stinks of old iron and older blood. There is no light, no door you can name —
-          only the corridor ahead, and the things the master left to keep it.
+          {t('hub.firstLife.body')}
         </p>
       </div>
       <Button variant="primary" onClick={onDescend}>
-        Descend →
+        {t('hub.firstLife.descend')}
       </Button>
       <button
         type="button"
         onClick={onTitle}
         className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic hover:text-[var(--color-text-secondary)]"
       >
-        ← Title
+        {t('hub.backTitle')}
       </button>
     </div>
   );

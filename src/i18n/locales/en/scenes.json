@@ -1,0 +1,52 @@
+{
+  "chapter": "Chapter {n} — {name}",
+  "chapterBare": "Chapter {n}",
+  "quirks": {
+    "eyebrow": "◆ The Druid Speaks",
+    "title": "Quirks",
+    "bodyA": "The grove returns your soul, but never the same flesh twice. Each life carries",
+    "bodyWord": "Quirks",
+    "bodyB": "— small gifts and small curses that came with you out of the dark.",
+    "boon": "Boon",
+    "boonDesc": "A gift — something that helps you.",
+    "bane": "Bane",
+    "baneDesc": "A burden — something that hinders you.",
+    "odd": "Odd",
+    "oddDesc": "Neither — a trade, a twist, a strangeness.",
+    "footer": "Your quirks are listed in the hub above the buildings. Every death rolls a new set — your soul does not forget the dying, only the dead.",
+    "understand": "I understand"
+  },
+  "reincarnation": {
+    "headline": "You wake again. The flesh is new. The soul remembers.",
+    "soulsWalked": "◆ Souls walked: {n} ◆",
+    "carries": "The soul carries what the flesh forgot",
+    "noQuirks": "No quirks this life. The soul comes back clean — for once.",
+    "walkBack": "Walk back into Phandalin →",
+    "orDoubleClick": "or double-click anywhere",
+    "holdSpeed": "▶▶ holding to speed",
+    "skipHint": "click skips · hold speeds · 2× completes"
+  },
+  "ending": {
+    "throneEyebrow": "◆ The Throne of Bhaal ◆",
+    "throneCreditsEyebrow": "◆ The wheel, at its turning ◆",
+    "pitEyebrow": "◆ The Trials of the Pit ◆",
+    "pitCreditsEyebrow": "◆ Out of the Pit ◆",
+    "clickToGoOn": "click to go on",
+    "letWheelTurn": "Let the wheel turn →",
+    "holdSpeed": "▶▶ holding to speed",
+    "skipHint": "click skips · hold speeds",
+    "throneOffer": "Amelyssan is unmade. The harvest she spent an age gathering spills back into the dark, and above its cooling pools the Throne of Bhaal stands empty — empty, and waiting, and turned toward you.\n\nA Solar descends through the red light on wings the colour of a struck bell, and does not draw her blade. \"Child of the dead god,\" she says. \"The portfolio of Murder has no holder, and you are the last vessel left whole enough to take it up. The choice the Father never offered you is yours alone now.\"\n\n\"Reach into the Throne, and the divinity is yours. You will rise as the new God of Murder, and the wheel that has turned you life into life will turn for you no longer — you will be the hand that turns it for others. Or refuse it. Let the taint burn out of your blood, and the godhood with it, and walk back down into the world a mortal thing that bleeds and ages and ends.\"\n\nShe does not press you. The wheel that spun you through a hundred lives slows beneath your feet, and waits — as it has always waited — to see which way a Child of Bhaal will turn, now that the turning is finally its own.",
+    "throneCredits": "The soul remembers. The flesh forgets.\n\nWhatever it makes of the empty seat — climbs onto it, or turns its back and walks — the chain that bound this soul to the wheel has been carried, at the last, to the place where such things are decided. That, of all the deeds a Child of Bhaal might do, was ever the rarest.\n\nHere the tale of this soul rests.",
+    "pitOffer": "Irenicus is dead. The mage who carved the soul out of you and wore it like a stolen coat lies broken at the bottom of his own hell, and the red engine of the Pit — the trials he shaped from your pride, your wrath, the killer worn under your skin — grinds to a halt around him.\n\nYou went down through every door he had made of you, and at the last there was only the captor himself, and now not even that. The cell the Cowled Wizards sank you in is a hundred lives behind you. The man who sank deeper still is ash. For the first time you can remember, the blood in your veins is quiet.\n\nQuiet — but not still. As the Pit cools it does not close. It draws one slow breath, like a thing that was only ever waiting; and far beneath where Irenicus fell, deeper than even he dared dig, something older stirs and tastes the dead god's blood walking free at last.\n\nThe wheel has carried you up out of one man's hell. It is still turning. The road past the Pit runs on toward a burning city, a war among the god's own children, and a hand that has steered you down the whole way. The captor is finished with you. Whatever made him is not.",
+    "pitCredits": "The soul remembers. The flesh forgets.\n\nIt walked out of the Pit a free thing — and for a Child of the dead god, freedom was only ever the breath drawn before the next door opens. The wheel turns. The road goes on, down past where the captor could ever follow.\n\nHere the captor's tale ends. The road's does not."
+  },
+  "soulVoice": {
+    "voice": "The Voice",
+    "whisper": "A Whisper",
+    "subtitle": "through the soul-bond",
+    "continue": "Continue",
+    "waiting": "...",
+    "holdSpeed": "▶▶ holding to speed",
+    "skipHint": "click skip · hold speed"
+  }
+}
