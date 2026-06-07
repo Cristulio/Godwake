@@ -15,10 +15,16 @@ sid="${ITERM_SESSION_ID:-}"
 [ -n "$sid" ] || exit 0
 uuid="${sid#*:}"
 
-branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+# Prefer the branch wt-new exported (survives a deleted cwd); fall back to git.
+branch="${WT_BRANCH:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)}"
 [ -n "$branch" ] || exit 0
 
-pr="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number' 2>/dev/null || true)"
+# Close once the lane's work has landed — an OPEN pr (not yet merged) OR a
+# MERGED one (the orchestrator merges fast, often before this Stop hook runs, so
+# checking only --state open left finished panes piling up). A lane that stopped
+# early with no PR, or a PR closed-without-merge, is left open for inspection.
+pr="$(gh pr list --head "$branch" --state all --json number,state \
+  --jq '[.[] | select(.state=="OPEN" or .state=="MERGED")][0].number' 2>/dev/null || true)"
 [ -n "$pr" ] || exit 0
 
 # Let the final response linger a beat, then close this pane. Detached so the

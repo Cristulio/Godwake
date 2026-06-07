@@ -139,9 +139,9 @@ if [ "$LAUNCH" -eq 1 ]; then
     # then run claude with the brief contents as the first user message.
     # \\\" → literal \" (AppleScript-escaped " inside the string)
     # \$   → literal $ (AppleScript has no $ interpolation, just pass it through)
-    LAUNCH_CMD="cd '$WORKTREE_PATH' && export WT_AUTOCLOSE=1 && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL} ${EFFORT:+--effort $EFFORT} \\\"\$(cat .briefing.md)\\\""
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && export WT_AUTOCLOSE=1 WT_BRANCH='$BRANCH' && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL} ${EFFORT:+--effort $EFFORT} \\\"\$(cat .briefing.md)\\\""
   else
-    LAUNCH_CMD="cd '$WORKTREE_PATH' && export WT_AUTOCLOSE=1 && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL} ${EFFORT:+--effort $EFFORT}"
+    LAUNCH_CMD="cd '$WORKTREE_PATH' && export WT_AUTOCLOSE=1 WT_BRANCH='$BRANCH' && (test -d node_modules || npm install) && claude --dangerously-skip-permissions ${MODEL:+--model $MODEL} ${EFFORT:+--effort $EFFORT}"
   fi
   if [ -d "/Applications/iTerm.app" ]; then
     echo ""
