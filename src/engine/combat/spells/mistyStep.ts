@@ -8,6 +8,7 @@ import {
   consumeSlot,
   nextLogId,
 } from './helpers';
+import { t } from '../../../i18n';
 
 export function castMistyStep(character: Readonly<Character>, state: CombatState): CastResult {
   let nextCharacter: Character = consumeSlot(character, 2);
@@ -17,7 +18,7 @@ export function castMistyStep(character: Readonly<Character>, state: CombatState
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'narration',
-    text: `${nextCharacter.name} steps through a curl of silver mist — +2 AC until next turn. The world reshapes around you; the next blow finds you elsewhere. Advantage on the next save.`,
+    text: t('combat.log.mistyStep', { name: nextCharacter.name }),
   });
   nextState = attachSpellEffect(nextState, 'misty-step', 'player');
   return { state: nextState, character: nextCharacter, cast: true };

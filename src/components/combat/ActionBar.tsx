@@ -361,7 +361,7 @@ export function ActionBar({
             onClick={onSecondWind}
             disabled={!canSecondWind}
             data-tutorial="abilities"
-            title="Bonus action: heal 1d10 + level. Once per short rest."
+            title={t('combat.bar.secondWind')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {t('ui.combat.secondWind')}{secondWindCount > 1 ? ` (${secondWindCount})` : ''}
@@ -372,7 +372,7 @@ export function ActionBar({
             variant={canActionSurge ? 'primary' : 'secondary'}
             onClick={onActionSurge}
             disabled={!canActionSurge}
-            title="Free Action: regain your action this turn. Once per short rest."
+            title={t('combat.bar.actionSurge')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {t('ui.combat.actionSurge')}{surgeRemaining > 0 && ` (${surgeRemaining})`}
@@ -383,7 +383,22 @@ export function ActionBar({
             variant={canMartialOffense ? 'primary' : 'secondary'}
             onClick={onMartialOffense}
             disabled={!canMartialOffense}
-            title={`Costs ${offenseCost} ${martial.pool}: this turn's strikes ${character.classId === 'fighter' ? `land surer (+${martialOffenseAttackBonus(character)} to hit) and bite for +${martialOffenseDamage(character)} damage` : `land for +${martialOffenseDamage(character)} damage`}${character.classId === 'barbarian' ? ', and cleave into a second foe' : ''}.`}
+            title={
+              character.classId === 'fighter'
+                ? t('combat.bar.offenseFighter', {
+                    cost: offenseCost,
+                    pool: martial.pool,
+                    hit: martialOffenseAttackBonus(character),
+                    dmg: martialOffenseDamage(character),
+                    cleave: '',
+                  })
+                : t('combat.bar.offenseOther', {
+                    cost: offenseCost,
+                    pool: martial.pool,
+                    dmg: martialOffenseDamage(character),
+                    cleave: character.classId === 'barbarian' ? t('combat.bar.offenseCleave') : '',
+                  })
+            }
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {offenseUp ? `${martial.offense} ✓` : `${martial.offense} (${offenseCost})`}
@@ -394,7 +409,7 @@ export function ActionBar({
             variant={canMartialDefense ? 'primary' : 'secondary'}
             onClick={onMartialDefense}
             disabled={!canMartialDefense}
-            title={`Costs ${MARTIAL_DEFENSE_COST} ${martial.pool}: blunt the next hit you take by ${martialDefenseReduction(character)}. Hold it for a blow you can see coming.`}
+            title={t('combat.bar.defense', { cost: MARTIAL_DEFENSE_COST, pool: martial.pool, reduction: martialDefenseReduction(character) })}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {`${martial.defense} (${MARTIAL_DEFENSE_COST})`}
@@ -405,7 +420,7 @@ export function ActionBar({
             variant={canMartialDisrupt ? 'primary' : 'secondary'}
             onClick={onMartialDisrupt}
             disabled={!canMartialDisrupt}
-            title={`Costs ${disruptCost} ${martial.pool}: arm a staggering strike — the next hit fells its target and costs it its next turn.`}
+            title={t('combat.bar.disrupt', { cost: disruptCost, pool: martial.pool })}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {disruptArmed ? `${martial.disrupt} ✓` : `${martial.disrupt} (${disruptCost})`}
@@ -417,7 +432,7 @@ export function ActionBar({
             variant={canCunningAction ? 'primary' : 'secondary'}
             onClick={onCunningAction}
             disabled={!canCunningAction}
-            title="Bonus action: Hide (advantage on next attack — enables Sneak), Quick Strike (a second strike this turn), Feint (guarantee Sneak on your next strike), or Steel Yourself (advantage on next save)."
+            title={t('combat.bar.cunningAction')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {t('ui.combat.cunningAction')}{cunningRemaining > 0 && ` (${cunningRemaining})`}
@@ -432,10 +447,10 @@ export function ActionBar({
             data-tutorial="abilities"
             title={
               rageBlockedByArmor
-                ? 'Heavy armor smothers your Rage — remove the plate to call the fury.'
+                ? t('combat.bar.rageArmor')
                 : !raging && !hasRageCharge
-                  ? 'Out of Rage charges — rest at a camp to refill them.'
-                  : `Bonus action: enter a ${RAGE_ROUNDS}-round battle-fury — physical damage halved, melee hits deal bonus damage, but healing is locked out until the fury ends. Spends one Rage charge; charges refill only at a rest.`
+                  ? t('combat.bar.rageEmpty')
+                  : t('combat.bar.rage', { rounds: RAGE_ROUNDS })
             }
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
@@ -451,7 +466,7 @@ export function ActionBar({
             variant={canReckless ? 'primary' : 'secondary'}
             onClick={onRecklessAttack}
             disabled={!canReckless}
-            title="Free: your melee attacks this turn roll with advantage, but attacks against you have advantage until your next turn."
+            title={t('combat.bar.reckless')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {reckless ? t('ui.combat.recklessOn') : t('ui.combat.reckless')}
@@ -463,7 +478,7 @@ export function ActionBar({
             onClick={onHuntersMark}
             disabled={!canHuntersMark}
             data-tutorial="abilities"
-            title="Bonus action: brand a target as your quarry — every hit on it deals extra damage. Re-cast to move the mark."
+            title={t('combat.bar.huntersMark')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {isMarkLive ? t('ui.combat.remark') : t('ui.combat.huntersMark')}
@@ -475,7 +490,7 @@ export function ActionBar({
             variant={canFlurry ? 'primary' : 'secondary'}
             onClick={onFlurry}
             disabled={!canFlurry}
-            title="Bonus action, 1 Ki: rain extra unarmed strikes this turn — keep hitting after your Attack action is spent."
+            title={t('combat.bar.flurry')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {flurryQueued ? t('ui.combat.flurryOn', { n: character.flurryStrikesRemaining ?? 0 }) : t('ui.combat.flurry', { n: ki })}
@@ -486,7 +501,7 @@ export function ActionBar({
             variant={canPatientDefense ? 'primary' : 'secondary'}
             onClick={onPatientDefense}
             disabled={!canPatientDefense}
-            title="Bonus action, 1 Ki: flow into a yielding guard — attacks against you roll at disadvantage until your next turn."
+            title={t('combat.bar.patientDefense')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {patientActive ? t('ui.combat.patientOn') : t('ui.combat.patientDefense')}
@@ -497,7 +512,7 @@ export function ActionBar({
             variant={canStunningStrike ? 'primary' : 'secondary'}
             onClick={onStunningStrike}
             disabled={!canStunningStrike}
-            title="Free, 2 Ki: arm a staggering blow — your next unarmed hit forces a save or the target loses its next turn."
+            title={t('combat.bar.stunningStrike')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {stunningArmed ? t('ui.combat.stunningOn') : t('ui.combat.stunningStrike')}
@@ -511,10 +526,10 @@ export function ActionBar({
             disabled={!canWildShape}
             title={
               isShaped
-                ? 'Already wearing the beast — claws out until the form spends out or fades.'
+                ? t('combat.bar.wildShapeOn')
                 : wildShapeUses <= 0
-                  ? 'No Wild Shape changes left this combat — they refresh next fight.'
-                  : "Bonus action: shed the body for a beast's shape — gain its vitality as temporary HP and rend with claws for several rounds. Once or twice per combat."
+                  ? t('combat.bar.wildShapeEmpty')
+                  : t('combat.bar.wildShape')
             }
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
@@ -528,7 +543,7 @@ export function ActionBar({
             onClick={onEntangle}
             data-tutorial="abilities"
             disabled={!canEntangle}
-            title="Bonus action, costs a 2nd-level slot: grasping roots sweep the floor — every enemy makes a Strength save or is rooted, losing its next turn. Root the room and still strike the same turn."
+            title={t('combat.bar.entangle')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             ✦ {t('ui.combat.entanglingRoots', { n: entangleSlots })}
@@ -540,7 +555,7 @@ export function ActionBar({
             variant={canSpells ? 'primary' : 'secondary'}
             onClick={onSpells}
             disabled={!canSpells}
-            title="Action: pick a prepared spell."
+            title={t('combat.bar.spells')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             ✦ {t('ui.combat.spellsBtn', { n: totalSlots })}

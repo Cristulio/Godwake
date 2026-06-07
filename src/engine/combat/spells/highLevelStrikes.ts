@@ -21,6 +21,7 @@ import {
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage } from './scaling';
+import { t } from '../../../i18n';
 
 function intMod(character: Readonly<Character>): number {
   return abilityModifier(effectiveAbilityScores(character).int);
@@ -46,7 +47,7 @@ export function castForceLance(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} drives a Force Lance through ${target.instance.displayName} — ${dealt} force, unerring.`,
+    text: t('combat.log.forceLance', { name: nextCharacter.name, target: target.instance.displayName, dealt }),
   });
   nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
@@ -90,7 +91,14 @@ export function castVoidRay(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} bores a Void Ray at ${target.instance.displayName}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} — ${crit ? 'CRITICAL HIT' : hit ? 'hit' : 'miss (graze)'}.`,
+      text: t('combat.log.voidRayRoll', {
+        name: nextCharacter.name,
+        target: target.instance.displayName,
+        mod: `${attackBonus >= 0 ? '+' : ''}${attackBonus}`,
+        total: toHit.total,
+        ac,
+        result: crit ? t('combat.f.resCrit') : hit ? t('combat.f.resHit') : t('combat.f.resMissGraze'),
+      }),
     },
   );
   nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
@@ -109,8 +117,8 @@ export function castVoidRay(ctx: CastSpellContext): CastResult {
     id: nextLogId(nextState),
     kind: 'damage',
     text: hit
-      ? `The wound refuses to close — ${dealt} necrotic.`
-      : `The ray grazes ${target.instance.displayName} — ${dealt} necrotic.`,
+      ? t('combat.log.voidRayHit', { dealt })
+      : t('combat.log.voidRayMiss', { target: target.instance.displayName, dealt }),
   });
 
   nextCharacter = markActionUsed(nextCharacter);
@@ -153,7 +161,14 @@ export function castDissolution(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} speaks ${target.instance.displayName} half-apart. CON save: d20${conMod >= 0 ? '+' : ''}${conMod} = ${save.total} vs DC ${dc} — ${saved ? 'success (half)' : 'fail (full)'}.`,
+      text: t('combat.log.halfApart', {
+        name: nextCharacter.name,
+        target: target.instance.displayName,
+        mod: `${conMod >= 0 ? '+' : ''}${conMod}`,
+        total: save.total,
+        dc,
+        result: saved ? t('combat.f.successHalf') : t('combat.f.failFull'),
+      }),
     },
   );
   nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
@@ -163,7 +178,7 @@ export function castDissolution(ctx: CastSpellContext): CastResult {
   nextState = appendLog(nextState, {
     id: nextLogId(nextState),
     kind: 'damage',
-    text: `${target.instance.displayName} takes ${dealt} force.`,
+    text: t('combat.log.halfApartDamage', { target: target.instance.displayName, dealt }),
   });
 
   nextCharacter = markActionUsed(nextCharacter);
@@ -192,7 +207,7 @@ export function castWither(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} withers ${target.instance.displayName} — ${dealt} necrotic, and the strength sloughs from its limbs.`,
+    text: t('combat.log.wither', { name: nextCharacter.name, target: target.instance.displayName, dealt }),
   });
   nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
@@ -253,7 +268,15 @@ export function castSoulSnare(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} casts Soul Snare at ${target.instance.displayName}. WIS save${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${wisMod >= 0 ? '+' : ''}${wisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+    text: t('combat.log.soulSnareRoll', {
+      name: nextCharacter.name,
+      target: target.instance.displayName,
+      resolute: resoluteWill ? t('combat.f.resoluteAdv') : '',
+      mod: `${wisMod >= 0 ? '+' : ''}${wisMod}`,
+      total: save.total,
+      dc,
+      result: success ? t('combat.f.success') : t('combat.f.fail'),
+    }),
   });
   nextState = attachSpellEffect(nextState, 'hold-person', 'player', targetId);
 
@@ -285,7 +308,7 @@ export function castSoulSnare(ctx: CastSpellContext): CastResult {
       {
         id: nextLogId(nextState),
         kind: 'system',
-        text: `${target.instance.displayName} locks rigid — bound body and will for 3 rounds.`,
+        text: t('combat.log.soulSnareBound', { target: target.instance.displayName }),
       },
     );
   }

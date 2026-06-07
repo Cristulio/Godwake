@@ -15,6 +15,7 @@ import {
   nextLogId,
   spellSaveDC,
 } from './helpers';
+import { t, getLocalized } from '../../../i18n';
 
 export function castHoldPerson(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
@@ -40,7 +41,16 @@ export function castHoldPerson(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} weaves ${getSpell(ctx.spellId).name} at ${target.instance.displayName}. WIS save${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${targetWisMod >= 0 ? '+' : ''}${targetWisMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+      text: t('combat.log.holdPersonRoll', {
+        name: nextCharacter.name,
+        spell: getLocalized('spells', ctx.spellId, 'name', getSpell(ctx.spellId).name),
+        target: target.instance.displayName,
+        resolute: resoluteWill ? t('combat.f.resoluteAdv') : '',
+        mod: `${targetWisMod >= 0 ? '+' : ''}${targetWisMod}`,
+        total: save.total,
+        dc,
+        result: success ? t('combat.f.success') : t('combat.f.fail'),
+      }),
     },
   ];
 
@@ -77,7 +87,7 @@ export function castHoldPerson(ctx: CastSpellContext): CastResult {
       {
         id: nextLogId(nextState),
         kind: 'system',
-        text: `${target.instance.displayName} stiffens — bound by the spell.`,
+        text: t('combat.log.holdPersonStiffen', { target: target.instance.displayName }),
       },
     );
   }

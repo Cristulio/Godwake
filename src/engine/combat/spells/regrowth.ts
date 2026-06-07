@@ -11,6 +11,7 @@ import {
   markActionUsed,
   nextLogId,
 } from './helpers';
+import { t } from '../../../i18n';
 
 /** Player-turn-start heal ticks after the immediate one. With the cast's own
  *  heal that is three knits in all (now + the start of the next two turns). */
@@ -42,7 +43,12 @@ export function castRegrowth(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'system',
-    text: `Green life wells up through ${nextCharacter.name} — ${after - before} HP knit, and ${perTurn} more at the start of each of the next ${REGROWTH_TICKS} turns.`,
+    text: t('combat.log.regrowth', {
+      name: nextCharacter.name,
+      amount: after - before,
+      perTurn,
+      ticks: REGROWTH_TICKS,
+    }),
   });
   nextState = attachSpellEffect(nextState, 'regrowth', 'player');
 

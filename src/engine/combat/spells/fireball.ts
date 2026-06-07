@@ -17,6 +17,7 @@ import {
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage } from './scaling';
+import { t } from '../../../i18n';
 
 export function castFireball(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
@@ -35,7 +36,13 @@ export function castFireball(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} flicks an ember — it blooms into a roar of flame. ${damageRoll.rolls.join('+')} = ${fullDmg} fire${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half; failures ignite.`,
+    text: t('combat.log.fireballCast', {
+      name: nextCharacter.name,
+      rolls: damageRoll.rolls.join('+'),
+      dmg: fullDmg,
+      evoker: evoker ? t('combat.log.sculptSpells') : '',
+      dc,
+    }),
   });
 
   nextState = attachSpellEffect(nextState, 'spell-burst', 'player', aliveMonsters[0]?.id, spellElement(ctx.spellId));
@@ -61,7 +68,13 @@ export function castFireball(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `${m.instance.displayName} DEX save: d20${dexMod >= 0 ? '+' : ''}${dexMod} = ${save.total} vs DC ${dc} — ${success ? 'success (half)' : 'fail (full, ignited)'}.`,
+      text: t('combat.log.fireballSave', {
+        name: m.instance.displayName,
+        mod: `${dexMod >= 0 ? '+' : ''}${dexMod}`,
+        total: save.total,
+        dc,
+        result: success ? t('combat.f.successHalf') : t('combat.f.failFullIgnited'),
+      }),
     });
     const damaged = applyDamage(nextState, m.id, dmg, nextCharacter);
     nextState = damaged.state;
@@ -69,7 +82,11 @@ export function castFireball(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `${m.instance.displayName} takes ${dmg} fire.`,
+      text: t('combat.log.takesDamage', {
+        name: m.instance.displayName,
+        dmg,
+        type: t('combat.dmg.fire'),
+      }),
     });
   }
 
@@ -92,7 +109,10 @@ export function castFireball(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'system',
-      text: `${names} ignite${igniteSurvivors.length === 1 ? 's' : ''} — burning for ${igniteDmg} fire next turn.`,
+      text:
+        igniteSurvivors.length === 1
+          ? t('combat.log.fireballIgniteOne', { names, dmg: igniteDmg })
+          : t('combat.log.fireballIgniteMany', { names, dmg: igniteDmg }),
     });
   }
 

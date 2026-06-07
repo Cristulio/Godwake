@@ -9,6 +9,7 @@ import {
   markActionUsed,
   nextLogId,
 } from './helpers';
+import { t } from '../../../i18n';
 
 /**
  * Rounds the displacement holds. Read by the monster-attack path as a
@@ -25,7 +26,7 @@ export function castBlur(character: Readonly<Character>, state: CombatState): Ca
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'narration',
-    text: `${nextCharacter.name}'s outline smears into a doubled blur — for ${BLUR_ROUNDS} rounds, attackers strike at disadvantage.`,
+    text: t('combat.log.blur', { name: nextCharacter.name, rounds: BLUR_ROUNDS }),
   });
   // Reuse the Misty Step self-shimmer overlay — a smear of displacement.
   nextState = attachSpellEffect(nextState, 'misty-step', 'player');

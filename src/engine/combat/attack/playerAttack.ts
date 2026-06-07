@@ -44,6 +44,7 @@ import {
 import { appendLog, markPlayerLog } from '../log';
 import { attachCombatVfx, weaponVfxKind } from '../vfx';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
+import { t, getLocalized } from '../../../i18n';
 
 export interface AttackContext {
   roller: DiceRoller;
@@ -53,6 +54,47 @@ export interface AttackContext {
 
 export function sneakAttackDiceForLevel(level: number): number {
   return Math.max(1, Math.ceil(level / 2));
+}
+
+// The damage-breakdown parts are tagged with stable English labels at each
+// bonus-damage source; this maps those tags onto combat.part.* keys so the
+// parenthetical math reads in the active language. An unmapped label falls back
+// to itself (so a new source is never silently dropped).
+const PART_KEY: Record<string, string> = {
+  blessing: 'blessing',
+  gear: 'gear',
+  enhancement: 'enhancement',
+  weapon: 'weapon',
+  affinity: 'affinity',
+  Hangry: 'hangry',
+  'first strike': 'firstStrike',
+  Whetstone: 'whetstone',
+  mastery: 'mastery',
+  heavy: 'heavy',
+  'martial arts': 'martialArts',
+  ki: 'ki',
+  'open hand': 'openHand',
+  shadow: 'shadow',
+  ascendant: 'ascendant',
+  'First Cut': 'firstCut',
+  'Bleed-Out': 'bleedOut',
+  Fellfast: 'fellfast',
+  Mountain: 'mountain',
+  Rage: 'rageCap',
+  Furious: 'furious',
+  'heavy haft': 'heavyHaft',
+  Relentless: 'relentless',
+  weakened: 'weakened',
+  assassinate: 'assassinate',
+  'giant-killer': 'giantKiller',
+  maneuver: 'maneuver',
+  Shadowed: 'shadowed',
+  Quarry: 'quarry',
+};
+
+function partLabel(label: string): string {
+  const key = PART_KEY[label];
+  return key ? t(`combat.part.${key}`) : label;
 }
 
 /** Rogue Assassinate (L4): extra Sneak Attack dice on the opening strike of the
@@ -227,11 +269,23 @@ export function playerAttack(
 
   const logEntries: CombatLogEntry[] = [];
   const newLogId = nextLogId(state);
-  const attackVerb = isRanged ? 'fires at' : 'attacks';
+  const weaponName = getLocalized('items', weapon.id, 'name', weapon.name);
+  const rollResult = (c: boolean, h: boolean): string =>
+    `— ${c ? t('combat.f.resCrit') : h ? t('combat.f.resHit') : t('combat.f.resMiss')}`;
+  const signed = (n: number): string => `${n >= 0 ? '+' : ''}${n}`;
   logEntries.push({
     id: newLogId,
     kind: 'roll',
-    text: `${nextCharacter.name} ${attackVerb} ${displayName(target, nextCharacter)} with ${weapon.name}. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
+    text: t('combat.log.attackRoll', {
+      name: nextCharacter.name,
+      verb: isRanged ? t('combat.log.verbFires') : t('combat.log.verbAttacks'),
+      target: displayName(target, nextCharacter),
+      weapon: weaponName,
+      mod: signed(attackBonus),
+      total: toHit.total,
+      ac,
+      result: rollResult(crit, hit),
+    }),
   });
 
   // Auto-reroll a miss if a reroll budget is available. Prefer the
@@ -252,7 +306,13 @@ export function playerAttack(
       logEntries.push({
         id: newLogId + 1,
         kind: 'roll',
-        text: `${sourceLabel} — reroll. d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}.`,
+        text: t('combat.log.reroll', {
+          source: sourceLabel,
+          mod: signed(attackBonus),
+          total: toHit.total,
+          ac,
+          result: rollResult(crit, hit),
+        }),
       });
     }
   }
@@ -501,7 +561,7 @@ export function playerAttack(
     // Vow reroll is already baked into the dice total — a note, not a summand,
     // or the breakdown would double-count it.
     if (bladeOfVowUsed && bladeOfVowDelta > 0) {
-      damageNotes.push(`Vow reroll +${bladeOfVowDelta}`);
+      damageNotes.push(t('combat.part.vowReroll', { n: bladeOfVowDelta }));
     }
 
     // Rogue Sneak Attack: once per turn, when the strike has the angle —
@@ -672,29 +732,33 @@ export function playerAttack(
       };
     }
 
-    const breakdown: string[] = [`${damageRoll.total} dice`];
+    const breakdown: string[] = [`${damageRoll.total} ${t('combat.part.dice')}`];
     const pushPart = (val: number, label: string) => {
       if (val === 0) return;
       breakdown.push(val > 0 ? `+ ${val} ${label}` : `- ${Math.abs(val)} ${label}`);
     };
-    pushPart(abilMod, attackAbility.toUpperCase());
-    pushPart(damageExpr.modifier, 'magic');
-    if (sneakDamage > 0) pushPart(sneakDamage, `sneak (${sneakDice}d6)`);
-    if (markDamage > 0) pushPart(markDamage, `mark (${HUNTERS_MARK_DICE})`);
-    if (colossusDamage > 0) pushPart(colossusDamage, 'colossus (1d8)');
-    for (const p of onTypeParts) pushPart(p.amount, p.label);
+    pushPart(abilMod, t(`combat.abil.${attackAbility}`));
+    pushPart(damageExpr.modifier, t('combat.part.magic'));
+    if (sneakDamage > 0) pushPart(sneakDamage, t('combat.part.sneak', { dice: `${sneakDice}d6` }));
+    if (markDamage > 0) pushPart(markDamage, t('combat.part.mark', { dice: HUNTERS_MARK_DICE }));
+    if (colossusDamage > 0) pushPart(colossusDamage, t('combat.part.colossus'));
+    for (const p of onTypeParts) pushPart(p.amount, partLabel(p.label));
     // Headline splits by damage type: the weapon-type subtotal (which the
     // parenthetical sums to) plus any off-type segments shown by their own type.
     const headline =
       offTypeParts.length > 0
-        ? `${weaponTypeDamage} ${weapon.damageType}` +
-          offTypeParts.map((p) => ` + ${p.amount} ${p.type}`).join('')
-        : `${totalDamage} ${weapon.damageType}`;
+        ? `${weaponTypeDamage} ${t(`combat.dmg.${weapon.damageType}`)}` +
+          offTypeParts.map((p) => ` + ${p.amount} ${t(`combat.dmg.${p.type}`)}`).join('')
+        : `${totalDamage} ${t(`combat.dmg.${weapon.damageType}`)}`;
     const noteSuffix = damageNotes.length > 0 ? ` [${damageNotes.join(', ')}]` : '';
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `Damage: ${headline} (${breakdown.join(' ')})${noteSuffix}.`,
+      text: t('combat.log.damageLine', {
+        headline,
+        breakdown: breakdown.join(' '),
+        note: noteSuffix,
+      }),
     });
 
     // Weapon-swing VFX on a connecting hit. Colossus Slayer is a once-per-turn
@@ -720,7 +784,7 @@ export function playerAttack(
         nextState = appendLog(nextState, {
           id: nextLogId(nextState),
           kind: 'system',
-          text: `${nextCharacter.name} drains ${after - before} HP from the wound.`,
+          text: t('combat.log.lifesteal', { name: nextCharacter.name, amount: after - before }),
         });
       }
     }
@@ -733,7 +797,7 @@ export function playerAttack(
       nextState = appendLog(nextState, {
         id: nextLogId(nextState),
         kind: 'system',
-        text: `${nextCharacter.name} feels the wound mend — regen kindled (${affixMods.regenPerTurn} HP/turn × 3).`,
+        text: t('combat.log.mendKindled', { name: nextCharacter.name, n: affixMods.regenPerTurn }),
       });
     }
 
@@ -758,7 +822,7 @@ export function playerAttack(
       nextState = appendLog(nextState, {
         id: nextLogId(nextState),
         kind: 'system',
-        text: `${displayName(target, nextCharacter)} begins to bleed (${affixMods.bleedDamage}/turn).`,
+        text: t('combat.log.bleedBegin', { target: displayName(target, nextCharacter), n: affixMods.bleedDamage }),
       });
     }
 
@@ -798,7 +862,7 @@ export function playerAttack(
         nextState = appendLog(nextState, {
           id: nextLogId(nextState),
           kind: 'system',
-          text: `${displayName(target, nextCharacter)} is envenomed — the wound festers (${ENVENOM_BLEED_PER_TURN}/turn).`,
+          text: t('combat.log.envenom', { target: displayName(target, nextCharacter), n: ENVENOM_BLEED_PER_TURN }),
         });
       }
     }
@@ -823,7 +887,7 @@ export function playerAttack(
         nextState = appendLog(nextState, {
           id: nextLogId(nextState),
           kind: 'system',
-          text: `${displayName(target, nextCharacter)} reels from the maneuver — a wound opens (3/turn).`,
+          text: t('combat.log.maneuverWound', { target: displayName(target, nextCharacter) }),
         });
       }
     }
@@ -852,7 +916,12 @@ export function playerAttack(
         nextState = appendLog(nextState, {
           id: nextLogId(nextState),
           kind: 'damage',
-          text: `${nextCharacter.name}'s shot carries into ${second.instance.displayName} for ${splashDamage} ${weapon.damageType}.`,
+          text: t('combat.log.shotCarries', {
+            name: nextCharacter.name,
+            target: second.instance.displayName,
+            dmg: splashDamage,
+            type: t(`combat.dmg.${weapon.damageType}`),
+          }),
         });
         nextState = attachCombatVfx(nextState, weaponVfxKind(w), 'player', second.id);
       }
@@ -885,7 +954,12 @@ export function playerAttack(
         nextState = appendLog(nextState, {
           id: nextLogId(nextState),
           kind: 'damage',
-          text: `${nextCharacter.name}'s swing cleaves on into ${second.instance.displayName} for ${cleaveDamage} ${weapon.damageType}.`,
+          text: t('combat.log.cleave', {
+            name: nextCharacter.name,
+            target: second.instance.displayName,
+            dmg: cleaveDamage,
+            type: t(`combat.dmg.${weapon.damageType}`),
+          }),
         });
         nextState = attachCombatVfx(nextState, weaponVfxKind(w), 'player', second.id);
       }
@@ -916,7 +990,7 @@ export function playerAttack(
         nextState = appendLog(nextState, {
           id: nextLogId(nextState),
           kind: 'system',
-          text: `${displayName(target, nextCharacter)} is staggered — it will lose its next turn.`,
+          text: t('combat.log.staggered', { target: displayName(target, nextCharacter) }),
         });
       }
     }
@@ -940,7 +1014,14 @@ export function playerAttack(
         nextState = appendLog(nextState, {
           id: nextLogId(nextState),
           kind: 'roll',
-          text: `${displayName(target, nextCharacter)} reels from the strike — CON save${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${conMod >= 0 ? '+' : ''}${conMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+          text: t('combat.log.stunSaveRoll', {
+            target: displayName(target, nextCharacter),
+            resolute: resoluteWill ? t('combat.f.resoluteAdv') : '',
+            mod: signed(conMod),
+            total: save.total,
+            dc,
+            result: success ? t('combat.f.success') : t('combat.f.fail'),
+          }),
         });
         if (!success) {
           nextState = {
@@ -953,7 +1034,7 @@ export function playerAttack(
           nextState = appendLog(nextState, {
             id: nextLogId(nextState),
             kind: 'system',
-            text: `${displayName(target, nextCharacter)} is stunned — it will lose its next turn.`,
+            text: t('combat.log.stunned', { target: displayName(target, nextCharacter) }),
           });
         }
         nextCharacter = { ...nextCharacter, stunningStrikeActive: false };
@@ -968,7 +1049,7 @@ export function playerAttack(
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'system',
-      text: `${nextCharacter.name}'s staggering strike goes wide — the opening is lost.`,
+      text: t('combat.log.disruptWide', { name: nextCharacter.name }),
     });
   }
 

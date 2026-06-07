@@ -9,6 +9,7 @@ import {
   markActionUsed,
   nextLogId,
 } from './helpers';
+import { t } from '../../../i18n';
 
 /** Duplicates conjured. Each absorbs one blow that would otherwise land. */
 export const MIRROR_IMAGE_COUNT = 3;
@@ -29,7 +30,7 @@ export function castMirrorImage(character: Readonly<Character>, state: CombatSta
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'narration',
-    text: `${nextCharacter.name} splits into ${MIRROR_IMAGE_COUNT} flickering duplicates — each will take a blow meant for you.`,
+    text: t('combat.log.mirrorImage', { name: nextCharacter.name, count: MIRROR_IMAGE_COUNT }),
   });
   // Reuse the Mage Armor self-shimmer overlay for the conjured duplicates.
   nextState = attachSpellEffect(nextState, 'mage-armor', 'player');

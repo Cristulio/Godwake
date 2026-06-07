@@ -57,6 +57,7 @@ import {
 import { appendLog } from '../log';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
 import { sneakAttackDiceForLevel } from './playerAttack';
+import { t, getLocalized } from '../../../i18n';
 import type { AttackContext } from './playerAttack';
 
 // Nimble Dodge: a low-level Rogue reads the first strike of the round and slips
@@ -175,7 +176,7 @@ function applyPhaseTransitions(
     s = appendLog(s, {
       id: nextLogId(s),
       kind: 'system',
-      text: phase.enterText ?? `${inst.displayName}${label} surges with fresh fury.`,
+      text: phase.enterText ?? t('combat.log.phaseSurge', { name: inst.displayName, label }),
     });
     s = attachEnemyEffect(s, 'enemy-frenzy', attackerId);
   }
@@ -207,7 +208,7 @@ function beginTelegraphCharge(
     kind: 'system',
     text:
       action.telegraph?.chargeText ??
-      `${displayName} draws itself up, channeling ${action.name} — a devastating blow lands next turn.`,
+      t('combat.log.telegraphCharge', { name: displayName, action: action.name }),
   });
   return attachEnemyEffect(s, 'enemy-frenzy', attackerId);
 }
@@ -226,7 +227,10 @@ function clearTelegraphAndAnnounce(
   return appendLog(s, {
     id: nextLogId(s),
     kind: 'system',
-    text: `${inst?.displayName ?? 'The enemy'} unleashes the charged ${ref.actionName}!`,
+    text: t('combat.log.chargedUnleash', {
+      name: inst?.displayName ?? t('combat.log.theEnemy'),
+      action: ref.actionName,
+    }),
   });
 }
 
@@ -246,7 +250,7 @@ function cancelChargeIfAny(state: CombatState, attackerId: string): CombatState 
   return appendLog(cleared, {
     id: nextLogId(cleared),
     kind: 'system',
-    text: `${inst.displayName} loses focus — the building ${pending.actionName} collapses, uncast.`,
+    text: t('combat.log.chargeCollapse', { name: inst.displayName, action: pending.actionName }),
   });
 }
 
@@ -280,7 +284,7 @@ export function monsterAttack(
       {
         id: nextLogId(state),
         kind: 'system',
-        text: `${attacker.instance.displayName} is knocked down — the turn is lost.`,
+        text: t('combat.log.knockedDown', { name: attacker.instance.displayName }),
       },
     );
     lostState = cancelChargeIfAny(lostState, attackerId);
@@ -310,8 +314,8 @@ export function monsterAttack(
         id: nextLogId(state),
         kind: 'system',
         text: expired
-          ? `${attacker.instance.displayName} shakes off the binding.`
-          : `${attacker.instance.displayName} is paralyzed — the turn is lost.`,
+          ? t('combat.log.shakeOffBinding', { name: attacker.instance.displayName })
+          : t('combat.log.paralyzedLost', { name: attacker.instance.displayName }),
       },
     );
     lostState = cancelChargeIfAny(lostState, attackerId);
@@ -343,8 +347,8 @@ export function monsterAttack(
         id: nextLogId(state),
         kind: 'system',
         text: expired
-          ? `${attacker.instance.displayName} wrenches free of the grasping roots — the turn is lost.`
-          : `${attacker.instance.displayName} is held fast by roots — the turn is lost.`,
+          ? t('combat.log.rootedFree', { name: attacker.instance.displayName })
+          : t('combat.log.rootedHeld', { name: attacker.instance.displayName }),
       },
     );
     lostState = cancelChargeIfAny(lostState, attackerId);
@@ -517,7 +521,7 @@ function maybeBossExtraPhase(
   state = appendLog(state, {
     id: nextLogId(state),
     kind: 'system',
-    text: `${inst.displayName} refuses to fall — a furious second wind drives it to strike again.`,
+    text: t('combat.log.bossSecondWind', { name: inst.displayName }),
   });
   state = attachEnemyEffect(state, 'enemy-frenzy', attackerId);
   return resolveMonsterChosenAction(
@@ -608,7 +612,7 @@ function resolveSingleAttack(
     workingState = appendLog(workingState, {
       id: nextLogId(workingState),
       kind: 'system',
-      text: `${attacker.instance.displayName} enters Battle Rage — +2 damage per hit.`,
+      text: t('combat.log.battleRage', { name: attacker.instance.displayName }),
     });
     workingState = attachEnemyEffect(workingState, 'enemy-frenzy', attackerId);
   }
@@ -657,24 +661,33 @@ function resolveSingleAttack(
   const advantageNote =
     attackAdvantage === 'advantage'
       ? playerParalyzed
-        ? ' (advantage — paralyzed)'
+        ? t('combat.log.advParalyzed')
         : recklessPlayer
-          ? ' (advantage — reckless)'
-          : ' (advantage — player exposed)'
+          ? t('combat.log.advReckless')
+          : t('combat.log.advExposed')
       : attackAdvantage === 'disadvantage'
         ? blurActive
-          ? ' (disadvantage — Blur)'
+          ? t('combat.log.disBlur')
           : rangedEvasion
-            ? ' (disadvantage — kept at range)'
+            ? t('combat.log.disRange')
             : patientDefense
-              ? ' (disadvantage — patient defense)'
-              : ' (disadvantage — nimble dodge)'
+              ? t('combat.log.disPatient')
+              : t('combat.log.disNimble')
         : '';
   workingState = appendLog(workingState, {
     id: nextLogId(workingState),
     kind: 'roll',
     source: 'enemy',
-    text: `${attacker.instance.displayName} attacks ${nextCharacter.name} with ${action.name}. d20${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus} = ${toHit.total} vs AC ${ac} ${crit ? '— CRITICAL HIT' : hit ? '— hit' : '— miss'}${advantageNote}.`,
+    text: t('combat.log.monsterAttackRoll', {
+      name: attacker.instance.displayName,
+      target: nextCharacter.name,
+      action: action.name,
+      mod: `${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus}`,
+      total: toHit.total,
+      ac,
+      result: `— ${crit ? t('combat.f.resCrit') : hit ? t('combat.f.resHit') : t('combat.f.resMiss')}`,
+      adv: advantageNote,
+    }),
   });
 
   // Spend the reaction on the dodge whether or not the strike still lands — the
@@ -684,7 +697,7 @@ function resolveSingleAttack(
     workingState = appendLog(workingState, {
       id: nextLogId(workingState),
       kind: 'system',
-      text: `${nextCharacter.name} twists low under the opening swing.`,
+      text: t('combat.log.nimbleTwist', { name: nextCharacter.name }),
     });
   }
 
@@ -710,20 +723,26 @@ function resolveSingleAttack(
     const sawThrough = roller.d20().total >= MIRROR_IMAGE_SEE_THROUGH_DC;
     const remainNote =
       remaining > 0
-        ? ` ${remaining} image${remaining === 1 ? '' : 's'} remain.`
-        : ' No images remain.';
+        ? remaining === 1
+          ? t('combat.log.imagesRemainOne', { n: remaining })
+          : t('combat.log.imagesRemainMany', { n: remaining })
+        : t('combat.log.noImagesRemain');
     if (sawThrough) {
       workingState = appendLog(workingState, {
         id: nextLogId(workingState),
         kind: 'system',
-        text: `${attacker.instance.displayName} sees past the flicker and strikes the true ${nextCharacter.name} — a duplicate collapses all the same.${remainNote}`,
+        text: t('combat.log.mirrorSawThrough', {
+          attacker: attacker.instance.displayName,
+          name: nextCharacter.name,
+          remain: remainNote,
+        }),
       });
     } else {
       hit = false;
       workingState = appendLog(workingState, {
         id: nextLogId(workingState),
         kind: 'system',
-        text: `A flickering duplicate shatters — the blow finds only afterimage.${remainNote}`,
+        text: t('combat.log.mirrorShatter', { remain: remainNote }),
       });
     }
   }
@@ -806,25 +825,31 @@ function resolveSingleAttack(
         lastAttack: { ...nextState.lastAttack, damageDealt: totalDamage },
       };
     }
-    const breakdown: string[] = [`${damageRoll.total} dice`];
+    const dmgWord = t(`combat.dmg.${action.damageType}`);
+    const breakdown: string[] = [`${damageRoll.total} ${t('combat.part.dice')}`];
     if (damageExpr.modifier !== 0) {
       breakdown.push(
         damageExpr.modifier > 0
-          ? `+ ${damageExpr.modifier} bonus`
-          : `- ${Math.abs(damageExpr.modifier)} bonus`,
+          ? `+ ${damageExpr.modifier} ${t('combat.part.bonus')}`
+          : `- ${Math.abs(damageExpr.modifier)} ${t('combat.part.bonus')}`,
       );
     }
-    if (rageBonus > 0) breakdown.push(`+ ${rageBonus} rage`);
-    if (ascensionBonus > 0) breakdown.push(`+ ${ascensionBonus} ascension`);
-    if (phaseBonus > 0) breakdown.push(`+ ${phaseBonus} phase`);
+    if (rageBonus > 0) breakdown.push(`+ ${rageBonus} ${t('combat.part.rage')}`);
+    if (ascensionBonus > 0) breakdown.push(`+ ${ascensionBonus} ${t('combat.part.ascension')}`);
+    if (phaseBonus > 0) breakdown.push(`+ ${phaseBonus} ${t('combat.part.phase')}`);
     const resistSuffix = resisted
       ? rageResists && !raceResists
-        ? ' (rage — physical halved)'
-        : ` (${action.damageType} resistance, halved)`
+        ? t('combat.log.resistRagePhysical')
+        : t('combat.log.resistType', { type: dmgWord })
       : '';
     const damageLine = immune
-      ? `Damage negated: ${nextCharacter.name} is immune to ${action.damageType}.`
-      : `Damage: ${totalDamage} ${action.damageType} (${breakdown.join(' ')})${resistSuffix}.`;
+      ? t('combat.log.monsterImmune', { name: nextCharacter.name, type: dmgWord })
+      : t('combat.log.monsterDamage', {
+          dmg: totalDamage,
+          type: dmgWord,
+          breakdown: breakdown.join(' '),
+          resist: resistSuffix,
+        });
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
@@ -851,7 +876,7 @@ function resolveSingleAttack(
             nextState = appendLog(nextState, {
               id: nextLogId(nextState),
               kind: 'system',
-              text: `${live.instance.displayName} drains ${after - before} HP from the wound.`,
+              text: t('combat.log.monsterDrain', { name: live.instance.displayName, amount: after - before }),
             });
             nextState = attachEnemyEffect(nextState, 'sustain-drain', attackerId, 'player');
           }
@@ -883,7 +908,12 @@ function resolveSingleAttack(
       nextState = appendLog(nextState, {
         id: nextLogId(nextState),
         kind: 'damage',
-        text: `${attacker.instance.displayName} overreaches — ${nextCharacter.name} ripostes for ${riposte.total} (${diceN}d6 sneak).`,
+        text: t('combat.log.opportunistRiposte', {
+          name: attacker.instance.displayName,
+          player: nextCharacter.name,
+          dmg: riposte.total,
+          n: diceN,
+        }),
       });
     }
   }
@@ -982,10 +1012,14 @@ function monsterSummon(
     ...inst,
     actionState: bumpActionState(inst, action.name, state.round),
   }));
+  const summonName = getLocalized('monsters', summonDef.id, 'name', summonDef.name);
   nextState = appendLog(nextState, {
     id: nextLogId(nextState),
     kind: 'system',
-    text: `${attacker.instance.displayName} calls ${count > 1 ? `${count} ${summonDef.name}s` : `a ${summonDef.name}`} into the fight.`,
+    text:
+      count > 1
+        ? t('combat.log.summonMany', { name: attacker.instance.displayName, count, monster: summonName })
+        : t('combat.log.summonOne', { name: attacker.instance.displayName, monster: summonName }),
   });
   // Anchor the rift on the first new add's slot (it's already in nextState's
   // combatants/turnOrder, so the layer resolves its battlefield position).
@@ -1033,17 +1067,21 @@ function monsterSustain(
 
   const parts: string[] = [];
   if (healAmount > 0) {
-    const subject = target.id === attackerId ? 'itself' : target.instance.displayName;
-    parts.push(`heals ${subject} for ${healAmount}`);
+    const subject = target.id === attackerId ? t('combat.log.sustainSelf') : target.instance.displayName;
+    parts.push(t('combat.log.sustainHeal', { subject, n: healAmount }));
   }
   if (action.wardTempHp !== undefined) {
-    const subject = target.id === attackerId ? 'itself' : target.instance.displayName;
-    parts.push(`shields ${subject} with ${action.wardTempHp} temp HP`);
+    const subject = target.id === attackerId ? t('combat.log.sustainSelf') : target.instance.displayName;
+    parts.push(t('combat.log.sustainWard', { subject, n: action.wardTempHp }));
   }
   nextState = appendLog(nextState, {
     id: nextLogId(nextState),
     kind: 'system',
-    text: `${attacker.instance.displayName} uses ${action.name}${parts.length ? ` — ${parts.join(' and ')}` : ''}.`,
+    text: t('combat.log.sustainLine', {
+      name: attacker.instance.displayName,
+      action: action.name,
+      suffix: parts.length ? ` — ${parts.join(t('combat.log.sustainJoin'))}` : '',
+    }),
   });
   // Heal up-glow takes precedence; a ward-only action shows the bubble instead.
   if (healAmount > 0) {
@@ -1057,17 +1095,13 @@ function monsterSustain(
 function debuffFlavor(condition: ConditionName): string {
   switch (condition) {
     case 'poisoned':
-      return 'is wracked with poison — attacks at disadvantage';
     case 'frightened':
-      return 'is gripped by fear — attacks at disadvantage';
     case 'blinded':
-      return 'is blinded — attacks at disadvantage, and is easier to hit';
     case 'restrained':
-      return 'is caught fast — attacks at disadvantage, and is easier to hit';
     case 'weakened':
-      return 'is weakened — their blows fall softer';
+      return t(`combat.cond.debuff.${condition}`);
     default:
-      return `is afflicted (${condition})`;
+      return t('combat.cond.debuff.default', { name: condition });
   }
 }
 
@@ -1087,7 +1121,17 @@ function monsterCastDebuff(
   logEntries.push({
     id: nextLogId(state),
     kind: 'roll',
-    text: `${attackerName} uses ${action.name}. ${nextCharacter.name} ${action.saveAbility.toUpperCase()} save${save.advantage ? ' (advantage)' : ''}: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${action.saveDC} — ${save.success ? 'success' : 'fail'}.`,
+    text: t('combat.log.debuffCastRoll', {
+      caster: attackerName,
+      action: action.name,
+      name: nextCharacter.name,
+      abil: t(`combat.abil.${action.saveAbility}`),
+      adv: save.advantage ? t('combat.f.advParen') : '',
+      mod: `${save.mod >= 0 ? '+' : ''}${save.mod}`,
+      total: save.total,
+      dc: action.saveDC,
+      result: save.success ? t('combat.f.success') : t('combat.f.fail'),
+    }),
   });
 
   if (!save.success) {
@@ -1105,13 +1149,16 @@ function monsterCastDebuff(
     logEntries.push({
       id: nextLogId(state) + 1,
       kind: 'system',
-      text: `${nextCharacter.name} ${debuffFlavor(action.condition)}.`,
+      text: t('combat.log.debuffApplied', {
+        name: nextCharacter.name,
+        effect: debuffFlavor(action.condition),
+      }),
     });
   } else {
     logEntries.push({
       id: nextLogId(state) + 1,
       kind: 'system',
-      text: `${nextCharacter.name} resists ${action.name}.`,
+      text: t('combat.log.debuffResisted', { name: nextCharacter.name, action: action.name }),
     });
   }
 
@@ -1168,7 +1215,17 @@ function monsterCastParalyze(
   logEntries.push({
     id: nextLogId(state),
     kind: 'roll',
-    text: `${attackerName} casts ${action.name}. ${nextCharacter.name} ${action.saveAbility.toUpperCase()} save${save.advantage ? ' (advantage)' : ''}: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${action.saveDC} — ${save.success ? 'success' : 'fail'}.`,
+    text: t('combat.log.paralyzeCastRoll', {
+      caster: attackerName,
+      action: action.name,
+      name: nextCharacter.name,
+      abil: t(`combat.abil.${action.saveAbility}`),
+      adv: save.advantage ? t('combat.f.advParen') : '',
+      mod: `${save.mod >= 0 ? '+' : ''}${save.mod}`,
+      total: save.total,
+      dc: action.saveDC,
+      result: save.success ? t('combat.f.success') : t('combat.f.fail'),
+    }),
   });
 
   if (!save.success) {
@@ -1181,13 +1238,13 @@ function monsterCastParalyze(
     logEntries.push({
       id: nextLogId(state) + 1,
       kind: 'system',
-      text: `${nextCharacter.name} is paralyzed. The Magistrate's hold tightens.`,
+      text: t('combat.log.paralyzeApplied', { name: nextCharacter.name }),
     });
   } else {
     logEntries.push({
       id: nextLogId(state) + 1,
       kind: 'system',
-      text: `${nextCharacter.name} shrugs off the binding.`,
+      text: t('combat.log.paralyzeResisted', { name: nextCharacter.name }),
     });
   }
 

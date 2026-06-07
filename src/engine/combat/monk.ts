@@ -15,6 +15,7 @@ import {
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
 import { getItem } from '../../content/items';
+import { t } from '../../i18n';
 
 /**
  * Flat per-hit damage edge a monk earns for going weaponless — the reward for
@@ -125,7 +126,7 @@ export function useFlurryOfBlows(ctx: MonkActionContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} pours Ki into a flurry — ${strikes} more strikes fall before the foe can answer.`,
+    text: t('combat.log.flurry', { name: nextCharacter.name, strikes }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
 }
@@ -152,7 +153,7 @@ export function usePatientDefense(ctx: MonkActionContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} settles into a flowing guard — the next blows come at disadvantage.`,
+    text: t('combat.log.patientDefense', { name: nextCharacter.name }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'shield', 'player'), nextCharacter);
 }
@@ -179,7 +180,7 @@ export function useStunningStrike(ctx: MonkActionContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} gathers Ki behind the next strike — aiming to drop a foe where it stands.`,
+    text: t('combat.log.stunningStrike', { name: nextCharacter.name }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
 }

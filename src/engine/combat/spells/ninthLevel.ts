@@ -26,6 +26,7 @@ import {
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage } from './scaling';
+import { t } from '../../../i18n';
 
 /**
  * Apotheosis (9th) — the transform-self capstone. The caster sheds the limits of
@@ -51,7 +52,12 @@ export function castApotheosis(
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'narration',
-    text: `${nextCharacter.name} sheds the limits of flesh and blazes as something greater — ${APOTHEOSIS_TEMP_HP} temp HP, +${APOTHEOSIS_AC_BONUS} AC, and every strike biting deeper for ${APOTHEOSIS_ROUNDS} rounds.`,
+    text: t('combat.log.apotheosis', {
+      name: nextCharacter.name,
+      temp: APOTHEOSIS_TEMP_HP,
+      ac: APOTHEOSIS_AC_BONUS,
+      rounds: APOTHEOSIS_ROUNDS,
+    }),
   });
   nextState = attachSpellEffect(nextState, 'mage-armor', 'player');
   return { state: nextState, character: nextCharacter, cast: true };
@@ -81,7 +87,7 @@ export function castUnmake(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} speaks ${target.instance.displayName} half-out of the world — ${dealt} necrotic as its form buckles.`,
+    text: t('combat.log.ninthDrain', { name: nextCharacter.name, target: target.instance.displayName, dealt }),
   });
   // The unmaking — a heavy necrotic strike — is the headline; the binding it
   // also lays is narrated below. Show the necrotic bolt, not the control viz.
@@ -101,7 +107,14 @@ export function castUnmake(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `${survivor.instance.displayName} CON save vs the binding${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${conMod >= 0 ? '+' : ''}${conMod} = ${save.total} vs DC ${dc} — ${resisted ? 'resists' : 'fails'}.`,
+      text: t('combat.log.ninthBindRoll', {
+        name: survivor.instance.displayName,
+        resolute: resoluteWill ? t('combat.f.resoluteAdv') : '',
+        mod: `${conMod >= 0 ? '+' : ''}${conMod}`,
+        total: save.total,
+        dc,
+        result: resisted ? t('combat.f.resists') : t('combat.f.fails'),
+      }),
     });
 
     if (!resisted) {
@@ -132,7 +145,7 @@ export function castUnmake(ctx: CastSpellContext): CastResult {
         {
           id: nextLogId(nextState),
           kind: 'system',
-          text: `${survivor.instance.displayName} is remade into something helpless — paralyzed for 2 rounds.`,
+          text: t('combat.log.ninthBindParalyze', { name: survivor.instance.displayName }),
         },
       );
     }

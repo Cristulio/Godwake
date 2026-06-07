@@ -15,6 +15,7 @@ import {
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage } from './scaling';
+import { t } from '../../../i18n';
 
 export function castBurningHands(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
@@ -38,7 +39,14 @@ export function castBurningHands(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} hurls a cone of flame. ${damageRoll.rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${fullDmg} fire${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half.`,
+    text: t('combat.log.burningHands', {
+      name: nextCharacter.name,
+      rolls: damageRoll.rolls.join('+'),
+      bonus: bonus > 0 ? `+${bonus}` : '',
+      dmg: fullDmg,
+      evoker: evoker ? t('combat.log.sculptSpells') : '',
+      dc,
+    }),
   });
 
   nextState = attachSpellEffect(

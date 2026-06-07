@@ -10,6 +10,7 @@ import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
 import { rogueCunningActionMax } from '../character/actions';
 import { wearsHeavierThanLight } from '../character/equip';
+import { t } from '../../i18n';
 
 export type CunningActionChoice = 'quick-strike' | 'feint' | 'hide' | 'steel';
 
@@ -100,16 +101,16 @@ export function useCunningAction(ctx: CunningActionContext): CombatActionResult 
   let narration: string;
   if (choice === 'hide') {
     nextCharacter = { ...nextCharacter, nextAttackAdvantage: true };
-    narration = `${nextCharacter.name} slips into a shadow. Next strike lands with advantage.`;
+    narration = t('combat.log.cunningHide', { name: nextCharacter.name });
   } else if (choice === 'feint') {
     nextCharacter = { ...nextCharacter, nextAttackForceSneak: true };
-    narration = `${nextCharacter.name} feints high — the guard drops. The next strike finds the gap.`;
+    narration = t('combat.log.cunningFeint', { name: nextCharacter.name });
   } else if (choice === 'steel') {
     nextCharacter = { ...nextCharacter, nextSaveAdvantage: true };
-    narration = `${nextCharacter.name} steels their nerve — the soul braces for the strike. Advantage on the next save.`;
+    narration = t('combat.log.cunningSteel', { name: nextCharacter.name });
   } else {
     nextCharacter = { ...nextCharacter, bonusAttackAvailable: true };
-    narration = `${nextCharacter.name} surges forward — a second quick strike rides the momentum.`;
+    narration = t('combat.log.cunningQuick', { name: nextCharacter.name });
   }
 
   const log: CombatLogEntry = {

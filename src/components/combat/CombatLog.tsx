@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { CombatLogEntry } from '../../types/combat';
+import { useT } from '../../i18n/useT';
 
 interface CombatLogProps {
   entries: CombatLogEntry[];
@@ -35,6 +36,7 @@ const KIND_GLYPH: Record<string, string> = {
 };
 
 export function CombatLog({ entries, maxEntries = 80 }: CombatLogProps) {
+  const { t } = useT();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -56,7 +58,7 @@ export function CombatLog({ entries, maxEntries = 80 }: CombatLogProps) {
     >
       {clipped > 0 && (
         <div className="text-[var(--color-text-muted)] text-[10px] uppercase tracking-widest italic text-center pb-1 border-b border-[var(--color-border-dim)] mb-1">
-          … {clipped} earlier line{clipped === 1 ? '' : 's'} clipped
+          {clipped === 1 ? t('combat.order.clippedOne', { n: clipped }) : t('combat.order.clippedMany', { n: clipped })}
         </div>
       )}
       {tail.map((entry) => {

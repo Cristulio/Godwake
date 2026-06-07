@@ -11,6 +11,7 @@ import {
   type CombatActionResult,
 } from './types';
 import { appendLog } from './log';
+import { t, getLocalized } from '../../i18n';
 
 export interface UseItemContext {
   roller: DiceRoller;
@@ -49,7 +50,8 @@ export function useConsumable(
     return combatResult(state, nextCharacter);
   }
 
-  let logText = `${nextCharacter.name} uses ${item.name}.`;
+  const itemName = getLocalized('items', item.id, 'name', item.name);
+  let logText = t('combat.log.useItem', { name: nextCharacter.name, item: itemName });
 
   if (item.effect === 'heal' && item.healDice) {
     const heal = roller.roll(item.healDice);
@@ -57,7 +59,11 @@ export function useConsumable(
     const after = Math.min(nextCharacter.hp.max, before + heal.total);
     const actuallyHealed = after - before;
     nextCharacter = patchHp(nextCharacter, { current: after });
-    logText += ` Rolls ${item.healDice} = ${heal.total} → +${actuallyHealed} HP.`;
+    logText += t('combat.log.useItemHeal', {
+      dice: item.healDice,
+      roll: heal.total,
+      healed: actuallyHealed,
+    });
 
     // Potion of Vitality regen tail: beyond the immediate knit above, bank a
     // slow restore for the next couple of player turns (ticked in turn.ts).
@@ -70,14 +76,14 @@ export function useConsumable(
         vitalityRegenHealPerTurn: perTurn,
         vitalityRegenTurnsRemaining: item.regenTurns,
       });
-      logText += ` A slow vitality settles in — about ${perTurn} HP at the start of each of the next ${item.regenTurns} turns.`;
+      logText += t('combat.log.useItemVitality', { perTurn, turns: item.regenTurns });
     }
   } else if (ref.itemId === 'antitoxin') {
     // Per-combat poison immunity. Mirrors the Iron Stomach quirk's
     // poisonImmune path in applyDamage so the existing immune gate
     // handles both transparently. Cleared in combat resolution.
     nextCharacter = { ...nextCharacter, poisonImmuneEncounter: true };
-    logText += ` The phial empties cold — poison will slide off until the room falls silent.`;
+    logText += t('combat.log.useItemAntitoxin');
   }
 
   // Spend action economy

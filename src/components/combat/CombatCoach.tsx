@@ -4,6 +4,7 @@ import type { CSSProperties } from 'react';
 import type { ClassId } from '../../schemas/ids';
 import { STARTER_CLASSES } from '../../engine/progression/unlocks';
 import { COMBAT_INTRO_TUTORIAL_ID } from '../../content/tutorials';
+import { useT } from '../../i18n/useT';
 
 /**
  * The first-combat coach: a one-time spotlight/coachmark overlay that teaches a
@@ -47,10 +48,10 @@ const SELECTOR: Record<CoachStep, string> = {
   abilities: '[data-tutorial="abilities"]',
 };
 
-const PROMPT: Record<CoachStep, string> = {
-  attack: 'Tap Attack to strike.',
-  target: 'Choose your target.',
-  abilities: "Your class's special moves live here.",
+const PROMPT_KEY: Record<CoachStep, string> = {
+  attack: 'combat.coach.attack',
+  target: 'combat.coach.target',
+  abilities: 'combat.coach.abilities',
 };
 
 export interface Box {
@@ -133,6 +134,7 @@ interface CombatCoachProps {
 }
 
 export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
+  const { t } = useT();
   const [box, setBox] = useState<Box | null>(null);
   const boxRef = useRef<Box | null>(null);
   const [reduced] = useState(
@@ -179,7 +181,7 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
   const dimPanel = 'absolute bg-black/70 pointer-events-auto';
 
   const overlay = (
-    <div className="fixed inset-0 z-[60] pointer-events-none" role="dialog" aria-label="Combat tutorial">
+    <div className="fixed inset-0 z-[60] pointer-events-none" role="dialog" aria-label={t('combat.coach.tutorialLabel')}>
       {/* Four dim panels frame the cutout and absorb stray taps, gently funnel-
           ing attention to the lit control. The hole itself is left uncovered so
           taps reach the real button beneath. */}
@@ -211,7 +213,7 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
         style={bubblePos}
         aria-live="polite"
       >
-        <p className="text-[var(--color-text-primary)] text-sm leading-snug">{PROMPT[step]}</p>
+        <p className="text-[var(--color-text-primary)] text-sm leading-snug">{t(PROMPT_KEY[step])}</p>
         <div className="flex items-center justify-center gap-3 mt-2.5">
           {step === 'abilities' && (
             <button
@@ -220,7 +222,7 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
               className="btn-chunky border-2 px-4 py-1.5 text-[11px] uppercase tracking-widest font-bold
                 bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]"
             >
-              Got it
+              {t('combat.coach.gotIt')}
             </button>
           )}
           <button
@@ -229,7 +231,7 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
             className="text-[10px] uppercase tracking-widest text-[var(--color-text-dim)]
               hover:text-[var(--color-accent-amber)] transition-colors"
           >
-            Skip
+            {t('combat.coach.skip')}
           </button>
         </div>
       </div>

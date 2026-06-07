@@ -27,6 +27,7 @@ import { isRageUnlimited } from '../character/actions';
 import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './martialResource';
 import { regenCunningActionForRound } from './cunningAction';
 import { monkHasPendingTurnAction } from './monk';
+import { t } from '../../i18n';
 
 function resetActionEconomyForCurrent(
   state: CombatState,
@@ -138,8 +139,11 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       kind: 'system',
       text:
         order[nextIndex] === 'player'
-          ? `— Your turn (round ${round}). —`
-          : `— ${combatantDisplayName(state, order[nextIndex])}'s turn (round ${round}). —`,
+          ? t('combat.log.yourTurn', { round })
+          : t('combat.log.enemyTurn', {
+              name: combatantDisplayName(state, order[nextIndex]),
+              round,
+            }),
     },
   );
 
@@ -200,7 +204,7 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
           nextState = appendLog(nextState, {
             id: nextState.log.length + 1,
             kind: 'narration',
-            text: `${nextCharacter.name}'s ${flavor.pool} gathers — a point returns.`,
+            text: t('combat.log.martialRegen', { name: nextCharacter.name, pool: flavor.pool }),
           });
         }
       }
@@ -227,7 +231,7 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'narration',
-        text: `${nextCharacter.name}'s hands find their rhythm — a Cunning Action returns.`,
+        text: t('combat.log.cunningRegen', { name: nextCharacter.name }),
       });
     }
   }
@@ -257,7 +261,7 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'narration',
-        text: `${nextCharacter.name} lets the beast's shape fall away.`,
+        text: t('combat.log.wildShapeFade', { name: nextCharacter.name }),
       });
     } else {
       nextCharacter = patchResources(nextCharacter, { wildShapeRoundsRemaining: remaining });
@@ -274,7 +278,7 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'system',
-        text: `${nextCharacter.name} ${conditionEndText(name)}.`,
+        text: t('combat.log.conditionEnd', { name: nextCharacter.name, effect: conditionEndText(name) }),
       });
     }
   }
@@ -309,7 +313,11 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'system',
-        text: `${nextCharacter.name} mends — ${after - before} HP restored. (${(nextState.playerRegenStacks ?? 1) - 1} turns remaining)`,
+        text: t('combat.log.regenMend', {
+          name: nextCharacter.name,
+          amount: after - before,
+          turns: (nextState.playerRegenStacks ?? 1) - 1,
+        }),
       });
     }
     nextState = { ...nextState, playerRegenStacks: (nextState.playerRegenStacks ?? 1) - 1 };
@@ -332,7 +340,11 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'system',
-        text: `Regrowth knits ${after - before} HP into ${nextCharacter.name}.${remaining > 0 ? ` (${remaining} turns remaining)` : ''}`,
+        text: t('combat.log.regrowthTick', {
+          amount: after - before,
+          name: nextCharacter.name,
+          suffix: remaining > 0 ? t('combat.f.turnsLeft', { n: remaining }) : '',
+        }),
       });
     }
     nextCharacter = patchResources(nextCharacter, { regrowthTurnsRemaining: remaining });
@@ -358,7 +370,11 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'system',
-        text: `The vitality draught knits ${after - before} HP into ${nextCharacter.name}.${remaining > 0 ? ` (${remaining} turns remaining)` : ''}`,
+        text: t('combat.log.vitalityTick', {
+          amount: after - before,
+          name: nextCharacter.name,
+          suffix: remaining > 0 ? t('combat.f.turnsLeft', { n: remaining }) : '',
+        }),
       });
     }
     nextCharacter = patchResources(nextCharacter, { vitalityRegenTurnsRemaining: remaining });
@@ -400,7 +416,11 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'damage',
-        text: `${mc.instance.displayName} bleeds for ${bleedDmg} damage.${newTurns > 0 ? ` (${newTurns} turns remaining)` : ''}`,
+        text: t('combat.log.bleed', {
+          name: mc.instance.displayName,
+          dmg: bleedDmg,
+          suffix: newTurns > 0 ? t('combat.f.turnsLeft', { n: newTurns }) : '',
+        }),
       });
     }
     // Evaluate if any monster died from bleed.
@@ -442,7 +462,7 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'damage',
-        text: `${mc.instance.displayName} burns for ${burnDmg} fire.`,
+        text: t('combat.log.burn', { name: mc.instance.displayName, dmg: burnDmg }),
       });
     }
     const burnEnded = evaluateCombatEnd(nextState, nextCharacter);
@@ -481,7 +501,11 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'damage',
-        text: `The spirit beast savages ${prey.instance.displayName} for ${dmg}.${remaining > 0 ? ` (${remaining} turns remaining)` : ''}`,
+        text: t('combat.log.spiritBeastTick', {
+          name: prey.instance.displayName,
+          dmg,
+          suffix: remaining > 0 ? t('combat.f.turnsLeft', { n: remaining }) : '',
+        }),
       });
     }
     nextCharacter = patchResources(nextCharacter, { spiritBeastTurnsRemaining: remaining });
@@ -535,7 +559,7 @@ export function applyCursedGroundChip(
     {
       id: state.log.length + 1,
       kind: 'damage',
-      text: `The cursed ground bites ${nextCharacter.name} for ${chip} damage.`,
+      text: t('combat.log.cursedGround', { name: nextCharacter.name, chip }),
     },
   );
   return { state: logged, character: nextCharacter };
@@ -544,17 +568,13 @@ export function applyCursedGroundChip(
 function conditionEndText(name: ConditionName): string {
   switch (name) {
     case 'poisoned':
-      return 'shakes off the poison';
     case 'frightened':
-      return 'steadies — the fear passes';
     case 'blinded':
-      return 'blinks the dark away — sight returns';
     case 'restrained':
-      return 'tears free';
     case 'weakened':
-      return 'feels their strength return';
+      return t(`combat.cond.end.${name}`);
     default:
-      return `is no longer ${name}`;
+      return t('combat.cond.end.default', { name });
   }
 }
 
@@ -583,7 +603,15 @@ export function resolvePlayerParalyzedTurn(
   logEntries.push({
     id: state.log.length + 1,
     kind: 'roll' as const,
-    text: `${nextCharacter.name} struggles against paralysis. ${cond.saveAbility.toUpperCase()} save${save.advantage ? ' (advantage)' : ''}: d20${save.mod >= 0 ? '+' : ''}${save.mod} = ${save.total} vs DC ${cond.saveDC} — ${save.success ? 'success' : 'fail'}.`,
+    text: t('combat.log.paralyzeStruggle', {
+      name: nextCharacter.name,
+      abil: t(`combat.abil.${cond.saveAbility}`),
+      adv: save.advantage ? t('combat.f.advParen') : '',
+      mod: `${save.mod >= 0 ? '+' : ''}${save.mod}`,
+      total: save.total,
+      dc: cond.saveDC,
+      result: save.success ? t('combat.f.success') : t('combat.f.fail'),
+    }),
   });
 
   if (save.success) {
@@ -591,7 +619,7 @@ export function resolvePlayerParalyzedTurn(
     logEntries.push({
       id: state.log.length + 2,
       kind: 'system' as const,
-      text: `${nextCharacter.name} breaks free. The Magistrate's hold falls away.`,
+      text: t('combat.log.paralyzeBreakFree', { name: nextCharacter.name }),
     });
     return { state: appendLog(state, ...logEntries), character: nextCharacter };
   }
@@ -602,7 +630,7 @@ export function resolvePlayerParalyzedTurn(
     logEntries.push({
       id: state.log.length + 2,
       kind: 'system' as const,
-      text: `The binding wears thin and snaps. ${nextCharacter.name} can move again.`,
+      text: t('combat.log.paralyzeWearsThin', { name: nextCharacter.name }),
     });
     return { state: appendLog(state, ...logEntries), character: nextCharacter };
   }
@@ -611,7 +639,7 @@ export function resolvePlayerParalyzedTurn(
   logEntries.push({
     id: state.log.length + 2,
     kind: 'system' as const,
-    text: `${nextCharacter.name} cannot move. The turn is lost.`,
+    text: t('combat.log.paralyzeCannotMove', { name: nextCharacter.name }),
   });
   return { state: appendLog(state, ...logEntries), character: nextCharacter };
 }

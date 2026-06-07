@@ -8,6 +8,7 @@ import {
 } from './types';
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
+import { t } from '../../i18n';
 
 export interface ActionSurgeContext {
   character: Character;
@@ -36,7 +37,7 @@ export function useActionSurge(ctx: ActionSurgeContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} surges — adrenaline burns through the wound. One more swing.`,
+    text: t('combat.log.actionSurge', { name: nextCharacter.name }),
   };
 
   return combatResult(

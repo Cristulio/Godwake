@@ -15,6 +15,7 @@ import {
   nextLogId,
   spellDamageBonus,
 } from './helpers';
+import { t, getLocalized } from '../../../i18n';
 
 /**
  * Magic Missile gains darts as the caster grows, so the guaranteed-hit L1 slot
@@ -67,7 +68,16 @@ export function castMagicMissile(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} casts ${getSpell(spellId).name}. ${darts} ${isDruid ? 'thorns lash' : 'darts streak'} at ${target.instance.displayName} — ${rolls.join('+')}${bonus > 0 ? `+${bonus}` : ''} = ${total} force, auto-hit.`,
+      text: t('combat.log.magicMissile', {
+        name: nextCharacter.name,
+        spell: getLocalized('spells', spellId, 'name', getSpell(spellId).name),
+        darts,
+        projectile: isDruid ? t('combat.log.magicMissileThorns') : t('combat.log.magicMissileDarts'),
+        target: target.instance.displayName,
+        rolls: rolls.join('+'),
+        bonus: bonus > 0 ? `+${bonus}` : '',
+        total,
+      }),
     },
   );
 
