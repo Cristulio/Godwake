@@ -20,11 +20,6 @@ import { getItem } from '../../content/items';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
 import { useT } from '../../i18n/useT';
 
-/** Entangling Roots is surfaced as its own dedicated bonus-action button (below)
- *  and pulled from the generic Spells list, so the id is referenced in both
- *  gates. */
-const ENTANGLE_SPELL_ID = 'entangling-roots';
-
 interface ActionBarProps {
   character: Character;
   state: CombatState;
@@ -41,7 +36,6 @@ interface ActionBarProps {
   onPatientDefense: () => void;
   onStunningStrike: () => void;
   onHuntersMark: () => void;
-  onEntangle: () => void;
   onWildShape: () => void;
   onSpells: () => void;
   onUseItem: () => void;
@@ -64,7 +58,6 @@ export function ActionBar({
   onPatientDefense,
   onStunningStrike,
   onHuntersMark,
-  onEntangle,
   onWildShape,
   onSpells,
   onUseItem,
@@ -259,15 +252,6 @@ export function ActionBar({
 
   const knownSpells = character.resources.knownSpells ?? [];
 
-  // Druid Entangling Roots: a dedicated bonus-action button (like the monk's
-  // Ki buttons), so the druid doesn't dig it out of the Spells list. Auto-known
-  // from L1; enabled once a 2nd-level slot is up and the bonus action is free.
-  // canCastSpell carries the exact slot + bonus-action gate the engine enforces.
-  const hasEntangle = isDruid && knownSpells.includes(ENTANGLE_SPELL_ID);
-  const entangleSlots = slotsAt(character, 2);
-  const canEntangle =
-    playersTurn && active && hasEntangle && canCastSpell(character, ENTANGLE_SPELL_ID).ok;
-
   // Druid Wild Shape: a dedicated bonus-action button (the bot already shifts
   // automatically; this gives a human druid the same lever). Mirrors the engine
   // gates in useWildShape — druid + the mechanic, a change still in the well, not
@@ -287,13 +271,13 @@ export function ActionBar({
     slotsAt(character, 1) + slotsAt(character, 2) + slotsAt(character, 3);
   // Button stays open as long as at least one known spell (action, bonus, or
   // reaction) can be cast right now — SpellPicker greys out individual entries.
-  // Entangling Roots is excluded: it has its own dedicated button and is pulled
-  // from the Spells list, so it must not be what keeps this one lit.
+  // The Druid's Entangling Roots is one of those spells (a bonus-action cast),
+  // surfaced through this menu like any other once its 2nd-level slot opens.
   const canSpells =
     playersTurn &&
     active &&
     isFullCasterClass &&
-    knownSpells.some((id) => id !== ENTANGLE_SPELL_ID && canCastSpell(character, id).ok);
+    knownSpells.some((id) => canCastSpell(character, id).ok);
 
   const consumableCount = character.inventory.filter((ref) => {
     try {
@@ -534,19 +518,6 @@ export function ActionBar({
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {isShaped ? t('ui.combat.beastFormOn') : t('ui.combat.wildShape', { n: wildShapeUses })}
-          </Button>
-        )}
-
-        {hasEntangle && (
-          <Button
-            variant={canEntangle ? 'primary' : 'secondary'}
-            onClick={onEntangle}
-            data-tutorial="abilities"
-            disabled={!canEntangle}
-            title={t('combat.bar.entangle')}
-            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
-          >
-            ✦ {t('ui.combat.entanglingRoots', { n: entangleSlots })}
           </Button>
         )}
 

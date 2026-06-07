@@ -211,9 +211,14 @@ describe('Druid — at-will Produce Flame sits clearly below the L1 Thornlash', 
     return magicMissileDartCount(level) * THORN_DART_AVG;
   }
 
-  it('Thornlash out-damages Produce Flame at L1 / L5 / L11 / L20', () => {
-    for (const level of [1, 5, 11, 20]) {
-      expect(produceFlameFull(level)).toBeLessThan(thornlashExpected(level));
+  it('Thornlash out-damages Produce Flame at every level, by a meaningful margin', () => {
+    for (let level = 1; level <= 20; level++) {
+      const cantrip = produceFlameFull(level);
+      const slot = thornlashExpected(level);
+      expect(cantrip).toBeLessThan(slot);
+      // The gap is never marginal — the L1 slot is always the clearly stronger
+      // play. Tightest band is L1-4 (darts still at 3); even there it clears 20%.
+      expect(slot).toBeGreaterThan(cantrip * 1.2);
     }
   });
 });
