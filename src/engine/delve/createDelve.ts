@@ -1,4 +1,5 @@
 import type { DelveState, RoomSpec } from '../../types/delve';
+import { t, getLocalized } from '../../i18n';
 import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from './constants';
 import { createRng, randomSeed } from '../dice/rng';
 import { clampAscension, ascensionEliteVariants, ascensionDungeonTwists } from './ascension';
@@ -1966,5 +1967,9 @@ export function chapterLabel(state: DelveState, chapter: number): string {
   const bossTitle = state.rooms.find(
     (r) => r.chapter === chapter && r.kind === 'boss',
   )?.title;
-  return bossTitle ? `Chapter ${chapter} — ${bossTitle}` : `Chapter ${chapter}`;
+  if (!bossTitle) return t('scenes.chapterBare', { n: chapter });
+  // The chapter name is its boss room's title; the data lane overlays it in
+  // es/chapters.json keyed by chapter number (field 'name'), English until then.
+  const name = getLocalized('chapters', String(chapter), 'name', bossTitle);
+  return t('scenes.chapter', { n: chapter, name });
 }

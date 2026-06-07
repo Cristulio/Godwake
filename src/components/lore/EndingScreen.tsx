@@ -4,52 +4,15 @@ import { useDelveStore } from '../../stores/delveStore';
 import { TOTAL_CHAPTERS } from '../../engine/delve/constants';
 import { Button } from '../ui/Button';
 import { playMusic, stopMusic } from '../../engine/audio';
+import { useT } from '../../i18n/useT';
 
 const BASE_TICK = 34;
 const FAST_TICK = 4;
 
 type Stage = 'offer' | 'credits';
 
-// The finale poses the ascend-or-mortal dilemma as flavor and leaves it hanging.
-// The soul makes no choice here — the answer is whatever the player carries into
-// their next descent (the New Game+ ascension they take, or the mortal rest of
-// not descending again).
-const SOLAR_OFFER = [
-  "Amelyssan is unmade. The harvest she spent an age gathering spills back into the dark, and above its cooling pools the Throne of Bhaal stands empty — empty, and waiting, and turned toward you.",
-  "A Solar descends through the red light on wings the colour of a struck bell, and does not draw her blade. \"Child of the dead god,\" she says. \"The portfolio of Murder has no holder, and you are the last vessel left whole enough to take it up. The choice the Father never offered you is yours alone now.\"",
-  "\"Reach into the Throne, and the divinity is yours. You will rise as the new God of Murder, and the wheel that has turned you life into life will turn for you no longer — you will be the hand that turns it for others. Or refuse it. Let the taint burn out of your blood, and the godhood with it, and walk back down into the world a mortal thing that bleeds and ages and ends.\"",
-  "She does not press you. The wheel that spun you through a hundred lives slows beneath your feet, and waits — as it has always waited — to see which way a Child of Bhaal will turn, now that the turning is finally its own.",
-];
-
-const CREDITS = [
-  "The soul remembers. The flesh forgets.",
-  "Whatever it makes of the empty seat — climbs onto it, or turns its back and walks — the chain that bound this soul to the wheel has been carried, at the last, to the place where such things are decided. That, of all the deeds a Child of Bhaal might do, was ever the rarest.",
-  "Here the tale of this soul rests.",
-];
-
-// The BASE-game ending: Irenicus felled in the heart of his own hell. A true
-// victory beat that also turns the soul's face toward the road beyond — the war
-// among the dead god's children, and the hand steering it — without naming New
-// Game+ outright. (The Throne chapters are reached only on the NG+ chain.)
-const PIT_OFFER = [
-  "Irenicus is dead. The mage who carved the soul out of you and wore it like a stolen coat lies broken at the bottom of his own hell, and the red engine of the Pit — the trials he shaped from your pride, your wrath, the killer worn under your skin — grinds to a halt around him.",
-  "You went down through every door he had made of you, and at the last there was only the captor himself, and now not even that. The cell the Cowled Wizards sank you in is a hundred lives behind you. The man who sank deeper still is ash. For the first time you can remember, the blood in your veins is quiet.",
-  "Quiet — but not still. As the Pit cools it does not close. It draws one slow breath, like a thing that was only ever waiting; and far beneath where Irenicus fell, deeper than even he dared dig, something older stirs and tastes the dead god's blood walking free at last.",
-  "The wheel has carried you up out of one man's hell. It is still turning. The road past the Pit runs on toward a burning city, a war among the god's own children, and a hand that has steered you down the whole way. The captor is finished with you. Whatever made him is not.",
-];
-
-const PIT_CREDITS = [
-  "The soul remembers. The flesh forgets.",
-  "It walked out of the Pit a free thing — and for a Child of the dead god, freedom was only ever the breath drawn before the next door opens. The wheel turns. The road goes on, down past where the captor could ever follow.",
-  "Here the captor's tale ends. The road's does not.",
-];
-
-function paragraphsFor(stage: Stage, isThrone: boolean): string[] {
-  if (isThrone) return stage === 'offer' ? SOLAR_OFFER : CREDITS;
-  return stage === 'offer' ? PIT_OFFER : PIT_CREDITS;
-}
-
 export function EndingScreen() {
+  const { t } = useT();
   const finishDelve = useGameStore((s) => s.finishDelve);
   const goToTitle = useGameStore((s) => s.goToTitle);
 
@@ -70,7 +33,14 @@ export function EndingScreen() {
   const indexRef = useRef(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const fullText = paragraphsFor(stage, isThrone).join('\n\n');
+  const narrationKey = isThrone
+    ? stage === 'offer'
+      ? 'scenes.ending.throneOffer'
+      : 'scenes.ending.throneCredits'
+    : stage === 'offer'
+      ? 'scenes.ending.pitOffer'
+      : 'scenes.ending.pitCredits';
+  const fullText = t(narrationKey);
 
   // Triumphant fanfare under the finale — the one bright theme in the game.
   useEffect(() => {
@@ -168,11 +138,11 @@ export function EndingScreen() {
         <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.4em] animate-fade-in-slow">
           {stage === 'credits'
             ? isThrone
-              ? '◆ The wheel, at its turning ◆'
-              : '◆ Out of the Pit ◆'
+              ? t('scenes.ending.throneCreditsEyebrow')
+              : t('scenes.ending.pitCreditsEyebrow')
             : isThrone
-              ? '◆ The Throne of Bhaal ◆'
-              : '◆ The Trials of the Pit ◆'}
+              ? t('scenes.ending.throneEyebrow')
+              : t('scenes.ending.pitEyebrow')}
         </div>
 
         <div className="text-center flex flex-col gap-5 min-h-[12rem] justify-center">
@@ -196,7 +166,7 @@ export function EndingScreen() {
         <div className="mt-2 flex flex-col items-center gap-3 min-h-[5rem]">
           {stage === 'offer' && done && (
             <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic animate-fade-in">
-              click to go on
+              {t('scenes.ending.clickToGoOn')}
             </div>
           )}
 
@@ -210,14 +180,14 @@ export function EndingScreen() {
                   concludeEnding();
                 }}
               >
-                Let the wheel turn →
+                {t('scenes.ending.letWheelTurn')}
               </Button>
             </div>
           )}
 
           {!done && (
             <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
-              {holding ? '▶▶ holding to speed' : 'click skips · hold speeds'}
+              {holding ? t('scenes.ending.holdSpeed') : t('scenes.ending.skipHint')}
             </div>
           )}
         </div>

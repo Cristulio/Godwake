@@ -15,18 +15,18 @@ import {
 import type { ClassId } from '../../schemas/ids';
 import { GroveScene } from './GroveScene';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
+import { useT } from '../../i18n/useT';
 
 type FlashKind = 'ok' | 'err';
 /** Shared functional tabs plus the active class's own tab. */
 type GroveTab = UpgradeCategory | 'class';
-
-const CLASS_TAGLINE = 'Blessings only your kind can carry';
 
 function classLabel(classId: ClassId): string {
   return classId.charAt(0).toUpperCase() + classId.slice(1);
 }
 
 export function DruidGroveScreen() {
+  const { t } = useT();
   const character = useGameStore((s) => s.character);
   const unlocked = useGameStore((s) => s.unlockedUpgrades);
   const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
@@ -44,7 +44,7 @@ export function DruidGroveScreen() {
   if (!character) {
     return (
       <div className="p-8 text-[var(--color-text-primary)]">
-        No character. <Button onClick={goToHub}>Hub</Button>
+        {t('hub.grove.noCharacter')} <Button onClick={goToHub}>{t('hub.grove.hub')}</Button>
       </div>
     );
   }
@@ -52,11 +52,11 @@ export function DruidGroveScreen() {
   function tryBuy(id: string) {
     const res = purchase(id);
     if (res.ok) {
-      setFlash({ kind: 'ok', msg: 'The Wellspring accepts your tribute.' });
+      setFlash({ kind: 'ok', msg: t('hub.grove.tribute') });
       setPulsing(id);
       setTimeout(() => setPulsing(null), 1400);
     } else {
-      setFlash({ kind: 'err', msg: res.reason ?? 'Cannot purchase.' });
+      setFlash({ kind: 'err', msg: res.reason ?? t('hub.grove.cannotPurchase') });
     }
     setTimeout(() => setFlash(null), 2400);
   }
@@ -69,7 +69,7 @@ export function DruidGroveScreen() {
   const hasClassTab = classUpgrades.length > 0;
   const shownUpgrades = tab === 'class' ? classUpgrades : listUpgradesByCategory(tab);
   const tabLabel = tab === 'class' ? classLabel(character.classId) : CATEGORY_LABELS[tab];
-  const tabTagline = tab === 'class' ? CLASS_TAGLINE : CATEGORY_TAGLINES[tab];
+  const tabTagline = tab === 'class' ? t('hub.grove.classTagline') : CATEGORY_TAGLINES[tab];
 
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-6xl mx-auto animate-room-enter">
@@ -79,14 +79,14 @@ export function DruidGroveScreen() {
             className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.15em]"
             style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.85), 0 0 18px rgba(244,167,66,0.3)' }}
           >
-            THE DRUID GROVE
+            {t('hub.grove.title')}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
-            Wellspring of Mielikki · Tend the soul, mend the wheel
+            {t('hub.grove.subtitle')}
           </p>
         </div>
         <Button variant="ghost" onClick={goToHub}>
-          ← Phandalin
+          {t('hub.grove.backPhandalin')}
         </Button>
       </header>
 
@@ -98,17 +98,14 @@ export function DruidGroveScreen() {
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-6">
         <Panel tone="glow">
           <p className="text-[var(--color-text-secondary)] text-sm italic leading-relaxed font-narrative">
-            The grove keepers gather around the pool. The water remembers every death you have
-            taken, every name you have worn. Spend the Renown your courage has earned, and the
-            Lady will mark your soul accordingly — a small mercy carried forward through every
-            flesh you wear hereafter.
+            {t('hub.grove.intro')}
           </p>
         </Panel>
         <div className="panel-etched-warm border border-[var(--color-border-warm)] p-4 flex items-center gap-4">
           <div className="flex-1">
             <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 flex items-center gap-1">
               <span className="text-[var(--color-accent-gold)]">◆</span>
-              Renown
+              {t('hub.grove.renown')}
             </div>
             <div
               className="font-mono text-3xl text-[var(--color-accent-gold)]"
@@ -117,7 +114,7 @@ export function DruidGroveScreen() {
               {character.renown}
             </div>
             <div className="font-mono text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest mt-1">
-              {ownedRanks} / {totalRanks} ranks blessed
+              {t('hub.grove.ranksBlessed', { owned: ownedRanks, total: totalRanks })}
             </div>
           </div>
         </div>
@@ -263,6 +260,7 @@ interface UpgradeCardProps {
 }
 
 function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: UpgradeCardProps) {
+  const { t } = useT();
   const maxed = currentRank >= upgrade.maxRank;
   const nextRank = currentRank + 1;
   const nextCost = maxed ? null : upgrade.costForRank(nextRank);
@@ -290,12 +288,12 @@ function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: U
     >
       {locked && (
         <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
-          ⚿ Sealed
+          {t('hub.grove.sealed')}
         </div>
       )}
       {!locked && maxed && (
         <div className="absolute -top-px -right-px bg-[var(--color-accent-gold)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
-          ◆ Max Rank
+          {t('hub.grove.maxRank')}
         </div>
       )}
 
@@ -314,7 +312,7 @@ function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: U
         {owned && (
           <div>
             <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mr-2">
-              Now ({currentRank}/{upgrade.maxRank})
+              {t('hub.grove.now', { rank: currentRank, max: upgrade.maxRank })}
             </span>
             {upgrade.effectAtRank(currentRank)}
           </div>
@@ -322,7 +320,7 @@ function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: U
         {!maxed && (
           <div className="text-[var(--color-accent-gold)]">
             <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mr-2">
-              Next ({nextRank}/{upgrade.maxRank})
+              {t('hub.grove.next', { rank: nextRank, max: upgrade.maxRank })}
             </span>
             {upgrade.effectAtRank(nextRank)}
           </div>
@@ -332,23 +330,25 @@ function UpgradeCard({ upgrade, currentRank, renown, locked, pulsing, onBuy }: U
       <div className="mt-auto">
         {locked ? (
           <div className="font-display text-[10px] uppercase tracking-widest text-[var(--color-text-dim)] text-center py-2 border border-[var(--color-border-dim)] bg-[var(--color-bg-deep)]/40">
-            ⚿ {upgrade.unlock?.label ?? 'Locked'}
+            ⚿ {upgrade.unlock?.label ?? t('hub.grove.locked')}
           </div>
         ) : maxed ? (
           <div className="font-display text-[10px] uppercase tracking-widest text-[var(--color-accent-amber)]/80 text-center py-2 border border-[var(--color-accent-amber)]/40 bg-[var(--color-bg-deep)]/40">
-            ✓ Soul blessed in full
+            {t('hub.grove.blessedInFull')}
           </div>
         ) : affordable ? (
           <Button variant="primary" onClick={onBuy} className="w-full">
-            {owned ? `Rank up — ${nextCost} R` : `Drink — ${nextCost} R`}
+            {owned
+              ? t('hub.grove.rankUp', { cost: nextCost ?? 0 })
+              : t('hub.grove.drink', { cost: nextCost ?? 0 })}
           </Button>
         ) : (
           <div className="flex flex-col gap-1">
             <Button variant="secondary" disabled className="w-full">
-              {nextCost} R — Wellspring withholds
+              {t('hub.grove.withholds', { cost: nextCost ?? 0 })}
             </Button>
             <div className="text-[10px] uppercase tracking-widest text-[var(--color-accent-blood)] text-center font-mono mt-0.5">
-              — {shortfall} renown short
+              {t('hub.grove.short', { n: shortfall })}
             </div>
           </div>
         )}

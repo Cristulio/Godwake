@@ -1,4 +1,5 @@
 import type React from 'react';
+import { useT } from '../../i18n/useT';
 
 /**
  * Painted full-bleed transition scenes shown when the player crosses a
@@ -54,8 +55,14 @@ const CHAPTER_META: Record<
 };
 
 export function ChapterIntroScene({ chapter, title, subtitle }: ChapterIntroSceneProps) {
+  const { tc } = useT();
   const meta = CHAPTER_META[chapter];
   const Scene = meta.render;
+  // Chapter name/subtitle overlay is keyed by chapter number; the data lane
+  // drops es/chapters.json with introTitle/introSubtitle fields. Falls back to
+  // the English meta until then. An explicit prop still wins.
+  const titleText = title ?? tc('chapters', String(chapter), 'introTitle', meta.title);
+  const subtitleText = subtitle ?? tc('chapters', String(chapter), 'introSubtitle', meta.subtitle);
   return (
     <div className="relative w-full max-w-[824px] mx-auto border-2 border-[var(--color-border-warm)] overflow-hidden shadow-[0_0_48px_rgba(0,0,0,0.7)]">
       <svg
@@ -68,10 +75,10 @@ export function ChapterIntroScene({ chapter, title, subtitle }: ChapterIntroScen
       </svg>
       <div className="absolute inset-x-0 bottom-0 px-4 pt-10 pb-3 bg-gradient-to-t from-[var(--color-bg-base)] via-[rgba(0,0,0,0.55)] to-transparent">
         <div className="font-display text-[var(--color-accent-amber)] text-sm md:text-base uppercase tracking-[0.4em]">
-          ◆ {title ?? meta.title}
+          ◆ {titleText}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] md:text-xs uppercase tracking-[0.3em] italic mt-1">
-          {subtitle ?? meta.subtitle}
+          {subtitleText}
         </div>
       </div>
     </div>

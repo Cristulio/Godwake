@@ -3,6 +3,7 @@ import { Button } from '../ui/Button';
 import { Imoen, Irenicus as IrenicusPortrait } from './NpcPortrait';
 import { useMetaStore } from '../../stores/metaStore';
 import { useInputBlock } from '../ui/useInputBlock';
+import { useT } from '../../i18n/useT';
 
 export type TauntContext =
   | 'death'
@@ -17,12 +18,9 @@ export type TauntContext =
   | 'low-hp';
 export type SoulVoiceSpeaker = 'irenicus' | 'imoen';
 
-// Pre-reveal labels for the soul-bond NPCs. The player only sees the real
-// name after an in-game introduction beat (see metaStore.knownNpcs).
-const PRE_REVEAL_LABEL: Record<SoulVoiceSpeaker, string> = {
-  irenicus: 'The Voice',
-  imoen: 'A Whisper',
-};
+// Pre-reveal labels for the soul-bond NPCs live in the scenes locale
+// (scenes.soulVoice.voice / .whisper). The player only sees the real name
+// after an in-game introduction beat (see metaStore.knownNpcs).
 const REAL_NAME: Record<SoulVoiceSpeaker, string> = {
   irenicus: 'Irenicus',
   imoen: 'Imoen',
@@ -416,11 +414,14 @@ const BASE_TICK = 28;
 const FAST_TICK = 4;
 
 export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, line }: SoulVoiceProps) {
+  const { t } = useT();
   const chaptersCleared = useMetaStore((s) => s.chaptersCleared);
   const deathCount = useMetaStore((s) => s.deathCount);
   const hasReincarnated = useMetaStore((s) => s.hasReincarnated);
   const isKnown = useMetaStore((s) => s.knownNpcs.includes(speaker));
-  const speakerLabel = isKnown ? REAL_NAME[speaker] : PRE_REVEAL_LABEL[speaker];
+  const speakerLabel = isKnown
+    ? REAL_NAME[speaker]
+    : t(speaker === 'irenicus' ? 'scenes.soulVoice.voice' : 'scenes.soulVoice.whisper');
 
   const quote = useMemo(
     () =>
@@ -496,7 +497,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
   const speakerName = speakerLabel;
   // The name is already stated on the portrait pillar (◆ {speakerName}); the
   // subtitle only frames how it reaches you, so identity isn't said twice.
-  const subtitle = 'through the soul-bond';
+  const subtitle = t('scenes.soulVoice.subtitle');
 
   const buttonVariant = isIrenicus ? 'danger' : 'primary';
 
@@ -575,10 +576,10 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
             <div className="mt-3 flex items-center justify-between gap-3">
               <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
                 {holding
-                  ? '▶▶ holding to speed'
+                  ? t('scenes.soulVoice.holdSpeed')
                   : done
                     ? ''
-                    : 'click skip · hold speed'}
+                    : t('scenes.soulVoice.skipHint')}
               </div>
               <Button
                 variant={done ? buttonVariant : 'secondary'}
@@ -588,7 +589,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
                 }}
                 disabled={!done}
               >
-                {done ? 'Continue' : '...'}
+                {done ? t('scenes.soulVoice.continue') : t('scenes.soulVoice.waiting')}
               </Button>
             </div>
           </div>
