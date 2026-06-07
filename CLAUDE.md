@@ -5,6 +5,67 @@ map, and design-decision log are in the auto-memory directory referenced from
 `.claude/settings.local.json` (`autoMemoryDirectory`). All worktrees share
 that memory.
 
+## GSD — spec-driven development
+
+We work spec-first: for anything non-trivial a short written spec is
+approved **before** code is written. The spec is the review gate — it's
+where direction and taste get applied. The user is non-technical and
+reviews intent in plain language, not diffs, so approving the spec (not
+the diff) is the green light to dispatch lanes. Scaffold one with
+`/spec <description>` (an orchestrator-side command).
+
+### When to spec (tiered — don't over-ceremony)
+
+The orchestrator proposes the tier; when in doubt, or when shared
+mechanics / multiple files are in play, default to **full**.
+
+- **Full spec** — new feature, new system, new content (chapter / class
+  / boss / event), or any change spanning multiple files or shared
+  mechanics (combat engine, dice, state shapes). Spec → plan → tasks.
+- **Lite** — one paragraph, no spec file: bug fix, copy, a single-file
+  tweak, one balance number. State intent + how it's validated, then go.
+  Lite skips the written spec, **never** the verification bar. A
+  three-line change never gets a three-page spec.
+- **Balance is sim-specced, not hand-specced.** For tuning, the "spec"
+  is the target band + the sim that measures it; validation is the sim
+  run, never hand-picked numbers. (See the sim-driven balance memories.)
+
+### Spec shape (plain language first)
+
+A full spec answers, in order:
+
+1. **Goal** — what the player experiences and why, in in-world / player
+   terms, not code terms. This is the part the user signs off on.
+2. **Plan** — the technical approach: which files/systems, data vs
+   engine, any shared-code touch that needs sequencing first.
+3. **Tasks** — the breakdown, grouped into file-disjoint lanes so they
+   can fan out in parallel without colliding.
+4. **Done means** — the bar: `npm run build` green, tests green,
+   sim-in-band (for balance), and the playtest check the user will run.
+
+### Where specs live + lifecycle
+
+- A spec is a memory file (`type: project`) in the shared auto-memory
+  dir — **not** in the repo. Why there: it's live-shared across every
+  worktree the instant it's written (no commit / branch / rebase before
+  a lane can read it), and the user reviews it in chat, not in a PR diff.
+  Add a MEMORY.md pointer like any other memory.
+- This file **is** the lane record — don't also write a separate
+  after-the-fact one. It begins as the spec and ends as the outcome.
+- **Status**, tracked in the file: `DRAFT` → `APPROVED` (user signed off
+  the Goal) → `BUILDING` (lanes dispatched) → `MERGED` (PR landed,
+  Outcome filled). Abandoned specs are **deleted**, not left as stale
+  DRAFTs.
+
+### How GSD rides the existing loop
+
+Plan → brief → dispatch → verify already *is* this loop. GSD only makes
+the "brief" a written, user-approved artifact instead of an ad-hoc
+message, and moves the approval gate to the spec (where the non-technical
+user has leverage) instead of the diff (which the user doesn't read).
+Merge stays on green; fan-out stays file-disjoint; balance stays
+sim-driven. Trivial changes skip the gate so iteration stays fast.
+
 ## Parallel worktree workflow
 
 This project is set up for parallel feature work via git worktrees. You can
