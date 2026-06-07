@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { Character } from '../types/character';
-import type { DelveState, RoomSpec } from '../types/delve';
+import type { CampRiskResult, DelveState, RoomSpec } from '../types/delve';
 import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
 import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
@@ -230,6 +230,9 @@ function enterRoom(
     // The campfire fork lock is per-camp: clear it on every room entry so the
     // next camp offers a fresh pick (boons stay tier-keyed in `campBoons`).
     campChoice: undefined,
+    // The bones-throw gate is part of the same per-camp fork — reset it too so
+    // each camp grants one fresh throw.
+    campRisk: undefined,
     // The elite fight/gold gate is per-node: reset so each elite re-prompts.
     eliteEngaged: undefined,
     ...(roomsCleared !== undefined ? { roomsCleared } : {}),
@@ -424,6 +427,14 @@ interface DelveStoreState {
    * explicitly skipped the panel. The same camp tier cannot be resolved twice.
    */
   pickCampBoon: (tier: number, boonId: string | null) => void;
+  /**
+   * Throw the bones at the campfire's "Tempt the Dark" gamble. Rolls a d20,
+   * applies the win (blessing + gold) or loss (HP), and records the outcome on
+   * the delve so the gate survives leaving and re-entering the camp screen.
+   * No-ops (returns null) if already thrown this camp. `riskTier` scales the
+   * gold payout (the camp's tier, min 1).
+   */
+  resolveCampRisk: (riskTier: number) => CampRiskResult | null;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
   /** Buy a pre-rolled shop item (carries its rolled payload) at the given price. */
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
@@ -1088,6 +1099,48 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
 
     charSlice.setCharacter(nextCharacter);
     set({ delve: nextDelve });
+  },
+
+  resolveCampRisk: (riskTier) => {
+    const s = get();
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!character || !s.delve) return null;
+    if (s.delve.campRisk) return null;
+
+    const roller = getActiveRoller();
+    const roll = roller.d20();
+    let result: CampRiskResult;
+
+    if (roll.total >= 11) {
+      // The dark answers: a blessing's whisper, and coin pressed into the palm.
+      const [blessingId] = rollBlessingOptions(
+        roller,
+        1,
+        character.classId,
+        character.blessings,
+      );
+      const gold = blessingId ? 15 * riskTier : 50 * riskTier;
+      if (blessingId) {
+        charSlice.setCharacter({
+          ...character,
+          blessings: [...character.blessings, blessingId],
+        });
+      }
+      get().addDelveReward(gold, 0);
+      result = { roll: roll.total, outcome: 'win', blessingId: blessingId ?? null, gold, damage: 0 };
+    } else {
+      // The dark takes its due. A campfire gamble bleeds you, but never kills.
+      const damage = Math.max(1, Math.floor(character.hp.max * 0.25));
+      charSlice.setCharacter({
+        ...character,
+        hp: { ...character.hp, current: Math.max(1, character.hp.current - damage) },
+      });
+      result = { roll: roll.total, outcome: 'loss', blessingId: null, gold: 0, damage };
+    }
+
+    set((cur) => (cur.delve ? { delve: { ...cur.delve, campRisk: result } } : cur));
+    return result;
   },
 
   pickEliteChoice: (choice) => {

@@ -10,8 +10,6 @@ import { useMetaStore } from '../../stores/metaStore';
 import { getBlessing } from '../../content/blessings';
 import { getItem } from '../../content/items';
 import { playSfx } from '../../engine/audio';
-import { getActiveRoller } from '../../engine/dice';
-import { rollBlessingOptions } from '../../engine/character/blessings';
 import {
   boonsForCampTier,
   type CampBoon,
@@ -30,14 +28,6 @@ type MerchantStep = 'closed' | 'shop';
  * sub-panel first. */
 type ForkBranch = 'attune' | 'risk';
 
-interface RiskResult {
-  roll: number;
-  outcome: 'win' | 'loss';
-  blessingId: string | null;
-  gold: number;
-  damage: number;
-}
-
 interface CampRoomProps {
   room: RoomSpec;
   onPressSouth: () => void;
@@ -49,8 +39,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const campChoice = useGameStore((s) => s.delve?.campChoice ?? null);
   const pickCampChoice = useGameStore((s) => s.pickCampChoice);
   const pickCampBoon = useGameStore((s) => s.pickCampBoon);
-  const setCharacter = useGameStore((s) => s.setCharacter);
-  const addDelveReward = useGameStore((s) => s.addDelveReward);
+  const resolveCampRisk = useGameStore((s) => s.resolveCampRisk);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
   const purchaseLegendary = useGameStore((s) => s.purchaseLegendary);
@@ -119,7 +108,9 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   );
 
   const [expanded, setExpanded] = useState<ForkBranch | null>(null);
-  const [riskResult, setRiskResult] = useState<RiskResult | null>(null);
+  // The throw-result gate lives on the delve (not component state) so it can't be
+  // reset by leaving the camp screen for the backpack and coming back.
+  const riskResult = delve?.campRisk ?? null;
   const [merchantStep, setMerchantStep] = useState<MerchantStep>('closed');
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
 
@@ -172,50 +163,9 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
   function resolveRisk() {
     if (!character || committed) return;
-    const roller = getActiveRoller();
-    const roll = roller.d20();
     playSfx('dice_clack');
-
-    if (roll.total >= 11) {
-      // The dark answers: a blessing's whisper, and coin pressed into the palm.
-      const [blessingId] = rollBlessingOptions(
-        roller,
-        1,
-        character.classId,
-        character.blessings,
-      );
-      const gold = blessingId ? 15 * riskTier : 50 * riskTier;
-      if (blessingId) {
-        setCharacter({
-          ...character,
-          blessings: [...character.blessings, blessingId],
-        });
-      }
-      addDelveReward(gold, 0);
-      setRiskResult({
-        roll: roll.total,
-        outcome: 'win',
-        blessingId: blessingId ?? null,
-        gold,
-        damage: 0,
-      });
-      playSfx('shrine_chime');
-    } else {
-      // The dark takes its due. A campfire gamble bleeds you, but never kills.
-      const nextCurrent = Math.max(1, character.hp.current - riskDamage);
-      setCharacter({
-        ...character,
-        hp: { ...character.hp, current: nextCurrent },
-      });
-      setRiskResult({
-        roll: roll.total,
-        outcome: 'loss',
-        blessingId: null,
-        gold: 0,
-        damage: riskDamage,
-      });
-      playSfx('hit_thud');
-    }
+    const result = resolveCampRisk(riskTier);
+    if (result) playSfx(result.outcome === 'win' ? 'shrine_chime' : 'hit_thud');
     setExpanded(null);
   }
 
