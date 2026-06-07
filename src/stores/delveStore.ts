@@ -34,7 +34,7 @@ import { TOTAL_CHAPTERS } from '../engine/delve/constants';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
 import { nextLoreBeat } from '../content/loreBeats';
-import { EQUIP_SLOTS } from '../engine/character/equip';
+import { equippedInventoryIndices } from '../engine/character/equip';
 import { sellValue } from '../components/delve/shopStock';
 import { newlyUnlocked, newlyUnlockedByChapter } from '../engine/progression';
 import { FIRST_GEAR_TUTORIAL_ID } from '../content/tutorials';
@@ -1238,8 +1238,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (!character) return { ok: false, reason: 'No character.' };
     const ref = character.inventory[inventoryIdx];
     if (!ref) return { ok: false, reason: 'No such item.' };
-    // Worn gear can't be sold out from under you — unequip it first.
-    if (EQUIP_SLOTS.some((slot) => character.equipped[slot] === ref)) {
+    // Worn gear can't be sold out from under you — unequip it first. Resolve by
+    // index (not object identity) so the guard still holds after a reload, where
+    // the rehydrated equipped ref is a distinct object from the bag entry.
+    if (equippedInventoryIndices(character).has(inventoryIdx)) {
       return { ok: false, reason: 'Unequip it first.' };
     }
     const gold = sellValue(ref);

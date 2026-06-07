@@ -344,6 +344,31 @@ export function equipItemToSlot(
   return { ...character, equipped };
 }
 
+/**
+ * The set of inventory indices that are currently equipped. Object identity
+ * between an equipped slot and its inventory entry breaks across a JSON
+ * persist/rehydrate (a reload) AND for the starting kit (slots are separate
+ * literals from the bag), so resolution falls back to matching `itemId` —
+ * each slot claims a distinct unclaimed entry. This is the authoritative
+ * "is this bag item worn" check for the inventory UI and the sell guard;
+ * an identity-only test would let a worn item be sold after a reload.
+ */
+export function equippedInventoryIndices(character: Character): Set<number> {
+  const indices = new Set<number>();
+  for (const slot of EQUIP_SLOTS) {
+    const ref = character.equipped[slot];
+    if (!ref) continue;
+    let idx = character.inventory.indexOf(ref);
+    if (idx === -1) {
+      idx = character.inventory.findIndex(
+        (inv, i) => !indices.has(i) && inv.itemId === ref.itemId,
+      );
+    }
+    if (idx !== -1) indices.add(idx);
+  }
+  return indices;
+}
+
 /** Clear a single equipment slot. The item stays in inventory. */
 export function unequipSlot(character: Character, slot: EquipSlot): Character {
   if (!character.equipped[slot]) return character;

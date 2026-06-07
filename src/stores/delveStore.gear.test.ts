@@ -172,4 +172,30 @@ describe('delveStore — selling to a merchant', () => {
     expect(char().goldInPocket).toBe(0);
     expect(hasItem(char().inventory, 'longsword')).toBe(true);
   });
+
+  it('refuses to sell an equipped item after a reload (refs no longer share identity)', () => {
+    // A JSON persist/rehydrate splits the shared ref: equipped.mainHand and the
+    // bag entry become distinct objects with the same itemId. The guard must
+    // still block the sale and keep the equipped slot intact — selling here is
+    // the corruption the lane fixes (sold from the bag, orphaned in the slot).
+    const reloaded = JSON.parse(
+      JSON.stringify(
+        makeFighter({
+          quirks: [],
+          goldInPocket: 0,
+          inventory: [{ itemId: 'longsword' }],
+          equipped: { mainHand: { itemId: 'longsword' }, offHand: null, armor: null },
+        }),
+      ),
+    ) as Character;
+    expect(reloaded.inventory[0]).not.toBe(reloaded.equipped.mainHand);
+    seed(reloaded);
+
+    const r = useDelveStore.getState().sellItem(0);
+
+    expect(r.ok).toBe(false);
+    expect(char().goldInPocket).toBe(0);
+    expect(hasItem(char().inventory, 'longsword')).toBe(true);
+    expect(char().equipped.mainHand?.itemId).toBe('longsword');
+  });
 });
