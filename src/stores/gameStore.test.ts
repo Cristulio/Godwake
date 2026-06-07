@@ -408,7 +408,7 @@ describe('Grove gating — ascension-locked deeper tiers', () => {
     useMetaStore.setState({ ascensionUnlocked: 0, unlockedUpgrades: {} });
     const res = useGameStore.getState().purchaseUpgrade('wellspring-depths');
     expect(res.ok).toBe(false);
-    expect(res.reason).toBe('Clear the chain to unlock.');
+    expect(res.reason).toBe('locked');
     expect(useMetaStore.getState().unlockedUpgrades['wellspring-depths']).toBeUndefined();
     // Renown is untouched by a refused purchase.
     expect(useCharacterStore.getState().character!.renown).toBe(1000);
@@ -431,7 +431,7 @@ describe('Grove gating — ascension-locked deeper tiers', () => {
     useMetaStore.setState({ ascensionUnlocked: 1, unlockedUpgrades: {} });
     const res = useGameStore.getState().purchaseUpgrade('crown-of-the-returned');
     expect(res.ok).toBe(false);
-    expect(res.reason).toBe('Reach Ascension 3 to unlock.');
+    expect(res.reason).toBe('locked');
   });
 });
 

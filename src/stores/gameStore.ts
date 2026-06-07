@@ -20,7 +20,7 @@ import { type EquipSlot } from '../engine/character/equip';
 import { useCharacterStore } from './characterStore';
 import { useDelveStore, type LootSummary } from './delveStore';
 import { useCombatStore } from './combatStore';
-import { useMetaStore } from './metaStore';
+import { useMetaStore, type UpgradePurchaseError } from './metaStore';
 import { useScreenStore, type Screen } from './screenStore';
 import { migrateV1ToV2, SAVE_VERSION } from './persistMigration';
 import { newlyUnlockedClasses } from '../engine/progression/unlocks';
@@ -260,7 +260,7 @@ interface GameState {
   markTutorialSeen: (tutorialId: string) => void;
 
   // Renown shop
-  purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: string };
+  purchaseUpgrade: (upgradeId: string) => { ok: boolean; reason?: UpgradePurchaseError };
 
   // Legendary relics
   equipRelic: (relicId: string) => void;

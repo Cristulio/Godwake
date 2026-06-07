@@ -42,7 +42,13 @@
     "renown": "Renombre",
     "ranksBlessed": "{owned} / {total} rangos bendecidos",
     "tribute": "El Manantial acepta tu tributo.",
-    "cannotPurchase": "No se puede comprar.",
+    "cannotPurchase": "El Manantial te rechaza.",
+    "errors": {
+      "noCharacter": "Ningún alma se alza ante el estanque.",
+      "unknownUpgrade": "El Manantial no conoce tal bendición.",
+      "maxRank": "Esta bendición ya se ha dado por completo.",
+      "insufficient": "El Manantial retiene — tu Renombre no alcanza."
+    },
     "classTagline": "Bendiciones que solo los tuyos pueden portar",
     "tabs": {
       "survival": "Supervivencia",
