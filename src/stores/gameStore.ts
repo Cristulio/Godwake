@@ -2,7 +2,7 @@ import { create, type StoreApi } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Character } from '../types/character';
 import type { CombatState } from '../types/combat';
-import type { DelveState, RoomSpec } from '../types/delve';
+import type { CampRiskResult, DelveState, RoomSpec } from '../types/delve';
 import type { Postmortem } from '../types/postmortem';
 import { setActiveRoller, setActiveRollerFromState, getActiveRoller } from '../engine/dice';
 import {
@@ -217,6 +217,7 @@ interface GameState {
   pickCampChoice: (choice: 'rest') => string | null;
   pickEliteChoice: (choice: 'fight' | 'gold') => void;
   pickCampBoon: (tier: number, boonId: string | null) => void;
+  resolveCampRisk: (riskTier: number) => CampRiskResult | null;
   purchaseFromMerchant: (itemId: string) => { ok: boolean; reason?: string };
   purchaseRolledGear: (ref: ItemRef, cost: number) => { ok: boolean; reason?: string };
   purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
@@ -858,6 +859,8 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().pickEliteChoice(choice),
         pickCampBoon: (tier, boonId) =>
           useDelveStore.getState().pickCampBoon(tier, boonId),
+        resolveCampRisk: (riskTier) =>
+          useDelveStore.getState().resolveCampRisk(riskTier),
         purchaseFromMerchant: (itemId) =>
           useDelveStore.getState().purchaseFromMerchant(itemId),
         purchaseRolledGear: (ref, cost) =>

@@ -62,6 +62,15 @@ export interface RoomSpec {
 
 export type DelvePhase = 'in-room' | 'between-rooms' | 'completed' | 'failed';
 
+/** Outcome of a campfire "Tempt the Dark" bones throw. */
+export interface CampRiskResult {
+  roll: number;
+  outcome: 'win' | 'loss';
+  blessingId: string | null;
+  gold: number;
+  damage: number;
+}
+
 export interface DelveState {
   dungeonName: string;
   chapterId: string;
@@ -117,6 +126,14 @@ export interface DelveState {
    * the 1st/2nd/3rd camp encountered in the delve. Cleared on delve end.
    */
   campBoons?: Array<{ tier: number; boonId: string | null }>;
+  /**
+   * Resolution of the campfire "Tempt the Dark" gamble at the CURRENT camp.
+   * Set by `resolveCampRisk` once the bones are thrown; locks the fork so the
+   * throw can't be repeated. Cleared on every room entry (like `campChoice`)
+   * so each camp offers one fresh throw — persisting it here, rather than in
+   * component state, keeps the gate alive across a trip to the backpack and back.
+   */
+  campRisk?: CampRiskResult;
   /**
    * Ascension level this run is being played at (0 = base). Stamped at delve
    * creation from the hub selector; read by combat spawning (enemy HP/damage),
