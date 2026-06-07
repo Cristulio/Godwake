@@ -78,7 +78,8 @@ import { buildPlayerCharacter, presetCreationInput } from '../src/engine/charact
 import { rollQuirks, renownSoulMarkMultiplier } from '../src/engine/character/quirks';
 import { MAX_ASCENSION, getAscensionLevel } from '../src/engine/delve/ascension';
 import { computeAC } from '../src/engine/character/derived';
-import { equipItem } from '../src/engine/character/equip';
+import { equipItem, slotForItem } from '../src/engine/character/equip';
+import { monkFightsUnarmed } from '../src/engine/combat/monk';
 import { characterAffixMods } from '../src/engine/items/affixMods';
 import { rollGearDrop, rollLegendaryDrop } from '../src/engine/items/drops';
 import { rollItem } from '../src/engine/items/rollItem';
@@ -319,6 +320,18 @@ function loadoutScore(c: Character): number {
 
 /** Equip a rolled drop, keeping it only if it strictly improves the loadout. */
 function tryEquipDrop(c: Character, ref: ItemRef): Character {
+  // A bare-handed monk's Martial Arts kit (scaling die + unarmed edge + Ki +
+  // Flurry / Stunning) beats any weapon, and equipping ANY weapon — even a
+  // themed monk weapon — turns that whole kit dark. loadoutScore only weighs
+  // the raw weapon die/affixes, so it would "upgrade" the monk into a plain
+  // swing and crater it. Keep the fists: never hand a bare-handed monk a
+  // main-hand weapon. (Armour/accessories still equip through the normal path.)
+  if (
+    monkFightsUnarmed(c) &&
+    slotForItem(ref.itemId) === 'mainHand'
+  ) {
+    return c;
+  }
   const idx = c.inventory.length;
   const withItem: Character = { ...c, inventory: [...c.inventory, ref] };
   const equipped = equipItem(withItem, idx);
