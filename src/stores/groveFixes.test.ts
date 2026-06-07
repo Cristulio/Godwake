@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   listClassUpgrades,
   getUpgrade,
+  groveUpgradeCost,
 } from '../content/upgrades';
 import {
   applyPermanentUpgrade,
@@ -131,6 +132,49 @@ describe('firstBoonQuirk — Wheelturner only keeps a good thread', () => {
   it('skips unknown ids without throwing', () => {
     expect(firstBoonQuirk(['not-a-real-quirk', 'stonehide'])).toBe('stonehide');
     expect(firstBoonQuirk([])).toBeUndefined();
+  });
+});
+
+// ── Issue 5: the Grove buy gate uses the ascension-SCALED price ──
+// The card displayed the bare costForRank while purchaseUpgrade deducted the
+// ascension-scaled groveUpgradeCost, so at Asc≥1 an "affordable" buy wrongly
+// failed "Not enough Renown". Both sides must read groveUpgradeCost.
+describe('Grove purchase honours the ascension-scaled price', () => {
+  const up = getUpgrade('pilgrims-boots'); // rank-1 cost 25
+
+  function setup(renown: number, ascensionUnlocked: number) {
+    useCharacterStore.setState({ character: { ...build('fighter'), renown } });
+    useMetaStore.setState({
+      ascensionUnlocked,
+      unlockedUpgrades: {},
+      renownSpent: 0,
+    });
+  }
+
+  it('scaled cost exceeds the bare base curve at Ascension 1', () => {
+    expect(groveUpgradeCost(up, 1, 1)).toBeGreaterThan(up.costForRank(1));
+  });
+
+  it('a buy at exactly the scaled cost succeeds and deducts the scaled amount', () => {
+    const cost = groveUpgradeCost(up, 1, 1);
+    setup(cost, 1);
+    const res = useMetaStore.getState().purchaseUpgrade('pilgrims-boots');
+    expect(res.ok).toBe(true);
+    expect(useCharacterStore.getState().character?.renown).toBe(0);
+    expect(useMetaStore.getState().renownSpent).toBe(cost);
+    expect(useMetaStore.getState().unlockedUpgrades['pilgrims-boots']).toBe(1);
+  });
+
+  it('a buy one renown below the scaled cost is refused', () => {
+    const cost = groveUpgradeCost(up, 1, 1);
+    setup(cost - 1, 1);
+    const res = useMetaStore.getState().purchaseUpgrade('pilgrims-boots');
+    expect(res.ok).toBe(false);
+    expect(useMetaStore.getState().renownSpent).toBe(0);
+  });
+
+  it('at Ascension 0 the scaled cost equals the base curve (no regression)', () => {
+    expect(groveUpgradeCost(up, 1, 0)).toBe(up.costForRank(1));
   });
 });
 

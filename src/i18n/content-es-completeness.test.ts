@@ -3,6 +3,7 @@ import { listMonsters } from '../content/monsters';
 import { listEvents } from '../content/events';
 import { LORE_BEATS } from '../content/loreBeats';
 import { BOSS_INTEL_CARDS } from '../content/bossIntel';
+import { listUpgrades } from '../content/upgrades';
 import type { EventChoiceOutcome } from '../schemas/event';
 
 import esMonsters from './locales/es/monsters.json';
@@ -10,6 +11,8 @@ import esEvents from './locales/es/events.json';
 import esLore from './locales/es/lore.json';
 import esBossIntel from './locales/es/bossIntel.json';
 import esChapters from './locales/es/chapters.json';
+import enUpgrades from './locales/en/upgrades.json';
+import esUpgrades from './locales/es/upgrades.json';
 
 type Overlay = Record<string, Record<string, string>>;
 
@@ -113,6 +116,52 @@ describe('es/bossIntel.json completeness', () => {
     const ids = new Set(BOSS_INTEL_CARDS.map((c) => c.bossDefId));
     const orphans = Object.keys(bossIntel).filter((id) => !ids.has(id));
     expect(orphans, `orphan boss intel overlays: ${orphans.join(', ')}`).toEqual([]);
+  });
+});
+
+describe('upgrades.json completeness (en effect templates + es overlay)', () => {
+  type EffectField = string | { one?: string; other?: string };
+  type UpRow = { name?: string; flavor?: string; effect?: EffectField; unlockLabel?: string };
+
+  const en = enUpgrades as Record<string, UpRow>;
+  const es = esUpgrades as Record<string, UpRow>;
+
+  /** An effect field is covered when it's a non-empty string, or a {one,other} pair both non-empty. */
+  function effectCovered(v: EffectField | undefined): boolean {
+    if (typeof v === 'string') return v.trim().length > 0;
+    if (v && typeof v === 'object') {
+      return (
+        typeof v.one === 'string' && v.one.trim().length > 0 &&
+        typeof v.other === 'string' && v.other.trim().length > 0
+      );
+    }
+    return false;
+  }
+
+  it('every upgrade has an English effect template', () => {
+    const missing = listUpgrades()
+      .filter((u) => !effectCovered(en[u.id]?.effect))
+      .map((u) => `${u.id}.effect`);
+    expect(missing, `missing en effect: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('every upgrade has a Spanish name + flavor + effect (and unlockLabel where gated)', () => {
+    const missing: string[] = [];
+    for (const u of listUpgrades()) {
+      const row = es[u.id];
+      const strRow = row as Record<string, string> | undefined;
+      if (!covered(strRow, 'name')) missing.push(`${u.id}.name`);
+      if (!covered(strRow, 'flavor')) missing.push(`${u.id}.flavor`);
+      if (!effectCovered(row?.effect)) missing.push(`${u.id}.effect`);
+      if (u.unlock && !covered(strRow, 'unlockLabel')) missing.push(`${u.id}.unlockLabel`);
+    }
+    expect(missing, `missing es upgrade overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('has no orphan upgrade ids in either locale', () => {
+    const ids = new Set(listUpgrades().map((u) => u.id));
+    const orphans = [...Object.keys(en), ...Object.keys(es)].filter((id) => !ids.has(id));
+    expect([...new Set(orphans)], `orphan upgrade overlays: ${orphans.join(', ')}`).toEqual([]);
   });
 });
 

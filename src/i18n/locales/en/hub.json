@@ -44,6 +44,20 @@
     "tribute": "The Wellspring accepts your tribute.",
     "cannotPurchase": "Cannot purchase.",
     "classTagline": "Blessings only your kind can carry",
+    "tabs": {
+      "survival": "Survival",
+      "offense": "Offense",
+      "economy": "Economy",
+      "fortune": "Fortune",
+      "soul": "Soul"
+    },
+    "taglines": {
+      "survival": "Flesh that endures",
+      "offense": "Steel that strikes truer",
+      "economy": "Pockets never quite empty",
+      "fortune": "Gods and luck lean closer",
+      "soul": "The thread the wheel cannot cut"
+    },
     "sealed": "⚿ Sealed",
     "maxRank": "◆ Max Rank",
     "now": "Now ({rank}/{max})",
