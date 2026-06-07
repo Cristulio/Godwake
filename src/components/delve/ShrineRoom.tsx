@@ -7,6 +7,7 @@ import { getActiveRoller } from '../../engine/dice';
 import { rollBlessingOptions } from '../../engine/character/blessings';
 import { baneQuirkCount } from '../../engine/character/quirks';
 import { playSfx } from '../../engine/audio';
+import { useT } from '../../i18n/useT';
 
 interface ShrineRoomProps {
   room: RoomSpec;
@@ -14,6 +15,7 @@ interface ShrineRoomProps {
 }
 
 export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
+  const { t } = useT();
   const addBlessing = useGameStore((s) => s.addBlessing);
   const grantTitheGold = useGameStore((s) => s.grantTitheGold);
   const shrineOptionBonus = useGameStore((s) => s.character?.shrineOptionBonus ?? 0);
@@ -54,7 +56,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
           {room.title.toUpperCase()}
         </h1>
         <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-          Shrine · A god is listening
+          {t('delve.shrine.label')}
         </p>
       </header>
 
@@ -70,7 +72,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
       {!chosen ? (
         <>
           <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em] text-center">
-            ► Choose a blessing
+            {t('delve.shrine.chooseBlessing')}
           </div>
           <div className="grid md:grid-cols-3 gap-4 items-stretch">
             {options.map((id) => (
@@ -90,20 +92,20 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
               onClick={leave}
               className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic hover:text-[var(--color-text-secondary)] py-2 px-4 border border-[var(--color-border-dim)] hover:border-[var(--color-border-warm)] transition-colors"
             >
-              Leave the altar untouched
+              {t('delve.shrine.leave')}
             </button>
           </div>
         </>
       ) : (
         <div className="flex flex-col items-center gap-3 animate-fade-in">
           <div className="text-[var(--color-accent-amber)] text-sm uppercase tracking-[0.3em]">
-            ◆ The god accepts the bargain
+            {t('delve.shrine.accepts')}
           </div>
           <div className="w-full max-w-md">
             <BlessingCard blessingId={chosen} baneCount={baneCount} delveLevel={delveLevel} />
           </div>
           <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic">
-            walking deeper...
+            {t('delve.shrine.walkingDeeper')}
           </div>
         </div>
       )}

@@ -7,12 +7,15 @@ import { armorEquipWarning } from '../../engine/character/equip';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
 import { baseStatLine, enhancementLine, itemTypeLabel } from '../inventory/itemDisplay';
 import type { GearStock, LegendaryOffer } from './shopStock';
+import { useT } from '../../i18n/useT';
+
+type TFn = (key: string, params?: Record<string, string | number>) => string;
 
 /** Most wares carry their own flavour; synthesise a short line for the rest. */
-export function consumableBlurb(item: Item): string {
+export function consumableBlurb(item: Item, t: TFn): string {
   if (item.description) return item.description;
   if (item.kind === 'consumable') {
-    return item.healDice ? `Restores ${item.healDice} HP.` : item.effect;
+    return item.healDice ? t('delve.wares.restores', { dice: item.healDice }) : item.effect;
   }
   return '';
 }
@@ -28,6 +31,7 @@ interface GearWareRowProps {
 
 /** One rolled arms-rack item: rarity-coloured frame, affix-effect list, price. */
 export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearWareRowProps) {
+  const { t } = useT();
   const rolled = stock.ref.rolled;
   const base = getItem(stock.ref.itemId);
   const rarity = rolled?.rarity ?? 'white';
@@ -79,13 +83,13 @@ export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearW
         )}
       </div>
       <div className="text-right shrink-0">
-        <div className="text-[var(--color-accent-gold)] text-sm">{stock.cost} gp</div>
+        <div className="text-[var(--color-accent-gold)] text-sm">{t('delve.wares.priceGp', { n: stock.cost })}</div>
         <Button
           variant={bought || tooDear ? 'secondary' : 'primary'}
           disabled={bought || tooDear}
           onClick={onBuy}
         >
-          {bought ? 'Sold' : tooDear ? `Need ${stock.cost - gold} more` : 'Buy'}
+          {bought ? t('delve.wares.sold') : tooDear ? t('delve.wares.needMore', { n: stock.cost - gold }) : t('delve.wares.buy')}
         </Button>
       </div>
     </div>
@@ -105,9 +109,10 @@ interface LegendaryWareRowProps {
  * player attunes it at the hub.
  */
 export function LegendaryWareRow({ offer, bought, gold, onBuy }: LegendaryWareRowProps) {
+  const { t } = useT();
   const gold700 = 'var(--color-accent-gold)';
   const tooDear = gold < offer.cost;
-  const effect = getLegendary(offer.legendaryId)?.effect ?? 'A relic that death cannot take.';
+  const effect = getLegendary(offer.legendaryId)?.effect ?? t('delve.wares.relicFallback');
   return (
     <div
       className="border-2 p-3 flex items-center gap-3"
@@ -118,20 +123,20 @@ export function LegendaryWareRow({ offer, bought, gold, onBuy }: LegendaryWareRo
           ✦ {offer.name}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
-          Legendary · banks to your reliquary
+          {t('delve.wares.legendaryBanks')}
         </div>
         <div className="text-[11px] italic leading-snug mt-1" style={{ color: gold700 }}>
           ◆ {effect}
         </div>
       </div>
       <div className="text-right shrink-0">
-        <div className="text-[var(--color-accent-gold)] text-sm">{offer.cost} gp</div>
+        <div className="text-[var(--color-accent-gold)] text-sm">{t('delve.wares.priceGp', { n: offer.cost })}</div>
         <Button
           variant={bought || tooDear ? 'secondary' : 'primary'}
           disabled={bought || tooDear}
           onClick={onBuy}
         >
-          {bought ? 'Bound' : tooDear ? `Need ${offer.cost - gold} more` : 'Acquire'}
+          {bought ? t('delve.wares.bound') : tooDear ? t('delve.wares.needMore', { n: offer.cost - gold }) : t('delve.wares.acquire')}
         </Button>
       </div>
     </div>
@@ -148,6 +153,7 @@ interface ConsumableWareRowProps {
 /** One fixed draught/charm row. Goes SOLD once bought so the same draught can't
  * be re-bought after a trip to the pack — the sold-state persists in delveStore. */
 export function ConsumableWareRow({ item, bought, gold, onBuy }: ConsumableWareRowProps) {
+  const { t } = useT();
   const tooDear = gold < item.cost;
   return (
     <div
@@ -159,17 +165,17 @@ export function ConsumableWareRow({ item, bought, gold, onBuy }: ConsumableWareR
           {item.name}
         </div>
         <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
-          {consumableBlurb(item)}
+          {consumableBlurb(item, t)}
         </div>
       </div>
       <div className="text-right shrink-0">
-        <div className="text-[var(--color-accent-gold)] text-sm">{item.cost} gp</div>
+        <div className="text-[var(--color-accent-gold)] text-sm">{t('delve.wares.priceGp', { n: item.cost })}</div>
         <Button
           variant={bought || tooDear ? 'secondary' : 'primary'}
           disabled={bought || tooDear}
           onClick={onBuy}
         >
-          {bought ? 'Sold' : tooDear ? `Need ${item.cost - gold} more` : 'Buy'}
+          {bought ? t('delve.wares.sold') : tooDear ? t('delve.wares.needMore', { n: item.cost - gold }) : t('delve.wares.buy')}
         </Button>
       </div>
     </div>
@@ -184,6 +190,7 @@ interface SellWareRowProps {
 
 /** One pack item the merchant will buy back, rarity-framed, with its sell price. */
 export function SellWareRow({ itemRef, price, onSell }: SellWareRowProps) {
+  const { t } = useT();
   const base = getItem(itemRef.itemId);
   const rarity = itemRef.rolled?.rarity ?? 'white';
   const color = GEAR_RARITY_COLOR[rarity];
@@ -200,9 +207,9 @@ export function SellWareRow({ itemRef, price, onSell }: SellWareRowProps) {
         </div>
       </div>
       <div className="text-right shrink-0">
-        <div className="text-[var(--color-accent-gold)] text-sm">+{price} gp</div>
+        <div className="text-[var(--color-accent-gold)] text-sm">{t('delve.wares.sellPriceGp', { n: price })}</div>
         <Button variant="secondary" onClick={onSell}>
-          Sell
+          {t('delve.wares.sell')}
         </Button>
       </div>
     </div>

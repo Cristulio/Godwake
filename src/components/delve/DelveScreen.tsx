@@ -24,6 +24,7 @@ import { PostmortemModal } from './PostmortemModal';
 import { RoomHeader } from './RoomHeader';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
+import { useT } from '../../i18n/useT';
 
 function decorationForRoom(room: RoomSpec, chapterId: string): BattlefieldDecoration {
   // Branching Godwake delve: nodes carry their chapter, so the backdrop keys
@@ -126,6 +127,7 @@ export function DelveScreen() {
 }
 
 function DelveScreenBody() {
+  const { t } = useT();
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const combat = useGameStore((s) => s.combat);
@@ -215,8 +217,8 @@ function DelveScreenBody() {
   if (!character) {
     return (
       <div className="p-8 text-[var(--color-text-primary)]">
-        <p>No character.</p>
-        <Button onClick={goToHub}>Hub</Button>
+        <p>{t('delve.screen.noCharacter')}</p>
+        <Button onClick={goToHub}>{t('delve.screen.hub')}</Button>
       </div>
     );
   }
@@ -226,10 +228,10 @@ function DelveScreenBody() {
       <div className="min-h-screen p-6 max-w-3xl mx-auto flex flex-col gap-4">
         <Panel>
           <p className="text-[var(--color-text-secondary)] text-sm">
-            No active delve. Return to Phandalin.
+            {t('delve.screen.noDelve')}
           </p>
           <div className="mt-3">
-            <Button onClick={goToHub}>Return to Phandalin</Button>
+            <Button onClick={goToHub}>{t('delve.screen.returnToTown')}</Button>
           </div>
         </Panel>
       </div>
@@ -306,7 +308,7 @@ function DelveScreenBody() {
           scene={isBossRoom ? 'boss' : 'combat'}
           decoration={decorationForRoom(room, delve.chapterId)}
           roomTitle={room.title.toUpperCase()}
-          roomLabel={`${isBossRoom ? 'Boss · ' : isEliteRoom ? 'Elite · ' : ''}Round ${combat.round}`}
+          roomLabel={`${isBossRoom ? t('delve.screen.bossPrefix') : isEliteRoom ? t('delve.screen.elitePrefix') : ''}${t('delve.screen.round', { n: combat.round })}`}
           onAbandon={() => useGameStore.getState().abandonDelve()}
           onCombatResolved={(outcome) => {
             if (outcome === 'victory') {
@@ -339,7 +341,7 @@ function DelveScreenBody() {
     return (
       <div className="min-h-screen p-6 flex items-center justify-center">
         <div className="text-[var(--color-text-dim)] text-sm uppercase tracking-widest animate-pulse">
-          Preparing encounter...
+          {t('delve.screen.preparing')}
         </div>
       </div>
     );
@@ -449,13 +451,14 @@ function DelveTopBar({
   delve: DelveState;
   character: Character;
 }) {
+  const { t } = useT();
   const goToInventory = useGameStore((s) => s.goToInventory);
   return (
     <div className="max-w-3xl w-full mx-auto px-4 md:px-6 pt-4">
       <RoomHeader delve={delve} blessingIds={character.blessings} quirkIds={character.quirks} />
       <div className="flex justify-end mt-2">
         <Button variant="ghost" onClick={goToInventory}>
-          ◆ Open Pack
+          {t('delve.common.openPack')}
         </Button>
       </div>
     </div>

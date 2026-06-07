@@ -3,6 +3,7 @@ import { Button } from '../ui/Button';
 import type { RoomSpec } from '../../types/delve';
 import { useGameStore } from '../../stores/gameStore';
 import { getMonster } from '../../content/monsters';
+import { useT } from '../../i18n/useT';
 
 interface EliteRoomProps {
   room: RoomSpec;
@@ -16,16 +17,17 @@ interface EliteRoomProps {
  * blow costs HP, and you forgo XP, loot, and any chance at a relic.
  */
 export function EliteRoom({ room }: EliteRoomProps) {
+  const { t, tc } = useT();
   const pickEliteChoice = useGameStore((s) => s.pickEliteChoice);
   const character = useGameStore((s) => s.character);
   const bounty = room.goldReward ?? 0;
   const partingBlow = character ? Math.max(1, Math.round(character.hp.max * 0.15)) : null;
 
   const defId = room.monsters?.[0]?.defId;
-  let eliteName = 'An elite foe';
+  let eliteName = t('delve.elite.genericName');
   if (defId) {
     try {
-      eliteName = getMonster(defId).name;
+      eliteName = tc('monsters', defId, 'name', getMonster(defId).name);
     } catch {
       /* unknown id — keep the generic label */
     }
@@ -33,48 +35,47 @@ export function EliteRoom({ room }: EliteRoomProps) {
 
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6">
-      <Panel tone="warm" title="An Elite Bars the Way">
+      <Panel tone="warm" title={t('delve.elite.title')}>
         <p className="text-[var(--color-text-secondary)] text-sm italic mb-4 leading-relaxed font-narrative">
-          {eliteName} holds this ground — scarred, deadly, and guarding something the dark does not
-          give up lightly. You can take it on, or take the coin it watches over and slip past.
+          {t('delve.elite.intro', { name: eliteName })}
         </p>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="panel-etched border-2 border-[var(--color-accent-blood)] p-4 flex flex-col">
             <div className="font-display text-[var(--color-accent-blood)] uppercase tracking-widest text-[11px] mb-1">
-              ⚔ Fight the elite
+              {t('delve.elite.fightHead')}
             </div>
             <p className="text-[var(--color-text-secondary)] text-xs mb-3 leading-relaxed flex-1">
-              Risk the harder battle. A victory yields{' '}
-              <span className="text-[var(--color-accent-gold)]">XP + gold + loot</span>, and may
-              add a <span className="text-[var(--color-accent-gold)]">legendary relic</span> to the
-              reliquary.
+              {t('delve.elite.fightBodyA')}{' '}
+              <span className="text-[var(--color-accent-gold)]">{t('delve.elite.fightBodyLoot')}</span>
+              {t('delve.elite.fightBodyB')}{' '}
+              <span className="text-[var(--color-accent-gold)]">{t('delve.elite.fightBodyRelic')}</span>{' '}
+              {t('delve.elite.fightBodyC')}
             </p>
             <Button variant="primary" onClick={() => pickEliteChoice('fight')} className="w-full">
-              ⚔ Face it
+              {t('delve.elite.fightButton')}
             </Button>
           </div>
           <div className="panel-etched border-2 border-[var(--color-border-warm)] p-4 flex flex-col">
             <div className="font-display text-[var(--color-accent-amber)] uppercase tracking-widest text-[11px] mb-1">
-              ◆ Take the gold
+              {t('delve.elite.goldHead')}
             </div>
             <p className="text-[var(--color-text-secondary)] text-xs mb-3 leading-relaxed flex-1">
-              Slip past with the coin it guards
+              {t('delve.elite.goldBodyA')}
               {bounty > 0 ? (
                 <>
-                  {' '}(<span className="text-[var(--color-accent-gold)]">{bounty} gold</span>)
+                  {' '}(<span className="text-[var(--color-accent-gold)]">{t('delve.elite.goldBounty', { n: bounty })}</span>)
                 </>
               ) : null}
-              . The guardian's blade still finds you on the way out — a wound that cuts
-              deeper the more life you carry,{' '}
+              {t('delve.elite.goldBodyB')}{' '}
               {partingBlow !== null ? (
-                <span className="text-[var(--color-accent-blood)]">lose {partingBlow} HP</span>
+                <span className="text-[var(--color-accent-blood)]">{t('delve.elite.goldLoseHp', { n: partingBlow })}</span>
               ) : (
-                <span className="text-[var(--color-accent-blood)]">lose HP</span>
+                <span className="text-[var(--color-accent-blood)]">{t('delve.elite.goldLoseHpUnknown')}</span>
               )}{' '}
-              entering the next room. No XP, no loot, no relic.
+              {t('delve.elite.goldBodyC')}
             </p>
             <Button variant="secondary" onClick={() => pickEliteChoice('gold')} className="w-full">
-              ◆ Take it and go
+              {t('delve.elite.goldButton')}
             </Button>
           </div>
         </div>

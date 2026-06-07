@@ -1,0 +1,209 @@
+{
+  "common": {
+    "continueDeeper": "Adentrarse más →",
+    "pressOn": "Seguir →",
+    "openPack": "◆ Abrir mochila",
+    "gold": "◈ Oro",
+    "goldInPocketTitle": "Oro en el bolsillo",
+    "hpStat": "PV {current}/{max}"
+  },
+  "header": {
+    "chapter": "Capítulo {n}",
+    "chapterNamed": "Capítulo {n} — {title}",
+    "soulLedger": "◆ Registro del Alma",
+    "soulLedgerTitle": "Mostrar todas las rarezas y bendiciones activas",
+    "ledgerTitle": "◆ El Registro del Alma",
+    "ledgerSub": "Las rarezas son cicatrices del alma — sobreviven a la rueda. Las bendiciones pertenecen al cuerpo y mueren con él.",
+    "close": "✕ Cerrar",
+    "closeTitle": "Cerrar (Esc)",
+    "quirks": "◉ Rarezas",
+    "quirkMarks": {
+      "one": "· {n} marca en el alma",
+      "other": "· {n} marcas en el alma"
+    },
+    "blessings": "◇ Bendiciones",
+    "blessingGifts": {
+      "one": "· {n} don para el camino",
+      "other": "· {n} dones para el camino"
+    }
+  },
+  "rest": {
+    "label": "Descanso · Breve",
+    "knits": "La herida cierra hondo, pero no del todo — la cura verdadera aguarda en el fuego al borde del capítulo.",
+    "restButton": "Descansar (cura 70%, recupera recursos)",
+    "steadied": "Te sientes repuesto."
+  },
+  "shrine": {
+    "label": "Santuario · Un dios escucha",
+    "chooseBlessing": "► Elige una bendición",
+    "leave": "Dejar el altar intacto",
+    "accepts": "◆ El dios acepta el trato",
+    "walkingDeeper": "adentrándose..."
+  },
+  "treasure": {
+    "label": "Tesoro",
+    "gold": "+{n} de oro",
+    "bargain": "· cazador de gangas"
+  },
+  "elite": {
+    "title": "Una Élite Cierra el Paso",
+    "genericName": "Un enemigo de élite",
+    "intro": "{name} domina este lugar — marcado, letal, y custodiando algo que la oscuridad no entrega a la ligera. Puedes enfrentarlo, o tomar la moneda que vigila y escabullirte.",
+    "fightHead": "⚔ Combatir a la élite",
+    "fightBodyA": "Arriesga la batalla más dura. La victoria rinde",
+    "fightBodyLoot": "XP + oro + botín",
+    "fightBodyB": ", y puede sumar una",
+    "fightBodyRelic": "reliquia legendaria",
+    "fightBodyC": "a tu relicario.",
+    "fightButton": "⚔ Enfrentarla",
+    "goldHead": "◆ Tomar el oro",
+    "goldBodyA": "Escabúllete con la moneda que custodia",
+    "goldBounty": "{n} de oro",
+    "goldBodyB": ". La hoja del guardián te alcanza igual a la salida — una herida que corta más hondo cuanta más vida llevas,",
+    "goldLoseHp": "pierdes {n} PV",
+    "goldLoseHpUnknown": "pierdes PV",
+    "goldBodyC": "al entrar en la sala siguiente. Sin XP, sin botín, sin reliquia.",
+    "goldButton": "◆ Tomarlo y partir"
+  },
+  "camp": {
+    "label": "Campamento · Una pausa en el largo camino · La oscuridad más honda aguarda",
+    "goldTitle": "Oro en el bolsillo — lo que puedes gastar en la caravana",
+    "forkIntro": "◆ La hoguera — elige una, las otras dos se cierran ◆",
+    "fork": {
+      "passed": "El momento ha pasado.",
+      "nevermind": "Olvídalo ✕"
+    },
+    "rest": {
+      "title": "Acampar junto al Fuego",
+      "flavor": "Una noche entera junto a las brasas. Las heridas cierran, los dados vuelven a la mano, y lo gastado es tuyo de nuevo antes del alba.",
+      "button": "Acampar",
+      "taken": "Descanso completo — PV restaurados, todos los recursos listos."
+    },
+    "attune": {
+      "title": "Sintonizar junto a las Brasas",
+      "flavor": "Un largo estudio de lo que portas. Vincula a ti un don duradero — se mantiene durante el resto de esta incursión.",
+      "button": "Elegir el rito ↓",
+      "noRite": "Ningún rito que sintonizar",
+      "taken": "{name} — sintonizado. {description}",
+      "panelTitle": "◆ Sintoniza un don · Campamento {tier}",
+      "panelBody": "El camino te ha marcado. Vincula un don para llevar al sur — este es el regalo entero de la noche, así que elige con la oscuridad en mente."
+    },
+    "risk": {
+      "title": "Tentar a la Oscuridad",
+      "flavor": "Arroja los huesos al fuego y pronuncia un nombre. Algo allá afuera, más allá de la luz, siempre escucha — y no da nada gratis.",
+      "button": "Arrojar los huesos ↓",
+      "winBlessing": "{name} concedida, y ",
+      "win": "La oscuridad respondió (sacaste {roll}). {blessing}+{gold} de oro.",
+      "loss": "La oscuridad cobró lo suyo (sacaste {roll}). −{damage} PV.",
+      "panelTitle": "◆ Tentar a la Oscuridad",
+      "panelBody": "Una sola tirada de los huesos. Ni lucha ni huida — solo la tirada y lo que traiga.",
+      "highRoll": "11 o más",
+      "highBody": " — la oscuridad responde: el susurro de una bendición y {gold} de oro (o {altGold} de oro si no queda bendición que dar).",
+      "lowRoll": "10 o menos",
+      "lowBody": " — cobra lo suyo: pierdes {damage} PV (un cuarto de tu salud), hasta no menos de 1.",
+      "throwButton": "Arrojar los huesos"
+    },
+    "caravan": {
+      "title": "◆ El Mercader de la Caravana",
+      "quote": "\"Moneda en este bolsillo, comodidad en el otro. El camino sigue — más vale ir bien provisto antes de la oscuridad.\"",
+      "open": "Acercarse a la caravana →",
+      "openPack": "◆ Abrir tu mochila"
+    },
+    "pressSouth": "Adentrarse en la oscuridad →",
+    "shop": {
+      "title": "El Mercader de la Caravana",
+      "sub": "Moneda y un salvoconducto, sin preguntas.",
+      "close": "Cerrar ×",
+      "arms": "Armas y Armaduras",
+      "reliquary": "✦ Relicario",
+      "draughts": "Brebajes y Amuletos",
+      "done": "Terminar el trato →"
+    },
+    "msg": {
+      "added": "{name} añadido a tu mochila.",
+      "itemFallback": "Objeto",
+      "legendaryBound": "{name} vinculado a tu relicario — sintonízalo en el refugio.",
+      "cannotPurchase": "No se puede comprar."
+    }
+  },
+  "event": {
+    "label": "Suceso · El camino se detiene",
+    "inPocket": "en el bolsillo",
+    "chooseRoad": "► Elige tu camino",
+    "sealed": "⚿ Sellado",
+    "sealedNote": "Las señales están aquí, pero el arte de leerlas aún no es tuyo. Desciende más en la oscuridad para aprenderlo.",
+    "nothing": "Nada digno de nota aquí. El corredor continúa.",
+    "drawSteel": "Desenvainar →",
+    "youChose": "elegiste · {label}",
+    "success": "Éxito",
+    "failure": "Fracaso",
+    "dcBadge": "{skill} CD {dc} · {bonus}",
+    "checkTitle": "Prueba de {skill} ({ability}) — tu bonificador {bonus}{proficient}",
+    "proficientSuffix": ", competente"
+  },
+  "wares": {
+    "restores": "Restaura {dice} PV.",
+    "buy": "Comprar",
+    "sold": "Vendido",
+    "needMore": "Faltan {n}",
+    "sell": "Vender",
+    "priceGp": "{n} mo",
+    "sellPriceGp": "+{n} mo",
+    "legendaryBanks": "Legendaria · se deposita en tu relicario",
+    "relicFallback": "Una reliquia que la muerte no puede llevarse.",
+    "bound": "Vinculada",
+    "acquire": "Adquirir"
+  },
+  "screen": {
+    "noCharacter": "Sin personaje.",
+    "hub": "Refugio",
+    "noDelve": "No hay incursión activa. Vuelve a Phandalin.",
+    "returnToTown": "Volver a Phandalin",
+    "preparing": "Preparando el encuentro...",
+    "bossPrefix": "Jefe · ",
+    "elitePrefix": "Élite · ",
+    "round": "Ronda {n}"
+  },
+  "coach": {
+    "copy": "Una Élite — un combate más duro que el camino que la rodea, y más rico por ello. La decisión de enfrentarla es tuya.",
+    "gotIt": "Entendido",
+    "skip": "Omitir",
+    "aria": "Tutorial de nodo de élite"
+  },
+  "campScene": {
+    "1": "Una hoguera al borde del camino bajo un cielo crepuscular, el sendero doblando hacia el sur.",
+    "2": "Una lámpara sobre un rollo de cuerda al final de un muelle, las torres doradas de Athkatla al otro lado del agua oscura, la barca de un contrabandista amarrada al costado.",
+    "3": "Un fuego químico sin humo en un cuenco de latón iluminando el alijo de un contrabandista en una caverna de la Infraoscuridad, estalactitas en lo alto.",
+    "4": "Un fuego frío sobre una repisa rocosa al borde de una sima, una pálida luz dorada brotando de la grieta en el suelo más adelante.",
+    "5": "Un fuego agonizante en el borde de una Rueda inmensa en el vacío absoluto, un peregrino desgastado ofreciendo una copa.",
+    "6": "Una lámpara entornada al borde de una escalera que se hunde en la oscuridad fría y salina, un rescatador de las profundidades soltando cuerda de sondeo hacia una biblioteca ahogada muy abajo.",
+    "7": "Una hoguera sobre la última piedra húmeda donde el agua negra termina y comienza un campo de ceniza, una figura con los harapos de un uniforme desconocido calentándose las manos mientras cae la ceniza.",
+    "8": "Una pequeña hoguera sobre un suelo de baile de mármol resquebrajado entre fragmentos de espejo erguidos, una figura encapuchada observando un reflejo cuya cara enmascarada no concuerda.",
+    "9": "Un fuego bajo en el suelo del bosque bajo una bóveda que arde anaranjada en lo alto, brasas cayendo, un elfo fugitivo sentado con un arco destensado sobre las rodillas.",
+    "10": "Una pálida luz de alma agonizando en una repisa estrecha sobre un vasto pozo que respira en un infierno rojo, palabras grabadas en la roca a su lado.",
+    "11": "Una débil hoguera de refugiados en una loma sobre una ciudad amurallada cercada por llamas y gigantes, el humo alzándose de Saradush ardiendo abajo, figuras acurrucadas compartiendo el calor.",
+    "12": "Un fuego de vigía donde el camino se bifurca hacia dos puertas oscuras — una entrada drow bajo una montaña a la izquierda, la guarida de un dragón en el yermo profundo a la derecha — un Arpista haciendo girar una hoja a la luz.",
+    "13": "Un fuego sin guardián sobre un fragmento plegado de plano a la deriva en el vacío, una única puerta oscura erguida tras él, un aliado sentado al otro lado de la llama con la mirada apartada.",
+    "14": "El Trono de Bhaal vacío sobre un estrado oscuro en el vacío, una tenue luz de sangre alzándose tras él, un fuego bajo agonizando al pie de los escalones."
+  },
+  "skill": {
+    "acrobatics": "Acrobacia",
+    "animal-handling": "Trato con Animales",
+    "arcana": "Arcanos",
+    "athletics": "Atletismo",
+    "deception": "Engaño",
+    "history": "Historia",
+    "insight": "Perspicacia",
+    "intimidation": "Intimidación",
+    "investigation": "Investigación",
+    "medicine": "Medicina",
+    "nature": "Naturaleza",
+    "perception": "Percepción",
+    "performance": "Interpretación",
+    "persuasion": "Persuasión",
+    "religion": "Religión",
+    "sleight-of-hand": "Juego de Manos",
+    "stealth": "Sigilo",
+    "survival": "Supervivencia"
+  }
+}

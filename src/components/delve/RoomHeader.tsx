@@ -3,6 +3,7 @@ import type { DelveState } from '../../types/delve';
 import { chapterLabel, getTwist } from '../../engine/delve';
 import { BlessingCard } from '../ui/BlessingCard';
 import { QuirkCard } from '../ui/QuirkCard';
+import { useT } from '../../i18n/useT';
 
 interface RoomHeaderProps {
   delve: DelveState;
@@ -20,6 +21,7 @@ interface RoomHeaderProps {
  * any room type without leaving.
  */
 export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeaderProps) {
+  const { t, tc } = useT();
   const [open, setOpen] = useState(false);
   const total = blessingIds.length + quirkIds.length;
   const twist = getTwist(delve.rooms[delve.currentRoomIdx]?.twistId);
@@ -51,9 +53,9 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
               text-[10px] uppercase tracking-widest font-bold px-2 py-1 transition-colors
               flex items-center gap-2
             "
-            title="Show all active quirks and blessings"
+            title={t('delve.header.soulLedgerTitle')}
           >
-            <span>◆ Soul Ledger</span>
+            <span>{t('delve.header.soulLedger')}</span>
             {quirkIds.length > 0 && (
               <span className="text-[var(--color-accent-amber)]">
                 ◉ {quirkIds.length}
@@ -73,10 +75,10 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
           <span className="text-[var(--color-accent-blood)] text-sm leading-none mt-0.5">✦</span>
           <div>
             <div className="font-display text-[var(--color-accent-blood)] text-[10px] uppercase tracking-[0.3em]">
-              {twist.name}
+              {tc('twists', twist.id, 'name', twist.name)}
             </div>
             <p className="text-[var(--color-text-secondary)] text-xs italic mt-0.5 leading-snug">
-              {twist.flavorText}
+              {tc('twists', twist.id, 'flavorText', twist.flavorText)}
             </p>
           </div>
         </div>
@@ -94,28 +96,28 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
             <div className="flex items-center justify-between gap-3 p-4 border-b border-[var(--color-border-warm)]">
               <div>
                 <h2 className="font-display text-[var(--color-accent-amber)] text-base uppercase tracking-[0.2em]">
-                  ◆ The Soul's Ledger
+                  {t('delve.header.ledgerTitle')}
                 </h2>
                 <p className="text-[var(--color-text-dim)] text-xs italic mt-1 normal-case tracking-normal">
-                  Quirks are scars of the soul — they survive the wheel. Blessings belong to the body and end with it.
+                  {t('delve.header.ledgerSub')}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-amber)] text-xs uppercase tracking-widest transition-colors"
-                title="Close (Esc)"
+                title={t('delve.header.closeTitle')}
               >
-                ✕ Close
+                {t('delve.header.close')}
               </button>
             </div>
 
             {quirkIds.length > 0 && (
               <div className="p-4 border-b border-[var(--color-border-dim)]">
                 <div className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
-                  <span>◉ Quirks</span>
+                  <span>{t('delve.header.quirks')}</span>
                   <span className="text-[var(--color-text-dim)]">
-                    · {quirkIds.length} mark{quirkIds.length === 1 ? '' : 's'} on the soul
+                    {t('delve.header.quirkMarks', { count: quirkIds.length, n: quirkIds.length })}
                   </span>
                 </div>
                 <div className="grid md:grid-cols-2 gap-3">
@@ -129,9 +131,9 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
             {blessingIds.length > 0 && (
               <div className="p-4">
                 <div className="font-display text-[var(--color-accent-gold)] text-[10px] uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
-                  <span>◇ Blessings</span>
+                  <span>{t('delve.header.blessings')}</span>
                   <span className="text-[var(--color-text-dim)]">
-                    · {blessingIds.length} gift{blessingIds.length === 1 ? '' : 's'} for the road
+                    {t('delve.header.blessingGifts', { count: blessingIds.length, n: blessingIds.length })}
                   </span>
                 </div>
                 <div className="flex flex-col gap-3">

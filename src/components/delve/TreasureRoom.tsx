@@ -4,6 +4,7 @@ import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { characterQuirkMods, soulMarkMultiplier } from '../../engine/character/quirks';
+import { useT } from '../../i18n/useT';
 
 interface TreasureRoomProps {
   room: RoomSpec;
@@ -11,6 +12,7 @@ interface TreasureRoomProps {
 }
 
 export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
+  const { t } = useT();
   const addDelveReward = useGameStore((s) => s.addDelveReward);
   const character = useGameStore((s) => s.character);
   const [revealed, setRevealed] = useState(false);
@@ -38,7 +40,7 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
           {room.title.toUpperCase()}
         </h1>
         <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-          Treasure
+          {t('delve.treasure.label')}
         </p>
       </header>
 
@@ -57,10 +59,10 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
           </p>
           {revealed && !!room.goldReward && (
             <div className="text-2xl font-mono text-[var(--color-accent-gold)] animate-fade-in">
-              +{actualGold} gold
+              {t('delve.treasure.gold', { n: actualGold })}
               {actualGold > (room.goldReward ?? 0) && (
                 <span className="text-sm text-[var(--color-status-poison)] ml-2 uppercase tracking-widest">
-                  · bargain hunter
+                  {t('delve.treasure.bargain')}
                 </span>
               )}
             </div>
@@ -70,7 +72,7 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
 
       <div className="flex justify-center">
         <Button variant="primary" onClick={onContinue} disabled={!revealed}>
-          Continue Deeper →
+          {t('delve.common.continueDeeper')}
         </Button>
       </div>
     </div>

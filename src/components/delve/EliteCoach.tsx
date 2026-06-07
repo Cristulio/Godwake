@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import type { CSSProperties } from 'react';
 import { useMetaStore } from '../../stores/metaStore';
 import { ELITE_INTRO_TUTORIAL_ID } from '../../content/tutorials';
+import { useT } from '../../i18n/useT';
 import {
   unionBox,
   spotlightGeometry,
@@ -79,9 +80,6 @@ export function useEliteIntroCoach(hasSelectableElite: boolean): {
 
 const SELECTOR = '[data-tutorial="elite"]';
 
-const COPY =
-  'An Elite — a harder fight than the road around it, and richer for it. The choice to brave it is yours.';
-
 function boxChanged(a: Box | null, b: Box | null): boolean {
   if ((a == null) !== (b == null)) return true;
   if (!a || !b) return false;
@@ -99,6 +97,7 @@ interface EliteCoachProps {
 }
 
 export function EliteCoach({ onDismiss }: EliteCoachProps) {
+  const { t } = useT();
   const [box, setBox] = useState<Box | null>(null);
   const boxRef = useRef<Box | null>(null);
   const [reduced] = useState(
@@ -145,7 +144,7 @@ export function EliteCoach({ onDismiss }: EliteCoachProps) {
   const dimPanel = 'absolute bg-black/55 pointer-events-none';
 
   const overlay = (
-    <div className="fixed inset-0 z-[60] pointer-events-none" role="dialog" aria-label="Elite node tutorial">
+    <div className="fixed inset-0 z-[60] pointer-events-none" role="dialog" aria-label={t('delve.coach.aria')}>
       <div className={dimPanel} style={{ top: 0, left: 0, right: 0, height: y0 }} />
       <div className={dimPanel} style={{ top: y1, left: 0, right: 0, bottom: 0 }} />
       <div className={dimPanel} style={{ top: y0, left: 0, width: x0, height: h }} />
@@ -174,7 +173,7 @@ export function EliteCoach({ onDismiss }: EliteCoachProps) {
         style={bubblePos}
         aria-live="polite"
       >
-        <p className="text-[var(--color-text-primary)] text-sm leading-snug">{COPY}</p>
+        <p className="text-[var(--color-text-primary)] text-sm leading-snug">{t('delve.coach.copy')}</p>
         <div className="flex items-center justify-center gap-3 mt-2.5">
           <button
             type="button"
@@ -182,7 +181,7 @@ export function EliteCoach({ onDismiss }: EliteCoachProps) {
             className="btn-chunky border-2 px-4 py-1.5 text-[11px] uppercase tracking-widest font-bold
               bg-[var(--color-accent-blood)] text-[var(--color-bg-base)] border-[var(--color-accent-deep-blood)]"
           >
-            Got it
+            {t('delve.coach.gotIt')}
           </button>
           <button
             type="button"
@@ -190,7 +189,7 @@ export function EliteCoach({ onDismiss }: EliteCoachProps) {
             className="text-[10px] uppercase tracking-widest text-[var(--color-text-dim)]
               hover:text-[var(--color-accent-blood)] transition-colors"
           >
-            Skip
+            {t('delve.coach.skip')}
           </button>
         </div>
       </div>

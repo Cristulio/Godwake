@@ -1,4 +1,5 @@
 import type { DelveState, RoomSpec } from '../../types/delve';
+import { t } from '../../i18n';
 import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from './constants';
 import { createRng, randomSeed } from '../dice/rng';
 import { clampAscension, ascensionEliteVariants, ascensionDungeonTwists } from './ascension';
@@ -1966,5 +1967,7 @@ export function chapterLabel(state: DelveState, chapter: number): string {
   const bossTitle = state.rooms.find(
     (r) => r.chapter === chapter && r.kind === 'boss',
   )?.title;
-  return bossTitle ? `Chapter ${chapter} — ${bossTitle}` : `Chapter ${chapter}`;
+  return bossTitle
+    ? t('delve.header.chapterNamed', { n: chapter, title: bossTitle })
+    : t('delve.header.chapter', { n: chapter });
 }

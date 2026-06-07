@@ -24,12 +24,12 @@ import type { Character } from '../../types/character';
 import { playSfx } from '../../engine/audio';
 import type { EventChoice } from '../../schemas/event';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
+import { useT } from '../../i18n/useT';
 
-function skillLabel(skill: SkillName): string {
-  return skill
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
+type TFn = (key: string, params?: Record<string, string | number>) => string;
+
+function skillLabel(skill: SkillName, t: TFn): string {
+  return t(`delve.skill.${skill}`);
 }
 
 interface EventRoomProps {
@@ -47,6 +47,7 @@ interface ResolvedTurn {
 }
 
 export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
+  const { t, tc } = useT();
   const character = useGameStore((s) => s.character);
   const setCharacter = useGameStore((s) => s.setCharacter);
 
@@ -80,7 +81,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
         <EventIllustration explicit={template?.illustration} chapter={room.chapter} />
         <Panel>
           <p className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest mb-2">
-            ⚿ Sealed
+            {t('delve.event.sealed')}
           </p>
           <h2 className="font-display text-[var(--color-accent-amber)] text-lg uppercase tracking-wider mb-3">
             {room.title}
@@ -89,12 +90,12 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
             {room.flavorText}
           </p>
           <p className="text-[var(--color-text-dim)] text-xs mt-4 italic">
-            The signs are here, but the art of reading them is not yet yours. Descend deeper into the dark to learn it.
+            {t('delve.event.sealedNote')}
           </p>
         </Panel>
         <div className="flex justify-center">
           <Button variant="primary" onClick={onContinue}>
-            Press On →
+            {t('delve.common.pressOn')}
           </Button>
         </div>
       </div>
@@ -107,12 +108,12 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
         <EventIllustration chapter={room.chapter} />
         <Panel>
           <p className="text-[var(--color-text-secondary)] text-sm">
-            Nothing of note here. The corridor goes on.
+            {t('delve.event.nothing')}
           </p>
         </Panel>
         <div className="flex justify-center">
           <Button variant="primary" onClick={onContinue}>
-            Continue Deeper →
+            {t('delve.common.continueDeeper')}
           </Button>
         </div>
       </div>
@@ -157,10 +158,10 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-            {template.title.toUpperCase()}
+            {tc('events', template.id, 'title', template.title).toUpperCase()}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-            Event · The road pauses
+            {t('delve.event.label')}
           </p>
         </div>
         <div data-testid="gold-balance" className="shrink-0 text-right">
@@ -168,21 +169,21 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
             {character.goldInPocket}g
           </div>
           <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
-            in pocket
+            {t('delve.event.inPocket')}
           </div>
         </div>
       </header>
 
       <Panel tone="warm" className="bg-gradient-to-br from-[#2d2418] to-[#221a14]">
         <p className="text-[var(--color-text-primary)] text-base italic leading-7">
-          {template.flavor}
+          {tc('events', template.id, 'flavor', template.flavor)}
         </p>
       </Panel>
 
       {!resolved ? (
         <>
           <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em] text-center">
-            ► Choose your road
+            {t('delve.event.chooseRoad')}
           </div>
           <div className="flex flex-col gap-3">
             {template.choices.map((choice) => (
@@ -217,6 +218,7 @@ interface ChoiceButtonProps {
 }
 
 function ChoiceButton({ choice, character, goldScale, onPick }: ChoiceButtonProps) {
+  const { t } = useT();
   const availability = canTakeChoice(character, choice, goldScale);
   const disabled = !availability.ok;
   const disabledReason = !availability.ok ? availability.reason : null;
@@ -253,15 +255,23 @@ function ChoiceButton({ choice, character, goldScale, onPick }: ChoiceButtonProp
           {skillTag && (
             <div
               data-testid="skillcheck-badge"
-              title={`${skillLabel(skillTag.skill)} (${ABILITY_FULL_NAMES[SKILL_TO_ABILITY[skillTag.skill]]}) check — your bonus ${skillTag.bonus >= 0 ? '+' : ''}${skillTag.bonus}${skillTag.proficient ? ', proficient' : ''}`}
+              title={t('delve.event.checkTitle', {
+                skill: skillLabel(skillTag.skill, t),
+                ability: ABILITY_FULL_NAMES[SKILL_TO_ABILITY[skillTag.skill]],
+                bonus: `${skillTag.bonus >= 0 ? '+' : ''}${skillTag.bonus}`,
+                proficient: skillTag.proficient ? t('delve.event.proficientSuffix') : '',
+              })}
               className={`text-[10px] uppercase tracking-widest border px-1.5 py-0.5 ${
                 skillTag.proficient
                   ? 'text-[var(--color-accent-amber)] border-[var(--color-accent-amber)]/60'
                   : 'text-[var(--color-text-secondary)] border-[var(--color-border-warm)]'
               }`}
             >
-              {skillLabel(skillTag.skill)} DC {skillTag.dc} · {skillTag.bonus >= 0 ? '+' : ''}
-              {skillTag.bonus}
+              {t('delve.event.dcBadge', {
+                skill: skillLabel(skillTag.skill, t),
+                dc: skillTag.dc,
+                bonus: `${skillTag.bonus >= 0 ? '+' : ''}${skillTag.bonus}`,
+              })}
             </div>
           )}
           {choice.successChance !== undefined && (
@@ -301,11 +311,12 @@ interface ResolutionPanelProps {
 }
 
 function ResolutionPanel({ choiceLabel, result, check, onContinue }: ResolutionPanelProps) {
-  const continueLabel = result.ambush ? 'Draw steel →' : 'Continue Deeper →';
+  const { t } = useT();
+  const continueLabel = result.ambush ? t('delve.event.drawSteel') : t('delve.common.continueDeeper');
   return (
     <div className="flex flex-col gap-4 animate-fade-in">
       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest text-center">
-        you chose · {choiceLabel}
+        {t('delve.event.youChose', { label: choiceLabel })}
       </div>
       {check && (
         <div
@@ -316,10 +327,10 @@ function ResolutionPanel({ choiceLabel, result, check, onContinue }: ResolutionP
               : 'text-[var(--color-accent-blood)]'
           }`}
         >
-          {skillLabel(check.skill)} · d20 {check.d20}
+          {skillLabel(check.skill, t)} · d20 {check.d20}
           {check.abilityMod !== 0 && ` ${check.abilityMod >= 0 ? '+' : '−'}${Math.abs(check.abilityMod)}`}
           {check.proficiencyMod !== 0 && ` +${check.proficiencyMod}`} = {check.total} vs DC {check.dc} —{' '}
-          {check.passed ? 'Success' : 'Failure'}
+          {check.passed ? t('delve.event.success') : t('delve.event.failure')}
         </div>
       )}
       <Panel tone="warm">

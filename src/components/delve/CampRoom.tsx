@@ -18,6 +18,7 @@ import {
 import { consumableStockForTier, rollGearStock, rollLegendaryOffer, type GearStock, type LegendaryOffer } from './shopStock';
 import { GearWareRow, ConsumableWareRow, LegendaryWareRow } from './MerchantWares';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
+import { useT } from '../../i18n/useT';
 
 /** Whether the caravan shop is open. Blessings are granted at shrines, not
  * here — the camp only sells wares. */
@@ -34,6 +35,7 @@ interface CampRoomProps {
 }
 
 export function CampRoom({ room, onPressSouth }: CampRoomProps) {
+  const { t, tc } = useT();
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const campChoice = useGameStore((s) => s.delve?.campChoice ?? null);
@@ -179,10 +181,10 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     const r = purchaseFromMerchant(itemId);
     if (r.ok) {
       recordShopPurchase(room.id, itemId);
-      setPurchaseMessage(`${getItem(itemId).name} added to your pack.`);
+      setPurchaseMessage(t('delve.camp.msg.added', { name: getItem(itemId).name }));
       playSfx('ui_click');
     } else {
-      setPurchaseMessage(r.reason ?? 'Cannot purchase.');
+      setPurchaseMessage(r.reason ?? t('delve.camp.msg.cannotPurchase'));
     }
   }
 
@@ -190,10 +192,12 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     const r = purchaseRolledGear(stock.ref, stock.cost);
     if (r.ok) {
       recordShopPurchase(room.id, key);
-      setPurchaseMessage(`${stock.ref.rolled?.name ?? 'Item'} added to your pack.`);
+      setPurchaseMessage(
+        t('delve.camp.msg.added', { name: stock.ref.rolled?.name ?? t('delve.camp.msg.itemFallback') }),
+      );
       playSfx('ui_click');
     } else {
-      setPurchaseMessage(r.reason ?? 'Cannot purchase.');
+      setPurchaseMessage(r.reason ?? t('delve.camp.msg.cannotPurchase'));
     }
   }
 
@@ -202,10 +206,10 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     const r = purchaseLegendary(legendaryOffer.legendaryId, legendaryOffer.cost);
     if (r.ok) {
       recordShopPurchase(room.id, 'legendary');
-      setPurchaseMessage(`${legendaryOffer.name} bound to your reliquary — attune it at the hub.`);
+      setPurchaseMessage(t('delve.camp.msg.legendaryBound', { name: legendaryOffer.name }));
       playSfx('ui_click');
     } else {
-      setPurchaseMessage(r.reason ?? 'Cannot purchase.');
+      setPurchaseMessage(r.reason ?? t('delve.camp.msg.cannotPurchase'));
     }
   }
 
@@ -224,15 +228,15 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
             {room.title.toUpperCase()}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
-            Camp · A pause on the long road · The deeper dark ahead
+            {t('delve.camp.label')}
           </p>
         </div>
         <div
           className="shrink-0 panel-etched-warm border border-[var(--color-accent-gold)] px-3 py-1.5 text-right"
-          title="Gold in pocket — what you can spend at the caravan"
+          title={t('delve.camp.goldTitle')}
         >
           <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
-            ◈ Gold
+            {t('delve.common.gold')}
           </div>
           <div
             className="font-mono text-lg text-[var(--color-accent-gold)] leading-none"
@@ -250,29 +254,29 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
             {room.flavorText}
           </p>
           <div className="text-xs uppercase tracking-widest text-[var(--color-text-dim)]">
-            HP {character.hp.current}/{character.hp.max}
+            {t('delve.common.hpStat', { current: character.hp.current, max: character.hp.max })}
           </div>
         </div>
       </Panel>
 
       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest text-center">
-        ◆ The campfire — take one, the other two close ◆
+        {t('delve.camp.forkIntro')}
       </div>
 
       <div className="grid md:grid-cols-3 gap-3 items-start">
         <ForkCard
-          title="Make Camp at the Fire"
-          flavor="A full night by the coals. Wounds close, dice come home to the hand, and what was spent is yours again before dawn."
+          title={t('delve.camp.rest.title')}
+          flavor={t('delve.camp.rest.flavor')}
           state={
             restTaken ? 'taken' : committed ? 'closed' : 'open'
           }
-          buttonLabel="Make camp"
+          buttonLabel={t('delve.camp.rest.button')}
           onPick={handleRest}
-          takenSummary="Full rest — HP restored, all resources readied."
+          takenSummary={t('delve.camp.rest.taken')}
         />
         <ForkCard
-          title="Attune by the Coals"
-          flavor="A long study of what you carry. Bind one lasting boon into yourself — it holds for the rest of this delve."
+          title={t('delve.camp.attune.title')}
+          flavor={t('delve.camp.attune.flavor')}
           state={
             boonTaken
               ? 'taken'
@@ -282,33 +286,45 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
                   ? 'active'
                   : 'open'
           }
-          buttonLabel={boonOptions.length === 0 ? 'No rite to attune' : 'Choose the rite ↓'}
+          buttonLabel={boonOptions.length === 0 ? t('delve.camp.attune.noRite') : t('delve.camp.attune.button')}
           disabled={boonOptions.length === 0}
           onPick={() => toggleBranch('attune')}
           takenSummary={
             takenBoon
-              ? `${takenBoon.name} — attuned. ${takenBoon.description}`
+              ? t('delve.camp.attune.taken', {
+                  name: tc('campBoons', takenBoon.id, 'name', takenBoon.name),
+                  description: tc('campBoons', takenBoon.id, 'description', takenBoon.description),
+                })
               : undefined
           }
         />
         <ForkCard
-          title="Tempt the Dark"
-          flavor="Throw the bones into the fire and speak a name. Something out past the light is always listening — and it does not give for free."
+          title={t('delve.camp.risk.title')}
+          flavor={t('delve.camp.risk.flavor')}
           state={
             riskTaken ? 'taken' : committed ? 'closed' : expanded === 'risk' ? 'active' : 'open'
           }
-          buttonLabel="Throw the bones ↓"
+          buttonLabel={t('delve.camp.risk.button')}
           onPick={() => toggleBranch('risk')}
           takenTone={riskResult?.outcome === 'loss' ? 'bad' : 'good'}
           takenSummary={
             riskResult
               ? riskResult.outcome === 'win'
-                ? `The dark answered (rolled ${riskResult.roll}). ${
-                    riskResult.blessingId
-                      ? `${getBlessing(riskResult.blessingId).name} granted, and `
-                      : ''
-                  }+${riskResult.gold} gold.`
-                : `The dark took its due (rolled ${riskResult.roll}). −${riskResult.damage} HP.`
+                ? t('delve.camp.risk.win', {
+                    roll: riskResult.roll,
+                    blessing: riskResult.blessingId
+                      ? t('delve.camp.risk.winBlessing', {
+                          name: tc(
+                            'blessings',
+                            riskResult.blessingId,
+                            'name',
+                            getBlessing(riskResult.blessingId).name,
+                          ),
+                        })
+                      : '',
+                    gold: riskResult.gold,
+                  })
+                : t('delve.camp.risk.loss', { roll: riskResult.roll, damage: riskResult.damage })
               : undefined
           }
         />
@@ -317,11 +333,10 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
       {!committed && expanded === 'attune' && boonOptions.length > 0 && (
         <Panel className="bg-gradient-to-br from-[#1e1a2a] to-[#100d18] border-[var(--color-accent-amber)] animate-fade-in">
           <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
-            ◆ Attune one boon · Camp {campTier}
+            {t('delve.camp.attune.panelTitle', { tier: campTier ?? 1 })}
           </div>
           <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-            The road has marked you. Bind one boon to carry south — this is the
-            night's whole gift, so choose with the dark in mind.
+            {t('delve.camp.attune.panelBody')}
           </p>
           <div className="grid md:grid-cols-3 gap-3">
             {boonOptions.map((b) => (
@@ -332,13 +347,13 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
                 className="text-left border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] hover:bg-[#2a1d12] transition-colors p-3 flex flex-col gap-1"
               >
                 <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest">
-                  {b.name}
+                  {tc('campBoons', b.id, 'name', b.name)}
                 </div>
                 <div className="text-[var(--color-text-primary)] text-xs leading-relaxed">
-                  {b.description}
+                  {tc('campBoons', b.id, 'description', b.description)}
                 </div>
                 <div className="text-[var(--color-text-dim)] text-[11px] italic leading-relaxed mt-1">
-                  {b.flavor}
+                  {tc('campBoons', b.id, 'flavor', b.flavor)}
                 </div>
               </button>
             ))}
@@ -349,25 +364,23 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
       {!committed && expanded === 'risk' && (
         <Panel className="rest-fork-ember bg-gradient-to-br from-[#2a1212] to-[#160a0a] animate-fade-in">
           <div className="text-[var(--color-status-poison)] text-xs uppercase tracking-widest mb-2">
-            ◆ Tempt the Dark
+            {t('delve.camp.risk.panelTitle')}
           </div>
           <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-            One throw of the bones. No fight, no flight — only the roll and what
-            it brings.
+            {t('delve.camp.risk.panelBody')}
           </p>
           <ul className="text-[var(--color-text-primary)] text-xs leading-relaxed mb-4 flex flex-col gap-1">
             <li>
-              <span className="text-[var(--color-accent-gold)]">11 or higher</span> — the dark
-              answers: a blessing's whisper{` and ${15 * riskTier} gold`} (or {50 * riskTier} gold
-              if no blessing is left to give).
+              <span className="text-[var(--color-accent-gold)]">{t('delve.camp.risk.highRoll')}</span>
+              {t('delve.camp.risk.highBody', { gold: 15 * riskTier, altGold: 50 * riskTier })}
             </li>
             <li>
-              <span className="text-[var(--color-status-poison)]">10 or lower</span> — it takes
-              its due: you lose {riskDamage} HP (a quarter of your health), down to no less than 1.
+              <span className="text-[var(--color-status-poison)]">{t('delve.camp.risk.lowRoll')}</span>
+              {t('delve.camp.risk.lowBody', { damage: riskDamage })}
             </li>
           </ul>
           <Button variant="primary" onClick={resolveRisk}>
-            Throw the bones
+            {t('delve.camp.risk.throwButton')}
           </Button>
         </Panel>
       )}
@@ -380,24 +393,24 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
       <Panel>
         <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest mb-2">
-          ◆ The Caravan-Merchant
+          {t('delve.camp.caravan.title')}
         </div>
         <p className="text-[var(--color-text-secondary)] text-xs italic mb-3 leading-relaxed">
-          "Coin in this pocket, comfort in the other. The road keeps going — best you're well-stocked before the dark."
+          {t('delve.camp.caravan.quote')}
         </p>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" onClick={openShop}>
-            Step up to the caravan →
+            {t('delve.camp.caravan.open')}
           </Button>
           <Button variant="ghost" onClick={goToInventory}>
-            ◆ Open your pack
+            {t('delve.camp.caravan.openPack')}
           </Button>
         </div>
       </Panel>
 
       <div className="flex justify-center mt-2">
         <Button variant="primary" onClick={onPressSouth}>
-          Press on into the dark →
+          {t('delve.camp.pressSouth')}
         </Button>
       </div>
 
@@ -451,25 +464,26 @@ function ShopModal({
   onBuyLegendary,
   onClose,
 }: ShopModalProps) {
+  const { t } = useT();
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in">
       <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto bg-[var(--color-bg-base)] border-2 border-[var(--color-accent-amber)] p-4 md:p-5">
         <header className="sticky top-0 z-10 -mx-4 -mt-4 px-4 pt-4 md:-mx-5 md:-mt-5 md:px-5 md:pt-5 pb-3 mb-4 bg-[var(--color-bg-base)] flex flex-wrap justify-between items-center gap-3 border-b border-[var(--color-border-warm)]">
           <div>
             <h2 className="font-display text-lg text-[var(--color-accent-amber)] uppercase tracking-[0.15em]">
-              The Caravan-Merchant
+              {t('delve.camp.shop.title')}
             </h2>
             <p className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic mt-1">
-              Coin and a charter, no questions asked.
+              {t('delve.camp.shop.sub')}
             </p>
           </div>
           <div className="flex items-center gap-3">
             <div
               className="panel-etched-warm border border-[var(--color-accent-gold)] px-3 py-2 text-right"
-              title="Gold in pocket"
+              title={t('delve.common.goldInPocketTitle')}
             >
               <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
-                ◈ Gold
+                {t('delve.common.gold')}
               </div>
               <div
                 className="font-mono text-xl text-[var(--color-accent-gold)] leading-none"
@@ -483,7 +497,7 @@ function ShopModal({
               onClick={onClose}
               className="text-[var(--color-text-dim)] hover:text-[var(--color-accent-amber)] text-xs uppercase tracking-widest"
             >
-              Close ×
+              {t('delve.camp.shop.close')}
             </button>
           </div>
         </header>
@@ -491,7 +505,7 @@ function ShopModal({
         {gear.length > 0 && (
           <div className="mb-5">
             <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
-              Arms &amp; Armour
+              {t('delve.camp.shop.arms')}
             </div>
             <div className="grid gap-3">
               {gear.map((stock, i) => {
@@ -513,7 +527,7 @@ function ShopModal({
         {legendaryOffer && (
           <div className="mb-5">
             <div className="text-[var(--color-accent-gold)] text-[10px] uppercase tracking-[0.3em] mb-2">
-              ✦ Reliquary
+              {t('delve.camp.shop.reliquary')}
             </div>
             <div className="grid gap-3">
               <LegendaryWareRow
@@ -529,7 +543,7 @@ function ShopModal({
         {consumables.length > 0 && (
           <div className="mb-5">
             <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
-              Draughts &amp; Charms
+              {t('delve.camp.shop.draughts')}
             </div>
             <div className="grid gap-3">
               {consumables.map((item) => (
@@ -553,7 +567,7 @@ function ShopModal({
 
         <div className="sticky bottom-0 -mx-4 -mb-4 px-4 md:-mx-5 md:-mb-5 md:px-5 mt-5 py-3 bg-[var(--color-bg-base)] border-t border-[var(--color-border-warm)] flex justify-end">
           <Button variant="primary" onClick={onClose}>
-            Done trading →
+            {t('delve.camp.shop.done')}
           </Button>
         </div>
       </div>
@@ -585,6 +599,7 @@ function ForkCard({
   takenTone = 'good',
   disabled = false,
 }: ForkCardProps) {
+  const { t } = useT();
   const panelClass = [
     state === 'closed' ? 'opacity-40' : '',
     state === 'active'
@@ -614,7 +629,7 @@ function ForkCard({
         </div>
       ) : state === 'closed' ? (
         <div className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic">
-          The moment has passed.
+          {t('delve.camp.fork.passed')}
         </div>
       ) : (
         <Button
@@ -622,7 +637,7 @@ function ForkCard({
           disabled={disabled}
           onClick={onPick}
         >
-          {state === 'active' ? 'Never mind ✕' : buttonLabel}
+          {state === 'active' ? t('delve.camp.fork.nevermind') : buttonLabel}
         </Button>
       )}
     </Panel>
