@@ -511,7 +511,6 @@
     "wildShapeOn": "Already wearing the beast — claws out until the form spends out or fades.",
     "wildShapeEmpty": "No Wild Shape changes left this combat — they refresh next fight.",
     "wildShape": "Bonus action: shed the body for a beast's shape — gain its vitality as temporary HP and rend with claws for several rounds. Once or twice per combat.",
-    "entangle": "Bonus action, costs a 2nd-level slot: grasping roots sweep the floor — every enemy makes a Strength save or is rooted, losing its next turn. Root the room and still strike the same turn.",
     "spells": "Action: pick a prepared spell."
   }
 }

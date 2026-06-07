@@ -709,10 +709,11 @@ export function hasRemainingTurnPlay(
     character.classId === 'ranger' &&
     !character.actionEconomy.bonusActionUsed &&
     !markOnLiveTarget;
-  // Druid Entangling Roots is a bonus-action cast (its own ActionBar button), so
-  // a druid sitting on a free bonus action and a 2nd-level slot still has a play
-  // worth holding the turn open for — mirror the monk Ki / fighter Second Wind
-  // holds rather than auto-ending before Roots can go off.
+  // Druid Entangling Roots is a bonus-action cast (cast from the Spells menu like
+  // any other 2nd-circle working), so a druid sitting on a free bonus action and a
+  // 2nd-level slot still has a play worth holding the turn open for — mirror the
+  // monk Ki / fighter Second Wind holds rather than auto-ending before Roots can
+  // go off.
   const hasUsableEntangle =
     character.classId === 'druid' &&
     !character.actionEconomy.bonusActionUsed &&

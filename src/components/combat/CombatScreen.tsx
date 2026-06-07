@@ -507,18 +507,6 @@ export function CombatScreen({
     if (result.cast) setCombat(result.state);
   }
 
-  // Druid Entangling Roots: a one-tap bonus-action cast straight from the
-  // ActionBar (no Spells-list dig, no target pick — it's an AoE that roots every
-  // foe). Spends the bonus action, leaving the main action for an attack/blast.
-  function handleEntangle() {
-    cancelTargeting();
-    const aliveMonsters = state.combatants.filter(
-      (c) => c.kind === 'monster' && c.instance.hp.current > 0,
-    );
-    if (aliveMonsters.length === 0) return;
-    doCastSpell('entangling-roots', aliveMonsters[0].id);
-  }
-
   // Druid Wild Shape: a one-tap bonus-action shift into the beast form (temp-HP
   // cushion + claws) straight from the ActionBar. Self-targeted, so it clears any
   // in-progress target pick like the other self actions.
@@ -852,7 +840,6 @@ export function CombatScreen({
             onPatientDefense={handlePatientDefense}
             onStunningStrike={handleStunningStrike}
             onHuntersMark={handleHuntersMarkClick}
-            onEntangle={handleEntangle}
             onWildShape={handleWildShape}
             onSpells={() => setPickingSpell(true)}
             onUseItem={() => setPickingItem(true)}

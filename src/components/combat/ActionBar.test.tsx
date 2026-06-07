@@ -21,7 +21,6 @@ const handlers = {
   onPatientDefense: () => {},
   onStunningStrike: () => {},
   onHuntersMark: () => {},
-  onEntangle: () => {},
   onWildShape: () => {},
   onSpells: () => {},
   onUseItem: () => {},
@@ -143,13 +142,12 @@ describe('ActionBar spell button gating', () => {
   });
 });
 
-describe('ActionBar — Druid Entangling Roots (dedicated bonus-action button)', () => {
+describe('ActionBar — Druid has no dedicated Entangling Roots button (cast via Spells)', () => {
   /** A druid carrying `level2` second-level slots — Entangle's cost. */
-  function druidWithSlots(level2: number, extra: Partial<Character> = {}): Character {
+  function druidWithSlots(level2: number): Character {
     const base = characterOfClass('druid');
     return {
       ...base,
-      ...extra,
       resources: {
         ...base.resources,
         spellSlots: { ...(base.resources.spellSlots ?? {}), 2: level2 },
@@ -169,30 +167,17 @@ describe('ActionBar — Druid Entangling Roots (dedicated bonus-action button)',
     return (btn as HTMLButtonElement) ?? null;
   }
 
-  it('renders for a druid and is enabled with a 2nd-level slot on the player turn', () => {
-    const btn = entangleButton(druidWithSlots(1));
-    expect(btn).not.toBeNull();
-    expect(btn?.disabled).toBe(false);
+  // Entangling Roots is now an ordinary 2nd-circle working cast through the Spells
+  // menu (like the wizard's Hold Person), not a dedicated bonus-action button.
+  it('shows no Entangling Roots button even with a 2nd-level slot up', () => {
+    expect(entangleButton(druidWithSlots(1))).toBeNull();
+    expect(entangleButton(druidWithSlots(0))).toBeNull();
   });
 
-  it('is disabled with no 2nd-level slot remaining', () => {
-    const btn = entangleButton(druidWithSlots(0));
-    expect(btn).not.toBeNull();
-    expect(btn?.disabled).toBe(true);
-  });
-
-  it('is disabled once the bonus action is already used', () => {
-    const btn = entangleButton(
-      druidWithSlots(1, {
-        actionEconomy: { actionUsed: false, bonusActionUsed: true, reactionUsed: false },
-      }),
-    );
-    expect(btn?.disabled).toBe(true);
-  });
-
-  it('does not render for non-druids (wizard / fighter)', () => {
-    expect(entangleButton(characterOfClass('wizard'))).toBeNull();
-    expect(entangleButton(characterOfClass('fighter'))).toBeNull();
+  // …but the generic Spells button lights up once a 2nd-level slot exists, since
+  // Entangle becomes castable through it.
+  it('lights the Spells button for a druid holding a 2nd-level slot', () => {
+    expect(hasSpellsButton(druidWithSlots(1))).toBe(true);
   });
 });
 

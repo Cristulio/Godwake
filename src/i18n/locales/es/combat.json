@@ -511,7 +511,6 @@
     "wildShapeOn": "Ya llevas la bestia — garras fuera hasta que la forma se agote o se desvanezca.",
     "wildShapeEmpty": "No quedan cambios de Forma Salvaje este combate — se renuevan la próxima lucha.",
     "wildShape": "Acción adicional: muda el cuerpo por la forma de una bestia — gana su vitalidad como PG temporales y desgarra con garras durante varias rondas. Una o dos veces por combate.",
-    "entangle": "Acción adicional, cuesta un espacio de nivel 2: raíces aferrantes barren el suelo — todo enemigo hace una salvación de Fuerza o queda enraizado, perdiendo su próximo turno. Enraíza la sala y aún golpea el mismo turno.",
     "spells": "Acción: elige un conjuro preparado."
   }
 }
