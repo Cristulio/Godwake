@@ -15,8 +15,8 @@ export const BURNING_DEAD: Monster = MonsterSchema.parse({
   cr: '10',
   size: 'medium',
   creatureType: 'undead',
-  ac: 16,
-  maxHp: 124,
+  ac: 18,
+  maxHp: 146,
   speed: 30,
   abilityScores: { str: 15, dex: 12, con: 16, int: 6, wis: 9, cha: 8 },
   passivePerception: 9,
@@ -26,8 +26,8 @@ export const BURNING_DEAD: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Charred Grasp',
-      attackBonus: 8,
-      damage: '2d8+4',
+      attackBonus: 11,
+      damage: '2d8+6',
       damageType: 'fire',
       reach: 5,
       description:
@@ -37,7 +37,7 @@ export const BURNING_DEAD: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'A Face Still Screaming',
       condition: 'frightened',
-      saveDC: 16,
+      saveDC: 18,
       saveAbility: 'wis',
       durationRounds: 2,
       description:

@@ -16,8 +16,8 @@ export const HOARDING_FIEND_OF_GREED: Monster = MonsterSchema.parse({
   cr: '12',
   size: 'large',
   creatureType: 'fiend (sin-manifestation)',
-  ac: 19,
-  maxHp: 200,
+  ac: 20,
+  maxHp: 230,
   speed: 25,
   abilityScores: { str: 19, dex: 12, con: 20, int: 13, wis: 14, cha: 17 },
   passivePerception: 12,
@@ -35,8 +35,8 @@ export const HOARDING_FIEND_OF_GREED: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Fist of Fused Treasure',
-      attackBonus: 12,
-      damage: '2d12+7',
+      attackBonus: 14,
+      damage: '2d12+8',
       damageType: 'bludgeoning',
       reach: 10,
       description:

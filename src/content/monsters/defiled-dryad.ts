@@ -13,8 +13,8 @@ export const DEFILED_DRYAD: Monster = MonsterSchema.parse({
   cr: '10',
   size: 'medium',
   creatureType: 'fey',
-  ac: 16,
-  maxHp: 120,
+  ac: 17,
+  maxHp: 136,
   speed: 30,
   abilityScores: { str: 13, dex: 17, con: 16, int: 14, wis: 18, cha: 19 },
   passivePerception: 15,
@@ -24,7 +24,7 @@ export const DEFILED_DRYAD: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Soured Charm',
       condition: 'frightened',
-      saveDC: 16,
+      saveDC: 17,
       saveAbility: 'wis',
       durationRounds: 2,
       description:
@@ -33,8 +33,8 @@ export const DEFILED_DRYAD: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Bramble Lash',
-      attackBonus: 10,
-      damage: '2d8+5',
+      attackBonus: 11,
+      damage: '2d8+6',
       damageType: 'slashing',
       reach: 10,
       description:

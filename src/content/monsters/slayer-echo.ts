@@ -15,8 +15,8 @@ export const SLAYER_ECHO: Monster = MonsterSchema.parse({
   cr: '14',
   size: 'large',
   creatureType: 'fiend (bhaal-avatar)',
-  ac: 20,
-  maxHp: 222,
+  ac: 21,
+  maxHp: 258,
   speed: 40,
   abilityScores: { str: 21, dex: 18, con: 20, int: 10, wis: 12, cha: 10 },
   passivePerception: 13,
@@ -26,7 +26,7 @@ export const SLAYER_ECHO: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'The Slayer Rises',
       condition: 'frightened',
-      saveDC: 19,
+      saveDC: 20,
       saveAbility: 'wis',
       durationRounds: 2,
       description:
@@ -42,8 +42,8 @@ export const SLAYER_ECHO: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: "Slayer's Claws",
-      attackBonus: 13,
-      damage: '2d10+8',
+      attackBonus: 15,
+      damage: '2d10+9',
       damageType: 'slashing',
       reach: 5,
       description:

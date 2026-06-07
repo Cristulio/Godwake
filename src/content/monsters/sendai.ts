@@ -16,8 +16,8 @@ export const SENDAI: Monster = MonsterSchema.parse({
   cr: '15',
   size: 'medium',
   creatureType: 'humanoid (drow Bhaalspawn)',
-  ac: 20,
-  maxHp: 238,
+  ac: 21,
+  maxHp: 300,
   speed: 30,
   abilityScores: { str: 14, dex: 18, con: 16, int: 15, wis: 18, cha: 18 },
   passivePerception: 17,
@@ -27,7 +27,7 @@ export const SENDAI: Monster = MonsterSchema.parse({
     {
       kind: 'paralyze',
       name: 'As I Have Held the Rest',
-      saveDC: 18,
+      saveDC: 20,
       saveAbility: 'wis',
       durationRounds: 2,
       description:
@@ -36,8 +36,8 @@ export const SENDAI: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Mace of the Twice-Promised',
-      attackBonus: 12,
-      damage: '2d8+6',
+      attackBonus: 15,
+      damage: '2d10+8',
       damageType: 'bludgeoning',
       reach: 5,
       description:

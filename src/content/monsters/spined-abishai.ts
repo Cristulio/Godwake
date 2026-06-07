@@ -14,8 +14,8 @@ export const SPINED_ABISHAI: Monster = MonsterSchema.parse({
   cr: '10',
   size: 'medium',
   creatureType: 'fiend (devil)',
-  ac: 18,
-  maxHp: 138,
+  ac: 19,
+  maxHp: 160,
   speed: 30,
   abilityScores: { str: 17, dex: 16, con: 18, int: 11, wis: 13, cha: 14 },
   passivePerception: 12,
@@ -25,8 +25,8 @@ export const SPINED_ABISHAI: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Barbed Spine',
-      attackBonus: 10,
-      damage: '2d8+6',
+      attackBonus: 12,
+      damage: '2d8+8',
       damageType: 'piercing',
       reach: 5,
       description:
@@ -36,7 +36,7 @@ export const SPINED_ABISHAI: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Pit-Venom',
       condition: 'poisoned',
-      saveDC: 18,
+      saveDC: 19,
       saveAbility: 'con',
       durationRounds: 2,
       description:

@@ -14,8 +14,8 @@ export const SULDANESSELLAR_ARCHER: Monster = MonsterSchema.parse({
   cr: '9',
   size: 'medium',
   creatureType: 'humanoid (elf)',
-  ac: 16,
-  maxHp: 100,
+  ac: 17,
+  maxHp: 115,
   speed: 30,
   abilityScores: { str: 12, dex: 19, con: 14, int: 13, wis: 15, cha: 12 },
   passivePerception: 16,
@@ -23,8 +23,8 @@ export const SULDANESSELLAR_ARCHER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Canopy-Watch Longbow',
-      attackBonus: 11,
-      damage: '2d8+6',
+      attackBonus: 12,
+      damage: '2d8+7',
       damageType: 'piercing',
       range: [80, 320],
       description:

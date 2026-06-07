@@ -14,8 +14,8 @@ export const STORMSCALE_DRAKE: Monster = MonsterSchema.parse({
   cr: '13',
   size: 'large',
   creatureType: 'dragon',
-  ac: 19,
-  maxHp: 178,
+  ac: 20,
+  maxHp: 218,
   speed: 40,
   abilityScores: { str: 19, dex: 13, con: 18, int: 6, wis: 12, cha: 9 },
   passivePerception: 12,
@@ -25,8 +25,8 @@ export const STORMSCALE_DRAKE: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Forked-Tongue Lash',
-      attackBonus: 11,
-      damage: '2d10+5',
+      attackBonus: 14,
+      damage: '2d10+8',
       damageType: 'lightning',
       reach: 10,
       description:
@@ -43,7 +43,7 @@ export const STORMSCALE_DRAKE: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Thunderclap Roar',
       condition: 'frightened',
-      saveDC: 16,
+      saveDC: 18,
       saveAbility: 'wis',
       durationRounds: 2,
       description:

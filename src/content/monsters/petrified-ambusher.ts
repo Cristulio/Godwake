@@ -15,8 +15,8 @@ export const PETRIFIED_AMBUSHER: Monster = MonsterSchema.parse({
   cr: '11',
   size: 'medium',
   creatureType: 'construct (petrified drow)',
-  ac: 18,
-  maxHp: 132,
+  ac: 20,
+  maxHp: 164,
   speed: 25,
   abilityScores: { str: 19, dex: 12, con: 18, int: 8, wis: 11, cha: 6 },
   passivePerception: 11,
@@ -25,8 +25,8 @@ export const PETRIFIED_AMBUSHER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Waking Stone Fist',
-      attackBonus: 10,
-      damage: '2d10+5',
+      attackBonus: 13,
+      damage: '2d10+7',
       damageType: 'bludgeoning',
       reach: 5,
       description:
@@ -36,7 +36,7 @@ export const PETRIFIED_AMBUSHER: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Closing Stone',
       condition: 'restrained',
-      saveDC: 16,
+      saveDC: 18,
       saveAbility: 'dex',
       durationRounds: 2,
       description:

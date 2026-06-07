@@ -14,8 +14,8 @@ export const KUO_TOA_DEEPGUARD: Monster = MonsterSchema.parse({
   cr: '11',
   size: 'medium',
   creatureType: 'humanoid (kuo-toa)',
-  ac: 17,
-  maxHp: 120,
+  ac: 19,
+  maxHp: 150,
   speed: 30,
   abilityScores: { str: 16, dex: 15, con: 16, int: 9, wis: 14, cha: 8 },
   passivePerception: 14,
@@ -24,8 +24,8 @@ export const KUO_TOA_DEEPGUARD: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Barbed Harpoon',
-      attackBonus: 9,
-      damage: '2d8+4',
+      attackBonus: 12,
+      damage: '2d8+7',
       damageType: 'piercing',
       reach: 10,
       description:
@@ -35,7 +35,7 @@ export const KUO_TOA_DEEPGUARD: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Sticky Net',
       condition: 'restrained',
-      saveDC: 15,
+      saveDC: 18,
       saveAbility: 'dex',
       durationRounds: 2,
       description:

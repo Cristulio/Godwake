@@ -13,8 +13,8 @@ export const SARADUSH_MARAUDER: Monster = MonsterSchema.parse({
   cr: '10',
   size: 'medium',
   creatureType: 'humanoid (mercenary)',
-  ac: 18,
-  maxHp: 132,
+  ac: 19,
+  maxHp: 156,
   speed: 30,
   abilityScores: { str: 18, dex: 13, con: 16, int: 9, wis: 11, cha: 10 },
   passivePerception: 11,
@@ -22,8 +22,8 @@ export const SARADUSH_MARAUDER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Plunderer\'s Greataxe',
-      attackBonus: 9,
-      damage: '2d12+4',
+      attackBonus: 12,
+      damage: '2d12+6',
       damageType: 'slashing',
       reach: 5,
       description:

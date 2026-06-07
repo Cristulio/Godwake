@@ -25,8 +25,8 @@ export const ABAZIGAL: Monster = MonsterSchema.parse({
   cr: '17',
   size: 'huge',
   creatureType: 'dragon (Bhaalspawn)',
-  ac: 22,
-  maxHp: 390,
+  ac: 23,
+  maxHp: 430,
   speed: 40,
   abilityScores: { str: 24, dex: 12, con: 22, int: 16, wis: 15, cha: 19 },
   passivePerception: 17,
@@ -49,7 +49,7 @@ export const ABAZIGAL: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Thunderous Roar',
       condition: 'frightened',
-      saveDC: 18,
+      saveDC: 21,
       saveAbility: 'wis',
       durationRounds: 2,
       description:
@@ -58,8 +58,8 @@ export const ABAZIGAL: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Arc-Lightning Breath',
-      attackBonus: 13,
-      damage: '4d10+6',
+      attackBonus: 15,
+      damage: '4d10+8',
       damageType: 'lightning',
       reach: 15,
       telegraph: {
@@ -72,8 +72,8 @@ export const ABAZIGAL: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Rending Bite and Claws',
-      attackBonus: 14,
-      damage: '2d10+7',
+      attackBonus: 16,
+      damage: '2d10+9',
       damageType: 'piercing',
       reach: 10,
       description:

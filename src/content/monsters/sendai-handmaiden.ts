@@ -14,8 +14,8 @@ export const SENDAI_HANDMAIDEN: Monster = MonsterSchema.parse({
   cr: '12',
   size: 'medium',
   creatureType: 'humanoid (drow)',
-  ac: 18,
-  maxHp: 140,
+  ac: 20,
+  maxHp: 172,
   speed: 30,
   abilityScores: { str: 12, dex: 16, con: 14, int: 13, wis: 17, cha: 15 },
   passivePerception: 16,
@@ -24,8 +24,8 @@ export const SENDAI_HANDMAIDEN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Venom-Scourge',
-      attackBonus: 9,
-      damage: '2d6+3',
+      attackBonus: 12,
+      damage: '2d8+6',
       damageType: 'poison',
       reach: 5,
       description:
@@ -35,7 +35,7 @@ export const SENDAI_HANDMAIDEN: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Cloud of Darkness',
       condition: 'blinded',
-      saveDC: 16,
+      saveDC: 18,
       saveAbility: 'con',
       durationRounds: 2,
       description:

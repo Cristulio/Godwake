@@ -23,8 +23,8 @@ export const NIZIDRAMANIIYT: Monster = MonsterSchema.parse({
   cr: '14',
   size: 'huge',
   creatureType: 'dragon',
-  ac: 20,
-  maxHp: 276,
+  ac: 21,
+  maxHp: 310,
   speed: 40,
   abilityScores: { str: 23, dex: 14, con: 21, int: 16, wis: 15, cha: 18 },
   passivePerception: 18,
@@ -36,7 +36,7 @@ export const NIZIDRAMANIIYT: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Breath of the Defiled Grove',
       condition: 'poisoned',
-      saveDC: 19,
+      saveDC: 20,
       saveAbility: 'con',
       durationRounds: 2,
       telegraph: {
@@ -51,7 +51,7 @@ export const NIZIDRAMANIIYT: Monster = MonsterSchema.parse({
       name: 'Wing Buffet',
       condition: 'weakened',
       amount: 4,
-      saveDC: 17,
+      saveDC: 18,
       saveAbility: 'str',
       durationRounds: 2,
       description:
@@ -67,8 +67,8 @@ export const NIZIDRAMANIIYT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Reaching Bite',
-      attackBonus: 14,
-      damage: '2d12+9',
+      attackBonus: 15,
+      damage: '2d12+10',
       damageType: 'piercing',
       reach: 10,
       description:

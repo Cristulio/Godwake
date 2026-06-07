@@ -13,8 +13,8 @@ export const PALACE_GOLEM: Monster = MonsterSchema.parse({
   cr: '11',
   size: 'large',
   creatureType: 'construct',
-  ac: 19,
-  maxHp: 168,
+  ac: 20,
+  maxHp: 190,
   speed: 25,
   abilityScores: { str: 21, dex: 9, con: 20, int: 3, wis: 11, cha: 1 },
   passivePerception: 10,
@@ -31,8 +31,8 @@ export const PALACE_GOLEM: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Ironwood Slam',
-      attackBonus: 12,
-      damage: '2d10+6',
+      attackBonus: 13,
+      damage: '2d10+8',
       damageType: 'bludgeoning',
       reach: 5,
       description:

@@ -13,8 +13,8 @@ export const HALF_GIANT_SIEGEBREAKER: Monster = MonsterSchema.parse({
   cr: '11',
   size: 'large',
   creatureType: 'giant',
-  ac: 18,
-  maxHp: 168,
+  ac: 19,
+  maxHp: 198,
   speed: 40,
   abilityScores: { str: 21, dex: 11, con: 19, int: 8, wis: 10, cha: 9 },
   passivePerception: 10,
@@ -30,8 +30,8 @@ export const HALF_GIANT_SIEGEBREAKER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Ram-Maul',
-      attackBonus: 9,
-      damage: '2d10+5',
+      attackBonus: 12,
+      damage: '2d10+7',
       damageType: 'bludgeoning',
       reach: 10,
       description:
