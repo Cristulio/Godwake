@@ -97,8 +97,8 @@ export function DruidGroveScreen() {
     tab === 'class' ? t('hub.grove.classTagline') : t(`hub.grove.taglines.${tab}`);
 
   return (
-    <div className="min-h-screen p-4 md:p-6 max-w-6xl mx-auto animate-room-enter">
-      <header className="flex flex-wrap gap-2 items-start mb-4 pb-4 border-b border-[var(--color-border-warm)]">
+    <div className="h-[calc(100vh-3rem)] lg:h-screen p-4 md:p-6 max-w-6xl mx-auto flex flex-col animate-room-enter">
+      <header className="flex-none flex flex-wrap gap-2 items-start mb-4 pb-4 border-b border-[var(--color-border-warm)]">
         <div>
           <h1
             className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.15em]"
@@ -115,12 +115,12 @@ export function DruidGroveScreen() {
         </Button>
       </header>
 
-      <div className="relative">
+      <div className="relative flex-none">
         <GroveScene />
         <div className="absolute inset-0 pointer-events-none animate-torch-flicker bg-gradient-to-b from-[rgba(168,208,66,0.04)] via-transparent to-transparent mb-6" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-6">
+      <div className="flex-none grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-6">
         <Panel tone="glow">
           <p className="text-[var(--color-text-secondary)] text-sm italic leading-relaxed font-narrative">
             {t('hub.grove.intro')}
@@ -148,7 +148,7 @@ export function DruidGroveScreen() {
       {flash && (
         <div
           className={`
-            mb-4 px-4 py-2 border-2 text-xs uppercase tracking-widest text-center font-display animate-fade-in
+            flex-none mb-4 px-4 py-2 border-2 text-xs uppercase tracking-widest text-center font-display animate-fade-in
             ${flash.kind === 'ok'
               ? 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)] bg-[var(--color-bg-panel)]'
               : 'border-[var(--color-accent-blood)] text-[var(--color-accent-blood)] bg-[var(--color-bg-panel)]'}
@@ -167,7 +167,7 @@ export function DruidGroveScreen() {
         classUpgrades={classUpgrades}
       />
 
-      <div className="mb-4 text-center">
+      <div className="flex-none mb-4 text-center">
         <div className="font-display text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em]">
           {tabLabel}
         </div>
@@ -176,7 +176,7 @@ export function DruidGroveScreen() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="flex-1 min-h-0 overflow-y-auto grid md:grid-cols-2 gap-4 content-start">
         {shownUpgrades.map((u) => (
           <UpgradeCard
             key={u.id}
@@ -214,7 +214,7 @@ function GroveTabs({ current, onChange, unlocked, classId, hasClassTab, classUpg
   });
 
   return (
-    <div className="flex flex-wrap gap-1 mb-5 border-b border-[var(--color-border-warm)]">
+    <div className="flex-none flex flex-wrap gap-1 mb-5 border-b border-[var(--color-border-warm)]">
       {UPGRADE_CATEGORIES.map((cat) => {
         const { owned, max } = tally(listUpgradesByCategory(cat));
         return (
