@@ -14,8 +14,8 @@ export const MURDER_HERALD: Monster = MonsterSchema.parse({
   cr: '13',
   size: 'medium',
   creatureType: 'fiend (cultist)',
-  ac: 19,
-  maxHp: 176,
+  ac: 20,
+  maxHp: 208,
   speed: 30,
   abilityScores: { str: 16, dex: 17, con: 17, int: 15, wis: 16, cha: 18 },
   passivePerception: 15,
@@ -34,8 +34,8 @@ export const MURDER_HERALD: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: "Herald's Censer",
-      attackBonus: 12,
-      damage: '2d10+8',
+      attackBonus: 14,
+      damage: '2d10+9',
       damageType: 'necrotic',
       reach: 10,
       description:

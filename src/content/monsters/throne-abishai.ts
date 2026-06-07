@@ -14,8 +14,8 @@ export const THRONE_ABISHAI: Monster = MonsterSchema.parse({
   cr: '12',
   size: 'medium',
   creatureType: 'fiend (devil)',
-  ac: 19,
-  maxHp: 160,
+  ac: 20,
+  maxHp: 190,
   speed: 40,
   abilityScores: { str: 18, dex: 15, con: 18, int: 12, wis: 14, cha: 16 },
   passivePerception: 14,
@@ -25,7 +25,7 @@ export const THRONE_ABISHAI: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Dread of the Pit',
       condition: 'frightened',
-      saveDC: 18,
+      saveDC: 19,
       saveAbility: 'wis',
       durationRounds: 2,
       description:
@@ -34,8 +34,8 @@ export const THRONE_ABISHAI: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Barbed Scourge',
-      attackBonus: 11,
-      damage: '2d10+7',
+      attackBonus: 13,
+      damage: '2d10+8',
       damageType: 'slashing',
       reach: 10,
       description:

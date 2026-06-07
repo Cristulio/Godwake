@@ -15,8 +15,8 @@ export const AVATAR_OF_WRATH: Monster = MonsterSchema.parse({
   cr: '11',
   size: 'large',
   creatureType: 'fiend (sin-manifestation)',
-  ac: 18,
-  maxHp: 174,
+  ac: 19,
+  maxHp: 200,
   speed: 40,
   abilityScores: { str: 20, dex: 15, con: 19, int: 10, wis: 11, cha: 16 },
   passivePerception: 11,
@@ -33,8 +33,8 @@ export const AVATAR_OF_WRATH: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Fist of Bhaal-Fire',
-      attackBonus: 11,
-      damage: '2d10+7',
+      attackBonus: 13,
+      damage: '2d10+8',
       damageType: 'fire',
       reach: 10,
       description:

@@ -15,7 +15,7 @@ export const FIRE_GIANT: Monster = MonsterSchema.parse({
   size: 'huge',
   creatureType: 'giant',
   ac: 20,
-  maxHp: 204,
+  maxHp: 240,
   speed: 30,
   abilityScores: { str: 24, dex: 11, con: 21, int: 10, wis: 14, cha: 11 },
   passivePerception: 14,
@@ -32,8 +32,8 @@ export const FIRE_GIANT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Heat-Drinking Greatsword',
-      attackBonus: 11,
-      damage: '2d10+7',
+      attackBonus: 13,
+      damage: '2d10+8',
       damageType: 'fire',
       reach: 10,
       description:
@@ -42,8 +42,8 @@ export const FIRE_GIANT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Hurled Boulder',
-      attackBonus: 11,
-      damage: '3d10+7',
+      attackBonus: 13,
+      damage: '3d10+8',
       damageType: 'bludgeoning',
       range: [60, 240],
       description:

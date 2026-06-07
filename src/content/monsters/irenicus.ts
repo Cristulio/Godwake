@@ -28,7 +28,7 @@ export const IRENICUS: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'humanoid (soulless elf)',
   ac: 22,
-  maxHp: 320,
+  maxHp: 360,
   speed: 30,
   abilityScores: { str: 18, dex: 18, con: 20, int: 22, wis: 17, cha: 21 },
   passivePerception: 17,
@@ -38,7 +38,7 @@ export const IRENICUS: Monster = MonsterSchema.parse({
     {
       kind: 'paralyze',
       name: 'The Binding Word',
-      saveDC: 21,
+      saveDC: 22,
       saveAbility: 'wis',
       durationRounds: 2,
       telegraph: {
@@ -53,7 +53,7 @@ export const IRENICUS: Monster = MonsterSchema.parse({
       name: 'The Leeching Word',
       condition: 'weakened',
       amount: 4,
-      saveDC: 20,
+      saveDC: 21,
       saveAbility: 'con',
       durationRounds: 2,
       description:
@@ -69,8 +69,8 @@ export const IRENICUS: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'The Stolen Sun',
-      attackBonus: 14,
-      damage: '2d12+9',
+      attackBonus: 15,
+      damage: '2d12+10',
       damageType: 'force',
       reach: 10,
       description:
@@ -93,7 +93,7 @@ export const IRENICUS: Monster = MonsterSchema.parse({
           kind: 'debuff',
           name: "The Slayer's Dread",
           condition: 'frightened',
-          saveDC: 20,
+          saveDC: 21,
           saveAbility: 'wis',
           durationRounds: 1,
           description:
@@ -102,8 +102,8 @@ export const IRENICUS: Monster = MonsterSchema.parse({
         {
           kind: 'attack',
           name: 'Murderous Rending',
-          attackBonus: 15,
-          damage: '2d8+9',
+          attackBonus: 16,
+          damage: '2d8+10',
           damageType: 'slashing',
           reach: 10,
           lifeDrain: 0.2,

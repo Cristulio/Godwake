@@ -14,8 +14,8 @@ export const FIRE_GIANT_SHAMAN: Monster = MonsterSchema.parse({
   cr: '11',
   size: 'large',
   creatureType: 'giant',
-  ac: 18,
-  maxHp: 158,
+  ac: 19,
+  maxHp: 186,
   speed: 30,
   abilityScores: { str: 19, dex: 12, con: 18, int: 13, wis: 17, cha: 14 },
   passivePerception: 14,
@@ -24,8 +24,8 @@ export const FIRE_GIANT_SHAMAN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Hurled Coal',
-      attackBonus: 8,
-      damage: '2d8+4',
+      attackBonus: 11,
+      damage: '2d8+6',
       damageType: 'fire',
       range: [40, 120],
       description:
@@ -45,7 +45,7 @@ export const FIRE_GIANT_SHAMAN: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Fistful of Cinders',
       condition: 'blinded',
-      saveDC: 16,
+      saveDC: 18,
       saveAbility: 'con',
       durationRounds: 2,
       description:

@@ -15,7 +15,7 @@ export const FIRE_GIANT_WARLORD: Monster = MonsterSchema.parse({
   size: 'huge',
   creatureType: 'giant',
   ac: 21,
-  maxHp: 268,
+  maxHp: 300,
   speed: 30,
   abilityScores: { str: 25, dex: 12, con: 22, int: 13, wis: 16, cha: 15 },
   passivePerception: 16,
@@ -32,8 +32,8 @@ export const FIRE_GIANT_WARLORD: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Warlord\'s Greatblade',
-      attackBonus: 13,
-      damage: '2d12+8',
+      attackBonus: 14,
+      damage: '2d12+9',
       damageType: 'fire',
       reach: 15,
       description:
@@ -42,8 +42,8 @@ export const FIRE_GIANT_WARLORD: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Hurled Wall-Stone',
-      attackBonus: 13,
-      damage: '3d10+8',
+      attackBonus: 14,
+      damage: '3d10+9',
       damageType: 'bludgeoning',
       range: [60, 240],
       description:

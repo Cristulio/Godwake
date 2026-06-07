@@ -30,7 +30,7 @@ export const YAGA_SHURA: Monster = MonsterSchema.parse({
   size: 'huge',
   creatureType: 'giant (bhaalspawn)',
   ac: 22,
-  maxHp: 350,
+  maxHp: 390,
   speed: 40,
   abilityScores: { str: 27, dex: 13, con: 23, int: 14, wis: 17, cha: 18 },
   passivePerception: 17,
@@ -68,8 +68,8 @@ export const YAGA_SHURA: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Hurled Pyre-Stone',
-      attackBonus: 14,
-      damage: '3d12+9',
+      attackBonus: 15,
+      damage: '3d12+10',
       damageType: 'bludgeoning',
       range: [60, 240],
       telegraph: {
@@ -82,8 +82,8 @@ export const YAGA_SHURA: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Greatsword of the Burning March',
-      attackBonus: 14,
-      damage: '2d12+9',
+      attackBonus: 15,
+      damage: '2d12+10',
       damageType: 'fire',
       reach: 15,
       description:

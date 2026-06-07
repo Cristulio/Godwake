@@ -27,8 +27,8 @@ export const MELISSAN: Monster = MonsterSchema.parse({
   cr: '18',
   size: 'medium',
   creatureType: 'fiend (ascending demigod)',
-  ac: 23,
-  maxHp: 440,
+  ac: 24,
+  maxHp: 480,
   speed: 30,
   abilityScores: { str: 20, dex: 20, con: 22, int: 20, wis: 22, cha: 24 },
   passivePerception: 19,
@@ -49,7 +49,7 @@ export const MELISSAN: Monster = MonsterSchema.parse({
     {
       kind: 'paralyze',
       name: 'The Murder That Stops the Heart',
-      saveDC: 21,
+      saveDC: 22,
       saveAbility: 'wis',
       durationRounds: 2,
       description:
@@ -77,8 +77,8 @@ export const MELISSAN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Scepter of the Unspoken God',
-      attackBonus: 15,
-      damage: '3d10+10',
+      attackBonus: 16,
+      damage: '3d10+12',
       damageType: 'necrotic',
       reach: 10,
       telegraph: {

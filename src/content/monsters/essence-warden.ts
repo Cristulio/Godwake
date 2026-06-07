@@ -15,8 +15,8 @@ export const ESSENCE_WARDEN: Monster = MonsterSchema.parse({
   cr: '14',
   size: 'medium',
   creatureType: 'fiend (cultist)',
-  ac: 20,
-  maxHp: 214,
+  ac: 21,
+  maxHp: 250,
   speed: 30,
   abilityScores: { str: 17, dex: 14, con: 18, int: 14, wis: 18, cha: 16 },
   passivePerception: 16,
@@ -36,7 +36,7 @@ export const ESSENCE_WARDEN: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Spray of Ichor',
       condition: 'blinded',
-      saveDC: 19,
+      saveDC: 20,
       saveAbility: 'con',
       durationRounds: 2,
       description:
@@ -45,8 +45,8 @@ export const ESSENCE_WARDEN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: "Warden's Gavel",
-      attackBonus: 13,
-      damage: '2d12+8',
+      attackBonus: 15,
+      damage: '2d12+9',
       damageType: 'bludgeoning',
       reach: 10,
       description:

@@ -16,7 +16,7 @@ export const WRAITH_OF_FEAR: Monster = MonsterSchema.parse({
   size: 'medium',
   creatureType: 'fiend (sin-manifestation)',
   ac: 19,
-  maxHp: 158,
+  maxHp: 182,
   speed: 30,
   abilityScores: { str: 13, dex: 18, con: 16, int: 14, wis: 18, cha: 19 },
   passivePerception: 14,
@@ -26,7 +26,7 @@ export const WRAITH_OF_FEAR: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'The Death You Run From',
       condition: 'frightened',
-      saveDC: 19,
+      saveDC: 20,
       saveAbility: 'wis',
       durationRounds: 2,
       description:
@@ -35,8 +35,8 @@ export const WRAITH_OF_FEAR: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Cold of the Flight',
-      attackBonus: 11,
-      damage: '2d8+7',
+      attackBonus: 13,
+      damage: '2d8+8',
       damageType: 'cold',
       reach: 10,
       description:

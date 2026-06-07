@@ -13,8 +13,8 @@ export const MARILITH_WARDEN: Monster = MonsterSchema.parse({
   cr: '16',
   size: 'large',
   creatureType: 'fiend (demon)',
-  ac: 21,
-  maxHp: 292,
+  ac: 22,
+  maxHp: 330,
   speed: 40,
   abilityScores: { str: 20, dex: 19, con: 20, int: 18, wis: 16, cha: 20 },
   passivePerception: 17,
@@ -23,7 +23,7 @@ export const MARILITH_WARDEN: Monster = MonsterSchema.parse({
     {
       kind: 'paralyze',
       name: 'Coils of the Pit',
-      saveDC: 20,
+      saveDC: 21,
       saveAbility: 'str',
       durationRounds: 2,
       description:
@@ -39,8 +39,8 @@ export const MARILITH_WARDEN: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Abyssal Blade',
-      attackBonus: 14,
-      damage: '2d12+9',
+      attackBonus: 16,
+      damage: '2d12+10',
       damageType: 'slashing',
       reach: 10,
       description:

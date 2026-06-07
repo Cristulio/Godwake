@@ -13,8 +13,8 @@ export const DEFILED_TREANT: Monster = MonsterSchema.parse({
   cr: '11',
   size: 'huge',
   creatureType: 'plant',
-  ac: 17,
-  maxHp: 162,
+  ac: 18,
+  maxHp: 184,
   speed: 20,
   abilityScores: { str: 22, dex: 8, con: 21, int: 12, wis: 16, cha: 12 },
   passivePerception: 13,
@@ -25,7 +25,7 @@ export const DEFILED_TREANT: Monster = MonsterSchema.parse({
       kind: 'debuff',
       name: 'Snaring Roots',
       condition: 'restrained',
-      saveDC: 16,
+      saveDC: 17,
       saveAbility: 'str',
       durationRounds: 2,
       description:
@@ -34,8 +34,8 @@ export const DEFILED_TREANT: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Crushing Bough',
-      attackBonus: 12,
-      damage: '2d10+6',
+      attackBonus: 13,
+      damage: '2d10+7',
       damageType: 'bludgeoning',
       reach: 10,
       description:

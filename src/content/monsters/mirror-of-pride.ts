@@ -17,7 +17,7 @@ export const MIRROR_OF_PRIDE: Monster = MonsterSchema.parse({
   size: 'large',
   creatureType: 'fiend (sin-manifestation)',
   ac: 20,
-  maxHp: 184,
+  maxHp: 212,
   speed: 20,
   abilityScores: { str: 16, dex: 17, con: 18, int: 16, wis: 15, cha: 20 },
   passivePerception: 14,
@@ -36,8 +36,8 @@ export const MIRROR_OF_PRIDE: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Shard of the Flattering Glass',
-      attackBonus: 12,
-      damage: '2d10+7',
+      attackBonus: 14,
+      damage: '2d10+8',
       damageType: 'force',
       reach: 10,
       description:

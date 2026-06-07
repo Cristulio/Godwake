@@ -14,8 +14,8 @@ export const GROMNIR_DEFENDER: Monster = MonsterSchema.parse({
   cr: '12',
   size: 'medium',
   creatureType: 'humanoid (bhaalspawn)',
-  ac: 19,
-  maxHp: 196,
+  ac: 20,
+  maxHp: 230,
   speed: 30,
   abilityScores: { str: 18, dex: 16, con: 18, int: 11, wis: 12, cha: 13 },
   passivePerception: 12,
@@ -31,8 +31,8 @@ export const GROMNIR_DEFENDER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Bhaal-Blooded Longsword',
-      attackBonus: 11,
-      damage: '2d8+6',
+      attackBonus: 13,
+      damage: '2d8+8',
       damageType: 'slashing',
       reach: 5,
       description:

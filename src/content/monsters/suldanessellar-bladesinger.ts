@@ -13,8 +13,8 @@ export const SULDANESSELLAR_BLADESINGER: Monster = MonsterSchema.parse({
   cr: '10',
   size: 'medium',
   creatureType: 'humanoid (elf)',
-  ac: 18,
-  maxHp: 126,
+  ac: 19,
+  maxHp: 142,
   speed: 35,
   abilityScores: { str: 14, dex: 20, con: 15, int: 17, wis: 13, cha: 14 },
   passivePerception: 14,
@@ -30,8 +30,8 @@ export const SULDANESSELLAR_BLADESINGER: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Singing Glaive',
-      attackBonus: 11,
-      damage: '2d8+6',
+      attackBonus: 12,
+      damage: '2d8+7',
       damageType: 'slashing',
       reach: 5,
       description:

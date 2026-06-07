@@ -13,8 +13,8 @@ export const BLUE_WYRMLING: Monster = MonsterSchema.parse({
   cr: '12',
   size: 'medium',
   creatureType: 'dragon',
-  ac: 18,
-  maxHp: 150,
+  ac: 20,
+  maxHp: 186,
   speed: 30,
   abilityScores: { str: 17, dex: 14, con: 17, int: 12, wis: 11, cha: 15 },
   passivePerception: 13,
@@ -23,8 +23,8 @@ export const BLUE_WYRMLING: Monster = MonsterSchema.parse({
     {
       kind: 'attack',
       name: 'Storm-Charged Bite',
-      attackBonus: 10,
-      damage: '2d8+4',
+      attackBonus: 13,
+      damage: '2d8+7',
       damageType: 'lightning',
       reach: 5,
       description:
