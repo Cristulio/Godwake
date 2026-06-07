@@ -65,7 +65,7 @@ describe('relic loadout — one relic per typed slot', () => {
     expect(eq.spellfocus).toBeUndefined();
     // Effects flow through the shared affix pipeline.
     const mods = characterAffixMods(useCharacterStore.getState().character!);
-    expect(mods.lifestealPct).toBe(12);
+    expect(mods.lifestealPct).toBe(6);
     expect(mods.tempHpPerCombat).toBe(8);
     expect(mods.critRangeBonus).toBe(1);
   });
@@ -80,9 +80,9 @@ describe('relic loadout — one relic per typed slot', () => {
     const eq = useMetaStore.getState().equippedRelics;
     expect(eq.vampire).toBe('hunters-eye'); // replaced, not stacked
     expect(Object.keys(eq)).toHaveLength(1);
-    // Only the survivor's lifesteal is baked (8, not 12 + 8).
+    // Only the survivor's lifesteal is baked (4, not 6 + 4).
     const mods = characterAffixMods(useCharacterStore.getState().character!);
-    expect(mods.lifestealPct).toBe(8);
+    expect(mods.lifestealPct).toBe(4);
   });
 
   it('clears the baked effects when the slot is unbound', () => {
@@ -139,11 +139,11 @@ describe('legendary effects apply through the affix pipeline', () => {
     });
     const meta = useMetaStore.getState();
     meta.equipRelic('vigil-helm'); // Aegis, 4 temp HP
-    meta.equipRelic('vigil-heart'); // Vampire, 8% lifesteal
+    meta.equipRelic('vigil-heart'); // Vampire, 5% lifesteal
     const mods = characterAffixMods(useCharacterStore.getState().character!);
     // helm 4 + 2-piece set 4 = 8 temp HP each combat; heart's lifesteal rides too.
     expect(mods.tempHpPerCombat).toBe(8);
-    expect(mods.lifestealPct).toBe(8);
+    expect(mods.lifestealPct).toBe(5);
   });
 });
 

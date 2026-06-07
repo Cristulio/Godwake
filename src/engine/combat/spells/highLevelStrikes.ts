@@ -2,7 +2,7 @@ import type { Character } from '../../../types/character';
 import type { CombatState } from '../../../types/combat';
 import { getMonster } from '../../../content/monsters';
 import { abilityModifier } from '../../../types/abilities';
-import { effectiveAbilityScores } from '../../character/derived';
+import { critRange, effectiveAbilityScores } from '../../character/derived';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
 import {
@@ -73,7 +73,9 @@ export function castVoidRay(ctx: CastSpellContext): CastResult {
   const attackBonus = spellAttackBonus(nextCharacter);
   const ac = target.instance.ac;
   const toHit = roller.d20('normal', attackBonus);
-  const crit = toHit.rolls[0] === 20;
+  // Crit gear widens the spell-attack crit window (see Scorching Ray) — Void Ray
+  // is an attack roll, so a caster's crit affixes double its dice on the wider band.
+  const crit = critRange(nextCharacter).includes(toHit.rolls[0]);
   const hit = crit || (toHit.total >= ac && !toHit.natural1);
 
   let nextState: CombatState = appendLog(

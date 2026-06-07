@@ -47,7 +47,7 @@ describe('legendary content', () => {
     const out = aggregateLegendaryEffects(['heartwood-talisman', 'cloak-of-the-nightwind']);
     // Two relics, no completed set → two entries.
     expect(out).toHaveLength(2);
-    expect(out.find((m) => (m.lifestealPct ?? 0) > 0)?.lifestealPct).toBe(12);
+    expect(out.find((m) => (m.lifestealPct ?? 0) > 0)?.lifestealPct).toBe(6);
     expect(out.find((m) => (m.critRangeBonus ?? 0) > 0)?.critRangeBonus).toBe(1);
   });
 

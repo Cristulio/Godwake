@@ -52,6 +52,17 @@ const MENDING: Affix = AffixSchema.parse({
   modifiers: { regenPerTurn: 4 },
 });
 
+// Lifesteal lives on the WEAPON — the blade that drinks. Accessory lifesteal
+// (LEECHING, below) is the lesser trickle. Both heal a % of the weapon damage
+// dealt (playerAttack.ts), so the only thing the slot changes is the magnitude.
+const VAMPIRIC: Affix = AffixSchema.parse({
+  id: 'vampiric',
+  namePart: { kind: 'prefix', word: 'Vampiric' },
+  effect: 'Heal for 5% of weapon damage dealt.',
+  appliesTo: ['weapon'],
+  modifiers: { lifestealPct: 5 },
+});
+
 // --- Armour affixes (generic) ----------------------------------------------
 
 const WARDED: Affix = AffixSchema.parse({
@@ -224,12 +235,12 @@ const WARDING: Affix = AffixSchema.parse({
   modifiers: { acBonus: 1 },
 });
 
-const VAMPIRIC: Affix = AffixSchema.parse({
-  id: 'vampiric',
-  namePart: { kind: 'prefix', word: 'Vampiric' },
-  effect: 'Heal for 15% of weapon damage dealt.',
+const LEECHING: Affix = AffixSchema.parse({
+  id: 'leeching',
+  namePart: { kind: 'prefix', word: 'Leeching' },
+  effect: 'Heal for 3% of weapon damage dealt.',
   appliesTo: ['accessory'],
-  modifiers: { lifestealPct: 15 },
+  modifiers: { lifestealPct: 3 },
 });
 
 const PREDATORS: Affix = AffixSchema.parse({
@@ -286,6 +297,7 @@ export const ALL_AFFIXES: Affix[] = [
   HONED,
   BLOODLETTING,
   MENDING,
+  VAMPIRIC,
   WARDED,
   STONEBLOOD,
   SALAMANDER,
@@ -304,7 +316,7 @@ export const ALL_AFFIXES: Affix[] = [
   SHADOWED,
   RELENTLESS,
   WARDING,
-  VAMPIRIC,
+  LEECHING,
   PREDATORS,
   EMBERWARD,
   RIMEWARD,
