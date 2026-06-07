@@ -5,8 +5,10 @@ import { listClasses } from '../../../content/classes';
 import { listItems, listAffixes } from '../../../content/items';
 import { listBlessings } from '../../../content/blessings';
 import { listAllQuirks } from '../../../content/quirks';
+import { listRaces } from '../../../content/races';
 import { martialFlavor } from '../../../engine/combat/martialResource';
 
+import racesEs from './races.json';
 import spellsEs from './spells.json';
 import classesEs from './classes.json';
 import abilitiesEs from './abilities.json';
@@ -132,6 +134,26 @@ describe('es/quirks.json completeness', () => {
 
   it('covers every quirk with name + flavor + effect and no orphans', () => {
     const { missing, orphans } = audit(quirksEs as Overlay, expected);
+    expect(missing).toEqual([]);
+    expect(orphans).toEqual([]);
+  });
+});
+
+describe('es/races.json completeness', () => {
+  // race -> the name plus every feature's name + description, keyed flat within
+  // the race row as `${featureId}.name` / `${featureId}.description` (the tc
+  // seam looks up es[raceId][field], so the feature key is just a field string).
+  const expected: Expected = {};
+  for (const r of listRaces()) {
+    const fields = ['name'];
+    for (const f of r.features) {
+      fields.push(`${f.id}.name`, `${f.id}.description`);
+    }
+    expected[r.id] = fields;
+  }
+
+  it('covers every race name + feature name/description with no orphans', () => {
+    const { missing, orphans } = audit(racesEs as Overlay, expected);
     expect(missing).toEqual([]);
     expect(orphans).toEqual([]);
   });

@@ -1,0 +1,27 @@
+{
+  "human": {
+    "name": "Humano",
+    "human-versatility.name": "Versatilidad",
+    "human-versatility.description": "Los humanos son los errantes y aventureros de la Costa de la Espada. Obtienes +1 a todas las características."
+  },
+  "wood-elf": {
+    "name": "Elfo silvano",
+    "wood-elf-fey-vigor.name": "Vigor feérico",
+    "wood-elf-fey-vigor.description": "Arqueros longevos de los bosques altos: prontos a sanar, lentos a caer. Tu máximo de puntos de golpe aumenta en 1 por cada nivel de personaje."
+  },
+  "hill-dwarf": {
+    "name": "Enano de las colinas",
+    "hill-dwarf-toughness.name": "Resistencia enana",
+    "hill-dwarf-toughness.description": "De sangre de piedra y mano de hacha, receloso de la magia y del agua salada por igual. Tu máximo de puntos de golpe aumenta en 1 por cada nivel de personaje."
+  },
+  "half-elf": {
+    "name": "Semielfo",
+    "half-elf-versatility.name": "Caminante de dos mundos",
+    "half-elf-versatility.description": "+2 Carisma (siempre). Al crear el personaje, +1 a la característica principal de tu clase y +1 a una secundaria (Destreza para marciales, Constitución para lanzadores): el mestizo se adapta a la vocación que lo reclame."
+  },
+  "tiefling": {
+    "name": "Tiefling",
+    "tiefling-hellish-resistance.name": "Constitución infernal",
+    "tiefling-hellish-resistance.description": "Linajes marcados por un pacto más antiguo que la memoria. Cuernos, humo y un hígado condenado: recibes la mitad de daño por fuego y veneno, y la sangre infernal espesa el alma: +1 PG en cada nivel."
+  }
+}
