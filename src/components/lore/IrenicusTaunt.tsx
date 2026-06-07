@@ -4,6 +4,7 @@ import { Imoen, Irenicus as IrenicusPortrait } from './NpcPortrait';
 import { useMetaStore } from '../../stores/metaStore';
 import { useInputBlock } from '../ui/useInputBlock';
 import { useT } from '../../i18n/useT';
+import { LORE_BEATS } from '../../content/loreBeats';
 
 export type TauntContext =
   | 'death'
@@ -395,6 +396,32 @@ export function selectSoulVoiceLine(
   return pool[seed % pool.length];
 }
 
+/**
+ * The es overlay row + field for the same line `selectSoulVoiceLine` would pick.
+ * The English pools above are the source of truth (and what the unit tests assert
+ * against); `es/soulVoice.json` mirrors them index-for-index, so the seeded index
+ * is the overlay field. Read through `tc('soulVoice', id, field, english)`, which
+ * returns the English fallback in en mode or when the overlay is missing.
+ */
+function soulVoiceOverlay(
+  speaker: SoulVoiceSpeaker,
+  context: TauntContext,
+  progression: VoiceProgression,
+): { id: string; field: string } {
+  const seed = progression.seed;
+  if (context === 'chapter-clear') {
+    const chapter = clampChapter(progression.clearedChapter ?? progression.chaptersCleared ?? 1);
+    const pool = CHAPTER_CLEAR[speaker][chapter] ?? CHAPTER_CLEAR[speaker][1];
+    return { id: `chapterClear.${speaker}.${chapter}`, field: String(seed % pool.length) };
+  }
+  const tier = progressionTier(progression.chaptersCleared);
+  const pool = ARC_QUOTES[speaker][context][tier];
+  return { id: `arc.${speaker}.${context}.${tier}`, field: String(seed % pool.length) };
+}
+
+/** Beat text → stable id, so a verbatim lore line can be overlaid via tc('lore'). */
+const LORE_ID_BY_TEXT = new Map(LORE_BEATS.map((b) => [b.text, b.id]));
+
 interface SoulVoiceProps {
   speaker: SoulVoiceSpeaker;
   context: TauntContext;
@@ -414,7 +441,7 @@ const BASE_TICK = 28;
 const FAST_TICK = 4;
 
 export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, line }: SoulVoiceProps) {
-  const { t } = useT();
+  const { t, tc, locale } = useT();
   const chaptersCleared = useMetaStore((s) => s.chaptersCleared);
   const deathCount = useMetaStore((s) => s.deathCount);
   const hasReincarnated = useMetaStore((s) => s.hasReincarnated);
@@ -423,18 +450,24 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
     ? REAL_NAME[speaker]
     : t(speaker === 'irenicus' ? 'scenes.soulVoice.voice' : 'scenes.soulVoice.whisper');
 
-  const quote = useMemo(
-    () =>
-      line ??
-      selectSoulVoiceLine(speaker, context, {
-        chaptersCleared,
-        deathCount,
-        hasReincarnated,
-        clearedChapter: chapter,
-        seed,
-      }),
-    [line, speaker, context, chaptersCleared, deathCount, hasReincarnated, chapter, seed],
-  );
+  const quote = useMemo(() => {
+    // A verbatim progressive lore beat: overlay it via the es/lore.json content
+    // seam, keyed by the beat id recovered from its English source text.
+    if (line) {
+      const beatId = LORE_ID_BY_TEXT.get(line);
+      return beatId ? tc('lore', beatId, 'text', line) : line;
+    }
+    const progression = {
+      chaptersCleared,
+      deathCount,
+      hasReincarnated,
+      clearedChapter: chapter,
+      seed,
+    };
+    const english = selectSoulVoiceLine(speaker, context, progression);
+    const { id, field } = soulVoiceOverlay(speaker, context, progression);
+    return tc('soulVoice', id, field, english);
+  }, [line, speaker, context, chaptersCleared, deathCount, hasReincarnated, chapter, seed, locale, tc]);
 
   const [typed, setTyped] = useState('');
   const [done, setDone] = useState(false);

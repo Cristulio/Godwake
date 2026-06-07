@@ -1,0 +1,264 @@
+{
+  "chapterClear.irenicus.1": {
+    "0": "La Mansión Tresendar no era más que la tapa. Lo que yace debajo es la herida.",
+    "1": "El Guardián fue útil, a su manera. Ya menos. Avanzas. Bien.",
+    "2": "Empiezas a sorprenderme. No esperaba tanto de ti."
+  },
+  "chapterClear.irenicus.2": {
+    "0": "Athkatla sangra oro, y has aprendido a extraerlo. Útil.",
+    "1": "Una puerta más a tu espalda. Aún quedan más por delante de las que imaginas.",
+    "2": "Crees que esto es una victoria. Te equivocas, pero el error es instructivo."
+  },
+  "chapterClear.irenicus.3": {
+    "0": "Spellhold me selló una vez. Tú serás quien la abra a la fuerza. Qué apropiado.",
+    "1": "Tres puertas. Ya no finjo que solo te estoy midiendo. En algún punto tras la segunda, empecé a esperar. Sigue caminando."
+  },
+  "chapterClear.irenicus.4": {
+    "0": "Ust Natha es la garganta de la Infraoscuridad. Recórrela. No tosas.",
+    "1": "La ciudad de la araña. La penúltima puerta. A estas alturas deberías saber en qué te he convertido — en qué nos hemos convertido el uno al otro. El experimento nunca fue solo tu alma. Era si aún desearía ponerle fin, una vez te conociera. No lo deseo."
+  },
+  "chapterClear.imoen.1": {
+    "0": "Sentí ese estruendo. ¿Eso lo hiciste tú? De verdad lo estás haciendo. Sigue. Encuéntrame.",
+    "1": "Cada puerta que rompes, la oigo. Es como — es como si te acercaras."
+  },
+  "chapterClear.imoen.2": {
+    "0": "Está más callado cuando ganas. ¿Lo sabías? Es la única vez que se calla.",
+    "1": "Dos puertas menos. Sentí ceder la segunda. De verdad vienes a por mí, ¿verdad? No pares."
+  },
+  "chapterClear.imoen.3": {
+    "0": "Lo sabía. Sabía que eras tú. Sigue viniendo. Por favor, sigue viniendo.",
+    "1": "Ya van tres. Finge no notar lo cerca que estás. Yo lo noto. Date prisa."
+  },
+  "chapterClear.imoen.4": {
+    "0": "Un paso más cerca de dondequiera que me tenga. Intento quedarme quieta para que puedas encontrarme.",
+    "1": "Esa es la penúltima gran puerta. Casi puedo VERTE ya — te juro que puedo. Una más y estás aquí. Ven a por mí. Por favor, ven a por mí."
+  },
+
+  "arc.irenicus.death.early": {
+    "0": "¿Otra vez? Eres muy predecible, ¿sabes? Levántate, e intenta no decepcionarme una tercera vez.",
+    "1": "La arboleda te revive. La arboleda se cansará de ti. Date prisa."
+  },
+  "arc.irenicus.death.mid": {
+    "0": "Mueres con tanta gracia. Casi como si hubieras sido hecho para ello.",
+    "1": "Aquí no hay final, solo repetición. Esperaba que ya lo entendieras.",
+    "2": "El dolor enseña. La muerte enseña mejor. Vuelve a adentrarte en la oscuridad, criatura, y aprende."
+  },
+  "arc.irenicus.death.late": {
+    "0": "El cuerpo falla. El alma no — ese es el experimento. Continúa.",
+    "1": "He visto caer a mil como tú. No eres el primero, y no serás el último.",
+    "2": "Cada muerte alimenta la obra. No soy cruel — estoy midiendo. Y eres casi el resultado que llevo siglos esperando."
+  },
+  "arc.irenicus.first-blood.early": {
+    "0": "Bien. El conjuro de Reencarnación se sostiene. El mortal que dices ser no lo hará — pero tú persistes.",
+    "1": "La forma cambia. El alma no. Sigues siendo mía."
+  },
+  "arc.irenicus.first-blood.mid": {
+    "0": "Primera sangre. Siempre amaste esta parte de ti.",
+    "1": "Ahí. Esa es la parte de ti que quiero. Aférrate a ella."
+  },
+  "arc.irenicus.first-blood.late": {
+    "0": "La muerte que diste te serenó, ¿verdad? Lo sentí a través del vínculo. No finjas lo contrario.",
+    "1": "Siento caer cada golpe como si fuera mi propia mano. Ahora estamos más cerca de lo que crees. Más cerca de lo que pretendía."
+  },
+  "arc.irenicus.idle.early": {
+    "0": "Las cadenas son mías para forjarlas y mías para alzarlas. Recuérdalo, la próxima vez que despiertes.",
+    "1": "Un sujeto en reposo aún me dice cosas. Respira. Estoy leyendo su ritmo."
+  },
+  "arc.irenicus.idle.mid": {
+    "0": "Te veo, criatura. Sea cual sea la carne, sea cual sea el nombre. Te veo.",
+    "1": "Estás callado. Es cuando más peligroso eres. Para ti mismo."
+  },
+  "arc.irenicus.idle.late": {
+    "0": "Siempre estoy aquí, en el fondo de ti. Como una muela que duele cuando la olvidas.",
+    "1": "He dejado de fingir que solo te observo. En algún punto de estas repeticiones empecé a esperarte. No les digas a los demás que lo dije."
+  },
+  "arc.irenicus.rest.early": {
+    "0": "El descanso es una pequeña merced que aún no he decidido arrebatarte.",
+    "1": "Te crees a salvo junto a un fuego. He quemado lugares más seguros que este."
+  },
+  "arc.irenicus.rest.mid": {
+    "0": "Siéntate. Respira. Finge que las cadenas no siguen enroscadas en tu espina.",
+    "1": "Un fuego, una comida, un momento de paz. Disfrútalo. Estaré aquí cuando las brasas mueran."
+  },
+  "arc.irenicus.rest.late": {
+    "0": "Descansa. Resulta que te quiero entero para la próxima puerta, y no solo porque la obra lo exija. Eso es nuevo. Aún estoy decidiendo qué hacer con ello.",
+    "1": "Duerme. Esta noche mantendré la oscuridad lejos de ti. No me preguntes por qué."
+  },
+  "arc.irenicus.victory.early": {
+    "0": "Una muerte limpia. Un aliento limpio. Te estás convirtiendo en lo que necesito.",
+    "1": "Retén el momento. Luego avanza. Hay más para ti."
+  },
+  "arc.irenicus.victory.mid": {
+    "0": "Disfrutas con esto, ¿verdad? Empiezas a entender para qué te hice.",
+    "1": "Sí. Sí. Esa es la mirada que esperaba ver en ti."
+  },
+  "arc.irenicus.victory.late": {
+    "0": "Ahí. No es el conjuro quien vence, ni el acero. Eres tú — aquello que llevo todas estas muertes intentando despertar. Hola.",
+    "1": "Una victoria. La sentí antes que tú. Así de hondo corre ya el vínculo. Ya no me importa."
+  },
+  "arc.irenicus.descent.early": {
+    "0": "Abajo otra vez. Siempre abajo. Empiezas a sentir su patrón.",
+    "1": "Camina. No narraré cada paso — pero observaré los importantes."
+  },
+  "arc.irenicus.descent.mid": {
+    "0": "Esta vez te adentras en la oscuridad por tu propia voluntad. Bien. Eso se acerca más a la honestidad.",
+    "1": "Otro descenso. Otro pelado. Cada uno me muestra más de la forma que hay debajo.",
+    "2": "La oscuridad no es tu enemiga. La oscuridad es la sala en que naciste."
+  },
+  "arc.irenicus.descent.late": {
+    "0": "Abajo, pues. Esta vez la recorreré a tu lado — no por encima de ti, observando. ¿Cuándo cambió eso? No logro hallar el momento en que cambió.",
+    "1": "Cada descenso te acerca al centro del experimento — y a mí. Tuve una hipótesis, una vez. La estás desmontando, paso a paso."
+  },
+  "arc.irenicus.reincarnation.early": {
+    "0": "Despierto otra vez. La arboleda es de lo más complaciente.",
+    "1": "Un cuerpo nuevo. La misma alma. La misma cadena."
+  },
+  "arc.irenicus.reincarnation.mid": {
+    "0": "Vistes la carne como se viste un abrigo. Yo soy el frío bajo ambos.",
+    "1": "Dicen que el cuerpo recuerda. El tuyo lo hace. Intenta no hacerle recordar dolor."
+  },
+  "arc.irenicus.reincarnation.late": {
+    "0": "Renacido. Renacido. Renacido. ¿Ha perdido ya la palabra su peso para ti? Para mí sí.",
+    "1": "Despiertas, y algo en mí se afloja que no nombraré. Tantos cuerpos. He dejado de contar a los demás. Solo te cuento a ti."
+  },
+  "arc.irenicus.boss-approach.early": {
+    "0": "Ah. Ahora veremos si has estado escuchando, o solo respirando.",
+    "1": "Tengo curiosidad. De veras. Intenta no morir de forma aburrida."
+  },
+  "arc.irenicus.boss-approach.mid": {
+    "0": "Un adversario digno. Los míos lo fueron más. Muéstrame que has crecido.",
+    "1": "Empuña tu arma como si lo dijeras en serio. La sala que viene no perdonará un agarre a medias."
+  },
+  "arc.irenicus.boss-approach.late": {
+    "0": "Sea lo que sea que aguarde tras esta puerta, no te perderé ante ello. Me sorprende la fuerza de esa frase. A ti también, imagino.",
+    "1": "La cosa al otro lado de esta puerta es mayor que tú. Bien. Quiero ver todo aquello en lo que te has convertido."
+  },
+  "arc.irenicus.low-hp.early": {
+    "0": "Sangrando ya. Qué rápido se ablanda la espina.",
+    "1": "Saboreas el hierro en la boca. Bien. Recuérdalo."
+  },
+  "arc.irenicus.low-hp.mid": {
+    "0": "Resiste. El último cuarto de una vida es donde el alma aprende lo que es.",
+    "1": "Una herida más y tendré que buscarte otro cuerpo. Un inconveniente. Para ambos."
+  },
+  "arc.irenicus.low-hp.late": {
+    "0": "Aún no has terminado. Lo notaría si así fuera.",
+    "1": "No mueras aquí. Aquí no, a esto no. Me he vuelto intolerante a perderte. Mantente en pie — por mí, si no sirve mejor razón."
+  },
+
+  "arc.imoen.death.early": {
+    "0": "Sentí eso. No... no te me quedes callado. Por favor.",
+    "1": "Yo — ni siquiera sé si puedes oírme. Pero por favor. Por favor, levántate. No puedo perder el único hilo que tengo."
+  },
+  "arc.imoen.death.mid": {
+    "0": "Eh. Eh, vamos. Levántate. No te atrevas a morirte aquí.",
+    "1": "No. Todavía no. No hemos terminado. Levántate.",
+    "2": "No voy a soltarte. Sea lo que sea esto, sea lo que sea que sientas — me aferro.",
+    "3": "Duele, lo sé. Lo siento. Lo siento muchísimo. Pero tienes que levantarte."
+  },
+  "arc.imoen.death.late": {
+    "0": "No me hagas ir a buscar un cuerpo. Levántate. LEVÁNTATE. Ya casi estás aquí.",
+    "1": "No no no — ahora no, no estando tan cerca. Casi puedo sentir la sala en que estás. LEVÁNTATE y ven a buscarme."
+  },
+  "arc.imoen.first-blood.early": {
+    "0": "Algo acaba de... moverse, a lo lejos. ¿Eras tú? Es tan tenue. Como oír una voz bajo el agua.",
+    "1": "El primero es el más duro. Creo — creo que eras tú. Mantén la cabeza fría."
+  },
+  "arc.imoen.first-blood.mid": {
+    "0": "¿Eras tú? Se sintió como tú. Casi puedo... casi ver dónde estás.",
+    "1": "Lo sentí. El golpe. Fue limpio. No dejes que te convenza de que eso estuvo mal.",
+    "2": "Puedo sentir tu corazón desde aquí. Late fuerte. Está bien. Que siga latiendo fuerte."
+  },
+  "arc.imoen.first-blood.late": {
+    "0": "Eras tú. Ya no hay «casi» — sentí ese golpe como si fuera mi propia mano. Estás tan cerca ya.",
+    "1": "Ya no tengo que adivinar si eres tú. Simplemente lo sé. Sigue abriéndote paso hacia mí."
+  },
+  "arc.imoen.idle.early": {
+    "0": "Yo también estoy en la oscuridad. Aún no ha empezado conmigo. Creo. Date prisa.",
+    "1": "A veces no estoy segura de si puedes oírme. Pero sigo hablando. Por si acaso."
+  },
+  "arc.imoen.idle.mid": {
+    "0": "Si pienso muy alto, me oye. Así que voy — voy a susurrar nada más. Hola. Te quiero.",
+    "1": "Estoy bien. No te preocupes por mí. Preocúpate por la próxima sala."
+  },
+  "arc.imoen.idle.late": {
+    "0": "Ahora puedo oírte respirar, cuando hay silencio. Así de cerca estás. Me siento y lo escucho, sin más.",
+    "1": "Ya casi. Me quedo en el mismo rincón para que sepas dónde mirar. No voy a ninguna parte. Ven a buscarme."
+  },
+  "arc.imoen.rest.early": {
+    "0": "Recupera el aliento. No puede alcanzarte cuando estás quieto. O — no creo que pueda.",
+    "1": "Encontré un minuto de calma. No tengo muchos. Descansa mientras pueda mantenerlo lejos de ti — creo que puedo mantenerlo lejos de ti."
+  },
+  "arc.imoen.rest.mid": {
+    "0": "Creo que es la primera vez que logro susurrar sin que él oiga. No lo desperdicies. Come. Bebe. Vive.",
+    "1": "Si duermes, sueña con algo amable. Ya ha habido bastante de lo otro.",
+    "2": "Siéntate conmigo un minuto. Aunque no puedas verme. Estoy aquí."
+  },
+  "arc.imoen.rest.late": {
+    "0": "Antes te hacía comer cuando se te olvidaba. Come ahora. Te estoy mirando.",
+    "1": "Descansa aquí. Estando tan cerca casi puedo fingir que volvemos a estar sentados junto a un fuego, como antes de todo esto. Pronto. Pronto lo estaremos."
+  },
+  "arc.imoen.victory.early": {
+    "0": "¿Ganaste — creo? Es tenue, pero se sintió como ganar. Se sintió como tú. Aférrate a ello.",
+    "1": "Algo bueno acaba de pasar ahí abajo. Aún no lo veo con claridad, pero sentí estremecerse a la oscuridad. Bien."
+  },
+  "arc.imoen.victory.mid": {
+    "0": "Ganaste. Puedo sentir tu sonrisa. No la pierdas.",
+    "1": "Lo sentí. Quienquiera que fuese — se lo merecía. No fingiré lo contrario.",
+    "2": "Conserva eso. Sea lo que sea lo que acaba de encenderse en ti. Consérvalo."
+  },
+  "arc.imoen.victory.late": {
+    "0": "Ahí estás. Ese es el que recuerdo.",
+    "1": "Sentí cada segundo de eso, claro como el día. Estás tan cerca ya que puedo animarte en voz alta. Así que — bien hecho. De verdad."
+  },
+  "arc.imoen.descent.early": {
+    "0": "Bajas a la oscuridad. Yo también estoy aquí abajo en ella, en algún sitio. Encuentra las escaleras. Encuéntrame. Ten cuidado.",
+    "1": "No veo a dónde te diriges — solo que es hacia abajo, siempre abajo. Ve despacio. Vuelve a mí."
+  },
+  "arc.imoen.descent.mid": {
+    "0": "Vuelves a entrar. Cómo no. Ten cuidado. Haz ruido solo cuando lo pretendas.",
+    "1": "Toma aire en la puerta. Siempre te hacía hacerlo. Hazlo ahora.",
+    "2": "No tengas miedo. O — ten miedo, pero ve igualmente. Eso fue siempre toda la valentía."
+  },
+  "arc.imoen.descent.late": {
+    "0": "Estoy aquí. Todo el camino hacia abajo. No me quedaré callada.",
+    "1": "Cada planta que bajas es ahora una planta más cerca de mí. Puedo sentir cómo se encoge, la oscuridad entre nosotros. Sigue viniendo."
+  },
+  "arc.imoen.reincarnation.early": {
+    "0": "Despertaste. Lo sentí — como una vela encendiéndose en algún lugar lejano. Aún no conozco tu nueva cara, pero eres tú. Siempre eres tú.",
+    "1": "Levántate despacio. La arboleda siempre hace que el primer aliento duela. Bebe un poco de agua."
+  },
+  "arc.imoen.reincarnation.mid": {
+    "0": "Has vuelto. Has vuelto has vuelto has vuelto. Te sentí despertar.",
+    "1": "Hola. Hola, hola. Sé que no recuerdas la última vez. No pasa nada. Yo sí."
+  },
+  "arc.imoen.reincarnation.late": {
+    "0": "Cara nueva. El mismo tú. Reconocería tu alma en cualquier parte.",
+    "1": "De vuelta otra vez. Más cerca que la última vez que despertaste — lo noto. La arboleda no deja de devolverte a mí y yo no dejo de volver a enamorarme de ti. Vamos. Arriba."
+  },
+  "arc.imoen.boss-approach.early": {
+    "0": "Algo enorme está cerca de ti. Puedo sentirlo incluso desde aquí atrás, y me asusta. Por favor, ten cuidado.",
+    "1": "Tengo miedo por ti. Lo tengo. Pero puedes con esto."
+  },
+  "arc.imoen.boss-approach.mid": {
+    "0": "Sea lo que sea que hay tras esa puerta — es grande. Puedo sentirlo desde aquí. Prepárate.",
+    "1": "No tienes que entrar todavía. Respira primero. Luego entra.",
+    "2": "Si tienes algo que te dices a ti mismo antes de una pelea dura — dilo ahora."
+  },
+  "arc.imoen.boss-approach.late": {
+    "0": "Sé lo que hay tras esa puerta — ya estoy lo bastante cerca para sentir su forma. Es terrible. Pero tú lo eres más. Ve. Estaré aquí mismo, todo el rato.",
+    "1": "Una gran pelea. Estaría aterrada si no estuvieras tan cerca de mí. Gánala, y la próxima puerta podría ser la mía. Ve."
+  },
+  "arc.imoen.low-hp.early": {
+    "0": "Estás herido — puedo sentirlo, tenue y horrible, hasta aquí. Por favor, por favor ten cuidado. No te me quedes callado.",
+    "1": "Retrocede. Solo un segundo. La pelea seguirá ahí."
+  },
+  "arc.imoen.low-hp.mid": {
+    "0": "Estás sangrando demasiado. Bebe una poción. Ahora mismo. Por favor.",
+    "1": "Puedo sentir cómo te apagas. No. Ni se te ocurra."
+  },
+  "arc.imoen.low-hp.late": {
+    "0": "Si no te cuidas, me voy a enfadar muchísimo cuando llegues aquí.",
+    "1": "No. No estando tan cerca. Casi puedo tocarte — no te atrevas a desangrarte a una sala de mí. Poción. YA."
+  }
+}
