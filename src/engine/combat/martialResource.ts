@@ -9,6 +9,7 @@ import {
 } from './types';
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
+import { t } from '../../i18n';
 
 /**
  * The shared martial resource — the engine the Fighter, Barbarian, and Ranger
@@ -106,15 +107,20 @@ export interface MartialFlavor {
   disrupt: string;
 }
 
-const FLAVOR: Partial<Record<ClassId, MartialFlavor>> = {
-  fighter: { pool: 'Resolve', offense: 'Power Attack', defense: 'Brace', disrupt: 'Shield Bash' },
-  barbarian: { pool: 'Fury', offense: 'Savage Cleave', defense: 'Bloodied Guard', disrupt: 'Knockdown' },
-  ranger: { pool: 'Focus', offense: 'Aimed Shot', defense: 'Set Stance', disrupt: 'Crippling Shot' },
-};
+const FLAVOR_CLASSES: ReadonlySet<ClassId> = new Set(['fighter', 'barbarian', 'ranger']);
 
-/** The class's martial flavor strings, or null for a non-martial class. */
+/** The class's martial flavor strings, or null for a non-martial class. Resolved
+ *  through t() each call so a language switch re-localizes the pool + ability
+ *  names live (ActionBar/HUD read these as button + pip labels). */
 export function martialFlavor(character: Readonly<Character>): MartialFlavor | null {
-  return FLAVOR[character.classId] ?? null;
+  const cls = character.classId;
+  if (!FLAVOR_CLASSES.has(cls)) return null;
+  return {
+    pool: t(`combat.martial.${cls}.pool`),
+    offense: t(`combat.martial.${cls}.offense`),
+    defense: t(`combat.martial.${cls}.defense`),
+    disrupt: t(`combat.martial.${cls}.disrupt`),
+  };
 }
 
 export function martialPointsLeft(character: Readonly<Character>): number {
@@ -208,8 +214,17 @@ export function useMartialOffense(ctx: MartialContext): CombatActionResult {
   });
   const offenseText =
     next.classId === 'fighter'
-      ? `${next.name} commits to a ${flavor.offense} — this turn's strikes land surer (+${martialOffenseAttackBonus(next)} to hit) and bite for ${martialOffenseDamage(next)} more.`
-      : `${next.name} commits to a ${flavor.offense} — this turn's strikes bite for ${martialOffenseDamage(next)} more.`;
+      ? t('combat.log.offenseFighter', {
+          name: next.name,
+          offense: flavor.offense,
+          hit: martialOffenseAttackBonus(next),
+          dmg: martialOffenseDamage(next),
+        })
+      : t('combat.log.offenseOther', {
+          name: next.name,
+          offense: flavor.offense,
+          dmg: martialOffenseDamage(next),
+        });
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
@@ -243,7 +258,7 @@ export function useMartialDefense(ctx: MartialContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${next.name} sets a ${flavor.defense} — the next blow is blunted by ${reduction}.`,
+    text: t('combat.log.defense', { name: next.name, defense: flavor.defense, reduction }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'shield', 'player'), next);
 }
@@ -272,7 +287,7 @@ export function useMartialDisrupt(ctx: MartialContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${next.name} winds up a ${flavor.disrupt} — the next blow must land to stagger its mark.`,
+    text: t('combat.log.disrupt', { name: next.name, disrupt: flavor.disrupt }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), next);
 }

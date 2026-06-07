@@ -12,6 +12,7 @@ import {
   nextLogId,
   spellSaveDC,
 } from './helpers';
+import { t } from '../../../i18n';
 
 /**
  * Entangle (2nd) — transmutation, area. The Druid's signature control, distinct
@@ -34,7 +35,7 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} calls grasping roots up through the floor — every foe must make a Strength save vs DC ${dc} or be rooted fast.`,
+    text: t('combat.log.entangleCast', { name: nextCharacter.name, dc }),
   });
   nextState = attachSpellEffect(nextState, 'debuff-restrain', 'player', live[0].id);
 
@@ -51,7 +52,14 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `${m.instance.displayName} STR save${resoluteWill ? ' (resolute will — advantage)' : ''}: d20${strMod >= 0 ? '+' : ''}${strMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail (rooted)'}.`,
+      text: t('combat.log.entangleSave', {
+        name: m.instance.displayName,
+        resolute: resoluteWill ? t('combat.f.resoluteAdv') : '',
+        mod: `${strMod >= 0 ? '+' : ''}${strMod}`,
+        total: save.total,
+        dc,
+        result: success ? t('combat.f.success') : t('combat.f.failRooted'),
+      }),
     });
 
     if (success) continue;
@@ -85,7 +93,10 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'system',
-      text: `${rooted.join(', ')} ${rooted.length === 1 ? 'is' : 'are'} caught fast — the roots hold, and the next turn is lost.`,
+      text:
+        rooted.length === 1
+          ? t('combat.log.entangleRootedOne', { names: rooted.join(', ') })
+          : t('combat.log.entangleRootedMany', { names: rooted.join(', ') }),
     });
   }
 

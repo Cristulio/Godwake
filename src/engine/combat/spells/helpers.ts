@@ -22,6 +22,7 @@ import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchSpellSlots } from '../types';
 import { attachCombatVfx } from '../vfx';
+import { t } from '../../../i18n';
 
 export interface CastSpellContext {
   roller: DiceRoller;
@@ -245,7 +246,13 @@ export function applyAreaSaveForHalf(
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `${m.instance.displayName} DEX save: d20${dexMod >= 0 ? '+' : ''}${dexMod} = ${save.total} vs DC ${dc} — ${success ? 'success (half)' : 'fail (full)'}.`,
+      text: t('combat.log.areaSave', {
+        name: m.instance.displayName,
+        mod: `${dexMod >= 0 ? '+' : ''}${dexMod}`,
+        total: save.total,
+        dc,
+        result: success ? t('combat.f.successHalf') : t('combat.f.failFull'),
+      }),
     });
     const damaged = applyDamage(nextState, m.id, dmg, nextCharacter);
     nextState = damaged.state;
@@ -253,7 +260,11 @@ export function applyAreaSaveForHalf(
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `${m.instance.displayName} takes ${dmg} ${damageType}.`,
+      text: t('combat.log.takesDamage', {
+        name: m.instance.displayName,
+        dmg,
+        type: t(`combat.dmg.${damageType}`),
+      }),
     });
   }
 

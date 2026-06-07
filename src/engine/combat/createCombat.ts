@@ -26,6 +26,7 @@ import { refreshMonsterIntents } from './attack/monsterIntent';
 import { playerAttack } from './attack/playerAttack';
 import { wieldsRangedWeapon, wearsHeavierThanLight } from '../character/equip';
 import { getActiveRoller } from '../dice';
+import { t } from '../../i18n';
 import {
   applyAscensionToMonster,
   ascensionBossExtraPhase,
@@ -213,7 +214,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     {
       id: 1,
       kind: 'system' as const,
-      text: 'Combat begins.',
+      text: t('combat.log.combatBegins'),
     },
   ];
 
@@ -377,7 +378,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     log.push({
       id: log.length + 1,
       kind: 'system' as const,
-      text: `${nextCharacter.name} braces with ${tempHpGrant} temporary HP.`,
+      text: t('combat.log.braceTempHp', { name: nextCharacter.name, n: tempHpGrant }),
     });
   }
 
@@ -394,7 +395,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     log.push({
       id: log.length + 1,
       kind: 'system' as const,
-      text: `${nextCharacter.name} recovers ${after - before} HP from a blessing.`,
+      text: t('combat.log.blessingRecover', { name: nextCharacter.name, amount: after - before }),
     });
   }
 
@@ -419,11 +420,11 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
         const newTemp = Math.max(nextCharacter.hp.temp, buff.tempHp);
         nextCharacter = patchHp(nextCharacter, { temp: newTemp });
       }
-      const girdNote = buff.tempHp > 0 ? ` (+${buff.tempHp} temp HP)` : '';
+      const girdNote = buff.tempHp > 0 ? t('combat.log.girdNote', { n: buff.tempHp }) : '';
       log.push({
         id: log.length + 1,
         kind: 'system' as const,
-        text: `${nextCharacter.name} readies the ${buff.label}${girdNote}.`,
+        text: t('combat.log.readyBuff', { name: nextCharacter.name, label: buff.label, gird: girdNote }),
       });
     }
   }
@@ -528,7 +529,7 @@ function resolveRangedOpeningVolley(
       {
         id: state.log.length + 1,
         kind: 'system' as const,
-        text: `${character.name} looses an opening volley before the enemy can close.`,
+        text: t('combat.log.openingVolley', { name: character.name }),
       },
     ],
   };

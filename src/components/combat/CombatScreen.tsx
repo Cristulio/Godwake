@@ -48,6 +48,7 @@ import { useBlockingModalOpen } from '../ui/useInputBlock';
 import { CombatCoach, combatIntroEligible, type CoachStep } from './CombatCoach';
 import { useMetaStore } from '../../stores/metaStore';
 import { COMBAT_INTRO_TUTORIAL_ID } from '../../content/tutorials';
+import { useT } from '../../i18n/useT';
 
 interface CombatScreenProps {
   character: Character;
@@ -73,6 +74,7 @@ export function CombatScreen({
   scene = 'combat',
   decoration = 'generic',
 }: CombatScreenProps) {
+  const { t } = useT();
   const setCombat = useGameStore((s) => s.setCombat);
   const setCharacter = useGameStore((s) => s.setCharacter);
   const speed = useSettingsStore((s) => s.speedMultiplier);
@@ -692,10 +694,10 @@ export function CombatScreen({
             className="font-display text-lg md:text-xl text-[var(--color-accent-amber)] tracking-[0.1em]"
             style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.85), 0 0 14px rgba(244,167,66,0.3)' }}
           >
-            {roomTitle ?? 'Encounter'}
+            {roomTitle ?? t('combat.screen.encounter')}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-[0.25em] mt-1">
-            {roomLabel ?? `Round ${state.round}`}
+            {roomLabel ?? t('combat.screen.round', { n: state.round })}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -707,7 +709,7 @@ export function CombatScreen({
                 ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
                 : 'bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)]'}
             `}
-            title={speed === 2 ? 'Slow down' : 'Speed up'}
+            title={speed === 2 ? t('combat.screen.slowDown') : t('combat.screen.speedUp')}
           >
             {speed === 2 ? '▶▶ 2×' : '▶ 1×'}
           </button>
@@ -719,9 +721,9 @@ export function CombatScreen({
                 ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
                 : 'bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)]'}
             `}
-            title={autoBattle ? 'Turn off Auto-Battle' : 'Auto-Battle: let the tactics engine play your turns'}
+            title={autoBattle ? t('combat.screen.autoOn') : t('combat.screen.autoOff')}
           >
-            ⚙ AUTO
+            ⚙ {t('combat.screen.auto')}
           </button>
           {onAbandon && (
             <button
@@ -729,7 +731,7 @@ export function CombatScreen({
               onClick={() => setConfirmAbandon(true)}
               className="btn-chunky px-3 py-1.5 border-2 bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-accent-deep-blood)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent-blood)] text-[10px] uppercase tracking-widest font-bold transition-colors"
             >
-              ⚑ Abandon
+              ⚑ {t('combat.screen.abandon')}
             </button>
           )}
         </div>
@@ -784,8 +786,8 @@ export function CombatScreen({
             />
           ) : (
             <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] text-center px-2">
-              Dice Pool
-              <div className="opacity-50 mt-1">awaiting roll</div>
+              {t('combat.screen.dicePool')}
+              <div className="opacity-50 mt-1">{t('combat.screen.awaitingRoll')}</div>
             </div>
           )}
         </aside>
@@ -806,27 +808,27 @@ export function CombatScreen({
                   : '0 0 24px rgba(200,51,46,0.6), 4px 4px 0 rgba(0,0,0,0.9)',
             }}
           >
-            {state.status === 'player-victory' ? '◆ Victory ◆' : '✗ You have fallen ✗'}
+            {state.status === 'player-victory' ? t('combat.screen.victory') : t('combat.screen.fallen')}
           </div>
           <Button variant="primary" size="lg" onClick={handleContinue}>
-            {state.status === 'player-victory' ? '▸ Continue Deeper' : '↻ Wake at the Grove'}
+            {state.status === 'player-victory' ? t('combat.screen.continueDeeper') : t('combat.screen.wakeAtGrove')}
           </Button>
         </div>
       ) : (
         <>
           {selectingTarget && (
             <div className="text-center text-[var(--color-accent-amber)] text-xs uppercase tracking-widest animate-pulse">
-              {markingTarget ? '► Select a quarry to mark' : '► Select a target'}
+              {markingTarget ? t('combat.screen.selectQuarry') : t('combat.screen.selectTarget')}
             </div>
           )}
           {character.conditions.some((c) => c.name === 'paralyzed') && (
             <div className="text-center text-[var(--color-accent-blood)] text-xs uppercase tracking-[0.3em] font-bold animate-pulse">
-              ✦ Paralyzed — attacks against you have advantage
+              {t('combat.screen.paralyzedBanner')}
             </div>
           )}
           {autoEndNotice && (
             <div className="text-center text-[var(--color-text-secondary)] text-xs uppercase tracking-widest italic">
-              Ending turn — no actions remain.
+              {t('combat.screen.autoEndNotice')}
             </div>
           )}
           <CombatHUD
@@ -888,14 +890,14 @@ export function CombatScreen({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/80">
           <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-6 max-w-sm">
             <div className="text-[var(--color-accent-amber)] text-sm uppercase tracking-widest mb-2">
-              Abandon the delve?
+              {t('combat.screen.abandonTitle')}
             </div>
             <p className="text-[var(--color-text-secondary)] text-sm mb-4">
-              Flee back to Phandalin. You keep your hide, but the gold and the glory stay buried.
+              {t('combat.screen.abandonBody')}
             </p>
             <div className="flex gap-2 justify-end">
               <Button variant="secondary" onClick={() => setConfirmAbandon(false)}>
-                Stay
+                {t('combat.screen.stay')}
               </Button>
               <Button
                 variant="danger"
@@ -904,7 +906,7 @@ export function CombatScreen({
                   onAbandon?.();
                 }}
               >
-                Abandon
+                {t('combat.screen.abandonConfirm')}
               </Button>
             </div>
           </div>

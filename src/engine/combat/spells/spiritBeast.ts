@@ -15,6 +15,7 @@ import {
   nextLogId,
 } from './helpers';
 import { scaleSpellDamage } from './scaling';
+import { t } from '../../../i18n';
 
 /** Player-turn-start maulings after the immediate one. With the cast's own
  *  strike that is three hits in all (now + the start of the next two turns). */
@@ -51,7 +52,7 @@ export function castSpiritBeast(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'system',
-    text: `${nextCharacter.name} calls a spirit beast to their side — fang and claw given form. It will maul a foe at the start of each of the next ${SPIRIT_BEAST_TICKS} turns.`,
+    text: t('combat.log.spiritBeastCast', { name: nextCharacter.name, ticks: SPIRIT_BEAST_TICKS }),
   });
   nextState = attachSpellEffect(nextState, 'summon-beast', 'player', targetId);
 
@@ -61,7 +62,7 @@ export function castSpiritBeast(ctx: CastSpellContext): CastResult {
   nextState = appendLog(nextState, {
     id: nextLogId(nextState),
     kind: 'damage',
-    text: `The spirit beast savages ${target.instance.displayName} for ${perTurn}.`,
+    text: t('combat.log.spiritBeastHit', { target: target.instance.displayName, perTurn }),
   });
 
   nextCharacter = markActionUsed(nextCharacter);

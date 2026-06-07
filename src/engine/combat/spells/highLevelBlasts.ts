@@ -16,6 +16,7 @@ import {
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage } from './scaling';
+import { t } from '../../../i18n';
 
 interface BlastConfig {
   slotLevel: SpellSlotLevel;
@@ -49,7 +50,14 @@ function castAreaBlast(ctx: CastSpellContext, cfg: BlastConfig): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} ${cfg.flavor} ${damageRoll.rolls.join('+')} = ${fullDmg} ${cfg.damageType}. DEX save DC ${dc} for half.`,
+    text: t('combat.log.highBlast', {
+      name: nextCharacter.name,
+      flavor: cfg.flavor,
+      rolls: damageRoll.rolls.join('+'),
+      dmg: fullDmg,
+      type: t(`combat.dmg.${cfg.damageType}`),
+      dc,
+    }),
   });
   // Lightning AoE arcs as a fork; every other element blooms as a burst across
   // the enemy line. Element drives the palette either way.
@@ -76,7 +84,7 @@ export function castRimeBlast(ctx: CastSpellContext): CastResult {
     dice: 7,
     die: 6,
     damageType: 'cold',
-    flavor: 'detonates a pressure-wave of killing frost —',
+    flavor: t('combat.log.blastFlavor.rime'),
   });
 }
 
@@ -86,7 +94,7 @@ export function castGlacialCone(ctx: CastSpellContext): CastResult {
     dice: 9,
     die: 8,
     damageType: 'cold',
-    flavor: 'sweeps the room with a fan of glacier-cold —',
+    flavor: t('combat.log.blastFlavor.glacial'),
   });
 }
 
@@ -96,7 +104,7 @@ export function castSunfireBurst(ctx: CastSpellContext): CastResult {
     dice: 11,
     die: 6,
     damageType: 'fire',
-    flavor: 'blooms a second sun —',
+    flavor: t('combat.log.blastFlavor.sunfire'),
   });
 }
 
@@ -106,7 +114,7 @@ export function castStormcrash(ctx: CastSpellContext): CastResult {
     dice: 13,
     die: 6,
     damageType: 'lightning',
-    flavor: 'brings the sky down indoors —',
+    flavor: t('combat.log.blastFlavor.storm'),
   });
 }
 
@@ -116,6 +124,6 @@ export function castCataclysm(ctx: CastSpellContext): CastResult {
     dice: 15,
     die: 6,
     damageType: 'fire',
-    flavor: 'calls a column of ruin down —',
+    flavor: t('combat.log.blastFlavor.cataclysm'),
   });
 }

@@ -1,6 +1,9 @@
 import { memo, type ReactElement } from 'react';
 import type { MonsterIntent } from '../../types/combat';
 import type { ConditionName } from '../../types/conditions';
+import { useT } from '../../i18n/useT';
+
+type TFn = (key: string, params?: Record<string, string | number>) => string;
 
 /**
  * enemy-telegraph: the at-a-glance badge showing what a monster will do on its
@@ -16,8 +19,6 @@ type IntentStyle = {
   /** CSS colour for the glyph + accent. */
   color: string;
   icon: ReactElement;
-  /** Tooltip / screen-reader description. */
-  describe: (intent: MonsterIntent) => string;
 };
 
 const SWORD: ReactElement = (
@@ -110,77 +111,62 @@ function multiTotalText(intent: MonsterIntent): string | null {
 }
 
 /** What a condition does to the player — so the read is actionable, not just a name. */
-function debuffEffect(c: ConditionName | undefined): string {
+function debuffEffect(c: ConditionName | undefined, t: TFn): string {
   switch (c) {
     case 'poisoned':
-      return 'poisoned — your attacks roll at disadvantage';
     case 'frightened':
-      return 'frightened — your attacks roll at disadvantage';
     case 'blinded':
-      return 'blinded — you attack at disadvantage and are easier to hit';
     case 'restrained':
-      return 'restrained — you attack at disadvantage and are easier to hit';
     case 'weakened':
-      return 'weakened — your hits deal less damage';
+      return t(`combat.intent.effect.${c}`);
     default:
-      return 'a curse';
+      return t('combat.intent.effect.default');
+  }
+}
+
+/** The localized tooltip / screen-reader description for an intent. */
+function describeIntent(i: MonsterIntent, t: TFn): string {
+  const unknown = () => t('combat.intent.unknown');
+  switch (i.kind) {
+    case 'attack':
+      return t('combat.intent.attack', { dmg: rangeText(i) ?? unknown() });
+    case 'multiattack': {
+      const total = multiTotalText(i);
+      return t('combat.intent.multiattack', {
+        hits: i.hits ?? 2,
+        per: rangeText(i) ?? unknown(),
+        total: total ? t('combat.intent.multiTotal', { total }) : '',
+      });
+    }
+    case 'drain':
+      return t('combat.intent.drain', { dmg: rangeText(i) ?? unknown() });
+    case 'paralyze':
+      return t('combat.intent.paralyze');
+    case 'debuff':
+      return t('combat.intent.debuff', { effect: debuffEffect(i.condition, t) });
+    case 'summon':
+      return t('combat.intent.summon');
+    case 'sustain-heal':
+      return t('combat.intent.sustainHeal');
+    case 'ward':
+      return t('combat.intent.ward');
+    case 'windup':
+      return i.imminent
+        ? t('combat.intent.windupImminent', { action: i.actionName })
+        : t('combat.intent.windupCharging', { action: i.actionName });
   }
 }
 
 const STYLES: Record<MonsterIntent['kind'], IntentStyle> = {
-  attack: {
-    color: 'var(--color-accent-blood)',
-    icon: ICONS.attack,
-    describe: (i) => `Attacks for ${rangeText(i) ?? '?'} damage if it hits.`,
-  },
-  multiattack: {
-    color: 'var(--color-accent-blood)',
-    icon: ICONS.multiattack,
-    describe: (i) => {
-      const per = rangeText(i) ?? '?';
-      const total = multiTotalText(i);
-      return `${i.hits ?? 2} separate hits, ${per} damage each${total ? ` (${total} total)` : ''}.`;
-    },
-  },
-  drain: {
-    color: 'var(--color-status-necrotic)',
-    icon: ICONS.drain,
-    describe: (i) => `Life-drain for ${rangeText(i) ?? '?'} damage — it heals for part of what it deals.`,
-  },
-  paralyze: {
-    color: 'var(--color-status-holy)',
-    icon: ICONS.paralyze,
-    describe: () =>
-      'Tries to paralyze you. Fail the save and you lose your turns while attackers strike with advantage.',
-  },
-  debuff: {
-    color: 'var(--color-status-poison)',
-    icon: ICONS.debuff,
-    describe: (i) => `Tries to leave you ${debuffEffect(i.condition)}. Save to resist.`,
-  },
-  summon: {
-    color: 'var(--color-accent-arcane)',
-    icon: ICONS.summon,
-    describe: () => 'Calls in reinforcements — more enemies join the fight.',
-  },
-  'sustain-heal': {
-    color: 'var(--color-status-poison)',
-    icon: ICONS['sustain-heal'],
-    describe: () => 'Heals itself or a wounded ally, restoring lost HP.',
-  },
-  ward: {
-    color: 'var(--color-accent-amber)',
-    icon: ICONS.ward,
-    describe: () => 'Shields itself or an ally with temporary HP that soaks your next hits.',
-  },
-  windup: {
-    color: 'var(--color-accent-torch)',
-    icon: ICONS.windup,
-    describe: (i) =>
-      i.imminent
-        ? `INCOMING: ${i.actionName} lands on the enemy's next turn — race its HP down, brace, or stun it to cancel the charge.`
-        : `Winding up ${i.actionName} — a heavy blow is being readied. It lands next turn, not this one.`,
-  },
+  attack: { color: 'var(--color-accent-blood)', icon: ICONS.attack },
+  multiattack: { color: 'var(--color-accent-blood)', icon: ICONS.multiattack },
+  drain: { color: 'var(--color-status-necrotic)', icon: ICONS.drain },
+  paralyze: { color: 'var(--color-status-holy)', icon: ICONS.paralyze },
+  debuff: { color: 'var(--color-status-poison)', icon: ICONS.debuff },
+  summon: { color: 'var(--color-accent-arcane)', icon: ICONS.summon },
+  'sustain-heal': { color: 'var(--color-status-poison)', icon: ICONS['sustain-heal'] },
+  ward: { color: 'var(--color-accent-amber)', icon: ICONS.ward },
+  windup: { color: 'var(--color-accent-torch)', icon: ICONS.windup },
 };
 
 // Per-condition tint for debuff intents, so a poison read differs from a fear read.
@@ -202,7 +188,9 @@ function valueText(intent: MonsterIntent): string | null {
 }
 
 function IntentBadgeImpl({ intent }: IntentBadgeProps) {
+  const { t } = useT();
   const style = STYLES[intent.kind];
+  const describe = describeIntent(intent, t);
   const color =
     intent.kind === 'debuff'
       ? DEBUFF_COLORS[intent.condition ?? 'poisoned'] ?? style.color
@@ -225,8 +213,8 @@ function IntentBadgeImpl({ intent }: IntentBadgeProps) {
     <div
       className={`enemy-intent-badge ${urgent ? 'enemy-intent-urgent' : ''}`}
       style={{ color, borderColor: color }}
-      title={style.describe(intent)}
-      aria-label={style.describe(intent)}
+      title={describe}
+      aria-label={describe}
     >
       <svg viewBox="0 0 16 16" className="enemy-intent-icon" aria-hidden="true">
         {style.icon}

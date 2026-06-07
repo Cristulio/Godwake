@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { playSfx } from '../../engine/audio';
+import { useT } from '../../i18n/useT';
 
 interface DiceRollOverlayProps {
   attackerName: string;
@@ -33,6 +34,7 @@ export function DiceRollOverlay({
   crit,
   onDismiss,
 }: DiceRollOverlayProps) {
+  const { t } = useT();
   const speed = useSettingsStore((s) => s.speedMultiplier);
   const [spinning, setSpinning] = useState(true);
   const [shownNumber, setShownNumber] = useState(rollNatural);
@@ -83,7 +85,7 @@ export function DiceRollOverlay({
     };
   }, [rollNatural, onDismiss, speed, hit, crit, attackerKind]);
 
-  const resultLabel = crit ? 'CRIT!' : hit ? 'HIT' : 'MISS';
+  const resultLabel = crit ? t('combat.dice.crit') : hit ? t('combat.dice.hit') : t('combat.dice.miss');
   const resultClass = crit
     ? 'text-[var(--color-dmg-crit)]'
     : hit
@@ -107,7 +109,7 @@ export function DiceRollOverlay({
               <span className="text-[var(--color-accent-amber)] font-bold text-base">{total}</span>
             </div>
             <div className="text-[var(--color-text-dim)] text-[9px] font-mono">
-              vs AC {targetAC}
+              {t('combat.dice.vsAc', { ac: targetAC })}
             </div>
             <div
               className={`font-display text-base uppercase tracking-[0.3em] mt-1 ${resultClass}`}
@@ -122,7 +124,7 @@ export function DiceRollOverlay({
           </div>
         ) : (
           <div className="text-[var(--color-text-dim)] text-[9px] font-mono uppercase tracking-widest h-9 flex items-center animate-pulse">
-            rolling…
+            {t('combat.dice.rolling')}
           </div>
         )}
         <div className="text-[var(--color-text-dim)] text-[8px] uppercase tracking-widest text-center truncate w-full mt-1">

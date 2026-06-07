@@ -19,6 +19,7 @@ import {
   spellSaveDC,
 } from './helpers';
 import { scaleSpellDamage } from './scaling';
+import { t } from '../../../i18n';
 
 /**
  * Lightning Bolt — the FOCUSED counterpart to Fireball's crowd-clear. A single
@@ -50,7 +51,15 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'roll',
-    text: `${nextCharacter.name} looses a spear of lightning at ${primary.instance.displayName}. ${damageRoll.rolls.join('+')} = ${fullDmg} lightning${evoker ? ' (Sculpt Spells)' : ''}. DEX save DC ${dc} for half${secondary ? '; the bolt forks to a second for half' : ''}.`,
+    text: t('combat.log.lightningBolt', {
+      name: nextCharacter.name,
+      target: primary.instance.displayName,
+      rolls: damageRoll.rolls.join('+'),
+      dmg: fullDmg,
+      evoker: evoker ? t('combat.log.sculptSpells') : '',
+      dc,
+      fork: secondary ? t('combat.log.lightningForkClause') : '',
+    }),
   });
   nextState = attachSpellEffect(nextState, 'spell-fork', 'player', primaryId, spellElement(ctx.spellId));
 
@@ -65,7 +74,13 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `${primary.instance.displayName} DEX save: d20${dexMod >= 0 ? '+' : ''}${dexMod} = ${save.total} vs DC ${dc} — ${success ? 'success (half)' : 'fail (full)'}.`,
+      text: t('combat.log.lightningSave', {
+        name: primary.instance.displayName,
+        mod: `${dexMod >= 0 ? '+' : ''}${dexMod}`,
+        total: save.total,
+        dc,
+        result: success ? t('combat.f.successHalf') : t('combat.f.failFull'),
+      }),
     });
     const damaged = applyDamage(nextState, primaryId, dmg, nextCharacter);
     nextState = damaged.state;
@@ -73,7 +88,11 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `${primary.instance.displayName} takes ${dmg} lightning.`,
+      text: t('combat.log.takesDamage', {
+        name: primary.instance.displayName,
+        dmg,
+        type: t('combat.dmg.lightning'),
+      }),
     });
   }
 
@@ -89,7 +108,13 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'roll',
-      text: `The bolt forks to ${secondary.instance.displayName}. DEX save: d20${dexMod >= 0 ? '+' : ''}${dexMod} = ${save.total} vs DC ${dc} — ${success ? 'success' : 'fail'}.`,
+      text: t('combat.log.lightningForkRoll', {
+        name: secondary.instance.displayName,
+        mod: `${dexMod >= 0 ? '+' : ''}${dexMod}`,
+        total: save.total,
+        dc,
+        result: success ? t('combat.f.success') : t('combat.f.fail'),
+      }),
     });
     const damaged = applyDamage(nextState, secondary.id, dmg, nextCharacter);
     nextState = damaged.state;
@@ -97,7 +122,7 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `${secondary.instance.displayName} takes ${dmg} lightning (fork).`,
+      text: t('combat.log.lightningForkDamage', { name: secondary.instance.displayName, dmg }),
     });
   }
 

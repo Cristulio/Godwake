@@ -1,5 +1,6 @@
 import type { CombatState } from '../../types/combat';
 import type { Character } from '../../types/character';
+import { useT } from '../../i18n/useT';
 
 interface TurnOrderTrackerProps {
   state: CombatState;
@@ -7,10 +8,11 @@ interface TurnOrderTrackerProps {
 }
 
 export function TurnOrderTracker({ state, character }: TurnOrderTrackerProps) {
+  const { t } = useT();
   return (
     <div className="flex items-center gap-2 flex-wrap text-[10px] uppercase">
       <span className="font-display text-[var(--color-accent-gold)] text-[9px] tracking-[0.25em]">
-        ◆ Order
+        {t('combat.order.label')}
       </span>
       {state.turnOrder.map((id, idx) => {
         const c = state.combatants.find((x) => x.id === id);

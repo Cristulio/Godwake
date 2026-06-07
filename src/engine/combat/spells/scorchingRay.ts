@@ -17,6 +17,7 @@ import {
   spellDamageBonus,
   spellElement,
 } from './helpers';
+import { t } from '../../../i18n';
 
 /**
  * Scorching Ray gains rays as the caster grows, so the L2 slot scales past a
@@ -52,7 +53,7 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
     {
       id: baseId,
       kind: 'narration',
-      text: `${nextCharacter.name} levels ${rayCount} scorching rays at ${target.instance.displayName}.`,
+      text: t('combat.log.scorchingRayCast', { name: nextCharacter.name, count: rayCount, target: target.instance.displayName }),
     },
   ];
   let hits = 0;
@@ -69,7 +70,13 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
     logs.push({
       id: baseId + 1 + i,
       kind: 'roll',
-      text: `Ray ${i + 1}: d20${attackBonus >= 0 ? '+' : ''}${attackBonus} = ${toHit.total} vs AC ${ac} — ${crit ? 'CRITICAL HIT' : hit ? 'hit' : 'miss'}.`,
+      text: t('combat.log.scorchingRayRoll', {
+        i: i + 1,
+        mod: `${attackBonus >= 0 ? '+' : ''}${attackBonus}`,
+        total: toHit.total,
+        ac,
+        result: crit ? t('combat.f.resCrit') : hit ? t('combat.f.resHit') : t('combat.f.resMiss'),
+      }),
     });
   }
 
@@ -96,13 +103,16 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'damage',
-      text: `${hits} of ${rayCount} ray${hits === 1 ? '' : 's'} land${hits === 1 ? 's' : ''} — ${totalDamage} fire.`,
+      text:
+        hits === 1
+          ? t('combat.log.scorchingRayHitOne', { hits, total: rayCount, dmg: totalDamage })
+          : t('combat.log.scorchingRayHitMany', { hits, total: rayCount, dmg: totalDamage }),
     });
   } else {
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
       kind: 'system',
-      text: `Every ray goes wide — ${target.instance.displayName} is untouched.`,
+      text: t('combat.log.scorchingRayMiss', { target: target.instance.displayName }),
     });
   }
 

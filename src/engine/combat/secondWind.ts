@@ -10,6 +10,7 @@ import {
 } from './types';
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
+import { t } from '../../i18n';
 
 export interface SecondWindContext {
   roller: DiceRoller;
@@ -52,7 +53,12 @@ export function useSecondWind(ctx: SecondWindContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} catches a second wind. 1d10+${nextCharacter.level} = ${heal.total} → +${actuallyHealed} HP.`,
+    text: t('combat.log.secondWind', {
+      name: nextCharacter.name,
+      level: nextCharacter.level,
+      roll: heal.total,
+      healed: actuallyHealed,
+    }),
   };
 
   return combatResult(attachCombatVfx(appendLog(state, log), 'second-wind', 'player'), nextCharacter);

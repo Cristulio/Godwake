@@ -25,6 +25,8 @@ import {
   type Blessing,
   type BlessingModifiers,
 } from '../../schemas/blessing';
+import { t } from '../../i18n';
+import { useT } from '../../i18n/useT';
 
 const UNCANNY_DODGE_LEVEL = 5;
 const NIMBLE_DODGE_MAX_LEVEL = 4;
@@ -54,19 +56,24 @@ function conditionGlyph(name: string): string {
   }
 }
 
-function wizardBuffDescription(name: string): string {
-  // Tooltips describe the mechanical effect, not just "active". Numbers mirror
-  // the wizard-buff branch in computeAC (Mage Armor +3 over the 10+DEX base =
-  // 13+DEX while unarmored; Shield +5; Misty Step +2).
-  switch (name) {
-    case 'Mage Armor':
-      return 'Mage Armor — base AC becomes 13 + DEX while unarmored.';
-    case 'Shield':
-      return 'Shield — +5 AC against incoming attacks until your next turn.';
-    case 'Misty Step':
-      return 'Misty Step — +2 AC until your next turn.';
-    default:
-      return `${name} active`;
+// Wizard buffs are tracked by their stable English id; these helpers localize the
+// HUD label + tooltip. Numbers mirror the wizard-buff branch in computeAC (Mage
+// Armor +3 over the 10+DEX base = 13+DEX while unarmored; Shield +5; Misty Step +2).
+function wizardBuffName(id: string): string {
+  switch (id) {
+    case 'Mage Armor': return t('combat.hud.mageArmorName');
+    case 'Shield': return t('combat.hud.shieldName');
+    case 'Misty Step': return t('combat.hud.mistyStepName');
+    default: return id;
+  }
+}
+
+function wizardBuffDescription(id: string): string {
+  switch (id) {
+    case 'Mage Armor': return t('combat.hud.mageArmorDesc');
+    case 'Shield': return t('combat.hud.shieldDesc');
+    case 'Misty Step': return t('combat.hud.mistyStepDesc');
+    default: return t('combat.hud.buffActive', { name: id });
   }
 }
 
@@ -82,18 +89,19 @@ export function resolveBlessingRunValue(
   character: Character,
 ): string | null {
   const banes = baneQuirkCount(character);
+  const s = banes === 1 ? '' : t('combat.hud.soulMarkPlural');
   const parts: string[] = [];
   const tempHpPerBane = modifiers.tempHpPerBaneQuirk ?? 0;
   if (tempHpPerBane > 0) {
-    parts.push(`+${tempHpPerBane * banes} temp HP (${banes} soul-mark${banes === 1 ? '' : 's'})`);
+    parts.push(t('combat.hud.tempHpBane', { n: tempHpPerBane * banes, banes, s }));
   }
   const tempHpPerLevel = modifiers.tempHpPerDelveLevel ?? 0;
   if (tempHpPerLevel > 0) {
-    parts.push(`+${tempHpPerLevel * character.level} temp HP (level ${character.level})`);
+    parts.push(t('combat.hud.tempHpLevel', { n: tempHpPerLevel * character.level, level: character.level }));
   }
   const acPerBane = modifiers.acBonusPerBaneQuirk ?? 0;
   if (acPerBane > 0) {
-    parts.push(`+${acPerBane * banes} AC (${banes} soul-mark${banes === 1 ? '' : 's'})`);
+    parts.push(t('combat.hud.acBane', { n: acPerBane * banes, banes, s }));
   }
   return parts.length > 0 ? parts.join(', ') : null;
 }
@@ -238,7 +246,7 @@ function BlessingBadge({
           </span>
           {runValue && (
             <span className="block mt-0.5 text-[var(--color-accent-gold)] font-bold text-[10px] leading-snug tabular-nums">
-              This run: {runValue}
+              {t('combat.hud.thisRun', { value: runValue })}
             </span>
           )}
           <span className="block mt-0.5 text-[var(--color-text-secondary)] text-[10px] leading-snug">
@@ -253,6 +261,7 @@ function BlessingBadge({
 }
 
 export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHUDProps) {
+  const { tc } = useT();
   const ac = computeAC(character);
   const critBand = critRange(character);
   // Surface the player's LIVE crit window — the stacked Champion + blessing +
@@ -403,16 +412,16 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
     <div
       className="flex flex-wrap items-stretch border-2 border-[var(--color-border-warm)] bg-[var(--color-bg-panel)] text-[10px] uppercase tracking-[0.18em]"
       style={{ minHeight: '40px' }}
-      aria-label="Combat HUD"
+      aria-label={t('combat.hud.label')}
     >
-      <Section title="Vitals">
+      <Section title={t('combat.hud.vitals')}>
         <div className="flex flex-col gap-1 min-w-[150px]">
           <div className="flex items-center justify-between gap-3">
             <span
               className={`tabular-nums font-bold ${hpTone}`}
-              title={`Hit points${character.hp.temp > 0 ? ` (+${character.hp.temp} temp)` : ''}`}
+              title={character.hp.temp > 0 ? t('combat.hud.hpTitleTemp', { n: character.hp.temp }) : t('combat.hud.hpTitle')}
             >
-              HP {character.hp.current}/{character.hp.max}
+              {t('combat.hud.hp')} {character.hp.current}/{character.hp.max}
               {character.hp.temp > 0 && (
                 <span className="ml-1 text-[var(--color-accent-gold)]">+{character.hp.temp}</span>
               )}
@@ -420,9 +429,9 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
             <span className="flex items-center gap-2.5">
               <span
                 className="tabular-nums text-[var(--color-text-secondary)]"
-                title="Armor Class"
+                title={t('combat.hud.acTitle')}
               >
-                AC {ac}
+                {t('combat.hud.ac')} {ac}
               </span>
             </span>
           </div>
@@ -431,12 +440,12 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
       </Section>
 
       {critRangeText && (
-        <Section title="Crit">
+        <Section title={t('combat.hud.crit')}>
           <Pill
-            text={`CRIT ${critRangeText}`}
+            text={t('combat.hud.critPill', { range: critRangeText })}
             on
             tone="amber"
-            title={`Critical range: a natural ${critRangeText} on the d20 scores a critical hit (doubled damage dice).`}
+            title={t('combat.hud.critTitle', { range: critRangeText })}
           />
         </Section>
       )}
@@ -444,33 +453,33 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
       {bossEdge && (
         <Section title={bossEdge.buff.label}>
           <Pill
-            text={bossEdge.live ? 'Set' : 'Spent'}
+            text={bossEdge.live ? t('combat.hud.set') : t('combat.hud.spent')}
             on={bossEdge.live}
             tone="amber"
-            title={`${bossEdge.buff.description} (readied against ${bossEdge.bossName})`}
+            title={t('combat.hud.bossEdgeTitle', { desc: bossEdge.buff.description, boss: bossEdge.bossName })}
           />
         </Section>
       )}
 
       {isFighter && (
-        <Section title="Second Wind">
+        <Section title={t('combat.hud.secondWind')}>
           <Dot
             on={secondWindAvailable}
-            title={secondWindAvailable ? 'Second Wind ready' : 'Second Wind spent'}
+            title={secondWindAvailable ? t('combat.hud.secondWindReady') : t('combat.hud.secondWindSpent')}
           />
           {Array.from({ length: secondWindBonus }).map((_, i) => (
-            <Dot key={`sw-bonus-${i}`} on title="Wellspring Vigil bonus charge" />
+            <Dot key={`sw-bonus-${i}`} on title={t('combat.hud.wellspringBonus')} />
           ))}
         </Section>
       )}
 
       {isFighter && surgeMax > 0 && (
-        <Section title="Action Surge">
+        <Section title={t('combat.hud.actionSurge')}>
           {Array.from({ length: surgeMax }).map((_, i) => (
             <Dot
               key={`as-${i}`}
               on={i < surgeRemaining}
-              title={i < surgeRemaining ? 'Action Surge available' : 'Action Surge spent'}
+              title={i < surgeRemaining ? t('combat.hud.actionSurgeReady') : t('combat.hud.actionSurgeSpent')}
             />
           ))}
         </Section>
@@ -484,32 +493,32 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               on={i < martialPoints}
               title={
                 i < martialPoints
-                  ? `${martial.pool} to spend — fuels ${martial.offense}, ${martial.defense}, ${martial.disrupt}. Refreshes each fight, regenerates through it.`
-                  : `${martial.pool} spent.`
+                  ? t('combat.hud.poolReady', { pool: martial.pool, offense: martial.offense, defense: martial.defense, disrupt: martial.disrupt })
+                  : t('combat.hud.poolSpent', { pool: martial.pool })
               }
             />
           ))}
           {offenseUp && (
             <Pill
-              text="Heavy"
+              text={t('combat.hud.heavy')}
               on
               tone="amber"
-              title={`${martial.offense} set — this turn's strikes land for bonus damage.`}
+              title={t('combat.hud.offenseSet', { offense: martial.offense })}
             />
           )}
           {disruptArmed && (
             <Pill
-              text="Armed"
+              text={t('combat.hud.armed')}
               on
               tone="amber"
-              title={`${martial.disrupt} armed — the next hit staggers its target.`}
+              title={t('combat.hud.disruptArmed', { disrupt: martial.disrupt })}
             />
           )}
         </Section>
       )}
 
       {isMonk && kiMax > 0 && (
-        <Section title="Ki">
+        <Section title={t('combat.hud.ki')}>
           {/* Ki = monk level, so a capstone monk carries 20+ pips — wrap them
               (like the blessing strip) so the well never overflows the bar on a
               narrow phone instead of marching off the edge. */}
@@ -518,11 +527,7 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               <Dot
                 key={`ki-${i}`}
                 on={i < kiNow}
-                title={
-                  i < kiNow
-                    ? 'Ki to spend — fuels Flurry of Blows, Patient Defense, and Stunning Strike. The well refills as each fight begins.'
-                    : 'Ki spent.'
-                }
+                title={i < kiNow ? t('combat.hud.kiReady') : t('combat.hud.kiSpent')}
               />
             ))}
           </div>
@@ -530,140 +535,120 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
       )}
 
       {isRogue && (
-        <Section title="Cunning Action">
+        <Section title={t('combat.hud.cunningAction')}>
           {Array.from({ length: Math.max(cunningMax, cunningRemaining) }).map((_, i) => (
             <Dot
               key={`ca-${i}`}
               on={i < cunningRemaining}
-              title={i < cunningRemaining ? 'Cunning Action available' : 'Cunning Action spent'}
+              title={i < cunningRemaining ? t('combat.hud.cunningReady') : t('combat.hud.cunningSpent')}
             />
           ))}
           {cunningRegenPending && (
             <Pill
-              text={`+1 in ${cunningRegenIn}`}
+              text={t('combat.hud.cunningRegenPill', { n: cunningRegenIn })}
               on={false}
               tone="amber"
-              title={`A spent Cunning Action returns in ${cunningRegenIn} turn${cunningRegenIn === 1 ? '' : 's'} — the rogue claws one use back every couple of turns.`}
+              title={cunningRegenIn === 1 ? t('combat.hud.cunningRegenOne', { n: cunningRegenIn }) : t('combat.hud.cunningRegenMany', { n: cunningRegenIn })}
             />
           )}
         </Section>
       )}
 
       {isRogue && (
-        <Section title="Sneak">
+        <Section title={t('combat.hud.sneak')}>
           <Pill
-            text={sneakArmed ? 'Armed' : sneakUsed ? 'Spent' : 'Idle'}
+            text={sneakArmed ? t('combat.hud.sneakArmed') : sneakUsed ? t('combat.hud.sneakSpent') : t('combat.hud.sneakIdle')}
             on={sneakArmed}
             tone="amber"
             title={
               sneakUsed
-                ? 'Sneak Attack already fired this turn.'
+                ? t('combat.hud.sneakUsedTitle')
                 : sneakArmed
                   ? character.nextAttackAdvantage
-                    ? 'Sneak Attack will trigger — you have advantage on your next attack.'
-                    : 'Sneak Attack will trigger — a target is bloodied.'
-                  : 'Sneak Attack needs advantage (Hide) or a bloodied target.'
+                    ? t('combat.hud.sneakAdvTitle')
+                    : t('combat.hud.sneakBloodiedTitle')
+                  : t('combat.hud.sneakNeedTitle')
             }
           />
         </Section>
       )}
 
       {hasUncannyDodge && (
-        <Section title="Reaction">
+        <Section title={t('combat.hud.reaction')}>
           <Pill
-            text={uncannyReady ? 'UD Ready' : 'UD Used'}
+            text={uncannyReady ? t('combat.hud.udReady') : t('combat.hud.udUsed')}
             on={uncannyReady}
             tone="gold"
-            title={
-              uncannyReady
-                ? 'Uncanny Dodge: halves the first hit you take this round.'
-                : 'Uncanny Dodge already used this round — resets at end of turn.'
-            }
+            title={uncannyReady ? t('combat.hud.udReadyTitle') : t('combat.hud.udUsedTitle')}
           />
         </Section>
       )}
 
       {hasNimbleDodge && (
-        <Section title="Reaction">
+        <Section title={t('combat.hud.reaction')}>
           <Pill
-            text={nimbleReady ? 'Nimble Ready' : 'Nimble Used'}
+            text={nimbleReady ? t('combat.hud.nimbleReady') : t('combat.hud.nimbleUsed')}
             on={nimbleReady}
             tone="gold"
-            title={
-              nimbleReady
-                ? 'Nimble Dodge: the first attack against you this round is made at disadvantage.'
-                : 'Nimble Dodge already used this round — resets at end of turn.'
-            }
+            title={nimbleReady ? t('combat.hud.nimbleReadyTitle') : t('combat.hud.nimbleUsedTitle')}
           />
         </Section>
       )}
 
       {hasGuard && (
-        <Section title="Reaction">
+        <Section title={t('combat.hud.reaction')}>
           <Pill
-            text={guardReady ? 'Guard Ready' : 'Guard Used'}
+            text={guardReady ? t('combat.hud.guardReady') : t('combat.hud.guardUsed')}
             on={guardReady}
             tone="gold"
-            title={
-              guardReady
-                ? 'Guard: the first hit you take this round is blunted by 2.'
-                : 'Guard already blunted a blow this round — resets at the start of your turn.'
-            }
+            title={guardReady ? t('combat.hud.guardReadyTitle') : t('combat.hud.guardUsedTitle')}
           />
         </Section>
       )}
 
       {hasShield && (
-        <Section title="Reaction">
+        <Section title={t('combat.hud.reaction')}>
           <button
             type="button"
             onClick={onToggleShieldAutoFire}
             disabled={!onToggleShieldAutoFire}
-            title={
-              shieldAutoFire
-                ? 'Shield auto-fires when it would turn a hit into a miss (costs 1 L1 slot). Click to disable.'
-                : 'Shield auto-fire is OFF — the slot is never spent automatically. Click to enable.'
-            }
+            title={shieldAutoFire ? t('combat.hud.shieldOnTitle') : t('combat.hud.shieldOffTitle')}
             className={`px-1.5 py-0.5 border-2 text-[8px] uppercase tracking-[0.2em] font-bold tabular-nums cursor-pointer ${
               shieldAutoFire
                 ? 'bg-[var(--color-bg-panel)] border-[var(--color-accent-gold)] text-[var(--color-accent-amber)]'
                 : 'bg-[var(--color-bg-panel)] border-[var(--color-border-dim)] text-[var(--color-text-dim)]'
             }`}
           >
-            Shield {shieldAutoFire ? 'Auto' : 'Off'}
+            {t('combat.hud.shield')} {shieldAutoFire ? t('combat.hud.shieldAuto') : t('combat.hud.shieldOff')}
           </button>
         </Section>
       )}
 
       {isBarbarian && (
-        <Section title="Rage">
+        <Section title={t('combat.hud.rage')}>
           <div className="flex flex-wrap items-center gap-1.5 max-w-[150px]">
             {rageUnlimited ? (
               <Pill
                 text="∞"
                 on
                 tone="blood"
-                title="Primal Champion — Rage is bottomless. Enter the fury as often as you like; it never spends a charge."
+                title={t('combat.hud.rageUnlimitedTitle')}
               />
             ) : (
               Array.from({ length: Math.max(rageChargesCap, rageCharges) }).map((_, i) => (
                 <Dot
                   key={`rage-${i}`}
                   on={i < rageCharges}
-                  title={
-                    i < rageCharges
-                      ? 'Rage charge ready — a 5-round fury. Charges refill only at a rest, not between fights.'
-                      : 'Rage charge spent — refills at the next rest.'
-                  }
+                  title={i < rageCharges ? t('combat.hud.rageChargeReady') : t('combat.hud.rageChargeSpent')}
                 />
               ))
             )}
             {raging && (
               <Pill
-                text={`Fury ${rageRounds}`}
+                text={t('combat.hud.furyPill', { n: rageRounds })}
                 on
                 tone="blood"
-                title={`Raging — ${rageRounds} round${rageRounds === 1 ? '' : 's'} left. Physical damage halved, melee hits land harder. Healing locked out until fury ends.`}
+                title={rageRounds === 1 ? t('combat.hud.ragingTitleOne', { n: rageRounds }) : t('combat.hud.ragingTitleMany', { n: rageRounds })}
               />
             )}
           </div>
@@ -671,31 +656,23 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
       )}
 
       {hasReckless && (
-        <Section title="Stance">
+        <Section title={t('combat.hud.stance')}>
           <Pill
-            text={reckless ? 'Reckless' : 'Guarded'}
+            text={reckless ? t('combat.hud.reckless') : t('combat.hud.guarded')}
             on={reckless}
             tone="blood"
-            title={
-              reckless
-                ? 'Fighting recklessly — your melee attacks have advantage, and so do attacks against you until your next turn.'
-                : 'Guarded — declare Reckless to trade defense for advantage on your swings.'
-            }
+            title={reckless ? t('combat.hud.recklessTitle') : t('combat.hud.guardedTitle')}
           />
         </Section>
       )}
 
       {isRanger && (
-        <Section title="Quarry">
+        <Section title={t('combat.hud.quarry')}>
           <Pill
-            text={markName ?? 'Unmarked'}
+            text={markName ?? t('combat.hud.unmarked')}
             on={markName != null}
             tone="amber"
-            title={
-              markName
-                ? `Hunter's Mark rides ${markName} — every hit on it bites deeper.`
-                : "No quarry marked — Hunter's Mark adds bonus damage to a branded target."
-            }
+            title={markName ? t('combat.hud.quarryTitle', { name: markName }) : t('combat.hud.quarryNoneTitle')}
           />
         </Section>
       )}
@@ -707,45 +684,45 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
             if (max <= 0) return null;
             const now = slotsNow[lvl] ?? 0;
             return (
-              <Section key={`slot-${lvl}`} title={`Slot ${lvl}`}>
+              <Section key={`slot-${lvl}`} title={t('combat.hud.slot', { lvl })}>
                 {Array.from({ length: max }).map((_, i) => (
                   <Dot
                     key={`slot-${lvl}-${i}`}
                     on={i < now}
-                    title={i < now ? `Level ${lvl} slot available` : `Level ${lvl} slot spent`}
+                    title={i < now ? t('combat.hud.slotAvailable', { lvl }) : t('combat.hud.slotSpent', { lvl })}
                   />
                 ))}
               </Section>
             );
           })}
-          <Section title="Cast">
+          <Section title={t('combat.hud.cast')}>
             <span
               className="tabular-nums text-[var(--color-accent-amber)]"
-              title="Spell attack bonus"
+              title={t('combat.hud.spellAtkTitle')}
             >
-              ATK {spellAttackBonus(character) >= 0 ? '+' : ''}
+              {t('combat.hud.atk')} {spellAttackBonus(character) >= 0 ? '+' : ''}
               {spellAttackBonus(character)}
             </span>
             <span
               className="tabular-nums text-[var(--color-accent-amber)]"
-              title="Spell save DC enemies roll against"
+              title={t('combat.hud.spellDcTitle')}
             >
-              DC {spellSaveDC(character)}
+              {t('combat.hud.dc')} {spellSaveDC(character)}
             </span>
           </Section>
         </>
       )}
 
       {wizardBuffs.length > 0 && (
-        <Section title="Buffs">
+        <Section title={t('combat.hud.buffs')}>
           {wizardBuffs.map((b) => (
-            <Pill key={b} text={b} on tone="gold" title={wizardBuffDescription(b)} />
+            <Pill key={b} text={wizardBuffName(b)} on tone="gold" title={wizardBuffDescription(b)} />
           ))}
         </Section>
       )}
 
       {blessingEntries.length > 0 && (
-        <Section title="Blessings">
+        <Section title={t('combat.hud.blessings')}>
           {/* Each blessing is its own badge wearing its god's mark, with its own
               hover/tap tooltip — never the whole strip concatenated. Wrap to a
               second row only when the marks run out of horizontal room. */}
@@ -753,8 +730,8 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
             {blessingEntries.map((b) => (
               <BlessingBadge
                 key={b.id}
-                name={b.name}
-                effect={b.effect}
+                name={tc('blessings', b.id, 'name', b.name)}
+                effect={tc('blessings', b.id, 'effect', b.effect)}
                 god={b.god}
                 runValue={b.runValue}
               />
@@ -764,18 +741,21 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
       )}
 
       {conditions.length > 0 && (
-        <Section title="Status">
-          {conditions.map((c, i) => (
-            <span
-              key={`${c.name}-${i}`}
-              title={c.name}
-              aria-label={c.name}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 border-2 bg-[var(--color-accent-deep-blood)] border-[var(--color-accent-blood)] text-[var(--color-text-primary)] text-[9px]"
-            >
-              <span>{conditionGlyph(c.name)}</span>
-              <span className="uppercase tracking-[0.15em]">{c.name}</span>
-            </span>
-          ))}
+        <Section title={t('combat.hud.status')}>
+          {conditions.map((c, i) => {
+            const condName = t(`combat.cond.name.${c.name}`);
+            return (
+              <span
+                key={`${c.name}-${i}`}
+                title={condName}
+                aria-label={condName}
+                className="inline-flex items-center gap-1 px-1.5 py-0.5 border-2 bg-[var(--color-accent-deep-blood)] border-[var(--color-accent-blood)] text-[var(--color-text-primary)] text-[9px]"
+              >
+                <span>{conditionGlyph(c.name)}</span>
+                <span className="uppercase tracking-[0.15em]">{condName}</span>
+              </span>
+            );
+          })}
         </Section>
       )}
     </div>

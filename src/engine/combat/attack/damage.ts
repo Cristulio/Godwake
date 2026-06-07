@@ -12,6 +12,7 @@ import { appendLog } from '../log';
 import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
 import { useMetaStore } from '../../../stores/metaStore';
 import { wearsHeavierThanLight } from '../../character/equip';
+import { t } from '../../../i18n';
 
 const UNCANNY_DODGE_LEVEL = 5;
 // Fighter Guard: a green soldier rolls with the first blow each round, shaving a
@@ -67,8 +68,13 @@ export function applyDamage(
           kind: 'system',
           text:
             effectiveAmount <= 0
-              ? `The wards hold — ${mc.instance.displayName} shrugs off the blow (${gate.wardLabel}).`
-              : `Warded — ${mc.instance.displayName} takes only ${effectiveAmount} of ${amount} (${gate.wardLabel}).`,
+              ? t('combat.log.wardHold', { name: mc.instance.displayName, label: gate.wardLabel })
+              : t('combat.log.wardPartial', {
+                  name: mc.instance.displayName,
+                  eff: effectiveAmount,
+                  amount,
+                  label: gate.wardLabel,
+                }),
         });
       }
     }
@@ -108,7 +114,7 @@ export function applyDamage(
     next = appendLog(next, {
       id: next.log.length + 1,
       kind: 'system',
-      text: `${nextCharacter.name} twists with the blow — ${reduction} damage avoided.`,
+      text: t('combat.log.disengage', { name: nextCharacter.name, reduction }),
     });
   }
   // Rogue Evasion (L10+): a boss's CHARGED special is telegraphed a full turn
@@ -128,7 +134,7 @@ export function applyDamage(
     next = appendLog(next, {
       id: next.log.length + 1,
       kind: 'system',
-      text: `${nextCharacter.name} reads the wind-up and rolls clear — Evasion halves the blast (${workingAmount} → ${evaded}).`,
+      text: t('combat.log.evasion', { name: nextCharacter.name, from: workingAmount, to: evaded }),
     });
     workingAmount = evaded;
   }
@@ -144,7 +150,7 @@ export function applyDamage(
     next = appendLog(next, {
       id: next.log.length + 1,
       kind: 'system',
-      text: `${nextCharacter.name} uses Uncanny Dodge — damage halved (${workingAmount} → ${halved}).`,
+      text: t('combat.log.uncannyDodge', { name: nextCharacter.name, from: workingAmount, to: halved }),
     });
     workingAmount = halved;
     nextCharacter = patchActionEconomy(nextCharacter, { reactionUsed: true });
@@ -166,7 +172,7 @@ export function applyDamage(
     next = appendLog(next, {
       id: next.log.length + 1,
       kind: 'system',
-      text: `${nextCharacter.name} rolls with the first blow — Guard turns it aside (${workingAmount} → ${guarded}).`,
+      text: t('combat.log.guard', { name: nextCharacter.name, from: workingAmount, to: guarded }),
     });
     workingAmount = guarded;
     nextCharacter = patchActionEconomy(nextCharacter, { reactionUsed: true });
@@ -183,7 +189,7 @@ export function applyDamage(
       next = appendLog(next, {
         id: next.log.length + 1,
         kind: 'system',
-        text: `${nextCharacter.name} is on death's door — Ilmater's grip holds. Stabilised at 1 HP.`,
+        text: t('combat.log.stabilise', { name: nextCharacter.name }),
       });
       return { state: next, character: nextCharacter };
     }
@@ -243,7 +249,7 @@ export function evaluateCombatEnd(
     return {
       state: appendLog(
         { ...state, status: 'player-victory' },
-        { id: nextLogId(state), kind: 'system', text: 'Victory. The room falls silent.' },
+        { id: nextLogId(state), kind: 'system', text: t('combat.log.victory') },
       ),
       character: nextCharacter,
     };
@@ -255,7 +261,7 @@ export function evaluateCombatEnd(
     return {
       state: appendLog(
         { ...state, status: 'player-defeat' },
-        { id: nextLogId(state), kind: 'system', text: 'You have fallen.' },
+        { id: nextLogId(state), kind: 'system', text: t('combat.log.defeat') },
       ),
       character: nextCharacter,
     };

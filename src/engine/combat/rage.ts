@@ -11,6 +11,7 @@ import {
 } from './types';
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
+import { t } from '../../i18n';
 
 export interface RageContext {
   character: Character;
@@ -40,7 +41,7 @@ export function useRage(ctx: RageContext): CombatActionResult {
     const log: CombatLogEntry = {
       id: state.log.length + 1,
       kind: 'narration',
-      text: `${character.name} reaches for the fury, but the heavy plate smothers it — no rage takes hold until the armor comes off.`,
+      text: t('combat.log.rageBlockedArmor', { name: character.name }),
     };
     return combatResult(appendLog(state, log), character);
   }
@@ -60,7 +61,7 @@ export function useRage(ctx: RageContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} gives way to the fury — physical blows glance off and every swing bites deeper, but no mending until it passes. ${RAGE_ROUNDS} rounds.`,
+    text: t('combat.log.rageEnter', { name: nextCharacter.name, rounds: RAGE_ROUNDS }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'rage', 'player'), nextCharacter);
 }
@@ -88,7 +89,7 @@ export function useRecklessAttack(ctx: RecklessAttackContext): CombatActionResul
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} throws the guard away — strikes land with advantage, but so do the blows that answer.`,
+    text: t('combat.log.reckless', { name: nextCharacter.name }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
 }

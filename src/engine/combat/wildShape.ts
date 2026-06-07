@@ -10,6 +10,7 @@ import {
 } from './types';
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
+import { t } from '../../i18n';
 
 /** Rounds a Wild Shape holds once entered — a longer window than Rage; the form
  *  is a commitment, not a one-turn burst. It also ends early when the beast's
@@ -84,7 +85,7 @@ export function useWildShape(ctx: WildShapeContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} sheds the body for a beast's shape — ${tempHp} temporary HP and claws to bare, until the form spends out or fades.`,
+    text: t('combat.log.wildShape', { name: nextCharacter.name, temp: tempHp }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'rage', 'player'), nextCharacter);
 }

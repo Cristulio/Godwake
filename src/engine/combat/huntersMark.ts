@@ -8,6 +8,7 @@ import {
 } from './types';
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
+import { t } from '../../i18n';
 
 export interface HuntersMarkContext {
   character: Character;
@@ -42,7 +43,10 @@ export function useHuntersMark(ctx: HuntersMarkContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: `${nextCharacter.name} marks ${target.instance.displayName} as the quarry. Every arrow that finds it bites the deeper.`,
+    text: t('combat.log.huntersMark', {
+      name: nextCharacter.name,
+      target: target.instance.displayName,
+    }),
   };
   return combatResult(
     attachCombatVfx(

@@ -18,6 +18,7 @@ import {
   spellElement,
 } from './helpers';
 import { scaleSpellDamage } from './scaling';
+import { t } from '../../../i18n';
 
 function intMod(character: Readonly<Character>): number {
   return abilityModifier(effectiveAbilityScores(character).int);
@@ -61,7 +62,7 @@ function castDrain(
   nextState = appendLog(nextState, {
     id: nextLogId(nextState),
     kind: 'system',
-    text: `The stolen life floods back into ${nextCharacter.name} — ${after - before} HP restored.`,
+    text: t('combat.log.lifeDrainRestore', { name: nextCharacter.name, amount: after - before }),
   });
 
   nextCharacter = markActionUsed(nextCharacter);
@@ -80,7 +81,7 @@ export function castVampiricTouch(ctx: CastSpellContext): CastResult {
     slot: 3,
     dice: 5,
     strikeLine: (caster, target, dealt) =>
-      `${caster} lays a grave-cold hand on ${target} — ${dealt} necrotic, the warmth dragged out of it.`,
+      t('combat.log.vampiricTouch', { caster, target, dealt }),
   });
 }
 
@@ -94,6 +95,6 @@ export function castExsanguinate(ctx: CastSpellContext): CastResult {
     slot: 6,
     dice: 10,
     strikeLine: (caster, target, dealt) =>
-      `${caster} bleeds ${target} dry from across the room — ${dealt} necrotic torn loose.`,
+      t('combat.log.exsanguinate', { caster, target, dealt }),
   });
 }

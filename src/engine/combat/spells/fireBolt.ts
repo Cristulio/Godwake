@@ -18,6 +18,7 @@ import {
   spellElement,
   spellSaveDC,
 } from './helpers';
+import { t, getLocalized } from '../../../i18n';
 
 /**
  * Fire Bolt is the cantrip arm of the shared spell-scaling model: one d10 base,
@@ -58,7 +59,14 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
     {
       id: nextLogId(state),
       kind: 'roll',
-      text: `${nextCharacter.name} looses ${getSpell(ctx.spellId).name} at ${target.instance.displayName}. DEX save DC ${dc}: ${save.total} (${saved ? 'saved' : 'failed'}).`,
+      text: t('combat.log.fireBoltCast', {
+        name: nextCharacter.name,
+        spell: getLocalized('spells', ctx.spellId, 'name', getSpell(ctx.spellId).name),
+        target: target.instance.displayName,
+        dc,
+        total: save.total,
+        result: saved ? t('combat.f.saved') : t('combat.f.failed'),
+      }),
     },
   ];
 
@@ -83,7 +91,11 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
   nextState = appendLog(nextState, {
     id: nextLogId(nextState),
     kind: 'damage',
-    text: `Damage: ${damageBreakdown}${saved ? ' halved' : ''} = ${dealt} fire.`,
+    text: t('combat.log.fireBoltDamage', {
+      breakdown: damageBreakdown,
+      halved: saved ? t('combat.log.halvedSuffix') : '',
+      dealt,
+    }),
   });
 
   nextCharacter = markActionUsed(nextCharacter);

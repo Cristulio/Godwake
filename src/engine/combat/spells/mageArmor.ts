@@ -9,6 +9,7 @@ import {
   markActionUsed,
   nextLogId,
 } from './helpers';
+import { t } from '../../../i18n';
 
 export function castMageArmor(character: Readonly<Character>, state: CombatState): CastResult {
   let nextCharacter: Character = consumeSlot(character, 1);
@@ -17,7 +18,7 @@ export function castMageArmor(character: Readonly<Character>, state: CombatState
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'narration',
-    text: `${nextCharacter.name} wraps themselves in shimmering force — +3 AC for this fight.`,
+    text: t('combat.log.mageArmor', { name: nextCharacter.name }),
   });
   nextState = attachSpellEffect(nextState, 'mage-armor', 'player');
   return { state: nextState, character: nextCharacter, cast: true };

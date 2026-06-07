@@ -2,6 +2,7 @@ import type { Character } from '../../types/character';
 import { getItem } from '../../content/items';
 import { Button } from '../ui/Button';
 import { ItemIcon } from '../inventory/ItemIcon';
+import { useT } from '../../i18n/useT';
 
 interface ItemPickerProps {
   character: Character;
@@ -10,6 +11,7 @@ interface ItemPickerProps {
 }
 
 export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
+  const { t, tc } = useT();
   // Group consumables by item id with counts
   const consumables = character.inventory
     .map((ref, idx) => ({ ref, idx, item: getItem(ref.itemId) }))
@@ -40,11 +42,11 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-[var(--color-accent-amber)] uppercase tracking-[0.3em] text-sm mb-3">
-          ► Use Item
+          {t('combat.itemPicker.title')}
         </div>
         {uniqueItems.length === 0 ? (
           <div className="text-[var(--color-text-secondary)] text-sm italic mb-4">
-            No usable items in your inventory.
+            {t('combat.itemPicker.empty')}
           </div>
         ) : (
           <div className="flex flex-col gap-2 mb-4">
@@ -62,18 +64,18 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2">
                         <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
-                          {item.name}
+                          {tc('items', item.id, 'name', item.name)}
                         </div>
                         <div className="text-[var(--color-accent-amber)] font-mono text-lg shrink-0">
                           ×{count}
                         </div>
                       </div>
                       <div className="text-[var(--color-text-secondary)] text-xs italic mt-1">
-                        {item.description}
+                        {tc('items', item.id, 'description', item.description ?? '')}
                       </div>
                       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-2">
-                        {item.actionCost === 'bonus' ? 'Bonus action' : 'Action'}
-                        {item.healDice && ` · heal ${item.healDice}`}
+                        {item.actionCost === 'bonus' ? t('combat.itemPicker.bonusAction') : t('combat.itemPicker.action')}
+                        {item.healDice && ` · ${t('combat.itemPicker.heal', { dice: item.healDice })}`}
                       </div>
                     </div>
                   </div>
@@ -84,7 +86,7 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
         )}
         <div className="flex justify-end">
           <Button variant="secondary" onClick={onCancel}>
-            Cancel
+            {t('combat.itemPicker.cancel')}
           </Button>
         </div>
       </div>

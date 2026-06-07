@@ -9,6 +9,7 @@ import {
   nextLogId,
   slotsAt,
 } from './helpers';
+import { t } from '../../../i18n';
 
 export function castShield(character: Readonly<Character>, state: CombatState): CastResult {
   let nextCharacter: Character = consumeSlot(character, 1);
@@ -19,7 +20,7 @@ export function castShield(character: Readonly<Character>, state: CombatState): 
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'narration',
-    text: `${nextCharacter.name} snaps a wall of force into place — +5 AC until next turn.`,
+    text: t('combat.log.shieldCast', { name: nextCharacter.name }),
   });
   nextState = attachSpellEffect(nextState, 'shield', 'player');
   return { state: nextState, character: nextCharacter, cast: true };
@@ -77,7 +78,7 @@ export function tryShieldReaction(
   let nextState: CombatState = appendLog(state, {
     id: nextLogId(state),
     kind: 'system',
-    text: `${nextCharacter.name} reacts with Shield — AC ${ac} → ${newAc}, the blow glances off (−1 L1 slot).`,
+    text: t('combat.log.shieldReact', { name: nextCharacter.name, ac, newAc }),
   });
   nextState = attachSpellEffect(nextState, 'shield', 'player');
   return { state: nextState, character: nextCharacter };
