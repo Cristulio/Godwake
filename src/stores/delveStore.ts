@@ -322,6 +322,9 @@ function reincarnateSoul(character: Character): Character {
     runAsiGains: undefined,
     level: 1,
     xp: 0,
+    // The school/archetype is a per-run choice re-made at the subclass level;
+    // clear it so the next life re-picks rather than inheriting the dead life's.
+    subclassId: null,
     quirks: newQuirks,
     blessings: [],
     campBoons: [],
@@ -500,6 +503,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       runAsiGains: undefined,
       level: 1,
       xp: 0,
+      // Fresh descent re-picks the school/archetype at the subclass level — the
+      // abandon path bypasses reincarnateSoul, so clear it here too.
+      subclassId: null,
       goldInPocket: startingGold,
       hp: { current: baseHpMax, max: baseHpMax, temp: 0 },
       hitDice: { current: 1, max: 1, die: cls.hitDie },

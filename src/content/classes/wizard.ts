@@ -189,14 +189,14 @@ export const WIZARD: Class = ClassSchema.parse({
       id: 'evocation',
       name: 'School of Evocation',
       description:
-        'You shape raw arcane force into directed harm. Best with spell-damage and spell-DC gear that scales every blast you throw.',
+        'You bend raw arcane force into directed ruin. Best with spell-damage and spell-DC gear that sharpens every blast you throw.',
       featuresByLevel: {
         '2': [
           {
             id: 'sculpt-spells',
             name: 'Arcane Tradition: Evocation',
             description:
-              'Your evocations bite past the page: Fireball (8d6→9d6) and Lightning Bolt (6d6→7d6) each deal one die more. Rewards spell-damage and spell-DC gear that compounds the bonus dice.',
+              'Every evocation you loose carries one extra die of harm — your Burning Hands roars for 4d6 where a lesser mage musters 3. The same bonus die rides every blast you learn after, Fireball and Lightning Bolt among them, and only bites deeper with spell-damage and spell-DC gear.',
             mechanicKey: 'sculpt-spells',
           },
         ],

@@ -149,6 +149,14 @@ describe('applyLevelUp', () => {
     expect(l2.subclassId).toBe('champion');
   });
 
+  it('preserves an already-chosen school across later level-ups (within-run)', () => {
+    const wiz = charAt('wizard', 2);
+    const evoker: Character = { ...wiz, subclassId: 'evocation' };
+    let c = applyLevelUp({ ...evoker, xp: xpForLevel(3) });
+    c = applyLevelUp({ ...c, xp: xpForLevel(4) });
+    expect(c.subclassId).toBe('evocation');
+  });
+
   it('bumps hit dice in lockstep with level', () => {
     const l2 = applyLevelUp({ ...SIR_BRICK, xp: 300 });
     expect(l2.hitDice.max).toBe(SIR_BRICK.hitDice.max + 1);

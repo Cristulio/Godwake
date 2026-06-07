@@ -351,6 +351,74 @@ describe('delveStore.failDelve — reincarnation', () => {
   });
 });
 
+describe('delveStore — the chosen school resets for a new life/run', () => {
+  function makeWizard(extra: Partial<Character> = {}): Character {
+    return {
+      ...createCharacter({
+        id: 'test-wizard',
+        name: 'Veyra',
+        raceId: 'human',
+        classId: 'wizard',
+        baseAbilityScores: {
+          int: STANDARD_ARRAY[0],
+          dex: STANDARD_ARRAY[1],
+          con: STANDARD_ARRAY[2],
+          wis: STANDARD_ARRAY[3],
+          cha: STANDARD_ARRAY[4],
+          str: STANDARD_ARRAY[5],
+        },
+      }),
+      ...extra,
+    };
+  }
+
+  function seedWizardRun(overrides: Partial<Character> = {}) {
+    const character = makeWizard({ level: 4, subclassId: 'evocation', ...overrides });
+    useCharacterStore.setState({ character, saveSeed: null });
+    useDelveStore.setState({ delve: createGodwakeDelve(1) });
+    useCombatStore.setState({ combat: null });
+    useMetaStore.setState({
+      hasReincarnated: false,
+      chaptersCleared: 0,
+      chapter1Cleared: false,
+      druidGroveUnlocked: false,
+      gameCompleted: false,
+      throneCompleted: false,
+      knownNpcs: [],
+    });
+    useScreenStore.setState({ screen: 'delve' });
+  }
+
+  beforeEach(() => {
+    setActiveRoller('school-reset-seed');
+  });
+
+  it('death clears the chosen school so the next life re-picks at level 2', () => {
+    seedWizardRun();
+    expect(char().subclassId).toBe('evocation');
+
+    useDelveStore.getState().failDelve();
+
+    expect(char().subclassId).toBeNull();
+  });
+
+  it('a clear clears the chosen school', () => {
+    seedWizardRun({ quirks: [] });
+    setDelve({ phase: 'completed', currentRoomIdx: 36 });
+
+    useDelveStore.getState().finishDelve();
+
+    expect(char().subclassId).toBeNull();
+  });
+
+  it('a fresh descent clears a school carried on the soul (abandon path)', () => {
+    seedWizardRun();
+    useDelveStore.getState().startDelve(createGodwakeDelve(1));
+
+    expect(char().subclassId).toBeNull();
+  });
+});
+
 describe('delveStore — Druid Grove arrives at the first reincarnation', () => {
   beforeEach(() => {
     setActiveRoller('grove-intro-seed');
