@@ -116,9 +116,43 @@ describe('nextLoreBeat — name reveal gating', () => {
   it('reveals Irenicus once the arc is walked into the endgame (Ch10+)', () => {
     const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
     const irenicusReveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
+    // The reveal is Imoen-spoken, so it still surfaces past Irenicus's death.
+    expect(irenicusReveal.speaker).toBe('imoen');
     expect(played).toContain(irenicusReveal.id);
-    // Fully maxed → the whole arc eventually plays, in registry order.
-    expect(played).toEqual(LORE_BEATS.map((b) => b.id));
+    // Past his chapter the dead antagonist is silent: only the surviving voice
+    // (Imoen) plays, every beat of hers, in registry order.
+    expect(played).toEqual(
+      LORE_BEATS.filter((b) => b.speaker !== 'irenicus').map((b) => b.id),
+    );
+  });
+});
+
+describe('nextLoreBeat — the antagonist falls silent after his death (Ch12+)', () => {
+  it('plays no Irenicus beat once the soul has climbed past his chapter', () => {
+    const played = walk(meta({ delveCount: 999, chaptersCleared: 12 }));
+    const irenicusBeats = played
+      .map((id) => LORE_BEATS.find((b) => b.id === id)!)
+      .filter((b) => b.speaker === 'irenicus');
+    expect(irenicusBeats).toHaveLength(0);
+  });
+
+  it('still lets Imoen carry the Throne-of-Bhaal arc to its finale', () => {
+    // A veteran one chapter into the Throne with NONE of the arc seen still gets
+    // Imoen's ToB beats — the silenced antagonist beats are skipped, not blocking.
+    const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
+    expect(played).toContain('lore-28-child-of-bhaal');
+    expect(played).toContain('lore-30-choose-it-as-yourself');
+  });
+
+  it('does NOT silence Irenicus through his own arc — clearing Ch11 is the boundary', () => {
+    // chaptersCleared === 11 is his death moment, where a final line is still his.
+    const played = walk(meta({ delveCount: 999, chaptersCleared: 11 }));
+    const irenicusBeats = played
+      .map((id) => LORE_BEATS.find((b) => b.id === id)!)
+      .filter((b) => b.speaker === 'irenicus');
+    expect(irenicusBeats.length).toBeGreaterThan(0);
+    // His last arc beat (the Ch11 confrontation) still plays at the boundary.
+    expect(played).toContain('lore-26-end-what-the-cage-began');
   });
 });
 
@@ -148,10 +182,13 @@ describe('LORE_BEATS — the arc spans the whole chapter chain (1→14)', () => 
   });
 
   it('clearing the whole chain unfolds the full back half, one beat per descent', () => {
-    // A veteran who has cleared all 14 chapters walks every beat, in order, and
-    // each call hands back exactly one (the trigger marks it seen to advance).
+    // A veteran who has cleared all 14 chapters walks every surviving beat, in
+    // order, one per call. Past Ch11 the dead antagonist is silent, so the walk
+    // is every Imoen beat (his stranded beats are skipped, never blocking).
     const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
-    expect(played).toEqual(LORE_BEATS.map((b) => b.id));
+    expect(played).toEqual(
+      LORE_BEATS.filter((b) => b.speaker !== 'irenicus').map((b) => b.id),
+    );
     // A run that has only cleared Chapter 9 sees the Godwake bridge but never the
     // Suldanessellar reveal or anything past it.
     const mid = walk(meta({ delveCount: 999, chaptersCleared: 9 }));
@@ -165,7 +202,10 @@ describe('nextLoreBeat — veterans get one beat per descent, never a wall', () 
   it('a maxed veteran is handed exactly one beat per call', () => {
     const m = meta({ delveCount: 999, chaptersCleared: 14 });
     const a = nextLoreBeat(m)!;
-    expect(a.id).toBe(LORE_BEATS[0].id);
+    // Past Ch11 the head is the first SURVIVING beat — the dead antagonist's
+    // opening line (LORE_BEATS[0]) is silenced and skipped over.
+    const firstSurviving = LORE_BEATS.find((b) => b.speaker !== 'irenicus')!;
+    expect(a.id).toBe(firstSurviving.id);
     // The selector itself never returns more than one; the trigger must mark
     // seen to advance. Re-calling without marking returns the SAME head.
     const again = nextLoreBeat(m)!;
