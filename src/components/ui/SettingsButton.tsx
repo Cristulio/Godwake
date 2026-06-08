@@ -61,8 +61,7 @@ export function SettingsButton() {
             aria-label={t('ui.feedback.title')}
             className="inline-flex items-center justify-center min-w-[2.25rem] lg:min-w-0 px-2.5 py-1.5 lg:px-2 lg:py-1 border-2 border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)] text-xs lg:text-[10px] uppercase tracking-widest font-bold transition-colors"
           >
-            <span className="lg:hidden" aria-hidden="true">✎</span>
-            <span className="hidden lg:inline">✎ {t('ui.feedback.button')}</span>
+            <span aria-hidden="true">✎</span>
           </button>
         )}
       </div>

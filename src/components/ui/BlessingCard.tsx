@@ -67,7 +67,7 @@ export function BlessingCard({
         <div className="text-[var(--color-accent-amber)] uppercase tracking-wider text-sm font-bold leading-tight">
           ◆ {tc('blessings', b.id, 'name', b.name)}
         </div>
-        <span className="shrink-0 text-[9px] uppercase tracking-widest px-1.5 py-0.5 border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)] whitespace-nowrap">
+        <span className="shrink-0 max-w-[45%] text-[9px] uppercase tracking-widest px-1.5 py-0.5 border border-[var(--color-accent-gold)] text-[var(--color-accent-gold)] text-right leading-tight break-words">
           {t(`screens.blessing.god.${b.god}`)}
         </span>
       </div>
