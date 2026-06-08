@@ -49,7 +49,9 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
   const { t } = useT();
   const chooseRoom = useGameStore((s) => s.chooseRoom);
   const goToInventory = useGameStore((s) => s.goToInventory);
+  const abandonDelve = useGameStore((s) => s.abandonDelve);
   const [hovered, setHovered] = useState<RoomSpec | null>(null);
+  const [confirmAbandon, setConfirmAbandon] = useState(false);
 
   const current = delve.rooms[delve.currentRoomIdx];
   const chapter = current?.chapter ?? 1;
@@ -148,6 +150,9 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
           </div>
           <Button variant="ghost" onClick={goToInventory}>
             ◆ {t('ui.map.pack')}
+          </Button>
+          <Button variant="ghost" onClick={() => setConfirmAbandon(true)}>
+            ⚑ {t('ui.map.abandon')}
           </Button>
         </div>
       </header>
@@ -280,6 +285,33 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
       </div>
 
       {eliteCoachActive && <EliteCoach onDismiss={dismissEliteCoach} />}
+
+      {confirmAbandon && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/80">
+          <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-6 max-w-sm">
+            <div className="text-[var(--color-accent-amber)] text-sm uppercase tracking-widest mb-2">
+              {t('ui.map.abandonTitle')}
+            </div>
+            <p className="text-[var(--color-text-secondary)] text-sm mb-4">
+              {t('ui.map.abandonBody')}
+            </p>
+            <div className="flex gap-2 justify-end">
+              <Button variant="secondary" onClick={() => setConfirmAbandon(false)}>
+                {t('ui.map.abandonStay')}
+              </Button>
+              <Button
+                variant="danger"
+                onClick={() => {
+                  setConfirmAbandon(false);
+                  abandonDelve();
+                }}
+              >
+                {t('ui.map.abandonConfirm')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
