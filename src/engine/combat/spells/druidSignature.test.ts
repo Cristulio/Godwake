@@ -323,3 +323,29 @@ describe('Signature identity — no longer Wizard reskins', () => {
     expect(known).not.toContain('summon-tempest');
   });
 });
+
+describe('Entangling Roots — caster\'s-eye control verdict', () => {
+  it('the anchor foe failing its save emits outcome:landed', () => {
+    const goblin = getMonster('goblin');
+    const druid = makeDruid({ slots: { 2: 1 } });
+    const init = createCombat({ character: druid, monsters: [{ def: goblin }] });
+    const anchorId = monsters(init.state)[0].id;
+    // Nat 1 — the foe is rooted no matter the DC, so the roots LAND.
+    const roller = makeScriptedRoller({ d20Faces: [1] });
+    const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'entangling-roots' });
+    expect(result.cast).toBe(true);
+    expect(result.state.spellEffectEvent?.outcome).toBe('landed');
+    expect(result.state.spellEffectEvent?.targetId).toBe(anchorId);
+  });
+
+  it('the anchor foe making its save emits outcome:resisted', () => {
+    const goblin = getMonster('goblin');
+    const druid = makeDruid({ slots: { 2: 1 } });
+    const init = createCombat({ character: druid, monsters: [{ def: goblin }] });
+    // Nat 20 — the foe tears free, the roots are RESISTED.
+    const roller = makeScriptedRoller({ d20Faces: [20] });
+    const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'entangling-roots' });
+    expect(result.cast).toBe(true);
+    expect(result.state.spellEffectEvent?.outcome).toBe('resisted');
+  });
+});

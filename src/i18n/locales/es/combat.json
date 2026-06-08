@@ -383,7 +383,9 @@
   },
   "float": {
     "miss": "FALLO",
-    "blocked": " bloqueado"
+    "blocked": " bloqueado",
+    "landed": "PRENDE",
+    "resisted": "RESISTE"
   },
   "coach": {
     "attack": "Toca Atacar para golpear.",

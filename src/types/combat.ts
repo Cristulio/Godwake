@@ -317,6 +317,14 @@ export interface SpellEffectEvent {
    * carry their look in the kind itself.
    */
   element?: SpellElement;
+  /**
+   * Caster's-eye verdict for a contested control spell (Hold Person, Entangle):
+   * `landed` when the target failed its save and the effect took hold,
+   * `resisted` when it shrugged it off — the inverse of the target's save. The
+   * target sprite floats this as a LANDED / RESISTED battlefield verdict.
+   * Absent for damage spells (they float numbers) and self-buffs (uncontested).
+   */
+  outcome?: 'landed' | 'resisted';
 }
 
 export interface CombatState {

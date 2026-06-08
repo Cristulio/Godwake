@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
-import type { MonsterInstance, AttackEvent } from '../../types/combat';
+import type { MonsterInstance, AttackEvent, SpellEffectEvent } from '../../types/combat';
 import { computeAC, isWildShaped } from '../../engine/character/derived';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
@@ -17,6 +17,8 @@ type CommonProps = {
   attackPulse: number;
   /** Latest attack event in combat — used to detect crits against this sprite. */
   lastAttack?: AttackEvent;
+  /** Latest spell-effect event — used to float a control verdict (LANDED/RESISTED) on this sprite. */
+  spellEffectEvent?: SpellEffectEvent;
 };
 
 type PlayerProps = CommonProps & {
@@ -223,6 +225,7 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   const [lunge, setLunge] = useState(false);
   const lastAttackPulse = useRef(props.attackPulse);
   const lastSeenAttackId = useRef<number | undefined>(undefined);
+  const lastSeenSpellEffectId = useRef<number | undefined>(undefined);
 
   // The floating combat number. Sourced from the landing attack event so it
   // shows the TRUE rolled damage (crits, affix bonuses, off-type all live in
@@ -314,6 +317,26 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hpCurrent, props.lastAttack?.id]);
+
+  // A control spell (Hold Person / Entangle) floats a caster's-eye verdict on
+  // its target: LANDED when it took hold, RESISTED when the foe shrugged it off.
+  // Parallel to the damage-float path above but driven off the spell-effect bus
+  // — only events carrying an `outcome` (the control casts) reach this float, so
+  // damage casts and buffs are ignored.
+  useEffect(() => {
+    const ev = props.spellEffectEvent;
+    if (!ev || !ev.outcome) return;
+    const isNew = ev.id !== lastSeenSpellEffectId.current;
+    lastSeenSpellEffectId.current = ev.id;
+    if (!isNew) return;
+    const myId = props.kind === 'player' ? 'player' : props.instance.id;
+    if (ev.targetId !== myId) return;
+    const id = Date.now() + Math.random();
+    const kind = ev.outcome;
+    setDamageFloats((d) => [...d, { id, amount: 0, kind }]);
+    setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1200);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.spellEffectEvent?.id]);
 
   // Lunge only when this sprite has actually attacked (attackPulse bumps).
   useEffect(() => {
@@ -540,6 +563,8 @@ export const BattlefieldSprite = memo(BattlefieldSpriteImpl, (prev, next) => {
   // lastAttack: only matters if it CHANGES — a new event id triggers a flash.
   // Sprite reads `lastAttack` to detect crits against itself, so id is enough.
   if (prev.lastAttack?.id !== next.lastAttack?.id) return false;
+  // spellEffectEvent: a new id may carry a control verdict to float on this sprite.
+  if (prev.spellEffectEvent?.id !== next.spellEffectEvent?.id) return false;
   if (prev.kind === 'player' && next.kind === 'player') {
     return (
       prev.character.hp.current === next.character.hp.current &&

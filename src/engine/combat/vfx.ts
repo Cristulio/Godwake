@@ -14,12 +14,13 @@ export function attachCombatVfx(
   attackerId: string,
   targetId?: string,
   element?: SpellElement,
+  outcome?: 'landed' | 'resisted',
 ): CombatState {
   const next = (state.spellEffectCounter ?? 0) + 1;
   return {
     ...state,
     spellEffectCounter: next,
-    spellEffectEvent: { id: next, kind, attackerId, targetId, element },
+    spellEffectEvent: { id: next, kind, attackerId, targetId, element, outcome },
   };
 }
 

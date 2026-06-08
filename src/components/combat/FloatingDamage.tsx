@@ -5,7 +5,7 @@ import { useT } from '../../i18n/useT';
 export interface FloatingDamageItem {
   id: number;
   amount: number;
-  kind: 'damage' | 'heal' | 'miss' | 'crit' | 'block';
+  kind: 'damage' | 'heal' | 'miss' | 'crit' | 'block' | 'landed' | 'resisted';
   /** Element of the blow (fire/cold/...) — tints the number. Physical/absent = default. */
   damageType?: string;
 }
@@ -119,6 +119,25 @@ const KIND_STYLE: Record<
     size: 'text-[34px]',
     glow: 'rgba(0,0,0,0)',
   },
+  // A control spell that took hold — violet force-tint with a soft glow so the
+  // verdict reads as a magical bind, not a struck blow.
+  landed: {
+    color: 'text-[#c9a8ff]',
+    prefix: '',
+    suffix: '',
+    animation: 'animate-damage-float',
+    size: 'text-[34px]',
+    glow: 'rgba(201,168,255,0.78)',
+  },
+  // Shrugged off — styled like a MISS: dim, deflecting, no glow.
+  resisted: {
+    color: 'text-[var(--color-text-secondary)]',
+    prefix: '',
+    suffix: '',
+    animation: 'animate-damage-deflect',
+    size: 'text-[34px]',
+    glow: 'rgba(0,0,0,0)',
+  },
 };
 
 /**
@@ -150,9 +169,13 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
   const label =
     item.kind === 'miss'
       ? t('combat.float.miss')
-      : item.kind === 'block'
-        ? `${item.amount}${t('combat.float.blocked')}`
-        : `${style.prefix}${item.amount}${style.suffix}`;
+      : item.kind === 'landed'
+        ? t('combat.float.landed')
+        : item.kind === 'resisted'
+          ? t('combat.float.resisted')
+          : item.kind === 'block'
+            ? `${item.amount}${t('combat.float.blocked')}`
+            : `${style.prefix}${item.amount}${style.suffix}`;
 
   // Spread numbers slightly so back-to-back hits don't perfectly overlap.
   const offsetX = ((item.id % 5) - 2) * 14;
