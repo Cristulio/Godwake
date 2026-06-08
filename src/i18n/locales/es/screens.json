@@ -168,6 +168,43 @@
     "actionBonus": "adicional",
     "actionAction": "acción"
   },
+  "itemDisplay": {
+    "twoH": "2m",
+    "acShield": "escudo +{n} CA",
+    "robeNoAc": "túnica · sin CA",
+    "armorAc": "{cat} · CA {n}",
+    "heal": "cura {dice}",
+    "weaponLabel": "Arma",
+    "shieldLabel": "Escudo",
+    "robeLabel": "Túnica",
+    "consumableLabel": "Consumible",
+    "armorLabel": "Armadura {cat}",
+    "weaponKind": "arma {cat}",
+    "armorKind": "armadura {cat}",
+    "consumableKind": "consumible de {effect}",
+    "accessoryKind": "{slot} · accesorio",
+    "enhanceWeapon": "+{n} a las tiradas de ataque y daño",
+    "enhanceArmor": "+{n} a la Clase de Armadura",
+    "category": {
+      "light": "ligera",
+      "medium": "media",
+      "heavy": "pesada",
+      "simple": "simple",
+      "martial": "marcial"
+    },
+    "slot": {
+      "helm": "Casco",
+      "amulet": "Amuleto",
+      "ring": "Anillo",
+      "belt": "Cinturón",
+      "boots": "Botas"
+    },
+    "consumable": {
+      "heal": "curación",
+      "buff": "mejora",
+      "utility": "utilidad"
+    }
+  },
   "codex": {
     "heading": "EL BESTIARIO",
     "library": "Biblioteca del pueblo · {discovered} / {total} descubiertos",

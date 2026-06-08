@@ -30,7 +30,12 @@ function makeFighter(extra: Partial<Character> = {}): Character {
 const lootWithItem: LootSummary = {
   gold: 12,
   xp: 40,
-  items: [{ name: 'Rusted Blade', rarity: 'green', description: '+1 to hit' }],
+  items: [
+    {
+      itemId: 'longsword',
+      rolled: { baseId: 'longsword', rarity: 'green', affixes: ['honed'], enhancement: 0, name: 'Honed Longsword' },
+    },
+  ],
   renown: 3,
 };
 

@@ -1,11 +1,14 @@
 import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
+import { localizedItemName, localizedItemDescription } from '../inventory/itemDisplay';
+import { getLegendary } from '../../content/legendaries';
+import { getSetPiece } from '../../content/sets';
 import { hasPendingLevelUp } from '../../engine/character/leveling';
 import { useT } from '../../i18n/useT';
 
 export function SpoilsScreen() {
-  const { t } = useT();
+  const { t, tc } = useT();
   const lastLoot = useGameStore((s) => s.lastLoot);
   const character = useGameStore((s) => s.character);
   const acceptSpoils = useGameStore((s) => s.acceptSpoils);
@@ -17,8 +20,8 @@ export function SpoilsScreen() {
   const nextLevel = character ? character.level + 1 : null;
   const hasItems =
     lastLoot.items.length > 0 ||
-    lastLoot.bankedLegendary != null ||
-    lastLoot.bankedSetPiece != null;
+    lastLoot.bankedLegendaryId != null ||
+    lastLoot.bankedSetPieceId != null;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden animate-fade-in-slow">
@@ -116,38 +119,42 @@ export function SpoilsScreen() {
               </span>
             </div>
             <div className="px-3 py-2 space-y-2">
-              {lastLoot.items.map((item, i) => (
-                <div key={`${item.name}-${i}`} className="flex flex-col gap-0.5">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="font-display uppercase tracking-wider text-[12px]"
-                      style={{ color: GEAR_RARITY_COLOR[item.rarity] }}
-                    >
-                      ◆ {item.name}
-                    </span>
-                    <span
-                      className="text-[9px] uppercase tracking-widest opacity-60 shrink-0 ml-auto"
-                      style={{ color: GEAR_RARITY_COLOR[item.rarity] }}
-                    >
-                      {GEAR_RARITY_LABEL[item.rarity]}
-                    </span>
-                  </div>
-                  {item.description && (
-                    <div className="text-[var(--color-text-dim)] text-[10px] leading-relaxed pl-4">
-                      {item.description}
+              {lastLoot.items.map((ref, i) => {
+                const rarity = ref.rolled?.rarity ?? 'white';
+                const description = localizedItemDescription(ref);
+                return (
+                  <div key={`${ref.itemId}-${i}`} className="flex flex-col gap-0.5">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="font-display uppercase tracking-wider text-[12px]"
+                        style={{ color: GEAR_RARITY_COLOR[rarity] }}
+                      >
+                        ◆ {localizedItemName(ref)}
+                      </span>
+                      <span
+                        className="text-[9px] uppercase tracking-widest opacity-60 shrink-0 ml-auto"
+                        style={{ color: GEAR_RARITY_COLOR[rarity] }}
+                      >
+                        {GEAR_RARITY_LABEL[rarity]}
+                      </span>
                     </div>
-                  )}
-                </div>
-              ))}
+                    {description && (
+                      <div className="text-[var(--color-text-dim)] text-[10px] leading-relaxed pl-4">
+                        {description}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
 
         {/* Legendary banked */}
-        {lastLoot.bankedLegendary && (
+        {lastLoot.bankedLegendaryId && (
           <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-gold)] px-3 py-2 animate-pop-in">
             <div className="font-display text-[var(--color-accent-gold)] text-sm uppercase tracking-wider">
-              ✦ {lastLoot.bankedLegendary}
+              ✦ {tc('legendaries', lastLoot.bankedLegendaryId, 'name', getLegendary(lastLoot.bankedLegendaryId)?.name ?? '')}
             </div>
             <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-0.5">
               {t('screens.spoils.legendaryBanked')}
@@ -156,10 +163,10 @@ export function SpoilsScreen() {
         )}
 
         {/* Set piece banked */}
-        {lastLoot.bankedSetPiece && (
+        {lastLoot.bankedSetPieceId && (
           <div className="bg-[var(--color-bg-panel)] border-2 px-3 py-2 animate-pop-in" style={{ borderColor: '#0fa968' }}>
             <div className="font-display text-sm uppercase tracking-wider" style={{ color: '#0fa968' }}>
-              ✦ {lastLoot.bankedSetPiece}
+              ✦ {tc('setGear', lastLoot.bankedSetPieceId, 'name', getSetPiece(lastLoot.bankedSetPieceId)?.name ?? '')}
             </div>
             <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-0.5">
               {t('screens.spoils.setPieceBanked')}

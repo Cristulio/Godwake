@@ -4,6 +4,7 @@ import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { getItem } from '../../content/items';
+import { localizedItemName } from '../inventory/itemDisplay';
 import { playSfx } from '../../engine/audio';
 import { equippedInventoryIndices } from '../../engine/character/equip';
 import {
@@ -30,7 +31,7 @@ interface ShopRoomProps {
  * re-renders don't reroll. Keep the coin-lender's diegetic voice.
  */
 export function ShopRoom({ room, onContinue }: ShopRoomProps) {
-  const { t } = useT();
+  const { t, tc } = useT();
   const character = useGameStore((s) => s.character);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
@@ -96,7 +97,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     const r = purchaseFromMerchant(itemId);
     if (r.ok) {
       recordShopPurchase(room.id, itemId);
-      setMessage(t('ui.shop.addedToPack', { name: getItem(itemId).name }));
+      setMessage(t('ui.shop.addedToPack', { name: tc('items', itemId, 'name', getItem(itemId).name) }));
       playSfx('ui_click');
     } else {
       setMessage(r.reason ?? t('ui.shop.cannotPurchase'));
@@ -107,7 +108,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     const r = purchaseRolledGear(stock.ref, stock.cost);
     if (r.ok) {
       recordShopPurchase(room.id, key);
-      setMessage(t('ui.shop.addedToPack', { name: stock.ref.rolled?.name ?? t('ui.shop.itemFallback') }));
+      setMessage(t('ui.shop.addedToPack', { name: localizedItemName(stock.ref) || t('ui.shop.itemFallback') }));
       playSfx('ui_click');
     } else {
       setMessage(r.reason ?? t('ui.shop.cannotPurchase'));
@@ -119,7 +120,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     const r = purchaseLegendary(legendaryOffer.legendaryId, legendaryOffer.cost);
     if (r.ok) {
       recordShopPurchase(room.id, 'legendary');
-      setMessage(t('ui.shop.boundToReliquary', { name: legendaryOffer.name }));
+      setMessage(t('ui.shop.boundToReliquary', { name: tc('legendaries', legendaryOffer.legendaryId, 'name', legendaryOffer.name) }));
       playSfx('ui_click');
     } else {
       setMessage(r.reason ?? t('ui.shop.cannotPurchase'));
@@ -238,7 +239,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
                 key={idx}
                 itemRef={ref}
                 price={sellValue(ref)}
-                onSell={() => sell(idx, ref.rolled?.name ?? getItem(ref.itemId).name)}
+                onSell={() => sell(idx, localizedItemName(ref))}
               />
             ))}
           </div>

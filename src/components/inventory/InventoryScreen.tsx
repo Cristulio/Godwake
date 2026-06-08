@@ -18,7 +18,7 @@ import { ItemIcon } from './ItemIcon';
 import { ItemTooltip } from './ItemTooltip';
 import { TouchTooltip } from '../ui/TouchTooltip';
 import { GEAR_RARITY_COLOR } from './rarity';
-import { baseStatLine } from './itemDisplay';
+import { baseStatLine, localizedItemName } from './itemDisplay';
 import { useT } from '../../i18n/useT';
 
 const DND_INV_MIME = 'application/x-godwake-inv-idx';
@@ -37,7 +37,7 @@ const SLOTS: EquipSlot[] = [
 ];
 
 export function InventoryScreen() {
-  const { t, tc } = useT();
+  const { t } = useT();
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const goToHub = useGameStore((s) => s.goToHub);
@@ -239,7 +239,7 @@ export function InventoryScreen() {
                               : 'var(--color-text-primary)',
                           }}
                         >
-                          {ref.rolled?.name ?? tc('items', item.id, 'name', item.name)}
+                          {localizedItemName(ref)}
                         </div>
                         <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
                           {baseStatLine(item)}
@@ -278,7 +278,7 @@ export function InventoryScreen() {
                         bare
                         placement="bottom"
                         label={t('screens.inventory.detailsAria', {
-                          name: ref.rolled?.name ?? tc('items', item.id, 'name', item.name),
+                          name: localizedItemName(ref),
                         })}
                         className="flex items-center justify-center w-8 h-8 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
                         content={
@@ -385,7 +385,7 @@ export function InventoryScreen() {
                                 : 'var(--color-text-primary)',
                             }}
                           >
-                            {ref.rolled?.name ?? tc('items', item.id, 'name', item.name)}
+                            {localizedItemName(ref)}
                           </div>
                           {stackCount > 1 && (
                             <div className="text-[var(--color-accent-amber)] font-mono text-xs shrink-0">
@@ -427,7 +427,7 @@ export function InventoryScreen() {
                           bare
                           placement="bottom"
                           label={t('screens.inventory.detailsAria', {
-                            name: ref.rolled?.name ?? tc('items', item.id, 'name', item.name),
+                            name: localizedItemName(ref),
                           })}
                           className="flex items-center justify-center w-8 h-8 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
                           content={

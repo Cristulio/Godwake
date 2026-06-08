@@ -55,7 +55,7 @@ export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardP
             key={i}
             className="text-[var(--color-text-secondary)] text-sm leading-relaxed mb-3"
           >
-            {para}
+            {tc('tutorials', featureId, `body${i}`, para)}
           </p>
         ))}
         <div className="bg-[var(--color-bg-elevated)] border border-[var(--color-accent-gold)]/50 p-3 mb-4 flex items-start gap-2">

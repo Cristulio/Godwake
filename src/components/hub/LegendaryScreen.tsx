@@ -154,8 +154,10 @@ interface SlotRowProps {
 }
 
 function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onUnequip }: SlotRowProps) {
-  const { t } = useT();
+  const { t, tc } = useT();
   const meta = RELIC_SLOT_META[slot];
+  const slotName = tc('relicSlots', slot, 'name', meta.name);
+  const slotBlurb = tc('relicSlots', slot, 'blurb', meta.blurb);
 
   if (locked) {
     const at = relicSlotUnlockRenown(index);
@@ -163,14 +165,14 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
       <div className="panel-etched border border-[var(--color-border-dim)] opacity-60 p-4 flex flex-col">
         <div className="flex items-center justify-between gap-2">
           <h3 className="font-display text-[var(--color-text-dim)] uppercase tracking-wider text-[12px]">
-            {meta.name}
+            {slotName}
           </h3>
           <span className="font-display text-[9px] uppercase tracking-widest text-[var(--color-text-dim)]">
             {t('hub.relicsScreen.sealed')}
           </span>
         </div>
         <p className="text-[var(--color-text-dim)] text-[11px] italic mt-1 font-narrative leading-snug">
-          {meta.blurb}
+          {slotBlurb}
         </p>
         <div className="mt-auto pt-3 text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest font-display">
           {t('hub.relicsScreen.wakesWhen', { n: at })}
@@ -195,7 +197,7 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
     >
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-display text-[var(--color-accent-amber)] uppercase tracking-wider text-[12px]">
-          {meta.name}
+          {slotName}
         </h3>
         <span
           className={`font-display text-[9px] uppercase tracking-widest ${
@@ -206,12 +208,12 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
         </span>
       </div>
       <p className="text-[var(--color-text-secondary)] text-[11px] italic mt-1 font-narrative leading-snug">
-        {meta.blurb}
+        {slotBlurb}
       </p>
 
       {equipped && (
         <div className="mt-2 text-[var(--color-accent-gold)] text-[11px] font-mono leading-snug">
-          {equipped.effect}
+          {tc('legendaries', equipped.id, 'effect', equipped.effect)}
         </div>
       )}
 
@@ -228,7 +230,7 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
                 <button
                   key={r.id}
                   type="button"
-                  title={r.effect}
+                  title={tc('legendaries', r.id, 'effect', r.effect)}
                   onClick={() => (on ? onUnequip(slot) : onEquip(r.id))}
                   className={`px-2 py-1 text-[10px] font-display uppercase tracking-wider border transition-colors ${
                     on
@@ -236,7 +238,7 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
                       : 'border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent-amber)] hover:text-[var(--color-accent-amber)]'
                   }`}
                 >
-                  {r.name}
+                  {tc('legendaries', r.id, 'name', r.name)}
                   {r.classGate ? ' ⚔' : ''}
                 </button>
               );
@@ -395,22 +397,24 @@ function Reliquary({ owned }: { owned: string[] }) {
 }
 
 function CatalogCard({ relic }: { relic: Legendary }) {
-  const { t } = useT();
-  const boundClass = relic.classGate ? getClass(relic.classGate).name : null;
+  const { t, tc } = useT();
+  const boundClass = relic.classGate
+    ? tc('classes', relic.classGate, 'name', getClass(relic.classGate).name)
+    : null;
   return (
     <div className="panel-etched border border-[var(--color-border-dim)] p-3 flex flex-col">
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-display text-[var(--color-accent-amber)] uppercase tracking-wider text-[11px] leading-tight">
-          {relic.name}
+          {tc('legendaries', relic.id, 'name', relic.name)}
         </h3>
         <span className="font-display text-[8px] uppercase tracking-widest text-[var(--color-text-dim)] shrink-0">
-          {RELIC_SLOT_META[relic.slot].name}
+          {tc('relicSlots', relic.slot, 'name', RELIC_SLOT_META[relic.slot].name)}
         </span>
       </div>
       <p className="text-[var(--color-text-secondary)] text-[10px] italic my-1.5 leading-snug font-narrative">
-        {relic.flavor}
+        {tc('legendaries', relic.id, 'flavor', relic.flavor)}
       </p>
-      <div className="text-[var(--color-accent-gold)] text-[10px] font-mono leading-snug">{relic.effect}</div>
+      <div className="text-[var(--color-accent-gold)] text-[10px] font-mono leading-snug">{tc('legendaries', relic.id, 'effect', relic.effect)}</div>
       {boundClass && (
         <div className="mt-1.5 text-[var(--color-text-dim)] text-[8px] uppercase tracking-widest font-display">
           {t('hub.relicsScreen.boundClass', { name: boundClass })}

@@ -9,6 +9,7 @@ import { useGameStore } from '../../stores/gameStore';
 import { useMetaStore } from '../../stores/metaStore';
 import { getBlessing } from '../../content/blessings';
 import { getItem } from '../../content/items';
+import { localizedItemName } from '../inventory/itemDisplay';
 import { playSfx } from '../../engine/audio';
 import {
   boonsForCampTier,
@@ -170,7 +171,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     const r = purchaseFromMerchant(itemId);
     if (r.ok) {
       recordShopPurchase(room.id, itemId);
-      setPurchaseMessage(t('delve.camp.msg.added', { name: getItem(itemId).name }));
+      setPurchaseMessage(t('delve.camp.msg.added', { name: tc('items', itemId, 'name', getItem(itemId).name) }));
       playSfx('ui_click');
     } else {
       setPurchaseMessage(r.reason ?? t('delve.camp.msg.cannotPurchase'));
@@ -182,7 +183,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     if (r.ok) {
       recordShopPurchase(room.id, key);
       setPurchaseMessage(
-        t('delve.camp.msg.added', { name: stock.ref.rolled?.name ?? t('delve.camp.msg.itemFallback') }),
+        t('delve.camp.msg.added', { name: localizedItemName(stock.ref) || t('delve.camp.msg.itemFallback') }),
       );
       playSfx('ui_click');
     } else {
@@ -195,7 +196,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     const r = purchaseLegendary(legendaryOffer.legendaryId, legendaryOffer.cost);
     if (r.ok) {
       recordShopPurchase(room.id, 'legendary');
-      setPurchaseMessage(t('delve.camp.msg.legendaryBound', { name: legendaryOffer.name }));
+      setPurchaseMessage(t('delve.camp.msg.legendaryBound', { name: tc('legendaries', legendaryOffer.legendaryId, 'name', legendaryOffer.name) }));
       playSfx('ui_click');
     } else {
       setPurchaseMessage(r.reason ?? t('delve.camp.msg.cannotPurchase'));

@@ -1,0 +1,68 @@
+{
+  "heartwood-talisman": {
+    "name": "Talismán de Madera Viva",
+    "flavor": "Un nudo de madera viva cortado del bosque de Mielikki, aún tibio de savia.",
+    "effect": "Cúrate el 6% del daño que inflijas"
+  },
+  "bulwark-sigil": {
+    "name": "Sigilo del Baluarte",
+    "flavor": "Un glifo de guarda martillado en bronce viejo de escudo, frío al tacto.",
+    "effect": "Gana 8 PG temporales al inicio de cada combate"
+  },
+  "gauntlets-of-the-titan": {
+    "name": "Guanteletes del Titán",
+    "flavor": "Brazales descomunales que prestan el tirón de un gigante a un brazo mortal.",
+    "effect": "Tus golpes desgarran con +4 de daño por sangrado"
+  },
+  "cloak-of-the-nightwind": {
+    "name": "Capa del Viento Nocturno",
+    "flavor": "Hilada de sombra y del silencio de un felino al acecho.",
+    "effect": "Los críticos aciertan con 19-20"
+  },
+  "sages-diadem": {
+    "name": "Diadema del Sabio",
+    "flavor": "Una fina diadema que zumba apenas contra las sienes.",
+    "effect": "+1 a la CD de salvación de conjuros y +2 al daño de conjuro"
+  },
+  "hunters-eye": {
+    "name": "Ojo del Cazador",
+    "flavor": "El ojo petrificado de un ave de presa que nunca parpadea ante un punto débil.",
+    "effect": "Cúrate el 4% del daño infligido; los críticos aciertan con 19-20"
+  },
+  "gauntlets-of-the-cascade": {
+    "name": "Guanteletes de la Cascada",
+    "flavor": "Acero en capas que lanza cada golpe de seguimiento más fuerte que el anterior.",
+    "effect": "+3 de daño en cada golpe de seguimiento"
+  },
+  "orb-of-streaming-fire": {
+    "name": "Orbe de Fuego Fluyente",
+    "flavor": "Una esfera de cristal con llama enjaulada que se inclina hacia lo que el lanzador nombre.",
+    "effect": "+3 al daño de conjuro y +1 al ataque de conjuro"
+  },
+  "band-of-renewal": {
+    "name": "Anillo de la Renovación",
+    "flavor": "Un sencillo anillo verde que cierra las heridas del portador como las estaciones cierran una cicatriz.",
+    "effect": "Regenera 2 PG al inicio de cada turno"
+  },
+  "totem-of-the-self": {
+    "name": "Tótem del Yo",
+    "flavor": "Un fetiche tallado que afila lo que tu clase hace mejor —la furia, la marca, el golpe no visto.",
+    "effect": "Afila tu golpe característico: +2 de daño de furia / marca / sigilo"
+  },
+  "crom-faeyr": {
+    "flavor": "Un martillo de guerra enano templado en sangre de gigante y atado con las runas-herreras de Clangeddin.",
+    "effect": "Tus golpes desgarran con +6 de daño por sangrado; +4 en cada golpe de seguimiento"
+  },
+  "robe-of-vecna": {
+    "flavor": "Cosida del sudario funerario de un dios de los secretos; la trama bebe el frío entre conjuros.",
+    "effect": "+2 a la CD de salvación de conjuros y +4 al daño de conjuro"
+  },
+  "ring-of-gaxx": {
+    "flavor": "Arrancado del dedo del semiliche Kangaxx; la herida que deja nunca deja de cerrarse.",
+    "effect": "Gana 12 PG temporales por combate y regenera 3 PG por turno"
+  },
+  "carsomyr": {
+    "flavor": "El Vengador Sagrado, reducido a una esquirla de acero radiante que tiene sed de lo impuro.",
+    "effect": "Cúrate el 8% del daño que inflijas; los críticos aciertan con 19-20"
+  }
+}
