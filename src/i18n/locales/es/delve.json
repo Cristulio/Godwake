@@ -127,6 +127,20 @@
       "cannotPurchase": "No se puede comprar."
     }
   },
+  "intel": {
+    "findWeakSpot": {
+      "label": "Busca el punto débil",
+      "hint": "Gratis. Ventaja en tu ataque de apertura (arma) o en tu primera salvación (lanzador)."
+    },
+    "study": {
+      "label": "Estudia el terreno",
+      "hint": "Ventaja en tu golpe de apertura y en la primera salvación contra el jefe, más {n} PG temporales."
+    },
+    "walkPast": {
+      "label": "Pasa de largo",
+      "hint": "Pasa de largo. Los audaces toman su camino y no hacen preguntas."
+    }
+  },
   "event": {
     "label": "Suceso · El camino se detiene",
     "inPocket": "en el bolsillo",

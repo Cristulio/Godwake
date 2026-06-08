@@ -127,6 +127,20 @@
       "cannotPurchase": "Cannot purchase."
     }
   },
+  "intel": {
+    "findWeakSpot": {
+      "label": "Find the weak spot",
+      "hint": "Free. Advantage on your opening attack (weapon) or first saving throw (caster)."
+    },
+    "study": {
+      "label": "Study the approach",
+      "hint": "Advantage on your opening strike and first save vs the boss, plus {n} temporary HP."
+    },
+    "walkPast": {
+      "label": "Walk past",
+      "hint": "Walk past. The bold take their road and ask no questions."
+    }
+  },
   "event": {
     "label": "Event · The road pauses",
     "inPocket": "in pocket",
