@@ -16,7 +16,6 @@ const handlers = {
   onMartialDisrupt: () => {},
   onCunningAction: () => {},
   onRage: () => {},
-  onRecklessAttack: () => {},
   onFlurry: () => {},
   onPatientDefense: () => {},
   onStunningStrike: () => {},

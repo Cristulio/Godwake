@@ -17,7 +17,6 @@ import {
   useCunningAction,
   type CunningActionChoice,
   useRage,
-  useRecklessAttack,
   useHuntersMark,
   useFlurryOfBlows,
   usePatientDefense,
@@ -587,13 +586,6 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
-  function handleRecklessAttack() {
-    cancelTargeting();
-    const result = useRecklessAttack({ character, state });
-    setCharacter(result.character);
-    setCombat(result.state);
-  }
-
   function handleMartialDisrupt() {
     cancelTargeting();
     const result = useMartialDisrupt({ character, state });
@@ -844,7 +836,6 @@ export function CombatScreen({
             onMartialDisrupt={handleMartialDisrupt}
             onCunningAction={() => setPickingCunning(true)}
             onRage={handleRage}
-            onRecklessAttack={handleRecklessAttack}
             onFlurry={handleFlurry}
             onPatientDefense={handlePatientDefense}
             onStunningStrike={handleStunningStrike}

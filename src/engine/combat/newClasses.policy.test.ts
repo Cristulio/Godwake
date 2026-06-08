@@ -97,7 +97,7 @@ function currentMonsterId(state: CombatState): string {
 describe('Policy — Barbarian', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('opens with Rage, then declares Reckless while healthy, then attacks', () => {
+  it('opens with Rage (which carries Reckless), then attacks — no standalone Reckless action', () => {
     const barb = makeBarbarian(2);
     const roller = createDiceRoller(1);
     const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
@@ -107,13 +107,11 @@ describe('Policy — Barbarian', () => {
 
     const afterRage = applyPlannedAction({ roller, state: init.state, character: init.character }, first);
     expect(isRaging(afterRage.character)).toBe(true);
+    // Rage folds Reckless in — no separate declaration step.
+    expect(afterRage.character.recklessActive).toBe(true);
 
     const second = chooseCombatAction(afterRage.state, afterRage.character);
-    expect(second.kind).toBe('reckless-attack');
-
-    const afterReck = applyPlannedAction({ roller, state: afterRage.state, character: afterRage.character }, second);
-    const third = chooseCombatAction(afterReck.state, afterReck.character);
-    expect(third.kind).toBe('attack');
+    expect(second.kind).toBe('attack');
   });
 
   it('wins a basic encounter under the auto-battle policy', () => {

@@ -78,7 +78,6 @@ describe('archetype profiles', () => {
       emergencyHp: 0.35,
       secondWindHp: 0.5,
       surgeHp: 0.7,
-      recklessHp: 0.5,
       wizardDefensiveHp: 0.5,
       wizardDrainHp: 0.6,
       holdPersonThreat: 8,

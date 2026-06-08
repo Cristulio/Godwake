@@ -112,7 +112,7 @@ export const CLASS_TUTORIALS: Partial<Record<ClassId, TutorialContent>> = {
       'Something older and angrier has clawed its way up. It feels no fear and little pain — it simply keeps swinging until one of you is gone.',
       'It wears no armor and needs none. The rage is the armor.',
     ],
-    key: 'The Barbarian: Rage halves the harm done to you, Reckless Attack trades safety for blood.',
+    key: 'The Barbarian: Rage halves the harm done to you — and once you fight recklessly, the fury swings with advantage, trading guard for blood.',
   },
   ranger: {
     unlocked: 'The Ranger — a new soul',

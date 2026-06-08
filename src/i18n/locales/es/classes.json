@@ -296,7 +296,7 @@
   },
   "barbarian.rage": {
     "name": "Furia",
-    "description": "Una acción adicional te sume en un frenesí de batalla durante varios asaltos: los golpes físicos contra ti se reducen a la mitad, y tus impactos cuerpo a cuerpo infligen daño adicional. Una furia por combate al principio, más a medida que te endureces."
+    "description": "Una acción adicional te sume en un frenesí de batalla durante varios asaltos: los golpes físicos contra ti se reducen a la mitad, y tus impactos cuerpo a cuerpo infligen daño adicional. En cuanto aprendes a luchar temerariamente, la furia también da ventaja a tus golpes cuerpo a cuerpo. Una furia por combate al principio, más a medida que te endureces."
   },
   "barbarian.unarmored-defense": {
     "name": "Defensa sin Armadura",
@@ -308,7 +308,7 @@
   },
   "barbarian.reckless-attack": {
     "name": "Ataque Temerario",
-    "description": "Puedes luchar con abandono: tus ataques cuerpo a cuerpo de este turno tiran con ventaja, pero todo ataque contra ti tiene ventaja hasta tu siguiente turno. Tira la guardia para asegurar la muerte."
+    "description": "Mientras estás en furia, luchas temerariamente: tus ataques cuerpo a cuerpo tienen ventaja, y también los ataques contra ti. Sin declararlo, sin coste —acompaña a la furia todo el rato, y que la Furia reduzca el daño paga la guardia abierta."
   },
   "barbarian.bloodied-guard": {
     "name": "Guardia Sangrienta",

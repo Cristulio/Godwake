@@ -17,7 +17,7 @@ export const BARBARIAN: Class = ClassSchema.parse({
         id: 'rage',
         name: 'Rage',
         description:
-          'A bonus action drops you into a battle-fury for several rounds: physical blows against you are halved, and your melee hits land for extra damage. One rage per fight at first, more as you harden.',
+          'A bonus action drops you into a battle-fury for several rounds: physical blows against you are halved, and your melee hits land for extra damage. Once you learn to fight recklessly, raging also lends your melee swings advantage. One rage per fight at first, more as you harden.',
         mechanicKey: 'rage',
       },
       {
@@ -40,7 +40,7 @@ export const BARBARIAN: Class = ClassSchema.parse({
         id: 'reckless-attack',
         name: 'Reckless Attack',
         description:
-          'You can fight with abandon: your melee attacks this turn roll with advantage, but every attack against you has advantage until your next turn. Throw the guard away to make the kill.',
+          'While raging, you fight recklessly: your melee attacks have advantage, and so do attacks against you. No declaration, no cost — it rides the fury the whole way, and Rage halving the harm pays for the open guard.',
         mechanicKey: 'reckless-attack',
       },
       {
