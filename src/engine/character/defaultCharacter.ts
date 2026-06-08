@@ -52,6 +52,7 @@ function startingKitFor(classId: ClassId): StartingKit {
           { itemId: 'shortbow' },
           leatherArmor,
           { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
         ],
         equipped: {
           mainHand: rapier,
@@ -64,8 +65,11 @@ function startingKitFor(classId: ClassId): StartingKit {
     case 'wizard': {
       const dagger: ItemRef = { itemId: 'dagger' };
       return {
+        // The glass-cannon caster opens with a deep cushion — three draughts.
         inventory: [
           dagger,
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
         ],
         equipped: {
@@ -96,14 +100,15 @@ function startingKitFor(classId: ClassId): StartingKit {
     case 'druid': {
       // A sickle for when something gets close before a spell can answer, and
       // hide leather to keep a little skin on. Produce Flame opens at range;
-      // Wild Shape is the real melee answer. Two potions — the squishy caster
-      // wants the cushion.
+      // Wild Shape is the real melee answer. Three potions — the squishy caster
+      // wants a deep cushion.
       const sickle: ItemRef = { itemId: 'sickle' };
       const leatherArmor: ItemRef = { itemId: 'leather-armor' };
       return {
         inventory: [
           sickle,
           leatherArmor,
+          { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
         ],
@@ -147,6 +152,7 @@ function startingKitFor(classId: ClassId): StartingKit {
           longbow,
           { itemId: 'shortsword' },
           leatherArmor,
+          { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
         ],
         equipped: {
