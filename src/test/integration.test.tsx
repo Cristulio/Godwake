@@ -64,7 +64,7 @@ describe('integration — character creation → first delve via store', () => {
     clearGodwakeStorage();
   });
 
-  it('commitCharacterCreation with Sir Brick preset stamps the character', () => {
+  it('commitCharacterCreation with Joni Trabado preset stamps the character', () => {
     useGameStore.getState().startNewGame('test-seed-1');
     useGameStore.getState().commitCharacterCreation({
       name: SIR_BRICK_PRESET.name,
@@ -74,7 +74,7 @@ describe('integration — character creation → first delve via store', () => {
     });
     const state = useGameStore.getState();
     expect(state.character).not.toBeNull();
-    expect(state.character?.name).toBe('Sir Brick');
+    expect(state.character?.name).toBe('Joni Trabado');
     expect(state.character?.classId).toBe('fighter');
     expect(['intro', 'delve']).toContain(state.screen);
   });
@@ -85,7 +85,7 @@ describe('integration — character creation → first delve via store', () => {
     // Selection model: a single "CHOOSE A SOUL" screen with one card per
     // playable class and a confirm that's gated until a soul is picked.
     expect(screen.getByRole('heading', { name: /choose a soul/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /sir brick/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /joni trabado/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /choose a soul/i })).toBeDisabled();
   });
 });

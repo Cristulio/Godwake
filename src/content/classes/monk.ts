@@ -160,7 +160,7 @@ export const MONK: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Shen Ironroot',
+    characterName: 'Marculino Pelado',
     // DEX-first with a WIS cushion that carries both Unarmored Defense AC and the
     // Ki save DC. With Wood Elf +2 DEX / +1 WIS the summary reads
     // DEX 17, WIS 15, CON 14, STR 12, INT 10, CHA 8.

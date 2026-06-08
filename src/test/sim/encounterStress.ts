@@ -141,7 +141,7 @@ const WIZARD_ARCHETYPE: ArchetypeBuilder = () => {
 const BARBARIAN_ARCHETYPE: ArchetypeBuilder = () => {
   const c = createCharacter({
     id: 'sim-barbarian',
-    name: 'Korrek',
+    name: 'Cali Trava Consumer',
     raceId: 'human' as RaceId,
     classId: 'barbarian',
     baseAbilityScores: {
@@ -172,7 +172,7 @@ const BARBARIAN_ARCHETYPE: ArchetypeBuilder = () => {
 const RANGER_ARCHETYPE: ArchetypeBuilder = () => {
   const c = createCharacter({
     id: 'sim-ranger',
-    name: 'Faelar',
+    name: 'Chompolario Biologo Trolo',
     raceId: 'wood-elf' as RaceId,
     classId: 'ranger',
     baseAbilityScores: {

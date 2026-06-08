@@ -19,7 +19,7 @@ function makeBarbarian(extra: Partial<Character> = {}): Character {
   return {
     ...createCharacter({
       id: 'test-barbarian',
-      name: 'Korrek',
+      name: 'Cali Trava Consumer',
       raceId: 'human',
       classId: 'barbarian',
       baseAbilityScores: {
@@ -42,7 +42,7 @@ function makeRanger(extra: Partial<Character> = {}): Character {
   return {
     ...createCharacter({
       id: 'test-ranger',
-      name: 'Faelar',
+      name: 'Chompolario Biologo Trolo',
       raceId: 'wood-elf',
       classId: 'ranger',
       baseAbilityScores: {

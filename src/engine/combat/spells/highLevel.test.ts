@@ -14,7 +14,7 @@ import type { CombatState, MonsterCombatant } from '../../../types/combat';
 function makeArchmage(spellId: string, level = 17): Character {
   const base = createCharacter({
     id: 'archmage',
-    name: 'Veyra',
+    name: 'Cristulio',
     raceId: 'human',
     classId: 'wizard',
     baseAbilityScores: {

@@ -128,7 +128,7 @@ export const ROGUE: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Maelis Vell',
+    characterName: 'Negro Ladron Marron',
     recommendedRaceId: 'half-elf',
     // DEX-first with a CON cushion so the back-rank archer doesn't fold on
     // the first stray hit. With Half-Elf's +2 CHA / +1 DEX (auto-routed

@@ -136,7 +136,7 @@ export const RANGER: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Faelar Quill',
+    characterName: 'Chompolario Biologo Trolo',
     recommendedRaceId: 'wood-elf',
     // DEX-first archer with a CON cushion so the back-rank shot survives the
     // monster that closes. With the Wood Elf +2 DEX / +1 WIS, the summary reads
