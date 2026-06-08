@@ -39,6 +39,9 @@ type MonsterProps = CommonProps & {
   wardLabel?: string;
   /** boss-framework: the active phase name once this boss has shifted, else undefined. */
   phaseLabel?: string;
+  /** Display-side shrink factor (≤1) applied when the enemy row is crowded, so a
+   *  field full of summoned adds compresses instead of overlapping the hero. */
+  scale?: number;
 };
 
 export type BattlefieldSpriteProps = PlayerProps | MonsterProps;
@@ -429,7 +432,12 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
           ${selectable ? 'drop-shadow-[0_0_18px_rgba(244,167,66,0.55)] hover:scale-[1.06] transition-transform' : ''}
           ${props.isActiveTurn && !dead ? 'drop-shadow-[0_0_18px_rgba(255,179,71,0.55)]' : ''}
         `}
-        style={{ width: props.kind === 'player' ? '84px' : `${monsterSpriteWidth(props.instance)}px` }}
+        style={{
+          width:
+            props.kind === 'player'
+              ? '84px'
+              : `${monsterSpriteWidth(props.instance) * (props.scale ?? 1)}px`,
+        }}
       >
         {props.kind === 'player' && !dead && (
           <MirrorImages
@@ -580,6 +588,7 @@ export const BattlefieldSprite = memo(BattlefieldSpriteImpl, (prev, next) => {
     // doesn't change for a given combatant.
     return (
       prev.selectable === next.selectable &&
+      prev.scale === next.scale &&
       // boss-framework: ward/phase chips flip on field changes (add dies, boss
       // shifts) without the instance identity necessarily moving — compare them.
       prev.wardLabel === next.wardLabel &&
