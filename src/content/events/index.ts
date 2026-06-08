@@ -1736,7 +1736,7 @@ const POOL: EventTemplate[] = [
         outcome: {
           resolution:
             "You close your fist on the page and turn for the door. The water, which spared it, does not spare the taking — it rises at your back in a single black wall, and shapes that were custodians come surfacing out of the stacks between you and the dry corridor.",
-          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['drowned-custodian', 'drowned-mnemonic'] }],
+          effects: [{ kind: 'spawn_ambush', monsterDefIds: ['drowned-acolyte', 'drowned-mnemonic'] }],
         },
       },
       {
