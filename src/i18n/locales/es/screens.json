@@ -273,7 +273,18 @@
     "acceptLevelUp": "Aceptar · Subir de nivel →",
     "accept": "Aceptar →",
     "openPack": "◆ Abrir la mochila",
-    "setPieceBanked": "Equipo de Conjunto guardado en el alma"
+    "setPieceBanked": "Guardado en tu Relicario — equípalo allí en una vida futura",
+    "setMeta": "{set} · {slot} · {have}/{total}",
+    "setSlot": {
+      "mainHand": "Arma",
+      "offHand": "Mano izquierda",
+      "armor": "Armadura",
+      "helm": "Casco",
+      "amulet": "Amuleto",
+      "ring": "Anillo",
+      "belt": "Cinturón",
+      "boots": "Botas"
+    }
   },
   "unlockTutorial": {
     "eyebrow": "◆ Nuevo — Desbloqueado",
