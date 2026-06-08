@@ -7,6 +7,7 @@ import { getClass } from '../../content/classes';
 import { playMusic, stopMusic } from '../../engine/audio';
 import { PhandalinScene } from './PhandalinScene';
 import { LegendaryScreen } from './LegendaryScreen';
+import { GlossaryScreen } from './GlossaryScreen';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
@@ -37,7 +38,7 @@ export function HubScreen() {
   // the delve gate by restoring the line below.
   // const elitesEnabled = isFeatureUnlocked('elite-nodes', progressionMeta);
   const elitesEnabled = true;
-  const [view, setView] = useState<'hub' | 'relics'>('hub');
+  const [view, setView] = useState<'hub' | 'relics' | 'glossary'>('hub');
 
   useEffect(() => {
     playMusic('hub_theme');
@@ -92,6 +93,10 @@ export function HubScreen() {
   // only with at least one owned.
   if (view === 'relics') {
     return <LegendaryScreen onBack={() => setView('hub')} />;
+  }
+
+  if (view === 'glossary') {
+    return <GlossaryScreen onBack={() => setView('hub')} />;
   }
 
   return (
@@ -151,13 +156,22 @@ export function HubScreen() {
               <QuirkRow quirkIds={character.quirks} emptyText={t('hub.noMarks')} />
             </div>
           </div>
-          <Button
-            variant="secondary"
-            onClick={goToCharacterSelect}
-            className="shrink-0 self-start basis-full w-full sm:basis-auto sm:w-auto"
-          >
-            {t('hub.changeCharacter')}
-          </Button>
+          <div className="shrink-0 self-start basis-full w-full sm:basis-auto sm:w-auto flex flex-col gap-2">
+            <Button
+              variant="secondary"
+              onClick={goToCharacterSelect}
+              className="w-full"
+            >
+              {t('hub.changeCharacter')}
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={useGameStore.getState().goToInventory}
+              className="w-full"
+            >
+              {t('hub.backpack')}
+            </Button>
+          </div>
         </div>
       </Panel>
 
@@ -225,11 +239,11 @@ export function HubScreen() {
         </button>
         <button
           type="button"
-          onClick={useGameStore.getState().goToInventory}
+          onClick={() => setView('glossary')}
           className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
         >
           <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
-            {t('hub.inventory')}
+            {t('hub.glossary')}
           </div>
           <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
             {t('hub.open')}

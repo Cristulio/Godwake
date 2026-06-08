@@ -31,6 +31,8 @@ import esLegendaries from './locales/es/legendaries.json';
 import esRelicSlots from './locales/es/relicSlots.json';
 import esTutorials from './locales/es/tutorials.json';
 import esTwists from './locales/es/twists.json';
+import { GLOSSARY } from '../content/glossary';
+import esGlossary from './locales/es/glossary.json';
 
 type Overlay = Record<string, Record<string, string>>;
 
@@ -45,6 +47,7 @@ const legendaries = esLegendaries as Overlay;
 const relicSlots = esRelicSlots as Overlay;
 const tutorials = esTutorials as Overlay;
 const twists = esTwists as Overlay;
+const glossary = esGlossary as Overlay;
 
 /** A row field is "covered" when it exists and is a non-empty Spanish string. */
 function covered(row: Record<string, string> | undefined, field: string): boolean {
@@ -309,6 +312,29 @@ describe('es/twists.json completeness', () => {
     const ids = new Set<string>(DUNGEON_TWISTS.map((t) => t.id));
     const orphans = Object.keys(twists).filter((id) => !ids.has(id));
     expect(orphans, `orphan twist overlays: ${orphans.join(', ')}`).toEqual([]);
+  });
+});
+
+describe('es/glossary.json completeness', () => {
+  it('every section has a Spanish title and every entry a Spanish term + desc', () => {
+    const missing: string[] = [];
+    for (const section of GLOSSARY) {
+      if (!covered(glossary[section.id], 'title')) missing.push(`${section.id}.title`);
+      for (const entry of section.entries) {
+        if (!covered(glossary[entry.id], 'term')) missing.push(`${entry.id}.term`);
+        if (!covered(glossary[entry.id], 'desc')) missing.push(`${entry.id}.desc`);
+      }
+    }
+    expect(missing, `missing glossary overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('has no orphan glossary ids', () => {
+    const ids = new Set<string>([
+      ...GLOSSARY.map((s) => s.id),
+      ...GLOSSARY.flatMap((s) => s.entries.map((e) => e.id)),
+    ]);
+    const orphans = Object.keys(glossary).filter((id) => !ids.has(id));
+    expect(orphans, `orphan glossary overlays: ${orphans.join(', ')}`).toEqual([]);
   });
 });
 

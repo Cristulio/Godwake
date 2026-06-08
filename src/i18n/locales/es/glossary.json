@@ -1,0 +1,112 @@
+{
+  "sec-attributes": { "title": "Los Seis Atributos" },
+  "str": {
+    "term": "Fuerza (FUE)",
+    "desc": "Potencia física pura. Rige tu precisión y daño con armas pesadas de cuerpo a cuerpo, y el Atletismo con que empujas, trepas y te zafas de una presa."
+  },
+  "dex": {
+    "term": "Destreza (DES)",
+    "desc": "Velocidad y precisión. Afina las armas sutiles y a distancia, eleva tu Clase de Armadura con armadura ligera, e impulsa el Sigilo y la Acrobacia."
+  },
+  "con": {
+    "term": "Constitución (CON)",
+    "desc": "Dureza y aguante. Fija los puntos de golpe que ganas al subir de nivel, y te sostiene frente al veneno, la enfermedad y el puro agotamiento."
+  },
+  "int": {
+    "term": "Inteligencia (INT)",
+    "desc": "Razón cultivada. La aptitud mágica del mago —fija la CD de salvación, el ataque y el daño de los conjuros arcanos— y nutre Arcanos e Investigación."
+  },
+  "wis": {
+    "term": "Sabiduría (SAB)",
+    "desc": "Percepción e instinto. La aptitud mágica del druida, y el sentido tras Percepción, Perspicacia y Supervivencia."
+  },
+  "cha": {
+    "term": "Carisma (CAR)",
+    "desc": "Fuerza de presencia. Convence a la gente con Persuasión, Engaño e Intimidación —e inclina muchas de las decisiones que el camino te plantea."
+  },
+  "sec-vitals": { "title": "Estadísticas Vitales" },
+  "hp": {
+    "term": "Puntos de Golpe (PG)",
+    "desc": "Tu vida. El daño los resta; llega a 0 y el alma deja el cuerpo —y la rueda gira. La cura y el descanso los restauran."
+  },
+  "ac": {
+    "term": "Clase de Armadura (CA)",
+    "desc": "Lo difícil que eres de impactar. Un atacante debe tirar un d20, sumar sus bonificadores e igualar o superar tu CA para acertar. Armadura, escudos y Destreza la elevan."
+  },
+  "proficiency": {
+    "term": "Competencia",
+    "desc": "La marca del adiestramiento: un bonificador fijo que se suma a los ataques, salvaciones y habilidades en que estás instruido. Se ahonda al subir de nivel."
+  },
+  "temp-hp": {
+    "term": "PG Temporales",
+    "desc": "Un colchón que algunas bendiciones y equipo extienden sobre tu salud. Absorbe el daño antes que la tuya, y no se acumula —prevalece la mayor fuente."
+  },
+  "sec-casting": { "title": "Lanzamiento" },
+  "spell-dc": {
+    "term": "CD de Salvación de Conjuro",
+    "desc": "El número que un enemigo debe superar en su salvación para resistir tu conjuro. Cuanto más alto, más difícil es sacudirse tu magia."
+  },
+  "spell-attack": {
+    "term": "Ataque de Conjuro",
+    "desc": "El bonificador que sumas cuando un conjuro debe impactar directo a un objetivo —una tirada de ataque contra su Clase de Armadura."
+  },
+  "spell-damage": {
+    "term": "Daño de Conjuro",
+    "desc": "Un bonificador fijo que se suma al daño de tus conjuros —una vez por lanzamiento, encima de los dados."
+  },
+  "spell-slots": {
+    "term": "Espacios de Conjuro",
+    "desc": "El combustible de tus conjuros. Cada lanzamiento gasta un espacio de su nivel; los trucos son gratis. Los espacios vuelven al acampar."
+  },
+  "sec-rolls": { "title": "Cómo Funcionan las Tiradas" },
+  "d20": {
+    "term": "El d20",
+    "desc": "Casi todo pende de un dado de veinte caras. Tíralo, suma tus bonificadores y compara con un número objetivo —la Clase de Armadura de un enemigo, o una dificultad (CD)."
+  },
+  "advantage": {
+    "term": "Ventaja y Desventaja",
+    "desc": "Con ventaja tiras dos d20 y te quedas con el mayor; con desventaja, con el menor. Nunca se acumulan, y una de cada una se anula."
+  },
+  "crit": {
+    "term": "Golpe Crítico",
+    "desc": "Un 20 natural en un ataque siempre acierta y tira sus dados de daño dos veces. Algunos dones amplían el margen que cuenta como crítico."
+  },
+  "save": {
+    "term": "Tiradas de Salvación",
+    "desc": "Cuando algo peligroso te alcanza —veneno, miedo, un conjuro— tiras un d20 más un atributo contra su CD para resistirlo o atenuarlo."
+  },
+  "skill-check": {
+    "term": "Pruebas de Habilidad",
+    "desc": "En el camino, una decisión pone a prueba una habilidad: tira un d20, suma la habilidad y alcanza la CD para tener éxito. El adiestramiento y el talento inclinan la balanza."
+  },
+  "sec-combat": { "title": "En Combate" },
+  "action-economy": {
+    "term": "Acción · Acción Adicional · Reacción",
+    "desc": "Cada turno realizas una Acción (atacar, lanzar, usar un objeto), a veces una Acción Adicional para un movimiento rápido, y una Reacción que puedes gastar en el turno de otra criatura."
+  },
+  "damage-types": {
+    "term": "Tipos de Daño",
+    "desc": "Los golpes llegan como cortante, fuego, veneno y más. Un enemigo puede resistir un tipo (daño a la mitad) o ser inmune (ninguno) —y unos pocos tienen debilidades."
+  },
+  "conditions": {
+    "term": "Estados",
+    "desc": "Efectos que tuercen un combate: envenenado merma la precisión, paralizado cuesta turnos enteros, apresado te clava en el sitio. La mayoría se disipa con el tiempo o una salvación."
+  },
+  "telegraph": {
+    "term": "Telegrafías",
+    "desc": "Un enemigo que carga un golpe pesado muestra su intención un turno antes de que aterrice. Baja su vida a la carrera, afiánzate, o atúrdelo para cancelar la carga."
+  },
+  "sec-between": { "title": "Entre Combates" },
+  "rest": {
+    "term": "Descanso y Campamento",
+    "desc": "Un descanso breve entre salas cierra algo de salud y recupera algunos recursos; un campamento completo al borde del capítulo lo restaura todo antes de la oscuridad más honda."
+  },
+  "quirks-blessings": {
+    "term": "Rarezas y Bendiciones",
+    "desc": "Las rarezas son las cicatrices y dones que el alma carga de muerte en muerte —sobreviven a la rueda. Las bendiciones se ganan dentro de una sola incursión y terminan con ella."
+  },
+  "renown": {
+    "term": "Renombre",
+    "desc": "Lo único que el camino devuelve. Llévalo de vuelta para gastarlo en crecimiento duradero, mientras el oro y la experiencia quedan atrás en la oscuridad."
+  }
+}

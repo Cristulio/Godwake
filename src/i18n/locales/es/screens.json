@@ -100,7 +100,7 @@
   },
   "inventory": {
     "noCharacter": "Sin personaje. Vuelve al título.",
-    "heading": "INVENTARIO",
+    "heading": "MOCHILA",
     "subtitle": "{name} · {n} objetos · CA {ac} · Crítico {crit}",
     "backToDelve": "← Volver a la incursión",
     "backPhandalin": "← Phandalin",
