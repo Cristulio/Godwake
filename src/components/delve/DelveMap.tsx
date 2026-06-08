@@ -1,4 +1,4 @@
-import { useMemo, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import type { Character } from '../../types/character';
 import type { DelveState, RoomKind, RoomSpec } from '../../types/delve';
 import { chapterLabel, chapterMapNodes, getTwist } from '../../engine/delve';
@@ -53,6 +53,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
   const [hovered, setHovered] = useState<RoomSpec | null>(null);
   const [confirmAbandon, setConfirmAbandon] = useState(false);
 
+  const frameRef = useRef<HTMLDivElement>(null);
   const current = delve.rooms[delve.currentRoomIdx];
   const chapter = current?.chapter ?? 1;
   const visited = useMemo(() => new Set(delve.visitedRoomIds ?? []), [delve.visitedRoomIds]);
@@ -111,6 +112,23 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
   const { active: eliteCoachActive, dismiss: dismissEliteCoach } =
     useEliteIntroCoach(hasSelectableElite);
 
+  // Follow the run: scroll the current node toward the centre of the viewport
+  // each step, so a deep route shows where you are instead of staying pinned left.
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame || !current) return;
+    const node = byId.get(current.id);
+    if (!node) return;
+    const max = frame.scrollWidth - frame.clientWidth;
+    if (max <= 0) return;
+    const left = Math.max(0, Math.min(node.cx - frame.clientWidth / 2, max));
+    try {
+      frame.scrollTo({ left, behavior: 'smooth' });
+    } catch {
+      frame.scrollLeft = left;
+    }
+  }, [current?.id, byId, width]);
+
   const detail = hovered;
   const detailTwist = detail ? getTwist(detail.twistId) : undefined;
 
@@ -157,7 +175,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
         </div>
       </header>
 
-      <div className="bm-map-frame overflow-x-auto">
+      <div ref={frameRef} className="bm-map-frame overflow-x-auto">
         <div className="relative mx-auto" style={{ width, height }}>
           <svg
             className="absolute inset-0 pointer-events-none"
