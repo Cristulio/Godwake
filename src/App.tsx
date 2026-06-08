@@ -4,6 +4,8 @@ import { TitleScreen } from './components/title/TitleScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { SettingsButton } from './components/ui/SettingsButton';
 import { FeedbackModal } from './components/ui/FeedbackModal';
+import { FirstRunModal } from './components/ui/FirstRunModal';
+import { useSettingsStore } from './stores/settingsStore';
 import { useCombatAudio } from './hooks/useCombatAudio';
 import { useT } from './i18n/useT';
 
@@ -89,6 +91,7 @@ function App() {
   const dismissTutorial = useGameStore((s) => s.dismissTutorial);
   const hubUnlockQueue = useGameStore((s) => s.hubUnlockQueue);
   const dismissHubTutorial = useGameStore((s) => s.dismissHubTutorial);
+  const firstRunSeen = useSettingsStore((s) => s.firstRunSeen);
 
   // Combat SFX reaction — fires spell/ability/enemy sounds off the combat
   // event stream regardless of which screen is mounted.
@@ -200,6 +203,7 @@ function App() {
       )}
       <SettingsButton />
       <FeedbackModal />
+      {!firstRunSeen && <FirstRunModal />}
     </div>
   );
 }

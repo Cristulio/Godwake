@@ -21,11 +21,14 @@ interface SettingsState {
   autoBattle: boolean;
   /** Display language for the whole game. */
   locale: Locale;
+  /** True once the player has cleared the first-run welcome (language + alpha notice). */
+  firstRunSeen: boolean;
 
   setSpeed: (s: 1 | 2) => void;
   setAutoEndTurnDelay: (ms: number) => void;
   setAutoBattle: (on: boolean) => void;
   setLocale: (l: Locale) => void;
+  markFirstRunSeen: () => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -35,11 +38,13 @@ export const useSettingsStore = create<SettingsState>()(
       autoEndTurnDelayMs: 1100,
       autoBattle: false,
       locale: 'en',
+      firstRunSeen: false,
       setSpeed: (s) => set({ speedMultiplier: s }),
       setAutoEndTurnDelay: (ms) =>
         set({ autoEndTurnDelayMs: Math.max(200, Math.min(3000, Math.round(ms))) }),
       setAutoBattle: (on) => set({ autoBattle: on }),
       setLocale: (l) => set({ locale: l }),
+      markFirstRunSeen: () => set({ firstRunSeen: true }),
     }),
     {
       name: 'godwake-settings',

@@ -1,5 +1,13 @@
 {
   "loading": "Cargando",
+  "firstRun": {
+    "welcome": "Bienvenido a Godwake",
+    "languageLabel": "Idioma",
+    "alphaTitle": "Alfa Temprana",
+    "alphaBody": "Godwake está en alfa temprana — habrá asperezas y cambios frecuentes. ¿Encuentras un fallo o tienes una idea? Toca el botón de Comentarios ✎ (arriba a la derecha) cuando quieras — leemos cada nota.",
+    "alphaBodyNoFeedback": "Godwake está en alfa temprana — habrá asperezas y cambios frecuentes. Gracias por aventurarte tan pronto.",
+    "begin": "Comenzar"
+  },
   "title": {
     "tagline": "El alma recuerda. La carne olvida.",
     "subtitle": "Un roguelite de vidas prestadas",

@@ -1,5 +1,13 @@
 {
   "loading": "Loading",
+  "firstRun": {
+    "welcome": "Welcome to Godwake",
+    "languageLabel": "Language",
+    "alphaTitle": "Early Alpha",
+    "alphaBody": "Godwake is in early alpha — expect rough edges and frequent changes. Spot a bug or have an idea? Tap the ✎ Feedback button (top-right) any time — we read every note.",
+    "alphaBodyNoFeedback": "Godwake is in early alpha — expect rough edges and frequent changes. Thank you for braving it this early.",
+    "begin": "Begin"
+  },
   "title": {
     "tagline": "The soul remembers. The flesh forgets.",
     "subtitle": "A roguelite of borrowed lives",
