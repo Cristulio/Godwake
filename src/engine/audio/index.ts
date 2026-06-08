@@ -45,6 +45,56 @@ export function stopMusic(): void {
   audioEngine.stopMusic();
 }
 
+// Mob-aware combat-music selector. Kept in this eager module (not sounds.ts) so
+// importing it from CombatScreen doesn't drag the ~1300-line synth into the
+// boot bundle — the actual track build still pays the lazy import on first play.
+// These pools mirror the builder ids in sounds.ts; `sounds.test.ts` asserts they
+// stay a subset of the registry so the two lists can't silently drift apart.
+const COMBAT_MUSIC_POOL: MusicId[] = [
+  'combat_theme',
+  'combat_theme_tense',
+  'combat_march',
+  'combat_prowl',
+  'combat_grim',
+  'combat_frenzy',
+  'combat_rally',
+];
+const BOSS_MUSIC_POOL: MusicId[] = [
+  'boss_theme',
+  'boss_theme_dire',
+  'boss_theme_wrath',
+];
+
+export { COMBAT_MUSIC_POOL, BOSS_MUSIC_POOL };
+
+let lastCombatMusicId: MusicId | null = null;
+
+function hashSignal(s: string): number {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+/**
+ * Pick a combat theme for an encounter. `signal` (the lead monster's defId)
+ * deterministically maps a given foe to a given variant — so the same creature
+ * feels consistent — while the last-played guard guarantees two fights in a row
+ * never share a theme. Repeats across non-adjacent fights are fine.
+ */
+export function pickCombatMusic(
+  signal: string,
+  opts?: { boss?: boolean },
+): MusicId {
+  const pool = opts?.boss ? BOSS_MUSIC_POOL : COMBAT_MUSIC_POOL;
+  const base = hashSignal(signal) % pool.length;
+  let id = pool[base];
+  if (id === lastCombatMusicId && pool.length > 1) {
+    id = pool[(base + 1) % pool.length];
+  }
+  lastCombatMusicId = id;
+  return id;
+}
+
 /**
  * Pick a swing SFX based on the weapon's shape. Falls back to the generic
  * `swing_whoosh` if no category applies.

@@ -43,7 +43,13 @@ import { Button } from '../ui/Button';
 import { DiceRollOverlay } from './DiceRollOverlay';
 import { Battlefield, type BattlefieldDecoration } from './Battlefield';
 import { TurnOrderTracker } from './TurnOrderTracker';
-import { playMusic, stopMusic, playSfx, type MusicId } from '../../engine/audio';
+import {
+  playMusic,
+  stopMusic,
+  playSfx,
+  pickCombatMusic,
+  type MusicId,
+} from '../../engine/audio';
 import { useBlockingModalOpen } from '../ui/useInputBlock';
 import { CombatCoach, combatIntroEligible, type CoachStep } from './CombatCoach';
 import { useMetaStore } from '../../stores/metaStore';
@@ -177,9 +183,10 @@ export function CombatScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.lastAttack?.id]);
 
-  // Combat music bed: boss rooms get the bossly bed after a 3s intro sting;
-  // normal rooms randomize between the two ambient beds the first time the
-  // combat goes active and stick to that choice for the rest of the fight.
+  // Combat music: the theme is picked from the lead foe's id so different
+  // creatures feel different, never repeating the previous fight's track, and
+  // is locked in for the rest of the fight. Boss rooms draw from the boss pool
+  // after a 3s intro sting.
   useEffect(() => {
     if (state.status !== 'active') {
       stopMusic();
@@ -188,11 +195,17 @@ export function CombatScreen({
       };
     }
 
+    if (!bedChoiceRef.current) {
+      const lead = state.combatants.find((c) => c.kind === 'monster');
+      const signal = lead?.instance.defId ?? roomTitle ?? 'combat';
+      bedChoiceRef.current = pickCombatMusic(signal, { boss: scene === 'boss' });
+    }
+    const theme = bedChoiceRef.current;
+
     if (scene === 'boss') {
-      bedChoiceRef.current = 'boss_theme';
       playSfx('boss_intro');
       const introTimer = setTimeout(() => {
-        playMusic('boss_theme');
+        playMusic(theme);
       }, 2800);
       return () => {
         clearTimeout(introTimer);
@@ -200,11 +213,7 @@ export function CombatScreen({
       };
     }
 
-    if (!bedChoiceRef.current) {
-      bedChoiceRef.current =
-        Math.random() < 0.5 ? 'combat_theme' : 'combat_theme_tense';
-    }
-    playMusic(bedChoiceRef.current);
+    playMusic(theme);
     return () => {
       stopMusic();
     };

@@ -1,6 +1,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { audioEngine } from './AudioEngine';
 import { MUSIC_IDS, SFX_IDS, playMusic, playSfx, stopMusic } from './sounds';
+import { BOSS_MUSIC_POOL, COMBAT_MUSIC_POOL, pickCombatMusic } from './index';
 
 // jsdom has no Web Audio; a minimal stub lets us exercise the synth graphs
 // (every renderer/builder) and the engine's bus wiring without real audio.
@@ -146,9 +147,49 @@ describe('audio music beds', () => {
         'hub_theme',
         'combat_theme',
         'combat_theme_tense',
+        'combat_march',
+        'combat_prowl',
+        'combat_grim',
+        'combat_frenzy',
+        'combat_rally',
         'boss_theme',
+        'boss_theme_dire',
+        'boss_theme_wrath',
         'victory_theme',
       ]),
     );
+  });
+});
+
+describe('mob-aware combat-music selector', () => {
+  it('keeps both pools a subset of the registered builders', () => {
+    for (const id of [...COMBAT_MUSIC_POOL, ...BOSS_MUSIC_POOL]) {
+      expect(MUSIC_IDS).toContain(id);
+    }
+  });
+
+  it('returns a combat-pool member and spreads foes across variants', () => {
+    const seen = new Set<string>();
+    for (let i = 0; i < 40; i++) {
+      const id = pickCombatMusic(`creature-kind-${i}`);
+      expect(COMBAT_MUSIC_POOL).toContain(id);
+      seen.add(id);
+    }
+    // Different foes should reach several distinct themes, not collapse to one.
+    expect(seen.size).toBeGreaterThan(2);
+  });
+
+  it('never repeats the previous fight back-to-back', () => {
+    let prev: string | null = null;
+    for (let i = 0; i < 200; i++) {
+      const id = pickCombatMusic(`foe-${i % 9}`, { boss: i % 5 === 0 });
+      expect(id).not.toBe(prev);
+      prev = id;
+    }
+  });
+
+  it('draws boss fights from the boss pool', () => {
+    const id = pickCombatMusic('archlich', { boss: true });
+    expect(BOSS_MUSIC_POOL).toContain(id);
   });
 });
