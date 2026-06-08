@@ -809,8 +809,12 @@ function buildCombatBed(ctx: AudioContext, out: AudioNode) {
   oscC.type = 'sine';
   oscC.frequency.value = 82.5; // perfect 5th up
 
-  oscA.connect(merger);
-  oscB.connect(merger);
+  // The detuned saw pair is the brass/horn-like ambiance voice — held at half
+  // gain so it sits under the drone instead of dominating it.
+  const sawGain = ctx.createGain();
+  sawGain.gain.value = 0.5;
+  oscA.connect(sawGain).connect(merger);
+  oscB.connect(sawGain).connect(merger);
   const cGain = ctx.createGain();
   cGain.gain.value = 0.35;
   oscC.connect(cGain).connect(merger);
@@ -884,8 +888,11 @@ function buildCombatBedTense(ctx: AudioContext, out: AudioNode) {
   oscC.type = 'square';
   oscC.frequency.value = 116;
 
-  oscA.connect(merger);
-  oscB.connect(merger);
+  // Same brass/horn-like detuned saw pair, also held at half gain.
+  const sawGain = ctx.createGain();
+  sawGain.gain.value = 0.5;
+  oscA.connect(sawGain).connect(merger);
+  oscB.connect(sawGain).connect(merger);
   const cGain = ctx.createGain();
   cGain.gain.value = 0.18;
   oscC.connect(cGain).connect(merger);
