@@ -25,6 +25,7 @@ import { playSfx } from '../../engine/audio';
 import type { EventChoice } from '../../schemas/event';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import { useT } from '../../i18n/useT';
+import { EventDiceRoll } from './EventDiceRoll';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
 
@@ -90,6 +91,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   }, [room.eventTemplateId]);
 
   const [resolved, setResolved] = useState<ResolvedTurn | null>(null);
+  const [rolling, setRolling] = useState<{ check: SkillCheckResult; skillName: string; turn: ResolvedTurn } | null>(null);
   const delveCount = useGameStore((s) => s.delveCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
   const renownSpent = useGameStore((s) => s.renownSpent);
@@ -199,13 +201,21 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
     const outcome = resolveChoiceOutcome(checked.outcome, roller);
     const result = applyEventOutcome(character, outcome, roller, goldScale);
     setCharacter(result.character);
-    setResolved({
+    const turn: ResolvedTurn = {
       choiceId: choice.id,
       choiceLabel: choice.label,
       resolutionRef: resolutionRefFor(choice, checked.succeeded, result.resolution),
       result,
       check: checked.skillCheck,
-    });
+    };
+    // A contested choice shows the die first (BG3-style); the resolution panel
+    // commits when the roll finishes. Uncontested choices resolve immediately.
+    if (checked.skillCheck) {
+      playSfx('ui_click');
+      setRolling({ check: checked.skillCheck, skillName: skillLabel(checked.skillCheck.skill, t), turn });
+      return;
+    }
+    setResolved(turn);
     playSfx('ui_click');
   }
 
@@ -276,6 +286,17 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
           result={resolved.result}
           check={resolved.check}
           onContinue={handleContinue}
+        />
+      )}
+
+      {rolling && (
+        <EventDiceRoll
+          check={rolling.check}
+          skillName={rolling.skillName}
+          onDone={() => {
+            setResolved(rolling.turn);
+            setRolling(null);
+          }}
         />
       )}
     </div>
