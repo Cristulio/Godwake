@@ -6,7 +6,7 @@ import {
   clampAscension,
   getAscensionLevel,
   ascensionMonsterHp,
-  ascensionDamageBonus,
+  ascensionDamageMult,
   applyAscensionToMonster,
   ELITE_VARIANTS_FROM,
   BOSS_EXTRA_PHASE_FROM,
@@ -52,9 +52,10 @@ describe('ascension config integrity', () => {
   it('Ascension 0 is the neutral baseline', () => {
     const base = getAscensionLevel(0);
     expect(base.enemyHpMult).toBe(1);
-    expect(base.enemyDamageBonus).toBe(0);
+    expect(base.enemyDamageMult).toBe(1);
     expect(base.bossHpMult).toBe(1);
     expect(base.startingGoldMult).toBe(1);
+    expect(base.goldFindMult).toBe(1);
     expect(base.renownMult).toBe(1);
     expect(base.upgradeCostMult).toBe(1);
   });
@@ -65,9 +66,9 @@ describe('ascension config integrity', () => {
       const cur = ASCENSION_LEVELS[i];
       expect(cur.renownMult).toBeGreaterThan(prev.renownMult);
       expect(cur.enemyHpMult).toBeGreaterThanOrEqual(prev.enemyHpMult);
-      expect(cur.enemyDamageBonus).toBeGreaterThanOrEqual(prev.enemyDamageBonus);
+      expect(cur.enemyDamageMult).toBeGreaterThanOrEqual(prev.enemyDamageMult);
       expect(cur.bossHpMult).toBeGreaterThanOrEqual(prev.bossHpMult);
-      expect(cur.startingGoldMult).toBeLessThanOrEqual(prev.startingGoldMult);
+      expect(cur.goldFindMult).toBeLessThanOrEqual(prev.goldFindMult);
       expect(cur.upgradeCostMult).toBeGreaterThan(prev.upgradeCostMult);
     }
   });
@@ -117,7 +118,7 @@ describe('ascension monster scaling helpers', () => {
   it('does not change stats at level 0', () => {
     expect(ascensionMonsterHp(100, 0, false)).toBe(100);
     expect(ascensionMonsterHp(100, 0, true)).toBe(100);
-    expect(ascensionDamageBonus(0)).toBe(0);
+    expect(ascensionDamageMult(0)).toBe(1);
   });
 
   it('applies the boss multiplier on top of the enemy HP multiplier, capped at the apex', () => {
@@ -143,7 +144,7 @@ describe('ascension monster scaling helpers', () => {
 });
 
 describe('createCombat — ascension scaling reaches the spawned encounter', () => {
-  it('boss HP is higher under ascension and damage bonus is stamped on the instance', () => {
+  it('boss HP is higher under ascension and the damage multiplier is stamped on the instance', () => {
     _resetMonsterInstanceCounter();
     const def = getMonster('duergar-ilyich');
     const baseline = createCombat({
@@ -165,8 +166,10 @@ describe('createCombat — ascension scaling reaches the spawned encounter', () 
     }
     expect(scaledInstance.instance.hp.max).toBe(ascensionMonsterHp(def.maxHp, 6, true));
     expect(scaledInstance.instance.hp.max).toBeGreaterThan(baseInstance.instance.hp.max);
-    expect(scaledInstance.instance.bonusDamage).toBe(ascensionDamageBonus(6));
-    expect(baseInstance.instance.bonusDamage).toBeUndefined();
+    expect(scaledInstance.instance.damageMult).toBe(ascensionDamageMult(6));
+    expect(baseInstance.instance.damageMult).toBeUndefined();
+    // Ascension difficulty is multiplicative now, not a flat bonusDamage stamp.
+    expect(scaledInstance.instance.bonusDamage).toBeUndefined();
   });
 
   it('non-boss enemies skip the boss multiplier', () => {

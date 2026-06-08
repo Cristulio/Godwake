@@ -80,8 +80,15 @@ export interface MonsterInstance {
    * extra action (a second wind), then this clears so it fires once per fight.
    */
   bossExtraPhaseArmed?: boolean;
-  /** Flat damage added to each of this monster's landed attacks (ascension scaling). Set at spawn. */
+  /** Flat damage added to each landed attack — dungeon-twist surcharge only. Set at spawn. */
   bonusDamage?: number;
+  /**
+   * Multiplier on every landed-attack's final damage (ascension difficulty). A
+   * percentage, not a flat add, so the penalty scales with the monster's own
+   * damage and stays meaningful in the high-stat-block endgame chapters. 1 / unset
+   * at Ascension 0. Set at spawn (createCombat) and on ascension-scaled summons.
+   */
+  damageMult?: number;
   /**
    * Per-action cadence bookkeeping for summon / sustain specials, keyed by the
    * action's name. `uses` enforces `once`; `lastRound` enforces `cooldownRounds`.

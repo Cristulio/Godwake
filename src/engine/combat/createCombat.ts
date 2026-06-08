@@ -30,7 +30,7 @@ import { t } from '../../i18n';
 import {
   applyAscensionToMonster,
   ascensionBossExtraPhase,
-  ascensionDamageBonus,
+  ascensionDamageMult,
 } from '../delve/ascension';
 import { getTwist, twistCombatEffect, CURSED_GROUND_DECAY_TURNS } from '../delve/twists';
 import { bossIntelBuffFor } from '../../content/bossIntel';
@@ -168,7 +168,10 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // its knobs feed the spawn (Bloodscent enemy damage) and the combat state
   // (Cursed Ground chip, Gloom first-strike, Sealed Wards, Quickening order).
   const twist = twistCombatEffect(input.twistId);
-  const enemyDamageBonus = ascensionDamageBonus(ascension) + (twist.enemyDamageBonus ?? 0);
+  // Ascension scales damage MULTIPLICATIVELY (damageMult) so it bites in the
+  // endgame; a twist's flat surcharge stays additive (bonusDamage).
+  const enemyDamageMult = ascensionDamageMult(ascension);
+  const twistDamageBonus = twist.enemyDamageBonus ?? 0;
   // Ascension extra-phase arms only the primary foe of a boss room (idx 0).
   const bossExtraPhase = isBoss && ascensionBossExtraPhase(ascension);
   const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }, idx) => {
@@ -180,7 +183,8 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       id: instance.id,
       instance: {
         ...instance,
-        ...(enemyDamageBonus > 0 ? { bonusDamage: enemyDamageBonus } : {}),
+        ...(twistDamageBonus > 0 ? { bonusDamage: twistDamageBonus } : {}),
+        ...(enemyDamageMult !== 1 ? { damageMult: enemyDamageMult } : {}),
         ...(legendaryResistances > 0 ? { legendaryResistances } : {}),
         ...(bossExtraPhase && idx === 0 ? { bossExtraPhaseArmed: true } : {}),
       },

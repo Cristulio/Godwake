@@ -785,17 +785,21 @@ function resolveSingleAttack(
       modifier: 0,
     });
     const rageBonus = raging ? 2 : 0;
-    const ascensionBonus = attacker.instance.bonusDamage ?? 0;
+    // Dungeon-twist flat surcharge (ascension difficulty rides damageMult below).
+    const twistBonus = attacker.instance.bonusDamage ?? 0;
     // boss-framework: flat enrage damage granted by an entered HP phase.
     const phaseBonus = attacker.instance.phaseDamageBonus ?? 0;
+    // Ascension difficulty: a percentage on the whole landed blow, so it scales
+    // with the enemy's own damage and bites hardest in the endgame chapters.
+    const damageMult = attacker.instance.damageMult ?? 1;
     // Wither (8th wizard) leaves a monster 'weakened' — a flat cut to its OWN
     // outgoing damage (the one self-debuff the monster turn reads against
     // itself). A landed hit still grazes for at least 1.
     const selfWeakened = attacker.instance.conditions
       .filter((c) => c.name === 'weakened')
       .reduce((sum, c) => sum + (c.level ?? DEFAULT_WEAKENED_AMOUNT), 0);
-    const rawBeforeWeaken =
-      damageRoll.total + damageExpr.modifier + rageBonus + ascensionBonus + phaseBonus;
+    const rawBlow = damageRoll.total + damageExpr.modifier + rageBonus + twistBonus + phaseBonus;
+    const rawBeforeWeaken = damageMult !== 1 ? Math.round(rawBlow * damageMult) : rawBlow;
     const rawDamage =
       selfWeakened > 0 ? Math.max(1, rawBeforeWeaken - selfWeakened) : rawBeforeWeaken;
 
@@ -842,7 +846,7 @@ function resolveSingleAttack(
       );
     }
     if (rageBonus > 0) breakdown.push(`+ ${rageBonus} ${t('combat.part.rage')}`);
-    if (ascensionBonus > 0) breakdown.push(`+ ${ascensionBonus} ${t('combat.part.ascension')}`);
+    if (twistBonus > 0) breakdown.push(`+ ${twistBonus} ${t('combat.part.ascension')}`);
     if (phaseBonus > 0) breakdown.push(`+ ${phaseBonus} ${t('combat.part.phase')}`);
     const resistSuffix = resisted
       ? rageResists && !raceResists

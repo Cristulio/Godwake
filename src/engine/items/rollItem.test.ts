@@ -256,8 +256,14 @@ describe('rolledItemCost', () => {
     expect(rolledItemCost(purple)).toBeGreaterThan(rolledItemCost(green));
   });
 
-  it('a plain base ref (no rolled payload) costs its base price', () => {
-    expect(rolledItemCost({ itemId: 'longsword' })).toBe(getItem('longsword').cost);
+  it('prices by POWER, not D&D materials: a plain ref ignores its base.cost', () => {
+    // Two bases with different D&D costs price identically when both are plain —
+    // power, not realism, drives the bag. (Guards the gameplay-over-purity rewrite.)
+    const longsword = rolledItemCost({ itemId: 'longsword' });
+    const greatsword = rolledItemCost({ itemId: 'greatsword' });
+    expect(longsword).toBe(greatsword);
+    expect(getItem('longsword').cost).not.toBe(getItem('greatsword').cost);
+    expect(longsword).not.toBe(getItem('longsword').cost);
   });
 
   it('prices up with the +N enhancement (the deep-loot gold sink)', () => {
