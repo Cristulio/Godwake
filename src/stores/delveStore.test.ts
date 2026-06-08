@@ -914,13 +914,24 @@ describe('delveStore.acceptSpoils — Irenicus falls silent after his Ch11 death
     expect(taunt!.chapter).toBe(11);
   });
 
-  it('clearing a Throne-of-Bhaal chapter (Ch12-14) fires NO Irenicus taunt', () => {
-    for (const bossIndex of [11, 12, 13]) {
+  it('clearing a Throne chapter (Ch12-13) fires a Melissan whisper, never Irenicus', () => {
+    for (const bossIndex of [11, 12]) {
       useScreenStore.setState({ taunt: null, tauntQueue: [] });
-      stageClear(bossRooms()[bossIndex]); // 12th/13th/14th boss = Ch12/13/14
+      stageClear(bossRooms()[bossIndex]); // 12th/13th boss = Ch12/13
       useDelveStore.getState().acceptSpoils();
-      expect(useScreenStore.getState().taunt).toBeNull();
+      const taunt = useScreenStore.getState().taunt;
+      expect(taunt).not.toBeNull();
+      expect(taunt!.speaker).toBe('melissan');
+      expect(taunt!.context).toBe('chapter-clear');
+      expect(taunt!.chapter).toBe(bossIndex + 1);
     }
+  });
+
+  it('clearing Ch14 — Melissan’s own death — fires NO whisper (the Throne finale takes over)', () => {
+    useScreenStore.setState({ taunt: null, tauntQueue: [] });
+    stageClear(bossRooms()[13]); // 14th boss = Ch14, Melissan herself
+    useDelveStore.getState().acceptSpoils();
+    expect(useScreenStore.getState().taunt).toBeNull();
   });
 });
 

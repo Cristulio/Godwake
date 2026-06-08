@@ -10,6 +10,7 @@
 
 import imoenUrl from '../../assets/sprites/npcs/imoen.svg';
 import irenicusUrl from '../../assets/sprites/npcs/irenicus.svg';
+import melissanUrl from '../../assets/sprites/npcs/melissan.svg';
 
 type PortraitProps = {
   className?: string;
@@ -41,4 +42,8 @@ export function Imoen(props: PortraitProps) {
 
 export function Irenicus(props: PortraitProps) {
   return <PortraitImg url={irenicusUrl} fallbackLabel="Irenicus" {...props} />;
+}
+
+export function Melissan(props: PortraitProps) {
+  return <PortraitImg url={melissanUrl} fallbackLabel="Melissan" {...props} />;
 }

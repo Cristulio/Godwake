@@ -859,11 +859,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       // room loaded): fire it now so it precedes the next room rather than
       // painting over it. The victory beat already played on the spoils screen.
       // Irenicus IS the Ch11 boss (BASE_GAME_CHAPTERS) — clearing Ch11 is his
-      // death, so a final line there is fine, but he must fall silent for the
-      // Throne-of-Bhaal chapters (Ch12-14). The ToB antagonist voice (Melissan)
-      // is a separate future lane; for now post-Irenicus clears get no taunt.
+      // death, so a final line there is fine, but he falls silent after. Through
+      // the Throne-of-Bhaal chapters (Ch12-13) Melissan, the false "kind ally,"
+      // whispers in his place — solicitous, the mask slipping as the Throne
+      // nears. Ch14 is her own death: the Throne finale fires there, no whisper.
       if (clearedChapter <= BASE_GAME_CHAPTERS) {
         useScreenStore.getState().showTaunt('irenicus', 'chapter-clear', clearedChapter);
+      } else if (clearedChapter < TOTAL_CHAPTERS) {
+        useScreenStore.getState().showTaunt('melissan', 'chapter-clear', clearedChapter);
       }
       get().creditChapterClearGold();
     }
