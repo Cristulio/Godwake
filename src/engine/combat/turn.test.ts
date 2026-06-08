@@ -226,3 +226,42 @@ describe('hasRemainingTurnPlay — turn auto-end gate (every class)', () => {
     ).toBe(false);
   });
 });
+
+describe('hasRemainingTurnPlay — pending follow-up attack hold', () => {
+  it('holds the turn for a Rogue Quick-Strike even after action AND bonus are spent', () => {
+    // Quick-Strike sets bonusAttackAvailable AFTER the main attack already burned
+    // the action (and the bonus action queuing it), so all three are true at once.
+    // The queued swing is free to fire — the turn must NOT auto-end under it.
+    const { state, character } = arena(make('rogue'));
+    const queued: Character = {
+      ...character,
+      actionEconomy: { ...character.actionEconomy, actionUsed: true, bonusActionUsed: true },
+      bonusAttackAvailable: true,
+    };
+    expect(hasRemainingTurnPlay(queued, state)).toBe(true);
+  });
+
+  it('holds the turn while flurry strikes are queued and the action is spent', () => {
+    const { state, character } = arena(make('monk'));
+    const queued: Character = {
+      ...character,
+      actionEconomy: { ...character.actionEconomy, actionUsed: true, bonusActionUsed: true },
+      flurryStrikesRemaining: 2,
+    };
+    expect(hasRemainingTurnPlay(queued, state)).toBe(true);
+  });
+
+  it('releases the turn when no follow-up is queued and no other hold applies', () => {
+    // A rogue with no cunning-action uses left, action + bonus spent, and no
+    // pending swing → nothing to hold for, so the turn must auto-end.
+    const { state, character } = arena(make('rogue'));
+    const tappedOut: Character = {
+      ...character,
+      actionEconomy: { ...character.actionEconomy, actionUsed: true, bonusActionUsed: true },
+      bonusAttackAvailable: false,
+      flurryStrikesRemaining: 0,
+      resources: { ...character.resources, cunningActionUsesRemaining: 0 },
+    };
+    expect(hasRemainingTurnPlay(tappedOut, state)).toBe(false);
+  });
+});

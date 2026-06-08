@@ -720,6 +720,17 @@ export function hasRemainingTurnPlay(
     (character.resources.knownSpells ?? []).includes('entangling-roots') &&
     (character.resources.spellSlots?.[2] ?? 0) > 0;
 
+  // A queued follow-up swing the Attack action already spawned: the Rogue's
+  // Quick-Strike (`bonusAttackAvailable`, set AFTER actionUsed) or a Monk's
+  // half-thrown Flurry. The strike is free to fire but the action is gone — so
+  // without this the turn auto-ends and the player loses the swing for not
+  // clicking fast enough. (Monk flurry is also covered by
+  // monkHasPendingTurnAction; spelled out here so the hold doesn't depend on
+  // classId.)
+  const hasPendingFollowupAttack =
+    character.bonusAttackAvailable === true ||
+    (character.flurryStrikesRemaining ?? 0) > 0;
+
   return (
     hasUsableSecondWind ||
     hasUsableActionSurge ||
@@ -727,6 +738,7 @@ export function hasRemainingTurnPlay(
     hasUsableRage ||
     hasUsableHuntersMark ||
     hasUsableEntangle ||
+    hasPendingFollowupAttack ||
     monkHasPendingTurnAction(character)
   );
 }
