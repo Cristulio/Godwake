@@ -37,7 +37,7 @@ describe('starting kits — safety-net baseline', () => {
     expect(potions.length).toBe(2);
   });
 
-  it('Wizard starts with 1 potion of healing', () => {
+  it('Wizard starts with 3 potions of healing (glass-cannon cushion)', () => {
     const c = buildPlayerCharacter({
       name: 'Mage',
       raceId: 'human',
@@ -45,10 +45,10 @@ describe('starting kits — safety-net baseline', () => {
       baseAbilityScores: baseScores(),
     });
     const potions = c.inventory.filter((i) => i.itemId === 'potion-of-healing');
-    expect(potions.length).toBe(1);
+    expect(potions.length).toBe(3);
   });
 
-  it('Rogue starts with 1 potion of healing, rapier equipped, dagger + shortbow in pack', () => {
+  it('Rogue starts with 2 potions of healing, rapier equipped, dagger + shortbow in pack', () => {
     const c = buildPlayerCharacter({
       name: 'Sneak',
       raceId: 'human',
@@ -56,7 +56,7 @@ describe('starting kits — safety-net baseline', () => {
       baseAbilityScores: baseScores(),
     });
     const potions = c.inventory.filter((i) => i.itemId === 'potion-of-healing');
-    expect(potions.length).toBe(1);
+    expect(potions.length).toBe(2);
     expect(c.equipped.mainHand?.itemId).toBe('rapier');
     expect(c.inventory.some((i) => i.itemId === 'dagger')).toBe(true);
     expect(c.inventory.some((i) => i.itemId === 'shortbow')).toBe(true);
