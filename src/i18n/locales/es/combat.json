@@ -141,7 +141,7 @@
     "rageBlockedArmor": "{name} busca la furia, pero la pesada placa la sofoca — no prende ninguna furia hasta que se quite la armadura.",
     "rageEnter": "{name} se entrega a la furia — los golpes físicos resbalan y cada tajo muerde más hondo, pero sin curación hasta que pase. {rounds} rondas.",
     "reckless": "{name} arroja la guardia — sus golpes aciertan con ventaja, pero también los que responden.",
-    "secondWind": "{name} recobra el aliento. 1d10+{level} = {roll} → +{healed} PG.",
+    "secondWind": "{name} recobra el aliento. 1d10+{bonus} = {roll} → +{healed} PG.",
     "actionSurge": "{name} se enardece — la adrenalina arde en la herida. Un golpe más.",
     "cunningHide": "{name} se desliza a una sombra. El próximo golpe acierta con ventaja.",
     "cunningFeint": "{name} finta alto — la guardia cae. El próximo golpe halla el hueco.",
@@ -496,7 +496,7 @@
     "soulMarkPlural": "s"
   },
   "bar": {
-    "secondWind": "Acción adicional: cura 1d10 + nivel. Una vez por descanso corto.",
+    "secondWind": "Acción adicional: cura 1d10 + 2 por nivel. Una vez por combate.",
     "actionSurge": "Acción gratuita: recupera tu acción este turno. Una vez por descanso corto.",
     "offenseFighter": "Cuesta {cost} de {pool}: los golpes de este turno aciertan más seguros (+{hit} al impacto) y muerden por +{dmg} de daño{cleave}.",
     "offenseOther": "Cuesta {cost} de {pool}: los golpes de este turno aciertan por +{dmg} de daño{cleave}.",
