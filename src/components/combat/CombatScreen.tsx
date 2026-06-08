@@ -116,6 +116,10 @@ export function CombatScreen({
     }),
   );
   const [coachStep, setCoachStep] = useState<CoachStep | 'done'>('attack');
+  // The Wizard opens its first lesson on SPELLS (cast Burning Hands), not Attack —
+  // a single focused step that completes the moment it acts. Every other class
+  // keeps the Attack → target → abilities flow.
+  const castFirst = character.classId === 'wizard';
   function finishCoach() {
     setCoachStep('done');
     useMetaStore.getState().markTutorialSeen(COMBAT_INTRO_TUTORIAL_ID);
@@ -447,8 +451,9 @@ export function CombatScreen({
     if (aliveMonsters.length === 1) {
       doAttack(aliveMonsters[0].id);
     } else {
-      // Coach: tapping Attack with multiple foes opens target-selection.
-      if (coachActive && coachStep === 'attack') setCoachStep('target');
+      // Coach: tapping Attack with multiple foes opens target-selection. (The
+      // Wizard's lesson is to CAST, not swing — its coach doesn't ride this path.)
+      if (coachActive && coachStep === 'attack' && !castFirst) setCoachStep('target');
       setSelectingTarget(true);
     }
   }
@@ -481,9 +486,11 @@ export function CombatScreen({
     setSelectingTarget(false);
     setCharacter(result.character);
     setCombat(result.state);
-    // Coach: the swing has landed — point the player at their class actions.
+    // Coach: the swing has landed — point the player at their class actions. The
+    // Wizard's lesson was to cast, so a weapon swing instead just completes it.
     if (coachActive && (coachStep === 'attack' || coachStep === 'target')) {
-      setCoachStep('abilities');
+      if (castFirst) finishCoach();
+      else setCoachStep('abilities');
     }
   }
 
@@ -513,6 +520,8 @@ export function CombatScreen({
     setSelectingTarget(false);
     setCharacter(result.character);
     if (result.cast) setCombat(result.state);
+    // Coach: the Wizard's first lesson is to cast — once a spell lands, it's done.
+    if (result.cast && coachActive && castFirst && coachStep === 'attack') finishCoach();
   }
 
   // Druid Wild Shape: a one-tap bonus-action shift into the beast form (temp-HP
@@ -910,8 +919,14 @@ export function CombatScreen({
         coachStep !== 'done' &&
         !isResolved &&
         !blockingModalOpen &&
+        !pickingSpell &&
         (coachStep !== 'attack' || isPlayerTurn(state)) && (
-          <CombatCoach step={coachStep} onSkip={finishCoach} onDismiss={finishCoach} />
+          <CombatCoach
+            step={coachStep}
+            castFirst={castFirst}
+            onSkip={finishCoach}
+            onDismiss={finishCoach}
+          />
         )}
     </div>
   );

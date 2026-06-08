@@ -505,6 +505,7 @@ export function ActionBar({
             variant={canSpells ? 'primary' : 'secondary'}
             onClick={onSpells}
             disabled={!canSpells}
+            data-tutorial="spells"
             title={t('combat.bar.spells')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >

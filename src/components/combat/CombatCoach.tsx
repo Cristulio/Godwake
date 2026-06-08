@@ -131,10 +131,20 @@ interface CombatCoachProps {
   onSkip: () => void;
   /** Acknowledge the informational final step ("Got it"). */
   onDismiss: () => void;
+  /**
+   * Caster first lesson: a spellcaster (the Wizard) opens on SPELLS, not Attack —
+   * the first step spotlights the Spells control and teaches Burning Hands instead
+   * of a weapon swing. Other classes keep the default Attack-first flow.
+   */
+  castFirst?: boolean;
 }
 
-export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
+export function CombatCoach({ step, onSkip, onDismiss, castFirst = false }: CombatCoachProps) {
   const { t } = useT();
+  // The Wizard's first step points at Spells (cast Burning Hands), not Attack.
+  const firstStepCast = step === 'attack' && castFirst;
+  const selector = firstStepCast ? '[data-tutorial="spells"]' : SELECTOR[step];
+  const promptKey = firstStepCast ? 'combat.coach.castFirst' : PROMPT_KEY[step];
   const [box, setBox] = useState<Box | null>(null);
   const boxRef = useRef<Box | null>(null);
   const [reduced] = useState(
@@ -144,7 +154,6 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
 
-  const selector = SELECTOR[step];
   // Track the target's live rect with a rAF loop (cheap, change-gated) so the
   // cutout follows layout shifts from resize, scroll, the battlefield's mobile
   // scale transform, and sprite motion without juggling listeners.
@@ -213,7 +222,7 @@ export function CombatCoach({ step, onSkip, onDismiss }: CombatCoachProps) {
         style={bubblePos}
         aria-live="polite"
       >
-        <p className="text-[var(--color-text-primary)] text-sm leading-snug">{t(PROMPT_KEY[step])}</p>
+        <p className="text-[var(--color-text-primary)] text-sm leading-snug">{t(promptKey)}</p>
         <div className="flex items-center justify-center gap-3 mt-2.5">
           {step === 'abilities' && (
             <button
