@@ -27,6 +27,7 @@ import {
   getAscensionLevel,
   ascensionAscendantLoot,
   ascensionExclusiveLoot,
+  ascensionGoldFindMult,
 } from '../engine/delve/ascension';
 import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from '../engine/delve/constants';
 import { getItem } from '../content/items';
@@ -679,11 +680,15 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     // Bargain Hunter / Pinchpurse scale gold; Soul-mark scales gold AND xp
-    // (each bane quirk = +20%). Both stack multiplicatively.
+    // (each bane quirk = +20%); ascension squeezes the find-rate (the real gold
+    // penalty — runs start at ~0 gold, so the legacy startingGoldMult barely
+    // bites). All stack multiplicatively.
+    const goldFind = ascensionGoldFindMult(s.delve.ascensionLevel ?? 0);
     const goldMul = character
       ? (characterQuirkMods(character).goldMultiplier ?? 1) *
-        soulMarkMultiplier(character)
-      : 1;
+        soulMarkMultiplier(character) *
+        goldFind
+      : goldFind;
     const xpMul = character ? soulMarkMultiplier(character) : 1;
     const finalGold = Math.floor(gold * goldMul);
     const finalXp = Math.floor(xp * xpMul);

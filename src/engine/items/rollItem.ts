@@ -279,18 +279,24 @@ export function rolledItemName(baseName: string, affixIds: string[], enhancement
 }
 
 /**
- * Shop/value price for a rolled item: base cost + per-affix premium + an
- * enhancement premium that climbs super-linearly (+1 ≈ 50, +2 ≈ 140, +3 ≈ 270
- * before the rarity multiplier), all scaled by rarity. The +N premium is what
- * makes deep loot cost more — the gold sink that soaks mid-game inflation.
+ * Shop/value price for a rolled item, priced by POWER — never by D&D materials.
+ * Gameplay over realism: an item costs for what it DOES (its rarity tier, its
+ * affix count, and its super-linear `+N` enhancement), so a plain plate no longer
+ * out-prices a stronger enchanted chainmail just because real-world plate is
+ * expensive. `base.cost` (the realism number) is intentionally ignored. A flat
+ * power floor + affix/enhancement premiums, all scaled by the rarity multiplier;
+ * the +N premium is the gold sink that soaks mid-game inflation. The weights are
+ * seed values pending the economy sim pass.
  */
+const ITEM_POWER_FLOOR = 40;
+const AFFIX_PREMIUM = 70;
 export function rolledItemCost(ref: ItemRef): number {
-  const base = getItem(ref.itemId);
   const affixCount = ref.rolled?.affixes.length ?? 0;
   const rarity = ref.rolled?.rarity ?? 'white';
   const enh = ref.rolled?.enhancement ?? 0;
-  const enhancePremium = enh * 30 + enh * enh * 20;
-  return Math.round((base.cost + 18 * affixCount + enhancePremium) * RARITY_PRICE_MULT[rarity]);
+  const enhancePremium = enh * 60 + enh * enh * 40;
+  const power = ITEM_POWER_FLOOR + AFFIX_PREMIUM * affixCount + enhancePremium;
+  return Math.round(power * RARITY_PRICE_MULT[rarity]);
 }
 
 /**

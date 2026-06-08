@@ -174,9 +174,11 @@ function attackDamageRange(
   // telegraphed range stays honest once the boss has shifted.
   const flat =
     expr.modifier + (instance.bonusDamage ?? 0) + (instance.phaseDamageBonus ?? 0) + rage;
+  // Ascension damage multiplier scales the whole blow (matches the resolver).
+  const mult = instance.damageMult ?? 1;
   return {
-    min: Math.max(1, expr.count + flat),
-    max: Math.max(1, expr.count * expr.die + flat),
+    min: Math.max(1, Math.round((expr.count + flat) * mult)),
+    max: Math.max(1, Math.round((expr.count * expr.die + flat) * mult)),
   };
 }
 

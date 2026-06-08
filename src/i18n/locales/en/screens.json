@@ -67,9 +67,9 @@
   },
   "ascension": {
     "enemyHp": "Enemies +{pct}% HP",
-    "enemyDamage": "Enemy blows +{n} damage",
+    "enemyDamage": "Enemy blows +{pct}% harder",
     "bossHp": "Bosses +{pct}% HP (on top)",
-    "lessGold": "Start with {pct}% less gold",
+    "lessGold": "{pct}% less gold found",
     "eyebrow": "◆ New Game+ ◆",
     "heading": "ASCENSION",
     "intro": "You have carried a soul to the empty Throne and back. Set how hard the dark presses on the next walk down.",

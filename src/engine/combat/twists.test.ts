@@ -5,6 +5,7 @@ import { applyCursedGroundChip } from './turn';
 import { playerAttack } from './attack';
 import { createDiceRoller, type DiceRoller } from '../dice';
 import { getMonster as getDef } from '../../content/monsters';
+import { ascensionDamageMult } from '../delve/ascension';
 import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 
@@ -202,15 +203,18 @@ describe('dungeon twist combat effects', () => {
     expect(primary(init.state).instance.bonusDamage).toBe(2);
   });
 
-  it('Bloodscent stacks on top of the ascension damage bonus', () => {
-    // Asc 5 carries a +2 enemy damage bonus; Bloodscent adds another +2.
+  it('Bloodscent (flat surcharge) and the ascension damage multiplier coexist independently', () => {
+    // Ascension difficulty is now a multiplier (damageMult), so the twist's flat
+    // +2 stays on bonusDamage and the Asc-5 ×1.2 rides damageMult separately —
+    // they no longer collapse into one additive number.
     const init = createCombat({
       character: makeFighter(),
       monsters: [{ def: getDef('goblin') }],
       ascension: 5,
       twistId: 'bloodscent',
     });
-    expect(primary(init.state).instance.bonusDamage).toBe(4);
+    expect(primary(init.state).instance.bonusDamage).toBe(2);
+    expect(primary(init.state).instance.damageMult).toBe(ascensionDamageMult(5));
   });
 
   it('Sealed Wards suppresses the start-of-combat blessing gird', () => {

@@ -13,14 +13,14 @@ function activeModifierLines(
   if (level.enemyHpMult > 1) {
     lines.push(t('screens.ascension.enemyHp', { pct: Math.round((level.enemyHpMult - 1) * 100) }));
   }
-  if (level.enemyDamageBonus > 0) {
-    lines.push(t('screens.ascension.enemyDamage', { n: level.enemyDamageBonus }));
+  if (level.enemyDamageMult > 1) {
+    lines.push(t('screens.ascension.enemyDamage', { pct: Math.round((level.enemyDamageMult - 1) * 100) }));
   }
   if (level.bossHpMult > 1) {
     lines.push(t('screens.ascension.bossHp', { pct: Math.round((level.bossHpMult - 1) * 100) }));
   }
-  if (level.startingGoldMult < 1) {
-    lines.push(t('screens.ascension.lessGold', { pct: Math.round((1 - level.startingGoldMult) * 100) }));
+  if (level.goldFindMult < 1) {
+    lines.push(t('screens.ascension.lessGold', { pct: Math.round((1 - level.goldFindMult) * 100) }));
   }
   return lines;
 }

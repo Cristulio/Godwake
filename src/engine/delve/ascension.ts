@@ -9,12 +9,22 @@ import type { Monster } from '../../schemas/monster';
 export interface AscensionModifiers {
   /** Multiplier on every enemy's max HP. */
   enemyHpMult: number;
-  /** Flat damage added to each enemy attack that lands. */
-  enemyDamageBonus: number;
+  /**
+   * Multiplier on every landed enemy attack's damage. A PERCENTAGE (1 = neutral),
+   * not a flat add, so the bite scales with the enemy's own damage and stays
+   * meaningful where it matters most — the high-stat-block endgame chapters.
+   */
+  enemyDamageMult: number;
   /** Extra HP multiplier for boss-kind enemies, stacked on top of enemyHpMult. */
   bossHpMult: number;
-  /** Multiplier on the gold seeded into the purse at delve start. */
+  /** Multiplier on the gold seeded into the purse at delve start (legacy; bites only with a Grove starting-purse). */
   startingGoldMult: number;
+  /**
+   * Multiplier on gold EARNED in-run (room + mob drops). The real ascension gold
+   * lever: runs start at ~0 gold so startingGoldMult is a near-no-op, but every
+   * soul earns gold, so squeezing the find-rate is an always-on economic penalty.
+   */
+  goldFindMult: number;
   /** Multiplier on renown earned from the run. Composes MULTIPLICATIVELY with the soul-mark. */
   renownMult: number;
   /**
@@ -59,9 +69,10 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     name: 'Ascension 0',
     newModifier: 'The chain as the world first knew it.',
     enemyHpMult: 1,
-    enemyDamageBonus: 0,
+    enemyDamageMult: 1,
     bossHpMult: 1,
     startingGoldMult: 1,
+    goldFindMult: 1,
     renownMult: 1,
     upgradeCostMult: 1,
   },
@@ -70,20 +81,22 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     name: 'Ascension 1',
     newModifier: 'Every enemy carries +15% HP.',
     enemyHpMult: 1.15,
-    enemyDamageBonus: 0,
+    enemyDamageMult: 1,
     bossHpMult: 1,
     startingGoldMult: 1,
+    goldFindMult: 1,
     renownMult: 1.25,
     upgradeCostMult: 1.2,
   },
   {
     level: 2,
     name: 'Ascension 2',
-    newModifier: 'Enemy blows land for +1 damage.',
+    newModifier: 'Enemy blows land 10% harder.',
     enemyHpMult: 1.15,
-    enemyDamageBonus: 1,
+    enemyDamageMult: 1.1,
     bossHpMult: 1,
     startingGoldMult: 1,
+    goldFindMult: 1,
     renownMult: 1.45,
     upgradeCostMult: 1.4,
   },
@@ -92,42 +105,46 @@ export const ASCENSION_LEVELS: AscensionLevel[] = [
     name: 'Ascension 3',
     newModifier: 'Chapter bosses gain +25% HP.',
     enemyHpMult: 1.15,
-    enemyDamageBonus: 1,
+    enemyDamageMult: 1.1,
     bossHpMult: 1.25,
     startingGoldMult: 1,
+    goldFindMult: 1,
     renownMult: 1.65,
     upgradeCostMult: 1.6,
   },
   {
     level: 4,
     name: 'Ascension 4',
-    newModifier: 'Enemies +25% HP; you descend with a quarter less gold.',
+    newModifier: 'Enemies +25% HP; the road yields a quarter less gold.',
     enemyHpMult: 1.25,
-    enemyDamageBonus: 1,
+    enemyDamageMult: 1.15,
     bossHpMult: 1.25,
     startingGoldMult: 0.75,
+    goldFindMult: 0.75,
     renownMult: 1.9,
     upgradeCostMult: 1.85,
   },
   {
     level: 5,
     name: 'Ascension 5',
-    newModifier: 'Enemy blows land for +2 damage.',
+    newModifier: 'Enemy blows land 20% harder.',
     enemyHpMult: 1.25,
-    enemyDamageBonus: 2,
+    enemyDamageMult: 1.2,
     bossHpMult: 1.25,
     startingGoldMult: 0.75,
+    goldFindMult: 0.75,
     renownMult: 2.15,
     upgradeCostMult: 2.1,
   },
   {
     level: 6,
     name: 'Ascension 6',
-    newModifier: 'Enemies +30% HP; bosses gain +50% HP; you descend with half the gold.',
+    newModifier: 'Enemies +30% HP; bosses gain +50% HP; blows land 30% harder; half the gold.',
     enemyHpMult: 1.3,
-    enemyDamageBonus: 2,
+    enemyDamageMult: 1.3,
     bossHpMult: 1.5,
     startingGoldMult: 0.5,
+    goldFindMult: 0.5,
     renownMult: 2.45,
     upgradeCostMult: 2.4,
   },
@@ -164,9 +181,14 @@ export function ascensionMonsterHp(baseHp: number, level: number, isBoss: boolea
   return Math.max(1, Math.round(baseHp * mult));
 }
 
-/** Flat damage bonus added to every enemy attack at the given ascension level. */
-export function ascensionDamageBonus(level: number): number {
-  return getAscensionLevel(level).enemyDamageBonus;
+/** Multiplier on every enemy attack's damage at the given ascension level (1 = neutral). */
+export function ascensionDamageMult(level: number): number {
+  return getAscensionLevel(level).enemyDamageMult;
+}
+
+/** Multiplier on gold EARNED in-run at the given ascension level (1 = neutral). */
+export function ascensionGoldFindMult(level: number): number {
+  return getAscensionLevel(level).goldFindMult;
 }
 
 /**

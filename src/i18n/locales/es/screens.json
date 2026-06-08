@@ -67,9 +67,9 @@
   },
   "ascension": {
     "enemyHp": "Enemigos +{pct}% de PV",
-    "enemyDamage": "Los golpes enemigos +{n} de daño",
+    "enemyDamage": "Golpes enemigos +{pct}% más fuertes",
     "bossHp": "Jefes +{pct}% de PV (además)",
-    "lessGold": "Empiezas con {pct}% menos de oro",
+    "lessGold": "{pct}% menos de oro hallado",
     "eyebrow": "◆ Nueva Partida+ ◆",
     "heading": "ASCENSIÓN",
     "intro": "Has llevado un alma al Trono vacío y de vuelta. Decide con cuánta fuerza aprieta la oscuridad en el próximo descenso.",
