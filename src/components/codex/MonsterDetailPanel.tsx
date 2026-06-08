@@ -5,6 +5,7 @@ import { MonsterPortrait } from '../combat/MonsterPortrait';
 import { abilityModifier, ABILITY_NAMES } from '../../types/abilities';
 import { localizedDamageType } from '../inventory/itemDisplay';
 import { useT } from '../../i18n/useT';
+import { getLocalizedMonsterActionName, getLocalizedMonsterActionDesc } from '../../i18n';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
 type TcFn = (namespace: string, id: string, field: string, fallbackEnglish: string) => string;
@@ -176,6 +177,7 @@ export function MonsterDetailPanel({
                   <ActionRow
                     key={`${a.kind}-${a.name}-${i}`}
                     action={a}
+                    monsterId={monster.id}
                     killCount={killingAbilities[a.name] ?? 0}
                     t={t}
                     tc={tc}
@@ -220,15 +222,21 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
 
 function ActionRow({
   action,
+  monsterId,
   killCount,
   t,
   tc,
 }: {
   action: MonsterAction;
+  monsterId: string;
   killCount: number;
   t: TFn;
   tc: TcFn;
 }) {
+  const actionName = getLocalizedMonsterActionName(monsterId, action.name);
+  const actionDesc = action.description
+    ? getLocalizedMonsterActionDesc(monsterId, action.name, action.description)
+    : undefined;
   const killBadge =
     killCount > 0 ? (
       <span
@@ -243,15 +251,15 @@ function ActionRow({
     return (
       <div className="panel-etched border border-[var(--color-border-dim)] p-2">
         <div className="font-display text-[var(--color-text-primary)] text-[11px] uppercase tracking-wider">
-          {action.name}
+          {actionName}
         </div>
         <div className="font-mono text-[11px] text-[var(--color-text-secondary)] mt-1">
           <span className="text-[var(--color-accent-gold)]">{bonus}</span> {t('screens.monsterDetail.toHit')} ·{' '}
           <span className="text-[var(--color-accent-amber)]">{action.damage}</span> {localizedDamageType(action.damageType)}
         </div>
-        {action.description && (
+        {actionDesc && (
           <p className="text-[var(--color-text-secondary)] text-[11px] italic mt-1 leading-snug">
-            {action.description}
+            {actionDesc}
           </p>
         )}
         {killBadge && <div className="mt-1.5">{killBadge}</div>}
@@ -263,16 +271,16 @@ function ActionRow({
     <div className="panel-etched border border-[var(--color-border-dim)] p-2">
       <div className="flex items-baseline justify-between gap-2">
         <div className="font-display text-[var(--color-text-primary)] text-[11px] uppercase tracking-wider">
-          {action.name}
+          {actionName}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest font-mono">
           {meta}
         </div>
       </div>
       <div className="font-mono text-[11px] text-[var(--color-text-secondary)] mt-1">{body}</div>
-      {action.description && (
+      {actionDesc && (
         <p className="text-[var(--color-text-secondary)] text-[11px] italic mt-1 leading-snug">
-          {action.description}
+          {actionDesc}
         </p>
       )}
       {killBadge && <div className="mt-1.5">{killBadge}</div>}

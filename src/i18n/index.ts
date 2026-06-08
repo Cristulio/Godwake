@@ -116,6 +116,40 @@ export function getLocalized(
 }
 
 /**
+ * Localize a monster ACTION name / description. These live inline on the monster
+ * def's `actions[]`, so the overlay nests under the monster's es row as
+ * `actions: { "<English action name>": { "name": "…", "desc": "…" } }`, keyed by
+ * the English action NAME (which doubles as the engine's stable action key — it
+ * must stay English everywhere it's stored/looked-up, so localize ONLY at the
+ * point of display). Falls back to the English source out of locale / untranslated.
+ */
+function monsterActionRow(monsterId: string, englishName: string): { name?: Json; desc?: Json } | undefined {
+  const row = registry.es?.monsters?.[monsterId];
+  if (!row || typeof row !== 'object' || Array.isArray(row)) return undefined;
+  const actions = (row as { [k: string]: Json }).actions;
+  if (!actions || typeof actions !== 'object' || Array.isArray(actions)) return undefined;
+  const entry = (actions as { [k: string]: Json })[englishName];
+  if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return undefined;
+  return entry as { name?: Json; desc?: Json };
+}
+
+export function getLocalizedMonsterActionName(monsterId: string, englishName: string): string {
+  if (getLocale() === DEFAULT_LOCALE) return englishName;
+  const val = monsterActionRow(monsterId, englishName)?.name;
+  return typeof val === 'string' ? val : englishName;
+}
+
+export function getLocalizedMonsterActionDesc(
+  monsterId: string,
+  englishName: string,
+  englishDesc: string,
+): string {
+  if (getLocale() === DEFAULT_LOCALE) return englishDesc;
+  const val = monsterActionRow(monsterId, englishName)?.desc;
+  return typeof val === 'string' ? val : englishDesc;
+}
+
+/**
  * Localize a PROCEDURAL delve room string — an encounter / room title or flavor.
  * These live inline in the pool + delve code with NO ids, so the overlay
  * (es/rooms{chapter}.json) is keyed by the ENGLISH SOURCE string and bucketed by

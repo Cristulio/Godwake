@@ -58,7 +58,7 @@ import {
 import { appendLog } from '../log';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
 import { sneakAttackDiceForLevel } from './playerAttack';
-import { t, getLocalized } from '../../../i18n';
+import { t, getLocalized, getLocalizedMonsterActionName } from '../../../i18n';
 import type { AttackContext } from './playerAttack';
 
 // Nimble Dodge: a low-level Rogue reads the first strike of the round and slips
@@ -95,6 +95,16 @@ function monsterInstanceOf(state: CombatState, id: string): MonsterInstance | un
     (x): x is MonsterCombatant => x.id === id && x.kind === 'monster',
   );
   return c?.instance;
+}
+
+/**
+ * The DISPLAY name for a monster action, localized through the attacker's def.
+ * The English `action.name` stays the stable engine key (charge refs,
+ * kill-tracking); only the text shown in the log is localized here.
+ */
+function locAction(state: CombatState, attackerId: string, englishName: string): string {
+  const inst = monsterInstanceOf(state, attackerId);
+  return inst ? getLocalizedMonsterActionName(inst.defId, englishName) : englishName;
 }
 
 /**
@@ -209,7 +219,7 @@ function beginTelegraphCharge(
     kind: 'system',
     text:
       action.telegraph?.chargeText ??
-      t('combat.log.telegraphCharge', { name: displayName, action: action.name }),
+      t('combat.log.telegraphCharge', { name: displayName, action: locAction(state, attackerId, action.name) }),
   });
   return attachEnemyEffect(s, 'enemy-frenzy', attackerId);
 }
@@ -230,7 +240,7 @@ function clearTelegraphAndAnnounce(
     kind: 'system',
     text: t('combat.log.chargedUnleash', {
       name: inst?.displayName ?? t('combat.log.theEnemy'),
-      action: ref.actionName,
+      action: inst ? getLocalizedMonsterActionName(inst.defId, ref.actionName) : ref.actionName,
     }),
   });
 }
@@ -251,7 +261,7 @@ function cancelChargeIfAny(state: CombatState, attackerId: string): CombatState 
   return appendLog(cleared, {
     id: nextLogId(cleared),
     kind: 'system',
-    text: t('combat.log.chargeCollapse', { name: inst.displayName, action: pending.actionName }),
+    text: t('combat.log.chargeCollapse', { name: inst.displayName, action: getLocalizedMonsterActionName(inst.defId, pending.actionName) }),
   });
 }
 
@@ -688,7 +698,7 @@ function resolveSingleAttack(
     text: t('combat.log.monsterAttackRoll', {
       name: attacker.instance.displayName,
       target: nextCharacter.name,
-      action: action.name,
+      action: getLocalizedMonsterActionName(attacker.instance.defId, action.name),
       mod: `${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus}`,
       total: toHit.total,
       ac,
@@ -761,7 +771,7 @@ function resolveSingleAttack(
     attackerKind: 'monster',
     attackerId,
     attackerDefId: attacker.instance.defId,
-    weaponName: action.name,
+    weaponName: getLocalizedMonsterActionName(attacker.instance.defId, action.name),
     attackBonus: action.attackBonus,
     natural: toHit.rolls[0],
     total: toHit.total,
@@ -1108,7 +1118,7 @@ function monsterSustain(
     kind: 'system',
     text: t('combat.log.sustainLine', {
       name: attacker.instance.displayName,
-      action: action.name,
+      action: getLocalizedMonsterActionName(attacker.instance.defId, action.name),
       suffix: parts.length ? ` — ${parts.join(t('combat.log.sustainJoin'))}` : '',
     }),
   });
@@ -1152,7 +1162,7 @@ function monsterCastDebuff(
     kind: 'roll',
     text: t('combat.log.debuffCastRoll', {
       caster: attackerName,
-      action: action.name,
+      action: locAction(state, attackerId, action.name),
       name: nextCharacter.name,
       abil: t(`combat.abil.${action.saveAbility}`),
       adv: save.advantage ? t('combat.f.advParen') : '',
@@ -1187,7 +1197,7 @@ function monsterCastDebuff(
     logEntries.push({
       id: nextLogId(state) + 1,
       kind: 'system',
-      text: t('combat.log.debuffResisted', { name: nextCharacter.name, action: action.name }),
+      text: t('combat.log.debuffResisted', { name: nextCharacter.name, action: locAction(state, attackerId, action.name) }),
     });
   }
 
@@ -1195,7 +1205,7 @@ function monsterCastDebuff(
   const saveEventId = (nextState.saveEventCounter ?? 0) + 1;
   const saveEvent: SaveEvent = {
     id: saveEventId,
-    sourceName: action.name,
+    sourceName: locAction(state, attackerId, action.name),
     casterName: attackerName,
     ability: action.saveAbility,
     dc: action.saveDC,
@@ -1246,7 +1256,7 @@ function monsterCastParalyze(
     kind: 'roll',
     text: t('combat.log.paralyzeCastRoll', {
       caster: attackerName,
-      action: action.name,
+      action: locAction(state, attackerId, action.name),
       name: nextCharacter.name,
       abil: t(`combat.abil.${action.saveAbility}`),
       adv: save.advantage ? t('combat.f.advParen') : '',
@@ -1281,7 +1291,7 @@ function monsterCastParalyze(
   const saveEventId = (nextState.saveEventCounter ?? 0) + 1;
   const saveEvent: SaveEvent = {
     id: saveEventId,
-    sourceName: action.name,
+    sourceName: locAction(state, attackerId, action.name),
     casterName: attackerName,
     ability: action.saveAbility,
     dc: action.saveDC,

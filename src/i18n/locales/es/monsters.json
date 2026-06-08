@@ -1,582 +1,1775 @@
 {
   "goblin": {
     "name": "Goblin",
-    "flavorText": "Pequeño, feroz y astuto en manada. La mayoría de los que trabajan las Celdas del Mago fueron arrastrados aquí en la oscuridad y retenidos por el trato de un vientre lleno."
+    "flavorText": "Pequeño, feroz y astuto en manada. La mayoría de los que trabajan las Celdas del Mago fueron arrastrados aquí en la oscuridad y retenidos por el trato de un vientre lleno.",
+    "actions": {
+      "Scimitar": {
+        "name": "Cimitarra"
+      },
+      "Shortbow": {
+        "name": "Arco Corto"
+      }
+    }
   },
   "goblin-warden": {
     "name": "Guardián Goblin",
-    "flavorText": "El guardián de las Celdas de Hierro. Más grande, más cruel y más difícil de matar que los suyos. La cadena se enrosca en su hombro, la hoja arranca chispas al suelo."
+    "flavorText": "El guardián de las Celdas de Hierro. Más grande, más cruel y más difícil de matar que los suyos. La cadena se enrosca en su hombro, la hoja arranca chispas al suelo.",
+    "actions": {
+      "Chain-Bound Greatsword": {
+        "name": "Mandoble Encadenado"
+      },
+      "Sound the Block": {
+        "name": "Tocar a Rebato"
+      }
+    }
   },
   "skeleton": {
     "name": "Esqueleto",
-    "flavorText": "Una cáscara reanimada por la obra del mago. Las cuencas vacías se clavan en ti y la mandíbula se abre con un chasquido, como probando una vocal que casi recuerda."
+    "flavorText": "Una cáscara reanimada por la obra del mago. Las cuencas vacías se clavan en ti y la mandíbula se abre con un chasquido, como probando una vocal que casi recuerda.",
+    "actions": {
+      "Rusted Shortsword": {
+        "name": "Espada Corta Oxidada"
+      }
+    }
   },
   "kobold": {
     "name": "Kobold",
-    "flavorText": "Esmirriado y afilado. Los sótanos bajo la Mansión Tresendar pululan de ellos, atraídos aquí, dice el clérigo, por el olor a carne fresca que los goblins no dejan de abandonar."
+    "flavorText": "Esmirriado y afilado. Los sótanos bajo la Mansión Tresendar pululan de ellos, atraídos aquí, dice el clérigo, por el olor a carne fresca que los goblins no dejan de abandonar.",
+    "actions": {
+      "Bone Dagger": {
+        "name": "Daga de Hueso"
+      }
+    }
   },
   "duergar-ilyich": {
     "name": "Ilyich el Duergar",
-    "flavorText": "Ilyich dirigió a los esclavistas duergar que el amo pagó para quebrar y alimentar a sus sujetos. La crueldad aburrida de un guardia y la paciencia de un esclavista… hasta que lo cortas. Llévalo a la mitad y la furia de sangre de piedra lo posee: guardia olvidada, el pico de guerra alzándose sobre su cabeza para golpes descendentes que verás venir y tendrás que responder igualmente."
+    "flavorText": "Ilyich dirigió a los esclavistas duergar que el amo pagó para quebrar y alimentar a sus sujetos. La crueldad aburrida de un guardia y la paciencia de un esclavista… hasta que lo cortas. Llévalo a la mitad y la furia de sangre de piedra lo posee: guardia olvidada, el pico de guerra alzándose sobre su cabeza para golpes descendentes que verás venir y tendrás que responder igualmente.",
+    "actions": {
+      "Heavy War Pick": {
+        "name": "Pico de Guerra Pesado"
+      }
+    }
   },
   "dust-mephit": {
     "name": "Mefit de Polvo",
-    "flavorText": "Un diablillo de piel gris hecho de polvo asfixiante. El laboratorio está espeso de ellos: enjambran los frascos de campana donde el amo guarda sus especímenes más frescos."
+    "flavorText": "Un diablillo de piel gris hecho de polvo asfixiante. El laboratorio está espeso de ellos: enjambran los frascos de campana donde el amo guarda sus especímenes más frescos.",
+    "actions": {
+      "Claws": {
+        "name": "Garras"
+      }
+    }
   },
   "animated-armor": {
     "name": "Armadura Animada",
-    "flavorText": "Un arnés vacío impulsado por un elemental atado. Las placas suenan como una campana golpeada cuando camina. El amo usa docenas para guardar sus bóvedas."
+    "flavorText": "Un arnés vacío impulsado por un elemental atado. Las placas suenan como una campana golpeada cuando camina. El amo usa docenas para guardar sus bóvedas.",
+    "actions": {
+      "Iron Slam": {
+        "name": "Golpe de Hierro"
+      }
+    }
   },
   "bugbear": {
     "name": "Bruto Osgo",
-    "flavorText": "Un goblinoide corpulento, vez y media más alto que sus primos goblins, con pelaje a parches y un collar de cuero tachonado de hierro. Los duergar los usan como guardacéldas: demasiado estúpidos para cuestionar el trabajo, demasiado fuertes para discutir con ellos."
+    "flavorText": "Un goblinoide corpulento, vez y media más alto que sus primos goblins, con pelaje a parches y un collar de cuero tachonado de hierro. Los duergar los usan como guardacéldas: demasiado estúpidos para cuestionar el trabajo, demasiado fuertes para discutir con ellos.",
+    "actions": {
+      "Morningstar": {
+        "name": "Lucero del Alba"
+      }
+    }
   },
   "imp": {
     "name": "Diablillo Atormentador",
-    "flavorText": "Un pequeño diablo carmesí con cola de aguja y ojos de hendidura amarilla. Habla la lengua de los mefits y su miedo le parece gracioso. Piel demasiado fina para un diablo en condiciones: la llama aún lo muerde. El amo lo quemaría por intruso, si alguna vez reparara en él."
+    "flavorText": "Un pequeño diablo carmesí con cola de aguja y ojos de hendidura amarilla. Habla la lengua de los mefits y su miedo le parece gracioso. Piel demasiado fina para un diablo en condiciones: la llama aún lo muerde. El amo lo quemaría por intruso, si alguna vez reparara en él.",
+    "actions": {
+      "Sting": {
+        "name": "Aguijón"
+      },
+      "Hellish Bolt": {
+        "name": "Descarga Infernal"
+      }
+    }
   },
   "stirge": {
     "name": "Estirge",
-    "flavorText": "Un insecto con cuerpo de murciélago del tamaño de un ganso, con una probóscide de aguja más larga que su torso. Los techos de la mazmorra están espesos de ellos: silenciosos hasta que se dejan caer."
+    "flavorText": "Un insecto con cuerpo de murciélago del tamaño de un ganso, con una probóscide de aguja más larga que su torso. Los techos de la mazmorra están espesos de ellos: silenciosos hasta que se dejan caer.",
+    "actions": {
+      "Blood Drain": {
+        "name": "Drenar Sangre"
+      }
+    }
   },
   "ghoul": {
     "name": "Necrófago",
-    "flavorText": "Fue una persona una vez. La piel es gris y tirante como cuerda sobre los huesos; la mandíbula está descoyuntada de tantos mordiscos. Huele a manzanas podridas y grasa vieja."
+    "flavorText": "Fue una persona una vez. La piel es gris y tirante como cuerda sobre los huesos; la mandíbula está descoyuntada de tantos mordiscos. Huele a manzanas podridas y grasa vieja.",
+    "actions": {
+      "Filthy Claws": {
+        "name": "Garras Inmundas"
+      },
+      "Carrion Sickness": {
+        "name": "Mal de Carroña"
+      }
+    }
   },
   "hobgoblin": {
     "name": "Soldado Trasgo",
-    "flavorText": "Piel naranja quemado, media armadura de hierro negro pulida a un brillo de soldado, y una espada larga portada como el reglamento que es. Los trasgos no saquean: marchan. Donde uno se planta, otros tres se están formando."
+    "flavorText": "Piel naranja quemado, media armadura de hierro negro pulida a un brillo de soldado, y una espada larga portada como el reglamento que es. Los trasgos no saquean: marchan. Donde uno se planta, otros tres se están formando.",
+    "actions": {
+      "Longsword": {
+        "name": "Espada Larga"
+      }
+    }
   },
   "cult-fanatic": {
     "name": "Fanático del Culto",
-    "flavorText": "Una túnica blanca sucia, un círculo de sangre seca en el cuello, ojos que no han dormido del modo en que tú lo has hecho. La daga que portan es más antigua que el culto y tiene tachados los nombres de dioses mejores."
+    "flavorText": "Una túnica blanca sucia, un círculo de sangre seca en el cuello, ojos que no han dormido del modo en que tú lo has hecho. La daga que portan es más antigua que el culto y tiene tachados los nombres de dioses mejores.",
+    "actions": {
+      "Sacrificial Dagger": {
+        "name": "Daga Sacrificial"
+      }
+    }
   },
   "shadow": {
     "name": "Sombra",
-    "flavorText": "Tiene la forma de un hombre alto y delgado aplastado contra una pared, salvo que no hay pared alguna. Donde cruza la luz de la lámpara, no se desborra."
+    "flavorText": "Tiene la forma de un hombre alto y delgado aplastado contra una pared, salvo que no hay pared alguna. Donde cruza la luz de la lámpara, no se desborra.",
+    "actions": {
+      "Strength Drain": {
+        "name": "Drenar Fuerza"
+      },
+      "Engulfing Touch": {
+        "name": "Toque Envolvente"
+      }
+    }
   },
   "cowled-enforcer": {
     "name": "Ejecutor Encapuchado",
-    "flavorText": "Una capucha gris, un cuello alto, una máscara de plata batida con forma de rostro sin rasgos. Los Magos Encapuchados de Amn no saquean: recaudan. Sus patrullas preguntan una sola vez."
+    "flavorText": "Una capucha gris, un cuello alto, una máscara de plata batida con forma de rostro sin rasgos. Los Magos Encapuchados de Amn no saquean: recaudan. Sus patrullas preguntan una sola vez.",
+    "actions": {
+      "Force Bolt": {
+        "name": "Descarga de Fuerza"
+      }
+    }
   },
   "slaver-cuirassier": {
     "name": "Coracero Esclavista",
-    "flavorText": "Peto negro lacado sobre una sobreveste roja, el sello de la Moneda Retorcida en el hombro. Las casas esclavistas de Athkatla los equipan bien; la cadena de su cinto es para ti, no para él."
+    "flavorText": "Peto negro lacado sobre una sobreveste roja, el sello de la Moneda Retorcida en el hombro. Las casas esclavistas de Athkatla los equipan bien; la cadena de su cinto es para ti, no para él.",
+    "actions": {
+      "Heavy Mace": {
+        "name": "Maza Pesada"
+      }
+    }
   },
   "athkatla-magistrate": {
     "name": "El Magistrado",
-    "flavorText": "Bajo el alto cuello plateado de los Magos Encapuchados, un hombre delgado en sus cincuenta con el sello de magistrado en una cadena. Ha hecho matar a gente antes del almuerzo y firmado la siguiente orden antes de que levantaran el cuerpo. Cuando el desgaste es demasiado lento llama a los alguaciles; cuando lo has dejado pálido de sangre deja de desgastar y simplemente dicta sentencia."
+    "flavorText": "Bajo el alto cuello plateado de los Magos Encapuchados, un hombre delgado en sus cincuenta con el sello de magistrado en una cadena. Ha hecho matar a gente antes del almuerzo y firmado la siguiente orden antes de que levantaran el cuerpo. Cuando el desgaste es demasiado lento llama a los alguaciles; cuando lo has dejado pálido de sangre deja de desgastar y simplemente dicta sentencia.",
+    "actions": {
+      "Hold Person": {
+        "name": "Inmovilizar Persona"
+      },
+      "Summon the Court Guard": {
+        "name": "Convocar la Guardia de la Corte"
+      },
+      "Mind Spike": {
+        "name": "Punzada Mental"
+      }
+    }
   },
   "bandit-captain": {
     "name": "Capitán Bandido",
-    "flavorText": "Un abrigo negro, una camisa blanca limpia, anillos de oro en tres dedos y un estoque cuya empuñadura se ha reenvuelto hace poco. El tipo de bandido que mantiene una cuenta abierta en el Antro de los Siete Valles entre robo y robo."
+    "flavorText": "Un abrigo negro, una camisa blanca limpia, anillos de oro en tres dedos y un estoque cuya empuñadura se ha reenvuelto hace poco. El tipo de bandido que mantiene una cuenta abierta en el Antro de los Siete Valles entre robo y robo.",
+    "actions": {
+      "Duelist's Rapier": {
+        "name": "Estoque del Duelista"
+      }
+    }
   },
   "dust-mephit-elder": {
     "name": "Mefit de Polvo Anciano",
-    "flavorText": "Tres veces el tamaño de los suyos, con garras más largas y alas más lentas. Su piel es del color del papel de libro mayor viejo y sus ojos son dos ranuras de moneda de luz amarilla."
+    "flavorText": "Tres veces el tamaño de los suyos, con garras más largas y alas más lentas. Su piel es del color del papel de libro mayor viejo y sus ojos son dos ranuras de moneda de luz amarilla.",
+    "actions": {
+      "Choking Breath": {
+        "name": "Aliento Asfixiante"
+      },
+      "Settling Dust": {
+        "name": "Polvo que se Asienta"
+      }
+    }
   },
   "bone-stalker": {
     "name": "Acechador de Hueso",
-    "flavorText": "Son dos indigentes apilados en un solo cadáver. La mandíbula inferior no pertenece a ninguno de los dos, y la cuerda de la muñeca es más vieja que cualquiera de los dos costillares."
+    "flavorText": "Son dos indigentes apilados en un solo cadáver. La mandíbula inferior no pertenece a ninguno de los dos, y la cuerda de la muñeca es más vieja que cualquiera de los dos costillares.",
+    "actions": {
+      "Knotted Cudgel": {
+        "name": "Garrote Nudoso"
+      }
+    }
   },
   "shadow-hound": {
     "name": "Sabueso de Sombra",
-    "flavorText": "Un lebrel del color de un callejón sin luz, sin ojos en los que puedas fijarte y una sombra que se alarga y no encaja con la luz de la lámpara. No jadea. No respira en absoluto."
+    "flavorText": "Un lebrel del color de un callejón sin luz, sin ojos en los que puedas fijarte y una sombra que se alarga y no encaja con la luz de la lámpara. No jadea. No respira en absoluto.",
+    "actions": {
+      "Lunging Bite": {
+        "name": "Mordisco al Embestir"
+      }
+    }
   },
   "mad-mage-prisoner": {
     "name": "Mago Loco Prisionero",
-    "flavorText": "Un hombre de cabeza rapada con una túnica manchada, la marca de los Magos Encapuchados aún fresca en su palma. Murmura el conjuro sin aliento entre palabras: lo único que queda en la celda que aún tiene una forma."
+    "flavorText": "Un hombre de cabeza rapada con una túnica manchada, la marca de los Magos Encapuchados aún fresca en su palma. Murmura el conjuro sin aliento entre palabras: lo único que queda en la celda que aún tiene una forma.",
+    "actions": {
+      "Magic Missile": {
+        "name": "Proyectil Mágico"
+      },
+      "Wild Surge: Flame": {
+        "name": "Oleada Salvaje: Llama"
+      }
+    }
   },
   "bonebound-test-subject": {
     "name": "Sujeto de Prueba Atado a Hueso",
-    "flavorText": "Un cuerpo que los Magos Encapuchados salvaron de la mesa y recablearon con hueso. Las costuras a lo largo de sus brazos y costillas sanaron en una línea demasiado recta: alguien las quería sólidas bajo tensión. Los ojos están abiertos y la boca cosida."
+    "flavorText": "Un cuerpo que los Magos Encapuchados salvaron de la mesa y recablearon con hueso. Las costuras a lo largo de sus brazos y costillas sanaron en una línea demasiado recta: alguien las quería sólidas bajo tensión. Los ojos están abiertos y la boca cosida.",
+    "actions": {
+      "Stitched Claw": {
+        "name": "Garra Cosida"
+      }
+    }
   },
   "hollow-sage": {
     "name": "Sabio Hueco",
-    "flavorText": "Fue un erudito encapuchado. La mente se ha ido —fregada por un experimento que el guardián ya no recuerda haber encargado—, pero los conjuros remachados en el hueso aún disparan cuando alguien camina a su alcance."
+    "flavorText": "Fue un erudito encapuchado. La mente se ha ido —fregada por un experimento que el guardián ya no recuerda haber encargado—, pero los conjuros remachados en el hueso aún disparan cuando alguien camina a su alcance.",
+    "actions": {
+      "Hollow Gaze": {
+        "name": "Mirada Hueca"
+      },
+      "Withering Touch": {
+        "name": "Toque Marchitante"
+      }
+    }
   },
   "wardens-apprentice": {
     "name": "Aprendiza del Guardián",
-    "flavorText": "Una joven Maga Encapuchada con la librea de plata del guardián, tres años en el aprendizaje y ya demasiado buena con los conjuros de disipación. Las guardas tejidas en su túnica la hacen difícil de alcanzar. Lo que no mata, lo deshace."
+    "flavorText": "Una joven Maga Encapuchada con la librea de plata del guardián, tres años en el aprendizaje y ya demasiado buena con los conjuros de disipación. Las guardas tejidas en su túnica la hacen difícil de alcanzar. Lo que no mata, lo deshace.",
+    "actions": {
+      "Dispelling Bolt": {
+        "name": "Descarga Disipadora"
+      }
+    }
   },
   "slayer-hound": {
     "name": "Sabueso Verdugo",
-    "flavorText": "Largo de patas, ancho de hombros, las costillas asomando por el pelaje gris pegado. Los perreros de los Magos Encapuchados sacrifican a todo cachorro que no aúlle correctamente a la tercera orden. Los que viven son muy buenos en su trabajo."
+    "flavorText": "Largo de patas, ancho de hombros, las costillas asomando por el pelaje gris pegado. Los perreros de los Magos Encapuchados sacrifican a todo cachorro que no aúlle correctamente a la tercera orden. Los que viven son muy buenos en su trabajo.",
+    "actions": {
+      "Rending Bite": {
+        "name": "Mordisco Desgarrador"
+      }
+    }
   },
   "asylum-director": {
     "name": "El Director del Asilo",
-    "flavorText": "El guardián de Spellhold, en el cargo más tiempo del que cualquiera de los Magos Encapuchados sobre él recuerda haber autorizado. Alto, delgado, túnica ribeteada en el plata y gris del asilo, el ojo tras su monóculo de un color para el que no tienes palabra. Ha estado esperando. Ha sido muy paciente. Hiérelo pasada la mitad y deja la alabarda y se pone a la parte por la que en realidad vino."
+    "flavorText": "El guardián de Spellhold, en el cargo más tiempo del que cualquiera de los Magos Encapuchados sobre él recuerda haber autorizado. Alto, delgado, túnica ribeteada en el plata y gris del asilo, el ojo tras su monóculo de un color para el que no tienes palabra. Ha estado esperando. Ha sido muy paciente. Hiérelo pasada la mitad y deja la alabarda y se pone a la parte por la que en realidad vino.",
+    "actions": {
+      "Hold Person": {
+        "name": "Inmovilizar Persona"
+      },
+      "Director's Glaive": {
+        "name": "Guja del Director"
+      }
+    }
   },
   "drow-warrior": {
     "name": "Guerrero Drow",
-    "flavorText": "Capa de seda de araña, media armadura de eslabón de mithral, una esbelta cimitarra en la cadera y una ballesta de mano enfundada al cruce. Los guardias de la Casa Eilservs visten el mismo equipo. También los de la Casa Despana. También los de otras seis Matronas. Las capas difieren solo en el color del ribete… y el ribete lo decide cada mes una política que no tienes tiempo de aprender."
+    "flavorText": "Capa de seda de araña, media armadura de eslabón de mithral, una esbelta cimitarra en la cadera y una ballesta de mano enfundada al cruce. Los guardias de la Casa Eilservs visten el mismo equipo. También los de la Casa Despana. También los de otras seis Matronas. Las capas difieren solo en el color del ribete… y el ribete lo decide cada mes una política que no tienes tiempo de aprender.",
+    "actions": {
+      "Mithral Scimitar": {
+        "name": "Cimitarra de Mithral"
+      }
+    }
   },
   "drow-crossbowman": {
     "name": "Ballestero Drow",
-    "flavorText": "Cuero ligero, una ballesta de mano sostenida baja, un carcaj de virotes cuyas puntas se han mojado y secado y vuelto a mojar. Los exploradores drow no apuntan a matar al primer disparo: apuntan a frenarte, para que los guerreros tras ellos elijan a placer."
+    "flavorText": "Cuero ligero, una ballesta de mano sostenida baja, un carcaj de virotes cuyas puntas se han mojado y secado y vuelto a mojar. Los exploradores drow no apuntan a matar al primer disparo: apuntan a frenarte, para que los guerreros tras ellos elijan a placer.",
+    "actions": {
+      "Venomed Bolt": {
+        "name": "Descarga Envenenada"
+      }
+    }
   },
   "driderling": {
     "name": "Cría de Drider",
-    "flavorText": "Una arañita tocada por Lolth que no creció hasta ser un drider: las sacerdotisas sacrifican las camadas enclenques en vez de alimentarlas. Las que escapan al sacrificio se instalan en los corredores inferiores de Ust Natha y hostigan los trenes de esclavos que bajan de la superficie."
+    "flavorText": "Una arañita tocada por Lolth que no creció hasta ser un drider: las sacerdotisas sacrifican las camadas enclenques en vez de alimentarlas. Las que escapan al sacrificio se instalan en los corredores inferiores de Ust Natha y hostigan los trenes de esclavos que bajan de la superficie.",
+    "actions": {
+      "Venomous Bite": {
+        "name": "Mordisco Venenoso"
+      }
+    }
   },
   "drider": {
     "name": "Drider",
-    "flavorText": "Lolth deshonra a sus iniciadas fracasadas rehaciéndolas de cintura para abajo: un cuerpo de araña negra fundido a un torso drow, aún vistiendo el tabardo de la sacerdotisa. Viven en las vigas de Ust Natha y ya no están invitadas al templo."
+    "flavorText": "Lolth deshonra a sus iniciadas fracasadas rehaciéndolas de cintura para abajo: un cuerpo de araña negra fundido a un torso drow, aún vistiendo el tabardo de la sacerdotisa. Viven en las vigas de Ust Natha y ya no están invitadas al templo.",
+    "actions": {
+      "Binding Web": {
+        "name": "Telaraña Atadora"
+      },
+      "Fang and Sickle": {
+        "name": "Colmillo y Hoz"
+      }
+    }
   },
   "mind-flayer-fragment": {
     "name": "Fragmento de Azotamentes",
-    "flavorText": "No un azotamentes pleno —esos anidan más hondo, en las colonias que los drow ya no asaltan—. Este es uno a medio crecer que el cerebro anciano abandonó o envió arriba como explorador. Los tentáculos funcionan. La boca funciona. Los pensamientos no son tuyos cuando está en la sala."
+    "flavorText": "No un azotamentes pleno —esos anidan más hondo, en las colonias que los drow ya no asaltan—. Este es uno a medio crecer que el cerebro anciano abandonó o envió arriba como explorador. Los tentáculos funcionan. La boca funciona. Los pensamientos no son tuyos cuando está en la sala.",
+    "actions": {
+      "Mind Blast": {
+        "name": "Estallido Mental"
+      },
+      "Tentacle Drive": {
+        "name": "Embate de Tentáculos"
+      }
+    }
   },
   "drow-matron-mother": {
     "name": "Matrona Madre",
-    "flavorText": "Alta, esbelta, ataviada con seda de araña teñida del mismo rojo arterial que los estandartes del templo a su espalda. El símbolo sagrado de obsidiana de Lolth pende de su garganta de una cadena de huesos de dedo: élficos de superficie, por las proporciones. Las ocho Matronas Madre de Ust Natha gobiernan por el asesinato y por dejar los asesinatos sin testigos. Esta lleva sesenta años de Matrona. No la ha desafiado dos veces la misma Casa."
+    "flavorText": "Alta, esbelta, ataviada con seda de araña teñida del mismo rojo arterial que los estandartes del templo a su espalda. El símbolo sagrado de obsidiana de Lolth pende de su garganta de una cadena de huesos de dedo: élficos de superficie, por las proporciones. Las ocho Matronas Madre de Ust Natha gobiernan por el asesinato y por dejar los asesinatos sin testigos. Esta lleva sesenta años de Matrona. No la ha desafiado dos veces la misma Casa.",
+    "actions": {
+      "Lolth's Stilling": {
+        "name": "Aquietamiento de Lolth"
+      },
+      "Handmaiden of the Pit": {
+        "name": "Doncella del Pozo"
+      },
+      "Venom of the Pit": {
+        "name": "Veneno del Pozo"
+      },
+      "Venomed Ritual Dagger": {
+        "name": "Daga Ritual Envenenada"
+      },
+      "Spider's Curse": {
+        "name": "Maldición de la Araña"
+      }
+    }
   },
   "plaguebound-cur": {
     "name": "Chucho Apestado",
-    "flavorText": "Un perro de presidio salido mal. Los duergar lo alimentan con lo que dejan las celdas, y lo que vuelve a salir es peor que lo que entró. Sus encías son negras y su aliento llega medio segundo antes que sus dientes."
+    "flavorText": "Un perro de presidio salido mal. Los duergar lo alimentan con lo que dejan las celdas, y lo que vuelve a salir es peor que lo que entró. Sus encías son negras y su aliento llega medio segundo antes que sus dientes.",
+    "actions": {
+      "Rotting Bite": {
+        "name": "Mordisco Putrefacto"
+      },
+      "Plague-Breath": {
+        "name": "Aliento Pestilente"
+      }
+    }
   },
   "cell-wight": {
     "name": "Espectro de Celda",
-    "flavorText": "Aún lleva el grillete que lo mató, fundido ahora al hueso de una muñeca. Sea por lo que fuera sentenciado, la sentencia no ha terminado; trabaja el corredor en que murió, y le incomoda todo lo bastante cálido como para marcharse."
+    "flavorText": "Aún lleva el grillete que lo mató, fundido ahora al hueso de una muñeca. Sea por lo que fuera sentenciado, la sentencia no ha terminado; trabaja el corredor en que murió, y le incomoda todo lo bastante cálido como para marcharse.",
+    "actions": {
+      "Grave-Iron Claw": {
+        "name": "Garra de Hierro Sepulcral"
+      },
+      "Withering Grip": {
+        "name": "Garra Marchitante"
+      }
+    }
   },
   "famished-ghast": {
     "name": "Demacrado Famélico",
-    "flavorText": "Hambriento más allá del punto en que un necrófago deja de ser paciente. Las costillas asoman por la piel gris y la mandíbula se ha descoyuntado de tantos mordiscos. Cuando te huele sangrar deja de fingir que acecha."
+    "flavorText": "Hambriento más allá del punto en que un necrófago deja de ser paciente. Las costillas asoman por la piel gris y la mandíbula se ha descoyuntado de tantos mordiscos. Cuando te huele sangrar deja de fingir que acecha.",
+    "actions": {
+      "Frenzied Rake": {
+        "name": "Zarpazo Frenético"
+      },
+      "Ravening Claws": {
+        "name": "Garras Voraces"
+      }
+    }
   },
   "duergar-taskmaster": {
     "name": "Capataz Duergar",
-    "flavorText": "Gris como pizarra mojada, ojos como dos brasas enfriándose. Ha dirigido este bloque treinta años sobre el simple principio de que siempre hay otro goblin en la oscuridad y nunca falta trabajo en el que quebrarlo."
+    "flavorText": "Gris como pizarra mojada, ojos como dos brasas enfriándose. Ha dirigido este bloque treinta años sobre el simple principio de que siempre hay otro goblin en la oscuridad y nunca falta trabajo en el que quebrarlo.",
+    "actions": {
+      "Iron Maul": {
+        "name": "Mazo de Hierro"
+      },
+      "Conscript the Block": {
+        "name": "Reclutar la Cuadra"
+      }
+    }
   },
   "cowled-conjurer": {
     "name": "Conjurador Encapuchado",
-    "flavorText": "El cuello plateado de los Magos Encapuchados, la máscara pulida en blanco. No duela; delega. Lo que sea que invoca le responde solo mientras le resulte interesante, lo cual viene a ser solo mientras esté vivo."
+    "flavorText": "El cuello plateado de los Magos Encapuchados, la máscara pulida en blanco. No duela; delega. Lo que sea que invoca le responde solo mientras le resulte interesante, lo cual viene a ser solo mientras esté vivo.",
+    "actions": {
+      "Bind Servitor": {
+        "name": "Atar Sirviente"
+      },
+      "Arcane Bolt": {
+        "name": "Descarga Arcana"
+      }
+    }
   },
   "lash-captain": {
     "name": "Capitán del Látigo",
-    "flavorText": "Ha conducido cáfilas por el Camino del Comercio veinte años y ha aprendido que el látigo es sobre todo por el sonido. Los hombres que temen el sonido no necesitan ser golpeados. Se decepciona, ligeramente, cada vez que alguien lo obliga a golpear."
+    "flavorText": "Ha conducido cáfilas por el Camino del Comercio veinte años y ha aprendido que el látigo es sobre todo por el sonido. Los hombres que temen el sonido no necesitan ser golpeados. Se decepciona, ligeramente, cada vez que alguien lo obliga a golpear.",
+    "actions": {
+      "Spiked Whip": {
+        "name": "Látigo con Púas"
+      },
+      "Crack the Whip": {
+        "name": "Restallar el Látigo"
+      }
+    }
   },
   "cowled-wardpriest": {
     "name": "Sacerdotisa de Guarda Encapuchada",
-    "flavorText": "Donde los ejecutores de los Magos Encapuchados rompen, las sacerdotisas de guarda remiendan… pero solo a los suyos. Nunca una vez escudó a un prisionero y nunca una vez dejó de escudar a un colega. La aritmética del gremio es muy sencilla para ella."
+    "flavorText": "Donde los ejecutores de los Magos Encapuchados rompen, las sacerdotisas de guarda remiendan… pero solo a los suyos. Nunca una vez escudó a un prisionero y nunca una vez dejó de escudar a un colega. La aritmética del gremio es muy sencilla para ella.",
+    "actions": {
+      "Cowl-Ward": {
+        "name": "Guarda de Capucha"
+      },
+      "Mind Lance": {
+        "name": "Lanza Mental"
+      }
+    }
   },
   "gibbering-husk": {
     "name": "Cáscara Balbuceante",
-    "flavorText": "Fue una persona, y un paciente, y luego una puerta. La Esfera habla por el agujero donde estaba su mente, en cien voces superpuestas, y las voces están muy interesadas en ti."
+    "flavorText": "Fue una persona, y un paciente, y luego una puerta. La Esfera habla por el agujero donde estaba su mente, en cien voces superpuestas, y las voces están muy interesadas en ti.",
+    "actions": {
+      "Raking Slam": {
+        "name": "Golpe Desgarrador"
+      },
+      "Gibbering Babble": {
+        "name": "Parloteo Demente"
+      }
+    }
   },
   "mind-leech": {
     "name": "Sanguijuela de Mente",
-    "flavorText": "Un nudo de músculo gris del tamaño de un corazón, todo boca en la cara inferior. No come carne. Come la parte de ti que decide huir, y engorda a ojos vistas con cada bocado."
+    "flavorText": "Un nudo de músculo gris del tamaño de un corazón, todo boca en la cara inferior. No come carne. Come la parte de ti que decide huir, y engorda a ojos vistas con cada bocado.",
+    "actions": {
+      "Psychic Feed": {
+        "name": "Festín Psíquico"
+      }
+    }
   },
   "sphere-aberration": {
     "name": "Horror Recompuesto",
-    "flavorText": "Los guardianes del asilo dejaron de registrar qué era esto. Es una lenta colina gris de carne fundida que se arrastra hacia el calor y olvida, de un momento al siguiente, que alguna vez le hicieron daño. Solo el fuego hace que la lección se quede."
+    "flavorText": "Los guardianes del asilo dejaron de registrar qué era esto. Es una lenta colina gris de carne fundida que se arrastra hacia el calor y olvida, de un momento al siguiente, que alguna vez le hicieron daño. Solo el fuego hace que la lección se quede.",
+    "actions": {
+      "Lashing Pseudopod": {
+        "name": "Pseudópodo Restallante"
+      },
+      "Reknit": {
+        "name": "Recoser"
+      }
+    }
   },
   "asylum-fleshwright": {
     "name": "Carnífice del Asilo",
-    "flavorText": "Delantales rígidos de trabajo viejo, gafas subidas a una frente alta y pálida. Te contempla como contempla todo en Spellhold: materia prima a la que aún no se le ha dicho para qué sirve."
+    "flavorText": "Delantales rígidos de trabajo viejo, gafas subidas a una frente alta y pálida. Te contempla como contempla todo en Spellhold: materia prima a la que aún no se le ha dicho para qué sirve.",
+    "actions": {
+      "Bone-Saw": {
+        "name": "Sierra de Hueso"
+      },
+      "Raise Subject": {
+        "name": "Alzar Sujeto"
+      }
+    }
   },
   "hollow-gaze": {
     "name": "La Mirada Hueca",
-    "flavorText": "El culto del Atestiguar se sacó los propios ojos para que ella pudiera ver por los agujeros. No se equivocaban al hacerlo. Cuelga en la oscuridad de la Esfera inferior, un orbe ciego del tamaño de una muela de molino, el gran ojo cosido y cicatrizado por su centro… y sin embargo nada cruza el umbral de sus salas sin ser visto. Sus fieles murieron de hambre a sus pies antes que ser los primeros en apartar la vista."
+    "flavorText": "El culto del Atestiguar se sacó los propios ojos para que ella pudiera ver por los agujeros. No se equivocaban al hacerlo. Cuelga en la oscuridad de la Esfera inferior, un orbe ciego del tamaño de una muela de molino, el gran ojo cosido y cicatrizado por su centro… y sin embargo nada cruza el umbral de sus salas sin ser visto. Sus fieles murieron de hambre a sus pies antes que ser los primeros en apartar la vista.",
+    "actions": {
+      "Stilling Ray": {
+        "name": "Rayo Aquietador"
+      },
+      "Shed a Witness": {
+        "name": "Desprender un Testigo"
+      },
+      "Fear Ray": {
+        "name": "Rayo de Miedo"
+      },
+      "Withering Ray": {
+        "name": "Rayo Marchitante"
+      },
+      "Dazzling Ray": {
+        "name": "Rayo Deslumbrante"
+      },
+      "Baleful Eye": {
+        "name": "Ojo Maligno"
+      }
+    }
   },
   "witness-mote": {
     "name": "Mota Testigo",
-    "flavorText": "No más grande que un puño, todo pupila y un borde húmedo de pestañas, deriva por los corredores del asilo sin más encargo que ver. No puede hacerte mucho daño. Solo está aquí para asegurarse de que la cosa de la oscuridad de abajo sepa exactamente dónde estás."
+    "flavorText": "No más grande que un puño, todo pupila y un borde húmedo de pestañas, deriva por los corredores del asilo sin más encargo que ver. No puede hacerte mucho daño. Solo está aquí para asegurarse de que la cosa de la oscuridad de abajo sepa exactamente dónde estás.",
+    "actions": {
+      "Glimmer-Ray": {
+        "name": "Rayo de Destello"
+      }
+    }
   },
   "gloaming-eye": {
     "name": "Ojo del Crepúsculo",
-    "flavorText": "Donde las Motas Testigo solo miran, estos han aprendido a sopesar. Un ojo único crecido al tamaño de la cabeza de un hombre, arrastrando una franja de tentáculos-pestaña grises, deriva por las salas altas de la Esfera y conduce a los perdidos hacia la oscuridad de abajo: sin tocarlos nunca, solo volviendo insoportable cualquier otro camino."
+    "flavorText": "Donde las Motas Testigo solo miran, estos han aprendido a sopesar. Un ojo único crecido al tamaño de la cabeza de un hombre, arrastrando una franja de tentáculos-pestaña grises, deriva por las salas altas de la Esfera y conduce a los perdidos hacia la oscuridad de abajo: sin tocarlos nunca, solo volviendo insoportable cualquier otro camino.",
+    "actions": {
+      "Cowing Gaze": {
+        "name": "Mirada Intimidante"
+      },
+      "Searing Glance": {
+        "name": "Mirada Abrasadora"
+      }
+    }
   },
   "spider-broodmother": {
     "name": "Madre de Camadas Araña",
-    "flavorText": "Bendecida por Lolth y grotescamente fértil, la mantienen en el templo inferior para reponer las madrigueras de cría más rápido de lo que las gastan los asaltos a la superficie. Su abdomen es del tamaño de un tonel de vino y nunca deja de moverse. La Matrona la llama santa. Los drow que la atienden no la llaman nada en absoluto, y se mantienen bien atrás."
+    "flavorText": "Bendecida por Lolth y grotescamente fértil, la mantienen en el templo inferior para reponer las madrigueras de cría más rápido de lo que las gastan los asaltos a la superficie. Su abdomen es del tamaño de un tonel de vino y nunca deja de moverse. La Matrona la llama santa. Los drow que la atienden no la llaman nada en absoluto, y se mantienen bien atrás.",
+    "actions": {
+      "Venom Bite": {
+        "name": "Mordisco Venenoso"
+      },
+      "Spill the Brood": {
+        "name": "Derramar la Camada"
+      }
+    }
   },
   "drow-war-priestess": {
     "name": "Sacerdotisa de Guerra Drow",
-    "flavorText": "Una sacerdotisa de segundo rango, aún no Matrona pero escalando la única escalera que Ust Natha mantiene. Valora a los guerreros de su Casa exactamente en lo que sean útiles, lo cual hoy es muchísimo. Lolth premia al superviviente, y ella pretende que su gente te sobreviva."
+    "flavorText": "Una sacerdotisa de segundo rango, aún no Matrona pero escalando la única escalera que Ust Natha mantiene. Valora a los guerreros de su Casa exactamente en lo que sean útiles, lo cual hoy es muchísimo. Lolth premia al superviviente, y ella pretende que su gente te sobreviva.",
+    "actions": {
+      "Lolth's Mending": {
+        "name": "Remiendo de Lolth"
+      },
+      "Serpent Scourge": {
+        "name": "Azote Serpentino"
+      }
+    }
   },
   "cavern-hunting-spider": {
     "name": "Araña Cazadora de Caverna",
-    "flavorText": "Grande como un perro de guerra y el doble de paciente, caza las galerías iluminadas por la faerzress bajo Ust Natha. Los drow no la guardan; simplemente caminan por otro corredor. Ha aprendido que las cosas que vienen de la superficie no saben qué corredor evitar."
+    "flavorText": "Grande como un perro de guerra y el doble de paciente, caza las galerías iluminadas por la faerzress bajo Ust Natha. Los drow no la guardan; simplemente caminan por otro corredor. Ha aprendido que las cosas que vienen de la superficie no saben qué corredor evitar.",
+    "actions": {
+      "Web Spray": {
+        "name": "Rociada de Telaraña"
+      },
+      "Feeding Frenzy": {
+        "name": "Frenesí Voraz"
+      },
+      "Fangs": {
+        "name": "Colmillos"
+      }
+    }
   },
   "reborn-husk": {
     "name": "Cáscara Renacida",
-    "flavorText": "Ha muerto antes: se nota por las costuras de luz pálida donde el ciclo la cosió y la devolvió. Los ojos te siguen con una paciencia terrible, como si supiera que estás solo unas pocas muertes por detrás de ella y esperara, casi con bondad, a que la alcances."
+    "flavorText": "Ha muerto antes: se nota por las costuras de luz pálida donde el ciclo la cosió y la devolvió. Los ojos te siguen con una paciencia terrible, como si supiera que estás solo unas pocas muertes por detrás de ella y esperara, casi con bondad, a que la alcances.",
+    "actions": {
+      "Grasping Claw": {
+        "name": "Garra Aferradora"
+      }
+    }
   },
   "ashen-chorister": {
     "name": "Corista Ceniciento",
-    "flavorText": "Un celestial con túnica quemado al color de la ceniza enfriada, el halo sobre él vuelto un anillo de hollín. Fue hermoso una vez, del modo en que las palabras de una tumba son hermosas. No te ve como un enemigo. Te ve como un rezagado a un canto que lleva mucho tiempo sonando, y te hace sitio en el verso."
+    "flavorText": "Un celestial con túnica quemado al color de la ceniza enfriada, el halo sobre él vuelto un anillo de hollín. Fue hermoso una vez, del modo en que las palabras de una tumba son hermosas. No te ve como un enemigo. Te ve como un rezagado a un canto que lleva mucho tiempo sonando, y te hace sitio en el verso.",
+    "actions": {
+      "The Waking Hymn": {
+        "name": "El Himno del Despertar"
+      },
+      "Hymn-Fire": {
+        "name": "Fuego de Himno"
+      }
+    }
   },
   "hollow-seraph": {
     "name": "Serafín Hueco",
-    "flavorText": "Conservó la armadura y la postura y la espada y perdió todo aquello para lo que la espada servía. El rostro dentro del yelmo es una lisa ausencia con el indicio de dónde solían estar las facciones. Guarda una cosa que ya no necesita guarda, contra una amenaza que ya no sabe nombrar, y te abatirá por acercarte por una lealtad que ha sobrevivido a su dios, su causa y su mente."
+    "flavorText": "Conservó la armadura y la postura y la espada y perdió todo aquello para lo que la espada servía. El rostro dentro del yelmo es una lisa ausencia con el indicio de dónde solían estar las facciones. Guarda una cosa que ya no necesita guarda, contra una amenaza que ya no sabe nombrar, y te abatirá por acercarte por una lealtad que ha sobrevivido a su dios, su causa y su mente.",
+    "actions": {
+      "Sword-Forms": {
+        "name": "Formas de Espada"
+      },
+      "Cold-Light Blade": {
+        "name": "Hoja de Luz Fría"
+      }
+    }
   },
   "cycle-shepherd": {
     "name": "Pastor del Ciclo",
-    "flavorText": "Alto y encorvado, una cosa con capucha y un cayado de pastor de hueso gris, conduce a los muertos de vuelta a la puerta y a la puerta de vuelta a los muertos. No te odia. Simplemente no concibe dejar que algo siga acabado: esa es la única crueldad para la que fue construido sin la capacidad de reconocerla. Toda alma que ha pastoreado le ha suplicado, tarde o temprano, que pare."
+    "flavorText": "Alto y encorvado, una cosa con capucha y un cayado de pastor de hueso gris, conduce a los muertos de vuelta a la puerta y a la puerta de vuelta a los muertos. No te odia. Simplemente no concibe dejar que algo siga acabado: esa es la única crueldad para la que fue construido sin la capacidad de reconocerla. Toda alma que ha pastoreado le ha suplicado, tarde o temprano, que pare.",
+    "actions": {
+      "Call the Cycle": {
+        "name": "Invocar el Ciclo"
+      },
+      "Soul-Hook": {
+        "name": "Garfio de Almas"
+      }
+    }
   },
   "deathless-penitent": {
     "name": "Penitente Sin Muerte",
-    "flavorText": "Lleva arrodillado aquí tanto tiempo que el suelo se ha gastado para encajar sus rodillas. Cada vez que un peregrino anterior a ti lo abatió, se alzó de nuevo, le dio las gracias y reanudó la plegaria. Las cicatrices no se acumulan; el ciclo lo mantiene nuevo. Es la cosa más piadosa del Despertar del Dios y la más condenada, y ya no sabe distinguir las dos."
+    "flavorText": "Lleva arrodillado aquí tanto tiempo que el suelo se ha gastado para encajar sus rodillas. Cada vez que un peregrino anterior a ti lo abatió, se alzó de nuevo, le dio las gracias y reanudó la plegaria. Las cicatrices no se acumulan; el ciclo lo mantiene nuevo. Es la cosa más piadosa del Despertar del Dios y la más condenada, y ya no sabe distinguir las dos.",
+    "actions": {
+      "Penitent's Flail": {
+        "name": "Mayal del Penitente"
+      },
+      "The Cycle Reknits": {
+        "name": "El Ciclo se Recose"
+      }
+    }
   },
   "godsblood-welter": {
     "name": "Marejada de Sangre Divina",
-    "flavorText": "Cuando un dios muere, la sangre no deja de ser divina: solo deja de ser obedecida. Esto es una charca de ella, vuelta lenta y hambrienta y tenue, horriblemente radiante, arrastrándose por el suelo del Despertar del Dios hacia todo lo aún cálido. Recuerda haber sido parte de algo vasto. Intenta, del único modo que le queda, meterte dentro de ese recuerdo."
+    "flavorText": "Cuando un dios muere, la sangre no deja de ser divina: solo deja de ser obedecida. Esto es una charca de ella, vuelta lenta y hambrienta y tenue, horriblemente radiante, arrastrándose por el suelo del Despertar del Dios hacia todo lo aún cálido. Recuerda haber sido parte de algo vasto. Intenta, del único modo que le queda, meterte dentro de ese recuerdo.",
+    "actions": {
+      "Leaching Ichor": {
+        "name": "Icor Lixiviante"
+      },
+      "Dissolving Pseudopod": {
+        "name": "Pseudópodo Disolvente"
+      }
+    }
   },
   "apostle-of-stillness": {
     "name": "Apóstol de la Quietud",
-    "flavorText": "No porta arma alguna, solo un rostro aquietado y un dedo alzado para siempre a sus labios. Donde estaban sus ojos hay dos monedas de luz inmóvil. Ha silenciado congregaciones, coros, ciudades enteras de muertos que gritaban, y nunca una vez alzó la voz para hacerlo. El silencio que ofrece es real, y total, y no entiende por qué cualquiera huye de él."
+    "flavorText": "No porta arma alguna, solo un rostro aquietado y un dedo alzado para siempre a sus labios. Donde estaban sus ojos hay dos monedas de luz inmóvil. Ha silenciado congregaciones, coros, ciudades enteras de muertos que gritaban, y nunca una vez alzó la voz para hacerlo. El silencio que ofrece es real, y total, y no entiende por qué cualquiera huye de él.",
+    "actions": {
+      "Be Still and Hear": {
+        "name": "Calla y Escucha"
+      },
+      "Radiant Judgement": {
+        "name": "Juicio Radiante"
+      }
+    }
   },
   "starflensed-mawn": {
     "name": "Fauce Desollada de Estrellas",
-    "flavorText": "Las estrellas también mueren cuando lo hace un dios. A esta la desollaron de su sitio en el firmamento y cayó aquí, a la oscuridad bajo la oscuridad, y la caída no la mató pero sí deshizo la parte que sabía ser una estrella. Lo que queda es un agujero anillado de luz y dientes, y siempre, siempre se alimenta, y nunca una vez ha estado lleno."
+    "flavorText": "Las estrellas también mueren cuando lo hace un dios. A esta la desollaron de su sitio en el firmamento y cayó aquí, a la oscuridad bajo la oscuridad, y la caída no la mató pero sí deshizo la parte que sabía ser una estrella. Lo que queda es un agujero anillado de luz y dientes, y siempre, siempre se alimenta, y nunca una vez ha estado lleno.",
+    "actions": {
+      "Searing Flare": {
+        "name": "Llamarada Abrasadora"
+      },
+      "Devour": {
+        "name": "Devorar"
+      },
+      "Rending Maw": {
+        "name": "Fauce Desgarradora"
+      }
+    }
   },
   "fallen-archon": {
     "name": "Arconte Caído",
-    "flavorText": "Lideró la última guerra del dios y la perdió, y la derrota quemó al capitán y lo sacó de la armadura sin dejar jamás que la armadura cayera. Hombreras del tamaño de escudos, un yelmo con dos rendijas de luz fría, un tabardo cuyo blasón se ha vuelto hollín. Aún sostiene la línea en el umbral del Despertar del Dios, por órdenes que nadie vivo recuerda haber dado, contra un enemigo ante el que hace mucho dejó de poder perder salvo ante ti."
+    "flavorText": "Lideró la última guerra del dios y la perdió, y la derrota quemó al capitán y lo sacó de la armadura sin dejar jamás que la armadura cayera. Hombreras del tamaño de escudos, un yelmo con dos rendijas de luz fría, un tabardo cuyo blasón se ha vuelto hollín. Aún sostiene la línea en el umbral del Despertar del Dios, por órdenes que nadie vivo recuerda haber dado, contra un enemigo ante el que hace mucho dejó de poder perder salvo ante ti.",
+    "actions": {
+      "Judgement-Forms": {
+        "name": "Formas del Juicio"
+      },
+      "Greatsword of the Last Host": {
+        "name": "Mandoble de la Última Hueste"
+      }
+    }
   },
   "hollow-dawn": {
     "name": "Aurelach, el Alba Hueca",
-    "flavorText": "Fue un dios de las auroras, del instante en que la oscuridad se rompe y al mundo se le concede otra vuelta. Luego murió, como mueren los dioses, y no pudo soportar la oscuridad que su muerte había dejado entrar, así que rompió la puerta entre el fin y el principio y se encajó en la herida, y ahora nada termina. Cada alma que ha muerto alguna vez ha muerto en él y ha sido vuelta y devuelta, tú entre ellas, más veces de las que has vivido. Es luminoso y vasto e indeciblemente cansado, y ha estado esperando a que una de sus almas vueltas escale todo el ciclo de vuelta a su trono. Espera a que lo hagas parar. Peleará contigo con todo lo que tiene para impedirte hacer la única cosa por la que ha rezado desde la mañana en que no pudo soltar."
+    "flavorText": "Fue un dios de las auroras, del instante en que la oscuridad se rompe y al mundo se le concede otra vuelta. Luego murió, como mueren los dioses, y no pudo soportar la oscuridad que su muerte había dejado entrar, así que rompió la puerta entre el fin y el principio y se encajó en la herida, y ahora nada termina. Cada alma que ha muerto alguna vez ha muerto en él y ha sido vuelta y devuelta, tú entre ellas, más veces de las que has vivido. Es luminoso y vasto e indeciblemente cansado, y ha estado esperando a que una de sus almas vueltas escale todo el ciclo de vuelta a su trono. Espera a que lo hagas parar. Peleará contigo con todo lo que tiene para impedirte hacer la única cosa por la que ha rezado desde la mañana en que no pudo soltar.",
+    "actions": {
+      "Be Still, the Dawn Commands": {
+        "name": "Calla, el Alba lo Ordena"
+      },
+      "A Second Dawn": {
+        "name": "Un Segundo Amanecer"
+      },
+      "The False Mornings": {
+        "name": "Las Mañanas Falsas"
+      },
+      "The Breaking of Morning": {
+        "name": "El Romper de la Mañana"
+      },
+      "Blade of the First Morning": {
+        "name": "Hoja de la Primera Mañana"
+      }
+    }
   },
   "bugbear-headsman": {
     "name": "Verdugo Osgo",
-    "flavorText": "El botín es suyo, y el botín son sobre todo los dientes de otros hombres. Ha hecho este trabajo el tiempo suficiente para aburrirse de él… hasta el momento en que lo haces sangrar, y entonces hay en él una honestidad breve y total que el mazo empeora."
+    "flavorText": "El botín es suyo, y el botín son sobre todo los dientes de otros hombres. Ha hecho este trabajo el tiempo suficiente para aburrirse de él… hasta el momento en que lo haces sangrar, y entonces hay en él una honestidad breve y total que el mazo empeora.",
+    "actions": {
+      "Spiked Maul": {
+        "name": "Mazo con Púas"
+      }
+    }
   },
   "hobgoblin-drillmaster": {
     "name": "Instructor Trasgo",
-    "flavorText": "Media armadura recuperada pulida a un brillo que ningún carroñero mantiene. Ha adiestrado levas toda su corta vida violenta y trata al goblin a su codo como una herramienta y a ti como un problema de disciplina. Ambos se resuelven igual."
+    "flavorText": "Media armadura recuperada pulida a un brillo que ningún carroñero mantiene. Ha adiestrado levas toda su corta vida violenta y trata al goblin a su codo como una herramienta y a ti como un problema de disciplina. Ambos se resuelven igual.",
+    "actions": {
+      "Drillmaster's Bark": {
+        "name": "Voz del Instructor"
+      },
+      "Drilled Longsword": {
+        "name": "Espada Larga Adiestrada"
+      }
+    }
   },
   "imp-needler": {
     "name": "Diablillo Aguijoneador",
-    "flavorText": "Un palmo de malicia roja con una púa en la cola y ojo para quién manda de verdad, lo cual, en su sopesada opinión, es él mismo. El trasgo cobra un sueldo. El diablillo va a su antojo."
+    "flavorText": "Un palmo de malicia roja con una púa en la cola y ojo para quién manda de verdad, lo cual, en su sopesada opinión, es él mismo. El trasgo cobra un sueldo. El diablillo va a su antojo.",
+    "actions": {
+      "Barbed Venom": {
+        "name": "Veneno Dentado"
+      },
+      "Hellish Bolt": {
+        "name": "Descarga Infernal"
+      }
+    }
   },
   "gallows-wight": {
     "name": "Espectro de la Horca",
-    "flavorText": "Dos cayeron en este pozo el mismo mal día y solo trepó odio suficiente para uno de ellos. Lleva el rostro mejor conservado sobre el propio y conserva la cuerda, según la teoría nada irrazonable de que lo que funcionó una vez funcionará de nuevo."
+    "flavorText": "Dos cayeron en este pozo el mismo mal día y solo trepó odio suficiente para uno de ellos. Lleva el rostro mejor conservado sobre el propio y conserva la cuerda, según la teoría nada irrazonable de que lo que funcionó una vez funcionará de nuevo.",
+    "actions": {
+      "Grave-Grip": {
+        "name": "Garra Sepulcral"
+      },
+      "Strangling Chain": {
+        "name": "Cadena Estranguladora"
+      }
+    }
   },
   "cowled-magus": {
     "name": "Mago Encapuchado",
-    "flavorText": "Cuello plateado, máscara de espejo, y un temperamento atado a una correa administrativa muy corta. Genuinamente habría preferido procesarte. Ya que insistes, dejará de tener cuidado con ello, que es lo más peligroso que un Mago Encapuchado puede decidir hacer."
+    "flavorText": "Cuello plateado, máscara de espejo, y un temperamento atado a una correa administrativa muy corta. Genuinamente habría preferido procesarte. Ya que insistes, dejará de tener cuidado con ello, que es lo más peligroso que un Mago Encapuchado puede decidir hacer.",
+    "actions": {
+      "Arcane Bolt": {
+        "name": "Descarga Arcana"
+      }
+    }
   },
   "cowled-houndmaster": {
     "name": "Sabuesero Encapuchado",
-    "flavorText": "Los Magos Encapuchados guardan cosas peores que prisioneros en sus perreras, y alguien tiene que alimentarlas. Ha dejado de estremecerse ante la oscuridad de su correa; la oscuridad ha dejado, casi del todo, de morderlo. Todo lo que vaya más allá es problema tuyo."
+    "flavorText": "Los Magos Encapuchados guardan cosas peores que prisioneros en sus perreras, y alguien tiene que alimentarlas. Ha dejado de estremecerse ante la oscuridad de su correa; la oscuridad ha dejado, casi del todo, de morderlo. Todo lo que vaya más allá es problema tuyo.",
+    "actions": {
+      "Loose the Pack": {
+        "name": "Soltar la Jauría"
+      },
+      "Lash of Binding": {
+        "name": "Látigo de Atadura"
+      }
+    }
   },
   "slaver-overseer": {
     "name": "Sobrestante Esclavista",
-    "flavorText": "Ha supervisado fosos desde Calimport hasta los muelles de Athkatla y ha aprendido que la cadena hace la mitad del trabajo y el MIEDO a la cadena la otra mitad. Él y el capitán cobran de amos distintos y ninguno ha cuestionado jamás el arreglo en un día de trabajo."
+    "flavorText": "Ha supervisado fosos desde Calimport hasta los muelles de Athkatla y ha aprendido que la cadena hace la mitad del trabajo y el MIEDO a la cadena la otra mitad. Él y el capitán cobran de amos distintos y ninguno ha cuestionado jamás el arreglo en un día de trabajo.",
+    "actions": {
+      "Crack the Lash": {
+        "name": "Restallar el Látigo"
+      },
+      "Two-Handed Mace": {
+        "name": "Maza a Dos Manos"
+      }
+    }
   },
   "warden-lictor": {
     "name": "Líctor Guardián",
-    "flavorText": "Los líctores llevan la autoridad de los Magos Encapuchados a los bloques de celdas, y la autoridad es sobre todo esto: la certeza de que, seas lo que seas, pueden hacerte menos de ello. Ha deshecho cosas más valientes que tú en esta galería y ha tachado sus nombres de una página ya abierta en el siguiente."
+    "flavorText": "Los líctores llevan la autoridad de los Magos Encapuchados a los bloques de celdas, y la autoridad es sobre todo esto: la certeza de que, seas lo que seas, pueden hacerte menos de ello. Ha deshecho cosas más valientes que tú en esta galería y ha tachado sus nombres de una página ya abierta en el siguiente.",
+    "actions": {
+      "Suppression Brand": {
+        "name": "Marca de Supresión"
+      },
+      "Dispelling Lance": {
+        "name": "Lanza Disipadora"
+      }
+    }
   },
   "threadbare-penitent": {
     "name": "Penitente Raído",
-    "flavorText": "Un alma que ha dado tantas vueltas a la rueda que no queda nada de ninguna vida: ni rostro, ni nombre, solo la postura de la penitencia y el hábito de la obediencia. El Telar los guarda de a miles como un molino guarda la paja: útiles solo en masa, barridos y gastados sin contarlos."
+    "flavorText": "Un alma que ha dado tantas vueltas a la rueda que no queda nada de ninguna vida: ni rostro, ni nombre, solo la postura de la penitencia y el hábito de la obediencia. El Telar los guarda de a miles como un molino guarda la paja: útiles solo en masa, barridos y gastados sin contarlos.",
+    "actions": {
+      "Penance": {
+        "name": "Penitencia"
+      },
+      "Worn Hands": {
+        "name": "Manos Gastadas"
+      }
+    }
   },
   "cycle-revenant": {
     "name": "Aparecido del Ciclo",
-    "flavorText": "Lleva un rostro que casi reconoces, porque es uno que solías tener. El Telar guarda cada vida que un alma ha gastado, archivada y fría, y cuando un alma intenta bajarse de la rueda el Telar envía arriba a los viejos yoes para traerla a casa. No están enfadados. Solo te quieren de vuelta en la fila, como a ellos los devolvieron, vida tras vida tras vida."
+    "flavorText": "Lleva un rostro que casi reconoces, porque es uno que solías tener. El Telar guarda cada vida que un alma ha gastado, archivada y fría, y cuando un alma intenta bajarse de la rueda el Telar envía arriba a los viejos yoes para traerla a casa. No están enfadados. Solo te quieren de vuelta en la fila, como a ellos los devolvieron, vida tras vida tras vida.",
+    "actions": {
+      "Grave-Cold Grasp": {
+        "name": "Garra Fría como la Tumba"
+      }
+    }
   },
   "fate-spinner": {
     "name": "Hilandera del Destino",
-    "flavorText": "De muchas manos y paciente, se sienta al borde del Telar donde entran los hilos, clasificando vidas como una pescadora clasifica la red. Ha hilado tu hilo antes: cada vez que moriste, fue aquí donde te midieron y te devolvieron. No entiende por qué caminas en sentido contrario por la fila, solo que la trama debe mantenerse, y tú eres un punto suelto."
+    "flavorText": "De muchas manos y paciente, se sienta al borde del Telar donde entran los hilos, clasificando vidas como una pescadora clasifica la red. Ha hilado tu hilo antes: cada vez que moriste, fue aquí donde te midieron y te devolvieron. No entiende por qué caminas en sentido contrario por la fila, solo que la trama debe mantenerse, y tú eres un punto suelto.",
+    "actions": {
+      "Binding Skein": {
+        "name": "Madeja Atadora"
+      },
+      "Thread-Lash": {
+        "name": "Latigazo de Hilo"
+      }
+    }
   },
   "loom-apostle": {
     "name": "Apóstol del Telar",
-    "flavorText": "Encapuchado, sin rostro, las manos teñidas hasta la muñeca con el tinte que el Telar usa para marcar una vida acabada. Atiende la rueda como un sacristán atiende una gran máquina que fue hecho para amar y a la que nunca se le enseñó a cuestionar. Para el apóstol, tu muerte no es un final y nunca lo fue: solo un hilo cortado, anudado y devuelto a la trama. Remendará a los suyos todo el día, y nunca una vez se preguntará por qué sangran."
+    "flavorText": "Encapuchado, sin rostro, las manos teñidas hasta la muñeca con el tinte que el Telar usa para marcar una vida acabada. Atiende la rueda como un sacristán atiende una gran máquina que fue hecho para amar y a la que nunca se le enseñó a cuestionar. Para el apóstol, tu muerte no es un final y nunca lo fue: solo un hilo cortado, anudado y devuelto a la trama. Remendará a los suyos todo el día, y nunca una vez se preguntará por qué sangran.",
+    "actions": {
+      "Re-weave the Thread": {
+        "name": "Retejer el Hilo"
+      },
+      "Censer of Pale Fire": {
+        "name": "Incensario de Fuego Pálido"
+      }
+    }
   },
   "karmic-echo": {
     "name": "Eco Kármico",
-    "flavorText": "No tanto una criatura como una onda estacionaria: la suma del libro de cuentas entero de un alma, cada vida que vivió y perdió, plegada sobre sí misma hasta proyectar una sombra. El Telar no tanto lo envía como lo deja suceder: el peso kármico de un alma que se niega a yacer quieta, vuelto contra quien la carga. Es, en el sentido más literal, tu propio pasado intentando retenerte."
+    "flavorText": "No tanto una criatura como una onda estacionaria: la suma del libro de cuentas entero de un alma, cada vida que vivió y perdió, plegada sobre sí misma hasta proyectar una sombra. El Telar no tanto lo envía como lo deja suceder: el peso kármico de un alma que se niega a yacer quieta, vuelto contra quien la carga. Es, en el sentido más literal, tu propio pasado intentando retenerte.",
+    "actions": {
+      "Weight of Lives": {
+        "name": "Peso de las Vidas"
+      },
+      "Recursion": {
+        "name": "Recursión"
+      }
+    }
   },
   "the-unwound": {
     "name": "El Desovillado",
-    "flavorText": "En otro tiempo un alma que quería exactamente lo que tú quieres: fuera de la rueda, libre del giro. Obtuvo su deseo. Sin el hilo que le diera forma, no ascendió; se desovilló, como hace un reloj cuando el muelle se suelta de golpe. Lo que queda corre las salas del Telar al azar, golpeando todo lo que aún se sostenga, odiando la integridad que ya no recuerda haber tenido. El Telar no lo caza. No necesita hacerlo. Es la advertencia."
+    "flavorText": "En otro tiempo un alma que quería exactamente lo que tú quieres: fuera de la rueda, libre del giro. Obtuvo su deseo. Sin el hilo que le diera forma, no ascendió; se desovilló, como hace un reloj cuando el muelle se suelta de golpe. Lo que queda corre las salas del Telar al azar, golpeando todo lo que aún se sostenga, odiando la integridad que ya no recuerda haber tenido. El Telar no lo caza. No necesita hacerlo. Es la advertencia.",
+    "actions": {
+      "Come Apart": {
+        "name": "Deshacerse"
+      },
+      "Unraveling Strike": {
+        "name": "Golpe Deshilador"
+      }
+    }
   },
   "axle-warden": {
     "name": "Guardián del Eje",
-    "flavorText": "Vasto, lento, y construido —no nacido— para una sola tarea: mantener la rueda girando pase lo que pase sobre ella. Donde una cosa tiene manos él tiene abrazaderas; donde tiene un rostro tiene la lisa esfera de latón que marca cuántas almas vencen. Nunca ha dejado de trabajar y nunca se pretendió que lo hiciera. La Madre del Telar lo plantó en el eje antes del primer giro, y ha devanado a los muertos de vuelta a los vivos cada instante desde entonces."
+    "flavorText": "Vasto, lento, y construido —no nacido— para una sola tarea: mantener la rueda girando pase lo que pase sobre ella. Donde una cosa tiene manos él tiene abrazaderas; donde tiene un rostro tiene la lisa esfera de latón que marca cuántas almas vencen. Nunca ha dejado de trabajar y nunca se pretendió que lo hiciera. La Madre del Telar lo plantó en el eje antes del primer giro, y ha devanado a los muertos de vuelta a los vivos cada instante desde entonces.",
+    "actions": {
+      "Turn the Wheel": {
+        "name": "Girar la Rueda"
+      },
+      "Wheel-Breaker Maul": {
+        "name": "Mazo Rompe-Ruedas"
+      }
+    }
   },
   "the-unmade": {
     "name": "El Deshecho",
-    "flavorText": "No tiene trono, porque un trono es algo hecho y él nunca fue hecho. Pasado el cadáver del falso dios —el que la superficie llamó el Despertar del Dios, el que gobernaba el ciclo y estaba, todo el tiempo, aterrado de lo que lo ponía a girar—, solo hay la rueda, y en el centro quieto de la rueda, una forma que se resuelve en atención cuanto más fracasas en apartar la vista. Es el eje sobre el que toda alma ha girado desde la primera muerte. No es tu enemigo. Es la razón de que jamás hubiera enemigos, y vidas, y tú. Rómpelo, y la rueda se detiene para todos, para siempre. Conviértete en él, y la rueda sigue girando, con tu mano en el centro. No hay tercer camino fuera de este piso."
+    "flavorText": "No tiene trono, porque un trono es algo hecho y él nunca fue hecho. Pasado el cadáver del falso dios —el que la superficie llamó el Despertar del Dios, el que gobernaba el ciclo y estaba, todo el tiempo, aterrado de lo que lo ponía a girar—, solo hay la rueda, y en el centro quieto de la rueda, una forma que se resuelve en atención cuanto más fracasas en apartar la vista. Es el eje sobre el que toda alma ha girado desde la primera muerte. No es tu enemigo. Es la razón de que jamás hubiera enemigos, y vidas, y tú. Rómpelo, y la rueda se detiene para todos, para siempre. Conviértete en él, y la rueda sigue girando, con tu mano en el centro. No hay tercer camino fuera de este piso.",
+    "actions": {
+      "Unmaking": {
+        "name": "Deshacer"
+      },
+      "Set the Anchor": {
+        "name": "Fijar el Ancla"
+      },
+      "The First Turning": {
+        "name": "El Primer Giro"
+      },
+      "Hand That Turns the Wheel": {
+        "name": "Mano que Gira la Rueda"
+      }
+    }
   },
   "drowned-acolyte": {
     "name": "Acólito Ahogado",
-    "flavorText": "Murió inclinado sobre un pupitre de lectura cuando el agua oscura subió por el suelo del Archivo, y aún no ha terminado el pasaje que copiaba. No queda nombre bajo la hinchazón: solo la postura del estudio y el hábito de la obediencia a una página. El Custodio los guarda por estanterías, como un pueblo ahogado guarda a sus muertos: en hileras, en su sitio, y nunca contados."
+    "flavorText": "Murió inclinado sobre un pupitre de lectura cuando el agua oscura subió por el suelo del Archivo, y aún no ha terminado el pasaje que copiaba. No queda nombre bajo la hinchazón: solo la postura del estudio y el hábito de la obediencia a una página. El Custodio los guarda por estanterías, como un pueblo ahogado guarda a sus muertos: en hileras, en su sitio, y nunca contados.",
+    "actions": {
+      "Sodden Diligence": {
+        "name": "Diligencia Empapada"
+      },
+      "Waterlogged Grasp": {
+        "name": "Garra Anegada"
+      }
+    }
   },
   "page-wraith": {
     "name": "Espectro de Página",
-    "flavorText": "Sueltas de sus encuadernaciones cuando el agua hinchó los lomos y los reventó, las páginas no se pudrieron: derivaron, y derivando en la oscuridad el tiempo suficiente adquirieron una suerte de hambre que es casi una suerte de lectura. Odian lo que está entero como los desencuadernados odian a los encuadernados. Solo quieren deshacerse contigo y aprender, página a página, exactamente cómo te armaron."
+    "flavorText": "Sueltas de sus encuadernaciones cuando el agua hinchó los lomos y los reventó, las páginas no se pudrieron: derivaron, y derivando en la oscuridad el tiempo suficiente adquirieron una suerte de hambre que es casi una suerte de lectura. Odian lo que está entero como los desencuadernados odian a los encuadernados. Solo quieren deshacerse contigo y aprender, página a página, exactamente cómo te armaron.",
+    "actions": {
+      "Reading Flock": {
+        "name": "Bandada Lectora"
+      }
+    }
   },
   "ink-drowned-scholar": {
     "name": "Erudito Ahogado en Tinta",
-    "flavorText": "Quería saberlo todo, y en los estantes anegados donde hundieron los libros prohibidos para apartarlos del mundo casi lo logró… y el saber lo deshizo, lo corrió junto con la tinta que sangraba en los márgenes hasta que erudito y texto fueron una sola agua negra. No habla. Escribe, en tu interior, la única frase que le queda: que algunas cosas solo se aprenden deshaciéndose, y que adoraría la compañía."
+    "flavorText": "Quería saberlo todo, y en los estantes anegados donde hundieron los libros prohibidos para apartarlos del mundo casi lo logró… y el saber lo deshizo, lo corrió junto con la tinta que sangraba en los márgenes hasta que erudito y texto fueron una sola agua negra. No habla. Escribe, en tu interior, la única frase que le queda: que algunas cosas solo se aprenden deshaciéndose, y que adoraría la compañía.",
+    "actions": {
+      "Floodwriting": {
+        "name": "Escritura de Riada"
+      },
+      "Dissolving Lash": {
+        "name": "Latigazo Disolvente"
+      }
+    }
   },
   "brine-archivist": {
     "name": "Archivero de Salmuera",
-    "flavorText": "Custodiaba los estantes más bajos, donde los libros demasiado peligrosos para leer se encadenaban y hundían y dejaban a la oscuridad, y los custodió durante el ahogamiento y después, porque custodiar es el único verbo que le queda. Para el archivero nada se pierde jamás: solo se mal-archiva, solo aguarda a ser devuelto a su sitio. Remendará a los suyos ahogados todo el día y nunca una vez se preguntará por qué siguen rompiéndose, porque una cosa que está siendo leída, después de todo, solo está siendo usada."
+    "flavorText": "Custodiaba los estantes más bajos, donde los libros demasiado peligrosos para leer se encadenaban y hundían y dejaban a la oscuridad, y los custodió durante el ahogamiento y después, porque custodiar es el único verbo que le queda. Para el archivero nada se pierde jamás: solo se mal-archiva, solo aguarda a ser devuelto a su sitio. Remendará a los suyos ahogados todo el día y nunca una vez se preguntará por qué siguen rompiéndose, porque una cosa que está siendo leída, después de todo, solo está siendo usada.",
+    "actions": {
+      "Re-Shelve the Broken": {
+        "name": "Reubicar a los Rotos"
+      },
+      "Catalogue-Chain": {
+        "name": "Cadena de Catálogo"
+      }
+    }
   },
   "drowned-mnemonic": {
     "name": "Mnemónico Ahogado",
-    "flavorText": "No tanto una criatura como un residuo: la memoria de una mente, conservada después de que la mente se fuera, como una casa ahogada conserva la forma del agua que la llenó. El Archivo no desperdicia nada que se haya leído: despoja del saber a los muertos y lo archiva, y los recuerdos más viejos, demasiado tiempo sin amarras, se alzan y derivan y ahogan a los vivos en oscuridad recordada. Encontrarlo es ser leído por todo lo que él leyó, todo a la vez, hasta que olvidas cuál de las vidas que abarrotan tu cráneo es la tuya."
+    "flavorText": "No tanto una criatura como un residuo: la memoria de una mente, conservada después de que la mente se fuera, como una casa ahogada conserva la forma del agua que la llenó. El Archivo no desperdicia nada que se haya leído: despoja del saber a los muertos y lo archiva, y los recuerdos más viejos, demasiado tiempo sin amarras, se alzan y derivan y ahogan a los vivos en oscuridad recordada. Encontrarlo es ser leído por todo lo que él leyó, todo a la vez, hasta que olvidas cuál de las vidas que abarrotan tu cráneo es la tuya.",
+    "actions": {
+      "Total Recall": {
+        "name": "Recuperación Total"
+      },
+      "Marginal Note": {
+        "name": "Nota al Margen"
+      }
+    }
   },
   "the-unindexed": {
     "name": "El Sin Catalogar",
-    "flavorText": "Bajó a los estantes anegados por la misma razón por la que tú los atraviesas: había algo abajo digno de saberse, guardado aquí por el que ahogó la biblioteca entera antes que dejarlo salir. Leyó demasiado lejos. El saber no cupo en una sola forma, y así la forma falló: sin archivar, sin catalogar, borrado de toda lista que el Archivo guarda. Lo que queda corre las salas inundadas odiando todo lo aún entero y ordenado, porque el orden es lo que no pudo conservar, y la miseria adora la compañía."
+    "flavorText": "Bajó a los estantes anegados por la misma razón por la que tú los atraviesas: había algo abajo digno de saberse, guardado aquí por el que ahogó la biblioteca entera antes que dejarlo salir. Leyó demasiado lejos. El saber no cupo en una sola forma, y así la forma falló: sin archivar, sin catalogar, borrado de toda lista que el Archivo guarda. Lo que queda corre las salas inundadas odiando todo lo aún entero y ordenado, porque el orden es lo que no pudo conservar, y la miseria adora la compañía.",
+    "actions": {
+      "Come Out of Order": {
+        "name": "Salir del Orden"
+      },
+      "Errata": {
+        "name": "Errata"
+      }
+    }
   },
   "tidebound-codex": {
     "name": "Códice Atado a la Marea",
-    "flavorText": "Atado a la puerta de los estantes prohibidos antes de que el agua llegara siquiera, fue construido —no nacido— para una sola tarea: no dejar salir nada. El ahogamiento no lo liberó; solo lo hizo más pesado. Donde tiene manos tiene cierres; donde tiene un rostro tiene un gran candado de latón que marca, en una escritura que ningún ojo vivo debería descifrar, la cuenta de lo que sigue archivado y debe permanecer archivado. Ha custodiado el saber más hondo del que ahogó este lugar desde antes de que se apagaran las luces, y no sabe, ni le importaría, que las luces no van a volver jamás."
+    "flavorText": "Atado a la puerta de los estantes prohibidos antes de que el agua llegara siquiera, fue construido —no nacido— para una sola tarea: no dejar salir nada. El ahogamiento no lo liberó; solo lo hizo más pesado. Donde tiene manos tiene cierres; donde tiene un rostro tiene un gran candado de latón que marca, en una escritura que ningún ojo vivo debería descifrar, la cuenta de lo que sigue archivado y debe permanecer archivado. Ha custodiado el saber más hondo del que ahogó este lugar desde antes de que se apagaran las luces, y no sabe, ni le importaría, que las luces no van a volver jamás.",
+    "actions": {
+      "Shed the Loose Leaves": {
+        "name": "Desprender las Hojas Sueltas"
+      },
+      "Chained Folio": {
+        "name": "Folio Encadenado"
+      }
+    }
   },
   "drowned-custodian": {
     "name": "El Custodio Ahogado",
-    "flavorText": "Cuando llegó aviso de que los enemigos del captor estaban cerca, el Guardián de este lugar no huyó con los libros prohibidos ni los quemó. Abrió las compuertas y trajo el mar oscuro sobre toda la biblioteca, ahogando cada página peligrosa y a sí mismo con ellas, para que nada de lo que el captor había enterrado aquí pudiera leerse jamás en el mundo. El agua mantuvo su palabra. También conservó al Guardián, atado ahora a los estantes que asesinó, catalogando a los ahogados para siempre, sin terminar nunca, sin morir nunca, un guardián hecho de su propio último acto leal. No se alza a recibirte con ira. Se alza como sube una marea, cierta y lenta, y dice, con una voz llena de agua negra: «Eres la primera cosa que baja aquí en una era que aún tiene nombre. Dámelo. Te archivaré donde están archivados los demás, y serás conservado, y conservado, y nunca tendrás que escalar de nuevo. El camino de abajo lleva solo al que nos ahogó a los dos. Quédate quieto. Déjame cerrarte aquí, donde está en calma.»"
+    "flavorText": "Cuando llegó aviso de que los enemigos del captor estaban cerca, el Guardián de este lugar no huyó con los libros prohibidos ni los quemó. Abrió las compuertas y trajo el mar oscuro sobre toda la biblioteca, ahogando cada página peligrosa y a sí mismo con ellas, para que nada de lo que el captor había enterrado aquí pudiera leerse jamás en el mundo. El agua mantuvo su palabra. También conservó al Guardián, atado ahora a los estantes que asesinó, catalogando a los ahogados para siempre, sin terminar nunca, sin morir nunca, un guardián hecho de su propio último acto leal. No se alza a recibirte con ira. Se alza como sube una marea, cierta y lenta, y dice, con una voz llena de agua negra: «Eres la primera cosa que baja aquí en una era que aún tiene nombre. Dámelo. Te archivaré donde están archivados los demás, y serás conservado, y conservado, y nunca tendrás que escalar de nuevo. El camino de abajo lleva solo al que nos ahogó a los dos. Quédate quieto. Déjame cerrarte aquí, donde está en calma.»",
+    "actions": {
+      "Reading of the Stilled": {
+        "name": "Lectura de los Aquietados"
+      },
+      "Drink the Deep Back": {
+        "name": "Beber la Profundidad de Vuelta"
+      },
+      "Read One Up Off the Shelf": {
+        "name": "Leer a Uno del Estante"
+      },
+      "Tidal Surge": {
+        "name": "Marejada"
+      },
+      "Close the Volume": {
+        "name": "Cerrar el Volumen"
+      },
+      "Weight of Black Water": {
+        "name": "Peso del Agua Negra"
+      }
+    }
   },
   "ember-conscript": {
     "name": "Recluta de Brasa",
-    "flavorText": "Un soldado desgastado hasta casi nada salvo el hábito de la obediencia: el rostro vuelto escoria bajo el yelmo, las manos crecidas en torno a la empuñadura de una espada y un escudo que no ha soltado desde el día en que el fuego atravesó la línea. No sabe que la guerra ha terminado. Nadie que pudiera habérselo dicho sobrevivió para hacerlo, y de todos modos no se habría retirado bajo su palabra. Solo conoce la última orden que le dieron, y la cumple."
+    "flavorText": "Un soldado desgastado hasta casi nada salvo el hábito de la obediencia: el rostro vuelto escoria bajo el yelmo, las manos crecidas en torno a la empuñadura de una espada y un escudo que no ha soltado desde el día en que el fuego atravesó la línea. No sabe que la guerra ha terminado. Nadie que pudiera habérselo dicho sobrevivió para hacerlo, y de todos modos no se habría retirado bajo su palabra. Solo conoce la última orden que le dieron, y la cumple.",
+    "actions": {
+      "Drilled Cadence": {
+        "name": "Cadencia Adiestrada"
+      },
+      "Char-Edged Sword": {
+        "name": "Espada de Filo Carbonizado"
+      }
+    }
   },
   "cinderwake-hound": {
     "name": "Sabueso de Estela de Ceniza",
-    "flavorText": "Lo que fuera que lo criaron se le quemó hace mucho; lo que corre ahora los campos de ceniza es solo la forma de un sabueso de caza dibujada en rescoldo vivo, dejando chispas donde sus zarpas rompen la costra. Aún mantiene el viejo piquete: rodeando el flanco de la columna muerta, empujando a todo lo vivo de vuelta hacia las lanzas. No come. Solo conduce, y quema lo que no se deje conducir."
+    "flavorText": "Lo que fuera que lo criaron se le quemó hace mucho; lo que corre ahora los campos de ceniza es solo la forma de un sabueso de caza dibujada en rescoldo vivo, dejando chispas donde sus zarpas rompen la costra. Aún mantiene el viejo piquete: rodeando el flanco de la columna muerta, empujando a todo lo vivo de vuelta hacia las lanzas. No come. Solo conduce, y quema lo que no se deje conducir.",
+    "actions": {
+      "Ash-Lunge": {
+        "name": "Embestida de Ceniza"
+      }
+    }
   },
   "slagbound-legionary": {
     "name": "Legionario Atado a la Escoria",
-    "flavorText": "Cuando el fuego bajó por la línea, las compañías pesadas no rompieron filas; aguantaron, como adiestradas, y el calor las soldó donde estaban: hombrera a hombro, greba a espinilla, visera al rostro detrás. Lo que se alzó después es un hombre y su arnés sin costura entre ambos, marchando los mismos cincuenta metros de ceniza que ha marchado durante un siglo, inclinándose en una carga que ya sucedió."
+    "flavorText": "Cuando el fuego bajó por la línea, las compañías pesadas no rompieron filas; aguantaron, como adiestradas, y el calor las soldó donde estaban: hombrera a hombro, greba a espinilla, visera al rostro detrás. Lo que se alzó después es un hombre y su arnés sin costura entre ambos, marchando los mismos cincuenta metros de ceniza que ha marchado durante un siglo, inclinándose en una carga que ya sucedió.",
+    "actions": {
+      "Locked Advance": {
+        "name": "Avance Trabado"
+      },
+      "Fused Gauntlet": {
+        "name": "Guantelete Fundido"
+      }
+    }
   },
   "ashchoke-herald": {
     "name": "Heraldo de Ahogo de Ceniza",
-    "flavorText": "En otro tiempo llamaba al reclutamiento y formaba la línea; ahora no anuncia más que su propia llegada, una cosa con capucha que vadea a la cabeza del humo con un cayado de hierro frío en alto. La caída de ceniza no es clima. Es la hueste: cada soldado molido a polvo a lo largo del largo arder, llevado en volandas sobre la marcha como un estandarte que ha olvidado que alguna vez fue tela. Donde va el heraldo, llega la columna, y no puedes ver para combatirla."
+    "flavorText": "En otro tiempo llamaba al reclutamiento y formaba la línea; ahora no anuncia más que su propia llegada, una cosa con capucha que vadea a la cabeza del humo con un cayado de hierro frío en alto. La caída de ceniza no es clima. Es la hueste: cada soldado molido a polvo a lo largo del largo arder, llevado en volandas sobre la marcha como un estandarte que ha olvidado que alguna vez fue tela. Donde va el heraldo, llega la columna, y no puedes ver para combatirla.",
+    "actions": {
+      "Ashfall Veil": {
+        "name": "Velo de Ceniza"
+      },
+      "Iron Crook": {
+        "name": "Cayado de Hierro"
+      }
+    }
   },
   "gravesmoke-revenant": {
     "name": "Aparecido de Humo Sepulcral",
-    "flavorText": "No todo soldado de la marcha tomó el fuego limpio. Algunos solo lo respiraron, y ardieron sin llama, y se apagaron despacio a lo largo de años hasta que lo que quedó fue una voluta de humo de tumba con la forma aproximada de un hombre, demasiado fina para sostenerse en el frío viento de ceniza. Se aferra a los vivos porque los vivos están cálidos, y el calor es lo único que le da bordes. No es cruel. Solo tiene frío, del modo en que tiene frío una cosa que recuerda haber estado cálida y ya no puede estarlo."
+    "flavorText": "No todo soldado de la marcha tomó el fuego limpio. Algunos solo lo respiraron, y ardieron sin llama, y se apagaron despacio a lo largo de años hasta que lo que quedó fue una voluta de humo de tumba con la forma aproximada de un hombre, demasiado fina para sostenerse en el frío viento de ceniza. Se aferra a los vivos porque los vivos están cálidos, y el calor es lo único que le da bordes. No es cruel. Solo tiene frío, del modo en que tiene frío una cosa que recuerda haber estado cálida y ya no puede estarlo.",
+    "actions": {
+      "Smothering Grip": {
+        "name": "Garra Sofocante"
+      }
+    }
   },
   "pyre-chaplain": {
     "name": "Capellán de la Pira",
-    "flavorText": "Atendía las quemas: decía las palabras sobre cada pira, mantenía los fuegos honestos, despedía limpios a los muertos del ejército. Cuando la tormenta de fuego se llevó la marcha entera de una vez no quedó nadie a quien quemar y no hubo fin al arder, y el capellán simplemente siguió con su oficio, prendiendo a los caídos de vuelta a sus pies para una guerra que no terminará. No tanto pelea como mantiene a la congregación. El incensario es una idea tardía. El rito es el arma."
+    "flavorText": "Atendía las quemas: decía las palabras sobre cada pira, mantenía los fuegos honestos, despedía limpios a los muertos del ejército. Cuando la tormenta de fuego se llevó la marcha entera de una vez no quedó nadie a quien quemar y no hubo fin al arder, y el capellán simplemente siguió con su oficio, prendiendo a los caídos de vuelta a sus pies para una guerra que no terminará. No tanto pelea como mantiene a la congregación. El incensario es una idea tardía. El rito es el arma.",
+    "actions": {
+      "Rekindle the Fallen": {
+        "name": "Reavivar a los Caídos"
+      },
+      "Coal-Censer": {
+        "name": "Incensario de Brasas"
+      }
+    }
   },
   "slag-colossus": {
     "name": "Coloso de Escoria",
-    "flavorText": "Cuando el hierro fundido de los carros-fragua reventados corrió sobre las compañías apretadas no tanto las mató como las recogió: cien soldados fijados en una sola colada enfriándose, hombreras y puntas de lanza y rostros gritando aún medio visibles en la superficie como moscas en ámbar. Lo que se alzó de ello es una sola cosa montañosa que camina la marcha sobre piernas de muertos de guerra fundidos, y cuando necesita más soldados simplemente deja que parte de sí mismo se ponga en pie y pelee."
+    "flavorText": "Cuando el hierro fundido de los carros-fragua reventados corrió sobre las compañías apretadas no tanto las mató como las recogió: cien soldados fijados en una sola colada enfriándose, hombreras y puntas de lanza y rostros gritando aún medio visibles en la superficie como moscas en ámbar. Lo que se alzó de ello es una sola cosa montañosa que camina la marcha sobre piernas de muertos de guerra fundidos, y cuando necesita más soldados simplemente deja que parte de sí mismo se ponga en pie y pelee.",
+    "actions": {
+      "Reforge the Ranks": {
+        "name": "Reforjar las Filas"
+      },
+      "Siege-Fist": {
+        "name": "Puño de Asedio"
+      }
+    }
   },
   "ashen-marshal": {
     "name": "Dravok, el Mariscal Ceniciento",
-    "flavorText": "No hay trono en los campos de ceniza: un trono es para una guerra que tiene dónde terminar. Se yergue donde estaba la línea, en el centro de una marcha que no va a ninguna parte y nunca se detiene, una alta forma quemada en la ruina de un arnés de mariscal con el rango aún legible bajo el carbón. Convirtió a toda la hueste muerta en una columna el día en que el fuego acabó con todo menos con él, y la ha marchado por el mundo desde entonces, buscando al enemigo que hizo esto. Ha decidido que eres tú. «La orden era aguantar», dice, casi con bondad, mientras las filas se cierran a tu espalda. «Nadie retiró al ejército. Así que el ejército aguanta. Fórmate, o cae.»"
+    "flavorText": "No hay trono en los campos de ceniza: un trono es para una guerra que tiene dónde terminar. Se yergue donde estaba la línea, en el centro de una marcha que no va a ninguna parte y nunca se detiene, una alta forma quemada en la ruina de un arnés de mariscal con el rango aún legible bajo el carbón. Convirtió a toda la hueste muerta en una columna el día en que el fuego acabó con todo menos con él, y la ha marchado por el mundo desde entonces, buscando al enemigo que hizo esto. Ha decidido que eres tú. «La orden era aguantar», dice, casi con bondad, mientras las filas se cierran a tu espalda. «Nadie retiró al ejército. Así que el ejército aguanta. Fórmate, o cae.»",
+    "actions": {
+      "Hold the Line": {
+        "name": "Mantener la Línea"
+      },
+      "Marshalled Volley": {
+        "name": "Andanada Coordinada"
+      },
+      "Old Campaign": {
+        "name": "Vieja Campaña"
+      },
+      "Cinder-Marshal's Blade": {
+        "name": "Hoja del Mariscal de Ceniza"
+      }
+    }
   },
   "masque-wisp": {
     "name": "Fuego Fatuo de Mascarada",
-    "flavorText": "La corte fue un lugar de máscaras mucho antes de caer, y cuando cayó las máscaras no lo hicieron. Esta es la menor de ellas: un solo rostro pintado y el recuerdo de un cuerpo, derivando por el salón en ruinas en lenta procesión, sin inclinarse ante nadie, sosteniendo una hoja que no recuerda que le dieran. Lleva el rostro de alguien que deberías reconocer. Todos lo hacen, aquí. Esa es la primera mentira que la Corte te cuenta, y la más barata, y aun así te cuesta sangre."
+    "flavorText": "La corte fue un lugar de máscaras mucho antes de caer, y cuando cayó las máscaras no lo hicieron. Esta es la menor de ellas: un solo rostro pintado y el recuerdo de un cuerpo, derivando por el salón en ruinas en lenta procesión, sin inclinarse ante nadie, sosteniendo una hoja que no recuerda que le dieran. Lleva el rostro de alguien que deberías reconocer. Todos lo hacen, aquí. Esa es la primera mentira que la Corte te cuenta, y la más barata, y aun así te cuesta sangre.",
+    "actions": {
+      "Borrowed-Hand Blade": {
+        "name": "Hoja de Mano Prestada"
+      }
+    }
   },
   "mirror-double": {
     "name": "Doble de Espejo",
-    "flavorText": "Cada pared de la Corte estuvo en otro tiempo espejada, para que los enmascarados admiraran los rostros que habían robado. El cristal se agrietó pero no dejó de reflejar; ahora todo lo que pasa deja una copia atrás, una cosa plana y brillante que sale de la superficie vistiendo tu postura y portando tus peores hábitos como arma. No es listo. No necesita serlo. Solo tiene que ser exactamente tan bueno como tú, y no estar dispuesto a morir primero."
+    "flavorText": "Cada pared de la Corte estuvo en otro tiempo espejada, para que los enmascarados admiraran los rostros que habían robado. El cristal se agrietó pero no dejó de reflejar; ahora todo lo que pasa deja una copia atrás, una cosa plana y brillante que sale de la superficie vistiendo tu postura y portando tus peores hábitos como arma. No es listo. No necesita serlo. Solo tiene que ser exactamente tan bueno como tú, y no estar dispuesto a morir primero.",
+    "actions": {
+      "Your Own Stroke, Returned": {
+        "name": "Tu Propio Golpe, Devuelto"
+      }
+    }
   },
   "veilsworn-courtier": {
     "name": "Cortesano Jurado al Velo",
-    "flavorText": "Las altas máscaras de la Corte hacían su asesinato con modales —una reverencia, una palabra amable, una acusación llevada en el rostro como colorete— y los Jurados al Velo conservan la forma de ello mucho después de que quienes lo vestían sean polvo. No puede hacer un rostro nuevo; solo puede devolverte el tuyo, vestido como alguien a quien le debes algo, y dejar que tu propia conciencia haga la atadura que a él ya le falta voluntad para hacer. El estoque solo está ahí para terminar lo que la vergüenza empieza."
+    "flavorText": "Las altas máscaras de la Corte hacían su asesinato con modales —una reverencia, una palabra amable, una acusación llevada en el rostro como colorete— y los Jurados al Velo conservan la forma de ello mucho después de que quienes lo vestían sean polvo. No puede hacer un rostro nuevo; solo puede devolverte el tuyo, vestido como alguien a quien le debes algo, y dejar que tu propia conciencia haga la atadura que a él ya le falta voluntad para hacer. El estoque solo está ahí para terminar lo que la vergüenza empieza.",
+    "actions": {
+      "The Face You Wronged": {
+        "name": "El Rostro que Agraviaste"
+      },
+      "Court-Rapier": {
+        "name": "Estoque de Corte"
+      }
+    }
   },
   "glasswright-duelist": {
     "name": "Duelista Vidriero",
-    "flavorText": "Enseñaba a esgrimir a las jóvenes máscaras, en los años en que la Corte aún tenía años, y les enseñaba la única regla verdadera del lugar: nunca te enfrentes a nadie con honestidad, y nunca a solas. Ahora duela para siempre en un salón caído, y cuando se le acaban los padrinos los hace de los espejos: tu reflejo, sacado y armado contra ti, porque la hoja más segura para clavar en una cosa es la que ya sabe lanzar."
+    "flavorText": "Enseñaba a esgrimir a las jóvenes máscaras, en los años en que la Corte aún tenía años, y les enseñaba la única regla verdadera del lugar: nunca te enfrentes a nadie con honestidad, y nunca a solas. Ahora duela para siempre en un salón caído, y cuando se le acaban los padrinos los hace de los espejos: tu reflejo, sacado y armado contra ti, porque la hoja más segura para clavar en una cosa es la que ya sabe lanzar.",
+    "actions": {
+      "Second": {
+        "name": "Secundar"
+      },
+      "Mirror-Rapier": {
+        "name": "Estoque-Espejo"
+      }
+    }
   },
   "pale-favourite": {
     "name": "Favorito Pálido",
-    "flavorText": "Fue el preferido de alguien en otro tiempo, el rostro más adorado en una corte construida sobre la adoración, y nunca aprendió a sostenerse sobre nada más. Cuando la estima se agotó no tanto murió como se ahuecó, y ahora trabaja la ruina del único modo que sabe: hace que lo ames, o lo temas, o lo compadezcas —cualquier atención sirve— y se alimenta de poseerte. La máscara está en blanco porque ha gastado todos los rostros que robó. El tuyo tampoco le durará mucho."
+    "flavorText": "Fue el preferido de alguien en otro tiempo, el rostro más adorado en una corte construida sobre la adoración, y nunca aprendió a sostenerse sobre nada más. Cuando la estima se agotó no tanto murió como se ahuecó, y ahora trabaja la ruina del único modo que sabe: hace que lo ames, o lo temas, o lo compadezcas —cualquier atención sirve— y se alimenta de poseerte. La máscara está en blanco porque ha gastado todos los rostros que robó. El tuyo tampoco le durará mucho.",
+    "actions": {
+      "Favourite's Embrace": {
+        "name": "Abrazo del Favorito"
+      }
+    }
   },
   "masquerade-warden": {
     "name": "Guardián de la Mascarada",
-    "flavorText": "Anunciaba a los invitados y dirigía los bailes y se aseguraba de que ningún rostro del baile fuera nunca del todo el rostro de debajo… y cuando la Corte cayó simplemente mantuvo la fiesta en marcha, porque un maestro de ceremonias sin ceremonia no es nada, y no puede permitirse ser nada. La multitud que conjura es cada invitado que jamás anunció, todos falsos, todos estorbando. Se esconde en su propia fiesta. Pasarás el combate aprendiendo que casi todo en la sala es mentira, y que la única cosa que no lo es tiene un alcance muy largo."
+    "flavorText": "Anunciaba a los invitados y dirigía los bailes y se aseguraba de que ningún rostro del baile fuera nunca del todo el rostro de debajo… y cuando la Corte cayó simplemente mantuvo la fiesta en marcha, porque un maestro de ceremonias sin ceremonia no es nada, y no puede permitirse ser nada. La multitud que conjura es cada invitado que jamás anunció, todos falsos, todos estorbando. Se esconde en su propia fiesta. Pasarás el combate aprendiendo que casi todo en la sala es mentira, y que la única cosa que no lo es tiene un alcance muy largo.",
+    "actions": {
+      "Call the Revel": {
+        "name": "Convocar la Orgía"
+      },
+      "Revelmaster Cane": {
+        "name": "Bastón del Maestro de la Orgía"
+      }
+    }
   },
   "mask-chamberlain": {
     "name": "El Chambelán de las Máscaras",
-    "flavorText": "Una gran casa funciona gracias a alguien que nadie mira jamás: el mayordomo que conoce cada rostro y guarda cada secreto y nunca, jamás lleva una máscara propia, porque su poder está en que le confíen asignar las de los demás. El chambelán de la Corte es ese alguien, y la muerte no lo ha relevado del puesto. Mantiene la mascarada con personal sacado de los espejos y remendada a partir del protocolo, presidiendo un baile sin invitados, negándose por principio a admitir que la casa ha caído. Para él no eres un intruso. Eres una irregularidad en la disposición de los asientos, y se encargará de corregirte."
+    "flavorText": "Una gran casa funciona gracias a alguien que nadie mira jamás: el mayordomo que conoce cada rostro y guarda cada secreto y nunca, jamás lleva una máscara propia, porque su poder está en que le confíen asignar las de los demás. El chambelán de la Corte es ese alguien, y la muerte no lo ha relevado del puesto. Mantiene la mascarada con personal sacado de los espejos y remendada a partir del protocolo, presidiendo un baile sin invitados, negándose por principio a admitir que la casa ha caído. Para él no eres un intruso. Eres una irregularidad en la disposición de los asientos, y se encargará de corregirte.",
+    "actions": {
+      "Fill the Hall": {
+        "name": "Llenar la Sala"
+      },
+      "A Fresh Mask": {
+        "name": "Una Máscara Nueva"
+      },
+      "Staff of Office": {
+        "name": "Bastón de Mando"
+      }
+    }
   },
   "the-hollow-pretender": {
     "name": "El Pretendiente Hueco",
-    "flavorText": "Hay un trono en el último salón y está vacío, y la cosa que gobierna desde él nunca una vez se ha sentado: una forma esbelta y cortés en galas en capas, enmascarada, que te hace una reverencia al entrar con la calidez exacta de un anfitrión que te ha esperado mucho tiempo. Lleva el rostro del primer rey de la Corte, y bajo él el rostro del segundo, y bajo él cada rostro que alguna vez sostuvo este salón, todo el camino hasta nada, porque tomó el trono no por sangre sino por ser, perfectamente, lo que cada sala necesitaba coronar. Es el truco más viejo del captor llevado como criatura: gobernar convirtiéndose en lo que desearían que fuera verdad. «Bienvenido de vuelta», dice, con una voz en la que casi confías. «Has llevado tantos rostros bajando hasta mí. Seguro que puedes ceder el último. Quítate el tuyo —lo guardaré a salvo— y habrá un sitio para ti aquí, donde nadie tiene jamás que ser nadie en absoluto.»"
+    "flavorText": "Hay un trono en el último salón y está vacío, y la cosa que gobierna desde él nunca una vez se ha sentado: una forma esbelta y cortés en galas en capas, enmascarada, que te hace una reverencia al entrar con la calidez exacta de un anfitrión que te ha esperado mucho tiempo. Lleva el rostro del primer rey de la Corte, y bajo él el rostro del segundo, y bajo él cada rostro que alguna vez sostuvo este salón, todo el camino hasta nada, porque tomó el trono no por sangre sino por ser, perfectamente, lo que cada sala necesitaba coronar. Es el truco más viejo del captor llevado como criatura: gobernar convirtiéndose en lo que desearían que fuera verdad. «Bienvenido de vuelta», dice, con una voz en la que casi confías. «Has llevado tantos rostros bajando hasta mí. Seguro que puedes ceder el último. Quítate el tuyo —lo guardaré a salvo— y habrá un sitio para ti aquí, donde nadie tiene jamás que ser nadie en absoluto.»",
+    "actions": {
+      "The Face Beneath": {
+        "name": "El Rostro de Abajo"
+      },
+      "The Court Attends": {
+        "name": "La Corte Asiste"
+      },
+      "The Unmasking": {
+        "name": "El Desenmascaramiento"
+      },
+      "A Hundred Borrowed Hands": {
+        "name": "Cien Manos Prestadas"
+      },
+      "Sceptre of a Hundred Reigns": {
+        "name": "Cetro de Cien Reinados"
+      }
+    }
   },
   "bodhi-spawn": {
     "name": "Engendro de Bodhi",
-    "flavorText": "Bodhi no escaló a la ciudad élfica sola. Sus crías subieron de las catacumbas por delante de ella, por las raíces de abajo y las tumbas reventadas, y son las primeras en encontrar el camino: pálidas y rápidas y hambrientas, aún vistiendo las galas rasgadas del señor elfo o peregrino que apuraron por última vez. Esta no habla. Solo mira tu garganta, y rodea, y espera el medio paso en que el ascenso te ha vuelto lento."
+    "flavorText": "Bodhi no escaló a la ciudad élfica sola. Sus crías subieron de las catacumbas por delante de ella, por las raíces de abajo y las tumbas reventadas, y son las primeras en encontrar el camino: pálidas y rápidas y hambrientas, aún vistiendo las galas rasgadas del señor elfo o peregrino que apuraron por última vez. Esta no habla. Solo mira tu garganta, y rodea, y espera el medio paso en que el ascenso te ha vuelto lento.",
+    "actions": {
+      "Rending Bite": {
+        "name": "Mordisco Desgarrador"
+      }
+    }
   },
   "suldanessellar-archer": {
     "name": "Arquera de Suldanessellar Hechizada",
-    "flavorText": "Suldanessellar plantó a sus vigías en las ramas altas, y durante trescientos años ningún enemigo alcanzó el Árbol sin antes responder a sus flechas. Ahora la guardia responde a la cosa del templo. La elfa en la rama sobre ti encaja una flecha con la gracia sin prisa de toda su larga vida, y la suelta contra la ciudad que nació para guardar, porque algo se metió dentro de ella y le dio la vuelta a la lealtad sin molestarse en retirarla. No parará hasta que el arco se rompa o la elfa lo haga."
+    "flavorText": "Suldanessellar plantó a sus vigías en las ramas altas, y durante trescientos años ningún enemigo alcanzó el Árbol sin antes responder a sus flechas. Ahora la guardia responde a la cosa del templo. La elfa en la rama sobre ti encaja una flecha con la gracia sin prisa de toda su larga vida, y la suelta contra la ciudad que nació para guardar, porque algo se metió dentro de ella y le dio la vuelta a la lealtad sin molestarse en retirarla. No parará hasta que el arco se rompa o la elfa lo haga.",
+    "actions": {
+      "Canopy-Watch Longbow": {
+        "name": "Arco Largo de Vigía del Dosel"
+      }
+    }
   },
   "suldanessellar-bladesinger": {
     "name": "Cantaespadas Corrompido",
-    "flavorText": "Ser un cantaespadas de Suldanessellar era estudiar un solo arte durante dos siglos hasta que la espada y el cantor fueran un solo movimiento. Este estudió ese tiempo, y más, y el arte sobrevivió a lo que le hicieron a su maestro: el cuerpo conserva el canto de espada a la perfección mientras la mente que le daba sentido ha sido vaciada y rellenada con el deseo del captor. Te saluda, por una etiqueta que ya nada queda para sentir, y luego danza, y la danza es matarte, y sigue siendo la cosa más hermosa de esta ciudad ardiente."
+    "flavorText": "Ser un cantaespadas de Suldanessellar era estudiar un solo arte durante dos siglos hasta que la espada y el cantor fueran un solo movimiento. Este estudió ese tiempo, y más, y el arte sobrevivió a lo que le hicieron a su maestro: el cuerpo conserva el canto de espada a la perfección mientras la mente que le daba sentido ha sido vaciada y rellenada con el deseo del captor. Te saluda, por una etiqueta que ya nada queda para sentir, y luego danza, y la danza es matarte, y sigue siendo la cosa más hermosa de esta ciudad ardiente.",
+    "actions": {
+      "The Turned Bladesong": {
+        "name": "El Canto de Hoja Vuelto"
+      },
+      "Singing Glaive": {
+        "name": "Guja Cantora"
+      }
+    }
   },
   "suldanessellar-warpriest": {
     "name": "Sacerdote de Guerra Corrompido",
-    "flavorText": "Los sacerdotes de Rillifane Rallathil atendían el Árbol de la Vida y las almas de los elfos que lo servían, y eran sanadores antes que cualquier otra cosa. Este aún sana: esa es la obscenidad. El captor no necesitó enseñarle crueldad, solo volver el remiendo que ya conocía hacia mantener en pie a sus propias filas, así que el sacerdote se mueve por la ciudad ardiente con el incensario oscilando, alzando a los propios defensores muertos de la ciudad para morir de nuevo, cantándote el himno fúnebre como si solo fueras el siguiente en cruzar con suavidad."
+    "flavorText": "Los sacerdotes de Rillifane Rallathil atendían el Árbol de la Vida y las almas de los elfos que lo servían, y eran sanadores antes que cualquier otra cosa. Este aún sana: esa es la obscenidad. El captor no necesitó enseñarle crueldad, solo volver el remiendo que ya conocía hacia mantener en pie a sus propias filas, así que el sacerdote se mueve por la ciudad ardiente con el incensario oscilando, alzando a los propios defensores muertos de la ciudad para morir de nuevo, cantándote el himno fúnebre como si solo fueras el siguiente en cruzar con suavidad.",
+    "actions": {
+      "Rite of the False Grove": {
+        "name": "Rito de la Arboleda Falsa"
+      },
+      "Hymn of Unmaking": {
+        "name": "Himno del Deshacer"
+      },
+      "Censer-Mace": {
+        "name": "Maza-Incensario"
+      }
+    }
   },
   "defiled-dryad": {
     "name": "Dríade Profanada",
-    "flavorText": "Las dríades de Suldanessellar eran el Árbol de la Vida vuelto gentil y andante: su pena y su acogida con un rostro, dispuestas a guiar a los perdidos al descanso. Cuando Irenicus puso la mano a las raíces del Árbol las dríades enfermaron con él, y la acogida se agrió en la misma dulzura larga y atrayente que una cosa a punto de ahogarse muestra a la que arrastra bajo. Aún quiere que vayas a ella. Aún abre los brazos. Eso es lo peor de ello."
+    "flavorText": "Las dríades de Suldanessellar eran el Árbol de la Vida vuelto gentil y andante: su pena y su acogida con un rostro, dispuestas a guiar a los perdidos al descanso. Cuando Irenicus puso la mano a las raíces del Árbol las dríades enfermaron con él, y la acogida se agrió en la misma dulzura larga y atrayente que una cosa a punto de ahogarse muestra a la que arrastra bajo. Aún quiere que vayas a ella. Aún abre los brazos. Eso es lo peor de ello.",
+    "actions": {
+      "Soured Charm": {
+        "name": "Encanto Agriado"
+      },
+      "Bramble Lash": {
+        "name": "Latigazo de Zarzas"
+      }
+    }
   },
   "defiled-treant": {
     "name": "Treant Profanado",
-    "flavorText": "En torno al Árbol de la Vida se erguían sus parientes menores: treants crecidos de su propia semilla a lo largo de las eras de Suldanessellar, dispuestos a guardar las laderas que subían hasta la sagrada corona de la ciudad. Enferman de las raíces hacia arriba según enferma el gran Árbol, el verde volviéndose negro en el corazón, la larga mente paciente agriándose en un solo dolor. Este ya no recuerda la diferencia entre un amigo de la ciudad y un enemigo de ella. Solo recuerda que algo está matando al Árbol, y que duele, y que estás lo bastante cerca para aplastarte."
+    "flavorText": "En torno al Árbol de la Vida se erguían sus parientes menores: treants crecidos de su propia semilla a lo largo de las eras de Suldanessellar, dispuestos a guardar las laderas que subían hasta la sagrada corona de la ciudad. Enferman de las raíces hacia arriba según enferma el gran Árbol, el verde volviéndose negro en el corazón, la larga mente paciente agriándose en un solo dolor. Este ya no recuerda la diferencia entre un amigo de la ciudad y un enemigo de ella. Solo recuerda que algo está matando al Árbol, y que duele, y que estás lo bastante cerca para aplastarte.",
+    "actions": {
+      "Snaring Roots": {
+        "name": "Raíces Apresadoras"
+      },
+      "Crushing Bough": {
+        "name": "Rama Aplastante"
+      }
+    }
   },
   "palace-golem": {
     "name": "Gólem de Palacio de Rillifane",
-    "flavorText": "Los altos elfos no forjaban a sus guardianes; los cultivaban, dando forma al duramen de árboles antiguos en torno a un núcleo de piedra consagrada y despertándolos a una sola y larga instrucción: guardar las salas interiores, admitir solo a la sangre de la ciudad. El gólem en la puerta del templo ha guardado esa instrucción una era, y la guarda aún, porque nadie le dijo que la ciudad estaba perdida y no lo entendería si lo hubieran hecho. Te lee, halla que no eres de la sangre, y da un paso para cerrar el paso con la paciencia de una cosa que nunca una vez ha estado cansada."
+    "flavorText": "Los altos elfos no forjaban a sus guardianes; los cultivaban, dando forma al duramen de árboles antiguos en torno a un núcleo de piedra consagrada y despertándolos a una sola y larga instrucción: guardar las salas interiores, admitir solo a la sangre de la ciudad. El gólem en la puerta del templo ha guardado esa instrucción una era, y la guarda aún, porque nadie le dijo que la ciudad estaba perdida y no lo entendería si lo hubieran hecho. Te lee, halla que no eres de la sangre, y da un paso para cerrar el paso con la paciencia de una cosa que nunca una vez ha estado cansada.",
+    "actions": {
+      "Gatewarden Sweep": {
+        "name": "Barrido del Guardapuertas"
+      },
+      "Ironwood Slam": {
+        "name": "Golpe de Madera Férrea"
+      }
+    }
   },
   "rakshasa": {
     "name": "Rakshasa",
-    "flavorText": "Irenicus no tomó Suldanessellar con sus propias manos; trajo lugartenientes dignos del trabajo, y entre ellos el primero el rakshasa: fiendos de cabeza de tigre con las túnicas de nobles asesinados, las manos vueltas del revés en la muñeca, protegidos contra los pequeños conjuros de los magos mortales y desdeñosos del resto. Este sostiene la escalera del templo que sube al Árbol, y ha sostenido mil escaleras así en mil mundos caídos, y te saluda con el buen humor sin fondo de una cosa que nunca una vez, en todo ese tiempo, ha perdido."
+    "flavorText": "Irenicus no tomó Suldanessellar con sus propias manos; trajo lugartenientes dignos del trabajo, y entre ellos el primero el rakshasa: fiendos de cabeza de tigre con las túnicas de nobles asesinados, las manos vueltas del revés en la muñeca, protegidos contra los pequeños conjuros de los magos mortales y desdeñosos del resto. Este sostiene la escalera del templo que sube al Árbol, y ha sostenido mil escaleras así en mil mundos caídos, y te saluda con el buen humor sin fondo de una cosa que nunca una vez, en todo ese tiempo, ha perdido.",
+    "actions": {
+      "Reversed Claws": {
+        "name": "Garras Invertidas"
+      },
+      "Curse-Tipped Rake": {
+        "name": "Zarpazo de Punta Maldita"
+      },
+      "Glamour of the Burning City": {
+        "name": "Embrujo de la Ciudad Ardiente"
+      }
+    }
   },
   "nizidramaniiyt": {
     "name": "Nizidramanii'yt",
-    "flavorText": "El captor no confió en que los propios defensores de la ciudad rota sostuvieran la última escalera, así que soltó un dragón en el templo de Rillifane Rallathil: Nizidramanii'yt, un wyrm verde lo bastante viejo para recordar la plantación de las arboledas menores, enroscado ahora sobre el altar destrozado del padre-árbol en un despliegue de escama verdedorada y desprecio posesivo. El lugar sagrado apesta a él: podredumbre de ciénaga y oro aplastado, el incienso de trescientos años ido bajo un almizcle reptil. Abre un ojo de hendidura del color del agua estancada cuando llegas, y no se molesta en alzarse, porque nada ha escalado aún esta escalera que mereciera ponerse en pie, y no espera que tú seas el primero."
+    "flavorText": "El captor no confió en que los propios defensores de la ciudad rota sostuvieran la última escalera, así que soltó un dragón en el templo de Rillifane Rallathil: Nizidramanii'yt, un wyrm verde lo bastante viejo para recordar la plantación de las arboledas menores, enroscado ahora sobre el altar destrozado del padre-árbol en un despliegue de escama verdedorada y desprecio posesivo. El lugar sagrado apesta a él: podredumbre de ciénaga y oro aplastado, el incienso de trescientos años ido bajo un almizcle reptil. Abre un ojo de hendidura del color del agua estancada cuando llegas, y no se molesta en alzarse, porque nada ha escalado aún esta escalera que mereciera ponerse en pie, y no espera que tú seas el primero.",
+    "actions": {
+      "Breath of the Defiled Grove": {
+        "name": "Aliento de la Arboleda Profanada"
+      },
+      "Wing Buffet": {
+        "name": "Aletazo"
+      },
+      "Rend and Coil": {
+        "name": "Desgarrar y Enroscar"
+      },
+      "Reaching Bite": {
+        "name": "Mordisco Alargado"
+      }
+    }
   },
   "mirror-of-pride": {
     "name": "Espejo del Orgullo",
-    "flavorText": "La segunda de las cinco pruebas es el Orgullo, y su pregunta lleva un rostro pequeño: hay aquí una baratija que no vale nada, salvo que sostenerla te dice que se te debe algo, que eres excepcional, que las reglas bajo las que escalan otras almas no acaban de aplicarse a ti. Quédatela y el foso tiene su anzuelo. El espejo es la vanidad vuelta guardián: una lámina vertical de cristal que nunca una vez te ha mostrado un defecto, y que se mete en ti a por lo que quiere creérselo. No tanto pelea contigo como te presenta al yo que preferirías ser, y echa ese yo sobre ti, una y otra vez, hasta que entiendes que la figura del cristal nunca fue más que tu propio asesinato vestido con una luz halagadora. Hazlo añicos, y habrás dejado la baratija."
+    "flavorText": "La segunda de las cinco pruebas es el Orgullo, y su pregunta lleva un rostro pequeño: hay aquí una baratija que no vale nada, salvo que sostenerla te dice que se te debe algo, que eres excepcional, que las reglas bajo las que escalan otras almas no acaban de aplicarse a ti. Quédatela y el foso tiene su anzuelo. El espejo es la vanidad vuelta guardián: una lámina vertical de cristal que nunca una vez te ha mostrado un defecto, y que se mete en ti a por lo que quiere creérselo. No tanto pelea contigo como te presenta al yo que preferirías ser, y echa ese yo sobre ti, una y otra vez, hasta que entiendes que la figura del cristal nunca fue más que tu propio asesinato vestido con una luz halagadora. Hazlo añicos, y habrás dejado la baratija.",
+    "actions": {
+      "Better Than They Are": {
+        "name": "Mejor de lo que Son"
+      },
+      "Shard of the Flattering Glass": {
+        "name": "Esquirla del Espejo Adulador"
+      }
+    }
   },
   "devourer-of-selfishness": {
     "name": "Devorador del Egoísmo",
-    "flavorText": "La quinta y última prueba es el Egoísmo, y el foso la guarda para el final porque es la que no viste forma halagadora alguna. Hay aquí una cosa que morirá sin un trozo de ti —tu fuerza, tu sangre, el calor que guardabas para ti mismo— y la prueba es solo si lo darás. El devorador es la negativa vuelta enorme: un hambre vasta, sin rostro, plegándose hacia dentro, que no es más que la voluntad de mantenerse entero pase lo que pase muera para ello. No te odia. Ni siquiera te ve, exactamente. Solo sabe que estás hecho de cosas que podría tener, y que tener es el único verbo que le queda. Para abatirlo debes gastarte en algo que no puede pagarte de vuelta, que es, por supuesto, lo mismo que la prueba pedía desde el principio."
+    "flavorText": "La quinta y última prueba es el Egoísmo, y el foso la guarda para el final porque es la que no viste forma halagadora alguna. Hay aquí una cosa que morirá sin un trozo de ti —tu fuerza, tu sangre, el calor que guardabas para ti mismo— y la prueba es solo si lo darás. El devorador es la negativa vuelta enorme: un hambre vasta, sin rostro, plegándose hacia dentro, que no es más que la voluntad de mantenerse entero pase lo que pase muera para ello. No te odia. Ni siquiera te ve, exactamente. Solo sabe que estás hecho de cosas que podría tener, y que tener es el único verbo que le queda. Para abatirlo debes gastarte en algo que no puede pagarte de vuelta, que es, por supuesto, lo mismo que la prueba pedía desde el principio.",
+    "actions": {
+      "Hold What Is Mine": {
+        "name": "Retener lo que es Mío"
+      },
+      "Inward Maw": {
+        "name": "Fauce Interior"
+      },
+      "Lessened for the Giving": {
+        "name": "Menguado por la Entrega"
+      }
+    }
   },
   "hoarding-fiend-of-greed": {
     "name": "Fiendo Acaparador de la Codicia",
-    "flavorText": "La cuarta de las cinco pruebas es la Codicia, y el foso es generoso al respecto: amontona el suelo con más de lo que cualquier alma podría cargar y te dice que te sirvas, sabiendo que el servirse es la trampa. Toma solo lo tuyo y pasa; agarra todo y quédate. El fiendo es el agarrar vuelto carne: una cosa hinchada, costrosa de oro, que llevó la oferta del tesoro hasta el límite y siguió tomando hasta que la riqueza fue todo lo que había de él, y ahora no puede parar, porque un tesoro solo está a salvo mientras crece. No te dará una muerte limpia y no aceptará una; aferra sus reservas robadas y se planta sobre ellas más allá de toda razón, como los codiciosos se aferran a la última moneda mientras la casa arde alrededor de la caja fuerte."
+    "flavorText": "La cuarta de las cinco pruebas es la Codicia, y el foso es generoso al respecto: amontona el suelo con más de lo que cualquier alma podría cargar y te dice que te sirvas, sabiendo que el servirse es la trampa. Toma solo lo tuyo y pasa; agarra todo y quédate. El fiendo es el agarrar vuelto carne: una cosa hinchada, costrosa de oro, que llevó la oferta del tesoro hasta el límite y siguió tomando hasta que la riqueza fue todo lo que había de él, y ahora no puede parar, porque un tesoro solo está a salvo mientras crece. No te dará una muerte limpia y no aceptará una; aferra sus reservas robadas y se planta sobre ellas más allá de toda razón, como los codiciosos se aferran a la última moneda mientras la casa arde alrededor de la caja fuerte.",
+    "actions": {
+      "Clutch the Hoard": {
+        "name": "Aferrar el Tesoro"
+      },
+      "Fist of Fused Treasure": {
+        "name": "Puño de Tesoro Fundido"
+      }
+    }
   },
   "avatar-of-wrath": {
     "name": "Avatar de la Ira",
-    "flavorText": "La tercera de las cinco pruebas es la Ira, y su pregunta es la más cruel porque ofrece lo más: hay aquí una cosa indefensa, y abatirla te hará más fuerte, y el único coste es hacerlo con rabia y llamar a la rabia justicia. El avatar es esa rabia con cuerpo: ancho, ardiente, alegremente estúpido, el peor don de tu padre alzándose del suelo del Infierno vistiendo tu propia disposición a arremeter. Pelea como pelea la ira: todo hacia delante, sin economía, más fuerte cuanto más sangra, porque la rabia no tiene plan para perder. Abátelo en frío, sin unirte a él, y habrás pasado. Iguala su fuego con el tuyo y solo le habrás mostrado al foso que eres exactamente lo que esperaba."
+    "flavorText": "La tercera de las cinco pruebas es la Ira, y su pregunta es la más cruel porque ofrece lo más: hay aquí una cosa indefensa, y abatirla te hará más fuerte, y el único coste es hacerlo con rabia y llamar a la rabia justicia. El avatar es esa rabia con cuerpo: ancho, ardiente, alegremente estúpido, el peor don de tu padre alzándose del suelo del Infierno vistiendo tu propia disposición a arremeter. Pelea como pelea la ira: todo hacia delante, sin economía, más fuerte cuanto más sangra, porque la rabia no tiene plan para perder. Abátelo en frío, sin unirte a él, y habrás pasado. Iguala su fuego con el tuyo y solo le habrás mostrado al foso que eres exactamente lo que esperaba.",
+    "actions": {
+      "Flurry of the Murder": {
+        "name": "Lluvia del Asesinato"
+      },
+      "Fist of Bhaal-Fire": {
+        "name": "Puño de Fuego de Bhaal"
+      }
+    }
   },
   "wraith-of-fear": {
     "name": "Espectro del Miedo",
-    "flavorText": "La primera de las cinco pruebas es el Miedo, y el foso plantea la pregunta sin rodeos: hay una cosa que temes por encima de todas las demás, y puedes enfrentarla o puedes huir, y la sangre de tu padre se medirá por cuál. El espectro es la pregunta vuelta guardián: el miedo con forma apenas suficiente para cazarte. No tiene muerte propia con la que amenazarte, así que toma prestada la que cargas, el final privado del que has huido por cada vida que puedes y no puedes recordar. Mátalo y habrás mirado al pavor en su hueco y no habrás salido corriendo. Huye de él, y te sigue el resto del camino, un poco más alto cada vez."
+    "flavorText": "La primera de las cinco pruebas es el Miedo, y el foso plantea la pregunta sin rodeos: hay una cosa que temes por encima de todas las demás, y puedes enfrentarla o puedes huir, y la sangre de tu padre se medirá por cuál. El espectro es la pregunta vuelta guardián: el miedo con forma apenas suficiente para cazarte. No tiene muerte propia con la que amenazarte, así que toma prestada la que cargas, el final privado del que has huido por cada vida que puedes y no puedes recordar. Mátalo y habrás mirado al pavor en su hueco y no habrás salido corriendo. Huye de él, y te sigue el resto del camino, un poco más alto cada vez.",
+    "actions": {
+      "The Death You Run From": {
+        "name": "La Muerte de la que Huyes"
+      },
+      "Cold of the Flight": {
+        "name": "Frío del Vuelo"
+      }
+    }
   },
   "slayer-shade": {
     "name": "Sombra del Verdugo",
-    "flavorText": "Todo hijo del Señor del Asesinato carga al Verdugo como una espada carga un filo: una forma bajo la piel que no es más que el impulso de matar, vuelto carne. La mayoría pasa la vida manteniéndolo dormido. Aquí, en el foso del captor, el suelo ardiente se mete en ti y tira de un hilo de él hasta soltarlo, y lo que sale libre es esto, un eco gris, veloz y hambriento de lo peor que podrías ser, vistiendo el comienzo de tus propias facciones y dispuesto a vestir el resto. No se invoca desde fuera. Siempre estuvo en ti. El Infierno solo te hace la descortesía de dejarlo caminar."
+    "flavorText": "Todo hijo del Señor del Asesinato carga al Verdugo como una espada carga un filo: una forma bajo la piel que no es más que el impulso de matar, vuelto carne. La mayoría pasa la vida manteniéndolo dormido. Aquí, en el foso del captor, el suelo ardiente se mete en ti y tira de un hilo de él hasta soltarlo, y lo que sale libre es esto, un eco gris, veloz y hambriento de lo peor que podrías ser, vistiendo el comienzo de tus propias facciones y dispuesto a vestir el resto. No se invoca desde fuera. Siempre estuvo en ti. El Infierno solo te hace la descortesía de dejarlo caminar.",
+    "actions": {
+      "Slayer-Talon": {
+        "name": "Garra del Asesino"
+      }
+    }
   },
   "spined-abishai": {
     "name": "Abishai Espinoso",
-    "flavorText": "El Infierno no es todo prueba y juicio. La mayor parte es alimaña: los pequeños diablos rencorosos que se reúnen donde se trabaja un alma, para estar cerca del dolor y aventurar un mordisco de lo que queda. Los abishai son los más viles de estos: cosas con púas y alas criadas de la crueldad de fiendos mejores, sin parte alguna en el diseño del captor salvo hacer que el camino hasta él duela todo el descenso. Este cierra la galería ardiente de delante porque algo viene atravesándola, y en el Infierno cualquier cosa que viene atravesando es presa o rival, y nunca en su existencia se ha molestado en distinguir la diferencia."
+    "flavorText": "El Infierno no es todo prueba y juicio. La mayor parte es alimaña: los pequeños diablos rencorosos que se reúnen donde se trabaja un alma, para estar cerca del dolor y aventurar un mordisco de lo que queda. Los abishai son los más viles de estos: cosas con púas y alas criadas de la crueldad de fiendos mejores, sin parte alguna en el diseño del captor salvo hacer que el camino hasta él duela todo el descenso. Este cierra la galería ardiente de delante porque algo viene atravesándola, y en el Infierno cualquier cosa que viene atravesando es presa o rival, y nunca en su existencia se ha molestado en distinguir la diferencia.",
+    "actions": {
+      "Barbed Spine": {
+        "name": "Espina Dentada"
+      },
+      "Pit-Venom": {
+        "name": "Veneno del Pozo"
+      }
+    }
   },
   "irenicus": {
     "name": "Jon Irenicus",
-    "flavorText": "Lo has oído todo el descenso. La Voz en la celda, en el asilo, en cada recodo: paciente, culta, casi tierna, la voz del hombre que te sacó el alma con el cuidado sin prisa de quien trasplanta una flor. Ahora hay al fin un rostro que ponerle: Jon Irenicus, el elfo exiliado que quemó su propia alma persiguiendo la divinidad y decidió que la tuya serviría en su lugar. Se yergue en el centro de su bolsillo de Infierno con el poder robado del Árbol de la Vida encendido bajo la piel y tu divinidad aferrada en él como un carbón tragado, y te saluda como siempre lo ha hecho: como a un sujeto, un espécimen, una cosa de la que se encariña del modo en que uno se encariña con un buen trabajo. «Bajaste todo este camino», dice, y la vieja Voz encaja en el rostro exactamente. «Después de todo lo que tomé, escalaste de vuelta hasta mí. Estoy casi conmovido. Pero siempre has malentendido lo que eres: no eres el que sobrevive a esta historia. Eres la tierra. Y tengo tales cosas que cultivar.»"
+    "flavorText": "Lo has oído todo el descenso. La Voz en la celda, en el asilo, en cada recodo: paciente, culta, casi tierna, la voz del hombre que te sacó el alma con el cuidado sin prisa de quien trasplanta una flor. Ahora hay al fin un rostro que ponerle: Jon Irenicus, el elfo exiliado que quemó su propia alma persiguiendo la divinidad y decidió que la tuya serviría en su lugar. Se yergue en el centro de su bolsillo de Infierno con el poder robado del Árbol de la Vida encendido bajo la piel y tu divinidad aferrada en él como un carbón tragado, y te saluda como siempre lo ha hecho: como a un sujeto, un espécimen, una cosa de la que se encariña del modo en que uno se encariña con un buen trabajo. «Bajaste todo este camino», dice, y la vieja Voz encaja en el rostro exactamente. «Después de todo lo que tomé, escalaste de vuelta hasta mí. Estoy casi conmovido. Pero siempre has malentendido lo que eres: no eres el que sobrevive a esta historia. Eres la tierra. Y tengo tales cosas que cultivar.»",
+    "actions": {
+      "The Binding Word": {
+        "name": "La Palabra que Ata"
+      },
+      "The Leeching Word": {
+        "name": "La Palabra Sanguijuela"
+      },
+      "The Work of Both Hands": {
+        "name": "La Obra de Ambas Manos"
+      },
+      "The Stolen Sun": {
+        "name": "El Sol Robado"
+      }
+    }
   },
   "saradush-marauder": {
     "name": "Saqueador de Saradush",
-    "flavorText": "Yaga-Shura no marchó solo gigantes de fuego a Saradush. El grueso del cerco es esto: mercenarios y saqueadores de cada tierra dura, pagados con la promesa de una ciudad saqueada y con la única tarea de ver que nada dentro de los muros salga vivo. No han tenido que pelear en semanas, solo esperar, y quemar lo que intente huir, y engordar con el botín de los campamentos. La espera los ha vuelto lentos. No los ha vuelto misericordiosos."
+    "flavorText": "Yaga-Shura no marchó solo gigantes de fuego a Saradush. El grueso del cerco es esto: mercenarios y saqueadores de cada tierra dura, pagados con la promesa de una ciudad saqueada y con la única tarea de ver que nada dentro de los muros salga vivo. No han tenido que pelear en semanas, solo esperar, y quemar lo que intente huir, y engordar con el botín de los campamentos. La espera los ha vuelto lentos. No los ha vuelto misericordiosos.",
+    "actions": {
+      "Plunderer's Greataxe": {
+        "name": "Hacha Grande del Saqueador"
+      }
+    }
   },
   "burning-dead": {
     "name": "Muerto Ardiente",
-    "flavorText": "Cuando el fuego de Yaga-Shura pasó sobre los muros no mató limpio. Atrapó a la gente de Saradush en sus casas y sus calles y se quedó atrapado, y los muertos que hizo se alzaron aún encendidos, caminando el humo con su propio arder por sudario. No saben que el asedio es su causa. Solo saben que arden, y que ellos no, y que tú aún no, y querrían que te les unieras en el único estado que les queda."
+    "flavorText": "Cuando el fuego de Yaga-Shura pasó sobre los muros no mató limpio. Atrapó a la gente de Saradush en sus casas y sus calles y se quedó atrapado, y los muertos que hizo se alzaron aún encendidos, caminando el humo con su propio arder por sudario. No saben que el asedio es su causa. Solo saben que arden, y que ellos no, y que tú aún no, y querrían que te les unieras en el único estado que les queda.",
+    "actions": {
+      "Charred Grasp": {
+        "name": "Garra Calcinada"
+      },
+      "A Face Still Screaming": {
+        "name": "Un Rostro que Aún Grita"
+      }
+    }
   },
   "fire-giant": {
     "name": "Gigante de Fuego",
-    "flavorText": "Estos son la hueste. Yaga-Shura bajó a los gigantes de fuego de las montañas y cercaron Saradush en un muro de hierro rojo, y lo que no pueden quemar lo rompen, y lo que no pueden romper lo aguardan. Pelean como las montañas los hicieron: lentos, vastos y finales. Uno solo de ellos sostuvo una puerta contra la guardia entera de la ciudad. El asedio tiene docenas. Vas a tener que atravesarlos igualmente."
+    "flavorText": "Estos son la hueste. Yaga-Shura bajó a los gigantes de fuego de las montañas y cercaron Saradush en un muro de hierro rojo, y lo que no pueden quemar lo rompen, y lo que no pueden romper lo aguardan. Pelean como las montañas los hicieron: lentos, vastos y finales. Uno solo de ellos sostuvo una puerta contra la guardia entera de la ciudad. El asedio tiene docenas. Vas a tener que atravesarlos igualmente.",
+    "actions": {
+      "Two Strokes of the Line": {
+        "name": "Dos Trazos de la Línea"
+      },
+      "Heat-Drinking Greatsword": {
+        "name": "Mandoble Bebedor de Calor"
+      },
+      "Hurled Boulder": {
+        "name": "Peñasco Arrojado"
+      }
+    }
   },
   "fire-giant-shaman": {
     "name": "Chamán Gigante de Fuego",
-    "flavorText": "Los gigantes de fuego no marchan sin sus chamanes, y los de Yaga-Shura son los peores de ellos: sacerdotes de la llama que atienden el gran arder del asedio como un pueblo menor atiende un hogar. Es su rito el que mantiene a los muertos de la ciudad encendidos y caminando, su aliento sobre las brasas el que no deja que se enfríen las piras de Saradush. Se mantienen a retaguardia de la línea, donde el humo es más espeso, y nunca son lo último que queda en pie, porque nunca se les acaba lo que poner delante."
+    "flavorText": "Los gigantes de fuego no marchan sin sus chamanes, y los de Yaga-Shura son los peores de ellos: sacerdotes de la llama que atienden el gran arder del asedio como un pueblo menor atiende un hogar. Es su rito el que mantiene a los muertos de la ciudad encendidos y caminando, su aliento sobre las brasas el que no deja que se enfríen las piras de Saradush. Se mantienen a retaguardia de la línea, donde el humo es más espeso, y nunca son lo último que queda en pie, porque nunca se les acaba lo que poner delante.",
+    "actions": {
+      "Hurled Coal": {
+        "name": "Brasa Arrojada"
+      },
+      "Stoke the Pyre": {
+        "name": "Avivar la Pira"
+      },
+      "Fistful of Cinders": {
+        "name": "Puñado de Brasas"
+      }
+    }
   },
   "fire-giant-warlord": {
     "name": "Señor de la Guerra Gigante de Fuego",
-    "flavorText": "Yaga-Shura no comanda el asedio golpe a golpe; tiene capitanes para eso, y este es uno de ellos: un gigante de fuego envejecido y enorme en las guerras de montaña, puesto al mando de toda un ala del cerco en torno a Saradush. Es todo lo que la línea es, empeorado: golpea desde más lejos, no se cansa, y lo que le haces lo deshace con un aliento, ingresando su propio calor de vuelta en la herida. Véncelo, y habrás roto un dedo del asedio. Hay más dedos. Y está la mano."
+    "flavorText": "Yaga-Shura no comanda el asedio golpe a golpe; tiene capitanes para eso, y este es uno de ellos: un gigante de fuego envejecido y enorme en las guerras de montaña, puesto al mando de toda un ala del cerco en torno a Saradush. Es todo lo que la línea es, empeorado: golpea desde más lejos, no se cansa, y lo que le haces lo deshace con un aliento, ingresando su propio calor de vuelta en la herida. Véncelo, y habrás roto un dedo del asedio. Hay más dedos. Y está la mano.",
+    "actions": {
+      "Captain's Cadence": {
+        "name": "Cadencia del Capitán"
+      },
+      "Warlord's Greatblade": {
+        "name": "Mandoble del Señor de la Guerra"
+      },
+      "Hurled Wall-Stone": {
+        "name": "Piedra de Muro Arrojada"
+      },
+      "Bank the Forge": {
+        "name": "Avivar la Forja"
+      }
+    }
   },
   "half-giant-siegebreaker": {
     "name": "Rompeasedios Semigigante",
-    "flavorText": "Para las partes del asedio que piden derribar cosas en vez de quemarlas, la hueste de Yaga-Shura tiene a estos: brutos de sangre semigigante demasiado pequeños para plantarse en la línea de gigantes de fuego y demasiado grandes para dejarlos fuera del trabajo. Rompieron la puerta exterior de Saradush en una tarde y han estado buscando algo más que romper desde entonces. Los muros están ya casi caídos. Tú servirás."
+    "flavorText": "Para las partes del asedio que piden derribar cosas en vez de quemarlas, la hueste de Yaga-Shura tiene a estos: brutos de sangre semigigante demasiado pequeños para plantarse en la línea de gigantes de fuego y demasiado grandes para dejarlos fuera del trabajo. Rompieron la puerta exterior de Saradush en una tarde y han estado buscando algo más que romper desde entonces. Los muros están ya casi caídos. Tú servirás.",
+    "actions": {
+      "Battering Work": {
+        "name": "Labor de Ariete"
+      },
+      "Ram-Maul": {
+        "name": "Mazo-Ariete"
+      }
+    }
   },
   "gromnir-defender": {
     "name": "Defensor de Gromnir",
-    "flavorText": "Dentro de los muros ardientes, el señor de la guerra loco Gromnir Il-Khan sostiene Saradush en un puño, y estos son los dedos del puño: soldados de sangre de Engendro de Bhaal que se aliaron con él porque prometió lo único que la protección de Melissan no había prometido: un modo de pelear. Son tu sangre. La misma sangre de dios muerto late en ellos, la misma crisis tira de ellos, y les han dicho que eres un rival más venido a tomar el asesinato de sus venas. No se equivocan sobre lo que eres. Solo se equivocan sobre por qué viniste."
+    "flavorText": "Dentro de los muros ardientes, el señor de la guerra loco Gromnir Il-Khan sostiene Saradush en un puño, y estos son los dedos del puño: soldados de sangre de Engendro de Bhaal que se aliaron con él porque prometió lo único que la protección de Melissan no había prometido: un modo de pelear. Son tu sangre. La misma sangre de dios muerto late en ellos, la misma crisis tira de ellos, y les han dicho que eres un rival más venido a tomar el asesinato de sus venas. No se equivocan sobre lo que eres. Solo se equivocan sobre por qué viniste.",
+    "actions": {
+      "Cornered Fury": {
+        "name": "Furia Acorralada"
+      },
+      "Bhaal-Blooded Longsword": {
+        "name": "Espada Larga de Sangre de Bhaal"
+      }
+    }
   },
   "yaga-shura": {
     "name": "Yaga-Shura",
-    "flavorText": "Tras Irenicus, tras el largo ascenso de vuelta a la luz, la sangre del dios muerto te empuja adelante… y te empuja aquí, a una ciudad en llamas. Saradush está cercada en hierro rojo y atestada de Engendros de Bhaal refugiados, y la mano en torno a su garganta pertenece a Yaga-Shura, uno de los Cinco, el señor gigante de fuego que tomó el propósito del dios muerto por suyo. Melissan te envió a través de la línea, a través del arder, a romper el asedio… y la rotura termina aquí, con el propio gigante, en el corazón del fuego que hizo. Pero hay un truco en él que aprenderás por las malas: su corazón fue cortado de su pecho en un ritual y llevado lejos, y mientras late en algún lugar lejos de aquí no siente las heridas que deberían matarlo. Hiérelo, y solo arde más fuerte. «¿Subiste de la oscuridad para ESTO?», dice el gigante, casi encantado, el espadón ya alzándose. «Entonces arde con el resto de ellos, diosecillo. Ni siquiera te siento.»"
+    "flavorText": "Tras Irenicus, tras el largo ascenso de vuelta a la luz, la sangre del dios muerto te empuja adelante… y te empuja aquí, a una ciudad en llamas. Saradush está cercada en hierro rojo y atestada de Engendros de Bhaal refugiados, y la mano en torno a su garganta pertenece a Yaga-Shura, uno de los Cinco, el señor gigante de fuego que tomó el propósito del dios muerto por suyo. Melissan te envió a través de la línea, a través del arder, a romper el asedio… y la rotura termina aquí, con el propio gigante, en el corazón del fuego que hizo. Pero hay un truco en él que aprenderás por las malas: su corazón fue cortado de su pecho en un ritual y llevado lejos, y mientras late en algún lugar lejos de aquí no siente las heridas que deberían matarlo. Hiérelo, y solo arde más fuerte. «¿Subiste de la oscuridad para ESTO?», dice el gigante, casi encantado, el espadón ya alzándose. «Entonces arde con el resto de ellos, diosecillo. Ni siquiera te siento.»",
+    "actions": {
+      "The Heart Laid Bare": {
+        "name": "El Corazón al Desnudo"
+      },
+      "Hurled Pyre-Stone": {
+        "name": "Piedra de Pira Arrojada"
+      },
+      "Greatsword of the Burning March": {
+        "name": "Mandoble de la Marcha Ardiente"
+      }
+    }
   },
   "heart-ember": {
     "name": "Brasa del Corazón",
-    "flavorText": "Un solo carbón del corazón cortado del gigante, surgido de dondequiera que el rito lo escondía, suspendido en el aire rojo y lento. No golpea tanto como humea. Mientras arde, el hombre no puede ser matado: apágalo y se vuelve mortal por primera vez."
+    "flavorText": "Un solo carbón del corazón cortado del gigante, surgido de dondequiera que el rito lo escondía, suspendido en el aire rojo y lento. No golpea tanto como humea. Mientras arde, el hombre no puede ser matado: apágalo y se vuelve mortal por primera vez.",
+    "actions": {
+      "Searing Pulse": {
+        "name": "Pulso Abrasador"
+      }
+    }
   },
   "sendai-handmaiden": {
     "name": "Doncella de Sendai",
-    "flavorText": "Sendai mantiene su enclave como Lolth mantiene su tela: por la devoción de sacerdotisas que han atado toda su esperanza de favor al ascenso de la matrona. Las doncellas son las fieles supervivientes de ese trato, sacerdotisas de guerra que atienden las galerías que las emboscadoras de piedra no pueden: apagando las luces, dosificando a los azotes, llamando el favor de la Reina Araña sobre lo que el intruso no haya acabado del todo de matar. No te temen. Han apostado sus almas a que un Engendro de Bhaal se vuelva dios, y junto a eso un brazo de espada en la oscuridad es cosa menuda."
+    "flavorText": "Sendai mantiene su enclave como Lolth mantiene su tela: por la devoción de sacerdotisas que han atado toda su esperanza de favor al ascenso de la matrona. Las doncellas son las fieles supervivientes de ese trato, sacerdotisas de guerra que atienden las galerías que las emboscadoras de piedra no pueden: apagando las luces, dosificando a los azotes, llamando el favor de la Reina Araña sobre lo que el intruso no haya acabado del todo de matar. No te temen. Han apostado sus almas a que un Engendro de Bhaal se vuelva dios, y junto a eso un brazo de espada en la oscuridad es cosa menuda.",
+    "actions": {
+      "Venom-Scourge": {
+        "name": "Azote Venenoso"
+      },
+      "Cloud of Darkness": {
+        "name": "Nube de Oscuridad"
+      },
+      "Spider Queen's Favour": {
+        "name": "Favor de la Reina Araña"
+      }
+    }
   },
   "kuo-toa-deepguard": {
     "name": "Guardaprofundos Kuo-Toa",
-    "flavorText": "Mucho antes de que Abazigal tomara las cavernas profundas por guarida, los kuo-toa sostenían el agua del fondo de ellas, locos y devotos y esperando a que un dios bajara a la oscuridad a ser adorado. Cuando llegó el semidragón, decidieron que era el indicado, como deciden siempre los hombres-pez, todos a la vez y más allá de toda discusión, y ahora guardan sus galerías inferiores con tanto celo como antes guardaban a sus propios ídolos muertos. Croan su nombre en su lengua ahogada al lanzar, y lo dicen como plegaria, y el arpón al final de la plegaria es igual de afilado."
+    "flavorText": "Mucho antes de que Abazigal tomara las cavernas profundas por guarida, los kuo-toa sostenían el agua del fondo de ellas, locos y devotos y esperando a que un dios bajara a la oscuridad a ser adorado. Cuando llegó el semidragón, decidieron que era el indicado, como deciden siempre los hombres-pez, todos a la vez y más allá de toda discusión, y ahora guardan sus galerías inferiores con tanto celo como antes guardaban a sus propios ídolos muertos. Croan su nombre en su lengua ahogada al lanzar, y lo dicen como plegaria, y el arpón al final de la plegaria es igual de afilado.",
+    "actions": {
+      "Barbed Harpoon": {
+        "name": "Arpón Dentado"
+      },
+      "Sticky Net": {
+        "name": "Red Pegajosa"
+      }
+    }
   },
   "petrified-ambusher": {
     "name": "Emboscador Petrificado",
-    "flavorText": "Sendai jalona su enclave con los muertos que aún no ha terminado de usar. Por cada galería tallada se yerguen a media zancada, grises y curtidos, drow vueltos piedra y posados como estatuaria para que la ciudad misma sea una emboscada contenida… y el único modo de distinguir el adorno de la trampa es pasar demasiado cerca de uno y sentir la piedra entibiarse. Entonces la costra se desprende en láminas y el drow de dentro termina, sin prisa, la embestida a medio hacer en que fue congelado, como si no hubiera pasado tiempo alguno desde que la matrona lo atrapó aquí y le dijo que esperara."
+    "flavorText": "Sendai jalona su enclave con los muertos que aún no ha terminado de usar. Por cada galería tallada se yerguen a media zancada, grises y curtidos, drow vueltos piedra y posados como estatuaria para que la ciudad misma sea una emboscada contenida… y el único modo de distinguir el adorno de la trampa es pasar demasiado cerca de uno y sentir la piedra entibiarse. Entonces la costra se desprende en láminas y el drow de dentro termina, sin prisa, la embestida a medio hacer en que fue congelado, como si no hubiera pasado tiempo alguno desde que la matrona lo atrapó aquí y le dijo que esperara.",
+    "actions": {
+      "Waking Stone Fist": {
+        "name": "Puño de Piedra Despierta"
+      },
+      "Closing Stone": {
+        "name": "Piedra de Cierre"
+      }
+    }
   },
   "blue-wyrmling": {
     "name": "Dragoncillo Azul",
-    "flavorText": "Abazigal lleva mucho en esto: engendrando sobre dragones y dracos y cosas más extrañas, criando la tormenta de su sangre de vuelta en una prole que llena de extremo a extremo la cálida oscuridad de su guarida. Estos son los jóvenes de ello, aún lo bastante pequeños para llamarlos dragoncillos, las escamas del azul eléctrico profundo de su progenitor y el aire en torno a ellos ya crepitando tenue cuando despiertan. Aún no son astutos. No tienen por qué serlo. Son relámpago con dientes, y hay un buen montón de ellos entre tú y su padre."
+    "flavorText": "Abazigal lleva mucho en esto: engendrando sobre dragones y dracos y cosas más extrañas, criando la tormenta de su sangre de vuelta en una prole que llena de extremo a extremo la cálida oscuridad de su guarida. Estos son los jóvenes de ello, aún lo bastante pequeños para llamarlos dragoncillos, las escamas del azul eléctrico profundo de su progenitor y el aire en torno a ellos ya crepitando tenue cuando despiertan. Aún no son astutos. No tienen por qué serlo. Son relámpago con dientes, y hay un buen montón de ellos entre tú y su padre.",
+    "actions": {
+      "Storm-Charged Bite": {
+        "name": "Mordisco Cargado de Tormenta"
+      },
+      "Snapping Frenzy": {
+        "name": "Frenesí de Dentelladas"
+      }
+    }
   },
   "stormscale-drake": {
     "name": "Draco de Escama de Tormenta",
-    "flavorText": "Entre los semidragones y los dragoncillos Abazigal guarda cosas más simples también: los dracos de escama de tormenta, grandes como caballos de guerra y ni una décima de brillantes, criados para nada salvo el relámpago en ellos y dejados vagar las galerías medias como perros de guardia. No tienen nada de la astucia de su progenitor ni nada de su orgullo; son apetito y embestida y una lengua que arquea, y perseguirán a una cosa que huye hasta el agotamiento por puro instinto romo. No los ama. No tiene por qué. Mantienen los caminos profundos ruidosos y letales, y eso es todo lo que pide."
+    "flavorText": "Entre los semidragones y los dragoncillos Abazigal guarda cosas más simples también: los dracos de escama de tormenta, grandes como caballos de guerra y ni una décima de brillantes, criados para nada salvo el relámpago en ellos y dejados vagar las galerías medias como perros de guardia. No tienen nada de la astucia de su progenitor ni nada de su orgullo; son apetito y embestida y una lengua que arquea, y perseguirán a una cosa que huye hasta el agotamiento por puro instinto romo. No los ama. No tiene por qué. Mantienen los caminos profundos ruidosos y letales, y eso es todo lo que pide.",
+    "actions": {
+      "Forked-Tongue Lash": {
+        "name": "Latigazo de Lengua Bífida"
+      },
+      "Lashing Pair": {
+        "name": "Par Restallante"
+      },
+      "Thunderclap Roar": {
+        "name": "Rugido Atronador"
+      }
+    }
   },
   "half-dragon-reaver": {
     "name": "Saqueador Semidragón",
-    "flavorText": "Donde los dragoncillos son las bestias de Abazigal, los saqueadores son sus hijos: semidragones por su sangre, crecidos a anchos guerreros de escama azul que cargan tanto su orgullo como la disciplina que se cuidó de inculcarles. Guardan las galerías del corazón de la guarida como una casa guarda a su señor, y pelean como tal: sin movimiento desperdiciado, sin miedo, el hacha grande entrando en la misma cadencia mesurada cada vez y la tormenta de sus venas cabalgando filo abajo. Saben en qué se está convirtiendo su padre. Pretenden estar de pie a su lado cuando lo haga."
+    "flavorText": "Donde los dragoncillos son las bestias de Abazigal, los saqueadores son sus hijos: semidragones por su sangre, crecidos a anchos guerreros de escama azul que cargan tanto su orgullo como la disciplina que se cuidó de inculcarles. Guardan las galerías del corazón de la guarida como una casa guarda a su señor, y pelean como tal: sin movimiento desperdiciado, sin miedo, el hacha grande entrando en la misma cadencia mesurada cada vez y la tormenta de sus venas cabalgando filo abajo. Saben en qué se está convirtiendo su padre. Pretenden estar de pie a su lado cuando lo haga.",
+    "actions": {
+      "Crackling Greataxe": {
+        "name": "Hacha Grande Crepitante"
+      },
+      "Reaver's Cadence": {
+        "name": "Cadencia del Saqueador"
+      },
+      "Sundering Shock": {
+        "name": "Descarga Demoledora"
+      }
+    }
   },
   "sendai": {
     "name": "Sendai",
-    "flavorText": "De los Cinco Engendros de Bhaal rivales, Sendai se tuvo por la más astuta, y su enclave es la prueba y la trampa de ello: una ciudad drow tallada honda en la roca, cada galería jalonada de sus propios parientes vueltos piedra y posados esperando, de modo que toda su fortaleza es una emboscada contenida que despierta al acercarte a su asiento. Se sienta en el centro de ella en un trono de drow petrificados, una matrona que ha gobernado por la paciencia donde sus hermanos gobernaron por la fuerza, y te ve llegar como ha visto llegar a un centenar de aspirantes a asesinos: segura de que la roca te tomará mucho antes de que la alcances, y enteramente dispuesta a bajar a terminarlo ella misma si no lo hace."
+    "flavorText": "De los Cinco Engendros de Bhaal rivales, Sendai se tuvo por la más astuta, y su enclave es la prueba y la trampa de ello: una ciudad drow tallada honda en la roca, cada galería jalonada de sus propios parientes vueltos piedra y posados esperando, de modo que toda su fortaleza es una emboscada contenida que despierta al acercarte a su asiento. Se sienta en el centro de ella en un trono de drow petrificados, una matrona que ha gobernado por la paciencia donde sus hermanos gobernaron por la fuerza, y te ve llegar como ha visto llegar a un centenar de aspirantes a asesinos: segura de que la roca te tomará mucho antes de que la alcances, y enteramente dispuesta a bajar a terminarlo ella misma si no lo hace.",
+    "actions": {
+      "As I Have Held the Rest": {
+        "name": "Como He Retenido a los Demás"
+      },
+      "Mace of the Twice-Promised": {
+        "name": "Maza del Dos Veces Prometido"
+      },
+      "Matron's Wrath": {
+        "name": "Ira de la Matrona"
+      },
+      "Wake, and Serve": {
+        "name": "Despierta, y Sirve"
+      }
+    }
   },
   "abazigal": {
     "name": "Abazigal",
-    "flavorText": "El último y el más fuerte de los Cinco que cazas, Abazigal reclama sangre de dragón en su linaje y ha pasado su larga vida demostrándolo: tomando la forma semidragón y luego negándose a dejarla jamás, hasta que el hombre se ha ido y solo queda el gran wyrm cobalto, enroscado en el fondo de cavernas que ha llenado de extremo a extremo con su propia prole de sangre de tormenta. Es inmune al relámpago que es todo su linaje, y pretende ser inmune a la muerte del mismo modo: sabe, como tú, que la esencia divina de los abatidos de los Cinco fluye a los supervivientes, y pretende ser el superviviente. «Así que», dice, y la palabra es trueno en la roca cerrada, «el enclenque de la camada de Bhaal baja a ser un peldaño. Acércate, pequeño pariente. Tengo sitio en mí para un dios más.»"
+    "flavorText": "El último y el más fuerte de los Cinco que cazas, Abazigal reclama sangre de dragón en su linaje y ha pasado su larga vida demostrándolo: tomando la forma semidragón y luego negándose a dejarla jamás, hasta que el hombre se ha ido y solo queda el gran wyrm cobalto, enroscado en el fondo de cavernas que ha llenado de extremo a extremo con su propia prole de sangre de tormenta. Es inmune al relámpago que es todo su linaje, y pretende ser inmune a la muerte del mismo modo: sabe, como tú, que la esencia divina de los abatidos de los Cinco fluye a los supervivientes, y pretende ser el superviviente. «Así que», dice, y la palabra es trueno en la roca cerrada, «el enclenque de la camada de Bhaal baja a ser un peldaño. Acércate, pequeño pariente. Tengo sitio en mí para un dios más.»",
+    "actions": {
+      "Thunderous Roar": {
+        "name": "Rugido Tronante"
+      },
+      "Arc-Lightning Breath": {
+        "name": "Aliento de Rayo en Arco"
+      },
+      "Rending Bite and Claws": {
+        "name": "Mordisco y Garras Desgarradoras"
+      }
+    }
   },
   "bhaal-essence-mote": {
     "name": "Mota de Esencia de Bhaal",
-    "flavorText": "Las charcas del Trono no son agua. Son el asesinato destilado de un dios muerto y de cada alma que su sangre envenenó alguna vez, y no yacen quietas: brotan. Esto es lo menor de lo que brotan: un coágulo del tamaño de una persona, espumado de la superficie por el hambre de debajo, que se sostiene solo mientras está matando. No tiene rostro y no recuerda nombre alguno, ni siquiera el de Bhaal. Solo conoce la única cosa que las charcas conocen, la única que queda del Dios del Asesinato cuando todo lo demás de él se evaporó: que debería haber menos de ti, y más de esto."
+    "flavorText": "Las charcas del Trono no son agua. Son el asesinato destilado de un dios muerto y de cada alma que su sangre envenenó alguna vez, y no yacen quietas: brotan. Esto es lo menor de lo que brotan: un coágulo del tamaño de una persona, espumado de la superficie por el hambre de debajo, que se sostiene solo mientras está matando. No tiene rostro y no recuerda nombre alguno, ni siquiera el de Bhaal. Solo conoce la única cosa que las charcas conocen, la única que queda del Dios del Asesinato cuando todo lo demás de él se evaporó: que debería haber menos de ti, y más de esto.",
+    "actions": {
+      "Congealing Murder": {
+        "name": "Asesinato Coagulante"
+      }
+    }
   },
   "blood-fiend": {
     "name": "Fiendo de Sangre",
-    "flavorText": "Alimenta un coágulo de asesinato el tiempo suficiente y aprende a sostenerse entre comidas. El fiendo de sangre es lo que una mota llega a ser cuando las charcas del Trono lo han criado más allá del umbral de olvidar cómo morir: una cosa erguida ahora, alta y asimétrica y humeando tenue, con demasiados brazos porque el asesinato del que está hecho siempre estuvo alargándose. No ruge ni amenaza. Subió del suelo del salón del dios muerto como sube la humedad por una pared, y cruza el terreno hacia ti con la paciencia de una marea, seguro en la médula que no tiene de que hay sitio en él para un alma más, y de que el sitio es exactamente de tu tamaño."
+    "flavorText": "Alimenta un coágulo de asesinato el tiempo suficiente y aprende a sostenerse entre comidas. El fiendo de sangre es lo que una mota llega a ser cuando las charcas del Trono lo han criado más allá del umbral de olvidar cómo morir: una cosa erguida ahora, alta y asimétrica y humeando tenue, con demasiados brazos porque el asesinato del que está hecho siempre estuvo alargándose. No ruge ni amenaza. Subió del suelo del salón del dios muerto como sube la humedad por una pared, y cruza el terreno hacia ti con la paciencia de una marea, seguro en la médula que no tiene de que hay sitio en él para un alma más, y de que el sitio es exactamente de tu tamaño.",
+    "actions": {
+      "Sanguine Rend": {
+        "name": "Desgarro Sanguíneo"
+      }
+    }
   },
   "essence-warden": {
     "name": "Guardián de las Charcas",
-    "flavorText": "Toda cosecha necesita su guardián de los recipientes: el que atiende las cubas, espuma la nata, repone lo que se evapora, y se asegura de que nada precioso se derrame o malgaste. En el Trono de Bhaal los recipientes son charcas de un dios destilado, y el guardián las atiende con el cuidado terrible de un sacristán: no cruel, exactamente, solo metódico, solo poco dispuesto a ver buena esencia echarse a perder cuando podría volver a verterse en algo útil. Para él los fiendos son existencias que conservar, las charcas un encargo que administrar, y tú una fuga. Te verá detenido como detiene cualquier fuga: sin calor, sin prisa, y sin la menor duda de que el suelo volverá a estar limpio cuando termines de gotear."
+    "flavorText": "Toda cosecha necesita su guardián de los recipientes: el que atiende las cubas, espuma la nata, repone lo que se evapora, y se asegura de que nada precioso se derrame o malgaste. En el Trono de Bhaal los recipientes son charcas de un dios destilado, y el guardián las atiende con el cuidado terrible de un sacristán: no cruel, exactamente, solo metódico, solo poco dispuesto a ver buena esencia echarse a perder cuando podría volver a verterse en algo útil. Para él los fiendos son existencias que conservar, las charcas un encargo que administrar, y tú una fuga. Te verá detenido como detiene cualquier fuga: sin calor, sin prisa, y sin la menor duda de que el suelo volverá a estar limpio cuando termines de gotear.",
+    "actions": {
+      "Sluice the Pools": {
+        "name": "Verter los Estanques"
+      },
+      "Spray of Ichor": {
+        "name": "Rociada de Icor"
+      },
+      "Warden's Gavel": {
+        "name": "Mazo del Guardián"
+      }
+    }
   },
   "marilith-warden": {
     "name": "Marilith del Trono",
-    "flavorText": "Cuando los planos inferiores apostaron una guardia en el Trono vacío, no la confiaron solo a escribientes. Enviaron una capitana. La marilith ha sostenido la aproximación interior desde antes de que el Dios del Asesinato fuera un cadáver, y la larga vigilia no la ha embotado como embotó a los abishai: una marilith no se aburre, se prepara. Ha combatido a toda clase de aspirante que los siglos enviaron salón arriba y los ha plegado a todos contra el suelo, y te contempla como una duelista de antigüedad imposible contempla a un retador más: con un destello de algo casi como cortesía, seis hojas ya alzándose, el anillo de serpiente ya cerrando sin prisa la distancia que creías tener. Amelyssan no necesita defender el Trono mientras esta cosa siga en pie en sus escalones."
+    "flavorText": "Cuando los planos inferiores apostaron una guardia en el Trono vacío, no la confiaron solo a escribientes. Enviaron una capitana. La marilith ha sostenido la aproximación interior desde antes de que el Dios del Asesinato fuera un cadáver, y la larga vigilia no la ha embotado como embotó a los abishai: una marilith no se aburre, se prepara. Ha combatido a toda clase de aspirante que los siglos enviaron salón arriba y los ha plegado a todos contra el suelo, y te contempla como una duelista de antigüedad imposible contempla a un retador más: con un destello de algo casi como cortesía, seis hojas ya alzándose, el anillo de serpiente ya cerrando sin prisa la distancia que creías tener. Amelyssan no necesita defender el Trono mientras esta cosa siga en pie en sus escalones.",
+    "actions": {
+      "Coils of the Pit": {
+        "name": "Anillos del Pozo"
+      },
+      "Six-Bladed Storm": {
+        "name": "Tormenta de Seis Hojas"
+      },
+      "Abyssal Blade": {
+        "name": "Hoja Abisal"
+      }
+    }
   },
   "murder-herald": {
     "name": "Heraldo de los Engendros de Bhaal",
-    "flavorText": "Amelyssan no cosechó a los Hijos de Bhaal solo con sus propias manos. Alzó voces para ello: un coro de sacerdotes y de cosas con forma de sacerdote, cada uno con un oficio en la larga liturgia de la cosecha, cada uno aún cantándola aquí al final porque el canto es lo único de lo que finalmente fueron hechos. Este es uno de los cantores menores, mantenido en el Trono para el verso servil: poblar el suelo del salón, espumar las charcas y poner en pie las espumas, asegurar que quien escale al asiento deba vadear el asesinato entero para alcanzarlo. Te saluda como un sacristán saluda a un rezagado a un funeral que, está calladamente seguro, pronto será el tuyo."
+    "flavorText": "Amelyssan no cosechó a los Hijos de Bhaal solo con sus propias manos. Alzó voces para ello: un coro de sacerdotes y de cosas con forma de sacerdote, cada uno con un oficio en la larga liturgia de la cosecha, cada uno aún cantándola aquí al final porque el canto es lo único de lo que finalmente fueron hechos. Este es uno de los cantores menores, mantenido en el Trono para el verso servil: poblar el suelo del salón, espumar las charcas y poner en pie las espumas, asegurar que quien escale al asiento deba vadear el asesinato entero para alcanzarlo. Te saluda como un sacristán saluda a un rezagado a un funeral que, está calladamente seguro, pronto será el tuyo.",
+    "actions": {
+      "Skim the Pools": {
+        "name": "Rozar los Estanques"
+      },
+      "Herald's Censer": {
+        "name": "Incensario del Heraldo"
+      }
+    }
   },
   "slayer-echo": {
     "name": "Eco del Verdugo",
-    "flavorText": "Eres un Hijo de Bhaal, y la herencia nunca ha sido una metáfora. En algún lugar bajo cada vida que has vivido está el Verdugo, la propia forma-asesinato del dios, esperando en la sangre el único momento en que estés bastante cansado o asustado o agraviado para dejarle tomar la rueda. Has pasado cien muertes manteniendo esa puerta cerrada. Aquí, al pie de su Trono, con su esencia destilada humeando en charcas a cada lado, la puerta no te necesita para abrirla. La corrupción simplemente responde a las charcas como el agua responde al agua, y se alza de tu propia sombra, y se vuelve, y estás mirando exactamente lo que serías si alguna vez perdieras. No habla. Nunca ha necesitado hacerlo. Solo ha querido siempre la única cosa, y siempre, con paciencia, ha estado dispuesto a ser tú para conseguirla."
+    "flavorText": "Eres un Hijo de Bhaal, y la herencia nunca ha sido una metáfora. En algún lugar bajo cada vida que has vivido está el Verdugo, la propia forma-asesinato del dios, esperando en la sangre el único momento en que estés bastante cansado o asustado o agraviado para dejarle tomar la rueda. Has pasado cien muertes manteniendo esa puerta cerrada. Aquí, al pie de su Trono, con su esencia destilada humeando en charcas a cada lado, la puerta no te necesita para abrirla. La corrupción simplemente responde a las charcas como el agua responde al agua, y se alza de tu propia sombra, y se vuelve, y estás mirando exactamente lo que serías si alguna vez perdieras. No habla. Nunca ha necesitado hacerlo. Solo ha querido siempre la única cosa, y siempre, con paciencia, ha estado dispuesto a ser tú para conseguirla.",
+    "actions": {
+      "The Slayer Rises": {
+        "name": "El Asesino se Alza"
+      },
+      "Murderous Frenzy": {
+        "name": "Frenesí Asesino"
+      },
+      "Slayer's Claws": {
+        "name": "Garras del Asesino"
+      }
+    }
   },
   "throne-abishai": {
     "name": "Abishai del Trono",
-    "flavorText": "Cuando el Dios del Asesinato murió y su Trono quedó vacío, los poderes de los planos inferiores hicieron lo que los poderes hacen con un asiento de cargo vacante: apostaron una guardia, por si la silla significaba algo que no habían terminado de entender. Los abishai han hecho la vigilia desde entonces, y el largo aburrimiento de ello ha desgastado toda la malicia hasta dejar procedimiento. No te odia. Simplemente no te dejará pasar, como no dejó pasar al último, ni a los mil anteriores: un escribiente del foso, sellando a cada alma que escala al Trono con el mismo sello ganchudo: denegado."
+    "flavorText": "Cuando el Dios del Asesinato murió y su Trono quedó vacío, los poderes de los planos inferiores hicieron lo que los poderes hacen con un asiento de cargo vacante: apostaron una guardia, por si la silla significaba algo que no habían terminado de entender. Los abishai han hecho la vigilia desde entonces, y el largo aburrimiento de ello ha desgastado toda la malicia hasta dejar procedimiento. No te odia. Simplemente no te dejará pasar, como no dejó pasar al último, ni a los mil anteriores: un escribiente del foso, sellando a cada alma que escala al Trono con el mismo sello ganchudo: denegado.",
+    "actions": {
+      "Dread of the Pit": {
+        "name": "Pavor del Pozo"
+      },
+      "Barbed Scourge": {
+        "name": "Azote Dentado"
+      }
+    }
   },
   "melissan": {
     "name": "Melissan",
-    "flavorText": "Fue el rostro más amable de toda la larga pesadilla. A lo largo de cada capítulo de la crisis hubo una mujer llamada Melissan al borde de lo peor de ello —aconsejando, dando cobijo, reuniendo a los Hijos de Bhaal huérfanos bajo su ala y llorando con ellos por lo que la herencia había hecho— y confiaste en ella, porque era la única persona en todo aquello que parecía no querer nada de ti salvo tu seguridad. Esa fue la obra maestra. Amelyssan la del Corazón Negro fue la más alta sacerdotisa de Bhaal antes de que él muriera, y no tanto lloró a su dios como lo inventarió: una divinidad destilada en un centenar de vasos mortales y esparcida por el mundo para ser segada a placer. La crisis entera fue su cosecha. Cada muerte que moriste fue una medida tomada. Y ahora, al pie del Trono vacío, con lo último de la esencia humeando en charcas a su alrededor y la máscara amable al fin apartada, se vuelve hacia ti sin ira alguna: solo la serena y terrible paciencia de una sacerdotisa en el rito final. «Siempre fuiste la mayor de las ofrendas», dice, y el Trono a su espalda empieza, tenue, a llenarse. «Gracias por cargarte a ti mismo todo el camino hasta el altar. Quédate quieto ahora. Hay un dios que hacer de todos vosotros, y he esperado muchísimo tiempo a ser Él.»"
+    "flavorText": "Fue el rostro más amable de toda la larga pesadilla. A lo largo de cada capítulo de la crisis hubo una mujer llamada Melissan al borde de lo peor de ello —aconsejando, dando cobijo, reuniendo a los Hijos de Bhaal huérfanos bajo su ala y llorando con ellos por lo que la herencia había hecho— y confiaste en ella, porque era la única persona en todo aquello que parecía no querer nada de ti salvo tu seguridad. Esa fue la obra maestra. Amelyssan la del Corazón Negro fue la más alta sacerdotisa de Bhaal antes de que él muriera, y no tanto lloró a su dios como lo inventarió: una divinidad destilada en un centenar de vasos mortales y esparcida por el mundo para ser segada a placer. La crisis entera fue su cosecha. Cada muerte que moriste fue una medida tomada. Y ahora, al pie del Trono vacío, con lo último de la esencia humeando en charcas a su alrededor y la máscara amable al fin apartada, se vuelve hacia ti sin ira alguna: solo la serena y terrible paciencia de una sacerdotisa en el rito final. «Siempre fuiste la mayor de las ofrendas», dice, y el Trono a su espalda empieza, tenue, a llenarse. «Gracias por cargarte a ti mismo todo el camino hasta el altar. Quédate quieto ahora. Hay un dios que hacer de todos vosotros, y he esperado muchísimo tiempo a ser Él.»",
+    "actions": {
+      "The Murder That Stops the Heart": {
+        "name": "El Asesinato que Para el Corazón"
+      },
+      "Draw on the Pools": {
+        "name": "Beber de los Estanques"
+      },
+      "Drink the Harvest": {
+        "name": "Beber la Cosecha"
+      },
+      "Scepter of the Unspoken God": {
+        "name": "Cetro del Dios Innombrado"
+      }
+    }
   },
   "ascendant-slayer": {
     "name": "Verdugo Ascendente",
-    "flavorText": "Escala la rueda lo bastante a menudo y algo escala contigo. El Verdugo Ascendente es la forma-asesinato del dios envalentonada por la repetición: el Verdugo que se alzó en tu sombra en el Trono, y no volvió a yacer cuando el ciclo te expulsó a una nueva vida al fondo de la cadena. Cada ascensión recuerda más, y despierta antes, y emerge más arriba de ti, hasta que ya no espera a que se alcance el Trono antes de caminar. Lleva tu alcance y tu cadencia porque eran tuyos; simplemente ha dejado de aceptar que el cuerpo en torno a ellos lo sea. No habla. Solo ha querido siempre la única cosa —ser el que termina el ascenso— y siempre ha estado dispuesto a ser tú para conseguirla."
+    "flavorText": "Escala la rueda lo bastante a menudo y algo escala contigo. El Verdugo Ascendente es la forma-asesinato del dios envalentonada por la repetición: el Verdugo que se alzó en tu sombra en el Trono, y no volvió a yacer cuando el ciclo te expulsó a una nueva vida al fondo de la cadena. Cada ascensión recuerda más, y despierta antes, y emerge más arriba de ti, hasta que ya no espera a que se alcance el Trono antes de caminar. Lleva tu alcance y tu cadencia porque eran tuyos; simplemente ha dejado de aceptar que el cuerpo en torno a ellos lo sea. No habla. Solo ha querido siempre la única cosa —ser el que termina el ascenso— y siempre ha estado dispuesto a ser tú para conseguirla.",
+    "actions": {
+      "Ascendant Frenzy": {
+        "name": "Frenesí Ascendente"
+      },
+      "Frenzied Rend": {
+        "name": "Desgarro Frenético"
+      }
+    }
   },
   "void-warden": {
     "name": "Guardián del Vacío",
-    "flavorText": "La rueda no gira a través de la nada. Entre la muerte que acaba una vida y el despertar que empieza la siguiente hay un silencio, vasto y sin luz y consciente, y guarda guardianes. El Guardián del Vacío es uno de ellos, arrancado de su puesto y subido por la cadena en la estela de un alma que ha aprendido a escalar la rueda a propósito… y no lo aprueba. Para él los muertos ascendentes son una fuga en el orden propio de los finales, almas que debieron quedar bajo tierra alzándose en cambio, una y otra vez, rechazando la oscuridad que se debe. No te odia por ello; el entremedio no odia. Solo pliega la luz lejos de ti pieza a pieza, y espera, con la paciencia sin fondo de un lugar que nunca una vez ha tenido prisa, a que estés quieto y gris y rendido como todos los demás."
+    "flavorText": "La rueda no gira a través de la nada. Entre la muerte que acaba una vida y el despertar que empieza la siguiente hay un silencio, vasto y sin luz y consciente, y guarda guardianes. El Guardián del Vacío es uno de ellos, arrancado de su puesto y subido por la cadena en la estela de un alma que ha aprendido a escalar la rueda a propósito… y no lo aprueba. Para él los muertos ascendentes son una fuga en el orden propio de los finales, almas que debieron quedar bajo tierra alzándose en cambio, una y otra vez, rechazando la oscuridad que se debe. No te odia por ello; el entremedio no odia. Solo pliega la luz lejos de ti pieza a pieza, y espera, con la paciencia sin fondo de un lugar que nunca una vez ha tenido prisa, a que estés quieto y gris y rendido como todos los demás.",
+    "actions": {
+      "Unseeing Hush": {
+        "name": "Quietud Ciega"
+      },
+      "Draw on the Silence": {
+        "name": "Beber del Silencio"
+      },
+      "Erasing Touch": {
+        "name": "Toque Borrador"
+      }
+    }
   },
   "deathless-ascendant": {
     "name": "Ascendente Sin Muerte",
-    "flavorText": "Algunas almas escalan la rueda por un final: por ascender, por romper el ciclo, por que al fin se les permita parar. Esta escaló tanto tiempo que el querer se gastó, y el parar nunca llegó, y en algún punto del milésimo descenso simplemente olvidó la diferencia entre vivir y no. El Ascendente Sin Muerte es lo que queda: un escalador que ya no recuerda un destino, caminando la cadena por puro hábito, ni lo bastante vivo para descansar ni lo bastante muerto para ser liberado. Se alza en los mismos capítulos que tú porque hace lo mismo que tú, y te mira como un hombre mira su propio reflejo en mala luz: con un reconocimiento tenue y exhausto, y la convicción sorda de que la única misericordia que queda en todo ello es asegurarse de que nunca tengas que escalar tan lejos como él."
+    "flavorText": "Algunas almas escalan la rueda por un final: por ascender, por romper el ciclo, por que al fin se les permita parar. Esta escaló tanto tiempo que el querer se gastó, y el parar nunca llegó, y en algún punto del milésimo descenso simplemente olvidó la diferencia entre vivir y no. El Ascendente Sin Muerte es lo que queda: un escalador que ya no recuerda un destino, caminando la cadena por puro hábito, ni lo bastante vivo para descansar ni lo bastante muerto para ser liberado. Se alza en los mismos capítulos que tú porque hace lo mismo que tú, y te mira como un hombre mira su propio reflejo en mala luz: con un reconocimiento tenue y exhausto, y la convicción sorda de que la única misericordia que queda en todo ello es asegurarse de que nunca tengas que escalar tan lejos como él.",
+    "actions": {
+      "Refuse the Ending": {
+        "name": "Rechazar el Final"
+      },
+      "Weight of Every Death": {
+        "name": "Peso de Cada Muerte"
+      },
+      "Wheel-Worn Cleaver": {
+        "name": "Cuchilla Gastada por la Rueda"
+      }
+    }
   }
 }

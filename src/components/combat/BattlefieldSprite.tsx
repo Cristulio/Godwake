@@ -448,7 +448,12 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
       `}
     >
       <div className="h-5 flex items-end justify-center mb-0.5">
-        {intent && <IntentBadge intent={intent} />}
+        {intent && (
+          <IntentBadge
+            intent={intent}
+            monsterId={props.kind === 'monster' ? props.instance.defId : undefined}
+          />
+        )}
       </div>
 
       <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-bold mb-0.5 font-display">

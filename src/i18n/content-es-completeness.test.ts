@@ -36,7 +36,7 @@ import esGlossary from './locales/es/glossary.json';
 
 type Overlay = Record<string, Record<string, string>>;
 
-const monsters = esMonsters as Overlay;
+const monsters = esMonsters as unknown as Overlay;
 const events = esEvents as Overlay;
 const lore = esLore as Overlay;
 const bossIntel = esBossIntel as Overlay;
@@ -76,6 +76,21 @@ describe('es/monsters.json completeness', () => {
     const ids = new Set(listMonsters().map((m) => m.id));
     const orphans = Object.keys(monsters).filter((id) => !ids.has(id));
     expect(orphans, `orphan monster overlays: ${orphans.join(', ')}`).toEqual([]);
+  });
+
+  it('every monster action has a Spanish name overlay (combat log + Codex)', () => {
+    const missing: string[] = [];
+    for (const m of listMonsters()) {
+      const row = monsters[m.id] as unknown as { actions?: Record<string, { name?: string }> } | undefined;
+      const actions = row?.actions;
+      for (const a of m.actions) {
+        const esName = actions?.[a.name]?.name;
+        if (typeof esName !== 'string' || esName.trim().length === 0) {
+          missing.push(`${m.id}.${a.name}`);
+        }
+      }
+    }
+    expect(missing, `missing monster action-name overlays: ${missing.join(', ')}`).toEqual([]);
   });
 });
 
