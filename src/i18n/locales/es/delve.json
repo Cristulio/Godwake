@@ -152,6 +152,8 @@
     "youChose": "elegiste · {label}",
     "success": "Éxito",
     "failure": "Fracaso",
+    "vsDc": "contra CD {dc}",
+    "skipRoll": "Saltar la tirada",
     "dcBadge": "{skill} CD {dc} · {bonus}",
     "checkTitle": "Prueba de {skill} ({ability}) — tu bonificador {bonus}{proficient}",
     "proficientSuffix": ", competente"

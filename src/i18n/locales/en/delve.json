@@ -152,6 +152,8 @@
     "youChose": "you chose · {label}",
     "success": "Success",
     "failure": "Failure",
+    "vsDc": "vs DC {dc}",
+    "skipRoll": "Skip the roll",
     "dcBadge": "{skill} DC {dc} · {bonus}",
     "checkTitle": "{skill} ({ability}) check — your bonus {bonus}{proficient}",
     "proficientSuffix": ", proficient"
