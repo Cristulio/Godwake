@@ -100,7 +100,7 @@
   },
   "inventory": {
     "noCharacter": "No character. Return to title.",
-    "heading": "INVENTORY",
+    "heading": "BACKPACK",
     "subtitle": "{name} · {n} items · AC {ac} · Crit {crit}",
     "backToDelve": "← Back to the delve",
     "backPhandalin": "← Phandalin",

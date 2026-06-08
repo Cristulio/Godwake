@@ -24,10 +24,17 @@
   "groveSealed": "Sealed to you",
   "renown": "Renown",
   "bestiary": "☥ Bestiary",
-  "inventory": "⛁ Inventory",
+  "inventory": "⛁ Backpack",
+  "backpack": "⛁ Backpack",
+  "glossary": "≡ Glossary",
   "relics": "✦ Relics",
   "open": "Open →",
   "relicsBound": "{n} bound →",
+  "glossaryScreen": {
+    "title": "The Glossary",
+    "subtitle": "Stats and mechanics, plainly told",
+    "back": "← Phandalin"
+  },
   "firstLife": {
     "ironCells": "The Iron Cells",
     "wake": "You wake in the dark, {name}.",

@@ -24,10 +24,17 @@
   "groveSealed": "Vedada para ti",
   "renown": "Renombre",
   "bestiary": "☥ Bestiario",
-  "inventory": "⛁ Inventario",
+  "inventory": "⛁ Mochila",
+  "backpack": "⛁ Mochila",
+  "glossary": "≡ Glosario",
   "relics": "✦ Reliquias",
   "open": "Abrir →",
   "relicsBound": "{n} ligadas →",
+  "glossaryScreen": {
+    "title": "El Glosario",
+    "subtitle": "Estadísticas y mecánicas, dichas con claridad",
+    "back": "← Phandalin"
+  },
   "firstLife": {
     "ironCells": "Las Celdas de Hierro",
     "wake": "Despiertas en la oscuridad, {name}.",
