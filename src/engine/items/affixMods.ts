@@ -128,5 +128,10 @@ export function characterAffixMods(character: Character): AffixMods {
   for (const m of character.legendaryEffects ?? []) {
     applyAffixModifiers(acc, m);
   }
+  // Set-gear effect payloads (pieces' effects + completed-set bonuses). Their
+  // base stats / +N ride the normal equipment path; only the effects fold here.
+  for (const m of character.setEffects ?? []) {
+    applyAffixModifiers(acc, m);
+  }
   return acc;
 }

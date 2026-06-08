@@ -11,6 +11,7 @@ const RARITY_RANK: Record<GearRarity, number> = {
   blue: 2,
   purple: 3,
   legendary: 4,
+  set: 4,
 };
 
 /**

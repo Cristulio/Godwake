@@ -14,12 +14,7 @@ import {
   type RelicSlot,
 } from './legendaries';
 import type { AffixModifiers } from '../schemas/item';
-import {
-  ascensionAscendantLoot,
-  ascensionExclusiveLoot,
-  ASCENDANT_LOOT_FROM,
-  ASCENSION_EXCLUSIVE_LOOT_FROM,
-} from '../engine/delve/ascension';
+import { ascensionAscendantLoot, ASCENDANT_LOOT_FROM } from '../engine/delve/ascension';
 
 describe('legendary content', () => {
   it('has a stable id list matching the set, no duplicates', () => {
@@ -51,21 +46,15 @@ describe('legendary content', () => {
     expect(out.find((m) => (m.critRangeBonus ?? 0) > 0)?.critRangeBonus).toBe(1);
   });
 
-  it('folds completed-set bonuses into the aggregate', () => {
-    // Full Vigil set: 3 relic effects + 2 met set tiers (2-piece, 3-piece).
-    const out = aggregateLegendaryEffects(['vigil-helm', 'vigil-mantle', 'vigil-heart']);
-    expect(out).toHaveLength(5);
-  });
-
   it('ignores unknown ids and returns an empty list for none', () => {
     expect(aggregateLegendaryEffects([])).toEqual([]);
     expect(aggregateLegendaryEffects(['nonexistent'])).toEqual([]);
   });
 
-  it('gates class-bound relics to their class for equipping', () => {
-    expect(canEquipLegendary('warsong-gauntlet', 'fighter')).toBe(true);
-    expect(canEquipLegendary('warsong-gauntlet', 'wizard')).toBe(false);
-    expect(canEquipLegendary('vigil-helm', 'wizard')).toBe(true);
+  it('legendaries are boon-only now (no class gate) and reject unknown ids', () => {
+    // The class/set binding moved to set gear; every real relic equips for any class.
+    expect(canEquipLegendary('heartwood-talisman', 'wizard')).toBe(true);
+    expect(canEquipLegendary('heartwood-talisman', 'fighter')).toBe(true);
     expect(canEquipLegendary('nonexistent', 'fighter')).toBe(false);
   });
 
@@ -150,43 +139,10 @@ describe('ascendant legendary tier (Ascension >= 3 gate)', () => {
     const at = legendaryDropPool('fighter', ascensionAscendantLoot(ASCENDANT_LOOT_FROM));
     for (const id of ascendantIds) expect(at).toContain(id);
   });
-});
 
-describe('ascension-exclusive set tier (Ascension >= 1 gate)', () => {
-  const exclusiveIds = LEGENDARIES.filter((l) => l.ascensionExclusive).map((l) => l.id);
-
-  it('defines a non-empty exclusive tier, all flagged and none doubling as ascendant', () => {
-    expect(exclusiveIds.length).toBeGreaterThanOrEqual(6);
-    for (const id of exclusiveIds) {
-      const l = getLegendary(id);
-      expect(l?.ascensionExclusive).toBe(true);
-      expect(l?.ascendant).toBeUndefined();
-      // Every exclusive relic belongs to a set (signature class or global).
-      expect(l?.setId).toBeTruthy();
+  it('no legendary carries a set piece any more (set gear is a separate layer)', () => {
+    for (const l of LEGENDARIES) {
+      expect((l as unknown as Record<string, unknown>).setId).toBeUndefined();
     }
-  });
-
-  it('the bank (elite-drop) pool excludes the exclusive tier on a normal run and includes it on NG+', () => {
-    const normal = legendaryBankPool(false, ascensionExclusiveLoot(0));
-    for (const id of exclusiveIds) expect(normal).not.toContain(id);
-    const ngplus = legendaryBankPool(false, ascensionExclusiveLoot(ASCENSION_EXCLUSIVE_LOOT_FROM));
-    for (const id of exclusiveIds) expect(ngplus).toContain(id);
-  });
-
-  it('the class offer (reliquary) pool gates the exclusive tier and respects classGate', () => {
-    const normal = legendaryDropPool('fighter', false, ascensionExclusiveLoot(0));
-    for (const id of exclusiveIds) expect(normal).not.toContain(id);
-    const ngFighter = legendaryDropPool('fighter', false, ascensionExclusiveLoot(1));
-    // Fighter's own signature set is offered; another class's bound set is not.
-    expect(ngFighter).toContain('ironclad-helm');
-    expect(ngFighter).not.toContain('archmagi-orb');
-    // Global exclusive sets are class-agnostic — offered to any class on NG+.
-    expect(ngFighter).toContain('revenant-heart');
-  });
-
-  it('ascensionExclusiveLoot switches on at Ascension 1', () => {
-    expect(ascensionExclusiveLoot(0)).toBe(false);
-    expect(ascensionExclusiveLoot(1)).toBe(true);
-    expect(ascensionExclusiveLoot(6)).toBe(true);
   });
 });

@@ -15,7 +15,16 @@ import {
   RELIC_SLOTS,
   type RelicSlot,
 } from '../content/legendaries';
-import { isFeatureUnlocked, unlockedRelicSlots } from '../engine/progression/unlocks';
+import {
+  SET_PIECE_ORDER,
+  setPieceDropPool,
+  getSetPiece,
+  canEquipSetPiece,
+  aggregateSetEffects,
+  type SetPiece,
+} from '../content/sets';
+import type { EquipSlot } from '../engine/character/equip';
+import { unlockedRelicSlots } from '../engine/progression/unlocks';
 
 /**
  * Why a Grove purchase was refused. A stable CODE, not display text, so the UI
@@ -123,6 +132,20 @@ interface MetaStoreState {
    */
   equippedRelics: Partial<Record<RelicSlot, string>>;
   /**
+   * SET-gear pieces the soul has earned (cross-delve persistent slot gear,
+   * content/sets.ts). Account level — survives reincarnation, reset only on New
+   * Game. Banked from elite/boss drops; equipped into real gear slots at the hub.
+   */
+  ownedSetPieces: string[];
+  /**
+   * The equipped SET-gear LOADOUT — at most one piece per equip slot
+   * ({@link EquipSlot}). Equipping a piece fills its slot. At delve start the
+   * pieces materialise into the character's equipment (replacing the rolled /
+   * starting item) and their effect payloads bake onto `character.setEffects`;
+   * class-bound pieces only stick while playing that class.
+   */
+  equippedSetPieces: Partial<Record<EquipSlot, string>>;
+  /**
    * Whether the soul has cleared the whole chain (felled Melissan) at least once.
    * Set the first time the final chapter is cleared. Gates the one-time
    * Throne-of-Bhaal ending capstone — later full clears fall straight through to
@@ -196,7 +219,7 @@ interface MetaStoreState {
    * Returns the banked id, or null when none remain. Banks to the collection
    * only; the player equips it at the hub for a future descent.
    */
-  grantLegendaryDrop: (allowAscendant: boolean, allowExclusive?: boolean) => string | null;
+  grantLegendaryDrop: (allowAscendant: boolean) => string | null;
   /**
    * Bank a SPECIFIC legendary by id (the shop "reliquary" purchase). Adds it to
    * the collection if it's a real, un-owned relic. Returns whether it banked.
@@ -218,6 +241,32 @@ interface MetaStoreState {
    * used on load and on a body swap.
    */
   applyRelicLoadout: () => void;
+  /**
+   * Bank a RANDOM un-owned SET piece (the elite/boss drop path). Drops can be any
+   * class's piece — off-class pieces are stashed until the player runs that class.
+   * `allowExclusive` folds in the Ascension-exclusive (NG+) pieces. Returns the
+   * banked id, or null when none remain.
+   */
+  grantSetPieceDrop: (allowExclusive: boolean) => string | null;
+  /** Bank a SPECIFIC set piece by id. Returns whether it banked (real + un-owned). */
+  bankSetPiece: (id: string) => boolean;
+  /**
+   * Equip a set piece into its slot, replacing whatever set piece sat there. A
+   * ring routes to the first free band. No-op if unknown, un-owned, or class-bound
+   * to a class other than the worn one. Re-bakes the set effect payloads.
+   */
+  equipSetPiece: (pieceId: string) => void;
+  /** Clear an equip slot's set piece and re-bake the set effects. */
+  unequipSetSlot: (slot: EquipSlot) => void;
+  /**
+   * Re-validate the equipped set loadout against the worn class + ownership
+   * (dropping anything no longer valid) and bake the summed effect payloads onto
+   * `character.setEffects`. Idempotent; the re-bake entry point used on load and
+   * on a body swap. The pieces' base stats materialise separately at delve start.
+   */
+  applySetLoadout: () => void;
+  /** The valid equipped set pieces for the worn class — drives delve-start materialisation. */
+  equippedSetPieceList: () => SetPiece[];
   /**
    * Mark the whole chain cleared (felled Melissan). Set once the Throne-of-Bhaal
    * ending capstone has played; idempotent. Unlocks the title's New Game+ entry.
@@ -253,6 +302,8 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   seenTutorials: [],
   ownedLegendaries: [],
   equippedRelics: {},
+  ownedSetPieces: [],
+  equippedSetPieces: {},
   gameCompleted: false,
   selectedAscension: 0,
   newGamePlusActive: false,
@@ -386,13 +437,12 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
         : { seenTutorials: [...s.seenTutorials, tutorialId] },
     ),
 
-  grantLegendaryDrop: (allowAscendant, allowExclusive = false) => {
+  grantLegendaryDrop: (allowAscendant) => {
     const owned = get().ownedLegendaries;
     // Elite-node drops can yield ANY class's relic; off-class relics are stashed
     // until the player runs that class (the equip gate handles use). The apex
-    // ascendant tier only enters this pool at Ascension >= 3 (allowAscendant); the
-    // ascension-exclusive sets only on a New Game+ run (allowExclusive, Asc >= 1).
-    const pool = legendaryBankPool(allowAscendant, allowExclusive).filter(
+    // ascendant tier only enters this pool at Ascension >= 3 (allowAscendant).
+    const pool = legendaryBankPool(allowAscendant).filter(
       (id) => !owned.includes(id),
     );
     if (pool.length === 0) return null;
@@ -453,10 +503,99 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (character) {
-      const setsUnlocked = isFeatureUnlocked('sets', get());
       charSlice.setCharacter({
         ...character,
-        legendaryEffects: aggregateLegendaryEffects(Object.values(next), setsUnlocked),
+        legendaryEffects: aggregateLegendaryEffects(Object.values(next)),
+      });
+    }
+  },
+
+  grantSetPieceDrop: (allowExclusive) => {
+    const owned = get().ownedSetPieces;
+    const classId = useCharacterStore.getState().character?.classId;
+    // Drops can yield ANY class's piece; off-class ones are stashed until the
+    // player runs that class. Pull from the current class's pool when known so a
+    // run is biased toward usable pieces, else the whole pool.
+    const pool = (classId
+      ? setPieceDropPool(classId, allowExclusive)
+      : SET_PIECE_ORDER.filter((id) => allowExclusive || !getSetPiece(id)?.ascensionExclusive)
+    ).filter((id) => !owned.includes(id));
+    if (pool.length === 0) return null;
+    const pick = pool[(getActiveRoller().roll('1d100').total - 1) % pool.length];
+    set({ ownedSetPieces: [...owned, pick] });
+    return pick;
+  },
+
+  bankSetPiece: (id) => {
+    const owned = get().ownedSetPieces;
+    if (owned.includes(id) || !SET_PIECE_ORDER.includes(id)) return false;
+    set({ ownedSetPieces: [...owned, id] });
+    return true;
+  },
+
+  equipSetPiece: (pieceId) => {
+    const piece = getSetPiece(pieceId);
+    if (!piece) return;
+    if (!get().ownedSetPieces.includes(pieceId)) return;
+    const classId = useCharacterStore.getState().character?.classId;
+    if (classId && !canEquipSetPiece(pieceId, classId)) return;
+    // Rings route to the first free band (then overwrite ring1 if both are full).
+    let slot: EquipSlot = piece.slot;
+    if (piece.slot === 'ring1') {
+      const cur = get().equippedSetPieces;
+      slot = !cur.ring1 ? 'ring1' : !cur.ring2 ? 'ring2' : 'ring1';
+    }
+    set({ equippedSetPieces: { ...get().equippedSetPieces, [slot]: pieceId } });
+    get().applySetLoadout();
+  },
+
+  unequipSetSlot: (slot) => {
+    if (get().equippedSetPieces[slot] === undefined) return;
+    const next = { ...get().equippedSetPieces };
+    delete next[slot];
+    set({ equippedSetPieces: next });
+    get().applySetLoadout();
+  },
+
+  equippedSetPieceList: () => {
+    const owned = get().ownedSetPieces;
+    const classId = useCharacterStore.getState().character?.classId;
+    const out: SetPiece[] = [];
+    for (const id of Object.values(get().equippedSetPieces)) {
+      if (!id || !owned.includes(id)) continue;
+      const piece = getSetPiece(id);
+      if (!piece) continue;
+      if (classId && !canEquipSetPiece(id, classId)) continue;
+      out.push(piece);
+    }
+    return out;
+  },
+
+  applySetLoadout: () => {
+    const owned = get().ownedSetPieces;
+    const classId = useCharacterStore.getState().character?.classId;
+    const current = get().equippedSetPieces;
+    // Re-validate every slotted piece: a real, owned piece that still claims this
+    // slot and is equippable by the worn class. Anything failing is dropped.
+    const next: Partial<Record<EquipSlot, string>> = {};
+    (Object.keys(current) as EquipSlot[]).forEach((slot) => {
+      const id = current[slot];
+      if (!id || !owned.includes(id)) return;
+      const piece = getSetPiece(id);
+      if (!piece) return;
+      // The piece's canonical slot must match (rings may sit in either band).
+      const slotOk = piece.slot === slot || (piece.slot === 'ring1' && slot === 'ring2');
+      if (!slotOk) return;
+      if (classId && !canEquipSetPiece(id, classId)) return;
+      next[slot] = id;
+    });
+    set({ equippedSetPieces: next });
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (character) {
+      charSlice.setCharacter({
+        ...character,
+        setEffects: aggregateSetEffects(Object.values(next).filter((v): v is string => !!v)),
       });
     }
   },
@@ -496,6 +635,8 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       seenTutorials: [],
       ownedLegendaries: [],
       equippedRelics: {},
+      ownedSetPieces: [],
+      equippedSetPieces: {},
       gameCompleted: false,
       selectedAscension: 0,
       newGamePlusActive: false,

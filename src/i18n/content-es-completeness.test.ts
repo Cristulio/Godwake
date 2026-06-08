@@ -4,6 +4,7 @@ import { listEvents } from '../content/events';
 import { LORE_BEATS } from '../content/loreBeats';
 import { BOSS_INTEL_CARDS } from '../content/bossIntel';
 import { listUpgrades } from '../content/upgrades';
+import { GEAR_SETS, SET_PIECES } from '../content/sets';
 import type { EventChoiceOutcome } from '../schemas/event';
 
 import esMonsters from './locales/es/monsters.json';
@@ -13,6 +14,7 @@ import esBossIntel from './locales/es/bossIntel.json';
 import esChapters from './locales/es/chapters.json';
 import enUpgrades from './locales/en/upgrades.json';
 import esUpgrades from './locales/es/upgrades.json';
+import esSetGear from './locales/es/setGear.json';
 
 type Overlay = Record<string, Record<string, string>>;
 
@@ -21,6 +23,7 @@ const events = esEvents as Overlay;
 const lore = esLore as Overlay;
 const bossIntel = esBossIntel as Overlay;
 const chapters = esChapters as Overlay;
+const setGear = esSetGear as Overlay;
 
 /** A row field is "covered" when it exists and is a non-empty Spanish string. */
 function covered(row: Record<string, string> | undefined, field: string): boolean {
@@ -162,6 +165,30 @@ describe('upgrades.json completeness (en effect templates + es overlay)', () => 
     const ids = new Set(listUpgrades().map((u) => u.id));
     const orphans = [...Object.keys(en), ...Object.keys(es)].filter((id) => !ids.has(id));
     expect([...new Set(orphans)], `orphan upgrade overlays: ${orphans.join(', ')}`).toEqual([]);
+  });
+});
+
+describe('es/setGear.json completeness', () => {
+  it('every set has a Spanish name + flavor + a label for each bonus tier', () => {
+    const missing: string[] = [];
+    for (const set of GEAR_SETS) {
+      if (!covered(setGear[set.id], 'name')) missing.push(`${set.id}.name`);
+      if (!covered(setGear[set.id], 'flavor')) missing.push(`${set.id}.flavor`);
+      for (const tier of set.bonuses) {
+        if (!covered(setGear[`${set.id}.bonus`], String(tier.piecesRequired)))
+          missing.push(`${set.id}.bonus.${tier.piecesRequired}`);
+      }
+    }
+    expect(missing, `missing set overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('every set piece has a Spanish name + effect', () => {
+    const missing: string[] = [];
+    for (const piece of SET_PIECES) {
+      if (!covered(setGear[piece.id], 'name')) missing.push(`${piece.id}.name`);
+      if (!covered(setGear[piece.id], 'effect')) missing.push(`${piece.id}.effect`);
+    }
+    expect(missing, `missing set-piece overlays: ${missing.join(', ')}`).toEqual([]);
   });
 });
 

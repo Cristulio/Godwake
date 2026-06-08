@@ -71,18 +71,18 @@ describe('relic loadout — one relic per typed slot', () => {
   });
 
   it('holds at most one relic per slot — a second of the same slot replaces the first', () => {
-    // heartwood-talisman and hunters-eye both seat in the Vampire slot.
-    useMetaStore.setState({ ownedLegendaries: ['heartwood-talisman', 'hunters-eye'] });
+    // heartwood-talisman and carsomyr both seat in the Vampire slot.
+    useMetaStore.setState({ ownedLegendaries: ['heartwood-talisman', 'carsomyr'] });
     const meta = useMetaStore.getState();
     meta.equipRelic('heartwood-talisman');
     expect(useMetaStore.getState().equippedRelics.vampire).toBe('heartwood-talisman');
-    meta.equipRelic('hunters-eye');
+    meta.equipRelic('carsomyr');
     const eq = useMetaStore.getState().equippedRelics;
-    expect(eq.vampire).toBe('hunters-eye'); // replaced, not stacked
+    expect(eq.vampire).toBe('carsomyr'); // replaced, not stacked
     expect(Object.keys(eq)).toHaveLength(1);
-    // Only the survivor's lifesteal is baked (4, not 6 + 4).
+    // Only the survivor's lifesteal is baked (8, not 6 + 8).
     const mods = characterAffixMods(useCharacterStore.getState().character!);
-    expect(mods.lifestealPct).toBe(4);
+    expect(mods.lifestealPct).toBe(8);
   });
 
   it('clears the baked effects when the slot is unbound', () => {
@@ -105,41 +105,31 @@ describe('relic loadout — one relic per typed slot', () => {
     expect(useMetaStore.getState().equippedRelics.rend).toBe('gauntlets-of-the-titan');
   });
 
-  it('refuses to seat a class-bound relic for the wrong class (kept owned, just stashed)', () => {
+  it('legendaries are boon-only now — no relic carries a class gate', () => {
     useCharacterStore.setState({ character: makeCharacter('wizard') });
-    useMetaStore.setState({
-      ownedLegendaries: ['warsong-gauntlet', 'bulwark-sigil'],
-      renownSpent: 1500, // every slot open
-    });
-    const meta = useMetaStore.getState();
-    meta.equipRelic('warsong-gauntlet'); // Fighter-bound → ignored for a Wizard
-    meta.equipRelic('bulwark-sigil'); // agnostic → seats
-    const eq = useMetaStore.getState().equippedRelics;
-    expect(eq.aegis).toBe('bulwark-sigil');
-    expect(eq.cascade).toBeUndefined();
-    expect(useMetaStore.getState().ownedLegendaries).toContain('warsong-gauntlet');
-  });
-
-  it('seats a class-bound relic for the right class', () => {
-    useCharacterStore.setState({ character: makeCharacter('fighter') });
-    useMetaStore.setState({ ownedLegendaries: ['warsong-gauntlet'], renownSpent: 1500 });
-    useMetaStore.getState().equipRelic('warsong-gauntlet'); // Cascade slot
-    expect(useMetaStore.getState().equippedRelics.cascade).toBe('warsong-gauntlet');
+    useMetaStore.setState({ ownedLegendaries: ['bulwark-sigil'], renownSpent: 1500 });
+    useMetaStore.getState().equipRelic('bulwark-sigil');
+    expect(useMetaStore.getState().equippedRelics.aegis).toBe('bulwark-sigil');
   });
 });
 
-describe('legendary effects apply through the affix pipeline', () => {
-  it('a 2-piece set (pieces in distinct slots) stacks its bonus on top of the pieces', () => {
-    // Sets unlock at game completion (chaptersCleared 14). Two Vigil pieces in
-    // DISTINCT slots: helm (Aegis) + heart (Vampire), both open from the start.
-    useMetaStore.setState({
-      ownedLegendaries: ['vigil-helm', 'vigil-heart'],
-      delveCount: 999,
-      chaptersCleared: 14,
-    });
+describe('set gear applies through the affix pipeline', () => {
+  it('a class-bound set piece is ignored for the wrong class (kept owned)', () => {
+    useCharacterStore.setState({ character: makeCharacter('wizard') });
+    useMetaStore.setState({ ownedSetPieces: ['warsong-crest', 'vigil-helm'] });
     const meta = useMetaStore.getState();
-    meta.equipRelic('vigil-helm'); // Aegis, 4 temp HP
-    meta.equipRelic('vigil-heart'); // Vampire, 5% lifesteal
+    meta.equipSetPiece('warsong-crest'); // Fighter-bound → ignored for a Wizard
+    meta.equipSetPiece('vigil-helm'); // universal → equips into the helm slot
+    expect(useMetaStore.getState().equippedSetPieces.helm).toBe('vigil-helm');
+    expect(useMetaStore.getState().ownedSetPieces).toContain('warsong-crest');
+  });
+
+  it('a 2-piece set stacks its bonus on top of the pieces', () => {
+    useCharacterStore.setState({ character: makeCharacter('fighter') });
+    useMetaStore.setState({ ownedSetPieces: ['vigil-helm', 'vigil-heart'] });
+    const meta = useMetaStore.getState();
+    meta.equipSetPiece('vigil-helm'); // helm, 4 temp HP
+    meta.equipSetPiece('vigil-heart'); // ring, 5% lifesteal
     const mods = characterAffixMods(useCharacterStore.getState().character!);
     // helm 4 + 2-piece set 4 = 8 temp HP each combat; heart's lifesteal rides too.
     expect(mods.tempHpPerCombat).toBe(8);

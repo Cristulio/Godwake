@@ -97,5 +97,11 @@
     "boundClass": "⚔ Ligada · {name}",
     "undiscoveredName": "??? ??? ???",
     "undiscoveredBody": "Una reliquia aún no ganada. Enfréntate a las élites de la oscuridad, y quizá sea tuya."
+  },
+  "setGear": {
+    "title": "Equipo de Conjunto · perdura entre vidas",
+    "equippedCount": "{n}/{total} equipadas",
+    "piecesFound": "{n}/{total} piezas halladas",
+    "undiscovered": "Aún no hallada"
   }
 }

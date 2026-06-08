@@ -19,6 +19,8 @@ export {
   dropSourceForRoom,
   rollGearDrop,
   rollLegendaryDrop,
+  rollSetPieceDrop,
   maxRolledRarityForChapter,
   capRarity,
 } from './drops';
+export { materializeSetGear, setPieceRef, isSetPieceRef } from './setGear';

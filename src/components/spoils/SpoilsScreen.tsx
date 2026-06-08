@@ -15,7 +15,10 @@ export function SpoilsScreen() {
 
   const leveledUp = character ? hasPendingLevelUp(character) : false;
   const nextLevel = character ? character.level + 1 : null;
-  const hasItems = lastLoot.items.length > 0 || lastLoot.bankedLegendary != null;
+  const hasItems =
+    lastLoot.items.length > 0 ||
+    lastLoot.bankedLegendary != null ||
+    lastLoot.bankedSetPiece != null;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden animate-fade-in-slow">
@@ -148,6 +151,18 @@ export function SpoilsScreen() {
             </div>
             <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-0.5">
               {t('screens.spoils.legendaryBanked')}
+            </div>
+          </div>
+        )}
+
+        {/* Set piece banked */}
+        {lastLoot.bankedSetPiece && (
+          <div className="bg-[var(--color-bg-panel)] border-2 px-3 py-2 animate-pop-in" style={{ borderColor: '#0fa968' }}>
+            <div className="font-display text-sm uppercase tracking-wider" style={{ color: '#0fa968' }}>
+              ✦ {lastLoot.bankedSetPiece}
+            </div>
+            <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-0.5">
+              {t('screens.spoils.setPieceBanked')}
             </div>
           </div>
         )}

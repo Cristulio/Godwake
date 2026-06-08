@@ -67,13 +67,13 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     key: "Relics bind to the soul, not the body — they outlast every death and are set at the hub.",
   },
   sets: {
-    unlocked: "Relic Sets",
+    unlocked: "Set Gear",
     title: "Forged in Company",
     body: [
-      "Not every relic was forged alone. Some were made in company, and when two or more of a kindred set rest on the same soul, the stones begin to answer one another — powers stir that no single piece holds by itself.",
-      "You need not gather the whole set for it to wake; a partial binding already counts, and each matching piece you add presses the bond deeper. A set is a thing worth building toward across many runs.",
+      "Gear has surfaced that does not rot away with the body that wore it. A set piece — blade, armor, or trinket — binds to the soul and outlasts every death; set it into your gear at the hub and it descends with you, life after life, stronger than any plunder the dark gives up by chance.",
+      "And these were not forged alone. Wear two or more pieces of one kindred set and they answer one another — powers stir that no single piece holds. You need not gather the whole set; a partial binding already counts, and each matching piece presses the bond deeper. A set is worth building toward across many runs.",
     ],
-    key: "Wear two or more relics of one set and they wake shared powers — partial sets already count.",
+    key: "Set pieces bind to the soul and equip into your gear slots — wear two of a set to wake shared powers.",
   },
   "grove-deep": {
     unlocked: "Deeper Grove Tiers",

@@ -235,7 +235,8 @@
     "legendaryBanked": "Legendary relic banked — attune it at the hub",
     "acceptLevelUp": "Accept · Level Up →",
     "accept": "Accept →",
-    "openPack": "◆ Open Pack Instead"
+    "openPack": "◆ Open Pack Instead",
+    "setPieceBanked": "Set Gear banked to the soul"
   },
   "unlockTutorial": {
     "eyebrow": "◆ New — Unlocked",

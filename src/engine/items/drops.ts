@@ -82,6 +82,25 @@ export function rollLegendaryDrop(roller: DiceRoller, roomKind: string): boolean
   return roller.roll('1d100').total <= LEGENDARY_DROP_CHANCE[source];
 }
 
+/**
+ * Chance (percent) that winning a fight yields a persistent SET piece, banked to
+ * the soul (content/sets.ts). Set gear is the deep-run / NG+ reward, so it drops
+ * only at elite + boss nodes (an elite some of the time, a boss usually); regular
+ * combats never cough one up. UN-SIMMED seed values — owner tunes after.
+ */
+const SET_PIECE_DROP_CHANCE: Record<DropSource, number> = {
+  combat: 0,
+  elite: 25,
+  boss: 40,
+};
+
+/** Roll whether a cleared room yields a set piece. Deterministic. */
+export function rollSetPieceDrop(roller: DiceRoller, roomKind: string): boolean {
+  const source = dropSourceForRoom(roomKind);
+  if (!source) return false;
+  return roller.roll('1d100').total <= SET_PIECE_DROP_CHANCE[source];
+}
+
 function pickWeightedRarity(roller: DiceRoller, table: Array<[GearRarity, number]>): GearRarity {
   const total = table.reduce((sum, [, w]) => sum + w, 0);
   // 1..total inclusive from the seeded roller.

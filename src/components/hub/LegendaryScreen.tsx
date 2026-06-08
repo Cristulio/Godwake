@@ -16,9 +16,10 @@ import {
   unlockedRelicSlots,
   relicSlotUnlockRenown,
 } from '../../engine/progression/unlocks';
-import { SETS, setProgress } from '../../content/sets';
+import { GEAR_SETS, getSetPiece, canEquipSetPiece, setProgress } from '../../content/sets';
 import { getClass } from '../../content/classes';
 import type { ClassId } from '../../schemas/ids';
+import type { EquipSlot } from '../../engine/character/equip';
 import { useT } from '../../i18n/useT';
 
 interface LegendaryScreenProps {
@@ -40,6 +41,10 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
   const equippedRelics = useGameStore((s) => s.equippedRelics);
   const equipRelic = useGameStore((s) => s.equipRelic);
   const unequipRelicSlot = useGameStore((s) => s.unequipRelicSlot);
+  const ownedSetPieces = useGameStore((s) => s.ownedSetPieces);
+  const equippedSetPieces = useGameStore((s) => s.equippedSetPieces);
+  const equipSetPiece = useGameStore((s) => s.equipSetPiece);
+  const unequipSetSlot = useGameStore((s) => s.unequipSetSlot);
   const classId = useGameStore((s) => s.character?.classId) ?? null;
   const delveCount = useGameStore((s) => s.delveCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
@@ -53,7 +58,6 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
   });
 
   const openSlots = unlockedRelicSlots(renownSpent);
-  const equippedIds = Object.values(equippedRelics).filter((id): id is string => !!id);
 
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-6xl mx-auto animate-room-enter">
@@ -123,7 +127,15 @@ export function LegendaryScreen({ onBack }: LegendaryScreenProps) {
         ))}
       </div>
 
-      {setsUnlocked && <SetsPanel equipped={equippedIds} owned={owned} />}
+      {setsUnlocked && (
+        <SetGearPanel
+          owned={ownedSetPieces}
+          equippedSetPieces={equippedSetPieces}
+          classId={classId}
+          onEquip={equipSetPiece}
+          onUnequip={unequipSetSlot}
+        />
+      )}
 
       <Reliquary owned={owned} />
     </div>
@@ -245,30 +257,55 @@ function SlotRow({ slot, index, locked, equippedId, owned, classId, onEquip, onU
   );
 }
 
-function SetsPanel({ equipped, owned }: { equipped: string[]; owned: string[] }) {
-  const { t } = useT();
+interface SetGearPanelProps {
+  owned: string[];
+  equippedSetPieces: Partial<Record<EquipSlot, string>>;
+  classId: ClassId | null;
+  onEquip: (pieceId: string) => void;
+  onUnequip: (slot: EquipSlot) => void;
+}
+
+const SET_FRAME = '#0fa968';
+
+/**
+ * The hub SET-gear board: one card per set. Each shows the set's escalating
+ * bonuses (lit by the number of its pieces currently equipped) and a row of its
+ * pieces — owned + class-legal pieces are toggle buttons that equip into / out of
+ * the soul's real gear slots; undiscovered or off-class pieces read dim.
+ */
+function SetGearPanel({ owned, equippedSetPieces, classId, onEquip, onUnequip }: SetGearPanelProps) {
+  const { t, tc } = useT();
+  // Map each equipped piece id back to the slot it sits in, so a toggle-off knows
+  // which slot to clear.
+  const slotOfPiece = new Map<string, EquipSlot>();
+  for (const [slot, pid] of Object.entries(equippedSetPieces)) {
+    if (pid) slotOfPiece.set(pid, slot as EquipSlot);
+  }
+  const equippedIds = [...slotOfPiece.keys()];
+
   return (
     <div className="mt-8">
       <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
-        <span className="text-[var(--color-accent-gold)]/60">✦</span>
-        {t('hub.relicsScreen.setBonuses')}
+        <span style={{ color: SET_FRAME }}>✦</span>
+        {t('hub.setGear.title')}
       </div>
       <div className="grid md:grid-cols-2 gap-3">
-        {SETS.map((set) => {
-          const activeCount = setProgress(set, equipped);
+        {GEAR_SETS.map((set) => {
+          const activeCount = setProgress(set, equippedIds);
           const ownedCount = set.pieceIds.filter((id) => owned.includes(id)).length;
+          const setName = tc('setGear', set.id, 'name', set.name);
           return (
-            <div key={set.id} className="panel-etched border border-[var(--color-border-dim)] p-3">
+            <div key={set.id} className="panel-etched border p-3" style={{ borderColor: SET_FRAME + '55' }}>
               <div className="flex justify-between items-baseline gap-2">
-                <h4 className="font-display text-[var(--color-accent-amber)] uppercase tracking-wider text-[11px]">
-                  {set.name}
+                <h4 className="font-display uppercase tracking-wider text-[11px]" style={{ color: SET_FRAME }}>
+                  {setName}
                 </h4>
-                <span className="font-mono text-[10px] text-[var(--color-accent-gold)] shrink-0">
-                  {t('hub.relicsScreen.boundCount', { n: activeCount, total: set.pieceIds.length })}
+                <span className="font-mono text-[10px] shrink-0" style={{ color: SET_FRAME }}>
+                  {t('hub.setGear.equippedCount', { n: activeCount, total: set.pieceIds.length })}
                 </span>
               </div>
               <p className="text-[var(--color-text-secondary)] text-[10px] italic mt-1 font-narrative leading-snug">
-                {set.flavor}
+                {tc('setGear', set.id, 'flavor', set.flavor)}
               </p>
               <div className="mt-2 space-y-0.5">
                 {set.bonuses.map((tier) => {
@@ -277,15 +314,56 @@ function SetsPanel({ equipped, owned }: { equipped: string[]; owned: string[] })
                     <div
                       key={tier.piecesRequired}
                       className="text-[10px] font-mono leading-snug"
-                      style={{ color: on ? 'var(--color-accent-gold)' : 'var(--color-text-dim)' }}
+                      style={{ color: on ? SET_FRAME : 'var(--color-text-dim)' }}
                     >
-                      {on ? '✦' : '○'} {tier.label}
+                      {on ? '✦' : '○'} {tc('setGear', `${set.id}.bonus`, String(tier.piecesRequired), tier.label)}
                     </div>
                   );
                 })}
               </div>
+
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {set.pieceIds.map((pid) => {
+                  const piece = getSetPiece(pid);
+                  if (!piece) return null;
+                  const isOwned = owned.includes(pid);
+                  const equippable = !classId || canEquipSetPiece(pid, classId);
+                  const on = slotOfPiece.has(pid);
+                  const pieceName = tc('setGear', pid, 'name', piece.name);
+                  if (!isOwned) {
+                    return (
+                      <span
+                        key={pid}
+                        title={t('hub.setGear.undiscovered')}
+                        className="px-2 py-1 text-[10px] font-display uppercase tracking-wider border border-[var(--color-border-dim)] text-[var(--color-text-dim)] opacity-60"
+                      >
+                        {pieceName}
+                      </span>
+                    );
+                  }
+                  return (
+                    <button
+                      key={pid}
+                      type="button"
+                      disabled={!equippable}
+                      title={tc('setGear', pid, 'effect', piece.effectLine)}
+                      onClick={() => (on ? onUnequip(slotOfPiece.get(pid)!) : onEquip(pid))}
+                      className="px-2 py-1 text-[10px] font-display uppercase tracking-wider border transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      style={
+                        on
+                          ? { borderColor: SET_FRAME, background: SET_FRAME, color: 'var(--color-bg-base)' }
+                          : { borderColor: SET_FRAME + '55', color: 'var(--color-text-secondary)' }
+                      }
+                    >
+                      {pieceName}
+                      {piece.classGate ? ' ⚔' : ''}
+                    </button>
+                  );
+                })}
+              </div>
+
               <div className="mt-1.5 text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest">
-                {t('hub.relicsScreen.piecesFound', { n: ownedCount, total: set.pieceIds.length })}
+                {t('hub.setGear.piecesFound', { n: ownedCount, total: set.pieceIds.length })}
               </div>
             </div>
           );

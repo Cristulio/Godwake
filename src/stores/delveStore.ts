@@ -4,9 +4,10 @@ import type { CampRiskResult, DelveState, RoomSpec } from '../types/delve';
 import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
 import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
-import { rollItem, rollGearDrop, rollLegendaryDrop } from '../engine/items';
+import { rollItem, rollGearDrop, rollLegendaryDrop, rollSetPieceDrop, materializeSetGear, isSetPieceRef } from '../engine/items';
 import { getAffix } from '../content/items';
 import { getLegendary } from '../content/legendaries';
+import { getSetPiece } from '../content/sets';
 import { baseStatLine } from '../components/inventory/itemDisplay';
 import { classStartingResources } from '../engine/character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
@@ -199,7 +200,11 @@ function gearResetToKit(
 ): Pick<Character, 'inventory' | 'equipped'> {
   try {
     const fresh = buildPlayerCharacter(presetCreationInput(character.classId));
-    return { inventory: fresh.inventory, equipped: fresh.equipped };
+    // Overlay the soul's banked SET gear onto the fresh kit: each equipped piece
+    // replaces its slot's starting item and persists across the wheel.
+    const pieces = useMetaStore.getState().equippedSetPieceList();
+    const withSet = materializeSetGear(fresh, pieces);
+    return { inventory: withSet.inventory, equipped: withSet.equipped };
   } catch {
     // Non-playable class with no preset — leave gear untouched rather than
     // strip the soul bare.
@@ -347,6 +352,8 @@ export interface LootSummary {
   items: Array<{ name: string; rarity: GearRarity; description: string }>;
   /** Name of a legendary relic banked to the reliquary this fight, if any. */
   bankedLegendary?: string;
+  /** Name of a SET-gear piece banked to the soul this fight, if any. */
+  bankedSetPiece?: string;
   /**
    * Renown this fight earned toward the run total (mobs felled + boss bonus,
    * pre run-end multipliers). Surfaced on the spoils screen so the player sees
@@ -704,6 +711,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     let xpGained = 0;
     const droppedItems: LootSummary['items'] = [];
     let bankedLegendary: string | undefined;
+    let bankedSetPiece: string | undefined;
 
     if (isRegularCombat) {
       const roomGold = room.goldReward ?? 0;
@@ -763,9 +771,15 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       // Gate: elite legendary drops are only available once the legendaries feature is unlocked.
       if (isFeatureUnlocked('legendaries', meta) && rollLegendaryDrop(getActiveRoller(), room.kind)) {
         const allowAscendant = ascensionAscendantLoot(s.delve.ascensionLevel ?? 0);
-        const allowExclusive = ascensionExclusiveLoot(s.delve.ascensionLevel ?? 0);
-        const bankedId = useMetaStore.getState().grantLegendaryDrop(allowAscendant, allowExclusive);
+        const bankedId = useMetaStore.getState().grantLegendaryDrop(allowAscendant);
         if (bankedId) bankedLegendary = getLegendary(bankedId)?.name ?? 'Legendary relic';
+      }
+      // Persistent SET piece drop (elite/boss): banked to the soul, equipped at
+      // the hub. Gated on the sets feature; NG+ runs fold in the exclusive sets.
+      if (isFeatureUnlocked('sets', meta) && rollSetPieceDrop(getActiveRoller(), room.kind)) {
+        const allowExclusive = ascensionExclusiveLoot(s.delve.ascensionLevel ?? 0);
+        const bankedPieceId = useMetaStore.getState().grantSetPieceDrop(allowExclusive);
+        if (bankedPieceId) bankedSetPiece = getSetPiece(bankedPieceId)?.name ?? 'Set piece';
       }
       // Tally actual deltas (quirk multipliers applied by addDelveReward).
       const after = useCharacterStore.getState().character;
@@ -789,6 +803,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         xp: xpGained,
         items: droppedItems,
         bankedLegendary,
+        bankedSetPiece,
         renown: fightRenown,
       },
       pendingSpoilsRoom: room,
@@ -1234,6 +1249,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (!character) return { ok: false, reason: 'No character.' };
     const ref = character.inventory[inventoryIdx];
     if (!ref) return { ok: false, reason: 'No such item.' };
+    // Persistent SET gear is never sold — it's banked to the soul, not run loot.
+    if (isSetPieceRef(ref)) return { ok: false, reason: 'Set gear cannot be sold.' };
     // Worn gear can't be sold out from under you — unequip it first. Resolve by
     // index (not object identity) so the guard still holds after a reload, where
     // the rehydrated equipped ref is a distinct object from the bag entry.
