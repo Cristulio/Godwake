@@ -8,7 +8,7 @@ import { Button } from '../ui/Button';
 import { EliteCoach, useEliteIntroCoach } from './EliteCoach';
 import { useT } from '../../i18n/useT';
 
-const COL_W = 118;
+const COL_W = 150;
 const ROW_H = 92;
 const PAD_X = 44;
 const PAD_Y = 44;
@@ -210,48 +210,47 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                     ? 'bm-node-visited'
                     : 'bm-node-locked';
             return (
-              <button
-                key={room.id}
-                type="button"
-                disabled={!isReachable}
-                data-tutorial={room.kind === 'elite' && isReachable ? 'elite' : undefined}
-                onMouseEnter={() => setHovered(room)}
-                onMouseLeave={() => setHovered((h) => (h === room ? null : h))}
-                onFocus={() => setHovered(room)}
-                onClick={() => {
-                  playSfx('ui_click');
-                  chooseRoom(room.id);
-                }}
-                className={`bm-node ${stateClass}`}
-                style={
-                  {
-                    left: cx - NODE / 2,
-                    top: cy - NODE / 2,
-                    width: NODE,
-                    height: NODE,
-                    '--bm-accent': accent,
-                  } as CSSProperties
-                }
-                title={room.title}
-              >
-                <span className="bm-node-tag">{tag}</span>
-                {isLocked && (
-                  <>
-                    <span className="bm-node-seal" aria-label={t('ui.map.sealedAria')}>
-                      ⚿ {t('ui.map.sealed')}
+              <div key={room.id} className="bm-node-anchor" style={{ left: cx, top: cy }}>
+                <button
+                  type="button"
+                  disabled={!isReachable}
+                  data-tutorial={room.kind === 'elite' && isReachable ? 'elite' : undefined}
+                  onMouseEnter={() => setHovered(room)}
+                  onMouseLeave={() => setHovered((h) => (h === room ? null : h))}
+                  onFocus={() => setHovered(room)}
+                  onClick={() => {
+                    playSfx('ui_click');
+                    chooseRoom(room.id);
+                  }}
+                  className={`bm-node ${stateClass}`}
+                  style={
+                    {
+                      minWidth: NODE,
+                      height: NODE,
+                      '--bm-accent': accent,
+                    } as CSSProperties
+                  }
+                  title={room.title}
+                >
+                  <span className="bm-node-tag">{tag}</span>
+                  {isLocked && (
+                    <>
+                      <span className="bm-node-seal" aria-label={t('ui.map.sealedAria')}>
+                        ⚿ {t('ui.map.sealed')}
+                      </span>
+                      <span className="bm-node-seal-hint">{t('ui.map.sealedYet')}</span>
+                    </>
+                  )}
+                  {room.twistId && (
+                    <span
+                      className="absolute -top-1 -right-1 text-[var(--color-accent-blood)] text-xs leading-none"
+                      aria-label="twisted"
+                    >
+                      ✦
                     </span>
-                    <span className="bm-node-seal-hint">{t('ui.map.sealedYet')}</span>
-                  </>
-                )}
-                {room.twistId && (
-                  <span
-                    className="absolute -top-1 -right-1 text-[var(--color-accent-blood)] text-xs leading-none"
-                    aria-label="twisted"
-                  >
-                    ✦
-                  </span>
-                )}
-              </button>
+                  )}
+                </button>
+              </div>
             );
           })}
         </div>
