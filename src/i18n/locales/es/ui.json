@@ -236,5 +236,19 @@
       "treasure": "Botín sin vigilar. Toma lo que puedas cargar.",
       "camp": "Un fuego en la costura entre capítulos."
     }
+  },
+  "feedback": {
+    "button": "Comentarios",
+    "title": "Enviar Aviso",
+    "closeAria": "Cerrar comentarios",
+    "intro": "¿Encontraste algo roto o tienes una idea? Envíalo directo al guardián de este mundo.",
+    "settingsHint": "Habla con el guardián — fallos o ideas.",
+    "bug": "Fallo",
+    "suggestion": "Idea",
+    "placeholder": "Cuéntanos qué pasó, o qué te gustaría ver…",
+    "submit": "Enviar",
+    "sending": "Enviando…",
+    "sent": "Enviado. Gracias — el guardián te escucha.",
+    "error": "No llegó. Inténtalo de nuevo en un momento."
   }
 }
