@@ -98,6 +98,24 @@ describe('selectSoulVoiceLine — chapter-clear matches the cleared chapter', ()
     expect(ch4).toContain('Ust Natha');
   });
 
+  it('Melissan whispers through the Throne chapters (12, 13) she presides over', () => {
+    for (const chapter of [12, 13]) {
+      for (let seed = 0; seed < 8; seed++) {
+        const line = selectSoulVoiceLine('melissan', 'chapter-clear', {
+          ...base,
+          clearedChapter: chapter,
+          // High-water mark is irrelevant — the cleared chapter drives the line.
+          chaptersCleared: 13,
+          seed,
+        });
+        expect(CHAPTER_CLEAR.melissan[chapter]).toContain(line);
+      }
+    }
+    // She never speaks for Ch14 (her own death → the Throne finale), so there is
+    // no pool there.
+    expect(CHAPTER_CLEAR.melissan[14]).toBeUndefined();
+  });
+
   it('clamps out-of-range chapters and falls back to chaptersCleared', () => {
     const high = selectSoulVoiceLine('irenicus', 'chapter-clear', {
       ...base,

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '../ui/Button';
-import { Imoen, Irenicus as IrenicusPortrait } from './NpcPortrait';
+import { Imoen, Irenicus as IrenicusPortrait, Melissan as MelissanPortrait } from './NpcPortrait';
 import { useMetaStore } from '../../stores/metaStore';
 import { useInputBlock } from '../ui/useInputBlock';
 import { useT } from '../../i18n/useT';
@@ -17,14 +17,21 @@ export type TauntContext =
   | 'reincarnation'
   | 'boss-approach'
   | 'low-hp';
-export type SoulVoiceSpeaker = 'irenicus' | 'imoen';
+export type SoulVoiceSpeaker = 'irenicus' | 'imoen' | 'melissan';
+
+// The soul-bond pair are the only voices that evolve across every arc context.
+// Melissan presides solely over the Throne chapters (Ch12-13) and whispers only
+// on chapter-clear, so she carries no arc pools.
+type ArcSpeaker = 'irenicus' | 'imoen';
 
 // Pre-reveal labels for the soul-bond NPCs live in the scenes locale
 // (scenes.soulVoice.voice / .whisper). The player only sees the real name
-// after an in-game introduction beat (see metaStore.knownNpcs).
+// after an in-game introduction beat (see metaStore.knownNpcs). Melissan is the
+// openly-named "kind ally" all along, so she is never masked behind a label.
 const REAL_NAME: Record<SoulVoiceSpeaker, string> = {
   irenicus: 'Irenicus',
   imoen: 'Imoen',
+  melissan: 'Melissan',
 };
 
 /**
@@ -97,9 +104,24 @@ export const CHAPTER_CLEAR: Record<SoulVoiceSpeaker, Record<number, string[]>> =
       "That's the last big door but one. I can almost SEE you now — I swear I can. One more and you're here. Come and get me. Please come and get me.",
     ],
   },
+  // The false ally unmasking through the Throne. Ch12 = the Siege of Saradush
+  // (Yaga-Shura), Ch13 = the last of the Five (Sendai, Abazigal). Ch14 is her
+  // own death — the Throne finale fires there, so she has no chapter-clear line.
+  melissan: {
+    12: [
+      'Saradush burned, and out of the fire you came carrying what none of the others could hold. I never doubted you would. Of all of them, you were always the most.',
+      'Yaga-Shura believed the essence had made him a god. It only made him a fuller cup — and you poured him out so cleanly. Walk on. I will show you the road, as I have shown you every road.',
+      'One of the Five is ash. I would not have asked this of the others; only you were ever strong enough to carry it. Rest, and then come to me. We are not so far apart now.',
+    ],
+    13: [
+      'The Five are five no longer. One by one you have gathered them back — to you, to what you bear. So much, in a single vessel, walking willingly on. I could almost weep.',
+      'Only the Throne stands between us now, and the kind road I have kept at your side this whole long way. Did you never wonder why I was always there, at the lip of every grief? No matter. We are nearly home.',
+      'Sendai, Abazigal — folded back into the whole. You did not keep a drop of what spilled from them; you never can. Good. Bring it onward. I have waited so very long, and the waiting is almost done.',
+    ],
+  },
 };
 
-export const ARC_QUOTES: Record<SoulVoiceSpeaker, Record<ArcContext, Record<VoiceTier, string[]>>> = {
+export const ARC_QUOTES: Record<ArcSpeaker, Record<ArcContext, Record<VoiceTier, string[]>>> = {
   irenicus: {
     death: {
       early: [
@@ -387,12 +409,16 @@ export function selectSoulVoiceLine(
 ): string {
   const seed = progression.seed;
   if (context === 'chapter-clear') {
-    const chapter = clampChapter(progression.clearedChapter ?? progression.chaptersCleared ?? 1);
-    const pool = CHAPTER_CLEAR[speaker][chapter] ?? CHAPTER_CLEAR[speaker][1];
+    const byChapter = CHAPTER_CLEAR[speaker];
+    // Look up the chapter actually cleared first (Melissan's Throne keys are
+    // 12-13, outside the 1-4 base range), then fall back to the clamped base
+    // chapter, then to whatever pool the speaker has.
+    const raw = Math.floor(progression.clearedChapter ?? progression.chaptersCleared ?? 1);
+    const pool = byChapter[raw] ?? byChapter[clampChapter(raw)] ?? Object.values(byChapter)[0];
     return pool[seed % pool.length];
   }
   const tier = progressionTier(progression.chaptersCleared);
-  const pool = ARC_QUOTES[speaker][context][tier];
+  const pool = ARC_QUOTES[speaker as ArcSpeaker][context][tier];
   return pool[seed % pool.length];
 }
 
@@ -410,12 +436,18 @@ function soulVoiceOverlay(
 ): { id: string; field: string } {
   const seed = progression.seed;
   if (context === 'chapter-clear') {
-    const chapter = clampChapter(progression.clearedChapter ?? progression.chaptersCleared ?? 1);
-    const pool = CHAPTER_CLEAR[speaker][chapter] ?? CHAPTER_CLEAR[speaker][1];
+    const byChapter = CHAPTER_CLEAR[speaker];
+    const raw = Math.floor(progression.clearedChapter ?? progression.chaptersCleared ?? 1);
+    const chapter = byChapter[raw]
+      ? raw
+      : byChapter[clampChapter(raw)]
+        ? clampChapter(raw)
+        : Number(Object.keys(byChapter)[0]);
+    const pool = byChapter[chapter];
     return { id: `chapterClear.${speaker}.${chapter}`, field: String(seed % pool.length) };
   }
   const tier = progressionTier(progression.chaptersCleared);
-  const pool = ARC_QUOTES[speaker][context][tier];
+  const pool = ARC_QUOTES[speaker as ArcSpeaker][context][tier];
   return { id: `arc.${speaker}.${context}.${tier}`, field: String(seed % pool.length) };
 }
 
@@ -445,10 +477,14 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
   const chaptersCleared = useMetaStore((s) => s.chaptersCleared);
   const deathCount = useMetaStore((s) => s.deathCount);
   const hasReincarnated = useMetaStore((s) => s.hasReincarnated);
+  // Only the two mystery soul-bond voices hide behind a pre-reveal label;
+  // Melissan is the openly-named ally throughout, so her bubble always names her.
+  const needsReveal = speaker === 'irenicus' || speaker === 'imoen';
   const isKnown = useMetaStore((s) => s.knownNpcs.includes(speaker));
-  const speakerLabel = isKnown
-    ? REAL_NAME[speaker]
-    : t(speaker === 'irenicus' ? 'scenes.soulVoice.voice' : 'scenes.soulVoice.whisper');
+  const speakerLabel =
+    !needsReveal || isKnown
+      ? REAL_NAME[speaker]
+      : t(speaker === 'irenicus' ? 'scenes.soulVoice.voice' : 'scenes.soulVoice.whisper');
 
   const quote = useMemo(() => {
     // A verbatim progressive lore beat: overlay it via the es/lore.json content
@@ -534,7 +570,8 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
 
   const buttonVariant = isIrenicus ? 'danger' : 'primary';
 
-  const PortraitGlyph = isIrenicus ? IrenicusPortrait : Imoen;
+  const PortraitGlyph =
+    speaker === 'irenicus' ? IrenicusPortrait : speaker === 'melissan' ? MelissanPortrait : Imoen;
 
   const overlayRef = useInputBlock<HTMLDivElement>();
 
