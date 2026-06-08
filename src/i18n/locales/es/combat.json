@@ -387,6 +387,7 @@
   },
   "coach": {
     "attack": "Toca Atacar para golpear.",
+    "castFirst": "Abre Conjuros y lanza Manos Ardientes — su cono abrasa a ambos enemigos de un golpe.",
     "target": "Elige tu objetivo.",
     "abilities": "Los movimientos especiales de tu clase están aquí.",
     "gotIt": "Entendido",

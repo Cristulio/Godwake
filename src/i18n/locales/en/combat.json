@@ -387,6 +387,7 @@
   },
   "coach": {
     "attack": "Tap Attack to strike.",
+    "castFirst": "Open Spells and cast Burning Hands — its cone scorches both foes at once.",
     "target": "Choose your target.",
     "abilities": "Your class's special moves live here.",
     "gotIt": "Got it",
