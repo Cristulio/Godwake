@@ -7,6 +7,8 @@ import { useDelveStore } from '../../stores/delveStore';
 import { useCharacterStore } from '../../stores/characterStore';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
 import { getItem } from '../../content/items';
+import { setPieceRef } from '../../engine/items';
+import { getSetPiece } from '../../content/sets';
 import type { RoomSpec } from '../../types/delve';
 
 const shopRoom: RoomSpec = {
@@ -76,6 +78,26 @@ describe('ShopRoom — merchant node', () => {
     unmount();
     render(<ShopRoom room={shopRoom} onContinue={() => {}} />);
     expect(screen.getAllByRole('button', { name: /sold/i }).length).toBeGreaterThan(0);
+  });
+
+  it('never lists persistent SET gear as sellable (banked to the soul)', () => {
+    // A banked set piece (vigil-helm, kind=accessory) plus a plain weapon so the
+    // sell section renders. Without the filter the set piece would show — it
+    // qualifies by kind — so its absence proves the exclusion, not an empty list.
+    const base = useCharacterStore.getState().character!;
+    useCharacterStore.setState({
+      character: {
+        ...base,
+        inventory: [...base.inventory, setPieceRef(getSetPiece('vigil-helm')!), { itemId: 'greatsword' }],
+      },
+    });
+
+    render(<ShopRoom room={shopRoom} onContinue={() => {}} />);
+
+    // The sell section rendered (the plain weapon is sellable)...
+    expect(screen.getByText(/Sell from your Pack/i)).toBeInTheDocument();
+    // ...but the set piece is not offered for sale anywhere.
+    expect(screen.queryByText(/Vigil Helm/i)).not.toBeInTheDocument();
   });
 
   it('starts a different shop room with a fresh, un-sold rack (no cross-shop bleed)', () => {

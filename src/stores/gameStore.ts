@@ -18,7 +18,7 @@ import type { ItemRef } from '../schemas/item';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
 import { type EquipSlot } from '../engine/character/equip';
 import { useCharacterStore } from './characterStore';
-import { useDelveStore, type LootSummary } from './delveStore';
+import { useDelveStore, withOwnedSetPieces, type LootSummary } from './delveStore';
 import { useCombatStore } from './combatStore';
 import { useMetaStore, type UpgradePurchaseError } from './metaStore';
 import { useScreenStore, type Screen } from './screenStore';
@@ -584,10 +584,11 @@ function adoptSoul(classId: ClassId) {
   const charSlice = useCharacterStore.getState();
   const soul = charSlice.character;
   const fresh = buildPlayerCharacter(presetCreationInput(classId));
-  charSlice.setCharacter(soul ? carrySoulProgress(fresh, soul) : fresh);
+  const body = soul ? carrySoulProgress(fresh, soul) : fresh;
+  // Surface the soul's banked set pieces in the hub backpack now — descent's
+  // gearResetToKit re-injects them, but the player needs to see/equip them first.
+  charSlice.setCharacter(withOwnedSetPieces(body));
   // Class-bound relics the new body can't wield drop; the effect payloads re-bake.
-  // Set pieces re-inject into the backpack at descent (delveStore.gearResetToKit),
-  // so a body swap needs no extra set-gear bake here.
   useMetaStore.getState().applyRelicLoadout();
 }
 
@@ -801,6 +802,10 @@ export const useGameStore = create<GameState>()(
 
         commitCharacterCreation: (input) => {
           useCharacterStore.getState().commitCharacterCreation(input);
+          // Surface banked set pieces in the hub backpack (empty on a true first
+          // creation; populated when an existing soul swaps bodies here).
+          const built = useCharacterStore.getState().character;
+          if (built) useCharacterStore.getState().setCharacter(withOwnedSetPieces(built));
           // Stamp the soul's origin starter ONCE — it anchors the relative
           // unlock ladder and rides every reincarnation (write-once setter).
           useMetaStore.getState().setOriginClass(input.classId);

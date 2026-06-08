@@ -199,6 +199,17 @@ function ownedSetPiecesForClass(classId: Character['classId']): SetPiece[] {
 }
 
 /**
+ * Surface the soul's banked, class-legal set pieces into an existing character's
+ * backpack so set gear is visible and equippable AT THE HUB, before descent —
+ * `gearResetToKit` only injects them at startDelve/reincarnation. Called on every
+ * hub-side character load (creation, soul swap). Expects a freshly built body
+ * (kit-only inventory): it appends, it does not dedupe.
+ */
+export function withOwnedSetPieces(character: Character): Character {
+  return injectSetPieces(character, ownedSetPiecesForClass(character.classId));
+}
+
+/**
  * Found/bought gear is INTRA-DELVE: descent (`startDelve`) and reincarnation
  * (`reincarnateSoul`) reset inventory + equipped to the class starting kit so
  * shop weapons and road drops never carry across lives. The soul's banked SET
