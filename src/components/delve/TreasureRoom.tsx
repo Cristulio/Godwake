@@ -12,7 +12,7 @@ interface TreasureRoomProps {
 }
 
 export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
-  const { t } = useT();
+  const { t, lr } = useT();
   const addDelveReward = useGameStore((s) => s.addDelveReward);
   const character = useGameStore((s) => s.character);
   const [revealed, setRevealed] = useState(false);
@@ -37,7 +37,7 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
     <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_40%,rgba(212,176,98,0.10),transparent_55%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)]">
         <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-          {room.title.toUpperCase()}
+          {lr(room.chapter, room.title).toUpperCase()}
         </h1>
         <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
           {t('delve.treasure.label')}
@@ -55,7 +55,7 @@ export function TreasureRoom({ room, onContinue }: TreasureRoomProps) {
             💰
           </div>
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-md">
-            {room.flavorText}
+            {lr(room.chapter, room.flavorText)}
           </p>
           {revealed && !!room.goldReward && (
             <div className="text-2xl font-mono text-[var(--color-accent-gold)] animate-fade-in">

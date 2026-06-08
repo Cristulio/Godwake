@@ -127,7 +127,7 @@ export function DelveScreen() {
 }
 
 function DelveScreenBody() {
-  const { t } = useT();
+  const { t, lr } = useT();
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const combat = useGameStore((s) => s.combat);
@@ -307,7 +307,7 @@ function DelveScreenBody() {
           state={combat}
           scene={isBossRoom ? 'boss' : 'combat'}
           decoration={decorationForRoom(room, delve.chapterId)}
-          roomTitle={room.title.toUpperCase()}
+          roomTitle={lr(room.chapter, room.title).toUpperCase()}
           roomLabel={`${isBossRoom ? t('delve.screen.bossPrefix') : isEliteRoom ? t('delve.screen.elitePrefix') : ''}${t('delve.screen.round', { n: combat.round })}`}
           onAbandon={() => useGameStore.getState().abandonDelve()}
           onCombatResolved={(outcome) => {

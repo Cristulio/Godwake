@@ -35,7 +35,7 @@ interface CampRoomProps {
 }
 
 export function CampRoom({ room, onPressSouth }: CampRoomProps) {
-  const { t, tc } = useT();
+  const { t, tc, lr } = useT();
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const campChoice = useGameStore((s) => s.delve?.campChoice ?? null);
@@ -222,7 +222,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-            {room.title.toUpperCase()}
+            {lr(room.chapter, room.title).toUpperCase()}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
             {t('delve.camp.label')}
@@ -248,7 +248,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
         <div className="flex flex-col items-center gap-4 py-4">
           <CampScene chapter={room.chapter} />
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-xl leading-relaxed">
-            {room.flavorText}
+            {lr(room.chapter, room.flavorText)}
           </p>
           <div className="text-xs uppercase tracking-widest text-[var(--color-text-dim)]">
             {t('delve.common.hpStat', { current: character.hp.current, max: character.hp.max })}

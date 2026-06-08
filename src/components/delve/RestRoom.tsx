@@ -13,7 +13,7 @@ interface RestRoomProps {
 }
 
 export function RestRoom({ room, onContinue }: RestRoomProps) {
-  const { t } = useT();
+  const { t, lr } = useT();
   const character = useGameStore((s) => s.character);
   const setCharacter = useGameStore((s) => s.setCharacter);
   const showTaunt = useGameStore((s) => s.showTaunt);
@@ -48,7 +48,7 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
     <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.07),transparent_55%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)]">
         <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-          {room.title.toUpperCase()}
+          {lr(room.chapter, room.title).toUpperCase()}
         </h1>
         <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
           {t('delve.rest.label')}
@@ -59,7 +59,7 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
         <div className="flex flex-col items-center gap-6 py-6">
           <div className="text-6xl drop-shadow-[0_0_18px_rgba(244,167,66,0.6)]">🔥</div>
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-md">
-            {room.flavorText}
+            {lr(room.chapter, room.flavorText)}
           </p>
           <p className="text-[var(--color-text-dim)] text-xs italic text-center max-w-md">
             {t('delve.rest.knits')}

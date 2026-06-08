@@ -31,7 +31,7 @@ interface ShopRoomProps {
  * re-renders don't reroll. Keep the coin-lender's diegetic voice.
  */
 export function ShopRoom({ room, onContinue }: ShopRoomProps) {
-  const { t, tc } = useT();
+  const { t, tc, lr } = useT();
   const character = useGameStore((s) => s.character);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);
   const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
@@ -145,7 +145,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-display text-xl text-[var(--color-accent-gold)] tracking-wider uppercase">
-            {room.title}
+            {lr(room.chapter, room.title)}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
             {t('ui.shop.subtitle')}
@@ -169,7 +169,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
 
       <Panel className="bg-gradient-to-br from-[#2a2112] to-[#16110a]">
         <p className="text-[var(--color-text-secondary)] text-sm italic text-center leading-relaxed">
-          {room.flavorText}
+          {lr(room.chapter, room.flavorText)}
         </p>
       </Panel>
 
