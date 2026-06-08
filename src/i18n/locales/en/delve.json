@@ -38,7 +38,8 @@
     "chooseBlessing": "► Choose a blessing",
     "leave": "Leave the altar untouched",
     "accepts": "◆ The god accepts the bargain",
-    "walkingDeeper": "walking deeper..."
+    "walkingDeeper": "walking deeper...",
+    "empty": "The altar is silent. The gods have emptied their hands to you — there are no blessings left to offer."
   },
   "treasure": {
     "label": "Treasure",

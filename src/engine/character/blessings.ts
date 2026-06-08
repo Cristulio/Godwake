@@ -50,20 +50,19 @@ const NON_STACKING_MODIFIER_KEYS: ReadonlySet<keyof BlessingModifiers> = new Set
   'damageBonus',
   'holyDamageBonus',
   'extraTempHpPerRoom',
-  'critRangeBonus',
   'firstAttackAdvantage',
   // Relic-style conditional/scaling levers added alongside the v2 pool. All
   // take max-of-individual in `aggregateBlessingModifiers`, so a second copy is
   // a dead pick — block the duplicate once owned. The two regen fields are
-  // deliberately ABSENT (they sum, so a second copy genuinely stacks).
+  // deliberately ABSENT (they sum, so a second copy genuinely stacks). All
+  // three crit-range levers are ABSENT too: per the blessing-pool overhaul
+  // crit range SUMS, so two crit blessings genuinely stack to +2.
   'tempHpPerDelveLevel',
   'tempHpPerBaneQuirk',
   'bossTempHp',
   'acBonusWhileFull',
   'acBonusWhileBloodied',
   'acBonusPerBaneQuirk',
-  'critRangeBonusWhileFull',
-  'critRangeBonusWhileBloodied',
   // Caster levers. Max-of (like damageBonus) so a second copy is a dead pick and
   // drops from future offers — the whole point of this lane is fresher caster
   // offers, not a +1/+1/+1 stacking build. The blessing total still ADDS to the
@@ -103,10 +102,11 @@ export function isNonStackingBlessing(b: Blessing): boolean {
  * can't span that many categories, and the count is never reduced below what
  * signature dedup alone would yield.
  *
- * `ownedBlessingIds` are the blessings the soul already holds this run. Any
- * owned blessing that is purely non-stacking is excluded from the roll — a
- * second copy would be a dead pick. Owned blessings that still stack stay
- * eligible.
+ * `ownedBlessingIds` are the blessings the soul already holds this run. Every
+ * owned blessing is consumed — excluded from the roll entirely, so a soul
+ * never sees the same blessing twice in a run, regardless of whether its
+ * levers would still stack. (Owned non-stacking blessings additionally block
+ * their signature twins, since a twin would be a dead pick.)
  */
 export function rollBlessingOptions(
   roller: DiceRoller,
@@ -119,9 +119,11 @@ export function rollBlessingOptions(
   const seen = new Set<string>();
   const seenSignatures = new Set<string>();
   const seenCategories = new Set<string>();
-  // Pre-block the signatures of owned non-stacking blessings so the roller
-  // never re-offers an inert duplicate.
+  // Consume every owned blessing: pre-seed `seen` with its id so it can never
+  // be re-offered this run. Owned non-stacking blessings also pre-block their
+  // signature so a mechanically-identical twin doesn't surface as a dead pick.
   for (const id of ownedBlessingIds) {
+    seen.add(id);
     let owned;
     try {
       owned = getBlessing(id);
@@ -163,8 +165,6 @@ export function rollBlessingOptions(
  *
  *   - `extraTempHpPerRoom` — 5e RAW: temp HP doesn't stack (PR #80).
  *     Lathander's Dawn +3 + Ilmater's Crown +2 should be +3, not +5.
- *   - `critRangeBonus` — Tempus's Edge alone should be the max crit lever,
- *     not compounded with Tymora's Gambit for 18–20 (3× crit rate).
  *   - `damageBonus` — only one damageBonus blessing exists post-dedup.
  *   - `holyDamageBonus` — only one holyDamageBonus blessing exists post-dedup.
  *
@@ -178,10 +178,12 @@ export function rollBlessingOptions(
  *
  * The v2 conditional/scaling levers follow the same split: every temp-HP
  * source (`tempHpPerDelveLevel`, `tempHpPerBaneQuirk`, `bossTempHp`) and every
- * AC/crit conditional (`acBonusWhile*`, `acBonusPerBaneQuirk`,
- * `critRangeBonusWhile*`) is `max-of` — a duplicate adds nothing. The two
- * regen fields (`regenPerCombat`, `regenPctPerCombat`) `sum`, so two healing
- * picks genuinely compound.
+ * AC conditional (`acBonusWhile*`, `acBonusPerBaneQuirk`) is `max-of` — a
+ * duplicate adds nothing. The two regen fields (`regenPerCombat`,
+ * `regenPctPerCombat`) and all three crit-range levers (`critRangeBonus`,
+ * `critRangeBonusWhile*`) `sum`, so two crit (or two healing) picks genuinely
+ * compound — the pool ships exactly two crit blessings so the blessing crit
+ * total is bounded at +2.
  */
 export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModifiers {
   const acc: BlessingModifiers = {};
@@ -213,9 +215,9 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
       acc.extraStabiliseCharges =
         (acc.extraStabiliseCharges ?? 0) + m.extraStabiliseCharges;
     if (m.critRangeBonus !== undefined)
-      acc.critRangeBonus = Math.max(acc.critRangeBonus ?? 0, m.critRangeBonus);
-    // v2 conditional/scaling levers. Temp-HP and AC/crit conditionals are
-    // max-of (a second copy doesn't compound); the two regen fields sum.
+      acc.critRangeBonus = (acc.critRangeBonus ?? 0) + m.critRangeBonus;
+    // v2 conditional/scaling levers. Temp-HP and AC conditionals are max-of
+    // (a second copy doesn't compound); the two regen and crit fields sum.
     if (m.tempHpPerDelveLevel !== undefined)
       acc.tempHpPerDelveLevel = Math.max(acc.tempHpPerDelveLevel ?? 0, m.tempHpPerDelveLevel);
     if (m.tempHpPerBaneQuirk !== undefined)
@@ -233,15 +235,10 @@ export function aggregateBlessingModifiers(blessingIds: string[]): BlessingModif
     if (m.acBonusPerBaneQuirk !== undefined)
       acc.acBonusPerBaneQuirk = Math.max(acc.acBonusPerBaneQuirk ?? 0, m.acBonusPerBaneQuirk);
     if (m.critRangeBonusWhileFull !== undefined)
-      acc.critRangeBonusWhileFull = Math.max(
-        acc.critRangeBonusWhileFull ?? 0,
-        m.critRangeBonusWhileFull,
-      );
+      acc.critRangeBonusWhileFull = (acc.critRangeBonusWhileFull ?? 0) + m.critRangeBonusWhileFull;
     if (m.critRangeBonusWhileBloodied !== undefined)
-      acc.critRangeBonusWhileBloodied = Math.max(
-        acc.critRangeBonusWhileBloodied ?? 0,
-        m.critRangeBonusWhileBloodied,
-      );
+      acc.critRangeBonusWhileBloodied =
+        (acc.critRangeBonusWhileBloodied ?? 0) + m.critRangeBonusWhileBloodied;
     // Caster levers — max-of (a duplicate adds nothing), folded into the spell
     // helpers as one more additive source alongside affixes/boons/permanents.
     if (m.spellDcBonus !== undefined)

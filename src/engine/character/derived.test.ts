@@ -183,17 +183,10 @@ describe('character derivation — human fighter', () => {
     expect(computeAC(noBanes)).toBe(12);
   });
 
-  it("Selûne's Clarity widens crit range only while at full HP", () => {
-    const full = { ...human, blessings: ['selunes-clarity'] };
-    expect(critRange(full)).toEqual([19, 20]);
-    const scratched = { ...full, hp: { ...full.hp, current: full.hp.max - 1 } };
-    expect(critRange(scratched)).toEqual([20]);
-  });
-
-  it("Tempus's Bloodfury widens crit range only while bloodied", () => {
-    const blessed = { ...human, blessings: ['tempus-bloodfury'] };
-    expect(critRange(blessed)).toEqual([20]);
-    const bloodied = { ...blessed, hp: { ...blessed.hp, current: Math.floor(blessed.hp.max / 2) } };
-    expect(critRange(bloodied)).toEqual([19, 20]);
+  it('two crit-range blessings stack to +2 (crit on 18-20)', () => {
+    const one = { ...human, blessings: ['tempus-edge'] };
+    expect(critRange(one)).toEqual([19, 20]);
+    const both = { ...human, blessings: ['tempus-edge', 'tymoras-gambit'] };
+    expect(critRange(both)).toEqual([18, 19, 20]);
   });
 });

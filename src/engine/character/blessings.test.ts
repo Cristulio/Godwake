@@ -151,7 +151,7 @@ describe('rollBlessingOptions — excludes owned non-stacking blessings', () => 
     });
   });
 
-  it('still offers a stacking blessing the soul already owns (charges sum)', () => {
+  it('consumes the exact owned blessing but still offers a distinct stacking twin', () => {
     const pool: Blessing[] = [
       fakeBlessing('stab-a', { extraStabiliseCharges: 1 }),
       fakeBlessing('stab-b', { extraStabiliseCharges: 1 }),
@@ -159,12 +159,44 @@ describe('rollBlessingOptions — excludes owned non-stacking blessings', () => 
     withFakePool(pool, () => {
       for (let seed = 0; seed < 50; seed += 1) {
         const roller = createDiceRoller(seed);
-        // Owning a stabilise card must not blank the pool — picking another
-        // genuinely adds a charge.
+        // Owning stab-a consumes it (never re-offered), but a distinct stacking
+        // card with the same lever still surfaces — picking it adds a charge.
         const result = rollBlessingOptions(roller, 1, undefined, ['stab-a']);
-        expect(result.length).toBe(1);
-        expect(['stab-a', 'stab-b']).toContain(result[0]);
+        expect(result).not.toContain('stab-a');
+        expect(result).toEqual(['stab-b']);
       }
+    });
+  });
+});
+
+describe('rollBlessingOptions — full per-run consumption', () => {
+  it('never re-offers any owned blessing, even one whose levers still stack', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('stab', { extraStabiliseCharges: 1 }),
+      fakeBlessing('regen', { regenPerCombat: 2 }),
+      fakeBlessing('ac', { acBonus: 1 }),
+      fakeBlessing('reroll', { rerollMissesPerEncounter: 1 }),
+    ];
+    withFakePool(pool, () => {
+      for (let seed = 0; seed < 200; seed += 1) {
+        const roller = createDiceRoller(seed);
+        const result = rollBlessingOptions(roller, 4, undefined, ['stab', 'regen']);
+        expect(result).not.toContain('stab');
+        expect(result).not.toContain('regen');
+      }
+    });
+  });
+
+  it('returns no options once every offerable blessing is owned (exhausted pool)', () => {
+    const pool: Blessing[] = [
+      fakeBlessing('a', { acBonus: 1 }),
+      fakeBlessing('b', { regenPerCombat: 2 }),
+      fakeBlessing('c', { rerollMissesPerEncounter: 1 }),
+    ];
+    withFakePool(pool, () => {
+      const roller = createDiceRoller(3);
+      const result = rollBlessingOptions(roller, 3, undefined, ['a', 'b', 'c']);
+      expect(result).toEqual([]);
     });
   });
 });
@@ -204,14 +236,14 @@ describe('aggregateBlessingModifiers — non-stacking fields take max-of-individ
     });
   });
 
-  it('takes max-of-individual for critRangeBonus (Tempus + Tymora would otherwise reach +2 → crit on 18–20)', () => {
+  it('SUMS critRangeBonus (Tempus + Tymora stack to +2 → crit on 18–20)', () => {
     const pool: Blessing[] = [
       fakeBlessing('tempus', { critRangeBonus: 1 }),
       fakeBlessing('tymora', { critRangeBonus: 1 }),
     ];
     withFakePool(pool, () => {
       const mods = aggregateBlessingModifiers(['tempus', 'tymora']);
-      expect(mods.critRangeBonus).toBe(1);
+      expect(mods.critRangeBonus).toBe(2);
     });
   });
 
@@ -293,22 +325,24 @@ describe('aggregateBlessingModifiers — v2 conditional/scaling levers', () => {
     });
   });
 
-  it('takes max-of for conditional AC and crit levers', () => {
+  it('takes max-of for conditional AC levers but SUMS conditional crit levers', () => {
     const pool: Blessing[] = [
       fakeBlessing('af1', { acBonusWhileFull: 1 }),
       fakeBlessing('af2', { acBonusWhileFull: 2 }),
       fakeBlessing('ab1', { acBonusWhileBloodied: 2 }),
       fakeBlessing('apb', { acBonusPerBaneQuirk: 1 }),
-      fakeBlessing('cf', { critRangeBonusWhileFull: 1 }),
-      fakeBlessing('cb', { critRangeBonusWhileBloodied: 1 }),
+      fakeBlessing('cf1', { critRangeBonusWhileFull: 1 }),
+      fakeBlessing('cf2', { critRangeBonusWhileFull: 1 }),
+      fakeBlessing('cb1', { critRangeBonusWhileBloodied: 1 }),
+      fakeBlessing('cb2', { critRangeBonusWhileBloodied: 1 }),
     ];
     withFakePool(pool, () => {
-      const mods = aggregateBlessingModifiers(['af1', 'af2', 'ab1', 'apb', 'cf', 'cb']);
+      const mods = aggregateBlessingModifiers(['af1', 'af2', 'ab1', 'apb', 'cf1', 'cf2', 'cb1', 'cb2']);
       expect(mods.acBonusWhileFull).toBe(2);
       expect(mods.acBonusWhileBloodied).toBe(2);
       expect(mods.acBonusPerBaneQuirk).toBe(1);
-      expect(mods.critRangeBonusWhileFull).toBe(1);
-      expect(mods.critRangeBonusWhileBloodied).toBe(1);
+      expect(mods.critRangeBonusWhileFull).toBe(2);
+      expect(mods.critRangeBonusWhileBloodied).toBe(2);
     });
   });
 
@@ -344,7 +378,7 @@ describe('rollBlessingOptions — v2 levers stack/non-stack offer rules', () => 
     });
   });
 
-  it('a regen blessing still gets offered when owned (charges sum)', () => {
+  it('a distinct regen blessing still gets offered after the owned one is consumed', () => {
     const pool: Blessing[] = [
       fakeBlessing('regen-a', { regenPerCombat: 2 }),
       fakeBlessing('regen-b', { regenPerCombat: 2 }),
@@ -353,8 +387,7 @@ describe('rollBlessingOptions — v2 levers stack/non-stack offer rules', () => 
       for (let seed = 0; seed < 50; seed += 1) {
         const roller = createDiceRoller(seed);
         const result = rollBlessingOptions(roller, 1, undefined, ['regen-a']);
-        expect(result.length).toBe(1);
-        expect(['regen-a', 'regen-b']).toContain(result[0]);
+        expect(result).toEqual(['regen-b']);
       }
     });
   });
@@ -463,6 +496,19 @@ describe('rollBlessingOptions — real pool', () => {
       expect(new Set(result).size).toBe(result.length);
     }
   });
+
+  it('ships exactly two crit-range blessings (crit tops out at +2 from blessings)', async () => {
+    const { listBlessings } = await import('../../content/blessings');
+    const critBlessings = listBlessings().filter((b) => {
+      const m = b.modifiers;
+      return (
+        m.critRangeBonus !== undefined ||
+        m.critRangeBonusWhileFull !== undefined ||
+        m.critRangeBonusWhileBloodied !== undefined
+      );
+    });
+    expect(critBlessings.length).toBe(2);
+  });
 });
 
 describe('aggregateBlessingModifiers — max-of-individual stacking guard (PR #80/#86)', () => {
@@ -475,10 +521,11 @@ describe('aggregateBlessingModifiers — max-of-individual stacking guard (PR #8
     expect(computeAC(stacked)).toBeGreaterThan(computeAC(single));
   });
 
-  it('stacking 2 crit-range blessings yields the same crit range as one', () => {
+  it('stacking 2 crit-range blessings widens the crit range beyond one (sum, not max)', () => {
     const single = characterAtLevel('fighter', 5, ['tempus-edge']);
     const stacked = characterAtLevel('fighter', 5, ['tempus-edge', 'tymoras-gambit']);
-    expect(critRange(stacked).length).toBe(critRange(single).length);
+    expect(critRange(stacked).length).toBe(critRange(single).length + 1);
+    expect(characterBlessingMods(stacked).critRangeBonus).toBe(2);
   });
 
   it('stacking 2 damage blessings yields the same damage bonus as one', () => {
