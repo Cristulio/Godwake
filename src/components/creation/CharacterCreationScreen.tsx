@@ -183,7 +183,7 @@ export function CharacterCreationScreen() {
               </div>
 
               <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
-                {tc('classes', opt.classId, 'blurb', opt.blurb)}
+                {tc('classes', opt.classId, 'flavorBlurb', opt.blurb)}
               </p>
 
               <div className="grid grid-cols-3 gap-1.5">

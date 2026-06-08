@@ -67,7 +67,7 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
           {rolled.affixes.map((id) => {
             let effect = id;
             try {
-              effect = tc('affixes', id, 'effect', getAffix(id).effect);
+              effect = tc('items', id, 'effect', getAffix(id).effect);
             } catch {
               /* unknown affix id — show the raw id */
             }

@@ -381,6 +381,10 @@
     "rolling": "rolling…",
     "vsAc": "vs AC {ac}"
   },
+  "float": {
+    "miss": "MISS",
+    "blocked": " blocked"
+  },
   "coach": {
     "attack": "Tap Attack to strike.",
     "target": "Choose your target.",

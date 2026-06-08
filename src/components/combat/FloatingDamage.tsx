@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { AttackEvent } from '../../types/combat';
+import { useT } from '../../i18n/useT';
 
 export interface FloatingDamageItem {
   id: number;
@@ -105,7 +106,7 @@ const KIND_STYLE: Record<
   block: {
     color: 'text-[var(--color-dmg-block)]',
     prefix: '',
-    suffix: ' blocked',
+    suffix: '',
     animation: 'animate-damage-deflect',
     size: 'text-[30px]',
     glow: 'rgba(138,168,255,0.7)',
@@ -138,6 +139,7 @@ const ELEMENT_TINT: Record<string, { color: string; glow: string }> = {
 };
 
 function DamageNumber({ item }: { item: FloatingDamageItem }) {
+  const { t } = useT();
   const style = KIND_STYLE[item.kind];
   // Damage / crit floats tint to their element when one is present; heals,
   // misses, and blocks keep their semantic colour.
@@ -147,9 +149,9 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
       : undefined;
   const label =
     item.kind === 'miss'
-      ? 'MISS'
+      ? t('combat.float.miss')
       : item.kind === 'block'
-        ? `${item.amount}${style.suffix}`
+        ? `${item.amount}${t('combat.float.blocked')}`
         : `${style.prefix}${item.amount}${style.suffix}`;
 
   // Spread numbers slightly so back-to-back hits don't perfectly overlap.
