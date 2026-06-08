@@ -71,8 +71,11 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   // then hidden at render if the rolled relic is already owned or just bought —
   // so buying it doesn't churn a fresh offer into view.
   const legendaryOffer = useMemo(
-    () => (classId ? rollLegendaryOffer(room.id, chapter, classId, [], ascensionLevel) : null),
-    [room.id, chapter, classId, ascensionLevel],
+    () =>
+      classId
+        ? rollLegendaryOffer(room.id, chapter, classId, [], ascensionLevel, ownedLegendaries.length)
+        : null,
+    [room.id, chapter, classId, ascensionLevel, ownedLegendaries.length],
   );
 
   if (!character) return null;
