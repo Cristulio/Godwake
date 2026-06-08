@@ -496,6 +496,7 @@
     "offenseFighter": "Cuesta {cost} de {pool}: los golpes de este turno aciertan más seguros (+{hit} al impacto) y muerden por +{dmg} de daño{cleave}.",
     "offenseOther": "Cuesta {cost} de {pool}: los golpes de este turno aciertan por +{dmg} de daño{cleave}.",
     "offenseCleave": ", y se hienden en un segundo enemigo",
+    "bonusActionCost": " También gasta tu acción adicional de este turno.",
     "defense": "Cuesta {cost} de {pool}: amortigua el próximo golpe que recibas en {reduction}. Resérvalo para un golpe que veas venir.",
     "disrupt": "Cuesta {cost} de {pool}: arma un golpe aturdidor — el próximo impacto abate a su objetivo y le cuesta su próximo turno.",
     "cunningAction": "Acción adicional: Esconderse (ventaja en el próximo ataque — habilita Furtivo), Golpe Veloz (un segundo golpe este turno), Finta (garantiza Furtivo en tu próximo golpe), o Templarse (ventaja en la próxima salvación).",

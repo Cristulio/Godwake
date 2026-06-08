@@ -129,6 +129,10 @@ export function ActionBar({
   const hasMartialOffense = martial != null && characterHasMechanic(character, 'martial-offense');
   const hasMartialDefense = martial != null && characterHasMechanic(character, 'martial-defense');
   const hasMartialDisrupt = martial != null && characterHasMechanic(character, 'martial-disrupt');
+  // Fighter Power Attack / Brace also spend the turn's bonus action; the
+  // Barbarian/Ranger spends stay free of the action economy.
+  const martialLeverCostsBonus = character.classId === 'fighter';
+  const martialBonusFree = !martialLeverCostsBonus || !character.actionEconomy.bonusActionUsed;
   // OFFENSE / DISRUPT are declared before the swing (gate on the action);
   // DEFENSE only needs to land before the enemy turn, so it stays open until the
   // multiattack chain is done.
@@ -138,6 +142,7 @@ export function ActionBar({
     hasMartialOffense &&
     !martialSpent &&
     !offenseUp &&
+    martialBonusFree &&
     martialPoints >= offenseCost &&
     !character.actionEconomy.actionUsed;
   const canMartialDefense =
@@ -145,6 +150,7 @@ export function ActionBar({
     active &&
     hasMartialDefense &&
     !martialSpent &&
+    martialBonusFree &&
     martialPoints >= MARTIAL_DEFENSE_COST &&
     !midMultiattack;
   const canMartialDisrupt =
@@ -365,7 +371,7 @@ export function ActionBar({
                     hit: martialOffenseAttackBonus(character),
                     dmg: martialOffenseDamage(character),
                     cleave: '',
-                  })
+                  }) + t('combat.bar.bonusActionCost')
                 : t('combat.bar.offenseOther', {
                     cost: offenseCost,
                     pool: martial.pool,
@@ -383,7 +389,10 @@ export function ActionBar({
             variant={canMartialDefense ? 'primary' : 'secondary'}
             onClick={onMartialDefense}
             disabled={!canMartialDefense}
-            title={t('combat.bar.defense', { cost: MARTIAL_DEFENSE_COST, pool: martial.pool, reduction: martialDefenseReduction(character) })}
+            title={
+              t('combat.bar.defense', { cost: MARTIAL_DEFENSE_COST, pool: martial.pool, reduction: martialDefenseReduction(character) }) +
+              (character.classId === 'fighter' ? t('combat.bar.bonusActionCost') : '')
+            }
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {`${martial.defense} (${MARTIAL_DEFENSE_COST})`}

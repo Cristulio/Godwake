@@ -666,8 +666,14 @@ function chooseMartialAction(
   const points = martialPointsLeft(character);
   if (points <= 0) return null;
 
-  const hasOffense = characterHasMechanic(character, 'martial-offense');
-  const hasDefense = characterHasMechanic(character, 'martial-defense');
+  // Fighter Power Attack / Brace also spend the bonus action; once it's gone (a
+  // bonus-action heal earlier this turn) the bot can't reach for them — only
+  // DISRUPT (Shield Bash) stays free. Barbarian/Ranger spends are unaffected.
+  const canSpendBonusLever =
+    character.classId !== 'fighter' || !character.actionEconomy.bonusActionUsed;
+
+  const hasOffense = characterHasMechanic(character, 'martial-offense') && canSpendBonusLever;
+  const hasDefense = characterHasMechanic(character, 'martial-defense') && canSpendBonusLever;
   const hasDisrupt = characterHasMechanic(character, 'martial-disrupt');
   const offenseCost = martialOffenseCost(character);
   const disruptCost = martialDisruptCost(character);

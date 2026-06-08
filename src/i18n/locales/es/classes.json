@@ -13,7 +13,7 @@
   },
   "fighter.power-attack": {
     "name": "Ataque Poderoso",
-    "description": "Tu Temple —tres puntos de aguante que se renuevan en cada combate, gastados como mucho uno por turno. El Ataque Poderoso es la ofensiva: afianza los pies y golpea con fuerza, y cada golpe de este turno muerde más hondo. Cuesta 2 de Temple."
+    "description": "Tu Temple —tres puntos de aguante que se renuevan en cada combate, gastados como mucho uno por turno. El Ataque Poderoso es la ofensiva: afianza los pies y golpea con fuerza, y cada golpe de este turno muerde más hondo. Cuesta 2 de Temple y tu acción adicional —descarga el golpe pesado o afiánzate, no ambos."
   },
   "fighter.action-surge": {
     "name": "Oleada de Acción",
@@ -21,7 +21,7 @@
   },
   "fighter.brace": {
     "name": "Afianzarse",
-    "description": "Lee el golpe entrante y planta el escudo contra él. Gasta 1 de Temple para asentar tu guardia —el siguiente impacto que recibas se mitiga en 4 más la mitad de tu nivel. Resérvalo para el golpe que ves venir."
+    "description": "Lee el golpe entrante y planta el escudo contra él. Gasta 1 de Temple y tu acción adicional para asentar tu guardia —el siguiente impacto que recibas se mitiga en 4 más la mitad de tu nivel. Resérvalo para el golpe que ves venir."
   },
   "fighter.shield-bash": {
     "name": "Golpe de Escudo",
