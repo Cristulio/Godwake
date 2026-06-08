@@ -1,11 +1,11 @@
 import type { Item, ItemRef } from '../../schemas/item';
 import type { ClassId } from '../../schemas/ids';
 import { Button } from '../ui/Button';
-import { getItem, getAffix } from '../../content/items';
+import { getItem } from '../../content/items';
 import { getLegendary } from '../../content/legendaries';
 import { armorEquipWarning } from '../../engine/character/equip';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
-import { baseStatLine, enhancementLine, itemTypeLabel } from '../inventory/itemDisplay';
+import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect } from '../inventory/itemDisplay';
 import type { GearStock, LegendaryOffer } from './shopStock';
 import { useT } from '../../i18n/useT';
 
@@ -32,7 +32,7 @@ interface GearWareRowProps {
 
 /** One rolled arms-rack item: rarity-coloured frame, affix-effect list, price. */
 export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearWareRowProps) {
-  const { t, tc } = useT();
+  const { t } = useT();
   const rolled = stock.ref.rolled;
   const base = getItem(stock.ref.itemId);
   const rarity = rolled?.rarity ?? 'white';
@@ -47,7 +47,7 @@ export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearW
     >
       <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider" style={{ color }}>
-          {rolled?.name ?? tc('items', base.id, 'name', base.name)}
+          {localizedItemName(stock.ref)}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
           {GEAR_RARITY_LABEL[rarity]} · {itemTypeLabel(base)}
@@ -63,19 +63,11 @@ export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearW
               ◆ {enhancementLine(base, rolled.enhancement)}
             </div>
           )}
-          {(rolled?.affixes ?? []).map((id) => {
-            let effect = id;
-            try {
-              effect = tc('items', id, 'effect', getAffix(id).effect);
-            } catch {
-              /* unknown id */
-            }
-            return (
-              <div key={id} className="text-[11px] italic leading-snug" style={{ color }}>
-                ◆ {effect}
-              </div>
-            );
-          })}
+          {(rolled?.affixes ?? []).map((id) => (
+            <div key={id} className="text-[11px] italic leading-snug" style={{ color }}>
+              ◆ {localizedAffixEffect(id)}
+            </div>
+          ))}
         </div>
         {warning && (
           <div className="text-[var(--color-accent-amber)] text-[10px] leading-snug mt-1">
@@ -110,10 +102,15 @@ interface LegendaryWareRowProps {
  * player attunes it at the hub.
  */
 export function LegendaryWareRow({ offer, bought, gold, onBuy }: LegendaryWareRowProps) {
-  const { t } = useT();
+  const { t, tc } = useT();
   const gold700 = 'var(--color-accent-gold)';
   const tooDear = gold < offer.cost;
-  const effect = getLegendary(offer.legendaryId)?.effect ?? t('delve.wares.relicFallback');
+  const effect = tc(
+    'legendaries',
+    offer.legendaryId,
+    'effect',
+    getLegendary(offer.legendaryId)?.effect ?? t('delve.wares.relicFallback'),
+  );
   return (
     <div
       className="border-2 p-3 flex items-center gap-3"
@@ -121,7 +118,7 @@ export function LegendaryWareRow({ offer, bought, gold, onBuy }: LegendaryWareRo
     >
       <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider" style={{ color: gold700 }}>
-          ✦ {offer.name}
+          ✦ {tc('legendaries', offer.legendaryId, 'name', offer.name)}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
           {t('delve.wares.legendaryBanks')}
@@ -191,7 +188,7 @@ interface SellWareRowProps {
 
 /** One pack item the merchant will buy back, rarity-framed, with its sell price. */
 export function SellWareRow({ itemRef, price, onSell }: SellWareRowProps) {
-  const { t, tc } = useT();
+  const { t } = useT();
   const base = getItem(itemRef.itemId);
   const rarity = itemRef.rolled?.rarity ?? 'white';
   const color = GEAR_RARITY_COLOR[rarity];
@@ -201,7 +198,7 @@ export function SellWareRow({ itemRef, price, onSell }: SellWareRowProps) {
     <div className="border p-3 flex items-center gap-4" style={{ borderColor: color }}>
       <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider truncate" style={{ color }}>
-          {itemRef.rolled?.name ?? tc('items', base.id, 'name', base.name)}
+          {localizedItemName(itemRef)}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
           {stat && stat !== typeLabel ? `${typeLabel} · ${stat}` : typeLabel}

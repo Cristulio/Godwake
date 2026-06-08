@@ -168,6 +168,43 @@
     "actionBonus": "bonus",
     "actionAction": "action"
   },
+  "itemDisplay": {
+    "twoH": "2h",
+    "acShield": "+{n} AC shield",
+    "robeNoAc": "robe · no AC",
+    "armorAc": "{cat} · AC {n}",
+    "heal": "heal {dice}",
+    "weaponLabel": "Weapon",
+    "shieldLabel": "Shield",
+    "robeLabel": "Robe",
+    "consumableLabel": "Consumable",
+    "armorLabel": "{cat} armor",
+    "weaponKind": "{cat} weapon",
+    "armorKind": "{cat} armor",
+    "consumableKind": "{effect} consumable",
+    "accessoryKind": "{slot} · accessory",
+    "enhanceWeapon": "+{n} to attack and damage rolls",
+    "enhanceArmor": "+{n} Armor Class",
+    "category": {
+      "light": "Light",
+      "medium": "Medium",
+      "heavy": "Heavy",
+      "simple": "simple",
+      "martial": "martial"
+    },
+    "slot": {
+      "helm": "Helm",
+      "amulet": "Amulet",
+      "ring": "Ring",
+      "belt": "Belt",
+      "boots": "Boots"
+    },
+    "consumable": {
+      "heal": "heal",
+      "buff": "buff",
+      "utility": "utility"
+    }
+  },
   "codex": {
     "heading": "THE BESTIARY",
     "library": "Town Library · {discovered} / {total} discovered",

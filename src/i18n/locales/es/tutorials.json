@@ -1,0 +1,100 @@
+{
+  "grove": {
+    "unlocked": "El Bosque Druídico",
+    "title": "Permanencia, Pagada en Sangre",
+    "body0": "Cada descenso marca el alma —Renombre, lo único que la rueda no puede consumir cuando te arrastra de vuelta para nacer otra vez. Más allá del refugio, en tierra más vieja, los druidas guardan un bosque que lo cambiará por algo más raro que el acero: permanencia.",
+    "body1": "Más sangre que derramar antes de caer, un brazo más certero, trucos que la oscuridad no sabe cómo arrebatarte. Atesorado, el Renombre solo se queda ahí. Gastado, vuelve más difícil de abatir cada vida que venga después de esta.",
+    "key": "El Renombre sobrevive a la muerte —cámbialo en el Bosque por mejoras de cuerpo, hoja y arte que nunca se reinician."
+  },
+  "elite-nodes": {
+    "unlocked": "Enemigos de Élite",
+    "title": "Los Marcados",
+    "body0": "Algunas cosas en la oscuridad se apartan de los suyos —más grandes, más viejas, equivocadas de un modo que hace que el resto les deje sitio. El camino por delante te mostrará dónde aguarda uno así. Si tomas su senda, es tuyo decidirlo.",
+    "body1": "Cuesta más que una muerte común: más sangre, más astucia, más suerte conservada. A cambio paga más —oro más pesado, botín más fino, y la única puerta por la que una reliquia Legendaria cae alguna vez en una mano viva.",
+    "key": "Las élites son los combates más duros de la ruta —y las únicas muertes que rinden una reliquia Legendaria."
+  },
+  "boss-intel": {
+    "unlocked": "Estudio del Guardián",
+    "title": "Un Estudio del Pavor",
+    "body0": "En el último sello de un capítulo, el oro compra algo más afilado que otra hoja —compra presciencia. Deja la moneda y podrás estudiar a la cosa enroscada tras esa puerta antes de enfrentarla: cómo se abre, qué ansía, el truco que guarda para el momento en que te crees vencedor.",
+    "body1": "Cuanto más hondo el capítulo, más empinado el precio. Sopésalo contra el hierro que esa moneda compraría en su lugar. Pero un alma que entra sabiendo ya la forma del horror vuelve a salir mucho más a menudo.",
+    "key": "Paga oro en el sello del capítulo para estudiar a su guardián —aprende sus patrones antes de que la puerta se abra."
+  },
+  "legendaries": {
+    "unlocked": "Reliquias Legendarias",
+    "title": "Ligada al Alma",
+    "body0": "Una reliquia ha aflorado de algún lugar muy por debajo del alcance del saqueo común —más vieja que los capítulos, más extraña que cualquier cosa que la oscuridad ceda de buena gana. Donde el equipo que portas se pudre con cada cuerpo caído, una reliquia se liga al alma que hay debajo. Resiste cada muerte, cada partida vaciada, cada nueva piel que vistes. Colócala en el refugio antes de descender.",
+    "body1": "No te cuelga armadura ni te pone filo en la mano. Lo que hace es torcer el modo en que un alma combate —en silencio, y por entero. Algunas reliquias responden a una sola clase de alma; en las manos equivocadas siguen siendo piedra muerta.",
+    "key": "Las reliquias se ligan al alma, no al cuerpo —sobreviven a cada muerte y se colocan en el refugio."
+  },
+  "sets": {
+    "unlocked": "Equipo de Conjunto",
+    "title": "Forjado en Compañía",
+    "body0": "Ha aflorado equipo que no se pudre con el cuerpo que lo vistió. Una pieza de conjunto —hoja, armadura o talismán— se liga al alma y sobrevive a cada muerte; colócala en tu equipo en el refugio y desciende contigo, vida tras vida, más fuerte que cualquier botín que la oscuridad ceda al azar.",
+    "body1": "Y no fueron forjadas a solas. Viste dos o más piezas de un mismo conjunto y se responden entre sí —despiertan poderes que ninguna pieza sola contiene. No necesitas reunir el conjunto entero; una unión parcial ya cuenta, y cada pieza que encaja estrecha más el vínculo. Vale la pena construir un conjunto a lo largo de muchas partidas.",
+    "key": "Las piezas de conjunto se ligan al alma y se equipan en tus ranuras —viste dos de un conjunto para despertar poderes compartidos."
+  },
+  "grove-deep": {
+    "unlocked": "Niveles Profundos del Bosque",
+    "title": "Raíces Más Hondas",
+    "body0": "Los druidas han abierto una cámara que sigue cerrada a las almas no probadas —niveles del Bosque que arraigan muy por debajo de los que conoces. El poder que aguarda allí es de otro orden por completo: forjado para la maestría, caro de pagar, de la clase que lleva a un veterano más allá de los muros que detienen en seco a un alma verde.",
+    "body1": "Estuvo bajo tus pies todo este tiempo. El Bosque simplemente abre sus raíces más bajas solo a un alma que ha demostrado saber usarlas.",
+    "key": "Se han abierto niveles más hondos del Bosque —mejoras más caras y fuertes para un alma que se ha probado."
+  },
+  "fighter": {
+    "unlocked": "El Guerrero — un alma nueva",
+    "title": "Un Alma de Espada y Escudo",
+    "body0": "Otro cuerpo ha aflorado de la rueda. El alma de un soldado —marcada, firme, difícil de abatir. Responderá en el refugio la próxima vez que cambies de piel.",
+    "body1": "Sin conjuros, sin trucos. Solo acero que no se cansa y una voluntad que rechaza el golpe mortal.",
+    "key": "El Guerrero: Segundo Aliento para curar, Oleada de Acción para un segundo golpe, críticos con 19-20."
+  },
+  "barbarian": {
+    "unlocked": "El Bárbaro — un alma nueva",
+    "title": "Un Alma Que No Caerá",
+    "body0": "Algo más viejo y más furioso se ha abierto paso a zarpazos. No siente miedo ni apenas dolor —simplemente sigue golpeando hasta que uno de los dos ya no esté.",
+    "body1": "No viste armadura y no la necesita. La furia es la armadura.",
+    "key": "El Bárbaro: la Furia reduce a la mitad el daño que recibes, el Ataque Temerario cambia seguridad por sangre."
+  },
+  "ranger": {
+    "unlocked": "El Explorador — un alma nueva",
+    "title": "Un Alma Que Caza",
+    "body0": "Un alma callada se ha asomado al borde de la rueda —paciente, de mirada lejana, mortal antes de que el enemigo cierre siquiera la distancia.",
+    "body1": "Marca a su presa y no falla dos veces.",
+    "key": "El Explorador: la Marca del Cazador acumula daño extra sobre un objetivo, la Puntería afina cada disparo."
+  },
+  "wizard": {
+    "unlocked": "El Mago — un alma nueva",
+    "title": "Un Alma del Arte",
+    "body0": "Un alma más frágil se ha alzado a la rueda —de piel fina, de huesos blandos, a un mal paso de la oscuridad. Vestida demasiado pronto se quiebra; vestida por un caminante que ha atesorado los dones de los guardianes, tuerce combates enteros con una palabra.",
+    "body1": "No porta acero de verdad. Lo que porta es fuego, y fuerza, y la paciencia de gastarlos bien.",
+    "key": "El Mago: Saeta de Fuego y Proyectil Mágico para abrir, Bola de Fuego a nivel 5 —y casi sin armadura tras la que esconderse."
+  },
+  "druid": {
+    "unlocked": "El Druida — un alma nueva",
+    "title": "Un Alma de la Vieja Fe",
+    "body0": "Un alma más vieja que la guerra de los nuevos dioses ha aflorado —una que guardó los bosques mientras el resto se arrodillaba ante tronos. De piel fina en su propia forma, a un mal paso de la oscuridad, como las almas del Arte que la precedieron.",
+    "body1": "Pero no siempre conserva su propia forma. Cuando los conjuros se agotan, deja el cuerpo y viste la bestia, y la bestia no sangra con tanta facilidad.",
+    "key": "El Druida: Producir Llamas y la tormenta para abrir, Forma Salvaje hacia la vitalidad y las garras de una bestia cuando el combate se cierra."
+  },
+  "monk": {
+    "unlocked": "El Monje — un alma nueva",
+    "title": "Un Alma de la Mano Vacía",
+    "body0": "Un alma afilada por una larga disciplina se ha asomado a la rueda —veloz, certera, sin portar hoja porque aprendió hace mucho que ella es la hoja. De piel fina pese a todo: vive o muere según la lectura, no según la guardia.",
+    "body1": "Vierte su fuerza interior en una tormenta de puños, más rápida de lo que un enemigo puede responder —y el golpe justo derriba a una cosa donde está.",
+    "key": "El Monje: las Artes Marciales golpean con tus puños, la Ráfaga de Golpes gasta Ki por golpes extra, el Golpe Aturdidor roba el turno a un enemigo."
+  },
+  "rogue": {
+    "unlocked": "El Pícaro — un alma nueva",
+    "title": "Un Alma en la Oscuridad",
+    "body0": "La última de las almas selladas se ha soltado —una mano de cuchillo que prefiere la herida que nadie vio venir. El cuerpo más difícil de vestir, y el más cruel en las manos adecuadas.",
+    "body1": "Golpea desde la sombra y un solo corte hace el trabajo de tres.",
+    "key": "El Pícaro: el Ataque Furtivo premia el golpe no visto, la Acción Astuta te mantiene escurridizo."
+  },
+  "first-gear": {
+    "unlocked": "Botín de la Oscuridad",
+    "title": "Un Hallazgo Digno de Cargar",
+    "body0": "La oscuridad se ha desprendido de algo que puedes usar —una pieza de equipo de guerra, reclamada y guardada. No se ha esfumado; ha ido a la Mochila, donde todo lo que rapiñas se conserva hasta que decides su valor.",
+    "body1": "Abre la Mochila y el hallazgo aguarda allí para ser examinado y vestido. Una hoja no hace nada colgada al hombro; el equipo se gana su sitio solo cuando está sobre tu cuerpo. Sopesa cada pieza contra lo que ya cargas, y luego equipa lo que sirva al descenso.",
+    "key": "El equipo hallado va a la Mochila —ábrela para examinar cada pieza y equipar lo que pretendas usar."
+  }
+}

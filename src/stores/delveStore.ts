@@ -5,10 +5,6 @@ import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
 import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
 import { rollItem, rollGearDrop, rollLegendaryDrop, rollSetPieceDrop, materializeSetGear, isSetPieceRef } from '../engine/items';
-import { getAffix } from '../content/items';
-import { getLegendary } from '../content/legendaries';
-import { getSetPiece } from '../content/sets';
-import { baseStatLine } from '../components/inventory/itemDisplay';
 import { classStartingResources } from '../engine/character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
 import { effectiveAbilityScores } from '../engine/character/derived';
@@ -349,11 +345,17 @@ function reincarnateSoul(character: Character): Character {
 export interface LootSummary {
   gold: number;
   xp: number;
-  items: Array<{ name: string; rarity: GearRarity; description: string }>;
-  /** Name of a legendary relic banked to the reliquary this fight, if any. */
-  bankedLegendary?: string;
-  /** Name of a SET-gear piece banked to the soul this fight, if any. */
-  bankedSetPiece?: string;
+  /**
+   * Dropped loot, as the structured `ItemRef`s rolled this fight. The spoils
+   * screen recomposes the LOCALIZED display name / description at render time
+   * (rolled.name is a baked-English string built at roll time, so storing the
+   * ref lets the spoils screen show Spanish under the es locale).
+   */
+  items: ItemRef[];
+  /** Id of a legendary relic banked to the reliquary this fight, if any. */
+  bankedLegendaryId?: string;
+  /** Id of a SET-gear piece banked to the soul this fight, if any. */
+  bankedSetPieceId?: string;
   /**
    * Renown this fight earned toward the run total (mobs felled + boss bonus,
    * pre run-end multipliers). Surfaced on the spoils screen so the player sees
@@ -710,8 +712,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     let goldGained = 0;
     let xpGained = 0;
     const droppedItems: LootSummary['items'] = [];
-    let bankedLegendary: string | undefined;
-    let bankedSetPiece: string | undefined;
+    let bankedLegendaryId: string | undefined;
+    let bankedSetPieceId: string | undefined;
 
     if (isRegularCombat) {
       const roomGold = room.goldReward ?? 0;
@@ -752,19 +754,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
             inventory: [...cur.inventory, ref],
           });
           queueFirstGearTutorial();
-          if (ref.rolled) {
-            // Build a one-liner: affix effects joined with ·, or fall back to
-            // the base stat line when no affixes rolled (white-tier base items).
-            let description = '';
-            if (ref.rolled.affixes.length > 0) {
-              description = ref.rolled.affixes.map((id) => getAffix(id).effect).join(' · ');
-            } else {
-              try {
-                description = baseStatLine(getItem(ref.itemId));
-              } catch { /* ignore */ }
-            }
-            droppedItems.push({ name: ref.rolled.name, rarity: ref.rolled.rarity, description });
-          }
+          if (ref.rolled) droppedItems.push(ref);
         }
       }
       // Rare legendary relic drop: banked to the collection, not equipped this run.
@@ -772,14 +762,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       if (isFeatureUnlocked('legendaries', meta) && rollLegendaryDrop(getActiveRoller(), room.kind)) {
         const allowAscendant = ascensionAscendantLoot(s.delve.ascensionLevel ?? 0);
         const bankedId = useMetaStore.getState().grantLegendaryDrop(allowAscendant);
-        if (bankedId) bankedLegendary = getLegendary(bankedId)?.name ?? 'Legendary relic';
+        if (bankedId) bankedLegendaryId = bankedId;
       }
       // Persistent SET piece drop (elite/boss): banked to the soul, equipped at
       // the hub. Gated on the sets feature; NG+ runs fold in the exclusive sets.
       if (isFeatureUnlocked('sets', meta) && rollSetPieceDrop(getActiveRoller(), room.kind)) {
         const allowExclusive = ascensionExclusiveLoot(s.delve.ascensionLevel ?? 0);
         const bankedPieceId = useMetaStore.getState().grantSetPieceDrop(allowExclusive);
-        if (bankedPieceId) bankedSetPiece = getSetPiece(bankedPieceId)?.name ?? 'Set piece';
+        if (bankedPieceId) bankedSetPieceId = bankedPieceId;
       }
       // Tally actual deltas (quirk multipliers applied by addDelveReward).
       const after = useCharacterStore.getState().character;
@@ -802,8 +792,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         gold: goldGained,
         xp: xpGained,
         items: droppedItems,
-        bankedLegendary,
-        bankedSetPiece,
+        bankedLegendaryId,
+        bankedSetPieceId,
         renown: fightRenown,
       },
       pendingSpoilsRoom: room,

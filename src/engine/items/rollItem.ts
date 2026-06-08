@@ -11,7 +11,7 @@ export type BaseKind = 'weapon' | 'armor' | 'accessory';
  * Curated base pools for rolled loot — the plain white bases the affix roll
  * builds on. (The old static "magic items" are gone; affixes replace them.)
  */
-const WEAPON_BASE_IDS = [
+export const WEAPON_BASE_IDS = [
   'dagger',
   'shortsword',
   'rapier',
@@ -35,13 +35,13 @@ const WEAPON_BASE_IDS = [
  * drawn from these alone (the generic rack above is non-unarmed, so it'd turn the
  * kit dark); no other class ever rolls one.
  */
-const MONK_WEAPON_BASE_IDS = [
+export const MONK_WEAPON_BASE_IDS = [
   'monk-war-staff',
   'monk-paired-kama',
   'monk-temple-glaive',
 ] as const;
 
-const ARMOR_BASE_IDS = [
+export const ARMOR_BASE_IDS = [
   'padded-armor',
   'leather-armor',
   'studded-leather',
@@ -64,7 +64,7 @@ const ARMOR_BASE_IDS = [
 ] as const;
 
 /** Accessory bases — class-agnostic affix carriers (helm/amulet/ring/belt/boots). */
-const ACCESSORY_BASE_IDS = [
+export const ACCESSORY_BASE_IDS = [
   'iron-ring',
   'silver-ring',
   'gold-ring',
@@ -224,7 +224,7 @@ export function eligibleAffixes(kind: BaseKind, classId: ClassId): Affix[] {
  * outranks a plain stat-stick — so the woven name leads with the affix that
  * actually matters ("Furious Greataxe", not "Honed Greataxe").
  */
-function affixDominance(affix: Affix): number {
+export function affixDominance(affix: Affix): number {
   const m = affix.modifiers;
   const gated = affix.classGate && affix.classGate.length > 0 ? 1000 : 0;
   const signature =

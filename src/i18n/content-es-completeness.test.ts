@@ -5,6 +5,16 @@ import { LORE_BEATS } from '../content/loreBeats';
 import { BOSS_INTEL_CARDS } from '../content/bossIntel';
 import { listUpgrades } from '../content/upgrades';
 import { GEAR_SETS, SET_PIECES } from '../content/sets';
+import { listAffixes } from '../content/items';
+import {
+  WEAPON_BASE_IDS,
+  MONK_WEAPON_BASE_IDS,
+  ARMOR_BASE_IDS,
+  ACCESSORY_BASE_IDS,
+} from '../engine/items/rollItem';
+import { LEGENDARIES, RELIC_SLOTS } from '../content/legendaries';
+import { TUTORIALS, CLASS_TUTORIALS, STANDALONE_TUTORIALS } from '../content/tutorials';
+import type { TutorialContent } from '../content/tutorials';
 import type { EventChoiceOutcome } from '../schemas/event';
 
 import esMonsters from './locales/es/monsters.json';
@@ -15,6 +25,10 @@ import esChapters from './locales/es/chapters.json';
 import enUpgrades from './locales/en/upgrades.json';
 import esUpgrades from './locales/es/upgrades.json';
 import esSetGear from './locales/es/setGear.json';
+import esItems from './locales/es/items.json';
+import esLegendaries from './locales/es/legendaries.json';
+import esRelicSlots from './locales/es/relicSlots.json';
+import esTutorials from './locales/es/tutorials.json';
 
 type Overlay = Record<string, Record<string, string>>;
 
@@ -24,6 +38,10 @@ const lore = esLore as Overlay;
 const bossIntel = esBossIntel as Overlay;
 const chapters = esChapters as Overlay;
 const setGear = esSetGear as Overlay;
+const items = esItems as Overlay;
+const legendaries = esLegendaries as Overlay;
+const relicSlots = esRelicSlots as Overlay;
+const tutorials = esTutorials as Overlay;
 
 /** A row field is "covered" when it exists and is a non-empty Spanish string. */
 function covered(row: Record<string, string> | undefined, field: string): boolean {
@@ -189,6 +207,77 @@ describe('es/setGear.json completeness', () => {
       if (!covered(setGear[piece.id], 'effect')) missing.push(`${piece.id}.effect`);
     }
     expect(missing, `missing set-piece overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+});
+
+// --- i18n-audit lane: rolled item names, affix strings, legendaries, tutorials ---
+
+describe('es/items.json rolled-loot completeness', () => {
+  it('every rollable base id has a Spanish name', () => {
+    const baseIds = [
+      ...WEAPON_BASE_IDS,
+      ...MONK_WEAPON_BASE_IDS,
+      ...ARMOR_BASE_IDS,
+      ...ACCESSORY_BASE_IDS,
+    ];
+    const missing = baseIds.filter((id) => !covered(items[id], 'name'));
+    expect(missing, `missing base name overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('every affix has a Spanish name word + effect (drives the rolled name + tooltip)', () => {
+    const missing: string[] = [];
+    for (const a of listAffixes()) {
+      if (!covered(items[a.id], 'word')) missing.push(`${a.id}.word`);
+      if (!covered(items[a.id], 'effect')) missing.push(`${a.id}.effect`);
+    }
+    expect(missing, `missing affix overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+});
+
+describe('es/legendaries.json + es/relicSlots.json completeness', () => {
+  // BG2-canonical proper nouns kept verbatim in both locales (no `name` overlay).
+  const PROPER_NOUN_RELICS = new Set(['crom-faeyr', 'robe-of-vecna', 'ring-of-gaxx', 'carsomyr']);
+
+  it('every relic has a Spanish flavor + effect (and a name unless a proper noun)', () => {
+    const missing: string[] = [];
+    for (const relic of LEGENDARIES) {
+      if (!covered(legendaries[relic.id], 'flavor')) missing.push(`${relic.id}.flavor`);
+      if (!covered(legendaries[relic.id], 'effect')) missing.push(`${relic.id}.effect`);
+      if (!PROPER_NOUN_RELICS.has(relic.id) && !covered(legendaries[relic.id], 'name'))
+        missing.push(`${relic.id}.name`);
+    }
+    expect(missing, `missing legendary overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('every relic slot has a Spanish name + blurb', () => {
+    const missing: string[] = [];
+    for (const slot of RELIC_SLOTS) {
+      if (!covered(relicSlots[slot], 'name')) missing.push(`${slot}.name`);
+      if (!covered(relicSlots[slot], 'blurb')) missing.push(`${slot}.blurb`);
+    }
+    expect(missing, `missing relic-slot overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+});
+
+describe('es/tutorials.json completeness', () => {
+  const ALL: Record<string, TutorialContent> = {
+    ...TUTORIALS,
+    ...CLASS_TUTORIALS,
+    ...STANDALONE_TUTORIALS,
+  };
+
+  it('every unlock card has Spanish unlocked/title/key + a line for each body paragraph', () => {
+    const missing: string[] = [];
+    for (const [id, content] of Object.entries(ALL)) {
+      const row = tutorials[id];
+      if (!covered(row, 'unlocked')) missing.push(`${id}.unlocked`);
+      if (!covered(row, 'title')) missing.push(`${id}.title`);
+      if (!covered(row, 'key')) missing.push(`${id}.key`);
+      content.body.forEach((_, i) => {
+        if (!covered(row, `body${i}`)) missing.push(`${id}.body${i}`);
+      });
+    }
+    expect(missing, `missing tutorial overlays: ${missing.join(', ')}`).toEqual([]);
   });
 });
 

@@ -1,0 +1,11 @@
+{
+  "vampire": { "name": "Vampiro", "blurb": "Bebe la vida de cada herida que infliges." },
+  "aegis": { "name": "Égida", "blurb": "Una guarda de vida prestada al primer aliento de cada combate." },
+  "precision": { "name": "Precisión", "blurb": "Encuentra el corte mortal más a menudo." },
+  "rend": { "name": "Desgarro", "blurb": "Deja heridas que siguen sangrando." },
+  "spellfocus": { "name": "Foco Arcano", "blurb": "Vuelve tu magia más difícil de rechazar." },
+  "cascade": { "name": "Cascada", "blurb": "Cada golpe de seguimiento cae con más fuerza." },
+  "spellpower": { "name": "Poder Arcano", "blurb": "Presta a tus conjuros un filo más cruel." },
+  "signature": { "name": "Sello", "blurb": "Afila lo que solo tu clase sabe hacer." },
+  "renewal": { "name": "Renovación", "blurb": "Cierra tus heridas, turno a turno." }
+}

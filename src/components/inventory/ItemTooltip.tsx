@@ -4,6 +4,7 @@ import { getAffix } from '../../content/items';
 import { getSetPiece, getGearSet } from '../../content/sets';
 import { weaponStatRequirement } from '../../engine/character/equip';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from './rarity';
+import { localizedItemName, itemKindLabel } from './itemDisplay';
 import { useT } from '../../i18n/useT';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
@@ -42,7 +43,7 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
   const { t, tc } = useT();
   const isRolled = rolled !== undefined && rolled.rarity !== 'white';
   const borderColor = isRolled ? GEAR_RARITY_COLOR[rolled.rarity] : 'var(--color-accent-amber)';
-  const displayName = rolled?.name ?? tc('items', item.id, 'name', item.name);
+  const displayName = localizedItemName({ itemId: item.id, rolled });
   return (
     <div
       role="tooltip"
@@ -56,7 +57,7 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
         className="text-[10px] uppercase tracking-widest mt-0.5"
         style={{ color: isRolled ? GEAR_RARITY_COLOR[rolled.rarity] : RARITY_COLOR[item.rarity] }}
       >
-        {kindLabel(item)} · {isRolled ? GEAR_RARITY_LABEL[rolled.rarity] : RARITY_LABEL[item.rarity]}
+        {itemKindLabel(item)} · {isRolled ? GEAR_RARITY_LABEL[rolled.rarity] : RARITY_LABEL[item.rarity]}
       </div>
 
       <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] font-mono">
@@ -121,21 +122,6 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
       )}
     </div>
   );
-}
-
-function kindLabel(item: Item): string {
-  switch (item.kind) {
-    case 'weapon':
-      return `${item.category} weapon`;
-    case 'armor':
-      if (item.category === 'shield') return 'shield';
-      if (item.category === 'robe') return 'robe';
-      return `${item.category} armor`;
-    case 'consumable':
-      return `${item.effect} consumable`;
-    case 'accessory':
-      return `${item.accessorySlot} · accessory`;
-  }
 }
 
 function renderStats(item: Item, t: TFn, rolledCost?: number, rolled?: RolledItem) {
