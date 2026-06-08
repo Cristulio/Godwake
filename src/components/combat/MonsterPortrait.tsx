@@ -293,6 +293,10 @@ const SPRITES: Record<string, SpriteEntry> = {
   'half-giant-siegebreaker': { url: halfGiantSiegebreakerUrl, label: 'Half-Giant Siegebreaker' },
   'gromnir-defender': { url: gromnirDefenderUrl, label: "Gromnir's Defender" },
   'yaga-shura': { url: yagaShuraUrl, label: 'Yaga-Shura' },
+  // Reuses the hovering-mote art for the giant's surfaced heart-ember weak-point
+  // (a floating red coal) — no bespoke sprite yet; the mote reads as the wound
+  // made briefly visible.
+  'heart-ember': { url: bhaalEssenceMoteUrl, label: 'Heart-Ember' },
   // ─── Chapter 13 · The Last of the Five ──────────────────────────────────
   'sendai-handmaiden': { url: sendaiHandmaidenUrl, label: "Sendai's Handmaiden" },
   'kuo-toa-deepguard': { url: kuoToaDeepguardUrl, label: 'Kuo-Toa Deepguard' },

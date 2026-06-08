@@ -37,6 +37,7 @@ import {
   DEFAULT_WEAKENED_AMOUNT,
 } from '../playerConditions';
 import { spawnMonsterInstance } from '../createCombat';
+import { applyAscensionToMonster } from '../../delve/ascension';
 import {
   effectiveActionsPerTurn,
   effectiveMonsterActions,
@@ -359,7 +360,13 @@ export function monsterAttack(
 
   // boss-framework: evaluate HP-threshold phases at turn start (each once) —
   // they may raise actions-per-turn, enrage, swing AC, or flip the transform.
-  const phasedState = applyPhaseTransitions(state, attackerId, monsterDef);
+  // Reset the per-turn attack-event batch here: this turn may resolve several
+  // swings (multiattack / multi-action) inside one atomic commit, and the UI
+  // drains this batch so every swing floats its own number, not just the last.
+  const phasedState: CombatState = {
+    ...applyPhaseTransitions(state, attackerId, monsterDef),
+    attackEvents: [],
+  };
   const startInstance = monsterInstanceOf(phasedState, attackerId);
   const actionsPerTurn = startInstance
     ? effectiveActionsPerTurn(monsterDef, startInstance)
@@ -918,6 +925,15 @@ function resolveSingleAttack(
     }
   }
 
+  // Record this swing in the per-turn batch (with its finalized damageDealt, so
+  // the float shows true rolled damage). lastAttack already carries the same
+  // event; the batch keeps EVERY swing of a multi-swing turn, not just the last.
+  const resolvedEvent = nextState.lastAttack ?? attackEvent;
+  nextState = {
+    ...nextState,
+    attackEvents: [...(nextState.attackEvents ?? []), resolvedEvent],
+  };
+
   return { state: nextState, character: nextCharacter };
 }
 
@@ -965,7 +981,16 @@ function monsterSummon(
     (c): c is MonsterCombatant => c.id === attackerId && c.kind === 'monster',
   );
   if (!attacker) return { state, character: character as Character };
-  const summonDef = getMonster(action.summonDefId);
+  // Scale the summoned add to the encounter the SAME way createCombat scaled
+  // the room's monsters — by the run's ascension level (HP) — so a late boss's
+  // reinforcement isn't a raw early-game stat block. Summons are never the
+  // primary foe, so they scale as non-boss (no boss HP multiplier). The flat
+  // ascension damage bonus is carried separately below via `bonusDamage`.
+  const summonDef = applyAscensionToMonster(
+    getMonster(action.summonDefId),
+    state.ascension ?? 0,
+    false,
+  );
 
   let count = action.count ?? 1;
   if (action.maxActive !== undefined) {

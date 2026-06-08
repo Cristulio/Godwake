@@ -9,6 +9,7 @@ import {
   type EncounterEntry,
 } from './chapter12Pools';
 import { MonsterSchema } from '../../schemas/monster';
+import { getMonster } from '../../content/monsters';
 import { SARADUSH_MARAUDER } from '../../content/monsters/saradush-marauder';
 import { BURNING_DEAD } from '../../content/monsters/burning-dead';
 import { HALF_GIANT_SIEGEBREAKER } from '../../content/monsters/half-giant-siegebreaker';
@@ -41,12 +42,12 @@ const CH12_BOSS = YAGA_SHURA;
 
 /**
  * Every monster def id this chapter is allowed to reference, boss included.
- * Yaga-Shura's heart-rite gate surfaces a reused small elemental (the dust mephit)
- * as the destructible weak-point, so it is a legitimate cross-chapter summon target.
+ * Yaga-Shura's heart-rite gate surfaces the bespoke `heart-ember` weak-point as
+ * the destructible objective, so it is a legitimate cross-chapter summon target.
  */
 const KNOWN_IDS = new Set<string>([
   ...[...CH12_MONSTERS, CH12_BOSS].map((m) => m.id),
-  'dust-mephit',
+  'heart-ember',
 ]);
 
 const ALL_POOLS: Array<[string, EncounterEntry[]]> = [
@@ -76,7 +77,11 @@ describe('chapter 12 — bestiary', () => {
     const kinds = CH12_BOSS.actions.map((a) => a.kind);
     expect(CH12_BOSS.actionsPerTurn).toBe(2);
     expect(kinds).toContain('summon');
-    expect(CH12_BOSS.gate?.whileAddAlive).toBe('dust-mephit');
+    expect(CH12_BOSS.gate?.whileAddAlive).toBe('heart-ember');
+    // The heart-ember is a deliberate 1-2 turn objective at its chapter, not the
+    // trivial early-game elemental that stood in before — tanky enough to read.
+    const heartEmber = getMonster(CH12_BOSS.gate!.whileAddAlive);
+    expect(heartEmber.maxHp).toBeGreaterThan(80);
     expect(CH12_BOSS.phases?.length ?? 0).toBeGreaterThan(0);
     const telegraphed = CH12_BOSS.actions.some((a) => a.kind === 'attack' && !!a.telegraph);
     expect(telegraphed).toBe(true);

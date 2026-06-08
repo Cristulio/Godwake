@@ -132,6 +132,7 @@ import { FIRE_GIANT_WARLORD } from './fire-giant-warlord';
 import { HALF_GIANT_SIEGEBREAKER } from './half-giant-siegebreaker';
 import { GROMNIR_DEFENDER } from './gromnir-defender';
 import { YAGA_SHURA } from './yaga-shura';
+import { HEART_EMBER } from './heart-ember';
 // ─── Chapter 13 · The Last of the Five (Sendai + Abazigal) ────────────────
 import { SENDAI_HANDMAIDEN } from './sendai-handmaiden';
 import { KUO_TOA_DEEPGUARD } from './kuo-toa-deepguard';
@@ -290,6 +291,7 @@ const ALL_MONSTERS: Monster[] = [
   HALF_GIANT_SIEGEBREAKER,
   GROMNIR_DEFENDER,
   YAGA_SHURA,
+  HEART_EMBER,
   // ─── Chapter 13 · The Last of the Five ──────────────────────────────────
   SENDAI_HANDMAIDEN,
   KUO_TOA_DEEPGUARD,
@@ -482,6 +484,7 @@ export {
   HALF_GIANT_SIEGEBREAKER,
   GROMNIR_DEFENDER,
   YAGA_SHURA,
+  HEART_EMBER,
   // ─── Chapter 13 · The Last of the Five ──────────────────────────────────
   SENDAI_HANDMAIDEN,
   KUO_TOA_DEEPGUARD,

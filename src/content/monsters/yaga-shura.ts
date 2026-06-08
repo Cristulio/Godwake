@@ -9,9 +9,9 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * Boss-framework kit (multi-action, Ch9+):
  *  - `gate` (HEART-RITE): while a beating ember of his cut-out heart survives on
  *    the field he takes almost nothing — wounds glance off the man who cannot
- *    feel them. The `summon` surfaces that ember (a reused small elemental as the
- *    weak-point) on round one; destroy it and he becomes mortal for the rest of
- *    the fight.
+ *    feel them. The `summon` surfaces that ember (the `heart-ember` weak-point, a
+ *    deliberate 1-2 turn objective — tanky, not a damage threat) on round one;
+ *    destroy it and he becomes mortal for the rest of the fight.
  *  - `actionsPerTurn: 2` — he fights with the weight of the whole siege, twice a
  *    turn.
  *  - A telegraphed `attack` (the Hurled Pyre-Stone): he tears a wagon of burning
@@ -39,7 +39,7 @@ export const YAGA_SHURA: Monster = MonsterSchema.parse({
   bossMechanic: 'battle-rage',
   actionsPerTurn: 2,
   gate: {
-    whileAddAlive: 'dust-mephit',
+    whileAddAlive: 'heart-ember',
     damageTakenPct: 0.1,
     wardLabel: 'destroy the beating heart',
   },
@@ -57,7 +57,7 @@ export const YAGA_SHURA: Monster = MonsterSchema.parse({
     {
       kind: 'summon',
       name: 'The Heart Laid Bare',
-      summonDefId: 'dust-mephit',
+      summonDefId: 'heart-ember',
       count: 1,
       maxActive: 1,
       once: true,

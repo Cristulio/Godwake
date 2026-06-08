@@ -167,6 +167,7 @@ export function Battlefield({
             facing="right"
             attackPulse={playerAttackPulse}
             lastAttack={state.lastAttack}
+            attackEvents={state.attackEvents}
             spellEffectEvent={state.spellEffectEvent}
           />
         </div>
@@ -189,6 +190,7 @@ export function Battlefield({
               onSelect={() => onSelectTarget(c.id)}
               attackPulse={monsterAttackPulseFor(c)}
               lastAttack={state.lastAttack}
+              attackEvents={state.attackEvents}
               spellEffectEvent={state.spellEffectEvent}
               wardLabel={gateWardLabel(state, c.instance)}
               phaseLabel={phaseLabel(c.instance)}

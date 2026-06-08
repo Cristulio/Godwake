@@ -438,6 +438,10 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     log,
     status: 'active',
     attackEventCounter: 0,
+    // Carry the room's ascension so mid-fight summons scale their adds the same
+    // way the room's monsters were scaled (applyAscensionToMonster). Omitted at
+    // Ascension 0 so untwisted/base fights carry no extra state weight.
+    ...(ascension > 0 ? { ascension } : {}),
     playerHasAttacked: false,
     rerollMissesEncounterRemaining: blessingMods.rerollMissesPerEncounter ?? 0,
     playerAttacksThisTurn: 0,

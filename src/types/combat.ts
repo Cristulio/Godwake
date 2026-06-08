@@ -342,6 +342,16 @@ export interface CombatState {
   status: CombatStatus;
   /** Latest attack roll — populated for dice-roll overlay animation. */
   lastAttack?: AttackEvent;
+  /**
+   * Every attack event resolved during the most recent atomic turn commit, in
+   * order. A monster multiattack / multi-action turn resolves several swings
+   * inside a single `monsterAttack` call, so the committed state only carries
+   * the LAST one in `lastAttack` — the earlier swings never reach React and
+   * their floating numbers are lost. This batch surfaces all of them so each
+   * swing floats its own number (BattlefieldSprite drains it). Reset at the
+   * start of each monster turn; absent on legacy saves (treated as empty).
+   */
+  attackEvents?: AttackEvent[];
   /** Counter to issue stable AttackEvent ids. */
   attackEventCounter: number;
   /** Latest spell-cast event — populated for the SpellEffectLayer overlay. */
@@ -424,4 +434,12 @@ export interface CombatState {
    * it had a full turn to see coming. Absent/false outside that window.
    */
   evasionWindowActive?: boolean;
+  /**
+   * Ascension level this encounter spawned at. Stamped at createCombat time so
+   * mid-fight spawns (monster summons) can scale a reinforcement's HP the same
+   * way createCombat scaled the room's monsters — otherwise a late boss's
+   * summoned add arrives at its raw early-game stat block. Absent = 0 (no
+   * scaling); legacy saves rehydrate as unscaled.
+   */
+  ascension?: number;
 }
