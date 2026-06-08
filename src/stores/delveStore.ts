@@ -27,7 +27,7 @@ import {
   ascensionAscendantLoot,
   ascensionExclusiveLoot,
 } from '../engine/delve/ascension';
-import { TOTAL_CHAPTERS } from '../engine/delve/constants';
+import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from '../engine/delve/constants';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
 import { nextLoreBeat } from '../content/loreBeats';
@@ -836,7 +836,13 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       // Synchronous (was a 1.5s setTimeout that landed the overlay AFTER the next
       // room loaded): fire it now so it precedes the next room rather than
       // painting over it. The victory beat already played on the spoils screen.
-      useScreenStore.getState().showTaunt('irenicus', 'chapter-clear', clearedChapter);
+      // Irenicus IS the Ch11 boss (BASE_GAME_CHAPTERS) — clearing Ch11 is his
+      // death, so a final line there is fine, but he must fall silent for the
+      // Throne-of-Bhaal chapters (Ch12-14). The ToB antagonist voice (Melissan)
+      // is a separate future lane; for now post-Irenicus clears get no taunt.
+      if (clearedChapter <= BASE_GAME_CHAPTERS) {
+        useScreenStore.getState().showTaunt('irenicus', 'chapter-clear', clearedChapter);
+      }
       get().creditChapterClearGold();
     }
     // Chained Godwake delve: Ilyich is the Ch1 boss. Flag the kill. The Voice is

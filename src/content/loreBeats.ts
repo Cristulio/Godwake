@@ -19,6 +19,7 @@
  * text. See {@link nextLoreBeat}.
  */
 import type { SoulVoiceSpeaker, TauntContext } from '../components/lore/IrenicusTaunt';
+import { BASE_GAME_CHAPTERS } from '../engine/delve/constants';
 
 export interface LoreBeat {
   /** Stable id, persisted in seenDialogueBeats. Never reuse or renumber. */
@@ -292,6 +293,21 @@ function isEligible(beat: LoreBeat, meta: LoreBeatMeta): boolean {
 }
 
 /**
+ * Irenicus IS the Chapter-11 boss ({@link BASE_GAME_CHAPTERS}); felling him is
+ * his death. Once the soul has climbed past his chapter — into the Throne-of-
+ * Bhaal stretch (Ch12-14) — he is gone and must not speak again. His arc is
+ * authored entirely at minChapters <= 11, but a single beat per descent lets the
+ * queue lag behind a fast climb, so an unseen Irenicus beat could otherwise
+ * surface on a later descent after he is already dead. Those stranded beats are
+ * SKIPPED (see {@link nextLoreBeat}), not blocked, so Imoen's later beats — and
+ * the Throne-of-Bhaal arc that hands off to the ending — still flow past them.
+ * (A Melissan voice to fill the ToB silence is a separate future lane.)
+ */
+function isSilencedAfterDeath(beat: LoreBeat, meta: LoreBeatMeta): boolean {
+  return beat.speaker === 'irenicus' && meta.chaptersCleared > BASE_GAME_CHAPTERS;
+}
+
+/**
  * The next beat to play, or null. Strict in-order, one at a time: scan the arc
  * from the top, skip beats already seen, and return the FIRST unseen beat — but
  * ONLY if it is eligible. If the first unseen beat is not yet eligible, return
@@ -302,6 +318,9 @@ function isEligible(beat: LoreBeat, meta: LoreBeatMeta): boolean {
 export function nextLoreBeat(meta: LoreBeatMeta): LoreBeat | null {
   for (const beat of LORE_BEATS) {
     if (meta.seenDialogueBeats.includes(beat.id)) continue;
+    // A dead antagonist's stranded beats are skipped, never returned — and never
+    // block the beats behind them (strict order is relaxed only for these).
+    if (isSilencedAfterDeath(beat, meta)) continue;
     return isEligible(beat, meta) ? beat : null;
   }
   return null;

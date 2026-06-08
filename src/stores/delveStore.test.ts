@@ -855,6 +855,46 @@ describe('delveStore.acceptSpoils — mid-run chapter-unlock reveals', () => {
   });
 });
 
+describe('delveStore.acceptSpoils — Irenicus falls silent after his Ch11 death', () => {
+  function bossRooms(): RoomSpec[] {
+    return useDelveStore.getState().delve!.rooms.filter((r) => r.kind === 'boss');
+  }
+  function stageClear(room: RoomSpec) {
+    const idx = useDelveStore.getState().delve!.rooms.findIndex((r) => r.id === room.id);
+    setDelve({ currentRoomIdx: idx, currentRoomId: room.id });
+    useDelveStore.setState({ pendingSpoilsRoom: room });
+  }
+
+  beforeEach(() => {
+    setActiveRoller('irenicus-silence-seed');
+    seedRun({ quirks: [] });
+    // The full NG+ chain so the Throne-of-Bhaal bosses (Ch12-14) exist to clear.
+    useDelveStore.setState({ delve: createGodwakeDelve({ seed: 1, fullChain: true }) });
+    useMetaStore.setState({ seenTutorials: [], chaptersCleared: 0, hasReincarnated: true });
+    useScreenStore.setState({ tutorialQueue: [], taunt: null, tauntQueue: [] });
+  });
+
+  it('clearing Ch11 — his death — still fires a final Irenicus chapter-clear taunt', () => {
+    stageClear(bossRooms()[10]); // 11th boss = Chapter 11, Irenicus himself
+    useDelveStore.getState().acceptSpoils();
+
+    const taunt = useScreenStore.getState().taunt;
+    expect(taunt).not.toBeNull();
+    expect(taunt!.speaker).toBe('irenicus');
+    expect(taunt!.context).toBe('chapter-clear');
+    expect(taunt!.chapter).toBe(11);
+  });
+
+  it('clearing a Throne-of-Bhaal chapter (Ch12-14) fires NO Irenicus taunt', () => {
+    for (const bossIndex of [11, 12, 13]) {
+      useScreenStore.setState({ taunt: null, tauntQueue: [] });
+      stageClear(bossRooms()[bossIndex]); // 12th/13th/14th boss = Ch12/13/14
+      useDelveStore.getState().acceptSpoils();
+      expect(useScreenStore.getState().taunt).toBeNull();
+    }
+  });
+});
+
 describe('delveStore — dialogue plays BEFORE the fight, never over it', () => {
   beforeEach(() => {
     setActiveRoller('dialogue-before-fight-seed');
