@@ -40,6 +40,9 @@ describe('integration — title screen + routing', () => {
     // Reset triggers a persist write to slot 0; clear AFTER so the
     // TitleScreen's hasAnySave() correctly reports no save.
     clearGodwakeStorage();
+    // These tests exercise the title/routing, not the first-run welcome — mark
+    // it seen so the FirstRunModal doesn't overlay the title screen here.
+    useSettingsStore.setState({ firstRunSeen: true });
   });
 
   it('renders Godwake title + New Game button', () => {
