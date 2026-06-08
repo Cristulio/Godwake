@@ -3,6 +3,7 @@ import type { ItemRef, AffixModifiers } from '../../schemas/item';
 import type { DamageType } from '../../types/damage';
 import { getAffix } from '../../content/items';
 import { EQUIP_SLOTS } from '../character/equip';
+import { equippedSetMods } from './setGear';
 
 /**
  * Aggregated affix effect across a set of equipped items. Numeric channels sum
@@ -128,9 +129,10 @@ export function characterAffixMods(character: Character): AffixMods {
   for (const m of character.legendaryEffects ?? []) {
     applyAffixModifiers(acc, m);
   }
-  // Set-gear effect payloads (pieces' effects + completed-set bonuses). Their
-  // base stats / +N ride the normal equipment path; only the effects fold here.
-  for (const m of character.setEffects ?? []) {
+  // Set-gear effect payloads (each worn piece's signature + every met set-bonus
+  // tier), computed LIVE from the equipped slots. The pieces' base stats / +N
+  // ride the normal equipment path; only these effects fold here.
+  for (const m of equippedSetMods(character)) {
     applyAffixModifiers(acc, m);
   }
   return acc;

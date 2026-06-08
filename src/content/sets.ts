@@ -29,10 +29,11 @@ export interface SetPiece {
   flavor: string;
   /**
    * The canonical equip slot the piece fills. Rings use `ring1` as their
-   * canonical slot; metaStore.equipSetPiece routes a ring to the first free band.
+   * canonical slot; the normal inventory equip flow routes a ring to the first
+   * free band.
    */
   slot: EquipSlot;
-  /** The effect payload baked onto the character while the piece is equipped. */
+  /** The effect payload folded onto the character while the piece is worn. */
   effects: AffixModifiers;
   /** Player-facing one-line effect text. */
   effectLine: string;
@@ -128,23 +129,53 @@ export const SET_PIECES: SetPiece[] = [
     classGate: 'fighter', ascensionExclusive: true,
   },
 
-  // --- Bloodrage Pelts (Barbarian, NG+) ------------------------------------
+  // --- Bloodrage Wrath (Barbarian, NG+, GRAND 8-piece) ---------------------
   {
-    id: 'bloodrage-fang', setId: 'bloodrage', name: 'Bloodrage Fang', slot: 'mainHand',
-    flavor: 'A tusk torn from a dire beast and lashed to a haft; the wounds it opens do not close.',
-    effects: { bleedDamage: 3 }, effectLine: 'Your blows rend for +3 bleed damage',
+    id: 'bloodrage-fang', setId: 'bloodrage', name: 'Bloodrage Greataxe', slot: 'mainHand',
+    flavor: 'A two-handed axe of dire-beast bone and black iron; the rage runs down the haft into the edge.',
+    effects: { rageDamageBonus: 4 }, effectLine: '+4 melee damage while Rage burns',
     enhancement: 2, classGate: 'barbarian', ascensionExclusive: true,
   },
   {
     id: 'bloodrage-pelt', setId: 'bloodrage', name: 'Bloodrage Pelt', slot: 'armor',
     flavor: 'The hide of a thing that died screaming, and screams a little still when the rage takes you.',
-    effects: { rageDamageBonus: 3 }, effectLine: '+3 melee damage while Rage burns',
+    effects: { tempHpPerCombat: 6 }, effectLine: 'Gain 6 temporary HP at the start of each fight',
     enhancement: 2, classGate: 'barbarian', ascensionExclusive: true,
   },
   {
     id: 'bloodrage-totem', setId: 'bloodrage', name: 'Bloodrage Totem', slot: 'amulet',
     flavor: 'Bone and red ochre bound with sinew — the ancestors lean close when it is carried into the dark.',
-    effects: { tempHpPerCombat: 6 }, effectLine: 'Gain 6 temporary HP at the start of each fight',
+    effects: { bleedDamage: 3 }, effectLine: 'Your blows rend for +3 bleed damage',
+    classGate: 'barbarian', ascensionExclusive: true,
+  },
+  {
+    id: 'bloodrage-helm', setId: 'bloodrage', name: 'Bloodrage Skullhelm', slot: 'helm',
+    flavor: 'A helm cut from a great beast’s skull; through its empty eyes the killing blow comes easy.',
+    effects: { critRangeBonus: 1 }, effectLine: 'Critical hits land on 19–20',
+    classGate: 'barbarian', ascensionExclusive: true,
+  },
+  {
+    id: 'bloodrage-ring', setId: 'bloodrage', name: 'Bloodrage Tusk-Ring', slot: 'ring1',
+    flavor: 'A ring of yellowed tusk that drinks a little life back from every wound it opens.',
+    effects: { lifestealPct: 5 }, effectLine: 'Heal 5% of the damage you deal',
+    classGate: 'barbarian', ascensionExclusive: true,
+  },
+  {
+    id: 'bloodrage-band', setId: 'bloodrage', name: 'Bloodrage Sinew-Band', slot: 'ring1',
+    flavor: 'Braided sinew that tightens as the fury rises, lending the arm a deeper savagery.',
+    effects: { rageDamageBonus: 2 }, effectLine: '+2 melee damage while Rage burns',
+    classGate: 'barbarian', ascensionExclusive: true,
+  },
+  {
+    id: 'bloodrage-belt', setId: 'bloodrage', name: 'Bloodrage Girdle', slot: 'belt',
+    flavor: 'A wide girdle of stitched hides, heavy with the weight of every kill it has carried.',
+    effects: { damageBonus: 2 }, effectLine: '+2 weapon damage on every hit',
+    classGate: 'barbarian', ascensionExclusive: true,
+  },
+  {
+    id: 'bloodrage-boots', setId: 'bloodrage', name: 'Bloodrage Treads', slot: 'boots',
+    flavor: 'Wraps of beast-leather that knit the body back together between blows.',
+    effects: { regenPerTurn: 2 }, effectLine: 'Regenerate 2 HP at the start of each turn',
     classGate: 'barbarian', ascensionExclusive: true,
   },
 
@@ -168,7 +199,19 @@ export const SET_PIECES: SetPiece[] = [
     classGate: 'ranger', ascensionExclusive: true,
   },
 
-  // --- Vestments of the Archmagi (Wizard, NG+) -----------------------------
+  // --- Vestments of the Archmagi (Wizard, NG+, GRAND 9-piece) --------------
+  {
+    id: 'archmagi-wand', setId: 'archmagi', name: 'Wand of the Archmagi', slot: 'mainHand',
+    flavor: 'A slim rod of starmetal that hums when law is spoken near it; the ruin it shapes bites deeper.',
+    effects: { spellDamageBonus: 3 }, effectLine: '+3 spell damage',
+    enhancement: 2, classGate: 'wizard', ascensionExclusive: true,
+  },
+  {
+    id: 'archmagi-orb', setId: 'archmagi', name: 'Orb of the Archmagi', slot: 'offHand',
+    flavor: 'A sphere of frozen quintessence; spoken law settles into the world a fraction harder around it.',
+    effects: { spellDcBonus: 1 }, effectLine: '+1 spell save DC',
+    classGate: 'wizard', ascensionExclusive: true,
+  },
   {
     id: 'archmagi-vestments', setId: 'archmagi', name: 'Vestments of the Archmagi', slot: 'armor',
     flavor: 'Indigo silk sewn with cold-burning sigils; the weave thins the wall between word and ruin.',
@@ -182,9 +225,33 @@ export const SET_PIECES: SetPiece[] = [
     classGate: 'wizard', ascensionExclusive: true,
   },
   {
-    id: 'archmagi-orb', setId: 'archmagi', name: 'Orb of the Archmagi', slot: 'ring1',
-    flavor: 'A sphere of frozen quintessence; spoken law settles into the world a fraction harder around it.',
+    id: 'archmagi-helm', setId: 'archmagi', name: 'Crown of the Archmagi', slot: 'helm',
+    flavor: 'A circlet of blued silver; the law it crowns the wearer with settles a fraction harder.',
     effects: { spellDcBonus: 1 }, effectLine: '+1 spell save DC',
+    classGate: 'wizard', ascensionExclusive: true,
+  },
+  {
+    id: 'archmagi-ring', setId: 'archmagi', name: 'Ring of the Archmagi', slot: 'ring1',
+    flavor: 'A band that holds an extra breath of the Weave for the one who knows how to spend it.',
+    effects: { bonusSpellSlotsL1: 1 }, effectLine: '+1 level-1 spell slot (refills on rest)',
+    classGate: 'wizard', ascensionExclusive: true,
+  },
+  {
+    id: 'archmagi-band', setId: 'archmagi', name: 'Band of the Archmagi', slot: 'ring1',
+    flavor: 'A ring of cold iron etched with a single closing sigil; the ruin it shapes runs deeper.',
+    effects: { spellDamageBonus: 2 }, effectLine: '+2 spell damage',
+    classGate: 'wizard', ascensionExclusive: true,
+  },
+  {
+    id: 'archmagi-girdle', setId: 'archmagi', name: 'Girdle of the Archmagi', slot: 'belt',
+    flavor: 'A sash of woven sigil-thread; the aim behind the spell steadies under it.',
+    effects: { spellAttackBonus: 1 }, effectLine: '+1 spell attack rolls',
+    classGate: 'wizard', ascensionExclusive: true,
+  },
+  {
+    id: 'archmagi-slippers', setId: 'archmagi', name: 'Slippers of the Archmagi', slot: 'boots',
+    flavor: 'Soft shoes that walk the wearer a half-step out of harm and knit small hurts as they go.',
+    effects: { regenPerTurn: 2 }, effectLine: 'Regenerate 2 HP at the start of each turn',
     classGate: 'wizard', ascensionExclusive: true,
   },
 
@@ -312,17 +379,30 @@ export const GEAR_SETS: GearSet[] = [
   },
   {
     id: 'bloodrage',
-    name: 'Bloodrage Pelts',
-    flavor: 'The trophies of a soul that learned to carry its fury back through every death.',
+    name: 'Bloodrage Wrath',
+    flavor: 'The full war-trophies of a soul that learned to carry its fury back through every death.',
     classGate: 'barbarian',
     ascensionExclusive: true,
-    pieceIds: ['bloodrage-fang', 'bloodrage-pelt', 'bloodrage-totem'],
+    pieceIds: [
+      'bloodrage-fang', 'bloodrage-pelt', 'bloodrage-totem', 'bloodrage-helm',
+      'bloodrage-ring', 'bloodrage-band', 'bloodrage-belt', 'bloodrage-boots',
+    ],
     bonuses: [
       { piecesRequired: 2, label: '2-piece: +4 melee damage while Rage burns', bonuses: { rageDamageBonus: 4 } },
       {
-        piecesRequired: 3,
-        label: '3-piece: +5 bleed damage, and crits land on 19–20',
-        bonuses: { bleedDamage: 5, critRangeBonus: 1 },
+        piecesRequired: 4,
+        label: '4-piece: +8 temporary HP each fight, and crits land on 19–20',
+        bonuses: { tempHpPerCombat: 8, critRangeBonus: 1 },
+      },
+      {
+        piecesRequired: 6,
+        label: '6-piece: +5 bleed damage, and heal 6% of the damage you deal',
+        bonuses: { bleedDamage: 5, lifestealPct: 6 },
+      },
+      {
+        piecesRequired: 8,
+        label: '8-piece: +6 melee damage while Rage burns, and +3 damage on every hit',
+        bonuses: { rageDamageBonus: 6, damageBonus: 3 },
       },
     ],
   },
@@ -344,10 +424,19 @@ export const GEAR_SETS: GearSet[] = [
     flavor: 'The full panoply of a mage who outlived the spells that should have ended them.',
     classGate: 'wizard',
     ascensionExclusive: true,
-    pieceIds: ['archmagi-vestments', 'archmagi-amulet', 'archmagi-orb'],
+    pieceIds: [
+      'archmagi-wand', 'archmagi-orb', 'archmagi-vestments', 'archmagi-amulet',
+      'archmagi-helm', 'archmagi-ring', 'archmagi-band', 'archmagi-girdle', 'archmagi-slippers',
+    ],
     bonuses: [
       { piecesRequired: 2, label: '2-piece: +4 spell damage and +1 spell attack', bonuses: { spellDamageBonus: 4, spellAttackBonus: 1 } },
-      { piecesRequired: 3, label: '3-piece: +1 spell save DC and +1 level-1 spell slot', bonuses: { spellDcBonus: 1, bonusSpellSlotsL1: 1 } },
+      { piecesRequired: 4, label: '4-piece: +1 spell save DC and +1 level-1 spell slot', bonuses: { spellDcBonus: 1, bonusSpellSlotsL1: 1 } },
+      { piecesRequired: 6, label: '6-piece: +6 spell damage', bonuses: { spellDamageBonus: 6 } },
+      {
+        piecesRequired: 9,
+        label: '9-piece: +2 spell save DC, +2 spell attack, and +1 level-1 spell slot',
+        bonuses: { spellDcBonus: 2, spellAttackBonus: 2, bonusSpellSlotsL1: 1 },
+      },
     ],
   },
   {
@@ -454,6 +543,11 @@ export function computeSetBonuses(activeIds: readonly string[]): AffixModifiers[
   return out;
 }
 
+/** Total pieces that make up a set — its "size" (3 up to the grand 8/9-piece sets). */
+export function setSize(set: GearSet): number {
+  return set.pieceIds.length;
+}
+
 /** How many pieces of a set are in the given active-id list (set-progress UI). */
 export function setProgress(set: GearSet, activeIds: readonly string[]): number {
   const active = new Set(activeIds);
@@ -461,11 +555,12 @@ export function setProgress(set: GearSet, activeIds: readonly string[]): number 
 }
 
 /**
- * The effect payloads of the equipped set pieces PLUS any completed-set bonuses,
- * as a flat list. metaStore.applySetLoadout bakes this onto the character
- * (`setEffects`); characterAffixMods folds each entry into the shared affix
- * pipeline so the effects ride every channel the engine already reads. The
- * pieces' base stats + `+N` enhancement ride the normal equipment path instead.
+ * The effect payloads of the given set pieces PLUS any completed-set bonuses, as
+ * a flat list. The engine calls this LIVE on the WORN pieces
+ * (engine/items/setGear.equippedSetMods → characterAffixMods), folding each entry
+ * into the shared affix pipeline so the effects ride every channel the engine
+ * already reads. The pieces' base stats + `+N` enhancement ride the normal
+ * equipment path instead.
  */
 export function aggregateSetEffects(ids: readonly string[]): AffixModifiers[] {
   const out: AffixModifiers[] = [];

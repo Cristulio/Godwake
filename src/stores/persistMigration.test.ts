@@ -200,8 +200,8 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 20', () => {
-    expect(SAVE_VERSION).toBe(20);
+  it('is 21', () => {
+    expect(SAVE_VERSION).toBe(21);
   });
 });
 

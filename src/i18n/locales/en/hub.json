@@ -99,9 +99,6 @@
     "undiscoveredBody": "A relic not yet earned. Brave the elites of the dark, and it may yet be yours."
   },
   "setGear": {
-    "title": "Set Gear · persists across lives",
-    "equippedCount": "{n}/{total} equipped",
-    "piecesFound": "{n}/{total} pieces found",
-    "undiscovered": "Not yet found"
+    "equippedCount": "{n}/{total} equipped"
   }
 }

@@ -48,7 +48,12 @@ describe('set gear — pieces & bases', () => {
   it('weapon/armour pieces carry a +N enhancement so they beat rolled purple gear', () => {
     for (const piece of SET_PIECES) {
       const item = getItem(piece.id);
-      if (item.kind === 'weapon' || (item.kind === 'armor' && item.category !== 'robe')) {
+      // Robes and orbs carry no AC, so a +N would do nothing — they lift through
+      // their effect payload instead.
+      const liftsViaEnhancement =
+        item.kind === 'weapon' ||
+        (item.kind === 'armor' && item.category !== 'robe' && item.category !== 'orb');
+      if (liftsViaEnhancement) {
         expect(piece.enhancement ?? 0, `${piece.id} should carry an enhancement`).toBeGreaterThan(0);
       }
     }

@@ -3,6 +3,7 @@ import { parseDiceExpression } from '../dice';
 import type { ClassId } from '../../schemas/ids';
 import type { Affix, GearRarity, ItemRef, Weapon, Armor, Accessory } from '../../schemas/item';
 import { getItem, getAffix, listAffixes } from '../../content/items';
+import { ORB_BASE_IDS } from '../../content/items/setBases';
 import { classWeaponProficient, classArmorProficient } from '../character/equip';
 
 export type BaseKind = 'weapon' | 'armor' | 'accessory';
@@ -134,7 +135,13 @@ function baseTier(base: Weapon | Armor | Accessory): number {
     return 1; // d4/d6 simples
   }
   if (base.kind === 'armor') {
-    if (base.category === 'shield' || base.category === 'robe') return 1;
+    // Robes and orbs carry no AC, so they stay at the floor of the depth bias —
+    // their value is the rolled (caster) affixes, not the base.
+    if (base.category === 'robe' || base.category === 'orb') return 1;
+    // Shields compete in the body-armour roll on their AC bonus, so deep chapters
+    // surface them (and the rarity ladder hands them blue/epic affixes) instead of
+    // pinning every shield at the floor.
+    if (base.category === 'shield') return base.baseAC >= 3 ? 3 : 2;
     if (base.baseAC >= 16) return 3;
     if (base.baseAC >= 13) return 2;
     return 1;
@@ -204,9 +211,12 @@ function legalBases(kind: BaseKind, classId: ClassId): Array<Weapon | Armor | Ac
   if (kind === 'accessory') {
     return ACCESSORY_BASE_IDS.map((id) => getItem(id) as Accessory);
   }
-  return ARMOR_BASE_IDS.map((id) => getItem(id) as Armor).filter((a) =>
-    classArmorProficient(classId, a),
-  );
+  // Armour bases + the caster off-hand orbs, both class-gated by armour
+  // proficiency (orbs only pass for casters — wizard/druid), so a martial never
+  // rolls one and a caster gets a shot at an orb off-hand.
+  return [...ARMOR_BASE_IDS, ...ORB_BASE_IDS]
+    .map((id) => getItem(id) as Armor)
+    .filter((a) => classArmorProficient(classId, a));
 }
 
 /** Affixes that may roll onto the given base kind for the given class. */
@@ -325,7 +335,8 @@ export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
   // The +N axis rides weapons and real armour/shields only; robes (no AC) and
   // accessories (pure affix carriers) never carry an enhancement.
   const carriesEnhancement =
-    base.kind === 'weapon' || (base.kind === 'armor' && base.category !== 'robe');
+    base.kind === 'weapon' ||
+    (base.kind === 'armor' && base.category !== 'robe' && base.category !== 'orb');
   const enhancement = carriesEnhancement ? rollEnhancement(roller, depth) : 0;
 
   return {

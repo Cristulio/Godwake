@@ -70,10 +70,10 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     unlocked: "Set Gear",
     title: "Forged in Company",
     body: [
-      "Gear has surfaced that does not rot away with the body that wore it. A set piece — blade, armor, or trinket — binds to the soul and outlasts every death; set it into your gear at the hub and it descends with you, life after life, stronger than any plunder the dark gives up by chance.",
-      "And these were not forged alone. Wear two or more pieces of one kindred set and they answer one another — powers stir that no single piece holds. You need not gather the whole set; a partial binding already counts, and each matching piece presses the bond deeper. A set is worth building toward across many runs.",
+      "Gear has surfaced that does not rot away with the body that wore it. A set piece — blade, armor, orb, or trinket — binds to the soul and outlasts every death; it returns to your pack each new life, ready to equip like any other gear, stronger than any plunder the dark gives up by chance.",
+      "And these were not forged alone. Wear two or more pieces of one kindred set and they answer one another — powers stir that no single piece holds. You need not gather the whole set; a partial binding already counts, and each matching piece presses the bond deeper. The grandest sets run eight or nine pieces — a chase across many runs.",
     ],
-    key: "Set pieces bind to the soul and equip into your gear slots — wear two of a set to wake shared powers.",
+    key: "Set pieces bind to the soul — they return to your pack each life. Wear two of a set to wake shared powers.",
   },
   "grove-deep": {
     unlocked: "Deeper Grove Tiers",

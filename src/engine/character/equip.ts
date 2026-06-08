@@ -3,6 +3,7 @@ import type { Armor, ItemRef, Weapon } from '../../schemas/item';
 import type { ClassId } from '../../schemas/ids';
 import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
+import { getSetPiece } from '../../content/sets';
 import { effectiveAbilityScores } from './derived';
 
 export type EquipSlot = keyof EquipmentSlots;
@@ -28,7 +29,9 @@ export function slotForItem(itemId: string): EquipSlot | null {
   const item = getItem(itemId);
   if (item.kind === 'weapon') return 'mainHand';
   if (item.kind === 'armor') {
-    return item.category === 'shield' ? 'offHand' : 'armor';
+    // Shields and caster orbs are the two off-hand armour kinds; everything else
+    // (light/medium/heavy/robe) fills the body slot.
+    return item.category === 'shield' || item.category === 'orb' ? 'offHand' : 'armor';
   }
   if (item.kind === 'accessory') {
     // Rings report ring1 as their canonical slot; `equipItem` routes to the
@@ -214,6 +217,13 @@ export function isArmorProficient(character: Character, armor: Armor): boolean {
 export function equipDenialReason(character: Character, itemId: string): string | null {
   const item = getItem(itemId);
 
+  // A class-bound SET piece only seats while playing its class (belt-and-
+  // suspenders over the class-biased drop / inject paths).
+  const setPiece = getSetPiece(itemId);
+  if (setPiece?.classGate && setPiece.classGate !== character.classId) {
+    return `Bound to the ${getClass(setPiece.classGate).name}`;
+  }
+
   if (item.kind === 'weapon') {
     if (!isWeaponProficient(character, item)) {
       return `A ${getClass(character.classId).name} can't wield this`;
@@ -266,6 +276,8 @@ export function equipItem(character: Character, inventoryIdx: number): Character
   const ref = character.inventory[inventoryIdx];
   if (!ref) return character;
   const item = getItem(ref.itemId);
+  const setPiece = getSetPiece(ref.itemId);
+  if (setPiece?.classGate && setPiece.classGate !== character.classId) return character;
   if (item.kind === 'weapon') {
     if (!isWeaponProficient(character, item)) return character;
     const req = weaponStatRequirement(item);

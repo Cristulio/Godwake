@@ -164,7 +164,6 @@ interface GameState {
   ownedLegendaries: string[];
   equippedRelics: Partial<Record<RelicSlot, string>>;
   ownedSetPieces: string[];
-  equippedSetPieces: Partial<Record<EquipSlot, string>>;
   gameCompleted: boolean;
   selectedAscension: number;
   newGamePlusActive: boolean;
@@ -268,10 +267,6 @@ interface GameState {
   equipRelic: (relicId: string) => void;
   unequipRelicSlot: (slot: RelicSlot) => void;
 
-  // Set gear
-  equipSetPiece: (pieceId: string) => void;
-  unequipSetSlot: (slot: EquipSlot) => void;
-
   // Ending capstone
   markGameCompleted: () => void;
 
@@ -328,7 +323,6 @@ interface PersistedSnapshot {
   ownedLegendaries: string[];
   equippedRelics: Partial<Record<RelicSlot, string>>;
   ownedSetPieces: string[];
-  equippedSetPieces: Partial<Record<EquipSlot, string>>;
   gameCompleted: boolean;
   selectedAscension: number;
   newGamePlusActive: boolean;
@@ -388,7 +382,6 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     ownedLegendaries: meta.ownedLegendaries,
     equippedRelics: meta.equippedRelics,
     ownedSetPieces: meta.ownedSetPieces,
-    equippedSetPieces: meta.equippedSetPieces,
     gameCompleted: meta.gameCompleted,
     selectedAscension: meta.selectedAscension,
     newGamePlusActive: meta.newGamePlusActive,
@@ -492,12 +485,6 @@ function scatterSnapshot(s: PersistedSnapshot) {
         ? (s.equippedRelics as Partial<Record<RelicSlot, string>>)
         : {},
     ownedSetPieces: Array.isArray(s.ownedSetPieces) ? s.ownedSetPieces : [],
-    equippedSetPieces:
-      s.equippedSetPieces &&
-      typeof s.equippedSetPieces === 'object' &&
-      !Array.isArray(s.equippedSetPieces)
-        ? (s.equippedSetPieces as Partial<Record<EquipSlot, string>>)
-        : {},
     // Recovery: a save whose deepest run cleared the BASE chain (Irenicus, Ch11)
     // but never flipped gameCompleted — e.g. an older build whose lazy ending
     // screen crashed before recording it — has beaten the base game. Restore the
@@ -584,9 +571,6 @@ function scatterSnapshot(s: PersistedSnapshot) {
   // for current saves; for pre-v10 saves it converts the stripped stat field to
   // the new effect form so equipped relics actually apply.
   useMetaStore.getState().applyRelicLoadout();
-  // Bake the equipped set-gear effect payloads onto the loaded character (drop
-  // any off-class pieces). The pieces' base stats re-materialise at delve start.
-  useMetaStore.getState().applySetLoadout();
 }
 
 /**
@@ -602,9 +586,9 @@ function adoptSoul(classId: ClassId) {
   const fresh = buildPlayerCharacter(presetCreationInput(classId));
   charSlice.setCharacter(soul ? carrySoulProgress(fresh, soul) : fresh);
   // Class-bound relics the new body can't wield drop; the effect payloads re-bake.
+  // Set pieces re-inject into the backpack at descent (delveStore.gearResetToKit),
+  // so a body swap needs no extra set-gear bake here.
   useMetaStore.getState().applyRelicLoadout();
-  // Same for set gear: class-bound pieces the new body can't equip drop; re-bake.
-  useMetaStore.getState().applySetLoadout();
 }
 
 /**
@@ -704,7 +688,6 @@ export const useGameStore = create<GameState>()(
           ownedLegendaries: m.ownedLegendaries,
           equippedRelics: m.equippedRelics,
           ownedSetPieces: m.ownedSetPieces,
-          equippedSetPieces: m.equippedSetPieces,
           gameCompleted: m.gameCompleted,
           selectedAscension: m.selectedAscension,
           newGamePlusActive: m.newGamePlusActive,
@@ -767,7 +750,6 @@ export const useGameStore = create<GameState>()(
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
         equippedRelics: useMetaStore.getState().equippedRelics,
         ownedSetPieces: useMetaStore.getState().ownedSetPieces,
-        equippedSetPieces: useMetaStore.getState().equippedSetPieces,
         gameCompleted: useMetaStore.getState().gameCompleted,
         selectedAscension: useMetaStore.getState().selectedAscension,
         newGamePlusActive: useMetaStore.getState().newGamePlusActive,
@@ -967,8 +949,6 @@ export const useGameStore = create<GameState>()(
 
         equipRelic: (relicId) => useMetaStore.getState().equipRelic(relicId),
         unequipRelicSlot: (slot) => useMetaStore.getState().unequipRelicSlot(slot),
-        equipSetPiece: (pieceId) => useMetaStore.getState().equipSetPiece(pieceId),
-        unequipSetSlot: (slot) => useMetaStore.getState().unequipSetSlot(slot),
 
         markGameCompleted: () => useMetaStore.getState().markGameCompleted(),
 

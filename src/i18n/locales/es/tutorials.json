@@ -30,9 +30,9 @@
   "sets": {
     "unlocked": "Equipo de Conjunto",
     "title": "Forjado en Compañía",
-    "body0": "Ha aflorado equipo que no se pudre con el cuerpo que lo vistió. Una pieza de conjunto —hoja, armadura o talismán— se liga al alma y sobrevive a cada muerte; colócala en tu equipo en el refugio y desciende contigo, vida tras vida, más fuerte que cualquier botín que la oscuridad ceda al azar.",
-    "body1": "Y no fueron forjadas a solas. Viste dos o más piezas de un mismo conjunto y se responden entre sí —despiertan poderes que ninguna pieza sola contiene. No necesitas reunir el conjunto entero; una unión parcial ya cuenta, y cada pieza que encaja estrecha más el vínculo. Vale la pena construir un conjunto a lo largo de muchas partidas.",
-    "key": "Las piezas de conjunto se ligan al alma y se equipan en tus ranuras —viste dos de un conjunto para despertar poderes compartidos."
+    "body0": "Ha aflorado equipo que no se pudre con el cuerpo que lo vistió. Una pieza de conjunto —hoja, armadura, orbe o talismán— se liga al alma y sobrevive a cada muerte; vuelve a tu mochila en cada nueva vida, lista para equipar como cualquier otro equipo, más fuerte que cualquier botín que la oscuridad ceda al azar.",
+    "body1": "Y no fueron forjadas a solas. Viste dos o más piezas de un mismo conjunto y se responden entre sí —despiertan poderes que ninguna pieza sola contiene. No necesitas reunir el conjunto entero; una unión parcial ya cuenta, y cada pieza que encaja estrecha más el vínculo. Los conjuntos más grandes constan de ocho o nueve piezas —una cacería de muchas partidas.",
+    "key": "Las piezas de conjunto se ligan al alma —vuelven a tu mochila en cada vida. Viste dos de un conjunto para despertar poderes compartidos."
   },
   "grove-deep": {
     "unlocked": "Niveles Profundos del Bosque",

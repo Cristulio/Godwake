@@ -12,8 +12,9 @@ export const DRUID: Class = ClassSchema.parse({
   weaponProficiency: { categories: ['simple'] },
   // Hide and leather, and a shield of living wood — nothing worked from metal,
   // by the oath of the Circle. Light armour keeps the squishy caster squishy;
-  // Wild Shape is the survival lever, not plate.
-  armorProficiency: { categories: ['light', 'shield'] },
+  // Wild Shape is the survival lever, not plate. An orb (off-hand caster focus)
+  // suits the druid's spell side too.
+  armorProficiency: { categories: ['light', 'shield', 'orb'] },
   subclassLevel: 2,
   featuresByLevel: {
     '1': [

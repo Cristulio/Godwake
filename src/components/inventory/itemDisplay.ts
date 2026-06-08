@@ -102,6 +102,7 @@ export function baseStatLine(item: Item): string {
     case 'armor':
       if (item.category === 'shield') return t('screens.itemDisplay.acShield', { n: item.baseAC });
       if (item.category === 'robe') return t('screens.itemDisplay.robeNoAc');
+      if (item.category === 'orb') return t('screens.itemDisplay.orbNoAc');
       return t('screens.itemDisplay.armorAc', { cat: categoryLabel(item.category), n: item.baseAC });
     case 'consumable':
       return item.healDice
@@ -123,7 +124,9 @@ export function enhancementLine(item: Item, enhancement: number): string | null 
     case 'weapon':
       return t('screens.itemDisplay.enhanceWeapon', { n: enhancement });
     case 'armor':
-      return item.category === 'robe' ? null : t('screens.itemDisplay.enhanceArmor', { n: enhancement });
+      return item.category === 'robe' || item.category === 'orb'
+        ? null
+        : t('screens.itemDisplay.enhanceArmor', { n: enhancement });
     default:
       return null;
   }
@@ -137,6 +140,7 @@ export function itemTypeLabel(item: Item): string {
     case 'armor':
       if (item.category === 'shield') return t('screens.itemDisplay.shieldLabel');
       if (item.category === 'robe') return t('screens.itemDisplay.robeLabel');
+      if (item.category === 'orb') return t('screens.itemDisplay.orbLabel');
       return t('screens.itemDisplay.armorLabel', { cat: categoryLabel(item.category) });
     case 'consumable':
       return t('screens.itemDisplay.consumableLabel');
@@ -153,6 +157,7 @@ export function itemKindLabel(item: Item): string {
     case 'armor':
       if (item.category === 'shield') return t('screens.itemDisplay.shieldLabel');
       if (item.category === 'robe') return t('screens.itemDisplay.robeLabel');
+      if (item.category === 'orb') return t('screens.itemDisplay.orbLabel');
       return t('screens.itemDisplay.armorKind', { cat: categoryLabel(item.category) });
     case 'consumable':
       return t('screens.itemDisplay.consumableKind', { effect: consumableEffectLabel(item.effect) });

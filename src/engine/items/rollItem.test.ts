@@ -40,8 +40,9 @@ describe('rollItem', () => {
 
   it('rolls only class-legal bases', () => {
     // A Wizard is barred from martial weapons and from real armour; its only
-    // legal "armour" is a robe, so forcing armour yields a robe (not a fallback
-    // weapon), and forcing a weapon stays simple-only.
+    // legal "armour" bases are robes (body slot) and orbs (off-hand caster
+    // focus), so forcing armour yields one of those (not a fallback weapon), and
+    // forcing a weapon stays simple-only.
     for (let i = 0; i < 40; i++) {
       const armorRef = rollItem(createDiceRoller(`wiz-armor-${i}`), {
         rarity: 'green',
@@ -50,7 +51,7 @@ describe('rollItem', () => {
       });
       const armorBase = getItem(armorRef.itemId);
       expect(armorBase.kind).toBe('armor');
-      if (armorBase.kind === 'armor') expect(armorBase.category).toBe('robe');
+      if (armorBase.kind === 'armor') expect(['robe', 'orb']).toContain(armorBase.category);
 
       const weaponRef = rollItem(createDiceRoller(`wiz-weapon-${i}`), {
         rarity: 'green',

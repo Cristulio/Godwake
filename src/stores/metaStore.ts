@@ -19,11 +19,7 @@ import {
   SET_PIECE_ORDER,
   setPieceDropPool,
   getSetPiece,
-  canEquipSetPiece,
-  aggregateSetEffects,
-  type SetPiece,
 } from '../content/sets';
-import type { EquipSlot } from '../engine/character/equip';
 import { unlockedRelicSlots } from '../engine/progression/unlocks';
 
 /**
@@ -132,19 +128,14 @@ interface MetaStoreState {
    */
   equippedRelics: Partial<Record<RelicSlot, string>>;
   /**
-   * SET-gear pieces the soul has earned (cross-delve persistent slot gear,
+   * SET-gear pieces the soul has earned (cross-delve persistent loot,
    * content/sets.ts). Account level — survives reincarnation, reset only on New
-   * Game. Banked from elite/boss drops; equipped into real gear slots at the hub.
+   * Game. Banked from elite/boss drops; re-injected into the backpack each life
+   * (delveStore.gearResetToKit) as real, equippable gear — there is no hub
+   * loadout. The player equips them through the normal inventory; set bonuses
+   * compute live from the worn pieces (engine/items/setGear.equippedSetMods).
    */
   ownedSetPieces: string[];
-  /**
-   * The equipped SET-gear LOADOUT — at most one piece per equip slot
-   * ({@link EquipSlot}). Equipping a piece fills its slot. At delve start the
-   * pieces materialise into the character's equipment (replacing the rolled /
-   * starting item) and their effect payloads bake onto `character.setEffects`;
-   * class-bound pieces only stick while playing that class.
-   */
-  equippedSetPieces: Partial<Record<EquipSlot, string>>;
   /**
    * Whether the soul has cleared the whole chain (felled Melissan) at least once.
    * Set the first time the final chapter is cleared. Gates the one-time
@@ -251,23 +242,6 @@ interface MetaStoreState {
   /** Bank a SPECIFIC set piece by id. Returns whether it banked (real + un-owned). */
   bankSetPiece: (id: string) => boolean;
   /**
-   * Equip a set piece into its slot, replacing whatever set piece sat there. A
-   * ring routes to the first free band. No-op if unknown, un-owned, or class-bound
-   * to a class other than the worn one. Re-bakes the set effect payloads.
-   */
-  equipSetPiece: (pieceId: string) => void;
-  /** Clear an equip slot's set piece and re-bake the set effects. */
-  unequipSetSlot: (slot: EquipSlot) => void;
-  /**
-   * Re-validate the equipped set loadout against the worn class + ownership
-   * (dropping anything no longer valid) and bake the summed effect payloads onto
-   * `character.setEffects`. Idempotent; the re-bake entry point used on load and
-   * on a body swap. The pieces' base stats materialise separately at delve start.
-   */
-  applySetLoadout: () => void;
-  /** The valid equipped set pieces for the worn class — drives delve-start materialisation. */
-  equippedSetPieceList: () => SetPiece[];
-  /**
    * Mark the whole chain cleared (felled Melissan). Set once the Throne-of-Bhaal
    * ending capstone has played; idempotent. Unlocks the title's New Game+ entry.
    */
@@ -303,7 +277,6 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   ownedLegendaries: [],
   equippedRelics: {},
   ownedSetPieces: [],
-  equippedSetPieces: {},
   gameCompleted: false,
   selectedAscension: 0,
   newGamePlusActive: false,
@@ -533,73 +506,6 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
     return true;
   },
 
-  equipSetPiece: (pieceId) => {
-    const piece = getSetPiece(pieceId);
-    if (!piece) return;
-    if (!get().ownedSetPieces.includes(pieceId)) return;
-    const classId = useCharacterStore.getState().character?.classId;
-    if (classId && !canEquipSetPiece(pieceId, classId)) return;
-    // Rings route to the first free band (then overwrite ring1 if both are full).
-    let slot: EquipSlot = piece.slot;
-    if (piece.slot === 'ring1') {
-      const cur = get().equippedSetPieces;
-      slot = !cur.ring1 ? 'ring1' : !cur.ring2 ? 'ring2' : 'ring1';
-    }
-    set({ equippedSetPieces: { ...get().equippedSetPieces, [slot]: pieceId } });
-    get().applySetLoadout();
-  },
-
-  unequipSetSlot: (slot) => {
-    if (get().equippedSetPieces[slot] === undefined) return;
-    const next = { ...get().equippedSetPieces };
-    delete next[slot];
-    set({ equippedSetPieces: next });
-    get().applySetLoadout();
-  },
-
-  equippedSetPieceList: () => {
-    const owned = get().ownedSetPieces;
-    const classId = useCharacterStore.getState().character?.classId;
-    const out: SetPiece[] = [];
-    for (const id of Object.values(get().equippedSetPieces)) {
-      if (!id || !owned.includes(id)) continue;
-      const piece = getSetPiece(id);
-      if (!piece) continue;
-      if (classId && !canEquipSetPiece(id, classId)) continue;
-      out.push(piece);
-    }
-    return out;
-  },
-
-  applySetLoadout: () => {
-    const owned = get().ownedSetPieces;
-    const classId = useCharacterStore.getState().character?.classId;
-    const current = get().equippedSetPieces;
-    // Re-validate every slotted piece: a real, owned piece that still claims this
-    // slot and is equippable by the worn class. Anything failing is dropped.
-    const next: Partial<Record<EquipSlot, string>> = {};
-    (Object.keys(current) as EquipSlot[]).forEach((slot) => {
-      const id = current[slot];
-      if (!id || !owned.includes(id)) return;
-      const piece = getSetPiece(id);
-      if (!piece) return;
-      // The piece's canonical slot must match (rings may sit in either band).
-      const slotOk = piece.slot === slot || (piece.slot === 'ring1' && slot === 'ring2');
-      if (!slotOk) return;
-      if (classId && !canEquipSetPiece(id, classId)) return;
-      next[slot] = id;
-    });
-    set({ equippedSetPieces: next });
-    const charSlice = useCharacterStore.getState();
-    const character = charSlice.character;
-    if (character) {
-      charSlice.setCharacter({
-        ...character,
-        setEffects: aggregateSetEffects(Object.values(next).filter((v): v is string => !!v)),
-      });
-    }
-  },
-
   markGameCompleted: () =>
     set((s) => (s.gameCompleted ? s : { gameCompleted: true })),
 
@@ -636,7 +542,6 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       ownedLegendaries: [],
       equippedRelics: {},
       ownedSetPieces: [],
-      equippedSetPieces: {},
       gameCompleted: false,
       selectedAscension: 0,
       newGamePlusActive: false,

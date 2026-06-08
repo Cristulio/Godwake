@@ -1,9 +1,18 @@
-import type { Character, EquipmentSlots } from '../../types/character';
-import type { ItemRef } from '../../schemas/item';
-import type { SetPiece } from '../../content/sets';
-import { getItem } from '../../content/items';
+import type { Character } from '../../types/character';
+import type { ItemRef, AffixModifiers } from '../../schemas/item';
+import { aggregateSetEffects, type SetPiece } from '../../content/sets';
+import { EQUIP_SLOTS } from '../character/equip';
 
-/** The ItemRef a banked set piece materialises into when worn (rarity 'set'). */
+/**
+ * The ItemRef a banked set piece materialises into. It is a REAL loot instance
+ * (rarity 'set'): its base stats resolve through `getItem(piece.id)`, it carries
+ * the guaranteed `+N` enhancement, and it is tagged with `setId` so the engine can
+ * count how many pieces of a set are worn. The piece's signature effect payload
+ * folds separately (equippedSetMods) so it is never double-counted by the affix
+ * roll. Set pieces live in the NORMAL backpack and equip through the normal slot
+ * flow — they are kept across lives by re-materialising the soul's owned pieces
+ * each descent (delveStore.gearResetToKit), not by a hub loadout.
+ */
 export function setPieceRef(piece: SetPiece): ItemRef {
   return {
     itemId: piece.id,
@@ -12,48 +21,50 @@ export function setPieceRef(piece: SetPiece): ItemRef {
       rarity: 'set',
       affixes: [],
       enhancement: piece.enhancement ?? 0,
+      setId: piece.setId,
       name: piece.name,
     },
   };
 }
 
-function isTwoHanded(itemId: string): boolean {
-  const item = getItem(itemId);
-  return item.kind === 'weapon' && item.properties.includes('two-handed');
+/** Whether a carried ref is a SET piece (emerald, persistent). */
+export function isSetPieceRef(ref: ItemRef | null | undefined): boolean {
+  return ref?.rolled?.rarity === 'set';
 }
 
 /**
- * Overlay the soul's equipped SET pieces onto an already kit-reset character:
- * each piece REPLACES whatever sits in its slot (the rolled / starting item) and
- * is appended to the pack so the inventory + sell guard see it as worn. Rings
- * route to the first free band; a two-handed set weapon clears the off-hand.
- * Pure — `pieces` is the pre-validated set (owned, class-legal, slot unlocked);
- * validation lives in metaStore.applySetLoadout. The pieces' effect payloads are
- * baked separately onto `character.setEffects`; only their base stats / +N ride
- * the equipment placed here.
+ * Append the soul's banked set pieces into the backpack as real, equippable loot
+ * (NOT auto-equipped — the player equips them through the normal inventory). Pure;
+ * `pieces` is the pre-filtered set the caller deems class-legal. Used at descent /
+ * reincarnation so persistent set gear resurfaces every life while rolled loot
+ * does not (delveStore.gearResetToKit).
  */
-export function materializeSetGear(character: Character, pieces: SetPiece[]): Character {
+export function injectSetPieces(character: Character, pieces: SetPiece[]): Character {
   if (pieces.length === 0) return character;
-  const equipped: EquipmentSlots = { ...character.equipped };
-  const inventory: ItemRef[] = [...character.inventory];
-  for (const piece of pieces) {
-    const ref = setPieceRef(piece);
-    inventory.push(ref);
-    if (piece.slot === 'mainHand') {
-      equipped.mainHand = ref;
-      if (isTwoHanded(piece.id)) equipped.offHand = null;
-    } else if (piece.slot === 'ring1') {
-      if (!equipped.ring1) equipped.ring1 = ref;
-      else if (!equipped.ring2) equipped.ring2 = ref;
-      else equipped.ring1 = ref;
-    } else {
-      equipped[piece.slot] = ref;
-    }
-  }
-  return { ...character, equipped, inventory };
+  return {
+    ...character,
+    inventory: [...character.inventory, ...pieces.map(setPieceRef)],
+  };
 }
 
-/** Whether a carried ref is a materialised SET piece (emerald, persistent). */
-export function isSetPieceRef(ref: ItemRef | null | undefined): boolean {
-  return ref?.rolled?.rarity === 'set';
+/** The set-piece ids the character is currently WEARING (equipped slots). */
+export function equippedSetIds(character: Character): string[] {
+  const ids: string[] = [];
+  for (const slot of EQUIP_SLOTS) {
+    const ref = character.equipped[slot];
+    if (ref?.rolled?.setId) ids.push(ref.itemId);
+  }
+  return ids;
+}
+
+/**
+ * The effect payloads a character's WORN set pieces contribute: each equipped
+ * piece's own signature effect PLUS every met set-bonus tier (2-piece, 3-piece, …
+ * up to the full set). Computed live from the equipped slots — no baked field — so
+ * the bonuses track the moment a piece is equipped or removed. The pieces' base
+ * stats / `+N` / any rolled affixes ride the normal equipment path; only these
+ * effects fold here (characterAffixMods).
+ */
+export function equippedSetMods(character: Character): AffixModifiers[] {
+  return aggregateSetEffects(equippedSetIds(character));
 }

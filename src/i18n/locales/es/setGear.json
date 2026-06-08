@@ -24,14 +24,21 @@
   "ironclad-greaves": { "name": "Grebas Acorazadas", "effect": "Gana 6 PG temporales al inicio de cada combate" },
   "ironclad-helm": { "name": "Yelmo Acorazado", "effect": "Los críticos aciertan con 19–20" },
 
-  "bloodrage": { "name": "Pieles de Furia Sangrienta", "flavor": "Los trofeos de un alma que aprendió a llevar su furia de vuelta a través de cada muerte." },
+  "bloodrage": { "name": "Furia Sangrienta", "flavor": "Los trofeos de guerra completos de un alma que aprendió a llevar su furia de vuelta a través de cada muerte." },
   "bloodrage.bonus": {
     "2": "2 piezas: +4 de daño cuerpo a cuerpo mientras arde la Furia",
-    "3": "3 piezas: +5 de daño por sangrado, y los críticos aciertan con 19–20"
+    "4": "4 piezas: +8 PG temporales por combate, y los críticos aciertan con 19–20",
+    "6": "6 piezas: +5 de daño por sangrado, y cúrate el 6% del daño que inflijas",
+    "8": "8 piezas: +6 de daño cuerpo a cuerpo mientras arde la Furia, y +3 de daño en cada golpe"
   },
-  "bloodrage-fang": { "name": "Colmillo de Furia", "effect": "Tus golpes desgarran con +3 de daño por sangrado" },
-  "bloodrage-pelt": { "name": "Piel de Furia", "effect": "+3 de daño cuerpo a cuerpo mientras arde la Furia" },
-  "bloodrage-totem": { "name": "Tótem de Furia", "effect": "Gana 6 PG temporales al inicio de cada combate" },
+  "bloodrage-fang": { "name": "Hacha de Furia Sangrienta", "effect": "+4 de daño cuerpo a cuerpo mientras arde la Furia" },
+  "bloodrage-pelt": { "name": "Piel de Furia", "effect": "Gana 6 PG temporales al inicio de cada combate" },
+  "bloodrage-totem": { "name": "Tótem de Furia", "effect": "Tus golpes desgarran con +3 de daño por sangrado" },
+  "bloodrage-helm": { "name": "Yelmo-Calavera de Furia", "effect": "Los críticos aciertan con 19–20" },
+  "bloodrage-ring": { "name": "Anillo-Colmillo de Furia", "effect": "Cúrate el 5% del daño que inflijas" },
+  "bloodrage-band": { "name": "Banda de Tendones de Furia", "effect": "+2 de daño cuerpo a cuerpo mientras arde la Furia" },
+  "bloodrage-belt": { "name": "Faja de Furia", "effect": "+2 de daño con arma en cada golpe" },
+  "bloodrage-boots": { "name": "Botas de Furia", "effect": "Regenera 2 PG al inicio de cada turno" },
 
   "wildstalker": { "name": "Atavío del Acechador Salvaje", "flavor": "El equipo de un cazador, llevado tanto tiempo a través de tantas vidas que la presa olvida que puede ser vista." },
   "wildstalker.bonus": {
@@ -45,11 +52,19 @@
   "archmagi": { "name": "Vestiduras del Archimago", "flavor": "La panoplia completa de un mago que sobrevivió a los conjuros que debieron acabar con él." },
   "archmagi.bonus": {
     "2": "2 piezas: +4 de daño de conjuro y +1 al ataque de conjuro",
-    "3": "3 piezas: +1 a la CD de salvación de conjuros y +1 espacio de conjuro de nivel 1"
+    "4": "4 piezas: +1 a la CD de salvación de conjuros y +1 espacio de conjuro de nivel 1",
+    "6": "6 piezas: +6 de daño de conjuro",
+    "9": "9 piezas: +2 a la CD de salvación de conjuros, +2 al ataque de conjuro, y +1 espacio de conjuro de nivel 1"
   },
+  "archmagi-wand": { "name": "Varita del Archimago", "effect": "+3 de daño de conjuro" },
   "archmagi-vestments": { "name": "Vestiduras del Archimago", "effect": "+3 de daño de conjuro" },
   "archmagi-amulet": { "name": "Amuleto del Archimago", "effect": "+1 a las tiradas de ataque de conjuro" },
   "archmagi-orb": { "name": "Orbe del Archimago", "effect": "+1 a la CD de salvación de conjuros" },
+  "archmagi-helm": { "name": "Corona del Archimago", "effect": "+1 a la CD de salvación de conjuros" },
+  "archmagi-ring": { "name": "Anillo del Archimago", "effect": "+1 espacio de conjuro de nivel 1 (se recarga al descansar)" },
+  "archmagi-band": { "name": "Banda del Archimago", "effect": "+2 de daño de conjuro" },
+  "archmagi-girdle": { "name": "Faja del Archimago", "effect": "+1 a las tiradas de ataque de conjuro" },
+  "archmagi-slippers": { "name": "Zapatillas del Archimago", "effect": "Regenera 2 PG al inicio de cada turno" },
 
   "greenwarden": { "name": "Manto del Guardaverde", "flavor": "Equipo viviente cultivado para un guardián de lo salvaje que cura sus propias heridas como las del bosque." },
   "greenwarden.bonus": {
