@@ -38,7 +38,7 @@ import {
 } from './martialResource';
 import { useCunningAction, type CunningActionChoice } from './cunningAction';
 import { playerConditionMods } from './playerConditions';
-import { useRage, useRecklessAttack } from './rage';
+import { useRage } from './rage';
 import { useHuntersMark } from './huntersMark';
 import { useWildShape, beastWeaponId } from './wildShape';
 import {
@@ -64,7 +64,6 @@ export type PlannedAction =
   | { kind: 'action-surge' }
   | { kind: 'cunning-action'; choice: CunningActionChoice }
   | { kind: 'rage' }
-  | { kind: 'reckless-attack' }
   | { kind: 'martial-offense' }
   | { kind: 'martial-defense' }
   | { kind: 'martial-disrupt' }
@@ -125,10 +124,6 @@ export interface ArchetypeProfile {
   /** Fighter Action Surge fires when still hurt at/below this (or outnumbered).
    *  Higher = spend the charge more freely. */
   surgeHp: number;
-  /** Barbarian goes Reckless only while ABOVE this HP fraction — it hands
-   *  enemies advantage back, so the bar is "healthy enough to wear the blows".
-   *  Lower = press recklessly even while hurt. */
-  recklessHp: number;
   /** HP fraction at/below which the wizard smears itself defensively
    *  (Blur / Mirror Image). */
   wizardDefensiveHp: number;
@@ -146,7 +141,6 @@ const BALANCED: ArchetypeProfile = {
   emergencyHp: 0.35,
   secondWindHp: 0.5,
   surgeHp: 0.7,
-  recklessHp: 0.5,
   wizardDefensiveHp: 0.5,
   wizardDrainHp: 0.6,
   holdPersonThreat: 8,
@@ -157,7 +151,6 @@ export const PROFILES: Record<Archetype, ArchetypeProfile> = {
     emergencyHp: 0.5,
     secondWindHp: 0.7,
     surgeHp: 0.5,
-    recklessHp: 0.7,
     wizardDefensiveHp: 0.65,
     wizardDrainHp: 0.75,
     holdPersonThreat: 6,
@@ -167,7 +160,6 @@ export const PROFILES: Record<Archetype, ArchetypeProfile> = {
     emergencyHp: 0.2,
     secondWindHp: 0.35,
     surgeHp: 1,
-    recklessHp: 0.25,
     wizardDefensiveHp: 0.35,
     wizardDrainHp: 0.45,
     holdPersonThreat: 12,
@@ -596,19 +588,6 @@ export function chooseCombatAction(
       }
       const druidAction = chooseDruidAction(character, live, primary, threat, profile);
       if (druidAction) return druidAction;
-    }
-    // Barbarian Reckless Attack: declare it before swinging while healthy
-    // enough to eat the return blows. Free stance — costs no action — so it
-    // resolves, then the same turn proceeds to the attack.
-    if (
-      isBarbarian &&
-      actionFree &&
-      character.recklessActive !== true &&
-      characterHasMechanic(character, 'reckless-attack') &&
-      hpPct > profile.recklessHp &&
-      primary
-    ) {
-      return { kind: 'reckless-attack' };
     }
     // Martial resource (Fighter / Barbarian / Ranger): read the enemy telegraph
     // and spend the pool WELL — deny a dangerous wind-up, brace a big incoming
@@ -1153,10 +1132,6 @@ export function applyPlannedAction(
     }
     case 'rage': {
       const r = useRage({ character, state });
-      return { state: r.state, character: r.character };
-    }
-    case 'reckless-attack': {
-      const r = useRecklessAttack({ character, state });
       return { state: r.state, character: r.character };
     }
     case 'hunters-mark': {

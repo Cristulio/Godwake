@@ -31,7 +31,6 @@ interface ActionBarProps {
   onMartialDisrupt: () => void;
   onCunningAction: () => void;
   onRage: () => void;
-  onRecklessAttack: () => void;
   onFlurry: () => void;
   onPatientDefense: () => void;
   onStunningStrike: () => void;
@@ -53,7 +52,6 @@ export function ActionBar({
   onMartialDisrupt,
   onCunningAction,
   onRage,
-  onRecklessAttack,
   onFlurry,
   onPatientDefense,
   onStunningStrike,
@@ -183,12 +181,6 @@ export function ActionBar({
     !rageBlockedByArmor &&
     hasRageCharge &&
     !character.actionEconomy.bonusActionUsed;
-
-  // Barbarian Reckless Attack — a free stance declared before the swing.
-  const hasReckless = isBarbarian && characterHasMechanic(character, 'reckless-attack');
-  const reckless = character.recklessActive === true;
-  const canReckless =
-    playersTurn && active && hasReckless && !reckless && !character.actionEconomy.actionUsed;
 
   // Ranger Hunter's Mark (bonus action) — brand or re-brand a quarry.
   const isMarkLive =
@@ -443,17 +435,6 @@ export function ActionBar({
               : rageUnlimited
                 ? t('ui.combat.rageUnlimited')
                 : t('ui.combat.rage', { n: rageCharges })}
-          </Button>
-        )}
-        {hasReckless && (
-          <Button
-            variant={canReckless ? 'primary' : 'secondary'}
-            onClick={onRecklessAttack}
-            disabled={!canReckless}
-            title={t('combat.bar.reckless')}
-            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
-          >
-            {reckless ? t('ui.combat.recklessOn') : t('ui.combat.reckless')}
           </Button>
         )}
         {isRanger && characterHasMechanic(character, 'hunters-mark') && (

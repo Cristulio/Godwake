@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import type { Character } from '../../types/character';
 import { TouchTooltip } from '../ui/TouchTooltip';
 import type { CombatState } from '../../types/combat';
-import { computeAC, characterHasMechanic, critRange } from '../../engine/character/derived';
+import { computeAC, critRange } from '../../engine/character/derived';
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
@@ -283,7 +283,6 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const rageUnlimited = isRageUnlimited(character);
   const rageCharges = character.resources.rageChargesRemaining ?? 0;
   const rageChargesCap = rageChargesMax(character);
-  const hasReckless = isBarbarian && characterHasMechanic(character, 'reckless-attack');
   const reckless = character.recklessActive === true;
 
   // --- Ranger resources ---
@@ -655,13 +654,13 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
         </Section>
       )}
 
-      {hasReckless && (
+      {reckless && (
         <Section title={t('combat.hud.stance')}>
           <Pill
-            text={reckless ? t('combat.hud.reckless') : t('combat.hud.guarded')}
-            on={reckless}
+            text={t('combat.hud.reckless')}
+            on
             tone="blood"
-            title={reckless ? t('combat.hud.recklessTitle') : t('combat.hud.guardedTitle')}
+            title={t('combat.hud.recklessTitle')}
           />
         </Section>
       )}

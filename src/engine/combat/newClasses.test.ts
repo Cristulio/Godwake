@@ -3,7 +3,7 @@ import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack } from './attack';
 import { monsterAttack } from './attack/monsterAttack';
-import { useRage, useRecklessAttack } from './rage';
+import { useRage } from './rage';
 import { RAGE_ROUNDS, rageChargesMax, shortRestHeal, longRest } from '../character/actions';
 import { useConsumable } from './useItem';
 import { useHuntersMark } from './huntersMark';
@@ -260,43 +260,77 @@ describe('Barbarian — Rage charges (rationed pool)', () => {
   });
 });
 
-describe('Barbarian — Reckless Attack', () => {
+describe('Barbarian — Reckless (folded into Rage)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it('declares the stance, hands enemies advantage, and clears on the next turn', () => {
+  // Spin endTurn until the player holds the turn again. Returns the state/char
+  // at the top of that next player turn (so rage has ticked once).
+  function cycleToPlayerTurn(state: CombatState, character: Character) {
+    let s = state;
+    let c = character;
+    for (let i = 0; i < (s.turnOrder.length + 1) * 2; i++) {
+      const et = endTurn(s, c);
+      s = et.state;
+      c = et.character;
+      if (s.turnOrder[s.currentTurnIndex] === 'player') break;
+    }
+    return { state: s, character: c };
+  }
+
+  it('raging at L2+ fights recklessly: incoming attacks roll with advantage, and it persists across turns', () => {
     const barb = makeBarbarian({ level: 2 });
     const roller = createDiceRoller(3);
     const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
-    const reck = useRecklessAttack({ character: init.character, state: init.state });
-    expect(reck.character.recklessActive).toBe(true);
+
+    // Entering Rage flips the reckless stance on — no separate declaration.
+    const raged = useRage({ character: init.character, state: init.state });
+    expect(raged.character.recklessActive).toBe(true);
 
     // The monster's swing now rolls with advantage.
     const ma = monsterAttack(
-      { roller, character: reck.character, state: reck.state },
-      monsterId(reck.state),
+      { roller, character: raged.character, state: raged.state },
+      monsterId(raged.state),
     );
-    const advLog = ma.state.log.find((l) => l.text.includes('advantage — reckless'));
-    expect(advLog).toBeDefined();
+    expect(ma.state.log.find((l) => l.text.includes('advantage — reckless'))).toBeDefined();
 
-    // Cycle back to the player's turn — the stance (and its downside) clears.
-    let state = ma.state;
-    let ch = ma.character;
-    for (let i = 0; i < state.turnOrder.length + 1; i++) {
-      const et = endTurn(state, ch);
-      state = et.state;
-      ch = et.character;
-      if (state.turnOrder[state.currentTurnIndex] === 'player') break;
-    }
-    expect(ch.recklessActive).toBe(false);
+    // Back at the player's turn the fury (and reckless) still holds.
+    const next = cycleToPlayerTurn(ma.state, ma.character);
+    expect((next.character.resources.rageRoundsRemaining ?? 0)).toBeGreaterThan(0);
+    expect(next.character.recklessActive).toBe(true);
   });
 
-  it('is gated to characters with the Reckless Attack feature (L1 barbarian cannot)', () => {
+  it('the reckless stance lifts the moment the rage fades', () => {
+    const barb = makeBarbarian({ level: 2 });
+    const roller = createDiceRoller(3);
+    const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
+    const raged = useRage({ character: init.character, state: init.state });
+
+    let s = raged.state;
+    let c = raged.character;
+    for (let r = 0; r < RAGE_ROUNDS + 1; r++) {
+      const cyc = cycleToPlayerTurn(s, c);
+      s = cyc.state;
+      c = cyc.character;
+      if ((c.resources.rageRoundsRemaining ?? 0) <= 0) break;
+    }
+    expect(c.resources.rageRoundsRemaining ?? 0).toBe(0);
+    expect(c.recklessActive).toBe(false);
+  });
+
+  it('a raging L1 barbarian (no Reckless feature yet) does NOT get advantage', () => {
     const barb = makeBarbarian({ level: 1 });
     const roller = createDiceRoller(3);
     const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
-    const reck = useRecklessAttack({ character: init.character, state: init.state });
-    expect(reck.character.recklessActive).toBeFalsy();
-    expect(reck.state).toBe(init.state);
+    const raged = useRage({ character: init.character, state: init.state });
+    expect(raged.character.resources.rageRoundsRemaining ?? 0).toBeGreaterThan(0);
+    expect(raged.character.recklessActive).toBeFalsy();
+  });
+
+  it('a non-raging L2 barbarian is not reckless — reckless only exists as part of Rage', () => {
+    const barb = makeBarbarian({ level: 2 });
+    const roller = createDiceRoller(3);
+    const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
+    expect(init.character.recklessActive).toBeFalsy();
   });
 });
 

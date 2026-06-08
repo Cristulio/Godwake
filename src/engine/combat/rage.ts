@@ -24,6 +24,12 @@ export interface RageContext {
  * damage (playerAttack). Fury locks out healing — draughts and lifesteal are
  * suppressed (useItem / playerAttack gate on isRaging).
  *
+ * From L2 (the `reckless-attack` feature) the fury also fights recklessly:
+ * entering Rage flips `recklessActive` on, so every melee swing rolls with
+ * advantage and every attack against the barbarian does too — for the whole
+ * Rage, no extra click. Rage's damage halving offsets the incoming risk.
+ * Reckless tracks Rage 1:1 and is cleared when the fury fades (see `endTurn`).
+ *
  * Rationed: entering spends one Rage charge (see `rageChargesRemaining` /
  * `rageChargesMax`), and with none left the barbarian can't rage — the bonus
  * action does nothing. The L20 capstone rages without spending. Charges come
@@ -57,6 +63,11 @@ export function useRage(ctx: RageContext): CombatActionResult {
     ...(unlimited ? {} : { rageChargesRemaining: charges - 1 }),
   });
   nextCharacter = patchActionEconomy(nextCharacter, { bonusActionUsed: true });
+  // From L2 on, raging means fighting recklessly: advantage on melee swings and
+  // advantage to attacks against you, for the whole fury (cleared on rage end).
+  if (characterHasMechanic(nextCharacter, 'reckless-attack')) {
+    nextCharacter = { ...nextCharacter, recklessActive: true };
+  }
 
   const log: CombatLogEntry = {
     id: state.log.length + 1,
@@ -64,32 +75,4 @@ export function useRage(ctx: RageContext): CombatActionResult {
     text: t('combat.log.rageEnter', { name: nextCharacter.name, rounds: RAGE_ROUNDS }),
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'rage', 'player'), nextCharacter);
-}
-
-export interface RecklessAttackContext {
-  character: Character;
-  state: CombatState;
-}
-
-/**
- * Barbarian Reckless Attack. A free stance declared on the turn (no action
- * cost): the barbarian's melee attacks roll with advantage this turn, but
- * attacks against them roll with advantage until the start of their next turn
- * (cleared in `endTurn`). Declared before the action is spent so the advantage
- * actually rides the swing.
- */
-export function useRecklessAttack(ctx: RecklessAttackContext): CombatActionResult {
-  const { character, state } = ctx;
-  if (character.classId !== 'barbarian') return combatResult(state, character);
-  if (!characterHasMechanic(character, 'reckless-attack')) return combatResult(state, character);
-  if (character.recklessActive === true) return combatResult(state, character);
-  if (character.actionEconomy.actionUsed) return combatResult(state, character);
-
-  const nextCharacter: Character = { ...character, recklessActive: true };
-  const log: CombatLogEntry = {
-    id: state.log.length + 1,
-    kind: 'narration',
-    text: t('combat.log.reckless', { name: nextCharacter.name }),
-  };
-  return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
 }

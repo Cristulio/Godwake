@@ -236,17 +236,15 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     }
   }
 
-  // Barbarian: the Reckless stance (and the advantage it hands enemies) clears
-  // at the start of the barbarian's next turn; Rage burns down one round each
-  // time that turn comes around.
-  if (order[nextIndex] === 'player') {
-    if (nextCharacter.recklessActive) {
+  // Barbarian: Rage burns down one round each time the barbarian's turn comes
+  // around. Reckless rides Rage 1:1 — raging means fighting recklessly for the
+  // whole fury (advantage both ways), so the stance lifts the moment the fury
+  // fades, not every turn.
+  if (order[nextIndex] === 'player' && (nextCharacter.resources.rageRoundsRemaining ?? 0) > 0) {
+    const remaining = (nextCharacter.resources.rageRoundsRemaining ?? 0) - 1;
+    nextCharacter = patchResources(nextCharacter, { rageRoundsRemaining: remaining });
+    if (remaining <= 0 && nextCharacter.recklessActive) {
       nextCharacter = { ...nextCharacter, recklessActive: false };
-    }
-    if ((nextCharacter.resources.rageRoundsRemaining ?? 0) > 0) {
-      nextCharacter = patchResources(nextCharacter, {
-        rageRoundsRemaining: (nextCharacter.resources.rageRoundsRemaining ?? 0) - 1,
-      });
     }
   }
 
