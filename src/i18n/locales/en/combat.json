@@ -141,7 +141,7 @@
     "rageBlockedArmor": "{name} reaches for the fury, but the heavy plate smothers it — no rage takes hold until the armor comes off.",
     "rageEnter": "{name} gives way to the fury — physical blows glance off and every swing bites deeper, but no mending until it passes. {rounds} rounds.",
     "reckless": "{name} throws the guard away — strikes land with advantage, but so do the blows that answer.",
-    "secondWind": "{name} catches a second wind. 1d10+{level} = {roll} → +{healed} HP.",
+    "secondWind": "{name} catches a second wind. 1d10+{bonus} = {roll} → +{healed} HP.",
     "actionSurge": "{name} surges — adrenaline burns through the wound. One more swing.",
     "cunningHide": "{name} slips into a shadow. Next strike lands with advantage.",
     "cunningFeint": "{name} feints high — the guard drops. The next strike finds the gap.",
@@ -496,7 +496,7 @@
     "soulMarkPlural": "s"
   },
   "bar": {
-    "secondWind": "Bonus action: heal 1d10 + level. Once per short rest.",
+    "secondWind": "Bonus action: heal 1d10 + 2 per level. Once per combat.",
     "actionSurge": "Free Action: regain your action this turn. Once per short rest.",
     "offenseFighter": "Costs {cost} {pool}: this turn's strikes land surer (+{hit} to hit) and bite for +{dmg} damage{cleave}.",
     "offenseOther": "Costs {cost} {pool}: this turn's strikes land for +{dmg} damage{cleave}.",
