@@ -40,12 +40,24 @@ export type SfxId =
   // Enemy abilities.
   | 'enemy_cast';
 
-export type MusicId =
-  | 'hub_theme'
+/** Regular-fight combat themes the mob-aware selector rotates between. */
+export type CombatMusicId =
   | 'combat_theme'
   | 'combat_theme_tense'
-  | 'boss_theme'
-  | 'victory_theme';
+  | 'combat_march'
+  | 'combat_prowl'
+  | 'combat_grim'
+  | 'combat_frenzy'
+  | 'combat_rally';
+
+/** Boss themes — a smaller pool the selector rotates per-boss. */
+export type BossMusicId = 'boss_theme' | 'boss_theme_dire' | 'boss_theme_wrath';
+
+export type MusicId =
+  | 'hub_theme'
+  | 'victory_theme'
+  | CombatMusicId
+  | BossMusicId;
 
 // Cache noise buffers per context + duration so we don't re-allocate and
 // re-fill on every sound play. The same broadband noise texture is
@@ -1093,6 +1105,14 @@ interface SeqOpts {
   type?: OscillatorType;
   /** Fraction of each step the note actually sounds (rest is the gap). */
   sustain?: number;
+  /** Transpose the whole line by N equal-tempered semitones (0 = as written). */
+  semitones?: number;
+  /**
+   * Shuffle the rhythm: push every off-beat step late by this fraction of a beat
+   * (0 = straight). Only the note start moves — loop length is unchanged, so the
+   * groove never drifts. Applied to the rhythm/melody, never the steady bed.
+   */
+  swing?: number;
 }
 
 /**
@@ -1109,17 +1129,21 @@ function startSequence(
   let stopped = false;
   const loopBeats = steps.reduce((s, [, b]) => s + b, 0);
   const loopMs = loopBeats * opts.beatS * 1000;
+  const ratio = opts.semitones ? Math.pow(2, opts.semitones / 12) : 1;
+  const swingS = (opts.swing ?? 0) * opts.beatS;
   const play = () => {
     if (stopped) return;
     let t = ctx.currentTime + 0.04;
-    for (const [freq, beats] of steps) {
+    steps.forEach(([freq, beats], i) => {
       const d = beats * opts.beatS;
       if (freq > 0) {
-        blip(ctx, out, freq, t, Math.max(0.05, d * (opts.sustain ?? 0.85)),
+        const off = i % 2 === 1 ? swingS : 0;
+        blip(ctx, out, freq * ratio, t + off,
+          Math.max(0.05, d * (opts.sustain ?? 0.85)),
           opts.level, opts.type ?? 'square');
       }
       t += d;
-    }
+    });
     setTimeout(play, loopMs);
   };
   play();
@@ -1162,16 +1186,18 @@ function startDrums(
   out: AudioNode,
   pattern: Drum[],
   beatS: number,
+  swing = 0,
 ): StopHandle {
   let stopped = false;
   const loopMs = pattern.length * beatS * 1000;
+  const swingS = swing * beatS;
   const play = () => {
     if (stopped) return;
     let t = ctx.currentTime + 0.04;
-    for (const step of pattern) {
-      if (step !== '.') drumHit(ctx, out, t, step);
+    pattern.forEach((step, i) => {
+      if (step !== '.') drumHit(ctx, out, t + (i % 2 === 1 ? swingS : 0), step);
       t += beatS;
-    }
+    });
     setTimeout(play, loopMs);
   };
   play();
@@ -1207,50 +1233,153 @@ function buildHubTheme(ctx: AudioContext, out: AudioNode): StopHandle {
   return combine(bed, lead, bass);
 }
 
-function buildCombatTheme(ctx: AudioContext, out: AudioNode): StopHandle {
-  // Brooding bed + a driving D-minor arpeggio, pulsing bass, four-on-the-floor.
-  const bed = buildCombatBed(ctx, out);
-  const lead = startSequence(ctx, out, [
-    [HZ.D4, 1], [HZ.A4, 1], [HZ.D5, 1], [HZ.A4, 1], [HZ.F4, 1], [HZ.A4, 1], [HZ.D5, 1], [HZ.A4, 1],
-    [HZ.C4, 1], [HZ.G4, 1], [HZ.C5, 1], [HZ.G4, 1], [HZ.E4, 1], [HZ.A4, 1], [HZ.C5, 1], [HZ.A4, 1],
-  ], { beatS: 0.2, level: 0.09, type: 'square', sustain: 0.6 });
-  const bass = startSequence(ctx, out, [
-    [HZ.D2, 1], [REST, 1], [HZ.D2, 1], [REST, 1], [HZ.C3, 1], [REST, 1], [HZ.E2, 1], [REST, 1],
-  ], { beatS: 0.4, level: 0.13, type: 'square', sustain: 0.5 });
-  const drums = startDrums(ctx, out,
-    ['k', 'h', 's', 'h', 'k', 'k', 's', 'h'], 0.4);
-  return combine(bed, lead, bass, drums);
+// ---------------------------------------------------------------------------
+// Combat-theme variants. Rather than hand-author a dozen tracks, two melodic
+// "cores" (the brooding D-minor arpeggio and the stalking chromatic line) are
+// parametrised: a variant transposes the melody, scales the tempo, swaps the
+// drum pattern, and shuffles the rhythm — leaving the steady atmospheric bed
+// untouched. The selector in `engine/audio/index.ts` maps the foe → a variant.
+// ---------------------------------------------------------------------------
+
+interface SeqLayer {
+  steps: Step[];
+  beatS: number;
+  level: number;
+  type: OscillatorType;
+  sustain: number;
 }
 
-function buildCombatThemeTense(ctx: AudioContext, out: AudioNode): StopHandle {
-  // Stalking bed + a tighter, more chromatic line at a faster clip.
-  const bed = buildCombatBedTense(ctx, out);
-  const lead = startSequence(ctx, out, [
-    [HZ.E4, 1], [HZ.F4, 1], [HZ.E4, 1], [HZ.D4, 1], [HZ.E4, 1], [HZ.A4, 1], [HZ.E4, 1], [HZ.F4, 1],
-    [HZ.E4, 1], [HZ.D4, 1], [HZ.C4, 1], [HZ.Bb3, 1], [HZ.A3, 2], [HZ.E4, 2],
-  ], { beatS: 0.18, level: 0.085, type: 'square', sustain: 0.55 });
-  const bass = startSequence(ctx, out, [
-    [HZ.A2, 1], [REST, 1], [HZ.A2, 1], [HZ.Bb2, 1], [HZ.A2, 1], [REST, 1], [HZ.E2, 1], [REST, 1],
-  ], { beatS: 0.36, level: 0.13, type: 'square', sustain: 0.5 });
-  const drums = startDrums(ctx, out,
-    ['k', 'h', 's', 'h', 'k', 'h', 's', 'k'], 0.36);
-  return combine(bed, lead, bass, drums);
+interface CombatCore {
+  bed: (ctx: AudioContext, out: AudioNode) => StopHandle;
+  lead: SeqLayer;
+  bass: SeqLayer;
+  drums: Drum[];
+  drumBeatS: number;
 }
 
-function buildBossTheme(ctx: AudioContext, out: AudioNode): StopHandle {
-  // Heavy bossly bed + a slow, menacing low theme and high tension stabs.
-  const bed = buildCombatBedBossly(ctx, out);
-  const lead = startSequence(ctx, out, [
+/** Per-variant knobs applied to the rhythm/melody layers, never the bed. */
+interface VariantKnob {
+  /** Transpose lead + bass by N semitones. */
+  semitones: number;
+  /** Multiply every beat duration (>1 slower, <1 faster). */
+  tempoMul: number;
+  /** Off-beat shuffle for the rhythm layers, fraction of a beat. */
+  swing: number;
+  /** Optional drum-pattern override. */
+  drums?: Drum[];
+}
+
+const DRUMS = {
+  march: ['k', '.', 's', '.', 'k', 'k', 's', '.'] as Drum[],
+  half: ['k', '.', '.', 's', '.', '.', 'k', 's'] as Drum[],
+  gallop: ['k', 'k', 'h', 's', 'k', 'k', 'h', 's'] as Drum[],
+  bossHeavy: ['k', '.', 's', '.', 'k', '.', 'k', 's', '.', '.', 'k', 's'] as Drum[],
+};
+
+const BROOD_CORE: CombatCore = {
+  bed: buildCombatBed,
+  lead: {
+    steps: [
+      [HZ.D4, 1], [HZ.A4, 1], [HZ.D5, 1], [HZ.A4, 1], [HZ.F4, 1], [HZ.A4, 1], [HZ.D5, 1], [HZ.A4, 1],
+      [HZ.C4, 1], [HZ.G4, 1], [HZ.C5, 1], [HZ.G4, 1], [HZ.E4, 1], [HZ.A4, 1], [HZ.C5, 1], [HZ.A4, 1],
+    ],
+    beatS: 0.2, level: 0.09, type: 'square', sustain: 0.6,
+  },
+  bass: {
+    steps: [
+      [HZ.D2, 1], [REST, 1], [HZ.D2, 1], [REST, 1], [HZ.C3, 1], [REST, 1], [HZ.E2, 1], [REST, 1],
+    ],
+    beatS: 0.4, level: 0.13, type: 'square', sustain: 0.5,
+  },
+  drums: ['k', 'h', 's', 'h', 'k', 'k', 's', 'h'],
+  drumBeatS: 0.4,
+};
+
+const STALK_CORE: CombatCore = {
+  bed: buildCombatBedTense,
+  lead: {
+    steps: [
+      [HZ.E4, 1], [HZ.F4, 1], [HZ.E4, 1], [HZ.D4, 1], [HZ.E4, 1], [HZ.A4, 1], [HZ.E4, 1], [HZ.F4, 1],
+      [HZ.E4, 1], [HZ.D4, 1], [HZ.C4, 1], [HZ.Bb3, 1], [HZ.A3, 2], [HZ.E4, 2],
+    ],
+    beatS: 0.18, level: 0.085, type: 'square', sustain: 0.55,
+  },
+  bass: {
+    steps: [
+      [HZ.A2, 1], [REST, 1], [HZ.A2, 1], [HZ.Bb2, 1], [HZ.A2, 1], [REST, 1], [HZ.E2, 1], [REST, 1],
+    ],
+    beatS: 0.36, level: 0.13, type: 'square', sustain: 0.5,
+  },
+  drums: ['k', 'h', 's', 'h', 'k', 'h', 's', 'k'],
+  drumBeatS: 0.36,
+};
+
+function buildSeqLayer(
+  ctx: AudioContext, out: AudioNode, layer: SeqLayer, knob: VariantKnob,
+): StopHandle {
+  return startSequence(ctx, out, layer.steps, {
+    beatS: layer.beatS * knob.tempoMul,
+    level: layer.level,
+    type: layer.type,
+    sustain: layer.sustain,
+    semitones: knob.semitones,
+    swing: knob.swing,
+  });
+}
+
+function buildCombatVariant(
+  ctx: AudioContext, out: AudioNode, core: CombatCore, knob: VariantKnob,
+): StopHandle {
+  return combine(
+    core.bed(ctx, out),
+    buildSeqLayer(ctx, out, core.lead, knob),
+    buildSeqLayer(ctx, out, core.bass, knob),
+    startDrums(ctx, out, knob.drums ?? core.drums, core.drumBeatS * knob.tempoMul, knob.swing),
+  );
+}
+
+const BOSS_LEAD: SeqLayer = {
+  steps: [
     [HZ.D3, 2], [HZ.Eb3, 2], [HZ.D3, 1], [HZ.C3, 1], [HZ.D3, 2],
     [HZ.F3, 2], [HZ.E3, 2], [HZ.D3, 3], [REST, 1],
-  ], { beatS: 0.34, level: 0.12, type: 'square', sustain: 0.7 });
-  const stab = startSequence(ctx, out, [
-    [REST, 8], [HZ.A4, 1], [HZ.Bb4, 1], [HZ.A4, 2], [REST, 4],
-  ], { beatS: 0.34, level: 0.07, type: 'triangle', sustain: 0.8 });
-  const drums = startDrums(ctx, out,
-    ['k', '.', '.', 's', '.', '.', 'k', '.', '.', 's', '.', '.'], 0.34);
-  return combine(bed, lead, stab, drums);
+  ],
+  beatS: 0.34, level: 0.12, type: 'square', sustain: 0.7,
+};
+const BOSS_STAB: SeqLayer = {
+  steps: [[REST, 8], [HZ.A4, 1], [HZ.Bb4, 1], [HZ.A4, 2], [REST, 4]],
+  beatS: 0.34, level: 0.07, type: 'triangle', sustain: 0.8,
+};
+const BOSS_DRUMS: Drum[] = ['k', '.', '.', 's', '.', '.', 'k', '.', '.', 's', '.', '.'];
+
+function buildBossVariant(
+  ctx: AudioContext, out: AudioNode, knob: VariantKnob,
+): StopHandle {
+  return combine(
+    buildCombatBedBossly(ctx, out),
+    buildSeqLayer(ctx, out, BOSS_LEAD, knob),
+    buildSeqLayer(ctx, out, BOSS_STAB, knob),
+    startDrums(ctx, out, knob.drums ?? BOSS_DRUMS, 0.34 * knob.tempoMul, knob.swing),
+  );
 }
+
+/** Identity knob: the original, un-transposed, straight track. */
+const STRAIGHT: VariantKnob = { semitones: 0, tempoMul: 1, swing: 0 };
+
+const COMBAT_VARIANTS: Record<CombatMusicId, { core: CombatCore; knob: VariantKnob }> = {
+  combat_theme: { core: BROOD_CORE, knob: STRAIGHT },
+  combat_theme_tense: { core: STALK_CORE, knob: STRAIGHT },
+  combat_march: { core: BROOD_CORE, knob: { semitones: -3, tempoMul: 1.12, swing: 0.08, drums: DRUMS.march } },
+  combat_prowl: { core: STALK_CORE, knob: { semitones: 2, tempoMul: 1.05, swing: 0.14 } },
+  combat_grim: { core: BROOD_CORE, knob: { semitones: -5, tempoMul: 0.96, swing: 0.1, drums: DRUMS.half } },
+  combat_frenzy: { core: STALK_CORE, knob: { semitones: 5, tempoMul: 0.85, swing: 0.12, drums: DRUMS.gallop } },
+  combat_rally: { core: BROOD_CORE, knob: { semitones: 7, tempoMul: 0.92, swing: 0.06 } },
+};
+
+const BOSS_VARIANTS: Record<BossMusicId, VariantKnob> = {
+  boss_theme: STRAIGHT,
+  boss_theme_dire: { semitones: -2, tempoMul: 1, swing: 0.06, drums: DRUMS.bossHeavy },
+  boss_theme_wrath: { semitones: 3, tempoMul: 0.9, swing: 0.08 },
+};
 
 function buildVictoryTheme(ctx: AudioContext, out: AudioNode): StopHandle {
   // Bright C-major fanfare loop — no dark drone under it.
@@ -1271,12 +1400,27 @@ function buildVictoryTheme(ctx: AudioContext, out: AudioNode): StopHandle {
   return combine(lead, harmony, bass, drums);
 }
 
-const MUSIC_BUILDERS: Record<MusicId, (ctx: AudioContext, out: AudioNode) => StopHandle> = {
+type MusicBuilder = (ctx: AudioContext, out: AudioNode) => StopHandle;
+
+const combatBuilders = Object.fromEntries(
+  Object.entries(COMBAT_VARIANTS).map(([id, { core, knob }]) => [
+    id,
+    (ctx: AudioContext, out: AudioNode) => buildCombatVariant(ctx, out, core, knob),
+  ]),
+) as Record<CombatMusicId, MusicBuilder>;
+
+const bossBuilders = Object.fromEntries(
+  Object.entries(BOSS_VARIANTS).map(([id, knob]) => [
+    id,
+    (ctx: AudioContext, out: AudioNode) => buildBossVariant(ctx, out, knob),
+  ]),
+) as Record<BossMusicId, MusicBuilder>;
+
+const MUSIC_BUILDERS: Record<MusicId, MusicBuilder> = {
   hub_theme: buildHubTheme,
-  combat_theme: buildCombatTheme,
-  combat_theme_tense: buildCombatThemeTense,
-  boss_theme: buildBossTheme,
   victory_theme: buildVictoryTheme,
+  ...combatBuilders,
+  ...bossBuilders,
 };
 
 /** Every registered music track id. */
