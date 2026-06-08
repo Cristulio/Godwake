@@ -57,7 +57,11 @@ export function InventoryScreen() {
   // re-fire the row's hover → an endless jitter. Anchor to whichever vertical
   // side of the row has more room and cap the height to that space, so the
   // absolute panel can never extend past the viewport.
-  const [tip, setTip] = useState<{ flip: boolean; maxH: number }>({ flip: false, maxH: 600 });
+  const [tip, setTip] = useState<{ flip: boolean; flipX: boolean; maxH: number }>({
+    flip: false,
+    flipX: false,
+    maxH: 600,
+  });
 
   function placeTip(el: HTMLElement) {
     const rect = el.getBoundingClientRect();
@@ -65,7 +69,14 @@ export function InventoryScreen() {
     const below = window.innerHeight - rect.top - pad;
     const above = rect.bottom - pad;
     const flip = above > below;
-    setTip({ flip, maxH: Math.max(160, Math.floor(flip ? above : below)) });
+    // Tooltip is w-64 (256px) anchored one side of the row with a ~8px margin.
+    // If the right side can't fit it but the left has more room, flip to the left
+    // so it never spills off the viewport edge.
+    const tipW = 256 + 8;
+    const spaceRight = window.innerWidth - rect.right - pad;
+    const spaceLeft = rect.left - pad;
+    const flipX = spaceRight < tipW && spaceLeft > spaceRight;
+    setTip({ flip, flipX, maxH: Math.max(160, Math.floor(flip ? above : below)) });
   }
 
   const ac = useMemo(() => (character ? computeAC(character) : 0), [character]);
@@ -256,7 +267,7 @@ export function InventoryScreen() {
                   )}
                   {hoverSlot === slot && item && !isDragging && (
                     <div
-                      className={`absolute z-30 left-full ml-2 hidden md:block pointer-events-none overflow-y-auto ${tip.flip ? 'bottom-0' : 'top-0'}`}
+                      className={`absolute z-30 ${tip.flipX ? 'right-full mr-2' : 'left-full ml-2'} hidden md:block pointer-events-none overflow-y-auto ${tip.flip ? 'bottom-0' : 'top-0'}`}
                       style={{ maxHeight: tip.maxH }}
                     >
                       <ItemTooltip
@@ -406,7 +417,7 @@ export function InventoryScreen() {
                       </div>
                       {hoverIdx === idx && !isDragging && (
                         <div
-                          className={`absolute z-30 left-full ml-2 hidden md:block pointer-events-none overflow-y-auto ${tip.flip ? 'bottom-0' : 'top-0'}`}
+                          className={`absolute z-30 ${tip.flipX ? 'right-full mr-2' : 'left-full ml-2'} hidden md:block pointer-events-none overflow-y-auto ${tip.flip ? 'bottom-0' : 'top-0'}`}
                           style={{ maxHeight: tip.maxH }}
                         >
                           <ItemTooltip
