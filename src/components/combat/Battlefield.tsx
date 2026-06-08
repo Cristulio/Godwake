@@ -52,6 +52,58 @@ interface BattlefieldProps {
   decoration?: BattlefieldDecoration;
 }
 
+/**
+ * The battlefield is a fixed 824px board: the hero stands at the left, the
+ * enemy row anchors to the right. With a summoner spawning adds, the living
+ * combatants plus lingering corpses overrun the row and pile onto the hero.
+ *
+ * Corpses are expendable. We always lay out every LIVING monster and backfill
+ * the remaining slots with the freshest corpses, dropping the oldest ones from
+ * the layout — a display cull only; combat state is untouched, the surplus
+ * SLAIN sprite simply vanishes. If the living alone would still overflow, the
+ * spacing tightens and the sprites shrink so the row stays within its bounds
+ * and never crosses into the hero's space.
+ */
+const FIELD_WIDTH = 824;
+const ROW_RIGHT = 40; // rightmost slot's offset from the board's right edge
+const SLOT_WIDTH = 96; // nominal per-sprite footprint
+const DEFAULT_PITCH = 116; // centre-to-centre spacing at full size
+const PLAYER_ZONE = 152; // monsters must stay right of this (hero slot + gap)
+const ROW_SPAN = FIELD_WIDTH - ROW_RIGHT - PLAYER_ZONE;
+
+interface MonsterSlot {
+  combatant: MonsterCombatant;
+  right: number;
+  scale: number;
+}
+
+function layoutMonsterSprites(monsters: MonsterCombatant[]): MonsterSlot[] {
+  const living = monsters.filter((c) => c.instance.hp.current > 0);
+  const corpses = monsters.filter((c) => c.instance.hp.current <= 0);
+
+  const fitAtFullSize = Math.floor((ROW_SPAN - SLOT_WIDTH) / DEFAULT_PITCH) + 1;
+  const corpseBudget = Math.max(0, fitAtFullSize - living.length);
+  // Keep the freshest corpses (tail of the spawn-ordered list); cull the oldest.
+  const keptCorpses = new Set(corpses.slice(corpses.length - corpseBudget));
+
+  // Preserve spawn order so survivors keep their place as the field thins.
+  const shown = monsters.filter((c) => c.instance.hp.current > 0 || keptCorpses.has(c));
+
+  const n = shown.length;
+  let pitch = DEFAULT_PITCH;
+  let scale = 1;
+  if (n > fitAtFullSize && n > 1) {
+    pitch = (ROW_SPAN - SLOT_WIDTH) / (n - 1);
+    if (pitch < SLOT_WIDTH) scale = pitch / SLOT_WIDTH;
+  }
+
+  return shown.map((combatant, idx) => ({
+    combatant,
+    right: ROW_RIGHT + idx * pitch,
+    scale,
+  }));
+}
+
 const BG_BY_SCENE: Record<'combat' | 'boss', string> = {
   combat:
     '[background:radial-gradient(ellipse_at_72%_22%,rgba(244,167,66,0.14),transparent_50%),radial-gradient(ellipse_at_28%_88%,rgba(31,58,61,0.22),transparent_55%),radial-gradient(ellipse_at_50%_55%,rgba(107,74,46,0.15),transparent_60%),linear-gradient(to_bottom,#12100c_0%,#1a1410_45%,#0e0a08_100%)]',
@@ -118,14 +170,14 @@ export function Battlefield({
           />
         </div>
 
-        {/* Enemies anchored to the right, evenly spaced — slot index drives
-            position so dead enemies keep their place. */}
-        {monsterCombatants.map((c, idx) => (
+        {/* Enemies anchored to the right. The layout culls surplus corpses and
+            compresses spacing so a crowded field never bleeds onto the hero. */}
+        {layoutMonsterSprites(monsterCombatants).map(({ combatant: c, right, scale }) => (
           <div
             key={c.id}
             data-tutorial="targets"
             className="absolute bottom-8 w-[96px] flex justify-center"
-            style={{ right: `${40 + idx * 116}px` }}
+            style={{ right: `${right}px` }}
           >
             <BattlefieldSprite
               kind="monster"
@@ -138,6 +190,7 @@ export function Battlefield({
               lastAttack={state.lastAttack}
               wardLabel={gateWardLabel(state, c.instance)}
               phaseLabel={phaseLabel(c.instance)}
+              scale={scale}
             />
           </div>
         ))}
