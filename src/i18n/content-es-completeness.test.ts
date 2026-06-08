@@ -239,7 +239,14 @@ describe('es/items.json rolled-loot completeness', () => {
 
 describe('es/legendaries.json + es/relicSlots.json completeness', () => {
   // BG2-canonical proper nouns kept verbatim in both locales (no `name` overlay).
-  const PROPER_NOUN_RELICS = new Set(['crom-faeyr', 'robe-of-vecna', 'ring-of-gaxx', 'carsomyr']);
+  const PROPER_NOUN_RELICS = new Set([
+    'crom-faeyr',
+    'robe-of-vecna',
+    'ring-of-gaxx',
+    'carsomyr',
+    'blackrazor',
+    'staff-of-the-magi',
+  ]);
 
   it('every relic has a Spanish flavor + effect (and a name unless a proper noun)', () => {
     const missing: string[] = [];
