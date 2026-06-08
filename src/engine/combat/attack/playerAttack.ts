@@ -15,6 +15,7 @@ import {
   effectiveAbilityScores,
   characterHasMechanic,
   isRaging,
+  ragedHealAmount,
   proficiencyBonus,
 } from '../../character/derived';
 import { rageDamageBonus } from '../../character/actions';
@@ -770,13 +771,12 @@ export function playerAttack(
 
     // Lifesteal (Vampiric weapon affix, Leeching accessory, Heartwood Talisman
     // legendary, etc.): heal for a fraction of the damage dealt, capped at max
-    // HP. Rage shuts the valve — no healing of any kind while the fury burns.
-    if (
-      affixMods.lifestealPct > 0 &&
-      !isRaging(nextCharacter) &&
-      nextCharacter.hp.current < nextCharacter.hp.max
-    ) {
-      const healed = Math.floor((totalDamage * affixMods.lifestealPct) / 100);
+    // HP. Rage halves the drink (rounded up), it no longer shuts it off.
+    if (affixMods.lifestealPct > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
+      const healed = ragedHealAmount(
+        nextCharacter,
+        Math.floor((totalDamage * affixMods.lifestealPct) / 100),
+      );
       if (healed > 0) {
         const before = nextCharacter.hp.current;
         const after = Math.min(nextCharacter.hp.max, before + healed);
@@ -791,8 +791,8 @@ export function playerAttack(
 
     // "of Mending" weapon affix: on every hit, refresh the regen clock to 3
     // turns. The actual healing ticks in turn.ts at the start of the player's
-    // turn. Rage suppresses regen (consistent with lifesteal).
-    if (affixMods.regenPerTurn > 0 && !isRaging(nextCharacter)) {
+    // turn (Rage halves the tick there, it no longer suppresses the clock).
+    if (affixMods.regenPerTurn > 0) {
       nextState = { ...nextState, playerRegenStacks: 3 };
       nextState = appendLog(nextState, {
         id: nextLogId(nextState),

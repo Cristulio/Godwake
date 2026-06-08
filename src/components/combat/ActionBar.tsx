@@ -289,8 +289,6 @@ export function ActionBar({
       return false;
     }
     if (item.kind !== 'consumable') return false;
-    // Rage locks out healing — a raging barbarian can't drink a draught.
-    if (raging && item.effect === 'heal') return false;
     return item.actionCost === 'bonus'
       ? !character.actionEconomy.bonusActionUsed
       : !character.actionEconomy.actionUsed;

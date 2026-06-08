@@ -22,7 +22,7 @@ import { refreshMonsterIntents } from './attack/monsterIntent';
 import type { ConditionName } from '../../types/conditions';
 import { characterAffixMods } from '../items/affixMods';
 import { evaluateCombatEnd } from './attack/damage';
-import { isRaging } from '../character/derived';
+import { ragedHealAmount } from '../character/derived';
 import { isRageUnlimited } from '../character/actions';
 import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './martialResource';
 import { regenCunningActionForRound } from './cunningAction';
@@ -297,13 +297,15 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
   }
 
   // Regen (of Mending affix): tick one stack at the start of the player's
-  // turn. Suppressed while raging (consistent with lifesteal).
+  // turn. Rage halves the tick (rounded up), it no longer suppresses it.
   if (
     order[nextIndex] === 'player' &&
-    (nextState.playerRegenStacks ?? 0) > 0 &&
-    !isRaging(nextCharacter)
+    (nextState.playerRegenStacks ?? 0) > 0
   ) {
-    const regenAmount = characterAffixMods(nextCharacter).regenPerTurn;
+    const regenAmount = ragedHealAmount(
+      nextCharacter,
+      characterAffixMods(nextCharacter).regenPerTurn,
+    );
     if (regenAmount > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
       const before = nextCharacter.hp.current;
       const after = Math.min(nextCharacter.hp.max, before + regenAmount);
@@ -350,16 +352,14 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
 
   // Potion of Vitality (regen draught): knit the banked amount at the start of
   // the player's turn for as many ticks as the drink granted, then expire. Runs
-  // alongside Mending and Regrowth without touching their counters. Suppressed
-  // while raging — Rage is the no-heal tradeoff (consistent with Mending and
-  // lifesteal) — and the ticks PAUSE rather than burn there, so they resume once
-  // the fury passes. A tick at full HP still counts down (runs on schedule).
+  // alongside Mending and Regrowth without touching their counters. Rage halves
+  // each tick (rounded up) rather than suppressing it. A tick at full HP still
+  // counts down (runs on schedule).
   if (
     order[nextIndex] === 'player' &&
-    (nextCharacter.resources.vitalityRegenTurnsRemaining ?? 0) > 0 &&
-    !isRaging(nextCharacter)
+    (nextCharacter.resources.vitalityRegenTurnsRemaining ?? 0) > 0
   ) {
-    const heal = nextCharacter.resources.vitalityRegenHealPerTurn ?? 0;
+    const heal = ragedHealAmount(nextCharacter, nextCharacter.resources.vitalityRegenHealPerTurn ?? 0);
     const remaining = (nextCharacter.resources.vitalityRegenTurnsRemaining ?? 0) - 1;
     if (heal > 0 && nextCharacter.hp.current > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
       const before = nextCharacter.hp.current;

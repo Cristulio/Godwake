@@ -477,9 +477,10 @@ export function chooseCombatAction(
       return { kind: 'wild-shape' };
     }
 
-    // Emergency potion (bonus action) for anyone genuinely low. Rage locks out
-    // healing, so a raging barbarian can't reach for it — keep swinging instead.
-    if (hpPct <= profile.emergencyHp && !isRaging(character)) {
+    // Emergency potion (bonus action) for anyone genuinely low. Rage now only
+    // HALVES the draught rather than locking it out, so a low raging barbarian
+    // still reaches for it — a half heal beats none.
+    if (hpPct <= profile.emergencyHp) {
       const healIdx = bestHealPotionIdx(character);
       if (healIdx >= 0) return { kind: 'item', inventoryIndex: healIdx };
     }

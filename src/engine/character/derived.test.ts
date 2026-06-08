@@ -5,8 +5,10 @@ import {
   effectiveAbilityScores,
   modifierFor,
   proficiencyBonus,
+  ragedHealAmount,
 } from './derived';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
+import type { Character } from '../../types/character';
 
 describe('proficiencyBonus', () => {
   it('is +2 at levels 1-4', () => {
@@ -27,6 +29,41 @@ describe('proficiencyBonus', () => {
     expect(proficiencyBonus(16)).toBe(5);
     expect(proficiencyBonus(17)).toBe(6);
     expect(proficiencyBonus(20)).toBe(6);
+  });
+});
+
+describe('ragedHealAmount — Rage halves healing (rounded up), never negates it', () => {
+  const base = createCharacter({
+    id: 'rage-heal',
+    name: 'Cali',
+    raceId: 'human',
+    classId: 'barbarian',
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[0],
+      dex: STANDARD_ARRAY[2],
+      con: STANDARD_ARRAY[1],
+      int: STANDARD_ARRAY[5],
+      wis: STANDARD_ARRAY[3],
+      cha: STANDARD_ARRAY[4],
+    },
+    skillProficiencies: ['athletics', 'intimidation'],
+  });
+  const raging: Character = { ...base, resources: { ...base.resources, rageRoundsRemaining: 3 } };
+
+  it('passes the full amount through when not raging', () => {
+    expect(ragedHealAmount(base, 10)).toBe(10);
+    expect(ragedHealAmount(base, 7)).toBe(7);
+  });
+
+  it('halves and rounds UP while raging, and never drops a real heal to 0', () => {
+    expect(ragedHealAmount(raging, 10)).toBe(5);
+    expect(ragedHealAmount(raging, 7)).toBe(4); // ceil(3.5)
+    expect(ragedHealAmount(raging, 1)).toBe(1); // a 1-point heal still restores 1
+  });
+
+  it('leaves zero/negative amounts untouched (no spurious heal)', () => {
+    expect(ragedHealAmount(raging, 0)).toBe(0);
+    expect(ragedHealAmount(base, 0)).toBe(0);
   });
 });
 

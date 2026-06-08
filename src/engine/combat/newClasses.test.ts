@@ -114,37 +114,41 @@ describe('Barbarian — Rage', () => {
     expect(observed).toBe(true);
   });
 
-  it("can't drink a healing potion while raging — the draught is kept, not spent", () => {
-    const roller = createDiceRoller(1);
+  it('drinks a healing potion while raging — heal HALVED (rounded up), potion spent', () => {
     const barb = makeBarbarian({
       inventory: [{ itemId: 'greataxe' }, { itemId: 'potion-of-healing' }],
     });
-    const init = createCombat({ roller, character: barb, monsters: [{ def: getMonster('goblin') }] });
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: barb,
+      monsters: [{ def: getMonster('goblin') }],
+    });
     const potionIdx = init.character.inventory.findIndex((r) => r.itemId === 'potion-of-healing');
     const hurt: Character = {
       ...init.character,
       hp: { current: 5, max: init.character.hp.max, temp: 0 },
     };
-
-    // Raging: the heal is a true no-op — HP untouched, potion still in the bag,
-    // no action spent (engine returns the same references for a no-op).
     const raging: Character = {
       ...hurt,
       resources: { ...hurt.resources, rageRoundsRemaining: 5 },
     };
-    const blocked = useConsumable({ roller, character: raging, state: init.state }, potionIdx);
-    expect(blocked.character).toBe(raging);
-    expect(blocked.state).toBe(init.state);
-    expect(blocked.character.hp.current).toBe(5);
-    expect(
-      blocked.character.inventory.filter((r) => r.itemId === 'potion-of-healing'),
-    ).toHaveLength(1);
 
-    // Control: the same potion, not raging, heals and is consumed.
-    const calm = useConsumable({ roller, character: hurt, state: init.state }, potionIdx);
-    expect(calm.character.hp.current).toBeGreaterThan(5);
+    // Fresh roller with the SAME seed for each drink so the underlying heal ROLL
+    // is identical — the only difference is Rage's halving.
+    const calm = useConsumable({ roller: createDiceRoller(7), character: hurt, state: init.state }, potionIdx);
+    const rageDrink = useConsumable(
+      { roller: createDiceRoller(7), character: raging, state: init.state },
+      potionIdx,
+    );
+
+    const calmHealed = calm.character.hp.current - 5;
+    const rageHealed = rageDrink.character.hp.current - 5;
+    expect(calmHealed).toBeGreaterThan(0);
+    // Rage halves the draught (rounded up) — it no longer locks it out.
+    expect(rageHealed).toBe(Math.ceil(calmHealed / 2));
+    // The potion is SPENT while raging now (not kept in the bag).
     expect(
-      calm.character.inventory.filter((r) => r.itemId === 'potion-of-healing'),
+      rageDrink.character.inventory.filter((r) => r.itemId === 'potion-of-healing'),
     ).toHaveLength(0);
   });
 

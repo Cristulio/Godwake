@@ -157,6 +157,16 @@ export function isRaging(character: Character): boolean {
 }
 
 /**
+ * Rage's healing tradeoff: while raging, every heal that lands — potion, lifesteal,
+ * regen — is HALVED (rounded up), not negated. Apply to the final heal amount right
+ * before it touches HP. A 1-point heal still restores 1. Not raging: unchanged.
+ */
+export function ragedHealAmount(character: Character, amount: number): number {
+  if (amount <= 0) return amount;
+  return isRaging(character) ? Math.ceil(amount / 2) : amount;
+}
+
+/**
  * Classes that cast off the shared full-caster spell engine — the same slot
  * ladder, prepared/known kit, and DC/attack scaling. The Wizard casts on
  * Intelligence; the Druid on Wisdom (see {@link spellcastingAbility}).

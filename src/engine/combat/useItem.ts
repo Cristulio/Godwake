@@ -2,7 +2,7 @@ import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { getItem } from '../../content/items';
-import { isRaging } from '../character/derived';
+import { ragedHealAmount } from '../character/derived';
 import {
   combatResult,
   patchActionEconomy,
@@ -35,13 +35,6 @@ export function useConsumable(
   const item = getItem(ref.itemId);
   if (item.kind !== 'consumable') return combatResult(state, nextCharacter);
 
-  // Rage's tradeoff: no safety net. A raging barbarian can't drink a healing
-  // draught — the fury locks out recovery until it passes. No-op (the potion is
-  // kept, not wasted) so the gate reads as "can't", not "lost it".
-  if (item.effect === 'heal' && isRaging(nextCharacter)) {
-    return combatResult(state, nextCharacter);
-  }
-
   // Action economy check
   if (item.actionCost === 'action' && nextCharacter.actionEconomy.actionUsed) {
     return combatResult(state, nextCharacter);
@@ -55,8 +48,10 @@ export function useConsumable(
 
   if (item.effect === 'heal' && item.healDice) {
     const heal = roller.roll(item.healDice);
+    // Rage halves what a draught restores (rounded up), it no longer locks it out.
+    const restored = ragedHealAmount(nextCharacter, heal.total);
     const before = nextCharacter.hp.current;
-    const after = Math.min(nextCharacter.hp.max, before + heal.total);
+    const after = Math.min(nextCharacter.hp.max, before + restored);
     const actuallyHealed = after - before;
     nextCharacter = patchHp(nextCharacter, { current: after });
     logText += t('combat.log.useItemHeal', {
