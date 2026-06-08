@@ -106,7 +106,11 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   // never meta-persisted — see engine/items/drops.maxRolledRarityForChapter.)
   'boss-intel': { chaptersCleared: 1 },
   legendaries: { chaptersCleared: 5 },
-  sets: { chaptersCleared: 14 }, // the whole chain felled (Melissan) — game completion
+  // Persistent SET gear (content/sets.ts) — a deeper-run reward than the boon
+  // relics, but still reachable within the first chain so the starter sets can
+  // drop before game completion. The Ascension-exclusive sets gate themselves on
+  // NG+ via the drop pool, not this feature flag.
+  sets: { chaptersCleared: 8 },
   // Deeper Grove tiers — a mastery reward, gated on Renown laid down at the Grove.
   'grove-deep': { renownSpent: 700 },
 };

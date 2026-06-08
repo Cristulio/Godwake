@@ -58,10 +58,10 @@ describe('legendary drop banks, does not equip mid-run', () => {
       if (!id) break;
       banked.push(id);
     }
-    // The whole base pool is reachable regardless of class — Fighter-bound relics
-    // included (they're stashed until the player runs a Fighter). The apex
-    // ascendant tier is excluded here (Asc 0): allowAscendant === false.
-    expect(banked).toContain('warsong-gauntlet');
+    // The whole base pool is reachable regardless of class (legendaries are
+    // boon-only now — no class gate). The apex ascendant tier is excluded here
+    // (Asc 0): allowAscendant === false.
+    expect(banked).toContain('heartwood-talisman');
     expect(banked).toHaveLength(legendaryBankPool(false).length);
   });
 
@@ -108,7 +108,7 @@ describe('shop reliquary: bought legendary banks and leaves stock', () => {
   });
 
   it('never offers an already-owned relic (so a bought relic leaves stock)', () => {
-    const owned = ['bulwark-sigil', 'vigil-helm', 'heartwood-talisman'];
+    const owned = ['bulwark-sigil', 'cloak-of-the-nightwind', 'heartwood-talisman'];
     for (let i = 0; i < 80; i++) {
       const offer = rollLegendaryOffer(`seed-${i}`, 3, 'fighter', owned);
       if (offer) expect(owned).not.toContain(offer.legendaryId);

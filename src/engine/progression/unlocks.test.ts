@@ -47,12 +47,12 @@ describe('UNLOCKS registry', () => {
     // Elites are always available now — `delveCount: 0` is the always-unlocked,
     // never-reveal sentinel (the onboarding gate is disabled, not removed).
     expect(UNLOCKS['elite-nodes'].delveCount).toBe(0);
-    // Power: earned by clearing deeper chapters; legendaries @5, sets @14. (Rolled
+    // Power: earned by clearing deeper chapters; legendaries @5, set gear @8. (Rolled
     // gear RARITY is no longer a ladder feature — it is gated by the run's current
     // chapter, see engine/items/drops.maxRolledRarityForChapter.)
     expect(UNLOCKS['boss-intel'].chaptersCleared).toBe(1);
     expect(UNLOCKS.legendaries.chaptersCleared).toBe(5);
-    expect(UNLOCKS.sets.chaptersCleared).toBe(14);
+    expect(UNLOCKS.sets.chaptersCleared).toBe(8);
     // Power features carry no delve gate now — depth is the only way in.
     expect(UNLOCKS.legendaries.delveCount).toBeUndefined();
     expect(UNLOCKS.sets.delveCount).toBeUndefined();
@@ -75,7 +75,7 @@ describe('isFeatureUnlocked', () => {
     const meta = mkMeta({ delveCount: 0, chaptersCleared: 5 });
     expect(isFeatureUnlocked('boss-intel', meta)).toBe(true); // @1
     expect(isFeatureUnlocked('legendaries', meta)).toBe(true); // @5
-    expect(isFeatureUnlocked('sets', meta)).toBe(false); // @14 (completion)
+    expect(isFeatureUnlocked('sets', meta)).toBe(false); // @8 (deeper run)
   });
 
   it('a brand-new soul (delve 0, no clears) has none of the gated features except always-on elites', () => {
@@ -135,7 +135,7 @@ describe('newlyUnlockedByChapter (progression axis)', () => {
     expect(newlyUnlockedByChapter(0, 1)).toEqual(['boss-intel']);
     expect(newlyUnlockedByChapter(2, 3)).toEqual([]); // gear rarity is no longer a ladder reveal
     expect(newlyUnlockedByChapter(4, 5)).toEqual(['legendaries']); // legendaries @5
-    expect(newlyUnlockedByChapter(13, 14)).toEqual(['sets']);
+    expect(newlyUnlockedByChapter(7, 8)).toEqual(['sets']); // set gear @8
   });
 
   it('returns every chapter threshold crossed in a multi-chapter jump, in ladder order', () => {

@@ -7,6 +7,9 @@ export const GEAR_RARITY_COLOR: Record<GearRarity, string> = {
   blue: 'var(--color-status-frost)',
   purple: 'var(--color-status-necrotic)',
   legendary: 'var(--color-accent-gold)',
+  // Distinct emerald frame for persistent SET gear — set apart from the rolled
+  // `green` (uncommon) so the two never read alike.
+  set: '#0fa968',
 };
 
 export const GEAR_RARITY_LABEL: Record<GearRarity, string> = {
@@ -15,6 +18,7 @@ export const GEAR_RARITY_LABEL: Record<GearRarity, string> = {
   blue: 'Rare',
   purple: 'Epic',
   legendary: 'Legendary',
+  set: 'Set',
 };
 
 /** The gear rarity of a carried item ref, defaulting to white for plain bases. */

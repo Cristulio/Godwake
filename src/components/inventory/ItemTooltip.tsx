@@ -1,6 +1,7 @@
 import type { Item, RolledItem } from '../../schemas/item';
 import type { Rarity } from '../../schemas/ids';
 import { getAffix } from '../../content/items';
+import { getSetPiece, getGearSet } from '../../content/sets';
 import { weaponStatRequirement } from '../../engine/character/equip';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from './rarity';
 import { useT } from '../../i18n/useT';
@@ -61,6 +62,21 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
       <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] font-mono">
         {renderStats(item, t, rolledCost, rolled)}
       </div>
+
+      {isRolled && rolled.rarity === 'set' && (() => {
+        const piece = getSetPiece(item.id);
+        if (!piece) return null;
+        return (
+          <div className="mt-2 pt-2 border-t border-[var(--color-border-dim)] space-y-0.5">
+            <div className="text-[10px] leading-snug" style={{ color: GEAR_RARITY_COLOR.set }}>
+              ◆ {tc('setGear', item.id, 'effect', piece.effectLine)}
+            </div>
+            <div className="text-[9px] uppercase tracking-widest" style={{ color: GEAR_RARITY_COLOR.set }}>
+              {tc('setGear', piece.setId, 'name', getGearSet(piece.setId)?.name ?? '')}
+            </div>
+          </div>
+        );
+      })()}
 
       {isRolled && rolled.affixes.length > 0 && (
         <div className="mt-2 pt-2 border-t border-[var(--color-border-dim)] space-y-0.5">

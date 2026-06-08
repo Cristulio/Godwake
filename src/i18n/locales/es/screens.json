@@ -235,7 +235,8 @@
     "legendaryBanked": "Reliquia legendaria guardada — sintonízala en el refugio",
     "acceptLevelUp": "Aceptar · Subir de nivel →",
     "accept": "Aceptar →",
-    "openPack": "◆ Abrir la mochila"
+    "openPack": "◆ Abrir la mochila",
+    "setPieceBanked": "Equipo de Conjunto guardado en el alma"
   },
   "unlockTutorial": {
     "eyebrow": "◆ Nuevo — Desbloqueado",

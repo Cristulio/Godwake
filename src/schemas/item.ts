@@ -146,9 +146,12 @@ export type Item = z.infer<typeof ItemSchema>;
 /**
  * Loot rarity, by colour. Affix count climbs with rarity: white = the starting
  * kit (0 affixes), green = 1, blue = 2, purple = 3-4, legendary = unique +
- * persists (Wave 2 — the existing #175 relic system, not rolled here).
+ * persists (Wave 2 — the existing #175 relic system, not rolled here). `set` is
+ * the persistent SET-gear tier (content/sets.ts): an emerald-framed slot item,
+ * stronger than purple, banked cross-run — never ROLLED here, it's stamped onto a
+ * materialised set piece (engine/items/setGear.ts).
  */
-export const GearRaritySchema = z.enum(['white', 'green', 'blue', 'purple', 'legendary']);
+export const GearRaritySchema = z.enum(['white', 'green', 'blue', 'purple', 'legendary', 'set']);
 export type GearRarity = z.infer<typeof GearRaritySchema>;
 
 /**

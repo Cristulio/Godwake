@@ -126,20 +126,20 @@ describe('legendaries survive a character swap (account-level, soul-carried)', (
     expect(after.legendaryEffects).toHaveLength(2);
   });
 
-  it('drops a class-bound relic the new class cannot seat on swap', () => {
+  it('drops a class-bound SET piece the new class cannot equip on swap', () => {
     useCharacterStore.setState({ character: makeFighter({ renown: 1000 }) });
-    useMetaStore.setState({ ownedLegendaries: ['warsong-gauntlet', 'bulwark-sigil'] });
+    useMetaStore.setState({ ownedSetPieces: ['warsong-gauntlet', 'vigil-heart'] });
     const meta0 = useMetaStore.getState();
-    meta0.equipRelic('warsong-gauntlet'); // Cascade (Fighter-bound)
-    meta0.equipRelic('bulwark-sigil'); // Aegis (agnostic)
-    expect(useMetaStore.getState().equippedRelics.cascade).toBe('warsong-gauntlet');
+    meta0.equipSetPiece('warsong-gauntlet'); // belt (Fighter-bound)
+    meta0.equipSetPiece('vigil-heart'); // ring (universal)
+    expect(useMetaStore.getState().equippedSetPieces.belt).toBe('warsong-gauntlet');
 
     useGameStore.getState().selectCharacter('wizard');
 
-    // The Fighter-bound Warsong gauntlet falls out of its slot; the agnostic relic stays.
+    // The Fighter-bound Warsong gauntlet falls out of its slot; the universal piece stays.
     const meta = useMetaStore.getState();
-    expect(meta.equippedRelics).toEqual({ aegis: 'bulwark-sigil' });
-    expect(meta.ownedLegendaries).toContain('warsong-gauntlet'); // still owned, just stashed
+    expect(meta.equippedSetPieces).toEqual({ ring1: 'vigil-heart' });
+    expect(meta.ownedSetPieces).toContain('warsong-gauntlet'); // still owned, just stashed
   });
 });
 

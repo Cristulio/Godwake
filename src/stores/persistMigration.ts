@@ -91,8 +91,14 @@ import type { RelicSlot } from '../content/legendaries';
  *             `level-up` screens are no longer coerced to `hub` on save. All new
  *             fields are additive/optional — a veteran's hub save (none of them
  *             present) loads to the hub with no active run, roller from saveSeed.
+ *  v19 → v20: Persistent SET gear (content/sets.ts). The 10 relic-sets were
+ *             CONVERTED into equippable slot gear: `ownedSetPieces` (banked piece
+ *             ids) + `equippedSetPieces` (a per-equip-slot map) join the snapshot,
+ *             both default []/{}. Legendaries became boon-only (the set concept
+ *             moved to slot gear) — owned legendary ids are unchanged. No
+ *             back-port (saves disposable in dev): the soul re-earns set pieces.
  */
-export const SAVE_VERSION = 19;
+export const SAVE_VERSION = 20;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -264,6 +270,8 @@ export interface MigratedSnapshot {
   knownNpcs: string[];
   ownedLegendaries: string[];
   equippedRelics: Partial<Record<RelicSlot, string>>;
+  ownedSetPieces: string[];
+  equippedSetPieces: Partial<Record<string, string>>;
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
@@ -392,6 +400,19 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
     Array.isArray(state.equippedRelics)
   ) {
     state.equippedRelics = {};
+  }
+
+  // v19 → v20: persistent SET gear. Old saves own no pieces and have an empty
+  // loadout; a present, well-shaped value is preserved.
+  if (!Array.isArray(state.ownedSetPieces)) {
+    state.ownedSetPieces = [];
+  }
+  if (
+    !state.equippedSetPieces ||
+    typeof state.equippedSetPieces !== 'object' ||
+    Array.isArray(state.equippedSetPieces)
+  ) {
+    state.equippedSetPieces = {};
   }
 
   // v9 → v10: per-soul seen-once dialogue beat tracking.

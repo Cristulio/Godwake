@@ -1,0 +1,89 @@
+{
+  "vigil": { "name": "Égida de la Vigilia", "flavor": "Pertrechos de guardia de los centinelas que nunca cedieron en la muralla." },
+  "vigil.bonus": {
+    "2": "2 piezas: +4 PG temporales por combate",
+    "3": "3 piezas: cúrate el 5% del daño que inflijas"
+  },
+  "vigil-helm": { "name": "Yelmo de la Vigilia", "effect": "Gana 4 PG temporales al inicio de cada combate" },
+  "vigil-mantle": { "name": "Manto de la Vigilia", "effect": "Gana 4 PG temporales al inicio de cada combate" },
+  "vigil-heart": { "name": "Corazón de la Vigilia", "effect": "Cúrate el 5% del daño que inflijas" },
+
+  "warsong": { "name": "Panoplia del Canto de Guerra", "flavor": "Las galas de un caudillo, forjadas para quienes encabezan la carga." },
+  "warsong.bonus": {
+    "2": "2 piezas: los críticos aciertan con 19-20, +2 de daño de seguimiento"
+  },
+  "warsong-gauntlet": { "name": "Guantelete del Canto de Guerra", "effect": "+3 de daño en cada golpe de seguimiento" },
+  "warsong-crest": { "name": "Cimera del Canto de Guerra", "effect": "Tus golpes desgarran con +3 de daño por sangrado" },
+
+  "ironclad": { "name": "Voto Acorazado", "flavor": "Las galas de un capitán de línea que nunca cedió terreno, jurado de nuevo a través de la rueda." },
+  "ironclad.bonus": {
+    "2": "2 piezas: +4 de daño en cada golpe de seguimiento",
+    "3": "3 piezas: +8 PG temporales por combate, y los críticos aciertan con 19–20"
+  },
+  "ironclad-banner": { "name": "Estandarte Acorazado", "effect": "+2 de daño en cada golpe de seguimiento" },
+  "ironclad-greaves": { "name": "Grebas Acorazadas", "effect": "Gana 6 PG temporales al inicio de cada combate" },
+  "ironclad-helm": { "name": "Yelmo Acorazado", "effect": "Los críticos aciertan con 19–20" },
+
+  "bloodrage": { "name": "Pieles de Furia Sangrienta", "flavor": "Los trofeos de un alma que aprendió a llevar su furia de vuelta a través de cada muerte." },
+  "bloodrage.bonus": {
+    "2": "2 piezas: +4 de daño cuerpo a cuerpo mientras arde la Furia",
+    "3": "3 piezas: +5 de daño por sangrado, y los críticos aciertan con 19–20"
+  },
+  "bloodrage-fang": { "name": "Colmillo de Furia", "effect": "Tus golpes desgarran con +3 de daño por sangrado" },
+  "bloodrage-pelt": { "name": "Piel de Furia", "effect": "+3 de daño cuerpo a cuerpo mientras arde la Furia" },
+  "bloodrage-totem": { "name": "Tótem de Furia", "effect": "Gana 6 PG temporales al inicio de cada combate" },
+
+  "wildstalker": { "name": "Atavío del Acechador Salvaje", "flavor": "El equipo de un cazador, llevado tanto tiempo a través de tantas vidas que la presa olvida que puede ser vista." },
+  "wildstalker.bonus": {
+    "2": "2 piezas: +5 de daño contra tu objetivo de Marca del Cazador",
+    "3": "3 piezas: cúrate el 6% del daño que inflijas"
+  },
+  "wildstalker-pelt": { "name": "Piel del Acechador", "effect": "Cúrate el 5% del daño que inflijas" },
+  "wildstalker-cowl": { "name": "Capucha del Acechador", "effect": "+3 de daño contra tu objetivo de Marca del Cazador" },
+  "wildstalker-quiver": { "name": "Carcaj del Acechador", "effect": "Los críticos aciertan con 19–20" },
+
+  "archmagi": { "name": "Vestiduras del Archimago", "flavor": "La panoplia completa de un mago que sobrevivió a los conjuros que debieron acabar con él." },
+  "archmagi.bonus": {
+    "2": "2 piezas: +4 de daño de conjuro y +1 al ataque de conjuro",
+    "3": "3 piezas: +1 a la CD de salvación de conjuros y +1 espacio de conjuro de nivel 1"
+  },
+  "archmagi-vestments": { "name": "Vestiduras del Archimago", "effect": "+3 de daño de conjuro" },
+  "archmagi-amulet": { "name": "Amuleto del Archimago", "effect": "+1 a las tiradas de ataque de conjuro" },
+  "archmagi-orb": { "name": "Orbe del Archimago", "effect": "+1 a la CD de salvación de conjuros" },
+
+  "greenwarden": { "name": "Manto del Guardaverde", "flavor": "Equipo viviente cultivado para un guardián de lo salvaje que cura sus propias heridas como las del bosque." },
+  "greenwarden.bonus": {
+    "2": "2 piezas: regenera 3 PG por turno",
+    "3": "3 piezas: +4 de daño de conjuro y cúrate el 5% del daño que inflijas"
+  },
+  "greenwarden-mantle": { "name": "Manto del Guardaverde", "effect": "Regenera 2 PG al inicio de cada turno" },
+  "greenwarden-circlet": { "name": "Diadema del Guardaverde", "effect": "+3 de daño de conjuro" },
+  "greenwarden-seed": { "name": "Semilla del Guardaverde", "effect": "Cúrate el 5% del daño que inflijas" },
+
+  "shadowdancer": { "name": "Conjunto del Danzasombras", "flavor": "El equipo de oscuridad tejida de un asesino que cruza entre vidas como cruza entre sombras." },
+  "shadowdancer.bonus": {
+    "2": "2 piezas: +5 de daño en el golpe que dispara el Ataque Furtivo",
+    "3": "3 piezas: los críticos aciertan con 19–20, y cúrate el 5% del daño que inflijas"
+  },
+  "shadowdancer-blade": { "name": "Hoja del Danzasombras", "effect": "Los críticos aciertan con 19–20" },
+  "shadowdancer-cloak": { "name": "Capa del Danzasombras", "effect": "Cúrate el 5% del daño que inflijas" },
+  "shadowdancer-cowl": { "name": "Capucha del Danzasombras", "effect": "+3 de daño en el golpe que dispara el Ataque Furtivo" },
+
+  "revenant": { "name": "Resolución del Renacido", "flavor": "Equipo de tumba que solo responde a un alma que la rueda ya ha traído de vuelta de la muerte." },
+  "revenant.bonus": {
+    "2": "2 piezas: +8 PG temporales por combate",
+    "3": "3 piezas: regenera 3 PG por turno, y cúrate el 5% del daño que inflijas"
+  },
+  "revenant-heart": { "name": "Corazón del Renacido", "effect": "Gana 6 PG temporales al inicio de cada combate" },
+  "revenant-shroud": { "name": "Sudario del Renacido", "effect": "Regenera 2 PG al inicio de cada turno" },
+  "revenant-chain": { "name": "Cadena del Renacido", "effect": "Cúrate el 5% del daño que inflijas" },
+
+  "conqueror": { "name": "Estela del Conquistador", "flavor": "Forjado con el botín de cadenas vencidas, para el alma que toma terreno y lo retiene." },
+  "conqueror.bonus": {
+    "2": "2 piezas: +5 de daño por sangrado",
+    "3": "3 piezas: los críticos aciertan con 19–20, y cúrate el 6% del daño que inflijas"
+  },
+  "conqueror-crown": { "name": "Corona del Conquistador", "effect": "Tus golpes desgarran con +4 de daño por sangrado" },
+  "conqueror-gauntlet": { "name": "Guantelete del Conquistador", "effect": "Los críticos aciertan con 19–20" },
+  "conqueror-sigil": { "name": "Sello del Conquistador", "effect": "Cúrate el 5% del daño que inflijas" }
+}

@@ -86,6 +86,9 @@ const AFFIX_COUNT: Record<GearRarity, number> = {
   blue: 2,
   purple: 3,
   legendary: 4,
+  // Set pieces carry their effect via the baked set-effect layer, not rolled
+  // affixes (engine/items/setGear.ts); never rolled through here.
+  set: 0,
 };
 
 /** Gold premium multiplier by rarity — drives the shop price (the gold sink). */
@@ -95,6 +98,7 @@ const RARITY_PRICE_MULT: Record<GearRarity, number> = {
   blue: 2.1,
   purple: 3.2,
   legendary: 6,
+  set: 6,
 };
 
 export interface RollItemOptions {

@@ -1,10 +1,22 @@
 {
-  "longsword": { "name": "Espada Larga" },
-  "dagger": { "name": "Daga" },
-  "shortbow": { "name": "Arco Corto" },
-  "greatsword": { "name": "Mandoble" },
-  "warhammer": { "name": "Martillo de Guerra" },
-  "rapier": { "name": "Estoque" },
+  "longsword": {
+    "name": "Espada Larga"
+  },
+  "dagger": {
+    "name": "Daga"
+  },
+  "shortbow": {
+    "name": "Arco Corto"
+  },
+  "greatsword": {
+    "name": "Mandoble"
+  },
+  "warhammer": {
+    "name": "Martillo de Guerra"
+  },
+  "rapier": {
+    "name": "Estoque"
+  },
   "mace": {
     "name": "Maza",
     "description": "Una cabeza acanalada de hierro fundido sobre un mango corto —sin filo que mellar, solo peso que dejar caer. Golpea por 1d6 contundente, y cala a través de un escudo donde una hoja resbalaría."
@@ -81,25 +93,54 @@
     "name": "Guja del Templo",
     "description": "Un mango de largo alcance con el que se entrenaban los guardianes de la puerta —la distancia plegada en la forma."
   },
-
-  "leather-armor": { "name": "Armadura de Cuero" },
-  "chain-mail": { "name": "Cota de Malla" },
-  "shield": { "name": "Escudo" },
-  "studded-leather": { "name": "Cuero Tachonado" },
-  "half-plate": { "name": "Media Placa" },
-  "padded-armor": { "name": "Armadura Acolchada" },
-  "hide-armor": { "name": "Armadura de Pieles" },
-  "scale-mail": { "name": "Cota de Escamas" },
-  "breastplate": { "name": "Peto" },
-  "ring-mail": { "name": "Cota de Anillas" },
-  "splint-armor": { "name": "Armadura de Bandas" },
-  "plate-armor": { "name": "Armadura de Placas" },
-
-  "apprentice-robe": { "name": "Túnica de Aprendiz" },
-  "silk-robe": { "name": "Túnica de Seda" },
-  "spellweave-robe": { "name": "Túnica de Trama Arcana" },
-  "archmagus-vestments": { "name": "Vestiduras de Archimago" },
-
+  "leather-armor": {
+    "name": "Armadura de Cuero"
+  },
+  "chain-mail": {
+    "name": "Cota de Malla"
+  },
+  "shield": {
+    "name": "Escudo"
+  },
+  "studded-leather": {
+    "name": "Cuero Tachonado"
+  },
+  "half-plate": {
+    "name": "Media Placa"
+  },
+  "padded-armor": {
+    "name": "Armadura Acolchada"
+  },
+  "hide-armor": {
+    "name": "Armadura de Pieles"
+  },
+  "scale-mail": {
+    "name": "Cota de Escamas"
+  },
+  "breastplate": {
+    "name": "Peto"
+  },
+  "ring-mail": {
+    "name": "Cota de Anillas"
+  },
+  "splint-armor": {
+    "name": "Armadura de Bandas"
+  },
+  "plate-armor": {
+    "name": "Armadura de Placas"
+  },
+  "apprentice-robe": {
+    "name": "Túnica de Aprendiz"
+  },
+  "silk-robe": {
+    "name": "Túnica de Seda"
+  },
+  "spellweave-robe": {
+    "name": "Túnica de Trama Arcana"
+  },
+  "archmagus-vestments": {
+    "name": "Vestiduras de Archimago"
+  },
   "potion-of-healing": {
     "name": "Poción de Curación",
     "description": "Un pequeño vial de cristal con líquido rojo dorado. Restaura 2d4+2 puntos de golpe. Huele levemente a canela y hierro. Apurado en un latido —una acción adicional."
@@ -116,48 +157,248 @@
     "name": "Poción de Vitalidad",
     "description": "Un tónico de oro pálido que huele a cobre batido y humo de pipa. Sana despacio —un primer calor tenue al bajar, y luego la sangre sigue cerrándose por su cuenta en los instantes que siguen mientras el brebaje se asienta hondo. Sorbido, no apurado de golpe —una acción adicional."
   },
-
-  "iron-ring": { "name": "Anillo de Hierro" },
-  "silver-ring": { "name": "Anillo de Plata" },
-  "gold-ring": { "name": "Anillo de Oro" },
-  "jade-amulet": { "name": "Amuleto de Jade" },
-  "bone-charm": { "name": "Talismán de Hueso" },
-  "worn-belt": { "name": "Cinturón Gastado" },
-  "studded-girdle": { "name": "Faja Tachonada" },
-  "traveler-boots": { "name": "Botas del Viajero" },
-  "soft-boots": { "name": "Botas Suaves" },
-  "iron-helm": { "name": "Yelmo de Hierro" },
-  "leather-cap": { "name": "Gorro de Cuero" },
-
-  "keen": { "word": "Afilada", "effect": "Rango de crítico ampliado en 1 (crítico con 19-20)." },
-  "cruel": { "word": "Cruel", "effect": "+2 de daño de arma en cada impacto." },
-  "honed": { "word": "Pulida", "effect": "+1 a las tiradas de ataque con arma." },
-  "bloodletting": { "word": "de Sangría", "effect": "Los impactos aplican sangrado: inflige 2 de daño al inicio de tus 3 siguientes turnos." },
-  "mending": { "word": "de Restauración", "effect": "Los impactos desencadenan restauración: cura 4 PG al inicio de tus 3 siguientes turnos." },
-  "vampiric": { "word": "Vampírica", "effect": "Cúrate por el 5% del daño de arma infligido." },
-  "warded": { "word": "Guardada", "effect": "+1 a la CA." },
-  "stoneblood": { "word": "de Sangre de Piedra", "effect": "+6 PG temporales al inicio de cada combate." },
-  "salamander": { "word": "de la Salamandra", "effect": "Resistencia al fuego: el daño de fuego entrante se reduce a la mitad." },
-  "frostward": { "word": "del Resguardo de Escarcha", "effect": "Resistencia al frío: el daño de frío entrante se reduce a la mitad." },
-  "graveward": { "word": "del Resguardo Sepulcral", "effect": "Resistencia al daño necrótico: el daño necrótico entrante se reduce a la mitad." },
-  "antivenom": { "word": "del Antiveneno", "effect": "Resistencia al veneno: el daño de veneno entrante se reduce a la mitad." },
-  "warded-mind": { "word": "de la Mente Guardada", "effect": "Resistencia al daño psíquico: el daño psíquico entrante se reduce a la mitad." },
-  "stalwart": { "word": "Recia", "effect": "+2 a la CA mientras estés ensangrentado (PG a la mitad o menos)." },
-  "pristine": { "word": "Inmaculada", "effect": "+1 a la CA mientras estés a plena salud." },
-  "arcane": { "word": "Arcana", "effect": "+1 a la CD de salvación de tus conjuros." },
-  "archmage": { "word": "del Archimago", "effect": "+2 al daño de conjuro." },
-  "lucid": { "word": "de Lucidez", "effect": "+1 a las tiradas de ataque de conjuro." },
-  "runic": { "word": "Rúnica", "effect": "+1 espacio de conjuro de nivel 1 (se rellena al descansar)." },
-  "furious": { "word": "Furiosa", "effect": "+3 de daño cuerpo a cuerpo mientras arde la Furia." },
-  "quarry": { "word": "de la Presa", "effect": "+2 de daño contra el objetivo de tu Marca del Cazador." },
-  "shadowed": { "word": "Sombría", "effect": "+4 de daño en el golpe en que aterriza tu Ataque Furtivo." },
-  "relentless": { "word": "Implacable", "effect": "+3 de daño en cada mandoble de seguimiento de tu Ataque Adicional." },
-  "warding": { "word": "de Resguardo", "effect": "+1 a la CA." },
-  "leeching": { "word": "Sanguijuela", "effect": "Cúrate por el 3% del daño de arma infligido." },
-  "predators": { "word": "del Depredador", "effect": "Rango de crítico ampliado en 1 (crítico con 19-20)." },
-  "emberward": { "word": "del Resguardo de Brasas", "effect": "Resistencia al fuego: el daño de fuego entrante se reduce a la mitad." },
-  "rimeward": { "word": "del Resguardo Gélido", "effect": "Resistencia al frío: el daño de frío entrante se reduce a la mitad." },
-  "vigorous": { "word": "Vigorosa", "effect": "+6 PG temporales al inicio de cada combate." },
-  "savage": { "word": "Salvaje", "effect": "+1 de daño de arma en cada impacto." },
-  "unerring": { "word": "Infalible", "effect": "+1 a las tiradas de ataque con arma." }
+  "iron-ring": {
+    "name": "Anillo de Hierro"
+  },
+  "silver-ring": {
+    "name": "Anillo de Plata"
+  },
+  "gold-ring": {
+    "name": "Anillo de Oro"
+  },
+  "jade-amulet": {
+    "name": "Amuleto de Jade"
+  },
+  "bone-charm": {
+    "name": "Talismán de Hueso"
+  },
+  "worn-belt": {
+    "name": "Cinturón Gastado"
+  },
+  "studded-girdle": {
+    "name": "Faja Tachonada"
+  },
+  "traveler-boots": {
+    "name": "Botas del Viajero"
+  },
+  "soft-boots": {
+    "name": "Botas Suaves"
+  },
+  "iron-helm": {
+    "name": "Yelmo de Hierro"
+  },
+  "leather-cap": {
+    "name": "Gorro de Cuero"
+  },
+  "keen": {
+    "word": "Afilada",
+    "effect": "Rango de crítico ampliado en 1 (crítico con 19-20)."
+  },
+  "cruel": {
+    "word": "Cruel",
+    "effect": "+2 de daño de arma en cada impacto."
+  },
+  "honed": {
+    "word": "Pulida",
+    "effect": "+1 a las tiradas de ataque con arma."
+  },
+  "bloodletting": {
+    "word": "de Sangría",
+    "effect": "Los impactos aplican sangrado: inflige 2 de daño al inicio de tus 3 siguientes turnos."
+  },
+  "mending": {
+    "word": "de Restauración",
+    "effect": "Los impactos desencadenan restauración: cura 4 PG al inicio de tus 3 siguientes turnos."
+  },
+  "vampiric": {
+    "word": "Vampírica",
+    "effect": "Cúrate por el 5% del daño de arma infligido."
+  },
+  "warded": {
+    "word": "Guardada",
+    "effect": "+1 a la CA."
+  },
+  "stoneblood": {
+    "word": "de Sangre de Piedra",
+    "effect": "+6 PG temporales al inicio de cada combate."
+  },
+  "salamander": {
+    "word": "de la Salamandra",
+    "effect": "Resistencia al fuego: el daño de fuego entrante se reduce a la mitad."
+  },
+  "frostward": {
+    "word": "del Resguardo de Escarcha",
+    "effect": "Resistencia al frío: el daño de frío entrante se reduce a la mitad."
+  },
+  "graveward": {
+    "word": "del Resguardo Sepulcral",
+    "effect": "Resistencia al daño necrótico: el daño necrótico entrante se reduce a la mitad."
+  },
+  "antivenom": {
+    "word": "del Antiveneno",
+    "effect": "Resistencia al veneno: el daño de veneno entrante se reduce a la mitad."
+  },
+  "warded-mind": {
+    "word": "de la Mente Guardada",
+    "effect": "Resistencia al daño psíquico: el daño psíquico entrante se reduce a la mitad."
+  },
+  "stalwart": {
+    "word": "Recia",
+    "effect": "+2 a la CA mientras estés ensangrentado (PG a la mitad o menos)."
+  },
+  "pristine": {
+    "word": "Inmaculada",
+    "effect": "+1 a la CA mientras estés a plena salud."
+  },
+  "arcane": {
+    "word": "Arcana",
+    "effect": "+1 a la CD de salvación de tus conjuros."
+  },
+  "archmage": {
+    "word": "del Archimago",
+    "effect": "+2 al daño de conjuro."
+  },
+  "lucid": {
+    "word": "de Lucidez",
+    "effect": "+1 a las tiradas de ataque de conjuro."
+  },
+  "runic": {
+    "word": "Rúnica",
+    "effect": "+1 espacio de conjuro de nivel 1 (se rellena al descansar)."
+  },
+  "furious": {
+    "word": "Furiosa",
+    "effect": "+3 de daño cuerpo a cuerpo mientras arde la Furia."
+  },
+  "quarry": {
+    "word": "de la Presa",
+    "effect": "+2 de daño contra el objetivo de tu Marca del Cazador."
+  },
+  "shadowed": {
+    "word": "Sombría",
+    "effect": "+4 de daño en el golpe en que aterriza tu Ataque Furtivo."
+  },
+  "relentless": {
+    "word": "Implacable",
+    "effect": "+3 de daño en cada mandoble de seguimiento de tu Ataque Adicional."
+  },
+  "warding": {
+    "word": "de Resguardo",
+    "effect": "+1 a la CA."
+  },
+  "leeching": {
+    "word": "Sanguijuela",
+    "effect": "Cúrate por el 3% del daño de arma infligido."
+  },
+  "predators": {
+    "word": "del Depredador",
+    "effect": "Rango de crítico ampliado en 1 (crítico con 19-20)."
+  },
+  "emberward": {
+    "word": "del Resguardo de Brasas",
+    "effect": "Resistencia al fuego: el daño de fuego entrante se reduce a la mitad."
+  },
+  "rimeward": {
+    "word": "del Resguardo Gélido",
+    "effect": "Resistencia al frío: el daño de frío entrante se reduce a la mitad."
+  },
+  "vigorous": {
+    "word": "Vigorosa",
+    "effect": "+6 PG temporales al inicio de cada combate."
+  },
+  "savage": {
+    "word": "Salvaje",
+    "effect": "+1 de daño de arma en cada impacto."
+  },
+  "unerring": {
+    "word": "Infalible",
+    "effect": "+1 a las tiradas de ataque con arma."
+  },
+  "vigil-helm": {
+    "name": "Yelmo de la Vigilia"
+  },
+  "vigil-mantle": {
+    "name": "Manto de la Vigilia"
+  },
+  "vigil-heart": {
+    "name": "Corazón de la Vigilia"
+  },
+  "warsong-gauntlet": {
+    "name": "Guantelete del Canto de Guerra"
+  },
+  "warsong-crest": {
+    "name": "Cimera del Canto de Guerra"
+  },
+  "ironclad-banner": {
+    "name": "Estandarte Acorazado"
+  },
+  "ironclad-greaves": {
+    "name": "Grebas Acorazadas"
+  },
+  "ironclad-helm": {
+    "name": "Yelmo Acorazado"
+  },
+  "bloodrage-fang": {
+    "name": "Colmillo de Furia"
+  },
+  "bloodrage-pelt": {
+    "name": "Piel de Furia"
+  },
+  "bloodrage-totem": {
+    "name": "Tótem de Furia"
+  },
+  "wildstalker-pelt": {
+    "name": "Piel del Acechador"
+  },
+  "wildstalker-cowl": {
+    "name": "Capucha del Acechador"
+  },
+  "wildstalker-quiver": {
+    "name": "Carcaj del Acechador"
+  },
+  "archmagi-vestments": {
+    "name": "Vestiduras del Archimago"
+  },
+  "archmagi-amulet": {
+    "name": "Amuleto del Archimago"
+  },
+  "archmagi-orb": {
+    "name": "Orbe del Archimago"
+  },
+  "greenwarden-mantle": {
+    "name": "Manto del Guardaverde"
+  },
+  "greenwarden-circlet": {
+    "name": "Diadema del Guardaverde"
+  },
+  "greenwarden-seed": {
+    "name": "Semilla del Guardaverde"
+  },
+  "shadowdancer-blade": {
+    "name": "Hoja del Danzasombras"
+  },
+  "shadowdancer-cloak": {
+    "name": "Capa del Danzasombras"
+  },
+  "shadowdancer-cowl": {
+    "name": "Capucha del Danzasombras"
+  },
+  "revenant-heart": {
+    "name": "Corazón del Renacido"
+  },
+  "revenant-shroud": {
+    "name": "Sudario del Renacido"
+  },
+  "revenant-chain": {
+    "name": "Cadena del Renacido"
+  },
+  "conqueror-crown": {
+    "name": "Corona del Conquistador"
+  },
+  "conqueror-gauntlet": {
+    "name": "Guantelete del Conquistador"
+  },
+  "conqueror-sigil": {
+    "name": "Sello del Conquistador"
+  }
 }

@@ -10,7 +10,7 @@ import {
   type BaseKind,
 } from '../../engine/items';
 import { legendaryDropPool, getLegendary } from '../../content/legendaries';
-import { ascensionAscendantLoot, ascensionExclusiveLoot } from '../../engine/delve/ascension';
+import { ascensionAscendantLoot } from '../../engine/delve/ascension';
 
 /**
  * Shared merchant stock for both the camp caravan (CampRoom) and the route-map
@@ -210,13 +210,11 @@ export function rollLegendaryOffer(
   if (chance <= 0) return null;
   const roller = createDiceRoller(`${seed}:legendary-offer`);
   if (roller.roll('1d100').total > chance) return null;
-  // The ascension-exclusive sets enter the reliquary ONLY on a New Game+ run
-  // (Asc >= 1); the apex ascendant tier ONLY at Asc >= 3. A first/normal run
-  // sees neither.
+  // The apex ascendant tier enters the reliquary ONLY at Asc >= 3. A first/normal
+  // run never sees it. (Set gear is a separate persistent layer — content/sets.ts.)
   const pool = legendaryDropPool(
     classId,
     ascensionAscendantLoot(ascensionLevel),
-    ascensionExclusiveLoot(ascensionLevel),
   ).filter((id) => !ownedIds.includes(id));
   if (pool.length === 0) return null;
   const id = pool[(roller.roll('1d100').total - 1) % pool.length];
