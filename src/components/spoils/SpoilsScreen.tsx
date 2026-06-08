@@ -3,8 +3,9 @@ import { Button } from '../ui/Button';
 import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
 import { localizedItemName, localizedItemDescription } from '../inventory/itemDisplay';
 import { getLegendary } from '../../content/legendaries';
-import { getSetPiece } from '../../content/sets';
+import { getSetPiece, setForPiece, setProgress } from '../../content/sets';
 import { hasPendingLevelUp } from '../../engine/character/leveling';
+import { useMetaStore } from '../../stores/metaStore';
 import { useT } from '../../i18n/useT';
 
 export function SpoilsScreen() {
@@ -13,6 +14,7 @@ export function SpoilsScreen() {
   const character = useGameStore((s) => s.character);
   const acceptSpoils = useGameStore((s) => s.acceptSpoils);
   const goToInventory = useGameStore((s) => s.goToInventory);
+  const ownedSetPieces = useMetaStore((s) => s.ownedSetPieces);
 
   if (!lastLoot) return null;
 
@@ -151,28 +153,72 @@ export function SpoilsScreen() {
         )}
 
         {/* Legendary banked */}
-        {lastLoot.bankedLegendaryId && (
-          <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-gold)] px-3 py-2 animate-pop-in">
-            <div className="font-display text-[var(--color-accent-gold)] text-sm uppercase tracking-wider">
-              ✦ {tc('legendaries', lastLoot.bankedLegendaryId, 'name', getLegendary(lastLoot.bankedLegendaryId)?.name ?? '')}
+        {lastLoot.bankedLegendaryId && (() => {
+          const id = lastLoot.bankedLegendaryId;
+          const legendary = getLegendary(id);
+          return (
+            <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-gold)] px-3 py-2 animate-pop-in">
+              <div className="font-display text-[var(--color-accent-gold)] text-sm uppercase tracking-wider">
+                ✦ {tc('legendaries', id, 'name', legendary?.name ?? '')}
+              </div>
+              {legendary && (
+                <div className="text-[var(--color-text-secondary)] text-[10px] leading-relaxed mt-0.5">
+                  {tc('legendaries', id, 'effect', legendary.effect)}
+                </div>
+              )}
+              <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-1">
+                {t('screens.spoils.legendaryBanked')}
+              </div>
             </div>
-            <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-0.5">
-              {t('screens.spoils.legendaryBanked')}
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Set piece banked */}
-        {lastLoot.bankedSetPieceId && (
-          <div className="bg-[var(--color-bg-panel)] border-2 px-3 py-2 animate-pop-in" style={{ borderColor: '#0fa968' }}>
-            <div className="font-display text-sm uppercase tracking-wider" style={{ color: '#0fa968' }}>
-              ✦ {tc('setGear', lastLoot.bankedSetPieceId, 'name', getSetPiece(lastLoot.bankedSetPieceId)?.name ?? '')}
+        {lastLoot.bankedSetPieceId && (() => {
+          const id = lastLoot.bankedSetPieceId;
+          const piece = getSetPiece(id);
+          const set = setForPiece(id);
+          const slotKey = piece ? (piece.slot === 'ring1' || piece.slot === 'ring2' ? 'ring' : piece.slot) : '';
+          const have = set ? setProgress(set, ownedSetPieces) : 0;
+          return (
+            <div className="bg-[var(--color-bg-panel)] border-2 px-3 py-2 animate-pop-in" style={{ borderColor: '#0fa968' }}>
+              <div className="font-display text-sm uppercase tracking-wider" style={{ color: '#0fa968' }}>
+                ✦ {tc('setGear', id, 'name', piece?.name ?? '')}
+              </div>
+              {set && piece && (
+                <div className="text-[10px] uppercase tracking-[0.2em] mt-0.5" style={{ color: '#0fa968', opacity: 0.85 }}>
+                  {t('screens.spoils.setMeta', {
+                    set: tc('setGear', set.id, 'name', set.name),
+                    slot: t(`screens.spoils.setSlot.${slotKey}`),
+                    have,
+                    total: set.pieceIds.length,
+                  })}
+                </div>
+              )}
+              {piece && (
+                <div className="text-[var(--color-text-secondary)] text-[10px] leading-relaxed mt-1">
+                  {tc('setGear', id, 'effect', piece.effectLine)}
+                </div>
+              )}
+              {set?.bonuses.map((tier) => {
+                const met = have >= tier.piecesRequired;
+                return (
+                  <div
+                    key={tier.piecesRequired}
+                    className="text-[9px] leading-relaxed mt-0.5"
+                    style={{ color: met ? '#0fa968' : 'var(--color-text-dim)' }}
+                  >
+                    {met ? '◆ ' : '◇ '}
+                    {tc('setGear', `${set.id}.bonus`, String(tier.piecesRequired), tier.label)}
+                  </div>
+                );
+              })}
+              <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-1">
+                {t('screens.spoils.setPieceBanked')}
+              </div>
             </div>
-            <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-0.5">
-              {t('screens.spoils.setPieceBanked')}
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Actions */}
         <div className="flex flex-col items-center gap-3 mt-2">

@@ -273,7 +273,18 @@
     "acceptLevelUp": "Accept · Level Up →",
     "accept": "Accept →",
     "openPack": "◆ Open Pack Instead",
-    "setPieceBanked": "Set Gear banked to the soul"
+    "setPieceBanked": "Banked to your Reliquary — equip it there in a life to come",
+    "setMeta": "{set} · {slot} · {have}/{total}",
+    "setSlot": {
+      "mainHand": "Weapon",
+      "offHand": "Off-hand",
+      "armor": "Armor",
+      "helm": "Helm",
+      "amulet": "Amulet",
+      "ring": "Ring",
+      "belt": "Belt",
+      "boots": "Boots"
+    }
   },
   "unlockTutorial": {
     "eyebrow": "◆ New — Unlocked",
