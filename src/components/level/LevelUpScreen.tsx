@@ -52,18 +52,23 @@ export function LevelUpScreen() {
     (nextLevel >= cls.subclassLevel && cls.subclasses.length === 1
       ? cls.subclasses[0].id
       : null);
+  // `tcId` is the es/classes.json overlay key (base feature vs subclass feature
+  // use different composite keys — see the completeness test's scheme).
   const features = [
-    ...(cls.featuresByLevel[String(nextLevel)] ?? []),
+    ...(cls.featuresByLevel[String(nextLevel)] ?? []).map((f) => ({
+      f,
+      tcId: `${cls.id}.${f.id}`,
+    })),
     ...(effectiveSubclassId
       ? (cls.subclasses.find((s) => s.id === effectiveSubclassId)?.featuresByLevel[
           String(nextLevel)
-        ] ?? [])
+        ] ?? []).map((f) => ({ f, tcId: `${cls.id}.${effectiveSubclassId}.${f.id}` }))
       : []),
     // Spell-learn prompts (learn-*) are fully represented by the selectable
     // spell cards below — drop their blurbs so the options aren't listed twice.
-  ].filter((f) => !f.id.startsWith('learn-'));
+  ].filter(({ f }) => !f.id.startsWith('learn-'));
   const hpDelta = hpGainForLevelUp(c);
-  const isAsiLevel = features.some((f) => f.mechanicKey === 'asi');
+  const isAsiLevel = features.some(({ f }) => f.mechanicKey === 'asi');
 
   // The score an ASI raises *from* is the current effective value (race + any
   // prior ASI gains). Cost is weighted: a +1 starting at 18+ eats 2 of the
@@ -143,7 +148,7 @@ export function LevelUpScreen() {
             ◆ {t('ui.level.levelN', { n: nextLevel })} ◆
           </h1>
           <div className="text-[var(--color-text-secondary)] text-xs mt-3 uppercase tracking-[0.3em]">
-            {c.name} · {cls.name}
+            {c.name} · {tc('classes', cls.id, 'name', cls.name)}
           </div>
         </div>
 
@@ -170,13 +175,13 @@ export function LevelUpScreen() {
         {features.length > 0 && (
           <Panel title={t('ui.level.newFeatures')} tone="glow" className="animate-scale-in">
             <ul className="flex flex-col gap-3">
-              {features.map((f) => (
+              {features.map(({ f, tcId }) => (
                 <li key={f.id} className="border-l-2 border-[var(--color-accent-amber)] pl-3">
                   <div className="font-display text-[var(--color-text-primary)] text-[11px] uppercase tracking-[0.2em]">
-                    {f.name}
+                    {tc('classes', tcId, 'name', f.name)}
                   </div>
                   <div className="text-[var(--color-text-secondary)] text-sm leading-relaxed mt-1.5">
-                    {f.description}
+                    {tc('classes', tcId, 'description', f.description)}
                   </div>
                 </li>
               ))}
@@ -265,15 +270,15 @@ export function LevelUpScreen() {
                     }`}
                   >
                     <div className="font-display text-[var(--color-text-primary)] text-[12px] uppercase tracking-[0.18em]">
-                      {sub.name}
+                      {tc('classes', `${cls.id}.${sub.id}`, 'name', sub.name)}
                     </div>
                     {feat && (
                       <div className="text-[var(--color-text-secondary)] text-xs mt-1.5 leading-relaxed normal-case tracking-normal">
-                        {feat.description}
+                        {tc('classes', `${cls.id}.${sub.id}.${feat.id}`, 'description', feat.description)}
                       </div>
                     )}
                     <div className="text-[var(--color-text-dim)] text-[11px] mt-1.5 italic normal-case tracking-normal">
-                      {sub.description}
+                      {tc('classes', `${cls.id}.${sub.id}`, 'description', sub.description)}
                     </div>
                   </button>
                 );

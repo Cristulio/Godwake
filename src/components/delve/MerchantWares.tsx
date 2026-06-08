@@ -10,10 +10,11 @@ import type { GearStock, LegendaryOffer } from './shopStock';
 import { useT } from '../../i18n/useT';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
+type TcFn = (namespace: string, id: string, field: string, fallbackEnglish: string) => string;
 
 /** Most wares carry their own flavour; synthesise a short line for the rest. */
-export function consumableBlurb(item: Item, t: TFn): string {
-  if (item.description) return item.description;
+export function consumableBlurb(item: Item, t: TFn, tc: TcFn): string {
+  if (item.description) return tc('items', item.id, 'description', item.description);
   if (item.kind === 'consumable') {
     return item.healDice ? t('delve.wares.restores', { dice: item.healDice }) : item.effect;
   }
@@ -31,7 +32,7 @@ interface GearWareRowProps {
 
 /** One rolled arms-rack item: rarity-coloured frame, affix-effect list, price. */
 export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearWareRowProps) {
-  const { t } = useT();
+  const { t, tc } = useT();
   const rolled = stock.ref.rolled;
   const base = getItem(stock.ref.itemId);
   const rarity = rolled?.rarity ?? 'white';
@@ -46,7 +47,7 @@ export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearW
     >
       <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider" style={{ color }}>
-          {rolled?.name ?? base.name}
+          {rolled?.name ?? tc('items', base.id, 'name', base.name)}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
           {GEAR_RARITY_LABEL[rarity]} · {itemTypeLabel(base)}
@@ -65,7 +66,7 @@ export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearW
           {(rolled?.affixes ?? []).map((id) => {
             let effect = id;
             try {
-              effect = getAffix(id).effect;
+              effect = tc('items', id, 'effect', getAffix(id).effect);
             } catch {
               /* unknown id */
             }
@@ -153,7 +154,7 @@ interface ConsumableWareRowProps {
 /** One fixed draught/charm row. Goes SOLD once bought so the same draught can't
  * be re-bought after a trip to the pack — the sold-state persists in delveStore. */
 export function ConsumableWareRow({ item, bought, gold, onBuy }: ConsumableWareRowProps) {
-  const { t } = useT();
+  const { t, tc } = useT();
   const tooDear = gold < item.cost;
   return (
     <div
@@ -162,10 +163,10 @@ export function ConsumableWareRow({ item, bought, gold, onBuy }: ConsumableWareR
     >
       <div className="flex-1 min-w-0">
         <div className="text-[var(--color-text-primary)] text-sm uppercase tracking-wider">
-          {item.name}
+          {tc('items', item.id, 'name', item.name)}
         </div>
         <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
-          {consumableBlurb(item, t)}
+          {consumableBlurb(item, t, tc)}
         </div>
       </div>
       <div className="text-right shrink-0">
@@ -190,7 +191,7 @@ interface SellWareRowProps {
 
 /** One pack item the merchant will buy back, rarity-framed, with its sell price. */
 export function SellWareRow({ itemRef, price, onSell }: SellWareRowProps) {
-  const { t } = useT();
+  const { t, tc } = useT();
   const base = getItem(itemRef.itemId);
   const rarity = itemRef.rolled?.rarity ?? 'white';
   const color = GEAR_RARITY_COLOR[rarity];
@@ -200,7 +201,7 @@ export function SellWareRow({ itemRef, price, onSell }: SellWareRowProps) {
     <div className="border p-3 flex items-center gap-4" style={{ borderColor: color }}>
       <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider truncate" style={{ color }}>
-          {itemRef.rolled?.name ?? base.name}
+          {itemRef.rolled?.name ?? tc('items', base.id, 'name', base.name)}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
           {stat && stat !== typeLabel ? `${typeLabel} · ${stat}` : typeLabel}

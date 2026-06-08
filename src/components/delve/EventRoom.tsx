@@ -39,11 +39,40 @@ interface EventRoomProps {
   onAmbush: (monsterDefIds: string[]) => void;
 }
 
+/** A content-seam pointer (namespace + id + field) into an es overlay. */
+interface OverlayRef {
+  namespace: string;
+  id: string;
+  field: string;
+}
+
 interface ResolvedTurn {
+  choiceId: string;
   choiceLabel: string;
+  /**
+   * The overlay row to read the resolution from (`events`/`choice.<id>.…` for
+   * ordinary events, `bossIntel`/<resolution-field> for intel rooms), or null
+   * when the displayed resolution can't be mapped to a canonical one (a
+   * random-weighted branch or an appended suffix) — then the engine's English
+   * resolution stands.
+   */
+  resolutionRef: OverlayRef | null;
   result: EventOutcomeResult;
   /** Present when the chosen option resolved via a skill check. */
   check?: SkillCheckResult;
+}
+
+/** boss-intel choice id → the es/bossIntel.json resolution field for it. */
+const BOSS_INTEL_RESOLUTION_FIELD: Record<string, string> = {
+  'find-weak-spot': 'weakSpotResolution',
+  'study-the-approach': 'battlePlanResolution',
+  'walk-past': 'walkPastResolution',
+};
+
+/** Boss def id when this room is a boss-intel beat, else null. */
+function bossDefIdForRoom(room: RoomSpec): string | null {
+  const id = room.eventTemplateId;
+  return id && id.startsWith('boss-intel-') ? id.slice('boss-intel-'.length) : null;
 }
 
 export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
@@ -73,8 +102,8 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   // Boss-intel rooms are event-kind rooms whose template id starts with
   // "boss-intel-". Before the feature unlocks, the preparation choices are
   // hidden: the player just walks past with a locked-room notice.
-  const isBossIntelRoom =
-    room.eventTemplateId != null && room.eventTemplateId.startsWith('boss-intel-');
+  const bossDefId = bossDefIdForRoom(room);
+  const isBossIntelRoom = bossDefId != null;
   if (isBossIntelRoom && !bossIntelUnlocked) {
     return (
       <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-4 animate-fade-in">
@@ -84,10 +113,10 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
             {t('delve.event.sealed')}
           </p>
           <h2 className="font-display text-[var(--color-accent-amber)] text-lg uppercase tracking-wider mb-3">
-            {room.title}
+            {tc('bossIntel', bossDefId, 'roomTitle', room.title)}
           </h2>
           <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed font-narrative italic">
-            {room.flavorText}
+            {tc('bossIntel', bossDefId, 'roomFlavor', room.flavorText)}
           </p>
           <p className="text-[var(--color-text-dim)] text-xs mt-4 italic">
             {t('delve.event.sealedNote')}
@@ -129,6 +158,40 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
     ? 1
     : eventGoldScale(room.chapter ?? 1, template.minChapter ?? 1);
 
+  // Boss-intel rooms carry their Spanish in the bossIntel overlay (keyed by boss
+  // def id); ordinary events in the events overlay (keyed by template id).
+  const localizedTitle = bossDefId
+    ? tc('bossIntel', bossDefId, 'roomTitle', template.title)
+    : tc('events', template.id, 'title', template.title);
+  const localizedFlavor = bossDefId
+    ? tc('bossIntel', bossDefId, 'roomFlavor', template.flavor)
+    : tc('events', template.id, 'flavor', template.flavor);
+
+  // The resolution is translatable only when the displayed text is verbatim a
+  // canonical outcome resolution the overlay carries — not a random-weighted
+  // branch and not a suffixed string. Boss-intel resolutions live in the
+  // bossIntel overlay (keyed by boss def id); ordinary events in the events
+  // overlay (keyed by template + choice id).
+  function resolutionRefFor(
+    choice: EventChoice,
+    succeeded: boolean | undefined,
+    displayedResolution: string,
+  ): OverlayRef | null {
+    if (bossDefId) {
+      const field = BOSS_INTEL_RESOLUTION_FIELD[choice.id];
+      if (field && choice.outcome && 'resolution' in choice.outcome && choice.outcome.resolution === displayedResolution) {
+        return { namespace: 'bossIntel', id: bossDefId, field };
+      }
+      return null;
+    }
+    const srcOutcome = succeeded === false ? choice.failureOutcome : choice.outcome;
+    if (srcOutcome && 'resolution' in srcOutcome && srcOutcome.resolution === displayedResolution) {
+      const field = succeeded === false ? 'failureResolution' : 'resolution';
+      return { namespace: 'events', id: template!.id, field: `choice.${choice.id}.${field}` };
+    }
+    return null;
+  }
+
   function handlePick(choice: EventChoice) {
     if (!character) return;
     const roller = getActiveRoller();
@@ -136,7 +199,13 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
     const outcome = resolveChoiceOutcome(checked.outcome, roller);
     const result = applyEventOutcome(character, outcome, roller, goldScale);
     setCharacter(result.character);
-    setResolved({ choiceLabel: choice.label, result, check: checked.skillCheck });
+    setResolved({
+      choiceId: choice.id,
+      choiceLabel: choice.label,
+      resolutionRef: resolutionRefFor(choice, checked.succeeded, result.resolution),
+      result,
+      check: checked.skillCheck,
+    });
     playSfx('ui_click');
   }
 
@@ -158,7 +227,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-            {tc('events', template.id, 'title', template.title).toUpperCase()}
+            {localizedTitle.toUpperCase()}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
             {t('delve.event.label')}
@@ -176,7 +245,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
 
       <Panel tone="warm" className="bg-gradient-to-br from-[#2d2418] to-[#221a14]">
         <p className="text-[var(--color-text-primary)] text-base italic leading-7">
-          {tc('events', template.id, 'flavor', template.flavor)}
+          {localizedFlavor}
         </p>
       </Panel>
 
@@ -189,6 +258,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
             {template.choices.map((choice) => (
               <ChoiceButton
                 key={choice.id}
+                templateId={template.id}
                 choice={choice}
                 character={character}
                 goldScale={goldScale}
@@ -199,7 +269,10 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
         </>
       ) : (
         <ResolutionPanel
+          templateId={template.id}
+          choiceId={resolved.choiceId}
           choiceLabel={resolved.choiceLabel}
+          resolutionRef={resolved.resolutionRef}
           result={resolved.result}
           check={resolved.check}
           onContinue={handleContinue}
@@ -210,6 +283,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
 }
 
 interface ChoiceButtonProps {
+  templateId: string;
   choice: EventChoice;
   character: Character;
   /** Chapter gold multiplier — scales the displayed cost and the gate check. */
@@ -217,8 +291,8 @@ interface ChoiceButtonProps {
   onPick: () => void;
 }
 
-function ChoiceButton({ choice, character, goldScale, onPick }: ChoiceButtonProps) {
-  const { t } = useT();
+function ChoiceButton({ templateId, choice, character, goldScale, onPick }: ChoiceButtonProps) {
+  const { t, tc } = useT();
   const availability = canTakeChoice(character, choice, goldScale);
   const disabled = !availability.ok;
   const disabledReason = !availability.ok ? availability.reason : null;
@@ -249,7 +323,7 @@ function ChoiceButton({ choice, character, goldScale, onPick }: ChoiceButtonProp
     >
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1.5">
         <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
-          {choice.label}
+          {tc('events', templateId, `choice.${choice.id}.label`, choice.label)}
         </div>
         <div className="flex flex-wrap items-baseline gap-2 shrink-0">
           {skillTag && (
@@ -291,7 +365,7 @@ function ChoiceButton({ choice, character, goldScale, onPick }: ChoiceButtonProp
       </div>
       {choice.hint && (
         <div className="text-[var(--color-text-secondary)] text-xs italic mt-1">
-          {choice.hint}
+          {tc('events', templateId, `choice.${choice.id}.hint`, choice.hint)}
         </div>
       )}
       {disabled && (
@@ -304,19 +378,36 @@ function ChoiceButton({ choice, character, goldScale, onPick }: ChoiceButtonProp
 }
 
 interface ResolutionPanelProps {
+  templateId: string;
+  choiceId: string;
   choiceLabel: string;
+  /** Overlay row to read the resolution from, or null to keep English. */
+  resolutionRef: OverlayRef | null;
   result: EventOutcomeResult;
   check?: SkillCheckResult;
   onContinue: () => void;
 }
 
-function ResolutionPanel({ choiceLabel, result, check, onContinue }: ResolutionPanelProps) {
-  const { t } = useT();
+function ResolutionPanel({
+  templateId,
+  choiceId,
+  choiceLabel,
+  resolutionRef,
+  result,
+  check,
+  onContinue,
+}: ResolutionPanelProps) {
+  const { t, tc } = useT();
   const continueLabel = result.ambush ? t('delve.event.drawSteel') : t('delve.common.continueDeeper');
+  const resolutionText = resolutionRef
+    ? tc(resolutionRef.namespace, resolutionRef.id, resolutionRef.field, result.resolution)
+    : result.resolution;
   return (
     <div className="flex flex-col gap-4 animate-fade-in">
       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest text-center">
-        {t('delve.event.youChose', { label: choiceLabel })}
+        {t('delve.event.youChose', {
+          label: tc('events', templateId, `choice.${choiceId}.label`, choiceLabel),
+        })}
       </div>
       {check && (
         <div
@@ -335,7 +426,7 @@ function ResolutionPanel({ choiceLabel, result, check, onContinue }: ResolutionP
       )}
       <Panel tone="warm">
         <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">
-          {result.resolution}
+          {resolutionText}
         </p>
         {result.effectsApplied.length > 0 && (
           <ul className="mt-3 pt-3 border-t border-[var(--color-border-dim)] flex flex-col gap-2">

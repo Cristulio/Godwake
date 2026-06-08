@@ -381,6 +381,10 @@
     "rolling": "tirando…",
     "vsAc": "vs CA {ac}"
   },
+  "float": {
+    "miss": "FALLO",
+    "blocked": " bloqueado"
+  },
   "coach": {
     "attack": "Toca Atacar para golpear.",
     "target": "Elige tu objetivo.",
