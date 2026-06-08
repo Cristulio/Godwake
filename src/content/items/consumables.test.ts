@@ -146,24 +146,35 @@ describe('Potion of Vitality — regen draught', () => {
     expect(item.regenTurns).toBe(2);
   });
 
-  it("a raging character still can't drink it — kept in the bag, no regen granted", () => {
+  it('drinks it while raging — immediate heal HALVED (rounded up), regen still banked, potion spent', () => {
     const barb = makeChar('barbarian', [{ itemId: POTION }]);
     const init = createCombat({ character: barb, monsters: [{ def: getMonster('goblin') }] });
     const potionIdx = init.character.inventory.findIndex((r) => r.itemId === POTION);
+    const hurt: Character = { ...init.character, hp: { current: 5, max: 100, temp: 0 } };
     const raging: Character = {
-      ...init.character,
-      hp: { current: 5, max: 100, temp: 0 },
-      resources: { ...init.character.resources, rageRoundsRemaining: 5 },
+      ...hurt,
+      resources: { ...hurt.resources, rageRoundsRemaining: 5 },
     };
 
-    const roller = makeScriptedRoller([[2], [3]]);
-    const blocked = useConsumable({ roller, character: raging, state: init.state }, potionIdx);
+    // Same scripted rolls for both so only Rage's halving differs.
+    const calm = useConsumable(
+      { roller: makeScriptedRoller([[2], [3]]), character: hurt, state: init.state },
+      potionIdx,
+    );
+    const drunk = useConsumable(
+      { roller: makeScriptedRoller([[2], [3]]), character: raging, state: init.state },
+      potionIdx,
+    );
 
-    // True no-op: HP untouched, no regen banked, potion still carried.
-    expect(blocked.character).toBe(raging);
-    expect(blocked.character.hp.current).toBe(5);
-    expect(blocked.character.resources.vitalityRegenTurnsRemaining ?? 0).toBe(0);
-    expect(blocked.character.inventory.filter((r) => r.itemId === POTION)).toHaveLength(1);
+    const calmHealed = calm.character.hp.current - 5;
+    const rageHealed = drunk.character.hp.current - 5;
+    expect(calmHealed).toBeGreaterThan(0);
+    // Immediate heal halved (rounded up); it no longer locks the draught out.
+    expect(rageHealed).toBe(Math.ceil(calmHealed / 2));
+    // The regen tail is still banked — it's halved per-tick in turn.ts, not here.
+    expect(drunk.character.resources.vitalityRegenTurnsRemaining ?? 0).toBeGreaterThan(0);
+    // The potion is SPENT now, not kept.
+    expect(drunk.character.inventory.filter((r) => r.itemId === POTION)).toHaveLength(0);
   });
 
   it('does not erase an already-active Mending (state) or Regrowth (resources) regen', () => {
