@@ -15,12 +15,35 @@ import {
 } from './legendaries';
 import type { AffixModifiers } from '../schemas/item';
 import { ascensionAscendantLoot, ASCENDANT_LOOT_FROM } from '../engine/delve/ascension';
+import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
+import { characterAffixMods } from '../engine/items/affixMods';
 
 describe('legendary content', () => {
   it('has a stable id list matching the set, no duplicates', () => {
     expect(LEGENDARY_ORDER).toHaveLength(LEGENDARIES.length);
     expect(LEGENDARY_ORDER).toEqual(LEGENDARIES.map((l) => l.id));
     expect(new Set(LEGENDARY_ORDER).size).toBe(LEGENDARY_ORDER.length);
+  });
+
+  it('holds the full reliquary pool (>= 27 relics)', () => {
+    expect(LEGENDARIES.length).toBeGreaterThanOrEqual(27);
+  });
+
+  it('every relic effect field is read by the modifier aggregation (no dead fields)', () => {
+    for (const relic of LEGENDARIES) {
+      const ch = buildPlayerCharacter(presetCreationInput('fighter'));
+      ch.legendaryEffects = [relic.effects];
+      const mods = characterAffixMods(ch) as unknown as Record<string, number | unknown[]>;
+      for (const [key, val] of Object.entries(relic.effects)) {
+        if (key === 'resist') {
+          expect(mods.resists, `${relic.id}.resist not folded`).toContain(val);
+        } else if (typeof val === 'number' && val !== 0) {
+          expect(mods[key] as number, `${relic.id}.${key} is a dead field`).toBeGreaterThanOrEqual(
+            val,
+          );
+        }
+      }
+    }
   });
 
   it('every relic is EFFECT-ONLY (no AC, no weapon damage) yet carries a real effect', () => {

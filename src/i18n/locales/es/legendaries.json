@@ -64,5 +64,68 @@
   "carsomyr": {
     "flavor": "El Vengador Sagrado, reducido a una esquirla de acero radiante que tiene sed de lo impuro.",
     "effect": "Cúrate el 8% del daño que inflijas; los críticos aciertan con 19-20"
+  },
+  "reavers-chain": {
+    "name": "Cadena del Saqueador",
+    "flavor": "Un mayal de eslabones dentados forjado por los saqueadores del Nelanther; cada gancho deja al portador más lleno y al enemigo más vacío.",
+    "effect": "Cúrate el 5% del daño que inflijas; +2 de daño por sangrado"
+  },
+  "ironheart-brooch": {
+    "name": "Broche de Corazón de Hierro",
+    "flavor": "Un broche de hierro enano llevado sobre el corazón; bebe el primer golpe destinado a detenerlo.",
+    "effect": "Gana 10 PG temporales al inicio de cada combate"
+  },
+  "duelists-whetstone": {
+    "name": "Piedra de Afilar del Duelista",
+    "flavor": "La piedra de un duelista, afilada tan fino que separa no solo el acero sino la costura bajo la piel.",
+    "effect": "Los críticos aciertan con 19-20; +2 de daño por sangrado"
+  },
+  "serpent-fang-ring": {
+    "name": "Anillo Colmillo de Sierpe",
+    "flavor": "Un sello engastado con un diente de víbora que aún rezuma su veneno lento.",
+    "effect": "Tus golpes desgarran con +5 de daño por sangrado"
+  },
+  "witchfire-wand": {
+    "name": "Varita de Fuego de Bruja",
+    "flavor": "Una varita de tejo carbonizado que responde a una Palabra con más fuego del que se le pidió.",
+    "effect": "+4 al daño de conjuro y +1 al ataque de conjuro"
+  },
+  "codex-of-the-veiled-star": {
+    "name": "Códice de la Estrella Velada",
+    "flavor": "Un grimorio cuyas notas al margen se reordenan de noche, ofreciendo un conjuro que el lector aún no había aprendido a desear.",
+    "effect": "+1 a la CD de salvación de conjuros y una ranura de conjuro de nivel 1 adicional"
+  },
+  "hymnal-of-slow-mending": {
+    "name": "Himnario del Remiendo Lento",
+    "flavor": "Un salterio del canto del alba de Lathander; tararéalo y las viejas heridas olvidan sangrar.",
+    "effect": "Regenera 3 PG al inicio de cada turno"
+  },
+  "idol-of-the-threefold-hunt": {
+    "name": "Ídolo de la Triple Cacería",
+    "flavor": "Un fetiche de tres caras —lobo, halcón y serpiente— que afila cualquier instinto con el que su portador cace.",
+    "effect": "Afila tu golpe característico: +3 de daño de furia / marca / sigilo"
+  },
+  "avalanche-gauntlets": {
+    "name": "Guanteletes de la Avalancha",
+    "flavor": "Guanteletes de nudillos de piedra que acumulan peso con cada golpe hasta que el último cae como una ladera.",
+    "effect": "+3 de daño en cada golpe de seguimiento; +2 de daño por sangrado"
+  },
+  "blackrazor": {
+    "flavor": "La hoja hambrienta de leyenda, una esquirla de vacío sin estrellas que se alimenta de las almas que siega.",
+    "effect": "Cúrate el 10% del daño que inflijas; +4 de daño por sangrado"
+  },
+  "staff-of-the-magi": {
+    "flavor": "El bastón del archimago, rebosante de Arte almacenado; devuelve más poder del que cualquier conjuro debería gastar.",
+    "effect": "+5 al daño de conjuro, +2 al ataque de conjuro y una ranura de conjuro de nivel 1 adicional"
+  },
+  "wardstone-of-the-unbroken": {
+    "name": "Piedra de Guarda del Inquebrantable",
+    "flavor": "Una clave arrancada de una fortaleza que jamás cayó; presta la terquedad de sus muros a la carne.",
+    "effect": "Gana 14 PG temporales por combate y regenera 2 PG por turno"
+  },
+  "mask-of-the-perfect-kill": {
+    "name": "Máscara de la Muerte Perfecta",
+    "flavor": "Una máscara de porcelana sin rasgos que llevaba el asesino que nunca falló dos veces; tras ella, toda garganta ya está abierta.",
+    "effect": "Los críticos aciertan con 18-20; +3 de daño por sangrado y cúrate el 6% del daño infligido"
   }
 }
