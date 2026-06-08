@@ -47,15 +47,13 @@ describe('UNLOCKS registry', () => {
     // Elites are always available now — `delveCount: 0` is the always-unlocked,
     // never-reveal sentinel (the onboarding gate is disabled, not removed).
     expect(UNLOCKS['elite-nodes'].delveCount).toBe(0);
-    // Power + gear: earned by clearing deeper chapters; blue @3, purple @5, sets @14.
+    // Power: earned by clearing deeper chapters; legendaries @5, sets @14. (Rolled
+    // gear RARITY is no longer a ladder feature — it is gated by the run's current
+    // chapter, see engine/items/drops.maxRolledRarityForChapter.)
     expect(UNLOCKS['boss-intel'].chaptersCleared).toBe(1);
-    expect(UNLOCKS['affixes-rare'].chaptersCleared).toBe(3);
-    expect(UNLOCKS['affixes-epic'].chaptersCleared).toBe(5);
     expect(UNLOCKS.legendaries.chaptersCleared).toBe(5);
     expect(UNLOCKS.sets.chaptersCleared).toBe(14);
-    // Gear tiers carry no delve gate now — depth is the only way in.
-    expect(UNLOCKS['affixes-rare'].delveCount).toBeUndefined();
-    expect(UNLOCKS['affixes-epic'].delveCount).toBeUndefined();
+    // Power features carry no delve gate now — depth is the only way in.
     expect(UNLOCKS.legendaries.delveCount).toBeUndefined();
     expect(UNLOCKS.sets.delveCount).toBeUndefined();
     // Renown spent: the deeper Grove at 700 (the alternate-soul bars ride the same
@@ -69,27 +67,15 @@ describe('isFeatureUnlocked', () => {
   it('a delve-7 soul with no clears has the onboarding reveal but no power unlocks', () => {
     const meta = mkMeta({ delveCount: 7 });
     expect(isFeatureUnlocked('elite-nodes', meta)).toBe(true); // always available now
-    expect(isFeatureUnlocked('affixes-rare', meta)).toBe(false); // chapter @3, not delve
     expect(isFeatureUnlocked('boss-intel', meta)).toBe(false); // chapter @1
     expect(isFeatureUnlocked('legendaries', meta)).toBe(false); // chapter @5
   });
 
-  it('power + gear features open on chapters cleared regardless of delve count', () => {
+  it('power features open on chapters cleared regardless of delve count', () => {
     const meta = mkMeta({ delveCount: 0, chaptersCleared: 5 });
     expect(isFeatureUnlocked('boss-intel', meta)).toBe(true); // @1
-    expect(isFeatureUnlocked('affixes-rare', meta)).toBe(true); // @3 (blue)
-    expect(isFeatureUnlocked('affixes-epic', meta)).toBe(true); // @5 (purple)
     expect(isFeatureUnlocked('legendaries', meta)).toBe(true); // @5
     expect(isFeatureUnlocked('sets', meta)).toBe(false); // @14 (completion)
-  });
-
-  it('gear tiers open on chapter depth: blue at 3, purple at 5, never on delve count', () => {
-    expect(isFeatureUnlocked('affixes-rare', mkMeta({ chaptersCleared: 2 }))).toBe(false);
-    expect(isFeatureUnlocked('affixes-rare', mkMeta({ chaptersCleared: 3 }))).toBe(true);
-    expect(isFeatureUnlocked('affixes-epic', mkMeta({ chaptersCleared: 4 }))).toBe(false);
-    expect(isFeatureUnlocked('affixes-epic', mkMeta({ chaptersCleared: 5 }))).toBe(true);
-    expect(isFeatureUnlocked('affixes-rare', mkMeta({ delveCount: 999 }))).toBe(false);
-    expect(isFeatureUnlocked('affixes-epic', mkMeta({ delveCount: 999 }))).toBe(false);
   });
 
   it('a brand-new soul (delve 0, no clears) has none of the gated features except always-on elites', () => {
@@ -147,20 +133,14 @@ describe('newlyUnlocked (delve axis)', () => {
 describe('newlyUnlockedByChapter (progression axis)', () => {
   it('returns the power feature whose chapter threshold the clear crossed', () => {
     expect(newlyUnlockedByChapter(0, 1)).toEqual(['boss-intel']);
-    expect(newlyUnlockedByChapter(2, 3)).toEqual(['affixes-rare']); // blue @3
-    // ch 5 crosses legendaries AND purple gear — both @5, in FEATURE_IDS order.
-    expect(newlyUnlockedByChapter(4, 5)).toEqual(['legendaries', 'affixes-epic']);
+    expect(newlyUnlockedByChapter(2, 3)).toEqual([]); // gear rarity is no longer a ladder reveal
+    expect(newlyUnlockedByChapter(4, 5)).toEqual(['legendaries']); // legendaries @5
     expect(newlyUnlockedByChapter(13, 14)).toEqual(['sets']);
   });
 
   it('returns every chapter threshold crossed in a multi-chapter jump, in ladder order', () => {
-    // 0 -> 5 crosses affixes-rare(3), boss-intel(1), legendaries(5), affixes-epic(5).
-    expect(newlyUnlockedByChapter(0, 5)).toEqual([
-      'affixes-rare',
-      'boss-intel',
-      'legendaries',
-      'affixes-epic',
-    ]);
+    // 0 -> 5 crosses boss-intel(1) then legendaries(5), in FEATURE_IDS order.
+    expect(newlyUnlockedByChapter(0, 5)).toEqual(['boss-intel', 'legendaries']);
   });
 
   it('never fires the delve- or renown-gated reveals on a chapter clear', () => {

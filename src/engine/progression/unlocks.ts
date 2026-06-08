@@ -24,11 +24,9 @@ import type { ClassId } from '../../schemas/ids';
  */
 export const FEATURE_IDS = [
   'grove',
-  'affixes-rare',
   'elite-nodes',
   'boss-intel',
   'legendaries',
-  'affixes-epic',
   'sets',
   'grove-deep',
 ] as const;
@@ -103,11 +101,10 @@ export const UNLOCKS: Record<FeatureId, UnlockCondition> = {
   // original onboarding gate by restoring the commented line:
   //   'elite-nodes': { delveCount: 5 },
   'elite-nodes': { delveCount: 0 },
-  // Power unlocks — earned by clearing deeper chapters. Blue gear opens once the
-  // soul's deepest run has cleared 3 chapters, purple at 5.
+  // Power unlocks — earned by clearing deeper chapters. (Rolled GEAR RARITY is NOT
+  // here: it is gated purely by the run's CURRENT chapter, resets every run, and is
+  // never meta-persisted — see engine/items/drops.maxRolledRarityForChapter.)
   'boss-intel': { chaptersCleared: 1 },
-  'affixes-rare': { chaptersCleared: 3 },
-  'affixes-epic': { chaptersCleared: 5 },
   legendaries: { chaptersCleared: 5 },
   sets: { chaptersCleared: 14 }, // the whole chain felled (Melissan) — game completion
   // Deeper Grove tiers — a mastery reward, gated on Renown laid down at the Grove.

@@ -19,4 +19,6 @@ export {
   dropSourceForRoom,
   rollGearDrop,
   rollLegendaryDrop,
+  maxRolledRarityForChapter,
+  capRarity,
 } from './drops';

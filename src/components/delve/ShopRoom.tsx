@@ -15,8 +15,6 @@ import {
   type GearStock,
 } from './shopStock';
 import { GearWareRow, ConsumableWareRow, LegendaryWareRow, SellWareRow } from './MerchantWares';
-import { isFeatureUnlocked } from '../../engine/progression/unlocks';
-import type { GearRarity } from '../../schemas/item';
 import { useT } from '../../i18n/useT';
 
 interface ShopRoomProps {
@@ -50,17 +48,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
 
   const tier = tierForChapter(room.chapter);
   const classId = character?.classId;
-  const delveCount = useGameStore((s) => s.delveCount);
   const ascensionLevel = useGameStore((s) => s.delve?.ascensionLevel ?? 0);
-  const chaptersCleared = useGameStore((s) => s.chaptersCleared);
-  const renownSpent = useGameStore((s) => s.renownSpent);
-  const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
-  const progressionMeta = { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked };
-  const shopMaxRarity: GearRarity = isFeatureUnlocked('affixes-epic', progressionMeta)
-    ? 'purple'
-    : isFeatureUnlocked('affixes-rare', progressionMeta)
-      ? 'blue'
-      : 'green';
 
   // Draughts & charms only from the fixed stock — the arms rack is rolled below.
   const consumables = useMemo(
@@ -72,10 +60,10 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   const gear = useMemo<GearStock[]>(
     () =>
       classId
-        ? rollGearStock(room.id, chapter, classId, room.layer ?? 0, shopMaxRarity)
+        ? rollGearStock(room.id, chapter, classId, room.layer ?? 0)
         : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [room.id, chapter, classId, room.layer, shopMaxRarity],
+    [room.id, chapter, classId, room.layer],
   );
 
   // The rare reliquary offer is rolled deterministically per visit (owned-blind),

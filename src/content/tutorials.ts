@@ -39,15 +39,6 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
     ],
     key: "Renown outlives death — trade it at the Grove for gains to body, blade, and art that never reset.",
   },
-  "affixes-rare": {
-    unlocked: "Rare Spoils",
-    title: "The Cold Blue Edge",
-    body: [
-      "The deep dark has started parting with better things. A Rare find — its edge lit cold and blue — wakes with two enchantments worked into it, where common iron carries only one.",
-      "And these are not tallies of plus-this and plus-that. They are deeds the metal performs: a blade that opens a wound which will not close, mail that turns the one blow meant to end you, a band that makes each killing strike crueler still. Read what a piece does, not what it weighs.",
-    ],
-    key: "Rare gear wakes with two affixes — and an affix is a deed the gear performs, not a number it adds.",
-  },
   "elite-nodes": {
     unlocked: "Elite Foes",
     title: "The Marked",
@@ -74,15 +65,6 @@ export const TUTORIALS: Record<FeatureId, TutorialContent> = {
       "It hangs no armor on you and puts no edge in your hand. What it does is bend the way a soul fights — quietly, and whole. Some relics answer to one kind of soul alone; in the wrong hands they stay dead stone.",
     ],
     key: "Relics bind to the soul, not the body — they outlast every death and are set at the hub.",
-  },
-  "affixes-epic": {
-    unlocked: "Epic Spoils",
-    title: "Restless Purple",
-    body: [
-      "The dark is giving up its deeper secrets now. An Epic find — marked in restless purple, layered with enchantment that will not lie still — carries three, sometimes four deeds where a Rare carries two.",
-      "With that many effects crowded onto a single piece, the waste lies in failing to see how they answer one another. Find the one whose every deed pulls the way your soul already fights, and a lone drop can carry an entire descent.",
-    ],
-    key: "Epic gear carries three or four affixes — seek the piece whose deeds answer one another and your soul.",
   },
   sets: {
     unlocked: "Relic Sets",
