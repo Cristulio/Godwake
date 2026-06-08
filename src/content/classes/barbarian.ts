@@ -161,7 +161,7 @@ export const BARBARIAN: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Korrek Bloodmane',
+    characterName: 'Cali Trava Consumer',
     recommendedRaceId: 'hill-dwarf',
     // STR-first with a heavy CON cushion — Unarmored Defense leans on both DEX
     // and CON, and a d12 hull wants every point of CON it can hold. With Hill

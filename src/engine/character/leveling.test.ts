@@ -39,7 +39,7 @@ function charAt(classId: ClassId, level: number): Character {
 
 const SIR_BRICK = createCharacter({
   id: 'test-sir-brick',
-  name: 'Sir Brick',
+  name: 'Joni Trabado',
   raceId: 'human',
   classId: 'fighter',
   baseAbilityScores: {

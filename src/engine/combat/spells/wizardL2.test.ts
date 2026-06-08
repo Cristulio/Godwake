@@ -84,7 +84,7 @@ function makeScriptedRoller(opts: {
 function makeWizardL3Knowing(spellId: string): Character {
   let w = createCharacter({
     id: 'l2-wizard',
-    name: 'Veyra',
+    name: 'Cristulio',
     raceId: 'human',
     classId: 'wizard',
     baseAbilityScores: { str: 8, dex: 12, con: 13, int: 15, wis: 14, cha: 10 },

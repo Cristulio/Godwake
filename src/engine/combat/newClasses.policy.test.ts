@@ -14,7 +14,7 @@ function makeBarbarian(level = 2): Character {
   return {
     ...createCharacter({
       id: 'sim-barbarian',
-      name: 'Korrek',
+      name: 'Cali Trava Consumer',
       raceId: 'human',
       classId: 'barbarian',
       baseAbilityScores: {
@@ -37,7 +37,7 @@ function makeRanger(level = 2): Character {
   return {
     ...createCharacter({
       id: 'sim-ranger',
-      name: 'Faelar',
+      name: 'Chompolario Biologo Trolo',
       raceId: 'wood-elf',
       classId: 'ranger',
       baseAbilityScores: {

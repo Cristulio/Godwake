@@ -235,9 +235,9 @@ export function carrySoulProgress(fresh: Character, soul: Character): Character 
   };
 }
 
-/** The Sir Brick preset — kept for the archived v1 creation flow. */
+/** The Joni Trabado preset — kept for the archived v1 creation flow. */
 export const SIR_BRICK_PRESET: CharacterCreationInput = {
-  name: 'Sir Brick',
+  name: 'Joni Trabado',
   raceId: 'human',
   classId: 'fighter',
   baseAbilityScores: {

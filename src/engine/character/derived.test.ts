@@ -33,7 +33,7 @@ describe('proficiencyBonus', () => {
 describe('character derivation — human fighter', () => {
   const human = createCharacter({
     id: 'test-1',
-    name: 'Sir Brick',
+    name: 'Joni Trabado',
     raceId: 'human',
     classId: 'fighter',
     baseAbilityScores: {
