@@ -4,7 +4,7 @@ import { Panel } from '../ui/Panel';
 import { BlessingCard } from '../ui/BlessingCard';
 import { useGameStore } from '../../stores/gameStore';
 import { getActiveRoller } from '../../engine/dice';
-import { rollBlessingOptions } from '../../engine/character/blessings';
+import { rollBlessingOptions, blessingsForClass } from '../../engine/character/blessings';
 import { baneQuirkCount } from '../../engine/character/quirks';
 import { playSfx } from '../../engine/audio';
 import { useT } from '../../i18n/useT';
@@ -24,14 +24,20 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   const character = useGameStore((s) => s.character);
   const baneCount = character ? baneQuirkCount(character) : 0;
   const delveLevel = character?.level ?? 1;
+  const ownedBlessingIds = character?.blessings ?? [];
+  // Blessings are consumed per run, so the shrine offers fewer cards as the
+  // pool empties: 3 (+ Wider Pantheon) normally, but capped at how many the
+  // soul hasn't already taken, and a flavor line once it's exhausted.
+  const remaining = Math.max(0, blessingsForClass(classId).length - ownedBlessingIds.length);
   const [options, setOptions] = useState<string[]>([]);
   const [chosen, setChosen] = useState<string | null>(null);
 
-  // Roll N unique blessing options on mount. Wider Pantheon adds extras.
+  // Roll the available unique blessing options on mount. Wider Pantheon adds
+  // extras; the run's already-owned blessings are excluded (consumption).
   useEffect(() => {
     const roller = getActiveRoller();
-    const count = 3 + shrineOptionBonus;
-    setOptions(rollBlessingOptions(roller, count, classId));
+    const count = Math.min(3 + shrineOptionBonus, remaining);
+    if (count > 0) setOptions(rollBlessingOptions(roller, count, classId, ownedBlessingIds));
     // Shrine Tithe: pay out gold on each shrine entry.
     if (shrineTitheGold > 0) grantTitheGold(shrineTitheGold);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,21 +75,35 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
         </div>
       </Panel>
 
-      {!chosen ? (
+      {!chosen && remaining === 0 ? (
+        <div className="flex flex-col items-center gap-4 animate-fade-in py-4">
+          <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-md leading-relaxed">
+            {t('delve.shrine.empty')}
+          </p>
+          <button
+            type="button"
+            onClick={leave}
+            className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest italic hover:text-[var(--color-text-secondary)] py-2 px-4 border border-[var(--color-border-dim)] hover:border-[var(--color-border-warm)] transition-colors"
+          >
+            {t('delve.shrine.leave')}
+          </button>
+        </div>
+      ) : !chosen ? (
         <>
           <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em] text-center">
             {t('delve.shrine.chooseBlessing')}
           </div>
-          <div className="grid md:grid-cols-3 gap-4 items-stretch">
+          <div className="flex flex-wrap justify-center gap-4 items-stretch">
             {options.map((id) => (
-              <BlessingCard
-                key={id}
-                blessingId={id}
-                pickable
-                onPick={() => pick(id)}
-                baneCount={baneCount}
-                delveLevel={delveLevel}
-              />
+              <div key={id} className="w-full md:w-72">
+                <BlessingCard
+                  blessingId={id}
+                  pickable
+                  onPick={() => pick(id)}
+                  baneCount={baneCount}
+                  delveLevel={delveLevel}
+                />
+              </div>
             ))}
           </div>
           <div className="flex justify-center">

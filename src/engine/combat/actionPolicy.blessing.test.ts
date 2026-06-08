@@ -4,7 +4,7 @@ import { characterAtLevel } from '../../test/sim/encounterStress';
 
 // Blessing ids referenced (see content/blessings):
 //   helms-aegis      -> { acBonus: 1 }
-//   tempus-edge      -> { critRangeBonus: 1 }     (weapon-keyed, non-stacking)
+//   tempus-edge      -> { critRangeBonus: 1 }     (weapon-keyed, crit SUMS/stacks)
 //   mystras-whisper  -> { damageBonus: 1 }        (weapon-keyed)
 //   tymoras-coin     -> { rerollMissesPerEncounter: 1 } (weapon-keyed)
 //   ilmaters-patience-> { extraStabiliseCharges: 1 }
@@ -35,9 +35,15 @@ describe('scoreBlessing', () => {
   });
 
   it('treats a non-stacking lever already owned as a dead pick', () => {
+    const f = characterAtLevel('fighter', 3, ['mystras-whisper']); // already +1 damage
+    // mystras-whisper is { damageBonus: 1 } — damage is max-of, so a duplicate is inert.
+    expect(scoreBlessing('mystras-whisper', f)).toBe(-1);
+  });
+
+  it('treats an owned crit blessing as a live pick (crit range stacks to +2)', () => {
     const f = characterAtLevel('fighter', 3, ['tempus-edge']); // already crit +1
-    // tempus-edge is { critRangeBonus: 1 } — same signature, so it is inert now.
-    expect(scoreBlessing('tempus-edge', f)).toBe(-1);
+    // Crit range sums now, so a second crit blessing genuinely widens the window.
+    expect(scoreBlessing('tempus-edge', f)).toBeGreaterThan(0);
   });
 
   it('credits only the marginal temp HP over the best source already held', () => {
@@ -67,8 +73,8 @@ describe('chooseBlessing', () => {
   });
 
   it('avoids an owned non-stacking duplicate in favour of a fresh option', () => {
-    const f = characterAtLevel('fighter', 3, ['tempus-edge']);
-    // tempus-edge is inert (dup crit); mystras-whisper still adds damage.
-    expect(chooseBlessing(['tempus-edge', 'mystras-whisper'], f)).toBe('mystras-whisper');
+    const f = characterAtLevel('fighter', 3, ['mystras-whisper']);
+    // mystras-whisper is inert (dup damage); helms-aegis still adds AC.
+    expect(chooseBlessing(['mystras-whisper', 'helms-aegis'], f)).toBe('helms-aegis');
   });
 });

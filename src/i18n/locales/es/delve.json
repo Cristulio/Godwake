@@ -38,7 +38,8 @@
     "chooseBlessing": "► Elige una bendición",
     "leave": "Dejar el altar intacto",
     "accepts": "◆ El dios acepta el trato",
-    "walkingDeeper": "adentrándose..."
+    "walkingDeeper": "adentrándose...",
+    "empty": "El altar guarda silencio. Los dioses han vaciado sus manos en ti —no quedan bendiciones que ofrecer."
   },
   "treasure": {
     "label": "Tesoro",

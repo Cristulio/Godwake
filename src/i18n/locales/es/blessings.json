@@ -114,16 +114,6 @@
     "flavor": "La Urdimbre se concentra más densa alrededor de los marcados y los condenados. Tus maldiciones la atraen como polillas a una vela.",
     "effect": "Al inicio de cada combate, gana 2 PG temporales por cada perdición que cargue el alma."
   },
-  "selunes-clarity": {
-    "name": "Claridad de Selûne",
-    "flavor": "Entero e ileso, ves la línea de la muerte como luz de luna sobre el agua —clara, certera, ya trazada.",
-    "effect": "Mientras estés a plena salud, tu rango de crítico se ensancha en 1."
-  },
-  "tempus-bloodfury": {
-    "name": "Furor Sangriento de Tempus",
-    "flavor": "Sangrando, acorralado, el valiente golpea más certero. Tempus se inclina más cerca del guerrero que no tiene nada que perder.",
-    "effect": "Mientras estés ensangrentado (a la mitad de PG o menos), tu rango de crítico se ensancha en 1."
-  },
   "helms-bastion": {
     "name": "Bastión de Helm",
     "flavor": "Ante el gran enemigo, el Vigilante pone Su escudo a tu espalda. No serás tú quien rompa la línea.",
