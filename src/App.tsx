@@ -3,7 +3,6 @@ import { useGameStore } from './stores/gameStore';
 import { TitleScreen } from './components/title/TitleScreen';
 import { HubScreen } from './components/hub/HubScreen';
 import { SettingsButton } from './components/ui/SettingsButton';
-import { FeedbackButton } from './components/ui/FeedbackButton';
 import { FeedbackModal } from './components/ui/FeedbackModal';
 import { useCombatAudio } from './hooks/useCombatAudio';
 import { useT } from './i18n/useT';
@@ -200,7 +199,6 @@ function App() {
         </Suspense>
       )}
       <SettingsButton />
-      <FeedbackButton />
       <FeedbackModal />
     </div>
   );

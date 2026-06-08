@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, act, fireEvent, waitFor } from '@testing-library/react';
 import { feedbackEnabled, submitFeedback, collectContext } from './feedback';
 import { useFeedbackUi } from './feedbackUi';
-import { FeedbackButton } from '../components/ui/FeedbackButton';
+import { SettingsButton } from '../components/ui/SettingsButton';
 import { FeedbackModal } from '../components/ui/FeedbackModal';
 import { useGameStore } from '../stores/gameStore';
 
@@ -72,16 +72,16 @@ describe('submitFeedback', () => {
   });
 });
 
-describe('FeedbackButton', () => {
-  it('renders nothing when the feature is disabled', () => {
+describe('feedback pill in the settings cluster', () => {
+  it('is absent when the feature is disabled', () => {
     vi.stubEnv('VITE_FEEDBACK_URL', '');
-    const { container } = render(<FeedbackButton />);
-    expect(container.firstChild).toBeNull();
+    render(<SettingsButton />);
+    expect(screen.queryByRole('button', { name: /send word/i })).toBeNull();
   });
 
   it('renders and opens the modal when enabled', () => {
     vi.stubEnv('VITE_FEEDBACK_URL', URL);
-    render(<FeedbackButton />);
+    render(<SettingsButton />);
     const btn = screen.getByRole('button', { name: /send word/i });
     fireEvent.click(btn);
     expect(useFeedbackUi.getState().open).toBe(true);

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { useAudioStore } from '../../stores/audioStore';
+import { useT } from '../../i18n/useT';
+import { useFeedbackUi } from '../../feedback/feedbackUi';
+import { feedbackEnabled } from '../../feedback/feedback';
 import { SettingsModal } from './SettingsModal';
 
 /**
@@ -14,9 +17,11 @@ import { SettingsModal } from './SettingsModal';
  * empty, so the fixed placement is unchanged there.
  */
 export function SettingsButton() {
+  const { t } = useT();
   const screen = useGameStore((s) => s.screen);
   const muted = useAudioStore((s) => s.muted);
   const toggleMuted = useAudioStore((s) => s.toggleMuted);
+  const openFeedback = useFeedbackUi((s) => s.openFeedback);
   const [open, setOpen] = useState(false);
 
   if (screen === 'title') return null;
@@ -48,6 +53,18 @@ export function SettingsButton() {
           <span className="lg:hidden" aria-hidden="true">⚙</span>
           <span className="hidden lg:inline">⚙ Settings</span>
         </button>
+        {feedbackEnabled() && (
+          <button
+            type="button"
+            onClick={openFeedback}
+            title={t('ui.feedback.title')}
+            aria-label={t('ui.feedback.title')}
+            className="inline-flex items-center justify-center min-w-[2.25rem] lg:min-w-0 px-2.5 py-1.5 lg:px-2 lg:py-1 border-2 border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)] text-xs lg:text-[10px] uppercase tracking-widest font-bold transition-colors"
+          >
+            <span className="lg:hidden" aria-hidden="true">✎</span>
+            <span className="hidden lg:inline">✎ {t('ui.feedback.button')}</span>
+          </button>
+        )}
       </div>
       {open && <SettingsModal onClose={() => setOpen(false)} />}
     </>
