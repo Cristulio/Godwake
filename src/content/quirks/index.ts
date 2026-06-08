@@ -143,7 +143,9 @@ const RAW: Quirk[] = [
   QuirkSchema.parse({
     id: 'carrion-eye',
     name: 'Carrion Eye',
-    sentiment: 'odd',
+    // Pure upside (+1 to-hit vs wounded, no cost) → a boon, not an "odd" trade.
+    // Its sibling Bloody-Minded is the same edge WITH a −1 AC cost (correctly odd).
+    sentiment: 'boon',
     flavor:
       'You read the weak the way a vulture reads a horizon. Patient. Certain. Already eating.',
     effect: '+1 to-hit vs wounded enemies (below half HP).',
