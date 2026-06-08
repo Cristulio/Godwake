@@ -496,6 +496,7 @@
     "offenseFighter": "Costs {cost} {pool}: this turn's strikes land surer (+{hit} to hit) and bite for +{dmg} damage{cleave}.",
     "offenseOther": "Costs {cost} {pool}: this turn's strikes land for +{dmg} damage{cleave}.",
     "offenseCleave": ", and cleave into a second foe",
+    "bonusActionCost": " Also spends your bonus action this turn.",
     "defense": "Costs {cost} {pool}: blunt the next hit you take by {reduction}. Hold it for a blow you can see coming.",
     "disrupt": "Costs {cost} {pool}: arm a staggering strike — the next hit fells its target and costs it its next turn.",
     "cunningAction": "Bonus action: Hide (advantage on next attack — enables Sneak), Quick Strike (a second strike this turn), Feint (guarantee Sneak on your next strike), or Steel Yourself (advantage on next save).",

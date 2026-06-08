@@ -194,6 +194,18 @@ function canSpend(character: Readonly<Character>, mechanicKey: string, cost: num
 }
 
 /**
+ * The Fighter's Power Attack / Brace also spend the turn's bonus action — a real
+ * opportunity cost: heave the heavy swing OR Second Wind, not both. The
+ * Barbarian (Savage Cleave / Bloodied Guard) and Ranger (Aimed Shot / Set
+ * Stance) keep their spends free of the action economy — their bonus action is
+ * already claimed by Rage / Hunter's Mark, so taxing it would dead-lock the kit.
+ * DISRUPT (Shield Bash) stays free for everyone.
+ */
+function martialSpendCostsBonusAction(character: Readonly<Character>): boolean {
+  return character.classId === 'fighter';
+}
+
+/**
  * OFFENSE — a heavy/aimed strike. A free stance declared before the swing:
  * spends {@link martialOffenseCost} points to add {@link martialOffenseDamage}
  * to every strike this turn (read in playerAttack). For the Barbarian the same
@@ -203,12 +215,17 @@ export function useMartialOffense(ctx: MartialContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.martialOffenseActive === true) return combatResult(state, character);
   if (character.actionEconomy.actionUsed) return combatResult(state, character);
+  const costsBonus = martialSpendCostsBonusAction(character);
+  if (costsBonus && character.actionEconomy.bonusActionUsed) return combatResult(state, character);
   const cost = martialOffenseCost(character);
   if (!canSpend(character, 'martial-offense', cost)) {
     return combatResult(state, character);
   }
   const flavor = martialFlavor(character)!;
   let next: Character = { ...character, martialOffenseActive: true, martialSpentThisTurn: true };
+  if (costsBonus) {
+    next = { ...next, actionEconomy: { ...next.actionEconomy, bonusActionUsed: true } };
+  }
   next = patchResources(next, {
     martialPointsRemaining: martialPointsLeft(character) - cost,
   });
@@ -242,6 +259,8 @@ export function useMartialOffense(ctx: MartialContext): CombatActionResult {
  */
 export function useMartialDefense(ctx: MartialContext): CombatActionResult {
   const { character, state } = ctx;
+  const costsBonus = martialSpendCostsBonusAction(character);
+  if (costsBonus && character.actionEconomy.bonusActionUsed) return combatResult(state, character);
   if (!canSpend(character, 'martial-defense', MARTIAL_DEFENSE_COST)) {
     return combatResult(state, character);
   }
@@ -252,6 +271,9 @@ export function useMartialDefense(ctx: MartialContext): CombatActionResult {
     incomingDamageReduction: Math.max(character.incomingDamageReduction ?? 0, reduction),
     martialSpentThisTurn: true,
   };
+  if (costsBonus) {
+    next = { ...next, actionEconomy: { ...next.actionEconomy, bonusActionUsed: true } };
+  }
   next = patchResources(next, {
     martialPointsRemaining: martialPointsLeft(character) - MARTIAL_DEFENSE_COST,
   });

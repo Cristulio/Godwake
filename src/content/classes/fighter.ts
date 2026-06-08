@@ -30,7 +30,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'power-attack',
         name: 'Power Attack',
         description:
-          'Your Resolve — three points of grit that refresh each fight, spent at most one a turn on the blows that matter. Power Attack is the offense: set your feet and swing heavy, and every strike this turn bites deeper. Costs 2 Resolve.',
+          'Your Resolve — three points of grit that refresh each fight, spent at most one a turn on the blows that matter. Power Attack is the offense: set your feet and swing heavy, and every strike this turn bites deeper. Costs 2 Resolve and your bonus action — heave the heavy swing or steady yourself, not both.',
         mechanicKey: 'martial-offense',
       },
     ],
@@ -46,7 +46,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'brace',
         name: 'Brace',
         description:
-          'Read the incoming blow and plant the shield against it. Spend 1 Resolve to set your guard — the next hit you take is blunted by 4 plus half your level. Hold it for the swing you can see coming.',
+          'Read the incoming blow and plant the shield against it. Spend 1 Resolve and your bonus action to set your guard — the next hit you take is blunted by 4 plus half your level. Hold it for the swing you can see coming.',
         mechanicKey: 'martial-defense',
       },
     ],

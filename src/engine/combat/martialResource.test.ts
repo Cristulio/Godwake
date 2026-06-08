@@ -97,8 +97,43 @@ describe('Martial pool — refresh + spend rules', () => {
       martialPoolMax(init.character) - martialOffenseCost(init.character),
     );
     expect(r.character.martialSpentThisTurn).toBe(true);
-    // No action-economy tax — the only cost is the point.
+    // The Fighter's Power Attack spends the bonus action (Brace too), but never
+    // the main action — the heavy swing still follows the same turn.
     expect(r.character.actionEconomy.actionUsed).toBe(false);
+    expect(r.character.actionEconomy.bonusActionUsed).toBe(true);
+  });
+
+  it("the Fighter's Power Attack / Brace are refused once the bonus action is spent", () => {
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: fighter(3),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const bonusSpent: Character = {
+      ...init.character,
+      actionEconomy: { ...init.character.actionEconomy, bonusActionUsed: true },
+    };
+    const off = useMartialOffense({ character: bonusSpent, state: init.state });
+    expect(off.character.martialOffenseActive).not.toBe(true);
+    expect(off.character.resources.martialPointsRemaining).toBe(
+      martialPoolMax(init.character),
+    );
+    const def = useMartialDefense({ character: bonusSpent, state: init.state });
+    expect(def.character.incomingDamageReduction ?? 0).toBe(0);
+  });
+
+  it("the Barbarian's Savage Cleave / Bloodied Guard stay free of the action economy", () => {
+    const init = createCombat({
+      roller: createDiceRoller(1),
+      character: barbarian(3),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const off = useMartialOffense({ character: init.character, state: init.state });
+    expect(off.character.martialOffenseActive).toBe(true);
+    expect(off.character.actionEconomy.bonusActionUsed).toBe(false);
+    const def = useMartialDefense({ character: init.character, state: init.state });
+    expect(def.character.incomingDamageReduction).toBe(martialDefenseReduction(init.character));
+    expect(def.character.actionEconomy.bonusActionUsed).toBe(false);
   });
 
   it('caps at one spend per turn — a second spend the same turn is a no-op', () => {
