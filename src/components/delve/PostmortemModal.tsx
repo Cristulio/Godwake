@@ -2,6 +2,7 @@ import type { Postmortem } from '../../types/postmortem';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { MonsterPortrait } from '../combat/MonsterPortrait';
+import { localizedDamageType } from '../inventory/itemDisplay';
 import { useT } from '../../i18n/useT';
 
 interface PostmortemModalProps {
@@ -76,7 +77,7 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
                   {postmortem.damageType && (
                     <span className="text-[var(--color-text-dim)] not-italic">
                       {' '}
-                      {postmortem.damageType}
+                      {localizedDamageType(postmortem.damageType)}
                     </span>
                   )}
                   {postmortem.crit && (

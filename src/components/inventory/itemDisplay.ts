@@ -1,4 +1,6 @@
 import type { Item, ItemRef } from '../../schemas/item';
+import type { GearRarity } from '../../schemas/item';
+import type { Rarity } from '../../schemas/ids';
 import { t, getLocalized } from '../../i18n';
 import { getItem, getAffix } from '../../content/items';
 import { affixDominance } from '../../engine/items/rollItem';
@@ -6,8 +8,27 @@ import { affixDominance } from '../../engine/items/rollItem';
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
 /** Localized damage-type word (reads the shared combat namespace, owned elsewhere). */
-function damageType(type: string): string {
-  return t(`combat.damageType.${type}`);
+export function localizedDamageType(type: string): string {
+  const key = `combat.dmg.${type}`;
+  const v = t(key);
+  return v === key ? type : v;
+}
+
+/** Localized loot-rarity word (white/green/blue/purple/legendary/set). */
+export function gearRarityLabel(rarity: GearRarity): string {
+  return t(`screens.rarity.gear.${rarity}`);
+}
+
+/** Localized D&D base-item rarity word (common…artifact). */
+export function dndRarityLabel(rarity: Rarity): string {
+  return t(`screens.rarity.dnd.${rarity}`);
+}
+
+/** Localized weapon-property word (finesse, heavy, …), falling back to the raw id. */
+export function weaponPropertyLabel(prop: string): string {
+  const key = `screens.itemTooltip.property.${prop}`;
+  const v = t(key);
+  return v === key ? prop : v;
 }
 
 /**
@@ -76,7 +97,7 @@ export function baseStatLine(item: Item): string {
       const versatile = item.versatileDamage
         ? ` (${item.versatileDamage} ${t('screens.itemDisplay.twoH')})`
         : '';
-      return `${item.damage} ${damageType(item.damageType)}${versatile}`;
+      return `${item.damage} ${localizedDamageType(item.damageType)}${versatile}`;
     }
     case 'armor':
       if (item.category === 'shield') return t('screens.itemDisplay.acShield', { n: item.baseAC });

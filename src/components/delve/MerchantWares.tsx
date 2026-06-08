@@ -4,8 +4,8 @@ import { Button } from '../ui/Button';
 import { getItem } from '../../content/items';
 import { getLegendary } from '../../content/legendaries';
 import { armorEquipWarning } from '../../engine/character/equip';
-import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
-import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect } from '../inventory/itemDisplay';
+import { GEAR_RARITY_COLOR } from '../inventory/rarity';
+import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect, gearRarityLabel } from '../inventory/itemDisplay';
 import type { GearStock, LegendaryOffer } from './shopStock';
 import { useT } from '../../i18n/useT';
 
@@ -50,7 +50,7 @@ export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearW
           {localizedItemName(stock.ref)}
         </div>
         <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
-          {GEAR_RARITY_LABEL[rarity]} · {itemTypeLabel(base)}
+          {gearRarityLabel(rarity)} · {itemTypeLabel(base)}
         </div>
         {base.kind !== 'accessory' && (
           <div className="text-[var(--color-text-secondary)] text-[11px] uppercase tracking-widest font-mono mt-0.5">

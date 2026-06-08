@@ -16,6 +16,7 @@ import { effectiveAbilityScores } from '../../engine/character/derived';
 import type { AbilityName, AbilityScores } from '../../types/abilities';
 import type { Character } from '../../types/character';
 import type { Spell, SpellLevel } from '../../schemas/spell';
+import { localizedDamageType } from '../inventory/itemDisplay';
 import { useT } from '../../i18n/useT';
 
 const ABILITY_ORDER: AbilityName[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
@@ -318,7 +319,7 @@ export function LevelUpScreen() {
                     </div>
                     <div className="text-[var(--color-text-dim)] text-[11px] mt-1 normal-case tracking-normal">
                       {spellScopeLabel(sp.target)}
-                      {sp.damageType ? ` · ${sp.damageType}` : ''}
+                      {sp.damageType ? ` · ${localizedDamageType(sp.damageType)}` : ''}
                     </div>
                     <div className="text-[var(--color-text-secondary)] text-xs mt-1.5 leading-relaxed normal-case tracking-normal">
                       {tc('spells', sp.id, 'description', sp.description)}

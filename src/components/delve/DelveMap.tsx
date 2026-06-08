@@ -46,7 +46,7 @@ interface Placed {
  * clickable, the rest dark. Picking a reachable node steps the run into it.
  */
 export function DelveMap({ delve, character }: { delve: DelveState; character: Character }) {
-  const { t } = useT();
+  const { t, tc } = useT();
   const chooseRoom = useGameStore((s) => s.chooseRoom);
   const goToInventory = useGameStore((s) => s.goToInventory);
   const abandonDelve = useGameStore((s) => s.abandonDelve);
@@ -272,7 +272,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
             )}
             {detailTwist && (
               <div className="text-[var(--color-accent-blood)] text-xs italic mt-1 leading-relaxed">
-                ✦ {detailTwist.telegraph}
+                ✦ {tc('twists', detailTwist.id, 'telegraph', detailTwist.telegraph)}
               </div>
             )}
           </>

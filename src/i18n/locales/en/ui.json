@@ -74,7 +74,10 @@
     "justNow": "just now",
     "minutesAgo": "{n}m ago",
     "hoursAgo": "{n}h ago",
-    "daysAgo": "{n}d ago"
+    "daysAgo": "{n}d ago",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "soundLabel": "Sound"
   },
   "combat": {
     "castSpell": "Cast a Spell",

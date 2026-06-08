@@ -32,8 +32,8 @@ export function SettingsButton() {
         <button
           type="button"
           onClick={toggleMuted}
-          title={muted ? 'Unmute' : 'Mute'}
-          aria-label={muted ? 'Unmute' : 'Mute'}
+          title={muted ? t('ui.settings.unmute') : t('ui.settings.mute')}
+          aria-label={muted ? t('ui.settings.unmute') : t('ui.settings.mute')}
           className={`inline-flex items-center justify-center min-w-[2.25rem] lg:min-w-0 px-2.5 py-1.5 lg:px-2 lg:py-1 border-2 text-xs lg:text-[10px] uppercase tracking-widest font-bold transition-colors ${
             muted
               ? 'bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-dim)]'
@@ -41,17 +41,17 @@ export function SettingsButton() {
           }`}
         >
           <span className="lg:hidden" aria-hidden="true">{muted ? '×' : '▸'}</span>
-          <span className="hidden lg:inline">{muted ? '× Muted' : '▸ Sound'}</span>
+          <span className="hidden lg:inline">{muted ? `× ${t('ui.settings.muted')}` : `▸ ${t('ui.settings.soundLabel')}`}</span>
         </button>
         <button
           type="button"
           onClick={() => setOpen(true)}
-          title="Settings"
-          aria-label="Settings"
+          title={t('ui.settings.title')}
+          aria-label={t('ui.settings.title')}
           className="inline-flex items-center justify-center min-w-[2.25rem] lg:min-w-0 px-2.5 py-1.5 lg:px-2 lg:py-1 border-2 border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)] text-xs lg:text-[10px] uppercase tracking-widest font-bold transition-colors"
         >
           <span className="lg:hidden" aria-hidden="true">⚙</span>
-          <span className="hidden lg:inline">⚙ Settings</span>
+          <span className="hidden lg:inline">⚙ {t('ui.settings.title')}</span>
         </button>
         {feedbackEnabled() && (
           <button

@@ -166,7 +166,19 @@
     "enhAc": "+{n} CA",
     "noneCaster": "ninguna (lanzador)",
     "actionBonus": "adicional",
-    "actionAction": "acción"
+    "actionAction": "acción",
+    "ft": "{a}/{b} pies",
+    "gp": "{n} po",
+    "property": {
+      "light": "ligera",
+      "heavy": "pesada",
+      "finesse": "sutileza",
+      "two-handed": "a dos manos",
+      "versatile": "versátil",
+      "reach": "alcance",
+      "ammunition": "munición",
+      "loading": "recarga"
+    }
   },
   "itemDisplay": {
     "twoH": "2m",
@@ -317,5 +329,23 @@
     "soulMarkResolved": "Marca del alma: tus {n} {markWord} +{pct}% de oro, PX y renombre.",
     "markEarns": "marca otorga",
     "marksEarn": "marcas otorgan"
+  },
+  "rarity": {
+    "gear": {
+      "white": "Común",
+      "green": "Infrecuente",
+      "blue": "Raro",
+      "purple": "Épico",
+      "legendary": "Legendario",
+      "set": "Conjunto"
+    },
+    "dnd": {
+      "common": "Común",
+      "uncommon": "Infrecuente",
+      "rare": "Raro",
+      "very-rare": "Muy raro",
+      "legendary": "Legendario",
+      "artifact": "Artefacto"
+    }
   }
 }

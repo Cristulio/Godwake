@@ -3,6 +3,7 @@ import type { Monster, MonsterAction } from '../../schemas/monster';
 import { getMonster } from '../../content/monsters';
 import { MonsterPortrait } from '../combat/MonsterPortrait';
 import { abilityModifier, ABILITY_NAMES } from '../../types/abilities';
+import { localizedDamageType } from '../inventory/itemDisplay';
 import { useT } from '../../i18n/useT';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
@@ -246,7 +247,7 @@ function ActionRow({
         </div>
         <div className="font-mono text-[11px] text-[var(--color-text-secondary)] mt-1">
           <span className="text-[var(--color-accent-gold)]">{bonus}</span> {t('screens.monsterDetail.toHit')} ·{' '}
-          <span className="text-[var(--color-accent-amber)]">{action.damage}</span> {action.damageType}
+          <span className="text-[var(--color-accent-amber)]">{action.damage}</span> {localizedDamageType(action.damageType)}
         </div>
         {action.description && (
           <p className="text-[var(--color-text-secondary)] text-[11px] italic mt-1 leading-snug">

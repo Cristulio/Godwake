@@ -74,7 +74,10 @@
     "justNow": "ahora mismo",
     "minutesAgo": "hace {n}m",
     "hoursAgo": "hace {n}h",
-    "daysAgo": "hace {n}d"
+    "daysAgo": "hace {n}d",
+    "mute": "Silenciar",
+    "unmute": "Activar sonido",
+    "soundLabel": "Sonido"
   },
   "combat": {
     "castSpell": "Lanzar un Conjuro",

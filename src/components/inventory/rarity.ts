@@ -12,15 +12,6 @@ export const GEAR_RARITY_COLOR: Record<GearRarity, string> = {
   set: '#0fa968',
 };
 
-export const GEAR_RARITY_LABEL: Record<GearRarity, string> = {
-  white: 'Common',
-  green: 'Uncommon',
-  blue: 'Rare',
-  purple: 'Epic',
-  legendary: 'Legendary',
-  set: 'Set',
-};
-
 /** The gear rarity of a carried item ref, defaulting to white for plain bases. */
 export function refRarity(ref: ItemRef | null | undefined): GearRarity {
   return ref?.rolled?.rarity ?? 'white';
