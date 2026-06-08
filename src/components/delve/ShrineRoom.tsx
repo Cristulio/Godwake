@@ -15,7 +15,7 @@ interface ShrineRoomProps {
 }
 
 export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
-  const { t } = useT();
+  const { t, lr } = useT();
   const addBlessing = useGameStore((s) => s.addBlessing);
   const grantTitheGold = useGameStore((s) => s.grantTitheGold);
   const shrineOptionBonus = useGameStore((s) => s.character?.shrineOptionBonus ?? 0);
@@ -59,7 +59,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
     <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(212,176,98,0.10),transparent_55%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)]">
         <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
-          {room.title.toUpperCase()}
+          {lr(room.chapter, room.title).toUpperCase()}
         </h1>
         <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest">
           {t('delve.shrine.label')}
@@ -70,7 +70,7 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
         <div className="flex flex-col items-center gap-3 py-4">
           <ShrineSilhouette />
           <p className="text-[var(--color-text-secondary)] text-sm italic text-center max-w-md leading-relaxed">
-            {room.flavorText}
+            {lr(room.chapter, room.flavorText)}
           </p>
         </div>
       </Panel>

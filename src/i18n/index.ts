@@ -103,3 +103,17 @@ export function getLocalized(
   }
   return fallbackEnglish;
 }
+
+/**
+ * Localize a PROCEDURAL delve room string — an encounter / room title or flavor.
+ * These live inline in the pool + delve code with NO ids, so the overlay
+ * (es/rooms{chapter}.json) is keyed by the ENGLISH SOURCE string and bucketed by
+ * the chapter the room belongs to. Falls back to the English source out of locale
+ * or when untranslated. Event / boss-intel rooms do NOT use this — they localize
+ * through es/events.json / es/bossIntel.json.
+ */
+export function localizeRoomText(chapter: number | undefined, englishSource: string): string {
+  if (!englishSource || getLocale() === DEFAULT_LOCALE || !chapter) return englishSource;
+  const val = registry.es?.[`rooms${chapter}`]?.[englishSource];
+  return typeof val === 'string' ? val : englishSource;
+}

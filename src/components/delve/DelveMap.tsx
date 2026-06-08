@@ -46,7 +46,7 @@ interface Placed {
  * clickable, the rest dark. Picking a reachable node steps the run into it.
  */
 export function DelveMap({ delve, character }: { delve: DelveState; character: Character }) {
-  const { t, tc } = useT();
+  const { t, tc, lr } = useT();
   const chooseRoom = useGameStore((s) => s.chooseRoom);
   const goToInventory = useGameStore((s) => s.goToInventory);
   const abandonDelve = useGameStore((s) => s.abandonDelve);
@@ -248,7 +248,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                       '--bm-accent': accent,
                     } as CSSProperties
                   }
-                  title={room.title}
+                  title={lr(room.chapter, room.title)}
                 >
                   <span className="bm-node-tag">{tag}</span>
                   {isLocked && (
