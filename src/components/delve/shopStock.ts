@@ -199,19 +199,23 @@ function legendaryOfferChance(chapter: number): number {
  * Kept in one place so the economy sim can retune the numbers without touching the
  * call sites. */
 export const LEGENDARY_PRICE = {
-  base: 1500,
-  perOwned: 900,
-  perChapter: 200,
+  base: 1200,
+  perOwned: 250,
+  perChapter: 150,
+  // Hard ceiling so a near-full reliquary stays an ATTAINABLE stretch goal (save
+  // up + clear elites), never the 35k wall the old steep `perOwned` produced.
+  cap: 6000,
 } as const;
 
 /** Reliquary price for the next relic: floor + per-banked-relic escalation + a
- * deep-chapter premium. `ownedCount` is how many legendaries are already banked. */
+ * deep-chapter premium, clamped to `cap` so it stays reachable. `ownedCount` is
+ * how many legendaries are already banked. */
 function legendaryOfferCost(chapter: number, ownedCount: number): number {
-  return (
+  const raw =
     LEGENDARY_PRICE.base +
     Math.max(0, ownedCount) * LEGENDARY_PRICE.perOwned +
-    Math.max(0, chapter - 3) * LEGENDARY_PRICE.perChapter
-  );
+    Math.max(0, chapter - 3) * LEGENDARY_PRICE.perChapter;
+  return Math.min(raw, LEGENDARY_PRICE.cap);
 }
 
 /**
