@@ -7,10 +7,6 @@
     "name": "Estilo de Combate: Defensa",
     "description": "Mientras vistas armadura, obtienes un bonificador de +1 a la CA."
   },
-  "fighter.guard": {
-    "name": "Guardia",
-    "description": "Un soldado entrenado se deja llevar por el primer golpe en lugar de recibirlo de lleno. El primer impacto contra ti cada asalto se mitiga en 2 —un golpe aún muerde al menos por 1. El instinto que saca a flote a un recluta novato en los asaltos iniciales; hacia el nivel 5 tu guardia entrenada y tu segundo golpe lo vuelven una segunda naturaleza, y se desvanece."
-  },
   "fighter.second-wind": {
     "name": "Segundo Aliento",
     "description": "En tu turno, puedes usar una acción adicional para recuperar puntos de golpe iguales a 1d10 + 2 por nivel de guerrero. Se renueva al inicio de cada encuentro de combate."
