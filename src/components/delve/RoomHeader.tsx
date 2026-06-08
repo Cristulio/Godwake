@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { DelveState } from '../../types/delve';
 import { chapterLabel, getTwist } from '../../engine/delve';
+import { stripDiacritics } from '../../i18n';
 import { BlessingCard } from '../ui/BlessingCard';
 import { QuirkCard } from '../ui/QuirkCard';
 import { useT } from '../../i18n/useT';
@@ -43,8 +44,10 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
           wide-but-not-huge viewports, where this header fills the row. */}
       <div className="flex items-center justify-between gap-3 lg:pr-[17rem]">
         <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
-          {delve.dungeonName}
-          {chapter ? ` · ${chapterLabel(delve, chapter)}` : ''}
+          {/* Pixel display font has no accented capitals — fold them so the
+              localized chapter label never falls back to a mismatched glyph. */}
+          {stripDiacritics(delve.dungeonName)}
+          {chapter ? ` · ${stripDiacritics(chapterLabel(delve, chapter))}` : ''}
         </div>
         {total > 0 && (
           <button

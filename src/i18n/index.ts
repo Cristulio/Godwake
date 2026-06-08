@@ -38,6 +38,17 @@ export function getLocale(): Locale {
   return useSettingsStore.getState().locale;
 }
 
+/**
+ * Fold accents to their base letters (Í→I, ñ→n, …). Used ONLY for text rendered
+ * in the pixel display font (Press Start 2P), which has no accented-capital
+ * glyphs — without this an accented char falls back to a mismatched font and
+ * renders "weird". Body/narrative fonts keep their accents, so this is applied at
+ * the pixel-heading render site, never to the source strings. No-op for English.
+ */
+export function stripDiacritics(s: string): string {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 function resolvePath(data: NamespaceData | undefined, path: string[]): Json | undefined {
   let node: Json | undefined = data;
   for (const seg of path) {
