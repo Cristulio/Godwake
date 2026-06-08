@@ -160,6 +160,34 @@ describe('monster summon action', () => {
     expect(r.state.log.some((l) => /calls a Goblin/.test(l.text))).toBe(true);
   });
 
+  it('scales a summoned add to the encounter ascension (HP), like the room monsters', () => {
+    // At Asc 6 every spawned monster carries +30% HP (createCombat). A mid-fight
+    // summon must take the SAME scaling, or a late boss's reinforcement arrives
+    // at its raw early-game stat block.
+    const roller = createDiceRoller(7);
+    const base = getDef('goblin').maxHp;
+    const init = createCombat({
+      roller,
+      character: makeFighter(),
+      monsters: [{ def: getDef('duergar-taskmaster') }],
+      ascension: 6,
+    });
+    const tid = monstersOf(init.state, 'duergar-taskmaster')[0].id;
+    const r = monsterAttack({ roller, character: init.character, state: init.state }, tid);
+    const summoned = monstersOf(r.state, 'goblin')[0];
+    expect(summoned.instance.hp.max).toBeGreaterThan(base);
+    expect(summoned.instance.hp.current).toBe(summoned.instance.hp.max);
+  });
+
+  it('an un-ascended summon keeps the raw def HP (parity)', () => {
+    const roller = createDiceRoller(7);
+    const base = getDef('goblin').maxHp;
+    const init = createCombat({ roller, character: makeFighter(), monsters: [{ def: getDef('duergar-taskmaster') }] });
+    const tid = monstersOf(init.state, 'duergar-taskmaster')[0].id;
+    const r = monsterAttack({ roller, character: init.character, state: init.state }, tid);
+    expect(monstersOf(r.state, 'goblin')[0].instance.hp.max).toBe(base);
+  });
+
   it('respects maxActive — will not exceed the brood cap', () => {
     const roller = createDiceRoller(3);
     // Spider Broodmother: count 2, maxActive 4. Two casts → 4 driderlings, a
@@ -236,6 +264,30 @@ describe('monster multiattack action', () => {
     expect(r.state.attackEventCounter - before).toBe(2);
     const swings = r.state.log.filter((l) => /with Ravening Claws/.test(l.text)).length;
     expect(swings).toBe(2);
+  });
+
+  it('surfaces BOTH swings in the per-turn attack-event batch (not just the last)', () => {
+    // The whole multiattack turn commits one atomic state, so `lastAttack` only
+    // carries the LAST swing — the UI would float a single number. The batch
+    // exposes every swing so each one floats. Engine-side proxy for the display.
+    const roller = createDiceRoller(11);
+    const init = createCombat({ roller, character: makeFighter(), monsters: [{ def: getDef('famished-ghast') }] });
+    const gid = monstersOf(init.state, 'famished-ghast')[0].id;
+    const r = monsterAttack({ roller, character: init.character, state: init.state }, gid);
+    expect(r.state.attackEvents).toHaveLength(2);
+    expect(r.state.attackEvents!.every((e) => e.attackerKind === 'monster')).toBe(true);
+    expect(r.state.attackEvents!.every((e) => e.targetName === init.character.name)).toBe(true);
+    // Distinct events (ids strictly ascending), and the last mirrors lastAttack.
+    expect(r.state.attackEvents![0].id).toBeLessThan(r.state.attackEvents![1].id);
+    expect(r.state.attackEvents![1].id).toBe(r.state.lastAttack!.id);
+  });
+
+  it('a single-attack turn batches exactly one event', () => {
+    const roller = createDiceRoller(7);
+    const init = createCombat({ roller, character: makeFighter(), monsters: [{ def: getDef('goblin') }] });
+    const gid = monstersOf(init.state, 'goblin')[0].id;
+    const r = monsterAttack({ roller, character: init.character, state: init.state }, gid);
+    expect(r.state.attackEvents).toHaveLength(1);
   });
 });
 

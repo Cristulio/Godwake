@@ -17,6 +17,13 @@ type CommonProps = {
   attackPulse: number;
   /** Latest attack event in combat — used to detect crits against this sprite. */
   lastAttack?: AttackEvent;
+  /**
+   * Every attack resolved in the most recent (atomic) turn commit. A monster
+   * multiattack / multi-action turn lands several swings in one commit, so
+   * `lastAttack` only carries the last — the earlier swings float off this batch
+   * (the main float effect owns the last one).
+   */
+  attackEvents?: AttackEvent[];
   /** Latest spell-effect event — used to float a control verdict (LANDED/RESISTED) on this sprite. */
   spellEffectEvent?: SpellEffectEvent;
 };
@@ -245,6 +252,18 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
       props.kind === 'player'
         ? { kind: 'player' }
         : { kind: 'monster', displayName: props.instance.displayName };
+    // Multi-swing turn aimed at this sprite: the batch effect floats every swing
+    // (and the cues), so defer here — just advance the bookkeeping so the hpDelta
+    // fallback doesn't double-count the swings' damage as a phantom tick.
+    const batched =
+      (props.attackEvents?.length ?? 0) >= 2 &&
+      !!props.lastAttack &&
+      attackAimedAt(props.lastAttack, self);
+    if (batched) {
+      prevHp.current = hpCurrent;
+      if (attackId !== undefined) lastSeenAttackId.current = attackId;
+      return;
+    }
     const float = resolveSpriteFloat({ lastAttack: props.lastAttack, self, hpDelta, isNewAttack });
     prevHp.current = hpCurrent;
     if (attackId !== undefined) lastSeenAttackId.current = attackId;
@@ -320,6 +339,51 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hpCurrent, props.lastAttack?.id]);
+
+  // Multi-swing monster turn (a Fire Giant's two strikes, a multi-action boss).
+  // The whole turn commits one atomic state, so `lastAttack` only carries the
+  // LAST swing — left to the main effect alone the turn would float a single
+  // number. When the batch holds 2+ swings the main effect defers (below) and
+  // this effect floats EVERY swing aimed at this sprite, staggered so they read
+  // as distinct blows. Keyed on the batch array identity — a fresh array per
+  // turn, so it fires once per turn and resets cleanly across fights (no
+  // monotonic-id bookkeeping).
+  useEffect(() => {
+    const events = props.attackEvents;
+    if (!events || events.length < 2) return;
+    const self: FloatSelf =
+      props.kind === 'player'
+        ? { kind: 'player' }
+        : { kind: 'monster', displayName: props.instance.displayName };
+    const swings = events.filter((e) => attackAimedAt(e, self));
+    if (swings.length === 0) return;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    swings.forEach((e, i) => {
+      timers.push(
+        setTimeout(() => {
+          const float = resolveSpriteFloat({ lastAttack: e, self, hpDelta: 0, isNewAttack: true });
+          const id = Date.now() + Math.random();
+          if (!float) {
+            if (!e.hit) {
+              setDamageFloats((d) => [...d, { id, amount: 0, kind: 'miss' }]);
+              timers.push(setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1000));
+            }
+            return;
+          }
+          const isCrit = float.kind === 'crit';
+          const damageType = e.hit && float.kind !== 'heal' ? e.damageType : undefined;
+          setDamageFloats((d) => [...d, { id, amount: float.amount, kind: float.kind, damageType }]);
+          timers.push(
+            setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), isCrit ? 1500 : 1200),
+          );
+          setHitFlash(isCrit ? 'crit' : 'normal');
+          timers.push(setTimeout(() => setHitFlash(null), isCrit ? 320 : 240));
+        }, i * 160),
+      );
+    });
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.attackEvents]);
 
   // A control spell (Hold Person / Entangle) floats a caster's-eye verdict on
   // its target: LANDED when it took hold, RESISTED when the foe shrugged it off.
@@ -571,6 +635,9 @@ export const BattlefieldSprite = memo(BattlefieldSpriteImpl, (prev, next) => {
   // lastAttack: only matters if it CHANGES — a new event id triggers a flash.
   // Sprite reads `lastAttack` to detect crits against itself, so id is enough.
   if (prev.lastAttack?.id !== next.lastAttack?.id) return false;
+  // attackEvents: a fresh per-turn batch (multi-swing turns) must re-render so
+  // each swing floats. New array identity each turn — compare by reference.
+  if (prev.attackEvents !== next.attackEvents) return false;
   // spellEffectEvent: a new id may carry a control verdict to float on this sprite.
   if (prev.spellEffectEvent?.id !== next.spellEffectEvent?.id) return false;
   if (prev.kind === 'player' && next.kind === 'player') {
