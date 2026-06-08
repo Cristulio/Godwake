@@ -37,7 +37,6 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
     kind: 'roll',
     text: t('combat.log.entangleCast', { name: nextCharacter.name, dc }),
   });
-  nextState = attachSpellEffect(nextState, 'debuff-restrain', 'player', live[0].id);
 
   const rooted: string[] = [];
   for (const m of live) {
@@ -48,6 +47,19 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
     const resoluteWill = (m.instance.legendaryResistances ?? 0) > 0;
     const save = roller.d20(resoluteWill ? 'advantage' : 'normal', strMod);
     const success = save.total >= dc;
+
+    // Anchor the restrain VFX + the caster's-eye verdict on the primary target
+    // (the first live foe): rooted = it LANDED, made the save = RESISTED.
+    if (m.id === live[0].id) {
+      nextState = attachSpellEffect(
+        nextState,
+        'debuff-restrain',
+        'player',
+        m.id,
+        undefined,
+        success ? 'resisted' : 'landed',
+      );
+    }
 
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),

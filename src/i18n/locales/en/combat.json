@@ -383,7 +383,9 @@
   },
   "float": {
     "miss": "MISS",
-    "blocked": " blocked"
+    "blocked": " blocked",
+    "landed": "LANDED",
+    "resisted": "RESISTED"
   },
   "coach": {
     "attack": "Tap Attack to strike.",

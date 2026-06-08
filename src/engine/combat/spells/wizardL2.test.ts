@@ -340,6 +340,29 @@ describe('Mirror Image — duplicates soak blows', () => {
   });
 });
 
+describe('Hold Person — caster\'s-eye control verdict', () => {
+  it('a failed target save emits outcome:landed', () => {
+    const goblin = getMonster('goblin');
+    const init = createCombat({ character: makeWizardL3Knowing('hold-person'), monsters: [{ def: goblin }] });
+    // Nat 1 — the foe blows the save no matter the DC, so the bind LANDS.
+    const roller = makeScriptedRoller({ d20Faces: [1] });
+    const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'hold-person' });
+    expect(result.cast).toBe(true);
+    expect(result.state.spellEffectEvent?.outcome).toBe('landed');
+    expect(result.state.spellEffectEvent?.targetId).toBe(monsterId(result.state));
+  });
+
+  it('a successful target save emits outcome:resisted', () => {
+    const goblin = getMonster('goblin');
+    const init = createCombat({ character: makeWizardL3Knowing('hold-person'), monsters: [{ def: goblin }] });
+    // Nat 20 — the foe makes the save, the spell is RESISTED.
+    const roller = makeScriptedRoller({ d20Faces: [20] });
+    const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'hold-person' });
+    expect(result.cast).toBe(true);
+    expect(result.state.spellEffectEvent?.outcome).toBe('resisted');
+  });
+});
+
 describe('L3 learn-spell pool', () => {
   it('offers the new 2nd-level spells beyond Misty Step', () => {
     let w = createCharacter({

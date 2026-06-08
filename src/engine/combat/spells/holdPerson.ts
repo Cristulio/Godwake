@@ -55,7 +55,16 @@ export function castHoldPerson(ctx: CastSpellContext): CastResult {
   ];
 
   let nextState: CombatState = appendLog(state, ...logs);
-  nextState = attachSpellEffect(nextState, 'hold-person', 'player', targetId);
+  // Caster's-eye verdict: a failed save means the bind LANDED, a made save means
+  // the target RESISTED — the inverse of the save's success.
+  nextState = attachSpellEffect(
+    nextState,
+    'hold-person',
+    'player',
+    targetId,
+    undefined,
+    success ? 'resisted' : 'landed',
+  );
 
   if (!success) {
     // Apply the paralyzed condition to the monster. Reuse the player-side
