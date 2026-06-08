@@ -17,6 +17,7 @@ import {
   type EventOutcomeResult,
 } from '../../engine/delve';
 import { skillBonus, type SkillCheckResult } from '../../engine/character/skillCheck';
+import { bossIntelBuffFor } from '../../content/bossIntel';
 import { SKILL_TO_ABILITY } from '../../types/skills';
 import { ABILITY_FULL_NAMES } from '../../types/abilities';
 import type { SkillName } from '../../types/skills';
@@ -262,6 +263,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
                 choice={choice}
                 character={character}
                 goldScale={goldScale}
+                bossDefId={bossDefId}
                 onPick={() => handlePick(choice)}
               />
             ))}
@@ -288,11 +290,36 @@ interface ChoiceButtonProps {
   character: Character;
   /** Chapter gold multiplier — scales the displayed cost and the gate check. */
   goldScale: number;
+  /** Set on a boss-intel room — its three generic choices localize via fixed keys. */
+  bossDefId: string | null;
   onPick: () => void;
 }
 
-function ChoiceButton({ templateId, choice, character, goldScale, onPick }: ChoiceButtonProps) {
+/** The boss-intel choice ids → their fixed delve.intel.* localization key. */
+const INTEL_CHOICE_KEY: Record<string, string> = {
+  'find-weak-spot': 'findWeakSpot',
+  'study-the-approach': 'study',
+  'walk-past': 'walkPast',
+};
+
+function ChoiceButton({ templateId, choice, character, goldScale, bossDefId, onPick }: ChoiceButtonProps) {
   const { t, tc } = useT();
+  // Boss-intel choices are generic (same labels every boss) and the per-boss
+  // template id never matches an es/events overlay — localize them via fixed
+  // delve.intel.* keys, interpolating the chapter-scaled temp-HP into the study hint.
+  const intelKey = bossDefId ? INTEL_CHOICE_KEY[choice.id] : undefined;
+  const intelGird =
+    intelKey === 'study' && bossDefId
+      ? (bossIntelBuffFor(bossDefId, 'battle-plan')?.tempHp ?? 0)
+      : 0;
+  const label = intelKey
+    ? t(`delve.intel.${intelKey}.label`)
+    : tc('events', templateId, `choice.${choice.id}.label`, choice.label);
+  const hint = intelKey
+    ? t(`delve.intel.${intelKey}.hint`, { n: intelGird })
+    : choice.hint
+      ? tc('events', templateId, `choice.${choice.id}.hint`, choice.hint)
+      : null;
   const availability = canTakeChoice(character, choice, goldScale);
   const disabled = !availability.ok;
   const disabledReason = !availability.ok ? availability.reason : null;
@@ -323,7 +350,7 @@ function ChoiceButton({ templateId, choice, character, goldScale, onPick }: Choi
     >
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1.5">
         <div className="text-[var(--color-text-primary)] uppercase tracking-wider text-sm font-bold">
-          {tc('events', templateId, `choice.${choice.id}.label`, choice.label)}
+          {label}
         </div>
         <div className="flex flex-wrap items-baseline gap-2 shrink-0">
           {skillTag && (
@@ -363,9 +390,9 @@ function ChoiceButton({ templateId, choice, character, goldScale, onPick }: Choi
           )}
         </div>
       </div>
-      {choice.hint && (
+      {hint && (
         <div className="text-[var(--color-text-secondary)] text-xs italic mt-1">
-          {tc('events', templateId, `choice.${choice.id}.hint`, choice.hint)}
+          {hint}
         </div>
       )}
       {disabled && (
