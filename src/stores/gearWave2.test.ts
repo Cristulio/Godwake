@@ -5,7 +5,7 @@ import { useMetaStore } from './metaStore';
 import { useCombatStore } from './combatStore';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
 import { legendaryBankPool } from '../content/legendaries';
-import { rollLegendaryOffer } from '../components/delve/shopStock';
+import { rollLegendaryOffer, LEGENDARY_PRICE } from '../components/delve/shopStock';
 import { setActiveRoller } from '../engine/dice';
 import type { DelveState } from '../types/delve';
 
@@ -113,5 +113,57 @@ describe('shop reliquary: bought legendary banks and leaves stock', () => {
       const offer = rollLegendaryOffer(`seed-${i}`, 3, 'fighter', owned);
       if (offer) expect(owned).not.toContain(offer.legendaryId);
     }
+  });
+});
+
+describe('reliquary pricing: substantial cost that escalates with the reliquary', () => {
+  // Find a seed+chapter that deterministically yields an offer, so the cost is
+  // stable across re-rolls (the offer roll ignores ownedCount — it's pool-blind).
+  function findOffer(chapter: number) {
+    for (let i = 0; i < 400; i++) {
+      const seed = `price-seed-${i}`;
+      if (rollLegendaryOffer(seed, chapter, 'fighter', [], 0, 0)) return seed;
+    }
+    throw new Error('no offer found');
+  }
+
+  it('the first relic costs far more than the old flat 500gp', () => {
+    const seed = findOffer(3);
+    const offer = rollLegendaryOffer(seed, 3, 'fighter', [], 0, 0)!;
+    // Chapter 3 is the anchor (no depth premium), 0 banked → the bare floor.
+    expect(offer.cost).toBe(LEGENDARY_PRICE.base);
+    expect(offer.cost).toBeGreaterThan(500);
+  });
+
+  it('each banked relic makes the next one dearer', () => {
+    const seed = findOffer(3);
+    const at = (owned: number) => rollLegendaryOffer(seed, 3, 'fighter', [], 0, owned)!.cost;
+    expect(at(1) - at(0)).toBe(LEGENDARY_PRICE.perOwned);
+    expect(at(5) - at(0)).toBe(5 * LEGENDARY_PRICE.perOwned);
+    // Monotonic climb across a full reliquary.
+    for (let n = 1; n <= 10; n++) expect(at(n)).toBeGreaterThan(at(n - 1));
+  });
+
+  it('deeper chapters add a premium on top of the escalation', () => {
+    const seed = findOffer(14);
+    const deep = rollLegendaryOffer(seed, 14, 'fighter', [], 0, 0)!;
+    expect(deep.cost).toBe(LEGENDARY_PRICE.base + (14 - 3) * LEGENDARY_PRICE.perChapter);
+  });
+
+  it('the purchase is gated on affordability at the escalated price', () => {
+    const seed = findOffer(3);
+    const offer = rollLegendaryOffer(seed, 3, 'fighter', [], 0, 4)!;
+    const ch = useCharacterStore.getState().character!;
+    // One gold short of the escalated price → refused, no charge, not banked.
+    useCharacterStore.setState({ character: { ...ch, goldInPocket: offer.cost - 1 } });
+    const denied = useDelveStore.getState().purchaseLegendary(offer.legendaryId, offer.cost);
+    expect(denied.ok).toBe(false);
+    expect(useCharacterStore.getState().character!.goldInPocket).toBe(offer.cost - 1);
+    expect(useMetaStore.getState().ownedLegendaries).not.toContain(offer.legendaryId);
+    // Exactly the price → allowed.
+    useCharacterStore.setState({ character: { ...ch, goldInPocket: offer.cost } });
+    const ok = useDelveStore.getState().purchaseLegendary(offer.legendaryId, offer.cost);
+    expect(ok.ok).toBe(true);
+    expect(useCharacterStore.getState().character!.goldInPocket).toBe(0);
   });
 });

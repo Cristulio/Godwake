@@ -187,9 +187,31 @@ function legendaryOfferChance(chapter: number): number {
   return 0;
 }
 
-/** The reliquary price climbs with depth — a real late-game gold sink. By judgment. */
-function legendaryOfferCost(chapter: number): number {
-  return 500 + Math.max(0, chapter - 3) * 250;
+/**
+ * The reliquary pricing curve — the SEED a sim pass tunes. A legendary is a
+ * PERMANENT, cross-run boon banked to the reliquary forever, so it must be a real
+ * long-game gold sink, not a 500gp impulse buy. The cost escalates on two axes:
+ *  - `base`: the floor for your FIRST relic (a deep-chapter splurge, not pocket change).
+ *  - `perOwned`: each relic already banked makes the next one dearer, so a full
+ *    reliquary is a long-game aspiration rather than a quick sweep.
+ *  - `perChapter`: a deep-run premium on top (anchored at chapter 3, the first
+ *    chapter a relic can be offered).
+ * Kept in one place so the economy sim can retune the numbers without touching the
+ * call sites. */
+export const LEGENDARY_PRICE = {
+  base: 1500,
+  perOwned: 900,
+  perChapter: 200,
+} as const;
+
+/** Reliquary price for the next relic: floor + per-banked-relic escalation + a
+ * deep-chapter premium. `ownedCount` is how many legendaries are already banked. */
+function legendaryOfferCost(chapter: number, ownedCount: number): number {
+  return (
+    LEGENDARY_PRICE.base +
+    Math.max(0, ownedCount) * LEGENDARY_PRICE.perOwned +
+    Math.max(0, chapter - 3) * LEGENDARY_PRICE.perChapter
+  );
 }
 
 /**
@@ -205,6 +227,11 @@ export function rollLegendaryOffer(
   classId: ClassId,
   ownedIds: readonly string[],
   ascensionLevel = 0,
+  // The escalation input for the price. Kept SEPARATE from `ownedIds` (the pool
+  // filter) on purpose: the call sites roll the offer owned-BLIND (ownedIds: [])
+  // so buying a relic doesn't churn a fresh one into view, but the price must
+  // still climb with the size of the reliquary you already hold.
+  ownedCount = ownedIds.length,
 ): LegendaryOffer | null {
   const chance = legendaryOfferChance(chapter);
   if (chance <= 0) return null;
@@ -220,5 +247,5 @@ export function rollLegendaryOffer(
   const id = pool[(roller.roll('1d100').total - 1) % pool.length];
   const leg = getLegendary(id);
   if (!leg) return null;
-  return { legendaryId: id, name: leg.name, cost: legendaryOfferCost(chapter) };
+  return { legendaryId: id, name: leg.name, cost: legendaryOfferCost(chapter, ownedCount) };
 }

@@ -93,10 +93,17 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const legendaryOffer = useMemo<LegendaryOffer | null>(
     () =>
       classId
-        ? rollLegendaryOffer(room.id, room.chapter ?? 1, classId, [], delve?.ascensionLevel ?? 0)
+        ? rollLegendaryOffer(
+            room.id,
+            room.chapter ?? 1,
+            classId,
+            [],
+            delve?.ascensionLevel ?? 0,
+            ownedLegendaries.length,
+          )
         : null,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [room.id, room.chapter, classId, delve?.ascensionLevel],
+    [room.id, room.chapter, classId, delve?.ascensionLevel, ownedLegendaries.length],
   );
 
   const [expanded, setExpanded] = useState<ForkBranch | null>(null);
