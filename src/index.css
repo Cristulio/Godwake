@@ -1041,9 +1041,11 @@ img, svg.pixel {
 .boss-state-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 2px;
-  padding: 0 3px;
-  height: 12px;
+  padding: 1px 4px;
+  min-height: 12px;
+  max-width: 100%;
   border: 1px solid;
   border-radius: 2px;
   background: rgba(8, 6, 5, 0.92);
@@ -1052,13 +1054,20 @@ img, svg.pixel {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
   pointer-events: auto;
   cursor: help;
+}
+.boss-state-chip > span {
+  min-width: 0;
 }
 .boss-state-chip-icon {
   width: 8px;
   height: 8px;
+  flex: none;
   display: block;
 }
 .boss-state-warded {

@@ -395,7 +395,7 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
           ("warded — destroy the heart") and the current phase. Static (no
           animation) so reduced-motion is honoured automatically. */}
       {props.kind === 'monster' && !dead && (props.wardLabel || props.phaseLabel) && (
-        <div className="flex flex-wrap items-center justify-center gap-1 mb-0.5 max-w-[112px]">
+        <div className="flex flex-wrap items-center justify-center gap-1 mb-0.5 max-w-[128px]">
           {props.wardLabel && (
             <span
               className="boss-state-chip boss-state-warded"
