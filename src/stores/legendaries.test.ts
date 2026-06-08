@@ -5,6 +5,9 @@ import { useMetaStore } from './metaStore';
 import { useCombatStore } from './combatStore';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
 import { characterAffixMods } from '../engine/items/affixMods';
+import { injectSetPieces } from '../engine/items';
+import { getSetPiece } from '../content/sets';
+import { equipItem } from '../engine/character/equip';
 import { setActiveRoller } from '../engine/dice';
 import type { ClassId } from '../schemas/ids';
 import type { DelveState } from '../types/delve';
@@ -114,23 +117,21 @@ describe('relic loadout — one relic per typed slot', () => {
 });
 
 describe('set gear applies through the affix pipeline', () => {
-  it('a class-bound set piece is ignored for the wrong class (kept owned)', () => {
-    useCharacterStore.setState({ character: makeCharacter('wizard') });
-    useMetaStore.setState({ ownedSetPieces: ['warsong-crest', 'vigil-helm'] });
-    const meta = useMetaStore.getState();
-    meta.equipSetPiece('warsong-crest'); // Fighter-bound → ignored for a Wizard
-    meta.equipSetPiece('vigil-helm'); // universal → equips into the helm slot
-    expect(useMetaStore.getState().equippedSetPieces.helm).toBe('vigil-helm');
-    expect(useMetaStore.getState().ownedSetPieces).toContain('warsong-crest');
+  it('a class-bound set piece cannot be equipped by the wrong class', () => {
+    const ch = injectSetPieces(makeCharacter('wizard'), [getSetPiece('warsong-crest')!]);
+    const idx = ch.inventory.findIndex((r) => r.itemId === 'warsong-crest');
+    const after = equipItem(ch, idx); // Fighter-bound → blocked for a Wizard
+    expect(after).toBe(ch); // equipItem returns the unchanged identity when blocked
   });
 
-  it('a 2-piece set stacks its bonus on top of the pieces', () => {
-    useCharacterStore.setState({ character: makeCharacter('fighter') });
-    useMetaStore.setState({ ownedSetPieces: ['vigil-helm', 'vigil-heart'] });
-    const meta = useMetaStore.getState();
-    meta.equipSetPiece('vigil-helm'); // helm, 4 temp HP
-    meta.equipSetPiece('vigil-heart'); // ring, 5% lifesteal
-    const mods = characterAffixMods(useCharacterStore.getState().character!);
+  it('a worn 2-piece set stacks its bonus on top of the pieces', () => {
+    let ch = injectSetPieces(makeCharacter('fighter'), [
+      getSetPiece('vigil-helm')!, // helm, 4 temp HP
+      getSetPiece('vigil-heart')!, // ring, 5% lifesteal
+    ]);
+    ch = equipItem(ch, ch.inventory.findIndex((r) => r.itemId === 'vigil-helm'));
+    ch = equipItem(ch, ch.inventory.findIndex((r) => r.itemId === 'vigil-heart'));
+    const mods = characterAffixMods(ch);
     // helm 4 + 2-piece set 4 = 8 temp HP each combat; heart's lifesteal rides too.
     expect(mods.tempHpPerCombat).toBe(8);
     expect(mods.lifestealPct).toBe(5);

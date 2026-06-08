@@ -21,7 +21,7 @@ export const WeaponProficiencySchema = z.object({
  * no armour at all (the Wizard). Enforced in `equip.ts`.
  */
 export const ArmorProficiencySchema = z.object({
-  categories: z.array(z.enum(['light', 'medium', 'heavy', 'shield', 'robe'])),
+  categories: z.array(z.enum(['light', 'medium', 'heavy', 'shield', 'robe', 'orb'])),
 });
 
 export const ClassFeatureSchema = z.object({

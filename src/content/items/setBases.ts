@@ -3,13 +3,15 @@ import type { Accessory } from '../../schemas/item';
 
 /**
  * Base items for the persistent SET GEAR layer (content/sets.ts). A set piece is
- * a real equippable slot item — a weapon, a piece of armour, or an accessory —
- * that the soul banks and re-equips at the hub. These bases give the engine
- * everything the normal equip path needs (slot via slotForItem, base damage /
- * AC, proficiency category); the set-specific power (a guaranteed effect payload
- * + the `+N` enhancement that keeps a piece above the best rolled purple) is
- * layered on at materialisation time (engine/items/setGear.ts) and the set
- * bonuses bake from content/sets.ts.
+ * a real equippable slot item — a weapon, a piece of armour, an off-hand orb, or
+ * an accessory — that the soul banks cross-life and re-equips through the NORMAL
+ * inventory (the pieces live in the backpack, not a hub reliquary screen). These
+ * bases give the engine everything the normal equip path needs (slot via
+ * slotForItem, base damage / AC, proficiency category); the set-specific power (a
+ * guaranteed effect payload + the `+N` enhancement that keeps a piece above the
+ * best rolled purple) is layered on at materialisation time
+ * (engine/items/setGear.ts) and the escalating set bonuses bake from
+ * content/sets.ts.
  *
  * Class-bound weapon / armour pieces are deliberately chosen to sit inside their
  * gated class's proficiency (a Rogue's set blade is finesse; a Fighter's set
@@ -35,7 +37,7 @@ function weapon(data: {
 function armor(data: {
   id: string;
   name: string;
-  category: 'light' | 'medium' | 'heavy' | 'robe';
+  category: 'light' | 'medium' | 'heavy' | 'robe' | 'orb';
   baseAC: number;
   cost: number;
 }): Item {
@@ -51,7 +53,22 @@ function accessory(data: {
   return AccessorySchema.parse({ kind: 'accessory', rarity: 'rare', ...data });
 }
 
+/**
+ * Generic ORB bases — the caster off-hand the drop pool offers (rollItem.ts).
+ * `armor` kind, `orb` category: no AC, slots into the off-hand, casters only.
+ * Plain bases (no set membership) — the affix roll makes them loot.
+ */
+export const ORB_BASE_IDS = ['crystal-orb', 'runed-orb', 'astral-orb'] as const;
+
+const GENERIC_ORBS: Item[] = [
+  armor({ id: 'crystal-orb', name: 'Crystal Orb', category: 'orb', baseAC: 0, cost: 90 }),
+  armor({ id: 'runed-orb', name: 'Runed Orb', category: 'orb', baseAC: 0, cost: 140 }),
+  armor({ id: 'astral-orb', name: 'Astral Orb', category: 'orb', baseAC: 0, cost: 210 }),
+];
+
 export const SET_BASE_ITEMS: Item[] = [
+  ...GENERIC_ORBS,
+
   // --- Vigil (universal, accessories) --------------------------------------
   accessory({ id: 'vigil-helm', name: 'Vigil Helm', accessorySlot: 'helm', cost: 220 }),
   accessory({ id: 'vigil-mantle', name: 'Vigil Mantle', accessorySlot: 'amulet', cost: 220 }),
@@ -76,30 +93,49 @@ export const SET_BASE_ITEMS: Item[] = [
   armor({ id: 'ironclad-greaves', name: 'Ironclad Greaves', category: 'heavy', baseAC: 18, cost: 320 }),
   accessory({ id: 'ironclad-helm', name: 'Ironclad Helm', accessorySlot: 'helm', cost: 300 }),
 
-  // --- Bloodrage Pelts (barbarian) — weapon + armour + accessory -----------
+  // --- Bloodrage Wrath (barbarian, GRAND 8-piece) — 2H axe + armour + 6 ----
   weapon({
     id: 'bloodrage-fang',
-    name: 'Bloodrage Fang',
+    name: 'Bloodrage Greataxe',
     category: 'martial',
-    damage: '1d8',
+    damage: '1d12',
     damageType: 'slashing',
-    properties: ['versatile'],
-    versatileDamage: '1d10',
+    properties: ['heavy', 'two-handed'],
     affinity: 'barbarian',
-    cost: 320,
+    cost: 360,
   }),
   armor({ id: 'bloodrage-pelt', name: 'Bloodrage Pelt', category: 'medium', baseAC: 14, cost: 320 }),
   accessory({ id: 'bloodrage-totem', name: 'Bloodrage Totem', accessorySlot: 'amulet', cost: 300 }),
+  accessory({ id: 'bloodrage-helm', name: 'Bloodrage Skullhelm', accessorySlot: 'helm', cost: 300 }),
+  accessory({ id: 'bloodrage-ring', name: 'Bloodrage Tusk-Ring', accessorySlot: 'ring', cost: 300 }),
+  accessory({ id: 'bloodrage-band', name: 'Bloodrage Sinew-Band', accessorySlot: 'ring', cost: 300 }),
+  accessory({ id: 'bloodrage-belt', name: 'Bloodrage Girdle', accessorySlot: 'belt', cost: 300 }),
+  accessory({ id: 'bloodrage-boots', name: 'Bloodrage Treads', accessorySlot: 'boots', cost: 300 }),
 
   // --- Wildstalker's Garb (ranger) — armour + accessories ------------------
   armor({ id: 'wildstalker-pelt', name: 'Wildstalker Pelt', category: 'light', baseAC: 12, cost: 320 }),
   accessory({ id: 'wildstalker-cowl', name: 'Wildstalker Cowl', accessorySlot: 'helm', cost: 300 }),
   accessory({ id: 'wildstalker-quiver', name: 'Wildstalker Quiver', accessorySlot: 'belt', cost: 300 }),
 
-  // --- Vestments of the Archmagi (wizard) — robe + accessories -------------
+  // --- Vestments of the Archmagi (wizard, GRAND 9-piece) — wand + orb + ----
+  weapon({
+    id: 'archmagi-wand',
+    name: 'Wand of the Archmagi',
+    category: 'simple',
+    damage: '1d6',
+    damageType: 'bludgeoning',
+    properties: [],
+    affinity: 'wizard',
+    cost: 360,
+  }),
+  armor({ id: 'archmagi-orb', name: 'Orb of the Archmagi', category: 'orb', baseAC: 0, cost: 320 }),
   armor({ id: 'archmagi-vestments', name: 'Vestments of the Archmagi', category: 'robe', baseAC: 0, cost: 320 }),
   accessory({ id: 'archmagi-amulet', name: 'Amulet of the Archmagi', accessorySlot: 'amulet', cost: 300 }),
-  accessory({ id: 'archmagi-orb', name: 'Orb of the Archmagi', accessorySlot: 'ring', cost: 300 }),
+  accessory({ id: 'archmagi-helm', name: 'Crown of the Archmagi', accessorySlot: 'helm', cost: 300 }),
+  accessory({ id: 'archmagi-ring', name: 'Ring of the Archmagi', accessorySlot: 'ring', cost: 300 }),
+  accessory({ id: 'archmagi-band', name: 'Band of the Archmagi', accessorySlot: 'ring', cost: 300 }),
+  accessory({ id: 'archmagi-girdle', name: 'Girdle of the Archmagi', accessorySlot: 'belt', cost: 300 }),
+  accessory({ id: 'archmagi-slippers', name: 'Slippers of the Archmagi', accessorySlot: 'boots', cost: 300 }),
 
   // --- Greenwarden's Mantle (druid) — armour + accessories -----------------
   armor({ id: 'greenwarden-mantle', name: 'Greenwarden Mantle', category: 'light', baseAC: 12, cost: 320 }),

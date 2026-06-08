@@ -292,14 +292,6 @@ export interface Character {
    * pipeline by `characterAffixMods`. Optional; undefined = no relics equipped.
    */
   legendaryEffects?: AffixModifiers[];
-  /**
-   * Effect payloads of the player's EQUIPPED SET-gear pieces + completed-set
-   * bonuses (content/sets.ts). The pieces' base stats + `+N` enhancement ride the
-   * normal equipment path; this is only their effect layer. Baked on by
-   * `applySetLoadout`, carried across the wheel, folded into the affix pipeline by
-   * `characterAffixMods`. Optional; undefined = no set pieces equipped.
-   */
-  setEffects?: AffixModifiers[];
   /** Grove upgrade: +N damage on the first attack of each combat. */
   permanentFirstAttackDamage?: number;
   /** Grove upgrade: +N damage against wounded targets (HP at half or less). */

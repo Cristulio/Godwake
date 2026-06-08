@@ -71,9 +71,15 @@ export const ArmorSchema = z.object({
    * NOT count as armour for AC. It grants no `baseAC` and is invisible to
    * Mage Armour's `!bodyArmor` check, so a robed wizard keeps Mage Armour's +3.
    * Its value is the rolled caster affixes it carries.
+   *
+   * `orb` is the caster's OFF-HAND focus — the spell-side mirror of a shield. It
+   * sits in the `offHand` slot (slotForItem), grants no AC of its own (`baseAC`
+   * 0; its value is the spell affixes it carries), and only casters may equip
+   * one (engine/character/equip.ts). A two-handed staff blocks it exactly as it
+   * blocks a shield.
    */
-  category: z.enum(['light', 'medium', 'heavy', 'shield', 'robe']),
-  /** Base AC value (for shield, this is +N bonus; 0 for a robe). */
+  category: z.enum(['light', 'medium', 'heavy', 'shield', 'robe', 'orb']),
+  /** Base AC value (for shield, this is +N bonus; 0 for a robe / orb). */
   baseAC: z.number(),
   strRequirement: z.number().optional(),
   cost: z.number(),
@@ -243,6 +249,14 @@ export interface RolledItem {
    * early chapters cap at +0/+1, deep chapters reach +2/+3.
    */
   enhancement?: number;
+  /**
+   * Set membership, for SET gear only (rarity 'set'). The id of the GearSet this
+   * piece belongs to (content/sets.ts). Present on a materialised set piece so the
+   * engine can count how many pieces of a set are worn and grant the escalating
+   * set bonuses (engine/items/setGear.ts.equippedSetMods). Absent on all rolled /
+   * plain loot.
+   */
+  setId?: string;
   /** Pre-rendered display name, e.g. "+2 Keen Longsword of the Leech". */
   name: string;
 }

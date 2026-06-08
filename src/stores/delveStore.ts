@@ -4,7 +4,8 @@ import type { CampRiskResult, DelveState, RoomSpec } from '../types/delve';
 import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
 import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
-import { rollItem, rollGearDrop, rollLegendaryDrop, rollSetPieceDrop, materializeSetGear, isSetPieceRef } from '../engine/items';
+import { rollItem, rollGearDrop, rollLegendaryDrop, rollSetPieceDrop, injectSetPieces, isSetPieceRef } from '../engine/items';
+import { getSetPiece, canEquipSetPiece, type SetPiece } from '../content/sets';
 import { classStartingResources } from '../engine/character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
 import { effectiveAbilityScores } from '../engine/character/derived';
@@ -185,10 +186,25 @@ function level1HpMax(ch: Character): number {
   return cls.hitDie + conMod + raceBonusHp + classBonusHp + permanentHp;
 }
 
+/** The soul's banked set pieces this class can actually wear (drop pool + equip-
+ * gate biasing already lean class-ward; this is the surfacing filter). */
+function ownedSetPiecesForClass(classId: Character['classId']): SetPiece[] {
+  const owned = useMetaStore.getState().ownedSetPieces;
+  const out: SetPiece[] = [];
+  for (const id of owned) {
+    const piece = getSetPiece(id);
+    if (piece && canEquipSetPiece(id, classId)) out.push(piece);
+  }
+  return out;
+}
+
 /**
  * Found/bought gear is INTRA-DELVE: descent (`startDelve`) and reincarnation
  * (`reincarnateSoul`) reset inventory + equipped to the class starting kit so
- * shop weapons and road drops never carry across lives.
+ * shop weapons and road drops never carry across lives. The soul's banked SET
+ * pieces are the exception — they re-enter the backpack each life as real,
+ * equippable loot (the player re-equips them through the normal inventory), which
+ * is what makes set gear persistent while rolled loot is not.
  * Returns only the gear fields — gold and HP are owned by the callers.
  */
 function gearResetToKit(
@@ -196,10 +212,7 @@ function gearResetToKit(
 ): Pick<Character, 'inventory' | 'equipped'> {
   try {
     const fresh = buildPlayerCharacter(presetCreationInput(character.classId));
-    // Overlay the soul's banked SET gear onto the fresh kit: each equipped piece
-    // replaces its slot's starting item and persists across the wheel.
-    const pieces = useMetaStore.getState().equippedSetPieceList();
-    const withSet = materializeSetGear(fresh, pieces);
+    const withSet = injectSetPieces(fresh, ownedSetPiecesForClass(character.classId));
     return { inventory: withSet.inventory, equipped: withSet.equipped };
   } catch {
     // Non-playable class with no preset — leave gear untouched rather than
@@ -769,7 +782,16 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       if (isFeatureUnlocked('sets', meta) && rollSetPieceDrop(getActiveRoller(), room.kind)) {
         const allowExclusive = ascensionExclusiveLoot(s.delve.ascensionLevel ?? 0);
         const bankedPieceId = useMetaStore.getState().grantSetPieceDrop(allowExclusive);
-        if (bankedPieceId) bankedSetPieceId = bankedPieceId;
+        if (bankedPieceId) {
+          bankedSetPieceId = bankedPieceId;
+          // Surface it in the live backpack THIS run too (if the worn class can
+          // wear it), so a dropped set piece is usable now — not only next life.
+          const cur = useCharacterStore.getState().character;
+          const piece = getSetPiece(bankedPieceId);
+          if (cur && piece && canEquipSetPiece(bankedPieceId, cur.classId)) {
+            useCharacterStore.getState().setCharacter(injectSetPieces(cur, [piece]));
+          }
+        }
       }
       // Tally actual deltas (quirk multipliers applied by addDelveReward).
       const after = useCharacterStore.getState().character;

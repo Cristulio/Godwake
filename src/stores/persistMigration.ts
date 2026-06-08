@@ -97,8 +97,13 @@ import type { RelicSlot } from '../content/legendaries';
  *             both default []/{}. Legendaries became boon-only (the set concept
  *             moved to slot gear) — owned legendary ids are unchanged. No
  *             back-port (saves disposable in dev): the soul re-earns set pieces.
+ *  v20 → v21: SET gear moved into the BACKPACK (gear-overhaul). Set pieces are now
+ *             real loot re-injected into the inventory each life and equipped
+ *             through the normal slots — the hub set loadout is gone, so
+ *             `equippedSetPieces` is dropped from the snapshot. `ownedSetPieces`
+ *             (the banked collection) stays. No back-port (saves disposable).
  */
-export const SAVE_VERSION = 20;
+export const SAVE_VERSION = 21;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -271,7 +276,6 @@ export interface MigratedSnapshot {
   ownedLegendaries: string[];
   equippedRelics: Partial<Record<RelicSlot, string>>;
   ownedSetPieces: string[];
-  equippedSetPieces: Partial<Record<string, string>>;
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
@@ -402,18 +406,13 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
     state.equippedRelics = {};
   }
 
-  // v19 → v20: persistent SET gear. Old saves own no pieces and have an empty
-  // loadout; a present, well-shaped value is preserved.
+  // v19 → v20 / v21: persistent SET gear. Old saves own no pieces; the banked
+  // collection is preserved. The v20 hub `equippedSetPieces` loadout is gone
+  // (v21 moved set gear into the backpack) — drop any stored value.
   if (!Array.isArray(state.ownedSetPieces)) {
     state.ownedSetPieces = [];
   }
-  if (
-    !state.equippedSetPieces ||
-    typeof state.equippedSetPieces !== 'object' ||
-    Array.isArray(state.equippedSetPieces)
-  ) {
-    state.equippedSetPieces = {};
-  }
+  delete state.equippedSetPieces;
 
   // v9 → v10: per-soul seen-once dialogue beat tracking.
   if (!Array.isArray(state.seenDialogueBeats)) {

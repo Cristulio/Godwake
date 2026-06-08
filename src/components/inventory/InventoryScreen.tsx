@@ -19,6 +19,9 @@ import { ItemTooltip } from './ItemTooltip';
 import { TouchTooltip } from '../ui/TouchTooltip';
 import { GEAR_RARITY_COLOR } from './rarity';
 import { baseStatLine, localizedItemName } from './itemDisplay';
+import { GEAR_SETS, setSize, setProgress } from '../../content/sets';
+import { equippedSetIds } from '../../engine/items';
+import type { Character } from '../../types/character';
 import { useT } from '../../i18n/useT';
 
 const DND_INV_MIME = 'application/x-godwake-inv-idx';
@@ -318,6 +321,8 @@ export function InventoryScreen() {
 
       </div>
 
+      <SetProgressPanel character={character} />
+
       <Panel
         title={t('screens.inventory.backpack', { n: character.inventory.length })}
         tone="default"
@@ -467,6 +472,59 @@ export function InventoryScreen() {
         </div>
         <div className="mt-4 pt-3 border-t border-[var(--color-border-dim)] text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest text-center font-mono">
           {t('screens.inventory.footer')}
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+/**
+ * Live set-progress for the WORN pieces: one row per set the player has at least
+ * one piece of equipped, showing how many of its pieces are on (X / size) and
+ * which escalating bonus tiers are lit. Reads straight off the equipped slots —
+ * set gear is real backpack loot now, so this replaces the old hub set board.
+ */
+function SetProgressPanel({ character }: { character: Character }) {
+  const { t, tc } = useT();
+  const frame = GEAR_RARITY_COLOR.set;
+  const wornIds = equippedSetIds(character);
+  if (wornIds.length === 0) return null;
+  const active = GEAR_SETS.filter((s) => setProgress(s, wornIds) > 0);
+  if (active.length === 0) return null;
+
+  return (
+    <div className="mb-6">
+      <Panel title={t('screens.inventory.sets')} tone="default">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {active.map((s) => {
+            const worn = setProgress(s, wornIds);
+            return (
+              <div key={s.id} className="panel-etched border p-3" style={{ borderColor: frame + '55' }}>
+                <div className="flex justify-between items-baseline gap-2">
+                  <h4 className="font-display uppercase tracking-wider text-[11px]" style={{ color: frame }}>
+                    {tc('setGear', s.id, 'name', s.name)}
+                  </h4>
+                  <span className="font-mono text-[10px] shrink-0" style={{ color: frame }}>
+                    {t('hub.setGear.equippedCount', { n: worn, total: setSize(s) })}
+                  </span>
+                </div>
+                <div className="mt-2 space-y-0.5">
+                  {s.bonuses.map((tier) => {
+                    const on = worn >= tier.piecesRequired;
+                    return (
+                      <div
+                        key={tier.piecesRequired}
+                        className="text-[10px] font-mono leading-snug"
+                        style={{ color: on ? frame : 'var(--color-text-dim)' }}
+                      >
+                        {on ? '◆' : '◇'} {tc('setGear', `${s.id}.bonus`, String(tier.piecesRequired), tier.label)}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </Panel>
     </div>

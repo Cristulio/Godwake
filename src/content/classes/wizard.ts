@@ -9,8 +9,9 @@ export const WIZARD: Class = ClassSchema.parse({
   // The scholar's hands know only simple arms — dagger, quarterstaff, mace.
   weaponProficiency: { categories: ['simple'] },
   // No true armour — the wizard's shell is Mage Armour. Robes are the lone
-  // exception: body-slot caster gear that grants no AC, so Mage Armour holds.
-  armorProficiency: { categories: ['robe'] },
+  // body-slot exception, and orbs the off-hand one: both are caster gear that
+  // grants no AC, so Mage Armour holds. (Orbs are the spell-side of a shield.)
+  armorProficiency: { categories: ['robe', 'orb'] },
   subclassLevel: 2,
   featuresByLevel: {
     '1': [

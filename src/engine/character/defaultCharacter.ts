@@ -226,7 +226,6 @@ export function carrySoulProgress(fresh: Character, soul: Character): Character 
     quirks: soul.quirks,
     permanentBonuses: soul.permanentBonuses,
     legendaryEffects: soul.legendaryEffects,
-    setEffects: soul.setEffects,
     permanentFirstAttackDamage: soul.permanentFirstAttackDamage,
     permanentWoundedTargetDamage: soul.permanentWoundedTargetDamage,
     permanentCritDamageBonus: soul.permanentCritDamageBonus,

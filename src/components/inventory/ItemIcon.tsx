@@ -164,7 +164,17 @@ function weaponGlyph(id: string) {
   }
 }
 
-function armorGlyph(id: string, category: 'light' | 'medium' | 'heavy' | 'shield' | 'robe') {
+function armorGlyph(id: string, category: 'light' | 'medium' | 'heavy' | 'shield' | 'robe' | 'orb') {
+  if (category === 'orb') {
+    // A caster's focus sphere — a glowing orb with an inner glint.
+    return (
+      <g fill="none" stroke={stroke} strokeWidth="1.6">
+        <circle cx="16" cy="16" r="9" />
+        <circle cx="16" cy="16" r="4" fill={accent} fillOpacity="0.4" stroke="none" />
+        <circle cx="13" cy="13" r="1.4" fill={accent} stroke="none" />
+      </g>
+    );
+  }
   if (category === 'shield' || id === 'shield') {
     return (
       <g fill="none" stroke={stroke} strokeWidth="1.6" strokeLinejoin="round">

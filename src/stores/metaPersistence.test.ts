@@ -126,20 +126,16 @@ describe('legendaries survive a character swap (account-level, soul-carried)', (
     expect(after.legendaryEffects).toHaveLength(2);
   });
 
-  it('drops a class-bound SET piece the new class cannot equip on swap', () => {
+  it('keeps the whole banked SET collection across a class swap', () => {
+    // Set gear lives in the backpack now: a swap doesn't drop the collection, it's
+    // re-injected (class-filtered) into each new life's pack at descent.
     useCharacterStore.setState({ character: makeFighter({ renown: 1000 }) });
     useMetaStore.setState({ ownedSetPieces: ['warsong-gauntlet', 'vigil-heart'] });
-    const meta0 = useMetaStore.getState();
-    meta0.equipSetPiece('warsong-gauntlet'); // belt (Fighter-bound)
-    meta0.equipSetPiece('vigil-heart'); // ring (universal)
-    expect(useMetaStore.getState().equippedSetPieces.belt).toBe('warsong-gauntlet');
 
     useGameStore.getState().selectCharacter('wizard');
 
-    // The Fighter-bound Warsong gauntlet falls out of its slot; the universal piece stays.
     const meta = useMetaStore.getState();
-    expect(meta.equippedSetPieces).toEqual({ ring1: 'vigil-heart' });
-    expect(meta.ownedSetPieces).toContain('warsong-gauntlet'); // still owned, just stashed
+    expect(meta.ownedSetPieces).toEqual(['warsong-gauntlet', 'vigil-heart']);
   });
 });
 

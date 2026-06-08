@@ -23,4 +23,10 @@ export {
   maxRolledRarityForChapter,
   capRarity,
 } from './drops';
-export { materializeSetGear, setPieceRef, isSetPieceRef } from './setGear';
+export {
+  setPieceRef,
+  isSetPieceRef,
+  injectSetPieces,
+  equippedSetIds,
+  equippedSetMods,
+} from './setGear';

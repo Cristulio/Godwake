@@ -5,9 +5,14 @@ import { useMetaStore } from './metaStore';
 import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
-import { materializeSetGear } from '../engine/items';
+import { injectSetPieces, rollItem } from '../engine/items';
+import { characterAffixMods } from '../engine/items/affixMods';
+import { equipItem, slotForItem } from '../engine/character/equip';
 import { getSetPiece } from '../content/sets';
-import { setActiveRoller } from '../engine/dice';
+import { getItem } from '../content/items';
+import { setActiveRoller, getActiveRoller } from '../engine/dice';
+import type { Character } from '../types/character';
+import type { ItemRef } from '../schemas/item';
 import type { DelveState } from '../types/delve';
 
 function godwakeDelve(): DelveState {
@@ -23,63 +28,142 @@ function godwakeDelve(): DelveState {
   };
 }
 
+/** Equip the first backpack ref whose itemId matches. */
+function equipById(ch: Character, id: string): Character {
+  return equipItem(ch, ch.inventory.findIndex((r) => r.itemId === id));
+}
+
 beforeEach(() => {
   setActiveRoller('setgear-seed');
   useCharacterStore.setState({ character: buildPlayerCharacter(presetCreationInput('fighter')) });
   useDelveStore.setState({ delve: null });
   useCombatStore.setState({ combat: null });
   useScreenStore.setState({ tutorialQueue: [], hubUnlockQueue: [] });
-  useMetaStore.setState({ ownedSetPieces: [], equippedSetPieces: {} });
+  useMetaStore.setState({ ownedSetPieces: [] });
 });
 
-describe('materializeSetGear (pure overlay)', () => {
-  it('replaces the slot item with the set piece and stamps it set-rarity', () => {
+describe('injectSetPieces (real backpack loot)', () => {
+  it('adds the piece to the pack (not equipped) stamped set-rarity + setId', () => {
     const fresh = buildPlayerCharacter(presetCreationInput('fighter'));
-    const armorPiece = getSetPiece('ironclad-greaves')!; // armor slot
-    const out = materializeSetGear(fresh, [armorPiece]);
-    expect(out.equipped.armor?.itemId).toBe('ironclad-greaves');
-    expect(out.equipped.armor?.rolled?.rarity).toBe('set');
-    expect(out.equipped.armor?.rolled?.enhancement).toBe(armorPiece.enhancement);
-    // The piece also lands in the pack so the inventory + sell guard see it worn.
-    expect(out.inventory.some((r) => r.itemId === 'ironclad-greaves')).toBe(true);
+    const out = injectSetPieces(fresh, [getSetPiece('ironclad-greaves')!]);
+    const ref = out.inventory.find((r) => r.itemId === 'ironclad-greaves');
+    expect(ref?.rolled?.rarity).toBe('set');
+    expect(ref?.rolled?.setId).toBe('ironclad');
+    expect(ref?.rolled?.enhancement).toBe(getSetPiece('ironclad-greaves')!.enhancement);
+    // Injected into the pack only — never auto-equipped.
+    expect(out.equipped.armor?.itemId).not.toBe('ironclad-greaves');
   });
 });
 
-describe('set gear persists into and across runs', () => {
-  it('an equipped set piece materialises into the slot on descent', () => {
-    useMetaStore.setState({ ownedSetPieces: ['ironclad-greaves'] });
-    useMetaStore.getState().equipSetPiece('ironclad-greaves');
-    // Bake check: the effect payload rode onto the soul.
-    expect(useCharacterStore.getState().character!.setEffects?.length).toBeGreaterThan(0);
+describe('set gear equips and its bonuses fold live', () => {
+  it('equipping a piece replaces the slot and a 2-piece bonus stacks on top', () => {
+    let ch = injectSetPieces(buildPlayerCharacter(presetCreationInput('fighter')), [
+      getSetPiece('vigil-helm')!, // helm, 4 temp HP
+      getSetPiece('vigil-heart')!, // ring, 5% lifesteal
+    ]);
+    ch = equipById(ch, 'vigil-helm');
+    ch = equipById(ch, 'vigil-heart');
+    expect(ch.equipped.helm?.itemId).toBe('vigil-helm');
+    expect(ch.equipped.helm?.rolled?.rarity).toBe('set');
+    const mods = characterAffixMods(ch);
+    expect(mods.tempHpPerCombat).toBe(8); // helm 4 + 2-piece 4
+    expect(mods.lifestealPct).toBe(5);
+  });
 
+  it('blocks a class-bound piece on the wrong class', () => {
+    const ch = injectSetPieces(buildPlayerCharacter(presetCreationInput('wizard')), [
+      getSetPiece('warsong-crest')!, // fighter-bound
+    ]);
+    const idx = ch.inventory.findIndex((r) => r.itemId === 'warsong-crest');
+    expect(equipItem(ch, idx)).toBe(ch);
+  });
+});
+
+describe('set gear persists in the backpack across the wheel', () => {
+  it('a banked piece is re-injected into the pack on every descent', () => {
+    useMetaStore.setState({ ownedSetPieces: ['vigil-heart'] });
+    useDelveStore.getState().startDelve(godwakeDelve());
+    let ch = useCharacterStore.getState().character!;
+    expect(ch.inventory.some((r) => r.itemId === 'vigil-heart')).toBe(true);
+
+    // A fresh descent rebuilds the kit; the banked piece re-appears in the pack.
+    useDelveStore.getState().startDelve(godwakeDelve());
+    ch = useCharacterStore.getState().character!;
+    expect(ch.inventory.some((r) => r.itemId === 'vigil-heart')).toBe(true);
+    expect(useMetaStore.getState().ownedSetPieces).toContain('vigil-heart');
+  });
+
+  it('only injects pieces the worn class can equip', () => {
+    useMetaStore.setState({ ownedSetPieces: ['warsong-crest', 'vigil-heart'] });
+    // Worn class is a wizard — the fighter-bound warsong piece stays banked but
+    // out of the pack; the universal vigil piece surfaces.
+    useCharacterStore.setState({ character: buildPlayerCharacter(presetCreationInput('wizard')) });
     useDelveStore.getState().startDelve(godwakeDelve());
     const ch = useCharacterStore.getState().character!;
-    expect(ch.equipped.armor?.itemId).toBe('ironclad-greaves');
-    expect(ch.equipped.armor?.rolled?.rarity).toBe('set');
+    expect(ch.inventory.some((r) => r.itemId === 'warsong-crest')).toBe(false);
+    expect(ch.inventory.some((r) => r.itemId === 'vigil-heart')).toBe(true);
   });
 
-  it('survives the wheel — still equipped after the run resets the kit', () => {
+  it('cannot be sold out of the pack mid-run', () => {
     useMetaStore.setState({ ownedSetPieces: ['vigil-heart'] });
-    useMetaStore.getState().equipSetPiece('vigil-heart'); // ring
-    useDelveStore.getState().startDelve(godwakeDelve());
-    expect(useCharacterStore.getState().character!.equipped.ring1?.itemId).toBe('vigil-heart');
-
-    // A fresh descent re-runs gearResetToKit; the banked piece re-materialises.
-    useDelveStore.getState().startDelve(godwakeDelve());
-    expect(useCharacterStore.getState().character!.equipped.ring1?.itemId).toBe('vigil-heart');
-    // Still banked + equipped at the loadout level.
-    expect(useMetaStore.getState().ownedSetPieces).toContain('vigil-heart');
-    expect(useMetaStore.getState().equippedSetPieces.ring1).toBe('vigil-heart');
-  });
-
-  it('set gear cannot be sold out of the pack mid-run', () => {
-    useMetaStore.setState({ ownedSetPieces: ['vigil-heart'] });
-    useMetaStore.getState().equipSetPiece('vigil-heart');
     useDelveStore.getState().startDelve(godwakeDelve());
     const ch = useCharacterStore.getState().character!;
     const idx = ch.inventory.findIndex((r) => r.itemId === 'vigil-heart');
     expect(idx).toBeGreaterThanOrEqual(0);
-    const res = useDelveStore.getState().sellItem(idx);
-    expect(res.ok).toBe(false);
+    expect(useDelveStore.getState().sellItem(idx).ok).toBe(false);
+  });
+});
+
+describe('orbs are caster off-hands', () => {
+  it('slot into the off-hand', () => {
+    expect(slotForItem('crystal-orb')).toBe('offHand');
+  });
+
+  it('a caster can equip an orb; a martial cannot', () => {
+    const orb: ItemRef = { itemId: 'crystal-orb' };
+    const wiz = buildPlayerCharacter(presetCreationInput('wizard'));
+    const wizWith = { ...wiz, inventory: [...wiz.inventory, orb] };
+    const wizAfter = equipItem(wizWith, wizWith.inventory.length - 1);
+    expect(wizAfter.equipped.offHand?.itemId).toBe('crystal-orb');
+
+    const ftr = buildPlayerCharacter(presetCreationInput('fighter'));
+    const ftrWith = { ...ftr, inventory: [...ftr.inventory, orb] };
+    expect(equipItem(ftrWith, ftrWith.inventory.length - 1)).toBe(ftrWith); // blocked
+  });
+
+  it('equipping an orb clears a two-handed main hand (mirrors a shield)', () => {
+    const wiz = buildPlayerCharacter(presetCreationInput('wizard'));
+    const twoHander: ItemRef = { itemId: 'greatsword' }; // two-handed
+    const orb: ItemRef = { itemId: 'crystal-orb' };
+    const staged = {
+      ...wiz,
+      equipped: { ...wiz.equipped, mainHand: twoHander },
+      inventory: [...wiz.inventory, orb],
+    };
+    const after = equipItem(staged, staged.inventory.length - 1);
+    expect(after.equipped.offHand?.itemId).toBe('crystal-orb');
+    expect(after.equipped.mainHand).toBeNull();
+  });
+});
+
+describe('shields roll the full rarity range', () => {
+  it('a shield base can roll an epic (purple) with the full affix budget', () => {
+    setActiveRoller('shield-roll-seed');
+    let sawPurpleShield = false;
+    for (let i = 0; i < 400 && !sawPurpleShield; i++) {
+      const ref = rollItem(getActiveRoller(), {
+        rarity: 'purple',
+        classId: 'fighter',
+        kind: 'armor',
+        depth: 8,
+      });
+      const base = getItem(ref.itemId);
+      if (base.kind === 'armor' && base.category === 'shield') {
+        sawPurpleShield = true;
+        // Purple = 3 affixes; the shield is no longer capped below that.
+        expect(ref.rolled?.affixes.length).toBe(3);
+      }
+    }
+    expect(sawPurpleShield).toBe(true);
   });
 });

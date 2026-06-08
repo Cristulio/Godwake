@@ -314,6 +314,15 @@
     "word": "Infalible",
     "effect": "+1 a las tiradas de ataque con arma."
   },
+  "crystal-orb": {
+    "name": "Orbe de Cristal"
+  },
+  "runed-orb": {
+    "name": "Orbe Rúnico"
+  },
+  "astral-orb": {
+    "name": "Orbe Astral"
+  },
   "vigil-helm": {
     "name": "Yelmo de la Vigilia"
   },
@@ -339,13 +348,28 @@
     "name": "Yelmo Acorazado"
   },
   "bloodrage-fang": {
-    "name": "Colmillo de Furia"
+    "name": "Hacha de Furia Sangrienta"
   },
   "bloodrage-pelt": {
     "name": "Piel de Furia"
   },
   "bloodrage-totem": {
     "name": "Tótem de Furia"
+  },
+  "bloodrage-helm": {
+    "name": "Yelmo-Calavera de Furia"
+  },
+  "bloodrage-ring": {
+    "name": "Anillo-Colmillo de Furia"
+  },
+  "bloodrage-band": {
+    "name": "Banda de Tendones de Furia"
+  },
+  "bloodrage-belt": {
+    "name": "Faja de Furia"
+  },
+  "bloodrage-boots": {
+    "name": "Botas de Furia"
   },
   "wildstalker-pelt": {
     "name": "Piel del Acechador"
@@ -356,6 +380,9 @@
   "wildstalker-quiver": {
     "name": "Carcaj del Acechador"
   },
+  "archmagi-wand": {
+    "name": "Varita del Archimago"
+  },
   "archmagi-vestments": {
     "name": "Vestiduras del Archimago"
   },
@@ -364,6 +391,21 @@
   },
   "archmagi-orb": {
     "name": "Orbe del Archimago"
+  },
+  "archmagi-helm": {
+    "name": "Corona del Archimago"
+  },
+  "archmagi-ring": {
+    "name": "Anillo del Archimago"
+  },
+  "archmagi-band": {
+    "name": "Banda del Archimago"
+  },
+  "archmagi-girdle": {
+    "name": "Faja del Archimago"
+  },
+  "archmagi-slippers": {
+    "name": "Zapatillas del Archimago"
   },
   "greenwarden-mantle": {
     "name": "Manto del Guardaverde"
