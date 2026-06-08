@@ -127,7 +127,7 @@ export function DelveScreen() {
 }
 
 function DelveScreenBody() {
-  const { t, lr } = useT();
+  const { t, tc, lr } = useT();
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const combat = useGameStore((s) => s.combat);
@@ -186,9 +186,10 @@ function DelveScreenBody() {
     const monsters = roomMonsters.flatMap((m) =>
       Array.from({ length: m.count }, (_, idx) => {
         const def = getMonster(m.defId);
+        const localizedName = tc('monsters', m.defId, 'name', def.name);
         const displayName = m.count > 1
-          ? `${m.displayPrefix ?? def.name} ${String.fromCharCode(65 + idx)}`
-          : def.name;
+          ? `${m.displayPrefix ?? localizedName} ${String.fromCharCode(65 + idx)}`
+          : localizedName;
         return { def, displayName };
       })
     );

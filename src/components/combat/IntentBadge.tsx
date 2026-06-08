@@ -2,6 +2,7 @@ import { memo, type ReactElement } from 'react';
 import type { MonsterIntent } from '../../types/combat';
 import type { ConditionName } from '../../types/conditions';
 import { useT } from '../../i18n/useT';
+import { getLocalizedMonsterActionName } from '../../i18n';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
 
@@ -13,6 +14,8 @@ type TFn = (key: string, params?: Record<string, string | number>) => string;
 
 interface IntentBadgeProps {
   intent: MonsterIntent;
+  /** Owning monster's def id — localizes the wind-up action name in its label. */
+  monsterId?: string;
 }
 
 type IntentStyle = {
@@ -125,8 +128,9 @@ function debuffEffect(c: ConditionName | undefined, t: TFn): string {
 }
 
 /** The localized tooltip / screen-reader description for an intent. */
-function describeIntent(i: MonsterIntent, t: TFn): string {
+function describeIntent(i: MonsterIntent, t: TFn, monsterId?: string): string {
   const unknown = () => t('combat.intent.unknown');
+  const actionName = monsterId ? getLocalizedMonsterActionName(monsterId, i.actionName) : i.actionName;
   switch (i.kind) {
     case 'attack':
       return t('combat.intent.attack', { dmg: rangeText(i) ?? unknown() });
@@ -152,8 +156,8 @@ function describeIntent(i: MonsterIntent, t: TFn): string {
       return t('combat.intent.ward');
     case 'windup':
       return i.imminent
-        ? t('combat.intent.windupImminent', { action: i.actionName })
-        : t('combat.intent.windupCharging', { action: i.actionName });
+        ? t('combat.intent.windupImminent', { action: actionName })
+        : t('combat.intent.windupCharging', { action: actionName });
   }
 }
 
@@ -187,10 +191,10 @@ function valueText(intent: MonsterIntent): string | null {
   return range;
 }
 
-function IntentBadgeImpl({ intent }: IntentBadgeProps) {
+function IntentBadgeImpl({ intent, monsterId }: IntentBadgeProps) {
   const { t } = useT();
   const style = STYLES[intent.kind];
-  const describe = describeIntent(intent, t);
+  const describe = describeIntent(intent, t, monsterId);
   const color =
     intent.kind === 'debuff'
       ? DEBUFF_COLORS[intent.condition ?? 'poisoned'] ?? style.color
