@@ -24,7 +24,7 @@ vi.mock('../content/items', async (importOriginal) => {
   };
 });
 
-import { useDelveStore } from './delveStore';
+import { useDelveStore, withOwnedSetPieces } from './delveStore';
 import { useCharacterStore } from './characterStore';
 import { useMetaStore } from './metaStore';
 import { useScreenStore } from './screenStore';
@@ -32,6 +32,8 @@ import { useCombatStore } from './combatStore';
 import { createGodwakeDelve } from '../engine/delve';
 import { setActiveRoller } from '../engine/dice';
 import { createCharacter, STANDARD_ARRAY } from '../engine/character/initialize';
+import { setPieceRef } from '../engine/items';
+import { getSetPiece } from '../content/sets';
 import { sellValue } from '../components/delve/shopStock';
 import type { Character } from '../types/character';
 import type { ItemRef } from '../schemas/item';
@@ -139,6 +141,29 @@ describe('delveStore — found/bought gear is intra-delve', () => {
   });
 });
 
+describe('withOwnedSetPieces — banked set gear surfaces in the hub backpack', () => {
+  it('injects the soul\'s class-legal banked pieces, skipping class-gated foreign ones', () => {
+    useMetaStore.setState({
+      ownedSetPieces: ['vigil-helm', 'warsong-gauntlet', 'bloodrage-fang'],
+    });
+    const withSet = withOwnedSetPieces(
+      makeFighter({ quirks: [], inventory: [{ itemId: 'longsword' }] }),
+    );
+
+    expect(hasItem(withSet.inventory, 'vigil-helm')).toBe(true); // universal
+    expect(hasItem(withSet.inventory, 'warsong-gauntlet')).toBe(true); // fighter-bound
+    expect(hasItem(withSet.inventory, 'bloodrage-fang')).toBe(false); // barbarian-bound
+    // The materialised refs are real 'set'-rarity loot, equippable through the bag.
+    expect(withSet.inventory.find((r) => r.itemId === 'vigil-helm')?.rolled?.rarity).toBe('set');
+  });
+
+  it('is a no-op when the soul owns no pieces', () => {
+    useMetaStore.setState({ ownedSetPieces: [] });
+    const fighter = makeFighter({ quirks: [], inventory: [{ itemId: 'longsword' }] });
+    expect(withOwnedSetPieces(fighter).inventory).toHaveLength(1);
+  });
+});
+
 describe('delveStore — selling to a merchant', () => {
   beforeEach(() => setActiveRoller('sell-seed'));
 
@@ -153,6 +178,17 @@ describe('delveStore — selling to a merchant', () => {
     expect(r.gold).toBe(expected);
     expect(char().goldInPocket).toBe(100 + expected);
     expect(hasItem(char().inventory, 'greatsword')).toBe(false);
+  });
+
+  it('refuses to sell a persistent SET piece (banked to the soul, not run loot)', () => {
+    const setRef = setPieceRef(getSetPiece('vigil-helm')!);
+    seed(makeFighter({ quirks: [], goldInPocket: 0, inventory: [setRef] }));
+
+    const r = useDelveStore.getState().sellItem(0);
+
+    expect(r.ok).toBe(false);
+    expect(char().goldInPocket).toBe(0);
+    expect(hasItem(char().inventory, 'vigil-helm')).toBe(true);
   });
 
   it('refuses to sell an equipped item (unequip first)', () => {

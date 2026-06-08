@@ -7,6 +7,7 @@ import { getItem } from '../../content/items';
 import { localizedItemName } from '../inventory/itemDisplay';
 import { playSfx } from '../../engine/audio';
 import { equippedInventoryIndices } from '../../engine/character/equip';
+import { isSetPieceRef } from '../../engine/items';
 import {
   consumableStockForTier,
   rollGearStock,
@@ -88,6 +89,9 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     .map((ref, idx) => ({ ref, idx }))
     .filter(({ ref, idx }) => {
       if (equippedIdx.has(idx)) return false;
+      // Persistent SET gear is banked to the soul, never sold — keep it out of the
+      // sell list entirely (the sell action also refuses it as a backstop).
+      if (isSetPieceRef(ref)) return false;
       const kind = getItem(ref.itemId).kind;
       return kind === 'weapon' || kind === 'armor' || kind === 'accessory';
     });
