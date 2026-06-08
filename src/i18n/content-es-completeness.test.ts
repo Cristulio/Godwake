@@ -13,6 +13,7 @@ import {
   ACCESSORY_BASE_IDS,
 } from '../engine/items/rollItem';
 import { LEGENDARIES, RELIC_SLOTS } from '../content/legendaries';
+import { DUNGEON_TWISTS } from '../engine/delve';
 import { TUTORIALS, CLASS_TUTORIALS, STANDALONE_TUTORIALS } from '../content/tutorials';
 import type { TutorialContent } from '../content/tutorials';
 import type { EventChoiceOutcome } from '../schemas/event';
@@ -29,6 +30,7 @@ import esItems from './locales/es/items.json';
 import esLegendaries from './locales/es/legendaries.json';
 import esRelicSlots from './locales/es/relicSlots.json';
 import esTutorials from './locales/es/tutorials.json';
+import esTwists from './locales/es/twists.json';
 
 type Overlay = Record<string, Record<string, string>>;
 
@@ -42,6 +44,7 @@ const items = esItems as Overlay;
 const legendaries = esLegendaries as Overlay;
 const relicSlots = esRelicSlots as Overlay;
 const tutorials = esTutorials as Overlay;
+const twists = esTwists as Overlay;
 
 /** A row field is "covered" when it exists and is a non-empty Spanish string. */
 function covered(row: Record<string, string> | undefined, field: string): boolean {
@@ -278,6 +281,27 @@ describe('es/tutorials.json completeness', () => {
       });
     }
     expect(missing, `missing tutorial overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+});
+
+describe('es/twists.json completeness', () => {
+  // RoomHeader reads name + flavorText; DelveMap reads telegraph on the route map.
+  const FIELDS = ['name', 'flavorText', 'telegraph'] as const;
+
+  it('every dungeon twist has all three Spanish fields', () => {
+    const missing: string[] = [];
+    for (const tw of DUNGEON_TWISTS) {
+      for (const field of FIELDS) {
+        if (!covered(twists[tw.id], field)) missing.push(`${tw.id}.${field}`);
+      }
+    }
+    expect(missing, `missing twist overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('has no orphan twist ids', () => {
+    const ids = new Set<string>(DUNGEON_TWISTS.map((t) => t.id));
+    const orphans = Object.keys(twists).filter((id) => !ids.has(id));
+    expect(orphans, `orphan twist overlays: ${orphans.join(', ')}`).toEqual([]);
   });
 });
 

@@ -3,8 +3,15 @@ import type { Rarity } from '../../schemas/ids';
 import { getAffix } from '../../content/items';
 import { getSetPiece, getGearSet } from '../../content/sets';
 import { weaponStatRequirement } from '../../engine/character/equip';
-import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from './rarity';
-import { localizedItemName, itemKindLabel } from './itemDisplay';
+import { GEAR_RARITY_COLOR } from './rarity';
+import {
+  localizedItemName,
+  itemKindLabel,
+  gearRarityLabel,
+  dndRarityLabel,
+  localizedDamageType,
+  weaponPropertyLabel,
+} from './itemDisplay';
 import { useT } from '../../i18n/useT';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
@@ -20,15 +27,6 @@ interface ItemTooltipProps {
   /** Caveat shown when this class dons this armour (Barbarian rage-break, agile suppression). */
   equipWarning?: string;
 }
-
-const RARITY_LABEL: Record<Rarity, string> = {
-  common: 'Common',
-  uncommon: 'Uncommon',
-  rare: 'Rare',
-  'very-rare': 'Very Rare',
-  legendary: 'Legendary',
-  artifact: 'Artifact',
-};
 
 const RARITY_COLOR: Record<Rarity, string> = {
   common: 'var(--color-text-secondary)',
@@ -57,7 +55,7 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
         className="text-[10px] uppercase tracking-widest mt-0.5"
         style={{ color: isRolled ? GEAR_RARITY_COLOR[rolled.rarity] : RARITY_COLOR[item.rarity] }}
       >
-        {itemKindLabel(item)} · {isRolled ? GEAR_RARITY_LABEL[rolled.rarity] : RARITY_LABEL[item.rarity]}
+        {itemKindLabel(item)} · {isRolled ? gearRarityLabel(rolled.rarity) : dndRarityLabel(item.rarity)}
       </div>
 
       <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] font-mono">
@@ -129,13 +127,13 @@ function renderStats(item: Item, t: TFn, rolledCost?: number, rolled?: RolledIte
   const enh = rolled?.enhancement ?? 0;
   const plus = enh > 0 ? ` +${enh}` : '';
   if (item.kind === 'weapon') {
-    rows.push([t('screens.itemTooltip.stat.damage'), `${item.damage}${plus} ${item.damageType}`]);
+    rows.push([t('screens.itemTooltip.stat.damage'), `${item.damage}${plus} ${localizedDamageType(item.damageType)}`]);
     if (item.versatileDamage) rows.push([t('screens.itemTooltip.stat.versatile'), `${item.versatileDamage}${plus}`]);
     if (enh > 0) rows.push([t('screens.itemTooltip.stat.enhancement'), t('screens.itemTooltip.hitDmg', { n: enh })]);
-    if (item.range) rows.push([t('screens.itemTooltip.stat.range'), `${item.range[0]}/${item.range[1]} ft`]);
+    if (item.range) rows.push([t('screens.itemTooltip.stat.range'), t('screens.itemTooltip.ft', { a: item.range[0], b: item.range[1] })]);
     const displayProps = item.properties.filter((p) => p !== 'special');
     if (displayProps.length > 0) {
-      rows.push([t('screens.itemTooltip.stat.properties'), displayProps.join(', ')]);
+      rows.push([t('screens.itemTooltip.stat.properties'), displayProps.map(weaponPropertyLabel).join(', ')]);
     }
     const req = weaponStatRequirement(item);
     if (req) rows.push([t('screens.itemTooltip.stat.req'), `${req.ability.toUpperCase()} ${req.value}`]);
@@ -156,7 +154,7 @@ function renderStats(item: Item, t: TFn, rolledCost?: number, rolled?: RolledIte
     ]);
     if (item.healDice) rows.push([t('screens.itemTooltip.stat.heal'), item.healDice]);
   }
-  rows.push([t('screens.itemTooltip.stat.value'), `${rolledCost ?? item.cost} gp`]);
+  rows.push([t('screens.itemTooltip.stat.value'), t('screens.itemTooltip.gp', { n: rolledCost ?? item.cost })]);
 
   return rows.map(([label, value]) => (
     <div key={label} className="contents">

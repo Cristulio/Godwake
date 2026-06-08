@@ -1,7 +1,7 @@
 import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
-import { GEAR_RARITY_COLOR, GEAR_RARITY_LABEL } from '../inventory/rarity';
-import { localizedItemName, localizedItemDescription } from '../inventory/itemDisplay';
+import { GEAR_RARITY_COLOR } from '../inventory/rarity';
+import { localizedItemName, localizedItemDescription, gearRarityLabel } from '../inventory/itemDisplay';
 import { getLegendary } from '../../content/legendaries';
 import { getSetPiece, setForPiece, setProgress } from '../../content/sets';
 import { hasPendingLevelUp } from '../../engine/character/leveling';
@@ -137,7 +137,7 @@ export function SpoilsScreen() {
                         className="text-[9px] uppercase tracking-widest opacity-60 shrink-0 ml-auto"
                         style={{ color: GEAR_RARITY_COLOR[rarity] }}
                       >
-                        {GEAR_RARITY_LABEL[rarity]}
+                        {gearRarityLabel(rarity)}
                       </span>
                     </div>
                     {description && (

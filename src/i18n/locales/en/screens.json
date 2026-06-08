@@ -166,7 +166,19 @@
     "enhAc": "+{n} AC",
     "noneCaster": "none (caster)",
     "actionBonus": "bonus",
-    "actionAction": "action"
+    "actionAction": "action",
+    "ft": "{a}/{b} ft",
+    "gp": "{n} gp",
+    "property": {
+      "light": "light",
+      "heavy": "heavy",
+      "finesse": "finesse",
+      "two-handed": "two-handed",
+      "versatile": "versatile",
+      "reach": "reach",
+      "ammunition": "ammunition",
+      "loading": "loading"
+    }
   },
   "itemDisplay": {
     "twoH": "2h",
@@ -317,5 +329,23 @@
     "soulMarkResolved": "Soul-mark: your {n} {markWord} +{pct}% gold, XP, and renown.",
     "markEarns": "mark earns",
     "marksEarn": "marks earn"
+  },
+  "rarity": {
+    "gear": {
+      "white": "Common",
+      "green": "Uncommon",
+      "blue": "Rare",
+      "purple": "Epic",
+      "legendary": "Legendary",
+      "set": "Set"
+    },
+    "dnd": {
+      "common": "Common",
+      "uncommon": "Uncommon",
+      "rare": "Rare",
+      "very-rare": "Very Rare",
+      "legendary": "Legendary",
+      "artifact": "Artifact"
+    }
   }
 }

@@ -1,22 +1,27 @@
 {
   "cursed-ground": {
     "name": "Suelo Maldito",
-    "flavorText": "La piedra aquí está sembrada de odio antiguo — bebe hondo de quien primero la pisa, y luego pierde su sed."
+    "flavorText": "La piedra aquí está sembrada de odio antiguo — bebe hondo de quien primero la pisa, y luego pierde su sed.",
+    "telegraph": "El suelo desangra a quien se queda en él."
   },
   "gloom": {
     "name": "Penumbra",
-    "flavorText": "Una espesa oscuridad cuelga en esta sala a la que el ojo nunca acaba de acostumbrarse. El primer golpe falla, y los que nunca ves cortan más hondo."
+    "flavorText": "Una espesa oscuridad cuelga en esta sala a la que el ojo nunca acaba de acostumbrarse. El primer golpe falla, y los que nunca ves cortan más hondo.",
+    "telegraph": "Una oscuridad cegadora se traga el primer golpe."
   },
   "bloodscent": {
     "name": "Olor a Sangre",
-    "flavorText": "Algo en el aire ha enardecido a las criaturas de aquí. Golpean para matar."
+    "flavorText": "Algo en el aire ha enardecido a las criaturas de aquí. Golpean para matar.",
+    "telegraph": "A los moradores de aquí los azuza un frenesí asesino."
   },
   "sealed-wards": {
     "name": "Guardas Selladas",
-    "flavorText": "Viejas guardas sellan esta cámara contra lo divino. Ningún dios puede alcanzarte mientras estés en ella."
+    "flavorText": "Viejas guardas sellan esta cámara contra lo divino. Ningún dios puede alcanzarte mientras estés en ella.",
+    "telegraph": "Ninguna bendición te alcanza dentro de estas guardas."
   },
   "quickening": {
     "name": "Aceleración",
-    "flavorText": "El tiempo corre torcido aquí. Los moradores se mueven primero, y más rápido de lo que tienen derecho."
+    "flavorText": "El tiempo corre torcido aquí. Los moradores se mueven primero, y más rápido de lo que tienen derecho.",
+    "telegraph": "Los moradores de aquí mueven primero."
   }
 }
