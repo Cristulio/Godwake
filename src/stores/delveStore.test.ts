@@ -271,16 +271,45 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     expect(char().level).toBe(1);
   });
 
-  it('does NOT replay the ending on a later full clear', () => {
-    // A veteran who already felled the Throne — the capstone must not replay.
+  it('REPLAYS the Throne finale on every full clear, even when throneCompleted is already set', () => {
+    // The owner's exact case: a past clear set throneCompleted (the win-moment
+    // record fires even if the credits never rendered — crashed lazy chunk,
+    // refresh, straight to NG+; gameStore hydration also recovers it from
+    // chaptersCleared >= 14). The true-clear payoff must still play.
+    seedCapstoneRun({ quirks: [], level: 6, renown: 0 });
     useMetaStore.setState({ gameCompleted: true, throneCompleted: true });
     setDelve({ phase: 'completed', currentRoomIdx: melissanIdx() });
+
+    const expectedGain = computeDelveRenown(useDelveStore.getState().delve!, char()).total;
+    expect(expectedGain).toBeGreaterThan(0);
+
+    useDelveStore.getState().finishDelve();
+
+    // The finale fires again; renown is banked this run too (not suppressed).
+    expect(useScreenStore.getState().screen).toBe('ending');
+    expect(useDelveStore.getState().delve).not.toBeNull();
+    expect(char().renown).toBe(expectedGain);
+
+    // Concluding settles without double-banking the renown.
+    useDelveStore.getState().finishDelve();
+    expect(useScreenStore.getState().screen).toBe('hub');
+    expect(useDelveStore.getState().delve).toBeNull();
+    expect(char().renown).toBe(expectedGain);
+  });
+
+  it('does NOT replay the base Pit ending once the base game is already complete', () => {
+    // The base (Irenicus, Ch11) ending stays first-time — gated on gameCompleted,
+    // not the Throne flag. A veteran replaying the base chain skips straight to hub.
+    seedRun({ quirks: [], level: 6, renown: 0 });
+    useMetaStore.setState({ gameCompleted: true });
+    const rooms = useDelveStore.getState().delve!.rooms;
+    const irenicusIdx = rooms.findIndex((r) => r.monsters?.[0]?.defId === 'irenicus');
+    setDelve({ phase: 'completed', currentRoomIdx: irenicusIdx });
 
     useDelveStore.getState().finishDelve();
 
     expect(useScreenStore.getState().screen).toBe('hub');
     expect(useDelveStore.getState().delve).toBeNull();
-    expect(useMetaStore.getState().gameCompleted).toBe(true);
   });
 
   it('does NOT fire on a non-final clear (fewer than all chapters felled)', () => {

@@ -900,16 +900,27 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // Beating the run's OWN final chapter (Irenicus at Ch11 for a base run,
     // Melissan at Ch14 for New Game+) detours to the narrative finale BEFORE the
     // soul settles: the ending screen reads the still-'completed' delve, then
-    // re-enters finishDelve() on conclude to run the deferred settle below. The
-    // ending fires once, gated by its completion flag, which doubles as the
-    // re-entry breaker — by the conclude call the flag is set, so this block is
-    // skipped and the run falls through to the settle. Completion is recorded
-    // HERE, at the win moment, not in the lazy-loaded ending screen (#366): a
-    // stale chunk must never cost the player the clear (or the New Game+ it
-    // unlocks).
-    const firstFinalClear =
-      beatFinalChapter && (isFullChain ? !meta.throneCompleted : !meta.gameCompleted);
-    if (firstFinalClear) {
+    // re-enters finishDelve() on conclude to run the deferred settle below.
+    // Completion is recorded HERE, at the win moment, not in the lazy-loaded
+    // ending screen (#366): a stale chunk must never cost the player the clear
+    // (or the New Game+ it unlocks).
+    //
+    // The Throne finale REPLAYS on every full-chain Melissan kill — it's the
+    // true-clear payoff and must always play, like a proper ending. Gating the
+    // DISPLAY on `throneCompleted` permanently hid it from anyone whose flag was
+    // set without ever seeing the credits: the win-moment record above fires even
+    // if the lazy ending chunk crashed, a refresh interrupted it, or the player
+    // walked straight on to New Game+ — and gameStore hydration also recovers the
+    // flag from `chaptersCleared >= 14`. So the flag is for UNLOCKS only; the
+    // base Pit ending (Irenicus) stays first-time, but the Throne does not gate
+    // on it. The re-entry breaker is the held delve's `renownSettled` (set below
+    // when the ending fires): the conclude call comes back through here with it
+    // set, so this block is skipped and the run falls through to the settle.
+    const showFinale =
+      beatFinalChapter &&
+      !s.delve.renownSettled &&
+      (isFullChain || !meta.gameCompleted);
+    if (showFinale) {
       // Bank renown NOW, at the win moment — the deferral to the ending screen's
       // conclude lost the ENTIRE run's renown whenever the player left the finale
       // any other way (a refresh, or straight on to New Game+): the re-entry that
