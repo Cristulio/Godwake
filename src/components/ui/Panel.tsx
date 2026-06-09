@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { stripDiacritics } from '../../i18n';
 
 type Tone = 'default' | 'warm' | 'glow';
 
@@ -23,7 +24,7 @@ export function Panel({ children, className = '', title, tone = 'default' }: Pan
       {title && (
         <h2 className="font-display text-[var(--color-accent-amber)] text-[10px] uppercase tracking-[0.2em] mb-3 pb-2 border-b border-[var(--color-border-dim)] flex items-center gap-2">
           <span className="text-[var(--color-accent-gold)]">◆</span>
-          {title}
+          {stripDiacritics(title)}
         </h2>
       )}
       {children}
