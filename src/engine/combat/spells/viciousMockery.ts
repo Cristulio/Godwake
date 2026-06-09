@@ -23,11 +23,12 @@ import { t, getLocalized } from '../../../i18n';
 
 /**
  * Vicious Mockery — the Bard's signature cantrip. A string of withering insult
- * lances psychic damage into one target (a d10 base grown by the shared cantrip
- * scaling, like Fire Bolt) and, on a failed Wisdom save, leaves it RATTLED:
- * frightened for one round, so its next blow is thrown wild (disadvantage). A
- * made save still takes half the barb but shrugs off the sting. No slot — at
- * will, the Bard's reliable chip + soft-control opener.
+ * lances psychic damage into one target and, on a failed Wisdom save, leaves it
+ * RATTLED: frightened for one round, so its next blow is thrown wild
+ * (disadvantage). It is a CONTROL cantrip, not a damage one — a small d4 base
+ * (vs Fire Bolt's d10) so the rattle is the point and the chip stays under the
+ * wizard's damage cantrip. A made save still takes half the barb but shrugs off
+ * the sting. No slot — at will, the Bard's soft-control opener.
  */
 export function castViciousMockery(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
@@ -46,7 +47,7 @@ export function castViciousMockery(ctx: CastSpellContext): CastResult {
   const save = roller.d20(resoluteWill ? 'advantage' : 'normal', wisMod);
   const saved = save.total >= dc;
 
-  const damageRoll = roller.roll({ count: 1, die: 10, modifier: 0 });
+  const damageRoll = roller.roll({ count: 1, die: 4, modifier: 0 });
   const scaledDice = scaleSpellDamage(damageRoll.total, nextCharacter, 0);
   const bonus = spellDamageBonus(nextCharacter) + spellcastingMod(nextCharacter);
   const fullDamage = scaledDice + bonus;
@@ -80,16 +81,10 @@ export function castViciousMockery(ctx: CastSpellContext): CastResult {
     },
     ...logs,
   );
-  // Psychic carries no elemental palette, so the bolt shows its default cast —
-  // the outcome verdict (LANDED / RESISTED) still floats on the target.
-  nextState = attachSpellEffect(
-    nextState,
-    'spell-bolt',
-    'player',
-    targetId,
-    undefined,
-    saved ? 'resisted' : 'landed',
-  );
+  // Psychic carries no elemental palette, so the bolt shows its default cast. No
+  // outcome verdict here — VM deals real damage, so the number floats (like Fire
+  // Bolt); the rattle reads from the combat log + the frightened condition icon.
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId);
 
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;

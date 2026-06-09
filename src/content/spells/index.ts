@@ -579,7 +579,7 @@ export const VICIOUS_MOCKERY: Spell = SpellSchema.parse({
   target: 'single',
   damageType: 'psychic',
   description:
-    'A string of withering, perfectly-aimed insult lances one target — d10 psychic + your Charisma modifier, the barb sharpening as you grow. On a failed Wisdom save the mark is left rattled, throwing its next blow wild (disadvantage). A made save still takes half.',
+    'A string of withering, perfectly-aimed insult lances one target — d4 psychic + your Charisma modifier, the barb sharpening as you grow. On a failed Wisdom save the mark is left rattled, throwing its next blow wild (disadvantage). A made save still takes half. A control cantrip: the rattle is the point, not the sting.',
   effectKey: 'vicious-mockery',
 });
 
