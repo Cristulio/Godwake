@@ -286,7 +286,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
         {detail ? (
           <>
             <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-widest">
-              {detail.title}
+              {lr(detail.chapter, detail.title)}
             </div>
             <div className="text-[var(--color-text-secondary)] text-xs italic mt-1 leading-relaxed">
               {t(`ui.map.blurb.${detail.kind}`)}
