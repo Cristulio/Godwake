@@ -176,7 +176,7 @@ export const WIZARD: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Cristulio',
+    characterName: 'Veyra Ash',
     recommendedRaceId: 'tiefling',
     // Tuned for INT-first study with a passable DEX/CON cushion. With
     // Tiefling's +1 INT / +2 CHA the summary reads INT 16, DEX 14, CON 13,

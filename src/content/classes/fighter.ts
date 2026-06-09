@@ -169,7 +169,7 @@ export const FIGHTER: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Joni Trabado',
+    characterName: 'Sir Brick',
     recommendedRaceId: 'human',
     // Standard array (15/14/13/12/10/8) tilted into STR/CON. With Human's
     // +1-across the table reads 16/15/14/13/11/9 in the summary.

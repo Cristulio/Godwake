@@ -385,7 +385,7 @@ describe('delveStore — the chosen school resets for a new life/run', () => {
     return {
       ...createCharacter({
         id: 'test-wizard',
-        name: 'Cristulio',
+        name: 'Veyra Ash',
         raceId: 'human',
         classId: 'wizard',
         baseAbilityScores: {

@@ -32,7 +32,7 @@ function makeBarbarian(extra: Partial<Character> = {}): Character {
   return {
     ...createCharacter({
       id: 'test-barbarian',
-      name: 'Cali Trava Consumer',
+      name: 'Korrek Bloodmane',
       raceId: 'human',
       classId: 'barbarian',
       baseAbilityScores: {
