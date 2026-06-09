@@ -86,7 +86,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
       classId
         ? rollGearStock(room.id, room.chapter ?? 1, classId, room.layer ?? 0)
         : [],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [room.id, room.chapter, room.layer, classId],
   );
 
@@ -104,7 +104,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
             ownedLegendaries.length,
           )
         : null,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [room.id, room.chapter, classId, delve?.ascensionLevel, ownedLegendaries.length],
   );
 

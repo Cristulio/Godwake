@@ -133,8 +133,8 @@ describe('Potion of Vitality — regen draught', () => {
     expect(character.hp.current).toBe(36);
     expect(character.resources.vitalityRegenTurnsRemaining).toBe(0);
 
-    // Expired — no third tick.
-    ({ state, character } = advanceRound(state, character));
+    // Expired — no third tick. (Last round; the returned state isn't read again.)
+    ({ character } = advanceRound(state, character));
     expect(character.hp.current).toBe(36);
     expect(character.resources.vitalityRegenTurnsRemaining).toBe(0);
   });
