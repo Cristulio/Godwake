@@ -43,8 +43,9 @@ export function DiceRollOverlay({
 
   useEffect(() => {
     let mounted = true;
-    // Dice animation caps at 2× — at 4× the tumble is too quick to read.
-    const t = (ms: number) => Math.max(40, Math.round(ms / Math.min(speed, 2)));
+    // Combat dice run at the full speed multiplier (incl. 4×) — only the
+    // out-of-combat event/camp rolls cap at 2×, where a slower tumble reads better.
+    const t = (ms: number) => Math.max(40, Math.round(ms / speed));
 
     playSfx('dice_clack');
     // Player swings are emitted from `playerAttack` so the audio matches the
