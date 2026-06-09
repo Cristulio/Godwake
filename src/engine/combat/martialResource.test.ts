@@ -16,7 +16,6 @@ import {
   martialPoolMax,
   regenMartialPoolForRound,
   MARTIAL_POOL_MAX,
-  MARTIAL_POOL_MAX_FIGHTER,
 } from './martialResource';
 import { chooseCombatAction } from './actionPolicy';
 import { endTurn } from './turn';
@@ -78,11 +77,10 @@ describe('Martial pool — refresh + spend rules', () => {
     }
   });
 
-  it('gives the Fighter a deeper pool than the Barbarian/Ranger baseline', () => {
-    expect(martialPoolMax(fighter(3))).toBe(MARTIAL_POOL_MAX_FIGHTER);
+  it('gives all three martial classes the same baseline pool', () => {
+    expect(martialPoolMax(fighter(3))).toBe(MARTIAL_POOL_MAX);
     expect(martialPoolMax(barbarian(3))).toBe(MARTIAL_POOL_MAX);
     expect(martialPoolMax(ranger(3))).toBe(MARTIAL_POOL_MAX);
-    expect(MARTIAL_POOL_MAX_FIGHTER).toBeGreaterThan(MARTIAL_POOL_MAX);
   });
 
   it('a spend depletes the pool and arms the stance', () => {
@@ -184,7 +182,7 @@ describe('Martial pool — mid-fight regen', () => {
     const r5 = regenMartialPoolForRound(r3, 5);
     expect(r5.resources.martialPointsRemaining).toBe(3);
     const r7 = regenMartialPoolForRound(r5, 7);
-    expect(r7.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX_FIGHTER);
+    expect(r7.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX);
   });
 
   it('Barbarian/Ranger regenerate every OTHER round', () => {
@@ -203,7 +201,7 @@ describe('Martial pool — mid-fight regen', () => {
   it('never regenerates past the cap (returns the same reference)', () => {
     const full: Character = {
       ...fighter(3),
-      resources: { ...fighter(3).resources, martialPointsRemaining: MARTIAL_POOL_MAX_FIGHTER },
+      resources: { ...fighter(3).resources, martialPointsRemaining: MARTIAL_POOL_MAX },
     };
     expect(regenMartialPoolForRound(full, 2)).toBe(full);
   });
@@ -332,7 +330,7 @@ describe('Martial DISRUPT — staggering strike', () => {
     expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - 2);
   });
 
-  it("the Fighter's Shield Bash costs 2 Resolve — spent from its deeper pool", () => {
+  it("the Fighter's Shield Bash costs 2 Resolve — spent from its Resolve pool", () => {
     expect(martialDisruptCost(fighter(3))).toBe(2);
     const init = createCombat({
       roller: createDiceRoller(1),
@@ -341,7 +339,7 @@ describe('Martial DISRUPT — staggering strike', () => {
     });
     const r = useMartialDisrupt({ character: init.character, state: init.state });
     expect(r.character.martialDisruptActive).toBe(true);
-    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX_FIGHTER - 2);
+    expect(r.character.resources.martialPointsRemaining).toBe(MARTIAL_POOL_MAX - 2);
   });
 
   it('a connecting hit fells the foe, which then loses its turn', () => {

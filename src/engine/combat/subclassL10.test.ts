@@ -143,8 +143,8 @@ describe('Fighter Champion — Superior Critical (18-20)', () => {
 
 describe('Fighter Battle Master — Tactical Reserve', () => {
   it('deepens the Resolve pool by one', () => {
-    expect(martialPoolMax(makeChar('fighter', 9, 'battle-master'))).toBe(4);
-    expect(martialPoolMax(makeChar('fighter', 10, 'battle-master'))).toBe(5);
+    expect(martialPoolMax(makeChar('fighter', 9, 'battle-master'))).toBe(3);
+    expect(martialPoolMax(makeChar('fighter', 10, 'battle-master'))).toBe(4);
   });
 
   it('refreshes the deeper pool at combat start and tops up on round 2', () => {
@@ -154,13 +154,13 @@ describe('Fighter Battle Master — Tactical Reserve', () => {
       character: bm,
       monsters: [{ def: getMonster('goblin') }],
     });
-    expect(character.resources.martialPointsRemaining).toBe(5);
+    expect(character.resources.martialPointsRemaining).toBe(4);
     // Spend one, then round 2 regenerates it (normal cadence starts round 3).
     const spent: Character = {
       ...character,
-      resources: { ...character.resources, martialPointsRemaining: 4 },
+      resources: { ...character.resources, martialPointsRemaining: 3 },
     };
-    expect(regenMartialPoolForRound(spent, 2).resources.martialPointsRemaining).toBe(5);
+    expect(regenMartialPoolForRound(spent, 2).resources.martialPointsRemaining).toBe(4);
     // A plain Fighter has no round-2 tick.
     const plain = makeChar('fighter', 10, 'champion');
     const plainSpent: Character = {

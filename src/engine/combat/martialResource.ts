@@ -38,15 +38,13 @@ import { t } from '../../i18n';
  *  - Spending is pure upside — the only cost is a point. No accuracy/defense
  *    tax.
  *
- * The Fighter carries a DEEPER well — it has no Rage / Hunter's-Mark damage
- * multiplier to lean on between spends, so the pool is its whole turn-to-turn
- * lever — but tops it up on the same slow cadence as the others, so it stays a
+ * The Fighter leans HARDEST on this pool — it has no Rage / Hunter's-Mark damage
+ * multiplier to fall back on between spends, so the pool is its whole turn-to-turn
+ * lever. All three share one depth and the same slow top-up cadence, so it stays a
  * scarce, save-it resource rather than one that refills as fast as it is spent.
  */
 
 export const MARTIAL_POOL_MAX = 3;
-/** The Fighter's deeper pool — it leans hardest on the resource (no Rage/Mark). */
-export const MARTIAL_POOL_MAX_FIGHTER = 4;
 /** DEFENSE costs the same single point for all three martial classes. OFFENSE
  *  and DISRUPT vary by class — see {@link martialOffenseCost} /
  *  {@link martialDisruptCost}. */
@@ -70,23 +68,21 @@ export function isMartialClass(character: Readonly<Character>): boolean {
 
 /**
  * The class's pool ceiling — both the per-fight refresh target and the regen cap.
- * The Fighter's is deeper ({@link MARTIAL_POOL_MAX_FIGHTER}); Barbarian and Ranger
- * share the baseline ({@link MARTIAL_POOL_MAX}). Zero for non-martial classes.
+ * All three martial classes share the baseline ({@link MARTIAL_POOL_MAX}); a Battle
+ * Master's Tactical Reserve (L10) deepens it by one. Zero for non-martial classes.
  */
 export function martialPoolMax(character: Readonly<Character>): number {
   if (!isMartialClass(character)) return 0;
-  const base = character.classId === 'fighter' ? MARTIAL_POOL_MAX_FIGHTER : MARTIAL_POOL_MAX;
   // Battle Master Tactical Reserve (L10): one deeper point of Resolve.
-  return base + (characterHasMechanic(character as Character, 'tactical-reserve') ? 1 : 0);
+  return MARTIAL_POOL_MAX + (characterHasMechanic(character as Character, 'tactical-reserve') ? 1 : 0);
 }
 
 /**
  * Mid-fight pool regen. Called at the start of each of the hero's turns (endTurn).
  * Adds one point on a regen-tick round, capped at the class max. The pool already
  * refreshes full on round 1 (createCombat), so ticks begin on rounds 3,5,7,… for
- * every martial class ({@link MARTIAL_REGEN_INTERVAL}) — the Fighter just tops up
- * into a deeper pool. Returns the SAME reference when nothing changes, so callers
- * can cheaply detect a real top-up.
+ * every martial class ({@link MARTIAL_REGEN_INTERVAL}). Returns the SAME reference
+ * when nothing changes, so callers can cheaply detect a real top-up.
  */
 export function regenMartialPoolForRound(
   character: Readonly<Character>,

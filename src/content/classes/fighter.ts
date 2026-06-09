@@ -23,7 +23,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'second-wind',
         name: 'Second Wind',
         description:
-          'On your turn, you can use a bonus action to regain hit points equal to 1d10 + 2 per fighter level. Refreshes at the start of every combat encounter.',
+          'On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. Refreshes at the start of every combat encounter.',
         mechanicKey: 'second-wind',
       },
       {
@@ -100,7 +100,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'weapon-mastery',
         name: 'Weapon Mastery',
         description:
-          'Years on the line sharpen every motion — your weapon attacks gain +1 to hit and +1 damage. A flat edge that compounds with everything else you swing.',
+          'Years on the line sharpen every motion — your weapon attacks gain +1 damage. A flat edge that compounds with everything else you swing.',
         mechanicKey: 'weapon-mastery',
       },
     ],
