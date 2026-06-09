@@ -125,7 +125,7 @@ export const PALADIN: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Minsc',
+    characterName: 'Minsc (and Boo)',
     recommendedRaceId: 'human',
     // Hybrid STR + CHA. STR 15 clears the heavy-armour gate and swings the martial
     // arm; CHA 15 drives smites, spells, Lay on Hands and the auras; CON cushions

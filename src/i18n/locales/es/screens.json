@@ -52,7 +52,9 @@
       "barbarian": "Gran hacha, sin armadura · 2 pociones de curación · 20 de oro",
       "ranger": "Arco largo, espada corta y armadura de cuero · 1 poción de curación · 15 de oro",
       "druid": "Hoz y armadura de cuero · 2 pociones de curación · 20 de oro",
-      "monk": "Puños desnudos y espada corta, sin armadura · 2 pociones de curación · 15 de oro"
+      "monk": "Puños desnudos y espada corta, sin armadura · 2 pociones de curación · 15 de oro",
+      "bard": "Laúd de Guerra, estoque, escudo y armadura de cuero · 3 pociones de curación · 20 de oro",
+      "paladin": "Espada larga, escudo y cota de malla · 2 pociones de curación · 25 de oro"
     },
     "hallmarks": {
       "fighter": "Aliento Vital · Oleada de Acción · el Campeón critica con 19–20",
@@ -63,7 +65,8 @@
       "ranger": "Marca del Cazador · Tiro con Arco · Verdugo de Colosos",
       "druid": "Producir Llama · Forma Salvaje · Círculo de la Luna",
       "monk": "Artes Marciales · Aluvión de Golpes · Golpe Aturdidor",
-      "bard": "Inspiración Bárdica · Burla Cruel · Palabras Cortantes del Saber / Ataque Adicional del Valor"
+      "bard": "Inspiración Bárdica · Burla Cruel · Palabras Cortantes del Saber / Ataque Adicional del Valor",
+      "paladin": "Imposición de Manos · Castigo Divino · Castigos del Resplandor / Auras del Baluarte"
     }
   },
   "ascension": {
