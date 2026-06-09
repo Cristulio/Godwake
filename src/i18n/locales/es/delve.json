@@ -102,7 +102,9 @@
       "highBody": " — la oscuridad responde: el susurro de una bendición y {gold} de oro (o {altGold} de oro si no queda bendición que dar).",
       "lowRoll": "10 o menos",
       "lowBody": " — cobra lo suyo: pierdes {damage} PV (un cuarto de tu salud), hasta no menos de 1.",
-      "throwButton": "Arrojar los huesos"
+      "throwButton": "Arrojar los huesos",
+      "diceWin": "La oscuridad responde",
+      "diceLoss": "Cobra lo suyo"
     },
     "caravan": {
       "title": "◆ El Mercader de la Caravana",

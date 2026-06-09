@@ -102,7 +102,9 @@
       "highBody": " — the dark answers: a blessing's whisper and {gold} gold (or {altGold} gold if no blessing is left to give).",
       "lowRoll": "10 or lower",
       "lowBody": " — it takes its due: you lose {damage} HP (a quarter of your health), down to no less than 1.",
-      "throwButton": "Throw the bones"
+      "throwButton": "Throw the bones",
+      "diceWin": "The dark answers",
+      "diceLoss": "It takes its due"
     },
     "caravan": {
       "title": "◆ The Caravan-Merchant",

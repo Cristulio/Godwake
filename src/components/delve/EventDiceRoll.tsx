@@ -28,7 +28,8 @@ export function EventDiceRoll({ check, skillName, onDone }: EventDiceRollProps) 
 
   useEffect(() => {
     let mounted = true;
-    const ms = (n: number) => Math.max(40, Math.round(n / speed));
+    // Dice animation caps at 2× — at 4× the tumble is too quick to read.
+    const ms = (n: number) => Math.max(40, Math.round(n / Math.min(speed, 2)));
 
     playSfx('dice_clack');
 

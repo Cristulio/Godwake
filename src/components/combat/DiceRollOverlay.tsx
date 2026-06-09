@@ -43,7 +43,8 @@ export function DiceRollOverlay({
 
   useEffect(() => {
     let mounted = true;
-    const t = (ms: number) => Math.max(40, Math.round(ms / speed));
+    // Dice animation caps at 2× — at 4× the tumble is too quick to read.
+    const t = (ms: number) => Math.max(40, Math.round(ms / Math.min(speed, 2)));
 
     playSfx('dice_clack');
     // Player swings are emitted from `playerAttack` so the audio matches the

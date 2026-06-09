@@ -19,6 +19,7 @@ import {
 } from '../../content/campBoons';
 import { consumableStockForTier, rollGearStock, rollLegendaryOffer, type GearStock, type LegendaryOffer } from './shopStock';
 import { GearWareRow, ConsumableWareRow, LegendaryWareRow } from './MerchantWares';
+import { CampDiceRoll } from './CampDiceRoll';
 import { useT } from '../../i18n/useT';
 
 /** Whether the caravan shop is open. Blessings are granted at shrines, not
@@ -113,6 +114,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const riskResult = delve?.campRisk ?? null;
   const [merchantStep, setMerchantStep] = useState<MerchantStep>('closed');
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
+  const [rollingRisk, setRollingRisk] = useState<{ roll: number; win: boolean } | null>(null);
 
   // Imoen whispers when the road opens up — once per soul (never replays on re-entry or in future runs).
   useEffect(() => {
@@ -163,10 +165,10 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
   function resolveRisk() {
     if (!character || committed) return;
-    playSfx('dice_clack');
     const result = resolveCampRisk(riskTier);
-    if (result) playSfx(result.outcome === 'win' ? 'shrine_chime' : 'hit_thud');
     setExpanded(null);
+    // The dice overlay plays the throw + win/loss sfx in sync with the tumble.
+    if (result) setRollingRisk({ roll: result.roll, win: result.outcome === 'win' });
   }
 
   function openShop() {
@@ -428,6 +430,14 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
             setMerchantStep('closed');
             setPurchaseMessage(null);
           }}
+        />
+      )}
+
+      {rollingRisk && (
+        <CampDiceRoll
+          roll={rollingRisk.roll}
+          win={rollingRisk.win}
+          onDone={() => setRollingRisk(null)}
         />
       )}
     </div>
