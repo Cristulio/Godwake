@@ -81,4 +81,32 @@ describe('appendLog', () => {
     const next = appendLog(s, entry(3, 'third'), entry(4, 'fourth'));
     expect(next.log.map((e) => e.text)).toEqual(['entry 1', 'entry 2', 'third', 'fourth']);
   });
+
+  it('keeps entry ids unique well past the cap — the long-fight duplicate-key bug', () => {
+    // Append one at a time far past MAX_COMBAT_LOG, the way a long boss fight
+    // does. Before the fix, once length pinned at the cap every new entry reused
+    // id MAX_COMBAT_LOG + 1, so CombatLog (key={entry.id}) got duplicate keys and
+    // mis-rendered. The id the caller passes is irrelevant — appendLog stamps it.
+    let s = mkState(0);
+    for (let i = 0; i < MAX_COMBAT_LOG + 50; i++) {
+      s = appendLog(s, entry(7, `line ${i}`));
+    }
+    const ids = s.log.map((e) => e.id);
+    expect(s.log).toHaveLength(MAX_COMBAT_LOG);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('stamps monotonic ids regardless of the id the caller passes', () => {
+    const s = mkState(3); // existing ids 1..3
+    const next = appendLog(s, entry(999, 'a'), entry(999, 'b'));
+    expect(next.log.slice(-2).map((e) => e.id)).toEqual([4, 5]);
+    expect(next.logSeq).toBe(6);
+  });
+
+  it('existing entries keep object identity (markPlayerLog reference set stays valid)', () => {
+    const s = mkState(3);
+    const existing = s.log[1];
+    const next = appendLog(s, entry(0, 'new'));
+    expect(next.log[1]).toBe(existing);
+  });
 });

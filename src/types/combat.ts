@@ -346,6 +346,14 @@ export interface CombatState {
   currentTurnIndex: number;
   round: number;
   log: CombatLogEntry[];
+  /**
+   * Monotonic counter for the next log-entry id, advanced by appendLog. Survives
+   * the MAX_COMBAT_LOG clip so ids stay unique even after the log saturates —
+   * unlike a `log.length + 1` scheme, which repeats ids once length pins at the
+   * cap (duplicate React keys corrupt the log render in long fights). Optional:
+   * absent on a fresh combat, appendLog seeds it from the initial log length.
+   */
+  logSeq?: number;
   status: CombatStatus;
   /** Latest attack roll — populated for dice-roll overlay animation. */
   lastAttack?: AttackEvent;

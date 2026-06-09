@@ -10,12 +10,23 @@ import type { CombatLogEntry, CombatState } from '../../types/combat';
 export const MAX_COMBAT_LOG = 200;
 
 export function appendLog(state: CombatState, ...entries: CombatLogEntry[]): CombatState {
-  const merged = entries.length === 1
-    ? [...state.log, entries[0]]
-    : [...state.log, ...entries];
+  if (entries.length === 0) return state;
+  // Stamp each appended entry with a monotonic id from a counter that survives
+  // the MAX_COMBAT_LOG clip. The `state.log.length + 1` ids the call sites pass
+  // collide once the log saturates — length pins at the cap, so every new entry
+  // reused the same id, and CombatLog keys on entry.id → duplicate React keys
+  // corrupted the log render in long fights. Log ids are display keys only (never
+  // matched in engine logic), so overriding them here is safe; only the NEW
+  // entries become fresh objects — existing entries keep their identity, so
+  // markPlayerLog's reference set still holds. Seeds from the initial log length
+  // on the first append of a fresh combat (logSeq still unset).
+  const startId = state.logSeq ?? state.log.length + 1;
+  const stamped = entries.map((e, i) => (e.id === startId + i ? e : { ...e, id: startId + i }));
+  const merged = [...state.log, ...stamped];
   return {
     ...state,
     log: merged.length > MAX_COMBAT_LOG ? merged.slice(-MAX_COMBAT_LOG) : merged,
+    logSeq: startId + entries.length,
   };
 }
 
