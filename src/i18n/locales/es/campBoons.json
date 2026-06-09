@@ -1,0 +1,67 @@
+{
+  "vigor-of-the-road": {
+    "name": "Vigor del Camino",
+    "description": "+5% de PG máximos (redondeado hacia abajo, mínimo +1). Los PG actuales suben con ellos.",
+    "flavor": "Tres días en un camino que no termina le enseñan a la espalda dónde estar."
+  },
+  "eye-of-the-hawk": {
+    "name": "Ojo del Halcón",
+    "description": "+1 a todas las tiradas de ataque durante el resto de la incursión.",
+    "flavor": "Un respiro. Una estrella fija. El mundo reducido a una sola línea recta."
+  },
+  "eye-of-the-mind": {
+    "name": "Ojo de la Mente",
+    "description": "+1 a todas las tiradas de ataque de conjuro durante el resto de la incursión.",
+    "flavor": "Un respiro. Un glifo sostenido firme en la mente. La Trama se tensa por ello."
+  },
+  "stillness-of-the-mind": {
+    "name": "Quietud de la Mente",
+    "description": "+1 a las tiradas de salvación de Sabiduría durante el resto de la incursión.",
+    "flavor": "Un nombre que guardas en tu centro. La oscuridad no puede moverlo."
+  },
+  "steel-of-the-brave": {
+    "name": "Acero del Valiente",
+    "description": "+1 a la Clase de Armadura durante el resto de la incursión.",
+    "flavor": "El escudo aprende dónde estar un latido antes del golpe."
+  },
+  "surge-of-the-storm": {
+    "name": "Ímpetu de la Tormenta",
+    "description": "+1 a la CD de salvación de conjuros durante el resto de la incursión.",
+    "flavor": "La Trama se inclina una fracción más cerca de la mano que la llamó."
+  },
+  "might-of-the-mountain": {
+    "name": "Poderío de la Montaña",
+    "description": "+1 de daño en cada golpe con arma durante el resto de la incursión.",
+    "flavor": "El golpe cae un pelo más hondo. La montaña recuerda."
+  },
+  "patience-of-ilmater": {
+    "name": "Paciencia de Ilmater",
+    "description": "+1 carga de estabilización — una vez más el nudo rojo aguanta cuando caes.",
+    "flavor": "Una venda de nudo rojo, bendecida en la pila. Llévala bajo la coraza."
+  },
+  "mantle-of-the-slain": {
+    "name": "Manto de los Caídos",
+    "description": "+1 PG máximo por nivel de personaje. Los PG actuales suben con ellos.",
+    "flavor": "Los nombres de los muertos que cargas se endurecen en una armadura silenciosa."
+  },
+  "blade-of-the-vow": {
+    "name": "Hoja del Voto",
+    "description": "Vuelve a tirar tu dado de daño de arma más bajo hasta tres veces por combate. Quédate con la mejor tirada cada vez.",
+    "flavor": "Un voto musitado a santos muertos hace mucho. La hoja no olvida."
+  },
+  "vow-of-the-tome": {
+    "name": "Voto del Tomo",
+    "description": "+1 de daño en cada conjuro que inflige daño, durante el resto de la incursión.",
+    "flavor": "Un voto musitado en el lomo de un libro abierto. La Trama responde leyendo."
+  },
+  "eyes-of-the-lich": {
+    "name": "Ojos del Liche",
+    "description": "+1 a todas las tiradas de ataque con arma y los críticos aterrizan con 19-20 durante el resto de la incursión.",
+    "flavor": "Una mirada tras ojos que hace mucho dejaron de parpadear. Ves dónde son débiles los vivos."
+  },
+  "gaze-of-the-lich": {
+    "name": "Mirada del Liche",
+    "description": "+1 a todas las tiradas de ataque de conjuro y los críticos en ataques de conjuro aterrizan con 19-20 durante el resto de la incursión.",
+    "flavor": "Un parpadeo prestado, frío y sin párpados. Por esos ojos los huecos en la trama mortal son evidentes."
+  }
+}
