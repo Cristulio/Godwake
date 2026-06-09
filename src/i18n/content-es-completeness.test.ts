@@ -92,6 +92,24 @@ describe('es/monsters.json completeness', () => {
     }
     expect(missing, `missing monster action-name overlays: ${missing.join(', ')}`).toEqual([]);
   });
+
+  it('every monster action with an English description has a Spanish desc overlay (Codex)', () => {
+    const missing: string[] = [];
+    for (const m of listMonsters()) {
+      const row = monsters[m.id] as unknown as
+        | { actions?: Record<string, { desc?: string }> }
+        | undefined;
+      const actions = row?.actions;
+      for (const a of m.actions) {
+        if (typeof a.description !== 'string' || a.description.trim().length === 0) continue;
+        const esDesc = actions?.[a.name]?.desc;
+        if (typeof esDesc !== 'string' || esDesc.trim().length === 0) {
+          missing.push(`${m.id}.${a.name}`);
+        }
+      }
+    }
+    expect(missing, `missing monster action-desc overlays: ${missing.join(', ')}`).toEqual([]);
+  });
 });
 
 describe('es/events.json completeness', () => {
