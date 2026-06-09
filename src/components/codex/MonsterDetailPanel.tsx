@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import type { Monster, MonsterAction } from '../../schemas/monster';
 import { getMonster } from '../../content/monsters';
 import { MonsterPortrait } from '../combat/MonsterPortrait';
@@ -37,7 +38,13 @@ export function MonsterDetailPanel({
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  return (
+  // Portal to <body>: the CodexScreen root carries `animate-room-enter`, whose
+  // `forwards` fill leaves a (non-none) transform that becomes the containing block
+  // for this `position: fixed` overlay — trapping it to the tall, scrollable
+  // bestiary box so the centered panel lands far above the viewport once you've
+  // scrolled down (the "black screen, nothing happens" report). The portal escapes
+  // that transformed ancestor so `fixed` is viewport-relative again.
+  return createPortal(
     <div
       className="fixed inset-0 z-40 bg-black/85 flex items-center justify-center p-4 animate-fade-in"
       onClick={onClose}
@@ -208,7 +215,8 @@ export function MonsterDetailPanel({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
