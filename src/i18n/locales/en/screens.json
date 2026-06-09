@@ -52,7 +52,9 @@
       "barbarian": "Greataxe, no armor · 2 healing potions · 20 gold",
       "ranger": "Longbow, shortsword & leather armor · 1 healing potion · 15 gold",
       "druid": "Sickle & leather armor · 2 healing potions · 20 gold",
-      "monk": "Bare fists & shortsword, no armor · 2 healing potions · 15 gold"
+      "monk": "Bare fists & shortsword, no armor · 2 healing potions · 15 gold",
+      "bard": "War Lute, rapier, shield & leather armor · 3 healing potions · 20 gold",
+      "paladin": "Longsword, shield & chain mail · 2 healing potions · 25 gold"
     },
     "hallmarks": {
       "fighter": "Second Wind · Action Surge · Champion crits on 19–20",
@@ -63,7 +65,8 @@
       "ranger": "Hunter's Mark · Archery · Colossus Slayer",
       "druid": "Produce Flame · Wild Shape · Circle of the Moon",
       "monk": "Martial Arts · Flurry of Blows · Stunning Strike",
-      "bard": "Bardic Inspiration · Vicious Mockery · Lore Cutting Words / Valor Extra Attack"
+      "bard": "Bardic Inspiration · Vicious Mockery · Lore Cutting Words / Valor Extra Attack",
+      "paladin": "Lay on Hands · Divine Smite · Radiant smites / Bulwark auras"
     }
   },
   "ascension": {
