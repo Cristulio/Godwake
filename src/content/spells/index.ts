@@ -359,6 +359,32 @@ export const UNMAKE: Spell = SpellSchema.parse({
   effectKey: 'unmake',
 });
 
+export const TIME_STOP: Spell = SpellSchema.parse({
+  id: 'time-stop',
+  book: 'wizard',
+  name: 'Time Stop',
+  level: 9,
+  school: 'transmutation',
+  range: 'Self',
+  target: 'self',
+  description:
+    'You stop time for everyone but yourself. The world freezes mid-breath and you take three more full turns — striking and casting at will — before a single foe can so much as flinch. A held instant to set up the kill.',
+  effectKey: 'time-stop',
+});
+
+export const SHAPE_CHANGE: Spell = SpellSchema.parse({
+  id: 'shape-change',
+  book: 'wizard',
+  name: 'Shape Change',
+  level: 9,
+  school: 'transmutation',
+  range: 'Self',
+  target: 'self',
+  description:
+    'Your body swells and scales over — you become a dragon. For 5 rounds you gain 100 temporary hit points and rend with three claw strikes each Attack, each biting like a +3 enchanted blade. You can still work magic, but a turn spent casting is a turn not clawing.',
+  effectKey: 'shape-change',
+});
+
 // --- Druid: the nature book (Silvanus's craft). A curated set spanning every
 // slot tier so no slot the climb opens is left dead. Each maps onto an EXISTING
 // spell-effect handler (no new engine kinds) — the flavor is the Druid's, the
@@ -563,6 +589,8 @@ const ALL_SPELLS: Spell[] = [
   WITHER,
   APOTHEOSIS,
   UNMAKE,
+  TIME_STOP,
+  SHAPE_CHANGE,
   // Druid book.
   PRODUCE_FLAME,
   THORNLASH,

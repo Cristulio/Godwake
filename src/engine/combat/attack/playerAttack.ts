@@ -25,6 +25,12 @@ import {
   MARTIAL_DISRUPT_STAGGER_TURNS,
 } from '../martialResource';
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
+import {
+  DRAGON_CLAW_ATTACKS,
+  DRAGON_CLAW_DAMAGE_BONUS,
+  DRAGON_CLAW_HIT_BONUS,
+  isDragonForm,
+} from '../shapeChange';
 import { monkKiSaveDC, monkFightsUnarmed, MONK_UNARMED_DAMAGE_EDGE } from '../monk';
 import { getMonster } from '../../../content/monsters';
 import { isRangedWeapon, rageBrokenByArmor } from '../../character/equip';
@@ -77,6 +83,7 @@ const PART_KEY: Record<string, string> = {
   'open hand': 'openHand',
   shadow: 'shadow',
   ascendant: 'ascendant',
+  dragon: 'dragon',
   'First Cut': 'firstCut',
   'Bleed-Out': 'bleedOut',
   Fellfast: 'fellfast',
@@ -208,6 +215,9 @@ export function playerAttack(
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   // Fighter Weapon Mastery (L9): +1 to hit on every weapon strike.
   if (characterHasMechanic(nextCharacter, 'weapon-mastery')) attackBonus += 1;
+  // Shape Change (dragon form): the dragon's claws strike like a +3 enchanted
+  // weapon — flat to-hit here, flat damage in the hit block.
+  if (isDragonForm(nextCharacter)) attackBonus += DRAGON_CLAW_HIT_BONUS;
   // Martial OFFENSE: a heavy/aimed strike. For the Barbarian (Savage Cleave) and
   // Ranger (Aimed Shot) it lands for flat bonus damage only (applied in the hit
   // block), no accuracy cost. The Fighter's Power Attack also SHARPENS the swing
@@ -508,6 +518,11 @@ export function playerAttack(
     if (isAscendant(nextCharacter)) {
       bonusDamage += APOTHEOSIS_BONUS_DAMAGE;
       onTypeParts.push({ amount: APOTHEOSIS_BONUS_DAMAGE, label: 'ascendant' });
+    }
+    // Shape Change (dragon form): each claw bites for the +3 enchanted edge.
+    if (isDragonForm(nextCharacter)) {
+      bonusDamage += DRAGON_CLAW_DAMAGE_BONUS;
+      onTypeParts.push({ amount: DRAGON_CLAW_DAMAGE_BONUS, label: 'dragon' });
     }
     if (isFirstAttack && (nextCharacter.permanentFirstAttackDamage ?? 0) > 0) {
       const fc = nextCharacter.permanentFirstAttackDamage ?? 0;
@@ -1123,6 +1138,9 @@ function markPlayerActionUsed(
  * L20). Loading weapons cap at 1 regardless — the reload is the bottleneck.
  */
 export function maxAttacksPerAction(character: Readonly<Character>): number {
+  // Shape Change (dragon form): three claw strikes per Attack, ahead of any
+  // class extra-attack check — the form's own multiattack.
+  if (isDragonForm(character)) return DRAGON_CLAW_ATTACKS;
   if (!characterHasMechanic(character, 'extra-attack')) return 1;
   const mainHand = character.equipped.mainHand;
   if (mainHand) {

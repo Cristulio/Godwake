@@ -11,6 +11,8 @@ import {
   APOTHEOSIS_ROUNDS,
   APOTHEOSIS_TEMP_HP,
 } from '../apotheosis';
+import { SHAPE_CHANGE_ROUNDS, SHAPE_CHANGE_TEMP_HP } from '../shapeChange';
+import { TIME_STOP_EXTRA_TURNS } from '../timeStop';
 import {
   type CastResult,
   type CastSpellContext,
@@ -60,6 +62,68 @@ export function castApotheosis(
     }),
   });
   nextState = attachSpellEffect(nextState, 'mage-armor', 'player');
+  return { state: nextState, character: nextCharacter, cast: true };
+}
+
+/**
+ * Time Stop (9th) — the held-instant capstone. The world freezes and the caster
+ * banks {@link TIME_STOP_EXTRA_TURNS} extra full turns: the turn engine keeps
+ * handing the turn back to the player (and resetting the action economy) without
+ * letting any enemy act, spending one banked turn each time, until the freeze
+ * runs out. A self-cast: no target. The free turns are delivered in turn.ts.
+ */
+export function castTimeStop(
+  character: Readonly<Character>,
+  state: CombatState,
+): CastResult {
+  let nextCharacter: Character = consumeSlot(character, 9);
+  nextCharacter = patchResources(nextCharacter, {
+    extraTurnsRemaining: TIME_STOP_EXTRA_TURNS,
+  });
+  nextCharacter = markActionUsed(nextCharacter);
+
+  let nextState: CombatState = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'narration',
+    text: t('combat.log.timeStop', {
+      name: nextCharacter.name,
+      turns: TIME_STOP_EXTRA_TURNS,
+    }),
+  });
+  nextState = attachSpellEffect(nextState, 'mage-armor', 'player');
+  return { state: nextState, character: nextCharacter, cast: true };
+}
+
+/**
+ * Shape Change → Dragon (9th) — the transform-into-a-monster capstone. The
+ * caster becomes a dragon: a wall of temporary hit points (taken as the max of
+ * any existing pool — the tempHp take-max rule) that fights with three claw
+ * strikes per Attack for {@link SHAPE_CHANGE_ROUNDS} rounds. The form reads in
+ * playerAttack (attack count + the +3/+3 claw bonus) and the attack call sites
+ * (the weapon swap), and decrements in turn.ts. A self-cast: no target.
+ */
+export function castShapeChange(
+  character: Readonly<Character>,
+  state: CombatState,
+): CastResult {
+  let nextCharacter: Character = consumeSlot(character, 9);
+  nextCharacter = patchResources(nextCharacter, {
+    dragonFormRoundsRemaining: SHAPE_CHANGE_ROUNDS,
+  });
+  const temp = Math.max(nextCharacter.hp.temp, SHAPE_CHANGE_TEMP_HP);
+  nextCharacter = { ...nextCharacter, hp: { ...nextCharacter.hp, temp } };
+  nextCharacter = markActionUsed(nextCharacter);
+
+  let nextState: CombatState = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'narration',
+    text: t('combat.log.shapeChange', {
+      name: nextCharacter.name,
+      temp: SHAPE_CHANGE_TEMP_HP,
+      rounds: SHAPE_CHANGE_ROUNDS,
+    }),
+  });
+  nextState = attachSpellEffect(nextState, 'rage', 'player');
   return { state: nextState, character: nextCharacter, cast: true };
 }
 

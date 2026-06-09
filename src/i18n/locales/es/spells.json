@@ -103,6 +103,14 @@
     "name": "Deshacer",
     "description": "Pronuncias a un enemigo medio fuera de la existencia —su forma se quiebra por 18d8 de daño necrótico y queda rehecho en algo indefenso, paralizado durante 2 asaltos. Una salvación de Constitución resiste la atadura, no el deshacer."
   },
+  "time-stop": {
+    "name": "Detener el Tiempo",
+    "description": "Detienes el tiempo para todos menos para ti. El mundo se congela a media respiración y tomas tres turnos completos más —golpeando y lanzando conjuros a voluntad— antes de que un solo enemigo pueda siquiera estremecerse. Un instante suspendido para preparar la muerte."
+  },
+  "shape-change": {
+    "name": "Cambiar de Forma",
+    "description": "Tu cuerpo se hincha y se cubre de escamas —te conviertes en un dragón. Durante 5 asaltos ganas 100 puntos de golpe temporales y desgarras con tres ataques de garra por Ataque, cada uno mordiendo como una hoja encantada +3. Aún puedes obrar magia, pero un turno lanzando conjuros es un turno sin garras."
+  },
   "produce-flame": {
     "name": "Producir Llama",
     "description": "Una llama trémula prende en el cuenco de tu mano y salta hacia un objetivo —d10 de fuego más tu modificador de Sabiduría, y la llama crece más feroz conforme tú lo haces. Una salvación de Destreza reduce la quemadura a la mitad. La luz nunca te deja sin antorcha."

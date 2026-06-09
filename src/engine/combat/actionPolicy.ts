@@ -41,6 +41,7 @@ import { playerConditionMods } from './playerConditions';
 import { useRage } from './rage';
 import { useHuntersMark } from './huntersMark';
 import { useWildShape, beastWeaponId } from './wildShape';
+import { DRAGON_CLAW_WEAPON_ID, isDragonForm } from './shapeChange';
 import {
   useFlurryOfBlows,
   usePatientDefense,
@@ -767,6 +768,13 @@ function chooseWizardAction(
   const actionFree = !character.actionEconomy.actionUsed;
   const beefy = highestHpTarget(live);
 
+  // Shape Change (dragon form): the wizard is a melee bruiser — maul with the
+  // claws rather than spend the one action casting. (Attack and cast share the
+  // action; the form's whole point is the triple claw.)
+  if (isDragonForm(character) && primary) {
+    return { kind: 'attack', targetId: primary.id };
+  }
+
   // Life-drain when hurt: a necrotic drain removes a foe AND knits the caster's
   // own wounds — strictly better than a bare nuke or a one-off smear when we're
   // bleeding. Hit the beefiest target (the heal is half the damage ROLLED, so
@@ -800,6 +808,29 @@ function chooseWizardAction(
   // 9th-level slot on trash.
   if (beefy && beefy.instance.hp.current >= BOSS_NUKE_HP) {
     if (beefy.instance.hp.current >= CAPSTONE_NUKE_HP) {
+      // Time Stop opens the burst — but only with a 9th slot to spare beyond the
+      // nuke that follows (don't steal the lone 9th slot from the kill), and
+      // never while the freeze is still banked.
+      if (
+        actionFree &&
+        knows(character, 'time-stop') &&
+        slotsAt(character, 9) >= 2 &&
+        (character.resources.extraTurnsRemaining ?? 0) === 0
+      ) {
+        return { kind: 'cast', spellId: 'time-stop' };
+      }
+      // Shape Change — become a dragon: a wall of temp HP that mauls with three
+      // claws. A power/survival button when not already transformed (dragon or
+      // ascendant).
+      if (
+        actionFree &&
+        knows(character, 'shape-change') &&
+        slotsAt(character, 9) > 0 &&
+        !isDragonForm(character) &&
+        (character.resources.ascendantRoundsRemaining ?? 0) === 0
+      ) {
+        return { kind: 'cast', spellId: 'shape-change' };
+      }
       if (
         actionFree &&
         knows(character, 'apotheosis') &&
@@ -1091,11 +1122,13 @@ export function applyPlannedAction(
       // A wild-shaped druid strikes with its beast profile (claws/bite); a
       // bare-handed monk strikes with its level-scaled Martial Arts die. A monk
       // who took up a weapon (even a monk weapon) swings that weapon plainly.
-      const weaponId = isWildShaped(character)
-        ? beastWeaponId(character)
-        : character.classId === 'monk' && monkFightsUnarmed(character)
-          ? martialArtsWeaponId(character)
-          : (character.equipped.mainHand?.itemId ?? 'dagger');
+      const weaponId = isDragonForm(character)
+        ? DRAGON_CLAW_WEAPON_ID
+        : isWildShaped(character)
+          ? beastWeaponId(character)
+          : character.classId === 'monk' && monkFightsUnarmed(character)
+            ? martialArtsWeaponId(character)
+            : (character.equipped.mainHand?.itemId ?? 'dagger');
       const r = playerAttack({ roller, character, state }, action.targetId, weaponId);
       return { state: r.state, character: r.character };
     }

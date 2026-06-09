@@ -281,6 +281,25 @@ export const DIRE_CLAWS: Weapon = WeaponSchema.parse({
   description: 'The heavier predators a Circle of the Moon druid can wear — a deeper, surer rend.',
 });
 
+// Shape Change dragon claws — never sold or rolled (absent from the loot/shop
+// pools, which draw from explicit id lists). Resolved only when the engine swaps
+// the wizard's attack to its dragon profile. The +3 to-hit / +3 damage that make
+// the claws "hit like a +3 enchanted weapon" are applied in playerAttack (gated
+// on isDragonForm), NOT baked here — the weapon carries only the base 2d8 rend.
+export const DRAGON_CLAWS: Weapon = WeaponSchema.parse({
+  id: 'dragon-claws',
+  kind: 'weapon',
+  name: 'Dragon Claws',
+  affinity: 'wizard',
+  category: 'martial',
+  damage: '2d8',
+  damageType: 'slashing',
+  properties: [],
+  cost: 0,
+  rarity: 'common',
+  description: 'Talons the length of swords — the natural arms of the dragon you have become.',
+});
+
 // Monk Martial Arts fists — never sold or rolled (absent from loot/shop pools,
 // which draw from explicit id lists). The engine swaps the monk's attack to the
 // level-appropriate die via martialArtsWeaponId. Finesse so the strike rides the
@@ -417,6 +436,7 @@ export const ALL_WEAPONS: Weapon[] = [
   SICKLE,
   BEAST_CLAWS,
   DIRE_CLAWS,
+  DRAGON_CLAWS,
   MONK_FISTS,
   MONK_FISTS_ADEPT,
   MONK_FISTS_MASTER,

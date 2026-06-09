@@ -342,6 +342,9 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       mistyStepActive: false,
       blurRoundsRemaining: illusionist ? 99 : 0,
       mirrorImages: illusionist ? 1 : 0,
+      // Drop any stale 9th-level transform/freeze carried from a prior fight.
+      extraTurnsRemaining: 0,
+      dragonFormRoundsRemaining: 0,
     });
   }
 

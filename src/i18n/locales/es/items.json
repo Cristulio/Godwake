@@ -65,6 +65,10 @@
     "name": "Garras Atroces",
     "description": "Los depredadores más pesados que un druida del Círculo de la Luna puede vestir —un desgarro más hondo y certero."
   },
+  "dragon-claws": {
+    "name": "Garras de Dragón",
+    "description": "Garras tan largas como espadas —las armas naturales del dragón en que te has convertido."
+  },
   "monk-fists": {
     "name": "Puños",
     "description": "La mano vacía —la única arma del monje, y la que nunca lo abandona."
