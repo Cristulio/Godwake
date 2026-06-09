@@ -58,6 +58,11 @@ const UnlockTutorialCard = lazy(() =>
 const IrenicusTaunt = lazy(() =>
   import('./components/lore/IrenicusTaunt').then((m) => ({ default: m.IrenicusTaunt })),
 );
+const AchievementToast = lazy(() =>
+  import('./components/system/AchievementToast').then((m) => ({
+    default: m.AchievementToast,
+  })),
+);
 // DelveScreen pulls all combat code + the 1.5k-line MonsterPortrait library.
 // Lazy so the title/hub loop loads fast; delve chunk warms when the player
 // first descends.
@@ -91,6 +96,8 @@ function App() {
   const dismissTutorial = useGameStore((s) => s.dismissTutorial);
   const hubUnlockQueue = useGameStore((s) => s.hubUnlockQueue);
   const dismissHubTutorial = useGameStore((s) => s.dismissHubTutorial);
+  const achievementToasts = useGameStore((s) => s.achievementToasts);
+  const dismissAchievementToast = useGameStore((s) => s.dismissAchievementToast);
   const firstRunSeen = useSettingsStore((s) => s.firstRunSeen);
 
   // Combat SFX reaction — fires spell/ability/enemy sounds off the combat
@@ -199,6 +206,15 @@ function App() {
       {pendingHubUnlock && (
         <Suspense fallback={null}>
           <UnlockTutorialCard featureId={pendingHubUnlock} onDismiss={dismissHubTutorial} />
+        </Suspense>
+      )}
+      {achievementToasts.length > 0 && (
+        <Suspense fallback={null}>
+          <AchievementToast
+            key={achievementToasts[0]}
+            id={achievementToasts[0]}
+            onDismiss={dismissAchievementToast}
+          />
         </Suspense>
       )}
       <SettingsButton />

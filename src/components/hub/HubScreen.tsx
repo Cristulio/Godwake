@@ -8,10 +8,12 @@ import { playMusic, stopMusic } from '../../engine/audio';
 import { PhandalinScene } from './PhandalinScene';
 import { LegendaryScreen } from './LegendaryScreen';
 import { GlossaryScreen } from './GlossaryScreen';
+import { AchievementsScreen } from './AchievementsScreen';
 import { QuirkRow } from '../ui/QuirkBadge';
 import { QuirkCard } from '../ui/QuirkCard';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import { loadDelveFactory } from '../../engine/delve/loadDelveFactory';
+import { runAchievementCheck } from '../../engine/achievements/check';
 import { useT } from '../../i18n/useT';
 
 export function HubScreen() {
@@ -38,13 +40,19 @@ export function HubScreen() {
   // the delve gate by restoring the line below.
   // const elitesEnabled = isFeatureUnlocked('elite-nodes', progressionMeta);
   const elitesEnabled = true;
-  const [view, setView] = useState<'hub' | 'relics' | 'glossary'>('hub');
+  const [view, setView] = useState<'hub' | 'relics' | 'glossary' | 'achievements'>('hub');
 
   useEffect(() => {
     playMusic('hub_theme');
     return () => {
       stopMusic();
     };
+  }, []);
+
+  // Hub return is the catch-all evaluation moment: surface any achievement the
+  // last run earned but whose toast the player may have missed mid-delve.
+  useEffect(() => {
+    runAchievementCheck();
   }, []);
 
   if (!character) {
@@ -97,6 +105,10 @@ export function HubScreen() {
 
   if (view === 'glossary') {
     return <GlossaryScreen onBack={() => setView('hub')} />;
+  }
+
+  if (view === 'achievements') {
+    return <AchievementsScreen onBack={() => setView('hub')} />;
   }
 
   return (
@@ -221,7 +233,7 @@ export function HubScreen() {
 
       <div
         className={`mt-8 grid gap-3 text-center ${
-          legendariesUnlocked ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'
+          legendariesUnlocked ? 'grid-cols-2 md:grid-cols-5' : 'grid-cols-2 md:grid-cols-4'
         }`}
       >
         <StatTile label={t('hub.renown')} value={character.renown} accent="amber" glyph="◆" />
@@ -244,6 +256,18 @@ export function HubScreen() {
         >
           <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
             {t('hub.glossary')}
+          </div>
+          <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
+            {t('hub.open')}
+          </div>
+        </button>
+        <button
+          type="button"
+          onClick={() => setView('achievements')}
+          className="panel-etched border border-[var(--color-border-warm)] hover:border-[var(--color-accent-amber)] p-4 transition-colors text-center group"
+        >
+          <div className="font-display text-[9px] text-[var(--color-text-dim)] uppercase tracking-widest mb-1 group-hover:text-[var(--color-accent-amber)]">
+            {t('hub.achievements')}
           </div>
           <div className="text-base text-[var(--color-text-primary)] uppercase tracking-wider group-hover:text-[var(--color-accent-amber)]">
             {t('hub.open')}

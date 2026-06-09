@@ -1,0 +1,174 @@
+{
+  "the-wheel-turns": {
+    "name": "La Rueda Gira",
+    "description": "Cae en la oscuridad y despierta de nuevo: tu primera muerte, tu primer renacer."
+  },
+  "first-door": {
+    "name": "La Primera Puerta",
+    "description": "Abate al guardián de un capítulo e irrumpe en la oscuridad más profunda."
+  },
+  "deeper-in": {
+    "name": "Más Adentro",
+    "description": "Supera tres capítulos del largo descenso."
+  },
+  "the-long-road": {
+    "name": "El Largo Camino",
+    "description": "Supera cinco capítulos del largo descenso."
+  },
+  "into-the-deep-dark": {
+    "name": "Hacia la Oscuridad Profunda",
+    "description": "Supera ocho capítulos del largo descenso."
+  },
+  "the-mage-unmade": {
+    "name": "El Mago Deshecho",
+    "description": "Asciende hasta el corazón de la obra y abate al propio Irenicus."
+  },
+  "beyond-the-cells": {
+    "name": "Más Allá de las Celdas",
+    "description": "Deja atrás al mago que te hizo y asciende al Trono de Bhaal."
+  },
+  "godwake": {
+    "name": "Godwake",
+    "description": "Deshaz a Melissan en el Trono y deja que la cosecha se derrame de vuelta a la oscuridad."
+  },
+  "a-second-skin": {
+    "name": "Una Segunda Piel",
+    "description": "Lleva una segunda alma de clase a la oscuridad."
+  },
+  "relic-bound": {
+    "name": "Ligado a la Reliquia",
+    "description": "Gana tu primera reliquia legendaria y lígala al alma."
+  },
+  "a-matched-thread": {
+    "name": "Un Hilo a Juego",
+    "description": "Recupera tu primera pieza de un gran conjunto."
+  },
+  "into-deeper-dark": {
+    "name": "Hacia una Oscuridad Mayor",
+    "description": "Supera la cadena y desbloquea el primer peldaño de la Ascensión."
+  },
+  "bard-debut": {
+    "name": "Canción en la Oscuridad",
+    "description": "Supera un capítulo como Bardo, laúd contra el silencio."
+  },
+  "ascendant-i": {
+    "name": "Ascendente I",
+    "description": "Vence una partida en Ascensión 1 o más profunda."
+  },
+  "ascendant-ii": {
+    "name": "Ascendente II",
+    "description": "Vence una partida en Ascensión 2 o más profunda."
+  },
+  "ascendant-iii": {
+    "name": "Ascendente III",
+    "description": "Vence una partida en Ascensión 3 o más profunda."
+  },
+  "ascendant-iv": {
+    "name": "Ascendente IV",
+    "description": "Vence una partida en Ascensión 4 o más profunda."
+  },
+  "ascendant-v": {
+    "name": "Ascendente V",
+    "description": "Vence una partida en Ascensión 5 o más profunda."
+  },
+  "ascendant-vi": {
+    "name": "Ascendente VI",
+    "description": "Vence una partida en Ascensión 6, la oscuridad más profunda que existe."
+  },
+  "throne-of-the-deepest-dark": {
+    "name": "Trono de la Oscuridad Más Profunda",
+    "description": "Deshaz a Melissan en el Trono cargando con el peso de la Ascensión 6."
+  },
+  "a-single-heartbeat": {
+    "name": "Un Solo Latido",
+    "description": "Gana una batalla con exactamente un punto de golpe (PG) restante."
+  },
+  "edge-walker": {
+    "name": "Caminante del Filo",
+    "description": "Gana tres batallas, cada una terminando con un solo punto de golpe."
+  },
+  "sword-and-spell": {
+    "name": "Espada y Hechizo",
+    "description": "Supera un capítulo con un alma lanzadora y con un alma marcial."
+  },
+  "toll-refused": {
+    "name": "Peaje Rechazado",
+    "description": "Planta cara y abate a una élite en batalla abierta en vez de comprar tu paso."
+  },
+  "elite-hunter": {
+    "name": "Cazador de Élites",
+    "description": "Abate a diez élites en batalla abierta."
+  },
+  "bard-last-verse": {
+    "name": "El Último Verso",
+    "description": "Abate a Irenicus con nada más que un Bardo y una canción."
+  },
+  "bard-the-show-goes-on": {
+    "name": "El Espectáculo Continúa",
+    "description": "Lleva al Bardo más allá de Irenicus, hasta el Trono de Bhaal."
+  },
+  "the-dark-answered": {
+    "name": "La Oscuridad Respondió",
+    "description": "Lanza los huesos en la hoguera y haz que la oscuridad responda a tu favor."
+  },
+  "fortunes-fool": {
+    "name": "Bufón de la Fortuna",
+    "description": "Gana la apuesta de la hoguera cinco veces. La oscuridad siempre cobra, tarde o temprano."
+  },
+  "the-cowards-tithe": {
+    "name": "El Diezmo del Cobarde",
+    "description": "Compra tu paso ante una élite diez veces. Prudencia, repetida."
+  },
+  "inglorious-end": {
+    "name": "Final Sin Gloria",
+    "description": "Que te abata un goblin común. La rueda no se preocupa por la dignidad."
+  },
+  "matched": {
+    "name": "A Juego",
+    "description": "Reúne todas las piezas de un único gran conjunto."
+  },
+  "the-wheel-grinds-on": {
+    "name": "La Rueda Sigue Girando",
+    "description": "Muere veinticinco veces a lo largo de todas tus vidas."
+  },
+  "many-masks": {
+    "name": "Muchas Máscaras",
+    "description": "Lleva cuatro almas de clase distintas a la oscuridad."
+  },
+  "tireless": {
+    "name": "Incansable",
+    "description": "Comienza cincuenta descensos. La oscuridad nunca anda escasa de puertas."
+  },
+  "the-whole-bestiary": {
+    "name": "El Bestiario Completo",
+    "description": "Registra a toda criatura que camina, repta o se pudre en la oscuridad."
+  },
+  "every-relic": {
+    "name": "Todas las Reliquias",
+    "description": "Liga al alma cada reliquia legendaria."
+  },
+  "every-set": {
+    "name": "Todos los Conjuntos",
+    "description": "Completa cada gran conjunto, hilo a hilo a juego."
+  },
+  "every-soul": {
+    "name": "Cada Alma",
+    "description": "Supera un capítulo con las ocho almas de clase."
+  },
+  "eight-masters": {
+    "name": "Ocho Maestros",
+    "description": "Abate a Irenicus con las ocho almas de clase, una tras otra."
+  },
+  "the-whole-truth": {
+    "name": "Toda la Verdad",
+    "description": "Escucha cada susurro del lazo del alma, de principio a fin."
+  },
+  "the-deepest-dark": {
+    "name": "La Oscuridad Más Profunda",
+    "description": "Abre cada peldaño de la escalera de la Ascensión."
+  },
+  "godwake-eternal": {
+    "name": "Godwake Eterno",
+    "description": "Gana toda otra marca que la rueda puede dar. No queda nada que demostrarle a la oscuridad."
+  }
+}

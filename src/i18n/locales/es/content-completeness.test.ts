@@ -6,6 +6,7 @@ import { listItems, listAffixes } from '../../../content/items';
 import { listBlessings } from '../../../content/blessings';
 import { listAllQuirks } from '../../../content/quirks';
 import { listRaces } from '../../../content/races';
+import { listAchievements } from '../../../content/achievements';
 import { martialFlavor } from '../../../engine/combat/martialResource';
 
 import racesEs from './races.json';
@@ -15,6 +16,7 @@ import abilitiesEs from './abilities.json';
 import itemsEs from './items.json';
 import blessingsEs from './blessings.json';
 import quirksEs from './quirks.json';
+import achievementsEs from './achievements.json';
 
 /** key -> the string fields the es overlay row must carry. */
 type Expected = Record<string, string[]>;
@@ -134,6 +136,19 @@ describe('es/quirks.json completeness', () => {
 
   it('covers every quirk with name + flavor + effect and no orphans', () => {
     const { missing, orphans } = audit(quirksEs as Overlay, expected);
+    expect(missing).toEqual([]);
+    expect(orphans).toEqual([]);
+  });
+});
+
+describe('es/achievements.json completeness', () => {
+  // Every achievement id (hidden ones too — their revealed text still needs es)
+  // must carry a name + description, and the overlay holds no orphan rows.
+  const expected: Expected = {};
+  for (const a of listAchievements()) expected[a.id] = ['name', 'description'];
+
+  it('covers every achievement with name + description and no orphans', () => {
+    const { missing, orphans } = audit(achievementsEs as Overlay, expected);
     expect(missing).toEqual([]);
     expect(orphans).toEqual([]);
   });
