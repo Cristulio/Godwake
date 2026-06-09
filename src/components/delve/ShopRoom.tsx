@@ -192,7 +192,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
                   bought={isBought(key)}
                   gold={gold}
                   onBuy={() => buyGear(stock, key)}
-                  playerClassId={classId}
+                  character={character}
                 />
               );
             })}

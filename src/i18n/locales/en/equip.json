@@ -1,0 +1,10 @@
+{
+  "agileRanger": "Suppresses Opening Volley and Ranged Evasion while worn.",
+  "agileRogue": "Suppresses Cunning Action and Uncanny Dodge while worn.",
+  "heavyRage": "Heavy armor — ends your Rage (no fury bonuses while worn).",
+  "boundToClass": "Bound to the {class}",
+  "cantWield": "A {class} can't wield this",
+  "cantWear": "A {class} can't wear this",
+  "requiresAbility": "Requires {ability} {value}",
+  "requiresStrength": "Requires Strength {value}"
+}

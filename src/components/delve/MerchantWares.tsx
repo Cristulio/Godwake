@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import type { Item, ItemRef } from '../../schemas/item';
-import type { ClassId } from '../../schemas/ids';
+import type { Character } from '../../types/character';
 import { Button } from '../ui/Button';
 import { getItem } from '../../content/items';
 import { getLegendary } from '../../content/legendaries';
-import { armorEquipWarning } from '../../engine/character/equip';
+import { armorEquipWarning, equipDenialReason, slotForItem } from '../../engine/character/equip';
+import { rolledItemCost } from '../../engine/items';
 import { GEAR_RARITY_COLOR } from '../inventory/rarity';
+import { ItemTooltip } from '../inventory/ItemTooltip';
 import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect, gearRarityLabel } from '../inventory/itemDisplay';
 import type { GearStock, LegendaryOffer } from './shopStock';
 import { useT } from '../../i18n/useT';
@@ -26,25 +29,49 @@ interface GearWareRowProps {
   bought: boolean;
   gold: number;
   onBuy: () => void;
-  /** Viewing class — drives the armour caveat line (e.g. Barbarian heavy-armour rage-break). */
-  playerClassId?: ClassId;
+  /** Viewing character — drives the armour caveat, usability gate, and the compare-on-hover tooltip. */
+  character?: Character;
 }
 
 /** One rolled arms-rack item: rarity-coloured frame, affix-effect list, price. */
-export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearWareRowProps) {
+export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareRowProps) {
   const { t } = useT();
+  const [hovered, setHovered] = useState(false);
   const rolled = stock.ref.rolled;
   const base = getItem(stock.ref.itemId);
   const rarity = rolled?.rarity ?? 'white';
   const color = GEAR_RARITY_COLOR[rarity];
   const tooDear = gold < stock.cost;
   const warning =
-    playerClassId && base.kind === 'armor' ? armorEquipWarning(playerClassId, base) : null;
+    character && base.kind === 'armor' ? armorEquipWarning(character.classId, base) : null;
+  // The usability gate — why this can't be worn yet (wrong class, stat shortfall,
+  // class-bound). Shown but never blocks buying: the player may grow into it.
+  const denial = character ? equipDenialReason(character, stock.ref.itemId) : null;
+  // Compare-on-hover: the item already worn in this buy item's slot (desktop only).
+  const slot = character ? slotForItem(stock.ref.itemId) : null;
+  const equippedRef =
+    character && slot
+      ? slot === 'ring1'
+        ? character.equipped.ring1 ?? character.equipped.ring2
+        : character.equipped[slot]
+      : null;
   return (
     <div
-      className="border p-3 flex items-center gap-3"
+      className="border p-3 flex items-center gap-3 relative"
       style={{ borderColor: bought ? 'var(--color-border-dim)' : color, opacity: bought ? 0.5 : 1 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
+      {hovered && equippedRef && (
+        <div className="absolute z-30 right-full mr-2 top-0 hidden md:block pointer-events-none">
+          <ItemTooltip
+            item={getItem(equippedRef.itemId)}
+            rolled={equippedRef.rolled}
+            rolledCost={rolledItemCost(equippedRef)}
+            hint={t('delve.wares.currentlyEquipped')}
+          />
+        </div>
+      )}
       <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider" style={{ color }}>
           {localizedItemName(stock.ref)}
@@ -72,6 +99,11 @@ export function GearWareRow({ stock, bought, gold, onBuy, playerClassId }: GearW
         {warning && (
           <div className="text-[var(--color-accent-amber)] text-[10px] leading-snug mt-1">
             ⚠ {warning}
+          </div>
+        )}
+        {denial && (
+          <div className="text-[var(--color-accent-blood)] text-[10px] leading-snug mt-1">
+            ✕ {denial}
           </div>
         )}
       </div>

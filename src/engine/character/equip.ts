@@ -5,6 +5,12 @@ import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
 import { getSetPiece } from '../../content/sets';
 import { effectiveAbilityScores } from './derived';
+import { t, getLocalized } from '../../i18n';
+
+/** Class display name through the content overlay (Spanish when active, else English). */
+function localizedClassName(classId: ClassId): string {
+  return getLocalized('classes', classId, 'name', getClass(classId).name);
+}
 
 export type EquipSlot = keyof EquipmentSlots;
 
@@ -131,8 +137,8 @@ export function barbarianMayDonHeavy(classId: ClassId, armor: Armor): boolean {
  */
 export function agileTradeoffWarning(classId: ClassId, armor: { category: string }): string | null {
   if (armor.category !== 'medium' && armor.category !== 'heavy') return null;
-  if (classId === 'ranger') return 'Suppresses Opening Volley and Ranged Evasion while worn.';
-  if (classId === 'rogue') return 'Suppresses Cunning Action and Uncanny Dodge while worn.';
+  if (classId === 'ranger') return t('equip.agileRanger');
+  if (classId === 'rogue') return t('equip.agileRogue');
   return null;
 }
 
@@ -144,7 +150,7 @@ export function agileTradeoffWarning(classId: ClassId, armor: { category: string
  */
 export function armorEquipWarning(classId: ClassId, armor: { category: string }): string | null {
   if (classId === 'barbarian' && armor.category === 'heavy') {
-    return 'Heavy armor — ends your Rage (no fury bonuses while worn).';
+    return t('equip.heavyRage');
   }
   return agileTradeoffWarning(classId, armor);
 }
@@ -221,30 +227,30 @@ export function equipDenialReason(character: Character, itemId: string): string 
   // suspenders over the class-biased drop / inject paths).
   const setPiece = getSetPiece(itemId);
   if (setPiece?.classGate && setPiece.classGate !== character.classId) {
-    return `Bound to the ${getClass(setPiece.classGate).name}`;
+    return t('equip.boundToClass', { class: localizedClassName(setPiece.classGate) });
   }
 
   if (item.kind === 'weapon') {
     if (!isWeaponProficient(character, item)) {
-      return `A ${getClass(character.classId).name} can't wield this`;
+      return t('equip.cantWield', { class: localizedClassName(character.classId) });
     }
     const req = weaponStatRequirement(item);
     if (req) {
       const score = effectiveAbilityScores(character)[req.ability] ?? 0;
       if (score < req.value) {
-        return `Requires ${req.ability.toUpperCase()} ${req.value}`;
+        return t('equip.requiresAbility', { ability: t(`combat.abil.${req.ability}`), value: req.value });
       }
     }
   }
 
   if (item.kind === 'armor') {
     if (!isArmorProficient(character, item) && !barbarianMayDonHeavy(character.classId, item)) {
-      return `A ${getClass(character.classId).name} can't wear this`;
+      return t('equip.cantWear', { class: localizedClassName(character.classId) });
     }
     if (item.strRequirement !== undefined) {
       const str = effectiveAbilityScores(character).str ?? 0;
       if (str < item.strRequirement) {
-        return `Requires Strength ${item.strRequirement}`;
+        return t('equip.requiresStrength', { ability: t('combat.abil.str'), value: item.strRequirement });
       }
     }
   }
