@@ -14,7 +14,7 @@ function makeArcher(weaponId: string, extra: Partial<Character> = {}): Character
   return {
     ...createCharacter({
       id: 'test-archer',
-      name: 'Chompolario Biologo Trolo',
+      name: 'Faelar Quill',
       raceId: 'wood-elf',
       classId: 'ranger',
       baseAbilityScores: { dex: 15, con: 14, str: 13, wis: 12, int: 10, cha: 8 },

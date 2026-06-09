@@ -170,7 +170,7 @@ export const DRUID: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Okamura',
+    characterName: 'Lureth Oakshadow',
     // WIS-first with a DEX cushion that carries AC and the finesse beast-claw.
     // With Wood Elf +2 DEX / +1 WIS the summary reads
     // WIS 16, DEX 15, CON 14, CHA 12, INT 10, STR 8.

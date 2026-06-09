@@ -70,7 +70,7 @@ describe('ragedHealAmount — Rage halves healing (rounded up), never negates it
 describe('character derivation — human fighter', () => {
   const human = createCharacter({
     id: 'test-1',
-    name: 'Joni Trabado',
+    name: 'Sir Brick',
     raceId: 'human',
     classId: 'fighter',
     baseAbilityScores: {

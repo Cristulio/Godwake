@@ -12,7 +12,7 @@ import {
   spellDamageMultiplier,
 } from './scaling';
 
-/** The canonical full-caster spellcasting modifier (+3 — Cristulio INT 16, Okamura
+/** The canonical full-caster spellcasting modifier (+3 — Veyra Ash INT 16, Lureth Oakshadow
  *  WIS 16). Spell scaling no longer varies with the casting mod (stats are fixed
  *  at creation, no ASIs), so this is simply the reference caster the probes are
  *  built at — its flat cantrip mod and save DCs still key off it. */

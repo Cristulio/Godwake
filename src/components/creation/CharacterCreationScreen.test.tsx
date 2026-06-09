@@ -29,20 +29,20 @@ describe('CharacterCreationScreen — selection', () => {
   it('offers the three starters (Fighter, Mage, Hunter) as choosable souls', () => {
     render(<CharacterCreationScreen />);
     expect(screen.getByRole('heading', { name: /choose a soul/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /joni trabado/i })).toBeInTheDocument(); // Fighter
-    expect(screen.getByRole('button', { name: /cristulio/i })).toBeInTheDocument(); // Wizard (Mage)
-    expect(screen.getByRole('button', { name: /chompolario biologo trolo/i })).toBeInTheDocument(); // Ranger (Hunter)
+    expect(screen.getByRole('button', { name: /sir brick/i })).toBeInTheDocument(); // Fighter
+    expect(screen.getByRole('button', { name: /veyra ash/i })).toBeInTheDocument(); // Wizard (Mage)
+    expect(screen.getByRole('button', { name: /faelar quill/i })).toBeInTheDocument(); // Ranger (Hunter)
   });
 
   it('seals the non-starter souls (Barbarian, Rogue, Druid, Monk) on a fresh soul — not choosable', () => {
     render(<CharacterCreationScreen />);
     // The sealed placeholders name only the class, never the character, and are
-    // not buttons — a fresh walker cannot forge Cali Trava Consumer, Negro Ladron
-    // Marron, Okamura, or Marculino Pelado. Barbarian is no longer a starter.
-    expect(screen.queryByRole('button', { name: /cali trava consumer/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /negro ladron marron/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /okamura/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /marculino pelado/i })).not.toBeInTheDocument();
+    // not buttons — a fresh walker cannot forge Korrek Bloodmane, Maelis Vell,
+    // Lureth Oakshadow, or Shen Ironroot. Barbarian is no longer a starter.
+    expect(screen.queryByRole('button', { name: /korrek bloodmane/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /lureth oakshadow/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /shen ironroot/i })).not.toBeInTheDocument();
     // The four sealed non-starters (barbarian/rogue/druid/monk) sit at 200/300/
     // 450/600 renown spent for every origin — none is the first-offering slot.
     expect(screen.getAllByText(/unlocks at \d+ renown spent/i).length).toBe(4);
@@ -86,19 +86,19 @@ describe('CharacterCreationScreen — selection', () => {
   it('confirm is disabled until a soul is picked', () => {
     render(<CharacterCreationScreen />);
     expect(screen.getByRole('button', { name: /choose a soul/i })).toBeDisabled();
-    fireEvent.click(screen.getByRole('button', { name: /cristulio/i }));
+    fireEvent.click(screen.getByRole('button', { name: /veyra ash/i }));
     expect(
-      screen.getByRole('button', { name: /begin as cristulio/i }),
+      screen.getByRole('button', { name: /begin as veyra ash/i }),
     ).not.toBeDisabled();
   });
 
-  it('picking Joni Trabado commits the fixed Fighter block (Human, fixed stats)', () => {
+  it('picking Sir Brick commits the fixed Fighter block (Human, fixed stats)', () => {
     render(<CharacterCreationScreen />);
-    fireEvent.click(screen.getByRole('button', { name: /joni trabado/i }));
+    fireEvent.click(screen.getByRole('button', { name: /sir brick/i }));
     fireEvent.click(screen.getByRole('button', { name: /begin/i }));
     const char = useGameStore.getState().character!;
     const preset = getClass('fighter').preset!;
-    expect(char.name).toBe('Joni Trabado');
+    expect(char.name).toBe('Sir Brick');
     expect(char.classId).toBe('fighter');
     expect(char.raceId).toBe('human');
     expect(char.baseAbilityScores).toEqual(preset.abilityScores);
@@ -106,9 +106,9 @@ describe('CharacterCreationScreen — selection', () => {
     expect(char.skillProficiencies).toEqual([]);
   });
 
-  it('picking Cristulio commits the fixed Wizard (Mage) block', () => {
+  it('picking Veyra Ash commits the fixed Wizard (Mage) block', () => {
     render(<CharacterCreationScreen />);
-    fireEvent.click(screen.getByRole('button', { name: /cristulio/i }));
+    fireEvent.click(screen.getByRole('button', { name: /veyra ash/i }));
     fireEvent.click(screen.getByRole('button', { name: /begin/i }));
     const char = useGameStore.getState().character!;
     const preset = getClass('wizard').preset!;
@@ -119,7 +119,7 @@ describe('CharacterCreationScreen — selection', () => {
 
   it('stamps originClass once on first creation (anchors the relative unlock ladder)', () => {
     render(<CharacterCreationScreen />);
-    fireEvent.click(screen.getByRole('button', { name: /cristulio/i }));
+    fireEvent.click(screen.getByRole('button', { name: /veyra ash/i }));
     fireEvent.click(screen.getByRole('button', { name: /begin/i }));
     expect(useGameStore.getState().originClass).toBe('wizard');
   });
