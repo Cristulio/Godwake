@@ -22,6 +22,8 @@ import {
   usePatientDefense,
   useStunningStrike,
   useBardicInspiration,
+  useLayOnHands,
+  useDivineSmite,
   useWildShape,
   hasRemainingTurnPlay,
   martialArtsWeaponId,
@@ -633,6 +635,20 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
+  function handleLayOnHands() {
+    cancelTargeting();
+    const result = useLayOnHands({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
+  function handleDivineSmite() {
+    cancelTargeting();
+    const result = useDivineSmite({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
   function handleHuntersMarkClick() {
     const aliveMonsters = state.combatants.filter(
       (c) => c.kind === 'monster' && c.instance.hp.current > 0,
@@ -859,6 +875,8 @@ export function CombatScreen({
             onPatientDefense={handlePatientDefense}
             onStunningStrike={handleStunningStrike}
             onBardicInspiration={handleBardicInspiration}
+            onLayOnHands={handleLayOnHands}
+            onDivineSmite={handleDivineSmite}
             onHuntersMark={handleHuntersMarkClick}
             onWildShape={handleWildShape}
             onSpells={() => setPickingSpell(true)}

@@ -43,10 +43,10 @@ describe('CharacterCreationScreen — selection', () => {
     expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /lureth oakshadow/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /shen ironroot/i })).not.toBeInTheDocument();
-    // The five sealed non-starters (barbarian/rogue/druid/monk/bard) sit at
-    // 200/300/450/600/800 renown spent for every origin — none is the
+    // The six sealed non-starters (barbarian/rogue/druid/monk/bard/paladin) sit at
+    // 200/300/450/600/800/1000 renown spent for every origin — none is the
     // first-offering slot.
-    expect(screen.getAllByText(/unlocks at \d+ renown spent/i).length).toBe(5);
+    expect(screen.getAllByText(/unlocks at \d+ renown spent/i).length).toBe(6);
   });
 
   it('renders sealed souls in the origin order, each naming its renown-spent bar (origin=wizard swap)', () => {
@@ -67,6 +67,7 @@ describe('CharacterCreationScreen — selection', () => {
       'Unlocks at 450 renown spent',
       'Unlocks at 600 renown spent',
       'Unlocks at 800 renown spent',
+      'Unlocks at 1000 renown spent',
     ]);
   });
 

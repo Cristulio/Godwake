@@ -5,6 +5,7 @@ import type { CombatState } from '../../types/combat';
 import type { DiceRoller } from '../dice';
 import { modifierFor } from '../character/derived';
 import { characterCampBoonMods } from '../character/campBoons';
+import { paladinAuraSaveBonus } from './paladin';
 import { patchActionEconomy } from './types';
 
 /**
@@ -58,6 +59,9 @@ export function rollPlayerSave(
   if (ability === 'wis') {
     mod += characterCampBoonMods(character).wisSaveBonus ?? 0;
   }
+  // Paladin Aura of Protection — the oath girds every saving throw by the
+  // Paladin's Charisma modifier (single-player: it girds the Paladin itself).
+  mod += paladinAuraSaveBonus(character);
   const advantage = !!character.nextSaveAdvantage;
   const roll = roller.d20(advantage ? 'advantage' : 'normal', mod);
   const next: Character = advantage

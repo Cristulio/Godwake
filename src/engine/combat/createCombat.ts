@@ -38,6 +38,7 @@ import { wildShapeUsesMax } from './wildShape';
 import { monkKiMax } from './monk';
 import { martialPoolMax } from './martialResource';
 import { bardInspirationMax } from './bard';
+import { layOnHandsMax, paladinAuraTempHp } from './paladin';
 
 // MAX_COMBAT_LOG now lives in the leaf log module (breaking the createCombat ⇄
 // log import cycle); re-exported here so existing importers keep working.
@@ -344,6 +345,15 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     });
   }
 
+  // Paladin: refill the Lay on Hands pool each encounter (mirrors the Monk's Ki
+  // cadence) and clear any unspent Divine Smite armed from the prior fight.
+  if (nextCharacter.classId === 'paladin') {
+    nextCharacter = { ...nextCharacter, smiteArmed: false };
+    nextCharacter = patchResources(nextCharacter, {
+      layOnHandsRemaining: layOnHandsMax(nextCharacter),
+    });
+  }
+
   // Wizards walk into every fight already wrapped in Mage Armor (passive class
   // baseline — no slot cost, no action cost). Shield is per-combat reaction-
   // only, so clear stale state.
@@ -401,6 +411,9 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     isBoss ? (blessingMods.bossTempHp ?? 0) : 0,
     affixMods.tempHpPerCombat,
     archetypeWardTempHp,
+    // Paladin Oath of the Bulwark: the self-buff aura girds the holy warrior with
+    // per-combat temp HP — front-line staying power, deeper at L10.
+    paladinAuraTempHp(nextCharacter),
   );
   if (tempHpGrant > 0) {
     const newTemp = Math.max(nextCharacter.hp.temp, tempHpGrant);

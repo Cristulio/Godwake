@@ -22,6 +22,7 @@ import {
   spellcastingMod,
 } from '../../character/derived';
 import { bardInspirationDieSize, spendsInspirationOnDamage } from '../bard';
+import { paladinSmiteOnHit } from '../paladin';
 import { rageDamageBonus } from '../../character/actions';
 import {
   martialOffenseDamage,
@@ -580,6 +581,20 @@ export function playerAttack(
     if (isDragonForm(nextCharacter)) {
       bonusDamage += DRAGON_CLAW_DAMAGE_BONUS;
       onTypeParts.push({ amount: DRAGON_CLAW_DAMAGE_BONUS, label: 'dragon' });
+    }
+    // Paladin Divine Smite: an armed smite (or a Bulwark Smite of the Crusader on
+    // a crit) sears the landing hit with radiant damage, spending the cheapest
+    // spell slot. The dice scale with the slot tier and the oath's smite
+    // milestones, and double on a crit like every weapon-hit die. Off-type radiant
+    // — its own headline segment, never folded into the weapon type.
+    const smite = paladinSmiteOnHit(nextCharacter, crit, roller);
+    if (smite) {
+      nextCharacter = smite.character;
+      if (smite.total > 0) {
+        bonusDamage += smite.total;
+        offTypeDamage += smite.total;
+        offTypeParts.push({ amount: smite.total, type: 'radiant' });
+      }
     }
     if (isFirstAttack && (nextCharacter.permanentFirstAttackDamage ?? 0) > 0) {
       const fc = nextCharacter.permanentFirstAttackDamage ?? 0;

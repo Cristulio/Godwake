@@ -198,6 +198,14 @@ export interface ClassResources {
    * the Monk's Ki. The die SIZE scales with level (bardInspirationDieSize).
    */
   inspirationDiceRemaining?: number;
+  /**
+   * Paladin: HP points left in the Lay on Hands pool. The renewable self-heal
+   * well the Paladin pours into its own wounds (a bonus-action chunk per spend).
+   * Refreshes to its max (layOnHandsMax — scales with level + CHA, deeper at the
+   * L20 capstone) at the start of every encounter (createCombat), like the
+   * Fighter's Second Wind and the Monk's Ki.
+   */
+  layOnHandsRemaining?: number;
 }
 
 /**
@@ -453,6 +461,13 @@ export interface Character {
    * until spent; cleared on combat start.
    */
   inspirationActive?: boolean;
+  /**
+   * Paladin Divine Smite stance. Set true when the Paladin arms a smite (a free
+   * declaration): the next weapon hit that connects spends the cheapest spell
+   * slot for radiant damage (resolved + cleared in playerAttack). A banked smite
+   * persists until it lands; cleared on combat start.
+   */
+  smiteArmed?: boolean;
   /**
    * One-shot extra attack this turn, funded by Rogue's Cunning Action: Quick
    * Strike. When set, the player can swing again even after the Action is spent.

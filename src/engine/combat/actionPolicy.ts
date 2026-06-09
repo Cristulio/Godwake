@@ -50,6 +50,7 @@ import {
   monkFightsUnarmed,
 } from './monk';
 import { useBardicInspiration, bardInspirationLeft, spendsInspirationOnDamage } from './bard';
+import { useLayOnHands, useDivineSmite, isPaladin, layOnHandsLeft, paladinHasSmiteSlot } from './paladin';
 
 /**
  * A single structured combat decision. Callers map it onto the real engine
@@ -75,6 +76,8 @@ export type PlannedAction =
   | { kind: 'patient-defense' }
   | { kind: 'stunning-strike' }
   | { kind: 'bardic-inspiration' }
+  | { kind: 'lay-on-hands' }
+  | { kind: 'divine-smite' }
   | { kind: 'end-turn' };
 
 // ---- Tunables --------------------------------------------------------------
@@ -423,6 +426,7 @@ export function chooseCombatAction(
   const isDruid = character.classId === 'druid';
   const isMonk = character.classId === 'monk';
   const isBard = character.classId === 'bard';
+  const isPal = isPaladin(character);
   // The monk's Ki kit (Flurry / Patient Defense / Stunning Strike) only fires
   // when fighting truly bare-handed; ANY weapon in hand (even a monk weapon)
   // turns it dark.
@@ -569,6 +573,29 @@ export function chooseCombatAction(
       }
     }
 
+    // Paladin: Lay on Hands — pour the renewable per-fight pool into our own
+    // wounds when hurt (a free heal that beats burning a slot or a potion). Once
+    // the pool is spent, a Cure Wounds HoT picks up the slack on a 2nd-level slot.
+    if (isPal) {
+      if (
+        characterHasMechanic(character, 'lay-on-hands') &&
+        hpPct <= profile.secondWindHp &&
+        layOnHandsLeft(character) > 0 &&
+        character.hp.current < character.hp.max
+      ) {
+        return { kind: 'lay-on-hands' };
+      }
+      if (
+        hpPct <= profile.wizardDrainHp &&
+        knows(character, 'cure-wounds') &&
+        slotsAt(character, 2) > 0 &&
+        layOnHandsLeft(character) <= 0 &&
+        (character.resources.regrowthTurnsRemaining ?? 0) === 0
+      ) {
+        return { kind: 'cast', spellId: 'cure-wounds' };
+      }
+    }
+
     // Rogue Cunning Action (bonus action, one per turn): raise the per-turn
     // ceiling. If Sneak Attack will land on the coming main strike WITHOUT setup
     // — the opener, a bloodied mark, or a dagger in hand — spend the bonus action
@@ -637,6 +664,12 @@ export function chooseCombatAction(
       if (bardAction) return bardAction;
       // Out of workings (or a Valor bard leaning martial): swing — the War Lute
       // (CHA-scaled) for the caster build, a finesse/martial arm for Valor.
+    }
+    if (isPal) {
+      const paladinAction = choosePaladinAction(character, live, primary, threat, profile);
+      if (paladinAction) return paladinAction;
+      // Otherwise: fall through to the weapon swing (the smite, if armed above,
+      // rides the hit).
     }
     // Martial resource (Fighter / Barbarian / Ranger): read the enemy telegraph
     // and spend the pool WELL — deny a dangerous wind-up, brace a big incoming
@@ -1262,6 +1295,76 @@ function chooseBardAction(
   return null;
 }
 
+/**
+ * Paladin spell + smite selection — the Charisma half-caster's main-action picker.
+ * It denies a dangerous foe its turn with a binding word (Compelled Duel), bursts a
+ * beefy single threat with a radiant lance (Searing Light, the Radiant oath's
+ * caster beat), finishes a near-dead foe with the auto-hit Castigate, and otherwise
+ * ARMS a Divine Smite onto the coming weapon swing. Returns null to fall through to
+ * the swing (out of useful workings, or the smite is already armed).
+ */
+function choosePaladinAction(
+  character: Character,
+  live: MonsterCombatant[],
+  primary: MonsterCombatant | undefined,
+  threat: MonsterCombatant | undefined,
+  profile: ArchetypeProfile,
+): PlannedAction | null {
+  const beefy = highestHpTarget(live);
+
+  // Control: a binding word on the scariest foe — worth it on a lone boss too (its
+  // whole turn vanishes while we work it down), not just a crowd.
+  if (
+    threat &&
+    !isMonsterParalyzed(threat) &&
+    knows(character, 'compel') &&
+    slotsAt(character, 2) > 0 &&
+    monsterThreat(threat) >= profile.holdPersonThreat &&
+    threat.instance.hp.current > HOLD_PERSON_MIN_HP
+  ) {
+    return { kind: 'cast', spellId: 'compel', targetId: threat.id };
+  }
+
+  // Searing Light: a radiant lance to burst a genuinely beefy single threat (the
+  // Radiant oath's caster finish) when a 4th-level slot is in hand.
+  if (
+    beefy &&
+    beefy.instance.hp.current >= BOSS_NUKE_HP &&
+    knows(character, 'searing-light') &&
+    slotsAt(character, 4) > 0
+  ) {
+    return { kind: 'cast', spellId: 'searing-light', targetId: beefy.id };
+  }
+
+  // Guaranteed finish: Castigate auto-hits, so a low target dies for sure — worth
+  // even the last 1st-level slot, since removing a foe is also defense.
+  if (
+    knows(character, 'castigate') &&
+    slotsAt(character, 1) > 0 &&
+    primary &&
+    primary.instance.hp.current <= MAGIC_MISSILE_MIN
+  ) {
+    return { kind: 'cast', spellId: 'castigate', targetId: primary.id };
+  }
+
+  // Arm a Divine Smite before the swing — spend the cheapest slot to sear a foe
+  // worth the burst (meaty, or an elite/boss). Free to declare, so the same turn
+  // proceeds to the attack that carries it. Skip overkill on near-dead trash.
+  if (
+    character.smiteArmed !== true &&
+    characterHasMechanic(character, 'divine-smite') &&
+    paladinHasSmiteSlot(character) &&
+    primary &&
+    character.equipped.mainHand &&
+    (primary.instance.hp.current >= DISRUPT_MIN_TARGET_HP ||
+      (primary.instance.legendaryResistances ?? 0) > 0)
+  ) {
+    return { kind: 'divine-smite' };
+  }
+
+  return null;
+}
+
 // ---- Dispatch --------------------------------------------------------------
 
 export interface ApplyActionContext {
@@ -1360,6 +1463,14 @@ export function applyPlannedAction(
     }
     case 'bardic-inspiration': {
       const r = useBardicInspiration({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'lay-on-hands': {
+      const r = useLayOnHands({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'divine-smite': {
+      const r = useDivineSmite({ character, state });
       return { state: r.state, character: r.character };
     }
     case 'end-turn':

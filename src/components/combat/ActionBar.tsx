@@ -19,6 +19,7 @@ import {
 import { getItem } from '../../content/items';
 import { stunningStrikeKiCost } from '../../engine/combat/monk';
 import { bardInspirationDieSize, bardInspirationLeft, spendsInspirationOnDamage } from '../../engine/combat/bard';
+import { isPaladin, layOnHandsLeft, paladinHasSmiteSlot } from '../../engine/combat/paladin';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
 import { useT } from '../../i18n/useT';
 
@@ -37,6 +38,8 @@ interface ActionBarProps {
   onPatientDefense: () => void;
   onStunningStrike: () => void;
   onBardicInspiration: () => void;
+  onLayOnHands: () => void;
+  onDivineSmite: () => void;
   onHuntersMark: () => void;
   onWildShape: () => void;
   onSpells: () => void;
@@ -59,6 +62,8 @@ export function ActionBar({
   onPatientDefense,
   onStunningStrike,
   onBardicInspiration,
+  onLayOnHands,
+  onDivineSmite,
   onHuntersMark,
   onWildShape,
   onSpells,
@@ -270,6 +275,35 @@ export function ActionBar({
     !midMultiattack;
   const inspirationToDamage = spendsInspirationOnDamage(character);
 
+  // Paladin Lay on Hands: a bonus-action spend that pours a chunk of the renewable
+  // pool into the Paladin's own wounds. Disabled at full HP, out of pool, or once
+  // the bonus action is spent.
+  const isPal = isPaladin(character);
+  const hasLayOnHands = isPal && characterHasMechanic(character, 'lay-on-hands');
+  const layPool = layOnHandsLeft(character);
+  const canLayOnHands =
+    playersTurn &&
+    active &&
+    hasLayOnHands &&
+    layPool > 0 &&
+    character.hp.current < character.hp.max &&
+    !character.actionEconomy.bonusActionUsed &&
+    !midMultiattack;
+
+  // Paladin Divine Smite: a free declaration that arms the next weapon hit to
+  // spend the cheapest slot for radiant damage. One at a time — disabled while
+  // already armed, out of slots, or the Attack action is spent.
+  const hasDivineSmite = isPal && characterHasMechanic(character, 'divine-smite');
+  const smiteArmed = character.smiteArmed === true;
+  const canDivineSmite =
+    playersTurn &&
+    active &&
+    hasDivineSmite &&
+    !smiteArmed &&
+    paladinHasSmiteSlot(character) &&
+    !character.actionEconomy.actionUsed &&
+    !midMultiattack;
+
   const knownSpells = character.resources.knownSpells ?? [];
 
   // Druid Wild Shape: a dedicated bonus-action button (the bot already shifts
@@ -287,8 +321,14 @@ export function ActionBar({
     wildShapeUses > 0 &&
     !character.actionEconomy.bonusActionUsed;
 
+  // The Paladin is a half-caster — surface the spell menu for it too (the engine
+  // already drives its CHA-based casting through the shared slot ladder).
+  const isCasterClass = isFullCasterClass || isPal;
   const totalSlots =
-    slotsAt(character, 1) + slotsAt(character, 2) + slotsAt(character, 3);
+    slotsAt(character, 1) +
+    slotsAt(character, 2) +
+    slotsAt(character, 3) +
+    (isPal ? slotsAt(character, 4) + slotsAt(character, 5) : 0);
   // Button stays open as long as at least one known spell (action, bonus, or
   // reaction) can be cast right now — SpellPicker greys out individual entries.
   // The Druid's Entangling Roots is one of those spells (a bonus-action cast),
@@ -296,7 +336,7 @@ export function ActionBar({
   const canSpells =
     playersTurn &&
     active &&
-    isFullCasterClass &&
+    isCasterClass &&
     knownSpells.some((id) => canCastSpell(character, id).ok);
 
   const consumableCount = character.inventory.filter((ref) => {
@@ -550,7 +590,31 @@ export function ActionBar({
           </Button>
         )}
 
-        {isFullCasterClass && characterHasMechanic(character, 'spellcasting') && (
+        {hasLayOnHands && (
+          <Button
+            variant={canLayOnHands ? 'primary' : 'secondary'}
+            onClick={onLayOnHands}
+            data-tutorial="abilities"
+            disabled={!canLayOnHands}
+            title={t('combat.bar.layOnHands')}
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {t('ui.combat.layOnHands', { n: layPool })}
+          </Button>
+        )}
+        {hasDivineSmite && (
+          <Button
+            variant={canDivineSmite ? 'primary' : 'secondary'}
+            onClick={onDivineSmite}
+            disabled={!canDivineSmite}
+            title={t('combat.bar.divineSmite')}
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {smiteArmed ? t('ui.combat.smiteOn') : t('ui.combat.divineSmite')}
+          </Button>
+        )}
+
+        {isCasterClass && characterHasMechanic(character, 'spellcasting') && (
           <Button
             variant={canSpells ? 'primary' : 'secondary'}
             onClick={onSpells}

@@ -320,6 +320,8 @@
     "openingVolley": "{name} suelta una andanada inicial antes de que el enemigo pueda acercarse.",
     "combatBegins": "Comienza el combate.",
     "bardicInspiration": "{name} toma aire y afianza el próximo golpe — guarda un d{die} de inspiración.",
+    "layOnHands": "{name} impone las manos y la luz cierra {amount} PG.",
+    "divineSmiteArm": "{name} alza un Castigo Divino — el próximo golpe arderá.",
     "cuttingWords": "{name} corta el golpe con una palabra mordaz (−{n}) — se va desviado.",
     "viciousMockeryCast": "{name} lanza {spell} contra {target}. Salvación de SAB{resolute}: {mod} = {total} contra CD {dc} — {result}.",
     "viciousMockeryDamage": "{target} sufre {dealt} psíquico{halved}.",
@@ -519,7 +521,15 @@
     "inspirationReady": "Un dado de Inspiración Bárdica para gastar en tus propias tiradas. La reserva se rellena al comenzar cada lucha.",
     "inspirationSpent": "Gastado — se rellena el próximo combate.",
     "inspirationBanked": "Hay un dado guardado para tu próxima tirada de ataque (o daño de arma, en Valor).",
-    "inspirationBankedPill": "d{die} listo"
+    "inspirationBankedPill": "d{die} listo",
+    "layOnHands": "Imposición de Manos",
+    "layOnHandsPool": "{n}/{max} PG",
+    "layOnHandsTitle": "Tu reserva renovable de gracia sanadora. Gasta un fragmento como acción adicional para cerrar tus propias heridas; se rellena en cada combate.",
+    "divineSmite": "Castigo Divino",
+    "smiteArmed": "Armado",
+    "smiteIdle": "Inactivo",
+    "smiteArmedTitle": "Hay un castigo armado — tu próximo impacto de arma gasta un espacio de conjuro para daño radiante.",
+    "smiteIdleTitle": "Arma un castigo para abrasar tu próximo impacto de arma con la luz de un espacio de conjuro."
   },
   "bar": {
     "secondWind": "Acción adicional: cura 1d10 + tu nivel. Una vez por combate.",
@@ -543,6 +553,8 @@
     "wildShape": "Acción adicional: muda el cuerpo por la forma de una bestia — gana su vitalidad como PG temporales y desgarra con garras durante varias rondas. Una o dos veces por combate.",
     "spells": "Acción: elige un conjuro preparado.",
     "inspirationLore": "Acción adicional: guarda un dado de Inspiración Bárdica (d{die}) para tu próxima tirada de ataque — el empujón que hace conectar el golpe.",
-    "inspirationValor": "Acción adicional: guarda un dado de Inspiración Bárdica (d{die}) en el DAÑO de tu próximo impacto de arma (Inspiración de Combate)."
+    "inspirationValor": "Acción adicional: guarda un dado de Inspiración Bárdica (d{die}) en el DAÑO de tu próximo impacto de arma (Inspiración de Combate).",
+    "layOnHands": "Acción adicional: vuelca un fragmento de tu reserva renovable de Imposición de Manos en tus propias heridas. Se rellena en cada combate.",
+    "divineSmite": "Gratis: arma un Castigo Divino — tu próximo impacto de arma gasta tu espacio de conjuro más bajo para abrasar al objetivo con daño radiante."
   }
 }

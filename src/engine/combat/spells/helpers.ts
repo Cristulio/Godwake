@@ -63,8 +63,10 @@ export function spellAttackBonus(character: Readonly<Character>): number {
 export function spellSaveDC(character: Readonly<Character>): number {
   // Full casters get a +1 baseline ("Focused Casting") so save-or-suck spells
   // like Burning Hands actually land — without this, DC 12 vs typical +2/+3 DEX
-  // saves means ~55% save rate and AoE feels useless.
-  const classBonus = isFullCaster(character.classId) ? 1 : 0;
+  // saves means ~55% save rate and AoE feels useless. The Paladin's binding word
+  // (the Radiant oath's control beat) keys off CHA, so it earns the same focus.
+  const classBonus =
+    isFullCaster(character.classId) || character.classId === 'paladin' ? 1 : 0;
   // Bard College of Lore — Lore Savant: a deeper grasp of the lyric craft hardens
   // every save-or-suck working by one more, the caster lean of the Lore fork.
   const loreBonus = characterHasMechanic(character as Character, 'lore-savant') ? 1 : 0;

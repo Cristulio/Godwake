@@ -1,5 +1,5 @@
 import type { Character, SpellSlots } from '../../types/character';
-import { characterHasMechanic, isFullCaster } from './derived';
+import { characterHasMechanic, isFullCaster, isHalfCaster } from './derived';
 import { characterAffixMods } from '../items/affixMods';
 
 /** Returns a character object with fresh action economy for a new turn. */
@@ -147,13 +147,64 @@ export function wizardSpellSlots(character: Readonly<Character>): SpellSlots {
   return slots;
 }
 
+/**
+ * Paladin half-caster slot table — the divine well across the L1→20 climb. Shallow
+ * by design (it caps at 5th-level slots, reached only at L17), since the slots
+ * mostly fund Divine Smite alongside a small support book. The standard 5e half-
+ * caster progression; each row is the refilled pool at that level, missing tiers 0.
+ * L1 holds no slots — the fresh Paladin is a pure martial until the oath's power
+ * wakes at L2.
+ */
+const PALADIN_SLOT_TABLE: Record<number, SpellSlots> = {
+  1: {},
+  2: { 1: 2 },
+  3: { 1: 3 },
+  4: { 1: 3 },
+  5: { 1: 4, 2: 2 },
+  6: { 1: 4, 2: 2 },
+  7: { 1: 4, 2: 3 },
+  8: { 1: 4, 2: 3 },
+  9: { 1: 4, 2: 3, 3: 2 },
+  10: { 1: 4, 2: 3, 3: 2 },
+  11: { 1: 4, 2: 3, 3: 3 },
+  12: { 1: 4, 2: 3, 3: 3 },
+  13: { 1: 4, 2: 3, 3: 3, 4: 1 },
+  14: { 1: 4, 2: 3, 3: 3, 4: 1 },
+  15: { 1: 4, 2: 3, 3: 3, 4: 2 },
+  16: { 1: 4, 2: 3, 3: 3, 4: 2 },
+  17: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 1 },
+  18: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 1 },
+  19: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  20: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+};
+
+/** The Paladin's refilled half-caster slot pool, including any bonus 1st-level
+ *  slot from caster gear / Grove (mirrors {@link wizardSpellSlots}). */
+export function paladinSpellSlots(character: Readonly<Character>): SpellSlots {
+  const clamped = Math.max(1, Math.min(20, Math.floor(character.level)));
+  const slots = { ...PALADIN_SLOT_TABLE[clamped] };
+  const bonusL1 =
+    characterAffixMods(character).bonusSpellSlotsL1 +
+    (character.permanentBonuses?.bonusSpellSlotsL1 ?? 0);
+  if (bonusL1 > 0) slots[1] = (slots[1] ?? 0) + bonusL1;
+  return slots;
+}
+
+/** The refilled slot pool for any spell-slot class — the full-caster ladder for
+ *  Wizard/Druid/Bard, the half-caster ladder for the Paladin, else unchanged. */
+export function casterSpellSlots(character: Readonly<Character>): SpellSlots | undefined {
+  if (isFullCaster(character.classId)) return wizardSpellSlots(character);
+  if (isHalfCaster(character.classId)) return paladinSpellSlots(character);
+  return undefined;
+}
+
 /** MVP short rest: regain hit dice up to (1d4 * level) HP — simplified.
  *  Also refreshes class resources, INCLUDING wizard spell slots. The chained
  *  delve is too long for slots to refill only at the hub — wizards would be
  *  cantripping by room 4. Camp rests + rest rooms are the wizard's recovery.
  */
 export function shortRestHeal(character: Character, healAmount: number): Character {
-  const isCaster = isFullCaster(character.classId);
+  const refilledSlots = casterSpellSlots(character);
   const newHp = Math.min(character.hp.max, character.hp.current + healAmount);
   return {
     ...character,
@@ -176,9 +227,7 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
         character.classId === 'monk'
           ? character.level + (character.level >= 20 ? 2 : 0)
           : character.resources.kiPointsRemaining,
-      spellSlots: isCaster
-        ? wizardSpellSlots(character)
-        : character.resources.spellSlots,
+      spellSlots: refilledSlots ?? character.resources.spellSlots,
     },
   };
 }
@@ -186,7 +235,7 @@ export function shortRestHeal(character: Character, healAmount: number): Charact
 /** Full long rest: full HP + full resources + conditions cleared. Used at hub between delves. */
 export function longRest(character: Character): Character {
   const isWizard = character.classId === 'wizard';
-  const isCaster = isFullCaster(character.classId);
+  const refilledSlots = casterSpellSlots(character);
   return withResetActionEconomy({
     ...character,
     hp: { ...character.hp, current: character.hp.max, temp: 0 },
@@ -211,9 +260,7 @@ export function longRest(character: Character): Character {
         character.classId === 'monk'
           ? character.level + (character.level >= 20 ? 2 : 0)
           : character.resources.kiPointsRemaining,
-      spellSlots: isCaster
-        ? wizardSpellSlots(character)
-        : character.resources.spellSlots,
+      spellSlots: refilledSlots ?? character.resources.spellSlots,
       mageArmorActive: isWizard ? false : character.resources.mageArmorActive,
       shieldActive: isWizard ? false : character.resources.shieldActive,
       mistyStepActive: isWizard ? false : character.resources.mistyStepActive,

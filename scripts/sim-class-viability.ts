@@ -98,8 +98,8 @@ import type { ItemRef } from '../src/schemas/item';
 import type { ClassId as SchemaClassId } from '../src/schemas/ids';
 import type { RoomSpec } from '../src/types/delve';
 
-type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid' | 'monk' | 'bard';
-const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid', 'monk', 'bard'];
+type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid' | 'monk' | 'bard' | 'paladin';
+const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid', 'monk', 'bard', 'paladin'];
 
 const SOULS_PER_CLASS = Number(process.env.SOULS_PER_CLASS ?? 150);
 const MAX_LIVES = Number(process.env.MAX_LIVES ?? 150);
@@ -216,6 +216,17 @@ const CLASS_PRIORITY: Record<ClassId, { id: string; maxAtRank: number }[]> = {
     { id: 'arcane-focus', maxAtRank: 3 },
     { id: 'sigil-of-the-wakened-mind', maxAtRank: 3 },
     { id: 'burning-tongue', maxAtRank: 5 },
+  ],
+  // Paladin: a STR+CHA half-caster weapon brute with no bespoke Grove node — banks
+  // the generic weapon-edge tree (its swings + Divine Smite ride per-hit damage and
+  // crits), with a touch of the caster tree for its binding word's DC, atop the
+  // shared HP/AC tree (interleaved in priorityFor).
+  paladin: [
+    { id: 'whetstone-resolve', maxAtRank: 4 },
+    { id: 'heirloom-blade', maxAtRank: 4 },
+    { id: 'fellfast-strike', maxAtRank: 3 },
+    { id: 'first-cut', maxAtRank: 3 },
+    { id: 'arcane-focus', maxAtRank: 3 },
   ],
 };
 
@@ -554,6 +565,10 @@ interface ProcCounters {
   stunningStrike: number;
   /** Bard Bardic Inspiration dice spent (bonus-action self-buff onto attack/damage). */
   bardicInspiration: number;
+  /** Paladin Lay on Hands self-heals spent (bonus-action pool spend). */
+  layOnHands: number;
+  /** Paladin Divine Smites armed (the slot→radiant rider on a weapon hit). */
+  divineSmite: number;
   /** New per-fight martial pool (#338) — Fighter Resolve / Barb Fury / Ranger Focus. */
   martialOffense: number;
   martialDefense: number;
@@ -586,6 +601,8 @@ function freshProcs(): ProcCounters {
     patientDefense: 0,
     stunningStrike: 0,
     bardicInspiration: 0,
+    layOnHands: 0,
+    divineSmite: 0,
     martialOffense: 0,
     martialDefense: 0,
     martialDisrupt: 0,
@@ -606,6 +623,7 @@ const PROCS: Record<ClassId, ProcCounters> = {
   druid: freshProcs(),
   monk: freshProcs(),
   bard: freshProcs(),
+  paladin: freshProcs(),
 };
 
 /**
@@ -640,6 +658,8 @@ function runPlayerTurnInstrumented(
     else if (action.kind === 'patient-defense') pc.patientDefense += 1;
     else if (action.kind === 'stunning-strike') pc.stunningStrike += 1;
     else if (action.kind === 'bardic-inspiration') pc.bardicInspiration += 1;
+    else if (action.kind === 'lay-on-hands') pc.layOnHands += 1;
+    else if (action.kind === 'divine-smite') pc.divineSmite += 1;
     else if (action.kind === 'martial-offense') pc.martialOffense += 1;
     else if (action.kind === 'martial-defense') pc.martialDefense += 1;
     else if (action.kind === 'martial-disrupt') pc.martialDisrupt += 1;
@@ -1034,9 +1054,9 @@ function renderAscensionHistogram(aggs: ClassAggregate[]): string {
 function renderProcs(): string {
   const lines: string[] = [];
   lines.push(
-    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat | Flurry/combat | StunStrike/combat | PatientDef/combat | Martial OFF/combat | Martial DEF/combat | Martial DIS/combat | Martial total/combat |',
+    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat | Flurry/combat | StunStrike/combat | PatientDef/combat | Martial OFF/combat | Martial DEF/combat | Martial DIS/combat | Martial total/combat | LayOnHands/combat | Smite/combat |',
   );
-  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|------------:|----------------:|----------------:|----------------:|----------------:|----------------:|-----------------:|');
+  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|------------:|----------------:|----------------:|----------------:|----------------:|----------------:|-----------------:|----------------:|------------:|');
   for (const classId of CLASSES) {
     const p = PROCS[classId];
     const per = (n: number) => (p.combats ? num(n / p.combats, 2) : '—');
@@ -1049,7 +1069,7 @@ function renderProcs(): string {
     const isMartial = classId === 'fighter' || classId === 'barbarian' || classId === 'ranger';
     const martialTotal = p.martialOffense + p.martialDefense + p.martialDisrupt;
     lines.push(
-      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} | ${relevant(per(p.flurry), isMonk)} | ${relevant(per(p.stunningStrike), isMonk)} | ${relevant(per(p.patientDefense), isMonk)} | ${relevant(perMartial(p.martialOffense), isMartial)} | ${relevant(perMartial(p.martialDefense), isMartial)} | ${relevant(perMartial(p.martialDisrupt), isMartial)} | ${relevant(perMartial(martialTotal), isMartial)} |`,
+      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} | ${relevant(per(p.flurry), isMonk)} | ${relevant(per(p.stunningStrike), isMonk)} | ${relevant(per(p.patientDefense), isMonk)} | ${relevant(perMartial(p.martialOffense), isMartial)} | ${relevant(perMartial(p.martialDefense), isMartial)} | ${relevant(perMartial(p.martialDisrupt), isMartial)} | ${relevant(perMartial(martialTotal), isMartial)} | ${relevant(per(p.layOnHands), classId === 'paladin')} | ${relevant(per(p.divineSmite), classId === 'paladin')} |`,
     );
   }
   return lines.join('\n');

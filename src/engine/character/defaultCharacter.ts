@@ -170,6 +170,30 @@ function startingKitFor(classId: ClassId): StartingKit {
         goldInPocket: 20,
       };
     }
+    case 'paladin': {
+      // The second heavy wearer: a longsword + shield in chain mail, the front-
+      // line plate its STR 15 clears. A dagger for reach and two draughts atop
+      // Lay on Hands. Shield of Faith and the smite kit do the rest.
+      const longsword: ItemRef = { itemId: 'longsword' };
+      const chainMail: ItemRef = { itemId: 'chain-mail' };
+      const shield: ItemRef = { itemId: 'shield' };
+      return {
+        inventory: [
+          longsword,
+          shield,
+          chainMail,
+          { itemId: 'dagger' },
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: longsword,
+          offHand: shield,
+          armor: chainMail,
+        },
+        goldInPocket: 25,
+      };
+    }
     case 'ranger': {
       // Longbow opens the room; the shortsword is for when something closes.
       // Light armor keeps the archer mobile. (Ammunition isn't tracked — the

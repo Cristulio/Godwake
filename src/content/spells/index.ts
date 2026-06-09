@@ -734,6 +734,68 @@ export const FINAL_CRESCENDO: Spell = SpellSchema.parse({
   effectKey: 'apotheosis',
 });
 
+// --- Paladin: the oath book (Charisma, the divine half-caster). A small, weapon-
+// first support kit — the slots mostly fuel Divine Smite, so the book is a focused
+// set of self-buffs, a self-heal, a binding word of control, and one radiant lance
+// for the Radiant oath. Each working maps onto an EXISTING spell-effect handler at
+// that handler's NATIVE slot tier (so the slot the spell costs and the slot the
+// handler spends agree), and keeps a holy reflavour. No new engine kinds.
+
+export const CASTIGATE: Spell = SpellSchema.parse({
+  id: 'castigate',
+  book: 'paladin',
+  name: 'Castigate',
+  level: 1,
+  school: 'evocation',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'force',
+  description:
+    'Lances of divine force leap from your open hand and find one target — 1d4+1 each, no attack roll and no save: the oath simply strikes home. Three to start, and more as you grow. The answer to a foe too armoured to cut.',
+  effectKey: 'magic-missile',
+});
+
+export const CURE_WOUNDS: Spell = SpellSchema.parse({
+  id: 'cure-wounds',
+  book: 'paladin',
+  name: 'Cure Wounds',
+  level: 2,
+  school: 'evocation',
+  range: 'Self',
+  target: 'self',
+  description:
+    'You lay the light on your own wounds and they knit now and again at the start of each of your next two turns. Sung as a swift prayer, so you still strike the same breath.',
+  effectKey: 'regrowth',
+  castTime: 'bonus',
+});
+
+export const COMPEL: Spell = SpellSchema.parse({
+  id: 'compel',
+  book: 'paladin',
+  name: 'Compelled Duel',
+  level: 2,
+  school: 'enchantment',
+  range: '60 ft',
+  target: 'single',
+  description:
+    'A word of binding command — the target must succeed a Wisdom save or be held fast, paralyzed for the next 2 rounds. The oath turned against the oathbreaker.',
+  effectKey: 'hold-person',
+});
+
+export const SEARING_LIGHT: Spell = SpellSchema.parse({
+  id: 'searing-light',
+  book: 'paladin',
+  name: 'Searing Light',
+  level: 4,
+  school: 'evocation',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'radiant',
+  description:
+    'A shaft of pure radiance lances clean through one target — 6d8 radiant damage. No attack roll, no save; the light simply finds it. The Radiant oath’s burst made manifest.',
+  effectKey: 'force-lance',
+});
+
 const ALL_SPELLS: Spell[] = [
   FIRE_BOLT,
   MAGIC_MISSILE,
@@ -789,6 +851,11 @@ const ALL_SPELLS: Spell[] = [
   POWER_WORD_BIND,
   FEEBLEMIND,
   FINAL_CRESCENDO,
+  // Paladin book.
+  CASTIGATE,
+  CURE_WOUNDS,
+  COMPEL,
+  SEARING_LIGHT,
 ];
 
 const SPELL_BY_ID: Map<string, Spell> = new Map(ALL_SPELLS.map((s) => [s.id, s]));

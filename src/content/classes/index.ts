@@ -8,8 +8,9 @@ import { RANGER } from './ranger';
 import { DRUID } from './druid';
 import { MONK } from './monk';
 import { BARD } from './bard';
+import { PALADIN } from './paladin';
 
-const ALL_CLASSES: Class[] = [FIGHTER, ROGUE, WIZARD, BARBARIAN, RANGER, DRUID, MONK, BARD];
+const ALL_CLASSES: Class[] = [FIGHTER, ROGUE, WIZARD, BARBARIAN, RANGER, DRUID, MONK, BARD, PALADIN];
 
 const CLASS_BY_ID: Record<ClassId, Class | undefined> = ALL_CLASSES.reduce(
   (acc, c) => {
