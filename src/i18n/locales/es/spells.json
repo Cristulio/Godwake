@@ -161,7 +161,7 @@
   },
   "vicious-mockery": {
     "name": "Burla Cruel",
-    "description": "Una sarta de insultos mordaces y certeros se clava en un objetivo: d10 psíquico + tu modificador de Carisma, la pulla afilándose conforme creces. Con una salvación de Sabiduría fallida el blanco queda desconcertado y tira su próximo golpe a lo loco (desventaja). Una salvación superada aún recibe la mitad."
+    "description": "Una sarta de insultos mordaces y certeros se clava en un objetivo: d4 psíquico + tu modificador de Carisma, la pulla afilándose conforme creces. Con una salvación de Sabiduría fallida el blanco queda desconcertado y tira su próximo golpe a lo loco (desventaja). Una salvación superada aún recibe la mitad. Un truco de control: lo que importa es el desconcierto, no el aguijón."
   },
   "dissonant-whispers": {
     "name": "Susurros Disonantes",
