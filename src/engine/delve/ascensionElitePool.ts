@@ -6,14 +6,34 @@ import type { EncounterEntry } from './chapter1Pools';
  * they are MIXED INTO every chapter's elite pool (see buildChapterNodes in
  * createDelve.ts), so the elite-room detour no longer only scales in numbers — it
  * changes WHAT you fight. The three ascendant horrors are things the climbing soul
- * drags up the wheel with it, endgame-band (CR 13–15) on purpose: ruinous early,
- * a genuine threat to the last chapter.
+ * drags up the wheel with it — a fixed endgame stat block (CR 13–15).
+ *
+ * Because they're chapter-agnostic, that fixed block alone would be ruinous in Ch1
+ * and underwhelming at the Throne, so each carries `scaleToChapter` and the elite-
+ * room builder NORMALIZES its HP, damage, and reward to the chapter it lands in
+ * (see {@link ascendantChapterScale}) — a clear step above that chapter's own
+ * elites everywhere, never a flat CR-15 wall in the first room.
  *
  * Single-monster compositions by design — each ascendant elite is meant to stand
- * the room on its own. Rewards sit a clear step above the chapters' own elites to
- * read as the bigger risk on the map. Authored as a flat pool (not per-chapter
- * variants) to keep the content bounded.
+ * the room on its own. Authored as a flat pool (not per-chapter variants) to keep
+ * the content bounded.
  */
+
+const ANCHOR_CHAPTER = 10;
+const GROWTH_PER_CHAPTER = 1.16;
+
+/**
+ * Chapter-normalization multiplier for an ascendant elite's stats + reward.
+ * Anchored at chapter {@link ANCHOR_CHAPTER} (≈100%, where the ~200-HP / CR-15
+ * block reads as a clear step above that chapter's own elites) and scaled
+ * geometrically: about −14%/chapter below the anchor, +16%/chapter above —
+ * roughly the rate the game's own elite HP climbs across Ch1→14. Clamped to a
+ * sane band so a stray chapter index can't produce a degenerate fight.
+ */
+export function ascendantChapterScale(chapter: number): number {
+  const raw = GROWTH_PER_CHAPTER ** (chapter - ANCHOR_CHAPTER);
+  return Math.min(2, Math.max(0.2, raw));
+}
 export const ASCENDANT_ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Shape That Climbed With You',
@@ -22,6 +42,7 @@ export const ASCENDANT_ELITE_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'ascendant-slayer', count: 1 }],
     xpReward: 4200,
     goldReward: 300,
+    scaleToChapter: true,
   },
   {
     title: 'A Warden Out of the Silence',
@@ -30,6 +51,7 @@ export const ASCENDANT_ELITE_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'void-warden', count: 1 }],
     xpReward: 3700,
     goldReward: 280,
+    scaleToChapter: true,
   },
   {
     title: 'The Climber That Would Not Stop',
@@ -38,5 +60,6 @@ export const ASCENDANT_ELITE_POOL: EncounterEntry[] = [
     monsters: [{ defId: 'deathless-ascendant', count: 1 }],
     xpReward: 3900,
     goldReward: 290,
+    scaleToChapter: true,
   },
 ];

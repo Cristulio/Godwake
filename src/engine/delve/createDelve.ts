@@ -4,7 +4,7 @@ import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from './constants';
 import { createRng, randomSeed } from '../dice/rng';
 import { clampAscension, ascensionEliteVariants, ascensionDungeonTwists } from './ascension';
 import { rollRoomTwist } from './twists';
-import { ASCENDANT_ELITE_POOL } from './ascensionElitePool';
+import { ASCENDANT_ELITE_POOL, ascendantChapterScale } from './ascensionElitePool';
 import { eventsForChapter } from '../../content/events';
 import { intelEventIdFor, getBossIntelCard } from '../../content/bossIntel';
 import type { EventTemplate } from '../../schemas/event';
@@ -1197,14 +1197,21 @@ function shopRoom(id: string, f: RoomFlavor): RoomSpec {
  * combat (no boss mechanic), just harder and richer.
  */
 function eliteRoom(id: string, e: EncounterEntry, chapter: number): RoomSpec {
+  // Ascendant elites carry a fixed endgame stat block; normalize it (and its
+  // reward) to the chapter they landed in. Normal elites: scale = 1 (untouched).
+  const scale = e.scaleToChapter ? ascendantChapterScale(chapter) : 1;
+  const monsters =
+    scale === 1
+      ? e.monsters
+      : e.monsters.map((m) => ({ ...m, statMult: (m.statMult ?? 1) * scale }));
   return {
     id,
     kind: 'elite',
     title: e.title,
     flavorText: e.flavorText,
-    monsters: e.monsters,
-    xpReward: e.xpReward,
-    goldReward: (e.goldReward ?? 0) + 20 + chapter * 10,
+    monsters,
+    xpReward: Math.round(e.xpReward * scale),
+    goldReward: Math.round((e.goldReward ?? 0) * scale) + 20 + chapter * 10,
   };
 }
 

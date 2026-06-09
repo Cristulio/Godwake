@@ -172,6 +172,34 @@ describe('createCombat — ascension scaling reaches the spawned encounter', () 
     expect(scaledInstance.instance.bonusDamage).toBeUndefined();
   });
 
+  it('a per-monster statMult scales HP and folds into the damage multiplier', () => {
+    _resetMonsterInstanceCounter();
+    const def = getMonster('ascendant-slayer');
+    const scaled = createCombat({
+      character: makeFighter(),
+      monsters: [{ def, statMult: 0.5 }],
+      ascension: 0,
+    });
+    const inst = scaled.state.combatants.find((c) => c.kind === 'monster');
+    if (inst?.kind !== 'monster') throw new Error('expected a monster combatant');
+    expect(inst.instance.hp.max).toBe(Math.round(def.maxHp * 0.5));
+    expect(inst.instance.damageMult).toBe(0.5);
+  });
+
+  it('a statMult above the anchor multiplies with the ascension damage mult', () => {
+    _resetMonsterInstanceCounter();
+    const def = getMonster('ascendant-slayer');
+    const scaled = createCombat({
+      character: makeFighter(),
+      monsters: [{ def, statMult: 1.5 }],
+      ascension: 6,
+    });
+    const inst = scaled.state.combatants.find((c) => c.kind === 'monster');
+    if (inst?.kind !== 'monster') throw new Error('expected a monster combatant');
+    expect(inst.instance.hp.max).toBe(Math.round(ascensionMonsterHp(def.maxHp, 6, false) * 1.5));
+    expect(inst.instance.damageMult).toBeCloseTo(ascensionDamageMult(6) * 1.5, 5);
+  });
+
   it('non-boss enemies skip the boss multiplier', () => {
     const def = getMonster('duergar-ilyich');
     const asBoss = createCombat({ character: makeFighter(), monsters: [{ def }], ascension: 6, isBoss: true });

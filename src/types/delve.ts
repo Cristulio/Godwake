@@ -14,6 +14,13 @@ export interface RoomMonster {
   count: number;
   /** Display prefix when multiple of the same monster ("Goblin A", "Goblin B"). */
   displayPrefix?: string;
+  /**
+   * Optional stat multiplier applied to this monster's HP and damage at spawn
+   * (createCombat), on top of ascension scaling. Used to normalize the
+   * chapter-agnostic ascendant elites to the chapter they appear in — see
+   * {@link ascendantChapterScale}. Absent/1 = no scaling.
+   */
+  statMult?: number;
 }
 
 export interface RoomSpec {

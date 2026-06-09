@@ -190,7 +190,7 @@ function DelveScreenBody() {
         const displayName = m.count > 1
           ? `${m.displayPrefix ?? localizedName} ${String.fromCharCode(65 + idx)}`
           : localizedName;
-        return { def, displayName };
+        return { def, displayName, statMult: m.statMult };
       })
     );
 

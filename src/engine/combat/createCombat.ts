@@ -84,7 +84,7 @@ export interface CreateCombatInput {
    */
   roller?: DiceRoller;
   character: Character;
-  monsters: Array<{ def: Monster; displayName?: string }>;
+  monsters: Array<{ def: Monster; displayName?: string; statMult?: number }>;
   /** Ascension level for enemy scaling (max HP + per-attack damage). Default 0 = no scaling. */
   ascension?: number;
   /** True when this is a chapter-boss encounter — applies the boss HP multiplier on top of enemyHpMult. */
@@ -175,17 +175,23 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   const twistDamageBonus = twist.enemyDamageBonus ?? 0;
   // Ascension extra-phase arms only the primary foe of a boss room (idx 0).
   const bossExtraPhase = isBoss && ascensionBossExtraPhase(ascension);
-  const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName }, idx) => {
-    const scaledDef = applyAscensionToMonster(def, ascension, isBoss);
+  const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName, statMult }, idx) => {
+    let scaledDef = applyAscensionToMonster(def, ascension, isBoss);
+    // Per-monster chapter normalization (ascendant elites): scale HP here, fold
+    // damage into damageMult below. Rides on top of ascension scaling.
+    if (statMult && statMult !== 1) {
+      scaledDef = { ...scaledDef, maxHp: Math.max(1, Math.round(scaledDef.maxHp * statMult)) };
+    }
     const instance = spawnMonsterInstance(scaledDef, displayName);
     const legendaryResistances = idx === 0 ? primaryLegendaryResistances : 0;
+    const damageMult = enemyDamageMult * (statMult ?? 1);
     return {
       kind: 'monster' as const,
       id: instance.id,
       instance: {
         ...instance,
         ...(twistDamageBonus > 0 ? { bonusDamage: twistDamageBonus } : {}),
-        ...(enemyDamageMult !== 1 ? { damageMult: enemyDamageMult } : {}),
+        ...(damageMult !== 1 ? { damageMult } : {}),
         ...(legendaryResistances > 0 ? { legendaryResistances } : {}),
         ...(bossExtraPhase && idx === 0 ? { bossExtraPhaseArmed: true } : {}),
       },

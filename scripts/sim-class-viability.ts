@@ -660,7 +660,7 @@ function runCombatRoom(
   const isElite = room.kind === 'elite';
   const monsterRefs = (room.monsters ?? []).flatMap((rm) => {
     const def = getMonster(rm.defId);
-    return Array.from({ length: rm.count }, () => ({ def, displayName: rm.displayPrefix }));
+    return Array.from({ length: rm.count }, () => ({ def, displayName: rm.displayPrefix, statMult: rm.statMult }));
   });
   const init = createCombat({ roller, character: characterIn, monsters: monsterRefs, ascension, isBoss, isElite, twistId: room.twistId });
   let state: CombatState = init.state;
