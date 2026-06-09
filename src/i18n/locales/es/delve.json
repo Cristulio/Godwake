@@ -5,7 +5,7 @@
     "openPack": "◆ Abrir mochila",
     "gold": "◈ Oro",
     "goldInPocketTitle": "Oro en el bolsillo",
-    "hpStat": "PV {current}/{max}"
+    "hpStat": "PG {current}/{max}"
   },
   "header": {
     "chapter": "Capítulo {n}",
@@ -61,8 +61,8 @@
     "goldBodyA": "Escabúllete con la moneda que custodia",
     "goldBounty": "{n} de oro",
     "goldBodyB": ". La hoja del guardián te alcanza igual a la salida — una herida que corta más hondo cuanta más vida llevas,",
-    "goldLoseHp": "pierdes {n} PV",
-    "goldLoseHpUnknown": "pierdes PV",
+    "goldLoseHp": "pierdes {n} PG",
+    "goldLoseHpUnknown": "pierdes PG",
     "goldBodyC": "al entrar en la sala siguiente. Sin XP, sin botín, sin reliquia.",
     "goldButton": "◆ Tomarlo y partir"
   },
@@ -78,7 +78,7 @@
       "title": "Acampar junto al Fuego",
       "flavor": "Una noche entera junto a las brasas. Las heridas cierran, los dados vuelven a la mano, y lo gastado es tuyo de nuevo antes del alba.",
       "button": "Acampar",
-      "taken": "Descanso completo — PV restaurados, todos los recursos listos."
+      "taken": "Descanso completo — PG restaurados, todos los recursos listos."
     },
     "attune": {
       "title": "Sintonizar junto a las Brasas",
@@ -95,13 +95,13 @@
       "button": "Arrojar los huesos ↓",
       "winBlessing": "{name} concedida, y ",
       "win": "La oscuridad respondió (sacaste {roll}). {blessing}+{gold} de oro.",
-      "loss": "La oscuridad cobró lo suyo (sacaste {roll}). −{damage} PV.",
+      "loss": "La oscuridad cobró lo suyo (sacaste {roll}). −{damage} PG.",
       "panelTitle": "◆ Tentar a la Oscuridad",
       "panelBody": "Una sola tirada de los huesos. Ni lucha ni huida — solo la tirada y lo que traiga.",
       "highRoll": "11 o más",
       "highBody": " — la oscuridad responde: el susurro de una bendición y {gold} de oro (o {altGold} de oro si no queda bendición que dar).",
       "lowRoll": "10 o menos",
-      "lowBody": " — cobra lo suyo: pierdes {damage} PV (un cuarto de tu salud), hasta no menos de 1.",
+      "lowBody": " — cobra lo suyo: pierdes {damage} PG (un cuarto de tu salud), hasta no menos de 1.",
       "throwButton": "Arrojar los huesos",
       "diceWin": "La oscuridad responde",
       "diceLoss": "Cobra lo suyo"
@@ -161,7 +161,7 @@
     "proficientSuffix": ", competente"
   },
   "wares": {
-    "restores": "Restaura {dice} PV.",
+    "restores": "Restaura {dice} PG.",
     "buy": "Comprar",
     "sold": "Vendido",
     "needMore": "Faltan {n}",

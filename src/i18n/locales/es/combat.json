@@ -377,6 +377,7 @@
       "default": "una maldición"
     }
   },
+  "slain": "Abatido",
   "dice": {
     "crit": "¡CRÍTICO!",
     "hit": "IMPACTO",

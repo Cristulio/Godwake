@@ -66,9 +66,9 @@
     }
   },
   "ascension": {
-    "enemyHp": "Enemigos +{pct}% de PV",
+    "enemyHp": "Enemigos +{pct}% de PG",
     "enemyDamage": "Golpes enemigos +{pct}% más fuertes",
-    "bossHp": "Jefes +{pct}% de PV (además)",
+    "bossHp": "Jefes +{pct}% de PG (además)",
     "lessGold": "{pct}% menos de oro hallado",
     "eyebrow": "◆ Nueva Partida+ ◆",
     "heading": "ASCENSIÓN",
@@ -265,7 +265,7 @@
     "summons": "invoca {n}× {name}",
     "support": "apoyo",
     "heals": "cura {x}",
-    "wards": "protege +{n} PV temp",
+    "wards": "protege +{n} PG temp",
     "anAlly": "a un aliado",
     "itself": "a sí mismo",
     "sustains": "se sostiene",
@@ -273,7 +273,7 @@
     "multiMeta": "×{n}",
     "multiBody": "{n} ataques en un turno",
     "bossMechanic": {
-      "battle-rage": "Furia de Batalla: al caer a la mitad de PV o menos, gana +2 de daño por golpe durante el resto del combate."
+      "battle-rage": "Furia de Batalla: al caer a la mitad de PG o menos, gana +2 de daño por golpe durante el resto del combate."
     }
   },
   "spoils": {
@@ -310,7 +310,7 @@
     "effect": "Efecto:",
     "forThisSoul": "Para esta alma:",
     "acBonus": "+{n} CA",
-    "tempHpEach": "+{n} PV temp en cada combate",
+    "tempHpEach": "+{n} PG temp en cada combate",
     "god": {
       "tymora": "Tymora · Suerte",
       "helm": "Helm · Protección",

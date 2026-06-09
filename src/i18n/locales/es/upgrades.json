@@ -2,17 +2,17 @@
   "pilgrims-boots": {
     "name": "Botas del Peregrino",
     "flavor": "Los druidas regalan al alma despierta un par de botas de cuero crudo antes del camino. La primera milla enseña a la espalda. La centésima la endurece.",
-    "effect": "+{n} de PV máximo, permanente."
+    "effect": "+{n} de PG máximo, permanente."
   },
   "iron-will": {
     "name": "Voluntad de Hierro",
     "flavor": "El Manantial tira más hondo esta vez. Despiertas con un aliento que antes no tenías. Tome lo que tome el amo, el alma conserva un poco más.",
-    "effect": "+5 de PV máximo, permanente."
+    "effect": "+5 de PG máximo, permanente."
   },
   "mantle-of-the-wakened": {
     "name": "Manto del Despierto",
     "flavor": "El Manantial guarda algo — un puñado de la vida vieja cosido en la costura de la nueva. La carne recuerda heridas que aún no ha recibido.",
-    "effect": "+{n} de PV máximo, permanente a través de las reencarnaciones."
+    "effect": "+{n} de PG máximo, permanente a través de las reencarnaciones."
   },
   "hardier-soul": {
     "name": "Alma más Recia",
@@ -30,7 +30,7 @@
   "wellspring-depths": {
     "name": "Hondura del Manantial",
     "flavor": "El estanque solo muestra su fondo a un alma que ha recorrido el camino entero y ha vuelto. Lo que da ahora, antes no podía darlo.",
-    "effect": "+{n} de PV máximo, permanente a través de las reencarnaciones.",
+    "effect": "+{n} de PG máximo, permanente a través de las reencarnaciones.",
     "unlockLabel": "Completa la cadena para desbloquear."
   },
   "first-cut": {
@@ -41,7 +41,7 @@
   "bleed-out": {
     "name": "Desangrado",
     "flavor": "Una pluma de búho prendida a tu cuello por una niña que no quiso hablar. Las cosas heridas se inclinan hacia ti, y tú hacia ellas.",
-    "effect": "+{n} de daño contra objetivos heridos (PV a la mitad o menos), permanente."
+    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos), permanente."
   },
   "fellfast-strike": {
     "name": "Golpe Aciago",
@@ -177,7 +177,7 @@
   "colossus-slayer": {
     "name": "Matacolosos",
     "flavor": "Aprendiste qué hilo, al tirar de él, deshace todo el tapiz. Los que sangran nunca duran mucho bajo tu mirada.",
-    "effect": "+{n} de daño contra objetivos heridos (PV a la mitad o menos), permanente."
+    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos), permanente."
   },
   "primal-reservoir": {
     "name": "Reserva Primigenia",

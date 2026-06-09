@@ -1030,10 +1030,13 @@ function monsterSummon(
   ).length;
   const bonusDamage = attacker.instance.bonusDamage;
 
+  // Bake the localized name onto the summoned add so its sprite label, turn
+  // order, and combat-log subject read in-locale (not just the summon log line).
+  const localizedSummonName = getLocalized('monsters', summonDef.id, 'name', summonDef.name);
   const newCombatants: MonsterCombatant[] = [];
   for (let i = 0; i < count; i++) {
     const suffix = String.fromCharCode(65 + existing + i);
-    const displayName = `${summonDef.name} ${suffix}`;
+    const displayName = `${localizedSummonName} ${suffix}`;
     const instance = spawnMonsterInstance(summonDef, displayName);
     newCombatants.push({
       kind: 'monster',
@@ -1051,14 +1054,13 @@ function monsterSummon(
     ...inst,
     actionState: bumpActionState(inst, action.name, state.round),
   }));
-  const summonName = getLocalized('monsters', summonDef.id, 'name', summonDef.name);
   nextState = appendLog(nextState, {
     id: nextLogId(nextState),
     kind: 'system',
     text:
       count > 1
-        ? t('combat.log.summonMany', { name: attacker.instance.displayName, count, monster: summonName })
-        : t('combat.log.summonOne', { name: attacker.instance.displayName, monster: summonName }),
+        ? t('combat.log.summonMany', { name: attacker.instance.displayName, count, monster: localizedSummonName })
+        : t('combat.log.summonOne', { name: attacker.instance.displayName, monster: localizedSummonName }),
   });
   // Anchor the rift on the first new add's slot (it's already in nextState's
   // combatants/turnOrder, so the layer resolves its battlefield position).

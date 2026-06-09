@@ -9,6 +9,7 @@ import { spriteSizeScale } from './spriteScale';
 import { FloatingDamage, resolveSpriteFloat, attackAimedAt, type FloatingDamageItem, type FloatSelf } from './FloatingDamage';
 import { MirrorImages } from './SpellEffect';
 import { IntentBadge } from './IntentBadge';
+import { useT } from '../../i18n/useT';
 
 type CommonProps = {
   isActiveTurn: boolean;
@@ -208,6 +209,7 @@ function sparkTint(damageType: string | undefined): { color: string; glow: strin
 }
 
 function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
+  const { t } = useT();
   const hpCurrent =
     props.kind === 'player' ? props.character.hp.current : props.instance.hp.current;
   const hpMax = props.kind === 'player' ? props.character.hp.max : props.instance.hp.max;
@@ -570,7 +572,7 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
         <FloatingDamage items={damageFloats} />
         {dead && (
           <div className="absolute inset-x-0 bottom-2 flex items-center justify-center text-[var(--color-accent-blood)] text-[10px] uppercase tracking-[0.3em] font-bold font-display">
-            Slain
+            {t('combat.slain')}
           </div>
         )}
       </div>
