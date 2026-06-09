@@ -31,6 +31,31 @@ function attackLandsOn(lastAttack: AttackEvent, self: FloatSelf): boolean {
 }
 
 /**
+ * True when `lastAttack` is the tail of a multi-swing batch aimed at this sprite
+ * that committed atomically — the case the per-turn batch effect floats swing by
+ * swing, so the main float effect must defer to it (and not double-count via the
+ * HP delta).
+ *
+ * Crucially it requires `lastAttack` to actually BE one of the batched events.
+ * The batch (`attackEvents`) is only ever written by a monster multiattack and
+ * is NOT cleared when the player then takes their turn, so a stale 2+ batch from
+ * the monster's last turn lingers in state. Without the membership check, the
+ * player's own fresh single swing — whose `lastAttack` is aimed at the struck
+ * monster — would match `length >= 2 && aimedAt(self)` against that stale batch,
+ * the main effect would defer, and the batch effect (keyed on the unchanged
+ * `attackEvents` reference) would never re-run — so the hit floated nothing.
+ */
+export function isBatchedMultiattack(
+  attackEvents: AttackEvent[] | undefined,
+  lastAttack: AttackEvent | undefined,
+  self: FloatSelf,
+): boolean {
+  if (!lastAttack || (attackEvents?.length ?? 0) < 2) return false;
+  if (!attackEvents!.some((e) => e.id === lastAttack.id)) return false;
+  return attackAimedAt(lastAttack, self);
+}
+
+/**
  * The floating combat number a sprite should show this commit, or null for
  * nothing. A fresh attack event that lands on this sprite is authoritative: it
  * shows the true rolled damage (`damageDealt` already folds in crit-doubling,
