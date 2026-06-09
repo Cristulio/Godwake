@@ -168,6 +168,7 @@
     "sell": "Sell",
     "priceGp": "{n} gp",
     "sellPriceGp": "+{n} gp",
+    "buyBackPriceGp": "−{n} gp",
     "legendaryBanks": "Legendary · banks to your reliquary",
     "relicFallback": "A relic that death cannot take.",
     "bound": "Bound",

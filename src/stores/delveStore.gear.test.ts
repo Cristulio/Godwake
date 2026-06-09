@@ -234,4 +234,48 @@ describe('delveStore — selling to a merchant', () => {
     expect(hasItem(char().inventory, 'longsword')).toBe(true);
     expect(char().equipped.mainHand?.itemId).toBe('longsword');
   });
+
+  it('buyback undoes a misclicked sale at the same price (net-zero gold, item restored)', () => {
+    const greatsword: ItemRef = { itemId: 'greatsword' };
+    seed(makeFighter({ quirks: [], goldInPocket: 100, inventory: [greatsword] }));
+    const price = sellValue(greatsword);
+    expect(price).toBeGreaterThan(0);
+
+    const sold = useDelveStore.getState().sellItem(0);
+    expect(sold.ok).toBe(true);
+    expect(char().goldInPocket).toBe(100 + price);
+    expect(hasItem(char().inventory, 'greatsword')).toBe(false);
+    expect(useDelveStore.getState().delve?.recentlySold).toHaveLength(1);
+
+    const back = useDelveStore.getState().buyBackItem(0);
+    expect(back.ok).toBe(true);
+    expect(back.gold).toBe(price);
+    expect(char().goldInPocket).toBe(100); // net zero — a clean undo
+    expect(hasItem(char().inventory, 'greatsword')).toBe(true);
+    expect(useDelveStore.getState().delve?.recentlySold ?? []).toHaveLength(0);
+  });
+
+  it('refuses buyback once the sale proceeds have been spent; the item stays on the stack', () => {
+    const greatsword: ItemRef = { itemId: 'greatsword' };
+    seed(makeFighter({ quirks: [], goldInPocket: 0, inventory: [greatsword] }));
+    expect(sellValue(greatsword)).toBeGreaterThan(0);
+
+    useDelveStore.getState().sellItem(0);
+    useCharacterStore.setState({ character: { ...char(), goldInPocket: 0 } }); // spent it
+
+    const back = useDelveStore.getState().buyBackItem(0);
+    expect(back.ok).toBe(false);
+    expect(hasItem(char().inventory, 'greatsword')).toBe(false);
+    expect(useDelveStore.getState().delve?.recentlySold).toHaveLength(1);
+  });
+
+  it('clears the buyback stack on room entry (leaving the shop ends the window)', () => {
+    const greatsword: ItemRef = { itemId: 'greatsword' };
+    seed(makeFighter({ quirks: [], goldInPocket: 50, inventory: [greatsword] }));
+    useDelveStore.getState().sellItem(0);
+    expect(useDelveStore.getState().delve?.recentlySold).toHaveLength(1);
+
+    useDelveStore.getState().advanceRoom();
+    expect(useDelveStore.getState().delve?.recentlySold ?? []).toHaveLength(0);
+  });
 });

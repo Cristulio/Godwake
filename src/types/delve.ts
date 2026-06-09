@@ -1,3 +1,5 @@
+import type { ItemRef } from '../schemas/item';
+
 export type RoomKind =
   | 'combat'
   | 'rest'
@@ -141,6 +143,13 @@ export interface DelveState {
    * component state, keeps the gate alive across a trip to the backpack and back.
    */
   campRisk?: CampRiskResult;
+  /**
+   * Items sold at the CURRENT shop this visit, most-recent last — the buyback
+   * stack. A misclicked sale can be undone by rebuying at the same price it
+   * fetched. Lives on the delve (not shop component state) so it survives a trip
+   * to the backpack, and is cleared on every room entry (leaving the shop).
+   */
+  recentlySold?: ItemRef[];
   /**
    * Ascension level this run is being played at (0 = base). Stamped at delve
    * creation from the hub selector; read by combat spawning (enemy HP/damage),
