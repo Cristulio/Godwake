@@ -225,11 +225,11 @@ function GameplaySection() {
           {t('ui.settings.combatSpeed')}
         </span>
         <div className="flex gap-1">
-          {[1, 2].map((mult) => (
+          {[1, 2, 4].map((mult) => (
             <button
               key={mult}
               type="button"
-              onClick={() => setSpeed(mult as 1 | 2)}
+              onClick={() => setSpeed(mult as 1 | 2 | 4)}
               className={`px-3 py-1 border-2 text-[10px] uppercase tracking-widest font-bold transition-colors ${
                 speedMultiplier === mult
                   ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-accent-amber)]'
