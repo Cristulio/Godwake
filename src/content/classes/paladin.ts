@@ -125,7 +125,7 @@ export const PALADIN: Class = ClassSchema.parse({
     ],
   },
   preset: {
-    characterName: 'Dame Ysolde',
+    characterName: 'Minsc',
     recommendedRaceId: 'human',
     // Hybrid STR + CHA. STR 15 clears the heavy-armour gate and swings the martial
     // arm; CHA 15 drives smites, spells, Lay on Hands and the auras; CON cushions
@@ -133,7 +133,7 @@ export const PALADIN: Class = ClassSchema.parse({
     // CON 15, WIS 12, DEX 11, INT 9.
     abilityScores: { str: 15, dex: 10, con: 14, int: 8, wis: 11, cha: 15 },
     flavorBlurb:
-      'Walks into the worst of it in full plate and stands there. Mends her own wounds, sears what she strikes, and rarely falls before the thing she came to kill.',
+      'Butt-kicking for goodness, in full plate — by order of a hamster. Minsc mends his own wounds, sears what he strikes, and charges the wicked with a berserker\'s joy. Boo, riding his shoulder, sees all and has never once steered him wrong.',
   },
   subclasses: [
     {

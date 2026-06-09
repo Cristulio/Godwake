@@ -31,6 +31,8 @@ export function PlayerPortrait({ classId, className = '' }: PlayerPortraitProps)
       return <MonkSvg className={className} />;
     case 'bard':
       return <BardSvg className={className} />;
+    case 'paladin':
+      return <PaladinSvg className={className} />;
     case 'fighter':
     default:
       return <FighterSvg className={className} />;
@@ -1076,6 +1078,145 @@ function RangerSvg({ className }: { className?: string }) {
       <rect x="12" y="32" width="5" height="5" fill="#1f2a18" />
       <rect x="12" y="32" width="5" height="1" fill="#2e4022" />
       <rect x="12" y="37" width="5" height="1" fill="#345029" />
+    </svg>
+  );
+}
+
+function PaladinSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 40"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Paladin"
+    >
+      {/* Backlight — holy gold radiance crossed with a cool steel rim + a faint halo */}
+      <ellipse cx="11" cy="16" rx="13" ry="18" fill="#f4d042" opacity="0.11" />
+      <ellipse cx="15" cy="15" rx="11" ry="16" fill="#4a6a90" opacity="0.06" />
+      <ellipse cx="11" cy="5" rx="6" ry="5" fill="#fff4c0" opacity="0.10" />
+      {/* Ground-contact shadow */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.6" fill="#000" opacity="0.45" />
+
+      {/* Minsc's scalplock — a topknot tuft over a shaved scalp */}
+      <rect x="11" y="0" width="2" height="1" fill="#2a1810" />
+      <rect x="11" y="1" width="1" height="1" fill="#4a2e18" />
+      {/* Bald scalp — skin ramp, lit crown */}
+      <rect x="8" y="2" width="8" height="2" fill="#b8905c" />
+      <rect x="9" y="2" width="6" height="1" fill="#d4ad78" />
+      <rect x="10" y="2" width="3" height="1" fill="#ecd0a0" />
+      <rect x="8" y="2" width="1" height="2" fill="#8a6840" />
+      <rect x="15" y="2" width="1" height="2" fill="#7a5836" />
+      {/* Face — weathered, ramped */}
+      <rect x="8" y="4" width="8" height="5" fill="#c8a878" />
+      <rect x="8" y="4" width="1" height="5" fill="#9c7448" />
+      <rect x="9" y="4" width="6" height="1" fill="#e0c49c" />
+      <rect x="15" y="4" width="1" height="5" fill="#8a6840" />
+      {/* Crimson war-paint stripe across the brow — Minsc's mark */}
+      <rect x="8" y="5" width="8" height="1" fill="#b5302c" />
+      <rect x="8" y="5" width="2" height="1" fill="#f04438" />
+      <rect x="14" y="5" width="1" height="1" fill="#f04438" />
+      {/* Glaring eyes + amber zeal glint */}
+      <rect x="9" y="6" width="2" height="1" fill="#1a1410" />
+      <rect x="13" y="6" width="2" height="1" fill="#1a1410" />
+      <rect x="10" y="6" width="1" height="1" fill="#f4b43a" />
+      <rect x="14" y="6" width="1" height="1" fill="#f4b43a" />
+      {/* Set jaw / stubble + thick neck */}
+      <rect x="9" y="8" width="6" height="1" fill="#a07c50" />
+      <rect x="10" y="8" width="4" height="1" fill="#8c6840" opacity="0.55" />
+      <rect x="10" y="9" width="4" height="1" fill="#9c7448" />
+
+      {/* Boo — the miniature giant space hamster, perched on the shoulder */}
+      <ellipse cx="3" cy="8" rx="3" ry="2.6" fill="#e8a020" opacity="0.18" />
+      <rect x="2" y="7" width="4" height="3" fill="#8c6232" />
+      <rect x="2" y="7" width="4" height="1" fill="#b07434" />
+      <rect x="2" y="9" width="4" height="1" fill="#5a3f24" />
+      <rect x="2" y="6" width="1" height="1" fill="#8c6232" />
+      <rect x="5" y="6" width="1" height="1" fill="#8c6232" />
+      <rect x="3" y="8" width="1" height="1" fill="#0a0806" />
+      <rect x="5" y="8" width="1" height="1" fill="#f4d042" />
+      <rect x="1" y="9" width="1" height="1" fill="#6b4a2e" />
+
+      {/* Pauldrons — steel ramp + gold trim + specular */}
+      <rect x="5" y="10" width="14" height="2" fill="#3e4654" />
+      <rect x="5" y="10" width="14" height="1" fill="#565d6e" />
+      <rect x="5" y="10" width="3" height="2" fill="#2a313e" />
+      <rect x="16" y="10" width="3" height="2" fill="#20252f" />
+      <rect x="6" y="10" width="3" height="1" fill="#8a91a4" />
+      <rect x="6" y="11" width="3" height="1" fill="#d4b062" />
+      {/* Chest plate — cool steel ramp, lit dome, specular */}
+      <rect x="7" y="12" width="10" height="9" fill="#3e4654" />
+      <rect x="6" y="12" width="1" height="9" fill="#2a313e" />
+      <rect x="7" y="12" width="1" height="9" fill="#565d6e" />
+      <rect x="17" y="12" width="1" height="9" fill="#20252f" />
+      <rect x="8" y="12" width="3" height="3" fill="#6a7080" />
+      <rect x="8" y="12" width="2" height="2" fill="#8a91a4" />
+      <rect x="9" y="12" width="1" height="1" fill="#cdd6e6" />
+      {/* Radiant holy sunburst emblem — gold bloom + bright core */}
+      <ellipse cx="12" cy="16" rx="4.5" ry="4.5" fill="#f4d042" opacity="0.22" />
+      <rect x="11" y="13" width="2" height="6" fill="#d4b062" />
+      <rect x="9" y="15" width="6" height="2" fill="#d4b062" />
+      <rect x="11" y="13" width="1" height="6" fill="#f4d042" />
+      <rect x="11" y="15" width="2" height="2" fill="#fff4c0" />
+      <rect x="8" y="13" width="1" height="1" fill="#f4d042" />
+      <rect x="15" y="13" width="1" height="1" fill="#f4d042" />
+      <rect x="8" y="18" width="1" height="1" fill="#d4b062" />
+      <rect x="15" y="18" width="1" height="1" fill="#d4b062" />
+      {/* Belt + gold buckle */}
+      <rect x="6" y="21" width="12" height="1" fill="#100a06" />
+      <rect x="11" y="21" width="2" height="1" fill="#d4b062" />
+      <rect x="11" y="21" width="1" height="1" fill="#f4d042" />
+
+      {/* Right arm — plate, holding the sword */}
+      <rect x="18" y="11" width="2" height="2" fill="#3e4654" />
+      <rect x="18" y="11" width="2" height="1" fill="#565d6e" />
+      <rect x="18" y="13" width="2" height="6" fill="#3e4654" />
+      <rect x="18" y="13" width="1" height="6" fill="#565d6e" />
+      <rect x="18" y="19" width="3" height="2" fill="#2a313e" />
+      {/* Longsword — steel ramp, bright spine; gold cross-guard, radiant tip */}
+      <ellipse cx="20" cy="2" rx="2.5" ry="3" fill="#fff4c0" opacity="0.22" />
+      <rect x="19" y="2" width="2" height="13" fill="#8a91a4" />
+      <rect x="19" y="2" width="1" height="13" fill="#e8eef8" />
+      <rect x="20" y="2" width="1" height="13" fill="#6a7080" />
+      <rect x="19" y="2" width="2" height="1" fill="#fff4c0" />
+      <rect x="19" y="4" width="1" height="2" fill="#ffffff" />
+      <rect x="18" y="15" width="4" height="1" fill="#d4b062" />
+      <rect x="18" y="15" width="4" height="1" fill="#f4d042" opacity="0.5" />
+      <rect x="19" y="16" width="2" height="3" fill="#5a4030" />
+      <rect x="19" y="16" width="1" height="3" fill="#7a5640" />
+
+      {/* Left arm — plate, gauntlet at the side */}
+      <rect x="4" y="11" width="2" height="2" fill="#3e4654" />
+      <rect x="4" y="13" width="2" height="6" fill="#3e4654" />
+      <rect x="4" y="13" width="1" height="6" fill="#2a313e" />
+      <rect x="3" y="19" width="3" height="2" fill="#2a313e" />
+      <rect x="3" y="19" width="3" height="1" fill="#565d6e" />
+
+      {/* Tassets — steel + gold hem */}
+      <rect x="7" y="22" width="10" height="3" fill="#3e4654" />
+      <rect x="7" y="22" width="10" height="1" fill="#565d6e" />
+      <rect x="11" y="22" width="2" height="3" fill="#6a7080" />
+      <rect x="7" y="24" width="10" height="1" fill="#d4b062" />
+      {/* Right leg — greave, steel ramp */}
+      <rect x="8" y="25" width="3" height="9" fill="#3e4654" />
+      <rect x="8" y="25" width="1" height="9" fill="#565d6e" />
+      <rect x="10" y="25" width="1" height="9" fill="#20252f" />
+      {/* Left leg */}
+      <rect x="13" y="25" width="3" height="9" fill="#3e4654" />
+      <rect x="13" y="25" width="1" height="9" fill="#565d6e" />
+      <rect x="15" y="25" width="1" height="9" fill="#20252f" />
+      {/* Gold knee studs */}
+      <rect x="8" y="28" width="3" height="1" fill="#d4b062" opacity="0.55" />
+      <rect x="13" y="28" width="3" height="1" fill="#d4b062" opacity="0.55" />
+      {/* Sabatons + steel toe-cap glint */}
+      <rect x="7" y="34" width="5" height="4" fill="#14110f" />
+      <rect x="7" y="34" width="5" height="1" fill="#3a2e22" />
+      <rect x="7" y="38" width="5" height="1" fill="#565d6e" />
+      <rect x="7" y="37" width="2" height="1" fill="#8a91a4" />
+      <rect x="12" y="34" width="5" height="4" fill="#14110f" />
+      <rect x="12" y="34" width="5" height="1" fill="#3a2e22" />
+      <rect x="12" y="38" width="5" height="1" fill="#565d6e" />
+      <rect x="12" y="37" width="2" height="1" fill="#8a91a4" />
     </svg>
   );
 }
