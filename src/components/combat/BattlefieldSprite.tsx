@@ -222,9 +222,9 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   // When temp HP is present, scale the bar against (max + temp) so the temp
   // buffer reads as an extension of the bar instead of overlapping current.
   const hpScale = hpMax + hpTemp;
-  const hpPercent = (hpCurrent / hpScale) * 100;
-  const tempPercent = (hpTemp / hpScale) * 100;
-  const healthRatio = hpCurrent / hpMax;
+  const hpPercent = hpScale > 0 ? (hpCurrent / hpScale) * 100 : 0;
+  const tempPercent = hpScale > 0 ? (hpTemp / hpScale) * 100 : 0;
+  const healthRatio = hpMax > 0 ? hpCurrent / hpMax : 0;
 
   const prevHp = useRef(hpCurrent);
   const [damageFloats, setDamageFloats] = useState<FloatingDamageItem[]>([]);
