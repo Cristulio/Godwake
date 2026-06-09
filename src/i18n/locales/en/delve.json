@@ -169,7 +169,8 @@
     "legendaryBanks": "Legendary · banks to your reliquary",
     "relicFallback": "A relic that death cannot take.",
     "bound": "Bound",
-    "acquire": "Acquire"
+    "acquire": "Acquire",
+    "currentlyEquipped": "Currently equipped"
   },
   "screen": {
     "noCharacter": "No character.",

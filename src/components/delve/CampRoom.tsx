@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { RoomSpec } from '../../types/delve';
 import type { Item } from '../../schemas/item';
+import type { Character } from '../../types/character';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { BlessingCard } from '../ui/BlessingCard';
@@ -413,6 +414,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 
       {merchantStep === 'shop' && (
         <ShopModal
+          character={character}
           gear={gear}
           consumables={consumables}
           legendaryOffer={showLegendary ? legendaryOffer : null}
@@ -436,6 +438,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
 const NO_SHOP_KEYS: string[] = [];
 
 interface ShopModalProps {
+  character: Character;
   gear: GearStock[];
   consumables: Item[];
   legendaryOffer: LegendaryOffer | null;
@@ -450,6 +453,7 @@ interface ShopModalProps {
 }
 
 function ShopModal({
+  character,
   gear,
   consumables,
   legendaryOffer,
@@ -514,6 +518,7 @@ function ShopModal({
                     bought={purchasedKeys.includes(key)}
                     gold={goldInPocket}
                     onBuy={() => onBuyGear(stock, key)}
+                    character={character}
                   />
                 );
               })}

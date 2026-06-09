@@ -1,0 +1,10 @@
+{
+  "agileRanger": "Suprime Andanada Inicial y Evasión a Distancia mientras la llevas puesta.",
+  "agileRogue": "Suprime Acción Astuta y Esquiva Asombrosa mientras la llevas puesta.",
+  "heavyRage": "Armadura pesada — termina tu Furia (sin bonos de furia mientras la llevas).",
+  "boundToClass": "Vinculado al {class}",
+  "cantWield": "Un {class} no puede empuñar esto",
+  "cantWear": "Un {class} no puede vestir esto",
+  "requiresAbility": "Requiere {ability} {value}",
+  "requiresStrength": "Requiere {ability} {value}"
+}

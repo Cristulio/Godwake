@@ -169,7 +169,8 @@
     "legendaryBanks": "Legendaria · se deposita en tu relicario",
     "relicFallback": "Una reliquia que la muerte no puede llevarse.",
     "bound": "Vinculada",
-    "acquire": "Adquirir"
+    "acquire": "Adquirir",
+    "currentlyEquipped": "Equipado actualmente"
   },
   "screen": {
     "noCharacter": "Sin personaje.",
