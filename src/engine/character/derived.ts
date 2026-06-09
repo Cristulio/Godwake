@@ -219,7 +219,13 @@ export function characterHasMechanic(character: Character, mechanicKey: string):
  * bloodied (Tempus's Bloodfury) — read live, so the band tracks current HP.
  */
 export function critRange(character: Character): number[] {
-  const base = characterHasMechanic(character, 'improved-critical') ? 19 : 20;
+  // Champion: Improved Critical (L2) opens the window to 19-20; Superior Critical
+  // (L10) widens it again to 18-20.
+  const base = characterHasMechanic(character, 'superior-critical')
+    ? 18
+    : characterHasMechanic(character, 'improved-critical')
+      ? 19
+      : 20;
   const mods = characterBlessingMods(character);
   let blessingBonus = mods.critRangeBonus ?? 0;
   if (isFullHp(character)) blessingBonus += mods.critRangeBonusWhileFull ?? 0;

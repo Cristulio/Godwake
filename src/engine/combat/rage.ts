@@ -1,17 +1,32 @@
 import type { Character } from '../../types/character';
-import type { CombatState, CombatLogEntry } from '../../types/combat';
+import type { CombatState, CombatLogEntry, MonsterCombatant } from '../../types/combat';
 import { characterHasMechanic } from '../character/derived';
 import { rageBrokenByArmor } from '../character/equip';
 import { RAGE_ROUNDS, isRageUnlimited } from '../character/actions';
 import {
   combatResult,
   patchActionEconomy,
+  patchHp,
   patchResources,
   type CombatActionResult,
 } from './types';
 import { appendLog } from './log';
 import { attachCombatVfx } from './vfx';
 import { t } from '../../i18n';
+
+/** Rounds the Berserker's Intimidating Presence holds a foe in fear. */
+const INTIMIDATING_PRESENCE_ROUNDS = 2;
+
+/** The deadliest live foe on the field — the one with the most max HP (the boss
+ *  or the heaviest hitter), ties broken by spawn order. Undefined if none live. */
+function deadliestLiveMonster(state: CombatState): MonsterCombatant | undefined {
+  let best: MonsterCombatant | undefined;
+  for (const c of state.combatants) {
+    if (c.kind !== 'monster' || c.instance.hp.current <= 0) continue;
+    if (!best || c.instance.hp.max > best.instance.hp.max) best = c;
+  }
+  return best;
+}
 
 export interface RageContext {
   character: Character;
@@ -74,5 +89,56 @@ export function useRage(ctx: RageContext): CombatActionResult {
     kind: 'narration',
     text: t('combat.log.rageEnter', { name: nextCharacter.name, rounds: RAGE_ROUNDS }),
   };
-  return combatResult(attachCombatVfx(appendLog(state, log), 'rage', 'player'), nextCharacter);
+  let nextState: CombatState = attachCombatVfx(appendLog(state, log), 'rage', 'player');
+
+  // Totem (Bear) Aspect of the Bear (L10): the fury wraps a fresh hide each time
+  // it takes hold — temporary HP equal to level (the elemental resistance rides
+  // monsterAttack). Temp HP doesn't stack: take the larger of any pending pool.
+  if (characterHasMechanic(nextCharacter, 'aspect-of-the-bear')) {
+    const grant = nextCharacter.level;
+    if (grant > nextCharacter.hp.temp) {
+      nextCharacter = patchHp(nextCharacter, { temp: grant });
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'system',
+        text: t('combat.log.bearWard', { name: nextCharacter.name, n: grant }),
+      });
+    }
+  }
+
+  // Berserker Intimidating Presence (L10): entering Rage grips the deadliest live
+  // foe with dread — frightened for two rounds (read as attack disadvantage and
+  // ticked down in monsterAttack).
+  if (characterHasMechanic(nextCharacter, 'intimidating-presence')) {
+    const prey = deadliestLiveMonster(nextState);
+    if (prey) {
+      nextState = {
+        ...nextState,
+        combatants: nextState.combatants.map((c) => {
+          if (c.kind !== 'monster' || c.id !== prey.id) return c;
+          return {
+            ...c,
+            instance: {
+              ...c.instance,
+              conditions: [
+                ...c.instance.conditions.filter((x) => x.name !== 'frightened'),
+                {
+                  name: 'frightened' as const,
+                  duration: { kind: 'rounds' as const, value: INTIMIDATING_PRESENCE_ROUNDS },
+                  source: 'player',
+                },
+              ],
+            },
+          };
+        }),
+      };
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'system',
+        text: t('combat.log.intimidate', { name: nextCharacter.name, target: prey.instance.displayName }),
+      });
+    }
+  }
+
+  return combatResult(nextState, nextCharacter);
 }

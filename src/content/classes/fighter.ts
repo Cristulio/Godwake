@@ -193,6 +193,15 @@ export const FIGHTER: Class = ClassSchema.parse({
             mechanicKey: 'improved-critical',
           },
         ],
+        '10': [
+          {
+            id: 'superior-critical',
+            name: 'Superior Critical',
+            description:
+              'The killing eye opens wider still — your weapon attacks now score a critical hit on a roll of 18, 19, or 20. With a big-die weapon and any crit-range gear, the spikes come often enough to plan around.',
+            mechanicKey: 'superior-critical',
+          },
+        ],
       },
     },
     {
@@ -210,6 +219,15 @@ export const FIGHTER: Class = ClassSchema.parse({
             mechanicKey: 'battle-master',
           },
         ],
+        '10': [
+          {
+            id: 'tactical-reserve',
+            name: 'Tactical Reserve',
+            description:
+              'A deeper well of discipline: your Resolve pool grows by one, and you recover a point every round through the opening of a fight, not just every other round. More maneuvers, banked earlier, with less waiting between them.',
+            mechanicKey: 'tactical-reserve',
+          },
+        ],
       },
     },
     {
@@ -225,6 +243,15 @@ export const FIGHTER: Class = ClassSchema.parse({
             description:
               'You brace behind armour and shield: at the start of each combat you gain temporary hit points equal to 3 + your level, soaking damage before your own. Rewards max-HP and tank gear that wants a deeper cushion to work behind.',
             mechanicKey: 'defender',
+          },
+        ],
+        '10': [
+          {
+            id: 'hold-the-wall',
+            name: 'Hold the Wall',
+            description:
+              'When the line bends, you set it. The first time you drop below half your hit points in a fight, you find a second wind of grit — temporary hit points equal to your level, soaking the blows that were about to land on bare flesh.',
+            mechanicKey: 'hold-the-wall',
           },
         ],
       },

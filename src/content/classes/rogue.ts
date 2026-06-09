@@ -154,6 +154,15 @@ export const ROGUE: Class = ClassSchema.parse({
             mechanicKey: 'fast-hands',
           },
         ],
+        '11': [
+          {
+            id: 'deft-hands',
+            name: 'Deft Hands',
+            description:
+              'The hands never stop moving. You gain one more Cunning Action each combat — another Hide, Quick Strike, Feint, or Steel Yourself to spend on the board state you want.',
+            mechanicKey: 'deft-hands',
+          },
+        ],
       },
     },
     {
@@ -171,6 +180,15 @@ export const ROGUE: Class = ClassSchema.parse({
             mechanicKey: 'assassin',
           },
         ],
+        '11': [
+          {
+            id: 'mortal-strike',
+            name: 'Mortal Strike',
+            description:
+              'You have learned exactly where the life sits. Your opening strike of a fight against a foe still at full health is an automatic critical — the kill front-loaded before it can so much as raise a guard.',
+            mechanicKey: 'mortal-strike',
+          },
+        ],
       },
     },
     {
@@ -186,6 +204,15 @@ export const ROGUE: Class = ClassSchema.parse({
             description:
               'Your Sneak Attack triggers every turn with no advantage or bloodied target required. Rewards steady, consistent-damage gear — the bonus is always online.',
             mechanicKey: 'swashbuckler',
+          },
+        ],
+        '11': [
+          {
+            id: 'rakish-duelist',
+            name: 'Rakish Duelist',
+            description:
+              'One blade, one foe, and all the room you need. When only a single enemy still stands against you, you fight with a duelist’s edge — +2 to hit, and your Sneak Attack lands no matter what. The last one standing is the easiest to read.',
+            mechanicKey: 'rakish-duelist',
           },
         ],
       },

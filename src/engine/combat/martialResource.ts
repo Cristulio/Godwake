@@ -75,7 +75,9 @@ export function isMartialClass(character: Readonly<Character>): boolean {
  */
 export function martialPoolMax(character: Readonly<Character>): number {
   if (!isMartialClass(character)) return 0;
-  return character.classId === 'fighter' ? MARTIAL_POOL_MAX_FIGHTER : MARTIAL_POOL_MAX;
+  const base = character.classId === 'fighter' ? MARTIAL_POOL_MAX_FIGHTER : MARTIAL_POOL_MAX;
+  // Battle Master Tactical Reserve (L10): one deeper point of Resolve.
+  return base + (characterHasMechanic(character as Character, 'tactical-reserve') ? 1 : 0);
 }
 
 /**
@@ -92,7 +94,12 @@ export function regenMartialPoolForRound(
 ): Character {
   const self = character as Character;
   if (!isMartialClass(character)) return self;
-  if (round <= 1 || (round - 1) % MARTIAL_REGEN_INTERVAL !== 0) return self;
+  // Normal cadence regenerates on rounds 3,5,7,… Battle Master Tactical Reserve
+  // (L10) also tops up on round 2, so the early fight refills every round before
+  // settling back to the every-other pace.
+  const tacticalEarly =
+    characterHasMechanic(self, 'tactical-reserve') && round === 2;
+  if (!tacticalEarly && (round <= 1 || (round - 1) % MARTIAL_REGEN_INTERVAL !== 0)) return self;
   const max = martialPoolMax(character);
   const current = martialPointsLeft(character);
   if (current >= max) return self;

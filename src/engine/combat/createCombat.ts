@@ -336,12 +336,14 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     // one Mirror Image to soak the first blow (rewards an evasive build). Other
     // wizards open with these cleared and must spend a slot to raise them.
     const illusionist = characterHasMechanic(nextCharacter, 'illusionist');
+    // Illusion Layered Veils (L10): walk in with a second mirror image woven.
+    const layeredVeils = characterHasMechanic(nextCharacter, 'layered-veils');
     nextCharacter = patchResources(nextCharacter, {
       mageArmorActive: true,
       shieldActive: false,
       mistyStepActive: false,
       blurRoundsRemaining: illusionist ? 99 : 0,
-      mirrorImages: illusionist ? 1 : 0,
+      mirrorImages: illusionist ? (layeredVeils ? 2 : 1) : 0,
       // Drop any stale 9th-level transform/freeze carried from a prior fight.
       extraTurnsRemaining: 0,
       dragonFormRoundsRemaining: 0,
@@ -363,14 +365,19 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // Abjurer's Arcane Ward + Totem (Bear) endurance: a per-combat temp-HP layer
   // scaling with level (2 + level). Temp HP doesn't stack — it joins the same
   // single-largest-source pool below.
+  // Abjuration Greater Arcane Ward (L10) deepens the abjurer's per-combat ward
+  // from 2+level to 5+level; it sits above the base abjurer branch so the larger
+  // grant wins.
   const archetypeWardTempHp = characterHasMechanic(nextCharacter, 'defender')
     ? 3 + nextCharacter.level
-    : characterHasMechanic(nextCharacter, 'wholeness-of-body')
-      ? nextCharacter.level
-      : characterHasMechanic(nextCharacter, 'abjurer') ||
-          characterHasMechanic(nextCharacter, 'totem-warrior')
-        ? 2 + nextCharacter.level
-        : 0;
+    : characterHasMechanic(nextCharacter, 'arcane-ward')
+      ? 5 + nextCharacter.level
+      : characterHasMechanic(nextCharacter, 'wholeness-of-body')
+        ? nextCharacter.level
+        : characterHasMechanic(nextCharacter, 'abjurer') ||
+            characterHasMechanic(nextCharacter, 'totem-warrior')
+          ? 2 + nextCharacter.level
+          : 0;
   const tempHpGrant = Math.max(
     blessingMods.extraTempHpPerRoom ?? 0,
     (blessingMods.tempHpPerDelveLevel ?? 0) * nextCharacter.level,

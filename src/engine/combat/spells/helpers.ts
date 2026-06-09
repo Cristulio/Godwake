@@ -11,6 +11,7 @@ import { getMonster } from '../../../content/monsters';
 import { applyDamage, evaluateCombatEnd as evaluateCombatEndShared } from '../attack';
 import { abilityModifier } from '../../../types/abilities';
 import {
+  characterHasMechanic,
   isFullCaster,
   proficiencyBonus,
   spellcastingMod,
@@ -78,6 +79,18 @@ export function spellSaveDC(character: Readonly<Character>): number {
   );
 }
 
+/**
+ * Evocation Empowered Evocation (L10): every damaging spell lands for an extra
+ * +⌊level/2⌋. Folded into {@link spellDamageBonus} so every handler that reads
+ * the shared rider picks it up; the two AoE blasts that bypass spellDamageBonus
+ * (Fireball, Lightning Bolt) add it explicitly in their own handlers.
+ */
+export function empoweredEvocationBonus(character: Readonly<Character>): number {
+  return characterHasMechanic(character as Character, 'empowered-evocation')
+    ? Math.floor(character.level / 2)
+    : 0;
+}
+
 export function spellDamageBonus(character: Readonly<Character>): number {
   const boonBonus = characterCampBoonMods(character).spellDamageBonus ?? 0;
   const blessingBonus = characterBlessingMods(character).spellDamageBonus ?? 0;
@@ -87,6 +100,7 @@ export function spellDamageBonus(character: Readonly<Character>): number {
     boonBonus +
     blessingBonus +
     ascendantBonus +
+    empoweredEvocationBonus(character) +
     characterAffixMods(character).spellDamageBonus
   );
 }

@@ -81,7 +81,7 @@
     "quarry": "Presa",
     "sneak": "sigilo ({dice})",
     "mark": "marca ({dice})",
-    "colossus": "coloso (1d8)",
+    "colossus": "coloso ({dice})",
     "vowReroll": "Repetida del Voto +{n}"
   },
   "cond": {
@@ -205,6 +205,7 @@
     "disRange": " (desventaja — mantenido a distancia)",
     "disPatient": " (desventaja — defensa paciente)",
     "disNimble": " (desventaja — esquiva ágil)",
+    "disFrightened": " (desventaja — asustado)",
     "nimbleTwist": "{name} se escurre bajo el primer tajo.",
     "mirrorSawThrough": "{attacker} ve a través del parpadeo y golpea al verdadero {name} — un duplicado se desvanece igualmente.{remain}",
     "mirrorShatter": "Un duplicado tembloroso se hace añicos — el golpe solo halla una imagen residual.{remain}",
@@ -299,6 +300,10 @@
     "spiritBeastCast": "{name} llama a una bestia espiritual a su lado — colmillo y garra hechos forma. Destrozará a un enemigo al inicio de cada uno de los próximos {ticks} turnos.",
     "spiritBeastHit": "La bestia espiritual destroza a {target} por {perTurn}.",
     "braceTempHp": "{name} se prepara con {n} PG temporales.",
+    "holdTheWall": "{name} sostiene la línea y aguanta — {n} PG temporales de puro temple.",
+    "bearWard": "{name} ciñe la piel del oso — {n} PG temporales.",
+    "intimidate": "La furia de {name} cae sobre {target} — queda asustado, sus golpes se desvían.",
+    "fearLifts": "{name} se sacude el pavor.",
     "blessingRecover": "{name} recupera {amount} PG de una bendición.",
     "girdNote": " (+{n} PG temp)",
     "readyBuff": "{name} prepara la {label}{gird}.",

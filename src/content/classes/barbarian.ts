@@ -187,6 +187,15 @@ export const BARBARIAN: Class = ClassSchema.parse({
             mechanicKey: 'frenzy',
           },
         ],
+        '10': [
+          {
+            id: 'intimidating-presence',
+            name: 'Intimidating Presence',
+            description:
+              'The fury wears a face. The moment you enter Rage, the deadliest thing still standing against you is gripped by dread — frightened for two rounds, its blows thrown wild and wide while the terror holds.',
+            mechanicKey: 'intimidating-presence',
+          },
+        ],
       },
     },
     {
@@ -202,6 +211,15 @@ export const BARBARIAN: Class = ClassSchema.parse({
             description:
               'The bear’s endurance is yours: you begin every combat with temporary hit points equal to 2 + your level, soaking the first blows. Rewards CON and max-HP tank gear — the bear out-lasts what the Berserker out-hits.',
             mechanicKey: 'totem-warrior',
+          },
+        ],
+        '10': [
+          {
+            id: 'aspect-of-the-bear',
+            name: 'Aspect of the Bear',
+            description:
+              'The bear-spirit settles fully into your hide. While raging, you shrug off not only steel but flame, frost, and storm — fire, cold, and lightning are halved alongside the physical. And entering Rage now wraps you in temporary hit points equal to your level, a fresh hide for every fresh fury.',
+            mechanicKey: 'aspect-of-the-bear',
           },
         ],
       },

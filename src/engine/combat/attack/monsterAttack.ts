@@ -470,7 +470,9 @@ export function monsterAttack(
     result = maybeBossExtraPhase(result, attackerId, lastResolvedAction, roller);
   }
 
-  const marked = markMonsterActionUsed(result.state, attackerId);
+  // Intimidating Presence: the dread ebbs one round now that the foe has acted.
+  const feared = tickActingMonsterFear(result.state, attackerId);
+  const marked = markMonsterActionUsed(feared, attackerId);
   // Re-pick this monster's intent now that the turn's action is spent (the
   // next player-turn refresh re-plans all of them, but this keeps the badge
   // honest during the rest of the monster phase). Clear it if it just died.
@@ -590,6 +592,40 @@ function markMonsterActionUsed(state: CombatState, attackerId: string): CombatSt
 }
 
 /**
+ * Berserker Intimidating Presence: tick the acting monster's `frightened` down
+ * one round at the END of its turn (it attacked at disadvantage this turn —
+ * see resolveSingleAttack), dropping the condition and logging when it lapses. A
+ * dead monster is left alone. Only round-duration fear is ticked.
+ */
+function tickActingMonsterFear(state: CombatState, attackerId: string): CombatState {
+  const inst = monsterInstanceOf(state, attackerId);
+  if (!inst || inst.hp.current <= 0) return state;
+  const fear = inst.conditions.find(
+    (c) => c.name === 'frightened' && c.duration.kind === 'rounds',
+  );
+  if (!fear || fear.duration.kind !== 'rounds') return state;
+  const next = fear.duration.value - 1;
+  const expired = next <= 0;
+  const ticked = patchMonsterInstance(state, attackerId, (i) => ({
+    ...i,
+    conditions: expired
+      ? i.conditions.filter((c) => c.name !== 'frightened')
+      : i.conditions.map((c) =>
+          c.name === 'frightened'
+            ? { ...c, duration: { kind: 'rounds' as const, value: next } }
+            : c,
+        ),
+  }));
+  return expired
+    ? appendLog(ticked, {
+        id: nextLogId(ticked),
+        kind: 'system',
+        text: t('combat.log.fearLifts', { name: inst.displayName }),
+      })
+    : ticked;
+}
+
+/**
  * Resolve ONE monster attack against the player. Does NOT mark the action used
  * or evaluate combat end — the caller (monsterAttack / monsterMultiattack)
  * centralizes that so a multiattack only spends one action and ends combat once.
@@ -650,6 +686,9 @@ function resolveSingleAttack(
   // next turn — incoming attacks roll at disadvantage.
   const patientDefense = nextCharacter.patientDefenseActive === true;
   const recklessPlayer = nextCharacter.recklessActive === true;
+  // Berserker Intimidating Presence: a frightened foe throws its blows wild —
+  // disadvantage on its attack rolls until the dread ticks out (monsterAttack).
+  const frightenedAttacker = attacker.instance.conditions.some((c) => c.name === 'frightened');
   // Nimble Dodge (Rogue L1-4): the first incoming attack each round resolves at
   // disadvantage as the rogue slips aside. Spends the reaction, so a second
   // swing that round lands clean. Refreshes when the rogue's turn comes back.
@@ -662,7 +701,8 @@ function resolveSingleAttack(
     !playerVulnerable &&
     !wearsHeavierThanLight(nextCharacter);
   const hasAdvantage = playerVulnerable || recklessPlayer;
-  const hasDisadvantage = blurActive || rangedEvasion || nimbleDodge || patientDefense;
+  const hasDisadvantage =
+    blurActive || rangedEvasion || nimbleDodge || patientDefense || frightenedAttacker;
   const attackAdvantage: 'normal' | 'advantage' | 'disadvantage' =
     hasAdvantage && hasDisadvantage
       ? 'normal'
@@ -689,7 +729,9 @@ function resolveSingleAttack(
             ? t('combat.log.disRange')
             : patientDefense
               ? t('combat.log.disPatient')
-              : t('combat.log.disNimble')
+              : frightenedAttacker
+                ? t('combat.log.disFrightened')
+                : t('combat.log.disNimble')
         : '';
   workingState = appendLog(workingState, {
     id: nextLogId(workingState),
@@ -828,9 +870,20 @@ function resolveSingleAttack(
     // Heavy armour smothers Rage — plate gives no physical-damage halving
     // (defense-in-depth alongside the equip-time break and the entry guard).
     const rageResists = isRaging(nextCharacter) && physical && !rageBrokenByArmor(nextCharacter);
+    // Totem (Bear) Aspect of the Bear (L10): while raging, fire/cold/lightning are
+    // halved alongside the physical. Heavy armour smothers the fury here too.
+    const elemental =
+      action.damageType === 'fire' ||
+      action.damageType === 'cold' ||
+      action.damageType === 'lightning';
+    const bearResists =
+      isRaging(nextCharacter) &&
+      elemental &&
+      !rageBrokenByArmor(nextCharacter) &&
+      characterHasMechanic(nextCharacter, 'aspect-of-the-bear');
     // Armour resist affix (Salamander / Frostward): halve a matching type.
     const affixResists = characterAffixMods(nextCharacter).resists.includes(action.damageType);
-    const resisted = !immune && (raceResists || rageResists || affixResists);
+    const resisted = !immune && (raceResists || rageResists || bearResists || affixResists);
     const totalDamage = immune
       ? 0
       : resisted
