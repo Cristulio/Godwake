@@ -46,6 +46,12 @@ export default defineConfig([
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/use-memo': 'warn',
       'react-refresh/only-export-components': 'warn',
+      // An `_`-prefix is the codebase's signal for an intentionally-unused binding
+      // (a uniform-API param the impl ignores, a destructured value kept for shape).
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+      ],
     },
   },
 ])

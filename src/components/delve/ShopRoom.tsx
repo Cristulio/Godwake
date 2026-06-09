@@ -64,7 +64,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
       classId
         ? rollGearStock(room.id, chapter, classId, room.layer ?? 0)
         : [],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [room.id, chapter, classId, room.layer],
   );
 

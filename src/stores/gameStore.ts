@@ -543,10 +543,12 @@ function scatterSnapshot(s: PersistedSnapshot) {
   // structurally broken or incoherent run snapshot (combat with no delve or
   // character underneath, a run screen with no delve) falls back to a clean hub
   // rather than white-screening on resume.
-  let restoredDelve: DelveState | null = null;
-  let restoredCombat: CombatState | null = null;
-  let restoredLastLoot: LootSummary | null = null;
-  let restoredShopKeys: Record<string, string[]> = {};
+  // Assigned on every path below (try sets them, catch resets them), so no initial
+  // value is read — declare without one to keep the lint honest.
+  let restoredDelve: DelveState | null;
+  let restoredCombat: CombatState | null;
+  let restoredLastLoot: LootSummary | null;
+  let restoredShopKeys: Record<string, string[]>;
   let restoredScreen: Screen = (s.screen ?? 'hub') as Screen;
   try {
     const delve = isValidDelve(s.delve) ? s.delve : null;
