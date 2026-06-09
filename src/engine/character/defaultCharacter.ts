@@ -143,9 +143,12 @@ function startingKitFor(classId: ClassId): StartingKit {
       };
     }
     case 'bard': {
-      // The War Lute is the caster-bard's arm — a CHA main-hand that strikes with
-      // thunder. A rapier rides along for the Valor build (finesse, DEX), light
-      // leather keeps a little skin on, and three draughts cushion the squishy
+      // The War Lute is the caster-bard's arm — a one-handed CHA main-hand that
+      // strikes with thunder. A rapier rides along for the Valor build (finesse,
+      // DEX), and a shield for Valor's front-line kit: martial training grants the
+      // proficiency at L3, so it waits in the bag until then (a Lore bard never
+      // equips it, and STR 8 keeps both colleges out of medium armour). Light
+      // leather keeps a little skin on; three draughts cushion the squishy
       // support. Vicious Mockery answers at range from turn one.
       const warLute: ItemRef = { itemId: 'war-lute' };
       const leatherArmor: ItemRef = { itemId: 'leather-armor' };
@@ -153,6 +156,7 @@ function startingKitFor(classId: ClassId): StartingKit {
         inventory: [
           warLute,
           { itemId: 'rapier' },
+          { itemId: 'shield' },
           leatherArmor,
           { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
