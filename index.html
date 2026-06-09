@@ -1,7 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" translate="no">
   <head>
     <meta charset="UTF-8" />
+    <!-- The game ships native en + es (in-game language selector). Browser
+         auto-translation (Google Translate) is therefore unwanted AND actively
+         harmful: it rewrites the DOM out from under React, throwing NotFoundError
+         on removeChild during the animated intro. Opt out so a Spanish browser
+         serves our es instead of crash-prone machine translation. -->
+    <meta name="google" content="notranslate" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Godwake</title>

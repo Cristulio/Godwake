@@ -121,6 +121,14 @@ function App() {
   const achievementToasts = useGameStore((s) => s.achievementToasts);
   const dismissAchievementToast = useGameStore((s) => s.dismissAchievementToast);
   const firstRunSeen = useSettingsStore((s) => s.firstRunSeen);
+  const locale = useSettingsStore((s) => s.locale);
+
+  // Keep <html lang> in step with the active locale: correct for screen readers,
+  // and it stops the browser offering to machine-translate a page it thinks is in
+  // the "wrong" language (the notranslate opt-out in index.html is the hard guard).
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   // Combat SFX reaction — fires spell/ability/enemy sounds off the combat
   // event stream regardless of which screen is mounted.
