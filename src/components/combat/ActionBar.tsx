@@ -17,6 +17,7 @@ import {
   MARTIAL_DEFENSE_COST,
 } from '../../engine/combat/martialResource';
 import { getItem } from '../../content/items';
+import { stunningStrikeKiCost } from '../../engine/combat/monk';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
 import { useT } from '../../i18n/useT';
 
@@ -244,7 +245,7 @@ export function ActionBar({
     playersTurn &&
     active &&
     hasStunningStrike &&
-    ki >= 2 &&
+    ki >= stunningStrikeKiCost(character) &&
     !stunningArmed &&
     !character.actionEconomy.actionUsed;
 

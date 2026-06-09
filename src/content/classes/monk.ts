@@ -185,6 +185,15 @@ export const MONK: Class = ClassSchema.parse({
             mechanicKey: 'open-hand-technique',
           },
         ],
+        '10': [
+          {
+            id: 'ki-focus',
+            name: 'Ki Focus',
+            description:
+              'The well runs closer to the surface. Stunning Strike now costs only a single point of Ki to arm, and the extra bite your Flurry already lands deepens further — every strike while a flurry pours out hits harder still.',
+            mechanicKey: 'ki-focus',
+          },
+        ],
         '6': [
           {
             id: 'wholeness-of-body',
@@ -209,6 +218,15 @@ export const MONK: Class = ClassSchema.parse({
             description:
               'You step from the dark unseen — the first unarmed strike of every fight lands with advantage and drives extra Ki-charged damage home.',
             mechanicKey: 'shadow-strike',
+          },
+        ],
+        '10': [
+          {
+            id: 'cloak-of-shadows',
+            name: 'Cloak of Shadows',
+            description:
+              'You wear the dark like a second skin. The opening strike you make from shadow drives even more Ki-charged ruin home — the unseen first blow of every fight hits harder than ever, the surest opener on the road of the empty hand.',
+            mechanicKey: 'cloak-of-shadows',
           },
         ],
       },

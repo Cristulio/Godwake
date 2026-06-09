@@ -10,6 +10,7 @@ import {
   type CastSpellContext,
   attachSpellEffect,
   consumeSlot,
+  empoweredEvocationBonus,
   evaluateCombatEndFull,
   findMonster,
   firstLiveMonsterId,
@@ -45,7 +46,8 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
   const evoker = characterHasMechanic(nextCharacter, 'sculpt-spells');
   const dice = evoker ? 11 : 10;
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
-  const fullDmg = scaleSpellDamage(damageRoll.total, nextCharacter, 3);
+  // Empowered Evocation rides the bolt directly (Lightning Bolt bypasses spellDamageBonus).
+  const fullDmg = scaleSpellDamage(damageRoll.total, nextCharacter, 3) + empoweredEvocationBonus(nextCharacter);
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {

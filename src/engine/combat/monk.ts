@@ -85,6 +85,11 @@ export function martialArtsWeaponId(character: Readonly<Character>): string {
   return 'monk-fists';
 }
 
+/** Ki spent to arm a Stunning Strike. Open Hand Ki Focus (L10) discounts it from 2 to 1. */
+export function stunningStrikeKiCost(character: Readonly<Character>): number {
+  return characterHasMechanic(character as Character, 'ki-focus') ? 1 : 2;
+}
+
 /** Extra strikes a single Flurry of Blows throws: 2 base, 3 at L9, 4 at the L20 capstone. */
 export function flurryStrikeCount(character: Readonly<Character>): number {
   if (characterHasMechanic(character, 'perfect-self')) return 4;
@@ -185,10 +190,11 @@ export function useStunningStrike(ctx: MonkActionContext): CombatActionResult {
   if (!characterHasMechanic(character, 'stunning-strike')) return combatResult(state, character);
   if (character.stunningStrikeActive === true) return combatResult(state, character);
   const ki = character.resources.kiPointsRemaining ?? 0;
-  if (ki < 2) return combatResult(state, character);
+  const cost = stunningStrikeKiCost(character);
+  if (ki < cost) return combatResult(state, character);
 
   let nextCharacter: Character = { ...character, stunningStrikeActive: true };
-  nextCharacter = patchResources(nextCharacter, { kiPointsRemaining: ki - 2 });
+  nextCharacter = patchResources(nextCharacter, { kiPointsRemaining: ki - cost });
 
   const log: CombatLogEntry = {
     id: state.log.length + 1,

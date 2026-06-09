@@ -84,6 +84,10 @@
     "name": "Arquetipo Marcial: Campeón",
     "description": "Tus ataques con arma logran un crítico con una tirada de 19 o 20. Premia las armas de rango de crítico y dado grande —cada punto de probabilidad de crítico vale más."
   },
+  "fighter.champion.superior-critical": {
+    "name": "Crítico Superior",
+    "description": "El ojo asesino se abre aún más: tus ataques con arma logran ahora un crítico con una tirada de 18, 19 o 20. Con un arma de dado grande y cualquier equipo de rango de crítico, los picos llegan tan a menudo que puedes planear en torno a ellos."
+  },
   "fighter.battle-master": {
     "name": "Maestro de Batalla",
     "description": "Un estudioso de las maniobras que abre los combates con un golpe medido y lisiante. Mejor con equipo de efecto al impactar que se acumula sobre las heridas que abres."
@@ -91,6 +95,10 @@
   "fighter.battle-master.battle-master": {
     "name": "Arquetipo Marcial: Maestro de Batalla",
     "description": "Una vez por combate, tu primer impacto se convierte en una maniobra precisa: daño adicional igual a los dados de tu arma y una herida sangrante (3 de daño cada turno durante 3 turnos). Premia el equipo de efecto al impactar y de sangrado que se construye sobre el corte inicial."
+  },
+  "fighter.battle-master.tactical-reserve": {
+    "name": "Reserva Táctica",
+    "description": "Un pozo más hondo de disciplina: tu reserva de Temple crece en uno, y recuperas un punto cada ronda durante la apertura de un combate, no solo cada dos rondas. Más maniobras, guardadas antes y con menos espera entre ellas."
   },
   "fighter.defender": {
     "name": "Defensor",
@@ -101,6 +109,10 @@
     "description": "Te afianzas tras armadura y escudo: al inicio de cada combate ganas puntos de golpe temporales iguales a 3 + tu nivel, absorbiendo el daño antes que el tuyo propio. Premia el equipo de tanque y máxima vida que quiere un colchón más profundo tras el que trabajar."
   },
 
+  "fighter.defender.hold-the-wall": {
+    "name": "Sostener el Muro",
+    "description": "Cuando la línea se dobla, tú la afianzas. La primera vez que bajas de la mitad de tus puntos de golpe en un combate, hallas un segundo aliento de temple —puntos de golpe temporales iguales a tu nivel, que absorben los golpes que estaban a punto de caer sobre carne desnuda."
+  },
   "rogue": {
     "name": "Pícaro",
     "flavorBlurb": "Botas silenciosas, manos más rápidas aún. Lee una sala buscando salidas antes de leerla buscando amigos."
@@ -165,6 +177,10 @@
     "name": "Arquetipo Pícaro: Ladrón",
     "description": "Tus manos se mueven más rápido de lo que la sala puede seguir: obtienes una segunda Acción Astuta cada combate. Premia el equipo de tempo y utilidad que quiere más acciones adicionales que gastar."
   },
+  "rogue.thief.deft-hands": {
+    "name": "Manos Diestras",
+    "description": "Las manos nunca se detienen. Ganas una Acción Astuta más por combate —otro Esconderse, Golpe Rápido, Finta o Temple que gastar en el control del tablero que prefieras."
+  },
   "rogue.assassin": {
     "name": "Asesino",
     "description": "Un matador que termina los combates en el primer aliento. Mejor con equipo de estallido y primer golpe que lo adelanta todo al primer corte."
@@ -172,6 +188,10 @@
   "rogue.assassin.assassin": {
     "name": "Arquetipo Pícaro: Asesino",
     "description": "Contra un enemigo aún a plena salud tu golpe siempre encuentra el hueco —inflige Ataque Furtivo y 2d6 extra. Premia el equipo de estallido y primer golpe: mátalos antes de que sangren."
+  },
+  "rogue.assassin.mortal-strike": {
+    "name": "Golpe Mortal",
+    "description": "Has aprendido exactamente dónde se asienta la vida. Tu golpe de apertura de un combate contra un enemigo aún con toda su salud es un crítico automático —la muerte adelantada antes de que pueda siquiera alzar la guardia."
   },
   "rogue.swashbuckler": {
     "name": "Espadachín",
@@ -182,6 +202,10 @@
     "description": "Tu Ataque Furtivo se activa cada turno sin necesidad de ventaja ni objetivo ensangrentado. Premia el equipo de daño constante —el bonificador siempre está activo."
   },
 
+  "rogue.swashbuckler.rakish-duelist": {
+    "name": "Duelista Galante",
+    "description": "Una hoja, un enemigo, y todo el espacio que necesitas. Cuando solo un enemigo se yergue aún contra ti, peleas con filo de duelista —+2 al impacto, y tu Ataque Furtivo acierta pase lo que pase. El último en pie es el más fácil de leer."
+  },
   "wizard": {
     "name": "Mago",
     "characterName": "Veyra Ceniza",
@@ -271,6 +295,10 @@
     "name": "Tradición Arcana: Evocación",
     "description": "Cada evocación que sueltas lleva un dado de daño adicional —tus Manos Ardientes rugen por 4d6 donde un mago menor reúne 3. El mismo dado extra cabalga cada descarga que aprendas después, la Bola de Fuego y el Relámpago entre ellas, y solo muerde más hondo con equipo de daño y CD de conjuro."
   },
+  "wizard.evocation.empowered-evocation": {
+    "name": "Evocación Potenciada",
+    "description": "Viertes tu propia fuerza reunida en la obra —cada hechizo de daño que lanzas golpea con daño adicional igual a la mitad de tu nivel. Una ventaja fija en cada rayo, estallido y descarga, que se acumula con cada dado que la ranura ya tira."
+  },
   "wizard.abjuration": {
     "name": "Escuela de Abjuración",
     "description": "Tejes una guarda que bebe los primeros golpes de cada combate. Mejor con equipo de supervivencia que compra más turnos al frágil lanzador."
@@ -278,6 +306,10 @@
   "wizard.abjuration.abjurer": {
     "name": "Tradición Arcana: Abjuración",
     "description": "Una Guarda Arcana se forma al inicio de cada combate, otorgando puntos de golpe temporales iguales a 2 + tu nivel que absorben el daño antes que el tuyo propio. Premia el equipo de supervivencia —cada turno extra con vida es otro conjuro lanzado."
+  },
+  "wizard.abjuration.arcane-ward": {
+    "name": "Gran Custodia Arcana",
+    "description": "Años de protección han engrosado el caparazón —la custodia que alzas al inicio de cada combate aguanta ahora firme, absorbiendo 5 + tu nivel de daño antes que el tuyo propio. El frágil lanzador entra en cada combate tras cristal de verdad."
   },
   "wizard.illusion": {
     "name": "Escuela de Ilusión",
@@ -288,6 +320,10 @@
     "description": "Comienzas cada combate ya desenfocado (los atacantes golpean con desventaja) y con una imagen especular para absorber un golpe. Premia una construcción evasiva que se apoya en no ser tocado jamás."
   },
 
+  "wizard.illusion.layered-veils": {
+    "name": "Velos Superpuestos",
+    "description": "El velo se dobla sobre sí mismo —ahora comienzas cada combate con dos imágenes especulares tejidas contra el Difuminar, no una. Dos golpes desperdiciados en imágenes residuales antes de que el primero encuentre tu verdadero yo."
+  },
   "barbarian": {
     "name": "Bárbaro",
     "characterName": "Korrek Melena de Sangre",
@@ -369,6 +405,10 @@
     "name": "Senda Primigenia: Berserker",
     "description": "Mientras enfureces, cada impacto cuerpo a cuerpo inflige 1d6 adicional. Premia el equipo de robo de vida y efecto al impactar: cuanto más golpeas, más devuelve la furia."
   },
+  "barbarian.berserker.intimidating-presence": {
+    "name": "Presencia Intimidante",
+    "description": "La furia tiene rostro. En el momento en que entras en Furia, lo más letal que aún se yergue contra ti queda preso del pavor —asustado durante dos rondas, sus golpes lanzados salvajes y desviados mientras dura el terror."
+  },
   "barbarian.totem-warrior": {
     "name": "Senda del Guerrero Tótem (Oso)",
     "description": "El espíritu del oso presta su pellejo a quienes se meten en lo peor. Mejor con equipo de tanque que se apila sobre la guardia endurecida."
@@ -378,6 +418,10 @@
     "description": "La resistencia del oso es tuya: comienzas cada combate con puntos de golpe temporales iguales a 2 + tu nivel, absorbiendo los primeros golpes. Premia el equipo de tanque de CON y máxima vida —el oso dura más de lo que el Berserker golpea."
   },
 
+  "barbarian.totem-warrior.aspect-of-the-bear": {
+    "name": "Aspecto del Oso",
+    "description": "El espíritu del oso se asienta del todo en tu piel. Mientras te enfureces, te sacudes no solo el acero sino la llama, la escarcha y la tormenta —fuego, frío y rayo se reducen a la mitad junto al daño físico. Y entrar en Furia te envuelve ahora en puntos de golpe temporales iguales a tu nivel, una piel nueva para cada furia nueva."
+  },
   "ranger": {
     "name": "Explorador",
     "characterName": "Faelar Pluma",
@@ -447,6 +491,10 @@
     "name": "Presa del Cazador: Matacolosos",
     "description": "Una vez por turno, un impacto contra un enemigo herido (por debajo de su salud plena) inflige 1d8 de daño adicional. Premia una construcción de un solo objetivo, inclinada al crítico, que abate a una presa."
   },
+  "ranger.hunter.deeper-wound": {
+    "name": "Herida Profunda",
+    "description": "Has aprendido dónde sangran los grandes. Tu golpe de Matacolosos tira ahora dos dados en la herida en vez de uno —una vez por turno un enemigo herido recibe 2d8 más, y la muerte de una sola presa llega mucho antes."
+  },
   "ranger.horde-breaker": {
     "name": "Cazador — Rompehordas",
     "description": "Aprendes a disparar contra una marea, no contra una sola garganta. Mejor con equipo de daño fijo y efecto al impactar que rinde el doble cuando tu disparo continúa."
@@ -454,6 +502,10 @@
   "ranger.horde-breaker.horde-breaker": {
     "name": "Presa del Cazador: Rompehordas",
     "description": "Una vez por turno, tras impactar, tu disparo continúa hacia un segundo enemigo —un golpe de refilón por los dados de tu arma más tus bonificadores de daño fijo. Premia el equipo de daño fijo y efecto al impactar que se beneficia de objetivos adicionales."
+  },
+  "ranger.horde-breaker.whirling-hunter": {
+    "name": "Cazador Giratorio",
+    "description": "Un disparo, y todo un rango responde. Tu golpe de arrastre alcanza ahora hasta dos enemigos más en vez de uno —contra una sala atestada, la única flecha disparada paga tres veces."
   },
   "ranger.giant-killer": {
     "name": "Cazador — Matagigantes",
@@ -464,6 +516,10 @@
     "description": "Tus impactos contra élites y jefes muerden 1d10 adicional. Premia una construcción mata-jefes que vive o muere por la mayor amenaza de la sala."
   },
 
+  "ranger.giant-killer.giantsbane": {
+    "name": "Azote de Gigantes",
+    "description": "Has hecho un estudio de derribar a los seres descomunales. Tu azote contra élites y jefes se duplica —cada impacto sobre la gran amenaza de la sala clava 2d10 en vez de uno, y el monstruo nombrado se desangra el doble de rápido."
+  },
   "druid": {
     "name": "Druida",
     "characterName": "Lureth Sombra de Roble",
@@ -643,6 +699,10 @@
     "name": "Plenitud del Cuerpo",
     "description": "Una vez por combate puedes cerrar tus propias heridas —al inicio del combate te afianzas con un colchón de PG temporales igual a tu nivel."
   },
+  "monk.way-of-the-open-hand.ki-focus": {
+    "name": "Foco de Ki",
+    "description": "El pozo corre más cerca de la superficie. Golpe Aturdidor cuesta ahora solo un punto de Ki para armarse, y el mordisco extra que tu Lluvia de Golpes ya inflige se ahonda aún más —cada golpe mientras se derrama un diluvio pega más fuerte todavía."
+  },
   "monk.way-of-shadow": {
     "name": "Camino de la Sombra",
     "description": "La tradición de la sombra —el primer golpe de un combate es siempre uno mortal. Mejor con una construcción que quiere que su apertura aterrice con la mayor fuerza."
@@ -650,5 +710,9 @@
   "monk.way-of-shadow.shadow-strike": {
     "name": "Tradición Monástica: Sombra",
     "description": "Sales de la oscuridad sin ser visto —el primer golpe sin armas de cada combate aterriza con ventaja e incrusta daño adicional cargado de Ki."
+  },
+  "monk.way-of-shadow.cloak-of-shadows": {
+    "name": "Manto de Sombras",
+    "description": "Vistes la oscuridad como una segunda piel. El golpe de apertura que lanzas desde la sombra inflige aún más ruina cargada de Ki —el primer golpe invisible de cada combate pega más fuerte que nunca, la apertura más certera del camino de la mano vacía."
   }
 }

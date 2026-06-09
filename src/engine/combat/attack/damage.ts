@@ -168,6 +168,32 @@ export function applyDamage(
     temp: remainingTemp,
     current: Math.max(0, nextCharacter.hp.current - overflow),
   });
+
+  // Defender Hold the Wall (L10): the first time this fight the fighter is driven
+  // below half HP (and is still standing), a second wind of grit girds them with
+  // temp HP equal to their level. One-shot per combat (CombatState flag). Temp HP
+  // doesn't stack — take the larger of any pool already up.
+  const halfMax = nextCharacter.hp.max / 2;
+  const droppedBelowHalf =
+    character.hp.current > halfMax &&
+    nextCharacter.hp.current > 0 &&
+    nextCharacter.hp.current <= halfMax;
+  if (
+    droppedBelowHalf &&
+    !next.holdTheWallUsed &&
+    characterHasMechanic(nextCharacter, 'hold-the-wall')
+  ) {
+    const grant = nextCharacter.level;
+    if (grant > nextCharacter.hp.temp) {
+      nextCharacter = patchHp(nextCharacter, { temp: grant });
+    }
+    next = { ...next, holdTheWallUsed: true };
+    next = appendLog(next, {
+      id: next.log.length + 1,
+      kind: 'system',
+      text: t('combat.log.holdTheWall', { name: nextCharacter.name, n: grant }),
+    });
+  }
   return { state: next, character: nextCharacter };
 }
 

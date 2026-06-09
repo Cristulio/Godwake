@@ -442,6 +442,12 @@ export interface CombatState {
    */
   evasionWindowActive?: boolean;
   /**
+   * Defender Hold the Wall (L10): set true once the fighter first drops below
+   * half HP in this combat and is girded with the one-shot temp-HP cushion, so
+   * the trigger fires at most once per fight. Absent/false = not yet triggered.
+   */
+  holdTheWallUsed?: boolean;
+  /**
    * Ascension level this encounter spawned at. Stamped at createCombat time so
    * mid-fight spawns (monster summons) can scale a reinforcement's HP the same
    * way createCombat scaled the room's monsters — otherwise a late boss's

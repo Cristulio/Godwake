@@ -161,6 +161,15 @@ export const RANGER: Class = ClassSchema.parse({
             mechanicKey: 'colossus-slayer',
           },
         ],
+        '10': [
+          {
+            id: 'deeper-wound',
+            name: 'Deeper Wound',
+            description:
+              'You have learned where the great ones bleed. Your Colossus Slayer strike now rolls two dice into the wound instead of one — once each turn a hurt foe takes 2d8 more, the kill on a single quarry coming that much faster.',
+            mechanicKey: 'deeper-wound',
+          },
+        ],
       },
     },
     {
@@ -178,6 +187,15 @@ export const RANGER: Class = ClassSchema.parse({
             mechanicKey: 'horde-breaker',
           },
         ],
+        '10': [
+          {
+            id: 'whirling-hunter',
+            name: 'Whirling Hunter',
+            description:
+              'One shot, a whole rank answered. Your carrying strike now glances into as many as two further foes instead of one — against a packed room the single loosed arrow pays out three times over.',
+            mechanicKey: 'whirling-hunter',
+          },
+        ],
       },
     },
     {
@@ -193,6 +211,15 @@ export const RANGER: Class = ClassSchema.parse({
             description:
               'Your hits against elites and bosses bite an extra 1d10. Rewards a boss-killer build that lives or dies on the room’s biggest threat.',
             mechanicKey: 'giant-killer',
+          },
+        ],
+        '10': [
+          {
+            id: 'giantsbane',
+            name: 'Giantsbane',
+            description:
+              'You have made a study of bringing down the towering things. Your bane against elites and bosses doubles — every hit on the room’s great threat drives 2d10 home instead of one, the named monster bleeding twice as fast.',
+            mechanicKey: 'giantsbane',
           },
         ],
       },

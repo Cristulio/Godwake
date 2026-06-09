@@ -201,6 +201,15 @@ export const WIZARD: Class = ClassSchema.parse({
             mechanicKey: 'sculpt-spells',
           },
         ],
+        '10': [
+          {
+            id: 'empowered-evocation',
+            name: 'Empowered Evocation',
+            description:
+              'You pour your own gathered force into the work — every damaging spell you cast lands for additional damage equal to half your level. A flat edge on every bolt, blast, and ray, compounding with each die the slot already rolls.',
+            mechanicKey: 'empowered-evocation',
+          },
+        ],
       },
     },
     {
@@ -218,6 +227,15 @@ export const WIZARD: Class = ClassSchema.parse({
             mechanicKey: 'abjurer',
           },
         ],
+        '10': [
+          {
+            id: 'arcane-ward',
+            name: 'Greater Arcane Ward',
+            description:
+              'Years of warding have thickened the shell — the ward you raise at the start of each combat now holds firm, absorbing 5 + your level damage before your own. The squishy caster walks into every fight behind real glass.',
+            mechanicKey: 'arcane-ward',
+          },
+        ],
       },
     },
     {
@@ -233,6 +251,15 @@ export const WIZARD: Class = ClassSchema.parse({
             description:
               'You begin every combat already blurred (attackers strike with disadvantage) and with one mirror image to soak a blow. Rewards an evasive build that leans on never being hit.',
             mechanicKey: 'illusionist',
+          },
+        ],
+        '10': [
+          {
+            id: 'layered-veils',
+            name: 'Layered Veils',
+            description:
+              'The veil doubles on itself — you now begin every combat with two mirror images woven against the Blur, not one. Two blows wasted on afterimages before the first can find the true you.',
+            mechanicKey: 'layered-veils',
           },
         ],
       },

@@ -81,7 +81,7 @@
     "quarry": "Quarry",
     "sneak": "sneak ({dice})",
     "mark": "mark ({dice})",
-    "colossus": "colossus (1d8)",
+    "colossus": "colossus ({dice})",
     "vowReroll": "Vow reroll +{n}"
   },
   "cond": {
@@ -205,6 +205,7 @@
     "disRange": " (disadvantage — kept at range)",
     "disPatient": " (disadvantage — patient defense)",
     "disNimble": " (disadvantage — nimble dodge)",
+    "disFrightened": " (disadvantage — frightened)",
     "nimbleTwist": "{name} twists low under the opening swing.",
     "mirrorSawThrough": "{attacker} sees past the flicker and strikes the true {name} — a duplicate collapses all the same.{remain}",
     "mirrorShatter": "A flickering duplicate shatters — the blow finds only afterimage.{remain}",
@@ -299,6 +300,10 @@
     "spiritBeastCast": "{name} calls a spirit beast to their side — fang and claw given form. It will maul a foe at the start of each of the next {ticks} turns.",
     "spiritBeastHit": "The spirit beast savages {target} for {perTurn}.",
     "braceTempHp": "{name} braces with {n} temporary HP.",
+    "holdTheWall": "{name} sets the line and holds — {n} temporary HP of sheer grit.",
+    "bearWard": "{name} pulls the bear's hide close — {n} temporary HP.",
+    "intimidate": "{name}'s fury falls on {target} — it is frightened, blows thrown wild.",
+    "fearLifts": "{name} shakes off the dread.",
     "blessingRecover": "{name} recovers {amount} HP from a blessing.",
     "girdNote": " (+{n} temp HP)",
     "readyBuff": "{name} readies the {label}{gird}.",

@@ -194,7 +194,14 @@ export function playerAttack(
     target.kind === 'monster' &&
     target.instance.hp.current > 0 &&
     target.instance.hp.current <= target.instance.hp.max / 2;
+  const targetFullHp =
+    target.kind === 'monster' && target.instance.hp.current >= target.instance.hp.max;
   const playerWounded = nextCharacter.hp.current <= nextCharacter.hp.max / 2;
+  // Swashbuckler Rakish Duelist (L11): in a true 1-on-1 the duelist reads the
+  // sole foe cold — +2 to hit and a guaranteed Sneak (folded into the triggers).
+  const soleLiveFoe =
+    state.combatants.filter((c) => c.kind === 'monster' && c.instance.hp.current > 0).length === 1;
+  const rakishSoleFoe = soleLiveFoe && characterHasMechanic(nextCharacter, 'rakish-duelist');
 
   let attackBonus = abilMod + profBonus;
   attackBonus += nextCharacter.permanentBonuses?.attack ?? 0;
@@ -215,6 +222,8 @@ export function playerAttack(
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
   // Fighter Weapon Mastery (L9): +1 to hit on every weapon strike.
   if (characterHasMechanic(nextCharacter, 'weapon-mastery')) attackBonus += 1;
+  // Swashbuckler Rakish Duelist (L11): the 1-on-1 edge.
+  if (rakishSoleFoe) attackBonus += 2;
   // Shape Change (dragon form): the dragon's claws strike like a +3 enchanted
   // weapon — flat to-hit here, flat damage in the hit block.
   if (isDragonForm(nextCharacter)) attackBonus += DRAGON_CLAW_HIT_BONUS;
@@ -275,7 +284,11 @@ export function playerAttack(
   if (forceSneak) nextCharacter = { ...nextCharacter, nextAttackForceSneak: false };
   if (nextBonus > 0) nextCharacter = { ...nextCharacter, nextAttackBonus: 0 };
   let toHit = roller.d20(advantage, attackBonus);
-  let crit = critRange(nextCharacter).includes(toHit.rolls[0]);
+  // Assassin Mortal Strike (L11): the opening strike of the fight on a full-HP
+  // foe is an automatic critical — front-load the kill before it can guard.
+  const mortalStrikeOpener =
+    isFirstAttack && targetFullHp && characterHasMechanic(nextCharacter, 'mortal-strike');
+  let crit = mortalStrikeOpener || critRange(nextCharacter).includes(toHit.rolls[0]);
   let hit = crit || (toHit.total >= ac && !toHit.natural1);
 
   const logEntries: CombatLogEntry[] = [];
@@ -506,13 +519,17 @@ export function playerAttack(
       characterHasMechanic(nextCharacter, 'open-hand-technique') &&
       (nextCharacter.flurryStrikesRemaining ?? 0) > 0
     ) {
-      bonusDamage += 2;
-      onTypeParts.push({ amount: 2, label: 'open hand' });
+      // Open Hand Ki Focus (L10) deepens the flurry bite from +2 to +4.
+      const openHand = 2 + (characterHasMechanic(nextCharacter, 'ki-focus') ? 2 : 0);
+      bonusDamage += openHand;
+      onTypeParts.push({ amount: openHand, label: 'open hand' });
     }
     // Monk (Shadow): the unseen opener drives extra Ki-charged damage home.
+    // Cloak of Shadows (L10) deepens the opener from +3 to +6.
     if (isFirstAttack && monkUnarmedStrike && characterHasMechanic(nextCharacter, 'shadow-strike')) {
-      bonusDamage += 3;
-      onTypeParts.push({ amount: 3, label: 'shadow' });
+      const shadow = 3 + (characterHasMechanic(nextCharacter, 'cloak-of-shadows') ? 3 : 0);
+      bonusDamage += shadow;
+      onTypeParts.push({ amount: shadow, label: 'shadow' });
     }
     // Apotheosis: the ascendant caster's every blow bites for far more.
     if (isAscendant(nextCharacter)) {
@@ -594,8 +611,6 @@ export function playerAttack(
     //    steady, consistent flat-damage gear).
     //  - Assassin finds it against any foe still at full health — the opener
     //    (rewards burst / first-strike gear).
-    const targetFullHp =
-      target.kind === 'monster' && target.instance.hp.current >= target.instance.hp.max;
     const swashbucklerSneak = characterHasMechanic(nextCharacter, 'swashbuckler');
     const assassinSneak = characterHasMechanic(nextCharacter, 'assassin') && targetFullHp;
     // Opening strike: the first attack of each combat always finds the gap —
@@ -608,6 +623,7 @@ export function playerAttack(
       wieldsDagger ||
       swashbucklerSneak ||
       assassinSneak ||
+      rakishSoleFoe ||
       openingStrike ||
       forceSneak;
     if (isRogue && !sneakAlreadyUsed && sneakTriggers) {
@@ -669,7 +685,9 @@ export function playerAttack(
       state.colossusSlayerUsedThisTurn !== true &&
       targetBelowMax
     ) {
-      const colossusRoll = roller.roll({ count: crit ? 2 : 1, die: 8, modifier: 0 });
+      // Hunter Deeper Wound (L10): the Colossus Slayer bonus rolls two dice.
+      const colossusDice = characterHasMechanic(nextCharacter, 'deeper-wound') ? 2 : 1;
+      const colossusRoll = roller.roll({ count: (crit ? 2 : 1) * colossusDice, die: 8, modifier: 0 });
       colossusDamage = colossusRoll.total;
       bonusDamage += colossusDamage;
       colossusFiredFlag = true;
@@ -698,7 +716,10 @@ export function playerAttack(
       target.kind === 'monster' &&
       (target.instance.legendaryResistances ?? 0) > 0
     ) {
-      const gkRoll = roller.roll({ count: crit ? 2 : 1, die: 10, modifier: 0 });
+      // Giant Killer Giantsbane (L10): the bane against the room's great threat
+      // drives two dice home instead of one.
+      const gkDice = characterHasMechanic(nextCharacter, 'giantsbane') ? 2 : 1;
+      const gkRoll = roller.roll({ count: (crit ? 2 : 1) * gkDice, die: 10, modifier: 0 });
       giantKillerDamage = gkRoll.total;
       bonusDamage += giantKillerDamage;
       onTypeParts.push({ amount: giantKillerDamage, label: 'giant-killer' });
@@ -757,7 +778,13 @@ export function playerAttack(
     pushPart(damageExpr.modifier, t('combat.part.magic'));
     if (sneakDamage > 0) pushPart(sneakDamage, t('combat.part.sneak', { dice: `${sneakDice}d6` }));
     if (markDamage > 0) pushPart(markDamage, t('combat.part.mark', { dice: HUNTERS_MARK_DICE }));
-    if (colossusDamage > 0) pushPart(colossusDamage, t('combat.part.colossus'));
+    if (colossusDamage > 0)
+      pushPart(
+        colossusDamage,
+        t('combat.part.colossus', {
+          dice: characterHasMechanic(nextCharacter, 'deeper-wound') ? '2d8' : '1d8',
+        }),
+      );
     for (const p of onTypeParts) pushPart(p.amount, partLabel(p.label));
     // Headline splits by damage type: the weapon-type subtotal (which the
     // parenthetical sums to) plus any off-type segments shown by their own type.
@@ -915,17 +942,22 @@ export function playerAttack(
       characterHasMechanic(nextCharacter, 'horde-breaker') &&
       (state.playerAttacksThisTurn ?? 0) === 0
     ) {
-      const second = nextState.combatants.find(
-        (c) => c.kind === 'monster' && c.id !== targetId && c.instance.hp.current > 0,
-      );
-      if (second && second.kind === 'monster') {
+      // Whirling Hunter (L10): the carrying shot glances into up to TWO further
+      // foes instead of one. Targets are selected off the pre-splash board, so an
+      // early kill in the loop doesn't reshuffle the picks.
+      const extraTargets = characterHasMechanic(nextCharacter, 'whirling-hunter') ? 2 : 1;
+      const others = nextState.combatants
+        .filter((c) => c.kind === 'monster' && c.id !== targetId && c.instance.hp.current > 0)
+        .slice(0, extraTargets);
+      for (const other of others) {
+        if (other.kind !== 'monster') continue;
         const splashRoll = roller.roll({
           count: damageExpr.count,
           die: damageExpr.die,
           modifier: 0,
         });
         const splashDamage = Math.max(1, splashRoll.total + (affixMods.damageBonus ?? 0));
-        const splashed = applyDamage(nextState, second.id, splashDamage, nextCharacter);
+        const splashed = applyDamage(nextState, other.id, splashDamage, nextCharacter);
         nextState = splashed.state;
         nextCharacter = splashed.character;
         nextState = appendLog(nextState, {
@@ -933,12 +965,12 @@ export function playerAttack(
           kind: 'damage',
           text: t('combat.log.shotCarries', {
             name: nextCharacter.name,
-            target: second.instance.displayName,
+            target: other.instance.displayName,
             dmg: splashDamage,
             type: t(`combat.dmg.${weapon.damageType}`),
           }),
         });
-        nextState = attachCombatVfx(nextState, weaponVfxKind(w), 'player', second.id);
+        nextState = attachCombatVfx(nextState, weaponVfxKind(w), 'player', other.id);
       }
     }
 

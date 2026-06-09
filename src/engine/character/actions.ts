@@ -78,7 +78,9 @@ export function rogueCunningActionMax(character: Character): number {
   if (character.classId !== 'rogue') return 0;
   const base = character.subclassId === 'thief' && character.level >= 3 ? 2 : 1;
   const mastery = characterHasMechanic(character, 'cunning-mastery') ? 1 : 0;
-  return base + mastery + (character.permanentBonuses?.cunningAction ?? 0);
+  // Thief Deft Hands (L11): one more Cunning Action each combat.
+  const deftHands = characterHasMechanic(character, 'deft-hands') ? 1 : 0;
+  return base + mastery + deftHands + (character.permanentBonuses?.cunningAction ?? 0);
 }
 
 /**
