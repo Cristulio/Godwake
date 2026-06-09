@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { resolveSpriteFloat, type FloatSelf } from './FloatingDamage';
+import { resolveSpriteFloat, isBatchedMultiattack, type FloatSelf } from './FloatingDamage';
 import type { AttackEvent, MonsterCombatant } from '../../types/combat';
 import { createCharacter, STANDARD_ARRAY } from '../../engine/character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from '../../engine/combat/createCombat';
@@ -122,6 +122,62 @@ describe('resolveSpriteFloat', () => {
       isNewAttack: true,
     });
     expect(float).toBeNull();
+  });
+});
+
+function monsterHit(over: Partial<AttackEvent> = {}): AttackEvent {
+  return {
+    id: 1,
+    attackerName: 'Goblin',
+    targetName: 'Brick',
+    attackerKind: 'monster',
+    weaponName: 'Scimitar',
+    attackBonus: 4,
+    natural: 12,
+    total: 16,
+    targetAC: 15,
+    hit: true,
+    crit: false,
+    damageDealt: 6,
+    ...over,
+  };
+}
+
+describe('isBatchedMultiattack — when the main float effect must defer to the batch effect', () => {
+  const player: FloatSelf = { kind: 'player' };
+
+  it('a real monster multiattack on the player IS batched (defer to the per-swing float)', () => {
+    const batch = [monsterHit({ id: 20 }), monsterHit({ id: 21 })];
+    // lastAttack is the tail of the batch, aimed at the player.
+    expect(isBatchedMultiattack(batch, batch[1], player)).toBe(true);
+  });
+
+  it('a stale monster batch does NOT capture the player\'s own fresh swing (the reported bug)', () => {
+    // attackEvents lingers from the monster's last multiattack (it is only ever
+    // reset by the next monsterAttack), but lastAttack is now the player's swing
+    // at a monster. The player swing must float its OWN damage, not defer.
+    const staleMonsterBatch = [monsterHit({ id: 20 }), monsterHit({ id: 21 })];
+    const playerSwing = playerHit({ id: 22, damageDealt: 14 });
+    expect(isBatchedMultiattack(staleMonsterBatch, playerSwing, goblin)).toBe(false);
+    // And the float resolver then surfaces the player's real damage.
+    const float = resolveSpriteFloat({ lastAttack: playerSwing, self: goblin, hpDelta: 14, isNewAttack: true });
+    expect(float).toEqual({ amount: 14, kind: 'damage' });
+  });
+
+  it('a single-swing batch is not a multiattack', () => {
+    const batch = [monsterHit({ id: 20 })];
+    expect(isBatchedMultiattack(batch, batch[0], player)).toBe(false);
+  });
+
+  it('an empty / absent batch is never batched', () => {
+    expect(isBatchedMultiattack([], monsterHit({ id: 20 }), player)).toBe(false);
+    expect(isBatchedMultiattack(undefined, monsterHit({ id: 20 }), player)).toBe(false);
+  });
+
+  it('a batch aimed at a different sprite does not defer this one', () => {
+    // Two swings on the player; the monster sprite must not treat them as its own.
+    const batch = [monsterHit({ id: 20 }), monsterHit({ id: 21 })];
+    expect(isBatchedMultiattack(batch, batch[1], goblin)).toBe(false);
   });
 });
 

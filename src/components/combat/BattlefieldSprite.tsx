@@ -6,7 +6,7 @@ import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
 import { BeastPortrait } from './BeastPortrait';
 import { spriteSizeScale } from './spriteScale';
-import { FloatingDamage, resolveSpriteFloat, attackAimedAt, type FloatingDamageItem, type FloatSelf } from './FloatingDamage';
+import { FloatingDamage, resolveSpriteFloat, attackAimedAt, isBatchedMultiattack, type FloatingDamageItem, type FloatSelf } from './FloatingDamage';
 import { MirrorImages } from './SpellEffect';
 import { IntentBadge } from './IntentBadge';
 import { useT } from '../../i18n/useT';
@@ -256,11 +256,10 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
         : { kind: 'monster', displayName: props.instance.displayName };
     // Multi-swing turn aimed at this sprite: the batch effect floats every swing
     // (and the cues), so defer here — just advance the bookkeeping so the hpDelta
-    // fallback doesn't double-count the swings' damage as a phantom tick.
-    const batched =
-      (props.attackEvents?.length ?? 0) >= 2 &&
-      !!props.lastAttack &&
-      attackAimedAt(props.lastAttack, self);
+    // fallback doesn't double-count the swings' damage as a phantom tick. Guards
+    // against a stale monster batch capturing the player's fresh swing (see
+    // isBatchedMultiattack) — that would otherwise eat the player's damage float.
+    const batched = isBatchedMultiattack(props.attackEvents, props.lastAttack, self);
     if (batched) {
       prevHp.current = hpCurrent;
       if (attackId !== undefined) lastSeenAttackId.current = attackId;
