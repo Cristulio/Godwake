@@ -31,6 +31,7 @@ import {
   applyPlannedAction,
 } from '../../engine/combat';
 import { buildPostmortem } from '../../engine/combat/postmortem';
+import { DRAGON_CLAW_WEAPON_ID, isDragonForm } from '../../engine/combat/shapeChange';
 import { getSpell } from '../../content/spells';
 import { ItemPicker } from './ItemPicker';
 import { CombatLog } from './CombatLog';
@@ -473,8 +474,9 @@ export function CombatScreen({
     // A monk fighting unarmed-style (bare hands or a monk weapon) strikes with
     // its level-scaled Martial Arts die; a monk who took up an ordinary weapon
     // swings that weapon plainly, kit dark.
-    const weaponId =
-      character.classId === 'monk' && monkFightsUnarmed(character)
+    const weaponId = isDragonForm(character)
+      ? DRAGON_CLAW_WEAPON_ID
+      : character.classId === 'monk' && monkFightsUnarmed(character)
         ? martialArtsWeaponId(character)
         : character.equipped.mainHand?.itemId;
     if (!weaponId) return;

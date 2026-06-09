@@ -111,6 +111,21 @@ export interface ClassResources {
    */
   ascendantRoundsRemaining?: number;
   /**
+   * Wizard: free player turns banked by Time Stop (9th-level). While > 0 the
+   * world is frozen — when the player's turn would end, the turn returns to the
+   * player and this decrements instead of advancing to any enemy. No buff
+   * durations tick on these free turns. Reset to 0 at combat start.
+   */
+  extraTurnsRemaining?: number;
+  /**
+   * Wizard: rounds the Shape Change (dragon) form holds (9th-level). While > 0
+   * the caster is a dragon — it makes {@link DRAGON_CLAW_ATTACKS} claw strikes
+   * per Attack action with the dragon-claws natural weapon (+3/+3). Decrements
+   * at the start of each player turn; reverts (temp HP persists) when it hits 0.
+   * Reset to 0 at combat start.
+   */
+  dragonFormRoundsRemaining?: number;
+  /**
    * Barbarian: rounds the current Rage holds. While > 0 the barbarian is
    * raging (physical-damage resistance + bonus melee damage). Decrements at the
    * start of each player turn; reset to 0 at combat start.

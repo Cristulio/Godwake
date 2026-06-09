@@ -72,9 +72,9 @@ function resetActionEconomyForCurrent(
  * Compute the next live turn-holder. Skips dead combatants. Wraps from the
  * last index back to 0 and bumps the round counter.
  *
- * TODO: time-stop hook — if character.extraTurnsRemaining > 0, decrement and
- * re-trigger player turn instead of advancing. (Plug here so callers stay
- * agnostic to whether the player just bought another turn.)
+ * Time Stop short-circuits this entirely: when the player holds banked extra
+ * turns the caller ({@link endTurn}) keeps the turn on the player instead of
+ * advancing, so this only ever runs once the freeze is spent.
  */
 function advanceTurn(
   state: CombatState,
@@ -107,6 +107,44 @@ function advanceTurn(
 export function endTurn(state: CombatState, character: Readonly<Character>): CombatActionResult {
   if (state.status !== 'active') return combatResult(state, character);
   let nextCharacter: Character = character;
+
+  // Time Stop: while the player holds banked free turns the world is frozen —
+  // the turn never leaves the player. Spend one banked turn, hand the player a
+  // fresh action economy, and return without advancing to any enemy. No buff
+  // duration ticks (dragon/rage/ascendant/blur) and no start-of-turn upkeep
+  // runs: a held instant shouldn't burn the caster's own spells or DOT clocks.
+  if (
+    currentCombatantId(state) === 'player' &&
+    nextCharacter.hp.current > 0 &&
+    (nextCharacter.resources.extraTurnsRemaining ?? 0) > 0
+  ) {
+    const remaining = (nextCharacter.resources.extraTurnsRemaining ?? 0) - 1;
+    nextCharacter = patchResources(nextCharacter, { extraTurnsRemaining: remaining });
+    nextCharacter = {
+      ...patchActionEconomy(nextCharacter, {
+        actionUsed: false,
+        bonusActionUsed: false,
+        reactionUsed: false,
+      }),
+      opportunistUsedThisRound: false,
+      bonusAttackAvailable: false,
+      flurryStrikesRemaining: 0,
+    };
+    const frozen: CombatState = appendLog(
+      {
+        ...state,
+        playerAttacksThisTurn: 0,
+        sneakAttackUsedThisTurn: false,
+        colossusSlayerUsedThisTurn: false,
+      },
+      {
+        id: state.log.length + 1,
+        kind: 'system',
+        text: t('combat.log.timeStopTurn', { name: nextCharacter.name, n: remaining }),
+      },
+    );
+    return combatResult(frozen, nextCharacter);
+  }
 
   const { nextIndex, round } = advanceTurn(state, nextCharacter);
   const order = state.turnOrder;
@@ -263,6 +301,23 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
       });
     } else {
       nextCharacter = patchResources(nextCharacter, { wildShapeRoundsRemaining: remaining });
+    }
+  }
+
+  // Wizard: the Shape Change (dragon) form burns down one round each time the
+  // player's turn comes around, reverting when it runs out. The temp HP may
+  // persist past the form (like Apotheosis) — only the form flag clears.
+  if (order[nextIndex] === 'player' && (nextCharacter.resources.dragonFormRoundsRemaining ?? 0) > 0) {
+    const remaining = (nextCharacter.resources.dragonFormRoundsRemaining ?? 0) - 1;
+    if (remaining <= 0) {
+      nextCharacter = patchResources(nextCharacter, { dragonFormRoundsRemaining: 0 });
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'narration',
+        text: t('combat.log.shapeChangeFade', { name: nextCharacter.name }),
+      });
+    } else {
+      nextCharacter = patchResources(nextCharacter, { dragonFormRoundsRemaining: remaining });
     }
   }
 

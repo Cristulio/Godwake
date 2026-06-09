@@ -221,6 +221,8 @@ const SIM_SPELL_PRIORITY: readonly string[] = [
   // 9th-level capstones first — a reachable slot here is the deepest pick.
   'unmake',
   'apotheosis',
+  'time-stop',
+  'shape-change',
   // High-tier blasts, biggest dice first (AoE outranks single-target at parity).
   'cataclysm',
   'stormcrash',
