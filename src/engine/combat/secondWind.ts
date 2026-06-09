@@ -19,7 +19,7 @@ export interface SecondWindContext {
 }
 
 /**
- * Fighter feature. Bonus action, once per combat: regain 1d10 + 2 × fighter
+ * Fighter feature. Bonus action, once per combat: regain 1d10 + fighter
  * level hit points. The base charge refreshes at the start of every encounter
  * (see createCombat); short/long rest also refresh it, but the per-combat
  * refresh is the load-bearing one for boss attrition. Returns the new combat
@@ -34,7 +34,7 @@ export function useSecondWind(ctx: SecondWindContext): CombatActionResult {
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
 
   let nextCharacter: Character = character;
-  const bonus = 2 * nextCharacter.level;
+  const bonus = nextCharacter.level;
   const heal = roller.roll(`1d10+${bonus}`);
   const before = nextCharacter.hp.current;
   const after = Math.min(nextCharacter.hp.max, before + heal.total);

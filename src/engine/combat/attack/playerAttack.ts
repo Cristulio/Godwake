@@ -234,8 +234,9 @@ export function playerAttack(
   const hasAffinity = w.affinity === nextCharacter.classId;
   // Ranger Fighting Style: Archery — +2 to attack rolls with ranged weapons.
   if (isRanged && characterHasMechanic(nextCharacter, 'archery')) attackBonus += 2;
-  // Fighter Weapon Mastery (L9): +1 to hit on every weapon strike.
-  if (characterHasMechanic(nextCharacter, 'weapon-mastery')) attackBonus += 1;
+  // Fighter Weapon Mastery (L9): a flat +1 DAMAGE edge (applied in the damage
+  // block below). The old +1 to-hit was dropped — across 2–3 attacks/turn the
+  // accuracy bonus compounded into the fighter's mid-late dominance.
   // Swashbuckler Rakish Duelist (L11): the 1-on-1 edge.
   if (rakishSoleFoe) attackBonus += 2;
   // Shape Change (dragon form): the dragon's claws strike like a +3 enchanted

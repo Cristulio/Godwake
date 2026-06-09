@@ -522,7 +522,7 @@
     "inspirationBankedPill": "d{die} ready"
   },
   "bar": {
-    "secondWind": "Bonus action: heal 1d10 + 2 per level. Once per combat.",
+    "secondWind": "Bonus action: heal 1d10 + your level. Once per combat.",
     "actionSurge": "Free Action: regain your action this turn. Once per short rest.",
     "offenseFighter": "Costs {cost} {pool}: this turn's strikes land surer (+{hit} to hit) and bite for +{dmg} damage{cleave}.",
     "offenseOther": "Costs {cost} {pool}: this turn's strikes land for +{dmg} damage{cleave}.",

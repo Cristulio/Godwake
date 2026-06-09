@@ -10,7 +10,7 @@
   },
   "fighter.second-wind": {
     "name": "Segundo Aliento",
-    "description": "En tu turno, puedes usar una acción adicional para recuperar puntos de golpe iguales a 1d10 + 2 por nivel de guerrero. Se renueva al inicio de cada encuentro de combate."
+    "description": "En tu turno, puedes usar una acción adicional para recuperar puntos de golpe iguales a 1d10 + tu nivel de guerrero. Se renueva al inicio de cada encuentro de combate."
   },
   "fighter.power-attack": {
     "name": "Ataque Poderoso",
@@ -46,7 +46,7 @@
   },
   "fighter.weapon-mastery": {
     "name": "Maestría con Armas",
-    "description": "Años en la línea afilan cada movimiento —tus ataques con arma ganan +1 a impactar y +1 al daño. Una ventaja fija que se acumula con todo lo demás que blandes."
+    "description": "Años en la línea afilan cada movimiento —tus ataques con arma ganan +1 al daño. Una ventaja fija que se acumula con todo lo demás que blandes."
   },
   "fighter.extra-attack-2": {
     "name": "Asalto Implacable",

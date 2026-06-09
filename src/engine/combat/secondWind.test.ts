@@ -18,12 +18,12 @@ function woundedFighter(level: number): Character {
   };
 }
 
-describe('Second Wind heal — 1d10 + 2 × level', () => {
-  it('heals within the 1d10 + 2×level band across the seed space, at a few levels', () => {
+describe('Second Wind heal — 1d10 + level', () => {
+  it('heals within the 1d10 + level band across the seed space, at a few levels', () => {
     _resetMonsterInstanceCounter();
     for (const level of [1, 10, 20]) {
-      const lo = 1 + 2 * level;
-      const hi = 10 + 2 * level;
+      const lo = 1 + level;
+      const hi = 10 + level;
       for (let seed = 0; seed < 50; seed++) {
         const character = woundedFighter(level);
         const { state } = createCombat({
