@@ -703,15 +703,15 @@ export function CombatScreen({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setSpeed(speed === 1 ? 2 : 1)}
+            onClick={() => setSpeed(speed === 1 ? 2 : speed === 2 ? 4 : 1)}
             className={`btn-chunky px-3 py-1.5 border-2 text-[10px] uppercase tracking-widest font-bold transition-colors
-              ${speed === 2
+              ${speed > 1
                 ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
                 : 'bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)]'}
             `}
-            title={speed === 2 ? t('combat.screen.slowDown') : t('combat.screen.speedUp')}
+            title={speed === 4 ? t('combat.screen.slowDown') : t('combat.screen.speedUp')}
           >
-            {speed === 2 ? '▶▶ 2×' : '▶ 1×'}
+            {speed === 4 ? '▶▶▶ 4×' : speed === 2 ? '▶▶ 2×' : '▶ 1×'}
           </button>
           <button
             type="button"

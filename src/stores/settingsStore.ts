@@ -13,8 +13,8 @@ import type { Locale } from '../i18n';
  * domain in gameStore until that's split too.
  */
 interface SettingsState {
-  /** Animation/turn-pacing multiplier. 1 = normal, 2 = fast forward. */
-  speedMultiplier: 1 | 2;
+  /** Animation/turn-pacing multiplier. 1 = normal, 2 = fast, 4 = very fast. */
+  speedMultiplier: 1 | 2 | 4;
   /** Delay (ms, pre-speed-multiplier) before auto-ending a turn with no actions remaining. */
   autoEndTurnDelayMs: number;
   /** When true, the player's combat turns are played automatically by the shared action policy. */
@@ -24,7 +24,7 @@ interface SettingsState {
   /** True once the player has cleared the first-run welcome (language + alpha notice). */
   firstRunSeen: boolean;
 
-  setSpeed: (s: 1 | 2) => void;
+  setSpeed: (s: 1 | 2 | 4) => void;
   setAutoEndTurnDelay: (ms: number) => void;
   setAutoBattle: (on: boolean) => void;
   setLocale: (l: Locale) => void;
@@ -67,7 +67,8 @@ export const useSettingsStore = create<SettingsState>()(
           // Only migrate values that are still at their pristine defaults
           // here; if the user has already touched the new store, respect it.
           if (state.speedMultiplier === 1 && typeof inner.speedMultiplier === 'number') {
-            state.speedMultiplier = inner.speedMultiplier === 2 ? 2 : 1;
+            state.speedMultiplier =
+              inner.speedMultiplier === 4 ? 4 : inner.speedMultiplier === 2 ? 2 : 1;
           }
           if (state.autoEndTurnDelayMs === 1100 && typeof inner.autoEndTurnDelayMs === 'number') {
             state.autoEndTurnDelayMs = Math.max(200, Math.min(3000, inner.autoEndTurnDelayMs));
