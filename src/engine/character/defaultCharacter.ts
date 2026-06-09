@@ -5,6 +5,7 @@ import type { ItemRef } from '../../schemas/item';
 import type { EquipmentSlots } from '../../types/character';
 import { getClass } from '../../content/classes';
 import { createCharacter, STANDARD_ARRAY } from './initialize';
+import { getLocalized } from '../../i18n';
 
 export interface CharacterCreationInput {
   name: string;
@@ -206,7 +207,9 @@ export function presetCreationInput(classId: ClassId): CharacterCreationInput {
     throw new Error(`Class ${classId} has no character preset to select.`);
   }
   return {
-    name: preset.characterName,
+    // Bake the locale-correct hero name (es players get e.g. "Sir Ladrillo").
+    // No-op in English / under sims, where it falls back to the preset name.
+    name: getLocalized('classes', classId, 'characterName', preset.characterName),
     raceId: preset.recommendedRaceId,
     classId,
     baseAbilityScores: { ...preset.abilityScores },
