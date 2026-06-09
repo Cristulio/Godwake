@@ -22,10 +22,12 @@ const CATEGORY_ORDER: AchievementCategory[] = [
 
 /**
  * The dedicated Achievements record, reached from a hub tile. Groups every
- * achievement by category, shows an "earned / total" header, and renders each
- * row unlocked (full colour) or locked (dim). Spoiler-hidden achievements stay
- * masked behind "???" until earned. Content (name/description) localizes through
- * the `achievements` overlay seam; the chrome through `screens.achievements`.
+ * achievement by category and shows an "earned / total" header. Like the
+ * bestiary, an achievement stays masked behind "???" until it is unlocked —
+ * only earned ones reveal their name and description (full colour); the rest
+ * read as locked placeholders, no spoilers. Content (name/description)
+ * localizes through the `achievements` overlay seam; chrome through
+ * `screens.achievements`.
  */
 export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
   const { t, tc } = useT();
@@ -111,8 +113,10 @@ interface AchievementRowProps {
 }
 
 function AchievementRow({ achievement, unlocked, t, tc }: AchievementRowProps) {
-  // A hidden achievement stays masked until earned — name + description concealed.
-  const masked = achievement.hidden && !unlocked;
+  // Like the bestiary: every unearned achievement stays masked — name and
+  // description concealed behind "???" — until it is unlocked. No spoilers; the
+  // category count is the only hint of what is left to find.
+  const masked = !unlocked;
   const name = masked
     ? t('screens.achievements.hiddenName')
     : tc('achievements', achievement.id, 'name', achievement.name);
