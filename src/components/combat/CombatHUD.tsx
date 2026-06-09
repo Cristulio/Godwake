@@ -17,6 +17,7 @@ import {
 import { turnsUntilCunningRegen } from '../../engine/combat/cunningAction';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { monkKiMax } from '../../engine/combat/monk';
+import { bardInspirationMax, bardInspirationLeft, bardInspirationDieSize } from '../../engine/combat/bard';
 import { getBlessing } from '../../content/blessings';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { baneQuirkCount } from '../../engine/character/quirks';
@@ -275,6 +276,13 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const isBarbarian = character.classId === 'barbarian';
   const isRanger = character.classId === 'ranger';
   const isMonk = character.classId === 'monk';
+  const isBard = character.classId === 'bard';
+
+  // --- Bard resources (Bardic Inspiration) ---
+  const inspirationMax = bardInspirationMax(character);
+  const inspirationNow = bardInspirationLeft(character);
+  const inspirationBanked = character.inspirationActive === true;
+  const inspirationDie = bardInspirationDieSize(character);
 
   // --- Barbarian resources ---
   const rageRounds = character.resources.rageRoundsRemaining ?? 0;
@@ -523,6 +531,28 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
                 title={i < kiNow ? t('combat.hud.kiReady') : t('combat.hud.kiSpent')}
               />
             ))}
+          </div>
+        </Section>
+      )}
+
+      {isBard && inspirationMax > 0 && (
+        <Section title={t('combat.hud.inspiration', { die: inspirationDie })}>
+          <div className="flex flex-wrap items-center gap-1.5 max-w-[150px]">
+            {Array.from({ length: Math.max(inspirationMax, inspirationNow) }).map((_, i) => (
+              <Dot
+                key={`insp-${i}`}
+                on={i < inspirationNow}
+                title={i < inspirationNow ? t('combat.hud.inspirationReady') : t('combat.hud.inspirationSpent')}
+              />
+            ))}
+            {inspirationBanked && (
+              <Pill
+                text={t('combat.hud.inspirationBankedPill', { die: inspirationDie })}
+                on
+                tone="amber"
+                title={t('combat.hud.inspirationBanked')}
+              />
+            )}
           </div>
         </Section>
       )}

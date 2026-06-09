@@ -18,6 +18,7 @@ import {
 } from '../../engine/combat/martialResource';
 import { getItem } from '../../content/items';
 import { stunningStrikeKiCost } from '../../engine/combat/monk';
+import { bardInspirationDieSize, bardInspirationLeft, spendsInspirationOnDamage } from '../../engine/combat/bard';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
 import { useT } from '../../i18n/useT';
 
@@ -35,6 +36,7 @@ interface ActionBarProps {
   onFlurry: () => void;
   onPatientDefense: () => void;
   onStunningStrike: () => void;
+  onBardicInspiration: () => void;
   onHuntersMark: () => void;
   onWildShape: () => void;
   onSpells: () => void;
@@ -56,6 +58,7 @@ export function ActionBar({
   onFlurry,
   onPatientDefense,
   onStunningStrike,
+  onBardicInspiration,
   onHuntersMark,
   onWildShape,
   onSpells,
@@ -248,6 +251,24 @@ export function ActionBar({
     ki >= stunningStrikeKiCost(character) &&
     !stunningArmed &&
     !character.actionEconomy.actionUsed;
+
+  // Bard Bardic Inspiration: a bonus-action spend that banks an inspiration die
+  // onto the next attack roll (core / Lore) or weapon damage (Valor). One at a
+  // time — disabled while a die is already banked, out of dice, or the bonus
+  // action is spent.
+  const isBard = character.classId === 'bard';
+  const hasBardicInspiration = isBard && characterHasMechanic(character, 'bardic-inspiration');
+  const inspirationDice = bardInspirationLeft(character);
+  const inspirationBanked = character.inspirationActive === true;
+  const canBardicInspiration =
+    playersTurn &&
+    active &&
+    hasBardicInspiration &&
+    inspirationDice > 0 &&
+    !inspirationBanked &&
+    !character.actionEconomy.bonusActionUsed &&
+    !midMultiattack;
+  const inspirationToDamage = spendsInspirationOnDamage(character);
 
   const knownSpells = character.resources.knownSpells ?? [];
 
@@ -489,6 +510,25 @@ export function ActionBar({
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {stunningArmed ? t('ui.combat.stunningOn') : t('ui.combat.stunningStrike')}
+          </Button>
+        )}
+
+        {hasBardicInspiration && (
+          <Button
+            variant={canBardicInspiration ? 'primary' : 'secondary'}
+            onClick={onBardicInspiration}
+            data-tutorial="abilities"
+            disabled={!canBardicInspiration}
+            title={
+              inspirationToDamage
+                ? t('combat.bar.inspirationValor', { die: bardInspirationDieSize(character) })
+                : t('combat.bar.inspirationLore', { die: bardInspirationDieSize(character) })
+            }
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {inspirationBanked
+              ? t('ui.combat.inspirationOn', { die: bardInspirationDieSize(character) })
+              : t('ui.combat.inspiration', { n: inspirationDice })}
           </Button>
         )}
 

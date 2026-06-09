@@ -174,6 +174,31 @@ export function classStartingResources(classId: ClassId) {
         // fresh monk reads one point before its first fight.
         kiPointsRemaining: 1,
       };
+    case 'bard':
+      return {
+        spellSlots: { 1: 2 },
+        // The whole College repertoire is prepared from L1 — higher tiers are
+        // simply uncastable until a slot of that level arrives (canCastSpell
+        // gates on the slot), exactly as the Druid's nature book.
+        knownSpells: [
+          'vicious-mockery',
+          'dissonant-whispers',
+          'healing-word',
+          'thunderwave',
+          'bard-hold-person',
+          'shatter',
+          'sphere-of-discord',
+          'dirge-of-despair',
+          'resounding-force',
+          'power-word-bind',
+          'feeblemind',
+          'final-crescendo',
+        ],
+        // Bardic Inspiration refills to its max (bardInspirationMax — the CHA mod)
+        // at the start of every encounter (createCombat). Seed one die so a fresh
+        // bard reads a point before its first fight.
+        inspirationDiceRemaining: 1,
+      };
     case 'wizard':
       return {
         spellSlots: { 1: 2, 2: 0, 3: 0, 4: 0 },

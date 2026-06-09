@@ -82,7 +82,8 @@
     "sneak": "sigilo ({dice})",
     "mark": "marca ({dice})",
     "colossus": "coloso ({dice})",
-    "vowReroll": "Repetida del Voto +{n}"
+    "vowReroll": "Repetida del Voto +{n}",
+    "inspiration": "inspiración"
   },
   "cond": {
     "name": {
@@ -111,9 +112,24 @@
     }
   },
   "martial": {
-    "fighter": { "pool": "Temple", "offense": "Golpe Potente", "defense": "Resguardo", "disrupt": "Golpe de Escudo" },
-    "barbarian": { "pool": "Furia", "offense": "Tajo Salvaje", "defense": "Guardia Sangrienta", "disrupt": "Derribo" },
-    "ranger": { "pool": "Concentración", "offense": "Disparo Certero", "defense": "Postura Firme", "disrupt": "Disparo Lisiante" }
+    "fighter": {
+      "pool": "Temple",
+      "offense": "Golpe Potente",
+      "defense": "Resguardo",
+      "disrupt": "Golpe de Escudo"
+    },
+    "barbarian": {
+      "pool": "Furia",
+      "offense": "Tajo Salvaje",
+      "defense": "Guardia Sangrienta",
+      "disrupt": "Derribo"
+    },
+    "ranger": {
+      "pool": "Concentración",
+      "offense": "Disparo Certero",
+      "defense": "Postura Firme",
+      "disrupt": "Disparo Lisiante"
+    }
   },
   "log": {
     "yourTurn": "— Tu turno (ronda {round}). —",
@@ -133,12 +149,10 @@
     "paralyzeBreakFree": "{name} se libera. La presa del Magistrado se desvanece.",
     "paralyzeWearsThin": "La atadura se gasta y se rompe. {name} puede moverse de nuevo.",
     "paralyzeCannotMove": "{name} no puede moverse. El turno se pierde.",
-
     "offenseFighter": "{name} se lanza a un {offense} — los golpes de este turno aciertan más seguros (+{hit} al impacto) y muerden por {dmg} más.",
     "offenseOther": "{name} se lanza a un {offense} — los golpes de este turno muerden por {dmg} más.",
     "defense": "{name} adopta un {defense} — el próximo golpe se amortigua en {reduction}.",
     "disrupt": "{name} prepara un {disrupt} — el próximo golpe debe acertar para aturdir a su objetivo.",
-
     "rageBlockedArmor": "{name} busca la furia, pero la pesada placa la sofoca — no prende ninguna furia hasta que se quite la armadura.",
     "rageEnter": "{name} se entrega a la furia — los golpes físicos resbalan y cada tajo muerde más hondo, pero sin curación hasta que pase. {rounds} rondas.",
     "secondWind": "{name} recobra el aliento. 1d10+{bonus} = {roll} → +{healed} PG.",
@@ -152,12 +166,10 @@
     "patientDefense": "{name} se asienta en una guardia fluida — los próximos golpes llegan con desventaja.",
     "stunningStrike": "{name} reúne Ki tras el próximo golpe — buscando derribar a un enemigo donde se yergue.",
     "wildShape": "{name} muda el cuerpo por la forma de una bestia — {temp} PG temporales y garras desnudas, hasta que la forma se agote o se desvanezca.",
-
     "useItem": "{name} usa {item}.",
     "useItemHeal": " Tira {dice} = {roll} → +{healed} PG.",
     "useItemVitality": " Una vitalidad lenta se asienta — unos {perTurn} PG al inicio de cada uno de los próximos {turns} turnos.",
     "useItemAntitoxin": " El frasco se vacía frío — el veneno resbalará hasta que la sala quede en silencio.",
-
     "wardHold": "Las guardas resisten — {name} se sacude el golpe ({label}).",
     "wardPartial": "Protegido — {name} recibe solo {eff} de {amount} ({label}).",
     "disengage": "{name} se retuerce con el golpe — {reduction} de daño evitado.",
@@ -166,7 +178,6 @@
     "stabilise": "{name} está al borde de la muerte — la mano de Ilmater lo sostiene. Estabilizado a 1 PG.",
     "victory": "Victoria. La sala queda en silencio.",
     "defeat": "Has caído.",
-
     "attackRoll": "{name} {verb} a {target} con {weapon}. d20{mod} = {total} vs CA {ac} {result}.",
     "verbAttacks": "ataca",
     "verbFires": "dispara a",
@@ -184,7 +195,6 @@
     "stunSaveRoll": "{target} se tambalea por el golpe — salvación de CON{resolute}: d20{mod} = {total} vs CD {dc} — {result}.",
     "stunned": "{target} queda aturdido — perderá su próximo turno.",
     "disruptWide": "El golpe aturdidor de {name} pasa de largo — la apertura se pierde.",
-
     "phaseSurge": "{name}{label} se enardece con furia renovada.",
     "telegraphCharge": "{name} se yergue, canalizando {action} — un golpe devastador caerá el próximo turno.",
     "chargedUnleash": "¡{name} desata el {action} cargado!",
@@ -231,7 +241,6 @@
     "paralyzeCastRoll": "{caster} lanza {action}. Salvación de {abil} de {name}{adv}: d20{mod} = {total} vs CD {dc} — {result}.",
     "paralyzeApplied": "{name} queda paralizado. La presa del Magistrado se cierra.",
     "paralyzeResisted": "{name} se sacude la atadura.",
-
     "sculptSpells": " (Esculpir Conjuros)",
     "blur": "El contorno de {name} se difumina en una silueta doble — durante {rounds} rondas, los atacantes golpean con desventaja.",
     "burningHands": "{name} arroja un cono de llamas. {rolls}{bonus} = {dmg} de fuego{evoker}. Salvación de DES CD {dc} para la mitad.",
@@ -254,7 +263,8 @@
       "glacial": "barre la sala con un abanico de frío glaciar —",
       "sunfire": "hace florecer un segundo sol —",
       "storm": "trae el cielo abajo bajo techo —",
-      "cataclysm": "hace caer una columna de ruina —"
+      "cataclysm": "hace caer una columna de ruina —",
+      "thunderwave": "una onda de sonido concusivo"
     },
     "forceLance": "{name} clava una Lanza de Fuerza a través de {target} — {dealt} de fuerza, infalible.",
     "voidRayRoll": "{name} perfora con un Rayo del Vacío a {target}. d20{mod} = {total} vs CA {ac} — {result}.",
@@ -308,7 +318,12 @@
     "girdNote": " (+{n} PG temp)",
     "readyBuff": "{name} prepara la {label}{gird}.",
     "openingVolley": "{name} suelta una andanada inicial antes de que el enemigo pueda acercarse.",
-    "combatBegins": "Comienza el combate."
+    "combatBegins": "Comienza el combate.",
+    "bardicInspiration": "{name} toma aire y afianza el próximo golpe — guarda un d{die} de inspiración.",
+    "cuttingWords": "{name} corta el golpe con una palabra mordaz (−{n}) — se va desviado.",
+    "viciousMockeryCast": "{name} lanza {spell} contra {target}. Salvación de SAB{resolute}: {mod} = {total} contra CD {dc} — {result}.",
+    "viciousMockeryDamage": "{target} sufre {dealt} psíquico{halved}.",
+    "viciousMockeryRattle": "{target} queda desconcertado — su próximo golpe se irá perdido."
   },
   "screen": {
     "encounter": "Encuentro",
@@ -499,7 +514,12 @@
     "tempHpBane": "+{n} PG temp ({banes} marca{s} de alma)",
     "tempHpLevel": "+{n} PG temp (nivel {level})",
     "acBane": "+{n} CA ({banes} marca{s} de alma)",
-    "soulMarkPlural": "s"
+    "soulMarkPlural": "s",
+    "inspiration": "Inspiración (d{die})",
+    "inspirationReady": "Un dado de Inspiración Bárdica para gastar en tus propias tiradas. La reserva se rellena al comenzar cada lucha.",
+    "inspirationSpent": "Gastado — se rellena el próximo combate.",
+    "inspirationBanked": "Hay un dado guardado para tu próxima tirada de ataque (o daño de arma, en Valor).",
+    "inspirationBankedPill": "d{die} listo"
   },
   "bar": {
     "secondWind": "Acción adicional: cura 1d10 + 2 por nivel. Una vez por combate.",
@@ -521,6 +541,8 @@
     "wildShapeOn": "Ya llevas la bestia — garras fuera hasta que la forma se agote o se desvanezca.",
     "wildShapeEmpty": "No quedan cambios de Forma Salvaje este combate — se renuevan la próxima lucha.",
     "wildShape": "Acción adicional: muda el cuerpo por la forma de una bestia — gana su vitalidad como PG temporales y desgarra con garras durante varias rondas. Una o dos veces por combate.",
-    "spells": "Acción: elige un conjuro preparado."
+    "spells": "Acción: elige un conjuro preparado.",
+    "inspirationLore": "Acción adicional: guarda un dado de Inspiración Bárdica (d{die}) para tu próxima tirada de ataque — el empujón que hace conectar el golpe.",
+    "inspirationValor": "Acción adicional: guarda un dado de Inspiración Bárdica (d{die}) en el DAÑO de tu próximo impacto de arma (Inspiración de Combate)."
   }
 }

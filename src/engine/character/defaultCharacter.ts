@@ -142,6 +142,30 @@ function startingKitFor(classId: ClassId): StartingKit {
         goldInPocket: 15,
       };
     }
+    case 'bard': {
+      // The War Lute is the caster-bard's arm — a CHA main-hand that strikes with
+      // thunder. A rapier rides along for the Valor build (finesse, DEX), light
+      // leather keeps a little skin on, and three draughts cushion the squishy
+      // support. Vicious Mockery answers at range from turn one.
+      const warLute: ItemRef = { itemId: 'war-lute' };
+      const leatherArmor: ItemRef = { itemId: 'leather-armor' };
+      return {
+        inventory: [
+          warLute,
+          { itemId: 'rapier' },
+          leatherArmor,
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+          { itemId: 'potion-of-healing' },
+        ],
+        equipped: {
+          mainHand: warLute,
+          offHand: null,
+          armor: leatherArmor,
+        },
+        goldInPocket: 20,
+      };
+    }
     case 'ranger': {
       // Longbow opens the room; the shortsword is for when something closes.
       // Light armor keeps the archer mobile. (Ammunition isn't tracked — the

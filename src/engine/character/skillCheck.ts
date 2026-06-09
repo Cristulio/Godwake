@@ -2,7 +2,19 @@ import type { Character } from '../../types/character';
 import type { SkillName } from '../../types/skills';
 import { SKILL_TO_ABILITY } from '../../types/skills';
 import type { DiceRoller } from '../dice';
-import { modifierFor, proficiencyBonus } from './derived';
+import { modifierFor, proficiencyBonus, characterHasMechanic } from './derived';
+
+/**
+ * Bard Jack of All Trades (L2): half proficiency (rounded down) on any check the
+ * bard is NOT already trained in — the breadth that makes the bard a strong
+ * generalist on event skill-checks. Zero for everyone else, and never stacks on
+ * a proficient/expert skill (that already gets the full bonus).
+ */
+function jackOfAllTradesBonus(character: Character, proficient: boolean): number {
+  if (proficient) return 0;
+  if (!characterHasMechanic(character, 'jack-of-all-trades')) return 0;
+  return Math.floor(proficiencyBonus(character.level) / 2);
+}
 
 export interface SkillCheckResult {
   skill: SkillName;
@@ -33,7 +45,7 @@ export function skillBonus(character: Character, skill: SkillName): number {
   const proficient = expert || character.skillProficiencies.includes(skill);
   const prof = proficiencyBonus(character.level);
   const proficiencyMod = expert ? prof * 2 : proficient ? prof : 0;
-  return abilityMod + proficiencyMod;
+  return abilityMod + proficiencyMod + jackOfAllTradesBonus(character, proficient);
 }
 
 /**
@@ -54,7 +66,8 @@ export function skillCheck(
   const expert = character.expertSkills.includes(skill);
   const proficient = expert || character.skillProficiencies.includes(skill);
   const prof = proficiencyBonus(character.level);
-  const proficiencyMod = expert ? prof * 2 : proficient ? prof : 0;
+  const proficiencyMod =
+    (expert ? prof * 2 : proficient ? prof : 0) + jackOfAllTradesBonus(character, proficient);
 
   const roll = roller.d20();
   const d20 = roll.rolls[0];

@@ -8,7 +8,7 @@ import type {
   CombatLogEntry,
 } from '../../../types/combat';
 import type { Weapon } from '../../../schemas/item';
-import { abilityModifier } from '../../../types/abilities';
+import { abilityModifier, type AbilityName } from '../../../types/abilities';
 import {
   critRange,
   computeAC,
@@ -17,7 +17,11 @@ import {
   isRaging,
   ragedHealAmount,
   proficiencyBonus,
+  isFullCaster,
+  spellcastingAbility,
+  spellcastingMod,
 } from '../../character/derived';
+import { bardInspirationDieSize, spendsInspirationOnDamage } from '../bard';
 import { rageDamageBonus } from '../../character/actions';
 import {
   martialOffenseDamage,
@@ -98,6 +102,7 @@ const PART_KEY: Record<string, string> = {
   maneuver: 'maneuver',
   Shadowed: 'shadowed',
   Quarry: 'quarry',
+  inspiration: 'inspiration',
 };
 
 function partLabel(label: string): string {
@@ -170,12 +175,21 @@ export function playerAttack(
   // Ranged weapons (bows, crossbows) are flagged by the `ammunition` property.
   // Thrown daggers stay in the finesse branch — they're melee that can fly.
   const isRanged = isRangedWeapon(w);
-  const attackAbility: 'str' | 'dex' = isRanged
-    ? 'dex'
-    : isFinesse
-      ? (abilityModifier(scores.dex) >= abilityModifier(scores.str) ? 'dex' : 'str')
-      : 'str';
-  const abilMod = abilityModifier(scores[attackAbility]);
+  // The Bard's War Lute is a CHA caster-weapon: its attack AND damage scale off
+  // the wielder's spellcasting modifier (Charisma) instead of STR/DEX — the
+  // "wand" the caster-leaning bard strikes with. Only a spellcasting class earns
+  // it; a non-caster swinging one falls back to the ordinary STR/DEX read.
+  const isCasterWeapon = w.casterWeapon === true && isFullCaster(nextCharacter.classId);
+  const attackAbility: AbilityName = isCasterWeapon
+    ? spellcastingAbility(nextCharacter)
+    : isRanged
+      ? 'dex'
+      : isFinesse
+        ? (abilityModifier(scores.dex) >= abilityModifier(scores.str) ? 'dex' : 'str')
+        : 'str';
+  const abilMod = isCasterWeapon
+    ? spellcastingMod(nextCharacter)
+    : abilityModifier(scores[attackAbility]);
   const profBonus = proficiencyBonus(nextCharacter.level);
 
   // A monk earns the Martial Arts kit (and the unarmed damage edge below) only
@@ -283,6 +297,18 @@ export function playerAttack(
   if (hideAdvantage) nextCharacter = { ...nextCharacter, nextAttackAdvantage: false };
   if (forceSneak) nextCharacter = { ...nextCharacter, nextAttackForceSneak: false };
   if (nextBonus > 0) nextCharacter = { ...nextCharacter, nextAttackBonus: 0 };
+  // Bard Bardic Inspiration (core / College of Lore): a banked inspiration die
+  // rides this attack roll — the self-buff that helps the War Lute or a finesse
+  // blade land. A Valor bard with Combat Inspiration instead pours the die into
+  // damage (resolved in the hit block below), so its banked die is left for that.
+  if (
+    nextCharacter.inspirationActive === true &&
+    !spendsInspirationOnDamage(nextCharacter)
+  ) {
+    const insp = roller.roll({ count: 1, die: bardInspirationDieSize(nextCharacter), modifier: 0 });
+    attackBonus += insp.total;
+    nextCharacter = { ...nextCharacter, inspirationActive: false };
+  }
   let toHit = roller.d20(advantage, attackBonus);
   // Assassin Mortal Strike (L11): the opening strike of the fight on a full-HP
   // foe is an automatic critical — front-load the kill before it can guard.
@@ -530,6 +556,19 @@ export function playerAttack(
       const shadow = 3 + (characterHasMechanic(nextCharacter, 'cloak-of-shadows') ? 3 : 0);
       bonusDamage += shadow;
       onTypeParts.push({ amount: shadow, label: 'shadow' });
+    }
+    // Bard Combat Inspiration (College of Valor): a banked inspiration die pours
+    // into the weapon hit's damage instead of the attack roll — the martial fork
+    // of Bardic Inspiration. Rides the first hit of the turn (the flag clears on
+    // application); a clean miss leaves the die banked for the next swing.
+    if (
+      nextCharacter.inspirationActive === true &&
+      spendsInspirationOnDamage(nextCharacter)
+    ) {
+      const insp = roller.roll({ count: 1, die: bardInspirationDieSize(nextCharacter), modifier: 0 });
+      bonusDamage += insp.total;
+      onTypeParts.push({ amount: insp.total, label: 'inspiration' });
+      nextCharacter = { ...nextCharacter, inspirationActive: false };
     }
     // Apotheosis: the ascendant caster's every blow bites for far more.
     if (isAscendant(nextCharacter)) {

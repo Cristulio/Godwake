@@ -98,8 +98,8 @@ import type { ItemRef } from '../src/schemas/item';
 import type { ClassId as SchemaClassId } from '../src/schemas/ids';
 import type { RoomSpec } from '../src/types/delve';
 
-type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid' | 'monk';
-const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid', 'monk'];
+type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid' | 'monk' | 'bard';
+const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid', 'monk', 'bard'];
 
 const SOULS_PER_CLASS = Number(process.env.SOULS_PER_CLASS ?? 150);
 const MAX_LIVES = Number(process.env.MAX_LIVES ?? 150);
@@ -204,6 +204,14 @@ const CLASS_PRIORITY: Record<ClassId, { id: string; maxAtRank: number }[]> = {
     { id: 'first-cut', maxAtRank: 3 },
     { id: 'killers-eye', maxAtRank: 2 },
     { id: 'fellfast-strike', maxAtRank: 3 },
+  ],
+  // Bard: a Charisma full-caster with no bespoke Grove node — banks the generic
+  // caster tree (spell DC / damage / attack), the levers its workings + Vicious
+  // Mockery scale on, atop the shared HP/AC tree (interleaved in priorityFor).
+  bard: [
+    { id: 'arcane-focus', maxAtRank: 3 },
+    { id: 'sigil-of-the-wakened-mind', maxAtRank: 3 },
+    { id: 'burning-tongue', maxAtRank: 5 },
   ],
 };
 
@@ -520,6 +528,8 @@ interface ProcCounters {
   flurry: number;
   patientDefense: number;
   stunningStrike: number;
+  /** Bard Bardic Inspiration dice spent (bonus-action self-buff onto attack/damage). */
+  bardicInspiration: number;
   /** New per-fight martial pool (#338) — Fighter Resolve / Barb Fury / Ranger Focus. */
   martialOffense: number;
   martialDefense: number;
@@ -551,6 +561,7 @@ function freshProcs(): ProcCounters {
     flurry: 0,
     patientDefense: 0,
     stunningStrike: 0,
+    bardicInspiration: 0,
     martialOffense: 0,
     martialDefense: 0,
     martialDisrupt: 0,
@@ -570,6 +581,7 @@ const PROCS: Record<ClassId, ProcCounters> = {
   ranger: freshProcs(),
   druid: freshProcs(),
   monk: freshProcs(),
+  bard: freshProcs(),
 };
 
 /**
@@ -603,6 +615,7 @@ function runPlayerTurnInstrumented(
     else if (action.kind === 'flurry-of-blows') pc.flurry += 1;
     else if (action.kind === 'patient-defense') pc.patientDefense += 1;
     else if (action.kind === 'stunning-strike') pc.stunningStrike += 1;
+    else if (action.kind === 'bardic-inspiration') pc.bardicInspiration += 1;
     else if (action.kind === 'martial-offense') pc.martialOffense += 1;
     else if (action.kind === 'martial-defense') pc.martialDefense += 1;
     else if (action.kind === 'martial-disrupt') pc.martialDisrupt += 1;

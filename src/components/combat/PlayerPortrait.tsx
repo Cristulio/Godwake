@@ -29,10 +29,154 @@ export function PlayerPortrait({ classId, className = '' }: PlayerPortraitProps)
       return <DruidSvg className={className} />;
     case 'monk':
       return <MonkSvg className={className} />;
+    case 'bard':
+      return <BardSvg className={className} />;
     case 'fighter':
     default:
       return <FighterSvg className={className} />;
   }
+}
+
+function BardSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 40"
+      shapeRendering="crispEdges"
+      className={className}
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Bard"
+    >
+      {/* Backlight — warm footlight amber + a cool violet stage rim */}
+      <ellipse cx="11" cy="17" rx="13" ry="18" fill="#e8a020" opacity="0.10" />
+      <ellipse cx="15" cy="15" rx="10" ry="14" fill="#7a5db8" opacity="0.07" />
+      <ellipse cx="11" cy="13" rx="8" ry="11" fill="#f4b43a" opacity="0.06" />
+      {/* Ground-contact shadow */}
+      <ellipse cx="12" cy="39" rx="9" ry="1.6" fill="#000" opacity="0.45" />
+
+      {/* Feathered cap — wine-red ramp with a jaunty cant + plume */}
+      <rect x="7" y="3" width="9" height="2" fill="#7a1c2a" />
+      <rect x="7" y="3" width="9" height="1" fill="#a8324a" />
+      <rect x="7" y="3" width="3" height="1" fill="#c84a64" />
+      <rect x="6" y="2" width="5" height="1" fill="#5a1220" />
+      <rect x="14" y="2" width="3" height="2" fill="#5a1220" />
+      <rect x="6" y="4" width="11" height="1" fill="#4a0e1a" />
+      {/* Cap band + gold pin specular */}
+      <rect x="7" y="4" width="9" height="1" fill="#3a0a14" />
+      <rect x="9" y="3" width="1" height="1" fill="#f4d042" />
+      {/* Plume — teal feather sweeping up-right, lit tip */}
+      <rect x="16" y="1" width="1" height="3" fill="#2e6a62" />
+      <rect x="17" y="0" width="1" height="2" fill="#3a8a7a" />
+      <rect x="18" y="0" width="1" height="1" fill="#6ac4b0" />
+      <rect x="17" y="0" width="1" height="1" fill="#a8f0dc" />
+
+      {/* Face — fair, ramped */}
+      <rect x="8" y="5" width="8" height="4" fill="#d8b888" />
+      <rect x="8" y="5" width="1" height="4" fill="#a8824e" />
+      <rect x="9" y="5" width="6" height="1" fill="#ecd0a0" />
+      <rect x="9" y="5" width="3" height="1" fill="#f8e6c0" />
+      <rect x="15" y="6" width="1" height="3" fill="#9c7448" />
+      {/* Bright, quick eyes + violet glint */}
+      <rect x="9" y="6" width="2" height="1" fill="#241810" />
+      <rect x="13" y="6" width="2" height="1" fill="#241810" />
+      <rect x="10" y="6" width="1" height="1" fill="#c4b0f0" />
+      <rect x="14" y="6" width="1" height="1" fill="#c4b0f0" />
+      {/* A half-grin */}
+      <rect x="10" y="8" width="4" height="1" fill="#a8824e" />
+      <rect x="13" y="8" width="1" height="1" fill="#c84a64" opacity="0.5" />
+      {/* Locks at the jaw */}
+      <rect x="7" y="5" width="1" height="4" fill="#6a3a1a" />
+      <rect x="16" y="5" width="1" height="4" fill="#5a3018" />
+
+      {/* Collar — violet doublet with a lace ruff */}
+      <rect x="6" y="9" width="12" height="1" fill="#e8dcc4" />
+      <rect x="6" y="10" width="12" height="2" fill="#3a2a5a" />
+      <rect x="6" y="10" width="12" height="1" fill="#503d78" />
+      <rect x="6" y="10" width="2" height="2" fill="#221640" />
+      <rect x="16" y="10" width="2" height="2" fill="#221640" />
+      {/* Doublet body — violet ramp + center light, slashed sleeves */}
+      <rect x="6" y="12" width="12" height="9" fill="#3a2a5a" />
+      <rect x="6" y="12" width="1" height="9" fill="#221640" />
+      <rect x="7" y="12" width="1" height="9" fill="#2f2150" />
+      <rect x="17" y="12" width="1" height="9" fill="#1c1236" />
+      <rect x="11" y="12" width="2" height="9" fill="#4d3a78" />
+      <rect x="11" y="12" width="1" height="4" fill="#5a4488" />
+      {/* Motley slashes — wine + gold accents */}
+      <rect x="8" y="13" width="1" height="3" fill="#7a1c2a" />
+      <rect x="14" y="14" width="1" height="3" fill="#7a1c2a" />
+      <rect x="9" y="17" width="1" height="1" fill="#d4b062" />
+      <rect x="13" y="15" width="1" height="1" fill="#d4b062" />
+      {/* Sash + buckle gleam */}
+      <rect x="6" y="19" width="12" height="2" fill="#5a1220" />
+      <rect x="6" y="19" width="12" height="1" fill="#7a1c2a" />
+      <rect x="11" y="19" width="2" height="2" fill="#d4b062" />
+      <rect x="11" y="19" width="1" height="1" fill="#fff4c0" />
+
+      {/* Left arm — fretting the neck of the lute high */}
+      <rect x="6" y="13" width="2" height="2" fill="#3a2a5a" />
+      <rect x="4" y="11" width="2" height="4" fill="#3a2a5a" />
+      <rect x="4" y="11" width="1" height="4" fill="#221640" />
+      <rect x="4" y="9" width="2" height="2" fill="#d8b888" />
+      <rect x="4" y="9" width="2" height="1" fill="#ecd0a0" />
+      {/* Right arm — strumming low across the body */}
+      <rect x="16" y="13" width="2" height="2" fill="#3a2a5a" />
+      <rect x="16" y="15" width="3" height="2" fill="#3a2a5a" />
+      <rect x="16" y="15" width="3" height="1" fill="#4d3a78" />
+      <rect x="13" y="16" width="2" height="2" fill="#d8b888" />
+      <rect x="13" y="16" width="2" height="1" fill="#ecd0a0" />
+
+      {/* War Lute — slung across the torso, warm wood ramp + bright soundboard */}
+      {/* Neck rising to the left hand, with frets */}
+      <rect x="5" y="9" width="2" height="7" fill="#6a3a1a" />
+      <rect x="5" y="9" width="1" height="7" fill="#8c5226" />
+      <rect x="6" y="9" width="1" height="7" fill="#4a2810" />
+      <rect x="5" y="11" width="2" height="1" fill="#d4b062" />
+      <rect x="5" y="13" width="2" height="1" fill="#d4b062" />
+      {/* Rounded body / soundboard */}
+      <rect x="9" y="15" width="8" height="6" fill="#8c5226" />
+      <rect x="9" y="15" width="8" height="1" fill="#b07434" />
+      <rect x="9" y="15" width="1" height="6" fill="#6a3a1a" />
+      <rect x="16" y="15" width="1" height="6" fill="#4a2810" />
+      <rect x="10" y="16" width="5" height="4" fill="#a8682e" />
+      <rect x="10" y="16" width="3" height="1" fill="#c89048" />
+      {/* Soundhole — dark rosette + gold ring */}
+      <rect x="12" y="17" width="2" height="2" fill="#1a0e06" />
+      <rect x="11" y="17" width="1" height="2" fill="#d4b062" />
+      <rect x="14" y="17" width="1" height="2" fill="#d4b062" />
+      {/* Strings catching the footlight */}
+      <rect x="7" y="14" width="8" height="1" fill="#e8dcc4" opacity="0.7" />
+      <rect x="9" y="20" width="6" height="1" fill="#cdbfa2" opacity="0.6" />
+      {/* A struck-chord shimmer — violet bloom + spark */}
+      <ellipse cx="13" cy="18" rx="5" ry="4" fill="#a48ee0" opacity="0.16" />
+      <rect x="16" y="13" width="1" height="1" fill="#d4c4f8" />
+      <rect x="8" y="21" width="1" height="1" fill="#c4b0f0" />
+
+      {/* Doublet skirt / tassets — violet ramp + gold hem */}
+      <rect x="6" y="21" width="12" height="4" fill="#3a2a5a" />
+      <rect x="6" y="21" width="1" height="4" fill="#221640" />
+      <rect x="17" y="21" width="1" height="4" fill="#1c1236" />
+      <rect x="11" y="21" width="2" height="4" fill="#4d3a78" />
+      <rect x="6" y="24" width="12" height="1" fill="#d4b062" />
+      <rect x="6" y="24" width="6" height="1" fill="#f4d042" opacity="0.5" />
+
+      {/* Legs — particoloured hose (one wine, one violet) */}
+      <rect x="8" y="25" width="3" height="9" fill="#7a1c2a" />
+      <rect x="8" y="25" width="1" height="9" fill="#5a1220" />
+      <rect x="10" y="25" width="1" height="9" fill="#a8324a" />
+      <rect x="13" y="25" width="3" height="9" fill="#3a2a5a" />
+      <rect x="13" y="25" width="1" height="9" fill="#221640" />
+      <rect x="15" y="25" width="1" height="9" fill="#4d3a78" />
+      {/* Garter ribbons */}
+      <rect x="8" y="29" width="3" height="1" fill="#d4b062" />
+      <rect x="13" y="29" width="3" height="1" fill="#d4b062" />
+      {/* Soft pointed boots */}
+      <rect x="7" y="34" width="5" height="4" fill="#3a2418" />
+      <rect x="7" y="34" width="5" height="1" fill="#5a3a20" />
+      <rect x="7" y="38" width="5" height="1" fill="#1a1410" />
+      <rect x="12" y="34" width="5" height="4" fill="#3a2418" />
+      <rect x="12" y="34" width="5" height="1" fill="#5a3a20" />
+      <rect x="12" y="38" width="5" height="1" fill="#1a1410" />
+    </svg>
+  );
 }
 
 function MonkSvg({ className }: { className?: string }) {

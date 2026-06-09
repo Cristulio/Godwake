@@ -62,7 +62,8 @@
       "barbarian": "Rage · Reckless Attack · Berserker Frenzy",
       "ranger": "Hunter's Mark · Archery · Colossus Slayer",
       "druid": "Produce Flame · Wild Shape · Circle of the Moon",
-      "monk": "Martial Arts · Flurry of Blows · Stunning Strike"
+      "monk": "Martial Arts · Flurry of Blows · Stunning Strike",
+      "bard": "Bardic Inspiration · Vicious Mockery · Lore Cutting Words / Valor Extra Attack"
     }
   },
   "ascension": {

@@ -4,7 +4,7 @@ import type { ClassId } from '../../schemas/ids';
 import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
 import { getSetPiece } from '../../content/sets';
-import { effectiveAbilityScores } from './derived';
+import { effectiveAbilityScores, characterHasMechanic } from './derived';
 import { t, getLocalized } from '../../i18n';
 
 /** Class display name through the content overlay (Spanish when active, else English). */
@@ -172,7 +172,13 @@ export function classWeaponProficient(classId: ClassId, weapon: Weapon): boolean
 }
 
 export function isWeaponProficient(character: Character, weapon: Weapon): boolean {
-  return classWeaponProficient(character.classId, weapon);
+  if (classWeaponProficient(character.classId, weapon)) return true;
+  // College of Valor (Bard): Martial Training opens the full martial weapon rack
+  // — the caster's base kit is simple + finesse, the martial fork adds the rest.
+  if (weapon.category === 'martial' && characterHasMechanic(character, 'martial-training')) {
+    return true;
+  }
+  return false;
 }
 
 export interface StatRequirement {
@@ -212,7 +218,16 @@ export function classArmorProficient(classId: ClassId, armor: Armor): boolean {
 }
 
 export function isArmorProficient(character: Character, armor: Armor): boolean {
-  return classArmorProficient(character.classId, armor);
+  if (classArmorProficient(character.classId, armor)) return true;
+  // College of Valor (Bard): Martial Training adds medium armour + shields atop
+  // the bard's base light/orb proficiency — the front-line fork.
+  if (
+    (armor.category === 'medium' || armor.category === 'shield') &&
+    characterHasMechanic(character, 'martial-training')
+  ) {
+    return true;
+  }
+  return false;
 }
 
 /**

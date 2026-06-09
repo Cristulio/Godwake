@@ -37,6 +37,7 @@ import { bossIntelBuffFor } from '../../content/bossIntel';
 import { wildShapeUsesMax } from './wildShape';
 import { monkKiMax } from './monk';
 import { martialPoolMax } from './martialResource';
+import { bardInspirationMax } from './bard';
 
 // MAX_COMBAT_LOG now lives in the leaf log module (breaking the createCombat ⇄
 // log import cycle); re-exported here so existing importers keep working.
@@ -325,6 +326,15 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     };
     nextCharacter = patchResources(nextCharacter, {
       kiPointsRemaining: monkKiMax(nextCharacter),
+    });
+  }
+
+  // Bard: refill the Bardic Inspiration pool each encounter (mirrors the Monk's
+  // Ki cadence) and clear any banked-but-unspent die from the prior fight.
+  if (nextCharacter.classId === 'bard') {
+    nextCharacter = { ...nextCharacter, inspirationActive: false };
+    nextCharacter = patchResources(nextCharacter, {
+      inspirationDiceRemaining: bardInspirationMax(nextCharacter),
     });
   }
 

@@ -49,6 +49,7 @@ import {
   martialArtsWeaponId,
   monkFightsUnarmed,
 } from './monk';
+import { useBardicInspiration, bardInspirationLeft, spendsInspirationOnDamage } from './bard';
 
 /**
  * A single structured combat decision. Callers map it onto the real engine
@@ -73,6 +74,7 @@ export type PlannedAction =
   | { kind: 'flurry-of-blows' }
   | { kind: 'patient-defense' }
   | { kind: 'stunning-strike' }
+  | { kind: 'bardic-inspiration' }
   | { kind: 'end-turn' };
 
 // ---- Tunables --------------------------------------------------------------
@@ -308,6 +310,17 @@ const DRUID_AOE_PRIORITY = [
   'wildfire',
 ] as const;
 
+/** Bard single-target focused nukes, deepest slot first — the caster bard's
+ *  burst to close a beefy fight (the bard has no true pack-clear AoE; Shatter's
+ *  fork is handled separately for an exact pair). */
+const BARD_NUKE_PRIORITY = [
+  'feeblemind',
+  'resounding-force',
+  'dirge-of-despair',
+  'sphere-of-discord',
+  'shatter',
+] as const;
+
 /** Index of the strongest healing consumable in inventory, or -1. */
 function bestHealPotionIdx(character: Character): number {
   let bestIdx = -1;
@@ -409,6 +422,7 @@ export function chooseCombatAction(
   const isRanger = character.classId === 'ranger';
   const isDruid = character.classId === 'druid';
   const isMonk = character.classId === 'monk';
+  const isBard = character.classId === 'bard';
   // The monk's Ki kit (Flurry / Patient Defense / Stunning Strike) only fires
   // when fighting truly bare-handed; ANY weapon in hand (even a monk weapon)
   // turns it dark.
@@ -528,6 +542,33 @@ export function chooseCombatAction(
       }
     }
 
+    // Bard: spend the bonus action on tempo. A sung Healing Word knits wounds
+    // over the next turns when hurt (the bard's own sustain) and still leaves the
+    // main action for a working or a swing. Otherwise a Valor bard banks an
+    // inspiration die onto the coming weapon hit (Combat Inspiration → damage);
+    // a Lore bard holds its dice for Cutting Words (the auto reaction in
+    // monsterAttack), so it never pre-spends them here.
+    if (isBard) {
+      if (
+        hpPct <= profile.wizardDrainHp &&
+        knows(character, 'healing-word') &&
+        slotsAt(character, 2) > 0 &&
+        (character.resources.regrowthTurnsRemaining ?? 0) === 0
+      ) {
+        return { kind: 'cast', spellId: 'healing-word' };
+      }
+      if (
+        spendsInspirationOnDamage(character) &&
+        characterHasMechanic(character, 'bardic-inspiration') &&
+        character.inspirationActive !== true &&
+        bardInspirationLeft(character) > 0 &&
+        primary &&
+        character.equipped.mainHand
+      ) {
+        return { kind: 'bardic-inspiration' };
+      }
+    }
+
     // Rogue Cunning Action (bonus action, one per turn): raise the per-turn
     // ceiling. If Sneak Attack will land on the coming main strike WITHOUT setup
     // — the opener, a bloodied mark, or a dagger in hand — spend the bonus action
@@ -590,6 +631,12 @@ export function chooseCombatAction(
       }
       const druidAction = chooseDruidAction(character, live, primary, threat, profile);
       if (druidAction) return druidAction;
+    }
+    if (isBard) {
+      const bardAction = chooseBardAction(character, live, primary, threat, profile);
+      if (bardAction) return bardAction;
+      // Out of workings (or a Valor bard leaning martial): swing — the War Lute
+      // (CHA-scaled) for the caster build, a finesse/martial arm for Valor.
     }
     // Martial resource (Fighter / Barbarian / Ranger): read the enemy telegraph
     // and spend the pool WELL — deny a dangerous wind-up, brace a big incoming
@@ -1098,6 +1145,123 @@ function aoeWastedAny(live: MonsterCombatant[], spellId: string): boolean {
   return false;
 }
 
+function viciousMockeryFullAvg(character: Character): number {
+  return 5.5 * spellDamageMultiplier(character, 0) + spellcastingMod(character);
+}
+
+/**
+ * Bard spell selection — the Charisma support's main-action picker. Both colleges
+ * deny a dangerous foe a turn (Power Word: Bind / Hold Person) and reach for the
+ * self-buff capstone on a true boss. A VALOR bard then returns null to swing
+ * (Extra Attack + Combat Inspiration is its damage); a LORE / core bard assembles
+ * burst from the book — a focused nuke on a beefy single, Shatter's fork on a
+ * pair, the auto-hit Dissonant Whispers to finish a low target — down to the
+ * at-will Vicious Mockery (chip + a rattling debuff). Returns null to fall through
+ * to a War Lute / weapon swing (out of slots, or Valor's martial lean).
+ */
+function chooseBardAction(
+  character: Character,
+  live: MonsterCombatant[],
+  primary: MonsterCombatant | undefined,
+  threat: MonsterCombatant | undefined,
+  profile: ArchetypeProfile,
+): PlannedAction | null {
+  const enemyCount = live.length;
+  const beefy = highestHpTarget(live);
+  const isValor = spendsInspirationOnDamage(character);
+
+  // Control: deny the scariest live foe its turn — a true boss eats the 7th-level
+  // hard lock (Power Word: Bind), a lesser dangerous foe the cheaper Hold Person.
+  if (
+    threat &&
+    !isMonsterParalyzed(threat) &&
+    monsterThreat(threat) >= profile.holdPersonThreat &&
+    threat.instance.hp.current > HOLD_PERSON_MIN_HP
+  ) {
+    if (
+      knows(character, 'power-word-bind') &&
+      slotsAt(character, 7) > 0 &&
+      threat.instance.hp.current >= SOUL_SNARE_HP
+    ) {
+      return { kind: 'cast', spellId: 'power-word-bind', targetId: threat.id };
+    }
+    if (knows(character, 'bard-hold-person') && slotsAt(character, 2) > 0) {
+      return { kind: 'cast', spellId: 'bard-hold-person', targetId: threat.id };
+    }
+  }
+
+  // Final Crescendo: the self-buff capstone on a genuine boss — temp HP, +AC, and
+  // far harder strikes (blade, lute, or working) for the assembled kill.
+  if (
+    beefy &&
+    beefy.instance.hp.current >= CAPSTONE_NUKE_HP &&
+    knows(character, 'final-crescendo') &&
+    slotsAt(character, 9) > 0 &&
+    (character.resources.ascendantRoundsRemaining ?? 0) === 0
+  ) {
+    return { kind: 'cast', spellId: 'final-crescendo' };
+  }
+
+  // Valor leans martial — once control / the capstone are handled it just swings
+  // (Combat Inspiration rides the hit). Lore / core assemble the book below.
+  if (isValor) return null;
+
+  // AoE when the room is crowded — Thunderwave is the bard's one pack-clear, the
+  // answer to a multi-mob room its single-target book can't thin fast enough.
+  if (
+    enemyCount >= 3 &&
+    knows(character, 'thunderwave') &&
+    slotsAt(character, 2) > 0
+  ) {
+    return { kind: 'cast', spellId: 'thunderwave', targetId: primary?.id };
+  }
+
+  // Beefy single threat: drop the deepest focused nuke that matches it.
+  if (beefy && beefy.instance.hp.current >= BOSS_NUKE_HP) {
+    const nuke = bestAffordable(character, BARD_NUKE_PRIORITY);
+    if (nuke) return { kind: 'cast', spellId: nuke, targetId: beefy.id };
+  }
+
+  // A beefy pair: Shatter hammers the tougher in full and forks to the other.
+  if (
+    enemyCount === 2 &&
+    knows(character, 'shatter') &&
+    slotsAt(character, 3) > 0 &&
+    beefy &&
+    beefy.instance.hp.current >= SCORCHING_RAY_WORTH_HP
+  ) {
+    return { kind: 'cast', spellId: 'shatter', targetId: beefy.id };
+  }
+
+  // Guaranteed finish: Dissonant Whispers auto-hits, so a low target dies for sure.
+  if (
+    knows(character, 'dissonant-whispers') &&
+    slotsAt(character, 1) > 0 &&
+    primary &&
+    primary.instance.hp.current <= MAGIC_MISSILE_MIN
+  ) {
+    return { kind: 'cast', spellId: 'dissonant-whispers', targetId: primary.id };
+  }
+
+  // Spend a level-1 slot (Dissonant Whispers) when the cantrip is too weak to matter.
+  if (
+    knows(character, 'dissonant-whispers') &&
+    slotsAt(character, 1) > 0 &&
+    primary &&
+    primary.instance.hp.current > viciousMockeryFullAvg(character)
+  ) {
+    return { kind: 'cast', spellId: 'dissonant-whispers', targetId: primary.id };
+  }
+
+  // Cantrip — Vicious Mockery (chip + a rattling debuff), or out of slots → fall
+  // through to a War Lute swing.
+  if (knows(character, 'vicious-mockery') && primary) {
+    return { kind: 'cast', spellId: 'vicious-mockery', targetId: primary.id };
+  }
+
+  return null;
+}
+
 // ---- Dispatch --------------------------------------------------------------
 
 export interface ApplyActionContext {
@@ -1192,6 +1356,10 @@ export function applyPlannedAction(
     }
     case 'stunning-strike': {
       const r = useStunningStrike({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'bardic-inspiration': {
+      const r = useBardicInspiration({ character, state });
       return { state: r.state, character: r.character };
     }
     case 'end-turn':

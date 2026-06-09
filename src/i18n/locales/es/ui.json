@@ -118,7 +118,9 @@
     "wildShape": "Forma Salvaje ({n})",
     "spellsBtn": "Conjuros ({n})",
     "item": "Objeto",
-    "endTurn": "Terminar Turno"
+    "endTurn": "Terminar Turno",
+    "inspiration": "♪ Inspirar ({n})",
+    "inspirationOn": "♪ Inspirado (d{die})"
   },
   "postmortem": {
     "soulFalls": "El Alma Cae",

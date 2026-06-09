@@ -48,6 +48,7 @@ import {
   selectMonsterIntent,
 } from './monsterIntent';
 import { tryShieldReaction } from '../spells/shield';
+import { tryCuttingWords } from '../bard';
 import { MIRROR_IMAGE_SEE_THROUGH_DC } from '../spells/mirrorImage';
 import {
   combatResult,
@@ -768,6 +769,19 @@ function resolveSingleAttack(
       workingState = triggered.state;
       nextCharacter = triggered.character;
       hit = false;
+    }
+  }
+
+  // Cutting Words reaction (Bard, College of Lore): a non-crit hit the bard can
+  // sing off — spend an inspiration die to subtract from the enemy's attack
+  // total, flipping the blow to a miss. Only fires when it would actually negate
+  // the hit (never wastes the scarce die), and spends the bard's reaction.
+  if (hit && !crit) {
+    const cut = tryCuttingWords(nextCharacter, workingState, ac, toHit.total, roller);
+    if (cut) {
+      workingState = cut.state;
+      nextCharacter = cut.character;
+      hit = cut.hit;
     }
   }
 

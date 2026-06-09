@@ -1,8 +1,9 @@
 import type { Character } from '../../../types/character';
 import type { CombatState } from '../../../types/combat';
 import { spellcastingMod } from '../../character/derived';
+import { getSpell } from '../../../content/spells';
 import { appendLog } from '../log';
-import { patchResources } from '../types';
+import { patchActionEconomy, patchResources } from '../types';
 import {
   type CastResult,
   type CastSpellContext,
@@ -52,6 +53,12 @@ export function castRegrowth(ctx: CastSpellContext): CastResult {
   });
   nextState = attachSpellEffect(nextState, 'regrowth', 'player');
 
-  nextCharacter = markActionUsed(nextCharacter);
+  // The Druid's Regrowth spends the main action; the Bard's Healing Word shares
+  // this handler but is sung as a bonus action (castTime 'bonus'), so it spends
+  // the bonus action instead — the bard heals AND still strikes the same turn.
+  nextCharacter =
+    getSpell(ctx.spellId).castTime === 'bonus'
+      ? patchActionEconomy(nextCharacter, { bonusActionUsed: true })
+      : markActionUsed(nextCharacter);
   return { state: nextState, character: nextCharacter, cast: true };
 }

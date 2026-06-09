@@ -562,6 +562,178 @@ export const AVATAR_OF_THE_WILDS: Spell = SpellSchema.parse({
   effectKey: 'apotheosis',
 });
 
+// --- Bard: the College repertoire (Charisma, the lyric craft). A focused book
+// of control, debuff, mind-rending sound, and a little self-heal — the bard is a
+// support that stands alone, not a fire-and-ice blaster. Each working maps onto
+// an EXISTING spell-effect handler (no new engine kinds beyond the signature
+// cantrip) and keeps that handler's native element, so the combat log never
+// lies. Cantrip + a working at every slot tier 1–9 (no dead slot on the climb).
+
+export const VICIOUS_MOCKERY: Spell = SpellSchema.parse({
+  id: 'vicious-mockery',
+  book: 'bard',
+  name: 'Vicious Mockery',
+  level: 0,
+  school: 'enchantment',
+  range: '60 ft',
+  target: 'single',
+  damageType: 'psychic',
+  description:
+    'A string of withering, perfectly-aimed insult lances one target — d10 psychic + your Charisma modifier, the barb sharpening as you grow. On a failed Wisdom save the mark is left rattled, throwing its next blow wild (disadvantage). A made save still takes half.',
+  effectKey: 'vicious-mockery',
+});
+
+export const DISSONANT_WHISPERS: Spell = SpellSchema.parse({
+  id: 'dissonant-whispers',
+  book: 'bard',
+  name: 'Dissonant Whispers',
+  level: 1,
+  school: 'enchantment',
+  range: '60 ft',
+  target: 'single',
+  damageType: 'psychic',
+  description:
+    'You whisper a discordant melody only one foe can hear — three lancing notes that simply land, no attack roll and no save, and more as you grow. The mind that hears them cannot help but flinch.',
+  effectKey: 'magic-missile',
+});
+
+export const HEALING_WORD: Spell = SpellSchema.parse({
+  id: 'healing-word',
+  book: 'bard',
+  name: 'Healing Word',
+  level: 2,
+  school: 'evocation',
+  range: 'Self',
+  target: 'self',
+  description:
+    'A single sung word of mending — your wounds knit now and again at the start of each of your next two turns. The bard’s own sustain, sung as a swift breath so you still strike the same turn.',
+  effectKey: 'regrowth',
+  castTime: 'bonus',
+});
+
+export const THUNDERWAVE: Spell = SpellSchema.parse({
+  id: 'thunderwave',
+  book: 'bard',
+  name: 'Thunderwave',
+  level: 2,
+  school: 'evocation',
+  range: 'Self (15-ft cone)',
+  target: 'area',
+  damageType: 'thunder',
+  description:
+    'A wave of concussive sound bursts out from you and rolls across the whole enemy line — thunder to every foe. A Dexterity save halves it. The bard’s answer to a crowded room.',
+  effectKey: 'thunder-wave',
+});
+
+export const BARD_HOLD_PERSON: Spell = SpellSchema.parse({
+  id: 'bard-hold-person',
+  book: 'bard',
+  name: 'Hold Person',
+  level: 2,
+  school: 'enchantment',
+  range: '60 ft',
+  target: 'single',
+  description:
+    'A binding cadence seizes one target — it must succeed a Wisdom save or be paralyzed for the next 2 rounds.',
+  effectKey: 'hold-person',
+});
+
+export const SHATTER: Spell = SpellSchema.parse({
+  id: 'shatter',
+  book: 'bard',
+  name: 'Shatter',
+  level: 3,
+  school: 'evocation',
+  range: '60 ft',
+  target: 'single',
+  damageType: 'lightning',
+  description:
+    'A sudden, ringing clap of ruinous sound hammers one foe for 10d6 and forks through to a second beside it for half. A Dexterity save halves it on each — the bard’s focused thunder.',
+  effectKey: 'lightning-bolt',
+});
+
+export const SPHERE_OF_DISCORD: Spell = SpellSchema.parse({
+  id: 'sphere-of-discord',
+  book: 'bard',
+  name: 'Sphere of Discord',
+  level: 4,
+  school: 'evocation',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'force',
+  description:
+    'A knot of warring sound implodes inside one target — 6d8 force, no attack roll and no save; it simply tears through.',
+  effectKey: 'force-lance',
+});
+
+export const DIRGE_OF_DESPAIR: Spell = SpellSchema.parse({
+  id: 'dirge-of-despair',
+  book: 'bard',
+  name: 'Dirge of Despair',
+  level: 5,
+  school: 'necromancy',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'necrotic',
+  description:
+    'You sing one foe a song of its own ending — a spell attack for 10d6 necrotic on a hit, and even a miss grazes for half. The dirge clings; the wound will not close.',
+  effectKey: 'void-ray',
+});
+
+export const RESOUNDING_FORCE: Spell = SpellSchema.parse({
+  id: 'resounding-force',
+  book: 'bard',
+  name: 'Resounding Force',
+  level: 6,
+  school: 'evocation',
+  range: '120 ft',
+  target: 'single',
+  damageType: 'force',
+  description:
+    'A single sustained note builds past bearing and bursts within one target — 12d6+24 force. A Constitution save halves it; a foe undone by it is simply unmade.',
+  effectKey: 'dissolution',
+});
+
+export const POWER_WORD_BIND: Spell = SpellSchema.parse({
+  id: 'power-word-bind',
+  book: 'bard',
+  name: 'Power Word: Bind',
+  level: 7,
+  school: 'enchantment',
+  range: '60 ft',
+  target: 'single',
+  description:
+    'One word of absolute command, and the target is bound where it stands — a Wisdom save or be paralyzed for the next 3 rounds. Far harder to break than a lesser binding.',
+  effectKey: 'soul-snare',
+});
+
+export const FEEBLEMIND: Spell = SpellSchema.parse({
+  id: 'feeblemind',
+  book: 'bard',
+  name: 'Feeblemind',
+  level: 8,
+  school: 'enchantment',
+  range: '90 ft',
+  target: 'single',
+  damageType: 'necrotic',
+  description:
+    'A blast of shattering psychic discord caves one mind in — 16d6 necrotic, and the survivor is left reeling, its blows landing soft (weakened) for the rest of the fight.',
+  effectKey: 'wither',
+});
+
+export const FINAL_CRESCENDO: Spell = SpellSchema.parse({
+  id: 'final-crescendo',
+  book: 'bard',
+  name: 'Final Crescendo',
+  level: 9,
+  school: 'transmutation',
+  range: 'Self',
+  target: 'self',
+  description:
+    'You become the song entire. For 4 rounds you gain 30 temporary hit points, +2 AC, and every strike — blade, lute, or working — bites for far more.',
+  effectKey: 'apotheosis',
+});
+
 const ALL_SPELLS: Spell[] = [
   FIRE_BOLT,
   MAGIC_MISSILE,
@@ -604,6 +776,19 @@ const ALL_SPELLS: Spell[] = [
   SPIRIT_BEAST,
   WRATH_OF_SILVANUS,
   AVATAR_OF_THE_WILDS,
+  // Bard book.
+  VICIOUS_MOCKERY,
+  DISSONANT_WHISPERS,
+  HEALING_WORD,
+  THUNDERWAVE,
+  BARD_HOLD_PERSON,
+  SHATTER,
+  SPHERE_OF_DISCORD,
+  DIRGE_OF_DESPAIR,
+  RESOUNDING_FORCE,
+  POWER_WORD_BIND,
+  FEEBLEMIND,
+  FINAL_CRESCENDO,
 ];
 
 const SPELL_BY_ID: Map<string, Spell> = new Map(ALL_SPELLS.map((s) => [s.id, s]));

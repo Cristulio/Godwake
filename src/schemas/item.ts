@@ -46,6 +46,13 @@ export const WeaponSchema = z.object({
    */
   monkWeapon: z.boolean().optional(),
   /**
+   * A CHA caster-weapon (the Bard's War Lute): its attack AND damage scale off
+   * the wielder's spellcasting modifier (Charisma for the Bard) instead of
+   * STR/DEX — the "wand" the caster-leaning Bard strikes with. Read in
+   * playerAttack; ignored by classes that don't cast off the spellcasting mod.
+   */
+  casterWeapon: z.boolean().optional(),
+  /**
    * Inherent to-hit modifier — the accuracy lever. The accurate weapon of a
    * redundant pair carries +N here in exchange for a smaller damage die (the
    * shortbow trades the longbow's larger die for +2 to hit).
