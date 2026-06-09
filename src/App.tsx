@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useGameStore } from './stores/gameStore';
 import { TitleScreen } from './components/title/TitleScreen';
 import { HubScreen } from './components/hub/HubScreen';
@@ -73,6 +73,28 @@ const SpoilsScreen = lazy(() =>
   import('./components/spoils/SpoilsScreen').then((m) => ({ default: m.SpoilsScreen })),
 );
 
+// Warm the lazy chunks the player is most likely to open next, during browser
+// idle time, so the next navigation hits a warm module cache instead of the
+// ◆ Loading fallback. The specifiers MIRROR the lazy() imports above, so each
+// thunk resolves the very same chunk Suspense will later request. Best-effort:
+// re-fetches dedupe in the module cache and failures are swallowed. DelveScreen
+// is the heavy one (combat + portraits), so warming it from the hub kills the
+// worst flash — the descent into a run.
+const PREFETCH: Partial<Record<string, (() => Promise<unknown>)[]>> = {
+  title: [() => import('./components/title/AscensionSelectScreen')],
+  hub: [
+    () => import('./components/delve/DelveScreen'),
+    () => import('./components/inventory/InventoryScreen'),
+    () => import('./components/codex/CodexScreen'),
+  ],
+  'ascension-select': [() => import('./components/delve/DelveScreen')],
+  delve: [
+    () => import('./components/spoils/SpoilsScreen'),
+    () => import('./components/level/LevelUpScreen'),
+  ],
+  spoils: [() => import('./components/delve/DelveScreen')],
+};
+
 function ScreenFallback() {
   const { t } = useT();
   return (
@@ -103,6 +125,23 @@ function App() {
   // Combat SFX reaction — fires spell/ability/enemy sounds off the combat
   // event stream regardless of which screen is mounted.
   useCombatAudio();
+
+  // Prefetch the chunks for the screens likely to follow this one, on idle, so
+  // navigation lands on a warm cache instead of the ◆ Loading fallback.
+  useEffect(() => {
+    const thunks = PREFETCH[screen];
+    if (!thunks) return;
+    const warm = () => {
+      for (const thunk of thunks) thunk().catch(() => {});
+    };
+    const ric: typeof window.requestIdleCallback | undefined = window.requestIdleCallback;
+    if (ric) {
+      const id = ric(warm);
+      return () => window.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(warm, 300);
+    return () => window.clearTimeout(id);
+  }, [screen]);
 
   // Show the quirks tutorial once: after first death has happened, the taunt
   // has dismissed, and the tutorial hasn't been shown yet.
