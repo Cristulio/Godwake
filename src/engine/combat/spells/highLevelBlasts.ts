@@ -78,6 +78,23 @@ function castAreaBlast(ctx: CastSpellContext, cfg: BlastConfig): CastResult {
   return { state: ended.state, character: ended.character, cast: true };
 }
 
+/**
+ * Thunderwave (2nd) — the Bard's pack tool. A wave of concussive sound bursts
+ * across the whole enemy line for a thunder AoE, DEX save for half. Shares the
+ * area-blast machinery; the low slot keeps it a workhorse crowd-clear rather than
+ * a finisher (the caster-bard's answer to a room, where its single-target book
+ * and control hold one foe at a time).
+ */
+export function castThunderwave(ctx: CastSpellContext): CastResult {
+  return castAreaBlast(ctx, {
+    slotLevel: 2,
+    dice: 5,
+    die: 6,
+    damageType: 'thunder',
+    flavor: t('combat.log.blastFlavor.thunderwave'),
+  });
+}
+
 export function castRimeBlast(ctx: CastSpellContext): CastResult {
   return castAreaBlast(ctx, {
     slotLevel: 4,

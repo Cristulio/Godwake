@@ -9,6 +9,7 @@ import { listAffixes } from '../content/items';
 import {
   WEAPON_BASE_IDS,
   MONK_WEAPON_BASE_IDS,
+  BARD_WEAPON_BASE_IDS,
   ARMOR_BASE_IDS,
   ACCESSORY_BASE_IDS,
 } from '../engine/items/rollItem';
@@ -259,6 +260,7 @@ describe('es/items.json rolled-loot completeness', () => {
     const baseIds = [
       ...WEAPON_BASE_IDS,
       ...MONK_WEAPON_BASE_IDS,
+      ...BARD_WEAPON_BASE_IDS,
       ...ARMOR_BASE_IDS,
       ...ACCESSORY_BASE_IDS,
     ];

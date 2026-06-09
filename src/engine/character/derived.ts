@@ -172,12 +172,15 @@ export function ragedHealAmount(character: Character, amount: number): number {
  * Intelligence; the Druid on Wisdom (see {@link spellcastingAbility}).
  */
 export function isFullCaster(classId: Character['classId']): boolean {
-  return classId === 'wizard' || classId === 'druid';
+  return classId === 'wizard' || classId === 'druid' || classId === 'bard';
 }
 
-/** The ability a caster keys spells off: Wisdom for the Druid, Intelligence otherwise. */
+/** The ability a caster keys spells off: Wisdom for the Druid, Charisma for the
+ *  Bard, Intelligence otherwise. */
 export function spellcastingAbility(character: Readonly<Character>): AbilityName {
-  return character.classId === 'druid' ? 'wis' : 'int';
+  if (character.classId === 'druid') return 'wis';
+  if (character.classId === 'bard') return 'cha';
+  return 'int';
 }
 
 /** The caster's spellcasting ability modifier (Wisdom for Druid, Intelligence for Wizard). */

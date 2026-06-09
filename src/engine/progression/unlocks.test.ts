@@ -165,11 +165,11 @@ describe('class unlocks (relative to the origin starter, paced by renown spent)'
     // Barbarian is no longer a starter — it is sealed at first creation now,
     // earned later as the first non-starter.
     expect(STARTER_CLASSES).not.toContain('barbarian');
-    expect(NON_STARTER_ORDER).toEqual(['barbarian', 'rogue', 'druid', 'monk']);
+    expect(NON_STARTER_ORDER).toEqual(['barbarian', 'rogue', 'druid', 'monk', 'bard']);
   });
 
-  it('exposes the slot bars: first offering (>0), then 100 / 200 / 300 / 450 / 600', () => {
-    expect(SLOT_RENOWN_THRESHOLDS).toEqual([1, 100, 200, 300, 450, 600]);
+  it('exposes the slot bars: first offering (>0), then 100 / 200 / 300 / 450 / 600 / 800', () => {
+    expect(SLOT_RENOWN_THRESHOLDS).toEqual([1, 100, 200, 300, 450, 600, 800]);
   });
 
   it('keeps the origin always unlocked at 0 renown — the worn body is yours, whichever it is', () => {
@@ -181,13 +181,13 @@ describe('class unlocks (relative to the origin starter, paced by renown spent)'
 
   it('per-origin ORDER: Fighter leads for a Mage/Hunter origin; ranger/wizard swap for a Fighter origin', () => {
     expect(relativeClassOrder('fighter')).toEqual(
-      ['fighter', 'ranger', 'wizard', 'barbarian', 'rogue', 'druid', 'monk'],
+      ['fighter', 'ranger', 'wizard', 'barbarian', 'rogue', 'druid', 'monk', 'bard'],
     );
     expect(relativeClassOrder('wizard')).toEqual(
-      ['wizard', 'fighter', 'ranger', 'barbarian', 'rogue', 'druid', 'monk'],
+      ['wizard', 'fighter', 'ranger', 'barbarian', 'rogue', 'druid', 'monk', 'bard'],
     );
     expect(relativeClassOrder('ranger')).toEqual(
-      ['ranger', 'fighter', 'wizard', 'barbarian', 'rogue', 'druid', 'monk'],
+      ['ranger', 'fighter', 'wizard', 'barbarian', 'rogue', 'druid', 'monk', 'bard'],
     );
   });
 
@@ -199,6 +199,8 @@ describe('class unlocks (relative to the origin starter, paced by renown spent)'
     expect(classUnlockRenown('rogue', 'fighter')).toBe(300);
     expect(classUnlockRenown('druid', 'fighter')).toBe(450);
     expect(classUnlockRenown('monk', 'fighter')).toBe(600);
+    // The Bard sits in the deepest slot — above the Monk, the last soul opened.
+    expect(classUnlockRenown('bard', 'fighter')).toBe(800);
     // renownSpent 0 unlocks only fighter; each bar adds exactly the next soul.
     expect(unlockedAt('fighter', 0)).toEqual(['fighter']);
     expect(unlockedAt('fighter', 1)).toEqual(['fighter', 'ranger']);
@@ -220,6 +222,11 @@ describe('class unlocks (relative to the origin starter, paced by renown spent)'
     expect(isClassUnlocked('wizard', 100, 'fighter')).toBe(true);
     expect(isClassUnlocked('monk', 599, 'fighter')).toBe(false);
     expect(isClassUnlocked('monk', 600, 'fighter')).toBe(true);
+    expect(isClassUnlocked('bard', 799, 'fighter')).toBe(false);
+    expect(isClassUnlocked('bard', 800, 'fighter')).toBe(true);
+    expect(unlockedAt('fighter', 800)).toEqual(
+      ['fighter', 'ranger', 'wizard', 'barbarian', 'rogue', 'druid', 'monk', 'bard'],
+    );
   });
 
   it('origin=wizard: fighter at the first purchase, ranger@100, then the non-starters', () => {

@@ -158,5 +158,53 @@
   "avatar-of-the-wilds": {
     "name": "Avatar de lo Silvestre",
     "description": "Dejas que lo silvestre te inunde por entero y te alzas como algo primigenio. Durante 4 asaltos ganas 30 puntos de golpe temporales, +2 a la CA, y cada golpe —garra o conjuro— muerde con mucha más fuerza."
+  },
+  "vicious-mockery": {
+    "name": "Burla Cruel",
+    "description": "Una sarta de insultos mordaces y certeros se clava en un objetivo: d10 psíquico + tu modificador de Carisma, la pulla afilándose conforme creces. Con una salvación de Sabiduría fallida el blanco queda desconcertado y tira su próximo golpe a lo loco (desventaja). Una salvación superada aún recibe la mitad."
+  },
+  "dissonant-whispers": {
+    "name": "Susurros Disonantes",
+    "description": "Susurras una melodía discordante que solo un enemigo oye: tres notas lancinantes que simplemente impactan, sin tirada de ataque ni salvación, y más conforme creces. La mente que las oye no puede evitar estremecerse."
+  },
+  "healing-word": {
+    "name": "Palabra de Curación",
+    "description": "Una sola palabra cantada de remiendo: tus heridas se cierran un poco al inicio de cada uno de tus dos próximos turnos. El sustento propio del bardo, cantado en un soplo para que aún golpees el mismo turno."
+  },
+  "bard-hold-person": {
+    "name": "Inmovilizar Persona",
+    "description": "Una cadencia atadora aferra a un objetivo: debe superar una salvación de Sabiduría o quedar paralizado durante los siguientes 2 asaltos."
+  },
+  "shatter": {
+    "name": "Estruendo",
+    "description": "Un súbito y resonante chasquido de sonido ruinoso golpea a un enemigo por 10d6 y se bifurca a un segundo a su lado por la mitad. Una salvación de Destreza lo reduce a la mitad en cada uno: el trueno enfocado del bardo."
+  },
+  "sphere-of-discord": {
+    "name": "Esfera de Discordia",
+    "description": "Un nudo de sonido en guerra implosiona dentro de un objetivo: 6d8 de fuerza, sin tirada de ataque ni salvación; simplemente lo desgarra."
+  },
+  "dirge-of-despair": {
+    "name": "Endecha de Desesperación",
+    "description": "Cantas a un enemigo una canción de su propio final: un ataque de conjuro por 10d6 necrótico al impactar, y aun fallando roza por la mitad. La endecha se aferra; la herida no cerrará."
+  },
+  "resounding-force": {
+    "name": "Fuerza Resonante",
+    "description": "Una sola nota sostenida crece más allá de lo soportable y estalla dentro de un objetivo: 12d6+24 de fuerza. Una salvación de Constitución la reduce a la mitad; a quien deshaga, simplemente lo deshace."
+  },
+  "power-word-bind": {
+    "name": "Palabra de Poder: Atar",
+    "description": "Una palabra de mando absoluto, y el objetivo queda atado donde está: una salvación de Sabiduría o quedar paralizado durante los siguientes 3 asaltos. Mucho más difícil de romper que una atadura menor."
+  },
+  "feeblemind": {
+    "name": "Mente en Blanco",
+    "description": "Un estallido de discordia psíquica hunde una mente: 16d6 necrótico, y el superviviente queda tambaleante, sus golpes cayendo blandos (debilitado) durante el resto del combate."
+  },
+  "final-crescendo": {
+    "name": "Crescendo Final",
+    "description": "Te conviertes en la canción entera. Durante 4 asaltos ganas 30 puntos de golpe temporales, +2 a la CA, y cada golpe —hoja, laúd o conjuro— muerde mucho más hondo."
+  },
+  "thunderwave": {
+    "name": "Onda Atronadora",
+    "description": "Una onda de sonido concusivo estalla desde ti y barre toda la línea enemiga —trueno a cada rival. Una salvación de Destreza la reduce a la mitad. La respuesta del bardo a una sala atestada."
   }
 }

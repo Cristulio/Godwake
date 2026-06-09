@@ -446,5 +446,9 @@
   },
   "conqueror-sigil": {
     "name": "Sello del Conquistador"
+  },
+  "war-lute": {
+    "name": "Laúd de Guerra",
+    "description": "Un laúd de cuerdas gruesas, sostenido como un arma: cada acorde, un golpe asestado. Resuena con trueno moldeado por la presencia del intérprete, escalando con el Carisma como una varita escala con el ingenio de un mago. El arma del bardo lanzador."
   }
 }

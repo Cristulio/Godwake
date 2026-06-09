@@ -64,13 +64,15 @@ export const SpellEffectKeySchema = z.enum([
   'regrowth', // 2: self heal-over-time (the Druid's only sustain)
   'entangle', // 2: AoE root — every enemy saves or loses its next turn
   'summon-beast', // 7: persistent spirit companion, auto-damage each turn
+  'vicious-mockery', // 0: Bard cantrip — psychic damage + rattles the target (disadvantage)
+  'thunder-wave', // 2: Bard thunder AoE — every enemy, DEX save for half (the pack tool)
 ]);
 export type SpellEffectKey = z.infer<typeof SpellEffectKeySchema>;
 
 export const SpellSchema = z.object({
   id: z.string(),
   /** Which class book offers this spell; the level-up picker filters on it. */
-  book: z.enum(['wizard', 'druid']),
+  book: z.enum(['wizard', 'druid', 'bard']),
   name: z.string(),
   /** 0 = cantrip (free, no slot cost). 1-3 supported at launch. */
   level: SpellLevelSchema,

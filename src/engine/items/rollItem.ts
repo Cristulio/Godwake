@@ -42,6 +42,14 @@ export const MONK_WEAPON_BASE_IDS = [
   'monk-temple-glaive',
 ] as const;
 
+/**
+ * The Bard's bespoke arm — the CHA caster-weapon. Appended to the generic rack
+ * for a bard alone (the War Lute scales off Charisma, useless to anyone else), so
+ * a bard's weapon loot can roll the instrument the caster build wants alongside
+ * the finesse blades it shares with the rogue.
+ */
+export const BARD_WEAPON_BASE_IDS = ['war-lute'] as const;
+
 export const ARMOR_BASE_IDS = [
   'padded-armor',
   'leather-armor',
@@ -203,7 +211,12 @@ function rollEnhancement(roller: DiceRoller, depth: number): number {
 /** Bases of a kind the class is trained to use. Accessories have no gate. */
 function legalBases(kind: BaseKind, classId: ClassId): Array<Weapon | Armor | Accessory> {
   if (kind === 'weapon') {
-    const ids = classId === 'monk' ? MONK_WEAPON_BASE_IDS : WEAPON_BASE_IDS;
+    const ids =
+      classId === 'monk'
+        ? MONK_WEAPON_BASE_IDS
+        : classId === 'bard'
+          ? [...WEAPON_BASE_IDS, ...BARD_WEAPON_BASE_IDS]
+          : WEAPON_BASE_IDS;
     return ids
       .map((id) => getItem(id) as Weapon)
       .filter((w) => classWeaponProficient(classId, w));

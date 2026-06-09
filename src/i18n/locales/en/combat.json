@@ -82,7 +82,8 @@
     "sneak": "sneak ({dice})",
     "mark": "mark ({dice})",
     "colossus": "colossus ({dice})",
-    "vowReroll": "Vow reroll +{n}"
+    "vowReroll": "Vow reroll +{n}",
+    "inspiration": "inspiration"
   },
   "cond": {
     "name": {
@@ -111,9 +112,24 @@
     }
   },
   "martial": {
-    "fighter": { "pool": "Resolve", "offense": "Power Attack", "defense": "Brace", "disrupt": "Shield Bash" },
-    "barbarian": { "pool": "Fury", "offense": "Savage Cleave", "defense": "Bloodied Guard", "disrupt": "Knockdown" },
-    "ranger": { "pool": "Focus", "offense": "Aimed Shot", "defense": "Set Stance", "disrupt": "Crippling Shot" }
+    "fighter": {
+      "pool": "Resolve",
+      "offense": "Power Attack",
+      "defense": "Brace",
+      "disrupt": "Shield Bash"
+    },
+    "barbarian": {
+      "pool": "Fury",
+      "offense": "Savage Cleave",
+      "defense": "Bloodied Guard",
+      "disrupt": "Knockdown"
+    },
+    "ranger": {
+      "pool": "Focus",
+      "offense": "Aimed Shot",
+      "defense": "Set Stance",
+      "disrupt": "Crippling Shot"
+    }
   },
   "log": {
     "yourTurn": "— Your turn (round {round}). —",
@@ -133,12 +149,10 @@
     "paralyzeBreakFree": "{name} breaks free. The Magistrate's hold falls away.",
     "paralyzeWearsThin": "The binding wears thin and snaps. {name} can move again.",
     "paralyzeCannotMove": "{name} cannot move. The turn is lost.",
-
     "offenseFighter": "{name} commits to a {offense} — this turn's strikes land surer (+{hit} to hit) and bite for {dmg} more.",
     "offenseOther": "{name} commits to a {offense} — this turn's strikes bite for {dmg} more.",
     "defense": "{name} sets a {defense} — the next blow is blunted by {reduction}.",
     "disrupt": "{name} winds up a {disrupt} — the next blow must land to stagger its mark.",
-
     "rageBlockedArmor": "{name} reaches for the fury, but the heavy plate smothers it — no rage takes hold until the armor comes off.",
     "rageEnter": "{name} gives way to the fury — physical blows glance off and every swing bites deeper, but no mending until it passes. {rounds} rounds.",
     "secondWind": "{name} catches a second wind. 1d10+{bonus} = {roll} → +{healed} HP.",
@@ -152,12 +166,10 @@
     "patientDefense": "{name} settles into a flowing guard — the next blows come at disadvantage.",
     "stunningStrike": "{name} gathers Ki behind the next strike — aiming to drop a foe where it stands.",
     "wildShape": "{name} sheds the body for a beast's shape — {temp} temporary HP and claws to bare, until the form spends out or fades.",
-
     "useItem": "{name} uses {item}.",
     "useItemHeal": " Rolls {dice} = {roll} → +{healed} HP.",
     "useItemVitality": " A slow vitality settles in — about {perTurn} HP at the start of each of the next {turns} turns.",
     "useItemAntitoxin": " The phial empties cold — poison will slide off until the room falls silent.",
-
     "wardHold": "The wards hold — {name} shrugs off the blow ({label}).",
     "wardPartial": "Warded — {name} takes only {eff} of {amount} ({label}).",
     "disengage": "{name} twists with the blow — {reduction} damage avoided.",
@@ -166,7 +178,6 @@
     "stabilise": "{name} is on death's door — Ilmater's grip holds. Stabilised at 1 HP.",
     "victory": "Victory. The room falls silent.",
     "defeat": "You have fallen.",
-
     "attackRoll": "{name} {verb} {target} with {weapon}. d20{mod} = {total} vs AC {ac} {result}.",
     "verbAttacks": "attacks",
     "verbFires": "fires at",
@@ -184,7 +195,6 @@
     "stunSaveRoll": "{target} reels from the strike — CON save{resolute}: d20{mod} = {total} vs DC {dc} — {result}.",
     "stunned": "{target} is stunned — it will lose its next turn.",
     "disruptWide": "{name}'s staggering strike goes wide — the opening is lost.",
-
     "phaseSurge": "{name}{label} surges with fresh fury.",
     "telegraphCharge": "{name} draws itself up, channeling {action} — a devastating blow lands next turn.",
     "chargedUnleash": "{name} unleashes the charged {action}!",
@@ -231,7 +241,6 @@
     "paralyzeCastRoll": "{caster} casts {action}. {name} {abil} save{adv}: d20{mod} = {total} vs DC {dc} — {result}.",
     "paralyzeApplied": "{name} is paralyzed. The Magistrate's hold tightens.",
     "paralyzeResisted": "{name} shrugs off the binding.",
-
     "sculptSpells": " (Sculpt Spells)",
     "blur": "{name}'s outline smears into a doubled blur — for {rounds} rounds, attackers strike at disadvantage.",
     "burningHands": "{name} hurls a cone of flame. {rolls}{bonus} = {dmg} fire{evoker}. DEX save DC {dc} for half.",
@@ -254,7 +263,8 @@
       "glacial": "sweeps the room with a fan of glacier-cold —",
       "sunfire": "blooms a second sun —",
       "storm": "brings the sky down indoors —",
-      "cataclysm": "calls a column of ruin down —"
+      "cataclysm": "calls a column of ruin down —",
+      "thunderwave": "a concussive wave of sound"
     },
     "forceLance": "{name} drives a Force Lance through {target} — {dealt} force, unerring.",
     "voidRayRoll": "{name} bores a Void Ray at {target}. d20{mod} = {total} vs AC {ac} — {result}.",
@@ -308,7 +318,12 @@
     "girdNote": " (+{n} temp HP)",
     "readyBuff": "{name} readies the {label}{gird}.",
     "openingVolley": "{name} looses an opening volley before the enemy can close.",
-    "combatBegins": "Combat begins."
+    "combatBegins": "Combat begins.",
+    "bardicInspiration": "{name} draws breath and steels the next blow — a d{die} of inspiration banked.",
+    "cuttingWords": "{name} cuts the blow short with a withering word (−{n}) — it goes wide.",
+    "viciousMockeryCast": "{name} hurls {spell} at {target}. WIS save{resolute}: {mod} = {total} vs DC {dc} — {result}.",
+    "viciousMockeryDamage": "{target} takes {dealt} psychic{halved}.",
+    "viciousMockeryRattle": "{target} is left rattled — its next blow goes wild."
   },
   "screen": {
     "encounter": "Encounter",
@@ -499,7 +514,12 @@
     "tempHpBane": "+{n} temp HP ({banes} soul-mark{s})",
     "tempHpLevel": "+{n} temp HP (level {level})",
     "acBane": "+{n} AC ({banes} soul-mark{s})",
-    "soulMarkPlural": "s"
+    "soulMarkPlural": "s",
+    "inspiration": "Inspiration (d{die})",
+    "inspirationReady": "A Bardic Inspiration die to spend on your own rolls. The well refills as each fight begins.",
+    "inspirationSpent": "Spent — refills next fight.",
+    "inspirationBanked": "A die is banked onto your next attack roll (or weapon damage, for Valor).",
+    "inspirationBankedPill": "d{die} ready"
   },
   "bar": {
     "secondWind": "Bonus action: heal 1d10 + 2 per level. Once per combat.",
@@ -521,6 +541,8 @@
     "wildShapeOn": "Already wearing the beast — claws out until the form spends out or fades.",
     "wildShapeEmpty": "No Wild Shape changes left this combat — they refresh next fight.",
     "wildShape": "Bonus action: shed the body for a beast's shape — gain its vitality as temporary HP and rend with claws for several rounds. Once or twice per combat.",
-    "spells": "Action: pick a prepared spell."
+    "spells": "Action: pick a prepared spell.",
+    "inspirationLore": "Bonus action: bank a Bardic Inspiration die (d{die}) onto your next attack roll — the lift that lands the blow.",
+    "inspirationValor": "Bonus action: bank a Bardic Inspiration die (d{die}) onto your next weapon hit's DAMAGE (Combat Inspiration)."
   }
 }

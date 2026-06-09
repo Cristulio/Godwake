@@ -118,7 +118,9 @@
     "wildShape": "Wild Shape ({n})",
     "spellsBtn": "Spells ({n})",
     "item": "Item",
-    "endTurn": "End Turn"
+    "endTurn": "End Turn",
+    "inspiration": "♪ Inspire ({n})",
+    "inspirationOn": "♪ Inspired (d{die})"
   },
   "postmortem": {
     "soulFalls": "The Soul Falls",

@@ -65,6 +65,9 @@ export function spellSaveDC(character: Readonly<Character>): number {
   // like Burning Hands actually land — without this, DC 12 vs typical +2/+3 DEX
   // saves means ~55% save rate and AoE feels useless.
   const classBonus = isFullCaster(character.classId) ? 1 : 0;
+  // Bard College of Lore — Lore Savant: a deeper grasp of the lyric craft hardens
+  // every save-or-suck working by one more, the caster lean of the Lore fork.
+  const loreBonus = characterHasMechanic(character as Character, 'lore-savant') ? 1 : 0;
   const boonBonus = characterCampBoonMods(character).spellDcBonus ?? 0;
   const blessingBonus = characterBlessingMods(character).spellDcBonus ?? 0;
   return (
@@ -72,6 +75,7 @@ export function spellSaveDC(character: Readonly<Character>): number {
     spellcastingMod(character) +
     proficiencyBonus(character.level) +
     classBonus +
+    loreBonus +
     (character.permanentBonuses?.spellDc ?? 0) +
     boonBonus +
     blessingBonus +

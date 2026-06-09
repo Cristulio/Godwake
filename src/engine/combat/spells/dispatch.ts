@@ -19,6 +19,7 @@ import {
   castRimeBlast,
   castStormcrash,
   castSunfireBurst,
+  castThunderwave,
 } from './highLevelBlasts';
 import {
   castDissolution,
@@ -32,6 +33,7 @@ import { castApotheosis, castShapeChange, castTimeStop, castUnmake } from './nin
 import { castRegrowth } from './regrowth';
 import { castEntangle } from './entangle';
 import { castSpiritBeast } from './spiritBeast';
+import { castViciousMockery } from './viciousMockery';
 
 /**
  * Cast a known spell. Stamps every roll/damage line the cast produced as the
@@ -132,6 +134,11 @@ function runCast(ctx: CastSpellContext): CastResult {
       return castEntangle(cc);
     case 'summon-beast':
       return castSpiritBeast(cc);
+    // Bard signature workings.
+    case 'vicious-mockery':
+      return castViciousMockery(cc);
+    case 'thunder-wave':
+      return castThunderwave(cc);
     default:
       // Exhaustive guard — if a new effectKey is added, this branch becomes
       // unreachable but keeps the switch honest.

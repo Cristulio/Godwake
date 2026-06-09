@@ -12,7 +12,7 @@ export const HALF_ELF: Race = RaceSchema.parse({
     cha: 2,
   },
   speed: 30,
-  validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger', 'druid', 'monk'],
+  validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger', 'druid', 'monk', 'bard'],
   features: [
     {
       id: 'half-elf-versatility',

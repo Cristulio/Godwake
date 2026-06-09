@@ -417,8 +417,30 @@ export const MONK_TEMPLE_GLAIVE: Weapon = WeaponSchema.parse({
   description: 'A reaching haft the gate-guardians drilled with — distance folded into the form.',
 });
 
+// The Bard's War Lute — a CHA caster-weapon. Its attack AND damage scale off the
+// bard's spellcasting (Charisma) modifier rather than STR/DEX (the `casterWeapon`
+// flag, read in playerAttack), striking with resonant thunder. The "wand" the
+// caster-leaning Lore bard fights with — one-handed, leaving the off-hand free
+// for a caster orb. Affinity grants the matched-weapon edge in a bard's hands.
+export const WAR_LUTE: Weapon = WeaponSchema.parse({
+  id: 'war-lute',
+  kind: 'weapon',
+  name: 'War Lute',
+  affinity: 'bard',
+  casterWeapon: true,
+  category: 'simple',
+  damage: '1d8',
+  damageType: 'thunder',
+  properties: [],
+  cost: 40,
+  rarity: 'common',
+  description:
+    'A heavy-strung lute braced like a weapon — every chord a struck blow. It rings with thunder shaped by the player’s own presence, scaling on Charisma the way a wand scales on a wizard’s wit. The caster-bard’s arm.',
+});
+
 export const ALL_WEAPONS: Weapon[] = [
   LONGSWORD,
+  WAR_LUTE,
   DAGGER,
   SHORTBOW,
   GREATSWORD,

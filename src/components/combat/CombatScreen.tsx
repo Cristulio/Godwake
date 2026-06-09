@@ -21,6 +21,7 @@ import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
+  useBardicInspiration,
   useWildShape,
   hasRemainingTurnPlay,
   martialArtsWeaponId,
@@ -625,6 +626,13 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
+  function handleBardicInspiration() {
+    cancelTargeting();
+    const result = useBardicInspiration({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
   function handleHuntersMarkClick() {
     const aliveMonsters = state.combatants.filter(
       (c) => c.kind === 'monster' && c.instance.hp.current > 0,
@@ -850,6 +858,7 @@ export function CombatScreen({
             onFlurry={handleFlurry}
             onPatientDefense={handlePatientDefense}
             onStunningStrike={handleStunningStrike}
+            onBardicInspiration={handleBardicInspiration}
             onHuntersMark={handleHuntersMarkClick}
             onWildShape={handleWildShape}
             onSpells={() => setPickingSpell(true)}

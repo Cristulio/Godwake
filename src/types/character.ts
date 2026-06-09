@@ -189,6 +189,15 @@ export interface ClassResources {
    * encounter (createCombat), like the Fighter's Second Wind.
    */
   kiPointsRemaining?: number;
+  /**
+   * Bard: Bardic Inspiration dice left. The pool the Bard spends on its OWN rolls
+   * — banked onto the next attack roll (core/Lore) or weapon damage (Valor
+   * Combat Inspiration), and consumed defensively by Lore's Cutting Words
+   * reaction. Refreshes to its max (bardInspirationMax — CHA mod, deeper at the
+   * college L10 + capstone) at the start of every encounter (createCombat), like
+   * the Monk's Ki. The die SIZE scales with level (bardInspirationDieSize).
+   */
+  inspirationDiceRemaining?: number;
 }
 
 /**
@@ -436,6 +445,14 @@ export interface Character {
    * combat start.
    */
   stunningStrikeActive?: boolean;
+  /**
+   * Bard Bardic Inspiration stance. Set true when the Bard spends an inspiration
+   * die (bonus action): the die is rolled and applied to the next attack roll
+   * (core/Lore) or, for a Valor bard with Combat Inspiration, to the next weapon
+   * hit's DAMAGE (resolved + cleared in playerAttack). A banked die persists
+   * until spent; cleared on combat start.
+   */
+  inspirationActive?: boolean;
   /**
    * One-shot extra attack this turn, funded by Rogue's Cunning Action: Quick
    * Strike. When set, the player can swing again even after the Action is spent.

@@ -108,7 +108,6 @@
     "name": "Arquetipo Marcial: Defensor",
     "description": "Te afianzas tras armadura y escudo: al inicio de cada combate ganas puntos de golpe temporales iguales a 3 + tu nivel, absorbiendo el daño antes que el tuyo propio. Premia el equipo de tanque y máxima vida que quiere un colchón más profundo tras el que trabajar."
   },
-
   "fighter.defender.hold-the-wall": {
     "name": "Sostener el Muro",
     "description": "Cuando la línea se dobla, tú la afianzas. La primera vez que bajas de la mitad de tus puntos de golpe en un combate, hallas un segundo aliento de temple —puntos de golpe temporales iguales a tu nivel, que absorben los golpes que estaban a punto de caer sobre carne desnuda."
@@ -201,7 +200,6 @@
     "name": "Arquetipo Pícaro: Espadachín",
     "description": "Tu Ataque Furtivo se activa cada turno sin necesidad de ventaja ni objetivo ensangrentado. Premia el equipo de daño constante —el bonificador siempre está activo."
   },
-
   "rogue.swashbuckler.rakish-duelist": {
     "name": "Duelista Galante",
     "description": "Una hoja, un enemigo, y todo el espacio que necesitas. Cuando solo un enemigo se yergue aún contra ti, peleas con filo de duelista —+2 al impacto, y tu Ataque Furtivo acierta pase lo que pase. El último en pie es el más fácil de leer."
@@ -319,7 +317,6 @@
     "name": "Tradición Arcana: Ilusión",
     "description": "Comienzas cada combate ya desenfocado (los atacantes golpean con desventaja) y con una imagen especular para absorber un golpe. Premia una construcción evasiva que se apoya en no ser tocado jamás."
   },
-
   "wizard.illusion.layered-veils": {
     "name": "Velos Superpuestos",
     "description": "El velo se dobla sobre sí mismo —ahora comienzas cada combate con dos imágenes especulares tejidas contra el Difuminar, no una. Dos golpes desperdiciados en imágenes residuales antes de que el primero encuentre tu verdadero yo."
@@ -417,7 +414,6 @@
     "name": "Senda Primigenia: Guerrero Tótem",
     "description": "La resistencia del oso es tuya: comienzas cada combate con puntos de golpe temporales iguales a 2 + tu nivel, absorbiendo los primeros golpes. Premia el equipo de tanque de CON y máxima vida —el oso dura más de lo que el Berserker golpea."
   },
-
   "barbarian.totem-warrior.aspect-of-the-bear": {
     "name": "Aspecto del Oso",
     "description": "El espíritu del oso se asienta del todo en tu piel. Mientras te enfureces, te sacudes no solo el acero sino la llama, la escarcha y la tormenta —fuego, frío y rayo se reducen a la mitad junto al daño físico. Y entrar en Furia te envuelve ahora en puntos de golpe temporales iguales a tu nivel, una piel nueva para cada furia nueva."
@@ -515,7 +511,6 @@
     "name": "Presa del Cazador: Matagigantes",
     "description": "Tus impactos contra élites y jefes muerden 1d10 adicional. Premia una construcción mata-jefes que vive o muere por la mayor amenaza de la sala."
   },
-
   "ranger.giant-killer.giantsbane": {
     "name": "Azote de Gigantes",
     "description": "Has hecho un estudio de derribar a los seres descomunales. Tu azote contra élites y jefes se duplica —cada impacto sobre la gran amenaza de la sala clava 2d10 en vez de uno, y el monstruo nombrado se desangra el doble de rápido."
@@ -613,7 +608,6 @@
     "name": "Vitalidad Sellada por la Luna",
     "description": "Las formas que vistes se vuelven más viejas y fuertes aún —la vitalidad de la bestia se ahonda con cada nivel de tu propio poder."
   },
-
   "monk": {
     "name": "Monje",
     "characterName": "Shen Raíz de Hierro",
@@ -714,5 +708,94 @@
   "monk.way-of-shadow.cloak-of-shadows": {
     "name": "Manto de Sombras",
     "description": "Vistes la oscuridad como una segunda piel. El golpe de apertura que lanzas desde la sombra inflige aún más ruina cargada de Ki —el primer golpe invisible de cada combate pega más fuerte que nunca, la apertura más certera del camino de la mano vacía."
+  },
+  "bard": {
+    "name": "Bardo",
+    "characterName": "Sylvaine Plañidera",
+    "flavorBlurb": "Habla para librarse de casi todo y canta para abatir lo que queda. Se sostiene sola cuando hace falta, y rara vez es la que cae."
+  },
+  "bard.spellcasting": {
+    "name": "Lanzamiento de Conjuros",
+    "description": "Tejes magia con música y palabra, ligada a tu Carisma: un repertorio de Colegio de control, sonido que rasga la mente y un poco de cura propia, sacado de un puñado de espacios. La Burla Cruel responde a voluntad, un insulto mordaz que clava daño psíquico y desconcierta a su objetivo. Un descanso largo rellena el pozo."
+  },
+  "bard.bardic-inspiration": {
+    "name": "Inspiración Bárdica",
+    "description": "Un puñado de dados de inspiración —tantos como tu modificador de Carisma, renovados en cada combate— que gastas en TUS propias tiradas. Una acción adicional guarda un dado para tu próxima tirada de ataque (crece d6 → d8 → d10 → d12 contigo), el empujón que hace conectar tu Laúd de Guerra o tu hoja. El Colegio reescribe cómo se gasta: Valor lo vuelca en daño de arma, Saber lo gasta en deshacer el golpe de un enemigo."
+  },
+  "bard.jack-of-all-trades": {
+    "name": "Versátil",
+    "description": "Algo de todo se te pega. Sumas la mitad de tu bonificador de competencia a cualquier prueba en la que no estés ya entrenado: la amplitud que te hace un generalista peligroso cuando el camino pone a prueba el ingenio, los nervios o una lengua de plata."
+  },
+  "bard.asi-4": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "bard.font-of-inspiration": {
+    "name": "Fuente de Inspiración",
+    "description": "El pozo corre más hondo y los dados suenan más fuerte: tu dado de Inspiración Bárdica crece a un d8. El empujón que prestas a tus propias tiradas muerde más fuerte desde aquí."
+  },
+  "bard.asi-8": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "bard.magical-secrets": {
+    "name": "Secretos Mágicos",
+    "description": "Robas las obras más profundas del arte ajeno: el repertorio se abre más allá del propio Colegio, y tu dado de Inspiración Bárdica crece a un d10. El bardo que lo toma todo prestado responde a todo."
+  },
+  "bard.asi-12": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "bard.superior-inspiration": {
+    "name": "Inspiración Superior",
+    "description": "La canción nunca se agota en el peor momento: tu dado de Inspiración Bárdica crece a un d12, lo más alto que suena el pozo."
+  },
+  "bard.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "bard.asi-19": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "bard.peerless-performer": {
+    "name": "Intérprete sin Igual",
+    "description": "Eres la canción entera: el pozo de inspiración corre dos dados más hondo que nunca, una reserva inagotable que gastar en tu propio arte. La cúspide del largo camino del Colegio."
+  },
+  "bard.lore": {
+    "name": "Colegio del Saber",
+    "description": "El verdadero lanzador: un bardo que vuelca el combate entero con palabra y conjuro. Mejor con equipo de lanzador (el Laúd de Guerra, un orbe de foco, afijos de CD de conjuro); se apoya en Palabras Cortantes para mantener en pie al frágil apoyo."
+  },
+  "bard.lore.cutting-words": {
+    "name": "Colegio de Bardo: Colegio del Saber",
+    "description": "Aprendes a clavar la grieta en la seguridad de un enemigo en el peor instante para él. Cuando un golpe enemigo fuera a conectar, gasta un dado de Inspiración Bárdica como reacción para restarlo del ataque: con suficiente, el golpe silba en el aire. La guardia del frágil lanzador, pagada del mismo pozo con el que inspira."
+  },
+  "bard.lore.lore-savant": {
+    "name": "Erudito del Saber",
+    "description": "Tu dominio de la lírica endurece toda atadura y maldición: la CD de salvación de tus conjuros sube en 1. Inmovilizar Persona, Palabra de Poder, Burla Cruel: todo eso cuesta más sacudirse."
+  },
+  "bard.lore.peerless-skill": {
+    "name": "Habilidad sin Par",
+    "description": "Secretos Mágicos Adicionales, y un pozo que no se vacía cuando importa: tu reserva de inspiración corre un dado más hondo, más Palabras Cortantes que desviar, más empuje que gastar en tus propios golpes."
+  },
+  "bard.valor": {
+    "name": "Colegio del Valor",
+    "description": "El verdadero marcial: un bardo que pelea en primera línea y canta entre los golpes. Mejor con equipo de arma (un estoque o mejor arma marcial, armadura intermedia); vuelca la Inspiración Bárdica en daño y golpea dos veces desde nivel 6."
+  },
+  "bard.valor.martial-training": {
+    "name": "Colegio de Bardo: Colegio del Valor",
+    "description": "El entrenamiento del escaldo de guerra: tomas armadura intermedia, escudos y el arsenal marcial completo, el equipo de primera línea del que prescinde el bardo lanzador. Ahora entras en lo peor, no lo rodeas."
+  },
+  "bard.valor.combat-inspiration": {
+    "name": "Inspiración de Combate",
+    "description": "Tu inspiración ya no asienta la puntería: impulsa el golpe. Un dado de Inspiración Bárdica guardado se vuelca en el DAÑO de tu impacto de arma en vez de en la tirada de ataque, la canción de guerra hecha filo."
+  },
+  "bard.valor.extra-attack": {
+    "name": "Ataque Adicional",
+    "description": "La hoja sigue el compás de la canción: puedes atacar dos veces, en lugar de una, siempre que realices la acción de Atacar en tu turno."
+  },
+  "bard.valor.combat-superiority": {
+    "name": "Magia de Batalla",
+    "description": "Curtido en primera línea, tu canción de guerra corre más hondo: la reserva de inspiración gana un dado, más Inspiración de Combate que volcar en cada mandoble."
   }
 }

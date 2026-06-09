@@ -19,6 +19,7 @@ const handlers = {
   onFlurry: () => {},
   onPatientDefense: () => {},
   onStunningStrike: () => {},
+  onBardicInspiration: () => {},
   onHuntersMark: () => {},
   onWildShape: () => {},
   onSpells: () => {},
