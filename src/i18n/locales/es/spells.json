@@ -206,5 +206,21 @@
   "thunderwave": {
     "name": "Onda Atronadora",
     "description": "Una onda de sonido concusivo estalla desde ti y barre toda la línea enemiga —trueno a cada rival. Una salvación de Destreza la reduce a la mitad. La respuesta del bardo a una sala atestada."
+  },
+  "castigate": {
+    "name": "Reprensión",
+    "description": "Lanzas de fuerza divina saltan de tu mano abierta y encuentran un objetivo —1d4+1 cada una, sin tirada de ataque y sin salvación: el juramento simplemente da en el blanco. Tres para empezar, y más a medida que creces. La respuesta a un enemigo demasiado acorazado para cortarlo."
+  },
+  "cure-wounds": {
+    "name": "Curar Heridas",
+    "description": "Pones la luz sobre tus propias heridas y se cierran de tanto en tanto al inicio de cada uno de tus dos próximos turnos. Cantado como una plegaria veloz, así que aún golpeas el mismo aliento."
+  },
+  "compel": {
+    "name": "Duelo Forzado",
+    "description": "Una palabra de mando que ata —el objetivo debe superar una salvación de Sabiduría o quedar sujeto, paralizado durante los siguientes 2 asaltos. El juramento vuelto contra el quebrantador de juramentos."
+  },
+  "searing-light": {
+    "name": "Luz Abrasadora",
+    "description": "Un haz de resplandor puro atraviesa limpio a un objetivo —6d8 de daño radiante. Sin tirada de ataque, sin salvación; la luz simplemente lo encuentra. El estallido del juramento del Resplandor hecho manifiesto."
   }
 }

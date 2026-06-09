@@ -72,7 +72,7 @@ export type SpellEffectKey = z.infer<typeof SpellEffectKeySchema>;
 export const SpellSchema = z.object({
   id: z.string(),
   /** Which class book offers this spell; the level-up picker filters on it. */
-  book: z.enum(['wizard', 'druid', 'bard']),
+  book: z.enum(['wizard', 'druid', 'bard', 'paladin']),
   name: z.string(),
   /** 0 = cantrip (free, no slot cost). 1-3 supported at launch. */
   level: SpellLevelSchema,

@@ -12,7 +12,7 @@ export const HUMAN: Race = RaceSchema.parse({
     cha: 1,
   },
   speed: 30,
-  validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger', 'druid', 'monk', 'bard'],
+  validClasses: ['fighter', 'wizard', 'rogue', 'barbarian', 'ranger', 'druid', 'monk', 'bard', 'paladin'],
   features: [
     {
       id: 'human-versatility',

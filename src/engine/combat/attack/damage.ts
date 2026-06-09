@@ -12,6 +12,7 @@ import { appendLog } from '../log';
 import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
 import { useMetaStore } from '../../../stores/metaStore';
 import { wearsHeavierThanLight } from '../../character/equip';
+import { paladinAuraDamageReduction } from '../paladin';
 import { t } from '../../../i18n';
 
 const UNCANNY_DODGE_LEVEL = 5;
@@ -108,6 +109,13 @@ export function applyDamage(
       kind: 'system',
       text: t('combat.log.disengage', { name: nextCharacter.name, reduction }),
     });
+  }
+  // Paladin Oath of the Bulwark — Unbreakable Aura: a flat cushion shaves every
+  // incoming hit (a persistent passive, so it stays silent to keep the log clean,
+  // unlike the one-shot braces above). Never below zero.
+  const auraReduction = paladinAuraDamageReduction(nextCharacter);
+  if (auraReduction > 0 && workingAmount > 0) {
+    workingAmount = Math.max(0, workingAmount - auraReduction);
   }
   // Rogue Evasion (L10+): a boss's CHARGED special is telegraphed a full turn
   // ahead — the rogue reads the wind-up and rolls clear, taking only half. Fires

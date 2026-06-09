@@ -8,6 +8,7 @@ export * from './cunningAction';
 export * from './rage';
 export * from './monk';
 export * from './bard';
+export * from './paladin';
 export * from './wildShape';
 export * from './huntersMark';
 export * from './vfx';

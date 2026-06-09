@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import type { Character } from '../../types/character';
 import { TouchTooltip } from '../ui/TouchTooltip';
 import type { CombatState } from '../../types/combat';
-import { computeAC, critRange } from '../../engine/character/derived';
+import { computeAC, critRange, characterHasMechanic } from '../../engine/character/derived';
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
@@ -18,6 +18,7 @@ import { turnsUntilCunningRegen } from '../../engine/combat/cunningAction';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { monkKiMax } from '../../engine/combat/monk';
 import { bardInspirationMax, bardInspirationLeft, bardInspirationDieSize } from '../../engine/combat/bard';
+import { layOnHandsLeft, layOnHandsMax } from '../../engine/combat/paladin';
 import { getBlessing } from '../../content/blessings';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { baneQuirkCount } from '../../engine/character/quirks';
@@ -277,12 +278,20 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const isRanger = character.classId === 'ranger';
   const isMonk = character.classId === 'monk';
   const isBard = character.classId === 'bard';
+  const isPaladinClass = character.classId === 'paladin';
 
   // --- Bard resources (Bardic Inspiration) ---
   const inspirationMax = bardInspirationMax(character);
   const inspirationNow = bardInspirationLeft(character);
   const inspirationBanked = character.inspirationActive === true;
   const inspirationDie = bardInspirationDieSize(character);
+
+  // --- Paladin resources (Lay on Hands pool + Divine Smite armed) ---
+  const layPool = layOnHandsLeft(character);
+  const layMax = layOnHandsMax(character);
+  const hasLayOnHands = isPaladinClass && characterHasMechanic(character, 'lay-on-hands');
+  const hasDivineSmite = isPaladinClass && characterHasMechanic(character, 'divine-smite');
+  const smiteArmed = character.smiteArmed === true;
 
   // --- Barbarian resources ---
   const rageRounds = character.resources.rageRoundsRemaining ?? 0;
@@ -554,6 +563,28 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
               />
             )}
           </div>
+        </Section>
+      )}
+
+      {hasLayOnHands && layMax > 0 && (
+        <Section title={t('combat.hud.layOnHands')}>
+          <Pill
+            text={t('combat.hud.layOnHandsPool', { n: layPool, max: layMax })}
+            on={layPool > 0}
+            tone="gold"
+            title={t('combat.hud.layOnHandsTitle')}
+          />
+        </Section>
+      )}
+
+      {hasDivineSmite && (
+        <Section title={t('combat.hud.divineSmite')}>
+          <Pill
+            text={smiteArmed ? t('combat.hud.smiteArmed') : t('combat.hud.smiteIdle')}
+            on={smiteArmed}
+            tone="amber"
+            title={smiteArmed ? t('combat.hud.smiteArmedTitle') : t('combat.hud.smiteIdleTitle')}
+          />
         </Section>
       )}
 

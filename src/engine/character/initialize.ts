@@ -199,6 +199,19 @@ export function classStartingResources(classId: ClassId) {
         // bard reads a point before its first fight.
         inspirationDiceRemaining: 1,
       };
+    case 'paladin':
+      return {
+        // No slots at L1 — the oath's power wakes at L2 (paladinSpellSlots). The
+        // whole divine book is prepared from the start; higher tiers are simply
+        // uncastable until a slot of that level arrives (canCastSpell gates on the
+        // slot), exactly as the Druid's nature book and the Bard's repertoire.
+        spellSlots: {},
+        knownSpells: ['castigate', 'cure-wounds', 'compel', 'searing-light'],
+        // Lay on Hands refills to its max (layOnHandsMax — scales with level + CHA)
+        // at the start of every encounter (createCombat). Seed the L1 value so a
+        // fresh paladin reads a pool before its first fight.
+        layOnHandsRemaining: 9,
+      };
     case 'wizard':
       return {
         spellSlots: { 1: 2, 2: 0, 3: 0, 4: 0 },

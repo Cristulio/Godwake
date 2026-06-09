@@ -1,10 +1,10 @@
 import type { Character } from '../../types/character';
 import type { AbilityName, AbilityScores } from '../../types/abilities';
 import { abilityModifier } from '../../types/abilities';
-import { effectiveAbilityScores, isFullCaster } from './derived';
+import { effectiveAbilityScores } from './derived';
 import { getClass } from '../../content/classes';
 import { getRace } from '../../content/races';
-import { wizardSpellSlots } from './actions';
+import { casterSpellSlots } from './actions';
 import { listSpells } from '../../content/spells';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 
@@ -132,13 +132,15 @@ export function applyLevelUp(character: Character): Character {
     resources.kiPointsRemaining = newLevel + (newLevel >= 20 ? 2 : 0);
   }
 
-  // Full casters (Wizard / Druid): slots scale with level on the shared ladder.
-  // Granting via the slot table also refills the well — leveling reads as a long
-  // rest in narrative terms. The Wizard surfaces a spell-learn picker at the odd
-  // levels (the picked id arrives via the `resources.knownSpells` override); the
-  // Druid prepares a fixed nature book, so no picker fires for it.
-  if (isFullCaster(character.classId)) {
-    resources.spellSlots = wizardSpellSlots({ ...character, level: newLevel });
+  // Spell-slot classes (full casters on the shared ladder; the Paladin on the
+  // shallower half-caster ladder): slots scale with level. Granting via the slot
+  // table also refills the well — leveling reads as a long rest in narrative
+  // terms. The Wizard surfaces a spell-learn picker at the odd levels (the picked
+  // id arrives via the `resources.knownSpells` override); the Druid, Bard, and
+  // Paladin prepare a fixed book, so no picker fires for them.
+  const refilledSlots = casterSpellSlots({ ...character, level: newLevel });
+  if (refilledSlots) {
+    resources.spellSlots = refilledSlots;
   }
 
   return {

@@ -128,7 +128,7 @@ export const STARTER_CLASSES: readonly ClassId[] = ['fighter', 'wizard', 'ranger
  * starters — barbarian first, monk last. They fill the tail of every per-origin
  * order, so every starter opens before any of these for every origin. Editable.
  */
-export const NON_STARTER_ORDER: readonly ClassId[] = ['barbarian', 'rogue', 'druid', 'monk', 'bard'];
+export const NON_STARTER_ORDER: readonly ClassId[] = ['barbarian', 'rogue', 'druid', 'monk', 'bard', 'paladin'];
 
 /** A soul's possible origin — always one of the three forged starters. */
 type StarterClass = 'fighter' | 'wizard' | 'ranger';
@@ -151,10 +151,10 @@ const UNLOCK_ORDER_BY_ORIGIN: Record<StarterClass, readonly ClassId[]> = {
  * Cumulative RENOWN-SPENT bars for unlock slots 2..8 (the origin holds slot 1 and
  * is always worn — bar 0). Slot 2 opens on ANY spend, the first Grove offering,
  * modelled as `>= 1` since renown is only ever spent in positive whole numbers.
- * The Bard sits in the deepest slot (bar 800 — above the Monk's 600), the last
- * soul a tribute-laden wheel opens. Editable data.
+ * The Paladin sits in the deepest slot (bar 1000 — above the Bard's 800), the
+ * last soul a tribute-laden wheel opens. Editable data.
  */
-export const SLOT_RENOWN_THRESHOLDS: readonly number[] = [1, 100, 200, 300, 450, 600, 800];
+export const SLOT_RENOWN_THRESHOLDS: readonly number[] = [1, 100, 200, 300, 450, 600, 800, 1000];
 
 /**
  * The soul's full unlock ORDER given the starter it forged: the origin first

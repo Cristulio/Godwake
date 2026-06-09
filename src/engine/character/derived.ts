@@ -175,11 +175,17 @@ export function isFullCaster(classId: Character['classId']): boolean {
   return classId === 'wizard' || classId === 'druid' || classId === 'bard';
 }
 
+/** A half-caster that spends spell slots off a shallower ladder than the full
+ *  casters — the Paladin (CHA), whose slots also fuel Divine Smite. */
+export function isHalfCaster(classId: Character['classId']): boolean {
+  return classId === 'paladin';
+}
+
 /** The ability a caster keys spells off: Wisdom for the Druid, Charisma for the
- *  Bard, Intelligence otherwise. */
+ *  Bard and the Paladin, Intelligence otherwise. */
 export function spellcastingAbility(character: Readonly<Character>): AbilityName {
   if (character.classId === 'druid') return 'wis';
-  if (character.classId === 'bard') return 'cha';
+  if (character.classId === 'bard' || character.classId === 'paladin') return 'cha';
   return 'int';
 }
 

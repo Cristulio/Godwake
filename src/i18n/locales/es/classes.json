@@ -797,5 +797,86 @@
   "bard.valor.combat-superiority": {
     "name": "Magia de Batalla",
     "description": "Curtido en primera línea, tu canción de guerra corre más hondo: la reserva de inspiración gana un dado, más Inspiración de Combate que volcar en cada mandoble."
+  },
+  "paladin": {
+    "name": "Paladín",
+    "characterName": "Dama Ysolde",
+    "flavorBlurb": "Se mete en lo peor con armadura completa y se queda ahí. Cierra sus propias heridas, abrasa lo que golpea, y rara vez cae antes que aquello que vino a matar."
+  },
+  "paladin.lay-on-hands": {
+    "name": "Imposición de Manos",
+    "description": "Un caudal de gracia sanadora que llevas a cada combate, renovado en cada encuentro. Como acción adicional presionas la luz sobre tus propias heridas y un fragmento del pozo las cierra —el aguante que permite al guerrero sagrado sostenerse solo. La reserva se ahonda conforme creces y conforme se hincha tu Carisma."
+  },
+  "paladin.aura-of-protection": {
+    "name": "Aura de Protección",
+    "description": "El juramento te ciñe como una segunda piel. Sumas tu modificador de Carisma a cada tirada de salvación —la palabra de atadura, la garra paralizante, el miedo que quiebra voluntades menores te hallan a todos más difícil de retener."
+  },
+  "paladin.spellcasting": {
+    "name": "Lanzamiento de Conjuros",
+    "description": "Tu fe responde en obras —un pequeño repertorio divino ligado a tu Carisma, sacado de un caudal somero de espacios de medio lanzador: Reprensión para herir a un enemigo demasiado acorazado para cortarlo, Curar Heridas para sanar, una palabra de atadura para retener a un enemigo, y una lanza de luz abrasadora. Un descanso largo rellena el pozo."
+  },
+  "paladin.divine-smite": {
+    "name": "Castigo Divino",
+    "description": "Aprendes a verter un espacio de conjuro en un golpe que aterriza. Arma un castigo como un acto gratuito; el próximo impacto de arma que conecte gasta tu espacio más bajo para abrasar al objetivo con fuego radiante sobre el acero —y cuanto más alto el espacio, más brillante arde."
+  },
+  "paladin.asi-4": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "paladin.extra-attack": {
+    "name": "Ataque Adicional",
+    "description": "Tu brazo armado lleva el paso de tu fe —puedes atacar dos veces, en lugar de una, siempre que realices la acción de Atacar en tu turno."
+  },
+  "paladin.asi-8": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "paladin.improved-divine-smite": {
+    "name": "Castigo Divino Mejorado",
+    "description": "El resplandor acude con más facilidad ahora —cada Castigo Divino que sueltas lleva un dado más de fuego sagrado. Cuanto más tiempo se sostiene el juramento, más pesada es la luz con que responde."
+  },
+  "paladin.asi-12": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "paladin.asi-16": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "paladin.asi-19": {
+    "name": "Mejora de Puntuación de Característica",
+    "description": "Puedes aumentar una característica en 2, o dos características en 1 cada una."
+  },
+  "paladin.oathkeeper": {
+    "name": "Juramento Inquebrantable",
+    "description": "El juramento está completo y el pozo de misericordia corre sin fondo —tu reserva de Imposición de Manos se ahonda en una medida plena de tu propio poder, una reserva inagotable de gracia que gastar en tu propia firmeza. La cúspide del largo camino de la fe."
+  },
+  "paladin.radiant": {
+    "name": "Juramento del Resplandor",
+    "description": "La inclinación lanzadora —un Paladín cuyos castigos arden más vivos y cuya fe responde en luz abrasadora. Mejor con equipo de Carisma (afijos de CD de conjuro, una mano secundaria de lanzador) para impulsar sus castigos mayores y su palabra de atadura. Más ligero con el arma, más pesado con el fuego sagrado."
+  },
+  "paladin.radiant.radiant-smite": {
+    "name": "Juramento Sagrado: Juramento del Resplandor",
+    "description": "Juras el juramento del alba, y tus castigos responden más ardientes —cada Castigo Divino lleva un dado más de fuego radiante. El Paladín del Resplandor gasta sus espacios como luz, no solo como acero."
+  },
+  "paladin.radiant.sears-the-wicked": {
+    "name": "Juicio Abrasador",
+    "description": "La luz que portas ha crecido hasta algo que asusta a la oscuridad —cada Castigo Divino arde un dado más caliente todavía. Pocas cosas malvadas resisten mucho ante la medida plena de tu resplandor."
+  },
+  "paladin.bulwark": {
+    "name": "Juramento del Baluarte",
+    "description": "La inclinación marcial —un Paladín que se planta al frente y se niega a caer. Mejor con equipo de arma y de tanque: su aura lo ciñe con puntos de golpe temporales en cada combate, y sus castigos responden a cada crítico gratis. El muro autopotenciador que el juramento fue forjado para ser."
+  },
+  "paladin.bulwark.aura-of-the-bulwark": {
+    "name": "Juramento Sagrado: Juramento del Baluarte",
+    "description": "Juras el juramento del muro de escudos, y el aura se vuelve hacia dentro para ceñirte. Al inicio de cada combate te envuelve en puntos de golpe temporales —un colchón de gracia que absorbe los primeros golpes antes que se gaste tu propia sangre."
+  },
+  "paladin.bulwark.crit-smite": {
+    "name": "Castigo del Cruzado",
+    "description": "Tu fe golpea más fuerte en la apertura perfecta —siempre que aterriza un golpe crítico, un Castigo Divino responde gratis, gastando un espacio para abrasar al objetivo aunque no hubieras armado nada. El muro contraataca."
+  },
+  "paladin.bulwark.unbreakable-aura": {
+    "name": "Aura Inquebrantable",
+    "description": "El aura del muro de escudos corre más honda que nunca —sus puntos de golpe protectores se hinchan, y un colchón firme ahora resta algo de cada golpe que aterriza sobre ti. Cuanto más tiempo te sostienes, más difícil eres de derribar."
   }
 }

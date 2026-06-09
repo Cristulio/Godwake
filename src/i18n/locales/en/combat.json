@@ -320,6 +320,8 @@
     "openingVolley": "{name} looses an opening volley before the enemy can close.",
     "combatBegins": "Combat begins.",
     "bardicInspiration": "{name} draws breath and steels the next blow — a d{die} of inspiration banked.",
+    "layOnHands": "{name} lays on hands and the light knits {amount} HP shut.",
+    "divineSmiteArm": "{name} raises a Divine Smite — the next blow will burn.",
     "cuttingWords": "{name} cuts the blow short with a withering word (−{n}) — it goes wide.",
     "viciousMockeryCast": "{name} hurls {spell} at {target}. WIS save{resolute}: {mod} = {total} vs DC {dc} — {result}.",
     "viciousMockeryDamage": "{target} takes {dealt} psychic{halved}.",
@@ -519,7 +521,15 @@
     "inspirationReady": "A Bardic Inspiration die to spend on your own rolls. The well refills as each fight begins.",
     "inspirationSpent": "Spent — refills next fight.",
     "inspirationBanked": "A die is banked onto your next attack roll (or weapon damage, for Valor).",
-    "inspirationBankedPill": "d{die} ready"
+    "inspirationBankedPill": "d{die} ready",
+    "layOnHands": "Lay on Hands",
+    "layOnHandsPool": "{n}/{max} HP",
+    "layOnHandsTitle": "Your renewable pool of healing grace. Spend a chunk as a bonus action to mend your own wounds; it refills each fight.",
+    "divineSmite": "Divine Smite",
+    "smiteArmed": "Armed",
+    "smiteIdle": "Idle",
+    "smiteArmedTitle": "A smite is armed — your next weapon hit spends a spell slot for radiant damage.",
+    "smiteIdleTitle": "Arm a smite to sear your next weapon hit with a spell slot's radiance."
   },
   "bar": {
     "secondWind": "Bonus action: heal 1d10 + your level. Once per combat.",
@@ -543,6 +553,8 @@
     "wildShape": "Bonus action: shed the body for a beast's shape — gain its vitality as temporary HP and rend with claws for several rounds. Once or twice per combat.",
     "spells": "Action: pick a prepared spell.",
     "inspirationLore": "Bonus action: bank a Bardic Inspiration die (d{die}) onto your next attack roll — the lift that lands the blow.",
-    "inspirationValor": "Bonus action: bank a Bardic Inspiration die (d{die}) onto your next weapon hit's DAMAGE (Combat Inspiration)."
+    "inspirationValor": "Bonus action: bank a Bardic Inspiration die (d{die}) onto your next weapon hit's DAMAGE (Combat Inspiration).",
+    "layOnHands": "Bonus action: pour a chunk of your renewable Lay on Hands pool into your own wounds. Refills each fight.",
+    "divineSmite": "Free: arm a Divine Smite — your next weapon hit spends your cheapest spell slot to sear the target with radiant damage."
   }
 }
