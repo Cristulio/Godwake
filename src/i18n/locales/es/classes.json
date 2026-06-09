@@ -800,8 +800,8 @@
   },
   "paladin": {
     "name": "Paladín",
-    "characterName": "Dama Ysolde",
-    "flavorBlurb": "Se mete en lo peor con armadura completa y se queda ahí. Cierra sus propias heridas, abrasa lo que golpea, y rara vez cae antes que aquello que vino a matar."
+    "characterName": "Minsc",
+    "flavorBlurb": "Repartiendo justicia a patadas, con armadura completa, por orden de un hámster. Minsc cierra sus propias heridas, abrasa lo que golpea, y carga contra los malvados con la dicha de un berserker. Boo, montado en su hombro, lo ve todo y nunca lo ha guiado mal."
   },
   "paladin.lay-on-hands": {
     "name": "Imposición de Manos",
