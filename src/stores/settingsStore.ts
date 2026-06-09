@@ -1,6 +1,27 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { Locale } from '../i18n';
+import { LOCALES, DEFAULT_LOCALE, type Locale } from '../i18n/locale';
+
+/**
+ * First-run language guess from the browser. A new player with no stored
+ * preference gets their browser's language if we ship it (currently es), else
+ * English — so a Spanish browser lands on our native es instead of reaching for
+ * the (now-disabled) Google Translate. Returning players keep their persisted
+ * choice; this only seeds the default the persist layer may override.
+ */
+export function detectInitialLocale(): Locale {
+  try {
+    const tags = navigator.languages?.length ? navigator.languages : [navigator.language];
+    for (const tag of tags) {
+      const base = tag?.toLowerCase().split('-')[0];
+      const hit = LOCALES.find((l) => l === base);
+      if (hit) return hit;
+    }
+  } catch {
+    // No navigator (SSR / tests) — fall through to the default.
+  }
+  return DEFAULT_LOCALE;
+}
 
 /**
  * Gameplay settings, split out of the god gameStore so they:
@@ -37,7 +58,7 @@ export const useSettingsStore = create<SettingsState>()(
       speedMultiplier: 1,
       autoEndTurnDelayMs: 1100,
       autoBattle: false,
-      locale: 'en',
+      locale: detectInitialLocale(),
       firstRunSeen: false,
       setSpeed: (s) => set({ speedMultiplier: s }),
       setAutoEndTurnDelay: (ms) =>

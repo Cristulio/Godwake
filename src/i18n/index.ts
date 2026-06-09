@@ -1,8 +1,7 @@
 import { useSettingsStore } from '../stores/settingsStore';
+import { LOCALES, DEFAULT_LOCALE, type Locale } from './locale';
 
-export type Locale = 'en' | 'es';
-export const LOCALES: Locale[] = ['en', 'es'];
-export const DEFAULT_LOCALE: Locale = 'en';
+export { LOCALES, DEFAULT_LOCALE, type Locale };
 
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 type NamespaceData = Record<string, Json>;
