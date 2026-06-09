@@ -1,6 +1,7 @@
 {
   "fighter": {
     "name": "Guerrero",
+    "characterName": "Sir Ladrillo",
     "flavorBlurb": "Un instrumento contundente con brazo de espada. Camina al frente, recibe el primer golpe y vive para refunfuñar sobre ello."
   },
   "fighter.fighting-style-defense": {
@@ -183,6 +184,7 @@
 
   "wizard": {
     "name": "Mago",
+    "characterName": "Veyra Ceniza",
     "flavorBlurb": "Erudito del antiguo pacto. Lee los grimorios como la mayoría lee las señales de peligro: despacio, y luego dos veces."
   },
   "wizard.spellcasting": {
@@ -288,6 +290,7 @@
 
   "barbarian": {
     "name": "Bárbaro",
+    "characterName": "Korrek Melena de Sangre",
     "flavorBlurb": "No lleva escudo y no quiere ninguno. Se mete en lo peor, deja que la furia tome el volante y sigue en pie cuando el polvo cae."
   },
   "barbarian.rage": {
@@ -377,6 +380,7 @@
 
   "ranger": {
     "name": "Explorador",
+    "characterName": "Faelar Pluma",
     "flavorBlurb": "Abre cada sala desde el otro extremo. Marca lo más peligroso a la vista y lo alimenta con flechas hasta que deja de moverse."
   },
   "ranger.hunters-mark": {
@@ -462,6 +466,7 @@
 
   "druid": {
     "name": "Druida",
+    "characterName": "Lureth Sombra de Roble",
     "flavorBlurb": "Guarda la antigua fe allá donde los nuevos dioses fueron a la guerra. Le habla con suavidad a la tormenta, y viste sus colmillos cuando las palabras suaves se agotan."
   },
   "druid.spellcasting": {
@@ -555,6 +560,7 @@
 
   "monk": {
     "name": "Monje",
+    "characterName": "Shen Raíz de Hierro",
     "flavorBlurb": "No lleva hoja y no la necesita. Lee el aliento de una sala, y luego la llena de puños más rápido de lo que un enemigo puede responder."
   },
   "monk.martial-arts": {

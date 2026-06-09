@@ -97,6 +97,9 @@ export function CharacterCreationScreen() {
   const sealedOptions = ordered.filter((o) => !isSelectable(o.classId));
   const [selectedClassId, setSelectedClassId] = useState<ClassId | null>(null);
   const selected = options.find((o) => o.classId === selectedClassId) ?? null;
+  const selectedName = selected
+    ? tc('classes', selected.classId, 'characterName', selected.characterName)
+    : '';
 
   function confirm() {
     if (!selectedClassId) return;
@@ -178,7 +181,7 @@ export function CharacterCreationScreen() {
                   </span>
                 </div>
                 <div className="text-[var(--color-text-secondary)] text-[11px] tracking-wide mt-1">
-                  {opt.characterName}
+                  {tc('classes', opt.classId, 'characterName', opt.characterName)}
                 </div>
               </div>
 
@@ -268,7 +271,7 @@ export function CharacterCreationScreen() {
       <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-border-warm)]">
         <div className="font-narrative text-[var(--color-text-dim)] text-sm italic tracking-wide hidden md:block">
           {selected
-            ? t('screens.charCreation.standsReady', { name: selected.characterName })
+            ? t('screens.charCreation.standsReady', { name: selectedName })
             : t('screens.charCreation.pickToContinue')}
         </div>
         <Button
@@ -279,10 +282,10 @@ export function CharacterCreationScreen() {
         >
           {selected
             ? newGamePlusFlow
-              ? t('screens.charCreation.descendAs', { name: selected.characterName })
+              ? t('screens.charCreation.descendAs', { name: selectedName })
               : isSwap
-                ? t('screens.charCreation.becomeAs', { name: selected.characterName })
-                : t('screens.charCreation.beginAs', { name: selected.characterName })
+                ? t('screens.charCreation.becomeAs', { name: selectedName })
+                : t('screens.charCreation.beginAs', { name: selectedName })
             : t('screens.charCreation.chooseSoul')}
         </Button>
       </div>
