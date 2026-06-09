@@ -377,6 +377,7 @@
       "default": "a curse"
     }
   },
+  "slain": "Slain",
   "dice": {
     "crit": "CRIT!",
     "hit": "HIT",
