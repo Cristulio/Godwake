@@ -33,6 +33,8 @@ import esTutorials from './locales/es/tutorials.json';
 import esTwists from './locales/es/twists.json';
 import { GLOSSARY } from '../content/glossary';
 import esGlossary from './locales/es/glossary.json';
+import { listCampBoons } from '../content/campBoons';
+import esCampBoons from './locales/es/campBoons.json';
 
 type Overlay = Record<string, Record<string, string>>;
 
@@ -48,6 +50,7 @@ const relicSlots = esRelicSlots as Overlay;
 const tutorials = esTutorials as Overlay;
 const twists = esTwists as Overlay;
 const glossary = esGlossary as Overlay;
+const campBoons = esCampBoons as Overlay;
 
 /** A row field is "covered" when it exists and is a non-empty Spanish string. */
 function covered(row: Record<string, string> | undefined, field: string): boolean {
@@ -345,6 +348,24 @@ describe('es/twists.json completeness', () => {
     const ids = new Set<string>(DUNGEON_TWISTS.map((t) => t.id));
     const orphans = Object.keys(twists).filter((id) => !ids.has(id));
     expect(orphans, `orphan twist overlays: ${orphans.join(', ')}`).toEqual([]);
+  });
+});
+
+describe('es/campBoons.json completeness', () => {
+  it('every camp boon has a Spanish name + description + flavor', () => {
+    const missing: string[] = [];
+    for (const b of listCampBoons()) {
+      if (!covered(campBoons[b.id], 'name')) missing.push(`${b.id}.name`);
+      if (!covered(campBoons[b.id], 'description')) missing.push(`${b.id}.description`);
+      if (!covered(campBoons[b.id], 'flavor')) missing.push(`${b.id}.flavor`);
+    }
+    expect(missing, `missing camp-boon overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('has no orphan camp-boon ids', () => {
+    const ids = new Set(listCampBoons().map((b) => b.id));
+    const orphans = Object.keys(campBoons).filter((id) => !ids.has(id));
+    expect(orphans, `orphan camp-boon overlays: ${orphans.join(', ')}`).toEqual([]);
   });
 });
 
