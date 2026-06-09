@@ -17,6 +17,7 @@ import type { UpgradePurchaseError } from '../../stores/metaStore';
 import { GroveScene } from './GroveScene';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import { useT } from '../../i18n/useT';
+import { stripDiacritics } from '../../i18n';
 
 type FlashKind = 'ok' | 'err';
 /** Shared functional tabs plus the active class's own tab. */
@@ -104,7 +105,7 @@ export function DruidGroveScreen() {
             className="font-display text-2xl md:text-3xl text-[var(--color-accent-amber)] tracking-[0.15em]"
             style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.85), 0 0 18px rgba(244,167,66,0.3)' }}
           >
-            {t('hub.grove.title')}
+            {stripDiacritics(t('hub.grove.title'))}
           </h1>
           <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-widest mt-1">
             {t('hub.grove.subtitle')}
@@ -169,7 +170,7 @@ export function DruidGroveScreen() {
 
       <div className="flex-none mb-3 text-center">
         <div className="font-display text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.3em]">
-          {tabLabel}
+          {stripDiacritics(tabLabel)}
         </div>
         <div className="font-narrative italic text-[var(--color-text-secondary)] text-xs mt-1">
           {tabTagline}
@@ -260,8 +261,8 @@ function TabButton({ label, owned, max, active, highlight, onClick }: TabButtonP
       type="button"
       onClick={onClick}
       className={`
-        flex-1 min-w-[5rem] py-2 px-3 border-2 border-b-0 transition-colors text-center
-        font-display text-[11px] uppercase tracking-widest
+        flex-1 min-w-[4.5rem] py-2 px-2 border-2 border-b-0 transition-colors text-center
+        font-display text-[10px] uppercase tracking-wide
         ${active
           ? 'border-[var(--color-accent-amber)] text-[var(--color-accent-amber)] bg-[var(--color-bg-panel)]'
           : highlight
@@ -269,7 +270,7 @@ function TabButton({ label, owned, max, active, highlight, onClick }: TabButtonP
             : 'border-[var(--color-border-dim)] text-[var(--color-text-dim)] hover:text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'}
       `}
     >
-      <div>{label}</div>
+      <div className="[overflow-wrap:anywhere] leading-[1.2]">{stripDiacritics(label)}</div>
       <div className="font-mono text-[9px] mt-0.5 opacity-70">
         {owned} / {max}
       </div>
