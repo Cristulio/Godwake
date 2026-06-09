@@ -39,10 +39,11 @@ export function RoomHeader({ delve, blessingIds = [], quirkIds = [] }: RoomHeade
 
   return (
     <>
-      {/* lg:pr reserves a right safe-zone so the Soul Ledger never slides under
-          the fixed top-right Sound/Settings/Feedback cluster (top-3 right-3) on
-          wide-but-not-huge viewports, where this header fills the row. */}
-      <div className="flex items-center justify-between gap-3 lg:pr-[17rem]">
+      {/* Reserve a right safe-zone so the Soul Ledger never slides under the
+          fixed top-right Sound/Settings/Feedback cluster (top-3 right-3). On
+          mobile the cluster is icon-only (~7rem); on lg it carries text labels
+          (~17rem). Without a mobile reserve the Ledger overlapped it in combat. */}
+      <div className="flex items-center justify-between gap-3 pr-28 lg:pr-[17rem]">
         <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em]">
           {/* Pixel display font has no accented capitals — fold them so the
               localized chapter label never falls back to a mismatched glyph. */}

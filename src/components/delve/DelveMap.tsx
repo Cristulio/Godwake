@@ -112,8 +112,10 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
   const { active: eliteCoachActive, dismiss: dismissEliteCoach } =
     useEliteIntroCoach(hasSelectableElite);
 
-  // Follow the run: scroll the current node toward the centre of the viewport
-  // each step, so a deep route shows where you are instead of staying pinned left.
+  // Follow the run: scroll so the ROAD AHEAD is centred — the upcoming reachable
+  // nodes, not the node just cleared. (Centring on the current node hid the
+  // choices off to the right.) Falls back to the current node at a chapter's end
+  // when nothing reachable remains.
   useEffect(() => {
     const frame = frameRef.current;
     if (!frame || !current) return;
@@ -121,7 +123,13 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
     if (!node) return;
     const max = frame.scrollWidth - frame.clientWidth;
     if (max <= 0) return;
-    const left = Math.max(0, Math.min(node.cx - frame.clientWidth / 2, max));
+    const aheadXs = (current.next ?? [])
+      .map((id) => byId.get(id)?.cx)
+      .filter((x): x is number => x !== undefined);
+    const targetCx = aheadXs.length > 0
+      ? aheadXs.reduce((sum, x) => sum + x, 0) / aheadXs.length
+      : node.cx;
+    const left = Math.max(0, Math.min(targetCx - frame.clientWidth / 2, max));
     try {
       frame.scrollTo({ left, behavior: 'smooth' });
     } catch {
