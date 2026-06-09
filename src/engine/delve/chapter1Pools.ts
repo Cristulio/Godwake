@@ -23,6 +23,13 @@ export interface EncounterEntry {
   xpReward: number;
   /** Optional gold bonus dropped on victory (e.g., bugbear's stash). */
   goldReward?: number;
+  /**
+   * Chapter-agnostic encounters (the ascendant elites) set this so the elite-room
+   * builder normalizes their stats AND rewards to the chapter they land in — a
+   * fixed CR-15 block is ruinous in Ch1 and underwhelming in the final chapter.
+   * See {@link ascendantChapterScale}.
+   */
+  scaleToChapter?: boolean;
 }
 
 export const WARMUP_POOL: EncounterEntry[] = [
