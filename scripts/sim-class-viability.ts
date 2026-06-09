@@ -352,6 +352,25 @@ function tryEquipDrop(c: Character, ref: ItemRef): Character {
   return c; // not an upgrade — don't hoard it
 }
 
+/**
+ * Equip any owned-but-unequipped inventory gear that now improves the loadout —
+ * mirrors a player kitting up when a level-up unlocks a proficiency (e.g. a Valor
+ * bard donning the shield its martial training grants at L3). Reuses the
+ * tryEquipDrop guards; a no-op for classes whose starting equip is already best.
+ */
+function reEquipFromInventory(c: Character): Character {
+  let best = c;
+  for (let i = 0; i < best.inventory.length; i++) {
+    const ref = best.inventory[i];
+    if (monkFightsUnarmed(best) && slotForItem(ref.itemId) === 'mainHand') continue;
+    const equipped = equipItem(best, i);
+    if (equipped !== best && loadoutScore(equipped) > loadoutScore(best) + 0.01) {
+      best = equipped;
+    }
+  }
+  return best;
+}
+
 /** A random un-owned eligible relic (mirrors metaStore.grantLegendaryDrop). */
 function bankRandomLegendary(roller: DiceRoller, classId: SchemaClassId, owned: string[]): string | null {
   const pool = legendaryDropPool(classId).filter((id) => !owned.includes(id));
@@ -808,6 +827,7 @@ function liveOneLife(
         while (character.level < MAX_LEVEL && character.xp >= xpForLevel(character.level + 1)) {
           character = simulateLevelUp(character);
         }
+        character = reEquipFromInventory(character);
       }
     }
 
