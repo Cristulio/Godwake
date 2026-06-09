@@ -103,6 +103,10 @@ const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger',
 
 const SOULS_PER_CLASS = Number(process.env.SOULS_PER_CLASS ?? 150);
 const MAX_LIVES = Number(process.env.MAX_LIVES ?? 150);
+// Force a subclass instead of the auto-picked subclasses[0]. Lets the sim probe
+// the non-default college/path (e.g. SUBCLASS=valor to play the martial Bard,
+// which subclasses[0]=lore otherwise hides). Applies to whatever classes run.
+const SUBCLASS_OVERRIDE = process.env.SUBCLASS || null;
 const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.env.ARCHETYPE ?? '')
   ? (process.env.ARCHETYPE as Archetype)
   : 'balanced';
@@ -498,6 +502,7 @@ function freshSoul(classId: ClassId): SoulState {
 /** Build the L1 vessel that descends, mirroring delveStore.startDelve + gear. */
 function descend(roller: DiceRoller, soul: SoulState): Character {
   let c = buildPlayerCharacter(presetCreationInput(soul.classId));
+  if (SUBCLASS_OVERRIDE) c = { ...c, subclassId: SUBCLASS_OVERRIDE };
   c = applyPermanentUpgrades(c, soul.unlockedUpgrades);
   c = applyDelveStartUpgrades(c, soul.unlockedUpgrades);
   c = { ...c, quirks: rollQuirks(roller, 2) };
