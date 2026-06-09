@@ -42,6 +42,7 @@ import { useCombatStore } from './combatStore';
 import { useScreenStore } from './screenStore';
 import { useMetaStore } from './metaStore';
 import { isFeatureUnlocked } from '../engine/progression/unlocks';
+import { runAchievementCheck } from '../engine/achievements/check';
 
 /**
  * Queue the one-time unlock tutorial for every FEATURE whose delve-count threshold
@@ -597,6 +598,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // progressive-unlock ladder (engine/progression/unlocks.ts).
     const prevDelveCount = meta.delveCount;
     meta.incrementDelveCount();
+    // Achievement bookkeeping: which class-souls have ever been carried down.
+    meta.recordClassPlayed(ch.classId);
     // Reveal-on-unlock: fire a one-time tutorial for any feature this descent
     // just opened. Reads the post-increment count off the captured prev value.
     // These are hub-surfaced (delve-count axis): if this descent crossed a
@@ -813,6 +816,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       const after = useCharacterStore.getState().character;
       goldGained = (after?.goldInPocket ?? character.goldInPocket) - goldBefore;
       xpGained = (after?.xp ?? character.xp ?? xpBefore) - xpBefore;
+      // Achievement counters: a win ending on a single hit point, and elites
+      // felled in open battle (the fight path — the toll path never reaches here).
+      if ((after?.hp.current ?? 0) === 1) meta.recordLowHpWin();
+      if (room.kind === 'elite') meta.recordEliteFightWin();
     }
 
     useCombatStore.getState().setCombat(null);
@@ -896,6 +903,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     ) {
       get().markChapter1BossKilled();
     }
+
+    // Achievement check: a cleared chapter, banked relic/set drops from the room
+    // just resolved, and the low-HP / elite counters are all settled by now.
+    runAchievementCheck();
 
     // Level up or return to the delve (room already advanced above).
     const updatedChar = useCharacterStore.getState().character;
@@ -1014,6 +1025,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (chaptersThisRun > 0) {
       const prevChapters = meta.chaptersCleared;
       meta.recordChapterCleared(chaptersThisRun);
+      // Per-class depth high-water for the class-specific achievements (bard arc,
+      // "every soul", "eight masters"). classId rides reincarnation unchanged.
+      meta.recordClassChapterClear(character.classId, chaptersThisRun);
       // Reaching a new depth opens the next advantage — fire the reveal for any
       // power feature this clear just unlocked (boss-intel, class swapping, epic
       // gear, legendaries, sets at completion).
@@ -1024,6 +1038,10 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // unlocks nothing new (Spire-style).
     if (wonBoss) {
       meta.unlockNextAscension(s.delve.ascensionLevel ?? 0);
+      // Achievement high-water: the deepest ascension a run was beaten at, and
+      // separately the deepest ascension the FULL chain (Melissan) fell at.
+      meta.recordClearAscension(s.delve.ascensionLevel ?? 0);
+      if (isFullChain) meta.recordThroneAscension(s.delve.ascensionLevel ?? 0);
       // Legendaries are no longer a guaranteed per-clear grant (Wave 2): they
       // drop rarely from any combat source mid-run and bank to the collection
       // (see resolveRoomVictory). Clearing the chain only advances ascension.
@@ -1031,6 +1049,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (!meta.druidGroveUnlocked && settled.renown >= GROVE_UNLOCK_THRESHOLD) {
       meta.setDruidGroveUnlocked(true);
     }
+    // Run's over (clear or death): evaluate every milestone it may have crossed.
+    runAchievementCheck();
   },
 
   failDelve: () => {
@@ -1188,6 +1208,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       }
       get().addDelveReward(gold, 0);
       result = { roll: roll.total, outcome: 'win', blessingId: blessingId ?? null, gold, damage: 0 };
+      // Achievement: the dark answered the campfire gamble.
+      useMetaStore.getState().recordDarkGambleWin();
+      runAchievementCheck();
     } else {
       // The dark takes its due. A campfire gamble bleeds you, but never kills.
       const damage = Math.max(1, Math.floor(character.hp.max * 0.25));
@@ -1228,6 +1251,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         hp: { ...character.hp, current: newCurrent },
       });
     }
+    // Achievement: a toll paid to slip past an elite (the coward's tithe).
+    useMetaStore.getState().recordEliteGoldTaken();
+    runAchievementCheck();
     get().advanceRoom();
   },
 

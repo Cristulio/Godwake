@@ -171,6 +171,33 @@ interface MetaStoreState {
    * mastery: survives reincarnation and a New Game, reset only by save deletion.
    */
   throneCompleted: boolean;
+  /**
+   * Achievement ids the soul has unlocked (content/achievements.ts). Account
+   * level — survives reincarnation, reset only on save-delete (mirrors
+   * throneCompleted). evaluate/unlock flow lives in engine/achievements/check.ts.
+   */
+  unlockedAchievements: string[];
+  /**
+   * Lightweight achievement counters bumped at the event that produces them, for
+   * criteria the meta snapshot can't otherwise derive. All account-level: survive
+   * reincarnation, reset only on save-delete.
+   */
+  /** Battles won with exactly 1 HP remaining. */
+  lowHpWins: number;
+  /** Elites felled in open battle (the fight path, not the toll). */
+  eliteFightWins: number;
+  /** Times the elite's toll was paid to slip past. */
+  eliteGoldTaken: number;
+  /** Campfire "Tempt the Dark" gambles won. */
+  darkGambleWins: number;
+  /** Deepest chapter ever cleared with each class id (high-water per class). */
+  classDeepestChapter: Record<string, number>;
+  /** Class ids the soul has ever descended as. */
+  classesPlayed: ClassId[];
+  /** Highest ascension at which any run beat its final boss (-1 = never). */
+  highestClearAscension: number;
+  /** Highest ascension at which the FULL chain (Melissan) fell (-1 = never). */
+  highestThroneAscension: number;
 
   discoverMonster: (defId: string) => void;
   recordMonsterDefeat: (defId: string) => void;
@@ -248,6 +275,24 @@ interface MetaStoreState {
   markGameCompleted: () => void;
   /** Record the Throne (Melissan / NG+ capstone) felled — gates the Throne ending. */
   markThroneCompleted: () => void;
+  /** Mark an achievement unlocked (idempotent). */
+  unlockAchievement: (id: string) => void;
+  /** Bump the count of battles won at exactly 1 HP. */
+  recordLowHpWin: () => void;
+  /** Bump the count of elites felled in open battle. */
+  recordEliteFightWin: () => void;
+  /** Bump the count of elite tolls paid to slip past. */
+  recordEliteGoldTaken: () => void;
+  /** Bump the count of campfire gambles won. */
+  recordDarkGambleWin: () => void;
+  /** Record the soul has descended as `classId` (idempotent). */
+  recordClassPlayed: (classId: ClassId) => void;
+  /** Raise the per-class deepest-chapter high-water mark for `classId`. */
+  recordClassChapterClear: (classId: ClassId, chapters: number) => void;
+  /** Raise the highest-ascension-cleared (any final boss) high-water mark. */
+  recordClearAscension: (level: number) => void;
+  /** Raise the highest-ascension full-chain (Melissan) high-water mark. */
+  recordThroneAscension: (level: number) => void;
   /** Mark the current campaign a New Game+ run (full chain) or a base run. */
   setNewGamePlusActive: (active: boolean) => void;
   /** Set the run's ascension level, clamped to 0..ascensionUnlocked. */
@@ -281,6 +326,15 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   selectedAscension: 0,
   newGamePlusActive: false,
   throneCompleted: false,
+  unlockedAchievements: [],
+  lowHpWins: 0,
+  eliteFightWins: 0,
+  eliteGoldTaken: 0,
+  darkGambleWins: 0,
+  classDeepestChapter: {},
+  classesPlayed: [],
+  highestClearAscension: -1,
+  highestThroneAscension: -1,
 
   discoverMonster: (defId) =>
     set((s) => {
@@ -512,6 +566,34 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   markThroneCompleted: () =>
     set((s) => (s.throneCompleted ? s : { throneCompleted: true })),
 
+  unlockAchievement: (id) =>
+    set((s) =>
+      s.unlockedAchievements.includes(id)
+        ? s
+        : { unlockedAchievements: [...s.unlockedAchievements, id] },
+    ),
+  recordLowHpWin: () => set((s) => ({ lowHpWins: s.lowHpWins + 1 })),
+  recordEliteFightWin: () => set((s) => ({ eliteFightWins: s.eliteFightWins + 1 })),
+  recordEliteGoldTaken: () => set((s) => ({ eliteGoldTaken: s.eliteGoldTaken + 1 })),
+  recordDarkGambleWin: () => set((s) => ({ darkGambleWins: s.darkGambleWins + 1 })),
+  recordClassPlayed: (classId) =>
+    set((s) =>
+      s.classesPlayed.includes(classId)
+        ? s
+        : { classesPlayed: [...s.classesPlayed, classId] },
+    ),
+  recordClassChapterClear: (classId, chapters) =>
+    set((s) => ({
+      classDeepestChapter: {
+        ...s.classDeepestChapter,
+        [classId]: Math.max(s.classDeepestChapter[classId] ?? 0, chapters),
+      },
+    })),
+  recordClearAscension: (level) =>
+    set((s) => ({ highestClearAscension: Math.max(s.highestClearAscension, level) })),
+  recordThroneAscension: (level) =>
+    set((s) => ({ highestThroneAscension: Math.max(s.highestThroneAscension, level) })),
+
   setNewGamePlusActive: (active) => set({ newGamePlusActive: active }),
 
   setSelectedAscension: (level) =>
@@ -546,5 +628,14 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       selectedAscension: 0,
       newGamePlusActive: false,
       throneCompleted: false,
+      unlockedAchievements: [],
+      lowHpWins: 0,
+      eliteFightWins: 0,
+      eliteGoldTaken: 0,
+      darkGambleWins: 0,
+      classDeepestChapter: {},
+      classesPlayed: [],
+      highestClearAscension: -1,
+      highestThroneAscension: -1,
     }),
 }));

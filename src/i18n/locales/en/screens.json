@@ -351,5 +351,20 @@
       "legendary": "Legendary",
       "artifact": "Artifact"
     }
+  },
+  "achievements": {
+    "title": "Deeds of the Soul",
+    "subtitle": "What the wheel remembers of you",
+    "progress": "{earned} / {total} earned",
+    "back": "← Phandalin",
+    "toastTitle": "Deed Earned",
+    "hiddenName": "??? ??? ???",
+    "hiddenDesc": "A deed yet undone. Walk on, and it may reveal itself.",
+    "categories": {
+      "progression": "The Descent",
+      "challenge": "Trials",
+      "quirky": "Curiosities",
+      "completionist": "Mastery"
+    }
   }
 }

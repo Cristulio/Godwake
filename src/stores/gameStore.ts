@@ -140,6 +140,8 @@ interface GameState {
   tutorialQueue: string[];
   /** Session-only queue of hub-surfaced unlock cards (delve-count axis); shown at the hub before a descent. */
   hubUnlockQueue: string[];
+  /** Session-only queue of achievement-unlock toast ids (head shown first). */
+  achievementToasts: string[];
   introSeen: boolean;
   hasReincarnated: boolean;
   deathCount: number;
@@ -168,6 +170,8 @@ interface GameState {
   selectedAscension: number;
   newGamePlusActive: boolean;
   throneCompleted: boolean;
+  /** Account-level achievement ledger (mirrored from metaStore). */
+  unlockedAchievements: string[];
   /** Session-only: inside the New Game+ run-launcher (see screenStore). */
   newGamePlusFlow: boolean;
 
@@ -234,6 +238,8 @@ interface GameState {
   dismissTutorial: () => void;
   /** Dismiss the head HUB unlock card: mark it seen and shift; the parked descent resumes once the last clears. */
   dismissHubTutorial: () => void;
+  /** Dismiss the head achievement toast (auto-fired on its timer or on tap). */
+  dismissAchievementToast: () => void;
   markIntroSeen: () => void;
 
   // Codex
@@ -327,6 +333,15 @@ interface PersistedSnapshot {
   selectedAscension: number;
   newGamePlusActive: boolean;
   throneCompleted: boolean;
+  unlockedAchievements: string[];
+  lowHpWins: number;
+  eliteFightWins: number;
+  eliteGoldTaken: number;
+  darkGambleWins: number;
+  classDeepestChapter: Record<string, number>;
+  classesPlayed: ClassId[];
+  highestClearAscension: number;
+  highestThroneAscension: number;
   __metadata?: SaveSlotMetadata;
 }
 
@@ -386,6 +401,15 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     selectedAscension: meta.selectedAscension,
     newGamePlusActive: meta.newGamePlusActive,
     throneCompleted: meta.throneCompleted,
+    unlockedAchievements: meta.unlockedAchievements,
+    lowHpWins: meta.lowHpWins,
+    eliteFightWins: meta.eliteFightWins,
+    eliteGoldTaken: meta.eliteGoldTaken,
+    darkGambleWins: meta.darkGambleWins,
+    classDeepestChapter: meta.classDeepestChapter,
+    classesPlayed: meta.classesPlayed,
+    highestClearAscension: meta.highestClearAscension,
+    highestThroneAscension: meta.highestThroneAscension,
     __metadata: {
       savedAt: new Date().toISOString(),
       characterName: ch.character?.name ?? '—',
@@ -500,6 +524,20 @@ function scatterSnapshot(s: PersistedSnapshot) {
       typeof s.selectedAscension === 'number' && s.selectedAscension >= 0
         ? s.selectedAscension
         : 0,
+    // Achievement ledger + counters. Old saves predate them → empty/zero (no
+    // back-credit; the next evaluation re-earns anything already true).
+    unlockedAchievements: Array.isArray(s.unlockedAchievements) ? s.unlockedAchievements : [],
+    lowHpWins: typeof s.lowHpWins === 'number' ? s.lowHpWins : 0,
+    eliteFightWins: typeof s.eliteFightWins === 'number' ? s.eliteFightWins : 0,
+    eliteGoldTaken: typeof s.eliteGoldTaken === 'number' ? s.eliteGoldTaken : 0,
+    darkGambleWins: typeof s.darkGambleWins === 'number' ? s.darkGambleWins : 0,
+    classDeepestChapter:
+      s.classDeepestChapter && typeof s.classDeepestChapter === 'object' && !Array.isArray(s.classDeepestChapter)
+        ? s.classDeepestChapter
+        : {},
+    classesPlayed: Array.isArray(s.classesPlayed) ? s.classesPlayed : [],
+    highestClearAscension: typeof s.highestClearAscension === 'number' ? s.highestClearAscension : -1,
+    highestThroneAscension: typeof s.highestThroneAscension === 'number' ? s.highestThroneAscension : -1,
   });
   // Restore the active run. Old/hub saves carry no run → null at the hub. A
   // structurally broken or incoherent run snapshot (combat with no delve or
@@ -550,6 +588,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
     tutorialQueue: [],
     hubUnlockQueue: [],
     pendingDescent: false,
+    achievementToasts: [],
     postmortem: null,
   });
   useDelveStore.setState({
@@ -693,6 +732,7 @@ export const useGameStore = create<GameState>()(
           selectedAscension: m.selectedAscension,
           newGamePlusActive: m.newGamePlusActive,
           throneCompleted: m.throneCompleted,
+          unlockedAchievements: m.unlockedAchievements,
         });
       };
       const mirrorScreen = () => {
@@ -705,6 +745,7 @@ export const useGameStore = create<GameState>()(
           taunt: sc.taunt,
           tutorialQueue: sc.tutorialQueue,
           hubUnlockQueue: sc.hubUnlockQueue,
+          achievementToasts: sc.achievementToasts,
           postmortem: sc.postmortem,
         });
       };
@@ -727,6 +768,7 @@ export const useGameStore = create<GameState>()(
         taunt: useScreenStore.getState().taunt,
         tutorialQueue: useScreenStore.getState().tutorialQueue,
         hubUnlockQueue: useScreenStore.getState().hubUnlockQueue,
+        achievementToasts: useScreenStore.getState().achievementToasts,
         introSeen: useScreenStore.getState().introSeen,
         hasReincarnated: useMetaStore.getState().hasReincarnated,
         deathCount: useMetaStore.getState().deathCount,
@@ -755,6 +797,7 @@ export const useGameStore = create<GameState>()(
         selectedAscension: useMetaStore.getState().selectedAscension,
         newGamePlusActive: useMetaStore.getState().newGamePlusActive,
         throneCompleted: useMetaStore.getState().throneCompleted,
+        unlockedAchievements: useMetaStore.getState().unlockedAchievements,
         newGamePlusFlow: useScreenStore.getState().newGamePlusFlow,
 
         goToTitle: () => useScreenStore.getState().goToTitle(),
@@ -780,12 +823,14 @@ export const useGameStore = create<GameState>()(
           // mode: resetMeta drops newGamePlusActive to false, so a New Game is a
           // BASE run (Cells→Irenicus) even for a veteran.
           const prevMeta = useMetaStore.getState();
-          const { gameCompleted, ascensionUnlocked, throneCompleted } = prevMeta;
+          // The achievement ledger is permanent mastery like throneCompleted —
+          // it carries across a New Game, reset only by deleting the save.
+          const { gameCompleted, ascensionUnlocked, throneCompleted, unlockedAchievements } = prevMeta;
           useCharacterStore.setState({ character: null, saveSeed: seed });
           useDelveStore.setState({ delve: null });
           useCombatStore.setState({ combat: null });
           prevMeta.resetMeta();
-          useMetaStore.setState({ gameCompleted, ascensionUnlocked, throneCompleted });
+          useMetaStore.setState({ gameCompleted, ascensionUnlocked, throneCompleted, unlockedAchievements });
           useScreenStore.setState({
             screen: 'character-creation',
             introSeen: false,
@@ -796,6 +841,7 @@ export const useGameStore = create<GameState>()(
             tutorialQueue: [],
             hubUnlockQueue: [],
             pendingDescent: false,
+            achievementToasts: [],
             postmortem: null,
           });
         },
@@ -902,6 +948,8 @@ export const useGameStore = create<GameState>()(
           // Resumes a parked descent into the delve when the last hub card clears.
           sc.shiftHubUnlock();
         },
+        dismissAchievementToast: () =>
+          useScreenStore.getState().dismissAchievementToast(),
         markIntroSeen: async () => {
           useScreenStore.getState().setIntroSeen(true);
           // First incarnation: drop the player straight into the cells.
@@ -1018,6 +1066,7 @@ export const useGameStore = create<GameState>()(
               tutorialQueue: [],
               hubUnlockQueue: [],
               pendingDescent: false,
+              achievementToasts: [],
               postmortem: null,
             });
           }

@@ -351,5 +351,20 @@
       "legendary": "Legendario",
       "artifact": "Artefacto"
     }
+  },
+  "achievements": {
+    "title": "Hazañas del Alma",
+    "subtitle": "Lo que la rueda recuerda de ti",
+    "progress": "{earned} / {total} obtenidas",
+    "back": "← Phandalin",
+    "toastTitle": "Hazaña Lograda",
+    "hiddenName": "??? ??? ???",
+    "hiddenDesc": "Una hazaña aún por hacer. Sigue adelante, y quizá se revele.",
+    "categories": {
+      "progression": "El Descenso",
+      "challenge": "Pruebas",
+      "quirky": "Curiosidades",
+      "completionist": "Maestría"
+    }
   }
 }

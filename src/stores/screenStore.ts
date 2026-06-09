@@ -75,6 +75,13 @@ interface ScreenStoreState {
    * to the delve. Dismissing the last hub card proceeds into the delve.
    */
   pendingDescent: boolean;
+  /**
+   * Achievement ids whose unlock toast is waiting to be shown, head first.
+   * Session-only (the permanent record is metaStore.unlockedAchievements). Filled
+   * by engine/achievements/check.ts when an evaluation newly unlocks something;
+   * App renders the head as a transient toast that auto-dismisses and shifts.
+   */
+  achievementToasts: string[];
 
   setScreen: (screen: Screen) => void;
   goToTitle: () => void;
@@ -105,6 +112,10 @@ interface ScreenStoreState {
   shiftHubUnlock: () => void;
   /** Park a descent at the hub so its just-queued unlock card(s) show before the delve. */
   holdForHubUnlock: () => void;
+  /** Append achievement-unlock toast ids, skipping any already queued. */
+  enqueueAchievementToasts: (ids: string[]) => void;
+  /** Drop the current achievement toast off the front of the queue. */
+  dismissAchievementToast: () => void;
   setPostmortem: (p: Postmortem | null) => void;
   clearPostmortem: () => void;
 }
@@ -120,6 +131,7 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
   tutorialQueue: [],
   hubUnlockQueue: [],
   pendingDescent: false,
+  achievementToasts: [],
 
   setScreen: (screen) => set({ screen }),
   goToTitle: () => set({ screen: 'title', newGamePlusFlow: false }),
@@ -177,6 +189,13 @@ export const useScreenStore = create<ScreenStoreState>()((set) => ({
         : { hubUnlockQueue: next };
     }),
   holdForHubUnlock: () => set({ screen: 'hub', pendingDescent: true }),
+  enqueueAchievementToasts: (ids) =>
+    set((s) => {
+      const fresh = ids.filter((id) => !s.achievementToasts.includes(id));
+      return fresh.length ? { achievementToasts: [...s.achievementToasts, ...fresh] } : s;
+    }),
+  dismissAchievementToast: () =>
+    set((s) => ({ achievementToasts: s.achievementToasts.slice(1) })),
   setPostmortem: (p) => set({ postmortem: p }),
   clearPostmortem: () => set({ postmortem: null }),
 }));
