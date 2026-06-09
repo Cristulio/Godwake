@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { Item, ItemRef } from '../../schemas/item';
 import type { Character } from '../../types/character';
 import { Button } from '../ui/Button';
@@ -34,9 +35,18 @@ interface GearWareRowProps {
 }
 
 /** One rolled arms-rack item: rarity-coloured frame, affix-effect list, price. */
+/** Approx ItemTooltip width (w-64 = 16rem) — used to place the floating compare. */
+const COMPARE_TIP_WIDTH = 256;
+
 export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareRowProps) {
   const { t } = useT();
-  const [hovered, setHovered] = useState(false);
+  const rowRef = useRef<HTMLDivElement>(null);
+  // Compare tooltip position in VIEWPORT coords (position: fixed via a body
+  // portal), so it floats clear of the shop's scrolling ware list instead of
+  // being clipped by it. null = hidden.
+  const [tipPos, setTipPos] = useState<{ top: number; left: number; anchorBottom: boolean } | null>(
+    null,
+  );
   const rolled = stock.ref.rolled;
   const base = getItem(stock.ref.itemId);
   const rarity = rolled?.rarity ?? 'white';
@@ -55,23 +65,50 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
         ? character.equipped.ring1 ?? character.equipped.ring2
         : character.equipped[slot]
       : null;
+  function showCompare() {
+    const el = rowRef.current;
+    if (!el || !equippedRef) return;
+    const r = el.getBoundingClientRect();
+    const margin = 8;
+    // Prefer the left of the row; flip to the right if it would run off-screen.
+    let left = r.left - COMPARE_TIP_WIDTH - margin;
+    if (left < margin) {
+      left = Math.min(r.right + margin, window.innerWidth - COMPARE_TIP_WIDTH - margin);
+    }
+    // A row in the lower half anchors its tooltip's BOTTOM to the row bottom and
+    // grows upward, so a tall compare never spills past the viewport floor.
+    const anchorBottom = r.top > window.innerHeight / 2;
+    setTipPos({ top: anchorBottom ? r.bottom : r.top, left, anchorBottom });
+  }
+
   return (
     <div
+      ref={rowRef}
       className="border p-3 flex items-center gap-3 relative"
       style={{ borderColor: bought ? 'var(--color-border-dim)' : color, opacity: bought ? 0.5 : 1 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={showCompare}
+      onMouseLeave={() => setTipPos(null)}
     >
-      {hovered && equippedRef && (
-        <div className="absolute z-30 right-full mr-2 top-0 hidden md:block pointer-events-none">
-          <ItemTooltip
-            item={getItem(equippedRef.itemId)}
-            rolled={equippedRef.rolled}
-            rolledCost={rolledItemCost(equippedRef)}
-            hint={t('delve.wares.currentlyEquipped')}
-          />
-        </div>
-      )}
+      {tipPos && equippedRef &&
+        createPortal(
+          <div
+            className="fixed z-50 hidden md:block pointer-events-none overflow-y-auto"
+            style={{
+              top: tipPos.top,
+              left: tipPos.left,
+              maxHeight: 'calc(100vh - 16px)',
+              transform: tipPos.anchorBottom ? 'translateY(-100%)' : undefined,
+            }}
+          >
+            <ItemTooltip
+              item={getItem(equippedRef.itemId)}
+              rolled={equippedRef.rolled}
+              rolledCost={rolledItemCost(equippedRef)}
+              hint={t('delve.wares.currentlyEquipped')}
+            />
+          </div>,
+          document.body,
+        )}
       <div className="flex-1 min-w-0">
         <div className="text-sm uppercase tracking-wider" style={{ color }}>
           {localizedItemName(stock.ref)}
