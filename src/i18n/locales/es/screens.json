@@ -184,6 +184,9 @@
   },
   "itemDisplay": {
     "twoH": "2m",
+    "oneHanded": "A una mano",
+    "twoHanded": "A dos manos",
+    "versatileHands": "Versátil ({dice} a dos manos)",
     "acShield": "escudo +{n} CA",
     "robeNoAc": "túnica · sin CA",
     "orbNoAc": "orbe · foco de conjuros",

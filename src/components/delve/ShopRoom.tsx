@@ -38,6 +38,10 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   const purchaseRolledGear = useGameStore((s) => s.purchaseRolledGear);
   const purchaseLegendary = useGameStore((s) => s.purchaseLegendary);
   const sellItem = useGameStore((s) => s.sellItem);
+  const buyBackItem = useGameStore((s) => s.buyBackItem);
+  // Select the raw ref (stable) — a `?? []` INSIDE the selector returns a fresh
+  // array every render and spins zustand into an infinite update loop.
+  const recentlySold = useGameStore((s) => s.delve?.recentlySold);
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const goToInventory = useGameStore((s) => s.goToInventory);
   const [message, setMessage] = useState<string | null>(null);
@@ -144,6 +148,16 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     }
   }
 
+  function buyBack(soldIndex: number, name: string) {
+    const r = buyBackItem(soldIndex);
+    if (r.ok) {
+      setMessage(t('ui.shop.boughtBack', { name, gold: r.gold ?? 0 }));
+      playSfx('ui_click');
+    } else {
+      setMessage(r.reason ?? t('ui.shop.cannotPurchase'));
+    }
+  }
+
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-5 [background-image:radial-gradient(circle_at_50%_25%,rgba(212,176,98,0.10),transparent_60%)]">
       <header className="pb-3 border-b border-[var(--color-border-warm)] flex flex-wrap items-start justify-between gap-4">
@@ -247,6 +261,26 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
                 itemRef={ref}
                 price={sellValue(ref)}
                 onSell={() => sell(idx, localizedItemName(ref))}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {recentlySold && recentlySold.length > 0 && (
+        <div>
+          <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2">
+            {t('ui.shop.buyBackHeader')}
+          </div>
+          <div className="grid gap-3">
+            {recentlySold.map((ref, i) => (
+              <SellWareRow
+                key={`buyback-${i}`}
+                itemRef={ref}
+                price={sellValue(ref)}
+                onSell={() => buyBack(i, localizedItemName(ref))}
+                actionLabel={t('ui.shop.buyBack')}
+                priceText={t('delve.wares.buyBackPriceGp', { n: sellValue(ref) })}
               />
             ))}
           </div>

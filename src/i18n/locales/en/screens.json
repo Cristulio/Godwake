@@ -184,6 +184,9 @@
   },
   "itemDisplay": {
     "twoH": "2h",
+    "oneHanded": "One-handed",
+    "twoHanded": "Two-handed",
+    "versatileHands": "Versatile ({dice} two-handed)",
     "acShield": "+{n} AC shield",
     "robeNoAc": "robe · no AC",
     "orbNoAc": "orb · caster focus",

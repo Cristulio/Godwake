@@ -228,6 +228,7 @@ interface GameState {
   purchaseLegendary: (legendaryId: string, cost: number) => { ok: boolean; reason?: string };
   recordShopPurchase: (roomId: string, key: string) => void;
   sellItem: (inventoryIdx: number) => { ok: boolean; reason?: string; gold?: number };
+  buyBackItem: (soldIndex: number) => { ok: boolean; reason?: string; gold?: number };
   acceptSpoils: () => void;
   clearLastLoot: () => void;
 
@@ -931,6 +932,7 @@ export const useGameStore = create<GameState>()(
         recordShopPurchase: (roomId, key) =>
           useDelveStore.getState().recordShopPurchase(roomId, key),
         sellItem: (idx) => useDelveStore.getState().sellItem(idx),
+        buyBackItem: (idx) => useDelveStore.getState().buyBackItem(idx),
         acceptSpoils: () => useDelveStore.getState().acceptSpoils(),
         clearLastLoot: () => useDelveStore.getState().clearLastLoot(),
 

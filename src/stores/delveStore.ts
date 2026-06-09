@@ -262,6 +262,8 @@ function enterRoom(
     campRisk: undefined,
     // The elite fight/gold gate is per-node: reset so each elite re-prompts.
     eliteEngaged: undefined,
+    // The buyback stack is per-shop: leaving the room ends the buyback window.
+    recentlySold: undefined,
     ...(roomsCleared !== undefined ? { roomsCleared } : {}),
   };
 }
@@ -487,6 +489,11 @@ interface DelveStoreState {
    */
   sellItem: (inventoryIdx: number) => { ok: boolean; reason?: string; gold?: number };
   /**
+   * Undo a misclicked sale: rebuy an item from this shop's buyback stack
+   * (`delve.recentlySold`) at the same price it fetched. Returns the gold spent.
+   */
+  buyBackItem: (soldIndex: number) => { ok: boolean; reason?: string; gold?: number };
+  /**
    * Accept the spoils screen: advance the room, fire boss taunts/bookkeeping,
    * then route to level-up (if the fight leveled up the character) or back to
    * the delve. This is the ONLY way to proceed past a combat victory.
@@ -640,6 +647,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
             roomsCleared,
             campChoice: undefined,
             eliteEngaged: undefined,
+            recentlySold: undefined,
           },
         };
       }
@@ -647,14 +655,16 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       const nextIds = cur?.next ?? [];
       // Terminal node (the final boss) — the chain has fallen.
       if (nextIds.length === 0) {
-        return { delve: { ...d, phase: 'completed', roomsCleared } };
+        return { delve: { ...d, phase: 'completed', roomsCleared, recentlySold: undefined } };
       }
       // A forced single step (intel→boss, boss→camp, camp→next entry): walk
       // straight through. Only a real fork opens the route map.
       if (nextIds.length === 1) {
         return { delve: enterRoom(d, nextIds[0], roomsCleared) };
       }
-      return { delve: { ...d, phase: 'between-rooms', roomsCleared } };
+      // A real fork opens the route map; clear the per-shop buyback window here too
+      // (enterRoom isn't reached until the player picks the next node).
+      return { delve: { ...d, phase: 'between-rooms', roomsCleared, recentlySold: undefined } };
     }),
 
   chooseRoom: (nextId) => {
@@ -1339,7 +1349,29 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       inventory: character.inventory.filter((_, i) => i !== inventoryIdx),
       goldInPocket: character.goldInPocket + gold,
     });
+    // Push onto the buyback stack so an accidental sale can be undone (until the
+    // player leaves the shop, which clears it on room entry).
+    set((s) => (s.delve ? { delve: { ...s.delve, recentlySold: [...(s.delve.recentlySold ?? []), ref] } } : s));
     return { ok: true, gold };
+  },
+
+  buyBackItem: (soldIndex) => {
+    const s = get();
+    const sold = s.delve?.recentlySold ?? [];
+    const ref = sold[soldIndex];
+    if (!s.delve || !ref) return { ok: false, reason: 'Nothing to buy back.' };
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!character) return { ok: false, reason: 'No character.' };
+    const cost = sellValue(ref);
+    if (character.goldInPocket < cost) return { ok: false, reason: 'Not enough gold.' };
+    charSlice.setCharacter({
+      ...character,
+      inventory: [...character.inventory, ref],
+      goldInPocket: character.goldInPocket - cost,
+    });
+    set({ delve: { ...s.delve, recentlySold: sold.filter((_, i) => i !== soldIndex) } });
+    return { ok: true, gold: cost };
   },
 
   clearLastLoot: () => set({ lastLoot: null }),

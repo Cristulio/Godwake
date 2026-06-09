@@ -216,10 +216,14 @@ interface SellWareRowProps {
   itemRef: ItemRef;
   price: number;
   onSell: () => void;
+  /** Button label override — defaults to "Sell"; the buyback list passes "Buy back". */
+  actionLabel?: string;
+  /** Price-line override — defaults to the "+{n} gp" sell credit; buyback passes a cost. */
+  priceText?: string;
 }
 
 /** One pack item the merchant will buy back, rarity-framed, with its sell price. */
-export function SellWareRow({ itemRef, price, onSell }: SellWareRowProps) {
+export function SellWareRow({ itemRef, price, onSell, actionLabel, priceText }: SellWareRowProps) {
   const { t } = useT();
   const base = getItem(itemRef.itemId);
   const rarity = itemRef.rolled?.rarity ?? 'white';
@@ -237,9 +241,9 @@ export function SellWareRow({ itemRef, price, onSell }: SellWareRowProps) {
         </div>
       </div>
       <div className="text-right shrink-0">
-        <div className="text-[var(--color-accent-gold)] text-sm">{t('delve.wares.sellPriceGp', { n: price })}</div>
+        <div className="text-[var(--color-accent-gold)] text-sm">{priceText ?? t('delve.wares.sellPriceGp', { n: price })}</div>
         <Button variant="secondary" onClick={onSell}>
-          {t('delve.wares.sell')}
+          {actionLabel ?? t('delve.wares.sell')}
         </Button>
       </div>
     </div>

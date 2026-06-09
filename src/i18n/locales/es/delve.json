@@ -168,6 +168,7 @@
     "sell": "Vender",
     "priceGp": "{n} mo",
     "sellPriceGp": "+{n} mo",
+    "buyBackPriceGp": "−{n} mo",
     "legendaryBanks": "Legendaria · se deposita en tu relicario",
     "relicFallback": "Una reliquia que la muerte no puede llevarse.",
     "bound": "Vinculada",

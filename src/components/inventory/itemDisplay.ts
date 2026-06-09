@@ -94,10 +94,14 @@ export function localizedItemDescription(ref: ItemRef): string {
 export function baseStatLine(item: Item): string {
   switch (item.kind) {
     case 'weapon': {
-      const versatile = item.versatileDamage
-        ? ` (${item.versatileDamage} ${t('screens.itemDisplay.twoH')})`
-        : '';
-      return `${item.damage} ${localizedDamageType(item.damageType)}${versatile}`;
+      // Always state handedness — a two-hander blocks a shield/orb off-hand, and
+      // players couldn't tell 1H from 2H at a glance.
+      const hands = item.properties.includes('two-handed')
+        ? t('screens.itemDisplay.twoHanded')
+        : item.versatileDamage
+          ? t('screens.itemDisplay.versatileHands', { dice: item.versatileDamage })
+          : t('screens.itemDisplay.oneHanded');
+      return `${item.damage} ${localizedDamageType(item.damageType)} · ${hands}`;
     }
     case 'armor':
       if (item.category === 'shield') return t('screens.itemDisplay.acShield', { n: item.baseAC });
