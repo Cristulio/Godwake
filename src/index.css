@@ -219,9 +219,16 @@ img, svg.pixel {
 }
 .animate-shake-soft { animation: godwake-shake-soft 220ms ease-in-out; }
 
+/* Container entrance animations (fade-in / scale-in / room-enter) MUST rest at
+   `transform: none`, not an identity transform like translateY(0)/scale(1). With
+   `forwards` fill the resting transform persists, and ANY non-none transform makes
+   the element a containing block for its `position: fixed` descendants — so a
+   full-screen modal nested under an animated screen gets trapped/mis-centered
+   instead of tracking the viewport (the bestiary bug, #545). `none` is visually
+   identical to the identity transform, so the entrance reads the same. */
 @keyframes godwake-fade-in {
   from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: none; }
 }
 .animate-fade-in { animation: godwake-fade-in 320ms ease-out forwards; }
 
@@ -233,7 +240,7 @@ img, svg.pixel {
 
 @keyframes godwake-scale-in {
   from { opacity: 0; transform: scale(0.92); }
-  to { opacity: 1; transform: scale(1); }
+  to { opacity: 1; transform: none; } /* rest at none — see fade-in note (fixed-overlay containing-block trap) */
 }
 .animate-scale-in { animation: godwake-scale-in 240ms cubic-bezier(0.22, 1.2, 0.36, 1) forwards; }
 
@@ -379,7 +386,7 @@ img, svg.pixel {
 /* Slow room transition */
 @keyframes godwake-room-enter {
   0% { opacity: 0; transform: translateY(20px) scale(0.98); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 1; transform: none; } /* rest at none — see fade-in note (fixed-overlay containing-block trap) */
 }
 .animate-room-enter { animation: godwake-room-enter 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
