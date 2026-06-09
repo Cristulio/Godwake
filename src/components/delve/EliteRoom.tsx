@@ -20,8 +20,11 @@ export function EliteRoom({ room }: EliteRoomProps) {
   const { t, tc } = useT();
   const pickEliteChoice = useGameStore((s) => s.pickEliteChoice);
   const character = useGameStore((s) => s.character);
-  const bounty = room.goldReward ?? 0;
-  const partingBlow = character ? Math.max(1, Math.round(character.hp.max * 0.15)) : null;
+  // Skipping pays HALF the elite's purse (winning pays full + XP + loot + relic),
+  // and the parting blow is 30% of max HP. Keep these in sync with delveStore's
+  // 'gold' branch in pickEliteChoice.
+  const bounty = Math.round((room.goldReward ?? 0) * 0.5);
+  const partingBlow = character ? Math.max(1, Math.round(character.hp.max * 0.3)) : null;
 
   const defId = room.monsters?.[0]?.defId;
   let eliteName = t('delve.elite.genericName');

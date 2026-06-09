@@ -1211,15 +1211,17 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       set({ delve: { ...s.delve, eliteEngaged: true } });
       return;
     }
-    // 'gold': slip past with the hush-money — gold granted, then a parting blow
-    // (15% of max HP, cannot kill). No fight, no XP, no loot, no relic.
+    // 'gold': slip past with the hush-money — HALF the elite's purse (skipping
+    // shouldn't pay like winning), then a parting blow (30% of max HP, cannot
+    // kill). No fight, no XP, no loot, no relic. Keep the fraction + blow in sync
+    // with EliteRoom's displayed numbers.
     const room = s.delve.rooms[s.delve.currentRoomIdx];
-    const bounty = room?.goldReward ?? 0;
+    const bounty = Math.round((room?.goldReward ?? 0) * 0.5);
     if (bounty > 0) get().addDelveReward(bounty, 0);
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (character) {
-      const blow = Math.max(1, Math.round(character.hp.max * 0.15));
+      const blow = Math.max(1, Math.round(character.hp.max * 0.3));
       const newCurrent = Math.max(1, character.hp.current - blow);
       charSlice.setCharacter({
         ...character,
