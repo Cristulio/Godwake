@@ -37,7 +37,8 @@ import {
   DEFAULT_WEAKENED_AMOUNT,
 } from '../playerConditions';
 import { spawnMonsterInstance } from '../createCombat';
-import { applyAscensionToMonster } from '../../delve/ascension';
+import { applyAscensionToMonster, ascensionDamageMult } from '../../delve/ascension';
+import { chapterRamp } from '../../delve/chapterRamp';
 import {
   effectiveActionsPerTurn,
   effectiveMonsterActions,
@@ -1063,15 +1064,22 @@ function monsterSummon(
   );
   if (!attacker) return { state, character: character as Character };
   // Scale the summoned add to the encounter the SAME way createCombat scaled
-  // the room's monsters — by the run's ascension level (HP) — so a late boss's
-  // reinforcement isn't a raw early-game stat block. Summons are never the
-  // primary foe, so they scale as non-boss (no boss HP multiplier). The flat
-  // ascension damage bonus is carried separately below via `bonusDamage`.
-  const summonDef = applyAscensionToMonster(
+  // the room's monsters — by the run's ascension level AND the base-game chapter
+  // ramp (both HP and damage) — so a late boss's reinforcement isn't a raw
+  // early-game stat block. Summons are never the primary foe, so they scale as
+  // non-boss (no boss HP multiplier). Recomputed from state (ascension + chapter)
+  // rather than copied off the summoner, mirroring how summon HP already derives
+  // from state.ascension. The dungeon-twist flat surcharge still rides bonusDamage.
+  const ramp = chapterRamp(state.chapter ?? 0);
+  let summonDef = applyAscensionToMonster(
     getMonster(action.summonDefId),
     state.ascension ?? 0,
     false,
   );
+  if (ramp.hpMult !== 1) {
+    summonDef = { ...summonDef, maxHp: Math.max(1, Math.round(summonDef.maxHp * ramp.hpMult)) };
+  }
+  const summonDamageMult = ascensionDamageMult(state.ascension ?? 0) * ramp.damageMult;
 
   let count = action.count ?? 1;
   if (action.maxActive !== undefined) {
@@ -1108,7 +1116,11 @@ function monsterSummon(
     newCombatants.push({
       kind: 'monster',
       id: instance.id,
-      instance: bonusDamage ? { ...instance, bonusDamage } : instance,
+      instance: {
+        ...instance,
+        ...(bonusDamage ? { bonusDamage } : {}),
+        ...(summonDamageMult !== 1 ? { damageMult: summonDamageMult } : {}),
+      },
     });
   }
 

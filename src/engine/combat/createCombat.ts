@@ -32,6 +32,7 @@ import {
   ascensionBossExtraPhase,
   ascensionDamageMult,
 } from '../delve/ascension';
+import { chapterRamp } from '../delve/chapterRamp';
 import { getTwist, twistCombatEffect, CURSED_GROUND_DECAY_TURNS } from '../delve/twists';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { wildShapeUsesMax } from './wildShape';
@@ -88,6 +89,13 @@ export interface CreateCombatInput {
   monsters: Array<{ def: Monster; displayName?: string; statMult?: number }>;
   /** Ascension level for enemy scaling (max HP + per-attack damage). Default 0 = no scaling. */
   ascension?: number;
+  /**
+   * Chapter this fight spawns in (1–14), driving the base-game difficulty ramp
+   * (see {@link chapterRamp}). Folds into the same HP/damage seam as ascension and
+   * stacks multiplicatively on top of it. Default 0/undefined = no ramp (and
+   * Ch1–4 are always neutral regardless).
+   */
+  chapter?: number;
   /** True when this is a chapter-boss encounter — applies the boss HP multiplier on top of enemyHpMult. */
   isBoss?: boolean;
   /** True for an elite encounter — grants the primary foe a smaller legendary-resistance pool. */
@@ -159,6 +167,11 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   const ascension = input.ascension ?? 0;
   const isBoss = input.isBoss ?? false;
   const isElite = input.isElite ?? false;
+  // Base-game chapter difficulty ramp (Ch5+). Resolved once here; folded into the
+  // SAME HP/damage seam as ascension below so the two stack multiplicatively, and
+  // stamped onto the combat state so mid-fight summons inherit it (see monsterSummon).
+  const chapter = input.chapter ?? 0;
+  const ramp = chapterRamp(chapter);
   // Only the primary foe of a boss/elite room legendary-resists control — its
   // adds stay lockable.
   const primaryLegendaryResistances = isBoss
@@ -171,15 +184,21 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // (Cursed Ground chip, Gloom first-strike, Sealed Wards, Quickening order).
   const twist = twistCombatEffect(input.twistId);
   // Ascension scales damage MULTIPLICATIVELY (damageMult) so it bites in the
-  // endgame; a twist's flat surcharge stays additive (bonusDamage).
-  const enemyDamageMult = ascensionDamageMult(ascension);
+  // endgame; a twist's flat surcharge stays additive (bonusDamage). The chapter
+  // ramp's damage factor multiplies in here too, so it rides the exact same path.
+  const enemyDamageMult = ascensionDamageMult(ascension) * ramp.damageMult;
   const twistDamageBonus = twist.enemyDamageBonus ?? 0;
   // Ascension extra-phase arms only the primary foe of a boss room (idx 0).
   const bossExtraPhase = isBoss && ascensionBossExtraPhase(ascension);
   const monsterCombatants: MonsterCombatant[] = monsters.map(({ def, displayName, statMult }, idx) => {
     let scaledDef = applyAscensionToMonster(def, ascension, isBoss);
+    // Chapter difficulty ramp: scale HP on top of ascension (folded into the same
+    // maxHp the spawn reads). Damage rides enemyDamageMult above.
+    if (ramp.hpMult !== 1) {
+      scaledDef = { ...scaledDef, maxHp: Math.max(1, Math.round(scaledDef.maxHp * ramp.hpMult)) };
+    }
     // Per-monster chapter normalization (ascendant elites): scale HP here, fold
-    // damage into damageMult below. Rides on top of ascension scaling.
+    // damage into damageMult below. Rides on top of ascension + ramp scaling.
     if (statMult && statMult !== 1) {
       scaledDef = { ...scaledDef, maxHp: Math.max(1, Math.round(scaledDef.maxHp * statMult)) };
     }
@@ -485,6 +504,10 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     // way the room's monsters were scaled (applyAscensionToMonster). Omitted at
     // Ascension 0 so untwisted/base fights carry no extra state weight.
     ...(ascension > 0 ? { ascension } : {}),
+    // Carry the room's chapter so mid-fight summons inherit the difficulty ramp
+    // (HP + damage) the same way they inherit ascension scaling. Omitted when the
+    // ramp is neutral (Ch1-4 / no chapter) so early fights carry no extra weight.
+    ...(ramp.hpMult !== 1 || ramp.damageMult !== 1 ? { chapter } : {}),
     playerHasAttacked: false,
     rerollMissesEncounterRemaining: blessingMods.rerollMissesPerEncounter ?? 0,
     playerAttacksThisTurn: 0,

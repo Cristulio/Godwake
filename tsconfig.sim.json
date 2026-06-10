@@ -28,6 +28,7 @@
     "scripts/sim-feel.ts",
     "scripts/sim-endgame-gear.ts",
     "scripts/sim-gear-rebalance.ts",
-    "scripts/sim-structural-integrity.ts"
+    "scripts/sim-structural-integrity.ts",
+    "scripts/sim-difficulty-arc.ts"
   ]
 }

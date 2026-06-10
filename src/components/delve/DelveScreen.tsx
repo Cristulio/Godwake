@@ -200,6 +200,7 @@ function DelveScreenBody() {
       character: fresh,
       monsters,
       ascension: delve.ascensionLevel ?? 0,
+      chapter: room.chapter ?? 0,
       isBoss: room.kind === 'boss',
       isElite: room.kind === 'elite',
       twistId: room.twistId,
@@ -411,6 +412,7 @@ function DelveScreenBody() {
               character: fresh,
               monsters,
               ascension: delve.ascensionLevel ?? 0,
+              chapter: room.chapter ?? 0,
             });
             setCharacter(newCombat.character);
             setCombat(newCombat.state);
