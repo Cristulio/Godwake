@@ -42,7 +42,7 @@ describe('LORE_BEATS registry invariants', () => {
     }
   });
 
-  it('reveals exactly one name per soul-bond NPC, Imoen before Irenicus', () => {
+  it('reveals exactly one name per soul-bond NPC, Inara before Velnaris', () => {
     const reveals = LORE_BEATS.filter((b) => b.reveals);
     const imoenIdx = LORE_BEATS.findIndex((b) => b.reveals === 'imoen');
     const irenicusIdx = LORE_BEATS.findIndex((b) => b.reveals === 'irenicus');
@@ -52,21 +52,21 @@ describe('LORE_BEATS registry invariants', () => {
     expect(irenicusIdx).toBeGreaterThan(imoenIdx);
   });
 
-  it('the Irenicus reveal lands just before the Ch11 confrontation (after clearing Ch10)', () => {
+  it('the Velnaris reveal lands just before the Ch11 confrontation (after clearing Ch10)', () => {
     const reveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
-    // Withheld until Suldanessellar (Ch10) is cleared — one descent shy of the
+    // Withheld until Tor Maladin (Ch10) is cleared — one descent shy of the
     // Chapter 11 fight where the boss puts a face to the name.
     expect(reveal.minChapters).toBe(10);
-    // ...and Imoen delivers it (his name learned through her, not from him).
+    // ...and Inara delivers it (his name learned through her, not from him).
     expect(reveal.speaker).toBe('imoen');
     // The reveal line actually states the name — that IS the reveal moment.
-    expect(reveal.text).toContain('Irenicus');
+    expect(reveal.text).toContain('Velnaris');
   });
 
-  it('no beat before the Irenicus reveal states his name', () => {
+  it('no beat before the Velnaris reveal states his name', () => {
     const irenicusIdx = LORE_BEATS.findIndex((b) => b.reveals === 'irenicus');
     for (let i = 0; i < irenicusIdx; i++) {
-      expect(LORE_BEATS[i].text).not.toContain('Irenicus');
+      expect(LORE_BEATS[i].text).not.toContain('Velnaris');
     }
   });
 });
@@ -99,7 +99,7 @@ describe('nextLoreBeat — strict in-order, one at a time', () => {
 });
 
 describe('nextLoreBeat — name reveal gating', () => {
-  it('does not surface the Irenicus reveal before Suldanessellar (Chapter 10) is cleared', () => {
+  it('does not surface the Velnaris reveal before Tor Maladin (Chapter 10) is cleared', () => {
     // Maxed delves, nine chapters cleared: the arc advances deep into his machine
     // but never reaches the pre-confrontation reveal beat.
     const played = walk(meta({ delveCount: 999, chaptersCleared: 9 }));
@@ -107,20 +107,20 @@ describe('nextLoreBeat — name reveal gating', () => {
     expect(played).not.toContain(irenicusReveal.id);
   });
 
-  it('surfaces the Imoen reveal early (delve-gated, no chapter clear needed)', () => {
+  it('surfaces the Inara reveal early (delve-gated, no chapter clear needed)', () => {
     const played = walk(meta({ delveCount: 999, chaptersCleared: 0 }));
     const imoenReveal = LORE_BEATS.find((b) => b.reveals === 'imoen')!;
     expect(played).toContain(imoenReveal.id);
   });
 
-  it('reveals Irenicus once the arc is walked into the endgame (Ch10+)', () => {
+  it('reveals Velnaris once the arc is walked into the endgame (Ch10+)', () => {
     const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
     const irenicusReveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
-    // The reveal is Imoen-spoken, so it still surfaces past Irenicus's death.
+    // The reveal is Inara-spoken, so it still surfaces past Velnaris's death.
     expect(irenicusReveal.speaker).toBe('imoen');
     expect(played).toContain(irenicusReveal.id);
     // Past his chapter the dead antagonist is silent: only the surviving voice
-    // (Imoen) plays, every beat of hers, in registry order.
+    // (Inara) plays, every beat of hers, in registry order.
     expect(played).toEqual(
       LORE_BEATS.filter((b) => b.speaker !== 'irenicus').map((b) => b.id),
     );
@@ -128,7 +128,7 @@ describe('nextLoreBeat — name reveal gating', () => {
 });
 
 describe('nextLoreBeat — the antagonist falls silent after his death (Ch12+)', () => {
-  it('plays no Irenicus beat once the soul has climbed past his chapter', () => {
+  it('plays no Velnaris beat once the soul has climbed past his chapter', () => {
     const played = walk(meta({ delveCount: 999, chaptersCleared: 12 }));
     const irenicusBeats = played
       .map((id) => LORE_BEATS.find((b) => b.id === id)!)
@@ -136,15 +136,15 @@ describe('nextLoreBeat — the antagonist falls silent after his death (Ch12+)',
     expect(irenicusBeats).toHaveLength(0);
   });
 
-  it('still lets Imoen carry the Throne-of-Bhaal arc to its finale', () => {
+  it('still lets Inara carry the Throne-of-the Slain God arc to its finale', () => {
     // A veteran one chapter into the Throne with NONE of the arc seen still gets
-    // Imoen's ToB beats — the silenced antagonist beats are skipped, not blocking.
+    // Inara's ToB beats — the silenced antagonist beats are skipped, not blocking.
     const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
     expect(played).toContain('lore-28-child-of-bhaal');
     expect(played).toContain('lore-30-choose-it-as-yourself');
   });
 
-  it('does NOT silence Irenicus through his own arc — clearing Ch11 is the boundary', () => {
+  it('does NOT silence Velnaris through his own arc — clearing Ch11 is the boundary', () => {
     // chaptersCleared === 11 is his death moment, where a final line is still his.
     const played = walk(meta({ delveCount: 999, chaptersCleared: 11 }));
     const irenicusBeats = played
@@ -184,13 +184,13 @@ describe('LORE_BEATS — the arc spans the whole chapter chain (1→14)', () => 
   it('clearing the whole chain unfolds the full back half, one beat per descent', () => {
     // A veteran who has cleared all 14 chapters walks every surviving beat, in
     // order, one per call. Past Ch11 the dead antagonist is silent, so the walk
-    // is every Imoen beat (his stranded beats are skipped, never blocking).
+    // is every Inara beat (his stranded beats are skipped, never blocking).
     const played = walk(meta({ delveCount: 999, chaptersCleared: 14 }));
     expect(played).toEqual(
       LORE_BEATS.filter((b) => b.speaker !== 'irenicus').map((b) => b.id),
     );
     // A run that has only cleared Chapter 9 sees the Godwake bridge but never the
-    // Suldanessellar reveal or anything past it.
+    // Tor Maladin reveal or anything past it.
     const mid = walk(meta({ delveCount: 999, chaptersCleared: 9 }));
     expect(mid).toContain('lore-22-no-seam');
     expect(mid).not.toContain('lore-24-the-vein-named');

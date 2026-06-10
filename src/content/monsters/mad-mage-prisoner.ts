@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Mad Mage Prisoner — a Spellhold inmate whose memory has been shaved down to
+ * Mad Mage Prisoner — a Glassreach inmate whose memory has been shaved down to
  * the single hand-shape of Magic Missile. He still casts it, over and over,
  * at anything that moves. Auto-hits in 5e RAW; modelled here as a high-bonus
  * force-damage attack to approximate the no-miss feel within the existing
@@ -41,5 +41,5 @@ export const MAD_MAGE_PRISONER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "A shaven-headed man in a stained robe, the brand of the Cowled Wizards still fresh on his palm. He mutters the incantation without breath between words — the only thing left in the cell that still has a shape.",
+    "A shaven-headed man in a stained robe, the brand of the Veiled Court still fresh on his palm. He mutters the incantation without breath between words — the only thing left in the cell that still has a shape.",
 });

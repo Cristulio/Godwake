@@ -118,7 +118,7 @@ export interface RollItemOptions {
   /**
    * Story depth (chapter, 1–14) this loot drops at. Drives the depth axis: deeper
    * chapters surface higher base tiers and a higher +N ceiling, and the endgame
-   * band (Ch10+) keeps climbing past the Ch8 ceiling so a Throne-of-Bhaal rack is
+   * band (Ch10+) keeps climbing past the Ch8 ceiling so a Throne-of-the Slain God rack is
    * the richest in the game. Default 1.
    */
   depth?: number;
@@ -178,7 +178,7 @@ function pickBaseWithDepth<T extends Weapon | Armor | Accessory>(
 }
 
 /** +N ceiling by story depth. The base game (Ch1-11) tops out at +3; only the
- * New Game+ Throne-of-Bhaal chapters climb past it — Ch12-13 to +4, Ch14 to +5.
+ * New Game+ Throne-of-the Slain God chapters climb past it — Ch12-13 to +4, Ch14 to +5.
  * The ToB band (Ch12-14) is reachable only in a NG+ run, so +4/+5 surface only
  * there. Takes the raw chapter uncapped, so Ch12-14 flow through. */
 export function depthEnhanceCap(depth: number): number {

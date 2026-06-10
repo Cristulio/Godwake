@@ -4,10 +4,10 @@ import type { BossIntelCard } from '../../content/bossIntel';
 /**
  * Chapter 11 · "The Trials of the Pit" encounter pools. The climax of the whole
  * soul-theft arc: at the Tree of Life the captor finished the theft, struck you
- * down, and you both fell into Hell — his pocket of the Abyss. Here the Bhaalspawn
+ * down, and you both fell into Hell — his pocket of the Abyss. Here the Slainkin
  * nature is put to the five trials — Fear, Pride, Wrath, Greed, Selfishness — each
- * with a moral fork and a guardian-manifestation, before the Tear of Bhaal and the
- * final battle with Irenicus himself, the Voice that has narrated the descent.
+ * with a moral fork and a guardian-manifestation, before the Tear of the Slain God and the
+ * final battle with Velnaris himself, the Voice that has narrated the descent.
  *
  * Theme: the pit measures your father's blood. Each trial-altar poses a question
  * about what a child of Murder is willing to be, and the sin you would answer it
@@ -17,7 +17,7 @@ import type { BossIntelCard } from '../../content/bossIntel';
  * pries out of you. Mechanically the apex of the chapters: paralysis, fear, blind,
  * life-drain, hoard-wards, summoned reflections, and a final boss gorged on a
  * stolen god. Continues the curve a band past Chapter 9: warmups CR 10, early-mid
- * CR 11, mid CR 12, elite CR 14, boss (Jon Irenicus) CR 16.
+ * CR 11, mid CR 12, elite CR 14, boss (Jon Velnaris) CR 16.
  */
 
 export interface EncounterEntry {
@@ -310,7 +310,7 @@ export interface ChapterRoomFlavor {
  * NOTE: there are no clean gods to pray to in the captor's pocket of Hell — the
  * "shrines" here are the trial-altars themselves, the moments of moral fork where
  * passing the test leaves you steadier; the "rests" are the rare still pockets of
- * the pit, and the calm of the Tear of Bhaal once it is claimed.
+ * the pit, and the calm of the Tear of the Slain God once it is claimed.
  */
 export const CHAPTER11_FLAVOR = {
   chapter: 11 as const,
@@ -323,7 +323,7 @@ export const CHAPTER11_FLAVOR = {
         "One of the five altars stands cooling, its question answered the hard right way — you faced the thing, set down the trinket, stayed your hand, spent yourself. There is no god in the stone to thank. But a soul that has just refused its own worst self stands a little straighter, and the burning ground does not press quite so close to a thing that has, for once, declined to be what the pit hoped. Stand at the answered altar a moment, and remember that the captor does not own all of you yet.",
     },
     {
-      title: 'The Tear of Bhaal',
+      title: 'The Tear of the Slain God',
       flavorText:
         "Where the five trials meet, a single drop of your father's essence hangs in the air, red-black and slow-turning, wept from a god as he died and kept here against this exact hour. It is the proof you came through the trials with something of yourself intact — and it is a weapon, the one thing in all of Hell the captor cannot have, because it answers only to the blood. Close your hand on the Tear. It is cold, and it is yours, and for the first time on the long climb down the Voice goes quiet.",
     },
@@ -337,7 +337,7 @@ export const CHAPTER11_FLAVOR = {
     {
       title: 'In the Lee of the Tear',
       flavorText:
-        "Close by the Tear of Bhaal the pit cannot quite hold its shape — the burning leans away from your father's essence as if it remembers being made by something this drop once belonged to. In that lee there is a coldness that passes, briefly, for peace. Whatever you are about to walk into wearing this calm, it is the last quiet there will be before the face at the end of the Voice. Take it. You have earned the breath, and you will need it.",
+        "Close by the Tear of the Slain God the pit cannot quite hold its shape — the burning leans away from your father's essence as if it remembers being made by something this drop once belonged to. In that lee there is a coldness that passes, briefly, for peace. Whatever you are about to walk into wearing this calm, it is the last quiet there will be before the face at the end of the Voice. Take it. You have earned the breath, and you will need it.",
     },
   ] as ChapterRoomFlavor[],
   shop: {
@@ -349,7 +349,7 @@ export const CHAPTER11_FLAVOR = {
   boss: {
     title: 'The Face at the End of the Voice',
     flavorText:
-      "The trials end and the burning opens into a vault at the heart of the pit, and the Voice that has walked you down the whole descent finally has a face. Jon Irenicus stands at the centre of his stolen Hell with the Tree of Life's power lit under his skin and your divinity gripped in him like a swallowed coal, and he turns to you with the unhurried fondness of a man regarding good work. \"You came all this way down,\" he says, and the old Voice from the cage fits the face exactly. \"After everything I took — you climbed back up to me. I am almost moved. But you have always misunderstood what you are. You are not the one who survives this story. You are the soil, child of Murder, and I have such things to grow.\" The Tear of Bhaal is cold in your hand. It is the one thing here he cannot have. Make him answer for the Voice.",
+      "The trials end and the burning opens into a vault at the heart of the pit, and the Voice that has walked you down the whole descent finally has a face. Jon Velnaris stands at the centre of his stolen Hell with the Tree of Life's power lit under his skin and your divinity gripped in him like a swallowed coal, and he turns to you with the unhurried fondness of a man regarding good work. \"You came all this way down,\" he says, and the old Voice from the cage fits the face exactly. \"After everything I took — you climbed back up to me. I am almost moved. But you have always misunderstood what you are. You are not the one who survives this story. You are the soil, child of Murder, and I have such things to grow.\" The Tear of the Slain God is cold in your hand. It is the one thing here he cannot have. Make him answer for the Voice.",
     xpReward: 5400,
     goldReward: 750,
   },
@@ -371,7 +371,7 @@ export const CHAPTER11_BOSS_INTEL: Omit<BossIntelCard, 'chapter'> & { chapter: 1
   weakSpotResolution:
     "You read the wall the way the one who left it meant you to. He does not strike first — he speaks first, the binding word he taught you on the slab, and the stillness is the snare. Knowing the word is the opener, you set your first cut for the half-beat before he can say it, while the Voice still expects you to obey.",
   battlePlanResolution:
-    "You read the whole patient procedure off the slag: the binding word first, to still you with the lesson he drilled into you a hundred lifetimes deep — then the studied two-stroke of a man finishing work he long since perfected, no anger in it to read — and the moment past half when the Bhaal-taint he tore out of you turns in his hands and he stops being a scholar and becomes the very thing he stole. You walk into the vault with your mind set against the word, the Tear cold in your hand, and your first strike already aimed past his guard.",
+    "You read the whole patient procedure off the slag: the binding word first, to still you with the lesson he drilled into you a hundred lifetimes deep — then the studied two-stroke of a man finishing work he long since perfected, no anger in it to read — and the moment past half when god-taint he tore out of you turns in his hands and he stops being a scholar and becomes the very thing he stole. You walk into the vault with your mind set against the word, the Tear cold in your hand, and your first strike already aimed past his guard.",
   walkPastResolution:
     "You leave the warning unread and the word un-warded, and step into the vault without slowing. The Voice, almost fond, marks the boldness of it — you were always his best work. The bold take the last room on their own terms, and what the captor sheds when he falls will weigh a touch heavier for a soul that walked in unafraid of the one who made it.",
   coinCost: 5 * 11 * 11 + 20 * 11,

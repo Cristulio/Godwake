@@ -138,7 +138,7 @@ describe('evaluateAchievements', () => {
   });
 
   it('withholds the platinum while any other achievement is unattainable', () => {
-    // A ledger complete in every way except one milestone (Melissan never felled),
+    // A ledger complete in every way except one milestone (Maevra never felled),
     // so 'godwake' can never satisfy from this snapshot and the platinum stays shut.
     const ctx = { ...maxedCtx(), throneCompleted: false };
     const newly = evaluateAchievements(ctx, []);

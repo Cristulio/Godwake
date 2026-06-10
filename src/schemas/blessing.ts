@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { ClassIdSchema } from './ids';
 
 /**
- * Faerûn gods that grant blessings at shrine rooms.
+ * the old realms gods that grant blessings at shrine rooms.
  */
 export const BlessingGodSchema = z.enum([
   'tymora',
@@ -17,13 +17,13 @@ export const BlessingGodSchema = z.enum([
 export type BlessingGod = z.infer<typeof BlessingGodSchema>;
 
 export const BLESSING_GOD_LABEL: Record<BlessingGod, string> = {
-  tymora: 'Tymora · Luck',
-  helm: 'Helm · Protection',
-  tempus: 'Tempus · War',
-  mystra: 'Mystra · Magic',
-  lathander: 'Lathander · Dawn',
-  selune: 'Selûne · Moon',
-  ilmater: 'Ilmater · Endurance',
+  tymora: 'Tyche · Luck',
+  helm: 'Argus · Protection',
+  tempus: 'Ares · War',
+  mystra: 'Hecate · Magic',
+  lathander: 'Eos · Dawn',
+  selune: 'Selene · Moon',
+  ilmater: 'Atlas · Endurance',
   silvanus: 'Silvanus · Nature',
 };
 
@@ -36,7 +36,7 @@ export const BLESSING_GOD_GLYPH: Record<BlessingGod, string> = {
   tymora: '◉', // lucky coin
   helm: '⛨', // the Watcher's shield
   tempus: '⚔', // crossed swords of war
-  mystra: '✦', // star of the Weave
+  mystra: '✦', // star of the Weft
   lathander: '☀', // the rising sun
   selune: '☾', // the moon's crescent
   ilmater: '✚', // the bound cross of suffering

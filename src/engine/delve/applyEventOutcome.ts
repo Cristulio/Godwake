@@ -19,7 +19,7 @@ import { scaleGold } from './eventGoldScale';
 /** Plain-text record of a single effect that landed. Useful for UI summaries. */
 export interface AppliedEffect {
   kind: EventEffect['kind'];
-  /** Short human-readable summary ("+5 HP", "+10g", "Tymora's Coin"). */
+  /** Short human-readable summary ("+5 HP", "+10g", "Tyche's Coin"). */
   detail: string;
 }
 

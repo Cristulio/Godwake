@@ -19,8 +19,8 @@ import { MARILITH_WARDEN } from '../../content/monsters/marilith-warden';
 import { MELISSAN } from '../../content/monsters/melissan';
 
 /**
- * Chapter 14 ("The Throne of Bhaal") content gate: the L20 finale bestiary, the
- * Melissan boss, the four pools, and the ready-to-wire flavor + intel must be
+ * Chapter 14 ("The Throne of the Slain God") content gate: the L20 finale bestiary, the
+ * Maevra boss, the four pools, and the ready-to-wire flavor + intel must be
  * valid + internally consistent. Integration wires the chapter into the registry,
  * createDelve, and bossIntel all at once; this suite owns the bestiary + pool
  * invariants in isolation, importing the monster constants directly so it stays
@@ -63,7 +63,7 @@ describe('chapter 14 — bestiary', () => {
     expect(ids.size).toBe(8);
   });
 
-  it('Melissan carries the biggest statblock in the game (CR 18, clearly above Irenicus CR16)', () => {
+  it('Maevra carries the biggest statblock in the game (CR 18, clearly above Velnaris CR16)', () => {
     expect(CH14_BOSS.id).toBe(CH14_BOSS_ID);
     expect(CH14_BOSS.cr).toBe('18');
     expect(CH14_BOSS.bossMechanic).toBe('battle-rage');

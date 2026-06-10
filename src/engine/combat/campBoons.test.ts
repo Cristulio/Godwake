@@ -110,7 +110,7 @@ describe('camp boons — derived modifiers', () => {
   });
 
   it('Might of the Mountain adds +1 weapon damage on a hit', () => {
-    // Use a sturdier monster (Ilyich, Ch1 boss) so a 1-shot kill can't mask
+    // Use a sturdier monster (Karzok, Ch1 boss) so a 1-shot kill can't mask
     // the +1 damage delta by flooring both monsters at 0 HP.
     const ilyich = getMonster('duergar-ilyich');
     const baseline = makeFighter();

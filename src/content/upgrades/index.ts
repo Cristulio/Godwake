@@ -145,7 +145,7 @@ const RAW: Upgrade[] = [
     category: 'survival',
     name: 'Hardier Soul',
     flavor:
-      "Ilmater's mark pressed beneath the heart. When the body breaks, the soul remembers it can still stand once more.",
+      "Atlas's mark pressed beneath the heart. When the body breaks, the soul remembers it can still stand once more.",
     effectAtRank: (r) => fx('hardier-soul', { count: r, n: r }),
     costForRank: (r) => rankCost(80, r),
     maxRank: 3,
@@ -370,7 +370,7 @@ const RAW: Upgrade[] = [
   {
     id: 'tymoras-wager',
     category: 'fortune',
-    name: "Tymora's Wager",
+    name: "Tyche's Wager",
     flavor:
       "A copper coin pressed into your palm by a laughing priestess. Heads, you live. Tails, you live again. She never lets you see the result.",
     effectAtRank: (r) => fx('tymoras-wager', { count: r, n: r }),
@@ -461,7 +461,7 @@ const RAW: Upgrade[] = [
     classId: 'rogue',
     name: 'Knife in the Dark',
     flavor:
-      "Selûne's other face — the wound finds its way home.",
+      "Selene's other face — the wound finds its way home.",
     effectAtRank: (r) => fx('knife-in-the-dark', { n: r }),
     costForRank: (r) => rankCost(150, r),
     maxRank: 3,
@@ -620,7 +620,7 @@ const RAW: Upgrade[] = [
     classId: 'druid',
     name: 'Deep Roots',
     flavor:
-      "Your soul sends roots past the Wellspring's floor, into the still water beneath. From it you draw one more breath of the Weave than the body was given.",
+      "Your soul sends roots past the Wellspring's floor, into the still water beneath. From it you draw one more breath of the Weft than the body was given.",
     effectAtRank: (r) => fx('deep-roots', { count: r, n: r }),
     costForRank: (r) => rankCost(160, r),
     maxRank: 2,
@@ -672,7 +672,7 @@ const RAW: Upgrade[] = [
     classId: 'wizard',
     name: 'Wellspring of Mysteries',
     flavor:
-      'The Wellspring keeps a page the masters never wrote — a fold of the Weave sewn into the soul, yours to spend and find waiting again.',
+      'The Wellspring keeps a page the masters never wrote — a fold of the Weft sewn into the soul, yours to spend and find waiting again.',
     effectAtRank: (r) => fx('wellspring-of-mysteries', { count: r, n: r }),
     costForRank: (r) => rankCost(160, r),
     maxRank: 2,

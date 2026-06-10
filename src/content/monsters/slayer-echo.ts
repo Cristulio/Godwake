@@ -2,7 +2,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Slayer-Echo — Chapter 14 mid bruiser, and the most personal foe in the hall.
- * This close to the Throne the Bhaal taint in your own blood answers the pools and
+ * This close to the Throne the Slain God taint in your own blood answers the pools and
  * stands up out of you: the Slayer, the avatar of the God of Murder you have
  * always carried and never wholly been, walked out a step and turned around. A
  * `debuff` (frightened — the horror of meeting your own worst shape) into a
@@ -51,5 +51,5 @@ export const SLAYER_ECHO: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "You are a Child of Bhaal, and the inheritance has never been a metaphor. Somewhere under every life you have lived there is the Slayer — the god's own murder-shape, waiting in the blood for the one moment you are tired enough or frightened enough or wronged enough to let it have the wheel. You have spent a hundred deaths keeping that door shut. Here, at the foot of his Throne, with his rendered essence steaming in pools to every side, the door does not need you to open it. The taint simply answers the pools the way water answers water, and stands up out of your own shadow, and turns around, and you are looking at exactly what you would be if you ever lost. It does not speak. It has never needed to. It has only ever wanted the one thing, and it has always, patiently, been willing to be you to get it.",
+    "You are a Child of the Slain God, and the inheritance has never been a metaphor. Somewhere under every life you have lived there is the Slayer — the god's own murder-shape, waiting in the blood for the one moment you are tired enough or frightened enough or wronged enough to let it have the wheel. You have spent a hundred deaths keeping that door shut. Here, at the foot of his Throne, with his rendered essence steaming in pools to every side, the door does not need you to open it. The taint simply answers the pools the way water answers water, and stands up out of your own shadow, and turns around, and you are looking at exactly what you would be if you ever lost. It does not speak. It has never needed to. It has only ever wanted the one thing, and it has always, patiently, been willing to be you to get it.",
 });

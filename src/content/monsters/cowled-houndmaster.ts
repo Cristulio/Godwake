@@ -43,5 +43,5 @@ export const COWLED_HOUNDMASTER: Monster = MonsterSchema.parse({
   ],
   resistances: ['necrotic'],
   flavorText:
-    'The Cowled Wizards keep worse things than prisoners in their kennels, and someone has to feed them. He has stopped flinching at the dark on his leash; the dark has stopped, mostly, at biting him. Everything past that is your problem.',
+    'The Veiled Court keeps worse things than prisoners in their kennels, and someone has to feed them. He has stopped flinching at the dark on his leash; the dark has stopped, mostly, at biting him. Everything past that is your problem.',
 });

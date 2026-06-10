@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Fire Giant — Chapter 12 mid, the line of Yaga-Shura's host. The thing the
+ * Fire Giant — Chapter 12 mid, the line of Hargan-Vor's host. The thing the
  * siege is built on: a mountain of red-iron muscle in scorched plate, with a
  * greatsword that drinks the heat and a hurled boulder for anything it cannot
  * reach. A `multiattack` bruiser (the greatsword, twice, at reach) that also
@@ -47,9 +47,9 @@ export const FIRE_GIANT: Monster = MonsterSchema.parse({
       damageType: 'bludgeoning',
       range: [60, 240],
       description:
-        'It tears a chunk of the broken wall loose, wreathes it in the heat coming off its own hands, and throws it the length of the street — a falling, burning piece of Saradush coming back down on the city it was taken from.',
+        'It tears a chunk of the broken wall loose, wreathes it in the heat coming off its own hands, and throws it the length of the street — a falling, burning piece of Karthen coming back down on the city it was taken from.',
     },
   ],
   flavorText:
-    "These are the host. Yaga-Shura led the fire giants down out of the mountains and they ringed Saradush in a wall of red iron, and what they cannot burn they break, and what they cannot break they wait out. They fight the way the mountains made them: slow, vast, and final. A single one of them held a gate against the city's whole guard. The siege has dozens. You are going to have to go through them anyway.",
+    "These are the host. Hargan-Vor led the fire giants down out of the mountains and they ringed Karthen in a wall of red iron, and what they cannot burn they break, and what they cannot break they wait out. They fight the way the mountains made them: slow, vast, and final. A single one of them held a gate against the city's whole guard. The siege has dozens. You are going to have to go through them anyway.",
 });

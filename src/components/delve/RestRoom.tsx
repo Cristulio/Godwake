@@ -24,7 +24,7 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
   const showTaunt = useGameStore((s) => s.showTaunt);
   const [showStone, setShowStone] = useState(false);
 
-  // Imoen whispers when the player first reaches an alcove — once per soul.
+  // Inara whispers when the player first reaches an alcove — once per soul.
   useEffect(() => {
     if (useMetaStore.getState().seenDialogueBeats.includes('imoen-rest-whisper')) return;
     const id = setTimeout(() => {

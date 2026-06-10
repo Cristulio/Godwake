@@ -272,7 +272,7 @@ function DelveScreenBody() {
         onReturn={() => {
           // Route through the Reincarnation Reveal — the dramatic moment where
           // the new quirks roll in over the painted Druid Grove. The reveal
-          // itself calls finishDelve() to land back at Phandalin.
+          // itself calls finishDelve() to land back at Wakeford.
           useGameStore.getState().goToReincarnation();
         }}
       />

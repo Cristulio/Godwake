@@ -1,9 +1,9 @@
 import type { RoomMonster } from '../../types/delve';
 
 /**
- * Spellhold / Chapter 3 encounter pools. Mirrors the chapter1Pools and
+ * Glassreach / Chapter 3 encounter pools. Mirrors the chapter1Pools and
  * chapter2Pools layout — pooled compositions for each combat slot in the
- * Spellhold side-delve. Rewards scale roughly +50% over Ch2 to match the
+ * Glassreach side-delve. Rewards scale roughly +50% over Ch2 to match the
  * tougher CR band (warmups around CR 2, elites a mix of CR 3-4).
  *
  * Slot ordering (8-room side-delve):
@@ -273,7 +273,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Test-Pit',
     flavorText:
-      "The Cowled Wizards have built a pit at the end of the gallery and the pit is currently in use — a Hollow Sage circles a stitched subject like he's grading its gait.",
+      "The Veiled Court have built a pit at the end of the gallery and the pit is currently in use — a Hollow Sage circles a stitched subject like he's grading its gait.",
     monsters: [
       { defId: 'hollow-sage', count: 1 },
       { defId: 'bonebound-test-subject', count: 1 },

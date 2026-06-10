@@ -1,7 +1,7 @@
 import type { RoomMonster } from '../../types/delve';
 
 /**
- * Athkatla / Chapter 2 encounter pools. Mirrors the chapter1Pools layout but
+ * Stormhaven / Chapter 2 encounter pools. Mirrors the chapter1Pools layout but
  * raised in CR — slot 1 is the alley warmup, slot 3 the counting-house
  * mid-fight, slot 5 the cowled-patrol mid-elite, slot 7 the rooftop-chase
  * pre-boss. The fixed boss is The Magistrate in chapter2Rooms.
@@ -19,7 +19,7 @@ export interface EncounterEntry {
 
 export const WARMUP_POOL: EncounterEntry[] = [
   {
-    title: 'A Back Alley off the Trade Way',
+    title: 'A Back Alley off the Trade Road',
     flavorText:
       "Two figures break from a doorway, daggers already drawn — a robed fanatic with the cult-circle bloodied at his collar, and a kobold thug paid for the morning's work.",
     monsters: [{ defId: 'cult-fanatic', count: 1 }, { defId: 'kobold', count: 1 }],
@@ -220,7 +220,7 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Conjurer in the Counting-House',
     flavorText:
-      "A Cowled Wizard waits behind the desk and does not stand. A circle of cold fire opens at his shoulder, and something with wings folds itself out of it, already grinning. He will not duel you. He delegates.",
+      "A Veiled Magus waits behind the desk and does not stand. A circle of cold fire opens at his shoulder, and something with wings folds itself out of it, already grinning. He will not duel you. He delegates.",
     monsters: [{ defId: 'cowled-conjurer', count: 1 }],
     xpReward: 360,
     goldReward: 24,
@@ -253,7 +253,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Twin Cowls',
     flavorText:
-      "Two Cowled Wizards have come down the lane in unison — a magus a step ahead, an enforcer at his shoulder. They do not speak. They do not need to. Where one looks, the other does not; and when the magus is hurt enough to stop economising, the lane-light starts to lean toward his hands.",
+      "Two Veiled Court have come down the lane in unison — a magus a step ahead, an enforcer at his shoulder. They do not speak. They do not need to. Where one looks, the other does not; and when the magus is hurt enough to stop economising, the lane-light starts to lean toward his hands.",
     monsters: [
       { defId: 'cowled-magus', count: 1 },
       { defId: 'cowled-enforcer', count: 1 },
@@ -275,7 +275,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Rooftop Chase',
     flavorText:
-      "You catch them on the tiled roof above the Trade Way — a Cowled magus in a hurry, a hobgoblin lieutenant holding the line. The magus does not turn; he keeps moving and lobbing grey force back over his shoulder, and when you finally cut him he stops running and turns to settle it in one cast. The hobgoblin smiles.",
+      "You catch them on the tiled roof above the Trade Road — a Cowled magus in a hurry, a hobgoblin lieutenant holding the line. The magus does not turn; he keeps moving and lobbing grey force back over his shoulder, and when you finally cut him he stops running and turns to settle it in one cast. The hobgoblin smiles.",
     monsters: [
       { defId: 'cowled-magus', count: 1 },
       { defId: 'hobgoblin', count: 1 },

@@ -2,7 +2,7 @@
       viewBox="0 0 34 44"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Gromnir's Defender"
+      aria-label="Brogmar's Defender"
     >
       <!-- Smouldering backlight + ground shadow -->
       <ellipse cx="17" cy="22" rx="14" ry="20" fill="#5a1010" opacity="0.16" />

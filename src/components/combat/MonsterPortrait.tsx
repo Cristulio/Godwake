@@ -92,7 +92,7 @@ import paleFavouriteUrl from '../../assets/sprites/monsters/pale-favourite.svg';
 import masqueradeWardenUrl from '../../assets/sprites/monsters/masquerade-warden.svg';
 import maskChamberlainUrl from '../../assets/sprites/monsters/mask-chamberlain.svg';
 import theHollowPretenderUrl from '../../assets/sprites/monsters/the-hollow-pretender.svg';
-// ─── Chapter 10 · Suldanessellar ──────────────────────────────────────────
+// ─── Chapter 10 · Tor Maladin ──────────────────────────────────────────
 import bodhiSpawnUrl from '../../assets/sprites/monsters/bodhi-spawn.svg';
 import suldanessellarArcherUrl from '../../assets/sprites/monsters/suldanessellar-archer.svg';
 import suldanessellarBladesingerUrl from '../../assets/sprites/monsters/suldanessellar-bladesinger.svg';
@@ -111,7 +111,7 @@ import wraithOfFearUrl from '../../assets/sprites/monsters/wraith-of-fear.svg';
 import slayerShadeUrl from '../../assets/sprites/monsters/slayer-shade.svg';
 import spinedAbishaiUrl from '../../assets/sprites/monsters/spined-abishai.svg';
 import irenicusUrl from '../../assets/sprites/monsters/irenicus.svg';
-// ─── Chapter 12 · The Siege of Saradush ───────────────────────────────────
+// ─── Chapter 12 · The Siege of Karthen ───────────────────────────────────
 import saradushMarauderUrl from '../../assets/sprites/monsters/saradush-marauder.svg';
 import burningDeadUrl from '../../assets/sprites/monsters/burning-dead.svg';
 import fireGiantUrl from '../../assets/sprites/monsters/fire-giant.svg';
@@ -129,7 +129,7 @@ import stormscaleDrakeUrl from '../../assets/sprites/monsters/stormscale-drake.s
 import halfDragonReaverUrl from '../../assets/sprites/monsters/half-dragon-reaver.svg';
 import sendaiUrl from '../../assets/sprites/monsters/sendai.svg';
 import abazigalUrl from '../../assets/sprites/monsters/abazigal.svg';
-// ─── Chapter 14 · The Throne of Bhaal ─────────────────────────────────────
+// ─── Chapter 14 · The Throne of the Slain God ─────────────────────────────────────
 import bhaalEssenceMoteUrl from '../../assets/sprites/monsters/bhaal-essence-mote.svg';
 import bloodFiendUrl from '../../assets/sprites/monsters/blood-fiend.svg';
 import essenceWardenUrl from '../../assets/sprites/monsters/essence-warden.svg';
@@ -174,7 +174,7 @@ const SPRITES: Record<string, SpriteEntry> = {
   'goblin-warden': { url: goblinWardenUrl, label: 'Goblin Warden' },
   skeleton: { url: skeletonUrl, label: 'Skeleton' },
   kobold: { url: koboldUrl, label: 'Kobold' },
-  'duergar-ilyich': { url: duergarIlyichUrl, label: 'Ilyich the Duergar' },
+  'duergar-ilyich': { url: duergarIlyichUrl, label: 'Karzok the Duergar' },
   'dust-mephit': { url: dustMephitUrl, label: 'Dust Mephit' },
   'animated-armor': { url: animatedArmorUrl, label: 'Animated Armor' },
   bugbear: { url: bugbearUrl, label: 'Bugbear Brute' },
@@ -197,7 +197,7 @@ const SPRITES: Record<string, SpriteEntry> = {
   'drow-warrior': { url: drowWarriorUrl, label: 'Drow Warrior' },
   'hollow-sage': { url: hollowSageUrl, label: 'Hollow Sage' },
   'mad-mage-prisoner': { url: madMagePrisonerUrl, label: 'Mad Mage Prisoner' },
-  'mind-flayer-fragment': { url: mindFlayerFragmentUrl, label: 'Mind Flayer Fragment' },
+  'mind-flayer-fragment': { url: mindFlayerFragmentUrl, label: 'Mindrender Fragment' },
   'shadow-hound': { url: shadowHoundUrl, label: 'Shadow Hound' },
   'slayer-hound': { url: slayerHoundUrl, label: 'Slayer Hound' },
   'asylum-director': { url: asylumDirectorUrl, label: 'The Asylum Director' },
@@ -265,9 +265,9 @@ const SPRITES: Record<string, SpriteEntry> = {
   'masquerade-warden': { url: masqueradeWardenUrl, label: 'Masquerade-Warden' },
   'mask-chamberlain': { url: maskChamberlainUrl, label: 'The Mask-Chamberlain' },
   'the-hollow-pretender': { url: theHollowPretenderUrl, label: 'The Hollow Pretender' },
-  // ─── Chapter 10 · Suldanessellar ────────────────────────────────────────
-  'bodhi-spawn': { url: bodhiSpawnUrl, label: "Bodhi's Spawn" },
-  'suldanessellar-archer': { url: suldanessellarArcherUrl, label: 'Charmed Suldanessellar Archer' },
+  // ─── Chapter 10 · Tor Maladin ────────────────────────────────────────
+  'bodhi-spawn': { url: bodhiSpawnUrl, label: "Velora's Spawn" },
+  'suldanessellar-archer': { url: suldanessellarArcherUrl, label: 'Charmed Tor Maladin Archer' },
   'suldanessellar-bladesinger': { url: suldanessellarBladesingerUrl, label: 'Corrupted Bladesinger' },
   'suldanessellar-warpriest': { url: suldanessellarWarpriestUrl, label: 'Corrupted War-Priest' },
   'defiled-dryad': { url: defiledDryadUrl, label: 'Defiled Dryad' },
@@ -283,38 +283,38 @@ const SPRITES: Record<string, SpriteEntry> = {
   'wraith-of-fear': { url: wraithOfFearUrl, label: 'Wraith of Fear' },
   'slayer-shade': { url: slayerShadeUrl, label: 'Slayer-Shade' },
   'spined-abishai': { url: spinedAbishaiUrl, label: 'Spined Abishai' },
-  irenicus: { url: irenicusUrl, label: 'Jon Irenicus' },
-  // ─── Chapter 12 · The Siege of Saradush ─────────────────────────────────
-  'saradush-marauder': { url: saradushMarauderUrl, label: 'Saradush Marauder' },
+  irenicus: { url: irenicusUrl, label: 'Jon Velnaris' },
+  // ─── Chapter 12 · The Siege of Karthen ─────────────────────────────────
+  'saradush-marauder': { url: saradushMarauderUrl, label: 'Karthen Marauder' },
   'burning-dead': { url: burningDeadUrl, label: 'Burning Dead' },
   'fire-giant': { url: fireGiantUrl, label: 'Fire Giant' },
   'fire-giant-shaman': { url: fireGiantShamanUrl, label: 'Fire-Giant Shaman' },
   'fire-giant-warlord': { url: fireGiantWarlordUrl, label: 'Fire-Giant Warlord' },
   'half-giant-siegebreaker': { url: halfGiantSiegebreakerUrl, label: 'Half-Giant Siegebreaker' },
-  'gromnir-defender': { url: gromnirDefenderUrl, label: "Gromnir's Defender" },
-  'yaga-shura': { url: yagaShuraUrl, label: 'Yaga-Shura' },
+  'gromnir-defender': { url: gromnirDefenderUrl, label: "Brogmar's Defender" },
+  'yaga-shura': { url: yagaShuraUrl, label: 'Hargan-Vor' },
   // Reuses the hovering-mote art for the giant's surfaced heart-ember weak-point
   // (a floating red coal) — no bespoke sprite yet; the mote reads as the wound
   // made briefly visible.
   'heart-ember': { url: bhaalEssenceMoteUrl, label: 'Heart-Ember' },
   // ─── Chapter 13 · The Last of the Five ──────────────────────────────────
-  'sendai-handmaiden': { url: sendaiHandmaidenUrl, label: "Sendai's Handmaiden" },
+  'sendai-handmaiden': { url: sendaiHandmaidenUrl, label: "Szendra's Handmaiden" },
   'kuo-toa-deepguard': { url: kuoToaDeepguardUrl, label: 'Kuo-Toa Deepguard' },
   'petrified-ambusher': { url: petrifiedAmbusherUrl, label: 'Petrified Ambusher' },
   'blue-wyrmling': { url: blueWyrmlingUrl, label: 'Blue Wyrmling' },
   'stormscale-drake': { url: stormscaleDrakeUrl, label: 'Stormscale Drake' },
   'half-dragon-reaver': { url: halfDragonReaverUrl, label: 'Half-Dragon Reaver' },
-  sendai: { url: sendaiUrl, label: 'Sendai' },
-  abazigal: { url: abazigalUrl, label: 'Abazigal' },
-  // ─── Chapter 14 · The Throne of Bhaal ───────────────────────────────────
-  'bhaal-essence-mote': { url: bhaalEssenceMoteUrl, label: 'Bhaal-Essence Mote' },
+  sendai: { url: sendaiUrl, label: 'Szendra' },
+  abazigal: { url: abazigalUrl, label: 'Korvazel' },
+  // ─── Chapter 14 · The Throne of the Slain God ───────────────────────────────────
+  'bhaal-essence-mote': { url: bhaalEssenceMoteUrl, label: 'God-Essence Mote' },
   'blood-fiend': { url: bloodFiendUrl, label: 'Blood-Fiend' },
   'essence-warden': { url: essenceWardenUrl, label: 'Warden of the Pools' },
   'marilith-warden': { url: marilithWardenUrl, label: 'Marilith of the Throne' },
-  'murder-herald': { url: murderHeraldUrl, label: 'Herald of the Bhaalspawn' },
+  'murder-herald': { url: murderHeraldUrl, label: 'Herald of the Slainkin' },
   'slayer-echo': { url: slayerEchoUrl, label: 'Slayer-Echo' },
   'throne-abishai': { url: throneAbishaiUrl, label: 'Throne Abishai' },
-  melissan: { url: melissanUrl, label: 'Melissan' },
+  melissan: { url: melissanUrl, label: 'Maevra' },
   // ─── Ascension-only elites (Ascension ≥ 2) ──────────────────────────────
   'ascendant-slayer': { url: ascendantSlayerUrl, label: 'Ascendant Slayer' },
   'void-warden': { url: voidWardenUrl, label: 'Void-Warden' },

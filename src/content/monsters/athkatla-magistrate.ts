@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster, type MonsterSummon } from '../../schemas/monster';
 
 /**
- * Athkatlan Magistrate — Ch2 boss. A senior Cowled Wizard who sits as
+ * Athkatlan Magistrate — Ch2 boss. A senior Veiled Magus who sits as
  * magistrate over a guild court and rules with the kind of casual cruelty
  * that requires no warrant. Brittle (low HP, light armor) but lethal: opens
  * combat with a Hold Person and then chips the paralyzed player to death
@@ -98,5 +98,5 @@ export const ATHKATLA_MAGISTRATE: Monster = MonsterSchema.parse({
   ],
   resistances: ['psychic'],
   flavorText:
-    "Beneath the high silver collar of the Cowled Wizards, a thin man in his fifties with a magistrate's seal of office on a chain. He has had people killed before lunch and signed the next warrant before the body was lifted. When the chipping is too slow he calls the bailiffs; when you have bled him pale he stops chipping and simply passes sentence.",
+    "Beneath the high silver collar of the Veiled Court, a thin man in his fifties with a magistrate's seal of office on a chain. He has had people killed before lunch and signed the next warrant before the body was lifted. When the chipping is too slow he calls the bailiffs; when you have bled him pale he stops chipping and simply passes sentence.",
 });

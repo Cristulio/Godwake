@@ -20,7 +20,7 @@ import { RAKSHASA } from '../../content/monsters/rakshasa';
 import { NIZIDRAMANIIYT } from '../../content/monsters/nizidramaniiyt';
 
 /**
- * Chapter 10 ("Suldanessellar") content gate. The chapter is not yet wired into
+ * Chapter 10 ("Tor Maladin") content gate. The chapter is not yet wired into
  * the delve registry (a single integration step wires all the L20 chapters at
  * once), so this suite owns the bestiary + pool invariants in isolation: it
  * imports the monster constants directly (each import triggers MonsterSchema

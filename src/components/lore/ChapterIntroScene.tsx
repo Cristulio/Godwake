@@ -28,17 +28,17 @@ const CHAPTER_META: Record<
     render: IronCellsScene,
   },
   2: {
-    title: 'Chapter II — Athkatla',
+    title: 'Chapter II — Stormhaven',
     subtitle: 'The City of Coin, by dusk',
     render: AthkatlaIntroScene,
   },
   3: {
-    title: 'Chapter III — Spellhold',
+    title: 'Chapter III — Glassreach',
     subtitle: 'An asylum on a cold island',
     render: SpellholdScene,
   },
   4: {
-    title: 'Chapter IV — Ust Natha',
+    title: 'Chapter IV — Zhal Vasha',
     subtitle: 'A drow city in the deep faerzress',
     render: UstNathaScene,
   },
@@ -287,9 +287,9 @@ function IronCellsScene() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────
-   Chapter 2 — Athkatla
+   Chapter 2 — Stormhaven
    City silhouette at dusk, gold-domed temple of Waukeen, chimney smoke,
-   a hooded Cowled Wizard on a high balcony.
+   a hooded Veiled Magus on a high balcony.
    ───────────────────────────────────────────────────────────────────── */
 function AthkatlaIntroScene() {
   return (
@@ -409,7 +409,7 @@ function AthkatlaIntroScene() {
           <ellipse cx="126" cy="112" rx="7" ry="4.5" fill="#1a120c" opacity="0.5" />
         </g>
 
-        {/* Right cluster — taller tower with the Cowled Wizard balcony */}
+        {/* Right cluster — taller tower with the Veiled Magus balcony */}
         <rect x="600" y="120" width="80" height="120" fill="#2a1c20" stroke="#0a0606" strokeWidth="1" />
         <rect x="600" y="120" width="80" height="8" fill="#1a120c" />
         <polygon points="596,124 684,124 680,110 600,110" fill="#1a120c" />
@@ -423,7 +423,7 @@ function AthkatlaIntroScene() {
         <rect x="608" y="160" width="64" height="3" fill="#5a4030" />
         <rect x="608" y="160" width="2" height="10" fill="#3a2820" />
         <rect x="670" y="160" width="2" height="10" fill="#3a2820" />
-        {/* Cowled Wizard silhouette on balcony — leaning, watchful */}
+        {/* Veiled Magus silhouette on balcony — leaning, watchful */}
         <g>
           {/* Robe */}
           <path
@@ -484,7 +484,7 @@ function AthkatlaIntroScene() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────
-   Chapter 3 — Spellhold
+   Chapter 3 — Glassreach
    An island prison off a stormy coast. Lightning splits the sky.
    The spire has one lit window — someone is awake inside.
    ───────────────────────────────────────────────────────────────────── */
@@ -576,7 +576,7 @@ function SpellholdScene() {
       <path d="M 0 196 q 30 -6 60 0 q 30 -4 60 0 L 120 200 L 0 200 Z" fill="#0e0c16" />
       <path d="M 720 198 q 30 -8 60 0 q 30 -4 60 0 L 840 204 L 720 204 Z" fill="#0e0c16" />
 
-      {/* Main Spellhold island silhouette — jagged cliffs */}
+      {/* Main Glassreach island silhouette — jagged cliffs */}
       <path
         d="M 280 220 L 310 188 L 340 196 L 358 174 L 386 184 L 412 156 L 442 178 L 466 168 L 488 180 L 510 174 L 534 196 L 552 188 L 568 220 Z"
         fill="url(#c3-island)"
@@ -666,7 +666,7 @@ function SpellholdScene() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────
-   Chapter 4 — Ust Natha
+   Chapter 4 — Zhal Vasha
    Faerzress-blue cavern, drow city silhouette under a fungal canopy,
    spider banner hung from the rock arch.
    ───────────────────────────────────────────────────────────────────── */

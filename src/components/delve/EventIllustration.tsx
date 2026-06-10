@@ -32,17 +32,17 @@ interface IllustrationEntry {
 
 const ILLUSTRATIONS: Record<IllustrationCategory, IllustrationEntry> = {
   'iron-cells': { url: ironCellsUrl, label: 'The Iron Cells' },
-  athkatla: { url: athkatlaUrl, label: 'Athkatla, the City of Coin' },
-  spellhold: { url: spellholdUrl, label: 'Spellhold, the Asylum' },
-  underdark: { url: underdarkUrl, label: 'The Underdark' },
+  athkatla: { url: athkatlaUrl, label: 'Stormhaven, the City of Coin' },
+  spellhold: { url: spellholdUrl, label: 'Glassreach, the Asylum' },
+  underdark: { url: underdarkUrl, label: 'The Deepdark' },
   'the-godwake': { url: godwakeUrl, label: 'The Godwake' },
   'drowned-archive': { url: drownedArchiveUrl, label: 'The Drowned Archive' },
   'ashfall-march': { url: ashfallMarchUrl, label: 'The Ashfall March' },
   'court-of-masks': { url: courtOfMasksUrl, label: 'The Court of Masks' },
-  suldanessellar: { url: suldanessellarUrl, label: 'Suldanessellar, the Tree of Life' },
+  suldanessellar: { url: suldanessellarUrl, label: 'Tor Maladin, the Tree of Life' },
   'hell-trials': { url: hellTrialsUrl, label: 'The Trials of the Pit' },
-  saradush: { url: saradushUrl, label: 'The Siege of Saradush' },
-  'throne-of-bhaal': { url: throneOfBhaalUrl, label: 'The Throne of Bhaal' },
+  saradush: { url: saradushUrl, label: 'The Siege of Karthen' },
+  'throne-of-bhaal': { url: throneOfBhaalUrl, label: 'The Throne of the Slain God' },
   omen: { url: omenUrl, label: 'An omen on the road' },
 };
 

@@ -2,7 +2,7 @@
       viewBox="0 0 26 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Sendai"
+      aria-label="Szendra"
     >
       <!-- Arcane violet backlight + ground shadow -->
       <ellipse cx="13" cy="20" rx="13" ry="20" fill="#5a30a0" opacity="0.1" />

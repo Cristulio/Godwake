@@ -2,7 +2,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Kuo-Toa Deepguard — Chapter 13 fodder out of the flooded approaches to
- * Abazigal's Lair. The fish-folk of the deep caverns took the half-dragon for a
+ * Korvazel's Lair. The fish-folk of the deep caverns took the half-dragon for a
  * god the moment he came down into their water, and now they keep his lower
  * galleries with barbed harpoons and clinging nets. A reach `attack` (the barbed
  * harpoon that drags as it bites) and a `debuff` (the sticky mucus net that
@@ -43,5 +43,5 @@ export const KUO_TOA_DEEPGUARD: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Long before Abazigal took the deep caverns for his lair, the kuo-toa held the water at the bottom of them, mad and devout and waiting for a god to come down into the dark and be worshipped. When the half-dragon came, they decided he was the one, the way the fish-folk always decide, all at once and past all argument — and now they keep his lower galleries as zealously as they once kept their own dead idols. They croak his name in their drowned tongue as they cast, and they mean it as a prayer, and the harpoon at the end of the prayer is just as sharp.",
+    "Long before Korvazel took the deep caverns for his lair, the kuo-toa held the water at the bottom of them, mad and devout and waiting for a god to come down into the dark and be worshipped. When the half-dragon came, they decided he was the one, the way the fish-folk always decide, all at once and past all argument — and now they keep his lower galleries as zealously as they once kept their own dead idols. They croak his name in their drowned tongue as they cast, and they mean it as a prayer, and the harpoon at the end of the prayer is just as sharp.",
 });

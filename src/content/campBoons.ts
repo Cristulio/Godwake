@@ -34,7 +34,7 @@ const ALL_BOONS: CampBoon[] = [
     tier: 1,
     name: 'Eye of the Mind',
     description: '+1 to all spell attack rolls for the rest of the delve.',
-    flavor: 'A breath. A glyph held steady in the mind. The Weave threads tauter for it.',
+    flavor: 'A breath. A glyph held steady in the mind. The Weft threads tauter for it.',
   },
   {
     id: 'stillness-of-the-mind',
@@ -57,7 +57,7 @@ const ALL_BOONS: CampBoon[] = [
     tier: 2,
     name: 'Surge of the Storm',
     description: '+1 to spell save DC for the rest of the delve.',
-    flavor: 'The Weave bends a fraction closer to the hand that called.',
+    flavor: 'The Weft bends a fraction closer to the hand that called.',
   },
   {
     id: 'might-of-the-mountain',
@@ -69,12 +69,12 @@ const ALL_BOONS: CampBoon[] = [
   {
     id: 'patience-of-ilmater',
     tier: 2,
-    name: 'Patience of Ilmater',
+    name: 'Patience of Atlas',
     description: '+1 stabilise charge — one more time the red knot holds when you fall.',
     flavor: 'A red-knotted bandage, blessed in the basin. Carry it under the breastplate.',
   },
 
-  // Tier 3 — Ch3 → Ch4 seam. The Underdark and the final boss.
+  // Tier 3 — Ch3 → Ch4 seam. The Deepdark and the final boss.
   {
     id: 'mantle-of-the-slain',
     tier: 3,
@@ -97,7 +97,7 @@ const ALL_BOONS: CampBoon[] = [
     tier: 3,
     name: 'Vow of the Tome',
     description: '+1 damage on every spell that deals damage, for the rest of the delve.',
-    flavor: 'A vow muttered into the spine of an open book. The Weave reads back.',
+    flavor: 'A vow muttered into the spine of an open book. The Weft reads back.',
   },
   {
     id: 'eyes-of-the-lich',

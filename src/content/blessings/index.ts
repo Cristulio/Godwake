@@ -16,7 +16,7 @@ const CASTER_CLASSES = ['wizard', 'druid'] as const;
 const POOL: Blessing[] = [
   BlessingSchema.parse({
     id: 'tymoras-coin',
-    name: "Tymora's Coin",
+    name: "Tyche's Coin",
     god: 'tymora',
     flavor: 'A copper finds its way into your hand. You did not put it there.',
     effect: 'Reroll one missed attack per encounter.',
@@ -25,7 +25,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'helms-aegis',
-    name: "Helm's Aegis",
+    name: "Argus's Aegis",
     god: 'helm',
     flavor: 'A weight settles on your shoulders — invisible, watchful, unwearying.',
     effect: '+1 AC.',
@@ -33,25 +33,25 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'tempus-fury',
-    name: "Tempus's Fury",
+    name: "Ares's Fury",
     god: 'tempus',
-    flavor: 'The first blow is always the truest. Tempus has a soft spot for the brave.',
+    flavor: 'The first blow is always the truest. Ares has a soft spot for the brave.',
     effect: '+2 damage on the first attack of each combat.',
     modifiers: { firstAttackDamage: 2 },
     classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'mystras-whisper',
-    name: "Mystra's Whisper",
+    name: "Hecate's Whisper",
     god: 'mystra',
-    flavor: 'The Weave hums faintly around your weapon. Your strikes carry an unseen edge.',
+    flavor: 'The Weft hums faintly around your weapon. Your strikes carry an unseen edge.',
     effect: '+1 force damage on all attacks.',
     modifiers: { damageBonus: 1 },
     classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'lathanders-dawn',
-    name: "Lathander's Dawn",
+    name: "Eos's Dawn",
     god: 'lathander',
     flavor: 'A faint warmth in the dark. New light at the threshold of each room.',
     effect: 'Gain 3 temporary HP at the start of each combat.',
@@ -59,7 +59,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'selunes-veil',
-    name: "Selûne's Veil",
+    name: "Selene's Veil",
     god: 'selune',
     flavor: 'You catch them not seeing you — even when you are obviously there.',
     effect: 'Advantage on your first attack each combat.',
@@ -68,7 +68,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'ilmaters-patience',
-    name: "Ilmater's Patience",
+    name: "Atlas's Patience",
     god: 'ilmater',
     flavor: 'The Crying God knows your weight. He carries it a moment longer than you can.',
     effect:
@@ -85,7 +85,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'tempus-edge',
-    name: "Tempus's Edge",
+    name: "Ares's Edge",
     god: 'tempus',
     flavor: 'Your crit range widens. The god of war prefers a decisive ending.',
     effect: 'Crit range extends by 1 (e.g. Champion crits on 18-20 instead of 19-20).',
@@ -94,7 +94,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'tymoras-wink',
-    name: "Tymora's Wink",
+    name: "Tyche's Wink",
     god: 'tymora',
     flavor: "The lady's luck has no patience for careful aim. Once per encounter the dice owe you one.",
     effect: 'Once per encounter, reroll any missed attack roll (weapon or spell).',
@@ -102,16 +102,16 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'tymoras-gambit',
-    name: "Tymora's Gambit",
+    name: "Tyche's Gambit",
     god: 'tymora',
     flavor: 'A reckless prayer answered. The dice tip one way — but your guard tips the other.',
-    effect: 'Crit range extends by 1, but you lose 1 AC. Tymora deals what she deals.',
+    effect: 'Crit range extends by 1, but you lose 1 AC. Tyche deals what she deals.',
     modifiers: { critRangeBonus: 1, acBonus: -1 },
     classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'helms-bulwark',
-    name: "Helm's Bulwark",
+    name: "Argus's Bulwark",
     god: 'helm',
     flavor: 'Your strikes carry a witness. Steel rings as if struck twice — once by you, once by Him.',
     effect: '+1 radiant damage on hits.',
@@ -120,24 +120,24 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'mystras-ward',
-    name: "Mystra's Ward",
+    name: "Hecate's Ward",
     god: 'mystra',
-    flavor: 'The Weave holds closest when you are untouched. The first wound unravels the spell.',
+    flavor: 'The Weft holds closest when you are untouched. The first wound unravels the spell.',
     effect: '+1 AC while at full HP.',
     modifiers: { acBonusWhileFull: 1 },
   }),
   BlessingSchema.parse({
     id: 'mystras-veil',
-    name: "Mystra's Veil",
+    name: "Hecate's Veil",
     god: 'mystra',
-    flavor: 'A thread of the Weave guides your first strike. It does not let go until it lands.',
+    flavor: 'A thread of the Weft guides your first strike. It does not let go until it lands.',
     effect: '+2 to-hit on the first attack of each combat.',
     modifiers: { firstAttackBonus: 2 },
     classRelevance: [...WEAPON_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'lathanders-ember',
-    name: "Lathander's Ember",
+    name: "Eos's Ember",
     god: 'lathander',
     flavor: 'A speck of dawn settles in the chest and does not go out. The morning mends even the stubborn wound.',
     effect: 'Regenerate 1 HP at the start of each combat.',
@@ -145,7 +145,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'ilmaters-crown',
-    name: "Ilmater's Crown",
+    name: "Atlas's Crown",
     god: 'ilmater',
     flavor: 'The Crying God presses a thumb to your brow. You will not break here. Not today.',
     effect: 'Gain 2 temporary HP at the start of each combat.',
@@ -171,7 +171,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'ilmaters-mercy',
-    name: "Ilmater's Mercy",
+    name: "Atlas's Mercy",
     god: 'ilmater',
     flavor: 'The Crying God takes a measure of your pain onto Himself between each trial. You enter the next a little whole.',
     effect: 'Heal 10% of your maximum HP at the start of each combat.',
@@ -179,7 +179,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'helms-vigil',
-    name: "Helm's Vigil",
+    name: "Argus's Vigil",
     god: 'helm',
     flavor: 'Unhurt, you stand the Watch unbroken — every guard kept, every gap closed. The first wound is what breaks the spell.',
     effect: '+2 AC while at full HP.',
@@ -187,7 +187,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'ilmaters-forbearance',
-    name: "Ilmater's Forbearance",
+    name: "Atlas's Forbearance",
     god: 'ilmater',
     flavor: 'Broken and bleeding, you only grow harder to fell. The Crying God loves nothing so much as the one who will not yield.',
     effect: '+2 AC while bloodied (at half HP or less).',
@@ -203,16 +203,16 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'mystras-reserve',
-    name: "Mystra's Reserve",
+    name: "Hecate's Reserve",
     god: 'mystra',
-    flavor: 'The Weave gathers thickest around the marked and the damned. Your curses draw it close like moths to a candle.',
+    flavor: 'The Weft gathers thickest around the marked and the damned. Your curses draw it close like moths to a candle.',
     effect:
       'At the start of each combat, gain 2 temporary HP for each bane the soul carries.',
     modifiers: { tempHpPerBaneQuirk: 2 },
   }),
   BlessingSchema.parse({
     id: 'helms-bastion',
-    name: "Helm's Bastion",
+    name: "Argus's Bastion",
     god: 'helm',
     flavor: 'Before the great enemy, the Watcher sets His shield against your back. You will not be the one who breaks the line.',
     effect: 'Gain 6 temporary HP at the start of a chapter-boss fight.',
@@ -221,16 +221,16 @@ const POOL: Blessing[] = [
   // --- caster pool: spell-keyed blessings (wizard/druid only) ---
   BlessingSchema.parse({
     id: 'mystras-acuity',
-    name: "Mystra's Acuity",
+    name: "Hecate's Acuity",
     god: 'mystra',
-    flavor: 'The Weave sharpens to a point behind your eyes. Where it touches, no ward holds clean.',
+    flavor: 'The Weft sharpens to a point behind your eyes. Where it touches, no ward holds clean.',
     effect: '+1 to your spell save DC.',
     modifiers: { spellDcBonus: 1 },
     classRelevance: [...CASTER_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'mystras-surge',
-    name: "Mystra's Surge",
+    name: "Hecate's Surge",
     god: 'mystra',
     flavor: 'The current runs fuller through you than the spell was meant to carry. It spills over into the world.',
     effect: '+2 damage on all spells.',
@@ -239,16 +239,16 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'mystras-precision',
-    name: "Mystra's Precision",
+    name: "Hecate's Precision",
     god: 'mystra',
-    flavor: 'The Weave does not let your aim wander. The bolt goes where the will points.',
+    flavor: 'The Weft does not let your aim wander. The bolt goes where the will points.',
     effect: '+1 to spell attack rolls.',
     modifiers: { spellAttackBonus: 1 },
     classRelevance: [...CASTER_CLASSES],
   }),
   BlessingSchema.parse({
     id: 'mystras-apex',
-    name: "Mystra's Apex",
+    name: "Hecate's Apex",
     god: 'mystra',
     flavor: 'For a breath the Lady of Mysteries casts through you, and the spell remembers what it was at the dawn of the Art.',
     effect: '+1 spell save DC and +1 spell damage.',
@@ -257,7 +257,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'selunes-beacon',
-    name: "Selûne's Beacon",
+    name: "Selene's Beacon",
     god: 'selune',
     flavor: 'Her light marks the target before the spell leaves your hand. You strike a thing already lit.',
     effect: '+1 to spell attack rolls and +1 spell damage.',
@@ -284,7 +284,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'lathanders-mantle',
-    name: "Lathander's Mantle",
+    name: "Eos's Mantle",
     god: 'lathander',
     flavor: 'Dawn cloaks the caster — fire to throw, warmth to wear. The morning does not send its own out cold.',
     effect: '+1 spell damage and 3 temporary HP at the start of each combat.',
@@ -294,7 +294,7 @@ const POOL: Blessing[] = [
   // --- universal pool: class-agnostic depth so every soul cycles fewer repeats ---
   BlessingSchema.parse({
     id: 'tymoras-fortune',
-    name: "Tymora's Fortune",
+    name: "Tyche's Fortune",
     god: 'tymora',
     flavor: 'The Lady leans close and palms the dice twice. What you fumble, she hands back — and once more besides.',
     effect: 'Reroll up to 2 missed attack rolls per encounter (weapon or spell).',
@@ -302,7 +302,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'lathanders-renewal',
-    name: "Lathander's Renewal",
+    name: "Eos's Renewal",
     god: 'lathander',
     flavor: 'Each threshold you cross, the dawn closes a little more of what the last room opened.',
     effect: 'Heal 3 HP at the start of each combat.',
@@ -310,7 +310,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'helms-rampart',
-    name: "Helm's Rampart",
+    name: "Argus's Rampart",
     god: 'helm',
     flavor: 'The Watcher sets a wall at your shoulder and braces it hardest where the worst is coming.',
     effect: '+1 AC, and 6 temporary HP at the start of a chapter-boss fight.',
@@ -318,7 +318,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'helms-resolve',
-    name: "Helm's Resolve",
+    name: "Argus's Resolve",
     god: 'helm',
     flavor: 'Bleeding, the Watch stands harder, not softer. A breached wall is the one He guards closest.',
     effect: '+3 AC while bloodied (at half HP or less).',
@@ -326,7 +326,7 @@ const POOL: Blessing[] = [
   }),
   BlessingSchema.parse({
     id: 'ilmaters-solace',
-    name: "Ilmater's Solace",
+    name: "Atlas's Solace",
     god: 'ilmater',
     flavor: 'The Crying God takes a measure of the hurt between each trial, and you walk into the next less broken than you left the last.',
     effect: 'Heal 15% of your maximum HP at the start of each combat.',

@@ -70,7 +70,7 @@ import {
   ELITE_POOL as MASK_ELITE_POOL,
   CHAPTER9_FLAVOR,
 } from './chapter9Pools';
-// ─── Chapter 10 · Suldanessellar (the Tree of Life) ───────────────────────
+// ─── Chapter 10 · Tor Maladin (the Tree of Life) ───────────────────────
 import {
   WARMUP_POOL as SULD_WARMUP_POOL,
   EARLY_MID_POOL as SULD_EARLY_MID_POOL,
@@ -78,7 +78,7 @@ import {
   ELITE_POOL as SULD_ELITE_POOL,
   CHAPTER10_FLAVOR,
 } from './chapter10Pools';
-// ─── Chapter 11 · The Trials of the Pit (Hell + Irenicus) ─────────────────
+// ─── Chapter 11 · The Trials of the Pit (Hell + Velnaris) ─────────────────
 import {
   WARMUP_POOL as PIT_WARMUP_POOL,
   EARLY_MID_POOL as PIT_EARLY_MID_POOL,
@@ -86,7 +86,7 @@ import {
   ELITE_POOL as PIT_ELITE_POOL,
   CHAPTER11_FLAVOR,
 } from './chapter11Pools';
-// ─── Chapter 12 · The Siege of Saradush (Yaga-Shura) ──────────────────────
+// ─── Chapter 12 · The Siege of Karthen (Hargan-Vor) ──────────────────────
 import {
   WARMUP_POOL as SARA_WARMUP_POOL,
   EARLY_MID_POOL as SARA_EARLY_MID_POOL,
@@ -94,7 +94,7 @@ import {
   ELITE_POOL as SARA_ELITE_POOL,
   CHAPTER12_FLAVOR,
 } from './chapter12Pools';
-// ─── Chapter 13 · The Last of the Five (Sendai + Abazigal) ────────────────
+// ─── Chapter 13 · The Last of the Five (Szendra + Korvazel) ────────────────
 import {
   WARMUP_POOL as FIVE_WARMUP_POOL,
   EARLY_MID_POOL as FIVE_EARLY_MID_POOL,
@@ -102,7 +102,7 @@ import {
   ELITE_POOL as FIVE_ELITE_POOL,
   CHAPTER13_FLAVOR,
 } from './chapter13Pools';
-// ─── Chapter 14 · The Throne of Bhaal (Melissan) — the L20 finale ─────────
+// ─── Chapter 14 · The Throne of the Slain God (Maevra) — the L20 finale ─────────
 import {
   WARMUP_POOL as THRONE_WARMUP_POOL,
   EARLY_MID_POOL as THRONE_EARLY_MID_POOL,
@@ -163,7 +163,7 @@ function eventRoom(id: string, rng: Rng, chapter: number, excludeIds: Set<string
 /**
  * Weighted draw that prefers events authored for the current chapter band over
  * older ones. `eventsForChapter` is cumulative (every event at or below the
- * chapter is eligible), so without this a Throne-of-Bhaal event room would
+ * chapter is eligible), so without this a Throne-of-the Slain God event room would
  * mostly serve Ch1 roadside fare by sheer count. Weight halves per chapter of
  * age (`2^-(chapter - minChapter)`), so the deep endgame is dominated by
  * deep-chapter events while the early game still mixes its small pools freely.
@@ -214,8 +214,8 @@ function intelRoomFor(id: string, bossDefId: string): RoomSpec {
  * pre-boss intel beat and then the chapter boss. The camps remain the seams
  * between chapters.
  *
- *   Ch1 Iron Cells → Camp → Ch2 Athkatla → Camp → Ch3 Spellhold → Camp →
- *     Ch4 Ust Natha → Camp → Ch5 The Godwake → Camp → Ch6 Beyond the Godwake.
+ *   Ch1 Iron Cells → Camp → Ch2 Stormhaven → Camp → Ch3 Glassreach → Camp →
+ *     Ch4 Zhal Vasha → Camp → Ch5 The Godwake → Camp → Ch6 Beyond the Godwake.
  *     Ends at the Unmade, the still centre of the wheel.
  *
  * The flat `rooms` array holds every node in chapter-major, layer-minor order
@@ -233,10 +233,10 @@ export interface GodwakeDelveOptions {
   ascension?: number;
   /**
    * Build the full New Game+ chain (all {@link TOTAL_CHAPTERS} = 14 chapters,
-   * Cells→Irenicus→Throne) instead of the base game. Default false: a base run
-   * spans only the Cells→Irenicus arc ({@link BASE_GAME_CHAPTERS} = 11 chapters
-   * + 10 camp seams), ending on Irenicus. NG+ extends it through Yaga-Shura,
-   * Abazigal and Melissan. Set true only by the post-completion NG+ launcher.
+   * Cells→Velnaris→Throne) instead of the base game. Default false: a base run
+   * spans only the Cells→Velnaris arc ({@link BASE_GAME_CHAPTERS} = 11 chapters
+   * + 10 camp seams), ending on Velnaris. NG+ extends it through Hargan-Vor,
+   * Korvazel and Maevra. Set true only by the post-completion NG+ launcher.
    */
   fullChain?: boolean;
   /**
@@ -1407,7 +1407,7 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     },
     bossDefId: 'duergar-ilyich',
     boss: {
-      title: "Ilyich's Hall",
+      title: "Karzok's Hall",
       flavorText:
         'The duergar slaver waits at the centre of a wide stone hall. He spits on the floor when he sees you. "Another of his pets, are you? Walking. Tch. We\'ll see how long."',
       xpReward: 250,
@@ -1426,12 +1426,12 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
       {
         title: 'A Curbside Shrine to Waukeen',
         flavorText:
-          "A pillar of guilded sandstone, four niches at the base. Athkatla's merchant queen does not promise gold — only that the scale will tip true. Coins clink at the bottom of the basin.",
+          "A pillar of guilded sandstone, four niches at the base. Stormhaven's merchant queen does not promise gold — only that the scale will tip true. Coins clink at the bottom of the basin.",
       },
       {
-        title: 'A Plague-Worn Altar to Ilmater',
+        title: 'A Plague-Worn Altar to Atlas',
         flavorText:
-          "Even Athkatla cannot stamp out the Crying God. A cracked stone basin half-hidden in a brick recess — Ilmater's red knot scratched in chalk and re-chalked a hundred times. Bandages hang dry on a nail.",
+          "Even Stormhaven cannot stamp out the Crying God. A cracked stone basin half-hidden in a brick recess — Atlas's red knot scratched in chalk and re-chalked a hundred times. Bandages hang dry on a nail.",
       },
     ],
     rests: [
@@ -1449,7 +1449,7 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     shop: {
       title: 'A Coin-Lender at the Curb',
       flavorText:
-        "A Waukeenar coin-lender keeps a folding stall in the colonnade, scales out, ledger open. In Athkatla everything is for sale and the only sin is a debt unpaid. He weighs your purse before he weighs his words.",
+        "A Waukeenar coin-lender keeps a folding stall in the colonnade, scales out, ledger open. In Stormhaven everything is for sale and the only sin is a debt unpaid. He weighs your purse before he weighs his words.",
     },
     bossDefId: 'athkatla-magistrate',
     boss: {
@@ -1471,14 +1471,14 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     },
     shrines: [
       {
-        title: 'A Smuggled Shrine to Mystra',
+        title: 'A Smuggled Shrine to Hecate',
         flavorText:
-          "Half-hidden behind a moved bookcase in a side-cell — a chalk circle around a star of seven points, and a stub of candle burned by hand-shielding rather than by holder. The Weave is thin in here, but Mystra's silver hand still reaches.",
+          "Half-hidden behind a moved bookcase in a side-cell — a chalk circle around a star of seven points, and a stub of candle burned by hand-shielding rather than by holder. The Weft is thin in here, but Hecate's silver hand still reaches.",
       },
       {
         title: "The Crying God's Mark",
         flavorText:
-          "A red-knotted bandage hangs on a nail above a cracked basin in a warden's washroom. Someone has been smuggling Ilmater's mercy into Spellhold one prayer at a time. The basin is still wet.",
+          "A red-knotted bandage hangs on a nail above a cracked basin in a warden's washroom. Someone has been smuggling Atlas's mercy into Glassreach one prayer at a time. The basin is still wet.",
       },
     ],
     rests: [
@@ -1520,10 +1520,10 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
       {
         title: 'A Faerzress Sigil to Eilistraee',
         flavorText:
-          "Hidden behind a fallen slab in the lower tunnels — a circle scratched in chalk, a moon-and-sword glyph at its centre. The drow goddess of the dance, the one Lolth's priestesses have a standing kill-order on. The bone-light flickers green here in a way that is not entirely natural.",
+          "Hidden behind a fallen slab in the lower tunnels — a circle scratched in chalk, a moon-and-sword glyph at its centre. The drow goddess of the dance, the one Arachne's priestesses have a standing kill-order on. The bone-light flickers green here in a way that is not entirely natural.",
       },
       {
-        title: "A Surface-Smuggled Altar to Selûne",
+        title: "A Surface-Smuggled Altar to Selene",
         flavorText:
           "A scrap of silver-moon tapestry pinned to a niche wall, half a candle-stub still warm. Some surface-elf slave from a previous caravan smuggled the moon-mother down here a prayer at a time. The drow priestesses have not yet found this one. The Lady is still listening.",
       },
@@ -1549,12 +1549,12 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     boss: {
       title: "The Matron Mother's Audience",
       flavorText:
-        "The inner temple of Lolth — black basalt, eight-legged sigils in arterial red along the walls, the air thick with the resin-smoke the priestesses burn for visions. At the centre, on a low throne carved from a single spider's egg-case, the Matron Mother does not rise. \"You are not on the slave-roll. The exception is easily corrected.\"",
+        "The inner temple of Arachne — black basalt, eight-legged sigils in arterial red along the walls, the air thick with the resin-smoke the priestesses burn for visions. At the centre, on a low throne carved from a single spider's egg-case, the Matron Mother does not rise. \"You are not on the slave-roll. The exception is easily corrected.\"",
       xpReward: 1650,
       goldReward: 220,
     },
   },
-  // Ch5 · The Godwake — past the Underdark, into the dead god of dawns that
+  // Ch5 · The Godwake — past the Deepdark, into the dead god of dawns that
   // could not let anything stay ended. Non-combat flavor authored here; the
   // chapter5Pools file ships only the encounter pools + threshold flavor.
   {
@@ -1680,8 +1680,8 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     bossDefId: CHAPTER9_FLAVOR.bossDefId,
     boss: CHAPTER9_FLAVOR.boss,
   },
-  // Ch10 · Suldanessellar — the hidden elven city stormed and burning as the
-  // player climbs it toward the Tree of Life; Irenicus's green dragon guards the
+  // Ch10 · Tor Maladin — the hidden elven city stormed and burning as the
+  // player climbs it toward the Tree of Life; Velnaris's green dragon guards the
   // last stair. All non-combat flavor + the boss ship in CHAPTER10_FLAVOR.
   {
     chapter: CHAPTER10_FLAVOR.chapter,
@@ -1698,7 +1698,7 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     bossDefId: CHAPTER10_FLAVOR.bossDefId,
     boss: CHAPTER10_FLAVOR.boss,
   },
-  // Ch11 · The Trials of the Pit — Irenicus's hells, each trial a sin made flesh,
+  // Ch11 · The Trials of the Pit — Velnaris's hells, each trial a sin made flesh,
   // ending in the captor himself (the SoA climax). Flavor + boss in CHAPTER11_FLAVOR.
   {
     chapter: CHAPTER11_FLAVOR.chapter,
@@ -1715,8 +1715,8 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     bossDefId: CHAPTER11_FLAVOR.bossDefId,
     boss: CHAPTER11_FLAVOR.boss,
   },
-  // Ch12 · The Siege of Saradush — ToB opens: the besieged city and the
-  // fire-giant warlord Yaga-Shura whose heart is hidden away. Flavor + boss in
+  // Ch12 · The Siege of Karthen — ToB opens: the besieged city and the
+  // fire-giant warlord Hargan-Vor whose heart is hidden away. Flavor + boss in
   // CHAPTER12_FLAVOR.
   {
     chapter: CHAPTER12_FLAVOR.chapter,
@@ -1733,8 +1733,8 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     bossDefId: CHAPTER12_FLAVOR.bossDefId,
     boss: CHAPTER12_FLAVOR.boss,
   },
-  // Ch13 · The Last of the Five — Sendai's Enclave and Abazigal's Lair, the last
-  // Bhaalspawn lords before the throne. Flavor + boss in CHAPTER13_FLAVOR.
+  // Ch13 · The Last of the Five — Szendra's Enclave and Korvazel's Lair, the last
+  // Slainkin lords before the throne. Flavor + boss in CHAPTER13_FLAVOR.
   {
     chapter: CHAPTER13_FLAVOR.chapter,
     prefix: CHAPTER13_FLAVOR.prefix,
@@ -1750,8 +1750,8 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     bossDefId: CHAPTER13_FLAVOR.bossDefId,
     boss: CHAPTER13_FLAVOR.boss,
   },
-  // Ch14 · The Throne of Bhaal — the finale: the Pocket Plane throne and
-  // Melissan, the biggest statblock in the game. The final chapter of the chain;
+  // Ch14 · The Throne of the Slain God — the finale: the Threshold throne and
+  // Maevra, the biggest statblock in the game. The final chapter of the chain;
   // its boss room is left terminal by the stitcher below. Flavor + boss in
   // CHAPTER14_FLAVOR.
   {
@@ -1773,8 +1773,8 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
 
 /**
  * Chapter-count constants, re-exported for consumers that import them from the
- * delve barrel. TOTAL_CHAPTERS (14) is the full NG+ chain to Melissan;
- * BASE_GAME_CHAPTERS (11) is where the base game ends, on Irenicus. finishDelve
+ * delve barrel. TOTAL_CHAPTERS (14) is the full NG+ chain to Maevra;
+ * BASE_GAME_CHAPTERS (11) is where the base game ends, on Velnaris. finishDelve
  * fires the win against the delve's OWN chapterCount, not these globals.
  */
 export { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS };
@@ -1783,22 +1783,22 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
   {
     title: 'A Roadside Fire',
     flavorText:
-      "Three days south of the Iron Cells the trees thin, and the Trade Way bends towards Amn. A caravan-merchant has a fire going by the milestone — kettle on, ox unhitched, a tarp pegged out in case the night turns. He looks up without surprise, as if he had been expecting someone walking out of the north on foot and bloody.",
+      "Three days south of the Iron Cells the trees thin, and the Trade Road bends towards Sudria. A caravan-merchant has a fire going by the milestone — kettle on, ox unhitched, a tarp pegged out in case the night turns. He looks up without surprise, as if he had been expecting someone walking out of the north on foot and bloody.",
   },
   {
     title: 'A Harbour-Lamp at the Docks',
     flavorText:
-      "The Magistrate's hall is hours behind you and the docks of Athkatla have not yet been told. A harbour-merchant has set a lamp on a coil of rope at the end of the jetty — kettle in his hand, the keel of a smuggler's wherry ticking against the boards beneath. He sees the blood on your sleeve and offers a cup before he offers a name.",
+      "The Magistrate's hall is hours behind you and the docks of Stormhaven have not yet been told. A harbour-merchant has set a lamp on a coil of rope at the end of the jetty — kettle in his hand, the keel of a smuggler's wherry ticking against the boards beneath. He sees the blood on your sleeve and offers a cup before he offers a name.",
   },
   {
-    title: 'A Smuggler-Fire in the Underdark',
+    title: 'A Smuggler-Fire in the Deepdark',
     flavorText:
-      "Past the Director's wing the Cowled Wizards keep a service-shaft that drops into the Upperdark. At the first widening, a surface-smuggler has a chemical-fire going in a brass bowl that does not give off smoke. He has been waiting for someone who walked out of Spellhold alive. He has goods to move down. You have a road to walk.",
+      "Past the Director's wing the Veiled Court keep a service-shaft that drops into the Upperdark. At the first widening, a surface-smuggler has a chemical-fire going in a brass bowl that does not give off smoke. He has been waiting for someone who walked out of Glassreach alive. He has goods to move down. You have a road to walk.",
   },
   {
     title: 'A Fire at the Edge of the Light',
     flavorText:
-      "The Matron's temple is behind you and the faerzress thins to nothing ahead, where a pale dawn-coloured glow leaks up through the floor of the world. A last camp on the lip of it — a deep-gnome exile who fled the Underdark and could go no further, a small cold fire that throws no shadow toward the light. He does not ask where you mean to go. He has seen the look before, on the others who climbed past him and did not come back down.",
+      "The Matron's temple is behind you and the faerzress thins to nothing ahead, where a pale dawn-coloured glow leaks up through the floor of the world. A last camp on the lip of it — a deep-gnome exile who fled the Deepdark and could go no further, a small cold fire that throws no shadow toward the light. He does not ask where you mean to go. He has seen the look before, on the others who climbed past him and did not come back down.",
   },
   {
     title: 'A Stillness Before the Wheel',
@@ -1833,7 +1833,7 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
   {
     title: 'A Fire Beneath the Burning Boughs',
     flavorText:
-      "The last mask is behind you and the music has stopped for good, and the broken stair turns upward — out of the captor's old house and into the open dark under a canopy lit orange from above, where a whole city is burning slow in the crowns of the trees. At the forest's edge a fugitive elf keeps a low fire that throws no light past its own ring, a bow unstrung across its knees because its hands have stopped being steady. \"That was Suldanessellar,\" it says, not taking its eyes from the glow. \"The hidden city. He has it now — charmed its watch, turned its woodland, loosed a dragon in the temple of the tree-father — and he is climbing it to the Tree of Life, to drain what the elves stripped from him and take back his godhood by the root. You can still beat him to the top. Rest. The climb is steep, and everything on it that was ours will try to kill you with our own hands.\"",
+      "The last mask is behind you and the music has stopped for good, and the broken stair turns upward — out of the captor's old house and into the open dark under a canopy lit orange from above, where a whole city is burning slow in the crowns of the trees. At the forest's edge a fugitive elf keeps a low fire that throws no light past its own ring, a bow unstrung across its knees because its hands have stopped being steady. \"That was Tor Maladin,\" it says, not taking its eyes from the glow. \"The hidden city. He has it now — charmed its watch, turned its woodland, loosed a dragon in the temple of the tree-father — and he is climbing it to the Tree of Life, to drain what the elves stripped from him and take back his godhood by the root. You can still beat him to the top. Rest. The climb is steep, and everything on it that was ours will try to kill you with our own hands.\"",
   },
   // Ch10→Ch11 seam: the Tree is reached too late — the captor drains it and
   // strikes you down, and you wake falling into his hells. No surface fire here;
@@ -1844,26 +1844,26 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
       "You reach the Tree of Life with the dragon's blood still on you and you are too late by a held breath — the captor takes the last of its light as you watch, and takes yours with it, and the world tips out from under you into a long red falling. You come to rest on a ledge that is not a place so much as a held idea of one, hung over a pit that breathes. There is no merchant, no kettle; only a guttering soul-light someone left burning, and scratched beside it in a hand that shook: HE BUILT THIS OUT OF YOU. Below, smaller: each trial is a thing you carry — pride, greed, wrath, fear, the killer under your skin — and at the bottom of all of them, him. Breathe. Steady the thing you are before the Pit names it back to you.",
   },
   // Ch11→Ch12 seam: the captor is felled in his own hell and the Pit lets you go.
-  // The descent ends; ToB opens with a Bhaalspawn war and a besieged city afire.
+  // The descent ends; ToB opens with a Slainkin war and a besieged city afire.
   {
     title: 'A Fire at the Edge of the Burning Siege',
     flavorText:
-      "The captor is dead in the heart of his own hell and the Pit, having no further use for you, spits you back into a world that has moved on without you — and gone to war while it did. The road comes out of the dark onto a ridge above a walled city ringed in fire and giants, and at the ridge a refugee keeps a thin fire among others who fled the same gates. \"You've been gone a long while,\" an old woman says, feeding the flames a broken chair-leg. \"It's the Children now — the dead god's blood, all of us hunted for the divinity in it, and one of them means to make himself whole by murdering every brother and sister he can find. That's Saradush, burning. He's put a fire-giant warlord at its throat — Yaga-Shura, and they say his heart isn't in his body to be reached. You carry the same blood they're dying for. Rest while the wall still holds. After this the road only runs toward the throne.\"",
+      "The captor is dead in the heart of his own hell and the Pit, having no further use for you, spits you back into a world that has moved on without you — and gone to war while it did. The road comes out of the dark onto a ridge above a walled city ringed in fire and giants, and at the ridge a refugee keeps a thin fire among others who fled the same gates. \"You've been gone a long while,\" an old woman says, feeding the flames a broken chair-leg. \"It's the Children now — the dead god's blood, all of us hunted for the divinity in it, and one of them means to make himself whole by murdering every brother and sister he can find. That's Karthen, burning. He's put a fire-giant warlord at its throat — Hargan-Vor, and they say his heart isn't in his body to be reached. You carry the same blood they're dying for. Rest while the wall still holds. After this the road only runs toward the throne.\"",
   },
-  // Ch12→Ch13 seam: Saradush relieved, the warlord felled; the hunt narrows to
-  // the last two Bhaalspawn lords before the throne stands open.
+  // Ch12→Ch13 seam: Karthen relieved, the warlord felled; the hunt narrows to
+  // the last two Slainkin lords before the throne stands open.
   {
     title: 'A Fire Between the Last Two Doors',
     flavorText:
-      "Yaga-Shura's fire is finally out and Saradush, what's left of it, will stand. The road past the siege forks once and runs down toward two dark doors — a drow enclave sunk under a mountain and a dragon's lair in the deep waste — and between them a Harper agent keeps a watch-fire and a short list, two names left uncrossed. \"Sendai and Abazigal,\" she says, turning a blade over in the firelight. \"The last of the Five strong enough to matter. She's a drow matron with a petrified garden of everyone who came at her before; he's half a dragon and twice as proud. Kill them and there's no one left between you and the throne the dead god left empty — only the one already sitting on it, pretending to be your friend. Rest. You'll want both hands steady for the last two.\"",
+      "Hargan-Vor's fire is finally out and Karthen, what's left of it, will stand. The road past the siege forks once and runs down toward two dark doors — a drow enclave sunk under a mountain and a dragon's lair in the deep waste — and between them a Harper agent keeps a watch-fire and a short list, two names left uncrossed. \"Szendra and Korvazel,\" she says, turning a blade over in the firelight. \"The last of the Five strong enough to matter. She's a drow matron with a petrified garden of everyone who came at her before; he's half a dragon and twice as proud. Kill them and there's no one left between you and the throne the dead god left empty — only the one already sitting on it, pretending to be your friend. Rest. You'll want both hands steady for the last two.\"",
   },
-  // Ch13→Ch14 seam: the last lords fall and the Pocket Plane opens for the end.
-  // The final fire before the Throne of Bhaal and the betrayer Melissan.
+  // Ch13→Ch14 seam: the last lords fall and the Threshold opens for the end.
+  // The final fire before the Throne of the Slain God and the betrayer Maevra.
   // (Append-only — terminal seam; the finale chapter follows, then nothing.)
   {
-    title: 'A Fire in the Pocket Plane',
+    title: 'A Fire in the Threshold',
     flavorText:
-      "Sendai is stone among her own statues and Abazigal's pride has cooled at last, and the world thins around you until there is only the small folded plane that has been yours since the first death — your own pocket of the dead god's making, where the road has always come to rest. The fire here needs no keeper; it has been burning the whole way, waiting. Across it sits the only ally who came the whole distance with you, and for the first time will not meet your eye. \"It was her,\" your guide says quietly. \"Melissan — Amelyssan — the one who gathered the Five and set them killing each other, the one who has been steering you down this road from the start. She means to take all of it, every drop of the god's blood, and wake as Bhaal reborn. There is one door left, and the throne behind it. Rest, if you can. Everything has been for this, and there is no chapter after.\"",
+      "Szendra is stone among her own statues and Korvazel's pride has cooled at last, and the world thins around you until there is only the small folded plane that has been yours since the first death — your own pocket of the dead god's making, where the road has always come to rest. The fire here needs no keeper; it has been burning the whole way, waiting. Across it sits the only ally who came the whole distance with you, and for the first time will not meet your eye. \"It was her,\" your guide says quietly. \"Maevra — Maevra — the one who gathered the Five and set them killing each other, the one who has been steering you down this road from the start. She means to take all of it, every drop of the god's blood, and wake as the Slain God reborn. There is one door left, and the throne behind it. Rest, if you can. Everything has been for this, and there is no chapter after.\"",
   },
 ];
 
@@ -1885,7 +1885,7 @@ export function createGodwakeDelve(
 
   const elitesEnabled = opts.elitesEnabled ?? true;
   const ascension = clampAscension(opts.ascension ?? 0);
-  // Base run = the Cells→Irenicus arc (11 chapters); New Game+ = the full chain
+  // Base run = the Cells→Velnaris arc (11 chapters); New Game+ = the full chain
   // to the Throne (14). Slice chapters AND camps together: the chain needs
   // exactly chapterCount-1 camp seams between bosses or the room graph silently
   // disconnects — the build stays green and only the reachability test catches
@@ -1900,7 +1900,7 @@ export function createGodwakeDelve(
 
   // Stitch the chapters together through the camp seams: each chapter boss
   // points at its camp, each camp at the next chapter's entry node. The run's
-  // final boss (Irenicus at Ch11 for a base run, Melissan at Ch14 for NG+) is
+  // final boss (Velnaris at Ch11 for a base run, Maevra at Ch14 for NG+) is
   // left terminal.
   const rooms: RoomSpec[] = [];
   chapters.forEach((nodes, i) => {
@@ -1964,7 +1964,7 @@ export function chapterMapNodes(state: DelveState, chapter: number): RoomSpec[] 
 
 /**
  * Breadcrumb label naming a chapter by its number and title, e.g.
- * "Chapter 1 — Ilyich's Hall". A chapter's name is the title of its boss room
+ * "Chapter 1 — Karzok's Hall". A chapter's name is the title of its boss room
  * — there is no separate name. Reads as a chapter title rather than a heading
  * ("toward …") so it stays true at the post-boss camp seam too. Falls back to
  * the bare number when the boss node can't be resolved. Shared by the route

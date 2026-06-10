@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Ilyich, the duergar slaver — boss of Chapter 1's Velnaris dungeon, and the
+ * Karzok, the duergar slaver — boss of Chapter 1's Velnaris dungeon, and the
  * game's tutorial boss for the telegraph read.
  *
  * Above half HP he simply trades plain pick swings (learn to attack and
@@ -18,7 +18,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const ILYICH: Monster = MonsterSchema.parse({
   id: 'duergar-ilyich',
-  name: 'Ilyich the Duergar',
+  name: 'Karzok the Duergar',
   cr: '2',
   size: 'medium',
   creatureType: 'humanoid (dwarf, duergar)',
@@ -45,7 +45,7 @@ export const ILYICH: Monster = MonsterSchema.parse({
       atHpPctBelow: 50,
       name: 'Stone-Blood Fury',
       enterText:
-        'Ilyich throws his head back and roars — stone-blood fury takes him. He plants his boots, drops his guard, and hauls the war pick high over his head.',
+        'Karzok throws his head back and roars — stone-blood fury takes him. He plants his boots, drops his guard, and hauls the war pick high over his head.',
       replaceActions: true,
       addActions: [
         {
@@ -57,7 +57,7 @@ export const ILYICH: Monster = MonsterSchema.parse({
           reach: 5,
           telegraph: {
             chargeText:
-              'Ilyich heaves the war pick up overhead, both hands white on the haft, every muscle winding — the next blow will fall with all his weight behind it.',
+              'Karzok heaves the war pick up overhead, both hands white on the haft, every muscle winding — the next blow will fall with all his weight behind it.',
           },
           description:
             'The pick comes down in a full overhead arc, the whole weight of his stone-heavy frame driving the spike through guard and bone alike.',
@@ -69,5 +69,5 @@ export const ILYICH: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Ilyich led the duergar slavers the master paid to break and feed his subjects. A guard's bored cruelty and a slaver's patience — until you cut him. Push him to half and the stone-blood fury takes him: guard forgotten, the war pick rising over his head for downstrokes you will see coming and have to answer all the same.",
+    "Karzok led the duergar slavers the master paid to break and feed his subjects. A guard's bored cruelty and a slaver's patience — until you cut him. Push him to half and the stone-blood fury takes him: guard forgotten, the war pick rising over his head for downstrokes you will see coming and have to answer all the same.",
 });

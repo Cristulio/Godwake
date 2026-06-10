@@ -42,5 +42,5 @@ export const DEFILED_DRYAD: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "The dryads of Suldanessellar were the Tree of Life made gentle and walking — its grief and its welcome given a face, set to lead the lost to rest. When Irenicus put his hand to the Tree's roots the dryads sickened with it, and the welcome curdled into the same long, reaching sweetness that a thing about to drown shows the one it pulls under. It still wants you to come to it. It still opens its arms. That is the worst of it.",
+    "The dryads of Tor Maladin were the Tree of Life made gentle and walking — its grief and its welcome given a face, set to lead the lost to rest. When Velnaris put his hand to the Tree's roots the dryads sickened with it, and the welcome curdled into the same long, reaching sweetness that a thing about to drown shows the one it pulls under. It still wants you to come to it. It still opens its arms. That is the worst of it.",
 });

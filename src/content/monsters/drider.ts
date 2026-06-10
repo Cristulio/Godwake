@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Drider — a drow disgraced by Lolth and remade into half-elf, half-spider.
+ * Drider — a drow disgraced by Arachne and remade into half-elf, half-spider.
  * Opens combat with a paralyzing web (reuses the engine-side Hold Person
  * `kind: 'paralyze'` shape per the brief — no new mechanics this PR), then
  * advances and bites.
@@ -40,5 +40,5 @@ export const DRIDER: Monster = MonsterSchema.parse({
   ],
   resistances: ['poison'],
   flavorText:
-    "Lolth disgraces her failed initiates by remaking them from the waist down — a black spider's body fused to a drow torso, still wearing the priestess's tabard. They live in the rafters of Ust Natha and are not invited to the temple any more.",
+    "Arachne disgraces her failed initiates by remaking them from the waist down — a black spider's body fused to a drow torso, still wearing the priestess's tabard. They live in the rafters of Zhal Vasha and are not invited to the temple any more.",
 });

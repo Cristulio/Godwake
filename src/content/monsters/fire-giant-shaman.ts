@@ -2,7 +2,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Fire-Giant Shaman — Chapter 12 early-mid support. The flame-priests of
- * Yaga-Shura's host, who keep the army's fires lit and the city's dead walking.
+ * Hargan-Vor's host, who keep the army's fires lit and the city's dead walking.
  * A `summon` engine (it calls the burning dead up out of the smoke faster than
  * you can put them down), a `debuff` that `blinded`s with a fistful of cinders,
  * and a fire `attack` (a hurled coal) at range — kill it fast or fight the
@@ -53,5 +53,5 @@ export const FIRE_GIANT_SHAMAN: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "The fire giants do not march without their shamans, and Yaga-Shura's are the worst of them — flame-priests who tend the great burning of the siege the way a lesser people tend a hearth. It is their rite that keeps the city's dead alight and walking, their breath on the coals that will not let Saradush's pyres go cold. They keep to the back of the line, where the smoke is thickest, and they are never the last thing left standing, because they never run out of things to put in front of them.",
+    "The fire giants do not march without their shamans, and Hargan-Vor's are the worst of them — flame-priests who tend the great burning of the siege the way a lesser people tend a hearth. It is their rite that keeps the city's dead alight and walking, their breath on the coals that will not let Karthen's pyres go cold. They keep to the back of the line, where the smoke is thickest, and they are never the last thing left standing, because they never run out of things to put in front of them.",
 });

@@ -1,9 +1,9 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Slayer Hound — the Cowled Wizards' kennel breed. Bigger than the slaver-
+ * Slayer Hound — the Veiled Court's kennel breed. Bigger than the slaver-
  * house shadow-hounds of Ch2 and bred lean for hunting escapees through the
- * corridors of Spellhold. Hits hard, dies fast — the design's "pack predator"
+ * corridors of Glassreach. Hits hard, dies fast — the design's "pack predator"
  * read comes from running it 2-to-a-room in the pools rather than from any
  * engine-side pack mechanic (no on-pack-hit hook exists in MonsterAction).
  */
@@ -31,5 +31,5 @@ export const SLAYER_HOUND: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Long in the leg, wide across the shoulder, ribs showing through close grey fur. The Cowled Wizards' kennelmasters cull any pup that doesn't bay correctly on the third command. The ones that live are very good at their job.",
+    "Long in the leg, wide across the shoulder, ribs showing through close grey fur. The Veiled Court's kennelmasters cull any pup that doesn't bay correctly on the third command. The ones that live are very good at their job.",
 });

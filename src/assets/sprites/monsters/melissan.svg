@@ -2,11 +2,11 @@
       viewBox="0 0 36 48"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Melissan"
+      aria-label="Maevra"
     >
       <ellipse cx="18" cy="46" rx="13" ry="2" fill="#0c0610" opacity="0.55" />
 
-      <!-- Bhaal-essence aura — layered bloom -->
+      <!-- god-essence aura — layered bloom -->
       <ellipse cx="18" cy="26" rx="17" ry="22" fill="#1a0610" opacity="0.5" />
       <ellipse cx="18" cy="24" rx="13" ry="18" fill="#3a0a14" opacity="0.34" />
       <ellipse cx="18" cy="22" rx="7" ry="11" fill="#b53c4a" opacity="0.1" />

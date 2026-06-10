@@ -1,8 +1,8 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Bandit Captain — a duelist who has worked the Trade Way long enough to
- * have a reputation and a rapier polished to keep it. Found on the Athkatla
+ * Bandit Captain — a duelist who has worked the Trade Road long enough to
+ * have a reputation and a rapier polished to keep it. Found on the Stormhaven
  * roads, occasionally moonlighting for the slaver houses.
  */
 export const BANDIT_CAPTAIN: Monster = MonsterSchema.parse({

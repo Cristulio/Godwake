@@ -40,5 +40,5 @@ export const LASH_CAPTAIN: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    'He has driven coffles down the Trade Way for twenty years and learned that the whip is mostly for the sound. The men who fear the sound do not need to be struck. He is disappointed, slightly, every time someone makes him strike.',
+    'He has driven coffles down the Trade Road for twenty years and learned that the whip is mostly for the sound. The men who fear the sound do not need to be struck. He is disappointed, slightly, every time someone makes him strike.',
 });

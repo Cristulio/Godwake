@@ -80,7 +80,7 @@ export function HubScreen() {
     if (!createGodwakeDelve) return; // chunk load failed — recovery reload in flight
     // A New Game+ campaign builds the full Cells→Throne chain on every descent,
     // including these post-death hub re-descents; a base campaign builds only the
-    // Cells→Irenicus arc.
+    // Cells→Velnaris arc.
     const delve = createGodwakeDelve({
       ascension: selectedAscension,
       elitesEnabled,

@@ -240,7 +240,7 @@ function DecorationLayer({ kind }: { kind: BattlefieldDecoration }) {
 }
 
 function UnderdarkTunnelBackdrop() {
-  // Raw Underdark cave — faerzress glow in cool purple-green, deep stone,
+  // Raw Deepdark cave — faerzress glow in cool purple-green, deep stone,
   // bone-light flecks scattered on the floor. Reads as "you are not in a
   // building any more." Color-only per the brief; no detailed SVG art.
   return (
@@ -323,8 +323,8 @@ function UnderdarkTunnelBackdrop() {
 
 function UstNathaTempleBackdrop() {
   // The temple-corridor near the city centre. Sickly green faerzress along
-  // the wall, an eight-legged Lolth sigil scratched between stone-courses,
-  // a stretched spider-silk banner. Reads as "you are inside Lolth's house
+  // the wall, an eight-legged Arachne sigil scratched between stone-courses,
+  // a stretched spider-silk banner. Reads as "you are inside Arachne's house
   // now." Color-only per the brief.
   return (
     <svg
@@ -371,7 +371,7 @@ function UstNathaTempleBackdrop() {
         <rect x="204" y="92" width="116" height="42" />
         <rect x="320" y="92" width="80" height="42" />
       </g>
-      {/* Eight-legged Lolth sigil scratched between courses */}
+      {/* Eight-legged Arachne sigil scratched between courses */}
       <g stroke="#b53a3a" strokeWidth="1" fill="none" opacity="0.75">
         <circle cx="200" cy="62" r="14" />
         <line x1="200" y1="48" x2="200" y2="76" />
@@ -434,7 +434,7 @@ function UstNathaTempleBackdrop() {
 
 function UstNathaThroneBackdrop() {
   // The Matron Mother's audience chamber. Deepest blue-violet, a raised
-  // egg-case throne silhouette, an enormous Lolth sigil glowing red on the
+  // egg-case throne silhouette, an enormous Arachne sigil glowing red on the
   // back wall, eight-pronged candelabra on either side. Reads colder and
   // older than the Magistrate's marble hall. Color-only per the brief.
   return (
@@ -479,7 +479,7 @@ function UstNathaThroneBackdrop() {
       {/* Vaulted recess — pointed arch */}
       <path d="M 110 100 L 110 48 Q 200 -8 290 48 L 290 100 Z" fill="#04020a" stroke="#3a1c4a" strokeWidth="1" />
       <path d="M 122 50 Q 200 -4 278 50" fill="none" stroke="#4a2a64" strokeWidth="0.8" opacity="0.5" />
-      {/* Lolth sigil in the recess — circle, cross, X, eight leg-stubs */}
+      {/* Arachne sigil in the recess — circle, cross, X, eight leg-stubs */}
       <circle cx="200" cy="46" r="22" fill="#1a0612" stroke="#b53a3a" strokeWidth="1.6" />
       <circle cx="200" cy="46" r="14" fill="#06020a" stroke="#7a2828" strokeWidth="0.8" />
       <g stroke="#b53a3a" strokeWidth="1" fill="none">

@@ -341,7 +341,7 @@ export function playerAttack(
   });
 
   // Auto-reroll a miss if a reroll budget is available. Prefer the
-  // per-encounter budget (Tymora's Coin) before the per-delve one (Tymora's Eye).
+  // per-encounter budget (Tyche's Coin) before the per-delve one (Tyche's Eye).
   let usedEncounterReroll = 0;
   let usedDelveReroll = 0;
   if (!hit) {
@@ -354,7 +354,7 @@ export function playerAttack(
       toHit = roller.d20(advantage, attackBonus);
       crit = critRange(nextCharacter).includes(toHit.rolls[0]);
       hit = crit || (toHit.total >= ac && !toHit.natural1);
-      const sourceLabel = source === 'encounter' ? "Tymora's Coin" : "Tymora's Eye";
+      const sourceLabel = source === 'encounter' ? "Tyche's Coin" : "Tyche's Eye";
       logEntries.push({
         id: newLogId + 1,
         kind: 'roll',

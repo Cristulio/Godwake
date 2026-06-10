@@ -41,5 +41,5 @@ export const SPIDER_BROODMOTHER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    'Lolth-blessed and grotesquely fertile, she is kept in the lower temple to replenish the brood-warrens faster than the surface raids spend them. Her abdomen is the size of a wine-tun and never stops moving. The Matron calls her holy. The drow who tend her call her nothing at all, and stand well back.',
+    'Arachne-blessed and grotesquely fertile, she is kept in the lower temple to replenish the brood-warrens faster than the surface raids spend them. Her abdomen is the size of a wine-tun and never stops moving. The Matron calls her holy. The drow who tend her call her nothing at all, and stand well back.',
 });

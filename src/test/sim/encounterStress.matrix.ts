@@ -49,7 +49,7 @@ function bossEntry(title: string, defId: string, xp: number, goldReward?: number
 }
 
 const BOSSES: Record<string, EncounterEntry[]> = {
-  ch1: [bossEntry("Ilyich's Hall (boss)", 'duergar-ilyich', 250)],
+  ch1: [bossEntry("Karzok's Hall (boss)", 'duergar-ilyich', 250)],
   ch2: [bossEntry("The Magistrate's Hall (boss)", 'athkatla-magistrate', 700, 80)],
   ch3: [bossEntry("The Director's Chamber (boss)", 'asylum-director', 1100, 140)],
   ch4: [bossEntry("The Matron Mother's Audience (boss)", 'drow-matron-mother', 1650, 220)],

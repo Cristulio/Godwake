@@ -1,8 +1,8 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Bodhi's Spawn — Chapter 10 warmup fodder, the bleed-over from the catacombs.
- * Bodhi's get rises through the under-roots of Suldanessellar ahead of the
+ * Velora's Spawn — Chapter 10 warmup fodder, the bleed-over from the catacombs.
+ * Velora's get rises through the under-roots of Tor Maladin ahead of the
  * vampire herself, the first of the city's invaders the climb meets: a pale,
  * fast, hungry thing in the rags of whoever it last fed on. A single life-drain
  * bite — it does not fight so much as feed, and it leaves the wound colder than
@@ -10,7 +10,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const BODHI_SPAWN: Monster = MonsterSchema.parse({
   id: 'bodhi-spawn',
-  name: "Bodhi's Spawn",
+  name: "Velora's Spawn",
   cr: '9',
   size: 'medium',
   creatureType: 'undead',
@@ -34,5 +34,5 @@ export const BODHI_SPAWN: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Bodhi did not climb into the elven city alone. Her get came up out of the catacombs ahead of her, through the under-roots and the burst tombs, and they meet the road first — pale and quick and starving, still wearing the torn finery of whatever elf-lord or pilgrim they last drank dry. This one does not speak. It only watches your throat, and circles, and waits for the half-step where the climb has made you slow.",
+    "Velora did not climb into the elven city alone. Her get came up out of the catacombs ahead of her, through the under-roots and the burst tombs, and they meet the road first — pale and quick and starving, still wearing the torn finery of whatever elf-lord or pilgrim they last drank dry. This one does not speak. It only watches your throat, and circles, and waits for the half-step where the climb has made you slow.",
 });

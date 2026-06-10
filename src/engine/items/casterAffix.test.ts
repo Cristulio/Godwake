@@ -9,7 +9,7 @@ import type { ItemRef } from '../../schemas/item';
 function wizard(): Character {
   return createCharacter({
     id: 'w',
-    name: 'Edwin',
+    name: 'Aldric',
     raceId: 'human',
     classId: 'wizard',
     baseAbilityScores: {

@@ -158,7 +158,7 @@
     "renownMult": "(renombre ×{mult})",
     "deepens": "El mundo se ahonda. La Ascensión {n} se te abre — un camino más duro, y más rico. La Arboleda se agita con ello.",
     "groveReturns": "La arboleda te devolverá a la vida. Tu alma recuerda lo que tu carne ha olvidado.",
-    "returnToTown": "Volver a Phandalin",
+    "returnToTown": "Volver a Wakeford",
     "wakeAtGrove": "Despertar en la Arboleda"
   },
   "level": {
@@ -227,7 +227,7 @@
     "pack": "Mochila",
     "abandon": "Abandonar",
     "abandonTitle": "¿Abandonar la incursión?",
-    "abandonBody": "Vuelve ya hacia Phandalin. Conservas el pellejo, pero el oro y la gloria quedan enterrados.",
+    "abandonBody": "Vuelve ya hacia Wakeford. Conservas el pellejo, pero el oro y la gloria quedan enterrados.",
     "abandonConfirm": "Abandonar",
     "abandonStay": "Seguir adelante",
     "sealed": "Sellado",

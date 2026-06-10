@@ -5,7 +5,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * fiendish wardens posted on the dead god's seat. Six arms, six blades, and the
  * tactician's mind the lesser abishai lack. A `paralyze` opener (it pins you in
  * its coils) into a three-strike `multiattack` storm, with an abyssal blade at
- * reach. The deadliest thing in the hall short of Amelyssan herself.
+ * reach. The deadliest thing in the hall short of Maevra herself.
  */
 export const MARILITH_WARDEN: Monster = MonsterSchema.parse({
   id: 'marilith-warden',
@@ -48,5 +48,5 @@ export const MARILITH_WARDEN: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "When the lower planes posted a guard on the empty Throne, they did not trust it only to clerks. They sent a captain. The marilith has held the inner approach since before the God of Murder was a corpse, and the long watch has not dulled it the way it dulled the abishai — a marilith does not get bored, it gets ready. It has fought every kind of claimant the centuries sent up the hall and folded all of them into the floor, and it regards you the way a duelist of impossible seniority regards one more challenger: with a flicker of something almost like courtesy, six blades already lifting, the serpent-coil already unhurriedly closing the distance you thought you had. Amelyssan does not need to defend the Throne while this thing still stands on its steps.",
+    "When the lower planes posted a guard on the empty Throne, they did not trust it only to clerks. They sent a captain. The marilith has held the inner approach since before the God of Murder was a corpse, and the long watch has not dulled it the way it dulled the abishai — a marilith does not get bored, it gets ready. It has fought every kind of claimant the centuries sent up the hall and folded all of them into the floor, and it regards you the way a duelist of impossible seniority regards one more challenger: with a flicker of something almost like courtesy, six blades already lifting, the serpent-coil already unhurriedly closing the distance you thought you had. Maevra does not need to defend the Throne while this thing still stands on its steps.",
 });

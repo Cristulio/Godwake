@@ -72,7 +72,7 @@ export function CharacterCreationScreen() {
   //  - New Game+ (run-launcher): pick/keep a soul and descend straight into the
   //    next run at the chosen ascension.
   //  - Hub swap: a soul already in the world, picked between runs → returns to
-  //    Phandalin keeping renown / Grove / quirks.
+  //    Wakeford keeping renown / Grove / quirks.
   //  - First creation: no soul yet → runs the intro → first-delve handoff.
   const isSwap = existing != null;
 

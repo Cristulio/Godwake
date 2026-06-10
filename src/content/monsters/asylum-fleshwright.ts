@@ -2,7 +2,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Asylum Fleshwright — Ch3 ELITE summoner. The Cowled surgeon who built the
- * Spellhold test-subjects, and still does, mid-fight. Demonstrates `summon`
+ * Glassreach test-subjects, and still does, mid-fight. Demonstrates `summon`
  * raising a `bonebound-test-subject` (maxActive 2, cooldown 3) while carving
  * with the bone-saw. A grinder: the longer it lives, the more stitched bodies
  * stand between you and it.
@@ -41,5 +41,5 @@ export const ASYLUM_FLESHWRIGHT: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    'Aprons stiff with old work, spectacles pushed up on a high pale forehead. He regards you the way he regards everything in Spellhold: as raw material that has not yet been told what it is for.',
+    'Aprons stiff with old work, spectacles pushed up on a high pale forehead. He regards you the way he regards everything in Glassreach: as raw material that has not yet been told what it is for.',
 });

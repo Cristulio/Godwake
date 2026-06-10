@@ -71,7 +71,7 @@ describe('buildPostmortem', () => {
     const state = bareState({
       lastAttack: {
         id: 1,
-        attackerName: 'Ilyich',
+        attackerName: 'Karzok',
         attackerId: 'm1',
         attackerDefId: 'duergar-ilyich',
         targetName: 'Caelis',
@@ -88,7 +88,7 @@ describe('buildPostmortem', () => {
       },
     });
     const p = buildPostmortem(state, ch, bareDelve());
-    expect(p.killerName).toBe('Ilyich');
+    expect(p.killerName).toBe('Karzok');
     expect(p.killerDefId).toBe('duergar-ilyich');
     expect(p.attackName).toBe('Eldritch Burst');
     expect(p.damageDealt).toBe(18);

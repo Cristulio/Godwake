@@ -2,7 +2,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Heart-Ember — not a creature so much as a wound made briefly visible. While
- * Yaga-Shura fights, the rite hiding his cut-out heart slips and a single ember
+ * Hargan-Vor fights, the rite hiding his cut-out heart slips and a single ember
  * of it surfaces here, hovering and red at the edge of him. It IS the giant's
  * condition gate (see yaga-shura.ts): while it burns, blows on the giant find
  * nothing to land in. So it is built as a deliberate 1-2 turn objective at its

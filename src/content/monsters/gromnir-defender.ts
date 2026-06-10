@@ -1,8 +1,8 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Gromnir's Defender — Chapter 12 mid. The Bhaalspawn-blooded guard of Gromnir
- * Il-Khan, the mad warlord who seized dying Saradush and holds it from the
+ * Brogmar's Defender — Chapter 12 mid. The Slainkin-blooded guard of Brogmar
+ * Il-Khan, the mad warlord who seized dying Karthen and holds it from the
  * inside while the giants burn it from without. These are kin to the player in
  * the worst way — also children of the dead god, also fighting to live one more
  * day — and the divine ichor in them makes a fast, vicious `multiattack`
@@ -10,7 +10,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const GROMNIR_DEFENDER: Monster = MonsterSchema.parse({
   id: 'gromnir-defender',
-  name: "Gromnir's Defender",
+  name: "Brogmar's Defender",
   cr: '12',
   size: 'medium',
   creatureType: 'humanoid (bhaalspawn)',
@@ -30,7 +30,7 @@ export const GROMNIR_DEFENDER: Monster = MonsterSchema.parse({
     },
     {
       kind: 'attack',
-      name: 'Bhaal-Blooded Longsword',
+      name: 'God-Blooded Longsword',
       attackBonus: 13,
       damage: '2d8+8',
       damageType: 'slashing',
@@ -40,5 +40,5 @@ export const GROMNIR_DEFENDER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Inside the burning walls, the mad warlord Gromnir Il-Khan holds Saradush in a fist, and these are the fist's fingers — Bhaalspawn-blooded soldiers who threw in with him because he promised the one thing Melissan's protection had not: a way to fight. They are your kin. The same dead god's blood beats in them, the same crisis pulls at them, and they have been told that you are one more rival come to take the murder in their veins. They are not wrong about what you are. They are only wrong about why you came.",
+    "Inside the burning walls, the mad warlord Brogmar Il-Khan holds Karthen in a fist, and these are the fist's fingers — Slainkin-blooded soldiers who threw in with him because he promised the one thing Maevra's protection had not: a way to fight. They are your kin. The same dead god's blood beats in them, the same crisis pulls at them, and they have been told that you are one more rival come to take the murder in their veins. They are not wrong about what you are. They are only wrong about why you came.",
 });

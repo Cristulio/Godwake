@@ -341,9 +341,9 @@ function reincarnateSoul(character: Character): Character {
     useScreenStore.getState().enqueueTutorials(['grove']);
   }
   // The soul-bond name reveals are no longer wired to the wheel — they now ride
-  // the progressive lore arc (content/loreBeats.ts): Imoen introduces herself in
+  // the progressive lore arc (content/loreBeats.ts): Inara introduces herself in
   // an early beat, the antagonist stays "The Voice" until the soul reaches
-  // Suldanessellar (cleared Chapter 10), one step before the Chapter 11
+  // Tor Maladin (cleared Chapter 10), one step before the Chapter 11
   // confrontation. A reincarnation alone reveals nothing.
 
   // Refill the body to the LEVEL-1 ceiling the soul will actually descend with,
@@ -879,14 +879,14 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
 
     get().advanceRoom();
 
-    // Imoen whispers on the FIRST cleared room of the run. Fired synchronously
+    // Inara whispers on the FIRST cleared room of the run. Fired synchronously
     // at the transition (not deferred), so it's the active dialogue before the
     // next room mounts — DelveScreen then holds that room's fight behind it.
     const d = get().delve;
     if (d && d.roomsCleared === 0) {
       useScreenStore.getState().showTaunt('imoen', 'first-blood');
     }
-    // Irenicus taunts after a boss clear.
+    // Velnaris taunts after a boss clear.
     if (room?.kind === 'boss') {
       const bossIdx = s.delve?.rooms.findIndex((r) => r.id === room.id) ?? -1;
       const clearedChapter =
@@ -904,9 +904,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       // Synchronous (was a 1.5s setTimeout that landed the overlay AFTER the next
       // room loaded): fire it now so it precedes the next room rather than
       // painting over it. The victory beat already played on the spoils screen.
-      // Irenicus IS the Ch11 boss (BASE_GAME_CHAPTERS) — clearing Ch11 is his
+      // Velnaris IS the Ch11 boss (BASE_GAME_CHAPTERS) — clearing Ch11 is his
       // death, so a final line there is fine, but he falls silent after. Through
-      // the Throne-of-Bhaal chapters (Ch12-13) Melissan, the false "kind ally,"
+      // the Throne-of-the Slain God chapters (Ch12-13) Maevra, the false "kind ally,"
       // whispers in his place — solicitous, the mask slipping as the Throne
       // nears. Ch14 is her own death: the Throne finale fires there, no whisper.
       if (clearedChapter <= BASE_GAME_CHAPTERS) {
@@ -916,7 +916,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       }
       get().creditChapterClearGold();
     }
-    // Chained Godwake delve: Ilyich is the Ch1 boss. Flag the kill. The Voice is
+    // Chained Godwake delve: Karzok is the Ch1 boss. Flag the kill. The Voice is
     // NOT named here — the antagonist's name stays hidden until the Chapter-10 lore
     // beat (content/loreBeats.ts) reveals it; a Chapter-1 clear is far too early.
     if (
@@ -961,33 +961,33 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const ch1Killed = s.delve.chapter1BossKilled === true;
     // Beating the run's final boss = its chain fell. Mid-run deaths credit the
     // chapter bosses actually killed. The room-10 flag is a belt-and-braces
-    // floor for chapter 1 (it's set the instant Ilyich dies).
+    // floor for chapter 1 (it's set the instant Karzok dies).
     const chaptersThisRun = wonBoss
       ? Math.max(bossesKilled, 1)
       : Math.max(bossesKilled, ch1Killed ? 1 : 0);
-    // The win fires when the run beats ITS OWN final chapter — Irenicus at Ch11
-    // for a base run, Melissan at Ch14 for New Game+ — read off the delve's own
+    // The win fires when the run beats ITS OWN final chapter — Velnaris at Ch11
+    // for a base run, Maevra at Ch14 for New Game+ — read off the delve's own
     // chapterCount, not a global constant, so a base run can win before the
     // Throne chapters exist in the chain at all.
     const chapterCount = s.delve.chapterCount ?? TOTAL_CHAPTERS;
     const isFullChain = chapterCount >= TOTAL_CHAPTERS;
     const beatFinalChapter = wonBoss && chaptersThisRun >= chapterCount;
-    // Beating the run's OWN final chapter (Irenicus at Ch11 for a base run,
-    // Melissan at Ch14 for New Game+) detours to the narrative finale BEFORE the
+    // Beating the run's OWN final chapter (Velnaris at Ch11 for a base run,
+    // Maevra at Ch14 for New Game+) detours to the narrative finale BEFORE the
     // soul settles: the ending screen reads the still-'completed' delve, then
     // re-enters finishDelve() on conclude to run the deferred settle below.
     // Completion is recorded HERE, at the win moment, not in the lazy-loaded
     // ending screen (#366): a stale chunk must never cost the player the clear
     // (or the New Game+ it unlocks).
     //
-    // The Throne finale REPLAYS on every full-chain Melissan kill — it's the
+    // The Throne finale REPLAYS on every full-chain Maevra kill — it's the
     // true-clear payoff and must always play, like a proper ending. Gating the
     // DISPLAY on `throneCompleted` permanently hid it from anyone whose flag was
     // set without ever seeing the credits: the win-moment record above fires even
     // if the lazy ending chunk crashed, a refresh interrupted it, or the player
     // walked straight on to New Game+ — and gameStore hydration also recovers the
     // flag from `chaptersCleared >= 14`. So the flag is for UNLOCKS only; the
-    // base Pit ending (Irenicus) stays first-time, but the Throne does not gate
+    // base Pit ending (Velnaris) stays first-time, but the Throne does not gate
     // on it. The re-entry breaker is the held delve's `renownSettled` (set below
     // when the ending fires): the conclude call comes back through here with it
     // set, so this block is skipped and the run falls through to the settle.
@@ -1062,7 +1062,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     if (wonBoss) {
       meta.unlockNextAscension(s.delve.ascensionLevel ?? 0);
       // Achievement high-water: the deepest ascension a run was beaten at, and
-      // separately the deepest ascension the FULL chain (Melissan) fell at.
+      // separately the deepest ascension the FULL chain (Maevra) fell at.
       meta.recordClearAscension(s.delve.ascensionLevel ?? 0);
       if (isFullChain) meta.recordThroneAscension(s.delve.ascensionLevel ?? 0);
       // Legendaries are no longer a guaranteed per-clear grant (Wave 2): they

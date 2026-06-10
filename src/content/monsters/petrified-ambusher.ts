@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Petrified Ambusher — Chapter 13 fodder out of Sendai's Enclave. The matron
+ * Petrified Ambusher — Chapter 13 fodder out of Szendra's Enclave. The matron
  * lined the carved drow city with her own kin turned to stone, posed mid-stride
  * along every gallery so that what looks like statuary is a held ambush. They
  * stand grey and patient until you pass too close, and then the stone sloughs
@@ -44,5 +44,5 @@ export const PETRIFIED_AMBUSHER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Sendai lines her enclave with the dead she has not finished using. Down every carved gallery they stand mid-stride, grey and weathered, drow turned to stone and posed as statuary so that the city itself is a held ambush — and the only way to tell the ornament from the trap is to pass too close to one and feel the stone go warm. Then the crust sheds in sheets and the drow inside finishes, unhurried, the lunge it was frozen halfway through, as though no time at all has passed since the matron caught it here and told it to wait.",
+    "Szendra lines her enclave with the dead she has not finished using. Down every carved gallery they stand mid-stride, grey and weathered, drow turned to stone and posed as statuary so that the city itself is a held ambush — and the only way to tell the ornament from the trap is to pass too close to one and feel the stone go warm. Then the crust sheds in sheets and the drow inside finishes, unhurried, the lunge it was frozen halfway through, as though no time at all has passed since the matron caught it here and told it to wait.",
 });

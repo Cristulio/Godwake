@@ -197,8 +197,8 @@
   "screen": {
     "noCharacter": "No character.",
     "hub": "Hub",
-    "noDelve": "No active delve. Return to Phandalin.",
-    "returnToTown": "Return to Phandalin",
+    "noDelve": "No active delve. Return to Wakeford.",
+    "returnToTown": "Return to Wakeford",
     "preparing": "Preparing encounter...",
     "bossPrefix": "Boss · ",
     "elitePrefix": "Elite · ",
@@ -212,8 +212,8 @@
   },
   "campScene": {
     "1": "A roadside fire under a dusk sky, the road bending south.",
-    "2": "A lamp on a coil of rope at the end of a jetty, the gilded towers of Athkatla across dark water, a smuggler's wherry tied alongside.",
-    "3": "A smokeless chemical-fire in a brass bowl lighting a smuggler's cache in an Underdark cavern, stalactites overhead.",
+    "2": "A lamp on a coil of rope at the end of a jetty, the gilded towers of Stormhaven across dark water, a smuggler's wherry tied alongside.",
+    "3": "A smokeless chemical-fire in a brass bowl lighting a smuggler's cache in an Deepdark cavern, stalactites overhead.",
     "4": "A cold fire on a rocky shelf at the edge of a rift, pale golden light rising from the crack in the floor ahead.",
     "5": "A guttering fire at the rim of an immense Wheel in absolute void, a worn pilgrim offering a cup.",
     "6": "A shuttered lamp at the lip of a stair that drops into cold salt-dark, a deep-salvager paying out sounding-rope toward a library drowned far below.",
@@ -221,10 +221,10 @@
     "8": "A small fire on a cracked marble dance-floor among standing shards of mirror, a hooded figure watching a reflection whose masked face does not match.",
     "9": "A low fire on the forest floor beneath a canopy burning orange overhead, embers drifting down, a fugitive elf seated with an unstrung bow across its knees.",
     "10": "A pale soul-light guttering on a narrow ledge above a vast breathing pit in a red hell, words scratched into the rock beside it.",
-    "11": "A thin refugee fire on a ridge above a walled city ringed in flame and giants, smoke rising from Saradush burning below, huddled figures sharing the warmth.",
+    "11": "A thin refugee fire on a ridge above a walled city ringed in flame and giants, smoke rising from Karthen burning below, huddled figures sharing the warmth.",
     "12": "A watch-fire where the road forks toward two dark doors — a drow gate beneath a mountain on the left, a dragon's lair in the deep waste on the right — a Harper turning a blade in the light.",
     "13": "A keeperless fire on a folded fragment of plane adrift in the void, a single dark door standing free behind it, an ally seated across the flame with eyes turned away.",
-    "14": "The empty Throne of Bhaal on a dark dais in the void, a thin bloodlight rising behind it, a low fire guttering at the foot of the steps."
+    "14": "The empty Throne of the Slain God on a dark dais in the void, a thin bloodlight rising behind it, a low fire guttering at the foot of the steps."
   },
   "skill": {
     "acrobatics": "Acrobatics",

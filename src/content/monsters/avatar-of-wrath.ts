@@ -6,7 +6,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * before you for the power it offers, and the rage you would do it in stands up to
  * meet you wearing your father's fire. A `multiattack` striker (it falls on you in
  * a flurry once the picker spends the opener) that carries `battle-rage`: wound it
- * past half and the Bhaal-fire in it catches properly, +2 a hit until one of you is
+ * past half and godfire in it catches properly, +2 a hit until one of you is
  * done. It does not control or feed. It only escalates, which is the whole sin.
  */
 export const AVATAR_OF_WRATH: Monster = MonsterSchema.parse({
@@ -32,7 +32,7 @@ export const AVATAR_OF_WRATH: Monster = MonsterSchema.parse({
     },
     {
       kind: 'attack',
-      name: 'Fist of Bhaal-Fire',
+      name: 'Fist of Godfire',
       attackBonus: 13,
       damage: '2d10+8',
       damageType: 'fire',

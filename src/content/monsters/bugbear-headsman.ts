@@ -7,7 +7,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * blood-mad, drops his guard, and winds up a single telegraphed Overhead Crush
  * the player gets one full turn to read — race the HP, brace, or hard-control him
  * to collapse the charge. It echoes the chapter's telegraph lesson on an elite
- * before Ilyich teaches it for real, and stays under the boss: no enrage damage
+ * before Karzok teaches it for real, and stays under the boss: no enrage damage
  * bonus, only the dropped guard. Conservative magnitudes pending the sim pass.
  */
 export const BUGBEAR_HEADSMAN: Monster = MonsterSchema.parse({

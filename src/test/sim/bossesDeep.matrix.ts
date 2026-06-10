@@ -95,7 +95,7 @@ export function renderReport(rows: CellAggregate[], runsPerCell: number): string
     '- `vacuum`: bare-soul. No blessings, no Grove upgrades. The floor reference.',
   );
   lines.push(
-    "- `loaded`: 5 defensive blessings (Helm's Aegis +1 AC · Lathander's Dawn +3 tempHp · Ilmater's Patience +1 stabilise · Selûne's Veil first-attack advantage · Tymora's Coin 1 miss reroll) plus a modest L5+ Grove (ac+1 · hp+10 · init+1 · damage+1). What a player who has hit shrines and bought a few mirror nodes brings.",
+    "- `loaded`: 5 defensive blessings (Argus's Aegis +1 AC · Eos's Dawn +3 tempHp · Atlas's Patience +1 stabilise · Selene's Veil first-attack advantage · Tyche's Coin 1 miss reroll) plus a modest L5+ Grove (ac+1 · hp+10 · init+1 · damage+1). What a player who has hit shrines and bought a few mirror nodes brings.",
   );
   lines.push('');
   lines.push('## Headline — wall moves where?');
@@ -127,7 +127,7 @@ export function renderReport(rows: CellAggregate[], runsPerCell: number): string
   lines.push('## Hold Person save success — class × boss');
   lines.push('');
   lines.push(
-    'Per-attempt save rates (i.e. fraction of fired paralyzes the player shrugged off). Ilyich has no paralyze; he is `—`.',
+    'Per-attempt save rates (i.e. fraction of fired paralyzes the player shrugged off). Karzok has no paralyze; he is `—`.',
   );
   lines.push('');
   lines.push(
@@ -246,11 +246,11 @@ export function renderReport(rows: CellAggregate[], runsPerCell: number): string
   lines.push('## Synthesis — per-boss verdict');
   lines.push('');
   lines.push(
-    'Six classes-of-three boss matchups (4 bosses × 3 classes; Ilyich + Magistrate + Director + Matron Mother) at the primary at-level, vacuum loadout. Verdicts read against the design intent ("each death is rewarding, bosses are meant to wall — not be impossible") and the project class-balance philosophy (asymmetric, not flat-balanced).',
+    'Six classes-of-three boss matchups (4 bosses × 3 classes; Karzok + Magistrate + Director + Matron Mother) at the primary at-level, vacuum loadout. Verdicts read against the design intent ("each death is rewarding, bosses are meant to wall — not be impossible") and the project class-balance philosophy (asymmetric, not flat-balanced).',
   );
   lines.push('');
   lines.push(
-    '### Ilyich (Ch1, L3) — _AC 16 → 15 tune is the right shape_',
+    '### Karzok (Ch1, L3) — _AC 16 → 15 tune is the right shape_',
   );
   lines.push('');
   lines.push(
@@ -314,7 +314,7 @@ export function renderReport(rows: CellAggregate[], runsPerCell: number): string
   lines.push('### Headline takeaway');
   lines.push('');
   lines.push(
-    '#89 moved the wall in the intended places: Ilyich + Magistrate are no longer the dominant kill-cause at their chapter\'s primary at-level for any class, and Director is reachable for melee. The remaining wall is **Wizard vs Director (8% vacuum / 49% loaded)** and **Wizard vs Matron (2% / 17%)** — both spell-economy + HP-floor problems that DC tuning can\'t solve on its own.',
+    '#89 moved the wall in the intended places: Karzok + Magistrate are no longer the dominant kill-cause at their chapter\'s primary at-level for any class, and Director is reachable for melee. The remaining wall is **Wizard vs Director (8% vacuum / 49% loaded)** and **Wizard vs Matron (2% / 17%)** — both spell-economy + HP-floor problems that DC tuning can\'t solve on its own.',
   );
   lines.push('');
   lines.push(

@@ -1,10 +1,10 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Sendai — Chapter 13 named elite, one of the last of the Five. A drow
- * Bhaalspawn matron who carved an enclave out of the rock and filled it with her
+ * Szendra — Chapter 13 named elite, one of the last of the Five. A drow
+ * Slainkin matron who carved an enclave out of the rock and filled it with her
  * own kin turned to stone, waiting on her word. She is a strong sub-fight, not
- * the chapter boss (that is Abazigal). Her kit is the enclave made flesh: a
+ * the chapter boss (that is Korvazel). Her kit is the enclave made flesh: a
  * `paralyze` that catches you the way she catches her statues, a `summon` that
  * wakes the petrified ambushers around her (one at a time, cooldown 3 — trimmed
  * so the CR11 adds stop out-walling her own chapter boss), a `multiattack` with
@@ -12,10 +12,10 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const SENDAI: Monster = MonsterSchema.parse({
   id: 'sendai',
-  name: 'Sendai',
+  name: 'Szendra',
   cr: '15',
   size: 'medium',
-  creatureType: 'humanoid (drow Bhaalspawn)',
+  creatureType: 'humanoid (drow Slainkin)',
   ac: 21,
   maxHp: 300,
   speed: 30,
@@ -41,7 +41,7 @@ export const SENDAI: Monster = MonsterSchema.parse({
       damageType: 'bludgeoning',
       reach: 5,
       description:
-        'A spiked mace given her by Lolth and sworn again to Bhaal, and it carries both promises in it — the head crushing where it lands and the drow venom seeping after, so the bruise keeps blooming long past the blow.',
+        'A spiked mace given her by Arachne and sworn again to the Slain God, and it carries both promises in it — the head crushing where it lands and the drow venom seeping after, so the bruise keeps blooming long past the blow.',
     },
     {
       kind: 'multiattack',
@@ -62,5 +62,5 @@ export const SENDAI: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Of the Five rival Bhaalspawn, Sendai held herself the cleverest, and her enclave is the proof and the trap of it — a drow city carved deep in the rock, every gallery lined with her own kin turned to stone and posed waiting, so that her whole stronghold is one held ambush that wakes as you near her seat. She sits at the centre of it on a throne of petrified drow, a matron who has ruled by patience where her siblings ruled by force, and she watches you come the way she has watched a hundred would-be killers come: certain that the rock will take you long before you reach her, and entirely willing to step down and finish it herself if it does not.",
+    "Of the Five rival Slainkin, Szendra held herself the cleverest, and her enclave is the proof and the trap of it — a drow city carved deep in the rock, every gallery lined with her own kin turned to stone and posed waiting, so that her whole stronghold is one held ambush that wakes as you near her seat. She sits at the centre of it on a throne of petrified drow, a matron who has ruled by patience where her siblings ruled by force, and she watches you come the way she has watched a hundred would-be killers come: certain that the rock will take you long before you reach her, and entirely willing to step down and finish it herself if it does not.",
 });

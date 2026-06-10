@@ -2,7 +2,7 @@
       viewBox="0 0 24 40"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Sendai's Handmaiden"
+      aria-label="Szendra's Handmaiden"
     >
       <!-- Drow-violet backlight + ground shadow -->
       <ellipse cx="12" cy="20" rx="12" ry="18" fill="#6a3a9a" opacity="0.08" />

@@ -183,7 +183,7 @@ describe('enhancement (+N) axis', () => {
 
   it('caps the base game (Ch1-11) at +3, with NG+ ToB chapters climbing to +4/+5', () => {
     // Exact +N ceiling per chapter. The base game tops out at +3; only the NG+
-    // Throne-of-Bhaal chapters (Ch12-14, reachable only in a New Game+ run) go
+    // Throne-of-the Slain God chapters (Ch12-14, reachable only in a New Game+ run) go
     // higher, so +4 (Ch12-13) and +5 (Ch14) are NG+-exclusive.
     const expected: Record<number, number> = {
       1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 3, 8: 3, 9: 3, 10: 3, 11: 3, 12: 4, 13: 4, 14: 5,

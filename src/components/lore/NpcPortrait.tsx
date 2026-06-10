@@ -5,7 +5,7 @@
  *
  * Same 24×40 viewBox and crispEdges style as the combat PlayerPortrait so
  * they feel like the same world. Each portrait is a named export so callers
- * can `import { Imoen } from ...` and drop it in like a sprite.
+ * can `import { Inara } from ...` and drop it in like a sprite.
  */
 
 import imoenUrl from '../../assets/sprites/npcs/imoen.svg';
@@ -36,14 +36,14 @@ function PortraitImg({
   );
 }
 
-export function Imoen(props: PortraitProps) {
-  return <PortraitImg url={imoenUrl} fallbackLabel="Imoen" {...props} />;
+export function Inara(props: PortraitProps) {
+  return <PortraitImg url={imoenUrl} fallbackLabel="Inara" {...props} />;
 }
 
-export function Irenicus(props: PortraitProps) {
-  return <PortraitImg url={irenicusUrl} fallbackLabel="Irenicus" {...props} />;
+export function Velnaris(props: PortraitProps) {
+  return <PortraitImg url={irenicusUrl} fallbackLabel="Velnaris" {...props} />;
 }
 
-export function Melissan(props: PortraitProps) {
-  return <PortraitImg url={melissanUrl} fallbackLabel="Melissan" {...props} />;
+export function Maevra(props: PortraitProps) {
+  return <PortraitImg url={melissanUrl} fallbackLabel="Maevra" {...props} />;
 }

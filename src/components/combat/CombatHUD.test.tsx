@@ -133,7 +133,7 @@ describe('CombatHUD', () => {
   it('Shows blessing glyphs when the character carries any', () => {
     const c: Character = { ...makeChar('fighter'), blessings: ['helms-aegis'] };
     render(<CombatHUD character={c} state={emptyState()} />);
-    expect(screen.getByLabelText(/Helm's Aegis/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Argus's Aegis/)).toBeInTheDocument();
   });
 
   it('telegraphs the readied boss-intel edge — Set while the opener is live, Spent once struck', () => {
@@ -143,7 +143,7 @@ describe('CombatHUD', () => {
       instance: {
         id: 'm1',
         defId: 'duergar-ilyich',
-        displayName: 'Ilyich',
+        displayName: 'Karzok',
         hp: { current: 40, max: 40, temp: 0 },
         ac: 14,
         acRevealed: false,

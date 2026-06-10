@@ -4,14 +4,14 @@ import { getMonster } from '../monsters';
 import { isSkillEnabled, type SkillName } from '../../types/skills';
 import type { EventOutcome } from '../../schemas/event';
 
-// The chapter bands the run passes through past Athkatla/Spellhold/Ust Natha.
+// The chapter bands the run passes through past Stormhaven/Glassreach/Zhal Vasha.
 // Each must have at least one event authored for it, so a late-chapter event
 // room is dominated by fitting content rather than Ch1 roadside fare.
 const BANDS: { name: string; min: number; max: number; sample: number }[] = [
   { name: 'Godwake descent (Ch5–9)', min: 5, max: 9, sample: 9 },
-  { name: 'Suldanessellar (Ch10)', min: 10, max: 10, sample: 10 },
+  { name: 'Tor Maladin (Ch10)', min: 10, max: 10, sample: 10 },
   { name: 'Hell trials (Ch11)', min: 11, max: 11, sample: 11 },
-  { name: 'Throne of Bhaal (Ch12–14)', min: 12, max: 14, sample: 14 },
+  { name: 'Throne of the Slain God (Ch12–14)', min: 12, max: 14, sample: 14 },
 ];
 
 function flatOutcomes(): EventOutcome[] {

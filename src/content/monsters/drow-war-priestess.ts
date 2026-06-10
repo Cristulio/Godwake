@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Drow War-Priestess — Ch4 support caster. Lolth's battlefield medic: she heals
+ * Drow War-Priestess — Ch4 support caster. Arachne's battlefield medic: she heals
  * and wards her House's warriors mid-fight (`sustain`, target: ally — 2d6 heal
  * plus a 12-point ward, cooldown 2) while scourging with a serpent-flail. Pairs
  * brutally with any drow front-liner; drop her first or the line never falls.
@@ -21,7 +21,7 @@ export const DROW_WAR_PRIESTESS: Monster = MonsterSchema.parse({
   actions: [
     {
       kind: 'sustain',
-      name: "Lolth's Mending",
+      name: "Arachne's Mending",
       target: 'ally',
       heal: '2d6',
       wardTempHp: 12,
@@ -41,5 +41,5 @@ export const DROW_WAR_PRIESTESS: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    'A priestess of the second rank, not yet a Matron but climbing the only ladder Ust Natha keeps. She values her House-warriors precisely as much as they are useful, which today is a great deal. Lolth rewards the survivor, and she intends her people to survive you.',
+    'A priestess of the second rank, not yet a Matron but climbing the only ladder Zhal Vasha keeps. She values her House-warriors precisely as much as they are useful, which today is a great deal. Arachne rewards the survivor, and she intends her people to survive you.',
 });

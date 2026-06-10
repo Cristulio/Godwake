@@ -163,7 +163,7 @@ describe('character derivation — human fighter', () => {
     expect(computeAC(cursed)).toBe(11);
   });
 
-  it("Helm's Aegis blessing adds 1 AC", () => {
+  it("Argus's Aegis blessing adds 1 AC", () => {
     const blessed = { ...human, blessings: ['helms-aegis'] };
     expect(computeAC(blessed)).toBe(13);
   });
@@ -176,13 +176,13 @@ describe('character derivation — human fighter', () => {
     expect(computeAC(bloodied)).toBe(13);
   });
 
-  it("Tempus's Edge widens crit range by 1", () => {
+  it("Ares's Edge widens crit range by 1", () => {
     const withEdge = { ...human, blessings: ['tempus-edge'] };
     // Lv1 fighter — no Improved Critical — base 20 → edge brings it to 19-20
     expect(critRange(withEdge)).toEqual([19, 20]);
   });
 
-  it("Tempus's Edge stacks with Improved Critical", () => {
+  it("Ares's Edge stacks with Improved Critical", () => {
     const champion2 = {
       ...human,
       level: 2,
@@ -193,7 +193,7 @@ describe('character derivation — human fighter', () => {
     expect(critRange(champion2)).toEqual([18, 19, 20]);
   });
 
-  it("Helm's Vigil adds +2 AC only while at full HP", () => {
+  it("Argus's Vigil adds +2 AC only while at full HP", () => {
     const full = { ...human, blessings: ['helms-vigil'] };
     // human starts at full HP → 10 + DEX(2) + 2 = 14
     expect(computeAC(full)).toBe(14);
@@ -202,7 +202,7 @@ describe('character derivation — human fighter', () => {
     expect(computeAC(scratched)).toBe(12);
   });
 
-  it("Ilmater's Forbearance adds +2 AC only while bloodied", () => {
+  it("Atlas's Forbearance adds +2 AC only while bloodied", () => {
     const blessed = { ...human, blessings: ['ilmaters-forbearance'] };
     // full HP → no bonus
     expect(computeAC(blessed)).toBe(12);

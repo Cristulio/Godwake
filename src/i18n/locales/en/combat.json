@@ -175,7 +175,7 @@
     "disengage": "{name} twists with the blow — {reduction} damage avoided.",
     "evasion": "{name} reads the wind-up and rolls clear — Evasion halves the blast ({from} → {to}).",
     "uncannyDodge": "{name} uses Uncanny Dodge — damage halved ({from} → {to}).",
-    "stabilise": "{name} is on death's door — Ilmater's grip holds. Stabilised at 1 HP.",
+    "stabilise": "{name} is on death's door — Atlas's grip holds. Stabilised at 1 HP.",
     "victory": "Victory. The room falls silent.",
     "defeat": "You have fallen.",
     "attackRoll": "{name} {verb} {target} with {weapon}. d20{mod} = {total} vs AC {ac} {result}.",
@@ -347,7 +347,7 @@
     "paralyzedBanner": "✦ Paralyzed — attacks against you have advantage",
     "autoEndNotice": "Ending turn — no actions remain.",
     "abandonTitle": "Abandon the delve?",
-    "abandonBody": "Flee back to Phandalin. You keep your hide, but the gold and the glory stay buried.",
+    "abandonBody": "Flee back to Wakeford. You keep your hide, but the gold and the glory stay buried.",
     "stay": "Stay",
     "abandonConfirm": "Abandon"
   },

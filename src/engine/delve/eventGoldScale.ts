@@ -4,7 +4,7 @@
  * Event outcomes author flat gold amounts (`{ kind: 'gold_delta', amount: 30 }`),
  * but the rest of the economy climbs hard with depth: mob drops scale by CR,
  * shop racks by chapter, boss-intel fees quadratically. A flat +30 that funded a
- * shop visit in the Iron Cells is pocket lint by the Throne of Bhaal. These
+ * shop visit in the Iron Cells is pocket lint by the Throne of the Slain God. These
  * helpers ramp an event's gold with the chapter it fires in so the payout — and
  * the matching cost — stays proportional to where the player actually is.
  *

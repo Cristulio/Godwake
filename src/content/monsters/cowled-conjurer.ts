@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Cowled Conjurer — Ch2 summoner. A Cowled Wizard who fights from behind a
+ * Cowled Conjurer — Ch2 summoner. A Veiled Magus who fights from behind a
  * bound servitor. Once per fight it binds an imp to the field (`summon`, once),
  * then settles into ranged arcane bolts. Kill the imp and the conjurer is
  * exposed; kill the conjurer and the imp keeps coming.
@@ -41,5 +41,5 @@ export const COWLED_CONJURER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    'The silver collar of the Cowled Wizards, the mask polished blank. He does not duel; he delegates. Whatever he calls up answers to him only as long as he is interesting to it, which is to say only as long as he is alive.',
+    'The silver collar of the Veiled Court, the mask polished blank. He does not duel; he delegates. Whatever he calls up answers to him only as long as he is interesting to it, which is to say only as long as he is alive.',
 });

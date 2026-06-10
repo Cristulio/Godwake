@@ -2,7 +2,7 @@
       viewBox="0 0 28 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Herald of the Bhaalspawn"
+      aria-label="Herald of the Slainkin"
     >
       <!-- Blood backlight + ground shadow -->
       <ellipse cx="14" cy="22" rx="13" ry="19" fill="#7a1410" opacity="0.14" />

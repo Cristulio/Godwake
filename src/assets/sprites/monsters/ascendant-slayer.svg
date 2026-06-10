@@ -4,7 +4,7 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Ascendant Slayer"
     >
-      <!-- Bhaal-blood backlight + ground shadow -->
+      <!-- god-blood backlight + ground shadow -->
       <ellipse cx="16" cy="22" rx="15" ry="20" fill="#7a1410" opacity="0.16" />
       <ellipse cx="16" cy="20" rx="10" ry="14" fill="#c0301a" opacity="0.1" />
       <ellipse cx="16" cy="42" rx="11" ry="1.8" fill="#000" opacity="0.45" />

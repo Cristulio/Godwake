@@ -175,7 +175,7 @@
     "disengage": "{name} se retuerce con el golpe — {reduction} de daño evitado.",
     "evasion": "{name} lee la embestida y rueda a salvo — la Evasión reduce a la mitad la explosión ({from} → {to}).",
     "uncannyDodge": "{name} usa Esquiva Asombrosa — daño reducido a la mitad ({from} → {to}).",
-    "stabilise": "{name} está al borde de la muerte — la mano de Ilmater lo sostiene. Estabilizado a 1 PG.",
+    "stabilise": "{name} está al borde de la muerte — la mano de Atlas lo sostiene. Estabilizado a 1 PG.",
     "victory": "Victoria. La sala queda en silencio.",
     "defeat": "Has caído.",
     "attackRoll": "{name} {verb} a {target} con {weapon}. d20{mod} = {total} vs CA {ac} {result}.",
@@ -347,7 +347,7 @@
     "paralyzedBanner": "✦ Paralizado — los ataques contra ti tienen ventaja",
     "autoEndNotice": "Terminando el turno — no quedan acciones.",
     "abandonTitle": "¿Abandonar la incursión?",
-    "abandonBody": "Huye de vuelta a Phandalin. Conservas el pellejo, pero el oro y la gloria quedan enterrados.",
+    "abandonBody": "Huye de vuelta a Wakeford. Conservas el pellejo, pero el oro y la gloria quedan enterrados.",
     "stay": "Quedarse",
     "abandonConfirm": "Abandonar"
   },

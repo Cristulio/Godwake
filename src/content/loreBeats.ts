@@ -4,11 +4,11 @@
  * chapters. Each beat plays ONCE (persisted in metaStore.seenDialogueBeats) and
  * strictly in order: a later beat never fires before its predecessor is seen.
  *
- * Two beats also REVEAL a soul-bond NPC's name (`reveals`): Imoen introduces
+ * Two beats also REVEAL a soul-bond NPC's name (`reveals`): Inara introduces
  * herself early, near the start of the arc. The antagonist stays "The Voice" far
  * longer — his name is withheld until the soul has clawed all the way down to
- * Suldanessellar (cleared Chapter 10), one descent shy of the Chapter 11
- * confrontation, where Imoen overhears it at last and the boss fight puts a face
+ * Tor Maladin (cleared Chapter 10), one descent shy of the Chapter 11
+ * confrontation, where Inara overhears it at last and the boss fight puts a face
  * to it. Until then every surface shows his pre-reveal label ("The Voice"); see
  * metaStore.knownNpcs and IrenicusTaunt's PRE_REVEAL_LABEL.
  *
@@ -48,7 +48,7 @@ export interface LoreBeat {
  * The arc, in play order. Opening beats are delve-gated so a struggling player
  * still gets the setup; the deeper story is chapter-gated so it can only unfold
  * by actually descending the chain. Menace from the antagonist, warmth and worry
- * from Imoen.
+ * from Inara.
  */
 export const LORE_BEATS: LoreBeat[] = [
   {
@@ -85,7 +85,7 @@ export const LORE_BEATS: LoreBeat[] = [
     context: 'idle',
     minDelves: 4,
     reveals: 'imoen',
-    text: "I should have told you lifetimes ago. My name's Imoen. We grew up together, you and me — a library by the sea, before any of this. You don't remember. That's alright. I remember enough for the both of us.",
+    text: "I should have told you lifetimes ago. My name's Inara. We grew up together, you and me — a library by the sea, before any of this. You don't remember. That's alright. I remember enough for the both of us.",
   },
   {
     id: 'lore-06-a-vein-of-god',
@@ -154,7 +154,7 @@ export const LORE_BEATS: LoreBeat[] = [
   },
   // ── Ch5-9 · the Godwake reframed as his god-making engine ──────────────────
   // The captor drags the bound soul down through his own works toward the
-  // divinity he covets; Imoen tracks the descent; the soul-bond strains.
+  // divinity he covets; Inara tracks the descent; the soul-bond strains.
   {
     id: 'lore-17-my-own-machine',
     speaker: 'irenicus',
@@ -204,9 +204,9 @@ export const LORE_BEATS: LoreBeat[] = [
     minChapters: 9,
     text: "I can't always tell your thoughts from his down here, and that frightens me worse than anything he's done. Hold on to the one who stole books off the high shelves with me. That one is ours. Don't let his masks have it. Don't let them have you.",
   },
-  // ── Ch10 · Suldanessellar / the Tree of Life — the plan AND the name revealed.
+  // ── Ch10 · Tor Maladin / the Tree of Life — the plan AND the name revealed.
   // The Voice has narrated the whole descent unnamed; here, one step from the
-  // confrontation, his plan surfaces and Imoen finally catches his name. ─────────
+  // confrontation, his plan surfaces and Inara finally catches his name. ─────────
   {
     id: 'lore-24-the-vein-named',
     speaker: 'irenicus',
@@ -220,7 +220,7 @@ export const LORE_BEATS: LoreBeat[] = [
     context: 'idle',
     minChapters: 10,
     reveals: 'irenicus',
-    text: "I heard the others say it at last — his name, the one who did this to us both. Irenicus. It tastes like a curse in the mouth. Good. Now we know what to scream when we pull him down.",
+    text: "I heard the others say it at last — his name, the one who did this to us both. Velnaris. It tastes like a curse in the mouth. Good. Now we know what to scream when we pull him down.",
   },
   {
     id: 'lore-12-the-hollow-they-made',
@@ -251,29 +251,29 @@ export const LORE_BEATS: LoreBeat[] = [
     minChapters: 11,
     text: "He's down. He's DOWN — the Voice is gone, there's only quiet where it lived all this time. You came the whole way down and pulled him under with you. And — oh. Oh, you're truly here. I have your hand. I have it. I am never letting it go again.",
   },
-  // ── Ch12-14 · Throne of Bhaal — the Voice is silenced; the Bhaalspawn truth
-  // surfaces, Melissan's harvest is unmasked, and the arc hands off to the
+  // ── Ch12-14 · Throne of the Slain God — the Voice is silenced; the Slainkin truth
+  // surfaces, Maevra's harvest is unmasked, and the arc hands off to the
   // ascend-or-mortal ending (EndingScreen) rather than resolving it here. ─────
   {
     id: 'lore-28-child-of-bhaal',
     speaker: 'imoen',
     context: 'descent',
     minChapters: 12,
-    text: "The Voice is dead, and the truth it hid is standing up in its place. You're a Child of Bhaal — the dead Lord of Murder — and so is every soul burning in that city, all of you hunted for the god in your blood. And something whispers now where Irenicus used to. It wants you to swing. Don't.",
+    text: "The Voice is dead, and the truth it hid is standing up in its place. You're a Child of the Slain God — the dead Lord of Murder — and so is every soul burning in that city, all of you hunted for the god in your blood. And something whispers now where Velnaris used to. It wants you to swing. Don't.",
   },
   {
     id: 'lore-29-the-kind-womans-smile',
     speaker: 'imoen',
     context: 'rest',
     minChapters: 13,
-    text: "The kind woman guiding us — Melissan — she set the Five to murdering each other. I've watched her smile a long while now, and I've started to dread it. She wants them all dead, and she wants your hand to do it. I just can't yet see what she means to take once the last of them falls.",
+    text: "The kind woman guiding us — Maevra — she set the Five to murdering each other. I've watched her smile a long while now, and I've started to dread it. She wants them all dead, and she wants your hand to do it. I just can't yet see what she means to take once the last of them falls.",
   },
   {
     id: 'lore-30-choose-it-as-yourself',
     speaker: 'imoen',
     context: 'boss-approach',
     minChapters: 14,
-    text: "I have the whole shape of it now. Melissan — Amelyssan — was Bhaal's own priestess, and the harvest was always hers: every death, every drop, gathered to wake HER as the god of Murder reborn. One door left, an empty throne behind it. End her. Then the seat is yours — to take, or to turn from. Choose it as yourself. I'll be with you at the wheel.",
+    text: "I have the whole shape of it now. Maevra — Maevra — was the Slain God's own priestess, and the harvest was always hers: every death, every drop, gathered to wake HER as the god of Murder reborn. One door left, an empty throne behind it. End her. Then the seat is yours — to take, or to turn from. Choose it as yourself. I'll be with you at the wheel.",
   },
 ];
 
@@ -293,15 +293,15 @@ function isEligible(beat: LoreBeat, meta: LoreBeatMeta): boolean {
 }
 
 /**
- * Irenicus IS the Chapter-11 boss ({@link BASE_GAME_CHAPTERS}); felling him is
+ * Velnaris IS the Chapter-11 boss ({@link BASE_GAME_CHAPTERS}); felling him is
  * his death. Once the soul has climbed past his chapter — into the Throne-of-
- * Bhaal stretch (Ch12-14) — he is gone and must not speak again. His arc is
+ * the Slain God stretch (Ch12-14) — he is gone and must not speak again. His arc is
  * authored entirely at minChapters <= 11, but a single beat per descent lets the
- * queue lag behind a fast climb, so an unseen Irenicus beat could otherwise
+ * queue lag behind a fast climb, so an unseen Velnaris beat could otherwise
  * surface on a later descent after he is already dead. Those stranded beats are
- * SKIPPED (see {@link nextLoreBeat}), not blocked, so Imoen's later beats — and
- * the Throne-of-Bhaal arc that hands off to the ending — still flow past them.
- * (A Melissan voice to fill the ToB silence is a separate future lane.)
+ * SKIPPED (see {@link nextLoreBeat}), not blocked, so Inara's later beats — and
+ * the Throne-of-the Slain God arc that hands off to the ending — still flow past them.
+ * (A Maevra voice to fill the ToB silence is a separate future lane.)
  */
 function isSilencedAfterDeath(beat: LoreBeat, meta: LoreBeatMeta): boolean {
   return beat.speaker === 'irenicus' && meta.chaptersCleared > BASE_GAME_CHAPTERS;

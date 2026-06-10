@@ -109,7 +109,7 @@ export interface DelveState {
    */
   mobsKilled?: number;
   /**
-   * Set true the moment the Ch1 boss (Ilyich) is killed inside a combined
+   * Set true the moment the Ch1 boss (Karzok) is killed inside a combined
    * Godwake delve. Lets us credit `chapter1Cleared` even if the player then
    * presses south, dies in Ch2, and the delve technically fails.
    */
@@ -167,11 +167,11 @@ export interface DelveState {
    */
   ascensionLevel?: number;
   /**
-   * How many chapters THIS run spans — the base game's Cells→Irenicus arc
+   * How many chapters THIS run spans — the base game's Cells→Velnaris arc
    * (`BASE_GAME_CHAPTERS` = 11) or the full New Game+ chain to the Throne
    * (`TOTAL_CHAPTERS` = 14). Stamped at delve creation so finishDelve fires the
    * win when the run beats its OWN final chapter instead of a global constant:
-   * a base run ends on Irenicus, a NG+ run on Melissan. Absent on legacy
+   * a base run ends on Velnaris, a NG+ run on Maevra. Absent on legacy
    * hand-built delves, which fall back to the full chain.
    */
   chapterCount?: number;

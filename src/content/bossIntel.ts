@@ -14,7 +14,7 @@ import { CHAPTER14_BOSS_INTEL } from '../engine/delve/chapter14Pools';
  * chapter boss.
  *
  * The intel beat is a BG2-style preparatory room (the Twisted Rune door, the
- * approach to Bodhi's lair). Reading the room no longer dumps a stat sheet —
+ * approach to Velora's lair). Reading the room no longer dumps a stat sheet —
  * once a boss is memorised, raw numbers are worthless. Instead each choice
  * grants a *combat* edge consumed at the boss fight:
  *   1. Find the weak spot (free)   — `weak-spot`: advantage on your opening strike.
@@ -29,7 +29,7 @@ import { CHAPTER14_BOSS_INTEL } from '../engine/delve/chapter14Pools';
 export interface BossIntelCard {
   /** Monster def id this card foreshadows. Matches the boss room's monster. */
   bossDefId: string;
-  /** Chapter index (1-14, the full chain through the Throne of Bhaal finale). Scales the `battle-plan` temp-HP gird. */
+  /** Chapter index (1-14, the full chain through the Throne of the Slain God finale). Scales the `battle-plan` temp-HP gird. */
   chapter: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
   /** Title shown on the intel event room. */
   roomTitle: string;
@@ -62,7 +62,7 @@ export function bossIntelCoinCost(chapter: BossIntelCard['chapter']): number {
 }
 
 export const BOSS_INTEL_CARDS: BossIntelCard[] = [
-  // ─── Ch1 · Ilyich ─────────────────────────────────────────────────────
+  // ─── Ch1 · Karzok ─────────────────────────────────────────────────────
   {
     bossDefId: 'duergar-ilyich',
     chapter: 1,
@@ -74,7 +74,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     battlePlanResolution:
       "You read the shrine and then the worn place on the floor, and you map the whole approach. He opens patient, swings two-handed, and only breaks into the rage once the wound is honest. You walk in with the first cut planned and your guard already set for the turn.",
     walkPastResolution:
-      "You step past the shrine without breaking stride. Somewhere in the rock the dust shifts as if a god noted the going. The gods reward the bold — Ilyich's purse will weigh a touch heavier when it falls.",
+      "You step past the shrine without breaking stride. Somewhere in the rock the dust shifts as if a god noted the going. The gods reward the bold — Karzok's purse will weigh a touch heavier when it falls.",
     coinCost: bossIntelCoinCost(1),
   },
   // ─── Ch2 · The Magistrate ─────────────────────────────────────────────
@@ -113,7 +113,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     chapter: 4,
     roomTitle: 'A Devotional Antechamber',
     roomFlavor:
-      "A small antechamber set into the temple corridor — a low basalt slab as an altar, a cup of priestess-cured venom evaporating slow in the air, a thumb-vial of fresh blood crusted around the rim. On the wall in arterial red, the eight-legged sigil of Lolth, and beneath it a litany scratched in drow script: BE STILL FOR THE SPIDER · BE STILL FOR THE PRIESTESS · BE STILL FOR THE TURN OF THE FANG. The stone has been knelt on. The kneel has been deep.",
+      "A small antechamber set into the temple corridor — a low basalt slab as an altar, a cup of priestess-cured venom evaporating slow in the air, a thumb-vial of fresh blood crusted around the rim. On the wall in arterial red, the eight-legged sigil of Arachne, and beneath it a litany scratched in drow script: BE STILL FOR THE SPIDER · BE STILL FOR THE PRIESTESS · BE STILL FOR THE TURN OF THE FANG. The stone has been knelt on. The kneel has been deep.",
     weakSpotResolution:
       "You read the litany the way a sacrifice reads it. The prayer comes first — be still — and the venom-edge after. Knowing the stilling is the opener, you set your first cut to land before she finishes the words.",
     battlePlanResolution:
@@ -199,7 +199,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
       "You leave the mask where it lies and the warning unread, and step past the dressing-table without slowing. On the empty throne ahead a courtly shape inclines its head, charmed, as though you have already agreed to something. The bold take the throne-room on their own terms — and what the Court sheds for you will weigh a touch heavier when the last mask finally comes off and there is nothing beneath it after all.",
     coinCost: bossIntelCoinCost(9),
   },
-  // ─── Ch10-14 · the BG2 endgame (Suldanessellar → the Throne of Bhaal) ──
+  // ─── Ch10-14 · the BG2 endgame (Tor Maladin → the Throne of the Slain God) ──
   // Authored alongside their pools and folded in here; the chapter union above
   // is widened to 14 to admit them. Each follows the same 5·ch²+20·ch cost curve.
   CHAPTER10_BOSS_INTEL,

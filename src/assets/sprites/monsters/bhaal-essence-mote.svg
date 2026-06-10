@@ -2,7 +2,7 @@
       viewBox="0 0 24 32"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Bhaal-Essence Mote"
+      aria-label="The Slain God-Essence Mote"
     >
       <!-- Murderous backlight bloom -->
       <ellipse cx="12" cy="18" rx="11" ry="13" fill="#8c1810" opacity="0.16" />

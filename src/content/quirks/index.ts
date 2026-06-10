@@ -3,7 +3,7 @@ import { QuirkSchema, type Quirk } from '../../schemas/quirk';
 const RAW: Quirk[] = [
   QuirkSchema.parse({
     id: 'tymoras-eye',
-    name: "Tymora's Eye",
+    name: "Tyche's Eye",
     sentiment: 'boon',
     flavor:
       'The lady of luck has lent you a single coin of her favour. You feel it pressing against your ribs.',

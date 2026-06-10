@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Corrupted Suldanessellar War-Priest — Chapter 10 mid. A priest of Rillifane
+ * Corrupted Tor Maladin War-Priest — Chapter 10 mid. A priest of Rillifane
  * Rallathil turned to the captor's rite. It mends its fellow corrupted with a
  * `sustain` heal, hollows the player with a `weakened` debuff (a hymn that
  * unmakes), and clubs with a censer-mace. The dangerous kind of fallen: a

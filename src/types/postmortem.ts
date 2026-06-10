@@ -5,7 +5,7 @@
  * when the player clicks REINCARNATE.
  */
 export interface Postmortem {
-  /** Display name of the killer (e.g. "Magistrate", "Ilyich"). */
+  /** Display name of the killer (e.g. "Magistrate", "Karzok"). */
   killerName: string;
   /** Monster def id of the killer, when known. Lets the postmortem deep-link to the codex. */
   killerDefId?: string;

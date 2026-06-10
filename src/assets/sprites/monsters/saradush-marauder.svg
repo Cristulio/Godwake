@@ -2,7 +2,7 @@
       viewBox="0 0 34 44"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Saradush Marauder"
+      aria-label="Karthen Marauder"
     >
       <!-- Warm raid-fire backlight + ground shadow -->
       <ellipse cx="17" cy="24" rx="14" ry="20" fill="#a85a20" opacity="0.07" />

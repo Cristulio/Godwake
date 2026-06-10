@@ -68,7 +68,7 @@ export interface AchievementContext {
   classesPlayed: readonly string[];
   /** Highest ascension at which any run beat its final boss. -1 if never. */
   highestClearAscension: number;
-  /** Highest ascension at which the FULL chain (Melissan) fell. -1 if never. */
+  /** Highest ascension at which the FULL chain (Maevra) fell. -1 if never. */
   highestThroneAscension: number;
   /** Battles won with exactly 1 HP remaining (cumulative). */
   lowHpWins: number;
@@ -89,9 +89,9 @@ const MARTIAL_CLASS_IDS: readonly string[] = PLAYABLE_CLASS_IDS.filter(
   (id) => !CASTER_CLASS_IDS.includes(id),
 );
 
-/** Irenicus is the Chapter-11 boss; the base chain is 11 chapters long. */
+/** Velnaris is the Chapter-11 boss; the base chain is 11 chapters long. */
 const IRENICUS_CHAPTER = 11;
-/** The Throne of Bhaal chapters open at Chapter 12. */
+/** The Throne of the Slain God chapters open at Chapter 12. */
 const THRONE_CHAPTER = 12;
 /** Slain-by flavour keys off the common goblin's bestiary def. */
 const GOBLIN_DEF_ID = 'goblin';
@@ -156,21 +156,21 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'the-mage-unmade',
     name: 'The Mage Unmade',
-    description: 'Climb to the heart of the work and cut down Irenicus himself.',
+    description: 'Climb to the heart of the work and cut down Velnaris himself.',
     category: 'progression',
     criteria: (c) => c.chaptersCleared >= IRENICUS_CHAPTER,
   },
   {
     id: 'beyond-the-cells',
     name: 'Beyond the Cells',
-    description: 'Pass the mage who made you and ascend into the Throne of Bhaal.',
+    description: 'Pass the mage who made you and ascend into the Throne of the Slain God.',
     category: 'progression',
     criteria: (c) => c.chaptersCleared >= THRONE_CHAPTER,
   },
   {
     id: 'godwake',
     name: 'Godwake',
-    description: 'Unmake Melissan at the Throne and let the harvest spill back into the dark.',
+    description: 'Unmake Maevra at the Throne and let the harvest spill back into the dark.',
     category: 'progression',
     criteria: (c) => c.throneCompleted,
   },
@@ -256,7 +256,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'throne-of-the-deepest-dark',
     name: 'Throne of the Deepest Dark',
-    description: 'Unmake Melissan at the Throne while bearing the weight of Ascension 6.',
+    description: 'Unmake Maevra at the Throne while bearing the weight of Ascension 6.',
     category: 'challenge',
     criteria: (c) => c.highestThroneAscension >= 6,
   },
@@ -300,14 +300,14 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'bard-last-verse',
     name: 'The Last Verse',
-    description: 'Cut down Irenicus with nothing but a Bard and a song.',
+    description: 'Cut down Velnaris with nothing but a Bard and a song.',
     category: 'challenge',
     criteria: (c) => clearedWith(c, 'bard', IRENICUS_CHAPTER),
   },
   {
     id: 'bard-the-show-goes-on',
     name: 'The Show Goes On',
-    description: 'Carry the Bard past Irenicus and into the Throne of Bhaal.',
+    description: 'Carry the Bard past Velnaris and into the Throne of the Slain God.',
     category: 'challenge',
     criteria: (c) => clearedWith(c, 'bard', THRONE_CHAPTER),
   },
@@ -410,7 +410,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'eight-masters',
     name: 'Eight Masters',
-    description: 'Cut down Irenicus with all eight class-souls in turn.',
+    description: 'Cut down Velnaris with all eight class-souls in turn.',
     category: 'completionist',
     criteria: (c) => PLAYABLE_CLASS_IDS.every((id) => clearedWith(c, id, IRENICUS_CHAPTER)),
   },

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '../ui/Button';
-import { Imoen, Irenicus as IrenicusPortrait, Melissan as MelissanPortrait } from './NpcPortrait';
+import { Inara, Velnaris as IrenicusPortrait, Maevra as MelissanPortrait } from './NpcPortrait';
 import { useMetaStore } from '../../stores/metaStore';
 import { useInputBlock } from '../ui/useInputBlock';
 import { useT } from '../../i18n/useT';
@@ -20,18 +20,18 @@ export type TauntContext =
 export type SoulVoiceSpeaker = 'irenicus' | 'imoen' | 'melissan';
 
 // The soul-bond pair are the only voices that evolve across every arc context.
-// Melissan presides solely over the Throne chapters (Ch12-13) and whispers only
+// Maevra presides solely over the Throne chapters (Ch12-13) and whispers only
 // on chapter-clear, so she carries no arc pools.
 type ArcSpeaker = 'irenicus' | 'imoen';
 
 // Pre-reveal labels for the soul-bond NPCs live in the scenes locale
 // (scenes.soulVoice.voice / .whisper). The player only sees the real name
-// after an in-game introduction beat (see metaStore.knownNpcs). Melissan is the
+// after an in-game introduction beat (see metaStore.knownNpcs). Maevra is the
 // openly-named "kind ally" all along, so she is never masked behind a label.
 const REAL_NAME: Record<SoulVoiceSpeaker, string> = {
-  irenicus: 'Irenicus',
-  imoen: 'Imoen',
-  melissan: 'Melissan',
+  irenicus: 'Velnaris',
+  imoen: 'Inara',
+  melissan: 'Maevra',
 };
 
 /**
@@ -39,8 +39,8 @@ const REAL_NAME: Record<SoulVoiceSpeaker, string> = {
  * `chaptersCleared` (the all-time high-water mark on metaStore) is the arc
  * axis: 0 = still in the Iron Cells, 4 = the whole chain has fallen.
  *
- *   Irenicus: clinical curiosity → genuine investment → revealing the bond.
- *   Imoen:    distant frightened whisper → "I can almost see you" → "you're
+ *   Velnaris: clinical curiosity → genuine investment → revealing the bond.
+ *   Inara:    distant frightened whisper → "I can almost see you" → "you're
  *             close, find me."
  */
 type VoiceTier = 'early' | 'mid' | 'late';
@@ -63,7 +63,7 @@ export function progressionTier(chaptersCleared: number): VoiceTier {
 }
 
 // chapter-clear lines name specific chapters, so they are keyed by the chapter
-// actually cleared (1 = Tresendar, 2 = Athkatla, 3 = Spellhold, 4 = Ust Natha)
+// actually cleared (1 = Tresendar, 2 = Stormhaven, 3 = Glassreach, 4 = Zhal Vasha)
 // rather than picked at random.
 export const CHAPTER_CLEAR: Record<SoulVoiceSpeaker, Record<number, string[]>> = {
   irenicus: {
@@ -73,16 +73,16 @@ export const CHAPTER_CLEAR: Record<SoulVoiceSpeaker, Record<number, string[]>> =
       'You begin to surprise me. I had not expected this much of you.',
     ],
     2: [
-      'Athkatla bleeds gold, and you have learned to draw it. Useful.',
+      'Stormhaven bleeds gold, and you have learned to draw it. Useful.',
       'One more door behind you. There are still more in front than you imagine.',
       'You think this is a victory. You are wrong, but the mistake is instructive.',
     ],
     3: [
-      'Spellhold sealed me once. You will be the one to pry it open. How fitting.',
+      'Glassreach sealed me once. You will be the one to pry it open. How fitting.',
       'Three doors. I no longer pretend I am only measuring you. Somewhere past the second, I began to hope. Keep walking.',
     ],
     4: [
-      'Ust Natha is the throat of the Underdark. Walk it. Do not cough.',
+      'Zhal Vasha is the throat of the Deepdark. Walk it. Do not cough.',
       "The spider's city. The last door but one. You should know by now what I have made of you — what we have made of each other. The experiment was never only your soul. It was whether I would still wish to end it, once I knew you. I do not.",
     ],
   },
@@ -104,19 +104,19 @@ export const CHAPTER_CLEAR: Record<SoulVoiceSpeaker, Record<number, string[]>> =
       "That's the last big door but one. I can almost SEE you now — I swear I can. One more and you're here. Come and get me. Please come and get me.",
     ],
   },
-  // The false ally unmasking through the Throne. Ch12 = the Siege of Saradush
-  // (Yaga-Shura), Ch13 = the last of the Five (Sendai, Abazigal). Ch14 is her
+  // The false ally unmasking through the Throne. Ch12 = the Siege of Karthen
+  // (Hargan-Vor), Ch13 = the last of the Five (Szendra, Korvazel). Ch14 is her
   // own death — the Throne finale fires there, so she has no chapter-clear line.
   melissan: {
     12: [
-      'Saradush burned, and out of the fire you came carrying what none of the others could hold. I never doubted you would. Of all of them, you were always the most.',
-      'Yaga-Shura believed the essence had made him a god. It only made him a fuller cup — and you poured him out so cleanly. Walk on. I will show you the road, as I have shown you every road.',
+      'Karthen burned, and out of the fire you came carrying what none of the others could hold. I never doubted you would. Of all of them, you were always the most.',
+      'Hargan-Vor believed the essence had made him a god. It only made him a fuller cup — and you poured him out so cleanly. Walk on. I will show you the road, as I have shown you every road.',
       'One of the Five is ash. I would not have asked this of the others; only you were ever strong enough to carry it. Rest, and then come to me. We are not so far apart now.',
     ],
     13: [
       'The Five are five no longer. One by one you have gathered them back — to you, to what you bear. So much, in a single vessel, walking willingly on. I could almost weep.',
       'Only the Throne stands between us now, and the kind road I have kept at your side this whole long way. Did you never wonder why I was always there, at the lip of every grief? No matter. We are nearly home.',
-      'Sendai, Abazigal — folded back into the whole. You did not keep a drop of what spilled from them; you never can. Good. Bring it onward. I have waited so very long, and the waiting is almost done.',
+      'Szendra, Korvazel — folded back into the whole. You did not keep a drop of what spilled from them; you never can. Good. Bring it onward. I have waited so very long, and the waiting is almost done.',
     ],
   },
 };
@@ -410,7 +410,7 @@ export function selectSoulVoiceLine(
   const seed = progression.seed;
   if (context === 'chapter-clear') {
     const byChapter = CHAPTER_CLEAR[speaker];
-    // Look up the chapter actually cleared first (Melissan's Throne keys are
+    // Look up the chapter actually cleared first (Maevra's Throne keys are
     // 12-13, outside the 1-4 base range), then fall back to the clamped base
     // chapter, then to whatever pool the speaker has.
     const raw = Math.floor(progression.clearedChapter ?? progression.chaptersCleared ?? 1);
@@ -478,7 +478,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
   const deathCount = useMetaStore((s) => s.deathCount);
   const hasReincarnated = useMetaStore((s) => s.hasReincarnated);
   // Only the two mystery soul-bond voices hide behind a pre-reveal label;
-  // Melissan is the openly-named ally throughout, so her bubble always names her.
+  // Maevra is the openly-named ally throughout, so her bubble always names her.
   const needsReveal = speaker === 'irenicus' || speaker === 'imoen';
   const isKnown = useMetaStore((s) => s.knownNpcs.includes(speaker));
   const speakerLabel =
@@ -571,12 +571,12 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
   const buttonVariant = isIrenicus ? 'danger' : 'primary';
 
   const PortraitGlyph =
-    speaker === 'irenicus' ? IrenicusPortrait : speaker === 'melissan' ? MelissanPortrait : Imoen;
+    speaker === 'irenicus' ? IrenicusPortrait : speaker === 'melissan' ? MelissanPortrait : Inara;
 
   const overlayRef = useInputBlock<HTMLDivElement>();
 
   // Tail / arrow points from the bubble back toward the portrait. For
-  // Irenicus the portrait sits on the right, so the tail points right.
+  // Velnaris the portrait sits on the right, so the tail points right.
   const tailSide = isIrenicus ? 'right-[12.5rem]' : 'left-[12.5rem]';
   const portraitFrameTint = isIrenicus
     ? 'border-[var(--color-accent-blood)] shadow-[0_0_20px_rgba(181,48,44,0.55)] bg-[#1a0a14]'
@@ -594,7 +594,7 @@ export function IrenicusTaunt({ speaker, context, onDismiss, seed = 0, chapter, 
       onMouseUp={() => setHolding(false)}
       onMouseLeave={() => setHolding(false)}
     >
-      {/* Layout: portrait + bubble in a row. Imoen on left, Irenicus on right. */}
+      {/* Layout: portrait + bubble in a row. Inara on left, Velnaris on right. */}
       <div
         className={`flex items-end gap-3 md:gap-5 max-w-3xl w-full ${
           isIrenicus ? 'flex-row-reverse' : 'flex-row'

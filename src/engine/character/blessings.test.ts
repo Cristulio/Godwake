@@ -236,7 +236,7 @@ describe('aggregateBlessingModifiers — non-stacking fields take max-of-individ
     });
   });
 
-  it('SUMS critRangeBonus (Tempus + Tymora stack to +2 → crit on 18–20)', () => {
+  it('SUMS critRangeBonus (Ares + Tyche stack to +2 → crit on 18–20)', () => {
     const pool: Blessing[] = [
       fakeBlessing('tempus', { critRangeBonus: 1 }),
       fakeBlessing('tymora', { critRangeBonus: 1 }),
@@ -247,7 +247,7 @@ describe('aggregateBlessingModifiers — non-stacking fields take max-of-individ
     });
   });
 
-  it('takes max-of-individual for damageBonus (Mystra + Silvanus would otherwise reach +2/hit)', () => {
+  it('takes max-of-individual for damageBonus (Hecate + Silvanus would otherwise reach +2/hit)', () => {
     const pool: Blessing[] = [
       fakeBlessing('mystra', { damageBonus: 1 }),
       fakeBlessing('silv', { damageBonus: 1 }),
@@ -258,7 +258,7 @@ describe('aggregateBlessingModifiers — non-stacking fields take max-of-individ
     });
   });
 
-  it('takes max-of-individual for holyDamageBonus (Helm + Lathander would otherwise reach +2/hit)', () => {
+  it('takes max-of-individual for holyDamageBonus (Argus + Eos would otherwise reach +2/hit)', () => {
     const pool: Blessing[] = [
       fakeBlessing('helm', { holyDamageBonus: 1 }),
       fakeBlessing('lath', { holyDamageBonus: 1 }),
@@ -271,7 +271,7 @@ describe('aggregateBlessingModifiers — non-stacking fields take max-of-individ
 });
 
 describe('aggregateBlessingModifiers — remaining sum-style fields', () => {
-  it('still sums extraStabiliseCharges (Ilmater + Tymora)', () => {
+  it('still sums extraStabiliseCharges (Atlas + Tyche)', () => {
     const pool: Blessing[] = [
       fakeBlessing('ilm', { extraStabiliseCharges: 1 }),
       fakeBlessing('tym', { extraStabiliseCharges: 1 }),
@@ -396,7 +396,7 @@ describe('rollBlessingOptions — v2 levers stack/non-stack offer rules', () => 
 describe('getBlessingCategory', () => {
   it('buckets the three AC blessings the player saw together as one category', async () => {
     const { getBlessing, getBlessingCategory } = await import('../../content/blessings');
-    // Helm's Vigil (+2 AC full) / Mystra's Ward (+1 AC) / Ilmater's Forbearance
+    // Argus's Vigil (+2 AC full) / Hecate's Ward (+1 AC) / Atlas's Forbearance
     // (+2 AC bloodied) — the trio that all showed in one offer. All defensive.
     const cats = ['helms-vigil', 'mystras-ward', 'ilmaters-forbearance'].map((id) =>
       getBlessingCategory(getBlessing(id)),

@@ -267,7 +267,7 @@ export interface Character {
    */
   campBoons?: string[];
   /**
-   * Per-delve mutable budgets (Tymora's Eye reroll counter, etc.). Optional so
+   * Per-delve mutable budgets (Tyche's Eye reroll counter, etc.). Optional so
    * legacy saves rehydrate without migration; treat undefined fields as 0.
    * Initialized in startDelve, mutated in combat, dropped at delve end.
    */
@@ -276,7 +276,7 @@ export interface Character {
     /**
      * Stabilise charges already spent this delve. Available charges =
      * 1 (free) + extraStabiliseCharges (from blessings) - stabilisesUsed.
-     * Recomputed on every applyDamage call so mid-delve Ilmater pickups count.
+     * Recomputed on every applyDamage call so mid-delve Atlas pickups count.
      */
     stabilisesUsed?: number;
   };
@@ -336,7 +336,7 @@ export interface Character {
   wheelturnerUnlocked?: boolean;
   /**
    * Grove upgrade: extra stabilise charges per delve (Hardier Soul). Stacks
-   * with Ilmater's Patience (blessing). Reset at delve start.
+   * with Atlas's Patience (blessing). Reset at delve start.
    */
   delveStabiliseBonus?: number;
   /**
