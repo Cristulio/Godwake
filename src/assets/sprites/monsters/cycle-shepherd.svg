@@ -1,69 +1,128 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 40"
+      viewBox="0 0 32 53"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Cycle-Shepherd"
     >
-      <!-- Cold gate backlight + ground shadow -->
-      <ellipse cx="12" cy="22" rx="13" ry="18" fill="#4a8a80" opacity="0.08" />
-      <ellipse cx="12" cy="38" rx="9" ry="1.5" fill="#000" opacity="0.4" />
+      <!-- Godwake-teal backlight + ground shadow -->
+      <ellipse cx="16" cy="25" rx="15" ry="23" fill="#7ad8c8" opacity="0.08" />
+      <ellipse cx="16" cy="51.6" rx="10" ry="1.8" fill="#000" opacity="0.42" />
 
-      <!-- Deep hood — ramp with a warm-grey lit ridge + cool rim -->
-      <polygon points="11,1 7,5 7,12 17,12 17,5 13,1" fill="#2a2c34" />
-      <polygon points="11,1 8,5 8,11 16,11 16,5 13,1" fill="#1a1c24" />
-      <polygon points="11,1 7,5 8,5 12,2" fill="#3a3c44" opacity="0.7" />
-      <polygon points="13,1 17,5 16,5 12,2" fill="#4a4c54" opacity="0.4" />
-      <rect x="16" y="5" width="1" height="7" fill="#4a7a72" opacity="0.4" />
+      <!-- ── Shepherd's crook — tall, crowned with the cycle-ring ── -->
+      <rect x="26" y="4" width="3" height="44" fill="#150d08" />
+      <rect x="27" y="5" width="1" height="42" fill="#2a2c34" />
+      <rect x="27" y="5" width="1" height="14" fill="#3a3c44" />
+      <!-- the cycle-ring head — a teal circle, broken once -->
+      <ellipse cx="27.5" cy="4" rx="4.6" ry="4.6" fill="#7ad8c8" opacity="0.22" />
+      <rect x="24" y="0" width="7" height="2" fill="#150d08" />
+      <rect x="23" y="1" width="3" height="6" fill="#150d08" />
+      <rect x="29" y="1" width="3" height="6" fill="#150d08" />
+      <rect x="24" y="6" width="7" height="2" fill="#150d08" />
+      <rect x="25" y="1" width="5" height="1" fill="#7ad8c8" />
+      <rect x="25" y="1" width="2" height="1" fill="#d4fff4" />
+      <rect x="24" y="2" width="1" height="4" fill="#5ab8a8" />
+      <rect x="30" y="2" width="1" height="4" fill="#7ad8c8" />
+      <rect x="25" y="6" width="5" height="1" fill="#4a9888" />
+      <!-- the break in the ring -->
+      <rect x="29" y="5" width="2" height="2" fill="#150d08" />
 
-      <!-- Shadowed face, two cold eyes -->
-      <rect x="9" y="7" width="6" height="4" fill="#0a0c12" />
-      <rect x="9" y="8" width="2" height="2" fill="#7ad8c8" />
-      <rect x="13" y="8" width="2" height="2" fill="#7ad8c8" />
-      <rect x="9" y="8" width="1" height="1" fill="#d4fff4" />
-      <rect x="13" y="8" width="1" height="1" fill="#d4fff4" />
-      <rect x="10" y="9" width="1" height="1" fill="#4a8a80" />
+      <!-- ── Deep cowl — night-dark wool, nothing but teal eyes ── -->
+      <rect x="9" y="2" width="13" height="4" fill="#150d08" />
+      <rect x="10" y="3" width="11" height="3" fill="#2a2c34" />
+      <rect x="10" y="3" width="5" height="1" fill="#3a3c44" />
+      <rect x="7" y="6" width="17" height="8" fill="#150d08" />
+      <rect x="8" y="7" width="15" height="6" fill="#2a2c34" />
+      <rect x="8" y="7" width="15" height="1" fill="#3a3c44" />
+      <rect x="8" y="7" width="3" height="6" fill="#32343c" />
+      <rect x="8" y="7" width="1" height="4" fill="#42444c" />
+      <rect x="20" y="8" width="3" height="5" fill="#1a1c24" />
+      <!-- the hood's hollow -->
+      <rect x="10" y="9" width="11" height="4" fill="#0a1410" />
+      <rect x="11" y="10" width="9" height="3" fill="#06201c" />
+      <!-- teal shepherd eyes — patient, paired -->
+      <rect x="12" y="10" width="2" height="2" fill="#7ad8c8" />
+      <rect x="17" y="10" width="2" height="2" fill="#5ab8a8" />
+      <rect x="12" y="10" width="1" height="1" fill="#d4fff4" />
+      <rect x="17" y="10" width="1" height="1" fill="#a8ece0" />
 
-      <!-- Robe — ramp, lit left fold + cool right rim -->
-      <polygon points="7,12 17,12 20,38 4,38" fill="#2a2c34" />
-      <polygon points="7,12 17,12 18,26 6,26" fill="#34363e" />
-      <polygon points="7,12 11,12 9,38 5,38" fill="#3a3c44" opacity="0.6" />
-      <polygon points="16,12 17,12 20,38 17,38" fill="#1a1c24" opacity="0.7" />
-      <rect x="11" y="12" width="2" height="24" fill="#3a3c44" />
-      <!-- Robe dither -->
-      <rect x="9" y="22" width="1" height="1" fill="#1a1c24" />
-      <rect x="15" y="28" width="1" height="1" fill="#34363e" />
-      <rect x="13" y="32" width="1" height="1" fill="#1a1c24" />
+      <!-- ── Mantle hung with passage-bells ── -->
+      <rect x="5" y="14" width="22" height="5" fill="#150d08" />
+      <rect x="6" y="15" width="20" height="3" fill="#2a2c34" />
+      <rect x="6" y="15" width="20" height="1" fill="#42444c" />
+      <rect x="6" y="15" width="5" height="1" fill="#52545c" />
+      <rect x="22" y="15" width="4" height="3" fill="#1a1c24" />
+      <!-- three small bells along the mantle edge -->
+      <rect x="8" y="18" width="2" height="2" fill="#150d08" />
+      <rect x="8" y="18" width="1" height="1" fill="#7a8a88" />
+      <rect x="14" y="18" width="2" height="2" fill="#150d08" />
+      <rect x="14" y="18" width="1" height="1" fill="#9aaaa8" />
+      <rect x="20" y="18" width="2" height="2" fill="#150d08" />
+      <rect x="20" y="18" width="1" height="1" fill="#6a7a78" />
 
-      <!-- Left arm holding the bone crook -->
-      <rect x="4" y="14" width="3" height="10" fill="#2a2c34" />
-      <rect x="4" y="14" width="1" height="10" fill="#3a3c44" />
-      <rect x="6" y="14" width="1" height="10" fill="#1a1c24" />
+      <!-- ── Robe — long night-wool, teal soul-lantern within ── -->
+      <rect x="6" y="19" width="20" height="22" fill="#150d08" />
+      <rect x="7" y="20" width="18" height="20" fill="#22242c" />
+      <rect x="7" y="20" width="18" height="1" fill="#32343c" />
+      <rect x="7" y="20" width="3" height="19" fill="#2a2c34" />
+      <rect x="7" y="20" width="1" height="15" fill="#3a3c44" />
+      <rect x="22" y="20" width="3" height="19" fill="#16181e" />
+      <rect x="24" y="21" width="1" height="18" fill="#101216" />
+      <!-- the gathered-souls lantern glowing through the cloth -->
+      <ellipse cx="15" cy="28" rx="5.4" ry="6" fill="#7ad8c8" opacity="0.18" />
+      <rect x="12" y="24" width="6" height="8" fill="#0a2420" />
+      <rect x="13" y="25" width="4" height="6" fill="#0e3c34" />
+      <rect x="13" y="26" width="4" height="4" fill="#1a6054" />
+      <rect x="14" y="27" width="2" height="2" fill="#3aa092" />
+      <rect x="14" y="27" width="1" height="1" fill="#a8ece0" />
+      <!-- small soul-shapes drifting inside the glow -->
+      <rect x="13" y="25" width="1" height="1" fill="#7ad8c8" opacity="0.8" />
+      <rect x="16" y="29" width="1" height="1" fill="#7ad8c8" opacity="0.7" />
+      <rect x="15" y="24" width="1" height="1" fill="#5ab8a8" opacity="0.6" />
+      <!-- wool weave dither -->
+      <rect x="9" y="23" width="1" height="1" fill="#32343c" />
+      <rect x="20" y="26" width="1" height="1" fill="#16181e" />
+      <rect x="10" y="34" width="1" height="1" fill="#2a2c34" />
 
-      <!-- Bone crook — bone ramp + specular, cold ember at the curl -->
-      <rect x="2" y="-1" width="2" height="32" fill="#a89878" />
-      <rect x="2" y="-1" width="1" height="32" fill="#c8c0b0" />
-      <rect x="3" y="-1" width="1" height="32" fill="#8c7a52" />
-      <path d="M3 0 q5 -2 5 4 q0 4 -4 4" fill="none" stroke="#a89878" stroke-width="1.6" />
-      <path d="M3 0 q5 -2 5 4" fill="none" stroke="#c8c0b0" stroke-width="0.6" />
-      <circle cx="3" cy="0" r="1.4" fill="#7ad8c8" opacity="0.6" />
-      <rect x="3" y="-1" width="1" height="1" fill="#e0d8c8" />
+      <!-- ── Left arm — hand open, beckoning the strays ── -->
+      <rect x="2" y="19" width="6" height="11" fill="#150d08" />
+      <rect x="3" y="20" width="4" height="9" fill="#22242c" />
+      <rect x="3" y="20" width="1" height="9" fill="#32343c" />
+      <rect x="6" y="20" width="1" height="9" fill="#1a1c24" />
+      <rect x="2" y="29" width="5" height="3" fill="#150d08" />
+      <rect x="3" y="30" width="3" height="1" fill="#3a4a48" />
+      <!-- pale beckoning fingers, teal-rimmed -->
+      <rect x="2" y="32" width="1" height="2" fill="#150d08" />
+      <rect x="4" y="32" width="1" height="2" fill="#150d08" />
+      <rect x="6" y="32" width="1" height="2" fill="#150d08" />
+      <rect x="2" y="32" width="1" height="1" fill="#7ad8c8" />
+      <rect x="4" y="32" width="1" height="1" fill="#5ab8a8" />
+      <rect x="6" y="32" width="1" height="1" fill="#7ad8c8" />
 
-      <!-- Right arm lowering toward the seam -->
-      <rect x="17" y="14" width="3" height="9" fill="#2a2c34" />
-      <rect x="19" y="14" width="1" height="9" fill="#1a1c24" />
-      <rect x="18" y="22" width="3" height="2" fill="#4a4c54" />
-      <rect x="18" y="22" width="3" height="1" fill="#5a5c64" />
+      <!-- ── Right arm — gripping the crook ── -->
+      <rect x="21" y="19" width="6" height="10" fill="#150d08" />
+      <rect x="22" y="20" width="4" height="8" fill="#1a1c24" />
+      <rect x="22" y="20" width="1" height="8" fill="#22242c" />
+      <rect x="23" y="28" width="5" height="3" fill="#150d08" />
+      <rect x="24" y="29" width="3" height="1" fill="#2a2c34" />
 
-      <!-- Gate-seam of cold light it pulls from -->
-      <ellipse cx="17" cy="36" rx="5" ry="1.6" fill="#7ad8c8" opacity="0.45" />
-      <ellipse cx="17" cy="36" rx="2.5" ry="0.9" fill="#d4fff4" opacity="0.4" />
-      <rect x="15" y="30" width="1" height="6" fill="#7ad8c8" opacity="0.55" />
-      <rect x="18" y="28" width="1" height="8" fill="#7ad8c8" opacity="0.55" />
-      <rect x="18" y="28" width="1" height="3" fill="#d4fff4" opacity="0.4" />
+      <!-- ── Hem — trailing into mist, no feet ── -->
+      <rect x="7" y="41" width="18" height="6" fill="#150d08" />
+      <rect x="8" y="42" width="16" height="4" fill="#1c1e26" />
+      <rect x="8" y="42" width="16" height="1" fill="#2a2c34" />
+      <rect x="8" y="42" width="3" height="4" fill="#22242c" />
+      <rect x="21" y="42" width="3" height="4" fill="#14161c" />
+      <rect x="12" y="43" width="1" height="3" fill="#101216" />
+      <rect x="17" y="43" width="1" height="3" fill="#101216" />
+      <!-- mist curling at the hem -->
+      <rect x="6" y="47" width="20" height="2" fill="#22242c" opacity="0.6" />
+      <rect x="8" y="49" width="16" height="1" fill="#2a2c34" opacity="0.4" />
+      <rect x="10" y="50" width="12" height="1" fill="#3a4a48" opacity="0.3" />
+      <rect x="13" y="51" width="6" height="1" fill="#3a6a60" opacity="0.2" />
 
-      <!-- Hem -->
-      <polygon points="4,38 7,34 10,38" fill="#1a1c24" />
-      <polygon points="10,38 13,34 16,38" fill="#1a1c24" />
-      <polygon points="16,38 19,34 20,38" fill="#1a1c24" />
-      <polygon points="4,38 7,35 10,38" fill="#2a2c34" opacity="0.6" />
+      <!-- ── Stray soul-motes following the shepherd ── -->
+      <rect x="3" y="12" width="1" height="1" fill="#7ad8c8" opacity="0.55" />
+      <rect x="29" y="16" width="1" height="1" fill="#7ad8c8" opacity="0.5" />
+      <rect x="2" y="38" width="1" height="1" fill="#5ab8a8" opacity="0.45" />
+      <rect x="30" y="34" width="1" height="1" fill="#7ad8c8" opacity="0.4" />
+      <rect x="5" y="44" width="1" height="1" fill="#a8ece0" opacity="0.35" />
     </svg>

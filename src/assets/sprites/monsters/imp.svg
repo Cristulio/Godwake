@@ -1,121 +1,166 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 28"
+      viewBox="0 0 30 38"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Imp"
     >
       <!-- Hellfire backlight + ground-contact shadow -->
-      <ellipse cx="11" cy="13" rx="11" ry="13" fill="#c0301a" opacity="0.1" />
-      <ellipse cx="11" cy="26" rx="7" ry="1.4" fill="#000" opacity="0.42" />
+      <ellipse cx="15" cy="16" rx="15" ry="16" fill="#c0301a" opacity="0.1" />
+      <ellipse cx="15" cy="35.5" rx="9" ry="1.5" fill="#000" opacity="0.4" />
 
-      <!-- Bat wings — membrane ramp, lit upper edge + cool rim -->
-      <polygon points="0,9 5,4 7,11 5,14" fill="#5a1010" />
-      <polygon points="22,9 17,4 15,11 17,14" fill="#5a1010" />
-      <polygon points="1,9 5,5 6,11" fill="#7a1c10" opacity="0.85" />
-      <polygon points="21,9 17,5 16,11" fill="#7a1c10" opacity="0.85" />
-      <polygon points="2,8 5,5 5,9" fill="#a83018" opacity="0.6" />
-      <polygon points="20,8 17,5 17,9" fill="#3a0c08" opacity="0.6" />
-      <!-- Wing ribs -->
-      <line x1="2" y1="6" x2="6" y2="13" stroke="#1a0606" stroke-width="0.5" />
-      <line x1="20" y1="6" x2="16" y2="13" stroke="#1a0606" stroke-width="0.5" />
-      <line x1="5" y1="4" x2="5" y2="13" stroke="#1a0606" stroke-width="0.3" />
-      <line x1="17" y1="4" x2="17" y2="13" stroke="#1a0606" stroke-width="0.3" />
+      <!-- ── Left wing — stepped bat membrane, lit edge ── -->
+      <rect x="0" y="11" width="2" height="5" fill="#150d08" />
+      <rect x="1" y="8" width="3" height="9" fill="#150d08" />
+      <rect x="3" y="6" width="3" height="12" fill="#150d08" />
+      <rect x="6" y="7" width="3" height="12" fill="#150d08" />
+      <rect x="1" y="9" width="2" height="7" fill="#7a1c10" />
+      <rect x="3" y="7" width="2" height="10" fill="#a83018" />
+      <rect x="5" y="8" width="2" height="10" fill="#7a1c10" />
+      <rect x="7" y="9" width="2" height="9" fill="#5a1010" />
+      <!-- hot lit leading edge -->
+      <rect x="3" y="7" width="2" height="1" fill="#e8662c" />
+      <rect x="1" y="9" width="2" height="1" fill="#c44a24" />
+      <rect x="5" y="8" width="2" height="1" fill="#a83018" />
+      <!-- wing fingers -->
+      <rect x="4" y="7" width="1" height="10" fill="#3a0c08" />
+      <rect x="7" y="8" width="1" height="10" fill="#3a0c08" />
+      <!-- membrane tear -->
+      <rect x="2" y="13" width="1" height="2" fill="#150d08" />
 
-      <!-- Torso — red ramp, key light upper-left -->
-      <rect x="8" y="7" width="6" height="8" fill="#a83018" />
-      <rect x="8" y="7" width="6" height="1" fill="#c44a24" />
-      <rect x="8" y="7" width="2" height="7" fill="#c44a24" />
-      <rect x="8" y="7" width="1" height="5" fill="#e8662c" />
-      <rect x="13" y="8" width="1" height="7" fill="#6a1810" />
-      <rect x="7" y="8" width="1" height="6" fill="#8c2010" />
-      <rect x="14" y="8" width="1" height="6" fill="#3a0c08" />
-      <!-- Dither at the belly fold -->
-      <rect x="10" y="12" width="1" height="1" fill="#8c2010" />
-      <rect x="12" y="11" width="1" height="1" fill="#c44a24" />
+      <!-- ── Right wing — shadow side ── -->
+      <rect x="28" y="11" width="2" height="5" fill="#150d08" />
+      <rect x="26" y="8" width="3" height="9" fill="#150d08" />
+      <rect x="24" y="6" width="3" height="12" fill="#150d08" />
+      <rect x="21" y="7" width="3" height="12" fill="#150d08" />
+      <rect x="27" y="9" width="2" height="7" fill="#5a1010" />
+      <rect x="25" y="7" width="2" height="10" fill="#7a1c10" />
+      <rect x="23" y="8" width="2" height="10" fill="#5a1010" />
+      <rect x="21" y="9" width="2" height="9" fill="#3a0c08" />
+      <rect x="25" y="7" width="2" height="1" fill="#a83018" />
+      <rect x="27" y="12" width="1" height="2" fill="#2e4a4e" />
+      <rect x="25" y="7" width="1" height="10" fill="#2a0a06" />
+      <rect x="22" y="8" width="1" height="10" fill="#2a0a06" />
 
-      <!-- Head — ramped, snarling -->
-      <rect x="7" y="2" width="8" height="5" fill="#a83018" />
-      <rect x="7" y="2" width="8" height="1" fill="#c44a24" />
-      <rect x="7" y="2" width="2" height="4" fill="#c44a24" />
-      <rect x="7" y="2" width="1" height="3" fill="#e8662c" />
-      <rect x="14" y="2" width="1" height="5" fill="#6a1810" />
-      <rect x="8" y="6" width="6" height="2" fill="#8c2010" />
-      <polygon points="9,8 11,10 13,8" fill="#8c2010" />
-      <polygon points="9,8 11,10 11,8" fill="#a83018" />
+      <!-- ── Horns — curved keratin, dark ramp ── -->
+      <rect x="8" y="0" width="3" height="3" fill="#150d08" />
+      <rect x="9" y="1" width="1" height="2" fill="#5a2a14" />
+      <rect x="9" y="1" width="1" height="1" fill="#8c5a2a" />
+      <rect x="7" y="2" width="2" height="2" fill="#150d08" />
+      <rect x="8" y="2" width="1" height="1" fill="#3a1208" />
+      <rect x="19" y="0" width="3" height="3" fill="#150d08" />
+      <rect x="20" y="1" width="1" height="2" fill="#3a1208" />
+      <rect x="21" y="2" width="2" height="2" fill="#150d08" />
+      <rect x="21" y="2" width="1" height="1" fill="#2a1006" />
 
-      <!-- Horns — dark ramp -->
-      <rect x="6" y="0" width="1" height="3" fill="#3a1208" />
-      <rect x="15" y="0" width="1" height="3" fill="#3a1208" />
-      <rect x="6" y="0" width="1" height="1" fill="#5a2a14" />
-      <rect x="15" y="0" width="1" height="1" fill="#5a2a14" />
-      <rect x="5" y="1" width="1" height="2" fill="#2a1006" />
-      <rect x="16" y="1" width="1" height="2" fill="#2a1006" />
-      <rect x="4" y="2" width="1" height="1" fill="#2a1006" />
-      <rect x="17" y="2" width="1" height="1" fill="#2a1006" />
+      <!-- ── Head — crimson ramp, wicked grin ── -->
+      <rect x="8" y="2" width="14" height="8" fill="#150d08" />
+      <rect x="9" y="3" width="12" height="6" fill="#a83018" />
+      <rect x="9" y="3" width="12" height="1" fill="#c44a24" />
+      <rect x="9" y="3" width="3" height="6" fill="#c44a24" />
+      <rect x="9" y="3" width="1" height="4" fill="#e8662c" />
+      <rect x="9" y="3" width="1" height="2" fill="#ff9858" />
+      <rect x="18" y="4" width="3" height="5" fill="#6a1810" />
+      <rect x="20" y="5" width="1" height="4" fill="#3a0c08" />
+      <!-- arched mischief brows -->
+      <rect x="10" y="4" width="3" height="1" fill="#3a0c08" />
+      <rect x="16" y="4" width="3" height="1" fill="#2a0a06" />
 
-      <!-- Glaring eyes — yellow with red core + spark -->
-      <rect x="8" y="3" width="2" height="2" fill="#1a0606" />
-      <rect x="12" y="3" width="2" height="2" fill="#1a0606" />
-      <rect x="8" y="3" width="2" height="1" fill="#f4d042" />
-      <rect x="12" y="3" width="2" height="1" fill="#f4d042" />
-      <rect x="8" y="4" width="1" height="1" fill="#b5302c" />
-      <rect x="13" y="4" width="1" height="1" fill="#b5302c" />
-      <rect x="9" y="3" width="1" height="1" fill="#fff4a0" />
+      <!-- ── Eyes — sulfur slits with red cores ── -->
+      <rect x="10" y="5" width="3" height="2" fill="#1a0606" />
+      <rect x="16" y="5" width="3" height="2" fill="#1a0606" />
+      <rect x="10" y="5" width="3" height="1" fill="#f4d042" />
+      <rect x="16" y="5" width="3" height="1" fill="#e0b830" />
+      <rect x="11" y="5" width="1" height="2" fill="#b5302c" />
+      <rect x="17" y="5" width="1" height="2" fill="#b5302c" />
+      <rect x="10" y="5" width="1" height="1" fill="#fff4a0" />
+      <rect x="16" y="5" width="1" height="1" fill="#ffe080" />
 
-      <!-- Fanged mouth -->
-      <rect x="8" y="5" width="6" height="1" fill="#1a0606" />
-      <rect x="9" y="6" width="1" height="1" fill="#e8dcc4" />
-      <rect x="12" y="6" width="1" height="1" fill="#d4c8a8" />
+      <!-- ── Needle-toothed grin, ear to ear ── -->
+      <rect x="10" y="7" width="10" height="2" fill="#1a0606" />
+      <rect x="10" y="7" width="1" height="1" fill="#f0e6cc" />
+      <rect x="12" y="7" width="1" height="2" fill="#e8dcc4" />
+      <rect x="14" y="7" width="1" height="1" fill="#f0e6cc" />
+      <rect x="16" y="7" width="1" height="2" fill="#d4c8a8" />
+      <rect x="18" y="7" width="1" height="1" fill="#c2b794" />
+      <!-- chin spur -->
+      <rect x="13" y="9" width="3" height="2" fill="#8c2010" />
+      <rect x="13" y="9" width="1" height="1" fill="#a83018" />
 
-      <!-- Upper arms -->
-      <rect x="5" y="9" width="2" height="5" fill="#a83018" />
-      <rect x="5" y="9" width="1" height="5" fill="#c44a24" />
-      <rect x="15" y="9" width="2" height="5" fill="#a83018" />
-      <rect x="16" y="9" width="1" height="5" fill="#6a1810" />
+      <!-- ── Torso — wiry crimson, ribbed belly ── -->
+      <rect x="10" y="10" width="10" height="11" fill="#150d08" />
+      <rect x="11" y="11" width="8" height="9" fill="#a83018" />
+      <rect x="11" y="11" width="8" height="1" fill="#c44a24" />
+      <rect x="11" y="11" width="2" height="8" fill="#c44a24" />
+      <rect x="11" y="11" width="1" height="5" fill="#e8662c" />
+      <rect x="17" y="12" width="2" height="8" fill="#6a1810" />
+      <rect x="18" y="13" width="1" height="7" fill="#3a0c08" />
+      <!-- ribbed belly plates -->
+      <rect x="13" y="13" width="4" height="1" fill="#8c2010" />
+      <rect x="13" y="15" width="4" height="1" fill="#8c2010" />
+      <rect x="13" y="17" width="4" height="1" fill="#6a1810" />
+      <rect x="13" y="13" width="1" height="1" fill="#c44a24" />
+      <rect x="13" y="15" width="1" height="1" fill="#c44a24" />
 
-      <!-- Forearms + clawed hands -->
-      <rect x="4" y="13" width="3" height="2" fill="#a83018" />
-      <rect x="4" y="13" width="3" height="1" fill="#c44a24" />
-      <rect x="15" y="13" width="3" height="2" fill="#a83018" />
-      <rect x="15" y="13" width="3" height="1" fill="#c44a24" />
-      <polygon points="4,15 3,17 5,16" fill="#3a1208" />
-      <polygon points="6,15 5,17 7,16" fill="#3a1208" />
-      <polygon points="15,15 14,17 16,16" fill="#3a1208" />
-      <polygon points="17,15 16,17 18,16" fill="#3a1208" />
+      <!-- ── Left arm — raised, cradling the conjured fire ── -->
+      <rect x="6" y="12" width="5" height="4" fill="#150d08" />
+      <rect x="7" y="13" width="3" height="2" fill="#a83018" />
+      <rect x="7" y="13" width="1" height="2" fill="#c44a24" />
+      <rect x="4" y="14" width="4" height="5" fill="#150d08" />
+      <rect x="5" y="15" width="2" height="3" fill="#c44a24" />
+      <rect x="5" y="15" width="1" height="2" fill="#e8662c" />
+      <!-- claw fingers cupping the flame -->
+      <rect x="4" y="18" width="1" height="2" fill="#150d08" />
+      <rect x="6" y="18" width="1" height="2" fill="#150d08" />
 
-      <!-- Conjured fireball — layered glow + specular -->
-      <circle cx="17" cy="14" r="2.6" fill="#8c2828" opacity="0.55" />
-      <circle cx="17" cy="14" r="1.8" fill="#e8401a" opacity="0.9" />
-      <circle cx="17" cy="14" r="1" fill="#ffb040" />
-      <rect x="17" y="14" width="1" height="1" fill="#fff4d0" />
+      <!-- ── Conjured fireball — layered glow above the palm ── -->
+      <circle cx="5.5" cy="12.5" r="4.4" fill="#8c2828" opacity="0.4" />
+      <circle cx="5.5" cy="12.5" r="3" fill="#e8401a" opacity="0.8" />
+      <circle cx="5.5" cy="12.5" r="1.8" fill="#ffb040" />
+      <rect x="4" y="11" width="2" height="2" fill="#ffe9b0" />
+      <rect x="5" y="11" width="1" height="1" fill="#fffbe8" />
+      <!-- drifting embers -->
+      <rect x="2" y="8" width="1" height="1" fill="#ffb040" opacity="0.7" />
+      <rect x="8" y="7" width="1" height="1" fill="#e8401a" opacity="0.55" />
+      <rect x="3" y="11" width="1" height="1" fill="#ff7a3a" opacity="0.5" />
 
-      <!-- Barbed tail -->
-      <rect x="11" y="15" width="1" height="3" fill="#a83018" />
-      <rect x="12" y="17" width="1" height="2" fill="#a83018" />
-      <rect x="13" y="18" width="1" height="2" fill="#8c2010" />
-      <rect x="14" y="19" width="1" height="2" fill="#8c2010" />
-      <polygon points="14,21 17,21 15,24" fill="#3a1208" />
-      <polygon points="14,21 17,21 16,19" fill="#3a1208" />
-      <polygon points="14,21 17,21 15,20" fill="#5a2a14" opacity="0.7" />
+      <!-- ── Right arm — down, claw flexing ── -->
+      <rect x="19" y="12" width="4" height="8" fill="#150d08" />
+      <rect x="20" y="13" width="2" height="6" fill="#6a1810" />
+      <rect x="20" y="13" width="1" height="6" fill="#8c2010" />
+      <rect x="20" y="19" width="4" height="3" fill="#150d08" />
+      <rect x="21" y="20" width="2" height="1" fill="#6a1810" />
+      <rect x="21" y="21" width="1" height="2" fill="#150d08" />
+      <rect x="23" y="21" width="1" height="2" fill="#150d08" />
 
-      <!-- Legs -->
-      <rect x="8" y="15" width="2" height="6" fill="#a83018" />
-      <rect x="12" y="15" width="2" height="6" fill="#a83018" />
-      <rect x="8" y="15" width="1" height="6" fill="#c44a24" />
-      <rect x="13" y="15" width="1" height="6" fill="#6a1810" />
-      <rect x="9" y="15" width="1" height="6" fill="#8c2010" />
+      <!-- ── Barbed tail — whipping up beside the right leg ── -->
+      <rect x="17" y="21" width="2" height="4" fill="#150d08" />
+      <rect x="18" y="22" width="1" height="3" fill="#8c2010" />
+      <rect x="19" y="24" width="2" height="3" fill="#150d08" />
+      <rect x="20" y="25" width="1" height="2" fill="#a83018" />
+      <rect x="21" y="26" width="2" height="3" fill="#150d08" />
+      <rect x="22" y="27" width="1" height="2" fill="#8c2010" />
+      <rect x="23" y="24" width="2" height="4" fill="#150d08" />
+      <rect x="24" y="25" width="1" height="2" fill="#a83018" />
+      <!-- the barb -->
+      <rect x="23" y="21" width="4" height="4" fill="#150d08" />
+      <rect x="24" y="22" width="2" height="2" fill="#5a2a14" />
+      <rect x="24" y="22" width="1" height="1" fill="#8c5a2a" />
 
-      <!-- Hooves -->
-      <rect x="7" y="21" width="4" height="3" fill="#3a1208" />
-      <rect x="11" y="21" width="4" height="3" fill="#3a1208" />
-      <rect x="7" y="21" width="4" height="1" fill="#5a2a14" />
-      <rect x="11" y="21" width="4" height="1" fill="#5a2a14" />
-      <rect x="8" y="23" width="1" height="1" fill="#1a0606" />
-      <rect x="10" y="23" width="1" height="1" fill="#1a0606" />
-      <rect x="12" y="23" width="1" height="1" fill="#1a0606" />
-      <rect x="14" y="23" width="1" height="1" fill="#1a0606" />
+      <!-- ── Legs — wiry, digitigrade ── -->
+      <rect x="10" y="21" width="4" height="9" fill="#150d08" />
+      <rect x="11" y="22" width="2" height="7" fill="#a83018" />
+      <rect x="11" y="22" width="1" height="7" fill="#c44a24" />
+      <rect x="15" y="21" width="4" height="9" fill="#150d08" />
+      <rect x="16" y="22" width="2" height="7" fill="#6a1810" />
+      <rect x="16" y="22" width="1" height="7" fill="#8c2010" />
 
-      <!-- Embers drifting off the fireball -->
-      <rect x="19" y="11" width="1" height="1" fill="#ffb040" opacity="0.6" />
-      <rect x="16" y="10" width="1" height="1" fill="#e8401a" opacity="0.5" />
+      <!-- ── Cloven hooves ── -->
+      <rect x="8" y="30" width="6" height="4" fill="#150d08" />
+      <rect x="9" y="31" width="4" height="2" fill="#3a1208" />
+      <rect x="9" y="31" width="4" height="1" fill="#5a2a14" />
+      <rect x="11" y="32" width="1" height="2" fill="#1a0606" />
+      <rect x="14" y="30" width="6" height="4" fill="#150d08" />
+      <rect x="15" y="31" width="4" height="2" fill="#2a1006" />
+      <rect x="15" y="31" width="4" height="1" fill="#3a1208" />
+      <rect x="17" y="32" width="1" height="2" fill="#1a0606" />
     </svg>

@@ -1,54 +1,125 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 22"
+      viewBox="0 0 38 30"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Cavern Hunting-Spider"
     >
-      <!-- Cold cavern backlight + web strands -->
-      <ellipse cx="15" cy="13" rx="13" ry="8" fill="#3a4632" opacity="0.07" />
-      <line x1="2" y1="2" x2="26" y2="4" stroke="#4a4a52" stroke-width="0.4" opacity="0.5" />
-      <line x1="3" y1="6" x2="25" y2="3" stroke="#4a4a52" stroke-width="0.4" opacity="0.5" />
+      <!-- Cave-gloom backlight + wide ground shadow -->
+      <ellipse cx="19" cy="16" rx="18" ry="13" fill="#5a4632" opacity="0.09" />
+      <ellipse cx="19" cy="28.6" rx="16" ry="1.7" fill="#000" opacity="0.42" />
 
-      <!-- Legs — dark chitin with a thin lit highlight pass -->
-      <line x1="11" y1="12" x2="3" y2="4" stroke="#160f0c" stroke-width="0.9" />
-      <line x1="11" y1="13" x2="2" y2="9" stroke="#160f0c" stroke-width="0.9" />
-      <line x1="11" y1="15" x2="2" y2="16" stroke="#160f0c" stroke-width="0.9" />
-      <line x1="11" y1="16" x2="3" y2="20" stroke="#160f0c" stroke-width="0.9" />
-      <line x1="17" y1="12" x2="25" y2="4" stroke="#160f0c" stroke-width="0.9" />
-      <line x1="17" y1="13" x2="26" y2="9" stroke="#160f0c" stroke-width="0.9" />
-      <line x1="17" y1="15" x2="26" y2="16" stroke="#160f0c" stroke-width="0.9" />
-      <line x1="17" y1="16" x2="25" y2="20" stroke="#160f0c" stroke-width="0.9" />
-      <line x1="11" y1="12" x2="5" y2="6" stroke="#342820" stroke-width="0.3" opacity="0.7" />
-      <line x1="17" y1="12" x2="23" y2="6" stroke="#342820" stroke-width="0.3" opacity="0.7" />
+      <!-- ── Rear leg pair, behind the abdomen ── -->
+      <rect x="4" y="9" width="4" height="3" fill="#150d08" />
+      <rect x="5" y="10" width="2" height="1" fill="#3e3022" />
+      <rect x="1" y="11" width="4" height="3" fill="#150d08" />
+      <rect x="2" y="12" width="2" height="1" fill="#2e2418" />
+      <rect x="0" y="13" width="3" height="9" fill="#150d08" />
+      <rect x="1" y="14" width="1" height="7" fill="#3e3022" />
+      <rect x="30" y="9" width="4" height="3" fill="#150d08" />
+      <rect x="31" y="10" width="2" height="1" fill="#2e2418" />
+      <rect x="33" y="11" width="4" height="3" fill="#150d08" />
+      <rect x="34" y="12" width="2" height="1" fill="#241c12" />
+      <rect x="35" y="13" width="3" height="9" fill="#150d08" />
+      <rect x="36" y="14" width="1" height="7" fill="#2e2418" />
 
-      <!-- Abdomen — chitin ramp, lit top-left -->
-      <ellipse cx="18" cy="14" rx="7" ry="5" fill="#1f160f" />
-      <ellipse cx="18" cy="14" rx="6.4" ry="4.4" fill="#2e2218" />
-      <ellipse cx="17" cy="13" rx="5" ry="3.4" fill="#3e3022" />
-      <ellipse cx="16" cy="12" rx="2.6" ry="1.6" fill="#4e3c2a" />
-      <!-- Pale chevron markings + speckle -->
-      <polygon points="18,10 16,13 20,13" fill="#6e5840" />
-      <rect x="17" y="14" width="2" height="1" fill="#5a4632" />
-      <rect x="20" y="15" width="1" height="1" fill="#5a4632" />
-      <rect x="15" y="11" width="1" height="1" fill="#7e6848" />
+      <!-- ── Abdomen — bristled cave-brown, banded ── -->
+      <rect x="20" y="5" width="14" height="3" fill="#150d08" />
+      <rect x="18" y="7" width="18" height="9" fill="#150d08" />
+      <rect x="20" y="16" width="14" height="3" fill="#150d08" />
+      <rect x="21" y="6" width="12" height="2" fill="#4e3c2a" />
+      <rect x="19" y="8" width="16" height="8" fill="#42321f" />
+      <rect x="21" y="15" width="12" height="3" fill="#332718" />
+      <!-- lit crown -->
+      <rect x="21" y="6" width="6" height="1" fill="#6a5438" />
+      <rect x="19" y="8" width="5" height="3" fill="#4e3c2a" />
+      <rect x="19" y="8" width="2" height="2" fill="#5e4830" />
+      <!-- shadow flank -->
+      <rect x="30" y="9" width="5" height="7" fill="#2e2418" />
+      <rect x="32" y="11" width="3" height="5" fill="#241c12" />
+      <rect x="34" y="12" width="1" height="3" fill="#26303a" />
+      <!-- pale chevron bands -->
+      <rect x="24" y="8" width="6" height="1" fill="#8a6f4a" />
+      <rect x="25" y="11" width="5" height="1" fill="#7a6240" />
+      <rect x="26" y="14" width="4" height="1" fill="#5e4830" />
+      <!-- bristle spikes -->
+      <rect x="22" y="4" width="1" height="2" fill="#150d08" />
+      <rect x="26" y="4" width="1" height="2" fill="#150d08" />
+      <rect x="30" y="5" width="1" height="2" fill="#150d08" />
+      <rect x="33" y="7" width="1" height="2" fill="#150d08" />
+      <!-- dither -->
+      <rect x="23" y="10" width="1" height="1" fill="#5e4830" />
+      <rect x="28" y="12" width="1" height="1" fill="#241c12" />
 
-      <!-- Cephalothorax + head — ramp -->
-      <ellipse cx="10" cy="14" rx="5" ry="4" fill="#2a2018" />
-      <ellipse cx="10" cy="13.5" rx="4.2" ry="3.2" fill="#3a2c20" />
-      <ellipse cx="8" cy="12.5" rx="3" ry="2" fill="#4a3a28" />
-      <ellipse cx="7" cy="12" rx="1.6" ry="1" fill="#5e4a32" />
+      <!-- ── Cephalothorax — head-plate low, fangs forward ── -->
+      <rect x="6" y="8" width="14" height="10" fill="#150d08" />
+      <rect x="7" y="9" width="12" height="8" fill="#42321f" />
+      <rect x="7" y="9" width="12" height="1" fill="#5e4830" />
+      <rect x="7" y="9" width="3" height="7" fill="#4e3c2a" />
+      <rect x="7" y="9" width="1" height="5" fill="#6a5438" />
+      <rect x="16" y="10" width="3" height="7" fill="#332718" />
+      <!-- carapace ridge -->
+      <rect x="10" y="9" width="1" height="8" fill="#332718" />
+      <rect x="13" y="9" width="1" height="8" fill="#2e2418" />
 
-      <!-- Eye cluster — gleaming with sparks -->
-      <rect x="6" y="12" width="1" height="1" fill="#f4d042" />
-      <rect x="8" y="11" width="1" height="1" fill="#f4d042" />
-      <rect x="6" y="14" width="1" height="1" fill="#c4a430" />
-      <rect x="9" y="13" width="1" height="1" fill="#c4a430" />
-      <rect x="6" y="12" width="1" height="1" fill="#fff0a0" opacity="0.8" />
-      <rect x="7" y="13" width="1" height="1" fill="#9a7a20" />
+      <!-- ── Eye cluster — eight gold hunting eyes, lamp-bright ── -->
+      <ellipse cx="9" cy="11" rx="4" ry="2.6" fill="#f4d042" opacity="0.18" />
+      <rect x="7" y="10" width="2" height="2" fill="#1a1208" />
+      <rect x="7" y="10" width="1" height="1" fill="#f4d042" />
+      <rect x="10" y="10" width="2" height="2" fill="#1a1208" />
+      <rect x="10" y="10" width="1" height="1" fill="#fff4a0" />
+      <rect x="8" y="12" width="2" height="2" fill="#1a1208" />
+      <rect x="8" y="12" width="1" height="1" fill="#e8cc70" />
+      <rect x="11" y="12" width="2" height="2" fill="#1a1208" />
+      <rect x="11" y="12" width="1" height="1" fill="#c4a430" />
+      <rect x="13" y="11" width="1" height="1" fill="#9a7a20" />
+      <rect x="14" y="13" width="1" height="1" fill="#c4a430" />
 
-      <!-- Fangs — chitin with specular tip -->
-      <polygon points="5,15 4,18 6,16" fill="#160f0c" />
-      <polygon points="7,15 6,18 8,16" fill="#160f0c" />
-      <rect x="4" y="17" width="1" height="1" fill="#5a4632" />
-      <rect x="6" y="17" width="1" height="1" fill="#5a4632" />
+      <!-- ── Chelicerae — venom fangs under the face ── -->
+      <rect x="6" y="17" width="9" height="3" fill="#150d08" />
+      <rect x="7" y="18" width="7" height="1" fill="#332718" />
+      <rect x="7" y="19" width="2" height="3" fill="#150d08" />
+      <rect x="7" y="19" width="1" height="2" fill="#e8e0c4" />
+      <rect x="11" y="19" width="2" height="3" fill="#150d08" />
+      <rect x="11" y="19" width="1" height="2" fill="#d4c8a8" />
+      <!-- venom drip -->
+      <rect x="7" y="22" width="1" height="1" fill="#a8c478" opacity="0.8" />
+      <rect x="11" y="22" width="1" height="2" fill="#6a8a3a" opacity="0.6" />
+
+      <!-- ── Mid + fore legs — wide hunting splay ── -->
+      <rect x="5" y="13" width="4" height="3" fill="#150d08" />
+      <rect x="6" y="14" width="2" height="1" fill="#4e3c2a" />
+      <rect x="2" y="15" width="4" height="3" fill="#150d08" />
+      <rect x="3" y="16" width="2" height="1" fill="#3e3022" />
+      <rect x="2" y="18" width="3" height="9" fill="#150d08" />
+      <rect x="3" y="19" width="1" height="7" fill="#3e3022" />
+      <rect x="3" y="19" width="1" height="3" fill="#4e3c2a" />
+      <rect x="10" y="16" width="4" height="4" fill="#150d08" />
+      <rect x="11" y="17" width="2" height="2" fill="#3e3022" />
+      <rect x="8" y="19" width="4" height="4" fill="#150d08" />
+      <rect x="9" y="20" width="2" height="2" fill="#332718" />
+      <rect x="7" y="22" width="3" height="6" fill="#150d08" />
+      <rect x="8" y="23" width="1" height="4" fill="#3e3022" />
+      <rect x="26" y="14" width="4" height="4" fill="#150d08" />
+      <rect x="27" y="15" width="2" height="2" fill="#2e2418" />
+      <rect x="29" y="17" width="4" height="4" fill="#150d08" />
+      <rect x="30" y="18" width="2" height="2" fill="#241c12" />
+      <rect x="31" y="20" width="3" height="8" fill="#150d08" />
+      <rect x="32" y="21" width="1" height="6" fill="#2e2418" />
+      <rect x="20" y="16" width="4" height="4" fill="#150d08" />
+      <rect x="21" y="17" width="2" height="2" fill="#332718" />
+      <rect x="22" y="19" width="4" height="4" fill="#150d08" />
+      <rect x="23" y="20" width="2" height="2" fill="#2e2418" />
+      <rect x="24" y="22" width="3" height="6" fill="#150d08" />
+      <rect x="25" y="23" width="1" height="4" fill="#2e2418" />
+      <!-- claw tips planted -->
+      <rect x="1" y="26" width="2" height="2" fill="#150d08" />
+      <rect x="6" y="27" width="2" height="2" fill="#150d08" />
+      <rect x="23" y="27" width="2" height="2" fill="#150d08" />
+      <rect x="30" y="27" width="2" height="2" fill="#150d08" />
+      <rect x="34" y="21" width="2" height="2" fill="#150d08" />
+      <rect x="36" y="26" width="2" height="2" fill="#150d08" />
+
+      <!-- ── Web anchor-line back up into the dark ── -->
+      <rect x="27" y="0" width="1" height="2" fill="#d8cfb8" opacity="0.3" />
+      <rect x="27" y="3" width="1" height="2" fill="#d8cfb8" opacity="0.25" />
     </svg>

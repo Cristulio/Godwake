@@ -1,67 +1,142 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 32"
+      viewBox="0 0 38 43"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Fate-Spinner"
     >
       <!-- Threads-of-fate backlight + ground shadow -->
-      <ellipse cx="14" cy="16" rx="13" ry="15" fill="#c0901a" opacity="0.07" />
-      <ellipse cx="14" cy="30" rx="9" ry="1.6" fill="#000" opacity="0.38" />
+      <ellipse cx="19" cy="20" rx="18" ry="19" fill="#c0901a" opacity="0.07" />
+      <ellipse cx="19" cy="41.6" rx="12" ry="1.8" fill="#000" opacity="0.38" />
 
-      <!-- Radiating threads of fate -->
-      <line x1="14" y1="14" x2="2" y2="2" stroke="#f4d042" stroke-width="0.5" opacity="0.7" />
-      <line x1="14" y1="14" x2="26" y2="2" stroke="#f4d042" stroke-width="0.5" opacity="0.7" />
-      <line x1="14" y1="14" x2="0" y2="14" stroke="#f4d042" stroke-width="0.5" opacity="0.7" />
-      <line x1="14" y1="14" x2="28" y2="14" stroke="#f4d042" stroke-width="0.5" opacity="0.7" />
-      <line x1="14" y1="14" x2="3" y2="28" stroke="#f4d042" stroke-width="0.5" opacity="0.6" />
-      <line x1="14" y1="14" x2="25" y2="28" stroke="#f4d042" stroke-width="0.5" opacity="0.6" />
+      <!-- ── The web of fates — gold threads radiating to the edges ── -->
+      <rect x="4" y="4" width="2" height="1" fill="#c4a430" opacity="0.7" />
+      <rect x="6" y="6" width="2" height="1" fill="#f4d042" opacity="0.6" />
+      <rect x="8" y="8" width="2" height="2" fill="#c4a430" opacity="0.6" />
+      <rect x="10" y="11" width="2" height="2" fill="#f4d042" opacity="0.55" />
+      <rect x="32" y="4" width="2" height="1" fill="#c4a430" opacity="0.7" />
+      <rect x="30" y="6" width="2" height="1" fill="#f4d042" opacity="0.6" />
+      <rect x="28" y="8" width="2" height="2" fill="#c4a430" opacity="0.6" />
+      <rect x="26" y="11" width="2" height="2" fill="#f4d042" opacity="0.55" />
+      <rect x="0" y="18" width="6" height="1" fill="#c4a430" opacity="0.6" />
+      <rect x="6" y="19" width="5" height="1" fill="#f4d042" opacity="0.5" />
+      <rect x="32" y="18" width="6" height="1" fill="#c4a430" opacity="0.6" />
+      <rect x="27" y="19" width="5" height="1" fill="#f4d042" opacity="0.5" />
+      <rect x="5" y="33" width="2" height="2" fill="#c4a430" opacity="0.5" />
+      <rect x="8" y="30" width="2" height="2" fill="#f4d042" opacity="0.45" />
+      <rect x="31" y="33" width="2" height="2" fill="#c4a430" opacity="0.5" />
+      <rect x="28" y="30" width="2" height="2" fill="#f4d042" opacity="0.45" />
+      <!-- knot-beads where lives cross -->
+      <rect x="7" y="6" width="1" height="1" fill="#fff4b0" />
+      <rect x="30" y="6" width="1" height="1" fill="#fff4b0" />
+      <rect x="2" y="18" width="1" height="1" fill="#fff4b0" />
+      <rect x="35" y="18" width="1" height="1" fill="#fff4b0" />
 
-      <!-- Hooded head — violet ramp + three eyes -->
-      <rect x="10" y="3" width="8" height="7" fill="#2a1c3a" />
-      <rect x="10" y="3" width="8" height="1" fill="#3a2a48" />
-      <rect x="10" y="3" width="3" height="7" fill="#34243f" />
-      <rect x="10" y="3" width="1" height="6" fill="#42345a" />
-      <rect x="16" y="4" width="2" height="6" fill="#1e1430" />
-      <rect x="17" y="4" width="1" height="6" fill="#181024" />
-      <rect x="10" y="3" width="8" height="1" fill="#241830" />
-      <rect x="11" y="5" width="2" height="2" fill="#f4d042" />
-      <rect x="15" y="5" width="2" height="2" fill="#f4d042" />
-      <rect x="13" y="5" width="2" height="2" fill="#c4a430" />
-      <rect x="11" y="5" width="1" height="1" fill="#fff4b0" />
-      <rect x="15" y="5" width="1" height="1" fill="#fff4b0" />
-      <rect x="13" y="5" width="1" height="1" fill="#fff4b0" opacity="0.6" />
-      <rect x="12" y="7" width="4" height="1" fill="#1a1020" />
+      <!-- ── Hooded head — deep violet cowl, three gold eyes ── -->
+      <rect x="13" y="2" width="12" height="11" fill="#150d08" />
+      <rect x="14" y="3" width="10" height="9" fill="#2a1c3a" />
+      <rect x="14" y="3" width="10" height="1" fill="#3a2a48" />
+      <rect x="14" y="3" width="3" height="9" fill="#34243f" />
+      <rect x="14" y="3" width="1" height="7" fill="#42345a" />
+      <rect x="21" y="4" width="3" height="8" fill="#1e1430" />
+      <rect x="23" y="5" width="1" height="7" fill="#181024" />
+      <!-- cowl peak -->
+      <rect x="16" y="0" width="6" height="3" fill="#150d08" />
+      <rect x="17" y="1" width="4" height="2" fill="#3a2a48" />
+      <rect x="17" y="1" width="2" height="1" fill="#4a3a5c" />
+      <!-- the three eyes — past, present, cut -->
+      <rect x="15" y="6" width="3" height="2" fill="#1a1020" />
+      <rect x="20" y="6" width="3" height="2" fill="#1a1020" />
+      <rect x="17" y="9" width="3" height="2" fill="#1a1020" />
+      <rect x="15" y="6" width="2" height="2" fill="#f4d042" />
+      <rect x="20" y="6" width="2" height="2" fill="#e0bc38" />
+      <rect x="18" y="9" width="2" height="1" fill="#c4a430" />
+      <rect x="15" y="6" width="1" height="1" fill="#fff4b0" />
+      <rect x="20" y="6" width="1" height="1" fill="#fff4b0" />
+      <rect x="18" y="9" width="1" height="1" fill="#ffe88a" />
 
-      <!-- Spindle body — violet ramp + lit thread core -->
-      <ellipse cx="14" cy="16" rx="6" ry="7" fill="#241830" />
-      <ellipse cx="13" cy="15" rx="4.6" ry="5.6" fill="#2e2040" />
-      <ellipse cx="12.5" cy="14" rx="2.6" ry="3.4" fill="#3a2a48" />
-      <rect x="12" y="13" width="4" height="6" fill="#3a2a48" />
-      <rect x="13" y="14" width="2" height="4" fill="#5a4470" opacity="0.7" />
-      <rect x="13" y="14" width="1" height="2" fill="#7a64a0" opacity="0.6" />
-      <rect x="11" y="18" width="1" height="1" fill="#1a1020" />
-      <rect x="16" y="13" width="1" height="1" fill="#42345a" />
+      <!-- ── Spindle body — wound around itself, thread-core glowing ── -->
+      <rect x="12" y="13" width="14" height="17" fill="#150d08" />
+      <rect x="13" y="14" width="12" height="15" fill="#241830" />
+      <rect x="13" y="14" width="12" height="1" fill="#3a2a48" />
+      <rect x="13" y="14" width="3" height="14" fill="#2e2040" />
+      <rect x="13" y="14" width="1" height="10" fill="#42345a" />
+      <rect x="22" y="15" width="3" height="14" fill="#1c122a" />
+      <rect x="24" y="16" width="1" height="13" fill="#160e22" />
+      <!-- winding grooves of the spindle -->
+      <rect x="14" y="16" width="10" height="1" fill="#160e22" />
+      <rect x="14" y="19" width="10" height="1" fill="#160e22" />
+      <rect x="14" y="22" width="10" height="1" fill="#120b1c" />
+      <rect x="14" y="25" width="10" height="1" fill="#120b1c" />
+      <rect x="14" y="17" width="4" height="1" fill="#42345a" opacity="0.7" />
+      <rect x="14" y="20" width="3" height="1" fill="#42345a" opacity="0.6" />
+      <!-- the lit thread-core wound at the heart -->
+      <ellipse cx="18" cy="21" rx="3.6" ry="4.4" fill="#f4d042" opacity="0.2" />
+      <rect x="16" y="18" width="4" height="7" fill="#3a2a18" />
+      <rect x="17" y="19" width="2" height="5" fill="#c4a430" />
+      <rect x="17" y="19" width="2" height="3" fill="#f4d042" />
+      <rect x="17" y="19" width="1" height="2" fill="#fff4b0" />
+      <!-- thread feeding out of the core to the web -->
+      <rect x="19" y="17" width="1" height="1" fill="#f4d042" />
+      <rect x="20" y="15" width="1" height="2" fill="#c4a430" opacity="0.8" />
+      <rect x="16" y="25" width="1" height="2" fill="#c4a430" opacity="0.7" />
 
-      <!-- Spinning arms reaching to the threads -->
-      <rect x="4" y="10" width="6" height="2" fill="#2a1c3a" />
-      <rect x="4" y="10" width="6" height="1" fill="#3a2a48" />
-      <rect x="18" y="10" width="6" height="2" fill="#241830" />
-      <rect x="18" y="10" width="6" height="1" fill="#332544" />
-      <rect x="2" y="13" width="6" height="2" fill="#2a1c3a" />
-      <rect x="2" y="13" width="6" height="1" fill="#3a2a48" />
-      <rect x="20" y="13" width="6" height="2" fill="#241830" />
-      <rect x="4" y="18" width="5" height="2" fill="#2a1c3a" />
-      <rect x="19" y="18" width="5" height="2" fill="#241830" />
-      <!-- Spindle fingers gripping threads -->
-      <rect x="2" y="9" width="2" height="2" fill="#4a3458" />
-      <rect x="2" y="9" width="1" height="1" fill="#5a4470" />
-      <rect x="24" y="9" width="2" height="2" fill="#3a2a48" />
-      <rect x="0" y="13" width="2" height="2" fill="#4a3458" />
-      <rect x="0" y="13" width="1" height="1" fill="#5a4470" />
-      <rect x="26" y="13" width="2" height="2" fill="#3a2a48" />
+      <!-- ── Spinner arms — six, working different threads ── -->
+      <!-- upper pair, lifted to the high threads -->
+      <rect x="6" y="10" width="8" height="3" fill="#150d08" />
+      <rect x="7" y="11" width="6" height="1" fill="#3a2a48" />
+      <rect x="7" y="11" width="3" height="1" fill="#4a3a5c" />
+      <rect x="4" y="7" width="4" height="4" fill="#150d08" />
+      <rect x="5" y="8" width="2" height="2" fill="#4a3458" />
+      <rect x="5" y="8" width="1" height="1" fill="#5a4470" />
+      <rect x="24" y="10" width="8" height="3" fill="#150d08" />
+      <rect x="25" y="11" width="6" height="1" fill="#2e2040" />
+      <rect x="30" y="7" width="4" height="4" fill="#150d08" />
+      <rect x="31" y="8" width="2" height="2" fill="#3a2a48" />
+      <!-- middle pair, holding the lateral lines -->
+      <rect x="3" y="16" width="10" height="3" fill="#150d08" />
+      <rect x="4" y="17" width="8" height="1" fill="#3a2a48" />
+      <rect x="4" y="17" width="4" height="1" fill="#4a3a5c" />
+      <rect x="1" y="15" width="4" height="4" fill="#150d08" />
+      <rect x="2" y="16" width="2" height="2" fill="#4a3458" />
+      <rect x="2" y="16" width="1" height="1" fill="#5a4470" />
+      <rect x="25" y="16" width="10" height="3" fill="#150d08" />
+      <rect x="26" y="17" width="8" height="1" fill="#2e2040" />
+      <rect x="33" y="15" width="4" height="4" fill="#150d08" />
+      <rect x="34" y="16" width="2" height="2" fill="#3a2a48" />
+      <!-- lower pair, drawing threads down -->
+      <rect x="5" y="24" width="8" height="3" fill="#150d08" />
+      <rect x="6" y="25" width="6" height="1" fill="#332544" />
+      <rect x="4" y="27" width="4" height="4" fill="#150d08" />
+      <rect x="5" y="28" width="2" height="2" fill="#42345a" />
+      <rect x="25" y="24" width="8" height="3" fill="#150d08" />
+      <rect x="26" y="25" width="6" height="1" fill="#241a34" />
+      <rect x="30" y="27" width="4" height="4" fill="#150d08" />
+      <rect x="31" y="28" width="2" height="2" fill="#2e2040" />
 
-      <!-- Hem -->
-      <polygon points="9,22 11,29 14,22" fill="#241830" />
-      <polygon points="9,22 11,28 13,22" fill="#2a1c3a" opacity="0.7" />
-      <polygon points="14,22 17,29 19,22" fill="#1e1430" />
+      <!-- ── The shears — hanging at the spindle's hip; the thing it never uses ── -->
+      <rect x="23" y="28" width="4" height="7" fill="#150d08" />
+      <rect x="24" y="29" width="1" height="5" fill="#8a91a4" />
+      <rect x="25" y="29" width="1" height="5" fill="#5a6478" />
+      <rect x="24" y="29" width="1" height="2" fill="#c8cfe0" />
+      <rect x="23" y="33" width="3" height="2" fill="#9a7e2e" />
+      <rect x="23" y="33" width="1" height="1" fill="#d4b062" />
+
+      <!-- ── Skirt of hanging threads, ends frayed loose ── -->
+      <rect x="12" y="30" width="14" height="4" fill="#150d08" />
+      <rect x="13" y="31" width="12" height="2" fill="#1c122a" />
+      <rect x="13" y="31" width="12" height="1" fill="#2e2040" />
+      <rect x="12" y="34" width="2" height="5" fill="#150d08" />
+      <rect x="12" y="35" width="1" height="3" fill="#2e2040" />
+      <rect x="15" y="34" width="2" height="7" fill="#150d08" />
+      <rect x="15" y="35" width="1" height="5" fill="#42345a" />
+      <rect x="18" y="34" width="2" height="6" fill="#150d08" />
+      <rect x="18" y="35" width="1" height="4" fill="#34243f" />
+      <rect x="21" y="34" width="2" height="8" fill="#150d08" />
+      <rect x="21" y="35" width="1" height="6" fill="#2e2040" />
+      <rect x="24" y="34" width="2" height="5" fill="#150d08" />
+      <rect x="24" y="35" width="1" height="3" fill="#241a34" />
+      <!-- one gold life-thread among the dark ones -->
+      <rect x="19" y="34" width="1" height="7" fill="#c4a430" />
+      <rect x="19" y="34" width="1" height="3" fill="#f4d042" />
+      <rect x="19" y="41" width="1" height="1" fill="#fff4b0" />
     </svg>

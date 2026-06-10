@@ -1,118 +1,137 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 36"
+      viewBox="0 0 30 49"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Mad Mage Prisoner"
     >
-      <!-- Cold dungeon backlight + ground shadow -->
-      <ellipse cx="11" cy="18" rx="11" ry="16" fill="#5a6ad0" opacity="0.07" />
-      <ellipse cx="11" cy="35" rx="8" ry="1.4" fill="#000" opacity="0.42" />
+      <!-- Leaking-magic backlight + ground shadow -->
+      <ellipse cx="15" cy="23" rx="14" ry="21" fill="#8a6ad0" opacity="0.08" />
+      <ellipse cx="15" cy="47.6" rx="10" ry="1.8" fill="#000" opacity="0.4" />
 
-      <!-- Wild hair spikes — grey ramp -->
-      <rect x="4" y="0" width="2" height="3" fill="#6a5a3a" />
-      <rect x="4" y="0" width="1" height="3" fill="#8c7a52" />
-      <rect x="7" y="0" width="1" height="4" fill="#8c7a52" />
-      <rect x="10" y="0" width="2" height="2" fill="#a89878" />
-      <rect x="13" y="0" width="1" height="3" fill="#6a5a3a" />
-      <rect x="16" y="0" width="2" height="4" fill="#5a4c34" />
+      <!-- ── Wild grey hair — shock-frizzed by his own spells ── -->
+      <rect x="7" y="0" width="3" height="3" fill="#150d08" />
+      <rect x="8" y="1" width="1" height="2" fill="#a8a89c" />
+      <rect x="11" y="0" width="2" height="2" fill="#150d08" />
+      <rect x="11" y="0" width="1" height="1" fill="#c4c4b4" />
+      <rect x="14" y="0" width="3" height="2" fill="#150d08" />
+      <rect x="15" y="0" width="1" height="1" fill="#a8a89c" />
+      <rect x="18" y="0" width="2" height="3" fill="#150d08" />
+      <rect x="18" y="1" width="1" height="1" fill="#8c8c80" />
+      <rect x="21" y="2" width="2" height="2" fill="#150d08" />
+      <rect x="21" y="2" width="1" height="1" fill="#a8a89c" />
+      <rect x="5" y="2" width="2" height="2" fill="#150d08" />
+      <rect x="6" y="2" width="1" height="1" fill="#8c8c80" />
+      <!-- hair mass -->
+      <rect x="6" y="2" width="17" height="4" fill="#150d08" />
+      <rect x="7" y="3" width="15" height="3" fill="#8c8c80" />
+      <rect x="7" y="3" width="6" height="2" fill="#a8a89c" />
+      <rect x="7" y="3" width="3" height="1" fill="#c4c4b4" />
+      <rect x="18" y="4" width="4" height="2" fill="#6e6e64" />
 
-      <!-- Gaunt face — pale ramp, key upper-left -->
-      <rect x="5" y="3" width="12" height="5" fill="#c2b794" />
-      <rect x="5" y="3" width="12" height="1" fill="#d4c8a8" />
-      <rect x="5" y="3" width="3" height="5" fill="#d4c8a8" />
-      <rect x="5" y="3" width="1" height="4" fill="#e8dcc4" />
-      <rect x="4" y="4" width="1" height="4" fill="#8c7a52" />
-      <rect x="15" y="4" width="2" height="4" fill="#a89878" />
-      <rect x="17" y="4" width="1" height="4" fill="#7a6848" />
+      <!-- ── Gaunt face — sleepless, one eye wider than the other ── -->
+      <rect x="7" y="5" width="15" height="9" fill="#150d08" />
+      <rect x="8" y="6" width="13" height="7" fill="#b89878" />
+      <rect x="8" y="6" width="13" height="1" fill="#d0ae88" />
+      <rect x="8" y="6" width="3" height="6" fill="#ccaa84" />
+      <rect x="8" y="6" width="1" height="4" fill="#e0c298" />
+      <rect x="18" y="7" width="3" height="6" fill="#94765a" />
+      <rect x="20" y="8" width="1" height="5" fill="#76583e" />
+      <!-- the WIDE eye — bloodshot, violet-sparked -->
+      <rect x="9" y="8" width="4" height="3" fill="#1a1410" />
+      <rect x="10" y="8" width="3" height="2" fill="#e8e0d0" />
+      <rect x="11" y="9" width="1" height="1" fill="#0a0808" />
+      <rect x="10" y="8" width="1" height="1" fill="#c4a8ff" />
+      <rect x="10" y="10" width="2" height="1" fill="#a85a5a" />
+      <!-- the narrowed eye -->
+      <rect x="16" y="9" width="3" height="1" fill="#1a1410" />
+      <rect x="16" y="9" width="1" height="1" fill="#8a6ad0" />
+      <rect x="16" y="8" width="3" height="1" fill="#76583e" />
+      <!-- hollow cheeks + muttering mouth -->
+      <rect x="9" y="11" width="2" height="2" fill="#94765a" />
+      <rect x="12" y="12" width="6" height="1" fill="#3a2418" />
+      <rect x="13" y="13" width="3" height="1" fill="#76583e" />
+      <!-- grey stubble dither -->
+      <rect x="11" y="13" width="1" height="1" fill="#8c8c80" />
+      <rect x="16" y="13" width="1" height="1" fill="#8c8c80" />
 
-      <!-- Hair sides -->
-      <rect x="3" y="3" width="3" height="6" fill="#6a5a3a" />
-      <rect x="3" y="3" width="1" height="6" fill="#8c7a52" />
-      <rect x="16" y="3" width="3" height="6" fill="#5a4c34" />
-      <rect x="2" y="5" width="2" height="3" fill="#6a5a3a" />
-      <rect x="18" y="5" width="2" height="3" fill="#5a4c34" />
+      <!-- ── Straitjacket — asylum canvas, arms bound across ── -->
+      <rect x="5" y="14" width="20" height="5" fill="#150d08" />
+      <rect x="6" y="15" width="18" height="3" fill="#c2b794" />
+      <rect x="6" y="15" width="18" height="1" fill="#d8cfae" />
+      <rect x="6" y="15" width="4" height="2" fill="#d0c4a0" />
+      <rect x="21" y="15" width="3" height="3" fill="#a89878" />
+      <!-- torso -->
+      <rect x="6" y="19" width="18" height="14" fill="#150d08" />
+      <rect x="7" y="20" width="16" height="12" fill="#c2b794" />
+      <rect x="7" y="20" width="16" height="1" fill="#d8cfae" />
+      <rect x="7" y="20" width="3" height="11" fill="#d0c4a0" />
+      <rect x="7" y="20" width="1" height="8" fill="#e4dcc0" />
+      <rect x="20" y="20" width="3" height="11" fill="#a89878" />
+      <rect x="22" y="21" width="1" height="10" fill="#8c7a52" />
+      <!-- crossed sleeve — left arm wrapped to the right hip -->
+      <rect x="6" y="21" width="18" height="5" fill="#150d08" />
+      <rect x="7" y="22" width="16" height="3" fill="#d0c4a0" />
+      <rect x="7" y="22" width="16" height="1" fill="#e4dcc0" />
+      <rect x="7" y="24" width="16" height="1" fill="#a89878" />
+      <!-- the other sleeve crossing back -->
+      <rect x="6" y="26" width="18" height="4" fill="#150d08" />
+      <rect x="7" y="27" width="16" height="2" fill="#c2b794" />
+      <rect x="7" y="27" width="16" height="1" fill="#d0c4a0" />
+      <rect x="7" y="28" width="16" height="1" fill="#94835c" />
+      <!-- buckle straps cinching the jacket -->
+      <rect x="10" y="20" width="2" height="12" fill="#6e5238" />
+      <rect x="10" y="20" width="1" height="12" fill="#8a6a48" />
+      <rect x="18" y="20" width="2" height="12" fill="#5a4028" />
+      <rect x="18" y="20" width="1" height="12" fill="#6e5238" />
+      <rect x="10" y="23" width="2" height="1" fill="#8a91a4" />
+      <rect x="18" y="23" width="2" height="1" fill="#6a7080" />
+      <rect x="10" y="29" width="2" height="1" fill="#8a91a4" />
+      <rect x="18" y="29" width="2" height="1" fill="#6a7080" />
+      <!-- canvas stains -->
+      <rect x="13" y="30" width="3" height="1" fill="#94835c" opacity="0.8" />
+      <rect x="9" y="25" width="1" height="1" fill="#94835c" opacity="0.7" />
 
-      <!-- Manic eyes — dark, red-rimmed, amber spark -->
-      <rect x="6" y="5" width="2" height="2" fill="#0a0808" />
-      <rect x="14" y="5" width="2" height="2" fill="#0a0808" />
-      <rect x="6" y="5" width="2" height="1" fill="#b53c4a" />
-      <rect x="14" y="5" width="2" height="1" fill="#b53c4a" />
-      <rect x="7" y="5" width="1" height="1" fill="#f4d042" />
-      <rect x="15" y="5" width="1" height="1" fill="#f4d042" />
+      <!-- ── Magic leaking through the seams anyway ── -->
+      <ellipse cx="24" cy="22" rx="3.6" ry="3" fill="#8a6ad0" opacity="0.3" />
+      <rect x="23" y="21" width="2" height="2" fill="#a88ae8" opacity="0.8" />
+      <rect x="23" y="21" width="1" height="1" fill="#e8dcff" />
+      <rect x="25" y="19" width="1" height="1" fill="#c4a8ff" opacity="0.8" />
+      <rect x="26" y="24" width="1" height="1" fill="#8a6ad0" opacity="0.7" />
+      <rect x="24" y="26" width="1" height="1" fill="#c4a8ff" opacity="0.5" />
+      <ellipse cx="5" cy="28" rx="2.6" ry="2.4" fill="#8a6ad0" opacity="0.25" />
+      <rect x="4" y="27" width="2" height="2" fill="#a88ae8" opacity="0.7" />
+      <rect x="4" y="27" width="1" height="1" fill="#e8dcff" opacity="0.9" />
+      <rect x="3" y="30" width="1" height="1" fill="#8a6ad0" opacity="0.6" />
+      <!-- a seam splitting under the pressure -->
+      <rect x="15" y="25" width="1" height="3" fill="#8a6ad0" opacity="0.6" />
+      <rect x="15" y="26" width="1" height="1" fill="#c4a8ff" />
 
-      <!-- Manic grin -->
-      <rect x="8" y="7" width="6" height="1" fill="#5a1208" />
-      <rect x="9" y="7" width="1" height="1" fill="#d4c8a8" />
-      <rect x="12" y="7" width="1" height="1" fill="#d4c8a8" />
+      <!-- ── Asylum trousers — torn at the knee ── -->
+      <rect x="7" y="33" width="16" height="3" fill="#150d08" />
+      <rect x="8" y="34" width="14" height="2" fill="#34425a" />
+      <rect x="8" y="34" width="14" height="1" fill="#42546e" />
+      <rect x="8" y="36" width="6" height="8" fill="#150d08" />
+      <rect x="9" y="37" width="4" height="7" fill="#34425a" />
+      <rect x="9" y="37" width="1" height="7" fill="#42546e" />
+      <rect x="12" y="37" width="1" height="7" fill="#26334a" />
+      <rect x="16" y="36" width="6" height="8" fill="#150d08" />
+      <rect x="17" y="37" width="4" height="7" fill="#2a3850" />
+      <rect x="17" y="37" width="1" height="7" fill="#34425a" />
+      <rect x="20" y="37" width="1" height="7" fill="#1f2a3e" />
+      <!-- torn knee, pale skin -->
+      <rect x="9" y="40" width="3" height="2" fill="#150d08" />
+      <rect x="10" y="40" width="2" height="1" fill="#b89878" />
+      <!-- chain hobble between the ankles -->
+      <rect x="12" y="42" width="2" height="1" fill="#5a6068" />
+      <rect x="15" y="43" width="2" height="1" fill="#3a3e46" />
+      <rect x="14" y="42" width="1" height="1" fill="#788088" />
 
-      <!-- Beard / collar — pale ramp -->
-      <rect x="4" y="8" width="14" height="3" fill="#b2a684" />
-      <rect x="4" y="8" width="14" height="1" fill="#d4c8a8" />
-      <rect x="5" y="9" width="12" height="2" fill="#a89878" />
-      <rect x="6" y="10" width="10" height="1" fill="#7a6848" />
-
-      <!-- Robe torso — blue-grey ramp -->
-      <rect x="4" y="11" width="14" height="13" fill="#34425a" />
-      <rect x="4" y="11" width="14" height="1" fill="#4a5870" />
-      <rect x="4" y="11" width="2" height="12" fill="#3a4860" />
-      <rect x="4" y="11" width="1" height="12" fill="#52608a" />
-      <rect x="16" y="11" width="2" height="12" fill="#2a3848" />
-      <rect x="17" y="11" width="1" height="12" fill="#202c3a" />
-      <rect x="10" y="11" width="2" height="13" fill="#2a3848" />
-      <!-- Stains + dither -->
-      <rect x="6" y="14" width="2" height="2" fill="#5a4058" opacity="0.7" />
-      <rect x="12" y="17" width="3" height="2" fill="#5a4058" opacity="0.7" />
-      <rect x="8" y="20" width="4" height="1" fill="#5a1208" opacity="0.5" />
-      <rect x="7" y="15" width="1" height="1" fill="#4a5870" />
-      <rect x="14" y="20" width="1" height="1" fill="#2a3848" />
-
-      <!-- Rope belt -->
-      <rect x="4" y="22" width="14" height="2" fill="#5a4028" />
-      <rect x="4" y="22" width="14" height="1" fill="#7a5a38" />
-      <rect x="10" y="22" width="2" height="3" fill="#5a4028" />
-
-      <!-- Arms + manacles -->
-      <rect x="2" y="13" width="2" height="6" fill="#34425a" />
-      <rect x="2" y="13" width="1" height="6" fill="#3a4860" />
-      <rect x="18" y="13" width="2" height="6" fill="#2a3848" />
-      <rect x="18" y="13" width="1" height="6" fill="#34425a" />
-      <rect x="2" y="19" width="2" height="3" fill="#b5a282" />
-      <rect x="2" y="19" width="2" height="1" fill="#d4c8a8" />
-      <rect x="18" y="19" width="2" height="3" fill="#a89878" />
-      <rect x="18" y="19" width="2" height="1" fill="#c2b794" />
-
-      <!-- Steel cuffs + chain -->
-      <rect x="0" y="20" width="3" height="2" fill="#8a91a4" />
-      <rect x="0" y="20" width="3" height="1" fill="#c0c8d8" />
-      <rect x="0" y="21" width="3" height="1" fill="#5a606e" />
-      <circle cx="0" cy="21.5" r="0.7" fill="#0a0808" />
-      <rect x="19" y="20" width="3" height="2" fill="#8a91a4" />
-      <rect x="19" y="20" width="3" height="1" fill="#c0c8d8" />
-      <rect x="19" y="21" width="3" height="1" fill="#5a606e" />
-      <circle cx="22" cy="21.5" r="0.7" fill="#0a0808" />
-      <circle cx="2" cy="22" r="0.6" fill="#6a7080" />
-      <circle cx="3" cy="23" r="0.6" fill="#5a606e" />
-      <circle cx="2" cy="24" r="0.6" fill="#6a7080" />
-      <circle cx="20" cy="22" r="0.6" fill="#6a7080" />
-      <circle cx="19" cy="23" r="0.6" fill="#5a606e" />
-      <circle cx="20" cy="24" r="0.6" fill="#6a7080" />
-
-      <!-- Wild-magic orb at the wrist -->
-      <circle cx="2" cy="13" r="2.5" fill="#a48ee0" opacity="0.4" />
-      <circle cx="2" cy="13" r="1.5" fill="#e8d4ff" opacity="0.7" />
-      <circle cx="2" cy="13" r="0.6" fill="#ffffff" />
-
-      <!-- Ragged robe skirt -->
-      <rect x="5" y="25" width="12" height="8" fill="#34425a" />
-      <rect x="5" y="25" width="12" height="1" fill="#4a5870" />
-      <rect x="5" y="25" width="2" height="8" fill="#3a4860" />
-      <rect x="15" y="25" width="2" height="8" fill="#2a3848" />
-      <polygon points="5,33 7,30 9,33" fill="#34425a" />
-      <polygon points="9,33 11,30 13,33" fill="#2e3c52" />
-      <polygon points="13,33 15,30 17,33" fill="#2a3848" />
-
-      <!-- Bare feet -->
-      <rect x="6" y="33" width="3" height="3" fill="#1a1410" />
-      <rect x="13" y="33" width="3" height="3" fill="#140e0a" />
-      <rect x="6" y="33" width="3" height="1" fill="#3a2418" />
+      <!-- ── Bare feet ── -->
+      <rect x="6" y="44" width="8" height="4" fill="#150d08" />
+      <rect x="7" y="45" width="6" height="2" fill="#b89878" />
+      <rect x="7" y="45" width="6" height="1" fill="#ccaa84" />
+      <rect x="7" y="46" width="1" height="1" fill="#94765a" />
+      <rect x="16" y="44" width="8" height="4" fill="#150d08" />
+      <rect x="17" y="45" width="6" height="2" fill="#94765a" />
+      <rect x="17" y="45" width="6" height="1" fill="#b89878" />
     </svg>

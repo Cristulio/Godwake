@@ -1,99 +1,142 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 36"
+      viewBox="0 0 30 49"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Bonebound Test Subject"
     >
-      <!-- Sickly arcane backlight + ground shadow -->
-      <ellipse cx="11" cy="18" rx="11" ry="17" fill="#5a3a78" opacity="0.08" />
-      <ellipse cx="11" cy="35" rx="7" ry="1.4" fill="#000" opacity="0.4" />
+      <!-- Sickly laboratory backlight + ground shadow -->
+      <ellipse cx="15" cy="23" rx="14" ry="21" fill="#8a6a98" opacity="0.07" />
+      <ellipse cx="15" cy="47.6" rx="11" ry="1.8" fill="#000" opacity="0.42" />
 
-      <!-- Restraint strap over the brow -->
-      <rect x="6" y="0" width="10" height="2" fill="#3a2838" />
-      <rect x="6" y="0" width="10" height="1" fill="#5a4858" />
+      <!-- ── Head — bruised flesh, bone plate grafted to the skull ── -->
+      <rect x="8" y="1" width="14" height="11" fill="#150d08" />
+      <rect x="9" y="2" width="12" height="9" fill="#5a4858" />
+      <rect x="9" y="2" width="12" height="1" fill="#7a6a78" />
+      <rect x="9" y="2" width="3" height="8" fill="#6a5868" />
+      <rect x="9" y="2" width="1" height="5" fill="#8a7a88" />
+      <rect x="18" y="3" width="3" height="8" fill="#3a2838" />
+      <rect x="20" y="4" width="1" height="7" fill="#2c1f2c" />
+      <!-- grafted bone plate across the crown -->
+      <rect x="11" y="1" width="9" height="4" fill="#150d08" />
+      <rect x="12" y="2" width="7" height="2" fill="#c2b794" />
+      <rect x="12" y="2" width="3" height="1" fill="#e8dcc4" />
+      <rect x="17" y="3" width="2" height="1" fill="#8c7a52" />
+      <!-- staples holding the plate -->
+      <rect x="13" y="4" width="1" height="1" fill="#8a91a4" />
+      <rect x="16" y="4" width="1" height="1" fill="#8a91a4" />
+      <rect x="19" y="4" width="1" height="1" fill="#5a6478" />
 
-      <!-- Head — sallow flesh ramp, key light upper-left -->
-      <rect x="5" y="2" width="12" height="8" fill="#5a4858" />
-      <rect x="5" y="2" width="12" height="1" fill="#7a6a78" />
-      <rect x="5" y="2" width="3" height="8" fill="#6a5868" />
-      <rect x="5" y="2" width="1" height="6" fill="#8a7888" />
-      <rect x="15" y="2" width="2" height="8" fill="#3a2838" />
-      <rect x="16" y="3" width="1" height="6" fill="#2a1828" />
-      <!-- Cranial stitches -->
-      <line x1="6" y1="3" x2="10" y2="5" stroke="#2a1828" stroke-width="0.5" />
-      <line x1="12" y1="5" x2="16" y2="3" stroke="#2a1828" stroke-width="0.5" />
-      <line x1="8" y1="4" x2="9" y2="6" stroke="#1a0828" stroke-width="0.3" />
-      <line x1="13" y1="4" x2="14" y2="6" stroke="#1a0828" stroke-width="0.3" />
-      <!-- Sunken eyes with amber spark -->
-      <rect x="6" y="5" width="2" height="2" fill="#0a0808" />
-      <rect x="14" y="5" width="2" height="2" fill="#0a0808" />
-      <rect x="7" y="6" width="1" height="1" fill="#f4d042" />
-      <rect x="15" y="6" width="1" height="1" fill="#f4d042" />
-      <rect x="7" y="6" width="1" height="1" fill="#fff4a0" opacity="0.6" />
-      <!-- Sutured mouth with bone teeth -->
-      <rect x="8" y="8" width="6" height="2" fill="#1a0828" />
-      <rect x="9" y="8" width="1" height="2" fill="#d4c8a8" />
-      <rect x="11" y="8" width="1" height="2" fill="#d4c8a8" />
-      <rect x="13" y="8" width="1" height="2" fill="#a89878" />
-      <rect x="9" y="10" width="4" height="1" fill="#5a1208" />
+      <!-- ── Mismatched eyes — one drugged amber, one stitched shut ── -->
+      <rect x="10" y="6" width="3" height="2" fill="#1a0e14" />
+      <rect x="10" y="6" width="2" height="2" fill="#d4a430" />
+      <rect x="10" y="6" width="1" height="1" fill="#ffd070" />
+      <rect x="16" y="6" width="3" height="2" fill="#1a0e14" />
+      <rect x="16" y="7" width="3" height="1" fill="#3a2838" />
+      <!-- stitch crosses over the dead eye -->
+      <rect x="16" y="6" width="1" height="1" fill="#8c7a52" />
+      <rect x="18" y="6" width="1" height="1" fill="#8c7a52" />
+      <rect x="17" y="7" width="1" height="1" fill="#a89878" />
 
-      <!-- Collar bolt-band -->
-      <rect x="3" y="11" width="16" height="2" fill="#5a4858" />
-      <rect x="3" y="11" width="16" height="1" fill="#7a6a78" />
-      <rect x="3" y="11" width="2" height="2" fill="#3a2838" />
-      <rect x="17" y="11" width="2" height="2" fill="#2a1828" />
+      <!-- ── Slack mouth, drool ── -->
+      <rect x="11" y="9" width="8" height="2" fill="#1a0e14" />
+      <rect x="11" y="9" width="1" height="1" fill="#c2b794" />
+      <rect x="14" y="9" width="1" height="2" fill="#a89878" />
+      <rect x="17" y="9" width="1" height="1" fill="#8c7a52" />
+      <rect x="13" y="11" width="1" height="2" fill="#9ab4c4" opacity="0.5" />
 
-      <!-- Torso — flesh ramp with surgical seams -->
-      <rect x="4" y="13" width="14" height="11" fill="#5a4858" />
-      <rect x="4" y="13" width="14" height="1" fill="#7a6a78" />
-      <rect x="4" y="13" width="2" height="11" fill="#6a5868" />
-      <rect x="16" y="13" width="2" height="11" fill="#3a2838" />
-      <line x1="4" y1="16" x2="18" y2="16" stroke="#2a1828" stroke-width="0.5" />
-      <line x1="4" y1="20" x2="18" y2="20" stroke="#2a1828" stroke-width="0.5" />
-      <!-- Rib-stitch staples -->
-      <rect x="6" y="14" width="1" height="3" fill="#3a2838" />
-      <rect x="9" y="14" width="1" height="3" fill="#3a2838" />
-      <rect x="12" y="14" width="1" height="3" fill="#3a2838" />
-      <rect x="15" y="14" width="1" height="3" fill="#3a2838" />
-      <rect x="7" y="17" width="1" height="3" fill="#3a2838" />
-      <rect x="10" y="17" width="1" height="3" fill="#3a2838" />
-      <rect x="13" y="17" width="1" height="3" fill="#3a2838" />
-      <rect x="16" y="17" width="1" height="3" fill="#3a2838" />
-      <!-- Exposed bone patch — bone ramp -->
-      <rect x="9" y="17" width="4" height="3" fill="#c2b794" />
-      <rect x="9" y="17" width="4" height="1" fill="#d4c8a8" />
-      <rect x="9" y="17" width="1" height="3" fill="#e8dcc4" />
-      <rect x="9" y="19" width="4" height="1" fill="#5a4030" />
+      <!-- ── Hulking shoulders — flesh sewn over a bone yoke ── -->
+      <rect x="3" y="12" width="24" height="5" fill="#150d08" />
+      <rect x="4" y="13" width="22" height="3" fill="#5a4858" />
+      <rect x="4" y="13" width="22" height="1" fill="#7a6a78" />
+      <rect x="4" y="13" width="5" height="2" fill="#6a5868" />
+      <rect x="22" y="13" width="4" height="3" fill="#3a2838" />
+      <!-- exposed bone yoke jutting at both shoulders -->
+      <rect x="2" y="11" width="5" height="4" fill="#150d08" />
+      <rect x="3" y="12" width="3" height="2" fill="#c2b794" />
+      <rect x="3" y="12" width="2" height="1" fill="#e8dcc4" />
+      <rect x="23" y="11" width="5" height="4" fill="#150d08" />
+      <rect x="24" y="12" width="3" height="2" fill="#a89878" />
+      <rect x="26" y="13" width="1" height="1" fill="#8c7a52" />
 
-      <!-- Arms + bone hands -->
-      <rect x="2" y="13" width="2" height="8" fill="#5a4858" />
-      <rect x="2" y="13" width="1" height="8" fill="#7a6a78" />
-      <rect x="0" y="20" width="3" height="2" fill="#c2b794" />
-      <rect x="0" y="20" width="3" height="1" fill="#d4c8a8" />
-      <rect x="18" y="13" width="2" height="8" fill="#5a4858" />
-      <rect x="19" y="13" width="1" height="8" fill="#3a2838" />
-      <rect x="19" y="20" width="3" height="2" fill="#a89878" />
-      <rect x="19" y="20" width="3" height="1" fill="#c2b794" />
+      <!-- ── Torso — stitched patchwork, rib bones bound OUTSIDE the skin ── -->
+      <rect x="6" y="17" width="18" height="16" fill="#150d08" />
+      <rect x="7" y="18" width="16" height="14" fill="#4a3a48" />
+      <rect x="7" y="18" width="16" height="1" fill="#6a5868" />
+      <rect x="7" y="18" width="3" height="13" fill="#5a4858" />
+      <rect x="7" y="18" width="1" height="13" fill="#6a5868" />
+      <rect x="20" y="18" width="3" height="13" fill="#3a2838" />
+      <rect x="22" y="19" width="1" height="12" fill="#2c1f2c" />
+      <rect x="22" y="22" width="1" height="4" fill="#2e4a4e" />
+      <!-- external bone ribs strapped across -->
+      <rect x="8" y="20" width="14" height="2" fill="#150d08" />
+      <rect x="9" y="20" width="12" height="1" fill="#c2b794" />
+      <rect x="9" y="20" width="4" height="1" fill="#d4c8a8" />
+      <rect x="17" y="20" width="4" height="1" fill="#8c7a52" />
+      <rect x="8" y="24" width="14" height="2" fill="#150d08" />
+      <rect x="9" y="24" width="12" height="1" fill="#a89878" />
+      <rect x="9" y="24" width="3" height="1" fill="#c2b794" />
+      <rect x="8" y="28" width="14" height="2" fill="#150d08" />
+      <rect x="9" y="28" width="12" height="1" fill="#8c7a52" />
+      <rect x="9" y="28" width="3" height="1" fill="#a89878" />
+      <!-- patchwork stitches between the ribs -->
+      <rect x="11" y="22" width="1" height="1" fill="#8c7a52" />
+      <rect x="12" y="23" width="1" height="1" fill="#8c7a52" />
+      <rect x="17" y="26" width="1" height="1" fill="#6e5e44" />
+      <rect x="18" y="27" width="1" height="1" fill="#6e5e44" />
+      <!-- suture scar down the belly -->
+      <rect x="14" y="30" width="2" height="2" fill="#2c1f2c" />
+      <rect x="14" y="30" width="1" height="1" fill="#a85a6a" />
 
-      <!-- Waist seam -->
-      <rect x="4" y="24" width="14" height="2" fill="#3a2838" />
-      <rect x="4" y="24" width="14" height="1" fill="#5a4858" />
+      <!-- ── Arms — too long, knuckles at the knee ── -->
+      <rect x="2" y="15" width="5" height="14" fill="#150d08" />
+      <rect x="3" y="16" width="3" height="12" fill="#5a4858" />
+      <rect x="3" y="16" width="1" height="12" fill="#6a5868" />
+      <rect x="5" y="16" width="1" height="12" fill="#3a2838" />
+      <!-- bone splint lashed to the forearm -->
+      <rect x="2" y="22" width="2" height="6" fill="#150d08" />
+      <rect x="2" y="23" width="1" height="4" fill="#c2b794" />
+      <rect x="1" y="28" width="6" height="4" fill="#150d08" />
+      <rect x="2" y="29" width="4" height="2" fill="#5a4858" />
+      <rect x="2" y="29" width="2" height="1" fill="#6a5868" />
+      <rect x="23" y="15" width="5" height="14" fill="#150d08" />
+      <rect x="24" y="16" width="3" height="12" fill="#3a2838" />
+      <rect x="24" y="16" width="1" height="12" fill="#4a3a48" />
+      <rect x="26" y="16" width="1" height="12" fill="#2c1f2c" />
+      <rect x="23" y="28" width="6" height="4" fill="#150d08" />
+      <rect x="24" y="29" width="4" height="2" fill="#3a2838" />
+      <rect x="24" y="29" width="2" height="1" fill="#4a3a48" />
 
-      <!-- Legs with knee sutures -->
-      <rect x="5" y="26" width="4" height="6" fill="#5a4858" />
-      <rect x="13" y="26" width="4" height="6" fill="#5a4858" />
-      <rect x="5" y="26" width="1" height="6" fill="#7a6a78" />
-      <rect x="13" y="26" width="1" height="6" fill="#6a5868" />
-      <rect x="8" y="26" width="1" height="6" fill="#3a2838" />
-      <rect x="16" y="26" width="1" height="6" fill="#2a1828" />
-      <line x1="5" y1="29" x2="9" y2="29" stroke="#2a1828" stroke-width="0.5" />
-      <line x1="13" y1="29" x2="17" y2="29" stroke="#2a1828" stroke-width="0.5" />
+      <!-- ── Rag waist-wrap, asylum-issue ── -->
+      <rect x="7" y="33" width="16" height="4" fill="#150d08" />
+      <rect x="8" y="34" width="14" height="2" fill="#5a5a64" />
+      <rect x="8" y="34" width="14" height="1" fill="#73737e" />
+      <rect x="12" y="35" width="1" height="2" fill="#43434c" />
+      <rect x="17" y="35" width="1" height="2" fill="#43434c" />
 
-      <!-- Restraint boots -->
-      <rect x="4" y="32" width="5" height="3" fill="#3a2418" />
-      <rect x="13" y="32" width="5" height="3" fill="#3a2418" />
-      <rect x="4" y="32" width="5" height="1" fill="#5a3a22" />
-      <rect x="13" y="32" width="5" height="1" fill="#5a3a22" />
-      <rect x="4" y="34" width="5" height="1" fill="#1a1410" />
-      <rect x="13" y="34" width="5" height="1" fill="#1a1410" />
+      <!-- ── Legs — bone-braced, heavy stagger ── -->
+      <rect x="8" y="37" width="6" height="8" fill="#150d08" />
+      <rect x="9" y="38" width="4" height="7" fill="#5a4858" />
+      <rect x="9" y="38" width="1" height="7" fill="#6a5868" />
+      <rect x="12" y="38" width="1" height="7" fill="#3a2838" />
+      <rect x="16" y="37" width="6" height="8" fill="#150d08" />
+      <rect x="17" y="38" width="4" height="7" fill="#4a3a48" />
+      <rect x="17" y="38" width="1" height="7" fill="#5a4858" />
+      <rect x="20" y="38" width="1" height="7" fill="#2c1f2c" />
+      <!-- bone shin braces -->
+      <rect x="9" y="40" width="1" height="5" fill="#c2b794" />
+      <rect x="18" y="40" width="1" height="5" fill="#a89878" />
+      <rect x="9" y="42" width="4" height="1" fill="#8c7a52" />
+      <rect x="17" y="42" width="4" height="1" fill="#6e5e44" />
+
+      <!-- ── Heavy bare feet ── -->
+      <rect x="6" y="45" width="8" height="3" fill="#150d08" />
+      <rect x="7" y="46" width="6" height="1" fill="#5a4858" />
+      <rect x="7" y="45" width="6" height="1" fill="#6a5868" />
+      <rect x="7" y="47" width="1" height="1" fill="#c2b794" />
+      <rect x="10" y="47" width="1" height="1" fill="#a89878" />
+      <rect x="16" y="45" width="8" height="3" fill="#150d08" />
+      <rect x="17" y="46" width="6" height="1" fill="#3a2838" />
+      <rect x="17" y="45" width="6" height="1" fill="#4a3a48" />
+      <rect x="17" y="47" width="1" height="1" fill="#a89878" />
+      <rect x="20" y="47" width="1" height="1" fill="#8c7a52" />
     </svg>

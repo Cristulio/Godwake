@@ -1,61 +1,132 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 40"
+      viewBox="0 0 32 53"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Deathless Penitent"
     >
-      <!-- Cold grave-light backlight + worn floor shadow -->
-      <ellipse cx="12" cy="26" rx="12" ry="11" fill="#4a8278" opacity="0.07" />
-      <ellipse cx="12" cy="37" rx="10" ry="2" fill="#000" opacity="0.4" />
+      <!-- Wound-light backlight + ground shadow -->
+      <ellipse cx="16" cy="25" rx="15" ry="23" fill="#7ad8c8" opacity="0.07" />
+      <ellipse cx="16" cy="51.6" rx="10" ry="1.8" fill="#000" opacity="0.4" />
 
-      <!-- Bowed head — ashen ramp, key upper-left -->
-      <rect x="9" y="13" width="7" height="6" fill="#7a746c" />
-      <rect x="9" y="13" width="7" height="1" fill="#8a847c" />
-      <rect x="9" y="13" width="2" height="6" fill="#8a847c" />
-      <rect x="14" y="13" width="2" height="6" fill="#5a544c" />
-      <rect x="10" y="16" width="2" height="1" fill="#14101a" />
-      <rect x="13" y="16" width="2" height="1" fill="#14101a" />
-      <!-- cold-light seam sealing the brow -->
-      <rect x="9" y="15" width="7" height="1" fill="#7ad8c8" opacity="0.75" />
-      <rect x="10" y="15" width="2" height="1" fill="#c8f4ec" opacity="0.7" />
+      <!-- ── Bowed bare head — grey flesh, scarred over and over ── -->
+      <rect x="10" y="3" width="12" height="10" fill="#150d08" />
+      <rect x="11" y="4" width="10" height="8" fill="#7a746c" />
+      <rect x="11" y="4" width="10" height="1" fill="#8a847c" />
+      <rect x="11" y="4" width="3" height="7" fill="#827c74" />
+      <rect x="11" y="4" width="1" height="4" fill="#948e86" />
+      <rect x="18" y="5" width="3" height="7" fill="#5a544c" />
+      <rect x="20" y="6" width="1" height="6" fill="#4a443e" />
+      <!-- the head hangs — face mostly brow -->
+      <rect x="11" y="9" width="10" height="3" fill="#6a645c" />
+      <rect x="11" y="9" width="10" height="1" fill="#5a544c" />
+      <!-- downcast eyes, barely open, teal-lit from below -->
+      <rect x="12" y="10" width="3" height="1" fill="#26221e" />
+      <rect x="17" y="10" width="3" height="1" fill="#221e1a" />
+      <rect x="13" y="10" width="1" height="1" fill="#5ab8a8" />
+      <rect x="18" y="10" width="1" height="1" fill="#4a9888" />
+      <!-- old kill-scars on the scalp — each one a death -->
+      <rect x="13" y="4" width="3" height="1" fill="#4a443e" />
+      <rect x="17" y="5" width="2" height="1" fill="#4a443e" />
+      <rect x="12" y="6" width="2" height="1" fill="#544e46" />
+      <rect x="18" y="7" width="2" height="1" fill="#4a443e" />
 
-      <!-- Hunched kneeling torso — armour ramp -->
-      <polygon points="7,19 17,19 19,31 5,31" fill="#5a544c" />
-      <polygon points="8,19 16,19 17,28 7,28" fill="#6a645c" />
-      <polygon points="8,19 11,19 11,28 7,27" fill="#7a746c" />
-      <polygon points="15,19 17,19 18,30 16,29" fill="#4a443c" />
-      <!-- reknitting wound-seams -->
-      <rect x="9" y="22" width="5" height="1" fill="#7ad8c8" opacity="0.8" />
-      <rect x="11" y="25" width="4" height="1" fill="#7ad8c8" opacity="0.65" />
-      <rect x="10" y="22" width="1" height="1" fill="#c8f4ec" opacity="0.7" />
-      <!-- plate dither -->
-      <rect x="10" y="20" width="1" height="1" fill="#7a746c" />
-      <rect x="14" y="27" width="1" height="1" fill="#4a443c" />
+      <!-- ── The WOUND — the killing blow, sealed with teal godwake-light ── -->
+      <ellipse cx="16" cy="22" rx="4.6" ry="5.4" fill="#7ad8c8" opacity="0.22" />
 
-      <!-- Bared back / shoulder -->
-      <rect x="6" y="20" width="3" height="3" fill="#7a746c" />
-      <rect x="6" y="20" width="3" height="1" fill="#8a847c" />
-      <rect x="6" y="20" width="1" height="3" fill="#928c84" />
+      <!-- ── Shoulders — sackcloth penitent shift ── -->
+      <rect x="5" y="13" width="22" height="4" fill="#150d08" />
+      <rect x="6" y="14" width="20" height="2" fill="#6a645c" />
+      <rect x="6" y="14" width="20" height="1" fill="#7a746c" />
+      <rect x="6" y="14" width="5" height="1" fill="#8a847c" />
+      <rect x="22" y="14" width="4" height="2" fill="#544e46" />
 
-      <!-- Arm raising the flail -->
-      <rect x="16" y="19" width="3" height="4" fill="#7a746c" />
-      <rect x="18" y="14" width="2" height="6" fill="#7a746c" />
-      <rect x="18" y="14" width="1" height="6" fill="#8a847c" />
-      <rect x="16" y="19" width="1" height="4" fill="#8a847c" />
+      <!-- ── Torso — shift torn open over the sealed death-wound ── -->
+      <rect x="6" y="17" width="20" height="17" fill="#150d08" />
+      <rect x="7" y="18" width="18" height="15" fill="#6a645c" />
+      <rect x="7" y="18" width="18" height="1" fill="#7a746c" />
+      <rect x="7" y="18" width="3" height="14" fill="#726c64" />
+      <rect x="7" y="18" width="1" height="11" fill="#827c74" />
+      <rect x="22" y="18" width="3" height="14" fill="#544e46" />
+      <rect x="24" y="19" width="1" height="13" fill="#46403a" />
+      <!-- the torn rent + the wound beneath -->
+      <rect x="12" y="18" width="8" height="9" fill="#150d08" />
+      <rect x="13" y="19" width="6" height="7" fill="#3e3832" />
+      <!-- grey flesh inside the rent -->
+      <rect x="13" y="19" width="6" height="2" fill="#5a544c" />
+      <!-- the sealed gash — teal light holding it shut -->
+      <rect x="14" y="20" width="4" height="6" fill="#0a2420" />
+      <rect x="15" y="20" width="2" height="6" fill="#0e3c34" />
+      <rect x="15" y="21" width="2" height="4" fill="#1a6054" />
+      <rect x="15" y="22" width="1" height="2" fill="#3aa092" />
+      <rect x="15" y="22" width="1" height="1" fill="#a8ece0" />
+      <!-- stitches of light crossing the gash -->
+      <rect x="14" y="21" width="4" height="1" fill="#5ab8a8" opacity="0.7" />
+      <rect x="14" y="23" width="4" height="1" fill="#5ab8a8" opacity="0.6" />
+      <rect x="14" y="25" width="4" height="1" fill="#4a9888" opacity="0.5" />
+      <!-- sackcloth weave dither -->
+      <rect x="9" y="21" width="1" height="1" fill="#7a746c" />
+      <rect x="21" y="24" width="1" height="1" fill="#46403a" />
+      <rect x="10" y="29" width="1" height="1" fill="#827c74" />
+      <!-- tally scratches — counting the deaths -->
+      <rect x="8" y="26" width="1" height="3" fill="#4a443e" />
+      <rect x="10" y="26" width="1" height="3" fill="#4a443e" />
+      <rect x="20" y="27" width="1" height="3" fill="#46403a" />
+      <rect x="22" y="27" width="1" height="3" fill="#46403a" />
 
-      <!-- Flail chain + iron heads + specular -->
-      <line x1="19" y1="14" x2="21" y2="6" stroke="#5a554c" stroke-width="0.8" />
-      <rect x="20" y="3" width="3" height="3" fill="#3a3430" />
-      <rect x="20" y="3" width="3" height="1" fill="#6a645c" />
-      <rect x="20" y="3" width="1" height="3" fill="#7a746c" />
-      <rect x="21" y="3" width="1" height="1" fill="#b4bcc8" />
-      <rect x="19" y="6" width="2" height="2" fill="#3a3430" />
-      <rect x="19" y="6" width="1" height="1" fill="#7a746c" />
+      <!-- ── Arms — wrapped in pilgrim cords, knuckles raw ── -->
+      <rect x="2" y="17" width="6" height="13" fill="#150d08" />
+      <rect x="3" y="18" width="4" height="11" fill="#6a645c" />
+      <rect x="3" y="18" width="1" height="11" fill="#7a746c" />
+      <rect x="6" y="18" width="1" height="11" fill="#544e46" />
+      <!-- cords -->
+      <rect x="3" y="21" width="4" height="1" fill="#46403a" />
+      <rect x="3" y="25" width="4" height="1" fill="#46403a" />
+      <rect x="2" y="29" width="5" height="3" fill="#150d08" />
+      <rect x="3" y="30" width="3" height="1" fill="#827c74" />
+      <rect x="3" y="31" width="1" height="1" fill="#9c5050" />
+      <rect x="24" y="17" width="6" height="13" fill="#150d08" />
+      <rect x="25" y="18" width="4" height="11" fill="#544e46" />
+      <rect x="25" y="18" width="1" height="11" fill="#6a645c" />
+      <rect x="28" y="18" width="1" height="11" fill="#46403a" />
+      <rect x="25" y="21" width="4" height="1" fill="#3a342e" />
+      <rect x="25" y="25" width="4" height="1" fill="#3a342e" />
+      <rect x="25" y="29" width="5" height="3" fill="#150d08" />
+      <rect x="26" y="30" width="3" height="1" fill="#5a544c" />
 
-      <!-- Kneeling legs folded under -->
-      <rect x="5" y="31" width="14" height="4" fill="#4a443c" />
-      <rect x="5" y="31" width="14" height="1" fill="#5a544c" />
-      <polygon points="5,35 9,31 9,35" fill="#5a544c" />
-      <polygon points="15,35 19,31 19,35" fill="#5a544c" />
-      <polygon points="5,35 9,31 8,35" fill="#6a645c" opacity="0.7" />
+      <!-- ── Rope girdle — frayed from being gripped in pain ── -->
+      <rect x="7" y="34" width="18" height="2" fill="#150d08" />
+      <rect x="8" y="34" width="16" height="1" fill="#5e5246" />
+      <rect x="14" y="35" width="2" height="4" fill="#4e4438" />
+      <rect x="14" y="37" width="1" height="3" fill="#3e362c" />
+
+      <!-- ── Skirt of the shift — mud-hemmed ── -->
+      <rect x="7" y="36" width="18" height="9" fill="#150d08" />
+      <rect x="8" y="37" width="16" height="7" fill="#5e584e" />
+      <rect x="8" y="37" width="16" height="1" fill="#6a645c" />
+      <rect x="8" y="37" width="3" height="7" fill="#665e54" />
+      <rect x="21" y="37" width="3" height="7" fill="#4a443e" />
+      <rect x="11" y="38" width="1" height="6" fill="#46403a" />
+      <rect x="16" y="38" width="1" height="6" fill="#3a342e" />
+      <rect x="19" y="38" width="1" height="6" fill="#46403a" />
+      <!-- mud-stained hem -->
+      <rect x="8" y="43" width="16" height="1" fill="#3a322a" />
+      <rect x="10" y="42" width="2" height="1" fill="#3a322a" opacity="0.7" />
+      <rect x="18" y="42" width="3" height="1" fill="#3a322a" opacity="0.6" />
+
+      <!-- ── Bare feet — walked raw, still walking ── -->
+      <rect x="8" y="45" width="7" height="3" fill="#150d08" />
+      <rect x="9" y="46" width="5" height="1" fill="#7a746c" />
+      <rect x="9" y="45" width="5" height="1" fill="#8a847c" />
+      <rect x="9" y="47" width="1" height="1" fill="#9c5050" />
+      <rect x="17" y="45" width="7" height="3" fill="#150d08" />
+      <rect x="18" y="46" width="5" height="1" fill="#5a544c" />
+      <rect x="18" y="45" width="5" height="1" fill="#6a645c" />
+      <rect x="21" y="47" width="1" height="1" fill="#7e4444" />
+
+      <!-- ── Godwake motes seeping from the wound ── -->
+      <rect x="13" y="16" width="1" height="1" fill="#7ad8c8" opacity="0.6" />
+      <rect x="19" y="15" width="1" height="1" fill="#5ab8a8" opacity="0.5" />
+      <rect x="16" y="13" width="1" height="1" fill="#7ad8c8" opacity="0.4" />
+      <rect x="28" y="33" width="1" height="1" fill="#5ab8a8" opacity="0.35" />
+      <rect x="3" y="35" width="1" height="1" fill="#7ad8c8" opacity="0.3" />
     </svg>

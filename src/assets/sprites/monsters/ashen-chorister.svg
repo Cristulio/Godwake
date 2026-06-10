@@ -1,77 +1,144 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 40"
+      viewBox="0 0 32 53"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Ashen Chorister"
     >
-      <!-- Ashen backlight + ground shadow -->
-      <ellipse cx="12" cy="22" rx="13" ry="18" fill="#7a6838" opacity="0.07" />
-      <ellipse cx="12" cy="38" rx="9" ry="1.5" fill="#000" opacity="0.4" />
+      <!-- Requiem backlight + ground shadow -->
+      <ellipse cx="16" cy="25" rx="15" ry="23" fill="#c0a040" opacity="0.07" />
+      <ellipse cx="16" cy="51.6" rx="10" ry="1.8" fill="#000" opacity="0.4" />
 
-      <!-- Soot halo — double ring with a lit upper arc -->
-      <circle cx="12" cy="2" r="6" fill="none" stroke="#3a3438" stroke-width="1.4" />
-      <circle cx="12" cy="2" r="6" fill="none" stroke="#6a6058" stroke-width="0.5" />
-      <path d="M7 0 A6 6 0 0 1 15 -2" fill="none" stroke="#9a8248" stroke-width="0.5" opacity="0.7" />
+      <!-- ── Head thrown back mid-note — ash-grey skin ── -->
+      <rect x="10" y="2" width="12" height="11" fill="#150d08" />
+      <rect x="11" y="3" width="10" height="9" fill="#5a524e" />
+      <rect x="11" y="3" width="10" height="1" fill="#6e6660" />
+      <rect x="11" y="3" width="3" height="8" fill="#665e58" />
+      <rect x="11" y="3" width="1" height="5" fill="#7a726a" />
+      <rect x="18" y="4" width="3" height="8" fill="#4a4348" />
+      <rect x="20" y="5" width="1" height="7" fill="#3e383c" />
+      <!-- eyes rolled shut in the singing -->
+      <rect x="12" y="6" width="3" height="1" fill="#2e2a2c" />
+      <rect x="17" y="6" width="3" height="1" fill="#262224" />
+      <rect x="12" y="5" width="3" height="1" fill="#6e6660" />
+      <rect x="17" y="5" width="3" height="1" fill="#5a524e" />
+      <!-- ash tears streaking down -->
+      <rect x="13" y="7" width="1" height="3" fill="#8a8278" />
+      <rect x="18" y="7" width="1" height="2" fill="#7a726a" />
 
-      <!-- Ash head — stone ramp, key light upper-left -->
-      <rect x="8" y="3" width="8" height="8" fill="#8a8278" />
-      <rect x="8" y="3" width="8" height="1" fill="#b8b0a8" />
-      <rect x="8" y="3" width="2" height="8" fill="#a39a90" />
-      <rect x="8" y="3" width="1" height="5" fill="#c4bcb4" />
-      <rect x="14" y="3" width="2" height="8" fill="#5a524e" />
-      <rect x="15" y="4" width="1" height="6" fill="#4a4348" />
-      <!-- Hollow eyes with ember glow -->
-      <rect x="9" y="5" width="2" height="2" fill="#1a1418" />
-      <rect x="13" y="5" width="2" height="2" fill="#1a1418" />
-      <rect x="9" y="5" width="1" height="1" fill="#e8862a" opacity="0.8" />
-      <rect x="13" y="5" width="1" height="1" fill="#e8862a" opacity="0.8" />
-      <!-- Mouth open in song — ember-lit throat -->
-      <rect x="10" y="8" width="4" height="3" fill="#1a1418" />
-      <rect x="11" y="9" width="2" height="2" fill="#a83a2a" opacity="0.7" />
-      <rect x="11" y="9" width="1" height="1" fill="#f4942a" opacity="0.6" />
+      <!-- ── The mouth — wide open, the dead god's note pouring out gold ── -->
+      <ellipse cx="16" cy="11" rx="4.4" ry="3" fill="#f4d042" opacity="0.25" />
+      <rect x="12" y="9" width="8" height="4" fill="#150d08" />
+      <rect x="13" y="10" width="6" height="3" fill="#1a0e04" />
+      <rect x="14" y="10" width="4" height="2" fill="#7a6838" />
+      <rect x="14" y="10" width="3" height="1" fill="#c0a040" />
+      <rect x="15" y="10" width="2" height="1" fill="#f0d060" />
+      <rect x="15" y="10" width="1" height="1" fill="#fff0b0" />
+      <!-- the note rising as motes -->
+      <rect x="15" y="7" width="1" height="1" fill="#f0d060" opacity="0.8" />
+      <rect x="17" y="5" width="1" height="1" fill="#c0a040" opacity="0.7" />
+      <rect x="14" y="3" width="1" height="1" fill="#f0d060" opacity="0.5" />
+      <rect x="18" y="1" width="1" height="1" fill="#c0a040" opacity="0.45" />
+      <rect x="12" y="1" width="1" height="1" fill="#a08430" opacity="0.4" />
 
-      <!-- Ashen robe — grey ramp, lit left edge + cool right rim -->
-      <polygon points="6,12 18,12 21,38 3,38" fill="#6a6058" />
-      <polygon points="6,12 16,12 17,26 5,26" fill="#7a7068" />
-      <polygon points="6,12 11,12 9,38 4,38" fill="#8a8078" opacity="0.55" />
-      <polygon points="16,12 18,12 21,38 18,38" fill="#4a4348" opacity="0.7" />
-      <rect x="11" y="12" width="2" height="24" fill="#9a9088" opacity="0.7" />
-      <!-- Robe dither texture -->
-      <rect x="9" y="22" width="1" height="1" fill="#5a524e" />
-      <rect x="15" y="28" width="1" height="1" fill="#4a4348" />
-      <rect x="13" y="32" width="1" height="1" fill="#7a7068" />
+      <!-- ── Choir collar — high stiff ruff of ash cloth ── -->
+      <rect x="8" y="13" width="16" height="4" fill="#150d08" />
+      <rect x="9" y="14" width="14" height="2" fill="#6e6660" />
+      <rect x="9" y="14" width="14" height="1" fill="#8a8278" />
+      <rect x="9" y="14" width="4" height="1" fill="#9a928a" />
+      <rect x="20" y="14" width="3" height="2" fill="#5a524e" />
+      <!-- pleats -->
+      <rect x="11" y="14" width="1" height="2" fill="#4a4348" />
+      <rect x="14" y="14" width="1" height="2" fill="#4a4348" />
+      <rect x="17" y="14" width="1" height="2" fill="#423c40" />
+      <rect x="20" y="14" width="1" height="2" fill="#3e383c" />
 
-      <!-- Soot-gold stole — gold ramp + specular -->
-      <rect x="9" y="12" width="2" height="20" fill="#7a6838" />
-      <rect x="9" y="12" width="1" height="20" fill="#9a8248" />
-      <rect x="13" y="12" width="2" height="20" fill="#7a6838" />
-      <rect x="14" y="12" width="1" height="20" fill="#5a4824" />
-      <rect x="9" y="14" width="1" height="1" fill="#c0a040" />
-      <rect x="13" y="18" width="1" height="1" fill="#c0a040" />
+      <!-- ── Cassock — ash-grey, gold chasuble band down the front ── -->
+      <rect x="7" y="17" width="18" height="24" fill="#150d08" />
+      <rect x="8" y="18" width="16" height="22" fill="#4a4348" />
+      <rect x="8" y="18" width="16" height="1" fill="#665e58" />
+      <rect x="8" y="18" width="3" height="21" fill="#56504c" />
+      <rect x="8" y="18" width="1" height="17" fill="#6e6660" />
+      <rect x="21" y="18" width="3" height="21" fill="#3e383c" />
+      <rect x="23" y="19" width="1" height="20" fill="#322e30" />
+      <rect x="23" y="24" width="1" height="5" fill="#36464a" />
+      <!-- gold chasuble band -->
+      <rect x="14" y="18" width="4" height="21" fill="#7a6838" />
+      <rect x="14" y="18" width="2" height="21" fill="#9a8638" />
+      <rect x="14" y="18" width="1" height="14" fill="#c0a040" />
+      <rect x="17" y="18" width="1" height="21" fill="#5a4c28" />
+      <!-- woven hymn-script on the band -->
+      <rect x="15" y="21" width="2" height="1" fill="#5a4c28" />
+      <rect x="15" y="25" width="2" height="1" fill="#5a4c28" />
+      <rect x="15" y="29" width="2" height="1" fill="#4a3e20" />
+      <rect x="15" y="33" width="2" height="1" fill="#4a3e20" />
+      <!-- censer chain looped at the waist -->
+      <rect x="9" y="30" width="1" height="1" fill="#c0a040" />
+      <rect x="10" y="31" width="1" height="1" fill="#9a8638" />
+      <rect x="11" y="32" width="1" height="1" fill="#c0a040" />
+      <!-- robe dither -->
+      <rect x="10" y="22" width="1" height="1" fill="#665e58" />
+      <rect x="20" y="27" width="1" height="1" fill="#322e30" />
 
-      <!-- Left arm at the hem -->
-      <rect x="3" y="14" width="3" height="9" fill="#6a6058" />
-      <rect x="3" y="14" width="1" height="9" fill="#8a8078" />
-      <rect x="5" y="14" width="1" height="9" fill="#4a4348" />
+      <!-- ── Left arm — pressing the hymn-book to the chest ── -->
+      <rect x="3" y="18" width="6" height="10" fill="#150d08" />
+      <rect x="4" y="19" width="4" height="8" fill="#4a4348" />
+      <rect x="4" y="19" width="1" height="8" fill="#665e58" />
+      <rect x="7" y="19" width="1" height="8" fill="#3e383c" />
+      <!-- the hymnal — ash-bound, gold clasp -->
+      <rect x="3" y="26" width="7" height="6" fill="#150d08" />
+      <rect x="4" y="27" width="5" height="4" fill="#5a3a28" />
+      <rect x="4" y="27" width="5" height="1" fill="#7a5238" />
+      <rect x="4" y="27" width="1" height="4" fill="#6e4630" />
+      <rect x="6" y="28" width="1" height="3" fill="#3e2618" />
+      <rect x="8" y="29" width="1" height="1" fill="#c0a040" />
 
-      <!-- Raised hand casting hymn-fire -->
-      <rect x="18" y="13" width="3" height="3" fill="#8a8278" />
-      <rect x="18" y="13" width="3" height="1" fill="#b8b0a8" />
-      <rect x="20" y="10" width="3" height="3" fill="#8a8278" />
-      <rect x="20" y="10" width="3" height="1" fill="#a39a90" />
-      <!-- Hymn-fire — layered radiant bloom + specular -->
-      <circle cx="22" cy="8" r="3" fill="#c0a040" opacity="0.45" />
-      <circle cx="22" cy="8" r="2" fill="#f4e8c0" opacity="0.9" />
-      <circle cx="22" cy="8" r="1" fill="#fff8e0" />
-      <rect x="22" y="8" width="1" height="1" fill="#ffffff" />
+      <!-- ── Right arm — swinging the censer ── -->
+      <rect x="23" y="18" width="6" height="9" fill="#150d08" />
+      <rect x="24" y="19" width="4" height="7" fill="#3e383c" />
+      <rect x="24" y="19" width="1" height="7" fill="#4a4348" />
+      <rect x="27" y="19" width="1" height="7" fill="#322e30" />
+      <rect x="24" y="26" width="4" height="2" fill="#150d08" />
+      <rect x="25" y="26" width="2" height="1" fill="#56504c" />
+      <!-- censer chain -->
+      <rect x="27" y="28" width="1" height="1" fill="#c0a040" />
+      <rect x="28" y="30" width="1" height="1" fill="#9a8638" />
+      <rect x="27" y="32" width="1" height="1" fill="#c0a040" />
+      <!-- the censer — coal-lit thurible -->
+      <ellipse cx="28" cy="37" rx="3.6" ry="3.4" fill="#f4a72a" opacity="0.3" />
+      <rect x="25" y="34" width="6" height="6" fill="#150d08" />
+      <rect x="26" y="35" width="4" height="4" fill="#7a6838" />
+      <rect x="26" y="35" width="4" height="1" fill="#c0a040" />
+      <rect x="26" y="35" width="2" height="1" fill="#f0d060" />
+      <rect x="29" y="37" width="1" height="2" fill="#5a4c28" />
+      <!-- vent holes glowing -->
+      <rect x="27" y="36" width="1" height="1" fill="#ff9838" />
+      <rect x="28" y="38" width="1" height="1" fill="#e87820" />
+      <rect x="26" y="38" width="1" height="1" fill="#ff9838" opacity="0.8" />
+      <!-- smoke threads -->
+      <rect x="27" y="32" width="1" height="1" fill="#8a8278" opacity="0.5" />
+      <rect x="29" y="30" width="1" height="1" fill="#8a8278" opacity="0.4" />
+      <rect x="28" y="27" width="1" height="1" fill="#9a928a" opacity="0.3" />
 
-      <!-- Hem — torn ash teeth -->
-      <polygon points="3,38 6,34 9,38" fill="#3a3438" />
-      <polygon points="9,38 12,34 15,38" fill="#3a3438" />
-      <polygon points="15,38 18,34 21,38" fill="#3a3438" />
-      <polygon points="3,38 6,35 9,38" fill="#5a524e" opacity="0.6" />
+      <!-- ── Hem + shuffling feet ── -->
+      <rect x="8" y="41" width="16" height="6" fill="#150d08" />
+      <rect x="9" y="42" width="14" height="4" fill="#423c40" />
+      <rect x="9" y="42" width="14" height="1" fill="#56504c" />
+      <rect x="9" y="42" width="3" height="4" fill="#4a4348" />
+      <rect x="20" y="42" width="3" height="4" fill="#36302e" />
+      <rect x="12" y="43" width="1" height="3" fill="#322e30" />
+      <rect x="16" y="43" width="1" height="3" fill="#2c2826" />
+      <rect x="19" y="43" width="1" height="3" fill="#322e30" />
+      <!-- gold band reaches the hem -->
+      <rect x="14" y="42" width="2" height="4" fill="#7a6838" />
+      <rect x="14" y="42" width="1" height="4" fill="#9a8638" />
+      <rect x="9" y="47" width="6" height="3" fill="#150d08" />
+      <rect x="10" y="48" width="4" height="1" fill="#3e383c" />
+      <rect x="17" y="47" width="6" height="3" fill="#150d08" />
+      <rect x="18" y="48" width="4" height="1" fill="#322e30" />
 
-      <!-- Drifting ash motes -->
-      <rect x="5" y="20" width="1" height="1" fill="#9a8248" opacity="0.5" />
-      <rect x="19" y="18" width="1" height="1" fill="#c0a040" opacity="0.45" />
+      <!-- ── Falling ash around the song ── -->
+      <rect x="4" y="11" width="1" height="1" fill="#9a928a" opacity="0.45" />
+      <rect x="27" y="13" width="1" height="1" fill="#8a8278" opacity="0.4" />
+      <rect x="2" y="31" width="1" height="1" fill="#8a8278" opacity="0.35" />
+      <rect x="30" y="22" width="1" height="1" fill="#9a928a" opacity="0.35" />
     </svg>

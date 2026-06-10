@@ -1,59 +1,136 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 34"
+      viewBox="0 0 32 45"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Ink-Drowned Scholar"
     >
-      <!-- Sickly ink backlight + ground shadow -->
-      <ellipse cx="12" cy="17" rx="11" ry="15" fill="#3a6a2a" opacity="0.07" />
-      <ellipse cx="12" cy="33" rx="8" ry="1.4" fill="#000" opacity="0.4" />
+      <!-- Ink-glow backlight + ground shadow -->
+      <ellipse cx="16" cy="21" rx="15" ry="20" fill="#1e3a1a" opacity="0.14" />
+      <ellipse cx="16" cy="43.6" rx="10" ry="1.7" fill="#000" opacity="0.4" />
 
-      <!-- Hood / head hollow — near-black ramp -->
-      <rect x="8" y="2" width="9" height="9" fill="#0e0e18" />
-      <rect x="9" y="1" width="7" height="2" fill="#1e1e2e" />
-      <rect x="9" y="1" width="7" height="1" fill="#2a2a3a" />
-      <rect x="8" y="2" width="2" height="8" fill="#16161f" />
-      <rect x="8" y="2" width="1" height="6" fill="#20202c" />
-      <rect x="15" y="2" width="2" height="8" fill="#0a0a12" />
+      <!-- ── Head — drowned in ink; it never dried ── -->
+      <rect x="10" y="1" width="12" height="11" fill="#150d08" />
+      <rect x="11" y="2" width="10" height="9" fill="#12121e" />
+      <rect x="11" y="2" width="10" height="1" fill="#1e1e2c" />
+      <rect x="11" y="2" width="3" height="8" fill="#16161f" />
+      <rect x="11" y="2" width="1" height="5" fill="#222230" />
+      <rect x="18" y="3" width="3" height="8" fill="#0a0a12" />
+      <!-- ink sheen on the crown -->
+      <rect x="12" y="2" width="4" height="1" fill="#2e2e40" />
+      <rect x="12" y="3" width="2" height="1" fill="#3a3a50" />
+      <!-- ink running off the jaw in strands -->
+      <rect x="12" y="11" width="1" height="3" fill="#0a0a12" />
+      <rect x="15" y="11" width="1" height="2" fill="#0a0a12" />
+      <rect x="19" y="11" width="1" height="3" fill="#0a0a12" />
+      <rect x="12" y="14" width="1" height="1" fill="#0a0a12" opacity="0.6" />
+      <rect x="19" y="14" width="1" height="1" fill="#0a0a12" opacity="0.6" />
 
-      <!-- Glowing eyes — toxic green + spark -->
-      <rect x="10" y="5" width="2" height="2" fill="#7aba5a" />
-      <rect x="13" y="5" width="2" height="2" fill="#7aba5a" />
-      <rect x="10" y="5" width="1" height="1" fill="#c4f0a0" />
-      <rect x="13" y="5" width="1" height="1" fill="#c4f0a0" />
-      <rect x="10" y="6" width="2" height="1" fill="#4a7a32" />
-      <rect x="13" y="6" width="2" height="1" fill="#4a7a32" />
-      <rect x="11" y="8" width="3" height="1" fill="#3a5a2a" opacity="0.8" />
+      <!-- ── Eyes — sick verdigris light through the ink ── -->
+      <ellipse cx="16" cy="6.5" rx="5.4" ry="2.4" fill="#7aba4a" opacity="0.14" />
+      <rect x="12" y="5" width="3" height="2" fill="#0c1408" />
+      <rect x="17" y="5" width="3" height="2" fill="#0c1408" />
+      <rect x="12" y="5" width="2" height="1" fill="#5a8a38" />
+      <rect x="17" y="5" width="2" height="1" fill="#48702c" />
+      <rect x="12" y="5" width="1" height="1" fill="#c4f0a0" />
+      <rect x="17" y="5" width="1" height="1" fill="#a0d47c" />
+      <!-- the mouth — a line of dissolved text trickling out -->
+      <rect x="12" y="9" width="8" height="1" fill="#0a0a12" />
+      <rect x="13" y="9" width="1" height="1" fill="#48702c" />
+      <rect x="16" y="9" width="1" height="1" fill="#3a5a24" />
+      <rect x="19" y="9" width="1" height="1" fill="#48702c" />
 
-      <!-- Robe body — ink-black ramp, faint lit fold -->
-      <rect x="6" y="11" width="12" height="16" fill="#10101a" />
-      <rect x="6" y="11" width="12" height="1" fill="#22222e" />
-      <rect x="6" y="11" width="2" height="15" fill="#16161f" />
-      <rect x="6" y="11" width="1" height="14" fill="#20202c" />
-      <rect x="11" y="11" width="2" height="16" fill="#1a1a28" />
-      <rect x="16" y="11" width="2" height="15" fill="#0a0a12" />
-      <!-- Wet ink stains + dither -->
-      <rect x="9" y="12" width="2" height="3" fill="#1e3a1a" opacity="0.7" />
-      <rect x="13" y="16" width="2" height="3" fill="#1e3a1a" opacity="0.55" />
-      <rect x="8" y="20" width="2" height="2" fill="#1e3a1a" opacity="0.45" />
-      <rect x="10" y="17" width="1" height="1" fill="#2a2a38" />
-      <rect x="14" y="22" width="1" height="1" fill="#0a0a12" />
+      <!-- ── Scholar's collar — the one dry thing left, almost ── -->
+      <rect x="8" y="13" width="16" height="3" fill="#150d08" />
+      <rect x="9" y="14" width="14" height="2" fill="#5a5244" />
+      <rect x="9" y="14" width="14" height="1" fill="#7e7662" />
+      <rect x="9" y="14" width="4" height="1" fill="#9a927c" />
+      <!-- ink soaking up into it -->
+      <rect x="9" y="15" width="3" height="1" fill="#16161f" />
+      <rect x="19" y="15" width="4" height="1" fill="#12121e" />
 
-      <!-- Dripping ink sleeves -->
-      <rect x="3" y="13" width="3" height="4" fill="#12121e" />
-      <rect x="3" y="13" width="1" height="4" fill="#1e1e2c" />
-      <rect x="1" y="15" width="3" height="2" fill="#0a0a12" />
-      <rect x="18" y="12" width="4" height="2" fill="#12121e" />
-      <rect x="18" y="12" width="4" height="1" fill="#1e1e2c" />
-      <rect x="20" y="13" width="3" height="3" fill="#0a0a12" />
-      <rect x="22" y="15" width="2" height="3" fill="#161624" />
-      <rect x="21" y="17" width="2" height="2" fill="#1e3a1a" opacity="0.6" />
+      <!-- ── Robe — black-soaked, ink crawling UP the weave ── -->
+      <rect x="6" y="16" width="20" height="17" fill="#150d08" />
+      <rect x="7" y="17" width="18" height="15" fill="#16161f" />
+      <rect x="7" y="17" width="18" height="1" fill="#222230" />
+      <rect x="7" y="17" width="3" height="14" fill="#1a1a26" />
+      <rect x="7" y="17" width="1" height="10" fill="#262634" />
+      <rect x="22" y="17" width="3" height="14" fill="#0e0e16" />
+      <rect x="24" y="18" width="1" height="13" fill="#0a0a10" />
+      <!-- remnant dry cloth at one shoulder — the tide-line of the ink -->
+      <rect x="8" y="17" width="6" height="3" fill="#4a4438" />
+      <rect x="8" y="17" width="6" height="1" fill="#5a5244" />
+      <rect x="8" y="19" width="4" height="1" fill="#3a3428" />
+      <rect x="14" y="18" width="1" height="2" fill="#2a2a36" />
+      <!-- ink sheen ripples -->
+      <rect x="9" y="22" width="4" height="1" fill="#2e2e40" opacity="0.8" />
+      <rect x="16" y="25" width="5" height="1" fill="#262634" opacity="0.8" />
+      <rect x="10" y="28" width="3" height="1" fill="#2e2e40" opacity="0.6" />
+      <!-- dissolved glyphs floating in the black -->
+      <rect x="11" y="20" width="1" height="1" fill="#48702c" />
+      <rect x="17" y="21" width="2" height="1" fill="#3a5a24" />
+      <rect x="13" y="24" width="1" height="1" fill="#5a8a38" />
+      <rect x="19" y="27" width="1" height="1" fill="#48702c" opacity="0.8" />
+      <rect x="12" y="29" width="2" height="1" fill="#3a5a24" opacity="0.8" />
+      <rect x="16" y="30" width="1" height="1" fill="#48702c" opacity="0.6" />
+      <!-- the heart-word still legible — glowing through the soak -->
+      <ellipse cx="16" cy="23" rx="3.4" ry="2.6" fill="#7aba4a" opacity="0.16" />
+      <rect x="14" y="22" width="4" height="2" fill="#0c1408" />
+      <rect x="15" y="22" width="2" height="1" fill="#7aba4a" />
+      <rect x="15" y="22" width="1" height="1" fill="#c4f0a0" />
 
-      <!-- Tattered hem -->
-      <rect x="6" y="27" width="12" height="3" fill="#0a0a12" />
-      <rect x="6" y="27" width="12" height="1" fill="#16161f" />
-      <polygon points="6,30 9,34 12,30" fill="#12121e" />
-      <polygon points="12,30 15,34 18,30" fill="#0e0e18" />
-      <rect x="4" y="32" width="16" height="2" fill="#0a1822" opacity="0.6" />
-      <rect x="7" y="31" width="2" height="1" fill="#1e3a1a" opacity="0.4" />
+      <!-- ── Left arm — quill still in hand, writing on nothing ── -->
+      <rect x="2" y="16" width="6" height="11" fill="#150d08" />
+      <rect x="3" y="17" width="4" height="9" fill="#16161f" />
+      <rect x="3" y="17" width="1" height="9" fill="#1e1e2c" />
+      <rect x="6" y="17" width="1" height="9" fill="#0e0e16" />
+      <rect x="2" y="26" width="5" height="3" fill="#150d08" />
+      <rect x="3" y="27" width="3" height="1" fill="#222230" />
+      <!-- the quill — white feather, ink-bled -->
+      <rect x="1" y="20" width="3" height="3" fill="#150d08" />
+      <rect x="2" y="21" width="1" height="1" fill="#dcd4bc" />
+      <rect x="0" y="17" width="3" height="4" fill="#150d08" />
+      <rect x="1" y="18" width="1" height="3" fill="#f2ebd6" />
+      <rect x="1" y="18" width="1" height="1" fill="#ffffff" />
+      <!-- ink climbing the feather -->
+      <rect x="1" y="20" width="1" height="1" fill="#12121e" />
+      <!-- nib scratching mid-air, leaving a green glyph -->
+      <rect x="2" y="29" width="1" height="2" fill="#150d08" />
+      <rect x="1" y="31" width="2" height="1" fill="#48702c" opacity="0.8" />
+      <rect x="3" y="32" width="2" height="1" fill="#3a5a24" opacity="0.6" />
+
+      <!-- ── Right arm — dissolving below the elbow into drip ── -->
+      <rect x="24" y="16" width="6" height="8" fill="#150d08" />
+      <rect x="25" y="17" width="4" height="6" fill="#0e0e16" />
+      <rect x="25" y="17" width="1" height="6" fill="#16161f" />
+      <rect x="25" y="23" width="4" height="3" fill="#150d08" opacity="0.9" />
+      <rect x="26" y="24" width="2" height="1" fill="#12121e" />
+      <rect x="26" y="26" width="3" height="3" fill="#150d08" opacity="0.7" />
+      <rect x="27" y="27" width="1" height="1" fill="#16161f" />
+      <rect x="27" y="29" width="2" height="3" fill="#150d08" opacity="0.5" />
+      <rect x="28" y="32" width="1" height="2" fill="#150d08" opacity="0.35" />
+      <!-- drip beads -->
+      <rect x="26" y="30" width="1" height="1" fill="#2e2e40" opacity="0.7" />
+      <rect x="28" y="34" width="1" height="1" fill="#262634" opacity="0.5" />
+
+      <!-- ── Skirt — hem dissolving into an ink pool ── -->
+      <rect x="7" y="33" width="18" height="6" fill="#150d08" />
+      <rect x="8" y="34" width="16" height="4" fill="#101018" />
+      <rect x="8" y="34" width="16" height="1" fill="#1a1a26" />
+      <rect x="8" y="34" width="3" height="4" fill="#14141e" />
+      <rect x="11" y="35" width="1" height="3" fill="#0a0a10" />
+      <rect x="16" y="35" width="1" height="3" fill="#0a0a10" />
+      <rect x="20" y="35" width="1" height="3" fill="#0a0a10" />
+      <!-- the pool — spreading, glyphs sinking in it -->
+      <ellipse cx="16" cy="41" rx="12" ry="2.2" fill="#0a0a12" />
+      <ellipse cx="16" cy="41" rx="12" ry="2.2" fill="#12121e" opacity="0.6" />
+      <ellipse cx="14" cy="40.6" rx="6" ry="1" fill="#222230" opacity="0.7" />
+      <rect x="10" y="41" width="2" height="1" fill="#3a5a24" opacity="0.7" />
+      <rect x="20" y="42" width="1" height="1" fill="#48702c" opacity="0.6" />
+      <rect x="15" y="43" width="2" height="1" fill="#2e4a1c" opacity="0.5" />
+
+      <!-- ── Verdigris motes — words escaping ── -->
+      <rect x="5" y="8" width="1" height="1" fill="#7aba4a" opacity="0.5" />
+      <rect x="26" y="10" width="1" height="1" fill="#5a8a38" opacity="0.45" />
+      <rect x="29" y="25" width="1" height="1" fill="#7aba4a" opacity="0.4" />
+      <rect x="4" y="36" width="1" height="1" fill="#5a8a38" opacity="0.35" />
     </svg>

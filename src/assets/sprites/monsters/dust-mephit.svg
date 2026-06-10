@@ -1,89 +1,147 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 28"
+      viewBox="0 0 30 38"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Dust Mephit"
     >
       <!-- Grit backlight + drifting dust shadow -->
-      <ellipse cx="11" cy="11" rx="11" ry="12" fill="#9a9088" opacity="0.08" />
-      <ellipse cx="11" cy="26" rx="8" ry="1.4" fill="#000" opacity="0.32" />
+      <ellipse cx="15" cy="15" rx="15" ry="16" fill="#9a9088" opacity="0.08" />
+      <ellipse cx="15" cy="35.5" rx="11" ry="1.8" fill="#000" opacity="0.3" />
 
-      <!-- Wings — tattered, lit leading edge -->
-      <polygon points="0,8 4,4 6,12 4,14" fill="#3a352e" />
-      <polygon points="0,8 4,4 6,12 4,14" fill="#5a5048" opacity="0.7" />
-      <polygon points="1,9 4,6 5,11" fill="#7a7068" opacity="0.6" />
-      <polygon points="2,9 4,6 4,8" fill="#9a9088" opacity="0.5" />
-      <polygon points="22,8 18,4 16,12 18,14" fill="#3a352e" />
-      <polygon points="22,8 18,4 16,12 18,14" fill="#4a443c" opacity="0.6" />
-      <polygon points="21,9 18,6 17,11" fill="#5a5048" opacity="0.5" />
-      <line x1="3" y1="6" x2="5" y2="13" stroke="#1a1410" stroke-width="0.4" />
-      <line x1="19" y1="6" x2="17" y2="13" stroke="#1a1410" stroke-width="0.4" />
+      <!-- ── Left wing — tattered stone-dust membrane, lit edge ── -->
+      <rect x="0" y="10" width="2" height="5" fill="#150d08" />
+      <rect x="1" y="7" width="3" height="9" fill="#150d08" />
+      <rect x="3" y="5" width="3" height="12" fill="#150d08" />
+      <rect x="6" y="6" width="3" height="13" fill="#150d08" />
+      <rect x="1" y="8" width="2" height="7" fill="#7a7068" />
+      <rect x="3" y="6" width="2" height="10" fill="#9a9088" />
+      <rect x="5" y="7" width="2" height="11" fill="#7a7068" />
+      <rect x="7" y="8" width="2" height="10" fill="#5a5048" />
+      <!-- pale lit leading edge -->
+      <rect x="3" y="6" width="2" height="1" fill="#d8d0c0" />
+      <rect x="1" y="8" width="2" height="1" fill="#b8b0a8" />
+      <rect x="5" y="7" width="2" height="1" fill="#9a9088" />
+      <!-- wing fingers + tears -->
+      <rect x="4" y="6" width="1" height="10" fill="#3a352e" />
+      <rect x="7" y="7" width="1" height="11" fill="#3a352e" />
+      <rect x="2" y="12" width="1" height="2" fill="#150d08" />
+      <rect x="6" y="14" width="1" height="2" fill="#150d08" />
 
-      <!-- Torso — stone ramp, key light upper-left -->
-      <rect x="8" y="6" width="6" height="9" fill="#5a5048" />
-      <rect x="8" y="6" width="3" height="9" fill="#7a7068" />
-      <rect x="8" y="6" width="1" height="7" fill="#9a9088" />
-      <rect x="13" y="6" width="1" height="9" fill="#3a352e" />
-      <rect x="7" y="7" width="1" height="6" fill="#3a352e" />
-      <rect x="14" y="7" width="1" height="6" fill="#2a2620" />
-      <rect x="9" y="9" width="1" height="1" fill="#b8b0a8" opacity="0.6" />
-      <rect x="11" y="11" width="1" height="1" fill="#3a352e" />
+      <!-- ── Right wing — shadow side ── -->
+      <rect x="28" y="10" width="2" height="5" fill="#150d08" />
+      <rect x="26" y="7" width="3" height="9" fill="#150d08" />
+      <rect x="24" y="5" width="3" height="12" fill="#150d08" />
+      <rect x="21" y="6" width="3" height="13" fill="#150d08" />
+      <rect x="27" y="8" width="2" height="7" fill="#4a443c" />
+      <rect x="25" y="6" width="2" height="10" fill="#5a5048" />
+      <rect x="23" y="7" width="2" height="11" fill="#4a443c" />
+      <rect x="21" y="8" width="2" height="10" fill="#3a352e" />
+      <rect x="25" y="6" width="2" height="1" fill="#9a9088" />
+      <rect x="27" y="12" width="1" height="2" fill="#3e5650" />
+      <rect x="25" y="6" width="1" height="10" fill="#2a2620" />
+      <rect x="22" y="7" width="1" height="11" fill="#2a2620" />
+      <rect x="26" y="11" width="1" height="2" fill="#150d08" />
 
-      <!-- Head — ramp + crumbling horns -->
-      <rect x="7" y="2" width="8" height="5" fill="#5a5048" />
-      <rect x="7" y="2" width="8" height="1" fill="#7a7068" />
-      <rect x="7" y="2" width="2" height="5" fill="#7a7068" />
-      <rect x="7" y="2" width="1" height="3" fill="#9a9088" />
-      <rect x="14" y="2" width="1" height="5" fill="#3a352e" />
-      <rect x="7" y="0" width="1" height="3" fill="#5a5048" />
-      <rect x="14" y="0" width="1" height="3" fill="#3a352e" />
-      <rect x="7" y="0" width="1" height="1" fill="#7a7068" />
-      <rect x="6" y="1" width="1" height="1" fill="#5a5048" />
-      <rect x="15" y="1" width="1" height="1" fill="#3a352e" />
+      <!-- ── Crumbling horns ── -->
+      <rect x="8" y="0" width="3" height="4" fill="#150d08" />
+      <rect x="9" y="1" width="1" height="2" fill="#7a7068" />
+      <rect x="9" y="1" width="1" height="1" fill="#9a9088" />
+      <rect x="19" y="0" width="3" height="4" fill="#150d08" />
+      <rect x="20" y="1" width="1" height="2" fill="#4a443c" />
+      <!-- chipped tip drifting off -->
+      <rect x="21" y="0" width="1" height="1" fill="#3a352e" />
 
-      <!-- Eyes — pale grit-light + spark -->
-      <rect x="8" y="3" width="2" height="2" fill="#1a1410" />
-      <rect x="12" y="3" width="2" height="2" fill="#1a1410" />
-      <rect x="8" y="3" width="1" height="1" fill="#e0d8c0" />
-      <rect x="12" y="3" width="1" height="1" fill="#c8c0b0" />
+      <!-- ── Head — cracked stone ramp, key upper-left ── -->
+      <rect x="8" y="2" width="14" height="8" fill="#150d08" />
+      <rect x="9" y="3" width="12" height="6" fill="#5a5048" />
+      <rect x="9" y="3" width="12" height="1" fill="#7a7068" />
+      <rect x="9" y="3" width="3" height="6" fill="#7a7068" />
+      <rect x="9" y="3" width="1" height="4" fill="#9a9088" />
+      <rect x="9" y="3" width="1" height="2" fill="#b8b0a8" />
+      <rect x="18" y="4" width="3" height="5" fill="#3a352e" />
+      <rect x="20" y="5" width="1" height="4" fill="#2a2620" />
+      <!-- fissure crack down the brow -->
+      <rect x="15" y="3" width="1" height="3" fill="#2a2620" />
+      <rect x="16" y="5" width="1" height="1" fill="#2a2620" />
 
-      <!-- Grimacing mouth -->
-      <rect x="8" y="5" width="6" height="2" fill="#1a1410" />
-      <rect x="8" y="5" width="1" height="2" fill="#e0d8c0" />
-      <rect x="10" y="5" width="1" height="1" fill="#e0d8c0" />
-      <rect x="13" y="5" width="1" height="2" fill="#c8c0b0" />
+      <!-- ── Eyes — pale grit-light, weary ── -->
+      <rect x="10" y="5" width="3" height="2" fill="#1a1410" />
+      <rect x="16" y="5" width="3" height="2" fill="#1a1410" />
+      <rect x="10" y="5" width="2" height="2" fill="#e0d8c0" />
+      <rect x="16" y="5" width="2" height="2" fill="#c8c0b0" />
+      <rect x="10" y="5" width="1" height="1" fill="#fff8e8" />
+      <rect x="16" y="5" width="1" height="1" fill="#f0e8d8" />
 
-      <!-- Arms — ramp + clawed hands -->
-      <rect x="6" y="9" width="2" height="5" fill="#5a5048" />
-      <rect x="6" y="9" width="1" height="5" fill="#7a7068" />
-      <rect x="14" y="9" width="2" height="5" fill="#5a5048" />
-      <rect x="15" y="9" width="1" height="5" fill="#3a352e" />
-      <rect x="5" y="13" width="3" height="2" fill="#5a5048" />
-      <rect x="5" y="13" width="3" height="1" fill="#7a7068" />
-      <rect x="14" y="13" width="3" height="2" fill="#5a5048" />
-      <polygon points="5,14 4,16 6,15" fill="#1a1410" />
-      <polygon points="7,14 6,16 8,15" fill="#1a1410" />
-      <polygon points="15,14 14,16 16,15" fill="#1a1410" />
-      <polygon points="17,14 16,16 18,15" fill="#1a1410" />
+      <!-- ── Grimacing mouth — cracked open, dust sifting out ── -->
+      <rect x="10" y="7" width="9" height="2" fill="#1a1410" />
+      <rect x="10" y="7" width="1" height="2" fill="#e0d8c0" />
+      <rect x="13" y="7" width="1" height="2" fill="#d8d0c0" />
+      <rect x="16" y="7" width="1" height="2" fill="#c8c0b0" />
+      <rect x="11" y="9" width="2" height="1" fill="#b8b0a8" opacity="0.5" />
 
-      <!-- Tail -->
-      <rect x="11" y="15" width="1" height="6" fill="#5a5048" />
-      <rect x="10" y="20" width="1" height="2" fill="#3a352e" />
-      <polygon points="9,22 11,24 10,22" fill="#1a1410" />
+      <!-- ── Torso — stone ramp with crumble pits ── -->
+      <rect x="9" y="10" width="12" height="12" fill="#150d08" />
+      <rect x="10" y="11" width="10" height="10" fill="#5a5048" />
+      <rect x="10" y="11" width="10" height="1" fill="#7a7068" />
+      <rect x="10" y="11" width="3" height="9" fill="#7a7068" />
+      <rect x="10" y="11" width="1" height="7" fill="#9a9088" />
+      <rect x="10" y="11" width="1" height="3" fill="#b8b0a8" />
+      <rect x="17" y="12" width="3" height="9" fill="#3a352e" />
+      <rect x="19" y="13" width="1" height="8" fill="#2a2620" />
+      <rect x="19" y="15" width="1" height="3" fill="#3e5650" />
+      <!-- crumble pits + dither -->
+      <rect x="13" y="13" width="1" height="1" fill="#3a352e" />
+      <rect x="15" y="16" width="2" height="1" fill="#2a2620" />
+      <rect x="12" y="18" width="1" height="1" fill="#3a352e" />
+      <rect x="11" y="14" width="1" height="1" fill="#b8b0a8" />
+      <!-- cracked belly seam leaking dust -->
+      <rect x="12" y="19" width="6" height="1" fill="#2a2620" />
+      <rect x="13" y="20" width="2" height="1" fill="#b8b0a8" opacity="0.6" />
 
-      <!-- Legs — ramp + talons -->
-      <rect x="8" y="15" width="2" height="6" fill="#5a5048" />
-      <rect x="8" y="15" width="1" height="6" fill="#7a7068" />
-      <rect x="12" y="15" width="2" height="6" fill="#5a5048" />
-      <rect x="13" y="15" width="1" height="6" fill="#3a352e" />
-      <rect x="7" y="21" width="4" height="2" fill="#5a5048" />
-      <rect x="11" y="21" width="4" height="2" fill="#5a5048" />
-      <polygon points="7,23 8,25 9,23" fill="#1a1410" />
-      <polygon points="13,23 14,25 15,23" fill="#1a1410" />
+      <!-- ── Arms — ramp + dark talons ── -->
+      <rect x="6" y="13" width="4" height="8" fill="#150d08" />
+      <rect x="7" y="14" width="2" height="6" fill="#5a5048" />
+      <rect x="7" y="14" width="1" height="6" fill="#7a7068" />
+      <rect x="5" y="19" width="4" height="4" fill="#150d08" />
+      <rect x="6" y="20" width="2" height="2" fill="#7a7068" />
+      <rect x="5" y="22" width="1" height="2" fill="#150d08" />
+      <rect x="7" y="22" width="1" height="2" fill="#150d08" />
+      <rect x="20" y="13" width="4" height="8" fill="#150d08" />
+      <rect x="21" y="14" width="2" height="6" fill="#3a352e" />
+      <rect x="22" y="14" width="1" height="6" fill="#2a2620" />
+      <rect x="21" y="19" width="4" height="4" fill="#150d08" />
+      <rect x="22" y="20" width="2" height="2" fill="#3a352e" />
+      <rect x="22" y="22" width="1" height="2" fill="#150d08" />
+      <rect x="24" y="22" width="1" height="2" fill="#150d08" />
 
-      <!-- Billowing dust cloud -->
-      <ellipse cx="11" cy="26" rx="8" ry="1.5" fill="#9a9088" opacity="0.3" />
-      <ellipse cx="11" cy="27" rx="6" ry="0.8" fill="#b8b0a8" opacity="0.2" />
-      <rect x="4" y="24" width="1" height="1" fill="#b8b0a8" opacity="0.4" />
-      <rect x="17" y="25" width="1" height="1" fill="#9a9088" opacity="0.35" />
+      <!-- ── Stubby legs + talons ── -->
+      <rect x="10" y="22" width="4" height="8" fill="#150d08" />
+      <rect x="11" y="23" width="2" height="6" fill="#5a5048" />
+      <rect x="11" y="23" width="1" height="6" fill="#7a7068" />
+      <rect x="16" y="22" width="4" height="8" fill="#150d08" />
+      <rect x="17" y="23" width="2" height="6" fill="#3a352e" />
+      <rect x="18" y="23" width="1" height="6" fill="#2a2620" />
+      <rect x="9" y="30" width="6" height="3" fill="#150d08" />
+      <rect x="10" y="31" width="4" height="1" fill="#5a5048" />
+      <rect x="10" y="30" width="4" height="1" fill="#7a7068" />
+      <rect x="15" y="30" width="6" height="3" fill="#150d08" />
+      <rect x="16" y="31" width="4" height="1" fill="#3a352e" />
+      <rect x="10" y="32" width="1" height="2" fill="#150d08" />
+      <rect x="13" y="32" width="1" height="2" fill="#150d08" />
+      <rect x="16" y="32" width="1" height="2" fill="#150d08" />
+      <rect x="19" y="32" width="1" height="2" fill="#150d08" />
+
+      <!-- ── Tail crumbling to grit ── -->
+      <rect x="14" y="22" width="2" height="6" fill="#150d08" />
+      <rect x="14" y="27" width="1" height="3" fill="#3a352e" />
+      <rect x="13" y="29" width="1" height="2" fill="#2a2620" />
+      <rect x="12" y="31" width="1" height="1" fill="#3a352e" opacity="0.7" />
+
+      <!-- ── Billowing dust skirt at the ground ── -->
+      <ellipse cx="15" cy="34.5" rx="11" ry="2" fill="#9a9088" opacity="0.3" />
+      <ellipse cx="15" cy="36" rx="8" ry="1.1" fill="#b8b0a8" opacity="0.22" />
+      <rect x="5" y="32" width="1" height="1" fill="#b8b0a8" opacity="0.45" />
+      <rect x="23" y="33" width="1" height="1" fill="#9a9088" opacity="0.4" />
+      <rect x="8" y="35" width="1" height="1" fill="#d8d0c0" opacity="0.35" />
+      <rect x="21" y="35" width="1" height="1" fill="#b8b0a8" opacity="0.3" />
     </svg>

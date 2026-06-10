@@ -1,124 +1,156 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 36"
+      viewBox="0 0 30 49"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Slaver Cuirassier"
     >
       <!-- Warm torchlit backlight + ground shadow -->
-      <ellipse cx="11" cy="18" rx="11" ry="16" fill="#a8542a" opacity="0.07" />
-      <ellipse cx="11" cy="35" rx="7" ry="1.3" fill="#000" opacity="0.4" />
+      <ellipse cx="15" cy="23" rx="14" ry="21" fill="#a8542a" opacity="0.07" />
+      <ellipse cx="15" cy="47.6" rx="10" ry="1.8" fill="#000" opacity="0.4" />
 
-      <!-- Red helm plume -->
-      <polygon points="9,-2 11,-4 13,-2" fill="#8c1818" />
-      <rect x="10" y="-2" width="2" height="3" fill="#b5302c" />
-      <rect x="10" y="-2" width="1" height="3" fill="#d8504a" />
+      <!-- ── Red helm plume, swept back ── -->
+      <rect x="12" y="0" width="7" height="3" fill="#150d08" />
+      <rect x="13" y="1" width="5" height="1" fill="#b5302c" />
+      <rect x="13" y="1" width="2" height="1" fill="#d8504a" />
+      <rect x="17" y="2" width="2" height="1" fill="#8c1818" />
+      <rect x="10" y="2" width="4" height="2" fill="#150d08" />
+      <rect x="11" y="3" width="2" height="1" fill="#8c1818" />
 
-      <!-- Black helm — steel ramp + specular -->
-      <rect x="6" y="0" width="10" height="2" fill="#0a0808" />
-      <rect x="6" y="1" width="10" height="5" fill="#1a1410" />
-      <rect x="6" y="1" width="10" height="1" fill="#3a3228" />
-      <rect x="6" y="1" width="2" height="5" fill="#2a221c" />
-      <rect x="6" y="1" width="1" height="3" fill="#4a4038" />
-      <rect x="5" y="5" width="12" height="1" fill="#3a2418" />
-      <rect x="7" y="1" width="3" height="1" fill="#5a5048" opacity="0.7" />
+      <!-- ── Black lobster helm — blued steel, brim low ── -->
+      <rect x="8" y="3" width="14" height="7" fill="#150d08" />
+      <rect x="9" y="4" width="12" height="5" fill="#1d1d24" />
+      <rect x="9" y="4" width="12" height="1" fill="#3c3c48" />
+      <rect x="9" y="4" width="4" height="1" fill="#5a5a6a" />
+      <rect x="9" y="5" width="2" height="4" fill="#2c2c36" />
+      <rect x="9" y="5" width="1" height="2" fill="#4a4a58" />
+      <rect x="19" y="5" width="2" height="4" fill="#101016" />
+      <!-- flared brim -->
+      <rect x="7" y="9" width="16" height="2" fill="#150d08" />
+      <rect x="8" y="9" width="14" height="1" fill="#3c3c48" />
+      <rect x="8" y="9" width="4" height="1" fill="#5a5a6a" />
 
-      <!-- Tan face under the brim -->
-      <rect x="7" y="6" width="8" height="4" fill="#a87838" />
-      <rect x="7" y="6" width="8" height="1" fill="#5a3c1c" />
-      <rect x="7" y="7" width="8" height="1" fill="#5a3c1c" opacity="0.55" />
-      <rect x="7" y="6" width="2" height="4" fill="#b8884a" />
-      <rect x="14" y="6" width="1" height="4" fill="#7a5226" />
-      <rect x="8" y="7" width="2" height="1" fill="#1a1410" />
-      <rect x="12" y="7" width="2" height="1" fill="#1a1410" />
-      <rect x="8" y="7" width="1" height="1" fill="#e8dcc4" />
-      <rect x="13" y="7" width="1" height="1" fill="#e8dcc4" />
-      <rect x="9" y="9" width="4" height="1" fill="#3a2010" />
-      <rect x="8" y="10" width="6" height="1" fill="#a87838" />
+      <!-- ── Tan face in the brim's shadow ── -->
+      <rect x="9" y="11" width="12" height="6" fill="#150d08" />
+      <rect x="10" y="12" width="10" height="4" fill="#a87838" />
+      <rect x="10" y="12" width="10" height="1" fill="#5a3c1c" />
+      <rect x="10" y="12" width="2" height="4" fill="#b8884a" />
+      <rect x="18" y="13" width="2" height="3" fill="#7a5226" />
+      <!-- cold professional eyes -->
+      <rect x="11" y="13" width="3" height="2" fill="#1a1410" />
+      <rect x="16" y="13" width="3" height="2" fill="#1a1410" />
+      <rect x="11" y="13" width="2" height="1" fill="#e8dcc4" />
+      <rect x="16" y="13" width="2" height="1" fill="#d4c8a8" />
+      <rect x="12" y="13" width="1" height="2" fill="#0a0808" />
+      <rect x="17" y="13" width="1" height="2" fill="#0a0808" />
+      <!-- set mouth -->
+      <rect x="12" y="15" width="6" height="1" fill="#3a2010" />
 
-      <!-- Red shoulder sash -->
-      <polygon points="4,12 11,11 18,12 18,14 4,14" fill="#8c1818" />
-      <polygon points="4,12 11,11 18,12 18,13 4,13" fill="#b5302c" opacity="0.7" />
-      <polygon points="4,12 11,11 11,12 4,13" fill="#d8504a" opacity="0.4" />
+      <!-- ── Red officer sash across the gorget ── -->
+      <rect x="6" y="17" width="18" height="3" fill="#150d08" />
+      <rect x="7" y="18" width="16" height="2" fill="#8c1818" />
+      <rect x="7" y="18" width="16" height="1" fill="#b5302c" />
+      <rect x="7" y="18" width="5" height="1" fill="#d8504a" />
+      <rect x="20" y="19" width="3" height="1" fill="#5a1208" />
 
-      <!-- Pauldrons — steel ramp + specular -->
-      <rect x="2" y="11" width="4" height="5" fill="#0a0808" />
-      <rect x="16" y="11" width="4" height="5" fill="#0a0808" />
-      <rect x="2" y="11" width="4" height="1" fill="#5a5048" />
-      <rect x="16" y="11" width="4" height="1" fill="#5a5048" />
-      <rect x="3" y="12" width="2" height="3" fill="#3a3228" />
-      <rect x="17" y="12" width="2" height="3" fill="#3a3228" />
-      <rect x="3" y="11" width="1" height="1" fill="#7a7068" />
-      <rect x="17" y="11" width="1" height="1" fill="#6a6058" />
+      <!-- ── Pauldrons — blackened steel, hard speculars ── -->
+      <rect x="1" y="19" width="9" height="6" fill="#150d08" />
+      <rect x="2" y="20" width="7" height="4" fill="#2c2c36" />
+      <rect x="2" y="20" width="7" height="1" fill="#5a5a6a" />
+      <rect x="2" y="20" width="3" height="1" fill="#8a8a9c" />
+      <rect x="2" y="20" width="1" height="1" fill="#c4c4d4" />
+      <rect x="2" y="23" width="7" height="1" fill="#101016" />
+      <rect x="20" y="19" width="9" height="6" fill="#150d08" />
+      <rect x="21" y="20" width="7" height="4" fill="#1d1d24" />
+      <rect x="21" y="20" width="7" height="1" fill="#3c3c48" />
+      <rect x="21" y="20" width="2" height="1" fill="#5a5a6a" />
+      <rect x="26" y="21" width="2" height="3" fill="#101016" />
+      <rect x="27" y="21" width="1" height="3" fill="#2e4a4e" />
 
-      <!-- Cuirass — steel ramp, lit ridge, gold boss -->
-      <rect x="5" y="14" width="12" height="11" fill="#0a0808" />
-      <rect x="5" y="14" width="12" height="1" fill="#5a5048" />
-      <rect x="5" y="24" width="12" height="1" fill="#5a5048" />
-      <rect x="6" y="15" width="2" height="8" fill="#2a221c" opacity="0.7" />
-      <rect x="14" y="15" width="2" height="8" fill="#2a221c" opacity="0.7" />
-      <rect x="5" y="14" width="1" height="11" fill="#3a3228" opacity="0.7" />
-      <circle cx="11" cy="18" r="3" fill="#8c6232" />
-      <circle cx="11" cy="18" r="2" fill="#d4a850" />
-      <rect x="10" y="17" width="1" height="1" fill="#f4d870" />
-      <rect x="10" y="17" width="2" height="2" fill="#5a3c1c" />
-      <rect x="11" y="16" width="1" height="3" fill="#8c6232" />
+      <!-- ── Cuirass — blued plate, gold slaver-guild boss ── -->
+      <rect x="6" y="20" width="18" height="15" fill="#150d08" />
+      <rect x="7" y="21" width="16" height="13" fill="#1d1d24" />
+      <rect x="7" y="21" width="16" height="1" fill="#3c3c48" />
+      <rect x="7" y="21" width="3" height="12" fill="#2c2c36" />
+      <rect x="7" y="21" width="1" height="12" fill="#4a4a58" />
+      <rect x="7" y="21" width="1" height="4" fill="#6a6a7c" />
+      <rect x="20" y="21" width="3" height="12" fill="#101016" />
+      <rect x="22" y="22" width="1" height="11" fill="#0a0a0e" />
+      <!-- plate ridge -->
+      <rect x="14" y="21" width="1" height="12" fill="#3c3c48" />
+      <rect x="15" y="21" width="1" height="12" fill="#101016" />
+      <!-- gold guild boss -->
+      <ellipse cx="15" cy="26" rx="4" ry="3.6" fill="#f4d042" opacity="0.13" />
+      <rect x="12" y="24" width="6" height="5" fill="#150d08" />
+      <rect x="13" y="25" width="4" height="3" fill="#8c6232" />
+      <rect x="13" y="25" width="2" height="2" fill="#d4a850" />
+      <rect x="13" y="25" width="1" height="1" fill="#f4d870" />
+      <rect x="16" y="27" width="1" height="1" fill="#5a3c1c" />
+      <!-- shackle-and-chain sigil etched in the boss -->
+      <rect x="14" y="26" width="2" height="1" fill="#5a3c1c" />
+      <!-- rivets -->
+      <rect x="9" y="22" width="1" height="1" fill="#8a8a9c" />
+      <rect x="19" y="22" width="1" height="1" fill="#3c3c48" />
+      <rect x="9" y="31" width="1" height="1" fill="#5a5a6a" />
+      <rect x="19" y="31" width="1" height="1" fill="#101016" />
 
-      <!-- Upper arms — red + steel -->
-      <rect x="3" y="15" width="3" height="6" fill="#8c1818" />
-      <rect x="16" y="15" width="3" height="6" fill="#8c1818" />
-      <rect x="3" y="15" width="1" height="6" fill="#b5302c" />
-      <rect x="18" y="15" width="1" height="6" fill="#5a1208" />
-      <rect x="3" y="20" width="3" height="3" fill="#0a0808" />
-      <rect x="16" y="20" width="3" height="3" fill="#0a0808" />
-      <rect x="3" y="20" width="3" height="1" fill="#5a5048" />
-      <rect x="16" y="20" width="3" height="1" fill="#5a5048" />
+      <!-- ── Left arm — red sleeve, steel couter, gauntlet ── -->
+      <rect x="2" y="25" width="5" height="7" fill="#150d08" />
+      <rect x="3" y="26" width="3" height="5" fill="#8c1818" />
+      <rect x="3" y="26" width="1" height="5" fill="#b5302c" />
+      <rect x="5" y="26" width="1" height="5" fill="#5a1208" />
+      <rect x="2" y="30" width="5" height="2" fill="#150d08" />
+      <rect x="3" y="30" width="3" height="1" fill="#3c3c48" />
+      <rect x="2" y="32" width="5" height="4" fill="#150d08" />
+      <rect x="3" y="33" width="3" height="2" fill="#1d1d24" />
+      <rect x="3" y="33" width="3" height="1" fill="#3c3c48" />
 
-      <!-- Gauntlets -->
-      <rect x="2" y="23" width="4" height="2" fill="#1a1410" />
-      <rect x="16" y="23" width="4" height="2" fill="#1a1410" />
+      <!-- ── Right arm — whip-stock gripped low ── -->
+      <rect x="23" y="25" width="5" height="7" fill="#150d08" />
+      <rect x="24" y="26" width="3" height="5" fill="#6a1212" />
+      <rect x="24" y="26" width="1" height="5" fill="#8c1818" />
+      <rect x="23" y="31" width="5" height="4" fill="#150d08" />
+      <rect x="24" y="32" width="3" height="2" fill="#1d1d24" />
+      <rect x="24" y="32" width="3" height="1" fill="#2c2c36" />
 
-      <!-- Whip haft -->
-      <rect x="17" y="23" width="2" height="9" fill="#3a2418" />
-      <rect x="18" y="23" width="1" height="9" fill="#5a3c1c" />
+      <!-- ── Coiled whip at the hip — leather rings ── -->
+      <rect x="24" y="34" width="5" height="6" fill="#150d08" />
+      <rect x="25" y="35" width="3" height="4" fill="#3a2418" />
+      <rect x="25" y="35" width="3" height="1" fill="#5a3c1c" />
+      <rect x="26" y="36" width="1" height="2" fill="#150d08" />
+      <rect x="25" y="37" width="3" height="1" fill="#5a3c1c" opacity="0.7" />
+      <!-- lash tail dropping -->
+      <rect x="28" y="39" width="1" height="4" fill="#3a2418" />
+      <rect x="28" y="42" width="1" height="1" fill="#7a1a0a" />
 
-      <!-- Belt + studs + buckle -->
-      <rect x="4" y="25" width="14" height="2" fill="#1a1410" />
-      <rect x="4" y="25" width="14" height="1" fill="#3a2e22" />
-      <rect x="10" y="25" width="2" height="2" fill="#8c6232" />
-      <rect x="10" y="25" width="1" height="1" fill="#d4a850" />
-      <circle cx="3" cy="26" r="1.5" fill="#5a5048" />
-      <circle cx="3" cy="28" r="1.5" fill="#5a5048" />
-      <circle cx="3" cy="26" r="0.6" fill="#1a1410" />
-      <circle cx="3" cy="28" r="0.6" fill="#1a1410" />
+      <!-- ── Belt + faulds ── -->
+      <rect x="7" y="34" width="16" height="2" fill="#150d08" />
+      <rect x="8" y="34" width="14" height="1" fill="#3a2e22" />
+      <rect x="13" y="34" width="3" height="2" fill="#8c6232" />
+      <rect x="13" y="34" width="2" height="1" fill="#d4a850" />
+      <rect x="6" y="36" width="18" height="4" fill="#150d08" />
+      <rect x="7" y="37" width="16" height="2" fill="#1d1d24" />
+      <rect x="7" y="37" width="16" height="1" fill="#3c3c48" />
+      <rect x="10" y="37" width="1" height="2" fill="#0a0a0e" />
+      <rect x="14" y="37" width="1" height="2" fill="#0a0a0e" />
+      <rect x="18" y="37" width="1" height="2" fill="#0a0a0e" />
+      <rect x="7" y="37" width="2" height="2" fill="#2c2c36" />
 
-      <!-- Faulds -->
-      <rect x="5" y="27" width="12" height="3" fill="#0a0808" />
-      <rect x="5" y="27" width="12" height="1" fill="#5a5048" />
-      <rect x="7" y="28" width="1" height="2" fill="#3a3228" />
-      <rect x="11" y="28" width="1" height="2" fill="#3a3228" />
-      <rect x="14" y="28" width="1" height="2" fill="#3a3228" />
+      <!-- ── Legs — red breeches, steel greaves ── -->
+      <rect x="7" y="40" width="6" height="5" fill="#150d08" />
+      <rect x="8" y="41" width="4" height="4" fill="#8c1818" />
+      <rect x="8" y="41" width="1" height="4" fill="#b5302c" />
+      <rect x="11" y="41" width="1" height="4" fill="#5a1208" />
+      <rect x="17" y="40" width="6" height="5" fill="#150d08" />
+      <rect x="18" y="41" width="4" height="4" fill="#6a1212" />
+      <rect x="18" y="41" width="1" height="4" fill="#8c1818" />
+      <rect x="21" y="41" width="1" height="4" fill="#4a0e06" />
 
-      <!-- Thighs -->
-      <rect x="6" y="30" width="4" height="3" fill="#8c1818" />
-      <rect x="12" y="30" width="4" height="3" fill="#8c1818" />
-      <rect x="6" y="30" width="1" height="3" fill="#b5302c" />
-      <rect x="12" y="30" width="1" height="3" fill="#b5302c" />
-
-      <!-- Greaves -->
-      <rect x="6" y="32" width="4" height="3" fill="#1a1410" />
-      <rect x="12" y="32" width="4" height="3" fill="#1a1410" />
-      <rect x="6" y="32" width="4" height="1" fill="#5a5048" />
-      <rect x="12" y="32" width="4" height="1" fill="#5a5048" />
-
-      <!-- Boots -->
-      <rect x="5" y="34" width="6" height="2" fill="#0a0808" />
-      <rect x="11" y="34" width="6" height="2" fill="#0a0808" />
-
-      <!-- Whip lash flicked to the side -->
-      <rect x="15" y="31" width="6" height="4" fill="#3a3228" opacity="0.9" />
-      <rect x="16" y="32" width="4" height="2" fill="#5a5048" />
-      <polygon points="15,31 13,33 15,33" fill="#3a3228" />
-      <polygon points="21,31 23,33 21,33" fill="#3a3228" />
-      <polygon points="15,35 13,33 15,33" fill="#3a3228" />
-      <polygon points="21,35 23,33 21,33" fill="#3a3228" />
+      <!-- ── Tall black boots ── -->
+      <rect x="6" y="44" width="8" height="4" fill="#150d08" />
+      <rect x="7" y="45" width="6" height="2" fill="#16161c" />
+      <rect x="7" y="45" width="6" height="1" fill="#3c3c48" />
+      <rect x="7" y="46" width="2" height="1" fill="#2c2c36" />
+      <rect x="16" y="44" width="8" height="4" fill="#150d08" />
+      <rect x="17" y="45" width="6" height="2" fill="#101014" />
+      <rect x="17" y="45" width="6" height="1" fill="#2c2c36" />
     </svg>

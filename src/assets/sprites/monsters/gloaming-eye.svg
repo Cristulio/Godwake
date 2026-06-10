@@ -1,42 +1,88 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 18 18"
+      viewBox="0 0 26 26"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-    aria-label="Gloaming Eye"
+      aria-label="Gloaming Eye"
     >
-      <!-- Witch-light backlight + floating shadow -->
-      <ellipse cx="9" cy="8" rx="9" ry="8" fill="#7a6ec0" opacity="0.08" />
-      <ellipse cx="9" cy="17" rx="6" ry="1" fill="#1a1626" opacity="0.6" />
+      <!-- Dusk-light bloom + faint hover shadow -->
+      <ellipse cx="13" cy="11" rx="13" ry="11" fill="#7a6ec0" opacity="0.1" />
+      <ellipse cx="13" cy="24.5" rx="7" ry="1.1" fill="#000" opacity="0.3" />
 
-      <!-- Eyeball — fleshy ramp shell, key light upper-left -->
-      <ellipse cx="9" cy="8" rx="7" ry="6" fill="#1f1a2e" />
-      <ellipse cx="9" cy="8" rx="6.4" ry="5.4" fill="#2a2438" />
-      <ellipse cx="8" cy="6.5" rx="4" ry="3" fill="#3a3450" opacity="0.8" />
-      <ellipse cx="9" cy="9.5" rx="5" ry="3" fill="#15101e" opacity="0.5" />
+      <!-- ── Orb body — dusk-violet sclera, key upper-left ── -->
+      <rect x="6" y="1" width="14" height="3" fill="#150d08" />
+      <rect x="4" y="3" width="18" height="3" fill="#150d08" />
+      <rect x="3" y="5" width="20" height="9" fill="#150d08" />
+      <rect x="4" y="14" width="18" height="3" fill="#150d08" />
+      <rect x="6" y="16" width="14" height="3" fill="#150d08" />
+      <!-- fill -->
+      <rect x="7" y="2" width="12" height="2" fill="#3a3450" />
+      <rect x="5" y="4" width="16" height="2" fill="#3a3450" />
+      <rect x="4" y="6" width="18" height="7" fill="#3a3450" />
+      <rect x="5" y="13" width="16" height="3" fill="#2a2438" />
+      <rect x="7" y="16" width="12" height="2" fill="#241f33" />
+      <!-- lit upper-left dome -->
+      <rect x="7" y="2" width="6" height="2" fill="#4e4868" />
+      <rect x="5" y="4" width="5" height="3" fill="#4e4868" />
+      <rect x="5" y="4" width="3" height="2" fill="#5e5880" />
+      <rect x="7" y="2" width="3" height="1" fill="#5e5880" />
+      <rect x="7" y="2" width="1" height="1" fill="#7a74a0" />
+      <!-- cool shadow lower-right -->
+      <rect x="18" y="6" width="4" height="7" fill="#2a2438" />
+      <rect x="20" y="8" width="2" height="6" fill="#241f33" />
+      <rect x="21" y="10" width="1" height="4" fill="#1c2e34" />
+      <!-- vein cracks in the sclera -->
+      <rect x="6" y="9" width="2" height="1" fill="#7a3040" />
+      <rect x="8" y="10" width="1" height="1" fill="#7a3040" />
+      <rect x="18" y="4" width="1" height="2" fill="#5a2430" />
+      <rect x="17" y="14" width="2" height="1" fill="#5a2430" />
 
-      <!-- Sclera — bright, with rim falloff -->
-      <ellipse cx="9" cy="8" rx="4.5" ry="3.8" fill="#aab2cc" />
-      <ellipse cx="9" cy="8" rx="4.5" ry="3.8" fill="#cdd3e6" opacity="0.6" />
-      <ellipse cx="8" cy="6.8" rx="2.6" ry="1.8" fill="#e8ecf6" opacity="0.7" />
-      <ellipse cx="10" cy="9.4" rx="3" ry="1.4" fill="#8a90ac" opacity="0.5" />
+      <!-- ── Iris — burning wine-red ring around a slit pupil ── -->
+      <rect x="9" y="5" width="8" height="9" fill="#7a3040" />
+      <rect x="10" y="4" width="6" height="11" fill="#7a3040" />
+      <rect x="10" y="5" width="6" height="9" fill="#a84452" />
+      <rect x="10" y="5" width="3" height="5" fill="#c85a62" />
+      <rect x="10" y="5" width="2" height="3" fill="#e07a72" />
+      <rect x="11" y="12" width="4" height="2" fill="#8c3846" />
+      <!-- slit pupil -->
+      <rect x="12" y="5" width="2" height="9" fill="#0a0612" />
+      <!-- wet glint -->
+      <rect x="10" y="5" width="1" height="1" fill="#ffe8e0" />
+      <rect x="14" y="7" width="1" height="2" fill="#d4a8b0" opacity="0.7" />
+      <!-- iris glow bloom -->
+      <ellipse cx="13" cy="9.5" rx="4.5" ry="5" fill="#c85a62" opacity="0.2" />
 
-      <!-- Blood vessels -->
-      <rect x="13" y="8" width="1" height="1" fill="#7a3040" opacity="0.5" />
-      <rect x="4" y="9" width="1" height="1" fill="#7a3040" opacity="0.4" />
-      <rect x="11" y="11" width="1" height="1" fill="#7a3040" opacity="0.4" />
+      <!-- ── Heavy lid drooping over the top — the gloaming ── -->
+      <rect x="5" y="1" width="16" height="3" fill="#150d08" />
+      <rect x="6" y="2" width="14" height="2" fill="#241f33" />
+      <rect x="6" y="2" width="14" height="1" fill="#3a3450" />
+      <rect x="6" y="2" width="4" height="1" fill="#4e4868" />
+      <rect x="6" y="3" width="3" height="1" fill="#2a2438" />
+      <!-- lash spikes -->
+      <rect x="8" y="4" width="1" height="1" fill="#150d08" />
+      <rect x="13" y="4" width="1" height="1" fill="#150d08" />
+      <rect x="17" y="4" width="1" height="1" fill="#150d08" />
 
-      <!-- Narrowed slit pupil + speculars -->
-      <ellipse cx="9" cy="8" rx="1.3" ry="3" fill="#15101e" />
-      <rect x="9" y="6" width="1" height="1" fill="#e8d27a" />
-      <rect x="8" y="5" width="1" height="1" fill="#ffffff" opacity="0.75" />
-      <rect x="10" y="9" width="1" height="1" fill="#7a6ec0" opacity="0.5" />
+      <!-- ── Trailing nerve-tendrils, drifting below ── -->
+      <rect x="7" y="19" width="2" height="2" fill="#150d08" />
+      <rect x="7" y="19" width="1" height="1" fill="#3a3450" />
+      <rect x="6" y="21" width="2" height="2" fill="#150d08" />
+      <rect x="6" y="21" width="1" height="1" fill="#2a2438" />
+      <rect x="5" y="23" width="1" height="2" fill="#150d08" opacity="0.7" />
+      <rect x="12" y="19" width="2" height="3" fill="#150d08" />
+      <rect x="12" y="19" width="1" height="2" fill="#3a3450" />
+      <rect x="13" y="22" width="1" height="2" fill="#150d08" opacity="0.8" />
+      <rect x="12" y="24" width="1" height="1" fill="#150d08" opacity="0.5" />
+      <rect x="17" y="19" width="2" height="2" fill="#150d08" />
+      <rect x="18" y="19" width="1" height="1" fill="#2a2438" />
+      <rect x="18" y="21" width="2" height="2" fill="#150d08" opacity="0.8" />
+      <rect x="19" y="23" width="1" height="1" fill="#150d08" opacity="0.5" />
+      <!-- nerve-spark -->
+      <rect x="12" y="21" width="1" height="1" fill="#7a6ec0" opacity="0.7" />
+      <rect x="18" y="20" width="1" height="1" fill="#7a6ec0" opacity="0.5" />
 
-      <!-- Lash-tendrils — ramped -->
-      <rect x="2" y="13" width="1" height="3" fill="#2a2438" />
-      <rect x="2" y="13" width="1" height="1" fill="#3a3450" />
-      <rect x="1" y="15" width="1" height="1" fill="#2a2438" opacity="0.7" />
-      <rect x="8" y="14" width="1" height="3" fill="#2a2438" />
-      <rect x="8" y="14" width="1" height="1" fill="#3a3450" />
-      <rect x="15" y="13" width="1" height="3" fill="#241f33" />
-      <rect x="16" y="15" width="1" height="1" fill="#241f33" opacity="0.7" />
+      <!-- ── Dusk motes orbiting ── -->
+      <rect x="2" y="7" width="1" height="1" fill="#7a6ec0" opacity="0.55" />
+      <rect x="23" y="9" width="1" height="1" fill="#7a6ec0" opacity="0.45" />
+      <rect x="4" y="16" width="1" height="1" fill="#9a8ee0" opacity="0.4" />
+      <rect x="22" y="16" width="1" height="1" fill="#7a6ec0" opacity="0.35" />
     </svg>

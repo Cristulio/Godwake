@@ -1,54 +1,116 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 32"
+      viewBox="0 0 32 43"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Cycle-Revenant"
     >
-      <!-- Spectral backlight + faint ground haze -->
-      <ellipse cx="12" cy="16" rx="11" ry="15" fill="#6aa0c4" opacity="0.1" />
-      <ellipse cx="12" cy="20" rx="9" ry="11" fill="#2a3a4a" opacity="0.3" />
-      <ellipse cx="12" cy="30" rx="7" ry="1.2" fill="#0e1a24" opacity="0.4" />
+      <!-- Cycle-light backlight + ground shadow -->
+      <ellipse cx="16" cy="20" rx="15" ry="19" fill="#8ce0d0" opacity="0.09" />
+      <ellipse cx="16" cy="41.6" rx="9" ry="1.5" fill="#000" opacity="0.34" />
 
-      <!-- Spectral head — ramp, key light upper-left -->
-      <rect x="8" y="3" width="8" height="8" fill="#5a7080" opacity="0.88" />
-      <rect x="8" y="3" width="8" height="1" fill="#9ab0c0" />
-      <rect x="8" y="3" width="3" height="8" fill="#7a90a0" opacity="0.9" />
-      <rect x="8" y="3" width="1" height="6" fill="#9ab0c0" opacity="0.8" />
-      <rect x="15" y="4" width="1" height="6" fill="#3a4a58" />
-      <!-- Hollow eyes — cold ghostfire + spark -->
-      <rect x="9" y="6" width="2" height="3" fill="#0e1a24" />
-      <rect x="13" y="6" width="2" height="3" fill="#0e1a24" />
-      <rect x="9" y="6" width="1" height="1" fill="#8ce0d0" />
-      <rect x="14" y="6" width="1" height="1" fill="#8ce0d0" />
-      <rect x="9" y="6" width="1" height="1" fill="#d4fff0" opacity="0.7" />
-      <rect x="11" y="9" width="2" height="1" fill="#3a4a58" />
+      <!-- ── Head — pale blue spectre, face washed of features ── -->
+      <rect x="10" y="1" width="12" height="11" fill="#150d08" />
+      <rect x="11" y="2" width="10" height="9" fill="#7a90a0" />
+      <rect x="11" y="2" width="10" height="1" fill="#9ab0c0" />
+      <rect x="11" y="2" width="3" height="8" fill="#8aa0b0" />
+      <rect x="11" y="2" width="1" height="5" fill="#aac0d0" />
+      <rect x="18" y="3" width="3" height="8" fill="#5a7080" />
+      <rect x="20" y="4" width="1" height="7" fill="#4a5a68" />
+      <!-- the cycle-mark branded on the brow — a teal ring -->
+      <rect x="14" y="3" width="4" height="1" fill="#2e6a60" />
+      <rect x="13" y="4" width="1" height="2" fill="#2e6a60" />
+      <rect x="18" y="4" width="1" height="2" fill="#3a8a7c" />
+      <rect x="14" y="6" width="4" height="1" fill="#3a8a7c" />
+      <rect x="15" y="4" width="2" height="1" fill="#8ce0d0" opacity="0.5" />
+      <!-- eyes — washed teal, mid-distance stare -->
+      <rect x="12" y="7" width="3" height="2" fill="#1e2a30" />
+      <rect x="17" y="7" width="3" height="2" fill="#1e2a30" />
+      <rect x="12" y="7" width="2" height="1" fill="#8ce0d0" />
+      <rect x="17" y="7" width="2" height="1" fill="#6ac0b0" />
+      <rect x="12" y="7" width="1" height="1" fill="#d4fff4" />
+      <rect x="17" y="7" width="1" height="1" fill="#a8e8dc" />
+      <!-- mouth — barely there -->
+      <rect x="14" y="10" width="4" height="1" fill="#4a5a68" />
 
-      <!-- Phantom torso — ramp + dither -->
-      <rect x="7" y="11" width="10" height="13" fill="#5a7080" opacity="0.82" />
-      <rect x="7" y="11" width="10" height="1" fill="#7a90a0" />
-      <rect x="7" y="11" width="3" height="13" fill="#6a8090" opacity="0.85" />
-      <rect x="7" y="11" width="1" height="11" fill="#9ab0c0" opacity="0.7" />
-      <rect x="15" y="12" width="2" height="12" fill="#3a4a58" opacity="0.7" />
-      <rect x="11" y="12" width="2" height="12" fill="#4a5e6c" opacity="0.8" />
-      <rect x="9" y="15" width="1" height="1" fill="#9ab0c0" opacity="0.5" />
-      <rect x="13" y="19" width="1" height="1" fill="#3a4a58" opacity="0.6" />
+      <!-- ── Shoulders — grave-shroud draped, one side slipping ── -->
+      <rect x="4" y="12" width="24" height="5" fill="#150d08" />
+      <rect x="5" y="13" width="22" height="3" fill="#7a90a0" />
+      <rect x="5" y="13" width="22" height="1" fill="#9ab0c0" />
+      <rect x="5" y="13" width="5" height="2" fill="#8aa0b0" />
+      <rect x="23" y="13" width="4" height="3" fill="#5a7080" />
+      <!-- slipping fold -->
+      <rect x="24" y="16" width="4" height="3" fill="#150d08" />
+      <rect x="25" y="17" width="2" height="1" fill="#5a7080" />
 
-      <!-- Reaching arms + hands -->
-      <rect x="3" y="14" width="4" height="2" fill="#6a8090" opacity="0.82" />
-      <rect x="3" y="14" width="4" height="1" fill="#8aa0b0" opacity="0.7" />
-      <rect x="17" y="14" width="4" height="2" fill="#5a7080" opacity="0.8" />
-      <rect x="1" y="13" width="3" height="2" fill="#7a90a0" opacity="0.72" />
-      <rect x="1" y="13" width="3" height="1" fill="#9ab0c0" opacity="0.6" />
-      <rect x="20" y="13" width="3" height="2" fill="#6a8090" opacity="0.7" />
+      <!-- ── Torso — shroud-wrapped, going translucent at the edges ── -->
+      <rect x="6" y="17" width="20" height="14" fill="#150d08" />
+      <rect x="7" y="18" width="18" height="12" fill="#6a8090" />
+      <rect x="7" y="18" width="18" height="1" fill="#8aa0b0" />
+      <rect x="7" y="18" width="3" height="11" fill="#7a90a0" />
+      <rect x="7" y="18" width="1" height="8" fill="#9ab0c0" />
+      <rect x="22" y="18" width="3" height="11" fill="#4a5a68" />
+      <rect x="24" y="19" width="1" height="10" fill="#3a4a58" />
+      <!-- shroud winds -->
+      <rect x="8" y="20" width="16" height="1" fill="#4a5a68" />
+      <rect x="8" y="23" width="16" height="1" fill="#465664" />
+      <rect x="8" y="26" width="16" height="1" fill="#3e4e5c" />
+      <rect x="8" y="21" width="5" height="1" fill="#9ab0c0" opacity="0.5" />
+      <!-- the old death showing through the windings — teal seam -->
+      <rect x="14" y="19" width="3" height="11" fill="#1e3a38" />
+      <rect x="15" y="20" width="1" height="9" fill="#2e6a60" />
+      <rect x="15" y="22" width="1" height="4" fill="#3a8a7c" />
+      <rect x="15" y="23" width="1" height="2" fill="#8ce0d0" />
+      <!-- translucency bites at the flanks -->
+      <rect x="7" y="27" width="2" height="2" fill="#150d08" />
+      <rect x="23" y="24" width="2" height="2" fill="#150d08" />
 
-      <!-- Dissolving wisp tails -->
-      <polygon points="7,24 9,30 11,24" fill="#5a7080" opacity="0.7" />
-      <polygon points="7,24 9,30 9,24" fill="#7a90a0" opacity="0.5" />
-      <polygon points="11,24 13,29 15,24" fill="#5a7080" opacity="0.55" />
-      <polygon points="13,24 15,30 17,24" fill="#4a5e6c" opacity="0.45" />
+      <!-- ── Left arm — reaching, fingers already gone-through ── -->
+      <rect x="2" y="17" width="6" height="11" fill="#150d08" />
+      <rect x="3" y="18" width="4" height="9" fill="#6a8090" />
+      <rect x="3" y="18" width="1" height="9" fill="#8aa0b0" />
+      <rect x="6" y="18" width="1" height="9" fill="#4a5a68" />
+      <rect x="2" y="27" width="5" height="3" fill="#150d08" />
+      <rect x="3" y="28" width="3" height="1" fill="#7a90a0" />
+      <!-- fading fingers -->
+      <rect x="2" y="30" width="1" height="2" fill="#6a8090" opacity="0.7" />
+      <rect x="4" y="30" width="1" height="2" fill="#5a7080" opacity="0.5" />
+      <rect x="6" y="30" width="1" height="2" fill="#6a8090" opacity="0.35" />
 
-      <!-- Crown highlight + drifting motes -->
-      <rect x="9" y="2" width="6" height="1" fill="#9ab0c0" opacity="0.6" />
-      <rect x="5" y="20" width="1" height="1" fill="#8ce0d0" opacity="0.45" />
-      <rect x="18" y="18" width="1" height="1" fill="#8ce0d0" opacity="0.4" />
+      <!-- ── Right arm — holding its own grave-lantern ── -->
+      <rect x="24" y="17" width="6" height="10" fill="#150d08" />
+      <rect x="25" y="18" width="4" height="8" fill="#5a7080" />
+      <rect x="25" y="18" width="1" height="8" fill="#6a8090" />
+      <rect x="28" y="18" width="1" height="8" fill="#3a4a58" />
+      <rect x="25" y="26" width="4" height="2" fill="#150d08" />
+      <rect x="26" y="26" width="2" height="1" fill="#6a8090" />
+      <!-- the lantern — its own soul, carried -->
+      <ellipse cx="28" cy="32" rx="3.6" ry="3.6" fill="#8ce0d0" opacity="0.28" />
+      <rect x="25" y="29" width="6" height="6" fill="#150d08" />
+      <rect x="26" y="30" width="4" height="4" fill="#1e3a38" />
+      <rect x="27" y="31" width="2" height="2" fill="#3a8a7c" />
+      <rect x="27" y="31" width="1" height="1" fill="#d4fff4" />
+      <!-- lantern ring -->
+      <rect x="27" y="28" width="2" height="1" fill="#5a7080" />
+
+      <!-- ── Lower body — winds loosening into drift ── -->
+      <rect x="7" y="31" width="18" height="5" fill="#150d08" />
+      <rect x="8" y="32" width="16" height="3" fill="#5a7080" />
+      <rect x="8" y="32" width="16" height="1" fill="#6a8090" />
+      <rect x="8" y="34" width="16" height="1" fill="#465664" />
+      <rect x="6" y="36" width="20" height="3" fill="#150d08" opacity="0.85" />
+      <rect x="7" y="37" width="18" height="1" fill="#4a5a68" opacity="0.8" />
+      <rect x="5" y="39" width="22" height="2" fill="#150d08" opacity="0.55" />
+      <rect x="8" y="41" width="16" height="1" fill="#150d08" opacity="0.3" />
+      <!-- shroud tails drifting sideways -->
+      <rect x="25" y="36" width="3" height="2" fill="#150d08" opacity="0.7" />
+      <rect x="26" y="37" width="1" height="1" fill="#5a7080" opacity="0.6" />
+      <rect x="28" y="38" width="2" height="2" fill="#150d08" opacity="0.45" />
+
+      <!-- ── Cycle motes orbiting — it has done this before ── -->
+      <rect x="4" y="8" width="1" height="1" fill="#8ce0d0" opacity="0.55" />
+      <rect x="27" y="10" width="1" height="1" fill="#8ce0d0" opacity="0.5" />
+      <rect x="2" y="24" width="1" height="1" fill="#6ac0b0" opacity="0.45" />
+      <rect x="29" y="22" width="1" height="1" fill="#8ce0d0" opacity="0.4" />
+      <rect x="11" y="38" width="1" height="1" fill="#a8e8dc" opacity="0.4" />
+      <rect x="20" y="40" width="1" height="1" fill="#6ac0b0" opacity="0.3" />
     </svg>

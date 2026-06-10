@@ -1,57 +1,99 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 24"
+      viewBox="0 0 38 33"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Godsblood Welter"
     >
       <!-- Divine backlight + ground shadow -->
-      <ellipse cx="14" cy="14" rx="13" ry="11" fill="#f0c870" opacity="0.1" />
-      <ellipse cx="14" cy="22" rx="13" ry="2" fill="#000" opacity="0.38" />
+      <ellipse cx="19" cy="19" rx="18" ry="14" fill="#f0c870" opacity="0.12" />
+      <ellipse cx="19" cy="30.6" rx="17" ry="2.2" fill="#000" opacity="0.38" />
 
-      <!-- Welling luminous mass — gold ramp, lit upper-left -->
-      <ellipse cx="14" cy="16" rx="12" ry="7" fill="#9a6e2a" />
-      <ellipse cx="14" cy="15" rx="11" ry="6.5" fill="#b88838" />
-      <ellipse cx="14" cy="14" rx="10" ry="6" fill="#d4a850" />
-      <ellipse cx="12" cy="13" rx="6" ry="4" fill="#f0c870" />
-      <ellipse cx="11" cy="12" rx="3" ry="2" fill="#fff0c0" />
-      <!-- Shadowed underbelly -->
-      <ellipse cx="16" cy="19" rx="9" ry="3" fill="#6a4a18" opacity="0.6" />
+      <!-- ── The welling mass — molten god-blood, stepped gold ramp ── -->
+      <rect x="8" y="12" width="22" height="3" fill="#150d08" />
+      <rect x="4" y="14" width="30" height="4" fill="#150d08" />
+      <rect x="2" y="17" width="34" height="10" fill="#150d08" />
+      <rect x="4" y="27" width="30" height="3" fill="#150d08" />
+      <!-- fill, dark rim to molten heart -->
+      <rect x="9" y="13" width="20" height="2" fill="#9a6e2a" />
+      <rect x="5" y="15" width="28" height="3" fill="#9a6e2a" />
+      <rect x="3" y="18" width="32" height="8" fill="#b88838" />
+      <rect x="5" y="26" width="28" height="3" fill="#7a5620" />
+      <!-- mid glow -->
+      <rect x="6" y="16" width="22" height="2" fill="#b88838" />
+      <rect x="5" y="18" width="24" height="6" fill="#d4a850" />
+      <!-- bright upper-left swell -->
+      <rect x="6" y="16" width="12" height="2" fill="#d4a850" />
+      <rect x="5" y="18" width="12" height="4" fill="#f0c870" />
+      <rect x="6" y="17" width="7" height="1" fill="#f0c870" />
+      <rect x="6" y="18" width="7" height="2" fill="#ffe9a8" />
+      <rect x="7" y="18" width="3" height="1" fill="#fff8e0" />
+      <!-- cool shadowed flank -->
+      <rect x="28" y="18" width="7" height="8" fill="#8a5e22" />
+      <rect x="31" y="20" width="4" height="6" fill="#6a4a18" />
+      <rect x="33" y="22" width="2" height="4" fill="#5a3e14" />
+      <rect x="34" y="20" width="1" height="3" fill="#4a5a4e" />
+      <!-- underbelly shadow -->
+      <rect x="7" y="26" width="24" height="2" fill="#6a4a18" />
+      <rect x="10" y="28" width="18" height="1" fill="#5a3e14" />
 
-      <!-- Inner divine core -->
-      <circle cx="13" cy="14" r="2.2" fill="#fff8e0" />
-      <circle cx="12.5" cy="13.5" r="1" fill="#ffffff" />
+      <!-- ── The divine core — white-hot, refusing to cool ── -->
+      <ellipse cx="14" cy="20.5" rx="6" ry="4.4" fill="#fff8e0" opacity="0.35" />
+      <rect x="11" y="19" width="6" height="4" fill="#ffe9a8" />
+      <rect x="12" y="19" width="4" height="3" fill="#fff8e0" />
+      <rect x="12" y="19" width="2" height="2" fill="#ffffff" />
+      <!-- heartbeat ripple rings -->
+      <rect x="9" y="18" width="1" height="5" fill="#f0c870" />
+      <rect x="18" y="19" width="1" height="4" fill="#f0c870" />
+      <rect x="10" y="23" width="8" height="1" fill="#f0c870" />
 
-      <!-- Dither at the tone boundary -->
-      <rect x="6" y="15" width="1" height="1" fill="#d4a850" />
-      <rect x="21" y="15" width="1" height="1" fill="#9a6e2a" />
-      <rect x="9" y="18" width="1" height="1" fill="#b88838" />
-      <rect x="18" y="11" width="1" height="1" fill="#f0c870" />
+      <!-- ── Rising pseudopod — a hand it almost remembers ── -->
+      <rect x="26" y="3" width="5" height="12" fill="#150d08" />
+      <rect x="27" y="4" width="3" height="11" fill="#b88838" />
+      <rect x="27" y="4" width="1" height="11" fill="#d4a850" />
+      <rect x="29" y="5" width="1" height="10" fill="#8a5e22" />
+      <!-- molten crown of the limb -->
+      <rect x="25" y="0" width="6" height="5" fill="#150d08" />
+      <rect x="26" y="1" width="4" height="3" fill="#f0c870" />
+      <rect x="26" y="1" width="2" height="2" fill="#ffe9a8" />
+      <rect x="26" y="1" width="1" height="1" fill="#fff8e0" />
+      <rect x="29" y="3" width="1" height="1" fill="#b88838" />
+      <!-- finger-stubs splitting -->
+      <rect x="25" y="0" width="1" height="2" fill="#d4a850" />
+      <rect x="30" y="0" width="1" height="2" fill="#b88838" />
 
-      <!-- Dripping edges — ramped -->
-      <rect x="5" y="19" width="2" height="3" fill="#9a6e2a" />
-      <rect x="5" y="19" width="1" height="2" fill="#b88838" />
-      <rect x="10" y="20" width="2" height="3" fill="#d4a850" />
-      <rect x="10" y="20" width="1" height="2" fill="#f0c870" />
-      <rect x="18" y="20" width="2" height="3" fill="#b88838" />
-      <rect x="22" y="19" width="2" height="2" fill="#9a6e2a" />
+      <!-- ── Second limb forming at the left ── -->
+      <rect x="4" y="8" width="4" height="8" fill="#150d08" />
+      <rect x="5" y="9" width="2" height="7" fill="#b88838" />
+      <rect x="5" y="9" width="1" height="7" fill="#d4a850" />
+      <rect x="3" y="6" width="5" height="4" fill="#150d08" />
+      <rect x="4" y="7" width="3" height="2" fill="#e0b860" />
+      <rect x="4" y="7" width="1" height="1" fill="#fff0c0" />
 
-      <!-- Rising dissolving pseudopod -->
-      <rect x="20" y="4" width="3" height="10" fill="#b88838" />
-      <rect x="20" y="4" width="1" height="10" fill="#d4a850" />
-      <rect x="22" y="5" width="1" height="9" fill="#8a5e22" />
-      <rect x="20" y="3" width="4" height="3" fill="#f0c870" />
-      <rect x="21" y="1" width="2" height="2" fill="#fff0c0" />
-      <rect x="21" y="1" width="1" height="1" fill="#fffaf0" />
+      <!-- ── Dripping edges — gold falling upward, the wrong way ── -->
+      <rect x="11" y="10" width="2" height="3" fill="#150d08" />
+      <rect x="11" y="11" width="1" height="2" fill="#d4a850" />
+      <rect x="12" y="8" width="1" height="2" fill="#f0c870" opacity="0.8" />
+      <rect x="11" y="6" width="1" height="1" fill="#ffe9a8" opacity="0.6" />
+      <rect x="20" y="9" width="2" height="4" fill="#150d08" />
+      <rect x="20" y="10" width="1" height="3" fill="#b88838" />
+      <rect x="21" y="7" width="1" height="2" fill="#d4a850" opacity="0.7" />
+      <rect x="20" y="5" width="1" height="1" fill="#f0c870" opacity="0.5" />
+      <!-- ground-spill drips -->
+      <rect x="6" y="29" width="3" height="2" fill="#150d08" />
+      <rect x="7" y="29" width="1" height="2" fill="#9a6e2a" />
+      <rect x="14" y="30" width="3" height="2" fill="#150d08" />
+      <rect x="15" y="30" width="1" height="1" fill="#d4a850" />
+      <rect x="24" y="30" width="3" height="2" fill="#150d08" />
+      <rect x="25" y="30" width="1" height="1" fill="#b88838" />
+      <rect x="31" y="28" width="3" height="2" fill="#150d08" />
+      <rect x="32" y="28" width="1" height="1" fill="#8a5e22" />
 
-      <!-- Second forming limb -->
-      <rect x="5" y="9" width="2" height="6" fill="#b88838" />
-      <rect x="5" y="9" width="1" height="6" fill="#d4a850" />
-      <rect x="4" y="8" width="3" height="2" fill="#e0b860" />
-      <rect x="4" y="8" width="1" height="1" fill="#fff0c0" />
-
-      <!-- Scattered bright motes -->
-      <rect x="8" y="15" width="1" height="1" fill="#fff8e0" />
-      <rect x="17" y="13" width="1" height="1" fill="#fff8e0" />
-      <rect x="15" y="17" width="1" height="1" fill="#fff8e0" />
-      <rect x="24" y="9" width="1" height="1" fill="#ffe8b0" opacity="0.7" />
+      <!-- ── Sacred motes boiling off ── -->
+      <rect x="16" y="11" width="1" height="1" fill="#fff8e0" />
+      <rect x="24" y="14" width="1" height="1" fill="#fff8e0" opacity="0.8" />
+      <rect x="8" y="14" width="1" height="1" fill="#ffe9a8" opacity="0.8" />
+      <rect x="30" y="16" width="1" height="1" fill="#f0c870" opacity="0.7" />
+      <rect x="2" y="12" width="1" height="1" fill="#ffe8b0" opacity="0.6" />
+      <rect x="35" y="10" width="1" height="1" fill="#f0c870" opacity="0.5" />
+      <rect x="33" y="4" width="1" height="1" fill="#ffe8b0" opacity="0.45" />
     </svg>
