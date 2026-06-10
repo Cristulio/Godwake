@@ -320,6 +320,10 @@ function runEncounterFight(
     character: withResetActionEconomy(hero),
     monsters: monsterRefs,
     ascension: ASCENSION,
+    // Chapter difficulty ramp (#554): pass the encounter's chapter so the boss
+    // carries the same ramp it has in play. CHAPTER_RAMP=off → chapter 0
+    // (ramp-neutral baseline), mirroring sim-difficulty-arc's toggle.
+    chapter: process.env.CHAPTER_RAMP === 'off' ? 0 : enc.chapter,
     isBoss: enc.isBoss,
     isElite: enc.isElite,
     twistId: enc.room.twistId,
