@@ -8,7 +8,7 @@ export function GroveScene() {
     <div className="relative w-full h-20 md:h-24 border-2 border-[var(--color-border-warm)] overflow-hidden">
       <svg
         viewBox="0 0 800 220"
-        preserveAspectRatio="xMidYEnd slice"
+        preserveAspectRatio="xMidYMax slice"
         className="absolute inset-0 w-full h-full"
       >
         <defs>
