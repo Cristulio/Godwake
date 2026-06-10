@@ -68,7 +68,7 @@ function locationLabel(screen: Screen): string {
     case 'intro':
       return 'Soul-bond intro';
     case 'hub':
-      return 'Phandalin';
+      return 'Wakeford';
     case 'druid-grove':
       return 'Druid Grove';
     case 'codex':
@@ -455,7 +455,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
   });
   // High-water chapter mark, deriving from the legacy chapter1Cleared boolean
   // for pre-progression saves. `>= BASE_GAME_CHAPTERS` means the base chain fell
-  // (Irenicus); `>= TOTAL_CHAPTERS` means the Throne fell too.
+  // (Velnaris); `>= TOTAL_CHAPTERS` means the Throne fell too.
   const chaptersClearedValue =
     typeof s.chaptersCleared === 'number'
       ? s.chaptersCleared
@@ -511,11 +511,11 @@ function scatterSnapshot(s: PersistedSnapshot) {
         ? (s.equippedRelics as Partial<Record<RelicSlot, string>>)
         : {},
     ownedSetPieces: Array.isArray(s.ownedSetPieces) ? s.ownedSetPieces : [],
-    // Recovery: a save whose deepest run cleared the BASE chain (Irenicus, Ch11)
+    // Recovery: a save whose deepest run cleared the BASE chain (Velnaris, Ch11)
     // but never flipped gameCompleted — e.g. an older build whose lazy ending
     // screen crashed before recording it — has beaten the base game. Restore the
     // flag on load so the player gets their New Game+ and isn't dropped back into
-    // a finished run. A run that cleared the full chain (Melissan, Ch14) likewise
+    // a finished run. A run that cleared the full chain (Maevra, Ch14) likewise
     // recovers the Throne milestone.
     gameCompleted: !!s.gameCompleted || chaptersClearedValue >= BASE_GAME_CHAPTERS,
     throneCompleted: !!s.throneCompleted || chaptersClearedValue >= TOTAL_CHAPTERS,
@@ -825,7 +825,7 @@ export const useGameStore = create<GameState>()(
           // a fresh base run. Carry those mastery flags over the wipe. Everything
           // else resets to a clean Ascension-0 start — including the campaign
           // mode: resetMeta drops newGamePlusActive to false, so a New Game is a
-          // BASE run (Cells→Irenicus) even for a veteran.
+          // BASE run (Cells→Velnaris) even for a veteran.
           const prevMeta = useMetaStore.getState();
           // The achievement ledger is permanent mastery like throneCompleted —
           // it carries across a New Game, reset only by deleting the save.

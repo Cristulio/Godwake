@@ -158,7 +158,7 @@
     "renownMult": "(renown ×{mult})",
     "deepens": "The world deepens. Ascension {n} opens to you — a harder road, and a richer one. The Grove stirs with it.",
     "groveReturns": "The grove will return you to life. Your soul remembers what your flesh has forgotten.",
-    "returnToTown": "Return to Phandalin",
+    "returnToTown": "Return to Wakeford",
     "wakeAtGrove": "Wake at the Grove"
   },
   "level": {
@@ -227,7 +227,7 @@
     "pack": "Pack",
     "abandon": "Abandon",
     "abandonTitle": "Abandon the delve?",
-    "abandonBody": "Turn back for Phandalin now. You keep your hide, but the gold and the glory stay buried.",
+    "abandonBody": "Turn back for Wakeford now. You keep your hide, but the gold and the glory stay buried.",
     "abandonConfirm": "Abandon",
     "abandonStay": "Walk on",
     "sealed": "Sealed",

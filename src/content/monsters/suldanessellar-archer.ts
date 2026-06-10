@@ -1,16 +1,16 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Charmed Suldanessellar Archer — Chapter 10 warmup. One of the hidden city's
- * own defenders, turned: a high elf of the canopy-watch whose mind Irenicus or
+ * Charmed Tor Maladin Archer — Chapter 10 warmup. One of the hidden city's
+ * own defenders, turned: a high elf of the canopy-watch whose mind Velnaris or
  * his dryads have hollowed out, still drilling the bow it has carried for three
  * centuries, only pointed the wrong way now. A clean ranged striker. The horror
- * is in the precision — these were the finest archers in Tethyr, and they have
+ * is in the precision — these were the finest archers in Tessar, and they have
  * not forgotten how, only why.
  */
 export const SULDANESSELLAR_ARCHER: Monster = MonsterSchema.parse({
   id: 'suldanessellar-archer',
-  name: 'Charmed Suldanessellar Archer',
+  name: 'Charmed Tor Maladin Archer',
   cr: '9',
   size: 'medium',
   creatureType: 'humanoid (elf)',
@@ -32,5 +32,5 @@ export const SULDANESSELLAR_ARCHER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Suldanessellar set its watchers in the high boughs, and for three hundred years no enemy reached the Tree without first answering their arrows. Now the watch answers to the thing in the temple. The elf on the branch above you nocks an arrow with the unhurried grace of its whole long life, and looses it at the city it was born to guard, because something reached into it and turned the loyalty around without troubling to remove it. It will not stop until the bow is broken or the elf is.",
+    "Tor Maladin set its watchers in the high boughs, and for three hundred years no enemy reached the Tree without first answering their arrows. Now the watch answers to the thing in the temple. The elf on the branch above you nocks an arrow with the unhurried grace of its whole long life, and looses it at the city it was born to guard, because something reached into it and turned the loyalty around without troubling to remove it. It will not stop until the bow is broken or the elf is.",
 });

@@ -2,7 +2,7 @@
       viewBox="0 0 22 32"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Mind Flayer Fragment"
+      aria-label="Mindrender Fragment"
     >
       <!-- Psionic backlight + faint ground glow -->
       <ellipse cx="11" cy="14" rx="11" ry="14" fill="#5a3a98" opacity="0.1" />

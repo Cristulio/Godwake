@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Defiled Treant — Chapter 10 mid. A guardian-tree of Suldanessellar, kin to
+ * Defiled Treant — Chapter 10 mid. A guardian-tree of Tor Maladin, kin to
  * the Tree of Life, rotted as the great Tree rots. It leads with a `restrained`
  * debuff (roots through the floor-stone) and then breaks you with a reaching
  * bough. The city's living wood turned against the city: slow, vast, and full
@@ -43,5 +43,5 @@ export const DEFILED_TREANT: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Around the Tree of Life stood its lesser kin — treants grown from its own seed across the ages of Suldanessellar, set to ward the slopes that led up to the holy crown of the city. They sicken from the roots up as the great Tree sickens, the green going black at the heart, the long patient mind curdling to a single ache. This one no longer remembers the difference between a friend of the city and an enemy of it. It remembers only that something is killing the Tree, and that it hurts, and that you are near enough to crush.",
+    "Around the Tree of Life stood its lesser kin — treants grown from its own seed across the ages of Tor Maladin, set to ward the slopes that led up to the holy crown of the city. They sicken from the roots up as the great Tree sickens, the green going black at the heart, the long patient mind curdling to a single ache. This one no longer remembers the difference between a friend of the city and an enemy of it. It remembers only that something is killing the Tree, and that it hurts, and that you are near enough to crush.",
 });

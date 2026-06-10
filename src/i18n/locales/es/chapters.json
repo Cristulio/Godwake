@@ -1,22 +1,22 @@
 {
   "1": {
-    "name": "La Sala de Ilyich",
+    "name": "La Sala de Karzok",
     "introTitle": "Capítulo I — Celdas de Hierro",
     "introSubtitle": "Bajo la Mansión Tresendar"
   },
   "2": {
     "name": "La Sala del Magistrado",
-    "introTitle": "Capítulo II — Athkatla",
+    "introTitle": "Capítulo II — Stormhaven",
     "introSubtitle": "La Ciudad de la Moneda, al anochecer"
   },
   "3": {
     "name": "La Cámara del Director",
-    "introTitle": "Capítulo III — Spellhold",
+    "introTitle": "Capítulo III — Glassreach",
     "introSubtitle": "Un asilo en una isla fría"
   },
   "4": {
     "name": "La Audiencia de la Matrona Madre",
-    "introTitle": "Capítulo IV — Ust Natha",
+    "introTitle": "Capítulo IV — Zhal Vasha",
     "introSubtitle": "Una ciudad drow en la faerzress profunda"
   },
   "5": {
@@ -51,6 +51,6 @@
     "name": "El Wyrm en el Fondo de la Oscuridad"
   },
   "14": {
-    "name": "El Trono de Bhaal"
+    "name": "El Trono del Dios Caído"
   }
 }

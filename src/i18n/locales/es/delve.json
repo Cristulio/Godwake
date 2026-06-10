@@ -197,8 +197,8 @@
   "screen": {
     "noCharacter": "Sin personaje.",
     "hub": "Refugio",
-    "noDelve": "No hay incursión activa. Vuelve a Phandalin.",
-    "returnToTown": "Volver a Phandalin",
+    "noDelve": "No hay incursión activa. Vuelve a Wakeford.",
+    "returnToTown": "Volver a Wakeford",
     "preparing": "Preparando el encuentro...",
     "bossPrefix": "Jefe · ",
     "elitePrefix": "Élite · ",
@@ -212,8 +212,8 @@
   },
   "campScene": {
     "1": "Una hoguera al borde del camino bajo un cielo crepuscular, el sendero doblando hacia el sur.",
-    "2": "Una lámpara sobre un rollo de cuerda al final de un muelle, las torres doradas de Athkatla al otro lado del agua oscura, la barca de un contrabandista amarrada al costado.",
-    "3": "Un fuego químico sin humo en un cuenco de latón iluminando el alijo de un contrabandista en una caverna de la Infraoscuridad, estalactitas en lo alto.",
+    "2": "Una lámpara sobre un rollo de cuerda al final de un muelle, las torres doradas de Stormhaven al otro lado del agua oscura, la barca de un contrabandista amarrada al costado.",
+    "3": "Un fuego químico sin humo en un cuenco de latón iluminando el alijo de un contrabandista en una caverna de la Oscuro Profundo, estalactitas en lo alto.",
     "4": "Un fuego frío sobre una repisa rocosa al borde de una sima, una pálida luz dorada brotando de la grieta en el suelo más adelante.",
     "5": "Un fuego agonizante en el borde de una Rueda inmensa en el vacío absoluto, un peregrino desgastado ofreciendo una copa.",
     "6": "Una lámpara entornada al borde de una escalera que se hunde en la oscuridad fría y salina, un rescatador de las profundidades soltando cuerda de sondeo hacia una biblioteca ahogada muy abajo.",
@@ -221,10 +221,10 @@
     "8": "Una pequeña hoguera sobre un suelo de baile de mármol resquebrajado entre fragmentos de espejo erguidos, una figura encapuchada observando un reflejo cuya cara enmascarada no concuerda.",
     "9": "Un fuego bajo en el suelo del bosque bajo una bóveda que arde anaranjada en lo alto, brasas cayendo, un elfo fugitivo sentado con un arco destensado sobre las rodillas.",
     "10": "Una pálida luz de alma agonizando en una repisa estrecha sobre un vasto pozo que respira en un infierno rojo, palabras grabadas en la roca a su lado.",
-    "11": "Una débil hoguera de refugiados en una loma sobre una ciudad amurallada cercada por llamas y gigantes, el humo alzándose de Saradush ardiendo abajo, figuras acurrucadas compartiendo el calor.",
+    "11": "Una débil hoguera de refugiados en una loma sobre una ciudad amurallada cercada por llamas y gigantes, el humo alzándose de Karthen ardiendo abajo, figuras acurrucadas compartiendo el calor.",
     "12": "Un fuego de vigía donde el camino se bifurca hacia dos puertas oscuras — una entrada drow bajo una montaña a la izquierda, la guarida de un dragón en el yermo profundo a la derecha — un Arpista haciendo girar una hoja a la luz.",
     "13": "Un fuego sin guardián sobre un fragmento plegado de plano a la deriva en el vacío, una única puerta oscura erguida tras él, un aliado sentado al otro lado de la llama con la mirada apartada.",
-    "14": "El Trono de Bhaal vacío sobre un estrado oscuro en el vacío, una tenue luz de sangre alzándose tras él, un fuego bajo agonizando al pie de los escalones."
+    "14": "El Trono del Dios Caído vacío sobre un estrado oscuro en el vacío, una tenue luz de sangre alzándose tras él, un fuego bajo agonizando al pie de los escalones."
   },
   "skill": {
     "acrobatics": "Acrobacia",

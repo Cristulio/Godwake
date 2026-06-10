@@ -21,15 +21,15 @@
   },
   "the-mage-unmade": {
     "name": "El Mago Deshecho",
-    "description": "Asciende hasta el corazón de la obra y abate al propio Irenicus."
+    "description": "Asciende hasta el corazón de la obra y abate al propio Velnaris."
   },
   "beyond-the-cells": {
     "name": "Más Allá de las Celdas",
-    "description": "Deja atrás al mago que te hizo y asciende al Trono de Bhaal."
+    "description": "Deja atrás al mago que te hizo y asciende al Trono del Dios Caído."
   },
   "godwake": {
     "name": "Godwake",
-    "description": "Deshaz a Melissan en el Trono y deja que la cosecha se derrame de vuelta a la oscuridad."
+    "description": "Deshaz a Maevra en el Trono y deja que la cosecha se derrame de vuelta a la oscuridad."
   },
   "a-second-skin": {
     "name": "Una Segunda Piel",
@@ -77,7 +77,7 @@
   },
   "throne-of-the-deepest-dark": {
     "name": "Trono de la Oscuridad Más Profunda",
-    "description": "Deshaz a Melissan en el Trono cargando con el peso de la Ascensión 6."
+    "description": "Deshaz a Maevra en el Trono cargando con el peso de la Ascensión 6."
   },
   "a-single-heartbeat": {
     "name": "Un Solo Latido",
@@ -101,11 +101,11 @@
   },
   "bard-last-verse": {
     "name": "El Último Verso",
-    "description": "Abate a Irenicus con nada más que un Bardo y una canción."
+    "description": "Abate a Velnaris con nada más que un Bardo y una canción."
   },
   "bard-the-show-goes-on": {
     "name": "El Espectáculo Continúa",
-    "description": "Lleva al Bardo más allá de Irenicus, hasta el Trono de Bhaal."
+    "description": "Lleva al Bardo más allá de Velnaris, hasta el Trono del Dios Caído."
   },
   "the-dark-answered": {
     "name": "La Oscuridad Respondió",
@@ -157,7 +157,7 @@
   },
   "eight-masters": {
     "name": "Ocho Maestros",
-    "description": "Abate a Irenicus con las ocho almas de clase, una tras otra."
+    "description": "Abate a Velnaris con las ocho almas de clase, una tras otra."
   },
   "the-whole-truth": {
     "name": "Toda la Verdad",

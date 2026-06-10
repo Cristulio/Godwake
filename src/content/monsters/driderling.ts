@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Driderling — a Lolth-touched spiderling, smaller than a hound but quick
+ * Driderling — a Arachne-touched spiderling, smaller than a hound but quick
  * and venomous. Pool mob; the chapter4 encounter pools spawn them in counts
  * of 2-3 to read as a swarm without a per-monster swarm mechanic.
  */
@@ -30,5 +30,5 @@ export const DRIDERLING: Monster = MonsterSchema.parse({
   ],
   resistances: ['poison'],
   flavorText:
-    "A Lolth-touched spiderling that did not grow up into a drider — the priestesses cull the runt-broods rather than feed them. The ones that escape the cull take up residence in the lower corridors of Ust Natha and harry the slave-trains coming down from the surface.",
+    "An Arachne-touched spiderling that did not grow up into a drider — the priestesses cull the runt-broods rather than feed them. The ones that escape the cull take up residence in the lower corridors of Zhal Vasha and harry the slave-trains coming down from the surface.",
 });

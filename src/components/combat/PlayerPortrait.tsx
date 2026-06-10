@@ -1098,7 +1098,7 @@ function PaladinSvg({ className }: { className?: string }) {
       {/* Ground-contact shadow */}
       <ellipse cx="12" cy="39" rx="9" ry="1.6" fill="#000" opacity="0.45" />
 
-      {/* Minsc's scalplock — a topknot tuft over a shaved scalp */}
+      {/* Halvar's scalplock — a topknot tuft over a shaved scalp */}
       <rect x="11" y="0" width="2" height="1" fill="#2a1810" />
       <rect x="11" y="1" width="1" height="1" fill="#4a2e18" />
       {/* Bald scalp — skin ramp, lit crown */}
@@ -1112,7 +1112,7 @@ function PaladinSvg({ className }: { className?: string }) {
       <rect x="8" y="4" width="1" height="5" fill="#9c7448" />
       <rect x="9" y="4" width="6" height="1" fill="#e0c49c" />
       <rect x="15" y="4" width="1" height="5" fill="#8a6840" />
-      {/* Crimson war-paint stripe across the brow — Minsc's mark */}
+      {/* Crimson war-paint stripe across the brow — Halvar's mark */}
       <rect x="8" y="5" width="8" height="1" fill="#b5302c" />
       <rect x="8" y="5" width="2" height="1" fill="#f04438" />
       <rect x="14" y="5" width="1" height="1" fill="#f04438" />
@@ -1126,7 +1126,7 @@ function PaladinSvg({ className }: { className?: string }) {
       <rect x="10" y="8" width="4" height="1" fill="#8c6840" opacity="0.55" />
       <rect x="10" y="9" width="4" height="1" fill="#9c7448" />
 
-      {/* Boo — the miniature giant space hamster, perched on the shoulder */}
+      {/* Pip — the miniature giant space hamster, perched on the shoulder */}
       <ellipse cx="3" cy="8" rx="3" ry="2.6" fill="#e8a020" opacity="0.18" />
       <rect x="2" y="7" width="4" height="3" fill="#8c6232" />
       <rect x="2" y="7" width="4" height="1" fill="#b07434" />

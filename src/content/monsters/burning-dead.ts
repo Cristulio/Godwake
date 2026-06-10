@@ -1,8 +1,8 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Burning Dead — Chapter 12 fodder. The immolated dead of Saradush, the
- * townsfolk and refugee Bhaalspawn the siege-fires caught and would not let
+ * Burning Dead — Chapter 12 fodder. The immolated dead of Karthen, the
+ * townsfolk and refugee Slainkin the siege-fires caught and would not let
  * lie. They rose still alight, and they have not gone out. A fire `attack`
  * (the charred grasp that sears what it holds) paired with a `debuff` that
  * `frightened`s — there is a particular horror in a thing that walks toward
@@ -45,5 +45,5 @@ export const BURNING_DEAD: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "When Yaga-Shura's fire came over the walls it did not kill cleanly. It caught the people of Saradush in their houses and their streets and it stayed caught, and the dead it made rose still alight, walking the smoke with their own burning for a shroud. They do not know the siege is the cause of them. They only know they are on fire, and that they are not, and that you are not yet, and they would have you join them in the only state they have left.",
+    "When Hargan-Vor's fire came over the walls it did not kill cleanly. It caught the people of Karthen in their houses and their streets and it stayed caught, and the dead it made rose still alight, walking the smoke with their own burning for a shroud. They do not know the siege is the cause of them. They only know they are on fire, and that they are not, and that you are not yet, and they would have you join them in the only state they have left.",
 });

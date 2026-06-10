@@ -32,7 +32,7 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'persuasion', dc: 12 },
         outcome: {
           resolution:
-            'You crouch and put words to the ache in her shoulders before she names it herself. She lifts her eyes for the first time and tells you a small story about her sister. When you stand, her thumb has marked Ilmater\'s tear on your brow, and her god rides a little of the road with you.',
+            'You crouch and put words to the ache in her shoulders before she names it herself. She lifts her eyes for the first time and tells you a small story about her sister. When you stand, her thumb has marked Atlas\'s tear on your brow, and her god rides a little of the road with you.',
           effects: [
             { kind: 'hp_delta', amount: 4 },
             { kind: 'grant_blessing', random: true },
@@ -65,7 +65,7 @@ const POOL: EventTemplate[] = [
             { kind: 'gold_delta', amount: 10 },
             {
               kind: 'grant_quirk_reroll',
-              fallbackText: 'Ilmater finds no bane to shake from you — only a tear briefly cool on your brow.',
+              fallbackText: 'Atlas finds no bane to shake from you — only a tear briefly cool on your brow.',
             },
           ],
         },
@@ -497,7 +497,7 @@ const POOL: EventTemplate[] = [
     ],
   }),
 
-  // ─── Chapter 2: Athkatla — coin-flavored choices ─────────────────────
+  // ─── Chapter 2: Stormhaven — coin-flavored choices ─────────────────────
   EventTemplateSchema.parse({
     id: 'beggar-at-the-gate',
     eventType: 'stranger',
@@ -567,7 +567,7 @@ const POOL: EventTemplate[] = [
     eventType: 'stranger',
     title: 'A Cowled Recruiter in the Shadow of an Arch',
     flavor:
-      "A figure in the grey-and-blue of the Cowled Wizards steps out of an arch as if from the stone itself. \"You walk loud, walker. The Cowl licenses talent. A small payment, and a small protection — name your wager.\"",
+      "A figure in the grey-and-blue of the Veiled Court steps out of an arch as if from the stone itself. \"You walk loud, walker. The Cowl licenses talent. A small payment, and a small protection — name your wager.\"",
     minChapter: 2,
     choices: [
       {
@@ -627,7 +627,7 @@ const POOL: EventTemplate[] = [
     eventType: 'bargain',
     title: 'A Wine-Merchant\'s Hospitality',
     flavor:
-      "A man in a saffron coat leans across his counter with a cup already poured. \"On the house, walker. A taste of Amnian red. The cellar has more — for those with coin and the throat for it.\"",
+      "A man in a saffron coat leans across his counter with a cup already poured. \"On the house, walker. A taste of Sudrian red. The cellar has more — for those with coin and the throat for it.\"",
     minChapter: 2,
     choices: [
       {
@@ -665,7 +665,7 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'persuasion', dc: 13 },
         outcome: {
           resolution:
-            'You spin him a tale about Amnian summers and a sister who married a vintner. He laughs and waves a hand. "Half price for a walker who knows the country, then" — and the longer you keep him laughing, the more coppers he counts back into your palm. The bottle goes into your pack at a thief\'s rate.',
+            'You spin him a tale about Sudrian summers and a sister who married a vintner. He laughs and waves a hand. "Half price for a walker who knows the country, then" — and the longer you keep him laughing, the more coppers he counts back into your palm. The bottle goes into your pack at a thief\'s rate.',
           effects: [
             { kind: 'gold_delta', amount: -8 },
             { kind: 'gold_delta', amount: 6 },
@@ -674,14 +674,14 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'Your tale wanders and his smile thins to courtesy. "Charming, walker. But my children eat Amnian red same as you." The price stays full and you have no stomach to pay it. You leave with the cork still in the bottle and your purse intact.',
+            'Your tale wanders and his smile thins to courtesy. "Charming, walker. But my children eat Sudrian red same as you." The price stays full and you have no stomach to pay it. You leave with the cork still in the bottle and your purse intact.',
           effects: [],
         },
       },
       {
         id: 'decline',
         label: 'Decline with thanks',
-        hint: 'The road is long and Athkatla wine is a long memory.',
+        hint: 'The road is long and Stormhaven wine is a long memory.',
         outcome: {
           resolution: 'He inclines his head, unhurt. "Another day, then." You leave with the smell of cedar and brandy following you down the lane.',
           effects: [],
@@ -747,7 +747,7 @@ const POOL: EventTemplate[] = [
       {
         id: 'intimidate',
         label: '[Intimidation] Snarl him into the gutter',
-        hint: 'Cow the boy and he drops everything and runs — but a child of Athkatla has been threatened by worse.',
+        hint: 'Cow the boy and he drops everything and runs — but a child of Stormhaven has been threatened by worse.',
         skillCheck: { skill: 'intimidation', dc: 13 },
         outcome: {
           resolution:
@@ -894,7 +894,7 @@ const POOL: EventTemplate[] = [
     ],
   }),
 
-  // ─── Chapter 3: Spellhold — deeper trade-offs ────────────────────────
+  // ─── Chapter 3: Glassreach — deeper trade-offs ────────────────────────
   EventTemplateSchema.parse({
     id: 'mad-prisoner-bargain',
     eventType: 'bargain',
@@ -983,21 +983,21 @@ const POOL: EventTemplate[] = [
       {
         id: 'read-the-line',
         label: 'Read the line aloud',
-        hint: 'Mystra hears.',
+        hint: 'Hecate hears.',
         outcome: {
           resolution:
-            'You speak the syllables. The page goes warm. Something coils into your chest — a small thread of the Weave, willing to ride with you the rest of the road.',
+            'You speak the syllables. The page goes warm. Something coils into your chest — a small thread of the Weft, willing to ride with you the rest of the road.',
           effects: [{ kind: 'grant_blessing', random: true }],
         },
       },
       {
         id: 'parse-the-script',
         label: '[Arcana] Parse the script before you speak it',
-        hint: 'Read what the ink is doing before you give it your voice. Name the working and the Weave answers kindly; misread it and it answers anyway.',
+        hint: 'Read what the ink is doing before you give it your voice. Name the working and the Weft answers kindly; misread it and it answers anyway.',
         skillCheck: { skill: 'arcana', dc: 14 },
         outcome: {
           resolution:
-            'You trace the line as it writes itself and you know its grammar — a binding-script, half a prayer, hungry for a careless tongue. You speak only the safe clauses and leave the snare unspoken. The page goes warm without teeth, and a clean thread of the Weave folds itself into your chest for the road.',
+            'You trace the line as it writes itself and you know its grammar — a binding-script, half a prayer, hungry for a careless tongue. You speak only the safe clauses and leave the snare unspoken. The page goes warm without teeth, and a clean thread of the Weft folds itself into your chest for the road.',
           effects: [{ kind: 'grant_blessing', random: true }],
         },
         failureOutcome: {
@@ -1097,19 +1097,19 @@ const POOL: EventTemplate[] = [
     ],
   }),
 
-  // ─── Chapter 4: Ust Natha — drow stakes ──────────────────────────────
+  // ─── Chapter 4: Zhal Vasha — drow stakes ──────────────────────────────
   EventTemplateSchema.parse({
     id: 'drow-priestess-test',
     eventType: 'shrine',
     title: "A Priestess's Test",
     flavor:
-      "A drow in Lolth's red lace blocks the corridor with the calm of a woman who has not been moved in a hundred years. \"Walker. The Spider Queen tests her gifts. Cut yourself for her or pay her the weight of the cut. Both are an offering. Neither is a refusal.\"",
+      "A drow in Arachne's red lace blocks the corridor with the calm of a woman who has not been moved in a hundred years. \"Walker. The Spider Queen tests her gifts. Cut yourself for her or pay her the weight of the cut. Both are an offering. Neither is a refusal.\"",
     minChapter: 4,
     choices: [
       {
         id: 'cut',
         label: 'Cut yourself for the Spider',
-        hint: 'Blood is the cheaper currency in Ust Natha.',
+        hint: 'Blood is the cheaper currency in Zhal Vasha.',
         requiresHpAtLeast: 10,
         outcome: {
           resolution:
@@ -1137,16 +1137,16 @@ const POOL: EventTemplate[] = [
       {
         id: 'flatter-the-spider',
         label: '[Deception] Flatter the Spider',
-        hint: 'A courtier\'s lie for Lolth\'s red lace. Sell the false praise in a court built on it — or be named for what you are.',
+        hint: 'A courtier\'s lie for Arachne\'s red lace. Sell the false praise in a court built on it — or be named for what you are.',
         skillCheck: { skill: 'deception', dc: 15 },
         outcome: {
           resolution:
-            'You bow as a noble of Ust Natha would bow, and put the priestess\'s own beauty into Lolth\'s mouth — the kind of compliment that is also a prayer. Her smile does not change, but her hand opens. "The Spider notes a tongue worth keeping." The corridor opens. No blood. No coin. The blessing she leaves is colder than the dark.',
+            'You bow as a noble of Zhal Vasha would bow, and put the priestess\'s own beauty into Arachne\'s mouth — the kind of compliment that is also a prayer. Her smile does not change, but her hand opens. "The Spider notes a tongue worth keeping." The corridor opens. No blood. No coin. The blessing she leaves is colder than the dark.',
           effects: [{ kind: 'grant_blessing', random: true }],
         },
         failureOutcome: {
           resolution:
-            'The flattery is a half-shade too thick, and a priestess of Lolth has heard every shade of it for a hundred years. Her smile does not change. "A clumsy tongue lies to a goddess of liars." She does not move. Behind you, a single set of boots comes up the corridor without hurry.',
+            'The flattery is a half-shade too thick, and a priestess of Arachne has heard every shade of it for a hundred years. Her smile does not change. "A clumsy tongue lies to a goddess of liars." She does not move. Behind you, a single set of boots comes up the corridor without hurry.',
           effects: [{ kind: 'spawn_ambush', monsterDefIds: ['drow-warrior'] }],
         },
       },
@@ -1330,7 +1330,7 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'history', dc: 12 },
         outcome: {
           resolution:
-            "The seal is a nine-pointed star on ochre — Yhaunn salt-merchant guild, third tier. They pay a bounty for any ledger recovered in Athkatla: not coin but favour, and favour in the right hands pays faster. You present it at a side-door three alleys over and the factor counts out the standing rate without blinking.",
+            "The seal is a nine-pointed star on ochre — Yhaunn salt-merchant guild, third tier. They pay a bounty for any ledger recovered in Stormhaven: not coin but favour, and favour in the right hands pays faster. You present it at a side-door three alleys over and the factor counts out the standing rate without blinking.",
           effects: [{ kind: 'grant_blessing', random: true }],
         },
         failureOutcome: {
@@ -1374,7 +1374,7 @@ const POOL: EventTemplate[] = [
     eventType: 'ruin',
     title: 'A Forgotten Offering Table',
     flavor:
-      "A side-chamber behind a slipped stone door, not on any Spellhold record you have heard of. Inside: a low table of old black granite, still bearing trinkets — a carved bowl, a copper figure, dead flowers pressed flat. Whatever god this was, the keepers have been gone a long time.",
+      "A side-chamber behind a slipped stone door, not on any Glassreach record you have heard of. Inside: a low table of old black granite, still bearing trinkets — a carved bowl, a copper figure, dead flowers pressed flat. Whatever god this was, the keepers have been gone a long time.",
     minChapter: 3,
     choices: [
       {
@@ -1389,14 +1389,14 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'You reach for the rite and mistake the figure — give it a Lathander dawn-prayer instead. The flowers do not move. Something small and patient in the room folds away from you. The corridor ahead sits heavier.',
+            'You reach for the rite and mistake the figure — give it a Eos dawn-prayer instead. The flowers do not move. Something small and patient in the room folds away from you. The corridor ahead sits heavier.',
           effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
         id: 'read-the-weave',
         label: '[Arcana] Read the residual enchantment',
-        hint: 'Old offerings draw old magic. Read the Weave in the room before it fades.',
+        hint: 'Old offerings draw old magic. Read the Weft in the room before it fades.',
         skillCheck: { skill: 'arcana', dc: 13 },
         outcome: {
           resolution:
@@ -1405,7 +1405,7 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'The Weave here is layered too deep — old magic folded over older magic, each one reading as noise to the next. You pull a thread that was load-bearing and the room goes cold all at once, a breath of raw backlash up both arms.',
+            'The Weft here is layered too deep — old magic folded over older magic, each one reading as noise to the next. You pull a thread that was load-bearing and the room goes cold all at once, a breath of raw backlash up both arms.',
           effects: [{ kind: 'hp_delta', amount: -5 }],
         },
       },
@@ -2034,7 +2034,7 @@ const POOL: EventTemplate[] = [
     ],
   }),
 
-  // ─── Chapter 10: Suldanessellar — the elven city stormed and burning,
+  // ─── Chapter 10: Tor Maladin — the elven city stormed and burning,
   //     climbed toward the Tree of Life. ─────────────────────────────────────
   EventTemplateSchema.parse({
     id: 'burning-bough',
@@ -2093,7 +2093,7 @@ const POOL: EventTemplate[] = [
     eventType: 'stranger',
     title: 'An Elf at the Last Stair',
     flavor:
-      "A bladesinger of Suldanessellar sits with her back to a shattered column, sword across her knees, watching the smoke climb. She does not rise. \"You're going up,\" she says. \"To the Tree. To him.\" Her city burns below the both of you. \"Then you'll want to know how the dragon at the top likes to open. Or you can walk past, and learn it the way I learned it.\"",
+      "A bladesinger of Tor Maladin sits with her back to a shattered column, sword across her knees, watching the smoke climb. She does not rise. \"You're going up,\" she says. \"To the Tree. To him.\" Her city burns below the both of you. \"Then you'll want to know how the dragon at the top likes to open. Or you can walk past, and learn it the way I learned it.\"",
     minChapter: 10,
     choices: [
       {
@@ -2140,7 +2140,7 @@ const POOL: EventTemplate[] = [
     ],
   }),
 
-  // ─── Chapter 11: The Trials of the Pit — Irenicus's hells, each trial a sin
+  // ─── Chapter 11: The Trials of the Pit — Velnaris's hells, each trial a sin
   //     made flesh. ──────────────────────────────────────────────────────────
   EventTemplateSchema.parse({
     id: 'trial-of-pride',
@@ -2241,14 +2241,14 @@ const POOL: EventTemplate[] = [
     ],
   }),
 
-  // ─── Chapter 12: The Siege of Saradush — the besieged city, Yaga-Shura's
+  // ─── Chapter 12: The Siege of Karthen — the besieged city, Hargan-Vor's
   //     fire giants at the walls. ────────────────────────────────────────────
   EventTemplateSchema.parse({
     id: 'breach-in-the-wall',
     eventType: 'ruin',
-    title: 'A Breach in the Saradush Wall',
+    title: 'A Breach in the Karthen Wall',
     flavor:
-      "A fire-giant's boulder has stove a hole clean through the curtain wall, and through it the siege glares orange — Yaga-Shura's host moving in the smoke. Two of the city's defenders are trying to shore the breach with rubble and dead men's shields, and losing. One of them sees you. \"Walker — hands, or get clear.\"",
+      "A fire-giant's boulder has stove a hole clean through the curtain wall, and through it the siege glares orange — Hargan-Vor's host moving in the smoke. Two of the city's defenders are trying to shore the breach with rubble and dead men's shields, and losing. One of them sees you. \"Walker — hands, or get clear.\"",
     minChapter: 12,
     choices: [
       {
@@ -2310,7 +2310,7 @@ const POOL: EventTemplate[] = [
     eventType: 'stranger',
     title: "A Marauder's Bargain",
     flavor:
-      "A Saradush marauder leans in a doorway off the burning street, not fighting anyone, a sack at his feet and a half-giant's mace propped easy on his shoulder. \"City's lost, walker. Yaga-Shura's heart's somewhere it can't be killed, so the wall's coming down whatever the fools at the breach think. I've a sack of what the dead won't miss. Trade, or move along — I'm done bleeding for Saradush.\"",
+      "A Karthen marauder leans in a doorway off the burning street, not fighting anyone, a sack at his feet and a half-giant's mace propped easy on his shoulder. \"City's lost, walker. Hargan-Vor's heart's somewhere it can't be killed, so the wall's coming down whatever the fools at the breach think. I've a sack of what the dead won't miss. Trade, or move along — I'm done bleeding for Karthen.\"",
     minChapter: 12,
     choices: [
       {
@@ -2350,19 +2350,19 @@ const POOL: EventTemplate[] = [
         label: 'Move along',
         hint: 'A looter in a burning city is a fight you can decline.',
         outcome: {
-          resolution: 'You leave him his sack and his doorway and his certainty that the city is lost. He watches you to the corner, then goes back to waiting out the end of Saradush in the shade. The mace never leaves his shoulder.',
+          resolution: 'You leave him his sack and his doorway and his certainty that the city is lost. He watches you to the corner, then goes back to waiting out the end of Karthen in the shade. The mace never leaves his shoulder.',
           effects: [],
         },
       },
     ],
   }),
 
-  // ─── Chapter 13–14: The last Bhaalspawn lords and the Throne of Bhaal —
+  // ─── Chapter 13–14: The last Slainkin lords and the Throne of the Slain God —
   //     the taint, the essence, the choice at the wheel's true centre. ────────
   EventTemplateSchema.parse({
     id: 'bhaalspawn-shrine',
     eventType: 'shrine',
-    title: 'A Shrine Built of Bhaalspawn Bone',
+    title: 'A Shrine Built of Slainkin Bone',
     flavor:
       "One of the Five raised this before you killed your way to it — an altar of fused bone and old blood, every fragment a sibling of yours, a child of the Lord of Murder rendered down to its essence and stacked toward a god that is dead and will not stay dead. The taint in your own blood leans toward it like iron to a lodestone.",
     minChapter: 13,
@@ -2370,7 +2370,7 @@ const POOL: EventTemplate[] = [
       {
         id: 'master-the-taint',
         label: '[Religion] Take the essence on your own terms',
-        hint: "Bhaal's blood in you answers the altar whether you will it or not. Master the calling and the essence is fuel; lose to it and it burns through you toward the dead god.",
+        hint: "The Slain God's blood in you answers the altar whether you will it or not. Master the calling and the essence is fuel; lose to it and it burns through you toward the dead god.",
         skillCheck: { skill: 'religion', dc: 17 },
         outcome: {
           resolution:
@@ -2395,7 +2395,7 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'The working is layered past your reading — sibling-essence folded over sibling-essence, each a different death. You pull a thread that was load-bearing and the altar discharges its surplus through the nearest source of Bhaal\'s blood, which is you.',
+            'The working is layered past your reading — sibling-essence folded over sibling-essence, each a different death. You pull a thread that was load-bearing and the altar discharges its surplus through the nearest source of the Slain God\'s blood, which is you.',
           effects: [{ kind: 'hp_delta', amount: -11 }],
         },
       },
@@ -2417,7 +2417,7 @@ const POOL: EventTemplate[] = [
     eventType: 'bargain',
     title: "A Dragon's Hoard-Toll",
     flavor:
-      "The half-dragon steward of the last lord's hoard coils across the only stair up, a treasure of conquered cities heaped at its back. \"Bhaalspawn,\" it says, tasting the word. \"My master will have your essence soon enough. Until then — the hoard takes a toll of all who climb. Pay it in coin, or pay it in the old way, in blood, and I'll let the doomed amuse me a while longer.\"",
+      "The half-dragon steward of the last lord's hoard coils across the only stair up, a treasure of conquered cities heaped at its back. \"Slainkin,\" it says, tasting the word. \"My master will have your essence soon enough. Until then — the hoard takes a toll of all who climb. Pay it in coin, or pay it in the old way, in blood, and I'll let the doomed amuse me a while longer.\"",
     minChapter: 13,
     choices: [
       {
@@ -2466,14 +2466,14 @@ const POOL: EventTemplate[] = [
     ],
   }),
 
-  // Ch14 · The Throne of Bhaal — the Pocket Plane, the dead god's seat, the
+  // Ch14 · The Throne of the Slain God — the Threshold, the dead god's seat, the
   //     choice at the centre of the wheel.
   EventTemplateSchema.parse({
     id: 'throne-that-waits',
     eventType: 'omen',
     title: 'The Throne That Waits',
     flavor:
-      "The Pocket Plane folds open on it: the Throne of Bhaal, vast and empty and patient, the seat of the dead Lord of Murder waiting for an heir to fill it. The taint in your blood roars toward the empty chair. To sit is to become a god of slaughter. The Throne does not command. It only waits, as it has waited through every life you have spent climbing to it.",
+      "The Threshold folds open on it: the Throne of the Slain God, vast and empty and patient, the seat of the dead Lord of Murder waiting for an heir to fill it. The taint in your blood roars toward the empty chair. To sit is to become a god of slaughter. The Throne does not command. It only waits, as it has waited through every life you have spent climbing to it.",
     minChapter: 14,
     choices: [
       {
@@ -2495,7 +2495,7 @@ const POOL: EventTemplate[] = [
       {
         id: 'commune-with-the-dead-god',
         label: '[Religion] Take the measure of the dead god',
-        hint: 'A throne is a god rendered into furniture. Read what is left of Bhaal in it and you read what truly waits at the climb\'s end; misjudge the dead god and its remnant answers.',
+        hint: 'A throne is a god rendered into furniture. Read what is left of the Slain God in it and you read what truly waits at the climb\'s end; misjudge the dead god and its remnant answers.',
         skillCheck: { skill: 'religion', dc: 18 },
         outcome: {
           resolution:
@@ -2513,7 +2513,7 @@ const POOL: EventTemplate[] = [
         label: 'Leave the Throne empty and walk on',
         hint: 'Some seats are best left cold. The climb does not end here, whatever the blood says.',
         outcome: {
-          resolution: 'You set your eyes on the far door and walk the length of the Pocket Plane without once looking at the empty seat, though the blood screams it the whole way. Behind you the Throne goes on waiting, patient as the wheel, for an heir who will not be you. Not this life.',
+          resolution: 'You set your eyes on the far door and walk the length of the Threshold without once looking at the empty seat, though the blood screams it the whole way. Behind you the Throne goes on waiting, patient as the wheel, for an heir who will not be you. Not this life.',
           effects: [{ kind: 'temp_hp', amount: 10 }],
         },
       },
@@ -2523,7 +2523,7 @@ const POOL: EventTemplate[] = [
   EventTemplateSchema.parse({
     id: 'voice-in-the-pocket-plane',
     eventType: 'stranger',
-    title: 'A Voice in the Pocket Plane',
+    title: 'A Voice in the Threshold',
     flavor:
       "The folded space gives up a figure of hard, clean light — a solar, or the memory of one, standing between you and the last door. \"Child of murder,\" it says, and there is no contempt in it, which is worse. \"You have climbed to the place where the lie at the centre of all this waits in a borrowed crown. Before the door — answer me one thing, and answer it true. What will you do with what you are?\"",
     minChapter: 14,

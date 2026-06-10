@@ -8,7 +8,7 @@ interface SceneProps {
 /**
  * Chapter-keyed camp illustration. Each camp seam between two chapters sits in
  * a different region of the long road from the Iron Cells to the Throne of
- * Bhaal, so we author one bespoke 8-bit-dark scene per chapter rather than
+ * the Slain God, so we author one bespoke 8-bit-dark scene per chapter rather than
  * reusing a single fire. The `chapter` prop is the RoomSpec.chapter value set
  * by campNode in createDelve; camps run 1–13 (one seam between each of the 14
  * chained chapters), with chapter 14 mapped too for forward-safety.
@@ -47,7 +47,7 @@ export function CampScene({ chapter }: { chapter: number | undefined }) {
 
 const SCENE_CLASS = 'w-full max-w-md drop-shadow-[0_0_18px_rgba(244,167,66,0.4)]';
 
-/** Camp 1 — a roadside fire on the Trade Way, the road bending south to Amn. */
+/** Camp 1 — a roadside fire on the Trade Road, the road bending south to Sudria. */
 function RoadsideFireScene({ label }: SceneProps) {
   return (
     <svg
@@ -117,7 +117,7 @@ function RoadsideFireScene({ label }: SceneProps) {
   );
 }
 
-/** Camp 2 — a harbour-lamp at the end of an Athkatla jetty, a wherry alongside. */
+/** Camp 2 — a harbour-lamp at the end of an Stormhaven jetty, a wherry alongside. */
 function HarbourLampScene({ label }: SceneProps) {
   return (
     <svg
@@ -152,7 +152,7 @@ function HarbourLampScene({ label }: SceneProps) {
       <circle cx="48" cy="16" r="0.8" fill="#fff8d0" />
       <circle cx="120" cy="24" r="0.6" fill="#fff8d0" opacity="0.7" />
       <circle cx="250" cy="12" r="0.9" fill="#fff8d0" />
-      {/* City skyline across the water — domes and spires of Athkatla */}
+      {/* City skyline across the water — domes and spires of Stormhaven */}
       <g fill="#241a2e">
         <rect x="0" y="66" width="320" height="20" />
         <rect x="22" y="54" width="26" height="14" />
@@ -295,7 +295,7 @@ function SmugglerFireScene({ label }: SceneProps) {
 
 /**
  * Camp 4 — a cold fire at the edge of the upwelling light. The deep gnome exile
- * who fled the Underdark and could go no further. A pale golden glow bleeds up
+ * who fled the Deepdark and could go no further. A pale golden glow bleeds up
  * from a rift in the floor ahead — dawn leaking through the floor of the world.
  * The fire throws no shadow toward the light.
  */
@@ -328,7 +328,7 @@ function EdgeOfLightScene({ label }: SceneProps) {
           <stop offset="100%" stopColor="#5a3010" stopOpacity="0" />
         </radialGradient>
       </defs>
-      {/* Void background — no sky, only deep Underdark */}
+      {/* Void background — no sky, only deep Deepdark */}
       <rect x="0" y="0" width="320" height="140" fill="url(#edge-void)" />
       {/* Rock ceiling, jagged */}
       <path
@@ -762,7 +762,7 @@ function BrokenMirrorsScene({ label }: SceneProps) {
 
 /**
  * Camp 9 — a Fire Beneath the Burning Boughs. The broken stair turns upward
- * into the open dark under a canopy lit orange from above: Suldanessellar
+ * into the open dark under a canopy lit orange from above: Tor Maladin
  * burning slow in the crowns of the trees. A fugitive elf keeps a low fire that
  * throws no light past its ring, an unstrung bow across its knees. (Region
  * band: suldanessellar.)
@@ -928,7 +928,7 @@ function ThresholdOfPitScene({ label }: SceneProps) {
 /**
  * Camp 11 — a Fire at the Edge of the Burning Siege. The Pit spits you back
  * into a world gone to war. On a ridge above a walled city ringed in fire and
- * giants — Saradush, burning — a refugee feeds a thin fire a broken chair-leg,
+ * giants — Karthen, burning — a refugee feeds a thin fire a broken chair-leg,
  * others huddled who fled the same gates. (Region band: saradush.)
  */
 function BurningSiegeScene({ label }: SceneProps) {
@@ -1023,8 +1023,8 @@ function BurningSiegeScene({ label }: SceneProps) {
 
 /**
  * Camp 12 — a Fire Between the Last Two Doors. The road past the siege forks
- * toward two dark doors: a drow enclave sunk under a mountain (Sendai) and a
- * dragon's lair in the deep waste (Abazigal). A Harper agent keeps a watch-fire
+ * toward two dark doors: a drow enclave sunk under a mountain (Szendra) and a
+ * dragon's lair in the deep waste (Korvazel). A Harper agent keeps a watch-fire
  * between them, turning a blade in the light. (Region band: saradush — distinct
  * from Ch11 by the fork and the two lairs.)
  */
@@ -1113,7 +1113,7 @@ function LastTwoDoorsScene({ label }: SceneProps) {
 }
 
 /**
- * Camp 13 — a Fire in the Pocket Plane. The world thins to the small folded
+ * Camp 13 — a Fire in the Threshold. The world thins to the small folded
  * plane that has been yours since the first death. A keeperless fire burns on a
  * fragment adrift in the void; one dark door stands free with the throne behind
  * it; and the only ally who came the whole way sits across the flame, eyes
@@ -1186,7 +1186,7 @@ function PocketPlaneScene({ label }: SceneProps) {
 }
 
 /**
- * Camp 14 — the Throne of Bhaal. The terminal chapter has no rest seam of its
+ * Camp 14 — the Throne of the Slain God. The terminal chapter has no rest seam of its
  * own, but the scene is mapped for forward-safety: the empty seat of the dead
  * god on a dark dais, a thin bloodlight behind it, a low fire guttering at the
  * foot of the steps. (Region band: throne-of-bhaal.)
@@ -1237,7 +1237,7 @@ function ThroneOfBhaalScene({ label }: SceneProps) {
         <rect x="134" y="74" width="8" height="22" />
         <rect x="178" y="74" width="8" height="22" />
       </g>
-      {/* a skull set in the crest — Bhaal, Lord of Murder */}
+      {/* a skull set in the crest — the Slain God, Lord of Murder */}
       <ellipse cx="160" cy="40" rx="5" ry="5.5" fill="#3a2a2e" />
       <circle cx="158" cy="39" r="1.2" fill="#8a1020" />
       <circle cx="162" cy="39" r="1.2" fill="#8a1020" />

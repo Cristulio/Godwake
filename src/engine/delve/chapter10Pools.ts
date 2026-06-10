@@ -2,10 +2,10 @@ import type { RoomMonster } from '../../types/delve';
 import type { BossIntelCard } from '../../content/bossIntel';
 
 /**
- * Chapter 10 · "Suldanessellar" encounter pools. Mirrors chapter9Pools — pooled
- * compositions for each combat slot in the hidden elven city of Tethyr, stormed
- * and burning as the player climbs it toward the Tree of Life. Jon Irenicus (the
- * exiled Joneleth) and his vampire ally Bodhi have taken the city; he means to
+ * Chapter 10 · "Tor Maladin" encounter pools. Mirrors chapter9Pools — pooled
+ * compositions for each combat slot in the hidden elven city of Tessar, stormed
+ * and burning as the player climbs it toward the Tree of Life. Jon Velnaris (the
+ * exiled Joneleth) and his vampire ally Velora have taken the city; he means to
  * drain the Tree and reclaim the godhood the elves stripped from him. The road
  * climbs through the canopy and the temple terraces toward the desecrated temple
  * of Rillifane, where a green dragon coils between the player and the Tree.
@@ -13,7 +13,7 @@ import type { BossIntelCard } from '../../content/bossIntel';
  * Theme: the holy place defiled and turned against its own. The city's own
  * defenders charmed and hollowed, its woodland spirits sickened with the dying
  * Tree, its grown guardians still keeping a city that is already lost, the
- * captor's rakshasa lieutenants holding the stairs, and Bodhi's spawn bleeding
+ * captor's rakshasa lieutenants holding the stairs, and Velora's spawn bleeding
  * up from the catacombs. Continues the curve a notch past Chapter 9: warmups
  * CR 9, early-mid CR 10, mid CR 11, elite CR 13, boss (Nizidramanii'yt) CR 14.
  */
@@ -30,7 +30,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'Up From the Catacombs',
     flavorText:
-      'The path off the forest road runs in under the first of the burning boughs, and something pale uncoils from the shadow of a burst tomb to meet it. One of Bodhi\'s spawn, still in the torn finery of the pilgrim it last drank, comes at you quick and low and silent — not to fight so much as to feed, and the climb has already made you slow.',
+      'The path off the forest road runs in under the first of the burning boughs, and something pale uncoils from the shadow of a burst tomb to meet it. One of Velora\'s spawn, still in the torn finery of the pilgrim it last drank, comes at you quick and low and silent — not to fight so much as to feed, and the climb has already made you slow.',
     monsters: [{ defId: 'bodhi-spawn', count: 1 }],
     xpReward: 1240,
     goldReward: 96,
@@ -38,7 +38,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Watch, Turned',
     flavorText:
-      'An arrow takes the bark by your ear before you hear the bow. High in the canopy a Suldanessellar archer nocks another with the unhurried grace of three centuries on the watch, eyes open and empty and aimed at the city it was born to guard. Something reached into it and turned the loyalty around without troubling to remove it.',
+      'An arrow takes the bark by your ear before you hear the bow. High in the canopy a Tor Maladin archer nocks another with the unhurried grace of three centuries on the watch, eyes open and empty and aimed at the city it was born to guard. Something reached into it and turned the loyalty around without troubling to remove it.',
     monsters: [{ defId: 'suldanessellar-archer', count: 1 }],
     xpReward: 1250,
     goldReward: 100,
@@ -46,7 +46,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'Two of the Pale',
     flavorText:
-      'Two of Bodhi\'s spawn rise together out of the under-roots, circling wide to take you from both sides the way a pair of dogs work a thing larger than either. Neither speaks. Both watch your throat, and wait for the half-step the climb has left in your guard.',
+      'Two of Velora\'s spawn rise together out of the under-roots, circling wide to take you from both sides the way a pair of dogs work a thing larger than either. Neither speaks. Both watch your throat, and wait for the half-step the climb has left in your guard.',
     monsters: [{ defId: 'bodhi-spawn', count: 2, displayPrefix: 'Spawn' }],
     xpReward: 1280,
     goldReward: 94,
@@ -54,7 +54,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'Arrow and Fang',
     flavorText:
-      'A charmed archer fixes you from the high bough while one of Bodhi\'s spawn breaks from the brush below — the shaft to keep you turning, the cold mouth to close while you are looking up. The city\'s own watch and the city\'s invaders, working you between them as though they had always been on the same side.',
+      'A charmed archer fixes you from the high bough while one of Velora\'s spawn breaks from the brush below — the shaft to keep you turning, the cold mouth to close while you are looking up. The city\'s own watch and the city\'s invaders, working you between them as though they had always been on the same side.',
     monsters: [
       { defId: 'suldanessellar-archer', count: 1 },
       { defId: 'bodhi-spawn', count: 1 },
@@ -73,7 +73,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Feeding-Pack at the Gate',
     flavorText:
-      'Where the path passes the first broken gate of the inner slopes, two of Bodhi\'s spawn worry at something best not looked at, and a charmed archer keeps the high ground above them. The spawn come off their meal hungrier than they went to it, and the watch looses to keep you in the killing-ground while they close.',
+      'Where the path passes the first broken gate of the inner slopes, two of Velora\'s spawn worry at something best not looked at, and a charmed archer keeps the high ground above them. The spawn come off their meal hungrier than they went to it, and the watch looses to keep you in the killing-ground while they close.',
     monsters: [
       { defId: 'bodhi-spawn', count: 2, displayPrefix: 'Spawn' },
       { defId: 'suldanessellar-archer', count: 1 },
@@ -87,7 +87,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Beautiful Defence',
     flavorText:
-      'A bladesinger of Suldanessellar steps into the path and salutes you out of an etiquette nothing in it remains to feel. Then it dances — the war-song of the elves moving through it perfectly while the mind that gave the song meaning has been emptied and refilled with the captor\'s want — and the dance is the most beautiful thing in this burning city, and it is to kill you.',
+      'A bladesinger of Tor Maladin steps into the path and salutes you out of an etiquette nothing in it remains to feel. Then it dances — the war-song of the elves moving through it perfectly while the mind that gave the song meaning has been emptied and refilled with the captor\'s want — and the dance is the most beautiful thing in this burning city, and it is to kill you.',
     monsters: [{ defId: 'suldanessellar-bladesinger', count: 1 }],
     xpReward: 1740,
     goldReward: 124,
@@ -103,7 +103,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Dance and the Drinker',
     flavorText:
-      'A bladesinger holds the terrace with one of Bodhi\'s spawn loose at its flank — the turned war-song to keep your blade busy and beautiful, the cold mouth to close the moment the measure pulls you out of line. The art of the city and the rot beneath it, fighting you to the same time.',
+      'A bladesinger holds the terrace with one of Velora\'s spawn loose at its flank — the turned war-song to keep your blade busy and beautiful, the cold mouth to close the moment the measure pulls you out of line. The art of the city and the rot beneath it, fighting you to the same time.',
     monsters: [
       { defId: 'suldanessellar-bladesinger', count: 1 },
       { defId: 'bodhi-spawn', count: 1 },
@@ -136,7 +136,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Fencer and the Watch',
     flavorText:
-      'A bladesinger dances the centre of the terrace with two of the canopy-watch loosing across it from the boughs — the seconds to keep you turning while the singer picks its line, the war-song to open you when the turning leaves a gap. The whole defence of Suldanessellar, said against the city it was raised to keep.',
+      'A bladesinger dances the centre of the terrace with two of the canopy-watch loosing across it from the boughs — the seconds to keep you turning while the singer picks its line, the war-song to open you when the turning leaves a gap. The whole defence of Tor Maladin, said against the city it was raised to keep.',
     monsters: [
       { defId: 'suldanessellar-bladesinger', count: 1 },
       { defId: 'suldanessellar-archer', count: 2, displayPrefix: 'Archer' },
@@ -304,14 +304,14 @@ export interface ChapterRoomFlavor {
  * rests / shop / boss + bossDefId), beside the pools, so the wiring re-authors
  * nothing.
  *
- * The shrines here are the holy places of Suldanessellar not yet wholly taken:
+ * The shrines here are the holy places of Tor Maladin not yet wholly taken:
  * a shard of the Tree of Life still keeping its light, and an undefiled altar of
  * Rillifane Rallathil in a side-chapel the fire has not reached.
  */
 export const CHAPTER10_FLAVOR = {
   chapter: 10 as const,
   prefix: 'c10',
-  title: 'Suldanessellar',
+  title: 'Tor Maladin',
   shrines: [
     {
       title: 'A Bough Still Green',
@@ -328,7 +328,7 @@ export const CHAPTER10_FLAVOR = {
     {
       title: 'A Talonha Balcony',
       flavorText:
-        "A carved balcony of one of the high elven houses, open to the night and the burning canopy below, somehow quiet. The household fled or fell long since; the cushions are still here, and the cold tea, and the view down over the city that was the most beautiful thing in Tethyr before tonight. For a little while you can sit where some elf-lord sat to watch the stars come up over the Tree, and be tired, and let the city burn without you for one held breath.",
+        "A carved balcony of one of the high elven houses, open to the night and the burning canopy below, somehow quiet. The household fled or fell long since; the cushions are still here, and the cold tea, and the view down over the city that was the most beautiful thing in Tessar before tonight. For a little while you can sit where some elf-lord sat to watch the stars come up over the Tree, and be tired, and let the city burn without you for one held breath.",
     },
     {
       title: 'The Hollow of a Great Root',

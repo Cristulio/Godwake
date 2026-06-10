@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Slaver Cuirassier — a uniformed enforcer of one of the Athkatla slaver
+ * Slaver Cuirassier — a uniformed enforcer of one of the Stormhaven slaver
  * houses. Mid-CR bruiser in lacquered breastplate with a heavy mace and a
  * length of weighted chain at the belt. Front-line brawler, not a finesse fighter.
  */
@@ -29,5 +29,5 @@ export const SLAVER_CUIRASSIER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Lacquered black breastplate over a red surcoat, the Twisted Coin sigil on the shoulder. Athkatla's slaver houses outfit them well; the chain at their belt is for you, not for him.",
+    "Lacquered black breastplate over a red surcoat, the Twisted Coin sigil on the shoulder. Stormhaven's slaver houses outfit them well; the chain at their belt is for you, not for him.",
 });

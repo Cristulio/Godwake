@@ -1,8 +1,8 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Sendai's Handmaiden — Chapter 13 early-mid, drow supporting cast out of the
- * enclave. A war-priestess of Lolth sworn to the Bhaalspawn matron, she keeps
+ * Szendra's Handmaiden — Chapter 13 early-mid, drow supporting cast out of the
+ * enclave. A war-priestess of Arachne sworn to the Slainkin matron, she keeps
  * the galleries the petrified ambushers cannot: poison on the scourge, a roll of
  * conjured darkness to blind the intruder, and the Spider Queen's favour to mend
  * whatever you have already broken. A poison `attack`, a `debuff` (blinded), and
@@ -10,7 +10,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const SENDAI_HANDMAIDEN: Monster = MonsterSchema.parse({
   id: 'sendai-handmaiden',
-  name: "Sendai's Handmaiden",
+  name: "Szendra's Handmaiden",
   cr: '12',
   size: 'medium',
   creatureType: 'humanoid (drow)',
@@ -48,9 +48,9 @@ export const SENDAI_HANDMAIDEN: Monster = MonsterSchema.parse({
       heal: '3d8+6',
       cooldownRounds: 2,
       description:
-        'She lays a hand on a faltering sister and calls down Lolth\'s cold mercy, knitting the wound shut with web-grey light — the enclave does not let its own fall while a handmaiden still stands to pray.',
+        'She lays a hand on a faltering sister and calls down Arachne\'s cold mercy, knitting the wound shut with web-grey light — the enclave does not let its own fall while a handmaiden still stands to pray.',
     },
   ],
   flavorText:
-    "Sendai keeps her enclave the way Lolth keeps her web: by the devotion of priestesses who have bound their whole hope of favour to the matron's rise. The handmaidens are the surviving faithful of that bargain, war-priestesses who tend the galleries the stone ambushers cannot — dousing the lights, dosing the scourges, calling the Spider Queen's favour down on whatever the intruder has not quite finished killing. They do not fear you. They have wagered their souls on a Bhaalspawn becoming a god, and next to that a swordarm in the dark is a small thing.",
+    "Szendra keeps her enclave the way Arachne keeps her web: by the devotion of priestesses who have bound their whole hope of favour to the matron's rise. The handmaidens are the surviving faithful of that bargain, war-priestesses who tend the galleries the stone ambushers cannot — dousing the lights, dosing the scourges, calling the Spider Queen's favour down on whatever the intruder has not quite finished killing. They do not fear you. They have wagered their souls on a Slainkin becoming a god, and next to that a swordarm in the dark is a small thing.",
 });

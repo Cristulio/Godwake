@@ -1,36 +1,36 @@
 {
   "tymoras-coin": {
-    "name": "Moneda de Tymora",
+    "name": "Moneda de Tique",
     "flavor": "Un cobre encuentra el camino hasta tu mano. Tú no lo pusiste ahí.",
     "effect": "Repite una tirada de ataque fallida por encuentro."
   },
   "helms-aegis": {
-    "name": "Égida de Helm",
+    "name": "Égida de Argos",
     "flavor": "Un peso se asienta sobre tus hombros —invisible, vigilante, incansable.",
     "effect": "+1 a la CA."
   },
   "tempus-fury": {
-    "name": "Furia de Tempus",
-    "flavor": "El primer golpe es siempre el más certero. Tempus tiene debilidad por los valientes.",
+    "name": "Furia de Ares",
+    "flavor": "El primer golpe es siempre el más certero. Ares tiene debilidad por los valientes.",
     "effect": "+2 de daño en el primer ataque de cada combate."
   },
   "mystras-whisper": {
-    "name": "Susurro de Mystra",
+    "name": "Susurro de Hécate",
     "flavor": "La Urdimbre zumba levemente alrededor de tu arma. Tus golpes portan un filo invisible.",
     "effect": "+1 de daño de fuerza en todos los ataques."
   },
   "lathanders-dawn": {
-    "name": "Alba de Lathander",
+    "name": "Alba de Eos",
     "flavor": "Un tenue calor en la oscuridad. Nueva luz en el umbral de cada sala.",
     "effect": "Gana 3 PG temporales al inicio de cada combate."
   },
   "selunes-veil": {
-    "name": "Velo de Selûne",
+    "name": "Velo de Selene",
     "flavor": "Los sorprendes sin verte —incluso cuando estás obviamente ahí.",
     "effect": "Ventaja en tu primer ataque de cada combate."
   },
   "ilmaters-patience": {
-    "name": "Paciencia de Ilmater",
+    "name": "Paciencia de Atlas",
     "flavor": "El Dios Llorón conoce tu peso. Lo carga un instante más de lo que tú puedes.",
     "effect": "Una vez por incursión, cuando fueras a caer, el Dios Llorón te perdona —estabilízate a 1 PG. Se acumula: +1 carga de estabilización."
   },
@@ -40,42 +40,42 @@
     "effect": "+1 a la CA mientras estés ensangrentado (a la mitad de PG o menos)."
   },
   "tempus-edge": {
-    "name": "Filo de Tempus",
+    "name": "Filo de Ares",
     "flavor": "Tu rango de crítico se ensancha. El dios de la guerra prefiere un final decisivo.",
     "effect": "El rango de crítico se extiende en 1 (p. ej. un Campeón hace crítico con 18-20 en lugar de 19-20)."
   },
   "tymoras-wink": {
-    "name": "Guiño de Tymora",
+    "name": "Guiño de Tique",
     "flavor": "La suerte de la dama no tiene paciencia para la puntería cuidadosa. Una vez por encuentro, los dados te deben una.",
     "effect": "Una vez por encuentro, repite cualquier tirada de ataque fallida (arma o conjuro)."
   },
   "tymoras-gambit": {
-    "name": "Jugada de Tymora",
+    "name": "Jugada de Tique",
     "flavor": "Una plegaria temeraria atendida. Los dados se inclinan a un lado —pero tu guardia se inclina al otro.",
-    "effect": "El rango de crítico se extiende en 1, pero pierdes 1 de CA. Tymora reparte lo que reparte."
+    "effect": "El rango de crítico se extiende en 1, pero pierdes 1 de CA. Tique reparte lo que reparte."
   },
   "helms-bulwark": {
-    "name": "Baluarte de Helm",
+    "name": "Baluarte de Argos",
     "flavor": "Tus golpes portan un testigo. El acero resuena como golpeado dos veces —una por ti, otra por Él.",
     "effect": "+1 de daño radiante en los impactos."
   },
   "mystras-ward": {
-    "name": "Guarda de Mystra",
+    "name": "Guarda de Hécate",
     "flavor": "La Urdimbre se ciñe más cuando estás intacto. La primera herida deshace el conjuro.",
     "effect": "+1 a la CA mientras estés a plena salud."
   },
   "mystras-veil": {
-    "name": "Velo de Mystra",
+    "name": "Velo de Hécate",
     "flavor": "Un hilo de la Urdimbre guía tu primer golpe. No lo suelta hasta que aterriza.",
     "effect": "+2 a impactar en el primer ataque de cada combate."
   },
   "lathanders-ember": {
-    "name": "Brasa de Lathander",
+    "name": "Brasa de Eos",
     "flavor": "Una mota de alba se asienta en el pecho y no se apaga. La mañana sana incluso la herida obstinada.",
     "effect": "Regenera 1 PG al inicio de cada combate."
   },
   "ilmaters-crown": {
-    "name": "Corona de Ilmater",
+    "name": "Corona de Atlas",
     "flavor": "El Dios Llorón presiona un pulgar contra tu frente. No te quebrarás aquí. Hoy no.",
     "effect": "Gana 2 PG temporales al inicio de cada combate."
   },
@@ -90,17 +90,17 @@
     "effect": "Cura 2 PG al inicio de cada combate."
   },
   "ilmaters-mercy": {
-    "name": "Misericordia de Ilmater",
+    "name": "Misericordia de Atlas",
     "flavor": "El Dios Llorón toma una medida de tu dolor sobre Sí entre cada prueba. Entras en la siguiente un poco más entero.",
     "effect": "Cura el 10% de tus PG máximos al inicio de cada combate."
   },
   "helms-vigil": {
-    "name": "Vigilia de Helm",
+    "name": "Vigilia de Argos",
     "flavor": "Ileso, mantienes la Guardia inquebrantable —cada defensa sostenida, cada hueco cerrado. La primera herida es lo que rompe el conjuro.",
     "effect": "+2 a la CA mientras estés a plena salud."
   },
   "ilmaters-forbearance": {
-    "name": "Templanza de Ilmater",
+    "name": "Templanza de Atlas",
     "flavor": "Roto y sangrante, solo te vuelves más difícil de derribar. El Dios Llorón nada ama tanto como al que no cede.",
     "effect": "+2 a la CA mientras estés ensangrentado (a la mitad de PG o menos)."
   },
@@ -110,37 +110,37 @@
     "effect": "+1 a la CA por cada perdición que cargue el alma."
   },
   "mystras-reserve": {
-    "name": "Reserva de Mystra",
+    "name": "Reserva de Hécate",
     "flavor": "La Urdimbre se concentra más densa alrededor de los marcados y los condenados. Tus maldiciones la atraen como polillas a una vela.",
     "effect": "Al inicio de cada combate, gana 2 PG temporales por cada perdición que cargue el alma."
   },
   "helms-bastion": {
-    "name": "Bastión de Helm",
+    "name": "Bastión de Argos",
     "flavor": "Ante el gran enemigo, el Vigilante pone Su escudo a tu espalda. No serás tú quien rompa la línea.",
     "effect": "Gana 6 PG temporales en un combate contra un jefe de capítulo."
   },
   "mystras-acuity": {
-    "name": "Agudeza de Mystra",
+    "name": "Agudeza de Hécate",
     "flavor": "La Urdimbre se afila hasta una punta detrás de tus ojos. Allá donde toca, ninguna guarda aguanta limpia.",
     "effect": "+1 a la CD de salvación de tus conjuros."
   },
   "mystras-surge": {
-    "name": "Oleada de Mystra",
+    "name": "Oleada de Hécate",
     "flavor": "La corriente corre más plena a través de ti de lo que el conjuro estaba destinado a portar. Se derrama al mundo.",
     "effect": "+2 de daño en todos los conjuros."
   },
   "mystras-precision": {
-    "name": "Precisión de Mystra",
+    "name": "Precisión de Hécate",
     "flavor": "La Urdimbre no deja que tu puntería divague. El proyectil va donde apunta la voluntad.",
     "effect": "+1 a las tiradas de ataque de conjuro."
   },
   "mystras-apex": {
-    "name": "Cénit de Mystra",
+    "name": "Cénit de Hécate",
     "flavor": "Por un aliento la Dama de los Misterios lanza a través de ti, y el conjuro recuerda lo que fue en el alba del Arte.",
     "effect": "+1 a la CD de salvación de conjuros y +1 de daño de conjuro."
   },
   "selunes-beacon": {
-    "name": "Faro de Selûne",
+    "name": "Faro de Selene",
     "flavor": "Su luz marca el objetivo antes de que el conjuro deje tu mano. Golpeas algo ya iluminado.",
     "effect": "+1 a las tiradas de ataque de conjuro y +1 de daño de conjuro."
   },
@@ -155,32 +155,32 @@
     "effect": "+1 a la CD de salvación de conjuros y +1 a las tiradas de ataque de conjuro."
   },
   "lathanders-mantle": {
-    "name": "Manto de Lathander",
+    "name": "Manto de Eos",
     "flavor": "El alba envuelve al lanzador —fuego que arrojar, calor que vestir. La mañana no manda a los suyos al frío.",
     "effect": "+1 de daño de conjuro y 3 PG temporales al inicio de cada combate."
   },
   "tymoras-fortune": {
-    "name": "Fortuna de Tymora",
+    "name": "Fortuna de Tique",
     "flavor": "La Dama se inclina cerca y palmea los dados dos veces. Lo que se te cae, ella te lo devuelve —y una vez más, de paso.",
     "effect": "Repite hasta 2 tiradas de ataque fallidas por encuentro (arma o conjuro)."
   },
   "lathanders-renewal": {
-    "name": "Renovación de Lathander",
+    "name": "Renovación de Eos",
     "flavor": "Cada umbral que cruzas, el alba cierra un poco más de lo que la última sala abrió.",
     "effect": "Cura 3 PG al inicio de cada combate."
   },
   "helms-rampart": {
-    "name": "Muralla de Helm",
+    "name": "Muralla de Argos",
     "flavor": "El Vigilante alza un muro a tu hombro y lo apuntala más fuerte allá donde viene lo peor.",
     "effect": "+1 a la CA, y 6 PG temporales en un combate contra un jefe de capítulo."
   },
   "helms-resolve": {
-    "name": "Resolución de Helm",
+    "name": "Resolución de Argos",
     "flavor": "Sangrando, la Guardia se mantiene más firme, no más blanda. Un muro brechado es el que Él guarda más de cerca.",
     "effect": "+3 a la CA mientras estés ensangrentado (a la mitad de PG o menos)."
   },
   "ilmaters-solace": {
-    "name": "Consuelo de Ilmater",
+    "name": "Consuelo de Atlas",
     "flavor": "El Dios Llorón toma una medida del dolor entre cada prueba, y entras en la siguiente menos roto de lo que dejaste la anterior.",
     "effect": "Cura el 15% de tus PG máximos al inicio de cada combate."
   },

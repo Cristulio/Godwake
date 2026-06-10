@@ -83,22 +83,22 @@ describe('selectSoulVoiceLine — chapter-clear matches the cleared chapter', ()
     }
   });
 
-  it('Irenicus names the right chapter (Athkatla for ch2, Ust Natha for ch4)', () => {
+  it('Velnaris names the right chapter (Stormhaven for ch2, Zhal Vasha for ch4)', () => {
     const ch2 = selectSoulVoiceLine('irenicus', 'chapter-clear', {
       ...base,
       clearedChapter: 2,
       seed: 0,
     });
-    expect(ch2).toContain('Athkatla');
+    expect(ch2).toContain('Stormhaven');
     const ch4 = selectSoulVoiceLine('irenicus', 'chapter-clear', {
       ...base,
       clearedChapter: 4,
       seed: 0,
     });
-    expect(ch4).toContain('Ust Natha');
+    expect(ch4).toContain('Zhal Vasha');
   });
 
-  it('Melissan whispers through the Throne chapters (12, 13) she presides over', () => {
+  it('Maevra whispers through the Throne chapters (12, 13) she presides over', () => {
     for (const chapter of [12, 13]) {
       for (let seed = 0; seed < 8; seed++) {
         const line = selectSoulVoiceLine('melissan', 'chapter-clear', {

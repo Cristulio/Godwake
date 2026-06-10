@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Fire-Giant Warlord — Chapter 12 elite. One of Yaga-Shura's captains, the
+ * Fire-Giant Warlord — Chapter 12 elite. One of Hargan-Vor's captains, the
  * giant set over a wing of the siege, bigger and older and harder to kill than
  * the line it commands. A `multiattack` apex with a great fire-blade at long
  * reach and a hurled wall-stone at range, and a `sustain` that banks its own
@@ -47,7 +47,7 @@ export const FIRE_GIANT_WARLORD: Monster = MonsterSchema.parse({
       damageType: 'bludgeoning',
       range: [60, 240],
       description:
-        'When you give it ground it takes a course of Saradush\'s broken wall in one hand and sends it back down the street at you, trailing fire, a piece of the city it is here to unmake.',
+        'When you give it ground it takes a course of Karthen\'s broken wall in one hand and sends it back down the street at you, trailing fire, a piece of the city it is here to unmake.',
     },
     {
       kind: 'sustain',
@@ -60,5 +60,5 @@ export const FIRE_GIANT_WARLORD: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Yaga-Shura does not command the siege stroke by stroke; he keeps captains for that, and this is one of them — a fire giant grown old and huge in the mountain-wars, set over a whole wing of the ring around Saradush. It is everything the line is, made worse: it hits from further, it does not tire, and what you do to it it undoes with a breath, banking its own heat back into the wound. Beat it, and you have broken a finger of the siege. There are more fingers. And there is the hand.",
+    "Hargan-Vor does not command the siege stroke by stroke; he keeps captains for that, and this is one of them — a fire giant grown old and huge in the mountain-wars, set over a whole wing of the ring around Karthen. It is everything the line is, made worse: it hits from further, it does not tire, and what you do to it it undoes with a breath, banking its own heat back into the wound. Beat it, and you have broken a finger of the siege. There are more fingers. And there is the hand.",
 });

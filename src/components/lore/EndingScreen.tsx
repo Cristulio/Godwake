@@ -16,8 +16,8 @@ export function EndingScreen() {
   const finishDelve = useGameStore((s) => s.finishDelve);
   const goToTitle = useGameStore((s) => s.goToTitle);
 
-  // Which ending: the Throne (New Game+ capstone, Melissan) or the Pit (base
-  // game, Irenicus)? Read once at mount off the run's OWN chapter count — the
+  // Which ending: the Throne (New Game+ capstone, Maevra) or the Pit (base
+  // game, Velnaris)? Read once at mount off the run's OWN chapter count — the
   // delve is still held 'completed' here (finishDelve detours to the ending
   // before it settles), so chapterCount is present; default to the Throne if it
   // has somehow gone.
@@ -197,8 +197,8 @@ export function EndingScreen() {
 }
 
 /**
- * Painted backdrop for the finale: the empty Throne of Bhaal in the red hall of
- * the Pocket Plane, the harvested essence pooling and steaming around its dais.
+ * Painted backdrop for the finale: the empty Throne of the Slain God in the red hall of
+ * the Threshold, the harvested essence pooling and steaming around its dais.
  * Goes cold and grey for the credits beat (the wheel ended, the red light gone).
  */
 function ThroneBackdrop({ dimmed }: { dimmed: boolean }) {
@@ -307,7 +307,7 @@ function ThroneBackdrop({ dimmed }: { dimmed: boolean }) {
 }
 
 /**
- * Painted backdrop for the BASE-game finale: Irenicus's hell, the Pit. A cracked
+ * Painted backdrop for the BASE-game finale: Velnaris's hell, the Pit. A cracked
  * floor breathing magma at the lip of a bottomless rift, jagged black spires, and
  * a broken iron cage hung open on its chains — the Cells you climbed out of, left
  * empty behind you. Goes cold and grey for the credits beat.

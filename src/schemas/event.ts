@@ -148,9 +148,9 @@ export const IllustrationCategorySchema = z.enum(EVENT_ILLUSTRATIONS);
 export type IllustrationCategory = z.infer<typeof IllustrationCategorySchema>;
 
 /**
- * Map a chapter (1–14, the full chain through the Throne of Bhaal) to its region
+ * Map a chapter (1–14, the full chain through the Throne of the Slain God) to its region
  * illustration. Ch5/6 share the cosmic Godwake; Ch12/13 share the war against
- * the Five (Saradush). Any out-of-range or absent chapter resolves to `omen`.
+ * the Five (Karthen). Any out-of-range or absent chapter resolves to `omen`.
  */
 const REGION_BY_CHAPTER: Record<number, IllustrationCategory> = {
   1: 'iron-cells',

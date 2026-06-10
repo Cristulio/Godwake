@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Abazigal — Chapter 13 boss, the last of the Five met in his lair. A Bhaalspawn
+ * Korvazel — Chapter 13 boss, the last of the Five met in his lair. A Slainkin
  * who took the shape of his draconic forebears and never gave it back: a great
  * half-blue-dragon, scaled cobalt and storm-charged, immune to the lightning
  * that is his blood.
@@ -21,10 +21,10 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const ABAZIGAL: Monster = MonsterSchema.parse({
   id: 'abazigal',
-  name: 'Abazigal',
+  name: 'Korvazel',
   cr: '17',
   size: 'huge',
-  creatureType: 'dragon (Bhaalspawn)',
+  creatureType: 'dragon (Slainkin)',
   ac: 23,
   maxHp: 430,
   speed: 40,
@@ -81,5 +81,5 @@ export const ABAZIGAL: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "The last and the strongest of the Five you hunt, Abazigal claims dragon blood in his lineage and has spent his long life proving it — taking the half-dragon form and then refusing ever to set it down, until the man is gone and only the great cobalt wyrm remains, coiled at the bottom of caverns he has filled end to end with his own storm-blooded brood. He is immune to the lightning that is the whole of his blood, and he means to be immune to death the same way: he knows, as you do, that the divine essence in the slain of the Five flows to the survivors, and he intends to be the survivor. \"So,\" he says, and the word is thunder in the close rock, \"the runt of Bhaal's litter comes down to be a stepping-stone. Come closer, little kin. I have room in me for one more god.\"",
+    "The last and the strongest of the Five you hunt, Korvazel claims dragon blood in his lineage and has spent his long life proving it — taking the half-dragon form and then refusing ever to set it down, until the man is gone and only the great cobalt wyrm remains, coiled at the bottom of caverns he has filled end to end with his own storm-blooded brood. He is immune to the lightning that is the whole of his blood, and he means to be immune to death the same way: he knows, as you do, that the divine essence in the slain of the Five flows to the survivors, and he intends to be the survivor. \"So,\" he says, and the word is thunder in the close rock, \"the runt of the Slain God's litter comes down to be a stepping-stone. Come closer, little kin. I have room in me for one more god.\"",
 });

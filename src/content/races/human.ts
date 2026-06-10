@@ -18,7 +18,7 @@ export const HUMAN: Race = RaceSchema.parse({
       id: 'human-versatility',
       name: 'Versatility',
       description:
-        'Humans are the wanderers and adventurers of the Sword Coast. You gain a +1 to every ability score.',
+        'Humans are the wanderers and adventurers of the Long Coast. You gain a +1 to every ability score.',
     },
   ],
 });

@@ -8,14 +8,14 @@
  * curve, and they under-paced compounding player power (levels, affix gear,
  * blessings, spell tiers, extra attacks) from the mid-game on — so the back half
  * of a run was EASIER than the front. This inverts the arc: enemies grow harder
- * faster than the player from Ch5 on, steepest into the Throne of Bhaal (Ch13-14),
+ * faster than the player from Ch5 on, steepest into the Throne of the Slain God (Ch13-14),
  * which becomes the hardest content in the game.
  *
  * Shape:
  *  - Ch1-4: EXACTLY 1.0 / 1.0. The early grind is a design pillar and must not move.
  *  - Ch5-12: geometric growth per chapter past the Ch4 anchor.
- *  - Ch13-14 (Throne of Bhaal): a steeper kicker compounded on top of the
- *    geometric growth, so reaching Melissan demands a Grove-carried soul.
+ *  - Ch13-14 (Throne of the Slain God): a steeper kicker compounded on top of the
+ *    geometric growth, so reaching Maevra demands a Grove-carried soul.
  *  - Clamped to a sane band so a stray chapter index can never produce a
  *    degenerate fight (mirrors {@link ascendantChapterScale}, #539).
  *
@@ -46,7 +46,7 @@ const RAMP_ANCHOR_CHAPTER = 4;
 /** Per-chapter geometric growth past the anchor, applied Ch5→12. SIM-TUNED (see header). */
 const HP_GROWTH_PER_CHAPTER = 1.045;
 const DAMAGE_GROWTH_PER_CHAPTER = 1.045;
-/** First Throne-of-Bhaal chapter — Ch13-14 carry the steeper kicker. */
+/** First Throne-of-the Slain God chapter — Ch13-14 carry the steeper kicker. */
 const TOB_FIRST_CHAPTER = 13;
 /**
  * Extra per-chapter multiplier compounded across the ToB act, ON TOP of the

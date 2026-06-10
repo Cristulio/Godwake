@@ -43,7 +43,7 @@ export function blessingSignature(b: Blessing): string {
  * owns one it should drop out of future offer rolls. Keep in sync with the
  * `Math.max`/OR branches in `aggregateBlessingModifiers`.
  *
- * `acBonus` is intentionally absent: it sums so that Tymora's Gambit's
+ * `acBonus` is intentionally absent: it sums so that Tyche's Gambit's
  * −1 AC penalty applies correctly (Math.max would silence the negative).
  */
 const NON_STACKING_MODIFIER_KEYS: ReadonlySet<keyof BlessingModifiers> = new Set([
@@ -164,11 +164,11 @@ export function rollBlessingOptions(
  * the audit follow-up flagged four more reachable-in-the-pool cases:
  *
  *   - `extraTempHpPerRoom` — 5e RAW: temp HP doesn't stack (PR #80).
- *     Lathander's Dawn +3 + Ilmater's Crown +2 should be +3, not +5.
+ *     Eos's Dawn +3 + Atlas's Crown +2 should be +3, not +5.
  *   - `damageBonus` — only one damageBonus blessing exists post-dedup.
  *   - `holyDamageBonus` — only one holyDamageBonus blessing exists post-dedup.
  *
- * `acBonus` sums (additive) so that Tymora's Gambit's −1 AC tradeoff
+ * `acBonus` sums (additive) so that Tyche's Gambit's −1 AC tradeoff
  * applies correctly; it is excluded from NON_STACKING_MODIFIER_KEYS.
  *
  * Fields with only one stacking source in the current pool

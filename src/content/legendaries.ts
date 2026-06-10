@@ -50,7 +50,7 @@ export const RELIC_SLOT_META: Record<RelicSlot, RelicSlotMeta> = {
 };
 
 /**
- * A legendary relic: cross-delve persistent gear managed only at the Phandalin
+ * A legendary relic: cross-delve persistent gear managed only at the Wakeford
  * hub (Hades keepsake/aspect style — separate from the run's affix gear). A relic
  * carries NO armour class and NO weapon damage; it is a pure EFFECT, layered on
  * top of your equipped affix gear through the same affix pipeline (see
@@ -68,7 +68,7 @@ export const RELIC_SLOT_META: Record<RelicSlot, RelicSlotMeta> = {
 export interface Legendary {
   id: string;
   name: string;
-  /** One-line flavor in the Forgotten Realms / BG2 voice. */
+  /** One-line flavor in the old realms / BG2 voice. */
   flavor: string;
   /** Player-facing mechanical line, e.g. "Heal 12% of the damage you deal". */
   effect: string;
@@ -225,7 +225,7 @@ export const LEGENDARIES: readonly Legendary[] = [
   {
     id: 'hymnal-of-slow-mending',
     name: 'Hymnal of Slow Mending',
-    flavor: 'A psalter of Lathander\u2019s dawn-song; hum it and old wounds forget to bleed.',
+    flavor: 'A psalter of Eos\u2019s dawn-song; hum it and old wounds forget to bleed.',
     effect: 'Regenerate 3 HP at the start of each turn',
     effects: { regenPerTurn: 3 },
     slot: 'renewal',

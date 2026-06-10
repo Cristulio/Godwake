@@ -20,7 +20,7 @@ import { FIRE_GIANT_WARLORD } from '../../content/monsters/fire-giant-warlord';
 import { YAGA_SHURA } from '../../content/monsters/yaga-shura';
 
 /**
- * Chapter 12 ("The Siege of Saradush") content gate: every new monster, the
+ * Chapter 12 ("The Siege of Karthen") content gate: every new monster, the
  * boss, the four pools, and the ready-to-wire flavor + intel must be valid and
  * internally consistent. Integration wires the bestiary into the monster
  * registry and the chapter into createDelve; this suite owns the bestiary +
@@ -42,7 +42,7 @@ const CH12_BOSS = YAGA_SHURA;
 
 /**
  * Every monster def id this chapter is allowed to reference, boss included.
- * Yaga-Shura's heart-rite gate surfaces the bespoke `heart-ember` weak-point as
+ * Hargan-Vor's heart-rite gate surfaces the bespoke `heart-ember` weak-point as
  * the destructible objective, so it is a legitimate cross-chapter summon target.
  */
 const KNOWN_IDS = new Set<string>([
@@ -64,7 +64,7 @@ describe('chapter 12 — bestiary', () => {
     }
   });
 
-  it('the boss (Yaga-Shura) carries an apex CR15 stat block a notch above Ch9', () => {
+  it('the boss (Hargan-Vor) carries an apex CR15 stat block a notch above Ch9', () => {
     // A clear notch above the Ch9 boss (The Hollow Pretender: 240 HP / AC 21).
     expect(CH12_BOSS.id).toBe('yaga-shura');
     expect(CH12_BOSS.maxHp).toBeGreaterThan(240);

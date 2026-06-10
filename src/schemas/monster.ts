@@ -178,8 +178,8 @@ export type MonsterPhase = z.infer<typeof MonsterPhaseSchema>;
 /**
  * boss-framework: a condition gate. While active the boss takes greatly reduced
  * (or zero) damage; the gate lifts when its condition is met. Today the
- * condition is "the linked add is alive" — kill the add (Yaga-Shura's hidden
- * heart, a Sendai statue, a weak-point) to drop the ward. The UI surfaces
+ * condition is "the linked add is alive" — kill the add (Hargan-Vor's hidden
+ * heart, a Szendra statue, a weak-point) to drop the ward. The UI surfaces
  * `wardLabel` so the player reads WHY the boss is shrugging off blows.
  */
 const MonsterGateSchema = z.object({

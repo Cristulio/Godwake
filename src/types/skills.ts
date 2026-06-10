@@ -89,7 +89,7 @@ export function isSkillEnabled(s: SkillName): boolean {
 export const SKILL_DESCRIPTIONS: Record<SkillName, string> = {
   acrobatics: 'Keep your footing on broken ground and slick stone.',
   'animal-handling': 'Calm or command beasts encountered in the deep.',
-  arcana: 'Read magical scripts, identify enchantments, and handle the Weave safely at shrines and in lore chambers.',
+  arcana: 'Read magical scripts, identify enchantments, and handle the Weft safely at shrines and in lore chambers.',
   athletics: 'Force open bars and heavy doors, upend obstacles, and outlast whatever physical demand the road puts on your body.',
   deception: 'Lie convincingly to wardens, cultists, and city guards.',
   history: 'Recall lore at shrines and ancient sites.',

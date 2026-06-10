@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Blood-Fiend — Chapter 14 early-mid striker, a Bhaal-essence horror grown past
+ * Blood-Fiend — Chapter 14 early-mid striker, a god-essence horror grown past
  * the mote stage. Where a mote is a clot, this is a clot that has fed long enough
  * to keep a shape between kills — a tall, wet, four-armed thing that walks. A
  * heavier `lifeDrain` attacker than the mote, and a faster one: every wound it

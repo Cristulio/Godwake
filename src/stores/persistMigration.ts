@@ -19,8 +19,8 @@ import type { RelicSlot } from '../content/legendaries';
  *  v4 → v5: codex now tracks monsterDefeats / monsterKilledBy /
  *           monsterKillingAbilities for the postmortem + bestiary win-rate
  *           rows. Default to empty maps on older saves.
- *  v5 → v6: knownNpcs gates name reveals for the soul-bond NPCs (Irenicus,
- *           Imoen). Missing field on older saves → []  (everyone pre-reveal).
+ *  v5 → v6: knownNpcs gates name reveals for the soul-bond NPCs (Velnaris,
+ *           Inara). Missing field on older saves → []  (everyone pre-reveal).
  *  v6 → v7: initiative removed entirely (player always acts first). Strip
  *           legacy `permanentInitBonus` / `delveInitBonus` / nested `init`
  *           bonus on load so the new turn engine never sees them.
@@ -31,7 +31,7 @@ import type { RelicSlot } from '../content/legendaries';
  *           default []) added to the meta snapshot. Old saves own none.
  *  v9 → v10: Two changes shipped in one bump.
  *            (a) Per-soul seen-once dialogue beats. `seenDialogueBeats` (default
- *            []) prevents one-time beats (e.g. Imoen's camp whisper) from
+ *            []) prevents one-time beats (e.g. Inara's camp whisper) from
  *            replaying on re-entry or in subsequent runs.
  *            (b) Legendaries became EFFECT-ONLY, hub-managed. The dead
  *            `character.legendaryBonuses` stat field is stripped here; the new
@@ -68,7 +68,7 @@ import type { RelicSlot } from '../content/legendaries';
  *             `enhancement` (weapons: attack+damage; armour/shield: AC). Equipped
  *             rolled items are default-filled to `enhancement: 0` so old loot is a
  *             plain base on the new axis (the engine also reads it with `?? 0`).
- *  v14 → v15: Throne-of-Bhaal ending capstone. `gameCompleted` (default false)
+ *  v14 → v15: Throne-of-the Slain God ending capstone. `gameCompleted` (default false)
  *             and `endingChosen` (default null) added to the meta snapshot. Old
  *             saves haven't seen the finale — a returning player still gets the
  *             one-time ending on their next full-chain clear.
@@ -459,7 +459,7 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
     state.originClass = null;
   }
 
-  // v14 → v15: Throne-of-Bhaal ending capstone. Old saves haven't seen the
+  // v14 → v15: Throne-of-the Slain God ending capstone. Old saves haven't seen the
   // finale, so the one-time ending fires on their next full-chain clear.
   if (typeof state.gameCompleted !== 'boolean') {
     state.gameCompleted = false;

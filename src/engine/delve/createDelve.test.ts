@@ -17,7 +17,7 @@ import type { DelveState, RoomSpec } from '../../types/delve';
 describe('createGodwakeDelve', () => {
   it('emits a deep room graph for the base chained run (the default)', () => {
     const d = createGodwakeDelve(1);
-    // Default is the base game (Cells→Irenicus, 11 chapters) — still a deep graph.
+    // Default is the base game (Cells→Velnaris, 11 chapters) — still a deep graph.
     expect(d.chapterCount).toBe(BASE_GAME_CHAPTERS);
     expect(d.rooms.length).toBeGreaterThanOrEqual(80);
   });
@@ -52,14 +52,14 @@ describe('createGodwakeDelve', () => {
     expect(bossIds).toContain('drowned-custodian');
     expect(bossIds).toContain('ashen-marshal');
     expect(bossIds).toContain('the-hollow-pretender');
-    expect(bossIds).toContain('nizidramaniiyt'); // Ch10 — Suldanessellar
+    expect(bossIds).toContain('nizidramaniiyt'); // Ch10 — Tor Maladin
     expect(bossIds).toContain('irenicus'); // Ch11 — The Trials of the Pit
-    expect(bossIds).toContain('yaga-shura'); // Ch12 — The Siege of Saradush
+    expect(bossIds).toContain('yaga-shura'); // Ch12 — The Siege of Karthen
     expect(bossIds).toContain('abazigal'); // Ch13 — The Last of the Five
-    expect(bossIds).toContain('melissan'); // Ch14 — The Throne of Bhaal
+    expect(bossIds).toContain('melissan'); // Ch14 — The Throne of the Slain God
   });
 
-  it('is the full fourteen-chapter chain ending at Melissan, every boss wired', () => {
+  it('is the full fourteen-chapter chain ending at Maevra, every boss wired', () => {
     const d = createGodwakeDelve({ seed: 1, fullChain: true });
     const bosses = d.rooms.filter((r) => r.kind === 'boss');
     // Fourteen chapters → fourteen distinct chapter bosses, in order 1..14.
@@ -80,7 +80,7 @@ describe('createGodwakeDelve', () => {
       expect(cards).toHaveLength(1);
     }
 
-    // The very last room of the chain is the Ch14 Melissan boss — the finale.
+    // The very last room of the chain is the Ch14 Maevra boss — the finale.
     const finalRoom = d.rooms[d.rooms.length - 1];
     expect(finalRoom.kind).toBe('boss');
     expect(finalRoom.chapter).toBe(14);
@@ -575,27 +575,27 @@ describe('createGodwakeDelve — base game vs New Game+ chain split', () => {
   const bossDefIds = (d: DelveState) =>
     d.rooms.filter((r) => r.kind === 'boss').map((r) => r.monsters?.[0]?.defId);
 
-  it('default build is the BASE game: 11 chapters, the Cells→Irenicus arc', () => {
+  it('default build is the BASE game: 11 chapters, the Cells→Velnaris arc', () => {
     const d = createGodwakeDelve(1);
     expect(BASE_GAME_CHAPTERS).toBe(11);
     expect(d.chapterCount).toBe(BASE_GAME_CHAPTERS);
     const bosses = d.rooms.filter((r) => r.kind === 'boss');
     expect(bosses).toHaveLength(BASE_GAME_CHAPTERS);
     expect(bosses.map((b) => b.chapter)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-    // Ends on Irenicus, in the heart of his own hell — the base-game final boss.
+    // Ends on Velnaris, in the heart of his own hell — the base-game final boss.
     const finalRoom = d.rooms[d.rooms.length - 1];
     expect(finalRoom.kind).toBe('boss');
     expect(finalRoom.chapter).toBe(11);
     expect(finalRoom.monsters?.[0]?.defId).toBe('irenicus');
     expect(finalRoom.next ?? []).toHaveLength(0);
-    // The Throne-of-Bhaal arc is New Game+ only — absent from a base run.
+    // The Throne-of-the Slain God arc is New Game+ only — absent from a base run.
     const ids = bossDefIds(d);
     expect(ids).not.toContain('yaga-shura');
     expect(ids).not.toContain('abazigal');
     expect(ids).not.toContain('melissan');
   });
 
-  it('full-chain build is New Game+: 14 chapters ending at Melissan', () => {
+  it('full-chain build is New Game+: 14 chapters ending at Maevra', () => {
     const d = createGodwakeDelve({ seed: 1, fullChain: true });
     expect(d.chapterCount).toBe(TOTAL_CHAPTERS);
     const bosses = d.rooms.filter((r) => r.kind === 'boss');
@@ -603,7 +603,7 @@ describe('createGodwakeDelve — base game vs New Game+ chain split', () => {
     const finalRoom = d.rooms[d.rooms.length - 1];
     expect(finalRoom.monsters?.[0]?.defId).toBe('melissan');
     expect(finalRoom.next ?? []).toHaveLength(0);
-    // Irenicus (Ch11) is still in the chain — now a mid-run boss, not the finale.
+    // Velnaris (Ch11) is still in the chain — now a mid-run boss, not the finale.
     expect(bossDefIds(d)).toContain('irenicus');
   });
 
@@ -636,7 +636,7 @@ describe('createGodwakeDelve — base game vs New Game+ chain split', () => {
 describe('chapterLabel', () => {
   it('names a chapter by its number and boss-room title (no "toward" — stays true post-boss)', () => {
     const d = createGodwakeDelve(1);
-    expect(chapterLabel(d, 1)).toBe("Chapter 1 — Ilyich's Hall");
+    expect(chapterLabel(d, 1)).toBe("Chapter 1 — Karzok's Hall");
   });
 
   it('falls back to the bare number when the chapter has no boss node', () => {

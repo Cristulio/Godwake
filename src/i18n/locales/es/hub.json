@@ -1,7 +1,7 @@
 {
   "noCharacter": "No hay personaje. Vuelve al título.",
   "title": "Título",
-  "location": "Costa de la Espada · Capítulo I · Las Celdas del Mago",
+  "location": "Costa Larga · Capítulo I · Las Celdas del Mago",
   "soulsWalked": "Almas que anduvieron este camino: {n}",
   "backTitle": "← Título",
   "levelInline": "Nivel {n}",
@@ -31,7 +31,7 @@
   "glossaryScreen": {
     "title": "El Glosario",
     "subtitle": "Estadísticas y mecánicas, dichas con claridad",
-    "back": "← Phandalin"
+    "back": "← Wakeford"
   },
   "firstLife": {
     "ironCells": "Las Celdas de Hierro",
@@ -42,7 +42,7 @@
   "grove": {
     "title": "LA ARBOLEDA DRUÍDICA",
     "subtitle": "Manantial de Mielikki · Cuida el alma, repara la rueda",
-    "backPhandalin": "← Phandalin",
+    "backPhandalin": "← Wakeford",
     "intro": "Los guardianes de la arboleda se reúnen en torno al estanque. El agua recuerda cada muerte que has sufrido, cada nombre que has portado. Gasta el Renombre que tu valor ha ganado, y la Dama marcará tu alma en consecuencia — una pequeña merced que llevarás contigo a través de cada carne que vistas en adelante.",
     "renown": "Renombre",
     "ranksBlessed": "{owned} / {total} rangos bendecidos",
@@ -85,7 +85,7 @@
   "relicsScreen": {
     "title": "RELIQUIAS DEL ALMA",
     "subtitle": "Dones ligados · Lo que la muerte no puede llevarse",
-    "backPhandalin": "← Phandalin",
+    "backPhandalin": "← Wakeford",
     "intro": "Hay cosas que la rueda no puede arrancarte. Estas reliquias, ganadas a las élites de la honda oscuridad, regresan con el alma a través de cada muerte — mas el alma solo puede portar un don de cada clase. Cada una se rige por su propia naturaleza; liga lo que quieras a los lugares que se han abierto, y deposita Renombre en la Arboleda para despertar los que aún duermen. No prestan armadura ni esgrimen hoja, solo sus dones, sumados a cualquier equipo que el camino ofrezca.",
     "slotsAwake": "Ranuras despiertas",
     "relicsFound": "Reliquias halladas",

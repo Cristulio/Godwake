@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Gibbering Husk — Ch3 mind-affecting controller. A Spellhold inmate hollowed
+ * Gibbering Husk — Ch3 mind-affecting controller. A Glassreach inmate hollowed
  * out by the Sphere's whispers, now a vector for them. Its Gibbering Babble
  * (`debuff`, WIS save → blinded) floods the player's senses: attacks at
  * disadvantage AND the husk's allies hit you more easily. A force-multiplier

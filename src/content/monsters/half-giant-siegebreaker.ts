@@ -2,7 +2,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Half-Giant Siegebreaker — Chapter 12 early-mid. The heavy muscle of the
- * besieging rabble: half-giant-blooded brutes Yaga-Shura's host keeps for the
+ * besieging rabble: half-giant-blooded brutes Hargan-Vor's host keeps for the
  * work of breaking gates and pulling down walls. A `multiattack` bruiser
  * swinging a beam-sized ram-maul at reach, slow to cross the ground and
  * impossible to ignore once it has.
@@ -39,5 +39,5 @@ export const HALF_GIANT_SIEGEBREAKER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "For the parts of the siege that call for tearing things down rather than burning them, Yaga-Shura's host keeps these: half-giant-blooded brutes too small to stand in the fire-giant line and far too large to be left out of the work. They broke the outer gate of Saradush in an afternoon and have been looking for something else to break ever since. The walls are mostly down now. You will do.",
+    "For the parts of the siege that call for tearing things down rather than burning them, Hargan-Vor's host keeps these: half-giant-blooded brutes too small to stand in the fire-giant line and far too large to be left out of the work. They broke the outer gate of Karthen in an afternoon and have been looking for something else to break ever since. The walls are mostly down now. You will do.",
 });

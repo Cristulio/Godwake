@@ -379,7 +379,7 @@ export interface CombatState {
   saveEventCounter?: number;
   /** True after the player has made their first attack roll this combat. */
   playerHasAttacked: boolean;
-  /** Missed-attack rerolls remaining for this encounter (Tymora's Coin etc.). */
+  /** Missed-attack rerolls remaining for this encounter (Tyche's Coin etc.). */
   rerollMissesEncounterRemaining: number;
   /** Player attacks made on the current turn — supports Extra Attack at Fighter L5. Reset on turn change. */
   playerAttacksThisTurn: number;

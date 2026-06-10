@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Drow Crossbowman — Ust Natha skirmisher. Ranged hand-crossbow with the
+ * Drow Crossbowman — Zhal Vasha skirmisher. Ranged hand-crossbow with the
  * sleep-venom the drow notoriously cure on their bolt-tips. Per the brief
  * (and [[feedback-gameplay-over-5e]]) the poison ships as flat extra
  * 'poison' damage on the attack, not as a CON save — the existing engine
@@ -28,7 +28,7 @@ export const DROW_CROSSBOWMAN: Monster = MonsterSchema.parse({
       damageType: 'poison',
       range: [80, 320],
       description:
-        "The bolt is already in the air before the click of the trigger reaches you. The tip is wet with the grey-green resin the drow cure for a season under the Underdark stones. Where it lands, the skin around the wound goes cold first.",
+        "The bolt is already in the air before the click of the trigger reaches you. The tip is wet with the grey-green resin the drow cure for a season under the Deepdark stones. Where it lands, the skin around the wound goes cold first.",
     },
   ],
   resistances: ['poison'],

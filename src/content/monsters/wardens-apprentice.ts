@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Warden's Apprentice — a junior Cowled Wizard in the warden's livery. High
+ * Warden's Apprentice — a junior Veiled Magus in the warden's livery. High
  * AC from layered protective wards. The "dispels temp HP on hit" line from
  * the design brief lives in flavor only — the combat engine has no on-hit
  * scrubbing hook yet, and the brief's hard constraint is to not invent new
@@ -32,5 +32,5 @@ export const WARDENS_APPRENTICE: Monster = MonsterSchema.parse({
   ],
   resistances: ['force'],
   flavorText:
-    "A young Cowled Wizard in the warden's silver-trim livery, three years into the apprenticeship and already too good with the dispelling spells. The wards layered into her robe make her hard to reach. What she doesn't kill, she unmakes.",
+    "A young Veiled Magus in the warden's silver-trim livery, three years into the apprenticeship and already too good with the dispelling spells. The wards layered into her robe make her hard to reach. What she doesn't kill, she unmakes.",
 });

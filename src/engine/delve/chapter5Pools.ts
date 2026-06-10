@@ -2,7 +2,7 @@ import type { RoomMonster } from '../../types/delve';
 
 /**
  * The Godwake / Chapter 5 encounter pools. The endgame chapter beyond the
- * Underdark: past Ust Natha the soul breaks through to the power behind the
+ * Deepdark: past Zhal Vasha the soul breaks through to the power behind the
  * death-and-rebirth cycle it has been caught in — a fallen god of dawns that
  * could not let anything, itself least of all, stay ended.
  *
@@ -26,10 +26,10 @@ export const CHAPTER5_TITLE = 'The Godwake';
 
 /**
  * Chapter intro / threshold flavor — the moment the soul crosses out of the
- * Underdark and into the light that should not be down here. BG2/FromSoft tone.
+ * Deepdark and into the light that should not be down here. BG2/FromSoft tone.
  */
 export const CHAPTER5_FLAVOR =
-  "The Underdark does not end so much as give up. The faerzress thins, the rock goes pale, and then there is light ahead where light has no business being — not torch, not faerzress, not the cold blue of the deep fungi, but a high steady dawn-coloured glow leaking up through the floor of the world. You have been here before. You do not remember being here before. The two facts sit in you at once and neither will leave. Every step toward the light, something old and tired turns over in your chest and recognises the road home, and you understand, the way you understand a thing in a dream, that you have walked this last mile more times than you have been alive — and that this time you mean to reach the end of it.";
+  "The Deepdark does not end so much as give up. The faerzress thins, the rock goes pale, and then there is light ahead where light has no business being — not torch, not faerzress, not the cold blue of the deep fungi, but a high steady dawn-coloured glow leaking up through the floor of the world. You have been here before. You do not remember being here before. The two facts sit in you at once and neither will leave. Every step toward the light, something old and tired turns over in your chest and recognises the road home, and you understand, the way you understand a thing in a dream, that you have walked this last mile more times than you have been alive — and that this time you mean to reach the end of it.";
 
 export interface EncounterEntry {
   title: string;

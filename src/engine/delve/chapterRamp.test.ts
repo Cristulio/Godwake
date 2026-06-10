@@ -33,7 +33,7 @@ describe('chapterRamp', () => {
     }
   });
 
-  it('the Throne of Bhaal kicker (Ch13-14) is strictly steeper than the geometric trend would predict', () => {
+  it('the Throne of the Slain God kicker (Ch13-14) is strictly steeper than the geometric trend would predict', () => {
     // The per-chapter step from Ch11→12 is pure geometric growth; the step into
     // the ToB act (Ch12→13) must add the kicker on top, so it is a larger jump.
     const geometricStep = chapterRamp(12).hpMult / chapterRamp(11).hpMult;

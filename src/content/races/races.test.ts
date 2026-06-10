@@ -82,7 +82,7 @@ describe('Half-Elf — class-aware +1/+1 auto-route', () => {
   it('fighter half-elf routes +1 to STR (primary) and +1 to DEX (martial secondary)', () => {
     const halfElfFighter = createCharacter({
       id: 'he-fighter',
-      name: 'Imoen',
+      name: 'Inara',
       raceId: 'half-elf',
       classId: 'fighter',
       baseAbilityScores: BASE_SCORES,
@@ -111,7 +111,7 @@ describe('Half-Elf — class-aware +1/+1 auto-route', () => {
     };
     const halfElfWizard = createCharacter({
       id: 'he-wizard',
-      name: 'Aerie',
+      name: 'Wren',
       raceId: 'half-elf',
       classId: 'wizard',
       baseAbilityScores: wizardScores,
@@ -132,7 +132,7 @@ describe('Half-Elf — class-aware +1/+1 auto-route', () => {
   it('rogue half-elf routes +1 to DEX (primary) and +1 to CON (DEX-primary fallback)', () => {
     const halfElfRogue = createCharacter({
       id: 'he-rogue',
-      name: 'Yoshimo',
+      name: 'Kaito',
       raceId: 'half-elf',
       classId: 'rogue',
       baseAbilityScores: BASE_SCORES,

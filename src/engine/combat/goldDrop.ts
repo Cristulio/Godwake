@@ -6,7 +6,7 @@ import { getMonster } from '../../content/monsters';
  * Gold dropped by a monster when killed, scaled to its CR. Tuned for a
  * Slay-the-Spire feel: every kill funds something, a normal Ch1 clear
  * affords ~1-2 mid-tier shop items, and a boss kill funds a real visit
- * without trivializing the shop. A CR-2 boss like Ilyich drops ~24-60
+ * without trivializing the shop. A CR-2 boss like Karzok drops ~24-60
  * (avg ~42), a Ch4 Matron Mother (CR 6) drops ~230.
  *
  * Returns a roll-result so combat logs can show the math.

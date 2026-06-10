@@ -40,5 +40,5 @@ export const COWLED_WARDPRIEST: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    'Where the enforcers of the Cowled Wizards break, the wardpriests mend — but only their own. She has never once shielded a prisoner and never once failed to shield a colleague. The math of the guild is very simple to her.',
+    'Where the enforcers of the Veiled Court break, the wardpriests mend — but only their own. She has never once shielded a prisoner and never once failed to shield a colleague. The math of the guild is very simple to her.',
 });

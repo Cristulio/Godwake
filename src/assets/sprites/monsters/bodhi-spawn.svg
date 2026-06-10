@@ -2,7 +2,7 @@
       viewBox="0 0 24 32"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Bodhi's Spawn"
+      aria-label="Velora's Spawn"
     >
       <!-- Cold blood backlight + ground shadow -->
       <ellipse cx="12" cy="15" rx="11" ry="14" fill="#5a1018" opacity="0.12" />

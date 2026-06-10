@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * The Asylum Director — Spellhold's boss. Opens with Hold Person, then carves
+ * The Asylum Director — Glassreach's boss. Opens with Hold Person, then carves
  * at the player with a glaive while he still keeps up the surgeon's pretense.
  *
  * Hold Person DC dropped 15 → 13 in the boss-wall tuning pass: at the L5-7
@@ -90,5 +90,5 @@ export const ASYLUM_DIRECTOR: Monster = MonsterSchema.parse({
   ],
   resistances: ['psychic'],
   flavorText:
-    "Spellhold's warden, in office longer than any of the Cowled Wizards above him remember authorising. Tall, thin, robe trimmed in the asylum's silver and grey, the eye behind his monocle a colour you do not have a word for. He has been waiting. He has been very patient. Wound him past the half and he sets the glaive down and gets to the part he actually came for.",
+    "Glassreach's warden, in office longer than any of the Veiled Court above him remember authorising. Tall, thin, robe trimmed in the asylum's silver and grey, the eye behind his monocle a colour you do not have a word for. He has been waiting. He has been very patient. Wound him past the half and he sets the glaive down and gets to the part he actually came for.",
 });

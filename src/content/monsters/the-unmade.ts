@@ -15,7 +15,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  *     that pins the never-made thing into a made world. While it lives, a `gate`
  *     wards off most incoming damage — the Unmade takes only a fifth, because it
  *     is not, quite, here to be ended. Shatter the anchor-mote to make it mortal.
- *     (The full flower of Yaga-Shura's heart-gate, five chapters early.)
+ *     (The full flower of Hargan-Vor's heart-gate, five chapters early.)
  *   - `multiattack`: it turns the wheel both ways at once, two strokes a turn.
  *   - At half HP a `phase`: refused at last, it turns the wheel faster (+2 damage).
  *     This folds the old `battle-rage` into the new phase system at equal weight.

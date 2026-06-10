@@ -211,7 +211,7 @@ const BASE_STABILISE_CHARGES = 2;
 /**
  * Spend a stabilise charge if any are available. Available =
  * BASE_STABILISE_CHARGES (free per delve) + extraStabiliseCharges (from
- * Ilmater's Patience stacks) + delveStabiliseBonus (Hardier Soul) -
+ * Atlas's Patience stacks) + delveStabiliseBonus (Hardier Soul) -
  * stabilisesUsed. Returns the (possibly patched) character and a flag.
  */
 function tryConsumeStabilise(

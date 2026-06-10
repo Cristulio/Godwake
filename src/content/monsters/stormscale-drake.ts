@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Stormscale Drake — Chapter 13 mid. The grown brood of Abazigal's lair: not
+ * Stormscale Drake — Chapter 13 mid. The grown brood of Korvazel's lair: not
  * the cunning half-dragons but the big dumb storm-blooded drakes he keeps as
  * hounds, scaled blue-black and humming with charge. They lash with a forked,
  * electrified tongue at reach and answer a wound with a thunderclap roar that
@@ -51,5 +51,5 @@ export const STORMSCALE_DRAKE: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Among the half-dragons and the wyrmlings Abazigal keeps things simpler too — the stormscale drakes, big as warhorses and not a tenth as bright, bred for nothing but the lightning in them and let to roam the middle galleries like guard-hounds. They have none of their sire's cunning and none of his pride; they are appetite and charge and a tongue that arcs, and they will chase a fleeing thing to exhaustion out of pure dim instinct. He does not love them. He does not have to. They keep the deep roads loud and lethal, and that is the whole of what he asks.",
+    "Among the half-dragons and the wyrmlings Korvazel keeps things simpler too — the stormscale drakes, big as warhorses and not a tenth as bright, bred for nothing but the lightning in them and let to roam the middle galleries like guard-hounds. They have none of their sire's cunning and none of his pride; they are appetite and charge and a tongue that arcs, and they will chase a fleeing thing to exhaustion out of pure dim instinct. He does not love them. He does not have to. They keep the deep roads loud and lethal, and that is the whole of what he asks.",
 });

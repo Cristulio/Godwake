@@ -1,20 +1,20 @@
 import type { RoomMonster } from '../../types/delve';
 
 /**
- * Chapter 14 · "The Throne of Bhaal" encounter pools — the game's final chapter
+ * Chapter 14 · "The Throne of the Slain God" encounter pools — the game's final chapter
  * and L20 finale. Mirrors chapter9Pools: pooled compositions for each combat slot
- * on the last climb, across the Pocket Plane and up the steps of the dead god's
- * empty seat to Amelyssan the Blackhearted, who engineered the whole Bhaalspawn
+ * on the last climb, across the Threshold and up the steps of the dead god's
+ * empty seat to Maevra the Blackhearted, who engineered the whole Slainkin
  * crisis to harvest the Children's essence and ascend as the new God of Murder.
  *
- * Theme: the harvest at the altar. The hall is hung with pools of Bhaal rendered
+ * Theme: the harvest at the altar. The hall is hung with pools of the Slain God rendered
  * down, and the murder in them buds — motes, blood-fiends, fiendish wardens up
  * from the Hells to keep the seat, priest-heralds singing the harvest along, and,
- * this close to the Throne, the player's own Bhaal taint walking out of their
+ * this close to the Throne, the player's own the Slain God taint walking out of their
  * shadow as the Slayer. The fiercest, heaviest bestiary in the game, capped by the
  * biggest statblock there is. Bands escalate a clear tier past every prior
  * chapter: warmups CR 12, early-mid CR 13, mid CR 14, elite (the Marilith of the
- * Throne) CR 16, boss (Melissan) CR 18.
+ * Throne) CR 16, boss (Maevra) CR 18.
  */
 
 export interface EncounterEntry {
@@ -29,7 +29,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'A Clot Stands Up',
     flavorText:
-      'The Pocket Plane gives out onto the first of the pools, and the surface of it is not still. A single Bhaal-essence mote skims up off the red and finds the shape of a person and the want of one, and crosses the floor toward you with the patience of a tide. It has no face and remembers no name, not even the god it was rendered from. It only knows there should be less of you.',
+      'The Threshold gives out onto the first of the pools, and the surface of it is not still. A single god-essence mote skims up off the red and finds the shape of a person and the want of one, and crosses the floor toward you with the patience of a tide. It has no face and remembers no name, not even the god it was rendered from. It only knows there should be less of you.',
     monsters: [{ defId: 'bhaal-essence-mote', count: 1 }],
     xpReward: 1930,
     goldReward: 136,
@@ -91,7 +91,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Cantor at Its Office',
     flavorText:
-      'A herald of the Bhaalspawn stands over a pool with a censer of black iron, and it does not so much fight as work — dipping the chain, drawing it up trailing, shaking more murder into being one clot at a time. It greets you the way a sexton greets a latecomer to a funeral that will, it is quietly certain, soon enough be yours.',
+      'A herald of the Slainkin stands over a pool with a censer of black iron, and it does not so much fight as work — dipping the chain, drawing it up trailing, shaking more murder into being one clot at a time. It greets you the way a sexton greets a latecomer to a funeral that will, it is quietly certain, soon enough be yours.',
     monsters: [{ defId: 'murder-herald', count: 1 }],
     xpReward: 2500,
     goldReward: 174,
@@ -214,7 +214,7 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Warden and Its Cantor',
     flavorText:
-      'A warden of the pools and a herald of the Bhaalspawn keep the hall between them — the one sluicing the fallen whole, the other skimming new murder up to replace whatever you break through. The whole liturgy of the harvest said twice: nothing here is allowed to stay dead but you.',
+      'A warden of the pools and a herald of the Slainkin keep the hall between them — the one sluicing the fallen whole, the other skimming new murder up to replace whatever you break through. The whole liturgy of the harvest said twice: nothing here is allowed to stay dead but you.',
     monsters: [
       { defId: 'essence-warden', count: 1 },
       { defId: 'murder-herald', count: 1 },
@@ -258,7 +258,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Captain and the Keeper',
     flavorText:
-      'A marilith holds the inner steps while a warden of the pools keeps it whole behind the coils — the deadliest blade in the hall short of Amelyssan, and the one thing that will not let it stay wounded. Break the warden first or fence a thing with six swords and no honest way to make it bleed.',
+      'A marilith holds the inner steps while a warden of the pools keeps it whole behind the coils — the deadliest blade in the hall short of Maevra, and the one thing that will not let it stay wounded. Break the warden first or fence a thing with six swords and no honest way to make it bleed.',
     monsters: [
       { defId: 'marilith-warden', count: 1 },
       { defId: 'essence-warden', count: 1 },
@@ -303,14 +303,14 @@ export interface ChapterRoomFlavor {
  * nothing.
  *
  * NOTE: there are no clean gods to pray to at the Throne of a dead one — the
- * "shrines" here are the few places on the Pocket Plane where the harvest has not
+ * "shrines" here are the few places on the Threshold where the harvest has not
  * yet reached: a still pool that has not learned to bud, and the worn altar where
  * the dead god once received what is now being made of you.
  */
 export const CHAPTER14_FLAVOR = {
   chapter: 14 as const,
   prefix: 'c14',
-  title: 'The Throne of Bhaal',
+  title: 'The Throne of the Slain God',
   shrines: [
     {
       title: 'A Pool That Has Not Woken',
@@ -320,14 +320,14 @@ export const CHAPTER14_FLAVOR = {
     {
       title: "The God's Worn Altar",
       flavorText:
-        "Off the long approach stands the altar Bhaal kept in his own house — a slab of black stone worn smooth in the centre by ten thousand years of offerings laid down and taken up, the channels at its edge still dark. It is the only honest thing in the hall: it never pretended to be anything but what it is. The murder that drowns this place was always meant to end on a stone like this, and it has not forgotten the shape of a soul that comes to it standing instead of carried. Rest a hand on the cold slab. For as long as you touch it, the harvest cannot quite find you.",
+        "Off the long approach stands the altar the Slain God kept in his own house — a slab of black stone worn smooth in the centre by ten thousand years of offerings laid down and taken up, the channels at its edge still dark. It is the only honest thing in the hall: it never pretended to be anything but what it is. The murder that drowns this place was always meant to end on a stone like this, and it has not forgotten the shape of a soul that comes to it standing instead of carried. Rest a hand on the cold slab. For as long as you touch it, the harvest cannot quite find you.",
     },
   ] as ChapterRoomFlavor[],
   rests: [
     {
-      title: 'A Fold in the Pocket Plane',
+      title: 'A Fold in the Threshold',
       flavorText:
-        "The Pocket Plane is your own — a scrap of reality the god's blood folded around you at your first death, and it answers to you here as it always has. You step sideways into a quiet pleat of it, out of the red hall and the singing and the steaming pools, into a grey stillness that is the closest thing to home a Child of Bhaal is ever given. Nothing follows you in. For a little while the harvest is somewhere else, and you are only tired, and allowed to be.",
+        "The Threshold is your own — a scrap of reality the god's blood folded around you at your first death, and it answers to you here as it always has. You step sideways into a quiet pleat of it, out of the red hall and the singing and the steaming pools, into a grey stillness that is the closest thing to home a Child of the Slain God is ever given. Nothing follows you in. For a little while the harvest is somewhere else, and you are only tired, and allowed to be.",
     },
     {
       title: 'Behind the Throne, in Its Shadow',
@@ -338,13 +338,13 @@ export const CHAPTER14_FLAVOR = {
   shop: {
     title: 'The Last Quartermaster',
     flavorText:
-      "Something that was a person once keeps a stall in the lee of the approach — a Child of Bhaal that climbed this far in some life before yours and chose, at the end, neither to ascend nor to die but to stay, to keep the gear of everyone who fell short laid out in neat rows for whoever comes next. It does not want coin to spend; there is nothing to spend it on at the foot of a god. It wants coin because counting the stock is the one mortal habit it has left, and it would rather take your measure across a trestle of dead climbers' steel than admit it has been here, alone, for longer than it can any longer feel.",
+      "Something that was a person once keeps a stall in the lee of the approach — a Child of the Slain God that climbed this far in some life before yours and chose, at the end, neither to ascend nor to die but to stay, to keep the gear of everyone who fell short laid out in neat rows for whoever comes next. It does not want coin to spend; there is nothing to spend it on at the foot of a god. It wants coin because counting the stock is the one mortal habit it has left, and it would rather take your measure across a trestle of dead climbers' steel than admit it has been here, alone, for longer than it can any longer feel.",
   } as ChapterRoomFlavor,
   bossDefId: 'melissan',
   boss: {
-    title: 'The Throne of Bhaal',
+    title: 'The Throne of the Slain God',
     flavorText:
-      "The hall ends at the Throne, and the Throne is empty, and the kind woman who walked beside you through every chapter of the nightmare is standing at the foot of it with the mask finally set down. Amelyssan the Blackhearted was Bhaal's highest priestess before he died, and she did not mourn her god so much as inventory him — a divinity rendered into a hundred-odd mortal vessels and scattered across the world to be reaped at leisure. The whole crisis was her harvest. Every death you died was a measure taken. Now, with the last of the essence steaming in pools around her, she turns to you with no anger at all, only the serene patience of a priestess at the final rite. \"You were always the largest of the offerings,\" she says, and the empty seat behind her begins, faintly, to fill. \"Thank you for carrying yourself all this way to the altar. Be still now. There is a god to make of all of you, and I have waited so very long to be Him.\"",
+      "The hall ends at the Throne, and the Throne is empty, and the kind woman who walked beside you through every chapter of the nightmare is standing at the foot of it with the mask finally set down. Maevra the Blackhearted was the Slain God's highest priestess before he died, and she did not mourn her god so much as inventory him — a divinity rendered into a hundred-odd mortal vessels and scattered across the world to be reaped at leisure. The whole crisis was her harvest. Every death you died was a measure taken. Now, with the last of the essence steaming in pools around her, she turns to you with no anger at all, only the serene patience of a priestess at the final rite. \"You were always the largest of the offerings,\" she says, and the empty seat behind her begins, faintly, to fill. \"Thank you for carrying yourself all this way to the altar. Be still now. There is a god to make of all of you, and I have waited so very long to be Him.\"",
     xpReward: 6800,
     goldReward: 950,
   },
@@ -361,9 +361,9 @@ export const CHAPTER14_BOSS_INTEL = {
   chapter: 14,
   roomTitle: "A Climber's Last Camp",
   roomFlavor:
-    "A worn pleat of the Pocket Plane where some Child of Bhaal stopped to think before the final steps, and never took them. Their gear is laid out with a strange care — a bedroll, a cold lamp, and pinned to the grey nothing of the wall a sheaf of notes in a hand that grew steadier the worse the truth got. The early pages are full of gratitude for a kind woman named Melissan. The middle pages cross her name out. The last page is only this, scored deep enough to tear the paper: SHE IS THE HARVEST. THE POOLS ARE US. AT THE THRONE YOUR OWN BLOOD STANDS UP — don't let the Slayer take the wheel. don't be still when she says be still. her heart is mortal until it isn't.",
+    "A worn pleat of the Threshold where some Child of the Slain God stopped to think before the final steps, and never took them. Their gear is laid out with a strange care — a bedroll, a cold lamp, and pinned to the grey nothing of the wall a sheaf of notes in a hand that grew steadier the worse the truth got. The early pages are full of gratitude for a kind woman named Maevra. The middle pages cross her name out. The last page is only this, scored deep enough to tear the paper: SHE IS THE HARVEST. THE POOLS ARE US. AT THE THRONE YOUR OWN BLOOD STANDS UP — don't let the Slayer take the wheel. don't be still when she says be still. her heart is mortal until it isn't.",
   weakSpotResolution:
-    "You read the dead climber's notes the way they were meant to be read. Amelyssan does not strike first — she stills first, lifting an open hand the way she must have lifted it over a thousand offerings, and the stilling is the snare. Knowing the verdict is the opener, you set your first cut for the half-beat before her hand comes up, while she still expects you, like all the rest, to be glad to be received.",
+    "You read the dead climber's notes the way they were meant to be read. Maevra does not strike first — she stills first, lifting an open hand the way she must have lifted it over a thousand offerings, and the stilling is the snare. Knowing the verdict is the opener, you set your first cut for the half-beat before her hand comes up, while she still expects you, like all the rest, to be glad to be received.",
   battlePlanResolution:
     "You read the whole rite off the climber's pages: the murder that stops the heart first, to still you the way she has stilled every offering before you — then the pools drawn on to stand fresh fiends at her shoulder, and the god-scaled scepter in threes — and the moment past half when the mortal priestess is worn through and the thing she is becoming takes the field in her place. You climb the last steps with your mind braced against the stilling and your own name held close against the Slayer, your first strike already set for the gap before her hand lifts.",
   walkPastResolution:

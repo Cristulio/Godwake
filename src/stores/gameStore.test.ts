@@ -238,10 +238,10 @@ describe('finishDelve — renown economy', () => {
     expect(useCharacterStore.getState().character!.renown).toBe(startingRenown + 50);
   });
 
-  it('death mid-Ch2 after Ilyich-kill stacks failure base + 1 boss + depth', () => {
+  it('death mid-Ch2 after Karzok-kill stacks failure base + 1 boss + depth', () => {
     expect(RENOWN_PER_CHAPTER_BOSS).toBe(25);
     const delve = useDelveStore.getState().delve!;
-    // currentRoomIdx 20 → slice(0, 20) counts Ilyich (idx 12) for the boss stack;
+    // currentRoomIdx 20 → slice(0, 20) counts Karzok (idx 12) for the boss stack;
     // depth credits the route ACTUALLY VISITED (entry node seeded free).
     const visited = delve.rooms.slice(0, 13).map((r) => r.id);
     useDelveStore.setState({

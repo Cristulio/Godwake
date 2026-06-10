@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Bonebound Test-Subject — what the Cowled Wizards do to a corpse when they
+ * Bonebound Test-Subject — what the Veiled Court does to a corpse when they
  * want one more answer out of it. A stitched undead with bone reinforcing the
  * weak places. Standard undead profile, bludgeoning-vulnerable like the
  * Skeleton and Bone Stalker before it.
@@ -33,5 +33,5 @@ export const BONEBOUND_TEST_SUBJECT: Monster = MonsterSchema.parse({
   vulnerabilities: ['bludgeoning'],
   immunities: ['poison'],
   flavorText:
-    "A body the Cowled Wizards saved from the slab and rewired with bone. The seams along its arms and ribs are healed in too straight a line — someone wanted them to hold under stress. The eyes are open and the mouth is sewn shut.",
+    "A body the Veiled Court saved from the slab and rewired with bone. The seams along its arms and ribs are healed in too straight a line — someone wanted them to hold under stress. The eyes are open and the mouth is sewn shut.",
 });

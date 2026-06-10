@@ -249,7 +249,7 @@ describe('boss intel — applied at the boss fight (createCombat)', () => {
     });
     expect(after.nextAttackAdvantage).toBe(true);
     expect(after.nextSaveAdvantage).toBe(true);
-    expect(after.hp.temp).toBe(6); // Ilyich is chapter 1 → 6 temp HP
+    expect(after.hp.temp).toBe(6); // Karzok is chapter 1 → 6 temp HP
   });
 
   it('does not apply the buff to a non-boss encounter', () => {
@@ -290,7 +290,7 @@ describe('boss intel cards — content', () => {
     // No boss carries two cards.
     expect(new Set(ids).size).toBe(ids.length);
     // The Ch1-6 spine plus the L20-expansion bosses (Ch7 Drowned Custodian
-    // through the BG2 endgame Ch14 Melissan) are all present.
+    // through the BG2 endgame Ch14 Maevra) are all present.
     expect(ids).toEqual(
       expect.arrayContaining([
         'duergar-ilyich',
@@ -302,11 +302,11 @@ describe('boss intel cards — content', () => {
         'drowned-custodian', // Ch7 — The Drowned Archive
         'ashen-marshal', // Ch8 — The Ashfall March
         'the-hollow-pretender', // Ch9 — The Court of Masks
-        'nizidramaniiyt', // Ch10 — Suldanessellar
+        'nizidramaniiyt', // Ch10 — Tor Maladin
         'irenicus', // Ch11 — The Trials of the Pit
-        'yaga-shura', // Ch12 — The Siege of Saradush
+        'yaga-shura', // Ch12 — The Siege of Karthen
         'abazigal', // Ch13 — The Last of the Five
-        'melissan', // Ch14 — The Throne of Bhaal
+        'melissan', // Ch14 — The Throne of the Slain God
       ]),
     );
     // Every card foreshadows a registered monster.

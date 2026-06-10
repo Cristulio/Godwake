@@ -1,8 +1,8 @@
 import type { RoomMonster } from '../../types/delve';
 
 /**
- * Ust Natha / Chapter 4 encounter pools. Mirrors chapter3Pools — pooled
- * compositions for each combat slot in the Ust Natha side-delve. Rewards
+ * Zhal Vasha / Chapter 4 encounter pools. Mirrors chapter3Pools — pooled
+ * compositions for each combat slot in the Zhal Vasha side-delve. Rewards
  * scale roughly +50% over Ch3 to match the tougher CR band (warmups CR 2-3,
  * elites CR 4-5, boss CR 6).
  *
@@ -96,7 +96,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Web-Mouth',
     flavorText:
-      "The corridor opens out into a side-cavern strung floor-to-ceiling with silk. A driderling drops from the rafters; a larger one crawls up out of a hole in the floor between you. Lolth's children hunt best in matched pairs.",
+      "The corridor opens out into a side-cavern strung floor-to-ceiling with silk. A driderling drops from the rafters; a larger one crawls up out of a hole in the floor between you. Arachne's children hunt best in matched pairs.",
     monsters: [{ defId: 'driderling', count: 2, displayPrefix: 'Driderling' }],
     xpReward: 460,
     goldReward: 26,
@@ -153,7 +153,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Priestess and Her Blade',
     flavorText:
-      "A drow war-priestess walks a step behind a House-warrior, the spider-sigil already in her hand. Every wound you open on the warrior closes around a skin of black webbing. Lolth is not finished with him.",
+      "A drow war-priestess walks a step behind a House-warrior, the spider-sigil already in her hand. Every wound you open on the warrior closes around a skin of black webbing. Arachne is not finished with him.",
     monsters: [
       { defId: 'drow-war-priestess', count: 1 },
       { defId: 'drow-warrior', count: 1 },
@@ -167,7 +167,7 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Lone Drider in the Rafters',
     flavorText:
-      "A drider drops from a ceiling-web slit and lands on the corridor floor in the obscene crouch-stance Lolth-touched things adopt. The drow face above the spider's body is still wearing a priestess's tabard, though the tabard has not been clean in some years.",
+      "A drider drops from a ceiling-web slit and lands on the corridor floor in the obscene crouch-stance Arachne-touched things adopt. The drow face above the spider's body is still wearing a priestess's tabard, though the tabard has not been clean in some years.",
     monsters: [{ defId: 'drider', count: 1 }],
     xpReward: 680,
     goldReward: 52,
@@ -260,7 +260,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Fragment and Its Kept Drow',
     flavorText:
-      "A mind flayer fragment has a drow warrior at heel, glassy-eyed, the scimitar in his hand held loose like a leash he has forgotten he is wearing. The fragment is not breathing. The drow is breathing too quickly.",
+      "A mindrender fragment has a drow warrior at heel, glassy-eyed, the scimitar in his hand held loose like a leash he has forgotten he is wearing. The fragment is not breathing. The drow is breathing too quickly.",
     monsters: [
       { defId: 'mind-flayer-fragment', count: 1 },
       { defId: 'drow-warrior', count: 1 },
@@ -293,7 +293,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Fragment Among the Brood',
     flavorText:
-      "A mind flayer fragment stands at the head of a side-chamber, a single driderling arranged below it in the obscene attentive crouch of a thing being studied. It looks up at you. The fragment does not need to.",
+      "A mindrender fragment stands at the head of a side-chamber, a single driderling arranged below it in the obscene attentive crouch of a thing being studied. It looks up at you. The fragment does not need to.",
     monsters: [
       { defId: 'mind-flayer-fragment', count: 1 },
       { defId: 'driderling', count: 1 },
@@ -315,7 +315,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Brood-Warren',
     flavorText:
-      "The corridor opens into a low warren and the smell hits first. A Lolth-blessed broodmother fills the far wall, her abdomen the size of a wine-tun and never still. She convulses, and a clutch of half-formed driderlings pours out already running. There will always be more until she stops.",
+      "The corridor opens into a low warren and the smell hits first. An Arachne-blessed broodmother fills the far wall, her abdomen the size of a wine-tun and never still. She convulses, and a clutch of half-formed driderlings pours out already running. There will always be more until she stops.",
     monsters: [{ defId: 'spider-broodmother', count: 1 }],
     xpReward: 1000,
     goldReward: 76,

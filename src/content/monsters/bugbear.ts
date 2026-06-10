@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Bugbear — a hulking goblinoid brute Ilyich's slavers hired to keep the
+ * Bugbear — a hulking goblinoid brute Karzok's slavers hired to keep the
  * lower cells. Tuned below RAW CR 1 so it's a bruiser threat in Ch1 without
  * overshadowing the duergar boss.
  */

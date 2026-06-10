@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Corrupted Suldanessellar Bladesinger — Chapter 10 early-mid. The city's
+ * Corrupted Tor Maladin Bladesinger — Chapter 10 early-mid. The city's
  * martial pride: a high-elf bladesinger whose song of war has been turned to
  * the captor's purpose. The bladesong keeps the AC high and the blade moving in
  * a multiattack flurry. A fallen artist of the sword, fighting beautifully for
@@ -39,5 +39,5 @@ export const SULDANESSELLAR_BLADESINGER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "To be a bladesinger of Suldanessellar was to study a single art for two centuries until the sword and the singer were one motion. This one studied that long, and longer, and the art survived what was done to its master — the body keeps the bladesong perfectly while the mind that gave it meaning has been emptied and refilled with the captor's want. It salutes you, out of an etiquette nothing remains to feel, and then it dances, and the dance is to kill you, and it is still the most beautiful thing in this burning city.",
+    "To be a bladesinger of Tor Maladin was to study a single art for two centuries until the sword and the singer were one motion. This one studied that long, and longer, and the art survived what was done to its master — the body keeps the bladesong perfectly while the mind that gave it meaning has been emptied and refilled with the captor's want. It salutes you, out of an etiquette nothing remains to feel, and then it dances, and the dance is to kill you, and it is still the most beautiful thing in this burning city.",
 });

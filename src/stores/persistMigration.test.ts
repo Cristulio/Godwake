@@ -457,8 +457,8 @@ describe('loadFromSlot — completion recovery for a crashed ending', () => {
     expect(useMetaStore.getState().gameCompleted).toBe(true);
   });
 
-  it('does NOT spuriously complete a save that never felled the base chain (Irenicus)', () => {
-    // Base completion = clearing through Ch11 (Irenicus). A save short of that
+  it('does NOT spuriously complete a save that never felled the base chain (Velnaris)', () => {
+    // Base completion = clearing through Ch11 (Velnaris). A save short of that
     // stays incomplete — the recovery floor is BASE_GAME_CHAPTERS, not TOTAL.
     writeSlot({ chaptersCleared: BASE_GAME_CHAPTERS - 1, gameCompleted: false });
 

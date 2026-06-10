@@ -228,7 +228,7 @@ function highestThreatTarget(live: MonsterCombatant[]): MonsterCombatant | undef
 /**
  * The add currently WARDING a gated boss: a living boss whose `gate.whileAddAlive`
  * names a living add (Matron's handmaiden, the Unmade's anchor-mote, the Hollow
- * Pretender's mirror-double, Yaga-Shura's heart). While that add lives the boss
+ * Pretender's mirror-double, Hargan-Vor's heart). While that add lives the boss
  * shrugs off most/all damage, so the bot must drop the ward FIRST — returns the
  * lowest-HP warding add to focus. Without this the bot reads a gated boss as a
  * near-invulnerable wall and pours wasted damage into it.

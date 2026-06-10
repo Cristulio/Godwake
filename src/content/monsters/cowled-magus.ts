@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Cowled Magus — Ch2 ELITE caster, the senior Cowled Wizard behind the audits,
+ * Cowled Magus — Ch2 ELITE caster, the senior Veiled Magus behind the audits,
  * the rooftop chase and the twin-cowl ambush. Above bloodied he trades dismissive
  * Arcane Bolts; once you cut him to half a half-HP PHASE takes him and he stops
  * being patient — winding up a single telegraphed Shatterbolt the player gets one
@@ -61,5 +61,5 @@ export const COWLED_MAGUS: Monster = MonsterSchema.parse({
   ],
   resistances: ['psychic'],
   flavorText:
-    'Silver collar, mirror mask, and a temper kept on a very short administrative leash. He would genuinely rather have processed you. Since you insist, he will stop being careful about it — which is the most dangerous thing a Cowled Wizard can decide to do.',
+    'Silver collar, mirror mask, and a temper kept on a very short administrative leash. He would genuinely rather have processed you. Since you insist, he will stop being careful about it — which is the most dangerous thing a Veiled Magus can decide to do.',
 });

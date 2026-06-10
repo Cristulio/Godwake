@@ -96,14 +96,14 @@ interface MetaStoreState {
   ascensionUnlocked: number;
   /**
    * NPC ids the player has been introduced to in-game. Drives whether the
-   * soul-bond panel shows the real name (e.g. "Irenicus") or the pre-reveal
+   * soul-bond panel shows the real name (e.g. "Velnaris") or the pre-reveal
    * placeholder ("The Voice"). Persists across reincarnation — the reveal is
    * one-time-per-soul.
    */
   knownNpcs: string[];
   /**
    * Dialogue beat IDs the soul has already heard. Prevents one-time beats
-   * (e.g. Imoen's camp/rest whispers) from replaying on re-entry or in
+   * (e.g. Inara's camp/rest whispers) from replaying on re-entry or in
    * subsequent runs. Soul-level — persists across reincarnations.
    */
   seenDialogueBeats: string[];
@@ -137,9 +137,9 @@ interface MetaStoreState {
    */
   ownedSetPieces: string[];
   /**
-   * Whether the soul has cleared the whole chain (felled Melissan) at least once.
+   * Whether the soul has cleared the whole chain (felled Maevra) at least once.
    * Set the first time the final chapter is cleared. Gates the one-time
-   * Throne-of-Bhaal ending capstone — later full clears fall straight through to
+   * Throne-of-the Slain God ending capstone — later full clears fall straight through to
    * the normal reincarnation flow — and unlocks the title's New Game+ entry (the
    * ascension-select run-launcher). Account-level: survives reincarnation AND a
    * New Game (the mastery is permanent), reset only by deleting the save.
@@ -157,16 +157,16 @@ interface MetaStoreState {
    * Is the CURRENT campaign a New Game+ run? Set when the soul descends through
    * the post-completion NG+ launcher (selectCharacterAndDescend); cleared by a
    * fresh base New Game. Drives whether each descent — including the post-death
-   * hub re-descents — builds the base Cells→Irenicus chain (11 chapters) or the
+   * hub re-descents — builds the base Cells→Velnaris chain (11 chapters) or the
    * full chain to the Throne (14). Distinct from {@link gameCompleted}, the
    * PERMANENT mastery flag: a veteran can start a base New Game with NG+ still
    * unlocked on the title. Persisted, so the campaign mode survives a hub reload.
    */
   newGamePlusActive: boolean;
   /**
-   * Whether the soul has felled Melissan at the Throne (the NG+ capstone) at
+   * Whether the soul has felled Maevra at the Throne (the NG+ capstone) at
    * least once. Gates the one-time Throne ending and, exactly as
-   * {@link gameCompleted} does for the base Irenicus ending, doubles as the
+   * {@link gameCompleted} does for the base Velnaris ending, doubles as the
    * re-entry breaker the ending screen's finishDelve() relies on. Permanent
    * mastery: survives reincarnation and a New Game, reset only by save deletion.
    */
@@ -196,7 +196,7 @@ interface MetaStoreState {
   classesPlayed: ClassId[];
   /** Highest ascension at which any run beat its final boss (-1 = never). */
   highestClearAscension: number;
-  /** Highest ascension at which the FULL chain (Melissan) fell (-1 = never). */
+  /** Highest ascension at which the FULL chain (Maevra) fell (-1 = never). */
   highestThroneAscension: number;
 
   discoverMonster: (defId: string) => void;
@@ -269,11 +269,11 @@ interface MetaStoreState {
   /** Bank a SPECIFIC set piece by id. Returns whether it banked (real + un-owned). */
   bankSetPiece: (id: string) => boolean;
   /**
-   * Mark the whole chain cleared (felled Melissan). Set once the Throne-of-Bhaal
+   * Mark the whole chain cleared (felled Maevra). Set once the Throne-of-the Slain God
    * ending capstone has played; idempotent. Unlocks the title's New Game+ entry.
    */
   markGameCompleted: () => void;
-  /** Record the Throne (Melissan / NG+ capstone) felled — gates the Throne ending. */
+  /** Record the Throne (Maevra / NG+ capstone) felled — gates the Throne ending. */
   markThroneCompleted: () => void;
   /** Mark an achievement unlocked (idempotent). */
   unlockAchievement: (id: string) => void;
@@ -291,7 +291,7 @@ interface MetaStoreState {
   recordClassChapterClear: (classId: ClassId, chapters: number) => void;
   /** Raise the highest-ascension-cleared (any final boss) high-water mark. */
   recordClearAscension: (level: number) => void;
-  /** Raise the highest-ascension full-chain (Melissan) high-water mark. */
+  /** Raise the highest-ascension full-chain (Maevra) high-water mark. */
   recordThroneAscension: (level: number) => void;
   /** Mark the current campaign a New Game+ run (full chain) or a base run. */
   setNewGamePlusActive: (active: boolean) => void;

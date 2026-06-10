@@ -2,7 +2,7 @@
       viewBox="0 0 22 36"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Ilyich the Duergar"
+      aria-label="Karzok the Duergar"
     >
       <!-- Dim forge backlight + ground shadow -->
       <ellipse cx="11" cy="18" rx="11" ry="16" fill="#8a5a2a" opacity="0.07" />

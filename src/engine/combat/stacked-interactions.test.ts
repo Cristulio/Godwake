@@ -483,7 +483,7 @@ describe('Soul-mark renown + Pinchpurse gold stacking', () => {
 /**
  * (7) Per-chapter-boss renown bonus + depth credit + soul-mark stacking.
  *
- * Killed Ilyich (room idx 12) + Magistrate (room idx 27) in the 58-room godwake
+ * Killed Karzok (room idx 12) + Magistrate (room idx 27) in the 58-room godwake
  * layout. Died in Ch3 (currentRoomIdx into the Ch3 region, before the Director
  * at idx 42 — e.g. 30). Failed delve, 1 bane:
  *   base = 15 + 10*2 (bosses) + 1*30 (depth) = 65
@@ -520,7 +520,7 @@ describe('Chapter-boss renown bonus + soul-mark stacking', () => {
     };
     useCharacterStore.setState({ character: fighter });
     const delve = createGodwakeDelve(1);
-    // Die at the Ch3 Director: slice(0, idx) counts Ilyich + Magistrate (2),
+    // Die at the Ch3 Director: slice(0, idx) counts Karzok + Magistrate (2),
     // not the Director itself. Indices read from the actual branching layout.
     const idx = delve.rooms.findIndex(
       (r) => r.kind === 'boss' && r.monsters?.[0]?.defId === 'asylum-director',

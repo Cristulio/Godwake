@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Hollow Sage — a Spellhold mage whose mind has been emptied out and left
+ * Hollow Sage — a Glassreach mage whose mind has been emptied out and left
  * with only the paralyzing gaze still wired. Reuses the engine-side Hold
  * Person mechanic from PR #9 (kind: 'paralyze') so the player can be locked
  * down by something that isn't a boss.

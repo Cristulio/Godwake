@@ -1,5 +1,5 @@
 /**
- * Painted Phandalin skyline — Tresendar Manor (left, ruined), Stonehill Inn
+ * Painted Wakeford skyline — Tresendar Manor (left, ruined), Stonehill Inn
  * (center, warm), Druid Grove (right, ancient oak). Rendered as inline SVG
  * with multiple gradient layers for a painterly dusk-into-night feel.
  *

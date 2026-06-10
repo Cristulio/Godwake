@@ -396,9 +396,9 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   }
 
   // Start-of-combat temp HP from blessings. Several distinct levers feed the
-  // same pool: a flat grant (Lathander's Dawn / Ilmater's Crown), one scaling
-  // with delve level (Lathander's Ascendance), one scaling with bane quirks
-  // (Mystra's Reserve), and a boss-only gird (Helm's Bastion). Temp HP doesn't
+  // same pool: a flat grant (Eos's Dawn / Atlas's Crown), one scaling
+  // with delve level (Eos's Ascendance), one scaling with bane quirks
+  // (Hecate's Reserve), and a boss-only gird (Argus's Bastion). Temp HP doesn't
   // stack — take the single largest source, then the higher of that and any
   // temp HP already on the sheet (RAW).
   // Sealed Wards twist: blessing modifiers are inert this fight — fall back to a
@@ -444,7 +444,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     });
   }
 
-  // Per-combat regeneration (Silvanus's Renewal flat + Ilmater's Mercy percent).
+  // Per-combat regeneration (Silvanus's Renewal flat + Atlas's Mercy percent).
   // Real healing of current HP, capped at max — matters most in back-to-back
   // rooms where the player walks in already scratched. Both fields sum.
   const regenAmount =

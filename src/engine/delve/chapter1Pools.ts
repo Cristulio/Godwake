@@ -9,7 +9,7 @@ import type { RoomMonster } from '../../types/delve';
  *   - earlyMid (R3): a real fight but still single-mid or pair.
  *   - mid    (R5): elite-solo or two coordinated foes.
  *   - elite  (R7): pre-boss spike. Solo elite or coordinated trio.
- * Boss (R8) is fixed (Ilyich) and not in this file.
+ * Boss (R8) is fixed (Karzok) and not in this file.
  *
  * Each entry carries the flavor text used for that specific composition so
  * the room reads coherent when it's, say, "a kobold pack" vs "a lone goblin".

@@ -50,7 +50,7 @@ export const MAX_ASCENSION = 6;
  * Slay-the-Spire-style ascension ladder over the full fourteen-chapter Godwake
  * chain. The modifiers are global multipliers applied to every enemy at spawn
  * (see applyAscensionToMonster / createCombat), so they ride the natural
- * difficulty ramp into the endgame chapters — the Throne-of-Bhaal chapters carry
+ * difficulty ramp into the endgame chapters — the Throne-of-the Slain God chapters carry
  * the highest base stat blocks, so the same ascension step bites hardest there.
  * Clear the chain
  * at Ascension N → unlock N+1 (see

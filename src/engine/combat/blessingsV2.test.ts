@@ -40,7 +40,7 @@ describe('v2 blessings — start-of-combat temp HP (createCombat)', () => {
     expect(after.hp.temp).toBe(5);
   });
 
-  it("Mystra's Reserve grants 2 temp HP per bane quirk", () => {
+  it("Hecate's Reserve grants 2 temp HP per bane quirk", () => {
     const hero = makeHuman({
       blessings: ['mystras-reserve'],
       quirks: ['vertigo', 'glassbone'],
@@ -49,13 +49,13 @@ describe('v2 blessings — start-of-combat temp HP (createCombat)', () => {
     expect(after.hp.temp).toBe(4);
   });
 
-  it("Mystra's Reserve grants nothing with no banes", () => {
+  it("Hecate's Reserve grants nothing with no banes", () => {
     const hero = makeHuman({ blessings: ['mystras-reserve'], quirks: [] });
     const after = createCombat({ roller, character: hero, monsters: [{ def: goblin }] }).character;
     expect(after.hp.temp).toBe(0);
   });
 
-  it("Helm's Bastion grants temp HP ONLY on a boss fight", () => {
+  it("Argus's Bastion grants temp HP ONLY on a boss fight", () => {
     const hero = makeHuman({ blessings: ['helms-bastion'] });
     const normal = createCombat({ roller, character: hero, monsters: [{ def: goblin }] }).character;
     expect(normal.hp.temp).toBe(0);
@@ -96,7 +96,7 @@ describe('v2 blessings — per-combat regeneration (createCombat)', () => {
     expect(after.hp.current).toBe(3);
   });
 
-  it("Ilmater's Mercy heals 10% of max HP at combat start", () => {
+  it("Atlas's Mercy heals 10% of max HP at combat start", () => {
     let hero = makeHuman({ blessings: ['ilmaters-mercy'] });
     hero = { ...hero, hp: { current: 1, max: 20, temp: 0 } };
     const after = createCombat({ roller, character: hero, monsters: [{ def: goblin }] }).character;

@@ -166,7 +166,7 @@ describe('delveStore.finishDelve — reincarnate on clear', () => {
 });
 
 describe('delveStore.finishDelve — true-ending capstone', () => {
-  /** Index of the chain's terminal Melissan boss room (all 14 bosses behind it). */
+  /** Index of the chain's terminal Maevra boss room (all 14 bosses behind it). */
   function melissanIdx(): number {
     const rooms = useDelveStore.getState().delve!.rooms;
     const idx = rooms.findIndex((r) => r.monsters?.[0]?.defId === 'melissan');
@@ -174,8 +174,8 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     return idx;
   }
 
-  /** Seed a run on the FULL chain — the Melissan capstone only exists there
-   *  (base ends at Irenicus, Ch11). */
+  /** Seed a run on the FULL chain — the Maevra capstone only exists there
+   *  (base ends at Velnaris, Ch11). */
   function seedCapstoneRun(overrides: Partial<Character> = {}) {
     const c = seedRun(overrides);
     useDelveStore.setState({ delve: createGodwakeDelve({ seed: 1, fullChain: true }) });
@@ -241,8 +241,8 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     expect(useMetaStore.getState().gameCompleted).toBe(true);
   });
 
-  it('base-game clear (Irenicus, Ch11) banks renown at the win moment, no re-entry needed', () => {
-    // A base delve ends on Irenicus at Ch11 — the full chain's Melissan capstone
+  it('base-game clear (Velnaris, Ch11) banks renown at the win moment, no re-entry needed', () => {
+    // A base delve ends on Velnaris at Ch11 — the full chain's Maevra capstone
     // doesn't exist here. seedRun lays down a base (11-chapter) delve; the same
     // win-moment bank must hold, gated on gameCompleted rather than throneCompleted.
     seedRun({ quirks: [], level: 6, renown: 0 });
@@ -298,7 +298,7 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
   });
 
   it('does NOT replay the base Pit ending once the base game is already complete', () => {
-    // The base (Irenicus, Ch11) ending stays first-time — gated on gameCompleted,
+    // The base (Velnaris, Ch11) ending stays first-time — gated on gameCompleted,
     // not the Throne flag. A veteran replaying the base chain skips straight to hub.
     seedRun({ quirks: [], level: 6, renown: 0 });
     useMetaStore.setState({ gameCompleted: true });
@@ -324,7 +324,7 @@ describe('delveStore.finishDelve — true-ending capstone', () => {
     expect(useMetaStore.getState().gameCompleted).toBe(false);
   });
 
-  it('does NOT fire on death, even standing in the Melissan room', () => {
+  it('does NOT fire on death, even standing in the Maevra room', () => {
     setDelve({ phase: 'failed', currentRoomIdx: melissanIdx() });
 
     useDelveStore.getState().finishDelve();
@@ -884,7 +884,7 @@ describe('delveStore.acceptSpoils — mid-run chapter-unlock reveals', () => {
   });
 });
 
-describe('delveStore.acceptSpoils — Irenicus falls silent after his Ch11 death', () => {
+describe('delveStore.acceptSpoils — Velnaris falls silent after his Ch11 death', () => {
   function bossRooms(): RoomSpec[] {
     return useDelveStore.getState().delve!.rooms.filter((r) => r.kind === 'boss');
   }
@@ -897,14 +897,14 @@ describe('delveStore.acceptSpoils — Irenicus falls silent after his Ch11 death
   beforeEach(() => {
     setActiveRoller('irenicus-silence-seed');
     seedRun({ quirks: [] });
-    // The full NG+ chain so the Throne-of-Bhaal bosses (Ch12-14) exist to clear.
+    // The full NG+ chain so the Throne-of-the Slain God bosses (Ch12-14) exist to clear.
     useDelveStore.setState({ delve: createGodwakeDelve({ seed: 1, fullChain: true }) });
     useMetaStore.setState({ seenTutorials: [], chaptersCleared: 0, hasReincarnated: true });
     useScreenStore.setState({ tutorialQueue: [], taunt: null, tauntQueue: [] });
   });
 
-  it('clearing Ch11 — his death — still fires a final Irenicus chapter-clear taunt', () => {
-    stageClear(bossRooms()[10]); // 11th boss = Chapter 11, Irenicus himself
+  it('clearing Ch11 — his death — still fires a final Velnaris chapter-clear taunt', () => {
+    stageClear(bossRooms()[10]); // 11th boss = Chapter 11, Velnaris himself
     useDelveStore.getState().acceptSpoils();
 
     const taunt = useScreenStore.getState().taunt;
@@ -914,7 +914,7 @@ describe('delveStore.acceptSpoils — Irenicus falls silent after his Ch11 death
     expect(taunt!.chapter).toBe(11);
   });
 
-  it('clearing a Throne chapter (Ch12-13) fires a Melissan whisper, never Irenicus', () => {
+  it('clearing a Throne chapter (Ch12-13) fires a Maevra whisper, never Velnaris', () => {
     for (const bossIndex of [11, 12]) {
       useScreenStore.setState({ taunt: null, tauntQueue: [] });
       stageClear(bossRooms()[bossIndex]); // 12th/13th boss = Ch12/13
@@ -927,9 +927,9 @@ describe('delveStore.acceptSpoils — Irenicus falls silent after his Ch11 death
     }
   });
 
-  it('clearing Ch14 — Melissan’s own death — fires NO whisper (the Throne finale takes over)', () => {
+  it('clearing Ch14 — Maevra’s own death — fires NO whisper (the Throne finale takes over)', () => {
     useScreenStore.setState({ taunt: null, tauntQueue: [] });
-    stageClear(bossRooms()[13]); // 14th boss = Ch14, Melissan herself
+    stageClear(bossRooms()[13]); // 14th boss = Ch14, Maevra herself
     useDelveStore.getState().acceptSpoils();
     expect(useScreenStore.getState().taunt).toBeNull();
   });
@@ -989,13 +989,13 @@ describe('delveStore — dialogue plays BEFORE the fight, never over it', () => 
     expect(fightHeld()).toBe(false);
   });
 
-  it('a reveal beat on descent flips ONLY its own NPC — Imoen early, Irenicus held to Ch10', () => {
+  it('a reveal beat on descent flips ONLY its own NPC — Inara early, Velnaris held to Ch10', () => {
     const idsBefore = (id: string) =>
       LORE_BEATS.slice(0, LORE_BEATS.findIndex((b) => b.id === id)).map((b) => b.id);
     const imoenReveal = LORE_BEATS.find((b) => b.reveals === 'imoen')!;
     const irenicusReveal = LORE_BEATS.find((b) => b.reveals === 'irenicus')!;
 
-    // The descent that drips Imoen's reveal: every earlier beat already seen, deep
+    // The descent that drips Inara's reveal: every earlier beat already seen, deep
     // in delves, no chapter cleared. Her name flips; the antagonist stays "The Voice".
     useMetaStore.setState({
       delveCount: 999,
@@ -1007,8 +1007,8 @@ describe('delveStore — dialogue plays BEFORE the fight, never over it', () => 
     expect(useMetaStore.getState().seenDialogueBeats).toContain(imoenReveal.id);
     expect(useMetaStore.getState().knownNpcs).toEqual(['imoen']);
 
-    // The descent that drips Irenicus's reveal needs Suldanessellar (Ch10) cleared.
-    // His name flips now — and only now; Imoen was already known, independently.
+    // The descent that drips Velnaris's reveal needs Tor Maladin (Ch10) cleared.
+    // His name flips now — and only now; Inara was already known, independently.
     useScreenStore.setState({ taunt: null, tauntQueue: [] });
     useMetaStore.setState({
       delveCount: 999,

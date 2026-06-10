@@ -48,7 +48,7 @@ describe('combat effects — turn order', () => {
 describe('combat effects — temp HP at combat start', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it("Lathander's Dawn grants 3 temp HP at combat start", () => {
+  it("Eos's Dawn grants 3 temp HP at combat start", () => {
     const goblin = getMonster('goblin');
     const blessed = makeHuman({ blessings: ['lathanders-dawn'] });
     expect(blessed.hp.temp).toBe(0);
@@ -102,10 +102,10 @@ describe('combat effects — temp HP absorbs damage', () => {
   });
 });
 
-describe('combat effects — Tempus first-attack damage', () => {
+describe('combat effects — Ares first-attack damage', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it("Tempus's Fury fires once, then turns off", () => {
+  it("Ares's Fury fires once, then turns off", () => {
     const goblin = getMonster('goblin');
     const blessed = makeHuman({ blessings: ['tempus-fury'] });
     const roller = createDiceRoller(3);
@@ -129,7 +129,7 @@ describe('combat effects — poison immunity', () => {
 describe('combat effects — rerolls', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
-  it("Tymora's Coin grants 1 encounter reroll at combat start", () => {
+  it("Tyche's Coin grants 1 encounter reroll at combat start", () => {
     const goblin = getMonster('goblin');
     const blessed = makeHuman({ blessings: ['tymoras-coin'] });
     const roller = createDiceRoller(99);
@@ -155,7 +155,7 @@ describe('combat effects — rerolls', () => {
       const goblinId = (state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant).id;
       state = playerAttack({ roller, character: blessed, state }, goblinId, 'longsword').state;
       if (state.rerollMissesEncounterRemaining === 0) {
-        const rerollLog = state.log.find((e) => e.text.includes("Tymora's Coin"));
+        const rerollLog = state.log.find((e) => e.text.includes("Tyche's Coin"));
         expect(rerollLog).toBeDefined();
         consumed = true;
       }
@@ -163,7 +163,7 @@ describe('combat effects — rerolls', () => {
     expect(consumed).toBe(true);
   });
 
-  it("Tymora's Eye initializes a per-delve reroll budget in startDelve", () => {
+  it("Tyche's Eye initializes a per-delve reroll budget in startDelve", () => {
     // Simulate startDelve's quirk-budget application without spinning the
     // whole store. characterQuirkMods aggregates rerollMissesPerDelve = 1.
     const eyed = makeHuman({ quirks: ['tymoras-eye'] });
@@ -193,7 +193,7 @@ describe('combat effects — rerolls', () => {
       state = atk.state;
       eyed = atk.character;
       if (eyed.delveBudgets?.quirkRerollMissesRemaining === 0) {
-        const rerollLog = state.log.find((e) => e.text.includes("Tymora's Eye"));
+        const rerollLog = state.log.find((e) => e.text.includes("Tyche's Eye"));
         expect(rerollLog).toBeDefined();
         consumed = true;
       }
@@ -204,7 +204,7 @@ describe('combat effects — rerolls', () => {
 
 /**
  * The `battle-rage` MECHANIC still ships on ~18 monsters, but the Ch1-3 bosses
- * moved their half-HP turn onto the framework PHASE system (see the Ilyich
+ * moved their half-HP turn onto the framework PHASE system (see the Karzok
  * berserk-phase block below). This mechanic coverage therefore runs against a
  * test-local `battle-rage` fixture rather than a real boss, so it stays honest
  * regardless of how the content bosses evolve.
@@ -319,13 +319,13 @@ describe('combat effects — Battle Rage (mechanic)', () => {
 });
 
 /**
- * Ilyich's half-HP berserk is now a boss-framework PHASE: above half he trades
+ * Karzok's half-HP berserk is now a boss-framework PHASE: above half he trades
  * plain Heavy War Pick swings; at half the "Stone-Blood Fury" phase swaps his
  * action list to a telegraphed Overhead Pick, enrages (+2 phase damage), drops
  * his AC by 2, and flips the transform hook. The charge resolves the turn after
  * it is read, carrying the phase enrage.
  */
-describe('combat effects — Berserk phase (Ilyich)', () => {
+describe('combat effects — Berserk phase (Karzok)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 
   function monsterId(state: CombatState): string {
@@ -415,7 +415,7 @@ describe('combat effects — stabilise (death-save replacement)', () => {
     expect(hero.hp.current).toBe(1);
     expect(after.state.status).toBe('active');
     expect(hero.delveBudgets?.stabilisesUsed).toBe(1);
-    const stabiliseLog = after.state.log.find((l) => l.text.includes("Ilmater's grip"));
+    const stabiliseLog = after.state.log.find((l) => l.text.includes("Atlas's grip"));
     expect(stabiliseLog).toBeDefined();
   });
 
@@ -447,11 +447,11 @@ describe('combat effects — stabilise (death-save replacement)', () => {
     hero = dmg.character;
     expect(hero.hp.current).toBe(0);
     expect(hero.delveBudgets?.stabilisesUsed).toBe(2);
-    const stabiliseLogs = state.log.filter((l) => l.text.includes("Ilmater's grip"));
+    const stabiliseLogs = state.log.filter((l) => l.text.includes("Atlas's grip"));
     expect(stabiliseLogs).toHaveLength(2);
   });
 
-  it("Ilmater's Patience grants an additional stabilise charge on top of the baseline", () => {
+  it("Atlas's Patience grants an additional stabilise charge on top of the baseline", () => {
     // Baseline 2 + blessing 1 = 3 charges. Fourth lethal blow drops.
     const goblin = getMonster('goblin');
     let hero = makeHuman({ blessings: ['ilmaters-patience'] });

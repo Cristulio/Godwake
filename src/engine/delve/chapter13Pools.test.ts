@@ -58,7 +58,7 @@ describe('chapter 13 — bestiary', () => {
     }
   });
 
-  it('the boss (Abazigal) carries an apex CR 17 stat block ramping toward Melissan', () => {
+  it('the boss (Korvazel) carries an apex CR 17 stat block ramping toward Maevra', () => {
     expect(ABAZIGAL.id).toBe(CH13_BOSS_ID);
     expect(ABAZIGAL.cr).toBe('17');
     expect(ABAZIGAL.bossMechanic).toBe('battle-rage');
@@ -82,7 +82,7 @@ describe('chapter 13 — bestiary', () => {
     expect(ABAZIGAL.immunities).toContain('lightning');
   });
 
-  it('Sendai is a named CR 15 elite in the ELITE_POOL, not the chapter boss', () => {
+  it('Szendra is a named CR 15 elite in the ELITE_POOL, not the chapter boss', () => {
     expect(SENDAI.id).toBe('sendai');
     expect(SENDAI.cr).toBe('15');
     const appearsInElite = ELITE_POOL.some((e) =>

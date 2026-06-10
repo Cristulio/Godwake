@@ -1,5 +1,5 @@
 /**
- * Painted Athkatla skyline — the City of Coin at dawn over the Sea of Swords.
+ * Painted Stormhaven skyline — the City of Coin at dawn over the Sea of Swords.
  * Gilded domes, marble spires, the harbor wall and merchant ships in silhouette.
  * Companion piece to PhandalinScene and GroveScene.
  */

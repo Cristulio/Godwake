@@ -46,5 +46,5 @@ export const WARDEN_LICTOR: Monster = MonsterSchema.parse({
   ],
   resistances: ['psychic'],
   flavorText:
-    'The lictors carry the Cowled Wizards\' authority into the cell-blocks, and the authority is mostly this: the certainty that whatever you are, they can make you less of it. She has unmade braver things than you in this gallery and crossed their names off a page already open to the next one.',
+    'The lictors carry the Veiled Court\' authority into the cell-blocks, and the authority is mostly this: the certainty that whatever you are, they can make you less of it. She has unmade braver things than you in this gallery and crossed their names off a page already open to the next one.',
 });

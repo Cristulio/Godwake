@@ -223,9 +223,9 @@ export function characterHasMechanic(character: Character, mechanicKey: string):
 
 /**
  * Crit range. Default 20 only. Improved Critical (Champion lv3) → 19-20.
- * Tempus's Edge (blessing) widens the band by N on the low end. Conditional
- * blessings widen it further while at full HP (Selûne's Clarity) or while
- * bloodied (Tempus's Bloodfury) — read live, so the band tracks current HP.
+ * Ares's Edge (blessing) widens the band by N on the low end. Conditional
+ * blessings widen it further while at full HP (Selene's Clarity) or while
+ * bloodied (Ares's Bloodfury) — read live, so the band tracks current HP.
  */
 export function critRange(character: Character): number[] {
   // Champion: Improved Critical (L2) opens the window to 19-20; Superior Critical

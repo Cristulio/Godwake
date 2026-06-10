@@ -1,8 +1,8 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Yaga-Shura — Chapter 12 boss, the fire-giant lord of the Five and the hand
- * behind the siege of Saradush. Faithful to the Throne of Bhaal: his heart was
+ * Hargan-Vor — Chapter 12 boss, the fire-giant lord of the Five and the hand
+ * behind the siege of Karthen. Faithful to the Throne of the Slain God: his heart was
  * cut out in a ritual and hidden away, and while it beats elsewhere he cannot
  * truly be killed — wounds that would fell a giant only stoke him hotter.
  *
@@ -25,7 +25,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const YAGA_SHURA: Monster = MonsterSchema.parse({
   id: 'yaga-shura',
-  name: 'Yaga-Shura',
+  name: 'Hargan-Vor',
   cr: '16',
   size: 'huge',
   creatureType: 'giant (bhaalspawn)',
@@ -74,10 +74,10 @@ export const YAGA_SHURA: Monster = MonsterSchema.parse({
       range: [60, 240],
       telegraph: {
         chargeText:
-          "He turns half from you and sets both hands under a wagon-sized block of Saradush's own wall, and it lights orange-white in his grip — he is winding back to throw the city at you. You have this one breath to close, to brace, or to put him down before it leaves his hands.",
+          "He turns half from you and sets both hands under a wagon-sized block of Karthen's own wall, and it lights orange-white in his grip — he is winding back to throw the city at you. You have this one breath to close, to brace, or to put him down before it leaves his hands.",
       },
       description:
-        "He pulls a wagon-sized block of Saradush's own wall off the rubble, sets it alight in his bare hands, and throws it the length of the burning street — the city he came to unmake coming down on you in a single falling sun.",
+        "He pulls a wagon-sized block of Karthen's own wall off the rubble, sets it alight in his bare hands, and throws it the length of the burning street — the city he came to unmake coming down on you in a single falling sun.",
     },
     {
       kind: 'attack',
@@ -91,5 +91,5 @@ export const YAGA_SHURA: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "After Irenicus, after the long climb back into the light, the dead god's blood pulls you on — and it pulls you here, to a city on fire. Saradush is ringed in red iron and packed with refugee Bhaalspawn, and the hand around its throat belongs to Yaga-Shura, one of the Five, the fire-giant lord who took the dead god's purpose for his own. Melissan sent you in past the line, through the burning, to break the siege — and the breaking ends here, with the giant himself, at the heart of the fire he made. But there is a trick in him you will learn the hard way: his heart was cut from his chest in a ritual and carried away, and while it beats somewhere far from here he does not feel the wounds that should kill him. Hurt him, and he only burns hotter. \"You came up out of the dark for THIS?\" the giant says, almost delighted, the greatsword already rising. \"Then burn with the rest of them, little godling. I cannot even feel you.\"",
+    "After Velnaris, after the long climb back into the light, the dead god's blood pulls you on — and it pulls you here, to a city on fire. Karthen is ringed in red iron and packed with refugee Slainkin, and the hand around its throat belongs to Hargan-Vor, one of the Five, the fire-giant lord who took the dead god's purpose for his own. Maevra sent you in past the line, through the burning, to break the siege — and the breaking ends here, with the giant himself, at the heart of the fire he made. But there is a trick in him you will learn the hard way: his heart was cut from his chest in a ritual and carried away, and while it beats somewhere far from here he does not feel the wounds that should kill him. Hurt him, and he only burns hotter. \"You came up out of the dark for THIS?\" the giant says, almost delighted, the greatsword already rising. \"Then burn with the rest of them, little godling. I cannot even feel you.\"",
 });

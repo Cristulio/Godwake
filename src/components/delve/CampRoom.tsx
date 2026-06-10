@@ -116,7 +116,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
   const [rollingRisk, setRollingRisk] = useState<{ roll: number; win: boolean } | null>(null);
 
-  // Imoen whispers when the road opens up — once per soul (never replays on re-entry or in future runs).
+  // Inara whispers when the road opens up — once per soul (never replays on re-entry or in future runs).
   useEffect(() => {
     if (useMetaStore.getState().seenDialogueBeats.includes('imoen-camp-whisper')) return;
     const t = setTimeout(() => {

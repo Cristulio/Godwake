@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Cowled Enforcer — a junior Cowled Wizard on patrol. They tax unlicensed
+ * Cowled Enforcer — a junior Veiled Magus on patrol. They tax unlicensed
  * magic with a thrown bolt of force; not yet senior enough for the
  * Magistrate's Hold Person trick. Caster archetype: thin armor, ranged.
  */
@@ -30,5 +30,5 @@ export const COWLED_ENFORCER: Monster = MonsterSchema.parse({
   ],
   resistances: ['fire'],
   flavorText:
-    'A grey hood, a high collar, a mask of beaten silver shaped like a featureless face. The Amnish Cowled Wizards do not raid — they collect. Their patrols ask once.',
+    'A grey hood, a high collar, a mask of beaten silver shaped like a featureless face. The Veiled Court of Sudria does not raid — it collects. Its patrols ask once.',
 });

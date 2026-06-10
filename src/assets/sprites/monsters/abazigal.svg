@@ -2,7 +2,7 @@
       viewBox="0 0 48 46"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Abazigal"
+      aria-label="Korvazel"
     >
       <!-- Storm backlight + ground shadow -->
       <ellipse cx="24" cy="24" rx="23" ry="22" fill="#3a64aa" opacity="0.08" />

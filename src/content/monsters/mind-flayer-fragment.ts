@@ -1,15 +1,15 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Mind Flayer Fragment — a half-formed illithid spawn lurking in the
- * tunnels above Ust Natha, drawn down from the illithid enclaves deeper
+ * Mindrender Fragment — a half-formed mindrender spawn lurking in the
+ * tunnels above Zhal Vasha, drawn down from the mindrender enclaves deeper
  * still. Opens with a paralyzing psychic stun (reuses Hold Person's
  * `kind: 'paralyze'` shape) and then drives a tentacle through the temple
  * with the player held.
  */
 export const MIND_FLAYER_FRAGMENT: Monster = MonsterSchema.parse({
   id: 'mind-flayer-fragment',
-  name: 'Mind Flayer Fragment',
+  name: 'Mindrender Fragment',
   cr: '5',
   size: 'medium',
   creatureType: 'aberration',
@@ -41,5 +41,5 @@ export const MIND_FLAYER_FRAGMENT: Monster = MonsterSchema.parse({
   ],
   resistances: ['psychic'],
   flavorText:
-    "Not a full mind flayer — those nest deeper, in the colonies the drow no longer raid. This is a half-grown one that the elder-brain abandoned or sent up as a scout. The tentacles work. The mouth works. The thoughts are not yours when it is in the room.",
+    "Not a full mindrender — those nest deeper, in the colonies the drow no longer raid. This is a half-grown one that the elder-brain abandoned or sent up as a scout. The tentacles work. The mouth works. The thoughts are not yours when it is in the room.",
 });

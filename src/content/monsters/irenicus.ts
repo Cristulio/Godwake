@@ -1,11 +1,11 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Jon Irenicus — Chapter 11 boss, the captor, the climax of the whole soul-theft
+ * Jon Velnaris — Chapter 11 boss, the captor, the climax of the whole soul-theft
  * arc. The Voice that has narrated your descent since the first cell; the elf who
  * tore your soul out at the Tree of Life and dragged you both into his pocket of
  * Hell to finish the work. Here he stands gorged on the Tree's stolen power and the
- * Bhaal-essence he has pried loose from you, his stolen divinity guttering under
+ * god-essence he has pried loose from you, his stolen divinity guttering under
  * his skin like a swallowed sun.
  *
  * boss-framework kit (apex, Ch11 multi-action): he acts TWICE a turn — the
@@ -14,7 +14,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * header) before it lands, a window to brace the save, burst him, or choke the
  * word off with hard control. A draining Leeching Word saps the strength from the
  * soul he half-owns (weakened). And at HALF HP the marquee fires: wound him past
- * the point his stolen power can paper over and the Bhaal-taint he tore out of you
+ * the point his stolen power can paper over and god-taint he tore out of you
  * takes him instead — a TRANSFORM PHASE that cracks him into the Slayer's shape,
  * his guard forgotten, a third action a turn, his disciplined kit REPLACED by the
  * frenzied, life-drinking rending of your father's gift turned in his hands. (The
@@ -23,7 +23,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const IRENICUS: Monster = MonsterSchema.parse({
   id: 'irenicus',
-  name: 'Jon Irenicus',
+  name: 'Jon Velnaris',
   cr: '16',
   size: 'large',
   creatureType: 'humanoid (soulless elf)',
@@ -87,7 +87,7 @@ export const IRENICUS: Monster = MonsterSchema.parse({
       bonusDamage: 3,
       acDelta: -2,
       enterText:
-        "The white light under his skin tears. For one moment the scholar's face is honestly afraid — of you, of the thing rising out of the wound — and then the Bhaal-taint he carved out of you decides it would rather wear him, and Jon Irenicus comes apart into the shape your father left in the blood. The Slayer stands where the captor stood: no more procedure, no more fond patience, only the appetite he stole from you given hands. It forgets to guard. It does not forget to feed.",
+        "The white light under his skin tears. For one moment the scholar's face is honestly afraid — of you, of the thing rising out of the wound — and then god-taint he carved out of you decides it would rather wear him, and Jon Velnaris comes apart into the shape your father left in the blood. The Slayer stands where the captor stood: no more procedure, no more fond patience, only the appetite he stole from you given hands. It forgets to guard. It does not forget to feed.",
       addActions: [
         {
           kind: 'debuff',
@@ -97,7 +97,7 @@ export const IRENICUS: Monster = MonsterSchema.parse({
           saveAbility: 'wis',
           durationRounds: 1,
           description:
-            'The Slayer turns the ruin of Irenicus\'s face on you, and what looks out of it is older than him and older than you and is the single oldest thing in your blood — the murder that made you. Some animal floor of you that the soul-theft never reached recognises its maker and tries to run, and for a breath you cannot make yourself close with the thing wearing your father\'s purpose.',
+            'The Slayer turns the ruin of Velnaris\'s face on you, and what looks out of it is older than him and older than you and is the single oldest thing in your blood — the murder that made you. Some animal floor of you that the soul-theft never reached recognises its maker and tries to run, and for a breath you cannot make yourself close with the thing wearing your father\'s purpose.',
         },
         {
           kind: 'attack',
@@ -114,5 +114,5 @@ export const IRENICUS: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "You have heard him the whole way down. The Voice in the cell, in the asylum, at every turning — patient, cultured, almost tender, the voice of the man who took your soul out of you with the unhurried care of someone repotting a flower. Now there is a face to put to it at last: Jon Irenicus, the exiled elf who burned his own soul away chasing godhood and decided yours would do instead. He stands at the centre of his pocket of Hell with the Tree of Life's stolen power lit under his skin and your divinity gripped in him like a swallowed coal, and he greets you the way he always has — as a subject, a specimen, a thing he is fond of in the way one is fond of good work. \"You came all this way down,\" he says, and the old Voice fits the face exactly. \"After everything I took, you climbed back up to me. I am almost moved. But you have always misunderstood what you are — you are not the one who survives this story. You are the soil. And I have such things to grow.\"",
+    "You have heard him the whole way down. The Voice in the cell, in the asylum, at every turning — patient, cultured, almost tender, the voice of the man who took your soul out of you with the unhurried care of someone repotting a flower. Now there is a face to put to it at last: Jon Velnaris, the exiled elf who burned his own soul away chasing godhood and decided yours would do instead. He stands at the centre of his pocket of Hell with the Tree of Life's stolen power lit under his skin and your divinity gripped in him like a swallowed coal, and he greets you the way he always has — as a subject, a specimen, a thing he is fond of in the way one is fond of good work. \"You came all this way down,\" he says, and the old Voice fits the face exactly. \"After everything I took, you climbed back up to me. I am almost moved. But you have always misunderstood what you are — you are not the one who survives this story. You are the soil. And I have such things to grow.\"",
 });

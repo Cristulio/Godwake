@@ -25,7 +25,7 @@ export interface SetPiece {
   setId: string;
   /** Display name (mirrors the base item name). */
   name: string;
-  /** One-line flavour in the Forgotten Realms / BG2 voice. */
+  /** One-line flavour in the old realms / BG2 voice. */
   flavor: string;
   /**
    * The canonical equip slot the piece fills. Rings use `ring1` as their
@@ -232,7 +232,7 @@ export const SET_PIECES: SetPiece[] = [
   },
   {
     id: 'archmagi-ring', setId: 'archmagi', name: 'Ring of the Archmagi', slot: 'ring1',
-    flavor: 'A band that holds an extra breath of the Weave for the one who knows how to spend it.',
+    flavor: 'A band that holds an extra breath of the Weft for the one who knows how to spend it.',
     effects: { bonusSpellSlotsL1: 1 }, effectLine: '+1 level-1 spell slot (refills on rest)',
     classGate: 'wizard', ascensionExclusive: true,
   },

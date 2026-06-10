@@ -16,7 +16,7 @@
   },
   "hardier-soul": {
     "name": "Alma más Recia",
-    "flavor": "La marca de Ilmater impresa bajo el corazón. Cuando el cuerpo se quiebra, el alma recuerda que aún puede alzarse una vez más.",
+    "flavor": "La marca de Atlas impresa bajo el corazón. Cuando el cuerpo se quiebra, el alma recuerda que aún puede alzarse una vez más.",
     "effect": {
       "one": "+{n} carga de estabilización por descenso (una auto-estabilización gratuita al caer abatido).",
       "other": "+{n} cargas de estabilización por descenso (una auto-estabilización gratuita al caer abatido)."
@@ -106,7 +106,7 @@
     }
   },
   "tymoras-wager": {
-    "name": "Apuesta de Tymora",
+    "name": "Apuesta de Tique",
     "flavor": "Una moneda de cobre puesta en tu palma por una sacerdotisa risueña. Cara, vives. Cruz, vuelves a vivir. Nunca te deja ver el resultado.",
     "effect": {
       "one": "Comienza cada descenso pudiendo repetir +{n} ataque fallado.",
@@ -141,7 +141,7 @@
   },
   "knife-in-the-dark": {
     "name": "Cuchillo en la Oscuridad",
-    "flavor": "El otro rostro de Selûne — la herida encuentra el camino a casa.",
+    "flavor": "El otro rostro de Selene — la herida encuentra el camino a casa.",
     "effect": "+{n}d6 de daño de Ataque Furtivo, permanente."
   },
   "arcane-focus": {

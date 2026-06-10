@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Blue Wyrmling — Chapter 13 early-mid. Abazigal's own get, the half-dragon's
+ * Blue Wyrmling — Chapter 13 early-mid. Korvazel's own get, the half-dragon's
  * brood still small enough to call young, nested in the warm crackling dark of
  * the lair's upper vaults. They are lightning down to the blood, immune to it,
  * and they fight the way their sire taught: bite first, bite again, the jaws
@@ -28,7 +28,7 @@ export const BLUE_WYRMLING: Monster = MonsterSchema.parse({
       damageType: 'lightning',
       reach: 5,
       description:
-        'The jaws come down trailing a blue thread of static that finds the gap in armour before the teeth do, so the bite arrives already burning — the brood-mark of every thing Abazigal has sired into the dark.',
+        'The jaws come down trailing a blue thread of static that finds the gap in armour before the teeth do, so the bite arrives already burning — the brood-mark of every thing Korvazel has sired into the dark.',
     },
     {
       kind: 'multiattack',
@@ -39,5 +39,5 @@ export const BLUE_WYRMLING: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Abazigal has been at this a long time — siring on dragons and drakes and stranger things, breeding the storm in his blood back into a brood that fills the warm dark of his lair end to end. These are the young of it, still small enough to be called wyrmlings, their scales the deep electric blue of their sire's and the air around them already crackling faintly when they wake. They are not yet cunning. They do not have to be. They are lightning with teeth, and there are a great many of them between you and their father.",
+    "Korvazel has been at this a long time — siring on dragons and drakes and stranger things, breeding the storm in his blood back into a brood that fills the warm dark of his lair end to end. These are the young of it, still small enough to be called wyrmlings, their scales the deep electric blue of their sire's and the air around them already crackling faintly when they wake. They are not yet cunning. They do not have to be. They are lightning with teeth, and there are a great many of them between you and their father.",
 });

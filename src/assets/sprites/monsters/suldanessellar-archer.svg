@@ -2,7 +2,7 @@
       viewBox="0 0 26 34"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Charmed Suldanessellar Archer"
+      aria-label="Charmed Tor Maladin Archer"
     >
       <!-- Sylvan backlight + ground shadow -->
       <ellipse cx="13" cy="17" rx="11" ry="15" fill="#3a7a3a" opacity="0.07" />

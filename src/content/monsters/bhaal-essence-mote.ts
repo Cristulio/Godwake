@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Bhaal-Essence Mote — Chapter 14 fodder. The chaff of the Throne: a gobbet of
+ * God-Essence Mote — Chapter 14 fodder. The chaff of the Throne: a gobbet of
  * congealed murder skimmed off one of the pools, given just enough shape to want
  * what the pools want. It is not a creature so much as an appetite with a reach —
  * a `lifeDrain` striker that thickens on every wound it opens, dragging a little
@@ -9,7 +9,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const BHAAL_ESSENCE_MOTE: Monster = MonsterSchema.parse({
   id: 'bhaal-essence-mote',
-  name: 'Bhaal-Essence Mote',
+  name: 'God-Essence Mote',
   cr: '12',
   size: 'medium',
   creatureType: 'fiend (bhaalspawn-essence)',
@@ -33,5 +33,5 @@ export const BHAAL_ESSENCE_MOTE: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "The pools of the Throne are not water. They are the rendered murder of a dead god and every soul his blood ever poisoned, and they do not lie still — they bud. This is the least of what they bud: a clot the size of a person, skimmed up off the surface by the hunger underneath, that holds together only as long as it is killing. It has no face and remembers no name, not even Bhaal's. It only knows the one thing the pools know, the one thing left of the God of Murder when everything else of him boiled away: that there should be less of you, and more of this.",
+    "The pools of the Throne are not water. They are the rendered murder of a dead god and every soul his blood ever poisoned, and they do not lie still — they bud. This is the least of what they bud: a clot the size of a person, skimmed up off the surface by the hunger underneath, that holds together only as long as it is killing. It has no face and remembers no name, not even the Slain God's. It only knows the one thing the pools know, the one thing left of the God of Murder when everything else of him boiled away: that there should be less of you, and more of this.",
 });

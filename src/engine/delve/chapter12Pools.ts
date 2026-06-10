@@ -1,21 +1,21 @@
 import type { RoomMonster } from '../../types/delve';
 
 /**
- * Chapter 12 · "The Siege of Saradush" encounter pools. Mirrors chapter9Pools —
+ * Chapter 12 · "The Siege of Karthen" encounter pools. Mirrors chapter9Pools —
  * pooled compositions for each combat slot in the burning, besieged city the
- * Throne of Bhaal crisis pulls the player into. After Irenicus, the dead god's
- * blood drags the heir on; Melissan sends them in past the line, through the
- * fire, to break the siege of a city packed with refugee Bhaalspawn and ringed
- * by the fire-giant army of Yaga-Shura, one of the Five.
+ * Throne of the Slain God crisis pulls the player into. After Velnaris, the dead god's
+ * blood drags the heir on; Maevra sends them in past the line, through the
+ * fire, to break the siege of a city packed with refugee Slainkin and ringed
+ * by the fire-giant army of Hargan-Vor, one of the Five.
  *
  * Theme: a city dying twice over — burned from without by the giants and held
- * from within by the mad Bhaalspawn warlord Gromnir, with the immolated dead
+ * from within by the mad Slainkin warlord Brogmar, with the immolated dead
  * walking the streets between. Mechanically the chapter leans into fire,
  * reach, and attrition: huge hitters that strike from a distance, dead that
  * frighten and re-kindle, a shaman that never runs out of bodies, and a boss
  * whose ritually-hidden heart means wounds only stoke him. Continues the curve
  * a clear notch past Chapter 9: warmups CR 10, early-mid CR 11, mid CR 12,
- * elite CR 14, boss (Yaga-Shura) CR 15.
+ * elite CR 14, boss (Hargan-Vor) CR 15.
  */
 
 export interface EncounterEntry {
@@ -30,7 +30,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'A Sentry on the Broken Wall',
     flavorText:
-      'The road comes up out of the smoke onto a breach in Saradush\'s outer wall, and a single Saradush marauder is posted in the gap — bored, fat on a season of plunder, picking through a dead man\'s pack. He sees you the way a man sees one more thing to be burned, and reaches for the looted greataxe without much hurrying about it.',
+      'The road comes up out of the smoke onto a breach in Karthen\'s outer wall, and a single Karthen marauder is posted in the gap — bored, fat on a season of plunder, picking through a dead man\'s pack. He sees you the way a man sees one more thing to be burned, and reaches for the looted greataxe without much hurrying about it.',
     monsters: [{ defId: 'saradush-marauder', count: 1 }],
     xpReward: 1490,
     goldReward: 116,
@@ -46,7 +46,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'Two of the Ring',
     flavorText:
-      'Two Saradush marauders share a doorway out of the ash-fall, dicing on a drumhead over the spoils of a house whose owners are smoke now. They rise together when they see you, unhurried, the way men rise who have not had to fight for anything in weeks and have forgotten it can cost them.',
+      'Two Karthen marauders share a doorway out of the ash-fall, dicing on a drumhead over the spoils of a house whose owners are smoke now. They rise together when they see you, unhurried, the way men rise who have not had to fight for anything in weeks and have forgotten it can cost them.',
     monsters: [{ defId: 'saradush-marauder', count: 2, displayPrefix: 'Marauder' }],
     xpReward: 1510,
     goldReward: 114,
@@ -54,7 +54,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Sellsword and the Cinder',
     flavorText:
-      'A Saradush marauder backs down the street ahead of a burning dead, herding it toward you the way you herd a fire you cannot put out — let it have the stranger, and keep clear of it yourself. The living thing wants your purse intact. The dead one only wants you alight.',
+      'A Karthen marauder backs down the street ahead of a burning dead, herding it toward you the way you herd a fire you cannot put out — let it have the stranger, and keep clear of it yourself. The living thing wants your purse intact. The dead one only wants you alight.',
     monsters: [
       { defId: 'saradush-marauder', count: 1 },
       { defId: 'burning-dead', count: 1 },
@@ -73,7 +73,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'A Squad on the Cordon',
     flavorText:
-      'Three Saradush marauders hold a corner of the cordon where the road tries to thread out of the city, leaning on looted spears with the easy boredom of men whose only standing order is that nothing gets past them alive. You are the most interesting thing to come up this street in a week. They mean to keep you here.',
+      'Three Karthen marauders hold a corner of the cordon where the road tries to thread out of the city, leaning on looted spears with the easy boredom of men whose only standing order is that nothing gets past them alive. You are the most interesting thing to come up this street in a week. They mean to keep you here.',
     monsters: [{ defId: 'saradush-marauder', count: 3, displayPrefix: 'Marauder' }],
     xpReward: 1530,
     goldReward: 112,
@@ -122,7 +122,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Shaman and the Cordon',
     flavorText:
-      'A fire-giant shaman keeps its rite at the back while two Saradush marauders hold the line in front of it — the coin-men to keep you off the priest, the priest to make sure the dead never thin. Cut through the sellswords fast, or fight the whole smoking street eyes-streaming while it refills around you.',
+      'A fire-giant shaman keeps its rite at the back while two Karthen marauders hold the line in front of it — the coin-men to keep you off the priest, the priest to make sure the dead never thin. Cut through the sellswords fast, or fight the whole smoking street eyes-streaming while it refills around you.',
     monsters: [
       { defId: 'fire-giant-shaman', count: 1 },
       { defId: 'saradush-marauder', count: 2, displayPrefix: 'Marauder' },
@@ -155,7 +155,7 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'Kin on the Barricade',
     flavorText:
-      "A barricade of furniture and dead-cart blocks the inner street, and the thing that holds it is one of your own — a Gromnir's defender, Bhaalspawn-blooded, notched longsword already out. There is a half-instant of awful recognition on both sides, the same dead god's ichor answering itself across the rubble, before it decides you are one more rival come for the murder in its veins and comes on fast.",
+      "A barricade of furniture and dead-cart blocks the inner street, and the thing that holds it is one of your own — a Brogmar's defender, Slainkin-blooded, notched longsword already out. There is a half-instant of awful recognition on both sides, the same dead god's ichor answering itself across the rubble, before it decides you are one more rival come for the murder in its veins and comes on fast.",
     monsters: [{ defId: 'gromnir-defender', count: 1 }],
     xpReward: 2580,
     goldReward: 182,
@@ -163,7 +163,7 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Line Itself',
     flavorText:
-      'The smoke parts on a mountain of red iron — a fire giant of Yaga-Shura\'s host, scorched plate and a greatsword banked to a sullen orange, blocking the whole width of the street. It does not hurry. It tears a chunk of the broken wall loose, weighs it in one hand, and you understand that there is no distance from this thing that is safe.',
+      'The smoke parts on a mountain of red iron — a fire giant of Hargan-Vor\'s host, scorched plate and a greatsword banked to a sullen orange, blocking the whole width of the street. It does not hurry. It tears a chunk of the broken wall loose, weighs it in one hand, and you understand that there is no distance from this thing that is safe.',
     monsters: [{ defId: 'fire-giant', count: 1 }],
     xpReward: 2600,
     goldReward: 186,
@@ -182,7 +182,7 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Defender and the Smoke',
     flavorText:
-      "A Gromnir's defender fights inside a fire-giant shaman's murk — the kin to keep you swinging fast, the priest to blind you and wake the dead behind you. Between the longsword you can barely see and the bodies that keep getting back up, the street is meant to leave you nothing you can be sure of except that all of it wants you down.",
+      "A Brogmar's defender fights inside a fire-giant shaman's murk — the kin to keep you swinging fast, the priest to blind you and wake the dead behind you. Between the longsword you can barely see and the bodies that keep getting back up, the street is meant to leave you nothing you can be sure of except that all of it wants you down.",
     monsters: [
       { defId: 'gromnir-defender', count: 1 },
       { defId: 'fire-giant-shaman', count: 1 },
@@ -215,7 +215,7 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'Two of the Blood',
     flavorText:
-      "Two Gromnir's defenders hold the gate to the citadel together, both Bhaalspawn, both fighting the way things fight when the siege has burned the fear off and left only the rage — fast, vicious, with the economy gone. They are your kin twice over, and they will kill you twice as gladly for it, because if you live they do not.",
+      "Two Brogmar's defenders hold the gate to the citadel together, both Slainkin, both fighting the way things fight when the siege has burned the fear off and left only the rage — fast, vicious, with the economy gone. They are your kin twice over, and they will kill you twice as gladly for it, because if you live they do not.",
     monsters: [{ defId: 'gromnir-defender', count: 2, displayPrefix: 'Defender' }],
     xpReward: 2640,
     goldReward: 188,
@@ -226,7 +226,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'A Captain of the Siege',
     flavorText:
-      'The street opens onto a plaza and the thing that commands this wing of the ring is waiting in it — a fire-giant warlord, older and huger than the line, a forge-black greatblade longer than the giants below it carry. It hits from further than seems fair, and what you open on it, it breathes shut again, banking its own heat back into the wound. One of Yaga-Shura\'s fingers. The hand is further in.',
+      'The street opens onto a plaza and the thing that commands this wing of the ring is waiting in it — a fire-giant warlord, older and huger than the line, a forge-black greatblade longer than the giants below it carry. It hits from further than seems fair, and what you open on it, it breathes shut again, banking its own heat back into the wound. One of Hargan-Vor\'s fingers. The hand is further in.',
     monsters: [{ defId: 'fire-giant-warlord', count: 1 }],
     xpReward: 3460,
     goldReward: 240,
@@ -256,7 +256,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Warlord and the Blood',
     flavorText:
-      "A fire-giant warlord holds the plaza while a Gromnir's defender fights at its feet — the captain of the siege and one of the city's own desperate kin, the immovable and the relentless, fighting on opposite sides of the same war and both of them, for this minute, against you. Spend too long on the giant and the Bhaalspawn has bled you; turn to the kin and the greatblade arrives at reach.",
+      "A fire-giant warlord holds the plaza while a Brogmar's defender fights at its feet — the captain of the siege and one of the city's own desperate kin, the immovable and the relentless, fighting on opposite sides of the same war and both of them, for this minute, against you. Spend too long on the giant and the Slainkin has bled you; turn to the kin and the greatblade arrives at reach.",
     monsters: [
       { defId: 'fire-giant-warlord', count: 1 },
       { defId: 'gromnir-defender', count: 1 },
@@ -301,20 +301,20 @@ export interface ChapterRoomFlavor {
  * rests / shop / boss + bossDefId), beside the pools, so the wiring re-authors
  * nothing.
  *
- * NOTE: the gods of Saradush burned with it — the "shrines" here are the few
- * places the fire has not yet reached, where a refugee Bhaalspawn can stand
+ * NOTE: the gods of Karthen burned with it — the "shrines" here are the few
+ * places the fire has not yet reached, where a refugee Slainkin can stand
  * out of the heat and the murder in the blood for a moment before the siege
  * finds them again.
  */
 export const CHAPTER12_FLAVOR = {
   chapter: 12 as const,
   prefix: 'c12',
-  title: 'The Siege of Saradush',
+  title: 'The Siege of Karthen',
   shrines: [
     {
       title: 'A Cistern the Fire Has Not Found',
       flavorText:
-        "A stair down into a stone cistern under a burned house, the water in it black and still and cool — the one thing in Saradush the giants' fire has not yet drunk. Refugees sheltered here until the smoke came down the steps; their things are still set out, waiting for them. Kneel at the cold edge of the water a while. The heat cannot follow you down here, and for as long as you stay the siege seems very far above.",
+        "A stair down into a stone cistern under a burned house, the water in it black and still and cool — the one thing in Karthen the giants' fire has not yet drunk. Refugees sheltered here until the smoke came down the steps; their things are still set out, waiting for them. Kneel at the cold edge of the water a while. The heat cannot follow you down here, and for as long as you stay the siege seems very far above.",
     },
     {
       title: 'A Shrine Under the Rubble',
@@ -331,26 +331,26 @@ export const CHAPTER12_FLAVOR = {
     {
       title: 'A Cellar the Refugees Left',
       flavorText:
-        "A cellar under a merchant's house where some of the city's refugee Bhaalspawn hid before Gromnir's men or the giants' fire moved them on — cold ashes of a small careful cook-fire, a child's blanket, a tally of days scratched on the wall that stops. The dead god's blood is quiet down here, among the leavings of people who only wanted to live. Sit a while in the place they kept. Nothing in it wants anything from you.",
+        "A cellar under a merchant's house where some of the city's refugee Slainkin hid before Brogmar's men or the giants' fire moved them on — cold ashes of a small careful cook-fire, a child's blanket, a tally of days scratched on the wall that stops. The dead god's blood is quiet down here, among the leavings of people who only wanted to live. Sit a while in the place they kept. Nothing in it wants anything from you.",
     },
   ] as ChapterRoomFlavor[],
   shop: {
     title: 'A Quartermaster Gone to Ground',
     flavorText:
-      "Something that was once Saradush's garrison quartermaster keeps a barred cellar off the muster-yard, still sorting the city's last stores by a logic worn down to habit — the good steel the dead guard left, harness off the fallen of both sides, potions and charms looted from the refugee column before it scattered. It does not want coin to spend; there is nothing left in the city to spend it on. It wants coin because counting the stores is the last duty it has, and it would rather keep the ledger than think about who the ledger was for.",
+      "Something that was once Karthen's garrison quartermaster keeps a barred cellar off the muster-yard, still sorting the city's last stores by a logic worn down to habit — the good steel the dead guard left, harness off the fallen of both sides, potions and charms looted from the refugee column before it scattered. It does not want coin to spend; there is nothing left in the city to spend it on. It wants coin because counting the stores is the last duty it has, and it would rather keep the ledger than think about who the ledger was for.",
   } as ChapterRoomFlavor,
   bossDefId: 'yaga-shura',
   boss: {
     title: 'At the Heart of the Fire',
     flavorText:
-      "The last street ends at the breach in the inner keep, and the siege is all around you at once — the ring closing at your back, the smoke folding down, the whole burning weight of the army gathered behind the one thing it was built around. At the centre of the fire he made, a mountain of red-iron muscle turns to regard you, almost delighted. \"You came up out of the dark for THIS?\" says Yaga-Shura, one of the Five, the great fire-blade already rising. \"Melissan's little errand-godling, sent to break my siege. Break it, then. Cut me. You will find there is no heart in me to stop — they took it out and hid it where you will never reach, and a thing with no heart does not feel the wounds that kill a giant. So burn with the rest of them, little kin. I cannot even feel you.\"",
+      "The last street ends at the breach in the inner keep, and the siege is all around you at once — the ring closing at your back, the smoke folding down, the whole burning weight of the army gathered behind the one thing it was built around. At the centre of the fire he made, a mountain of red-iron muscle turns to regard you, almost delighted. \"You came up out of the dark for THIS?\" says Hargan-Vor, one of the Five, the great fire-blade already rising. \"Maevra's little errand-godling, sent to break my siege. Break it, then. Cut me. You will find there is no heart in me to stop — they took it out and hid it where you will never reach, and a thing with no heart does not feel the wounds that kill a giant. So burn with the rest of them, little kin. I cannot even feel you.\"",
     xpReward: 4800,
     goldReward: 660,
   },
 } as const;
 
 /**
- * Boss intel card for Yaga-Shura, shaped to match `BossIntelCard` (the integration
+ * Boss intel card for Hargan-Vor, shaped to match `BossIntelCard` (the integration
  * lane folds this into `bossIntel.ts`; the `chapter` field there is widened to
  * include 12). The paid edge follows the standard curve: `coinCost = 5·ch² + 20·ch`
  * = 5·144 + 20·12 = 960, a real gold sink against the deep purse a Chapter 12
@@ -361,12 +361,12 @@ export const CHAPTER12_BOSS_INTEL = {
   chapter: 12 as const,
   roomTitle: "A Captured Map of the Heart-Rite",
   roomFlavor:
-    "An abandoned command-tent in the lee of the breach, where someone who got this far ahead of you stopped to think. On the camp-table a fire-giant shaman's map is still pinned — the siege-ring drawn in charcoal, and at its centre Yaga-Shura, and from the giant a single line running off the edge of the map to a mark no one here could read. Beside it, in a refugee's shaking hand, the thing they worked out before the smoke took them: HIS HEART IS NOT IN HIM. Below, smaller, pressed through the parchment: you cannot kill what cannot bleed — hurt him and he only burns hotter — last the fire, do not trade it.",
+    "An abandoned command-tent in the lee of the breach, where someone who got this far ahead of you stopped to think. On the camp-table a fire-giant shaman's map is still pinned — the siege-ring drawn in charcoal, and at its centre Hargan-Vor, and from the giant a single line running off the edge of the map to a mark no one here could read. Beside it, in a refugee's shaking hand, the thing they worked out before the smoke took them: HIS HEART IS NOT IN HIM. Below, smaller, pressed through the parchment: you cannot kill what cannot bleed — hurt him and he only burns hotter — last the fire, do not trade it.",
   weakSpotResolution:
-    "You read the map the way the one who left it meant you to. Yaga-Shura does not guard himself, because he cannot be killed — the heart-rite means the wounds land on a thing that is not there to feel them. But a giant still has to wind up the greatblade, and the first arc is always the widest. Knowing he will not flinch from anything you do, you set your opening strike for the gap before that first arc comes round.",
+    "You read the map the way the one who left it meant you to. Hargan-Vor does not guard himself, because he cannot be killed — the heart-rite means the wounds land on a thing that is not there to feel them. But a giant still has to wind up the greatblade, and the first arc is always the widest. Knowing he will not flinch from anything you do, you set your opening strike for the gap before that first arc comes round.",
   battlePlanResolution:
     "You read the whole shape of him off the captured map: the heart cut out and hidden, so the wounds only stoke him; the great fire-blade at reach, twice to the stroke; the hurled wall-stone for when you give ground; and the moment past half when the missing heart means the pain has nowhere to land and he comes on hotter for being hurt. You walk into the fire bracing not to be ended in the first exchange, your guard set for the long arc and your first cut already aimed at the gap before it.",
   walkPastResolution:
-    "You leave the command-tent unread and the warning un-heeded, and step past the map without slowing. Out at the centre of the fire a mountain of a giant marks your coming and laughs, glad of the company and certain of the ending. The bold take the heart of the siege on their own terms — and what Yaga-Shura sheds for you will weigh a touch heavier when the fire finally goes out of him.",
+    "You leave the command-tent unread and the warning un-heeded, and step past the map without slowing. Out at the centre of the fire a mountain of a giant marks your coming and laughs, glad of the company and certain of the ending. The bold take the heart of the siege on their own terms — and what Hargan-Vor sheds for you will weigh a touch heavier when the fire finally goes out of him.",
   coinCost: 5 * 144 + 20 * 12,
 } as const;

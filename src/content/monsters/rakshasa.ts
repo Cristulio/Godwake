@@ -5,7 +5,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  * a high elf's stolen finery, hands set on backward, spell-warded against the
  * lesser magics. It works in `multiattack` cursed claws (a touch of life-drain,
  * the wound that will not close) and a `frightened` debuff spun out of illusion.
- * Irenicus did not storm Suldanessellar alone; these came with him, and they
+ * Velnaris did not storm Tor Maladin alone; these came with him, and they
  * hold the temple stair to the Tree.
  */
 export const RAKSHASA: Monster = MonsterSchema.parse({
@@ -52,5 +52,5 @@ export const RAKSHASA: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Irenicus did not take Suldanessellar with his own hands; he brought lieutenants worthy of the work, and chief among them the rakshasa — tiger-headed fiends in the robes of murdered nobles, hands turned backward at the wrist, warded against the small spells of mortal mages and contemptuous of the rest. This one holds the temple stair that climbs to the Tree, and it has held a thousand such stairs on a thousand fallen worlds, and it greets you with the bottomless good humour of a thing that has never once, in all that time, lost.",
+    "Velnaris did not take Tor Maladin with his own hands; he brought lieutenants worthy of the work, and chief among them the rakshasa — tiger-headed fiends in the robes of murdered nobles, hands turned backward at the wrist, warded against the small spells of mortal mages and contemptuous of the rest. This one holds the temple stair that climbs to the Tree, and it has held a thousand such stairs on a thousand fallen worlds, and it greets you with the bottomless good humour of a thing that has never once, in all that time, lost.",
 });

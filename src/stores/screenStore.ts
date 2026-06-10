@@ -48,7 +48,7 @@ interface ScreenStoreState {
   taunt: Taunt | null;
   /**
    * Lines waiting behind `taunt`. Two NPCs can fire close together (e.g. the
-   * camp's Imoen whisper after a boss-clear Irenicus line) — queueing instead
+   * camp's Inara whisper after a boss-clear Velnaris line) — queueing instead
    * of overwriting means each line is read and dismissed before the next shows.
    */
   tauntQueue: Taunt[];

@@ -50,7 +50,7 @@ export interface BossSpec {
 export const BOSSES: BossSpec[] = [
   {
     id: 'duergar-ilyich',
-    shortName: 'Ilyich',
+    shortName: 'Karzok',
     chapter: 1,
     // Ch1 boss arrives end of chapter — player is typically L1 fresh-rolled
     // (under-level scramble) or L3 (full at-level).
@@ -83,7 +83,7 @@ export const BOSSES: BossSpec[] = [
     shortName: 'Matron Mother',
     chapter: 4,
     // Ch4 boss: L7 is the primary at-level. L6 is the under-level (player
-    // rushed Ust Natha without farming the elite cluster).
+    // rushed Zhal Vasha without farming the elite cluster).
     levels: [6, 7],
     preBaseline: { rogue: 0, fighter: 50, wizard: 0, levelTested: 7 },
     preBaselineRounds: { rogue: 9.9, fighter: 11.8, wizard: 9.7 },
@@ -93,7 +93,7 @@ export const BOSSES: BossSpec[] = [
 /**
  * Defensive blessings: each picks a distinct mechanical lever so the
  * aggregator's max-of carve-outs don't squash the bundle. Reaches +1 AC,
- * +3 tempHp per combat, an Ilmater stabilise charge, a first-attack
+ * +3 tempHp per combat, an Atlas stabilise charge, a first-attack
  * advantage, and one miss-reroll per combat.
  */
 const LOADED_BLESSINGS: string[] = [
@@ -147,7 +147,7 @@ export interface FightResult {
   damageTaken: number;
   playerCrits: number;
   bossCrits: number;
-  /** Hold Person was offered (boss has a paralyze action). True for all but Ilyich. */
+  /** Hold Person was offered (boss has a paralyze action). True for all but Karzok. */
   paralyzeOffered: boolean;
   /** Player saved against Hold Person. */
   paralyzeSaved: boolean;

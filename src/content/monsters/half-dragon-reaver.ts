@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Half-Dragon Reaver — Chapter 13 mid. The cunning half of Abazigal's brood:
+ * Half-Dragon Reaver — Chapter 13 mid. The cunning half of Korvazel's brood:
  * his half-blooded get grown to warriors, blue-scaled and broad, carrying the
  * storm in their lineage and a greataxe in their hands. They fight with their
  * sire's pride and a soldier's discipline both — a heavy `multiattack` (the
@@ -51,5 +51,5 @@ export const HALF_DRAGON_REAVER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Where the wyrmlings are Abazigal's beasts, the reavers are his sons — half-dragon by his blood, grown to broad blue-scaled warriors who carry both his pride and the discipline he was careful to drill into them. They guard the heart-galleries of the lair as a household guards its lord, and they fight like it: no wasted motion, no fear, the greataxe coming in the same measured cadence every time and the storm in their veins riding down the edge. They know what their father is becoming. They intend to be standing at his side when he does.",
+    "Where the wyrmlings are Korvazel's beasts, the reavers are his sons — half-dragon by his blood, grown to broad blue-scaled warriors who carry both his pride and the discipline he was careful to drill into them. They guard the heart-galleries of the lair as a household guards its lord, and they fight like it: no wasted motion, no fear, the greataxe coming in the same measured cadence every time and the storm in their veins riding down the edge. They know what their father is becoming. They intend to be standing at his side when he does.",
 });

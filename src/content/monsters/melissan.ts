@@ -1,10 +1,10 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Melissan — Amelyssan the Blackhearted, the true final villain of the game and
- * the apex of the bestiary. Once Bhaal's highest priestess, she engineered the
- * whole Bhaalspawn crisis to harvest the Children's divine essence and seize the
- * empty Throne of Bhaal, to rise as the new God of Murder. At the Throne she
+ * Maevra — Maevra the Blackhearted, the true final villain of the game and
+ * the apex of the bestiary. Once the Slain God's highest priestess, she engineered the
+ * whole Slainkin crisis to harvest the Children's divine essence and seize the
+ * empty Throne of the Slain God, to rise as the new God of Murder. At the Throne she
  * draws on the pools of rendered essence and ascends as she is worn down.
  *
  * Apex boss-framework kit (the biggest statblock in the game — CR 18, ~440 HP):
@@ -23,7 +23,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const MELISSAN: Monster = MonsterSchema.parse({
   id: 'melissan',
-  name: 'Melissan',
+  name: 'Maevra',
   cr: '18',
   size: 'medium',
   creatureType: 'fiend (ascending demigod)',
@@ -40,7 +40,7 @@ export const MELISSAN: Monster = MonsterSchema.parse({
       atHpPctBelow: 50,
       name: 'Ascendant',
       enterText:
-        'You wear away the last of the mortal half of her, and what is underneath stops pretending to wear a body at all. The pools at her feet stand up into her; the kind face is gone past even contempt now; and Amelyssan the Blackhearted takes her third stride into godhood mid-fight — faster than a thing with limbs should be, and no longer bothering to stay inside the shape that has limbs.',
+        'You wear away the last of the mortal half of her, and what is underneath stops pretending to wear a body at all. The pools at her feet stand up into her; the kind face is gone past even contempt now; and Maevra the Blackhearted takes her third stride into godhood mid-fight — faster than a thing with limbs should be, and no longer bothering to stay inside the shape that has limbs.',
       actionsPerTurn: 3,
       transform: true,
     },
@@ -90,5 +90,5 @@ export const MELISSAN: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "She was the kindest face of the whole long nightmare. Through every chapter of the crisis there was a woman called Melissan at the edge of the worst of it — counselling, sheltering, gathering the orphaned Children of Bhaal under her wing and weeping with them over what the inheritance had done — and you trusted her, because she was the one person in all of it who seemed to want nothing from you but your safety. That was the masterwork. Amelyssan the Blackhearted was Bhaal's highest priestess before he died, and she did not mourn her god so much as inventory him: a divinity rendered down into a hundred-odd mortal vessels and scattered across the world to be reaped at leisure. The whole crisis was her harvest. Every death you died was a measure taken. And now, at the foot of the empty Throne, with the last of the essence steaming in pools around her and the kind mask finally set aside, she turns to you with no anger at all — only the serene, terrible patience of a priestess at the final rite. \"You were always the largest of the offerings,\" she says, and the Throne behind her begins, faintly, to fill. \"Thank you for carrying yourself all this way to the altar. Be still now. There is a god to make of all of you, and I have waited so very long to be Him.\"",
+    "She was the kindest face of the whole long nightmare. Through every chapter of the crisis there was a woman called Maevra at the edge of the worst of it — counselling, sheltering, gathering the orphaned Children of the Slain God under her wing and weeping with them over what the inheritance had done — and you trusted her, because she was the one person in all of it who seemed to want nothing from you but your safety. That was the masterwork. Maevra the Blackhearted was the Slain God's highest priestess before he died, and she did not mourn her god so much as inventory him: a divinity rendered down into a hundred-odd mortal vessels and scattered across the world to be reaped at leisure. The whole crisis was her harvest. Every death you died was a measure taken. And now, at the foot of the empty Throne, with the last of the essence steaming in pools around her and the kind mask finally set aside, she turns to you with no anger at all — only the serene, terrible patience of a priestess at the final rite. \"You were always the largest of the offerings,\" she says, and the Throne behind her begins, faintly, to fill. \"Thank you for carrying yourself all this way to the altar. Be still now. There is a god to make of all of you, and I have waited so very long to be Him.\"",
 });

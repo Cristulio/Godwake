@@ -1,7 +1,7 @@
 {
   "noCharacter": "No character. Return to title.",
   "title": "Title",
-  "location": "Sword Coast · Chapter I · The Mage's Cells",
+  "location": "Long Coast · Chapter I · The Mage's Cells",
   "soulsWalked": "Souls walked this road: {n}",
   "backTitle": "← Title",
   "levelInline": "Level {n}",
@@ -31,7 +31,7 @@
   "glossaryScreen": {
     "title": "The Glossary",
     "subtitle": "Stats and mechanics, plainly told",
-    "back": "← Phandalin"
+    "back": "← Wakeford"
   },
   "firstLife": {
     "ironCells": "The Iron Cells",
@@ -42,7 +42,7 @@
   "grove": {
     "title": "THE DRUID GROVE",
     "subtitle": "Wellspring of Mielikki · Tend the soul, mend the wheel",
-    "backPhandalin": "← Phandalin",
+    "backPhandalin": "← Wakeford",
     "intro": "The grove keepers gather around the pool. The water remembers every death you have taken, every name you have worn. Spend the Renown your courage has earned, and the Lady will mark your soul accordingly — a small mercy carried forward through every flesh you wear hereafter.",
     "renown": "Renown",
     "ranksBlessed": "{owned} / {total} ranks blessed",
@@ -85,7 +85,7 @@
   "relicsScreen": {
     "title": "RELICS OF THE SOUL",
     "subtitle": "Bound gifts · What death cannot take",
-    "backPhandalin": "← Phandalin",
+    "backPhandalin": "← Wakeford",
     "intro": "Some things the wheel cannot strip from you. These relics, won from the elites of the deep dark, return with the soul through every death — yet the soul can hold but one gift of each kind. Each keeps to its own nature; bind what you will to the places that have opened, and lay Renown at the Grove to wake those that still sleep. They lend no armour and swing no blade, only their gifts, layered over whatever gear the road provides.",
     "slotsAwake": "Slots awake",
     "relicsFound": "Relics found",

@@ -2,7 +2,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
  * Slayer-Shade — Chapter 11 fodder, and the thing the Pride trial calls to its
- * side. An echo of the Bhaalspawn taint that the pit drags up out of you: the
+ * side. An echo of the Slainkin taint that the pit drags up out of you: the
  * Slayer-form you carry as your father's son, peeled off and given a half-life of
  * its own, all murder and no self. A `lifeDrain` striker — every wound it opens it
  * pours back into itself (heals half the necrotic it deals), because it is made of
