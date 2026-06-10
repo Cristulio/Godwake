@@ -31,7 +31,26 @@
     "label": "Rest · Short",
     "knits": "The wound knits deep, but not whole — true healing waits for the fire at the chapter's edge.",
     "restButton": "Rest (heal 70%, refresh resources)",
-    "steadied": "You feel steadied."
+    "steadied": "You feel steadied.",
+    "forkIntro": "◆ The whetstone or the quiet hour — take one ◆",
+    "option": {
+      "rest": {
+        "title": "The Quiet Hour",
+        "flavor": "Sink down by the guttering light. Breath slows, the worst of the hurt closes, and what you spent comes back to your hand."
+      },
+      "hone": {
+        "title": "The Whetstone",
+        "flavor": "Spend the hour on steel, not sleep. Set edge to stone and one piece of your war-gear bites deeper — and stays sharp for the rest of the road."
+      }
+    },
+    "honeButton": "Set to the stone",
+    "honePrompt": "What will you sharpen?",
+    "honeUpgrade": "+{from} → +{to}",
+    "honeAtCap": "Honed to its limit",
+    "honeNone": "You carry nothing the stone can bite — no blade, no plate to sharpen.",
+    "honeAllCapped": "Every edge and plate you carry is already as keen as the stone can make it.",
+    "honeTaken": "Edge set to stone — your gear bites +1 deeper for the rest of the road.",
+    "honeCancel": "Leave the stone"
   },
   "shrine": {
     "label": "Shrine · A god is listening",

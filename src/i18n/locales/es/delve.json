@@ -31,7 +31,26 @@
     "label": "Descanso · Breve",
     "knits": "La herida cierra hondo, pero no del todo — la cura verdadera aguarda en el fuego al borde del capítulo.",
     "restButton": "Descansar (cura 70%, recupera recursos)",
-    "steadied": "Te sientes repuesto."
+    "steadied": "Te sientes repuesto.",
+    "forkIntro": "◆ La piedra de afilar o la hora en calma — elige una ◆",
+    "option": {
+      "rest": {
+        "title": "La Hora en Calma",
+        "flavor": "Húndete junto a la luz vacilante. La respiración se calma, lo peor de la herida cierra, y lo que gastaste vuelve a tu mano."
+      },
+      "hone": {
+        "title": "La Piedra de Afilar",
+        "flavor": "Gasta la hora en el acero, no en el sueño. Pon filo a la piedra y una pieza de tu equipo muerde más hondo — y sigue afilada el resto del camino."
+      }
+    },
+    "honeButton": "Pasar por la piedra",
+    "honePrompt": "¿Qué vas a afilar?",
+    "honeUpgrade": "+{from} → +{to}",
+    "honeAtCap": "Afilado a su límite",
+    "honeNone": "No llevas nada que la piedra pueda morder — ni hoja ni placa que afilar.",
+    "honeAllCapped": "Cada filo y placa que llevas está ya tan afilado como la piedra puede dejarlo.",
+    "honeTaken": "Filo pasado por la piedra — tu equipo muerde +1 más hondo el resto del camino.",
+    "honeCancel": "Dejar la piedra"
   },
   "shrine": {
     "label": "Santuario · Un dios escucha",
