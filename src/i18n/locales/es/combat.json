@@ -331,6 +331,8 @@
     "encounter": "Encuentro",
     "round": "Ronda {n}",
     "slowDown": "Ralentizar",
+    "speedLocked": "Sellado — la Arboleda vende este ritmo (La Rueda, Acelerada · La Rueda, Desatada).",
+    "speedSet": "Jugar a {n}×",
     "speedUp": "Acelerar",
     "autoOn": "Desactivar Auto-Combate",
     "autoOff": "Auto-Combate: deja que el motor táctico juegue tus turnos",

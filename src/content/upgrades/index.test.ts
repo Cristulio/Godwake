@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   findUpgrade,
+  maxUnlockedSpeed,
   getUpgrade,
   groveUpgradeCost,
   listUpgrades,
@@ -80,5 +81,28 @@ describe('cheap Grove on-ramps — early traction that opens the game', () => {
 
   it('wider-pantheon repriced as a cheap early on-ramp (rank 1 = 40, was 150)', () => {
     expect(getUpgrade('wider-pantheon').costForRank(1)).toBe(40);
+  });
+});
+
+describe('game-speed Grove gates (wheel-quickened / wheel-unbound)', () => {
+  it('both upgrades exist as cheap/expensive rank-1 soul nodes, ×2 well under ×4', () => {
+    const x2 = findUpgrade('wheel-quickened');
+    const x4 = findUpgrade('wheel-unbound');
+    expect(x2).toBeDefined();
+    expect(x4).toBeDefined();
+    expect(x2!.maxRank).toBe(1);
+    expect(x4!.maxRank).toBe(1);
+    expect(x2!.costForRank(1)).toBeLessThan(x4!.costForRank(1));
+    expect(x2!.costForRank(1)).toBeLessThanOrEqual(25);
+  });
+
+  it('maxUnlockedSpeed ladders 1 → 2 → 4 with ownership', () => {
+    expect(maxUnlockedSpeed({})).toBe(1);
+    expect(maxUnlockedSpeed({ 'wheel-quickened': 1 })).toBe(2);
+    expect(maxUnlockedSpeed({ 'wheel-quickened': 1, 'wheel-unbound': 1 })).toBe(4);
+    // ×4 owned alone still opens the top tier — each gate is its own purchase.
+    expect(maxUnlockedSpeed({ 'wheel-unbound': 1 })).toBe(4);
+    // unrelated upgrades don't open anything
+    expect(maxUnlockedSpeed({ wheelturner: 1 })).toBe(1);
   });
 });

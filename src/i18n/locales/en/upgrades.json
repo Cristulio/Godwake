@@ -41,6 +41,8 @@
   },
   "soul-marrow": { "effect": "Each bane-quirk you carry earns an extra +{n}% renown on top of the soul-mark." },
   "wheelturner": { "effect": "On reincarnation, your first boon-quirk is carried into the new life (banes are left behind; the remaining slot rerolls)." },
+  "wheel-quickened": { "effect": "Unlocks the \u00d72 game speed \u2014 combat, dice, and travel hurry when you ask." },
+  "wheel-unbound": { "effect": "Unlocks the \u00d74 game speed \u2014 the road at a full sprint." },
   "wellspring-vigil": {
     "effect": {
       "one": "+{n} extra Second Wind charge per delve.",

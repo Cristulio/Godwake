@@ -3,6 +3,8 @@ import type { Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { useGameStore } from '../../stores/gameStore';
 import { useSettingsStore } from '../../stores/settingsStore';
+import { useGameSpeed } from '../../hooks/useGameSpeed';
+import { maxUnlockedSpeed } from '../../content/upgrades';
 import { getActiveRoller } from '../../engine/dice';
 import {
   endTurn,
@@ -86,8 +88,12 @@ export function CombatScreen({
   const { t } = useT();
   const setCombat = useGameStore((s) => s.setCombat);
   const setCharacter = useGameStore((s) => s.setCharacter);
-  const speed = useSettingsStore((s) => s.speedMultiplier);
+  const speed = useGameSpeed();
   const setSpeed = useSettingsStore((s) => s.setSpeed);
+  // Grove speed gates: ×2/×4 are renown unlocks. The control shows all three
+  // tiers; locked ones render greyed (useGameSpeed clamps any stale setting).
+  const unlockedUpgrades = useGameStore((s) => s.unlockedUpgrades);
+  const speedCeiling = maxUnlockedSpeed(unlockedUpgrades ?? {});
   const autoEndTurnDelayMs = useSettingsStore((s) => s.autoEndTurnDelayMs);
   const autoBattle = useSettingsStore((s) => s.autoBattle);
   const setAutoBattle = useSettingsStore((s) => s.setAutoBattle);
@@ -725,18 +731,31 @@ export function CombatScreen({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setSpeed(speed === 1 ? 2 : speed === 2 ? 4 : 1)}
-            className={`btn-chunky px-3 py-1.5 border-2 text-[10px] uppercase tracking-widest font-bold transition-colors
-              ${speed > 1
-                ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
-                : 'bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)]'}
-            `}
-            title={speed === 4 ? t('combat.screen.slowDown') : t('combat.screen.speedUp')}
-          >
-            {speed === 4 ? '▶▶▶ 4×' : speed === 2 ? '▶▶ 2×' : '▶ 1×'}
-          </button>
+          <div className="flex">
+            {([1, 2, 4] as const).map((mult, i) => {
+              const locked = mult > speedCeiling;
+              const active = speed === mult;
+              return (
+                <button
+                  key={mult}
+                  type="button"
+                  disabled={locked}
+                  onClick={() => setSpeed(mult)}
+                  className={`btn-chunky px-2 py-1.5 border-2 text-[10px] uppercase tracking-widest font-bold transition-colors
+                    ${i > 0 ? '-ml-0.5' : ''}
+                    ${locked
+                      ? 'bg-[var(--color-bg-deep)] border-[var(--color-border-dim)] text-[var(--color-text-muted)] opacity-50 cursor-default'
+                      : active
+                        ? 'bg-[var(--color-accent-amber)] text-[var(--color-bg-base)] border-[var(--color-accent-gold)]'
+                        : 'bg-[var(--color-bg-panel)] border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-panel-hover)] hover:border-[var(--color-accent-amber)]'}
+                  `}
+                  title={locked ? t('combat.screen.speedLocked') : t('combat.screen.speedSet', { n: mult })}
+                >
+                  {mult === 4 ? '▶▶▶ 4×' : mult === 2 ? '▶▶ 2×' : '▶ 1×'}
+                </button>
+              );
+            })}
+          </div>
           <button
             type="button"
             onClick={() => setAutoBattle(!autoBattle)}

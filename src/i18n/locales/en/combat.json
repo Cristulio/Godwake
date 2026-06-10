@@ -331,6 +331,8 @@
     "encounter": "Encounter",
     "round": "Round {n}",
     "slowDown": "Slow down",
+    "speedLocked": "Sealed \u2014 the Grove sells this pace (The Wheel, Quickened \u00b7 The Wheel, Unbound).",
+    "speedSet": "Play at {n}\u00d7",
     "speedUp": "Speed up",
     "autoOn": "Turn off Auto-Battle",
     "autoOff": "Auto-Battle: let the tactics engine play your turns",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSettingsStore } from '../../stores/settingsStore';
+import { useGameSpeed } from '../../hooks/useGameSpeed';
 import { playSfx } from '../../engine/audio';
 import { useT } from '../../i18n/useT';
 import { D20Die } from '../ui/D20Die';
@@ -21,7 +21,7 @@ interface CampDiceRollProps {
  */
 export function CampDiceRoll({ roll, win, onDone }: CampDiceRollProps) {
   const { t } = useT();
-  const speed = useSettingsStore((s) => s.speedMultiplier);
+  const speed = useGameSpeed();
   const [spinning, setSpinning] = useState(true);
   const [shown, setShown] = useState(roll);
   const [revealedVerdict, setRevealedVerdict] = useState(false);
