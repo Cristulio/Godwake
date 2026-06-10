@@ -1,104 +1,195 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 46"
+      viewBox="0 0 56 80"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Jon Velnaris"
     >
-      <ellipse cx="16" cy="43" rx="12" ry="2" fill="#0a0408" opacity="0.55" />
+      <!-- Stolen-divinity aura — layered bloom + ground shadow -->
+      <ellipse cx="28" cy="38" rx="27" ry="36" fill="#5a1010" opacity="0.18" />
+      <ellipse cx="28" cy="34" rx="20" ry="28" fill="#c0301a" opacity="0.12" />
+      <ellipse cx="28" cy="38" rx="11" ry="16" fill="#e8a020" opacity="0.08" />
+      <ellipse cx="28" cy="77.4" rx="18" ry="2.4" fill="#0a0408" opacity="0.55" />
 
-      <!-- Stolen-soul aura — layered bloom -->
-      <ellipse cx="16" cy="22" rx="15" ry="21" fill="#5a1010" opacity="0.18" />
-      <ellipse cx="16" cy="20" rx="11" ry="16" fill="#c0301a" opacity="0.12" />
-      <ellipse cx="16" cy="22" rx="6" ry="9" fill="#e8a020" opacity="0.08" />
+      <!-- ══ Staff — dark wood, burning orb ══ -->
+      <rect x="42" y="8" width="4" height="52" fill="#150d08" />
+      <rect x="43" y="9" width="2" height="50" fill="#3a2648" />
+      <rect x="43" y="9" width="1" height="50" fill="#4c3460" />
+      <!-- gold ferrules -->
+      <rect x="42" y="14" width="4" height="2" fill="#c89a48" />
+      <rect x="42" y="14" width="2" height="1" fill="#ecc46a" />
+      <rect x="42" y="52" width="4" height="2" fill="#8a6420" />
+      <!-- the orb of stolen fire -->
+      <ellipse cx="44" cy="5" rx="8" ry="8" fill="#5a1010" opacity="0.6" />
+      <rect x="40" y="1" width="8" height="8" fill="#150d08" />
+      <rect x="41" y="2" width="6" height="6" fill="#a02810" />
+      <rect x="42" y="3" width="4" height="4" fill="#e8401a" />
+      <rect x="42" y="3" width="3" height="3" fill="#ffb040" />
+      <rect x="43" y="4" width="2" height="2" fill="#fff4d0" />
+      <rect x="43" y="4" width="1" height="1" fill="#ffffff" />
+      <!-- flame licks off the orb -->
+      <rect x="40" y="0" width="1" height="2" fill="#e8401a" opacity="0.8" />
+      <rect x="47" y="0" width="1" height="3" fill="#ffb040" opacity="0.7" />
+      <rect x="44" y="0" width="1" height="1" fill="#ffd070" />
 
-      <!-- Robe wings — dark, with a cold rim catching the aura -->
-      <polygon points="8,40 7,14 13,9 13,40" fill="#160a14" opacity="0.92" />
-      <polygon points="24,40 25,14 19,9 19,40" fill="#160a14" opacity="0.92" />
-      <polygon points="7,14 13,9 13,12 8,17" fill="#2c1a34" opacity="0.7" />
-      <polygon points="25,14 19,9 19,12 24,17" fill="#1e1024" opacity="0.7" />
+      <!-- ══ Robe wings behind ══ -->
+      <rect x="10" y="22" width="7" height="38" fill="#160a14" />
+      <rect x="11" y="24" width="5" height="34" fill="#1c1020" />
+      <rect x="11" y="24" width="2" height="30" fill="#2c1a34" />
+      <rect x="39" y="22" width="7" height="38" fill="#120810" />
+      <rect x="40" y="24" width="5" height="34" fill="#160a14" />
 
-      <!-- Gaunt elven head — pale ramp -->
-      <rect x="11" y="3" width="10" height="11" fill="#cfc2b0" />
-      <rect x="11" y="3" width="10" height="1" fill="#e2d8c8" />
-      <rect x="11" y="3" width="3" height="10" fill="#dccfbd" />
-      <rect x="11" y="3" width="1" height="8" fill="#ece2d2" />
-      <rect x="19" y="4" width="2" height="9" fill="#a89c88" />
-      <rect x="11" y="13" width="10" height="1" fill="#8e8270" />
-      <!-- Widow's-peak black hair -->
-      <polygon points="11,3 16,-1 21,3" fill="#0e0810" />
-      <polygon points="13,2 16,0 19,2" fill="#241a2c" opacity="0.6" />
-      <polygon points="9,5 11,4 11,12 9,14" fill="#0e0810" opacity="0.85" />
-      <polygon points="23,5 21,4 21,12 23,14" fill="#0e0810" opacity="0.85" />
-      <!-- Cold ritual eyes -->
-      <rect x="12" y="6" width="3" height="2" fill="#7ac0e0" />
-      <rect x="17" y="6" width="3" height="2" fill="#7ac0e0" />
-      <rect x="12" y="6" width="1" height="2" fill="#d0f0ff" />
-      <rect x="17" y="6" width="1" height="2" fill="#d0f0ff" />
-      <rect x="13" y="6" width="1" height="1" fill="#10202a" />
-      <rect x="18" y="6" width="1" height="1" fill="#10202a" />
-      <!-- Brow shadow + hollow cheeks -->
-      <rect x="12" y="5" width="8" height="1" fill="#a89c88" opacity="0.6" />
-      <rect x="12" y="9" width="1" height="3" fill="#a89c88" opacity="0.5" />
-      <rect x="19" y="9" width="1" height="3" fill="#8e8270" opacity="0.6" />
-      <rect x="15" y="9" width="2" height="3" fill="#a89c88" />
-      <rect x="13" y="11" width="6" height="1" fill="#7a2424" opacity="0.55" />
+      <!-- ══ Gaunt elven head ══ -->
+      <!-- widow's-peak hair -->
+      <rect x="19" y="1" width="18" height="4" fill="#150d08" />
+      <rect x="20" y="2" width="16" height="3" fill="#0e0810" />
+      <rect x="27" y="4" width="3" height="2" fill="#0e0810" />
+      <rect x="22" y="3" width="4" height="1" fill="#241a2c" />
+      <!-- hair falls at the temples -->
+      <rect x="17" y="4" width="4" height="16" fill="#150d08" />
+      <rect x="18" y="5" width="2" height="14" fill="#0e0810" />
+      <rect x="18" y="5" width="1" height="10" fill="#241a2c" />
+      <rect x="35" y="4" width="4" height="16" fill="#150d08" />
+      <rect x="36" y="5" width="2" height="14" fill="#0e0810" />
+      <!-- pointed ears through the hair -->
+      <rect x="15" y="9" width="3" height="4" fill="#150d08" />
+      <rect x="16" y="10" width="2" height="2" fill="#cfc2b0" />
+      <rect x="38" y="9" width="3" height="4" fill="#150d08" />
+      <rect x="39" y="10" width="1" height="2" fill="#a89c88" />
+      <!-- gaunt face -->
+      <rect x="19" y="4" width="18" height="18" fill="#150d08" />
+      <rect x="20" y="5" width="16" height="16" fill="#cfc2b0" />
+      <rect x="20" y="5" width="6" height="16" fill="#dccfbd" />
+      <rect x="20" y="5" width="3" height="12" fill="#ece2d2" />
+      <rect x="32" y="5" width="4" height="16" fill="#a89c88" />
+      <rect x="34" y="5" width="2" height="16" fill="#8e8270" />
+      <rect x="20" y="5" width="16" height="2" fill="#0e0810" />
+      <rect x="21" y="7" width="14" height="1" fill="#a89c88" />
+      <!-- cold ritual eyes -->
+      <rect x="21" y="10" width="5" height="3" fill="#10202a" />
+      <rect x="30" y="10" width="5" height="3" fill="#10202a" />
+      <rect x="22" y="11" width="3" height="2" fill="#7ac0e0" />
+      <rect x="31" y="11" width="3" height="2" fill="#5a9cc0" />
+      <rect x="22" y="11" width="1" height="1" fill="#d0f0ff" />
+      <rect x="31" y="11" width="1" height="1" fill="#a8d8f0" />
+      <!-- hollow cheeks -->
+      <rect x="21" y="14" width="2" height="4" fill="#b0a490" />
+      <rect x="33" y="14" width="2" height="4" fill="#7e7260" />
+      <!-- sharp nose -->
+      <rect x="27" y="12" width="2" height="4" fill="#b0a490" />
+      <rect x="27" y="12" width="1" height="4" fill="#cfc2b0" />
+      <rect x="27" y="15" width="2" height="1" fill="#8e8270" />
+      <!-- thin contemptuous mouth -->
+      <rect x="24" y="18" width="8" height="1" fill="#7a2424" />
+      <rect x="24" y="18" width="3" height="1" fill="#8e3030" />
+      <!-- ritual scar on the left cheek -->
+      <rect x="23" y="13" width="1" height="3" fill="#9a8a74" />
 
-      <!-- Robe torso — dark violet ramp -->
-      <rect x="8" y="14" width="16" height="22" fill="#1c1020" />
-      <rect x="8" y="14" width="16" height="2" fill="#2c1a34" />
-      <rect x="8" y="14" width="16" height="1" fill="#3c2648" />
-      <rect x="8" y="16" width="2" height="18" fill="#241430" />
-      <rect x="14" y="16" width="4" height="20" fill="#100818" />
-      <!-- Robe dither texture -->
-      <rect x="11" y="22" width="1" height="1" fill="#2c1a34" />
-      <rect x="20" y="26" width="1" height="1" fill="#100818" />
-      <rect x="10" y="30" width="1" height="1" fill="#2c1a34" />
+      <!-- ══ High collar ══ -->
+      <rect x="16" y="22" width="24" height="5" fill="#150d08" />
+      <rect x="17" y="23" width="22" height="4" fill="#2c1a34" />
+      <rect x="17" y="23" width="7" height="4" fill="#3c2648" />
+      <rect x="17" y="23" width="22" height="1" fill="#4c3460" />
+      <!-- gold collar points -->
+      <rect x="18" y="23" width="1" height="2" fill="#c89a48" />
+      <rect x="27" y="23" width="2" height="2" fill="#ecc46a" />
+      <rect x="37" y="23" width="1" height="2" fill="#8a6420" />
 
-      <!-- Chest rune — the wound where his soul should be -->
-      <circle cx="16" cy="22" r="4.5" fill="#5a1010" opacity="0.85" />
-      <circle cx="16" cy="22" r="3" fill="#e8a020" opacity="0.9" />
-      <circle cx="16" cy="22" r="1.8" fill="#fff4d0" />
-      <rect x="16" y="22" width="1" height="1" fill="#ffffff" />
-      <rect x="15" y="25" width="2" height="11" fill="#e8a020" opacity="0.45" />
-      <rect x="11" y="22" width="1" height="1" fill="#fff4d0" opacity="0.65" />
-      <rect x="20" y="22" width="1" height="1" fill="#fff4d0" opacity="0.65" />
-      <rect x="16" y="17" width="1" height="1" fill="#e8a020" opacity="0.5" />
-      <rect x="16" y="27" width="1" height="1" fill="#e8a020" opacity="0.5" />
+      <!-- ══ Robe — dark violet, the soul-wound ══ -->
+      <rect x="13" y="27" width="30" height="30" fill="#150d08" />
+      <rect x="14" y="28" width="28" height="29" fill="#1c1020" />
+      <rect x="14" y="28" width="9" height="29" fill="#241430" />
+      <rect x="14" y="28" width="4" height="25" fill="#2c1a34" />
+      <rect x="14" y="28" width="1" height="18" fill="#3c2648" />
+      <rect x="36" y="28" width="6" height="29" fill="#160a18" />
+      <rect x="40" y="28" width="2" height="29" fill="#100818" />
+      <!-- dark center panel -->
+      <rect x="25" y="28" width="6" height="29" fill="#100818" />
+      <!-- gold sigil embroidery -->
+      <rect x="17" y="32" width="1" height="1" fill="#c89a48" opacity="0.7" />
+      <rect x="20" y="36" width="1" height="1" fill="#8a6420" opacity="0.8" />
+      <rect x="17" y="42" width="1" height="1" fill="#c89a48" opacity="0.6" />
+      <rect x="38" y="34" width="1" height="1" fill="#8a6420" opacity="0.7" />
+      <rect x="38" y="44" width="1" height="1" fill="#c89a48" opacity="0.5" />
+      <!-- THE SOUL-WOUND — stolen divinity burning through -->
+      <ellipse cx="28" cy="36" rx="8" ry="8" fill="#5a1010" opacity="0.85" />
+      <rect x="23" y="31" width="10" height="10" fill="#5a1010" />
+      <rect x="24" y="32" width="8" height="8" fill="#a02810" />
+      <rect x="25" y="33" width="6" height="6" fill="#e8401a" />
+      <rect x="26" y="34" width="4" height="4" fill="#e8a020" />
+      <rect x="26" y="34" width="3" height="3" fill="#ffd070" />
+      <rect x="27" y="35" width="2" height="2" fill="#fff4d0" />
+      <rect x="27" y="35" width="1" height="1" fill="#ffffff" />
+      <!-- wound rays -->
+      <rect x="28" y="28" width="1" height="3" fill="#e8a020" opacity="0.7" />
+      <rect x="28" y="41" width="1" height="3" fill="#e8a020" opacity="0.6" />
+      <rect x="20" y="36" width="3" height="1" fill="#e8a020" opacity="0.65" />
+      <rect x="33" y="36" width="3" height="1" fill="#e8a020" opacity="0.6" />
+      <rect x="22" y="30" width="1" height="1" fill="#ffd070" opacity="0.7" />
+      <rect x="33" y="30" width="1" height="1" fill="#ffd070" opacity="0.6" />
+      <rect x="22" y="42" width="1" height="1" fill="#e8401a" opacity="0.6" />
+      <rect x="33" y="42" width="1" height="1" fill="#e8401a" opacity="0.55" />
+      <!-- light leaking down the robe seam -->
+      <rect x="27" y="41" width="2" height="14" fill="#e8a020" opacity="0.4" />
+      <rect x="27" y="41" width="1" height="10" fill="#ffd070" opacity="0.45" />
 
-      <!-- Left arm + open conjuring hand -->
-      <rect x="3" y="16" width="6" height="3" fill="#1c1020" />
-      <rect x="3" y="16" width="6" height="1" fill="#2c1a34" />
-      <rect x="2" y="18" width="4" height="12" fill="#241430" />
-      <rect x="2" y="18" width="1" height="12" fill="#100818" />
-      <ellipse cx="4" cy="29" rx="4" ry="3" fill="#7ac0e0" opacity="0.16" />
-      <rect x="2" y="28" width="5" height="3" fill="#cfc2b0" />
-      <rect x="2" y="28" width="5" height="1" fill="#e2d8c8" />
-      <rect x="3" y="29" width="1" height="1" fill="#7ac0e0" />
+      <!-- ══ Left arm — conjuring cold fire ══ -->
+      <rect x="9" y="27" width="8" height="8" fill="#150d08" />
+      <rect x="10" y="28" width="6" height="6" fill="#241430" />
+      <rect x="10" y="28" width="2" height="6" fill="#2c1a34" />
+      <rect x="7" y="33" width="8" height="10" fill="#150d08" />
+      <rect x="8" y="34" width="6" height="8" fill="#1c1020" />
+      <rect x="8" y="34" width="2" height="8" fill="#241430" />
+      <!-- wide sleeve cuff -->
+      <rect x="6" y="41" width="9" height="4" fill="#150d08" />
+      <rect x="7" y="42" width="7" height="2" fill="#2c1a34" />
+      <rect x="7" y="42" width="3" height="1" fill="#3c2648" />
+      <!-- pale conjuring hand, palm up -->
+      <ellipse cx="10" cy="49" rx="7" ry="5" fill="#7ac0e0" opacity="0.18" />
+      <rect x="6" y="45" width="9" height="5" fill="#150d08" />
+      <rect x="7" y="46" width="7" height="3" fill="#cfc2b0" />
+      <rect x="7" y="46" width="3" height="3" fill="#dccfbd" />
+      <rect x="7" y="46" width="7" height="1" fill="#ece2d2" />
+      <!-- cold flame hovering -->
+      <rect x="9" y="42" width="3" height="3" fill="#7ac0e0" />
+      <rect x="9" y="42" width="2" height="2" fill="#d0f0ff" />
+      <rect x="10" y="40" width="1" height="2" fill="#7ac0e0" opacity="0.8" />
+      <rect x="8" y="43" width="1" height="1" fill="#5a9cc0" opacity="0.8" />
 
-      <!-- Right arm + staff -->
-      <rect x="23" y="15" width="6" height="3" fill="#1c1020" />
-      <rect x="23" y="15" width="6" height="1" fill="#2c1a34" />
-      <rect x="27" y="2" width="2" height="15" fill="#3a2648" />
-      <rect x="27" y="2" width="1" height="15" fill="#4c3460" />
-      <!-- Staff orb — burning red, layered -->
-      <ellipse cx="28" cy="2" rx="4.5" ry="5" fill="#5a1010" opacity="0.75" />
-      <circle cx="28" cy="2" r="2.6" fill="#e8401a" />
-      <circle cx="28" cy="2" r="1.4" fill="#ffb040" />
-      <rect x="28" y="2" width="1" height="1" fill="#fff4d0" />
-      <rect x="27" y="-1" width="2" height="2" fill="#ffb040" opacity="0.7" />
+      <!-- ══ Right arm — to the staff ══ -->
+      <rect x="37" y="27" width="8" height="8" fill="#150d08" />
+      <rect x="38" y="28" width="6" height="6" fill="#160a18" />
+      <rect x="38" y="28" width="2" height="6" fill="#1c1020" />
+      <!-- hand on the staff -->
+      <rect x="40" y="33" width="7" height="6" fill="#150d08" />
+      <rect x="41" y="34" width="5" height="4" fill="#a89c88" />
+      <rect x="41" y="34" width="2" height="4" fill="#cfc2b0" />
+      <rect x="42" y="36" width="1" height="1" fill="#8e8270" />
+      <rect x="44" y="36" width="1" height="1" fill="#8e8270" />
 
-      <!-- Robe hem legs -->
-      <rect x="10" y="36" width="6" height="6" fill="#160a14" />
-      <rect x="18" y="36" width="6" height="6" fill="#160a14" />
-      <rect x="10" y="36" width="1" height="6" fill="#2c1a34" />
-      <rect x="18" y="36" width="1" height="6" fill="#241430" />
-      <rect x="9" y="41" width="8" height="2" fill="#0a0408" />
-      <rect x="18" y="41" width="8" height="2" fill="#0a0408" />
-      <rect x="12" y="38" width="1" height="4" fill="#3c2648" opacity="0.5" />
-      <rect x="21" y="38" width="1" height="4" fill="#3c2648" opacity="0.5" />
+      <!-- ══ Robe hem ══ -->
+      <rect x="12" y="57" width="32" height="3" fill="#100818" />
+      <rect x="11" y="60" width="34" height="13" fill="#150d08" />
+      <rect x="12" y="61" width="32" height="11" fill="#1c1020" />
+      <rect x="12" y="61" width="8" height="11" fill="#241430" />
+      <rect x="12" y="61" width="3" height="9" fill="#2c1a34" />
+      <rect x="38" y="61" width="6" height="11" fill="#160a18" />
+      <!-- fold lines -->
+      <rect x="22" y="61" width="1" height="11" fill="#100818" />
+      <rect x="32" y="61" width="2" height="11" fill="#0e0714" />
+      <!-- wound light catching the hem -->
+      <rect x="27" y="61" width="2" height="6" fill="#e8a020" opacity="0.25" />
+      <!-- tattered hem -->
+      <rect x="14" y="70" width="3" height="2" fill="#0e0714" />
+      <rect x="20" y="71" width="3" height="1" fill="#0e0714" />
+      <rect x="27" y="70" width="3" height="2" fill="#0e0714" />
+      <rect x="35" y="71" width="3" height="1" fill="#0e0714" />
+      <rect x="12" y="72" width="32" height="1" fill="#0a0408" />
 
-      <!-- Drifting motes -->
-      <rect x="5" y="33" width="1" height="1" fill="#7ac0e0" opacity="0.55" />
-      <rect x="27" y="20" width="1" height="1" fill="#e8401a" opacity="0.55" />
-      <rect x="10" y="11" width="1" height="1" fill="#e8a020" opacity="0.4" />
+      <!-- ══ Drifting soul-motes ══ -->
+      <rect x="8" y="20" width="1" height="1" fill="#7ac0e0" opacity="0.6" />
+      <rect x="48" y="26" width="1" height="1" fill="#e8401a" opacity="0.6" />
+      <rect x="12" y="56" width="1" height="1" fill="#e8a020" opacity="0.5" />
+      <rect x="47" y="46" width="1" height="1" fill="#ffd070" opacity="0.45" />
+      <rect x="18" y="2" width="1" height="1" fill="#e8a020" opacity="0.4" />
+      <rect x="50" y="62" width="1" height="1" fill="#7ac0e0" opacity="0.4" />
     </svg>

@@ -1,51 +1,152 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 36 46"
+      viewBox="0 0 56 72"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Devourer of Selfishness"
     >
-      <ellipse cx="18" cy="43" rx="15" ry="2" fill="#06040a" opacity="0.5" />
+      <!-- Devouring-void aura + ground shadow -->
+      <ellipse cx="28" cy="38" rx="27" ry="33" fill="#0e0816" opacity="0.5" />
+      <ellipse cx="28" cy="38" rx="22" ry="28" fill="#160e22" opacity="0.6" />
+      <ellipse cx="28" cy="38" rx="14" ry="17" fill="#3a1a2a" opacity="0.18" />
+      <ellipse cx="28" cy="69.4" rx="23" ry="2.4" fill="#06040a" opacity="0.55" />
 
-      <!-- Devouring-void aura — layered -->
-      <ellipse cx="18" cy="24" rx="17" ry="21" fill="#0e0816" opacity="0.5" />
-      <ellipse cx="18" cy="24" rx="14" ry="18" fill="#160e22" opacity="0.6" />
-      <ellipse cx="18" cy="24" rx="9" ry="11" fill="#3a1a2a" opacity="0.18" />
+      <!-- ══ Small cunning head atop the mass ══ -->
+      <rect x="20" y="2" width="16" height="11" fill="#150d08" />
+      <rect x="21" y="3" width="14" height="9" fill="#4a2034" />
+      <rect x="21" y="3" width="5" height="9" fill="#5a2840" />
+      <rect x="21" y="3" width="2" height="6" fill="#6a304c" />
+      <rect x="31" y="3" width="4" height="9" fill="#3a1828" />
+      <!-- curled horns -->
+      <rect x="17" y="0" width="4" height="4" fill="#150d08" />
+      <rect x="18" y="1" width="2" height="2" fill="#b0a486" />
+      <rect x="35" y="0" width="4" height="4" fill="#150d08" />
+      <rect x="36" y="1" width="2" height="2" fill="#988c70" />
+      <!-- greedy little eyes -->
+      <rect x="23" y="6" width="3" height="2" fill="#1a0a06" />
+      <rect x="30" y="6" width="3" height="2" fill="#1a0a06" />
+      <rect x="24" y="6" width="2" height="1" fill="#f4d042" />
+      <rect x="31" y="6" width="1" height="1" fill="#e8b830" />
+      <rect x="24" y="6" width="1" height="1" fill="#fff8d0" />
+      <!-- thin smiling mouth (the small one) -->
+      <rect x="24" y="10" width="8" height="1" fill="#1a0a06" />
+      <rect x="24" y="9" width="2" height="1" fill="#3a1828" />
 
-      <!-- Radiating jagged mass — ramp, lit upper-left points -->
-      <polygon points="4,18 1,8 7,14 6,4 12,12 18,2 24,12 30,4 29,14 35,8 32,18 34,30 28,28 30,40 22,34 18,44 14,34 6,40 8,28 2,30" fill="#160e22" opacity="0.94" />
-      <polygon points="6,4 12,12 18,2 24,12 18,8" fill="#2c1d44" opacity="0.6" />
-      <polygon points="8,18 18,8 28,18 26,32 18,38 10,32" fill="#241634" opacity="0.88" />
-      <polygon points="8,18 18,8 18,14 12,20" fill="#3a2a52" opacity="0.55" />
+      <!-- ══ The gorged body ══ -->
+      <rect x="8" y="12" width="40" height="10" fill="#150d08" />
+      <rect x="4" y="20" width="48" height="30" fill="#150d08" />
+      <rect x="8" y="48" width="40" height="12" fill="#150d08" />
+      <rect x="9" y="13" width="38" height="9" fill="#4a2034" />
+      <rect x="5" y="21" width="46" height="28" fill="#542438" />
+      <rect x="9" y="49" width="38" height="10" fill="#451d30" />
+      <!-- lit upper-left flank -->
+      <rect x="7" y="16" width="16" height="20" fill="#642a44" />
+      <rect x="7" y="16" width="8" height="14" fill="#743450" />
+      <rect x="8" y="16" width="4" height="8" fill="#84405c" />
+      <!-- shadow right flank -->
+      <rect x="42" y="18" width="9" height="30" fill="#3a1828" />
+      <rect x="47" y="22" width="4" height="24" fill="#2e1220" />
+      <!-- stretch-mark seams over the gut -->
+      <rect x="12" y="24" width="6" height="1" fill="#3a1828" />
+      <rect x="38" y="26" width="6" height="1" fill="#2e1220" />
+      <rect x="10" y="44" width="8" height="1" fill="#3a1828" />
+      <rect x="38" y="46" width="7" height="1" fill="#2e1220" />
 
-      <!-- Central maw — bottomless void -->
-      <ellipse cx="18" cy="24" rx="8" ry="9" fill="#060308" />
-      <ellipse cx="18" cy="24" rx="6" ry="7" fill="#020104" />
-      <ellipse cx="15" cy="20" rx="3" ry="3" fill="#160e22" opacity="0.6" />
+      <!-- ══ THE BELLY-MAW — the true mouth ══ -->
+      <rect x="12" y="26" width="32" height="20" fill="#150d08" />
+      <rect x="13" y="27" width="30" height="18" fill="#1a0508" />
+      <rect x="14" y="29" width="28" height="14" fill="#2e0a10" />
+      <rect x="16" y="31" width="24" height="10" fill="#4a1018" />
+      <!-- inner gullet glow -->
+      <rect x="22" y="33" width="12" height="6" fill="#6e1a20" />
+      <rect x="25" y="34" width="6" height="4" fill="#8e2428" />
+      <rect x="27" y="35" width="2" height="2" fill="#b53c4a" />
+      <!-- upper fangs -->
+      <rect x="14" y="27" width="3" height="4" fill="#e8e0cc" />
+      <rect x="14" y="27" width="2" height="3" fill="#f6f0dc" />
+      <rect x="19" y="27" width="3" height="5" fill="#e8e0cc" />
+      <rect x="19" y="27" width="1" height="4" fill="#f6f0dc" />
+      <rect x="25" y="27" width="3" height="4" fill="#d8d0b8" />
+      <rect x="31" y="27" width="3" height="5" fill="#d8d0b8" />
+      <rect x="37" y="27" width="3" height="4" fill="#c8c0a8" />
+      <!-- lower fangs -->
+      <rect x="16" y="41" width="3" height="4" fill="#d8d0b8" />
+      <rect x="22" y="40" width="3" height="5" fill="#e8e0cc" />
+      <rect x="29" y="41" width="3" height="4" fill="#d8d0b8" />
+      <rect x="35" y="40" width="3" height="5" fill="#c8c0a8" />
+      <!-- drool strands -->
+      <rect x="20" y="45" width="1" height="3" fill="#8e6a74" opacity="0.7" />
+      <rect x="33" y="45" width="1" height="2" fill="#8e6a74" opacity="0.6" />
 
-      <!-- Inward fangs + bleeding rim -->
-      <polygon points="12,22 14,26 12,28" fill="#3a1a2a" />
-      <polygon points="24,22 22,26 24,28" fill="#3a1a2a" />
-      <polygon points="14,20 18,18 22,20 21,23 18,21 15,23" fill="#7a2030" opacity="0.6" />
-      <polygon points="15,28 18,31 21,28 20,30 18,32 16,30" fill="#7a2030" opacity="0.6" />
+      <!-- ══ Devoured treasures stuck in the hide ══ -->
+      <rect x="9" y="19" width="3" height="3" fill="#150d08" />
+      <rect x="10" y="20" width="1" height="1" fill="#f4d042" />
+      <rect x="42" y="14" width="3" height="3" fill="#150d08" />
+      <rect x="43" y="15" width="1" height="1" fill="#c0a040" />
+      <rect x="6" y="38" width="3" height="3" fill="#150d08" />
+      <rect x="7" y="39" width="1" height="1" fill="#e8b830" />
+      <!-- a swallowed crown bulging out -->
+      <rect x="44" y="34" width="6" height="4" fill="#150d08" />
+      <rect x="45" y="35" width="4" height="2" fill="#c0a040" />
+      <rect x="45" y="35" width="1" height="1" fill="#f4d042" />
+      <rect x="47" y="34" width="1" height="1" fill="#f4d042" />
+      <!-- a ring on a chain, half-sunk -->
+      <rect x="11" y="52" width="4" height="3" fill="#150d08" />
+      <rect x="12" y="53" width="2" height="1" fill="#e8b830" />
 
-      <!-- Hungering eyes + spark -->
-      <rect x="14" y="22" width="2" height="2" fill="#c43048" opacity="0.85" />
-      <rect x="20" y="22" width="2" height="2" fill="#c43048" opacity="0.85" />
-      <rect x="14" y="22" width="1" height="1" fill="#f06080" />
-      <rect x="20" y="22" width="1" height="1" fill="#f06080" />
-      <rect x="14" y="22" width="1" height="1" fill="#ffb0c0" opacity="0.5" />
-      <rect x="17" y="26" width="2" height="1" fill="#9a2838" opacity="0.6" />
+      <!-- ══ Grasping arms ══ -->
+      <!-- left arm reaching wide -->
+      <rect x="2" y="22" width="6" height="10" fill="#150d08" />
+      <rect x="3" y="23" width="4" height="8" fill="#542438" />
+      <rect x="3" y="23" width="2" height="8" fill="#642a44" />
+      <rect x="0" y="30" width="7" height="9" fill="#150d08" />
+      <rect x="1" y="31" width="5" height="7" fill="#4a2034" />
+      <rect x="1" y="31" width="2" height="7" fill="#542438" />
+      <!-- clawed grabber -->
+      <rect x="0" y="38" width="8" height="7" fill="#150d08" />
+      <rect x="1" y="39" width="6" height="5" fill="#642a44" />
+      <rect x="1" y="39" width="3" height="5" fill="#743450" />
+      <rect x="0" y="43" width="2" height="3" fill="#e8e0cc" />
+      <rect x="3" y="44" width="2" height="2" fill="#d8d0b8" />
+      <rect x="6" y="43" width="2" height="3" fill="#c8c0a8" />
+      <!-- right arm -->
+      <rect x="48" y="22" width="6" height="10" fill="#150d08" />
+      <rect x="49" y="23" width="4" height="8" fill="#3a1828" />
+      <rect x="49" y="23" width="2" height="8" fill="#451d30" />
+      <rect x="49" y="30" width="7" height="9" fill="#150d08" />
+      <rect x="50" y="31" width="5" height="7" fill="#2e1220" />
+      <rect x="50" y="31" width="2" height="7" fill="#3a1828" />
+      <rect x="48" y="38" width="8" height="7" fill="#150d08" />
+      <rect x="49" y="39" width="6" height="5" fill="#451d30" />
+      <rect x="49" y="39" width="2" height="5" fill="#542438" />
+      <rect x="48" y="43" width="2" height="3" fill="#c8c0a8" />
+      <rect x="51" y="44" width="2" height="2" fill="#b0a88c" />
+      <rect x="54" y="43" width="2" height="3" fill="#a0987c" />
 
-      <!-- Limb facets — rim-lit -->
-      <polygon points="3,16 5,22 8,20" fill="#2c1d44" opacity="0.55" />
-      <polygon points="3,16 5,22 5,18" fill="#3a2a52" opacity="0.4" />
-      <polygon points="33,16 31,22 28,20" fill="#241634" opacity="0.5" />
-      <polygon points="10,38 12,42 15,38" fill="#160e22" opacity="0.7" />
-      <polygon points="26,38 24,42 21,38" fill="#160e22" opacity="0.7" />
+      <!-- ══ Stubby crushing legs ══ -->
+      <rect x="12" y="58" width="13" height="8" fill="#150d08" />
+      <rect x="13" y="59" width="11" height="7" fill="#451d30" />
+      <rect x="13" y="59" width="4" height="7" fill="#542438" />
+      <rect x="21" y="59" width="3" height="7" fill="#3a1828" />
+      <rect x="31" y="58" width="13" height="8" fill="#150d08" />
+      <rect x="32" y="59" width="11" height="7" fill="#3a1828" />
+      <rect x="32" y="59" width="3" height="7" fill="#451d30" />
+      <rect x="40" y="59" width="3" height="7" fill="#2e1220" />
+      <!-- taloned feet -->
+      <rect x="10" y="64" width="16" height="5" fill="#150d08" />
+      <rect x="11" y="65" width="14" height="3" fill="#3a1828" />
+      <rect x="10" y="66" width="2" height="3" fill="#d8d0b8" />
+      <rect x="15" y="66" width="2" height="3" fill="#c8c0a8" />
+      <rect x="20" y="66" width="2" height="3" fill="#c8c0a8" />
+      <rect x="30" y="64" width="16" height="5" fill="#150d08" />
+      <rect x="31" y="65" width="14" height="3" fill="#2e1220" />
+      <rect x="31" y="66" width="2" height="3" fill="#b0a88c" />
+      <rect x="36" y="66" width="2" height="3" fill="#a0987c" />
+      <rect x="41" y="66" width="2" height="3" fill="#a0987c" />
 
-      <!-- Drifting void-motes -->
-      <rect x="5" y="14" width="1" height="1" fill="#f06080" opacity="0.4" />
-      <rect x="30" y="28" width="1" height="1" fill="#c43048" opacity="0.4" />
-      <rect x="18" y="40" width="1" height="1" fill="#7a2030" opacity="0.4" />
-      <rect x="9" y="10" width="1" height="1" fill="#3a2a52" opacity="0.5" />
+      <!-- gold motes spiraling INTO the maw -->
+      <rect x="8" y="14" width="1" height="1" fill="#f4d042" opacity="0.7" />
+      <rect x="14" y="20" width="1" height="1" fill="#e8b830" opacity="0.6" />
+      <rect x="46" y="20" width="1" height="1" fill="#c0a040" opacity="0.6" />
+      <rect x="42" y="50" width="1" height="1" fill="#e8b830" opacity="0.5" />
+      <rect x="50" y="10" width="1" height="1" fill="#f4d042" opacity="0.5" />
     </svg>

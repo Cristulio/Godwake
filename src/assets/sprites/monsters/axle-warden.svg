@@ -1,76 +1,141 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 36"
+      viewBox="0 0 52 58"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Axle-Warden"
     >
       <!-- Brass backlight + ground shadow -->
-      <ellipse cx="16" cy="20" rx="15" ry="17" fill="#8a6a2a" opacity="0.08" />
-      <ellipse cx="16" cy="34" rx="10" ry="1.5" fill="#000" opacity="0.4" />
+      <ellipse cx="26" cy="30" rx="25" ry="26" fill="#8a6a2a" opacity="0.09" />
+      <ellipse cx="26" cy="55.5" rx="17" ry="2.2" fill="#000" opacity="0.45" />
 
-      <!-- Gear-halo — twin brass rings + spokes, lit upper-left arc -->
-      <circle cx="16" cy="20" r="13" fill="none" stroke="#5a4624" stroke-width="1.5" opacity="0.55" />
-      <path d="M5 14 A13 13 0 0 1 24 9" fill="none" stroke="#b08840" stroke-width="0.6" opacity="0.6" />
-      <circle cx="16" cy="20" r="9" fill="none" stroke="#6a5424" stroke-width="1" opacity="0.55" />
-      <line x1="16" y1="7" x2="16" y2="33" stroke="#5a4624" stroke-width="0.6" opacity="0.5" />
-      <line x1="3" y1="20" x2="29" y2="20" stroke="#5a4624" stroke-width="0.6" opacity="0.5" />
-      <line x1="7" y1="11" x2="25" y2="29" stroke="#5a4624" stroke-width="0.6" opacity="0.5" />
-      <line x1="25" y1="11" x2="7" y2="29" stroke="#5a4624" stroke-width="0.6" opacity="0.5" />
+      <!-- ══ Gear-halo — brass rings + spokes behind the wheel ══ -->
+      <circle cx="26" cy="28" r="22" fill="none" stroke="#5a4624" stroke-width="1.4" opacity="0.5" />
+      <circle cx="26" cy="28" r="22" fill="none" stroke="#b08840" stroke-width="0.4" opacity="0.35" />
+      <line x1="26" y1="4" x2="26" y2="52" stroke="#5a4624" stroke-width="0.6" opacity="0.4" />
+      <line x1="3" y1="28" x2="49" y2="28" stroke="#5a4624" stroke-width="0.6" opacity="0.4" />
+      <line x1="10" y1="12" x2="42" y2="44" stroke="#5a4624" stroke-width="0.5" opacity="0.32" />
+      <line x1="42" y1="12" x2="10" y2="44" stroke="#5a4624" stroke-width="0.5" opacity="0.32" />
+      <!-- gear teeth riding the halo -->
+      <rect x="25" y="3" width="3" height="3" fill="#8a6a2a" opacity="0.8" />
+      <rect x="2" y="27" width="3" height="3" fill="#6e5424" opacity="0.7" />
+      <rect x="47" y="27" width="3" height="3" fill="#6e5424" opacity="0.7" />
+      <rect x="9" y="11" width="2" height="2" fill="#8a6a2a" opacity="0.6" />
+      <rect x="41" y="11" width="2" height="2" fill="#8a6a2a" opacity="0.6" />
 
-      <!-- Head — brass ramp, key light upper-left -->
-      <rect x="10" y="3" width="12" height="9" fill="#7a5e24" />
-      <rect x="10" y="3" width="12" height="1" fill="#b08840" />
-      <rect x="10" y="3" width="3" height="9" fill="#8a6a2a" />
-      <rect x="10" y="3" width="1" height="6" fill="#b08840" />
-      <rect x="20" y="3" width="2" height="9" fill="#5a4418" />
-      <rect x="21" y="4" width="1" height="7" fill="#3a2c10" />
-      <!-- Single glass eye-lens — bronze bezel + glowing core + specular -->
-      <circle cx="16" cy="8" r="3" fill="#5a4418" />
-      <circle cx="16" cy="8" r="2" fill="#3a2c10" />
-      <rect x="15" y="7" width="2" height="2" fill="#f4942a" />
-      <rect x="16" y="8" width="1" height="1" fill="#ffd870" />
-      <rect x="15" y="5" width="2" height="1" fill="#d4a850" opacity="0.7" />
+      <!-- ══ The great wheel body ══ -->
+      <!-- outer rim — iron, stepped octagon -->
+      <rect x="16" y="8" width="20" height="4" fill="#150d08" />
+      <rect x="10" y="11" width="8" height="5" fill="#150d08" />
+      <rect x="34" y="11" width="8" height="5" fill="#150d08" />
+      <rect x="6" y="15" width="6" height="8" fill="#150d08" />
+      <rect x="40" y="15" width="6" height="8" fill="#150d08" />
+      <rect x="4" y="22" width="5" height="12" fill="#150d08" />
+      <rect x="43" y="22" width="5" height="12" fill="#150d08" />
+      <rect x="6" y="33" width="6" height="8" fill="#150d08" />
+      <rect x="40" y="33" width="6" height="8" fill="#150d08" />
+      <rect x="10" y="40" width="8" height="5" fill="#150d08" />
+      <rect x="34" y="40" width="8" height="5" fill="#150d08" />
+      <rect x="16" y="44" width="20" height="4" fill="#150d08" />
+      <!-- rim metal fill -->
+      <rect x="17" y="9" width="18" height="2" fill="#5e5444" />
+      <rect x="17" y="9" width="8" height="1" fill="#74684e" />
+      <rect x="11" y="12" width="6" height="3" fill="#544a3c" />
+      <rect x="35" y="12" width="6" height="3" fill="#463e32" />
+      <rect x="7" y="16" width="4" height="6" fill="#4e4438" />
+      <rect x="41" y="16" width="4" height="6" fill="#3e362c" />
+      <rect x="5" y="23" width="3" height="10" fill="#463e32" />
+      <rect x="44" y="23" width="3" height="10" fill="#362f26" />
+      <rect x="7" y="34" width="4" height="6" fill="#3e362c" />
+      <rect x="41" y="34" width="4" height="6" fill="#322b22" />
+      <rect x="11" y="41" width="6" height="3" fill="#362f26" />
+      <rect x="35" y="41" width="6" height="3" fill="#2c261e" />
+      <rect x="17" y="45" width="18" height="2" fill="#322b22" />
+      <!-- rim runes — the wheel's writ -->
+      <rect x="20" y="9" width="2" height="1" fill="#e8c060" opacity="0.9" />
+      <rect x="30" y="10" width="2" height="1" fill="#c8a040" opacity="0.8" />
+      <rect x="8" y="18" width="1" height="2" fill="#e8c060" opacity="0.8" />
+      <rect x="44" y="19" width="1" height="2" fill="#a88430" opacity="0.7" />
+      <rect x="6" y="26" width="1" height="2" fill="#c8a040" opacity="0.8" />
+      <rect x="45" y="27" width="1" height="2" fill="#8a6a2a" opacity="0.7" />
+      <rect x="9" y="36" width="1" height="2" fill="#c8a040" opacity="0.7" />
+      <rect x="43" y="36" width="1" height="2" fill="#8a6a2a" opacity="0.6" />
+      <rect x="22" y="45" width="2" height="1" fill="#a88430" opacity="0.7" />
 
-      <!-- Boiler torso — brass ramp + rivet plates -->
-      <rect x="8" y="12" width="16" height="14" fill="#7a5e24" />
-      <rect x="8" y="12" width="16" height="1" fill="#9a7a30" />
-      <rect x="14" y="12" width="4" height="14" fill="#8a6a2a" />
-      <rect x="15" y="12" width="2" height="14" fill="#a07c34" />
-      <rect x="8" y="12" width="2" height="14" fill="#6a5020" />
-      <rect x="8" y="12" width="1" height="14" fill="#5a4418" />
-      <rect x="22" y="13" width="2" height="13" fill="#3a2c10" />
-      <!-- Plate seams + rivets + specular -->
-      <rect x="8" y="18" width="16" height="1" fill="#5a4418" />
-      <rect x="10" y="14" width="1" height="1" fill="#d4a850" />
-      <rect x="20" y="14" width="1" height="1" fill="#9a7a30" />
-      <rect x="11" y="21" width="1" height="1" fill="#9a7a30" />
-      <rect x="19" y="21" width="1" height="1" fill="#7a5e24" />
-      <rect x="15" y="15" width="1" height="1" fill="#f4d870" />
+      <!-- ══ Spokes — turning inside the rim ══ -->
+      <rect x="24" y="12" width="4" height="14" fill="#150d08" />
+      <rect x="25" y="13" width="2" height="12" fill="#4e4438" />
+      <rect x="25" y="13" width="1" height="12" fill="#5e5444" />
+      <rect x="24" y="30" width="4" height="14" fill="#150d08" />
+      <rect x="25" y="31" width="2" height="12" fill="#3e362c" />
+      <rect x="12" y="26" width="12" height="4" fill="#150d08" />
+      <rect x="13" y="27" width="10" height="2" fill="#463e32" />
+      <rect x="13" y="27" width="10" height="1" fill="#544a3c" />
+      <rect x="28" y="26" width="12" height="4" fill="#150d08" />
+      <rect x="29" y="27" width="10" height="2" fill="#3e362c" />
+      <!-- diagonal half-spokes -->
+      <rect x="15" y="16" width="3" height="3" fill="#150d08" />
+      <rect x="18" y="19" width="3" height="3" fill="#150d08" />
+      <rect x="16" y="17" width="1" height="1" fill="#544a3c" />
+      <rect x="34" y="16" width="3" height="3" fill="#150d08" />
+      <rect x="31" y="19" width="3" height="3" fill="#150d08" />
+      <rect x="35" y="17" width="1" height="1" fill="#463e32" />
+      <rect x="15" y="37" width="3" height="3" fill="#150d08" />
+      <rect x="18" y="34" width="3" height="3" fill="#150d08" />
+      <rect x="34" y="37" width="3" height="3" fill="#150d08" />
+      <rect x="31" y="34" width="3" height="3" fill="#150d08" />
 
-      <!-- Left arm + piston fist -->
-      <rect x="4" y="14" width="4" height="3" fill="#7a5e24" />
-      <rect x="4" y="14" width="4" height="1" fill="#9a7a30" />
-      <rect x="2" y="13" width="3" height="2" fill="#8a6a2a" />
-      <rect x="2" y="13" width="3" height="1" fill="#b08840" />
+      <!-- ══ The hub — a single sleepless eye ══ -->
+      <rect x="19" y="21" width="14" height="14" fill="#150d08" />
+      <rect x="20" y="22" width="12" height="12" fill="#5e5444" />
+      <rect x="20" y="22" width="5" height="12" fill="#74684e" />
+      <rect x="20" y="22" width="2" height="8" fill="#887a5a" />
+      <rect x="29" y="22" width="3" height="12" fill="#463e32" />
+      <!-- hub bolts -->
+      <rect x="21" y="23" width="1" height="1" fill="#a89878" />
+      <rect x="30" y="23" width="1" height="1" fill="#6e6248" />
+      <rect x="21" y="32" width="1" height="1" fill="#988a68" />
+      <rect x="30" y="32" width="1" height="1" fill="#5e5444" />
+      <!-- the eye -->
+      <rect x="22" y="24" width="8" height="8" fill="#0e0c08" />
+      <rect x="23" y="25" width="6" height="6" fill="#1a1610" />
+      <rect x="24" y="26" width="4" height="4" fill="#e8c060" />
+      <rect x="25" y="27" width="2" height="2" fill="#0e0c08" />
+      <rect x="24" y="26" width="1" height="1" fill="#fff0b0" />
+      <!-- eye-light bleeding through the hub seams -->
+      <rect x="22" y="28" width="1" height="1" fill="#c8a040" opacity="0.7" />
+      <rect x="29" y="28" width="1" height="1" fill="#a88430" opacity="0.6" />
 
-      <!-- Right arm + raised wrench-key -->
-      <rect x="24" y="14" width="4" height="9" fill="#7a5e24" />
-      <rect x="24" y="14" width="1" height="9" fill="#9a7a30" />
-      <rect x="27" y="14" width="1" height="9" fill="#5a4418" />
-      <rect x="26" y="6" width="3" height="10" fill="#5a4418" />
-      <rect x="26" y="6" width="1" height="10" fill="#7a5e24" />
-      <rect x="25" y="3" width="5" height="4" fill="#9a7a30" />
-      <rect x="25" y="3" width="5" height="1" fill="#d4a850" />
-      <rect x="25" y="3" width="1" height="4" fill="#b08840" />
-      <rect x="27" y="4" width="1" height="1" fill="#f4d870" />
+      <!-- ══ Strut arms — bracing the wheel upright ══ -->
+      <rect x="8" y="40" width="6" height="5" fill="#150d08" />
+      <rect x="9" y="41" width="4" height="3" fill="#463e32" />
+      <rect x="5" y="44" width="7" height="6" fill="#150d08" />
+      <rect x="6" y="45" width="5" height="4" fill="#3e362c" />
+      <rect x="6" y="45" width="2" height="4" fill="#4e4438" />
+      <rect x="38" y="40" width="6" height="5" fill="#150d08" />
+      <rect x="39" y="41" width="4" height="3" fill="#362f26" />
+      <rect x="40" y="44" width="7" height="6" fill="#150d08" />
+      <rect x="41" y="45" width="5" height="4" fill="#2c261e" />
+      <!-- strut feet biting the ground -->
+      <rect x="3" y="49" width="9" height="5" fill="#150d08" />
+      <rect x="4" y="50" width="7" height="3" fill="#362f26" />
+      <rect x="4" y="50" width="3" height="3" fill="#463e32" />
+      <rect x="4" y="52" width="7" height="1" fill="#1a160f" />
+      <rect x="40" y="49" width="9" height="5" fill="#150d08" />
+      <rect x="41" y="50" width="7" height="3" fill="#2c261e" />
+      <rect x="41" y="52" width="7" height="1" fill="#16120c" />
+      <!-- ground contact of the rim itself -->
+      <rect x="18" y="48" width="16" height="5" fill="#150d08" />
+      <rect x="19" y="49" width="14" height="3" fill="#2c261e" />
+      <rect x="19" y="49" width="5" height="2" fill="#362f26" />
+      <rect x="19" y="51" width="14" height="1" fill="#16120c" />
 
-      <!-- Legs -->
-      <rect x="8" y="26" width="6" height="9" fill="#6a5020" />
-      <rect x="18" y="26" width="6" height="9" fill="#6a5020" />
-      <rect x="8" y="26" width="1" height="9" fill="#8a6a2a" />
-      <rect x="18" y="26" width="1" height="9" fill="#8a6a2a" />
-      <rect x="13" y="26" width="1" height="9" fill="#3a2c10" />
-      <rect x="23" y="26" width="1" height="9" fill="#3a2c10" />
-      <rect x="8" y="33" width="6" height="2" fill="#3a2c10" />
-      <rect x="18" y="33" width="6" height="2" fill="#3a2c10" />
+      <!-- grinding sparks where the wheel meets stone -->
+      <rect x="16" y="50" width="1" height="1" fill="#ffd070" opacity="0.9" />
+      <rect x="35" y="51" width="1" height="1" fill="#e8a020" opacity="0.8" />
+      <rect x="14" y="53" width="1" height="1" fill="#c8a040" opacity="0.7" />
+      <rect x="37" y="48" width="1" height="1" fill="#ffd070" opacity="0.6" />
+
+      <!-- brass motes -->
+      <rect x="6" y="8" width="1" height="1" fill="#e8c060" opacity="0.5" />
+      <rect x="46" y="10" width="1" height="1" fill="#c8a040" opacity="0.45" />
     </svg>

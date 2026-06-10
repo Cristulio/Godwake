@@ -1,130 +1,229 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 38"
+      viewBox="0 0 48 76"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="The Magistrate"
     >
-      <!-- Cold court backlight + ground shadow -->
-      <ellipse cx="12" cy="20" rx="13" ry="18" fill="#3a4080" opacity="0.08" />
-      <ellipse cx="12" cy="37" rx="11" ry="1.4" fill="#000" opacity="0.4" />
+      <!-- Cold court backlight + warm torch key + ground shadow -->
+      <ellipse cx="30" cy="34" rx="17" ry="26" fill="#3a4080" opacity="0.09" />
+      <ellipse cx="14" cy="26" rx="13" ry="20" fill="#e8a020" opacity="0.06" />
+      <ellipse cx="24" cy="73.5" rx="17" ry="2.3" fill="#000" opacity="0.5" />
 
-      <!-- Wide hat brim — slate ramp -->
-      <polygon points="6,2 18,2 22,5 2,5" fill="#2a2838" />
-      <polygon points="6,2 18,2 21,4 3,4" fill="#3a3848" />
-      <polygon points="6,2 18,2 18,3 6,3" fill="#4a4858" opacity="0.6" />
-      <rect x="2" y="4" width="20" height="1" fill="#15131f" />
-      <!-- Hat crown + gem -->
-      <rect x="9" y="0" width="6" height="3" fill="#1a1828" />
-      <rect x="9" y="0" width="6" height="1" fill="#3a3848" />
-      <rect x="9" y="0" width="2" height="3" fill="#2a2838" />
-      <rect x="11" y="-2" width="2" height="2" fill="#8c6232" />
-      <circle cx="12" cy="-2" r="1.5" fill="#d4a850" />
-      <circle cx="12" cy="-2" r="0.7" fill="#ffe890" />
+      <!-- ══ The Sentence — spectral scales hovering over the raised hand ══ -->
+      <ellipse cx="8" cy="9" rx="7" ry="7" fill="#d4b062" opacity="0.13" />
+      <!-- beam -->
+      <rect x="3" y="6" width="11" height="1" fill="#ecc46a" opacity="0.85" />
+      <rect x="8" y="4" width="1" height="3" fill="#ecc46a" opacity="0.85" />
+      <rect x="8" y="3" width="1" height="1" fill="#fff0b8" />
+      <!-- hanging pans -->
+      <rect x="3" y="7" width="1" height="3" fill="#c89a48" opacity="0.7" />
+      <rect x="13" y="7" width="1" height="3" fill="#c89a48" opacity="0.7" />
+      <rect x="1" y="10" width="5" height="1" fill="#ecc46a" opacity="0.85" />
+      <rect x="11" y="10" width="5" height="1" fill="#ecc46a" opacity="0.85" />
+      <rect x="2" y="11" width="3" height="1" fill="#c89a48" opacity="0.6" />
+      <rect x="12" y="11" width="3" height="1" fill="#c89a48" opacity="0.6" />
+      <rect x="4" y="5" width="1" height="1" fill="#fff0b8" opacity="0.9" />
+      <rect x="12" y="8" width="1" height="1" fill="#fff0b8" opacity="0.7" />
 
-      <!-- Gold hat pin -->
-      <rect x="20" y="5" width="1" height="4" fill="#d4a850" />
-      <rect x="20" y="5" width="1" height="2" fill="#ffe890" />
-      <rect x="20" y="9" width="2" height="1" fill="#d4a850" />
-      <rect x="20" y="10" width="1" height="2" fill="#8c6232" />
+      <!-- ══ Hat — tall crown, wide brim ══ -->
+      <!-- crown -->
+      <rect x="17" y="0" width="14" height="8" fill="#150d08" />
+      <rect x="18" y="1" width="12" height="7" fill="#262438" />
+      <rect x="18" y="1" width="4" height="7" fill="#323048" />
+      <rect x="18" y="1" width="1" height="7" fill="#46445c" />
+      <rect x="28" y="1" width="2" height="7" fill="#1c1a2c" />
+      <!-- silver hatband + buckle -->
+      <rect x="18" y="6" width="12" height="2" fill="#15131f" />
+      <rect x="22" y="6" width="4" height="2" fill="#9a9ab0" />
+      <rect x="22" y="6" width="4" height="1" fill="#c2c2d4" />
+      <rect x="23" y="6" width="1" height="1" fill="#e8e8f0" />
+      <!-- brim -->
+      <rect x="9" y="8" width="30" height="4" fill="#150d08" />
+      <rect x="10" y="9" width="28" height="2" fill="#2c2a40" />
+      <rect x="10" y="9" width="10" height="1" fill="#46445c" />
+      <rect x="10" y="9" width="4" height="1" fill="#5c5a74" />
+      <rect x="32" y="9" width="6" height="2" fill="#1c1a2c" />
+      <rect x="10" y="11" width="28" height="1" fill="#15131f" />
 
-      <!-- Face — parchment ramp -->
-      <rect x="8" y="5" width="8" height="7" fill="#d2bea2" />
-      <rect x="8" y="5" width="8" height="1" fill="#e2d2b8" />
-      <rect x="8" y="5" width="3" height="7" fill="#dccaae" />
-      <rect x="8" y="5" width="1" height="6" fill="#e8dcc4" />
-      <rect x="14" y="6" width="2" height="6" fill="#b6a486" />
-      <rect x="15" y="6" width="1" height="6" fill="#a89878" />
-      <rect x="8" y="11" width="8" height="1" fill="#9a8a6c" />
-      <!-- Spectacles — silver rims + glint -->
-      <rect x="6" y="6" width="2" height="2" fill="#b5b5c8" />
-      <rect x="16" y="6" width="2" height="2" fill="#9a9ab0" />
-      <rect x="6" y="6" width="1" height="1" fill="#e8e8f0" />
-      <rect x="9" y="7" width="2" height="1" fill="#1a1410" />
-      <rect x="13" y="7" width="2" height="1" fill="#1a1410" />
-      <rect x="9" y="7" width="1" height="1" fill="#a8b8c8" />
-      <rect x="14" y="7" width="1" height="1" fill="#8a98a8" />
-      <!-- Nose + stern mouth -->
-      <rect x="11" y="8" width="2" height="2" fill="#a89878" />
-      <rect x="10" y="10" width="4" height="1" fill="#3a2010" />
+      <!-- ══ Periwig curls — white rolls framing the face ══ -->
+      <rect x="11" y="12" width="6" height="12" fill="#150d08" />
+      <rect x="12" y="13" width="4" height="10" fill="#d8d2bc" />
+      <rect x="12" y="13" width="2" height="10" fill="#ece6d0" />
+      <rect x="12" y="13" width="1" height="6" fill="#f8f4e4" />
+      <rect x="12" y="16" width="4" height="1" fill="#b0a890" />
+      <rect x="12" y="19" width="4" height="1" fill="#b0a890" />
+      <rect x="31" y="12" width="6" height="12" fill="#150d08" />
+      <rect x="32" y="13" width="4" height="10" fill="#b8b09a" />
+      <rect x="32" y="13" width="1" height="10" fill="#cfc8b0" />
+      <rect x="32" y="16" width="4" height="1" fill="#948c74" />
+      <rect x="32" y="19" width="4" height="1" fill="#948c74" />
 
-      <!-- Judicial mantle collar — silver ramp -->
-      <polygon points="4,12 12,11 20,12 21,15 3,15" fill="#9a9ab0" />
-      <polygon points="4,12 12,11 20,12 20,13 4,13" fill="#e8e8f0" />
-      <polygon points="4,13 12,12 20,13 20,14 4,14" fill="#c2c2d4" opacity="0.7" />
-      <!-- Gold chain + gavel pendant -->
-      <line x1="9" y1="13" x2="12" y2="17" stroke="#d4a850" stroke-width="0.6" />
-      <line x1="15" y1="13" x2="12" y2="17" stroke="#a87e34" stroke-width="0.6" />
-      <rect x="11" y="17" width="3" height="3" fill="#d4a850" />
-      <rect x="11" y="17" width="3" height="1" fill="#ffe890" />
-      <rect x="11" y="17" width="1" height="1" fill="#fff4c8" />
-      <rect x="12" y="18" width="1" height="1" fill="#5a3c1c" />
+      <!-- ══ Face — parchment, spectacles, stern ══ -->
+      <rect x="16" y="11" width="16" height="13" fill="#150d08" />
+      <rect x="17" y="12" width="14" height="12" fill="#cdb994" />
+      <rect x="17" y="12" width="6" height="11" fill="#dcc9a4" />
+      <rect x="17" y="12" width="3" height="8" fill="#e8dcc4" />
+      <rect x="28" y="12" width="3" height="12" fill="#b6a486" />
+      <rect x="30" y="12" width="1" height="12" fill="#a08c6c" />
+      <!-- brow shade under brim -->
+      <rect x="17" y="12" width="14" height="2" fill="#b6a486" />
+      <rect x="17" y="12" width="6" height="2" fill="#c4b292" />
+      <!-- stern brows -->
+      <rect x="18" y="14" width="4" height="1" fill="#8a7a5c" />
+      <rect x="26" y="14" width="4" height="1" fill="#7a6a4e" />
+      <!-- spectacles — silver rims, chained -->
+      <rect x="18" y="15" width="4" height="3" fill="#9a9ab0" />
+      <rect x="26" y="15" width="4" height="3" fill="#8a8aa0" />
+      <rect x="19" y="16" width="2" height="1" fill="#1a1410" />
+      <rect x="27" y="16" width="2" height="1" fill="#1a1410" />
+      <rect x="19" y="16" width="1" height="1" fill="#cfdce8" />
+      <rect x="27" y="16" width="1" height="1" fill="#a8b8c8" />
+      <rect x="22" y="16" width="4" height="1" fill="#9a9ab0" />
+      <rect x="18" y="15" width="1" height="1" fill="#e8e8f0" />
+      <rect x="26" y="15" width="1" height="1" fill="#c2c2d4" />
+      <!-- nose -->
+      <rect x="23" y="17" width="2" height="3" fill="#b6a486" />
+      <rect x="23" y="17" width="1" height="3" fill="#cdb994" />
+      <rect x="23" y="20" width="2" height="1" fill="#9a8a6c" />
+      <!-- pursed judging mouth + jowls -->
+      <rect x="21" y="22" width="6" height="1" fill="#6a4a34" />
+      <rect x="19" y="21" width="1" height="2" fill="#a08c6c" />
+      <rect x="28" y="21" width="1" height="2" fill="#948060" />
 
-      <!-- Robe torso — deep court-blue ramp + dither -->
-      <rect x="4" y="13" width="16" height="15" fill="#1a2050" />
-      <rect x="4" y="13" width="16" height="1" fill="#3a4080" />
-      <rect x="4" y="13" width="3" height="15" fill="#222a5e" />
-      <rect x="4" y="13" width="1" height="15" fill="#2c3470" />
-      <rect x="17" y="14" width="3" height="14" fill="#141846" />
-      <rect x="18" y="14" width="1" height="14" fill="#0e1138" />
-      <rect x="11" y="13" width="2" height="15" fill="#0a0a28" />
-      <rect x="4" y="27" width="16" height="1" fill="#0a0a28" />
-      <rect x="7" y="18" width="1" height="1" fill="#2c3470" />
-      <rect x="15" y="22" width="1" height="1" fill="#0e1138" />
-      <!-- Silver robe buttons -->
-      <rect x="11" y="15" width="2" height="1" fill="#b5b5c8" />
-      <rect x="11" y="18" width="2" height="1" fill="#b5b5c8" />
-      <rect x="11" y="21" width="2" height="1" fill="#b5b5c8" />
-      <rect x="11" y="24" width="2" height="1" fill="#9a9ab0" />
+      <!-- ══ Ermine mantle collar ══ -->
+      <rect x="9" y="24" width="30" height="6" fill="#150d08" />
+      <rect x="10" y="25" width="28" height="4" fill="#d8d2bc" />
+      <rect x="10" y="25" width="28" height="1" fill="#f0ecdc" />
+      <rect x="10" y="25" width="8" height="2" fill="#ece6d0" />
+      <rect x="32" y="25" width="6" height="4" fill="#b8b09a" />
+      <!-- ermine tail flecks -->
+      <rect x="13" y="27" width="1" height="2" fill="#2a2520" />
+      <rect x="19" y="26" width="1" height="2" fill="#2a2520" />
+      <rect x="25" y="27" width="1" height="2" fill="#2a2520" />
+      <rect x="31" y="26" width="1" height="2" fill="#2a2520" />
+      <rect x="35" y="27" width="1" height="2" fill="#2a2520" />
 
-      <!-- Shoulders -->
-      <rect x="3" y="13" width="2" height="5" fill="#141846" />
-      <rect x="19" y="13" width="2" height="5" fill="#0e1138" />
+      <!-- ══ Robe body — court blue, pleats ══ -->
+      <rect x="11" y="29" width="26" height="25" fill="#150d08" />
+      <rect x="12" y="30" width="24" height="24" fill="#1a2050" />
+      <rect x="12" y="30" width="8" height="24" fill="#222a5e" />
+      <rect x="12" y="30" width="4" height="22" fill="#2c3470" />
+      <rect x="12" y="30" width="1" height="16" fill="#3a4080" />
+      <rect x="32" y="30" width="4" height="24" fill="#141846" />
+      <rect x="35" y="30" width="1" height="24" fill="#0e1138" />
+      <!-- center placket -->
+      <rect x="21" y="30" width="6" height="24" fill="#141846" />
+      <rect x="21" y="30" width="1" height="24" fill="#0e1138" />
+      <rect x="26" y="30" width="1" height="24" fill="#0e1138" />
+      <!-- silver buttons -->
+      <rect x="23" y="33" width="2" height="1" fill="#c2c2d4" />
+      <rect x="23" y="37" width="2" height="1" fill="#b5b5c8" />
+      <rect x="23" y="41" width="2" height="1" fill="#9a9ab0" />
+      <rect x="23" y="45" width="2" height="1" fill="#9a9ab0" />
+      <rect x="23" y="49" width="2" height="1" fill="#8a8aa0" />
+      <!-- fold shadows -->
+      <rect x="16" y="34" width="1" height="18" fill="#141846" />
+      <rect x="30" y="34" width="1" height="18" fill="#0e1138" />
 
-      <!-- Sleeves — ramped -->
-      <polygon points="3,15 0,20 0,26 4,22" fill="#1a2050" />
-      <polygon points="3,15 1,20 3,22 4,20" fill="#222a5e" opacity="0.7" />
-      <polygon points="21,15 24,20 24,26 20,22" fill="#141846" />
-      <polygon points="3,15 1,20 3,20" fill="#0a0a28" opacity="0.5" />
-      <polygon points="21,15 23,20 21,20" fill="#0a0a28" opacity="0.5" />
-      <!-- Silver cuffs -->
-      <rect x="0" y="24" width="5" height="1" fill="#b5b5c8" />
-      <rect x="19" y="24" width="5" height="1" fill="#9a9ab0" />
-      <rect x="0" y="25" width="5" height="1" fill="#7a7a98" />
-      <rect x="19" y="25" width="5" height="1" fill="#6a6a88" />
+      <!-- ══ Chain of office + seal ══ -->
+      <rect x="13" y="30" width="2" height="1" fill="#c89a48" />
+      <rect x="15" y="31" width="2" height="1" fill="#ecc46a" />
+      <rect x="17" y="32" width="2" height="1" fill="#c89a48" />
+      <rect x="19" y="33" width="2" height="1" fill="#ecc46a" />
+      <rect x="33" y="30" width="2" height="1" fill="#8a6420" />
+      <rect x="31" y="31" width="2" height="1" fill="#c89a48" />
+      <rect x="29" y="32" width="2" height="1" fill="#8a6420" />
+      <rect x="27" y="33" width="2" height="1" fill="#c89a48" />
+      <!-- medallion seal -->
+      <rect x="20" y="34" width="8" height="8" fill="#150d08" />
+      <rect x="21" y="35" width="6" height="6" fill="#c89a48" />
+      <rect x="21" y="35" width="6" height="1" fill="#ecc46a" />
+      <rect x="21" y="35" width="2" height="1" fill="#fff0b8" />
+      <rect x="26" y="36" width="1" height="5" fill="#8a6420" />
+      <!-- engraved scales on the seal -->
+      <rect x="22" y="37" width="4" height="1" fill="#8a6420" />
+      <rect x="23" y="36" width="1" height="1" fill="#8a6420" />
+      <rect x="22" y="38" width="1" height="1" fill="#8a6420" />
+      <rect x="25" y="38" width="1" height="1" fill="#8a6420" />
 
-      <!-- Left hand holding the scales of justice -->
-      <rect x="0" y="20" width="3" height="3" fill="#1a1410" />
-      <rect x="-1" y="20" width="1" height="3" fill="#1a1410" />
-      <polygon points="0,20 -2,18 -1,21" fill="#1a1410" />
-      <polygon points="0,23 -2,25 -1,22" fill="#1a1410" />
-      <circle cx="-1" cy="21" r="3.5" fill="none" stroke="#b5b5c8" stroke-width="0.6" opacity="0.85" />
-      <circle cx="-1" cy="21" r="2.5" fill="none" stroke="#e8e8f0" stroke-width="0.4" opacity="0.85" />
-      <circle cx="-1" cy="21" r="1.2" fill="#b5b5c8" opacity="0.55" />
-      <rect x="-3" y="21" width="4" height="0.5" fill="#e8e8f0" opacity="0.7" />
-      <rect x="-1" y="19" width="0.5" height="4" fill="#e8e8f0" opacity="0.7" />
+      <!-- ══ Right arm — raised in sentence ══ -->
+      <rect x="8" y="29" width="8" height="8" fill="#150d08" />
+      <rect x="9" y="30" width="6" height="6" fill="#222a5e" />
+      <rect x="9" y="30" width="3" height="6" fill="#2c3470" />
+      <rect x="9" y="30" width="1" height="4" fill="#3a4080" />
+      <rect x="6" y="24" width="8" height="8" fill="#150d08" />
+      <rect x="7" y="25" width="6" height="6" fill="#2c3470" />
+      <rect x="7" y="25" width="2" height="6" fill="#3a4080" />
+      <!-- silver cuff -->
+      <rect x="6" y="22" width="8" height="3" fill="#150d08" />
+      <rect x="7" y="22" width="6" height="2" fill="#b5b5c8" />
+      <rect x="7" y="22" width="3" height="1" fill="#e8e8f0" />
+      <!-- hand — two fingers raised in judgment -->
+      <rect x="6" y="15" width="7" height="8" fill="#150d08" />
+      <rect x="7" y="16" width="5" height="6" fill="#cdb994" />
+      <rect x="7" y="16" width="2" height="6" fill="#dcc9a4" />
+      <rect x="8" y="13" width="3" height="4" fill="#150d08" />
+      <rect x="9" y="14" width="1" height="3" fill="#dcc9a4" />
+      <rect x="10" y="14" width="1" height="3" fill="#cdb994" />
+      <rect x="11" y="18" width="2" height="2" fill="#b6a486" />
 
-      <!-- Right hand + gold ring -->
-      <rect x="21" y="22" width="3" height="3" fill="#1a1410" />
-      <rect x="21" y="22" width="1" height="2" fill="#e8dcc4" />
-      <rect x="21" y="22" width="1" height="1" fill="#f4ecd8" />
-      <rect x="22" y="23" width="2" height="1" fill="#d4a850" />
+      <!-- ══ Left arm — gavel of the court ══ -->
+      <rect x="33" y="29" width="8" height="12" fill="#150d08" />
+      <rect x="34" y="30" width="6" height="10" fill="#141846" />
+      <rect x="34" y="30" width="2" height="10" fill="#1a2050" />
+      <rect x="38" y="30" width="2" height="10" fill="#0e1138" />
+      <!-- silver cuff -->
+      <rect x="33" y="39" width="8" height="3" fill="#150d08" />
+      <rect x="34" y="40" width="6" height="2" fill="#9a9ab0" />
+      <rect x="34" y="40" width="2" height="1" fill="#c2c2d4" />
+      <!-- hand -->
+      <rect x="33" y="42" width="7" height="6" fill="#150d08" />
+      <rect x="34" y="43" width="5" height="4" fill="#b6a486" />
+      <rect x="34" y="43" width="2" height="4" fill="#cdb994" />
+      <!-- gavel — handle right, heavy head -->
+      <rect x="38" y="44" width="6" height="3" fill="#150d08" />
+      <rect x="39" y="45" width="5" height="1" fill="#6a3a1a" />
+      <rect x="39" y="45" width="2" height="1" fill="#8c5226" />
+      <rect x="41" y="38" width="7" height="12" fill="#150d08" />
+      <rect x="42" y="39" width="5" height="10" fill="#4a2810" />
+      <rect x="42" y="39" width="5" height="2" fill="#8c5226" />
+      <rect x="42" y="39" width="2" height="1" fill="#b07434" />
+      <rect x="42" y="47" width="5" height="2" fill="#2e1808" />
+      <!-- silver bands -->
+      <rect x="42" y="42" width="5" height="1" fill="#9a9ab0" />
+      <rect x="42" y="42" width="2" height="1" fill="#c2c2d4" />
+      <rect x="42" y="45" width="5" height="1" fill="#8a8aa0" />
 
-      <!-- Waist band + clasp -->
-      <rect x="4" y="25" width="16" height="2" fill="#0a0a28" />
-      <rect x="11" y="25" width="2" height="2" fill="#b5b5c8" />
-      <rect x="11" y="25" width="2" height="1" fill="#e8e8f0" />
+      <!-- ══ Waist + skirt ══ -->
+      <rect x="11" y="52" width="26" height="3" fill="#0e1138" />
+      <rect x="21" y="52" width="6" height="3" fill="#150d08" />
+      <rect x="22" y="52" width="4" height="2" fill="#b5b5c8" />
+      <rect x="22" y="52" width="4" height="1" fill="#e8e8f0" />
+      <!-- skirt flare -->
+      <rect x="10" y="55" width="28" height="13" fill="#150d08" />
+      <rect x="11" y="56" width="26" height="11" fill="#1a2050" />
+      <rect x="11" y="56" width="7" height="11" fill="#222a5e" />
+      <rect x="11" y="56" width="3" height="11" fill="#2c3470" />
+      <rect x="32" y="56" width="5" height="11" fill="#141846" />
+      <rect x="35" y="56" width="2" height="11" fill="#0e1138" />
+      <!-- pleats -->
+      <rect x="17" y="56" width="1" height="11" fill="#141846" />
+      <rect x="23" y="56" width="2" height="11" fill="#0e1138" />
+      <rect x="29" y="56" width="1" height="11" fill="#0e1138" />
+      <!-- silver hem -->
+      <rect x="11" y="65" width="26" height="1" fill="#9a9ab0" />
+      <rect x="11" y="65" width="8" height="1" fill="#c2c2d4" />
+      <rect x="11" y="66" width="26" height="1" fill="#15131f" />
 
-      <!-- Robe skirt — ramped + scalloped hem -->
-      <polygon points="4,28 20,28 22,35 2,35" fill="#1a2050" />
-      <polygon points="4,28 20,28 21,33 3,33" fill="#222a5e" opacity="0.8" />
-      <polygon points="4,28 20,28 20,30 4,30" fill="#3a4080" opacity="0.4" />
-      <rect x="11" y="28" width="2" height="7" fill="#0a0a28" />
-      <rect x="2" y="34" width="20" height="1" fill="#9a9ab0" />
-      <polygon points="2,35 5,33 8,35" fill="#1a2050" />
-      <polygon points="8,35 11,33 14,35" fill="#1a2050" />
-      <polygon points="14,35 17,33 20,35" fill="#141846" />
-
-      <!-- Feet -->
-      <rect x="9" y="35" width="2" height="2" fill="#0a0808" />
-      <rect x="13" y="35" width="2" height="2" fill="#0a0808" />
+      <!-- ══ Shoes ══ -->
+      <rect x="15" y="67" width="8" height="5" fill="#150d08" />
+      <rect x="16" y="68" width="6" height="3" fill="#26201c" />
+      <rect x="16" y="68" width="6" height="1" fill="#3c322a" />
+      <rect x="16" y="68" width="2" height="1" fill="#52443a" />
+      <!-- silver shoe buckle -->
+      <rect x="18" y="69" width="2" height="1" fill="#b5b5c8" />
+      <rect x="25" y="67" width="8" height="5" fill="#150d08" />
+      <rect x="26" y="68" width="6" height="3" fill="#1e1916" />
+      <rect x="26" y="68" width="6" height="1" fill="#2e2620" />
+      <rect x="28" y="69" width="2" height="1" fill="#8a8aa0" />
     </svg>
