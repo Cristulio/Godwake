@@ -220,6 +220,7 @@ interface GameState {
   creditChapterClearGold: () => void;
   concludeDelveAtCamp: () => void;
   pickCampChoice: (choice: 'rest') => string | null;
+  pickRestChoice: (choice: 'rest' | 'hone', slot?: EquipSlot) => boolean;
   pickEliteChoice: (choice: 'fight' | 'gold') => void;
   pickCampBoon: (tier: number, boonId: string | null) => void;
   resolveCampRisk: (riskTier: number) => CampRiskResult | null;
@@ -917,6 +918,8 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().concludeDelveAtCamp(),
         pickCampChoice: (choice) =>
           useDelveStore.getState().pickCampChoice(choice),
+        pickRestChoice: (choice, slot) =>
+          useDelveStore.getState().pickRestChoice(choice, slot),
         pickEliteChoice: (choice) =>
           useDelveStore.getState().pickEliteChoice(choice),
         pickCampBoon: (tier, boonId) =>

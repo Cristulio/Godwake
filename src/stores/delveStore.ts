@@ -12,7 +12,8 @@ import { effectiveAbilityScores } from '../engine/character/derived';
 import { abilityModifier } from '../types/abilities';
 import { getRace } from '../content/races';
 import { getClass } from '../content/classes';
-import { longRest, withResetActionEconomy } from '../engine/character/actions';
+import { longRest, shortRestHeal, withResetActionEconomy } from '../engine/character/actions';
+import { honeItem, canHoneSlot } from '../engine/delve/hone';
 import { rollBlessingOptions } from '../engine/character/blessings';
 import {
   rollQuirks,
@@ -33,7 +34,7 @@ import { TOTAL_CHAPTERS, BASE_GAME_CHAPTERS } from '../engine/delve/constants';
 import { getItem } from '../content/items';
 import { getCampBoon } from '../content/campBoons';
 import { nextLoreBeat } from '../content/loreBeats';
-import { equippedInventoryIndices } from '../engine/character/equip';
+import { equippedInventoryIndices, type EquipSlot } from '../engine/character/equip';
 import { sellValue } from '../components/delve/shopStock';
 import { newlyUnlocked, newlyUnlockedByChapter } from '../engine/progression';
 import { FIRST_GEAR_TUTORIAL_ID } from '../content/tutorials';
@@ -260,6 +261,9 @@ function enterRoom(
     // The bones-throw gate is part of the same per-camp fork — reset it too so
     // each camp grants one fresh throw.
     campRisk: undefined,
+    // The rest-room Rest/Hone fork is per-room: clear it so the next alcove offers
+    // a fresh pick (and the gate can't be re-armed by leaving for the backpack).
+    restChoice: undefined,
     // The elite fight/gold gate is per-node: reset so each elite re-prompts.
     eliteEngaged: undefined,
     // The buyback stack is per-shop: leaving the room ends the buyback window.
@@ -452,6 +456,14 @@ interface DelveStoreState {
   concludeDelveAtCamp: () => void;
   /** Resolve a camp choice. Returns null (rest grants no blessing). */
   pickCampChoice: (choice: 'rest') => string | null;
+  /**
+   * Resolve the rest-room fork. 'rest' knits 70% of max HP and refreshes class
+   * resources (today's behaviour); 'hone' forgoes the heal to raise the equipped
+   * item at `slot` by +1 enhancement for the rest of the run (engine/delve/hone).
+   * The lock lives on the delve so it survives an unmount/remount. No-op once a
+   * choice is made (or a 'hone' with no honeable slot). Returns true when applied.
+   */
+  pickRestChoice: (choice: 'rest' | 'hone', slot?: EquipSlot) => boolean;
   /**
    * Resolve the elite node's risk/reward decision. 'fight' engages the encounter
    * (the spawn-on-enter effect builds it; a win may yield a legendary relic);
@@ -646,6 +658,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
             phase: wasLast ? 'completed' : 'in-room',
             roomsCleared,
             campChoice: undefined,
+            restChoice: undefined,
             eliteEngaged: undefined,
             recentlySold: undefined,
           },
@@ -1133,6 +1146,26 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     charSlice.setCharacter(nextCharacter);
     set({ delve: { ...s.delve, campChoice: choice } });
     return grantedBlessingId;
+  },
+
+  pickRestChoice: (choice, slot) => {
+    const s = get();
+    const charSlice = useCharacterStore.getState();
+    const character = charSlice.character;
+    if (!character || !s.delve) return false;
+    if (s.delve.restChoice) return false;
+
+    if (choice === 'hone') {
+      if (!slot || !canHoneSlot(character, slot)) return false;
+      charSlice.setCharacter(honeItem(character, slot));
+    } else {
+      // Rest: unchanged from today — 70% of max HP, refresh class resources.
+      const healAmount = Math.floor(character.hp.max * 0.7);
+      charSlice.setCharacter(shortRestHeal(character, healAmount));
+    }
+
+    set({ delve: { ...s.delve, restChoice: choice } });
+    return true;
   },
 
   pickCampBoon: (tier, boonId) => {

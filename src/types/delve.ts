@@ -122,6 +122,16 @@ export interface DelveState {
    */
   campChoice?: 'rest';
   /**
+   * The mutually-exclusive choice made at the CURRENT rest room: 'rest' (the 70%
+   * heal + resource refresh, today's behaviour) or 'hone' (forgo the heal to
+   * raise one carried item's enhancement +1 for the rest of the run). Set by
+   * `pickRestChoice`; locks the other option. Cleared on every room entry (like
+   * `campChoice`) so each rest room offers a fresh fork — persisting it here, not
+   * in component state, keeps the gate alive across a trip to the backpack and
+   * back (the camp-bones unmount exploit, #444).
+   */
+  restChoice?: 'rest' | 'hone';
+  /**
    * Elite node risk/reward gate. Undefined while the decision is pending (the
    * EliteRoom panel shows); set true once the player chooses to FIGHT, which
    * lets the spawn-on-enter effect build the encounter. Taking the gold instead

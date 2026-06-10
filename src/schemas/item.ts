@@ -257,6 +257,15 @@ export interface RolledItem {
    */
   enhancement?: number;
   /**
+   * How many times this item has been HONED at a rest room THIS run (each hone
+   * raises `enhancement` by +1 — see engine/delve/hone.ts). Run-scoped: it rides
+   * the run character only; re-materialised set pieces and fresh loot start
+   * unset. Tracked separately from `enhancement` so the cap (no more than +2 over
+   * the rolled baseline) survives even after the +N has been folded in. Absent on
+   * anything never honed.
+   */
+  honedThisRun?: number;
+  /**
    * Set membership, for SET gear only (rarity 'set'). The id of the GearSet this
    * piece belongs to (content/sets.ts). Present on a materialised set piece so the
    * engine can count how many pieces of a set are worn and grant the escalating
