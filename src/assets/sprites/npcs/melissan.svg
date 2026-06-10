@@ -1,87 +1,139 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 40" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet" aria-label="Maevra">
-      <!-- Pale priestess halo + harvest-violet undertone + ground shadow -->
-      <ellipse cx="12" cy="19" rx="12" ry="18" fill="#d8c89a" opacity="0.08" />
-      <ellipse cx="12" cy="22" rx="9" ry="12" fill="#7a3a6a" opacity="0.07" />
-      <ellipse cx="12" cy="39" rx="8" ry="1.5" fill="#000" opacity="0.4" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 60" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet" aria-label="Maevra">
+  <!-- 36×60 dialogue portrait: priestess-queen of the Slain God. Silver hair
+       drawn back under a gold diadem, violet gem, harvest-violet robes. -->
+  <ellipse cx="18" cy="25" rx="17" ry="26" fill="#d8c89a" opacity="0.08" />
+  <ellipse cx="18" cy="32" rx="13" ry="18" fill="#7a3a6a" opacity="0.08" />
+  <ellipse cx="18" cy="58.4" rx="12" ry="2" fill="#000" opacity="0.40" />
 
-      <!-- Pale silver hair, drawn back — cool ash ramp, key light upper-left -->
-      <rect x="6" y="3" width="12" height="4" fill="#b8b0a4" />
-      <rect x="5" y="5" width="14" height="13" fill="#b8b0a4" />
-      <rect x="6" y="3" width="12" height="1" fill="#dcd6c8" />
-      <rect x="5" y="5" width="2" height="13" fill="#c7c0b2" />
-      <rect x="5" y="5" width="1" height="9" fill="#e0dccf" />
-      <rect x="17" y="5" width="2" height="13" fill="#928a7c" />
-      <rect x="18" y="5" width="1" height="13" fill="#7c7468" />
-      <rect x="5" y="14" width="2" height="5" fill="#a39a8c" />
-      <rect x="17" y="14" width="2" height="5" fill="#867e72" />
+  <!-- ── Hair — pale silver, drawn back, long falls; ash ramp ── -->
+  <!-- outline -->
+  <rect x="9" y="2" width="18" height="3" fill="#150d08" />
+  <rect x="7" y="5" width="22" height="14" fill="#150d08" />
+  <rect x="7" y="19" width="6" height="14" fill="#150d08" />
+  <rect x="23" y="19" width="6" height="14" fill="#150d08" />
+  <!-- crown, drawn back smooth -->
+  <rect x="10" y="3" width="16" height="2" fill="#b8b0a4" />
+  <rect x="8" y="5" width="20" height="3" fill="#b8b0a4" />
+  <rect x="10" y="3" width="10" height="1" fill="#dcd6c8" />
+  <rect x="11" y="3" width="4" height="1" fill="#f0ece0" />
+  <rect x="24" y="3" width="2" height="2" fill="#928a7c" />
+  <!-- combed-back strand lines -->
+  <rect x="13" y="4" width="1" height="3" fill="#a39a8c" />
+  <rect x="18" y="4" width="1" height="3" fill="#a39a8c" />
+  <rect x="22" y="4" width="1" height="3" fill="#928a7c" />
+  <!-- side falls -->
+  <rect x="8" y="8" width="4" height="11" fill="#b8b0a4" />
+  <rect x="8" y="8" width="2" height="11" fill="#c7c0b2" />
+  <rect x="8" y="8" width="1" height="7" fill="#e0dccf" />
+  <rect x="25" y="8" width="3" height="11" fill="#928a7c" />
+  <rect x="27" y="8" width="1" height="11" fill="#7c7468" />
+  <!-- long falls over the shoulders -->
+  <rect x="8" y="19" width="4" height="13" fill="#a39a8c" />
+  <rect x="8" y="19" width="1" height="13" fill="#c7c0b2" />
+  <rect x="11" y="19" width="1" height="13" fill="#8a8274" />
+  <rect x="24" y="19" width="4" height="13" fill="#857d70" />
+  <rect x="27" y="19" width="1" height="13" fill="#6e6658" />
+  <rect x="24" y="19" width="1" height="8" fill="#9a9284" />
 
-      <!-- Circlet — thin gold band with a violet soul-stone -->
-      <rect x="6" y="6" width="12" height="1" fill="#caa84e" />
-      <rect x="6" y="6" width="12" height="1" fill="#e6c66c" opacity="0.5" />
-      <rect x="11" y="5" width="2" height="2" fill="#8a50c0" />
-      <rect x="11" y="5" width="1" height="1" fill="#d4b0f8" />
+  <!-- ── Diadem — gold band + violet gem, set into the hairline ── -->
+  <rect x="9" y="7" width="18" height="2" fill="#150d08" />
+  <rect x="10" y="7" width="16" height="1" fill="#c89a48" />
+  <rect x="10" y="7" width="6" height="1" fill="#ecc46a" />
+  <rect x="11" y="7" width="2" height="1" fill="#fff0b8" />
+  <rect x="24" y="7" width="2" height="1" fill="#9a7232" />
+  <!-- gem -->
+  <ellipse cx="18" cy="8" rx="4" ry="3" fill="#a48ee0" opacity="0.30" />
+  <rect x="16" y="6" width="4" height="3" fill="#150d08" />
+  <rect x="17" y="7" width="2" height="1" fill="#8a64d0" />
+  <rect x="17" y="7" width="1" height="1" fill="#d4b4ff" />
 
-      <!-- Serene, cool-fair face — bone ramp -->
-      <rect x="8" y="7" width="8" height="10" fill="#e2d2bc" />
-      <rect x="8" y="7" width="3" height="10" fill="#ecdcc6" />
-      <rect x="8" y="7" width="1" height="9" fill="#f4e8d4" />
-      <rect x="14" y="8" width="2" height="9" fill="#cab89e" />
-      <rect x="15" y="8" width="1" height="9" fill="#b6a488" />
-      <rect x="8" y="14" width="8" height="2" fill="#cebc9e" />
+  <!-- ── Face — regal, pale, heavy-lidded violet eyes ── -->
+  <rect x="12" y="9" width="13" height="13" fill="#e8d4bc" />
+  <rect x="12" y="9" width="13" height="1" fill="#c4ac90" />
+  <rect x="12" y="9" width="2" height="13" fill="#f2e2cc" />
+  <rect x="12" y="11" width="1" height="8" fill="#f8eeda" />
+  <rect x="22" y="9" width="3" height="13" fill="#c4ac90" />
+  <rect x="24" y="9" width="1" height="13" fill="#a8906e" />
+  <!-- heavy-lidded eyes — violet, imperious -->
+  <rect x="13" y="12" width="4" height="1" fill="#8a6e54" />
+  <rect x="20" y="12" width="4" height="1" fill="#8a6e54" />
+  <rect x="13" y="13" width="4" height="2" fill="#f4ecdc" />
+  <rect x="20" y="13" width="4" height="2" fill="#ecdfc8" />
+  <rect x="14" y="13" width="2" height="2" fill="#5a3aa0" />
+  <rect x="21" y="13" width="2" height="2" fill="#5a3aa0" />
+  <rect x="14" y="13" width="1" height="1" fill="#b494f0" />
+  <rect x="21" y="13" width="1" height="1" fill="#b494f0" />
+  <rect x="13" y="14" width="4" height="1" fill="#c4ac90" />
+  <rect x="20" y="14" width="4" height="1" fill="#b89e7e" />
+  <!-- slender nose -->
+  <rect x="18" y="14" width="1" height="3" fill="#c4ac90" />
+  <rect x="17" y="17" width="1" height="1" fill="#f2e2cc" />
+  <!-- composed mouth — faint knowing curve -->
+  <rect x="15" y="19" width="6" height="1" fill="#a0644e" />
+  <rect x="15" y="19" width="1" height="1" fill="#b87860" />
+  <rect x="21" y="18" width="1" height="1" fill="#a0644e" />
+  <!-- cheek + chin modelling -->
+  <rect x="14" y="16" width="1" height="1" fill="#d8c0a4" />
+  <rect x="22" y="16" width="2" height="1" fill="#b89e7e" />
+  <rect x="15" y="21" width="7" height="1" fill="#d8c0a4" />
 
-      <!-- Lowered brows — placid, patient -->
-      <rect x="9" y="9" width="2" height="1" fill="#8a7a62" />
-      <rect x="13" y="9" width="2" height="1" fill="#8a7a62" />
-      <!-- Half-lidded eyes — faint violet bloom, serene rather than blazing -->
-      <ellipse cx="10" cy="10.5" rx="2" ry="1.3" fill="#9a6ac0" opacity="0.22" />
-      <ellipse cx="14" cy="10.5" rx="2" ry="1.3" fill="#9a6ac0" opacity="0.22" />
-      <rect x="9" y="10" width="2" height="1" fill="#3a2a44" />
-      <rect x="13" y="10" width="2" height="1" fill="#3a2a44" />
-      <rect x="9" y="10" width="1" height="1" fill="#b890e0" />
-      <rect x="13" y="10" width="1" height="1" fill="#b890e0" />
+  <!-- ── Neck + throat gem ── -->
+  <rect x="14" y="22" width="9" height="4" fill="#150d08" />
+  <rect x="15" y="22" width="7" height="3" fill="#d8c0a4" />
+  <rect x="15" y="22" width="3" height="3" fill="#e8d4bc" />
+  <!-- choker -->
+  <rect x="15" y="24" width="7" height="1" fill="#3a2a5a" />
+  <rect x="17" y="24" width="2" height="1" fill="#8a64d0" />
+  <rect x="17" y="24" width="1" height="1" fill="#d4b4ff" />
 
-      <!-- Fine nose + the kind, unreadable smile -->
-      <rect x="11" y="11" width="2" height="2" fill="#d4c2aa" />
-      <rect x="11" y="11" width="1" height="2" fill="#e2d2bc" />
-      <rect x="10" y="14" width="4" height="1" fill="#a06868" />
-      <rect x="9" y="14" width="1" height="1" fill="#bc8a78" opacity="0.7" />
-      <rect x="14" y="14" width="1" height="1" fill="#bc8a78" opacity="0.7" />
+  <!-- ── Robes — harvest violet, gold-trimmed high collar ── -->
+  <!-- outline -->
+  <rect x="6" y="25" width="24" height="5" fill="#150d08" />
+  <rect x="5" y="29" width="26" height="25" fill="#150d08" />
+  <!-- high collar wings -->
+  <rect x="7" y="26" width="6" height="3" fill="#4a2a44" />
+  <rect x="7" y="26" width="6" height="1" fill="#6a3a5e" />
+  <rect x="7" y="26" width="2" height="1" fill="#8a4a78" />
+  <rect x="23" y="26" width="6" height="3" fill="#3a2036" />
+  <rect x="23" y="28" width="6" height="1" fill="#2a1828" />
+  <!-- shoulders + chest -->
+  <rect x="6" y="29" width="24" height="24" fill="#4a2a44" />
+  <rect x="6" y="29" width="3" height="24" fill="#5e3456" />
+  <rect x="6" y="29" width="1" height="24" fill="#6a3a5e" />
+  <rect x="26" y="29" width="4" height="24" fill="#3a2036" />
+  <rect x="29" y="29" width="1" height="24" fill="#2a1828" />
+  <!-- center panel — pale vestment -->
+  <rect x="14" y="29" width="9" height="24" fill="#cfc4ac" />
+  <rect x="14" y="29" width="2" height="24" fill="#e2d8c0" />
+  <rect x="14" y="29" width="1" height="12" fill="#f0e8d2" />
+  <rect x="21" y="29" width="2" height="24" fill="#b0a68e" />
+  <rect x="22" y="29" width="1" height="24" fill="#968c76" />
+  <!-- gold trim seams -->
+  <rect x="13" y="29" width="1" height="24" fill="#c89a48" />
+  <rect x="23" y="29" width="1" height="24" fill="#9a7232" />
+  <rect x="13" y="29" width="1" height="4" fill="#ecc46a" />
+  <!-- the Slain God's sigil — inverted gold crown over a cut circle -->
+  <ellipse cx="18" cy="38" rx="6" ry="5" fill="#d8c89a" opacity="0.14" />
+  <rect x="15" y="34" width="7" height="1" fill="#c89a48" />
+  <rect x="15" y="34" width="1" height="3" fill="#c89a48" />
+  <rect x="18" y="34" width="1" height="2" fill="#9a7232" />
+  <rect x="21" y="34" width="1" height="3" fill="#9a7232" />
+  <rect x="16" y="38" width="5" height="1" fill="#9a7232" />
+  <rect x="16" y="40" width="5" height="1" fill="#c89a48" />
+  <rect x="17" y="39" width="3" height="1" fill="#ecc46a" />
+  <rect x="17" y="39" width="1" height="1" fill="#fff0b8" />
+  <!-- robe dither -->
+  <rect x="10" y="35" width="1" height="1" fill="#5e3456" />
+  <rect x="25" y="38" width="1" height="1" fill="#2a1828" />
+  <rect x="9" y="44" width="1" height="1" fill="#5e3456" />
+  <rect x="26" y="46" width="1" height="1" fill="#2a1828" />
+  <!-- vestment fold lines -->
+  <rect x="18" y="44" width="1" height="9" fill="#b0a68e" />
+  <rect x="16" y="46" width="1" height="1" fill="#b0a68e" />
+  <rect x="20" y="49" width="1" height="1" fill="#968c76" />
 
-      <!-- Neck + high priestess collar -->
-      <rect x="10" y="16" width="4" height="2" fill="#cebc9e" />
-      <rect x="5" y="17" width="14" height="2" fill="#2a2230" />
-      <rect x="5" y="17" width="14" height="1" fill="#3e3346" />
-      <rect x="8" y="17" width="8" height="3" fill="#1c1622" />
-      <polygon points="6,19 8,17 8,23" fill="#352a3e" />
-      <polygon points="18,19 16,17 16,23" fill="#2a2230" />
-
-      <!-- Bone-and-ash priestess vestment — pale grey ramp, lit left, gold orphrey -->
-      <rect x="4" y="19" width="16" height="21" fill="#4e4654" />
-      <rect x="4" y="19" width="1" height="21" fill="#2c2632" />
-      <rect x="5" y="19" width="1" height="21" fill="#3a3340" />
-      <rect x="18" y="19" width="2" height="21" fill="#2c2632" />
-      <rect x="6" y="19" width="2" height="19" fill="#5e5566" />
-      <rect x="6" y="19" width="1" height="9" fill="#6e6476" />
-      <rect x="11" y="20" width="2" height="20" fill="#6a6072" opacity="0.6" />
-      <rect x="8" y="31" width="1" height="1" fill="#5e5566" />
-      <rect x="15" y="34" width="1" height="1" fill="#2c2632" />
-      <!-- Gold orphrey banding down the vestment -->
-      <rect x="11" y="20" width="2" height="1" fill="#caa84e" />
-      <rect x="11" y="20" width="1" height="1" fill="#e6c66c" />
-      <rect x="11" y="24" width="2" height="1" fill="#b8964a" />
-      <rect x="11" y="28" width="2" height="1" fill="#caa84e" />
-      <line x1="11.5" y1="20" x2="11.5" y2="29" stroke="#2c2632" stroke-width="0.3" />
-
-      <!-- god-essence reliquary at the breast — violet bloom + bright core -->
-      <ellipse cx="12" cy="24" rx="4" ry="4" fill="#7a3aa0" opacity="0.26" />
-      <rect x="11" y="22" width="2" height="4" fill="#3a1850" />
-      <rect x="10" y="23" width="4" height="2" fill="#3a1850" />
-      <rect x="11" y="23" width="2" height="2" fill="#8a50c0" />
-      <rect x="11" y="23" width="1" height="1" fill="#d4b0f8" />
-      <rect x="11" y="22" width="1" height="4" fill="#a86ad0" opacity="0.6" />
-
-      <!-- Vestment shoulder seams + hem -->
-      <rect x="6" y="24" width="1" height="14" fill="#3a3340" />
-      <rect x="17" y="24" width="1" height="14" fill="#2c2632" />
-      <rect x="4" y="38" width="16" height="2" fill="#2c2632" />
+  <!-- ── Hem ── -->
+  <rect x="6" y="53" width="24" height="1" fill="#2a1828" />
+  <rect x="7" y="54" width="22" height="4" fill="#1c1018" />
+  <rect x="8" y="55" width="20" height="2" fill="#241420" />
 </svg>
