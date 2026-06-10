@@ -19,12 +19,19 @@
  *  - Clamped to a sane band so a stray chapter index can never produce a
  *    degenerate fight (mirrors {@link ascendantChapterScale}, #539).
  *
- * PROVISIONAL CONSTANTS — these are conservative seam-defaults, NOT tuned to a
- * target. A post-merge sim pass (`scripts/sim-difficulty-arc.ts`) calibrates them
- * against the band: a bare soul walls ~Ch6-9 with ToB reach ≈ 0 (but never
- * mathematically impossible); a mid-Grove soul walls ~Ch9-12; a full-Grove soul
- * reaches ToB with a real-but-hard clear. Do NOT hand-tune the numbers here —
- * change them only on the back of a sim run ([[feedback-balance-from-sims]]).
+ * SIM-TUNED (2026-06-09, `scripts/sim-difficulty-arc.ts` @ SOULS=40 LIVES=80,
+ * fighter+monk, 3 Grove tiers × ramp on/off; findings in
+ * docs/sim-findings/difficulty-arc.md). The provisional 1.06/1.06/1.12 seam
+ * overshot the MID-SECTION: the full-Grove tail died in a pile at Ch9-11
+ * (420/301/417 of 3200 lives) and only 12 lives ever entered ToB — the slog,
+ * not the Throne, was the wall. Retuned to flatten the climb and steepen the
+ * cliff (growth 1.045, ToB kicker 1.18 → Ch12 ≈ 1.42×, Ch14 ≈ 1.98×): the
+ * full-Grove tail now rides to Ch12-13 and dies AT the Throne, which is the
+ * owner-approved shape — ToB is the hardest content, carried by the kicker.
+ * Band: bare soul walls early/mid with ToB ≈ 0 (never impossible — owner
+ * ruling "brutally unlikely"); mid-Grove walls ~Ch9-12; full-Grove reaches ToB
+ * and dies there, not before. Do NOT hand-tune the numbers here — change them
+ * only on the back of a sim run ([[feedback-balance-from-sims]]).
  */
 
 export interface ChapterRamp {
@@ -36,16 +43,17 @@ export interface ChapterRamp {
 
 /** Last chapter the ramp leaves untouched — Ch1-4 are exactly 1.0/1.0 (early-grind pillar). */
 const RAMP_ANCHOR_CHAPTER = 4;
-/** Per-chapter geometric growth past the anchor, applied Ch5→12. PROVISIONAL. */
-const HP_GROWTH_PER_CHAPTER = 1.06;
-const DAMAGE_GROWTH_PER_CHAPTER = 1.06;
+/** Per-chapter geometric growth past the anchor, applied Ch5→12. SIM-TUNED (see header). */
+const HP_GROWTH_PER_CHAPTER = 1.045;
+const DAMAGE_GROWTH_PER_CHAPTER = 1.045;
 /** First Throne-of-Bhaal chapter — Ch13-14 carry the steeper kicker. */
 const TOB_FIRST_CHAPTER = 13;
 /**
  * Extra per-chapter multiplier compounded across the ToB act, ON TOP of the
- * geometric growth (Ch13 ×kicker¹, Ch14 ×kicker²). PROVISIONAL.
+ * geometric growth (Ch13 ×kicker¹, Ch14 ×kicker²). SIM-TUNED (see header) —
+ * deliberately the steepest step in the game: the Throne is the cliff.
  */
-const TOB_KICKER_PER_CHAPTER = 1.12;
+const TOB_KICKER_PER_CHAPTER = 1.18;
 /**
  * Safety clamp so a stray/legacy chapter index can't produce a degenerate fight.
  * At the provisional constants the deepest chapter (Ch14) lands well inside this
