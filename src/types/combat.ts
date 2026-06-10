@@ -463,4 +463,11 @@ export interface CombatState {
    * scaling); legacy saves rehydrate as unscaled.
    */
   ascension?: number;
+  /**
+   * Chapter (1–14) this encounter spawned in, stamped at createCombat time so
+   * mid-fight summons inherit the base-game difficulty ramp (HP + damage; see
+   * {@link chapterRamp}) the same way they inherit ascension scaling. Absent when
+   * the ramp is neutral (Ch1-4 / no chapter); legacy saves rehydrate unramped.
+   */
+  chapter?: number;
 }
