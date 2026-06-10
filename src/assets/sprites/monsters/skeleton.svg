@@ -1,91 +1,159 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 36"
+      viewBox="0 0 28 50"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Skeleton"
     >
       <!-- Cold grave backlight + ground shadow -->
-      <ellipse cx="10" cy="17" rx="9" ry="15" fill="#4a8278" opacity="0.07" />
-      <ellipse cx="10" cy="35" rx="7" ry="1.4" fill="#000" opacity="0.4" />
+      <ellipse cx="14" cy="24" rx="13" ry="22" fill="#4a8278" opacity="0.08" />
+      <ellipse cx="13" cy="18" rx="9" ry="13" fill="#ffb040" opacity="0.04" />
+      <ellipse cx="14" cy="48.6" rx="10" ry="1.8" fill="#000" opacity="0.42" />
 
-      <!-- Cranium — bone ramp, key light upper-left -->
-      <rect x="6" y="0" width="8" height="2" fill="#d4c8a8" />
-      <rect x="6" y="0" width="8" height="1" fill="#f0e6cc" />
-      <rect x="5" y="2" width="10" height="7" fill="#c2b794" />
-      <rect x="5" y="2" width="3" height="6" fill="#d4c8a8" />
-      <rect x="5" y="2" width="1" height="4" fill="#e8dcc4" />
-      <rect x="13" y="2" width="2" height="6" fill="#a89878" />
-      <rect x="4" y="3" width="1" height="5" fill="#8c7a52" />
-      <rect x="15" y="3" width="1" height="5" fill="#5a4c34" />
+      <!-- ── Cranium — bone ramp, key light upper-left ── -->
+      <rect x="7" y="0" width="14" height="13" fill="#150d08" />
+      <rect x="8" y="1" width="12" height="11" fill="#c2b794" />
+      <rect x="8" y="1" width="12" height="1" fill="#d4c8a8" />
+      <rect x="9" y="1" width="6" height="1" fill="#f0e6cc" />
+      <rect x="8" y="2" width="4" height="8" fill="#d4c8a8" />
+      <rect x="8" y="2" width="2" height="5" fill="#e8dcc4" />
+      <rect x="8" y="2" width="1" height="3" fill="#f8f2dc" />
+      <rect x="17" y="2" width="3" height="9" fill="#a89878" />
+      <rect x="19" y="3" width="1" height="8" fill="#8c7a52" />
+      <rect x="19" y="6" width="1" height="3" fill="#5e6e62" />
+      <!-- cranial cracks -->
+      <rect x="13" y="1" width="1" height="3" fill="#8c7a52" />
+      <rect x="14" y="3" width="1" height="1" fill="#8c7a52" />
+      <rect x="11" y="2" width="1" height="1" fill="#a89878" />
 
-      <!-- Eye sockets — hollow with cold-fire spark -->
-      <rect x="6" y="4" width="3" height="3" fill="#0a0806" />
-      <rect x="11" y="4" width="3" height="3" fill="#0a0806" />
-      <rect x="7" y="5" width="1" height="1" fill="#ff8a3a" />
-      <rect x="12" y="5" width="1" height="1" fill="#ff8a3a" />
-      <rect x="7" y="5" width="1" height="1" fill="#ffd070" opacity="0.6" />
-      <!-- Nasal cavity -->
-      <rect x="9" y="6" width="2" height="2" fill="#0a0806" />
+      <!-- ── Eye sockets — hollow, cold ember spark ── -->
+      <rect x="9" y="4" width="4" height="4" fill="#0a0806" />
+      <rect x="15" y="4" width="4" height="4" fill="#0a0806" />
+      <rect x="10" y="5" width="2" height="2" fill="#ff8a3a" opacity="0.85" />
+      <rect x="16" y="5" width="2" height="2" fill="#d4641e" opacity="0.85" />
+      <rect x="10" y="5" width="1" height="1" fill="#ffd070" />
+      <rect x="16" y="5" width="1" height="1" fill="#ffb060" />
+      <!-- brow shadow over sockets -->
+      <rect x="9" y="4" width="4" height="1" fill="#1a1208" />
+      <rect x="15" y="4" width="4" height="1" fill="#1a1208" />
 
-      <!-- Grinning teeth -->
-      <rect x="6" y="8" width="8" height="2" fill="#0a0806" />
-      <rect x="6" y="8" width="1" height="2" fill="#d4c8a8" />
-      <rect x="8" y="8" width="1" height="2" fill="#d4c8a8" />
-      <rect x="10" y="8" width="1" height="2" fill="#d4c8a8" />
-      <rect x="12" y="8" width="1" height="2" fill="#a89878" />
+      <!-- ── Nasal cavity ── -->
+      <rect x="13" y="7" width="2" height="3" fill="#0a0806" />
+      <rect x="13" y="7" width="1" height="1" fill="#5a4c34" />
 
-      <!-- Spine -->
-      <rect x="9" y="10" width="2" height="1" fill="#a89878" />
-      <rect x="9" y="13" width="2" height="1" fill="#a89878" />
-      <rect x="9" y="16" width="2" height="1" fill="#8c7a52" />
+      <!-- ── Rictus grin — separated teeth ── -->
+      <rect x="9" y="10" width="10" height="3" fill="#0a0806" />
+      <rect x="9" y="10" width="1" height="3" fill="#e8dcc4" />
+      <rect x="11" y="10" width="1" height="3" fill="#d4c8a8" />
+      <rect x="13" y="10" width="1" height="3" fill="#e8dcc4" />
+      <rect x="15" y="10" width="1" height="3" fill="#c2b794" />
+      <rect x="17" y="10" width="1" height="3" fill="#a89878" />
+      <!-- jaw shadow line -->
+      <rect x="9" y="12" width="10" height="1" fill="#0a0806" opacity="0.6" />
 
-      <!-- Ribcage — dark hollow with lit rib bars -->
-      <rect x="6" y="11" width="8" height="9" fill="#14110d" />
-      <rect x="7" y="11" width="1" height="9" fill="#d4c8a8" />
-      <rect x="12" y="11" width="1" height="9" fill="#a89878" />
-      <rect x="6" y="12" width="2" height="1" fill="#d4c8a8" />
-      <rect x="12" y="12" width="2" height="1" fill="#a89878" />
-      <rect x="6" y="14" width="2" height="1" fill="#d4c8a8" />
-      <rect x="12" y="14" width="2" height="1" fill="#a89878" />
-      <rect x="6" y="16" width="2" height="1" fill="#c2b794" />
-      <rect x="12" y="16" width="2" height="1" fill="#8c7a52" />
-      <rect x="6" y="18" width="2" height="1" fill="#c2b794" />
-      <rect x="12" y="18" width="2" height="1" fill="#8c7a52" />
-      <!-- Sternum highlight -->
-      <rect x="9" y="11" width="1" height="5" fill="#a89878" />
+      <!-- ── Cervical vertebrae ── -->
+      <rect x="12" y="13" width="4" height="3" fill="#150d08" />
+      <rect x="13" y="13" width="2" height="1" fill="#a89878" />
+      <rect x="13" y="15" width="2" height="1" fill="#8c7a52" />
 
-      <!-- Pelvis -->
-      <rect x="6" y="20" width="8" height="2" fill="#a89878" />
-      <rect x="6" y="20" width="8" height="1" fill="#c2b794" />
-      <rect x="9" y="20" width="2" height="2" fill="#5a4c34" />
+      <!-- ── Clavicles + scapula shelf ── -->
+      <rect x="4" y="16" width="20" height="4" fill="#150d08" />
+      <rect x="5" y="17" width="18" height="2" fill="#a89878" />
+      <rect x="5" y="17" width="18" height="1" fill="#c2b794" />
+      <rect x="5" y="17" width="5" height="1" fill="#d4c8a8" />
+      <rect x="19" y="17" width="4" height="2" fill="#8c7a52" />
+      <rect x="13" y="17" width="2" height="2" fill="#8c7a52" />
 
-      <!-- Arm bones -->
-      <rect x="4" y="11" width="2" height="9" fill="#c2b794" />
-      <rect x="4" y="11" width="1" height="9" fill="#d4c8a8" />
-      <rect x="14" y="11" width="2" height="9" fill="#a89878" />
-      <rect x="15" y="11" width="1" height="9" fill="#8c7a52" />
-      <rect x="3" y="20" width="3" height="2" fill="#c2b794" />
-      <rect x="14" y="20" width="3" height="2" fill="#a89878" />
+      <!-- ── Ribcage — dark hollow, lit rib bars curving ── -->
+      <rect x="6" y="20" width="16" height="12" fill="#150d08" />
+      <rect x="7" y="21" width="14" height="10" fill="#100d08" />
+      <!-- sternum -->
+      <rect x="13" y="21" width="2" height="8" fill="#a89878" />
+      <rect x="13" y="21" width="1" height="8" fill="#c2b794" />
+      <!-- left ribs (lit) -->
+      <rect x="7" y="22" width="6" height="1" fill="#d4c8a8" />
+      <rect x="7" y="24" width="6" height="1" fill="#c2b794" />
+      <rect x="7" y="26" width="6" height="1" fill="#c2b794" />
+      <rect x="8" y="28" width="5" height="1" fill="#a89878" />
+      <rect x="9" y="30" width="4" height="1" fill="#8c7a52" />
+      <!-- right ribs (shadow) -->
+      <rect x="15" y="22" width="6" height="1" fill="#a89878" />
+      <rect x="15" y="24" width="6" height="1" fill="#8c7a52" />
+      <rect x="15" y="26" width="6" height="1" fill="#8c7a52" />
+      <rect x="15" y="28" width="5" height="1" fill="#6e6244" />
+      <rect x="15" y="30" width="4" height="1" fill="#5a4c34" />
+      <!-- teal grave-light seeping through the cage -->
+      <rect x="10" y="23" width="2" height="1" fill="#2e4a4e" opacity="0.7" />
+      <rect x="16" y="25" width="2" height="1" fill="#2e4a4e" opacity="0.5" />
 
-      <!-- Pitted sword — bone-grey ramp + specular -->
-      <rect x="15" y="9" width="2" height="11" fill="#6a7080" />
-      <rect x="16" y="9" width="1" height="11" fill="#b4bcce" />
-      <rect x="16" y="10" width="1" height="2" fill="#e8eef8" />
-      <rect x="14" y="19" width="4" height="1" fill="#5a4030" />
-      <rect x="15" y="20" width="2" height="2" fill="#14110d" />
+      <!-- ── Spine + lumbar ── -->
+      <rect x="12" y="32" width="4" height="3" fill="#150d08" />
+      <rect x="13" y="32" width="2" height="1" fill="#a89878" />
+      <rect x="13" y="34" width="2" height="1" fill="#8c7a52" />
 
-      <!-- Leg bones -->
-      <rect x="7" y="22" width="2" height="11" fill="#c2b794" />
-      <rect x="7" y="22" width="1" height="11" fill="#d4c8a8" />
-      <rect x="11" y="22" width="2" height="11" fill="#a89878" />
-      <rect x="12" y="22" width="1" height="11" fill="#8c7a52" />
-      <!-- Knee joints -->
-      <rect x="7" y="27" width="2" height="1" fill="#5a4c34" />
-      <rect x="11" y="27" width="2" height="1" fill="#5a4c34" />
+      <!-- ── Left arm bones — lit ── -->
+      <rect x="3" y="20" width="4" height="12" fill="#150d08" />
+      <rect x="4" y="21" width="2" height="10" fill="#c2b794" />
+      <rect x="4" y="21" width="1" height="10" fill="#e8dcc4" />
+      <!-- elbow knob -->
+      <rect x="4" y="25" width="2" height="1" fill="#8c7a52" />
+      <!-- hand -->
+      <rect x="2" y="31" width="5" height="3" fill="#150d08" />
+      <rect x="3" y="32" width="3" height="1" fill="#d4c8a8" />
+      <rect x="3" y="33" width="1" height="1" fill="#c2b794" />
+      <rect x="5" y="33" width="1" height="1" fill="#a89878" />
 
-      <!-- Feet -->
-      <rect x="5" y="33" width="4" height="2" fill="#c2b794" />
-      <rect x="5" y="33" width="4" height="1" fill="#d4c8a8" />
-      <rect x="11" y="33" width="4" height="2" fill="#a89878" />
-      <rect x="11" y="33" width="4" height="1" fill="#c2b794" />
+      <!-- ── Right arm bones — shadow, raising the pitted sword ── -->
+      <rect x="21" y="20" width="4" height="12" fill="#150d08" />
+      <rect x="22" y="21" width="2" height="10" fill="#a89878" />
+      <rect x="23" y="21" width="1" height="10" fill="#8c7a52" />
+      <rect x="22" y="26" width="2" height="1" fill="#5a4c34" />
+      <rect x="21" y="30" width="5" height="3" fill="#150d08" />
+      <rect x="22" y="31" width="3" height="1" fill="#a89878" />
+
+      <!-- ── Pitted sword — grave-grey steel, nicked edge ── -->
+      <rect x="22" y="8" width="4" height="23" fill="#150d08" />
+      <rect x="23" y="9" width="1" height="21" fill="#8a91a4" />
+      <rect x="24" y="9" width="1" height="21" fill="#5a6478" />
+      <rect x="23" y="9" width="1" height="5" fill="#c8cfe0" />
+      <rect x="23" y="10" width="1" height="2" fill="#f2f0e4" />
+      <!-- rust pits + nicks -->
+      <rect x="23" y="16" width="1" height="1" fill="#6b4a22" />
+      <rect x="24" y="20" width="1" height="1" fill="#150d08" />
+      <rect x="23" y="24" width="1" height="1" fill="#5a4030" />
+      <rect x="24" y="14" width="1" height="1" fill="#39424f" />
+      <!-- crossguard -->
+      <rect x="21" y="29" width="6" height="1" fill="#5a4030" />
+      <rect x="21" y="29" width="2" height="1" fill="#8a6238" />
+
+      <!-- ── Pelvis ── -->
+      <rect x="7" y="35" width="14" height="4" fill="#150d08" />
+      <rect x="8" y="36" width="12" height="2" fill="#a89878" />
+      <rect x="8" y="36" width="12" height="1" fill="#c2b794" />
+      <rect x="8" y="36" width="3" height="1" fill="#d4c8a8" />
+      <rect x="13" y="36" width="2" height="2" fill="#0a0806" />
+      <rect x="18" y="36" width="2" height="2" fill="#8c7a52" />
+
+      <!-- ── Leg bones — femur/tibia with knee knobs ── -->
+      <rect x="8" y="39" width="4" height="8" fill="#150d08" />
+      <rect x="9" y="40" width="2" height="6" fill="#c2b794" />
+      <rect x="9" y="40" width="1" height="6" fill="#d4c8a8" />
+      <rect x="9" y="42" width="2" height="1" fill="#8c7a52" />
+      <rect x="16" y="39" width="4" height="8" fill="#150d08" />
+      <rect x="17" y="40" width="2" height="6" fill="#a89878" />
+      <rect x="18" y="40" width="1" height="6" fill="#8c7a52" />
+      <rect x="17" y="42" width="2" height="1" fill="#5a4c34" />
+
+      <!-- ── Splayed bone feet ── -->
+      <rect x="6" y="46" width="7" height="3" fill="#150d08" />
+      <rect x="7" y="47" width="5" height="1" fill="#c2b794" />
+      <rect x="7" y="46" width="5" height="1" fill="#d4c8a8" />
+      <rect x="7" y="48" width="1" height="1" fill="#e8dcc4" />
+      <rect x="9" y="48" width="1" height="1" fill="#d4c8a8" />
+      <rect x="11" y="48" width="1" height="1" fill="#c2b794" />
+      <rect x="15" y="46" width="7" height="3" fill="#150d08" />
+      <rect x="16" y="47" width="5" height="1" fill="#a89878" />
+      <rect x="16" y="46" width="5" height="1" fill="#c2b794" />
+      <rect x="16" y="48" width="1" height="1" fill="#c2b794" />
+      <rect x="18" y="48" width="1" height="1" fill="#a89878" />
+      <rect x="20" y="48" width="1" height="1" fill="#8c7a52" />
     </svg>

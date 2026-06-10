@@ -1,83 +1,130 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 24"
+      viewBox="0 0 38 33"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Slayer Hound"
     >
-      <!-- Hot backlight + ground-contact shadow -->
-      <ellipse cx="14" cy="13" rx="14" ry="11" fill="#b8501a" opacity="0.08" />
-      <ellipse cx="14" cy="23" rx="11" ry="1.3" fill="#000" opacity="0.42" />
+      <!-- Murder-heat backlight + ground shadow -->
+      <ellipse cx="19" cy="18" rx="18" ry="14" fill="#c43020" opacity="0.08" />
+      <ellipse cx="19" cy="31.6" rx="15" ry="1.7" fill="#000" opacity="0.42" />
 
-      <!-- Head — hide ramp, key light upper-left -->
-      <rect x="2" y="9" width="6" height="6" fill="#5a3018" />
-      <rect x="2" y="9" width="6" height="1" fill="#9a5a30" />
-      <rect x="2" y="9" width="2" height="5" fill="#7a4028" />
-      <rect x="2" y="9" width="1" height="3" fill="#b87440" />
-      <rect x="6" y="10" width="2" height="5" fill="#3a1a08" />
-      <polygon points="2,9 0,7 0,11" fill="#5a3018" />
-      <polygon points="2,9 0,7 1,9" fill="#7a4028" />
-      <polygon points="2,12 0,14 2,15" fill="#3a1a08" />
+      <!-- ── Bone-spur ridge along the spine ── -->
+      <rect x="13" y="6" width="3" height="4" fill="#150d08" />
+      <rect x="14" y="7" width="1" height="2" fill="#d4c8a8" />
+      <rect x="14" y="7" width="1" height="1" fill="#f0e6cc" />
+      <rect x="18" y="5" width="3" height="5" fill="#150d08" />
+      <rect x="19" y="6" width="1" height="3" fill="#c2b794" />
+      <rect x="19" y="6" width="1" height="1" fill="#e8dcc4" />
+      <rect x="23" y="6" width="3" height="4" fill="#150d08" />
+      <rect x="24" y="7" width="1" height="2" fill="#a89878" />
+      <rect x="27" y="8" width="3" height="3" fill="#150d08" />
+      <rect x="28" y="9" width="1" height="1" fill="#8c7a52" />
 
-      <!-- Predator eye — gold iris, red core, spark -->
-      <rect x="3" y="11" width="1" height="1" fill="#f4d042" />
-      <rect x="3" y="11" width="1" height="1" fill="#b53c4a" />
-      <rect x="3" y="10" width="1" height="1" fill="#fff0b0" opacity="0.6" />
+      <!-- ── Haunches + barrel body — dried-blood hide ── -->
+      <rect x="9" y="9" width="24" height="12" fill="#150d08" />
+      <rect x="10" y="10" width="22" height="10" fill="#5a3018" />
+      <rect x="10" y="10" width="22" height="1" fill="#7a4028" />
+      <rect x="10" y="10" width="6" height="1" fill="#9a5a30" />
+      <rect x="10" y="11" width="3" height="8" fill="#6e3a1e" />
+      <rect x="10" y="11" width="1" height="5" fill="#7a4028" />
+      <rect x="27" y="11" width="5" height="9" fill="#3a1a08" />
+      <rect x="30" y="12" width="2" height="8" fill="#2e1406" />
+      <rect x="31" y="14" width="1" height="4" fill="#26303a" />
+      <!-- whip-scar welts across the flank -->
+      <rect x="17" y="12" width="5" height="1" fill="#3a1a08" />
+      <rect x="20" y="14" width="5" height="1" fill="#2e1406" />
+      <rect x="17" y="12" width="2" height="1" fill="#9a5a30" />
+      <!-- starved rib shadows -->
+      <rect x="15" y="14" width="1" height="5" fill="#3a1a08" />
+      <rect x="18" y="15" width="1" height="4" fill="#3a1a08" />
+      <!-- hide dither -->
+      <rect x="13" y="12" width="1" height="1" fill="#9a5a30" />
+      <rect x="24" y="13" width="1" height="1" fill="#2e1406" />
+      <rect x="22" y="17" width="1" height="1" fill="#3a1a08" />
 
-      <!-- Frayed ears -->
-      <polygon points="0,8 2,9 1,11" fill="#3a1a08" />
-      <polygon points="3,7 5,9 3,9" fill="#3a1a08" />
-      <polygon points="3,7 5,9 4,8" fill="#7a4028" opacity="0.6" />
+      <!-- ── Neck + skull-heavy head, low and forward ── -->
+      <rect x="5" y="10" width="9" height="9" fill="#150d08" />
+      <rect x="6" y="11" width="7" height="7" fill="#5a3018" />
+      <rect x="6" y="11" width="7" height="1" fill="#9a5a30" />
+      <rect x="6" y="11" width="2" height="6" fill="#7a4028" />
+      <!-- torn ears pinned back -->
+      <rect x="10" y="8" width="3" height="3" fill="#150d08" />
+      <rect x="11" y="9" width="1" height="1" fill="#6e3a1e" />
+      <rect x="13" y="9" width="2" height="2" fill="#150d08" opacity="0.8" />
 
-      <!-- Snout + bared fangs -->
-      <rect x="0" y="13" width="3" height="2" fill="#1a1410" />
-      <rect x="0" y="14" width="3" height="1" fill="#5a3018" />
-      <polygon points="0,14 1,16 2,14" fill="#ffffff" />
-      <polygon points="2,14 3,16 4,14" fill="#e8e0c4" />
+      <!-- ── Muzzle — blunt, scarred, peeled back ── -->
+      <rect x="0" y="12" width="7" height="6" fill="#150d08" />
+      <rect x="1" y="13" width="5" height="4" fill="#4a2410" />
+      <rect x="1" y="13" width="5" height="1" fill="#6e3a1e" />
+      <rect x="1" y="13" width="2" height="3" fill="#5a3018" />
+      <!-- nostril slit + old brand -->
+      <rect x="1" y="14" width="1" height="1" fill="#1a0a04" />
+      <rect x="4" y="13" width="2" height="1" fill="#7a2010" />
 
-      <!-- Body — hide ramp, lit ridge, dark belly -->
-      <rect x="6" y="9" width="14" height="8" fill="#5a3018" />
-      <rect x="6" y="9" width="14" height="1" fill="#9a5a30" />
-      <rect x="6" y="10" width="14" height="1" fill="#7a4028" />
-      <rect x="6" y="16" width="14" height="1" fill="#3a1a08" />
-      <rect x="6" y="9" width="1" height="8" fill="#b87440" opacity="0.6" />
+      <!-- ── Eyes — murder-red, bloomed ── -->
+      <ellipse cx="6" cy="13" rx="3" ry="2" fill="#e8401a" opacity="0.35" />
+      <rect x="5" y="12" width="3" height="2" fill="#1a0a04" />
+      <rect x="5" y="12" width="2" height="2" fill="#e8401a" />
+      <rect x="5" y="12" width="1" height="1" fill="#ffb060" />
+      <rect x="10" y="12" width="2" height="2" fill="#1a0a04" />
+      <rect x="10" y="12" width="1" height="1" fill="#c43020" />
 
-      <!-- Scar mottling -->
-      <rect x="8" y="12" width="3" height="2" fill="#3a1a08" />
-      <rect x="13" y="13" width="3" height="2" fill="#3a1a08" />
-      <rect x="16" y="11" width="2" height="2" fill="#3a1a08" />
-      <rect x="9" y="11" width="1" height="1" fill="#9a5a30" opacity="0.6" />
-      <rect x="14" y="11" width="1" height="1" fill="#9a5a30" opacity="0.5" />
+      <!-- ── Jaws — unhinged wide, fangs interlocking ── -->
+      <rect x="0" y="18" width="9" height="3" fill="#150d08" />
+      <rect x="1" y="18" width="7" height="2" fill="#1a0a04" />
+      <!-- upper fangs -->
+      <rect x="1" y="17" width="1" height="3" fill="#f0e6cc" />
+      <rect x="3" y="17" width="1" height="3" fill="#e8dcc4" />
+      <rect x="5" y="17" width="1" height="3" fill="#d4c8a8" />
+      <rect x="7" y="17" width="1" height="2" fill="#c2b794" />
+      <!-- gum line -->
+      <rect x="1" y="17" width="7" height="1" fill="#7a1e10" />
+      <!-- lower jaw + counter-fangs -->
+      <rect x="0" y="21" width="8" height="3" fill="#150d08" />
+      <rect x="1" y="22" width="6" height="1" fill="#4a2410" />
+      <rect x="2" y="21" width="1" height="2" fill="#d4c8a8" />
+      <rect x="4" y="21" width="1" height="2" fill="#c2b794" />
+      <rect x="6" y="21" width="1" height="1" fill="#a89878" />
+      <!-- blood-drip from the bite -->
+      <rect x="3" y="24" width="1" height="2" fill="#a93340" />
+      <rect x="3" y="26" width="1" height="1" fill="#7e1f2c" opacity="0.7" />
 
-      <!-- Hackle + spike up-right -->
-      <rect x="20" y="8" width="3" height="8" fill="#5a3018" />
-      <rect x="20" y="8" width="1" height="8" fill="#7a4028" />
-      <polygon points="22,8 28,2 26,8" fill="#5a3018" />
-      <polygon points="22,8 27,3 24,4" fill="#3a1a08" />
-      <polygon points="23,7 28,2 27,4" fill="#9a5a30" opacity="0.5" />
+      <!-- ── Legs — heavy bone-clawed, mid-stalk ── -->
+      <rect x="8" y="19" width="5" height="12" fill="#150d08" />
+      <rect x="9" y="20" width="3" height="10" fill="#4a2410" />
+      <rect x="9" y="20" width="1" height="10" fill="#6e3a1e" />
+      <rect x="14" y="20" width="4" height="11" fill="#150d08" />
+      <rect x="15" y="21" width="2" height="9" fill="#3a1a08" />
+      <rect x="22" y="19" width="5" height="12" fill="#150d08" />
+      <rect x="23" y="20" width="3" height="10" fill="#4a2410" />
+      <rect x="23" y="20" width="1" height="10" fill="#5a3018" />
+      <rect x="28" y="20" width="4" height="11" fill="#150d08" />
+      <rect x="29" y="21" width="2" height="9" fill="#2e1406" />
+      <!-- paws + bone talons -->
+      <rect x="7" y="29" width="6" height="3" fill="#150d08" />
+      <rect x="8" y="30" width="4" height="1" fill="#4a2410" />
+      <rect x="7" y="31" width="1" height="1" fill="#e8dcc4" />
+      <rect x="9" y="31" width="1" height="1" fill="#d4c8a8" />
+      <rect x="11" y="31" width="1" height="1" fill="#c2b794" />
+      <rect x="13" y="29" width="6" height="3" fill="#150d08" />
+      <rect x="14" y="30" width="4" height="1" fill="#3a1a08" />
+      <rect x="14" y="31" width="1" height="1" fill="#c2b794" />
+      <rect x="16" y="31" width="1" height="1" fill="#a89878" />
+      <rect x="21" y="29" width="6" height="3" fill="#150d08" />
+      <rect x="22" y="30" width="4" height="1" fill="#4a2410" />
+      <rect x="21" y="31" width="1" height="1" fill="#d4c8a8" />
+      <rect x="23" y="31" width="1" height="1" fill="#c2b794" />
+      <rect x="27" y="29" width="6" height="3" fill="#150d08" />
+      <rect x="28" y="30" width="4" height="1" fill="#2e1406" />
+      <rect x="28" y="31" width="1" height="1" fill="#a89878" />
+      <rect x="30" y="31" width="1" height="1" fill="#8c7a52" />
 
-      <!-- Legs — ramp, shadow on inner edge -->
-      <rect x="7" y="17" width="3" height="6" fill="#5a3018" />
-      <rect x="11" y="17" width="3" height="6" fill="#5a3018" />
-      <rect x="15" y="17" width="3" height="6" fill="#5a3018" />
-      <rect x="19" y="17" width="3" height="6" fill="#5a3018" />
-      <rect x="7" y="17" width="1" height="6" fill="#7a4028" />
-      <rect x="11" y="17" width="1" height="6" fill="#7a4028" />
-      <rect x="15" y="17" width="1" height="6" fill="#7a4028" />
-      <rect x="19" y="17" width="1" height="6" fill="#7a4028" />
-      <rect x="9" y="17" width="1" height="6" fill="#3a1a08" />
-      <rect x="13" y="17" width="1" height="6" fill="#3a1a08" />
-      <rect x="17" y="17" width="1" height="6" fill="#3a1a08" />
-      <rect x="21" y="17" width="1" height="6" fill="#3a1a08" />
-
-      <!-- Claws -->
-      <rect x="6" y="22" width="5" height="2" fill="#1a1410" />
-      <rect x="11" y="22" width="4" height="2" fill="#1a1410" />
-      <rect x="15" y="22" width="4" height="2" fill="#1a1410" />
-      <rect x="19" y="22" width="4" height="2" fill="#1a1410" />
-      <rect x="7" y="23" width="1" height="1" fill="#d4c8a8" opacity="0.5" />
-      <rect x="16" y="23" width="1" height="1" fill="#d4c8a8" opacity="0.5" />
-
-      <!-- Embers -->
-      <rect x="24" y="9" width="1" height="1" fill="#f4942a" opacity="0.5" />
-      <rect x="18" y="19" width="1" height="1" fill="#b8501a" opacity="0.4" />
+      <!-- ── Whip tail with a bone hook ── -->
+      <rect x="32" y="11" width="4" height="2" fill="#150d08" />
+      <rect x="33" y="12" width="2" height="1" fill="#3a1a08" />
+      <rect x="35" y="9" width="2" height="3" fill="#150d08" />
+      <rect x="36" y="10" width="1" height="1" fill="#4a2410" />
+      <rect x="35" y="6" width="3" height="4" fill="#150d08" />
+      <rect x="36" y="7" width="1" height="2" fill="#a89878" />
+      <rect x="36" y="7" width="1" height="1" fill="#c2b794" />
     </svg>

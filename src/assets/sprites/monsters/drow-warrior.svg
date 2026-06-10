@@ -1,104 +1,167 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 36"
+      viewBox="0 0 30 49"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Drow Warrior"
     >
-      <!-- Faerzress backlight + ground shadow -->
-      <ellipse cx="11" cy="18" rx="11" ry="17" fill="#7a5ec0" opacity="0.08" />
-      <ellipse cx="11" cy="35" rx="8" ry="1.4" fill="#000" opacity="0.42" />
+      <!-- Deepdark violet backlight + ground shadow -->
+      <ellipse cx="15" cy="23" rx="14" ry="21" fill="#6a4a90" opacity="0.08" />
+      <ellipse cx="15" cy="47.6" rx="10" ry="1.8" fill="#000" opacity="0.42" />
 
-      <!-- White hair — pale ramp, key light upper-left -->
-      <rect x="6" y="0" width="10" height="2" fill="#c8c0d0" />
-      <rect x="6" y="0" width="10" height="1" fill="#e8e0f0" />
-      <rect x="5" y="2" width="12" height="3" fill="#c8c0d0" />
-      <rect x="5" y="2" width="12" height="1" fill="#ffffff" />
-      <rect x="5" y="2" width="2" height="3" fill="#e8e0f0" />
-      <rect x="15" y="2" width="2" height="3" fill="#a89cb8" />
+      <!-- ── Bone-white hair — swept back in a war-knot ── -->
+      <rect x="12" y="0" width="5" height="3" fill="#150d08" />
+      <rect x="13" y="1" width="3" height="2" fill="#d8cfb8" />
+      <rect x="13" y="1" width="1" height="1" fill="#f4eedc" />
+      <rect x="8" y="2" width="14" height="4" fill="#150d08" />
+      <rect x="9" y="3" width="12" height="3" fill="#d8cfb8" />
+      <rect x="9" y="3" width="5" height="2" fill="#ece3cc" />
+      <rect x="9" y="3" width="2" height="1" fill="#f8f4e8" />
+      <rect x="17" y="4" width="4" height="2" fill="#b8ae94" />
+      <!-- loose strand -->
+      <rect x="7" y="4" width="2" height="3" fill="#150d08" />
+      <rect x="8" y="5" width="1" height="1" fill="#d8cfb8" />
 
-      <!-- Face — dark elf skin ramp -->
-      <rect x="6" y="5" width="10" height="5" fill="#5a4858" />
-      <rect x="6" y="5" width="3" height="5" fill="#6a5868" />
-      <rect x="6" y="5" width="1" height="4" fill="#7e6c7e" />
-      <rect x="14" y="5" width="2" height="5" fill="#3a2838" />
-      <rect x="5" y="6" width="1" height="4" fill="#2a2030" />
-      <rect x="16" y="6" width="1" height="4" fill="#2a2030" />
+      <!-- ── Face — obsidian-violet skin, blade-sharp ── -->
+      <rect x="8" y="6" width="14" height="9" fill="#150d08" />
+      <rect x="9" y="7" width="12" height="7" fill="#2e1e44" />
+      <rect x="9" y="7" width="12" height="1" fill="#3e2c58" />
+      <rect x="9" y="7" width="3" height="7" fill="#3a2858" />
+      <rect x="9" y="7" width="1" height="5" fill="#4c3a6e" />
+      <rect x="18" y="8" width="3" height="6" fill="#22143a" />
+      <rect x="20" y="9" width="1" height="5" fill="#180e2c" />
+      <!-- pointed ears -->
+      <rect x="5" y="8" width="4" height="3" fill="#150d08" />
+      <rect x="6" y="9" width="2" height="1" fill="#3a2858" />
+      <rect x="6" y="9" width="1" height="1" fill="#4c3a6e" />
+      <rect x="21" y="8" width="4" height="3" fill="#150d08" />
+      <rect x="22" y="9" width="2" height="1" fill="#22143a" />
+      <!-- red eyes under white brows -->
+      <rect x="10" y="9" width="3" height="1" fill="#d8cfb8" />
+      <rect x="16" y="9" width="3" height="1" fill="#b8ae94" />
+      <rect x="10" y="10" width="3" height="2" fill="#180e2c" />
+      <rect x="16" y="10" width="3" height="2" fill="#180e2c" />
+      <rect x="10" y="10" width="2" height="1" fill="#c4303c" />
+      <rect x="16" y="10" width="2" height="1" fill="#a02830" />
+      <rect x="10" y="10" width="1" height="1" fill="#ff7a6a" />
+      <rect x="16" y="10" width="1" height="1" fill="#e85a50" />
+      <!-- thin nose + disdainful mouth -->
+      <rect x="14" y="11" width="2" height="1" fill="#22143a" />
+      <rect x="12" y="13" width="6" height="1" fill="#180e2c" />
 
-      <!-- Burning eyes — red iris, gold core -->
-      <rect x="8" y="7" width="2" height="1" fill="#b53c4a" />
-      <rect x="12" y="7" width="2" height="1" fill="#b53c4a" />
-      <rect x="9" y="7" width="1" height="1" fill="#f4d042" />
-      <rect x="13" y="7" width="1" height="1" fill="#f4d042" />
-      <rect x="8" y="6" width="2" height="1" fill="#2a2030" opacity="0.6" />
-      <rect x="12" y="6" width="2" height="1" fill="#2a2030" opacity="0.6" />
-      <rect x="10" y="9" width="2" height="1" fill="#3a2838" />
+      <!-- ── Spider-silk half-cape over the left shoulder ── -->
+      <rect x="3" y="15" width="9" height="5" fill="#150d08" />
+      <rect x="4" y="16" width="7" height="3" fill="#4a3868" />
+      <rect x="4" y="16" width="7" height="1" fill="#6a5890" />
+      <rect x="4" y="16" width="2" height="3" fill="#5a4878" />
+      <!-- silk sheen -->
+      <rect x="5" y="17" width="2" height="1" fill="#8a78b0" />
 
-      <!-- Pauldrons — armour ramp -->
-      <rect x="4" y="10" width="14" height="3" fill="#2a1a48" />
-      <rect x="4" y="10" width="14" height="1" fill="#4a3868" />
-      <rect x="4" y="10" width="2" height="3" fill="#1a0a28" />
-      <rect x="16" y="10" width="2" height="3" fill="#1a0a28" />
-      <rect x="5" y="10" width="2" height="1" fill="#6a5488" />
+      <!-- ── Pauldrons — black adamant, web-etched ── -->
+      <rect x="2" y="17" width="8" height="5" fill="#150d08" />
+      <rect x="3" y="18" width="6" height="3" fill="#2a2030" />
+      <rect x="3" y="18" width="6" height="1" fill="#4a3a56" />
+      <rect x="3" y="18" width="2" height="1" fill="#6a5868" />
+      <rect x="20" y="17" width="8" height="5" fill="#150d08" />
+      <rect x="21" y="18" width="6" height="3" fill="#221a28" />
+      <rect x="21" y="18" width="6" height="1" fill="#3a2e44" />
+      <rect x="25" y="19" width="2" height="2" fill="#16101c" />
+      <rect x="26" y="19" width="1" height="2" fill="#2e4a4e" />
 
-      <!-- Cuirass — purple ramp + spider emblem -->
-      <rect x="5" y="13" width="12" height="8" fill="#2a1a48" />
-      <rect x="5" y="13" width="12" height="1" fill="#4a3868" />
-      <rect x="5" y="13" width="2" height="7" fill="#3a2858" />
-      <rect x="5" y="13" width="1" height="7" fill="#4a3868" />
-      <rect x="15" y="13" width="2" height="7" fill="#1a0a28" />
-      <rect x="6" y="14" width="9" height="6" fill="#3a2858" />
-      <rect x="7" y="15" width="1" height="1" fill="#4a3868" opacity="0.6" />
-      <rect x="13" y="17" width="1" height="1" fill="#1a0a28" />
-      <!-- Spider sigil -->
-      <rect x="10" y="15" width="2" height="5" fill="#a48ee0" />
-      <rect x="9" y="16" width="4" height="2" fill="#a48ee0" />
-      <rect x="10" y="15" width="1" height="1" fill="#e8d4ff" />
+      <!-- ── Cuirass — night-black plate, gold spider sigil ── -->
+      <rect x="7" y="17" width="16" height="15" fill="#150d08" />
+      <rect x="8" y="18" width="14" height="13" fill="#221a28" />
+      <rect x="8" y="18" width="14" height="1" fill="#3a2e44" />
+      <rect x="8" y="18" width="3" height="12" fill="#2a2030" />
+      <rect x="8" y="18" width="1" height="12" fill="#4a3a56" />
+      <rect x="19" y="18" width="3" height="12" fill="#16101c" />
+      <rect x="21" y="19" width="1" height="11" fill="#100a14" />
+      <!-- gold spider sigil -->
+      <rect x="13" y="21" width="4" height="3" fill="#9a7e2e" />
+      <rect x="14" y="21" width="2" height="2" fill="#f4d042" />
+      <rect x="14" y="21" width="1" height="1" fill="#fff4a0" />
+      <!-- sigil legs -->
+      <rect x="12" y="20" width="1" height="1" fill="#c4a430" />
+      <rect x="17" y="20" width="1" height="1" fill="#9a7e2e" />
+      <rect x="12" y="24" width="1" height="1" fill="#c4a430" />
+      <rect x="17" y="24" width="1" height="1" fill="#9a7e2e" />
+      <!-- plate seams -->
+      <rect x="8" y="26" width="14" height="1" fill="#100a14" />
+      <rect x="8" y="27" width="14" height="1" fill="#3a2e44" opacity="0.5" />
+      <!-- web etching dither -->
+      <rect x="10" y="19" width="1" height="1" fill="#4a3a56" />
+      <rect x="18" y="22" width="1" height="1" fill="#16101c" />
+      <rect x="11" y="29" width="1" height="1" fill="#4a3a56" />
 
-      <!-- Belt + buckle -->
-      <rect x="5" y="20" width="12" height="2" fill="#1a0a28" />
-      <rect x="10" y="20" width="2" height="2" fill="#d4b062" />
-      <rect x="10" y="20" width="1" height="1" fill="#f4d042" />
+      <!-- ── Left arm — twin-blade arm raised across ── -->
+      <rect x="3" y="20" width="5" height="9" fill="#150d08" />
+      <rect x="4" y="21" width="3" height="7" fill="#2e1e44" />
+      <rect x="4" y="21" width="1" height="7" fill="#3a2858" />
+      <rect x="6" y="21" width="1" height="7" fill="#22143a" />
+      <rect x="3" y="28" width="5" height="3" fill="#150d08" />
+      <rect x="4" y="29" width="3" height="1" fill="#3a2858" />
 
-      <!-- Left arm + dagger -->
-      <rect x="3" y="11" width="2" height="6" fill="#5a4858" />
-      <rect x="3" y="11" width="1" height="6" fill="#6a5868" />
-      <rect x="2" y="16" width="3" height="2" fill="#6a5868" />
-      <rect x="2" y="16" width="3" height="1" fill="#7e6c7e" />
-      <rect x="0" y="13" width="3" height="2" fill="#5a3a20" />
-      <rect x="0" y="13" width="3" height="1" fill="#7a5230" />
-      <rect x="-1" y="13" width="1" height="1" fill="#3a2418" />
-      <rect x="0" y="5" width="2" height="8" fill="#8a91a4" />
-      <rect x="0" y="5" width="1" height="8" fill="#d4dcec" />
-      <rect x="0" y="5" width="1" height="2" fill="#ffffff" />
-      <rect x="-1" y="3" width="4" height="2" fill="#d4b062" />
-      <rect x="-1" y="3" width="4" height="1" fill="#f4d042" />
+      <!-- ── Right arm — second blade low ── -->
+      <rect x="22" y="20" width="5" height="9" fill="#150d08" />
+      <rect x="23" y="21" width="3" height="7" fill="#22143a" />
+      <rect x="23" y="21" width="1" height="7" fill="#2e1e44" />
+      <rect x="22" y="28" width="5" height="3" fill="#150d08" />
+      <rect x="23" y="29" width="3" height="1" fill="#22143a" />
 
-      <!-- Right arm + longsword -->
-      <rect x="17" y="11" width="2" height="6" fill="#5a4858" />
-      <rect x="18" y="11" width="1" height="6" fill="#3a2838" />
-      <rect x="17" y="16" width="3" height="2" fill="#6a5868" />
-      <rect x="17" y="16" width="3" height="1" fill="#7e6c7e" />
-      <rect x="20" y="9" width="3" height="14" fill="#8a91a4" />
-      <rect x="21" y="9" width="1" height="14" fill="#d4dcec" />
-      <rect x="21" y="10" width="1" height="3" fill="#ffffff" />
-      <rect x="20" y="9" width="1" height="14" fill="#5a627a" />
-      <polygon points="20,9 24,11 23,13 19,11" fill="#6a5488" />
-      <rect x="20" y="20" width="3" height="3" fill="#1a0a28" />
+      <!-- ── Twin adamant sabers — violet-black steel, moonlit edges ── -->
+      <!-- left blade, raised diagonal via steps -->
+      <rect x="0" y="10" width="3" height="4" fill="#150d08" />
+      <rect x="1" y="11" width="1" height="3" fill="#8a8ab4" />
+      <rect x="1" y="11" width="1" height="1" fill="#e8e8ff" />
+      <rect x="1" y="13" width="3" height="5" fill="#150d08" />
+      <rect x="2" y="14" width="1" height="4" fill="#6a6a94" />
+      <rect x="2" y="14" width="1" height="1" fill="#c8c8ec" />
+      <rect x="2" y="17" width="3" height="5" fill="#150d08" />
+      <rect x="3" y="18" width="1" height="4" fill="#8a8ab4" />
+      <rect x="3" y="21" width="3" height="8" fill="#150d08" />
+      <rect x="4" y="22" width="1" height="6" fill="#52527a" />
+      <!-- guard -->
+      <rect x="2" y="28" width="5" height="1" fill="#9a7e2e" />
+      <rect x="2" y="28" width="2" height="1" fill="#d4b062" />
+      <!-- right blade, vertical at the side -->
+      <rect x="24" y="12" width="3" height="17" fill="#150d08" />
+      <rect x="25" y="13" width="1" height="15" fill="#8a8ab4" />
+      <rect x="26" y="13" width="1" height="14" fill="#52527a" />
+      <rect x="25" y="13" width="1" height="4" fill="#e8e8ff" />
+      <rect x="25" y="14" width="1" height="1" fill="#ffffff" />
+      <rect x="23" y="28" width="5" height="1" fill="#9a7e2e" />
+      <rect x="26" y="29" width="2" height="3" fill="#150d08" />
+      <rect x="26" y="29" width="1" height="2" fill="#3a2418" />
 
-      <!-- Legs — armour ramp -->
-      <rect x="5" y="22" width="12" height="2" fill="#1a0a28" />
-      <rect x="6" y="24" width="3" height="6" fill="#2a1a48" />
-      <rect x="13" y="24" width="3" height="6" fill="#2a1a48" />
-      <rect x="6" y="24" width="1" height="6" fill="#3a2858" />
-      <rect x="13" y="24" width="1" height="6" fill="#3a2858" />
-      <rect x="8" y="24" width="1" height="6" fill="#1a0a28" />
-      <rect x="15" y="24" width="1" height="6" fill="#1a0a28" />
+      <!-- ── War-skirt + studded belt ── -->
+      <rect x="8" y="31" width="14" height="2" fill="#150d08" />
+      <rect x="9" y="31" width="12" height="1" fill="#3a2e44" />
+      <rect x="13" y="31" width="3" height="2" fill="#9a7e2e" />
+      <rect x="13" y="31" width="2" height="1" fill="#d4b062" />
+      <rect x="7" y="33" width="16" height="4" fill="#150d08" />
+      <rect x="8" y="34" width="14" height="2" fill="#2a2030" />
+      <rect x="8" y="34" width="14" height="1" fill="#3a2e44" />
+      <rect x="11" y="34" width="1" height="2" fill="#100a14" />
+      <rect x="15" y="34" width="1" height="2" fill="#100a14" />
+      <rect x="19" y="34" width="1" height="2" fill="#100a14" />
 
-      <!-- Boots -->
-      <rect x="6" y="30" width="3" height="4" fill="#3a2418" />
-      <rect x="13" y="30" width="3" height="4" fill="#3a2418" />
-      <rect x="6" y="30" width="3" height="1" fill="#5a3a20" />
-      <rect x="13" y="30" width="3" height="1" fill="#5a3a20" />
-      <rect x="5" y="34" width="4" height="2" fill="#1a1410" />
-      <rect x="13" y="34" width="4" height="2" fill="#1a1410" />
+      <!-- ── Legs — lithe stance, silk-wrapped greaves ── -->
+      <rect x="8" y="37" width="6" height="7" fill="#150d08" />
+      <rect x="9" y="38" width="4" height="6" fill="#2e1e44" />
+      <rect x="9" y="38" width="1" height="6" fill="#3a2858" />
+      <rect x="12" y="38" width="1" height="6" fill="#22143a" />
+      <rect x="16" y="37" width="6" height="7" fill="#150d08" />
+      <rect x="17" y="38" width="4" height="6" fill="#22143a" />
+      <rect x="17" y="38" width="1" height="6" fill="#2e1e44" />
+      <rect x="20" y="38" width="1" height="6" fill="#180e2c" />
+      <!-- silk wraps -->
+      <rect x="9" y="40" width="4" height="1" fill="#4a3868" />
+      <rect x="17" y="40" width="4" height="1" fill="#3a2c54" />
+
+      <!-- ── Soft-step boots ── -->
+      <rect x="7" y="43" width="7" height="5" fill="#150d08" />
+      <rect x="8" y="44" width="5" height="3" fill="#221a28" />
+      <rect x="8" y="44" width="5" height="1" fill="#3a2e44" />
+      <rect x="16" y="43" width="7" height="5" fill="#150d08" />
+      <rect x="17" y="44" width="5" height="3" fill="#1a141e" />
+      <rect x="17" y="44" width="5" height="1" fill="#2a2030" />
     </svg>

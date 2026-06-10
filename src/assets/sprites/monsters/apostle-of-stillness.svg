@@ -1,66 +1,104 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 40"
+      viewBox="0 0 32 53"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Apostle of Stillness"
     >
-      <!-- Sanctified pale backlight + ground shadow -->
-      <ellipse cx="12" cy="20" rx="11" ry="18" fill="#d8c878" opacity="0.07" />
-      <ellipse cx="12" cy="38" rx="8" ry="1.4" fill="#000" opacity="0.35" />
+      <!-- Still pale backlight + ground shadow -->
+      <ellipse cx="16" cy="25" rx="15" ry="23" fill="#c0bcae" opacity="0.07" />
+      <ellipse cx="16" cy="51.6" rx="10" ry="1.8" fill="#000" opacity="0.4" />
 
-      <!-- Thin still halo of fixed light -->
-      <circle cx="12" cy="3" r="6" fill="none" stroke="#d8c878" stroke-width="0.6" opacity="0.7" />
-      <circle cx="12" cy="3" r="6" fill="none" stroke="#fff8e0" stroke-width="0.3" opacity="0.5" />
+      <!-- ── Veiled head — featureless cloth pulled taut ── -->
+      <rect x="10" y="1" width="12" height="12" fill="#150d08" />
+      <rect x="11" y="2" width="10" height="10" fill="#c0bcae" />
+      <rect x="11" y="2" width="10" height="1" fill="#d4d0c2" />
+      <rect x="11" y="2" width="3" height="9" fill="#c8c4b6" />
+      <rect x="11" y="2" width="1" height="6" fill="#dcd8ca" />
+      <rect x="18" y="3" width="3" height="9" fill="#9a968a" />
+      <rect x="20" y="4" width="1" height="8" fill="#8a8678" />
+      <rect x="20" y="7" width="1" height="3" fill="#7e8a86" />
+      <!-- the face beneath presses through the cloth -->
+      <rect x="13" y="5" width="2" height="1" fill="#9a968a" />
+      <rect x="17" y="5" width="2" height="1" fill="#8a8678" />
+      <rect x="14" y="8" width="3" height="1" fill="#a8a496" />
+      <rect x="14" y="9" width="3" height="1" fill="#8a8678" />
+      <!-- stitched-iron ring sealing the veil at the throat -->
+      <rect x="12" y="12" width="8" height="2" fill="#150d08" />
+      <rect x="13" y="12" width="6" height="1" fill="#6a7080" />
+      <rect x="13" y="12" width="2" height="1" fill="#8a91a4" />
 
-      <!-- Pale ruined head — bone ramp, key upper-left -->
-      <rect x="8" y="3" width="8" height="8" fill="#c0bcae" />
-      <rect x="8" y="3" width="8" height="1" fill="#d4d0c2" />
-      <rect x="8" y="3" width="2" height="8" fill="#d4d0c2" />
-      <rect x="8" y="3" width="1" height="5" fill="#e8e4d4" />
-      <rect x="14" y="4" width="2" height="7" fill="#9a9484" />
-      <rect x="15" y="4" width="1" height="7" fill="#8a8678" />
+      <!-- ── Yoke of stillness — stone bar across the shoulders ── -->
+      <rect x="3" y="14" width="26" height="5" fill="#150d08" />
+      <rect x="4" y="15" width="24" height="3" fill="#9a968a" />
+      <rect x="4" y="15" width="24" height="1" fill="#c0bcae" />
+      <rect x="4" y="15" width="6" height="1" fill="#d4d0c2" />
+      <rect x="24" y="15" width="4" height="3" fill="#7e7a6e" />
+      <rect x="4" y="17" width="24" height="1" fill="#6e6a60" />
+      <!-- carved stillness-runes on the yoke -->
+      <rect x="7" y="16" width="2" height="1" fill="#5a564c" />
+      <rect x="15" y="16" width="2" height="1" fill="#5a564c" />
+      <rect x="22" y="16" width="2" height="1" fill="#4e4a42" />
 
-      <!-- Two coins of unmoving light for eyes -->
-      <circle cx="10" cy="6" r="1.3" fill="#f4e8b0" />
-      <circle cx="14" cy="6" r="1.3" fill="#f4e8b0" />
-      <circle cx="10" cy="6" r="0.6" fill="#fff8e0" />
-      <circle cx="14" cy="6" r="0.6" fill="#fff8e0" />
-      <!-- Stilled mouth -->
-      <rect x="10" y="9" width="4" height="1" fill="#9a9080" />
+      <!-- ── Robe — pale column, utterly symmetric, fold-perfect ── -->
+      <rect x="7" y="19" width="18" height="22" fill="#150d08" />
+      <rect x="8" y="20" width="16" height="20" fill="#b0aca0" />
+      <rect x="8" y="20" width="16" height="1" fill="#c8c4b6" />
+      <rect x="8" y="20" width="3" height="19" fill="#c0bcae" />
+      <rect x="8" y="20" width="1" height="16" fill="#d4d0c2" />
+      <rect x="21" y="20" width="3" height="19" fill="#8a8678" />
+      <rect x="23" y="21" width="1" height="18" fill="#7e7a6e" />
+      <rect x="23" y="26" width="1" height="5" fill="#7e8a86" />
+      <!-- perfect mirrored folds -->
+      <rect x="12" y="21" width="1" height="18" fill="#9a968a" />
+      <rect x="19" y="21" width="1" height="18" fill="#8a8678" />
+      <rect x="15" y="21" width="2" height="18" fill="#a8a496" />
+      <rect x="15" y="21" width="1" height="18" fill="#9a968a" />
+      <!-- prayer-strip nailed to the breast -->
+      <rect x="14" y="23" width="4" height="7" fill="#150d08" />
+      <rect x="15" y="24" width="2" height="5" fill="#e8e0c4" />
+      <rect x="15" y="24" width="1" height="3" fill="#f4eedc" />
+      <rect x="15" y="26" width="2" height="1" fill="#8a8268" />
+      <rect x="15" y="28" width="2" height="1" fill="#8a8268" />
+      <!-- the nail -->
+      <rect x="15" y="23" width="1" height="1" fill="#6a7080" />
 
-      <!-- Pale robe — bone ramp, lit centre, shadow flank -->
-      <polygon points="7,11 17,11 20,38 4,38" fill="#b0ac9e" />
-      <polygon points="7,11 14,11 12,38 6,38" fill="#c8c4b6" />
-      <rect x="11" y="11" width="2" height="27" fill="#dcd8c8" />
-      <polygon points="16,11 17,11 20,38 17,38" fill="#8a8678" />
-      <rect x="7" y="11" width="1" height="27" fill="#9aa6a8" opacity="0.5" />
-      <!-- robe dither -->
-      <rect x="9" y="22" width="1" height="1" fill="#c8c4b6" />
-      <rect x="15" y="28" width="1" height="1" fill="#8a8678" />
-      <rect x="8" y="32" width="1" height="1" fill="#c8c4b6" />
+      <!-- ── Arms — crossed dead-level, hands hidden in cuffs ── -->
+      <rect x="4" y="19" width="5" height="12" fill="#150d08" />
+      <rect x="5" y="20" width="3" height="10" fill="#b0aca0" />
+      <rect x="5" y="20" width="1" height="10" fill="#c8c4b6" />
+      <rect x="7" y="20" width="1" height="10" fill="#9a968a" />
+      <rect x="23" y="19" width="5" height="12" fill="#150d08" />
+      <rect x="24" y="20" width="3" height="10" fill="#8a8678" />
+      <rect x="24" y="20" width="1" height="10" fill="#9a968a" />
+      <rect x="26" y="20" width="1" height="10" fill="#6e6a60" />
+      <!-- both cuffs meet at the waist, sealed together with a pin -->
+      <rect x="9" y="30" width="14" height="5" fill="#150d08" />
+      <rect x="10" y="31" width="12" height="3" fill="#c0bcae" />
+      <rect x="10" y="31" width="12" height="1" fill="#d4d0c2" />
+      <rect x="10" y="33" width="12" height="1" fill="#8a8678" />
+      <rect x="15" y="31" width="2" height="3" fill="#6a7080" />
+      <rect x="15" y="31" width="1" height="1" fill="#a4adc4" />
 
-      <!-- Raised hand, finger to lips -->
-      <rect x="9" y="11" width="2" height="3" fill="#c0bcae" />
-      <rect x="9" y="11" width="1" height="3" fill="#d4d0c2" />
-      <rect x="10" y="9" width="2" height="3" fill="#c0bcae" />
-      <rect x="11" y="8" width="1" height="2" fill="#e8e0d0" />
+      <!-- ── Hem — floats one inch off the floor; stillness ── -->
+      <rect x="8" y="41" width="16" height="6" fill="#150d08" />
+      <rect x="9" y="42" width="14" height="4" fill="#a8a496" />
+      <rect x="9" y="42" width="14" height="1" fill="#c0bcae" />
+      <rect x="9" y="42" width="3" height="4" fill="#b0aca0" />
+      <rect x="20" y="42" width="3" height="4" fill="#8a8678" />
+      <rect x="12" y="43" width="1" height="3" fill="#8a8678" />
+      <rect x="16" y="43" width="1" height="3" fill="#7e7a6e" />
+      <rect x="19" y="43" width="1" height="3" fill="#8a8678" />
+      <!-- dead-straight hem line -->
+      <rect x="9" y="46" width="14" height="1" fill="#5a564c" />
+      <!-- the gap of still air beneath -->
+      <rect x="10" y="48" width="12" height="1" fill="#7e8a86" opacity="0.4" />
+      <rect x="12" y="50" width="8" height="1" fill="#7e8a86" opacity="0.25" />
 
-      <!-- Other arm at side, still -->
-      <rect x="16" y="13" width="3" height="11" fill="#b0ac9e" />
-      <rect x="16" y="13" width="1" height="11" fill="#c0bcae" />
-      <rect x="18" y="13" width="1" height="11" fill="#8a8678" />
-      <rect x="16" y="22" width="3" height="2" fill="#c8c4b6" />
-      <rect x="16" y="22" width="3" height="1" fill="#d4d0c2" />
-
-      <!-- Gold orphrey down the robe -->
-      <rect x="11" y="14" width="2" height="18" fill="#c8a850" opacity="0.7" />
-      <rect x="11" y="14" width="1" height="18" fill="#e8c870" opacity="0.5" />
-      <rect x="11" y="16" width="1" height="1" fill="#fff0b0" opacity="0.6" />
-
-      <!-- Hem -->
-      <polygon points="4,38 7,34 10,38" fill="#9a968a" />
-      <polygon points="10,38 13,34 16,38" fill="#9a968a" />
-      <polygon points="16,38 19,34 20,38" fill="#9a968a" />
-      <polygon points="7,34 8,36 6,36" fill="#c0bcae" opacity="0.6" />
-      <polygon points="13,34 14,36 12,36" fill="#c0bcae" opacity="0.6" />
+      <!-- ── Dust hanging motionless around it ── -->
+      <rect x="3" y="24" width="1" height="1" fill="#d4d0c2" opacity="0.5" />
+      <rect x="28" y="27" width="1" height="1" fill="#c0bcae" opacity="0.45" />
+      <rect x="2" y="36" width="1" height="1" fill="#c0bcae" opacity="0.4" />
+      <rect x="29" y="38" width="1" height="1" fill="#a8a496" opacity="0.4" />
+      <rect x="5" y="9" width="1" height="1" fill="#d4d0c2" opacity="0.4" />
+      <rect x="26" y="10" width="1" height="1" fill="#b0aca0" opacity="0.35" />
     </svg>

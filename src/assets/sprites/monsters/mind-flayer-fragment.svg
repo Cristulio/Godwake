@@ -1,59 +1,127 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 32"
+      viewBox="0 0 30 44"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Mindrender Fragment"
     >
-      <!-- Psionic backlight + faint ground glow -->
-      <ellipse cx="11" cy="14" rx="11" ry="14" fill="#5a3a98" opacity="0.1" />
-      <ellipse cx="11" cy="28" rx="7" ry="1.4" fill="#1a0a28" opacity="0.35" />
+      <!-- Psychic violet backlight + faint hover shadow -->
+      <ellipse cx="15" cy="20" rx="15" ry="19" fill="#a48ee0" opacity="0.1" />
+      <ellipse cx="15" cy="42.6" rx="9" ry="1.5" fill="#000" opacity="0.32" />
 
-      <!-- Bulbous cranium — purple ramp, key light upper-left -->
-      <ellipse cx="11" cy="6" rx="7" ry="5" fill="#3a2858" />
-      <ellipse cx="11" cy="6" rx="6.5" ry="4.6" fill="#5a3a78" />
-      <ellipse cx="10" cy="5" rx="5" ry="3.4" fill="#7a5a98" />
-      <ellipse cx="9" cy="3" rx="3" ry="1.6" fill="#a48ee0" opacity="0.6" />
-      <ellipse cx="14" cy="8" rx="4" ry="2.5" fill="#2a1840" opacity="0.6" />
-      <rect x="8" y="2" width="2" height="1" fill="#c4b0f0" opacity="0.6" />
+      <!-- ── Bulbed cranium — over-swollen, vein-lit ── -->
+      <rect x="7" y="0" width="16" height="3" fill="#150d08" />
+      <rect x="5" y="3" width="20" height="8" fill="#150d08" />
+      <rect x="7" y="11" width="16" height="3" fill="#150d08" />
+      <rect x="8" y="1" width="14" height="2" fill="#7a5a98" />
+      <rect x="6" y="4" width="18" height="7" fill="#6a4c88" />
+      <rect x="8" y="11" width="14" height="2" fill="#5a3a78" />
+      <!-- lit dome -->
+      <rect x="8" y="1" width="7" height="2" fill="#8a6aa8" />
+      <rect x="8" y="1" width="4" height="1" fill="#a48ec0" />
+      <rect x="6" y="4" width="4" height="4" fill="#7a5a98" />
+      <rect x="6" y="4" width="2" height="2" fill="#8a6aa8" />
+      <!-- shadow side -->
+      <rect x="20" y="4" width="4" height="7" fill="#5a3a78" />
+      <rect x="22" y="6" width="2" height="5" fill="#4a3470" />
+      <rect x="23" y="8" width="1" height="3" fill="#2e4a4e" />
+      <!-- psychic veins pulsing across the cranium -->
+      <rect x="11" y="2" width="1" height="4" fill="#c4b0f0" />
+      <rect x="12" y="5" width="1" height="2" fill="#a48ee0" />
+      <rect x="16" y="3" width="1" height="3" fill="#a48ee0" />
+      <rect x="17" y="6" width="1" height="1" fill="#8a6ac8" />
+      <rect x="19" y="2" width="1" height="3" fill="#8a6ac8" />
+      <!-- the FRACTURE — it is a torn-off piece of something larger -->
+      <rect x="13" y="0" width="2" height="4" fill="#2a1648" />
+      <rect x="14" y="2" width="2" height="3" fill="#2a1648" />
+      <rect x="14" y="1" width="1" height="1" fill="#e8dcff" />
+      <rect x="15" y="3" width="1" height="1" fill="#c4b0f0" />
 
-      <!-- Blank white eyes + spec -->
-      <rect x="7" y="6" width="2" height="2" fill="#150820" />
-      <rect x="13" y="6" width="2" height="2" fill="#150820" />
-      <rect x="7" y="6" width="1" height="1" fill="#ffffff" />
-      <rect x="13" y="6" width="1" height="1" fill="#ffffff" />
-      <rect x="8" y="7" width="1" height="1" fill="#a48ee0" opacity="0.6" />
+      <!-- ── White blind eyes — pupil-less hunger ── -->
+      <rect x="9" y="6" width="4" height="3" fill="#1a0e2c" />
+      <rect x="17" y="6" width="4" height="3" fill="#1a0e2c" />
+      <rect x="10" y="7" width="2" height="1" fill="#e8e4f4" />
+      <rect x="18" y="7" width="2" height="1" fill="#c8c2dc" />
+      <rect x="10" y="7" width="1" height="1" fill="#ffffff" />
+      <rect x="18" y="7" width="1" height="1" fill="#ece6f8" />
+      <rect x="9" y="6" width="4" height="1" fill="#241238" />
+      <rect x="17" y="6" width="4" height="1" fill="#241238" />
 
-      <!-- Mouth ring above the tentacles -->
-      <rect x="6" y="10" width="10" height="3" fill="#3a2858" />
-      <rect x="6" y="10" width="10" height="1" fill="#1a0a28" />
-      <rect x="6" y="12" width="10" height="1" fill="#150820" />
+      <!-- ── Tentacle-beard — four feelers, writhing asymmetric ── -->
+      <rect x="9" y="13" width="3" height="4" fill="#150d08" />
+      <rect x="10" y="14" width="1" height="3" fill="#7a5a98" />
+      <rect x="8" y="17" width="3" height="4" fill="#150d08" />
+      <rect x="9" y="18" width="1" height="3" fill="#6a4c88" />
+      <rect x="9" y="21" width="3" height="3" fill="#150d08" />
+      <rect x="10" y="22" width="1" height="2" fill="#5a3a78" />
+      <rect x="13" y="13" width="3" height="5" fill="#150d08" />
+      <rect x="14" y="14" width="1" height="4" fill="#8a6aa8" />
+      <rect x="14" y="18" width="3" height="4" fill="#150d08" />
+      <rect x="15" y="19" width="1" height="3" fill="#7a5a98" />
+      <rect x="13" y="22" width="3" height="3" fill="#150d08" />
+      <rect x="14" y="23" width="1" height="2" fill="#6a4c88" />
+      <rect x="17" y="13" width="3" height="4" fill="#150d08" />
+      <rect x="18" y="14" width="1" height="3" fill="#6a4c88" />
+      <rect x="18" y="17" width="3" height="4" fill="#150d08" />
+      <rect x="19" y="18" width="1" height="3" fill="#5a3a78" />
+      <rect x="20" y="13" width="3" height="3" fill="#150d08" />
+      <rect x="21" y="14" width="1" height="2" fill="#5a3a78" />
+      <rect x="21" y="16" width="3" height="4" fill="#150d08" />
+      <rect x="22" y="17" width="1" height="2" fill="#4a3470" />
+      <!-- sucker pips on the lit feeler -->
+      <rect x="13" y="15" width="1" height="1" fill="#c4b0f0" />
+      <rect x="13" y="19" width="1" height="1" fill="#a48ee0" />
 
-      <!-- Facial tentacles — ramped, curling down -->
-      <polygon points="6,11 4,16 5,18" fill="#4a3470" />
-      <polygon points="8,12 7,18 9,20" fill="#4a3470" />
-      <polygon points="10,13 10,21 12,22" fill="#5a3a78" />
-      <polygon points="12,13 13,21 14,22" fill="#4a3470" />
-      <polygon points="14,12 15,18 16,20" fill="#3a2858" />
-      <polygon points="16,11 18,16 17,18" fill="#3a2858" />
-      <polygon points="10,13 10,21 11,21" fill="#7a5a98" opacity="0.6" />
-      <polygon points="8,12 7,18 8,18" fill="#5a3a78" opacity="0.6" />
-      <!-- Pale suckers -->
-      <rect x="4" y="13" width="2" height="2" fill="#7a5a98" opacity="0.6" />
-      <rect x="6" y="15" width="2" height="2" fill="#7a5a98" opacity="0.6" />
-      <rect x="8" y="17" width="2" height="2" fill="#8a6aa8" opacity="0.6" />
-      <rect x="12" y="17" width="2" height="2" fill="#7a5a98" opacity="0.6" />
-      <rect x="14" y="15" width="2" height="2" fill="#5a3a78" opacity="0.6" />
-      <rect x="16" y="13" width="2" height="2" fill="#5a3a78" opacity="0.6" />
+      <!-- ── Ragged torso — robe scrap over a half-body ── -->
+      <rect x="8" y="24" width="14" height="10" fill="#150d08" />
+      <rect x="9" y="25" width="12" height="8" fill="#3a2858" />
+      <rect x="9" y="25" width="12" height="1" fill="#4a3470" />
+      <rect x="9" y="25" width="3" height="7" fill="#443064" />
+      <rect x="9" y="25" width="1" height="5" fill="#54407a" />
+      <rect x="18" y="25" width="3" height="7" fill="#2a1c48" />
+      <rect x="20" y="26" width="1" height="6" fill="#221440" />
+      <!-- it ends mid-rib — the rest never came through -->
+      <rect x="9" y="32" width="12" height="2" fill="#1c1034" />
+      <rect x="10" y="33" width="10" height="1" fill="#150d28" />
+      <!-- psychic glow bleeding from the torn edge -->
+      <rect x="11" y="34" width="8" height="1" fill="#a48ee0" opacity="0.45" />
+      <rect x="13" y="35" width="4" height="1" fill="#c4b0f0" opacity="0.35" />
 
-      <!-- Dissolving fragment tail — fading psionic ectoplasm -->
-      <ellipse cx="11" cy="25" rx="6" ry="3" fill="#3a2858" opacity="0.5" />
-      <ellipse cx="11" cy="27" rx="5" ry="2" fill="#a48ee0" opacity="0.3" />
-      <ellipse cx="11" cy="29" rx="7" ry="1.5" fill="#a48ee0" opacity="0.15" />
+      <!-- ── Arms — too-long fingers, casting ── -->
+      <rect x="4" y="25" width="6" height="4" fill="#150d08" />
+      <rect x="5" y="26" width="4" height="2" fill="#6a4c88" />
+      <rect x="5" y="26" width="1" height="2" fill="#7a5a98" />
+      <rect x="3" y="28" width="4" height="5" fill="#150d08" />
+      <rect x="4" y="29" width="2" height="3" fill="#5a3a78" />
+      <!-- splayed fingers -->
+      <rect x="2" y="33" width="1" height="3" fill="#150d08" />
+      <rect x="4" y="33" width="1" height="4" fill="#150d08" />
+      <rect x="6" y="33" width="1" height="3" fill="#150d08" />
+      <rect x="2" y="33" width="1" height="1" fill="#8a6aa8" />
+      <rect x="4" y="33" width="1" height="1" fill="#7a5a98" />
+      <rect x="20" y="25" width="6" height="4" fill="#150d08" />
+      <rect x="21" y="26" width="4" height="2" fill="#5a3a78" />
+      <rect x="24" y="26" width="1" height="2" fill="#4a3470" />
+      <rect x="23" y="28" width="4" height="5" fill="#150d08" />
+      <rect x="24" y="29" width="2" height="3" fill="#4a3470" />
+      <rect x="23" y="33" width="1" height="3" fill="#150d08" />
+      <rect x="25" y="33" width="1" height="4" fill="#150d08" />
+      <rect x="27" y="33" width="1" height="3" fill="#150d08" />
+      <rect x="25" y="33" width="1" height="1" fill="#6a4c88" />
 
-      <!-- Drifting psi-motes -->
-      <circle cx="5" cy="2" r="1" fill="#a48ee0" opacity="0.6" />
-      <circle cx="17" cy="2" r="1" fill="#a48ee0" opacity="0.55" />
-      <circle cx="11" cy="0" r="0.6" fill="#e8d4ff" />
-      <rect x="3" y="9" width="1" height="1" fill="#c4b0f0" opacity="0.5" />
-      <rect x="18" y="9" width="1" height="1" fill="#c4b0f0" opacity="0.45" />
+      <!-- ── Psychic storm gathering between the hands ── -->
+      <ellipse cx="15" cy="38" rx="6" ry="3.6" fill="#a48ee0" opacity="0.22" />
+      <rect x="12" y="36" width="6" height="4" fill="#2a1648" opacity="0.8" />
+      <rect x="13" y="37" width="4" height="2" fill="#8a6ac8" opacity="0.8" />
+      <rect x="14" y="37" width="2" height="2" fill="#c4b0f0" />
+      <rect x="14" y="37" width="1" height="1" fill="#f0e8ff" />
+      <!-- storm sparks -->
+      <rect x="10" y="36" width="1" height="1" fill="#c4b0f0" opacity="0.7" />
+      <rect x="19" y="39" width="1" height="1" fill="#a48ee0" opacity="0.6" />
+      <rect x="12" y="41" width="1" height="1" fill="#8a6ac8" opacity="0.5" />
+      <rect x="17" y="35" width="1" height="1" fill="#e8dcff" opacity="0.6" />
+
+      <!-- ── It does not touch the ground — trailing wisps ── -->
+      <rect x="11" y="40" width="2" height="2" fill="#3a2858" opacity="0.5" />
+      <rect x="16" y="41" width="2" height="2" fill="#2a1c48" opacity="0.4" />
+      <rect x="13" y="42" width="2" height="1" fill="#3a2858" opacity="0.25" />
     </svg>

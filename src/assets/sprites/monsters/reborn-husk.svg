@@ -1,71 +1,137 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 40"
+      viewBox="0 0 32 53"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Reborn Husk"
     >
-      <!-- Cold reanimation backlight + ground shadow -->
-      <ellipse cx="12" cy="20" rx="12" ry="17" fill="#4aa89a" opacity="0.07" />
-      <ellipse cx="12" cy="38" rx="8" ry="1.4" fill="#000" opacity="0.42" />
+      <!-- Rebirth-light backlight + ground shadow -->
+      <ellipse cx="16" cy="25" rx="15" ry="23" fill="#7ad8c8" opacity="0.08" />
+      <ellipse cx="16" cy="51.6" rx="10" ry="1.8" fill="#000" opacity="0.4" />
 
-      <!-- Bowed grey head — ramp, key upper-left -->
-      <rect x="8" y="3" width="8" height="7" fill="#8a857c" />
-      <rect x="8" y="3" width="8" height="1" fill="#a8a39a" />
-      <rect x="8" y="3" width="2" height="6" fill="#9a958c" />
-      <rect x="8" y="3" width="1" height="5" fill="#b0aaa0" />
-      <rect x="14" y="4" width="2" height="6" fill="#6a655c" />
-      <rect x="15" y="4" width="1" height="6" fill="#56524a" />
-      <!-- Sunken eyes — cold-light spark -->
-      <rect x="8" y="5" width="2" height="2" fill="#14181c" />
-      <rect x="14" y="5" width="2" height="2" fill="#14181c" />
-      <rect x="9" y="5" width="1" height="1" fill="#a4e8e0" />
-      <rect x="15" y="5" width="1" height="1" fill="#a4e8e0" />
-      <rect x="9" y="5" width="1" height="1" fill="#d4fffa" opacity="0.6" />
-      <rect x="10" y="8" width="4" height="1" fill="#56524a" />
+      <!-- ── Head — grey clay-flesh, cracked like drying earth ── -->
+      <rect x="10" y="2" width="12" height="11" fill="#150d08" />
+      <rect x="11" y="3" width="10" height="9" fill="#8a857c" />
+      <rect x="11" y="3" width="10" height="1" fill="#9a958c" />
+      <rect x="11" y="3" width="3" height="8" fill="#928d84" />
+      <rect x="11" y="3" width="1" height="5" fill="#a6a198" />
+      <rect x="18" y="4" width="3" height="8" fill="#6a655c" />
+      <rect x="20" y="5" width="1" height="7" fill="#56524a" />
+      <!-- the great crack across the face — teal light inside -->
+      <rect x="13" y="3" width="1" height="4" fill="#2a2a26" />
+      <rect x="14" y="6" width="1" height="3" fill="#2a2a26" />
+      <rect x="14" y="7" width="1" height="1" fill="#5ab8a8" />
+      <rect x="13" y="4" width="1" height="1" fill="#3aa092" />
+      <!-- eyes — one grey-dead, one teal-rekindled -->
+      <rect x="12" y="6" width="3" height="2" fill="#1e1c18" />
+      <rect x="17" y="6" width="3" height="2" fill="#1e1c18" />
+      <rect x="17" y="6" width="2" height="1" fill="#3aa092" />
+      <rect x="17" y="6" width="1" height="1" fill="#a8ece0" />
+      <rect x="12" y="7" width="2" height="1" fill="#46443e" />
+      <!-- slack mouth, re-learning breath -->
+      <rect x="13" y="10" width="6" height="1" fill="#2a2a26" />
+      <rect x="14" y="11" width="3" height="1" fill="#56524a" />
 
-      <!-- Cold-light stitch at the throat -->
-      <rect x="7" y="10" width="10" height="1" fill="#7ad8c8" opacity="0.9" />
-      <rect x="7" y="10" width="10" height="1" fill="#c4fff0" opacity="0.4" />
+      <!-- ── Shoulders — husk plates flaking like bark ── -->
+      <rect x="4" y="13" width="24" height="4" fill="#150d08" />
+      <rect x="5" y="14" width="22" height="2" fill="#7a756c" />
+      <rect x="5" y="14" width="22" height="1" fill="#8a857c" />
+      <rect x="5" y="14" width="5" height="1" fill="#9a958c" />
+      <rect x="23" y="14" width="4" height="2" fill="#5e5a52" />
+      <!-- flaking shards lifting -->
+      <rect x="6" y="12" width="2" height="2" fill="#150d08" />
+      <rect x="7" y="13" width="1" height="1" fill="#8a857c" />
+      <rect x="24" y="12" width="2" height="2" fill="#150d08" />
+      <rect x="25" y="13" width="1" height="1" fill="#56524a" />
 
-      <!-- Hunched torso — ash ramp -->
-      <rect x="6" y="11" width="12" height="13" fill="#6a655c" />
-      <rect x="6" y="11" width="12" height="1" fill="#8a857c" />
-      <rect x="6" y="11" width="2" height="12" fill="#7a756c" />
-      <rect x="6" y="11" width="1" height="11" fill="#9a958c" />
-      <rect x="16" y="11" width="2" height="12" fill="#56524a" />
-      <rect x="17" y="11" width="1" height="12" fill="#46423a" />
-      <rect x="9" y="13" width="6" height="9" fill="#8a857c" />
-      <rect x="9" y="13" width="3" height="9" fill="#9a958c" />
-      <!-- Glowing chest seam + dither -->
-      <rect x="10" y="15" width="1" height="6" fill="#7ad8c8" opacity="0.55" />
-      <rect x="8" y="18" width="1" height="1" fill="#56524a" />
-      <rect x="14" y="16" width="1" height="1" fill="#9a958c" />
+      <!-- ── Torso — the husk split down the sternum, new light beneath ── -->
+      <rect x="6" y="17" width="20" height="17" fill="#150d08" />
+      <rect x="7" y="18" width="18" height="15" fill="#7a756c" />
+      <rect x="7" y="18" width="18" height="1" fill="#8a857c" />
+      <rect x="7" y="18" width="3" height="14" fill="#827d74" />
+      <rect x="7" y="18" width="1" height="10" fill="#928d84" />
+      <rect x="22" y="18" width="3" height="14" fill="#5e5a52" />
+      <rect x="24" y="19" width="1" height="13" fill="#4e4a44" />
+      <rect x="24" y="23" width="1" height="4" fill="#46565a" />
+      <!-- the sternum split — widening -->
+      <rect x="14" y="18" width="4" height="15" fill="#1c1c18" />
+      <rect x="15" y="19" width="2" height="13" fill="#0a2420" />
+      <rect x="15" y="20" width="2" height="11" fill="#0e3c34" />
+      <rect x="15" y="22" width="2" height="7" fill="#1a6054" />
+      <rect x="16" y="24" width="1" height="3" fill="#3aa092" />
+      <rect x="16" y="25" width="1" height="1" fill="#a8ece0" />
+      <!-- crack-lines branching from the split -->
+      <rect x="12" y="21" width="2" height="1" fill="#2a2a26" />
+      <rect x="11" y="22" width="1" height="1" fill="#2a2a26" />
+      <rect x="18" y="25" width="2" height="1" fill="#2a2a26" />
+      <rect x="20" y="26" width="1" height="1" fill="#2a2a26" />
+      <rect x="13" y="28" width="1" height="1" fill="#2a2a26" />
+      <rect x="12" y="22" width="1" height="1" fill="#3aa092" opacity="0.7" />
+      <rect x="19" y="26" width="1" height="1" fill="#3aa092" opacity="0.6" />
+      <!-- husk plate seams -->
+      <rect x="8" y="24" width="5" height="1" fill="#56524a" />
+      <rect x="19" y="22" width="4" height="1" fill="#4e4a44" />
+      <rect x="9" y="29" width="4" height="1" fill="#56524a" />
+      <!-- weathering dither -->
+      <rect x="10" y="20" width="1" height="1" fill="#928d84" />
+      <rect x="21" y="28" width="1" height="1" fill="#46443e" />
 
-      <!-- Reaching arms — ramp -->
-      <rect x="3" y="13" width="3" height="3" fill="#7a756c" />
-      <rect x="3" y="13" width="3" height="1" fill="#9a958c" />
-      <rect x="1" y="15" width="3" height="3" fill="#6a655c" />
-      <rect x="0" y="17" width="3" height="2" fill="#9a958c" />
-      <rect x="0" y="17" width="3" height="1" fill="#b0aaa0" />
-      <rect x="18" y="13" width="3" height="3" fill="#6a655c" />
-      <rect x="18" y="13" width="3" height="1" fill="#7a756c" />
-      <rect x="20" y="15" width="3" height="3" fill="#56524a" />
-      <rect x="21" y="17" width="3" height="2" fill="#8a857c" />
-      <!-- Stitched wrists -->
-      <rect x="0" y="16" width="3" height="1" fill="#7ad8c8" opacity="0.75" />
-      <rect x="21" y="16" width="3" height="1" fill="#7ad8c8" opacity="0.7" />
+      <!-- ── Arms — one still husk, one already shed to new grey skin ── -->
+      <rect x="2" y="17" width="6" height="13" fill="#150d08" />
+      <rect x="3" y="18" width="4" height="11" fill="#7a756c" />
+      <rect x="3" y="18" width="1" height="11" fill="#8a857c" />
+      <rect x="6" y="18" width="1" height="11" fill="#5e5a52" />
+      <!-- husk cracking at the elbow -->
+      <rect x="3" y="23" width="4" height="1" fill="#2a2a26" />
+      <rect x="4" y="23" width="1" height="1" fill="#5ab8a8" opacity="0.7" />
+      <rect x="2" y="29" width="5" height="3" fill="#150d08" />
+      <rect x="3" y="30" width="3" height="1" fill="#928d84" />
+      <!-- the shed arm — smoother, newer -->
+      <rect x="24" y="17" width="6" height="13" fill="#150d08" />
+      <rect x="25" y="18" width="4" height="11" fill="#9a958c" />
+      <rect x="25" y="18" width="1" height="11" fill="#a6a198" />
+      <rect x="28" y="18" width="1" height="11" fill="#7a756c" />
+      <rect x="24" y="29" width="5" height="3" fill="#150d08" />
+      <rect x="25" y="30" width="3" height="1" fill="#a6a198" />
+      <!-- shed husk-shard still hanging at the wrist -->
+      <rect x="28" y="27" width="2" height="3" fill="#150d08" />
+      <rect x="28" y="28" width="1" height="1" fill="#5e5a52" />
 
-      <!-- Ragged legs -->
-      <rect x="6" y="24" width="12" height="2" fill="#46423a" />
-      <rect x="6" y="24" width="12" height="1" fill="#6a655c" />
-      <rect x="6" y="26" width="5" height="10" fill="#6a655c" />
-      <rect x="6" y="26" width="1" height="10" fill="#8a857c" />
-      <rect x="13" y="26" width="5" height="10" fill="#56524a" />
-      <rect x="13" y="26" width="1" height="10" fill="#6a655c" />
-      <rect x="9" y="28" width="1" height="6" fill="#7ad8c8" opacity="0.4" />
+      <!-- ── Waist wrap — burial linen, half-unwound ── -->
+      <rect x="7" y="34" width="18" height="3" fill="#150d08" />
+      <rect x="8" y="35" width="16" height="1" fill="#aaa496" />
+      <rect x="8" y="36" width="16" height="1" fill="#8e887a" />
+      <!-- trailing unwound strip -->
+      <rect x="23" y="37" width="3" height="2" fill="#150d08" />
+      <rect x="24" y="37" width="1" height="2" fill="#aaa496" />
+      <rect x="25" y="39" width="2" height="3" fill="#150d08" />
+      <rect x="26" y="40" width="1" height="2" fill="#8e887a" />
 
-      <!-- Feet -->
-      <rect x="6" y="36" width="5" height="3" fill="#1a1410" />
-      <rect x="13" y="36" width="5" height="3" fill="#140e0a" />
-      <rect x="6" y="36" width="5" height="1" fill="#3a3430" />
+      <!-- ── Legs — husk greaves, crack at one knee ── -->
+      <rect x="8" y="37" width="6" height="8" fill="#150d08" />
+      <rect x="9" y="38" width="4" height="7" fill="#7a756c" />
+      <rect x="9" y="38" width="1" height="7" fill="#8a857c" />
+      <rect x="12" y="38" width="1" height="7" fill="#5e5a52" />
+      <rect x="18" y="37" width="6" height="8" fill="#150d08" />
+      <rect x="19" y="38" width="4" height="7" fill="#6a655c" />
+      <rect x="19" y="38" width="1" height="7" fill="#7a756c" />
+      <rect x="22" y="38" width="1" height="7" fill="#56524a" />
+      <!-- knee crack leaking light -->
+      <rect x="9" y="41" width="4" height="1" fill="#2a2a26" />
+      <rect x="10" y="41" width="1" height="1" fill="#3aa092" />
+
+      <!-- ── Bare feet — new soles on old ground ── -->
+      <rect x="7" y="45" width="8" height="3" fill="#150d08" />
+      <rect x="8" y="46" width="6" height="1" fill="#8a857c" />
+      <rect x="8" y="45" width="6" height="1" fill="#9a958c" />
+      <rect x="17" y="45" width="8" height="3" fill="#150d08" />
+      <rect x="18" y="46" width="6" height="1" fill="#6a655c" />
+      <rect x="18" y="45" width="6" height="1" fill="#7a756c" />
+
+      <!-- ── Rebirth motes rising from every crack ── -->
+      <rect x="15" y="15" width="1" height="1" fill="#7ad8c8" opacity="0.6" />
+      <rect x="18" y="13" width="1" height="1" fill="#5ab8a8" opacity="0.5" />
+      <rect x="13" y="34" width="1" height="1" fill="#5ab8a8" opacity="0.45" />
+      <rect x="28" y="14" width="1" height="1" fill="#7ad8c8" opacity="0.4" />
+      <rect x="3" y="36" width="1" height="1" fill="#7ad8c8" opacity="0.35" />
+      <rect x="16" y="20" width="1" height="1" fill="#a8ece0" opacity="0.7" />
     </svg>

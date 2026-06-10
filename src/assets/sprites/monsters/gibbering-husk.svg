@@ -1,65 +1,120 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 32"
+      viewBox="0 0 30 44"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Gibbering Husk"
     >
-      <!-- Sickly aberrant backlight + ground shadow -->
-      <ellipse cx="11" cy="16" rx="10" ry="14" fill="#6a4a7a" opacity="0.08" />
-      <ellipse cx="11" cy="31" rx="7" ry="1.3" fill="#000" opacity="0.4" />
+      <!-- Madness backlight + ground shadow -->
+      <ellipse cx="15" cy="21" rx="14" ry="20" fill="#8a6a98" opacity="0.07" />
+      <ellipse cx="15" cy="42.6" rx="10" ry="1.7" fill="#000" opacity="0.4" />
 
-      <!-- Lolling head — flesh ramp, key upper-left -->
-      <rect x="6" y="3" width="9" height="7" fill="#5a4a5a" />
-      <rect x="6" y="3" width="9" height="1" fill="#6a5a6a" />
-      <rect x="6" y="3" width="2" height="7" fill="#6a5a6a" />
-      <rect x="6" y="3" width="1" height="4" fill="#7a6a7a" />
-      <rect x="13" y="4" width="2" height="6" fill="#3a2a3a" />
-      <rect x="5" y="5" width="1" height="3" fill="#4a5a6a" opacity="0.5" />
+      <!-- ── Lopsided head — husk skin pulled wrong ── -->
+      <rect x="7" y="1" width="15" height="11" fill="#150d08" />
+      <rect x="8" y="2" width="13" height="9" fill="#4a3a4a" />
+      <rect x="8" y="2" width="13" height="1" fill="#6a5a6a" />
+      <rect x="8" y="2" width="3" height="8" fill="#5a4a5a" />
+      <rect x="8" y="2" width="1" height="5" fill="#7a6a7a" />
+      <rect x="18" y="3" width="3" height="8" fill="#3a2a3a" />
+      <rect x="20" y="4" width="1" height="7" fill="#2a1e2a" />
+      <!-- skin split at the crown -->
+      <rect x="13" y="1" width="1" height="3" fill="#1a0a14" />
+      <rect x="14" y="2" width="1" height="2" fill="#1a0a14" />
 
-      <!-- Too many eyes, mismatched, with sparks -->
-      <rect x="7" y="5" width="1" height="1" fill="#c4d442" />
+      <!-- ── Eyes — too many, scattered, none blinking together ── -->
+      <rect x="9" y="4" width="2" height="2" fill="#1a0a14" />
       <rect x="9" y="4" width="1" height="1" fill="#c4d442" />
-      <rect x="11" y="5" width="1" height="1" fill="#c4d442" />
-      <rect x="13" y="4" width="1" height="1" fill="#9aca5a" />
-      <rect x="9" y="4" width="1" height="1" fill="#e8f0a0" opacity="0.7" />
+      <rect x="13" y="3" width="2" height="2" fill="#1a0a14" />
+      <rect x="13" y="3" width="1" height="1" fill="#f4f062" />
+      <rect x="17" y="4" width="2" height="2" fill="#1a0a14" />
+      <rect x="17" y="4" width="1" height="1" fill="#a4b432" />
+      <rect x="11" y="6" width="2" height="2" fill="#1a0a14" />
+      <rect x="11" y="6" width="1" height="1" fill="#c4d442" />
+      <rect x="15" y="6" width="2" height="2" fill="#1a0a14" />
+      <rect x="15" y="7" width="1" height="1" fill="#8a9a22" />
 
-      <!-- Babbling mouths -->
-      <rect x="7" y="7" width="3" height="2" fill="#1a0a14" />
-      <rect x="11" y="7" width="3" height="2" fill="#1a0a14" />
-      <rect x="8" y="7" width="1" height="1" fill="#a85a6a" />
-      <rect x="12" y="7" width="1" height="1" fill="#a85a6a" />
+      <!-- ── Mouths — the gibbering: three, mid-sentence ── -->
+      <rect x="9" y="9" width="5" height="2" fill="#1a0a14" />
+      <rect x="9" y="9" width="1" height="1" fill="#d4c8a8" />
+      <rect x="11" y="9" width="1" height="2" fill="#c2b794" />
+      <rect x="15" y="9" width="4" height="1" fill="#1a0a14" />
+      <rect x="16" y="9" width="1" height="1" fill="#a89878" />
 
-      <!-- Hunched torso — flesh ramp + small mouths + dither -->
-      <rect x="4" y="10" width="13" height="11" fill="#5a4a5a" />
-      <rect x="4" y="10" width="13" height="1" fill="#6a5a6a" />
-      <rect x="4" y="10" width="2" height="11" fill="#6a5a6a" />
-      <rect x="4" y="10" width="1" height="6" fill="#7a6a7a" />
-      <rect x="15" y="10" width="2" height="11" fill="#3a2a3a" />
-      <rect x="6" y="12" width="2" height="1" fill="#1a0a14" />
-      <rect x="13" y="13" width="2" height="1" fill="#1a0a14" />
-      <rect x="9" y="15" width="2" height="1" fill="#1a0a14" />
-      <rect x="6" y="17" width="2" height="1" fill="#1a0a14" />
-      <rect x="12" y="17" width="2" height="1" fill="#1a0a14" />
-      <rect x="9" y="13" width="1" height="1" fill="#4a3a4a" />
-      <rect x="11" y="19" width="1" height="1" fill="#7a6a7a" />
+      <!-- ── Sagging shoulders ── -->
+      <rect x="4" y="12" width="22" height="4" fill="#150d08" />
+      <rect x="5" y="13" width="20" height="2" fill="#4a3a4a" />
+      <rect x="5" y="13" width="20" height="1" fill="#6a5a6a" />
+      <rect x="5" y="13" width="4" height="1" fill="#7a6a7a" />
+      <rect x="21" y="13" width="4" height="2" fill="#3a2a3a" />
 
-      <!-- Slack arms -->
-      <rect x="1" y="11" width="3" height="9" fill="#4a3a4a" />
-      <rect x="1" y="11" width="1" height="9" fill="#5a4a5a" />
-      <rect x="17" y="11" width="3" height="9" fill="#4a3a4a" />
-      <rect x="19" y="11" width="1" height="9" fill="#2a1a2a" />
-      <polygon points="1,20 0,22 2,21" fill="#3a2a3a" />
-      <polygon points="19,20 20,22 18,21" fill="#3a2a3a" />
+      <!-- ── Husk torso — hollow, split open with mouths in the rents ── -->
+      <rect x="6" y="16" width="18" height="15" fill="#150d08" />
+      <rect x="7" y="17" width="16" height="13" fill="#4a3a4a" />
+      <rect x="7" y="17" width="16" height="1" fill="#5a4a5a" />
+      <rect x="7" y="17" width="3" height="12" fill="#5a4a5a" />
+      <rect x="7" y="17" width="1" height="12" fill="#6a5a6a" />
+      <rect x="20" y="17" width="3" height="12" fill="#3a2a3a" />
+      <rect x="22" y="18" width="1" height="11" fill="#2a1e2a" />
+      <rect x="22" y="21" width="1" height="3" fill="#2e4a4e" />
+      <!-- chest mouth — wide, needle teeth -->
+      <rect x="10" y="19" width="10" height="4" fill="#1a0a14" />
+      <rect x="10" y="19" width="10" height="1" fill="#2a1e2a" />
+      <rect x="11" y="20" width="1" height="2" fill="#e8dcc4" />
+      <rect x="13" y="20" width="1" height="3" fill="#d4c8a8" />
+      <rect x="15" y="20" width="1" height="2" fill="#e8dcc4" />
+      <rect x="17" y="20" width="1" height="3" fill="#c2b794" />
+      <rect x="19" y="20" width="1" height="2" fill="#a89878" />
+      <!-- second mouth at the hip, mumbling sideways -->
+      <rect x="8" y="26" width="6" height="2" fill="#1a0a14" />
+      <rect x="9" y="26" width="1" height="1" fill="#c2b794" />
+      <rect x="11" y="26" width="1" height="2" fill="#d4c8a8" />
+      <!-- a stray eye where no eye should be -->
+      <rect x="17" y="26" width="2" height="2" fill="#1a0a14" />
+      <rect x="17" y="26" width="1" height="1" fill="#c4d442" />
+      <!-- husk dither -->
+      <rect x="9" y="24" width="1" height="1" fill="#5a4a5a" />
+      <rect x="19" y="24" width="1" height="1" fill="#2a1e2a" />
 
-      <!-- Splayed legs -->
-      <rect x="5" y="21" width="4" height="8" fill="#4a3a4a" />
-      <rect x="12" y="21" width="4" height="8" fill="#4a3a4a" />
-      <rect x="5" y="21" width="1" height="8" fill="#5a4a5a" />
-      <rect x="15" y="21" width="1" height="8" fill="#2a1a2a" />
+      <!-- ── Arms — hanging slack, fingers twitch-splayed ── -->
+      <rect x="2" y="15" width="5" height="13" fill="#150d08" />
+      <rect x="3" y="16" width="3" height="11" fill="#4a3a4a" />
+      <rect x="3" y="16" width="1" height="11" fill="#5a4a5a" />
+      <rect x="5" y="16" width="1" height="11" fill="#3a2a3a" />
+      <rect x="2" y="27" width="5" height="3" fill="#150d08" />
+      <rect x="3" y="28" width="3" height="1" fill="#5a4a5a" />
+      <rect x="2" y="29" width="1" height="2" fill="#150d08" />
+      <rect x="4" y="29" width="1" height="2" fill="#150d08" />
+      <rect x="6" y="29" width="1" height="2" fill="#150d08" />
+      <rect x="23" y="15" width="5" height="13" fill="#150d08" />
+      <rect x="24" y="16" width="3" height="11" fill="#3a2a3a" />
+      <rect x="24" y="16" width="1" height="11" fill="#4a3a4a" />
+      <rect x="26" y="16" width="1" height="11" fill="#2a1e2a" />
+      <rect x="23" y="27" width="5" height="3" fill="#150d08" />
+      <rect x="24" y="28" width="3" height="1" fill="#3a2a3a" />
+      <rect x="23" y="29" width="1" height="2" fill="#150d08" />
+      <rect x="25" y="29" width="1" height="2" fill="#150d08" />
+      <rect x="27" y="29" width="1" height="2" fill="#150d08" />
 
-      <!-- Bare feet -->
-      <rect x="4" y="29" width="6" height="3" fill="#3a2a3a" />
-      <rect x="12" y="29" width="6" height="3" fill="#3a2a3a" />
-      <rect x="4" y="29" width="6" height="1" fill="#4a3a4a" />
-      <rect x="12" y="29" width="6" height="1" fill="#4a3a4a" />
+      <!-- ── Hips + legs — shamble ── -->
+      <rect x="7" y="31" width="16" height="3" fill="#150d08" />
+      <rect x="8" y="32" width="14" height="2" fill="#3a2a3a" />
+      <rect x="8" y="32" width="14" height="1" fill="#4a3a4a" />
+      <rect x="8" y="34" width="6" height="7" fill="#150d08" />
+      <rect x="9" y="35" width="4" height="6" fill="#4a3a4a" />
+      <rect x="9" y="35" width="1" height="6" fill="#5a4a5a" />
+      <rect x="12" y="35" width="1" height="6" fill="#3a2a3a" />
+      <rect x="16" y="34" width="6" height="7" fill="#150d08" />
+      <rect x="17" y="35" width="4" height="6" fill="#3a2a3a" />
+      <rect x="17" y="35" width="1" height="6" fill="#4a3a4a" />
+      <rect x="20" y="35" width="1" height="6" fill="#2a1e2a" />
+      <!-- a mouth on the knee, of course -->
+      <rect x="9" y="37" width="3" height="1" fill="#1a0a14" />
+      <rect x="10" y="37" width="1" height="1" fill="#a89878" />
+
+      <!-- ── Dragging feet ── -->
+      <rect x="6" y="41" width="8" height="3" fill="#150d08" />
+      <rect x="7" y="42" width="6" height="1" fill="#4a3a4a" />
+      <rect x="7" y="41" width="6" height="1" fill="#5a4a5a" />
+      <rect x="16" y="41" width="8" height="3" fill="#150d08" />
+      <rect x="17" y="42" width="6" height="1" fill="#3a2a3a" />
+      <rect x="17" y="41" width="6" height="1" fill="#4a3a4a" />
     </svg>

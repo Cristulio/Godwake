@@ -1,67 +1,147 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 34"
+      viewBox="0 0 32 45"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Brine-Archivist"
     >
-      <!-- Cold tidal backlight + ground shadow -->
-      <ellipse cx="12" cy="17" rx="11" ry="15" fill="#3a8278" opacity="0.08" />
-      <ellipse cx="12" cy="33" rx="8" ry="1.4" fill="#000" opacity="0.4" />
+      <!-- Deep-brine backlight + ground shadow -->
+      <ellipse cx="16" cy="21" rx="15" ry="20" fill="#34605c" opacity="0.1" />
+      <ellipse cx="16" cy="43.6" rx="10" ry="1.7" fill="#000" opacity="0.4" />
 
-      <!-- Conical hood — teal ramp, key upper-left -->
-      <polygon points="12,1 18,9 6,9" fill="#2a4a48" />
-      <polygon points="12,1 14,9 6,9" fill="#34605c" />
-      <polygon points="12,1 12,9 7,9" fill="#3e706a" />
-      <polygon points="12,1 18,9 14,9" fill="#16302e" />
-      <polygon points="12,1 13,4 12,5" fill="#4a807a" />
+      <!-- ── Lantern-staff — a shelf-hook crowned with a brine-lamp ── -->
+      <rect x="26" y="2" width="3" height="40" fill="#150d08" />
+      <rect x="27" y="3" width="1" height="38" fill="#2a4a48" />
+      <rect x="27" y="3" width="1" height="12" fill="#34605c" />
+      <!-- the brine-lamp — green-glass globe of preserved light -->
+      <ellipse cx="27.5" cy="4" rx="4.4" ry="4.2" fill="#5ad0b0" opacity="0.22" />
+      <rect x="25" y="0" width="6" height="6" fill="#150d08" />
+      <rect x="26" y="1" width="4" height="4" fill="#0e2e2a" />
+      <rect x="27" y="2" width="2" height="2" fill="#2a8a72" />
+      <rect x="27" y="2" width="1" height="1" fill="#9af0d8" />
+      <!-- something small floating preserved inside -->
+      <rect x="28" y="3" width="1" height="1" fill="#16302e" />
 
-      <!-- Shadowed face + cold eyes -->
-      <rect x="10" y="6" width="4" height="3" fill="#0e1e1e" />
-      <rect x="10" y="6" width="1" height="2" fill="#8ad0c8" />
-      <rect x="13" y="6" width="1" height="2" fill="#8ad0c8" />
-      <rect x="10" y="6" width="1" height="1" fill="#d4f4ee" opacity="0.7" />
+      <!-- ── Coral-crusted mitre-hood ── -->
+      <rect x="10" y="0" width="12" height="4" fill="#150d08" />
+      <rect x="11" y="1" width="10" height="3" fill="#234240" />
+      <rect x="11" y="1" width="5" height="1" fill="#2a4a48" />
+      <rect x="8" y="4" width="16" height="7" fill="#150d08" />
+      <rect x="9" y="5" width="14" height="6" fill="#234240" />
+      <rect x="9" y="5" width="14" height="1" fill="#34605c" />
+      <rect x="9" y="5" width="3" height="6" fill="#2a4a48" />
+      <rect x="9" y="5" width="1" height="4" fill="#3c6c66" />
+      <rect x="20" y="6" width="3" height="5" fill="#16302e" />
+      <rect x="22" y="7" width="1" height="4" fill="#0e1e1e" />
+      <!-- barnacle crust along the hood edge -->
+      <rect x="10" y="4" width="2" height="1" fill="#7e8a78" />
+      <rect x="14" y="3" width="2" height="2" fill="#6e7a68" />
+      <rect x="15" y="3" width="1" height="1" fill="#9aa690" />
+      <rect x="19" y="4" width="2" height="1" fill="#5e6a58" />
+      <rect x="12" y="5" width="1" height="1" fill="#8e9a84" />
 
-      <!-- Robe body — teal ramp + lit center fold -->
-      <rect x="5" y="9" width="14" height="17" fill="#234240" />
-      <rect x="5" y="9" width="14" height="1" fill="#34605c" />
-      <rect x="11" y="10" width="2" height="16" fill="#3e706a" />
-      <rect x="11" y="10" width="1" height="16" fill="#4a807a" />
-      <rect x="5" y="9" width="2" height="16" fill="#2a4a48" />
-      <rect x="5" y="9" width="1" height="16" fill="#34605c" />
-      <rect x="17" y="10" width="2" height="15" fill="#16302e" />
-      <rect x="18" y="10" width="1" height="15" fill="#102422" />
-      <!-- Wet sheen + dither -->
-      <rect x="7" y="12" width="6" height="1" fill="#a8c0b8" opacity="0.4" />
-      <rect x="8" y="18" width="8" height="1" fill="#a8c0b8" opacity="0.32" />
-      <rect x="9" y="15" width="1" height="1" fill="#34605c" />
-      <rect x="15" y="21" width="1" height="1" fill="#16302e" />
+      <!-- ── Face — salt-cured leather, eyes like lamplit tide-pools ── -->
+      <rect x="10" y="11" width="12" height="6" fill="#150d08" />
+      <rect x="11" y="12" width="10" height="4" fill="#4e5a4c" />
+      <rect x="11" y="12" width="10" height="1" fill="#5e6a58" />
+      <rect x="11" y="12" width="3" height="4" fill="#56624f" />
+      <rect x="18" y="13" width="3" height="3" fill="#3e4a3c" />
+      <!-- tide-pool eyes -->
+      <rect x="12" y="13" width="3" height="2" fill="#0e2e2a" />
+      <rect x="17" y="13" width="3" height="2" fill="#0e2e2a" />
+      <rect x="12" y="13" width="2" height="1" fill="#2a8a72" />
+      <rect x="17" y="13" width="2" height="1" fill="#1e6e5a" />
+      <rect x="12" y="13" width="1" height="1" fill="#9af0d8" />
+      <rect x="17" y="13" width="1" height="1" fill="#5ad0b0" />
+      <!-- salt-cracked mouth -->
+      <rect x="13" y="16" width="6" height="1" fill="#1a2420" />
+      <rect x="14" y="16" width="1" height="1" fill="#5e6a58" />
 
-      <!-- Right arm + pale webbed hand -->
-      <rect x="18" y="13" width="3" height="9" fill="#234240" />
-      <rect x="18" y="13" width="1" height="9" fill="#2a4a48" />
-      <rect x="20" y="13" width="1" height="9" fill="#16302e" />
-      <rect x="20" y="20" width="3" height="2" fill="#a8b8b0" />
-      <rect x="21" y="21" width="2" height="2" fill="#c0ccc4" />
-      <rect x="21" y="21" width="1" height="1" fill="#e0e8e0" />
+      <!-- ── Stole of specimen-jars slung across the shoulders ── -->
+      <rect x="5" y="17" width="22" height="4" fill="#150d08" />
+      <rect x="6" y="18" width="20" height="2" fill="#234240" />
+      <rect x="6" y="18" width="20" height="1" fill="#34605c" />
+      <rect x="6" y="18" width="5" height="1" fill="#3c6c66" />
+      <rect x="22" y="18" width="4" height="2" fill="#16302e" />
 
-      <!-- Left arm + bronze tally beads -->
-      <rect x="3" y="13" width="3" height="2" fill="#234240" />
-      <rect x="3" y="13" width="3" height="1" fill="#34605c" />
-      <line x1="3" y1="15" x2="4" y2="23" stroke="#6a5020" stroke-width="0.6" />
-      <circle cx="3" cy="16" r="1.5" fill="#8a6a2a" />
-      <circle cx="3" cy="16" r="0.7" fill="#c8a850" />
-      <circle cx="3" cy="19" r="1.5" fill="#8a6a2a" />
-      <circle cx="3" cy="19" r="0.7" fill="#b08840" />
-      <circle cx="4" cy="22" r="1.5" fill="#b08840" />
-      <circle cx="4" cy="22" r="0.7" fill="#e0c060" />
+      <!-- ── Robe — deep teal, kelp-hemmed, salt tide-rings ── -->
+      <rect x="6" y="21" width="20" height="16" fill="#150d08" />
+      <rect x="7" y="22" width="18" height="14" fill="#1c3836" />
+      <rect x="7" y="22" width="18" height="1" fill="#2a4a48" />
+      <rect x="7" y="22" width="3" height="13" fill="#234240" />
+      <rect x="7" y="22" width="1" height="9" fill="#2a4a48" />
+      <rect x="22" y="22" width="3" height="13" fill="#142a28" />
+      <rect x="24" y="23" width="1" height="12" fill="#0e1e1e" />
+      <!-- the bandolier of jars — three stoppered specimens -->
+      <rect x="8" y="23" width="16" height="2" fill="#3a3024" />
+      <rect x="8" y="23" width="16" height="1" fill="#52442e" />
+      <rect x="9" y="25" width="4" height="5" fill="#150d08" />
+      <rect x="10" y="26" width="2" height="3" fill="#0e2e2a" />
+      <rect x="10" y="26" width="2" height="1" fill="#2a8a72" />
+      <rect x="10" y="27" width="1" height="1" fill="#5ad0b0" />
+      <rect x="10" y="25" width="2" height="1" fill="#52442e" />
+      <rect x="14" y="25" width="4" height="6" fill="#150d08" />
+      <rect x="15" y="26" width="2" height="4" fill="#102420" />
+      <rect x="15" y="26" width="2" height="1" fill="#1e6e5a" />
+      <!-- a small drowned hand floats in this one -->
+      <rect x="15" y="28" width="1" height="1" fill="#7a8a86" />
+      <rect x="15" y="25" width="2" height="1" fill="#52442e" />
+      <rect x="19" y="25" width="4" height="5" fill="#150d08" />
+      <rect x="20" y="26" width="2" height="3" fill="#0e2e2a" />
+      <rect x="20" y="26" width="1" height="2" fill="#16544a" />
+      <rect x="20" y="25" width="2" height="1" fill="#3a3024" />
+      <!-- tide-rings on the lower robe -->
+      <rect x="8" y="33" width="16" height="1" fill="#5e6a58" opacity="0.4" />
+      <rect x="8" y="30" width="16" height="1" fill="#4e5a4c" opacity="0.3" />
+      <!-- kelp strands caught in the weave -->
+      <rect x="9" y="31" width="1" height="4" fill="#1e3a1a" />
+      <rect x="21" y="32" width="1" height="3" fill="#16301a" />
 
-      <!-- Robe hem + webbed feet -->
-      <rect x="5" y="26" width="14" height="2" fill="#16302e" />
-      <rect x="5" y="26" width="14" height="1" fill="#234240" />
-      <polygon points="5,28 7,32 9,28" fill="#2a4a48" />
-      <polygon points="5,28 6,32 9,28" fill="#34605c" />
-      <polygon points="9,28 11,32 13,28" fill="#234240" />
-      <polygon points="13,28 15,32 17,28" fill="#1e3a38" />
-      <rect x="8" y="32" width="3" height="2" fill="#0e1e1e" />
-      <rect x="13" y="32" width="3" height="2" fill="#0e1e1e" />
+      <!-- ── Left arm — gloved, holding a dripping ledger ── -->
+      <rect x="2" y="21" width="6" height="10" fill="#150d08" />
+      <rect x="3" y="22" width="4" height="8" fill="#1c3836" />
+      <rect x="3" y="22" width="1" height="8" fill="#234240" />
+      <rect x="6" y="22" width="1" height="8" fill="#142a28" />
+      <rect x="2" y="30" width="5" height="2" fill="#150d08" />
+      <rect x="3" y="30" width="3" height="1" fill="#3e4a3c" />
+      <!-- the tide-ledger, salt-swollen -->
+      <rect x="1" y="32" width="7" height="6" fill="#150d08" />
+      <rect x="2" y="33" width="5" height="4" fill="#3a3024" />
+      <rect x="2" y="33" width="5" height="1" fill="#52442e" />
+      <rect x="2" y="33" width="1" height="4" fill="#46392a" />
+      <rect x="3" y="34" width="3" height="2" fill="#8e8670" />
+      <rect x="3" y="34" width="2" height="1" fill="#a89e84" />
+      <!-- wet script -->
+      <rect x="4" y="35" width="2" height="1" fill="#34302a" />
+      <!-- drip -->
+      <rect x="3" y="38" width="1" height="2" fill="#5ad0b0" opacity="0.5" />
+
+      <!-- ── Right arm — gripping the lantern-staff ── -->
+      <rect x="22" y="21" width="6" height="9" fill="#150d08" />
+      <rect x="23" y="22" width="4" height="7" fill="#142a28" />
+      <rect x="23" y="22" width="1" height="7" fill="#1c3836" />
+      <rect x="23" y="29" width="5" height="3" fill="#150d08" />
+      <rect x="24" y="30" width="3" height="1" fill="#3e4a3c" />
+
+      <!-- ── Hem — dragging wet, kelp tangled ── -->
+      <rect x="7" y="37" width="18" height="5" fill="#150d08" />
+      <rect x="8" y="38" width="16" height="3" fill="#16302e" />
+      <rect x="8" y="38" width="16" height="1" fill="#234240" />
+      <rect x="8" y="38" width="3" height="3" fill="#1c3836" />
+      <rect x="11" y="38" width="1" height="3" fill="#0e1e1e" />
+      <rect x="16" y="38" width="1" height="3" fill="#0c1a18" />
+      <rect x="20" y="38" width="1" height="3" fill="#0e1e1e" />
+      <!-- kelp tassels at the hem -->
+      <rect x="9" y="41" width="1" height="3" fill="#1e3a1a" />
+      <rect x="14" y="41" width="1" height="2" fill="#16301a" />
+      <rect x="19" y="41" width="1" height="3" fill="#1e3a1a" />
+      <rect x="23" y="41" width="1" height="2" fill="#16301a" />
+      <!-- brine puddle -->
+      <ellipse cx="16" cy="43" rx="8" ry="1" fill="#34605c" opacity="0.45" />
+
+      <!-- ── Preserved motes around the lamp ── -->
+      <rect x="22" y="6" width="1" height="1" fill="#5ad0b0" opacity="0.55" />
+      <rect x="31" y="9" width="1" height="1" fill="#2a8a72" opacity="0.5" />
+      <rect x="24" y="13" width="1" height="1" fill="#9af0d8" opacity="0.4" />
+      <rect x="3" y="12" width="1" height="1" fill="#5ad0b0" opacity="0.4" />
+      <rect x="5" y="40" width="1" height="1" fill="#2a8a72" opacity="0.35" />
     </svg>

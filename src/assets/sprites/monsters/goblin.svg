@@ -1,108 +1,177 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 32"
+      viewBox="0 0 28 44"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Goblin"
     >
       <!-- Atmospheric backlight + ground-contact shadow -->
-      <ellipse cx="10" cy="15" rx="10" ry="14" fill="#5e8a2e" opacity="0.07" />
-      <ellipse cx="10" cy="31" rx="7" ry="1.4" fill="#000" opacity="0.4" />
+      <ellipse cx="14" cy="20" rx="14" ry="19" fill="#5e8a2e" opacity="0.08" />
+      <ellipse cx="13" cy="16" rx="10" ry="12" fill="#ffb040" opacity="0.05" />
+      <ellipse cx="14" cy="42.6" rx="10" ry="1.8" fill="#000" opacity="0.42" />
 
-      <!-- Ears — green ramp with lit upper edge -->
-      <rect x="3" y="3" width="2" height="3" fill="#4a7022" />
-      <rect x="3" y="3" width="2" height="1" fill="#5e8a2e" />
-      <rect x="2" y="4" width="1" height="2" fill="#2d3f12" />
-      <rect x="15" y="3" width="2" height="3" fill="#4a7022" />
-      <rect x="15" y="3" width="2" height="1" fill="#5e8a2e" />
-      <rect x="17" y="4" width="1" height="2" fill="#2d3f12" />
+      <!-- ── Left ear — big bat-ear, lit upper edge ── -->
+      <rect x="1" y="3" width="6" height="6" fill="#150d08" />
+      <rect x="2" y="4" width="4" height="4" fill="#4a7022" />
+      <rect x="2" y="4" width="3" height="1" fill="#7faa3e" />
+      <rect x="2" y="5" width="1" height="2" fill="#5e8a2e" />
+      <rect x="4" y="6" width="2" height="2" fill="#2d3f12" />
+      <rect x="3" y="5" width="1" height="1" fill="#a8c452" />
+      <!-- notch bitten out of the ear -->
+      <rect x="2" y="7" width="1" height="1" fill="#150d08" />
 
-      <!-- Head — ramp: shadow side right, key light upper-left -->
-      <rect x="5" y="2" width="10" height="8" fill="#4a7022" />
-      <rect x="5" y="2" width="10" height="1" fill="#2d3f12" />
-      <rect x="5" y="3" width="2" height="6" fill="#5e8a2e" />
-      <rect x="5" y="3" width="1" height="4" fill="#7faa3e" />
-      <rect x="4" y="4" width="1" height="4" fill="#2d3f12" />
-      <rect x="13" y="3" width="2" height="6" fill="#3a5018" />
-      <rect x="15" y="4" width="1" height="4" fill="#2d3f12" />
+      <!-- ── Right ear — shadow side, teal bounce ── -->
+      <rect x="21" y="3" width="6" height="6" fill="#150d08" />
+      <rect x="22" y="4" width="4" height="4" fill="#3a5018" />
+      <rect x="22" y="4" width="3" height="1" fill="#4a7022" />
+      <rect x="24" y="5" width="2" height="3" fill="#2d3f12" />
+      <rect x="25" y="6" width="1" height="2" fill="#2e4a4e" />
 
-      <!-- Snout / nose with occlusion -->
-      <rect x="9" y="4" width="2" height="3" fill="#3a5018" />
-      <rect x="10" y="5" width="1" height="3" fill="#2d3f12" />
-      <rect x="9" y="7" width="1" height="1" fill="#1f3310" />
+      <!-- ── Head — green ramp, key light upper-left ── -->
+      <rect x="6" y="1" width="16" height="13" fill="#150d08" />
+      <rect x="7" y="2" width="14" height="11" fill="#4a7022" />
+      <!-- crown light -->
+      <rect x="7" y="2" width="12" height="1" fill="#5e8a2e" />
+      <rect x="7" y="2" width="6" height="1" fill="#7faa3e" />
+      <!-- lit left cheek + hot rim -->
+      <rect x="7" y="3" width="3" height="9" fill="#5e8a2e" />
+      <rect x="7" y="3" width="1" height="7" fill="#7faa3e" />
+      <rect x="7" y="3" width="1" height="3" fill="#a8c452" />
+      <!-- cool shadow right -->
+      <rect x="18" y="3" width="3" height="10" fill="#3a5018" />
+      <rect x="20" y="4" width="1" height="9" fill="#2d3f12" />
+      <rect x="20" y="8" width="1" height="3" fill="#2e4a4e" />
+      <!-- scowling brow ridge -->
+      <rect x="8" y="5" width="6" height="1" fill="#2d3f12" />
+      <rect x="14" y="5" width="6" height="1" fill="#22300f" />
+      <rect x="8" y="4" width="2" height="1" fill="#3a5018" />
 
-      <!-- Glaring eyes — yellow with red core + spark -->
-      <rect x="5" y="4" width="4" height="1" fill="#22300f" />
-      <rect x="11" y="4" width="4" height="1" fill="#22300f" />
-      <rect x="6" y="5" width="2" height="1" fill="#f4d042" />
-      <rect x="12" y="5" width="2" height="1" fill="#f4d042" />
-      <rect x="6" y="5" width="1" height="1" fill="#b5302c" />
-      <rect x="13" y="5" width="1" height="1" fill="#b5302c" />
-      <rect x="7" y="5" width="1" height="1" fill="#fff4a0" />
+      <!-- ── Glaring eyes — sulfur yellow, red core, hot spark ── -->
+      <rect x="8" y="6" width="4" height="2" fill="#22300f" />
+      <rect x="15" y="6" width="4" height="2" fill="#22300f" />
+      <rect x="9" y="6" width="3" height="2" fill="#f4d042" />
+      <rect x="15" y="6" width="3" height="2" fill="#e8c238" />
+      <rect x="10" y="7" width="1" height="1" fill="#b5302c" />
+      <rect x="16" y="7" width="1" height="1" fill="#b5302c" />
+      <rect x="9" y="6" width="1" height="1" fill="#fff4a0" />
+      <rect x="15" y="6" width="1" height="1" fill="#fff4a0" />
 
-      <!-- Snarling mouth — dark with bright fangs -->
-      <rect x="6" y="8" width="8" height="2" fill="#160f0a" />
-      <rect x="6" y="8" width="1" height="1" fill="#e8dcc4" />
-      <rect x="8" y="8" width="1" height="2" fill="#e8dcc4" />
-      <rect x="11" y="8" width="1" height="1" fill="#e8dcc4" />
-      <rect x="13" y="9" width="1" height="1" fill="#d4c8a8" />
-      <rect x="7" y="10" width="6" height="1" fill="#3a5018" />
+      <!-- ── Squat snout ── -->
+      <rect x="12" y="8" width="4" height="3" fill="#3a5018" />
+      <rect x="12" y="8" width="2" height="1" fill="#4a7022" />
+      <rect x="13" y="10" width="1" height="1" fill="#1f3310" />
+      <rect x="15" y="10" width="1" height="1" fill="#1f3310" />
+      <rect x="15" y="9" width="1" height="2" fill="#2d3f12" />
 
-      <!-- Shoulders -->
-      <rect x="3" y="11" width="14" height="2" fill="#4a7022" />
-      <rect x="3" y="11" width="14" height="1" fill="#5e8a2e" />
-      <rect x="3" y="11" width="2" height="2" fill="#2d3f12" />
-      <rect x="15" y="11" width="2" height="2" fill="#2d3f12" />
-      <rect x="5" y="11" width="3" height="1" fill="#7faa3e" />
+      <!-- ── Ear-to-ear grin — dark gum, snaggle fangs ── -->
+      <rect x="8" y="11" width="12" height="2" fill="#160f0a" />
+      <rect x="8" y="11" width="1" height="1" fill="#e8dcc4" />
+      <rect x="10" y="11" width="1" height="2" fill="#f0e6cc" />
+      <rect x="13" y="12" width="1" height="1" fill="#e8dcc4" />
+      <rect x="15" y="11" width="1" height="2" fill="#d4c8a8" />
+      <rect x="18" y="11" width="1" height="1" fill="#a89878" />
+      <!-- lip glint -->
+      <rect x="9" y="12" width="1" height="1" fill="#3a5018" />
 
-      <!-- Leather torso — brown ramp + rivets -->
-      <rect x="5" y="13" width="10" height="7" fill="#5a3a22" />
-      <rect x="5" y="13" width="10" height="1" fill="#7a5230" />
-      <rect x="5" y="13" width="2" height="6" fill="#6b4a2e" />
-      <rect x="5" y="13" width="1" height="6" fill="#3a2418" />
-      <rect x="13" y="13" width="2" height="6" fill="#3a2418" />
-      <rect x="5" y="20" width="10" height="1" fill="#2a1810" />
-      <rect x="6" y="15" width="1" height="1" fill="#a8814a" />
-      <rect x="9" y="15" width="1" height="1" fill="#a8814a" />
-      <rect x="12" y="15" width="1" height="1" fill="#8c6232" />
-      <rect x="7" y="17" width="1" height="1" fill="#8c6232" />
-      <rect x="11" y="17" width="1" height="1" fill="#8c6232" />
-      <!-- Belt buckle -->
-      <rect x="9" y="18" width="2" height="2" fill="#d4b062" />
-      <rect x="9" y="18" width="1" height="1" fill="#f4d042" />
-      <rect x="10" y="19" width="1" height="1" fill="#9a7e2e" />
+      <!-- ── Hunched shoulders — wider than the head ── -->
+      <rect x="3" y="14" width="22" height="4" fill="#150d08" />
+      <rect x="4" y="15" width="20" height="2" fill="#4a7022" />
+      <rect x="4" y="15" width="20" height="1" fill="#5e8a2e" />
+      <rect x="4" y="15" width="6" height="1" fill="#7faa3e" />
+      <rect x="20" y="15" width="4" height="2" fill="#2d3f12" />
+      <rect x="4" y="16" width="2" height="1" fill="#5e8a2e" />
 
-      <!-- Arms — green ramp -->
-      <rect x="3" y="13" width="2" height="7" fill="#4a7022" />
-      <rect x="3" y="13" width="1" height="7" fill="#3a5018" />
-      <rect x="15" y="13" width="2" height="7" fill="#4a7022" />
-      <rect x="16" y="13" width="1" height="7" fill="#3a5018" />
-      <rect x="2" y="19" width="3" height="2" fill="#4a7022" />
-      <rect x="2" y="19" width="3" height="1" fill="#5e8a2e" />
-      <rect x="15" y="19" width="3" height="2" fill="#4a7022" />
+      <!-- ── Studded-leather vest — brown ramp, stitched hem ── -->
+      <rect x="6" y="17" width="16" height="12" fill="#150d08" />
+      <rect x="7" y="18" width="14" height="10" fill="#5a3a22" />
+      <rect x="7" y="18" width="14" height="1" fill="#7a5230" />
+      <rect x="7" y="18" width="3" height="9" fill="#6b4a2e" />
+      <rect x="7" y="18" width="1" height="9" fill="#8a6238" />
+      <rect x="18" y="18" width="3" height="9" fill="#3a2418" />
+      <rect x="20" y="19" width="1" height="8" fill="#2a1810" />
+      <!-- rivet studs, lit and shadowed -->
+      <rect x="9" y="20" width="1" height="1" fill="#a8814a" />
+      <rect x="12" y="20" width="1" height="1" fill="#a8814a" />
+      <rect x="15" y="20" width="1" height="1" fill="#8c6232" />
+      <rect x="18" y="20" width="1" height="1" fill="#8c6232" />
+      <rect x="10" y="23" width="1" height="1" fill="#a8814a" />
+      <rect x="14" y="23" width="1" height="1" fill="#8c6232" />
+      <rect x="17" y="23" width="1" height="1" fill="#7a5230" />
+      <!-- ragged lower hem -->
+      <rect x="7" y="27" width="14" height="1" fill="#2a1810" />
+      <rect x="8" y="26" width="2" height="1" fill="#3a2418" />
+      <rect x="13" y="26" width="3" height="1" fill="#3a2418" />
+      <!-- belt + crooked gold buckle -->
+      <rect x="7" y="28" width="14" height="2" fill="#33231a" />
+      <rect x="7" y="28" width="14" height="1" fill="#4a3322" />
+      <rect x="12" y="28" width="3" height="2" fill="#9a7e2e" />
+      <rect x="12" y="28" width="2" height="1" fill="#d4b062" />
+      <rect x="12" y="28" width="1" height="1" fill="#f4d042" />
 
-      <!-- Crude dagger — steel ramp + specular -->
-      <rect x="17" y="13" width="1" height="6" fill="#8a91a4" />
-      <rect x="17" y="13" width="1" height="2" fill="#e8eef8" />
-      <rect x="17" y="15" width="1" height="1" fill="#ffffff" />
-      <rect x="18" y="19" width="1" height="2" fill="#8a91a4" />
-      <rect x="16" y="18" width="2" height="1" fill="#5a3a20" />
+      <!-- ── Left arm — lit, bent with open claw ── -->
+      <rect x="3" y="17" width="4" height="9" fill="#150d08" />
+      <rect x="4" y="18" width="2" height="7" fill="#4a7022" />
+      <rect x="4" y="18" width="1" height="7" fill="#5e8a2e" />
+      <rect x="2" y="24" width="4" height="4" fill="#150d08" />
+      <rect x="3" y="25" width="2" height="2" fill="#5e8a2e" />
+      <rect x="3" y="25" width="1" height="1" fill="#7faa3e" />
+      <!-- claw fingers -->
+      <rect x="2" y="27" width="1" height="2" fill="#150d08" />
+      <rect x="4" y="27" width="1" height="2" fill="#150d08" />
+      <rect x="2" y="27" width="1" height="1" fill="#d4c8a8" />
+      <rect x="4" y="27" width="1" height="1" fill="#c2b794" />
 
-      <!-- Loincloth -->
-      <rect x="6" y="21" width="8" height="3" fill="#3a2418" />
-      <rect x="6" y="21" width="8" height="1" fill="#5a3a20" />
-      <rect x="9" y="21" width="2" height="3" fill="#2a1810" />
+      <!-- ── Right arm — shadow side, gripping the blade ── -->
+      <rect x="21" y="17" width="4" height="9" fill="#150d08" />
+      <rect x="22" y="18" width="2" height="7" fill="#3a5018" />
+      <rect x="23" y="18" width="1" height="7" fill="#2d3f12" />
+      <rect x="22" y="25" width="4" height="3" fill="#150d08" />
+      <rect x="23" y="26" width="2" height="1" fill="#3a5018" />
 
-      <!-- Legs -->
-      <rect x="6" y="24" width="3" height="6" fill="#4a7022" />
-      <rect x="6" y="24" width="1" height="6" fill="#5e8a2e" />
-      <rect x="8" y="24" width="1" height="6" fill="#3a5018" />
-      <rect x="11" y="24" width="3" height="6" fill="#4a7022" />
-      <rect x="11" y="24" width="1" height="6" fill="#3a5018" />
-      <rect x="13" y="26" width="1" height="4" fill="#2d3f12" />
+      <!-- ── Chipped falchion — steel ramp, notched edge, beside the body ── -->
+      <rect x="23" y="9" width="3" height="16" fill="#150d08" />
+      <rect x="24" y="10" width="1" height="15" fill="#8a91a4" />
+      <rect x="25" y="10" width="1" height="14" fill="#5a6478" />
+      <rect x="24" y="10" width="1" height="4" fill="#c8cfe0" />
+      <rect x="24" y="11" width="1" height="1" fill="#f2f0e4" />
+      <!-- chipped notches eaten out of the edge -->
+      <rect x="24" y="15" width="1" height="1" fill="#150d08" />
+      <rect x="24" y="19" width="1" height="1" fill="#150d08" />
+      <rect x="24" y="22" width="1" height="1" fill="#39424f" />
+      <!-- crossguard + wrapped grip -->
+      <rect x="22" y="24" width="5" height="1" fill="#5a3a20" />
+      <rect x="22" y="24" width="2" height="1" fill="#8a6238" />
 
-      <!-- Splayed feet -->
-      <rect x="5" y="30" width="4" height="2" fill="#3a5018" />
-      <rect x="5" y="30" width="4" height="1" fill="#4a7022" />
-      <rect x="11" y="30" width="4" height="2" fill="#3a5018" />
-      <rect x="11" y="30" width="4" height="1" fill="#4a7022" />
+      <!-- ── Loincloth ── -->
+      <rect x="8" y="30" width="12" height="4" fill="#150d08" />
+      <rect x="9" y="30" width="10" height="3" fill="#3a2418" />
+      <rect x="9" y="30" width="10" height="1" fill="#5a3a20" />
+      <rect x="13" y="30" width="2" height="3" fill="#2a1810" />
+      <rect x="9" y="32" width="3" height="1" fill="#2a1810" />
+
+      <!-- ── Bowed legs ── -->
+      <rect x="7" y="33" width="5" height="8" fill="#150d08" />
+      <rect x="8" y="34" width="3" height="6" fill="#4a7022" />
+      <rect x="8" y="34" width="1" height="6" fill="#5e8a2e" />
+      <rect x="10" y="34" width="1" height="6" fill="#3a5018" />
+      <rect x="16" y="33" width="5" height="8" fill="#150d08" />
+      <rect x="17" y="34" width="3" height="6" fill="#4a7022" />
+      <rect x="17" y="34" width="1" height="6" fill="#3a5018" />
+      <rect x="19" y="34" width="1" height="6" fill="#2d3f12" />
+      <!-- knee scuffs -->
+      <rect x="8" y="36" width="2" height="1" fill="#7faa3e" />
+      <rect x="17" y="36" width="2" height="1" fill="#2d3f12" />
+
+      <!-- ── Splayed three-toed feet ── -->
+      <rect x="5" y="40" width="7" height="3" fill="#150d08" />
+      <rect x="6" y="41" width="5" height="1" fill="#4a7022" />
+      <rect x="6" y="40" width="5" height="1" fill="#5e8a2e" />
+      <rect x="6" y="42" width="1" height="1" fill="#d4c8a8" />
+      <rect x="8" y="42" width="1" height="1" fill="#d4c8a8" />
+      <rect x="10" y="42" width="1" height="1" fill="#c2b794" />
+      <rect x="16" y="40" width="7" height="3" fill="#150d08" />
+      <rect x="17" y="41" width="5" height="1" fill="#3a5018" />
+      <rect x="17" y="40" width="5" height="1" fill="#4a7022" />
+      <rect x="17" y="42" width="1" height="1" fill="#c2b794" />
+      <rect x="19" y="42" width="1" height="1" fill="#c2b794" />
+      <rect x="21" y="42" width="1" height="1" fill="#a89878" />
     </svg>

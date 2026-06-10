@@ -1,52 +1,134 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 32"
+      viewBox="0 0 32 43"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Threadbare Penitent"
     >
-      <!-- Mournful backlight + ground shadow -->
-      <ellipse cx="12" cy="16" rx="11" ry="15" fill="#6a6488" opacity="0.08" />
-      <ellipse cx="12" cy="30" rx="7" ry="1.4" fill="#0a0810" opacity="0.32" />
+      <!-- Worn-cloth backlight + ground shadow -->
+      <ellipse cx="16" cy="20" rx="15" ry="19" fill="#9a90b0" opacity="0.08" />
+      <ellipse cx="16" cy="41.6" rx="10" ry="1.6" fill="#000" opacity="0.38" />
 
-      <!-- Drawn hood — ramp + hollow face -->
-      <ellipse cx="12" cy="8" rx="6" ry="6" fill="#6a6478" />
-      <ellipse cx="11" cy="7" rx="5" ry="5" fill="#7a7488" opacity="0.7" />
-      <ellipse cx="12" cy="9" rx="4" ry="5" fill="#2a2438" />
-      <ellipse cx="12" cy="9" rx="2.5" ry="3.5" fill="#181222" />
-      <!-- Dim sorrow-eyes -->
-      <rect x="10" y="8" width="1" height="1" fill="#9a90b0" opacity="0.8" />
-      <rect x="13" y="8" width="1" height="1" fill="#9a90b0" opacity="0.8" />
-      <rect x="11" y="8" width="2" height="2" fill="#9a90b0" opacity="0.5" />
+      <!-- ── Hooded head — cloth worn to gauze, scalp showing through ── -->
+      <rect x="10" y="1" width="12" height="11" fill="#150d08" />
+      <rect x="11" y="2" width="10" height="9" fill="#5a5468" />
+      <rect x="11" y="2" width="10" height="1" fill="#6a6478" />
+      <rect x="11" y="2" width="3" height="8" fill="#625c70" />
+      <rect x="11" y="2" width="1" height="5" fill="#7a7488" />
+      <rect x="18" y="3" width="3" height="8" fill="#4a4458" />
+      <rect x="20" y="4" width="1" height="7" fill="#3e384c" />
+      <!-- threadbare patches — weave gone sheer -->
+      <rect x="13" y="3" width="3" height="2" fill="#7a7488" opacity="0.6" />
+      <rect x="14" y="4" width="1" height="1" fill="#9a90b0" opacity="0.6" />
+      <rect x="17" y="6" width="2" height="2" fill="#464054" opacity="0.8" />
+      <!-- the face — tired hollow, downcast pale eyes -->
+      <rect x="12" y="6" width="8" height="4" fill="#221e2c" />
+      <rect x="13" y="7" width="3" height="1" fill="#15121c" />
+      <rect x="17" y="7" width="3" height="1" fill="#15121c" />
+      <rect x="13" y="8" width="2" height="1" fill="#b8aec8" />
+      <rect x="17" y="8" width="2" height="1" fill="#9a90b0" />
+      <rect x="13" y="8" width="1" height="1" fill="#e2d8f0" />
+      <rect x="17" y="8" width="1" height="1" fill="#c8bedb" />
 
-      <!-- Ragged robe — ramp + dither -->
-      <rect x="6" y="13" width="12" height="13" fill="#5a5468" />
-      <rect x="6" y="13" width="3" height="13" fill="#6a6478" />
-      <rect x="6" y="13" width="1" height="13" fill="#7a7488" />
-      <rect x="16" y="13" width="2" height="13" fill="#4a4458" />
-      <rect x="6" y="13" width="12" height="1" fill="#3a3548" />
-      <rect x="11" y="14" width="2" height="12" fill="#4a4458" />
-      <rect x="8" y="16" width="1" height="9" fill="#6a6478" opacity="0.6" />
-      <rect x="15" y="16" width="1" height="9" fill="#4a4458" opacity="0.7" />
-      <rect x="9" y="18" width="1" height="1" fill="#6a6478" />
-      <rect x="14" y="22" width="1" height="1" fill="#3a3548" />
+      <!-- ── Shoulders — patched mantle, each patch a confession ── -->
+      <rect x="4" y="12" width="24" height="4" fill="#150d08" />
+      <rect x="5" y="13" width="22" height="2" fill="#5a5468" />
+      <rect x="5" y="13" width="22" height="1" fill="#6a6478" />
+      <rect x="5" y="13" width="5" height="1" fill="#7a7488" />
+      <rect x="23" y="13" width="4" height="2" fill="#464054" />
+      <!-- mismatched patches -->
+      <rect x="7" y="13" width="3" height="2" fill="#5e5848" />
+      <rect x="19" y="14" width="3" height="1" fill="#4e5862" />
 
-      <!-- Withered arms -->
-      <rect x="2" y="17" width="4" height="2" fill="#7a7488" />
-      <rect x="2" y="17" width="4" height="1" fill="#8a8498" />
-      <rect x="18" y="17" width="4" height="2" fill="#6a6478" />
-      <rect x="0" y="18" width="2" height="1" fill="#8a8498" />
-      <rect x="22" y="18" width="2" height="1" fill="#7a7488" />
+      <!-- ── Robe — worn to the warp in great patches ── -->
+      <rect x="6" y="16" width="20" height="16" fill="#150d08" />
+      <rect x="7" y="17" width="18" height="14" fill="#4a4458" />
+      <rect x="7" y="17" width="18" height="1" fill="#5a5468" />
+      <rect x="7" y="17" width="3" height="13" fill="#524c60" />
+      <rect x="7" y="17" width="1" height="9" fill="#625c70" />
+      <rect x="22" y="17" width="3" height="13" fill="#3e384c" />
+      <rect x="24" y="18" width="1" height="12" fill="#342e40" />
+      <!-- threadbare windows — backlight showing THROUGH the weave -->
+      <rect x="10" y="19" width="4" height="3" fill="#343044" />
+      <rect x="11" y="20" width="2" height="1" fill="#9a90b0" opacity="0.45" />
+      <rect x="17" y="23" width="4" height="4" fill="#343044" />
+      <rect x="18" y="24" width="2" height="2" fill="#9a90b0" opacity="0.4" />
+      <rect x="18" y="24" width="1" height="1" fill="#c8bedb" opacity="0.4" />
+      <rect x="9" y="26" width="3" height="3" fill="#343044" />
+      <rect x="10" y="27" width="1" height="1" fill="#9a90b0" opacity="0.35" />
+      <!-- visible mending — long crude stitches -->
+      <rect x="14" y="19" width="1" height="1" fill="#8a8268" />
+      <rect x="14" y="21" width="1" height="1" fill="#8a8268" />
+      <rect x="16" y="23" width="1" height="1" fill="#7a7258" />
+      <rect x="16" y="26" width="1" height="1" fill="#7a7258" />
+      <rect x="12" y="29" width="1" height="1" fill="#8a8268" />
+      <!-- patch squares -->
+      <rect x="15" y="27" width="4" height="3" fill="#4e4858" />
+      <rect x="15" y="27" width="4" height="1" fill="#5e5868" />
 
-      <!-- Tattered hem -->
-      <polygon points="6,26 7,30 8,26" fill="#5a5468" />
-      <polygon points="9,26 10,29 11,26" fill="#5a5468" />
-      <polygon points="13,26 14,30 15,26" fill="#4a4458" />
-      <polygon points="16,26 17,29 18,26" fill="#4a4458" />
-      <polygon points="6,26 7,29 7,26" fill="#6a6478" opacity="0.6" />
+      <!-- ── Arms — sleeves out at the elbow, grey skin through ── -->
+      <rect x="2" y="16" width="6" height="12" fill="#150d08" />
+      <rect x="3" y="17" width="4" height="10" fill="#4a4458" />
+      <rect x="3" y="17" width="1" height="10" fill="#5a5468" />
+      <rect x="6" y="17" width="1" height="10" fill="#3e384c" />
+      <!-- out-at-elbow hole -->
+      <rect x="3" y="21" width="3" height="2" fill="#150d08" />
+      <rect x="4" y="21" width="2" height="2" fill="#6e6a78" />
+      <rect x="4" y="21" width="1" height="1" fill="#827e8c" />
+      <rect x="2" y="27" width="5" height="3" fill="#150d08" />
+      <rect x="3" y="28" width="3" height="1" fill="#827e8c" />
+      <rect x="24" y="16" width="6" height="12" fill="#150d08" />
+      <rect x="25" y="17" width="4" height="10" fill="#3e384c" />
+      <rect x="25" y="17" width="1" height="10" fill="#4a4458" />
+      <rect x="28" y="17" width="1" height="10" fill="#342e40" />
+      <rect x="25" y="22" width="3" height="2" fill="#150d08" />
+      <rect x="26" y="22" width="2" height="2" fill="#5e5a68" />
+      <rect x="25" y="27" width="5" height="3" fill="#150d08" />
+      <rect x="26" y="28" width="3" height="1" fill="#6e6a78" />
+      <!-- hands clasped at the front in penance -->
+      <rect x="12" y="30" width="8" height="4" fill="#150d08" />
+      <rect x="13" y="31" width="6" height="2" fill="#827e8c" />
+      <rect x="13" y="31" width="3" height="1" fill="#9692a0" />
+      <rect x="16" y="32" width="2" height="1" fill="#5e5a68" />
+      <!-- knucklebone rosary wound through the fingers -->
+      <rect x="14" y="33" width="1" height="1" fill="#c2b794" />
+      <rect x="16" y="34" width="1" height="1" fill="#a89878" />
+      <rect x="18" y="33" width="1" height="1" fill="#c2b794" />
 
-      <!-- Frayed threads -->
-      <line x1="7" y1="30" x2="6" y2="32" stroke="#7a7488" stroke-width="0.5" />
-      <line x1="14" y1="30" x2="15" y2="32" stroke="#7a7488" stroke-width="0.5" />
-      <line x1="1" y1="19" x2="0" y2="22" stroke="#7a7488" stroke-width="0.5" />
-      <line x1="23" y1="19" x2="24" y2="22" stroke="#7a7488" stroke-width="0.5" />
+      <!-- ── Frayed rope belt ── -->
+      <rect x="7" y="31" width="16" height="2" fill="#150d08" />
+      <rect x="8" y="31" width="14" height="1" fill="#6e6252" />
+
+      <!-- ── Skirt — hem eaten to ribbons ── -->
+      <rect x="7" y="33" width="18" height="7" fill="#150d08" />
+      <rect x="8" y="34" width="16" height="5" fill="#423c50" />
+      <rect x="8" y="34" width="16" height="1" fill="#524c60" />
+      <rect x="8" y="34" width="3" height="5" fill="#4a4458" />
+      <rect x="21" y="34" width="3" height="5" fill="#363044" />
+      <rect x="12" y="35" width="1" height="4" fill="#2e2a3c" />
+      <rect x="16" y="35" width="1" height="4" fill="#2a2638" />
+      <rect x="19" y="35" width="1" height="4" fill="#2e2a3c" />
+      <!-- the ribboned hem -->
+      <rect x="8" y="39" width="2" height="3" fill="#150d08" />
+      <rect x="8" y="39" width="1" height="2" fill="#423c50" />
+      <rect x="11" y="39" width="2" height="2" fill="#150d08" />
+      <rect x="11" y="39" width="1" height="1" fill="#363044" />
+      <rect x="14" y="39" width="2" height="4" fill="#150d08" />
+      <rect x="14" y="39" width="1" height="3" fill="#423c50" />
+      <rect x="17" y="39" width="2" height="2" fill="#150d08" />
+      <rect x="18" y="39" width="1" height="1" fill="#363044" />
+      <rect x="20" y="39" width="2" height="3" fill="#150d08" />
+      <rect x="21" y="39" width="1" height="2" fill="#3e384c" />
+      <rect x="23" y="39" width="2" height="2" fill="#150d08" />
+
+      <!-- ── Bare feet through the ribbons ── -->
+      <rect x="9" y="40" width="5" height="3" fill="#150d08" />
+      <rect x="10" y="41" width="3" height="1" fill="#827e8c" />
+      <rect x="18" y="40" width="5" height="3" fill="#150d08" />
+      <rect x="19" y="41" width="3" height="1" fill="#6e6a78" />
+
+      <!-- ── Lint and loose thread drifting off ── -->
+      <rect x="4" y="9" width="1" height="1" fill="#9a90b0" opacity="0.45" />
+      <rect x="27" y="11" width="1" height="1" fill="#8a8098" opacity="0.4" />
+      <rect x="3" y="33" width="1" height="1" fill="#8a8098" opacity="0.35" />
+      <rect x="28" y="32" width="1" height="1" fill="#9a90b0" opacity="0.35" />
     </svg>

@@ -1,62 +1,133 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 32"
+      viewBox="0 0 38 43"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="The Unwound"
     >
       <!-- Warm unraveling backlight + ground shadow -->
-      <ellipse cx="14" cy="16" rx="13" ry="14" fill="#c47a3a" opacity="0.07" />
-      <ellipse cx="13" cy="30" rx="7" ry="1.3" fill="#000" opacity="0.36" />
+      <ellipse cx="19" cy="21" rx="18" ry="19" fill="#c47a3a" opacity="0.08" />
+      <ellipse cx="18" cy="41.6" rx="10" ry="1.7" fill="#000" opacity="0.36" />
 
-      <!-- Head — tawny ramp, key upper-left -->
-      <rect x="10" y="2" width="7" height="7" fill="#6a4a3a" />
-      <rect x="10" y="2" width="7" height="1" fill="#8a6450" />
-      <rect x="10" y="2" width="2" height="6" fill="#7a5a4a" />
-      <rect x="10" y="2" width="1" height="5" fill="#9a7460" />
-      <rect x="15" y="3" width="2" height="6" fill="#5a3e30" />
-      <rect x="16" y="3" width="1" height="6" fill="#4a3024" />
-      <!-- Fire eyes + spark -->
-      <rect x="11" y="4" width="2" height="2" fill="#f48030" />
-      <rect x="14" y="4" width="2" height="2" fill="#f48030" />
-      <rect x="11" y="4" width="1" height="1" fill="#ffd060" />
-      <rect x="14" y="4" width="1" height="1" fill="#ffd060" />
-      <rect x="11" y="4" width="1" height="1" fill="#fff0c0" opacity="0.6" />
-      <rect x="12" y="7" width="3" height="1" fill="#2a1a14" />
+      <!-- ── Head — a person wound from cord, coming loose at the crown ── -->
+      <rect x="12" y="2" width="12" height="11" fill="#150d08" />
+      <rect x="13" y="3" width="10" height="9" fill="#6a4a3a" />
+      <rect x="13" y="3" width="10" height="1" fill="#8a6450" />
+      <rect x="13" y="3" width="3" height="8" fill="#7a5a4a" />
+      <rect x="13" y="3" width="1" height="6" fill="#9a7460" />
+      <rect x="20" y="4" width="3" height="8" fill="#5a3e30" />
+      <rect x="22" y="5" width="1" height="7" fill="#4a3024" />
+      <!-- the winding — cord rows around the skull -->
+      <rect x="14" y="5" width="9" height="1" fill="#4a3024" />
+      <rect x="13" y="8" width="9" height="1" fill="#4a3024" />
+      <rect x="14" y="5" width="3" height="1" fill="#8a6450" opacity="0.6" />
+      <!-- the crown coming UNDONE — a loose end lifting away -->
+      <rect x="20" y="0" width="4" height="3" fill="#150d08" />
+      <rect x="21" y="1" width="2" height="1" fill="#8a6450" />
+      <rect x="24" y="0" width="3" height="2" fill="#150d08" opacity="0.8" />
+      <rect x="25" y="0" width="1" height="1" fill="#a87850" />
+      <rect x="12" y="2" width="2" height="1" fill="#150d08" />
 
-      <!-- Torso — tawny ramp, unraveling at the edge -->
-      <rect x="9" y="9" width="9" height="11" fill="#5a3e30" />
-      <rect x="9" y="9" width="9" height="1" fill="#7a5a4a" />
-      <rect x="9" y="9" width="2" height="10" fill="#6a4a3a" />
-      <rect x="9" y="9" width="1" height="9" fill="#8a6450" />
-      <rect x="16" y="10" width="2" height="9" fill="#4a3024" />
-      <rect x="17" y="10" width="1" height="9" fill="#3a261c" />
-      <rect x="12" y="10" width="2" height="9" fill="#8a6450" opacity="0.6" />
-      <!-- Dither -->
-      <rect x="11" y="14" width="1" height="1" fill="#7a5a4a" />
-      <rect x="15" y="16" width="1" height="1" fill="#4a3024" />
+      <!-- ── Fire eyes — the knot of self, burning to stay tied ── -->
+      <ellipse cx="18" cy="7" rx="5" ry="2.4" fill="#f48030" opacity="0.18" />
+      <rect x="14" y="6" width="3" height="2" fill="#2a1208" />
+      <rect x="19" y="6" width="3" height="2" fill="#2a1208" />
+      <rect x="14" y="6" width="2" height="2" fill="#f48030" />
+      <rect x="19" y="6" width="2" height="2" fill="#d86a24" />
+      <rect x="14" y="6" width="1" height="1" fill="#ffd060" />
+      <rect x="19" y="6" width="1" height="1" fill="#ffb84a" />
+      <!-- mouth — a fray, not a mouth -->
+      <rect x="15" y="10" width="6" height="1" fill="#2a1a14" />
+      <rect x="16" y="11" width="2" height="1" fill="#4a3024" />
 
-      <!-- Stub arms -->
-      <rect x="16" y="11" width="2" height="2" fill="#6a4a3a" />
-      <rect x="16" y="11" width="2" height="1" fill="#8a6450" />
-      <rect x="9" y="13" width="2" height="2" fill="#6a4a3a" />
-      <rect x="9" y="13" width="2" height="1" fill="#8a6450" />
+      <!-- ── Torso — thick-wound cord body, mid-unravel everywhere ── -->
+      <rect x="10" y="13" width="16" height="15" fill="#150d08" />
+      <rect x="11" y="14" width="14" height="13" fill="#5a3e30" />
+      <rect x="11" y="14" width="14" height="1" fill="#7a5a4a" />
+      <rect x="11" y="14" width="3" height="12" fill="#6a4a3a" />
+      <rect x="11" y="14" width="1" height="9" fill="#8a6450" />
+      <rect x="22" y="14" width="3" height="12" fill="#4a3024" />
+      <rect x="24" y="15" width="1" height="11" fill="#3a261c" />
+      <!-- winding rows -->
+      <rect x="12" y="16" width="12" height="1" fill="#3a261c" />
+      <rect x="12" y="19" width="12" height="1" fill="#3a261c" />
+      <rect x="12" y="22" width="12" height="1" fill="#33211a" />
+      <rect x="12" y="25" width="12" height="1" fill="#33211a" />
+      <rect x="12" y="17" width="4" height="1" fill="#8a6450" opacity="0.55" />
+      <rect x="12" y="20" width="3" height="1" fill="#8a6450" opacity="0.5" />
+      <!-- the GAP — a band already unwound; light shows through the hollow -->
+      <rect x="13" y="23" width="9" height="2" fill="#150d08" />
+      <rect x="14" y="23" width="7" height="2" fill="#1f130c" />
+      <rect x="15" y="24" width="4" height="1" fill="#c47a3a" opacity="0.35" />
+      <!-- frayed fibres at every edge -->
+      <rect x="10" y="15" width="1" height="1" fill="#8a6450" />
+      <rect x="25" y="18" width="1" height="1" fill="#5a3e30" />
+      <rect x="10" y="21" width="1" height="1" fill="#7a5a4a" />
 
-      <!-- Unraveling threads — base + lit highlight -->
-      <line x1="18" y1="10" x2="27" y2="5" stroke="#5a3e30" stroke-width="0.9" />
-      <line x1="18" y1="12" x2="28" y2="13" stroke="#5a3e30" stroke-width="0.9" />
-      <line x1="9" y1="11" x2="1" y2="7" stroke="#5a3e30" stroke-width="0.9" />
-      <line x1="9" y1="15" x2="0" y2="17" stroke="#5a3e30" stroke-width="0.9" />
-      <line x1="17" y1="18" x2="26" y2="24" stroke="#5a3e30" stroke-width="0.9" />
-      <line x1="10" y1="19" x2="3" y2="26" stroke="#5a3e30" stroke-width="0.9" />
-      <line x1="18" y1="10" x2="27" y2="5" stroke="#a87850" stroke-width="0.3" />
-      <line x1="9" y1="11" x2="1" y2="7" stroke="#a87850" stroke-width="0.3" />
-      <line x1="17" y1="18" x2="26" y2="24" stroke="#a87850" stroke-width="0.3" />
+      <!-- ── Arms — cord bundles, ends whipping loose ── -->
+      <rect x="6" y="14" width="5" height="10" fill="#150d08" />
+      <rect x="7" y="15" width="3" height="8" fill="#6a4a3a" />
+      <rect x="7" y="15" width="1" height="8" fill="#8a6450" />
+      <rect x="9" y="15" width="1" height="8" fill="#4a3024" />
+      <rect x="7" y="18" width="3" height="1" fill="#3a261c" />
+      <rect x="7" y="21" width="3" height="1" fill="#3a261c" />
+      <rect x="25" y="14" width="5" height="10" fill="#150d08" />
+      <rect x="26" y="15" width="3" height="8" fill="#5a3e30" />
+      <rect x="26" y="15" width="1" height="8" fill="#6a4a3a" />
+      <rect x="28" y="15" width="1" height="8" fill="#3a261c" />
+      <rect x="26" y="18" width="3" height="1" fill="#33211a" />
+      <rect x="26" y="21" width="3" height="1" fill="#33211a" />
 
-      <!-- Leg threads -->
-      <polygon points="9,20 11,28 13,20" fill="#5a3e30" />
-      <polygon points="9,20 10,28 13,20" fill="#6a4a3a" />
-      <polygon points="14,20 16,28 18,20" fill="#4a3024" />
-      <line x1="11" y1="28" x2="9" y2="32" stroke="#8a6450" stroke-width="0.7" />
-      <line x1="16" y1="28" x2="18" y2="32" stroke="#8a6450" stroke-width="0.7" />
-      <line x1="13" y1="24" x2="13" y2="31" stroke="#8a6450" stroke-width="0.6" />
+      <!-- ── The unravelled lengths — streaming off into the room ── -->
+      <!-- right arm end, three strands -->
+      <rect x="29" y="13" width="3" height="2" fill="#150d08" />
+      <rect x="30" y="14" width="1" height="1" fill="#8a6450" />
+      <rect x="32" y="11" width="3" height="2" fill="#150d08" />
+      <rect x="33" y="12" width="1" height="1" fill="#a87850" />
+      <rect x="35" y="9" width="3" height="2" fill="#150d08" opacity="0.8" />
+      <rect x="36" y="10" width="1" height="1" fill="#8a6450" />
+      <rect x="30" y="22" width="4" height="2" fill="#150d08" />
+      <rect x="31" y="23" width="2" height="1" fill="#6a4a3a" />
+      <rect x="34" y="24" width="3" height="2" fill="#150d08" opacity="0.8" />
+      <rect x="35" y="25" width="1" height="1" fill="#7a5a4a" />
+      <!-- left arm end -->
+      <rect x="3" y="12" width="3" height="2" fill="#150d08" />
+      <rect x="4" y="13" width="1" height="1" fill="#9a7460" />
+      <rect x="0" y="10" width="3" height="2" fill="#150d08" opacity="0.8" />
+      <rect x="1" y="11" width="1" height="1" fill="#8a6450" />
+      <rect x="2" y="20" width="4" height="2" fill="#150d08" />
+      <rect x="3" y="21" width="2" height="1" fill="#7a5a4a" />
+      <rect x="0" y="23" width="3" height="2" fill="#150d08" opacity="0.8" />
+      <rect x="1" y="24" width="1" height="1" fill="#6a4a3a" />
+
+      <!-- ── Legs — wound cones fraying to single threads at the floor ── -->
+      <rect x="11" y="28" width="6" height="7" fill="#150d08" />
+      <rect x="12" y="29" width="4" height="5" fill="#6a4a3a" />
+      <rect x="12" y="29" width="1" height="5" fill="#8a6450" />
+      <rect x="15" y="29" width="1" height="5" fill="#4a3024" />
+      <rect x="12" y="31" width="4" height="1" fill="#3a261c" />
+      <rect x="19" y="28" width="6" height="7" fill="#150d08" />
+      <rect x="20" y="29" width="4" height="5" fill="#5a3e30" />
+      <rect x="20" y="29" width="1" height="5" fill="#6a4a3a" />
+      <rect x="23" y="29" width="1" height="5" fill="#3a261c" />
+      <rect x="20" y="31" width="4" height="1" fill="#33211a" />
+      <!-- narrowing to threads -->
+      <rect x="12" y="35" width="4" height="3" fill="#150d08" />
+      <rect x="13" y="36" width="2" height="2" fill="#5a3e30" />
+      <rect x="20" y="35" width="4" height="3" fill="#150d08" />
+      <rect x="21" y="36" width="2" height="2" fill="#4a3024" />
+      <rect x="13" y="38" width="2" height="3" fill="#150d08" />
+      <rect x="13" y="38" width="1" height="3" fill="#8a6450" />
+      <rect x="21" y="38" width="2" height="3" fill="#150d08" />
+      <rect x="22" y="38" width="1" height="3" fill="#6a4a3a" />
+      <!-- the last threads trailing -->
+      <rect x="12" y="41" width="1" height="1" fill="#8a6450" opacity="0.7" />
+      <rect x="15" y="41" width="1" height="1" fill="#6a4a3a" opacity="0.6" />
+      <rect x="20" y="41" width="1" height="1" fill="#7a5a4a" opacity="0.6" />
+      <rect x="23" y="41" width="1" height="1" fill="#5a3e30" opacity="0.5" />
+
+      <!-- ── Fibre dust shaking loose ── -->
+      <rect x="8" y="9" width="1" height="1" fill="#a87850" opacity="0.5" />
+      <rect x="28" y="6" width="1" height="1" fill="#8a6450" opacity="0.45" />
+      <rect x="5" y="28" width="1" height="1" fill="#8a6450" opacity="0.4" />
+      <rect x="31" y="29" width="1" height="1" fill="#7a5a4a" opacity="0.4" />
     </svg>

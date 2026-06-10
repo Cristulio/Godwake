@@ -1,76 +1,150 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 34"
+      viewBox="0 0 30 46"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Drow War-Priestess"
     >
-      <!-- Arachne-violet backlight + ground shadow -->
-      <ellipse cx="11" cy="17" rx="10" ry="16" fill="#7a2450" opacity="0.1" />
-      <ellipse cx="11" cy="32" rx="8" ry="1.6" fill="#000" opacity="0.4" />
+      <!-- Spider-goddess backlight + ground shadow -->
+      <ellipse cx="15" cy="22" rx="14" ry="20" fill="#d44a6a" opacity="0.07" />
+      <ellipse cx="15" cy="44.6" rx="10" ry="1.7" fill="#000" opacity="0.4" />
 
-      <!-- Spilled white hair — pale ramp -->
-      <rect x="5" y="2" width="10" height="3" fill="#c8c4d4" />
-      <rect x="5" y="2" width="10" height="1" fill="#e8e4f0" />
-      <rect x="6" y="1" width="8" height="1" fill="#d8d4e0" />
-      <rect x="4" y="3" width="2" height="7" fill="#bcb8cc" />
-      <rect x="4" y="3" width="1" height="7" fill="#d4d0e0" />
-      <rect x="14" y="3" width="2" height="7" fill="#a8a4ba" />
-      <rect x="15" y="3" width="1" height="7" fill="#9a96ac" />
+      <!-- ── White hair — long, parted around a spider circlet ── -->
+      <rect x="8" y="0" width="14" height="4" fill="#150d08" />
+      <rect x="9" y="1" width="12" height="3" fill="#d8cfb8" />
+      <rect x="9" y="1" width="5" height="2" fill="#ece3cc" />
+      <rect x="9" y="1" width="2" height="1" fill="#f8f4e8" />
+      <rect x="17" y="2" width="4" height="2" fill="#b8ae94" />
+      <!-- long falls past the shoulders -->
+      <rect x="6" y="4" width="4" height="10" fill="#150d08" />
+      <rect x="7" y="5" width="2" height="8" fill="#d8cfb8" />
+      <rect x="7" y="5" width="1" height="6" fill="#ece3cc" />
+      <rect x="20" y="4" width="4" height="10" fill="#150d08" />
+      <rect x="21" y="5" width="2" height="8" fill="#b8ae94" />
+      <rect x="22" y="6" width="1" height="7" fill="#9a9078" />
+      <!-- spider circlet — gold, eight pin-legs -->
+      <rect x="12" y="0" width="6" height="2" fill="#150d08" />
+      <rect x="13" y="1" width="4" height="1" fill="#d4b062" />
+      <rect x="13" y="1" width="2" height="1" fill="#f4d042" />
+      <rect x="12" y="0" width="1" height="1" fill="#9a7e2e" />
+      <rect x="17" y="0" width="1" height="1" fill="#9a7e2e" />
 
-      <!-- Drow face — dusk-violet ramp -->
-      <rect x="6" y="4" width="8" height="6" fill="#42344e" />
-      <rect x="6" y="4" width="3" height="6" fill="#4e4058" />
-      <rect x="6" y="4" width="1" height="5" fill="#5a4c64" />
-      <rect x="12" y="4" width="2" height="6" fill="#32263c" />
-      <rect x="13" y="5" width="1" height="5" fill="#281e30" />
-      <!-- Burning eyes + spark -->
-      <rect x="7" y="6" width="2" height="1" fill="#d44a6a" />
-      <rect x="11" y="6" width="2" height="1" fill="#d44a6a" />
-      <rect x="7" y="6" width="1" height="1" fill="#f08aa0" />
-      <rect x="11" y="6" width="1" height="1" fill="#f08aa0" />
-      <rect x="9" y="8" width="2" height="1" fill="#2a1e30" />
+      <!-- ── Face — obsidian-violet, imperious ── -->
+      <rect x="9" y="4" width="12" height="9" fill="#150d08" />
+      <rect x="10" y="5" width="10" height="7" fill="#2e1e44" />
+      <rect x="10" y="5" width="10" height="1" fill="#3e2c58" />
+      <rect x="10" y="5" width="3" height="7" fill="#3a2858" />
+      <rect x="10" y="5" width="1" height="5" fill="#4c3a6e" />
+      <rect x="17" y="6" width="3" height="6" fill="#22143a" />
+      <rect x="19" y="7" width="1" height="5" fill="#180e2c" />
+      <!-- red eyes, heavy-lidded contempt -->
+      <rect x="11" y="7" width="3" height="1" fill="#180e2c" />
+      <rect x="16" y="7" width="3" height="1" fill="#180e2c" />
+      <rect x="11" y="8" width="3" height="1" fill="#1f1330" />
+      <rect x="16" y="8" width="3" height="1" fill="#1f1330" />
+      <rect x="11" y="8" width="2" height="1" fill="#c4303c" />
+      <rect x="16" y="8" width="2" height="1" fill="#a02830" />
+      <rect x="11" y="8" width="1" height="1" fill="#ff7a6a" />
+      <!-- painted lips -->
+      <rect x="13" y="11" width="4" height="1" fill="#7e1f2c" />
+      <rect x="13" y="11" width="2" height="1" fill="#a93340" />
 
-      <!-- Robe — dark plum ramp + dither -->
-      <rect x="5" y="10" width="12" height="13" fill="#3a1a2a" />
-      <rect x="5" y="10" width="12" height="1" fill="#4a2436" />
-      <rect x="5" y="10" width="2" height="13" fill="#442032" />
-      <rect x="5" y="10" width="1" height="13" fill="#52283c" />
-      <rect x="15" y="11" width="2" height="12" fill="#2a1220" />
-      <rect x="16" y="11" width="1" height="12" fill="#220c1a" />
-      <rect x="10" y="10" width="2" height="13" fill="#2a1220" />
-      <rect x="8" y="17" width="1" height="1" fill="#52283c" />
-      <rect x="13" y="20" width="1" height="1" fill="#220c1a" />
+      <!-- ── Gorget of spider-silk + web-pattern vestment ── -->
+      <rect x="8" y="13" width="14" height="3" fill="#150d08" />
+      <rect x="9" y="14" width="12" height="2" fill="#442032" />
+      <rect x="9" y="14" width="12" height="1" fill="#5e2c44" />
+      <rect x="9" y="14" width="4" height="1" fill="#742c4e" />
 
-      <!-- Eight-legged Arachne sigil -->
-      <rect x="9" y="14" width="4" height="1" fill="#b53c4a" />
-      <rect x="10" y="13" width="2" height="3" fill="#b53c4a" />
-      <rect x="10" y="13" width="2" height="1" fill="#d44a6a" />
-      <rect x="9" y="13" width="1" height="1" fill="#d44a6a" />
-      <rect x="12" y="15" width="1" height="1" fill="#d44a6a" />
-      <rect x="10" y="13" width="1" height="1" fill="#f08aa0" />
+      <!-- ── Vestment — wine-dark robe, pink web filigree ── -->
+      <rect x="6" y="16" width="18" height="15" fill="#150d08" />
+      <rect x="7" y="17" width="16" height="13" fill="#3a1a2a" />
+      <rect x="7" y="17" width="16" height="1" fill="#542638" />
+      <rect x="7" y="17" width="3" height="12" fill="#442032" />
+      <rect x="7" y="17" width="1" height="12" fill="#542638" />
+      <rect x="20" y="17" width="3" height="12" fill="#2a1220" />
+      <rect x="22" y="18" width="1" height="11" fill="#200d18" />
+      <!-- web filigree across the breast -->
+      <rect x="9" y="19" width="12" height="1" fill="#d44a6a" opacity="0.7" />
+      <rect x="11" y="21" width="8" height="1" fill="#d44a6a" opacity="0.5" />
+      <rect x="13" y="23" width="4" height="1" fill="#d44a6a" opacity="0.4" />
+      <rect x="10" y="19" width="1" height="5" fill="#d44a6a" opacity="0.4" />
+      <rect x="15" y="19" width="1" height="5" fill="#f08aa0" opacity="0.5" />
+      <rect x="19" y="19" width="1" height="5" fill="#d44a6a" opacity="0.35" />
+      <!-- goddess amulet — black spider on pink gem -->
+      <ellipse cx="15" cy="20" rx="3.4" ry="2.8" fill="#f08aa0" opacity="0.2" />
+      <rect x="13" y="18" width="4" height="4" fill="#150d08" />
+      <rect x="14" y="19" width="2" height="2" fill="#f08aa0" />
+      <rect x="14" y="19" width="1" height="1" fill="#ffd0dc" />
+      <rect x="15" y="20" width="1" height="1" fill="#a83052" />
 
-      <!-- Raised mending hand, web-light -->
-      <rect x="2" y="10" width="3" height="3" fill="#3a1a2a" />
-      <rect x="2" y="10" width="3" height="1" fill="#4a2436" />
-      <rect x="1" y="8" width="2" height="3" fill="#5a4c64" />
-      <rect x="1" y="8" width="2" height="1" fill="#6a5c74" />
-      <ellipse cx="1" cy="7" rx="2" ry="1.6" fill="#c8b4d0" opacity="0.45" />
-      <rect x="1" y="7" width="1" height="1" fill="#e8d8f0" opacity="0.7" />
+      <!-- ── Left arm — raised, casting the goddess's pink fire ── -->
+      <rect x="2" y="14" width="6" height="4" fill="#150d08" />
+      <rect x="3" y="15" width="4" height="2" fill="#442032" />
+      <rect x="3" y="15" width="4" height="1" fill="#5e2c44" />
+      <rect x="1" y="11" width="5" height="5" fill="#150d08" />
+      <rect x="2" y="12" width="3" height="3" fill="#3a2858" />
+      <rect x="2" y="12" width="1" height="2" fill="#4c3a6e" />
+      <!-- open palm wreathed in pink flame -->
+      <ellipse cx="3.5" cy="8" rx="3.6" ry="3.4" fill="#d44a6a" opacity="0.35" />
+      <rect x="2" y="7" width="3" height="3" fill="#a83052" />
+      <rect x="2" y="7" width="2" height="2" fill="#d44a6a" />
+      <rect x="2" y="7" width="1" height="1" fill="#f08aa0" />
+      <rect x="3" y="6" width="1" height="1" fill="#ffd0dc" />
+      <rect x="1" y="9" width="1" height="1" fill="#f08aa0" opacity="0.8" />
+      <rect x="5" y="5" width="1" height="1" fill="#d44a6a" opacity="0.7" />
+      <rect x="2" y="4" width="1" height="1" fill="#f08aa0" opacity="0.5" />
 
-      <!-- Serpent-flail arm — venom-green ramp -->
-      <rect x="16" y="11" width="3" height="6" fill="#3a1a2a" />
-      <rect x="16" y="11" width="1" height="6" fill="#442032" />
-      <rect x="18" y="9" width="1" height="9" fill="#2a2e22" />
-      <rect x="17" y="9" width="3" height="2" fill="#3a5a2a" />
-      <rect x="17" y="9" width="3" height="1" fill="#5e9a36" />
-      <rect x="18" y="7" width="1" height="2" fill="#4a7a2a" />
-      <rect x="18" y="7" width="1" height="1" fill="#7eba46" />
+      <!-- ── Right arm — scourge of writhing cords ── -->
+      <rect x="22" y="16" width="6" height="9" fill="#150d08" />
+      <rect x="23" y="17" width="4" height="7" fill="#2a1220" />
+      <rect x="23" y="17" width="1" height="7" fill="#3a1a2a" />
+      <rect x="23" y="24" width="5" height="3" fill="#150d08" />
+      <rect x="24" y="25" width="3" height="1" fill="#3a2858" />
+      <!-- scourge handle + five living lashes -->
+      <rect x="26" y="22" width="2" height="6" fill="#150d08" />
+      <rect x="26" y="23" width="1" height="4" fill="#5a3a22" />
+      <rect x="25" y="28" width="2" height="3" fill="#150d08" />
+      <rect x="26" y="29" width="1" height="2" fill="#3a1a2a" />
+      <rect x="27" y="30" width="2" height="3" fill="#150d08" />
+      <rect x="28" y="31" width="1" height="2" fill="#442032" />
+      <rect x="26" y="32" width="2" height="3" fill="#150d08" />
+      <rect x="27" y="33" width="1" height="2" fill="#3a1a2a" />
+      <rect x="28" y="34" width="2" height="3" fill="#150d08" opacity="0.9" />
+      <rect x="29" y="35" width="1" height="1" fill="#542638" />
+      <!-- snake-head tips, pink-eyed -->
+      <rect x="25" y="30" width="1" height="1" fill="#d44a6a" />
+      <rect x="27" y="34" width="1" height="1" fill="#f08aa0" />
 
-      <!-- Robe hem -->
-      <polygon points="5,23 4,32 9,32" fill="#3a1a2a" />
-      <polygon points="5,23 4,31 7,31" fill="#442032" opacity="0.7" />
-      <polygon points="17,23 18,32 11,32" fill="#2a1220" />
-      <rect x="9" y="23" width="4" height="9" fill="#2a1220" />
-      <rect x="9" y="23" width="1" height="9" fill="#34182a" />
-      <rect x="4" y="31" width="14" height="1" fill="#1a0a14" />
+      <!-- ── Girdle ── -->
+      <rect x="7" y="31" width="16" height="2" fill="#150d08" />
+      <rect x="8" y="31" width="14" height="1" fill="#742c4e" />
+      <rect x="13" y="31" width="3" height="2" fill="#d4b062" />
+      <rect x="13" y="31" width="2" height="1" fill="#f4d042" />
+
+      <!-- ── Skirt — floor-length, slit, web hem ── -->
+      <rect x="6" y="33" width="18" height="10" fill="#150d08" />
+      <rect x="7" y="34" width="16" height="8" fill="#3a1a2a" />
+      <rect x="7" y="34" width="16" height="1" fill="#542638" />
+      <rect x="7" y="34" width="3" height="8" fill="#442032" />
+      <rect x="7" y="34" width="1" height="6" fill="#542638" />
+      <rect x="20" y="34" width="3" height="8" fill="#2a1220" />
+      <rect x="22" y="35" width="1" height="7" fill="#200d18" />
+      <!-- thigh slit showing obsidian leg -->
+      <rect x="16" y="35" width="2" height="7" fill="#150d08" />
+      <rect x="16" y="36" width="1" height="6" fill="#2e1e44" />
+      <!-- web hem filigree -->
+      <rect x="8" y="40" width="14" height="1" fill="#d44a6a" opacity="0.45" />
+      <rect x="9" y="38" width="1" height="2" fill="#d44a6a" opacity="0.3" />
+      <rect x="14" y="38" width="1" height="2" fill="#d44a6a" opacity="0.3" />
+      <rect x="19" y="38" width="1" height="2" fill="#d44a6a" opacity="0.3" />
+      <!-- fold shadows -->
+      <rect x="11" y="35" width="1" height="7" fill="#2a1220" />
+      <rect x="13" y="35" width="1" height="7" fill="#200d18" />
+
+      <!-- ── Pointed slippers ── -->
+      <rect x="8" y="43" width="6" height="3" fill="#150d08" />
+      <rect x="9" y="44" width="4" height="1" fill="#442032" />
+      <rect x="9" y="43" width="4" height="1" fill="#542638" />
+      <rect x="16" y="43" width="6" height="3" fill="#150d08" />
+      <rect x="17" y="44" width="4" height="1" fill="#2a1220" />
+      <rect x="17" y="43" width="4" height="1" fill="#3a1a2a" />
     </svg>
