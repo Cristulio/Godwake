@@ -1,61 +1,137 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 42"
+      viewBox="0 0 34 46"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Herald of the Slainkin"
     >
-      <!-- Blood backlight + ground shadow -->
-      <ellipse cx="14" cy="22" rx="13" ry="19" fill="#7a1410" opacity="0.14" />
-      <ellipse cx="14" cy="40" rx="11" ry="2" fill="#1a0610" opacity="0.4" />
+      <!-- Harvest-song backlight + ground shadow -->
+      <ellipse cx="16" cy="25" rx="15" ry="18" fill="#a82a20" opacity="0.06" />
+      <ellipse cx="25" cy="33" rx="7" ry="6" fill="#d84838" opacity="0.08" />
+      <ellipse cx="16" cy="44.4" rx="11" ry="1.7" fill="#000" opacity="0.42" />
 
-      <!-- Cloak body — dark blood ramp + lit fold + dither -->
-      <polygon points="7,12 21,12 24,40 4,40" fill="#1a0a12" />
-      <polygon points="7,12 21,12 23,38 5,38" fill="#241018" />
-      <polygon points="9,13 19,13 21,30 7,30" fill="#2e1420" />
-      <polygon points="7,12 14,40 14,12" fill="#140810" opacity="0.5" />
-      <rect x="13" y="14" width="2" height="24" fill="#4a1a1a" opacity="0.6" />
-      <rect x="13" y="14" width="1" height="14" fill="#6a2424" opacity="0.5" />
-      <rect x="9" y="20" width="1" height="1" fill="#3a1c28" />
-      <rect x="18" y="26" width="1" height="1" fill="#140810" />
-      <rect x="8" y="31" width="1" height="1" fill="#3a1c28" />
+      <!-- The herald's high cowl — thrown back for the singing -->
+      <rect x="9" y="0" width="13" height="6" fill="#150d08" />
+      <rect x="10" y="1" width="11" height="4" fill="#481018" />
+      <rect x="10" y="1" width="11" height="1" fill="#67192a" />
+      <rect x="10" y="1" width="4" height="1" fill="#7e1f2c" />
+      <rect x="10" y="1" width="2" height="4" fill="#531320" />
+      <rect x="19" y="2" width="2" height="3" fill="#3a0d1a" />
+      <!-- gold trim of the office -->
+      <rect x="10" y="5" width="11" height="1" fill="#9a7232" />
+      <rect x="10" y="5" width="4" height="1" fill="#c89a48" />
 
-      <!-- Hood + shadowed cavity -->
-      <polygon points="9,4 19,4 20,13 8,13" fill="#1a0a12" />
-      <polygon points="9,4 19,4 19,11 9,11" fill="#241018" opacity="0.8" />
-      <polygon points="9,4 14,1 19,4" fill="#5a1208" />
-      <polygon points="10,4 14,1.5 18,4" fill="#7a1810" opacity="0.7" />
-      <rect x="13" y="0" width="2" height="2" fill="#8c2010" />
-      <rect x="13" y="0" width="1" height="1" fill="#b53c4a" />
-      <ellipse cx="14" cy="9" rx="4" ry="5" fill="#0a0408" />
-      <!-- Burning eyes + spark -->
-      <rect x="11" y="8" width="2" height="2" fill="#b53c4a" />
-      <rect x="15" y="8" width="2" height="2" fill="#b53c4a" />
-      <rect x="11" y="8" width="1" height="1" fill="#f4d042" />
-      <rect x="15" y="8" width="1" height="1" fill="#f4d042" />
-      <rect x="12" y="9" width="1" height="1" fill="#e85a4a" opacity="0.7" />
+      <!-- Head — tipped back, mid-call -->
+      <rect x="10" y="5" width="11" height="9" fill="#150d08" />
+      <rect x="11" y="6" width="9" height="7" fill="#cdc0b0" />
+      <rect x="11" y="6" width="9" height="1" fill="#e2d8c8" />
+      <rect x="11" y="6" width="3" height="1" fill="#f0e8da" />
+      <rect x="11" y="6" width="1" height="5" fill="#dcd2c2" />
+      <rect x="18" y="7" width="2" height="6" fill="#a89884" />
+      <rect x="19" y="8" width="1" height="5" fill="#8a7c68" />
+      <!-- eyes closed in the office of the song -->
+      <rect x="12" y="8" width="2" height="1" fill="#8a7c68" />
+      <rect x="16" y="8" width="2" height="1" fill="#8a7c68" />
+      <!-- THE CALL — the mouth wide open, singing the harvest along -->
+      <rect x="13" y="10" width="5" height="4" fill="#150d08" />
+      <rect x="14" y="11" width="3" height="3" fill="#2e0c12" />
+      <rect x="14" y="11" width="3" height="1" fill="#481018" />
+      <rect x="15" y="12" width="1" height="1" fill="#1c060a" />
+      <!-- the song made visible, rising -->
+      <rect x="18" y="4" width="1" height="1" fill="#d84838" opacity="0.7" />
+      <rect x="21" y="2" width="1" height="1" fill="#a82a20" opacity="0.6" />
+      <rect x="23" y="0" width="1" height="1" fill="#d84838" opacity="0.45" />
 
-      <!-- Left arm + blood lantern -->
-      <rect x="4" y="20" width="2" height="2" fill="#2e1420" />
-      <rect x="4" y="20" width="2" height="1" fill="#3a1c28" />
-      <rect x="2" y="6" width="1" height="15" fill="#3a2418" />
-      <rect x="2" y="6" width="1" height="8" fill="#4e3424" />
-      <line x1="2" y1="6" x2="2" y2="3" stroke="#3a2418" stroke-width="1" />
-      <ellipse cx="2" cy="22" rx="3.4" ry="2.4" fill="#5a1208" opacity="0.7" />
-      <circle cx="2" cy="22" r="1.8" fill="#8c2010" />
-      <circle cx="2" cy="22" r="0.9" fill="#e85a4a" />
-      <rect x="2" y="22" width="1" height="1" fill="#ffd0a0" />
-      <rect x="1" y="24" width="1" height="1" fill="#b53c4a" opacity="0.7" />
-      <rect x="3" y="25" width="1" height="1" fill="#b53c4a" opacity="0.6" />
-      <rect x="1" y="13" width="1" height="1" fill="#f4d042" opacity="0.5" />
+      <!-- Vestments — harvest-wine, gold orphrey, blood-hemmed -->
+      <rect x="8" y="14" width="16" height="16" fill="#150d08" />
+      <rect x="9" y="15" width="14" height="14" fill="#481021" />
+      <rect x="9" y="15" width="14" height="1" fill="#67192a" />
+      <rect x="9" y="15" width="5" height="1" fill="#7e1f2c" />
+      <rect x="9" y="15" width="2" height="14" fill="#531320" />
+      <rect x="9" y="15" width="1" height="9" fill="#67192a" />
+      <rect x="19" y="15" width="3" height="14" fill="#3a0d1a" />
+      <rect x="21" y="15" width="1" height="14" fill="#330b16" />
+      <!-- gold orphrey down the centre -->
+      <rect x="14" y="15" width="3" height="14" fill="#9a7232" />
+      <rect x="14" y="15" width="1" height="14" fill="#c89a48" />
+      <rect x="15" y="17" width="1" height="1" fill="#ecc46a" />
+      <rect x="15" y="21" width="1" height="1" fill="#ecc46a" />
+      <rect x="15" y="25" width="1" height="1" fill="#ecc46a" />
+      <!-- the drowned-throat sigil at the collar -->
+      <rect x="13" y="14" width="5" height="2" fill="#150d08" />
+      <rect x="14" y="14" width="3" height="1" fill="#a82a20" />
+      <rect x="15" y="14" width="1" height="1" fill="#d84838" />
 
-      <!-- Right arm + staff -->
-      <rect x="22" y="20" width="2" height="2" fill="#2e1420" />
-      <rect x="22" y="20" width="2" height="1" fill="#3a1c28" />
-      <rect x="24" y="22" width="1" height="10" fill="#3a2418" />
-      <rect x="24" y="22" width="1" height="5" fill="#4e3424" />
+      <!-- Censer arm — swung low over the pool, mid-dip -->
+      <rect x="22" y="16" width="6" height="4" fill="#150d08" />
+      <rect x="23" y="17" width="4" height="2" fill="#481021" />
+      <rect x="23" y="17" width="4" height="1" fill="#67192a" />
+      <rect x="25" y="19" width="4" height="4" fill="#150d08" />
+      <rect x="26" y="20" width="2" height="2" fill="#cdc0b0" />
+      <rect x="26" y="20" width="1" height="1" fill="#e2d8c8" />
+      <!-- the chain falling toward the pool -->
+      <rect x="27" y="23" width="1" height="1" fill="#c89a48" />
+      <rect x="28" y="24" width="1" height="1" fill="#9a7232" />
+      <rect x="27" y="25" width="1" height="1" fill="#c89a48" />
+      <rect x="28" y="26" width="1" height="1" fill="#9a7232" />
+      <!-- the censer — dipped, coming up dripping murder -->
+      <rect x="24" y="27" width="8" height="7" fill="#150d08" />
+      <rect x="25" y="28" width="6" height="5" fill="#8a5a28" />
+      <rect x="25" y="28" width="6" height="1" fill="#a87434" />
+      <rect x="25" y="28" width="2" height="1" fill="#c89a48" />
+      <rect x="29" y="29" width="2" height="4" fill="#6e4620" />
+      <!-- the vents, running red instead of smoking -->
+      <rect x="26" y="30" width="4" height="2" fill="#7a1a10" />
+      <rect x="26" y="30" width="3" height="1" fill="#a82a20" />
+      <rect x="27" y="30" width="1" height="1" fill="#d84838" />
+      <!-- what it shakes into being — drips that stand up -->
+      <rect x="26" y="34" width="1" height="2" fill="#7a1a10" />
+      <rect x="29" y="34" width="1" height="1" fill="#a82a20" opacity="0.8" />
+      <rect x="27" y="37" width="2" height="2" fill="#150d08" />
+      <rect x="27" y="37" width="1" height="1" fill="#a82a20" />
+      <rect x="30" y="36" width="1" height="1" fill="#7a1a10" opacity="0.7" />
 
-      <!-- Hem feet -->
-      <rect x="6" y="38" width="6" height="3" fill="#140810" />
-      <rect x="6" y="38" width="6" height="1" fill="#241018" />
-      <rect x="16" y="38" width="6" height="3" fill="#120610" />
+      <!-- Off arm raised in the cantor's gesture -->
+      <rect x="4" y="13" width="5" height="5" fill="#150d08" />
+      <rect x="5" y="14" width="3" height="3" fill="#481021" />
+      <rect x="5" y="14" width="3" height="1" fill="#67192a" />
+      <rect x="3" y="9" width="5" height="6" fill="#150d08" />
+      <rect x="4" y="10" width="3" height="4" fill="#531320" />
+      <rect x="4" y="10" width="3" height="1" fill="#67192a" />
+      <rect x="4" y="10" width="1" height="4" fill="#67192a" />
+      <!-- the open cantor's hand -->
+      <rect x="3" y="5" width="5" height="5" fill="#150d08" />
+      <rect x="4" y="6" width="3" height="3" fill="#cdc0b0" />
+      <rect x="4" y="6" width="3" height="1" fill="#e2d8c8" />
+      <rect x="6" y="7" width="1" height="2" fill="#a89884" />
+      <rect x="3" y="4" width="1" height="2" fill="#b4a692" />
+      <rect x="5" y="3" width="1" height="3" fill="#cdc0b0" />
+      <rect x="7" y="4" width="1" height="2" fill="#b4a692" />
+
+      <!-- Skirts — wine to the floor, hem drinking the pools -->
+      <rect x="8" y="29" width="16" height="13" fill="#150d08" />
+      <rect x="9" y="30" width="14" height="11" fill="#3d0e1a" />
+      <rect x="9" y="30" width="14" height="1" fill="#481021" />
+      <rect x="9" y="30" width="3" height="11" fill="#451024" />
+      <rect x="19" y="30" width="3" height="11" fill="#330b16" />
+      <rect x="21" y="30" width="1" height="11" fill="#2a0912" />
+      <!-- orphrey continuing -->
+      <rect x="14" y="30" width="3" height="9" fill="#9a7232" />
+      <rect x="14" y="30" width="1" height="9" fill="#c89a48" />
+      <rect x="15" y="33" width="1" height="1" fill="#ecc46a" />
+      <rect x="15" y="37" width="1" height="1" fill="#ecc46a" />
+      <!-- the hem-soak -->
+      <rect x="9" y="39" width="14" height="2" fill="#7a1a10" />
+      <rect x="9" y="39" width="5" height="1" fill="#8c2014" />
+      <rect x="19" y="39" width="3" height="2" fill="#5e120c" />
+      <rect x="11" y="38" width="2" height="1" fill="#7a1a10" />
+      <rect x="17" y="38" width="2" height="1" fill="#5e120c" />
+      <!-- the floor wet where it stands -->
+      <rect x="7" y="41" width="18" height="2" fill="#150d08" />
+      <rect x="8" y="42" width="16" height="1" fill="#2e0c12" />
+      <rect x="8" y="41" width="6" height="1" fill="#481018" />
+
+      <!-- Motes already answering the call -->
+      <rect x="2" y="20" width="1" height="1" fill="#d84838" opacity="0.5" />
+      <rect x="30" y="13" width="1" height="1" fill="#a82a20" opacity="0.5" />
+      <rect x="5" y="33" width="1" height="1" fill="#a82a20" opacity="0.45" />
     </svg>

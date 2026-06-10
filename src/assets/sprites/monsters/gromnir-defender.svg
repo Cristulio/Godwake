@@ -4,63 +4,133 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Brogmar's Defender"
     >
-      <!-- Smouldering backlight + ground shadow -->
-      <ellipse cx="17" cy="22" rx="14" ry="20" fill="#5a1010" opacity="0.16" />
-      <ellipse cx="17" cy="22" rx="9" ry="14" fill="#8a2a1a" opacity="0.1" />
-      <ellipse cx="17" cy="42" rx="12" ry="1.8" fill="#0c0608" opacity="0.5" />
+      <!-- Godblood backlight + ground shadow -->
+      <ellipse cx="16" cy="24" rx="15" ry="18" fill="#c89a48" opacity="0.05" />
+      <ellipse cx="16" cy="42.4" rx="11" ry="1.7" fill="#000" opacity="0.42" />
 
-      <!-- Horned helm — steel ramp, key upper-left, red eyes -->
-      <rect x="12" y="3" width="10" height="10" fill="#3a3640" />
-      <rect x="12" y="3" width="10" height="2" fill="#4e4a56" />
-      <rect x="12" y="3" width="2" height="10" fill="#454150" />
-      <rect x="13" y="4" width="1" height="8" fill="#5a5662" />
-      <rect x="20" y="3" width="2" height="10" fill="#2a2730" />
-      <rect x="16" y="2" width="2" height="3" fill="#8a2a1a" />
-      <rect x="16" y="2" width="1" height="2" fill="#b53c2a" />
-      <rect x="14" y="7" width="2" height="2" fill="#e84028" />
-      <rect x="19" y="7" width="2" height="2" fill="#e84028" />
-      <rect x="14" y="7" width="1" height="1" fill="#ff8060" />
-      <rect x="19" y="7" width="1" height="1" fill="#ff8060" />
-      <rect x="15" y="10" width="5" height="2" fill="#0c0608" />
+      <!-- Head — gaunt Slainkin face, the ichor showing at the eyes -->
+      <rect x="10" y="2" width="11" height="10" fill="#150d08" />
+      <rect x="11" y="3" width="9" height="8" fill="#c89468" />
+      <rect x="11" y="3" width="9" height="1" fill="#e0b488" />
+      <rect x="11" y="3" width="3" height="1" fill="#f0cc9c" />
+      <rect x="11" y="3" width="1" height="6" fill="#d4a274" />
+      <rect x="18" y="4" width="2" height="7" fill="#a87650" />
+      <rect x="19" y="5" width="1" height="6" fill="#8a5e3e" />
+      <!-- battered open-face helm with a notched crest -->
+      <rect x="9" y="0" width="13" height="4" fill="#150d08" />
+      <rect x="10" y="1" width="11" height="2" fill="#3a3038" />
+      <rect x="10" y="1" width="11" height="1" fill="#5a5058" />
+      <rect x="10" y="1" width="4" height="1" fill="#6e6470" />
+      <rect x="13" y="0" width="5" height="1" fill="#2a2028" />
+      <rect x="16" y="0" width="1" height="1" fill="#150d08" />
+      <!-- the eyes — divine ichor, amber, too bright for the face -->
+      <rect x="12" y="6" width="2" height="2" fill="#1a1206" />
+      <rect x="16" y="6" width="2" height="2" fill="#1a1206" />
+      <rect x="12" y="6" width="2" height="1" fill="#ecc46a" />
+      <rect x="16" y="6" width="2" height="1" fill="#ecc46a" />
+      <rect x="12" y="6" width="1" height="1" fill="#fff0b8" />
+      <rect x="16" y="6" width="1" height="1" fill="#fff0b8" />
+      <!-- hollow cheeks, the siege diet -->
+      <rect x="11" y="8" width="1" height="2" fill="#a87650" />
+      <rect x="14" y="9" width="2" height="1" fill="#a87650" />
+      <!-- a mouth that has stopped asking -->
+      <rect x="13" y="10" width="4" height="1" fill="#6a4830" />
+      <!-- godblood vein at the temple -->
+      <rect x="18" y="5" width="1" height="3" fill="#c89a48" opacity="0.8" />
 
-      <!-- Cuirass — dark plate ramp + red core + dither -->
-      <rect x="10" y="13" width="15" height="16" fill="#2e2a34" />
-      <rect x="10" y="13" width="15" height="2" fill="#403c48" />
-      <rect x="10" y="13" width="15" height="1" fill="#4e4a56" />
-      <rect x="10" y="13" width="2" height="16" fill="#383440" />
-      <rect x="11" y="14" width="1" height="13" fill="#4e4a56" opacity="0.5" />
-      <rect x="23" y="13" width="2" height="16" fill="#221f28" />
-      <rect x="13" y="15" width="9" height="11" fill="#201d26" />
-      <rect x="16" y="15" width="2" height="11" fill="#8a2a1a" opacity="0.75" />
-      <rect x="16" y="15" width="1" height="6" fill="#b53c2a" opacity="0.6" />
-      <rect x="13" y="18" width="9" height="1" fill="#4e4a56" opacity="0.5" />
-      <rect x="14" y="22" width="1" height="1" fill="#2e2a34" />
-      <rect x="20" y="24" width="1" height="1" fill="#201d26" />
+      <!-- Torso — patched scale over siege-rags -->
+      <rect x="8" y="12" width="16" height="15" fill="#150d08" />
+      <rect x="9" y="13" width="14" height="13" fill="#4a4048" />
+      <rect x="9" y="13" width="14" height="1" fill="#5e5460" />
+      <rect x="9" y="13" width="5" height="1" fill="#6e6470" />
+      <rect x="9" y="13" width="2" height="13" fill="#524850" />
+      <rect x="9" y="13" width="1" height="8" fill="#5e5460" />
+      <rect x="20" y="13" width="3" height="13" fill="#3a3038" />
+      <rect x="22" y="13" width="1" height="13" fill="#2e262c" />
+      <!-- scale rows, half of them replaced with boiled leather -->
+      <rect x="10" y="15" width="12" height="1" fill="#332a31" />
+      <rect x="10" y="18" width="12" height="1" fill="#332a31" />
+      <rect x="10" y="21" width="12" height="1" fill="#332a31" />
+      <rect x="10" y="24" width="12" height="1" fill="#332a31" />
+      <rect x="12" y="15" width="3" height="1" fill="#6e6470" />
+      <rect x="17" y="18" width="3" height="1" fill="#6e6470" />
+      <!-- the leather patches -->
+      <rect x="15" y="19" width="5" height="3" fill="#4a3a2a" />
+      <rect x="15" y="19" width="5" height="1" fill="#5e4a34" />
+      <rect x="10" y="22" width="4" height="3" fill="#3a2c20" />
+      <rect x="10" y="22" width="4" height="1" fill="#4a3a2a" />
+      <!-- Brogmar's mark daubed on the chest — the Il-Khan's eye -->
+      <rect x="13" y="14" width="6" height="4" fill="#150d08" />
+      <rect x="14" y="15" width="4" height="2" fill="#7e1f2c" />
+      <rect x="15" y="15" width="2" height="2" fill="#a93340" />
+      <rect x="15" y="16" width="2" height="1" fill="#ecc46a" />
+      <rect x="16" y="16" width="1" height="1" fill="#fff0b8" />
+      <!-- godblood seeping at a seam -->
+      <rect x="11" y="17" width="1" height="4" fill="#c89a48" opacity="0.7" />
+      <rect x="11" y="18" width="1" height="1" fill="#ecc46a" />
 
-      <!-- Arms + gauntlet -->
-      <rect x="6" y="14" width="4" height="11" fill="#2e2a34" />
-      <rect x="6" y="14" width="1" height="11" fill="#3a3640" />
-      <rect x="25" y="14" width="4" height="11" fill="#2e2a34" />
-      <rect x="28" y="14" width="1" height="11" fill="#221f28" />
-      <rect x="25" y="23" width="4" height="3" fill="#9a8478" opacity="0.85" />
-      <rect x="25" y="23" width="4" height="1" fill="#b09a8c" opacity="0.7" />
+      <!-- Twin-blade arms — the fast vicious double-cut -->
+      <!-- lead arm, blade levelled -->
+      <rect x="22" y="14" width="6" height="4" fill="#150d08" />
+      <rect x="23" y="15" width="4" height="2" fill="#4a4048" />
+      <rect x="23" y="15" width="4" height="1" fill="#5e5460" />
+      <rect x="26" y="16" width="3" height="3" fill="#150d08" />
+      <rect x="27" y="17" width="1" height="1" fill="#c89468" />
+      <!-- the first blade — notched, fast -->
+      <rect x="28" y="13" width="6" height="3" fill="#150d08" />
+      <rect x="28" y="14" width="6" height="1" fill="#b8b2ba" />
+      <rect x="28" y="14" width="3" height="1" fill="#e2dee6" />
+      <rect x="31" y="13" width="1" height="1" fill="#3a3038" />
+      <!-- second arm, blade back for the cross-cut -->
+      <rect x="4" y="14" width="5" height="4" fill="#150d08" />
+      <rect x="5" y="15" width="3" height="2" fill="#3a3038" />
+      <rect x="5" y="15" width="3" height="1" fill="#4a4048" />
+      <rect x="3" y="17" width="4" height="4" fill="#150d08" />
+      <rect x="4" y="18" width="2" height="2" fill="#a87650" />
+      <rect x="4" y="18" width="1" height="1" fill="#c89468" />
+      <!-- the second blade angled down-out -->
+      <rect x="0" y="20" width="5" height="3" fill="#150d08" />
+      <rect x="1" y="21" width="4" height="1" fill="#9a949e" />
+      <rect x="1" y="21" width="2" height="1" fill="#c8c4ce" />
+      <!-- godblood streak on the steel -->
+      <rect x="2" y="22" width="2" height="1" fill="#c89a48" opacity="0.7" />
 
-      <!-- Spear + tower shield — steel ramp + specular -->
-      <rect x="3" y="3" width="2" height="22" fill="#5a4636" />
-      <rect x="3" y="3" width="1" height="22" fill="#6e5742" />
-      <rect x="2" y="1" width="4" height="3" fill="#7a4632" />
-      <polygon points="2,3 5,3 5,28 3.5,30 2,28" fill="#b4bcc6" />
-      <polygon points="3.5,3 5,3 5,28 3.5,30" fill="#8a929c" />
-      <polygon points="2,3 3.5,3 3.5,28 2,28" fill="#cdd6e0" opacity="0.6" />
-      <rect x="2" y="5" width="2" height="2" fill="#e0ecf4" opacity="0.7" />
-      <rect x="2" y="5" width="1" height="1" fill="#ffffff" opacity="0.7" />
-      <rect x="2" y="12" width="2" height="2" fill="#e84028" opacity="0.4" />
+      <!-- Belt + rag-skirt -->
+      <rect x="8" y="27" width="16" height="3" fill="#150d08" />
+      <rect x="9" y="28" width="14" height="1" fill="#3a2c20" />
+      <rect x="9" y="28" width="5" height="1" fill="#4a3a2a" />
+      <rect x="14" y="27" width="3" height="3" fill="#150d08" />
+      <rect x="15" y="28" width="1" height="1" fill="#9a7232" />
+      <!-- rag-skirt panels -->
+      <rect x="9" y="30" width="6" height="4" fill="#38303a" />
+      <rect x="9" y="30" width="6" height="1" fill="#42383f" />
+      <rect x="9" y="33" width="3" height="1" fill="#2a2228" />
+      <rect x="17" y="30" width="5" height="3" fill="#2e262c" />
+      <rect x="17" y="32" width="2" height="1" fill="#221c20" />
 
-      <!-- Legs -->
-      <rect x="11" y="29" width="5" height="11" fill="#201d26" />
-      <rect x="19" y="29" width="5" height="11" fill="#201d26" />
-      <rect x="11" y="29" width="1" height="11" fill="#2e2a34" />
-      <rect x="19" y="29" width="1" height="11" fill="#2e2a34" />
-      <rect x="10" y="38" width="7" height="3" fill="#0c0810" />
-      <rect x="19" y="38" width="7" height="3" fill="#0c0810" />
+      <!-- Legs — wrapped shins, the stance of the last line -->
+      <rect x="9" y="31" width="6" height="8" fill="#150d08" />
+      <rect x="10" y="32" width="4" height="6" fill="#4a3a2a" />
+      <rect x="10" y="32" width="1" height="6" fill="#5e4a34" />
+      <rect x="13" y="32" width="1" height="6" fill="#3a2c20" />
+      <rect x="17" y="31" width="6" height="8" fill="#150d08" />
+      <rect x="18" y="32" width="4" height="6" fill="#3e2f22" />
+      <rect x="18" y="32" width="1" height="6" fill="#4a3a2a" />
+      <rect x="21" y="32" width="1" height="6" fill="#32261b" />
+      <!-- shin-wrap bands -->
+      <rect x="10" y="34" width="4" height="1" fill="#8a7050" />
+      <rect x="18" y="35" width="4" height="1" fill="#6a5440" />
+      <!-- battered sabatons -->
+      <rect x="7" y="38" width="8" height="4" fill="#150d08" />
+      <rect x="8" y="39" width="6" height="2" fill="#2a2028" />
+      <rect x="8" y="39" width="3" height="1" fill="#3a3038" />
+      <rect x="16" y="38" width="8" height="4" fill="#150d08" />
+      <rect x="17" y="39" width="6" height="2" fill="#241c22" />
+      <rect x="17" y="39" width="2" height="1" fill="#2a2028" />
+
+      <!-- The siege coming down around it -->
+      <rect x="3" y="8" width="1" height="1" fill="#d4641a" opacity="0.5" />
+      <rect x="29" y="9" width="1" height="1" fill="#a83a14" opacity="0.45" />
+      <rect x="27" y="32" width="1" height="1" fill="#58525c" opacity="0.45" />
+      <rect x="5" y="30" width="1" height="1" fill="#7a7480" opacity="0.4" />
     </svg>

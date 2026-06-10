@@ -1,59 +1,138 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 32"
+      viewBox="0 0 34 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
+      aria-label="Pyre-Chaplain"
     >
-      <!-- Ember backlight + ground shadow -->
-      <ellipse cx="16" cy="18" rx="13" ry="15" fill="#d4641a" opacity="0.09" />
-      <ellipse cx="16" cy="31" rx="10" ry="1.5" fill="#000" opacity="0.42" />
+      <!-- Censer-glow backlight + ground shadow -->
+      <ellipse cx="16" cy="24" rx="15" ry="16" fill="#d4641a" opacity="0.08" />
+      <ellipse cx="27" cy="30" rx="6" ry="6" fill="#f4942a" opacity="0.12" />
+      <ellipse cx="15" cy="40.4" rx="11" ry="1.7" fill="#000" opacity="0.44" />
 
-      <!-- Cowl — dark ramp, key light upper-left -->
-      <polygon points="9,9 16,1 23,9" fill="#2a1e1c" />
-      <polygon points="10,9 16,3 22,9" fill="#3a2c2a" />
-      <polygon points="10,9 16,3 18,9" fill="#4a3632" opacity="0.6" />
-      <polygon points="9,9 12,6 11,9" fill="#5a4642" opacity="0.5" />
+      <!-- Hood — scorched wool, deep cowl -->
+      <rect x="9" y="1" width="12" height="11" fill="#150d08" />
+      <rect x="10" y="2" width="10" height="9" fill="#3d2a22" />
+      <rect x="10" y="2" width="10" height="1" fill="#523a2c" />
+      <rect x="10" y="2" width="4" height="1" fill="#664838" />
+      <rect x="10" y="2" width="2" height="8" fill="#48332a" />
+      <rect x="10" y="2" width="1" height="5" fill="#523a2c" />
+      <rect x="18" y="3" width="2" height="8" fill="#2e1f1a" />
+      <!-- cowl shadow + the face of a man who never left the pyres -->
+      <rect x="11" y="5" width="8" height="6" fill="#1a1410" />
+      <rect x="12" y="6" width="6" height="4" fill="#6e5240" />
+      <rect x="12" y="6" width="6" height="1" fill="#86664e" />
+      <rect x="12" y="6" width="1" height="3" fill="#86664e" />
+      <rect x="17" y="6" width="1" height="4" fill="#523a2c" />
+      <!-- sunken ember-lit eyes -->
+      <rect x="13" y="7" width="2" height="2" fill="#1a1410" />
+      <rect x="16" y="7" width="2" height="2" fill="#1a1410" />
+      <rect x="13" y="7" width="1" height="1" fill="#f4942a" />
+      <rect x="16" y="7" width="1" height="1" fill="#f4942a" />
+      <!-- ash-streaked jaw -->
+      <rect x="13" y="10" width="4" height="1" fill="#523a2c" />
+      <rect x="14" y="10" width="2" height="1" fill="#9a949e" opacity="0.7" />
 
-      <!-- Shadowed face hollow + smoulder eyes -->
-      <ellipse cx="16" cy="10" rx="6" ry="7" fill="#2a201e" />
-      <ellipse cx="16" cy="11" rx="4" ry="5" fill="#140e0c" />
-      <rect x="14" y="10" width="2" height="2" fill="#f4942a" />
-      <rect x="17" y="10" width="2" height="2" fill="#f4942a" />
-      <rect x="14" y="10" width="1" height="1" fill="#ffd070" />
-      <rect x="17" y="10" width="1" height="1" fill="#ffd070" />
-      <rect x="15" y="14" width="3" height="1" fill="#d4641a" opacity="0.6" />
+      <!-- Vestments — scorched robe, iron orphreys -->
+      <rect x="7" y="12" width="16" height="19" fill="#150d08" />
+      <rect x="8" y="13" width="14" height="17" fill="#3d2a22" />
+      <rect x="8" y="13" width="14" height="1" fill="#523a2c" />
+      <rect x="8" y="13" width="5" height="1" fill="#664838" />
+      <rect x="8" y="13" width="2" height="17" fill="#48332a" />
+      <rect x="8" y="13" width="1" height="10" fill="#5a4232" />
+      <rect x="19" y="13" width="3" height="17" fill="#2e1f1a" />
+      <rect x="21" y="13" width="1" height="17" fill="#261a16" />
+      <!-- the chaplain's stole — fire-rite red, gold thread -->
+      <rect x="10" y="13" width="3" height="16" fill="#7e1f2c" />
+      <rect x="10" y="13" width="1" height="16" fill="#a93340" />
+      <rect x="17" y="13" width="3" height="16" fill="#531320" />
+      <rect x="17" y="13" width="1" height="16" fill="#7e1f2c" />
+      <!-- gold flame-sigils stitched down the stole -->
+      <rect x="11" y="15" width="1" height="1" fill="#ecc46a" />
+      <rect x="11" y="19" width="1" height="1" fill="#c89a48" />
+      <rect x="11" y="23" width="1" height="1" fill="#ecc46a" />
+      <rect x="18" y="16" width="1" height="1" fill="#c89a48" />
+      <rect x="18" y="20" width="1" height="1" fill="#ecc46a" />
+      <rect x="18" y="24" width="1" height="1" fill="#c89a48" />
+      <!-- rope cincture -->
+      <rect x="9" y="26" width="12" height="1" fill="#86664e" />
+      <rect x="9" y="26" width="4" height="1" fill="#a8845e" />
+      <rect x="14" y="27" width="2" height="2" fill="#86664e" />
+      <!-- char bites in the hem-line of the chest -->
+      <rect x="14" y="17" width="2" height="1" fill="#261a16" />
+      <rect x="13" y="21" width="1" height="2" fill="#261a16" />
 
-      <!-- Robe — dark ramp, ember veins, dither -->
-      <rect x="10" y="16" width="13" height="15" fill="#3a2c2a" />
-      <rect x="10" y="16" width="13" height="1" fill="#4a3632" />
-      <rect x="10" y="16" width="3" height="15" fill="#46342f" />
-      <rect x="10" y="16" width="1" height="13" fill="#5a4642" opacity="0.7" />
-      <rect x="21" y="16" width="2" height="15" fill="#241a18" />
-      <rect x="15" y="17" width="3" height="14" fill="#241a18" />
-      <rect x="11" y="19" width="11" height="1" fill="#a83a14" opacity="0.6" />
-      <rect x="12" y="23" width="9" height="1" fill="#d4641a" opacity="0.45" />
-      <rect x="11" y="27" width="11" height="1" fill="#6a3a1a" opacity="0.5" />
-      <rect x="13" y="21" width="1" height="1" fill="#e87820" opacity="0.45" />
-      <rect x="19" y="25" width="1" height="1" fill="#241a18" />
-      <rect x="10" y="31" width="13" height="1" fill="#140e0c" />
+      <!-- Left arm raised in the rite — palm full of kindling light -->
+      <rect x="3" y="12" width="6" height="5" fill="#150d08" />
+      <rect x="4" y="13" width="4" height="3" fill="#3d2a22" />
+      <rect x="4" y="13" width="4" height="1" fill="#523a2c" />
+      <rect x="4" y="13" width="1" height="3" fill="#5a4232" />
+      <!-- sleeve falling open -->
+      <rect x="2" y="9" width="6" height="5" fill="#150d08" />
+      <rect x="3" y="10" width="4" height="3" fill="#48332a" />
+      <rect x="3" y="10" width="4" height="1" fill="#5a4232" />
+      <rect x="3" y="10" width="1" height="3" fill="#664838" />
+      <!-- the raised hand, rekindling fire cupped over it -->
+      <rect x="3" y="5" width="5" height="5" fill="#150d08" />
+      <rect x="4" y="6" width="3" height="3" fill="#6e5240" />
+      <rect x="4" y="6" width="3" height="1" fill="#86664e" />
+      <rect x="6" y="7" width="1" height="2" fill="#523a2c" />
+      <!-- the flame it is breathing back into the dead -->
+      <ellipse cx="5.5" cy="3.5" rx="3.5" ry="3" fill="#d4641a" opacity="0.25" />
+      <rect x="4" y="2" width="3" height="3" fill="#a83a14" />
+      <rect x="4" y="2" width="2" height="2" fill="#e87820" />
+      <rect x="5" y="1" width="1" height="2" fill="#f4942a" />
+      <rect x="5" y="1" width="1" height="1" fill="#ffd070" />
+      <rect x="4" y="0" width="1" height="1" fill="#f4942a" opacity="0.6" />
+      <rect x="6" y="0" width="1" height="1" fill="#d4641a" opacity="0.5" />
 
-      <!-- Left arm + censer chain -->
-      <rect x="7" y="17" width="3" height="2" fill="#3a2c2a" />
-      <rect x="7" y="17" width="3" height="1" fill="#4a3632" />
-      <rect x="5" y="18" width="3" height="2" fill="#46342f" />
-      <line x1="6" y1="20" x2="6" y2="25" stroke="#5a4e42" stroke-width="1" />
-      <line x1="6" y1="20" x2="6" y2="25" stroke="#7a6e60" stroke-width="0.4" opacity="0.6" />
+      <!-- Right arm — censer-chain wrapped fist, held low -->
+      <rect x="21" y="13" width="6" height="5" fill="#150d08" />
+      <rect x="22" y="14" width="4" height="3" fill="#2e1f1a" />
+      <rect x="22" y="14" width="4" height="1" fill="#3d2a22" />
+      <rect x="24" y="17" width="4" height="4" fill="#150d08" />
+      <rect x="25" y="18" width="2" height="2" fill="#523a2c" />
+      <rect x="25" y="18" width="1" height="1" fill="#6e5240" />
+      <!-- censer chain, link by link -->
+      <rect x="26" y="21" width="1" height="1" fill="#7a7078" />
+      <rect x="27" y="22" width="1" height="1" fill="#5a5058" />
+      <rect x="26" y="23" width="1" height="1" fill="#7a7078" />
+      <rect x="27" y="24" width="1" height="1" fill="#5a5058" />
+      <rect x="26" y="25" width="1" height="1" fill="#7a7078" />
+      <!-- the censer — a helm re-hung as a thurible, coals live -->
+      <rect x="23" y="26" width="8" height="7" fill="#150d08" />
+      <rect x="24" y="27" width="6" height="5" fill="#3a3038" />
+      <rect x="24" y="27" width="6" height="1" fill="#5a5058" />
+      <rect x="24" y="27" width="2" height="4" fill="#4a4048" />
+      <rect x="28" y="28" width="2" height="4" fill="#2a2028" />
+      <!-- coal-light breathing through the vents -->
+      <rect x="25" y="29" width="4" height="2" fill="#a83a14" />
+      <rect x="25" y="29" width="3" height="1" fill="#e87820" />
+      <rect x="26" y="29" width="1" height="1" fill="#ffd070" />
+      <rect x="24" y="31" width="6" height="1" fill="#6a1c0a" />
+      <!-- smoke threading up off the coals -->
+      <rect x="27" y="24" width="1" height="1" fill="#58525c" opacity="0.45" />
+      <rect x="29" y="22" width="1" height="2" fill="#3a363e" opacity="0.4" />
+      <rect x="30" y="19" width="1" height="2" fill="#58525c" opacity="0.3" />
 
-      <!-- Swinging censer — iron bowl + flame -->
-      <rect x="4" y="25" width="5" height="4" fill="#2a201e" />
-      <rect x="4" y="25" width="5" height="1" fill="#4a3632" />
-      <rect x="4" y="25" width="1" height="4" fill="#46342f" />
-      <rect x="5" y="26" width="3" height="2" fill="#f4942a" />
-      <rect x="6" y="26" width="1" height="1" fill="#ffd070" />
-      <rect x="3" y="29" width="2" height="2" fill="#e87820" opacity="0.7" />
-      <rect x="7" y="30" width="2" height="2" fill="#d4641a" opacity="0.55" />
-      <rect x="5" y="31" width="1" height="1" fill="#f4942a" opacity="0.7" />
+      <!-- Robe skirts to the ash -->
+      <rect x="7" y="31" width="16" height="9" fill="#150d08" />
+      <rect x="8" y="32" width="14" height="7" fill="#332218" />
+      <rect x="8" y="32" width="14" height="1" fill="#3d2a22" />
+      <rect x="8" y="32" width="3" height="7" fill="#3d2a22" />
+      <rect x="18" y="32" width="4" height="7" fill="#261a16" />
+      <!-- stole tips at the hem -->
+      <rect x="10" y="32" width="3" height="3" fill="#531320" />
+      <rect x="10" y="32" width="1" height="3" fill="#7e1f2c" />
+      <rect x="17" y="32" width="3" height="3" fill="#3d0e1a" />
+      <!-- ragged burnt hem -->
+      <rect x="9" y="38" width="2" height="1" fill="#150d08" />
+      <rect x="12" y="39" width="3" height="1" fill="#1a1410" />
+      <rect x="17" y="38" width="2" height="1" fill="#150d08" />
+      <rect x="11" y="37" width="1" height="1" fill="#a83a14" opacity="0.6" />
 
-      <!-- Rising cinders -->
-      <rect x="4" y="22" width="1" height="1" fill="#ffd070" opacity="0.5" />
-      <rect x="9" y="20" width="1" height="1" fill="#f4942a" opacity="0.4" />
+      <!-- Drifting embers from the rite -->
+      <rect x="9" y="4" width="1" height="1" fill="#f4942a" opacity="0.55" />
+      <rect x="1" y="13" width="1" height="1" fill="#d4641a" opacity="0.5" />
+      <rect x="31" y="27" width="1" height="1" fill="#f4942a" opacity="0.5" />
+      <rect x="22" y="34" width="1" height="1" fill="#d4641a" opacity="0.45" />
     </svg>

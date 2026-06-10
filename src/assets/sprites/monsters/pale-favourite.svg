@@ -1,56 +1,123 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 26 34"
+      viewBox="0 0 32 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Pale Favourite"
     >
-      <!-- Crimson backlight + ground shadow -->
-      <ellipse cx="13" cy="17" rx="12" ry="16" fill="#7a1428" opacity="0.08" />
-      <ellipse cx="13" cy="32" rx="10" ry="2" fill="#1e1622" opacity="0.35" />
+      <!-- Cold adoring backlight + faint shadow -->
+      <ellipse cx="16" cy="22" rx="15" ry="17" fill="#9a949e" opacity="0.07" />
+      <ellipse cx="16" cy="40.4" rx="9" ry="1.5" fill="#000" opacity="0.32" />
 
-      <!-- Pale head — porcelain ramp, lit upper-left -->
-      <ellipse cx="13" cy="8" rx="5" ry="6" fill="#f0ead8" />
-      <ellipse cx="11" cy="6" rx="3" ry="4" fill="#f6f1e4" opacity="0.6" />
-      <ellipse cx="15" cy="10" rx="3" ry="4" fill="#d8cdb6" opacity="0.5" />
-      <rect x="11" y="7" width="1" height="2" fill="#cabfaa" opacity="0.7" />
-      <rect x="14" y="7" width="1" height="2" fill="#cabfaa" opacity="0.7" />
-      <rect x="12" y="10" width="2" height="1" fill="#8a2438" opacity="0.7" />
-      <rect x="9" y="5" width="8" height="1" fill="#d8cdb6" opacity="0.5" />
-      <!-- Cold favoured eyes -->
-      <rect x="11" y="7" width="1" height="1" fill="#5a1020" />
-      <rect x="14" y="7" width="1" height="1" fill="#5a1020" />
+      <!-- The blank mask — beautiful, unfinished, waiting for your face -->
+      <rect x="10" y="1" width="12" height="13" fill="#150d08" />
+      <rect x="11" y="2" width="10" height="11" fill="#f0e6d2" />
+      <rect x="11" y="2" width="10" height="1" fill="#f8f2e2" />
+      <rect x="11" y="2" width="5" height="3" fill="#f8f2e2" />
+      <rect x="11" y="2" width="1" height="9" fill="#f0e6d2" />
+      <rect x="19" y="3" width="2" height="10" fill="#cdbfa2" />
+      <rect x="20" y="4" width="1" height="9" fill="#b4a486" />
+      <!-- chin taper -->
+      <rect x="12" y="13" width="8" height="1" fill="#cdbfa2" />
+      <rect x="13" y="14" width="6" height="1" fill="#b4a486" />
+      <!-- where eyes should be — shallow dishes, no holes at all -->
+      <rect x="12" y="6" width="3" height="2" fill="#cdbfa2" />
+      <rect x="17" y="6" width="3" height="2" fill="#cdbfa2" />
+      <rect x="12" y="6" width="3" height="1" fill="#b4a486" />
+      <rect x="17" y="6" width="3" height="1" fill="#b4a486" />
+      <!-- the faintest borrowed features surfacing -->
+      <rect x="13" y="7" width="1" height="1" fill="#8a7f6a" />
+      <rect x="18" y="7" width="1" height="1" fill="#8a7f6a" />
+      <rect x="14" y="10" width="4" height="1" fill="#cdbfa2" />
+      <rect x="15" y="11" width="2" height="1" fill="#b4a486" />
+      <!-- a single gilt tear it was painted with -->
+      <rect x="18" y="9" width="1" height="2" fill="#c89a48" />
+      <rect x="18" y="9" width="1" height="1" fill="#ecc46a" />
 
-      <!-- Wine gown — crimson ramp + bodice + gold belt -->
-      <polygon points="9,13 17,13 20,32 6,32" fill="#5a2638" />
-      <polygon points="9,13 17,13 18,21 8,21" fill="#6e3046" />
-      <polygon points="9,13 12,13 12,30 8,28" fill="#7a3850" />
-      <rect x="12" y="13" width="2" height="19" fill="#4a1e30" opacity="0.7" />
-      <rect x="9" y="16" width="1" height="14" fill="#8a4258" opacity="0.5" />
-      <rect x="16" y="16" width="1" height="14" fill="#4a1e30" opacity="0.5" />
-      <rect x="10" y="13" width="6" height="2" fill="#e8dfcc" opacity="0.85" />
-      <rect x="10" y="13" width="3" height="1" fill="#f6f1e4" opacity="0.7" />
-      <rect x="7" y="24" width="12" height="1" fill="#c0a040" opacity="0.7" />
-      <rect x="7" y="24" width="4" height="1" fill="#f4d878" opacity="0.6" />
-      <!-- gown dither -->
-      <rect x="11" y="18" width="1" height="1" fill="#6e3046" />
-      <rect x="15" y="26" width="1" height="1" fill="#4a1e30" />
+      <!-- Crown of court-curls gone to cobweb -->
+      <rect x="9" y="0" width="14" height="3" fill="#150d08" />
+      <rect x="10" y="1" width="12" height="1" fill="#9a949e" />
+      <rect x="10" y="1" width="5" height="1" fill="#b8b2ba" />
+      <rect x="9" y="2" width="2" height="3" fill="#7a7480" />
+      <rect x="21" y="2" width="2" height="3" fill="#58525c" />
 
-      <!-- Arms + pale hands -->
-      <rect x="5" y="14" width="4" height="2" fill="#5a2638" />
-      <rect x="3" y="15" width="3" height="7" fill="#6e3046" />
-      <rect x="3" y="15" width="1" height="7" fill="#7a3850" />
-      <rect x="2" y="21" width="3" height="2" fill="#f0ead8" />
-      <rect x="2" y="21" width="3" height="1" fill="#f6f1e4" />
-      <rect x="17" y="14" width="4" height="2" fill="#5a2638" />
-      <rect x="20" y="15" width="3" height="7" fill="#6e3046" />
-      <rect x="22" y="15" width="1" height="7" fill="#4a1e30" />
-      <rect x="21" y="21" width="3" height="2" fill="#e0d6c2" />
-      <polygon points="21,20 23,17 24,21" fill="#e0d6c2" opacity="0.6" />
+      <!-- Gown — once the colour of favour, starved grey-violet -->
+      <rect x="8" y="15" width="16" height="14" fill="#150d08" />
+      <rect x="9" y="16" width="14" height="12" fill="#4a3f58" />
+      <rect x="9" y="16" width="14" height="1" fill="#5e5170" />
+      <rect x="9" y="16" width="5" height="1" fill="#726488" />
+      <rect x="9" y="16" width="2" height="12" fill="#564a66" />
+      <rect x="9" y="16" width="1" height="8" fill="#665878" />
+      <rect x="20" y="16" width="3" height="12" fill="#3a3046" />
+      <rect x="22" y="16" width="1" height="12" fill="#2e2638" />
+      <!-- the hollow at the collar — no throat, only want -->
+      <rect x="13" y="15" width="6" height="3" fill="#221e26" />
+      <rect x="14" y="15" width="4" height="2" fill="#16131a" />
+      <!-- bodice lacing, gilt gone dull -->
+      <rect x="14" y="19" width="1" height="7" fill="#9a7232" />
+      <rect x="17" y="19" width="1" height="7" fill="#9a7232" />
+      <rect x="15" y="20" width="2" height="1" fill="#c89a48" />
+      <rect x="15" y="23" width="2" height="1" fill="#9a7232" />
+      <!-- the warmth it has already taken, pooled at the breastbone -->
+      <rect x="15" y="17" width="2" height="2" fill="#6a3020" />
+      <rect x="15" y="17" width="1" height="1" fill="#a85428" />
 
-      <!-- Hem feet + glints -->
-      <rect x="9" y="32" width="3" height="1" fill="#160e16" />
-      <rect x="14" y="32" width="3" height="1" fill="#160e16" />
-      <rect x="6" y="11" width="1" height="1" fill="#f6f1e4" opacity="0.6" />
-      <rect x="19" y="26" width="1" height="1" fill="#f4d878" opacity="0.5" />
-      <rect x="13" y="2" width="1" height="2" fill="#f6f1e4" opacity="0.7" />
+      <!-- Both arms open — the embrace you are meant to walk into -->
+      <rect x="3" y="14" width="7" height="5" fill="#150d08" />
+      <rect x="4" y="15" width="6" height="3" fill="#4a3f58" />
+      <rect x="4" y="15" width="6" height="1" fill="#5e5170" />
+      <rect x="4" y="15" width="1" height="3" fill="#665878" />
+      <rect x="2" y="11" width="5" height="6" fill="#150d08" />
+      <rect x="3" y="12" width="3" height="4" fill="#564a66" />
+      <rect x="3" y="12" width="3" height="1" fill="#665878" />
+      <rect x="3" y="12" width="1" height="4" fill="#726488" />
+      <!-- sleeve fold at the wrist -->
+      <rect x="2" y="10" width="5" height="2" fill="#150d08" />
+      <rect x="3" y="10" width="3" height="1" fill="#3a3046" />
+      <!-- pale open hand, palm up, fingers spread -->
+      <rect x="1" y="7" width="5" height="4" fill="#150d08" />
+      <rect x="2" y="8" width="3" height="2" fill="#e8dcc4" />
+      <rect x="2" y="8" width="3" height="1" fill="#f0e6d2" />
+      <rect x="1" y="6" width="1" height="2" fill="#cdbfa2" />
+      <rect x="3" y="5" width="1" height="3" fill="#e8dcc4" />
+      <rect x="5" y="6" width="1" height="2" fill="#cdbfa2" />
+
+      <rect x="22" y="14" width="7" height="5" fill="#150d08" />
+      <rect x="22" y="15" width="6" height="3" fill="#3a3046" />
+      <rect x="22" y="15" width="6" height="1" fill="#4a3f58" />
+      <rect x="25" y="11" width="5" height="6" fill="#150d08" />
+      <rect x="26" y="12" width="3" height="4" fill="#352c40" />
+      <rect x="26" y="12" width="3" height="1" fill="#4a3f58" />
+      <!-- sleeve fold -->
+      <rect x="25" y="10" width="5" height="2" fill="#150d08" />
+      <rect x="26" y="10" width="3" height="1" fill="#2e2638" />
+      <!-- the other hand, fingers already curling -->
+      <rect x="26" y="6" width="5" height="5" fill="#150d08" />
+      <rect x="27" y="7" width="3" height="3" fill="#cdbfa2" />
+      <rect x="27" y="7" width="2" height="1" fill="#e8dcc4" />
+      <rect x="26" y="5" width="1" height="2" fill="#b4a486" />
+      <rect x="28" y="4" width="1" height="3" fill="#cdbfa2" />
+      <rect x="30" y="5" width="1" height="2" fill="#b4a486" />
+
+      <!-- Skirts — long, drifting, hem already gone -->
+      <rect x="8" y="29" width="16" height="9" fill="#150d08" />
+      <rect x="9" y="30" width="14" height="7" fill="#3f3550" />
+      <rect x="9" y="30" width="14" height="1" fill="#4a3f58" />
+      <rect x="9" y="30" width="3" height="7" fill="#4a3f58" />
+      <rect x="19" y="30" width="4" height="7" fill="#332b40" />
+      <rect x="22" y="30" width="1" height="7" fill="#2a2334" />
+      <!-- the gown unravelling to threads below -->
+      <rect x="10" y="37" width="3" height="2" fill="#352c40" />
+      <rect x="11" y="39" width="2" height="2" fill="#2e2638" opacity="0.8" />
+      <rect x="12" y="41" width="1" height="1" fill="#2a2334" opacity="0.5" />
+      <rect x="15" y="37" width="2" height="3" fill="#2e2638" opacity="0.9" />
+      <rect x="16" y="40" width="1" height="1" fill="#262030" opacity="0.6" />
+      <rect x="19" y="37" width="3" height="2" fill="#2a2334" opacity="0.85" />
+      <rect x="20" y="39" width="2" height="1" fill="#262030" opacity="0.6" />
+      <rect x="14" y="38" width="1" height="2" fill="#221e26" opacity="0.7" />
+
+      <!-- Motes of regard it still gathers -->
+      <rect x="6" y="20" width="1" height="1" fill="#b8b2ba" opacity="0.4" />
+      <rect x="25" y="22" width="1" height="1" fill="#cdbfa2" opacity="0.4" />
+      <rect x="7" y="33" width="1" height="1" fill="#9a949e" opacity="0.35" />
+      <rect x="24" y="4" width="1" height="1" fill="#b8b2ba" opacity="0.35" />
     </svg>

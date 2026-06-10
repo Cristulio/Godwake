@@ -1,64 +1,197 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 42"
+      viewBox="0 0 46 56"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Defiled Treant"
     >
-      <!-- Blighted-green backlight + ground shadow -->
-      <ellipse cx="16" cy="20" rx="15" ry="19" fill="#3a5018" opacity="0.07" />
-      <ellipse cx="16" cy="37" rx="14" ry="3" fill="#0c0e06" opacity="0.45" />
+      <!-- Grove-grief backlight + vast ground shadow -->
+      <ellipse cx="23" cy="30" rx="22" ry="22" fill="#3a8a52" opacity="0.05" />
+      <ellipse cx="23" cy="54" rx="18" ry="2" fill="#000" opacity="0.46" />
 
-      <!-- Withered foliage crown — green ramp -->
-      <polygon points="16,-2 6,8 9,12 23,12 26,8" fill="#1a2210" />
-      <polygon points="16,0 9,7 11,11 21,11 23,7" fill="#28341a" />
-      <polygon points="16,1 11,6 13,10 19,10 21,6" fill="#34441f" opacity="0.7" />
-      <polygon points="16,-2 9,7 11,9 16,2" fill="#222c14" opacity="0.6" />
-      <rect x="7" y="3" width="2" height="2" fill="#161e0c" />
-      <rect x="23" y="4" width="2" height="2" fill="#141a0a" />
-      <rect x="13" y="2" width="3" height="2" fill="#3a4c26" />
-      <rect x="11" y="5" width="1" height="1" fill="#4a5e30" />
+      <!-- Canopy crown — half alive, half gone to grey -->
+      <rect x="8" y="0" width="30" height="9" fill="#150d08" />
+      <rect x="9" y="1" width="28" height="7" fill="#234a30" />
+      <rect x="9" y="1" width="28" height="1" fill="#2e5e3c" />
+      <rect x="9" y="1" width="10" height="2" fill="#3a8a52" />
+      <rect x="9" y="1" width="5" height="1" fill="#4a9a5e" />
+      <rect x="10" y="2" width="2" height="1" fill="#6ac482" />
+      <rect x="30" y="2" width="7" height="6" fill="#1e3a28" />
+      <!-- the dead side of the crown -->
+      <rect x="25" y="1" width="12" height="3" fill="#4a3a2a" />
+      <rect x="28" y="1" width="9" height="2" fill="#5a4430" />
+      <rect x="33" y="3" width="4" height="3" fill="#3a2c20" />
+      <!-- canopy bites and gaps -->
+      <rect x="14" y="0" width="3" height="2" fill="#150d08" />
+      <rect x="22" y="3" width="3" height="2" fill="#150d08" />
+      <rect x="29" y="6" width="3" height="2" fill="#150d08" />
+      <!-- boughs showing through -->
+      <rect x="12" y="6" width="6" height="2" fill="#150d08" />
+      <rect x="13" y="6" width="4" height="1" fill="#5a4430" />
+      <rect x="27" y="7" width="5" height="2" fill="#150d08" />
+      <rect x="28" y="7" width="3" height="1" fill="#4a3826" />
 
-      <!-- Trunk torso — bark ramp + grain + maw -->
-      <rect x="10" y="11" width="12" height="20" fill="#2e2418" />
-      <rect x="10" y="11" width="12" height="1" fill="#4a3a26" />
-      <rect x="10" y="11" width="3" height="20" fill="#3a2e1e" />
-      <rect x="10" y="11" width="1" height="20" fill="#4a3a26" />
-      <rect x="20" y="12" width="2" height="19" fill="#241a10" />
-      <rect x="21" y="12" width="1" height="19" fill="#1c140a" />
-      <polygon points="13,20 19,20 17,28 15,28" fill="#120c06" opacity="0.7" />
-      <rect x="12" y="14" width="1" height="14" fill="#5a4832" opacity="0.4" />
-      <rect x="16" y="13" width="1" height="15" fill="#241a10" opacity="0.6" />
-      <rect x="14" y="17" width="1" height="1" fill="#4a3a26" />
-      <rect x="18" y="22" width="1" height="1" fill="#1c140a" />
-      <!-- Hollow glowing eyes + spark -->
-      <rect x="13" y="14" width="2" height="3" fill="#0a1006" />
-      <rect x="17" y="15" width="2" height="3" fill="#0a1006" />
-      <rect x="13" y="14" width="2" height="1" fill="#5a8a2e" />
-      <rect x="17" y="15" width="2" height="1" fill="#5a8a2e" />
-      <rect x="13" y="14" width="1" height="1" fill="#a8e060" />
-      <rect x="17" y="15" width="1" height="1" fill="#a8e060" />
+      <!-- Trunk — the guardian's body -->
+      <rect x="13" y="8" width="20" height="32" fill="#150d08" />
+      <rect x="14" y="9" width="18" height="30" fill="#6e533a" />
+      <rect x="14" y="9" width="18" height="1" fill="#8a6a4a" />
+      <rect x="14" y="9" width="7" height="1" fill="#a8845e" />
+      <rect x="14" y="9" width="3" height="30" fill="#7a5c40" />
+      <rect x="14" y="9" width="1" height="20" fill="#8a6a4a" />
+      <rect x="28" y="9" width="4" height="30" fill="#5a4430" />
+      <rect x="31" y="9" width="1" height="30" fill="#48361e" />
+      <!-- deep bark fissures -->
+      <rect x="19" y="10" width="1" height="28" fill="#48361e" />
+      <rect x="25" y="9" width="1" height="29" fill="#48361e" />
+      <rect x="22" y="12" width="1" height="24" fill="#5a4430" />
+      <!-- moss shelf on the lit shoulder -->
+      <rect x="14" y="11" width="6" height="2" fill="#2e5e3c" />
+      <rect x="14" y="11" width="3" height="1" fill="#3a8a52" />
+      <rect x="15" y="13" width="3" height="1" fill="#234a30" />
 
-      <!-- Branch arms — bark ramp + twig fingers -->
-      <polygon points="10,14 3,8 0,13 6,18" fill="#3a2e1e" />
-      <polygon points="10,14 4,9 1,13 6,17" fill="#4a3a26" opacity="0.7" />
-      <line x1="6" y1="12" x2="0" y2="9" stroke="#161008" stroke-width="0.9" />
-      <line x1="4" y1="15" x2="0" y2="18" stroke="#161008" stroke-width="0.9" />
-      <polygon points="22,14 30,9 32,15 25,19" fill="#2a2014" />
-      <polygon points="22,14 29,10 31,14 25,18" fill="#3a2e1e" opacity="0.6" />
-      <line x1="26" y1="13" x2="32" y2="11" stroke="#120c06" stroke-width="0.9" />
-      <line x1="27" y1="16" x2="31" y2="20" stroke="#120c06" stroke-width="0.9" />
+      <!-- The grief-face grown into the trunk -->
+      <!-- brow ridge -->
+      <rect x="16" y="15" width="14" height="2" fill="#150d08" />
+      <rect x="17" y="15" width="12" height="1" fill="#48361e" />
+      <!-- hollow eyes, rot-violet light far inside -->
+      <rect x="17" y="17" width="4" height="4" fill="#150d08" />
+      <rect x="18" y="18" width="2" height="2" fill="#1a1322" />
+      <rect x="18" y="18" width="2" height="1" fill="#5a3a8a" />
+      <rect x="18" y="18" width="1" height="1" fill="#8a5ad0" />
+      <rect x="25" y="17" width="4" height="4" fill="#150d08" />
+      <rect x="26" y="18" width="2" height="2" fill="#1a1322" />
+      <rect x="26" y="18" width="2" height="1" fill="#5a3a8a" />
+      <rect x="26" y="18" width="1" height="1" fill="#8a5ad0" />
+      <!-- weeping sap-stain beneath the eyes -->
+      <rect x="18" y="21" width="1" height="3" fill="#48361e" />
+      <rect x="27" y="21" width="1" height="2" fill="#48361e" />
+      <!-- the long nose-ridge of bark -->
+      <rect x="22" y="18" width="2" height="6" fill="#8a6a4a" />
+      <rect x="22" y="18" width="1" height="6" fill="#a8845e" />
+      <!-- the mouth — a split that grief keeps opening -->
+      <rect x="18" y="26" width="10" height="3" fill="#150d08" />
+      <rect x="19" y="27" width="8" height="2" fill="#1a1410" />
+      <rect x="20" y="27" width="2" height="1" fill="#5a3a8a" />
+      <rect x="24" y="28" width="2" height="1" fill="#2c1a40" />
+      <!-- bark lips -->
+      <rect x="17" y="25" width="12" height="1" fill="#48361e" />
+      <rect x="18" y="29" width="10" height="1" fill="#48361e" />
 
-      <!-- Root legs + splayed roots -->
-      <rect x="11" y="31" width="4" height="6" fill="#2a2014" />
-      <rect x="11" y="31" width="1" height="6" fill="#3a2e1e" />
-      <rect x="17" y="31" width="4" height="6" fill="#241a10" />
-      <rect x="20" y="31" width="1" height="6" fill="#1c140a" />
-      <polygon points="8,37 11,33 16,37" fill="#1a1208" />
-      <polygon points="9,37 11,34 14,37" fill="#2a2014" opacity="0.6" />
-      <polygon points="16,37 21,33 24,37" fill="#161008" />
-      <line x1="9" y1="37" x2="6" y2="40" stroke="#241a10" stroke-width="1.2" />
-      <line x1="23" y1="37" x2="26" y2="40" stroke="#1c140a" stroke-width="1.2" />
-      <rect x="13" y="24" width="6" height="1" fill="#120c06" opacity="0.6" />
-      <rect x="5" y="11" width="1" height="1" fill="#8aba4a" opacity="0.4" />
-      <rect x="27" y="13" width="1" height="1" fill="#5a8a2e" opacity="0.4" />
+      <!-- The defiling — violet rot hollows breaking through the trunk -->
+      <rect x="15" y="31" width="4" height="5" fill="#150d08" />
+      <rect x="16" y="32" width="2" height="3" fill="#2c1a40" />
+      <rect x="16" y="32" width="2" height="1" fill="#5a3a8a" />
+      <rect x="16" y="32" width="1" height="1" fill="#8a5ad0" />
+      <rect x="27" y="33" width="4" height="4" fill="#150d08" />
+      <rect x="28" y="34" width="2" height="2" fill="#2c1a40" />
+      <rect x="28" y="34" width="1" height="1" fill="#5a3a8a" />
+      <!-- rot veins crawling from the hollows -->
+      <rect x="19" y="33" width="2" height="1" fill="#2c1a40" />
+      <rect x="21" y="34" width="2" height="1" fill="#2c1a40" opacity="0.8" />
+      <rect x="26" y="36" width="2" height="1" fill="#2c1a40" opacity="0.7" />
+
+      <!-- Striking bough-arm raised high (viewer-right) -->
+      <rect x="31" y="10" width="8" height="5" fill="#150d08" />
+      <rect x="32" y="11" width="6" height="3" fill="#5a4430" />
+      <rect x="32" y="11" width="6" height="1" fill="#6e533a" />
+      <rect x="36" y="6" width="6" height="7" fill="#150d08" />
+      <rect x="37" y="7" width="4" height="5" fill="#4a3826" />
+      <rect x="37" y="7" width="4" height="1" fill="#5a4430" />
+      <rect x="37" y="7" width="1" height="5" fill="#5a4430" />
+      <!-- the reaching break-you bough, knuckled twigs -->
+      <rect x="39" y="2" width="6" height="6" fill="#150d08" />
+      <rect x="40" y="3" width="4" height="4" fill="#5a4430" />
+      <rect x="40" y="3" width="4" height="1" fill="#6e533a" />
+      <rect x="40" y="3" width="1" height="3" fill="#6e533a" />
+      <!-- splayed twig-fingers -->
+      <rect x="44" y="1" width="2" height="2" fill="#150d08" />
+      <rect x="44" y="1" width="1" height="1" fill="#8a6a4a" />
+      <rect x="44" y="4" width="2" height="2" fill="#150d08" />
+      <rect x="44" y="4" width="1" height="1" fill="#7a5c40" />
+      <rect x="43" y="7" width="2" height="2" fill="#150d08" />
+      <rect x="43" y="7" width="1" height="1" fill="#6e533a" />
+      <!-- rot at the wrist-joint -->
+      <rect x="39" y="6" width="1" height="1" fill="#8a5ad0" opacity="0.7" />
+      <rect x="41" y="8" width="1" height="1" fill="#5a3a8a" opacity="0.6" />
+
+      <!-- Dragging bough-arm (viewer-left), knuckles to the stone -->
+      <rect x="7" y="12" width="7" height="5" fill="#150d08" />
+      <rect x="8" y="13" width="5" height="3" fill="#6e533a" />
+      <rect x="8" y="13" width="5" height="1" fill="#8a6a4a" />
+      <rect x="8" y="13" width="1" height="3" fill="#8a6a4a" />
+      <rect x="4" y="15" width="6" height="14" fill="#150d08" />
+      <rect x="5" y="16" width="4" height="12" fill="#5a4430" />
+      <rect x="5" y="16" width="4" height="1" fill="#6e533a" />
+      <rect x="5" y="16" width="1" height="10" fill="#6e533a" />
+      <rect x="8" y="17" width="1" height="11" fill="#48361e" />
+      <!-- moss hanging off the elbow -->
+      <rect x="4" y="19" width="2" height="3" fill="#234a30" />
+      <rect x="4" y="19" width="1" height="2" fill="#2e5e3c" />
+      <!-- the grounded fist of roots -->
+      <rect x="2" y="28" width="9" height="7" fill="#150d08" />
+      <rect x="3" y="29" width="7" height="5" fill="#5a4430" />
+      <rect x="3" y="29" width="7" height="1" fill="#6e533a" />
+      <rect x="3" y="29" width="2" height="4" fill="#6e533a" />
+      <rect x="8" y="30" width="2" height="4" fill="#48361e" />
+      <!-- root knuckles biting the floor-stone -->
+      <rect x="1" y="33" width="3" height="2" fill="#150d08" />
+      <rect x="2" y="33" width="2" height="1" fill="#6e533a" />
+      <rect x="5" y="34" width="2" height="2" fill="#150d08" />
+      <rect x="5" y="34" width="1" height="1" fill="#5a4430" />
+      <rect x="9" y="34" width="2" height="1" fill="#150d08" />
+
+      <!-- Root-legs splitting from the trunk, heaving the floor -->
+      <rect x="13" y="39" width="20" height="6" fill="#150d08" />
+      <rect x="14" y="40" width="18" height="4" fill="#5f4732" />
+      <rect x="14" y="40" width="18" height="1" fill="#6e533a" />
+      <rect x="14" y="40" width="5" height="4" fill="#6a4f38" />
+      <rect x="27" y="40" width="5" height="4" fill="#4a3826" />
+      <!-- the split -->
+      <rect x="21" y="40" width="3" height="5" fill="#150d08" />
+      <rect x="22" y="41" width="1" height="4" fill="#1a1410" />
+      <!-- left root-leg -->
+      <rect x="11" y="44" width="11" height="6" fill="#150d08" />
+      <rect x="12" y="45" width="9" height="4" fill="#5a4430" />
+      <rect x="12" y="45" width="9" height="1" fill="#6e533a" />
+      <rect x="12" y="45" width="3" height="3" fill="#6a4f38" />
+      <rect x="18" y="46" width="3" height="3" fill="#48361e" />
+      <!-- root toes -->
+      <rect x="8" y="49" width="7" height="4" fill="#150d08" />
+      <rect x="9" y="50" width="5" height="2" fill="#5a4430" />
+      <rect x="9" y="50" width="2" height="1" fill="#6e533a" />
+      <rect x="5" y="51" width="4" height="2" fill="#150d08" />
+      <rect x="6" y="51" width="2" height="1" fill="#4a3826" />
+      <rect x="15" y="50" width="5" height="3" fill="#150d08" />
+      <rect x="16" y="51" width="3" height="1" fill="#48361e" />
+      <!-- right root-leg -->
+      <rect x="24" y="44" width="11" height="6" fill="#150d08" />
+      <rect x="25" y="45" width="9" height="4" fill="#4f3c28" />
+      <rect x="25" y="45" width="9" height="1" fill="#5a4430" />
+      <rect x="30" y="46" width="3" height="3" fill="#3e2f1c" />
+      <rect x="26" y="49" width="7" height="4" fill="#150d08" />
+      <rect x="27" y="50" width="5" height="2" fill="#48361e" />
+      <rect x="32" y="51" width="5" height="2" fill="#150d08" />
+      <rect x="33" y="51" width="3" height="1" fill="#3e2f1c" />
+      <!-- heaved floor-stone slabs at the roots -->
+      <rect x="2" y="52" width="6" height="2" fill="#150d08" />
+      <rect x="3" y="52" width="4" height="1" fill="#58525c" />
+      <rect x="3" y="52" width="2" height="1" fill="#6e6874" />
+      <rect x="36" y="50" width="6" height="3" fill="#150d08" />
+      <rect x="37" y="51" width="4" height="1" fill="#46404c" />
+      <rect x="37" y="51" width="2" height="1" fill="#58525c" />
+      <rect x="20" y="53" width="7" height="1" fill="#150d08" />
+      <rect x="21" y="53" width="5" height="1" fill="#3a363e" />
+
+      <!-- Restraining roots snaking out along the ground -->
+      <rect x="33" y="47" width="6" height="2" fill="#150d08" />
+      <rect x="34" y="47" width="4" height="1" fill="#4a3826" />
+      <rect x="38" y="44" width="4" height="2" fill="#150d08" />
+      <rect x="39" y="44" width="2" height="1" fill="#5a4430" />
+      <rect x="41" y="45" width="1" height="1" fill="#8a5ad0" opacity="0.6" />
+
+      <!-- Falling dead leaves -->
+      <rect x="6" y="6" width="1" height="1" fill="#5a4430" opacity="0.6" />
+      <rect x="40" y="16" width="1" height="1" fill="#4a3a2a" opacity="0.55" />
+      <rect x="10" y="22" width="1" height="1" fill="#3a8a52" opacity="0.45" />
+      <rect x="36" y="30" width="1" height="1" fill="#5a4430" opacity="0.5" />
+      <rect x="12" y="36" width="1" height="1" fill="#8a5ad0" opacity="0.35" />
     </svg>

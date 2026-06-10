@@ -1,50 +1,102 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 26 32"
+      viewBox="0 0 32 40"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Gravesmoke Revenant"
     >
-      <!-- Cold smoke-light backlight -->
-      <ellipse cx="13" cy="15" rx="12" ry="15" fill="#6a7a90" opacity="0.08" />
-      <ellipse cx="13" cy="30" rx="7" ry="1.4" fill="#0a0c10" opacity="0.3" />
+      <!-- Cold backlight + thin ground shadow (it barely presses the ash) -->
+      <ellipse cx="15" cy="22" rx="14" ry="16" fill="#58525c" opacity="0.09" />
+      <ellipse cx="15" cy="38.4" rx="9" ry="1.4" fill="#000" opacity="0.3" />
 
-      <!-- Rising grave-smoke -->
-      <rect x="9" y="6" width="2" height="2" fill="#4a4a52" opacity="0.4" />
-      <rect x="14" y="4" width="2" height="2" fill="#5a5a64" opacity="0.4" />
-      <rect x="11" y="2" width="3" height="2" fill="#4a4a52" opacity="0.3" />
+      <!-- Loose smoke shed off the shoulders -->
+      <rect x="3" y="6" width="2" height="2" fill="#3a363e" opacity="0.4" />
+      <rect x="1" y="9" width="2" height="1" fill="#58525c" opacity="0.35" />
+      <rect x="26" y="8" width="2" height="2" fill="#3a363e" opacity="0.4" />
+      <rect x="28" y="5" width="2" height="1" fill="#58525c" opacity="0.3" />
+      <rect x="5" y="3" width="1" height="1" fill="#7a7480" opacity="0.3" />
 
-      <!-- Smoke skull — layered ramp, lit upper-left -->
-      <ellipse cx="12" cy="11" rx="6" ry="6" fill="#3a3a44" opacity="0.85" />
-      <ellipse cx="11" cy="10" rx="5" ry="5" fill="#4c4c56" opacity="0.7" />
-      <ellipse cx="12" cy="11" rx="4" ry="5" fill="#26262e" opacity="0.9" />
-      <ellipse cx="10" cy="9" rx="2" ry="2" fill="#5a5a64" opacity="0.5" />
-      <!-- Pale-blue eyes + spark -->
-      <rect x="9" y="10" width="2" height="2" fill="#a0c0d0" opacity="0.85" />
-      <rect x="13" y="10" width="2" height="2" fill="#a0c0d0" opacity="0.85" />
-      <rect x="9" y="10" width="1" height="1" fill="#e0f0f8" />
-      <rect x="13" y="10" width="1" height="1" fill="#e0f0f8" />
-      <rect x="11" y="13" width="2" height="2" fill="#16161c" opacity="0.7" />
+      <!-- Head — a soldier's profile barely holding its edges -->
+      <rect x="10" y="2" width="10" height="9" fill="#150d08" />
+      <rect x="11" y="3" width="8" height="7" fill="#3a363e" />
+      <rect x="11" y="3" width="8" height="1" fill="#4e4854" />
+      <rect x="11" y="3" width="3" height="1" fill="#5e5864" />
+      <rect x="11" y="3" width="1" height="5" fill="#46404c" />
+      <rect x="17" y="4" width="2" height="6" fill="#2e2a32" />
+      <!-- the ghost of a helm-line across the brow -->
+      <rect x="11" y="4" width="8" height="1" fill="#2e2a32" />
+      <!-- eyes — cold, the only thing that never smokes -->
+      <rect x="12" y="6" width="2" height="2" fill="#0e0c12" />
+      <rect x="16" y="6" width="2" height="2" fill="#0e0c12" />
+      <rect x="12" y="6" width="1" height="1" fill="#b8d8e0" />
+      <rect x="16" y="6" width="1" height="1" fill="#b8d8e0" />
+      <!-- jaw smoking apart -->
+      <rect x="12" y="9" width="5" height="1" fill="#2e2a32" opacity="0.8" />
+      <rect x="13" y="10" width="3" height="1" fill="#3a363e" opacity="0.5" />
 
-      <!-- Smoke torso — ramp + dither -->
-      <rect x="7" y="16" width="10" height="11" fill="#34343e" opacity="0.8" />
-      <rect x="7" y="16" width="3" height="11" fill="#44444e" opacity="0.7" />
-      <rect x="7" y="16" width="1" height="11" fill="#54545e" opacity="0.6" />
-      <rect x="8" y="16" width="8" height="2" fill="#44444e" opacity="0.6" />
-      <rect x="10" y="18" width="4" height="9" fill="#22222a" opacity="0.85" />
-      <rect x="9" y="20" width="1" height="6" fill="#5a5a64" opacity="0.4" />
-      <rect x="14" y="20" width="1" height="6" fill="#2a2a32" opacity="0.5" />
-      <rect x="12" y="19" width="1" height="1" fill="#44444e" opacity="0.5" />
-      <rect x="15" y="23" width="1" height="1" fill="#22222a" opacity="0.6" />
+      <!-- Torso — densest where the stolen warmth is kept -->
+      <rect x="8" y="10" width="14" height="16" fill="#150d08" />
+      <rect x="9" y="11" width="12" height="14" fill="#332f37" />
+      <rect x="9" y="11" width="12" height="1" fill="#46404c" />
+      <rect x="9" y="11" width="4" height="1" fill="#58525c" />
+      <rect x="9" y="11" width="2" height="11" fill="#3a363e" />
+      <rect x="9" y="11" width="1" height="7" fill="#4e4854" />
+      <rect x="18" y="11" width="3" height="14" fill="#28242c" />
+      <rect x="20" y="11" width="1" height="14" fill="#221e26" />
+      <!-- the ghost of a cuirass — straps it remembers wearing -->
+      <rect x="10" y="14" width="10" height="1" fill="#28242c" />
+      <rect x="10" y="19" width="10" height="1" fill="#28242c" />
+      <!-- stolen warmth banked in the chest, cooling at the rim -->
+      <rect x="13" y="14" width="4" height="5" fill="#3d2520" />
+      <rect x="14" y="15" width="2" height="3" fill="#6a3020" />
+      <rect x="14" y="16" width="2" height="1" fill="#a85428" />
+      <rect x="15" y="16" width="1" height="1" fill="#e0904c" />
+      <!-- cold spots where the smoke thins -->
+      <rect x="11" y="17" width="1" height="2" fill="#221e26" />
+      <rect x="17" y="21" width="2" height="1" fill="#221e26" />
 
-      <!-- Wisping arms -->
-      <rect x="3" y="17" width="4" height="2" fill="#3a3a44" opacity="0.7" />
-      <rect x="1" y="18" width="3" height="2" fill="#34343e" opacity="0.55" />
-      <rect x="17" y="17" width="4" height="2" fill="#3a3a44" opacity="0.7" />
-      <rect x="20" y="15" width="3" height="2" fill="#34343e" opacity="0.5" />
-      <rect x="22" y="14" width="2" height="1" fill="#44444e" opacity="0.4" />
+      <!-- Reaching arm — long, the fingers longer -->
+      <rect x="19" y="12" width="7" height="4" fill="#150d08" />
+      <rect x="20" y="13" width="5" height="2" fill="#332f37" />
+      <rect x="20" y="13" width="5" height="1" fill="#46404c" />
+      <rect x="24" y="14" width="5" height="3" fill="#150d08" />
+      <rect x="25" y="15" width="3" height="1" fill="#3a363e" />
+      <!-- splayed grave-grip fingers, frost at the tips -->
+      <rect x="28" y="13" width="3" height="1" fill="#150d08" />
+      <rect x="29" y="13" width="2" height="1" fill="#46404c" />
+      <rect x="28" y="15" width="4" height="1" fill="#150d08" />
+      <rect x="29" y="15" width="3" height="1" fill="#58525c" />
+      <rect x="31" y="15" width="1" height="1" fill="#b8d8e0" />
+      <rect x="28" y="17" width="3" height="1" fill="#150d08" />
+      <rect x="29" y="17" width="2" height="1" fill="#46404c" />
+      <rect x="30" y="17" width="1" height="1" fill="#8fb8c0" />
 
-      <!-- Dissipating legs -->
-      <polygon points="8,27 10,32 12,27" fill="#2a2a32" opacity="0.7" />
-      <polygon points="13,27 15,31 17,27" fill="#2a2a32" opacity="0.6" />
-      <rect x="6" y="27" width="2" height="3" fill="#34343e" opacity="0.4" />
+      <!-- Trailing arm, half-smoked away -->
+      <rect x="6" y="13" width="3" height="8" fill="#150d08" />
+      <rect x="7" y="14" width="1" height="6" fill="#2e2a32" />
+      <rect x="6" y="20" width="2" height="3" fill="#28242c" opacity="0.8" />
+      <rect x="5" y="22" width="2" height="2" fill="#221e26" opacity="0.6" />
+      <rect x="4" y="24" width="2" height="1" fill="#3a363e" opacity="0.4" />
+
+      <!-- Lower body — unravelling into the ashfall -->
+      <rect x="9" y="25" width="12" height="6" fill="#150d08" />
+      <rect x="10" y="26" width="10" height="4" fill="#2e2a32" />
+      <rect x="10" y="26" width="3" height="4" fill="#332f37" />
+      <rect x="17" y="26" width="3" height="4" fill="#262229" />
+      <!-- smoke streamers where legs were -->
+      <rect x="10" y="30" width="4" height="3" fill="#28242c" />
+      <rect x="11" y="33" width="3" height="2" fill="#262229" opacity="0.85" />
+      <rect x="12" y="35" width="2" height="2" fill="#221e26" opacity="0.6" />
+      <rect x="13" y="37" width="1" height="1" fill="#3a363e" opacity="0.4" />
+      <rect x="16" y="30" width="4" height="2" fill="#262229" opacity="0.9" />
+      <rect x="17" y="32" width="3" height="2" fill="#221e26" opacity="0.7" />
+      <rect x="18" y="34" width="2" height="1" fill="#2e2a32" opacity="0.5" />
+      <rect x="19" y="35" width="1" height="2" fill="#3a363e" opacity="0.35" />
+      <rect x="15" y="31" width="1" height="3" fill="#1d1a21" opacity="0.8" />
+
+      <!-- Wisps curling off the silhouette -->
+      <rect x="22" y="20" width="2" height="1" fill="#3a363e" opacity="0.45" />
+      <rect x="24" y="18" width="1" height="1" fill="#58525c" opacity="0.35" />
+      <rect x="7" y="28" width="1" height="2" fill="#3a363e" opacity="0.4" />
+      <rect x="21" y="28" width="2" height="1" fill="#2e2a32" opacity="0.45" />
+      <rect x="23" y="26" width="1" height="1" fill="#58525c" opacity="0.3" />
     </svg>

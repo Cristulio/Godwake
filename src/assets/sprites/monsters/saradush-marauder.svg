@@ -4,61 +4,138 @@
       preserveAspectRatio="xMidYMax meet"
       aria-label="Karthen Marauder"
     >
-      <!-- Warm raid-fire backlight + ground shadow -->
-      <ellipse cx="17" cy="24" rx="14" ry="20" fill="#a85a20" opacity="0.07" />
-      <ellipse cx="17" cy="42" rx="11" ry="2" fill="#000" opacity="0.42" />
+      <!-- Siege-fire backlight + ground shadow -->
+      <ellipse cx="16" cy="24" rx="15" ry="18" fill="#d4641a" opacity="0.06" />
+      <ellipse cx="16" cy="42.4" rx="11" ry="1.7" fill="#000" opacity="0.42" />
 
-      <!-- Head — tan ramp, key upper-left -->
-      <rect x="13" y="4" width="9" height="9" fill="#7a5234" />
-      <rect x="13" y="4" width="9" height="2" fill="#8f6240" />
-      <rect x="13" y="4" width="3" height="9" fill="#9a6c48" />
-      <rect x="13" y="4" width="1" height="6" fill="#ad7c54" />
-      <rect x="20" y="5" width="2" height="8" fill="#5e3e26" />
-      <rect x="14" y="7" width="2" height="2" fill="#0c0804" />
-      <rect x="19" y="7" width="2" height="2" fill="#0c0804" />
-      <rect x="14" y="7" width="1" height="1" fill="#e88a52" opacity="0.6" />
-      <rect x="15" y="10" width="5" height="1" fill="#a83a14" opacity="0.6" />
-      <!-- Red headband -->
-      <rect x="12" y="3" width="11" height="2" fill="#3a2a1a" />
-      <rect x="13" y="3" width="9" height="1" fill="#a83a14" />
+      <!-- Head — wind-burnt sellsword under a looted half-helm -->
+      <rect x="10" y="2" width="11" height="10" fill="#150d08" />
+      <rect x="11" y="3" width="9" height="8" fill="#c89468" />
+      <rect x="11" y="3" width="9" height="1" fill="#e0b488" />
+      <rect x="11" y="3" width="1" height="6" fill="#d4a274" />
+      <rect x="18" y="4" width="2" height="7" fill="#a87650" />
+      <rect x="19" y="5" width="1" height="6" fill="#8a5e3e" />
+      <!-- the half-helm, someone else's crest knocked off it -->
+      <rect x="9" y="1" width="13" height="4" fill="#150d08" />
+      <rect x="10" y="2" width="11" height="2" fill="#3a3038" />
+      <rect x="10" y="2" width="11" height="1" fill="#5a5058" />
+      <rect x="10" y="2" width="4" height="1" fill="#6e6470" />
+      <rect x="20" y="3" width="1" height="1" fill="#2a2028" />
+      <!-- the stump where the crest was -->
+      <rect x="14" y="0" width="3" height="2" fill="#150d08" />
+      <rect x="15" y="0" width="1" height="1" fill="#2a2028" />
+      <!-- mean little eyes -->
+      <rect x="12" y="6" width="2" height="2" fill="#1a1410" />
+      <rect x="16" y="6" width="2" height="2" fill="#1a1410" />
+      <rect x="12" y="6" width="1" height="1" fill="#e8dcc4" />
+      <rect x="16" y="6" width="1" height="1" fill="#e8dcc4" />
+      <!-- broken nose, stubble jaw -->
+      <rect x="14" y="8" width="2" height="2" fill="#a87650" />
+      <rect x="12" y="10" width="7" height="1" fill="#8a5e3e" />
+      <rect x="13" y="10" width="4" height="1" fill="#6a4830" />
+      <!-- a scar he is proud of -->
+      <rect x="17" y="5" width="1" height="3" fill="#96584a" />
 
-      <!-- Leather cuirass — ramp + straps + dither -->
-      <rect x="10" y="13" width="15" height="16" fill="#46362a" />
-      <rect x="10" y="13" width="15" height="2" fill="#5a4636" />
-      <rect x="10" y="13" width="3" height="16" fill="#5a4636" />
-      <rect x="10" y="13" width="1" height="16" fill="#6a5440" />
-      <rect x="23" y="13" width="2" height="16" fill="#2e241a" />
-      <rect x="12" y="15" width="11" height="11" fill="#2e241a" />
-      <rect x="13" y="17" width="9" height="1" fill="#6a4a2a" opacity="0.6" />
-      <rect x="13" y="21" width="9" height="1" fill="#6a4a2a" opacity="0.5" />
-      <rect x="11" y="14" width="1" height="13" fill="#6a5440" opacity="0.6" />
-      <rect x="15" y="19" width="1" height="1" fill="#46362a" />
-      <rect x="20" y="23" width="1" height="1" fill="#241a12" />
+      <!-- Torso — looted mail over a fattened paunch -->
+      <rect x="8" y="12" width="16" height="16" fill="#150d08" />
+      <rect x="9" y="13" width="14" height="14" fill="#4a4048" />
+      <rect x="9" y="13" width="14" height="1" fill="#5a5058" />
+      <rect x="9" y="13" width="5" height="1" fill="#6e6470" />
+      <rect x="9" y="13" width="2" height="14" fill="#524850" />
+      <rect x="9" y="13" width="1" height="9" fill="#5e5460" />
+      <rect x="20" y="13" width="3" height="14" fill="#3a3038" />
+      <rect x="22" y="13" width="1" height="14" fill="#2e262c" />
+      <!-- mail rows, dented -->
+      <rect x="10" y="15" width="12" height="1" fill="#3a3038" />
+      <rect x="10" y="18" width="12" height="1" fill="#3a3038" />
+      <rect x="10" y="21" width="12" height="1" fill="#3a3038" />
+      <rect x="10" y="24" width="12" height="1" fill="#3a3038" />
+      <rect x="13" y="15" width="2" height="1" fill="#6e6470" />
+      <rect x="17" y="18" width="2" height="1" fill="#6e6470" />
+      <rect x="11" y="21" width="2" height="1" fill="#5e5460" />
+      <!-- the paunch straining the bottom rows -->
+      <rect x="10" y="22" width="12" height="5" fill="#463c44" />
+      <rect x="10" y="22" width="4" height="4" fill="#4e4450" />
+      <rect x="19" y="22" width="3" height="5" fill="#38303a" />
+      <!-- wine sash looted off someone better dressed -->
+      <rect x="9" y="13" width="3" height="2" fill="#7e1f2c" />
+      <rect x="9" y="13" width="2" height="1" fill="#a93340" />
+      <rect x="12" y="15" width="3" height="2" fill="#67192a" />
+      <rect x="15" y="17" width="3" height="2" fill="#531320" />
+      <rect x="18" y="19" width="3" height="2" fill="#67192a" />
+      <rect x="21" y="21" width="2" height="2" fill="#531320" />
 
-      <!-- Shoulders + bare skin band -->
-      <rect x="6" y="14" width="4" height="11" fill="#46362a" />
-      <rect x="6" y="14" width="4" height="1" fill="#5a4636" />
-      <rect x="25" y="14" width="4" height="11" fill="#46362a" />
-      <rect x="25" y="14" width="1" height="11" fill="#2e241a" />
-      <rect x="6" y="23" width="4" height="3" fill="#caa070" opacity="0.85" />
-      <rect x="6" y="23" width="4" height="1" fill="#dab488" opacity="0.7" />
+      <!-- Greataxe arm — both hands on the looted haft -->
+      <rect x="22" y="13" width="6" height="5" fill="#150d08" />
+      <rect x="23" y="14" width="4" height="3" fill="#4a4048" />
+      <rect x="23" y="14" width="4" height="1" fill="#5a5058" />
+      <!-- the haft, leaning back over the shoulder -->
+      <rect x="24" y="2" width="4" height="22" fill="#150d08" />
+      <rect x="25" y="3" width="2" height="20" fill="#6a3a1a" />
+      <rect x="25" y="3" width="1" height="20" fill="#8c5226" />
+      <!-- gripping fists, one above the other -->
+      <rect x="23" y="16" width="5" height="3" fill="#150d08" />
+      <rect x="24" y="17" width="3" height="1" fill="#c89468" />
+      <rect x="23" y="20" width="5" height="3" fill="#150d08" />
+      <rect x="24" y="21" width="3" height="1" fill="#a87650" />
+      <!-- the greataxe head — heavy, notched, badly kept -->
+      <rect x="22" y="0" width="9" height="6" fill="#150d08" />
+      <rect x="23" y="1" width="7" height="4" fill="#5a5058" />
+      <rect x="23" y="1" width="7" height="1" fill="#7a7078" />
+      <rect x="23" y="1" width="3" height="1" fill="#9a949e" />
+      <rect x="28" y="2" width="2" height="3" fill="#3a3038" />
+      <!-- the bit edge + notch -->
+      <rect x="30" y="1" width="2" height="5" fill="#150d08" />
+      <rect x="30" y="2" width="1" height="3" fill="#b8b2ba" />
+      <rect x="30" y="3" width="1" height="1" fill="#3a3038" />
+      <!-- old blood on the bit -->
+      <rect x="31" y="4" width="1" height="2" fill="#531320" />
 
-      <!-- Great axe — haft ramp + steel head + specular -->
-      <rect x="2" y="6" width="3" height="22" fill="#5a4030" />
-      <rect x="2" y="6" width="1" height="22" fill="#6a4e3a" />
-      <polygon points="0,6 7,6 7,1 2,1" fill="#9aa6b0" />
-      <polygon points="0,6 7,6 7,9 2,9" fill="#6a7680" />
-      <polygon points="0,6 7,6 7,3 1,3" fill="#bcc8d2" opacity="0.6" />
-      <rect x="2" y="1" width="5" height="1" fill="#c6d2dc" />
-      <rect x="1" y="3" width="2" height="2" fill="#e8f0f8" opacity="0.8" />
+      <!-- Off arm, thumb hooked in the belt -->
+      <rect x="5" y="14" width="4" height="8" fill="#150d08" />
+      <rect x="6" y="15" width="2" height="6" fill="#4a3a2a" />
+      <rect x="6" y="15" width="1" height="6" fill="#6a5440" />
+      <rect x="5" y="21" width="4" height="3" fill="#150d08" />
+      <rect x="6" y="22" width="2" height="1" fill="#c89468" />
 
-      <!-- Legs + boots -->
-      <rect x="11" y="29" width="5" height="11" fill="#2e241a" />
-      <rect x="19" y="29" width="5" height="11" fill="#2e241a" />
-      <rect x="11" y="29" width="1" height="11" fill="#3e2e20" />
-      <rect x="19" y="29" width="1" height="11" fill="#3e2e20" />
-      <rect x="13" y="31" width="1" height="6" fill="#46362a" opacity="0.5" />
-      <rect x="10" y="38" width="7" height="3" fill="#140c08" />
-      <rect x="19" y="38" width="7" height="3" fill="#140c08" />
-      <rect x="10" y="38" width="7" height="1" fill="#241a12" />
+      <!-- Belt with a stolen buckle + sack of plunder -->
+      <rect x="8" y="27" width="16" height="3" fill="#150d08" />
+      <rect x="9" y="28" width="14" height="1" fill="#4a3a2a" />
+      <rect x="9" y="28" width="5" height="1" fill="#6a5440" />
+      <rect x="14" y="27" width="3" height="3" fill="#150d08" />
+      <rect x="15" y="28" width="1" height="1" fill="#ecc46a" />
+      <!-- the sack at the hip -->
+      <rect x="3" y="24" width="6" height="7" fill="#150d08" />
+      <rect x="4" y="25" width="4" height="5" fill="#6a5440" />
+      <rect x="4" y="25" width="4" height="1" fill="#8a7050" />
+      <rect x="4" y="25" width="1" height="4" fill="#7a6048" />
+      <rect x="7" y="26" width="1" height="4" fill="#4a3a2a" />
+      <!-- something gold poking out -->
+      <rect x="5" y="24" width="2" height="1" fill="#c89a48" />
+      <rect x="5" y="24" width="1" height="1" fill="#ecc46a" />
+
+      <!-- Legs — mismatched greaves, swaggering stance -->
+      <rect x="9" y="30" width="6" height="9" fill="#150d08" />
+      <rect x="10" y="31" width="4" height="7" fill="#4a3a2a" />
+      <rect x="10" y="31" width="1" height="7" fill="#6a5440" />
+      <rect x="13" y="31" width="1" height="7" fill="#3a2c20" />
+      <rect x="17" y="30" width="6" height="9" fill="#150d08" />
+      <rect x="18" y="31" width="4" height="7" fill="#3a3038" />
+      <rect x="18" y="31" width="1" height="7" fill="#4a4048" />
+      <rect x="21" y="31" width="1" height="7" fill="#2e262c" />
+      <!-- one looted steel greave -->
+      <rect x="18" y="34" width="4" height="1" fill="#7a7078" />
+      <rect x="18" y="34" width="2" height="1" fill="#9a949e" />
+      <!-- worn boots -->
+      <rect x="7" y="38" width="8" height="4" fill="#150d08" />
+      <rect x="8" y="39" width="6" height="2" fill="#3a2c20" />
+      <rect x="8" y="39" width="3" height="1" fill="#4a3a2a" />
+      <rect x="16" y="38" width="8" height="4" fill="#150d08" />
+      <rect x="17" y="39" width="6" height="2" fill="#2e231a" />
+      <rect x="17" y="39" width="2" height="1" fill="#3a2c20" />
+
+      <!-- Siege-smoke drifting through -->
+      <rect x="2" y="10" width="1" height="1" fill="#58525c" opacity="0.45" />
+      <rect x="30" y="12" width="1" height="1" fill="#7a7480" opacity="0.4" />
+      <rect x="4" y="34" width="1" height="1" fill="#d4641a" opacity="0.4" />
     </svg>

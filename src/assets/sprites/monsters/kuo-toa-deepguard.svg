@@ -1,72 +1,150 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 40"
+      viewBox="0 0 30 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Kuo-Toa Deepguard"
     >
-      <!-- Abyssal teal backlight + ground shadow -->
-      <ellipse cx="12" cy="20" rx="12" ry="19" fill="#2e7a66" opacity="0.08" />
-      <ellipse cx="12" cy="39" rx="9" ry="1.6" fill="#000" opacity="0.42" />
+      <!-- Drowned-gallery backlight + wet ground shadow -->
+      <ellipse cx="14" cy="23" rx="13" ry="17" fill="#2a6a72" opacity="0.07" />
+      <ellipse cx="14" cy="40.4" rx="10" ry="1.6" fill="#000" opacity="0.4" />
 
-      <!-- Fin crests -->
-      <polygon points="6,5 9,1 9,7" fill="#3a6a5a" />
-      <polygon points="6,5 8,2 9,6" fill="#4a7a66" opacity="0.6" />
-      <polygon points="18,5 15,1 15,7" fill="#2e5a4c" />
+      <!-- Head — wide fish skull, fin-crest, lidless moon eyes -->
+      <rect x="7" y="2" width="14" height="11" fill="#150d08" />
+      <rect x="8" y="3" width="12" height="9" fill="#3a6a5e" />
+      <rect x="8" y="3" width="12" height="1" fill="#4a8270" />
+      <rect x="8" y="3" width="5" height="1" fill="#5a9a82" />
+      <rect x="8" y="3" width="2" height="8" fill="#427666" />
+      <rect x="17" y="4" width="3" height="8" fill="#2c5248" />
+      <rect x="19" y="4" width="1" height="8" fill="#224238" />
+      <!-- the fin-crest, spined and webbed -->
+      <rect x="10" y="0" width="9" height="3" fill="#150d08" />
+      <rect x="11" y="1" width="7" height="1" fill="#2c5248" />
+      <rect x="11" y="1" width="3" height="1" fill="#3a6a5e" />
+      <rect x="12" y="0" width="1" height="1" fill="#4a8270" />
+      <rect x="15" y="0" width="1" height="1" fill="#3a6a5e" />
+      <rect x="18" y="0" width="1" height="1" fill="#2c5248" />
+      <!-- huge round eyes, set wide, never blinking -->
+      <rect x="8" y="5" width="4" height="4" fill="#150d08" />
+      <rect x="9" y="6" width="3" height="3" fill="#0e1a16" />
+      <rect x="9" y="6" width="2" height="2" fill="#d4c83a" />
+      <rect x="9" y="6" width="1" height="1" fill="#f0ea9a" />
+      <rect x="16" y="5" width="4" height="4" fill="#150d08" />
+      <rect x="16" y="6" width="3" height="3" fill="#0e1a16" />
+      <rect x="17" y="6" width="2" height="2" fill="#d4c83a" />
+      <rect x="17" y="6" width="1" height="1" fill="#f0ea9a" />
+      <!-- the wide fish mouth, needle teeth -->
+      <rect x="10" y="10" width="8" height="3" fill="#150d08" />
+      <rect x="11" y="11" width="6" height="1" fill="#1c3830" />
+      <rect x="11" y="11" width="1" height="1" fill="#e8e0c8" />
+      <rect x="13" y="11" width="1" height="1" fill="#e8e0c8" />
+      <rect x="15" y="11" width="1" height="1" fill="#e8e0c8" />
+      <!-- gill slits -->
+      <rect x="8" y="9" width="1" height="3" fill="#224238" />
+      <rect x="19" y="9" width="1" height="3" fill="#1a342c" />
 
-      <!-- Bulbous head — scale ramp -->
-      <rect x="8" y="2" width="8" height="9" fill="#4a7a66" />
-      <rect x="8" y="2" width="8" height="2" fill="#62977f" />
-      <rect x="8" y="2" width="3" height="1" fill="#76ad90" />
-      <rect x="8" y="2" width="2" height="9" fill="#548872" />
-      <rect x="14" y="3" width="2" height="8" fill="#3a6a5a" />
-      <rect x="15" y="3" width="1" height="8" fill="#2e5a4c" />
-      <!-- Bulging pale eyes + pupil + spark -->
-      <ellipse cx="10" cy="7" rx="2" ry="2" fill="#e8e0c4" />
-      <ellipse cx="14" cy="7" rx="2" ry="2" fill="#dcd4b6" />
-      <rect x="9" y="6" width="2" height="2" fill="#1a2418" />
-      <rect x="13" y="6" width="2" height="2" fill="#1a2418" />
-      <rect x="9" y="6" width="1" height="1" fill="#fffce0" />
-      <rect x="13" y="6" width="1" height="1" fill="#fffce0" />
-      <!-- Gaping maw -->
-      <rect x="10" y="9" width="4" height="2" fill="#1f2e22" />
-      <rect x="10" y="9" width="4" height="1" fill="#2a3a2e" />
+      <!-- Torso — slick scale back, pale glistening belly -->
+      <rect x="6" y="13" width="15" height="14" fill="#150d08" />
+      <rect x="7" y="14" width="13" height="12" fill="#3a6a5e" />
+      <rect x="7" y="14" width="13" height="1" fill="#4a8270" />
+      <rect x="7" y="14" width="5" height="1" fill="#5a9a82" />
+      <rect x="7" y="14" width="2" height="12" fill="#427666" />
+      <rect x="17" y="14" width="3" height="12" fill="#2c5248" />
+      <rect x="19" y="14" width="1" height="12" fill="#224238" />
+      <!-- the pale belly -->
+      <rect x="10" y="15" width="7" height="10" fill="#a8b89a" />
+      <rect x="10" y="15" width="7" height="1" fill="#c2d0b2" />
+      <rect x="10" y="15" width="2" height="9" fill="#b4c4a4" />
+      <rect x="15" y="16" width="2" height="9" fill="#92a286" />
+      <!-- belly ridges -->
+      <rect x="10" y="18" width="7" height="1" fill="#86967a" />
+      <rect x="10" y="21" width="7" height="1" fill="#86967a" />
+      <rect x="10" y="24" width="7" height="1" fill="#86967a" />
+      <!-- wet glints on the scale -->
+      <rect x="8" y="16" width="1" height="1" fill="#8fd8c8" />
+      <rect x="18" y="19" width="1" height="1" fill="#6ab8a4" />
+      <rect x="8" y="22" width="1" height="1" fill="#8fd8c8" opacity="0.8" />
 
-      <!-- Scaled torso — ramp + gill lines + lit belly -->
-      <rect x="6" y="11" width="12" height="12" fill="#3a6a5a" />
-      <rect x="6" y="11" width="12" height="2" fill="#4a7a66" />
-      <rect x="6" y="11" width="2" height="12" fill="#447464" />
-      <rect x="6" y="11" width="1" height="12" fill="#4e8070" />
-      <rect x="16" y="12" width="2" height="11" fill="#2e5a4c" />
-      <rect x="17" y="12" width="1" height="11" fill="#264c40" />
-      <rect x="9" y="13" width="6" height="9" fill="#62977f" opacity="0.5" />
-      <line x1="7" y1="15" x2="17" y2="15" stroke="#2a4a3e" stroke-width="0.5" />
-      <line x1="7" y1="19" x2="17" y2="19" stroke="#2a4a3e" stroke-width="0.5" />
-      <rect x="9" y="14" width="1" height="1" fill="#a0e0c0" opacity="0.6" />
-      <rect x="14" y="17" width="1" height="1" fill="#264c40" />
+      <!-- Harpoon arm — barbed shaft levelled at reach -->
+      <rect x="19" y="15" width="6" height="4" fill="#150d08" />
+      <rect x="20" y="16" width="4" height="2" fill="#3a6a5e" />
+      <rect x="20" y="16" width="4" height="1" fill="#4a8270" />
+      <!-- webbed claw on the shaft -->
+      <rect x="23" y="17" width="4" height="4" fill="#150d08" />
+      <rect x="24" y="18" width="2" height="2" fill="#2c5248" />
+      <rect x="24" y="18" width="1" height="1" fill="#3a6a5e" />
+      <!-- the harpoon — bone-barbed, dripping -->
+      <rect x="20" y="6" width="3" height="26" fill="#150d08" />
+      <rect x="21" y="7" width="1" height="24" fill="#6a5440" />
+      <rect x="21" y="7" width="1" height="8" fill="#8a7050" />
+      <!-- the barbed head -->
+      <rect x="20" y="2" width="3" height="5" fill="#150d08" />
+      <rect x="21" y="3" width="1" height="4" fill="#d4c8a8" />
+      <rect x="21" y="3" width="1" height="2" fill="#f0e8da" />
+      <rect x="18" y="4" width="2" height="2" fill="#150d08" />
+      <rect x="18" y="4" width="1" height="1" fill="#d4c8a8" />
+      <rect x="23" y="5" width="2" height="2" fill="#150d08" />
+      <rect x="24" y="5" width="1" height="1" fill="#b4a692" />
+      <!-- drip -->
+      <rect x="22" y="8" width="1" height="1" fill="#6ab8a4" opacity="0.7" />
+      <rect x="23" y="11" width="1" height="1" fill="#3a8a78" opacity="0.5" />
 
-      <!-- Spear -->
-      <rect x="3" y="0" width="2" height="22" fill="#5a4030" />
-      <rect x="3" y="0" width="1" height="22" fill="#6e5038" />
-      <polygon points="2,1 4,-2 6,1" fill="#aab0b0" />
-      <polygon points="3,1 4,-1 5,1" fill="#cfd6d6" />
-      <polygon points="2,1 6,1 5,3 3,3" fill="#7a8080" />
-      <rect x="3" y="-1" width="1" height="1" fill="#ffffff" />
+      <!-- Net arm — the mucus net gathered to throw -->
+      <rect x="2" y="15" width="5" height="4" fill="#150d08" />
+      <rect x="3" y="16" width="3" height="2" fill="#2c5248" />
+      <rect x="3" y="16" width="3" height="1" fill="#3a6a5e" />
+      <rect x="1" y="18" width="4" height="4" fill="#150d08" />
+      <rect x="2" y="19" width="2" height="2" fill="#224238" />
+      <!-- the net — weighted mesh hanging in folds -->
+      <rect x="0" y="22" width="7" height="9" fill="#150d08" />
+      <rect x="1" y="23" width="5" height="7" fill="#1c3830" />
+      <rect x="1" y="23" width="5" height="1" fill="#2c5248" />
+      <!-- mesh lines -->
+      <rect x="2" y="24" width="1" height="6" fill="#0e1a16" />
+      <rect x="4" y="24" width="1" height="6" fill="#0e1a16" />
+      <rect x="1" y="25" width="5" height="1" fill="#0e1a16" />
+      <rect x="1" y="27" width="5" height="1" fill="#0e1a16" />
+      <rect x="1" y="29" width="5" height="1" fill="#0e1a16" />
+      <!-- mucus sheen on the mesh -->
+      <rect x="3" y="24" width="1" height="1" fill="#8fd8c8" opacity="0.7" />
+      <rect x="5" y="26" width="1" height="1" fill="#6ab8a4" opacity="0.6" />
+      <rect x="2" y="28" width="1" height="1" fill="#8fd8c8" opacity="0.5" />
+      <!-- net weights -->
+      <rect x="1" y="30" width="2" height="2" fill="#150d08" />
+      <rect x="1" y="30" width="1" height="1" fill="#58525c" />
+      <rect x="4" y="30" width="2" height="2" fill="#150d08" />
+      <rect x="5" y="30" width="1" height="1" fill="#46404c" />
 
-      <!-- Arms -->
-      <rect x="3" y="12" width="2" height="3" fill="#4a7a66" />
-      <rect x="3" y="12" width="2" height="1" fill="#5a8a72" />
-      <rect x="17" y="12" width="4" height="3" fill="#3a6a5a" />
-      <rect x="17" y="12" width="4" height="1" fill="#4a7a66" />
-      <rect x="20" y="14" width="3" height="9" fill="#2e5a4c" />
-      <rect x="20" y="14" width="1" height="9" fill="#3a6a5a" />
+      <!-- Crouched frog-legs, webbed feet wide -->
+      <rect x="6" y="27" width="15" height="4" fill="#150d08" />
+      <rect x="7" y="28" width="13" height="2" fill="#2c5248" />
+      <rect x="7" y="28" width="5" height="1" fill="#3a6a5e" />
+      <rect x="16" y="28" width="4" height="2" fill="#224238" />
+      <!-- thighs bowed out -->
+      <rect x="6" y="30" width="6" height="6" fill="#150d08" />
+      <rect x="7" y="31" width="4" height="4" fill="#3a6a5e" />
+      <rect x="7" y="31" width="1" height="4" fill="#427666" />
+      <rect x="10" y="31" width="1" height="4" fill="#2c5248" />
+      <rect x="15" y="30" width="6" height="6" fill="#150d08" />
+      <rect x="16" y="31" width="4" height="4" fill="#2c5248" />
+      <rect x="19" y="31" width="1" height="4" fill="#224238" />
+      <!-- shins angling back in the crouch -->
+      <rect x="7" y="36" width="4" height="3" fill="#150d08" />
+      <rect x="8" y="37" width="2" height="1" fill="#2c5248" />
+      <rect x="16" y="36" width="4" height="3" fill="#150d08" />
+      <rect x="17" y="37" width="2" height="1" fill="#224238" />
+      <!-- the long webbed feet -->
+      <rect x="4" y="38" width="9" height="3" fill="#150d08" />
+      <rect x="5" y="39" width="7" height="1" fill="#3a6a5e" />
+      <rect x="5" y="39" width="3" height="1" fill="#427666" />
+      <rect x="3" y="39" width="2" height="1" fill="#150d08" />
+      <rect x="3" y="39" width="1" height="1" fill="#5a9a82" />
+      <rect x="14" y="38" width="9" height="3" fill="#150d08" />
+      <rect x="15" y="39" width="7" height="1" fill="#2c5248" />
+      <rect x="22" y="39" width="2" height="1" fill="#150d08" />
+      <rect x="23" y="39" width="1" height="1" fill="#3a6a5e" />
 
-      <!-- Legs + webbed feet -->
-      <rect x="7" y="23" width="4" height="10" fill="#3a6a5a" />
-      <rect x="7" y="23" width="1" height="10" fill="#447464" />
-      <rect x="10" y="23" width="1" height="10" fill="#2e5a4c" />
-      <rect x="13" y="23" width="4" height="10" fill="#326050" />
-      <rect x="16" y="23" width="1" height="10" fill="#264c40" />
-      <polygon points="5,33 11,33 8,36" fill="#2a4a3e" />
-      <polygon points="6,33 11,33 8,35" fill="#3a6a5a" opacity="0.6" />
-      <polygon points="13,33 19,33 16,36" fill="#244038" />
+      <!-- Drips off everything -->
+      <rect x="25" y="24" width="1" height="1" fill="#6ab8a4" opacity="0.55" />
+      <rect x="8" y="12" width="1" height="1" fill="#8fd8c8" opacity="0.5" />
+      <rect x="26" y="33" width="1" height="1" fill="#3a8a78" opacity="0.5" />
     </svg>

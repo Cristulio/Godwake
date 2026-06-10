@@ -1,69 +1,127 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 34"
+      viewBox="0 0 34 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Glasswright-Duelist"
     >
-      <!-- Cool refracted backlight + ground shadow -->
-      <ellipse cx="14" cy="17" rx="13" ry="16" fill="#5a8aa8" opacity="0.08" />
-      <ellipse cx="14" cy="31" rx="10" ry="1.8" fill="#0a1018" opacity="0.4" />
+      <!-- Mirror-light backlight + ground shadow -->
+      <ellipse cx="17" cy="23" rx="16" ry="17" fill="#8fb8c0" opacity="0.06" />
+      <ellipse cx="16" cy="40.4" rx="11" ry="1.6" fill="#000" opacity="0.42" />
 
-      <!-- Faceted glass head — translucent ramp + refraction lines -->
-      <rect x="10" y="2" width="8" height="10" fill="#aec4d2" />
-      <rect x="10" y="2" width="8" height="1" fill="#eef6fa" />
-      <rect x="10" y="2" width="3" height="10" fill="#c8d8e2" />
-      <rect x="10" y="2" width="1" height="8" fill="#eef6fa" />
-      <rect x="16" y="3" width="2" height="9" fill="#86a0b2" />
-      <rect x="17" y="3" width="1" height="9" fill="#6e8a9c" />
-      <rect x="10" y="11" width="8" height="1" fill="#7a94a6" />
-      <polygon points="14,2 18,7 14,12 10,7" fill="#dfeef6" opacity="0.4" />
-      <line x1="11" y1="3" x2="16" y2="11" stroke="#f0f6f9" stroke-width="0.5" opacity="0.7" />
-      <line x1="17" y1="3" x2="13" y2="11" stroke="#7a94a6" stroke-width="0.4" opacity="0.6" />
-      <!-- Dark eye slits + glint -->
-      <rect x="11" y="6" width="2" height="2" fill="#16222a" />
-      <rect x="15" y="6" width="2" height="2" fill="#16222a" />
-      <rect x="11" y="6" width="1" height="1" fill="#f0f6f9" />
-      <rect x="15" y="6" width="1" height="1" fill="#cfe4ee" />
+      <!-- The cracked pane it draws doubles from — standing at its back -->
+      <rect x="1" y="6" width="9" height="26" fill="#150d08" />
+      <rect x="2" y="7" width="7" height="24" fill="#2e4654" />
+      <rect x="2" y="7" width="7" height="1" fill="#4a6a78" />
+      <rect x="2" y="7" width="3" height="1" fill="#5a7e8c" />
+      <rect x="2" y="7" width="1" height="20" fill="#3a5a68" />
+      <rect x="8" y="8" width="1" height="23" fill="#22363e" />
+      <!-- the long crack, something half-out of it -->
+      <rect x="4" y="9" width="1" height="4" fill="#8fb8c0" />
+      <rect x="5" y="12" width="1" height="4" fill="#b8d8e0" />
+      <rect x="4" y="15" width="1" height="5" fill="#8fb8c0" />
+      <rect x="5" y="19" width="1" height="4" fill="#6a93a2" />
+      <rect x="5" y="13" width="1" height="1" fill="#fff" />
+      <!-- a palm pressed against the inside -->
+      <rect x="6" y="16" width="2" height="3" fill="#3f5e6e" />
+      <rect x="6" y="17" width="1" height="1" fill="#5a7e8c" />
+      <!-- gilt frame edge -->
+      <rect x="2" y="30" width="7" height="1" fill="#9a7232" />
+      <rect x="2" y="30" width="3" height="1" fill="#c89a48" />
 
-      <!-- Torso — slate-steel ramp + glass inlay -->
-      <rect x="9" y="12" width="10" height="13" fill="#33303e" />
-      <rect x="9" y="12" width="10" height="1" fill="#4a4658" />
-      <rect x="9" y="12" width="2" height="13" fill="#3c3848" />
-      <rect x="9" y="12" width="1" height="13" fill="#48445a" />
-      <rect x="17" y="13" width="2" height="12" fill="#26242f" />
-      <rect x="18" y="13" width="1" height="12" fill="#1e1c26" />
-      <rect x="13" y="13" width="2" height="12" fill="#2a2734" />
-      <rect x="10" y="14" width="8" height="1" fill="#7fa0b4" opacity="0.6" />
-      <rect x="10" y="16" width="1" height="8" fill="#5a8298" opacity="0.5" />
-      <rect x="16" y="16" width="1" height="8" fill="#46627a" opacity="0.5" />
-      <rect x="11" y="19" width="1" height="1" fill="#48445a" />
-      <rect x="15" y="21" width="1" height="1" fill="#1e1c26" />
+      <!-- Head — fencing-mask of porcelain, gilt-rimmed -->
+      <rect x="13" y="2" width="11" height="11" fill="#150d08" />
+      <rect x="14" y="3" width="9" height="9" fill="#e8dcc4" />
+      <rect x="14" y="3" width="9" height="1" fill="#f8f2e2" />
+      <rect x="14" y="3" width="4" height="2" fill="#f8f2e2" />
+      <rect x="14" y="3" width="1" height="7" fill="#f0e6d2" />
+      <rect x="21" y="4" width="2" height="8" fill="#cdbfa2" />
+      <rect x="22" y="5" width="1" height="7" fill="#b4a486" />
+      <rect x="15" y="11" width="7" height="1" fill="#cdbfa2" />
+      <!-- mesh slit instead of a face -->
+      <rect x="15" y="6" width="7" height="3" fill="#0e0c12" />
+      <rect x="16" y="7" width="1" height="1" fill="#3a5a68" />
+      <rect x="18" y="7" width="1" height="1" fill="#3a5a68" />
+      <rect x="20" y="7" width="1" height="1" fill="#3a5a68" />
+      <!-- one cold glint tracking you through the mesh -->
+      <rect x="17" y="6" width="1" height="1" fill="#e8f4f8" />
+      <!-- gilt rim -->
+      <rect x="14" y="5" width="9" height="1" fill="#c89a48" />
+      <rect x="14" y="5" width="3" height="1" fill="#ecc46a" />
 
-      <!-- Left arm -->
-      <rect x="5" y="13" width="4" height="2" fill="#33303e" />
-      <rect x="5" y="13" width="4" height="1" fill="#43404f" />
-      <rect x="3" y="14" width="3" height="2" fill="#3c3848" />
-      <rect x="2" y="15" width="2" height="3" fill="#33303e" />
-      <line x1="2" y1="18" x2="4" y2="25" stroke="#b0cede" stroke-width="0.8" opacity="0.7" />
+      <!-- Lunge torso — quilted fencing doublet, glass-stitched -->
+      <rect x="11" y="13" width="15" height="14" fill="#150d08" />
+      <rect x="12" y="14" width="13" height="12" fill="#3a2a5a" />
+      <rect x="12" y="14" width="13" height="1" fill="#503d78" />
+      <rect x="12" y="14" width="5" height="1" fill="#6a52a0" />
+      <rect x="12" y="14" width="2" height="12" fill="#473570" />
+      <rect x="12" y="14" width="1" height="8" fill="#503d78" />
+      <rect x="22" y="14" width="3" height="12" fill="#2a1d48" />
+      <rect x="24" y="14" width="1" height="12" fill="#221640" />
+      <!-- quilt seams -->
+      <rect x="12" y="18" width="13" height="1" fill="#2a1d48" />
+      <rect x="12" y="22" width="13" height="1" fill="#2a1d48" />
+      <rect x="17" y="14" width="1" height="12" fill="#2f2354" />
+      <!-- glass studs catching light -->
+      <rect x="14" y="16" width="1" height="1" fill="#b8d8e0" />
+      <rect x="20" y="16" width="1" height="1" fill="#8fb8c0" />
+      <rect x="14" y="20" width="1" height="1" fill="#8fb8c0" />
+      <rect x="20" y="20" width="1" height="1" fill="#b8d8e0" />
+      <rect x="14" y="24" width="1" height="1" fill="#b8d8e0" opacity="0.8" />
+      <!-- gilt baldric across the chest -->
+      <rect x="12" y="15" width="2" height="1" fill="#c89a48" />
+      <rect x="14" y="17" width="2" height="1" fill="#9a7232" />
+      <rect x="16" y="19" width="2" height="1" fill="#c89a48" />
+      <rect x="18" y="21" width="2" height="1" fill="#9a7232" />
+      <rect x="20" y="23" width="2" height="1" fill="#c89a48" />
 
-      <!-- Right arm + glass rapier (specular blade) -->
-      <rect x="19" y="13" width="3" height="2" fill="#2a2734" />
-      <rect x="22" y="11" width="2" height="3" fill="#3c3848" />
-      <line x1="23" y1="11" x2="27" y2="1" stroke="#9ec0d4" stroke-width="1.2" />
-      <line x1="23" y1="11" x2="27" y2="1" stroke="#eef6fa" stroke-width="0.5" />
-      <polygon points="26,2 28,0 27,3" fill="#f4fbff" />
-      <rect x="25" y="4" width="1" height="1" fill="#ffffff" />
+      <!-- Rapier arm extended full-stretch — the duelist's line -->
+      <rect x="24" y="14" width="6" height="4" fill="#150d08" />
+      <rect x="25" y="15" width="4" height="2" fill="#3a2a5a" />
+      <rect x="25" y="15" width="4" height="1" fill="#503d78" />
+      <!-- gloved fist + swept gilt hilt -->
+      <rect x="28" y="15" width="3" height="4" fill="#150d08" />
+      <rect x="29" y="16" width="1" height="2" fill="#2a1d48" />
+      <rect x="29" y="14" width="2" height="2" fill="#c89a48" />
+      <rect x="29" y="14" width="1" height="1" fill="#ecc46a" />
+      <!-- the mirror-rapier — glass blade run out to full extension -->
+      <rect x="30" y="11" width="4" height="4" fill="#150d08" />
+      <rect x="30" y="12" width="4" height="2" fill="#a8ccd8" />
+      <rect x="30" y="12" width="4" height="1" fill="#e8f4f8" />
+      <rect x="31" y="11" width="1" height="1" fill="#fff" />
+      <rect x="33" y="12" width="1" height="1" fill="#fff" />
 
-      <!-- Legs -->
-      <rect x="10" y="25" width="3" height="6" fill="#2a2734" />
-      <rect x="10" y="25" width="1" height="6" fill="#36333f" />
-      <rect x="15" y="25" width="3" height="6" fill="#242230" />
-      <rect x="17" y="25" width="1" height="6" fill="#1c1a26" />
-      <rect x="10" y="30" width="4" height="1" fill="#14111a" />
-      <rect x="15" y="30" width="4" height="1" fill="#14111a" />
+      <!-- Off arm thrown back for balance, lace cuff -->
+      <rect x="9" y="16" width="4" height="8" fill="#150d08" />
+      <rect x="10" y="17" width="2" height="6" fill="#2a1d48" />
+      <rect x="10" y="17" width="1" height="6" fill="#3a2a5a" />
+      <rect x="9" y="23" width="3" height="2" fill="#150d08" />
+      <rect x="10" y="23" width="1" height="1" fill="#e8dcc4" />
 
-      <!-- Refraction motes -->
-      <rect x="6" y="9" width="1" height="1" fill="#eef6fa" opacity="0.6" />
-      <rect x="21" y="22" width="1" height="1" fill="#b0cede" opacity="0.5" />
-      <rect x="4" y="23" width="1" height="1" fill="#cfe4ee" opacity="0.4" />
+      <!-- Breeches + lead leg deep in the lunge -->
+      <rect x="11" y="27" width="14" height="4" fill="#150d08" />
+      <rect x="12" y="28" width="12" height="2" fill="#2a1d48" />
+      <rect x="12" y="28" width="5" height="1" fill="#3a2a5a" />
+      <rect x="21" y="28" width="3" height="2" fill="#221640" />
+      <!-- lead leg striding right -->
+      <rect x="18" y="29" width="8" height="4" fill="#150d08" />
+      <rect x="19" y="30" width="6" height="2" fill="#3a2a5a" />
+      <rect x="19" y="30" width="6" height="1" fill="#473570" />
+      <rect x="23" y="31" width="3" height="6" fill="#150d08" />
+      <rect x="24" y="32" width="1" height="4" fill="#2a1d48" />
+      <!-- trailing leg straight behind -->
+      <rect x="11" y="30" width="4" height="8" fill="#150d08" />
+      <rect x="12" y="31" width="2" height="6" fill="#221640" />
+      <rect x="12" y="31" width="1" height="6" fill="#2a1d48" />
+      <!-- court shoes, gilt buckles -->
+      <rect x="22" y="37" width="6" height="3" fill="#150d08" />
+      <rect x="23" y="37" width="4" height="2" fill="#2e2a32" />
+      <rect x="24" y="37" width="1" height="1" fill="#ecc46a" />
+      <rect x="10" y="38" width="6" height="2" fill="#150d08" />
+      <rect x="11" y="38" width="4" height="1" fill="#28242c" />
+      <rect x="12" y="38" width="1" height="1" fill="#c89a48" />
+
+      <!-- Glass dust ground off the blade -->
+      <rect x="28" y="10" width="1" height="1" fill="#b8d8e0" opacity="0.5" />
+      <rect x="32" y="17" width="1" height="1" fill="#8fb8c0" opacity="0.45" />
+      <rect x="27" y="22" width="1" height="1" fill="#e8f4f8" opacity="0.4" />
     </svg>

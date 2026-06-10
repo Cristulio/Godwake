@@ -1,60 +1,109 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 32"
+      viewBox="0 0 30 40"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
+      aria-label="Mirror-Double"
     >
       <!-- Cold mirror backlight + ground shadow -->
-      <ellipse cx="12" cy="15" rx="11" ry="15" fill="#7fb0d0" opacity="0.08" />
-      <ellipse cx="12" cy="24" rx="9" ry="6" fill="#16202a" opacity="0.3" />
+      <ellipse cx="15" cy="22" rx="14" ry="16" fill="#8fb8c0" opacity="0.07" />
+      <ellipse cx="15" cy="38.4" rx="9" ry="1.5" fill="#000" opacity="0.36" />
 
-      <!-- Glassy head — silver-blue ramp, lit upper-left -->
-      <ellipse cx="12" cy="8" rx="5" ry="6" fill="#7fa0b4" />
-      <ellipse cx="11" cy="7" rx="4" ry="5" fill="#9fbccd" opacity="0.7" />
-      <ellipse cx="10" cy="6" rx="2" ry="3" fill="#b8cdd8" opacity="0.6" />
-      <rect x="7" y="8" width="10" height="6" fill="#9fbccd" opacity="0.5" />
-      <rect x="14" y="5" width="2" height="6" fill="#5e7e92" opacity="0.6" />
-      <!-- Hollow eyes + spark -->
-      <rect x="9" y="6" width="2" height="2" fill="#1a2630" />
-      <rect x="13" y="6" width="2" height="2" fill="#1a2630" />
-      <rect x="9" y="6" width="1" height="1" fill="#eef6fa" />
-      <rect x="13" y="6" width="1" height="1" fill="#eef6fa" />
-      <!-- Fracture lines across the glass face -->
-      <line x1="10" y1="2" x2="14" y2="13" stroke="#dceaf2" stroke-width="0.5" opacity="0.8" />
-      <line x1="15" y1="5" x2="11" y2="12" stroke="#dceaf2" stroke-width="0.5" opacity="0.6" />
+      <!-- Head — your head, done in glass -->
+      <rect x="9" y="2" width="11" height="10" fill="#150d08" />
+      <rect x="10" y="3" width="9" height="8" fill="#4a6a78" />
+      <rect x="10" y="3" width="9" height="1" fill="#6a93a2" />
+      <rect x="10" y="3" width="4" height="1" fill="#8fb8c0" />
+      <rect x="10" y="3" width="2" height="7" fill="#5a7e8c" />
+      <rect x="10" y="3" width="1" height="4" fill="#7aa4b0" />
+      <rect x="17" y="4" width="2" height="7" fill="#3a5a68" />
+      <rect x="18" y="4" width="1" height="7" fill="#2e4654" />
+      <!-- the face it copied, almost right -->
+      <rect x="11" y="6" width="2" height="2" fill="#e8f4f8" />
+      <rect x="15" y="6" width="2" height="2" fill="#e8f4f8" />
+      <rect x="11" y="6" width="1" height="1" fill="#fff" />
+      <rect x="15" y="6" width="1" height="1" fill="#fff" />
+      <rect x="12" y="9" width="5" height="1" fill="#2e4654" />
+      <!-- crack across the brow -->
+      <rect x="10" y="5" width="3" height="1" fill="#b8d8e0" />
+      <rect x="13" y="4" width="2" height="1" fill="#b8d8e0" />
+      <rect x="15" y="5" width="1" height="1" fill="#8fb8c0" />
 
-      <!-- Mirror torso — ramp + highlight ribs + crack -->
-      <rect x="7" y="13" width="10" height="13" fill="#7fa0b4" />
-      <rect x="7" y="13" width="3" height="13" fill="#9fbccd" />
-      <rect x="7" y="13" width="1" height="13" fill="#b0cede" />
-      <rect x="15" y="13" width="2" height="13" fill="#6a8ca0" />
-      <rect x="7" y="13" width="10" height="1" fill="#a4c2d2" />
-      <rect x="11" y="14" width="2" height="12" fill="#5e7e92" />
-      <rect x="8" y="16" width="1" height="8" fill="#cfe4ee" opacity="0.7" />
-      <rect x="15" y="16" width="1" height="8" fill="#b0cede" opacity="0.6" />
-      <line x1="9" y1="14" x2="16" y2="25" stroke="#cfe4ee" stroke-width="0.5" opacity="0.55" />
-      <rect x="13" y="18" width="1" height="1" fill="#6a8ca0" />
+      <!-- Torso — adventurer's stance rebuilt in panes -->
+      <rect x="8" y="12" width="14" height="15" fill="#150d08" />
+      <rect x="9" y="13" width="12" height="13" fill="#3f5e6e" />
+      <rect x="9" y="13" width="12" height="1" fill="#5a7e8c" />
+      <rect x="9" y="13" width="5" height="1" fill="#6a93a2" />
+      <rect x="9" y="13" width="2" height="13" fill="#4a6a78" />
+      <rect x="9" y="13" width="1" height="8" fill="#6a93a2" />
+      <rect x="18" y="13" width="3" height="13" fill="#32505e" />
+      <rect x="20" y="13" width="1" height="13" fill="#28424e" />
+      <!-- pane joints — the body is panels, not flesh -->
+      <rect x="9" y="17" width="12" height="1" fill="#28424e" />
+      <rect x="14" y="13" width="1" height="13" fill="#28424e" />
+      <!-- the long crack it peeled off of -->
+      <rect x="12" y="14" width="1" height="3" fill="#b8d8e0" />
+      <rect x="13" y="16" width="1" height="2" fill="#e8f4f8" />
+      <rect x="14" y="18" width="1" height="2" fill="#b8d8e0" />
+      <rect x="15" y="20" width="1" height="3" fill="#8fb8c0" />
+      <rect x="16" y="22" width="1" height="2" fill="#b8d8e0" opacity="0.8" />
+      <!-- glass glints where the hall light catches -->
+      <rect x="10" y="15" width="1" height="1" fill="#fff" />
+      <rect x="17" y="19" width="1" height="1" fill="#e8f4f8" />
+      <rect x="11" y="22" width="1" height="1" fill="#e8f4f8" opacity="0.8" />
 
-      <!-- Arms -->
-      <rect x="3" y="14" width="4" height="2" fill="#7fa0b4" />
-      <rect x="3" y="14" width="4" height="1" fill="#9fbccd" />
-      <rect x="1" y="15" width="3" height="2" fill="#6a8ca0" />
-      <rect x="17" y="14" width="3" height="2" fill="#7fa0b4" />
+      <!-- Sword arm — your guard, turned back on you -->
+      <rect x="20" y="13" width="5" height="4" fill="#150d08" />
+      <rect x="21" y="14" width="3" height="2" fill="#3f5e6e" />
+      <rect x="21" y="14" width="3" height="1" fill="#5a7e8c" />
+      <!-- glass blade raised beside the body -->
+      <rect x="22" y="2" width="4" height="14" fill="#150d08" />
+      <rect x="23" y="3" width="2" height="12" fill="#7aa4b0" />
+      <rect x="23" y="3" width="1" height="12" fill="#a8ccd8" />
+      <rect x="23" y="3" width="1" height="5" fill="#d8ecf2" />
+      <rect x="23" y="3" width="1" height="2" fill="#fff" />
+      <!-- chip missing from the edge -->
+      <rect x="24" y="8" width="1" height="2" fill="#28424e" />
+      <!-- guard + grip fist -->
+      <rect x="21" y="15" width="6" height="2" fill="#150d08" />
+      <rect x="22" y="15" width="4" height="1" fill="#32505e" />
+      <rect x="22" y="16" width="3" height="2" fill="#3f5e6e" />
 
-      <!-- Shard blade — ice ramp + bright specular -->
-      <rect x="19" y="13" width="2" height="9" fill="#c8dce8" />
-      <rect x="19" y="13" width="2" height="5" fill="#e4f0f6" />
-      <rect x="19" y="13" width="1" height="9" fill="#ffffff" opacity="0.7" />
-      <polygon points="19,12 20,9 21,13" fill="#eef6fa" />
+      <!-- Off arm — shield it half-remembers, gone to shards -->
+      <rect x="4" y="14" width="5" height="9" fill="#150d08" />
+      <rect x="5" y="15" width="3" height="7" fill="#3a5a68" />
+      <rect x="5" y="15" width="3" height="1" fill="#4a6a78" />
+      <rect x="5" y="15" width="1" height="5" fill="#5a7e8c" />
+      <!-- shard fragments hanging where the rim was -->
+      <rect x="3" y="17" width="2" height="2" fill="#150d08" />
+      <rect x="3" y="17" width="1" height="1" fill="#8fb8c0" />
+      <rect x="2" y="20" width="2" height="1" fill="#150d08" />
+      <rect x="2" y="20" width="1" height="1" fill="#6a93a2" />
+      <rect x="4" y="23" width="2" height="2" fill="#150d08" />
+      <rect x="4" y="23" width="1" height="1" fill="#7aa4b0" />
 
-      <!-- Legs + boots -->
-      <rect x="8" y="26" width="3" height="5" fill="#5e7e92" />
-      <rect x="13" y="26" width="3" height="5" fill="#5e7e92" />
-      <rect x="8" y="26" width="1" height="5" fill="#7fa0b4" />
-      <rect x="13" y="26" width="1" height="5" fill="#7fa0b4" />
-      <rect x="8" y="30" width="3" height="1" fill="#1a2630" />
-      <rect x="13" y="30" width="3" height="1" fill="#1a2630" />
+      <!-- Legs — panes thinning toward the floor -->
+      <rect x="9" y="27" width="5" height="9" fill="#150d08" />
+      <rect x="10" y="28" width="3" height="7" fill="#3a5a68" />
+      <rect x="10" y="28" width="1" height="7" fill="#4a6a78" />
+      <rect x="12" y="28" width="1" height="7" fill="#2e4654" />
+      <rect x="16" y="27" width="5" height="9" fill="#150d08" />
+      <rect x="17" y="28" width="3" height="7" fill="#32505e" />
+      <rect x="17" y="28" width="1" height="7" fill="#3f5e6e" />
+      <rect x="19" y="28" width="1" height="7" fill="#28424e" />
+      <!-- crack continuing down the lead shin -->
+      <rect x="11" y="29" width="1" height="3" fill="#8fb8c0" />
+      <rect x="11" y="30" width="1" height="1" fill="#e8f4f8" />
+      <!-- feet — it never quite did the feet -->
+      <rect x="8" y="35" width="6" height="3" fill="#150d08" />
+      <rect x="9" y="35" width="4" height="2" fill="#2e4654" />
+      <rect x="9" y="35" width="2" height="1" fill="#3a5a68" />
+      <rect x="15" y="35" width="6" height="3" fill="#150d08" />
+      <rect x="16" y="35" width="4" height="2" fill="#28424e" />
+      <rect x="16" y="35" width="2" height="1" fill="#32505e" />
 
-      <!-- Glints -->
-      <rect x="5" y="10" width="1" height="1" fill="#eef6fa" opacity="0.6" />
-      <rect x="18" y="20" width="1" height="1" fill="#eef6fa" opacity="0.5" />
+      <!-- Splinters of itself it sheds when it moves -->
+      <rect x="25" y="20" width="1" height="1" fill="#b8d8e0" opacity="0.5" />
+      <rect x="6" y="29" width="1" height="1" fill="#8fb8c0" opacity="0.45" />
+      <rect x="23" y="27" width="1" height="1" fill="#e8f4f8" opacity="0.4" />
+      <rect x="7" y="9" width="1" height="1" fill="#b8d8e0" opacity="0.4" />
     </svg>
