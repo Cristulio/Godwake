@@ -1,78 +1,169 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 40"
+      viewBox="0 0 48 68"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Fallen Archon"
     >
       <!-- Tarnished-glory backlight + ground shadow -->
-      <ellipse cx="14" cy="20" rx="14" ry="19" fill="#9a8850" opacity="0.07" />
-      <ellipse cx="14" cy="38" rx="10" ry="1.8" fill="#000" opacity="0.42" />
+      <ellipse cx="24" cy="32" rx="23" ry="30" fill="#9a8850" opacity="0.07" />
+      <ellipse cx="24" cy="65.5" rx="17" ry="2.3" fill="#000" opacity="0.45" />
 
-      <!-- Burnt wings of soot-light — ramp -->
-      <polygon points="8,11 1,4 2,18 8,18" fill="#4a4238" />
-      <polygon points="20,11 27,4 26,18 20,18" fill="#4a4238" />
-      <polygon points="8,12 3,8 4,16 8,16" fill="#5a5248" opacity="0.7" />
-      <polygon points="20,12 24,8 23,16 20,16" fill="#5a5248" opacity="0.7" />
-      <polygon points="8,12 4,9 5,14 8,14" fill="#6a6258" opacity="0.5" />
-      <rect x="2" y="6" width="1" height="1" fill="#7a7268" opacity="0.6" />
-      <rect x="25" y="6" width="1" height="1" fill="#6a6258" opacity="0.5" />
+      <!-- ══ Broken halo — a ring with a piece gone ══ -->
+      <circle cx="24" cy="10" r="9" fill="none" stroke="#c9b87a" stroke-width="1" opacity="0.5" />
+      <rect x="28" y="1" width="6" height="4" fill="#120d08" />
+      <rect x="19" y="0" width="1" height="1" fill="#f4e8b0" opacity="0.7" />
+      <!-- the broken shard falling -->
+      <rect x="33" y="6" width="2" height="2" fill="#c9b87a" opacity="0.7" />
+      <rect x="35" y="9" width="1" height="1" fill="#9a8850" opacity="0.6" />
 
-      <!-- Great pauldrons — gold ramp + specular -->
-      <rect x="4" y="11" width="6" height="5" fill="#9a8850" />
-      <rect x="18" y="11" width="6" height="5" fill="#9a8850" />
-      <rect x="4" y="11" width="6" height="1" fill="#c8b878" />
-      <rect x="18" y="11" width="6" height="1" fill="#c8b878" />
-      <rect x="4" y="11" width="2" height="5" fill="#b8a868" />
-      <rect x="22" y="11" width="2" height="5" fill="#7a6c40" />
-      <rect x="5" y="12" width="1" height="1" fill="#f0e0a0" />
+      <!-- ══ Wings — one still light, one burnt ══ -->
+      <!-- left wing: faded radiance -->
+      <rect x="2" y="12" width="6" height="4" fill="#150d08" />
+      <rect x="4" y="15" width="8" height="5" fill="#150d08" />
+      <rect x="6" y="19" width="9" height="6" fill="#150d08" />
+      <rect x="9" y="24" width="8" height="6" fill="#150d08" />
+      <rect x="3" y="13" width="4" height="2" fill="#bca866" />
+      <rect x="5" y="16" width="6" height="3" fill="#a89254" />
+      <rect x="7" y="20" width="7" height="4" fill="#948046" />
+      <rect x="10" y="25" width="6" height="4" fill="#7e6c3c" />
+      <!-- feather gaps -->
+      <rect x="6" y="17" width="2" height="1" fill="#150d08" />
+      <rect x="9" y="22" width="2" height="1" fill="#150d08" />
+      <rect x="12" y="26" width="2" height="1" fill="#150d08" />
+      <!-- lit leading edge -->
+      <rect x="3" y="13" width="4" height="1" fill="#e8d894" />
+      <rect x="5" y="16" width="3" height="1" fill="#d4c47e" />
+      <!-- right wing: burnt to soot-bone -->
+      <rect x="40" y="12" width="6" height="4" fill="#150d08" />
+      <rect x="36" y="15" width="8" height="5" fill="#150d08" />
+      <rect x="35" y="19" width="8" height="6" fill="#150d08" />
+      <rect x="34" y="24" width="6" height="5" fill="#150d08" />
+      <rect x="41" y="13" width="4" height="2" fill="#4a4238" />
+      <rect x="37" y="16" width="6" height="3" fill="#3e372e" />
+      <rect x="36" y="20" width="6" height="4" fill="#332d26" />
+      <rect x="35" y="25" width="4" height="3" fill="#28231e" />
+      <!-- charred bone fingers showing -->
+      <rect x="42" y="14" width="3" height="1" fill="#6e6254" />
+      <rect x="39" y="18" width="3" height="1" fill="#5e5246" />
+      <rect x="37" y="23" width="3" height="1" fill="#4e443a" />
+      <!-- embers still eating the wing -->
+      <rect x="43" y="16" width="1" height="1" fill="#e87820" opacity="0.8" />
+      <rect x="38" y="21" width="1" height="1" fill="#a83a14" opacity="0.8" />
+      <rect x="36" y="27" width="1" height="1" fill="#d4641a" opacity="0.7" />
 
-      <!-- Helm — gold ramp, two slits of cold fire -->
-      <rect x="10" y="2" width="8" height="9" fill="#a89860" />
-      <rect x="10" y="2" width="8" height="1" fill="#c8b878" />
-      <rect x="10" y="2" width="3" height="9" fill="#b8a868" />
-      <rect x="10" y="2" width="1" height="6" fill="#d0c088" />
-      <rect x="16" y="2" width="2" height="9" fill="#7a6c40" />
-      <polygon points="14,0 11,3 17,3" fill="#c8b878" />
-      <rect x="11" y="6" width="2" height="2" fill="#0a0c10" />
-      <rect x="15" y="6" width="2" height="2" fill="#0a0c10" />
-      <rect x="11" y="6" width="2" height="1" fill="#cfe8ff" />
-      <rect x="15" y="6" width="2" height="1" fill="#cfe8ff" />
-      <rect x="11" y="6" width="1" height="1" fill="#ffffff" opacity="0.8" />
-      <rect x="13" y="9" width="2" height="2" fill="#7a6c40" />
+      <!-- ══ Head — tarnished casque, weeping light ══ -->
+      <rect x="17" y="4" width="14" height="14" fill="#150d08" />
+      <rect x="18" y="5" width="12" height="12" fill="#8a7a4e" />
+      <rect x="18" y="5" width="5" height="12" fill="#9e8e5c" />
+      <rect x="18" y="5" width="2" height="8" fill="#b2a26a" />
+      <rect x="26" y="5" width="4" height="12" fill="#6e6240" />
+      <rect x="28" y="5" width="2" height="12" fill="#5a5034" />
+      <!-- casque ridge -->
+      <rect x="23" y="5" width="2" height="6" fill="#a89254" />
+      <rect x="23" y="5" width="1" height="6" fill="#bca866" />
+      <!-- mournful eye slits, light leaking down like tears -->
+      <rect x="19" y="9" width="4" height="2" fill="#1a1408" />
+      <rect x="25" y="9" width="4" height="2" fill="#1a1408" />
+      <rect x="20" y="9" width="2" height="1" fill="#f4e8b0" />
+      <rect x="26" y="9" width="2" height="1" fill="#d4c47e" />
+      <!-- tear-tracks of light -->
+      <rect x="20" y="11" width="1" height="4" fill="#e8d894" opacity="0.8" />
+      <rect x="27" y="11" width="1" height="3" fill="#c9b87a" opacity="0.7" />
+      <!-- jaw guard -->
+      <rect x="19" y="14" width="10" height="2" fill="#6e6240" />
+      <rect x="19" y="14" width="4" height="1" fill="#8a7a4e" />
 
-      <!-- Cuirass + soot tabard — ramp + dither -->
-      <rect x="8" y="16" width="12" height="12" fill="#9a8850" />
-      <rect x="8" y="16" width="2" height="12" fill="#7a6c40" />
-      <rect x="18" y="16" width="2" height="12" fill="#7a6c40" />
-      <rect x="8" y="16" width="1" height="12" fill="#b8a868" />
-      <rect x="8" y="16" width="12" height="1" fill="#c8b878" />
-      <rect x="11" y="16" width="6" height="14" fill="#3a342c" />
-      <rect x="13" y="18" width="2" height="10" fill="#4a443a" />
-      <rect x="10" y="20" width="1" height="1" fill="#b8a868" />
-      <rect x="18" y="24" width="1" height="1" fill="#7a6c40" />
+      <!-- ══ Tarnished breastplate ══ -->
+      <rect x="12" y="18" width="24" height="22" fill="#150d08" />
+      <rect x="13" y="19" width="22" height="20" fill="#8a7a4e" />
+      <rect x="13" y="19" width="8" height="20" fill="#9e8e5c" />
+      <rect x="13" y="19" width="4" height="14" fill="#b2a26a" />
+      <rect x="30" y="19" width="5" height="20" fill="#6e6240" />
+      <rect x="33" y="19" width="2" height="20" fill="#5a5034" />
+      <!-- the dimming chest-star -->
+      <rect x="20" y="24" width="8" height="8" fill="#150d08" />
+      <rect x="21" y="25" width="6" height="6" fill="#5a5034" />
+      <rect x="23" y="26" width="2" height="4" fill="#c9b87a" />
+      <rect x="22" y="27" width="4" height="2" fill="#c9b87a" />
+      <rect x="23" y="27" width="2" height="2" fill="#f4e8b0" />
+      <rect x="23" y="27" width="1" height="1" fill="#fdf8e0" />
+      <!-- tarnish stains crawling the plate -->
+      <rect x="15" y="21" width="2" height="2" fill="#5e5436" opacity="0.8" />
+      <rect x="28" y="22" width="3" height="1" fill="#4e4630" opacity="0.8" />
+      <rect x="16" y="34" width="3" height="2" fill="#5e5436" opacity="0.7" />
+      <rect x="27" y="35" width="2" height="2" fill="#443c28" opacity="0.8" />
+      <!-- plate seams -->
+      <rect x="13" y="23" width="22" height="1" fill="#443c28" />
+      <rect x="13" y="33" width="22" height="1" fill="#3a3422" />
 
-      <!-- Right arm + greatsword of fixed cold light -->
-      <rect x="20" y="16" width="3" height="8" fill="#8a7a48" />
-      <rect x="20" y="16" width="1" height="8" fill="#a89860" />
-      <rect x="22" y="11" width="2" height="8" fill="#b8a868" />
-      <rect x="19" y="10" width="8" height="1" fill="#8aa0c0" />
-      <rect x="22" y="-2" width="2" height="13" fill="#cfe8ff" opacity="0.9" />
-      <rect x="22" y="-2" width="1" height="13" fill="#ffffff" />
-      <rect x="22" y="-2" width="2" height="2" fill="#eaf4ff" />
+      <!-- ══ Left arm — sword point-down ══ -->
+      <rect x="8" y="19" width="7" height="8" fill="#150d08" />
+      <rect x="9" y="20" width="5" height="6" fill="#9e8e5c" />
+      <rect x="9" y="20" width="2" height="6" fill="#b2a26a" />
+      <rect x="6" y="26" width="8" height="9" fill="#150d08" />
+      <rect x="7" y="27" width="6" height="7" fill="#8a7a4e" />
+      <rect x="7" y="27" width="2" height="7" fill="#9e8e5c" />
+      <!-- gauntlet on the hilt -->
+      <rect x="6" y="33" width="8" height="6" fill="#150d08" />
+      <rect x="7" y="34" width="6" height="4" fill="#6e6240" />
+      <rect x="7" y="34" width="2" height="4" fill="#8a7a4e" />
+      <!-- the old blade — point resting on the ground -->
+      <rect x="7" y="30" width="6" height="3" fill="#150d08" />
+      <rect x="8" y="31" width="4" height="1" fill="#b8b09a" />
+      <rect x="8" y="38" width="4" height="24" fill="#150d08" />
+      <rect x="9" y="39" width="2" height="22" fill="#a8a08a" />
+      <rect x="9" y="39" width="1" height="18" fill="#c8c0a8" />
+      <!-- nicks in the blade -->
+      <rect x="8" y="44" width="1" height="2" fill="#120d08" />
+      <rect x="11" y="50" width="1" height="2" fill="#120d08" />
+      <!-- old light pooling at the tip -->
+      <rect x="9" y="61" width="2" height="2" fill="#c9b87a" opacity="0.6" />
 
-      <!-- Left gauntlet -->
-      <rect x="5" y="16" width="3" height="9" fill="#8a7a48" />
-      <rect x="5" y="16" width="1" height="9" fill="#a89860" />
-      <rect x="4" y="23" width="4" height="3" fill="#b8a868" />
-      <rect x="4" y="23" width="4" height="1" fill="#c8b878" />
+      <!-- ══ Right arm — open empty hand ══ -->
+      <rect x="33" y="19" width="7" height="8" fill="#150d08" />
+      <rect x="34" y="20" width="5" height="6" fill="#6e6240" />
+      <rect x="34" y="20" width="2" height="6" fill="#7e6e44" />
+      <rect x="35" y="26" width="7" height="9" fill="#150d08" />
+      <rect x="36" y="27" width="5" height="7" fill="#5a5034" />
+      <rect x="36" y="27" width="2" height="7" fill="#6e6240" />
+      <!-- bare hand, palm open -->
+      <rect x="36" y="33" width="6" height="6" fill="#150d08" />
+      <rect x="37" y="34" width="4" height="4" fill="#b0a084" />
+      <rect x="37" y="34" width="2" height="4" fill="#c4b698" />
 
-      <!-- Fauld + greaves + boots -->
-      <rect x="8" y="28" width="12" height="3" fill="#7a6c40" />
-      <rect x="8" y="28" width="12" height="1" fill="#9a8850" />
-      <rect x="8" y="31" width="5" height="6" fill="#8a7a48" />
-      <rect x="15" y="31" width="5" height="6" fill="#8a7a48" />
-      <rect x="8" y="31" width="1" height="6" fill="#a89860" />
-      <rect x="15" y="31" width="1" height="6" fill="#a89860" />
-      <rect x="8" y="37" width="5" height="3" fill="#1a1410" />
-      <rect x="15" y="37" width="5" height="3" fill="#1a1410" />
+      <!-- ══ Faulds + greaves ══ -->
+      <rect x="12" y="40" width="24" height="5" fill="#150d08" />
+      <rect x="13" y="41" width="22" height="3" fill="#6e6240" />
+      <rect x="13" y="41" width="7" height="2" fill="#8a7a4e" />
+      <rect x="29" y="41" width="6" height="3" fill="#5a5034" />
+      <!-- legs -->
+      <rect x="13" y="45" width="9" height="11" fill="#150d08" />
+      <rect x="14" y="46" width="7" height="10" fill="#8a7a4e" />
+      <rect x="14" y="46" width="3" height="10" fill="#9e8e5c" />
+      <rect x="19" y="46" width="2" height="10" fill="#6e6240" />
+      <rect x="26" y="45" width="9" height="11" fill="#150d08" />
+      <rect x="27" y="46" width="7" height="10" fill="#6e6240" />
+      <rect x="27" y="46" width="2" height="10" fill="#7e6e44" />
+      <rect x="32" y="46" width="2" height="10" fill="#5a5034" />
+      <!-- knee plates -->
+      <rect x="15" y="48" width="5" height="2" fill="#9e8e5c" />
+      <rect x="15" y="48" width="2" height="1" fill="#b2a26a" />
+      <rect x="28" y="48" width="5" height="2" fill="#7e6e44" />
+
+      <!-- ══ Sabatons ══ -->
+      <rect x="11" y="56" width="12" height="6" fill="#150d08" />
+      <rect x="12" y="57" width="10" height="4" fill="#6e6240" />
+      <rect x="12" y="57" width="10" height="1" fill="#8a7a4e" />
+      <rect x="12" y="57" width="4" height="1" fill="#9e8e5c" />
+      <rect x="12" y="60" width="10" height="1" fill="#2a2418" />
+      <rect x="25" y="56" width="12" height="6" fill="#150d08" />
+      <rect x="26" y="57" width="10" height="4" fill="#5a5034" />
+      <rect x="26" y="57" width="10" height="1" fill="#6e6240" />
+      <rect x="26" y="60" width="10" height="1" fill="#241f14" />
+
+      <!-- falling gold dust -->
+      <rect x="14" y="10" width="1" height="1" fill="#f4e8b0" opacity="0.6" />
+      <rect x="40" y="32" width="1" height="1" fill="#c9b87a" opacity="0.5" />
+      <rect x="5" y="46" width="1" height="1" fill="#c9b87a" opacity="0.45" />
+      <rect x="42" y="50" width="1" height="1" fill="#9a8850" opacity="0.4" />
     </svg>

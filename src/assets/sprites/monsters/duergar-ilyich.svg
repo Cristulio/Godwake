@@ -1,95 +1,270 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 22 36"
+      viewBox="0 0 44 72"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Karzok the Duergar"
     >
-      <!-- Dim forge backlight + ground shadow -->
-      <ellipse cx="11" cy="18" rx="11" ry="16" fill="#8a5a2a" opacity="0.07" />
-      <ellipse cx="11" cy="35" rx="7" ry="1.3" fill="#000" opacity="0.4" />
+      <!-- Forge backlight + cool ambient + ground shadow -->
+      <ellipse cx="15" cy="30" rx="16" ry="22" fill="#e8731e" opacity="0.10" />
+      <ellipse cx="30" cy="42" rx="15" ry="20" fill="#2e6a62" opacity="0.07" />
+      <ellipse cx="22" cy="64" rx="14" ry="8" fill="#a83414" opacity="0.06" />
+      <ellipse cx="22" cy="69.6" rx="16" ry="2.3" fill="#000" opacity="0.5" />
 
-      <!-- Helm-crest hair -->
-      <rect x="9" y="0" width="4" height="2" fill="#3a2e22" />
-      <rect x="10" y="0" width="2" height="1" fill="#5a4030" />
-      <rect x="7" y="2" width="8" height="4" fill="#3a2e22" />
-      <rect x="7" y="2" width="8" height="1" fill="#4a3a2a" />
-      <rect x="6" y="3" width="1" height="3" fill="#1a1410" />
-      <rect x="15" y="3" width="1" height="3" fill="#1a1410" />
+      <!-- ══ Great war pick — iron beak, haft beside the body ══ -->
+      <!-- pick head outline -->
+      <rect x="1" y="0" width="9" height="7" fill="#150d08" />
+      <rect x="9" y="1" width="10" height="5" fill="#150d08" />
+      <rect x="9" y="6" width="5" height="2" fill="#150d08" />
+      <!-- hammer poll (left of haft) -->
+      <rect x="2" y="1" width="4" height="5" fill="#3a3644" />
+      <rect x="2" y="1" width="4" height="1" fill="#6e6a78" />
+      <rect x="2" y="1" width="2" height="1" fill="#9a96a4" />
+      <rect x="2" y="5" width="4" height="1" fill="#262230" />
+      <!-- beak — tapering iron spike, lit top edge -->
+      <rect x="10" y="2" width="8" height="1" fill="#6e6a78" />
+      <rect x="10" y="2" width="4" height="1" fill="#9a96a4" />
+      <rect x="16" y="2" width="2" height="1" fill="#c8c4d4" />
+      <rect x="10" y="3" width="7" height="1" fill="#4a4654" />
+      <rect x="10" y="4" width="5" height="1" fill="#3a3644" />
+      <rect x="10" y="5" width="4" height="1" fill="#2e2a38" />
+      <rect x="10" y="6" width="3" height="1" fill="#262230" />
+      <!-- haft socket -->
+      <rect x="6" y="1" width="3" height="6" fill="#2e2a38" />
+      <rect x="6" y="1" width="1" height="6" fill="#56525e" />
+      <!-- haft — dark oak, iron bands -->
+      <rect x="5" y="7" width="5" height="51" fill="#150d08" />
+      <rect x="6" y="7" width="3" height="50" fill="#4a2810" />
+      <rect x="6" y="7" width="1" height="50" fill="#8c5226" />
+      <rect x="7" y="7" width="1" height="50" fill="#6a3a1a" />
+      <rect x="6" y="14" width="3" height="1" fill="#3a3644" />
+      <rect x="6" y="15" width="3" height="1" fill="#6e6a78" />
+      <rect x="6" y="28" width="3" height="1" fill="#3a3644" />
+      <rect x="6" y="29" width="3" height="1" fill="#6e6a78" />
+      <rect x="6" y="52" width="3" height="2" fill="#2e2a38" />
+      <!-- butt spike -->
+      <rect x="5" y="58" width="5" height="3" fill="#150d08" />
+      <rect x="6" y="58" width="3" height="2" fill="#3a3644" />
+      <rect x="6" y="58" width="1" height="1" fill="#6e6a78" />
 
-      <!-- Grey-dwarf face — stone ramp, key upper-left -->
-      <rect x="6" y="6" width="10" height="4" fill="#7a7068" />
-      <rect x="6" y="6" width="10" height="1" fill="#8a8278" />
-      <rect x="6" y="6" width="2" height="4" fill="#857b73" />
-      <rect x="14" y="6" width="2" height="4" fill="#5a5048" />
-      <!-- amber eyes + spark -->
-      <rect x="7" y="7" width="2" height="1" fill="#1a1410" />
-      <rect x="13" y="7" width="2" height="1" fill="#1a1410" />
-      <rect x="7" y="7" width="1" height="1" fill="#ffb347" />
-      <rect x="14" y="7" width="1" height="1" fill="#ffb347" />
-      <rect x="10" y="8" width="2" height="2" fill="#5a5048" />
+      <!-- ══ Iron crest — mohawk of riveted plates ══ -->
+      <rect x="17" y="5" width="10" height="3" fill="#150d08" />
+      <rect x="15" y="7" width="14" height="3" fill="#150d08" />
+      <rect x="18" y="6" width="8" height="2" fill="#3a3644" />
+      <rect x="18" y="6" width="3" height="1" fill="#6e6a78" />
+      <rect x="22" y="6" width="1" height="2" fill="#262230" />
+      <rect x="16" y="8" width="12" height="2" fill="#2e2a38" />
+      <rect x="16" y="8" width="4" height="1" fill="#56525e" />
+      <rect x="19" y="7" width="1" height="1" fill="#9a96a4" />
+      <rect x="25" y="8" width="1" height="1" fill="#56525e" />
 
-      <!-- Iron beard ramp -->
-      <rect x="5" y="10" width="12" height="6" fill="#3a2418" />
-      <rect x="5" y="10" width="12" height="1" fill="#4a3424" />
-      <rect x="5" y="10" width="2" height="6" fill="#4a3424" />
-      <rect x="7" y="12" width="2" height="2" fill="#2a180c" />
-      <rect x="11" y="13" width="2" height="2" fill="#2a180c" />
-      <rect x="13" y="11" width="2" height="2" fill="#2a180c" />
-      <rect x="10" y="15" width="2" height="1" fill="#8c6232" />
+      <!-- ══ Head — squat stone-grey face, heavy brow ══ -->
+      <rect x="14" y="9" width="16" height="16" fill="#150d08" />
+      <rect x="15" y="10" width="14" height="15" fill="#565460" />
+      <!-- lit left plane (warm key) -->
+      <rect x="15" y="10" width="6" height="14" fill="#74707a" />
+      <rect x="15" y="10" width="3" height="12" fill="#8e8588" />
+      <rect x="15" y="10" width="1" height="8" fill="#b0a496" />
+      <!-- crown shade under crest -->
+      <rect x="15" y="10" width="14" height="1" fill="#46424e" />
+      <!-- shadow right plane (cool) -->
+      <rect x="26" y="10" width="3" height="15" fill="#46424e" />
+      <rect x="28" y="10" width="1" height="15" fill="#343042" />
+      <!-- heavy scarred brow -->
+      <rect x="15" y="13" width="14" height="2" fill="#46424e" />
+      <rect x="15" y="13" width="6" height="1" fill="#5e5a64" />
+      <rect x="24" y="12" width="3" height="1" fill="#343042" />
+      <!-- brow scar (left) -->
+      <rect x="18" y="11" width="1" height="2" fill="#343042" />
+      <!-- amber furnace eyes + spark -->
+      <rect x="16" y="15" width="4" height="3" fill="#1a0e06" />
+      <rect x="24" y="15" width="4" height="3" fill="#1a0e06" />
+      <rect x="17" y="16" width="3" height="2" fill="#e8731e" />
+      <rect x="25" y="16" width="2" height="2" fill="#c05a14" />
+      <rect x="17" y="16" width="1" height="1" fill="#ffe8a0" />
+      <rect x="25" y="16" width="1" height="1" fill="#ffb347" />
+      <!-- broad nose -->
+      <rect x="21" y="17" width="3" height="4" fill="#46424e" />
+      <rect x="21" y="17" width="1" height="4" fill="#74707a" />
+      <rect x="21" y="20" width="3" height="1" fill="#343042" />
+      <!-- ember crack across left cheek -->
+      <rect x="16" y="19" width="1" height="3" fill="#a83414" />
+      <rect x="16" y="20" width="1" height="1" fill="#ffb347" />
+      <rect x="17" y="21" width="1" height="1" fill="#e8731e" />
+      <!-- scowl -->
+      <rect x="18" y="22" width="8" height="1" fill="#2a2632" />
+      <rect x="18" y="22" width="2" height="1" fill="#343042" />
 
-      <!-- Pauldrons -->
-      <rect x="1" y="12" width="4" height="4" fill="#1a1410" />
-      <rect x="17" y="12" width="4" height="4" fill="#1a1410" />
-      <rect x="1" y="12" width="4" height="1" fill="#3a2e22" />
-      <rect x="17" y="12" width="4" height="1" fill="#3a2e22" />
-      <rect x="2" y="13" width="2" height="1" fill="#5a4030" />
-      <rect x="18" y="13" width="2" height="1" fill="#5a4030" />
+      <!-- ══ Iron-grey beard — braided, ringed ══ -->
+      <rect x="13" y="22" width="18" height="3" fill="#150d08" />
+      <rect x="12" y="24" width="20" height="6" fill="#150d08" />
+      <rect x="14" y="29" width="16" height="4" fill="#150d08" />
+      <rect x="16" y="33" width="12" height="2" fill="#150d08" />
+      <rect x="14" y="23" width="16" height="2" fill="#8e8a96" />
+      <rect x="13" y="25" width="18" height="4" fill="#74707e" />
+      <rect x="15" y="29" width="14" height="3" fill="#5e5a68" />
+      <rect x="17" y="32" width="10" height="2" fill="#4a4654" />
+      <!-- lit left licks -->
+      <rect x="14" y="23" width="4" height="2" fill="#b4b0bc" />
+      <rect x="13" y="25" width="3" height="3" fill="#a09cac" />
+      <rect x="15" y="29" width="2" height="2" fill="#8e8a96" />
+      <!-- cool right shade -->
+      <rect x="27" y="25" width="4" height="4" fill="#56525e" />
+      <rect x="26" y="29" width="3" height="3" fill="#46424e" />
+      <!-- braid channels -->
+      <rect x="18" y="25" width="1" height="8" fill="#56525e" />
+      <rect x="22" y="25" width="1" height="9" fill="#4a4654" />
+      <rect x="26" y="25" width="1" height="7" fill="#46424e" />
+      <!-- iron beard-rings -->
+      <rect x="17" y="27" width="3" height="1" fill="#2e2a38" />
+      <rect x="17" y="26" width="3" height="1" fill="#9a96a4" />
+      <rect x="21" y="30" width="3" height="1" fill="#2e2a38" />
+      <rect x="21" y="29" width="3" height="1" fill="#8e8a96" />
+      <rect x="25" y="27" width="3" height="1" fill="#2e2a38" />
+      <!-- moustache -->
+      <rect x="17" y="23" width="4" height="1" fill="#a8a4b0" />
+      <rect x="23" y="23" width="4" height="1" fill="#8e8a96" />
 
-      <!-- Cuirass — leather ramp + gold trim + gem -->
-      <rect x="4" y="14" width="14" height="9" fill="#3a2e22" />
-      <rect x="5" y="15" width="12" height="7" fill="#2a1f17" />
-      <rect x="4" y="14" width="14" height="1" fill="#5a4030" />
-      <rect x="4" y="22" width="14" height="1" fill="#5a4030" />
-      <rect x="4" y="14" width="1" height="9" fill="#5a4030" opacity="0.6" />
-      <rect x="9" y="17" width="4" height="3" fill="#5a4030" />
-      <rect x="10" y="18" width="2" height="1" fill="#b5302c" />
-      <rect x="10" y="18" width="1" height="1" fill="#e85a4a" opacity="0.7" />
+      <!-- ══ Spiked pauldrons ══ -->
+      <!-- left (lit) -->
+      <rect x="7" y="26" width="10" height="8" fill="#150d08" />
+      <rect x="8" y="27" width="8" height="6" fill="#4a4654" />
+      <rect x="8" y="27" width="8" height="2" fill="#6e6a78" />
+      <rect x="8" y="27" width="3" height="1" fill="#a8a4b4" />
+      <rect x="8" y="31" width="8" height="2" fill="#3a3644" />
+      <rect x="10" y="29" width="1" height="1" fill="#9a96a4" />
+      <rect x="13" y="30" width="1" height="1" fill="#262230" />
+      <!-- left spike -->
+      <rect x="6" y="24" width="3" height="3" fill="#150d08" />
+      <rect x="7" y="25" width="1" height="2" fill="#6e6a78" />
+      <!-- right (shadow side) -->
+      <rect x="27" y="26" width="11" height="8" fill="#150d08" />
+      <rect x="28" y="27" width="9" height="6" fill="#3a3644" />
+      <rect x="28" y="27" width="9" height="1" fill="#56525e" />
+      <rect x="28" y="31" width="9" height="2" fill="#2e2a38" />
+      <rect x="30" y="29" width="1" height="1" fill="#6e6a78" />
+      <!-- right spikes -->
+      <rect x="35" y="23" width="3" height="4" fill="#150d08" />
+      <rect x="36" y="24" width="1" height="2" fill="#56525e" />
+      <rect x="37" y="25" width="1" height="1" fill="#74707e" />
+      <rect x="31" y="24" width="3" height="3" fill="#150d08" />
+      <rect x="32" y="25" width="1" height="2" fill="#4a4654" />
 
-      <!-- Arms -->
-      <rect x="2" y="16" width="3" height="7" fill="#7a7068" />
-      <rect x="2" y="16" width="1" height="7" fill="#857b73" />
-      <rect x="17" y="16" width="3" height="7" fill="#7a7068" />
-      <rect x="19" y="16" width="1" height="7" fill="#5a5048" />
-      <rect x="1" y="22" width="4" height="3" fill="#1a1410" />
-      <rect x="17" y="22" width="4" height="3" fill="#1a1410" />
-      <rect x="2" y="23" width="2" height="1" fill="#3a2e22" />
-      <rect x="18" y="23" width="2" height="1" fill="#3a2e22" />
+      <!-- ══ Cuirass — battle-iron, ember gut seam ══ -->
+      <rect x="11" y="33" width="22" height="17" fill="#150d08" />
+      <rect x="12" y="34" width="20" height="15" fill="#3e3a48" />
+      <!-- lit left plane -->
+      <rect x="12" y="34" width="7" height="15" fill="#56525e" />
+      <rect x="12" y="34" width="3" height="13" fill="#6e6a78" />
+      <rect x="12" y="34" width="1" height="9" fill="#928c8e" />
+      <!-- cool right -->
+      <rect x="28" y="34" width="4" height="15" fill="#2e2a38" />
+      <rect x="31" y="34" width="1" height="15" fill="#262230" />
+      <!-- central ridge -->
+      <rect x="21" y="34" width="2" height="15" fill="#4a4654" />
+      <rect x="21" y="34" width="1" height="15" fill="#5e5a68" />
+      <!-- chest plate seams -->
+      <rect x="12" y="38" width="20" height="1" fill="#2e2a38" />
+      <rect x="12" y="43" width="20" height="1" fill="#2a2632" />
+      <!-- rivets -->
+      <rect x="13" y="35" width="1" height="1" fill="#9a96a4" />
+      <rect x="30" y="35" width="1" height="1" fill="#56525e" />
+      <rect x="13" y="39" width="1" height="1" fill="#8e8a96" />
+      <rect x="30" y="39" width="1" height="1" fill="#4a4654" />
+      <rect x="13" y="44" width="1" height="1" fill="#8e8a96" />
+      <rect x="30" y="44" width="1" height="1" fill="#4a4654" />
+      <!-- battle notch -->
+      <rect x="16" y="36" width="2" height="1" fill="#262230" />
+      <rect x="26" y="40" width="2" height="2" fill="#262230" />
+      <!-- ember gut seam — stone-blood fury leaking -->
+      <rect x="19" y="44" width="6" height="1" fill="#a83414" />
+      <rect x="20" y="44" width="2" height="1" fill="#e8731e" />
+      <rect x="21" y="44" width="1" height="1" fill="#ffe8a0" />
+      <rect x="18" y="45" width="2" height="1" fill="#7e2410" />
+      <rect x="24" y="45" width="2" height="1" fill="#7e2410" />
+      <rect x="22" y="45" width="1" height="1" fill="#e8731e" />
 
-      <!-- War-pick haft + head -->
-      <rect x="18" y="3" width="2" height="20" fill="#3a2418" />
-      <rect x="19" y="3" width="1" height="20" fill="#5a4030" />
-      <rect x="16" y="3" width="4" height="2" fill="#1a1410" />
-      <polygon points="20,5 24,1 22,7" fill="#1a1410" />
-      <polygon points="20,5 23,2 22,5" fill="#3a3228" />
-      <rect x="20" y="3" width="1" height="2" fill="#5a4030" />
-      <rect x="22" y="2" width="1" height="1" fill="#8a929c" />
+      <!-- ══ Left arm — gripping the haft ══ -->
+      <rect x="9" y="33" width="6" height="6" fill="#150d08" />
+      <rect x="10" y="34" width="4" height="4" fill="#56525e" />
+      <rect x="10" y="34" width="2" height="2" fill="#74707a" />
+      <rect x="7" y="37" width="6" height="7" fill="#150d08" />
+      <rect x="8" y="38" width="4" height="5" fill="#4a4654" />
+      <rect x="8" y="38" width="2" height="5" fill="#5e5a68" />
+      <!-- gauntlet fist on haft -->
+      <rect x="4" y="42" width="8" height="7" fill="#150d08" />
+      <rect x="5" y="43" width="6" height="5" fill="#565460" />
+      <rect x="5" y="43" width="6" height="2" fill="#74707a" />
+      <rect x="5" y="43" width="2" height="1" fill="#928c8e" />
+      <rect x="6" y="45" width="1" height="1" fill="#46424e" />
+      <rect x="8" y="45" width="1" height="1" fill="#46424e" />
+      <rect x="10" y="45" width="1" height="1" fill="#46424e" />
+      <rect x="5" y="47" width="6" height="1" fill="#343042" />
 
-      <!-- Belt -->
-      <rect x="4" y="23" width="14" height="2" fill="#1a1410" />
-      <rect x="10" y="23" width="2" height="2" fill="#8c6232" />
-      <rect x="10" y="23" width="1" height="1" fill="#d4a850" />
+      <!-- ══ Right arm — clenched ember fist ══ -->
+      <rect x="31" y="33" width="7" height="7" fill="#150d08" />
+      <rect x="32" y="34" width="5" height="5" fill="#46424e" />
+      <rect x="32" y="34" width="2" height="5" fill="#56525e" />
+      <rect x="32" y="39" width="7" height="7" fill="#150d08" />
+      <rect x="33" y="40" width="4" height="5" fill="#3e3a48" />
+      <rect x="33" y="40" width="1" height="5" fill="#4e4a58" />
+      <!-- bare stone fist, cracked knuckles -->
+      <rect x="32" y="45" width="8" height="8" fill="#150d08" />
+      <rect x="33" y="46" width="6" height="6" fill="#565460" />
+      <rect x="33" y="46" width="2" height="4" fill="#74707a" />
+      <rect x="37" y="46" width="2" height="6" fill="#46424e" />
+      <!-- knuckle ember cracks -->
+      <rect x="34" y="47" width="1" height="1" fill="#e8731e" />
+      <rect x="36" y="47" width="1" height="1" fill="#ffb347" />
+      <rect x="38" y="48" width="1" height="1" fill="#a83414" />
+      <rect x="35" y="49" width="2" height="1" fill="#a83414" />
+      <rect x="33" y="51" width="6" height="1" fill="#3a3644" />
 
-      <!-- Legs -->
-      <rect x="6" y="25" width="4" height="8" fill="#3a2e22" />
-      <rect x="12" y="25" width="4" height="8" fill="#3a2e22" />
-      <rect x="7" y="26" width="2" height="7" fill="#2a1f17" />
-      <rect x="13" y="26" width="2" height="7" fill="#2a1f17" />
-      <rect x="6" y="25" width="1" height="8" fill="#4a3a2a" />
-      <rect x="12" y="25" width="1" height="8" fill="#4a3a2a" />
+      <!-- ══ Studded war-belt ══ -->
+      <rect x="11" y="49" width="22" height="5" fill="#150d08" />
+      <rect x="12" y="50" width="20" height="3" fill="#3a2a1c" />
+      <rect x="12" y="50" width="20" height="1" fill="#5a4228" />
+      <rect x="12" y="50" width="6" height="1" fill="#6e5232" />
+      <!-- iron buckle -->
+      <rect x="19" y="49" width="6" height="5" fill="#150d08" />
+      <rect x="20" y="50" width="4" height="3" fill="#6e6a78" />
+      <rect x="20" y="50" width="4" height="1" fill="#9a96a4" />
+      <rect x="20" y="50" width="1" height="1" fill="#c8c4d4" />
+      <rect x="21" y="51" width="2" height="1" fill="#46424e" />
+      <!-- studs -->
+      <rect x="14" y="51" width="1" height="1" fill="#8e8a96" />
+      <rect x="28" y="51" width="1" height="1" fill="#56525e" />
 
-      <!-- Boots -->
-      <rect x="5" y="33" width="6" height="3" fill="#1a1410" />
-      <rect x="11" y="33" width="6" height="3" fill="#1a1410" />
-      <rect x="5" y="33" width="6" height="1" fill="#3a2e22" />
-      <rect x="11" y="33" width="6" height="1" fill="#3a2e22" />
+      <!-- ══ Legs — squat armored, wide stance ══ -->
+      <rect x="11" y="54" width="10" height="9" fill="#150d08" />
+      <rect x="12" y="55" width="8" height="8" fill="#3e3a48" />
+      <rect x="12" y="55" width="3" height="8" fill="#56525e" />
+      <rect x="12" y="55" width="1" height="5" fill="#6e6a78" />
+      <rect x="18" y="55" width="2" height="8" fill="#2e2a38" />
+      <!-- knee plate -->
+      <rect x="13" y="57" width="5" height="2" fill="#56525e" />
+      <rect x="13" y="57" width="2" height="1" fill="#8e8a96" />
+      <rect x="23" y="54" width="10" height="9" fill="#150d08" />
+      <rect x="24" y="55" width="8" height="8" fill="#343042" />
+      <rect x="24" y="55" width="2" height="8" fill="#46424e" />
+      <rect x="30" y="55" width="2" height="8" fill="#262230" />
+      <rect x="25" y="57" width="5" height="2" fill="#46424e" />
+      <rect x="25" y="57" width="2" height="1" fill="#6e6a78" />
+
+      <!-- ══ Iron boots — toe-capped ══ -->
+      <rect x="9" y="62" width="13" height="6" fill="#150d08" />
+      <rect x="10" y="63" width="11" height="4" fill="#3a3644" />
+      <rect x="10" y="63" width="11" height="1" fill="#5e5a68" />
+      <rect x="10" y="63" width="4" height="1" fill="#74707e" />
+      <rect x="10" y="65" width="4" height="2" fill="#56525e" />
+      <rect x="10" y="66" width="11" height="1" fill="#1e1a26" />
+      <rect x="23" y="62" width="13" height="6" fill="#150d08" />
+      <rect x="24" y="63" width="11" height="4" fill="#2e2a38" />
+      <rect x="24" y="63" width="11" height="1" fill="#4a4654" />
+      <rect x="31" y="65" width="4" height="2" fill="#3e3a48" />
+      <rect x="24" y="66" width="11" height="1" fill="#191522" />
+
+      <!-- ember motes drifting off the fury -->
+      <rect x="38" y="42" width="1" height="1" fill="#ffb347" opacity="0.9" />
+      <rect x="40" y="38" width="1" height="1" fill="#e8731e" opacity="0.7" />
+      <rect x="36" y="34" width="1" height="1" fill="#a83414" opacity="0.8" />
     </svg>

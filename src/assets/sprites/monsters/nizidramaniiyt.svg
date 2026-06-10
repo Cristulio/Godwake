@@ -1,87 +1,248 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 46 42"
+      viewBox="0 0 72 60"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Nizidramanii'yt"
     >
       <!-- Venom backlight + ground shadow -->
-      <ellipse cx="23" cy="22" rx="22" ry="20" fill="#5a7e34" opacity="0.07" />
-      <ellipse cx="23" cy="37" rx="21" ry="5" fill="#080e06" opacity="0.45" />
+      <ellipse cx="36" cy="28" rx="34" ry="26" fill="#5a7e34" opacity="0.07" />
+      <ellipse cx="36" cy="56.5" rx="30" ry="3" fill="#080e06" opacity="0.5" />
 
-      <!-- Wings — ribbed membrane, lit leading edge -->
-      <polygon points="2,30 10,16 16,20 8,34" fill="#1e3014" opacity="0.7" />
-      <polygon points="2,30 10,16 16,20 8,34" fill="#2c481b" opacity="0.5" />
-      <polygon points="6,28 11,19 14,22 9,31" fill="#34521f" opacity="0.55" />
-      <polygon points="7,28 11,19 12,23" fill="#436628" opacity="0.4" />
-      <polygon points="44,30 36,16 30,20 38,34" fill="#1a2a12" opacity="0.7" />
-      <polygon points="44,30 36,16 30,20 38,34" fill="#243a16" opacity="0.45" />
-      <polygon points="40,28 35,19 32,22 37,31" fill="#2c481b" opacity="0.5" />
+      <!-- ══ Far wing — dark fan behind, peeking left of the near wing ══ -->
+      <rect x="26" y="2" width="16" height="3" fill="#0c1408" />
+      <rect x="24" y="5" width="18" height="3" fill="#0e1808" />
+      <rect x="23" y="8" width="18" height="3" fill="#121e0c" />
+      <rect x="24" y="11" width="16" height="3" fill="#0e1808" />
+      <rect x="26" y="14" width="13" height="3" fill="#0c1408" />
+      <rect x="28" y="17" width="9" height="2" fill="#0a1206" />
+      <!-- far finger bones -->
+      <rect x="26" y="4" width="14" height="1" fill="#060c04" />
+      <rect x="25" y="9" width="14" height="1" fill="#060c04" />
+      <rect x="27" y="14" width="11" height="1" fill="#060c04" />
 
-      <!-- Body — scale ramp, lit dorsal, dark belly -->
-      <polygon points="12,34 14,18 23,14 32,18 34,34" fill="#2c481b" />
-      <polygon points="12,34 14,18 23,14 30,18 32,32 14,32" fill="#34521f" />
-      <polygon points="14,32 16,20 23,17 30,20 32,32" fill="#436628" opacity="0.7" />
-      <polygon points="14,32 16,20 23,17 23,24 16,30" fill="#5a7e34" opacity="0.4" />
-      <polygon points="12,34 14,18 16,20 14,34" fill="#1e3014" opacity="0.6" />
-      <!-- Scale speckle highlights -->
-      <rect x="19" y="20" width="2" height="2" fill="#5a7e34" opacity="0.7" />
-      <rect x="25" y="22" width="2" height="2" fill="#436628" opacity="0.7" />
-      <rect x="21" y="26" width="2" height="2" fill="#436628" opacity="0.6" />
-      <rect x="17" y="28" width="2" height="2" fill="#34521f" opacity="0.6" />
-      <rect x="27" y="27" width="2" height="2" fill="#2c481b" opacity="0.6" />
-      <rect x="20" y="18" width="1" height="1" fill="#7ab040" opacity="0.6" />
+      <!-- ══ Near wing — raised high-right, LIT membrane fan ══ -->
+      <!-- outline under-layer for the whole fan -->
+      <rect x="42" y="1" width="8" height="6" fill="#150d08" />
+      <rect x="45" y="5" width="26" height="5" fill="#150d08" />
+      <rect x="46" y="9" width="25" height="5" fill="#150d08" />
+      <rect x="46" y="13" width="23" height="5" fill="#150d08" />
+      <rect x="45" y="17" width="21" height="5" fill="#150d08" />
+      <rect x="44" y="21" width="17" height="5" fill="#150d08" />
+      <!-- membrane panels — brightest at the top edge -->
+      <rect x="47" y="6" width="22" height="3" fill="#6a9a3a" />
+      <rect x="47" y="6" width="16" height="1" fill="#7ab040" />
+      <rect x="48" y="9" width="22" height="2" fill="#5a8a32" />
+      <rect x="48" y="11" width="21" height="2" fill="#4c7430" />
+      <rect x="48" y="13" width="20" height="2" fill="#436628" />
+      <rect x="47" y="15" width="20" height="2" fill="#3e6228" />
+      <rect x="47" y="17" width="18" height="2" fill="#34521f" />
+      <rect x="46" y="19" width="17" height="2" fill="#2c481b" />
+      <rect x="46" y="21" width="15" height="2" fill="#243a16" />
+      <rect x="45" y="23" width="13" height="2" fill="#1e3014" />
+      <!-- hot glow streaks — torch through the membrane -->
+      <rect x="50" y="7" width="10" height="1" fill="#9ac84a" />
+      <rect x="53" y="8" width="5" height="1" fill="#c8e060" />
+      <rect x="49" y="10" width="7" height="1" fill="#7ab040" />
+      <rect x="58" y="12" width="6" height="1" fill="#6a9a3a" />
+      <rect x="51" y="14" width="4" height="1" fill="#5a8a32" />
+      <!-- carved finger bones radiating from the wrist -->
+      <rect x="48" y="5" width="23" height="1" fill="#150d08" />
+      <rect x="49" y="9" width="21" height="1" fill="#150d08" />
+      <rect x="49" y="14" width="19" height="1" fill="#150d08" />
+      <rect x="48" y="19" width="16" height="1" fill="#150d08" />
+      <!-- finger tip claws -->
+      <rect x="69" y="4" width="2" height="2" fill="#cdd8b0" />
+      <rect x="69" y="9" width="2" height="1" fill="#b0bc94" />
+      <rect x="67" y="14" width="2" height="1" fill="#b0bc94" />
+      <!-- ragged trailing edge -->
+      <rect x="62" y="21" width="3" height="2" fill="#16240e" />
+      <rect x="58" y="24" width="3" height="2" fill="#121e0c" />
+      <rect x="53" y="25" width="2" height="2" fill="#0e1808" />
+      <!-- wing-arm bone, shoulder up to the wrist -->
+      <rect x="30" y="22" width="7" height="6" fill="#150d08" />
+      <rect x="34" y="17" width="7" height="7" fill="#150d08" />
+      <rect x="38" y="11" width="7" height="8" fill="#150d08" />
+      <rect x="41" y="4" width="7" height="9" fill="#150d08" />
+      <rect x="31" y="23" width="5" height="4" fill="#34521f" />
+      <rect x="35" y="18" width="5" height="5" fill="#3e6228" />
+      <rect x="39" y="12" width="5" height="6" fill="#436628" />
+      <rect x="42" y="5" width="5" height="7" fill="#4c7430" />
+      <rect x="42" y="5" width="2" height="7" fill="#5a8a32" />
+      <rect x="39" y="12" width="2" height="6" fill="#5a8a32" />
+      <rect x="42" y="5" width="1" height="4" fill="#6a9a3a" />
+      <!-- wrist thumb-spike -->
+      <rect x="42" y="0" width="4" height="5" fill="#150d08" />
+      <rect x="43" y="1" width="2" height="3" fill="#e8f0d0" />
+      <rect x="43" y="1" width="1" height="2" fill="#ffffff" />
 
-      <!-- Horned head — ramp -->
-      <polygon points="22,16 16,8 18,2 23,6 28,2 30,8 24,16" fill="#2c481b" />
-      <polygon points="22,16 16,8 18,2 23,6 24,16" fill="#34521f" opacity="0.7" />
-      <rect x="17" y="3" width="2" height="4" fill="#436628" />
-      <rect x="17" y="3" width="1" height="2" fill="#5a7e34" />
-      <rect x="27" y="3" width="2" height="4" fill="#243a16" />
-      <!-- Brow + snout -->
-      <polygon points="20,10 26,10 28,16 23,20 18,16" fill="#3e6228" />
-      <polygon points="20,10 26,10 28,16 23,20 18,16" fill="#4c7430" opacity="0.4" />
-      <polygon points="20,10 23,10 21,18 18,16" fill="#5a7e34" opacity="0.4" />
-      <!-- Venom eyes + spark -->
-      <rect x="20" y="12" width="2" height="2" fill="#1a1006" />
-      <rect x="24" y="12" width="2" height="2" fill="#1a1006" />
-      <rect x="20" y="12" width="1" height="1" fill="#c8e060" />
-      <rect x="24" y="12" width="1" height="1" fill="#c8e060" />
-      <rect x="20" y="12" width="1" height="1" fill="#eaf8a0" opacity="0.6" />
-      <!-- Fanged maw + venom drip -->
-      <polygon points="18,16 23,20 28,16 26,18 23,19 20,18" fill="#243a16" />
-      <rect x="20" y="17" width="1" height="2" fill="#e8f0d0" />
-      <rect x="25" y="17" width="1" height="2" fill="#e8f0d0" />
-      <ellipse cx="23" cy="18" rx="5" ry="2" fill="#7ab040" opacity="0.28" />
+      <!-- ══ Tail — sweeping right, arrowhead tip ══ -->
+      <rect x="50" y="38" width="6" height="4" fill="#150d08" />
+      <rect x="55" y="36" width="6" height="4" fill="#150d08" />
+      <rect x="60" y="34" width="6" height="4" fill="#150d08" />
+      <rect x="65" y="31" width="4" height="4" fill="#150d08" />
+      <rect x="51" y="39" width="4" height="2" fill="#2c481b" />
+      <rect x="56" y="37" width="4" height="2" fill="#243a16" />
+      <rect x="61" y="35" width="4" height="2" fill="#1e3014" />
+      <rect x="66" y="32" width="2" height="2" fill="#1a2a12" />
+      <!-- bone arrowhead -->
+      <rect x="67" y="27" width="4" height="5" fill="#150d08" />
+      <rect x="68" y="28" width="2" height="3" fill="#cdd8b0" />
+      <rect x="68" y="28" width="1" height="2" fill="#e8f0d0" />
+      <rect x="53" y="37" width="1" height="1" fill="#e8f0d0" opacity="0.8" />
+      <rect x="58" y="35" width="1" height="1" fill="#cdd8b0" opacity="0.8" />
+      <rect x="63" y="33" width="1" height="1" fill="#cdd8b0" opacity="0.7" />
 
-      <!-- Forelegs + bone claws -->
-      <polygon points="12,22 4,26 2,24 11,18" fill="#34521f" />
-      <polygon points="12,22 4,26 8,23 11,18" fill="#436628" opacity="0.6" />
-      <polygon points="6,25 2,24 4,28" fill="#e8f0d0" opacity="0.9" />
-      <polygon points="6,25 2,24 4,26" fill="#ffffff" opacity="0.5" />
-      <polygon points="34,22 42,26 44,24 35,18" fill="#2c481b" />
-      <polygon points="34,22 42,26 40,23 35,18" fill="#34521f" opacity="0.6" />
-      <polygon points="40,25 44,24 42,28" fill="#e8f0d0" opacity="0.85" />
+      <!-- ══ Body mass ══ -->
+      <rect x="20" y="26" width="32" height="22" fill="#150d08" />
+      <rect x="21" y="27" width="30" height="20" fill="#243a16" />
+      <rect x="21" y="27" width="12" height="20" fill="#2c481b" />
+      <rect x="21" y="27" width="6" height="16" fill="#34521f" />
+      <rect x="44" y="27" width="7" height="20" fill="#1e3014" />
+      <rect x="49" y="27" width="2" height="20" fill="#1a2a12" />
+      <!-- dorsal ridge spikes -->
+      <rect x="28" y="23" width="3" height="5" fill="#150d08" />
+      <rect x="29" y="24" width="1" height="3" fill="#436628" />
+      <rect x="34" y="24" width="3" height="4" fill="#150d08" />
+      <rect x="35" y="25" width="1" height="2" fill="#3e6228" />
+      <rect x="40" y="25" width="3" height="4" fill="#150d08" />
+      <rect x="41" y="26" width="1" height="2" fill="#34521f" />
+      <rect x="46" y="26" width="3" height="3" fill="#150d08" />
+      <rect x="47" y="27" width="1" height="1" fill="#2c481b" />
+      <!-- scale dither on the flank -->
+      <rect x="27" y="30" width="2" height="1" fill="#436628" />
+      <rect x="33" y="32" width="2" height="1" fill="#34521f" />
+      <rect x="29" y="35" width="2" height="1" fill="#3e6228" />
+      <rect x="38" y="31" width="2" height="1" fill="#2c481b" />
+      <rect x="41" y="35" width="2" height="1" fill="#243a16" />
+      <rect x="36" y="38" width="2" height="1" fill="#2c481b" />
+      <rect x="44" y="32" width="1" height="1" fill="#16240e" />
+      <rect x="46" y="38" width="1" height="1" fill="#16240e" />
+      <!-- belly plates -->
+      <rect x="23" y="41" width="26" height="6" fill="#5a6e3a" />
+      <rect x="23" y="41" width="26" height="1" fill="#7c8c48" />
+      <rect x="23" y="43" width="26" height="1" fill="#42522c" />
+      <rect x="23" y="45" width="26" height="1" fill="#42522c" />
+      <rect x="23" y="41" width="6" height="1" fill="#96a45c" />
+      <rect x="44" y="41" width="5" height="6" fill="#42522c" />
 
-      <!-- Hind legs + claws -->
-      <rect x="14" y="33" width="6" height="6" fill="#243a16" />
-      <rect x="14" y="33" width="1" height="6" fill="#34521f" />
-      <rect x="19" y="33" width="1" height="6" fill="#16240e" />
-      <rect x="26" y="33" width="6" height="6" fill="#243a16" />
-      <rect x="26" y="33" width="1" height="6" fill="#34521f" />
-      <rect x="31" y="33" width="1" height="6" fill="#16240e" />
-      <polygon points="12,39 14,35 21,39" fill="#0e1808" />
-      <polygon points="25,39 32,35 34,39" fill="#0e1808" />
-      <rect x="13" y="38" width="2" height="1" fill="#e8f0d0" />
-      <rect x="18" y="38" width="2" height="1" fill="#e8f0d0" />
-      <rect x="27" y="38" width="2" height="1" fill="#e8f0d0" />
-      <rect x="32" y="38" width="2" height="1" fill="#e8f0d0" />
+      <!-- ══ Neck — thick arc up-left ══ -->
+      <rect x="22" y="20" width="10" height="9" fill="#150d08" />
+      <rect x="19" y="14" width="10" height="9" fill="#150d08" />
+      <rect x="17" y="8" width="10" height="9" fill="#150d08" />
+      <rect x="23" y="21" width="8" height="7" fill="#2c481b" />
+      <rect x="20" y="15" width="8" height="7" fill="#34521f" />
+      <rect x="18" y="9" width="8" height="7" fill="#3e6228" />
+      <rect x="23" y="21" width="3" height="7" fill="#34521f" />
+      <rect x="20" y="15" width="3" height="7" fill="#436628" />
+      <rect x="18" y="9" width="3" height="7" fill="#4c7430" />
+      <!-- neck dorsal spikes -->
+      <rect x="26" y="6" width="3" height="4" fill="#150d08" />
+      <rect x="27" y="7" width="1" height="2" fill="#cdd8b0" />
+      <rect x="28" y="12" width="3" height="4" fill="#150d08" />
+      <rect x="29" y="13" width="1" height="2" fill="#cdd8b0" />
+      <rect x="30" y="18" width="3" height="4" fill="#150d08" />
+      <rect x="31" y="19" width="1" height="2" fill="#b0bc94" />
+      <!-- throat plates -->
+      <rect x="19" y="13" width="3" height="9" fill="#5a6e3a" />
+      <rect x="19" y="13" width="1" height="9" fill="#7c8c48" />
 
-      <!-- Sweeping tail -->
-      <polygon points="34,30 44,34 43,36 33,33" fill="#2c481b" />
-      <polygon points="34,30 44,34 42,33 33,33" fill="#34521f" opacity="0.6" />
-      <polygon points="44,34 43,31 46,35" fill="#34521f" />
+      <!-- ══ Head — horned skull, gaping venom jaw ══ -->
+      <!-- back-swept horns -->
+      <rect x="22" y="1" width="6" height="3" fill="#150d08" />
+      <rect x="27" y="0" width="4" height="3" fill="#150d08" />
+      <rect x="23" y="2" width="4" height="1" fill="#cdd8b0" />
+      <rect x="27" y="1" width="3" height="1" fill="#e8f0d0" />
+      <rect x="29" y="0" width="1" height="1" fill="#ffffff" />
+      <rect x="20" y="3" width="5" height="3" fill="#150d08" />
+      <rect x="21" y="4" width="3" height="1" fill="#b0bc94" />
+      <!-- cranium -->
+      <rect x="10" y="3" width="14" height="9" fill="#150d08" />
+      <rect x="11" y="4" width="12" height="7" fill="#3e6228" />
+      <rect x="11" y="4" width="5" height="7" fill="#4c7430" />
+      <rect x="11" y="4" width="2" height="5" fill="#5a8a32" />
+      <rect x="20" y="4" width="3" height="7" fill="#34521f" />
+      <!-- brow ledge -->
+      <rect x="11" y="6" width="10" height="2" fill="#2c481b" />
+      <rect x="11" y="6" width="4" height="1" fill="#34521f" />
+      <!-- venom eye, slit pupil -->
+      <rect x="13" y="7" width="5" height="3" fill="#1a1006" />
+      <rect x="14" y="8" width="4" height="2" fill="#c8e060" />
+      <rect x="16" y="8" width="1" height="2" fill="#1a1006" />
+      <rect x="14" y="8" width="1" height="1" fill="#eaf8a0" />
+      <!-- cheek frill spikes -->
+      <rect x="22" y="10" width="4" height="3" fill="#150d08" />
+      <rect x="23" y="11" width="2" height="1" fill="#b0bc94" />
+      <rect x="21" y="13" width="4" height="3" fill="#150d08" />
+      <rect x="22" y="14" width="2" height="1" fill="#cdd8b0" />
+      <!-- snout -->
+      <rect x="2" y="7" width="10" height="8" fill="#150d08" />
+      <rect x="3" y="8" width="9" height="6" fill="#436628" />
+      <rect x="3" y="8" width="9" height="2" fill="#4c7430" />
+      <rect x="3" y="8" width="4" height="1" fill="#5a8a32" />
+      <rect x="3" y="12" width="9" height="2" fill="#34521f" />
+      <!-- nostril + venom wisp -->
+      <rect x="4" y="9" width="2" height="1" fill="#1a1006" />
+      <rect x="3" y="5" width="1" height="2" fill="#9ac84a" opacity="0.4" />
+      <rect x="2" y="2" width="1" height="2" fill="#9ac84a" opacity="0.25" />
+      <!-- upper fangs -->
+      <rect x="3" y="14" width="10" height="1" fill="#1a2a12" />
+      <rect x="4" y="14" width="1" height="3" fill="#ffffff" />
+      <rect x="7" y="14" width="1" height="2" fill="#e8f0d0" />
+      <rect x="10" y="14" width="1" height="2" fill="#cdd8b0" />
+      <!-- gaping maw interior -->
+      <rect x="3" y="15" width="12" height="4" fill="#150d08" />
+      <rect x="4" y="15" width="10" height="3" fill="#1a1006" />
+      <rect x="6" y="16" width="7" height="2" fill="#2e1a0a" />
+      <!-- venom glow inside the maw -->
+      <rect x="5" y="16" width="5" height="1" fill="#7ab040" opacity="0.7" />
+      <rect x="6" y="17" width="3" height="1" fill="#9ac84a" opacity="0.6" />
+      <!-- lower jaw, swung open -->
+      <rect x="3" y="18" width="13" height="4" fill="#150d08" />
+      <rect x="4" y="19" width="11" height="2" fill="#2c481b" />
+      <rect x="4" y="19" width="5" height="1" fill="#34521f" />
+      <!-- lower fangs -->
+      <rect x="5" y="18" width="1" height="2" fill="#e8f0d0" />
+      <rect x="9" y="18" width="1" height="1" fill="#cdd8b0" />
+      <rect x="13" y="18" width="1" height="1" fill="#cdd8b0" />
+      <!-- jaw hinge muscle -->
+      <rect x="14" y="13" width="6" height="6" fill="#150d08" />
+      <rect x="15" y="14" width="4" height="4" fill="#34521f" />
+      <rect x="15" y="14" width="2" height="2" fill="#3e6228" />
+      <!-- venom drip from the jaw -->
+      <rect x="6" y="22" width="1" height="2" fill="#9ac84a" opacity="0.8" />
+      <rect x="6" y="25" width="1" height="1" fill="#c8e060" opacity="0.7" />
 
-      <!-- Venom motes -->
-      <rect x="9" y="24" width="1" height="1" fill="#c8e060" opacity="0.5" />
-      <rect x="37" y="26" width="1" height="1" fill="#c8e060" opacity="0.45" />
+      <!-- ══ Forelegs ══ -->
+      <rect x="22" y="42" width="8" height="12" fill="#150d08" />
+      <rect x="23" y="43" width="6" height="10" fill="#2c481b" />
+      <rect x="23" y="43" width="2" height="10" fill="#34521f" />
+      <rect x="27" y="43" width="2" height="10" fill="#243a16" />
+      <rect x="22" y="40" width="9" height="5" fill="#150d08" />
+      <rect x="23" y="41" width="7" height="3" fill="#34521f" />
+      <rect x="23" y="41" width="3" height="2" fill="#436628" />
+      <rect x="20" y="52" width="10" height="4" fill="#150d08" />
+      <rect x="21" y="53" width="8" height="2" fill="#243a16" />
+      <rect x="20" y="54" width="2" height="2" fill="#e8f0d0" />
+      <rect x="24" y="54" width="2" height="2" fill="#e8f0d0" />
+      <rect x="28" y="54" width="2" height="2" fill="#cdd8b0" />
+
+      <!-- ══ Hind leg (near) ══ -->
+      <rect x="40" y="38" width="12" height="10" fill="#150d08" />
+      <rect x="41" y="39" width="10" height="8" fill="#243a16" />
+      <rect x="41" y="39" width="4" height="8" fill="#2c481b" />
+      <rect x="48" y="39" width="3" height="8" fill="#1e3014" />
+      <rect x="42" y="46" width="8" height="8" fill="#150d08" />
+      <rect x="43" y="47" width="6" height="6" fill="#1e3014" />
+      <rect x="43" y="47" width="2" height="6" fill="#243a16" />
+      <rect x="41" y="52" width="11" height="4" fill="#150d08" />
+      <rect x="42" y="53" width="9" height="2" fill="#1a2a12" />
+      <rect x="42" y="54" width="2" height="2" fill="#cdd8b0" />
+      <rect x="46" y="54" width="2" height="2" fill="#cdd8b0" />
+      <rect x="50" y="54" width="2" height="2" fill="#b0bc94" />
+
+      <!-- ══ Venom motes ══ -->
+      <rect x="30" y="32" width="1" height="1" fill="#c8e060" opacity="0.5" />
+      <rect x="56" y="32" width="1" height="1" fill="#c8e060" opacity="0.45" />
+      <rect x="10" y="24" width="1" height="1" fill="#9ac84a" opacity="0.5" />
+      <rect x="64" y="24" width="1" height="1" fill="#7ab040" opacity="0.45" />
     </svg>

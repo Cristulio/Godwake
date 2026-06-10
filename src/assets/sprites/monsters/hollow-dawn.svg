@@ -1,81 +1,191 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 30 44"
+      viewBox="0 0 56 80"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Aurelach, the Hollow Dawn"
     >
       <!-- Dawn backlight + ground shadow -->
-      <ellipse cx="15" cy="24" rx="15" ry="20" fill="#f4d878" opacity="0.08" />
-      <ellipse cx="15" cy="42" rx="11" ry="1.8" fill="#1a1408" opacity="0.4" />
+      <ellipse cx="28" cy="36" rx="26" ry="34" fill="#f4d878" opacity="0.07" />
+      <ellipse cx="28" cy="77.4" rx="19" ry="2.4" fill="#1a1408" opacity="0.45" />
 
-      <!-- Great dawn-halo -->
-      <circle cx="15" cy="9" r="11" fill="#f4d878" opacity="0.18" />
-      <circle cx="15" cy="9" r="8.5" fill="none" stroke="#f4d878" stroke-width="0.7" opacity="0.6" />
-      <circle cx="15" cy="9" r="6.5" fill="none" stroke="#fff0b0" stroke-width="0.5" opacity="0.7" />
-      <!-- radiating rays -->
-      <rect x="14" y="-2" width="2" height="4" fill="#fff0b0" opacity="0.6" />
-      <rect x="6" y="2" width="3" height="1" fill="#f4d878" opacity="0.5" />
-      <rect x="21" y="2" width="3" height="1" fill="#f4d878" opacity="0.5" />
+      <!-- ══ Great dawn-halo — rings + pixel rays ══ -->
+      <circle cx="28" cy="16" r="15" fill="#f4d878" opacity="0.14" />
+      <circle cx="28" cy="16" r="13" fill="none" stroke="#f4d878" stroke-width="1" opacity="0.5" />
+      <circle cx="28" cy="16" r="9.5" fill="none" stroke="#fff0b0" stroke-width="0.7" opacity="0.6" />
+      <!-- rays -->
+      <rect x="27" y="0" width="2" height="4" fill="#fff0b0" opacity="0.7" />
+      <rect x="10" y="15" width="4" height="1" fill="#f4d878" opacity="0.5" />
+      <rect x="42" y="15" width="4" height="1" fill="#f4d878" opacity="0.5" />
+      <rect x="15" y="4" width="2" height="2" fill="#f4d878" opacity="0.45" />
+      <rect x="39" y="4" width="2" height="2" fill="#f4d878" opacity="0.45" />
+      <rect x="13" y="26" width="2" height="2" fill="#e8cc68" opacity="0.35" />
+      <rect x="41" y="26" width="2" height="2" fill="#e8cc68" opacity="0.35" />
 
-      <!-- Wings of fixed light — ramp -->
-      <polygon points="9,16 0,6 1,26 9,24" fill="#c8a848" opacity="0.5" />
-      <polygon points="21,16 30,6 29,26 21,24" fill="#c8a848" opacity="0.5" />
-      <polygon points="9,16 1,8 2,24 9,23" fill="#e8c860" opacity="0.55" />
-      <polygon points="21,16 29,8 28,24 21,23" fill="#e8c860" opacity="0.55" />
-      <polygon points="9,16 3,11 4,22 9,21" fill="#fff0b0" opacity="0.45" />
-      <polygon points="21,16 27,11 26,22 21,21" fill="#fff0b0" opacity="0.45" />
+      <!-- ══ Wings of fixed light — stepped pixel feathers ══ -->
+      <!-- left wing -->
+      <rect x="2" y="14" width="4" height="3" fill="#a08030" opacity="0.85" />
+      <rect x="4" y="12" width="6" height="4" fill="#bca044" opacity="0.9" />
+      <rect x="6" y="15" width="8" height="5" fill="#c8a848" />
+      <rect x="10" y="18" width="8" height="6" fill="#d4b850" />
+      <rect x="14" y="22" width="6" height="8" fill="#e8cc68" />
+      <rect x="4" y="17" width="4" height="6" fill="#bca044" />
+      <rect x="6" y="22" width="5" height="6" fill="#c8a848" />
+      <rect x="9" y="27" width="6" height="5" fill="#d4b850" />
+      <rect x="13" y="30" width="5" height="6" fill="#e8cc68" />
+      <!-- feather gaps -->
+      <rect x="6" y="20" width="2" height="2" fill="#150d08" opacity="0.5" />
+      <rect x="9" y="25" width="2" height="2" fill="#150d08" opacity="0.45" />
+      <rect x="12" y="29" width="2" height="2" fill="#150d08" opacity="0.4" />
+      <!-- lit leading edge -->
+      <rect x="4" y="12" width="6" height="1" fill="#fff0b0" />
+      <rect x="8" y="14" width="6" height="1" fill="#f4dc88" />
+      <rect x="2" y="14" width="1" height="3" fill="#fff0b0" />
+      <!-- feather tips fading -->
+      <rect x="5" y="33" width="3" height="3" fill="#bca044" opacity="0.6" />
+      <rect x="8" y="36" width="3" height="3" fill="#c8a848" opacity="0.5" />
+      <rect x="12" y="38" width="3" height="4" fill="#d4b850" opacity="0.45" />
+      <!-- right wing (shadow side) -->
+      <rect x="50" y="14" width="4" height="3" fill="#8a6c28" opacity="0.85" />
+      <rect x="46" y="12" width="6" height="4" fill="#a08030" opacity="0.9" />
+      <rect x="42" y="15" width="8" height="5" fill="#b08838" />
+      <rect x="38" y="18" width="8" height="6" fill="#bca044" />
+      <rect x="36" y="22" width="6" height="8" fill="#c8a848" />
+      <rect x="48" y="17" width="4" height="6" fill="#a08030" />
+      <rect x="45" y="22" width="5" height="6" fill="#b08838" />
+      <rect x="41" y="27" width="6" height="5" fill="#bca044" />
+      <rect x="38" y="30" width="5" height="6" fill="#c8a848" />
+      <rect x="48" y="20" width="2" height="2" fill="#150d08" opacity="0.5" />
+      <rect x="45" y="25" width="2" height="2" fill="#150d08" opacity="0.45" />
+      <rect x="42" y="29" width="2" height="2" fill="#150d08" opacity="0.4" />
+      <rect x="48" y="33" width="3" height="3" fill="#a08030" opacity="0.6" />
+      <rect x="45" y="36" width="3" height="3" fill="#b08838" opacity="0.5" />
+      <rect x="41" y="38" width="3" height="4" fill="#bca044" opacity="0.45" />
 
-      <!-- Crowned, tired head — ramp -->
-      <polygon points="15,1 11,5 19,5" fill="#e8c860" />
-      <rect x="11" y="3" width="1" height="2" fill="#fff0b0" />
-      <rect x="15" y="2" width="1" height="2" fill="#fff0b0" />
-      <rect x="18" y="3" width="1" height="2" fill="#fff0b0" />
-      <rect x="10" y="5" width="10" height="9" fill="#e0d8c4" />
-      <rect x="10" y="5" width="3" height="9" fill="#ece4d2" />
-      <rect x="10" y="5" width="10" height="1" fill="#c8bca0" />
-      <rect x="18" y="5" width="2" height="9" fill="#c8bca0" />
-      <!-- eyes: weary coins of dawn-light + spark -->
-      <rect x="11" y="8" width="3" height="2" fill="#f4d878" />
-      <rect x="16" y="8" width="3" height="2" fill="#f4d878" />
-      <rect x="11" y="8" width="3" height="1" fill="#fff8e0" />
-      <rect x="16" y="8" width="3" height="1" fill="#fff8e0" />
-      <rect x="11" y="8" width="1" height="1" fill="#ffffff" />
-      <rect x="12" y="12" width="6" height="1" fill="#9a8c70" />
+      <!-- ══ Crown — three dawn-spikes ══ -->
+      <rect x="21" y="1" width="14" height="3" fill="#150d08" />
+      <rect x="26" y="0" width="4" height="2" fill="#150d08" />
+      <rect x="22" y="2" width="12" height="2" fill="#c8a848" />
+      <rect x="22" y="2" width="4" height="1" fill="#e8cc68" />
+      <rect x="27" y="0" width="2" height="3" fill="#fff0b0" />
+      <rect x="22" y="0" width="2" height="3" fill="#f4dc88" />
+      <rect x="32" y="0" width="2" height="3" fill="#e8cc68" />
 
-      <!-- Radiant robed body — ramp + dither -->
-      <polygon points="9,14 21,14 25,42 5,42" fill="#bca044" />
-      <polygon points="9,14 21,14 24,40 6,40" fill="#d4b850" />
-      <polygon points="9,14 21,14 23,32 7,32" fill="#e8cc68" />
-      <polygon points="11,14 19,14 20,30 10,30" fill="#f4dc88" />
-      <polygon points="9,14 12,14 11,40 6,40" fill="#e8cc68" opacity="0.5" />
-      <rect x="9" y="22" width="1" height="1" fill="#d4b850" />
-      <rect x="20" y="28" width="1" height="1" fill="#bca044" />
-      <!-- breast-light -->
-      <circle cx="15" cy="20" r="3" fill="#fff4c0" opacity="0.85" />
-      <circle cx="15" cy="20" r="1.5" fill="#ffffff" />
-      <rect x="14" y="23" width="2" height="16" fill="#fff0b0" opacity="0.5" />
+      <!-- ══ Head — weary bone-gold face ══ -->
+      <rect x="20" y="4" width="16" height="15" fill="#150d08" />
+      <rect x="21" y="5" width="14" height="13" fill="#d4c8a4" />
+      <rect x="21" y="5" width="5" height="13" fill="#e0d8c4" />
+      <rect x="21" y="5" width="2" height="9" fill="#ece4d2" />
+      <rect x="31" y="5" width="4" height="13" fill="#bcae8c" />
+      <rect x="33" y="5" width="2" height="13" fill="#a89878" />
+      <rect x="21" y="5" width="14" height="1" fill="#bcae8c" />
+      <!-- weary coin eyes — dawn light, heavy lids -->
+      <rect x="22" y="9" width="4" height="3" fill="#1a1408" />
+      <rect x="30" y="9" width="4" height="3" fill="#1a1408" />
+      <rect x="23" y="10" width="3" height="2" fill="#f4d878" />
+      <rect x="30" y="10" width="3" height="2" fill="#d4b850" />
+      <rect x="23" y="10" width="3" height="1" fill="#fff8e0" />
+      <rect x="23" y="10" width="1" height="1" fill="#ffffff" />
+      <rect x="30" y="10" width="1" height="1" fill="#fff0b0" />
+      <!-- lid shadows -->
+      <rect x="22" y="9" width="4" height="1" fill="#9a8c70" />
+      <rect x="30" y="9" width="4" height="1" fill="#8a7c60" />
+      <!-- light-leak crack down the right cheek -->
+      <rect x="32" y="12" width="1" height="3" fill="#fff0b0" />
+      <rect x="33" y="15" width="1" height="2" fill="#f4d878" />
+      <!-- weary mouth -->
+      <rect x="25" y="16" width="6" height="1" fill="#9a8c70" />
+      <rect x="25" y="16" width="2" height="1" fill="#8a7c60" />
 
-      <!-- Left hand, open and tired at its side -->
-      <rect x="5" y="16" width="3" height="11" fill="#d4b850" />
-      <rect x="5" y="16" width="1" height="11" fill="#e8cc68" />
-      <rect x="4" y="25" width="4" height="3" fill="#e0d8c4" />
-      <rect x="4" y="25" width="4" height="1" fill="#ece4d2" />
+      <!-- ══ Radiant robed body ══ -->
+      <rect x="17" y="18" width="22" height="6" fill="#150d08" />
+      <rect x="18" y="19" width="20" height="5" fill="#d4b850" />
+      <rect x="18" y="19" width="6" height="5" fill="#e8cc68" />
+      <rect x="36" y="19" width="2" height="5" fill="#bca044" />
+      <!-- torso taper -->
+      <rect x="16" y="24" width="24" height="22" fill="#150d08" />
+      <rect x="17" y="25" width="22" height="21" fill="#d4b850" />
+      <rect x="17" y="25" width="7" height="21" fill="#e8cc68" />
+      <rect x="17" y="25" width="3" height="17" fill="#f4dc88" />
+      <rect x="34" y="25" width="5" height="21" fill="#bca044" />
+      <rect x="37" y="25" width="2" height="21" fill="#a89038" />
+      <!-- breast-light — the hollow core -->
+      <ellipse cx="28" cy="31" rx="5" ry="5" fill="#fff4c0" opacity="0.5" />
+      <rect x="25" y="28" width="6" height="6" fill="#fff4c0" />
+      <rect x="26" y="29" width="4" height="4" fill="#ffffff" />
+      <rect x="26" y="29" width="2" height="2" fill="#fffef4" />
+      <!-- light seam to the hem -->
+      <rect x="27" y="34" width="2" height="24" fill="#fff0b0" opacity="0.6" />
+      <rect x="27" y="34" width="1" height="20" fill="#fff8e0" opacity="0.7" />
+      <!-- robe fold shades -->
+      <rect x="22" y="26" width="1" height="19" fill="#c8a848" />
+      <rect x="32" y="26" width="1" height="19" fill="#a89038" />
+      <!-- gold dither sparkle -->
+      <rect x="20" y="29" width="1" height="1" fill="#fff0b0" />
+      <rect x="35" y="33" width="1" height="1" fill="#8a6c28" />
+      <rect x="19" y="38" width="1" height="1" fill="#f4dc88" />
+      <rect x="33" y="41" width="1" height="1" fill="#8a6c28" />
 
-      <!-- Right arm raising the Blade of the First Morning -->
-      <rect x="22" y="15" width="3" height="7" fill="#d4b850" />
-      <rect x="22" y="15" width="1" height="7" fill="#e8cc68" />
-      <rect x="24" y="9" width="2" height="7" fill="#e0d8c4" />
-      <rect x="22" y="8" width="6" height="1" fill="#c8b878" />
-      <!-- the dawn-blade: oldest cold light + specular -->
-      <rect x="24" y="-4" width="2" height="13" fill="#eaf4ff" opacity="0.92" />
-      <rect x="24" y="-4" width="1" height="13" fill="#ffffff" />
-      <rect x="23" y="-4" width="4" height="2" fill="#cfe0ff" opacity="0.6" />
-      <rect x="24" y="-3" width="1" height="2" fill="#ffffff" />
+      <!-- ══ Left hand — open, tired, at its side ══ -->
+      <rect x="11" y="28" width="7" height="14" fill="#150d08" />
+      <rect x="12" y="29" width="5" height="12" fill="#c8a848" />
+      <rect x="12" y="29" width="2" height="12" fill="#d4b850" />
+      <rect x="10" y="40" width="7" height="7" fill="#150d08" />
+      <rect x="11" y="41" width="5" height="5" fill="#d4c8a4" />
+      <rect x="11" y="41" width="2" height="5" fill="#e0d8c4" />
+      <rect x="12" y="46" width="1" height="2" fill="#d4c8a4" />
+      <rect x="14" y="46" width="1" height="2" fill="#bcae8c" />
 
-      <!-- Hem of light -->
-      <polygon points="5,42 9,37 13,42" fill="#b89c40" />
-      <polygon points="13,42 17,37 21,42" fill="#b89c40" />
-      <polygon points="17,42 21,37 25,42" fill="#b89c40" />
-      <polygon points="9,42 12,38 15,42" fill="#d4b850" />
-      <polygon points="15,42 18,38 21,42" fill="#d4b850" />
+      <!-- ══ Right arm — raising the Blade of the First Morning ══ -->
+      <rect x="37" y="22" width="8" height="6" fill="#150d08" />
+      <rect x="38" y="23" width="6" height="4" fill="#bca044" />
+      <rect x="38" y="23" width="2" height="4" fill="#c8a848" />
+      <rect x="41" y="16" width="7" height="8" fill="#150d08" />
+      <rect x="42" y="17" width="5" height="6" fill="#c8a848" />
+      <rect x="42" y="17" width="2" height="6" fill="#d4b850" />
+      <!-- gauntlet grip -->
+      <rect x="42" y="12" width="7" height="6" fill="#150d08" />
+      <rect x="43" y="13" width="5" height="4" fill="#d4c8a4" />
+      <rect x="43" y="13" width="2" height="4" fill="#e0d8c4" />
+      <!-- cross-guard -->
+      <rect x="41" y="10" width="9" height="3" fill="#150d08" />
+      <rect x="42" y="11" width="7" height="1" fill="#c8b878" />
+      <rect x="42" y="11" width="3" height="1" fill="#f4dc88" />
+      <!-- the dawn-blade — oldest cold light -->
+      <rect x="43" y="0" width="5" height="11" fill="#150d08" opacity="0.6" />
+      <rect x="44" y="0" width="3" height="11" fill="#eaf4ff" opacity="0.95" />
+      <rect x="44" y="0" width="1" height="11" fill="#ffffff" />
+      <rect x="46" y="0" width="1" height="11" fill="#cfe0ff" />
+      <rect x="44" y="0" width="3" height="1" fill="#ffffff" />
+      <!-- blade glints -->
+      <rect x="43" y="3" width="1" height="2" fill="#ffffff" opacity="0.8" />
+      <rect x="48" y="6" width="1" height="2" fill="#cfe0ff" opacity="0.7" />
+
+      <!-- ══ Hem of light — zigzag rays over fading glow ══ -->
+      <rect x="15" y="46" width="26" height="3" fill="#150d08" />
+      <rect x="16" y="47" width="24" height="2" fill="#bca044" />
+      <rect x="16" y="47" width="8" height="1" fill="#d4b850" />
+      <!-- falling light points -->
+      <rect x="16" y="49" width="4" height="10" fill="#c8a848" />
+      <rect x="17" y="59" width="2" height="6" fill="#b89c40" opacity="0.85" />
+      <rect x="17" y="65" width="2" height="4" fill="#a08030" opacity="0.6" />
+      <rect x="22" y="49" width="4" height="14" fill="#d4b850" />
+      <rect x="23" y="63" width="2" height="6" fill="#c8a848" opacity="0.85" />
+      <rect x="23" y="69" width="2" height="4" fill="#b89c40" opacity="0.55" />
+      <rect x="28" y="49" width="4" height="17" fill="#e8cc68" />
+      <rect x="29" y="66" width="2" height="5" fill="#d4b850" opacity="0.8" />
+      <rect x="29" y="71" width="2" height="3" fill="#c8a848" opacity="0.5" />
+      <rect x="34" y="49" width="4" height="12" fill="#bca044" />
+      <rect x="35" y="61" width="2" height="6" fill="#a89038" opacity="0.8" />
+      <rect x="35" y="67" width="2" height="4" fill="#8a6c28" opacity="0.55" />
+      <!-- inner light between the rays -->
+      <rect x="20" y="49" width="2" height="8" fill="#fff0b0" opacity="0.45" />
+      <rect x="26" y="49" width="2" height="11" fill="#fff8e0" opacity="0.5" />
+      <rect x="32" y="49" width="2" height="9" fill="#fff0b0" opacity="0.4" />
+
+      <!-- drifting dawn motes -->
+      <rect x="12" y="22" width="1" height="1" fill="#fff0b0" opacity="0.85" />
+      <rect x="44" y="34" width="1" height="1" fill="#f4d878" opacity="0.7" />
+      <rect x="8" y="44" width="1" height="1" fill="#e8cc68" opacity="0.6" />
+      <rect x="47" y="48" width="1" height="1" fill="#f4d878" opacity="0.55" />
+      <rect x="38" y="60" width="1" height="1" fill="#fff0b0" opacity="0.5" />
     </svg>

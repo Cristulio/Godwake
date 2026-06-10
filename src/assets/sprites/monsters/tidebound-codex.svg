@@ -1,72 +1,140 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 36"
+      viewBox="0 0 52 58"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Tidebound Codex"
     >
-      <!-- Drowned-teal backlight + ground shadow -->
-      <ellipse cx="16" cy="18" rx="15" ry="16" fill="#2a6a64" opacity="0.08" />
-      <ellipse cx="16" cy="34" rx="11" ry="1.8" fill="#000" opacity="0.4" />
+      <!-- Drowned-teal backlight + hover shadow -->
+      <ellipse cx="26" cy="28" rx="25" ry="26" fill="#2a6a64" opacity="0.09" />
+      <ellipse cx="26" cy="55" rx="18" ry="2.4" fill="#000" opacity="0.42" />
 
-      <!-- Upper cover lip — teal ramp -->
-      <rect x="6" y="4" width="20" height="6" fill="#23413e" />
-      <rect x="6" y="4" width="20" height="1" fill="#356060" />
-      <rect x="6" y="4" width="20" height="1" fill="#2e524e" />
-      <rect x="6" y="9" width="20" height="1" fill="#16302e" />
-      <rect x="7" y="6" width="18" height="1" fill="#a8c0b8" opacity="0.3" />
-      <rect x="8" y="3" width="6" height="2" fill="#2a4a48" />
-      <rect x="18" y="2" width="7" height="3" fill="#2a4a48" />
-      <rect x="18" y="2" width="7" height="1" fill="#3a5a56" />
+      <!-- ══ The codex — floating, straining against its chains ══ -->
+      <!-- back cover block -->
+      <rect x="8" y="10" width="36" height="34" fill="#150d08" />
+      <rect x="9" y="11" width="34" height="32" fill="#23413e" />
+      <rect x="9" y="11" width="10" height="32" fill="#2c524c" />
+      <rect x="9" y="11" width="4" height="24" fill="#37635c" />
+      <rect x="36" y="11" width="7" height="32" fill="#1a322f" />
+      <rect x="40" y="11" width="3" height="32" fill="#142724" />
+      <!-- spine ridges -->
+      <rect x="9" y="16" width="34" height="1" fill="#142724" />
+      <rect x="9" y="26" width="34" height="1" fill="#10201e" />
+      <rect x="9" y="37" width="34" height="1" fill="#10201e" />
+      <rect x="9" y="17" width="12" height="1" fill="#3a6e66" />
+      <rect x="9" y="27" width="10" height="1" fill="#2c524c" />
+      <!-- brass corner caps, verdigrised -->
+      <rect x="9" y="11" width="4" height="4" fill="#8a6a2a" />
+      <rect x="9" y="11" width="2" height="2" fill="#b08840" />
+      <rect x="39" y="11" width="4" height="4" fill="#6e5424" />
+      <rect x="9" y="39" width="4" height="4" fill="#6e5424" />
+      <rect x="39" y="39" width="4" height="4" fill="#5a4624" />
+      <rect x="10" y="12" width="1" height="1" fill="#d4b062" />
+      <!-- verdigris stains -->
+      <rect x="11" y="14" width="2" height="1" fill="#3a8a7a" />
+      <rect x="40" y="13" width="2" height="1" fill="#2e6a62" />
 
-      <!-- Tome body — cover ramp + clasps + page-edge bands -->
-      <rect x="5" y="10" width="22" height="16" fill="#1e3a38" />
-      <rect x="5" y="10" width="22" height="1" fill="#142826" />
-      <rect x="5" y="10" width="2" height="16" fill="#234440" />
-      <rect x="5" y="10" width="1" height="16" fill="#2a504c" />
-      <rect x="25" y="11" width="2" height="15" fill="#162e2c" />
-      <rect x="26" y="11" width="1" height="15" fill="#112422" />
-      <rect x="6" y="11" width="3" height="14" fill="#172f2d" />
-      <rect x="23" y="11" width="3" height="14" fill="#142826" />
-      <rect x="5" y="13" width="22" height="1" fill="#356060" opacity="0.4" />
-      <rect x="5" y="17" width="22" height="1" fill="#356060" opacity="0.4" />
-      <rect x="5" y="21" width="22" height="1" fill="#356060" opacity="0.4" />
+      <!-- ══ Swollen page block — bulging out the fore-edge ══ -->
+      <rect x="3" y="13" width="9" height="29" fill="#150d08" />
+      <rect x="4" y="14" width="7" height="27" fill="#aabcb2" />
+      <rect x="4" y="14" width="4" height="27" fill="#c2d0c6" />
+      <rect x="4" y="14" width="2" height="20" fill="#d8e2da" />
+      <!-- page lines -->
+      <rect x="4" y="17" width="7" height="1" fill="#8aa49c" />
+      <rect x="4" y="21" width="7" height="1" fill="#8aa49c" />
+      <rect x="4" y="26" width="7" height="1" fill="#7a948c" />
+      <rect x="4" y="31" width="7" height="1" fill="#7a948c" />
+      <rect x="4" y="35" width="7" height="1" fill="#6a847c" />
+      <rect x="4" y="38" width="7" height="1" fill="#6a847c" />
+      <!-- pages bulging mid-strain -->
+      <rect x="2" y="20" width="2" height="10" fill="#150d08" />
+      <rect x="3" y="21" width="1" height="8" fill="#d8e2da" />
 
-      <!-- Central reading eye — gold ramp + iris + spark -->
-      <rect x="12" y="14" width="8" height="8" fill="#6a5020" />
-      <rect x="12" y="14" width="8" height="1" fill="#8a6a2a" />
-      <rect x="12" y="14" width="2" height="8" fill="#7a5c24" />
-      <rect x="18" y="14" width="2" height="8" fill="#54401a" />
-      <circle cx="16" cy="18" r="3" fill="#b08840" />
-      <circle cx="16" cy="18" r="3" fill="#c89a48" opacity="0.5" />
-      <rect x="15" y="15" width="2" height="3" fill="#3a2c10" />
-      <rect x="15" y="18" width="3" height="2" fill="#3a2c10" />
-      <rect x="16" y="18" width="1" height="1" fill="#f4d042" />
-      <rect x="14" y="16" width="1" height="1" fill="#ffe890" opacity="0.7" />
+      <!-- ══ Glow leaking from between the pages ══ -->
+      <rect x="6" y="25" width="1" height="3" fill="#8ad0e0" />
+      <rect x="5" y="26" width="1" height="1" fill="#d4f4ff" />
+      <ellipse cx="6" cy="27" rx="5" ry="6" fill="#8ad0e0" opacity="0.16" />
+      <rect x="7" y="30" width="1" height="2" fill="#5aa0b4" opacity="0.8" />
 
-      <!-- Fluttering pages, left -->
-      <rect x="0" y="13" width="5" height="3" fill="#23413e" />
-      <rect x="0" y="13" width="5" height="1" fill="#2e524e" />
-      <polygon points="0,16 4,15 3,20 -1,18" fill="#cfc7ad" />
-      <polygon points="0,16 4,15 3,18 -1,17" fill="#e0d8be" opacity="0.6" />
-      <polygon points="2,18 5,18 4,22 1,21" fill="#bcb49a" />
+      <!-- ══ The chains — crossed, straining ══ -->
+      <!-- diagonal chain 1 -->
+      <rect x="6" y="8" width="4" height="3" fill="#150d08" />
+      <rect x="7" y="9" width="2" height="1" fill="#56525e" />
+      <rect x="11" y="12" width="4" height="3" fill="#150d08" />
+      <rect x="12" y="13" width="2" height="1" fill="#6e6a78" />
+      <rect x="16" y="16" width="4" height="3" fill="#150d08" />
+      <rect x="17" y="17" width="2" height="1" fill="#56525e" />
+      <rect x="21" y="20" width="4" height="3" fill="#150d08" />
+      <rect x="22" y="21" width="2" height="1" fill="#6e6a78" />
+      <rect x="26" y="24" width="4" height="3" fill="#150d08" />
+      <rect x="27" y="25" width="2" height="1" fill="#56525e" />
+      <rect x="31" y="28" width="4" height="3" fill="#150d08" />
+      <rect x="32" y="29" width="2" height="1" fill="#46424e" />
+      <rect x="36" y="32" width="4" height="3" fill="#150d08" />
+      <rect x="37" y="33" width="2" height="1" fill="#56525e" />
+      <rect x="41" y="36" width="4" height="3" fill="#150d08" />
+      <rect x="42" y="37" width="2" height="1" fill="#46424e" />
+      <rect x="45" y="40" width="4" height="3" fill="#150d08" />
+      <rect x="46" y="41" width="2" height="1" fill="#3a3644" />
+      <!-- diagonal chain 2 -->
+      <rect x="42" y="6" width="4" height="3" fill="#150d08" />
+      <rect x="43" y="7" width="2" height="1" fill="#46424e" />
+      <rect x="38" y="10" width="4" height="3" fill="#150d08" />
+      <rect x="39" y="11" width="2" height="1" fill="#56525e" />
+      <rect x="34" y="14" width="4" height="3" fill="#150d08" />
+      <rect x="35" y="15" width="2" height="1" fill="#46424e" />
+      <rect x="30" y="18" width="4" height="3" fill="#150d08" />
+      <rect x="31" y="19" width="2" height="1" fill="#56525e" />
+      <rect x="25" y="22" width="4" height="3" fill="#150d08" />
+      <rect x="26" y="23" width="2" height="1" fill="#6e6a78" />
+      <rect x="20" y="26" width="4" height="3" fill="#150d08" />
+      <rect x="21" y="27" width="2" height="1" fill="#56525e" />
+      <rect x="15" y="30" width="4" height="3" fill="#150d08" />
+      <rect x="16" y="31" width="2" height="1" fill="#46424e" />
+      <rect x="10" y="34" width="4" height="3" fill="#150d08" />
+      <rect x="11" y="35" width="2" height="1" fill="#56525e" />
+      <rect x="5" y="38" width="4" height="3" fill="#150d08" />
+      <rect x="6" y="39" width="2" height="1" fill="#3a3644" />
+      <!-- the great padlock where the chains cross -->
+      <rect x="23" y="21" width="8" height="9" fill="#150d08" />
+      <rect x="24" y="22" width="6" height="7" fill="#5a4624" />
+      <rect x="24" y="22" width="3" height="7" fill="#6e5424" />
+      <rect x="24" y="22" width="6" height="1" fill="#8a6a2a" />
+      <rect x="26" y="24" width="2" height="3" fill="#1a160f" />
+      <rect x="26" y="24" width="1" height="1" fill="#b08840" />
 
-      <!-- Quill / candle, right -->
-      <rect x="27" y="14" width="5" height="3" fill="#23413e" />
-      <rect x="27" y="14" width="5" height="1" fill="#2e524e" />
-      <rect x="29" y="6" width="3" height="10" fill="#6a5020" />
-      <rect x="29" y="6" width="1" height="10" fill="#8a6a2a" />
-      <rect x="28" y="3" width="5" height="4" fill="#5a4418" />
-      <rect x="28" y="3" width="5" height="1" fill="#8a6a2a" />
-      <rect x="28" y="4" width="4" height="3" fill="#cfc7ad" />
-      <rect x="28" y="4" width="4" height="1" fill="#e8e0c4" />
-      <rect x="29" y="5" width="3" height="1" fill="#9a9278" />
-      <rect x="29" y="3" width="1" height="1" fill="#fff4d0" />
+      <!-- ══ Cover sigil — drowned ward, alight ══ -->
+      <rect x="16" y="33" width="6" height="6" fill="#150d08" />
+      <rect x="17" y="34" width="4" height="4" fill="#1a322f" />
+      <rect x="18" y="35" width="2" height="2" fill="#3a8a7a" />
+      <rect x="18" y="35" width="1" height="1" fill="#8ad0e0" />
+      <!-- sigil ring -->
+      <rect x="17" y="34" width="4" height="1" fill="#2e6a62" />
+      <rect x="17" y="38" width="4" height="1" fill="#244e48" />
 
-      <!-- Cover legs -->
-      <rect x="8" y="26" width="7" height="9" fill="#162e2c" />
-      <rect x="8" y="26" width="1" height="9" fill="#1e3a38" />
-      <rect x="17" y="26" width="7" height="9" fill="#132624" />
-      <rect x="23" y="26" width="1" height="9" fill="#0f201e" />
-      <rect x="8" y="33" width="7" height="2" fill="#0a1a18" />
-      <rect x="17" y="33" width="7" height="2" fill="#0a1a18" />
+      <!-- ══ Barnacles + weed on the cover ══ -->
+      <rect x="30" y="13" width="2" height="2" fill="#cdbfa2" />
+      <rect x="32" y="14" width="1" height="1" fill="#e8dcc4" />
+      <rect x="34" y="40" width="2" height="2" fill="#b0a486" />
+      <rect x="13" y="40" width="2" height="1" fill="#cdbfa2" />
+      <!-- kelp strand trailing off the spine -->
+      <rect x="44" y="20" width="2" height="6" fill="#2a4018" />
+      <rect x="45" y="26" width="2" height="5" fill="#1f3012" />
+      <rect x="44" y="31" width="1" height="4" fill="#16240e" />
+
+      <!-- ══ Water dripping beneath the floating tome ══ -->
+      <rect x="14" y="45" width="1" height="3" fill="#8ad0e0" opacity="0.7" />
+      <rect x="26" y="46" width="1" height="2" fill="#5aa0b4" opacity="0.7" />
+      <rect x="37" y="45" width="1" height="3" fill="#8ad0e0" opacity="0.6" />
+      <rect x="20" y="49" width="1" height="1" fill="#8ad0e0" opacity="0.5" />
+      <rect x="32" y="50" width="1" height="1" fill="#5aa0b4" opacity="0.5" />
+      <!-- the puddle gathering below -->
+      <rect x="12" y="52" width="28" height="2" fill="#0a1822" opacity="0.8" />
+      <rect x="16" y="51" width="8" height="1" fill="#14323e" opacity="0.7" />
+      <rect x="30" y="53" width="8" height="1" fill="#14323e" opacity="0.6" />
+      <rect x="18" y="52" width="4" height="1" fill="#8ad0e0" opacity="0.3" />
+
+      <!-- drowned motes -->
+      <rect x="2" y="18" width="1" height="1" fill="#8ad0e0" opacity="0.5" />
+      <rect x="48" y="26" width="1" height="1" fill="#5aa0b4" opacity="0.45" />
+      <rect x="46" y="48" width="1" height="1" fill="#3a8a7a" opacity="0.4" />
     </svg>

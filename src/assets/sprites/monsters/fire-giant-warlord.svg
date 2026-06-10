@@ -1,79 +1,180 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 38 40"
+      viewBox="0 0 60 64"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Fire-Giant Warlord"
     >
       <!-- Forge backlight + ground shadow -->
-      <ellipse cx="19" cy="20" rx="18" ry="20" fill="#a83a14" opacity="0.1" />
-      <ellipse cx="19" cy="38" rx="14" ry="1.8" fill="#000" opacity="0.45" />
+      <ellipse cx="30" cy="32" rx="29" ry="30" fill="#a83a14" opacity="0.1" />
+      <ellipse cx="30" cy="61.4" rx="22" ry="2.4" fill="#000" opacity="0.5" />
 
-      <!-- Head — lava-rock skin ramp, key light upper-left -->
-      <rect x="12" y="3" width="13" height="9" fill="#a85028" />
-      <rect x="12" y="3" width="13" height="2" fill="#c46834" />
-      <rect x="12" y="3" width="3" height="9" fill="#b85e30" />
-      <rect x="12" y="3" width="1" height="6" fill="#e07840" />
-      <rect x="23" y="3" width="2" height="9" fill="#8a3a18" />
-      <rect x="24" y="4" width="1" height="7" fill="#5a2410" />
-      <!-- Gold crown horns + gem tips -->
-      <polygon points="12,3 11,-1 14,2" fill="#c0a040" />
-      <polygon points="25,3 26,-1 23,2" fill="#c0a040" />
-      <polygon points="12,3 11,-1 13,1" fill="#f4d042" opacity="0.7" />
-      <rect x="11" y="-1" width="2" height="2" fill="#f4d042" />
-      <rect x="24" y="-1" width="2" height="2" fill="#f4d042" />
-      <rect x="11" y="-1" width="1" height="1" fill="#fff0c0" />
-      <!-- Molten eyes + spec -->
-      <rect x="13" y="6" width="3" height="2" fill="#ffb04a" />
-      <rect x="21" y="6" width="3" height="2" fill="#ffb04a" />
-      <rect x="13" y="6" width="1" height="1" fill="#fff0c0" />
-      <rect x="21" y="6" width="1" height="1" fill="#fff0c0" />
-      <rect x="15" y="10" width="7" height="1" fill="#5a2410" />
+      <!-- ══ The planted greatsword — point in the stone ══ -->
+      <rect x="47" y="2" width="6" height="3" fill="#150d08" />
+      <rect x="48" y="3" width="4" height="1" fill="#5e4836" />
+      <rect x="48" y="5" width="4" height="42" fill="#150d08" />
+      <rect x="49" y="6" width="2" height="40" fill="#6e6a78" />
+      <rect x="49" y="6" width="1" height="36" fill="#8e8a96" />
+      <!-- fuller line -->
+      <rect x="50" y="8" width="1" height="32" fill="#56525e" />
+      <!-- heat shimmer on the blade -->
+      <rect x="49" y="12" width="1" height="4" fill="#e87820" opacity="0.6" />
+      <rect x="50" y="22" width="1" height="4" fill="#d4641a" opacity="0.5" />
+      <!-- cross-guard -->
+      <rect x="44" y="44" width="12" height="4" fill="#150d08" />
+      <rect x="45" y="45" width="10" height="2" fill="#3a2a1c" />
+      <rect x="45" y="45" width="4" height="1" fill="#5a3a22" />
+      <!-- point buried + cracks -->
+      <rect x="48" y="47" width="4" height="8" fill="#150d08" />
+      <rect x="49" y="48" width="2" height="6" fill="#56525e" />
+      <rect x="46" y="55" width="8" height="3" fill="#150d08" />
+      <rect x="44" y="56" width="3" height="1" fill="#1e150c" />
+      <rect x="54" y="56" width="3" height="1" fill="#1e150c" />
 
-      <!-- Blackened plate cuirass — iron ramp -->
-      <rect x="5" y="12" width="27" height="18" fill="#352a20" />
-      <rect x="5" y="12" width="27" height="2" fill="#52402e" />
-      <rect x="5" y="12" width="27" height="1" fill="#6a5240" />
-      <rect x="5" y="12" width="2" height="18" fill="#46362a" />
-      <rect x="30" y="13" width="2" height="17" fill="#2a201a" />
-      <!-- Gold gorget -->
-      <rect x="13" y="11" width="11" height="3" fill="#c0a040" />
-      <rect x="13" y="11" width="11" height="1" fill="#f4d042" />
-      <rect x="13" y="11" width="2" height="3" fill="#d4b850" />
-      <!-- Molten core through the breastplate -->
-      <rect x="9" y="15" width="19" height="12" fill="#2a201a" />
-      <rect x="6" y="14" width="1" height="15" fill="#f4942a" opacity="0.55" />
-      <rect x="30" y="14" width="1" height="15" fill="#e87820" opacity="0.5" />
-      <rect x="12" y="16" width="13" height="1" fill="#a83a14" opacity="0.65" />
-      <rect x="10" y="20" width="17" height="1" fill="#f4942a" opacity="0.5" />
-      <rect x="14" y="24" width="9" height="1" fill="#ffb04a" opacity="0.45" />
-      <rect x="18" y="18" width="2" height="2" fill="#ffd070" opacity="0.4" />
+      <!-- ══ Iron crown ══ -->
+      <rect x="16" y="0" width="20" height="4" fill="#150d08" />
+      <rect x="17" y="1" width="18" height="3" fill="#2e2a38" />
+      <rect x="17" y="1" width="6" height="2" fill="#3e3a48" />
+      <rect x="29" y="1" width="6" height="3" fill="#262230" />
+      <!-- crown spikes -->
+      <rect x="17" y="0" width="2" height="2" fill="#4a4654" />
+      <rect x="24" y="0" width="2" height="1" fill="#56525e" />
+      <rect x="31" y="0" width="2" height="2" fill="#3a3644" />
+      <!-- ember gem -->
+      <rect x="25" y="1" width="3" height="2" fill="#a83414" />
+      <rect x="25" y="1" width="1" height="1" fill="#ffb04a" />
 
-      <!-- Pauldrons -->
-      <rect x="0" y="13" width="6" height="15" fill="#352a20" />
-      <rect x="0" y="13" width="6" height="1" fill="#52402e" />
-      <rect x="0" y="13" width="1" height="15" fill="#46362a" />
-      <rect x="32" y="13" width="6" height="15" fill="#352a20" />
-      <rect x="37" y="13" width="1" height="15" fill="#2a201a" />
-      <rect x="0" y="26" width="6" height="3" fill="#c46834" opacity="0.85" />
+      <!-- ══ Head — lava-rock skin, fire beard ══ -->
+      <rect x="16" y="4" width="20" height="14" fill="#150d08" />
+      <rect x="17" y="5" width="18" height="12" fill="#a85028" />
+      <rect x="17" y="5" width="6" height="12" fill="#bc5e30" />
+      <rect x="17" y="5" width="3" height="8" fill="#d06c38" />
+      <rect x="30" y="5" width="5" height="12" fill="#8a3e1c" />
+      <rect x="33" y="5" width="2" height="12" fill="#702e12" />
+      <!-- heavy brow -->
+      <rect x="17" y="8" width="18" height="2" fill="#702e12" />
+      <rect x="17" y="8" width="6" height="1" fill="#8a3e1c" />
+      <!-- furnace eyes -->
+      <rect x="18" y="10" width="5" height="3" fill="#3a1404" />
+      <rect x="28" y="10" width="5" height="3" fill="#3a1404" />
+      <rect x="19" y="11" width="3" height="2" fill="#ff8a1a" />
+      <rect x="29" y="11" width="3" height="2" fill="#e06a14" />
+      <rect x="19" y="11" width="1" height="1" fill="#ffe090" />
+      <rect x="29" y="11" width="1" height="1" fill="#ffd070" />
+      <!-- broad nose -->
+      <rect x="24" y="11" width="4" height="4" fill="#8a3e1c" />
+      <rect x="24" y="11" width="2" height="4" fill="#a85028" />
 
-      <!-- Flaming greatsword on the right -->
-      <rect x="34" y="-2" width="3" height="16" fill="#3a2a1a" />
-      <rect x="34" y="-2" width="1" height="16" fill="#52402e" />
-      <polygon points="30,14 39,14 39,0 35,-4 30,0" fill="#6a5240" />
-      <polygon points="35,14 39,14 39,0 35,-4" fill="#46362a" />
-      <!-- Banded flame on the blade -->
-      <rect x="31" y="3" width="7" height="1" fill="#f4942a" opacity="0.8" />
-      <rect x="31" y="7" width="7" height="1" fill="#ffb04a" opacity="0.75" />
-      <rect x="31" y="11" width="7" height="1" fill="#e87820" opacity="0.65" />
-      <rect x="34" y="1" width="2" height="1" fill="#fff0c0" opacity="0.7" />
+      <!-- ══ Fire beard — flame-orange braids ══ -->
+      <rect x="15" y="15" width="22" height="4" fill="#150d08" />
+      <rect x="14" y="18" width="24" height="6" fill="#150d08" />
+      <rect x="16" y="22" width="20" height="4" fill="#150d08" />
+      <rect x="16" y="16" width="20" height="2" fill="#d4641a" />
+      <rect x="15" y="19" width="22" height="4" fill="#e87820" />
+      <rect x="17" y="23" width="18" height="2" fill="#f4942a" />
+      <rect x="16" y="16" width="6" height="2" fill="#e87820" />
+      <rect x="15" y="19" width="5" height="2" fill="#f4942a" />
+      <rect x="17" y="23" width="4" height="1" fill="#ffb04a" />
+      <!-- beard braid channels -->
+      <rect x="20" y="19" width="1" height="6" fill="#a83a14" />
+      <rect x="26" y="19" width="1" height="7" fill="#8a2e10" />
+      <rect x="32" y="19" width="1" height="6" fill="#a83a14" />
+      <!-- flame tips dripping -->
+      <rect x="18" y="26" width="2" height="2" fill="#d4641a" />
+      <rect x="24" y="26" width="2" height="3" fill="#e87820" />
+      <rect x="25" y="29" width="1" height="1" fill="#ffb04a" />
+      <rect x="31" y="26" width="2" height="2" fill="#a83a14" />
 
-      <!-- Legs — plate with molten cracks -->
-      <rect x="9" y="30" width="8" height="10" fill="#2a201a" />
-      <rect x="20" y="30" width="8" height="10" fill="#2a201a" />
-      <rect x="9" y="30" width="1" height="10" fill="#46362a" />
-      <rect x="20" y="30" width="1" height="10" fill="#46362a" />
-      <rect x="11" y="32" width="1" height="5" fill="#e87820" opacity="0.5" />
-      <rect x="23" y="32" width="1" height="5" fill="#e87820" opacity="0.45" />
-      <rect x="8" y="38" width="10" height="2" fill="#120a06" />
-      <rect x="20" y="38" width="10" height="2" fill="#120a06" />
+      <!-- ══ Black-iron pauldrons ══ -->
+      <rect x="4" y="18" width="16" height="10" fill="#150d08" />
+      <rect x="5" y="19" width="14" height="8" fill="#2e2a38" />
+      <rect x="5" y="19" width="14" height="2" fill="#3e3a48" />
+      <rect x="5" y="19" width="5" height="1" fill="#56525e" />
+      <rect x="5" y="25" width="14" height="2" fill="#1e1a26" />
+      <!-- gold trim -->
+      <rect x="5" y="23" width="14" height="1" fill="#c89a48" opacity="0.8" />
+      <rect x="38" y="18" width="16" height="10" fill="#150d08" />
+      <rect x="39" y="19" width="14" height="8" fill="#262230" />
+      <rect x="39" y="19" width="14" height="1" fill="#343042" />
+      <rect x="39" y="25" width="14" height="2" fill="#191522" />
+      <rect x="39" y="23" width="14" height="1" fill="#8a6420" opacity="0.8" />
+
+      <!-- ══ Black-iron cuirass ══ -->
+      <rect x="12" y="26" width="34" height="22" fill="#150d08" />
+      <rect x="13" y="27" width="32" height="20" fill="#2e2a38" />
+      <rect x="13" y="27" width="11" height="20" fill="#383442" />
+      <rect x="13" y="27" width="5" height="14" fill="#46424e" />
+      <rect x="38" y="27" width="7" height="20" fill="#221e2a" />
+      <rect x="43" y="27" width="2" height="20" fill="#1a1622" />
+      <!-- gold rivet lines -->
+      <rect x="13" y="31" width="32" height="1" fill="#1a1622" />
+      <rect x="14" y="30" width="1" height="1" fill="#c89a48" />
+      <rect x="28" y="30" width="1" height="1" fill="#a8843a" />
+      <rect x="42" y="30" width="1" height="1" fill="#8a6420" />
+      <rect x="13" y="40" width="32" height="1" fill="#16121e" />
+      <!-- the warlord's sun-mark, branded in gold -->
+      <rect x="24" y="33" width="10" height="7" fill="#150d08" />
+      <rect x="25" y="34" width="8" height="5" fill="#c89a48" />
+      <rect x="25" y="34" width="3" height="2" fill="#ecc46a" />
+      <rect x="28" y="35" width="2" height="3" fill="#1a1622" />
+      <rect x="26" y="36" width="6" height="1" fill="#8a6420" />
+      <!-- ember seams -->
+      <rect x="15" y="43" width="7" height="1" fill="#a83a14" opacity="0.7" />
+      <rect x="35" y="44" width="6" height="1" fill="#8a2e10" opacity="0.7" />
+
+      <!-- ══ Left arm — colossal fist ══ -->
+      <rect x="2" y="27" width="9" height="13" fill="#150d08" />
+      <rect x="3" y="28" width="7" height="11" fill="#2e2a38" />
+      <rect x="3" y="28" width="3" height="11" fill="#383442" />
+      <rect x="8" y="28" width="2" height="11" fill="#221e2a" />
+      <!-- bare giant fist -->
+      <rect x="1" y="39" width="10" height="10" fill="#150d08" />
+      <rect x="2" y="40" width="8" height="8" fill="#a85028" />
+      <rect x="2" y="40" width="3" height="8" fill="#bc5e30" />
+      <rect x="8" y="40" width="2" height="8" fill="#8a3e1c" />
+      <rect x="3" y="44" width="6" height="1" fill="#702e12" />
+
+      <!-- ══ Right arm — resting on the pommel ══ -->
+      <rect x="44" y="27" width="9" height="11" fill="#150d08" />
+      <rect x="45" y="28" width="7" height="9" fill="#262230" />
+      <rect x="45" y="28" width="3" height="9" fill="#2e2a38" />
+      <!-- hand atop the planted sword -->
+      <rect x="45" y="37" width="9" height="8" fill="#150d08" />
+      <rect x="46" y="38" width="7" height="6" fill="#8a3e1c" />
+      <rect x="46" y="38" width="3" height="6" fill="#a85028" />
+      <rect x="48" y="41" width="1" height="1" fill="#702e12" />
+      <rect x="51" y="41" width="1" height="1" fill="#702e12" />
+
+      <!-- ══ War-skirt + legs ══ -->
+      <rect x="12" y="48" width="34" height="4" fill="#150d08" />
+      <rect x="13" y="49" width="32" height="2" fill="#1e1a26" />
+      <rect x="13" y="49" width="10" height="1" fill="#2e2a38" />
+      <rect x="20" y="49" width="2" height="3" fill="#c89a48" opacity="0.6" />
+      <rect x="34" y="49" width="2" height="3" fill="#8a6420" opacity="0.6" />
+      <!-- legs -->
+      <rect x="13" y="52" width="13" height="8" fill="#150d08" />
+      <rect x="14" y="53" width="11" height="7" fill="#2a1c12" />
+      <rect x="14" y="53" width="4" height="7" fill="#3a2a1c" />
+      <rect x="22" y="53" width="3" height="7" fill="#221710" />
+      <rect x="16" y="55" width="1" height="4" fill="#e87820" opacity="0.55" />
+      <rect x="30" y="52" width="13" height="8" fill="#150d08" />
+      <rect x="31" y="53" width="11" height="7" fill="#241810" />
+      <rect x="31" y="53" width="3" height="7" fill="#2a1c12" />
+      <rect x="39" y="53" width="3" height="7" fill="#1c120c" />
+      <rect x="34" y="55" width="1" height="4" fill="#d4641a" opacity="0.5" />
+
+      <!-- ══ Giant feet ══ -->
+      <rect x="10" y="58" width="17" height="5" fill="#150d08" />
+      <rect x="11" y="59" width="15" height="3" fill="#241810" />
+      <rect x="11" y="59" width="15" height="1" fill="#3a2a1c" />
+      <rect x="11" y="61" width="15" height="1" fill="#0e0903" />
+      <rect x="29" y="58" width="17" height="5" fill="#150d08" />
+      <rect x="30" y="59" width="15" height="3" fill="#1c120c" />
+      <rect x="30" y="59" width="15" height="1" fill="#2a1c12" />
+      <rect x="30" y="61" width="15" height="1" fill="#0c0702" />
+
+      <!-- drifting cinders -->
+      <rect x="8" y="10" width="1" height="2" fill="#f4942a" opacity="0.6" />
+      <rect x="42" y="8" width="1" height="1" fill="#ffd070" opacity="0.55" />
+      <rect x="5" y="34" width="1" height="1" fill="#ffb04a" opacity="0.6" />
+      <rect x="56" y="30" width="1" height="1" fill="#e87820" opacity="0.5" />
     </svg>

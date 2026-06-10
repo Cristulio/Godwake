@@ -1,92 +1,184 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 34 46"
+      viewBox="0 0 48 68"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="The Hollow Pretender"
     >
-      <!-- Layered void/gold backlight + ground shadow -->
-      <ellipse cx="17" cy="22" rx="16" ry="22" fill="#2a1840" opacity="0.28" />
-      <ellipse cx="17" cy="20" rx="11" ry="16" fill="#c0a040" opacity="0.08" />
-      <ellipse cx="17" cy="43" rx="13" ry="2" fill="#0a0610" opacity="0.5" />
+      <!-- Void/gold backlight + ground shadow -->
+      <ellipse cx="24" cy="32" rx="23" ry="32" fill="#2a1840" opacity="0.28" />
+      <ellipse cx="24" cy="28" rx="15" ry="22" fill="#c0a040" opacity="0.08" />
+      <ellipse cx="24" cy="65.5" rx="18" ry="2.3" fill="#0a0610" opacity="0.55" />
 
-      <!-- Robe wings — dark with a lit inner fold -->
-      <polygon points="9,42 8,15 13,11 13,42" fill="#160e22" />
-      <polygon points="9,42 8,16 12,12 12,42" fill="#1e1430" opacity="0.9" />
-      <polygon points="25,42 26,15 21,11 21,42" fill="#120a1c" />
-      <polygon points="9,16 13,12 13,15 9,18" fill="#352350" opacity="0.6" />
-      <polygon points="26,16 21,12 21,15 25,18" fill="#241634" opacity="0.6" />
+      <!-- ══ Scepter-staff — cold false flame ══ -->
+      <rect x="38" y="6" width="4" height="46" fill="#150d08" />
+      <rect x="39" y="7" width="2" height="44" fill="#2c1d44" />
+      <rect x="39" y="7" width="1" height="44" fill="#3a2658" />
+      <!-- gold collar -->
+      <rect x="38" y="10" width="4" height="2" fill="#c0a040" />
+      <rect x="38" y="10" width="2" height="1" fill="#f4d042" />
+      <!-- false flame finial -->
+      <rect x="37" y="0" width="6" height="7" fill="#150d08" opacity="0.7" />
+      <rect x="38" y="2" width="4" height="5" fill="#c0a040" />
+      <rect x="38" y="2" width="2" height="3" fill="#f4d042" />
+      <rect x="39" y="0" width="2" height="3" fill="#fff0b0" />
+      <rect x="39" y="0" width="1" height="2" fill="#ffffff" />
+      <rect x="42" y="3" width="1" height="2" fill="#9a7e2e" />
+      <rect x="37" y="4" width="1" height="2" fill="#c0a040" opacity="0.7" />
 
-      <!-- Hollow head void behind the mask -->
-      <rect x="11" y="3" width="12" height="13" fill="#0e0a16" />
-      <ellipse cx="17" cy="9" rx="5" ry="6" fill="#060308" />
-      <ellipse cx="17" cy="9" rx="3" ry="4" fill="#1a1228" opacity="0.6" />
-      <rect x="11" y="3" width="12" height="2" fill="#2a1d3e" />
-      <rect x="11" y="3" width="12" height="1" fill="#46306a" />
-      <rect x="11" y="14" width="12" height="2" fill="#1a1228" />
+      <!-- ══ Robe wings behind ══ -->
+      <rect x="8" y="22" width="6" height="36" fill="#120a1c" />
+      <rect x="9" y="24" width="4" height="32" fill="#160e22" />
+      <rect x="34" y="22" width="6" height="36" fill="#0e0816" />
+      <rect x="35" y="24" width="4" height="32" fill="#120a1c" />
 
-      <!-- Porcelain mask — pale ramp + crown + eye/mouth voids -->
-      <polygon points="11,2 17,-2 23,2 23,13 19,16 15,16 11,13" fill="#dccfb8" />
-      <polygon points="11,2 17,-2 23,2 23,11 17,15 11,11" fill="#ece2cf" opacity="0.65" />
-      <polygon points="11,2 17,-2 20,1 19,13 15,16 11,13" fill="#e8dec9" opacity="0.4" />
-      <rect x="13" y="3" width="1" height="11" fill="#f4ecd8" opacity="0.6" />
-      <rect x="21" y="3" width="2" height="11" fill="#c2b59c" opacity="0.6" />
-      <rect x="13" y="7" width="3" height="3" fill="#060308" />
-      <rect x="18" y="7" width="3" height="3" fill="#060308" />
-      <rect x="13" y="7" width="1" height="1" fill="#1a1424" />
-      <rect x="16" y="11" width="2" height="3" fill="#060308" />
-      <!-- Gold crown band -->
-      <polygon points="11,2 17,-2 23,2" fill="#c0a040" />
-      <polygon points="13,1 17,-2 21,1" fill="#f4d042" />
-      <rect x="16" y="-2" width="2" height="2" fill="#fff0b0" />
-      <rect x="13" y="0" width="1" height="2" fill="#f4d042" />
-      <rect x="20" y="0" width="1" height="2" fill="#c0a040" />
+      <!-- ══ The hollow — void behind the mask ══ -->
+      <rect x="15" y="3" width="18" height="18" fill="#060308" />
+      <rect x="16" y="4" width="16" height="16" fill="#0e0a16" />
+      <rect x="17" y="5" width="6" height="14" fill="#16101f" />
+      <!-- faint void shimmer inside -->
+      <rect x="19" y="8" width="1" height="1" fill="#352350" opacity="0.8" />
+      <rect x="28" y="13" width="1" height="1" fill="#2a1d3e" opacity="0.8" />
 
-      <!-- Robe torso — violet ramp + jewelled placket + dither -->
-      <rect x="9" y="16" width="16" height="20" fill="#241634" />
-      <rect x="9" y="16" width="16" height="2" fill="#352350" />
-      <rect x="9" y="16" width="16" height="1" fill="#46306a" />
-      <rect x="9" y="16" width="3" height="20" fill="#2c1d44" />
-      <rect x="9" y="16" width="1" height="20" fill="#3a2658" />
-      <rect x="23" y="17" width="2" height="19" fill="#1a1028" />
-      <rect x="24" y="17" width="1" height="19" fill="#150c22" />
-      <rect x="15" y="18" width="4" height="18" fill="#160e22" />
-      <rect x="11" y="19" width="3" height="3" fill="#c0a040" />
-      <rect x="11" y="19" width="3" height="1" fill="#f4d042" />
-      <rect x="11" y="19" width="1" height="1" fill="#fff0b0" />
-      <rect x="10" y="23" width="14" height="1" fill="#c0a040" opacity="0.6" />
-      <rect x="11" y="27" width="12" height="1" fill="#a0c0d0" opacity="0.45" />
-      <rect x="12" y="31" width="10" height="1" fill="#9a7e2e" opacity="0.5" />
-      <rect x="13" y="25" width="1" height="1" fill="#3a2658" />
-      <rect x="20" y="29" width="1" height="1" fill="#150c22" />
+      <!-- ══ Gold crown — riding above the mask ══ -->
+      <rect x="15" y="0" width="18" height="3" fill="#150d08" />
+      <rect x="16" y="1" width="16" height="2" fill="#c0a040" />
+      <rect x="16" y="1" width="5" height="1" fill="#f4d042" />
+      <rect x="28" y="1" width="4" height="2" fill="#9a7e2e" />
+      <!-- crown points -->
+      <rect x="16" y="-0" width="2" height="2" fill="#f4d042" />
+      <rect x="23" y="0" width="2" height="2" fill="#fff0b0" />
+      <rect x="30" y="0" width="2" height="2" fill="#c0a040" />
+      <rect x="19" y="0" width="1" height="1" fill="#c0a040" />
+      <rect x="27" y="0" width="1" height="1" fill="#9a7e2e" />
 
-      <!-- Arms — left pale hand, right staff -->
-      <rect x="3" y="18" width="6" height="3" fill="#241634" />
-      <rect x="3" y="18" width="6" height="1" fill="#352350" />
-      <rect x="2" y="20" width="4" height="10" fill="#2c1d44" />
-      <rect x="2" y="20" width="1" height="10" fill="#3a2658" />
-      <rect x="2" y="29" width="5" height="3" fill="#dccfb8" />
-      <rect x="2" y="29" width="5" height="1" fill="#ece2cf" />
-      <rect x="25" y="18" width="6" height="3" fill="#1e1430" />
-      <rect x="27" y="6" width="2" height="15" fill="#2c1d44" />
-      <rect x="27" y="6" width="1" height="15" fill="#3a2658" />
-      <!-- Staff flame -->
-      <rect x="27" y="2" width="2" height="6" fill="#c0a040" />
-      <rect x="27" y="2" width="2" height="3" fill="#f4d042" />
-      <polygon points="26,2 28,-1 30,2" fill="#fff0b0" opacity="0.85" />
-      <polygon points="27,1 28,-1 29,2" fill="#fffae0" opacity="0.8" />
-      <rect x="27" y="0" width="1" height="2" fill="#ffffff" />
+      <!-- ══ Porcelain mask — floating before the void ══ -->
+      <rect x="16" y="4" width="16" height="15" fill="#150d08" />
+      <rect x="17" y="5" width="14" height="13" fill="#dccfb8" />
+      <rect x="17" y="5" width="5" height="13" fill="#ece2cf" />
+      <rect x="17" y="5" width="2" height="9" fill="#f4ecd8" />
+      <rect x="28" y="5" width="3" height="13" fill="#c2b59c" />
+      <rect x="30" y="5" width="1" height="13" fill="#aa9d84" />
+      <!-- mask edge gap — void visible at the jaw sides -->
+      <rect x="17" y="16" width="2" height="2" fill="#060308" />
+      <rect x="29" y="16" width="2" height="2" fill="#060308" />
+      <!-- almond eye-voids, empty -->
+      <rect x="19" y="9" width="4" height="3" fill="#060308" />
+      <rect x="25" y="9" width="4" height="3" fill="#060308" />
+      <rect x="19" y="9" width="1" height="1" fill="#1a1424" />
+      <rect x="25" y="9" width="1" height="1" fill="#1a1424" />
+      <!-- gilt cheek filigree -->
+      <rect x="18" y="13" width="2" height="1" fill="#c0a040" />
+      <rect x="28" y="13" width="2" height="1" fill="#9a7e2e" />
+      <!-- painted serene smile + chin crack -->
+      <rect x="21" y="15" width="6" height="1" fill="#aa9d84" />
+      <rect x="21" y="15" width="2" height="1" fill="#c2b59c" />
+      <rect x="26" y="14" width="1" height="1" fill="#aa9d84" />
+      <rect x="24" y="16" width="1" height="2" fill="#8a7d64" />
 
-      <!-- Robe hem feet -->
-      <rect x="10" y="36" width="6" height="7" fill="#1e1430" />
-      <rect x="10" y="36" width="1" height="7" fill="#2c1d44" />
-      <rect x="18" y="36" width="6" height="7" fill="#180e26" />
-      <rect x="9" y="42" width="8" height="2" fill="#0c0814" />
-      <rect x="18" y="42" width="8" height="2" fill="#0a0612" />
-      <rect x="12" y="38" width="1" height="4" fill="#46306a" opacity="0.5" />
-      <rect x="21" y="38" width="1" height="4" fill="#352350" opacity="0.5" />
+      <!-- ══ Ray collar — court finery ══ -->
+      <rect x="11" y="19" width="26" height="3" fill="#150d08" />
+      <rect x="12" y="20" width="24" height="2" fill="#46306a" />
+      <rect x="12" y="20" width="8" height="1" fill="#5a4288" />
+      <!-- gold collar rays -->
+      <rect x="12" y="18" width="2" height="2" fill="#c0a040" />
+      <rect x="17" y="17" width="2" height="3" fill="#f4d042" />
+      <rect x="23" y="17" width="2" height="2" fill="#c0a040" />
+      <rect x="29" y="17" width="2" height="3" fill="#9a7e2e" />
+      <rect x="34" y="18" width="2" height="2" fill="#9a7e2e" />
 
-      <!-- Drifting motes -->
-      <rect x="6" y="33" width="1" height="1" fill="#f4d042" opacity="0.55" />
-      <rect x="28" y="26" width="1" height="1" fill="#a0c0d0" opacity="0.5" />
-      <rect x="17" y="44" width="1" height="1" fill="#ece2cf" opacity="0.45" />
+      <!-- ══ Robe — violet brocade ══ -->
+      <rect x="11" y="22" width="26" height="26" fill="#150d08" />
+      <rect x="12" y="23" width="24" height="25" fill="#241634" />
+      <rect x="12" y="23" width="8" height="25" fill="#2c1d44" />
+      <rect x="12" y="23" width="4" height="22" fill="#3a2658" />
+      <rect x="12" y="23" width="1" height="16" fill="#46306a" />
+      <rect x="31" y="23" width="5" height="25" fill="#1a1028" />
+      <rect x="34" y="23" width="2" height="25" fill="#150c22" />
+      <!-- dark center panel -->
+      <rect x="21" y="23" width="6" height="25" fill="#160e22" />
+      <rect x="21" y="23" width="1" height="25" fill="#120a1c" />
+      <!-- jeweled placket -->
+      <rect x="23" y="25" width="2" height="2" fill="#c0a040" />
+      <rect x="23" y="25" width="1" height="1" fill="#f4d042" />
+      <rect x="23" y="30" width="2" height="2" fill="#a0c0d0" />
+      <rect x="23" y="30" width="1" height="1" fill="#e8f4fc" />
+      <rect x="23" y="35" width="2" height="2" fill="#c0a040" />
+      <rect x="23" y="40" width="2" height="2" fill="#9a7e2e" />
+      <!-- brocade pattern dots -->
+      <rect x="14" y="26" width="1" height="1" fill="#5a4288" />
+      <rect x="17" y="29" width="1" height="1" fill="#46306a" />
+      <rect x="14" y="33" width="1" height="1" fill="#5a4288" />
+      <rect x="17" y="37" width="1" height="1" fill="#46306a" />
+      <rect x="14" y="41" width="1" height="1" fill="#46306a" />
+      <rect x="29" y="27" width="1" height="1" fill="#2a1d3e" />
+      <rect x="32" y="31" width="1" height="1" fill="#241634" />
+      <rect x="29" y="36" width="1" height="1" fill="#2a1d3e" />
+      <rect x="32" y="41" width="1" height="1" fill="#241634" />
+      <!-- mirror-shard brooch -->
+      <rect x="15" y="24" width="3" height="3" fill="#150d08" />
+      <rect x="16" y="25" width="2" height="2" fill="#a0c0d0" />
+      <rect x="16" y="25" width="1" height="1" fill="#e8f4fc" />
+
+      <!-- ══ Left arm — holding the spare mask ══ -->
+      <rect x="8" y="23" width="7" height="8" fill="#150d08" />
+      <rect x="9" y="24" width="5" height="6" fill="#2c1d44" />
+      <rect x="9" y="24" width="2" height="6" fill="#3a2658" />
+      <rect x="6" y="29" width="7" height="10" fill="#150d08" />
+      <rect x="7" y="30" width="5" height="8" fill="#241634" />
+      <rect x="7" y="30" width="2" height="8" fill="#2c1d44" />
+      <!-- porcelain hand -->
+      <rect x="6" y="37" width="7" height="5" fill="#150d08" />
+      <rect x="7" y="38" width="5" height="3" fill="#dccfb8" />
+      <rect x="7" y="38" width="2" height="3" fill="#ece2cf" />
+      <!-- the spare mask, held face-out at the hip -->
+      <rect x="3" y="40" width="10" height="12" fill="#150d08" />
+      <rect x="4" y="41" width="8" height="10" fill="#c2b59c" />
+      <rect x="4" y="41" width="3" height="10" fill="#dccfb8" />
+      <rect x="4" y="41" width="1" height="7" fill="#ece2cf" />
+      <rect x="10" y="41" width="2" height="10" fill="#aa9d84" />
+      <!-- its empty eyes + faint painted mouth -->
+      <rect x="5" y="44" width="2" height="2" fill="#060308" />
+      <rect x="9" y="44" width="2" height="2" fill="#060308" />
+      <rect x="6" y="48" width="4" height="1" fill="#8a7d64" />
+      <!-- crack across its brow -->
+      <rect x="7" y="42" width="1" height="1" fill="#8a7d64" />
+      <rect x="8" y="41" width="1" height="1" fill="#8a7d64" />
+
+      <!-- ══ Right arm — to the scepter ══ -->
+      <rect x="33" y="23" width="7" height="8" fill="#150d08" />
+      <rect x="34" y="24" width="5" height="6" fill="#1a1028" />
+      <rect x="34" y="24" width="2" height="6" fill="#241634" />
+      <!-- porcelain hand on the staff -->
+      <rect x="36" y="29" width="7" height="6" fill="#150d08" />
+      <rect x="37" y="30" width="5" height="4" fill="#c2b59c" />
+      <rect x="37" y="30" width="2" height="4" fill="#dccfb8" />
+      <rect x="38" y="32" width="1" height="1" fill="#8a7d64" />
+      <rect x="40" y="32" width="1" height="1" fill="#8a7d64" />
+
+      <!-- ══ Robe hem — pooling, slipper points ══ -->
+      <rect x="11" y="48" width="26" height="3" fill="#150c22" />
+      <rect x="10" y="51" width="28" height="11" fill="#150d08" />
+      <rect x="11" y="52" width="26" height="9" fill="#241634" />
+      <rect x="11" y="52" width="7" height="9" fill="#2c1d44" />
+      <rect x="11" y="52" width="3" height="7" fill="#3a2658" />
+      <rect x="32" y="52" width="5" height="9" fill="#1a1028" />
+      <!-- fold lines -->
+      <rect x="19" y="52" width="1" height="9" fill="#1a1028" />
+      <rect x="26" y="52" width="1" height="9" fill="#150c22" />
+      <!-- gold hem thread -->
+      <rect x="11" y="59" width="26" height="1" fill="#9a7e2e" opacity="0.75" />
+      <rect x="11" y="59" width="8" height="1" fill="#c0a040" opacity="0.8" />
+      <rect x="11" y="60" width="26" height="1" fill="#0e0816" />
+      <!-- slipper points -->
+      <rect x="16" y="61" width="6" height="4" fill="#150d08" />
+      <rect x="17" y="62" width="4" height="2" fill="#2c1d44" />
+      <rect x="17" y="62" width="2" height="1" fill="#3a2658" />
+      <rect x="26" y="61" width="6" height="4" fill="#150d08" />
+      <rect x="27" y="62" width="4" height="2" fill="#241634" />
+
+      <!-- ══ Drifting motes ══ -->
+      <rect x="6" y="14" width="1" height="1" fill="#f4d042" opacity="0.55" />
+      <rect x="42" y="22" width="1" height="1" fill="#a0c0d0" opacity="0.5" />
+      <rect x="5" y="56" width="1" height="1" fill="#ece2cf" opacity="0.45" />
+      <rect x="43" y="48" width="1" height="1" fill="#f4d042" opacity="0.4" />
     </svg>

@@ -1,75 +1,158 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 36"
+      viewBox="0 0 44 56"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Rakshasa"
     >
       <!-- Warm fiend backlight + ground shadow -->
-      <ellipse cx="14" cy="18" rx="14" ry="17" fill="#c87838" opacity="0.08" />
-      <ellipse cx="14" cy="31" rx="11" ry="1.7" fill="#000" opacity="0.42" />
+      <ellipse cx="22" cy="28" rx="21" ry="25" fill="#c87838" opacity="0.09" />
+      <ellipse cx="22" cy="53.6" rx="15" ry="2.2" fill="#000" opacity="0.45" />
 
-      <!-- Ears — fur ramp, inner shadow -->
-      <polygon points="8,8 8,2 11,4" fill="#c87838" />
-      <polygon points="20,8 20,2 17,4" fill="#a85c28" />
-      <polygon points="8,8 8,3 10,4" fill="#d88a44" opacity="0.7" />
-      <rect x="8" y="3" width="3" height="3" fill="#3a2410" />
-      <rect x="17" y="3" width="3" height="3" fill="#3a2410" />
+      <!-- ══ Tiger head — striped, jade-eyed ══ -->
+      <!-- ears -->
+      <rect x="10" y="2" width="5" height="5" fill="#150d08" />
+      <rect x="11" y="3" width="3" height="3" fill="#c87838" />
+      <rect x="12" y="4" width="2" height="2" fill="#2e1810" />
+      <rect x="29" y="2" width="5" height="5" fill="#150d08" />
+      <rect x="30" y="3" width="3" height="3" fill="#a85e28" />
+      <rect x="30" y="4" width="2" height="2" fill="#241208" />
+      <!-- skull -->
+      <rect x="11" y="5" width="22" height="15" fill="#150d08" />
+      <rect x="12" y="6" width="20" height="13" fill="#c87838" />
+      <rect x="12" y="6" width="7" height="13" fill="#dc8a44" />
+      <rect x="12" y="6" width="3" height="9" fill="#ec9c52" />
+      <rect x="27" y="6" width="5" height="13" fill="#a85e28" />
+      <rect x="30" y="6" width="2" height="13" fill="#8a4a1e" />
+      <!-- tiger stripes -->
+      <rect x="15" y="6" width="2" height="3" fill="#2e1810" />
+      <rect x="20" y="6" width="2" height="2" fill="#2e1810" />
+      <rect x="25" y="6" width="2" height="3" fill="#241208" />
+      <rect x="12" y="10" width="2" height="2" fill="#2e1810" />
+      <rect x="30" y="10" width="2" height="2" fill="#241208" />
+      <rect x="13" y="15" width="2" height="2" fill="#2e1810" />
+      <rect x="29" y="15" width="2" height="2" fill="#241208" />
+      <!-- jade eyes, slit pupils -->
+      <rect x="15" y="10" width="4" height="3" fill="#1a1006" />
+      <rect x="25" y="10" width="4" height="3" fill="#1a1006" />
+      <rect x="16" y="11" width="3" height="2" fill="#5fbf6a" />
+      <rect x="26" y="11" width="2" height="2" fill="#48a054" />
+      <rect x="17" y="11" width="1" height="2" fill="#1a1006" />
+      <rect x="16" y="11" width="1" height="1" fill="#c8f0c0" />
+      <rect x="26" y="11" width="1" height="1" fill="#a0d8a0" />
+      <!-- muzzle — pale, whiskered -->
+      <rect x="17" y="13" width="10" height="6" fill="#e8d4b4" />
+      <rect x="17" y="13" width="4" height="6" fill="#f4e4c8" />
+      <rect x="25" y="13" width="2" height="6" fill="#d0b894" />
+      <!-- nose + fanged smile -->
+      <rect x="20" y="13" width="4" height="2" fill="#2e1810" />
+      <rect x="21" y="13" width="2" height="1" fill="#4a2a1a" />
+      <rect x="18" y="17" width="8" height="1" fill="#2e1810" />
+      <rect x="18" y="17" width="1" height="2" fill="#fdfaf0" />
+      <rect x="25" y="17" width="1" height="2" fill="#e8e0cc" />
+      <!-- whisker dots -->
+      <rect x="16" y="15" width="1" height="1" fill="#8a4a1e" />
+      <rect x="27" y="15" width="1" height="1" fill="#8a4a1e" />
 
-      <!-- Tiger face — fur ramp, key light upper-left -->
-      <rect x="8" y="4" width="12" height="9" fill="#c87838" />
-      <rect x="8" y="4" width="12" height="1" fill="#e89a52" />
-      <rect x="8" y="4" width="3" height="9" fill="#d88a44" />
-      <rect x="8" y="4" width="1" height="6" fill="#f0aa64" />
-      <rect x="18" y="4" width="2" height="9" fill="#a85c28" />
-      <rect x="19" y="5" width="1" height="7" fill="#8a4a1c" />
-      <!-- Stripes -->
-      <rect x="9" y="5" width="10" height="1" fill="#2a1808" />
-      <rect x="9" y="7" width="2" height="1" fill="#2a1808" />
-      <rect x="17" y="7" width="2" height="1" fill="#2a1808" />
-      <!-- Burning gold eyes + spec -->
-      <rect x="11" y="6" width="2" height="2" fill="#1a1008" />
-      <rect x="15" y="6" width="2" height="2" fill="#1a1008" />
-      <rect x="11" y="6" width="1" height="1" fill="#f0d050" />
-      <rect x="15" y="6" width="1" height="1" fill="#f0d050" />
-      <rect x="11" y="6" width="1" height="1" fill="#fff0a0" opacity="0.6" />
-      <!-- Snout + nose + fangs -->
-      <rect x="13" y="9" width="2" height="1" fill="#1a0c04" />
-      <polygon points="11,10 17,10 14,13" fill="#3a1a10" />
-      <rect x="11" y="11" width="1" height="2" fill="#f0e8d8" />
-      <rect x="16" y="11" width="1" height="2" fill="#f0e8d8" />
+      <!-- ══ Opulent silk robe — teal + gold ══ -->
+      <!-- shoulders -->
+      <rect x="8" y="19" width="28" height="7" fill="#150d08" />
+      <rect x="9" y="20" width="26" height="6" fill="#1f4844" />
+      <rect x="9" y="20" width="9" height="6" fill="#2a5e58" />
+      <rect x="9" y="20" width="4" height="4" fill="#36746c" />
+      <rect x="28" y="20" width="7" height="6" fill="#173834" />
+      <!-- gold shoulder trim -->
+      <rect x="9" y="20" width="26" height="1" fill="#c0a040" />
+      <rect x="9" y="20" width="8" height="1" fill="#f4d042" />
+      <!-- torso -->
+      <rect x="10" y="26" width="24" height="18" fill="#150d08" />
+      <rect x="11" y="27" width="22" height="16" fill="#1f4844" />
+      <rect x="11" y="27" width="7" height="16" fill="#2a5e58" />
+      <rect x="11" y="27" width="3" height="11" fill="#36746c" />
+      <rect x="28" y="27" width="5" height="16" fill="#173834" />
+      <rect x="31" y="27" width="2" height="16" fill="#122a26" />
+      <!-- brocade pattern -->
+      <rect x="14" y="29" width="1" height="1" fill="#c0a040" />
+      <rect x="18" y="32" width="1" height="1" fill="#9a7e2e" />
+      <rect x="14" y="36" width="1" height="1" fill="#c0a040" />
+      <rect x="29" y="30" width="1" height="1" fill="#8a6e28" />
+      <rect x="29" y="38" width="1" height="1" fill="#8a6e28" />
+      <!-- gold sash -->
+      <rect x="11" y="33" width="22" height="3" fill="#150d08" />
+      <rect x="12" y="34" width="20" height="1" fill="#c0a040" />
+      <rect x="12" y="34" width="7" height="1" fill="#f4d042" />
+      <!-- jeweled clasp -->
+      <rect x="20" y="33" width="4" height="3" fill="#150d08" />
+      <rect x="21" y="34" width="2" height="1" fill="#b53c4a" />
+      <rect x="21" y="34" width="1" height="1" fill="#e85a4a" />
 
-      <!-- Crimson robe — silk ramp + gold bands -->
-      <rect x="9" y="13" width="10" height="13" fill="#6a1828" />
-      <rect x="9" y="13" width="10" height="1" fill="#8a2438" />
-      <rect x="9" y="13" width="2" height="13" fill="#7e1e30" />
-      <rect x="9" y="13" width="1" height="13" fill="#9a2e42" />
-      <rect x="17" y="13" width="2" height="13" fill="#4e1020" />
-      <rect x="18" y="14" width="1" height="12" fill="#3a0c14" />
-      <rect x="13" y="14" width="2" height="12" fill="#8a2438" opacity="0.6" />
-      <rect x="10" y="16" width="8" height="1" fill="#c0a040" opacity="0.6" />
-      <rect x="10" y="20" width="8" height="1" fill="#c0a040" opacity="0.5" />
-      <rect x="10" y="16" width="2" height="1" fill="#f0d050" opacity="0.6" />
+      <!-- ══ The backwards hands — palms forever outward ══ -->
+      <!-- left arm -->
+      <rect x="5" y="21" width="6" height="9" fill="#150d08" />
+      <rect x="6" y="22" width="4" height="7" fill="#2a5e58" />
+      <rect x="6" y="22" width="2" height="7" fill="#36746c" />
+      <rect x="4" y="28" width="7" height="8" fill="#150d08" />
+      <rect x="5" y="29" width="5" height="6" fill="#1f4844" />
+      <rect x="5" y="29" width="2" height="6" fill="#2a5e58" />
+      <!-- backwards hand: palm out, thumb on the OUTSIDE, fingers curling away -->
+      <rect x="3" y="34" width="8" height="8" fill="#150d08" />
+      <rect x="4" y="35" width="6" height="6" fill="#dc8a44" />
+      <rect x="4" y="35" width="3" height="6" fill="#ec9c52" />
+      <!-- palm lines -->
+      <rect x="6" y="37" width="2" height="1" fill="#a85e28" />
+      <rect x="5" y="39" width="3" height="1" fill="#a85e28" />
+      <!-- thumb jutting outward (wrong side) -->
+      <rect x="1" y="36" width="3" height="3" fill="#150d08" />
+      <rect x="2" y="37" width="2" height="1" fill="#dc8a44" />
+      <!-- claw tips curling away behind -->
+      <rect x="9" y="34" width="2" height="2" fill="#e8e0cc" />
+      <rect x="9" y="38" width="2" height="2" fill="#cdc4ac" />
+      <!-- right arm -->
+      <rect x="33" y="21" width="6" height="9" fill="#150d08" />
+      <rect x="34" y="22" width="4" height="7" fill="#173834" />
+      <rect x="34" y="22" width="2" height="7" fill="#1f4844" />
+      <rect x="33" y="28" width="7" height="8" fill="#150d08" />
+      <rect x="34" y="29" width="5" height="6" fill="#122a26" />
+      <rect x="34" y="29" width="2" height="6" fill="#173834" />
+      <!-- backwards hand right -->
+      <rect x="33" y="34" width="8" height="8" fill="#150d08" />
+      <rect x="34" y="35" width="6" height="6" fill="#a85e28" />
+      <rect x="34" y="35" width="3" height="6" fill="#c87838" />
+      <rect x="36" y="37" width="2" height="1" fill="#7a3e16" />
+      <rect x="36" y="39" width="3" height="1" fill="#7a3e16" />
+      <rect x="40" y="36" width="3" height="3" fill="#150d08" />
+      <rect x="41" y="37" width="2" height="1" fill="#a85e28" />
+      <rect x="33" y="34" width="2" height="2" fill="#cdc4ac" />
+      <rect x="33" y="38" width="2" height="2" fill="#b0a88c" />
 
-      <!-- Arms + clawed paws -->
-      <rect x="6" y="14" width="3" height="3" fill="#6a1828" />
-      <rect x="6" y="14" width="1" height="3" fill="#7e1e30" />
-      <rect x="3" y="15" width="3" height="2" fill="#c87838" />
-      <rect x="3" y="15" width="3" height="1" fill="#d88a44" />
-      <polygon points="3,15 1,13 2,17" fill="#f0e8d8" />
-      <rect x="19" y="14" width="3" height="3" fill="#6a1828" />
-      <rect x="21" y="14" width="1" height="3" fill="#4e1020" />
-      <rect x="22" y="13" width="3" height="2" fill="#c87838" />
-      <polygon points="25,13 27,11 26,15" fill="#f0e8d8" />
+      <!-- ══ Illusion flame wisp circling ══ -->
+      <rect x="36" y="14" width="2" height="2" fill="#e8a020" opacity="0.8" />
+      <rect x="38" y="12" width="1" height="2" fill="#ffd070" opacity="0.7" />
+      <rect x="37" y="17" width="1" height="1" fill="#c87838" opacity="0.7" />
+      <ellipse cx="38" cy="15" rx="4" ry="4" fill="#e8a020" opacity="0.12" />
 
-      <!-- Legs / feet -->
-      <rect x="10" y="26" width="3" height="6" fill="#4e1020" />
-      <rect x="15" y="26" width="3" height="6" fill="#4e1020" />
-      <rect x="10" y="26" width="1" height="6" fill="#6a1828" />
-      <rect x="15" y="26" width="1" height="6" fill="#6a1828" />
-      <rect x="10" y="31" width="4" height="1" fill="#1a0c06" />
-      <rect x="15" y="31" width="4" height="1" fill="#1a0c06" />
+      <!-- ══ Robe skirt + curl-toed slippers ══ -->
+      <rect x="10" y="44" width="24" height="3" fill="#122a26" />
+      <rect x="9" y="47" width="26" height="6" fill="#150d08" />
+      <rect x="10" y="48" width="24" height="4" fill="#1f4844" />
+      <rect x="10" y="48" width="7" height="4" fill="#2a5e58" />
+      <rect x="28" y="48" width="6" height="4" fill="#173834" />
+      <rect x="17" y="48" width="1" height="4" fill="#173834" />
+      <rect x="26" y="48" width="1" height="4" fill="#122a26" />
+      <!-- gold hem -->
+      <rect x="10" y="51" width="24" height="1" fill="#9a7e2e" />
+      <rect x="10" y="51" width="8" height="1" fill="#c0a040" />
+      <!-- curl-toed slippers -->
+      <rect x="12" y="52" width="7" height="3" fill="#150d08" />
+      <rect x="13" y="53" width="5" height="1" fill="#7e1f2c" />
+      <rect x="11" y="51" width="2" height="2" fill="#150d08" />
+      <rect x="11" y="51" width="1" height="1" fill="#a93340" />
+      <rect x="25" y="52" width="7" height="3" fill="#150d08" />
+      <rect x="26" y="53" width="5" height="1" fill="#6e1a26" />
+      <rect x="31" y="51" width="2" height="2" fill="#150d08" />
+      <rect x="32" y="51" width="1" height="1" fill="#8e2434" />
 
-      <!-- Embers -->
-      <rect x="6" y="11" width="1" height="1" fill="#f0d050" opacity="0.5" />
-      <rect x="22" y="20" width="1" height="1" fill="#e89a52" opacity="0.45" />
+      <!-- fiend motes -->
+      <rect x="4" y="12" width="1" height="1" fill="#e8a020" opacity="0.5" />
+      <rect x="40" y="26" width="1" height="1" fill="#c87838" opacity="0.5" />
+      <rect x="6" y="46" width="1" height="1" fill="#f4d042" opacity="0.4" />
     </svg>

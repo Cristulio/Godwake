@@ -1,68 +1,151 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 44"
+      viewBox="0 0 44 64"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Deathless Ascendant"
     >
       <!-- Gilded backlight + ground shadow -->
-      <ellipse cx="16" cy="22" rx="14" ry="20" fill="#c9b87a" opacity="0.07" />
-      <ellipse cx="16" cy="42" rx="12" ry="2" fill="#0a0805" opacity="0.5" />
+      <ellipse cx="20" cy="30" rx="20" ry="28" fill="#c9b87a" opacity="0.07" />
+      <ellipse cx="22" cy="61.5" rx="16" ry="2.2" fill="#0a0805" opacity="0.5" />
 
-      <!-- Halo -->
-      <circle cx="16" cy="7" r="7" fill="none" stroke="#c9b87a" stroke-width="0.5" opacity="0.45" />
-      <circle cx="16" cy="7" r="7" fill="none" stroke="#f4e8b0" stroke-width="0.3" opacity="0.3" />
-      <rect x="15" y="0" width="2" height="14" fill="#c9b87a" opacity="0.22" />
-      <rect x="9" y="6" width="14" height="2" fill="#c9b87a" opacity="0.22" />
+      <!-- ══ Worn-out halo ══ -->
+      <circle cx="20" cy="10" r="9" fill="none" stroke="#c9b87a" stroke-width="0.7" opacity="0.4" />
+      <circle cx="20" cy="10" r="9" fill="none" stroke="#f4e8b0" stroke-width="0.3" opacity="0.25" />
+      <!-- halo chips — pieces missing -->
+      <rect x="26" y="3" width="3" height="2" fill="#120d08" />
+      <rect x="11" y="14" width="2" height="2" fill="#120d08" />
+      <rect x="19" y="0" width="1" height="2" fill="#f4e8b0" opacity="0.5" />
 
-      <!-- Head wrappings — bone-gold ramp, key upper-left -->
-      <rect x="12" y="4" width="8" height="9" fill="#a89568" />
-      <rect x="12" y="4" width="8" height="2" fill="#cdbb88" />
-      <rect x="12" y="4" width="2" height="8" fill="#b8a578" />
-      <rect x="12" y="4" width="1" height="6" fill="#d4c490" />
-      <rect x="18" y="5" width="2" height="7" fill="#8a7a50" />
-      <rect x="19" y="5" width="1" height="7" fill="#6a5d3a" />
-      <!-- Hollow eyes + cold spark -->
-      <rect x="13" y="7" width="2" height="2" fill="#1a1610" />
-      <rect x="17" y="7" width="2" height="2" fill="#1a1610" />
-      <rect x="13" y="7" width="1" height="1" fill="#f4e8b0" />
-      <rect x="17" y="7" width="1" height="1" fill="#f4e8b0" />
-      <rect x="12" y="11" width="8" height="1" fill="#5a4c30" />
+      <!-- ══ Wrapped head — bone-gold bandages ══ -->
+      <rect x="13" y="4" width="15" height="14" fill="#150d08" />
+      <rect x="14" y="5" width="13" height="12" fill="#a89568" />
+      <rect x="14" y="5" width="5" height="12" fill="#b8a578" />
+      <rect x="14" y="5" width="2" height="8" fill="#d4c490" />
+      <rect x="24" y="5" width="3" height="12" fill="#8a7a50" />
+      <rect x="26" y="5" width="1" height="12" fill="#6a5d3a" />
+      <!-- bandage seams -->
+      <rect x="14" y="7" width="13" height="1" fill="#8a7a50" />
+      <rect x="14" y="10" width="13" height="1" fill="#7a6c46" />
+      <rect x="14" y="14" width="13" height="1" fill="#8a7a50" />
+      <!-- loose strap end -->
+      <rect x="27" y="8" width="2" height="6" fill="#150d08" />
+      <rect x="28" y="9" width="1" height="4" fill="#8a7a50" />
+      <rect x="28" y="13" width="1" height="3" fill="#6a5d3a" opacity="0.7" />
+      <!-- hollow eyes + tired gold sparks -->
+      <rect x="16" y="8" width="3" height="3" fill="#1a1610" />
+      <rect x="22" y="8" width="3" height="3" fill="#1a1610" />
+      <rect x="17" y="9" width="1" height="1" fill="#f4e8b0" />
+      <rect x="23" y="9" width="1" height="1" fill="#d4c490" />
+      <!-- jaw wrap shadow -->
+      <rect x="16" y="13" width="9" height="1" fill="#5a4c30" />
 
-      <!-- Wrapped robe — ramp -->
-      <polygon points="10,13 22,13 23,26 18,32 14,32 9,26" fill="#3a3424" />
-      <polygon points="12,15 20,15 21,25 16,30 11,25" fill="#5d543c" />
-      <polygon points="12,15 16,15 16,30 11,25" fill="#6a5d3a" />
-      <rect x="15" y="15" width="2" height="15" fill="#7a6f48" opacity="0.7" />
-      <!-- Wrap bands + gilt -->
-      <rect x="11" y="18" width="10" height="1" fill="#2e2a1c" />
-      <rect x="11" y="23" width="10" height="1" fill="#2e2a1c" />
-      <rect x="11" y="17" width="10" height="1" fill="#8a7a48" opacity="0.5" />
-      <rect x="14" y="20" width="4" height="1" fill="#c9b87a" opacity="0.6" />
-      <rect x="14" y="20" width="1" height="1" fill="#f4e8b0" />
+      <!-- ══ Slumped wrapped shoulders ══ -->
+      <rect x="8" y="18" width="26" height="7" fill="#150d08" />
+      <rect x="9" y="19" width="24" height="6" fill="#4a4230" />
+      <rect x="9" y="19" width="8" height="6" fill="#5d543c" />
+      <rect x="9" y="19" width="3" height="4" fill="#6a5d3a" />
+      <rect x="28" y="19" width="5" height="6" fill="#3a3424" />
+      <rect x="9" y="19" width="24" height="1" fill="#6e6244" />
 
-      <!-- Left wrapped arm -->
-      <polygon points="10,14 5,18 6,27 9,24 10,18" fill="#4a4230" />
-      <polygon points="10,14 6,18 9,24 10,18" fill="#5d543c" />
-      <polygon points="4,17 7,16 5,26 3,24" fill="#3a3424" />
-      <rect x="3" y="22" width="2" height="6" fill="#7a6f48" />
-      <rect x="3" y="22" width="1" height="6" fill="#8c7f56" />
+      <!-- ══ Wrapped robe body ══ -->
+      <rect x="9" y="24" width="24" height="22" fill="#150d08" />
+      <rect x="10" y="25" width="22" height="21" fill="#4a4230" />
+      <rect x="10" y="25" width="7" height="21" fill="#5d543c" />
+      <rect x="10" y="25" width="3" height="16" fill="#6a5d3a" />
+      <rect x="28" y="25" width="4" height="21" fill="#3a3424" />
+      <rect x="30" y="25" width="2" height="21" fill="#2e2a1c" />
+      <!-- wrap bands -->
+      <rect x="10" y="29" width="22" height="1" fill="#2e2a1c" />
+      <rect x="10" y="30" width="10" height="1" fill="#6e6244" />
+      <rect x="10" y="35" width="22" height="1" fill="#2e2a1c" />
+      <rect x="10" y="36" width="8" height="1" fill="#665a3e" />
+      <rect x="10" y="41" width="22" height="1" fill="#28241a" />
+      <!-- hanging tatters -->
+      <rect x="12" y="44" width="2" height="5" fill="#3a3424" />
+      <rect x="12" y="48" width="1" height="3" fill="#2e2a1c" opacity="0.8" />
+      <rect x="27" y="44" width="2" height="4" fill="#332e20" />
+      <!-- the worn ascension seal -->
+      <rect x="17" y="31" width="8" height="8" fill="#150d08" />
+      <rect x="18" y="32" width="6" height="6" fill="#8a7a48" />
+      <rect x="18" y="32" width="6" height="1" fill="#c9b87a" />
+      <rect x="18" y="32" width="2" height="1" fill="#f4e8b0" />
+      <rect x="22" y="33" width="2" height="5" fill="#6e6244" />
+      <!-- the seal's sigil, half-worn -->
+      <rect x="19" y="34" width="3" height="1" fill="#5a4c30" />
+      <rect x="20" y="33" width="1" height="3" fill="#5a4c30" />
+      <rect x="19" y="36" width="1" height="1" fill="#f4e8b0" opacity="0.7" />
 
-      <!-- Right arm + gilded mace -->
-      <rect x="24" y="18" width="3" height="9" fill="#3a3424" />
-      <rect x="24" y="18" width="1" height="9" fill="#4a4230" />
-      <polygon points="22,14 27,15 28,12 31,14 29,20 24,19" fill="#8a8276" />
-      <polygon points="27,9 31,13 29,15 25,12" fill="#b0a89a" />
-      <polygon points="28,8 32,12 30,14 27,11" fill="#d4ccbe" />
-      <rect x="29" y="10" width="1" height="1" fill="#ffffff" />
+      <!-- ══ Left arm — hanging, unraveling ══ -->
+      <rect x="5" y="25" width="6" height="12" fill="#150d08" />
+      <rect x="6" y="26" width="4" height="10" fill="#4a4230" />
+      <rect x="6" y="26" width="2" height="10" fill="#5d543c" />
+      <!-- wrapped hand -->
+      <rect x="5" y="36" width="6" height="5" fill="#150d08" />
+      <rect x="6" y="37" width="4" height="3" fill="#a89568" />
+      <rect x="6" y="37" width="2" height="3" fill="#b8a578" />
+      <!-- bandage strand falling loose -->
+      <rect x="6" y="41" width="2" height="5" fill="#150d08" />
+      <rect x="7" y="41" width="1" height="4" fill="#8a7a50" />
+      <rect x="7" y="46" width="1" height="4" fill="#6a5d3a" opacity="0.7" />
+      <rect x="6" y="50" width="1" height="3" fill="#5a4c30" opacity="0.5" />
 
-      <!-- Legs -->
-      <rect x="12" y="32" width="3" height="8" fill="#3a3424" />
-      <rect x="12" y="32" width="1" height="8" fill="#4a4230" />
-      <rect x="17" y="32" width="3" height="8" fill="#2e2a1c" />
-      <polygon points="10,40 15,40 14,43 11,43" fill="#241f15" />
-      <polygon points="17,40 22,40 21,43 18,43" fill="#1e1a12" />
+      <!-- ══ Right arm — resting on the notched cleaver ══ -->
+      <rect x="31" y="25" width="6" height="9" fill="#150d08" />
+      <rect x="32" y="26" width="4" height="7" fill="#3a3424" />
+      <rect x="32" y="26" width="2" height="7" fill="#4a4230" />
+      <!-- hand on the pommel -->
+      <rect x="32" y="32" width="6" height="5" fill="#150d08" />
+      <rect x="33" y="33" width="4" height="3" fill="#a89568" />
+      <rect x="33" y="33" width="2" height="3" fill="#b8a578" />
+      <!-- ══ The notched cleaver — point down, a walking prop ══ -->
+      <!-- grip above the hand -->
+      <rect x="33" y="28" width="4" height="5" fill="#150d08" />
+      <rect x="34" y="29" width="2" height="4" fill="#4f3722" />
+      <rect x="34" y="29" width="1" height="4" fill="#6e4e30" />
+      <!-- cleaver blade -->
+      <rect x="31" y="37" width="9" height="18" fill="#150d08" />
+      <rect x="32" y="38" width="7" height="16" fill="#5a5a64" />
+      <rect x="32" y="38" width="3" height="16" fill="#6e6a78" />
+      <rect x="32" y="38" width="1" height="12" fill="#84808c" />
+      <rect x="37" y="38" width="2" height="16" fill="#46424e" />
+      <!-- edge notches — bites taken out of the blade -->
+      <rect x="31" y="41" width="2" height="2" fill="#120d08" />
+      <rect x="31" y="46" width="2" height="3" fill="#120d08" />
+      <rect x="31" y="51" width="2" height="2" fill="#120d08" />
+      <!-- old blood stain + rust -->
+      <rect x="35" y="42" width="2" height="1" fill="#5a3424" opacity="0.8" />
+      <rect x="36" y="48" width="2" height="1" fill="#5a3424" opacity="0.7" />
+      <rect x="33" y="52" width="2" height="1" fill="#6e4628" opacity="0.6" />
+      <!-- edge catching light -->
+      <rect x="33" y="38" width="1" height="3" fill="#b0acb8" />
+      <!-- blade tip resting on the ground -->
+      <rect x="32" y="54" width="7" height="3" fill="#150d08" />
+      <rect x="33" y="55" width="5" height="1" fill="#3a3a44" />
 
-      <!-- Drifting motes -->
-      <rect x="14" y="20" width="1" height="1" fill="#f4e8b0" opacity="0.6" />
-      <rect x="24" y="24" width="1" height="1" fill="#c9b87a" opacity="0.5" />
+      <!-- ══ Wrapped legs ══ -->
+      <rect x="12" y="46" width="8" height="10" fill="#150d08" />
+      <rect x="13" y="47" width="6" height="9" fill="#3a3424" />
+      <rect x="13" y="47" width="2" height="9" fill="#4a4230" />
+      <rect x="17" y="47" width="2" height="9" fill="#2e2a1c" />
+      <rect x="20" y="46" width="8" height="10" fill="#150d08" />
+      <rect x="21" y="47" width="6" height="9" fill="#332e20" />
+      <rect x="21" y="47" width="2" height="9" fill="#3f3927" />
+      <!-- wrap bands on the shins -->
+      <rect x="13" y="50" width="6" height="1" fill="#28241a" />
+      <rect x="21" y="51" width="6" height="1" fill="#241f15" />
+
+      <!-- ══ Bone-bare feet ══ -->
+      <rect x="10" y="56" width="10" height="5" fill="#150d08" />
+      <rect x="11" y="57" width="8" height="3" fill="#a89568" />
+      <rect x="11" y="57" width="3" height="3" fill="#b8a578" />
+      <rect x="11" y="59" width="8" height="1" fill="#6a5d3a" />
+      <rect x="20" y="56" width="10" height="5" fill="#150d08" />
+      <rect x="21" y="57" width="8" height="3" fill="#8a7a50" />
+      <rect x="21" y="59" width="8" height="1" fill="#5a4c30" />
+
+      <!-- ══ Gold dust motes ══ -->
+      <rect x="19" y="33" width="1" height="1" fill="#f4e8b0" opacity="0.6" />
+      <rect x="30" y="22" width="1" height="1" fill="#c9b87a" opacity="0.5" />
+      <rect x="8" y="44" width="1" height="1" fill="#c9b87a" opacity="0.45" />
+      <rect x="38" y="58" width="1" height="1" fill="#f4e8b0" opacity="0.4" />
     </svg>
