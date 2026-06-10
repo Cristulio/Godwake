@@ -8,7 +8,7 @@ export function AthkatlaScene() {
     <div className="relative w-full h-48 md:h-56 border-2 border-[var(--color-border-warm)] overflow-hidden mb-6">
       <svg
         viewBox="0 0 800 220"
-        preserveAspectRatio="xMidYEnd slice"
+        preserveAspectRatio="xMidYMax slice"
         className="absolute inset-0 w-full h-full"
       >
         <defs>
