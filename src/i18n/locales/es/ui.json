@@ -18,6 +18,7 @@
     "saveSummary": "{name} · Niv {level} · {location}",
     "earlyBuild": "versión temprana",
     "madeForFriends": "Hecho para amigos",
+    "srdAttribution": "Includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available under CC-BY-4.0",
     "confirmNewTitle": "¿Comenzar una nueva partida?",
     "confirmNewBody": "Tu alma — {soul} — será devuelta a la rueda.",
     "confirmNewNote": "Las ranuras de guardado manual no se tocan. Solo se borra el autoguardado activo.",

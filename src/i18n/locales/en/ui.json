@@ -18,6 +18,7 @@
     "saveSummary": "{name} · Lv {level} · {location}",
     "earlyBuild": "early build",
     "madeForFriends": "Made for friends",
+    "srdAttribution": "Includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available under CC-BY-4.0",
     "confirmNewTitle": "Begin a new game?",
     "confirmNewBody": "Your soul — {soul} — will be released back to the wheel.",
     "confirmNewNote": "Manual save slots are not touched. Only the active autosave is wiped.",

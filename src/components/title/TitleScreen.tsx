@@ -136,6 +136,11 @@ export function TitleScreen() {
       <div className="absolute bottom-4 left-4 text-[var(--color-text-muted)] text-[9px] font-display tracking-[0.3em] uppercase opacity-40">
         {t('ui.title.madeForFriends')}
       </div>
+      {/* CC-BY-4.0 requires this credit for SRD 5.1 mechanics — keep it on the
+          title screen so every distributed build carries the attribution. */}
+      <div className="absolute bottom-9 inset-x-0 text-center text-[var(--color-text-muted)] text-[8px] font-mono tracking-wide opacity-40 px-4">
+        {t('ui.title.srdAttribution')}
+      </div>
 
       {confirming && (
         <NewGameConfirm onCancel={() => setConfirming(false)} onConfirm={beginNewGame} />
