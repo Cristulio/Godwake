@@ -412,6 +412,34 @@ const RAW: Upgrade[] = [
     apply: (c) => ({ ...c, wheelturnerUnlocked: true }),
     kind: 'permanent',
   },
+  {
+    // Game-speed gates: ×2 / ×4 are renown unlocks, not free toggles. Cheap
+    // first-buy traction with a real, felt payoff (owner directive 2026-06-10).
+    // The mechanic lives UI-side: the speed controls read maxUnlockedSpeed()
+    // below, so `apply` is identity — the upgrade's whole effect is the unlock.
+    id: 'wheel-quickened',
+    category: 'soul',
+    name: 'The Wheel, Quickened',
+    flavor:
+      'The Grove teaches your soul to lean into the turn. The world is willing to hurry — for those who have paid the road its toll.',
+    effectAtRank: () => fx('wheel-quickened'),
+    costForRank: () => 15,
+    maxRank: 1,
+    apply: (c) => c,
+    kind: 'permanent',
+  },
+  {
+    id: 'wheel-unbound',
+    category: 'soul',
+    name: 'The Wheel, Unbound',
+    flavor:
+      'The old druid unhooks something behind the hours, and the road blurs. Walk it at a sprint — the wheel keeps the count either way.',
+    effectAtRank: () => fx('wheel-unbound'),
+    costForRank: () => 90,
+    maxRank: 1,
+    apply: (c) => c,
+    kind: 'permanent',
+  },
 
   // ─── CLASS: FIGHTER ──────────────────────────────────────────────────────
   {
@@ -731,3 +759,19 @@ export const UPGRADE_CATEGORIES: UpgradeCategory[] = [
   'fortune',
   'soul',
 ];
+
+/**
+ * Highest game-speed multiplier the account has unlocked at the Grove.
+ * ×2 and ×4 are renown purchases (wheel-quickened / wheel-unbound); ×1 is
+ * always available. ×4 implies nothing about ×2 — each is its own purchase —
+ * but the clamp below naturally lets an owned ×4 stand alone. The speed
+ * controls stay VISIBLE at every tier and render locked tiers greyed; the
+ * single enforcement point is useGameSpeed(), which clamps the persisted
+ * setting to this ceiling so a pre-gate save can't keep a speed it no longer
+ * owns.
+ */
+export function maxUnlockedSpeed(unlocked: Record<string, number>): 1 | 2 | 4 {
+  if ((unlocked['wheel-unbound'] ?? 0) >= 1) return 4;
+  if ((unlocked['wheel-quickened'] ?? 0) >= 1) return 2;
+  return 1;
+}

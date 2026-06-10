@@ -9,6 +9,7 @@ import {
   type SaveSlotMetadata,
 } from '../../stores/gameStore';
 import { Button } from './Button';
+import { maxUnlockedSpeed } from '../../content/upgrades';
 import { useT } from '../../i18n/useT';
 import { LOCALES, type Locale } from '../../i18n';
 
@@ -217,30 +218,46 @@ function GameplaySection() {
   const setSpeed = useSettingsStore((s) => s.setSpeed);
   const autoEndTurnDelayMs = useSettingsStore((s) => s.autoEndTurnDelayMs);
   const setAutoEndTurnDelay = useSettingsStore((s) => s.setAutoEndTurnDelay);
+  // ×2/×4 are Grove renown unlocks (wheel-quickened / wheel-unbound). Locked
+  // tiers stay visible but greyed; useGameSpeed clamps the live pacing anyway.
+  const unlockedUpgrades = useGameStore((s) => s.unlockedUpgrades);
+  const speedCeiling = maxUnlockedSpeed(unlockedUpgrades ?? {});
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-1">
         <span className="font-display text-[var(--color-text-secondary)] text-[10px] uppercase tracking-[0.3em]">
           {t('ui.settings.combatSpeed')}
         </span>
         <div className="flex gap-1">
-          {[1, 2, 4].map((mult) => (
-            <button
-              key={mult}
-              type="button"
-              onClick={() => setSpeed(mult as 1 | 2 | 4)}
-              className={`px-3 py-1 border-2 text-[10px] uppercase tracking-widest font-bold transition-colors ${
-                speedMultiplier === mult
-                  ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-accent-amber)]'
-                  : 'border-[var(--color-border-warm)] bg-[var(--color-bg-panel)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent-amber)]'
-              }`}
-            >
-              {t('ui.settings.speedSuffix', { n: mult })}
-            </button>
-          ))}
+          {[1, 2, 4].map((mult) => {
+            const locked = mult > speedCeiling;
+            return (
+              <button
+                key={mult}
+                type="button"
+                disabled={locked}
+                onClick={() => setSpeed(mult as 1 | 2 | 4)}
+                title={locked ? t('ui.settings.speedLockedHint') : undefined}
+                className={`px-3 py-1 border-2 text-[10px] uppercase tracking-widest font-bold transition-colors ${
+                  locked
+                    ? 'border-[var(--color-border-dim)] bg-[var(--color-bg-deep)] text-[var(--color-text-muted)] opacity-50 cursor-default'
+                    : speedMultiplier === mult
+                      ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-accent-amber)]'
+                      : 'border-[var(--color-border-warm)] bg-[var(--color-bg-panel)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent-amber)]'
+                }`}
+              >
+                {t('ui.settings.speedSuffix', { n: mult })}
+              </button>
+            );
+          })}
         </div>
       </div>
+      {speedCeiling < 4 && (
+        <div className="text-right text-[var(--color-text-muted)] text-[10px] italic mb-3">
+          {t('ui.settings.speedLockedHint')}
+        </div>
+      )}
       <SliderRow
         label={t('ui.settings.turnEnd')}
         value={autoEndTurnDelayMs}

@@ -123,6 +123,16 @@
     "flavor": "Una vieja druida posa la mano sobre tu pecho y solo dice: «Un hilo brillante que la rueda no cortará». La primera bendición de tu alma sobrevive al giro — las maldiciones se las deja a la rueda.",
     "effect": "Al reencarnar, tu primera rareza-don se traslada a la nueva vida (las perdiciones se quedan atrás; la ranura restante se vuelve a tirar)."
   },
+  "wheel-quickened": {
+    "name": "La Rueda, Acelerada",
+    "flavor": "La Arboleda le enseña a tu alma a inclinarse en el giro. El mundo está dispuesto a apresurarse — para quienes le han pagado su peaje al camino.",
+    "effect": "Desbloquea la velocidad de juego ×2 — el combate, los dados y el viaje se apresuran cuando lo pides."
+  },
+  "wheel-unbound": {
+    "name": "La Rueda, Desatada",
+    "flavor": "La vieja druida desengancha algo detrás de las horas, y el camino se vuelve borroso. Recórrelo al esprint — la rueda lleva la cuenta igualmente.",
+    "effect": "Desbloquea la velocidad de juego ×4 — el camino a toda carrera."
+  },
   "wellspring-vigil": {
     "name": "Vigilia del Manantial",
     "flavor": "El círculo de Mielikki mantiene una vigilia mientras duermes. Te adentras en la oscuridad con el segundo aliento ya tomado — y un tercero, y un cuarto.",

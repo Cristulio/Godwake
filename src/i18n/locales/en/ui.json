@@ -55,6 +55,7 @@
     "musicHint": "Music is muted by default. Drag the slider up to wake the ambient bed.",
     "combatSpeed": "Combat speed",
     "speedSuffix": "{n}× speed",
+    "speedLockedHint": "\u00d72 and \u00d74 are sold at the Druid Grove \u2014 The Wheel, Quickened and The Wheel, Unbound.",
     "turnEnd": "Turn end",
     "turnEndHint": "Delay before your turn auto-ends when no actions remain. Lower = snappier.",
     "tongue": "Tongue",

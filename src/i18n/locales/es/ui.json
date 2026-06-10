@@ -55,6 +55,7 @@
     "musicHint": "La música está silenciada por defecto. Sube el control para despertar el lecho ambiental.",
     "combatSpeed": "Velocidad de combate",
     "speedSuffix": "{n}× velocidad",
+    "speedLockedHint": "El ×2 y el ×4 se venden en la Arboleda Druida — La Rueda, Acelerada y La Rueda, Desatada.",
     "turnEnd": "Fin de turno",
     "turnEndHint": "Retraso antes de que tu turno termine solo cuando no quedan acciones. Menor = más ágil.",
     "tongue": "Lengua",
