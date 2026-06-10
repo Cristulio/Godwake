@@ -2,10 +2,7 @@
   "noCharacter": "No hay personaje. Vuelve al título.",
   "title": "Título",
   "location": "Costa de la Espada · Capítulo I · Las Celdas del Mago",
-  "lives": {
-    "one": "La rueda ha girado para ti {count} vida",
-    "other": "La rueda ha girado para ti {count} vidas"
-  },
+  "soulsWalked": "Almas que anduvieron este camino: {n}",
   "backTitle": "← Título",
   "levelInline": "Nivel {n}",
   "hp": "PG",

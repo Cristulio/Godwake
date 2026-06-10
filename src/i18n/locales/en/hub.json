@@ -2,10 +2,7 @@
   "noCharacter": "No character. Return to title.",
   "title": "Title",
   "location": "Sword Coast · Chapter I · The Mage's Cells",
-  "lives": {
-    "one": "The wheel has turned for you {count} life",
-    "other": "The wheel has turned for you {count} lives"
-  },
+  "soulsWalked": "Souls walked this road: {n}",
   "backTitle": "← Title",
   "levelInline": "Level {n}",
   "hp": "HP",

@@ -31,6 +31,7 @@ export function HubScreen() {
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const equippedRelics = useGameStore((s) => s.equippedRelics);
   const delveCount = useGameStore((s) => s.delveCount);
+  const deathCount = useGameStore((s) => s.deathCount);
   const chaptersCleared = useGameStore((s) => s.chaptersCleared);
   const renownSpent = useGameStore((s) => s.renownSpent);
   const progressionMeta = { delveCount, chaptersCleared, renownSpent, druidGroveUnlocked, hasReincarnated };
@@ -122,7 +123,7 @@ export function HubScreen() {
             {t('hub.location')}
           </p>
           <p className="text-[var(--color-text-dim)] text-[10px] italic tracking-widest mt-1">
-            {t('hub.lives', { count: delveCount })}
+            {t('hub.soulsWalked', { n: deathCount })}
           </p>
         </div>
         <Button variant="ghost" onClick={goToTitle}>
