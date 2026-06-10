@@ -1,61 +1,144 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 26 34"
+      viewBox="0 0 32 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Defiled Dryad"
     >
-      <!-- Corrupted-grove backlight + ground shadow -->
-      <ellipse cx="13" cy="17" rx="12" ry="16" fill="#5e8a2e" opacity="0.07" />
-      <ellipse cx="13" cy="31" rx="10" ry="2" fill="#0e1408" opacity="0.45" />
+      <!-- Soured-grove backlight + ground shadow -->
+      <ellipse cx="15" cy="23" rx="14" ry="17" fill="#3a8a52" opacity="0.05" />
+      <ellipse cx="15" cy="40.4" rx="10" ry="1.6" fill="#000" opacity="0.38" />
 
-      <!-- Withered leaf crown -->
-      <polygon points="13,-1 8,3 9,6 17,6 18,3" fill="#1e2a12" opacity="0.8" />
-      <polygon points="13,-1 9,3 13,6" fill="#3a4a1e" opacity="0.6" />
+      <!-- Hair of withered leaves, still trying to be a crown -->
+      <rect x="7" y="0" width="16" height="4" fill="#150d08" />
+      <rect x="8" y="1" width="14" height="2" fill="#2e5e3c" />
+      <rect x="8" y="1" width="6" height="1" fill="#3a8a52" />
+      <rect x="8" y="1" width="3" height="1" fill="#4a9a5e" />
+      <rect x="18" y="1" width="4" height="2" fill="#234a30" />
+      <!-- dead patches in the crown -->
+      <rect x="15" y="1" width="3" height="1" fill="#6a5440" />
+      <rect x="20" y="2" width="2" height="1" fill="#4a3a2a" />
+      <!-- leaves trailing beside the face -->
+      <rect x="5" y="3" width="3" height="6" fill="#150d08" />
+      <rect x="6" y="4" width="1" height="4" fill="#2e5e3c" />
+      <rect x="6" y="6" width="1" height="2" fill="#6a5440" />
+      <rect x="22" y="3" width="3" height="7" fill="#150d08" />
+      <rect x="23" y="4" width="1" height="5" fill="#234a30" />
+      <rect x="23" y="7" width="1" height="2" fill="#4a3a2a" />
+      <!-- one last living sprig -->
+      <rect x="11" y="0" width="2" height="1" fill="#6ac482" />
 
-      <!-- Head — bark-flesh ramp, key upper-left -->
-      <rect x="9" y="3" width="7" height="9" fill="#4a5a2e" />
-      <rect x="9" y="3" width="7" height="1" fill="#6e7e48" />
-      <rect x="9" y="3" width="2" height="9" fill="#5a6a3a" />
-      <rect x="9" y="3" width="1" height="5" fill="#7e8e54" />
-      <rect x="14" y="4" width="2" height="8" fill="#3a4424" />
-      <rect x="9" y="11" width="7" height="1" fill="#2e3a1c" />
-      <rect x="8" y="4" width="1" height="6" fill="#3e4a26" opacity="0.7" />
-      <rect x="16" y="4" width="1" height="6" fill="#1e2810" />
+      <!-- Face — smooth bark, the warmth gone wrong -->
+      <rect x="9" y="3" width="12" height="11" fill="#150d08" />
+      <rect x="10" y="4" width="10" height="9" fill="#a8845e" />
+      <rect x="10" y="4" width="10" height="1" fill="#c4a072" />
+      <rect x="10" y="4" width="4" height="2" fill="#d4b482" />
+      <rect x="10" y="4" width="1" height="7" fill="#b89068" />
+      <rect x="18" y="5" width="2" height="8" fill="#8a6a4a" />
+      <rect x="19" y="6" width="1" height="7" fill="#6e533a" />
+      <!-- bark-grain lines down the cheek -->
+      <rect x="12" y="5" width="1" height="8" fill="#8a6a4a" />
+      <rect x="16" y="6" width="1" height="7" fill="#8a6a4a" />
+      <!-- eyes — the charm soured, violet where green lived -->
+      <rect x="11" y="7" width="3" height="2" fill="#1a1322" />
+      <rect x="15" y="7" width="3" height="2" fill="#1a1322" />
+      <rect x="12" y="7" width="2" height="1" fill="#8a5ad0" />
+      <rect x="16" y="7" width="2" height="1" fill="#8a5ad0" />
+      <rect x="12" y="7" width="1" height="1" fill="#c4b0f0" />
+      <rect x="16" y="7" width="1" height="1" fill="#c4b0f0" />
+      <!-- the once-welcoming mouth, now a grief-split -->
+      <rect x="13" y="11" width="4" height="1" fill="#6e533a" />
+      <rect x="14" y="12" width="2" height="1" fill="#2c1a40" />
 
-      <!-- Glowing eyes + sap-dark mouth -->
-      <rect x="10" y="6" width="2" height="2" fill="#101808" />
-      <rect x="13" y="6" width="2" height="2" fill="#101808" />
-      <rect x="10" y="6" width="1" height="1" fill="#9aca5a" />
-      <rect x="13" y="6" width="1" height="1" fill="#9aca5a" />
-      <rect x="10" y="6" width="1" height="1" fill="#d0f08a" opacity="0.6" />
-      <rect x="11" y="9" width="3" height="1" fill="#2a1818" />
+      <!-- Torso — living wood gone grey at the seams -->
+      <rect x="9" y="14" width="13" height="13" fill="#150d08" />
+      <rect x="10" y="15" width="11" height="11" fill="#8a6a4a" />
+      <rect x="10" y="15" width="11" height="1" fill="#a8845e" />
+      <rect x="10" y="15" width="4" height="1" fill="#c4a072" />
+      <rect x="10" y="15" width="2" height="11" fill="#9a7652" />
+      <rect x="10" y="15" width="1" height="7" fill="#a8845e" />
+      <rect x="18" y="15" width="3" height="11" fill="#6e533a" />
+      <rect x="20" y="15" width="1" height="11" fill="#5a4430" />
+      <!-- moss stole across the shoulder, half-dead -->
+      <rect x="10" y="15" width="4" height="2" fill="#2e5e3c" />
+      <rect x="10" y="15" width="2" height="1" fill="#3a8a52" />
+      <rect x="17" y="16" width="4" height="2" fill="#234a30" />
+      <rect x="19" y="17" width="2" height="1" fill="#4a3a2a" />
+      <!-- bark-grain -->
+      <rect x="13" y="16" width="1" height="9" fill="#6e533a" />
+      <rect x="16" y="17" width="1" height="8" fill="#6e533a" />
+      <!-- the defiling — violet rot veining out from the heartwood -->
+      <rect x="14" y="18" width="2" height="4" fill="#2c1a40" />
+      <rect x="14" y="19" width="1" height="2" fill="#5a3a8a" />
+      <rect x="14" y="19" width="1" height="1" fill="#8a5ad0" />
+      <rect x="12" y="20" width="2" height="1" fill="#2c1a40" />
+      <rect x="16" y="21" width="2" height="1" fill="#2c1a40" />
+      <rect x="11" y="22" width="1" height="1" fill="#5a3a8a" opacity="0.8" />
+      <rect x="18" y="22" width="1" height="1" fill="#5a3a8a" opacity="0.7" />
 
-      <!-- Torso — mossy bark ramp + grain dither -->
-      <polygon points="9,12 17,12 19,26 7,26" fill="#3a4424" />
-      <polygon points="9,12 14,12 13,26 9,26" fill="#4c5a2e" />
-      <rect x="11" y="12" width="2" height="14" fill="#5a6a3a" opacity="0.6" />
-      <polygon points="16,12 17,12 19,26 16,26" fill="#2a3018" />
-      <rect x="9" y="16" width="8" height="1" fill="#1e2810" opacity="0.6" />
-      <rect x="9" y="20" width="8" height="1" fill="#1e2810" opacity="0.6" />
-      <rect x="10" y="14" width="1" height="1" fill="#6e7e48" />
-      <rect x="15" y="23" width="1" height="1" fill="#1e2810" />
+      <!-- Bramble-lash arm — thorned whip-limb raised -->
+      <rect x="20" y="14" width="6" height="4" fill="#150d08" />
+      <rect x="21" y="15" width="4" height="2" fill="#8a6a4a" />
+      <rect x="21" y="15" width="4" height="1" fill="#a8845e" />
+      <!-- the lash uncoiling — segment by thorned segment -->
+      <rect x="25" y="12" width="4" height="3" fill="#150d08" />
+      <rect x="26" y="13" width="2" height="1" fill="#6e533a" />
+      <rect x="28" y="9" width="3" height="4" fill="#150d08" />
+      <rect x="29" y="10" width="1" height="2" fill="#5a4430" />
+      <rect x="29" y="5" width="3" height="5" fill="#150d08" />
+      <rect x="30" y="6" width="1" height="3" fill="#6e533a" />
+      <!-- thorns -->
+      <rect x="27" y="11" width="1" height="1" fill="#c4a072" />
+      <rect x="31" y="8" width="1" height="1" fill="#c4a072" />
+      <rect x="29" y="4" width="1" height="1" fill="#d4b482" />
+      <rect x="31" y="3" width="1" height="2" fill="#150d08" />
+      <rect x="31" y="3" width="1" height="1" fill="#c4a072" />
+      <!-- rot at the lash joints -->
+      <rect x="28" y="12" width="1" height="1" fill="#5a3a8a" opacity="0.7" />
+      <rect x="30" y="9" width="1" height="1" fill="#8a5ad0" opacity="0.6" />
 
-      <!-- Branch arms — bark ramp + twigs -->
-      <polygon points="9,13 4,9 1,14 5,18" fill="#2e3a1c" />
-      <polygon points="9,13 5,10 3,13 6,16" fill="#3e4a26" opacity="0.7" />
-      <line x1="5" y1="11" x2="1" y2="8" stroke="#1a1010" stroke-width="0.8" />
-      <line x1="3" y1="14" x2="0" y2="16" stroke="#1a1010" stroke-width="0.8" />
-      <polygon points="17,13 22,9 25,14 21,18" fill="#2e3a1c" />
-      <polygon points="17,13 21,10 23,13 20,16" fill="#243012" opacity="0.7" />
-      <line x1="21" y1="11" x2="25" y2="8" stroke="#1a1010" stroke-width="0.8" />
-      <line x1="23" y1="14" x2="26" y2="16" stroke="#1a1010" stroke-width="0.8" />
+      <!-- Off arm — the old beckoning gesture, gone stiff -->
+      <rect x="4" y="15" width="6" height="4" fill="#150d08" />
+      <rect x="5" y="16" width="4" height="2" fill="#8a6a4a" />
+      <rect x="5" y="16" width="4" height="1" fill="#9a7652" />
+      <rect x="2" y="17" width="4" height="5" fill="#150d08" />
+      <rect x="3" y="18" width="2" height="3" fill="#6e533a" />
+      <rect x="3" y="18" width="1" height="3" fill="#8a6a4a" />
+      <!-- twig fingers, curling in -->
+      <rect x="1" y="21" width="3" height="1" fill="#150d08" />
+      <rect x="1" y="21" width="2" height="1" fill="#a8845e" />
+      <rect x="2" y="23" width="3" height="1" fill="#150d08" />
+      <rect x="2" y="23" width="2" height="1" fill="#9a7652" />
+      <rect x="4" y="22" width="1" height="1" fill="#c4a072" />
 
-      <!-- Root legs -->
-      <polygon points="7,26 9,32 11,26" fill="#1e2810" />
-      <polygon points="15,26 17,32 19,26" fill="#1e2810" />
-      <rect x="11" y="26" width="4" height="5" fill="#2e3a1c" />
-      <rect x="11" y="26" width="1" height="5" fill="#3e4a26" />
-      <rect x="4" y="22" width="1" height="2" fill="#2a1818" opacity="0.7" />
-      <rect x="21" y="22" width="1" height="2" fill="#2a1818" opacity="0.7" />
-      <rect x="6" y="10" width="1" height="1" fill="#9aca5a" opacity="0.4" />
+      <!-- Rooted skirt — bark flowing into the broken floor -->
+      <rect x="9" y="27" width="13" height="11" fill="#150d08" />
+      <rect x="10" y="28" width="11" height="9" fill="#6e533a" />
+      <rect x="10" y="28" width="11" height="1" fill="#8a6a4a" />
+      <rect x="10" y="28" width="3" height="9" fill="#7a5c40" />
+      <rect x="18" y="28" width="3" height="9" fill="#5a4430" />
+      <rect x="20" y="28" width="1" height="9" fill="#4a3826" />
+      <!-- bark-grain falling -->
+      <rect x="14" y="29" width="1" height="8" fill="#5a4430" />
+      <rect x="16" y="29" width="1" height="7" fill="#5a4430" />
+      <!-- rot veins reaching the ground -->
+      <rect x="12" y="31" width="1" height="4" fill="#2c1a40" />
+      <rect x="12" y="32" width="1" height="2" fill="#5a3a8a" />
+      <rect x="17" y="33" width="1" height="3" fill="#2c1a40" />
+      <!-- root toes splaying over the stone -->
+      <rect x="7" y="37" width="6" height="3" fill="#150d08" />
+      <rect x="8" y="38" width="4" height="1" fill="#6e533a" />
+      <rect x="8" y="38" width="2" height="1" fill="#8a6a4a" />
+      <rect x="5" y="39" width="3" height="1" fill="#150d08" />
+      <rect x="6" y="39" width="2" height="1" fill="#5a4430" />
+      <rect x="13" y="38" width="6" height="2" fill="#150d08" />
+      <rect x="14" y="38" width="4" height="1" fill="#5a4430" />
+      <rect x="19" y="37" width="5" height="3" fill="#150d08" />
+      <rect x="20" y="38" width="3" height="1" fill="#4a3826" />
+      <rect x="24" y="38" width="2" height="1" fill="#150d08" />
+
+      <!-- Spores off the soured charm -->
+      <rect x="6" y="11" width="1" height="1" fill="#8a5ad0" opacity="0.4" />
+      <rect x="25" y="20" width="1" height="1" fill="#a87ae0" opacity="0.4" />
+      <rect x="5" y="29" width="1" height="1" fill="#5a3a8a" opacity="0.4" />
+      <rect x="24" y="31" width="1" height="1" fill="#3a8a52" opacity="0.4" />
     </svg>

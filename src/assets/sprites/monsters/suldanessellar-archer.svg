@@ -1,69 +1,134 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 26 34"
+      viewBox="0 0 32 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Charmed Tor Maladin Archer"
     >
-      <!-- Sylvan backlight + ground shadow -->
-      <ellipse cx="13" cy="17" rx="11" ry="15" fill="#3a7a3a" opacity="0.07" />
-      <ellipse cx="13" cy="29" rx="9" ry="1.6" fill="#000" opacity="0.4" />
+      <!-- Canopy backlight + ground shadow -->
+      <ellipse cx="15" cy="23" rx="14" ry="17" fill="#3a8a52" opacity="0.06" />
+      <ellipse cx="15" cy="40.4" rx="10" ry="1.6" fill="#000" opacity="0.4" />
 
-      <!-- Head — tan ramp, key upper-left + pointed ears -->
-      <rect x="9" y="3" width="7" height="8" fill="#b09a76" />
-      <rect x="9" y="3" width="7" height="1" fill="#dccba6" />
-      <rect x="9" y="3" width="2" height="7" fill="#cdbd9a" />
-      <rect x="9" y="3" width="1" height="6" fill="#e6d6b0" />
-      <rect x="14" y="4" width="2" height="6" fill="#a08858" />
-      <rect x="15" y="4" width="1" height="6" fill="#8a7448" />
-      <rect x="9" y="10" width="7" height="1" fill="#a08858" />
-      <polygon points="9,4 6,2 9,7" fill="#cdbd9a" />
-      <polygon points="9,4 7,3 9,6" fill="#dccba6" />
-      <polygon points="16,4 19,2 16,7" fill="#a08858" />
-      <!-- Headband -->
-      <rect x="9" y="2" width="7" height="2" fill="#243e24" />
-      <rect x="9" y="2" width="7" height="1" fill="#34543a" />
-      <rect x="11" y="1" width="3" height="1" fill="#3a5a3a" />
-      <!-- Green eyes + spark -->
-      <rect x="10" y="6" width="2" height="1" fill="#2e4a2e" />
-      <rect x="13" y="6" width="2" height="1" fill="#2e4a2e" />
-      <rect x="10" y="6" width="1" height="1" fill="#7ad07a" />
-      <rect x="13" y="6" width="1" height="1" fill="#7ad07a" />
+      <!-- Head — high-elf profile, three centuries of drill in the stance -->
+      <rect x="10" y="2" width="10" height="10" fill="#150d08" />
+      <rect x="11" y="3" width="8" height="8" fill="#d4ad78" />
+      <rect x="11" y="3" width="8" height="1" fill="#ecd0a0" />
+      <rect x="11" y="3" width="3" height="1" fill="#f8e8c4" />
+      <rect x="11" y="3" width="1" height="6" fill="#e0bd88" />
+      <rect x="17" y="4" width="2" height="7" fill="#b8905c" />
+      <rect x="18" y="5" width="1" height="6" fill="#95714a" />
+      <!-- the long ear of the canopy-watch -->
+      <rect x="8" y="5" width="3" height="2" fill="#150d08" />
+      <rect x="9" y="5" width="2" height="1" fill="#d4ad78" />
+      <rect x="9" y="6" width="1" height="1" fill="#b8905c" />
+      <!-- topknot + war-braid -->
+      <rect x="12" y="0" width="6" height="3" fill="#150d08" />
+      <rect x="13" y="1" width="4" height="1" fill="#e8dcc4" />
+      <rect x="13" y="1" width="2" height="1" fill="#f8f2e2" />
+      <rect x="18" y="2" width="2" height="6" fill="#150d08" />
+      <rect x="19" y="3" width="1" height="4" fill="#cdbfa2" />
+      <!-- eyes — hollowed, charm-lit violet, nothing behind them -->
+      <rect x="12" y="6" width="2" height="2" fill="#1a1322" />
+      <rect x="15" y="6" width="2" height="2" fill="#1a1322" />
+      <rect x="12" y="6" width="1" height="1" fill="#a87ae0" />
+      <rect x="15" y="6" width="1" height="1" fill="#a87ae0" />
+      <!-- the mouth a flat drilled line -->
+      <rect x="13" y="9" width="4" height="1" fill="#95714a" />
 
-      <!-- Tunic torso — leaf-green ramp -->
-      <rect x="9" y="11" width="8" height="12" fill="#243a26" />
-      <rect x="9" y="11" width="8" height="1" fill="#3a5a3a" />
-      <rect x="9" y="11" width="2" height="11" fill="#27402a" />
-      <rect x="9" y="11" width="1" height="10" fill="#34543a" />
-      <rect x="15" y="12" width="2" height="11" fill="#1c3020" />
-      <rect x="12" y="12" width="2" height="11" fill="#34543a" opacity="0.6" />
-      <rect x="10" y="14" width="6" height="1" fill="#6a8a5a" opacity="0.45" />
-      <!-- Dither -->
-      <rect x="11" y="18" width="1" height="1" fill="#34543a" />
-      <rect x="14" y="20" width="1" height="1" fill="#1c3020" />
+      <!-- Canopy-watch leathers — leaf-green over elf-gold -->
+      <rect x="9" y="12" width="13" height="14" fill="#150d08" />
+      <rect x="10" y="13" width="11" height="12" fill="#2e5e3c" />
+      <rect x="10" y="13" width="11" height="1" fill="#3a7a4a" />
+      <rect x="10" y="13" width="4" height="1" fill="#4a9a5e" />
+      <rect x="10" y="13" width="2" height="12" fill="#356a44" />
+      <rect x="10" y="13" width="1" height="8" fill="#3a8a52" />
+      <rect x="18" y="13" width="3" height="12" fill="#234a30" />
+      <rect x="20" y="13" width="1" height="12" fill="#1e3a28" />
+      <!-- gold gorget of Tessar -->
+      <rect x="12" y="13" width="7" height="2" fill="#9a7232" />
+      <rect x="12" y="13" width="7" height="1" fill="#c89a48" />
+      <rect x="13" y="13" width="2" height="1" fill="#ecc46a" />
+      <!-- leaf-scale lamellar rows -->
+      <rect x="10" y="17" width="11" height="1" fill="#234a30" />
+      <rect x="11" y="17" width="2" height="1" fill="#3a8a52" />
+      <rect x="15" y="17" width="2" height="1" fill="#3a8a52" />
+      <rect x="10" y="20" width="11" height="1" fill="#234a30" />
+      <rect x="12" y="20" width="2" height="1" fill="#3a7a4a" />
+      <rect x="16" y="20" width="2" height="1" fill="#3a7a4a" />
+      <!-- rot-violet creeping at the hem — the charm's stain -->
+      <rect x="10" y="23" width="3" height="2" fill="#2c1a40" />
+      <rect x="17" y="24" width="3" height="1" fill="#2c1a40" />
+      <rect x="11" y="23" width="1" height="1" fill="#5a3a8a" />
 
-      <!-- Arms + tan hands -->
-      <rect x="15" y="12" width="4" height="2" fill="#27402a" />
-      <rect x="15" y="12" width="4" height="1" fill="#34543a" />
-      <rect x="19" y="13" width="2" height="2" fill="#cdbd9a" />
-      <rect x="19" y="13" width="2" height="1" fill="#dccba6" />
-      <rect x="5" y="12" width="4" height="2" fill="#243a26" />
-      <rect x="3" y="13" width="2" height="3" fill="#cdbd9a" />
-      <rect x="3" y="13" width="2" height="1" fill="#dccba6" />
+      <!-- Quiver at the hip -->
+      <rect x="6" y="20" width="4" height="8" fill="#150d08" />
+      <rect x="7" y="21" width="2" height="6" fill="#6a3a1a" />
+      <rect x="7" y="21" width="1" height="6" fill="#8c5226" />
+      <!-- fletchings -->
+      <rect x="6" y="18" width="1" height="3" fill="#cdbfa2" />
+      <rect x="8" y="18" width="1" height="3" fill="#a93340" />
+      <rect x="7" y="17" width="1" height="3" fill="#e8dcc4" />
 
-      <!-- Longbow + nocked arrow -->
-      <path d="M 4 4 Q -1 16 4 28" fill="none" stroke="#7a5e34" stroke-width="1.2" />
-      <path d="M 4 4 Q 0 16 4 28" fill="none" stroke="#c8a85a" stroke-width="0.4" />
-      <line x1="4" y1="4" x2="4" y2="28" stroke="#e8e2d2" stroke-width="0.4" opacity="0.7" />
-      <line x1="4" y1="16" x2="20" y2="16" stroke="#d8cdb0" stroke-width="0.6" />
-      <polygon points="20,16 18,15 18,17" fill="#e8e2d2" />
-      <rect x="19" y="15" width="1" height="1" fill="#ffffff" opacity="0.7" />
+      <!-- Bow arm extended — the recurve at full draw -->
+      <rect x="20" y="13" width="7" height="4" fill="#150d08" />
+      <rect x="21" y="14" width="5" height="2" fill="#2e5e3c" />
+      <rect x="21" y="14" width="5" height="1" fill="#3a7a4a" />
+      <rect x="25" y="14" width="4" height="3" fill="#150d08" />
+      <rect x="26" y="15" width="2" height="1" fill="#d4ad78" />
+      <!-- the great recurve — three centuries of wood, gold-tipped -->
+      <rect x="26" y="2" width="3" height="13" fill="#150d08" />
+      <rect x="27" y="3" width="1" height="11" fill="#8c5226" />
+      <rect x="27" y="3" width="1" height="5" fill="#b07434" />
+      <rect x="26" y="17" width="3" height="13" fill="#150d08" />
+      <rect x="27" y="18" width="1" height="11" fill="#6a3a1a" />
+      <!-- recurve tips, gold -->
+      <rect x="27" y="1" width="3" height="2" fill="#150d08" />
+      <rect x="28" y="1" width="2" height="1" fill="#c89a48" />
+      <rect x="28" y="1" width="1" height="1" fill="#ecc46a" />
+      <rect x="27" y="29" width="3" height="2" fill="#150d08" />
+      <rect x="28" y="30" width="2" height="1" fill="#9a7232" />
+      <!-- string at full draw, back to the cheek -->
+      <rect x="28" y="3" width="1" height="1" fill="#e8dcc4" opacity="0.85" />
+      <rect x="24" y="6" width="1" height="2" fill="#e8dcc4" opacity="0.75" />
+      <rect x="21" y="8" width="1" height="2" fill="#e8dcc4" opacity="0.85" />
+      <rect x="24" y="22" width="1" height="2" fill="#e8dcc4" opacity="0.75" />
+      <rect x="28" y="28" width="1" height="1" fill="#e8dcc4" opacity="0.85" />
+      <rect x="22" y="10" width="1" height="10" fill="#e8dcc4" opacity="0.6" />
+      <!-- the arrow — nocked, levelled, three centuries certain -->
+      <rect x="20" y="14" width="11" height="1" fill="#b07434" />
+      <rect x="20" y="14" width="4" height="1" fill="#d4985a" />
+      <rect x="30" y="13" width="2" height="3" fill="#150d08" />
+      <rect x="30" y="14" width="2" height="1" fill="#e8f4f8" />
+      <rect x="19" y="13" width="2" height="1" fill="#a93340" />
+      <rect x="19" y="15" width="2" height="1" fill="#cdbfa2" />
 
-      <!-- Legs -->
-      <rect x="9" y="23" width="3" height="7" fill="#22361f" />
-      <rect x="9" y="23" width="1" height="7" fill="#2e4a2e" />
-      <rect x="14" y="23" width="3" height="7" fill="#1a2c18" />
-      <rect x="14" y="23" width="1" height="7" fill="#22361f" />
-      <rect x="9" y="29" width="4" height="1" fill="#0e1a12" />
-      <rect x="14" y="29" width="4" height="1" fill="#0e1a12" />
-      <rect x="6" y="9" width="1" height="1" fill="#7ad07a" opacity="0.5" />
+      <!-- Draw arm pulled back past the jaw -->
+      <rect x="17" y="10" width="5" height="4" fill="#150d08" />
+      <rect x="18" y="11" width="3" height="2" fill="#356a44" />
+      <rect x="18" y="11" width="3" height="1" fill="#3a8a52" />
+      <rect x="20" y="11" width="2" height="2" fill="#d4ad78" />
+      <rect x="20" y="11" width="1" height="1" fill="#ecd0a0" />
+
+      <!-- Legs — the watcher's stance, weight banked -->
+      <rect x="9" y="26" width="12" height="3" fill="#150d08" />
+      <rect x="10" y="26" width="10" height="2" fill="#234a30" />
+      <rect x="10" y="26" width="4" height="1" fill="#2e5e3c" />
+      <rect x="9" y="28" width="5" height="10" fill="#150d08" />
+      <rect x="10" y="29" width="3" height="8" fill="#2e5e3c" />
+      <rect x="10" y="29" width="1" height="8" fill="#356a44" />
+      <rect x="16" y="28" width="5" height="10" fill="#150d08" />
+      <rect x="17" y="29" width="3" height="8" fill="#234a30" />
+      <rect x="19" y="29" width="1" height="8" fill="#1e3a28" />
+      <!-- soft canopy boots, gold clasp -->
+      <rect x="8" y="36" width="6" height="3" fill="#150d08" />
+      <rect x="9" y="36" width="4" height="2" fill="#6a3a1a" />
+      <rect x="9" y="36" width="2" height="1" fill="#8c5226" />
+      <rect x="10" y="37" width="1" height="1" fill="#c89a48" />
+      <rect x="15" y="36" width="6" height="3" fill="#150d08" />
+      <rect x="16" y="36" width="4" height="2" fill="#4a2810" />
+      <rect x="16" y="36" width="2" height="1" fill="#6a3a1a" />
+
+      <!-- Falling leaves that no longer mean home -->
+      <rect x="4" y="10" width="1" height="1" fill="#3a8a52" opacity="0.5" />
+      <rect x="24" y="32" width="1" height="1" fill="#2e5e3c" opacity="0.5" />
+      <rect x="6" y="31" width="1" height="1" fill="#5a3a8a" opacity="0.4" />
     </svg>

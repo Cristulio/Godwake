@@ -1,78 +1,166 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 26 40"
+      viewBox="0 0 32 44"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Half-Dragon Reaver"
     >
-      <!-- Storm backlight + ground shadow -->
-      <ellipse cx="13" cy="20" rx="13" ry="19" fill="#3a64aa" opacity="0.08" />
-      <ellipse cx="12" cy="38" rx="10" ry="1.8" fill="#000" opacity="0.42" />
+      <!-- Storm-blood backlight + ground shadow -->
+      <ellipse cx="15" cy="24" rx="14" ry="18" fill="#3a5288" opacity="0.07" />
+      <ellipse cx="15" cy="42.4" rx="11" ry="1.7" fill="#000" opacity="0.42" />
 
-      <!-- Horns -->
-      <polygon points="7,4 9,0 10,5" fill="#16305c" />
-      <polygon points="7,4 8,1 9,5" fill="#244a86" opacity="0.7" />
-      <polygon points="17,4 15,0 16,5" fill="#14254a" />
+      <!-- Head — blunt draconic skull on a soldier's neck -->
+      <rect x="9" y="2" width="12" height="11" fill="#150d08" />
+      <rect x="10" y="3" width="10" height="9" fill="#2e4474" />
+      <rect x="10" y="3" width="10" height="1" fill="#3a5288" />
+      <rect x="10" y="3" width="4" height="1" fill="#4a66a4" />
+      <rect x="10" y="3" width="2" height="8" fill="#36507e" />
+      <rect x="18" y="4" width="2" height="8" fill="#22335a" />
+      <rect x="19" y="5" width="1" height="7" fill="#1a2848" />
+      <!-- swept horns, sire's pride -->
+      <rect x="7" y="0" width="4" height="3" fill="#150d08" />
+      <rect x="8" y="1" width="2" height="1" fill="#aab4c8" />
+      <rect x="8" y="1" width="1" height="1" fill="#c8d0e0" />
+      <rect x="19" y="0" width="4" height="3" fill="#150d08" />
+      <rect x="20" y="1" width="2" height="1" fill="#8a94ac" />
+      <!-- storm-yellow soldier eyes -->
+      <rect x="11" y="6" width="3" height="2" fill="#0e1626" />
+      <rect x="16" y="6" width="3" height="2" fill="#0e1626" />
+      <rect x="12" y="6" width="2" height="1" fill="#ffe066" />
+      <rect x="17" y="6" width="2" height="1" fill="#ffe066" />
+      <rect x="12" y="6" width="1" height="1" fill="#fff4c0" />
+      <rect x="17" y="6" width="1" height="1" fill="#fff4c0" />
+      <!-- the muzzle — scaled jaw, discipline holding the teeth in -->
+      <rect x="12" y="9" width="7" height="3" fill="#22335a" />
+      <rect x="13" y="10" width="5" height="1" fill="#16203a" />
+      <rect x="13" y="10" width="1" height="1" fill="#c8d0e0" />
+      <rect x="16" y="10" width="1" height="1" fill="#c8d0e0" />
+      <!-- charge at the nostril -->
+      <rect x="19" y="9" width="1" height="1" fill="#8fd8ff" opacity="0.7" />
 
-      <!-- Draconic head — scale ramp, lit upper-left -->
-      <rect x="8" y="3" width="8" height="8" fill="#244a86" />
-      <rect x="8" y="3" width="8" height="2" fill="#3a64aa" />
-      <rect x="8" y="3" width="3" height="1" fill="#5a84cc" />
-      <rect x="8" y="3" width="2" height="8" fill="#2a4e8e" />
-      <rect x="14" y="4" width="2" height="7" fill="#1a3460" />
-      <rect x="15" y="4" width="1" height="7" fill="#16305c" />
-      <polygon points="8,11 12,14 16,11" fill="#1e3a6e" />
-      <!-- Lightning eyes + spark -->
-      <rect x="9" y="6" width="2" height="2" fill="#f4d042" />
-      <rect x="13" y="6" width="2" height="2" fill="#f4d042" />
-      <rect x="9" y="6" width="1" height="1" fill="#fff0b0" />
-      <rect x="13" y="6" width="1" height="1" fill="#fff0b0" />
-      <rect x="10" y="7" width="1" height="1" fill="#e89a20" />
-      <line x1="9" y1="9" x2="15" y2="9" stroke="#e8e0c4" stroke-width="0.6" />
+      <!-- Shoulders — broad, scale over harness -->
+      <rect x="5" y="12" width="22" height="6" fill="#150d08" />
+      <rect x="6" y="13" width="20" height="4" fill="#2a3c66" />
+      <rect x="6" y="13" width="20" height="1" fill="#3a5288" />
+      <rect x="6" y="13" width="7" height="1" fill="#4a66a4" />
+      <rect x="6" y="13" width="2" height="4" fill="#36507e" />
+      <rect x="23" y="13" width="3" height="4" fill="#1e2c4e" />
+      <!-- scale ridge across the trapezius -->
+      <rect x="9" y="12" width="3" height="2" fill="#150d08" />
+      <rect x="10" y="12" width="1" height="1" fill="#4a66a4" />
+      <rect x="19" y="12" width="3" height="2" fill="#150d08" />
+      <rect x="20" y="12" width="1" height="1" fill="#3a5288" />
 
-      <!-- Scaled torso — ramp + plate seam + spine ridges -->
-      <rect x="6" y="11" width="14" height="13" fill="#1e3a6e" />
-      <rect x="6" y="11" width="14" height="2" fill="#2a4e8e" />
-      <rect x="6" y="11" width="3" height="13" fill="#244a86" />
-      <rect x="6" y="11" width="1" height="13" fill="#2e548e" />
-      <rect x="18" y="12" width="2" height="12" fill="#16305c" />
-      <rect x="19" y="12" width="1" height="12" fill="#122850" />
-      <polygon points="8,11 10,8 12,11" fill="#2a4e8e" />
-      <polygon points="14,11 16,8 18,11" fill="#244a86" />
-      <rect x="10" y="14" width="6" height="8" fill="#16305c" />
-      <rect x="11" y="13" width="2" height="2" fill="#7ec8ff" opacity="0.6" />
-      <rect x="9" y="16" width="1" height="1" fill="#3a64aa" />
-      <rect x="16" y="19" width="1" height="1" fill="#122850" />
+      <!-- Torso — blue-scaled slab in a war-harness -->
+      <rect x="7" y="15" width="17" height="14" fill="#150d08" />
+      <rect x="8" y="16" width="15" height="12" fill="#2a3c66" />
+      <rect x="8" y="16" width="15" height="1" fill="#36507e" />
+      <rect x="8" y="16" width="2" height="12" fill="#324a78" />
+      <rect x="8" y="16" width="1" height="8" fill="#3a5288" />
+      <rect x="20" y="16" width="3" height="12" fill="#1e2c4e" />
+      <rect x="22" y="16" width="1" height="12" fill="#1a2848" />
+      <!-- scale rows -->
+      <rect x="9" y="18" width="13" height="1" fill="#1a2848" />
+      <rect x="9" y="21" width="13" height="1" fill="#1a2848" />
+      <rect x="9" y="24" width="13" height="1" fill="#1a2848" />
+      <rect x="11" y="18" width="2" height="1" fill="#4a66a4" />
+      <rect x="16" y="21" width="2" height="1" fill="#4a66a4" />
+      <!-- the harness — leather cross-strap, iron studs -->
+      <rect x="8" y="16" width="3" height="2" fill="#3a2c20" />
+      <rect x="11" y="18" width="3" height="2" fill="#32261b" />
+      <rect x="14" y="20" width="3" height="2" fill="#3a2c20" />
+      <rect x="17" y="22" width="3" height="2" fill="#32261b" />
+      <rect x="20" y="24" width="3" height="2" fill="#3a2c20" />
+      <rect x="9" y="16" width="1" height="1" fill="#7a7078" />
+      <rect x="15" y="20" width="1" height="1" fill="#7a7078" />
+      <rect x="21" y="24" width="1" height="1" fill="#5a5058" />
+      <!-- pale belly scale at the flank -->
+      <rect x="9" y="25" width="5" height="3" fill="#8a94ac" />
+      <rect x="9" y="25" width="5" height="1" fill="#aab4c8" />
+      <rect x="12" y="26" width="2" height="2" fill="#6a7490" />
+      <!-- charge crawling a seam -->
+      <rect x="10" y="20" width="1" height="2" fill="#8fd8ff" opacity="0.6" />
 
-      <!-- Left arm -->
-      <rect x="2" y="12" width="4" height="3" fill="#244a86" />
-      <rect x="2" y="12" width="4" height="1" fill="#3a64aa" />
-      <rect x="1" y="14" width="3" height="9" fill="#1e3a6e" />
-      <rect x="1" y="14" width="1" height="9" fill="#244a86" />
+      <!-- Greataxe arms — both fists on the crackling haft -->
+      <rect x="23" y="14" width="6" height="5" fill="#150d08" />
+      <rect x="24" y="15" width="4" height="3" fill="#2a3c66" />
+      <rect x="24" y="15" width="4" height="1" fill="#3a5288" />
+      <!-- the haft over the shoulder -->
+      <rect x="25" y="2" width="4" height="24" fill="#150d08" />
+      <rect x="26" y="3" width="2" height="22" fill="#4a3a2a" />
+      <rect x="26" y="3" width="1" height="22" fill="#6a5440" />
+      <!-- gripping fists -->
+      <rect x="24" y="17" width="5" height="3" fill="#150d08" />
+      <rect x="25" y="18" width="3" height="1" fill="#2e4474" />
+      <rect x="24" y="21" width="5" height="3" fill="#150d08" />
+      <rect x="25" y="22" width="3" height="1" fill="#22335a" />
+      <!-- the greataxe head — storm-iron, charge on the edge -->
+      <rect x="22" y="0" width="9" height="7" fill="#150d08" />
+      <rect x="23" y="1" width="7" height="5" fill="#3e4658" />
+      <rect x="23" y="1" width="7" height="1" fill="#5a6478" />
+      <rect x="23" y="1" width="3" height="1" fill="#6e7a92" />
+      <rect x="28" y="2" width="2" height="4" fill="#2e3646" />
+      <!-- the bit edge, lightning living on it -->
+      <rect x="30" y="0" width="2" height="7" fill="#150d08" />
+      <rect x="30" y="1" width="1" height="5" fill="#8fd8ff" />
+      <rect x="30" y="2" width="1" height="2" fill="#e8f8ff" />
+      <!-- arcs jumping off the edge -->
+      <rect x="31" y="0" width="1" height="1" fill="#c8ecff" />
+      <rect x="31" y="6" width="1" height="1" fill="#8fd8ff" opacity="0.8" />
+      <rect x="29" y="7" width="1" height="1" fill="#8fd8ff" opacity="0.6" />
 
-      <!-- Right arm + greataxe -->
-      <rect x="20" y="12" width="4" height="3" fill="#1a3460" />
-      <rect x="22" y="0" width="2" height="15" fill="#5a4a38" />
-      <rect x="22" y="0" width="1" height="15" fill="#6e5a44" />
-      <polygon points="19,-2 27,-2 24,6 22,6" fill="#8a9298" />
-      <polygon points="20,-1 26,-1 24,4" fill="#aeb6bc" />
-      <polygon points="20,-1 23,-1 22,2" fill="#cfd6dc" />
-      <rect x="20" y="2" width="6" height="1" fill="#7ec8ff" opacity="0.6" />
-      <rect x="21" y="-1" width="1" height="1" fill="#ffffff" />
+      <!-- Off arm braced across the body -->
+      <rect x="3" y="14" width="5" height="5" fill="#150d08" />
+      <rect x="4" y="15" width="3" height="3" fill="#2e4474" />
+      <rect x="4" y="15" width="3" height="1" fill="#3a5288" />
+      <rect x="2" y="18" width="4" height="6" fill="#150d08" />
+      <rect x="3" y="19" width="2" height="4" fill="#22335a" />
+      <rect x="3" y="19" width="1" height="4" fill="#2e4474" />
+      <!-- clawed hand -->
+      <rect x="2" y="23" width="4" height="3" fill="#150d08" />
+      <rect x="3" y="24" width="2" height="1" fill="#2a3c66" />
+      <rect x="1" y="25" width="2" height="1" fill="#150d08" />
+      <rect x="1" y="25" width="1" height="1" fill="#c8d0e0" />
+      <rect x="5" y="26" width="1" height="1" fill="#aab4c8" />
 
-      <!-- Legs + clawed feet -->
-      <rect x="7" y="24" width="4" height="10" fill="#1e3a6e" />
-      <rect x="7" y="24" width="1" height="10" fill="#244a86" />
-      <rect x="10" y="24" width="1" height="10" fill="#16305c" />
-      <rect x="15" y="24" width="4" height="10" fill="#1a3460" />
-      <rect x="18" y="24" width="1" height="10" fill="#122850" />
-      <polygon points="5,34 11,34 8,37" fill="#14254a" />
-      <rect x="5" y="34" width="1" height="2" fill="#b8c4e0" />
-      <rect x="8" y="34" width="1" height="2" fill="#9aa8cc" />
-      <polygon points="13,34 19,34 16,37" fill="#11203f" />
-      <rect x="13" y="34" width="1" height="2" fill="#9aa8cc" />
+      <!-- War-kilt + tail swinging out behind -->
+      <rect x="7" y="29" width="17" height="4" fill="#150d08" />
+      <rect x="8" y="30" width="15" height="2" fill="#3a2c20" />
+      <rect x="8" y="30" width="15" height="1" fill="#4a3a2a" />
+      <rect x="8" y="30" width="5" height="2" fill="#42321f" />
+      <rect x="19" y="31" width="4" height="1" fill="#32261b" />
+      <rect x="12" y="30" width="1" height="3" fill="#150d08" />
+      <rect x="17" y="30" width="1" height="3" fill="#150d08" />
+      <!-- the tail -->
+      <rect x="1" y="28" width="7" height="3" fill="#150d08" />
+      <rect x="2" y="29" width="5" height="1" fill="#22335a" />
+      <rect x="2" y="29" width="2" height="1" fill="#2a3c66" />
+      <rect x="0" y="26" width="3" height="3" fill="#150d08" />
+      <rect x="1" y="27" width="1" height="1" fill="#1e2c4e" />
 
-      <!-- Lightning crackle -->
-      <polygon points="11,23 13,25 11,25 13,28" fill="#7ec8ff" opacity="0.65" />
-      <rect x="3" y="18" width="1" height="2" fill="#7ec8ff" opacity="0.5" />
-      <rect x="24" y="8" width="1" height="1" fill="#7ec8ff" opacity="0.5" />
+      <!-- Legs — set wide, the discipline of the line -->
+      <rect x="8" y="32" width="6" height="8" fill="#150d08" />
+      <rect x="9" y="33" width="4" height="6" fill="#2a3c66" />
+      <rect x="9" y="33" width="1" height="6" fill="#36507e" />
+      <rect x="12" y="33" width="1" height="6" fill="#1e2c4e" />
+      <rect x="17" y="32" width="6" height="8" fill="#150d08" />
+      <rect x="18" y="33" width="4" height="6" fill="#22335a" />
+      <rect x="18" y="33" width="1" height="6" fill="#2a3c66" />
+      <rect x="21" y="33" width="1" height="6" fill="#1a2848" />
+      <!-- scale shin-ridges -->
+      <rect x="9" y="35" width="4" height="1" fill="#1a2848" />
+      <rect x="18" y="36" width="4" height="1" fill="#16203a" />
+      <!-- clawed feet -->
+      <rect x="6" y="39" width="8" height="3" fill="#150d08" />
+      <rect x="7" y="40" width="6" height="1" fill="#22335a" />
+      <rect x="5" y="40" width="2" height="1" fill="#150d08" />
+      <rect x="5" y="40" width="1" height="1" fill="#c8d0e0" />
+      <rect x="16" y="39" width="8" height="3" fill="#150d08" />
+      <rect x="17" y="40" width="6" height="1" fill="#1e2c4e" />
+      <rect x="23" y="40" width="2" height="1" fill="#150d08" />
+      <rect x="24" y="40" width="1" height="1" fill="#aab4c8" />
+
+      <!-- The storm in the lineage, leaking -->
+      <rect x="4" y="8" width="1" height="1" fill="#8fd8ff" opacity="0.5" />
+      <rect x="29" y="10" width="1" height="1" fill="#c8ecff" opacity="0.5" />
+      <rect x="27" y="30" width="1" height="1" fill="#8fd8ff" opacity="0.45" />
     </svg>

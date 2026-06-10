@@ -1,71 +1,149 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 28 36"
+      viewBox="0 0 34 44"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Corrupted War-Priest"
     >
-      <!-- Tarnished-gold backlight + ground shadow -->
-      <ellipse cx="14" cy="18" rx="13" ry="16" fill="#9a8a4a" opacity="0.07" />
-      <ellipse cx="14" cy="31" rx="11" ry="2" fill="#14100a" opacity="0.45" />
+      <!-- Soured rite backlight + ground shadow -->
+      <ellipse cx="16" cy="24" rx="15" ry="17" fill="#3a8a52" opacity="0.05" />
+      <ellipse cx="9" cy="8" rx="7" ry="6" fill="#a87ae0" opacity="0.08" />
+      <ellipse cx="16" cy="42.4" rx="11" ry="1.7" fill="#000" opacity="0.42" />
 
-      <!-- Crested helm — gold ramp + specular -->
-      <polygon points="14,0 10,4 18,4" fill="#9a8a4a" />
-      <polygon points="14,0 11,4 14,4" fill="#bcac68" />
-      <rect x="10" y="3" width="8" height="2" fill="#8a7a40" />
-      <rect x="10" y="3" width="8" height="1" fill="#b09c50" />
-      <rect x="13" y="1" width="2" height="2" fill="#d8c878" />
-      <rect x="13" y="1" width="1" height="1" fill="#fff0b0" />
+      <!-- Antler-branch mitre of Rillifane, one tine snapped -->
+      <rect x="10" y="0" width="3" height="4" fill="#150d08" />
+      <rect x="11" y="1" width="1" height="3" fill="#8c5226" />
+      <rect x="8" y="0" width="3" height="2" fill="#150d08" />
+      <rect x="9" y="0" width="1" height="1" fill="#b07434" />
+      <rect x="17" y="0" width="3" height="3" fill="#150d08" />
+      <rect x="18" y="1" width="1" height="2" fill="#6a3a1a" />
+      <!-- the snapped tine -->
+      <rect x="19" y="0" width="2" height="2" fill="#150d08" />
+      <rect x="19" y="0" width="1" height="1" fill="#4a2810" />
 
-      <!-- Pale ascetic face — ramp + cheek-flanges -->
-      <rect x="10" y="5" width="7" height="8" fill="#cdbd9a" />
-      <rect x="10" y="5" width="2" height="8" fill="#dccaa6" />
-      <rect x="10" y="5" width="1" height="5" fill="#e6d6b4" />
-      <rect x="16" y="5" width="1" height="8" fill="#b09a76" />
-      <rect x="10" y="12" width="7" height="1" fill="#b09a76" />
-      <rect x="11" y="8" width="2" height="1" fill="#4a3a2a" />
-      <rect x="14" y="8" width="2" height="1" fill="#4a3a2a" />
-      <rect x="11" y="8" width="1" height="1" fill="#c8b080" />
-      <rect x="14" y="8" width="1" height="1" fill="#c8b080" />
-      <polygon points="10,6 7,4 10,9" fill="#cdbd9a" />
-      <polygon points="10,6 8,5 10,8" fill="#dccaa6" opacity="0.7" />
-      <polygon points="17,6 20,4 17,9" fill="#b09a76" />
+      <!-- Head — drawn elven face under the leaf-cowl -->
+      <rect x="10" y="3" width="11" height="10" fill="#150d08" />
+      <rect x="11" y="4" width="9" height="8" fill="#2e5e3c" />
+      <rect x="11" y="4" width="9" height="1" fill="#3a7a4a" />
+      <rect x="11" y="4" width="3" height="1" fill="#4a9a5e" />
+      <rect x="18" y="5" width="2" height="7" fill="#234a30" />
+      <!-- the face within -->
+      <rect x="12" y="6" width="7" height="6" fill="#1a1410" />
+      <rect x="13" y="7" width="5" height="4" fill="#d4ad78" />
+      <rect x="13" y="7" width="5" height="1" fill="#ecd0a0" />
+      <rect x="13" y="7" width="1" height="3" fill="#e0bd88" />
+      <rect x="17" y="8" width="1" height="3" fill="#95714a" />
+      <!-- charm-hollow eyes -->
+      <rect x="13" y="8" width="2" height="1" fill="#1a1322" />
+      <rect x="16" y="8" width="2" height="1" fill="#1a1322" />
+      <rect x="13" y="8" width="1" height="1" fill="#a87ae0" />
+      <rect x="16" y="8" width="1" height="1" fill="#a87ae0" />
+      <!-- the hymn caught on its lips -->
+      <rect x="14" y="10" width="3" height="1" fill="#95714a" />
+      <rect x="15" y="10" width="1" height="1" fill="#531320" />
 
-      <!-- War-robe — olive ramp, lit centre, shadow flank -->
-      <polygon points="9,13 18,13 22,30 5,30" fill="#3a3220" />
-      <polygon points="9,13 16,13 14,30 7,30" fill="#4a402a" />
-      <rect x="13" y="14" width="2" height="16" fill="#5a4e30" opacity="0.7" />
-      <polygon points="17,13 18,13 22,30 18,30" fill="#2a2416" />
-      <polygon points="11,15 16,15 14,22 13,22" fill="#8a7a40" opacity="0.6" />
-      <rect x="9" y="20" width="9" height="1" fill="#5a4e30" opacity="0.5" />
-      <rect x="10" y="17" width="1" height="1" fill="#4a402a" />
-      <rect x="16" y="25" width="1" height="1" fill="#2a2416" />
+      <!-- Vestments — bark-green chasuble, gold orphrey, rot climbing -->
+      <rect x="8" y="13" width="15" height="17" fill="#150d08" />
+      <rect x="9" y="14" width="13" height="15" fill="#2e5e3c" />
+      <rect x="9" y="14" width="13" height="1" fill="#3a7a4a" />
+      <rect x="9" y="14" width="5" height="1" fill="#4a9a5e" />
+      <rect x="9" y="14" width="2" height="15" fill="#356a44" />
+      <rect x="9" y="14" width="1" height="10" fill="#3a8a52" />
+      <rect x="19" y="14" width="3" height="15" fill="#234a30" />
+      <rect x="21" y="14" width="1" height="15" fill="#1e3a28" />
+      <!-- gold orphrey down the centre — the Leaflord's column -->
+      <rect x="14" y="14" width="3" height="15" fill="#9a7232" />
+      <rect x="14" y="14" width="1" height="15" fill="#c89a48" />
+      <rect x="15" y="15" width="1" height="1" fill="#ecc46a" />
+      <rect x="15" y="19" width="1" height="1" fill="#ecc46a" />
+      <rect x="15" y="23" width="1" height="1" fill="#ecc46a" />
+      <rect x="15" y="27" width="1" height="1" fill="#ecc46a" />
+      <!-- the oak-leaf clasp, wilting -->
+      <rect x="13" y="14" width="5" height="2" fill="#150d08" />
+      <rect x="14" y="14" width="3" height="1" fill="#3a8a52" />
+      <rect x="14" y="14" width="1" height="1" fill="#4a9a5e" />
+      <!-- rot-violet veining up the hem and the shoulder -->
+      <rect x="9" y="26" width="3" height="3" fill="#2c1a40" />
+      <rect x="10" y="25" width="1" height="1" fill="#5a3a8a" />
+      <rect x="18" y="27" width="3" height="2" fill="#2c1a40" />
+      <rect x="19" y="26" width="1" height="1" fill="#5a3a8a" />
+      <rect x="9" y="15" width="2" height="2" fill="#2c1a40" />
+      <rect x="10" y="15" width="1" height="1" fill="#5a3a8a" />
 
-      <!-- Arms + bone hands -->
-      <rect x="18" y="14" width="4" height="2" fill="#3a3220" />
-      <rect x="18" y="14" width="4" height="1" fill="#4a402a" />
-      <rect x="22" y="15" width="2" height="3" fill="#cdbd9a" />
-      <rect x="4" y="14" width="5" height="2" fill="#3a3220" />
-      <rect x="4" y="14" width="5" height="1" fill="#4a402a" />
-      <rect x="3" y="16" width="3" height="2" fill="#cdbd9a" />
-      <rect x="3" y="16" width="3" height="1" fill="#dccaa6" />
+      <!-- Right arm — censer-mace swung on its chain -->
+      <rect x="21" y="15" width="6" height="4" fill="#150d08" />
+      <rect x="22" y="16" width="4" height="2" fill="#2e5e3c" />
+      <rect x="22" y="16" width="4" height="1" fill="#3a7a4a" />
+      <rect x="25" y="18" width="4" height="4" fill="#150d08" />
+      <rect x="26" y="19" width="2" height="2" fill="#d4ad78" />
+      <rect x="26" y="19" width="1" height="1" fill="#ecd0a0" />
+      <!-- chain links down -->
+      <rect x="27" y="22" width="1" height="1" fill="#7a7078" />
+      <rect x="28" y="23" width="1" height="1" fill="#5a5058" />
+      <rect x="27" y="24" width="1" height="1" fill="#7a7078" />
+      <rect x="28" y="25" width="1" height="1" fill="#5a5058" />
+      <!-- the censer-mace head — ironwood burl, rite-smoke -->
+      <rect x="24" y="26" width="9" height="8" fill="#150d08" />
+      <rect x="25" y="27" width="7" height="6" fill="#4a2810" />
+      <rect x="25" y="27" width="7" height="1" fill="#6a3a1a" />
+      <rect x="25" y="27" width="2" height="5" fill="#5a3018" />
+      <rect x="25" y="27" width="1" height="3" fill="#8c5226" />
+      <rect x="30" y="28" width="2" height="5" fill="#3a2010" />
+      <!-- burl studs -->
+      <rect x="26" y="29" width="1" height="1" fill="#b07434" />
+      <rect x="29" y="31" width="1" height="1" fill="#8c5226" />
+      <!-- the soured incense breathing out violet -->
+      <rect x="27" y="29" width="3" height="2" fill="#2c1a40" />
+      <rect x="28" y="29" width="1" height="1" fill="#8a5ad0" />
+      <rect x="28" y="30" width="1" height="1" fill="#5a3a8a" />
+      <rect x="31" y="25" width="1" height="1" fill="#8a5ad0" opacity="0.5" />
+      <rect x="32" y="22" width="1" height="2" fill="#5a3a8a" opacity="0.4" />
+      <rect x="30" y="20" width="1" height="1" fill="#a87ae0" opacity="0.35" />
 
-      <!-- Mace — gold head + steel flanges + specular -->
-      <line x1="24" y1="6" x2="24" y2="17" stroke="#6a5a30" stroke-width="0.8" />
-      <rect x="22" y="6" width="4" height="3" fill="#9a8a4a" />
-      <rect x="22" y="6" width="4" height="1" fill="#d8c878" />
-      <rect x="22" y="6" width="1" height="3" fill="#bcac68" />
-      <rect x="22" y="6" width="1" height="1" fill="#fff0b0" />
-      <rect x="23" y="9" width="2" height="2" fill="#8a7a40" />
-      <rect x="22" y="11" width="1" height="2" fill="#9aa0a0" opacity="0.5" />
-      <rect x="25" y="11" width="1" height="3" fill="#9aa0a0" opacity="0.4" />
-      <rect x="23" y="13" width="1" height="2" fill="#b0b6b6" opacity="0.35" />
+      <!-- Left arm raised in the unmaking blessing -->
+      <rect x="4" y="13" width="5" height="5" fill="#150d08" />
+      <rect x="5" y="14" width="3" height="3" fill="#2e5e3c" />
+      <rect x="5" y="14" width="3" height="1" fill="#3a8a52" />
+      <rect x="3" y="9" width="5" height="6" fill="#150d08" />
+      <rect x="4" y="10" width="3" height="4" fill="#356a44" />
+      <rect x="4" y="10" width="3" height="1" fill="#3a8a52" />
+      <rect x="4" y="10" width="1" height="4" fill="#3a7a4a" />
+      <!-- the blessing hand, palm out, hymn-light pooling -->
+      <rect x="3" y="5" width="5" height="5" fill="#150d08" />
+      <rect x="4" y="6" width="3" height="3" fill="#d4ad78" />
+      <rect x="4" y="6" width="3" height="1" fill="#ecd0a0" />
+      <rect x="6" y="7" width="1" height="2" fill="#b8905c" />
+      <!-- the hymn that unmakes, gathering -->
+      <ellipse cx="5.5" cy="3.5" rx="3" ry="2.5" fill="#8a5ad0" opacity="0.2" />
+      <rect x="4" y="2" width="3" height="2" fill="#5a3a8a" />
+      <rect x="5" y="2" width="1" height="2" fill="#8a5ad0" />
+      <rect x="5" y="1" width="1" height="1" fill="#c4b0f0" />
+      <rect x="3" y="3" width="1" height="1" fill="#8a5ad0" opacity="0.6" />
+      <rect x="7" y="2" width="1" height="1" fill="#a87ae0" opacity="0.5" />
 
-      <!-- Robe hem -->
-      <polygon points="5,30 8,25 11,30" fill="#2a2416" />
-      <polygon points="11,30 14,25 17,30" fill="#2a2416" />
-      <polygon points="17,30 20,25 22,30" fill="#2a2416" />
-      <polygon points="8,25 9,27 7,27" fill="#4a402a" opacity="0.6" />
-      <polygon points="14,25 15,27 13,27" fill="#4a402a" opacity="0.6" />
-      <rect x="3" y="22" width="1" height="2" fill="#8a7a40" opacity="0.6" />
-      <rect x="13" y="3" width="1" height="1" fill="#d8c878" opacity="0.6" />
+      <!-- Albs falling to the floor-stone -->
+      <rect x="8" y="29" width="15" height="12" fill="#150d08" />
+      <rect x="9" y="30" width="13" height="10" fill="#26492f" />
+      <rect x="9" y="30" width="13" height="1" fill="#2e5e3c" />
+      <rect x="9" y="30" width="3" height="10" fill="#2c5436" />
+      <rect x="18" y="30" width="4" height="10" fill="#1e3a28" />
+      <rect x="21" y="30" width="1" height="10" fill="#192e20" />
+      <!-- gold orphrey continuing to the hem -->
+      <rect x="14" y="30" width="3" height="9" fill="#9a7232" />
+      <rect x="14" y="30" width="1" height="9" fill="#c89a48" />
+      <rect x="15" y="32" width="1" height="1" fill="#ecc46a" />
+      <rect x="15" y="36" width="1" height="1" fill="#ecc46a" />
+      <!-- rot pooled at the hem -->
+      <rect x="9" y="38" width="4" height="2" fill="#2c1a40" />
+      <rect x="17" y="38" width="4" height="2" fill="#221433" />
+      <rect x="10" y="38" width="1" height="1" fill="#5a3a8a" />
+      <!-- sandalled feet -->
+      <rect x="10" y="40" width="4" height="2" fill="#150d08" />
+      <rect x="11" y="40" width="2" height="1" fill="#8c5226" />
+      <rect x="17" y="40" width="4" height="2" fill="#150d08" />
+      <rect x="18" y="40" width="2" height="1" fill="#6a3a1a" />
+
+      <!-- Wilted leaves shaken from the mitre -->
+      <rect x="2" y="18" width="1" height="1" fill="#3a8a52" opacity="0.5" />
+      <rect x="24" y="12" width="1" height="1" fill="#2e5e3c" opacity="0.5" />
+      <rect x="6" y="34" width="1" height="1" fill="#5a3a8a" opacity="0.4" />
     </svg>

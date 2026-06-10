@@ -1,78 +1,171 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 30 44"
+      viewBox="0 0 40 50"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Slayer-Echo"
     >
-      <!-- Cold void backlight + smoke pool -->
-      <ellipse cx="15" cy="22" rx="14" ry="20" fill="#5a1010" opacity="0.13" />
-      <ellipse cx="15" cy="24" rx="13" ry="19" fill="#1a0610" opacity="0.4" />
-      <polygon points="15,42 4,40 6,30 15,32 24,30 26,40" fill="#0e0408" opacity="0.55" />
+      <!-- Taint-heat backlight + ground shadow -->
+      <ellipse cx="20" cy="27" rx="19" ry="21" fill="#a83a14" opacity="0.08" />
+      <ellipse cx="20" cy="48.3" rx="14" ry="1.9" fill="#000" opacity="0.44" />
 
-      <!-- Horned head — shadow ramp, faint cold rim upper-left -->
-      <rect x="11" y="3" width="8" height="9" fill="#160810" />
-      <rect x="11" y="3" width="3" height="8" fill="#241016" />
-      <rect x="11" y="3" width="1" height="6" fill="#3a1620" />
-      <rect x="17" y="4" width="2" height="7" fill="#0a0408" />
-      <polygon points="11,3 9,-2 13,2" fill="#0e0408" />
-      <polygon points="11,3 10,-1 12,2" fill="#241016" />
-      <polygon points="19,3 21,-2 17,2" fill="#080306" />
+      <!-- The horn-crest — the crown you always carried -->
+      <rect x="9" y="0" width="5" height="4" fill="#150d08" />
+      <rect x="10" y="1" width="3" height="2" fill="#5a3018" />
+      <rect x="10" y="1" width="1" height="1" fill="#7a4028" />
+      <rect x="6" y="0" width="4" height="2" fill="#150d08" />
+      <rect x="7" y="0" width="2" height="1" fill="#9a5a30" />
+      <rect x="22" y="0" width="5" height="4" fill="#150d08" />
+      <rect x="23" y="1" width="3" height="2" fill="#4a2410" />
+      <rect x="26" y="0" width="4" height="2" fill="#150d08" />
+      <rect x="27" y="0" width="2" height="1" fill="#7a4028" />
 
-      <!-- Burning eyes — the only colour -->
-      <rect x="11" y="5" width="4" height="1" fill="#3a0a08" />
-      <rect x="15" y="5" width="4" height="1" fill="#3a0a08" />
-      <rect x="12" y="6" width="2" height="2" fill="#e23030" />
-      <rect x="16" y="6" width="2" height="2" fill="#e23030" />
-      <rect x="12" y="6" width="1" height="1" fill="#ff7a5a" />
-      <rect x="16" y="6" width="1" height="1" fill="#ff7a5a" />
-      <rect x="13" y="7" width="1" height="1" fill="#b51c14" />
-      <rect x="17" y="7" width="1" height="1" fill="#b51c14" />
+      <!-- Head — the worst shape, turned around to face you -->
+      <rect x="11" y="2" width="14" height="11" fill="#150d08" />
+      <rect x="12" y="3" width="12" height="9" fill="#3a1a08" />
+      <rect x="12" y="3" width="12" height="1" fill="#5a3018" />
+      <rect x="12" y="3" width="4" height="1" fill="#7a4028" />
+      <rect x="12" y="3" width="2" height="8" fill="#4a2410" />
+      <rect x="22" y="4" width="2" height="8" fill="#2a1206" />
+      <rect x="23" y="5" width="1" height="7" fill="#241004" />
+      <!-- brow plates crushed down over the glare -->
+      <rect x="13" y="4" width="5" height="2" fill="#150d08" />
+      <rect x="18" y="5" width="5" height="2" fill="#150d08" />
+      <rect x="13" y="4" width="4" height="1" fill="#2a1206" />
+      <rect x="19" y="5" width="3" height="1" fill="#241004" />
+      <!-- the lidless white eyes — yours, narrowed to murder -->
+      <rect x="14" y="6" width="3" height="1" fill="#f0e8da" />
+      <rect x="19" y="7" width="3" height="1" fill="#f0e8da" />
+      <rect x="14" y="6" width="1" height="1" fill="#fff" />
+      <rect x="19" y="7" width="1" height="1" fill="#fff" />
+      <!-- the maw — too wide, all appetite, none of your restraint -->
+      <rect x="13" y="9" width="10" height="4" fill="#150d08" />
+      <rect x="14" y="10" width="8" height="3" fill="#2a1206" />
+      <rect x="15" y="10" width="6" height="2" fill="#7a1a10" />
+      <rect x="16" y="10" width="3" height="1" fill="#a83a14" />
+      <!-- the teeth, rows of them -->
+      <rect x="14" y="9" width="1" height="2" fill="#d4c8a8" />
+      <rect x="17" y="9" width="1" height="1" fill="#f0e8da" />
+      <rect x="20" y="9" width="1" height="2" fill="#d4c8a8" />
+      <rect x="15" y="12" width="1" height="1" fill="#b4a692" />
+      <rect x="18" y="12" width="1" height="1" fill="#d4c8a8" />
+      <rect x="21" y="12" width="1" height="1" fill="#b4a692" />
 
-      <!-- Fanged maw -->
-      <rect x="11" y="9" width="8" height="2" fill="#0a0408" />
-      <rect x="12" y="10" width="1" height="1" fill="#c8b8a8" />
-      <rect x="14" y="10" width="1" height="1" fill="#c8b8a8" />
-      <rect x="16" y="10" width="1" height="1" fill="#a89878" />
-      <rect x="11" y="9" width="8" height="1" fill="#5a1208" opacity="0.7" />
+      <!-- Shoulders — slabbed, spine-bladed -->
+      <rect x="5" y="12" width="13" height="9" fill="#150d08" />
+      <rect x="6" y="13" width="11" height="7" fill="#4a2410" />
+      <rect x="6" y="13" width="11" height="1" fill="#6a3820" />
+      <rect x="6" y="13" width="4" height="1" fill="#7a4028" />
+      <rect x="6" y="13" width="2" height="6" fill="#54290f" />
+      <rect x="15" y="14" width="2" height="6" fill="#3a1a08" />
+      <rect x="18" y="12" width="13" height="9" fill="#150d08" />
+      <rect x="19" y="13" width="11" height="7" fill="#3a1a08" />
+      <rect x="19" y="13" width="11" height="1" fill="#4a2410" />
+      <rect x="26" y="14" width="4" height="6" fill="#2a1206" />
+      <rect x="29" y="14" width="1" height="6" fill="#241004" />
+      <!-- the spine-blades rising off the shoulders -->
+      <rect x="4" y="10" width="3" height="3" fill="#150d08" />
+      <rect x="5" y="11" width="1" height="1" fill="#9a5a30" />
+      <rect x="29" y="10" width="3" height="3" fill="#150d08" />
+      <rect x="30" y="11" width="1" height="1" fill="#7a4028" />
 
-      <!-- Torso — black ramp, ember seam down centre -->
-      <polygon points="9,12 21,12 23,24 18,30 12,30 7,24" fill="#0e0408" />
-      <polygon points="10,13 20,13 21,23 17,29 11,23" fill="#1a0a10" />
-      <polygon points="11,14 19,14 20,22 15,27 11,22" fill="#241016" />
-      <polygon points="9,12 8,23 12,29 12,12" fill="#060206" opacity="0.6" />
-      <rect x="14" y="14" width="2" height="14" fill="#5a1208" opacity="0.6" />
-      <rect x="14" y="14" width="1" height="8" fill="#8c2010" opacity="0.5" />
-      <!-- Dither -->
-      <rect x="12" y="18" width="1" height="1" fill="#3a1620" />
-      <rect x="18" y="19" width="1" height="1" fill="#060206" />
-      <rect x="11" y="22" width="1" height="1" fill="#3a1620" />
+      <!-- Torso — the taint glowing through the ribs -->
+      <rect x="10" y="14" width="20" height="20" fill="#150d08" />
+      <rect x="11" y="15" width="18" height="18" fill="#42200c" />
+      <rect x="11" y="15" width="18" height="1" fill="#54290f" />
+      <rect x="11" y="15" width="7" height="1" fill="#6a3820" />
+      <rect x="11" y="15" width="2" height="18" fill="#4a2410" />
+      <rect x="11" y="15" width="1" height="12" fill="#5a3018" />
+      <rect x="27" y="15" width="2" height="18" fill="#33170a" />
+      <rect x="28" y="15" width="1" height="18" fill="#2a1206" />
+      <!-- the rib furnace of the taint -->
+      <rect x="15" y="18" width="1" height="9" fill="#7a1a10" />
+      <rect x="17" y="17" width="1" height="11" fill="#a83a14" />
+      <rect x="17" y="19" width="1" height="4" fill="#e87820" />
+      <rect x="17" y="20" width="1" height="2" fill="#ffd070" />
+      <rect x="19" y="17" width="1" height="11" fill="#a83a14" />
+      <rect x="19" y="20" width="1" height="3" fill="#d4641a" />
+      <rect x="21" y="18" width="1" height="9" fill="#7a1a10" />
+      <rect x="16" y="18" width="1" height="8" fill="#1a0c06" />
+      <rect x="18" y="18" width="1" height="9" fill="#1a0c06" />
+      <rect x="20" y="18" width="1" height="8" fill="#1a0c06" />
+      <!-- sinew lines -->
+      <rect x="13" y="17" width="1" height="12" fill="#33170a" />
+      <rect x="24" y="17" width="1" height="12" fill="#2a1206" />
 
-      <!-- Left ragged blade-arm -->
-      <polygon points="9,13 3,18 1,26 5,24 9,18" fill="#0e0408" />
-      <polygon points="9,13 4,17 2,25 5,23 9,17" fill="#1a0a10" />
-      <polygon points="0,25 4,23 1,29" fill="#080306" />
-      <polygon points="1,28 3,27 2,31" fill="#0e0408" />
-      <polygon points="3,30 5,29 4,33" fill="#0e0408" />
+      <!-- Killing arm — cocked high, raking forward at your face -->
+      <rect x="29" y="14" width="6" height="5" fill="#150d08" />
+      <rect x="30" y="15" width="4" height="3" fill="#3a1a08" />
+      <rect x="30" y="15" width="4" height="1" fill="#5a3018" />
+      <rect x="31" y="9" width="5" height="8" fill="#150d08" />
+      <rect x="32" y="10" width="3" height="6" fill="#2a1206" />
+      <rect x="32" y="10" width="1" height="6" fill="#3a1a08" />
+      <!-- the hand thrust at you, knuckles forward -->
+      <rect x="33" y="6" width="5" height="6" fill="#150d08" />
+      <rect x="34" y="7" width="3" height="4" fill="#3a1a08" />
+      <rect x="34" y="7" width="1" height="4" fill="#4a2410" />
+      <!-- bone scythes raking forward and down -->
+      <rect x="37" y="5" width="3" height="2" fill="#150d08" />
+      <rect x="38" y="5" width="2" height="1" fill="#f0e8da" />
+      <rect x="37" y="8" width="3" height="2" fill="#150d08" />
+      <rect x="38" y="8" width="2" height="1" fill="#d4c8a8" />
+      <rect x="37" y="11" width="3" height="2" fill="#150d08" />
+      <rect x="37" y="11" width="2" height="1" fill="#d4c8a8" />
+      <rect x="36" y="13" width="2" height="2" fill="#150d08" />
+      <rect x="36" y="13" width="1" height="1" fill="#b4a692" />
 
-      <!-- Right ragged blade-arm — deeper shadow -->
-      <polygon points="21,13 27,18 29,26 25,24 21,18" fill="#080306" />
-      <polygon points="21,13 26,17 28,25 25,23 21,17" fill="#160810" />
-      <polygon points="30,25 26,23 29,29" fill="#060206" />
-      <polygon points="29,28 27,27 28,31" fill="#080306" />
-      <polygon points="27,30 25,29 26,33" fill="#080306" />
+      <!-- Off arm — low, claws already wet -->
+      <rect x="3" y="17" width="7" height="5" fill="#150d08" />
+      <rect x="4" y="18" width="5" height="3" fill="#4a2410" />
+      <rect x="4" y="18" width="5" height="1" fill="#6a3820" />
+      <rect x="2" y="21" width="5" height="6" fill="#150d08" />
+      <rect x="3" y="22" width="3" height="4" fill="#3a1a08" />
+      <rect x="3" y="22" width="1" height="4" fill="#4a2410" />
+      <!-- down-claws -->
+      <rect x="1" y="27" width="2" height="3" fill="#150d08" />
+      <rect x="1" y="28" width="1" height="2" fill="#d4c8a8" />
+      <rect x="4" y="27" width="2" height="3" fill="#150d08" />
+      <rect x="5" y="28" width="1" height="2" fill="#b4a692" />
+      <rect x="6" y="26" width="2" height="2" fill="#150d08" />
+      <rect x="7" y="26" width="1" height="1" fill="#f0e8da" />
+      <!-- the wet -->
+      <rect x="2" y="30" width="1" height="1" fill="#7a1a10" opacity="0.8" />
+      <rect x="5" y="31" width="1" height="1" fill="#a82a20" opacity="0.6" />
 
-      <!-- Legs -->
-      <rect x="11" y="30" width="3" height="10" fill="#1a0a10" />
-      <rect x="11" y="30" width="1" height="10" fill="#241016" />
-      <rect x="13" y="30" width="1" height="10" fill="#080306" />
-      <rect x="16" y="30" width="3" height="10" fill="#160810" />
-      <rect x="18" y="30" width="1" height="10" fill="#060206" />
-      <polygon points="9,40 14,40 13,43 10,43" fill="#080306" />
-      <polygon points="16,40 21,40 20,43 17,43" fill="#060206" />
+      <!-- Hips + digitigrade legs, coiled to spring -->
+      <rect x="11" y="34" width="18" height="4" fill="#150d08" />
+      <rect x="12" y="35" width="16" height="2" fill="#33170a" />
+      <rect x="12" y="35" width="6" height="1" fill="#42200c" />
+      <rect x="23" y="35" width="5" height="2" fill="#2a1206" />
+      <!-- lead leg -->
+      <rect x="12" y="37" width="7" height="6" fill="#150d08" />
+      <rect x="13" y="38" width="5" height="4" fill="#3a1a08" />
+      <rect x="13" y="38" width="2" height="4" fill="#4a2410" />
+      <rect x="16" y="38" width="2" height="4" fill="#2a1206" />
+      <!-- taint-vein down the shin -->
+      <rect x="14" y="39" width="1" height="3" fill="#a83a14" />
+      <rect x="14" y="40" width="1" height="1" fill="#e87820" />
+      <rect x="13" y="42" width="5" height="4" fill="#150d08" />
+      <rect x="14" y="43" width="3" height="2" fill="#2a1206" />
+      <!-- trailing leg, hock raised -->
+      <rect x="22" y="37" width="6" height="5" fill="#150d08" />
+      <rect x="23" y="38" width="4" height="3" fill="#2e1408" />
+      <rect x="23" y="38" width="1" height="3" fill="#3a1a08" />
+      <rect x="24" y="41" width="5" height="4" fill="#150d08" />
+      <rect x="25" y="42" width="3" height="2" fill="#241004" />
+      <!-- talon feet -->
+      <rect x="11" y="45" width="9" height="3" fill="#150d08" />
+      <rect x="12" y="46" width="7" height="1" fill="#2a1206" />
+      <rect x="9" y="46" width="3" height="1" fill="#150d08" />
+      <rect x="9" y="46" width="2" height="1" fill="#d4c8a8" />
+      <rect x="19" y="47" width="2" height="1" fill="#b4a692" />
+      <rect x="23" y="44" width="9" height="3" fill="#150d08" />
+      <rect x="24" y="45" width="7" height="1" fill="#241004" />
+      <rect x="31" y="45" width="2" height="1" fill="#150d08" />
+      <rect x="31" y="45" width="2" height="1" fill="#b4a692" />
 
-      <!-- Embers bleeding out -->
-      <rect x="13" y="20" width="1" height="1" fill="#e23030" opacity="0.6" />
-      <rect x="16" y="24" width="1" height="1" fill="#5a1208" opacity="0.7" />
-      <rect x="6" y="16" width="1" height="1" fill="#b51c14" opacity="0.5" />
-      <rect x="24" y="20" width="1" height="1" fill="#5a1208" opacity="0.5" />
+      <!-- The frenzy already leaking out of it -->
+      <rect x="7" y="7" width="1" height="1" fill="#a83a14" opacity="0.55" />
+      <rect x="31" y="6" width="1" height="1" fill="#e87820" opacity="0.5" />
+      <rect x="36" y="20" width="1" height="1" fill="#d4641a" opacity="0.5" />
+      <rect x="3" y="13" width="1" height="1" fill="#a83a14" opacity="0.45" />
     </svg>

@@ -1,66 +1,117 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 26 34"
+      viewBox="0 0 32 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Veilsworn Courtier"
     >
-      <!-- Candlelit-hall backlight + ground shadow -->
-      <ellipse cx="13" cy="18" rx="12" ry="16" fill="#7a5e9a" opacity="0.07" />
-      <ellipse cx="13" cy="32" rx="10" ry="2" fill="#1c1228" opacity="0.42" />
+      <!-- Cold hall backlight + ground shadow -->
+      <ellipse cx="15" cy="23" rx="14" ry="17" fill="#58525c" opacity="0.08" />
+      <ellipse cx="15" cy="40.4" rx="10" ry="1.6" fill="#000" opacity="0.4" />
 
-      <!-- Porcelain face — ramp, key light upper-left -->
-      <rect x="9" y="2" width="8" height="11" fill="#d8cdbc" />
-      <rect x="9" y="2" width="8" height="1" fill="#f6f0e6" />
-      <rect x="9" y="2" width="3" height="11" fill="#ece4d6" />
-      <rect x="9" y="2" width="1" height="9" fill="#ffffff" />
-      <rect x="16" y="2" width="1" height="11" fill="#b8ac98" />
-      <rect x="9" y="12" width="8" height="1" fill="#c8bca6" />
-      <!-- Eyes — void + red glow -->
-      <rect x="10" y="6" width="2" height="2" fill="#160e1e" />
-      <rect x="14" y="6" width="2" height="2" fill="#160e1e" />
-      <rect x="10" y="6" width="1" height="1" fill="#9a3a3a" />
-      <rect x="14" y="6" width="1" height="1" fill="#9a3a3a" />
-      <rect x="10" y="6" width="1" height="1" fill="#d46060" opacity="0.6" />
-      <!-- Painted mouth -->
-      <rect x="12" y="9" width="2" height="2" fill="#7a2a2a" />
-      <rect x="12" y="9" width="2" height="1" fill="#9a3a3a" />
-      <!-- Gilt circlet + side locks -->
-      <rect x="8" y="3" width="1" height="4" fill="#c0a040" />
-      <rect x="17" y="3" width="1" height="4" fill="#9a7e2e" />
-      <polygon points="9,2 13,-1 17,2" fill="#3a2c52" />
-      <polygon points="10,2 13,-0.5 16,2" fill="#52406f" opacity="0.6" />
-      <rect x="12" y="-1" width="2" height="2" fill="#f4d042" />
-      <rect x="12" y="-1" width="1" height="1" fill="#fff4c0" />
+      <!-- Plumed half-mask turned full on you -->
+      <rect x="9" y="1" width="12" height="12" fill="#150d08" />
+      <!-- the plume — wine feathers off the mask's crown -->
+      <rect x="7" y="0" width="4" height="3" fill="#150d08" />
+      <rect x="8" y="1" width="2" height="1" fill="#7e1f2c" />
+      <rect x="8" y="1" width="1" height="1" fill="#a93340" />
+      <rect x="5" y="0" width="3" height="2" fill="#150d08" />
+      <rect x="6" y="0" width="1" height="1" fill="#c84a64" />
+      <!-- porcelain face — the one you failed -->
+      <rect x="10" y="2" width="10" height="10" fill="#e8dcc4" />
+      <rect x="10" y="2" width="10" height="1" fill="#f8f2e2" />
+      <rect x="10" y="2" width="4" height="2" fill="#f8f2e2" />
+      <rect x="10" y="2" width="1" height="8" fill="#f0e6d2" />
+      <rect x="18" y="3" width="2" height="9" fill="#cdbfa2" />
+      <rect x="19" y="4" width="1" height="8" fill="#b4a486" />
+      <rect x="11" y="12" width="8" height="1" fill="#cdbfa2" />
+      <!-- gilt rim of the half-mask across the brow -->
+      <rect x="10" y="4" width="10" height="1" fill="#c89a48" />
+      <rect x="10" y="4" width="4" height="1" fill="#ecc46a" />
+      <rect x="14" y="3" width="1" height="1" fill="#ecc46a" />
+      <!-- the accusing eyes — dark, fixed, lit by a point each -->
+      <rect x="11" y="6" width="3" height="3" fill="#0e0c12" />
+      <rect x="16" y="6" width="3" height="3" fill="#0e0c12" />
+      <rect x="12" y="7" width="1" height="1" fill="#e8f4f8" />
+      <rect x="17" y="7" width="1" height="1" fill="#e8f4f8" />
+      <!-- the mouth painted mid-condemnation -->
+      <rect x="13" y="10" width="4" height="1" fill="#531320" />
+      <rect x="14" y="11" width="2" height="1" fill="#7e1f2c" />
 
-      <!-- Robe — purple ramp + gold trim + dither -->
-      <polygon points="8,13 18,13 21,32 5,32" fill="#2a1d3e" />
-      <polygon points="8,13 18,13 19,20 7,20" fill="#3a2a52" />
-      <polygon points="8,13 12,13 11,20 7,20" fill="#43335f" opacity="0.7" />
-      <rect x="12" y="13" width="2" height="19" fill="#43335f" opacity="0.6" />
-      <rect x="9" y="16" width="1" height="14" fill="#52406f" opacity="0.45" />
-      <rect x="16" y="16" width="1" height="14" fill="#1c1228" opacity="0.7" />
-      <rect x="7" y="22" width="12" height="1" fill="#c0a040" opacity="0.6" />
-      <rect x="6" y="27" width="14" height="1" fill="#9a7e2e" opacity="0.5" />
-      <rect x="11" y="18" width="1" height="1" fill="#52406f" opacity="0.5" />
-      <rect x="15" y="25" width="1" height="1" fill="#1c1228" />
+      <!-- High court collar, standing fanned behind the head -->
+      <rect x="6" y="11" width="4" height="6" fill="#150d08" />
+      <rect x="7" y="12" width="2" height="4" fill="#531320" />
+      <rect x="7" y="12" width="1" height="4" fill="#7e1f2c" />
+      <rect x="20" y="11" width="4" height="6" fill="#150d08" />
+      <rect x="21" y="12" width="2" height="4" fill="#3d0e1a" />
+      <rect x="21" y="12" width="1" height="4" fill="#531320" />
 
-      <!-- Left sleeve + pale hand -->
-      <rect x="4" y="14" width="4" height="2" fill="#2a1d3e" />
-      <rect x="2" y="15" width="3" height="7" fill="#33254a" />
-      <rect x="2" y="15" width="1" height="7" fill="#43335f" />
-      <rect x="2" y="21" width="3" height="2" fill="#d8cdbc" />
-      <rect x="2" y="21" width="3" height="1" fill="#ece4d6" />
+      <!-- Doublet — wine court-dress kept immaculate by habit -->
+      <rect x="7" y="13" width="16" height="16" fill="#150d08" />
+      <rect x="8" y="14" width="14" height="14" fill="#67192a" />
+      <rect x="8" y="14" width="14" height="1" fill="#7e1f2c" />
+      <rect x="8" y="14" width="6" height="1" fill="#a93340" />
+      <rect x="8" y="14" width="2" height="14" fill="#7e1f2c" />
+      <rect x="8" y="14" width="1" height="9" fill="#a93340" />
+      <rect x="19" y="14" width="3" height="14" fill="#531320" />
+      <rect x="21" y="14" width="1" height="14" fill="#3d0e1a" />
+      <!-- shade showing at the collar where a throat should be -->
+      <rect x="12" y="14" width="6" height="2" fill="#221e26" />
+      <rect x="13" y="14" width="4" height="1" fill="#2e2a32" />
+      <!-- gilt frogging down the breast -->
+      <rect x="12" y="17" width="6" height="1" fill="#9a7232" />
+      <rect x="12" y="17" width="2" height="1" fill="#ecc46a" />
+      <rect x="12" y="20" width="6" height="1" fill="#9a7232" />
+      <rect x="12" y="20" width="2" height="1" fill="#c89a48" />
+      <rect x="12" y="23" width="6" height="1" fill="#9a7232" />
+      <rect x="12" y="23" width="2" height="1" fill="#ecc46a" />
+      <!-- moth-wear in the immaculate -->
+      <rect x="10" y="25" width="2" height="1" fill="#3d0e1a" />
+      <rect x="17" y="26" width="2" height="1" fill="#3d0e1a" />
 
-      <!-- Right sleeve + thin dagger + specular -->
-      <rect x="18" y="14" width="4" height="2" fill="#2a1d3e" />
-      <rect x="20" y="13" width="3" height="9" fill="#33254a" />
-      <rect x="20" y="13" width="1" height="9" fill="#43335f" />
-      <rect x="21" y="13" width="1" height="11" fill="#aab4be" />
-      <rect x="21" y="13" width="1" height="6" fill="#eaf0f4" />
-      <rect x="21" y="13" width="1" height="2" fill="#ffffff" />
+      <!-- Rapier arm — levelled at you over the off shoulder line -->
+      <rect x="21" y="15" width="6" height="4" fill="#150d08" />
+      <rect x="22" y="16" width="4" height="2" fill="#67192a" />
+      <rect x="22" y="16" width="4" height="1" fill="#7e1f2c" />
+      <!-- lace cuff -->
+      <rect x="25" y="15" width="3" height="4" fill="#150d08" />
+      <rect x="26" y="16" width="1" height="2" fill="#e8dcc4" />
+      <!-- gloved hand on the swept hilt -->
+      <rect x="26" y="17" width="3" height="3" fill="#150d08" />
+      <rect x="27" y="18" width="1" height="1" fill="#3d0e1a" />
+      <!-- swept guard, gilt -->
+      <rect x="27" y="15" width="2" height="2" fill="#c89a48" />
+      <rect x="27" y="15" width="1" height="1" fill="#ecc46a" />
+      <!-- the thin blade levelled at your eye-line -->
+      <rect x="28" y="13" width="4" height="3" fill="#150d08" />
+      <rect x="28" y="14" width="4" height="1" fill="#b8d8e0" />
+      <rect x="28" y="14" width="2" height="1" fill="#e8f4f8" />
 
-      <!-- Hem + drifting motes -->
-      <rect x="5" y="32" width="16" height="1" fill="#160e1e" />
-      <rect x="6" y="9" width="1" height="1" fill="#f4d042" opacity="0.5" />
-      <rect x="19" y="26" width="1" height="1" fill="#9a3a3a" opacity="0.5" />
+      <!-- Off arm folded behind the back — duellist's etiquette -->
+      <rect x="4" y="15" width="4" height="9" fill="#150d08" />
+      <rect x="5" y="16" width="2" height="7" fill="#531320" />
+      <rect x="5" y="16" width="1" height="7" fill="#67192a" />
+
+      <!-- Court skirts falling to the floor, no feet, no haste -->
+      <rect x="7" y="28" width="16" height="11" fill="#150d08" />
+      <rect x="8" y="29" width="14" height="9" fill="#481021" />
+      <rect x="8" y="29" width="14" height="1" fill="#531320" />
+      <rect x="8" y="29" width="3" height="9" fill="#531320" />
+      <rect x="8" y="29" width="1" height="6" fill="#67192a" />
+      <rect x="18" y="29" width="4" height="9" fill="#3d0e1a" />
+      <rect x="21" y="29" width="1" height="9" fill="#330b16" />
+      <!-- gilt hem thread -->
+      <rect x="8" y="36" width="14" height="1" fill="#9a7232" opacity="0.8" />
+      <rect x="9" y="36" width="3" height="1" fill="#c89a48" />
+      <!-- the skirt parts on shade beneath, not legs -->
+      <rect x="13" y="32" width="3" height="6" fill="#221e26" />
+      <rect x="14" y="33" width="1" height="5" fill="#16131a" />
+      <!-- ragged trail where it drags -->
+      <rect x="9" y="38" width="2" height="2" fill="#150d08" />
+      <rect x="14" y="39" width="3" height="1" fill="#150d08" />
+      <rect x="19" y="38" width="2" height="2" fill="#150d08" />
+
+      <!-- Hall-dust stirred by the turn -->
+      <rect x="3" y="12" width="1" height="1" fill="#cdbfa2" opacity="0.35" />
+      <rect x="25" y="24" width="1" height="1" fill="#9a949e" opacity="0.4" />
+      <rect x="5" y="32" width="1" height="1" fill="#7a7480" opacity="0.4" />
     </svg>

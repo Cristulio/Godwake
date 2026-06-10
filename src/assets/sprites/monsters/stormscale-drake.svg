@@ -1,80 +1,161 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 34 34"
+      viewBox="0 0 44 42"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Stormscale Drake"
     >
-      <!-- Storm backlight + ground shadow -->
-      <ellipse cx="17" cy="18" rx="16" ry="15" fill="#3a64aa" opacity="0.08" />
-      <ellipse cx="17" cy="32" rx="12" ry="1.6" fill="#000" opacity="0.42" />
+      <!-- Charge-hum backlight + long ground shadow -->
+      <ellipse cx="22" cy="24" rx="21" ry="16" fill="#3a5288" opacity="0.07" />
+      <ellipse cx="22" cy="40.3" rx="17" ry="1.9" fill="#000" opacity="0.44" />
 
-      <!-- Far wing membrane — ribbed, behind the body -->
-      <polygon points="2,6 12,12 12,22 4,18" fill="#16305c" />
-      <polygon points="3,8 11,13 11,18" fill="#1e3a6e" opacity="0.7" />
-      <polygon points="4,9 10,13 10,16" fill="#244a86" opacity="0.5" />
-      <rect x="5" y="9" width="1" height="9" fill="#14254a" />
-      <rect x="8" y="11" width="1" height="9" fill="#14254a" />
+      <!-- Tail — thick, dragging a slow arc of charge -->
+      <rect x="1" y="18" width="8" height="4" fill="#150d08" />
+      <rect x="2" y="19" width="6" height="2" fill="#1a2848" />
+      <rect x="2" y="19" width="3" height="1" fill="#22335a" />
+      <rect x="0" y="14" width="5" height="5" fill="#150d08" />
+      <rect x="1" y="15" width="3" height="3" fill="#16203a" />
+      <rect x="1" y="15" width="1" height="2" fill="#1e2c4e" />
+      <!-- tail ridge plates -->
+      <rect x="3" y="13" width="2" height="2" fill="#150d08" />
+      <rect x="3" y="13" width="1" height="1" fill="#3a5288" />
+      <rect x="6" y="16" width="2" height="2" fill="#150d08" />
+      <rect x="6" y="16" width="1" height="1" fill="#2e4474" />
+      <!-- charge bleeding off the tail -->
+      <rect x="0" y="12" width="1" height="1" fill="#8fd8ff" opacity="0.7" />
+      <rect x="4" y="11" width="1" height="1" fill="#c8ecff" opacity="0.5" />
 
-      <!-- Body — scale ramp, lit top-left -->
-      <rect x="10" y="14" width="16" height="11" fill="#1e3866" />
-      <rect x="10" y="14" width="16" height="2" fill="#2e5290" />
-      <rect x="10" y="14" width="6" height="1" fill="#5a84cc" />
-      <rect x="10" y="14" width="2" height="10" fill="#243e6e" />
-      <rect x="24" y="15" width="2" height="10" fill="#16305c" />
-      <rect x="10" y="24" width="16" height="1" fill="#14254a" />
-      <line x1="12" y1="18" x2="24" y2="18" stroke="#14254a" stroke-width="0.5" />
-      <line x1="12" y1="21" x2="24" y2="21" stroke="#14254a" stroke-width="0.5" />
-      <!-- Dorsal ridge -->
-      <polygon points="14,14 16,10 18,14" fill="#16305c" />
-      <polygon points="19,14 21,10 23,14" fill="#1e3a6e" />
-      <polygon points="14,14 16,10 17,14" fill="#2e5290" opacity="0.6" />
-      <!-- Scale speckle highlights -->
-      <rect x="13" y="16" width="1" height="1" fill="#5a84cc" />
-      <rect x="18" y="17" width="1" height="1" fill="#4a74ba" />
-      <rect x="21" y="16" width="1" height="1" fill="#5a84cc" />
+      <!-- Hindquarters — heavy, the hound's sit before the lunge -->
+      <rect x="7" y="11" width="13" height="13" fill="#150d08" />
+      <rect x="8" y="12" width="11" height="11" fill="#22335a" />
+      <rect x="8" y="12" width="11" height="1" fill="#2e4474" />
+      <rect x="8" y="12" width="5" height="1" fill="#3a5288" />
+      <rect x="8" y="12" width="1" height="8" fill="#2e4474" />
+      <rect x="16" y="13" width="3" height="10" fill="#1a2848" />
+      <rect x="18" y="13" width="1" height="10" fill="#16203a" />
+      <!-- haunch scale rows -->
+      <rect x="9" y="15" width="8" height="1" fill="#16203a" />
+      <rect x="9" y="18" width="8" height="1" fill="#16203a" />
+      <rect x="10" y="15" width="2" height="1" fill="#3a5288" />
+      <rect x="12" y="18" width="2" height="1" fill="#2e4474" />
+      <!-- charge crawling the haunch -->
+      <rect x="11" y="13" width="1" height="1" fill="#8fd8ff" opacity="0.7" />
+      <rect x="14" y="16" width="1" height="1" fill="#8fd8ff" opacity="0.55" />
+      <!-- rear leg, planted heavy -->
+      <rect x="9" y="23" width="6" height="9" fill="#150d08" />
+      <rect x="10" y="24" width="4" height="7" fill="#1e2c4e" />
+      <rect x="10" y="24" width="1" height="7" fill="#2a3c66" />
+      <rect x="13" y="24" width="1" height="7" fill="#16203a" />
+      <rect x="8" y="31" width="8" height="3" fill="#150d08" />
+      <rect x="9" y="32" width="6" height="1" fill="#1a2848" />
+      <!-- talons -->
+      <rect x="6" y="32" width="2" height="1" fill="#150d08" />
+      <rect x="6" y="32" width="1" height="1" fill="#c8d0e0" />
+      <rect x="15" y="33" width="1" height="1" fill="#aab4c8" />
 
-      <!-- Head to the right — ramped -->
-      <rect x="24" y="8" width="9" height="8" fill="#243e6e" />
-      <rect x="24" y="8" width="9" height="2" fill="#2e5290" />
-      <rect x="24" y="8" width="3" height="1" fill="#5a84cc" />
-      <rect x="24" y="14" width="9" height="2" fill="#16305c" />
-      <polygon points="33,9 30,15 33,16" fill="#1e3866" />
-      <!-- Brow horn -->
-      <polygon points="25,8 27,4 28,9" fill="#16305c" />
-      <polygon points="25,8 27,4 27,8" fill="#244a86" opacity="0.6" />
-      <!-- Lightning eye + spec -->
-      <rect x="27" y="11" width="3" height="2" fill="#f4d042" />
-      <rect x="28" y="11" width="1" height="2" fill="#fff0b0" />
-      <rect x="27" y="11" width="1" height="1" fill="#e89a20" />
-      <!-- Jaw + fangs -->
-      <polygon points="26,16 24,20 22,16" fill="#1e3866" />
-      <polygon points="32,16 30,19 28,16" fill="#1e3866" />
-      <polygon points="24,16 25,19 22,17" fill="#d8e0f0" />
-      <polygon points="30,16 31,18 28,17" fill="#d8e0f0" />
-      <!-- Breath crackle -->
-      <polygon points="30,18 33,20 28,20" fill="#7ec8ff" opacity="0.45" />
+      <!-- Spined back-ridge running the whole length -->
+      <rect x="9" y="10" width="3" height="2" fill="#150d08" />
+      <rect x="10" y="10" width="1" height="1" fill="#4a66a4" />
+      <rect x="14" y="9" width="3" height="2" fill="#150d08" />
+      <rect x="15" y="9" width="1" height="1" fill="#3a5288" />
+      <rect x="19" y="8" width="3" height="2" fill="#150d08" />
+      <rect x="20" y="8" width="1" height="1" fill="#4a66a4" />
+      <rect x="24" y="7" width="3" height="2" fill="#150d08" />
+      <rect x="25" y="7" width="1" height="1" fill="#3a5288" />
 
-      <!-- Legs + claws -->
-      <rect x="9" y="25" width="4" height="7" fill="#1e3866" />
-      <rect x="15" y="25" width="4" height="7" fill="#1e3866" />
-      <rect x="21" y="25" width="4" height="7" fill="#1e3866" />
-      <rect x="9" y="25" width="1" height="7" fill="#244a86" />
-      <rect x="15" y="25" width="1" height="7" fill="#244a86" />
-      <rect x="21" y="25" width="1" height="7" fill="#243e6e" />
-      <polygon points="8,32 13,32 10,34" fill="#14254a" />
-      <polygon points="14,32 19,32 16,34" fill="#14254a" />
-      <polygon points="20,32 25,32 22,34" fill="#14254a" />
-      <rect x="8" y="32" width="1" height="2" fill="#b8c4e0" />
-      <rect x="14" y="32" width="1" height="2" fill="#b8c4e0" />
-      <rect x="20" y="32" width="1" height="2" fill="#9aa8cc" />
+      <!-- Barrel — slung low between the legs, humming -->
+      <rect x="17" y="9" width="16" height="13" fill="#150d08" />
+      <rect x="18" y="10" width="14" height="11" fill="#2a3c66" />
+      <rect x="18" y="10" width="14" height="1" fill="#3a5288" />
+      <rect x="18" y="10" width="6" height="1" fill="#4a66a4" />
+      <rect x="18" y="10" width="1" height="8" fill="#3a5288" />
+      <rect x="29" y="11" width="3" height="10" fill="#1e2c4e" />
+      <rect x="31" y="11" width="1" height="10" fill="#1a2848" />
+      <!-- pale belly plates under the barrel -->
+      <rect x="19" y="17" width="11" height="4" fill="#8a94ac" />
+      <rect x="19" y="17" width="11" height="1" fill="#aab4c8" />
+      <rect x="19" y="17" width="4" height="1" fill="#c8d0e0" />
+      <rect x="27" y="18" width="3" height="3" fill="#6a7490" />
+      <rect x="19" y="19" width="11" height="1" fill="#6a7490" />
+      <!-- the hum — charge arcing plate to plate -->
+      <rect x="22" y="18" width="1" height="1" fill="#8fd8ff" />
+      <rect x="25" y="20" width="1" height="1" fill="#c8ecff" opacity="0.8" />
+      <rect x="20" y="12" width="1" height="1" fill="#8fd8ff" opacity="0.7" />
+      <rect x="27" y="14" width="1" height="1" fill="#8fd8ff" opacity="0.6" />
 
-      <!-- Tail -->
-      <polygon points="26,20 34,23 27,24" fill="#1a2e52" opacity="0.8" />
-      <polygon points="26,20 32,22 27,23" fill="#243e6e" opacity="0.6" />
+      <!-- Foreleg planted wide -->
+      <rect x="27" y="21" width="6" height="11" fill="#150d08" />
+      <rect x="28" y="22" width="4" height="9" fill="#22335a" />
+      <rect x="28" y="22" width="1" height="9" fill="#2e4474" />
+      <rect x="31" y="22" width="1" height="9" fill="#1a2848" />
+      <rect x="26" y="31" width="8" height="3" fill="#150d08" />
+      <rect x="27" y="32" width="6" height="1" fill="#1e2c4e" />
+      <rect x="24" y="32" width="2" height="1" fill="#150d08" />
+      <rect x="24" y="32" width="1" height="1" fill="#c8d0e0" />
+      <rect x="33" y="33" width="1" height="1" fill="#aab4c8" />
+      <!-- second foreleg stepping -->
+      <rect x="33" y="20" width="5" height="8" fill="#150d08" />
+      <rect x="34" y="21" width="3" height="6" fill="#1e2c4e" />
+      <rect x="34" y="21" width="1" height="6" fill="#2a3c66" />
+      <rect x="33" y="27" width="6" height="3" fill="#150d08" />
+      <rect x="34" y="28" width="4" height="1" fill="#1a2848" />
+      <rect x="38" y="28" width="2" height="1" fill="#150d08" />
+      <rect x="38" y="28" width="1" height="1" fill="#c8d0e0" />
 
-      <!-- Lightning crackle -->
-      <polygon points="22,18 24,20 22,20 24,23" fill="#7ec8ff" opacity="0.7" />
-      <rect x="13" y="11" width="2" height="2" fill="#7ec8ff" opacity="0.6" />
-      <rect x="18" y="16" width="1" height="1" fill="#7ec8ff" opacity="0.7" />
-      <rect x="27" y="15" width="2" height="1" fill="#7ec8ff" opacity="0.5" />
+      <!-- Neck — thick, rising forward to the carried-low skull -->
+      <rect x="29" y="5" width="7" height="10" fill="#150d08" />
+      <rect x="30" y="6" width="5" height="8" fill="#2e4474" />
+      <rect x="30" y="6" width="5" height="1" fill="#3a5288" />
+      <rect x="30" y="6" width="2" height="7" fill="#3a5288" />
+      <rect x="33" y="7" width="2" height="7" fill="#22335a" />
+      <!-- neck ridge continuing -->
+      <rect x="29" y="4" width="3" height="2" fill="#150d08" />
+      <rect x="30" y="4" width="1" height="1" fill="#4a66a4" />
+
+      <!-- Head — a long wedge skull, jaw hinged wide on the lash -->
+      <rect x="32" y="2" width="10" height="7" fill="#150d08" />
+      <rect x="33" y="3" width="8" height="5" fill="#2e4474" />
+      <rect x="33" y="3" width="8" height="1" fill="#3a5288" />
+      <rect x="33" y="3" width="4" height="1" fill="#4a66a4" />
+      <rect x="33" y="3" width="1" height="4" fill="#3a5288" />
+      <rect x="39" y="4" width="2" height="4" fill="#22335a" />
+      <!-- the wedge snout tapering -->
+      <rect x="40" y="4" width="3" height="4" fill="#150d08" />
+      <rect x="40" y="5" width="2" height="2" fill="#2e4474" />
+      <rect x="40" y="5" width="2" height="1" fill="#3a5288" />
+      <!-- horn stubs swept back -->
+      <rect x="31" y="0" width="3" height="3" fill="#150d08" />
+      <rect x="32" y="1" width="1" height="1" fill="#8a94ac" />
+      <rect x="35" y="0" width="3" height="2" fill="#150d08" />
+      <rect x="36" y="0" width="1" height="1" fill="#aab4c8" />
+      <!-- storm-yellow eye, dumb and fixed -->
+      <rect x="35" y="4" width="2" height="2" fill="#0e1626" />
+      <rect x="35" y="4" width="1" height="1" fill="#ffe066" />
+      <!-- upper teeth at the jaw line -->
+      <rect x="37" y="8" width="1" height="1" fill="#c8d0e0" />
+      <rect x="39" y="8" width="1" height="1" fill="#c8d0e0" />
+      <rect x="41" y="7" width="1" height="1" fill="#aab4c8" />
+      <!-- lower jaw dropped open -->
+      <rect x="35" y="9" width="7" height="3" fill="#150d08" />
+      <rect x="36" y="10" width="5" height="1" fill="#22335a" />
+      <rect x="36" y="10" width="2" height="1" fill="#2e4474" />
+      <rect x="38" y="9" width="3" height="1" fill="#16203a" />
+      <rect x="40" y="11" width="1" height="1" fill="#aab4c8" />
+      <!-- THE TONGUE — forked, electrified, lashing straight out at reach -->
+      <rect x="38" y="8" width="4" height="1" fill="#9a4a82" />
+      <rect x="38" y="8" width="2" height="1" fill="#b85a9a" />
+      <rect x="41" y="7" width="3" height="2" fill="#150d08" />
+      <rect x="41" y="8" width="3" height="1" fill="#b85a9a" />
+      <rect x="42" y="8" width="1" height="1" fill="#d878b4" />
+      <!-- the fork splitting at the tip -->
+      <rect x="43" y="6" width="1" height="2" fill="#d878b4" />
+      <rect x="43" y="9" width="1" height="2" fill="#b85a9a" />
+      <!-- the charge running the fork -->
+      <rect x="43" y="5" width="1" height="1" fill="#e8f8ff" />
+      <rect x="42" y="11" width="1" height="1" fill="#8fd8ff" />
+      <rect x="40" y="6" width="1" height="1" fill="#c8ecff" opacity="0.7" />
+
+      <!-- The thunder it answers wounds with, gathering -->
+      <rect x="27" y="2" width="1" height="1" fill="#c8ecff" opacity="0.5" />
+      <rect x="23" y="4" width="1" height="1" fill="#8fd8ff" opacity="0.45" />
+      <rect x="17" y="7" width="1" height="1" fill="#8fd8ff" opacity="0.4" />
     </svg>

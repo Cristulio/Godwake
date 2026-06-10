@@ -1,73 +1,136 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 32"
+      viewBox="0 0 30 40"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
       aria-label="Ember-Conscript"
     >
       <!-- Ember backlight + ground shadow -->
-      <ellipse cx="12" cy="16" rx="12" ry="16" fill="#d4641a" opacity="0.08" />
-      <ellipse cx="12" cy="30" rx="8" ry="1.4" fill="#000" opacity="0.4" />
+      <ellipse cx="15" cy="22" rx="14" ry="17" fill="#d4641a" opacity="0.07" />
+      <ellipse cx="15" cy="20" rx="9" ry="11" fill="#f4942a" opacity="0.06" />
+      <ellipse cx="15" cy="38.4" rx="10" ry="1.6" fill="#000" opacity="0.42" />
 
-      <!-- Burnt helm — iron ramp, key light upper-left -->
-      <rect x="8" y="2" width="8" height="7" fill="#3a3038" />
-      <rect x="8" y="2" width="8" height="1" fill="#5a5058" />
-      <rect x="8" y="2" width="2" height="7" fill="#4a4048" />
-      <rect x="8" y="2" width="1" height="4" fill="#5a5058" />
-      <rect x="15" y="2" width="1" height="7" fill="#2a2028" />
-      <rect x="11" y="0" width="2" height="2" fill="#6a3a1a" />
-      <rect x="11" y="0" width="1" height="1" fill="#a83a14" />
-      <!-- Visor slit — ember-lit eyes -->
-      <rect x="9" y="6" width="6" height="2" fill="#1a1410" />
-      <rect x="10" y="6" width="2" height="2" fill="#f4942a" />
-      <rect x="13" y="6" width="2" height="2" fill="#f4942a" />
-      <rect x="10" y="6" width="1" height="1" fill="#ffd070" />
-      <rect x="13" y="6" width="1" height="1" fill="#ffd070" />
+      <!-- Burnt helm — outline, then iron ramp keyed upper-left -->
+      <rect x="9" y="1" width="12" height="10" fill="#150d08" />
+      <rect x="10" y="2" width="10" height="8" fill="#3a3038" />
+      <rect x="10" y="2" width="10" height="1" fill="#5a5058" />
+      <rect x="10" y="2" width="4" height="1" fill="#786860" />
+      <rect x="10" y="2" width="2" height="7" fill="#4a4048" />
+      <rect x="10" y="2" width="1" height="4" fill="#5a5058" />
+      <rect x="18" y="3" width="2" height="7" fill="#2a2028" />
+      <rect x="19" y="3" width="1" height="7" fill="#241c26" />
+      <!-- cheek guards -->
+      <rect x="10" y="8" width="3" height="2" fill="#332a31" />
+      <rect x="17" y="8" width="3" height="2" fill="#241c26" />
+      <!-- burnt crest stub, still smouldering -->
+      <rect x="13" y="0" width="4" height="2" fill="#150d08" />
+      <rect x="14" y="0" width="2" height="1" fill="#6a3a1a" />
+      <rect x="14" y="0" width="1" height="1" fill="#a83a14" />
+      <rect x="15" y="0" width="1" height="1" fill="#f4942a" />
+      <!-- Visor slit — ember-lit eyes under the brow -->
+      <rect x="11" y="6" width="8" height="2" fill="#1a1410" />
+      <rect x="12" y="6" width="2" height="2" fill="#f4942a" />
+      <rect x="16" y="6" width="2" height="2" fill="#f4942a" />
+      <rect x="12" y="6" width="1" height="1" fill="#ffd070" />
+      <rect x="16" y="6" width="1" height="1" fill="#ffd070" />
 
-      <!-- Scorched cuirass — iron ramp with ember cracks -->
-      <rect x="7" y="9" width="10" height="13" fill="#3a3038" />
-      <rect x="7" y="9" width="10" height="1" fill="#4a4048" />
-      <rect x="7" y="9" width="2" height="13" fill="#42383f" />
-      <rect x="7" y="9" width="1" height="13" fill="#2a2028" />
-      <rect x="15" y="9" width="2" height="13" fill="#2a2028" />
-      <rect x="11" y="10" width="2" height="11" fill="#2a2028" />
-      <!-- Ember seams glowing through the plate -->
-      <rect x="8" y="12" width="1" height="8" fill="#d4641a" opacity="0.55" />
-      <rect x="15" y="12" width="1" height="8" fill="#d4641a" opacity="0.5" />
-      <rect x="9" y="15" width="6" height="1" fill="#a83a14" opacity="0.7" />
-      <rect x="9" y="15" width="2" height="1" fill="#f4942a" opacity="0.6" />
-      <rect x="10" y="18" width="3" height="1" fill="#d4641a" opacity="0.5" />
+      <!-- Scorched cuirass — outline under-layer, iron ramp, ember seams -->
+      <rect x="8" y="11" width="14" height="16" fill="#150d08" />
+      <rect x="9" y="12" width="12" height="14" fill="#3a3038" />
+      <rect x="9" y="12" width="12" height="1" fill="#4a4048" />
+      <rect x="9" y="12" width="5" height="1" fill="#5a5058" />
+      <rect x="9" y="12" width="2" height="14" fill="#42383f" />
+      <rect x="9" y="12" width="1" height="8" fill="#5a5058" />
+      <rect x="18" y="12" width="3" height="14" fill="#2a2028" />
+      <rect x="20" y="12" width="1" height="14" fill="#241c26" />
+      <!-- breastplate centre ridge + char blistering -->
+      <rect x="14" y="13" width="2" height="12" fill="#2a2028" />
+      <rect x="11" y="14" width="2" height="1" fill="#241c26" />
+      <rect x="17" y="17" width="2" height="1" fill="#241c26" />
+      <rect x="10" y="21" width="1" height="2" fill="#241c26" />
+      <!-- Ember seams glowing through the split plate -->
+      <rect x="10" y="14" width="1" height="9" fill="#a83a14" />
+      <rect x="10" y="15" width="1" height="3" fill="#d4641a" />
+      <rect x="10" y="16" width="1" height="1" fill="#f4942a" />
+      <rect x="18" y="15" width="1" height="8" fill="#a83a14" opacity="0.8" />
+      <rect x="18" y="18" width="1" height="2" fill="#d4641a" opacity="0.8" />
+      <rect x="11" y="19" width="8" height="1" fill="#6a1c0a" />
+      <rect x="12" y="19" width="3" height="1" fill="#a83a14" />
+      <rect x="12" y="19" width="1" height="1" fill="#f4942a" />
+      <rect x="13" y="23" width="4" height="1" fill="#6a1c0a" />
+      <rect x="14" y="23" width="2" height="1" fill="#d4641a" opacity="0.7" />
 
-      <!-- Shield arm -->
-      <rect x="2" y="11" width="5" height="11" fill="#4a3a2a" />
-      <rect x="2" y="11" width="5" height="1" fill="#5a4a36" />
-      <rect x="2" y="11" width="1" height="11" fill="#6a5440" />
-      <rect x="6" y="11" width="1" height="11" fill="#2a2018" />
-      <rect x="3" y="13" width="3" height="3" fill="#2a2018" />
-      <rect x="4" y="14" width="1" height="1" fill="#e87820" />
-      <rect x="4" y="14" width="1" height="1" fill="#ffd070" opacity="0.7" />
+      <!-- Pauldron (right shoulder, viewer-right) — slumped, melted -->
+      <rect x="19" y="11" width="6" height="5" fill="#150d08" />
+      <rect x="20" y="12" width="4" height="3" fill="#332a31" />
+      <rect x="20" y="12" width="4" height="1" fill="#4a4048" />
+      <rect x="23" y="13" width="1" height="2" fill="#241c26" />
 
-      <!-- Right arm + ember-edged blade -->
-      <rect x="17" y="13" width="2" height="3" fill="#3a3038" />
-      <rect x="17" y="13" width="1" height="3" fill="#4a4048" />
-      <rect x="18" y="4" width="2" height="12" fill="#5a5058" />
-      <rect x="18" y="4" width="1" height="12" fill="#7a7078" />
-      <!-- Heated cutting edge -->
-      <rect x="18" y="4" width="2" height="5" fill="#e87820" />
-      <rect x="18" y="4" width="1" height="3" fill="#ffd070" />
-      <rect x="18" y="4" width="1" height="1" fill="#fff4d0" />
-      <rect x="17" y="15" width="4" height="2" fill="#2a2028" />
+      <!-- Shield arm (viewer-left) — scorched oak, iron boss with live coal -->
+      <rect x="1" y="11" width="8" height="17" fill="#150d08" />
+      <rect x="2" y="12" width="6" height="15" fill="#4a3a2a" />
+      <rect x="2" y="12" width="6" height="1" fill="#6a5440" />
+      <rect x="2" y="12" width="3" height="1" fill="#8a7050" />
+      <rect x="2" y="12" width="1" height="13" fill="#6a5440" />
+      <rect x="7" y="13" width="1" height="14" fill="#2a2018" />
+      <!-- charred bottom edge, burnt through -->
+      <rect x="2" y="24" width="6" height="3" fill="#2a2018" />
+      <rect x="3" y="25" width="4" height="2" fill="#1a1410" />
+      <rect x="4" y="26" width="2" height="1" fill="#6a1c0a" />
+      <!-- iron rim strap + rivets -->
+      <rect x="2" y="17" width="6" height="1" fill="#2a2028" />
+      <rect x="2" y="17" width="1" height="1" fill="#5a5058" />
+      <rect x="7" y="17" width="1" height="1" fill="#241c26" />
+      <!-- boss with a coal seated in it -->
+      <rect x="3" y="14" width="4" height="4" fill="#2a2028" />
+      <rect x="4" y="15" width="2" height="2" fill="#a83a14" />
+      <rect x="4" y="15" width="1" height="1" fill="#ffd070" />
+      <rect x="5" y="16" width="1" height="1" fill="#d4641a" />
 
-      <!-- Legs -->
-      <rect x="8" y="22" width="3" height="8" fill="#3a3038" />
-      <rect x="13" y="22" width="3" height="8" fill="#3a3038" />
-      <rect x="8" y="22" width="1" height="8" fill="#4a4048" />
-      <rect x="13" y="22" width="1" height="8" fill="#2a2028" />
-      <rect x="8" y="30" width="4" height="2" fill="#1a1410" />
-      <rect x="13" y="30" width="4" height="2" fill="#1a1410" />
+      <!-- Sword arm + heated blade (viewer-right) -->
+      <rect x="21" y="15" width="4" height="5" fill="#150d08" />
+      <rect x="22" y="16" width="2" height="3" fill="#3a3038" />
+      <rect x="22" y="16" width="1" height="3" fill="#4a4048" />
+      <!-- blade raised beside the body, edge still cooking -->
+      <rect x="22" y="3" width="4" height="16" fill="#150d08" />
+      <rect x="23" y="4" width="2" height="14" fill="#5a5058" />
+      <rect x="23" y="4" width="1" height="14" fill="#786870" />
+      <!-- heat gradient up the cutting edge -->
+      <rect x="23" y="4" width="2" height="6" fill="#a83a14" />
+      <rect x="23" y="4" width="2" height="4" fill="#e87820" />
+      <rect x="23" y="4" width="1" height="3" fill="#ffd070" />
+      <rect x="23" y="4" width="1" height="1" fill="#fff4d0" />
+      <rect x="24" y="10" width="1" height="3" fill="#6a1c0a" />
+      <!-- crossguard + grip fist -->
+      <rect x="21" y="18" width="6" height="2" fill="#150d08" />
+      <rect x="22" y="18" width="4" height="1" fill="#2a2028" />
+      <rect x="22" y="18" width="1" height="1" fill="#4a4048" />
+      <rect x="22" y="19" width="3" height="2" fill="#332a31" />
 
-      <!-- Drifting embers -->
-      <rect x="6" y="23" width="1" height="1" fill="#f4942a" opacity="0.6" />
-      <rect x="16" y="20" width="1" height="1" fill="#f4942a" opacity="0.55" />
-      <rect x="10" y="26" width="1" height="1" fill="#d4641a" opacity="0.5" />
-      <rect x="20" y="2" width="1" height="1" fill="#ffd070" opacity="0.5" />
+      <!-- Tassets + legs — outline, iron ramp -->
+      <rect x="9" y="26" width="12" height="3" fill="#150d08" />
+      <rect x="10" y="26" width="10" height="2" fill="#332a31" />
+      <rect x="10" y="26" width="4" height="1" fill="#4a4048" />
+      <rect x="9" y="28" width="5" height="10" fill="#150d08" />
+      <rect x="16" y="28" width="5" height="10" fill="#150d08" />
+      <rect x="10" y="29" width="3" height="8" fill="#3a3038" />
+      <rect x="10" y="29" width="1" height="8" fill="#4a4048" />
+      <rect x="17" y="29" width="3" height="8" fill="#2a2028" />
+      <rect x="19" y="29" width="1" height="8" fill="#241c26" />
+      <!-- ember crack down the lead shin -->
+      <rect x="11" y="31" width="1" height="4" fill="#a83a14" />
+      <rect x="11" y="32" width="1" height="1" fill="#f4942a" />
+      <!-- sabatons -->
+      <rect x="8" y="36" width="6" height="3" fill="#150d08" />
+      <rect x="9" y="36" width="4" height="2" fill="#2a2028" />
+      <rect x="9" y="36" width="4" height="1" fill="#3a3038" />
+      <rect x="15" y="36" width="6" height="3" fill="#150d08" />
+      <rect x="16" y="36" width="4" height="2" fill="#241c26" />
+      <rect x="16" y="36" width="2" height="1" fill="#2a2028" />
+
+      <!-- Drifting embers off the seams -->
+      <rect x="6" y="8" width="1" height="1" fill="#f4942a" opacity="0.6" />
+      <rect x="26" y="13" width="1" height="1" fill="#ffd070" opacity="0.5" />
+      <rect x="7" y="30" width="1" height="1" fill="#d4641a" opacity="0.55" />
+      <rect x="22" y="27" width="1" height="1" fill="#f4942a" opacity="0.5" />
+      <rect x="27" y="6" width="1" height="1" fill="#d4641a" opacity="0.4" />
     </svg>
