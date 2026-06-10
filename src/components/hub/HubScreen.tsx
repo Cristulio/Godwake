@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
+import { PlayerPortrait } from '../combat/PlayerPortrait';
 import { useGameStore } from '../../stores/gameStore';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
@@ -135,8 +136,11 @@ export function HubScreen() {
 
       <Panel tone="glow" className="mb-6">
         <div className="flex flex-wrap items-center gap-4">
-          <div className="w-16 h-16 panel-etched border border-[var(--color-border-warm)] flex items-center justify-center text-3xl shrink-0">
-            <span aria-hidden>🛡️</span>
+          <div
+            aria-hidden
+            className="w-16 h-20 panel-etched border border-[var(--color-border-warm)] flex items-end justify-center overflow-hidden shrink-0"
+          >
+            <PlayerPortrait classId={character.classId} className="h-[4.5rem] w-auto" />
           </div>
           <div className="flex-1 min-w-0 self-stretch flex flex-col justify-center">
             <div className="font-display text-[var(--color-accent-amber)] text-sm uppercase tracking-widest" style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.8)' }}>

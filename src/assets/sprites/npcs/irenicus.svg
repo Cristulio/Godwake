@@ -1,84 +1,129 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 40" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet" aria-label="Velnaris">
-      <!-- Cold soul-glow backlight + ground shadow -->
-      <ellipse cx="12" cy="20" rx="12" ry="18" fill="#5a3a7a" opacity="0.11" />
-      <ellipse cx="13" cy="15" rx="8" ry="11" fill="#3a6a72" opacity="0.06" />
-      <ellipse cx="12" cy="39" rx="8" ry="1.5" fill="#000" opacity="0.42" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 60" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet" aria-label="Velnaris">
+  <!-- 36×60 dialogue portrait: the Voice. Long raven hair, gaunt pale face,
+       narrow violet eyes, soul-amulet burning at the chest. Cold violet glow. -->
+  <ellipse cx="18" cy="26" rx="17" ry="26" fill="#5a3a7a" opacity="0.11" />
+  <ellipse cx="20" cy="22" rx="12" ry="16" fill="#3a6a72" opacity="0.06" />
+  <ellipse cx="18" cy="58.4" rx="12" ry="2" fill="#000" opacity="0.40" />
 
-      <!-- Long black hair — cool charcoal ramp, rim-lit upper-left -->
-      <rect x="6" y="3" width="12" height="4" fill="#0e0a14" />
-      <rect x="5" y="5" width="14" height="13" fill="#0e0a14" />
-      <rect x="6" y="3" width="12" height="1" fill="#241a30" />
-      <rect x="5" y="5" width="2" height="13" fill="#16101f" />
-      <rect x="5" y="5" width="1" height="9" fill="#2a2038" />
-      <rect x="17" y="5" width="2" height="13" fill="#0a0710" />
-      <rect x="5" y="5" width="1" height="4" fill="#4a5a72" opacity="0.6" />
-      <rect x="6" y="4" width="2" height="1" fill="#3a4a62" opacity="0.6" />
+  <!-- ── Hair — long raven falls, cool blue rim upper-left ── -->
+  <!-- outline -->
+  <rect x="9" y="2" width="18" height="3" fill="#06040a" />
+  <rect x="7" y="5" width="22" height="14" fill="#06040a" />
+  <rect x="7" y="19" width="6" height="13" fill="#06040a" />
+  <rect x="23" y="19" width="6" height="13" fill="#06040a" />
+  <!-- crown -->
+  <rect x="10" y="3" width="16" height="2" fill="#0e0a14" />
+  <rect x="8" y="5" width="20" height="3" fill="#16101f" />
+  <rect x="10" y="3" width="8" height="1" fill="#241a30" />
+  <!-- widow's peak -->
+  <rect x="17" y="6" width="2" height="2" fill="#0e0a14" />
+  <!-- side falls -->
+  <rect x="8" y="8" width="4" height="11" fill="#0e0a14" />
+  <rect x="8" y="8" width="2" height="11" fill="#16101f" />
+  <rect x="25" y="8" width="3" height="11" fill="#0a0710" />
+  <!-- cool rim catch upper-left -->
+  <rect x="8" y="5" width="1" height="8" fill="#2a2038" />
+  <rect x="8" y="5" width="1" height="3" fill="#4a5a72" opacity="0.7" />
+  <rect x="10" y="3" width="3" height="1" fill="#3a4a62" opacity="0.6" />
+  <!-- long falls over the shoulders -->
+  <rect x="8" y="19" width="4" height="12" fill="#0e0a14" />
+  <rect x="8" y="19" width="1" height="12" fill="#1c1428" />
+  <rect x="24" y="19" width="4" height="12" fill="#0a0710" />
+  <rect x="27" y="19" width="1" height="12" fill="#06040a" />
+  <!-- strand shadow -->
+  <rect x="10" y="22" width="1" height="6" fill="#06040a" />
+  <rect x="25" y="21" width="1" height="7" fill="#16101f" />
 
-      <!-- Gaunt face — cool-pale skin ramp -->
-      <rect x="8" y="6" width="8" height="11" fill="#c4b6a4" />
-      <rect x="8" y="6" width="3" height="11" fill="#d4c8b6" />
-      <rect x="8" y="6" width="1" height="9" fill="#e2d6c4" />
-      <rect x="14" y="7" width="2" height="10" fill="#a89a86" />
-      <rect x="15" y="8" width="1" height="9" fill="#94866f" />
-      <!-- Hollow cheeks + brow occlusion + gaunt dither -->
-      <rect x="8" y="13" width="8" height="2" fill="#a89a86" />
-      <rect x="8" y="15" width="8" height="1" fill="#7e7060" />
-      <rect x="8" y="6" width="8" height="1" fill="#94866f" opacity="0.5" />
-      <rect x="9" y="11" width="1" height="2" fill="#a89a86" />
-      <rect x="14" y="11" width="1" height="2" fill="#94866f" />
-      <rect x="8" y="10" width="1" height="1" fill="#9c8e7a" />
-      <rect x="15" y="12" width="1" height="1" fill="#7e7060" />
+  <!-- ── Face — gaunt, pale, cut from shadow ── -->
+  <rect x="12" y="8" width="13" height="14" fill="#beb4a4" />
+  <rect x="12" y="8" width="13" height="1" fill="#8e8678" />
+  <rect x="12" y="8" width="2" height="14" fill="#d2c8ba" />
+  <rect x="12" y="10" width="1" height="9" fill="#e2dacc" />
+  <rect x="22" y="8" width="3" height="14" fill="#8e8678" />
+  <rect x="24" y="8" width="1" height="14" fill="#6e6658" />
+  <!-- pointed elven ears just past the hairline -->
+  <rect x="11" y="12" width="1" height="3" fill="#beb4a4" />
+  <rect x="11" y="11" width="1" height="1" fill="#d2c8ba" />
+  <rect x="25" y="12" width="1" height="3" fill="#8e8678" />
+  <!-- sunken temples + hard cheekbones -->
+  <rect x="13" y="14" width="1" height="2" fill="#8e8678" />
+  <rect x="22" y="14" width="2" height="2" fill="#5e5648" />
+  <rect x="14" y="16" width="2" height="1" fill="#9e9586" />
+  <rect x="21" y="16" width="2" height="1" fill="#6e6658" />
+  <!-- narrow violet eyes — glowing slits under a knit brow -->
+  <rect x="13" y="12" width="4" height="2" fill="#1a1230" />
+  <rect x="20" y="12" width="4" height="2" fill="#1a1230" />
+  <rect x="14" y="12" width="2" height="1" fill="#a070e0" />
+  <rect x="21" y="12" width="2" height="1" fill="#a070e0" />
+  <rect x="14" y="12" width="1" height="1" fill="#e0c8ff" />
+  <rect x="21" y="12" width="1" height="1" fill="#d4b4ff" />
+  <rect x="13" y="11" width="4" height="1" fill="#6e6658" />
+  <rect x="20" y="11" width="4" height="1" fill="#6e6658" />
+  <!-- blade nose -->
+  <rect x="18" y="13" width="1" height="4" fill="#9e9586" />
+  <rect x="17" y="16" width="1" height="1" fill="#d2c8ba" />
+  <rect x="19" y="16" width="1" height="1" fill="#6e6658" />
+  <!-- thin bloodless mouth, faint contempt -->
+  <rect x="15" y="19" width="6" height="1" fill="#5e5040" />
+  <rect x="14" y="19" width="1" height="1" fill="#6e6658" />
+  <!-- jaw shadow -->
+  <rect x="14" y="21" width="9" height="1" fill="#8e8678" />
 
-      <!-- Brows -->
-      <rect x="9" y="8" width="2" height="1" fill="#2a2038" />
-      <rect x="13" y="8" width="2" height="1" fill="#2a2038" />
-      <!-- Soulless eyes — violet bloom + bright core -->
-      <ellipse cx="10" cy="9.5" rx="2.2" ry="1.6" fill="#a86ad0" opacity="0.32" />
-      <ellipse cx="14" cy="9.5" rx="2.2" ry="1.6" fill="#a86ad0" opacity="0.32" />
-      <rect x="9" y="9" width="2" height="2" fill="#160a22" />
-      <rect x="13" y="9" width="2" height="2" fill="#160a22" />
-      <rect x="9" y="9" width="1" height="1" fill="#c89af0" />
-      <rect x="13" y="9" width="1" height="1" fill="#c89af0" />
-      <rect x="10" y="10" width="1" height="1" fill="#8a50b8" />
-      <rect x="14" y="10" width="1" height="1" fill="#8a50b8" />
+  <!-- ── Neck ── -->
+  <rect x="14" y="22" width="9" height="4" fill="#06040a" />
+  <rect x="15" y="22" width="7" height="3" fill="#9e9586" />
+  <rect x="15" y="22" width="3" height="3" fill="#beb4a4" />
 
-      <!-- Sharp nose + grim mouth -->
-      <rect x="11" y="11" width="2" height="2" fill="#b4a692" />
-      <rect x="11" y="11" width="1" height="2" fill="#c4b6a4" />
-      <rect x="10" y="14" width="4" height="1" fill="#3a2430" />
-      <rect x="11" y="15" width="2" height="1" fill="#5a3a48" opacity="0.7" />
+  <!-- ── Mantle — layered shoulders, silver clasp pins ── -->
+  <rect x="6" y="25" width="24" height="5" fill="#06040a" />
+  <rect x="7" y="26" width="22" height="3" fill="#241a3e" />
+  <rect x="7" y="26" width="22" height="1" fill="#332552" />
+  <rect x="7" y="26" width="5" height="1" fill="#473570" />
+  <rect x="24" y="26" width="5" height="3" fill="#180f2c" />
+  <rect x="13" y="29" width="1" height="1" fill="#9a92b4" />
+  <rect x="22" y="29" width="1" height="1" fill="#7a7294" />
 
-      <!-- High robe collar -->
-      <rect x="5" y="17" width="14" height="2" fill="#1a1226" />
-      <rect x="5" y="17" width="14" height="1" fill="#2a1d3a" />
-      <rect x="8" y="17" width="8" height="3" fill="#0a0710" />
-      <polygon points="6,19 8,17 8,23" fill="#241a30" />
-      <polygon points="18,19 16,17 16,23" fill="#1a1226" />
+  <!-- ── Robe chest — near-black, violet-lit placket ── -->
+  <rect x="5" y="30" width="26" height="24" fill="#06040a" />
+  <rect x="6" y="31" width="24" height="22" fill="#1c1430" />
+  <rect x="6" y="31" width="3" height="22" fill="#241a3e" />
+  <rect x="6" y="31" width="1" height="22" fill="#332552" />
+  <rect x="26" y="31" width="4" height="22" fill="#120c24" />
+  <rect x="29" y="31" width="1" height="22" fill="#0c0814" />
+  <!-- center placket -->
+  <rect x="16" y="31" width="4" height="22" fill="#241a3e" />
+  <rect x="16" y="31" width="1" height="22" fill="#332552" />
+  <rect x="19" y="31" width="1" height="22" fill="#14102a" />
+  <!-- robe dither -->
+  <rect x="11" y="37" width="1" height="1" fill="#2a1f46" />
+  <rect x="23" y="40" width="1" height="1" fill="#0c0814" />
+  <rect x="9" y="45" width="1" height="1" fill="#2a1f46" />
+  <rect x="24" y="48" width="1" height="1" fill="#0c0814" />
 
-      <!-- Dark sorcerer's robe — charcoal-violet ramp, lit left, dither -->
-      <rect x="4" y="19" width="16" height="21" fill="#221733" />
-      <rect x="4" y="19" width="1" height="21" fill="#0e0818" />
-      <rect x="5" y="19" width="1" height="21" fill="#160e22" />
-      <rect x="18" y="19" width="2" height="21" fill="#0e0818" />
-      <rect x="6" y="19" width="2" height="19" fill="#2a1d3e" />
-      <rect x="6" y="19" width="1" height="8" fill="#352447" />
-      <rect x="11" y="27" width="2" height="13" fill="#1a1228" />
-      <rect x="8" y="30" width="1" height="1" fill="#2a1d3e" />
-      <rect x="15" y="33" width="1" height="1" fill="#160e22" />
-      <rect x="9" y="35" width="1" height="1" fill="#160e22" />
-      <rect x="14" y="24" width="1" height="1" fill="#2a1d3e" />
+  <!-- ── The soul-amulet — chained, burning violet ── -->
+  <rect x="14" y="31" width="1" height="4" fill="#7a7294" />
+  <rect x="21" y="31" width="1" height="4" fill="#5e5878" />
+  <rect x="15" y="34" width="1" height="2" fill="#7a7294" />
+  <rect x="20" y="34" width="1" height="2" fill="#5e5878" />
+  <ellipse cx="18" cy="40" rx="7" ry="6" fill="#a48ee0" opacity="0.22" />
+  <ellipse cx="18" cy="40" rx="4" ry="3.5" fill="#c4b0f0" opacity="0.25" />
+  <!-- setting -->
+  <rect x="14" y="36" width="8" height="8" fill="#06040a" />
+  <rect x="15" y="37" width="6" height="6" fill="#473570" />
+  <rect x="15" y="37" width="2" height="2" fill="#5a4488" />
+  <!-- gem facets -->
+  <rect x="16" y="38" width="4" height="4" fill="#8a64d0" />
+  <rect x="16" y="38" width="2" height="2" fill="#b494f0" />
+  <rect x="16" y="38" width="1" height="1" fill="#ecdcff" />
+  <rect x="19" y="41" width="1" height="1" fill="#5a3aa0" />
+  <!-- escaping soul-wisps -->
+  <rect x="13" y="35" width="1" height="1" fill="#c4b0f0" opacity="0.8" />
+  <rect x="23" y="37" width="1" height="1" fill="#a48ee0" opacity="0.7" />
+  <rect x="12" y="42" width="1" height="1" fill="#8a64d0" opacity="0.6" />
+  <rect x="24" y="44" width="1" height="1" fill="#a48ee0" opacity="0.5" />
 
-      <!-- Soul-shard pendant — glowing bloom + bright core -->
-      <ellipse cx="12" cy="24" rx="4" ry="4" fill="#7a4ab0" opacity="0.24" />
-      <line x1="12" y1="19" x2="12" y2="22" stroke="#2a1d3a" stroke-width="0.5" />
-      <rect x="11" y="22" width="2" height="4" fill="#3a1850" />
-      <rect x="10" y="23" width="4" height="2" fill="#3a1850" />
-      <rect x="11" y="23" width="2" height="2" fill="#8a50c0" />
-      <rect x="11" y="23" width="1" height="1" fill="#d4b0f8" />
-      <rect x="11" y="22" width="1" height="4" fill="#a86ad0" opacity="0.6" />
-
-      <!-- Robe shoulder seams + lower hem -->
-      <rect x="6" y="24" width="1" height="14" fill="#160e22" />
-      <rect x="17" y="24" width="1" height="14" fill="#0e0818" />
-      <rect x="4" y="38" width="16" height="2" fill="#0e0818" />
+  <!-- ── Robe hem fade ── -->
+  <rect x="6" y="53" width="24" height="1" fill="#14102a" />
+  <rect x="7" y="54" width="22" height="4" fill="#0c0814" />
+  <rect x="8" y="55" width="20" height="2" fill="#120c24" />
 </svg>

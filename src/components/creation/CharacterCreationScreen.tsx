@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Button } from '../ui/Button';
+import { PlayerPortrait } from '../combat/PlayerPortrait';
 import { useT } from '../../i18n/useT';
 import { useGameStore } from '../../stores/gameStore';
 import { getRace } from '../../content/races';
@@ -164,6 +165,17 @@ export function CharacterCreationScreen() {
                   : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] hover:border-[var(--color-border-warm)]'
               }`}
             >
+              <div
+                aria-hidden
+                className={`relative h-28 flex items-end justify-center overflow-hidden border bg-[var(--color-bg-deep)]/60 ${
+                  isSelected
+                    ? 'border-[var(--color-border-warm)]'
+                    : 'border-[var(--color-border-dim)]'
+                }`}
+              >
+                <PlayerPortrait classId={opt.classId} className="h-24 w-auto" />
+              </div>
+
               <div>
                 <div className="flex items-center gap-2">
                   <span
@@ -244,6 +256,14 @@ export function CharacterCreationScreen() {
             >
               <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
                 {t('screens.charCreation.sealed')}
+              </div>
+              {/* The sealed soul shows as a grey ghost — shape readable, colour
+                  withheld until the body wakes. */}
+              <div
+                aria-hidden
+                className="relative h-28 flex items-end justify-center overflow-hidden border border-[var(--color-border-dim)] bg-[var(--color-bg-deep)]/60"
+              >
+                <PlayerPortrait classId={o.classId} className="h-24 w-auto grayscale brightness-50 opacity-70" />
               </div>
               <div className="font-display text-[var(--color-text-dim)] text-base tracking-wide">
                 {tc('classes', o.classId, 'name', o.className)}
