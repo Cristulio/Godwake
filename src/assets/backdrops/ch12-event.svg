@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch12-event — A Cistern the Fire Has Not Found: the stone water-vault
+       under a burned house, the chapter's calm scene (events + rest). Cool
+       and still: vault columns stand in black water; the stair from the
+       street descends upper-LEFT, a faint warm wash of the burning far
+       above leaking down it (the key, dim). On a dry ledge right, the
+       refugees' things sit waiting — a folded blanket, bowls, a doll — by
+       one small candle (the warm counter-note). The WATERLINE is the floor
+       seam: kerb at y62-66, water y66-84. Quiet mid band y38-63.
+       Ramps — vault stone: #101218 #15161c #1a1c24 #232830 (+#2c3340);
+       water: #0a1014 #0c1418 #16242c (+gleam #2a4a52); stair warm wash:
+       #241712 #332218; candle: #a33d1e #e8743a #ffb347.
+       No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c12v-stair-wash" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.13" />
+      <stop offset="55%" stop-color="#a33d1e" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c12v-candle-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the vault ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0d0f14" />
+  <!-- barrel-ceiling courses -->
+  <rect x="0" y="0" width="160" height="4" fill="#08090c" />
+  <rect x="0" y="4" width="160" height="1" fill="#15161c" />
+  <rect x="0" y="5" width="34" height="6" fill="#1a1c24" />
+  <rect x="35" y="5" width="30" height="6" fill="#171a20" />
+  <rect x="66" y="5" width="28" height="6" fill="#15161c" />
+  <rect x="95" y="5" width="32" height="6" fill="#13151b" />
+  <rect x="128" y="5" width="32" height="6" fill="#101218" />
+  <rect x="0" y="5" width="34" height="1" fill="#232830" />
+  <!-- back wall courses -->
+  <rect x="0" y="12" width="26" height="12" fill="#171a20" />
+  <rect x="27" y="12" width="24" height="12" fill="#1a1c24" />
+  <rect x="52" y="12" width="26" height="12" fill="#15161c" />
+  <rect x="79" y="12" width="24" height="12" fill="#13151b" />
+  <rect x="104" y="12" width="26" height="12" fill="#111319" />
+  <rect x="131" y="12" width="29" height="12" fill="#101218" />
+  <rect x="27" y="12" width="24" height="1" fill="#262c36" />
+  <rect x="0" y="25" width="30" height="13" fill="#1a1c24" />
+  <rect x="31" y="25" width="26" height="13" fill="#171a20" />
+  <rect x="58" y="25" width="24" height="13" fill="#14171d" />
+  <rect x="83" y="25" width="26" height="13" fill="#121419" />
+  <rect x="110" y="25" width="50" height="13" fill="#101218" />
+  <rect x="31" y="25" width="26" height="1" fill="#232830" />
+  <!-- damp staining down the back wall -->
+  <rect x="46" y="13" width="2" height="11" fill="#0e1014" opacity="0.8" />
+  <rect x="47" y="25" width="2" height="9" fill="#0d0f13" opacity="0.8" />
+  <rect x="90" y="14" width="2" height="10" fill="#0d0f13" opacity="0.7" />
+  <!-- high vent grate, a breath of the burning city far above -->
+  <rect x="118" y="6" width="8" height="4" fill="#0a0c10" />
+  <rect x="118" y="6" width="8" height="1" fill="#15181e" />
+  <rect x="120" y="6" width="1" height="4" fill="#0d0f14" />
+  <rect x="123" y="6" width="1" height="4" fill="#0d0f14" />
+  <rect x="119" y="7" width="1" height="1" fill="#3f1a0e" opacity="0.7" />
+
+  <!-- ══ The stair from the street (upper-LEFT), warm-washed ══ -->
+  <rect x="0" y="6" width="22" height="36" fill="#0a0b0e" />
+  <!-- steps descending right-to-left view: treads catching the wash -->
+  <rect x="0" y="10" width="20" height="2" fill="#241712" />
+  <rect x="0" y="12" width="20" height="3" fill="#15110e" />
+  <rect x="0" y="15" width="17" height="2" fill="#2a1b14" />
+  <rect x="0" y="17" width="17" height="3" fill="#16120f" />
+  <rect x="0" y="20" width="14" height="2" fill="#241712" />
+  <rect x="0" y="22" width="14" height="3" fill="#141110" />
+  <rect x="0" y="25" width="11" height="2" fill="#1f1511" />
+  <rect x="0" y="27" width="11" height="3" fill="#121010" />
+  <rect x="0" y="30" width="8" height="2" fill="#1a1210" />
+  <rect x="0" y="32" width="8" height="3" fill="#101012" />
+  <rect x="0" y="35" width="6" height="2" fill="#161210" />
+  <rect x="0" y="37" width="6" height="5" fill="#0f1013" />
+  <!-- the doorway's warm rim at the stair head -->
+  <rect x="0" y="6" width="22" height="1" fill="#332218" />
+  <rect x="20" y="6" width="2" height="6" fill="#241712" />
+  <rect x="21" y="12" width="1" height="4" fill="#1a1210" />
+  <!-- stair side wall edge -->
+  <rect x="22" y="6" width="1" height="36" fill="#1c2028" />
+  <rect x="23" y="6" width="1" height="36" fill="#101218" />
+  <!-- smoke that found the stair, thinning as it sinks -->
+  <rect x="2" y="8" width="6" height="1" fill="#0c0a0c" opacity="0.8" />
+  <rect x="6" y="13" width="5" height="1" fill="#0b090b" opacity="0.6" />
+  <rect x="-12" y="-8" width="60" height="52" fill="url(#c12v-stair-wash)" />
+
+  <!-- ══ Columns standing in the water ══ -->
+  <rect x="52" y="14" width="7" height="48" fill="#171a20" />
+  <rect x="52" y="14" width="2" height="48" fill="#1f242c" />
+  <rect x="57" y="14" width="2" height="48" fill="#101218" />
+  <rect x="51" y="12" width="9" height="2" fill="#1c2028" />
+  <rect x="51" y="12" width="9" height="1" fill="#262c36" />
+  <rect x="52" y="34" width="7" height="1" fill="#0e1014" />
+  <rect x="51" y="58" width="9" height="4" fill="#13161c" />
+  <!-- water-stain ring where the level once stood -->
+  <rect x="52" y="50" width="7" height="1" fill="#0c0f13" />
+  <rect x="104" y="14" width="7" height="48" fill="#13161c" />
+  <rect x="104" y="14" width="2" height="48" fill="#1a1e26" />
+  <rect x="109" y="14" width="2" height="48" fill="#0d0f14" />
+  <rect x="103" y="12" width="9" height="2" fill="#171a20" />
+  <rect x="103" y="12" width="9" height="1" fill="#1f242c" />
+  <rect x="104" y="34" width="7" height="1" fill="#0c0e12" />
+  <rect x="103" y="58" width="9" height="4" fill="#101318" />
+  <rect x="104" y="50" width="7" height="1" fill="#0b0d11" />
+
+  <!-- ══ MID BAND (y38-62): still vault wall, very quiet ══ -->
+  <rect x="0" y="38" width="30" height="12" fill="#15171d" />
+  <rect x="31" y="38" width="21" height="12" fill="#13151b" />
+  <rect x="59" y="38" width="23" height="12" fill="#121419" />
+  <rect x="82" y="38" width="22" height="12" fill="#111318" />
+  <rect x="111" y="38" width="49" height="12" fill="#0f1116" />
+  <rect x="0" y="50" width="26" height="12" fill="#13151b" />
+  <rect x="27" y="50" width="25" height="12" fill="#121419" />
+  <rect x="59" y="50" width="23" height="12" fill="#101217" />
+  <rect x="82" y="50" width="22" height="12" fill="#0f1116" />
+  <rect x="111" y="50" width="49" height="12" fill="#0e1014" />
+
+  <!-- ══ The refugees' ledge (x116-152, y42-56) ══ -->
+  <rect x="116" y="48" width="38" height="3" fill="#1a1c24" />
+  <rect x="116" y="48" width="38" height="1" fill="#262c36" />
+  <rect x="116" y="51" width="38" height="5" fill="#12141a" />
+  <rect x="118" y="56" width="34" height="6" fill="#0f1116" />
+  <!-- the folded blanket -->
+  <rect x="120" y="45" width="7" height="3" fill="#2a2230" />
+  <rect x="120" y="45" width="7" height="1" fill="#363044" />
+  <rect x="121" y="46" width="5" height="1" fill="#221c28" />
+  <!-- two bowls, set out -->
+  <rect x="130" y="46" width="4" height="2" fill="#241a11" />
+  <rect x="131" y="45" width="2" height="1" fill="#332416" />
+  <rect x="136" y="46" width="3" height="2" fill="#1d1510" />
+  <rect x="137" y="45" width="1" height="1" fill="#281d14" />
+  <!-- the doll, sat up against the wall -->
+  <rect x="146" y="44" width="2" height="3" fill="#3a2a20" />
+  <rect x="146" y="43" width="2" height="1" fill="#4a382a" />
+  <rect x="145" y="45" width="1" height="1" fill="#2e2118" />
+  <rect x="148" y="45" width="1" height="1" fill="#2e2118" />
+  <!-- the candle — the warm counter-note -->
+  <rect x="141" y="45" width="2" height="3" fill="#8a7e6a" />
+  <rect x="141" y="44" width="2" height="1" fill="#6a5e4c" />
+  <rect x="141" y="42" width="1" height="2" fill="#e8743a" />
+  <rect x="141" y="41" width="1" height="1" fill="#ffb347" />
+  <rect x="124" y="32" width="38" height="26" fill="url(#c12v-candle-glow)" />
+  <!-- a tally of days scratched beside the ledge, stopped -->
+  <rect x="125" y="40" width="1" height="2" fill="#1f242c" />
+  <rect x="127" y="40" width="1" height="2" fill="#1f242c" />
+  <rect x="129" y="40" width="1" height="2" fill="#1f242c" />
+  <rect x="124" y="41" width="7" height="1" fill="#1c2028" />
+
+  <!-- ══ Kerb at the water's edge (y62-66) ══ -->
+  <rect x="0" y="62" width="160" height="4" fill="#171a20" />
+  <rect x="0" y="62" width="160" height="1" fill="#232830" />
+  <rect x="24" y="62" width="1" height="4" fill="#101218" />
+  <rect x="49" y="62" width="1" height="4" fill="#101218" />
+  <rect x="76" y="62" width="1" height="4" fill="#0e1014" />
+  <rect x="101" y="62" width="1" height="4" fill="#0e1014" />
+  <rect x="128" y="62" width="1" height="4" fill="#0d0f13" />
+  <rect x="0" y="62" width="24" height="1" fill="#2c3340" />
+
+  <!-- ══ NEAR (y66-84): the black still water ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a1014" />
+  <rect x="0" y="66" width="160" height="1" fill="#050708" />
+  <!-- the faintest swell lines on a dead-still surface -->
+  <rect x="8" y="70" width="20" height="1" fill="#0c1418" />
+  <rect x="36" y="74" width="26" height="1" fill="#0c1418" />
+  <rect x="70" y="69" width="22" height="1" fill="#0b1216" />
+  <rect x="98" y="76" width="24" height="1" fill="#0b1216" />
+  <rect x="130" y="71" width="22" height="1" fill="#0a1115" />
+  <rect x="20" y="79" width="24" height="1" fill="#0b1216" />
+  <rect x="56" y="81" width="28" height="1" fill="#0a1115" />
+  <!-- column reflections, broken soft -->
+  <rect x="53" y="67" width="5" height="6" fill="#0d1318" />
+  <rect x="54" y="74" width="3" height="4" fill="#0c1216" />
+  <rect x="54" y="79" width="3" height="2" fill="#0b1115" />
+  <rect x="105" y="67" width="5" height="5" fill="#0c1115" />
+  <rect x="106" y="73" width="3" height="4" fill="#0b1014" />
+  <!-- the stair's warm wash caught on the water, left -->
+  <rect x="2" y="68" width="8" height="1" fill="#1c1410" />
+  <rect x="6" y="71" width="6" height="1" fill="#241712" />
+  <rect x="3" y="74" width="5" height="1" fill="#1a120e" />
+  <rect x="9" y="77" width="4" height="1" fill="#16100c" />
+  <!-- the candle's twin, trembling under the ledge -->
+  <rect x="140" y="68" width="2" height="1" fill="#3f2a14" />
+  <rect x="141" y="70" width="1" height="1" fill="#2a1c10" />
+  <rect x="140" y="73" width="1" height="1" fill="#1f150c" />
+  <!-- cold teal gleams where the vault breathes on the surface -->
+  <rect x="44" y="68" width="3" height="1" fill="#16242c" />
+  <rect x="46" y="68" width="1" height="1" fill="#2a4a52" />
+  <rect x="86" y="72" width="3" height="1" fill="#16242c" />
+  <rect x="88" y="72" width="1" height="1" fill="#22383f" />
+  <rect x="118" y="78" width="3" height="1" fill="#121c22" />
+  <rect x="64" y="77" width="2" height="1" fill="#121c22" />
+  <!-- a dropped cup on the kerb lip, half-sunk -->
+  <rect x="92" y="66" width="3" height="2" fill="#15161c" />
+  <rect x="92" y="66" width="3" height="1" fill="#1f242c" />
+</svg>

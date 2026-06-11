@@ -1,0 +1,250 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch14-elite — The Kept Steps: the grand stair the marilith has held
+       since before the god was a corpse, dressed for the hall's last
+       guardians. The stair mass climbs the RIGHT half toward the Throne
+       level; a six-armed warden-statue keeps its plinth mid-hall — the
+       drilled school the demon teaches. Key light: a chain-censer
+       upper-LEFT burning low blood-red; an essence basin set INTO the
+       stair side seeps a dim second glow. The Slayer's gouges rake the
+       left marble. Quiet mid band y38-63 (stair faces kept to two close
+       values); seam y66.
+       Ramps — void marble: #0c0a10 #131019 #1b1622 #251e2e (+#332a40);
+       essence: #2a0b08 #3f100c #5a1812 #8a2418; brass: #54400f #6a521e
+       #8a6c2a; censer-flame: #a33d1e #e8743a (+#ffb347 pinpoint).
+       No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c14e-censer-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.18" />
+      <stop offset="45%" stop-color="#a33d1e" stop-opacity="0.09" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c14e-basin-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#c43a28" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#8a2418" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c14e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: hall wall, left ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0e0b12" />
+  <rect x="0" y="0" width="160" height="5" fill="#070509" />
+  <rect x="0" y="5" width="160" height="1" fill="#1b1622" />
+  <!-- brass cornice -->
+  <rect x="0" y="6" width="160" height="2" fill="#1b1622" />
+  <rect x="0" y="6" width="40" height="1" fill="#54400f" />
+  <rect x="40" y="6" width="44" height="1" fill="#3a2c0c" />
+  <rect x="84" y="6" width="40" height="1" fill="#241c08" />
+  <rect x="124" y="6" width="36" height="1" fill="#181206" />
+  <!-- marble courses (left hall) -->
+  <rect x="0" y="8" width="22" height="13" fill="#1b1622" />
+  <rect x="23" y="8" width="20" height="13" fill="#1f1a28" />
+  <rect x="44" y="8" width="22" height="13" fill="#171320" />
+  <rect x="67" y="8" width="25" height="13" fill="#131019" />
+  <rect x="23" y="8" width="20" height="1" fill="#2a2436" />
+  <rect x="0" y="22" width="18" height="14" fill="#1f1a28" />
+  <rect x="19" y="22" width="24" height="14" fill="#1b1622" />
+  <rect x="44" y="22" width="22" height="14" fill="#151220" />
+  <rect x="67" y="22" width="25" height="14" fill="#110e17" />
+  <rect x="19" y="22" width="24" height="1" fill="#2a2436" />
+  <!-- the Slayer's gouges, raked across the panel -->
+  <rect x="8" y="24" width="10" height="1" fill="#080609" />
+  <rect x="10" y="26" width="10" height="1" fill="#080609" />
+  <rect x="12" y="28" width="9" height="1" fill="#0a070b" />
+  <rect x="14" y="30" width="8" height="1" fill="#0a070b" />
+  <rect x="8" y="24" width="2" height="1" fill="#332a40" />
+  <rect x="10" y="26" width="2" height="1" fill="#2e2638" />
+  <!-- deep wall beyond the stair, right -->
+  <rect x="92" y="8" width="68" height="28" fill="#0c0a10" />
+  <rect x="92" y="8" width="68" height="1" fill="#110e17" />
+  <rect x="120" y="12" width="1" height="20" fill="#0a080d" />
+  <rect x="144" y="10" width="1" height="22" fill="#09070c" />
+  <!-- the Throne level's red breathing down the stairwell -->
+  <rect x="150" y="8" width="10" height="22" fill="#160a0b" />
+  <rect x="154" y="10" width="6" height="16" fill="#1e0c0a" />
+  <rect x="157" y="12" width="3" height="12" fill="#2a0b08" />
+  <rect x="159" y="16" width="1" height="6" fill="#3f100c" />
+
+  <!-- ══ The chain-censer — key light upper-LEFT ══ -->
+  <rect x="27" y="0" width="1" height="9" fill="#241c08" />
+  <rect x="27" y="2" width="1" height="2" fill="#54400f" />
+  <rect x="27" y="6" width="1" height="2" fill="#54400f" />
+  <rect x="24" y="9" width="7" height="3" fill="#54400f" />
+  <rect x="23" y="12" width="9" height="2" fill="#6a521e" />
+  <rect x="24" y="14" width="7" height="1" fill="#3a2c0c" />
+  <rect x="26" y="15" width="3" height="1" fill="#241c08" />
+  <!-- pierced sides, coals showing through -->
+  <rect x="25" y="10" width="1" height="1" fill="#a33d1e" />
+  <rect x="28" y="10" width="1" height="1" fill="#e8743a" />
+  <rect x="30" y="10" width="1" height="1" fill="#a33d1e" />
+  <rect x="26" y="13" width="1" height="1" fill="#a33d1e" />
+  <rect x="29" y="13" width="1" height="1" fill="#5a1812" />
+  <!-- low flame standing off the coals -->
+  <rect x="26" y="7" width="3" height="2" fill="#a33d1e" />
+  <rect x="27" y="5" width="1" height="2" fill="#e8743a" />
+  <rect x="27" y="4" width="1" height="1" fill="#ffb347" />
+  <!-- incense-smoke leaning down the hall -->
+  <rect x="31" y="3" width="3" height="1" fill="#14101a" opacity="0.9" />
+  <rect x="34" y="2" width="4" height="1" fill="#120e16" opacity="0.8" />
+  <rect x="38" y="3" width="3" height="1" fill="#100c13" opacity="0.7" />
+  <rect x="-10" y="-12" width="68" height="54" fill="url(#c14e-censer-halo)" />
+
+  <!-- ══ The six-armed warden-statue, mid-hall plinth (x46-62) ══ -->
+  <rect x="48" y="30" width="12" height="6" fill="#1b1622" />
+  <rect x="48" y="30" width="12" height="1" fill="#2a2436" />
+  <rect x="50" y="36" width="8" height="2" fill="#151220" />
+  <!-- coiled base -->
+  <rect x="50" y="26" width="9" height="4" fill="#1e1a28" />
+  <rect x="49" y="28" width="3" height="2" fill="#221c2c" />
+  <!-- torso rising -->
+  <rect x="52" y="18" width="5" height="8" fill="#221c2c" />
+  <rect x="53" y="15" width="3" height="3" fill="#262030" />
+  <rect x="53" y="14" width="3" height="1" fill="#2e2838" />
+  <!-- the six arms, blades half-drawn, stone-still -->
+  <rect x="49" y="17" width="3" height="1" fill="#221c2c" />
+  <rect x="47" y="15" width="2" height="2" fill="#262030" />
+  <rect x="46" y="12" width="1" height="3" fill="#2e2838" />
+  <rect x="57" y="17" width="3" height="1" fill="#1e1a28" />
+  <rect x="60" y="15" width="2" height="2" fill="#221c2c" />
+  <rect x="62" y="12" width="1" height="3" fill="#262030" />
+  <rect x="48" y="20" width="3" height="1" fill="#1e1a28" />
+  <rect x="46" y="21" width="2" height="1" fill="#221c2c" />
+  <rect x="58" y="20" width="3" height="1" fill="#1c1826" />
+  <rect x="61" y="21" width="2" height="1" fill="#1e1a28" />
+  <rect x="50" y="23" width="2" height="1" fill="#1c1826" />
+  <rect x="57" y="23" width="2" height="1" fill="#1a1624" />
+  <!-- censer-light rims the high blades -->
+  <rect x="46" y="12" width="1" height="1" fill="#3a3244" />
+  <rect x="47" y="15" width="1" height="1" fill="#363044" />
+  <rect x="53" y="14" width="1" height="1" fill="#363044" />
+
+  <!-- ══ THE STAIR (right half): climbing to the Throne level ══ -->
+  <!-- each flight: tread highlight + riser shadow, two close values -->
+  <rect x="92" y="58" width="68" height="8" fill="#13101a" />
+  <rect x="92" y="58" width="68" height="1" fill="#1c1824" />
+  <rect x="98" y="52" width="62" height="6" fill="#120f18" />
+  <rect x="98" y="52" width="62" height="1" fill="#1b1722" />
+  <rect x="104" y="46" width="56" height="6" fill="#110e16" />
+  <rect x="104" y="46" width="56" height="1" fill="#1a1620" />
+  <rect x="110" y="40" width="50" height="6" fill="#100d15" />
+  <rect x="110" y="40" width="50" height="1" fill="#181420" />
+  <rect x="116" y="35" width="44" height="5" fill="#0f0c13" />
+  <rect x="116" y="35" width="44" height="1" fill="#17131e" />
+  <rect x="122" y="30" width="38" height="5" fill="#0e0b12" />
+  <rect x="122" y="30" width="38" height="1" fill="#161220" />
+  <rect x="128" y="25" width="32" height="5" fill="#0d0a11" />
+  <rect x="128" y="25" width="32" height="1" fill="#141019" />
+  <rect x="134" y="20" width="26" height="5" fill="#0c090f" />
+  <rect x="134" y="20" width="26" height="1" fill="#131018" />
+  <rect x="140" y="15" width="20" height="5" fill="#0b080e" />
+  <rect x="146" y="10" width="14" height="5" fill="#0a070c" />
+  <!-- stair balustrade edge, brass-threaded -->
+  <rect x="92" y="56" width="6" height="2" fill="#1b1622" />
+  <rect x="98" y="50" width="6" height="2" fill="#1a1521" />
+  <rect x="104" y="44" width="6" height="2" fill="#181420" />
+  <rect x="110" y="38" width="6" height="2" fill="#16121e" />
+  <rect x="116" y="33" width="6" height="2" fill="#14111b" />
+  <rect x="122" y="28" width="6" height="2" fill="#131019" />
+  <rect x="128" y="23" width="6" height="2" fill="#111018" />
+  <rect x="134" y="18" width="6" height="2" fill="#100d15" />
+  <rect x="92" y="56" width="6" height="1" fill="#3a2c0c" />
+  <rect x="104" y="44" width="6" height="1" fill="#2c2208" />
+  <rect x="116" y="33" width="6" height="1" fill="#241c08" />
+  <rect x="128" y="23" width="6" height="1" fill="#181206" />
+  <!-- the essence basin set into the stair side — second glow -->
+  <rect x="100" y="58" width="9" height="4" fill="#1b1622" />
+  <rect x="101" y="57" width="7" height="1" fill="#54400f" />
+  <rect x="102" y="58" width="5" height="1" fill="#8a2418" />
+  <rect x="103" y="58" width="3" height="1" fill="#c43a28" />
+  <!-- its seep, running two steps down -->
+  <rect x="103" y="59" width="1" height="3" fill="#5a1812" />
+  <rect x="104" y="62" width="1" height="2" fill="#3f100c" />
+  <rect x="105" y="64" width="1" height="2" fill="#2a0b08" />
+  <rect x="88" y="46" width="34" height="26" fill="url(#c14e-basin-glow)" />
+  <!-- worn hollows up the middle of the treads — the demon's rounds -->
+  <rect x="118" y="53" width="8" height="1" fill="#0f0c14" />
+  <rect x="124" y="47" width="8" height="1" fill="#0e0b12" />
+  <rect x="130" y="41" width="8" height="1" fill="#0d0a10" />
+
+  <!-- ══ MID BAND left of the stair (y38-66): quiet wainscot ══ -->
+  <rect x="0" y="38" width="20" height="9" fill="#161220" />
+  <rect x="21" y="38" width="24" height="9" fill="#181424" />
+  <rect x="46" y="38" width="22" height="9" fill="#13101c" />
+  <rect x="69" y="38" width="23" height="9" fill="#110e17" />
+  <rect x="0" y="47" width="24" height="9" fill="#181424" />
+  <rect x="25" y="47" width="20" height="9" fill="#161220" />
+  <rect x="46" y="47" width="22" height="9" fill="#120f1a" />
+  <rect x="69" y="47" width="23" height="9" fill="#100d15" />
+  <rect x="0" y="56" width="22" height="10" fill="#151120" />
+  <rect x="23" y="56" width="22" height="10" fill="#13101c" />
+  <rect x="46" y="56" width="22" height="10" fill="#100d18" />
+  <rect x="69" y="56" width="23" height="10" fill="#0e0b12" />
+  <!-- brass dado -->
+  <rect x="0" y="46" width="45" height="1" fill="#241c08" />
+  <rect x="46" y="46" width="22" height="1" fill="#1c1606" />
+  <rect x="69" y="46" width="23" height="1" fill="#140f05" />
+
+  <!-- ══ NEAR FLOOR (y66-84): hall floor before the steps ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a080d" />
+  <rect x="0" y="66" width="160" height="1" fill="#040305" />
+  <rect x="90" y="66" width="70" height="1" fill="#030204" />
+  <!-- far slab row -->
+  <rect x="1" y="67" width="13" height="4" fill="#251e2e" />
+  <rect x="15" y="67" width="12" height="4" fill="#282134" />
+  <rect x="28" y="67" width="13" height="4" fill="#221c2a" />
+  <rect x="42" y="67" width="12" height="4" fill="#1e1826" />
+  <rect x="55" y="67" width="13" height="4" fill="#1a1522" />
+  <rect x="69" y="67" width="12" height="4" fill="#16121e" />
+  <rect x="82" y="67" width="13" height="4" fill="#13101a" />
+  <rect x="96" y="67" width="12" height="4" fill="#110e17" />
+  <rect x="109" y="67" width="13" height="4" fill="#0f0c14" />
+  <rect x="123" y="67" width="12" height="4" fill="#0d0a11" />
+  <rect x="136" y="67" width="23" height="4" fill="#0b090e" />
+  <rect x="15" y="67" width="12" height="1" fill="#332a40" />
+  <rect x="1" y="67" width="13" height="1" fill="#2e2638" />
+  <!-- mid slab row -->
+  <rect x="0" y="72" width="15" height="5" fill="#221c2a" />
+  <rect x="16" y="72" width="14" height="5" fill="#251e2e" />
+  <rect x="31" y="72" width="15" height="5" fill="#201a28" />
+  <rect x="47" y="72" width="14" height="5" fill="#1c1624" />
+  <rect x="62" y="72" width="15" height="5" fill="#171320" />
+  <rect x="78" y="72" width="14" height="5" fill="#14101c" />
+  <rect x="93" y="72" width="15" height="5" fill="#110e18" />
+  <rect x="109" y="72" width="14" height="5" fill="#0f0c14" />
+  <rect x="124" y="72" width="35" height="5" fill="#0c0a10" />
+  <rect x="16" y="72" width="14" height="1" fill="#2e2638" />
+  <!-- near slab row -->
+  <rect x="0" y="78" width="18" height="6" fill="#251e2e" />
+  <rect x="19" y="78" width="17" height="6" fill="#2a2334" />
+  <rect x="37" y="78" width="18" height="6" fill="#221c2a" />
+  <rect x="56" y="78" width="17" height="6" fill="#1e1826" />
+  <rect x="74" y="78" width="18" height="6" fill="#181420" />
+  <rect x="93" y="78" width="17" height="6" fill="#13101a" />
+  <rect x="111" y="78" width="18" height="6" fill="#100d15" />
+  <rect x="130" y="78" width="29" height="6" fill="#0d0a10" />
+  <rect x="19" y="78" width="17" height="1" fill="#332a40" />
+  <rect x="0" y="78" width="18" height="1" fill="#2e2638" />
+  <!-- the statue's plinth contact -->
+  <rect x="48" y="66" width="12" height="1" fill="#030204" />
+  <!-- gold inlay arc sweeping toward the stair foot -->
+  <rect x="6" y="75" width="22" height="1" fill="#2c2208" />
+  <rect x="28" y="74" width="24" height="1" fill="#241c08" />
+  <rect x="52" y="73" width="22" height="1" fill="#1c1606" />
+  <rect x="74" y="72" width="16" height="1" fill="#181206" />
+  <rect x="14" y="75" width="2" height="1" fill="#54400f" />
+  <rect x="40" y="74" width="1" height="1" fill="#3a2c0c" />
+  <!-- the fallen censer, spilled cold ash -->
+  <rect x="34" y="79" width="4" height="2" fill="#3a2c0c" />
+  <rect x="33" y="80" width="1" height="1" fill="#54400f" />
+  <rect x="38" y="80" width="5" height="1" fill="#16121a" />
+  <rect x="41" y="79" width="3" height="1" fill="#141018" />
+  <rect x="36" y="78" width="1" height="1" fill="#6a521e" />
+  <!-- a snapped blade the school did not forgive -->
+  <rect x="66" y="80" width="5" height="1" fill="#2e2a38" />
+  <rect x="70" y="79" width="1" height="1" fill="#3a3444" />
+  <rect x="64" y="81" width="2" height="1" fill="#221e2c" />
+  <!-- censer-light pooled at the hero's ground -->
+  <rect x="-8" y="58" width="60" height="24" fill="url(#c14e-floor-pool)" />
+</svg>

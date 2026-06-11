@@ -1,0 +1,244 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch14-combat — The Long Approach: the dead god's hall, walked at last.
+       Black marble chased with brass, and the murder of a god hung in
+       basins along the colonnade — rendered essence, red-black, barely lit.
+       Key light: the first hanging basin upper-LEFT (x~28, y~14), its
+       red-gold glow the only warmth; a far doorway at the hall's end is
+       rimmed with the deeper red of the Throne beyond. Columns cross the
+       mid band as quiet darks. The harvest-channel runs the floor toward
+       the unseen seat, a thread of red in the gold. Quiet mid band
+       y38-63; seam y66.
+       Ramps — void marble: #0c0a10 #131019 #1b1622 #251e2e (+#332a40
+       polish); essence: #2a0b08 #3f100c #5a1812 #8a2418 (+#c43a28 gleam);
+       brass: #54400f #6a521e #8a6c2a (+#a8862e); bone: #6a5e4c.
+       No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c14c-basin-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#c43a28" stop-opacity="0.22" />
+      <stop offset="45%" stop-color="#8a2418" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#8a2418" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c14c-door-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#8a2418" stop-opacity="0.14" />
+      <stop offset="100%" stop-color="#5a1812" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c14c-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#c43a28" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#c43a28" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the hall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0e0b12" />
+  <rect x="108" y="0" width="52" height="66" fill="#0b0910" />
+  <!-- coffered dark overhead -->
+  <rect x="0" y="0" width="160" height="5" fill="#070509" />
+  <rect x="0" y="5" width="160" height="1" fill="#1b1622" />
+  <rect x="20" y="0" width="1" height="5" fill="#0d0a11" />
+  <rect x="60" y="0" width="1" height="5" fill="#0d0a11" />
+  <rect x="100" y="0" width="1" height="4" fill="#0b0810" />
+  <rect x="140" y="0" width="1" height="4" fill="#0a070e" />
+  <!-- brass cornice line, catching what light there is -->
+  <rect x="0" y="6" width="160" height="2" fill="#1b1622" />
+  <rect x="0" y="6" width="48" height="1" fill="#54400f" />
+  <rect x="48" y="6" width="40" height="1" fill="#3a2c0c" />
+  <rect x="88" y="6" width="36" height="1" fill="#241c08" />
+  <rect x="124" y="6" width="36" height="1" fill="#181206" />
+  <!-- marble panel courses -->
+  <rect x="0" y="8" width="24" height="14" fill="#1b1622" />
+  <rect x="25" y="8" width="22" height="14" fill="#1f1a28" />
+  <rect x="48" y="8" width="24" height="14" fill="#171320" />
+  <rect x="73" y="8" width="34" height="14" fill="#131019" />
+  <rect x="108" y="8" width="26" height="14" fill="#100d15" />
+  <rect x="135" y="8" width="25" height="14" fill="#0e0b12" />
+  <rect x="25" y="8" width="22" height="1" fill="#2a2436" />
+  <rect x="0" y="23" width="20" height="15" fill="#1f1a28" />
+  <rect x="21" y="23" width="26" height="15" fill="#1b1622" />
+  <rect x="48" y="23" width="24" height="15" fill="#151220" />
+  <rect x="73" y="23" width="34" height="15" fill="#110e17" />
+  <rect x="108" y="23" width="26" height="15" fill="#0e0b12" />
+  <rect x="135" y="23" width="25" height="15" fill="#0d0a10" />
+  <rect x="21" y="23" width="26" height="1" fill="#2a2436" />
+  <!-- brass panel-seams, vertical threads -->
+  <rect x="24" y="8" width="1" height="30" fill="#241c08" />
+  <rect x="47" y="8" width="1" height="30" fill="#1c1606" />
+  <rect x="72" y="8" width="1" height="30" fill="#161105" />
+  <rect x="107" y="8" width="1" height="30" fill="#100c04" />
+  <rect x="134" y="8" width="1" height="30" fill="#0c0903" />
+  <!-- a carved offering-frieze, half-swallowed by the dark -->
+  <rect x="6" y="11" width="3" height="4" fill="#251e2e" />
+  <rect x="11" y="12" width="2" height="3" fill="#221c2a" />
+  <rect x="30" y="11" width="3" height="4" fill="#282134" />
+  <rect x="35" y="12" width="2" height="3" fill="#251e2e" />
+  <rect x="54" y="12" width="3" height="3" fill="#1f1a28" />
+  <rect x="80" y="12" width="3" height="3" fill="#171320" />
+  <rect x="114" y="13" width="3" height="2" fill="#131019" />
+
+  <!-- ══ The far doorway — the way the blood pulls (x82-94) ══ -->
+  <rect x="82" y="10" width="12" height="46" fill="#070509" />
+  <rect x="82" y="10" width="12" height="2" fill="#110e17" />
+  <rect x="81" y="10" width="1" height="46" fill="#151220" />
+  <rect x="94" y="10" width="1" height="46" fill="#0c0a10" />
+  <!-- the red rim of the deeper hall -->
+  <rect x="83" y="12" width="1" height="40" fill="#2a0b08" />
+  <rect x="84" y="20" width="1" height="24" fill="#3f100c" />
+  <rect x="85" y="30" width="1" height="10" fill="#5a1812" />
+  <rect x="92" y="14" width="1" height="36" fill="#1c0806" />
+  <rect x="86" y="50" width="6" height="2" fill="#2a0b08" />
+  <rect x="74" y="16" width="32" height="40" fill="url(#c14c-door-glow)" />
+
+  <!-- ══ Colonnade columns (quiet darks through the band) ══ -->
+  <!-- column 1, behind the hero's ground -->
+  <rect x="8" y="8" width="8" height="58" fill="#1d1826" />
+  <rect x="8" y="8" width="2" height="58" fill="#272030" />
+  <rect x="14" y="8" width="2" height="58" fill="#151220" />
+  <rect x="8" y="8" width="8" height="2" fill="#251e2e" />
+  <rect x="8" y="8" width="8" height="1" fill="#332a40" />
+  <rect x="8" y="28" width="8" height="1" fill="#110e16" />
+  <rect x="8" y="48" width="8" height="1" fill="#100d14" />
+  <!-- brass collar -->
+  <rect x="8" y="26" width="8" height="1" fill="#54400f" />
+  <!-- column 2 -->
+  <rect x="44" y="8" width="8" height="58" fill="#191522" />
+  <rect x="44" y="8" width="2" height="58" fill="#221c2c" />
+  <rect x="50" y="8" width="2" height="58" fill="#110e18" />
+  <rect x="44" y="8" width="8" height="2" fill="#1f1a28" />
+  <rect x="44" y="26" width="8" height="1" fill="#3a2c0c" />
+  <rect x="44" y="48" width="8" height="1" fill="#0e0b12" />
+  <!-- column 3 -->
+  <rect x="112" y="8" width="8" height="58" fill="#131019" />
+  <rect x="112" y="8" width="2" height="58" fill="#1a1622" />
+  <rect x="118" y="8" width="2" height="58" fill="#0d0a11" />
+  <rect x="112" y="8" width="8" height="2" fill="#171320" />
+  <rect x="112" y="26" width="8" height="1" fill="#241c08" />
+  <rect x="112" y="48" width="8" height="1" fill="#0b0910" />
+  <!-- column 4 -->
+  <rect x="144" y="8" width="8" height="58" fill="#100d15" />
+  <rect x="144" y="8" width="2" height="58" fill="#16121c" />
+  <rect x="150" y="8" width="2" height="58" fill="#0b090f" />
+  <rect x="144" y="26" width="8" height="1" fill="#181206" />
+
+  <!-- ══ The hanging basins of the harvest ══ -->
+  <!-- basin 1, upper-LEFT — the key light -->
+  <rect x="29" y="0" width="1" height="10" fill="#241c08" />
+  <rect x="29" y="3" width="1" height="2" fill="#54400f" />
+  <rect x="26" y="10" width="8" height="2" fill="#54400f" />
+  <rect x="25" y="12" width="10" height="3" fill="#6a521e" />
+  <rect x="26" y="15" width="8" height="1" fill="#3a2c0c" />
+  <rect x="28" y="16" width="4" height="1" fill="#241c08" />
+  <!-- the essence in it, lit from within -->
+  <rect x="27" y="11" width="6" height="1" fill="#8a2418" />
+  <rect x="28" y="10" width="4" height="1" fill="#c43a28" />
+  <rect x="29" y="10" width="2" height="1" fill="#e85a3a" />
+  <!-- slow drip down the basin lip -->
+  <rect x="33" y="14" width="1" height="2" fill="#5a1812" />
+  <rect x="33" y="18" width="1" height="1" fill="#3f100c" />
+  <rect x="33" y="22" width="1" height="1" fill="#2a0b08" />
+  <!-- steam standing off the surface -->
+  <rect x="28" y="6" width="1" height="3" fill="#1c1014" opacity="0.8" />
+  <rect x="31" y="4" width="1" height="4" fill="#180e12" opacity="0.7" />
+  <rect x="-8" y="-12" width="68" height="56" fill="url(#c14c-basin-halo)" />
+  <!-- basin 2, right side, nearly dark -->
+  <rect x="127" y="0" width="1" height="8" fill="#181206" />
+  <rect x="124" y="8" width="7" height="2" fill="#3a2c0c" />
+  <rect x="123" y="10" width="9" height="3" fill="#2c2208" />
+  <rect x="124" y="13" width="7" height="1" fill="#1c1606" />
+  <rect x="125" y="9" width="5" height="1" fill="#5a1812" />
+  <rect x="126" y="8" width="3" height="1" fill="#8a2418" />
+  <rect x="130" y="12" width="1" height="2" fill="#3f100c" />
+  <rect x="130" y="16" width="1" height="1" fill="#2a0b08" />
+
+  <!-- ══ MID BAND (y38-66): polished wainscot, quiet ══ -->
+  <rect x="0" y="38" width="20" height="9" fill="#161220" />
+  <rect x="21" y="38" width="23" height="9" fill="#181424" />
+  <rect x="52" y="38" width="20" height="9" fill="#13101c" />
+  <rect x="95" y="38" width="17" height="9" fill="#0f0c15" />
+  <rect x="120" y="38" width="24" height="9" fill="#0d0a12" />
+  <rect x="152" y="38" width="8" height="9" fill="#0c090f" />
+  <rect x="0" y="47" width="24" height="9" fill="#181424" />
+  <rect x="25" y="47" width="19" height="9" fill="#161220" />
+  <rect x="52" y="47" width="20" height="9" fill="#120f1a" />
+  <rect x="95" y="47" width="17" height="9" fill="#0e0b13" />
+  <rect x="120" y="47" width="24" height="9" fill="#0c0a11" />
+  <rect x="152" y="47" width="8" height="9" fill="#0b080e" />
+  <rect x="0" y="56" width="22" height="10" fill="#151120" />
+  <rect x="23" y="56" width="21" height="10" fill="#13101c" />
+  <rect x="52" y="56" width="20" height="10" fill="#100d18" />
+  <rect x="95" y="56" width="17" height="10" fill="#0d0a11" />
+  <rect x="120" y="56" width="40" height="10" fill="#0b090f" />
+  <!-- a thin brass dado line through the band -->
+  <rect x="0" y="46" width="44" height="1" fill="#241c08" />
+  <rect x="52" y="46" width="20" height="1" fill="#1c1606" />
+  <rect x="95" y="46" width="49" height="1" fill="#100c04" />
+
+  <!-- ══ NEAR FLOOR (y66-84): polished void-marble, the harvest-channel ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a080d" />
+  <rect x="0" y="66" width="160" height="1" fill="#040305" />
+  <!-- far slab row -->
+  <rect x="1" y="67" width="13" height="4" fill="#251e2e" />
+  <rect x="15" y="67" width="12" height="4" fill="#282134" />
+  <rect x="28" y="67" width="13" height="4" fill="#221c2a" />
+  <rect x="42" y="67" width="12" height="4" fill="#1e1826" />
+  <rect x="55" y="67" width="13" height="4" fill="#1a1522" />
+  <rect x="69" y="67" width="12" height="4" fill="#16121e" />
+  <rect x="82" y="67" width="13" height="4" fill="#13101a" />
+  <rect x="96" y="67" width="12" height="4" fill="#100d16" />
+  <rect x="109" y="67" width="13" height="4" fill="#0e0b13" />
+  <rect x="123" y="67" width="12" height="4" fill="#0d0a11" />
+  <rect x="136" y="67" width="23" height="4" fill="#0b090e" />
+  <rect x="15" y="67" width="12" height="1" fill="#332a40" />
+  <rect x="1" y="67" width="13" height="1" fill="#2e2638" />
+  <rect x="28" y="67" width="13" height="1" fill="#2a2434" />
+  <!-- mid slab row -->
+  <rect x="0" y="72" width="15" height="5" fill="#221c2a" />
+  <rect x="16" y="72" width="14" height="5" fill="#251e2e" />
+  <rect x="31" y="72" width="15" height="5" fill="#201a28" />
+  <rect x="47" y="72" width="14" height="5" fill="#1c1624" />
+  <rect x="62" y="72" width="15" height="5" fill="#171320" />
+  <rect x="78" y="72" width="14" height="5" fill="#14101c" />
+  <rect x="93" y="72" width="15" height="5" fill="#110e18" />
+  <rect x="109" y="72" width="14" height="5" fill="#0f0c14" />
+  <rect x="124" y="72" width="35" height="5" fill="#0c0a10" />
+  <rect x="16" y="72" width="14" height="1" fill="#2e2638" />
+  <rect x="31" y="72" width="15" height="1" fill="#2a2434" />
+  <!-- near slab row -->
+  <rect x="0" y="78" width="18" height="6" fill="#251e2e" />
+  <rect x="19" y="78" width="17" height="6" fill="#2a2334" />
+  <rect x="37" y="78" width="18" height="6" fill="#221c2a" />
+  <rect x="56" y="78" width="17" height="6" fill="#1e1826" />
+  <rect x="74" y="78" width="18" height="6" fill="#181420" />
+  <rect x="93" y="78" width="17" height="6" fill="#13101a" />
+  <rect x="111" y="78" width="18" height="6" fill="#100d15" />
+  <rect x="130" y="78" width="29" height="6" fill="#0d0a10" />
+  <rect x="19" y="78" width="17" height="1" fill="#332a40" />
+  <rect x="0" y="78" width="18" height="1" fill="#2e2638" />
+  <!-- the harvest-channel: brass groove running to the far door -->
+  <rect x="2" y="74" width="40" height="1" fill="#3a2c0c" />
+  <rect x="42" y="73" width="28" height="1" fill="#2c2208" />
+  <rect x="70" y="72" width="18" height="1" fill="#241c08" />
+  <rect x="10" y="74" width="2" height="1" fill="#54400f" />
+  <rect x="30" y="74" width="1" height="1" fill="#54400f" />
+  <!-- the red thread moving in it -->
+  <rect x="16" y="74" width="3" height="1" fill="#3f100c" />
+  <rect x="18" y="74" width="1" height="1" fill="#5a1812" />
+  <rect x="48" y="73" width="2" height="1" fill="#3f100c" />
+  <rect x="76" y="72" width="2" height="1" fill="#2a0b08" />
+  <!-- the basin's glow caught in the polish -->
+  <rect x="26" y="68" width="6" height="1" fill="#1c0e10" />
+  <rect x="28" y="70" width="3" height="1" fill="#240f10" />
+  <rect x="29" y="69" width="1" height="1" fill="#3f100c" opacity="0.8" />
+  <!-- column reflections -->
+  <rect x="10" y="68" width="4" height="1" fill="#16121c" opacity="0.8" />
+  <rect x="46" y="68" width="4" height="1" fill="#120f18" opacity="0.8" />
+  <rect x="114" y="68" width="4" height="1" fill="#0d0a12" opacity="0.8" />
+  <!-- a single bone-white offering bowl, left at the channel side -->
+  <rect x="58" y="79" width="4" height="2" fill="#4a4238" />
+  <rect x="59" y="78" width="2" height="1" fill="#6a5e4c" />
+  <rect x="59" y="80" width="2" height="1" fill="#36302a" />
+  <!-- dust of the harvested, drifted fine -->
+  <rect x="90" y="75" width="5" height="1" fill="#16121a" />
+  <rect x="122" y="70" width="5" height="1" fill="#100d14" />
+  <rect x="38" y="70" width="4" height="1" fill="#1c1824" />
+  <!-- basin-light pooled left -->
+  <rect x="-8" y="58" width="62" height="24" fill="url(#c14c-floor-pool)" />
+</svg>

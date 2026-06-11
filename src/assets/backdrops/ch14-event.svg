@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch14-event — Behind the Throne, in Its Shadow: the one blind place in
+       the hall, the chapter's calm scene (events + rest). The great seat's
+       back fills the LEFT as a dark monolith; the light of the pools
+       beyond leaks a thin red-gold rim down its edge (the key, upper-left
+       by position, and the scene's only warmth). Past it: grey Threshold
+       stillness — cold marble, far columns barely told from the gloom,
+       dust hanging in dead air. A worn camp-stone where climbers before
+       you sat. Quiet mid band y38-63; seam y66.
+       Ramps — shadow marble: #0b090e #110e15 #161220 #1c1726 (+#262034);
+       threshold grey: #2c3340 #3a3e4e #4a5468 (sparing); rim leak:
+       #3f100c #5a1812 #8a2418 (thin); brass: #241c08 #3a2c0c.
+       No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c14v-rim-leak" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#8a2418" stop-opacity="0.13" />
+      <stop offset="55%" stop-color="#5a1812" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#5a1812" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c14v-still-air" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#4a5468" stop-opacity="0.07" />
+      <stop offset="100%" stop-color="#3a3e4e" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the hall's gloom behind the seat ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0c0a10" />
+  <rect x="0" y="0" width="160" height="5" fill="#060408" />
+  <rect x="0" y="5" width="160" height="1" fill="#13101a" />
+  <!-- the hall wall, read only as panel seams in the dark -->
+  <rect x="36" y="6" width="30" height="32" fill="#100d15" />
+  <rect x="67" y="6" width="28" height="32" fill="#0e0b12" />
+  <rect x="96" y="6" width="30" height="32" fill="#0d0a11" />
+  <rect x="127" y="6" width="33" height="32" fill="#0b090e" />
+  <rect x="66" y="6" width="1" height="32" fill="#0a080c" />
+  <rect x="95" y="6" width="1" height="32" fill="#090709" />
+  <rect x="126" y="6" width="1" height="32" fill="#080608" />
+  <rect x="36" y="6" width="30" height="1" fill="#151220" />
+  <!-- far columns, barely told from the gloom -->
+  <rect x="106" y="8" width="6" height="56" fill="#110e15" />
+  <rect x="106" y="8" width="1" height="56" fill="#161220" />
+  <rect x="111" y="8" width="1" height="56" fill="#0d0a10" />
+  <rect x="106" y="8" width="6" height="1" fill="#1a1521" />
+  <rect x="106" y="33" width="6" height="1" fill="#1c1606" />
+  <rect x="138" y="10" width="5" height="54" fill="#0e0b12" />
+  <rect x="138" y="10" width="1" height="54" fill="#13101a" />
+  <rect x="142" y="10" width="1" height="54" fill="#0b080d" />
+  <rect x="138" y="33" width="5" height="1" fill="#140f05" />
+  <!-- the frieze line, dying out of the light -->
+  <rect x="36" y="10" width="58" height="1" fill="#13101a" />
+  <rect x="94" y="10" width="66" height="1" fill="#100d14" />
+
+  <!-- ══ THE SEAT'S BACK: monolith filling the LEFT (x0-34) ══ -->
+  <rect x="0" y="0" width="34" height="66" fill="#0a080d" />
+  <!-- its mass stepped like the front, but unlit, unread -->
+  <rect x="0" y="0" width="28" height="66" fill="#090709" />
+  <rect x="0" y="0" width="20" height="66" fill="#08060a" />
+  <!-- the carved channels of the back, vertical, almost invisible -->
+  <rect x="6" y="4" width="1" height="60" fill="#0a080c" />
+  <rect x="13" y="2" width="1" height="62" fill="#0b090d" />
+  <rect x="21" y="4" width="1" height="62" fill="#0a080c" />
+  <rect x="27" y="6" width="1" height="60" fill="#0c0a0e" />
+  <!-- crown spires against the void -->
+  <rect x="2" y="0" width="3" height="3" fill="#070508" />
+  <rect x="10" y="0" width="3" height="2" fill="#070508" />
+  <rect x="18" y="0" width="3" height="3" fill="#080609" />
+  <rect x="26" y="0" width="3" height="2" fill="#08060a" />
+  <!-- THE RIM: pool-light leaking around the monolith's edge -->
+  <rect x="33" y="2" width="1" height="64" fill="#2a0b08" />
+  <rect x="34" y="0" width="1" height="66" fill="#5a1812" />
+  <rect x="34" y="6" width="1" height="10" fill="#8a2418" />
+  <rect x="34" y="16" width="1" height="4" fill="#a32c1c" />
+  <rect x="34" y="30" width="1" height="6" fill="#8a2418" />
+  <rect x="33" y="10" width="1" height="4" fill="#3f100c" />
+  <rect x="33" y="32" width="1" height="3" fill="#3f100c" />
+  <!-- the leak catching the first marble beyond the edge -->
+  <rect x="35" y="4" width="1" height="58" fill="#1e1418" />
+  <rect x="36" y="12" width="1" height="6" fill="#241114" />
+  <rect x="36" y="32" width="1" height="4" fill="#1e0f12" />
+  <rect x="28" y="-6" width="44" height="60" fill="url(#c14v-rim-leak)" />
+
+  <!-- ══ MID BAND (y38-66): the blind stillness, very quiet ══ -->
+  <rect x="36" y="38" width="28" height="10" fill="#100e16" />
+  <rect x="65" y="38" width="40" height="10" fill="#0e0c13" />
+  <rect x="113" y="38" width="24" height="10" fill="#0c0a10" />
+  <rect x="144" y="38" width="16" height="10" fill="#0b090e" />
+  <rect x="36" y="48" width="24" height="9" fill="#0f0d14" />
+  <rect x="61" y="48" width="44" height="9" fill="#0d0b12" />
+  <rect x="113" y="48" width="47" height="9" fill="#0b090f" />
+  <rect x="36" y="57" width="28" height="9" fill="#0e0c12" />
+  <rect x="65" y="57" width="40" height="9" fill="#0c0a10" />
+  <rect x="113" y="57" width="47" height="9" fill="#0a080d" />
+  <!-- dust hanging in the dead air (the stillness made visible) -->
+  <rect x="48" y="22" width="1" height="1" fill="#2c3340" opacity="0.7" />
+  <rect x="58" y="30" width="1" height="1" fill="#262c38" opacity="0.6" />
+  <rect x="70" y="18" width="1" height="1" fill="#2c3340" opacity="0.55" />
+  <rect x="82" y="34" width="1" height="1" fill="#222834" opacity="0.6" />
+  <rect x="92" y="24" width="1" height="1" fill="#262c38" opacity="0.5" />
+  <rect x="54" y="42" width="1" height="1" fill="#222834" opacity="0.5" />
+  <rect x="76" y="46" width="1" height="1" fill="#1e242e" opacity="0.5" />
+  <rect x="100" y="40" width="1" height="1" fill="#1e242e" opacity="0.45" />
+  <rect x="64" y="26" width="38" height="30" fill="url(#c14v-still-air)" />
+  <!-- a cold draught-line where the hall breathes past the seat -->
+  <rect x="44" y="14" width="20" height="1" fill="#0e0c13" opacity="0.8" />
+  <rect x="64" y="13" width="16" height="1" fill="#0d0b11" opacity="0.7" />
+
+  <!-- ══ The climbers' camp-stone (x70-92, in the band's low edge) ══ -->
+  <rect x="72" y="56" width="18" height="6" fill="#13101a" />
+  <rect x="72" y="56" width="18" height="1" fill="#1c1726" />
+  <rect x="73" y="57" width="16" height="1" fill="#161220" />
+  <rect x="71" y="60" width="20" height="2" fill="#0f0c14" />
+  <!-- the seat-hollow worn by those who waited here before you -->
+  <rect x="77" y="56" width="8" height="1" fill="#262034" />
+  <!-- initials scratched, small, by more than one hand -->
+  <rect x="75" y="58" width="1" height="2" fill="#0b090e" />
+  <rect x="77" y="59" width="2" height="1" fill="#0b090e" />
+  <rect x="84" y="58" width="1" height="2" fill="#0a080c" />
+  <rect x="86" y="58" width="2" height="1" fill="#0a080c" />
+  <!-- a stub of candle left for the next one, long cold -->
+  <rect x="92" y="59" width="2" height="3" fill="#3a3630" />
+  <rect x="92" y="58" width="2" height="1" fill="#4a4438" />
+  <rect x="92" y="57" width="1" height="1" fill="#26221c" />
+
+  <!-- ══ NEAR FLOOR (y66-84): cold marble in shadow ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#090710" />
+  <rect x="0" y="66" width="160" height="1" fill="#030204" />
+  <!-- the monolith's contact, deepest dark -->
+  <rect x="0" y="66" width="35" height="2" fill="#050306" />
+  <!-- far slab row -->
+  <rect x="36" y="67" width="12" height="4" fill="#1a1522" />
+  <rect x="49" y="67" width="12" height="4" fill="#171320" />
+  <rect x="62" y="67" width="13" height="4" fill="#14111b" />
+  <rect x="76" y="67" width="12" height="4" fill="#131019" />
+  <rect x="89" y="67" width="13" height="4" fill="#110e16" />
+  <rect x="103" y="67" width="12" height="4" fill="#0f0c14" />
+  <rect x="116" y="67" width="13" height="4" fill="#0d0b11" />
+  <rect x="130" y="67" width="12" height="4" fill="#0c0a0f" />
+  <rect x="143" y="67" width="16" height="4" fill="#0b090d" />
+  <rect x="36" y="67" width="12" height="1" fill="#262034" />
+  <rect x="49" y="67" width="12" height="1" fill="#221e2e" />
+  <!-- the rim-light's thin fall across the floor by the edge -->
+  <rect x="36" y="66" width="2" height="1" fill="#3f100c" />
+  <rect x="35" y="68" width="2" height="10" fill="#1e1014" />
+  <rect x="37" y="70" width="1" height="6" fill="#241114" />
+  <rect x="36" y="78" width="1" height="4" fill="#180d10" />
+  <!-- mid slab row -->
+  <rect x="0" y="72" width="15" height="5" fill="#0d0a12" />
+  <rect x="16" y="72" width="14" height="5" fill="#0e0b13" />
+  <rect x="31" y="72" width="4" height="5" fill="#100d15" />
+  <rect x="38" y="72" width="14" height="5" fill="#171320" />
+  <rect x="53" y="72" width="15" height="5" fill="#151120" />
+  <rect x="69" y="72" width="14" height="5" fill="#13101a" />
+  <rect x="84" y="72" width="15" height="5" fill="#110e17" />
+  <rect x="100" y="72" width="14" height="5" fill="#0f0c14" />
+  <rect x="115" y="72" width="14" height="5" fill="#0d0a11" />
+  <rect x="130" y="72" width="29" height="5" fill="#0b090e" />
+  <rect x="38" y="72" width="14" height="1" fill="#221e2e" />
+  <!-- near slab row -->
+  <rect x="0" y="78" width="18" height="6" fill="#0e0b13" />
+  <rect x="19" y="78" width="17" height="6" fill="#100d15" />
+  <rect x="37" y="78" width="18" height="6" fill="#1a1522" />
+  <rect x="56" y="78" width="17" height="6" fill="#171320" />
+  <rect x="74" y="78" width="18" height="6" fill="#14111b" />
+  <rect x="93" y="78" width="17" height="6" fill="#110e16" />
+  <rect x="111" y="78" width="18" height="6" fill="#0e0c12" />
+  <rect x="130" y="78" width="29" height="6" fill="#0c0a0f" />
+  <rect x="37" y="78" width="18" height="1" fill="#262034" />
+  <rect x="19" y="78" width="17" height="1" fill="#161220" />
+  <!-- the camp-stone's contact -->
+  <rect x="70" y="66" width="22" height="1" fill="#030204" />
+  <!-- the worn path from the hall's edge to the stone -->
+  <rect x="42" y="74" width="10" height="1" fill="#1a1626" />
+  <rect x="52" y="71" width="10" height="1" fill="#1c1828" />
+  <rect x="62" y="69" width="8" height="1" fill="#1e1a2a" />
+  <!-- dust drifted deep where no rite ever reaches -->
+  <rect x="98" y="74" width="6" height="1" fill="#0d0b12" />
+  <rect x="120" y="70" width="6" height="1" fill="#0b090f" />
+  <rect x="140" y="75" width="6" height="1" fill="#0a080d" />
+  <rect x="100" y="73" width="3" height="1" fill="#100e15" />
+  <!-- one mote settling in the rim-light, caught red -->
+  <rect x="38" y="73" width="1" height="1" fill="#5a1812" opacity="0.8" />
+  <rect x="40" y="69" width="1" height="1" fill="#3f100c" opacity="0.7" />
+</svg>

@@ -1,0 +1,239 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch11-boss — The Heart-Vault: the chamber at the bottom of the pit where
+       the Voice has a face. Set piece centred in the hero-enemy gap: a black
+       dais bearing the stolen power of the Tree of Life — a charred
+       root-pillar lit from within by gold-red seams, its roots gripping the
+       steps. Flanking basalt columns carry chained sconces (flames above
+       y28); their shafts cross the mid band as quiet darks. Key light:
+       upper-LEFT sconce + the pillar's high seams (the component lays the
+       blood-red boss ambience above). Vault ribs converge overhead. Quiet
+       mid band y38-63; floor seam y66.
+       Ramps — basalt warm: #160b08 #221110 #2e1812 #3c2218 (+#4e2e1e);
+       basalt cool: #120c14 #181020 #1f1628; charred root: #0e0807 #1a100a
+       #251710; power seams: #5a1812 #a33d1e #e8743a #ffb347 (+#ffe9a8);
+       brass: #54400f #6a521e. No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c11b-sconce-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.24" />
+      <stop offset="45%" stop-color="#a33d1e" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c11b-heart-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.20" />
+      <stop offset="50%" stop-color="#a33d1e" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c11b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the vault ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0c0709" />
+  <rect x="104" y="0" width="56" height="66" fill="#0d0910" />
+  <!-- converging ceiling ribs -->
+  <rect x="0" y="0" width="160" height="4" fill="#060304" />
+  <rect x="0" y="4" width="160" height="1" fill="#140b0b" />
+  <rect x="10" y="0" width="2" height="6" fill="#1c1010" />
+  <rect x="34" y="0" width="2" height="5" fill="#221312" />
+  <rect x="58" y="0" width="2" height="4" fill="#1c1010" />
+  <rect x="100" y="0" width="2" height="4" fill="#140d12" />
+  <rect x="124" y="0" width="2" height="5" fill="#120c12" />
+  <rect x="148" y="0" width="2" height="6" fill="#100a10" />
+  <!-- vault wall courses -->
+  <rect x="0" y="5" width="16" height="9" fill="#221110" />
+  <rect x="17" y="5" width="20" height="9" fill="#2e1812" />
+  <rect x="38" y="5" width="18" height="9" fill="#221110" />
+  <rect x="57" y="5" width="18" height="9" fill="#1a0e0c" />
+  <rect x="86" y="5" width="17" height="9" fill="#160e12" />
+  <rect x="104" y="5" width="22" height="9" fill="#181020" />
+  <rect x="127" y="5" width="33" height="9" fill="#1f1628" />
+  <rect x="17" y="5" width="20" height="1" fill="#3c2218" />
+  <rect x="0" y="15" width="20" height="11" fill="#2e1812" />
+  <rect x="21" y="15" width="17" height="11" fill="#221110" />
+  <rect x="39" y="15" width="17" height="11" fill="#1a0e0c" />
+  <rect x="104" y="15" width="20" height="11" fill="#181020" />
+  <rect x="125" y="15" width="35" height="11" fill="#181020" />
+  <rect x="21" y="15" width="17" height="1" fill="#4e2e1e" />
+  <rect x="0" y="27" width="14" height="11" fill="#221110" />
+  <rect x="15" y="27" width="23" height="11" fill="#2e1812" />
+  <rect x="39" y="27" width="17" height="11" fill="#160e12" />
+  <rect x="104" y="27" width="24" height="11" fill="#120c14" />
+  <rect x="129" y="27" width="31" height="11" fill="#181020" />
+  <rect x="15" y="27" width="23" height="1" fill="#3c2218" />
+  <!-- red fissure-web behind the pillar (the vault remembers the theft) -->
+  <rect x="47" y="9" width="1" height="3" fill="#3f100c" />
+  <rect x="48" y="11" width="1" height="2" fill="#2a0b08" />
+  <rect x="96" y="12" width="1" height="3" fill="#3f100c" />
+  <rect x="95" y="14" width="1" height="2" fill="#2a0b08" />
+  <rect x="51" y="20" width="1" height="3" fill="#2a0b08" />
+  <rect x="99" y="24" width="1" height="3" fill="#2a0b08" />
+  <rect x="133" y="9" width="1" height="3" fill="#1c0806" />
+  <!-- heat-cracks -->
+  <rect x="28" y="8" width="1" height="2" fill="#160b08" />
+  <rect x="112" y="18" width="1" height="3" fill="#0e0a10" />
+  <rect x="146" y="30" width="1" height="3" fill="#0e0a10" />
+
+  <!-- ══ Flanking column LEFT (x24-31), sconce flame above y28 ══ -->
+  <rect x="24" y="5" width="8" height="61" fill="#1e110d" />
+  <rect x="24" y="5" width="2" height="61" fill="#2a1812" />
+  <rect x="30" y="5" width="2" height="61" fill="#140c0a" />
+  <rect x="24" y="5" width="8" height="2" fill="#2e1812" />
+  <rect x="24" y="5" width="8" height="1" fill="#3c2218" />
+  <rect x="24" y="20" width="8" height="1" fill="#160d0b" />
+  <rect x="24" y="40" width="8" height="1" fill="#160d0b" />
+  <rect x="24" y="56" width="8" height="1" fill="#120a09" />
+  <!-- brass sconce + flame -->
+  <rect x="25" y="14" width="6" height="2" fill="#54400f" />
+  <rect x="26" y="16" width="4" height="1" fill="#3a2c0c" />
+  <rect x="26" y="11" width="4" height="3" fill="#a33d1e" />
+  <rect x="27" y="9" width="2" height="2" fill="#e8743a" />
+  <rect x="27" y="7" width="1" height="2" fill="#ffb347" />
+  <rect x="28" y="11" width="1" height="2" fill="#ffe9a8" />
+  <!-- chain rising off the sconce into the dark -->
+  <rect x="31" y="2" width="1" height="9" fill="#161013" />
+  <rect x="31" y="4" width="1" height="2" fill="#211a1c" />
+
+  <!-- ══ Flanking column RIGHT (x130-137), dimmer sconce ══ -->
+  <rect x="130" y="5" width="8" height="61" fill="#120b10" />
+  <rect x="130" y="5" width="2" height="61" fill="#1a1016" />
+  <rect x="136" y="5" width="2" height="61" fill="#0d080c" />
+  <rect x="130" y="5" width="8" height="2" fill="#1f1428" />
+  <rect x="130" y="20" width="8" height="1" fill="#0e090d" />
+  <rect x="130" y="40" width="8" height="1" fill="#0e090d" />
+  <rect x="130" y="56" width="8" height="1" fill="#0c070b" />
+  <rect x="131" y="14" width="6" height="2" fill="#3a2c0c" />
+  <rect x="132" y="16" width="4" height="1" fill="#281e08" />
+  <rect x="132" y="12" width="4" height="2" fill="#5a1812" />
+  <rect x="133" y="10" width="2" height="2" fill="#a33d1e" />
+  <rect x="133" y="8" width="1" height="2" fill="#e8743a" />
+  <rect x="137" y="2" width="1" height="9" fill="#100a10" />
+  <rect x="137" y="5" width="1" height="2" fill="#181020" />
+
+  <!-- ══ MID BAND (y38-66): quiet vault wall ══ -->
+  <rect x="0" y="38" width="23" height="9" fill="#1c110d" />
+  <rect x="0" y="47" width="23" height="9" fill="#180f0c" />
+  <rect x="0" y="56" width="23" height="10" fill="#150d0b" />
+  <rect x="32" y="38" width="24" height="9" fill="#150e0c" />
+  <rect x="32" y="47" width="24" height="9" fill="#130d0b" />
+  <rect x="32" y="56" width="24" height="10" fill="#110c0a" />
+  <rect x="104" y="38" width="26" height="9" fill="#110d15" />
+  <rect x="104" y="47" width="26" height="9" fill="#100c13" />
+  <rect x="104" y="56" width="26" height="10" fill="#0e0a11" />
+  <rect x="138" y="38" width="22" height="9" fill="#121019" />
+  <rect x="138" y="47" width="22" height="9" fill="#110e16" />
+  <rect x="138" y="56" width="22" height="10" fill="#0f0c13" />
+
+  <!-- ══ THE SET PIECE: dais + root-pillar of stolen power (x56-104) ══ -->
+  <!-- dais steps (dark, quiet — they cross the lower mid band) -->
+  <rect x="62" y="60" width="36" height="6" fill="#191009" />
+  <rect x="62" y="60" width="36" height="1" fill="#241710" />
+  <rect x="66" y="54" width="28" height="6" fill="#150d08" />
+  <rect x="66" y="54" width="28" height="1" fill="#1f130c" />
+  <rect x="70" y="49" width="20" height="5" fill="#120b07" />
+  <rect x="70" y="49" width="20" height="1" fill="#1a100a" />
+  <!-- the charred root-pillar (x73-87, y6-49) -->
+  <rect x="73" y="8" width="14" height="41" fill="#140c08" />
+  <rect x="74" y="6" width="11" height="3" fill="#0e0807" />
+  <rect x="73" y="8" width="3" height="41" fill="#1d120b" />
+  <rect x="85" y="8" width="2" height="41" fill="#0e0807" />
+  <!-- twisted root strands winding the trunk -->
+  <rect x="76" y="10" width="2" height="12" fill="#251710" />
+  <rect x="78" y="20" width="2" height="10" fill="#1a100a" />
+  <rect x="80" y="14" width="2" height="14" fill="#251710" />
+  <rect x="82" y="26" width="2" height="12" fill="#1a100a" />
+  <rect x="79" y="34" width="2" height="10" fill="#251710" />
+  <rect x="76" y="30" width="2" height="14" fill="#1d120b" />
+  <!-- the lit power seams — brightest high, dying toward the floor -->
+  <rect x="78" y="8" width="1" height="6" fill="#e8743a" />
+  <rect x="78" y="9" width="1" height="3" fill="#ffb347" />
+  <rect x="79" y="7" width="1" height="2" fill="#ffe9a8" />
+  <rect x="81" y="12" width="1" height="7" fill="#a33d1e" />
+  <rect x="81" y="14" width="1" height="3" fill="#e8743a" />
+  <rect x="76" y="16" width="1" height="6" fill="#a33d1e" />
+  <rect x="83" y="20" width="1" height="6" fill="#5a1812" />
+  <rect x="83" y="22" width="1" height="2" fill="#a33d1e" />
+  <rect x="79" y="26" width="1" height="6" fill="#5a1812" />
+  <rect x="77" y="36" width="1" height="5" fill="#3f100c" />
+  <rect x="82" y="40" width="1" height="5" fill="#2a0b08" />
+  <!-- root toes gripping the dais steps -->
+  <rect x="70" y="46" width="4" height="3" fill="#1a100a" />
+  <rect x="68" y="49" width="4" height="5" fill="#140c08" />
+  <rect x="87" y="46" width="4" height="3" fill="#0e0807" />
+  <rect x="90" y="49" width="3" height="5" fill="#0c0706" />
+  <rect x="72" y="54" width="3" height="6" fill="#120b07" />
+  <rect x="86" y="54" width="3" height="6" fill="#0c0706" />
+  <rect x="69" y="60" width="3" height="6" fill="#0f0905" />
+  <rect x="89" y="60" width="3" height="6" fill="#0b0604" />
+  <!-- a last seam guttering at a root toe -->
+  <rect x="71" y="48" width="1" height="2" fill="#3f100c" />
+  <!-- the heart-glow crowning the pillar -->
+  <rect x="50" y="-4" width="60" height="40" fill="url(#c11b-heart-glow)" />
+
+  <!-- ══ Key-light halo upper-LEFT (sconce side) ══ -->
+  <rect x="-6" y="-12" width="64" height="54" fill="url(#c11b-sconce-halo)" />
+
+  <!-- ══ NEAR FLOOR (y66-84): polished pit-rock ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a0506" />
+  <rect x="0" y="66" width="160" height="1" fill="#040102" />
+  <!-- dais contact shadow -->
+  <rect x="58" y="66" width="44" height="1" fill="#030101" />
+  <!-- far slab row -->
+  <rect x="1" y="67" width="13" height="4" fill="#2e1c16" />
+  <rect x="15" y="67" width="12" height="4" fill="#33201a" />
+  <rect x="28" y="67" width="13" height="4" fill="#271812" />
+  <rect x="42" y="67" width="12" height="4" fill="#221410" />
+  <rect x="55" y="67" width="13" height="4" fill="#1d120e" />
+  <rect x="69" y="67" width="11" height="4" fill="#19100d" />
+  <rect x="81" y="67" width="13" height="4" fill="#150e0d" />
+  <rect x="95" y="67" width="12" height="4" fill="#13101a" />
+  <rect x="108" y="67" width="13" height="4" fill="#110e15" />
+  <rect x="122" y="67" width="12" height="4" fill="#121019" />
+  <rect x="135" y="67" width="24" height="4" fill="#0f0d14" />
+  <rect x="15" y="67" width="12" height="1" fill="#42291c" />
+  <rect x="1" y="67" width="13" height="1" fill="#3c2218" />
+  <!-- mid slab row -->
+  <rect x="0" y="72" width="14" height="5" fill="#2a1a14" />
+  <rect x="15" y="72" width="14" height="5" fill="#33201a" />
+  <rect x="30" y="72" width="15" height="5" fill="#2a1a14" />
+  <rect x="46" y="72" width="14" height="5" fill="#241510" />
+  <rect x="61" y="72" width="15" height="5" fill="#1f130e" />
+  <rect x="77" y="72" width="14" height="5" fill="#1a110e" />
+  <rect x="92" y="72" width="15" height="5" fill="#151013" />
+  <rect x="108" y="72" width="14" height="5" fill="#121017" />
+  <rect x="123" y="72" width="36" height="5" fill="#100e14" />
+  <rect x="15" y="72" width="14" height="1" fill="#42291c" />
+  <rect x="30" y="72" width="15" height="1" fill="#3c2218" />
+  <!-- near slab row -->
+  <rect x="0" y="78" width="17" height="6" fill="#2e1c16" />
+  <rect x="18" y="78" width="17" height="6" fill="#3a241c" />
+  <rect x="36" y="78" width="18" height="6" fill="#2e1c16" />
+  <rect x="55" y="78" width="17" height="6" fill="#271812" />
+  <rect x="73" y="78" width="18" height="6" fill="#201410" />
+  <rect x="92" y="78" width="17" height="6" fill="#181113" />
+  <rect x="110" y="78" width="18" height="6" fill="#131118" />
+  <rect x="129" y="78" width="30" height="6" fill="#101015" />
+  <rect x="18" y="78" width="17" height="1" fill="#46291c" />
+  <rect x="0" y="78" width="17" height="1" fill="#3c2218" />
+  <!-- the pillar's glow caught faintly in the polished floor -->
+  <rect x="74" y="68" width="1" height="2" fill="#3f100c" opacity="0.7" />
+  <rect x="80" y="69" width="1" height="2" fill="#2a0b08" opacity="0.7" />
+  <rect x="84" y="68" width="1" height="1" fill="#3f100c" opacity="0.5" />
+  <!-- column contact shadows -->
+  <rect x="24" y="66" width="8" height="1" fill="#040102" />
+  <rect x="130" y="66" width="8" height="1" fill="#040102" />
+  <!-- drifted ash + a dropped chalice (an offering he did not need) -->
+  <rect x="40" y="74" width="5" height="1" fill="#241c20" />
+  <rect x="42" y="73" width="2" height="1" fill="#322830" />
+  <rect x="112" y="71" width="5" height="1" fill="#1c161c" />
+  <rect x="104" y="79" width="2" height="2" fill="#3a2c0c" />
+  <rect x="103" y="81" width="4" height="1" fill="#54400f" />
+  <rect x="104" y="79" width="1" height="1" fill="#6a521e" />
+  <!-- ember motes settling -->
+  <rect x="48" y="70" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+  <rect x="98" y="73" width="1" height="1" fill="#5a1812" opacity="0.7" />
+  <rect x="64" y="76" width="1" height="1" fill="#a33d1e" opacity="0.45" />
+  <!-- sconce light pooling left -->
+  <rect x="-8" y="58" width="62" height="24" fill="url(#c11b-floor-pool)" />
+</svg>

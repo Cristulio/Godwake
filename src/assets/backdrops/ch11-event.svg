@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch11-event — A Still Pocket of the Pit: a dead fold of the burning where
+       the flame has guttered to embers and nothing comes. The calm scene of
+       the chapter (events + rest). Cool ash-violet rock; ONE warm note: a
+       guttered fire-pit breathing its last in the centre. A high crack
+       upper-LEFT leaks a faint red of the far burning (the key, dim). A
+       previous walker sits where he stopped, at rest. Event banners crop to
+       roughly y28-54: the overhang lip, the ember-pit and the seated bones
+       all cross that band. Floor seam y66.
+       Ramps — ash rock: #100c10 #171118 #1f1820 #282030 (+#332a3e edge);
+       warm rock (near the crack): #1a100c #241712; ember: #2a0b08 #5a1812
+       #a33d1e #e8743a; ash: #241c20 #322830 #3a3036.
+       No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c11v-crack-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#a33d1e" stop-opacity="0.16" />
+      <stop offset="50%" stop-color="#5a1812" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#5a1812" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c11v-ember-breath" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the fold's back wall, ash-violet ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0c090c" />
+  <rect x="0" y="0" width="160" height="4" fill="#060305" />
+  <rect x="0" y="4" width="160" height="1" fill="#120d12" />
+  <!-- rock courses -->
+  <rect x="0" y="5" width="20" height="9" fill="#1a100c" />
+  <rect x="21" y="5" width="22" height="9" fill="#1f1820" />
+  <rect x="44" y="5" width="24" height="9" fill="#171118" />
+  <rect x="69" y="5" width="22" height="9" fill="#1f1820" />
+  <rect x="92" y="5" width="26" height="9" fill="#171118" />
+  <rect x="119" y="5" width="41" height="9" fill="#100c10" />
+  <rect x="21" y="5" width="22" height="1" fill="#282030" />
+  <rect x="0" y="15" width="16" height="10" fill="#241712" />
+  <rect x="17" y="15" width="24" height="10" fill="#1f1820" />
+  <rect x="42" y="15" width="20" height="10" fill="#282030" />
+  <rect x="63" y="15" width="26" height="10" fill="#171118" />
+  <rect x="90" y="15" width="24" height="10" fill="#13101a" />
+  <rect x="115" y="15" width="45" height="10" fill="#100c10" />
+  <rect x="42" y="15" width="20" height="1" fill="#332a3e" />
+  <rect x="17" y="15" width="24" height="1" fill="#282030" />
+
+  <!-- ══ The sheltering overhang (its lip crosses the crop band) ══ -->
+  <rect x="0" y="26" width="160" height="6" fill="#181218" />
+  <rect x="0" y="26" width="160" height="1" fill="#221a26" />
+  <rect x="0" y="31" width="160" height="1" fill="#0a070a" />
+  <rect x="18" y="26" width="20" height="1" fill="#2c2336" />
+  <rect x="52" y="27" width="2" height="6" fill="#110d12" />
+  <rect x="96" y="27" width="2" height="5" fill="#0e0a0f" />
+  <rect x="130" y="27" width="2" height="6" fill="#0c090c" />
+  <!-- under-shadow of the lip -->
+  <rect x="0" y="32" width="160" height="3" fill="#090609" />
+
+  <!-- ══ The high crack, upper-LEFT — far burning leaking through ══ -->
+  <rect x="22" y="6" width="1" height="8" fill="#3f100c" />
+  <rect x="23" y="8" width="1" height="9" fill="#5a1812" />
+  <rect x="24" y="12" width="1" height="6" fill="#3f100c" />
+  <rect x="23" y="10" width="1" height="3" fill="#a33d1e" />
+  <rect x="22" y="13" width="1" height="2" fill="#2a0b08" />
+  <rect x="24" y="9" width="1" height="2" fill="#2a0b08" />
+  <!-- scorch around the crack -->
+  <rect x="20" y="8" width="2" height="8" fill="#140d0b" />
+  <rect x="25" y="10" width="2" height="8" fill="#140d0b" />
+  <rect x="-8" y="-10" width="62" height="50" fill="url(#c11v-crack-glow)" />
+
+  <!-- ══ MID BAND (y35-66): the pocket's still walls, very quiet ══ -->
+  <rect x="0" y="35" width="26" height="10" fill="#161016" />
+  <rect x="27" y="35" width="30" height="10" fill="#191219" />
+  <rect x="58" y="35" width="28" height="10" fill="#141014" />
+  <rect x="87" y="35" width="30" height="10" fill="#120e12" />
+  <rect x="118" y="35" width="42" height="10" fill="#0f0c10" />
+  <rect x="0" y="45" width="22" height="11" fill="#191219" />
+  <rect x="23" y="45" width="28" height="11" fill="#161016" />
+  <rect x="52" y="45" width="30" height="11" fill="#131013" />
+  <rect x="83" y="45" width="32" height="11" fill="#110e11" />
+  <rect x="116" y="45" width="44" height="11" fill="#0e0b0e" />
+  <rect x="0" y="56" width="24" height="10" fill="#161016" />
+  <rect x="25" y="56" width="28" height="10" fill="#141014" />
+  <rect x="54" y="56" width="30" height="10" fill="#110e11" />
+  <rect x="85" y="56" width="32" height="10" fill="#0f0c0f" />
+  <rect x="118" y="56" width="42" height="10" fill="#0d0a0d" />
+  <!-- faint old soot-stain rising over the dead fire -->
+  <rect x="66" y="36" width="8" height="20" fill="#0b080b" opacity="0.7" />
+  <rect x="68" y="30" width="5" height="6" fill="#0b080b" opacity="0.5" />
+
+  <!-- ══ The walker who stopped here (right of centre, at rest) ══ -->
+  <!-- slumped against the wall, long quiet: ash-grey bones, dim -->
+  <rect x="106" y="48" width="6" height="3" fill="#2c2622" />
+  <rect x="107" y="45" width="4" height="3" fill="#332c26" />
+  <rect x="108" y="42" width="3" height="3" fill="#3a322a" />
+  <rect x="108" y="41" width="2" height="1" fill="#42382e" />
+  <rect x="105" y="51" width="8" height="2" fill="#26201c" />
+  <rect x="104" y="53" width="5" height="2" fill="#221c18" />
+  <rect x="111" y="53" width="4" height="2" fill="#201a16" />
+  <!-- his pack, set down neatly beside him -->
+  <rect x="116" y="50" width="5" height="4" fill="#1c1410" />
+  <rect x="116" y="50" width="5" height="1" fill="#261b14" />
+  <rect x="117" y="49" width="2" height="1" fill="#1c1410" />
+  <!-- the hollow where his face was -->
+  <rect x="109" y="43" width="1" height="1" fill="#1f1a16" />
+  <!-- his lantern, still burning its last finger of oil -->
+  <rect x="122" y="49" width="3" height="4" fill="#211a1c" />
+  <rect x="122" y="49" width="3" height="1" fill="#2e2228" />
+  <rect x="123" y="48" width="1" height="1" fill="#161013" />
+  <rect x="123" y="50" width="1" height="2" fill="#a33d1e" />
+  <rect x="123" y="50" width="1" height="1" fill="#e8743a" />
+  <!-- the staff he leaned and left -->
+  <rect x="101" y="38" width="1" height="16" fill="#241712" />
+  <rect x="101" y="38" width="1" height="2" fill="#332218" />
+
+  <!-- ══ The guttered fire-pit — the warm counter-note (crop-band focal) ══ -->
+  <!-- ring stones -->
+  <rect x="64" y="60" width="3" height="3" fill="#1f1820" />
+  <rect x="68" y="61" width="3" height="2" fill="#1a141a" />
+  <rect x="72" y="60" width="3" height="3" fill="#1f1820" />
+  <rect x="62" y="62" width="2" height="2" fill="#171118" />
+  <rect x="76" y="62" width="2" height="2" fill="#171118" />
+  <rect x="64" y="60" width="3" height="1" fill="#282030" />
+  <!-- ember bed, breathing low -->
+  <rect x="66" y="62" width="7" height="2" fill="#2a0b08" />
+  <rect x="67" y="62" width="4" height="1" fill="#5a1812" />
+  <rect x="68" y="62" width="2" height="1" fill="#a33d1e" />
+  <rect x="69" y="61" width="1" height="1" fill="#e8743a" />
+  <rect x="71" y="63" width="1" height="1" fill="#5a1812" />
+  <rect x="66" y="63" width="1" height="1" fill="#3f100c" />
+  <!-- one thin thread of smoke -->
+  <rect x="69" y="56" width="1" height="4" fill="#1c161c" opacity="0.8" />
+  <rect x="70" y="51" width="1" height="5" fill="#171218" opacity="0.7" />
+  <rect x="69" y="46" width="1" height="5" fill="#131013" opacity="0.6" />
+  <rect x="44" y="44" width="52" height="34" fill="url(#c11v-ember-breath)" />
+
+  <!-- ══ NEAR FLOOR (y66-84): ash-banked ground ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a070a" />
+  <rect x="0" y="66" width="160" height="1" fill="#040203" />
+  <!-- far row -->
+  <rect x="1" y="67" width="14" height="4" fill="#221a22" />
+  <rect x="16" y="67" width="12" height="4" fill="#282030" />
+  <rect x="29" y="67" width="14" height="4" fill="#1f1820" />
+  <rect x="44" y="67" width="13" height="4" fill="#1c151c" />
+  <rect x="58" y="67" width="13" height="4" fill="#191219" />
+  <rect x="72" y="67" width="13" height="4" fill="#171118" />
+  <rect x="86" y="67" width="13" height="4" fill="#141014" />
+  <rect x="100" y="67" width="13" height="4" fill="#120e12" />
+  <rect x="114" y="67" width="13" height="4" fill="#100d10" />
+  <rect x="128" y="67" width="31" height="4" fill="#0e0b0e" />
+  <rect x="16" y="67" width="12" height="1" fill="#332a3e" />
+  <rect x="1" y="67" width="14" height="1" fill="#2c2336" />
+  <!-- fire-pit contact at the seam -->
+  <rect x="62" y="66" width="16" height="1" fill="#030102" />
+  <!-- mid row -->
+  <rect x="0" y="72" width="15" height="5" fill="#1c151c" />
+  <rect x="16" y="72" width="14" height="5" fill="#221a22" />
+  <rect x="31" y="72" width="15" height="5" fill="#1f1820" />
+  <rect x="47" y="72" width="14" height="5" fill="#1a141a" />
+  <rect x="62" y="72" width="15" height="5" fill="#171118" />
+  <rect x="78" y="72" width="14" height="5" fill="#141014" />
+  <rect x="93" y="72" width="15" height="5" fill="#120e12" />
+  <rect x="109" y="72" width="14" height="5" fill="#100d10" />
+  <rect x="124" y="72" width="35" height="5" fill="#0e0b0e" />
+  <rect x="16" y="72" width="14" height="1" fill="#2c2336" />
+  <!-- near row -->
+  <rect x="0" y="78" width="18" height="6" fill="#1f1820" />
+  <rect x="19" y="78" width="17" height="6" fill="#241c24" />
+  <rect x="37" y="78" width="18" height="6" fill="#1f1820" />
+  <rect x="56" y="78" width="17" height="6" fill="#1a141a" />
+  <rect x="74" y="78" width="18" height="6" fill="#171118" />
+  <rect x="93" y="78" width="17" height="6" fill="#131013" />
+  <rect x="111" y="78" width="18" height="6" fill="#110e11" />
+  <rect x="130" y="78" width="29" height="6" fill="#0f0c0f" />
+  <rect x="19" y="78" width="17" height="1" fill="#2c2336" />
+  <!-- ash drifts banked deep in this pocket -->
+  <rect x="30" y="69" width="8" height="1" fill="#241c20" />
+  <rect x="32" y="68" width="4" height="1" fill="#322830" />
+  <rect x="33" y="67" width="2" height="1" fill="#3a3036" />
+  <rect x="84" y="74" width="9" height="1" fill="#241c20" />
+  <rect x="86" y="73" width="5" height="1" fill="#2c242a" />
+  <rect x="120" y="70" width="7" height="1" fill="#1c161c" />
+  <rect x="122" y="69" width="3" height="1" fill="#241c20" />
+  <rect x="48" y="80" width="6" height="1" fill="#241c20" />
+  <rect x="50" y="79" width="3" height="1" fill="#2c242a" />
+  <!-- ember flecks gone cold mid-air, settled -->
+  <rect x="58" y="70" width="1" height="1" fill="#3f100c" opacity="0.8" />
+  <rect x="78" y="69" width="1" height="1" fill="#5a1812" opacity="0.7" />
+  <rect x="74" y="75" width="1" height="1" fill="#3f100c" opacity="0.6" />
+  <rect x="66" y="79" width="1" height="1" fill="#2a0b08" opacity="0.8" />
+  <!-- his boots, set side by side (he meant to rest) -->
+  <rect x="98" y="74" width="3" height="2" fill="#1c1410" />
+  <rect x="102" y="74" width="3" height="2" fill="#1c1410" />
+  <rect x="98" y="74" width="3" height="1" fill="#261b14" />
+  <rect x="102" y="74" width="3" height="1" fill="#241712" />
+  <!-- a tin cup by the pit, still waiting -->
+  <rect x="58" y="63" width="2" height="2" fill="#3a3036" />
+  <rect x="58" y="63" width="2" height="1" fill="#48404a" />
+</svg>

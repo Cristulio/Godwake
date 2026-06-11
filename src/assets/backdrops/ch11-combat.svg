@@ -1,0 +1,237 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch11-combat — The Burning Causeway: a basalt shelf across Velnaris's
+       pocket of Hell. Key light: a burning fissure in the left cliff
+       (x~22,y~10) venting flame, matching the gameplay glow. The pit wall
+       climbs in scorched strata; a bone-dry arch right-of-centre leads
+       deeper, its legs crossing the mid band as quiet darks. Depth bands:
+       far cliff y0-38 (fire-cracks, chains), mid y38-63 QUIET, floor y66-84
+       (cracked basalt, ember veins). Wall/floor seam at y66.
+       Ramps — basalt warm: #160b08 #221110 #2e1812 #3c2218 (+#4e2e1e edge);
+       basalt cool: #120c14 #181020 #1f1628; ember: #5a1812 #a33d1e #e8743a
+       #ffb347 (+#ffe9a8 core); ash: #241c20 #322830.
+       No baked-in vignette/grain: the Battlefield overlays add those. -->
+  <defs>
+    <radialGradient id="c11c-fissure-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#e8743a" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c11c-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the pit's upper dark + scorched cliff strata ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0d0708" />
+  <rect x="96" y="0" width="64" height="66" fill="#0e0a10" />
+  <!-- the dark above the pit, smoke-hazed -->
+  <rect x="0" y="0" width="160" height="5" fill="#070304" />
+  <rect x="0" y="5" width="160" height="1" fill="#120a0a" />
+  <rect x="58" y="2" width="34" height="2" fill="#0c0608" opacity="0.8" />
+  <!-- strata course 1 (y6-12) -->
+  <rect x="0" y="6" width="17" height="7" fill="#2e1812" />
+  <rect x="18" y="6" width="20" height="7" fill="#3c2218" />
+  <rect x="39" y="6" width="22" height="7" fill="#2e1812" />
+  <rect x="62" y="6" width="20" height="7" fill="#221110" />
+  <rect x="83" y="6" width="20" height="7" fill="#1c1212" />
+  <rect x="104" y="6" width="24" height="7" fill="#181020" />
+  <rect x="129" y="6" width="31" height="7" fill="#1f1628" />
+  <rect x="18" y="6" width="20" height="1" fill="#4e2e1e" />
+  <rect x="39" y="6" width="12" height="1" fill="#3c2218" />
+  <!-- strata course 2 (y13-20) -->
+  <rect x="0" y="13" width="10" height="8" fill="#3c2218" />
+  <rect x="11" y="13" width="18" height="8" fill="#2e1812" />
+  <rect x="30" y="13" width="17" height="8" fill="#3c2218" />
+  <rect x="48" y="13" width="22" height="8" fill="#221110" />
+  <rect x="71" y="13" width="21" height="8" fill="#1c1212" />
+  <rect x="93" y="13" width="9" height="8" fill="#181020" />
+  <rect x="129" y="13" width="31" height="8" fill="#181020" />
+  <rect x="30" y="13" width="17" height="1" fill="#4e2e1e" />
+  <rect x="11" y="13" width="18" height="1" fill="#3c2218" />
+  <!-- strata course 3 (y21-28) -->
+  <rect x="0" y="21" width="20" height="8" fill="#2e1812" />
+  <rect x="21" y="21" width="15" height="8" fill="#221110" />
+  <rect x="37" y="21" width="13" height="8" fill="#2e1812" />
+  <rect x="51" y="21" width="19" height="8" fill="#1a0e0c" />
+  <rect x="71" y="21" width="20" height="8" fill="#160e12" />
+  <rect x="92" y="21" width="10" height="8" fill="#120c14" />
+  <rect x="129" y="21" width="14" height="8" fill="#1f1628" />
+  <rect x="144" y="21" width="16" height="8" fill="#181020" />
+  <rect x="21" y="21" width="15" height="1" fill="#4e2e1e" />
+  <!-- strata course 4 (y29-37) -->
+  <rect x="0" y="29" width="13" height="9" fill="#221110" />
+  <rect x="14" y="29" width="19" height="9" fill="#2e1812" />
+  <rect x="34" y="29" width="16" height="9" fill="#221110" />
+  <rect x="51" y="29" width="19" height="9" fill="#160e12" />
+  <rect x="71" y="29" width="21" height="9" fill="#140d11" />
+  <rect x="93" y="29" width="9" height="9" fill="#120c14" />
+  <rect x="129" y="29" width="13" height="9" fill="#181020" />
+  <rect x="143" y="29" width="17" height="9" fill="#120c14" />
+  <rect x="14" y="29" width="19" height="1" fill="#3c2218" />
+  <!-- distant fire-cracks webbing the high cliff -->
+  <rect x="46" y="8" width="1" height="3" fill="#3f100c" />
+  <rect x="47" y="10" width="1" height="2" fill="#5a1812" />
+  <rect x="48" y="12" width="1" height="2" fill="#3f100c" />
+  <rect x="69" y="15" width="1" height="3" fill="#3f100c" />
+  <rect x="68" y="17" width="1" height="2" fill="#5a1812" />
+  <rect x="87" y="9" width="1" height="2" fill="#3f100c" />
+  <rect x="88" y="11" width="1" height="3" fill="#3f100c" />
+  <rect x="58" y="24" width="1" height="3" fill="#2a0b08" />
+  <rect x="139" y="10" width="1" height="3" fill="#2a0b08" />
+  <!-- carved manacle-rings driven into the cliff, old and shut -->
+  <rect x="42" y="17" width="3" height="3" fill="#1a0e0c" />
+  <rect x="43" y="18" width="1" height="1" fill="#0d0708" />
+  <rect x="76" y="24" width="3" height="3" fill="#140d11" />
+  <rect x="77" y="25" width="1" height="1" fill="#0d0708" />
+
+  <!-- ══ The bone-dry arch right-of-centre, the way deeper ══ -->
+  <rect x="103" y="6" width="6" height="60" fill="#1a1118" />
+  <rect x="121" y="6" width="6" height="60" fill="#150e14" />
+  <rect x="103" y="6" width="24" height="4" fill="#1f1424" />
+  <rect x="103" y="6" width="24" height="1" fill="#2a1c30" />
+  <rect x="109" y="10" width="12" height="56" fill="#070304" />
+  <!-- faint red rim inside the arch throat -->
+  <rect x="109" y="22" width="1" height="14" fill="#2a0b08" />
+  <rect x="110" y="30" width="1" height="8" fill="#1c0806" />
+  <rect x="114" y="40" width="2" height="1" fill="#2a0b08" opacity="0.8" />
+  <!-- arch leg facets (quiet darks through the mid band) -->
+  <rect x="104" y="20" width="1" height="46" fill="#221620" />
+  <rect x="126" y="20" width="1" height="46" fill="#0f0a10" />
+  <rect x="103" y="38" width="6" height="1" fill="#150e14" />
+  <rect x="121" y="38" width="6" height="1" fill="#100a10" />
+
+  <!-- ══ Hanging chains off the high dark ══ -->
+  <rect x="88" y="6" width="1" height="24" fill="#1a0e0c" />
+  <rect x="88" y="9" width="1" height="2" fill="#2e1812" />
+  <rect x="88" y="15" width="1" height="2" fill="#2e1812" />
+  <rect x="88" y="21" width="1" height="2" fill="#2e1812" />
+  <rect x="87" y="29" width="3" height="2" fill="#221110" />
+  <rect x="140" y="6" width="1" height="18" fill="#120c14" />
+  <rect x="140" y="10" width="1" height="2" fill="#1f1628" />
+  <rect x="140" y="16" width="1" height="2" fill="#1f1628" />
+  <rect x="139" y="23" width="3" height="2" fill="#181020" />
+
+  <!-- ══ MID BAND (y38-66): quiet scorched courses ══ -->
+  <rect x="0" y="38" width="18" height="9" fill="#1e120e" />
+  <rect x="19" y="38" width="26" height="9" fill="#221110" />
+  <rect x="46" y="38" width="24" height="9" fill="#180f0d" />
+  <rect x="71" y="38" width="31" height="9" fill="#130d10" />
+  <rect x="128" y="38" width="32" height="9" fill="#131019" />
+  <rect x="0" y="47" width="24" height="9" fill="#221110" />
+  <rect x="25" y="47" width="21" height="9" fill="#1e120e" />
+  <rect x="47" y="47" width="23" height="9" fill="#150e0d" />
+  <rect x="71" y="47" width="31" height="9" fill="#120c10" />
+  <rect x="128" y="47" width="14" height="9" fill="#110d16" />
+  <rect x="143" y="47" width="17" height="9" fill="#131019" />
+  <rect x="0" y="56" width="14" height="10" fill="#1e120e" />
+  <rect x="15" y="56" width="31" height="10" fill="#1a100c" />
+  <rect x="47" y="56" width="23" height="10" fill="#130d0c" />
+  <rect x="71" y="56" width="31" height="10" fill="#100b0e" />
+  <rect x="128" y="56" width="32" height="10" fill="#0f0c14" />
+  <!-- hairline heat-cracks, upper wall only -->
+  <rect x="26" y="9" width="1" height="2" fill="#160b08" />
+  <rect x="27" y="11" width="1" height="2" fill="#160b08" />
+  <rect x="95" y="15" width="1" height="3" fill="#0e0a10" />
+  <rect x="148" y="25" width="1" height="3" fill="#0e0a10" />
+
+  <!-- ══ The burning fissure — the scene's key light ══ -->
+  <rect x="21" y="8" width="1" height="14" fill="#5a1812" />
+  <rect x="22" y="6" width="2" height="18" fill="#a33d1e" />
+  <rect x="24" y="9" width="1" height="12" fill="#5a1812" />
+  <rect x="22" y="10" width="1" height="8" fill="#e8743a" />
+  <rect x="23" y="12" width="1" height="5" fill="#ffb347" />
+  <rect x="23" y="14" width="1" height="2" fill="#ffe9a8" />
+  <!-- flame tongue licking out the fissure head -->
+  <rect x="22" y="4" width="2" height="2" fill="#e8743a" />
+  <rect x="23" y="2" width="1" height="2" fill="#ffb347" />
+  <rect x="22" y="3" width="1" height="1" fill="#a33d1e" />
+  <!-- heat-scorch blooming around the crack -->
+  <rect x="19" y="10" width="2" height="10" fill="#160b08" />
+  <rect x="25" y="11" width="2" height="9" fill="#160b08" />
+  <!-- drifting embers -->
+  <rect x="29" y="8" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="33" y="14" width="1" height="1" fill="#a33d1e" opacity="0.8" />
+  <rect x="27" y="20" width="1" height="1" fill="#ffb347" opacity="0.7" />
+  <rect x="38" y="5" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+  <rect x="17" y="26" width="1" height="1" fill="#e8743a" opacity="0.5" />
+  <rect x="44" y="33" width="1" height="1" fill="#a33d1e" opacity="0.45" />
+  <rect x="-9" y="-12" width="64" height="56" fill="url(#c11c-fissure-halo)" />
+
+  <!-- ══ NEAR FLOOR (y66-84): cracked basalt shelf, ember veins ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0b0607" />
+  <rect x="0" y="66" width="160" height="1" fill="#050203" />
+  <!-- far slab row (y67-71) -->
+  <rect x="1" y="67" width="12" height="4" fill="#33201a" />
+  <rect x="14" y="67" width="12" height="4" fill="#3a241c" />
+  <rect x="27" y="67" width="13" height="4" fill="#2e1c16" />
+  <rect x="41" y="67" width="12" height="4" fill="#271812" />
+  <rect x="54" y="67" width="13" height="4" fill="#221410" />
+  <rect x="68" y="67" width="12" height="4" fill="#1d120e" />
+  <rect x="81" y="67" width="13" height="4" fill="#19100d" />
+  <rect x="95" y="67" width="12" height="4" fill="#150e0e" />
+  <rect x="108" y="67" width="13" height="4" fill="#131017" />
+  <rect x="122" y="67" width="12" height="4" fill="#110e15" />
+  <rect x="135" y="67" width="12" height="4" fill="#121019" />
+  <rect x="148" y="67" width="11" height="4" fill="#0f0d14" />
+  <rect x="14" y="67" width="12" height="1" fill="#4e2e1e" />
+  <rect x="1" y="67" width="12" height="1" fill="#42291c" />
+  <rect x="27" y="67" width="13" height="1" fill="#3c2218" />
+  <!-- mid slab row (y72-77) -->
+  <rect x="0" y="72" width="14" height="5" fill="#2a1a14" />
+  <rect x="15" y="72" width="14" height="5" fill="#33201a" />
+  <rect x="30" y="72" width="15" height="5" fill="#2e1c16" />
+  <rect x="46" y="72" width="14" height="5" fill="#271812" />
+  <rect x="61" y="72" width="15" height="5" fill="#221410" />
+  <rect x="77" y="72" width="14" height="5" fill="#1d120e" />
+  <rect x="92" y="72" width="15" height="5" fill="#171010" />
+  <rect x="108" y="72" width="14" height="5" fill="#131017" />
+  <rect x="123" y="72" width="15" height="5" fill="#111016" />
+  <rect x="139" y="72" width="20" height="5" fill="#0f0d14" />
+  <!-- near slab row (y78-84) -->
+  <rect x="0" y="78" width="18" height="6" fill="#2e1c16" />
+  <rect x="19" y="78" width="17" height="6" fill="#3a241c" />
+  <rect x="37" y="78" width="18" height="6" fill="#33201a" />
+  <rect x="56" y="78" width="17" height="6" fill="#2a1a14" />
+  <rect x="74" y="78" width="18" height="6" fill="#221410" />
+  <rect x="93" y="78" width="17" height="6" fill="#1a1110" />
+  <rect x="111" y="78" width="18" height="6" fill="#141118" />
+  <rect x="130" y="78" width="29" height="6" fill="#111015" />
+  <rect x="19" y="78" width="17" height="1" fill="#46291c" />
+  <rect x="0" y="78" width="18" height="1" fill="#3c2218" />
+  <rect x="15" y="72" width="14" height="1" fill="#42291c" />
+  <rect x="30" y="72" width="15" height="1" fill="#3c2218" />
+  <!-- ember veins glowing in the floor cracks, dying rightward -->
+  <rect x="13" y="71" width="1" height="2" fill="#a33d1e" />
+  <rect x="14" y="70" width="1" height="1" fill="#e8743a" />
+  <rect x="29" y="73" width="1" height="3" fill="#a33d1e" />
+  <rect x="30" y="75" width="1" height="1" fill="#e8743a" />
+  <rect x="28" y="76" width="1" height="1" fill="#5a1812" />
+  <rect x="45" y="73" width="1" height="2" fill="#5a1812" />
+  <rect x="46" y="74" width="1" height="1" fill="#a33d1e" />
+  <rect x="60" y="75" width="1" height="2" fill="#5a1812" />
+  <rect x="75" y="79" width="1" height="2" fill="#3f100c" />
+  <rect x="91" y="74" width="1" height="2" fill="#2a0b08" />
+  <!-- ash drifts banked against the slab joints -->
+  <rect x="49" y="70" width="5" height="1" fill="#241c20" />
+  <rect x="51" y="69" width="2" height="1" fill="#322830" />
+  <rect x="84" y="76" width="6" height="1" fill="#241c20" />
+  <rect x="86" y="75" width="3" height="1" fill="#2c242a" />
+  <rect x="120" y="70" width="5" height="1" fill="#1c161c" />
+  <!-- a half-melted sword, abandoned mid-causeway -->
+  <rect x="66" y="80" width="6" height="1" fill="#3a3036" />
+  <rect x="71" y="79" width="2" height="1" fill="#48404a" />
+  <rect x="65" y="81" width="2" height="1" fill="#2a1a14" />
+  <rect x="64" y="80" width="1" height="1" fill="#5a1812" />
+  <!-- charred bone scatter -->
+  <rect x="98" y="80" width="3" height="1" fill="#4a4038" />
+  <rect x="97" y="79" width="1" height="1" fill="#5a5048" />
+  <rect x="102" y="81" width="1" height="1" fill="#4a4038" />
+  <rect x="36" y="75" width="3" height="1" fill="#46291c" />
+  <!-- cooling slag gleam in the cool right corner -->
+  <rect x="142" y="79" width="6" height="2" fill="#16121c" />
+  <rect x="144" y="80" width="2" height="1" fill="#2a1c30" />
+  <rect x="146" y="79" width="1" height="1" fill="#3f2a1c" opacity="0.8" />
+  <!-- firelight pooling on the near slabs -->
+  <rect x="-8" y="58" width="66" height="24" fill="url(#c11c-floor-pool)" />
+</svg>

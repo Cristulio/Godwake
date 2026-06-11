@@ -1,0 +1,235 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch13-combat — The Enclave Gallery: Szendra's halls, carved violet rock
+       and a century of petrified kin posed mid-ambush in their niches. Key
+       light: a drow cold-lamp on its sconce upper-LEFT (x~20, y~10), pale
+       violet; the right side dies into deep stone dark. Statues stand in
+       the arch niches y10-36 (far band) — grey-lilac, blades half-raised,
+       never finished. Spider-sigil frieze along the top course. Quiet mid
+       band y38-63 (fluted panels, two low-contrast values); polished floor
+       y66-84 with inlay lines; seam y66.
+       Ramps — drow stone: #110d18 #181222 #221a30 #2c2240 (+#3a2e52 edge);
+       petrified kin: #2e2a38 #3a3444 #4a4456 (+#5a5468); cold-lamp:
+       #4a4a7a #8a7aae #b8a8d8; depth dark: #0b0810 #0e0a14.
+       No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c13c-lamp-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#b8a8d8" stop-opacity="0.20" />
+      <stop offset="45%" stop-color="#8a7aae" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#8a7aae" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c13c-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#8a7aae" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#8a7aae" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: carved gallery wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0e0a14" />
+  <rect x="110" y="0" width="50" height="66" fill="#0b0810" />
+  <!-- ceiling + spider-sigil frieze -->
+  <rect x="0" y="0" width="160" height="4" fill="#080610" />
+  <rect x="0" y="4" width="160" height="4" fill="#181222" />
+  <rect x="0" y="4" width="160" height="1" fill="#2c2240" />
+  <rect x="0" y="8" width="160" height="1" fill="#0b0810" />
+  <!-- the frieze: abstract spider marks, repeating -->
+  <rect x="8" y="5" width="3" height="2" fill="#221a30" />
+  <rect x="9" y="4" width="1" height="1" fill="#3a2e52" />
+  <rect x="26" y="5" width="3" height="2" fill="#221a30" />
+  <rect x="27" y="4" width="1" height="1" fill="#3a2e52" />
+  <rect x="44" y="5" width="3" height="2" fill="#221a30" />
+  <rect x="45" y="4" width="1" height="1" fill="#2c2240" />
+  <rect x="62" y="5" width="3" height="2" fill="#1c1626" />
+  <rect x="80" y="5" width="3" height="2" fill="#1c1626" />
+  <rect x="98" y="5" width="3" height="2" fill="#161220" />
+  <rect x="116" y="5" width="3" height="2" fill="#13101c" />
+  <rect x="134" y="5" width="3" height="2" fill="#13101c" />
+  <rect x="152" y="5" width="3" height="2" fill="#100d18" />
+
+  <!-- ══ Niche arcade (y9-37): five bays, three holding the held kin ══ -->
+  <!-- pier 1 -->
+  <rect x="0" y="9" width="8" height="29" fill="#221a30" />
+  <rect x="0" y="9" width="8" height="1" fill="#2c2240" />
+  <rect x="6" y="9" width="2" height="29" fill="#181222" />
+  <!-- bay 1: niche with statue (lit side) -->
+  <rect x="8" y="9" width="22" height="29" fill="#13101c" />
+  <rect x="8" y="9" width="22" height="2" fill="#181222" />
+  <rect x="10" y="11" width="18" height="27" fill="#0e0b16" />
+  <rect x="12" y="11" width="14" height="2" fill="#0b0810" />
+  <!-- the petrified ambusher: blade half-raised, a century unfinished -->
+  <rect x="16" y="17" width="5" height="4" fill="#4a4456" />
+  <rect x="17" y="16" width="3" height="1" fill="#5a5468" />
+  <rect x="15" y="21" width="7" height="9" fill="#3a3444" />
+  <rect x="14" y="22" width="2" height="6" fill="#2e2a38" />
+  <rect x="21" y="21" width="2" height="4" fill="#4a4456" />
+  <rect x="23" y="18" width="2" height="4" fill="#4a4456" />
+  <rect x="24" y="14" width="1" height="5" fill="#5a5468" />
+  <rect x="16" y="30" width="3" height="7" fill="#2e2a38" />
+  <rect x="20" y="30" width="2" height="7" fill="#262232" />
+  <rect x="14" y="36" width="9" height="2" fill="#221a30" />
+  <!-- lamp-light rims his shoulder -->
+  <rect x="16" y="17" width="2" height="1" fill="#6a6480" />
+  <!-- pier 2 -->
+  <rect x="30" y="9" width="9" height="29" fill="#221a30" />
+  <rect x="30" y="9" width="9" height="1" fill="#3a2e52" />
+  <rect x="30" y="9" width="2" height="29" fill="#2c2240" />
+  <rect x="37" y="9" width="2" height="29" fill="#181222" />
+  <!-- fluting -->
+  <rect x="33" y="11" width="1" height="25" fill="#181222" />
+  <rect x="35" y="11" width="1" height="25" fill="#181222" />
+  <!-- bay 2: empty niche, its occupant long shattered -->
+  <rect x="39" y="9" width="20" height="29" fill="#13101c" />
+  <rect x="39" y="9" width="20" height="2" fill="#181222" />
+  <rect x="41" y="11" width="16" height="27" fill="#0e0b16" />
+  <rect x="43" y="11" width="12" height="2" fill="#0b0810" />
+  <!-- the stump of her feet still on the plinth -->
+  <rect x="46" y="34" width="3" height="3" fill="#2e2a38" />
+  <rect x="50" y="35" width="2" height="2" fill="#262232" />
+  <rect x="44" y="36" width="10" height="2" fill="#1c1626" />
+  <!-- pier 3 -->
+  <rect x="59" y="9" width="9" height="29" fill="#1c1626" />
+  <rect x="59" y="9" width="2" height="29" fill="#262032" />
+  <rect x="66" y="9" width="2" height="29" fill="#13101c" />
+  <rect x="62" y="11" width="1" height="25" fill="#13101c" />
+  <rect x="64" y="11" width="1" height="25" fill="#13101c" />
+  <!-- bay 3: statue deeper in shadow -->
+  <rect x="68" y="9" width="20" height="29" fill="#100d18" />
+  <rect x="68" y="9" width="20" height="2" fill="#161220" />
+  <rect x="70" y="11" width="16" height="27" fill="#0c0913" />
+  <!-- this one kneels, crossbow levelled forever -->
+  <rect x="74" y="22" width="4" height="3" fill="#3a3444" />
+  <rect x="75" y="21" width="2" height="1" fill="#4a4456" />
+  <rect x="73" y="25" width="6" height="6" fill="#2e2a38" />
+  <rect x="78" y="24" width="4" height="2" fill="#3a3444" />
+  <rect x="81" y="23" width="2" height="1" fill="#4a4456" />
+  <rect x="73" y="31" width="3" height="6" fill="#262232" />
+  <rect x="77" y="33" width="4" height="4" fill="#221e2c" />
+  <rect x="72" y="36" width="11" height="2" fill="#1c1626" />
+  <!-- pier 4 -->
+  <rect x="88" y="9" width="9" height="29" fill="#181426" />
+  <rect x="88" y="9" width="2" height="29" fill="#221c30" />
+  <rect x="95" y="9" width="2" height="29" fill="#100d18" />
+  <rect x="91" y="11" width="1" height="25" fill="#100d18" />
+  <rect x="93" y="11" width="1" height="25" fill="#100d18" />
+  <!-- bay 4: dark niche, shape barely there -->
+  <rect x="97" y="9" width="18" height="29" fill="#0e0b16" />
+  <rect x="97" y="9" width="18" height="2" fill="#13101c" />
+  <rect x="99" y="11" width="14" height="27" fill="#0a0811" />
+  <rect x="103" y="20" width="5" height="11" fill="#1c1924" />
+  <rect x="104" y="17" width="3" height="3" fill="#221e2c" />
+  <rect x="103" y="31" width="2" height="6" fill="#161320" />
+  <rect x="106" y="31" width="2" height="6" fill="#13101c" />
+  <!-- pier 5 + far bays fading out -->
+  <rect x="115" y="9" width="9" height="29" fill="#13101c" />
+  <rect x="115" y="9" width="2" height="29" fill="#1a1626" />
+  <rect x="122" y="9" width="2" height="29" fill="#0e0b16" />
+  <rect x="124" y="9" width="16" height="29" fill="#0c0913" />
+  <rect x="124" y="9" width="16" height="2" fill="#100d18" />
+  <rect x="129" y="19" width="4" height="12" fill="#161320" />
+  <rect x="130" y="16" width="2" height="3" fill="#1a1724" />
+  <rect x="140" y="9" width="8" height="29" fill="#100d18" />
+  <rect x="140" y="9" width="2" height="29" fill="#161220" />
+  <rect x="148" y="9" width="12" height="29" fill="#0b0810" />
+
+  <!-- ══ The cold-lamp — key light upper-LEFT ══ -->
+  <rect x="18" y="12" width="5" height="1" fill="#2c2240" />
+  <rect x="19" y="9" width="3" height="3" fill="#4a4a7a" />
+  <rect x="20" y="10" width="1" height="1" fill="#b8a8d8" />
+  <rect x="19" y="9" width="3" height="1" fill="#8a7aae" />
+  <rect x="20" y="8" width="1" height="1" fill="#8a7aae" />
+  <!-- its glow has no flicker and casts no smoke; motes hang in it -->
+  <rect x="26" y="12" width="1" height="1" fill="#6a6490" opacity="0.7" />
+  <rect x="30" y="17" width="1" height="1" fill="#5a5480" opacity="0.6" />
+  <rect x="24" y="20" width="1" height="1" fill="#6a6490" opacity="0.5" />
+  <rect x="-10" y="-14" width="66" height="56" fill="url(#c13c-lamp-halo)" />
+
+  <!-- ══ MID BAND (y38-66): fluted panel course, quiet ══ -->
+  <rect x="0" y="38" width="20" height="9" fill="#181323" />
+  <rect x="21" y="38" width="26" height="9" fill="#151120" />
+  <rect x="48" y="38" width="24" height="9" fill="#13101c" />
+  <rect x="73" y="38" width="36" height="9" fill="#110e19" />
+  <rect x="110" y="38" width="50" height="9" fill="#0d0a13" />
+  <rect x="0" y="47" width="26" height="9" fill="#151120" />
+  <rect x="27" y="47" width="20" height="9" fill="#181323" />
+  <rect x="48" y="47" width="24" height="9" fill="#120f1a" />
+  <rect x="73" y="47" width="36" height="9" fill="#100d17" />
+  <rect x="110" y="47" width="50" height="9" fill="#0c0912" />
+  <rect x="0" y="56" width="22" height="10" fill="#141020" />
+  <rect x="23" y="56" width="24" height="10" fill="#120f1c" />
+  <rect x="48" y="56" width="24" height="10" fill="#100d17" />
+  <rect x="73" y="56" width="36" height="10" fill="#0e0b14" />
+  <rect x="110" y="56" width="50" height="10" fill="#0b0811" />
+  <!-- panel seams (1px, barely there) -->
+  <rect x="20" y="38" width="1" height="28" fill="#0e0b14" />
+  <rect x="47" y="38" width="1" height="28" fill="#0e0b14" />
+  <rect x="72" y="38" width="1" height="28" fill="#0c0911" />
+  <rect x="109" y="38" width="1" height="28" fill="#0a070f" />
+
+  <!-- ══ NEAR FLOOR (y66-84): polished tiles, inlay lines ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a0810" />
+  <rect x="0" y="66" width="160" height="1" fill="#040306" />
+  <!-- far tile row -->
+  <rect x="1" y="67" width="13" height="4" fill="#262038" />
+  <rect x="15" y="67" width="12" height="4" fill="#221c32" />
+  <rect x="28" y="67" width="13" height="4" fill="#1e182c" />
+  <rect x="42" y="67" width="12" height="4" fill="#1a1526" />
+  <rect x="55" y="67" width="13" height="4" fill="#171222" />
+  <rect x="69" y="67" width="12" height="4" fill="#14101e" />
+  <rect x="82" y="67" width="13" height="4" fill="#120e1a" />
+  <rect x="96" y="67" width="12" height="4" fill="#100c17" />
+  <rect x="109" y="67" width="13" height="4" fill="#0e0a14" />
+  <rect x="123" y="67" width="12" height="4" fill="#0d0912" />
+  <rect x="136" y="67" width="23" height="4" fill="#0b0810" />
+  <rect x="15" y="67" width="12" height="1" fill="#3a2e52" />
+  <rect x="1" y="67" width="13" height="1" fill="#332a48" />
+  <rect x="28" y="67" width="13" height="1" fill="#2c2240" />
+  <!-- mid tile row -->
+  <rect x="0" y="72" width="15" height="5" fill="#221c32" />
+  <rect x="16" y="72" width="14" height="5" fill="#262038" />
+  <rect x="31" y="72" width="15" height="5" fill="#201a30" />
+  <rect x="47" y="72" width="14" height="5" fill="#1c1628" />
+  <rect x="62" y="72" width="15" height="5" fill="#181324" />
+  <rect x="78" y="72" width="14" height="5" fill="#14101e" />
+  <rect x="93" y="72" width="15" height="5" fill="#110e1a" />
+  <rect x="109" y="72" width="14" height="5" fill="#0f0b15" />
+  <rect x="124" y="72" width="35" height="5" fill="#0c0911" />
+  <rect x="16" y="72" width="14" height="1" fill="#332a48" />
+  <rect x="31" y="72" width="15" height="1" fill="#2c2240" />
+  <!-- near tile row -->
+  <rect x="0" y="78" width="18" height="6" fill="#262038" />
+  <rect x="19" y="78" width="17" height="6" fill="#2a2440" />
+  <rect x="37" y="78" width="18" height="6" fill="#221c32" />
+  <rect x="56" y="78" width="17" height="6" fill="#1e182c" />
+  <rect x="74" y="78" width="18" height="6" fill="#181324" />
+  <rect x="93" y="78" width="17" height="6" fill="#13101e" />
+  <rect x="111" y="78" width="18" height="6" fill="#100c17" />
+  <rect x="130" y="78" width="29" height="6" fill="#0d0a12" />
+  <rect x="19" y="78" width="17" height="1" fill="#3a2e52" />
+  <rect x="0" y="78" width="18" height="1" fill="#332a48" />
+  <!-- silver inlay thread running the gallery's length -->
+  <rect x="2" y="76" width="34" height="1" fill="#3a3450" />
+  <rect x="37" y="76" width="30" height="1" fill="#322c46" />
+  <rect x="68" y="76" width="30" height="1" fill="#28233a" />
+  <rect x="99" y="76" width="28" height="1" fill="#1e1a2e" />
+  <rect x="128" y="76" width="30" height="1" fill="#161226" />
+  <rect x="10" y="76" width="2" height="1" fill="#4a4468" />
+  <rect x="30" y="76" width="1" height="1" fill="#4a4468" />
+  <!-- the fallen arm of the shattered statue, where it rolled -->
+  <rect x="50" y="80" width="6" height="2" fill="#2e2a38" />
+  <rect x="55" y="79" width="3" height="2" fill="#3a3444" />
+  <rect x="57" y="79" width="1" height="1" fill="#4a4456" />
+  <rect x="49" y="81" width="2" height="1" fill="#262232" />
+  <!-- her blade beside it, stone to the hilt -->
+  <rect x="60" y="81" width="5" height="1" fill="#3a3444" />
+  <rect x="64" y="80" width="2" height="1" fill="#4a4456" />
+  <!-- dust of the kin, drifted into the tile joints -->
+  <rect x="86" y="74" width="5" height="1" fill="#1c1824" />
+  <rect x="88" y="73" width="2" height="1" fill="#262234" />
+  <rect x="116" y="70" width="5" height="1" fill="#141020" />
+  <rect x="32" y="70" width="4" height="1" fill="#201a30" />
+  <!-- a dropped cold-lamp, dead, by the right pier -->
+  <rect x="128" y="80" width="3" height="2" fill="#1c1626" />
+  <rect x="129" y="79" width="1" height="1" fill="#262032" />
+  <rect x="129" y="80" width="1" height="1" fill="#2e2a44" />
+  <!-- lamplight pooled on the polish, left -->
+  <rect x="-8" y="58" width="60" height="24" fill="url(#c13c-floor-pool)" />
+</svg>
