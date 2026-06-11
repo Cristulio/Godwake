@@ -1,0 +1,234 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch1-boss — The Warden's Hall: the set piece. A raised dais and the
+       Warden's iron seat before the great keep door, twin brazier columns,
+       blood-black banners. Key light: LEFT brazier (upper-left bias); the
+       right brazier burns lower. The component adds the boss blood-red
+       ambience above this art. Quiet mid band y38-63 outside the centre
+       set piece (which sits in the hero/enemy gap); floor seam y66. -->
+  <defs>
+    <radialGradient id="c1b-brazier-l" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.32" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.14" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c1b-brazier-r" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.20" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c1b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: hall wall, great ashlar blocks ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0f0a06" />
+  <rect x="108" y="0" width="52" height="66" fill="#0b0c10" />
+  <rect x="0" y="0" width="160" height="4" fill="#0a0705" />
+  <rect x="0" y="4" width="160" height="1" fill="#16100a" />
+  <rect x="0" y="5" width="26" height="11" fill="#281d14" />
+  <rect x="27" y="5" width="30" height="11" fill="#34271a" />
+  <rect x="58" y="5" width="22" height="11" fill="#281d14" />
+  <rect x="81" y="5" width="26" height="11" fill="#1d1510" />
+  <rect x="108" y="5" width="24" height="11" fill="#15161c" />
+  <rect x="133" y="5" width="27" height="11" fill="#1a1c24" />
+  <rect x="27" y="5" width="30" height="1" fill="#453524" />
+  <rect x="0" y="17" width="18" height="12" fill="#34271a" />
+  <rect x="19" y="17" width="24" height="12" fill="#281d14" />
+  <rect x="44" y="17" width="20" height="12" fill="#1d1510" />
+  <rect x="96" y="17" width="16" height="12" fill="#15161c" />
+  <rect x="113" y="17" width="22" height="12" fill="#101218" />
+  <rect x="136" y="17" width="24" height="12" fill="#15161c" />
+  <rect x="19" y="17" width="24" height="1" fill="#5a4630" />
+  <rect x="0" y="30" width="22" height="12" fill="#281d14" />
+  <rect x="23" y="30" width="20" height="12" fill="#1d1510" />
+  <rect x="44" y="30" width="14" height="12" fill="#241a11" />
+  <rect x="100" y="30" width="14" height="12" fill="#101218" />
+  <rect x="115" y="30" width="26" height="12" fill="#14151b" />
+  <rect x="142" y="30" width="18" height="12" fill="#101218" />
+  <!-- hairline cracks, upper wall -->
+  <rect x="36" y="9" width="1" height="3" fill="#140e09" />
+  <rect x="35" y="11" width="1" height="2" fill="#140e09" />
+  <rect x="120" y="10" width="1" height="3" fill="#0d0e12" />
+  <rect x="121" y="12" width="1" height="2" fill="#0d0e12" />
+
+  <!-- ══ The great keep door behind the seat ══ -->
+  <rect x="64" y="6" width="32" height="32" fill="#0b0907" />
+  <rect x="65" y="8" width="14" height="30" fill="#16120d" />
+  <rect x="81" y="8" width="14" height="30" fill="#120f0b" />
+  <rect x="80" y="8" width="1" height="30" fill="#060403" />
+  <rect x="64" y="6" width="32" height="2" fill="#211b13" />
+  <rect x="64" y="6" width="16" height="1" fill="#2d2519" />
+  <!-- cross straps + rivets -->
+  <rect x="65" y="14" width="30" height="2" fill="#211b13" />
+  <rect x="65" y="26" width="30" height="2" fill="#1c170f" />
+  <rect x="66" y="14" width="1" height="1" fill="#3f3524" />
+  <rect x="78" y="14" width="1" height="1" fill="#3f3524" />
+  <rect x="82" y="14" width="1" height="1" fill="#2d2519" />
+  <rect x="93" y="14" width="1" height="1" fill="#2d2519" />
+  <rect x="66" y="27" width="1" height="1" fill="#2d2519" />
+  <rect x="93" y="27" width="1" height="1" fill="#211b13" />
+  <!-- ring pulls -->
+  <rect x="76" y="20" width="2" height="3" fill="#2d2519" />
+  <rect x="82" y="20" width="2" height="3" fill="#211b13" />
+
+  <!-- ══ Blood-black banners flanking the door ══ -->
+  <rect x="48" y="5" width="10" height="1" fill="#6a521e" />
+  <rect x="48" y="6" width="10" height="32" fill="#1f0c0a" />
+  <rect x="49" y="8" width="3" height="28" fill="#2a1410" />
+  <rect x="48" y="38" width="3" height="4" fill="#1f0c0a" />
+  <rect x="52" y="38" width="3" height="2" fill="#1f0c0a" />
+  <rect x="56" y="38" width="2" height="3" fill="#1f0c0a" />
+  <!-- the warden's keyhole sigil, bone-pale -->
+  <rect x="51" y="14" width="4" height="4" fill="#8a7d68" />
+  <rect x="52" y="15" width="2" height="2" fill="#1f0c0a" />
+  <rect x="52" y="18" width="2" height="5" fill="#8a7d68" />
+  <rect x="102" y="5" width="10" height="1" fill="#5a4519" />
+  <rect x="102" y="6" width="10" height="32" fill="#190a08" />
+  <rect x="103" y="8" width="3" height="28" fill="#220e0b" />
+  <rect x="102" y="38" width="3" height="3" fill="#190a08" />
+  <rect x="107" y="38" width="3" height="4" fill="#190a08" />
+  <rect x="105" y="14" width="4" height="4" fill="#6e6354" />
+  <rect x="106" y="15" width="2" height="2" fill="#190a08" />
+  <rect x="106" y="18" width="2" height="5" fill="#6e6354" />
+
+  <!-- ══ Brazier columns ══ -->
+  <!-- left column (the key light) -->
+  <rect x="22" y="20" width="7" height="46" fill="#16120d" />
+  <rect x="22" y="20" width="2" height="46" fill="#211b13" />
+  <rect x="28" y="20" width="1" height="46" fill="#0b0907" />
+  <rect x="21" y="62" width="9" height="4" fill="#211b13" />
+  <rect x="21" y="62" width="9" height="1" fill="#2d2519" />
+  <rect x="20" y="16" width="11" height="4" fill="#211b13" />
+  <rect x="20" y="16" width="11" height="1" fill="#3f3524" />
+  <rect x="21" y="15" width="9" height="1" fill="#16120d" />
+  <!-- its fire -->
+  <rect x="23" y="12" width="5" height="3" fill="#a33d1e" />
+  <rect x="24" y="10" width="3" height="3" fill="#e8743a" />
+  <rect x="25" y="8" width="2" height="2" fill="#ffb347" />
+  <rect x="25" y="11" width="1" height="3" fill="#ffe9a8" />
+  <rect x="23" y="11" width="1" height="1" fill="#e8743a" />
+  <rect x="31" y="14" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="34" y="22" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="-6" y="-10" width="76" height="66" fill="url(#c1b-brazier-l)" />
+  <!-- right column (burning low) -->
+  <rect x="131" y="20" width="7" height="46" fill="#120f0b" />
+  <rect x="131" y="20" width="1" height="46" fill="#1c170f" />
+  <rect x="137" y="20" width="1" height="46" fill="#08070a" />
+  <rect x="130" y="62" width="9" height="4" fill="#16120d" />
+  <rect x="129" y="16" width="11" height="4" fill="#16120d" />
+  <rect x="129" y="16" width="11" height="1" fill="#211b13" />
+  <rect x="132" y="13" width="5" height="3" fill="#7a2e16" />
+  <rect x="133" y="11" width="3" height="2" fill="#a33d1e" />
+  <rect x="134" y="12" width="1" height="2" fill="#e8743a" />
+  <rect x="104" y="-6" width="64" height="58" fill="url(#c1b-brazier-r)" />
+
+  <!-- ══ MID BAND (y42-66): quiet wall ══ -->
+  <rect x="0" y="42" width="21" height="12" fill="#241a11" />
+  <rect x="30" y="42" width="14" height="12" fill="#281d14" />
+  <rect x="44" y="42" width="14" height="12" fill="#1f160e" />
+  <rect x="96" y="42" width="18" height="12" fill="#101218" />
+  <rect x="115" y="42" width="16" height="12" fill="#14151b" />
+  <rect x="139" y="42" width="21" height="12" fill="#101218" />
+  <rect x="0" y="54" width="16" height="12" fill="#1f160e" />
+  <rect x="17" y="54" width="4" height="12" fill="#241a11" />
+  <rect x="30" y="54" width="18" height="12" fill="#1d1510" />
+  <rect x="49" y="54" width="9" height="12" fill="#191007" />
+  <rect x="96" y="54" width="14" height="12" fill="#0f1016" />
+  <rect x="111" y="54" width="20" height="12" fill="#121319" />
+  <rect x="139" y="54" width="21" height="12" fill="#0f1016" />
+
+  <!-- ══ The dais + the Warden's seat (centre set piece) ══ -->
+  <!-- seat back, crenellated, rim-lit from the left brazier -->
+  <rect x="72" y="24" width="16" height="30" fill="#16120d" />
+  <rect x="72" y="24" width="3" height="2" fill="#211b13" />
+  <rect x="78" y="24" width="4" height="2" fill="#211b13" />
+  <rect x="85" y="24" width="3" height="2" fill="#211b13" />
+  <rect x="75" y="26" width="3" height="2" fill="#0b0907" />
+  <rect x="82" y="26" width="3" height="2" fill="#0b0907" />
+  <rect x="72" y="24" width="1" height="30" fill="#3f3524" />
+  <rect x="73" y="26" width="1" height="26" fill="#211b13" />
+  <rect x="87" y="24" width="1" height="30" fill="#0b0907" />
+  <!-- rivet line down the back -->
+  <rect x="79" y="30" width="2" height="2" fill="#211b13" />
+  <rect x="79" y="38" width="2" height="2" fill="#211b13" />
+  <rect x="79" y="46" width="2" height="2" fill="#1c170f" />
+  <!-- arms -->
+  <rect x="69" y="44" width="3" height="3" fill="#211b13" />
+  <rect x="69" y="47" width="2" height="7" fill="#16120d" />
+  <rect x="88" y="44" width="3" height="3" fill="#16120d" />
+  <rect x="89" y="47" width="2" height="7" fill="#0e0b08" />
+  <rect x="69" y="44" width="3" height="1" fill="#2d2519" />
+  <!-- dais steps -->
+  <rect x="66" y="54" width="28" height="4" fill="#241a11" />
+  <rect x="66" y="54" width="28" height="1" fill="#34271a" />
+  <rect x="62" y="58" width="36" height="4" fill="#1d1510" />
+  <rect x="62" y="58" width="36" height="1" fill="#2d1f12" />
+  <rect x="58" y="62" width="44" height="4" fill="#191007" />
+  <rect x="58" y="62" width="44" height="1" fill="#281d14" />
+  <!-- step shadows under the seat -->
+  <rect x="70" y="54" width="20" height="1" fill="#0a0705" />
+
+  <!-- ══ NEAR FLOOR (y66-84): paved hall + the path to the dais ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a0705" />
+  <rect x="0" y="66" width="160" height="1" fill="#060302" />
+  <!-- far row -->
+  <rect x="1" y="67" width="13" height="4" fill="#2d1f12" />
+  <rect x="15" y="67" width="12" height="4" fill="#332416" />
+  <rect x="28" y="67" width="13" height="4" fill="#2d1f12" />
+  <rect x="42" y="67" width="12" height="4" fill="#241a11" />
+  <rect x="55" y="67" width="13" height="4" fill="#1f160e" />
+  <rect x="69" y="67" width="10" height="4" fill="#2d1f12" />
+  <rect x="80" y="67" width="10" height="4" fill="#281d14" />
+  <rect x="91" y="67" width="12" height="4" fill="#191410" />
+  <rect x="104" y="67" width="13" height="4" fill="#141210" />
+  <rect x="118" y="67" width="12" height="4" fill="#111118" />
+  <rect x="131" y="67" width="13" height="4" fill="#101218" />
+  <rect x="145" y="67" width="14" height="4" fill="#0d0e14" />
+  <rect x="15" y="67" width="12" height="1" fill="#453524" />
+  <rect x="1" y="67" width="13" height="1" fill="#3a2c1c" />
+  <!-- mid row -->
+  <rect x="0" y="72" width="15" height="5" fill="#241a11" />
+  <rect x="16" y="72" width="14" height="5" fill="#2d1f12" />
+  <rect x="31" y="72" width="15" height="5" fill="#281d14" />
+  <rect x="47" y="72" width="14" height="5" fill="#241a11" />
+  <rect x="62" y="72" width="11" height="5" fill="#1f160e" />
+  <rect x="74" y="72" width="12" height="5" fill="#2d1f12" />
+  <rect x="87" y="72" width="11" height="5" fill="#1d1510" />
+  <rect x="99" y="72" width="15" height="5" fill="#15130f" />
+  <rect x="115" y="72" width="14" height="5" fill="#111118" />
+  <rect x="130" y="72" width="29" height="5" fill="#0e0f15" />
+  <rect x="16" y="72" width="14" height="1" fill="#3a2c1c" />
+  <!-- near row -->
+  <rect x="0" y="78" width="19" height="6" fill="#281d14" />
+  <rect x="20" y="78" width="17" height="6" fill="#332416" />
+  <rect x="38" y="78" width="18" height="6" fill="#2d1f12" />
+  <rect x="57" y="78" width="16" height="6" fill="#241a11" />
+  <rect x="74" y="78" width="12" height="6" fill="#2d1f12" />
+  <rect x="87" y="78" width="16" height="6" fill="#1f160e" />
+  <rect x="104" y="78" width="17" height="6" fill="#181510" />
+  <rect x="122" y="78" width="18" height="6" fill="#121218" />
+  <rect x="141" y="78" width="18" height="6" fill="#101016" />
+  <rect x="20" y="78" width="17" height="1" fill="#3f2e1b" />
+  <rect x="0" y="78" width="19" height="1" fill="#34271a" />
+  <!-- brass inlay lines framing the approach to the dais -->
+  <rect x="73" y="66" width="1" height="18" fill="#3a2c12" />
+  <rect x="86" y="66" width="1" height="18" fill="#33260f" />
+  <rect x="73" y="70" width="1" height="3" fill="#6a521e" />
+  <rect x="86" y="72" width="1" height="2" fill="#54400f" />
+  <rect x="73" y="79" width="1" height="2" fill="#8a6c2a" />
+  <!-- manacles waiting by the left wall -->
+  <rect x="32" y="75" width="3" height="1" fill="#2d2519" />
+  <rect x="32" y="76" width="1" height="1" fill="#211b13" />
+  <rect x="34" y="76" width="1" height="1" fill="#211b13" />
+  <rect x="35" y="75" width="3" height="1" fill="#16120d" />
+  <!-- the warden's dropped key, catching the brazier light -->
+  <rect x="91" y="79" width="3" height="1" fill="#8a6c2a" />
+  <rect x="93" y="78" width="1" height="1" fill="#a8862e" />
+  <rect x="90" y="79" width="1" height="1" fill="#54400f" />
+  <!-- cracks -->
+  <rect x="50" y="74" width="1" height="3" fill="#0a0705" />
+  <rect x="112" y="80" width="3" height="1" fill="#0c0a07" />
+  <!-- firelight pooling at the dais foot -->
+  <rect x="-8" y="58" width="70" height="24" fill="url(#c1b-floor-pool)" />
+</svg>

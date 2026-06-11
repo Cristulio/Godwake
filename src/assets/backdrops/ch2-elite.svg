@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch2-elite — Stormhaven docks: the Coinward wharf after the lamps are
+       doused. Same city, heavier dressing — a warehouse crane, stacked
+       cargo, a tarred cog hull looming at her moorings. Key light: the
+       crane-beam lantern upper-LEFT; the harbour answers with a cold
+       shimmer. Quiet mid band y38-63 (hull strakes + plain siding); plank
+       floor band y66-84 (parallax seam y66).
+       Ramps — timber: #120c08 #1a120c #241710 #322015; tarred hull: #0c0a0e
+       #14121a #1c1a24 #262430; sky: #0a0c18 #11142a; water: #0c1418 #16242c
+       #2a4a52; lantern: #a33d1e #e8743a #ffb347 #ffe9a8. -->
+  <defs>
+    <radialGradient id="c2e-lantern-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.30" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c2e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: night sky, masts, rigging ══ -->
+  <rect x="0" y="0" width="160" height="30" fill="#0a0c18" />
+  <rect x="0" y="12" width="160" height="10" fill="#11142a" />
+  <rect x="0" y="22" width="160" height="8" fill="#161a32" />
+  <rect x="72" y="3" width="1" height="1" fill="#aab8d8" opacity="0.7" />
+  <rect x="98" y="6" width="1" height="1" fill="#8a98c0" opacity="0.55" />
+  <rect x="150" y="2" width="1" height="1" fill="#aab8d8" opacity="0.6" />
+  <!-- gulls asleep on the far breakwater -->
+  <rect x="84" y="26" width="14" height="1" fill="#06070c" />
+  <rect x="88" y="25" width="1" height="1" fill="#0e1018" />
+  <rect x="93" y="25" width="1" height="1" fill="#0e1018" />
+
+  <!-- the cog's masts, yards and furled canvas -->
+  <rect x="115" y="0" width="3" height="30" fill="#0e0c10" />
+  <rect x="115" y="0" width="1" height="30" fill="#16141a" />
+  <rect x="106" y="6" width="21" height="2" fill="#0e0c10" />
+  <rect x="107" y="8" width="19" height="3" fill="#23232e" />
+  <rect x="108" y="9" width="4" height="2" fill="#2a2a36" />
+  <rect x="115" y="9" width="5" height="2" fill="#2a2a36" />
+  <rect x="110" y="8" width="1" height="3" fill="#16141a" />
+  <rect x="119" y="8" width="1" height="3" fill="#16141a" />
+  <rect x="139" y="2" width="3" height="28" fill="#0c0a0e" />
+  <rect x="139" y="2" width="1" height="28" fill="#14121a" />
+  <rect x="132" y="9" width="17" height="2" fill="#0c0a0e" />
+  <rect x="133" y="11" width="15" height="2" fill="#1e1e28" />
+  <rect x="136" y="11" width="4" height="2" fill="#26262f" />
+  <!-- rigging: stepped 1px lines down to the rail -->
+  <rect x="112" y="11" width="1" height="4" fill="#14121a" />
+  <rect x="110" y="15" width="1" height="5" fill="#14121a" />
+  <rect x="108" y="20" width="1" height="5" fill="#14121a" />
+  <rect x="106" y="25" width="1" height="4" fill="#14121a" />
+  <rect x="121" y="11" width="1" height="5" fill="#14121a" />
+  <rect x="123" y="16" width="1" height="6" fill="#14121a" />
+  <rect x="125" y="22" width="1" height="7" fill="#14121a" />
+  <rect x="143" y="13" width="1" height="5" fill="#121016" />
+  <rect x="145" y="18" width="1" height="6" fill="#121016" />
+  <rect x="147" y="24" width="1" height="5" fill="#121016" />
+  <!-- pennant -->
+  <rect x="139" y="0" width="1" height="2" fill="#16141a" />
+  <rect x="140" y="0" width="4" height="1" fill="#3f1d14" />
+  <rect x="140" y="1" width="2" height="1" fill="#3f1d14" />
+
+  <!-- ══ Warehouse (x0-62): board siding + the crane ══ -->
+  <rect x="0" y="6" width="62" height="60" fill="#1c130c" />
+  <rect x="0" y="6" width="62" height="2" fill="#0e0906" />
+  <rect x="0" y="8" width="62" height="1" fill="#241710" />
+  <!-- vertical board lines -->
+  <rect x="8" y="8" width="1" height="58" fill="#120c08" />
+  <rect x="16" y="8" width="1" height="58" fill="#120c08" />
+  <rect x="24" y="8" width="1" height="58" fill="#120c08" />
+  <rect x="32" y="8" width="1" height="58" fill="#120c08" />
+  <rect x="40" y="8" width="1" height="58" fill="#120c08" />
+  <rect x="48" y="8" width="1" height="58" fill="#120c08" />
+  <rect x="56" y="8" width="1" height="58" fill="#120c08" />
+  <!-- lantern-side boards catch the light -->
+  <rect x="25" y="8" width="7" height="1" fill="#322015" />
+  <rect x="33" y="8" width="7" height="1" fill="#3a2c1c" />
+  <!-- the loft door, shut, hoist track above -->
+  <rect x="10" y="12" width="12" height="10" fill="#120c08" />
+  <rect x="11" y="13" width="10" height="8" fill="#170f0a" />
+  <rect x="15" y="13" width="1" height="8" fill="#0e0906" />
+  <rect x="11" y="17" width="10" height="1" fill="#0e0906" />
+  <!-- tally board by the door -->
+  <rect x="26" y="30" width="8" height="6" fill="#241710" />
+  <rect x="27" y="31" width="2" height="1" fill="#3a2c1c" />
+  <rect x="30" y="31" width="3" height="1" fill="#3a2c1c" />
+  <rect x="27" y="33" width="4" height="1" fill="#3a2c1c" />
+  <!-- ══ The crane beam + its lantern (key light) ══ -->
+  <rect x="0" y="10" width="44" height="3" fill="#241710" />
+  <rect x="0" y="10" width="44" height="1" fill="#322015" />
+  <rect x="42" y="13" width="2" height="2" fill="#241710" />
+  <!-- strut -->
+  <rect x="34" y="13" width="2" height="2" fill="#1a120c" />
+  <rect x="32" y="15" width="2" height="2" fill="#1a120c" />
+  <rect x="30" y="17" width="2" height="2" fill="#1a120c" />
+  <rect x="28" y="19" width="2" height="2" fill="#1a120c" />
+  <!-- the hook chain -->
+  <rect x="20" y="13" width="1" height="12" fill="#16120d" />
+  <rect x="20" y="15" width="1" height="2" fill="#211b13" />
+  <rect x="20" y="20" width="1" height="2" fill="#211b13" />
+  <rect x="19" y="25" width="3" height="2" fill="#211b13" />
+  <rect x="19" y="27" width="1" height="2" fill="#16120d" />
+  <rect x="20" y="29" width="2" height="1" fill="#16120d" />
+  <!-- the beam lantern -->
+  <rect x="38" y="13" width="1" height="3" fill="#120c08" />
+  <rect x="36" y="16" width="5" height="7" fill="#1a120c" />
+  <rect x="37" y="17" width="3" height="5" fill="#ffb347" />
+  <rect x="38" y="18" width="1" height="2" fill="#ffe9a8" />
+  <rect x="36" y="16" width="5" height="1" fill="#241710" />
+  <rect x="37" y="23" width="3" height="1" fill="#120c08" />
+  <rect x="38" y="24" width="1" height="1" fill="#a33d1e" />
+  <rect x="6" y="-8" width="72" height="62" fill="url(#c2e-lantern-halo)" />
+
+  <!-- ══ The cog hull (x96-160), tarred and quiet ══ -->
+  <rect x="96" y="30" width="64" height="34" fill="#14121a" />
+  <!-- rail + caprail catch a sliver of sky -->
+  <rect x="96" y="28" width="64" height="2" fill="#262430" />
+  <rect x="96" y="28" width="64" height="1" fill="#32303e" />
+  <!-- rail stanchions -->
+  <rect x="102" y="25" width="1" height="3" fill="#1c1a24" />
+  <rect x="112" y="25" width="1" height="3" fill="#1c1a24" />
+  <rect x="122" y="25" width="1" height="3" fill="#1c1a24" />
+  <rect x="132" y="25" width="1" height="3" fill="#1c1a24" />
+  <rect x="142" y="25" width="1" height="3" fill="#1c1a24" />
+  <rect x="152" y="25" width="1" height="3" fill="#1c1a24" />
+  <!-- strakes: long horizontal planking, dark on dark -->
+  <rect x="96" y="34" width="64" height="1" fill="#0c0a0e" />
+  <rect x="96" y="40" width="64" height="1" fill="#0c0a0e" />
+  <rect x="96" y="46" width="64" height="1" fill="#0a080c" />
+  <rect x="96" y="52" width="64" height="1" fill="#0a080c" />
+  <rect x="96" y="58" width="64" height="1" fill="#08070a" />
+  <rect x="96" y="31" width="64" height="3" fill="#1c1a24" />
+  <rect x="96" y="35" width="64" height="5" fill="#16141d" />
+  <!-- hawse + anchor stock -->
+  <rect x="100" y="36" width="4" height="3" fill="#0c0a0e" />
+  <rect x="101" y="39" width="2" height="6" fill="#16120d" />
+  <rect x="99" y="44" width="6" height="2" fill="#211b13" />
+  <!-- fender bumpers against the dock -->
+  <rect x="108" y="56" width="3" height="8" fill="#1f160e" />
+  <rect x="128" y="56" width="3" height="8" fill="#1f160e" />
+  <rect x="148" y="56" width="3" height="8" fill="#191007" />
+  <!-- mooring line down to the bollard -->
+  <rect x="98" y="48" width="1" height="2" fill="#322015" />
+  <rect x="96" y="50" width="2" height="2" fill="#2a1c12" />
+  <rect x="93" y="52" width="3" height="2" fill="#322015" />
+  <rect x="90" y="54" width="3" height="2" fill="#2a1c12" />
+  <rect x="88" y="56" width="2" height="2" fill="#241710" />
+
+  <!-- ══ Water: the cold sliver between dock and hull ══ -->
+  <rect x="96" y="62" width="64" height="4" fill="#0c1418" />
+  <rect x="100" y="62" width="8" height="1" fill="#16242c" />
+  <rect x="114" y="63" width="6" height="1" fill="#16242c" />
+  <rect x="104" y="62" width="2" height="1" fill="#2a4a52" />
+  <rect x="134" y="62" width="5" height="1" fill="#16242c" />
+  <rect x="136" y="62" width="1" height="1" fill="#2a4a52" />
+  <rect x="150" y="63" width="4" height="1" fill="#16242c" />
+
+  <!-- ══ Cargo in the hero/enemy gap: crates + rope ══ -->
+  <rect x="64" y="48" width="16" height="18" fill="#241710" />
+  <rect x="64" y="48" width="16" height="1" fill="#3a2c1c" />
+  <rect x="64" y="48" width="1" height="18" fill="#322015" />
+  <rect x="71" y="48" width="1" height="18" fill="#170f0a" />
+  <rect x="64" y="56" width="16" height="1" fill="#170f0a" />
+  <rect x="79" y="48" width="1" height="18" fill="#120c08" />
+  <!-- stencil mark -->
+  <rect x="66" y="51" width="4" height="3" fill="#1a120c" />
+  <rect x="67" y="52" width="2" height="1" fill="#54400f" />
+  <!-- small crate -->
+  <rect x="80" y="56" width="11" height="10" fill="#1f130d" />
+  <rect x="80" y="56" width="11" height="1" fill="#2d1c12" />
+  <rect x="80" y="61" width="11" height="1" fill="#120c08" />
+  <rect x="85" y="56" width="1" height="10" fill="#120c08" />
+  <!-- rope coil on the big crate -->
+  <rect x="66" y="45" width="8" height="3" fill="#322015" />
+  <rect x="67" y="46" width="6" height="1" fill="#1f130d" />
+  <rect x="68" y="44" width="4" height="1" fill="#2a1c12" />
+
+  <!-- ══ MID BAND remainder: quiet siding base ══ -->
+  <rect x="0" y="56" width="62" height="10" fill="#170f0a" />
+  <rect x="0" y="56" width="62" height="1" fill="#1f160e" />
+  <!-- net heaped against the wall -->
+  <rect x="4" y="58" width="10" height="6" fill="#14101a" />
+  <rect x="5" y="59" width="3" height="1" fill="#1c1a24" />
+  <rect x="10" y="61" width="3" height="1" fill="#1c1a24" />
+  <rect x="7" y="62" width="2" height="1" fill="#1c1a24" />
+
+  <!-- ══ NEAR FLOOR (y66-84): wet planking ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0e0a07" />
+  <rect x="0" y="66" width="160" height="1" fill="#060403" />
+  <!-- board rows: long planks, butt joints staggered -->
+  <rect x="0" y="67" width="160" height="4" fill="#1a120" opacity="0" />
+  <rect x="0" y="67" width="34" height="4" fill="#241a11" />
+  <rect x="35" y="67" width="40" height="4" fill="#1f160e" />
+  <rect x="76" y="67" width="36" height="4" fill="#191209" />
+  <rect x="113" y="67" width="46" height="4" fill="#141016" />
+  <rect x="0" y="67" width="34" height="1" fill="#3a2c1c" />
+  <rect x="35" y="67" width="40" height="1" fill="#2d2418" />
+  <rect x="0" y="72" width="52" height="4" fill="#211810" />
+  <rect x="53" y="72" width="38" height="4" fill="#1c140c" />
+  <rect x="92" y="72" width="32" height="4" fill="#161009" />
+  <rect x="125" y="72" width="34" height="4" fill="#121017" />
+  <rect x="0" y="72" width="52" height="1" fill="#332416" />
+  <rect x="0" y="77" width="28" height="7" fill="#281d14" />
+  <rect x="29" y="77" width="46" height="7" fill="#211810" />
+  <rect x="76" y="77" width="40" height="7" fill="#1a130b" />
+  <rect x="117" y="77" width="42" height="7" fill="#141019" />
+  <rect x="0" y="77" width="28" height="1" fill="#3f2e1b" />
+  <rect x="29" y="77" width="46" height="1" fill="#2d2114" />
+  <!-- plank gaps (vertical seams) -->
+  <rect x="34" y="67" width="1" height="4" fill="#080604" />
+  <rect x="75" y="67" width="1" height="4" fill="#080604" />
+  <rect x="112" y="67" width="1" height="4" fill="#080604" />
+  <rect x="52" y="72" width="1" height="4" fill="#080604" />
+  <rect x="91" y="72" width="1" height="4" fill="#080604" />
+  <rect x="124" y="72" width="1" height="4" fill="#080604" />
+  <rect x="28" y="77" width="1" height="7" fill="#080604" />
+  <rect x="75" y="77" width="1" height="7" fill="#080604" />
+  <rect x="116" y="77" width="1" height="7" fill="#080604" />
+  <!-- long board shadow lines -->
+  <rect x="0" y="71" width="160" height="1" fill="#0a0705" />
+  <rect x="0" y="76" width="160" height="1" fill="#0a0705" />
+  <!-- nail heads + knots -->
+  <rect x="20" y="68" width="1" height="1" fill="#0e0a07" />
+  <rect x="60" y="69" width="1" height="1" fill="#0e0a07" />
+  <rect x="98" y="68" width="1" height="1" fill="#0c0907" />
+  <rect x="40" y="74" width="2" height="1" fill="#120d08" />
+  <rect x="14" y="80" width="2" height="2" fill="#1a120c" />
+  <rect x="64" y="80" width="1" height="1" fill="#0e0a07" />
+  <rect x="104" y="79" width="2" height="1" fill="#100c12" />
+  <!-- rain puddles holding the harbour cold -->
+  <rect x="126" y="79" width="12" height="3" fill="#0c1018" />
+  <rect x="128" y="78" width="8" height="1" fill="#0c1018" />
+  <rect x="129" y="79" width="4" height="1" fill="#1d2c3c" />
+  <rect x="131" y="80" width="2" height="1" fill="#2a4456" />
+  <rect x="84" y="73" width="6" height="2" fill="#0c1014" />
+  <rect x="86" y="73" width="2" height="1" fill="#16222e" />
+  <!-- a dropped fish-knife by the crates -->
+  <rect x="60" y="79" width="4" height="1" fill="#3f3a44" />
+  <rect x="59" y="79" width="1" height="1" fill="#241710" />
+  <!-- bollard at the dock edge -->
+  <rect x="86" y="58" width="5" height="8" fill="#1a120c" />
+  <rect x="86" y="58" width="5" height="2" fill="#241710" />
+  <rect x="85" y="60" width="7" height="1" fill="#120c08" />
+  <!-- lanternlight pooling on the boards -->
+  <rect x="4" y="58" width="66" height="26" fill="url(#c2e-floor-pool)" />
+</svg>

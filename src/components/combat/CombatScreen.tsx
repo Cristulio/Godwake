@@ -807,6 +807,7 @@ export function CombatScreen({
               character={character}
               state={state}
               scene={scene}
+              chapter={chapter}
               decoration={decoration}
               selectingTarget={selectingTarget}
               onSelectTarget={(id) => doAttack(id)}

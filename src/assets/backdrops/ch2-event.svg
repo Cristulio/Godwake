@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch2-event — A fountain court off the Coinward, at dusk: the calm
+       corner of Stormhaven (events + rest). Violet evening over the roofs,
+       a small fountain still talking to itself, ivy, an arcade going dark.
+       Key light: the door lamp upper-LEFT; the dusk and one lit tower
+       window answer far off. Event banners crop to roughly y28-54: the
+       lamp, fountain bowl and arcade all cross that band. Floor seam y66.
+       Ramps — dusk sky: #1a1030 #2a1844 #3a2356 #4a2f60 #6a4258; plaster:
+       #1c161a #241c20 #2c2228 #382c30; ivy: #162112 #22311a #2e4224;
+       water: #141824 #232b40 #3a3f60; lamp: #a33d1e #ffb347 #ffe9a8. -->
+  <defs>
+    <radialGradient id="c2v-lamp-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c2v-dusk-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#6a4258" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#6a4258" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the dusk ══ -->
+  <rect x="0" y="0" width="160" height="26" fill="#1a1030" />
+  <rect x="0" y="7" width="160" height="6" fill="#2a1844" />
+  <rect x="0" y="13" width="160" height="5" fill="#3a2356" />
+  <rect x="0" y="18" width="160" height="4" fill="#4a2f60" />
+  <rect x="0" y="22" width="160" height="4" fill="#5a3a58" />
+  <rect x="44" y="3" width="1" height="1" fill="#c8c8e8" opacity="0.8" />
+  <rect x="92" y="6" width="1" height="1" fill="#aab8d8" opacity="0.5" />
+  <!-- swallows going home -->
+  <rect x="58" y="8" width="1" height="1" fill="#0e0818" />
+  <rect x="60" y="7" width="1" height="1" fill="#0e0818" />
+  <rect x="62" y="8" width="1" height="1" fill="#0e0818" />
+  <rect x="84" y="12" width="1" height="1" fill="#0e0818" />
+  <rect x="86" y="11" width="1" height="1" fill="#0e0818" />
+  <!-- rooflines against the last light -->
+  <polygon points="0,20 10,12 22,20" fill="#0e0818" />
+  <rect x="0" y="20" width="36" height="6" fill="#0e0818" />
+  <polygon points="22,20 30,14 38,20" fill="#0e0818" />
+  <rect x="30" y="10" width="2" height="6" fill="#0e0818" />
+  <rect x="136" y="18" width="24" height="8" fill="#0e0818" />
+  <polygon points="136,18 146,11 156,18" fill="#0e0818" />
+  <!-- the bell tower, one window awake -->
+  <rect x="116" y="6" width="14" height="20" fill="#120a1c" />
+  <rect x="118" y="2" width="10" height="4" fill="#0e0818" />
+  <polygon points="118,2 123,0 128,2" fill="#0e0818" />
+  <rect x="120" y="8" width="6" height="5" fill="#0a0612" />
+  <rect x="121" y="9" width="4" height="4" fill="#06040c" />
+  <rect x="119" y="16" width="3" height="4" fill="#c87f2e" />
+  <rect x="120" y="17" width="1" height="1" fill="#ffd98a" />
+  <rect x="116" y="6" width="1" height="20" fill="#1c1228" />
+
+  <!-- ══ Court walls (y26-66) ══ -->
+  <rect x="0" y="26" width="160" height="40" fill="#241c20" />
+  <rect x="0" y="26" width="160" height="1" fill="#2c2228" />
+  <!-- dusk catches the wall tops -->
+  <rect x="0" y="27" width="92" height="1" fill="#38302c" opacity="0.7" />
+
+  <!-- ══ Ivy swallowing the left wall ══ -->
+  <rect x="0" y="26" width="10" height="14" fill="#162112" />
+  <rect x="0" y="40" width="7" height="12" fill="#162112" />
+  <rect x="10" y="28" width="6" height="8" fill="#22311a" />
+  <rect x="4" y="36" width="8" height="6" fill="#22311a" />
+  <rect x="0" y="52" width="5" height="8" fill="#22311a" />
+  <rect x="16" y="26" width="5" height="5" fill="#162112" />
+  <rect x="21" y="26" width="8" height="3" fill="#22311a" />
+  <rect x="30" y="26" width="6" height="2" fill="#162112" />
+  <rect x="8" y="44" width="5" height="5" fill="#162112" />
+  <!-- leaves catching the lamp -->
+  <rect x="14" y="30" width="2" height="1" fill="#2e4224" />
+  <rect x="8" y="38" width="2" height="1" fill="#2e4224" />
+  <rect x="23" y="27" width="2" height="1" fill="#2e4224" />
+  <rect x="5" y="54" width="2" height="1" fill="#2e4224" />
+  <rect x="15" y="31" width="1" height="1" fill="#3a5230" />
+
+  <!-- ══ The door + its lamp (key light) ══ -->
+  <rect x="24" y="38" width="10" height="22" fill="#150f12" />
+  <rect x="24" y="38" width="10" height="1" fill="#241c20" />
+  <rect x="24" y="38" width="1" height="22" fill="#1c161a" />
+  <rect x="31" y="48" width="1" height="2" fill="#54400f" />
+  <!-- lamp bracket above the door -->
+  <rect x="27" y="30" width="1" height="2" fill="#1c161a" />
+  <rect x="25" y="32" width="5" height="6" fill="#1a120c" />
+  <rect x="26" y="33" width="3" height="4" fill="#ffb347" />
+  <rect x="27" y="34" width="1" height="2" fill="#ffe9a8" />
+  <rect x="25" y="32" width="5" height="1" fill="#241710" />
+  <rect x="26" y="38" width="3" height="1" fill="#120c08" />
+  <rect x="4" y="12" width="60" height="56" fill="url(#c2v-lamp-halo)" />
+
+  <!-- ══ The arcade going dark (x92-160) ══ -->
+  <rect x="92" y="26" width="68" height="40" fill="#1c161a" />
+  <rect x="92" y="26" width="68" height="2" fill="#241c20" />
+  <!-- arches -->
+  <rect x="96" y="32" width="16" height="30" fill="#0c0a12" />
+  <rect x="98" y="30" width="12" height="2" fill="#0c0a12" />
+  <rect x="100" y="28" width="8" height="2" fill="#0c0a12" />
+  <rect x="96" y="32" width="1" height="30" fill="#1c1622" />
+  <rect x="118" y="32" width="16" height="30" fill="#0c0a12" />
+  <rect x="120" y="30" width="12" height="2" fill="#0c0a12" />
+  <rect x="122" y="28" width="8" height="2" fill="#0c0a12" />
+  <rect x="118" y="32" width="1" height="30" fill="#1c1622" />
+  <rect x="140" y="32" width="16" height="30" fill="#0c0a12" />
+  <rect x="142" y="30" width="12" height="2" fill="#0c0a12" />
+  <rect x="144" y="28" width="8" height="2" fill="#0c0a12" />
+  <rect x="140" y="32" width="1" height="30" fill="#1c1622" />
+  <!-- pier faces hold a little dusk -->
+  <rect x="92" y="28" width="4" height="34" fill="#241c20" />
+  <rect x="112" y="28" width="6" height="34" fill="#241c20" />
+  <rect x="134" y="28" width="6" height="34" fill="#241c20" />
+  <rect x="156" y="28" width="4" height="34" fill="#241c20" />
+  <rect x="113" y="28" width="1" height="34" fill="#2c2228" />
+  <rect x="135" y="28" width="1" height="34" fill="#2c2228" />
+  <!-- something small sleeping under the middle arch -->
+  <rect x="124" y="58" width="5" height="3" fill="#120e14" />
+  <rect x="125" y="57" width="3" height="1" fill="#120e14" />
+
+  <!-- ══ MID BAND quiet wall between door and arcade ══ -->
+  <rect x="36" y="30" width="56" height="36" fill="#221a1e" />
+  <rect x="36" y="30" width="56" height="1" fill="#2a2026" />
+  <!-- faint course lines only -->
+  <rect x="36" y="42" width="56" height="1" fill="#1c161a" />
+  <rect x="36" y="54" width="56" height="1" fill="#1c161a" />
+  <rect x="60" y="30" width="1" height="36" fill="#1e181c" />
+  <rect x="78" y="30" width="1" height="36" fill="#1e181c" />
+  <!-- a votive niche with a cold candle -->
+  <rect x="84" y="34" width="5" height="7" fill="#140f12" />
+  <rect x="85" y="33" width="3" height="1" fill="#140f12" />
+  <rect x="86" y="38" width="1" height="2" fill="#8a7d68" />
+
+  <!-- ══ The fountain ══ -->
+  <!-- upper bowl -->
+  <rect x="48" y="32" width="14" height="2" fill="#382c30" />
+  <rect x="48" y="32" width="14" height="1" fill="#46383a" />
+  <rect x="50" y="34" width="10" height="2" fill="#2c2228" />
+  <rect x="52" y="36" width="6" height="2" fill="#241c20" />
+  <!-- column -->
+  <rect x="53" y="38" width="4" height="20" fill="#241c20" />
+  <rect x="53" y="38" width="1" height="20" fill="#322628" />
+  <rect x="56" y="38" width="1" height="20" fill="#1c161a" />
+  <!-- the trickle, catching what light is left -->
+  <rect x="51" y="34" width="1" height="24" fill="#3a3f60" />
+  <rect x="51" y="36" width="1" height="2" fill="#8a9ab0" />
+  <rect x="51" y="46" width="1" height="2" fill="#5a6488" />
+  <rect x="58" y="34" width="1" height="10" fill="#232b40" />
+  <!-- basin -->
+  <rect x="42" y="58" width="28" height="3" fill="#382c30" />
+  <rect x="42" y="58" width="28" height="1" fill="#46383a" />
+  <rect x="40" y="61" width="32" height="5" fill="#2c2228" />
+  <rect x="40" y="61" width="32" height="1" fill="#38302c" />
+  <rect x="44" y="61" width="24" height="3" fill="#141824" />
+  <rect x="46" y="61" width="8" height="1" fill="#3a2356" />
+  <rect x="56" y="62" width="6" height="1" fill="#232b40" />
+  <rect x="49" y="61" width="2" height="1" fill="#6a4258" />
+  <rect x="59" y="62" width="1" height="1" fill="#3a3f60" />
+  <!-- ripple ring where the trickle lands -->
+  <rect x="50" y="62" width="3" height="1" fill="#232b40" />
+  <!-- coins under the water -->
+  <rect x="54" y="63" width="2" height="1" fill="#6a521e" />
+  <rect x="62" y="63" width="1" height="1" fill="#8a6c2a" />
+  <rect x="47" y="63" width="1" height="1" fill="#54400f" />
+
+  <!-- ══ The stone bench, waiting ══ -->
+  <rect x="100" y="58" width="16" height="2" fill="#2c2228" />
+  <rect x="100" y="58" width="16" height="1" fill="#38302c" />
+  <rect x="102" y="60" width="2" height="6" fill="#241c20" />
+  <rect x="112" y="60" width="2" height="6" fill="#241c20" />
+  <rect x="100" y="60" width="16" height="1" fill="#16121a" />
+
+  <!-- ══ NEAR FLOOR (y66-84): dusk flags + fallen leaves ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#161214" />
+  <rect x="0" y="66" width="160" height="1" fill="#0a0809" />
+  <!-- far row -->
+  <rect x="1" y="67" width="13" height="4" fill="#282026" />
+  <rect x="15" y="67" width="12" height="4" fill="#2e2429" />
+  <rect x="28" y="67" width="13" height="4" fill="#241c20" />
+  <rect x="42" y="67" width="12" height="4" fill="#282026" />
+  <rect x="55" y="67" width="13" height="4" fill="#221a1e" />
+  <rect x="69" y="67" width="12" height="4" fill="#241c20" />
+  <rect x="82" y="67" width="13" height="4" fill="#1e181c" />
+  <rect x="96" y="67" width="12" height="4" fill="#1c161a" />
+  <rect x="109" y="67" width="13" height="4" fill="#1a1418" />
+  <rect x="123" y="67" width="12" height="4" fill="#181216" />
+  <rect x="136" y="67" width="23" height="4" fill="#161014" />
+  <rect x="15" y="67" width="12" height="1" fill="#3c3034" />
+  <rect x="1" y="67" width="13" height="1" fill="#342a2e" />
+  <!-- mid row -->
+  <rect x="0" y="72" width="15" height="5" fill="#241c20" />
+  <rect x="16" y="72" width="14" height="5" fill="#2a2226" />
+  <rect x="31" y="72" width="15" height="5" fill="#262024" />
+  <rect x="47" y="72" width="14" height="5" fill="#2a2226" />
+  <rect x="62" y="72" width="15" height="5" fill="#221a1e" />
+  <rect x="78" y="72" width="14" height="5" fill="#1e181c" />
+  <rect x="93" y="72" width="15" height="5" fill="#1c161a" />
+  <rect x="109" y="72" width="14" height="5" fill="#191317" />
+  <rect x="124" y="72" width="15" height="5" fill="#171115" />
+  <rect x="140" y="72" width="19" height="5" fill="#151013" />
+  <rect x="16" y="72" width="14" height="1" fill="#362c30" />
+  <!-- near row -->
+  <rect x="0" y="78" width="19" height="6" fill="#2a2226" />
+  <rect x="20" y="78" width="17" height="6" fill="#302428" />
+  <rect x="38" y="78" width="18" height="6" fill="#262024" />
+  <rect x="57" y="78" width="17" height="6" fill="#2a2226" />
+  <rect x="75" y="78" width="18" height="6" fill="#221a1e" />
+  <rect x="94" y="78" width="17" height="6" fill="#1e181c" />
+  <rect x="112" y="78" width="18" height="6" fill="#1a1418" />
+  <rect x="131" y="78" width="28" height="6" fill="#171115" />
+  <rect x="20" y="78" width="17" height="1" fill="#3c3034" />
+  <rect x="0" y="78" width="19" height="1" fill="#342a2e" />
+  <!-- fallen leaves drifting against the stones -->
+  <rect x="34" y="69" width="2" height="1" fill="#4a3a22" />
+  <rect x="74" y="73" width="2" height="1" fill="#5a4628" />
+  <rect x="76" y="74" width="1" height="1" fill="#4a3a22" />
+  <rect x="98" y="70" width="2" height="1" fill="#42331e" />
+  <rect x="22" y="80" width="2" height="1" fill="#5a4628" />
+  <rect x="64" y="80" width="2" height="1" fill="#4a3a22" />
+  <rect x="118" y="79" width="2" height="1" fill="#3a2e1c" />
+  <rect x="88" y="81" width="2" height="1" fill="#42331e" />
+  <!-- wet ring where the basin sweats -->
+  <rect x="42" y="67" width="28" height="1" fill="#10141c" opacity="0.7" />
+  <!-- the dusk lying over everything -->
+  <rect x="60" y="0" width="100" height="50" fill="url(#c2v-dusk-glow)" />
+</svg>

@@ -9,6 +9,8 @@ import { enhancementOf } from '../../engine/items';
 import { honeableSlots, canHoneSlot } from '../../engine/delve/hone';
 import { localizedItemName } from '../inventory/itemDisplay';
 import { playSfx } from '../../engine/audio';
+import { backdropFor } from '../../assets/backdrops/registry';
+import { EventIllustration } from './EventIllustration';
 import { useT } from '../../i18n/useT';
 
 interface RestRoomProps {
@@ -69,6 +71,9 @@ export function RestRoom({ room, onContinue }: RestRoomProps) {
 
   return (
     <div className="min-h-screen p-4 md:p-6 max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in [background-image:radial-gradient(circle_at_50%_30%,rgba(244,167,66,0.07),transparent_55%)]">
+      {/* The biome's calm corner, once its backdrop scene has been authored —
+          rest shares the chapter's event scene, so this lights up per chapter. */}
+      {backdropFor(room.chapter, 'rest') && <EventIllustration chapter={room.chapter} />}
       <header className="pb-3 border-b border-[var(--color-border-warm)]">
         <h1 className="text-xl text-[var(--color-accent-amber)] tracking-wider">
           {lr(room.chapter, room.title).toUpperCase()}
