@@ -148,7 +148,7 @@ export function useFlurryOfBlows(ctx: MonkActionContext): CombatActionResult {
     kind: 'narration',
     text: t('combat.log.flurry', { name: nextCharacter.name, strikes }),
   };
-  return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
+  return combatResult(attachCombatVfx(appendLog(state, log), 'ki-charge', 'player'), nextCharacter);
 }
 
 /**
@@ -203,5 +203,5 @@ export function useStunningStrike(ctx: MonkActionContext): CombatActionResult {
     kind: 'narration',
     text: t('combat.log.stunningStrike', { name: nextCharacter.name }),
   };
-  return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
+  return combatResult(attachCombatVfx(appendLog(state, log), 'ki-charge', 'player'), nextCharacter);
 }

@@ -35,6 +35,11 @@ const SPELL_EFFECT_SFX: Partial<Record<SpellEffectKind, SfxId>> = {
   'cunning-action': 'buff_surge',
   'action-surge': 'buff_surge',
   'second-wind': 'second_wind',
+  // Monk ki spends + control landings (animations-revamp). The weapon-swing
+  // kinds (unarmed/axe-chop/crush/...) stay absent like slash/pierce — the
+  // attack path already sounds them via swingSfxForWeapon.
+  'ki-charge': 'buff_surge',
+  'stun-burst': 'spell_debuff',
   // Enemy abilities.
   'enemy-summon': 'enemy_cast',
   'enemy-frenzy': 'boss_phase',

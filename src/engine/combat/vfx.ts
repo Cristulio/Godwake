@@ -25,13 +25,54 @@ export function attachCombatVfx(
 }
 
 /**
- * Pick the weapon-swing VFX kind for an attack. Ranged weapons (bows,
- * crossbows — flagged `ammunition`) fire an arrow; everything else reads off
- * the physical damage type. Elemental weapons fall back to a slash so a
- * flaming sablecane still reads as a melee swing rather than a spell.
+ * Per-weapon-TYPE VFX identity, keyed off the weapon's base id. An axe chops,
+ * a hammer cracks the ground, a spear drives a lance line, a dagger flicks,
+ * a staff bonks — not just three damage-type swooshes. Content untouched:
+ * this table is the only place a weapon id meets a look. Weapons absent here
+ * fall through to the damage-type read below, so a new weapon always renders
+ * something sane.
+ */
+const WEAPON_VFX_BY_ID: Record<string, SpellEffectKind> = {
+  // Bare fists — the monk's virtual unarmed-strike profiles (every tier).
+  'monk-fists': 'unarmed',
+  'monk-fists-adept': 'unarmed',
+  'monk-fists-master': 'unarmed',
+  'monk-fists-grandmaster': 'unarmed',
+  // Axes and axe-like sweeps — the heavy descending chop.
+  battleaxe: 'axe-chop',
+  greataxe: 'axe-chop',
+  'monk-temple-glaive': 'axe-chop',
+  'bloodrage-fang': 'axe-chop',
+  // Maces, hammers, flails — the ground-cracking crush.
+  mace: 'crush',
+  warhammer: 'crush',
+  flail: 'crush',
+  // Spears and hafted points — the long lance thrust.
+  javelin: 'spear-thrust',
+  'ironclad-banner': 'spear-thrust',
+  // Quick paired steel — the double flick.
+  dagger: 'dagger-flick',
+  'monk-paired-kama': 'dagger-flick',
+  'shadowdancer-blade': 'dagger-flick',
+  // Caster implements — the indignant staff/wand bonk.
+  quarterstaff: 'caster-bonk',
+  'monk-war-staff': 'caster-bonk',
+  'archmagi-wand': 'caster-bonk',
+  'war-lute': 'caster-bonk',
+};
+
+/**
+ * Pick the weapon-swing VFX kind for an attack. The base-id table above gives
+ * each weapon TYPE its own identity; ranged weapons (bows, crossbows — flagged
+ * `ammunition`) fire the bow-shot; anything unmapped reads off the physical
+ * damage type (the original slash/pierce/bludgeon fallbacks). Elemental
+ * weapons fall back to a slash so a flaming sablecane still reads as a melee
+ * swing rather than a spell.
  */
 export function weaponVfxKind(weapon: Weapon): SpellEffectKind {
-  if (weapon.properties.includes('ammunition')) return 'arrow';
+  const byId = WEAPON_VFX_BY_ID[weapon.id];
+  if (byId) return byId;
+  if (weapon.properties.includes('ammunition')) return 'bow-shot';
   switch (weapon.damageType) {
     case 'bludgeoning':
       return 'bludgeon';

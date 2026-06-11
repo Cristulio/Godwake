@@ -861,9 +861,16 @@ export function playerAttack(
 
     // Weapon-swing VFX on a connecting hit. Colossus Slayer is a once-per-turn
     // signature blow, so it shows its own heavy-cleave effect instead of the
-    // plain swing on the strike that triggered it. Whiffs skip the bus — the
-    // attacker's lunge already reads as a miss.
-    const vfxKind = colossusFiredFlag ? 'colossus' : weaponVfxKind(w);
+    // plain swing on the strike that triggered it. A monk's Flurry extras (the
+    // same actionUsed signal as the diminished-edge guard above) read as the
+    // rapid double-jab rather than the single straight punch. Whiffs skip the
+    // bus — the attacker's lunge already reads as a miss.
+    const baseVfxKind = weaponVfxKind(w);
+    const vfxKind = colossusFiredFlag
+      ? 'colossus'
+      : baseVfxKind === 'unarmed' && diminishedExtraEdge
+        ? 'unarmed-flurry'
+        : baseVfxKind;
     nextState = attachCombatVfx(nextState, vfxKind, 'player', targetId);
 
     // Lifesteal (Vampiric weapon affix, Leeching accessory, Heartwood Talisman
@@ -1095,6 +1102,9 @@ export function playerAttack(
           kind: 'system',
           text: t('combat.log.staggered', { target: displayName(target, nextCharacter) }),
         });
+        // The fell is the story of this strike — the slam-and-topple replaces
+        // the plain swing VFX (one event slot; the later attach wins).
+        nextState = attachCombatVfx(nextState, 'knockdown-burst', 'player', targetId);
       }
     }
 
@@ -1139,6 +1149,9 @@ export function playerAttack(
             kind: 'system',
             text: t('combat.log.stunned', { target: displayName(target, nextCharacter) }),
           });
+          // The stun is the story of this blow — the palm-flash + dizzy-star
+          // spin replaces the plain jab VFX (one event slot; later attach wins).
+          nextState = attachCombatVfx(nextState, 'stun-burst', 'player', targetId);
         }
         nextCharacter = { ...nextCharacter, stunningStrikeActive: false };
       }
