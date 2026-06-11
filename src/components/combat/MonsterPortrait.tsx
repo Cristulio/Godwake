@@ -283,7 +283,7 @@ const SPRITES: Record<string, SpriteEntry> = {
   'wraith-of-fear': { url: wraithOfFearUrl, label: 'Wraith of Fear' },
   'slayer-shade': { url: slayerShadeUrl, label: 'Slayer-Shade' },
   'spined-abishai': { url: spinedAbishaiUrl, label: 'Spined Abishai' },
-  irenicus: { url: irenicusUrl, label: 'Jon Velnaris' },
+  irenicus: { url: irenicusUrl, label: 'Velnaris' },
   // ─── Chapter 12 · The Siege of Karthen ─────────────────────────────────
   'saradush-marauder': { url: saradushMarauderUrl, label: 'Karthen Marauder' },
   'burning-dead': { url: burningDeadUrl, label: 'Burning Dead' },

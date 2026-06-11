@@ -4,7 +4,7 @@ import type { BossIntelCard } from '../../content/bossIntel';
 /**
  * Chapter 10 · "Tor Maladin" encounter pools. Mirrors chapter9Pools — pooled
  * compositions for each combat slot in the hidden elven city of Tessar, stormed
- * and burning as the player climbs it toward the Tree of Life. Jon Velnaris (the
+ * and burning as the player climbs it toward the Tree of Life. Velnaris (the
  * exiled Joneleth) and his vampire ally Velora have taken the city; he means to
  * drain the Tree and reclaim the godhood the elves stripped from him. The road
  * climbs through the canopy and the temple terraces toward the desecrated temple

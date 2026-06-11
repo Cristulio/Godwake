@@ -67,7 +67,8 @@
       "monk": "Martial Arts · Flurry of Blows · Stunning Strike",
       "bard": "Bardic Inspiration · Vicious Mockery · Lore Cutting Words / Valor Extra Attack",
       "paladin": "Lay on Hands · Divine Smite · Radiant smites / Bulwark auras"
-    }
+    },
+    "sealedProgress": " {spent} / {req} renown given — {n} more and it is yours to wear."
   },
   "ascension": {
     "enemyHp": "Enemies +{pct}% HP",

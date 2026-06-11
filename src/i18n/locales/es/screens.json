@@ -67,7 +67,8 @@
       "monk": "Artes Marciales · Aluvión de Golpes · Golpe Aturdidor",
       "bard": "Inspiración Bárdica · Burla Cruel · Palabras Cortantes del Saber / Ataque Adicional del Valor",
       "paladin": "Imposición de Manos · Castigo Divino · Castigos del Resplandor / Auras del Baluarte"
-    }
+    },
+    "sealedProgress": " {spent} / {req} de renombre entregado — {n} más y será tuyo."
   },
   "ascension": {
     "enemyHp": "Enemigos +{pct}% de PG",

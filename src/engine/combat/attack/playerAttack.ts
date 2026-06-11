@@ -872,7 +872,8 @@ export function playerAttack(
     if (affixMods.lifestealPct > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
       const healed = ragedHealAmount(
         nextCharacter,
-        Math.floor((totalDamage * affixMods.lifestealPct) / 100),
+        // A tiny pct on a small hit floors to 0 — a vampiric weapon always drinks at least 1.
+        Math.max(1, Math.floor((totalDamage * affixMods.lifestealPct) / 100)),
       );
       if (healed > 0) {
         const before = nextCharacter.hp.current;

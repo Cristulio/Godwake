@@ -324,14 +324,14 @@ describe('Rogue Swashbuckler — Rakish Duelist', () => {
 });
 
 describe('Monk Open Hand — Ki Focus', () => {
-  it('discounts Stunning Strike to 1 Ki and arms it for that much', () => {
-    expect(stunningStrikeKiCost(makeChar('monk', 9, 'way-of-the-open-hand'))).toBe(2);
-    expect(stunningStrikeKiCost(makeChar('monk', 10, 'way-of-the-open-hand'))).toBe(1);
+  it('discounts Stunning Strike to 2 Ki and arms it for that much', () => {
+    expect(stunningStrikeKiCost(makeChar('monk', 9, 'way-of-the-open-hand'))).toBe(3);
+    expect(stunningStrikeKiCost(makeChar('monk', 10, 'way-of-the-open-hand'))).toBe(2);
 
     const base = makeChar('monk', 10, 'way-of-the-open-hand');
-    const monk: Character = { ...base, resources: { ...base.resources, kiPointsRemaining: 1 } };
+    const monk: Character = { ...base, resources: { ...base.resources, kiPointsRemaining: 2 } };
     const init = createCombat({ roller: createDiceRoller(1), character: monk, monsters: [{ def: getMonster('goblin') }] });
-    const oneKi: Character = { ...init.character, resources: { ...init.character.resources, kiPointsRemaining: 1 } };
+    const oneKi: Character = { ...init.character, resources: { ...init.character.resources, kiPointsRemaining: 2 } };
     const armed = useStunningStrike({ character: oneKi, state: init.state });
     expect(armed.character.stunningStrikeActive).toBe(true);
     expect(armed.character.resources.kiPointsRemaining).toBe(0);
