@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch12-elite — The Breach: where the giants came through Karthen's wall.
+       The city wall fills the far field; its battlement is torn open
+       x~58-94 and the fire of the siege camp glows THROUGH the gap. A
+       burning hoarding atop the wall upper-LEFT is the key light; the
+       breach-rim is the elite's second, dimmer glow. A flung boulder lies
+       lodged at the breach foot; a siege ladder's hooks grip the parapet.
+       Bands: wall y0-38 structural, mid y38-63 QUIET wall-face, rubble
+       floor y66-84; seam y66.
+       Ramps — wall stone: #15161c #1a1c24 #232830 #2c3340 (+#3a4452 lit
+       warm #34271a #453524 near the fire); flame: #a33d1e #e8743a #ffb347
+       #ffe9a8; ember sky: #2a1414; char: #0a0705. No baked-in vignette. -->
+  <defs>
+    <radialGradient id="c12e-hoarding-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#e8743a" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c12e-breach-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.20" />
+      <stop offset="55%" stop-color="#a33d1e" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c12e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ SKY sliver above the battlement ══ -->
+  <rect x="0" y="0" width="160" height="10" fill="#100a10" />
+  <rect x="0" y="0" width="160" height="4" fill="#0a060a" />
+  <rect x="100" y="2" width="60" height="5" fill="#1c1016" />
+  <rect x="20" y="1" width="36" height="2" fill="#080508" opacity="0.9" />
+  <rect x="64" y="3" width="30" height="2" fill="#120c12" opacity="0.8" />
+  <!-- cinders riding the updraft -->
+  <rect x="48" y="2" width="1" height="1" fill="#e8743a" opacity="0.8" />
+  <rect x="84" y="4" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="118" y="2" width="1" height="1" fill="#e8743a" opacity="0.5" />
+
+  <!-- ══ THE WALL: battlement + face ══ -->
+  <!-- merlons -->
+  <rect x="0" y="8" width="10" height="6" fill="#232830" />
+  <rect x="12" y="8" width="10" height="6" fill="#1f242c" />
+  <rect x="24" y="8" width="10" height="6" fill="#232830" />
+  <rect x="36" y="8" width="10" height="6" fill="#1c2028" />
+  <rect x="48" y="8" width="9" height="6" fill="#1a1c24" />
+  <rect x="97" y="8" width="10" height="6" fill="#1a1c24" />
+  <rect x="109" y="8" width="10" height="6" fill="#171a20" />
+  <rect x="121" y="8" width="10" height="6" fill="#1a1c24" />
+  <rect x="133" y="8" width="10" height="6" fill="#15181e" />
+  <rect x="145" y="8" width="10" height="6" fill="#171a20" />
+  <rect x="0" y="8" width="10" height="1" fill="#3a4452" />
+  <rect x="12" y="8" width="10" height="1" fill="#34271a" />
+  <rect x="24" y="8" width="10" height="1" fill="#2c3340" />
+  <!-- walk + face top course -->
+  <rect x="0" y="14" width="58" height="4" fill="#1a1c24" />
+  <rect x="94" y="14" width="66" height="4" fill="#171a20" />
+  <rect x="0" y="14" width="58" height="1" fill="#2c3340" />
+  <!-- wall face courses, left of breach -->
+  <rect x="0" y="18" width="20" height="10" fill="#232830" />
+  <rect x="21" y="18" width="18" height="10" fill="#1f242c" />
+  <rect x="40" y="18" width="18" height="10" fill="#1a1c24" />
+  <rect x="0" y="29" width="16" height="9" fill="#1f242c" />
+  <rect x="17" y="29" width="21" height="9" fill="#232830" />
+  <rect x="39" y="29" width="17" height="9" fill="#1c2028" />
+  <rect x="21" y="18" width="18" height="1" fill="#323a48" />
+  <rect x="17" y="29" width="21" height="1" fill="#2c3340" />
+  <!-- wall face courses, right of breach -->
+  <rect x="96" y="18" width="22" height="10" fill="#1a1c24" />
+  <rect x="119" y="18" width="20" height="10" fill="#171a20" />
+  <rect x="140" y="18" width="20" height="10" fill="#15181e" />
+  <rect x="98" y="29" width="20" height="9" fill="#171a20" />
+  <rect x="119" y="29" width="22" height="9" fill="#15181e" />
+  <rect x="142" y="29" width="18" height="9" fill="#13161c" />
+  <rect x="96" y="18" width="22" height="1" fill="#232830" />
+  <!-- old quarry-marks and crack from the impact -->
+  <rect x="46" y="21" width="1" height="3" fill="#101218" />
+  <rect x="45" y="23" width="1" height="2" fill="#101218" />
+  <rect x="100" y="22" width="1" height="4" fill="#0e1014" />
+  <rect x="101" y="25" width="1" height="3" fill="#0e1014" />
+  <rect x="102" y="27" width="1" height="2" fill="#0e1014" />
+
+  <!-- ══ THE BREACH (x56-96): torn open, fire beyond ══ -->
+  <!-- jagged broken edges -->
+  <rect x="56" y="10" width="4" height="8" fill="#15181e" />
+  <rect x="58" y="16" width="4" height="10" fill="#1a1c24" />
+  <rect x="60" y="24" width="3" height="12" fill="#15181e" />
+  <rect x="92" y="12" width="4" height="8" fill="#13161c" />
+  <rect x="90" y="18" width="4" height="10" fill="#15181e" />
+  <rect x="88" y="26" width="4" height="10" fill="#13161c" />
+  <!-- the gap itself: siege-camp fire beyond -->
+  <rect x="60" y="10" width="30" height="28" fill="#1c0c0a" />
+  <rect x="62" y="12" width="26" height="24" fill="#2a0f0a" />
+  <rect x="64" y="16" width="22" height="18" fill="#3f100c" />
+  <!-- broken stone jags intruding into the gap (the tear is ragged) -->
+  <rect x="66" y="10" width="5" height="4" fill="#15181e" />
+  <rect x="68" y="14" width="3" height="2" fill="#13161c" />
+  <rect x="80" y="10" width="6" height="3" fill="#13161c" />
+  <rect x="82" y="13" width="3" height="2" fill="#11141a" />
+  <rect x="74" y="10" width="3" height="2" fill="#15181e" />
+  <rect x="63" y="30" width="3" height="6" fill="#15181e" />
+  <rect x="85" y="28" width="3" height="8" fill="#13161c" />
+  <!-- distant camp fires dotting the dark plain -->
+  <rect x="68" y="28" width="2" height="1" fill="#a33d1e" />
+  <rect x="76" y="26" width="1" height="1" fill="#e8743a" />
+  <rect x="82" y="29" width="2" height="1" fill="#a33d1e" />
+  <rect x="72" y="31" width="1" height="1" fill="#e8743a" />
+  <rect x="79" y="32" width="1" height="1" fill="#a33d1e" />
+  <!-- smoke columns rising off the plain -->
+  <rect x="70" y="14" width="2" height="13" fill="#1c0c0a" />
+  <rect x="78" y="12" width="2" height="14" fill="#1c0c0a" />
+  <rect x="71" y="10" width="2" height="5" fill="#120808" />
+  <!-- fire-lit rim on the broken stone -->
+  <rect x="60" y="10" width="1" height="26" fill="#5a2812" />
+  <rect x="61" y="18" width="1" height="14" fill="#3f1a0e" />
+  <rect x="89" y="12" width="1" height="24" fill="#3f1a0e" />
+  <rect x="62" y="34" width="26" height="2" fill="#2a0f0a" />
+  <rect x="56" y="10" width="4" height="1" fill="#453524" />
+  <rect x="92" y="12" width="4" height="1" fill="#34271a" />
+  <rect x="34" y="6" width="56" height="40" fill="url(#c12e-breach-glow)" />
+
+  <!-- ══ Siege ladder hooked over the parapet (x34-44) ══ -->
+  <rect x="36" y="6" width="1" height="10" fill="#241a11" />
+  <rect x="42" y="6" width="1" height="10" fill="#241a11" />
+  <rect x="36" y="6" width="7" height="1" fill="#2d2519" />
+  <rect x="37" y="9" width="5" height="1" fill="#1d1510" />
+  <rect x="37" y="13" width="5" height="1" fill="#1d1510" />
+  <rect x="36" y="5" width="2" height="1" fill="#34271a" />
+  <rect x="41" y="5" width="2" height="1" fill="#34271a" />
+
+  <!-- ══ Burning hoarding atop the wall — key light upper-LEFT ══ -->
+  <rect x="6" y="4" width="18" height="4" fill="#16100a" />
+  <rect x="6" y="4" width="18" height="1" fill="#241a11" />
+  <rect x="8" y="2" width="6" height="3" fill="#a33d1e" />
+  <rect x="9" y="0" width="4" height="3" fill="#e8743a" />
+  <rect x="10" y="0" width="2" height="2" fill="#ffb347" />
+  <rect x="16" y="2" width="4" height="2" fill="#a33d1e" />
+  <rect x="17" y="1" width="2" height="2" fill="#e8743a" />
+  <rect x="18" y="0" width="1" height="1" fill="#ffb347" />
+  <rect x="14" y="3" width="1" height="2" fill="#5a1812" />
+  <!-- embers off the hoarding -->
+  <rect x="27" y="3" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="31" y="7" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="24" y="11" width="1" height="1" fill="#e8743a" opacity="0.6" />
+  <rect x="-12" y="-14" width="72" height="56" fill="url(#c12e-hoarding-halo)" />
+
+  <!-- ══ MID BAND (y38-66): wall base, quiet ══ -->
+  <rect x="0" y="38" width="22" height="9" fill="#1c2028" />
+  <rect x="23" y="38" width="20" height="9" fill="#1f242c" />
+  <rect x="44" y="38" width="16" height="9" fill="#1a1c24" />
+  <rect x="61" y="38" width="28" height="9" fill="#181216" />
+  <rect x="90" y="38" width="16" height="9" fill="#15181e" />
+  <rect x="107" y="38" width="26" height="9" fill="#13161c" />
+  <rect x="134" y="38" width="26" height="9" fill="#12141a" />
+  <rect x="0" y="47" width="18" height="9" fill="#1f242c" />
+  <rect x="19" y="47" width="22" height="9" fill="#1c2028" />
+  <rect x="42" y="47" width="18" height="9" fill="#171a20" />
+  <rect x="61" y="47" width="28" height="9" fill="#151013" />
+  <rect x="90" y="47" width="20" height="9" fill="#13161c" />
+  <rect x="111" y="47" width="24" height="9" fill="#12141a" />
+  <rect x="136" y="47" width="24" height="9" fill="#101218" />
+  <rect x="0" y="56" width="24" height="10" fill="#1c2028" />
+  <rect x="25" y="56" width="18" height="10" fill="#1a1c24" />
+  <rect x="44" y="56" width="16" height="10" fill="#15181e" />
+  <rect x="90" y="56" width="22" height="10" fill="#12141a" />
+  <rect x="113" y="56" width="47" height="10" fill="#101218" />
+  <!-- the boulder that made the breach, lodged at its foot -->
+  <rect x="64" y="50" width="22" height="16" fill="#11141a" />
+  <rect x="66" y="48" width="18" height="2" fill="#13161c" />
+  <rect x="70" y="46" width="11" height="2" fill="#11141a" />
+  <rect x="64" y="50" width="2" height="16" fill="#171c24" />
+  <rect x="84" y="52" width="2" height="14" fill="#0d1015" />
+  <rect x="66" y="48" width="10" height="1" fill="#1c2230" />
+  <!-- fire-rim catching its crown -->
+  <rect x="76" y="46" width="5" height="1" fill="#3f1a0e" />
+  <rect x="81" y="47" width="3" height="1" fill="#2a120a" />
+  <!-- cracks radiating into the pavement from under it -->
+  <rect x="60" y="62" width="1" height="4" fill="#0b0d11" />
+  <rect x="58" y="64" width="1" height="2" fill="#0b0d11" />
+  <rect x="88" y="60" width="1" height="6" fill="#0b0d11" />
+
+  <!-- ══ NEAR FLOOR (y66-84): rubble field ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0c0d10" />
+  <rect x="0" y="66" width="160" height="1" fill="#040404" />
+  <rect x="62" y="66" width="26" height="1" fill="#030303" />
+  <!-- far paving row -->
+  <rect x="1" y="67" width="12" height="4" fill="#262c36" />
+  <rect x="14" y="67" width="11" height="4" fill="#222832" />
+  <rect x="26" y="67" width="12" height="4" fill="#1f242c" />
+  <rect x="39" y="67" width="11" height="4" fill="#1c2028" />
+  <rect x="51" y="67" width="12" height="4" fill="#181c22" />
+  <rect x="64" y="67" width="11" height="4" fill="#161013" />
+  <rect x="76" y="67" width="12" height="4" fill="#141013" />
+  <rect x="89" y="67" width="11" height="4" fill="#13161c" />
+  <rect x="101" y="67" width="12" height="4" fill="#12141a" />
+  <rect x="114" y="67" width="11" height="4" fill="#101218" />
+  <rect x="126" y="67" width="12" height="4" fill="#0f1116" />
+  <rect x="139" y="67" width="20" height="4" fill="#0e1014" />
+  <rect x="1" y="67" width="12" height="1" fill="#3a4452" />
+  <rect x="14" y="67" width="11" height="1" fill="#34271a" />
+  <!-- mid paving row -->
+  <rect x="0" y="72" width="14" height="5" fill="#222832" />
+  <rect x="15" y="72" width="13" height="5" fill="#262c36" />
+  <rect x="29" y="72" width="14" height="5" fill="#1f242c" />
+  <rect x="44" y="72" width="13" height="5" fill="#1c2028" />
+  <rect x="58" y="72" width="14" height="5" fill="#171a20" />
+  <rect x="73" y="72" width="13" height="5" fill="#141016" />
+  <rect x="87" y="72" width="14" height="5" fill="#13161c" />
+  <rect x="102" y="72" width="13" height="5" fill="#11141a" />
+  <rect x="116" y="72" width="14" height="5" fill="#101218" />
+  <rect x="131" y="72" width="28" height="5" fill="#0e1014" />
+  <rect x="15" y="72" width="13" height="1" fill="#323a48" />
+  <!-- near paving row -->
+  <rect x="0" y="78" width="17" height="6" fill="#262c36" />
+  <rect x="18" y="78" width="16" height="6" fill="#2a3140" />
+  <rect x="35" y="78" width="17" height="6" fill="#222832" />
+  <rect x="53" y="78" width="16" height="6" fill="#1f242c" />
+  <rect x="70" y="78" width="17" height="6" fill="#181c22" />
+  <rect x="88" y="78" width="16" height="6" fill="#14171d" />
+  <rect x="105" y="78" width="17" height="6" fill="#12141a" />
+  <rect x="123" y="78" width="36" height="6" fill="#101218" />
+  <rect x="18" y="78" width="16" height="1" fill="#3a4452" />
+  <rect x="0" y="78" width="17" height="1" fill="#323a48" />
+  <!-- masonry chunks blown across the pavement -->
+  <rect x="46" y="69" width="5" height="2" fill="#262c36" />
+  <rect x="47" y="68" width="3" height="1" fill="#323a48" />
+  <rect x="52" y="70" width="3" height="1" fill="#1f242c" />
+  <rect x="92" y="70" width="6" height="2" fill="#1c2028" />
+  <rect x="94" y="69" width="3" height="1" fill="#262c36" />
+  <rect x="99" y="71" width="3" height="1" fill="#171a20" />
+  <rect x="118" y="74" width="4" height="2" fill="#171a20" />
+  <rect x="119" y="73" width="2" height="1" fill="#1f242c" />
+  <rect x="30" y="80" width="4" height="2" fill="#2a3140" />
+  <rect x="31" y="79" width="2" height="1" fill="#3a4452" />
+  <!-- a guard's helm, empty where it rolled -->
+  <rect x="108" y="79" width="4" height="2" fill="#2c3340" />
+  <rect x="109" y="78" width="2" height="1" fill="#3a4452" />
+  <rect x="108" y="80" width="1" height="1" fill="#171a20" />
+  <!-- his spear beside it -->
+  <rect x="114" y="80" width="8" height="1" fill="#241a11" />
+  <rect x="122" y="80" width="2" height="1" fill="#3a4452" />
+  <!-- arrows standing where they struck -->
+  <rect x="42" y="76" width="1" height="4" fill="#241a11" />
+  <rect x="42" y="75" width="1" height="1" fill="#34271a" />
+  <rect x="75" y="74" width="1" height="4" fill="#1d1510" />
+  <rect x="75" y="73" width="1" height="1" fill="#281d14" />
+  <!-- embers settling on the rubble nearest the breach -->
+  <rect x="68" y="70" width="1" height="1" fill="#a33d1e" opacity="0.8" />
+  <rect x="80" y="73" width="1" height="1" fill="#e8743a" opacity="0.7" />
+  <rect x="73" y="76" width="1" height="1" fill="#5a1812" opacity="0.8" />
+  <rect x="85" y="79" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+  <!-- hoarding-light pooling left -->
+  <rect x="-10" y="58" width="64" height="24" fill="url(#c12e-floor-pool)" />
+</svg>

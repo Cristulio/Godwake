@@ -1,0 +1,316 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch14-boss — The Throne of the Slain God: the game's final arena.
+       Set piece centred in the hero-enemy gap: the empty seat itself on a
+       stepped dais (x56-104), its monolith back climbing the whole far
+       field, gold-chased, and the seat beginning — faintly — to fill: a
+       pale shimmer traced inside the dark where the new god gathers. The
+       last of the essence steams in two pools flanking the dais foot;
+       brass harvest-channels carry the red up the steps. Colossal columns
+       x22-30 / x130-138 bear censers burning blood-red (flames above
+       y28), chains rising into the void. One pale god-spark hangs above
+       the crown. Key light: the LEFT censer + pool, halo biased
+       upper-left (the component lays the blood-red boss ambience above).
+       The throne back and dais cross the mid band as quiet darks; pools
+       live in the floor band; seam y66.
+       Ramps — void marble: #0c0a10 #131019 #1b1622 #251e2e (+#332a40);
+       essence: #2a0b08 #3f100c #5a1812 #8a2418 (+#c43a28 #e85a3a gleam);
+       brass: #54400f #6a521e #8a6c2a (+#a8862e); shimmer: #3a3e4e
+       #4a5468 #6a7488 (tiny); censer-flame: #a33d1e #e8743a #ffb347.
+       No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c14b-censer-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.20" />
+      <stop offset="45%" stop-color="#a33d1e" stop-opacity="0.09" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c14b-pool-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#c43a28" stop-opacity="0.16" />
+      <stop offset="55%" stop-color="#8a2418" stop-opacity="0.07" />
+      <stop offset="100%" stop-color="#8a2418" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c14b-seat-shimmer" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#6a7488" stop-opacity="0.13" />
+      <stop offset="60%" stop-color="#4a5468" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#4a5468" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the hall of the dead god ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0d0a11" />
+  <rect x="110" y="0" width="50" height="66" fill="#0b0810" />
+  <!-- the void overhead -->
+  <rect x="0" y="0" width="160" height="6" fill="#060408" />
+  <rect x="0" y="6" width="160" height="1" fill="#16121c" />
+  <!-- chains rising off the columns into the dark -->
+  <rect x="20" y="0" width="1" height="14" fill="#241c08" />
+  <rect x="20" y="3" width="1" height="2" fill="#3a2c0c" />
+  <rect x="20" y="9" width="1" height="2" fill="#3a2c0c" />
+  <rect x="33" y="0" width="1" height="10" fill="#1c1606" />
+  <rect x="33" y="4" width="1" height="2" fill="#2c2208" />
+  <rect x="126" y="0" width="1" height="10" fill="#140f05" />
+  <rect x="126" y="5" width="1" height="2" fill="#1c1606" />
+  <rect x="139" y="0" width="1" height="14" fill="#181206" />
+  <rect x="139" y="4" width="1" height="2" fill="#241c08" />
+  <!-- high frieze: the offering-bearers, a dim procession -->
+  <rect x="0" y="8" width="160" height="5" fill="#131019" />
+  <rect x="0" y="8" width="160" height="1" fill="#1f1a28" />
+  <rect x="5" y="9" width="2" height="3" fill="#1b1622" />
+  <rect x="10" y="9" width="2" height="3" fill="#1d1826" />
+  <rect x="15" y="9" width="2" height="3" fill="#1b1622" />
+  <rect x="38" y="9" width="2" height="3" fill="#1b1622" />
+  <rect x="43" y="9" width="2" height="3" fill="#191522" />
+  <rect x="48" y="9" width="2" height="3" fill="#1b1622" />
+  <rect x="110" y="9" width="2" height="3" fill="#131019" />
+  <rect x="115" y="9" width="2" height="3" fill="#110e16" />
+  <rect x="142" y="9" width="2" height="3" fill="#100d15" />
+  <rect x="147" y="9" width="2" height="3" fill="#0f0c14" />
+  <rect x="0" y="13" width="160" height="1" fill="#070509" />
+  <!-- marble panels behind the throne -->
+  <rect x="0" y="14" width="21" height="24" fill="#171320" />
+  <rect x="22" y="14" width="20" height="24" fill="#1b1622" />
+  <rect x="43" y="14" width="13" height="24" fill="#151220" />
+  <rect x="104" y="14" width="25" height="24" fill="#100d15" />
+  <rect x="130" y="14" width="30" height="24" fill="#0e0b12" />
+  <rect x="22" y="14" width="20" height="1" fill="#262030" />
+  <!-- brass panel seams -->
+  <rect x="21" y="14" width="1" height="24" fill="#241c08" />
+  <rect x="42" y="14" width="1" height="24" fill="#1c1606" />
+  <rect x="103" y="14" width="1" height="24" fill="#140f05" />
+  <rect x="129" y="14" width="1" height="24" fill="#100c04" />
+  <!-- the god-spark, waiting above the crown -->
+  <rect x="79" y="3" width="2" height="2" fill="#4a5468" />
+  <rect x="79" y="3" width="1" height="1" fill="#9aa4c0" />
+  <rect x="78" y="4" width="1" height="1" fill="#2c3340" opacity="0.8" />
+  <rect x="81" y="3" width="1" height="1" fill="#2c3340" opacity="0.6" />
+
+  <!-- ══ Flanking column LEFT (x22-30) + censer ══ -->
+  <rect x="22" y="14" width="9" height="52" fill="#1d1826" />
+  <rect x="22" y="14" width="2" height="52" fill="#272030" />
+  <rect x="29" y="14" width="2" height="52" fill="#151220" />
+  <rect x="22" y="14" width="9" height="2" fill="#251e2e" />
+  <rect x="22" y="14" width="9" height="1" fill="#332a40" />
+  <rect x="22" y="34" width="9" height="1" fill="#110e16" />
+  <rect x="22" y="52" width="9" height="1" fill="#100d14" />
+  <rect x="22" y="33" width="9" height="1" fill="#54400f" />
+  <!-- the censer bracketed off its face -->
+  <rect x="24" y="18" width="6" height="2" fill="#54400f" />
+  <rect x="23" y="20" width="8" height="3" fill="#6a521e" />
+  <rect x="24" y="23" width="6" height="1" fill="#3a2c0c" />
+  <rect x="26" y="24" width="2" height="1" fill="#241c08" />
+  <!-- coals + low blood flame (above y28) -->
+  <rect x="25" y="19" width="1" height="1" fill="#a33d1e" />
+  <rect x="28" y="19" width="1" height="1" fill="#e8743a" />
+  <rect x="25" y="16" width="4" height="2" fill="#a33d1e" />
+  <rect x="26" y="14" width="2" height="2" fill="#e8743a" />
+  <rect x="27" y="13" width="1" height="1" fill="#ffb347" />
+  <rect x="25" y="21" width="1" height="1" fill="#8a2418" />
+  <rect x="29" y="21" width="1" height="1" fill="#5a1812" />
+  <!-- smoke leaning right -->
+  <rect x="30" y="11" width="3" height="1" fill="#14101a" opacity="0.9" />
+  <rect x="33" y="10" width="4" height="1" fill="#120e16" opacity="0.7" />
+  <rect x="-10" y="-10" width="68" height="54" fill="url(#c14b-censer-halo)" />
+
+  <!-- ══ Flanking column RIGHT (x130-138) + dimmer censer ══ -->
+  <rect x="130" y="14" width="9" height="52" fill="#131019" />
+  <rect x="130" y="14" width="2" height="52" fill="#1a1622" />
+  <rect x="137" y="14" width="2" height="52" fill="#0d0a11" />
+  <rect x="130" y="14" width="9" height="2" fill="#171320" />
+  <rect x="130" y="34" width="9" height="1" fill="#0d0a10" />
+  <rect x="130" y="52" width="9" height="1" fill="#0b090e" />
+  <rect x="130" y="33" width="9" height="1" fill="#241c08" />
+  <rect x="132" y="18" width="6" height="2" fill="#3a2c0c" />
+  <rect x="131" y="20" width="8" height="3" fill="#4a3a10" />
+  <rect x="132" y="23" width="6" height="1" fill="#241c08" />
+  <rect x="133" y="16" width="4" height="2" fill="#5a1812" />
+  <rect x="134" y="14" width="2" height="2" fill="#a33d1e" />
+  <rect x="135" y="13" width="1" height="1" fill="#e8743a" />
+  <rect x="133" y="19" width="1" height="1" fill="#8a2418" />
+  <rect x="136" y="21" width="1" height="1" fill="#5a1812" />
+
+  <!-- ══ THE THRONE: monolith back + seat (x70-90) ══ -->
+  <!-- the back: a tower of black stone, tapering -->
+  <rect x="72" y="6" width="16" height="40" fill="#110e17" />
+  <rect x="74" y="4" width="12" height="2" fill="#0f0c14" />
+  <rect x="72" y="6" width="2" height="40" fill="#1a1521" />
+  <rect x="86" y="6" width="2" height="40" fill="#0c0a10" />
+  <!-- crown spires -->
+  <rect x="73" y="2" width="2" height="3" fill="#0f0c14" />
+  <rect x="79" y="1" width="2" height="3" fill="#110e17" />
+  <rect x="85" y="2" width="2" height="3" fill="#0e0b12" />
+  <rect x="73" y="2" width="1" height="1" fill="#1d1826" />
+  <rect x="79" y="1" width="1" height="1" fill="#1f1a28" />
+  <!-- gold chasing up the back's edges -->
+  <rect x="73" y="8" width="1" height="36" fill="#3a2c0c" />
+  <rect x="86" y="8" width="1" height="36" fill="#241c08" />
+  <rect x="74" y="6" width="12" height="1" fill="#54400f" />
+  <!-- the carved channels of old offerings, running down the back -->
+  <rect x="76" y="8" width="1" height="34" fill="#0d0a11" />
+  <rect x="79" y="8" width="2" height="34" fill="#0c090f" />
+  <rect x="83" y="8" width="1" height="34" fill="#0d0a11" />
+  <!-- the seat, deep between the arms -->
+  <rect x="73" y="34" width="14" height="12" fill="#080609" />
+  <rect x="73" y="34" width="14" height="1" fill="#0d0a11" />
+  <!-- THE FILLING: a pale shimmer gathering in the dark of the seat -->
+  <rect x="78" y="36" width="4" height="1" fill="#2c3340" opacity="0.9" />
+  <rect x="77" y="38" width="2" height="1" fill="#3a3e4e" opacity="0.8" />
+  <rect x="81" y="38" width="2" height="1" fill="#3a3e4e" opacity="0.7" />
+  <rect x="78" y="40" width="1" height="2" fill="#4a5468" opacity="0.8" />
+  <rect x="81" y="41" width="1" height="1" fill="#4a5468" opacity="0.7" />
+  <rect x="79" y="37" width="2" height="1" fill="#4a5468" opacity="0.5" />
+  <rect x="79" y="43" width="2" height="1" fill="#2c3340" opacity="0.7" />
+  <rect x="66" y="28" width="28" height="24" fill="url(#c14b-seat-shimmer)" />
+  <!-- the arms, low and wide -->
+  <rect x="68" y="38" width="5" height="8" fill="#151120" />
+  <rect x="68" y="38" width="5" height="1" fill="#221c2c" />
+  <rect x="68" y="38" width="1" height="8" fill="#1c1726" />
+  <rect x="87" y="38" width="5" height="8" fill="#100d15" />
+  <rect x="87" y="38" width="5" height="1" fill="#1a1521" />
+  <rect x="91" y="38" width="1" height="8" fill="#0c0a10" />
+  <!-- gold finials on the arm heads -->
+  <rect x="68" y="37" width="2" height="1" fill="#6a521e" />
+  <rect x="90" y="37" width="2" height="1" fill="#3a2c0c" />
+
+  <!-- ══ The dais: three steps crossing the lower band, dark and quiet ══ -->
+  <rect x="70" y="46" width="20" height="4" fill="#14111b" />
+  <rect x="70" y="46" width="20" height="1" fill="#1d1826" />
+  <rect x="64" y="50" width="32" height="6" fill="#120f18" />
+  <rect x="64" y="50" width="32" height="1" fill="#1b1622" />
+  <rect x="60" y="56" width="40" height="5" fill="#100d15" />
+  <rect x="60" y="56" width="40" height="1" fill="#181420" />
+  <rect x="56" y="61" width="48" height="5" fill="#0e0b12" />
+  <rect x="56" y="61" width="48" height="1" fill="#16121c" />
+  <!-- the harvest-channels climbing the steps, brass + red thread -->
+  <rect x="64" y="62" width="1" height="4" fill="#3a2c0c" />
+  <rect x="66" y="57" width="1" height="4" fill="#3a2c0c" />
+  <rect x="68" y="51" width="1" height="5" fill="#2c2208" />
+  <rect x="71" y="47" width="1" height="3" fill="#2c2208" />
+  <rect x="64" y="63" width="1" height="2" fill="#5a1812" />
+  <rect x="66" y="58" width="1" height="2" fill="#3f100c" />
+  <rect x="68" y="52" width="1" height="2" fill="#3f100c" />
+  <rect x="95" y="62" width="1" height="4" fill="#2c2208" />
+  <rect x="93" y="57" width="1" height="4" fill="#241c08" />
+  <rect x="91" y="51" width="1" height="5" fill="#1c1606" />
+  <rect x="88" y="47" width="1" height="3" fill="#1c1606" />
+  <rect x="95" y="63" width="1" height="2" fill="#3f100c" />
+  <rect x="93" y="58" width="1" height="2" fill="#2a0b08" />
+  <!-- the sigil of the murder-god cut into the dais riser -->
+  <rect x="77" y="62" width="6" height="3" fill="#0b090e" />
+  <rect x="78" y="63" width="1" height="1" fill="#241c08" />
+  <rect x="80" y="62" width="1" height="3" fill="#241c08" />
+  <rect x="82" y="63" width="1" height="1" fill="#1c1606" />
+
+  <!-- ══ MID BAND outside the set piece (y38-66): hall wall, quiet ══ -->
+  <rect x="0" y="38" width="21" height="9" fill="#161220" />
+  <rect x="0" y="47" width="21" height="9" fill="#141120" />
+  <rect x="0" y="56" width="21" height="10" fill="#13101c" />
+  <rect x="31" y="38" width="25" height="9" fill="#13101b" />
+  <rect x="31" y="47" width="25" height="9" fill="#120f19" />
+  <rect x="31" y="56" width="25" height="10" fill="#100d17" />
+  <rect x="104" y="38" width="26" height="9" fill="#0f0c15" />
+  <rect x="104" y="47" width="26" height="9" fill="#0e0b13" />
+  <rect x="104" y="56" width="26" height="10" fill="#0c0a10" />
+  <rect x="139" y="38" width="21" height="9" fill="#0d0a12" />
+  <rect x="139" y="47" width="21" height="9" fill="#0c0910" />
+  <rect x="139" y="56" width="21" height="10" fill="#0b080e" />
+  <!-- steam standing off the pools, climbing thin and dim -->
+  <rect x="44" y="50" width="1" height="14" fill="#1a0e10" opacity="0.8" />
+  <rect x="45" y="42" width="1" height="9" fill="#160c0e" opacity="0.7" />
+  <rect x="44" y="36" width="1" height="7" fill="#120a0c" opacity="0.55" />
+  <rect x="50" y="54" width="1" height="10" fill="#180d0f" opacity="0.7" />
+  <rect x="51" y="46" width="1" height="9" fill="#140b0d" opacity="0.55" />
+  <rect x="114" y="52" width="1" height="12" fill="#160c0e" opacity="0.7" />
+  <rect x="115" y="44" width="1" height="9" fill="#120a0c" opacity="0.55" />
+  <rect x="120" y="56" width="1" height="8" fill="#140b0d" opacity="0.6" />
+
+  <!-- ══ NEAR FLOOR (y66-84): polished hall floor + THE POOLS ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a080d" />
+  <rect x="0" y="66" width="160" height="1" fill="#040305" />
+  <rect x="54" y="66" width="52" height="1" fill="#030204" />
+  <!-- far slab row -->
+  <rect x="1" y="67" width="13" height="4" fill="#251e2e" />
+  <rect x="15" y="67" width="12" height="4" fill="#282134" />
+  <rect x="28" y="67" width="8" height="4" fill="#221c2a" />
+  <rect x="56" y="67" width="12" height="4" fill="#16121e" />
+  <rect x="69" y="67" width="12" height="4" fill="#14111b" />
+  <rect x="82" y="67" width="13" height="4" fill="#13101a" />
+  <rect x="96" y="67" width="8" height="4" fill="#110e17" />
+  <rect x="126" y="67" width="9" height="4" fill="#0d0a11" />
+  <rect x="136" y="67" width="23" height="4" fill="#0b090e" />
+  <rect x="15" y="67" width="12" height="1" fill="#332a40" />
+  <rect x="1" y="67" width="13" height="1" fill="#2e2638" />
+  <!-- THE POOL, left (x36-54): the last of the god, steaming -->
+  <rect x="36" y="68" width="19" height="9" fill="#2a0b08" />
+  <rect x="37" y="69" width="17" height="7" fill="#3f100c" />
+  <rect x="39" y="70" width="13" height="5" fill="#5a1812" />
+  <rect x="42" y="71" width="7" height="3" fill="#8a2418" />
+  <rect x="44" y="72" width="3" height="1" fill="#c43a28" />
+  <rect x="45" y="72" width="1" height="1" fill="#e85a3a" />
+  <!-- its brass lip -->
+  <rect x="35" y="67" width="21" height="1" fill="#54400f" />
+  <rect x="35" y="68" width="1" height="9" fill="#3a2c0c" />
+  <rect x="55" y="68" width="1" height="9" fill="#241c08" />
+  <rect x="35" y="77" width="21" height="1" fill="#1c1606" />
+  <!-- slow rings on the surface -->
+  <rect x="40" y="73" width="4" height="1" fill="#3f100c" />
+  <rect x="48" y="70" width="3" height="1" fill="#5a1812" />
+  <!-- THE POOL, right (x106-124), darker -->
+  <rect x="106" y="68" width="19" height="9" fill="#1c0806" />
+  <rect x="107" y="69" width="17" height="7" fill="#2a0b08" />
+  <rect x="109" y="70" width="13" height="5" fill="#3f100c" />
+  <rect x="112" y="71" width="7" height="3" fill="#5a1812" />
+  <rect x="114" y="72" width="3" height="1" fill="#8a2418" />
+  <rect x="105" y="67" width="21" height="1" fill="#3a2c0c" />
+  <rect x="105" y="68" width="1" height="9" fill="#241c08" />
+  <rect x="125" y="68" width="1" height="9" fill="#181206" />
+  <rect x="105" y="77" width="21" height="1" fill="#140f05" />
+  <rect x="110" y="73" width="4" height="1" fill="#2a0b08" />
+  <rect x="118" y="70" width="3" height="1" fill="#3f100c" />
+  <!-- pool glow halos -->
+  <rect x="22" y="52" width="48" height="32" fill="url(#c14b-pool-glow)" />
+  <rect x="94" y="56" width="44" height="28" fill="url(#c14b-pool-glow)" opacity="0.7" />
+  <!-- mid slab row (between and beyond the pools) -->
+  <rect x="0" y="72" width="15" height="5" fill="#221c2a" />
+  <rect x="16" y="72" width="14" height="5" fill="#251e2e" />
+  <rect x="31" y="72" width="4" height="5" fill="#201a28" />
+  <rect x="57" y="72" width="14" height="5" fill="#171320" />
+  <rect x="72" y="72" width="14" height="5" fill="#151120" />
+  <rect x="87" y="72" width="17" height="5" fill="#13101a" />
+  <rect x="127" y="72" width="8" height="5" fill="#0d0a11" />
+  <rect x="136" y="72" width="23" height="5" fill="#0c0a0f" />
+  <rect x="16" y="72" width="14" height="1" fill="#2e2638" />
+  <!-- near slab row -->
+  <rect x="0" y="78" width="18" height="6" fill="#251e2e" />
+  <rect x="19" y="78" width="17" height="6" fill="#2a2334" />
+  <rect x="37" y="78" width="18" height="6" fill="#221c2a" />
+  <rect x="56" y="78" width="17" height="6" fill="#1e1826" />
+  <rect x="74" y="78" width="18" height="6" fill="#181420" />
+  <rect x="93" y="78" width="17" height="6" fill="#13101a" />
+  <rect x="111" y="78" width="18" height="6" fill="#100d15" />
+  <rect x="130" y="78" width="29" height="6" fill="#0d0a10" />
+  <rect x="19" y="78" width="17" height="1" fill="#332a40" />
+  <rect x="0" y="78" width="18" height="1" fill="#2e2638" />
+  <!-- inlay ring arcs centred on the dais -->
+  <rect x="58" y="80" width="14" height="1" fill="#241c08" />
+  <rect x="72" y="79" width="16" height="1" fill="#2c2208" />
+  <rect x="88" y="80" width="14" height="1" fill="#241c08" />
+  <rect x="50" y="81" width="8" height="1" fill="#1c1606" />
+  <rect x="102" y="81" width="8" height="1" fill="#1c1606" />
+  <rect x="78" y="79" width="2" height="1" fill="#54400f" />
+  <!-- the pools caught in the polish -->
+  <rect x="40" y="79" width="6" height="1" fill="#1e0c0c" />
+  <rect x="43" y="80" width="3" height="1" fill="#16090a" />
+  <rect x="111" y="79" width="5" height="1" fill="#140809" />
+  <rect x="44" y="79" width="1" height="1" fill="#3f100c" opacity="0.7" />
+  <!-- column contact shadows -->
+  <rect x="22" y="66" width="9" height="1" fill="#030204" />
+  <rect x="130" y="66" width="9" height="1" fill="#030204" />
+  <!-- an offering-knife, laid down and never taken up -->
+  <rect x="9" y="75" width="5" height="1" fill="#2e2a38" />
+  <rect x="13" y="74" width="1" height="1" fill="#3a3444" />
+  <rect x="8" y="75" width="1" height="1" fill="#54400f" />
+  <!-- petals of dried blood-lotus, scattered for the rite -->
+  <rect x="62" y="74" width="2" height="1" fill="#2a0b08" />
+  <rect x="98" y="75" width="2" height="1" fill="#1c0806" />
+  <rect x="74" y="75" width="1" height="1" fill="#3f100c" />
+  <rect x="88" y="74" width="2" height="1" fill="#2a0b08" />
+</svg>

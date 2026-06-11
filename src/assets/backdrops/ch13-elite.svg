@@ -1,0 +1,229 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch13-elite — The Storm Road: the deep approach to Korvazel's lair,
+       cobalt rock charged end to end with the half-dragon's storm. Key
+       light: a crystal cluster upper-LEFT with a live arc playing across
+       it (blue-white, tiny cores). Fulgurite lightning-trees — his old
+       breath fused into the wall — branch up the right. The brood is near:
+       a clutch of eggs in a scorched hollow low-RIGHT, one cracked and
+       faintly glowing (the elite's second glow). Claw-gouges score the
+       stone. Quiet mid band y38-63; fused-glass floor y66-84; seam y66.
+       Ramps — storm rock: #0a1020 #122040 #16284a #1c3260 (+#2a4a8a edge);
+       deep dark: #060a16 #080d1c; lightning: #2a4a8a #6a8aff #aac4ff
+       (+#eef4ff core); fulgurite glass: #1c2a30 #2a4248 #3a5e66; egg:
+       #1c2433 #28344a (+crack glow #4a6aae). No baked-in vignette. -->
+  <defs>
+    <radialGradient id="c13e-arc-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#aac4ff" stop-opacity="0.20" />
+      <stop offset="45%" stop-color="#6a8aff" stop-opacity="0.09" />
+      <stop offset="100%" stop-color="#6a8aff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c13e-egg-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#6a8aff" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#4a6aae" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c13e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#6a8aff" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#6a8aff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: cavern wall, storm-charged strata ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#080d1c" />
+  <rect x="0" y="0" width="160" height="5" fill="#04060e" />
+  <rect x="0" y="5" width="160" height="1" fill="#0e1526" />
+  <!-- strata course 1 -->
+  <rect x="0" y="6" width="18" height="8" fill="#122040" />
+  <rect x="19" y="6" width="21" height="8" fill="#16284a" />
+  <rect x="41" y="6" width="20" height="8" fill="#122040" />
+  <rect x="62" y="6" width="22" height="8" fill="#0e1a36" />
+  <rect x="85" y="6" width="22" height="8" fill="#0c162e" />
+  <rect x="108" y="6" width="24" height="8" fill="#0a1226" />
+  <rect x="133" y="6" width="27" height="8" fill="#081020" />
+  <rect x="19" y="6" width="21" height="1" fill="#2a4a8a" />
+  <rect x="41" y="6" width="12" height="1" fill="#1c3260" />
+  <!-- strata course 2 -->
+  <rect x="0" y="15" width="13" height="9" fill="#16284a" />
+  <rect x="14" y="15" width="19" height="9" fill="#122040" />
+  <rect x="34" y="15" width="18" height="9" fill="#16284a" />
+  <rect x="53" y="15" width="22" height="9" fill="#0e1a36" />
+  <rect x="76" y="15" width="24" height="9" fill="#0c162e" />
+  <rect x="101" y="15" width="26" height="9" fill="#0a1226" />
+  <rect x="128" y="15" width="32" height="9" fill="#081020" />
+  <rect x="14" y="15" width="19" height="1" fill="#1c3260" />
+  <!-- strata course 3 -->
+  <rect x="0" y="25" width="20" height="13" fill="#122040" />
+  <rect x="21" y="25" width="16" height="13" fill="#0e1a36" />
+  <rect x="38" y="25" width="16" height="13" fill="#122040" />
+  <rect x="55" y="25" width="20" height="13" fill="#0c162e" />
+  <rect x="76" y="25" width="24" height="13" fill="#0a1226" />
+  <rect x="101" y="25" width="26" height="13" fill="#091122" />
+  <rect x="128" y="25" width="32" height="13" fill="#070e1c" />
+  <rect x="21" y="25" width="16" height="1" fill="#1c3260" />
+  <!-- storm-charge seams webbing the high rock -->
+  <rect x="48" y="8" width="1" height="3" fill="#2a4a8a" />
+  <rect x="49" y="10" width="1" height="2" fill="#1c3260" />
+  <rect x="70" y="17" width="1" height="3" fill="#1c3260" />
+  <rect x="69" y="19" width="1" height="2" fill="#122c5a" />
+  <rect x="92" y="10" width="1" height="3" fill="#1c3260" />
+  <rect x="118" y="20" width="1" height="3" fill="#122c5a" />
+  <!-- claw-gouges, four parallel, where a drake dragged past -->
+  <rect x="56" y="28" width="8" height="1" fill="#060a16" />
+  <rect x="57" y="30" width="8" height="1" fill="#060a16" />
+  <rect x="58" y="32" width="8" height="1" fill="#060a16" />
+  <rect x="59" y="34" width="7" height="1" fill="#070c18" />
+  <rect x="56" y="28" width="2" height="1" fill="#0e1a36" />
+  <!-- second set, higher, older -->
+  <rect x="100" y="16" width="6" height="1" fill="#060a16" />
+  <rect x="101" y="18" width="6" height="1" fill="#060a16" />
+  <rect x="102" y="20" width="5" height="1" fill="#070c18" />
+
+  <!-- ══ Fulgurite lightning-trees up the RIGHT wall ══ -->
+  <!-- main trunk: his breath struck here and never stopped -->
+  <rect x="136" y="10" width="2" height="44" fill="#2a4248" />
+  <rect x="137" y="8" width="1" height="4" fill="#3a5e66" />
+  <rect x="136" y="20" width="1" height="2" fill="#3a5e66" />
+  <!-- branches forking up and out -->
+  <rect x="133" y="14" width="3" height="1" fill="#2a4248" />
+  <rect x="131" y="12" width="2" height="2" fill="#1c2a30" />
+  <rect x="130" y="10" width="1" height="2" fill="#2a4248" />
+  <rect x="138" y="16" width="4" height="1" fill="#2a4248" />
+  <rect x="142" y="13" width="2" height="3" fill="#1c2a30" />
+  <rect x="144" y="11" width="1" height="2" fill="#2a4248" />
+  <rect x="134" y="26" width="2" height="1" fill="#1c2a30" />
+  <rect x="132" y="24" width="2" height="2" fill="#1c2a30" />
+  <rect x="138" y="30" width="3" height="1" fill="#1c2a30" />
+  <rect x="141" y="27" width="2" height="3" fill="#16222a" />
+  <!-- a faint residual crackle living in the glass -->
+  <rect x="137" y="12" width="1" height="2" fill="#6a8aff" opacity="0.8" />
+  <rect x="136" y="22" width="1" height="1" fill="#4a6aae" opacity="0.7" />
+  <rect x="143" y="14" width="1" height="1" fill="#6a8aff" opacity="0.6" />
+  <!-- smaller dead tree, left of it -->
+  <rect x="122" y="22" width="1" height="32" fill="#1c2a30" />
+  <rect x="120" y="26" width="2" height="1" fill="#16222a" />
+  <rect x="123" y="30" width="2" height="1" fill="#16222a" />
+  <rect x="119" y="24" width="1" height="2" fill="#16222a" />
+
+  <!-- ══ The crystal cluster + live arc — key light upper-LEFT ══ -->
+  <rect x="18" y="12" width="3" height="6" fill="#16284a" />
+  <rect x="21" y="10" width="2" height="8" fill="#1c3260" />
+  <rect x="23" y="13" width="2" height="5" fill="#16284a" />
+  <rect x="19" y="9" width="2" height="4" fill="#2a4a8a" />
+  <rect x="22" y="8" width="1" height="3" fill="#4a6aae" />
+  <rect x="20" y="11" width="1" height="3" fill="#6a8aff" />
+  <rect x="22" y="10" width="1" height="2" fill="#aac4ff" />
+  <rect x="22" y="10" width="1" height="1" fill="#eef4ff" />
+  <!-- the arc, caught mid-leap to the neighbouring spur -->
+  <rect x="25" y="9" width="2" height="1" fill="#aac4ff" />
+  <rect x="27" y="8" width="2" height="1" fill="#6a8aff" />
+  <rect x="29" y="9" width="1" height="1" fill="#aac4ff" />
+  <rect x="30" y="10" width="1" height="2" fill="#4a6aae" />
+  <rect x="30" y="12" width="2" height="3" fill="#16284a" />
+  <rect x="31" y="11" width="1" height="2" fill="#2a4a8a" />
+  <!-- static motes hanging in the charge -->
+  <rect x="34" y="14" width="1" height="1" fill="#6a8aff" opacity="0.7" />
+  <rect x="27" y="19" width="1" height="1" fill="#4a6aae" opacity="0.6" />
+  <rect x="38" y="9" width="1" height="1" fill="#aac4ff" opacity="0.5" />
+  <rect x="16" y="22" width="1" height="1" fill="#4a6aae" opacity="0.5" />
+  <rect x="-10" y="-14" width="66" height="56" fill="url(#c13e-arc-halo)" />
+
+  <!-- ══ MID BAND (y38-66): quiet cobalt courses ══ -->
+  <rect x="0" y="38" width="19" height="9" fill="#0e1830" />
+  <rect x="20" y="38" width="25" height="9" fill="#101c36" />
+  <rect x="46" y="38" width="26" height="9" fill="#0c1528" />
+  <rect x="73" y="38" width="32" height="9" fill="#0a1222" />
+  <rect x="106" y="38" width="54" height="9" fill="#080f1e" />
+  <rect x="0" y="47" width="25" height="9" fill="#101c36" />
+  <rect x="26" y="47" width="19" height="9" fill="#0e1830" />
+  <rect x="46" y="47" width="26" height="9" fill="#0b1324" />
+  <rect x="73" y="47" width="32" height="9" fill="#091020" />
+  <rect x="106" y="47" width="54" height="9" fill="#070d1a" />
+  <rect x="0" y="56" width="22" height="10" fill="#0e1830" />
+  <rect x="23" y="56" width="22" height="10" fill="#0c1528" />
+  <rect x="46" y="56" width="26" height="10" fill="#0a1120" />
+  <rect x="73" y="56" width="32" height="10" fill="#080e1c" />
+  <rect x="106" y="56" width="54" height="10" fill="#060b16" />
+
+  <!-- ══ The brood clutch, low-RIGHT in its scorched hollow ══ -->
+  <rect x="118" y="58" width="34" height="8" fill="#05080f" />
+  <rect x="120" y="56" width="30" height="2" fill="#060a14" />
+  <!-- eggs: long ovals, leathery, half-buried in glass sand -->
+  <rect x="123" y="59" width="5" height="6" fill="#1c2433" />
+  <rect x="124" y="58" width="3" height="1" fill="#28344a" />
+  <rect x="123" y="59" width="1" height="4" fill="#28344a" />
+  <rect x="130" y="60" width="5" height="5" fill="#1a2230" />
+  <rect x="131" y="59" width="3" height="1" fill="#242f42" />
+  <rect x="137" y="59" width="5" height="6" fill="#1c2433" />
+  <rect x="138" y="58" width="3" height="1" fill="#28344a" />
+  <rect x="144" y="61" width="4" height="4" fill="#181f2c" />
+  <!-- the cracked one — the elite's second glow, faint -->
+  <rect x="132" y="61" width="1" height="2" fill="#4a6aae" />
+  <rect x="133" y="60" width="1" height="1" fill="#6a8aff" />
+  <rect x="131" y="63" width="1" height="1" fill="#2a4a8a" />
+  <rect x="118" y="48" width="40" height="28" fill="url(#c13e-egg-glow)" />
+
+  <!-- ══ NEAR FLOOR (y66-84): scorched rock + fused glass-sand ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#060a14" />
+  <rect x="0" y="66" width="160" height="1" fill="#030408" />
+  <rect x="116" y="66" width="38" height="1" fill="#020305" />
+  <!-- far row -->
+  <rect x="1" y="67" width="13" height="4" fill="#16223c" />
+  <rect x="15" y="67" width="12" height="4" fill="#192642" />
+  <rect x="28" y="67" width="13" height="4" fill="#142038" />
+  <rect x="42" y="67" width="12" height="4" fill="#121c32" />
+  <rect x="55" y="67" width="13" height="4" fill="#10182c" />
+  <rect x="69" y="67" width="12" height="4" fill="#0e1526" />
+  <rect x="82" y="67" width="13" height="4" fill="#0c1222" />
+  <rect x="96" y="67" width="12" height="4" fill="#0a101e" />
+  <rect x="109" y="67" width="13" height="4" fill="#090e1a" />
+  <rect x="123" y="67" width="12" height="4" fill="#080d18" />
+  <rect x="136" y="67" width="23" height="4" fill="#070b16" />
+  <rect x="15" y="67" width="12" height="1" fill="#2a4a8a" />
+  <rect x="1" y="67" width="13" height="1" fill="#22386a" />
+  <rect x="28" y="67" width="13" height="1" fill="#1c3260" />
+  <!-- mid row -->
+  <rect x="0" y="72" width="15" height="5" fill="#121c32" />
+  <rect x="16" y="72" width="14" height="5" fill="#16223c" />
+  <rect x="31" y="72" width="15" height="5" fill="#142038" />
+  <rect x="47" y="72" width="14" height="5" fill="#111a30" />
+  <rect x="62" y="72" width="15" height="5" fill="#0e1628" />
+  <rect x="78" y="72" width="14" height="5" fill="#0c1322" />
+  <rect x="93" y="72" width="15" height="5" fill="#0a101e" />
+  <rect x="109" y="72" width="14" height="5" fill="#090e1a" />
+  <rect x="124" y="72" width="35" height="5" fill="#070b16" />
+  <rect x="16" y="72" width="14" height="1" fill="#22386a" />
+  <rect x="31" y="72" width="15" height="1" fill="#1c3260" />
+  <!-- near row -->
+  <rect x="0" y="78" width="18" height="6" fill="#16223c" />
+  <rect x="19" y="78" width="17" height="6" fill="#1a2846" />
+  <rect x="37" y="78" width="18" height="6" fill="#142038" />
+  <rect x="56" y="78" width="17" height="6" fill="#111a30" />
+  <rect x="74" y="78" width="18" height="6" fill="#0e1628" />
+  <rect x="93" y="78" width="17" height="6" fill="#0b1120" />
+  <rect x="111" y="78" width="18" height="6" fill="#090e1a" />
+  <rect x="130" y="78" width="29" height="6" fill="#070b14" />
+  <rect x="19" y="78" width="17" height="1" fill="#2a4a8a" />
+  <rect x="0" y="78" width="18" height="1" fill="#22386a" />
+  <!-- patches of sand fused to glass where breath met ground -->
+  <rect x="44" y="70" width="7" height="2" fill="#1c2a30" />
+  <rect x="46" y="69" width="4" height="1" fill="#2a4248" />
+  <rect x="48" y="70" width="2" height="1" fill="#3a5e66" />
+  <rect x="50" y="71" width="3" height="1" fill="#16222a" />
+  <rect x="84" y="75" width="6" height="2" fill="#16222a" />
+  <rect x="86" y="74" width="3" height="1" fill="#2a4248" />
+  <rect x="62" y="80" width="5" height="1" fill="#1c2a30" />
+  <rect x="64" y="79" width="2" height="1" fill="#2a4248" />
+  <!-- a climber's blade, melted into the glass mid-swing -->
+  <rect x="72" y="74" width="6" height="1" fill="#28344a" />
+  <rect x="77" y="73" width="2" height="1" fill="#3a4a66" />
+  <rect x="71" y="75" width="2" height="1" fill="#1c2a30" />
+  <!-- bone shards gone glassy -->
+  <rect x="96" y="79" width="3" height="1" fill="#2c3644" />
+  <rect x="100" y="80" width="2" height="1" fill="#242e3c" />
+  <rect x="34" y="74" width="2" height="1" fill="#2c3644" />
+  <!-- static pricks dying on the ground charge -->
+  <rect x="22" y="70" width="1" height="1" fill="#4a6aae" opacity="0.7" />
+  <rect x="58" y="74" width="1" height="1" fill="#2a4a8a" opacity="0.7" />
+  <rect x="90" y="70" width="1" height="1" fill="#4a6aae" opacity="0.5" />
+  <!-- arc-light pooled below the cluster -->
+  <rect x="-8" y="58" width="60" height="24" fill="url(#c13e-floor-pool)" />
+</svg>
