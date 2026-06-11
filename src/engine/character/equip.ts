@@ -52,6 +52,27 @@ export function slotForItem(itemId: string): EquipSlot | null {
  * except a ring matches BOTH ring slots, so the inventory UI lets the player
  * drag a ring onto either band.
  */
+
+/**
+ * The item(s) the character currently WEARS in the slot this item would
+ * occupy — the "compare with equipped" set for shop racks and the backpack.
+ * Rings are a pair: hovering any ring compares against BOTH worn rings.
+ */
+export function equippedRefsForItemSlot(
+  character: Character,
+  itemId: string,
+): ItemRef[] {
+  const slot = slotForItem(itemId);
+  if (!slot) return [];
+  if (slot === 'ring1') {
+    return [character.equipped.ring1, character.equipped.ring2].filter(
+      (r): r is ItemRef => r != null,
+    );
+  }
+  const worn = character.equipped[slot];
+  return worn ? [worn] : [];
+}
+
 export function canEquipToSlot(itemId: string, slot: EquipSlot): boolean {
   const item = getItem(itemId);
   if (item.kind === 'accessory' && item.accessorySlot === 'ring') {
