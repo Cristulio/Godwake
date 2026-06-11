@@ -72,7 +72,7 @@
   "quartermasters-stipend": {
     "name": "Estipendio del Intendente",
     "flavor": "Un vale doblado, sellado con cera verde. Preséntalo al superar un capítulo y la Arboleda te reembolsará, por una contabilidad que solo ellos llevan.",
-    "effect": "Gana +{n} de oro cada vez que cae un jefe de capítulo."
+    "effect": "Ganas +{n} de oro × el número del capítulo cada vez que cae un jefe de capítulo (el Cap. 1 paga {n}; el 14, catorce veces más)."
   },
   "shrine-tithe": {
     "name": "Diezmo del Altar",

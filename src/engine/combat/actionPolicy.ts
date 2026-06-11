@@ -979,7 +979,10 @@ function chooseWizardAction(
     ) {
       return { kind: 'cast', spellId: 'soul-snare', targetId: threat.id };
     }
-    if (knows(character, 'hold-person') && slotsAt(character, 2) > 0) {
+    // Hold Person only when the field is down to ONE foe (owner directive
+    // 2026-06-11): paralyzing one of a crowd wastes the action's tempo — the
+    // pack still mauls you. The boss-grade Soul Snare above keeps its gate.
+    if (knows(character, 'hold-person') && slotsAt(character, 2) > 0 && enemyCount === 1) {
       return { kind: 'cast', spellId: 'hold-person', targetId: threat.id };
     }
   }
