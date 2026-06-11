@@ -452,7 +452,7 @@ interface DelveStoreState {
   failDelve: () => void;
   abandonDelve: () => void;
   markChapter1BossKilled: () => void;
-  creditChapterClearGold: () => void;
+  creditChapterClearGold: (clearedChapter?: number) => void;
   concludeDelveAtCamp: () => void;
   /** Resolve a camp choice. Returns null (rest grants no blessing). */
   pickCampChoice: (choice: 'rest') => string | null;
@@ -914,7 +914,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       } else if (clearedChapter < TOTAL_CHAPTERS) {
         useScreenStore.getState().showTaunt('melissan', 'chapter-clear', clearedChapter);
       }
-      get().creditChapterClearGold();
+      get().creditChapterClearGold(clearedChapter);
     }
     // Chained Godwake delve: Karzok is the Ch1 boss. Flag the kill. The Voice is
     // NOT named here — the antagonist's name stays hidden until the Chapter-10 lore
@@ -1109,15 +1109,18 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
   markChapter1BossKilled: () =>
     set((s) => (s.delve ? { delve: { ...s.delve, chapter1BossKilled: true } } : s)),
 
-  creditChapterClearGold: () => {
+  creditChapterClearGold: (clearedChapter = 1) => {
     const s = get();
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (!s.delve || !character) return;
     // Two sources stack: Quartermaster's Stipend (delveStart, top-level) and
     // Coin in the Pocket's per-clear payout (permanent, permanentBonuses).
+    // The Stipend SCALES with the chapter just cleared (owner: a flat +10 was
+    // irrelevant by the late game) — Ch1 pays 1x, Ch14 pays 14x. Coin in the
+    // Pocket's per-clear payout stays flat.
     const bonus =
-      (character.chapterClearGoldBonus ?? 0) +
+      (character.chapterClearGoldBonus ?? 0) * Math.max(1, clearedChapter) +
       (character.permanentBonuses?.chapterClearGold ?? 0);
     if (bonus <= 0) return;
     charSlice.setCharacter({

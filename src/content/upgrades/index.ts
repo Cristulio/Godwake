@@ -287,7 +287,7 @@ const RAW: Upgrade[] = [
     category: 'economy',
     name: "Quartermaster's Stipend",
     flavor:
-      'A folded chit, sealed with green wax. Present it at a chapter cleared and the Grove will reimburse, by some accounting only they keep.',
+      'A folded chit, sealed with green wax. The deeper the chapter it is presented at, the more the Grove reimburses — by some accounting only they keep.',
     effectAtRank: (r) => fx('quartermasters-stipend', { n: 10 * r }),
     costForRank: (r) => rankCost(70, r),
     maxRank: 3,

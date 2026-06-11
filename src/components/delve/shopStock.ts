@@ -1,6 +1,7 @@
 import type { GearRarity, ItemRef } from '../../schemas/item';
 import type { ClassId } from '../../schemas/ids';
 import type { CampBoonTier } from '../../content/campBoons';
+import { getClass } from '../../content/classes';
 import { createDiceRoller } from '../../engine/dice';
 import {
   rollItem,
@@ -137,9 +138,17 @@ export function rollGearStock(
       else purples += 1;
     }
     const kind = stockSlotKind(i, isMonk);
+    // A shield-bearer's rack always carries one shield (owner: a Paladin saw
+    // almost none) — slot 2 pins to the shield rack for shield-proficient
+    // classes; everyone else keeps the free roll there.
+    const shieldSlot = i === 2 && !isMonk && classCanShield(classId);
     const ref = rollItem(
       roller,
-      kind ? { rarity, classId, kind, depth: chapter } : { rarity, classId, depth: chapter },
+      shieldSlot
+        ? { rarity, classId, kind: 'armor', armorCategory: 'shield', depth: chapter }
+        : kind
+          ? { rarity, classId, kind, depth: chapter }
+          : { rarity, classId, depth: chapter },
     );
     return { ref, cost: rolledItemCost(ref) };
   });
@@ -158,6 +167,13 @@ function stockSlotKind(i: number, isMonk: boolean): BaseKind | undefined {
   if (i === 1) return 'accessory';
   if (!isMonk) return undefined;
   return i === 0 ? 'weapon' : 'accessory';
+}
+
+
+/** Whether this class trains with shields — the guaranteed shield shop slot
+ *  only makes sense for someone who can raise one. */
+function classCanShield(classId: ClassId): boolean {
+  return getClass(classId).armorProficiency?.categories.includes('shield') ?? false;
 }
 
 /** Fraction of an item's value the merchant pays back when buying it from you. */

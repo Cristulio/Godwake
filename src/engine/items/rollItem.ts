@@ -122,6 +122,12 @@ export interface RollItemOptions {
    * the richest in the game. Default 1.
    */
   depth?: number;
+  /**
+   * With kind 'armor': restrict the base pool to this armour category (e.g. a
+   * guaranteed SHIELD shop slot for shield-proficient classes). Silently ignored
+   * when the class has no legal base in the category.
+   */
+  armorCategory?: 'shield';
 }
 
 /** Deterministic non-negative pick in [0, n) from the seeded roller. */
@@ -330,6 +336,10 @@ export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
   }
 
   let bases = legalBases(kind, classId);
+  if (kind === 'armor' && opts.armorCategory) {
+    const narrowed = bases.filter((b) => b.kind === 'armor' && b.category === opts.armorCategory);
+    if (narrowed.length > 0) bases = narrowed;
+  }
   // A class might be barred from the chosen kind entirely (Wizard + armour) —
   // fall back to weapons, which every class can use.
   if (bases.length === 0) {

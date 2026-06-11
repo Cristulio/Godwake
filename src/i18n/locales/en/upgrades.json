@@ -1,32 +1,64 @@
 {
-  "pilgrims-boots": { "effect": "+{n} maximum HP, permanent." },
-  "iron-will": { "effect": "+5 maximum HP, permanent." },
-  "mantle-of-the-wakened": { "effect": "+{n} maximum HP, permanent across reincarnations." },
+  "pilgrims-boots": {
+    "effect": "+{n} maximum HP, permanent."
+  },
+  "iron-will": {
+    "effect": "+5 maximum HP, permanent."
+  },
+  "mantle-of-the-wakened": {
+    "effect": "+{n} maximum HP, permanent across reincarnations."
+  },
   "hardier-soul": {
     "effect": {
       "one": "+{n} stabilise charge per delve (a free self-stabilise when downed).",
       "other": "+{n} stabilise charges per delve (a free self-stabilise when downed)."
     }
   },
-  "cloak-of-the-grove": { "effect": "+{n} AC, permanent." },
-  "wellspring-depths": { "effect": "+{n} maximum HP, permanent across reincarnations." },
-  "first-cut": { "effect": "+{n} damage on the first attack of each combat, permanent." },
-  "bleed-out": { "effect": "+{n} damage against wounded targets (HP at half or less), permanent." },
-  "fellfast-strike": { "effect": "+{n} damage on critical hits, permanent." },
-  "whetstone-resolve": { "effect": "+{n} damage on all weapon hits, permanent." },
-  "heirloom-blade": { "effect": "+{n} to all attack rolls, permanent." },
-  "killers-eye": { "effect": "Crit on {lo}-20 instead of 20 only (crit range +{n}), permanent." },
-  "crown-of-the-returned": { "effect": "+{n} to all attack rolls and spell-attack rolls, permanent." },
-  "quartermasters-stipend": { "effect": "Gain +{n} gold each time a chapter boss falls." },
-  "shrine-tithe": { "effect": "Gain +{n} gold at each shrine room visited." },
-  "coin-in-pocket": { "effect": "Start each delve with +{n1} gold, and gain +{n2} gold each time a chapter boss falls." },
+  "cloak-of-the-grove": {
+    "effect": "+{n} AC, permanent."
+  },
+  "wellspring-depths": {
+    "effect": "+{n} maximum HP, permanent across reincarnations."
+  },
+  "first-cut": {
+    "effect": "+{n} damage on the first attack of each combat, permanent."
+  },
+  "bleed-out": {
+    "effect": "+{n} damage against wounded targets (HP at half or less), permanent."
+  },
+  "fellfast-strike": {
+    "effect": "+{n} damage on critical hits, permanent."
+  },
+  "whetstone-resolve": {
+    "effect": "+{n} damage on all weapon hits, permanent."
+  },
+  "heirloom-blade": {
+    "effect": "+{n} to all attack rolls, permanent."
+  },
+  "killers-eye": {
+    "effect": "Crit on {lo}-20 instead of 20 only (crit range +{n}), permanent."
+  },
+  "crown-of-the-returned": {
+    "effect": "+{n} to all attack rolls and spell-attack rolls, permanent."
+  },
+  "quartermasters-stipend": {
+    "effect": "Gain +{n} gold × the chapter's number each time a chapter boss falls (Ch1 pays {n}, Ch14 pays fourteen-fold)."
+  },
+  "shrine-tithe": {
+    "effect": "Gain +{n} gold at each shrine room visited."
+  },
+  "coin-in-pocket": {
+    "effect": "Start each delve with +{n1} gold, and gain +{n2} gold each time a chapter boss falls."
+  },
   "mielikki-cache": {
     "effect": {
       "one": "Start each delve with +{n} Potion of Healing.",
       "other": "Start each delve with +{n} Potions of Healing."
     }
   },
-  "wider-pantheon": { "effect": "Shrines offer {n} blessings to choose from (instead of 3)." },
+  "wider-pantheon": {
+    "effect": "Shrines offer {n} blessings to choose from (instead of 3)."
+  },
   "pilgrims-step": {
     "effect": {
       "one": "Start each delve with {n} random shrine blessing already in hand.",
@@ -39,10 +71,18 @@
       "other": "Start each delve able to reroll +{n} missed attacks."
     }
   },
-  "soul-marrow": { "effect": "Each bane-quirk you carry earns an extra +{n}% renown on top of the soul-mark." },
-  "wheelturner": { "effect": "On reincarnation, your first boon-quirk is carried into the new life (banes are left behind; the remaining slot rerolls)." },
-  "wheel-quickened": { "effect": "Unlocks the \u00d72 game speed \u2014 combat, dice, and travel hurry when you ask." },
-  "wheel-unbound": { "effect": "Unlocks the \u00d74 game speed \u2014 the road at a full sprint." },
+  "soul-marrow": {
+    "effect": "Each bane-quirk you carry earns an extra +{n}% renown on top of the soul-mark."
+  },
+  "wheelturner": {
+    "effect": "On reincarnation, your first boon-quirk is carried into the new life (banes are left behind; the remaining slot rerolls)."
+  },
+  "wheel-quickened": {
+    "effect": "Unlocks the ×2 game speed — combat, dice, and travel hurry when you ask."
+  },
+  "wheel-unbound": {
+    "effect": "Unlocks the ×4 game speed — the road at a full sprint."
+  },
   "wellspring-vigil": {
     "effect": {
       "one": "+{n} extra Second Wind charge per delve.",
@@ -55,21 +95,39 @@
       "other": "+{n} extra Cunning Action uses per combat."
     }
   },
-  "knife-in-the-dark": { "effect": "+{n}d6 Sneak Attack damage, permanent." },
-  "arcane-focus": { "effect": "+{n} to spell attack rolls, permanent." },
-  "burning-tongue": { "effect": "+{n} damage to spells, permanent." },
-  "sigil-of-the-wakened-mind": { "effect": "+{n} spell save DC, permanent (enemies save harder against your spells)." },
-  "brutal-scars": { "effect": "+{n} damage on critical hits, permanent." },
-  "reckless-eye": { "effect": "Crit on {lo}-20 instead of 20 only (crit range +{n}), permanent." },
-  "first-arrow": { "effect": "+{n} damage on the first attack of each combat, permanent." },
-  "colossus-slayer": { "effect": "+{n} damage against wounded targets (HP at half or less), permanent." },
+  "knife-in-the-dark": {
+    "effect": "+{n}d6 Sneak Attack damage, permanent."
+  },
+  "arcane-focus": {
+    "effect": "+{n} to spell attack rolls, permanent."
+  },
+  "burning-tongue": {
+    "effect": "+{n} damage to spells, permanent."
+  },
+  "sigil-of-the-wakened-mind": {
+    "effect": "+{n} spell save DC, permanent (enemies save harder against your spells)."
+  },
+  "brutal-scars": {
+    "effect": "+{n} damage on critical hits, permanent."
+  },
+  "reckless-eye": {
+    "effect": "Crit on {lo}-20 instead of 20 only (crit range +{n}), permanent."
+  },
+  "first-arrow": {
+    "effect": "+{n} damage on the first attack of each combat, permanent."
+  },
+  "colossus-slayer": {
+    "effect": "+{n} damage against wounded targets (HP at half or less), permanent."
+  },
   "primal-reservoir": {
     "effect": {
       "one": "+{n} Wild Shape use per combat.",
       "other": "+{n} Wild Shape uses per combat."
     }
   },
-  "verdant-wrath": { "effect": "+{n} damage to spells, permanent." },
+  "verdant-wrath": {
+    "effect": "+{n} damage to spells, permanent."
+  },
   "deep-roots": {
     "effect": {
       "one": "+{n} first-level spell slot each delve, permanent.",
@@ -82,7 +140,9 @@
       "other": "+{n} maximum Ki points per combat."
     }
   },
-  "pressure-points": { "effect": "+{n} damage on critical hits, permanent." },
+  "pressure-points": {
+    "effect": "+{n} damage on critical hits, permanent."
+  },
   "wellspring-of-mysteries": {
     "effect": {
       "one": "+{n} first-level spell slot each delve, permanent.",
