@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch4-event — Zhal Vasha, the moon-shrine grotto: the calm corner of
+       the Deepdark (events + rest). A heresy kept quiet — a cleft in the
+       high rock lets down a pale silver light onto a still pool; dancers
+       worn almost smooth circle the far wall; someone has left a candle
+       burning on the shrine ledge and coins in the water. Key light: the
+       cleft, upper-LEFT, falling as dithered rays; the candle answers in
+       warm. Event banners crop to roughly y28-54 — rays, relief, candle
+       and pool-edge all cross that band. Floor seam y66. Grotto ramps:
+       rock #0d0b12 #14111a #1b1724 #241f30; moonlight #2a3a42 #3d5560
+       #5a7d8a (+#8aacbe); water #0c1418 #16242c #2a4a52 (+#4a7a86);
+       fungi #0c1c20 #14303a #1f4a56; candle #a33d1e #ffb347 #ffe9a8. -->
+  <defs>
+    <radialGradient id="c4v-moon-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#8aacbe" stop-opacity="0.22" />
+      <stop offset="50%" stop-color="#6a8a9a" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#6a8a9a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c4v-candle-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.20" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="c4v-ray" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#8aacbe" stop-opacity="0.30" />
+      <stop offset="70%" stop-color="#7a9aac" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#7a9aac" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- ══ FAR: grotto rock, rough-shelved ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0c0a11" />
+  <rect x="0" y="0" width="160" height="3" fill="#06050a" />
+  <!-- irregular rock masses, low contrast -->
+  <rect x="0" y="3" width="14" height="20" fill="#14111a" />
+  <rect x="30" y="3" width="22" height="13" fill="#100e16" />
+  <rect x="52" y="3" width="26" height="16" fill="#14111a" />
+  <rect x="78" y="3" width="28" height="13" fill="#100e16" />
+  <rect x="106" y="3" width="26" height="17" fill="#0e0c14" />
+  <rect x="132" y="3" width="28" height="14" fill="#0c0b12" />
+  <rect x="0" y="23" width="12" height="20" fill="#100e16" />
+  <rect x="30" y="16" width="18" height="16" fill="#0e0c14" />
+  <rect x="48" y="19" width="24" height="14" fill="#100e16" />
+  <rect x="72" y="16" width="20" height="18" fill="#0e0c14" />
+  <rect x="92" y="20" width="16" height="14" fill="#0c0b12" />
+  <rect x="132" y="17" width="28" height="18" fill="#0e0c14" />
+  <rect x="52" y="3" width="26" height="1" fill="#1b1724" />
+  <rect x="0" y="3" width="14" height="1" fill="#1b1724" />
+  <rect x="30" y="16" width="18" height="1" fill="#161320" />
+  <!-- a seam of rock catching the moon, top edges only -->
+  <rect x="32" y="20" width="10" height="1" fill="#222c32" />
+  <rect x="46" y="26" width="8" height="1" fill="#1c242a" />
+
+  <!-- ══ The cleft and its light (x14-30 above) ══ -->
+  <rect x="14" y="0" width="16" height="14" fill="#10141a" />
+  <rect x="16" y="0" width="12" height="11" fill="#1a2630" />
+  <rect x="18" y="0" width="8" height="9" fill="#2a3a42" />
+  <rect x="20" y="0" width="5" height="7" fill="#3d5560" />
+  <rect x="21" y="0" width="3" height="4" fill="#5a7d8a" />
+  <rect x="22" y="0" width="1" height="2" fill="#8aacbe" />
+  <!-- jagged lip -->
+  <rect x="14" y="14" width="4" height="1" fill="#0e0c14" />
+  <rect x="18" y="11" width="3" height="1" fill="#10141a" />
+  <rect x="25" y="9" width="3" height="2" fill="#10141a" />
+  <rect x="28" y="12" width="2" height="2" fill="#0e0c14" />
+  <!-- the fall of light to the pool -->
+  <polygon points="16,8 30,8 70,62 44,62" fill="url(#c4v-ray)" />
+  <rect x="28" y="14" width="2" height="2" fill="#22303a" opacity="0.55" />
+  <rect x="33" y="21" width="2" height="2" fill="#1d2a32" opacity="0.5" />
+  <rect x="39" y="29" width="2" height="2" fill="#22303a" opacity="0.45" />
+  <rect x="46" y="38" width="2" height="2" fill="#1d2a32" opacity="0.4" />
+  <rect x="52" y="47" width="2" height="2" fill="#1a252c" opacity="0.38" />
+  <rect x="31" y="17" width="1" height="1" fill="#2c3c46" opacity="0.6" />
+  <rect x="42" y="33" width="1" height="1" fill="#243038" opacity="0.5" />
+  <rect x="55" y="52" width="1" height="1" fill="#243038" opacity="0.45" />
+  <rect x="-6" y="-10" width="76" height="66" fill="url(#c4v-moon-glow)" />
+  <!-- the silver chime left for the lady of the cleft -->
+  <rect x="33" y="10" width="1" height="5" fill="#22222a" />
+  <rect x="32" y="15" width="3" height="1" fill="#6e7e8a" />
+  <rect x="33" y="16" width="1" height="3" fill="#3a3f44" />
+  <rect x="33" y="19" width="1" height="1" fill="#9eb4c0" />
+
+  <!-- ══ The dancers worn into the far wall (x106-134, y22-44) ══ -->
+  <rect x="106" y="22" width="28" height="22" fill="#100e16" />
+  <rect x="106" y="22" width="28" height="1" fill="#161320" />
+  <!-- figure 1: arms up -->
+  <rect x="110" y="26" width="2" height="2" fill="#2e2e38" />
+  <rect x="109" y="28" width="4" height="4" fill="#26262e" />
+  <rect x="108" y="25" width="1" height="2" fill="#26262e" />
+  <rect x="113" y="25" width="1" height="2" fill="#26262e" />
+  <rect x="110" y="32" width="1" height="3" fill="#26262e" />
+  <rect x="112" y="32" width="1" height="2" fill="#26262e" />
+  <!-- figure 2: mid-turn, skirt flared -->
+  <rect x="118" y="27" width="2" height="2" fill="#2e2e38" />
+  <rect x="117" y="29" width="4" height="3" fill="#26262e" />
+  <rect x="116" y="32" width="6" height="2" fill="#26262e" />
+  <rect x="118" y="34" width="1" height="2" fill="#22222a" />
+  <rect x="121" y="28" width="2" height="1" fill="#26262e" />
+  <!-- figure 3: bowing to the moon -->
+  <rect x="127" y="29" width="2" height="2" fill="#2e2e38" />
+  <rect x="126" y="31" width="4" height="3" fill="#26262e" />
+  <rect x="125" y="30" width="1" height="1" fill="#26262e" />
+  <rect x="127" y="34" width="1" height="3" fill="#22222a" />
+  <rect x="129" y="34" width="1" height="2" fill="#22222a" />
+  <!-- the circling-line they dance on, worn to dashes -->
+  <rect x="108" y="38" width="3" height="1" fill="#1e1a28" />
+  <rect x="114" y="38" width="4" height="1" fill="#1e1a28" />
+  <rect x="121" y="38" width="3" height="1" fill="#1e1a28" />
+  <rect x="127" y="38" width="4" height="1" fill="#1e1a28" />
+  <!-- a crescent scratched above them, almost gone -->
+  <rect x="119" y="24" width="3" height="1" fill="#2e2e38" />
+  <rect x="118" y="25" width="1" height="1" fill="#2a2a32" />
+  <rect x="122" y="25" width="1" height="1" fill="#2a2a32" />
+
+  <!-- ══ The shrine ledge + candle (x98-112, y44-52) ══ -->
+  <rect x="98" y="48" width="14" height="2" fill="#1b1724" />
+  <rect x="98" y="48" width="14" height="1" fill="#241f30" />
+  <rect x="99" y="50" width="12" height="2" fill="#12101a" />
+  <rect x="102" y="44" width="3" height="4" fill="#3a382c" />
+  <rect x="103" y="41" width="1" height="3" fill="#ffe9a8" />
+  <rect x="102" y="39" width="3" height="3" fill="#ffb347" />
+  <rect x="103" y="38" width="1" height="1" fill="#e8743a" />
+  <rect x="105" y="43" width="1" height="1" fill="#e8743a" opacity="0.8" />
+  <rect x="86" y="26" width="44" height="42" fill="url(#c4v-candle-glow)" />
+  <!-- dried petals of cave-flower someone carried down -->
+  <rect x="107" y="46" width="2" height="1" fill="#3a2356" />
+  <rect x="109" y="47" width="1" height="1" fill="#2a1844" />
+
+  <!-- ══ The still pool (x42-98, y54-66) ══ -->
+  <rect x="42" y="54" width="56" height="12" fill="#0c1418" />
+  <rect x="42" y="54" width="56" height="1" fill="#101c22" />
+  <rect x="44" y="56" width="52" height="9" fill="#16242c" />
+  <!-- the moon-shaft standing in the water -->
+  <rect x="52" y="55" width="8" height="10" fill="#1d3038" />
+  <rect x="54" y="55" width="4" height="10" fill="#2a4a52" />
+  <rect x="55" y="56" width="2" height="8" fill="#35606a" />
+  <rect x="56" y="57" width="1" height="4" fill="#4a7a86" />
+  <!-- still-water rings, barely -->
+  <rect x="66" y="58" width="6" height="1" fill="#1d3038" />
+  <rect x="78" y="61" width="5" height="1" fill="#1d3038" />
+  <rect x="86" y="57" width="4" height="1" fill="#1a2c33" />
+  <!-- the coins they left -->
+  <rect x="62" y="63" width="1" height="1" fill="#4a7a86" />
+  <rect x="70" y="64" width="1" height="1" fill="#3a5f68" />
+  <rect x="81" y="63" width="1" height="1" fill="#4a7a86" />
+  <!-- pool rim stones -->
+  <rect x="40" y="54" width="2" height="12" fill="#14111a" />
+  <rect x="98" y="54" width="2" height="12" fill="#100e16" />
+  <rect x="42" y="53" width="10" height="1" fill="#1b1724" />
+  <rect x="88" y="53" width="10" height="1" fill="#14111a" />
+
+  <!-- ══ Quiet flanks of the mid band ══ -->
+  <rect x="0" y="43" width="40" height="23" fill="#100e16" />
+  <rect x="0" y="43" width="40" height="1" fill="#14111a" />
+  <rect x="0" y="54" width="40" height="1" fill="#0e0c13" />
+  <rect x="20" y="43" width="1" height="23" fill="#0e0c13" />
+  <rect x="100" y="52" width="60" height="14" fill="#0e0c14" />
+  <rect x="134" y="44" width="26" height="22" fill="#0c0b12" />
+  <rect x="134" y="44" width="26" height="1" fill="#100e16" />
+  <rect x="147" y="44" width="1" height="22" fill="#0a090f" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the grotto shore ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#08070d" />
+  <rect x="0" y="66" width="160" height="1" fill="#050409" />
+  <!-- shore slabs -->
+  <rect x="1" y="67" width="14" height="4" fill="#221d2c" />
+  <rect x="16" y="67" width="12" height="4" fill="#2a2438" />
+  <rect x="29" y="67" width="13" height="4" fill="#1e1a28" />
+  <rect x="43" y="67" width="13" height="4" fill="#1b1724" />
+  <rect x="57" y="67" width="12" height="4" fill="#171420" />
+  <rect x="70" y="67" width="13" height="4" fill="#14111a" />
+  <rect x="84" y="67" width="12" height="4" fill="#12101a" />
+  <rect x="97" y="67" width="13" height="4" fill="#100e16" />
+  <rect x="111" y="67" width="12" height="4" fill="#0e0c14" />
+  <rect x="124" y="67" width="13" height="4" fill="#0c0b12" />
+  <rect x="138" y="67" width="21" height="4" fill="#0b0a10" />
+  <rect x="16" y="67" width="12" height="1" fill="#342c44" />
+  <rect x="1" y="67" width="14" height="1" fill="#2f2840" />
+  <rect x="0" y="72" width="16" height="5" fill="#1b1724" />
+  <rect x="17" y="72" width="14" height="5" fill="#221d2c" />
+  <rect x="32" y="72" width="15" height="5" fill="#1e1a28" />
+  <rect x="48" y="72" width="14" height="5" fill="#171420" />
+  <rect x="63" y="72" width="15" height="5" fill="#14111a" />
+  <rect x="79" y="72" width="14" height="5" fill="#12101a" />
+  <rect x="94" y="72" width="15" height="5" fill="#100e16" />
+  <rect x="110" y="72" width="14" height="5" fill="#0e0c14" />
+  <rect x="125" y="72" width="15" height="5" fill="#0c0b12" />
+  <rect x="141" y="72" width="18" height="5" fill="#0b0a10" />
+  <rect x="17" y="72" width="14" height="1" fill="#2f2840" />
+  <rect x="0" y="78" width="20" height="6" fill="#221d2c" />
+  <rect x="21" y="78" width="17" height="6" fill="#2a2438" />
+  <rect x="39" y="78" width="18" height="6" fill="#1e1a28" />
+  <rect x="58" y="78" width="17" height="6" fill="#1b1724" />
+  <rect x="76" y="78" width="18" height="6" fill="#14111a" />
+  <rect x="95" y="78" width="17" height="6" fill="#12101a" />
+  <rect x="113" y="78" width="18" height="6" fill="#0e0c14" />
+  <rect x="132" y="78" width="27" height="6" fill="#0c0b12" />
+  <rect x="21" y="78" width="17" height="1" fill="#342c44" />
+  <rect x="0" y="78" width="20" height="1" fill="#2f2840" />
+  <!-- moonlight lying on the wet shore -->
+  <rect x="44" y="67" width="12" height="1" fill="#1d3038" />
+  <rect x="48" y="68" width="8" height="1" fill="#16242c" />
+  <rect x="50" y="70" width="4" height="1" fill="#16242c" />
+  <!-- luminous fungi on the left rocks -->
+  <rect x="6" y="64" width="4" height="2" fill="#0c1c20" />
+  <rect x="8" y="65" width="3" height="2" fill="#14303a" />
+  <rect x="9" y="63" width="2" height="2" fill="#14303a" />
+  <rect x="10" y="64" width="1" height="1" fill="#1f4a56" />
+  <rect x="8" y="66" width="1" height="1" fill="#2e6e80" />
+  <rect x="12" y="66" width="2" height="1" fill="#0c1c20" />
+  <!-- a knelt-out hollow in the shore stone, and bare footprints -->
+  <rect x="58" y="73" width="6" height="1" fill="#100e14" />
+  <rect x="59" y="74" width="4" height="1" fill="#0e0c12" />
+  <rect x="70" y="76" width="2" height="1" fill="#0f0d13" />
+  <rect x="74" y="79" width="2" height="1" fill="#0f0d13" />
+  <rect x="78" y="76" width="2" height="1" fill="#0f0d13" />
+  <!-- moon pooling on the water and shore -->
+  <rect x="34" y="46" width="44" height="34" fill="url(#c4v-moon-glow)" />
+</svg>

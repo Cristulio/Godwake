@@ -1,0 +1,231 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch5-boss — The brink of morning: the Godwake's set piece. The last
+       arch of the climb stands full of the false dawn — the Hollow Dawn's
+       own light, gold at the heart and rose where it grieves against the
+       stone — flanked by two kneeling colossi worn faceless by the
+       mornings. The kneel-slab waits on the dais at centre. Key bias
+       upper-LEFT: the arch-light cores toward its left shoulder. The
+       component lays the boss blood-red ambience above (gold + red = the
+       morning that means you harm). Quiet mid band y38-63 outside the
+       centre; floor seam y66. Shares the ch5 ramps (ch5-combat.svg). -->
+  <defs>
+    <radialGradient id="c5b-dawn-core" cx="0.42" cy="0.42" r="0.62">
+      <stop offset="0%" stop-color="#ffd890" stop-opacity="0.36" />
+      <stop offset="45%" stop-color="#f0b868" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#d08848" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c5b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f0b868" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#d08848" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="c5b-ray" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#f0b868" stop-opacity="0.22" />
+      <stop offset="70%" stop-color="#d08848" stop-opacity="0.07" />
+      <stop offset="100%" stop-color="#d08848" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- ══ FAR: pale precinct wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#241e18" />
+  <rect x="118" y="0" width="42" height="66" fill="#1c1628" />
+  <rect x="0" y="0" width="160" height="4" fill="#171310" />
+  <rect x="0" y="4" width="160" height="1" fill="#2c251d" />
+  <rect x="0" y="5" width="18" height="11" fill="#353026" />
+  <rect x="19" y="5" width="18" height="11" fill="#2e2922" />
+  <rect x="38" y="5" width="16" height="11" fill="#28231d" />
+  <rect x="106" y="5" width="16" height="11" fill="#211b16" />
+  <rect x="118" y="5" width="20" height="11" fill="#221a30" />
+  <rect x="139" y="5" width="21" height="11" fill="#1c1628" />
+  <rect x="0" y="5" width="18" height="1" fill="#4f4839" />
+  <rect x="0" y="17" width="20" height="11" fill="#3a352a" />
+  <rect x="21" y="17" width="16" height="11" fill="#322c25" />
+  <rect x="38" y="17" width="14" height="11" fill="#2a241e" />
+  <rect x="108" y="17" width="14" height="11" fill="#1f1a15" />
+  <rect x="118" y="17" width="22" height="11" fill="#1c1628" />
+  <rect x="141" y="17" width="19" height="11" fill="#14101c" />
+  <rect x="0" y="17" width="20" height="1" fill="#4a443a" />
+  <rect x="0" y="29" width="16" height="11" fill="#322c25" />
+  <rect x="17" y="29" width="20" height="11" fill="#2a241e" />
+  <rect x="38" y="29" width="14" height="11" fill="#262019" />
+  <rect x="108" y="29" width="14" height="11" fill="#1d1813" />
+  <rect x="118" y="29" width="24" height="11" fill="#161226" />
+  <rect x="143" y="29" width="17" height="11" fill="#120e1a" />
+  <!-- old cracks -->
+  <rect x="30" y="9" width="1" height="3" fill="#1c1814" />
+  <rect x="29" y="11" width="1" height="2" fill="#1c1814" />
+  <rect x="146" y="10" width="1" height="3" fill="#0f0c16" />
+
+  <!-- ══ The arch of morning (x56-104, y2-44) ══ -->
+  <!-- stepped pale rings -->
+  <rect x="68" y="2" width="24" height="2" fill="#4f4839" />
+  <rect x="62" y="4" width="7" height="3" fill="#4a443a" />
+  <rect x="91" y="4" width="7" height="3" fill="#423c30" />
+  <rect x="58" y="7" width="5" height="4" fill="#4a443a" />
+  <rect x="97" y="7" width="5" height="4" fill="#3a352a" />
+  <rect x="56" y="11" width="3" height="6" fill="#423c30" />
+  <rect x="101" y="11" width="3" height="6" fill="#353026" />
+  <rect x="54" y="17" width="3" height="27" fill="#423c30" />
+  <rect x="103" y="17" width="3" height="27" fill="#322c25" />
+  <rect x="54" y="17" width="1" height="27" fill="#54503e" />
+  <rect x="68" y="2" width="24" height="1" fill="#5a5444" />
+  <!-- the light standing in the arch -->
+  <rect x="57" y="17" width="46" height="27" fill="#6a3a28" />
+  <rect x="59" y="11" width="42" height="33" fill="#6a3a28" />
+  <rect x="63" y="7" width="34" height="37" fill="#a05a32" />
+  <rect x="66" y="4" width="28" height="40" fill="#a05a32" />
+  <rect x="68" y="7" width="24" height="37" fill="#d08848" />
+  <rect x="64" y="12" width="32" height="26" fill="#d08848" />
+  <rect x="68" y="10" width="20" height="30" fill="#f0b868" />
+  <rect x="64" y="16" width="26" height="18" fill="#f0b868" />
+  <rect x="66" y="12" width="14" height="18" fill="#ffd890" />
+  <rect x="70" y="9" width="8" height="25" fill="#ffd890" />
+  <!-- the rose grief at the edges -->
+  <rect x="57" y="14" width="2" height="6" fill="#8a4a52" />
+  <rect x="100" y="20" width="3" height="8" fill="#8a4a52" />
+  <rect x="60" y="38" width="4" height="3" fill="#8a4a52" />
+  <rect x="94" y="40" width="6" height="2" fill="#8a4a52" />
+  <rect x="59" y="9" width="3" height="3" fill="#8a4a52" />
+  <!-- something tall stands in the morning, almost unmakeable -->
+  <rect x="77" y="16" width="6" height="22" fill="#f0b868" />
+  <rect x="78" y="14" width="4" height="24" fill="#ffd890" />
+  <rect x="79" y="20" width="2" height="14" fill="#fff2c8" />
+  <!-- the glow off the whole aperture, biased left -->
+  <rect x="34" y="-10" width="92" height="68" fill="url(#c5b-dawn-core)" />
+  <!-- rays breaking past the springers -->
+  <polygon points="57,17 64,17 50,66 38,66" fill="url(#c5b-ray)" />
+  <polygon points="96,17 103,17 122,66 110,66" fill="url(#c5b-ray)" />
+  <!-- dust of the threshold hanging in it -->
+  <rect x="52" y="28" width="1" height="1" fill="#d08848" opacity="0.6" />
+  <rect x="48" y="40" width="1" height="1" fill="#a05a32" opacity="0.5" />
+  <rect x="108" y="32" width="1" height="1" fill="#a05a32" opacity="0.5" />
+  <rect x="112" y="46" width="1" height="1" fill="#8a5030" opacity="0.45" />
+
+  <!-- ══ Left colossus (x12-34): kneeling, faceless, lit side ══ -->
+  <rect x="18" y="8" width="10" height="8" fill="#423c30" />
+  <rect x="20" y="6" width="6" height="2" fill="#423c30" />
+  <rect x="18" y="8" width="10" height="1" fill="#54503e" />
+  <rect x="18" y="8" width="2" height="8" fill="#4f4839" />
+  <!-- bowed head's shadow notch -->
+  <rect x="21" y="12" width="5" height="2" fill="#322c25" />
+  <!-- shoulders + folded arms -->
+  <rect x="14" y="16" width="18" height="10" fill="#3a352a" />
+  <rect x="14" y="16" width="18" height="1" fill="#4f4839" />
+  <rect x="14" y="16" width="3" height="10" fill="#423c30" />
+  <rect x="12" y="22" width="6" height="14" fill="#353026" />
+  <rect x="28" y="22" width="6" height="14" fill="#2e2922" />
+  <!-- the long kneel of the body -->
+  <rect x="14" y="26" width="18" height="24" fill="#322c25" />
+  <rect x="14" y="26" width="4" height="24" fill="#3a352a" />
+  <rect x="30" y="26" width="4" height="24" fill="#2a241e" />
+  <rect x="12" y="50" width="22" height="16" fill="#2e2922" />
+  <rect x="12" y="50" width="22" height="1" fill="#3a352a" />
+  <rect x="12" y="50" width="5" height="16" fill="#353026" />
+  <!-- hands lost in the lap, worn to one mass -->
+  <rect x="19" y="36" width="8" height="4" fill="#2a241e" />
+  <rect x="19" y="36" width="8" height="1" fill="#353026" />
+  <!-- the dawn rims its bowed crown -->
+  <rect x="26" y="6" width="2" height="1" fill="#d08848" />
+  <rect x="28" y="9" width="1" height="3" fill="#a05a32" />
+  <rect x="28" y="12" width="1" height="2" fill="#6a3a28" />
+
+  <!-- ══ Right colossus (x126-148): its twin in the violet ══ -->
+  <rect x="132" y="10" width="10" height="8" fill="#261e36" />
+  <rect x="134" y="8" width="6" height="2" fill="#261e36" />
+  <rect x="132" y="10" width="1" height="8" fill="#2e2540" />
+  <rect x="135" y="14" width="5" height="2" fill="#1c1628" />
+  <rect x="128" y="18" width="18" height="10" fill="#221a30" />
+  <rect x="128" y="18" width="18" height="1" fill="#2e2540" />
+  <rect x="126" y="24" width="6" height="14" fill="#1f1930" />
+  <rect x="142" y="24" width="6" height="14" fill="#191424" />
+  <rect x="128" y="28" width="18" height="22" fill="#1c1628" />
+  <rect x="128" y="28" width="3" height="22" fill="#221a30" />
+  <rect x="126" y="50" width="22" height="16" fill="#191424" />
+  <rect x="126" y="50" width="22" height="1" fill="#221a30" />
+  <rect x="133" y="38" width="8" height="4" fill="#161226" />
+  <!-- the dawn finds it anyway, one rim -->
+  <rect x="132" y="9" width="2" height="1" fill="#8a4a52" />
+  <rect x="132" y="12" width="1" height="3" fill="#6a3a28" />
+
+  <!-- ══ Quiet mid-band wall between colossi and arch ══ -->
+  <rect x="34" y="40" width="20" height="26" fill="#262019" />
+  <rect x="34" y="40" width="20" height="1" fill="#2e2922" />
+  <rect x="34" y="53" width="20" height="1" fill="#221c17" />
+  <rect x="44" y="40" width="1" height="26" fill="#221c17" />
+  <rect x="106" y="44" width="20" height="22" fill="#1a1511" />
+  <rect x="106" y="44" width="20" height="1" fill="#1f1a15" />
+  <rect x="106" y="55" width="20" height="1" fill="#171310" />
+  <rect x="116" y="44" width="1" height="22" fill="#171310" />
+
+  <!-- ══ The dais + the kneel-slab ══ -->
+  <rect x="56" y="62" width="48" height="4" fill="#28231d" />
+  <rect x="58" y="59" width="44" height="3" fill="#322c25" />
+  <rect x="60" y="56" width="40" height="3" fill="#3a352a" />
+  <rect x="60" y="56" width="18" height="1" fill="#4f4839" />
+  <rect x="58" y="59" width="16" height="1" fill="#423c30" />
+  <rect x="56" y="62" width="14" height="1" fill="#3a352a" />
+  <!-- the slab, knelt to a hollow -->
+  <rect x="72" y="50" width="16" height="6" fill="#423c30" />
+  <rect x="72" y="50" width="16" height="1" fill="#54503e" />
+  <rect x="72" y="51" width="2" height="5" fill="#4a443a" />
+  <rect x="86" y="51" width="2" height="5" fill="#353026" />
+  <rect x="76" y="52" width="8" height="2" fill="#322c25" />
+  <rect x="77" y="53" width="6" height="1" fill="#2a241e" />
+  <!-- the light lying on the slab -->
+  <rect x="74" y="50" width="6" height="1" fill="#d08848" />
+  <rect x="80" y="50" width="4" height="1" fill="#a05a32" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the threshold flags ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#15110d" />
+  <rect x="0" y="66" width="160" height="1" fill="#0d0a07" />
+  <rect x="1" y="67" width="13" height="4" fill="#3a352a" />
+  <rect x="15" y="67" width="12" height="4" fill="#423c30" />
+  <rect x="28" y="67" width="12" height="4" fill="#3a352a" />
+  <rect x="41" y="67" width="13" height="4" fill="#353026" />
+  <rect x="95" y="67" width="13" height="4" fill="#221c17" />
+  <rect x="109" y="67" width="12" height="4" fill="#1d1813" />
+  <rect x="122" y="67" width="12" height="4" fill="#191529" />
+  <rect x="135" y="67" width="12" height="4" fill="#141022" />
+  <rect x="148" y="67" width="11" height="4" fill="#100d1a" />
+  <rect x="15" y="67" width="12" height="1" fill="#54503e" />
+  <rect x="1" y="67" width="13" height="1" fill="#4a443a" />
+  <rect x="0" y="72" width="15" height="5" fill="#353026" />
+  <rect x="16" y="72" width="14" height="5" fill="#3a352a" />
+  <rect x="31" y="72" width="14" height="5" fill="#322c25" />
+  <rect x="46" y="72" width="15" height="5" fill="#2e2922" />
+  <rect x="62" y="72" width="14" height="5" fill="#2a241e" />
+  <rect x="77" y="72" width="15" height="5" fill="#262019" />
+  <rect x="93" y="72" width="14" height="5" fill="#211b16" />
+  <rect x="108" y="72" width="14" height="5" fill="#1c1713" />
+  <rect x="123" y="72" width="15" height="5" fill="#171326" />
+  <rect x="139" y="72" width="20" height="5" fill="#120f1e" />
+  <rect x="16" y="72" width="14" height="1" fill="#4f4839" />
+  <rect x="0" y="78" width="18" height="6" fill="#3a352a" />
+  <rect x="19" y="78" width="17" height="6" fill="#423c30" />
+  <rect x="37" y="78" width="17" height="6" fill="#3a352a" />
+  <rect x="55" y="78" width="17" height="6" fill="#322c25" />
+  <rect x="73" y="78" width="17" height="6" fill="#2a241e" />
+  <rect x="91" y="78" width="17" height="6" fill="#241e18" />
+  <rect x="109" y="78" width="17" height="6" fill="#1d1813" />
+  <rect x="127" y="78" width="16" height="6" fill="#161224" />
+  <rect x="144" y="78" width="15" height="6" fill="#110e1c" />
+  <rect x="19" y="78" width="17" height="1" fill="#54503e" />
+  <rect x="0" y="78" width="18" height="1" fill="#4a443a" />
+  <!-- the morning lying down the centre of the floor -->
+  <rect x="55" y="67" width="12" height="4" fill="#4a3424" />
+  <rect x="68" y="67" width="13" height="4" fill="#553a26" />
+  <rect x="82" y="67" width="12" height="4" fill="#4a3424" />
+  <rect x="68" y="67" width="13" height="1" fill="#6a4a2e" />
+  <rect x="55" y="67" width="12" height="1" fill="#5e422a" />
+  <rect x="72" y="68" width="5" height="1" fill="#7a5230" />
+  <rect x="30" y="52" width="100" height="32" fill="url(#c5b-floor-pool)" />
+  <!-- coins of every pilgrim it turned, scattered at the brink -->
+  <rect x="64" y="74" width="1" height="1" fill="#a8862e" />
+  <rect x="72" y="76" width="1" height="1" fill="#8a6c2a" />
+  <rect x="86" y="74" width="1" height="1" fill="#a8862e" />
+  <rect x="79" y="80" width="1" height="1" fill="#8a6c2a" />
+  <rect x="92" y="78" width="1" height="1" fill="#6a521e" />
+  <!-- and one sword laid flat, hilt toward the arch -->
+  <rect x="40" y="74" width="7" height="1" fill="#322c25" />
+  <rect x="46" y="73" width="2" height="1" fill="#423c30" />
+  <rect x="38" y="75" width="2" height="1" fill="#2a241e" />
+</svg>

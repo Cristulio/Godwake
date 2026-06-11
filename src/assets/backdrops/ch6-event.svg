@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch6-event — A stillness before the wheel: the calm corner of the
+       Loom (events + rest). The last seam of quiet at the rim — a
+       guttering thing that was a pilgrim once tends a small fire out of
+       habit, a cup already poured, and near it the two words something
+       scored into the plate before going on. One thread passes far
+       overhead with its slow beads (the cool key, upper-LEFT); the fire
+       is the warm answer. Event banners crop to roughly y28-54 — the
+       pilgrim, fire-glow, words and thread all cross that band. Floor
+       seam y66 (the rim rail). Shares the ch6 ramps (ch6-combat.svg) +
+       fire: #a33d1e #e8743a #ffb347 #ffe9a8. -->
+  <defs>
+    <radialGradient id="c6v-thread-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#6ab4c4" stop-opacity="0.18" />
+      <stop offset="50%" stop-color="#2e5a68" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#2e5a68" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c6v-fire-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="50%" stop-color="#e8743a" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the void, gentler here ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0a0c14" />
+  <rect x="0" y="0" width="160" height="8" fill="#05060c" />
+  <rect x="100" y="0" width="60" height="66" fill="#08090f" />
+  <!-- the far arc, low and at rest -->
+  <rect x="0" y="22" width="26" height="3" fill="#141828" />
+  <rect x="26" y="24" width="28" height="3" fill="#121624" />
+  <rect x="54" y="26" width="30" height="3" fill="#101320" />
+  <rect x="84" y="28" width="30" height="3" fill="#0e111c" />
+  <rect x="114" y="30" width="30" height="3" fill="#0d101a" />
+  <rect x="144" y="32" width="16" height="3" fill="#0c0e18" />
+  <rect x="0" y="22" width="26" height="1" fill="#1a1f2e" />
+  <rect x="26" y="24" width="28" height="1" fill="#181c2c" />
+  <rect x="54" y="26" width="30" height="1" fill="#151a28" />
+  <!-- one spoke far off, going up out of sight -->
+  <rect x="120" y="0" width="3" height="30" fill="#10131e" />
+  <rect x="120" y="0" width="1" height="30" fill="#141828" />
+  <rect x="121" y="8" width="1" height="1" fill="#1c2132" />
+
+  <!-- ══ The one passing thread (the cool key, upper-LEFT) ══ -->
+  <rect x="0" y="6" width="18" height="1" fill="#2e5a68" />
+  <rect x="18" y="7" width="20" height="1" fill="#1e3a44" />
+  <rect x="38" y="8" width="22" height="1" fill="#16303a" />
+  <rect x="60" y="9" width="24" height="1" fill="#122832" />
+  <rect x="84" y="10" width="26" height="1" fill="#0f2028" />
+  <rect x="110" y="11" width="28" height="1" fill="#0c1a20" />
+  <rect x="138" y="12" width="22" height="1" fill="#0a161c" />
+  <!-- its slow beads -->
+  <rect x="8" y="6" width="1" height="1" fill="#9adee8" />
+  <rect x="9" y="6" width="1" height="1" fill="#6ab4c4" />
+  <rect x="46" y="8" width="1" height="1" fill="#46818f" />
+  <rect x="92" y="10" width="1" height="1" fill="#2e5a68" />
+  <rect x="-16" y="-14" width="72" height="52" fill="url(#c6v-thread-glow)" />
+  <!-- a fibre it shed, going down slow -->
+  <rect x="24" y="10" width="1" height="1" fill="#16303a" opacity="0.8" />
+  <rect x="26" y="14" width="1" height="1" fill="#122832" opacity="0.7" />
+  <rect x="25" y="19" width="1" height="1" fill="#0f2028" opacity="0.6" />
+
+  <!-- ══ MID BAND backdrop (y33-63): the quiet dark ══ -->
+  <rect x="0" y="33" width="100" height="33" fill="#090b12" />
+  <rect x="100" y="33" width="60" height="33" fill="#07080e" />
+  <rect x="0" y="48" width="100" height="1" fill="#0a0d15" />
+  <rect x="100" y="48" width="60" height="1" fill="#080a10" />
+
+  <!-- ══ The camp: fire, the one who tends it, the cup, the words ══ -->
+  <!-- the pilgrim, hunched, facing the fire; thread frays off its back -->
+  <rect x="60" y="40" width="8" height="3" fill="#1a1826" />
+  <rect x="59" y="43" width="10" height="9" fill="#1f1d2e" />
+  <rect x="58" y="46" width="12" height="6" fill="#1f1d2e" />
+  <rect x="62" y="38" width="5" height="3" fill="#1a1826" />
+  <rect x="63" y="37" width="3" height="2" fill="#171522" />
+  <!-- its firelit edge -->
+  <rect x="59" y="43" width="1" height="9" fill="#322a2a" />
+  <rect x="60" y="41" width="1" height="2" fill="#2e2826" />
+  <rect x="62" y="38" width="1" height="3" fill="#2a2422" />
+  <!-- the frays coming off its shoulders -->
+  <rect x="68" y="39" width="3" height="1" fill="#16303a" />
+  <rect x="70" y="41" width="3" height="1" fill="#122832" />
+  <rect x="69" y="44" width="2" height="1" fill="#0f2028" />
+  <rect x="71" y="38" width="1" height="1" fill="#1e3a44" />
+  <!-- its hand, worn nearly smooth, held to the heat -->
+  <rect x="56" y="47" width="3" height="2" fill="#2a2624" />
+  <rect x="55" y="48" width="2" height="1" fill="#322a2a" />
+
+  <!-- the fire, tended out of habit -->
+  <rect x="44" y="52" width="9" height="2" fill="#1a1826" />
+  <rect x="45" y="51" width="7" height="1" fill="#242234" />
+  <rect x="46" y="48" width="5" height="3" fill="#a33d1e" />
+  <rect x="47" y="45" width="3" height="3" fill="#e8743a" />
+  <rect x="48" y="43" width="2" height="2" fill="#ffb347" />
+  <rect x="48" y="46" width="1" height="3" fill="#ffe9a8" />
+  <rect x="50" y="42" width="1" height="1" fill="#e8743a" />
+  <!-- charred ends poking out -->
+  <rect x="43" y="52" width="3" height="1" fill="#100e18" />
+  <rect x="51" y="53" width="3" height="1" fill="#100e18" />
+  <!-- embers that drift UP, against no wind -->
+  <rect x="52" y="40" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="55" y="35" width="1" height="1" fill="#a33d1e" opacity="0.8" />
+  <rect x="50" y="30" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+  <rect x="22" y="22" width="56" height="50" fill="url(#c6v-fire-glow)" />
+
+  <!-- the plate with the scored words, catching the firelight -->
+  <rect x="72" y="50" width="16" height="4" fill="#1c1a2a" />
+  <rect x="72" y="50" width="16" height="1" fill="#2e2c42" />
+  <rect x="74" y="51" width="4" height="1" fill="#4a3e2e" />
+  <rect x="80" y="51" width="6" height="1" fill="#4a3e2e" />
+  <rect x="75" y="52" width="2" height="1" fill="#3a3226" />
+  <rect x="82" y="52" width="3" height="1" fill="#3a3226" />
+  <!-- the cup, poured and waiting -->
+  <rect x="68" y="51" width="3" height="3" fill="#242234" />
+  <rect x="68" y="51" width="3" height="1" fill="#34324a" />
+  <rect x="69" y="50" width="1" height="1" fill="#2e2c42" />
+  <!-- its faint steam -->
+  <rect x="69" y="47" width="1" height="1" fill="#1c2132" opacity="0.8" />
+  <rect x="70" y="45" width="1" height="1" fill="#181c2c" opacity="0.6" />
+
+  <!-- the worn smooth sitting-place across the fire -->
+  <rect x="36" y="54" width="8" height="3" fill="#1f1d2e" />
+  <rect x="36" y="54" width="8" height="1" fill="#2a2838" />
+  <rect x="37" y="57" width="6" height="1" fill="#171522" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the rim tread, at rest ══ -->
+  <rect x="0" y="66" width="160" height="2" fill="#2e2c42" />
+  <rect x="0" y="66" width="160" height="1" fill="#3a3852" />
+  <rect x="0" y="68" width="160" height="1" fill="#0d0b14" />
+  <rect x="0" y="69" width="160" height="15" fill="#12101a" />
+  <rect x="7" y="66" width="1" height="1" fill="#4a4866" />
+  <rect x="23" y="66" width="1" height="1" fill="#4a4866" />
+  <rect x="39" y="66" width="1" height="1" fill="#3a3852" />
+  <rect x="55" y="66" width="1" height="1" fill="#3a3852" />
+  <rect x="71" y="66" width="1" height="1" fill="#34324a" />
+  <rect x="87" y="66" width="1" height="1" fill="#34324a" />
+  <rect x="103" y="66" width="1" height="1" fill="#2e2c42" />
+  <rect x="119" y="66" width="1" height="1" fill="#2e2c42" />
+  <rect x="135" y="66" width="1" height="1" fill="#282640" />
+  <rect x="151" y="66" width="1" height="1" fill="#282640" />
+  <rect x="1" y="69" width="18" height="5" fill="#242234" />
+  <rect x="20" y="69" width="16" height="5" fill="#2e2c42" />
+  <rect x="37" y="69" width="17" height="5" fill="#242234" />
+  <rect x="55" y="69" width="16" height="5" fill="#1f1d2e" />
+  <rect x="72" y="69" width="17" height="5" fill="#1a1826" />
+  <rect x="90" y="69" width="16" height="5" fill="#171522" />
+  <rect x="107" y="69" width="17" height="5" fill="#14121e" />
+  <rect x="125" y="69" width="16" height="5" fill="#12101a" />
+  <rect x="142" y="69" width="17" height="5" fill="#100e18" />
+  <rect x="20" y="69" width="16" height="1" fill="#3a3852" />
+  <rect x="1" y="69" width="18" height="1" fill="#34324a" />
+  <rect x="0" y="75" width="16" height="4" fill="#2e2c42" />
+  <rect x="17" y="75" width="18" height="4" fill="#242234" />
+  <rect x="36" y="75" width="16" height="4" fill="#28263a" />
+  <rect x="53" y="75" width="18" height="4" fill="#1f1d2e" />
+  <rect x="72" y="75" width="16" height="4" fill="#1a1826" />
+  <rect x="89" y="75" width="18" height="4" fill="#161420" />
+  <rect x="108" y="75" width="16" height="4" fill="#14121e" />
+  <rect x="125" y="75" width="18" height="4" fill="#110f1a" />
+  <rect x="144" y="75" width="15" height="4" fill="#0f0d16" />
+  <rect x="0" y="75" width="16" height="1" fill="#3a3852" />
+  <rect x="17" y="75" width="18" height="1" fill="#34324a" />
+  <rect x="0" y="80" width="19" height="4" fill="#242234" />
+  <rect x="20" y="80" width="17" height="4" fill="#2e2c42" />
+  <rect x="38" y="80" width="18" height="4" fill="#242234" />
+  <rect x="57" y="80" width="17" height="4" fill="#1f1d2e" />
+  <rect x="75" y="80" width="18" height="4" fill="#1a1826" />
+  <rect x="94" y="80" width="17" height="4" fill="#161420" />
+  <rect x="112" y="80" width="18" height="4" fill="#13111c" />
+  <rect x="131" y="80" width="28" height="4" fill="#100e18" />
+  <rect x="20" y="80" width="17" height="1" fill="#3a3852" />
+  <rect x="0" y="80" width="19" height="1" fill="#34324a" />
+  <!-- the firelight lying warm on the tread -->
+  <rect x="20" y="56" width="58" height="28" fill="url(#c6v-fire-glow)" />
+  <!-- a bundle of unburnt scraps, stacked neat out of habit -->
+  <rect x="28" y="76" width="6" height="2" fill="#1c1a2a" />
+  <rect x="29" y="75" width="4" height="1" fill="#242234" />
+  <rect x="30" y="74" width="2" height="1" fill="#1f1d2e" />
+  <!-- the path everyone took past this fire, worn into the plates -->
+  <rect x="84" y="72" width="24" height="2" fill="#1c1a2a" />
+  <rect x="108" y="73" width="22" height="2" fill="#181624" />
+  <rect x="130" y="74" width="20" height="1" fill="#151320" />
+  <!-- thread-fluff drifted against the sitting-stone -->
+  <rect x="34" y="65" width="3" height="1" fill="#16303a" />
+  <rect x="98" y="65" width="2" height="1" fill="#122832" />
+</svg>

@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch6-elite — Beyond the Godwake, the spoke-gate: where a spoke of the
+       Loom comes down to meet the rim, and the wheel's keepers wind what
+       they catch. Same biome as ch6-combat, heavier dressing — the great
+       spoke plunging in from upper-LEFT with its bound thread-windings
+       (the key glows at its collar), two half-wound souls hung up to set,
+       cable-rings, a winding-drum. Quiet mid band y38-63; floor seam y66
+       (the rim rail). Shares the ch6 ramps (see ch6-combat.svg header). -->
+  <defs>
+    <radialGradient id="c6e-collar-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#6ab4c4" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#2e5a68" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#2e5a68" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c6e-spindle-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#46818f" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#2e5a68" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c6e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#46818f" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#2e5a68" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: void + the far arc ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0a0c14" />
+  <rect x="0" y="0" width="160" height="8" fill="#05060c" />
+  <rect x="100" y="0" width="60" height="66" fill="#08090f" />
+  <rect x="60" y="18" width="24" height="4" fill="#141828" />
+  <rect x="84" y="20" width="26" height="4" fill="#121624" />
+  <rect x="110" y="22" width="26" height="4" fill="#101320" />
+  <rect x="136" y="24" width="24" height="4" fill="#0e111c" />
+  <rect x="60" y="18" width="24" height="1" fill="#181c2c" />
+  <rect x="84" y="20" width="26" height="1" fill="#151a28" />
+  <rect x="96" y="24" width="2" height="12" fill="#0e111c" />
+  <rect x="97" y="36" width="1" height="6" fill="#0c0e18" />
+  <rect x="132" y="26" width="2" height="10" fill="#0d101a" />
+
+  <!-- ══ The great spoke, plunging to the rim (upper-left mass) ══ -->
+  <rect x="2" y="0" width="22" height="8" fill="#242234" />
+  <rect x="6" y="8" width="22" height="8" fill="#242234" />
+  <rect x="12" y="16" width="22" height="8" fill="#1f1d2e" />
+  <rect x="18" y="24" width="22" height="8" fill="#1f1d2e" />
+  <rect x="24" y="32" width="22" height="8" fill="#1a1826" />
+  <rect x="30" y="40" width="22" height="8" fill="#1a1826" />
+  <rect x="36" y="48" width="22" height="8" fill="#171522" />
+  <rect x="42" y="56" width="22" height="10" fill="#171522" />
+  <!-- its lit top edge, stepping down -->
+  <rect x="2" y="0" width="22" height="1" fill="#3a3852" />
+  <rect x="24" y="8" width="4" height="1" fill="#34324a" />
+  <rect x="30" y="16" width="4" height="1" fill="#34324a" />
+  <rect x="36" y="24" width="4" height="1" fill="#2e2c42" />
+  <rect x="42" y="32" width="4" height="1" fill="#2e2c42" />
+  <rect x="48" y="40" width="4" height="1" fill="#282640" />
+  <rect x="54" y="48" width="4" height="1" fill="#282640" />
+  <!-- its shadowed underside -->
+  <rect x="2" y="6" width="4" height="2" fill="#12101a" />
+  <rect x="6" y="14" width="6" height="2" fill="#12101a" />
+  <rect x="12" y="22" width="6" height="2" fill="#100e18" />
+  <rect x="18" y="30" width="6" height="2" fill="#100e18" />
+  <rect x="24" y="38" width="6" height="2" fill="#0e0c16" />
+  <rect x="30" y="46" width="6" height="2" fill="#0e0c16" />
+  <rect x="36" y="54" width="6" height="2" fill="#0d0b14" />
+  <!-- bolted collars across it -->
+  <rect x="8" y="2" width="2" height="8" fill="#2e2c42" />
+  <rect x="8" y="2" width="2" height="1" fill="#3a3852" />
+  <rect x="20" y="14" width="2" height="8" fill="#2e2c42" />
+  <rect x="32" y="26" width="2" height="8" fill="#282640" />
+  <rect x="44" y="38" width="2" height="8" fill="#242234" />
+  <rect x="9" y="4" width="1" height="1" fill="#4a4866" />
+  <rect x="21" y="16" width="1" height="1" fill="#4a4866" />
+  <!-- ══ The thread-winding at its collar: THE key glow ══ -->
+  <rect x="14" y="8" width="8" height="6" fill="#1e3a44" />
+  <rect x="15" y="9" width="6" height="4" fill="#2e5a68" />
+  <rect x="16" y="10" width="4" height="2" fill="#46818f" />
+  <rect x="17" y="10" width="2" height="1" fill="#6ab4c4" />
+  <rect x="18" y="11" width="1" height="1" fill="#9adee8" />
+  <!-- winding lines wrapping the spoke -->
+  <rect x="12" y="14" width="10" height="1" fill="#1e3a44" />
+  <rect x="18" y="20" width="10" height="1" fill="#16303a" />
+  <rect x="24" y="27" width="10" height="1" fill="#122832" />
+  <rect x="30" y="35" width="10" height="1" fill="#0f2028" />
+  <rect x="14" y="14" width="1" height="1" fill="#46818f" />
+  <rect x="22" y="20" width="1" height="1" fill="#2e5a68" />
+  <rect x="-14" y="-14" width="74" height="58" fill="url(#c6e-collar-glow)" />
+  <!-- threads leaving the winding for the dark -->
+  <rect x="22" y="9" width="16" height="1" fill="#1e3a44" />
+  <rect x="38" y="10" width="18" height="1" fill="#16303a" />
+  <rect x="56" y="11" width="20" height="1" fill="#122832" />
+  <rect x="76" y="12" width="22" height="1" fill="#0f2028" />
+  <rect x="98" y="13" width="24" height="1" fill="#0c1a20" />
+  <rect x="46" y="10" width="1" height="1" fill="#46818f" />
+  <rect x="84" y="12" width="1" height="1" fill="#2e5a68" />
+
+  <!-- ══ The half-wound souls, hung to set (above the mid band) ══ -->
+  <rect x="66" y="5" width="1" height="4" fill="#16303a" />
+  <rect x="63" y="9" width="7" height="14" fill="#1a1826" />
+  <rect x="64" y="8" width="5" height="1" fill="#242234" />
+  <rect x="64" y="10" width="5" height="12" fill="#1e3a44" />
+  <rect x="65" y="12" width="3" height="8" fill="#2e5a68" />
+  <rect x="66" y="14" width="1" height="4" fill="#46818f" />
+  <!-- winding ridges -->
+  <rect x="63" y="12" width="7" height="1" fill="#12101a" />
+  <rect x="63" y="16" width="7" height="1" fill="#12101a" />
+  <rect x="63" y="20" width="7" height="1" fill="#12101a" />
+  <rect x="64" y="23" width="5" height="2" fill="#171522" />
+  <rect x="66" y="25" width="2" height="2" fill="#14121e" />
+  <!-- the second, drier, almost set -->
+  <rect x="90" y="6" width="1" height="3" fill="#122832" />
+  <rect x="88" y="9" width="6" height="11" fill="#171522" />
+  <rect x="88" y="10" width="5" height="9" fill="#16303a" />
+  <rect x="89" y="12" width="3" height="5" fill="#1e3a44" />
+  <rect x="90" y="14" width="1" height="2" fill="#2e5a68" />
+  <rect x="88" y="12" width="6" height="1" fill="#100e18" />
+  <rect x="88" y="16" width="6" height="1" fill="#100e18" />
+  <rect x="89" y="20" width="4" height="2" fill="#13111c" />
+  <rect x="52" y="-2" width="52" height="36" fill="url(#c6e-spindle-glow)" />
+
+  <!-- ══ MID BAND (y38-63): the void past the gate ══ -->
+  <rect x="58" y="38" width="42" height="28" fill="#090b12" />
+  <rect x="100" y="38" width="60" height="28" fill="#07080e" />
+  <rect x="58" y="50" width="42" height="1" fill="#0a0d15" />
+  <rect x="100" y="50" width="60" height="1" fill="#080a10" />
+  <rect x="120" y="58" width="18" height="1" fill="#0a0c14" />
+
+  <!-- ══ Cable-rings + the winding-drum (right, low) ══ -->
+  <rect x="108" y="56" width="3" height="10" fill="#1a1826" />
+  <rect x="108" y="56" width="3" height="1" fill="#242234" />
+  <rect x="107" y="58" width="5" height="3" fill="#242234" />
+  <rect x="108" y="59" width="3" height="1" fill="#12101a" />
+  <!-- the drum, thread coiled fat -->
+  <rect x="118" y="54" width="18" height="12" fill="#1a1826" />
+  <rect x="118" y="54" width="18" height="1" fill="#282640" />
+  <rect x="118" y="54" width="2" height="12" fill="#1f1d2e" />
+  <rect x="134" y="54" width="2" height="12" fill="#13111c" />
+  <rect x="121" y="56" width="12" height="8" fill="#16303a" />
+  <rect x="122" y="57" width="10" height="6" fill="#1e3a44" />
+  <rect x="123" y="58" width="8" height="1" fill="#2e5a68" />
+  <rect x="123" y="61" width="8" height="1" fill="#122832" />
+  <rect x="125" y="59" width="4" height="1" fill="#46818f" />
+  <!-- its axle stubs -->
+  <rect x="116" y="58" width="2" height="4" fill="#242234" />
+  <rect x="136" y="58" width="2" height="4" fill="#1f1d2e" />
+  <!-- a cable running off the drum along the floor -->
+  <rect x="100" y="64" width="18" height="1" fill="#122832" />
+  <rect x="84" y="65" width="16" height="1" fill="#0f2028" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the rim tread at the gate ══ -->
+  <rect x="0" y="66" width="160" height="2" fill="#2e2c42" />
+  <rect x="0" y="66" width="160" height="1" fill="#3a3852" />
+  <rect x="0" y="68" width="160" height="1" fill="#0d0b14" />
+  <rect x="0" y="69" width="160" height="15" fill="#12101a" />
+  <rect x="8" y="66" width="1" height="1" fill="#4a4866" />
+  <rect x="24" y="66" width="1" height="1" fill="#4a4866" />
+  <rect x="40" y="66" width="1" height="1" fill="#3a3852" />
+  <rect x="56" y="66" width="1" height="1" fill="#3a3852" />
+  <rect x="72" y="66" width="1" height="1" fill="#34324a" />
+  <rect x="88" y="66" width="1" height="1" fill="#34324a" />
+  <rect x="104" y="66" width="1" height="1" fill="#2e2c42" />
+  <rect x="120" y="66" width="1" height="1" fill="#2e2c42" />
+  <rect x="136" y="66" width="1" height="1" fill="#282640" />
+  <rect x="152" y="66" width="1" height="1" fill="#282640" />
+  <rect x="1" y="69" width="18" height="5" fill="#242234" />
+  <rect x="20" y="69" width="16" height="5" fill="#2e2c42" />
+  <rect x="37" y="69" width="17" height="5" fill="#242234" />
+  <rect x="55" y="69" width="16" height="5" fill="#1f1d2e" />
+  <rect x="72" y="69" width="17" height="5" fill="#1a1826" />
+  <rect x="90" y="69" width="16" height="5" fill="#171522" />
+  <rect x="107" y="69" width="17" height="5" fill="#14121e" />
+  <rect x="125" y="69" width="16" height="5" fill="#12101a" />
+  <rect x="142" y="69" width="17" height="5" fill="#100e18" />
+  <rect x="20" y="69" width="16" height="1" fill="#3a3852" />
+  <rect x="1" y="69" width="18" height="1" fill="#34324a" />
+  <rect x="0" y="75" width="16" height="4" fill="#2e2c42" />
+  <rect x="17" y="75" width="18" height="4" fill="#242234" />
+  <rect x="36" y="75" width="16" height="4" fill="#28263a" />
+  <rect x="53" y="75" width="18" height="4" fill="#1f1d2e" />
+  <rect x="72" y="75" width="16" height="4" fill="#1a1826" />
+  <rect x="89" y="75" width="18" height="4" fill="#161420" />
+  <rect x="108" y="75" width="16" height="4" fill="#14121e" />
+  <rect x="125" y="75" width="18" height="4" fill="#110f1a" />
+  <rect x="144" y="75" width="15" height="4" fill="#0f0d16" />
+  <rect x="0" y="75" width="16" height="1" fill="#3a3852" />
+  <rect x="17" y="75" width="18" height="1" fill="#34324a" />
+  <rect x="0" y="80" width="19" height="4" fill="#242234" />
+  <rect x="20" y="80" width="17" height="4" fill="#2e2c42" />
+  <rect x="38" y="80" width="18" height="4" fill="#242234" />
+  <rect x="57" y="80" width="17" height="4" fill="#1f1d2e" />
+  <rect x="75" y="80" width="18" height="4" fill="#1a1826" />
+  <rect x="94" y="80" width="17" height="4" fill="#161420" />
+  <rect x="112" y="80" width="18" height="4" fill="#13111c" />
+  <rect x="131" y="80" width="28" height="4" fill="#100e18" />
+  <rect x="20" y="80" width="17" height="1" fill="#3a3852" />
+  <rect x="0" y="80" width="19" height="1" fill="#34324a" />
+  <!-- the spoke's foot bites the tread here -->
+  <rect x="46" y="66" width="20" height="2" fill="#1f1d2e" />
+  <rect x="48" y="68" width="16" height="3" fill="#1a1826" />
+  <rect x="50" y="71" width="12" height="2" fill="#171522" />
+  <rect x="46" y="66" width="20" height="1" fill="#2e2c42" />
+  <!-- wedge bolts around the bite -->
+  <rect x="47" y="69" width="1" height="1" fill="#3a3852" />
+  <rect x="63" y="69" width="1" height="1" fill="#34324a" />
+  <rect x="54" y="72" width="1" height="1" fill="#2e2c42" />
+  <!-- spilled winding-fluff -->
+  <rect x="68" y="72" width="3" height="1" fill="#1e3a44" />
+  <rect x="70" y="73" width="3" height="1" fill="#16303a" />
+  <rect x="30" y="77" width="3" height="1" fill="#16303a" />
+  <rect x="96" y="78" width="2" height="1" fill="#122832" />
+  <!-- a shed skin of wrappings, human-shaped and empty -->
+  <rect x="78" y="78" width="7" height="2" fill="#1c1a2a" />
+  <rect x="84" y="77" width="3" height="2" fill="#1a1826" />
+  <rect x="76" y="79" width="2" height="1" fill="#171522" />
+  <rect x="80" y="77" width="2" height="1" fill="#242234" />
+  <rect x="-10" y="58" width="66" height="26" fill="url(#c6e-floor-pool)" />
+</svg>
