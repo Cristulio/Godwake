@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useCombatStore } from '../stores/combatStore';
-import { playSfx, type SfxId } from '../engine/audio';
+import { bumpMusicIntensity, playSfx, type SfxId } from '../engine/audio';
 import type { SpellEffectKind, SpellElement } from '../types/combat';
 
 /**
@@ -56,7 +56,7 @@ const ELEMENT_SFX: Record<SpellElement, SfxId> = {
   thunder: 'spell_lightning',
   acid: 'spell_debuff',
   poison: 'spell_debuff',
-  necrotic: 'spell_debuff',
+  necrotic: 'spell_necrotic',
   radiant: 'spell_holy',
   force: 'spell_arcane',
 };
@@ -85,6 +85,8 @@ export function useCombatAudio(): void {
       lastEventId = event.id;
       const sfx = sfxForSpellEffect(event.kind, event.element);
       if (sfx) playSfx(sfx);
+      // A boss refusing to fall raises the arrangement a layer.
+      if (event.kind === 'enemy-frenzy') bumpMusicIntensity();
     });
     return unsub;
   }, []);

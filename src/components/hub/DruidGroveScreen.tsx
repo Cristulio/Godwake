@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
@@ -15,6 +15,7 @@ import {
 import type { ClassId } from '../../schemas/ids';
 import type { UpgradePurchaseError } from '../../stores/metaStore';
 import { GroveScene } from './GroveScene';
+import { playMusic, stopMusic } from '../../engine/audio';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import { useT } from '../../i18n/useT';
 import { stripDiacritics } from '../../i18n';
@@ -28,6 +29,13 @@ function classLabel(classId: ClassId): string {
 }
 
 export function DruidGroveScreen() {
+  useEffect(() => {
+    playMusic('grove_theme');
+    return () => {
+      stopMusic();
+    };
+  }, []);
+
   const { t, tc } = useT();
   const character = useGameStore((s) => s.character);
   const unlocked = useGameStore((s) => s.unlockedUpgrades);

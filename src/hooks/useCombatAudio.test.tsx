@@ -35,7 +35,7 @@ describe('sfxForSpellEffect mapping', () => {
     expect(sfxForSpellEffect('spell-burst', 'fire')).toBe('spell_fire');
     expect(sfxForSpellEffect('spell-fork', 'lightning')).toBe('spell_lightning');
     expect(sfxForSpellEffect('spell-burst', 'cold')).toBe('spell_ice');
-    expect(sfxForSpellEffect('spell-drain', 'necrotic')).toBe('spell_debuff');
+    expect(sfxForSpellEffect('spell-drain', 'necrotic')).toBe('spell_necrotic');
     expect(sfxForSpellEffect('spell-bolt', 'force')).toBe('spell_arcane');
     // No element to key off — stays silent rather than guessing.
     expect(sfxForSpellEffect('spell-bolt')).toBeUndefined();

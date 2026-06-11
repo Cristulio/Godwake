@@ -48,7 +48,7 @@ interface BattlefieldProps {
   state: CombatState;
   selectingTarget: boolean;
   onSelectTarget: (id: string) => void;
-  scene: 'combat' | 'boss';
+  scene: 'combat' | 'elite' | 'boss';
   decoration?: BattlefieldDecoration;
 }
 
@@ -104,9 +104,13 @@ function layoutMonsterSprites(monsters: MonsterCombatant[]): MonsterSlot[] {
   }));
 }
 
-const BG_BY_SCENE: Record<'combat' | 'boss', string> = {
-  combat:
-    '[background:radial-gradient(ellipse_at_72%_22%,rgba(244,167,66,0.14),transparent_50%),radial-gradient(ellipse_at_28%_88%,rgba(31,58,61,0.22),transparent_55%),radial-gradient(ellipse_at_50%_55%,rgba(107,74,46,0.15),transparent_60%),linear-gradient(to_bottom,#12100c_0%,#1a1410_45%,#0e0a08_100%)]',
+const COMBAT_BG =
+  '[background:radial-gradient(ellipse_at_72%_22%,rgba(244,167,66,0.14),transparent_50%),radial-gradient(ellipse_at_28%_88%,rgba(31,58,61,0.22),transparent_55%),radial-gradient(ellipse_at_50%_55%,rgba(107,74,46,0.15),transparent_60%),linear-gradient(to_bottom,#12100c_0%,#1a1410_45%,#0e0a08_100%)]';
+
+const BG_BY_SCENE: Record<'combat' | 'elite' | 'boss', string> = {
+  combat: COMBAT_BG,
+  // Elite rooms share the standard field — their heavier treatment is audio.
+  elite: COMBAT_BG,
   boss:
     '[background:radial-gradient(ellipse_at_72%_22%,rgba(181,48,44,0.22),transparent_50%),radial-gradient(ellipse_at_28%_88%,rgba(15,5,5,0.45),transparent_55%),radial-gradient(ellipse_at_50%_45%,rgba(120,28,28,0.20),transparent_60%),linear-gradient(to_bottom,#0d0606_0%,#1a0808_50%,#080404_100%)]',
 };

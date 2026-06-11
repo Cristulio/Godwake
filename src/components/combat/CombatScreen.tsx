@@ -68,7 +68,9 @@ interface CombatScreenProps {
   onAbandon?: () => void;
   roomTitle?: string;
   roomLabel?: string;
-  scene?: 'combat' | 'boss';
+  scene?: 'combat' | 'elite' | 'boss';
+  /** Delve chapter — 13+ selects the Throne-act themes. */
+  chapter?: number;
   decoration?: BattlefieldDecoration;
 }
 
@@ -83,6 +85,7 @@ export function CombatScreen({
   roomTitle,
   roomLabel,
   scene = 'combat',
+  chapter = 0,
   decoration = 'generic',
 }: CombatScreenProps) {
   const { t } = useT();
@@ -211,7 +214,11 @@ export function CombatScreen({
     if (!bedChoiceRef.current) {
       const lead = state.combatants.find((c) => c.kind === 'monster');
       const signal = lead?.instance.defId ?? roomTitle ?? 'combat';
-      bedChoiceRef.current = pickCombatMusic(signal, { boss: scene === 'boss' });
+      bedChoiceRef.current = pickCombatMusic(signal, {
+        boss: scene === 'boss',
+        elite: scene === 'elite',
+        throne: chapter >= 13,
+      });
     }
     const theme = bedChoiceRef.current;
 

@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { RoomSpec } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../stores/gameStore';
 import { getItem } from '../../content/items';
 import { localizedItemName } from '../inventory/itemDisplay';
-import { playSfx } from '../../engine/audio';
+import { playMusic, playSfx, stopMusic } from '../../engine/audio';
 import { equippedInventoryIndices } from '../../engine/character/equip';
 import { isSetPieceRef } from '../../engine/items';
 import {
@@ -32,6 +32,13 @@ interface ShopRoomProps {
  * re-renders don't reroll. Keep the coin-lender's diegetic voice.
  */
 export function ShopRoom({ room, onContinue }: ShopRoomProps) {
+  useEffect(() => {
+    playMusic('shop_theme');
+    return () => {
+      stopMusic();
+    };
+  }, []);
+
   const { t, tc, lr } = useT();
   const character = useGameStore((s) => s.character);
   const purchaseFromMerchant = useGameStore((s) => s.purchaseFromMerchant);

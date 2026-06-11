@@ -25,6 +25,7 @@ class FakeNode {
   gain = new FakeParam();
   frequency = new FakeParam();
   Q = new FakeParam();
+  delayTime = new FakeParam();
   type = '';
   buffer: unknown = null;
   loop = false;
@@ -52,6 +53,9 @@ class FakeAudioContext {
     return new FakeNode();
   }
   createBiquadFilter() {
+    return new FakeNode();
+  }
+  createDelay() {
     return new FakeNode();
   }
   createBuffer(_channels: number, length: number) {
@@ -103,6 +107,8 @@ describe('audio SFX registry', () => {
       'player_hurt',
       'armor_clang',
       'ui_hover',
+      'spell_necrotic',
+      'reincarnation_sting',
     ] as const) {
       expect(SFX_IDS).toContain(id);
     }
@@ -144,6 +150,13 @@ describe('audio music beds', () => {
   it('exposes the expected track set, all turned on by default', () => {
     expect(MUSIC_IDS).toEqual(
       expect.arrayContaining([
+        'title_theme',
+        'grove_theme',
+        'shop_theme',
+        'event_theme',
+        'combat_elite',
+        'combat_throne',
+        'boss_throne',
         'hub_theme',
         'combat_theme',
         'combat_theme_tense',
@@ -191,5 +204,11 @@ describe('mob-aware combat-music selector', () => {
   it('draws boss fights from the boss pool', () => {
     const id = pickCombatMusic('archlich', { boss: true });
     expect(BOSS_MUSIC_POOL).toContain(id);
+  });
+
+  it('routes elite and Throne-act fights to their dedicated themes', () => {
+    expect(pickCombatMusic('hunter', { elite: true })).toBe('combat_elite');
+    expect(pickCombatMusic('courtier', { throne: true })).toBe('combat_throne');
+    expect(pickCombatMusic('slain-god', { throne: true, boss: true })).toBe('boss_throne');
   });
 });

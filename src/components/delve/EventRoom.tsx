@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { RoomSpec } from '../../types/delve';
 import { Panel } from '../ui/Panel';
 import { Button } from '../ui/Button';
@@ -22,7 +22,7 @@ import { SKILL_TO_ABILITY } from '../../types/skills';
 import { ABILITY_FULL_NAMES } from '../../types/abilities';
 import type { SkillName } from '../../types/skills';
 import type { Character } from '../../types/character';
-import { playSfx } from '../../engine/audio';
+import { playMusic, playSfx, stopMusic } from '../../engine/audio';
 import type { EventChoice } from '../../schemas/event';
 import { isFeatureUnlocked } from '../../engine/progression/unlocks';
 import { useT } from '../../i18n/useT';
@@ -78,6 +78,13 @@ function bossDefIdForRoom(room: RoomSpec): string | null {
 }
 
 export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
+  useEffect(() => {
+    playMusic('event_theme');
+    return () => {
+      stopMusic();
+    };
+  }, []);
+
   const { t, tc } = useT();
   const character = useGameStore((s) => s.character);
   const setCharacter = useGameStore((s) => s.setCharacter);

@@ -45,6 +45,14 @@ export function stopMusic(): void {
   audioEngine.stopMusic();
 }
 
+/**
+ * Raise the current track's arrangement one layer (boss phase transitions).
+ * Lives on the eager engine; flat themes ignore it.
+ */
+export function bumpMusicIntensity(): void {
+  audioEngine.bumpMusicIntensity();
+}
+
 // Mob-aware combat-music selector. Kept in this eager module (not sounds.ts) so
 // importing it from CombatScreen doesn't drag the ~1300-line synth into the
 // boot bundle — the actual track build still pays the lazy import on first play.
@@ -80,11 +88,23 @@ function hashSignal(s: string): number {
  * deterministically maps a given foe to a given variant — so the same creature
  * feels consistent — while the last-played guard guarantees two fights in a row
  * never share a theme. Repeats across non-adjacent fights are fine.
+ *
+ * Elite rooms get the dedicated heavier theme; the Throne act (chapters 13-14)
+ * overrides everything with the Slain God's court themes.
  */
 export function pickCombatMusic(
   signal: string,
-  opts?: { boss?: boolean },
+  opts?: { boss?: boolean; elite?: boolean; throne?: boolean },
 ): MusicId {
+  if (opts?.throne) {
+    const id: MusicId = opts.boss ? 'boss_throne' : 'combat_throne';
+    lastCombatMusicId = id;
+    return id;
+  }
+  if (opts?.elite) {
+    lastCombatMusicId = 'combat_elite';
+    return 'combat_elite';
+  }
   const pool = opts?.boss ? BOSS_MUSIC_POOL : COMBAT_MUSIC_POOL;
   const base = hashSignal(signal) % pool.length;
   let id = pool[base];
