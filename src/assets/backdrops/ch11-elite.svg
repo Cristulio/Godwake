@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch11-elite — The Trial Ground: the floor of the pit where one of the
+       five altars poses its question, dressed for a harder fight. Key light:
+       a black-iron pole brazier upper-LEFT burning dark red; an ember
+       fissure low-right answers it dimly (the elite's second glow). Two
+       soul-gibbets hang off the high dark; the five trial-glyphs are cut
+       into the cliff course; the altar itself sits LOW in the centre gap,
+       dark and quiet. Bands: far cliff y0-38, mid y38-63 QUIET, floor
+       y66-84; seam at y66.
+       Ramps — basalt warm: #160b08 #221110 #2e1812 #3c2218 (+#4e2e1e);
+       basalt cool: #120c14 #181020 #1f1628; ember: #5a1812 #a33d1e #e8743a
+       #ffb347; iron: #0c0809 #161013 #211a1c; ash: #241c20 #322830.
+       No baked-in vignette/grain: the Battlefield overlays add those. -->
+  <defs>
+    <radialGradient id="c11e-brazier-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.24" />
+      <stop offset="45%" stop-color="#a33d1e" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c11e-fissure-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#a33d1e" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: pit dark + scorched strata ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0d0708" />
+  <rect x="100" y="0" width="60" height="66" fill="#0e0a10" />
+  <rect x="0" y="0" width="160" height="5" fill="#070304" />
+  <rect x="0" y="5" width="160" height="1" fill="#120a0a" />
+  <!-- strata course 1 (y6-12) -->
+  <rect x="0" y="6" width="15" height="7" fill="#2e1812" />
+  <rect x="16" y="6" width="19" height="7" fill="#221110" />
+  <rect x="36" y="6" width="21" height="7" fill="#2e1812" />
+  <rect x="58" y="6" width="20" height="7" fill="#221110" />
+  <rect x="79" y="6" width="22" height="7" fill="#1c1212" />
+  <rect x="102" y="6" width="24" height="7" fill="#181020" />
+  <rect x="127" y="6" width="33" height="7" fill="#1f1628" />
+  <rect x="16" y="6" width="19" height="1" fill="#3c2218" />
+  <!-- strata course 2 (y13-20) -->
+  <rect x="0" y="13" width="12" height="8" fill="#3c2218" />
+  <rect x="13" y="13" width="20" height="8" fill="#2e1812" />
+  <rect x="34" y="13" width="18" height="8" fill="#221110" />
+  <rect x="53" y="13" width="23" height="8" fill="#1a0e0c" />
+  <rect x="77" y="13" width="24" height="8" fill="#160e12" />
+  <rect x="102" y="13" width="22" height="8" fill="#181020" />
+  <rect x="125" y="13" width="35" height="8" fill="#181020" />
+  <rect x="13" y="13" width="20" height="1" fill="#4e2e1e" />
+  <!-- the five trial-glyphs cut into the course (fear pride wrath greed self) -->
+  <rect x="40" y="15" width="3" height="4" fill="#1a0e0c" />
+  <rect x="41" y="16" width="1" height="2" fill="#0d0708" />
+  <rect x="46" y="15" width="3" height="4" fill="#1a0e0c" />
+  <rect x="46" y="16" width="2" height="1" fill="#0d0708" />
+  <rect x="52" y="15" width="3" height="4" fill="#160c0a" />
+  <rect x="53" y="15" width="1" height="3" fill="#0d0708" />
+  <rect x="58" y="15" width="3" height="4" fill="#160c0a" />
+  <rect x="58" y="17" width="3" height="1" fill="#0d0708" />
+  <rect x="64" y="15" width="3" height="4" fill="#160c0a" />
+  <rect x="65" y="16" width="1" height="1" fill="#0d0708" />
+  <rect x="65" y="18" width="1" height="1" fill="#0d0708" />
+  <!-- one glyph smoulders — the trial currently being asked -->
+  <rect x="41" y="16" width="1" height="2" fill="#5a1812" />
+  <rect x="41" y="16" width="1" height="1" fill="#a33d1e" />
+  <!-- strata course 3 (y21-28) -->
+  <rect x="0" y="21" width="18" height="8" fill="#2e1812" />
+  <rect x="19" y="21" width="16" height="8" fill="#221110" />
+  <rect x="36" y="21" width="15" height="8" fill="#2e1812" />
+  <rect x="52" y="21" width="21" height="8" fill="#1a0e0c" />
+  <rect x="74" y="21" width="27" height="8" fill="#140d11" />
+  <rect x="102" y="21" width="20" height="8" fill="#1f1628" />
+  <rect x="123" y="21" width="37" height="8" fill="#181020" />
+  <rect x="19" y="21" width="16" height="1" fill="#4e2e1e" />
+  <!-- strata course 4 (y29-37) -->
+  <rect x="0" y="29" width="14" height="9" fill="#221110" />
+  <rect x="15" y="29" width="20" height="9" fill="#2e1812" />
+  <rect x="36" y="29" width="17" height="9" fill="#221110" />
+  <rect x="54" y="29" width="20" height="9" fill="#160e12" />
+  <rect x="75" y="29" width="26" height="9" fill="#140d11" />
+  <rect x="102" y="29" width="22" height="9" fill="#181020" />
+  <rect x="125" y="29" width="35" height="9" fill="#120c14" />
+  <rect x="15" y="29" width="20" height="1" fill="#3c2218" />
+  <!-- heat-cracks -->
+  <rect x="30" y="9" width="1" height="2" fill="#160b08" />
+  <rect x="84" y="16" width="1" height="3" fill="#0e0a10" />
+  <rect x="150" y="23" width="1" height="3" fill="#0e0a10" />
+  <rect x="71" y="9" width="1" height="3" fill="#3f100c" />
+  <rect x="70" y="11" width="1" height="2" fill="#2a0b08" />
+
+  <!-- ══ Soul-gibbet 1 (lit side): hung off the dark at x30 ══ -->
+  <rect x="33" y="0" width="1" height="6" fill="#161013" />
+  <rect x="33" y="2" width="1" height="2" fill="#211a1c" />
+  <rect x="30" y="6" width="7" height="1" fill="#211a1c" />
+  <rect x="30" y="7" width="1" height="12" fill="#161013" />
+  <rect x="36" y="7" width="1" height="12" fill="#161013" />
+  <rect x="32" y="7" width="1" height="12" fill="#0c0809" />
+  <rect x="34" y="7" width="1" height="12" fill="#0c0809" />
+  <rect x="30" y="19" width="7" height="1" fill="#161013" />
+  <rect x="31" y="20" width="5" height="1" fill="#0c0809" />
+  <!-- a pale wisp curled inside it -->
+  <rect x="33" y="14" width="2" height="3" fill="#2c3a30" opacity="0.8" />
+  <rect x="33" y="13" width="1" height="1" fill="#3a4c3e" opacity="0.7" />
+
+  <!-- ══ Soul-gibbet 2 (shadow side): x116, dimmer ══ -->
+  <rect x="119" y="0" width="1" height="4" fill="#100a10" />
+  <rect x="116" y="4" width="7" height="1" fill="#161016" />
+  <rect x="116" y="5" width="1" height="14" fill="#100a10" />
+  <rect x="122" y="5" width="1" height="14" fill="#100a10" />
+  <rect x="118" y="5" width="1" height="14" fill="#0a060a" />
+  <rect x="120" y="5" width="1" height="14" fill="#0a060a" />
+  <rect x="116" y="19" width="7" height="1" fill="#100a10" />
+  <rect x="117" y="20" width="5" height="1" fill="#0a060a" />
+  <rect x="118" y="13" width="2" height="2" fill="#1c2622" opacity="0.7" />
+
+  <!-- ══ Spike-chain slung across the upper dark ══ -->
+  <rect x="44" y="3" width="10" height="1" fill="#161013" />
+  <rect x="54" y="4" width="12" height="1" fill="#211a1c" />
+  <rect x="66" y="5" width="12" height="1" fill="#161013" />
+  <rect x="78" y="6" width="10" height="1" fill="#100c0d" />
+  <rect x="57" y="5" width="1" height="2" fill="#211a1c" />
+  <rect x="69" y="6" width="1" height="2" fill="#161013" />
+  <rect x="81" y="7" width="1" height="2" fill="#100c0d" />
+
+  <!-- ══ MID BAND (y38-66): quiet courses ══ -->
+  <rect x="0" y="38" width="16" height="9" fill="#1e120e" />
+  <rect x="17" y="38" width="25" height="9" fill="#221110" />
+  <rect x="43" y="38" width="27" height="9" fill="#180f0d" />
+  <rect x="71" y="38" width="30" height="9" fill="#130d10" />
+  <rect x="102" y="38" width="26" height="9" fill="#131019" />
+  <rect x="129" y="38" width="31" height="9" fill="#110d16" />
+  <rect x="0" y="47" width="22" height="9" fill="#221110" />
+  <rect x="23" y="47" width="20" height="9" fill="#1e120e" />
+  <rect x="44" y="47" width="26" height="9" fill="#150e0d" />
+  <rect x="71" y="47" width="30" height="9" fill="#120c10" />
+  <rect x="102" y="47" width="24" height="9" fill="#110d16" />
+  <rect x="127" y="47" width="33" height="9" fill="#131019" />
+  <rect x="0" y="56" width="13" height="10" fill="#1e120e" />
+  <rect x="14" y="56" width="29" height="10" fill="#1a100c" />
+  <rect x="44" y="56" width="26" height="10" fill="#130d0c" />
+  <rect x="71" y="56" width="30" height="10" fill="#100b0e" />
+  <rect x="102" y="56" width="58" height="10" fill="#0f0c14" />
+
+  <!-- ══ The trial-altar, LOW in the centre gap (dark, quiet) ══ -->
+  <rect x="48" y="58" width="22" height="8" fill="#1c1210" />
+  <rect x="48" y="58" width="22" height="1" fill="#2a1a14" />
+  <rect x="50" y="59" width="18" height="1" fill="#221410" />
+  <rect x="46" y="64" width="26" height="2" fill="#140d0b" />
+  <rect x="48" y="60" width="1" height="4" fill="#241612" />
+  <rect x="69" y="59" width="1" height="5" fill="#0f0a09" />
+  <!-- the question cut into its face, cooling -->
+  <rect x="55" y="60" width="2" height="2" fill="#0d0708" />
+  <rect x="58" y="61" width="3" height="1" fill="#0d0708" />
+  <rect x="62" y="60" width="1" height="2" fill="#0d0708" />
+  <rect x="56" y="60" width="1" height="1" fill="#3f100c" />
+  <!-- offerings left on the slab: a trinket that gleams (greed, refused) -->
+  <rect x="52" y="57" width="2" height="1" fill="#54400f" />
+  <rect x="53" y="56" width="1" height="1" fill="#8a6c2a" />
+  <rect x="64" y="57" width="2" height="1" fill="#241c20" />
+
+  <!-- ══ The pole brazier — key light upper-LEFT ══ -->
+  <rect x="20" y="14" width="1" height="22" fill="#161013" />
+  <rect x="19" y="35" width="3" height="2" fill="#211a1c" />
+  <rect x="17" y="10" width="7" height="3" fill="#211a1c" />
+  <rect x="18" y="9" width="5" height="1" fill="#161013" />
+  <rect x="17" y="10" width="1" height="1" fill="#2e2228" />
+  <!-- dark-red fire -->
+  <rect x="18" y="6" width="5" height="3" fill="#a33d1e" />
+  <rect x="19" y="4" width="3" height="2" fill="#e8743a" />
+  <rect x="20" y="2" width="1" height="2" fill="#ffb347" />
+  <rect x="19" y="6" width="1" height="2" fill="#ffe9a8" />
+  <rect x="22" y="3" width="1" height="1" fill="#a33d1e" />
+  <!-- embers off the brazier -->
+  <rect x="26" y="6" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="29" y="12" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="24" y="18" width="1" height="1" fill="#e8743a" opacity="0.55" />
+  <rect x="14" y="22" width="1" height="1" fill="#a33d1e" opacity="0.5" />
+  <rect x="-10" y="-16" width="66" height="58" fill="url(#c11e-brazier-halo)" />
+
+  <!-- ══ NEAR FLOOR (y66-84): scorched ground of the trial ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0b0607" />
+  <rect x="0" y="66" width="160" height="1" fill="#050203" />
+  <!-- far slab row -->
+  <rect x="1" y="67" width="13" height="4" fill="#33201a" />
+  <rect x="15" y="67" width="11" height="4" fill="#2e1c16" />
+  <rect x="27" y="67" width="13" height="4" fill="#271812" />
+  <rect x="41" y="67" width="12" height="4" fill="#221410" />
+  <rect x="54" y="67" width="13" height="4" fill="#1d120e" />
+  <rect x="68" y="67" width="12" height="4" fill="#19100d" />
+  <rect x="81" y="67" width="13" height="4" fill="#150e0e" />
+  <rect x="95" y="67" width="12" height="4" fill="#131017" />
+  <rect x="108" y="67" width="13" height="4" fill="#110e15" />
+  <rect x="122" y="67" width="12" height="4" fill="#121019" />
+  <rect x="135" y="67" width="24" height="4" fill="#0f0d14" />
+  <rect x="1" y="67" width="13" height="1" fill="#42291c" />
+  <rect x="15" y="67" width="11" height="1" fill="#3c2218" />
+  <!-- altar contact shadow at the seam -->
+  <rect x="46" y="66" width="26" height="1" fill="#040102" />
+  <!-- mid slab row -->
+  <rect x="0" y="72" width="14" height="5" fill="#2a1a14" />
+  <rect x="15" y="72" width="14" height="5" fill="#33201a" />
+  <rect x="30" y="72" width="15" height="5" fill="#2a1a14" />
+  <rect x="46" y="72" width="14" height="5" fill="#241510" />
+  <rect x="61" y="72" width="15" height="5" fill="#1f130e" />
+  <rect x="77" y="72" width="14" height="5" fill="#1a110e" />
+  <rect x="92" y="72" width="15" height="5" fill="#151011" />
+  <rect x="108" y="72" width="14" height="5" fill="#121017" />
+  <rect x="123" y="72" width="36" height="5" fill="#100e14" />
+  <rect x="15" y="72" width="14" height="1" fill="#42291c" />
+  <rect x="30" y="72" width="15" height="1" fill="#3c2218" />
+  <!-- near slab row -->
+  <rect x="0" y="78" width="17" height="6" fill="#2e1c16" />
+  <rect x="18" y="78" width="17" height="6" fill="#3a241c" />
+  <rect x="36" y="78" width="18" height="6" fill="#2e1c16" />
+  <rect x="55" y="78" width="17" height="6" fill="#271812" />
+  <rect x="73" y="78" width="18" height="6" fill="#201410" />
+  <rect x="92" y="78" width="17" height="6" fill="#181113" />
+  <rect x="110" y="78" width="18" height="6" fill="#131118" />
+  <rect x="129" y="78" width="30" height="6" fill="#101015" />
+  <rect x="18" y="78" width="17" height="1" fill="#46291c" />
+  <rect x="0" y="78" width="17" height="1" fill="#3c2218" />
+  <!-- manacle pairs bolted to the ground before the altar -->
+  <rect x="40" y="74" width="3" height="1" fill="#211a1c" />
+  <rect x="40" y="75" width="1" height="1" fill="#161013" />
+  <rect x="42" y="75" width="1" height="1" fill="#161013" />
+  <rect x="74" y="73" width="3" height="1" fill="#1c1517" />
+  <rect x="74" y="74" width="1" height="1" fill="#120d0f" />
+  <rect x="76" y="74" width="1" height="1" fill="#120d0f" />
+  <!-- bone heap (those who answered wrong) -->
+  <rect x="86" y="79" width="4" height="2" fill="#3a3228" />
+  <rect x="85" y="80" width="1" height="1" fill="#4a4038" />
+  <rect x="90" y="79" width="2" height="1" fill="#4a4038" />
+  <rect x="88" y="78" width="1" height="1" fill="#5a5048" />
+  <rect x="101" y="81" width="3" height="1" fill="#3a3228" />
+  <!-- ash drifts -->
+  <rect x="32" y="70" width="5" height="1" fill="#241c20" />
+  <rect x="34" y="69" width="2" height="1" fill="#322830" />
+  <rect x="116" y="74" width="6" height="1" fill="#1c161c" />
+  <rect x="58" y="70" width="4" height="1" fill="#241c20" />
+  <!-- the ember fissure low-RIGHT — the elite's second, dimmer glow -->
+  <rect x="136" y="73" width="1" height="3" fill="#5a1812" />
+  <rect x="137" y="71" width="1" height="4" fill="#a33d1e" />
+  <rect x="138" y="74" width="1" height="2" fill="#5a1812" />
+  <rect x="137" y="72" width="1" height="2" fill="#e8743a" />
+  <rect x="139" y="76" width="1" height="1" fill="#3f100c" />
+  <rect x="135" y="76" width="1" height="2" fill="#3f100c" />
+  <rect x="112" y="56" width="52" height="28" fill="url(#c11e-fissure-glow)" />
+  <!-- brazier light pooling near the hero's ground -->
+  <rect x="-8" y="60" width="60" height="22" fill="url(#c11e-brazier-halo)" opacity="0.5" />
+</svg>

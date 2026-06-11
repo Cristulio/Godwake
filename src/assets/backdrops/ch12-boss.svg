@@ -1,0 +1,280 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch12-boss — At the Heart of the Fire: the breach in Karthen's inner
+       keep, Hargan-Vor's ground. Set piece centred in the hero-enemy gap:
+       twin gate towers x56-64 / x96-104 flanking the shattered keep gate,
+       its splintered leaves hanging inward and the furnace of the taken
+       keep glowing through. Flames crown the LEFT tower (key light biased
+       upper-left; the component lays the blood-red boss ambience above).
+       Outer flanks: a burning timber stack x20-30, a keep buttress
+       x130-138 — verticals crossing the mid band as quiet darks. Molten
+       slag seeps from the threshold. Quiet mid band y38-63; seam y66.
+       Ramps — keep stone: #15161c #1a1c24 #232830 #2c3340 (+#3a4452);
+       furnace: #3f100c #a33d1e #e8743a #ffb347 (+#ffe9a8 core); char:
+       #0a0705 #16100a; slag: #5a1812. No baked-in vignette/grain. -->
+  <defs>
+    <radialGradient id="c12b-crown-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#e8743a" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c12b-furnace-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.22" />
+      <stop offset="55%" stop-color="#a33d1e" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c12b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ SKY: smoke pressing down on the keep ══ -->
+  <rect x="0" y="0" width="160" height="12" fill="#120c10" />
+  <rect x="0" y="0" width="160" height="5" fill="#0a060a" />
+  <rect x="24" y="2" width="40" height="3" fill="#070407" opacity="0.9" />
+  <rect x="92" y="1" width="44" height="3" fill="#070407" opacity="0.85" />
+  <rect x="56" y="5" width="30" height="2" fill="#1c0e0c" opacity="0.8" />
+  <!-- ember rain -->
+  <rect x="50" y="3" width="1" height="1" fill="#e8743a" opacity="0.85" />
+  <rect x="88" y="2" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="112" y="5" width="1" height="1" fill="#e8743a" opacity="0.6" />
+  <rect x="38" y="7" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+  <rect x="70" y="2" width="1" height="1" fill="#ffb347" opacity="0.7" />
+
+  <!-- ══ Curtain wall behind, left + right of the gate towers ══ -->
+  <rect x="0" y="12" width="56" height="54" fill="#1a1c24" />
+  <rect x="0" y="12" width="56" height="2" fill="#0e1014" />
+  <rect x="0" y="14" width="56" height="1" fill="#262c36" />
+  <rect x="104" y="12" width="56" height="54" fill="#15181e" />
+  <rect x="104" y="12" width="56" height="2" fill="#0c0e12" />
+  <!-- wall courses left -->
+  <rect x="0" y="15" width="18" height="10" fill="#232830" />
+  <rect x="19" y="15" width="17" height="10" fill="#1f242c" />
+  <rect x="37" y="15" width="19" height="10" fill="#1c2028" />
+  <rect x="0" y="26" width="15" height="11" fill="#1f242c" />
+  <rect x="16" y="26" width="20" height="11" fill="#232830" />
+  <rect x="37" y="26" width="19" height="11" fill="#1a1c24" />
+  <rect x="19" y="15" width="17" height="1" fill="#323a48" />
+  <rect x="16" y="26" width="20" height="1" fill="#2c3340" />
+  <!-- wall courses right -->
+  <rect x="104" y="15" width="22" height="10" fill="#171a20" />
+  <rect x="127" y="15" width="33" height="10" fill="#15181e" />
+  <rect x="104" y="26" width="18" height="11" fill="#15181e" />
+  <rect x="123" y="26" width="37" height="11" fill="#13161c" />
+  <rect x="104" y="15" width="22" height="1" fill="#1f242c" />
+  <!-- arrow loops -->
+  <rect x="26" y="18" width="2" height="5" fill="#0e1014" />
+  <rect x="26" y="18" width="2" height="1" fill="#13161c" />
+  <rect x="118" y="19" width="2" height="5" fill="#0c0e12" />
+  <!-- impact crack through the right wall -->
+  <rect x="140" y="16" width="1" height="5" fill="#0e1014" />
+  <rect x="141" y="20" width="1" height="4" fill="#0e1014" />
+  <rect x="140" y="23" width="1" height="3" fill="#0c0e12" />
+
+  <!-- ══ SET PIECE: the gate towers + shattered gate (x56-104) ══ -->
+  <!-- left tower -->
+  <rect x="56" y="6" width="9" height="60" fill="#1f242c" />
+  <rect x="56" y="6" width="2" height="60" fill="#2a3140" />
+  <rect x="63" y="6" width="2" height="60" fill="#15181e" />
+  <rect x="56" y="6" width="9" height="2" fill="#2c3340" />
+  <rect x="56" y="6" width="9" height="1" fill="#3a4452" />
+  <rect x="56" y="22" width="9" height="1" fill="#11141a" />
+  <rect x="56" y="42" width="9" height="1" fill="#11141a" />
+  <rect x="56" y="58" width="9" height="1" fill="#0f1116" />
+  <!-- its crown burns — the key light -->
+  <rect x="57" y="3" width="7" height="3" fill="#a33d1e" />
+  <rect x="58" y="1" width="5" height="2" fill="#e8743a" />
+  <rect x="59" y="0" width="3" height="1" fill="#ffb347" />
+  <rect x="60" y="2" width="1" height="2" fill="#ffe9a8" />
+  <rect x="56" y="5" width="2" height="1" fill="#5a1812" />
+  <rect x="62" y="4" width="2" height="1" fill="#5a1812" />
+  <!-- right tower -->
+  <rect x="95" y="6" width="9" height="60" fill="#1a1c24" />
+  <rect x="95" y="6" width="2" height="60" fill="#222832" />
+  <rect x="102" y="6" width="2" height="60" fill="#12141a" />
+  <rect x="95" y="6" width="9" height="2" fill="#232830" />
+  <rect x="95" y="22" width="9" height="1" fill="#0f1116" />
+  <rect x="95" y="42" width="9" height="1" fill="#0f1116" />
+  <rect x="95" y="58" width="9" height="1" fill="#0d0f13" />
+  <!-- smoke seeping off its crown, no flame (the fire is INSIDE) -->
+  <rect x="96" y="3" width="3" height="3" fill="#120c10" opacity="0.9" />
+  <rect x="98" y="1" width="3" height="3" fill="#0c080c" opacity="0.8" />
+  <!-- tower-top ember vents -->
+  <rect x="97" y="8" width="2" height="2" fill="#3f100c" />
+  <rect x="98" y="9" width="1" height="1" fill="#a33d1e" />
+  <!-- the gate arch between -->
+  <rect x="65" y="6" width="30" height="6" fill="#1c2028" />
+  <rect x="65" y="6" width="30" height="1" fill="#2c3340" />
+  <rect x="65" y="11" width="30" height="1" fill="#0e1014" />
+  <!-- flames licking out under the arch head -->
+  <rect x="68" y="12" width="5" height="2" fill="#a33d1e" />
+  <rect x="70" y="11" width="2" height="1" fill="#e8743a" />
+  <rect x="84" y="12" width="4" height="2" fill="#a33d1e" />
+  <rect x="86" y="11" width="2" height="1" fill="#e8743a" />
+  <!-- THE FURNACE: the keep interior alight (y12-50 between towers) -->
+  <rect x="65" y="12" width="30" height="40" fill="#2a0f0a" />
+  <rect x="67" y="14" width="26" height="36" fill="#3f100c" />
+  <rect x="69" y="17" width="22" height="30" fill="#5a1812" />
+  <rect x="71" y="20" width="16" height="24" fill="#a33d1e" />
+  <rect x="74" y="24" width="12" height="16" fill="#e8743a" />
+  <rect x="76" y="27" width="6" height="9" fill="#ffb347" />
+  <rect x="77" y="30" width="3" height="4" fill="#ffe9a8" />
+  <!-- the burning hall's collapsed rafters crossing the glow -->
+  <rect x="68" y="20" width="14" height="2" fill="#2a0f0a" />
+  <rect x="80" y="22" width="10" height="2" fill="#3f100c" />
+  <rect x="70" y="38" width="12" height="2" fill="#3f100c" />
+  <rect x="80" y="41" width="12" height="2" fill="#2a0f0a" />
+  <rect x="73" y="21" width="2" height="2" fill="#16100a" />
+  <rect x="84" y="23" width="2" height="2" fill="#16100a" />
+  <rect x="76" y="39" width="3" height="1" fill="#1c0c08" />
+  <!-- a fallen beam leaning through the doorway -->
+  <rect x="84" y="26" width="2" height="10" fill="#2a0f0a" />
+  <rect x="85" y="34" width="2" height="10" fill="#1c0c08" />
+  <!-- the gate's splintered leaves hanging into the glow -->
+  <rect x="66" y="12" width="4" height="34" fill="#16100a" />
+  <rect x="70" y="12" width="2" height="26" fill="#0f0a06" />
+  <rect x="66" y="44" width="3" height="8" fill="#0f0a06" />
+  <rect x="90" y="12" width="4" height="30" fill="#16100a" />
+  <rect x="88" y="12" width="2" height="22" fill="#0f0a06" />
+  <rect x="91" y="40" width="3" height="10" fill="#0f0a06" />
+  <!-- iron strapping still on the leaves, fire-rimmed -->
+  <rect x="66" y="18" width="4" height="1" fill="#241a11" />
+  <rect x="66" y="30" width="4" height="1" fill="#241a11" />
+  <rect x="90" y="20" width="4" height="1" fill="#1d1510" />
+  <rect x="69" y="13" width="1" height="32" fill="#5a2812" />
+  <rect x="90" y="13" width="1" height="28" fill="#5a2812" />
+  <!-- sparks spiralling in the gate mouth -->
+  <rect x="75" y="18" width="1" height="1" fill="#ffb347" opacity="0.9" />
+  <rect x="83" y="16" width="1" height="1" fill="#e8743a" opacity="0.8" />
+  <rect x="79" y="22" width="1" height="1" fill="#ffe9a8" opacity="0.8" />
+  <rect x="86" y="24" width="1" height="1" fill="#ffb347" opacity="0.7" />
+  <rect x="58" y="2" width="44" height="52" fill="url(#c12b-furnace-glow)" />
+
+  <!-- ══ Outer flank LEFT: burning timber stack (x18-32) ══ -->
+  <rect x="18" y="44" width="14" height="22" fill="#16100a" />
+  <rect x="19" y="40" width="12" height="4" fill="#1d1510" />
+  <rect x="21" y="37" width="9" height="3" fill="#16100a" />
+  <rect x="18" y="44" width="14" height="1" fill="#281d14" />
+  <rect x="19" y="40" width="12" height="1" fill="#241a11" />
+  <!-- beam ends -->
+  <rect x="19" y="46" width="2" height="2" fill="#0f0a06" />
+  <rect x="19" y="52" width="2" height="2" fill="#0f0a06" />
+  <rect x="19" y="58" width="2" height="2" fill="#0d0805" />
+  <rect x="29" y="48" width="2" height="2" fill="#0d0805" />
+  <rect x="29" y="56" width="2" height="2" fill="#0c0704" />
+  <!-- fire working through the stack top (above y28 only embers below) -->
+  <rect x="22" y="34" width="6" height="3" fill="#a33d1e" />
+  <rect x="23" y="32" width="4" height="2" fill="#e8743a" />
+  <rect x="24" y="30" width="2" height="2" fill="#ffb347" />
+  <rect x="25" y="29" width="1" height="1" fill="#ffe9a8" />
+  <rect x="20" y="36" width="2" height="1" fill="#5a1812" />
+  <rect x="28" y="35" width="2" height="1" fill="#5a1812" />
+  <!-- ember seams glowing down the stack -->
+  <rect x="24" y="42" width="1" height="3" fill="#5a1812" />
+  <rect x="27" y="47" width="1" height="2" fill="#3f100c" />
+  <rect x="22" y="55" width="1" height="2" fill="#3f100c" />
+
+  <!-- ══ Outer flank RIGHT: keep buttress (x130-138) ══ -->
+  <rect x="130" y="10" width="8" height="56" fill="#13161c" />
+  <rect x="130" y="10" width="2" height="56" fill="#1a1e26" />
+  <rect x="136" y="10" width="2" height="56" fill="#0e1014" />
+  <rect x="130" y="10" width="8" height="2" fill="#1c2028" />
+  <rect x="130" y="10" width="8" height="1" fill="#262c36" />
+  <rect x="130" y="30" width="8" height="1" fill="#0e1014" />
+  <rect x="130" y="50" width="8" height="1" fill="#0c0e12" />
+  <!-- scorch up its face -->
+  <rect x="132" y="56" width="3" height="10" fill="#0c0a08" />
+  <rect x="133" y="48" width="2" height="8" fill="#0e0c0a" />
+
+  <!-- ══ MID BAND (y38-66): wall bases, quiet ══ -->
+  <rect x="0" y="38" width="17" height="9" fill="#1c2028" />
+  <rect x="0" y="47" width="17" height="9" fill="#1a1c24" />
+  <rect x="0" y="56" width="17" height="10" fill="#171a20" />
+  <rect x="33" y="38" width="23" height="9" fill="#181b21" />
+  <rect x="33" y="47" width="23" height="9" fill="#15181e" />
+  <rect x="33" y="56" width="23" height="10" fill="#13161c" />
+  <rect x="104" y="38" width="26" height="9" fill="#12151b" />
+  <rect x="104" y="47" width="26" height="9" fill="#111419" />
+  <rect x="104" y="56" width="26" height="10" fill="#0f1217" />
+  <rect x="138" y="38" width="22" height="9" fill="#111419" />
+  <rect x="138" y="47" width="22" height="9" fill="#101318" />
+  <rect x="138" y="56" width="22" height="10" fill="#0e1115" />
+
+  <!-- ══ The key-light halo (left tower crown) ══ -->
+  <rect x="-8" y="-14" width="76" height="58" fill="url(#c12b-crown-halo)" />
+
+  <!-- ══ NEAR FLOOR (y66-84): scorched flags before the gate ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0c0c0e" />
+  <rect x="0" y="66" width="160" height="1" fill="#040404" />
+  <rect x="56" y="66" width="48" height="1" fill="#030202" />
+  <!-- far flag row -->
+  <rect x="1" y="67" width="12" height="4" fill="#262c36" />
+  <rect x="14" y="67" width="11" height="4" fill="#222832" />
+  <rect x="26" y="67" width="12" height="4" fill="#1f242c" />
+  <rect x="39" y="67" width="11" height="4" fill="#1c2028" />
+  <rect x="51" y="67" width="12" height="4" fill="#1a161a" />
+  <rect x="64" y="67" width="11" height="4" fill="#241412" />
+  <rect x="76" y="67" width="12" height="4" fill="#2a1410" />
+  <rect x="89" y="67" width="11" height="4" fill="#221311" />
+  <rect x="101" y="67" width="12" height="4" fill="#161217" />
+  <rect x="114" y="67" width="11" height="4" fill="#12141a" />
+  <rect x="126" y="67" width="12" height="4" fill="#101218" />
+  <rect x="139" y="67" width="20" height="4" fill="#0e1014" />
+  <rect x="1" y="67" width="12" height="1" fill="#3a4452" />
+  <rect x="14" y="67" width="11" height="1" fill="#323a48" />
+  <!-- the threshold glow on the stones before the gate -->
+  <rect x="68" y="67" width="8" height="1" fill="#5a2812" />
+  <rect x="78" y="67" width="6" height="1" fill="#3f1a0e" />
+  <!-- mid flag row -->
+  <rect x="0" y="72" width="14" height="5" fill="#222832" />
+  <rect x="15" y="72" width="13" height="5" fill="#262c36" />
+  <rect x="29" y="72" width="14" height="5" fill="#1f242c" />
+  <rect x="44" y="72" width="13" height="5" fill="#1c2028" />
+  <rect x="58" y="72" width="14" height="5" fill="#1a1518" />
+  <rect x="73" y="72" width="13" height="5" fill="#1c1210" />
+  <rect x="87" y="72" width="14" height="5" fill="#171114" />
+  <rect x="102" y="72" width="13" height="5" fill="#12141a" />
+  <rect x="116" y="72" width="14" height="5" fill="#101218" />
+  <rect x="131" y="72" width="28" height="5" fill="#0e1014" />
+  <rect x="15" y="72" width="13" height="1" fill="#323a48" />
+  <!-- near flag row -->
+  <rect x="0" y="78" width="17" height="6" fill="#262c36" />
+  <rect x="18" y="78" width="16" height="6" fill="#2a3140" />
+  <rect x="35" y="78" width="17" height="6" fill="#222832" />
+  <rect x="53" y="78" width="16" height="6" fill="#1f242c" />
+  <rect x="70" y="78" width="17" height="6" fill="#1a171a" />
+  <rect x="88" y="78" width="16" height="6" fill="#151114" />
+  <rect x="105" y="78" width="17" height="6" fill="#12141a" />
+  <rect x="123" y="78" width="36" height="6" fill="#101218" />
+  <rect x="18" y="78" width="16" height="1" fill="#3a4452" />
+  <rect x="0" y="78" width="17" height="1" fill="#323a48" />
+  <!-- molten slag seeping from the threshold, veining the flags -->
+  <rect x="72" y="68" width="1" height="3" fill="#a33d1e" />
+  <rect x="73" y="70" width="1" height="2" fill="#e8743a" />
+  <rect x="74" y="71" width="1" height="3" fill="#a33d1e" />
+  <rect x="75" y="73" width="1" height="2" fill="#5a1812" />
+  <rect x="82" y="68" width="1" height="2" fill="#5a1812" />
+  <rect x="83" y="69" width="1" height="3" fill="#3f100c" />
+  <rect x="86" y="70" width="1" height="2" fill="#3f100c" />
+  <rect x="70" y="74" width="1" height="2" fill="#3f100c" />
+  <!-- the fallen portcullis, half-buried (x40-56) -->
+  <rect x="40" y="70" width="16" height="1" fill="#16120d" />
+  <rect x="40" y="73" width="16" height="1" fill="#16120d" />
+  <rect x="42" y="69" width="1" height="6" fill="#211b13" />
+  <rect x="46" y="69" width="1" height="6" fill="#1c170f" />
+  <rect x="50" y="69" width="1" height="6" fill="#211b13" />
+  <rect x="54" y="69" width="1" height="6" fill="#16120d" />
+  <rect x="42" y="69" width="1" height="1" fill="#2d2519" />
+  <!-- dropped shield, giant-dented -->
+  <rect x="110" y="74" width="5" height="3" fill="#1c2028" />
+  <rect x="111" y="73" width="3" height="1" fill="#262c36" />
+  <rect x="112" y="75" width="2" height="1" fill="#11141a" />
+  <!-- embers settling -->
+  <rect x="34" y="70" width="1" height="1" fill="#e8743a" opacity="0.8" />
+  <rect x="92" y="73" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="62" y="76" width="1" height="1" fill="#ffb347" opacity="0.6" />
+  <rect x="48" y="80" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+  <rect x="120" y="79" width="1" height="1" fill="#5a1812" opacity="0.7" />
+  <!-- furnace-light washing the gate stones -->
+  <rect x="48" y="56" width="64" height="28" fill="url(#c12b-floor-pool)" />
+</svg>
