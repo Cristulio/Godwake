@@ -18,11 +18,12 @@ export function TitleScreen() {
   // lets the soul descend again at a chosen ascension. The mastery persists, so
   // the entry stays even after starting a fresh base game.
   const newGamePlusAvailable = activeSave && gameCompleted;
-  // Continue resumes only an UNFINISHED campaign. Once the chain has been cleared
-  // the run is over — the way on is New Game+, not resuming a finished (already
-  // won) delve. So a completed save routes through the ascension launcher instead
-  // of dropping the soul back into a dead run.
-  const canContinue = activeSave && !gameCompleted;
+  // Continue resumes whatever the autosave holds — including a LIVE New Game+
+  // descent, which exists on a save whose base chain is already complete. The
+  // old gate (activeSave && !gameCompleted) assumed completed = nothing to
+  // resume and stranded mid-NG+ runs at the title (owner-hit, 2026-06-11).
+  // A post-victory save with no live run simply resumes at the hub — harmless.
+  const canContinue = activeSave;
 
   useEffect(() => {
     const t = setTimeout(() => setGlow(true), 200);

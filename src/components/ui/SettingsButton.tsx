@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useGameStore } from '../../stores/gameStore';
 import { useAudioStore } from '../../stores/audioStore';
 import { useT } from '../../i18n/useT';
 import { useFeedbackUi } from '../../feedback/feedbackUi';
@@ -18,13 +17,10 @@ import { SettingsModal } from './SettingsModal';
  */
 export function SettingsButton() {
   const { t } = useT();
-  const screen = useGameStore((s) => s.screen);
   const muted = useAudioStore((s) => s.muted);
   const toggleMuted = useAudioStore((s) => s.toggleMuted);
   const openFeedback = useFeedbackUi((s) => s.openFeedback);
   const [open, setOpen] = useState(false);
-
-  if (screen === 'title') return null;
 
   return (
     <>
