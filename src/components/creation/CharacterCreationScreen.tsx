@@ -167,13 +167,22 @@ export function CharacterCreationScreen() {
             >
               <div
                 aria-hidden
-                className={`relative h-28 flex items-end justify-center overflow-hidden border bg-[var(--color-bg-deep)]/60 ${
+                className={`relative h-36 flex items-end justify-center overflow-hidden border bg-[var(--color-bg-deep)]/60 ${
                   isSelected
                     ? 'border-[var(--color-border-warm)]'
                     : 'border-[var(--color-border-dim)]'
                 }`}
               >
-                <PlayerPortrait classId={opt.classId} className="h-24 w-auto" />
+                {/* Torch-spotlight behind the soul, matching the battlefield's
+                    key light, so the sprite reads on the near-black card box. */}
+                <div
+                  className="absolute inset-x-0 bottom-0 h-full pointer-events-none"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse 55% 70% at 50% 78%, rgba(244,167,66,0.16) 0%, rgba(244,167,66,0.05) 45%, transparent 70%)',
+                  }}
+                />
+                <PlayerPortrait classId={opt.classId} className="relative h-32 w-auto" />
               </div>
 
               <div>

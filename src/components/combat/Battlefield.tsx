@@ -192,6 +192,7 @@ export function Battlefield({
               lastAttack={state.lastAttack}
               attackEvents={state.attackEvents}
               spellEffectEvent={state.spellEffectEvent}
+              marked={state.huntersMarkTargetId === c.id}
               wardLabel={gateWardLabel(state, c.instance)}
               phaseLabel={phaseLabel(c.instance)}
               scale={scale}

@@ -402,6 +402,7 @@
     }
   },
   "slain": "Slain",
+  "quarryMarked": "Marked quarry \u2014 your arrows find it deeper.",
   "dice": {
     "crit": "CRIT!",
     "hit": "HIT",

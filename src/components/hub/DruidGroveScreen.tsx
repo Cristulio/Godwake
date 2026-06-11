@@ -178,7 +178,20 @@ export function DruidGroveScreen() {
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto grid md:grid-cols-2 gap-4 content-start">
-        {shownUpgrades.map((u) => (
+        {[...shownUpgrades]
+          .sort((a, b) => {
+            // Cheapest next purchase first (owner ask) — the tab reads as a
+            // price ladder. Fully-blessed nodes have nothing left to buy, so
+            // they sink to the end as trophies.
+            const next = (u: (typeof shownUpgrades)[number]) => {
+              const rank = unlocked[u.id] ?? 0;
+              return rank >= u.maxRank
+                ? Infinity
+                : groveUpgradeCost(u, rank + 1, ascensionUnlocked);
+            };
+            return next(a) - next(b);
+          })
+          .map((u) => (
           <UpgradeCard
             key={u.id}
             upgrade={u}

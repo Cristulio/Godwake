@@ -50,6 +50,10 @@ type MonsterProps = CommonProps & {
   /** Display-side shrink factor (≤1) applied when the enemy row is crowded, so a
    *  field full of summoned adds compresses instead of overlapping the hero. */
   scale?: number;
+  /** True when this monster is the ranger's marked quarry — floats a small
+   *  amber reticle on the sprite so the mark reads on the battlefield, not
+   *  only in the FOCUS row. */
+  marked?: boolean;
 };
 
 export type BattlefieldSpriteProps = PlayerProps | MonsterProps;
@@ -518,6 +522,21 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
         {selectable && (
           <div className="absolute inset-0 border-2 border-[var(--color-accent-amber)] -m-1 pointer-events-none animate-pulse-glow" />
         )}
+        {props.kind === 'monster' && props.marked && !dead && (
+          <div
+            className="absolute -top-1 -right-1 z-10 pointer-events-none"
+            title={t('combat.quarryMarked')}
+          >
+            <svg viewBox="0 0 12 12" className="w-4 h-4" aria-label={t('combat.quarryMarked')}>
+              <circle cx="6" cy="6" r="4.4" fill="none" stroke="var(--color-accent-amber)" strokeWidth="1.4" />
+              <line x1="6" y1="0.4" x2="6" y2="3" stroke="var(--color-accent-amber)" strokeWidth="1.4" />
+              <line x1="6" y1="9" x2="6" y2="11.6" stroke="var(--color-accent-amber)" strokeWidth="1.4" />
+              <line x1="0.4" y1="6" x2="3" y2="6" stroke="var(--color-accent-amber)" strokeWidth="1.4" />
+              <line x1="9" y1="6" x2="11.6" y2="6" stroke="var(--color-accent-amber)" strokeWidth="1.4" />
+              <circle cx="6" cy="6" r="1.1" fill="var(--color-accent-blood)" />
+            </svg>
+          </div>
+        )}
         <div className={`relative w-full ${knockbackClass}`}>
           <div
             className={`
@@ -662,6 +681,7 @@ export const BattlefieldSprite = memo(BattlefieldSpriteImpl, (prev, next) => {
     return (
       prev.selectable === next.selectable &&
       prev.scale === next.scale &&
+      prev.marked === next.marked &&
       // boss-framework: ward/phase chips flip on field changes (add dies, boss
       // shifts) without the instance identity necessarily moving — compare them.
       prev.wardLabel === next.wardLabel &&
