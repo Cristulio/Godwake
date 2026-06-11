@@ -1,3 +1,4 @@
+import { layoutMonsterSprites, SLOT_WIDTH, FIELD_WIDTH } from './battlefieldLayout';
 import { useEffect, useRef, useState } from 'react';
 import type {
   CombatState,
@@ -56,6 +57,16 @@ function anchorFor(state: CombatState, id: string): Anchor {
   const monsters = state.combatants.filter(
     (c) => c.kind === 'monster',
   ) as MonsterCombatant[];
+  // Mirror the Battlefield's REAL slot layout (corpse culling + crowd
+  // compression) instead of a naive fixed-step index — the two diverged the
+  // moment summons crowded the row or old corpses were culled, and bolts
+  // landed mid-field while the damage hit the right sprite (owner-seen).
+  const slot = layoutMonsterSprites(monsters).find((s) => s.combatant.id === id);
+  if (slot) {
+    return { x: FIELD_WIDTH - slot.right - SLOT_WIDTH / 2, y: MONSTER_Y };
+  }
+  // Culled corpse (effect aimed at a body the row no longer shows) — the old
+  // approximation is fine for a fading target.
   const idx = monsters.findIndex((m) => m.id === id);
   if (idx < 0) return PLAYER_ANCHOR;
   return { x: MONSTER_BASE_X - idx * MONSTER_STEP_X, y: MONSTER_Y };

@@ -737,7 +737,7 @@ export function CombatScreen({
             {roomLabel ?? t('combat.screen.round', { n: state.round })}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto">
           <div className="flex">
             {([1, 2, 4] as const).map((mult, i) => {
               const locked = mult > speedCeiling;

@@ -118,8 +118,9 @@ export function attachSpellEffect(
   targetId?: string,
   element?: SpellElement,
   outcome?: 'landed' | 'resisted',
+  damage?: number,
 ): CombatState {
-  return attachCombatVfx(state, kind, attackerId, targetId, element, outcome);
+  return attachCombatVfx(state, kind, attackerId, targetId, element, outcome, damage);
 }
 
 const SPELL_ELEMENTS: ReadonlySet<string> = new Set<SpellElement>([

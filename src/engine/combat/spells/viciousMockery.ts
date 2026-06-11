@@ -84,7 +84,7 @@ export function castViciousMockery(ctx: CastSpellContext): CastResult {
   // Psychic carries no elemental palette, so the bolt shows its default cast. No
   // outcome verdict here — VM deals real damage, so the number floats (like Fire
   // Bolt); the rattle reads from the combat log + the frightened condition icon.
-  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId);
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, undefined, undefined, dealt);
 
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
