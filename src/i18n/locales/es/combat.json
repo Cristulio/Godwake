@@ -531,8 +531,8 @@
     "divineSmite": "Castigo Divino",
     "smiteArmed": "Armado",
     "smiteIdle": "Inactivo",
-    "smiteArmedTitle": "Hay un castigo armado — tu próximo impacto de arma gasta un espacio de conjuro para daño radiante.",
-    "smiteIdleTitle": "Arma un castigo para abrasar tu próximo impacto de arma con la luz de un espacio de conjuro."
+    "smiteArmedTitle": "Hay un castigo armado — tu próximo impacto de arma gasta tu espacio de conjuro más bajo en daño radiante. Los espacios son el combustible: vuelven al descansar.",
+    "smiteIdleTitle": "Arma un castigo para abrasar tu próximo impacto con la luz de un espacio de conjuro. El combustible son tus espacios (arriba); descansar los rellena."
   },
   "bar": {
     "secondWind": "Acción adicional: cura 1d10 + tu nivel. Una vez por combate.",

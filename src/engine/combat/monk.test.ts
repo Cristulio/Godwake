@@ -297,31 +297,31 @@ describe('Monk — combat wiring', () => {
     const m = r.state.combatants.find((c) => c.id === targetId) as MonsterCombatant;
     expect(m.instance.staggeredTurns).toBe(1);
     expect(r.character.stunningStrikeActive ?? false).toBe(false);
-    expect(kiAfterArm).toBe((init.character.resources.kiPointsRemaining ?? 0) - 2);
+    expect(kiAfterArm).toBe((init.character.resources.kiPointsRemaining ?? 0) - 3);
   });
 
-  it('Stunning Strike costs 2 Ki — armed at 2, refused at 1', () => {
+  it('Stunning Strike costs 3 Ki — armed at 3, refused at 2', () => {
     const init = createCombat({
       roller: createDiceRoller(7),
       character: makeMonk(5),
       monsters: [{ def: getMonster('goblin') }],
     });
 
-    // 1 Ki is no longer enough: the stance refuses to arm and spends nothing.
-    const oneKi: Character = {
-      ...init.character,
-      resources: { ...init.character.resources, kiPointsRemaining: 1 },
-    };
-    const refused = useStunningStrike({ character: oneKi, state: init.state });
-    expect(refused.character.stunningStrikeActive ?? false).toBe(false);
-    expect(refused.character.resources.kiPointsRemaining).toBe(1);
-
-    // 2 Ki arms it and drains the pair.
+    // 2 Ki is no longer enough: the stance refuses to arm and spends nothing.
     const twoKi: Character = {
       ...init.character,
       resources: { ...init.character.resources, kiPointsRemaining: 2 },
     };
-    const armed = useStunningStrike({ character: twoKi, state: init.state });
+    const refused = useStunningStrike({ character: twoKi, state: init.state });
+    expect(refused.character.stunningStrikeActive ?? false).toBe(false);
+    expect(refused.character.resources.kiPointsRemaining).toBe(2);
+
+    // 3 Ki arms it and drains the trio.
+    const threeKi: Character = {
+      ...init.character,
+      resources: { ...init.character.resources, kiPointsRemaining: 3 },
+    };
+    const armed = useStunningStrike({ character: threeKi, state: init.state });
     expect(armed.character.stunningStrikeActive).toBe(true);
     expect(armed.character.resources.kiPointsRemaining).toBe(0);
   });

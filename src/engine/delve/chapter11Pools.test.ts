@@ -56,9 +56,9 @@ describe('chapter 11 — bestiary registration', () => {
     }
   });
 
-  it('the boss (Jon Velnaris) carries an apex stat block a notch above Ch9', () => {
+  it('the boss (Velnaris) carries an apex stat block a notch above Ch9', () => {
     expect(CH11_BOSS.id).toBe('irenicus');
-    expect(CH11_BOSS.name).toBe('Jon Velnaris');
+    expect(CH11_BOSS.name).toBe('Velnaris');
     expect(CH11_BOSS.cr).toBe('16');
     // boss-framework: the captor now escalates via the framework — he acts twice
     // a turn and at half HP cracks into the Slayer (a transform phase that gains a

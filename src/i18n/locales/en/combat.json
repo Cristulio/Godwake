@@ -331,8 +331,8 @@
     "encounter": "Encounter",
     "round": "Round {n}",
     "slowDown": "Slow down",
-    "speedLocked": "Sealed \u2014 the Grove sells this pace (The Wheel, Quickened \u00b7 The Wheel, Unbound).",
-    "speedSet": "Play at {n}\u00d7",
+    "speedLocked": "Sealed — the Grove sells this pace (The Wheel, Quickened · The Wheel, Unbound).",
+    "speedSet": "Play at {n}×",
     "speedUp": "Speed up",
     "autoOn": "Turn off Auto-Battle",
     "autoOff": "Auto-Battle: let the tactics engine play your turns",
@@ -402,7 +402,7 @@
     }
   },
   "slain": "Slain",
-  "quarryMarked": "Marked quarry \u2014 your arrows find it deeper.",
+  "quarryMarked": "Marked quarry — your arrows find it deeper.",
   "dice": {
     "crit": "CRIT!",
     "hit": "HIT",
@@ -531,8 +531,8 @@
     "divineSmite": "Divine Smite",
     "smiteArmed": "Armed",
     "smiteIdle": "Idle",
-    "smiteArmedTitle": "A smite is armed — your next weapon hit spends a spell slot for radiant damage.",
-    "smiteIdleTitle": "Arm a smite to sear your next weapon hit with a spell slot's radiance."
+    "smiteArmedTitle": "A smite is armed — your next weapon hit spends your cheapest spell slot for radiant damage. Slots are the fuel: they return when you rest.",
+    "smiteIdleTitle": "Arm a smite to sear your next weapon hit with a spell slot's radiance. Fuel = your spell slots (shown above); resting refills them."
   },
   "bar": {
     "secondWind": "Bonus action: heal 1d10 + your level. Once per combat.",

@@ -283,7 +283,12 @@ export function CharacterCreationScreen() {
                 ) : (
                   <>
                     {t('screens.charCreation.sealedThreshold', { n: threshold })}
-                    {remaining > 0 && t('screens.charCreation.sealedRemaining', { n: remaining })}
+                    {remaining > 0 &&
+                      t('screens.charCreation.sealedProgress', {
+                        spent: renownSpent,
+                        req: threshold,
+                        n: remaining,
+                      })}
                   </>
                 )}
               </p>

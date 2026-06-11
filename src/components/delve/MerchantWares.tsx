@@ -57,17 +57,22 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
   // The usability gate — why this can't be worn yet (wrong class, stat shortfall,
   // class-bound). Shown but never blocks buying: the player may grow into it.
   const denial = character ? equipDenialReason(character, stock.ref.itemId) : null;
-  // Compare-on-hover: the item already worn in this buy item's slot (desktop only).
+  // Compare-on-hover: the item(s) already worn in this buy item's slot (desktop
+  // only). Rings are a PAIR of slots — show BOTH worn rings, not just one.
   const slot = character ? slotForItem(stock.ref.itemId) : null;
-  const equippedRef =
+  const equippedRefs: ItemRef[] =
     character && slot
       ? slot === 'ring1'
-        ? character.equipped.ring1 ?? character.equipped.ring2
+        ? [character.equipped.ring1, character.equipped.ring2].filter(
+            (r): r is ItemRef => r != null,
+          )
         : character.equipped[slot]
-      : null;
+          ? [character.equipped[slot] as ItemRef]
+          : []
+      : [];
   function showCompare() {
     const el = rowRef.current;
-    if (!el || !equippedRef) return;
+    if (!el || equippedRefs.length === 0) return;
     const r = el.getBoundingClientRect();
     const margin = 8;
     // Prefer the left of the row; flip to the right if it would run off-screen.
@@ -89,10 +94,10 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
       onMouseEnter={showCompare}
       onMouseLeave={() => setTipPos(null)}
     >
-      {tipPos && equippedRef &&
+      {tipPos && equippedRefs.length > 0 &&
         createPortal(
           <div
-            className="fixed z-50 hidden md:block pointer-events-none overflow-y-auto"
+            className="fixed z-50 hidden md:block pointer-events-none overflow-y-auto space-y-1"
             style={{
               top: tipPos.top,
               left: tipPos.left,
@@ -100,12 +105,15 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
               transform: tipPos.anchorBottom ? 'translateY(-100%)' : undefined,
             }}
           >
-            <ItemTooltip
-              item={getItem(equippedRef.itemId)}
-              rolled={equippedRef.rolled}
-              rolledCost={rolledItemCost(equippedRef)}
-              hint={t('delve.wares.currentlyEquipped')}
-            />
+            {equippedRefs.map((ref, i) => (
+              <ItemTooltip
+                key={`${ref.itemId}-${i}`}
+                item={getItem(ref.itemId)}
+                rolled={ref.rolled}
+                rolledCost={rolledItemCost(ref)}
+                hint={t('delve.wares.currentlyEquipped')}
+              />
+            ))}
           </div>,
           document.body,
         )}

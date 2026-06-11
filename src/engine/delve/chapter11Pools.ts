@@ -17,7 +17,7 @@ import type { BossIntelCard } from '../../content/bossIntel';
  * pries out of you. Mechanically the apex of the chapters: paralysis, fear, blind,
  * life-drain, hoard-wards, summoned reflections, and a final boss gorged on a
  * stolen god. Continues the curve a band past Chapter 9: warmups CR 10, early-mid
- * CR 11, mid CR 12, elite CR 14, boss (Jon Velnaris) CR 16.
+ * CR 11, mid CR 12, elite CR 14, boss (Velnaris) CR 16.
  */
 
 export interface EncounterEntry {
@@ -349,7 +349,7 @@ export const CHAPTER11_FLAVOR = {
   boss: {
     title: 'The Face at the End of the Voice',
     flavorText:
-      "The trials end and the burning opens into a vault at the heart of the pit, and the Voice that has walked you down the whole descent finally has a face. Jon Velnaris stands at the centre of his stolen Hell with the Tree of Life's power lit under his skin and your divinity gripped in him like a swallowed coal, and he turns to you with the unhurried fondness of a man regarding good work. \"You came all this way down,\" he says, and the old Voice from the cage fits the face exactly. \"After everything I took — you climbed back up to me. I am almost moved. But you have always misunderstood what you are. You are not the one who survives this story. You are the soil, child of Murder, and I have such things to grow.\" The Tear of the Slain God is cold in your hand. It is the one thing here he cannot have. Make him answer for the Voice.",
+      "The trials end and the burning opens into a vault at the heart of the pit, and the Voice that has walked you down the whole descent finally has a face. Velnaris stands at the centre of his stolen Hell with the Tree of Life's power lit under his skin and your divinity gripped in him like a swallowed coal, and he turns to you with the unhurried fondness of a man regarding good work. \"You came all this way down,\" he says, and the old Voice from the cage fits the face exactly. \"After everything I took — you climbed back up to me. I am almost moved. But you have always misunderstood what you are. You are not the one who survives this story. You are the soil, child of Murder, and I have such things to grow.\" The Tear of the Slain God is cold in your hand. It is the one thing here he cannot have. Make him answer for the Voice.",
     xpReward: 5400,
     goldReward: 750,
   },

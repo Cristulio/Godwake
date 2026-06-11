@@ -85,9 +85,11 @@ export function martialArtsWeaponId(character: Readonly<Character>): string {
   return 'monk-fists';
 }
 
-/** Ki spent to arm a Stunning Strike. Open Hand Ki Focus (L10) discounts it from 2 to 1. */
+/** Ki spent to arm a Stunning Strike. Owner retune 2026-06-11: Ki flows far
+ *  more freely than scarcer pools (Resolve), so a 2-Ki stun was too cheap —
+ *  now 3, and the Open Hand Ki Focus (L10) discount lands at 2. */
 export function stunningStrikeKiCost(character: Readonly<Character>): number {
-  return characterHasMechanic(character as Character, 'ki-focus') ? 1 : 2;
+  return characterHasMechanic(character as Character, 'ki-focus') ? 2 : 3;
 }
 
 /** Extra strikes a single Flurry of Blows throws: 2 base, 3 at L9, 4 at the L20 capstone. */
