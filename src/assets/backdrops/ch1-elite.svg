@@ -1,0 +1,271 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch1-elite — The Iron Cells, the chain yard: where the warden's pets are
+       kept. Same biome as ch1-combat, heavier dressing — gibbet cages on the
+       beam, a dropped portcullis, shackle rings, a floor drain fed by old
+       blood. Key light: wall torch upper-LEFT. Cool teal depth to the right.
+       Quiet mid band y38-63; floor band y66-84 (parallax seam at y66).
+       Shares the ch1 ramps (see ch1-combat.svg header). -->
+  <defs>
+    <radialGradient id="c1e-torch-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.30" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c1e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c1e-coal-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: ceiling beam + back wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0f0a06" />
+  <rect x="100" y="0" width="60" height="66" fill="#0b0c10" />
+  <rect x="0" y="0" width="160" height="5" fill="#0a0705" />
+  <!-- iron-strapped gallows beam -->
+  <rect x="0" y="5" width="160" height="3" fill="#16100a" />
+  <rect x="0" y="5" width="100" height="1" fill="#241710" />
+  <rect x="28" y="5" width="2" height="3" fill="#211b13" />
+  <rect x="68" y="5" width="2" height="3" fill="#211b13" />
+  <rect x="122" y="5" width="2" height="3" fill="#16120d" />
+
+  <!-- meat hooks along the beam -->
+  <rect x="58" y="8" width="1" height="3" fill="#16120d" />
+  <rect x="57" y="11" width="2" height="1" fill="#211b13" />
+  <rect x="70" y="8" width="1" height="2" fill="#16120d" />
+  <rect x="82" y="8" width="1" height="4" fill="#16120d" />
+  <rect x="81" y="12" width="2" height="1" fill="#211b13" />
+  <!-- a coiled chain left on the middle hook -->
+  <rect x="69" y="10" width="3" height="2" fill="#1c170f" />
+  <rect x="69" y="12" width="1" height="8" fill="#16120d" />
+  <rect x="69" y="14" width="1" height="2" fill="#211b13" />
+
+  <!-- wall courses, lit left -->
+  <rect x="0" y="8" width="20" height="8" fill="#281d14" />
+  <rect x="21" y="8" width="24" height="8" fill="#34271a" />
+  <rect x="46" y="8" width="20" height="8" fill="#281d14" />
+  <rect x="67" y="8" width="18" height="8" fill="#1d1510" />
+  <rect x="115" y="8" width="20" height="8" fill="#15161c" />
+  <rect x="136" y="8" width="24" height="8" fill="#1a1c24" />
+  <rect x="21" y="8" width="24" height="1" fill="#453524" />
+  <rect x="0" y="17" width="12" height="8" fill="#34271a" />
+  <rect x="13" y="17" width="16" height="8" fill="#281d14" />
+  <rect x="30" y="17" width="15" height="8" fill="#34271a" />
+  <rect x="46" y="17" width="22" height="8" fill="#1d1510" />
+  <rect x="69" y="17" width="16" height="8" fill="#1a1712" />
+  <rect x="115" y="17" width="13" height="8" fill="#101218" />
+  <rect x="129" y="17" width="31" height="8" fill="#15161c" />
+  <rect x="30" y="17" width="15" height="1" fill="#5a4630" />
+  <rect x="0" y="26" width="18" height="11" fill="#281d14" />
+  <rect x="19" y="26" width="14" height="11" fill="#1d1510" />
+  <rect x="34" y="26" width="18" height="11" fill="#281d14" />
+  <rect x="53" y="26" width="15" height="11" fill="#1a1712" />
+  <rect x="69" y="26" width="16" height="11" fill="#15130e" />
+  <rect x="115" y="26" width="22" height="11" fill="#101218" />
+  <rect x="138" y="26" width="22" height="11" fill="#14151b" />
+  <rect x="19" y="26" width="14" height="1" fill="#34271a" />
+
+  <!-- hairline cracks, upper wall -->
+  <rect x="24" y="11" width="1" height="3" fill="#140e09" />
+  <rect x="23" y="13" width="1" height="2" fill="#140e09" />
+  <rect x="61" y="20" width="1" height="3" fill="#10100c" />
+  <rect x="146" y="12" width="1" height="3" fill="#0d0e12" />
+  <rect x="145" y="14" width="1" height="2" fill="#0d0e12" />
+
+  <!-- shackle rings bolted to the wall, one weeping an old stain -->
+  <rect x="8" y="31" width="3" height="3" fill="#211b13" />
+  <rect x="9" y="32" width="1" height="1" fill="#0f0a06" />
+  <rect x="24" y="31" width="3" height="3" fill="#211b13" />
+  <rect x="25" y="32" width="1" height="1" fill="#0f0a06" />
+  <rect x="25" y="34" width="1" height="7" fill="#2a1410" />
+  <rect x="25" y="41" width="1" height="4" fill="#1f0e0b" />
+  <rect x="58" y="31" width="3" height="3" fill="#1c170f" />
+  <rect x="59" y="32" width="1" height="1" fill="#0d0906" />
+
+  <!-- ══ Gibbet cage 1, torch-lit ══ -->
+  <rect x="35" y="8" width="1" height="6" fill="#16120d" />
+  <rect x="35" y="9" width="1" height="2" fill="#211b13" />
+  <rect x="30" y="14" width="13" height="1" fill="#211b13" />
+  <rect x="30" y="14" width="1" height="18" fill="#211b13" />
+  <rect x="33" y="15" width="1" height="17" fill="#16120d" />
+  <rect x="36" y="15" width="1" height="17" fill="#16120d" />
+  <rect x="39" y="15" width="1" height="17" fill="#16120d" />
+  <rect x="42" y="14" width="1" height="18" fill="#1c170f" />
+  <rect x="31" y="15" width="2" height="17" fill="#070403" />
+  <rect x="34" y="15" width="2" height="17" fill="#070403" />
+  <rect x="37" y="15" width="2" height="17" fill="#070403" />
+  <rect x="40" y="15" width="2" height="17" fill="#070403" />
+  <rect x="30" y="20" width="13" height="1" fill="#1c170f" />
+  <rect x="30" y="26" width="13" height="1" fill="#1c170f" />
+  <rect x="30" y="32" width="13" height="1" fill="#211b13" />
+  <!-- what's left inside -->
+  <rect x="34" y="18" width="2" height="2" fill="#6a5e4c" />
+  <rect x="34" y="19" width="1" height="1" fill="#4a4136" />
+  <rect x="33" y="28" width="4" height="2" fill="#4a4136" />
+  <rect x="37" y="29" width="3" height="1" fill="#3a3429" />
+  <!-- torch catches the cage's left ribs -->
+  <rect x="30" y="14" width="1" height="4" fill="#3f3524" />
+  <rect x="33" y="15" width="1" height="3" fill="#2d2519" />
+
+  <!-- ══ Gibbet cage 2, hanging in the dark ══ -->
+  <rect x="123" y="8" width="1" height="4" fill="#0d0b0f" />
+  <rect x="119" y="12" width="10" height="1" fill="#14151b" />
+  <rect x="119" y="12" width="1" height="14" fill="#101218" />
+  <rect x="122" y="13" width="1" height="13" fill="#0d0e12" />
+  <rect x="125" y="13" width="1" height="13" fill="#0d0e12" />
+  <rect x="128" y="12" width="1" height="14" fill="#101218" />
+  <rect x="120" y="13" width="2" height="13" fill="#040303" />
+  <rect x="123" y="13" width="2" height="13" fill="#040303" />
+  <rect x="126" y="13" width="2" height="13" fill="#040303" />
+  <rect x="119" y="19" width="10" height="1" fill="#0d0e12" />
+  <rect x="119" y="26" width="10" height="1" fill="#101218" />
+  <rect x="124" y="16" width="1" height="1" fill="#2c3a30" />
+
+  <!-- ══ The torch — key light ══ -->
+  <rect x="12" y="16" width="5" height="2" fill="#211b13" />
+  <rect x="13" y="18" width="3" height="3" fill="#16120d" />
+  <rect x="14" y="21" width="1" height="2" fill="#0b0907" />
+  <rect x="13" y="13" width="3" height="3" fill="#a33d1e" />
+  <rect x="13" y="10" width="3" height="3" fill="#e8743a" />
+  <rect x="14" y="8" width="2" height="2" fill="#ffb347" />
+  <rect x="14" y="11" width="1" height="3" fill="#ffe9a8" />
+  <rect x="14" y="4" width="2" height="3" fill="#0a0705" />
+  <rect x="20" y="14" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="23" y="22" width="1" height="1" fill="#a33d1e" opacity="0.8" />
+  <rect x="-14" y="-14" width="74" height="60" fill="url(#c1e-torch-halo)" />
+
+  <!-- ══ Dropped portcullis (x86-112), the way the handlers come in ══ -->
+  <rect x="85" y="14" width="29" height="2" fill="#211b13" />
+  <rect x="85" y="14" width="29" height="1" fill="#2d2519" />
+  <rect x="85" y="16" width="2" height="50" fill="#16120d" />
+  <rect x="112" y="16" width="2" height="50" fill="#120f0b" />
+  <rect x="87" y="16" width="25" height="50" fill="#030202" />
+  <rect x="90" y="16" width="1" height="50" fill="#16120d" />
+  <rect x="94" y="16" width="1" height="50" fill="#120f0b" />
+  <rect x="98" y="16" width="1" height="50" fill="#120f0b" />
+  <rect x="102" y="16" width="1" height="50" fill="#0e0b08" />
+  <rect x="106" y="16" width="1" height="50" fill="#0e0b08" />
+  <rect x="110" y="16" width="1" height="50" fill="#0b0907" />
+  <rect x="87" y="22" width="25" height="1" fill="#120f0b" />
+  <rect x="87" y="30" width="25" height="1" fill="#0e0b08" />
+  <rect x="87" y="38" width="25" height="1" fill="#0c0a07" />
+  <rect x="87" y="46" width="25" height="1" fill="#0c0a07" />
+  <rect x="87" y="54" width="25" height="1" fill="#0a0806" />
+  <rect x="87" y="62" width="25" height="1" fill="#0a0806" />
+  <!-- the torch finds the gate's first bars -->
+  <rect x="90" y="16" width="1" height="4" fill="#2d2519" />
+  <rect x="87" y="16" width="3" height="1" fill="#1c170f" />
+
+  <!-- ══ MID BAND (y38-66): quiet courses + one draped chain ══ -->
+  <rect x="0" y="38" width="22" height="9" fill="#241a11" />
+  <rect x="23" y="38" width="26" height="9" fill="#281d14" />
+  <rect x="50" y="38" width="18" height="9" fill="#1d1510" />
+  <rect x="69" y="38" width="16" height="9" fill="#191611" />
+  <rect x="115" y="38" width="20" height="9" fill="#14151b" />
+  <rect x="136" y="38" width="24" height="9" fill="#101218" />
+  <rect x="0" y="47" width="16" height="9" fill="#281d14" />
+  <rect x="17" y="47" width="24" height="9" fill="#241a11" />
+  <rect x="42" y="47" width="26" height="9" fill="#1d1510" />
+  <rect x="69" y="47" width="16" height="9" fill="#15130e" />
+  <rect x="115" y="47" width="14" height="9" fill="#101218" />
+  <rect x="130" y="47" width="30" height="9" fill="#14151b" />
+  <rect x="0" y="56" width="24" height="10" fill="#1f160e" />
+  <rect x="25" y="56" width="20" height="10" fill="#241a11" />
+  <rect x="46" y="56" width="22" height="10" fill="#191007" />
+  <rect x="69" y="56" width="16" height="10" fill="#14120e" />
+  <rect x="115" y="56" width="22" height="10" fill="#0f1016" />
+  <rect x="138" y="56" width="22" height="10" fill="#121319" />
+  <!-- long chain slumped against the wall -->
+  <rect x="48" y="38" width="1" height="6" fill="#1c170f" />
+  <rect x="49" y="43" width="1" height="6" fill="#16120d" />
+  <rect x="50" y="48" width="1" height="6" fill="#1c170f" />
+  <rect x="51" y="53" width="1" height="6" fill="#16120d" />
+  <rect x="52" y="58" width="1" height="6" fill="#1c170f" />
+  <rect x="48" y="40" width="1" height="2" fill="#211b13" />
+  <rect x="50" y="50" width="1" height="2" fill="#211b13" />
+
+  <!-- ══ NEAR FLOOR (y66-84) ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0a0705" />
+  <rect x="0" y="66" width="160" height="1" fill="#060302" />
+  <!-- far stone row -->
+  <rect x="1" y="67" width="12" height="4" fill="#2d1f12" />
+  <rect x="14" y="67" width="12" height="4" fill="#332416" />
+  <rect x="27" y="67" width="12" height="4" fill="#2d1f12" />
+  <rect x="40" y="67" width="13" height="4" fill="#241a11" />
+  <rect x="54" y="67" width="12" height="4" fill="#1f160e" />
+  <rect x="67" y="67" width="13" height="4" fill="#1d1510" />
+  <rect x="81" y="67" width="12" height="4" fill="#191410" />
+  <rect x="94" y="67" width="13" height="4" fill="#141210" />
+  <rect x="108" y="67" width="12" height="4" fill="#111118" />
+  <rect x="121" y="67" width="13" height="4" fill="#0f1016" />
+  <rect x="135" y="67" width="12" height="4" fill="#101218" />
+  <rect x="148" y="67" width="11" height="4" fill="#0d0e14" />
+  <rect x="14" y="67" width="12" height="1" fill="#453524" />
+  <rect x="1" y="67" width="12" height="1" fill="#3a2c1c" />
+  <rect x="27" y="67" width="12" height="1" fill="#34271a" />
+  <!-- mid stone row -->
+  <rect x="0" y="72" width="14" height="5" fill="#241a11" />
+  <rect x="15" y="72" width="15" height="5" fill="#2d1f12" />
+  <rect x="31" y="72" width="14" height="5" fill="#281d14" />
+  <rect x="46" y="72" width="15" height="5" fill="#241a11" />
+  <rect x="62" y="72" width="14" height="5" fill="#1d1510" />
+  <rect x="77" y="72" width="15" height="5" fill="#191410" />
+  <rect x="93" y="72" width="14" height="5" fill="#15130f" />
+  <rect x="108" y="72" width="15" height="5" fill="#111118" />
+  <rect x="124" y="72" width="14" height="5" fill="#101117" />
+  <rect x="139" y="72" width="20" height="5" fill="#0e0f15" />
+  <rect x="15" y="72" width="15" height="1" fill="#3a2c1c" />
+  <rect x="31" y="72" width="14" height="1" fill="#34271a" />
+  <!-- near stone row -->
+  <rect x="0" y="78" width="18" height="6" fill="#281d14" />
+  <rect x="19" y="78" width="17" height="6" fill="#332416" />
+  <rect x="37" y="78" width="18" height="6" fill="#2d1f12" />
+  <rect x="56" y="78" width="17" height="6" fill="#241a11" />
+  <rect x="74" y="78" width="18" height="6" fill="#1f160e" />
+  <rect x="93" y="78" width="17" height="6" fill="#181510" />
+  <rect x="111" y="78" width="18" height="6" fill="#121218" />
+  <rect x="130" y="78" width="29" height="6" fill="#101016" />
+  <rect x="19" y="78" width="17" height="1" fill="#3f2e1b" />
+  <rect x="0" y="78" width="18" height="1" fill="#34271a" />
+  <!-- ══ The drain, and what feeds it ══ -->
+  <rect x="70" y="73" width="14" height="6" fill="#16120d" />
+  <rect x="71" y="74" width="12" height="4" fill="#0a0808" />
+  <rect x="72" y="75" width="3" height="2" fill="#030202" />
+  <rect x="76" y="75" width="3" height="2" fill="#030202" />
+  <rect x="80" y="75" width="2" height="2" fill="#030202" />
+  <rect x="70" y="73" width="14" height="1" fill="#211b13" />
+  <!-- old blood crawling toward the grate -->
+  <rect x="62" y="74" width="8" height="1" fill="#3f100c" />
+  <rect x="58" y="73" width="5" height="1" fill="#2a0b08" />
+  <rect x="84" y="76" width="6" height="1" fill="#3f100c" />
+  <rect x="89" y="75" width="4" height="1" fill="#2a0b08" />
+  <rect x="66" y="75" width="2" height="1" fill="#5a1812" />
+  <!-- pool under the lit gibbet, long dried -->
+  <rect x="31" y="70" width="9" height="2" fill="#2a0b08" />
+  <rect x="33" y="71" width="5" height="2" fill="#3f100c" />
+  <rect x="35" y="70" width="2" height="1" fill="#5a1812" />
+  <rect x="36" y="34" width="1" height="2" fill="#2a0b08" />
+  <!-- bones the pets left -->
+  <rect x="50" y="79" width="4" height="1" fill="#6a5e4c" />
+  <rect x="49" y="78" width="1" height="1" fill="#7a6e5a" />
+  <rect x="54" y="79" width="1" height="1" fill="#7a6e5a" />
+  <rect x="102" y="74" width="3" height="1" fill="#4a4136" />
+  <rect x="103" y="75" width="3" height="1" fill="#3a3429" />
+  <!-- straw kicked to the shadow side -->
+  <rect x="118" y="74" width="3" height="1" fill="#42331e" />
+  <rect x="122" y="73" width="2" height="1" fill="#4a3a22" />
+  <rect x="116" y="76" width="2" height="1" fill="#42331e" />
+  <!-- ══ Coal bowl dying at the far right — the yard's second glow ══ -->
+  <rect x="151" y="60" width="6" height="3" fill="#16120d" />
+  <rect x="152" y="63" width="1" height="3" fill="#0b0907" />
+  <rect x="155" y="63" width="1" height="3" fill="#0b0907" />
+  <rect x="152" y="59" width="2" height="1" fill="#a33d1e" />
+  <rect x="154" y="59" width="1" height="1" fill="#e8743a" />
+  <rect x="153" y="58" width="1" height="1" fill="#a33d1e" opacity="0.8" />
+  <rect x="138" y="48" width="32" height="26" fill="url(#c1e-coal-glow)" />
+  <!-- torchlight pooling on the flags -->
+  <rect x="-8" y="60" width="64" height="22" fill="url(#c1e-floor-pool)" />
+</svg>

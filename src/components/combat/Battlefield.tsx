@@ -1,6 +1,8 @@
 import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant, MonsterInstance } from '../../types/combat';
 import { getMonster } from '../../content/monsters';
+import { backdropFor } from '../../assets/backdrops/registry';
+import { BattlefieldBackdrop } from './BattlefieldBackdrop';
 import { BattlefieldSprite } from './BattlefieldSprite';
 import { SpellEffectLayer } from './SpellEffect';
 
@@ -49,6 +51,8 @@ interface BattlefieldProps {
   selectingTarget: boolean;
   onSelectTarget: (id: string) => void;
   scene: 'combat' | 'elite' | 'boss';
+  /** Delve chapter — selects the authored backdrop scene when one exists. */
+  chapter?: number;
   decoration?: BattlefieldDecoration;
 }
 
@@ -121,8 +125,12 @@ export function Battlefield({
   selectingTarget,
   onSelectTarget,
   scene,
+  chapter,
   decoration = 'generic',
 }: BattlefieldProps) {
+  // Authored per-chapter scene when one exists; otherwise the gradient +
+  // legacy decoration battlefield, so chapters upgrade incrementally.
+  const backdropUrl = backdropFor(chapter, scene);
   const currentTurnId = state.turnOrder[state.currentTurnIndex];
   const monsterCombatants = state.combatants.filter(
     (c) => c.kind === 'monster',
@@ -147,7 +155,11 @@ export function Battlefield({
       `}
       style={{ width: '824px', height: '420px', flexShrink: 0 }}
     >
-      <DecorationLayer kind={decoration} />
+      {backdropUrl ? (
+        <BattlefieldBackdrop url={backdropUrl} kind={scene} />
+      ) : (
+        <DecorationLayer kind={decoration} />
+      )}
       <GrainOverlay />
 
       {/* Floor strip with subtle vignette */}

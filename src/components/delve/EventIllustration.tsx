@@ -2,6 +2,7 @@ import {
   resolveEventIllustration,
   type IllustrationCategory,
 } from '../../schemas/event';
+import { backdropFor } from '../../assets/backdrops/registry';
 import ironCellsUrl from '../../assets/illustrations/iron-cells.svg';
 import athkatlaUrl from '../../assets/illustrations/athkatla.svg';
 import spellholdUrl from '../../assets/illustrations/spellhold.svg';
@@ -61,13 +62,17 @@ interface EventIllustrationProps {
 
 export function EventIllustration({ explicit, chapter, className = '' }: EventIllustrationProps) {
   const entry = ILLUSTRATIONS[resolveEventIllustration(explicit, chapter)];
+  // The chapter's authored backdrop scene (the calmer event/rest corner of the
+  // biome) supersedes the region banner once its art lands; the region
+  // illustration stays as the fallback and keeps providing the diegetic label.
+  const sceneUrl = explicit ? undefined : backdropFor(chapter, 'event');
   return (
     <div
       className={`relative h-28 w-full overflow-hidden border-2 border-[var(--color-border-warm)] ${className}`}
       aria-hidden
     >
       <img
-        src={entry.url}
+        src={sceneUrl ?? entry.url}
         alt={entry.label}
         className="h-full w-full"
         style={{ objectFit: 'cover', objectPosition: 'center', imageRendering: 'pixelated' }}
