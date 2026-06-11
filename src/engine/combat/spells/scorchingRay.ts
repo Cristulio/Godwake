@@ -94,7 +94,7 @@ export function castScorchingRay(ctx: CastSpellContext): CastResult {
     },
     ...logs,
   );
-  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId), undefined, totalDamage);
 
   if (totalDamage > 0) {
     const damaged = applyDamage(nextState, targetId, totalDamage, nextCharacter);

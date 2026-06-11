@@ -49,7 +49,7 @@ export function castForceLance(ctx: CastSpellContext): CastResult {
     kind: 'roll',
     text: t('combat.log.forceLance', { name: nextCharacter.name, target: target.instance.displayName, dealt }),
   });
-  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId), undefined, dealt);
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;
@@ -171,7 +171,7 @@ export function castDissolution(ctx: CastSpellContext): CastResult {
       }),
     },
   );
-  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId), undefined, dealt);
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;
@@ -209,7 +209,7 @@ export function castWither(ctx: CastSpellContext): CastResult {
     kind: 'roll',
     text: t('combat.log.wither', { name: nextCharacter.name, target: target.instance.displayName, dealt }),
   });
-  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
+  nextState = attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId), undefined, dealt);
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;

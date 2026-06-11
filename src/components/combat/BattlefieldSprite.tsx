@@ -2,6 +2,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 import type { Character } from '../../types/character';
 import type { MonsterInstance, AttackEvent, SpellEffectEvent } from '../../types/combat';
 import { computeAC, isWildShaped } from '../../engine/character/derived';
+import { isDragonForm } from '../../engine/combat/shapeChange';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
 import { BeastPortrait } from './BeastPortrait';
@@ -269,6 +270,22 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
       if (attackId !== undefined) lastSeenAttackId.current = attackId;
       return;
     }
+    // A fresh single-target damage SPELL on this sprite: the spell-effect
+    // effect below floats the event's TRUE damage (overkill shows the real
+    // number, not the clamped HP delta) — defer here, bookkeeping only. The
+    // spell effect runs after this one in the same commit and marks the id.
+    const ev = props.spellEffectEvent;
+    const myId = props.kind === 'player' ? 'player' : props.instance.id;
+    if (
+      ev &&
+      (ev.damage ?? 0) > 0 &&
+      ev.targetId === myId &&
+      ev.id !== lastSeenSpellEffectId.current
+    ) {
+      prevHp.current = hpCurrent;
+      if (attackId !== undefined) lastSeenAttackId.current = attackId;
+      return;
+    }
     const float = resolveSpriteFloat({ lastAttack: props.lastAttack, self, hpDelta, isNewAttack });
     prevHp.current = hpCurrent;
     if (attackId !== undefined) lastSeenAttackId.current = attackId;
@@ -390,22 +407,29 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.attackEvents]);
 
-  // A control spell (Hold Person / Entangle) floats a caster's-eye verdict on
-  // its target: LANDED when it took hold, RESISTED when the foe shrugged it off.
-  // Parallel to the damage-float path above but driven off the spell-effect bus
-  // — only events carrying an `outcome` (the control casts) reach this float, so
-  // damage casts and buffs are ignored.
+  // The spell-effect bus floats two things on the target sprite:
+  //  - a control verdict (LANDED / RESISTED) for outcome-carrying casts, and
+  //  - the TRUE rolled damage of a single-target damage cast (`ev.damage`), so
+  //    an overkill shows the spell's real number instead of the clamped HP
+  //    delta (the main effect above defers to this one for those events).
   useEffect(() => {
     const ev = props.spellEffectEvent;
-    if (!ev || !ev.outcome) return;
+    if (!ev || (!ev.outcome && !(ev.damage && ev.damage > 0))) return;
     const isNew = ev.id !== lastSeenSpellEffectId.current;
     lastSeenSpellEffectId.current = ev.id;
     if (!isNew) return;
     const myId = props.kind === 'player' ? 'player' : props.instance.id;
     if (ev.targetId !== myId) return;
     const id = Date.now() + Math.random();
-    const kind = ev.outcome;
-    setDamageFloats((d) => [...d, { id, amount: 0, kind }]);
+    if (ev.outcome) {
+      setDamageFloats((d) => [...d, { id, amount: 0, kind: ev.outcome! }]);
+      setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1200);
+      return;
+    }
+    setDamageFloats((d) => [
+      ...d,
+      { id, amount: ev.damage!, kind: 'damage', damageType: ev.element },
+    ]);
     setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1200);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.spellEffectEvent?.id]);
@@ -568,6 +592,11 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
                 defId={props.instance.defId}
                 className="w-full h-auto"
               />
+            ) : isDragonForm(props.character) ? (
+              // Shape Change: the caster IS a dragon for the duration — wear
+              // the dragon's battlefield body (the wyrm sprite), not the robe.
+              // Purely visual; reverts when the form's rounds run out.
+              <MonsterPortrait defId="nizidramaniiyt" className="w-full h-auto" />
             ) : isWildShaped(props.character) ? (
               // Wild Shape swaps the druid's battlefield form for a beast
               // silhouette — purely visual; reverts when the form spends out

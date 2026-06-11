@@ -82,8 +82,8 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
     ...logs,
   );
   nextState = isDruid
-    ? attachSpellEffect(nextState, 'nature-flame', 'player', targetId)
-    : attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId));
+    ? attachSpellEffect(nextState, 'nature-flame', 'player', targetId, undefined, undefined, dealt)
+    : attachSpellEffect(nextState, 'spell-bolt', 'player', targetId, spellElement(ctx.spellId), undefined, dealt);
 
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;

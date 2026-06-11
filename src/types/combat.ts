@@ -333,6 +333,13 @@ export interface SpellEffectEvent {
   /** Combatant id of the target. Undefined for self-effects (shield, rage, second-wind). */
   targetId?: string;
   /**
+   * True rolled damage of a SINGLE-TARGET damage cast — floats on the target
+   * sprite so an overkill shows the spell's real number, never the clamped HP
+   * delta (the float otherwise reads "remaining HP" on kills). Absent on
+   * non-damage effects and AOE (those float per-sprite deltas).
+   */
+  damage?: number;
+  /**
    * Damage element for the shape kinds (`spell-bolt` / `spell-burst` /
    * `spell-fork` / `spell-drain`) — picks the colour ramp + particle style.
    * Absent for non-elemental effects (weapon swings, buffs, control), which

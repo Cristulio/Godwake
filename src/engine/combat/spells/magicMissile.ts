@@ -84,7 +84,7 @@ export function castMagicMissile(ctx: CastSpellContext): CastResult {
   const damaged = applyDamage(nextState, targetId, total, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;
-  nextState = attachSpellEffect(nextState, isDruid ? 'thorn-lash' : 'magic-missile', 'player', targetId);
+  nextState = attachSpellEffect(nextState, isDruid ? 'thorn-lash' : 'magic-missile', 'player', targetId, undefined, undefined, total);
   nextCharacter = markActionUsed(nextCharacter);
   const ended = evaluateCombatEndFull(nextState, nextCharacter);
   return { state: ended.state, character: ended.character, cast: true };

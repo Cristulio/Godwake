@@ -50,7 +50,7 @@ function castDrain(
     kind: 'roll',
     text: opts.strikeLine(nextCharacter.name, target.instance.displayName, dealt),
   });
-  nextState = attachSpellEffect(nextState, 'spell-drain', 'player', targetId, spellElement(ctx.spellId));
+  nextState = attachSpellEffect(nextState, 'spell-drain', 'player', targetId, spellElement(ctx.spellId), undefined, dealt);
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;
