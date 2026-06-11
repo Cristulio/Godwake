@@ -304,7 +304,22 @@ export type SpellEffectKind =
   // The Druid's damage at-wills share the wizard's cast handlers (fire-bolt /
   // magic-missile) but get their OWN nature look so they never read as arcane:
   | 'nature-flame' // Produce Flame — a wild, leaf-edged flame (vs the clean arcane fire bolt)
-  | 'thorn-lash'; // Thornlash — barbed vine tendrils lashing the foe (vs force darts)
+  | 'thorn-lash' // Thornlash — barbed vine tendrils lashing the foe (vs force darts)
+  // === animations-revamp === per-weapon-TYPE identities + the monk's bare-hand
+  // language + control-landing signatures. Weapon kinds resolve in weaponVfxKind
+  // (id table first, damage type as the fallback); the old slash/pierce/bludgeon/
+  // arrow stay as fallbacks for unmapped weapons.
+  | 'unarmed' // bare-fist jab — flat-knuckle impact flash
+  | 'unarmed-flurry' // Flurry extra strike — rapid double-jab streaks
+  | 'ki-charge' // ki gathered into the palms (Flurry / Stunning Strike wind-up)
+  | 'axe-chop' // heavy descending chop — wide chunky wake + bitten-out debris
+  | 'crush' // mace/hammer/flail — slam block + ground-crack ring + dust
+  | 'spear-thrust' // long lance line driven deep, focused puncture
+  | 'dagger-flick' // two crossing steel flicks + glint
+  | 'bow-shot' // arrow flight with a draw-flash at release + feather burst on impact
+  | 'caster-bonk' // staff/orb/wand bonk — modest arc, indignant arcane pop
+  | 'stun-burst' // Stunning Strike lands — palm flash + dizzy star spin
+  | 'knockdown-burst'; // martial DISRUPT lands — slam wedge + ground dust topple
 
 /** Alias spelling out that the union is the canonical combat-VFX kind set. */
 export type CombatVfxKind = SpellEffectKind;

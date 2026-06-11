@@ -432,7 +432,26 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
       ? 'animate-lunge-right'
       : 'animate-lunge-left'
     : '';
-  const idleClass = dead ? 'animate-die-fall' : 'animate-idle-breath';
+  // === animations-revamp === persistent condition states. The sprite's resting
+  // animation tells its state: a staggered foe slumps under its dizzy-star halo,
+  // a paralyzed one shivers against the bind, a frightened one rattles. One
+  // state class at a time (strongest read wins) so transforms never compound.
+  const conditions =
+    props.kind === 'player' ? props.character.conditions : props.instance.conditions;
+  const staggered =
+    !dead && props.kind === 'monster' && (props.instance.staggeredTurns ?? 0) > 0;
+  const held = !dead && !staggered && conditions.some((c) => c.name === 'paralyzed');
+  const frightened =
+    !dead && !staggered && !held && conditions.some((c) => c.name === 'frightened');
+  const idleClass = dead
+    ? 'animate-die-fall'
+    : staggered
+      ? 'animate-stun-slump'
+      : held
+        ? 'animate-held-shiver'
+        : frightened
+          ? 'animate-fright-rattle'
+          : 'animate-idle-breath';
   const knockbackClass =
     knockback === 'left'
       ? 'animate-knockback-left'
@@ -571,8 +590,70 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
             {!dead && healthRatio <= 0.3 && (
               <div className="absolute inset-0 bg-[var(--color-accent-blood)] mix-blend-multiply pointer-events-none animate-hurt-tint" />
             )}
+            {/* Bind shimmer — a paralyzed sprite carries a faint arcane ring at
+                the torso while the hold lasts (the shiver above is the motion). */}
+            {held && (
+              <div
+                className="absolute left-1/2 top-[46%] pointer-events-none"
+                aria-hidden="true"
+                style={{ width: 0, height: 0 }}
+              >
+                <svg
+                  width="72"
+                  height="30"
+                  viewBox="-36 -15 72 30"
+                  style={{ position: 'absolute', left: -36, top: -15, overflow: 'visible' }}
+                >
+                  <ellipse cx="0" cy="0" rx="30" ry="11" fill="none" stroke="#9b6fcf" strokeWidth="1.8" opacity="0.7" />
+                  <ellipse cx="0" cy="0" rx="24" ry="8" fill="none" stroke="#c9a8ff" strokeWidth="0.8" opacity="0.55" strokeDasharray="3 4" />
+                </svg>
+              </div>
+            )}
           </div>
         </div>
+        {/* Dizzy-star halo — a staggered foe wears orbiting stars until its lost
+            turn passes. Stars ride a translate-ellipse keyframe; under
+            prefers-reduced-motion they rest spread on the rim (index.css). */}
+        {staggered && (
+          <div
+            className="absolute left-1/2 -top-2 pointer-events-none z-10"
+            aria-hidden="true"
+            style={{ width: 0, height: 0 }}
+          >
+            <svg
+              width="72"
+              height="28"
+              viewBox="-36 -14 72 28"
+              style={{ position: 'absolute', left: -36, top: -14, overflow: 'visible' }}
+            >
+              <ellipse cx="0" cy="0" rx="27" ry="9" fill="none" stroke="#ffd166" strokeWidth="1.2" opacity="0.5" strokeDasharray="4 5" />
+            </svg>
+            <div className="absolute" style={{ left: 0, top: 0, width: 0, height: 0 }}>
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="absolute animate-stun-star-orbit"
+                  style={{
+                    left: -7,
+                    top: -7,
+                    width: 14,
+                    height: 14,
+                    animationDelay: `${-i * 600}ms`,
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="-7 -7 14 14" style={{ overflow: 'visible' }}>
+                    <polygon
+                      points="0,-6 1.6,-1.6 6,0 1.6,1.6 0,6 -1.6,1.6 -6,0 -1.6,-1.6"
+                      fill="#ffd166"
+                      stroke="#fff5d1"
+                      strokeWidth="0.5"
+                    />
+                  </svg>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* Impact sparks — element-tinted, sized by hit weight */}
         {sparks.map((s) => (
           <div

@@ -12,6 +12,17 @@ import {
   WeaponPierceEffect,
   WeaponBludgeonEffect,
   ArrowShotEffect,
+  UnarmedImpactEffect,
+  UnarmedFlurryEffect,
+  KiChargeEffect,
+  AxeChopEffect,
+  CrushEffect,
+  SpearThrustEffect,
+  DaggerFlickEffect,
+  BowShotEffect,
+  CasterBonkEffect,
+  StunBurstEffect,
+  KnockdownBurstEffect,
 } from './SlashEffect';
 
 interface Anchor {
@@ -118,6 +129,29 @@ export function SpellEffect({ kind, origin, target, element, onDone }: SpellEffe
       return <WeaponBludgeonEffect origin={origin} target={target} onDone={onDone} />;
     case 'arrow':
       return <ArrowShotEffect origin={origin} target={target} onDone={onDone} />;
+    // === animations-revamp === per-weapon-TYPE identities + monk + control landings.
+    case 'unarmed':
+      return <UnarmedImpactEffect origin={origin} target={target} onDone={onDone} />;
+    case 'unarmed-flurry':
+      return <UnarmedFlurryEffect origin={origin} target={target} onDone={onDone} />;
+    case 'ki-charge':
+      return <KiChargeEffect origin={origin} onDone={onDone} />;
+    case 'axe-chop':
+      return <AxeChopEffect origin={origin} target={target} onDone={onDone} />;
+    case 'crush':
+      return <CrushEffect origin={origin} target={target} onDone={onDone} />;
+    case 'spear-thrust':
+      return <SpearThrustEffect origin={origin} target={target} onDone={onDone} />;
+    case 'dagger-flick':
+      return <DaggerFlickEffect origin={origin} target={target} onDone={onDone} />;
+    case 'bow-shot':
+      return <BowShotEffect origin={origin} target={target} onDone={onDone} />;
+    case 'caster-bonk':
+      return <CasterBonkEffect origin={origin} target={target} onDone={onDone} />;
+    case 'stun-burst':
+      return <StunBurstEffect origin={origin} target={target} onDone={onDone} />;
+    case 'knockdown-burst':
+      return <KnockdownBurstEffect origin={origin} target={target} onDone={onDone} />;
     // --- class-ability kinds (feat/vfx-combat) ---
     case 'rage':
       return <RageEffect origin={origin} onDone={onDone} />;
@@ -190,9 +224,15 @@ interface ArcProps {
 
 function MagicMissileEffect({ origin, target, onDone }: ArcProps) {
   useDoneTimer(1100, onDone);
-  const darts = [0, 120, 240];
+  // Cadence + spread jitter per cast (animations-revamp): the trio never
+  // launches or lands on exactly the same beat twice. Computed once per mount.
+  const [darts] = useState(() =>
+    [0, 120, 240].map((d) => Math.max(0, d + Math.round(Math.random() * 70 - 35))),
+  );
   // Each dart aims a little above/below the target center for visual spread.
-  const targetOffsets = [-10, 0, 10];
+  const [targetOffsets] = useState(() =>
+    [-10, 0, 10].map((o) => o + Math.round(Math.random() * 10 - 5)),
+  );
   const flightMs = 560;
 
   return (
@@ -361,6 +401,22 @@ interface ElementTargetProps {
 
 // ---------- Shape: single-target projectile (spell-bolt) ----------
 
+/**
+ * Flight-path variants for the projectile shapes (animations-revamp): the
+ * classic mid arc, a flat fast sizzle, and a high lobbed throw. Picked at
+ * random per cast so repeat fire bolts never trace the same line. All three
+ * settle identically under prefers-reduced-motion (see index.css).
+ */
+const BOLT_ARC_VARIANTS = [
+  'animate-firebolt-arc',
+  'animate-firebolt-arc-low',
+  'animate-firebolt-arc-high',
+] as const;
+
+function pickBoltArc(): (typeof BOLT_ARC_VARIANTS)[number] {
+  return BOLT_ARC_VARIANTS[Math.floor(Math.random() * BOLT_ARC_VARIANTS.length)];
+}
+
 function SpellBoltEffect({ origin, target, element, onDone }: ElementArcProps) {
   useDoneTimer(820, onDone);
   const pal = paletteFor(element);
@@ -370,13 +426,15 @@ function SpellBoltEffect({ origin, target, element, onDone }: ElementArcProps) {
   const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
   // Ghost trail particles — each a snapshot behind the head, riding the same arc.
   const trail = [60, 120, 180];
+  // One flight path per cast; the trail rides the same variant as the head.
+  const [arcClass] = useState(pickBoltArc);
 
   return (
     <>
       {trail.map((delay, i) => (
         <div
           key={`trail-${i}`}
-          className="absolute animate-firebolt-arc"
+          className={`absolute ${arcClass}`}
           style={
             {
               left: origin.x,
@@ -394,7 +452,7 @@ function SpellBoltEffect({ origin, target, element, onDone }: ElementArcProps) {
         </div>
       ))}
       <div
-        className="absolute animate-firebolt-arc"
+        className={`absolute ${arcClass}`}
         style={
           {
             left: origin.x,
@@ -535,9 +593,14 @@ function SpellBurstEffect({ target, element, onDone }: ElementTargetProps) {
   const pal = paletteFor(element);
   const el = element ?? 'arcane';
   const [motes] = useState(() => burstScatter());
+  // Half the casts detonate with a double-pulse bloom (animations-revamp) so
+  // back-to-back bursts read as separate blasts, not a looped replay.
+  const [bloomClass] = useState(() =>
+    Math.random() < 0.5 ? 'animate-spell-bloom' : 'animate-spell-bloom-double',
+  );
   return (
     <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
-      <div className="absolute animate-spell-bloom" style={{ left: 0, top: 0, width: 0, height: 0 }}>
+      <div className={`absolute ${bloomClass}`} style={{ left: 0, top: 0, width: 0, height: 0 }}>
         <BurstFlare pal={pal} el={el} />
       </div>
       <div className="absolute animate-spell-ring" style={{ left: 0, top: 0, width: 0, height: 0, transformOrigin: 'center' }}>
@@ -2657,12 +2720,14 @@ function NatureFlameEffect({ origin, target, onDone }: ArcProps) {
   const dy = target.y - origin.y;
   const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
   const trail = [60, 130, 200];
+  // A wild flame wanders — same per-cast flight variants as the arcane bolt.
+  const [arcClass] = useState(pickBoltArc);
   return (
     <>
       {trail.map((delay, i) => (
         <div
           key={`nf-trail-${i}`}
-          className="absolute animate-firebolt-arc"
+          className={`absolute ${arcClass}`}
           style={
             {
               left: origin.x,
@@ -2680,7 +2745,7 @@ function NatureFlameEffect({ origin, target, onDone }: ArcProps) {
         </div>
       ))}
       <div
-        className="absolute animate-firebolt-arc"
+        className={`absolute ${arcClass}`}
         style={
           {
             left: origin.x,

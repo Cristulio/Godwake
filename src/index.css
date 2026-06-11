@@ -1211,6 +1211,242 @@ img, svg.pixel {
   50% { box-shadow: 0 0 12px var(--bm-accent, var(--color-accent-amber)), 2px 2px 0 rgba(0, 0, 0, 0.6); }
 }
 
+/* === animations-revamp === per-weapon-TYPE swings, the monk's bare-hand
+   language, control-landing signatures, persistent condition states, and
+   spell-cast flight variety. Pairs with components in SlashEffect.tsx /
+   SpellEffect.tsx and the state classes in BattlefieldSprite.tsx. VFX leaves
+   may rest on transforms freely; only the persistent SPRITE states carry a
+   resting transform, and sprites host no fixed descendants (see the
+   transform-rest-at-none note on the entrance keyframes above). */
+
+/* Unarmed: jab streak drives in from the attacker side (--jab-from) */
+@keyframes godwake-jab-in {
+  0% { opacity: 0; transform: translateX(var(--jab-from)); }
+  35% { opacity: 1; }
+  55% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(0); }
+}
+.animate-jab-in { animation: godwake-jab-in 240ms cubic-bezier(0.6, 0, 0.4, 1) forwards; }
+
+/* Unarmed: flat-knuckle impact pop — sharp in, quick settle */
+@keyframes godwake-fist-impact {
+  0% { opacity: 0; transform: scale(0.4); }
+  30% { opacity: 1; transform: scale(1.12); }
+  60% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.06); }
+}
+.animate-fist-impact { animation: godwake-fist-impact 300ms cubic-bezier(0.2, 0.9, 0.3, 1) forwards; }
+
+/* Ki: gather rings contract INTO the palms */
+@keyframes godwake-ki-gather {
+  0% { opacity: 0; transform: scale(1.5); }
+  30% { opacity: 0.95; }
+  100% { opacity: 0; transform: scale(0.4); }
+}
+.animate-ki-gather { animation: godwake-ki-gather 520ms cubic-bezier(0.4, 0, 0.6, 1) forwards; }
+
+/* Ki: the palm core blooms as the rings land */
+@keyframes godwake-ki-core {
+  0% { opacity: 0; transform: scale(0.3); }
+  40% { opacity: 1; transform: scale(1.1); }
+  70% { opacity: 0.95; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+.animate-ki-core { animation: godwake-ki-core 680ms ease-out forwards; }
+
+/* Axe: heavy descending chop — steeper and chunkier than the sword's slash */
+@keyframes godwake-axe-chop {
+  0% { opacity: 0; transform: rotate(-66deg) scale(0.7); }
+  30% { opacity: 1; transform: rotate(-10deg) scale(1.08); }
+  55% { opacity: 1; transform: rotate(10deg) scale(1.14); }
+  100% { opacity: 0; transform: rotate(18deg) scale(1.2); }
+}
+.animate-axe-chop { animation: godwake-axe-chop 400ms cubic-bezier(0.45, 0, 0.2, 1) forwards; }
+
+/* Crush: the weight drops and squashes on the slam */
+@keyframes godwake-crush-drop {
+  0% { opacity: 0; transform: translateY(-44px); }
+  25% { opacity: 1; }
+  55% { transform: translateY(0) scaleY(1); }
+  68% { transform: translateY(2px) scaleY(0.82); }
+  82% { transform: translateY(0) scaleY(1); opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(0); }
+}
+.animate-crush-drop { animation: godwake-crush-drop 440ms cubic-bezier(0.5, 0, 0.8, 0.4) forwards; }
+
+/* Crush / knockdown: ground-shock half ring expands along the floor */
+@keyframes godwake-crack-ring {
+  0% { opacity: 0; transform: scale(0.3, 0.5); }
+  35% { opacity: 0.95; }
+  100% { opacity: 0; transform: scale(1.45, 1); }
+}
+.animate-crack-ring { animation: godwake-crack-ring 540ms cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+
+/* Crush: ground cracks flash in and linger a beat */
+@keyframes godwake-crack-lines {
+  0% { opacity: 0; transform: scale(0.6); }
+  25% { opacity: 1; transform: scale(1); }
+  70% { opacity: 0.85; }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+.animate-crack-lines { animation: godwake-crack-lines 580ms ease-out forwards; }
+
+/* Spear: the lance drives in deep, overshoots, recoils
+   (--lance-from = attacker side; --lance-recoil = small pull-back) */
+@keyframes godwake-lance-thrust {
+  0% { opacity: 0; transform: translateX(var(--lance-from)); }
+  28% { opacity: 1; }
+  48% { transform: translateX(calc(var(--lance-recoil) * -0.9)); }
+  64% { transform: translateX(var(--lance-recoil)); }
+  80% { transform: translateX(0); opacity: 1; }
+  100% { opacity: 0; transform: translateX(0); }
+}
+.animate-lance-thrust { animation: godwake-lance-thrust 380ms cubic-bezier(0.5, 0, 0.3, 1) forwards; }
+
+/* Dagger: a thin flick whips through along its own rotated axis (--flick-from) */
+@keyframes godwake-flick {
+  0% { opacity: 0; transform: translateX(var(--flick-from)); }
+  25% { opacity: 1; }
+  55% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(calc(var(--flick-from) * -0.25)); }
+}
+.animate-flick { animation: godwake-flick 220ms cubic-bezier(0.55, 0, 0.45, 1) forwards; }
+
+/* Dagger: glint star where the X crosses */
+@keyframes godwake-glint {
+  0% { opacity: 0; transform: scale(0.2) rotate(-20deg); }
+  40% { opacity: 1; transform: scale(1.15) rotate(8deg); }
+  100% { opacity: 0; transform: scale(0.7) rotate(20deg); }
+}
+.animate-glint { animation: godwake-glint 300ms ease-out forwards; }
+
+/* Bow: limbs + string snap forward at release */
+@keyframes godwake-bow-flash {
+  0% { opacity: 0; transform: scaleX(0.86); }
+  25% { opacity: 1; transform: scaleX(1.06); }
+  55% { opacity: 0.8; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+.animate-bow-flash { animation: godwake-bow-flash 260ms ease-out forwards; }
+
+/* Bow: fletching feathers shaken loose by the thunk — flutter out, then fall
+   (--feather-x / --feather-y / --feather-rot per feather) */
+@keyframes godwake-feather {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+  20% { opacity: 1; }
+  60% { opacity: 0.9; transform: translate(var(--feather-x), var(--feather-y)) rotate(var(--feather-rot)); }
+  100% { opacity: 0; transform: translate(calc(var(--feather-x) * 1.3), calc(var(--feather-y) * 0.2 + 14px)) rotate(calc(var(--feather-rot) * 1.6)); }
+}
+.animate-feather { animation: godwake-feather 480ms ease-out forwards; }
+
+/* Staff/orb/wand: the modest overhead bonk arc */
+@keyframes godwake-bonk-arc {
+  0% { opacity: 0; transform: rotate(-70deg); }
+  30% { opacity: 1; transform: rotate(-12deg); }
+  48% { transform: rotate(14deg); }
+  62% { transform: rotate(6deg); }
+  100% { opacity: 0; transform: rotate(8deg); }
+}
+.animate-bonk-arc { animation: godwake-bonk-arc 420ms cubic-bezier(0.5, 0, 0.4, 1) forwards; }
+
+/* Stun: dizzy stars ride a flat ellipse around the head. Shared by the
+   one-shot stun-burst (faster, inside a fade shell) and the persistent
+   staggered halo on the sprite (slower, infinite). */
+@keyframes godwake-stun-star-orbit {
+  0% { transform: translate(26px, 0) scale(1); opacity: 0.95; }
+  25% { transform: translate(0, 8px) scale(1.12); opacity: 1; }
+  50% { transform: translate(-26px, 0) scale(1); opacity: 0.9; }
+  75% { transform: translate(0, -8px) scale(0.82); opacity: 0.6; }
+  100% { transform: translate(26px, 0) scale(1); opacity: 0.95; }
+}
+.animate-stun-star-orbit { animation: godwake-stun-star-orbit 1800ms linear infinite; }
+
+/* Stun one-shot: fade shell around the whirling stars */
+@keyframes godwake-stun-fade {
+  0% { opacity: 0; }
+  18% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.animate-stun-fade { animation: godwake-stun-fade 950ms ease-out forwards; }
+
+/* Stun one-shot: the dazed halo ring slams in and wobbles */
+@keyframes godwake-stun-ring {
+  0% { opacity: 0; transform: scale(0.5); }
+  22% { opacity: 1; transform: scale(1.06) rotate(4deg); }
+  45% { transform: scale(1) rotate(-4deg); }
+  68% { transform: scale(1.02) rotate(3deg); }
+  100% { opacity: 0; transform: scale(1) rotate(0deg); }
+}
+.animate-stun-ring { animation: godwake-stun-ring 950ms ease-out forwards; }
+
+/* Persistent: a staggered sprite slumps and sways under its stars.
+   Tilts about the feet so it reads as buckled knees, not a lean. */
+@keyframes godwake-stun-slump {
+  0%, 100% { transform: rotate(-6deg) translateY(2px); }
+  50% { transform: rotate(-8.5deg) translateY(3px); }
+}
+.animate-stun-slump {
+  animation: godwake-stun-slump 1.6s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+
+/* Persistent: a paralyzed sprite is pinned rigid — a hair-width shiver
+   against the bind (the arcane ring overlay carries the colour). */
+@keyframes godwake-held-shiver {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-1px); }
+  40% { transform: translateX(1.2px); }
+  60% { transform: translateX(-1.2px); }
+  80% { transform: translateX(0.8px); }
+}
+.animate-held-shiver { animation: godwake-held-shiver 360ms linear infinite; }
+
+/* Persistent: a frightened sprite rattles — bigger than the shiver, with a
+   broken rhythm so it reads as trembling, not vibrating. */
+@keyframes godwake-fright-rattle {
+  0%, 100% { transform: translateX(0); }
+  8% { transform: translateX(-2px) rotate(-0.8deg); }
+  18% { transform: translateX(2.4px); }
+  26% { transform: translateX(-1.6px) rotate(0.6deg); }
+  38% { transform: translateX(1px); }
+  46% { transform: translateX(-0.6px); }
+  62% { transform: translateX(2px) rotate(-0.5deg); }
+  74% { transform: translateX(-2.2px); }
+  86% { transform: translateX(1.2px) rotate(0.4deg); }
+}
+.animate-fright-rattle { animation: godwake-fright-rattle 1.1s linear infinite; }
+
+/* Spell variety: flight-path variants for the projectile shapes. Same travel
+   vars as godwake-firebolt-arc; only the arc height + tempo differ. */
+@keyframes godwake-firebolt-arc-low {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  15% { opacity: 1; }
+  50% { transform: translate(calc(var(--dx) * 0.5), calc(var(--dy) * 0.5 - 10px)) scale(1.05); opacity: 1; }
+  92% { transform: translate(calc(var(--dx) * 0.94), calc(var(--dy) * 0.94 - 2px)) scale(1.15); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; }
+}
+.animate-firebolt-arc-low { animation: godwake-firebolt-arc-low 480ms cubic-bezier(0.5, 0, 0.7, 1) forwards; }
+
+@keyframes godwake-firebolt-arc-high {
+  0% { transform: translate(0, 0) scale(0.55); opacity: 0; }
+  12% { opacity: 1; }
+  45% { transform: translate(calc(var(--dx) * 0.42), calc(var(--dy) * 0.42 - 74px)) scale(1.1); opacity: 1; }
+  92% { transform: translate(calc(var(--dx) * 0.95), calc(var(--dy) * 0.95 - 8px)) scale(1.25); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1.6); opacity: 0; }
+}
+.animate-firebolt-arc-high { animation: godwake-firebolt-arc-high 760ms cubic-bezier(0.35, 0.1, 0.65, 1) forwards; }
+
+/* Spell variety: a burst that detonates in two pulses */
+@keyframes godwake-spell-bloom-double {
+  0% { opacity: 0; transform: scale(0.3); }
+  18% { opacity: 1; transform: scale(0.95); }
+  34% { opacity: 0.55; transform: scale(1.02); }
+  52% { opacity: 1; transform: scale(1.18); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+.animate-spell-bloom-double { animation: godwake-spell-bloom-double 560ms ease-out forwards; }
+
 /* === Reduced motion ===
    Honour prefers-reduced-motion for the combat juice: strip the screen shake,
    hit-stop jolt, knockback/lunge displacement, idle loop, spark travel and the
@@ -1250,14 +1486,35 @@ img, svg.pixel {
   /* Element spell shapes settle in place — the projectile flashes at the target
      instead of arcing across, and the burst bloom/ring fade without expanding.
      The fork (.animate-spell-fork) is opacity-only already, so it needs no
-     override. Informational colour still reads; only the travel/scale is cut. */
-  .animate-firebolt-arc {
+     override. Informational colour still reads; only the travel/scale is cut.
+     The animations-revamp flight variants settle identically. */
+  .animate-firebolt-arc,
+  .animate-firebolt-arc-low,
+  .animate-firebolt-arc-high {
     animation: godwake-spell-arc-rm 360ms ease-out forwards !important;
   }
   .animate-spell-bloom,
-  .animate-spell-ring {
+  .animate-spell-ring,
+  .animate-spell-bloom-double {
     animation: godwake-spell-settle 360ms ease-out forwards !important;
   }
+  /* animations-revamp: persistent condition states settle to static poses —
+     the halo, bind ring and slump still read the state without the motion. */
+  .animate-held-shiver,
+  .animate-fright-rattle {
+    animation: none !important;
+  }
+  .animate-stun-slump {
+    animation: none !important;
+    transform: rotate(-6deg) translateY(2px);
+  }
+  /* Dizzy stars stop orbiting and rest spread around the halo rim. */
+  .animate-stun-star-orbit {
+    animation: none !important;
+  }
+  .animate-stun-star-orbit:nth-child(1) { transform: translate(26px, 0); }
+  .animate-stun-star-orbit:nth-child(2) { transform: translate(-14px, 7px); }
+  .animate-stun-star-orbit:nth-child(3) { transform: translate(-14px, -7px); }
 }
 
 @keyframes godwake-spell-arc-rm {
