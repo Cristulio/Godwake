@@ -22,6 +22,22 @@ import ch6Combat from './ch6-combat.svg';
 import ch6Elite from './ch6-elite.svg';
 import ch6Boss from './ch6-boss.svg';
 import ch6Event from './ch6-event.svg';
+import ch7Combat from './ch7-combat.svg';
+import ch7Elite from './ch7-elite.svg';
+import ch7Boss from './ch7-boss.svg';
+import ch7Event from './ch7-event.svg';
+import ch8Combat from './ch8-combat.svg';
+import ch8Elite from './ch8-elite.svg';
+import ch8Boss from './ch8-boss.svg';
+import ch8Event from './ch8-event.svg';
+import ch9Combat from './ch9-combat.svg';
+import ch9Elite from './ch9-elite.svg';
+import ch9Boss from './ch9-boss.svg';
+import ch9Event from './ch9-event.svg';
+import ch10Combat from './ch10-combat.svg';
+import ch10Elite from './ch10-elite.svg';
+import ch10Boss from './ch10-boss.svg';
+import ch10Event from './ch10-event.svg';
 
 /**
  * Battlefield scene registry — full-bleed pixel-painted backdrops, keyed by
@@ -43,6 +59,10 @@ const SCENES: Record<number, Partial<Record<BackdropKind, string>>> = {
   4: { combat: ch4Combat, elite: ch4Elite, boss: ch4Boss, event: ch4Event },
   5: { combat: ch5Combat, elite: ch5Elite, boss: ch5Boss, event: ch5Event },
   6: { combat: ch6Combat, elite: ch6Elite, boss: ch6Boss, event: ch6Event },
+  7: { combat: ch7Combat, elite: ch7Elite, boss: ch7Boss, event: ch7Event },
+  8: { combat: ch8Combat, elite: ch8Elite, boss: ch8Boss, event: ch8Event },
+  9: { combat: ch9Combat, elite: ch9Elite, boss: ch9Boss, event: ch9Event },
+  10: { combat: ch10Combat, elite: ch10Elite, boss: ch10Boss, event: ch10Event },
 };
 
 export function backdropFor(

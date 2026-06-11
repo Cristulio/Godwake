@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch9-event — The Cold Green-Room: the calm corner of the Court of
+       Masks. The bare stone the palace never painted: a service door, a
+       row of costume hooks, a long mirror leaning out the way it was left,
+       the bench worn smooth by a hundred years of nerves, a brazier down
+       to its last coal — and the back of the great arras, the one place
+       the masquerade never looked. Key light: a candle stub on a crate,
+       LEFT of centre. Event banners crop to roughly y28-54. Floor seam
+       y66 (bare boards, not checks — this is backstage).
+       Shares the ch9 ramps (see ch9-combat.svg header); bare stone:
+       #1c1a1e #242228 #2a2830; boards: #1a1310 #1f160e #241a14. -->
+  <defs>
+    <radialGradient id="c9v-candle-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c9v-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the bare wall nobody dressed ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#242228" />
+  <rect x="100" y="0" width="60" height="66" fill="#1e1c22" />
+  <rect x="0" y="0" width="160" height="4" fill="#121116" />
+  <rect x="0" y="4" width="160" height="1" fill="#2a2830" />
+  <!-- rough ashlar courses, left -->
+  <rect x="0" y="5" width="26" height="12" fill="#2a2830" />
+  <rect x="27" y="5" width="22" height="12" fill="#242228" />
+  <rect x="50" y="5" width="20" height="12" fill="#28262c" />
+  <rect x="0" y="18" width="18" height="13" fill="#242228" />
+  <rect x="19" y="18" width="20" height="13" fill="#2a2830" />
+  <rect x="40" y="18" width="30" height="13" fill="#242228" />
+  <rect x="0" y="17" width="70" height="1" fill="#16151a" />
+  <rect x="0" y="31" width="70" height="1" fill="#16151a" />
+  <rect x="27" y="5" width="22" height="1" fill="#312e36" />
+  <rect x="19" y="18" width="20" height="1" fill="#312e36" />
+  <!-- a mason's mark, the only signature back here -->
+  <rect x="60" y="10" width="3" height="1" fill="#1c1a1e" />
+  <rect x="61" y="9" width="1" height="3" fill="#1c1a1e" />
+
+  <!-- ══ The service door (x8-24) ══ -->
+  <rect x="7" y="18" width="19" height="2" fill="#16100c" />
+  <rect x="8" y="20" width="17" height="36" fill="#1a1310" />
+  <rect x="11" y="20" width="1" height="36" fill="#120d0a" />
+  <rect x="15" y="20" width="1" height="36" fill="#120d0a" />
+  <rect x="19" y="20" width="1" height="36" fill="#120d0a" />
+  <rect x="8" y="20" width="17" height="1" fill="#241a14" />
+  <!-- hinge straps + latch -->
+  <rect x="8" y="26" width="7" height="1" fill="#211b13" />
+  <rect x="8" y="44" width="7" height="1" fill="#211b13" />
+  <rect x="21" y="36" width="3" height="2" fill="#211b13" />
+  <rect x="22" y="37" width="1" height="1" fill="#2d2519" />
+  <!-- it has not been opened politely in a long time -->
+  <rect x="9" y="50" width="4" height="1" fill="#0e0b08" />
+
+  <!-- ══ The hook rail, and what was left on it ══ -->
+  <rect x="30" y="14" width="38" height="1" fill="#211b13" />
+  <rect x="34" y="15" width="1" height="2" fill="#1c170f" />
+  <rect x="42" y="15" width="1" height="2" fill="#1c170f" />
+  <rect x="50" y="15" width="1" height="2" fill="#1c170f" />
+  <rect x="58" y="15" width="1" height="2" fill="#1c170f" />
+  <rect x="66" y="15" width="1" height="2" fill="#1c170f" />
+  <!-- one honest rehearsal mask -->
+  <rect x="41" y="17" width="4" height="3" fill="#3a3a36" />
+  <rect x="42" y="17" width="1" height="1" fill="#121116" />
+  <rect x="44" y="17" width="1" height="1" fill="#121116" />
+  <rect x="42" y="16" width="2" height="1" fill="#44443e" />
+  <!-- a cloak nobody came back for -->
+  <rect x="56" y="17" width="6" height="14" fill="#242028" />
+  <rect x="57" y="15" width="3" height="2" fill="#2c2228" />
+  <rect x="58" y="31" width="3" height="3" fill="#201c24" />
+  <rect x="56" y="17" width="1" height="14" fill="#2c2228" />
+
+  <!-- ══ The long mirror, leaning where it was left ══ -->
+  <rect x="34" y="22" width="20" height="2" fill="#54400f" />
+  <rect x="34" y="22" width="20" height="1" fill="#6a521e" />
+  <rect x="33" y="24" width="2" height="34" fill="#4a3a0c" />
+  <rect x="53" y="24" width="2" height="34" fill="#3f3009" />
+  <rect x="35" y="24" width="18" height="32" fill="#14151b" />
+  <!-- the room, dim in the glass -->
+  <rect x="38" y="27" width="2" height="24" fill="#1b222a" />
+  <rect x="46" y="29" width="3" height="20" fill="#181e25" />
+  <!-- the candle doubled, a warm point with no heat -->
+  <rect x="40" y="40" width="1" height="2" fill="#3a2c14" />
+  <rect x="40" y="40" width="1" height="1" fill="#503a18" />
+  <!-- the figure the glass remembers is not quite yours -->
+  <rect x="43" y="30" width="1" height="14" fill="#1a2028" />
+  <rect x="33" y="56" width="22" height="2" fill="#2a1a10" />
+  <rect x="33" y="56" width="22" height="1" fill="#38241a" />
+
+  <!-- ══ The crate, the candle — the key light ══ -->
+  <rect x="22" y="46" width="9" height="10" fill="#1f160e" />
+  <rect x="22" y="46" width="9" height="1" fill="#2a2014" />
+  <rect x="26" y="46" width="1" height="10" fill="#16100c" />
+  <rect x="22" y="51" width="9" height="1" fill="#16100c" />
+  <rect x="25" y="42" width="2" height="4" fill="#3a3830" />
+  <rect x="25" y="40" width="2" height="2" fill="#e8743a" />
+  <rect x="25" y="39" width="1" height="1" fill="#ffb347" />
+  <rect x="26" y="40" width="1" height="1" fill="#ffe9a8" />
+  <rect x="-12" y="12" width="80" height="62" fill="url(#c9v-candle-halo)" />
+  <!-- wax that has been allowed to run for years -->
+  <rect x="24" y="45" width="4" height="1" fill="#34322c" />
+  <rect x="28" y="46" width="1" height="2" fill="#2e2c26" />
+
+  <!-- ══ The back of the great arras (x70-160) ══ -->
+  <rect x="70" y="8" width="90" height="1" fill="#211b13" />
+  <rect x="74" y="8" width="1" height="2" fill="#2d2519" />
+  <rect x="86" y="8" width="1" height="2" fill="#2d2519" />
+  <rect x="98" y="8" width="1" height="2" fill="#2d2519" />
+  <rect x="110" y="8" width="1" height="2" fill="#2d2519" />
+  <rect x="122" y="8" width="1" height="2" fill="#2d2519" />
+  <rect x="134" y="8" width="1" height="2" fill="#2d2519" />
+  <rect x="146" y="8" width="1" height="2" fill="#2d2519" />
+  <rect x="70" y="10" width="90" height="48" fill="#221338" />
+  <rect x="70" y="10" width="90" height="1" fill="#2a1844" />
+  <!-- the weave from the wrong side: the pattern in negative -->
+  <rect x="76" y="16" width="6" height="4" fill="#1a1030" />
+  <rect x="90" y="16" width="6" height="4" fill="#1a1030" />
+  <rect x="104" y="16" width="6" height="4" fill="#180e2c" />
+  <rect x="118" y="16" width="6" height="4" fill="#180e2c" />
+  <rect x="132" y="16" width="6" height="4" fill="#160d28" />
+  <rect x="146" y="16" width="6" height="4" fill="#160d28" />
+  <rect x="83" y="30" width="6" height="4" fill="#1a1030" />
+  <rect x="97" y="30" width="6" height="4" fill="#180e2c" />
+  <rect x="111" y="30" width="6" height="4" fill="#180e2c" />
+  <rect x="125" y="30" width="6" height="4" fill="#160d28" />
+  <rect x="139" y="30" width="6" height="4" fill="#160d28" />
+  <!-- loose threads hanging out of the story -->
+  <rect x="88" y="20" width="1" height="6" fill="#3a2356" />
+  <rect x="116" y="34" width="1" height="5" fill="#2a1844" />
+  <rect x="142" y="20" width="1" height="4" fill="#2a1844" />
+  <!-- moth-holes: the hall's cold marble looking in -->
+  <rect x="94" y="24" width="3" height="2" fill="#1e1c22" />
+  <rect x="126" y="40" width="2" height="2" fill="#1e1c22" />
+  <rect x="148" y="13" width="2" height="2" fill="#1e1c22" />
+  <!-- the torn hem, and bare stone below it -->
+  <rect x="70" y="50" width="14" height="8" fill="#1c0f30" />
+  <rect x="88" y="52" width="12" height="6" fill="#1c0f30" />
+  <rect x="104" y="50" width="16" height="8" fill="#180e2c" />
+  <rect x="124" y="53" width="10" height="5" fill="#180e2c" />
+  <rect x="138" y="51" width="22" height="7" fill="#160d28" />
+  <rect x="84" y="54" width="4" height="4" fill="#1e1c22" />
+  <rect x="100" y="55" width="4" height="3" fill="#1e1c22" />
+  <rect x="120" y="54" width="4" height="4" fill="#1c1a20" />
+  <rect x="134" y="55" width="4" height="3" fill="#1c1a20" />
+  <rect x="70" y="58" width="90" height="8" fill="#1e1c22" />
+  <rect x="70" y="58" width="90" height="1" fill="#16151a" />
+
+  <!-- ══ The bench + the brazier ══ -->
+  <rect x="56" y="50" width="40" height="3" fill="#2a1a10" />
+  <rect x="56" y="50" width="40" height="1" fill="#46301e" />
+  <rect x="56" y="53" width="40" height="1" fill="#180f0a" />
+  <rect x="58" y="54" width="2" height="12" fill="#1f130d" />
+  <rect x="92" y="54" width="2" height="12" fill="#180f0a" />
+  <rect x="60" y="56" width="32" height="1" fill="#160d09" />
+  <!-- the brazier, one coal from cold -->
+  <rect x="104" y="46" width="14" height="5" fill="#16120d" />
+  <rect x="105" y="45" width="12" height="2" fill="#211b13" />
+  <rect x="105" y="45" width="12" height="1" fill="#2d2519" />
+  <rect x="106" y="51" width="2" height="9" fill="#120f0b" />
+  <rect x="114" y="51" width="2" height="9" fill="#0e0b08" />
+  <rect x="110" y="51" width="2" height="7" fill="#100d0a" />
+  <rect x="107" y="46" width="8" height="2" fill="#1c1610" />
+  <rect x="109" y="46" width="3" height="1" fill="#5a1812" />
+  <rect x="110" y="46" width="1" height="1" fill="#3f100c" />
+
+  <!-- ══ NEAR FLOOR (y66-84): bare boards, swept by nobody ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#14100c" />
+  <rect x="0" y="66" width="160" height="1" fill="#080604" />
+  <!-- plank run 1 (y67-71) -->
+  <rect x="1" y="67" width="30" height="4" fill="#241a14" />
+  <rect x="32" y="67" width="28" height="4" fill="#1f160e" />
+  <rect x="61" y="67" width="30" height="4" fill="#1a1310" />
+  <rect x="92" y="67" width="28" height="4" fill="#161009" />
+  <rect x="121" y="67" width="38" height="4" fill="#120d08" />
+  <rect x="1" y="67" width="30" height="1" fill="#322416" />
+  <rect x="32" y="67" width="28" height="1" fill="#2a2014" />
+  <!-- plank run 2 (y72-77) -->
+  <rect x="0" y="72" width="24" height="5" fill="#1f160e" />
+  <rect x="25" y="72" width="32" height="5" fill="#241a14" />
+  <rect x="58" y="72" width="26" height="5" fill="#1a1310" />
+  <rect x="85" y="72" width="32" height="5" fill="#14100a" />
+  <rect x="118" y="72" width="42" height="5" fill="#110c08" />
+  <rect x="25" y="72" width="32" height="1" fill="#2a2014" />
+  <!-- plank run 3 (y78-84) -->
+  <rect x="0" y="78" width="34" height="6" fill="#241a14" />
+  <rect x="35" y="78" width="28" height="6" fill="#1f160e" />
+  <rect x="64" y="78" width="30" height="6" fill="#161009" />
+  <rect x="95" y="78" width="30" height="6" fill="#130e09" />
+  <rect x="126" y="78" width="33" height="6" fill="#100b07" />
+  <rect x="0" y="78" width="34" height="1" fill="#322416" />
+  <!-- board gaps -->
+  <rect x="31" y="67" width="1" height="4" fill="#0c0906" />
+  <rect x="60" y="67" width="1" height="4" fill="#0c0906" />
+  <rect x="91" y="67" width="1" height="4" fill="#0a0805" />
+  <rect x="120" y="67" width="1" height="4" fill="#0a0805" />
+  <rect x="24" y="72" width="1" height="5" fill="#0c0906" />
+  <rect x="57" y="72" width="1" height="5" fill="#0c0906" />
+  <rect x="84" y="72" width="1" height="5" fill="#0a0805" />
+  <rect x="117" y="72" width="1" height="5" fill="#0a0805" />
+  <rect x="34" y="78" width="1" height="6" fill="#0c0906" />
+  <rect x="63" y="78" width="1" height="6" fill="#0a0805" />
+  <rect x="94" y="78" width="1" height="6" fill="#0a0805" />
+  <rect x="125" y="78" width="1" height="6" fill="#0a0805" />
+  <!-- a playbill for a revel no one left -->
+  <rect x="64" y="74" width="6" height="3" fill="#3a3830" />
+  <rect x="64" y="74" width="6" height="1" fill="#45433a" />
+  <rect x="66" y="75" width="3" height="1" fill="#24221e" />
+  <!-- a button, a hairpin: the small change of identities -->
+  <rect x="48" y="80" width="1" height="1" fill="#6a521e" />
+  <rect x="78" y="81" width="2" height="1" fill="#34383c" />
+  <!-- ash spilled at the brazier's feet -->
+  <rect x="104" y="68" width="10" height="2" fill="#28241c" />
+  <rect x="106" y="67" width="5" height="1" fill="#322c22" />
+  <!-- dust thick along the arras hem -->
+  <rect x="96" y="67" width="8" height="1" fill="#1a1a20" opacity="0.7" />
+  <rect x="130" y="68" width="9" height="1" fill="#15151a" opacity="0.7" />
+  <!-- candlelight on the boards -->
+  <rect x="-8" y="54" width="72" height="30" fill="url(#c9v-floor-pool)" />
+</svg>

@@ -1,0 +1,261 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch10-boss — The Temple of Rillifane, Defiled: the great house of the
+       tree-father made a wyrm's den. Living-wood columns under a woven-
+       bough roof, the altar of living oak smashed in two — claw-gouged,
+       scorched, its raw split the palest thing in the room — coin and
+       chalice scattered where a hoard has been dragged about, and the
+       swamp-reek of the green wyrm hanging low. Key light: the burning
+       canopy through the torn roof, upper-LEFT, falling as an amber shaft
+       on the broken altar. The component lays the boss blood-red ambience
+       above. Quiet mid band y38-63 outside the set piece; floor seam y66.
+       Shares the ch10 ramps (see ch10-combat.svg header); oak: #241a14
+       #2e2218 #3a2c1e, raw split: #4a3a22 #5a4630; gold: #54400f #6a521e
+       #8a6c2a (+#a8862e glints); miasma: #16343a #1a2c1e. -->
+  <defs>
+    <radialGradient id="c10b-burn-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.28" />
+      <stop offset="50%" stop-color="#a33d1e" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="c10b-shaft" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.22" />
+      <stop offset="65%" stop-color="#a33d1e" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </linearGradient>
+    <radialGradient id="c10b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the temple gloom + the woven roof ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#100f16" />
+  <rect x="104" y="0" width="56" height="66" fill="#0d0c12" />
+  <rect x="0" y="0" width="160" height="6" fill="#0a090e" />
+  <rect x="0" y="6" width="160" height="2" fill="#0c0a10" />
+  <!-- bough lattice -->
+  <rect x="0" y="3" width="26" height="2" fill="#0c0a10" />
+  <rect x="66" y="2" width="30" height="2" fill="#0c0a10" />
+  <rect x="100" y="4" width="28" height="2" fill="#0b0a0e" />
+  <rect x="134" y="2" width="26" height="2" fill="#0b0a0e" />
+  <rect x="12" y="5" width="2" height="4" fill="#0c0a10" />
+  <rect x="88" y="4" width="2" height="5" fill="#0c0a10" />
+  <rect x="118" y="5" width="2" height="4" fill="#0b0a0e" />
+  <!-- dark leaf-mass in the rafters -->
+  <rect x="70" y="6" width="14" height="2" fill="#10180b" />
+  <rect x="108" y="7" width="12" height="2" fill="#0e1509" />
+  <rect x="142" y="6" width="12" height="2" fill="#0e1509" />
+
+  <!-- ══ The torn roof, upper-LEFT: the city burning through ══ -->
+  <rect x="30" y="0" width="32" height="8" fill="#3f1c08" />
+  <rect x="36" y="0" width="20" height="6" fill="#5a2c0e" />
+  <rect x="42" y="8" width="14" height="2" fill="#3f1c08" />
+  <rect x="34" y="1" width="3" height="1" fill="#a33d1e" />
+  <rect x="48" y="3" width="3" height="1" fill="#a33d1e" />
+  <rect x="50" y="2" width="1" height="1" fill="#e8743a" />
+  <rect x="44" y="0" width="2" height="1" fill="#ffb347" />
+  <!-- splintered bough ends ragging the hole -->
+  <rect x="30" y="0" width="2" height="6" fill="#0c0a10" />
+  <rect x="38" y="6" width="4" height="2" fill="#0c0a10" />
+  <rect x="52" y="5" width="4" height="2" fill="#0c0a10" />
+  <rect x="58" y="0" width="2" height="5" fill="#0c0a10" />
+  <rect x="46" y="7" width="3" height="2" fill="#0b0a0e" />
+  <rect x="6" y="-14" width="84" height="46" fill="url(#c10b-burn-glow)" />
+  <!-- the shaft, falling on the broken altar -->
+  <rect x="32" y="6" width="48" height="42" fill="url(#c10b-shaft)" />
+  <rect x="40" y="12" width="2" height="10" fill="#5a2c0e" opacity="0.30" />
+  <rect x="48" y="18" width="2" height="12" fill="#5a2c0e" opacity="0.24" />
+  <rect x="56" y="26" width="2" height="10" fill="#3f1c08" opacity="0.22" />
+  <rect x="64" y="32" width="2" height="8" fill="#3f1c08" opacity="0.18" />
+  <!-- embers idling down the shaft -->
+  <rect x="46" y="14" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="54" y="24" width="1" height="1" fill="#a33d1e" opacity="0.8" />
+  <rect x="62" y="34" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+
+  <!-- ══ High leaf-windows in the far wall ══ -->
+  <rect x="6" y="12" width="12" height="16" fill="#11142a" />
+  <rect x="8" y="10" width="8" height="2" fill="#11142a" />
+  <rect x="11" y="12" width="1" height="16" fill="#0a0c18" />
+  <rect x="6" y="19" width="12" height="1" fill="#0a0c18" />
+  <!-- one pane out: the burn looking in -->
+  <rect x="13" y="14" width="4" height="4" fill="#2a1206" />
+  <rect x="14" y="15" width="2" height="1" fill="#3f1c08" />
+  <rect x="142" y="12" width="12" height="16" fill="#0d102a" />
+  <rect x="144" y="10" width="8" height="2" fill="#0d102a" />
+  <rect x="147" y="12" width="1" height="16" fill="#090b16" />
+  <rect x="142" y="19" width="12" height="1" fill="#090b16" />
+  <rect x="143" y="22" width="3" height="3" fill="#23100a" />
+
+  <!-- ══ Living-wood columns (x22-32, x128-138) ══ -->
+  <rect x="22" y="0" width="10" height="66" fill="#1c1c24" />
+  <rect x="22" y="0" width="2" height="66" fill="#14141a" />
+  <rect x="30" y="2" width="2" height="64" fill="#24242e" />
+  <rect x="31" y="8" width="1" height="34" fill="#3a2c1e" />
+  <!-- the capital spreading into the roof -->
+  <rect x="18" y="0" width="18" height="3" fill="#16161e" />
+  <rect x="20" y="3" width="14" height="2" fill="#1a1a22" />
+  <!-- carved spiral bands -->
+  <rect x="24" y="14" width="7" height="1" fill="#121218" />
+  <rect x="24" y="26" width="7" height="1" fill="#121218" />
+  <rect x="24" y="38" width="7" height="1" fill="#10101a" />
+  <rect x="24" y="50" width="7" height="1" fill="#10101a" />
+  <rect x="128" y="0" width="10" height="66" fill="#14141a" />
+  <rect x="128" y="0" width="2" height="66" fill="#101016" />
+  <rect x="136" y="2" width="2" height="64" fill="#1a1a22" />
+  <rect x="124" y="0" width="18" height="3" fill="#101018" />
+  <rect x="126" y="3" width="14" height="2" fill="#12121a" />
+  <rect x="130" y="16" width="7" height="1" fill="#0e0e14" />
+  <rect x="130" y="30" width="7" height="1" fill="#0e0e14" />
+  <rect x="130" y="44" width="7" height="1" fill="#0d0d12" />
+  <!-- a wyrm-claw has scored even the columns -->
+  <rect x="129" y="22" width="1" height="6" fill="#0a0a0e" />
+  <rect x="131" y="24" width="1" height="6" fill="#0a0a0e" />
+
+  <!-- ══ MID BAND (y38-66): relief wall, two close values ══ -->
+  <rect x="0" y="38" width="11" height="14" fill="#12121a" />
+  <rect x="11" y="38" width="11" height="14" fill="#100f17" />
+  <rect x="0" y="52" width="14" height="14" fill="#100f17" />
+  <rect x="14" y="52" width="8" height="14" fill="#0e0e15" />
+  <rect x="32" y="38" width="16" height="14" fill="#111018" />
+  <rect x="48" y="38" width="14" height="14" fill="#100f16" />
+  <rect x="32" y="52" width="18" height="14" fill="#0f0e15" />
+  <rect x="50" y="52" width="12" height="14" fill="#0e0d14" />
+  <rect x="98" y="38" width="14" height="14" fill="#0e0d14" />
+  <rect x="112" y="38" width="16" height="14" fill="#0d0c12" />
+  <rect x="98" y="52" width="16" height="14" fill="#0d0c12" />
+  <rect x="114" y="52" width="14" height="14" fill="#0c0b11" />
+  <rect x="138" y="38" width="22" height="14" fill="#0c0b11" />
+  <rect x="138" y="52" width="22" height="14" fill="#0d0c12" />
+  <!-- carved relief verticals, barely told -->
+  <rect x="6" y="40" width="1" height="24" fill="#0d0c12" />
+  <rect x="16" y="40" width="1" height="24" fill="#0d0c12" />
+  <rect x="106" y="40" width="1" height="24" fill="#0a0a0e" />
+  <rect x="146" y="40" width="1" height="24" fill="#0a0a0e" />
+
+  <!-- ══ The altar of the tree-father, smashed in two ══ -->
+  <!-- the steps it stands on -->
+  <rect x="58" y="62" width="44" height="4" fill="#262830" />
+  <rect x="58" y="62" width="44" height="1" fill="#343740" />
+  <rect x="58" y="62" width="20" height="1" fill="#3a3d48" />
+  <rect x="62" y="58" width="36" height="4" fill="#20222a" />
+  <rect x="62" y="58" width="36" height="1" fill="#2e303a" />
+  <!-- left half: upright, gouged -->
+  <rect x="62" y="36" width="16" height="22" fill="#241a14" />
+  <rect x="62" y="36" width="16" height="2" fill="#2e2218" />
+  <rect x="62" y="36" width="10" height="1" fill="#3a2c1e" />
+  <rect x="62" y="38" width="1" height="20" fill="#2e2218" />
+  <!-- the carved garland, dead -->
+  <rect x="64" y="42" width="3" height="1" fill="#16210f" />
+  <rect x="69" y="43" width="3" height="1" fill="#16210f" />
+  <rect x="74" y="42" width="3" height="1" fill="#141d0d" />
+  <rect x="64" y="52" width="3" height="1" fill="#141d0d" />
+  <rect x="70" y="53" width="3" height="1" fill="#10180b" />
+  <!-- claw-gouges, three and parallel -->
+  <rect x="66" y="38" width="1" height="5" fill="#0c0a08" />
+  <rect x="67" y="43" width="1" height="5" fill="#0c0a08" />
+  <rect x="70" y="39" width="1" height="5" fill="#0c0a08" />
+  <rect x="71" y="44" width="1" height="5" fill="#0c0a08" />
+  <rect x="74" y="38" width="1" height="5" fill="#0a0806" />
+  <rect x="75" y="43" width="1" height="6" fill="#0a0806" />
+  <!-- the raw split edge, palest thing in the den -->
+  <rect x="77" y="36" width="1" height="22" fill="#4a3a22" />
+  <rect x="77" y="36" width="1" height="8" fill="#5a4630" />
+  <!-- right half: thrown down, leaning -->
+  <rect x="80" y="46" width="18" height="12" fill="#1f160e" />
+  <rect x="80" y="46" width="18" height="2" fill="#241a14" />
+  <rect x="80" y="44" width="10" height="2" fill="#1f160e" />
+  <rect x="80" y="44" width="10" height="1" fill="#2e2218" />
+  <rect x="90" y="47" width="8" height="1" fill="#241a14" />
+  <!-- its split face, tipped up into the shaft -->
+  <rect x="80" y="46" width="1" height="12" fill="#4a3a22" />
+  <rect x="81" y="46" width="1" height="6" fill="#5a4630" />
+  <!-- scorch up the side -->
+  <rect x="92" y="48" width="4" height="10" fill="#0c0a08" />
+  <rect x="88" y="52" width="4" height="6" fill="#0e0b08" />
+  <!-- the censer, kicked over on the steps -->
+  <rect x="70" y="63" width="5" height="3" fill="#54400f" />
+  <rect x="71" y="62" width="3" height="1" fill="#6a521e" />
+  <rect x="74" y="65" width="3" height="1" fill="#3f3009" />
+  <!-- one thread of incense, the last office kept -->
+  <rect x="72" y="56" width="1" height="6" fill="#45433a" opacity="0.5" />
+  <rect x="73" y="50" width="1" height="6" fill="#3a3830" opacity="0.4" />
+  <rect x="72" y="44" width="1" height="6" fill="#34322c" opacity="0.3" />
+
+  <!-- ══ The reek of the wyrm, lying low ══ -->
+  <rect x="100" y="62" width="34" height="2" fill="#16343a" opacity="0.40" />
+  <rect x="112" y="64" width="30" height="1" fill="#16343a" opacity="0.30" />
+  <rect x="94" y="64" width="14" height="1" fill="#1a2c1e" opacity="0.40" />
+  <rect x="56" y="64" width="10" height="1" fill="#1a2c1e" opacity="0.30" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the temple floor, the dragged hoard ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#1a1c22" />
+  <rect x="0" y="66" width="160" height="1" fill="#0b0c10" />
+  <rect x="1" y="67" width="15" height="4" fill="#262830" />
+  <rect x="17" y="67" width="13" height="4" fill="#20222a" />
+  <rect x="31" y="67" width="14" height="4" fill="#262830" />
+  <rect x="46" y="67" width="13" height="4" fill="#20222a" />
+  <rect x="60" y="67" width="14" height="4" fill="#1e2026" />
+  <rect x="75" y="67" width="13" height="4" fill="#1c1e24" />
+  <rect x="89" y="67" width="14" height="4" fill="#1a1c22" />
+  <rect x="104" y="67" width="13" height="4" fill="#181a20" />
+  <rect x="118" y="67" width="14" height="4" fill="#16181e" />
+  <rect x="133" y="67" width="26" height="4" fill="#14161c" />
+  <rect x="1" y="67" width="15" height="1" fill="#343740" />
+  <rect x="17" y="67" width="13" height="1" fill="#2e303a" />
+  <rect x="0" y="72" width="14" height="5" fill="#20222a" />
+  <rect x="15" y="72" width="14" height="5" fill="#262830" />
+  <rect x="30" y="72" width="13" height="5" fill="#20222a" />
+  <rect x="44" y="72" width="14" height="5" fill="#1e2026" />
+  <rect x="59" y="72" width="13" height="5" fill="#1c1e24" />
+  <rect x="73" y="72" width="14" height="5" fill="#1a1c22" />
+  <rect x="88" y="72" width="13" height="5" fill="#181a20" />
+  <rect x="102" y="72" width="14" height="5" fill="#16181e" />
+  <rect x="117" y="72" width="42" height="5" fill="#14161c" />
+  <rect x="15" y="72" width="14" height="1" fill="#343740" />
+  <rect x="0" y="78" width="17" height="6" fill="#262830" />
+  <rect x="18" y="78" width="16" height="6" fill="#20222a" />
+  <rect x="35" y="78" width="17" height="6" fill="#262830" />
+  <rect x="53" y="78" width="16" height="6" fill="#1e2026" />
+  <rect x="70" y="78" width="17" height="6" fill="#1c1e24" />
+  <rect x="88" y="78" width="16" height="6" fill="#181a20" />
+  <rect x="105" y="78" width="17" height="6" fill="#16181e" />
+  <rect x="123" y="78" width="36" height="6" fill="#14161c" />
+  <rect x="0" y="78" width="17" height="1" fill="#343740" />
+  <rect x="18" y="78" width="16" height="1" fill="#2e303a" />
+  <!-- the old ring-inlay around the altar, in broken arcs -->
+  <rect x="44" y="70" width="8" height="1" fill="#2e303a" />
+  <rect x="38" y="72" width="5" height="1" fill="#2e303a" />
+  <rect x="34" y="75" width="4" height="1" fill="#2a2c36" />
+  <rect x="108" y="70" width="8" height="1" fill="#23252d" />
+  <rect x="118" y="72" width="5" height="1" fill="#23252d" />
+  <rect x="124" y="75" width="4" height="1" fill="#20222a" />
+  <!-- scorch fanned from the den side -->
+  <rect x="112" y="74" width="12" height="1" fill="#0c0a08" />
+  <rect x="118" y="76" width="10" height="1" fill="#0c0a08" />
+  <rect x="126" y="78" width="9" height="1" fill="#0a0806" />
+  <rect x="134" y="80" width="8" height="1" fill="#0a0806" />
+  <!-- the hoard, dragged and dropped -->
+  <rect x="54" y="69" width="2" height="1" fill="#6a521e" />
+  <rect x="57" y="70" width="1" height="1" fill="#8a6c2a" />
+  <rect x="62" y="68" width="1" height="1" fill="#a8862e" />
+  <rect x="84" y="70" width="2" height="1" fill="#6a521e" />
+  <rect x="88" y="69" width="1" height="1" fill="#8a6c2a" />
+  <rect x="96" y="71" width="2" height="1" fill="#54400f" />
+  <rect x="100" y="74" width="1" height="1" fill="#8a6c2a" />
+  <rect x="106" y="77" width="2" height="1" fill="#6a521e" />
+  <rect x="111" y="79" width="1" height="1" fill="#a8862e" />
+  <rect x="70" y="74" width="2" height="1" fill="#54400f" />
+  <rect x="76" y="76" width="1" height="1" fill="#8a6c2a" />
+  <rect x="48" y="76" width="2" height="1" fill="#54400f" />
+  <rect x="42" y="80" width="1" height="1" fill="#6a521e" />
+  <!-- a chalice on its side, still counting as treasure -->
+  <rect x="103" y="80" width="4" height="2" fill="#6a521e" />
+  <rect x="106" y="79" width="2" height="2" fill="#8a6c2a" />
+  <rect x="107" y="79" width="1" height="1" fill="#a8862e" />
+  <!-- leaf-litter blown in -->
+  <rect x="26" y="73" width="2" height="1" fill="#16210f" />
+  <rect x="12" y="79" width="2" height="1" fill="#1f2e16" />
+  <rect x="146" y="73" width="2" height="1" fill="#10180b" />
+  <!-- the shaft's warmth landing at the altar's foot -->
+  <rect x="30" y="54" width="66" height="30" fill="url(#c10b-floor-pool)" />
+</svg>

@@ -1,0 +1,214 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch8-combat — The Ashfall March: the open field that has burned for a
+       hundred years. A ridge on fire far off to the LEFT (the key light,
+       with a burning snag-tree carrying it nearer), smoke standing in
+       columns, ash falling through everything, the relics of the march
+       planted where they fell — spears, a torn standard, a dead limber.
+       Quiet mid band y38-63 (drifting haze, two values); floor seam y66.
+       Ramps — smoke: #141008 #1a1410 #1f1a14 #241e16; char ground:
+       #0c0a08 #14100c #1c1610 #241c12; ash: #2c2820 #3a3328 (+#4a4438
+       flecks); iron: #0b0907 #16120d #211b13; fire: #5a1812 #a33d1e
+       #e8743a #ffb347 (+#ffe9a8 core); old blood: #2a0b08 #3f100c. -->
+  <defs>
+    <radialGradient id="c8c-fire-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#e8743a" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c8c-fireline-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#a33d1e" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c8c-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the standing smoke ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#1f1a14" />
+  <rect x="104" y="0" width="56" height="66" fill="#181410" />
+  <rect x="0" y="0" width="160" height="6" fill="#141008" />
+  <rect x="0" y="6" width="160" height="6" fill="#1a1410" />
+  <rect x="0" y="12" width="160" height="1" fill="#221c14" />
+  <!-- smoke columns leaning off the fire -->
+  <rect x="20" y="3" width="4" height="18" fill="#100d08" />
+  <rect x="22" y="0" width="4" height="6" fill="#0e0b06" />
+  <rect x="48" y="8" width="3" height="13" fill="#120f09" />
+  <rect x="50" y="4" width="3" height="6" fill="#100d08" />
+  <rect x="96" y="6" width="3" height="15" fill="#13100a" />
+  <!-- carrion birds riding the heat -->
+  <rect x="70" y="7" width="1" height="1" fill="#0a0805" />
+  <rect x="72" y="6" width="1" height="1" fill="#0a0805" />
+  <rect x="74" y="7" width="1" height="1" fill="#0a0805" />
+  <rect x="112" y="11" width="1" height="1" fill="#0c0a06" />
+  <rect x="114" y="10" width="1" height="1" fill="#0c0a06" />
+
+  <!-- ══ The burning line on the ridge, LEFT — the key light ══ -->
+  <rect x="0" y="21" width="72" height="2" fill="#5a1812" />
+  <rect x="6" y="20" width="8" height="2" fill="#a33d1e" />
+  <rect x="24" y="20" width="9" height="2" fill="#a33d1e" />
+  <rect x="44" y="21" width="6" height="1" fill="#a33d1e" />
+  <rect x="9" y="19" width="3" height="1" fill="#e8743a" />
+  <rect x="27" y="19" width="2" height="1" fill="#e8743a" />
+  <rect x="10" y="18" width="1" height="1" fill="#ffb347" />
+  <rect x="-14" y="2" width="100" height="40" fill="url(#c8c-fireline-glow)" />
+  <!-- the ridge itself, black against its own burning -->
+  <rect x="0" y="23" width="160" height="5" fill="#0e0c08" />
+  <rect x="36" y="22" width="20" height="2" fill="#0e0c08" />
+  <rect x="76" y="22" width="30" height="2" fill="#0d0b07" />
+  <rect x="120" y="24" width="40" height="4" fill="#0c0a07" />
+  <rect x="0" y="28" width="160" height="1" fill="#16110b" />
+
+  <!-- ══ The burning snag — the fire carried near ══ -->
+  <rect x="17" y="12" width="4" height="24" fill="#0c0a08" />
+  <rect x="17" y="12" width="1" height="24" fill="#1c1610" />
+  <rect x="12" y="14" width="5" height="2" fill="#0c0a08" />
+  <rect x="10" y="12" width="3" height="2" fill="#0a0805" />
+  <rect x="21" y="9" width="5" height="2" fill="#0c0a08" />
+  <rect x="25" y="7" width="3" height="2" fill="#0a0805" />
+  <rect x="20" y="6" width="2" height="4" fill="#0c0a08" />
+  <!-- the flame nested in the crotch -->
+  <rect x="18" y="10" width="3" height="3" fill="#a33d1e" />
+  <rect x="19" y="8" width="2" height="3" fill="#e8743a" />
+  <rect x="19" y="9" width="1" height="2" fill="#ffb347" />
+  <rect x="20" y="9" width="1" height="1" fill="#ffe9a8" />
+  <rect x="-12" y="-14" width="68" height="56" fill="url(#c8c-fire-halo)" />
+  <!-- embers leaving the snag -->
+  <rect x="28" y="12" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="33" y="17" width="1" height="1" fill="#a33d1e" opacity="0.8" />
+  <rect x="40" y="24" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+
+  <!-- ══ The relics of the march, planted on the field ══ -->
+  <rect x="38" y="26" width="1" height="12" fill="#16120d" />
+  <rect x="37" y="26" width="3" height="1" fill="#1c1610" />
+  <rect x="60" y="24" width="1" height="14" fill="#16120d" />
+  <rect x="74" y="28" width="1" height="10" fill="#120f0a" />
+  <rect x="73" y="28" width="3" height="1" fill="#16120d" />
+  <rect x="102" y="26" width="1" height="11" fill="#110e09" />
+  <rect x="120" y="28" width="1" height="9" fill="#0f0d09" />
+  <!-- the torn standard, still answering a dead wind -->
+  <rect x="55" y="24" width="5" height="7" fill="#3f100c" />
+  <rect x="53" y="25" width="2" height="3" fill="#3f100c" />
+  <rect x="55" y="24" width="5" height="1" fill="#5a1812" />
+  <rect x="54" y="31" width="3" height="2" fill="#2a0b08" />
+  <rect x="57" y="33" width="2" height="1" fill="#2a0b08" />
+  <!-- a dead limber, wheels up, far right -->
+  <rect x="118" y="31" width="24" height="6" fill="#13100a" />
+  <rect x="120" y="29" width="18" height="2" fill="#110e09" />
+  <rect x="126" y="25" width="8" height="4" fill="#120f0a" />
+  <rect x="128" y="23" width="4" height="2" fill="#110e09" />
+  <rect x="129" y="26" width="2" height="2" fill="#0b0907" />
+  <rect x="140" y="27" width="4" height="2" fill="#110e09" />
+  <rect x="143" y="25" width="3" height="2" fill="#0f0d09" />
+
+  <!-- ══ MID BAND (y38-66): the haze drifting over the dead ground ══ -->
+  <rect x="0" y="38" width="56" height="10" fill="#1d1812" />
+  <rect x="56" y="38" width="48" height="10" fill="#1a1510" />
+  <rect x="104" y="38" width="56" height="10" fill="#16130e" />
+  <rect x="0" y="48" width="40" height="9" fill="#1a1510" />
+  <rect x="40" y="48" width="64" height="9" fill="#1d1812" />
+  <rect x="104" y="48" width="56" height="9" fill="#14110d" />
+  <rect x="0" y="57" width="62" height="9" fill="#171310" />
+  <rect x="62" y="57" width="42" height="9" fill="#15120d" />
+  <rect x="104" y="57" width="56" height="9" fill="#12100c" />
+  <!-- ragged haze edges -->
+  <rect x="30" y="47" width="14" height="1" fill="#1f1a14" opacity="0.8" />
+  <rect x="84" y="56" width="16" height="1" fill="#1a1510" opacity="0.8" />
+  <rect x="118" y="47" width="12" height="1" fill="#17140f" opacity="0.8" />
+  <!-- helm-mounds of the unburied, almost lost in it -->
+  <rect x="46" y="61" width="6" height="3" fill="#16110b" />
+  <rect x="48" y="60" width="3" height="1" fill="#1a140d" />
+  <rect x="92" y="62" width="5" height="2" fill="#13100a" />
+  <rect x="126" y="61" width="6" height="3" fill="#110e09" />
+  <rect x="128" y="60" width="3" height="1" fill="#14110b" />
+
+  <!-- ══ The ashfall, streaking through everything ══ -->
+  <rect x="34" y="8" width="1" height="2" fill="#4a4438" opacity="0.7" />
+  <rect x="58" y="14" width="1" height="2" fill="#3a352c" opacity="0.7" />
+  <rect x="80" y="6" width="1" height="2" fill="#4a4438" opacity="0.6" />
+  <rect x="90" y="20" width="1" height="2" fill="#3a352c" opacity="0.6" />
+  <rect x="108" y="14" width="1" height="2" fill="#34302a" opacity="0.6" />
+  <rect x="124" y="9" width="1" height="2" fill="#3a352c" opacity="0.5" />
+  <rect x="140" y="18" width="1" height="2" fill="#34302a" opacity="0.5" />
+  <rect x="66" y="30" width="1" height="2" fill="#3a352c" opacity="0.5" />
+  <rect x="12" y="42" width="1" height="2" fill="#3a352c" opacity="0.5" />
+  <rect x="98" y="44" width="1" height="2" fill="#322e26" opacity="0.5" />
+  <rect x="146" y="40" width="1" height="2" fill="#2e2a24" opacity="0.5" />
+  <rect x="72" y="52" width="1" height="2" fill="#322e26" opacity="0.4" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the char, the ash, the dead iron ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#14100c" />
+  <rect x="0" y="66" width="160" height="1" fill="#080604" />
+  <!-- far ground row -->
+  <rect x="1" y="67" width="15" height="4" fill="#241c12" />
+  <rect x="17" y="67" width="13" height="4" fill="#1c1610" />
+  <rect x="31" y="67" width="14" height="4" fill="#241c12" />
+  <rect x="46" y="67" width="13" height="4" fill="#1c1610" />
+  <rect x="60" y="67" width="14" height="4" fill="#191409" />
+  <rect x="75" y="67" width="13" height="4" fill="#16120d" />
+  <rect x="89" y="67" width="14" height="4" fill="#14100c" />
+  <rect x="104" y="67" width="13" height="4" fill="#120f0b" />
+  <rect x="118" y="67" width="14" height="4" fill="#100d09" />
+  <rect x="133" y="67" width="26" height="4" fill="#0e0b08" />
+  <rect x="1" y="67" width="15" height="1" fill="#3a3328" />
+  <rect x="17" y="67" width="13" height="1" fill="#2c2820" />
+  <rect x="31" y="67" width="14" height="1" fill="#322c22" />
+  <!-- mid ground row -->
+  <rect x="0" y="72" width="14" height="5" fill="#1c1610" />
+  <rect x="15" y="72" width="14" height="5" fill="#241c12" />
+  <rect x="30" y="72" width="13" height="5" fill="#1c1610" />
+  <rect x="44" y="72" width="14" height="5" fill="#191409" />
+  <rect x="59" y="72" width="13" height="5" fill="#16120d" />
+  <rect x="73" y="72" width="14" height="5" fill="#14100c" />
+  <rect x="88" y="72" width="13" height="5" fill="#120f0b" />
+  <rect x="102" y="72" width="14" height="5" fill="#100d09" />
+  <rect x="117" y="72" width="42" height="5" fill="#0e0b08" />
+  <rect x="15" y="72" width="14" height="1" fill="#322c22" />
+  <rect x="30" y="72" width="13" height="1" fill="#2c2820" />
+  <!-- near ground row -->
+  <rect x="0" y="78" width="18" height="6" fill="#241c12" />
+  <rect x="19" y="78" width="16" height="6" fill="#1c1610" />
+  <rect x="36" y="78" width="17" height="6" fill="#241c12" />
+  <rect x="54" y="78" width="16" height="6" fill="#191409" />
+  <rect x="71" y="78" width="17" height="6" fill="#16120d" />
+  <rect x="89" y="78" width="16" height="6" fill="#120f0b" />
+  <rect x="106" y="78" width="17" height="6" fill="#100d09" />
+  <rect x="124" y="78" width="35" height="6" fill="#0e0b08" />
+  <rect x="0" y="78" width="18" height="1" fill="#3a3328" />
+  <rect x="19" y="78" width="16" height="1" fill="#2c2820" />
+  <!-- ash drifted into the lee of everything -->
+  <rect x="8" y="70" width="9" height="2" fill="#2c2820" />
+  <rect x="10" y="69" width="5" height="1" fill="#3a3328" />
+  <rect x="40" y="75" width="8" height="2" fill="#28241c" />
+  <rect x="42" y="74" width="4" height="1" fill="#322c22" />
+  <rect x="76" y="80" width="10" height="2" fill="#221e16" />
+  <rect x="112" y="76" width="8" height="2" fill="#1c1914" />
+  <!-- ember seams opening in the char -->
+  <rect x="28" y="74" width="4" height="1" fill="#0a0805" />
+  <rect x="30" y="75" width="3" height="1" fill="#5a1812" />
+  <rect x="31" y="75" width="1" height="1" fill="#a33d1e" />
+  <rect x="56" y="80" width="5" height="1" fill="#0a0805" />
+  <rect x="58" y="80" width="2" height="1" fill="#5a1812" />
+  <rect x="59" y="80" width="1" height="1" fill="#e8743a" />
+  <rect x="14" y="81" width="3" height="1" fill="#5a1812" />
+  <!-- a helm half under the ash, a spear-stub, a snapped blade -->
+  <rect x="84" y="74" width="5" height="3" fill="#2d2519" />
+  <rect x="85" y="73" width="3" height="1" fill="#3a352c" />
+  <rect x="86" y="75" width="1" height="1" fill="#16120d" />
+  <rect x="52" y="69" width="1" height="5" fill="#16120d" />
+  <rect x="51" y="69" width="3" height="1" fill="#1c1610" />
+  <rect x="98" y="79" width="8" height="1" fill="#34383c" />
+  <rect x="106" y="78" width="2" height="2" fill="#211b13" />
+  <rect x="97" y="79" width="1" height="1" fill="#42464a" />
+  <!-- the old blood, gone black under the ash -->
+  <rect x="64" y="76" width="6" height="2" fill="#2a0b08" opacity="0.8" />
+  <rect x="68" y="78" width="3" height="1" fill="#2a0b08" opacity="0.6" />
+  <!-- ribs of something the fire took, far right -->
+  <rect x="130" y="76" width="1" height="3" fill="#3a352c" />
+  <rect x="133" y="75" width="1" height="4" fill="#34302a" />
+  <rect x="136" y="76" width="1" height="3" fill="#2e2a24" />
+  <rect x="129" y="79" width="9" height="1" fill="#28241c" />
+  <!-- firelight pooling toward the snag -->
+  <rect x="-8" y="58" width="64" height="24" fill="url(#c8c-floor-pool)" />
+</svg>

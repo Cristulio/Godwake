@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch7-elite — The Drowned Archive, the reading-room: same biome, heavier
+       dressing. A railed gallery above, a shelving-tier toppled in the
+       drowning, a long reading table with two chained folios, an archive
+       cage on the cold side. Key light: a lamp hung off the gallery rail
+       (x~24,y~14). Second, dimmer glow: phosphorescent ink spilled across
+       the right floor. Quiet mid band y38-63; floor seam y66.
+       Shares the ch7 ramps (see ch7-combat.svg header); ink-glow
+       #16343a #1f4a52 #2a6a76. -->
+  <defs>
+    <radialGradient id="c7e-lamp-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.28" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c7e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c7e-ink-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#2a6a76" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#1f4a52" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: ceiling + the reading-room wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0e1316" />
+  <rect x="98" y="0" width="62" height="66" fill="#0a0e12" />
+  <rect x="0" y="0" width="160" height="4" fill="#080a0c" />
+  <rect x="0" y="4" width="160" height="1" fill="#121a1e" />
+
+  <!-- ══ The gallery (y5-17): rail, balusters, drowned books behind ══ -->
+  <rect x="0" y="5" width="160" height="12" fill="#0b0e11" />
+  <rect x="0" y="5" width="98" height="12" fill="#0d1013" />
+  <!-- book-mass up on the gallery, barely told apart -->
+  <rect x="4" y="7" width="20" height="8" fill="#16100c" />
+  <rect x="30" y="8" width="26" height="7" fill="#120e0b" />
+  <rect x="60" y="7" width="22" height="8" fill="#100d0a" />
+  <rect x="100" y="8" width="24" height="7" fill="#0c0f13" />
+  <rect x="128" y="7" width="26" height="8" fill="#0b0e12" />
+  <rect x="8" y="7" width="2" height="8" fill="#241a14" />
+  <rect x="13" y="8" width="2" height="7" fill="#1a2418" />
+  <rect x="18" y="7" width="2" height="8" fill="#2a1410" />
+  <!-- rail + balusters -->
+  <rect x="0" y="5" width="160" height="1" fill="#2e2218" />
+  <rect x="0" y="6" width="160" height="1" fill="#1a1310" />
+  <rect x="4" y="7" width="1" height="9" fill="#1a1310" />
+  <rect x="12" y="7" width="1" height="9" fill="#1a1310" />
+  <rect x="20" y="7" width="1" height="9" fill="#211812" />
+  <rect x="28" y="7" width="1" height="9" fill="#1a1310" />
+  <rect x="36" y="7" width="1" height="9" fill="#16100c" />
+  <rect x="44" y="7" width="1" height="9" fill="#1a1310" />
+  <rect x="52" y="7" width="1" height="9" fill="#16100c" />
+  <rect x="60" y="7" width="1" height="9" fill="#14100c" />
+  <rect x="68" y="7" width="1" height="9" fill="#16100c" />
+  <rect x="76" y="7" width="1" height="9" fill="#120e0b" />
+  <rect x="84" y="7" width="1" height="9" fill="#14100c" />
+  <rect x="92" y="7" width="1" height="9" fill="#120e0b" />
+  <rect x="102" y="7" width="1" height="9" fill="#0f1217" />
+  <rect x="110" y="7" width="1" height="9" fill="#0e1015" />
+  <rect x="118" y="7" width="1" height="9" fill="#0f1217" />
+  <rect x="126" y="7" width="1" height="9" fill="#0e1015" />
+  <rect x="134" y="7" width="1" height="9" fill="#0d0f14" />
+  <rect x="142" y="7" width="1" height="9" fill="#0e1015" />
+  <rect x="150" y="7" width="1" height="9" fill="#0d0f14" />
+  <!-- gallery floor edge -->
+  <rect x="0" y="16" width="160" height="2" fill="#241a14" />
+  <rect x="0" y="16" width="98" height="1" fill="#3a2c1e" />
+  <rect x="98" y="16" width="62" height="1" fill="#2e2218" />
+  <!-- high-water stain under the gallery lip -->
+  <rect x="0" y="19" width="160" height="1" fill="#1d2a2e" opacity="0.7" />
+  <rect x="58" y="20" width="1" height="2" fill="#15212a" opacity="0.7" />
+  <rect x="104" y="20" width="1" height="3" fill="#101a20" opacity="0.6" />
+
+  <!-- ══ The toppled shelving-tier, leaning into the standing case ══ -->
+  <rect x="6" y="18" width="12" height="58" fill="#16100c" />
+  <rect x="6" y="18" width="1" height="48" fill="#1a1310" />
+  <rect x="6" y="18" width="12" height="1" fill="#2e2218" />
+  <!-- the leaning tier: stepped slab falling left-to-right -->
+  <rect x="14" y="14" width="9" height="4" fill="#241a14" />
+  <rect x="21" y="17" width="9" height="4" fill="#211812" />
+  <rect x="28" y="20" width="9" height="4" fill="#1d1410" />
+  <rect x="35" y="23" width="9" height="4" fill="#1a1310" />
+  <rect x="42" y="26" width="9" height="4" fill="#16100c" />
+  <rect x="14" y="14" width="9" height="1" fill="#3a2c1e" />
+  <rect x="21" y="17" width="9" height="1" fill="#2e2218" />
+  <rect x="28" y="20" width="9" height="1" fill="#2e2218" />
+  <!-- books sliding off the tier as it went over -->
+  <rect x="24" y="22" width="3" height="2" fill="#2a1410" />
+  <rect x="31" y="25" width="3" height="2" fill="#1a2418" />
+  <rect x="38" y="28" width="3" height="2" fill="#14202a" />
+  <rect x="44" y="31" width="4" height="2" fill="#241a14" />
+  <!-- the case it leans on -->
+  <rect x="50" y="12" width="10" height="54" fill="#14100c" />
+  <rect x="50" y="12" width="10" height="1" fill="#2e2218" />
+  <rect x="50" y="12" width="1" height="54" fill="#1d1410" />
+  <rect x="52" y="15" width="6" height="5" fill="#100c09" />
+  <rect x="52" y="22" width="6" height="5" fill="#0e0b08" />
+  <rect x="52" y="29" width="6" height="5" fill="#100c09" />
+
+  <!-- ══ The archive cage on the cold side (x114-142) ══ -->
+  <rect x="100" y="18" width="48" height="48" fill="#0b0e12" />
+  <rect x="114" y="12" width="28" height="2" fill="#16120d" />
+  <rect x="114" y="14" width="28" height="44" fill="#070a0d" />
+  <!-- caged shelf shadows -->
+  <rect x="116" y="20" width="24" height="1" fill="#0d1014" />
+  <rect x="116" y="30" width="24" height="1" fill="#0d1014" />
+  <rect x="117" y="16" width="3" height="4" fill="#0d1116" />
+  <rect x="124" y="16" width="4" height="4" fill="#0f1318" />
+  <rect x="132" y="17" width="3" height="3" fill="#0d1116" />
+  <rect x="121" y="24" width="4" height="6" fill="#0e1116" />
+  <rect x="129" y="25" width="3" height="5" fill="#0c0f14" />
+  <!-- the mesh: verticals + two rails, iron -->
+  <rect x="116" y="14" width="1" height="44" fill="#181712" />
+  <rect x="120" y="14" width="1" height="44" fill="#15140f" />
+  <rect x="124" y="14" width="1" height="44" fill="#15140f" />
+  <rect x="128" y="14" width="1" height="44" fill="#12110d" />
+  <rect x="132" y="14" width="1" height="44" fill="#12110d" />
+  <rect x="136" y="14" width="1" height="44" fill="#100f0b" />
+  <rect x="140" y="14" width="1" height="44" fill="#100f0b" />
+  <rect x="114" y="26" width="28" height="1" fill="#15140f" />
+  <rect x="114" y="42" width="28" height="1" fill="#12110d" />
+  <!-- lock plate, still doing its one job -->
+  <rect x="126" y="33" width="5" height="6" fill="#16120d" />
+  <rect x="127" y="34" width="3" height="2" fill="#211b13" />
+  <rect x="128" y="37" width="1" height="1" fill="#0b0907" />
+  <rect x="114" y="58" width="28" height="2" fill="#0d0c0a" />
+
+  <!-- ══ MID BAND (y38-66): panelled bases, two close values ══ -->
+  <rect x="18" y="38" width="14" height="14" fill="#121517" />
+  <rect x="32" y="38" width="18" height="14" fill="#101316" />
+  <rect x="18" y="52" width="24" height="14" fill="#0f1215" />
+  <rect x="42" y="52" width="8" height="14" fill="#111416" />
+  <rect x="60" y="38" width="40" height="14" fill="#0e1114" />
+  <rect x="60" y="52" width="28" height="14" fill="#0d1013" />
+  <rect x="88" y="52" width="12" height="14" fill="#0c0f12" />
+  <rect x="142" y="38" width="18" height="14" fill="#0a0d11" />
+  <rect x="142" y="52" width="18" height="14" fill="#0b0e11" />
+  <!-- the book avalanche at the toppled tier's foot, kept low -->
+  <rect x="10" y="58" width="26" height="8" fill="#120d0a" />
+  <rect x="12" y="56" width="14" height="2" fill="#14100c" />
+  <rect x="13" y="58" width="5" height="2" fill="#241a14" />
+  <rect x="20" y="60" width="6" height="2" fill="#1d1410" />
+  <rect x="28" y="59" width="5" height="2" fill="#1a1310" />
+  <rect x="16" y="62" width="7" height="2" fill="#16100c" />
+
+  <!-- ══ The reading table, low across the gap ══ -->
+  <rect x="38" y="56" width="46" height="2" fill="#1a1310" />
+  <rect x="38" y="56" width="32" height="1" fill="#2e2218" />
+  <rect x="70" y="56" width="14" height="1" fill="#241a14" />
+  <rect x="38" y="58" width="46" height="1" fill="#100c09" />
+  <rect x="40" y="59" width="2" height="7" fill="#16100c" />
+  <rect x="80" y="59" width="2" height="7" fill="#120d0a" />
+  <!-- two chained folios, shut fast -->
+  <rect x="44" y="52" width="9" height="4" fill="#241a14" />
+  <rect x="44" y="52" width="9" height="1" fill="#3a2c1e" />
+  <rect x="46" y="53" width="1" height="3" fill="#6a521e" />
+  <rect x="60" y="53" width="10" height="3" fill="#2a1410" />
+  <rect x="60" y="53" width="10" height="1" fill="#3a1d16" />
+  <rect x="67" y="53" width="1" height="3" fill="#6a521e" />
+  <!-- their chains, dropping over the table edge -->
+  <rect x="48" y="58" width="1" height="1" fill="#2d2519" />
+  <rect x="48" y="60" width="1" height="1" fill="#211b13" />
+  <rect x="48" y="62" width="1" height="1" fill="#2d2519" />
+  <rect x="48" y="64" width="1" height="1" fill="#211b13" />
+  <rect x="64" y="58" width="1" height="1" fill="#2d2519" />
+  <rect x="64" y="60" width="1" height="1" fill="#211b13" />
+  <rect x="64" y="62" width="1" height="1" fill="#2d2519" />
+  <!-- an overturned reader's chair -->
+  <rect x="88" y="60" width="10" height="2" fill="#16100c" />
+  <rect x="90" y="58" width="6" height="2" fill="#1a1310" />
+  <rect x="88" y="62" width="2" height="4" fill="#120d0a" />
+  <rect x="96" y="62" width="2" height="3" fill="#120d0a" />
+
+  <!-- ══ The gallery lamp — the key light ══ -->
+  <rect x="24" y="7" width="1" height="3" fill="#16120d" />
+  <rect x="22" y="10" width="5" height="6" fill="#211b13" />
+  <rect x="23" y="11" width="3" height="4" fill="#a33d1e" />
+  <rect x="24" y="11" width="1" height="4" fill="#e8743a" />
+  <rect x="24" y="13" width="1" height="1" fill="#ffe9a8" />
+  <rect x="23" y="11" width="1" height="1" fill="#ffb347" />
+  <rect x="22" y="16" width="5" height="1" fill="#16120d" />
+  <rect x="29" y="13" width="1" height="1" fill="#e8743a" opacity="0.7" />
+  <rect x="33" y="20" width="1" height="1" fill="#a33d1e" opacity="0.5" />
+  <rect x="-10" y="-12" width="72" height="60" fill="url(#c7e-lamp-halo)" />
+
+  <!-- ══ Loose leaves on the still air ══ -->
+  <rect x="34" y="34" width="2" height="1" fill="#4a483c" opacity="0.7" />
+  <rect x="58" y="24" width="1" height="1" fill="#3f3d33" opacity="0.7" />
+  <rect x="72" y="30" width="2" height="1" fill="#454337" opacity="0.6" />
+  <rect x="92" y="22" width="1" height="1" fill="#343229" opacity="0.6" />
+  <rect x="146" y="26" width="1" height="1" fill="#2a281f" opacity="0.5" />
+
+  <!-- ══ NEAR FLOOR (y66-84): wet stone, ink spill glowing right ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0c1014" />
+  <rect x="0" y="66" width="160" height="1" fill="#050708" />
+  <rect x="1" y="67" width="13" height="4" fill="#1f2e32" />
+  <rect x="15" y="67" width="12" height="4" fill="#182428" />
+  <rect x="28" y="67" width="13" height="4" fill="#1f2e32" />
+  <rect x="42" y="67" width="12" height="4" fill="#141d21" />
+  <rect x="55" y="67" width="13" height="4" fill="#121a1e" />
+  <rect x="69" y="67" width="12" height="4" fill="#10181c" />
+  <rect x="82" y="67" width="13" height="4" fill="#0e1418" />
+  <rect x="96" y="67" width="12" height="4" fill="#0d1317" />
+  <rect x="109" y="67" width="13" height="4" fill="#0c1216" />
+  <rect x="123" y="67" width="12" height="4" fill="#0b1014" />
+  <rect x="136" y="67" width="23" height="4" fill="#0a0f13" />
+  <rect x="1" y="67" width="13" height="1" fill="#283a3e" />
+  <rect x="15" y="67" width="12" height="1" fill="#2d4145" />
+  <rect x="28" y="67" width="13" height="1" fill="#243438" />
+  <rect x="0" y="72" width="14" height="5" fill="#182428" />
+  <rect x="15" y="72" width="13" height="5" fill="#1f2e32" />
+  <rect x="29" y="72" width="14" height="5" fill="#182428" />
+  <rect x="44" y="72" width="13" height="5" fill="#141d21" />
+  <rect x="58" y="72" width="14" height="5" fill="#121a1e" />
+  <rect x="73" y="72" width="13" height="5" fill="#10181c" />
+  <rect x="87" y="72" width="14" height="5" fill="#0e1418" />
+  <rect x="102" y="72" width="13" height="5" fill="#0c1216" />
+  <rect x="116" y="72" width="14" height="5" fill="#0b1014" />
+  <rect x="131" y="72" width="28" height="5" fill="#0a0f13" />
+  <rect x="15" y="72" width="13" height="1" fill="#2d4145" />
+  <rect x="29" y="72" width="14" height="1" fill="#243438" />
+  <rect x="0" y="78" width="16" height="6" fill="#1f2e32" />
+  <rect x="17" y="78" width="15" height="6" fill="#182428" />
+  <rect x="33" y="78" width="16" height="6" fill="#1f2e32" />
+  <rect x="50" y="78" width="15" height="6" fill="#141d21" />
+  <rect x="66" y="78" width="16" height="6" fill="#121a1e" />
+  <rect x="83" y="78" width="15" height="6" fill="#0e1418" />
+  <rect x="99" y="78" width="16" height="6" fill="#0c1216" />
+  <rect x="116" y="78" width="43" height="6" fill="#0a0f13" />
+  <rect x="0" y="78" width="16" height="1" fill="#283a3e" />
+  <rect x="17" y="78" width="15" height="1" fill="#2d4145" />
+  <!-- the ink that got out: a glowing slick across the cold side -->
+  <rect x="106" y="74" width="18" height="5" fill="#0d1c20" />
+  <rect x="110" y="72" width="10" height="2" fill="#0d1c20" />
+  <rect x="108" y="75" width="13" height="3" fill="#16343a" />
+  <rect x="112" y="76" width="6" height="1" fill="#1f4a52" />
+  <rect x="114" y="75" width="2" height="1" fill="#2a6a76" />
+  <rect x="124" y="76" width="4" height="2" fill="#0d1c20" />
+  <rect x="126" y="79" width="3" height="1" fill="#16343a" opacity="0.8" />
+  <rect x="96" y="68" width="44" height="18" fill="url(#c7e-ink-glow)" />
+  <!-- the tipped inkwell it ran from -->
+  <rect x="102" y="71" width="3" height="2" fill="#16120d" />
+  <rect x="104" y="72" width="2" height="1" fill="#0d1c20" />
+  <!-- scattered books off the table -->
+  <rect x="46" y="74" width="9" height="2" fill="#1a2418" />
+  <rect x="47" y="72" width="7" height="2" fill="#241a14" />
+  <rect x="46" y="74" width="9" height="1" fill="#22311a" />
+  <rect x="60" y="78" width="8" height="3" fill="#3a3830" />
+  <rect x="60" y="78" width="8" height="1" fill="#45433a" />
+  <rect x="63" y="78" width="1" height="3" fill="#241a14" />
+  <rect x="74" y="75" width="6" height="2" fill="#2a1410" />
+  <rect x="74" y="75" width="6" height="1" fill="#3a1d16" />
+  <!-- a dropped chain staple by the hero's ground -->
+  <rect x="10" y="76" width="4" height="1" fill="#2d2519" />
+  <rect x="10" y="77" width="1" height="1" fill="#211b13" />
+  <rect x="13" y="77" width="1" height="1" fill="#211b13" />
+  <!-- wet moss at the case feet -->
+  <rect x="4" y="66" width="3" height="1" fill="#1c2914" />
+  <rect x="6" y="67" width="2" height="1" fill="#2a3d1c" />
+  <rect x="52" y="66" width="3" height="1" fill="#1c2914" />
+  <rect x="54" y="67" width="1" height="1" fill="#2a3d1c" />
+  <!-- lamplight pooling under the gallery -->
+  <rect x="-6" y="58" width="64" height="24" fill="url(#c7e-floor-pool)" />
+</svg>

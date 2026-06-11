@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch9-elite — The Court of Masks, the gallery of mirrors: the receiving
+       line. Mirror after mirror in a duelling rhythm, one half-shrouded, a
+       toppled courtier's statue, the drift of cast-off masks heaped along
+       the east wall, a chalk line and a dropped rapier where the last
+       affair of honour stopped mid-figure. Key light: a twin girandole on
+       the LEFT wall — answered, wrongly, by a cold gleam in a far mirror
+       no candle is lighting. Quiet mid band y38-63; floor seam y66.
+       Shares the ch9 ramps (see ch9-combat.svg header). -->
+  <defs>
+    <radialGradient id="c9e-candle-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.27" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c9e-ghost-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#3a5c6a" stop-opacity="0.14" />
+      <stop offset="100%" stop-color="#2a4450" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c9e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: cornice + gallery wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#21212a" />
+  <rect x="98" y="0" width="62" height="66" fill="#1a1a21" />
+  <rect x="0" y="0" width="160" height="3" fill="#101016" />
+  <rect x="0" y="3" width="160" height="3" fill="#34343f" />
+  <rect x="0" y="3" width="98" height="1" fill="#3a3a44" />
+  <rect x="0" y="6" width="160" height="1" fill="#14141a" />
+  <rect x="10" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="26" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="42" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="58" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="74" y="4" width="2" height="2" fill="#24242c" />
+  <rect x="104" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="120" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="136" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="152" y="4" width="2" height="2" fill="#1e1e26" />
+
+  <!-- ══ The receiving line, west (lit) side ══ -->
+  <!-- glass 1 -->
+  <rect x="6" y="10" width="16" height="26" fill="#6a521e" />
+  <rect x="7" y="11" width="14" height="24" fill="#15161c" />
+  <rect x="7" y="11" width="14" height="1" fill="#8a6c2a" />
+  <rect x="7" y="11" width="1" height="24" fill="#54400f" />
+  <rect x="10" y="14" width="2" height="17" fill="#1d242c" />
+  <rect x="16" y="16" width="2" height="13" fill="#191f26" />
+  <!-- glass 2, half under its dust sheet -->
+  <rect x="26" y="10" width="16" height="26" fill="#6a521e" />
+  <rect x="27" y="11" width="14" height="24" fill="#15161c" />
+  <rect x="40" y="11" width="1" height="24" fill="#54400f" />
+  <rect x="31" y="14" width="2" height="16" fill="#1b222a" />
+  <rect x="26" y="10" width="12" height="3" fill="#2c2228" />
+  <rect x="26" y="13" width="8" height="3" fill="#242028" />
+  <rect x="26" y="16" width="5" height="4" fill="#201c24" />
+  <rect x="26" y="20" width="3" height="3" fill="#1c1820" />
+  <rect x="26" y="10" width="12" height="1" fill="#382c30" />
+  <!-- glass 3 -->
+  <rect x="46" y="10" width="16" height="26" fill="#54400f" />
+  <rect x="47" y="11" width="14" height="24" fill="#14151b" />
+  <rect x="47" y="11" width="14" height="1" fill="#6a521e" />
+  <rect x="50" y="15" width="2" height="15" fill="#1a2128" />
+  <rect x="56" y="14" width="2" height="17" fill="#181e25" />
+  <!-- the girandole's twin flames, doubled in its own glass -->
+  <rect x="12" y="17" width="1" height="2" fill="#3a2c14" opacity="0.9" />
+  <rect x="14" y="18" width="1" height="1" fill="#503a18" opacity="0.8" />
+
+  <!-- ══ The receiving line, east (cold) side ══ -->
+  <rect x="100" y="10" width="16" height="26" fill="#3f3009" />
+  <rect x="101" y="11" width="14" height="24" fill="#101218" />
+  <rect x="101" y="11" width="14" height="1" fill="#54400f" />
+  <rect x="104" y="14" width="2" height="17" fill="#161b22" />
+  <rect x="110" y="16" width="2" height="13" fill="#141920" />
+  <!-- the glass that gleams with no candle in the room -->
+  <rect x="120" y="10" width="16" height="26" fill="#3f3009" />
+  <rect x="121" y="11" width="14" height="24" fill="#101218" />
+  <rect x="121" y="11" width="14" height="1" fill="#4a3a0c" />
+  <rect x="125" y="14" width="2" height="18" fill="#1a2028" />
+  <rect x="129" y="16" width="2" height="14" fill="#1d242c" />
+  <rect x="128" y="19" width="1" height="3" fill="#2a4450" />
+  <rect x="128" y="20" width="1" height="1" fill="#3a5c6a" />
+  <rect x="116" y="6" width="26" height="34" fill="url(#c9e-ghost-glow)" />
+  <rect x="140" y="10" width="16" height="26" fill="#392b08" />
+  <rect x="141" y="11" width="14" height="24" fill="#101218" />
+  <rect x="141" y="11" width="14" height="1" fill="#4a3a0c" />
+  <rect x="144" y="15" width="2" height="15" fill="#141920" />
+  <rect x="150" y="14" width="2" height="16" fill="#12171e" />
+
+  <!-- ══ Pilaster strips between the glasses ══ -->
+  <rect x="23" y="8" width="2" height="58" fill="#2c2c34" />
+  <rect x="23" y="8" width="1" height="58" fill="#34343f" />
+  <rect x="43" y="8" width="2" height="58" fill="#2a2a32" />
+  <rect x="63" y="8" width="2" height="58" fill="#26262c" />
+  <rect x="97" y="8" width="2" height="58" fill="#1e1e26" />
+  <rect x="117" y="8" width="2" height="58" fill="#1c1c24" />
+  <rect x="137" y="8" width="2" height="58" fill="#1c1c24" />
+  <rect x="157" y="8" width="2" height="58" fill="#1a1a21" />
+  <rect x="22" y="8" width="4" height="1" fill="#6a521e" />
+  <rect x="42" y="8" width="4" height="1" fill="#54400f" />
+  <rect x="62" y="8" width="4" height="1" fill="#54400f" />
+  <rect x="96" y="8" width="4" height="1" fill="#3f3009" />
+  <rect x="116" y="8" width="4" height="1" fill="#3f3009" />
+  <rect x="136" y="8" width="4" height="1" fill="#392b08" />
+
+  <!-- ══ The girandole — the key light ══ -->
+  <rect x="19" y="14" width="1" height="4" fill="#54400f" />
+  <rect x="17" y="12" width="2" height="2" fill="#54400f" />
+  <rect x="21" y="12" width="2" height="2" fill="#54400f" />
+  <rect x="17" y="14" width="5" height="1" fill="#6a521e" />
+  <rect x="17" y="9" width="1" height="3" fill="#4a4a44" />
+  <rect x="22" y="9" width="1" height="3" fill="#4a4a44" />
+  <rect x="17" y="7" width="1" height="2" fill="#e8743a" />
+  <rect x="22" y="7" width="1" height="2" fill="#e8743a" />
+  <rect x="17" y="7" width="1" height="1" fill="#ffb347" />
+  <rect x="22" y="7" width="1" height="1" fill="#ffe9a8" />
+  <rect x="-10" y="-16" width="70" height="62" fill="url(#c9e-candle-halo)" />
+  <!-- dust idling through the light -->
+  <rect x="27" y="16" width="1" height="1" fill="#3a3a44" opacity="0.8" />
+  <rect x="32" y="24" width="1" height="1" fill="#34343f" opacity="0.7" />
+  <rect x="24" y="30" width="1" height="1" fill="#2c2c34" opacity="0.6" />
+
+  <!-- ══ MID BAND (y38-66): wainscot, two values, nothing performing ══ -->
+  <rect x="0" y="38" width="160" height="1" fill="#2c2c34" />
+  <rect x="0" y="39" width="23" height="13" fill="#26262c" />
+  <rect x="0" y="52" width="23" height="14" fill="#23232b" />
+  <rect x="25" y="39" width="38" height="13" fill="#24242c" />
+  <rect x="25" y="52" width="38" height="14" fill="#21212a" />
+  <rect x="65" y="39" width="32" height="13" fill="#21212a" />
+  <rect x="65" y="52" width="32" height="14" fill="#1f1f27" />
+  <rect x="99" y="39" width="38" height="13" fill="#1c1c24" />
+  <rect x="99" y="52" width="38" height="14" fill="#1a1a21" />
+  <rect x="139" y="39" width="21" height="13" fill="#1a1a21" />
+  <rect x="139" y="52" width="21" height="14" fill="#1c1c24" />
+  <rect x="34" y="39" width="1" height="27" fill="#1e1e26" />
+  <rect x="52" y="39" width="1" height="27" fill="#1e1e26" />
+  <rect x="82" y="39" width="1" height="27" fill="#1b1b22" />
+  <rect x="108" y="39" width="1" height="27" fill="#17171e" />
+  <rect x="128" y="39" width="1" height="27" fill="#17171e" />
+  <rect x="148" y="39" width="1" height="27" fill="#16161d" />
+
+  <!-- ══ The toppled statue, face-down off its plinth ══ -->
+  <rect x="4" y="56" width="10" height="10" fill="#2c2c34" />
+  <rect x="4" y="56" width="10" height="1" fill="#34343f" />
+  <rect x="4" y="60" width="10" height="1" fill="#26262c" />
+  <rect x="13" y="56" width="1" height="10" fill="#22222a" />
+  <!-- the courtier, holding his bow forever -->
+  <rect x="14" y="61" width="16" height="4" fill="#34343f" />
+  <rect x="29" y="62" width="4" height="3" fill="#34343f" />
+  <rect x="32" y="61" width="3" height="3" fill="#3a3a44" />
+  <rect x="18" y="59" width="6" height="2" fill="#34343f" />
+  <rect x="14" y="61" width="12" height="1" fill="#3a3a44" />
+  <rect x="22" y="65" width="6" height="1" fill="#2c2c34" />
+  <!-- the hand, still offered -->
+  <rect x="26" y="60" width="3" height="1" fill="#3a3a44" />
+
+  <!-- ══ The drift of cast-off masks, east wall ══ -->
+  <rect x="106" y="60" width="48" height="6" fill="#26262a" />
+  <rect x="110" y="58" width="36" height="2" fill="#2a2a2e" />
+  <rect x="118" y="56" width="18" height="2" fill="#2e2e2a" />
+  <!-- the faces in the heap -->
+  <rect x="112" y="58" width="4" height="2" fill="#3a3a36" />
+  <rect x="113" y="58" width="1" height="1" fill="#16161c" />
+  <rect x="120" y="56" width="4" height="2" fill="#4a4a44" />
+  <rect x="121" y="56" width="1" height="1" fill="#121217" />
+  <rect x="123" y="56" width="1" height="1" fill="#121217" />
+  <rect x="128" y="57" width="4" height="2" fill="#3a3a36" />
+  <rect x="129" y="57" width="1" height="1" fill="#14141a" />
+  <rect x="136" y="58" width="4" height="2" fill="#44443e" />
+  <rect x="137" y="58" width="1" height="1" fill="#16161c" />
+  <rect x="144" y="60" width="4" height="2" fill="#3a3a36" />
+  <rect x="121" y="55" width="2" height="1" fill="#5a5a52" />
+  <rect x="113" y="57" width="2" height="1" fill="#4a4a44" />
+  <rect x="129" y="56" width="2" height="1" fill="#44443e" />
+  <!-- one rolled clear, watching the floor -->
+  <rect x="98" y="63" width="4" height="2" fill="#4a4a44" />
+  <rect x="99" y="63" width="1" height="1" fill="#14141a" />
+  <rect x="101" y="63" width="1" height="1" fill="#14141a" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the duelling floor ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#16161c" />
+  <rect x="0" y="66" width="160" height="1" fill="#0a0a0e" />
+  <rect x="1" y="67" width="9" height="4" fill="#2c2c34" />
+  <rect x="10" y="67" width="9" height="4" fill="#18181f" />
+  <rect x="19" y="67" width="9" height="4" fill="#2c2c34" />
+  <rect x="28" y="67" width="9" height="4" fill="#18181f" />
+  <rect x="37" y="67" width="9" height="4" fill="#2a2a32" />
+  <rect x="46" y="67" width="9" height="4" fill="#18181f" />
+  <rect x="55" y="67" width="9" height="4" fill="#28282f" />
+  <rect x="64" y="67" width="9" height="4" fill="#16161d" />
+  <rect x="73" y="67" width="9" height="4" fill="#26262d" />
+  <rect x="82" y="67" width="9" height="4" fill="#15151b" />
+  <rect x="91" y="67" width="9" height="4" fill="#23232a" />
+  <rect x="100" y="67" width="9" height="4" fill="#14141a" />
+  <rect x="109" y="67" width="9" height="4" fill="#202028" />
+  <rect x="118" y="67" width="9" height="4" fill="#131318" />
+  <rect x="127" y="67" width="9" height="4" fill="#1e1e25" />
+  <rect x="136" y="67" width="9" height="4" fill="#121217" />
+  <rect x="145" y="67" width="9" height="4" fill="#1c1c23" />
+  <rect x="154" y="67" width="5" height="4" fill="#111116" />
+  <rect x="1" y="67" width="9" height="1" fill="#34343f" />
+  <rect x="19" y="67" width="9" height="1" fill="#34343f" />
+  <rect x="0" y="72" width="11" height="5" fill="#18181f" />
+  <rect x="11" y="72" width="11" height="5" fill="#2c2c34" />
+  <rect x="22" y="72" width="11" height="5" fill="#18181f" />
+  <rect x="33" y="72" width="11" height="5" fill="#2c2c34" />
+  <rect x="44" y="72" width="11" height="5" fill="#17171e" />
+  <rect x="55" y="72" width="11" height="5" fill="#28282f" />
+  <rect x="66" y="72" width="11" height="5" fill="#15151b" />
+  <rect x="77" y="72" width="11" height="5" fill="#26262d" />
+  <rect x="88" y="72" width="11" height="5" fill="#14141a" />
+  <rect x="99" y="72" width="11" height="5" fill="#22222a" />
+  <rect x="110" y="72" width="11" height="5" fill="#131318" />
+  <rect x="121" y="72" width="11" height="5" fill="#1e1e25" />
+  <rect x="132" y="72" width="11" height="5" fill="#121217" />
+  <rect x="143" y="72" width="11" height="5" fill="#1c1c23" />
+  <rect x="154" y="72" width="6" height="5" fill="#111116" />
+  <rect x="11" y="72" width="11" height="1" fill="#34343f" />
+  <rect x="0" y="78" width="13" height="6" fill="#2c2c34" />
+  <rect x="13" y="78" width="13" height="6" fill="#18181f" />
+  <rect x="26" y="78" width="13" height="6" fill="#2c2c34" />
+  <rect x="39" y="78" width="13" height="6" fill="#18181f" />
+  <rect x="52" y="78" width="13" height="6" fill="#2a2a32" />
+  <rect x="65" y="78" width="13" height="6" fill="#16161d" />
+  <rect x="78" y="78" width="13" height="6" fill="#26262d" />
+  <rect x="91" y="78" width="13" height="6" fill="#14141a" />
+  <rect x="104" y="78" width="13" height="6" fill="#22222a" />
+  <rect x="117" y="78" width="13" height="6" fill="#131318" />
+  <rect x="130" y="78" width="13" height="6" fill="#1e1e25" />
+  <rect x="143" y="78" width="17" height="6" fill="#121217" />
+  <rect x="0" y="78" width="13" height="1" fill="#3a3a44" />
+  <rect x="26" y="78" width="13" height="1" fill="#34343f" />
+  <!-- the chalk line of the last affair -->
+  <rect x="80" y="68" width="1" height="3" fill="#3a3a40" opacity="0.9" />
+  <rect x="80" y="73" width="1" height="3" fill="#3a3a40" opacity="0.8" />
+  <rect x="80" y="78" width="1" height="3" fill="#3a3a40" opacity="0.8" />
+  <rect x="80" y="82" width="1" height="2" fill="#3a3a40" opacity="0.7" />
+  <!-- the rapier, conceded -->
+  <rect x="84" y="74" width="10" height="1" fill="#34383c" />
+  <rect x="83" y="74" width="1" height="1" fill="#42464a" />
+  <rect x="94" y="73" width="2" height="3" fill="#54400f" />
+  <rect x="95" y="74" width="2" height="1" fill="#6a521e" />
+  <!-- the glove that called it -->
+  <rect x="70" y="79" width="4" height="2" fill="#242028" />
+  <rect x="73" y="78" width="2" height="2" fill="#2c2228" />
+  <!-- dust where no figure has turned in a century -->
+  <rect x="40" y="70" width="6" height="1" fill="#1a1a20" opacity="0.8" />
+  <rect x="58" y="80" width="7" height="1" fill="#1a1a20" opacity="0.7" />
+  <rect x="34" y="80" width="5" height="1" fill="#18181e" opacity="0.7" />
+  <!-- candlelight pooling at the west rank -->
+  <rect x="-8" y="56" width="64" height="28" fill="url(#c9e-floor-pool)" />
+</svg>
