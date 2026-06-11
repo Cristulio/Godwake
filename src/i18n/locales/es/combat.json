@@ -402,6 +402,7 @@
     }
   },
   "slain": "Abatido",
+  "quarryMarked": "Presa marcada — tus flechas la encuentran más hondo.",
   "dice": {
     "crit": "¡CRÍTICO!",
     "hit": "IMPACTO",
