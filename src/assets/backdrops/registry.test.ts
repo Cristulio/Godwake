@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { backdropFor } from './registry';
 
 describe('backdropFor', () => {
-  it('resolves every authored chapter 1-2 scene', () => {
-    for (const chapter of [1, 2]) {
+  it('resolves every authored chapter 1-6 scene', () => {
+    for (const chapter of [1, 2, 3, 4, 5, 6]) {
       for (const kind of ['combat', 'elite', 'boss', 'event'] as const) {
         expect(backdropFor(chapter, kind), `ch${chapter}-${kind}`).toMatch(/\.svg$/);
       }
@@ -15,8 +15,7 @@ describe('backdropFor', () => {
   });
 
   it('falls back to undefined for unauthored chapters and missing chapter tags', () => {
-    expect(backdropFor(3, 'combat')).toBeUndefined();
-    expect(backdropFor(14, 'boss')).toBeUndefined();
+    expect(backdropFor(99, 'boss')).toBeUndefined();
     expect(backdropFor(undefined, 'combat')).toBeUndefined();
     expect(backdropFor(0, 'combat')).toBeUndefined();
   });

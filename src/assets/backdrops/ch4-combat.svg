@@ -1,0 +1,282 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch4-combat — Zhal Vasha, a street under the webs: the Deepdark city
+       carved out of the living basalt. House facades flank a street that
+       falls away into cavern dark; a faerzress lantern burns violet on its
+       bracket (the key, upper-LEFT); webs curtain the high corners and a
+       far bridge crosses the black with one pin of light. Quiet mid band
+       y38-63 (plain lower facades, flat street dark in the gap); floor
+       seam y66, fitted basalt flags below with a cold fungi cluster.
+       Ramps — basalt: #0d0b12 #14111a #1b1724 #241f30 (+#2f2840 edge);
+       faerzress: #1a1234 #2a1e54 #3d2c78 #5a44a8 (+#7a5fd0 core);
+       web: #2a2a32 #3a3a44 #4e4e5a; fungi: #0c1c20 #14303a #1f4a56
+       (+#2e6e80); old red (house sigils, unlit): #2a0b08 #3f100c. -->
+  <defs>
+    <radialGradient id="c4c-lantern-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#7a5fd0" stop-opacity="0.34" />
+      <stop offset="45%" stop-color="#3d2c78" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#3d2c78" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c4c-fungi-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#2e6e80" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#2e6e80" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c4c-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#5a44a8" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#5a44a8" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: cavern dark, ceiling fringe, the street falling away ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0d0b12" />
+  <rect x="100" y="0" width="60" height="66" fill="#0a0a10" />
+  <rect x="46" y="6" width="66" height="60" fill="#0a0911" />
+  <rect x="0" y="0" width="160" height="5" fill="#07060a" />
+  <!-- stalactite fringe over the street -->
+  <rect x="52" y="5" width="3" height="3" fill="#0f0d16" />
+  <rect x="53" y="8" width="1" height="2" fill="#0f0d16" />
+  <rect x="64" y="5" width="2" height="4" fill="#0c0b12" />
+  <rect x="64" y="9" width="1" height="2" fill="#0c0b12" />
+  <rect x="78" y="5" width="3" height="2" fill="#0f0d16" />
+  <rect x="79" y="7" width="1" height="3" fill="#0f0d16" />
+  <rect x="93" y="5" width="2" height="3" fill="#0c0b12" />
+  <rect x="104" y="5" width="3" height="4" fill="#0b0a10" />
+  <rect x="105" y="9" width="1" height="2" fill="#0b0a10" />
+  <!-- the city's far tier: stalagmite spires hung with pin-lights -->
+  <rect x="56" y="10" width="6" height="22" fill="#100d18" />
+  <rect x="57" y="6" width="4" height="4" fill="#100d18" />
+  <rect x="58" y="4" width="2" height="2" fill="#0e0b15" />
+  <rect x="56" y="10" width="1" height="22" fill="#151221" />
+  <rect x="70" y="14" width="8" height="18" fill="#0e0b15" />
+  <rect x="72" y="9" width="4" height="5" fill="#0e0b15" />
+  <rect x="73" y="7" width="2" height="2" fill="#0c0a12" />
+  <rect x="70" y="14" width="1" height="18" fill="#131019" />
+  <rect x="92" y="11" width="7" height="21" fill="#0d0a13" />
+  <rect x="94" y="7" width="3" height="4" fill="#0d0a13" />
+  <rect x="92" y="11" width="1" height="21" fill="#110e18" />
+  <!-- their lit slits, far and cold -->
+  <rect x="58" y="13" width="1" height="2" fill="#3d2c78" />
+  <rect x="60" y="20" width="1" height="1" fill="#2a1e54" />
+  <rect x="73" y="17" width="1" height="2" fill="#3d2c78" opacity="0.9" />
+  <rect x="75" y="24" width="1" height="1" fill="#2a1e54" />
+  <rect x="94" y="15" width="1" height="2" fill="#2a1e54" />
+  <rect x="96" y="22" width="1" height="1" fill="#3d2c78" opacity="0.8" />
+  <!-- the bridge slung between the tiers, one lamp burning -->
+  <rect x="46" y="32" width="66" height="2" fill="#1b1724" />
+  <rect x="46" y="32" width="66" height="1" fill="#241f30" />
+  <rect x="46" y="34" width="66" height="1" fill="#0a0911" />
+  <rect x="58" y="30" width="1" height="2" fill="#1b1724" />
+  <rect x="74" y="30" width="1" height="2" fill="#1b1724" />
+  <rect x="90" y="30" width="1" height="2" fill="#1b1724" />
+  <rect x="104" y="30" width="1" height="2" fill="#161320" />
+  <rect x="75" y="27" width="1" height="3" fill="#161320" />
+  <rect x="74" y="26" width="3" height="1" fill="#1b1724" />
+  <rect x="75" y="28" width="1" height="2" fill="#5a44a8" />
+  <rect x="75" y="28" width="1" height="1" fill="#a48ef0" />
+  <!-- distant faerzress pinpricks in the cavern black -->
+  <rect x="64" y="12" width="1" height="1" fill="#2a1e54" opacity="0.8" />
+  <rect x="86" y="9" width="1" height="1" fill="#3d2c78" opacity="0.7" />
+  <rect x="102" y="14" width="1" height="1" fill="#2a1e54" opacity="0.6" />
+
+  <!-- ══ Left facade (x0-46): a great house carved from the rock ══ -->
+  <rect x="0" y="6" width="46" height="60" fill="#1b1724" />
+  <rect x="0" y="6" width="46" height="1" fill="#241f30" />
+  <rect x="45" y="6" width="1" height="60" fill="#0a0911" />
+  <!-- block courses -->
+  <rect x="0" y="13" width="46" height="1" fill="#12101a" />
+  <rect x="0" y="26" width="46" height="1" fill="#12101a" />
+  <rect x="0" y="40" width="46" height="1" fill="#12101a" />
+  <rect x="0" y="53" width="46" height="1" fill="#12101a" />
+  <rect x="11" y="6" width="1" height="7" fill="#12101a" />
+  <rect x="30" y="6" width="1" height="7" fill="#12101a" />
+  <rect x="20" y="14" width="1" height="12" fill="#12101a" />
+  <rect x="8" y="27" width="1" height="13" fill="#12101a" />
+  <rect x="14" y="41" width="1" height="12" fill="#161320" />
+  <rect x="30" y="41" width="1" height="12" fill="#161320" />
+  <rect x="8" y="54" width="1" height="12" fill="#161320" />
+  <rect x="22" y="54" width="1" height="12" fill="#161320" />
+  <!-- lantern-side top edges -->
+  <rect x="0" y="14" width="20" height="1" fill="#2f2840" />
+  <rect x="12" y="6" width="18" height="1" fill="#2f2840" />
+  <rect x="0" y="27" width="8" height="1" fill="#241f30" />
+  <!-- the house frieze: angular drow trim -->
+  <rect x="0" y="15" width="46" height="2" fill="#241f30" />
+  <rect x="2" y="15" width="2" height="1" fill="#14111a" />
+  <rect x="7" y="16" width="2" height="1" fill="#14111a" />
+  <rect x="12" y="15" width="2" height="1" fill="#14111a" />
+  <rect x="17" y="16" width="2" height="1" fill="#14111a" />
+  <rect x="22" y="15" width="2" height="1" fill="#14111a" />
+  <rect x="27" y="16" width="2" height="1" fill="#14111a" />
+  <rect x="32" y="15" width="2" height="1" fill="#14111a" />
+  <rect x="37" y="16" width="2" height="1" fill="#14111a" />
+  <rect x="42" y="15" width="2" height="1" fill="#14111a" />
+  <!-- the tall slit doorway, shut on dark -->
+  <rect x="33" y="20" width="10" height="46" fill="#07060a" />
+  <rect x="32" y="18" width="12" height="2" fill="#241f30" />
+  <rect x="33" y="20" width="1" height="46" fill="#161320" />
+  <rect x="42" y="20" width="1" height="46" fill="#0e0c14" />
+  <rect x="35" y="20" width="6" height="44" fill="#0c0a11" />
+  <rect x="35" y="20" width="6" height="1" fill="#12101a" />
+  <rect x="37" y="40" width="2" height="3" fill="#07060a" />
+  <!-- the house sigil-banner: old red on black, unlit -->
+  <rect x="4" y="18" width="9" height="18" fill="#14111a" />
+  <rect x="4" y="18" width="9" height="1" fill="#1e1a28" />
+  <rect x="4" y="18" width="1" height="18" fill="#181522" />
+  <rect x="6" y="22" width="5" height="1" fill="#3f100c" />
+  <rect x="5" y="23" width="2" height="2" fill="#3f100c" />
+  <rect x="10" y="23" width="2" height="2" fill="#3f100c" />
+  <rect x="7" y="24" width="3" height="2" fill="#2a0b08" />
+  <rect x="5" y="27" width="1" height="2" fill="#2a0b08" />
+  <rect x="11" y="27" width="1" height="2" fill="#2a0b08" />
+  <rect x="7" y="28" width="1" height="2" fill="#2a0b08" />
+  <rect x="9" y="28" width="1" height="2" fill="#2a0b08" />
+  <rect x="4" y="34" width="4" height="2" fill="#100d16" />
+  <rect x="9" y="34" width="4" height="2" fill="#100d16" />
+  <!-- scratches where a patrol counted its watches -->
+  <rect x="24" y="30" width="1" height="3" fill="#241f30" />
+  <rect x="26" y="30" width="1" height="3" fill="#241f30" />
+  <rect x="28" y="30" width="1" height="3" fill="#241f30" />
+
+  <!-- ══ Right facade (x112-160): the dark neighbour ══ -->
+  <rect x="112" y="8" width="48" height="58" fill="#14111a" />
+  <rect x="112" y="8" width="48" height="1" fill="#1b1724" />
+  <rect x="112" y="8" width="1" height="58" fill="#0a0911" />
+  <rect x="112" y="18" width="48" height="1" fill="#0e0c14" />
+  <rect x="112" y="32" width="48" height="1" fill="#0e0c14" />
+  <rect x="112" y="46" width="48" height="1" fill="#0e0c14" />
+  <rect x="112" y="58" width="48" height="1" fill="#0e0c14" />
+  <rect x="126" y="8" width="1" height="10" fill="#0e0c14" />
+  <rect x="144" y="19" width="1" height="13" fill="#0e0c14" />
+  <rect x="124" y="33" width="1" height="13" fill="#100e16" />
+  <rect x="138" y="47" width="1" height="11" fill="#100e16" />
+  <rect x="150" y="33" width="1" height="13" fill="#100e16" />
+  <!-- its frieze, barely caught -->
+  <rect x="112" y="20" width="48" height="1" fill="#1b1724" />
+  <rect x="116" y="20" width="2" height="1" fill="#0e0c14" />
+  <rect x="124" y="20" width="2" height="1" fill="#0e0c14" />
+  <rect x="132" y="20" width="2" height="1" fill="#0e0c14" />
+  <rect x="140" y="20" width="2" height="1" fill="#0e0c14" />
+  <rect x="148" y="20" width="2" height="1" fill="#0e0c14" />
+  <!-- slit windows, nothing behind them -->
+  <rect x="120" y="10" width="2" height="6" fill="#07060a" />
+  <rect x="134" y="10" width="2" height="6" fill="#07060a" />
+  <rect x="148" y="10" width="2" height="6" fill="#07060a" />
+  <rect x="130" y="24" width="2" height="6" fill="#07060a" />
+  <rect x="146" y="24" width="2" height="6" fill="#07060a" />
+  <!-- a watcher's slit with the faintest violet behind it -->
+  <rect x="120" y="24" width="2" height="6" fill="#07060a" />
+  <rect x="120" y="26" width="1" height="1" fill="#1a1234" />
+
+  <!-- ══ Webs: the high corners ══ -->
+  <rect x="0" y="0" width="14" height="1" fill="#2a2a32" />
+  <rect x="2" y="2" width="11" height="1" fill="#2a2a32" />
+  <rect x="5" y="4" width="7" height="1" fill="#22222a" />
+  <rect x="13" y="0" width="1" height="3" fill="#2a2a32" />
+  <rect x="8" y="1" width="1" height="4" fill="#22222a" />
+  <rect x="4" y="1" width="1" height="2" fill="#22222a" />
+  <rect x="10" y="3" width="1" height="1" fill="#4e4e5a" />
+  <!-- the big web curtain, high right -->
+  <rect x="118" y="0" width="42" height="1" fill="#2a2a32" />
+  <rect x="124" y="2" width="34" height="1" fill="#22222a" />
+  <rect x="131" y="4" width="26" height="1" fill="#2a2a32" />
+  <rect x="138" y="6" width="18" height="1" fill="#22222a" />
+  <rect x="124" y="0" width="1" height="3" fill="#2a2a32" />
+  <rect x="132" y="0" width="1" height="5" fill="#22222a" />
+  <rect x="141" y="0" width="1" height="7" fill="#2a2a32" />
+  <rect x="150" y="0" width="1" height="5" fill="#22222a" />
+  <rect x="136" y="3" width="1" height="1" fill="#4e4e5a" />
+  <rect x="146" y="2" width="1" height="1" fill="#4e4e5a" />
+  <rect x="128" y="1" width="1" height="1" fill="#3a3a44" />
+  <!-- a small cocoon snagged in it -->
+  <rect x="143" y="7" width="3" height="5" fill="#3a3a44" />
+  <rect x="143" y="7" width="3" height="1" fill="#4e4e5a" />
+  <rect x="144" y="12" width="1" height="2" fill="#2a2a32" />
+  <rect x="143" y="8" width="1" height="3" fill="#2e2e38" />
+
+  <!-- ══ The faerzress lantern: the key light ══ -->
+  <rect x="14" y="7" width="6" height="1" fill="#241f30" />
+  <rect x="19" y="8" width="1" height="2" fill="#241f30" />
+  <rect x="16" y="10" width="7" height="10" fill="#14111a" />
+  <rect x="16" y="10" width="7" height="1" fill="#2f2840" />
+  <rect x="16" y="19" width="7" height="1" fill="#1e1a28" />
+  <rect x="17" y="15" width="5" height="4" fill="#2a1e54" />
+  <rect x="17" y="13" width="5" height="2" fill="#3d2c78" />
+  <rect x="18" y="11" width="3" height="2" fill="#5a44a8" />
+  <rect x="19" y="12" width="1" height="5" fill="#a48ef0" />
+  <rect x="18" y="14" width="3" height="2" fill="#7a5fd0" />
+  <rect x="17" y="10" width="1" height="10" fill="#14111a" />
+  <rect x="21" y="10" width="1" height="10" fill="#14111a" />
+  <!-- faerzress motes drifting off the flame -->
+  <rect x="25" y="12" width="1" height="1" fill="#5a44a8" opacity="0.8" />
+  <rect x="29" y="18" width="1" height="1" fill="#3d2c78" opacity="0.7" />
+  <rect x="23" y="23" width="1" height="1" fill="#2a1e54" opacity="0.6" />
+  <rect x="-12" y="-14" width="76" height="62" fill="url(#c4c-lantern-halo)" />
+
+  <!-- ══ NEAR FLOOR (y66-84): fitted basalt flags ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#08070d" />
+  <rect x="0" y="66" width="160" height="1" fill="#050409" />
+  <!-- far flag row -->
+  <rect x="1" y="67" width="13" height="4" fill="#221d2c" />
+  <rect x="15" y="67" width="11" height="4" fill="#2a2438" />
+  <rect x="27" y="67" width="13" height="4" fill="#221d2c" />
+  <rect x="41" y="67" width="12" height="4" fill="#1b1724" />
+  <rect x="54" y="67" width="13" height="4" fill="#171420" />
+  <rect x="68" y="67" width="12" height="4" fill="#14111a" />
+  <rect x="81" y="67" width="13" height="4" fill="#12101a" />
+  <rect x="95" y="67" width="12" height="4" fill="#100e16" />
+  <rect x="108" y="67" width="13" height="4" fill="#0e0c14" />
+  <rect x="122" y="67" width="12" height="4" fill="#0c0b12" />
+  <rect x="135" y="67" width="12" height="4" fill="#0e0c14" />
+  <rect x="148" y="67" width="11" height="4" fill="#0b0a10" />
+  <rect x="15" y="67" width="11" height="1" fill="#342c44" />
+  <rect x="1" y="67" width="13" height="1" fill="#2f2840" />
+  <rect x="27" y="67" width="13" height="1" fill="#2a2438" />
+  <!-- mid flag row -->
+  <rect x="0" y="72" width="15" height="5" fill="#1b1724" />
+  <rect x="16" y="72" width="14" height="5" fill="#221d2c" />
+  <rect x="31" y="72" width="15" height="5" fill="#1e1a28" />
+  <rect x="47" y="72" width="14" height="5" fill="#1b1724" />
+  <rect x="62" y="72" width="15" height="5" fill="#161320" />
+  <rect x="78" y="72" width="14" height="5" fill="#13111b" />
+  <rect x="93" y="72" width="15" height="5" fill="#100e16" />
+  <rect x="109" y="72" width="14" height="5" fill="#0e0c14" />
+  <rect x="124" y="72" width="15" height="5" fill="#0c0b12" />
+  <rect x="140" y="72" width="19" height="5" fill="#0b0a10" />
+  <rect x="16" y="72" width="14" height="1" fill="#2f2840" />
+  <rect x="31" y="72" width="15" height="1" fill="#2a2438" />
+  <!-- near flag row -->
+  <rect x="0" y="78" width="19" height="6" fill="#221d2c" />
+  <rect x="20" y="78" width="17" height="6" fill="#2a2438" />
+  <rect x="38" y="78" width="18" height="6" fill="#221d2c" />
+  <rect x="57" y="78" width="17" height="6" fill="#1b1724" />
+  <rect x="75" y="78" width="18" height="6" fill="#171420" />
+  <rect x="94" y="78" width="17" height="6" fill="#12101a" />
+  <rect x="112" y="78" width="18" height="6" fill="#0e0c14" />
+  <rect x="131" y="78" width="28" height="6" fill="#0c0b12" />
+  <rect x="20" y="78" width="17" height="1" fill="#342c44" />
+  <rect x="0" y="78" width="19" height="1" fill="#2f2840" />
+  <!-- cracks + a vein of faerzress dying out in the stone -->
+  <rect x="48" y="74" width="1" height="3" fill="#0a0911" />
+  <rect x="49" y="76" width="2" height="1" fill="#0a0911" />
+  <rect x="34" y="70" width="2" height="1" fill="#1a1234" />
+  <rect x="37" y="71" width="2" height="1" fill="#1a1234" />
+  <rect x="40" y="72" width="1" height="1" fill="#2a1e54" />
+  <!-- a dropped quarrel by the hero's ground -->
+  <rect x="30" y="76" width="5" height="1" fill="#241f30" />
+  <rect x="35" y="76" width="1" height="1" fill="#4e4e5a" />
+  <rect x="29" y="75" width="1" height="1" fill="#3f100c" />
+  <!-- web skein dragged along the right flags -->
+  <rect x="118" y="74" width="6" height="1" fill="#22222a" />
+  <rect x="122" y="75" width="5" height="1" fill="#2a2a32" />
+  <rect x="126" y="73" width="4" height="1" fill="#22222a" />
+  <!-- the cold fungi cluster, crossing the seam in the dark corner -->
+  <rect x="144" y="64" width="4" height="2" fill="#0c1c20" />
+  <rect x="146" y="65" width="4" height="2" fill="#14303a" />
+  <rect x="148" y="63" width="2" height="2" fill="#14303a" />
+  <rect x="149" y="64" width="1" height="1" fill="#1f4a56" />
+  <rect x="147" y="66" width="1" height="1" fill="#2e6e80" />
+  <rect x="151" y="66" width="2" height="1" fill="#0c1c20" />
+  <rect x="150" y="62" width="1" height="1" fill="#1f4a56" opacity="0.9" />
+  <rect x="134" y="56" width="28" height="20" fill="url(#c4c-fungi-glow)" />
+  <!-- lantern light pooling on the flags -->
+  <rect x="-8" y="60" width="64" height="22" fill="url(#c4c-floor-pool)" />
+</svg>
