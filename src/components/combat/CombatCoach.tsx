@@ -22,7 +22,7 @@ export interface CombatIntroGate {
   hasReincarnated: boolean;
   seenTutorials: string[];
   classId: ClassId;
-  scene: 'combat' | 'boss';
+  scene: 'combat' | 'elite' | 'boss';
 }
 
 /**

@@ -307,7 +307,8 @@ function DelveScreenBody() {
         <CombatScreen
           character={character}
           state={combat}
-          scene={isBossRoom ? 'boss' : 'combat'}
+          scene={isBossRoom ? 'boss' : isEliteRoom ? 'elite' : 'combat'}
+          chapter={room.chapter ?? 0}
           decoration={decorationForRoom(room, delve.chapterId)}
           roomTitle={lr(room.chapter, room.title).toUpperCase()}
           roomLabel={`${isBossRoom ? t('delve.screen.bossPrefix') : isEliteRoom ? t('delve.screen.elitePrefix') : ''}${t('delve.screen.round', { n: combat.round })}`}

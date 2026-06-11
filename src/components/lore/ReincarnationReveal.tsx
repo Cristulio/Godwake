@@ -25,6 +25,11 @@ export function ReincarnationReveal() {
   const lastSfxCountRef = useRef(0);
   const overlayRef = useInputBlock<HTMLDivElement>();
 
+  // The rebirth sting — once, as the reveal opens.
+  useEffect(() => {
+    playSfx('reincarnation_sting');
+  }, []);
+
   // Typewriter for the headline, with hold-to-speed.
   useEffect(() => {
     if (headlineDone) return;

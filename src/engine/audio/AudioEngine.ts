@@ -15,13 +15,21 @@
 
 type SfxRenderer = (ctx: AudioContext, out: AudioNode, now: number) => void;
 
+/**
+ * Handle a music builder returns. `setIntensity` is optional: themes that
+ * layer up (boss fights) expose it so phase changes can raise the arrangement
+ * mid-track without restarting it.
+ */
+type MusicHandle = { stop: () => void; setIntensity?: (level: number) => void };
+
 class _AudioEngine {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
   private sfxBus: GainNode | null = null;
   private musicBus: GainNode | null = null;
-  private musicNodes: { stop: () => void } | null = null;
+  private musicNodes: MusicHandle | null = null;
   private currentMusicId: string | null = null;
+  private musicIntensity = 0;
   private autoResumeAttached = false;
 
   // Current store-driven values; the store calls setVolumes on change.
@@ -120,7 +128,7 @@ class _AudioEngine {
    */
   playMusic(
     id: string,
-    build: (ctx: AudioContext, out: AudioNode) => { stop: () => void },
+    build: (ctx: AudioContext, out: AudioNode) => MusicHandle,
   ) {
     const ctx = this.ensureContext();
     if (!ctx || !this.musicBus) return;
@@ -138,6 +146,7 @@ class _AudioEngine {
     const now = ctx.currentTime;
     trackGain.gain.linearRampToValueAtTime(1, now + 0.8);
     this.musicNodes = {
+      setIntensity: handle.setIntensity?.bind(handle),
       stop: () => {
         try {
           const t = ctx.currentTime;
@@ -170,6 +179,22 @@ class _AudioEngine {
       this.musicNodes = null;
     }
     this.currentMusicId = null;
+    this.musicIntensity = 0;
+  }
+
+  /** Set the current track's arrangement intensity (no-op for flat themes). */
+  setMusicIntensity(level: number) {
+    this.musicIntensity = level;
+    try {
+      this.musicNodes?.setIntensity?.(level);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  /** Raise intensity one step — wired to boss phase transitions. */
+  bumpMusicIntensity() {
+    this.setMusicIntensity(this.musicIntensity + 1);
   }
 
   currentMusic(): string | null {

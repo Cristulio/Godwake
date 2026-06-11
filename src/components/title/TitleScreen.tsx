@@ -29,9 +29,9 @@ export function TitleScreen() {
     return () => clearTimeout(t);
   }, []);
 
-  // The title shares the hub theme — same wistful bed the soul rests in.
+  // The lonely title statement of the Godwake motif.
   useEffect(() => {
-    playMusic('hub_theme');
+    playMusic('title_theme');
     return () => {
       stopMusic();
     };
