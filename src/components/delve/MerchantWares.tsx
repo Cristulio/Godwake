@@ -5,7 +5,7 @@ import type { Character } from '../../types/character';
 import { Button } from '../ui/Button';
 import { getItem } from '../../content/items';
 import { getLegendary } from '../../content/legendaries';
-import { armorEquipWarning, equipDenialReason, slotForItem } from '../../engine/character/equip';
+import { armorEquipWarning, equipDenialReason, equippedRefsForItemSlot } from '../../engine/character/equip';
 import { rolledItemCost } from '../../engine/items';
 import { GEAR_RARITY_COLOR } from '../inventory/rarity';
 import { ItemTooltip } from '../inventory/ItemTooltip';
@@ -59,17 +59,9 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
   const denial = character ? equipDenialReason(character, stock.ref.itemId) : null;
   // Compare-on-hover: the item(s) already worn in this buy item's slot (desktop
   // only). Rings are a PAIR of slots — show BOTH worn rings, not just one.
-  const slot = character ? slotForItem(stock.ref.itemId) : null;
-  const equippedRefs: ItemRef[] =
-    character && slot
-      ? slot === 'ring1'
-        ? [character.equipped.ring1, character.equipped.ring2].filter(
-            (r): r is ItemRef => r != null,
-          )
-        : character.equipped[slot]
-          ? [character.equipped[slot] as ItemRef]
-          : []
-      : [];
+  const equippedRefs: ItemRef[] = character
+    ? equippedRefsForItemSlot(character, stock.ref.itemId)
+    : [];
   function showCompare() {
     const el = rowRef.current;
     if (!el || equippedRefs.length === 0) return;

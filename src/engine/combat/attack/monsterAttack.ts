@@ -1254,7 +1254,14 @@ function monsterCastDebuff(
     }),
   });
 
-  if (!save.success) {
+  // Antitoxin / Iron Stomach: a body immune to poison damage shrugs the
+  // POISONED sickness too — the venom never takes hold at all.
+  const poisonShrugged =
+    action.condition === 'poisoned' &&
+    (characterQuirkMods(nextCharacter).poisonImmune === true ||
+      nextCharacter.poisonImmuneEncounter === true);
+
+  if (!save.success && !poisonShrugged) {
     nextCharacter = applyPlayerCondition(nextCharacter, {
       name: action.condition,
       rounds: action.durationRounds,

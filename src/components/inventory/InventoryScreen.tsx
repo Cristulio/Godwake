@@ -11,6 +11,7 @@ import {
   equippedInventoryIndices,
   type EquipSlot,
   armorEquipWarning,
+  equippedRefsForItemSlot,
 } from '../../engine/character/equip';
 import { rolledItemCost } from '../../engine/items/rollItem';
 import type { Item, ItemRef } from '../../schemas/item';
@@ -436,6 +437,20 @@ export function InventoryScreen() {
                             }
                             hint={hint}
                           />
+                          {/* Compare-with-equipped (the shop's hover, owner-asked for
+                              the backpack too): what you'd be replacing, both rings. */}
+                          {!equipped &&
+                            character &&
+                            equippedRefsForItemSlot(character, ref.itemId).map((eref, ei) => (
+                              <div className="mt-1" key={`${eref.itemId}-${ei}`}>
+                                <ItemTooltip
+                                  item={getItem(eref.itemId)}
+                                  rolled={eref.rolled}
+                                  rolledCost={rolledItemCost(eref)}
+                                  hint={t('delve.wares.currentlyEquipped')}
+                                />
+                              </div>
+                            ))}
                         </div>
                       )}
                       <div className="md:hidden shrink-0">
