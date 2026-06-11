@@ -1,0 +1,233 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch3-event — Glassreach, the reading room: the calm corner of the
+       asylum (events + rest). Tall shelves of confiscated grimoires, a
+       lectern with one book left open, papers nobody will refile. Key
+       light: pale moonlight through the high barred window upper-LEFT,
+       falling as dithered rays; the lectern candle answers in warm.
+       Event banners crop to roughly y28-54 — the rays, candle and open
+       book all cross that band. Floor seam y66. Cool ramps: plaster
+       #131614 #181c19 #1e2420; shelf wood #120d08 #1a140c #241710
+       #2a1c12; moonlight #2a3a42 #3d5560 #5a7d8a; paper #262622 #2e2e28
+       #3a382c; candle #a33d1e #e8743a #ffb347 #ffe9a8. -->
+  <defs>
+    <radialGradient id="c3v-moon-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#8aacbe" stop-opacity="0.20" />
+      <stop offset="50%" stop-color="#6a8a9a" stop-opacity="0.09" />
+      <stop offset="100%" stop-color="#6a8a9a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c3v-candle-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="c3v-ray" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#8aacbe" stop-opacity="0.28" />
+      <stop offset="70%" stop-color="#7a9aac" stop-opacity="0.09" />
+      <stop offset="100%" stop-color="#7a9aac" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- ══ FAR: cold plaster, far from the wards ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0e100e" />
+  <rect x="0" y="0" width="160" height="4" fill="#080a08" />
+  <rect x="0" y="4" width="160" height="1" fill="#161814" />
+  <rect x="16" y="5" width="22" height="11" fill="#1e2420" />
+  <rect x="38" y="5" width="24" height="11" fill="#181c19" />
+  <rect x="62" y="5" width="22" height="11" fill="#1e2420" />
+  <rect x="84" y="5" width="26" height="11" fill="#161a18" />
+  <rect x="110" y="5" width="24" height="11" fill="#131614" />
+  <rect x="16" y="5" width="22" height="1" fill="#2a3430" />
+  <rect x="16" y="16" width="20" height="12" fill="#181c19" />
+  <rect x="36" y="16" width="26" height="12" fill="#1e2420" />
+  <rect x="62" y="16" width="20" height="12" fill="#161a18" />
+  <rect x="82" y="16" width="28" height="12" fill="#131614" />
+  <rect x="110" y="16" width="24" height="12" fill="#10130f" />
+  <rect x="36" y="16" width="26" height="1" fill="#222a26" />
+  <rect x="16" y="28" width="26" height="12" fill="#1a1f1c" />
+  <rect x="42" y="28" width="20" height="12" fill="#161a18" />
+  <rect x="62" y="28" width="24" height="12" fill="#181c19" />
+  <rect x="86" y="28" width="24" height="12" fill="#10130f" />
+  <rect x="110" y="28" width="24" height="12" fill="#131614" />
+  <!-- the rail + quiet lower wall behind the lectern -->
+  <rect x="16" y="40" width="118" height="1" fill="#0c0d0a" />
+  <rect x="16" y="41" width="60" height="25" fill="#161a18" />
+  <rect x="76" y="41" width="58" height="25" fill="#121514" />
+  <rect x="30" y="41" width="1" height="25" fill="#121514" />
+  <rect x="60" y="41" width="1" height="25" fill="#121514" />
+  <rect x="92" y="41" width="1" height="25" fill="#0f1110" />
+  <rect x="112" y="41" width="1" height="25" fill="#0f1110" />
+  <rect x="16" y="53" width="60" height="1" fill="#121514" />
+  <rect x="76" y="53" width="58" height="1" fill="#0f1110" />
+  <!-- plaster cracks + damp -->
+  <rect x="68" y="8" width="1" height="3" fill="#11120d" />
+  <rect x="69" y="11" width="1" height="2" fill="#11120d" />
+  <rect x="98" y="18" width="1" height="9" fill="#0d100e" />
+
+  <!-- ══ The high barred window + moon shaft (the key) ══ -->
+  <rect x="18" y="5" width="13" height="9" fill="#2a3a42" />
+  <rect x="18" y="5" width="13" height="1" fill="#3d5560" />
+  <rect x="19" y="6" width="3" height="2" fill="#5a7d8a" />
+  <rect x="25" y="6" width="3" height="3" fill="#3d5560" />
+  <rect x="21" y="5" width="1" height="9" fill="#121518" />
+  <rect x="24" y="5" width="1" height="9" fill="#121518" />
+  <rect x="27" y="5" width="1" height="9" fill="#121518" />
+  <rect x="18" y="9" width="13" height="1" fill="#121518" />
+  <rect x="17" y="5" width="1" height="10" fill="#0c0e10" />
+  <rect x="31" y="5" width="1" height="10" fill="#0c0e10" />
+  <rect x="18" y="14" width="13" height="1" fill="#0c0e10" />
+  <!-- dithered rays falling toward the lectern -->
+  <polygon points="18,14 31,14 56,60 34,60" fill="url(#c3v-ray)" />
+  <rect x="26" y="16" width="2" height="2" fill="#22303a" opacity="0.55" />
+  <rect x="30" y="22" width="2" height="2" fill="#1d2a32" opacity="0.5" />
+  <rect x="34" y="29" width="2" height="2" fill="#22303a" opacity="0.45" />
+  <rect x="38" y="36" width="2" height="2" fill="#1d2a32" opacity="0.4" />
+  <rect x="43" y="44" width="2" height="2" fill="#1a252c" opacity="0.4" />
+  <rect x="29" y="18" width="1" height="1" fill="#2c3c46" opacity="0.6" />
+  <rect x="36" y="26" width="1" height="1" fill="#2c3c46" opacity="0.5" />
+  <rect x="41" y="38" width="1" height="1" fill="#243038" opacity="0.45" />
+  <rect x="0" y="-6" width="64" height="56" fill="url(#c3v-moon-glow)" />
+  <!-- dust motes drifting in the shaft -->
+  <rect x="33" y="20" width="1" height="1" fill="#46606c" opacity="0.7" />
+  <rect x="39" y="31" width="1" height="1" fill="#3d5560" opacity="0.6" />
+  <rect x="45" y="42" width="1" height="1" fill="#34464f" opacity="0.5" />
+
+  <!-- ══ Left shelf wall (x0-15): confiscated grimoires ══ -->
+  <rect x="0" y="0" width="16" height="66" fill="#120d08" />
+  <rect x="15" y="0" width="1" height="66" fill="#1a140c" />
+  <rect x="0" y="7" width="15" height="1" fill="#241710" />
+  <rect x="0" y="17" width="15" height="1" fill="#241710" />
+  <rect x="0" y="27" width="15" height="1" fill="#241710" />
+  <rect x="0" y="37" width="15" height="1" fill="#241710" />
+  <rect x="0" y="47" width="15" height="1" fill="#1d130c" />
+  <rect x="0" y="57" width="15" height="1" fill="#1d130c" />
+  <!-- spines, the shaft-side row catching pale -->
+  <rect x="1" y="8" width="3" height="9" fill="#2a1c12" />
+  <rect x="5" y="9" width="2" height="8" fill="#1c2220" />
+  <rect x="8" y="8" width="3" height="9" fill="#241710" />
+  <rect x="12" y="10" width="2" height="7" fill="#233028" />
+  <rect x="12" y="10" width="2" height="1" fill="#33453a" />
+  <rect x="1" y="18" width="2" height="9" fill="#233028" />
+  <rect x="4" y="19" width="3" height="8" fill="#241710" />
+  <rect x="8" y="18" width="2" height="9" fill="#2a1c12" />
+  <rect x="11" y="20" width="3" height="7" fill="#1a140c" />
+  <rect x="11" y="20" width="3" height="1" fill="#2c241a" />
+  <rect x="1" y="28" width="3" height="9" fill="#1c2220" />
+  <rect x="5" y="29" width="2" height="8" fill="#2a1c12" />
+  <rect x="8" y="28" width="3" height="9" fill="#1a140c" />
+  <rect x="12" y="28" width="2" height="9" fill="#241710" />
+  <rect x="1" y="38" width="2" height="9" fill="#241710" />
+  <rect x="4" y="38" width="3" height="9" fill="#1a140c" />
+  <rect x="8" y="39" width="2" height="8" fill="#1c2220" />
+  <rect x="11" y="38" width="3" height="9" fill="#120d08" />
+  <rect x="1" y="48" width="3" height="9" fill="#1a140c" />
+  <rect x="5" y="48" width="2" height="9" fill="#120d08" />
+  <rect x="8" y="48" width="3" height="9" fill="#241710" />
+  <rect x="1" y="58" width="13" height="8" fill="#0e0a06" />
+  <!-- one book pulled half out, never pushed back -->
+  <rect x="11" y="36" width="4" height="2" fill="#2c241a" />
+
+  <!-- ══ Right shelf wall (x134-160): the dark stacks ══ -->
+  <rect x="134" y="0" width="26" height="66" fill="#0c0906" />
+  <rect x="134" y="0" width="1" height="66" fill="#140e09" />
+  <rect x="135" y="9" width="25" height="1" fill="#170f0a" />
+  <rect x="135" y="20" width="25" height="1" fill="#170f0a" />
+  <rect x="135" y="31" width="25" height="1" fill="#170f0a" />
+  <rect x="135" y="42" width="25" height="1" fill="#120c08" />
+  <rect x="135" y="53" width="25" height="1" fill="#120c08" />
+  <rect x="136" y="10" width="3" height="10" fill="#11120d" />
+  <rect x="140" y="11" width="2" height="9" fill="#15100a" />
+  <rect x="143" y="10" width="3" height="10" fill="#0e1210" />
+  <rect x="147" y="12" width="2" height="8" fill="#11120d" />
+  <rect x="150" y="10" width="3" height="10" fill="#0e0a06" />
+  <rect x="136" y="21" width="2" height="10" fill="#15100a" />
+  <rect x="139" y="22" width="3" height="9" fill="#0e1210" />
+  <rect x="143" y="21" width="2" height="10" fill="#11120d" />
+  <rect x="146" y="23" width="3" height="8" fill="#0e0a06" />
+  <rect x="150" y="21" width="2" height="10" fill="#15100a" />
+  <rect x="136" y="32" width="3" height="10" fill="#0e1210" />
+  <rect x="140" y="33" width="2" height="9" fill="#11120d" />
+  <rect x="143" y="32" width="3" height="10" fill="#15100a" />
+  <rect x="147" y="34" width="2" height="8" fill="#0e0a06" />
+  <rect x="136" y="43" width="2" height="10" fill="#11120d" />
+  <rect x="139" y="43" width="3" height="10" fill="#0e0a06" />
+  <rect x="143" y="44" width="2" height="9" fill="#0e1210" />
+  <rect x="135" y="54" width="25" height="12" fill="#0a0805" />
+  <!-- a gap where one book was taken and the row leant into it -->
+  <rect x="146" y="33" width="3" height="2" fill="#070503" />
+  <rect x="149" y="32" width="1" height="10" fill="#0c0a07" />
+
+  <!-- ══ The lectern, the open book, the candle (the focal) ══ -->
+  <rect x="42" y="38" width="14" height="3" fill="#241710" />
+  <rect x="42" y="38" width="14" height="1" fill="#322015" />
+  <rect x="44" y="41" width="10" height="2" fill="#1a140c" />
+  <rect x="47" y="43" width="4" height="16" fill="#1a140c" />
+  <rect x="47" y="43" width="1" height="16" fill="#241710" />
+  <rect x="44" y="59" width="10" height="2" fill="#120d08" />
+  <!-- the open book -->
+  <rect x="43" y="36" width="6" height="2" fill="#34322a" />
+  <rect x="49" y="36" width="6" height="2" fill="#2c2a22" />
+  <rect x="48" y="36" width="1" height="2" fill="#1d1b14" />
+  <rect x="43" y="35" width="5" height="1" fill="#3a382c" />
+  <rect x="50" y="35" width="4" height="1" fill="#34322a" />
+  <!-- the candle beside it -->
+  <rect x="57" y="34" width="3" height="4" fill="#3a382c" />
+  <rect x="57" y="38" width="3" height="1" fill="#262622" />
+  <rect x="58" y="31" width="1" height="3" fill="#ffe9a8" />
+  <rect x="57" y="29" width="3" height="3" fill="#ffb347" />
+  <rect x="58" y="28" width="1" height="1" fill="#e8743a" />
+  <rect x="60" y="33" width="1" height="1" fill="#e8743a" opacity="0.8" />
+  <rect x="40" y="14" width="38" height="40" fill="url(#c3v-candle-glow)" />
+  <!-- wax run down the lectern edge -->
+  <rect x="57" y="35" width="1" height="3" fill="#44423a" />
+
+  <!-- ══ The overturned chair in the dark half ══ -->
+  <rect x="94" y="58" width="14" height="2" fill="#1a140c" />
+  <rect x="94" y="60" width="2" height="4" fill="#15100a" />
+  <rect x="100" y="60" width="2" height="4" fill="#120d08" />
+  <rect x="106" y="56" width="2" height="8" fill="#15100a" />
+  <rect x="96" y="56" width="8" height="2" fill="#120d08" />
+  <rect x="94" y="58" width="6" height="1" fill="#241710" />
+
+  <!-- ══ NEAR FLOOR (y66-84): boards, drifted papers ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0b0a08" />
+  <rect x="0" y="66" width="160" height="1" fill="#060505" />
+  <!-- floorboards, long runs -->
+  <rect x="0" y="67" width="34" height="4" fill="#221a10" />
+  <rect x="35" y="67" width="30" height="4" fill="#281e13" />
+  <rect x="66" y="67" width="28" height="4" fill="#1d160d" />
+  <rect x="95" y="67" width="30" height="4" fill="#171108" />
+  <rect x="126" y="67" width="33" height="4" fill="#120d08" />
+  <rect x="35" y="67" width="30" height="1" fill="#3a2c1c" />
+  <rect x="0" y="67" width="34" height="1" fill="#33271a" />
+  <rect x="0" y="72" width="28" height="5" fill="#281e13" />
+  <rect x="29" y="72" width="32" height="5" fill="#221a10" />
+  <rect x="62" y="72" width="30" height="5" fill="#1a130b" />
+  <rect x="93" y="72" width="28" height="5" fill="#140f08" />
+  <rect x="122" y="72" width="37" height="5" fill="#100c06" />
+  <rect x="29" y="72" width="32" height="1" fill="#33271a" />
+  <rect x="0" y="78" width="32" height="6" fill="#2c2115" />
+  <rect x="33" y="78" width="28" height="6" fill="#241b10" />
+  <rect x="62" y="78" width="32" height="6" fill="#1d160d" />
+  <rect x="95" y="78" width="26" height="6" fill="#161009" />
+  <rect x="122" y="78" width="37" height="6" fill="#110d07" />
+  <rect x="0" y="78" width="32" height="1" fill="#3a2c1c" />
+  <!-- board joints -->
+  <rect x="50" y="72" width="1" height="5" fill="#110d07" />
+  <rect x="78" y="78" width="1" height="6" fill="#110d07" />
+  <rect x="108" y="67" width="1" height="4" fill="#0e0a05" />
+  <!-- papers drifted where the draught leaves them -->
+  <rect x="36" y="70" width="5" height="2" fill="#262622" />
+  <rect x="37" y="69" width="3" height="1" fill="#2e2e28" />
+  <rect x="42" y="71" width="4" height="2" fill="#222220" />
+  <rect x="58" y="74" width="5" height="2" fill="#262622" />
+  <rect x="60" y="73" width="2" height="1" fill="#2e2e28" />
+  <rect x="52" y="79" width="4" height="2" fill="#2a2a26" />
+  <rect x="66" y="80" width="5" height="2" fill="#222220" />
+  <rect x="84" y="76" width="4" height="2" fill="#1d1d1a" />
+  <rect x="98" y="80" width="4" height="2" fill="#191917" />
+  <!-- a line of ink where the bottle rolled, and the bottle -->
+  <rect x="74" y="72" width="8" height="1" fill="#0a0d10" />
+  <rect x="82" y="73" width="3" height="2" fill="#10141a" />
+  <rect x="82" y="72" width="2" height="1" fill="#1a2026" />
+  <!-- moonlight pooling under the shaft -->
+  <rect x="26" y="56" width="34" height="26" fill="url(#c3v-moon-glow)" />
+</svg>

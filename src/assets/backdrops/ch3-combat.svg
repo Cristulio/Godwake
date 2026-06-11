@@ -1,0 +1,286 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch3-combat — Glassreach, a ward corridor: the mage-asylum's cell block.
+       Institutional plaster over a glazed-tile wainscot, iron-banded ward
+       doors, and the biome signature: a warded observation window glowing
+       sigil-teal. One cell door hangs ajar. Key light: caged wall-lamp
+       upper-LEFT; the right side falls to a sickly green-grey cold.
+       Quiet mid band y38-63 (wainscot tile, two values per zone); floor
+       seam y66 (wainscot base shadow), tiled floor y66-84 with the drain.
+       Ramps — plaster lit: #201c12 #2a2517 #342e1d #3e3724 (+#4c4430 edge);
+       plaster cool: #131614 #181c19 #1e2420; wainscot lit: #242218 #2c2a1e;
+       wainscot cool: #161a18 #1c2220; iron: #0b0907 #16120d #211b13 #2d2519;
+       ward-glass: #0e2620 #1a4438 #2a6a56 (+#3f9a7a core); chalk: #4a4a3e;
+       lamp: #a33d1e #e8743a #ffb347 #ffe9a8. -->
+  <defs>
+    <radialGradient id="c3c-lamp-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.30" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c3c-ward-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#2a6a56" stop-opacity="0.20" />
+      <stop offset="100%" stop-color="#2a6a56" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c3c-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: base, ceiling, cool right zone ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#100f0b" />
+  <rect x="100" y="0" width="60" height="66" fill="#0e1210" />
+  <rect x="0" y="0" width="160" height="4" fill="#0a0906" />
+  <rect x="0" y="4" width="160" height="1" fill="#1a1812" />
+  <rect x="70" y="3" width="26" height="1" fill="#060504" />
+
+  <!-- ══ Upper plaster (y5-39): broad institutional panels, damp-patched ══ -->
+  <rect x="0" y="5" width="26" height="12" fill="#2a2517" />
+  <rect x="26" y="5" width="23" height="12" fill="#342e1d" />
+  <rect x="79" y="5" width="14" height="12" fill="#201c12" />
+  <rect x="93" y="5" width="14" height="12" fill="#181c19" />
+  <rect x="107" y="5" width="28" height="12" fill="#131614" />
+  <rect x="135" y="5" width="25" height="12" fill="#181c19" />
+  <rect x="26" y="5" width="23" height="1" fill="#4c4430" />
+  <rect x="0" y="5" width="26" height="1" fill="#3e3724" />
+  <rect x="0" y="17" width="20" height="11" fill="#342e1d" />
+  <rect x="20" y="17" width="14" height="11" fill="#2a2517" />
+  <rect x="34" y="17" width="15" height="11" fill="#2a2517" />
+  <rect x="79" y="17" width="16" height="11" fill="#1c1913" />
+  <rect x="95" y="17" width="12" height="11" fill="#131614" />
+  <rect x="135" y="17" width="13" height="11" fill="#1e2420" />
+  <rect x="148" y="17" width="12" height="11" fill="#131614" />
+  <rect x="20" y="17" width="14" height="1" fill="#3e3724" />
+  <rect x="0" y="28" width="16" height="11" fill="#2a2517" />
+  <rect x="16" y="28" width="18" height="11" fill="#342e1d" />
+  <rect x="34" y="28" width="15" height="11" fill="#241f14" />
+  <rect x="79" y="28" width="13" height="11" fill="#181c19" />
+  <rect x="92" y="28" width="15" height="11" fill="#10130f" />
+  <rect x="135" y="28" width="25" height="11" fill="#161a18" />
+  <rect x="16" y="28" width="18" height="1" fill="#3e3724" />
+
+  <!-- damp streaks weeping from the cornice (upper wall only) -->
+  <rect x="8" y="5" width="1" height="9" fill="#201c12" />
+  <rect x="45" y="5" width="1" height="13" fill="#241f14" />
+  <rect x="46" y="5" width="1" height="7" fill="#241f14" />
+  <rect x="101" y="5" width="2" height="16" fill="#0d100e" />
+  <rect x="102" y="21" width="1" height="9" fill="#0d100e" />
+  <rect x="140" y="5" width="1" height="11" fill="#10130f" />
+  <!-- hairline plaster cracks -->
+  <rect x="31" y="9" width="1" height="3" fill="#1c1812" />
+  <rect x="32" y="12" width="1" height="2" fill="#1c1812" />
+  <rect x="86" y="12" width="1" height="3" fill="#11120d" />
+  <rect x="85" y="15" width="1" height="2" fill="#11120d" />
+  <rect x="146" y="22" width="1" height="3" fill="#0e110f" />
+
+  <!-- the reciting prisoner's three chalk sigils, and a fourth unfinished -->
+  <rect x="37" y="20" width="3" height="1" fill="#4a4a3e" />
+  <rect x="37" y="21" width="1" height="3" fill="#4a4a3e" />
+  <rect x="39" y="21" width="1" height="2" fill="#4a4a3e" />
+  <rect x="38" y="23" width="2" height="1" fill="#4a4a3e" />
+  <rect x="42" y="20" width="3" height="1" fill="#4a4a3e" />
+  <rect x="42" y="21" width="1" height="3" fill="#4a4a3e" />
+  <rect x="44" y="21" width="1" height="2" fill="#4a4a3e" />
+  <rect x="43" y="23" width="2" height="1" fill="#4a4a3e" />
+  <rect x="37" y="26" width="3" height="1" fill="#42423a" />
+  <rect x="37" y="27" width="1" height="3" fill="#42423a" />
+  <rect x="39" y="27" width="1" height="2" fill="#42423a" />
+  <rect x="38" y="29" width="2" height="1" fill="#42423a" />
+  <rect x="42" y="26" width="2" height="1" fill="#38382e" />
+  <rect x="42" y="27" width="1" height="2" fill="#38382e" />
+
+  <!-- ══ Picture rail + wainscot (y40-65): the quiet mid band ══ -->
+  <rect x="0" y="40" width="160" height="1" fill="#0d0c09" />
+  <rect x="0" y="41" width="49" height="25" fill="#242218" />
+  <rect x="79" y="41" width="31" height="25" fill="#1c2220" />
+  <rect x="135" y="41" width="25" height="25" fill="#161a18" />
+  <!-- tile course line + sparse vertical joints, one ramp step off the field -->
+  <rect x="0" y="53" width="49" height="1" fill="#1f1d14" />
+  <rect x="79" y="53" width="31" height="1" fill="#171c1a" />
+  <rect x="135" y="53" width="25" height="1" fill="#121514" />
+  <rect x="14" y="41" width="1" height="25" fill="#1f1d14" />
+  <rect x="30" y="41" width="1" height="25" fill="#1f1d14" />
+  <rect x="44" y="41" width="1" height="25" fill="#1f1d14" />
+  <rect x="94" y="41" width="1" height="25" fill="#171c1a" />
+  <rect x="142" y="41" width="1" height="25" fill="#121514" />
+  <rect x="152" y="41" width="1" height="25" fill="#121514" />
+  <rect x="0" y="41" width="49" height="1" fill="#2c2a1e" />
+  <rect x="79" y="41" width="31" height="1" fill="#222824" />
+
+  <!-- ══ Ward door 1 (lit side): x50-78, iron-banded, hatch shut ══ -->
+  <rect x="49" y="11" width="31" height="2" fill="#211b13" />
+  <rect x="49" y="11" width="31" height="1" fill="#2d2519" />
+  <rect x="50" y="13" width="29" height="53" fill="#16120d" />
+  <rect x="50" y="13" width="2" height="53" fill="#211b13" />
+  <rect x="77" y="13" width="2" height="53" fill="#0e0b08" />
+  <!-- riveted iron bands -->
+  <rect x="50" y="20" width="29" height="3" fill="#1d1812" />
+  <rect x="50" y="20" width="29" height="1" fill="#2d2519" />
+  <rect x="52" y="21" width="1" height="1" fill="#2d2519" />
+  <rect x="63" y="21" width="1" height="1" fill="#2d2519" />
+  <rect x="75" y="21" width="1" height="1" fill="#2d2519" />
+  <rect x="50" y="36" width="29" height="3" fill="#1d1812" />
+  <rect x="50" y="36" width="29" height="1" fill="#2a2417" />
+  <rect x="52" y="37" width="1" height="1" fill="#2d2519" />
+  <rect x="63" y="37" width="1" height="1" fill="#2d2519" />
+  <rect x="75" y="37" width="1" height="1" fill="#2d2519" />
+  <rect x="50" y="52" width="29" height="3" fill="#1d1812" />
+  <rect x="52" y="53" width="1" height="1" fill="#211b13" />
+  <rect x="63" y="53" width="1" height="1" fill="#211b13" />
+  <rect x="75" y="53" width="1" height="1" fill="#211b13" />
+  <!-- observation hatch, slid shut -->
+  <rect x="59" y="25" width="11" height="6" fill="#0b0907" />
+  <rect x="60" y="26" width="9" height="4" fill="#211b13" />
+  <rect x="60" y="26" width="9" height="1" fill="#2d2519" />
+  <rect x="64" y="27" width="2" height="2" fill="#16120d" />
+  <!-- the lamp catches the door's lit edge -->
+  <rect x="50" y="13" width="1" height="10" fill="#33291a" />
+  <!-- ward sigil scratched into the lintel -->
+  <rect x="62" y="11" width="1" height="1" fill="#3f3a2a" />
+  <rect x="64" y="11" width="1" height="1" fill="#3f3a2a" />
+  <rect x="63" y="12" width="2" height="1" fill="#3f3a2a" />
+
+  <!-- ══ Warded observation window x86-104 y10-32: the sigil-teal signature ══ -->
+  <rect x="85" y="9" width="21" height="2" fill="#211b13" />
+  <rect x="85" y="9" width="21" height="1" fill="#2d2519" />
+  <rect x="85" y="32" width="21" height="2" fill="#0e0b08" />
+  <rect x="85" y="11" width="2" height="21" fill="#1a150e" />
+  <rect x="104" y="11" width="2" height="21" fill="#0e0b08" />
+  <rect x="87" y="11" width="17" height="21" fill="#0e2620" />
+  <!-- mullion cross -->
+  <rect x="94" y="11" width="2" height="21" fill="#16120d" />
+  <rect x="87" y="20" width="17" height="2" fill="#16120d" />
+  <!-- glass depth + the warding circle etched in light -->
+  <rect x="88" y="12" width="6" height="8" fill="#123028" />
+  <rect x="96" y="23" width="7" height="8" fill="#123028" />
+  <rect x="89" y="14" width="3" height="1" fill="#1a4438" />
+  <rect x="88" y="15" width="1" height="3" fill="#1a4438" />
+  <rect x="92" y="15" width="1" height="3" fill="#1a4438" />
+  <rect x="89" y="18" width="3" height="1" fill="#1a4438" />
+  <rect x="90" y="16" width="1" height="1" fill="#2a6a56" />
+  <rect x="98" y="25" width="3" height="1" fill="#1a4438" />
+  <rect x="97" y="26" width="1" height="2" fill="#1a4438" />
+  <rect x="101" y="26" width="1" height="2" fill="#1a4438" />
+  <rect x="98" y="28" width="3" height="1" fill="#1a4438" />
+  <rect x="99" y="27" width="1" height="1" fill="#3f9a7a" />
+  <rect x="97" y="13" width="2" height="1" fill="#1a4438" />
+  <rect x="90" y="24" width="1" height="2" fill="#1a4438" />
+  <!-- the ward's cold spill -->
+  <rect x="78" y="2" width="40" height="40" fill="url(#c3c-ward-glow)" />
+
+  <!-- ══ Ward door 2 (shadow side): x110-134, AJAR ══ -->
+  <rect x="109" y="11" width="27" height="2" fill="#16120d" />
+  <rect x="110" y="13" width="22" height="53" fill="#0d0b0f" />
+  <rect x="110" y="13" width="1" height="53" fill="#16131a" />
+  <rect x="110" y="21" width="22" height="2" fill="#120f13" />
+  <rect x="110" y="38" width="22" height="2" fill="#120f13" />
+  <rect x="110" y="54" width="22" height="2" fill="#0f0d11" />
+  <rect x="118" y="26" width="9" height="5" fill="#080709" />
+  <rect x="119" y="27" width="7" height="3" fill="#120f13" />
+  <!-- the gap where it stands open onto dark -->
+  <rect x="132" y="13" width="3" height="53" fill="#050403" />
+  <rect x="132" y="13" width="1" height="53" fill="#1a161c" />
+  <rect x="135" y="11" width="1" height="55" fill="#0a090c" />
+  <!-- something pale low in the opened dark -->
+  <rect x="133" y="60" width="1" height="1" fill="#2c3a30" />
+
+  <!-- ══ The caged wall-lamp: the scene's one key light ══ -->
+  <rect x="20" y="9" width="7" height="1" fill="#211b13" />
+  <rect x="21" y="10" width="5" height="11" fill="#16120d" />
+  <rect x="21" y="10" width="5" height="1" fill="#2d2519" />
+  <rect x="21" y="20" width="5" height="1" fill="#211b13" />
+  <rect x="23" y="21" width="1" height="2" fill="#0b0907" />
+  <!-- flame inside the cage -->
+  <rect x="22" y="16" width="3" height="3" fill="#a33d1e" />
+  <rect x="22" y="13" width="3" height="3" fill="#e8743a" />
+  <rect x="23" y="11" width="2" height="2" fill="#ffb347" />
+  <rect x="23" y="14" width="1" height="3" fill="#ffe9a8" />
+  <!-- cage bars cross the flame -->
+  <rect x="22" y="10" width="1" height="11" fill="#16120d" />
+  <rect x="25" y="10" width="1" height="11" fill="#16120d" />
+  <rect x="21" y="15" width="5" height="1" fill="#1d1812" />
+  <!-- soot bloom above -->
+  <rect x="22" y="6" width="3" height="3" fill="#0a0906" />
+  <rect x="23" y="5" width="2" height="1" fill="#0a0906" />
+  <!-- a moth circling the cage -->
+  <rect x="30" y="13" width="1" height="1" fill="#5c5440" opacity="0.9" />
+  <rect x="33" y="18" width="1" height="1" fill="#423a2c" opacity="0.7" />
+  <rect x="-12" y="-14" width="78" height="62" fill="url(#c3c-lamp-halo)" />
+
+  <!-- ══ NEAR FLOOR (y66-84): glazed tiles, drain, drag-gouges ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0c0b09" />
+  <rect x="0" y="66" width="160" height="1" fill="#070605" />
+  <!-- far tile row y67-71 -->
+  <rect x="1" y="67" width="12" height="4" fill="#2c2620" />
+  <rect x="14" y="67" width="12" height="4" fill="#332c22" />
+  <rect x="27" y="67" width="12" height="4" fill="#2c2620" />
+  <rect x="40" y="67" width="12" height="4" fill="#262118" />
+  <rect x="53" y="67" width="12" height="4" fill="#211d15" />
+  <rect x="66" y="67" width="12" height="4" fill="#1d1a13" />
+  <rect x="79" y="67" width="12" height="4" fill="#181712" />
+  <rect x="92" y="67" width="12" height="4" fill="#141614" />
+  <rect x="105" y="67" width="12" height="4" fill="#111413" />
+  <rect x="118" y="67" width="12" height="4" fill="#0f1211" />
+  <rect x="131" y="67" width="12" height="4" fill="#111413" />
+  <rect x="144" y="67" width="15" height="4" fill="#0e100f" />
+  <rect x="14" y="67" width="12" height="1" fill="#453d2c" />
+  <rect x="1" y="67" width="12" height="1" fill="#3a3322" />
+  <rect x="27" y="67" width="12" height="1" fill="#332c22" />
+  <!-- mid tile row y72-77 -->
+  <rect x="0" y="72" width="14" height="5" fill="#262118" />
+  <rect x="15" y="72" width="13" height="5" fill="#2c2620" />
+  <rect x="29" y="72" width="14" height="5" fill="#282318" />
+  <rect x="44" y="72" width="13" height="5" fill="#241f17" />
+  <rect x="58" y="72" width="14" height="5" fill="#1f1b14" />
+  <rect x="73" y="72" width="13" height="5" fill="#1a1813" />
+  <rect x="87" y="72" width="14" height="5" fill="#151614" />
+  <rect x="102" y="72" width="13" height="5" fill="#121413" />
+  <rect x="116" y="72" width="14" height="5" fill="#101211" />
+  <rect x="131" y="72" width="13" height="5" fill="#111413" />
+  <rect x="145" y="72" width="14" height="5" fill="#0e100f" />
+  <rect x="15" y="72" width="13" height="1" fill="#3a3322" />
+  <rect x="29" y="72" width="14" height="1" fill="#332c22" />
+  <!-- near tile row y78-84 -->
+  <rect x="0" y="78" width="17" height="6" fill="#2c2620" />
+  <rect x="18" y="78" width="16" height="6" fill="#332c22" />
+  <rect x="35" y="78" width="17" height="6" fill="#2c2620" />
+  <rect x="53" y="78" width="16" height="6" fill="#262118" />
+  <rect x="70" y="78" width="17" height="6" fill="#211d15" />
+  <rect x="88" y="78" width="16" height="6" fill="#1a1813" />
+  <rect x="105" y="78" width="17" height="6" fill="#141614" />
+  <rect x="123" y="78" width="16" height="6" fill="#111413" />
+  <rect x="140" y="78" width="19" height="6" fill="#0f1110" />
+  <rect x="18" y="78" width="16" height="1" fill="#453d2c" />
+  <rect x="0" y="78" width="17" height="1" fill="#3a3322" />
+  <rect x="35" y="78" width="17" height="1" fill="#332c22" />
+  <!-- central drain grate, fed by a dark runnel -->
+  <rect x="69" y="74" width="8" height="4" fill="#0a0808" />
+  <rect x="69" y="74" width="8" height="1" fill="#15130e" />
+  <rect x="70" y="75" width="1" height="2" fill="#040303" />
+  <rect x="72" y="75" width="1" height="2" fill="#040303" />
+  <rect x="74" y="75" width="1" height="2" fill="#040303" />
+  <rect x="64" y="72" width="5" height="1" fill="#0d0c0a" />
+  <rect x="61" y="71" width="4" height="1" fill="#0e0d0a" />
+  <!-- drag-gouges from the lit door toward the hero's ground -->
+  <rect x="44" y="70" width="9" height="1" fill="#171410" />
+  <rect x="36" y="71" width="9" height="1" fill="#181510" />
+  <rect x="28" y="72" width="9" height="1" fill="#1d1912" />
+  <rect x="46" y="72" width="6" height="1" fill="#171410" />
+  <!-- dropped restraint strap, buckle catching the lamp -->
+  <rect x="33" y="76" width="6" height="1" fill="#2a1a10" />
+  <rect x="38" y="77" width="3" height="1" fill="#241710" />
+  <rect x="32" y="77" width="2" height="1" fill="#1d130c" />
+  <rect x="37" y="76" width="1" height="1" fill="#6e7e8a" />
+  <!-- old scrubbed stain around the drain -->
+  <rect x="78" y="73" width="6" height="3" fill="#12100d" opacity="0.8" />
+  <rect x="83" y="75" width="4" height="2" fill="#12100d" opacity="0.6" />
+  <!-- a dropped page from the reading room, settled by the cool wall -->
+  <rect x="120" y="76" width="4" height="2" fill="#262622" />
+  <rect x="121" y="75" width="2" height="1" fill="#2e2e28" />
+  <rect x="121" y="76" width="2" height="1" fill="#1c1c18" />
+  <!-- cold gleam in the dark corner: a fallen key, never reached -->
+  <rect x="146" y="80" width="2" height="1" fill="#3a4a52" />
+  <rect x="148" y="79" width="1" height="1" fill="#2a3a42" />
+  <!-- lamplight pooling on the tiles -->
+  <rect x="-6" y="60" width="66" height="22" fill="url(#c3c-floor-pool)" />
+</svg>

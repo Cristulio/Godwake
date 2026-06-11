@@ -1,0 +1,273 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch4-boss — The temple of Arachne: Zhal Vasha's set piece. The
+       eight-legged sigil burns arterial red on the basalt above the
+       Matron's altar; silk-wrapped columns flank the dais, their braziers
+       carrying the violet temple-flame — the LEFT one tall (the key,
+       upper-left bias), the right banked low. Silk swags hang from the
+       dark. The component lays the boss blood-red ambience above this.
+       Quiet mid band y38-63 outside the central altar; floor seam y66;
+       the red-black runner leads in. Shares ch4 ramps (ch4-combat.svg)
+       + sigil red: #3f100c #5a1812 #7a2018 (+#a02a20 core). -->
+  <defs>
+    <radialGradient id="c4b-brazier-l" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#5a44a8" stop-opacity="0.30" />
+      <stop offset="45%" stop-color="#3d2c78" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#3d2c78" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c4b-brazier-r" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#5a44a8" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#3d2c78" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c4b-sigil-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#a02a20" stop-opacity="0.20" />
+      <stop offset="55%" stop-color="#5a1812" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#5a1812" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c4b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#5a44a8" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#5a44a8" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: temple wall, great basalt courses ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0d0b12" />
+  <rect x="104" y="0" width="56" height="66" fill="#0a0a10" />
+  <rect x="0" y="0" width="160" height="4" fill="#07060a" />
+  <rect x="0" y="4" width="160" height="1" fill="#12101a" />
+  <rect x="0" y="5" width="24" height="12" fill="#1b1724" />
+  <rect x="25" y="5" width="28" height="12" fill="#241f30" />
+  <rect x="54" y="5" width="24" height="12" fill="#1b1724" />
+  <rect x="79" y="5" width="25" height="12" fill="#14111a" />
+  <rect x="104" y="5" width="26" height="12" fill="#100e16" />
+  <rect x="131" y="5" width="29" height="12" fill="#14111a" />
+  <rect x="25" y="5" width="28" height="1" fill="#2f2840" />
+  <rect x="0" y="5" width="24" height="1" fill="#241f30" />
+  <rect x="0" y="18" width="20" height="13" fill="#241f30" />
+  <rect x="21" y="18" width="24" height="13" fill="#1b1724" />
+  <rect x="46" y="18" width="18" height="13" fill="#161320" />
+  <rect x="96" y="18" width="14" height="13" fill="#0e0c14" />
+  <rect x="111" y="18" width="24" height="13" fill="#100e16" />
+  <rect x="136" y="18" width="24" height="13" fill="#0e0c14" />
+  <rect x="21" y="18" width="24" height="1" fill="#2f2840" />
+  <rect x="0" y="32" width="26" height="12" fill="#1b1724" />
+  <rect x="27" y="32" width="18" height="12" fill="#161320" />
+  <rect x="100" y="32" width="18" height="12" fill="#0c0b12" />
+  <rect x="119" y="32" width="22" height="12" fill="#100e16" />
+  <rect x="142" y="32" width="18" height="12" fill="#0c0b12" />
+  <!-- old cracks -->
+  <rect x="36" y="9" width="1" height="3" fill="#100d16" />
+  <rect x="35" y="11" width="1" height="2" fill="#100d16" />
+  <rect x="122" y="10" width="1" height="3" fill="#08080e" />
+  <rect x="146" y="22" width="1" height="3" fill="#08080e" />
+
+  <!-- ══ Silk swags from the ceiling dark ══ -->
+  <rect x="36" y="4" width="1" height="4" fill="#2a2a32" />
+  <rect x="37" y="7" width="3" height="1" fill="#2a2a32" />
+  <rect x="40" y="8" width="4" height="1" fill="#22222a" />
+  <rect x="44" y="9" width="3" height="1" fill="#2a2a32" />
+  <rect x="47" y="8" width="3" height="1" fill="#22222a" />
+  <rect x="50" y="7" width="3" height="1" fill="#2a2a32" />
+  <rect x="53" y="5" width="1" height="3" fill="#22222a" />
+  <rect x="42" y="9" width="1" height="3" fill="#22222a" />
+  <rect x="49" y="8" width="1" height="4" fill="#1e1e26" />
+  <rect x="106" y="4" width="1" height="5" fill="#22222a" />
+  <rect x="107" y="8" width="4" height="1" fill="#2a2a32" />
+  <rect x="111" y="9" width="4" height="1" fill="#22222a" />
+  <rect x="115" y="8" width="4" height="1" fill="#2a2a32" />
+  <rect x="119" y="6" width="1" height="3" fill="#22222a" />
+  <rect x="113" y="9" width="1" height="4" fill="#1e1e26" />
+
+  <!-- ══ The eight-legged sigil, burning on the wall (x62-98, y8-32) ══ -->
+  <!-- abdomen + cephalothorax -->
+  <rect x="75" y="13" width="10" height="7" fill="#5a1812" />
+  <rect x="76" y="12" width="8" height="1" fill="#5a1812" />
+  <rect x="76" y="20" width="8" height="1" fill="#5a1812" />
+  <rect x="77" y="14" width="6" height="4" fill="#7a2018" />
+  <rect x="79" y="15" width="3" height="2" fill="#a02a20" />
+  <rect x="78" y="21" width="4" height="3" fill="#5a1812" />
+  <rect x="79" y="24" width="2" height="1" fill="#3f100c" />
+  <!-- legs, four a side, stepped -->
+  <rect x="73" y="11" width="2" height="1" fill="#5a1812" />
+  <rect x="71" y="10" width="2" height="1" fill="#3f100c" />
+  <rect x="69" y="9" width="2" height="1" fill="#3f100c" />
+  <rect x="68" y="10" width="1" height="3" fill="#3f100c" />
+  <rect x="73" y="14" width="2" height="1" fill="#5a1812" />
+  <rect x="70" y="13" width="3" height="1" fill="#3f100c" />
+  <rect x="67" y="14" width="3" height="1" fill="#3f100c" />
+  <rect x="66" y="15" width="1" height="4" fill="#3f100c" />
+  <rect x="73" y="17" width="2" height="1" fill="#5a1812" />
+  <rect x="70" y="18" width="3" height="1" fill="#3f100c" />
+  <rect x="67" y="19" width="3" height="1" fill="#3f100c" />
+  <rect x="66" y="20" width="1" height="4" fill="#3f100c" />
+  <rect x="74" y="20" width="2" height="1" fill="#5a1812" />
+  <rect x="71" y="21" width="3" height="1" fill="#3f100c" />
+  <rect x="69" y="22" width="2" height="1" fill="#3f100c" />
+  <rect x="68" y="23" width="1" height="4" fill="#3f100c" />
+  <rect x="85" y="11" width="2" height="1" fill="#5a1812" />
+  <rect x="87" y="10" width="2" height="1" fill="#3f100c" />
+  <rect x="89" y="9" width="2" height="1" fill="#3f100c" />
+  <rect x="91" y="10" width="1" height="3" fill="#3f100c" />
+  <rect x="85" y="14" width="2" height="1" fill="#5a1812" />
+  <rect x="87" y="13" width="3" height="1" fill="#3f100c" />
+  <rect x="90" y="14" width="3" height="1" fill="#3f100c" />
+  <rect x="93" y="15" width="1" height="4" fill="#3f100c" />
+  <rect x="85" y="17" width="2" height="1" fill="#5a1812" />
+  <rect x="87" y="18" width="3" height="1" fill="#3f100c" />
+  <rect x="90" y="19" width="3" height="1" fill="#3f100c" />
+  <rect x="93" y="20" width="1" height="4" fill="#3f100c" />
+  <rect x="84" y="20" width="2" height="1" fill="#5a1812" />
+  <rect x="86" y="21" width="3" height="1" fill="#3f100c" />
+  <rect x="89" y="22" width="2" height="1" fill="#3f100c" />
+  <rect x="91" y="23" width="1" height="4" fill="#3f100c" />
+  <!-- the litany ring beneath the sigil -->
+  <rect x="70" y="28" width="2" height="1" fill="#3f100c" />
+  <rect x="74" y="28" width="3" height="1" fill="#3f100c" />
+  <rect x="79" y="28" width="2" height="1" fill="#5a1812" />
+  <rect x="83" y="28" width="3" height="1" fill="#3f100c" />
+  <rect x="88" y="28" width="2" height="1" fill="#3f100c" />
+  <rect x="48" y="-2" width="64" height="44" fill="url(#c4b-sigil-glow)" />
+
+  <!-- ══ Left silk-wrapped column (x22-32), brazier = THE key ══ -->
+  <rect x="22" y="8" width="10" height="58" fill="#1b1724" />
+  <rect x="22" y="8" width="2" height="58" fill="#241f30" />
+  <rect x="30" y="8" width="2" height="58" fill="#12101a" />
+  <rect x="22" y="8" width="10" height="2" fill="#241f30" />
+  <!-- silk wrap, climbing -->
+  <rect x="22" y="16" width="6" height="1" fill="#3a3a44" />
+  <rect x="26" y="17" width="6" height="1" fill="#2a2a32" />
+  <rect x="22" y="26" width="7" height="1" fill="#3a3a44" />
+  <rect x="27" y="27" width="5" height="1" fill="#2a2a32" />
+  <rect x="22" y="38" width="6" height="1" fill="#2e2e38" />
+  <rect x="25" y="39" width="7" height="1" fill="#26262e" />
+  <rect x="22" y="50" width="8" height="1" fill="#2e2e38" />
+  <rect x="28" y="51" width="4" height="1" fill="#26262e" />
+  <rect x="24" y="16" width="1" height="1" fill="#4e4e5a" />
+  <!-- the brazier bowl + violet flame -->
+  <rect x="23" y="5" width="8" height="2" fill="#14111a" />
+  <rect x="23" y="5" width="8" height="1" fill="#2f2840" />
+  <rect x="24" y="7" width="6" height="1" fill="#0e0c14" />
+  <rect x="25" y="2" width="4" height="3" fill="#3d2c78" />
+  <rect x="26" y="0" width="2" height="2" fill="#5a44a8" />
+  <rect x="26" y="3" width="1" height="2" fill="#7a5fd0" />
+  <rect x="29" y="1" width="1" height="1" fill="#3d2c78" />
+  <rect x="33" y="6" width="1" height="1" fill="#5a44a8" opacity="0.8" />
+  <rect x="36" y="12" width="1" height="1" fill="#3d2c78" opacity="0.7" />
+  <rect x="-14" y="-18" width="84" height="64" fill="url(#c4b-brazier-l)" />
+
+  <!-- ══ Right silk-wrapped column (x128-138), brazier banked ══ -->
+  <rect x="128" y="8" width="10" height="58" fill="#14111a" />
+  <rect x="128" y="8" width="1" height="58" fill="#1b1724" />
+  <rect x="136" y="8" width="2" height="58" fill="#0e0c14" />
+  <rect x="128" y="8" width="10" height="2" fill="#1b1724" />
+  <rect x="128" y="18" width="6" height="1" fill="#2e2e38" />
+  <rect x="132" y="19" width="6" height="1" fill="#26262e" />
+  <rect x="128" y="30" width="7" height="1" fill="#2e2e38" />
+  <rect x="133" y="31" width="5" height="1" fill="#26262e" />
+  <rect x="128" y="44" width="6" height="1" fill="#26262e" />
+  <rect x="131" y="45" width="7" height="1" fill="#22222a" />
+  <rect x="128" y="56" width="8" height="1" fill="#26262e" />
+  <rect x="129" y="5" width="8" height="2" fill="#100e16" />
+  <rect x="129" y="5" width="8" height="1" fill="#241f30" />
+  <rect x="131" y="3" width="3" height="2" fill="#3d2c78" />
+  <rect x="132" y="2" width="1" height="1" fill="#5a44a8" />
+  <rect x="118" y="-8" width="44" height="42" fill="url(#c4b-brazier-r)" />
+
+  <!-- ══ Quiet mid-band wall outside the set piece ══ -->
+  <rect x="0" y="44" width="22" height="22" fill="#161320" />
+  <rect x="0" y="44" width="22" height="1" fill="#1b1724" />
+  <rect x="0" y="55" width="22" height="1" fill="#12101a" />
+  <rect x="11" y="44" width="1" height="22" fill="#12101a" />
+  <rect x="32" y="44" width="26" height="22" fill="#13111b" />
+  <rect x="32" y="55" width="26" height="1" fill="#100e16" />
+  <rect x="45" y="44" width="1" height="22" fill="#100e16" />
+  <rect x="102" y="44" width="26" height="22" fill="#0e0c14" />
+  <rect x="102" y="55" width="26" height="1" fill="#0c0a11" />
+  <rect x="115" y="44" width="1" height="22" fill="#0c0a11" />
+  <rect x="138" y="44" width="22" height="22" fill="#0c0b12" />
+  <rect x="138" y="55" width="22" height="1" fill="#0a090f" />
+  <rect x="149" y="44" width="1" height="22" fill="#0a090f" />
+
+  <!-- ══ The altar on its dais ══ -->
+  <rect x="56" y="62" width="48" height="4" fill="#12101a" />
+  <rect x="58" y="59" width="44" height="3" fill="#1b1724" />
+  <rect x="60" y="56" width="40" height="3" fill="#241f30" />
+  <rect x="60" y="56" width="20" height="1" fill="#342c44" />
+  <rect x="58" y="59" width="18" height="1" fill="#2f2840" />
+  <rect x="56" y="62" width="16" height="1" fill="#241f30" />
+  <!-- drow litany scratched along the riser -->
+  <rect x="63" y="60" width="2" height="1" fill="#342c44" />
+  <rect x="67" y="60" width="3" height="1" fill="#342c44" />
+  <rect x="72" y="60" width="2" height="1" fill="#342c44" />
+  <rect x="77" y="60" width="3" height="1" fill="#342c44" />
+  <rect x="82" y="60" width="2" height="1" fill="#342c44" />
+  <rect x="87" y="60" width="3" height="1" fill="#342c44" />
+  <rect x="92" y="60" width="2" height="1" fill="#342c44" />
+  <!-- the altar slab -->
+  <rect x="70" y="46" width="20" height="10" fill="#14111a" />
+  <rect x="70" y="46" width="20" height="2" fill="#241f30" />
+  <rect x="70" y="46" width="8" height="1" fill="#342c44" />
+  <rect x="70" y="48" width="2" height="8" fill="#1b1724" />
+  <rect x="88" y="48" width="2" height="8" fill="#0e0c14" />
+  <!-- the kneel-worn hollow at its foot -->
+  <rect x="76" y="55" width="8" height="1" fill="#0e0c14" />
+  <!-- the cup of venom + the thumb-vial of blood -->
+  <rect x="74" y="44" width="3" height="2" fill="#14303a" />
+  <rect x="74" y="44" width="3" height="1" fill="#1f4a56" />
+  <rect x="75" y="43" width="1" height="1" fill="#2e6e80" />
+  <rect x="83" y="44" width="1" height="2" fill="#3f100c" />
+  <rect x="83" y="43" width="1" height="1" fill="#5a1812" />
+  <!-- old offerings dried on the slab edge -->
+  <rect x="79" y="46" width="3" height="1" fill="#2a0b08" />
+  <rect x="85" y="47" width="2" height="1" fill="#2a0b08" />
+
+  <!-- ══ NEAR FLOOR (y66-84): polished basalt + the runner ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#08070d" />
+  <rect x="0" y="66" width="160" height="1" fill="#050409" />
+  <rect x="1" y="67" width="13" height="4" fill="#221d2c" />
+  <rect x="15" y="67" width="12" height="4" fill="#2a2438" />
+  <rect x="28" y="67" width="13" height="4" fill="#221d2c" />
+  <rect x="42" y="67" width="12" height="4" fill="#1b1724" />
+  <rect x="55" y="67" width="11" height="4" fill="#171420" />
+  <rect x="94" y="67" width="12" height="4" fill="#100e16" />
+  <rect x="107" y="67" width="13" height="4" fill="#0e0c14" />
+  <rect x="121" y="67" width="12" height="4" fill="#0c0b12" />
+  <rect x="134" y="67" width="13" height="4" fill="#0e0c14" />
+  <rect x="148" y="67" width="11" height="4" fill="#0b0a10" />
+  <rect x="15" y="67" width="12" height="1" fill="#342c44" />
+  <rect x="1" y="67" width="13" height="1" fill="#2f2840" />
+  <rect x="0" y="72" width="15" height="5" fill="#1b1724" />
+  <rect x="16" y="72" width="14" height="5" fill="#221d2c" />
+  <rect x="31" y="72" width="14" height="5" fill="#1e1a28" />
+  <rect x="46" y="72" width="13" height="5" fill="#1b1724" />
+  <rect x="94" y="72" width="14" height="5" fill="#100e16" />
+  <rect x="109" y="72" width="13" height="5" fill="#0e0c14" />
+  <rect x="123" y="72" width="14" height="5" fill="#0c0b12" />
+  <rect x="138" y="72" width="21" height="5" fill="#0b0a10" />
+  <rect x="16" y="72" width="14" height="1" fill="#2f2840" />
+  <rect x="0" y="78" width="19" height="6" fill="#221d2c" />
+  <rect x="20" y="78" width="17" height="6" fill="#2a2438" />
+  <rect x="38" y="78" width="17" height="6" fill="#221d2c" />
+  <rect x="56" y="78" width="10" height="6" fill="#1b1724" />
+  <rect x="94" y="78" width="13" height="6" fill="#12101a" />
+  <rect x="108" y="78" width="16" height="6" fill="#0e0c14" />
+  <rect x="125" y="78" width="15" height="6" fill="#0c0b12" />
+  <rect x="141" y="78" width="18" height="6" fill="#0b0a10" />
+  <rect x="20" y="78" width="17" height="1" fill="#342c44" />
+  <rect x="0" y="78" width="19" height="1" fill="#2f2840" />
+  <!-- the red-black runner to the dais -->
+  <rect x="66" y="66" width="28" height="18" fill="#1d0806" />
+  <rect x="68" y="66" width="24" height="18" fill="#2a0b08" />
+  <rect x="66" y="66" width="28" height="1" fill="#170504" />
+  <rect x="68" y="71" width="24" height="1" fill="#1d0806" />
+  <rect x="68" y="77" width="24" height="1" fill="#1d0806" />
+  <rect x="68" y="82" width="24" height="1" fill="#1d0806" />
+  <!-- its woven spider repeat, barely lighter -->
+  <rect x="72" y="68" width="2" height="1" fill="#3f100c" />
+  <rect x="86" y="74" width="2" height="1" fill="#3f100c" />
+  <rect x="74" y="80" width="2" height="1" fill="#3f100c" />
+  <!-- spilt venom etch by the dais edge -->
+  <rect x="96" y="69" width="3" height="1" fill="#14303a" />
+  <rect x="98" y="70" width="2" height="1" fill="#0c1c20" />
+  <!-- brazier light pooling left -->
+  <rect x="-8" y="58" width="62" height="24" fill="url(#c4b-floor-pool)" />
+</svg>

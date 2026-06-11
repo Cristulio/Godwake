@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch6-boss — The still centre: the Loom's set piece. The axle of the
+       wheel comes down through the dark like a tower, and at its heart is
+       the still point — the one pale unmoving place, the eye every thread
+       runs back to. Two outer spokes flank the arena as quiet towers; the
+       worn circle on the tread marks where everything before you stood.
+       Key bias upper-LEFT: the radiant threads knot toward the axle's
+       left shoulder. The component lays the boss blood-red ambience above.
+       Quiet mid band y38-63 outside the axle; floor seam y66 (the rail).
+       Shares the ch6 ramps (ch6-combat.svg header). -->
+  <defs>
+    <radialGradient id="c6b-still-glow" cx="0.45" cy="0.42" r="0.58">
+      <stop offset="0%" stop-color="#9adee8" stop-opacity="0.30" />
+      <stop offset="45%" stop-color="#46818f" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#2e5a68" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c6b-knot-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#6ab4c4" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#2e5a68" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c6b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#46818f" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#2e5a68" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the void all the way down ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0a0c14" />
+  <rect x="0" y="0" width="160" height="8" fill="#05060c" />
+  <rect x="104" y="0" width="56" height="66" fill="#08090f" />
+  <!-- the faintest memory of the far arc -->
+  <rect x="0" y="30" width="18" height="2" fill="#0e111c" />
+  <rect x="142" y="32" width="18" height="2" fill="#0c0f18" />
+
+  <!-- ══ Flanking spokes (x16-26, x134-144): quiet towers ══ -->
+  <rect x="16" y="0" width="11" height="66" fill="#1a1826" />
+  <rect x="16" y="0" width="2" height="66" fill="#242234" />
+  <rect x="25" y="0" width="2" height="66" fill="#12101a" />
+  <rect x="16" y="14" width="11" height="2" fill="#12101a" />
+  <rect x="16" y="14" width="5" height="1" fill="#2e2c42" />
+  <rect x="16" y="40" width="11" height="2" fill="#12101a" />
+  <rect x="16" y="40" width="4" height="1" fill="#242234" />
+  <rect x="18" y="15" width="1" height="1" fill="#3a3852" />
+  <rect x="134" y="0" width="11" height="66" fill="#14121e" />
+  <rect x="134" y="0" width="1" height="66" fill="#1a1826" />
+  <rect x="143" y="0" width="2" height="66" fill="#0e0c16" />
+  <rect x="134" y="16" width="11" height="2" fill="#0e0c16" />
+  <rect x="134" y="42" width="11" height="2" fill="#0e0c16" />
+  <!-- thread-wisps caught on their flanks -->
+  <rect x="27" y="20" width="1" height="4" fill="#16303a" />
+  <rect x="134" y="24" width="1" height="3" fill="#122832" />
+
+  <!-- ══ The axle (x66-94, y0-58) ══ -->
+  <rect x="66" y="0" width="28" height="58" fill="#1f1d2e" />
+  <rect x="66" y="0" width="4" height="58" fill="#2e2c42" />
+  <rect x="70" y="0" width="2" height="58" fill="#242234" />
+  <rect x="90" y="0" width="4" height="58" fill="#14121e" />
+  <rect x="88" y="0" width="2" height="58" fill="#171522" />
+  <!-- collar rings -->
+  <rect x="66" y="6" width="28" height="3" fill="#12101a" />
+  <rect x="66" y="6" width="28" height="1" fill="#3a3852" />
+  <rect x="66" y="38" width="28" height="3" fill="#12101a" />
+  <rect x="66" y="38" width="12" height="1" fill="#34324a" />
+  <rect x="66" y="52" width="28" height="2" fill="#100e18" />
+  <!-- rivet studs on the collars, fading right -->
+  <rect x="69" y="7" width="1" height="1" fill="#4a4866" />
+  <rect x="77" y="7" width="1" height="1" fill="#3a3852" />
+  <rect x="85" y="7" width="1" height="1" fill="#34324a" />
+  <rect x="91" y="7" width="1" height="1" fill="#2e2c42" />
+  <!-- the axle's bitten old scars -->
+  <rect x="74" y="44" width="3" height="1" fill="#12101a" />
+  <rect x="76" y="45" width="2" height="1" fill="#12101a" />
+  <rect x="82" y="48" width="3" height="1" fill="#100e18" />
+
+  <!-- ══ The still point (x74-86, y16-32) ══ -->
+  <!-- the ring -->
+  <rect x="76" y="16" width="8" height="1" fill="#2e5a68" />
+  <rect x="74" y="17" width="3" height="2" fill="#2e5a68" />
+  <rect x="83" y="17" width="3" height="2" fill="#1e3a44" />
+  <rect x="73" y="19" width="2" height="10" fill="#2e5a68" />
+  <rect x="85" y="19" width="2" height="10" fill="#1e3a44" />
+  <rect x="74" y="29" width="3" height="2" fill="#1e3a44" />
+  <rect x="83" y="29" width="3" height="2" fill="#16303a" />
+  <rect x="76" y="31" width="8" height="1" fill="#1e3a44" />
+  <!-- the unmoving pale -->
+  <rect x="75" y="19" width="10" height="10" fill="#46818f" />
+  <rect x="76" y="18" width="8" height="12" fill="#46818f" />
+  <rect x="77" y="20" width="6" height="8" fill="#6ab4c4" />
+  <rect x="78" y="21" width="4" height="6" fill="#9adee8" />
+  <rect x="79" y="23" width="2" height="3" fill="#c8eef4" />
+  <!-- it holds one thread of every colour the souls ever were -->
+  <rect x="79" y="19" width="1" height="1" fill="#d08848" />
+  <rect x="81" y="27" width="1" height="1" fill="#8a4a52" />
+  <rect x="48" y="-2" width="64" height="56" fill="url(#c6b-still-glow)" />
+
+  <!-- ══ The threads, running back to the eye ══ -->
+  <!-- left fan (the keyed side: brighter, knotted) -->
+  <rect x="48" y="12" width="26" height="1" fill="#2e5a68" />
+  <rect x="28" y="11" width="20" height="1" fill="#1e3a44" />
+  <rect x="8" y="10" width="20" height="1" fill="#16303a" />
+  <rect x="0" y="9" width="8" height="1" fill="#122832" />
+  <rect x="52" y="20" width="21" height="1" fill="#1e3a44" />
+  <rect x="34" y="19" width="18" height="1" fill="#16303a" />
+  <rect x="27" y="18" width="7" height="1" fill="#122832" />
+  <rect x="56" y="27" width="17" height="1" fill="#16303a" />
+  <rect x="40" y="28" width="16" height="1" fill="#122832" />
+  <rect x="60" y="6" width="16" height="1" fill="#1e3a44" />
+  <rect x="50" y="4" width="10" height="1" fill="#16303a" />
+  <!-- the knot at the axle's left shoulder -->
+  <rect x="62" y="11" width="5" height="3" fill="#2e5a68" />
+  <rect x="63" y="12" width="3" height="1" fill="#6ab4c4" />
+  <rect x="64" y="12" width="1" height="1" fill="#9adee8" />
+  <rect x="40" y="-4" width="52" height="40" fill="url(#c6b-knot-glow)" />
+  <!-- beads coming in slow -->
+  <rect x="40" y="11" width="1" height="1" fill="#6ab4c4" />
+  <rect x="18" y="10" width="1" height="1" fill="#46818f" />
+  <rect x="44" y="19" width="1" height="1" fill="#46818f" />
+  <rect x="58" y="27" width="1" height="1" fill="#2e5a68" />
+  <!-- right fan (dimmer, longer) -->
+  <rect x="87" y="14" width="26" height="1" fill="#1e3a44" />
+  <rect x="113" y="13" width="22" height="1" fill="#16303a" />
+  <rect x="135" y="12" width="25" height="1" fill="#122832" />
+  <rect x="89" y="22" width="22" height="1" fill="#16303a" />
+  <rect x="111" y="21" width="20" height="1" fill="#122832" />
+  <rect x="131" y="20" width="14" height="1" fill="#0f2028" />
+  <rect x="91" y="29" width="18" height="1" fill="#122832" />
+  <rect x="109" y="30" width="16" height="1" fill="#0f2028" />
+  <rect x="86" y="6" width="16" height="1" fill="#16303a" />
+  <rect x="102" y="5" width="12" height="1" fill="#122832" />
+  <rect x="100" y="14" width="1" height="1" fill="#46818f" />
+  <rect x="122" y="13" width="1" height="1" fill="#2e5a68" />
+  <rect x="104" y="22" width="1" height="1" fill="#2e5a68" />
+
+  <!-- ══ MID BAND (y41-63): the void floor of the arena ══ -->
+  <rect x="27" y="41" width="39" height="25" fill="#090b12" />
+  <rect x="94" y="41" width="40" height="25" fill="#07080e" />
+  <rect x="27" y="52" width="39" height="1" fill="#0a0d15" />
+  <rect x="94" y="52" width="40" height="1" fill="#080a10" />
+  <rect x="0" y="41" width="16" height="25" fill="#090b12" />
+  <rect x="145" y="41" width="15" height="25" fill="#07080e" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the tread, and the worn circle ══ -->
+  <rect x="0" y="66" width="160" height="2" fill="#2e2c42" />
+  <rect x="0" y="66" width="160" height="1" fill="#3a3852" />
+  <rect x="0" y="68" width="160" height="1" fill="#0d0b14" />
+  <rect x="0" y="69" width="160" height="15" fill="#12101a" />
+  <rect x="10" y="66" width="1" height="1" fill="#4a4866" />
+  <rect x="26" y="66" width="1" height="1" fill="#4a4866" />
+  <rect x="42" y="66" width="1" height="1" fill="#3a3852" />
+  <rect x="58" y="66" width="1" height="1" fill="#3a3852" />
+  <rect x="74" y="66" width="1" height="1" fill="#34324a" />
+  <rect x="90" y="66" width="1" height="1" fill="#34324a" />
+  <rect x="106" y="66" width="1" height="1" fill="#2e2c42" />
+  <rect x="122" y="66" width="1" height="1" fill="#2e2c42" />
+  <rect x="138" y="66" width="1" height="1" fill="#282640" />
+  <rect x="154" y="66" width="1" height="1" fill="#282640" />
+  <rect x="1" y="69" width="18" height="5" fill="#242234" />
+  <rect x="20" y="69" width="16" height="5" fill="#2e2c42" />
+  <rect x="37" y="69" width="17" height="5" fill="#242234" />
+  <rect x="55" y="69" width="16" height="5" fill="#1f1d2e" />
+  <rect x="72" y="69" width="17" height="5" fill="#1a1826" />
+  <rect x="90" y="69" width="16" height="5" fill="#171522" />
+  <rect x="107" y="69" width="17" height="5" fill="#14121e" />
+  <rect x="125" y="69" width="16" height="5" fill="#12101a" />
+  <rect x="142" y="69" width="17" height="5" fill="#100e18" />
+  <rect x="20" y="69" width="16" height="1" fill="#3a3852" />
+  <rect x="1" y="69" width="18" height="1" fill="#34324a" />
+  <rect x="0" y="75" width="16" height="4" fill="#2e2c42" />
+  <rect x="17" y="75" width="18" height="4" fill="#242234" />
+  <rect x="36" y="75" width="16" height="4" fill="#28263a" />
+  <rect x="53" y="75" width="18" height="4" fill="#1f1d2e" />
+  <rect x="72" y="75" width="16" height="4" fill="#1a1826" />
+  <rect x="89" y="75" width="18" height="4" fill="#161420" />
+  <rect x="108" y="75" width="16" height="4" fill="#14121e" />
+  <rect x="125" y="75" width="18" height="4" fill="#110f1a" />
+  <rect x="144" y="75" width="15" height="4" fill="#0f0d16" />
+  <rect x="0" y="75" width="16" height="1" fill="#3a3852" />
+  <rect x="17" y="75" width="18" height="1" fill="#34324a" />
+  <rect x="0" y="80" width="19" height="4" fill="#242234" />
+  <rect x="20" y="80" width="17" height="4" fill="#2e2c42" />
+  <rect x="38" y="80" width="18" height="4" fill="#242234" />
+  <rect x="57" y="80" width="17" height="4" fill="#1f1d2e" />
+  <rect x="75" y="80" width="18" height="4" fill="#1a1826" />
+  <rect x="94" y="80" width="17" height="4" fill="#161420" />
+  <rect x="112" y="80" width="18" height="4" fill="#13111c" />
+  <rect x="131" y="80" width="28" height="4" fill="#100e18" />
+  <rect x="20" y="80" width="17" height="1" fill="#3a3852" />
+  <rect x="0" y="80" width="19" height="1" fill="#34324a" />
+  <!-- the worn circle: where everything before you stood -->
+  <rect x="68" y="72" width="24" height="1" fill="#34324a" />
+  <rect x="64" y="73" width="5" height="1" fill="#2e2c42" />
+  <rect x="91" y="73" width="5" height="1" fill="#26243a" />
+  <rect x="62" y="74" width="3" height="3" fill="#2a2838" />
+  <rect x="95" y="74" width="3" height="3" fill="#222032" />
+  <rect x="64" y="77" width="5" height="1" fill="#2a2838" />
+  <rect x="91" y="77" width="5" height="1" fill="#222032" />
+  <rect x="68" y="78" width="24" height="1" fill="#26243a" />
+  <rect x="68" y="74" width="24" height="3" fill="#1c1a2c" />
+  <rect x="69" y="73" width="22" height="1" fill="#1e1c2e" />
+  <rect x="69" y="77" width="22" height="1" fill="#1a1828" />
+  <!-- the scored last words, worn almost smooth -->
+  <rect x="71" y="75" width="3" height="1" fill="#3a3852" />
+  <rect x="76" y="75" width="4" height="1" fill="#3a3852" />
+  <rect x="83" y="75" width="3" height="1" fill="#34324a" />
+  <!-- the axle's foot-shadow -->
+  <rect x="66" y="69" width="28" height="1" fill="#0d0b14" />
+  <rect x="70" y="70" width="20" height="1" fill="#0f0d16" />
+  <!-- the still light falling on the circle -->
+  <rect x="44" y="56" width="72" height="28" fill="url(#c6b-floor-pool)" />
+</svg>

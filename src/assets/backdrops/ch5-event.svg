@@ -1,0 +1,206 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch5-event — The reliquary of first mornings: the calm corner of the
+       Godwake (events + rest). A side-shrine off the climb — the pale slab
+       with the dead god's keepsakes: the phial of the first light (still
+       faintly lit), the sword-form drilled into the stone, the litany
+       glowing low on the wall in a script older than letters. The kneeling
+       has worn the floor to fit a shape you recognise. Key light: a small
+       dawn-rent upper-LEFT; the phial answers faint at the slab. Event
+       banners crop to roughly y28-54 — the litany, slab top and phial all
+       sit in that band. Floor seam y66. Shares ch5 ramps (ch5-combat.svg);
+       litany glow #6a3a28 #a05a32 (+#d08848 px). -->
+  <defs>
+    <radialGradient id="c5v-dawn-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f0b868" stop-opacity="0.24" />
+      <stop offset="45%" stop-color="#d08848" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#d08848" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c5v-phial-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffd890" stop-opacity="0.20" />
+      <stop offset="100%" stop-color="#f0b868" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="c5v-ray" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#f0b868" stop-opacity="0.20" />
+      <stop offset="70%" stop-color="#d08848" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#d08848" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- ══ FAR: the shrine wall, pale into violet ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#221c17" />
+  <rect x="104" y="0" width="56" height="66" fill="#191424" />
+  <rect x="0" y="0" width="160" height="4" fill="#15110d" />
+  <rect x="0" y="4" width="160" height="1" fill="#2a241e" />
+  <rect x="0" y="5" width="22" height="11" fill="#322c25" />
+  <rect x="23" y="5" width="20" height="11" fill="#2e2922" />
+  <rect x="44" y="5" width="22" height="11" fill="#28231d" />
+  <rect x="67" y="5" width="20" height="11" fill="#241e18" />
+  <rect x="88" y="5" width="15" height="11" fill="#211b16" />
+  <rect x="104" y="5" width="24" height="11" fill="#1f1930" />
+  <rect x="129" y="5" width="31" height="11" fill="#191424" />
+  <rect x="0" y="5" width="22" height="1" fill="#4a443a" />
+  <rect x="0" y="17" width="18" height="11" fill="#2e2922" />
+  <rect x="19" y="17" width="24" height="11" fill="#2a241e" />
+  <rect x="44" y="17" width="20" height="11" fill="#262019" />
+  <rect x="65" y="17" width="22" height="11" fill="#221c17" />
+  <rect x="88" y="17" width="15" height="11" fill="#1d1813" />
+  <rect x="104" y="17" width="22" height="11" fill="#161226" />
+  <rect x="127" y="17" width="33" height="11" fill="#14101c" />
+  <rect x="19" y="17" width="24" height="1" fill="#423c30" />
+  <!-- cracks -->
+  <rect x="52" y="8" width="1" height="3" fill="#1a1612" />
+  <rect x="51" y="10" width="1" height="2" fill="#1a1612" />
+  <rect x="132" y="9" width="1" height="3" fill="#100d18" />
+
+  <!-- ══ The small rent (x0-12, y0-10) ══ -->
+  <rect x="0" y="0" width="12" height="8" fill="#6a3a28" />
+  <rect x="0" y="0" width="9" height="6" fill="#a05a32" />
+  <rect x="0" y="0" width="6" height="4" fill="#d08848" />
+  <rect x="0" y="0" width="3" height="2" fill="#f0b868" />
+  <rect x="9" y="0" width="3" height="3" fill="#221c17" />
+  <rect x="5" y="6" width="4" height="2" fill="#2a241e" />
+  <rect x="0" y="8" width="5" height="2" fill="#2e2922" />
+  <rect x="10" y="4" width="2" height="4" fill="#2e2922" />
+  <rect x="5" y="8" width="2" height="1" fill="#54503e" />
+  <rect x="0" y="10" width="2" height="1" fill="#8a4a52" />
+  <polygon points="0,6 11,6 42,60 14,60" fill="url(#c5v-ray)" />
+  <rect x="12" y="12" width="2" height="2" fill="#7a4630" opacity="0.45" />
+  <rect x="18" y="22" width="2" height="2" fill="#6a3a28" opacity="0.4" />
+  <rect x="24" y="33" width="2" height="2" fill="#7a4630" opacity="0.35" />
+  <rect x="30" y="45" width="2" height="2" fill="#6a3a28" opacity="0.3" />
+  <rect x="21" y="28" width="1" height="1" fill="#a05a32" opacity="0.5" />
+  <rect x="28" y="40" width="1" height="1" fill="#8a5030" opacity="0.45" />
+  <rect x="-16" y="-18" width="72" height="62" fill="url(#c5v-dawn-halo)" />
+  <!-- slow dust in the shaft -->
+  <rect x="16" y="18" width="1" height="1" fill="#d08848" opacity="0.5" />
+  <rect x="26" y="36" width="1" height="1" fill="#a05a32" opacity="0.45" />
+
+  <!-- ══ The litany, glowing low on the wall (y29-42) ══ -->
+  <rect x="34" y="29" width="3" height="1" fill="#6a3a28" />
+  <rect x="39" y="29" width="2" height="1" fill="#a05a32" />
+  <rect x="43" y="29" width="4" height="1" fill="#6a3a28" />
+  <rect x="49" y="29" width="2" height="1" fill="#6a3a28" />
+  <rect x="53" y="29" width="3" height="1" fill="#a05a32" />
+  <rect x="58" y="29" width="2" height="1" fill="#6a3a28" />
+  <rect x="62" y="29" width="3" height="1" fill="#6a3a28" />
+  <rect x="36" y="33" width="2" height="1" fill="#a05a32" />
+  <rect x="40" y="33" width="3" height="1" fill="#6a3a28" />
+  <rect x="45" y="33" width="2" height="1" fill="#6a3a28" />
+  <rect x="49" y="33" width="4" height="1" fill="#a05a32" />
+  <rect x="55" y="33" width="2" height="1" fill="#6a3a28" />
+  <rect x="59" y="33" width="3" height="1" fill="#6a3a28" />
+  <rect x="64" y="33" width="2" height="1" fill="#a05a32" />
+  <rect x="34" y="37" width="2" height="1" fill="#6a3a28" />
+  <rect x="38" y="37" width="4" height="1" fill="#6a3a28" />
+  <rect x="44" y="37" width="2" height="1" fill="#a05a32" />
+  <rect x="48" y="37" width="3" height="1" fill="#6a3a28" />
+  <rect x="53" y="37" width="2" height="1" fill="#6a3a28" />
+  <rect x="57" y="37" width="4" height="1" fill="#6a3a28" />
+  <rect x="40" y="41" width="3" height="1" fill="#6a3a28" />
+  <rect x="45" y="41" width="2" height="1" fill="#a05a32" />
+  <rect x="49" y="41" width="3" height="1" fill="#6a3a28" />
+  <rect x="54" y="41" width="2" height="1" fill="#6a3a28" />
+  <!-- the one word that still burns: REST -->
+  <rect x="47" y="33" width="1" height="1" fill="#d08848" />
+  <!-- the sword-form drilled beside the litany -->
+  <rect x="70" y="30" width="1" height="8" fill="#1a1511" />
+  <rect x="68" y="32" width="5" height="1" fill="#1a1511" />
+  <rect x="70" y="29" width="1" height="1" fill="#54503e" />
+
+  <!-- ══ The slab of keepsakes (x40-76, y46-60) ══ -->
+  <rect x="40" y="46" width="36" height="14" fill="#3a352a" />
+  <rect x="40" y="46" width="36" height="2" fill="#4a443a" />
+  <rect x="40" y="46" width="12" height="1" fill="#54503e" />
+  <rect x="40" y="48" width="3" height="12" fill="#423c30" />
+  <rect x="73" y="48" width="3" height="12" fill="#322c25" />
+  <rect x="40" y="59" width="36" height="1" fill="#28231d" />
+  <!-- the phial of the first light -->
+  <rect x="48" y="42" width="2" height="4" fill="#a05a32" />
+  <rect x="48" y="41" width="2" height="1" fill="#54503e" />
+  <rect x="48" y="43" width="1" height="2" fill="#f0b868" />
+  <rect x="49" y="44" width="1" height="1" fill="#ffd890" />
+  <rect x="34" y="28" width="32" height="32" fill="url(#c5v-phial-glow)" />
+  <!-- the folded burial cloth, and the scratched form it kept -->
+  <rect x="56" y="44" width="9" height="2" fill="#322c25" />
+  <rect x="56" y="44" width="9" height="1" fill="#3a352a" />
+  <rect x="58" y="43" width="5" height="1" fill="#353026" />
+  <rect x="68" y="45" width="4" height="1" fill="#2e2922" />
+  <rect x="69" y="44" width="1" height="1" fill="#423c30" />
+  <!-- the kneel-hollow, worn to fit -->
+  <rect x="52" y="62" width="12" height="2" fill="#1d1813" />
+  <rect x="54" y="61" width="8" height="1" fill="#221c17" />
+  <rect x="55" y="64" width="6" height="1" fill="#1a1511" />
+
+  <!-- ══ Quiet flanks (y40-65) ══ -->
+  <rect x="0" y="40" width="40" height="26" fill="#262019" />
+  <rect x="0" y="40" width="40" height="1" fill="#2a241e" />
+  <rect x="0" y="53" width="40" height="1" fill="#221c17" />
+  <rect x="20" y="40" width="1" height="26" fill="#221c17" />
+  <rect x="76" y="40" width="28" height="26" fill="#1d1813" />
+  <rect x="76" y="53" width="28" height="1" fill="#1a1511" />
+  <rect x="90" y="40" width="1" height="26" fill="#1a1511" />
+  <rect x="104" y="40" width="56" height="26" fill="#120f1e" />
+  <rect x="104" y="40" width="56" height="1" fill="#161226" />
+  <rect x="104" y="53" width="56" height="1" fill="#100d1a" />
+  <rect x="132" y="40" width="1" height="26" fill="#100d1a" />
+  <!-- the pilgrim's bedroll he did not come back down for -->
+  <rect x="116" y="58" width="14" height="4" fill="#1c1628" />
+  <rect x="116" y="58" width="14" height="1" fill="#221a30" />
+  <rect x="116" y="58" width="3" height="4" fill="#1f1930" />
+  <rect x="131" y="60" width="3" height="2" fill="#14101c" />
+  <!-- his staff against the wall -->
+  <rect x="136" y="40" width="1" height="24" fill="#1f1930" />
+  <rect x="135" y="39" width="3" height="1" fill="#261e36" />
+
+  <!-- ══ NEAR FLOOR (y66-84) ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#15110d" />
+  <rect x="0" y="66" width="160" height="1" fill="#0d0a07" />
+  <rect x="1" y="67" width="13" height="4" fill="#3a352a" />
+  <rect x="15" y="67" width="12" height="4" fill="#423c30" />
+  <rect x="28" y="67" width="12" height="4" fill="#3a352a" />
+  <rect x="41" y="67" width="13" height="4" fill="#353026" />
+  <rect x="55" y="67" width="12" height="4" fill="#2e2922" />
+  <rect x="68" y="67" width="13" height="4" fill="#2a241e" />
+  <rect x="82" y="67" width="12" height="4" fill="#262019" />
+  <rect x="95" y="67" width="13" height="4" fill="#221c17" />
+  <rect x="109" y="67" width="12" height="4" fill="#1d1813" />
+  <rect x="122" y="67" width="12" height="4" fill="#191529" />
+  <rect x="135" y="67" width="12" height="4" fill="#141022" />
+  <rect x="148" y="67" width="11" height="4" fill="#100d1a" />
+  <rect x="15" y="67" width="12" height="1" fill="#54503e" />
+  <rect x="1" y="67" width="13" height="1" fill="#4a443a" />
+  <rect x="0" y="72" width="15" height="5" fill="#353026" />
+  <rect x="16" y="72" width="14" height="5" fill="#3a352a" />
+  <rect x="31" y="72" width="14" height="5" fill="#322c25" />
+  <rect x="46" y="72" width="15" height="5" fill="#2e2922" />
+  <rect x="62" y="72" width="14" height="5" fill="#2a241e" />
+  <rect x="77" y="72" width="15" height="5" fill="#262019" />
+  <rect x="93" y="72" width="14" height="5" fill="#211b16" />
+  <rect x="108" y="72" width="14" height="5" fill="#1c1713" />
+  <rect x="123" y="72" width="15" height="5" fill="#171326" />
+  <rect x="139" y="72" width="20" height="5" fill="#120f1e" />
+  <rect x="16" y="72" width="14" height="1" fill="#4f4839" />
+  <rect x="0" y="78" width="18" height="6" fill="#3a352a" />
+  <rect x="19" y="78" width="17" height="6" fill="#423c30" />
+  <rect x="37" y="78" width="17" height="6" fill="#3a352a" />
+  <rect x="55" y="78" width="17" height="6" fill="#322c25" />
+  <rect x="73" y="78" width="17" height="6" fill="#2a241e" />
+  <rect x="91" y="78" width="17" height="6" fill="#241e18" />
+  <rect x="109" y="78" width="17" height="6" fill="#1d1813" />
+  <rect x="127" y="78" width="16" height="6" fill="#161224" />
+  <rect x="144" y="78" width="15" height="6" fill="#110e1c" />
+  <rect x="19" y="78" width="17" height="1" fill="#54503e" />
+  <rect x="0" y="78" width="18" height="1" fill="#4a443a" />
+  <!-- the path knelt into the floor, slab to threshold -->
+  <rect x="52" y="70" width="12" height="1" fill="#28231d" />
+  <rect x="54" y="73" width="10" height="1" fill="#262019" />
+  <rect x="55" y="76" width="9" height="1" fill="#221c17" />
+  <rect x="56" y="80" width="8" height="1" fill="#1f1a15" />
+  <!-- dried mountain flowers someone left, long colourless -->
+  <rect x="44" y="74" width="2" height="1" fill="#54503e" />
+  <rect x="46" y="73" width="1" height="1" fill="#5a5444" />
+  <rect x="47" y="74" width="2" height="1" fill="#4a443a" />
+  <!-- a sandal print in the old dust, pointed up the climb -->
+  <rect x="90" y="76" width="3" height="1" fill="#1d1813" />
+  <rect x="91" y="77" width="2" height="1" fill="#1a1511" />
+</svg>

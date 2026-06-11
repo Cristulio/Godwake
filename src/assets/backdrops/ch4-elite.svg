@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch4-elite — Zhal Vasha, the web gallery: a house yard given over to
+       the spiders. Same biome as ch4-combat, heavier dressing — the great
+       orb-web wheeled between two carved columns, a body cocooned and hung,
+       egg sacs banked at the column foot with their own faint cold sheen,
+       the house's spider-sigil banner. Key light: faerzress lantern
+       upper-LEFT on the column bracket. Quiet mid band y38-63 (flat cavern
+       wall, column shafts as quiet darks); floor seam y66. Shares the ch4
+       ramps (see ch4-combat.svg header). -->
+  <defs>
+    <radialGradient id="c4e-lantern-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#7a5fd0" stop-opacity="0.34" />
+      <stop offset="45%" stop-color="#3d2c78" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#3d2c78" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c4e-sac-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#2e6e80" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#2e6e80" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c4e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#5a44a8" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#5a44a8" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: cavern back wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0d0b12" />
+  <rect x="98" y="0" width="62" height="66" fill="#0a0a10" />
+  <rect x="0" y="0" width="160" height="5" fill="#07060a" />
+  <rect x="0" y="5" width="160" height="1" fill="#12101a" />
+  <!-- rough rock shelving, low contrast -->
+  <rect x="34" y="6" width="30" height="12" fill="#100e16" />
+  <rect x="64" y="6" width="34" height="12" fill="#0e0c14" />
+  <rect x="34" y="18" width="26" height="14" fill="#0e0c14" />
+  <rect x="60" y="18" width="38" height="14" fill="#100e16" />
+  <rect x="34" y="6" width="30" height="1" fill="#161320" />
+  <rect x="98" y="8" width="28" height="12" fill="#0c0b12" />
+  <rect x="98" y="20" width="28" height="12" fill="#0a0a10" />
+  <!-- mid band: flat dark wall, two close values -->
+  <rect x="34" y="32" width="64" height="34" fill="#0c0a11" />
+  <rect x="34" y="48" width="64" height="1" fill="#0e0c13" />
+  <rect x="60" y="32" width="1" height="34" fill="#0e0c13" />
+  <rect x="98" y="32" width="28" height="34" fill="#0a090f" />
+
+  <!-- ══ Left carved column (x24-33) ══ -->
+  <rect x="24" y="4" width="10" height="62" fill="#1b1724" />
+  <rect x="24" y="4" width="10" height="2" fill="#241f30" />
+  <rect x="24" y="4" width="2" height="62" fill="#241f30" />
+  <rect x="32" y="4" width="2" height="62" fill="#12101a" />
+  <!-- carved ring bands -->
+  <rect x="24" y="12" width="10" height="2" fill="#14111a" />
+  <rect x="24" y="12" width="10" height="1" fill="#2f2840" />
+  <rect x="24" y="30" width="10" height="2" fill="#14111a" />
+  <rect x="24" y="30" width="4" height="1" fill="#241f30" />
+  <rect x="24" y="50" width="10" height="2" fill="#14111a" />
+  <!-- chevron carving between the bands -->
+  <rect x="27" y="18" width="4" height="1" fill="#241f30" />
+  <rect x="26" y="19" width="2" height="1" fill="#241f30" />
+  <rect x="30" y="19" width="2" height="1" fill="#241f30" />
+  <rect x="27" y="24" width="4" height="1" fill="#241f30" />
+  <rect x="26" y="25" width="2" height="1" fill="#241f30" />
+  <rect x="30" y="25" width="2" height="1" fill="#241f30" />
+
+  <!-- ══ Right carved column (x126-135) ══ -->
+  <rect x="126" y="4" width="10" height="62" fill="#14111a" />
+  <rect x="126" y="4" width="10" height="2" fill="#1b1724" />
+  <rect x="126" y="4" width="1" height="62" fill="#1b1724" />
+  <rect x="134" y="4" width="2" height="62" fill="#0e0c14" />
+  <rect x="126" y="12" width="10" height="2" fill="#0e0c14" />
+  <rect x="126" y="30" width="10" height="2" fill="#0e0c14" />
+  <rect x="126" y="50" width="10" height="2" fill="#0e0c14" />
+  <rect x="128" y="18" width="4" height="1" fill="#1b1724" />
+  <rect x="127" y="19" width="2" height="1" fill="#1b1724" />
+  <rect x="131" y="19" width="2" height="1" fill="#1b1724" />
+  <!-- the house banner off its capital: the spider, old red -->
+  <rect x="138" y="6" width="10" height="20" fill="#14111a" />
+  <rect x="138" y="6" width="10" height="1" fill="#1e1a28" />
+  <rect x="138" y="6" width="1" height="20" fill="#181522" />
+  <rect x="141" y="10" width="4" height="1" fill="#3f100c" />
+  <rect x="140" y="11" width="2" height="2" fill="#3f100c" />
+  <rect x="144" y="11" width="2" height="2" fill="#3f100c" />
+  <rect x="142" y="12" width="2" height="2" fill="#2a0b08" />
+  <rect x="139" y="14" width="1" height="2" fill="#2a0b08" />
+  <rect x="146" y="14" width="1" height="2" fill="#2a0b08" />
+  <rect x="141" y="15" width="1" height="2" fill="#2a0b08" />
+  <rect x="144" y="15" width="1" height="2" fill="#2a0b08" />
+  <rect x="138" y="22" width="4" height="2" fill="#100d16" />
+  <rect x="143" y="22" width="5" height="2" fill="#100d16" />
+
+  <!-- ══ The great web wheel (hub x78,y16; kept above the mid band) ══ -->
+  <!-- rings -->
+  <rect x="70" y="8" width="17" height="1" fill="#2a2a32" />
+  <rect x="64" y="10" width="6" height="1" fill="#22222a" />
+  <rect x="87" y="10" width="6" height="1" fill="#22222a" />
+  <rect x="61" y="12" width="3" height="1" fill="#2a2a32" />
+  <rect x="93" y="12" width="3" height="1" fill="#2a2a32" />
+  <rect x="59" y="14" width="2" height="2" fill="#22222a" />
+  <rect x="96" y="14" width="2" height="2" fill="#22222a" />
+  <rect x="58" y="16" width="1" height="3" fill="#2a2a32" />
+  <rect x="98" y="16" width="1" height="3" fill="#2a2a32" />
+  <rect x="59" y="19" width="2" height="2" fill="#22222a" />
+  <rect x="96" y="19" width="2" height="2" fill="#22222a" />
+  <rect x="61" y="21" width="3" height="1" fill="#2a2a32" />
+  <rect x="93" y="21" width="3" height="1" fill="#2a2a32" />
+  <rect x="64" y="23" width="6" height="1" fill="#22222a" />
+  <rect x="87" y="23" width="6" height="1" fill="#22222a" />
+  <rect x="70" y="25" width="17" height="1" fill="#2a2a32" />
+  <!-- inner ring -->
+  <rect x="73" y="12" width="11" height="1" fill="#22222a" />
+  <rect x="70" y="14" width="3" height="1" fill="#1e1e26" />
+  <rect x="84" y="14" width="3" height="1" fill="#1e1e26" />
+  <rect x="69" y="15" width="1" height="4" fill="#22222a" />
+  <rect x="87" y="15" width="1" height="4" fill="#22222a" />
+  <rect x="70" y="19" width="3" height="1" fill="#1e1e26" />
+  <rect x="84" y="19" width="3" height="1" fill="#1e1e26" />
+  <rect x="73" y="21" width="11" height="1" fill="#22222a" />
+  <!-- spokes -->
+  <rect x="78" y="6" width="1" height="22" fill="#2a2a32" />
+  <rect x="60" y="16" width="37" height="1" fill="#2a2a32" />
+  <rect x="66" y="10" width="1" height="1" fill="#22222a" />
+  <rect x="68" y="11" width="1" height="1" fill="#22222a" />
+  <rect x="70" y="12" width="1" height="1" fill="#22222a" />
+  <rect x="72" y="13" width="1" height="1" fill="#22222a" />
+  <rect x="74" y="14" width="1" height="1" fill="#22222a" />
+  <rect x="90" y="10" width="1" height="1" fill="#22222a" />
+  <rect x="88" y="11" width="1" height="1" fill="#22222a" />
+  <rect x="86" y="12" width="1" height="1" fill="#22222a" />
+  <rect x="84" y="13" width="1" height="1" fill="#22222a" />
+  <rect x="82" y="14" width="1" height="1" fill="#22222a" />
+  <rect x="66" y="22" width="1" height="1" fill="#22222a" />
+  <rect x="68" y="21" width="1" height="1" fill="#22222a" />
+  <rect x="70" y="20" width="1" height="1" fill="#22222a" />
+  <rect x="72" y="19" width="1" height="1" fill="#22222a" />
+  <rect x="90" y="22" width="1" height="1" fill="#22222a" />
+  <rect x="88" y="21" width="1" height="1" fill="#22222a" />
+  <rect x="86" y="20" width="1" height="1" fill="#22222a" />
+  <rect x="84" y="19" width="1" height="1" fill="#22222a" />
+  <!-- hub knot + dew catching the lantern -->
+  <rect x="77" y="15" width="3" height="3" fill="#3a3a44" />
+  <rect x="78" y="16" width="1" height="1" fill="#4e4e5a" />
+  <rect x="70" y="8" width="1" height="1" fill="#4e4e5a" />
+  <rect x="62" y="12" width="1" height="1" fill="#4e4e5a" />
+  <rect x="73" y="12" width="1" height="1" fill="#3a3a44" />
+  <rect x="92" y="21" width="1" height="1" fill="#3a3a44" />
+  <!-- anchor lines to the columns and ceiling -->
+  <rect x="34" y="14" width="24" height="1" fill="#22222a" />
+  <rect x="99" y="16" width="27" height="1" fill="#22222a" />
+  <rect x="68" y="5" width="1" height="3" fill="#22222a" />
+  <rect x="88" y="5" width="1" height="3" fill="#22222a" />
+  <rect x="48" y="14" width="1" height="1" fill="#4e4e5a" />
+
+  <!-- ══ The cocooned body, hung off the wheel ══ -->
+  <rect x="57" y="20" width="1" height="3" fill="#2a2a32" />
+  <rect x="55" y="23" width="5" height="11" fill="#3a3a44" />
+  <rect x="55" y="23" width="5" height="1" fill="#4e4e5a" />
+  <rect x="55" y="23" width="1" height="11" fill="#42424e" />
+  <rect x="59" y="23" width="1" height="11" fill="#2e2e38" />
+  <rect x="55" y="26" width="5" height="1" fill="#2e2e38" />
+  <rect x="55" y="29" width="5" height="1" fill="#2e2e38" />
+  <rect x="55" y="32" width="5" height="1" fill="#2e2e38" />
+  <rect x="56" y="34" width="3" height="2" fill="#2e2e38" />
+  <rect x="57" y="36" width="1" height="1" fill="#2a2a32" />
+  <!-- the smaller bundle, drier -->
+  <rect x="95" y="9" width="1" height="2" fill="#22222a" />
+  <rect x="93" y="11" width="4" height="7" fill="#2e2e38" />
+  <rect x="93" y="11" width="4" height="1" fill="#3a3a44" />
+  <rect x="93" y="14" width="4" height="1" fill="#26262e" />
+  <rect x="94" y="18" width="2" height="1" fill="#26262e" />
+
+  <!-- ══ The faerzress lantern on the left column ══ -->
+  <rect x="18" y="7" width="6" height="1" fill="#241f30" />
+  <rect x="18" y="8" width="1" height="2" fill="#241f30" />
+  <rect x="15" y="10" width="7" height="10" fill="#14111a" />
+  <rect x="15" y="10" width="7" height="1" fill="#2f2840" />
+  <rect x="15" y="19" width="7" height="1" fill="#1e1a28" />
+  <rect x="16" y="15" width="5" height="4" fill="#2a1e54" />
+  <rect x="16" y="13" width="5" height="2" fill="#3d2c78" />
+  <rect x="17" y="11" width="3" height="2" fill="#5a44a8" />
+  <rect x="18" y="12" width="1" height="5" fill="#a48ef0" />
+  <rect x="17" y="14" width="3" height="2" fill="#7a5fd0" />
+  <rect x="16" y="10" width="1" height="10" fill="#14111a" />
+  <rect x="20" y="10" width="1" height="10" fill="#14111a" />
+  <rect x="24" y="13" width="1" height="1" fill="#5a44a8" opacity="0.8" />
+  <rect x="22" y="20" width="1" height="1" fill="#3d2c78" opacity="0.7" />
+  <rect x="-14" y="-14" width="76" height="62" fill="url(#c4e-lantern-halo)" />
+
+  <!-- ══ Weapon rack low against the back wall ══ -->
+  <rect x="40" y="56" width="14" height="1" fill="#1b1724" />
+  <rect x="40" y="57" width="1" height="9" fill="#14111a" />
+  <rect x="53" y="57" width="1" height="9" fill="#14111a" />
+  <rect x="43" y="50" width="1" height="14" fill="#1e1a28" />
+  <rect x="42" y="49" width="3" height="1" fill="#241f30" />
+  <rect x="47" y="52" width="1" height="12" fill="#1e1a28" />
+  <rect x="46" y="51" width="3" height="1" fill="#241f30" />
+  <rect x="50" y="54" width="1" height="10" fill="#181522" />
+  <!-- a round shield leant at its foot -->
+  <rect x="36" y="58" width="6" height="6" fill="#1b1724" />
+  <rect x="37" y="57" width="4" height="1" fill="#241f30" />
+  <rect x="38" y="60" width="2" height="2" fill="#241f30" />
+
+  <!-- ══ Egg sacs banked at the right column foot ══ -->
+  <rect x="118" y="60" width="6" height="6" fill="#2e2e38" />
+  <rect x="119" y="59" width="4" height="1" fill="#3a3a44" />
+  <rect x="124" y="62" width="5" height="4" fill="#2a2a32" />
+  <rect x="125" y="61" width="3" height="1" fill="#363640" />
+  <rect x="114" y="62" width="4" height="4" fill="#2a2a32" />
+  <rect x="115" y="61" width="2" height="1" fill="#363640" />
+  <rect x="129" y="60" width="4" height="6" fill="#2e2e38" />
+  <rect x="130" y="59" width="2" height="1" fill="#3a3a44" />
+  <!-- the cold sheen on the sacs -->
+  <rect x="120" y="61" width="2" height="1" fill="#1f4a56" />
+  <rect x="126" y="63" width="1" height="1" fill="#1f4a56" />
+  <rect x="130" y="61" width="1" height="1" fill="#2e6e80" />
+  <rect x="106" y="50" width="42" height="26" fill="url(#c4e-sac-glow)" />
+  <!-- silk guying the sacs to the column -->
+  <rect x="121" y="56" width="1" height="3" fill="#22222a" />
+  <rect x="127" y="57" width="1" height="4" fill="#22222a" />
+  <rect x="131" y="54" width="1" height="5" fill="#22222a" />
+
+  <!-- ══ NEAR FLOOR (y66-84): basalt flags under the webs ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#08070d" />
+  <rect x="0" y="66" width="160" height="1" fill="#050409" />
+  <rect x="1" y="67" width="13" height="4" fill="#221d2c" />
+  <rect x="15" y="67" width="11" height="4" fill="#2a2438" />
+  <rect x="27" y="67" width="13" height="4" fill="#221d2c" />
+  <rect x="41" y="67" width="12" height="4" fill="#1b1724" />
+  <rect x="54" y="67" width="13" height="4" fill="#171420" />
+  <rect x="68" y="67" width="12" height="4" fill="#14111a" />
+  <rect x="81" y="67" width="13" height="4" fill="#12101a" />
+  <rect x="95" y="67" width="12" height="4" fill="#100e16" />
+  <rect x="108" y="67" width="13" height="4" fill="#0e0c14" />
+  <rect x="122" y="67" width="12" height="4" fill="#0c0b12" />
+  <rect x="135" y="67" width="12" height="4" fill="#0e0c14" />
+  <rect x="148" y="67" width="11" height="4" fill="#0b0a10" />
+  <rect x="15" y="67" width="11" height="1" fill="#342c44" />
+  <rect x="1" y="67" width="13" height="1" fill="#2f2840" />
+  <rect x="0" y="72" width="15" height="5" fill="#1b1724" />
+  <rect x="16" y="72" width="14" height="5" fill="#221d2c" />
+  <rect x="31" y="72" width="15" height="5" fill="#1e1a28" />
+  <rect x="47" y="72" width="14" height="5" fill="#1b1724" />
+  <rect x="62" y="72" width="15" height="5" fill="#161320" />
+  <rect x="78" y="72" width="14" height="5" fill="#13111b" />
+  <rect x="93" y="72" width="15" height="5" fill="#100e16" />
+  <rect x="109" y="72" width="14" height="5" fill="#0e0c14" />
+  <rect x="124" y="72" width="15" height="5" fill="#0c0b12" />
+  <rect x="140" y="72" width="19" height="5" fill="#0b0a10" />
+  <rect x="16" y="72" width="14" height="1" fill="#2f2840" />
+  <rect x="0" y="78" width="19" height="6" fill="#221d2c" />
+  <rect x="20" y="78" width="17" height="6" fill="#2a2438" />
+  <rect x="38" y="78" width="18" height="6" fill="#221d2c" />
+  <rect x="57" y="78" width="17" height="6" fill="#1b1724" />
+  <rect x="75" y="78" width="18" height="6" fill="#171420" />
+  <rect x="94" y="78" width="17" height="6" fill="#12101a" />
+  <rect x="112" y="78" width="18" height="6" fill="#0e0c14" />
+  <rect x="131" y="78" width="28" height="6" fill="#0c0b12" />
+  <rect x="20" y="78" width="17" height="1" fill="#342c44" />
+  <rect x="0" y="78" width="19" height="1" fill="#2f2840" />
+  <!-- silk drag-lines across the flags -->
+  <rect x="56" y="70" width="8" height="1" fill="#22222a" />
+  <rect x="62" y="71" width="7" height="1" fill="#1e1e26" />
+  <rect x="100" y="75" width="9" height="1" fill="#22222a" />
+  <rect x="107" y="74" width="5" height="1" fill="#1e1e26" />
+  <!-- what the webs kept: a stripped boot, a clean long bone -->
+  <rect x="68" y="79" width="4" height="2" fill="#1e1a28" />
+  <rect x="71" y="78" width="2" height="1" fill="#241f30" />
+  <rect x="88" y="80" width="5" height="1" fill="#3e3a4a" />
+  <rect x="87" y="79" width="1" height="1" fill="#4a4658" />
+  <rect x="93" y="80" width="1" height="1" fill="#4a4658" />
+  <!-- a dropped scimitar never picked back up -->
+  <rect x="34" y="75" width="6" height="1" fill="#2f2840" />
+  <rect x="40" y="74" width="2" height="1" fill="#3e3a4a" />
+  <rect x="32" y="76" width="2" height="1" fill="#241f30" />
+  <!-- lantern pooling -->
+  <rect x="-10" y="60" width="64" height="22" fill="url(#c4e-floor-pool)" />
+</svg>
