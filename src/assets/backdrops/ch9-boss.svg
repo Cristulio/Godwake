@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch9-boss — The Throne That Wears No Face: the hall ends at an empty
+       throne on its dais, under a great arched mirror that reflects the
+       room a half-step wrong and the throne not at all. Faded velvet
+       flanks the glass; a porcelain mask waits on the seat. Twin column
+       candle-stands — the LEFT burns brighter (the key); the component
+       lays the boss blood-red ambience above. Quiet mid band y38-63
+       outside the centre set piece; floor seam y66.
+       Shares the ch9 ramps (see ch9-combat.svg header); throne walnut:
+       #1f130d #2a1a10 #38241a; runner: #2a0b08 #3f100c. -->
+  <defs>
+    <radialGradient id="c9b-candle-l" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.30" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c9b-candle-r" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c9b-void-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#3a5c6a" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#2a4450" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c9b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: cornice + the hall's end wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#21212a" />
+  <rect x="104" y="0" width="56" height="66" fill="#1a1a21" />
+  <rect x="0" y="0" width="160" height="3" fill="#101016" />
+  <rect x="0" y="3" width="160" height="3" fill="#34343f" />
+  <rect x="0" y="3" width="104" height="1" fill="#3a3a44" />
+  <rect x="0" y="6" width="160" height="1" fill="#14141a" />
+  <rect x="8" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="24" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="40" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="118" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="134" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="150" y="4" width="2" height="2" fill="#1e1e26" />
+  <!-- marble courses, kept plain -->
+  <rect x="0" y="9" width="20" height="13" fill="#26262c" />
+  <rect x="0" y="22" width="14" height="14" fill="#22222a" />
+  <rect x="14" y="22" width="6" height="14" fill="#26262c" />
+  <rect x="140" y="9" width="20" height="13" fill="#1c1c24" />
+  <rect x="140" y="22" width="20" height="14" fill="#1e1e26" />
+  <rect x="6" y="13" width="5" height="1" fill="#34343f" />
+  <rect x="146" y="16" width="6" height="1" fill="#26262c" />
+
+  <!-- ══ The great arched mirror (x58-102) ══ -->
+  <rect x="62" y="2" width="36" height="3" fill="#6a521e" />
+  <rect x="58" y="5" width="44" height="35" fill="#6a521e" />
+  <rect x="58" y="5" width="2" height="35" fill="#54400f" />
+  <rect x="100" y="5" width="2" height="35" fill="#4a3a0c" />
+  <rect x="62" y="2" width="36" height="1" fill="#8a6c2a" />
+  <rect x="60" y="5" width="40" height="1" fill="#8a6c2a" />
+  <!-- the glass: a room, wrong -->
+  <rect x="60" y="6" width="40" height="33" fill="#0d0f14" />
+  <rect x="64" y="4" width="32" height="2" fill="#0d0f14" />
+  <!-- it reflects the candles a half-step out of true -->
+  <rect x="66" y="12" width="2" height="14" fill="#161b22" />
+  <rect x="92" y="14" width="2" height="12" fill="#13181f" />
+  <rect x="68" y="10" width="1" height="2" fill="#3a2c14" />
+  <rect x="91" y="12" width="1" height="1" fill="#2c2210" />
+  <!-- and the throne, nowhere in it -->
+  <rect x="74" y="14" width="12" height="22" fill="#0b0d11" />
+  <rect x="70" y="4" width="40" height="40" fill="url(#c9b-void-glow)" />
+  <!-- one pale smear, standing where no one stands -->
+  <rect x="79" y="18" width="1" height="9" fill="#1a2028" />
+  <rect x="79" y="17" width="1" height="1" fill="#1d242c" />
+
+  <!-- ══ Faded velvet, flanking the glass ══ -->
+  <rect x="46" y="4" width="11" height="42" fill="#2a1844" />
+  <rect x="46" y="4" width="11" height="2" fill="#3a2356" />
+  <rect x="48" y="6" width="1" height="40" fill="#221338" />
+  <rect x="52" y="6" width="1" height="40" fill="#1a1030" />
+  <rect x="55" y="6" width="1" height="40" fill="#221338" />
+  <rect x="46" y="42" width="11" height="4" fill="#221338" />
+  <rect x="47" y="45" width="3" height="1" fill="#54400f" />
+  <rect x="103" y="4" width="11" height="42" fill="#221338" />
+  <rect x="103" y="4" width="11" height="2" fill="#2a1844" />
+  <rect x="105" y="6" width="1" height="40" fill="#1a1030" />
+  <rect x="109" y="6" width="1" height="40" fill="#160d28" />
+  <rect x="112" y="6" width="1" height="40" fill="#1a1030" />
+  <rect x="103" y="42" width="11" height="4" fill="#1a1030" />
+  <rect x="110" y="45" width="3" height="1" fill="#3f3009" />
+  <!-- a moth-hole each: the wall looking through -->
+  <rect x="50" y="20" width="2" height="2" fill="#21212a" />
+  <rect x="107" y="28" width="2" height="1" fill="#1a1a21" />
+
+  <!-- ══ Flanking columns + candle-stands ══ -->
+  <rect x="22" y="6" width="8" height="60" fill="#2c2c34" />
+  <rect x="21" y="6" width="10" height="3" fill="#34343f" />
+  <rect x="21" y="6" width="10" height="1" fill="#3a3a44" />
+  <rect x="22" y="9" width="1" height="57" fill="#34343f" />
+  <rect x="29" y="9" width="1" height="57" fill="#22222a" />
+  <rect x="21" y="60" width="10" height="6" fill="#26262c" />
+  <rect x="21" y="60" width="10" height="1" fill="#34343f" />
+  <rect x="130" y="6" width="8" height="60" fill="#1e1e26" />
+  <rect x="129" y="6" width="10" height="3" fill="#24242c" />
+  <rect x="129" y="6" width="10" height="1" fill="#2a2a32" />
+  <rect x="130" y="9" width="1" height="57" fill="#24242c" />
+  <rect x="137" y="9" width="1" height="57" fill="#17171e" />
+  <rect x="129" y="60" width="10" height="6" fill="#1a1a21" />
+  <rect x="129" y="60" width="10" height="1" fill="#26262c" />
+  <!-- the left stand: three flames, the key -->
+  <rect x="24" y="18" width="4" height="2" fill="#54400f" />
+  <rect x="25" y="20" width="2" height="3" fill="#3f3009" />
+  <rect x="23" y="15" width="1" height="3" fill="#4a4a44" />
+  <rect x="25" y="14" width="1" height="3" fill="#4a4a44" />
+  <rect x="27" y="15" width="1" height="3" fill="#4a4a44" />
+  <rect x="23" y="13" width="1" height="2" fill="#e8743a" />
+  <rect x="25" y="12" width="1" height="2" fill="#ffb347" />
+  <rect x="25" y="12" width="1" height="1" fill="#ffe9a8" />
+  <rect x="27" y="13" width="1" height="2" fill="#e8743a" />
+  <rect x="-10" y="-14" width="76" height="64" fill="url(#c9b-candle-l)" />
+  <!-- the right stand: burning low, about to give up -->
+  <rect x="132" y="19" width="4" height="2" fill="#3f3009" />
+  <rect x="133" y="21" width="2" height="3" fill="#322708" />
+  <rect x="133" y="16" width="1" height="3" fill="#3a3a36" />
+  <rect x="135" y="17" width="1" height="2" fill="#3a3a36" />
+  <rect x="133" y="14" width="1" height="2" fill="#a33d1e" />
+  <rect x="135" y="15" width="1" height="2" fill="#7a2a16" />
+  <rect x="104" y="-8" width="64" height="56" fill="url(#c9b-candle-r)" />
+
+  <!-- ══ MID BAND (y38-66): wainscot beyond the set piece ══ -->
+  <rect x="0" y="38" width="22" height="1" fill="#2c2c34" />
+  <rect x="138" y="38" width="22" height="1" fill="#24242c" />
+  <rect x="0" y="39" width="22" height="13" fill="#26262c" />
+  <rect x="0" y="52" width="22" height="14" fill="#23232b" />
+  <rect x="30" y="39" width="16" height="13" fill="#23232b" />
+  <rect x="30" y="52" width="16" height="14" fill="#21212a" />
+  <rect x="30" y="46" width="16" height="1" fill="#26262c" />
+  <rect x="114" y="39" width="16" height="13" fill="#1c1c24" />
+  <rect x="114" y="52" width="16" height="14" fill="#1a1a21" />
+  <rect x="138" y="39" width="22" height="13" fill="#1b1b22" />
+  <rect x="138" y="52" width="22" height="14" fill="#1d1d25" />
+  <rect x="10" y="39" width="1" height="27" fill="#1e1e26" />
+  <rect x="38" y="39" width="1" height="27" fill="#1e1e26" />
+  <rect x="122" y="39" width="1" height="27" fill="#17171e" />
+  <rect x="148" y="39" width="1" height="27" fill="#16161d" />
+
+  <!-- ══ The throne, empty the whole time ══ -->
+  <!-- tall back -->
+  <rect x="68" y="22" width="24" height="32" fill="#1f130d" />
+  <rect x="70" y="20" width="20" height="2" fill="#1f130d" />
+  <rect x="74" y="18" width="12" height="2" fill="#2a1a10" />
+  <rect x="78" y="16" width="4" height="2" fill="#2a1a10" />
+  <rect x="70" y="20" width="20" height="1" fill="#38241a" />
+  <rect x="68" y="22" width="1" height="32" fill="#2a1a10" />
+  <rect x="91" y="22" width="1" height="32" fill="#160d09" />
+  <!-- gilt finial + edging, catching the candles -->
+  <rect x="78" y="15" width="4" height="1" fill="#6a521e" />
+  <rect x="79" y="14" width="2" height="1" fill="#8a6c2a" />
+  <rect x="69" y="23" width="1" height="10" fill="#54400f" />
+  <rect x="90" y="23" width="1" height="10" fill="#3f3009" />
+  <!-- the seat and arms -->
+  <rect x="66" y="44" width="28" height="3" fill="#2a1a10" />
+  <rect x="66" y="44" width="28" height="1" fill="#38241a" />
+  <rect x="66" y="47" width="3" height="7" fill="#1f130d" />
+  <rect x="91" y="47" width="3" height="7" fill="#180f0a" />
+  <rect x="70" y="47" width="20" height="7" fill="#160d09" />
+  <rect x="70" y="47" width="20" height="1" fill="#1f130d" />
+  <!-- the mask, set on the cushion like a guest -->
+  <rect x="77" y="48" width="6" height="3" fill="#4a4a44" />
+  <rect x="78" y="47" width="4" height="1" fill="#5a5a52" />
+  <rect x="78" y="49" width="1" height="1" fill="#121217" />
+  <rect x="81" y="49" width="1" height="1" fill="#121217" />
+  <!-- finery left across one arm, a court's worth of skins -->
+  <rect x="88" y="44" width="8" height="3" fill="#2a1844" />
+  <rect x="90" y="47" width="6" height="5" fill="#221338" />
+  <rect x="92" y="52" width="4" height="4" fill="#1a1030" />
+  <rect x="88" y="44" width="8" height="1" fill="#3a2356" />
+  <rect x="91" y="48" width="1" height="6" fill="#6a521e" />
+
+  <!-- ══ The dais (steps to y66) ══ -->
+  <rect x="62" y="54" width="36" height="3" fill="#2c2c34" />
+  <rect x="62" y="54" width="36" height="1" fill="#3a3a44" />
+  <rect x="58" y="57" width="44" height="4" fill="#26262c" />
+  <rect x="58" y="57" width="44" height="1" fill="#34343f" />
+  <rect x="54" y="61" width="52" height="5" fill="#22222a" />
+  <rect x="54" y="61" width="52" height="1" fill="#2c2c34" />
+  <!-- the runner, worn to the weave -->
+  <rect x="72" y="54" width="16" height="3" fill="#3f100c" />
+  <rect x="70" y="57" width="20" height="4" fill="#3f100c" />
+  <rect x="68" y="61" width="24" height="5" fill="#2a0b08" />
+  <rect x="72" y="54" width="16" height="1" fill="#5a1812" />
+  <rect x="74" y="58" width="3" height="1" fill="#2a0b08" />
+  <rect x="83" y="62" width="4" height="1" fill="#3f100c" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the checks, leading to the dais ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#16161c" />
+  <rect x="0" y="66" width="160" height="1" fill="#0a0a0e" />
+  <rect x="1" y="67" width="9" height="4" fill="#2c2c34" />
+  <rect x="10" y="67" width="9" height="4" fill="#18181f" />
+  <rect x="19" y="67" width="9" height="4" fill="#2c2c34" />
+  <rect x="28" y="67" width="9" height="4" fill="#18181f" />
+  <rect x="37" y="67" width="9" height="4" fill="#2a2a32" />
+  <rect x="46" y="67" width="9" height="4" fill="#17171e" />
+  <rect x="55" y="67" width="9" height="4" fill="#28282f" />
+  <rect x="96" y="67" width="9" height="4" fill="#15151b" />
+  <rect x="105" y="67" width="9" height="4" fill="#202028" />
+  <rect x="114" y="67" width="9" height="4" fill="#131318" />
+  <rect x="123" y="67" width="9" height="4" fill="#1e1e25" />
+  <rect x="132" y="67" width="9" height="4" fill="#121217" />
+  <rect x="141" y="67" width="9" height="4" fill="#1c1c23" />
+  <rect x="150" y="67" width="9" height="4" fill="#111116" />
+  <rect x="1" y="67" width="9" height="1" fill="#34343f" />
+  <rect x="19" y="67" width="9" height="1" fill="#34343f" />
+  <rect x="0" y="72" width="11" height="5" fill="#18181f" />
+  <rect x="11" y="72" width="11" height="5" fill="#2c2c34" />
+  <rect x="22" y="72" width="11" height="5" fill="#18181f" />
+  <rect x="33" y="72" width="11" height="5" fill="#2c2c34" />
+  <rect x="44" y="72" width="11" height="5" fill="#17171e" />
+  <rect x="55" y="72" width="11" height="5" fill="#28282f" />
+  <rect x="94" y="72" width="11" height="5" fill="#15151b" />
+  <rect x="105" y="72" width="11" height="5" fill="#22222a" />
+  <rect x="116" y="72" width="11" height="5" fill="#131318" />
+  <rect x="127" y="72" width="11" height="5" fill="#1e1e25" />
+  <rect x="138" y="72" width="11" height="5" fill="#121217" />
+  <rect x="149" y="72" width="11" height="5" fill="#1c1c23" />
+  <rect x="11" y="72" width="11" height="1" fill="#34343f" />
+  <rect x="33" y="72" width="11" height="1" fill="#30303a" />
+  <rect x="0" y="78" width="13" height="6" fill="#2c2c34" />
+  <rect x="13" y="78" width="13" height="6" fill="#18181f" />
+  <rect x="26" y="78" width="13" height="6" fill="#2c2c34" />
+  <rect x="39" y="78" width="13" height="6" fill="#18181f" />
+  <rect x="52" y="78" width="13" height="6" fill="#2a2a32" />
+  <rect x="65" y="78" width="13" height="6" fill="#16161d" />
+  <rect x="78" y="78" width="13" height="6" fill="#26262d" />
+  <rect x="91" y="78" width="13" height="6" fill="#14141a" />
+  <rect x="104" y="78" width="13" height="6" fill="#22222a" />
+  <rect x="117" y="78" width="13" height="6" fill="#131318" />
+  <rect x="130" y="78" width="13" height="6" fill="#1e1e25" />
+  <rect x="143" y="78" width="17" height="6" fill="#121217" />
+  <rect x="0" y="78" width="13" height="1" fill="#3a3a44" />
+  <rect x="26" y="78" width="13" height="1" fill="#34343f" />
+  <!-- the runner reaching the floor, and stopping -->
+  <rect x="70" y="66" width="20" height="3" fill="#2a0b08" />
+  <rect x="72" y="69" width="16" height="1" fill="#240a07" />
+  <rect x="70" y="66" width="20" height="1" fill="#3f100c" />
+  <!-- petals of gilt flaked off the frame, swept nowhere -->
+  <rect x="56" y="70" width="1" height="1" fill="#6a521e" />
+  <rect x="100" y="73" width="1" height="1" fill="#54400f" />
+  <rect x="62" y="80" width="1" height="1" fill="#54400f" />
+  <!-- dust along the column feet -->
+  <rect x="20" y="67" width="6" height="1" fill="#1a1a20" opacity="0.8" />
+  <rect x="134" y="68" width="6" height="1" fill="#15151a" opacity="0.8" />
+  <!-- candlelight pooling toward the dais -->
+  <rect x="-8" y="56" width="68" height="28" fill="url(#c9b-floor-pool)" />
+</svg>

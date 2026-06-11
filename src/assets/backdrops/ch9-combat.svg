@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch9-combat — The Court of Masks: the masquerade hall. Tall mirrors in
+       gilt frames between marble pilasters, a dead chandelier, a rotted
+       curtain swag, the cracked dance-floor checkered underfoot — and the
+       music a hundred years stopped. Key light: a bronze candelabra on the
+       LEFT wall, three small flames; one cold glint answers from the
+       cracked mirror. Quiet mid band y38-63 (wainscot, two values);
+       floor seam y66.
+       Ramps — marble: #1e1e26 #26262c #2c2c34 #34343f #3a3a44; gilt:
+       #54400f #6a521e #8a6c2a; mirror glass: #101218 #15161c #1d242c,
+       glint #3a5c6a; velvet: #1a1030 #2a1844 #3a2356; mask porcelain:
+       #3a3a36 #4a4a44 #5a5a52; candle: #a33d1e #e8743a #ffb347 #ffe9a8;
+       checker: #2c2c34 / #16161c. -->
+  <defs>
+    <radialGradient id="c9c-candle-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c9c-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: cornice + the ballroom wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#22222a" />
+  <rect x="100" y="0" width="60" height="66" fill="#1b1b22" />
+  <rect x="0" y="0" width="160" height="3" fill="#101016" />
+  <rect x="0" y="3" width="160" height="3" fill="#34343f" />
+  <rect x="0" y="3" width="100" height="1" fill="#3a3a44" />
+  <rect x="0" y="6" width="160" height="1" fill="#14141a" />
+  <!-- dentil run -->
+  <rect x="8" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="16" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="32" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="40" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="56" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="64" y="4" width="2" height="2" fill="#26262c" />
+  <rect x="96" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="112" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="120" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="136" y="4" width="2" height="2" fill="#1e1e26" />
+  <rect x="144" y="4" width="2" height="2" fill="#1e1e26" />
+
+  <!-- ══ The dead chandelier, top-centre ══ -->
+  <rect x="79" y="0" width="2" height="4" fill="#16120d" />
+  <rect x="74" y="4" width="12" height="2" fill="#211b13" />
+  <rect x="70" y="6" width="4" height="2" fill="#211b13" />
+  <rect x="86" y="6" width="4" height="2" fill="#1c170f" />
+  <rect x="68" y="8" width="3" height="3" fill="#1c170f" />
+  <rect x="89" y="8" width="3" height="3" fill="#16120d" />
+  <rect x="76" y="6" width="2" height="4" fill="#1c170f" />
+  <rect x="82" y="6" width="2" height="4" fill="#16120d" />
+  <rect x="79" y="6" width="2" height="6" fill="#16120d" />
+  <!-- cold crystal, remembering light it isn't getting -->
+  <rect x="69" y="11" width="1" height="1" fill="#26303a" />
+  <rect x="77" y="10" width="1" height="1" fill="#26303a" />
+  <rect x="83" y="10" width="1" height="1" fill="#1d242c" />
+  <rect x="90" y="11" width="1" height="1" fill="#1d242c" />
+  <rect x="80" y="12" width="1" height="1" fill="#26303a" />
+
+  <!-- ══ Mirrors of the west wall (lit side) ══ -->
+  <!-- mirror 1, whole -->
+  <rect x="8" y="10" width="18" height="26" fill="#6a521e" />
+  <rect x="9" y="11" width="16" height="24" fill="#15161c" />
+  <rect x="9" y="11" width="16" height="1" fill="#8a6c2a" />
+  <rect x="9" y="11" width="1" height="24" fill="#54400f" />
+  <!-- a pale guess of the room in the glass -->
+  <rect x="12" y="14" width="2" height="18" fill="#1d242c" />
+  <rect x="18" y="16" width="3" height="14" fill="#191f26" />
+  <rect x="15" y="20" width="2" height="8" fill="#171c23" />
+  <!-- mirror 2, cracked through -->
+  <rect x="34" y="10" width="18" height="26" fill="#6a521e" />
+  <rect x="35" y="11" width="16" height="24" fill="#15161c" />
+  <rect x="35" y="11" width="16" height="1" fill="#8a6c2a" />
+  <rect x="50" y="11" width="1" height="24" fill="#54400f" />
+  <rect x="38" y="14" width="2" height="16" fill="#1d242c" />
+  <rect x="45" y="15" width="3" height="13" fill="#191f26" />
+  <!-- the crack, stepping down the glass -->
+  <rect x="43" y="11" width="1" height="5" fill="#0d0e12" />
+  <rect x="42" y="16" width="1" height="4" fill="#0d0e12" />
+  <rect x="44" y="14" width="3" height="1" fill="#0d0e12" />
+  <rect x="41" y="20" width="1" height="6" fill="#0d0e12" />
+  <rect x="42" y="26" width="1" height="5" fill="#0d0e12" />
+  <rect x="39" y="22" width="2" height="1" fill="#0d0e12" />
+  <!-- one cold glint at the break -->
+  <rect x="43" y="15" width="1" height="1" fill="#3a5c6a" />
+  <rect x="42" y="16" width="1" height="1" fill="#2a4450" />
+
+  <!-- ══ Mirrors of the east wall (cold side) ══ -->
+  <rect x="108" y="10" width="18" height="26" fill="#3f3009" />
+  <rect x="109" y="11" width="16" height="24" fill="#101218" />
+  <rect x="109" y="11" width="16" height="1" fill="#54400f" />
+  <rect x="112" y="14" width="2" height="17" fill="#161b22" />
+  <rect x="119" y="16" width="3" height="13" fill="#141920" />
+  <rect x="134" y="10" width="18" height="26" fill="#3f3009" />
+  <rect x="135" y="11" width="16" height="24" fill="#101218" />
+  <rect x="135" y="11" width="16" height="1" fill="#4a3a0c" />
+  <rect x="138" y="15" width="2" height="15" fill="#141920" />
+  <rect x="145" y="14" width="3" height="16" fill="#161b22" />
+  <!-- something in this one is not standing where you are -->
+  <rect x="142" y="18" width="1" height="7" fill="#1a2028" />
+
+  <!-- ══ Pilasters between the glasses ══ -->
+  <rect x="28" y="8" width="4" height="58" fill="#2c2c34" />
+  <rect x="28" y="8" width="1" height="58" fill="#34343f" />
+  <rect x="31" y="8" width="1" height="58" fill="#22222a" />
+  <rect x="27" y="8" width="6" height="2" fill="#6a521e" />
+  <rect x="27" y="8" width="6" height="1" fill="#8a6c2a" />
+  <rect x="54" y="8" width="4" height="58" fill="#26262c" />
+  <rect x="54" y="8" width="1" height="58" fill="#2c2c34" />
+  <rect x="53" y="8" width="6" height="2" fill="#54400f" />
+  <rect x="53" y="8" width="6" height="1" fill="#6a521e" />
+  <rect x="104" y="8" width="4" height="58" fill="#1e1e26" />
+  <rect x="104" y="8" width="1" height="58" fill="#26262c" />
+  <rect x="103" y="8" width="6" height="2" fill="#3f3009" />
+  <rect x="128" y="8" width="4" height="58" fill="#1e1e26" />
+  <rect x="128" y="8" width="1" height="58" fill="#24242c" />
+  <rect x="127" y="8" width="6" height="2" fill="#3f3009" />
+  <rect x="154" y="8" width="4" height="58" fill="#1b1b22" />
+  <rect x="153" y="8" width="6" height="2" fill="#392b08" />
+
+  <!-- ══ The rotted swag, upper-right ══ -->
+  <rect x="128" y="3" width="32" height="5" fill="#2a1844" />
+  <rect x="132" y="8" width="24" height="3" fill="#2a1844" />
+  <rect x="136" y="11" width="14" height="2" fill="#221338" />
+  <rect x="128" y="3" width="32" height="1" fill="#3a2356" />
+  <rect x="140" y="13" width="5" height="2" fill="#1a1030" />
+  <rect x="148" y="11" width="3" height="4" fill="#221338" />
+  <rect x="134" y="9" width="3" height="1" fill="#1a1030" />
+  <!-- moth-holes the wall shows through -->
+  <rect x="138" y="5" width="2" height="2" fill="#1b1b22" />
+  <rect x="146" y="7" width="2" height="1" fill="#1b1b22" />
+
+  <!-- ══ The candelabra — the key light ══ -->
+  <rect x="20" y="20" width="1" height="6" fill="#54400f" />
+  <rect x="17" y="18" width="2" height="2" fill="#54400f" />
+  <rect x="22" y="18" width="2" height="2" fill="#54400f" />
+  <rect x="17" y="20" width="7" height="1" fill="#6a521e" />
+  <rect x="17" y="15" width="1" height="3" fill="#4a4a44" />
+  <rect x="20" y="14" width="1" height="3" fill="#4a4a44" />
+  <rect x="23" y="15" width="1" height="3" fill="#4a4a44" />
+  <rect x="17" y="13" width="1" height="2" fill="#e8743a" />
+  <rect x="20" y="12" width="1" height="2" fill="#e8743a" />
+  <rect x="23" y="13" width="1" height="2" fill="#e8743a" />
+  <rect x="20" y="12" width="1" height="1" fill="#ffe9a8" />
+  <rect x="17" y="13" width="1" height="1" fill="#ffb347" />
+  <rect x="23" y="13" width="1" height="1" fill="#ffb347" />
+  <rect x="-10" y="-14" width="72" height="62" fill="url(#c9c-candle-halo)" />
+  <!-- dust hanging in the candlelight -->
+  <rect x="28" y="18" width="1" height="1" fill="#3a3a44" opacity="0.8" />
+  <rect x="33" y="26" width="1" height="1" fill="#34343f" opacity="0.7" />
+  <rect x="25" y="30" width="1" height="1" fill="#2c2c34" opacity="0.7" />
+
+  <!-- ══ MID BAND (y38-66): the wainscot, kept quiet ══ -->
+  <rect x="0" y="38" width="160" height="1" fill="#2c2c34" />
+  <rect x="0" y="39" width="28" height="13" fill="#26262c" />
+  <rect x="0" y="52" width="28" height="14" fill="#23232b" />
+  <rect x="32" y="39" width="22" height="13" fill="#24242c" />
+  <rect x="32" y="52" width="22" height="14" fill="#26262c" />
+  <rect x="58" y="39" width="46" height="13" fill="#22222a" />
+  <rect x="58" y="52" width="46" height="14" fill="#1f1f27" />
+  <rect x="108" y="39" width="20" height="13" fill="#1d1d25" />
+  <rect x="108" y="52" width="20" height="14" fill="#1b1b22" />
+  <rect x="132" y="39" width="22" height="13" fill="#1b1b22" />
+  <rect x="132" y="52" width="22" height="14" fill="#1d1d25" />
+  <!-- panel seams, barely there -->
+  <rect x="14" y="39" width="1" height="27" fill="#1e1e26" />
+  <rect x="44" y="39" width="1" height="27" fill="#1e1e26" />
+  <rect x="80" y="39" width="1" height="27" fill="#1b1b22" />
+  <rect x="118" y="39" width="1" height="27" fill="#17171e" />
+  <rect x="142" y="39" width="1" height="27" fill="#17171e" />
+  <!-- a dust sheet bunched against the east wall -->
+  <rect x="140" y="58" width="18" height="8" fill="#242028" />
+  <rect x="142" y="56" width="12" height="2" fill="#2c2228" />
+  <rect x="146" y="58" width="3" height="8" fill="#1e1a22" />
+  <rect x="152" y="60" width="2" height="6" fill="#1e1a22" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the cracked dance-floor ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#16161c" />
+  <rect x="0" y="66" width="160" height="1" fill="#0a0a0e" />
+  <!-- far rank of checks (y67-71) -->
+  <rect x="1" y="67" width="9" height="4" fill="#2c2c34" />
+  <rect x="10" y="67" width="9" height="4" fill="#18181f" />
+  <rect x="19" y="67" width="9" height="4" fill="#2c2c34" />
+  <rect x="28" y="67" width="9" height="4" fill="#18181f" />
+  <rect x="37" y="67" width="9" height="4" fill="#2a2a32" />
+  <rect x="46" y="67" width="9" height="4" fill="#18181f" />
+  <rect x="55" y="67" width="9" height="4" fill="#28282f" />
+  <rect x="64" y="67" width="9" height="4" fill="#16161d" />
+  <rect x="73" y="67" width="9" height="4" fill="#26262d" />
+  <rect x="82" y="67" width="9" height="4" fill="#15151b" />
+  <rect x="91" y="67" width="9" height="4" fill="#23232a" />
+  <rect x="100" y="67" width="9" height="4" fill="#14141a" />
+  <rect x="109" y="67" width="9" height="4" fill="#202028" />
+  <rect x="118" y="67" width="9" height="4" fill="#131318" />
+  <rect x="127" y="67" width="9" height="4" fill="#1e1e25" />
+  <rect x="136" y="67" width="9" height="4" fill="#121217" />
+  <rect x="145" y="67" width="9" height="4" fill="#1c1c23" />
+  <rect x="154" y="67" width="5" height="4" fill="#111116" />
+  <rect x="1" y="67" width="9" height="1" fill="#34343f" />
+  <rect x="19" y="67" width="9" height="1" fill="#34343f" />
+  <rect x="37" y="67" width="9" height="1" fill="#30303a" />
+  <!-- mid rank (y72-77) -->
+  <rect x="0" y="72" width="11" height="5" fill="#18181f" />
+  <rect x="11" y="72" width="11" height="5" fill="#2c2c34" />
+  <rect x="22" y="72" width="11" height="5" fill="#18181f" />
+  <rect x="33" y="72" width="11" height="5" fill="#2c2c34" />
+  <rect x="44" y="72" width="11" height="5" fill="#17171e" />
+  <rect x="55" y="72" width="11" height="5" fill="#28282f" />
+  <rect x="66" y="72" width="11" height="5" fill="#15151b" />
+  <rect x="77" y="72" width="11" height="5" fill="#26262d" />
+  <rect x="88" y="72" width="11" height="5" fill="#14141a" />
+  <rect x="99" y="72" width="11" height="5" fill="#22222a" />
+  <rect x="110" y="72" width="11" height="5" fill="#131318" />
+  <rect x="121" y="72" width="11" height="5" fill="#1e1e25" />
+  <rect x="132" y="72" width="11" height="5" fill="#121217" />
+  <rect x="143" y="72" width="11" height="5" fill="#1c1c23" />
+  <rect x="154" y="72" width="6" height="5" fill="#111116" />
+  <rect x="11" y="72" width="11" height="1" fill="#34343f" />
+  <rect x="33" y="72" width="11" height="1" fill="#34343f" />
+  <!-- near rank (y78-84) -->
+  <rect x="0" y="78" width="13" height="6" fill="#2c2c34" />
+  <rect x="13" y="78" width="13" height="6" fill="#18181f" />
+  <rect x="26" y="78" width="13" height="6" fill="#2c2c34" />
+  <rect x="39" y="78" width="13" height="6" fill="#18181f" />
+  <rect x="52" y="78" width="13" height="6" fill="#2a2a32" />
+  <rect x="65" y="78" width="13" height="6" fill="#16161d" />
+  <rect x="78" y="78" width="13" height="6" fill="#26262d" />
+  <rect x="91" y="78" width="13" height="6" fill="#14141a" />
+  <rect x="104" y="78" width="13" height="6" fill="#22222a" />
+  <rect x="117" y="78" width="13" height="6" fill="#131318" />
+  <rect x="130" y="78" width="13" height="6" fill="#1e1e25" />
+  <rect x="143" y="78" width="17" height="6" fill="#121217" />
+  <rect x="0" y="78" width="13" height="1" fill="#3a3a44" />
+  <rect x="26" y="78" width="13" height="1" fill="#34343f" />
+  <!-- the crack wandering across the dance-floor -->
+  <rect x="60" y="68" width="1" height="3" fill="#0c0c10" />
+  <rect x="61" y="71" width="2" height="1" fill="#0c0c10" />
+  <rect x="63" y="72" width="1" height="4" fill="#0c0c10" />
+  <rect x="64" y="76" width="3" height="1" fill="#0c0c10" />
+  <rect x="67" y="77" width="1" height="3" fill="#0c0c10" />
+  <rect x="68" y="80" width="3" height="1" fill="#0c0c10" />
+  <rect x="71" y="81" width="1" height="3" fill="#0c0c10" />
+  <!-- masks where their wearers stopped needing them -->
+  <rect x="44" y="74" width="4" height="2" fill="#4a4a44" />
+  <rect x="45" y="73" width="2" height="1" fill="#5a5a52" />
+  <rect x="45" y="74" width="1" height="1" fill="#16161c" />
+  <rect x="47" y="74" width="1" height="1" fill="#16161c" />
+  <rect x="90" y="79" width="4" height="2" fill="#3a3a36" />
+  <rect x="91" y="79" width="1" height="1" fill="#121217" />
+  <rect x="93" y="79" width="1" height="1" fill="#121217" />
+  <rect x="118" y="71" width="3" height="2" fill="#3a3a36" />
+  <rect x="119" y="71" width="1" height="1" fill="#111116" />
+  <!-- a folded fan, dropped mid-figure -->
+  <rect x="100" y="76" width="5" height="1" fill="#54400f" />
+  <rect x="104" y="75" width="2" height="1" fill="#6a521e" />
+  <!-- a violin, face-down since the music stopped -->
+  <rect x="28" y="81" width="6" height="2" fill="#2a1a10" />
+  <rect x="33" y="81" width="3" height="1" fill="#38241a" />
+  <rect x="36" y="81" width="1" height="1" fill="#54400f" />
+  <!-- candlelight pooling on the checks -->
+  <rect x="-8" y="58" width="66" height="26" fill="url(#c9c-floor-pool)" />
+</svg>

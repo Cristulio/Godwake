@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch7-event — A Dry Carrel: the calm corner of the Drowned Archive.
+       One reading-carrel built high enough that the flood stopped at its
+       step — a hard bench, a dead lamp, one candle somebody left burning,
+       and the black water lapping a hand's breadth below, carrying its
+       small warm reflection out into the dark of the drowned stacks.
+       Key light: the carrel candle, upper-LEFT bias. Event banners crop
+       to roughly y28-54: candle, desk and waterline all cross that band.
+       Floor seam y66 = the water's surface / the carrel footing.
+       Ramps — ch7 stone/wood/water (see ch7-combat.svg header); candle:
+       #a33d1e #e8743a #ffb347 #ffe9a8; pages: #3a3830 #45433a. -->
+  <defs>
+    <radialGradient id="c7v-candle-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.26" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c7v-water-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the flooded reading-hall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0c1013" />
+  <rect x="96" y="0" width="64" height="66" fill="#090d10" />
+  <rect x="0" y="0" width="160" height="4" fill="#07090b" />
+  <rect x="0" y="4" width="160" height="1" fill="#111921" />
+  <!-- high-water stain: the flood has been higher than this -->
+  <rect x="0" y="7" width="160" height="1" fill="#1d2a2e" opacity="0.7" />
+  <rect x="74" y="8" width="1" height="3" fill="#15212a" opacity="0.6" />
+  <rect x="118" y="8" width="1" height="2" fill="#101a20" opacity="0.6" />
+
+  <!-- ══ Drowned stacks standing in the water, right ══ -->
+  <rect x="68" y="10" width="26" height="56" fill="#0a0d10" />
+  <rect x="68" y="10" width="26" height="1" fill="#11181c" />
+  <rect x="70" y="16" width="22" height="1" fill="#0d1115" />
+  <rect x="70" y="26" width="22" height="1" fill="#0d1115" />
+  <rect x="70" y="36" width="22" height="1" fill="#0c1014" />
+  <rect x="72" y="12" width="3" height="4" fill="#0d1014" />
+  <rect x="78" y="11" width="4" height="5" fill="#0e1216" />
+  <rect x="85" y="12" width="3" height="4" fill="#0d1014" />
+  <rect x="73" y="19" width="4" height="6" fill="#0e1216" />
+  <rect x="80" y="20" width="3" height="5" fill="#0c0f13" />
+  <rect x="86" y="19" width="4" height="6" fill="#0d1014" />
+  <rect x="100" y="8" width="30" height="58" fill="#080b0e" />
+  <rect x="100" y="8" width="30" height="1" fill="#0e1418" />
+  <rect x="102" y="18" width="26" height="1" fill="#0b0e12" />
+  <rect x="102" y="30" width="26" height="1" fill="#0a0d11" />
+  <rect x="104" y="10" width="4" height="6" fill="#0b0e12" />
+  <rect x="111" y="11" width="3" height="5" fill="#0a0d11" />
+  <rect x="118" y="10" width="4" height="6" fill="#0b0e12" />
+  <rect x="125" y="11" width="3" height="5" fill="#090c10" />
+  <rect x="136" y="12" width="22" height="54" fill="#070a0d" />
+  <rect x="136" y="12" width="22" height="1" fill="#0c1115" />
+  <rect x="138" y="24" width="18" height="1" fill="#090c10" />
+  <!-- one pale spine the dark has not quite taken -->
+  <rect x="106" y="22" width="2" height="6" fill="#1d2226" />
+  <!-- the stacks' feet, lost in the flood -->
+  <rect x="68" y="60" width="90" height="6" fill="#060809" />
+
+  <!-- ══ The carrel, built above the waterline (x14-58) ══ -->
+  <!-- canopy -->
+  <rect x="12" y="13" width="48" height="3" fill="#1a1310" />
+  <rect x="12" y="13" width="48" height="1" fill="#2e2218" />
+  <rect x="12" y="16" width="48" height="1" fill="#0f0b08" />
+  <!-- posts -->
+  <rect x="13" y="16" width="3" height="46" fill="#1a1310" />
+  <rect x="13" y="16" width="1" height="46" fill="#241a14" />
+  <rect x="56" y="16" width="3" height="46" fill="#16100c" />
+  <rect x="58" y="16" width="1" height="46" fill="#100c09" />
+  <!-- back panel -->
+  <rect x="16" y="17" width="40" height="41" fill="#0f0c09" />
+  <rect x="18" y="20" width="36" height="1" fill="#13100c" />
+  <rect x="18" y="30" width="36" height="1" fill="#13100c" />
+  <!-- a small shelf of saved books over the desk -->
+  <rect x="18" y="24" width="22" height="1" fill="#241a14" />
+  <rect x="19" y="19" width="2" height="5" fill="#2a1410" />
+  <rect x="21" y="20" width="3" height="4" fill="#241a14" />
+  <rect x="24" y="19" width="2" height="5" fill="#1a2418" />
+  <rect x="26" y="20" width="2" height="4" fill="#14202a" />
+  <rect x="28" y="19" width="3" height="5" fill="#241a14" />
+  <rect x="31" y="20" width="2" height="4" fill="#2a1410" />
+  <rect x="33" y="19" width="2" height="5" fill="#3a3830" />
+  <!-- the dead lamp on its chain -->
+  <rect x="49" y="17" width="1" height="3" fill="#16120d" />
+  <rect x="47" y="20" width="5" height="5" fill="#16120d" />
+  <rect x="48" y="21" width="3" height="3" fill="#0d1014" />
+  <rect x="47" y="25" width="5" height="1" fill="#100c09" />
+  <!-- the desk -->
+  <rect x="18" y="40" width="32" height="3" fill="#241a14" />
+  <rect x="18" y="40" width="32" height="1" fill="#3a2c1e" />
+  <rect x="19" y="43" width="2" height="11" fill="#16100c" />
+  <rect x="47" y="43" width="2" height="11" fill="#120d0a" />
+  <!-- the open page, kept dry -->
+  <rect x="37" y="38" width="9" height="2" fill="#3a3830" />
+  <rect x="37" y="38" width="9" height="1" fill="#45433a" />
+  <rect x="41" y="38" width="1" height="2" fill="#241a14" />
+  <!-- the candle, burning for no one -->
+  <rect x="29" y="36" width="2" height="4" fill="#3a3830" />
+  <rect x="29" y="34" width="2" height="2" fill="#e8743a" />
+  <rect x="29" y="33" width="1" height="1" fill="#ffb347" />
+  <rect x="30" y="34" width="1" height="1" fill="#ffe9a8" />
+  <rect x="-6" y="6" width="76" height="60" fill="url(#c7v-candle-halo)" />
+  <!-- the bench -->
+  <rect x="22" y="48" width="24" height="2" fill="#1a1310" />
+  <rect x="22" y="48" width="24" height="1" fill="#2e2218" />
+  <rect x="23" y="50" width="2" height="6" fill="#120d0a" />
+  <rect x="43" y="50" width="2" height="6" fill="#120d0a" />
+  <!-- the carrel floor + its stone footing -->
+  <rect x="12" y="56" width="48" height="2" fill="#241a14" />
+  <rect x="12" y="56" width="48" height="1" fill="#2e2218" />
+  <rect x="10" y="58" width="52" height="8" fill="#121a1e" />
+  <rect x="10" y="58" width="52" height="1" fill="#1f2e32" />
+  <rect x="10" y="62" width="52" height="1" fill="#0e1418" />
+  <!-- the step the flood stopped at -->
+  <rect x="50" y="62" width="14" height="4" fill="#182428" />
+  <rect x="50" y="62" width="14" height="1" fill="#243438" />
+
+  <!-- ══ MID BAND (y38-66) left of the carrel: bare quiet wall ══ -->
+  <rect x="0" y="38" width="13" height="14" fill="#0e1316" />
+  <rect x="0" y="52" width="13" height="14" fill="#0c1114" />
+  <!-- a stack of books hauled up from the water, drying -->
+  <rect x="2" y="58" width="9" height="8" fill="#10121a" />
+  <rect x="2" y="60" width="8" height="2" fill="#241a14" />
+  <rect x="3" y="58" width="7" height="2" fill="#1a2418" />
+  <rect x="2" y="62" width="9" height="2" fill="#16100c" />
+  <rect x="3" y="58" width="7" height="1" fill="#22311a" />
+
+  <!-- ══ Loose leaves adrift ══ -->
+  <rect x="62" y="22" width="2" height="1" fill="#454337" opacity="0.7" />
+  <rect x="86" y="30" width="1" height="1" fill="#343229" opacity="0.6" />
+  <rect x="120" y="20" width="1" height="1" fill="#2e2c24" opacity="0.6" />
+  <rect x="142" y="34" width="2" height="1" fill="#2a281f" opacity="0.5" />
+
+  <!-- ══ NEAR (y66-84): the carrel platform, then the black water ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#04070a" />
+  <rect x="0" y="66" width="160" height="1" fill="#050708" />
+  <!-- the platform the carrel stands on -->
+  <rect x="0" y="66" width="44" height="18" fill="#0c1014" />
+  <rect x="1" y="67" width="13" height="4" fill="#1f2e32" />
+  <rect x="15" y="67" width="12" height="4" fill="#182428" />
+  <rect x="28" y="67" width="13" height="4" fill="#1f2e32" />
+  <rect x="1" y="67" width="13" height="1" fill="#283a3e" />
+  <rect x="15" y="67" width="12" height="1" fill="#2d4145" />
+  <rect x="0" y="72" width="14" height="5" fill="#182428" />
+  <rect x="15" y="72" width="13" height="5" fill="#1f2e32" />
+  <rect x="29" y="72" width="13" height="5" fill="#141d21" />
+  <rect x="15" y="72" width="13" height="1" fill="#2d4145" />
+  <rect x="0" y="78" width="16" height="6" fill="#1f2e32" />
+  <rect x="17" y="78" width="14" height="6" fill="#182428" />
+  <rect x="32" y="78" width="10" height="6" fill="#141d21" />
+  <rect x="0" y="78" width="16" height="1" fill="#283a3e" />
+  <!-- the platform's drowned edge -->
+  <rect x="42" y="66" width="2" height="18" fill="#0a0f13" />
+  <rect x="44" y="66" width="1" height="18" fill="#0a1014" />
+  <!-- the water: still, black, holding the room upside-down -->
+  <rect x="45" y="66" width="115" height="1" fill="#0a1014" />
+  <!-- the carrel's warm reflection, broken on the still water -->
+  <rect x="46" y="68" width="10" height="1" fill="#13100c" opacity="0.8" />
+  <rect x="48" y="71" width="7" height="1" fill="#100d0a" opacity="0.7" />
+  <rect x="47" y="75" width="8" height="1" fill="#0d0b09" opacity="0.6" />
+  <rect x="50" y="79" width="5" height="1" fill="#0b0a08" opacity="0.5" />
+  <!-- the candle, answering itself in the water -->
+  <rect x="52" y="69" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="53" y="72" width="1" height="1" fill="#e8743a" opacity="0.5" />
+  <rect x="52" y="76" width="1" height="1" fill="#a33d1e" opacity="0.4" />
+  <rect x="36" y="62" width="44" height="22" fill="url(#c7v-water-glow)" />
+  <!-- the stacks' reflections, long and dark -->
+  <rect x="72" y="68" width="18" height="1" fill="#070a0d" opacity="0.9" />
+  <rect x="74" y="70" width="14" height="2" fill="#060809" opacity="0.8" />
+  <rect x="104" y="68" width="22" height="1" fill="#060809" opacity="0.9" />
+  <rect x="106" y="70" width="18" height="2" fill="#05080b" opacity="0.8" />
+  <rect x="140" y="69" width="16" height="2" fill="#05080b" opacity="0.8" />
+  <!-- cold glints where the water remembers the high windows -->
+  <rect x="96" y="67" width="4" height="1" fill="#1d3a42" opacity="0.8" />
+  <rect x="130" y="68" width="3" height="1" fill="#12242a" opacity="0.8" />
+  <rect x="148" y="67" width="3" height="1" fill="#16303a" opacity="0.7" />
+  <!-- leaves becalmed on the surface -->
+  <rect x="66" y="67" width="2" height="1" fill="#343229" opacity="0.8" />
+  <rect x="90" y="69" width="2" height="1" fill="#2e2c24" opacity="0.7" />
+  <rect x="124" y="67" width="1" height="1" fill="#2a281f" opacity="0.7" />
+  <rect x="58" y="73" width="2" height="1" fill="#2e2c24" opacity="0.6" />
+  <!-- one ring where something rose, far out -->
+  <rect x="116" y="76" width="6" height="1" fill="#0a1218" opacity="0.9" />
+  <rect x="118" y="75" width="2" height="1" fill="#0d1c22" opacity="0.8" />
+</svg>

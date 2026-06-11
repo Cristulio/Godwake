@@ -1,0 +1,256 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch10-elite — Tor Maladin, the gate of the turned watch: same burning
+       city, heavier dressing. A carved elven gate whose watch changed
+       sides without putting out their own lamp, a barricade of beautiful
+       furniture dragged across the gap, a charmed company's spent arrows,
+       and the tree-father's guardian statue toppled full-length across
+       the stones. Key light: the canopy burn upper-LEFT + the watch-lamp
+       still burning on the left pylon. A charred banner smoulders dim on
+       the right. Quiet mid band y38-63; floor seam y66.
+       Shares the ch10 ramps (see ch10-combat.svg header). -->
+  <defs>
+    <linearGradient id="c10e-canopy-glow" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.17" />
+      <stop offset="55%" stop-color="#a33d1e" stop-opacity="0.07" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </linearGradient>
+    <radialGradient id="c10e-lamp-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.24" />
+      <stop offset="45%" stop-color="#f4a742" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c10e-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#f4a742" stop-opacity="0.09" />
+      <stop offset="100%" stop-color="#f4a742" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the canopy on fire ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#11101a" />
+  <rect x="0" y="0" width="160" height="4" fill="#2a1206" />
+  <rect x="0" y="4" width="88" height="4" fill="#3f1c08" />
+  <rect x="88" y="4" width="72" height="4" fill="#2a1206" />
+  <rect x="0" y="8" width="48" height="4" fill="#5a2c0e" />
+  <rect x="48" y="8" width="64" height="4" fill="#3f1c08" />
+  <rect x="112" y="8" width="48" height="4" fill="#241006" />
+  <rect x="0" y="12" width="160" height="3" fill="#1c1410" />
+  <rect x="0" y="15" width="160" height="1" fill="#170f0c" />
+  <rect x="10" y="3" width="26" height="2" fill="#0c0a10" />
+  <rect x="30" y="6" width="24" height="2" fill="#0c0a10" />
+  <rect x="58" y="4" width="26" height="2" fill="#0e0b10" />
+  <rect x="88" y="7" width="26" height="2" fill="#0d0a0e" />
+  <rect x="118" y="4" width="26" height="2" fill="#0d0a0e" />
+  <rect x="20" y="5" width="2" height="7" fill="#0c0a10" />
+  <rect x="48" y="3" width="2" height="9" fill="#0e0b10" />
+  <rect x="98" y="5" width="2" height="8" fill="#0d0a0e" />
+  <rect x="136" y="6" width="2" height="7" fill="#0d0a0e" />
+  <rect x="14" y="8" width="5" height="1" fill="#a33d1e" />
+  <rect x="16" y="7" width="2" height="1" fill="#e8743a" />
+  <rect x="17" y="6" width="1" height="1" fill="#ffb347" />
+  <rect x="40" y="10" width="4" height="1" fill="#a33d1e" />
+  <rect x="42" y="9" width="1" height="1" fill="#e8743a" />
+  <rect x="74" y="11" width="3" height="1" fill="#7a2a16" />
+  <rect x="104" y="9" width="3" height="1" fill="#a33d1e" />
+  <rect x="130" y="10" width="2" height="1" fill="#7a2a16" />
+  <rect x="0" y="0" width="160" height="38" fill="url(#c10e-canopy-glow)" />
+  <!-- ember rain -->
+  <rect x="26" y="18" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="58" y="24" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="86" y="20" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="124" y="26" width="1" height="1" fill="#7a2a16" opacity="0.6" />
+  <rect x="146" y="18" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+  <rect x="36" y="46" width="1" height="1" fill="#a33d1e" opacity="0.5" />
+  <rect x="130" y="50" width="1" height="1" fill="#7a2a16" opacity="0.4" />
+
+  <!-- ══ The gate: crown + pylons ══ -->
+  <!-- crown arch -->
+  <rect x="56" y="6" width="48" height="5" fill="#2e303a" />
+  <rect x="48" y="9" width="10" height="5" fill="#2a2c36" />
+  <rect x="102" y="9" width="10" height="5" fill="#23252d" />
+  <rect x="44" y="13" width="8" height="5" fill="#2a2c36" />
+  <rect x="108" y="13" width="8" height="5" fill="#20222a" />
+  <rect x="56" y="6" width="48" height="1" fill="#3a3d48" />
+  <rect x="48" y="9" width="10" height="1" fill="#363944" />
+  <rect x="44" y="13" width="8" height="1" fill="#343740" />
+  <!-- the leaf-coil carved along the crown -->
+  <rect x="60" y="8" width="2" height="1" fill="#1e2026" />
+  <rect x="66" y="9" width="2" height="1" fill="#1e2026" />
+  <rect x="72" y="8" width="2" height="1" fill="#1e2026" />
+  <rect x="78" y="9" width="2" height="1" fill="#1e2026" />
+  <rect x="84" y="8" width="2" height="1" fill="#1c1e24" />
+  <rect x="90" y="9" width="2" height="1" fill="#1c1e24" />
+  <rect x="96" y="8" width="2" height="1" fill="#1c1e24" />
+  <!-- pylons -->
+  <rect x="44" y="18" width="10" height="48" fill="#262830" />
+  <rect x="44" y="18" width="1" height="48" fill="#343740" />
+  <rect x="53" y="18" width="1" height="48" fill="#1c1e24" />
+  <rect x="44" y="18" width="10" height="1" fill="#2e303a" />
+  <rect x="106" y="18" width="10" height="48" fill="#1c1e24" />
+  <rect x="106" y="18" width="1" height="48" fill="#23252d" />
+  <rect x="115" y="18" width="1" height="48" fill="#14161c" />
+  <!-- carved bands on the pylons -->
+  <rect x="46" y="30" width="6" height="1" fill="#1e2026" />
+  <rect x="46" y="44" width="6" height="1" fill="#1e2026" />
+  <rect x="108" y="30" width="6" height="1" fill="#14161c" />
+  <rect x="108" y="44" width="6" height="1" fill="#14161c" />
+  <!-- the gateway: dark, and the gulf beyond -->
+  <rect x="54" y="18" width="52" height="48" fill="#0c0c12" />
+  <rect x="54" y="18" width="52" height="1" fill="#10101a" />
+
+  <!-- ══ The watch-lamp, still kept ══ -->
+  <rect x="47" y="19" width="4" height="1" fill="#2e303a" />
+  <rect x="48" y="20" width="2" height="5" fill="#262830" />
+  <rect x="48" y="21" width="2" height="3" fill="#e8743a" />
+  <rect x="48" y="22" width="1" height="1" fill="#ffb347" />
+  <rect x="49" y="22" width="1" height="1" fill="#ffe9a8" />
+  <rect x="48" y="25" width="2" height="1" fill="#1c1e24" />
+  <rect x="16" y="-4" width="68" height="58" fill="url(#c10e-lamp-halo)" />
+  <!-- the banner the fire is finishing, right pylon -->
+  <rect x="108" y="20" width="6" height="10" fill="#16210f" />
+  <rect x="108" y="20" width="6" height="1" fill="#1f2e16" />
+  <rect x="109" y="24" width="2" height="2" fill="#0c0c12" />
+  <rect x="111" y="27" width="2" height="2" fill="#0c0c12" />
+  <rect x="108" y="30" width="3" height="1" fill="#5a1812" />
+  <rect x="112" y="30" width="2" height="1" fill="#5a1812" />
+  <rect x="110" y="30" width="1" height="1" fill="#a33d1e" />
+
+  <!-- ══ MID BAND (y38-66): trunks beyond the gate, kept quiet ══ -->
+  <rect x="0" y="16" width="12" height="50" fill="#16161e" />
+  <rect x="0" y="16" width="5" height="50" fill="#111118" />
+  <rect x="11" y="20" width="1" height="46" fill="#1c1c24" />
+  <rect x="12" y="16" width="32" height="22" fill="#12121c" />
+  <rect x="12" y="38" width="32" height="14" fill="#10101a" />
+  <rect x="12" y="52" width="32" height="14" fill="#0e0e16" />
+  <rect x="116" y="16" width="32" height="22" fill="#100f18" />
+  <rect x="116" y="38" width="32" height="14" fill="#0e0d14" />
+  <rect x="116" y="52" width="32" height="14" fill="#0c0c12" />
+  <rect x="148" y="16" width="12" height="50" fill="#111118" />
+  <rect x="155" y="16" width="5" height="50" fill="#0e0e14" />
+  <rect x="148" y="22" width="1" height="44" fill="#181820" />
+  <!-- a far trunk each side, crown in the burn -->
+  <rect x="24" y="10" width="5" height="28" fill="#14141a" />
+  <rect x="24" y="10" width="1" height="28" fill="#1c1c24" />
+  <rect x="132" y="12" width="5" height="26" fill="#121218" />
+
+  <!-- ══ The barricade, dragged across the gap ══ -->
+  <!-- a chest, a table on its side, lovely and wasted -->
+  <rect x="58" y="58" width="12" height="8" fill="#1f160e" />
+  <rect x="58" y="58" width="12" height="1" fill="#2a2014" />
+  <rect x="62" y="58" width="1" height="8" fill="#16100c" />
+  <rect x="70" y="54" width="10" height="12" fill="#1a1310" />
+  <rect x="70" y="54" width="10" height="1" fill="#241a14" />
+  <rect x="72" y="56" width="6" height="8" fill="#120d0a" />
+  <!-- an upended chair on the heap -->
+  <rect x="60" y="54" width="8" height="3" fill="#1a1310" />
+  <rect x="61" y="50" width="1" height="4" fill="#16100c" />
+  <rect x="66" y="51" width="1" height="3" fill="#16100c" />
+  <!-- the tower shield, leant into the line -->
+  <rect x="82" y="52" width="9" height="14" fill="#23252d" />
+  <rect x="83" y="50" width="7" height="2" fill="#23252d" />
+  <rect x="83" y="50" width="7" height="1" fill="#2e303a" />
+  <rect x="82" y="52" width="1" height="14" fill="#2a2c36" />
+  <rect x="85" y="54" width="3" height="5" fill="#1a2410" />
+  <rect x="86" y="55" width="1" height="2" fill="#243114" />
+  <!-- spears through the works, angled -->
+  <rect x="92" y="46" width="1" height="3" fill="#241a14" />
+  <rect x="93" y="49" width="1" height="4" fill="#241a14" />
+  <rect x="94" y="53" width="1" height="5" fill="#1f160e" />
+  <rect x="95" y="58" width="1" height="8" fill="#1a1310" />
+  <rect x="91" y="44" width="1" height="2" fill="#34383c" />
+  <rect x="76" y="48" width="1" height="3" fill="#1f160e" />
+  <rect x="77" y="51" width="1" height="3" fill="#1a1310" />
+  <rect x="75" y="46" width="1" height="2" fill="#2e323a" />
+  <!-- drapery snagged off someone's window -->
+  <rect x="66" y="57" width="6" height="3" fill="#1a2410" />
+  <rect x="64" y="60" width="5" height="2" fill="#16210f" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the causeway before the gate ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#1e2026" />
+  <rect x="0" y="66" width="160" height="1" fill="#0c0d11" />
+  <rect x="0" y="67" width="160" height="1" fill="#343740" />
+  <rect x="0" y="67" width="40" height="1" fill="#3a3d48" />
+  <rect x="8" y="67" width="1" height="1" fill="#22242c" />
+  <rect x="18" y="67" width="1" height="1" fill="#22242c" />
+  <rect x="28" y="67" width="1" height="1" fill="#22242c" />
+  <rect x="38" y="67" width="1" height="1" fill="#20222a" />
+  <rect x="48" y="67" width="1" height="1" fill="#20222a" />
+  <rect x="58" y="67" width="1" height="1" fill="#1f2128" />
+  <rect x="68" y="67" width="1" height="1" fill="#1f2128" />
+  <rect x="78" y="67" width="1" height="1" fill="#1d1f25" />
+  <rect x="88" y="67" width="1" height="1" fill="#1d1f25" />
+  <rect x="98" y="67" width="1" height="1" fill="#1c1e24" />
+  <rect x="108" y="67" width="1" height="1" fill="#1b1d23" />
+  <rect x="118" y="67" width="1" height="1" fill="#1b1d23" />
+  <rect x="128" y="67" width="1" height="1" fill="#1a1c22" />
+  <rect x="138" y="67" width="1" height="1" fill="#191b21" />
+  <rect x="148" y="67" width="1" height="1" fill="#191b21" />
+  <rect x="1" y="68" width="17" height="5" fill="#2e303a" />
+  <rect x="19" y="68" width="16" height="5" fill="#262830" />
+  <rect x="36" y="68" width="17" height="5" fill="#2e303a" />
+  <rect x="54" y="68" width="16" height="5" fill="#262830" />
+  <rect x="71" y="68" width="17" height="5" fill="#23252d" />
+  <rect x="89" y="68" width="16" height="5" fill="#20222a" />
+  <rect x="106" y="68" width="17" height="5" fill="#1e2026" />
+  <rect x="124" y="68" width="16" height="5" fill="#1c1e24" />
+  <rect x="141" y="68" width="18" height="5" fill="#1a1c22" />
+  <rect x="1" y="68" width="17" height="1" fill="#3a3d48" />
+  <rect x="36" y="68" width="17" height="1" fill="#363944" />
+  <rect x="0" y="74" width="14" height="5" fill="#262830" />
+  <rect x="15" y="74" width="17" height="5" fill="#2e303a" />
+  <rect x="33" y="74" width="16" height="5" fill="#262830" />
+  <rect x="50" y="74" width="17" height="5" fill="#23252d" />
+  <rect x="68" y="74" width="16" height="5" fill="#20222a" />
+  <rect x="85" y="74" width="17" height="5" fill="#1e2026" />
+  <rect x="103" y="74" width="16" height="5" fill="#1c1e24" />
+  <rect x="120" y="74" width="17" height="5" fill="#1a1c22" />
+  <rect x="138" y="74" width="21" height="5" fill="#181a20" />
+  <rect x="15" y="74" width="17" height="1" fill="#3a3d48" />
+  <rect x="0" y="79" width="18" height="5" fill="#2e303a" />
+  <rect x="19" y="79" width="18" height="5" fill="#262830" />
+  <rect x="38" y="79" width="19" height="5" fill="#2a2c36" />
+  <rect x="58" y="79" width="18" height="5" fill="#23252d" />
+  <rect x="77" y="79" width="19" height="5" fill="#20222a" />
+  <rect x="97" y="79" width="18" height="5" fill="#1d1f25" />
+  <rect x="116" y="79" width="19" height="5" fill="#1b1d23" />
+  <rect x="136" y="79" width="23" height="5" fill="#191b21" />
+  <rect x="0" y="79" width="18" height="1" fill="#3a3d48" />
+  <rect x="19" y="79" width="18" height="1" fill="#363944" />
+  <!-- the guardian, toppled full-length on the stones -->
+  <rect x="114" y="70" width="6" height="7" fill="#262830" />
+  <rect x="114" y="70" width="6" height="1" fill="#2e303a" />
+  <rect x="120" y="71" width="22" height="5" fill="#2e303a" />
+  <rect x="120" y="71" width="22" height="1" fill="#363944" />
+  <rect x="126" y="76" width="10" height="2" fill="#2a2c36" />
+  <rect x="142" y="72" width="5" height="4" fill="#2e303a" />
+  <rect x="143" y="71" width="3" height="1" fill="#363944" />
+  <!-- the antlers, broken into the stone -->
+  <rect x="147" y="70" width="3" height="1" fill="#2a2c36" />
+  <rect x="149" y="68" width="1" height="2" fill="#2a2c36" />
+  <rect x="151" y="69" width="2" height="1" fill="#262830" />
+  <rect x="147" y="75" width="4" height="1" fill="#262830" />
+  <rect x="151" y="76" width="2" height="1" fill="#23252d" />
+  <!-- the hand, palm-open toward the gate it kept -->
+  <rect x="120" y="77" width="4" height="1" fill="#2a2c36" />
+  <!-- arrows spent against the works -->
+  <rect x="34" y="72" width="6" height="1" fill="#241a14" />
+  <rect x="33" y="72" width="1" height="1" fill="#2a3d1c" />
+  <rect x="40" y="72" width="1" height="1" fill="#34383c" />
+  <rect x="50" y="78" width="5" height="1" fill="#1f160e" />
+  <rect x="49" y="78" width="1" height="1" fill="#22311a" />
+  <rect x="98" y="71" width="5" height="1" fill="#241a14" />
+  <rect x="103" y="71" width="1" height="1" fill="#34383c" />
+  <!-- one stuck fast, fletching up -->
+  <rect x="86" y="70" width="1" height="4" fill="#241a14" />
+  <rect x="85" y="69" width="2" height="1" fill="#2a3d1c" />
+  <!-- the watch's blood, and the city's leaves, together -->
+  <rect x="24" y="76" width="6" height="2" fill="#2a0b08" opacity="0.8" />
+  <rect x="28" y="78" width="3" height="1" fill="#2a0b08" opacity="0.6" />
+  <rect x="56" y="81" width="2" height="1" fill="#1f2e16" />
+  <rect x="72" y="79" width="2" height="1" fill="#16210f" />
+  <rect x="108" y="80" width="2" height="1" fill="#141d0d" />
+  <rect x="12" y="81" width="2" height="1" fill="#1f2e16" />
+  <!-- a leaf down alight by the barricade -->
+  <rect x="66" y="71" width="1" height="1" fill="#a33d1e" />
+  <!-- lamplight pooling at the left pylon's foot -->
+  <rect x="18" y="56" width="62" height="28" fill="url(#c10e-floor-pool)" />
+</svg>

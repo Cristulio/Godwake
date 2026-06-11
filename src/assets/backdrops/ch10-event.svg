@@ -1,0 +1,264 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch10-event — A Talonha Balcony: the calm corner of Tor Maladin. A
+       carved balcony of one of the high houses, open to the night: below
+       and beyond the rail, the city burns slow in the crowns of its own
+       trees; overhead, one low bough of the Tree of Life still holds its
+       silver-green light. Cushions, cold tea, an unstrung bow against the
+       rail. Key light: the living bough, upper-LEFT and COOL (the calm
+       scene's key, answered warm by the distant burn). Event banners crop
+       to roughly y28-54: the vista and the rail-line live there.
+       Floor seam y66 (the carved deck border).
+       Shares the ch10 ramps (see ch10-combat.svg header); Tree silver-
+       green: #2a4a3a #3a6a52 #4f8a6a (+#6aa886 brightest, 1px); cushion
+       teal: #16282c #1d3a40; violet: #221338 #2a1844. -->
+  <defs>
+    <radialGradient id="c10v-bough-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#4f8a6a" stop-opacity="0.22" />
+      <stop offset="50%" stop-color="#3a6a52" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#3a6a52" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c10v-burn-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#a33d1e" stop-opacity="0.14" />
+      <stop offset="100%" stop-color="#a33d1e" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the night over the canopy ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0c0e1c" />
+  <rect x="0" y="0" width="160" height="5" fill="#0a0c18" />
+  <rect x="0" y="5" width="160" height="3" fill="#0b0d1a" />
+  <!-- two stars the smoke has not found -->
+  <rect x="92" y="2" width="1" height="1" fill="#aab8d8" opacity="0.7" />
+  <rect x="124" y="4" width="1" height="1" fill="#c8c8e8" opacity="0.5" />
+  <!-- smoke standing into the night -->
+  <rect x="48" y="0" width="4" height="12" fill="#11142a" opacity="0.8" />
+  <rect x="50" y="0" width="4" height="7" fill="#0e1124" opacity="0.8" />
+  <rect x="100" y="2" width="3" height="12" fill="#11142a" opacity="0.7" />
+  <rect x="134" y="0" width="3" height="10" fill="#0e1124" opacity="0.7" />
+
+  <!-- ══ The vista: the city burning in its trees (y8-50) ══ -->
+  <!-- great trunks against the glow -->
+  <rect x="20" y="8" width="8" height="42" fill="#11111c" />
+  <rect x="20" y="8" width="1" height="42" fill="#16161e" />
+  <rect x="60" y="10" width="9" height="40" fill="#10101a" />
+  <rect x="60" y="10" width="1" height="40" fill="#151520" />
+  <rect x="108" y="9" width="9" height="41" fill="#0f0f18" />
+  <rect x="144" y="12" width="7" height="38" fill="#0e0e16" />
+  <!-- their crowns, going to fire (brighter LEFT) -->
+  <rect x="10" y="10" width="24" height="3" fill="#3f1c08" />
+  <rect x="14" y="8" width="14" height="2" fill="#5a2c0e" />
+  <rect x="30" y="13" width="14" height="2" fill="#2a1206" />
+  <rect x="52" y="12" width="22" height="3" fill="#2a1206" />
+  <rect x="56" y="10" width="12" height="2" fill="#3f1c08" />
+  <rect x="100" y="12" width="20" height="2" fill="#23100a" />
+  <rect x="104" y="14" width="10" height="1" fill="#2a1206" />
+  <rect x="140" y="14" width="14" height="2" fill="#23100a" />
+  <!-- embers in the crowns -->
+  <rect x="18" y="9" width="2" height="1" fill="#a33d1e" />
+  <rect x="22" y="8" width="1" height="1" fill="#e8743a" />
+  <rect x="36" y="12" width="1" height="1" fill="#a33d1e" />
+  <rect x="62" y="11" width="1" height="1" fill="#a33d1e" />
+  <rect x="66" y="13" width="1" height="1" fill="#7a2a16" />
+  <rect x="110" y="13" width="1" height="1" fill="#7a2a16" />
+  <rect x="146" y="14" width="1" height="1" fill="#7a2a16" />
+  <!-- the burn's haze among the boughs, right and low -->
+  <rect x="64" y="4" width="92" height="44" fill="url(#c10v-burn-glow)" />
+  <!-- dark leaf-masses below the crowns -->
+  <rect x="4" y="16" width="28" height="4" fill="#10180b" />
+  <rect x="34" y="18" width="20" height="3" fill="#0e1509" />
+  <rect x="52" y="16" width="24" height="4" fill="#10180b" />
+  <rect x="78" y="18" width="24" height="3" fill="#0e1509" />
+  <rect x="104" y="16" width="22" height="4" fill="#0d1408" />
+  <rect x="128" y="18" width="32" height="3" fill="#0d1408" />
+  <!-- the city in the trees: bridges and houses, dark -->
+  <rect x="28" y="24" width="26" height="2" fill="#14161c" />
+  <rect x="36" y="20" width="6" height="4" fill="#16181e" />
+  <rect x="38" y="18" width="2" height="2" fill="#181a20" />
+  <rect x="70" y="26" width="32" height="2" fill="#121420" />
+  <rect x="80" y="21" width="7" height="5" fill="#14161c" />
+  <rect x="82" y="19" width="3" height="2" fill="#16181e" />
+  <rect x="120" y="24" width="20" height="2" fill="#10121c" />
+  <rect x="126" y="20" width="6" height="4" fill="#12141a" />
+  <!-- one window still lit somewhere it shouldn't be -->
+  <rect x="83" y="23" width="1" height="1" fill="#c87f2e" />
+  <!-- dead lamp-strings between the trunks -->
+  <rect x="30" y="30" width="1" height="1" fill="#1e2026" />
+  <rect x="38" y="31" width="1" height="1" fill="#1e2026" />
+  <rect x="46" y="32" width="1" height="1" fill="#1c1e24" />
+  <rect x="54" y="31" width="1" height="1" fill="#1c1e24" />
+  <rect x="76" y="32" width="1" height="1" fill="#1a1c22" />
+  <rect x="84" y="33" width="1" height="1" fill="#1a1c22" />
+  <rect x="92" y="32" width="1" height="1" fill="#181a20" />
+  <rect x="120" y="33" width="1" height="1" fill="#16181e" />
+  <rect x="128" y="34" width="1" height="1" fill="#16181e" />
+  <!-- fire caught in the under-leaves, far down -->
+  <rect x="24" y="38" width="10" height="2" fill="#23100a" />
+  <rect x="28" y="37" width="4" height="1" fill="#2a1206" />
+  <rect x="70" y="40" width="12" height="2" fill="#23100a" />
+  <rect x="74" y="39" width="3" height="1" fill="#2a1206" />
+  <rect x="76" y="39" width="1" height="1" fill="#5a1812" />
+  <rect x="118" y="42" width="10" height="2" fill="#1d0d08" />
+  <!-- the gulf going down forever -->
+  <rect x="0" y="44" width="160" height="6" fill="#0b0c14" />
+
+  <!-- ══ The living bough, upper-LEFT — the key light ══ -->
+  <rect x="0" y="4" width="14" height="3" fill="#14141a" />
+  <rect x="12" y="6" width="12" height="3" fill="#14141a" />
+  <rect x="22" y="8" width="10" height="2" fill="#121218" />
+  <rect x="30" y="10" width="8" height="2" fill="#121218" />
+  <!-- its leaves: dark green, edged in the Tree's own light -->
+  <rect x="6" y="7" width="10" height="3" fill="#1f2e16" />
+  <rect x="14" y="9" width="12" height="3" fill="#16210f" />
+  <rect x="24" y="11" width="10" height="3" fill="#1f2e16" />
+  <rect x="32" y="13" width="8" height="2" fill="#16210f" />
+  <rect x="4" y="9" width="6" height="2" fill="#2a4a3a" />
+  <rect x="10" y="10" width="3" height="1" fill="#3a6a52" />
+  <rect x="18" y="12" width="4" height="1" fill="#3a6a52" />
+  <rect x="26" y="14" width="3" height="1" fill="#4f8a6a" />
+  <rect x="34" y="15" width="2" height="1" fill="#3a6a52" />
+  <rect x="13" y="9" width="1" height="1" fill="#6aa886" />
+  <rect x="28" y="13" width="1" height="1" fill="#6aa886" />
+  <rect x="20" y="11" width="1" height="1" fill="#4f8a6a" />
+  <!-- two leaves letting go, alight with green not fire -->
+  <rect x="16" y="20" width="1" height="1" fill="#3a6a52" opacity="0.8" />
+  <rect x="30" y="26" width="1" height="1" fill="#2a4a3a" opacity="0.8" />
+  <rect x="-16" y="-12" width="76" height="52" fill="url(#c10v-bough-glow)" />
+
+  <!-- ══ The balustrade (rail y50, balusters to y64) ══ -->
+  <rect x="0" y="50" width="160" height="3" fill="#2e303a" />
+  <rect x="0" y="50" width="56" height="1" fill="#3a3d48" />
+  <rect x="56" y="50" width="56" height="1" fill="#343740" />
+  <rect x="0" y="53" width="160" height="1" fill="#191b21" />
+  <!-- carved newels -->
+  <rect x="6" y="46" width="5" height="18" fill="#262830" />
+  <rect x="6" y="46" width="5" height="1" fill="#343740" />
+  <rect x="6" y="46" width="1" height="18" fill="#2e303a" />
+  <rect x="5" y="44" width="7" height="2" fill="#2e303a" />
+  <rect x="5" y="44" width="7" height="1" fill="#3a3d48" />
+  <rect x="149" y="46" width="5" height="18" fill="#1e2026" />
+  <rect x="148" y="44" width="7" height="2" fill="#23252d" />
+  <rect x="148" y="44" width="7" height="1" fill="#2a2c36" />
+  <!-- the house's lamp, dark on the newel cap -->
+  <rect x="7" y="39" width="3" height="5" fill="#1e2026" />
+  <rect x="8" y="40" width="1" height="3" fill="#11101a" />
+  <rect x="7" y="38" width="3" height="1" fill="#262830" />
+  <!-- balusters -->
+  <rect x="14" y="54" width="1" height="10" fill="#262830" />
+  <rect x="20" y="54" width="1" height="10" fill="#262830" />
+  <rect x="26" y="54" width="1" height="10" fill="#24262e" />
+  <rect x="32" y="54" width="1" height="10" fill="#24262e" />
+  <rect x="38" y="54" width="1" height="10" fill="#22242c" />
+  <rect x="44" y="54" width="1" height="10" fill="#22242c" />
+  <rect x="50" y="54" width="1" height="10" fill="#20222a" />
+  <rect x="56" y="54" width="1" height="10" fill="#20222a" />
+  <rect x="62" y="54" width="1" height="10" fill="#1f2128" />
+  <rect x="68" y="54" width="1" height="10" fill="#1f2128" />
+  <rect x="74" y="54" width="1" height="10" fill="#1e2026" />
+  <rect x="80" y="54" width="1" height="10" fill="#1e2026" />
+  <rect x="86" y="54" width="1" height="10" fill="#1d1f25" />
+  <rect x="92" y="54" width="1" height="10" fill="#1d1f25" />
+  <rect x="98" y="54" width="1" height="10" fill="#1c1e24" />
+  <rect x="104" y="54" width="1" height="10" fill="#1c1e24" />
+  <rect x="110" y="54" width="1" height="10" fill="#1b1d23" />
+  <rect x="116" y="54" width="1" height="10" fill="#1b1d23" />
+  <rect x="122" y="54" width="1" height="10" fill="#1a1c22" />
+  <rect x="128" y="54" width="1" height="10" fill="#1a1c22" />
+  <rect x="134" y="54" width="1" height="10" fill="#191b21" />
+  <rect x="140" y="54" width="1" height="10" fill="#191b21" />
+  <rect x="146" y="54" width="1" height="10" fill="#181a20" />
+  <!-- the rail's shadow band, then the kerb to the deck -->
+  <rect x="0" y="64" width="160" height="2" fill="#15171d" />
+  <!-- the unstrung bow, leant where its hands left it -->
+  <rect x="135" y="38" width="1" height="3" fill="#241a14" />
+  <rect x="136" y="41" width="1" height="5" fill="#2a1a10" />
+  <rect x="137" y="46" width="1" height="6" fill="#2a1a10" />
+  <rect x="138" y="52" width="1" height="7" fill="#241a14" />
+  <rect x="139" y="59" width="1" height="5" fill="#1f160e" />
+  <rect x="134" y="38" width="1" height="1" fill="#38241a" />
+  <!-- the string, hanging slack -->
+  <rect x="134" y="39" width="1" height="4" fill="#34322c" opacity="0.8" />
+  <rect x="133" y="43" width="1" height="3" fill="#2e2c26" opacity="0.7" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the carved deck ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#1a1310" />
+  <rect x="0" y="66" width="160" height="1" fill="#0a0805" />
+  <!-- the carved border at the seam -->
+  <rect x="0" y="67" width="160" height="1" fill="#322416" />
+  <rect x="0" y="67" width="48" height="1" fill="#3a2c1e" />
+  <rect x="10" y="67" width="1" height="1" fill="#1f160e" />
+  <rect x="22" y="67" width="1" height="1" fill="#1f160e" />
+  <rect x="34" y="67" width="1" height="1" fill="#1f160e" />
+  <rect x="46" y="67" width="1" height="1" fill="#1c130d" />
+  <rect x="58" y="67" width="1" height="1" fill="#1c130d" />
+  <rect x="70" y="67" width="1" height="1" fill="#1a120c" />
+  <rect x="82" y="67" width="1" height="1" fill="#1a120c" />
+  <rect x="94" y="67" width="1" height="1" fill="#18110b" />
+  <rect x="106" y="67" width="1" height="1" fill="#18110b" />
+  <rect x="118" y="67" width="1" height="1" fill="#16100a" />
+  <rect x="130" y="67" width="1" height="1" fill="#16100a" />
+  <rect x="142" y="67" width="1" height="1" fill="#140e09" />
+  <rect x="154" y="67" width="1" height="1" fill="#140e09" />
+  <!-- plank runs -->
+  <rect x="1" y="68" width="30" height="5" fill="#241a14" />
+  <rect x="32" y="68" width="28" height="5" fill="#1f160e" />
+  <rect x="61" y="68" width="30" height="5" fill="#1c130d" />
+  <rect x="92" y="68" width="28" height="5" fill="#18110b" />
+  <rect x="121" y="68" width="38" height="5" fill="#150f0a" />
+  <rect x="1" y="68" width="30" height="1" fill="#322416" />
+  <rect x="32" y="68" width="28" height="1" fill="#2a2014" />
+  <rect x="0" y="74" width="24" height="5" fill="#1f160e" />
+  <rect x="25" y="74" width="32" height="5" fill="#241a14" />
+  <rect x="58" y="74" width="26" height="5" fill="#1a120c" />
+  <rect x="85" y="74" width="32" height="5" fill="#160f0a" />
+  <rect x="118" y="74" width="42" height="5" fill="#130d08" />
+  <rect x="25" y="74" width="32" height="1" fill="#2a2014" />
+  <rect x="0" y="79" width="34" height="5" fill="#241a14" />
+  <rect x="35" y="79" width="28" height="5" fill="#1f160e" />
+  <rect x="64" y="79" width="30" height="5" fill="#18110b" />
+  <rect x="95" y="79" width="30" height="5" fill="#150f0a" />
+  <rect x="126" y="79" width="33" height="5" fill="#120c08" />
+  <rect x="0" y="79" width="34" height="1" fill="#322416" />
+  <!-- board gaps -->
+  <rect x="31" y="68" width="1" height="5" fill="#0e0906" />
+  <rect x="60" y="68" width="1" height="5" fill="#0e0906" />
+  <rect x="91" y="68" width="1" height="5" fill="#0c0805" />
+  <rect x="120" y="68" width="1" height="5" fill="#0c0805" />
+  <rect x="24" y="74" width="1" height="5" fill="#0e0906" />
+  <rect x="57" y="74" width="1" height="5" fill="#0c0805" />
+  <rect x="84" y="74" width="1" height="5" fill="#0c0805" />
+  <rect x="117" y="74" width="1" height="5" fill="#0a0704" />
+  <rect x="34" y="79" width="1" height="5" fill="#0e0906" />
+  <rect x="63" y="79" width="1" height="5" fill="#0c0805" />
+  <rect x="94" y="79" width="1" height="5" fill="#0a0704" />
+  <rect x="125" y="79" width="1" height="5" fill="#0a0704" />
+  <!-- the cushions, kept out of the wind -->
+  <rect x="12" y="71" width="10" height="6" fill="#1d3a40" />
+  <rect x="12" y="71" width="10" height="1" fill="#26474e" />
+  <rect x="14" y="77" width="6" height="1" fill="#16282c" />
+  <rect x="11" y="73" width="1" height="2" fill="#16282c" />
+  <rect x="23" y="73" width="8" height="5" fill="#2a1844" />
+  <rect x="23" y="73" width="8" height="1" fill="#3a2356" />
+  <rect x="30" y="75" width="1" height="1" fill="#54400f" />
+  <!-- the tea, gone cold mid-pour -->
+  <rect x="38" y="74" width="12" height="1" fill="#2a2014" />
+  <rect x="40" y="70" width="4" height="4" fill="#262830" />
+  <rect x="41" y="69" width="2" height="1" fill="#2e303a" />
+  <rect x="44" y="71" width="1" height="2" fill="#2e303a" />
+  <rect x="38" y="72" width="2" height="2" fill="#2e303a" />
+  <rect x="47" y="72" width="2" height="2" fill="#2a2c36" />
+  <rect x="49" y="73" width="2" height="1" fill="#23252d" />
+  <!-- a shawl folded over nothing -->
+  <rect x="56" y="73" width="7" height="3" fill="#221338" />
+  <rect x="56" y="73" width="7" height="1" fill="#2a1844" />
+  <!-- the quiver, full: the fight went past this house -->
+  <rect x="142" y="74" width="3" height="7" fill="#2a1a10" />
+  <rect x="142" y="73" width="3" height="1" fill="#38241a" />
+  <rect x="142" y="72" width="1" height="1" fill="#2a3d1c" />
+  <rect x="144" y="72" width="1" height="1" fill="#2a3d1c" />
+  <!-- leaves down on the deck, one of them still green-lit -->
+  <rect x="68" y="76" width="2" height="1" fill="#1f2e16" />
+  <rect x="98" y="80" width="2" height="1" fill="#16210f" />
+  <rect x="30" y="81" width="2" height="1" fill="#1f2e16" />
+  <rect x="20" y="69" width="2" height="1" fill="#2a4a3a" />
+  <rect x="21" y="69" width="1" height="1" fill="#3a6a52" />
+</svg>

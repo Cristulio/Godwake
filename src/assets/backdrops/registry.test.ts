@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { backdropFor } from './registry';
 
 describe('backdropFor', () => {
-  it('resolves every authored chapter 1-6 scene', () => {
-    for (const chapter of [1, 2, 3, 4, 5, 6]) {
+  it('resolves every authored chapter 1-10 scene', () => {
+    for (const chapter of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
       for (const kind of ['combat', 'elite', 'boss', 'event'] as const) {
         expect(backdropFor(chapter, kind), `ch${chapter}-${kind}`).toMatch(/\.svg$/);
       }
@@ -20,6 +20,7 @@ describe('backdropFor', () => {
 
   it('maps rest rooms onto the chapter event scene', () => {
     expect(backdropFor(1, 'rest')).toBe(backdropFor(1, 'event'));
+    expect(backdropFor(7, 'rest')).toBe(backdropFor(7, 'event'));
     expect(backdropFor(14, 'rest')).toBe(backdropFor(14, 'event'));
   });
 

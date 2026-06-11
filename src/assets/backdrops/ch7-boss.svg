@@ -1,0 +1,256 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch7-boss — Where the Keeper Drowned the Library: the great rotunda.
+       The floodgate-wheel stands locked open on its dais between the
+       combatants, the half-raised gate weeping black water behind it.
+       Key light: a drowned oculus upper-LEFT, leaking a cold green-white
+       shaft down onto the wheel — the library's own lamps are dead
+       verdigris. Phosphor glints in the pool below the dais. The component
+       lays the boss blood-red ambience above. Quiet mid band y38-63
+       outside the centre set piece; floor seam y66.
+       Ramps — ch7 stone/water (see ch7-combat.svg); iron: #0b0907 #16120d
+       #211b13 #2d2519; verdigris: #16343a #1f4a52; cold light: #1d3a42
+       #2a525c #3a6a74. -->
+  <defs>
+    <radialGradient id="c7b-oculus-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#3a6a74" stop-opacity="0.30" />
+      <stop offset="50%" stop-color="#2a525c" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#2a525c" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="c7b-ray" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#3a6a74" stop-opacity="0.26" />
+      <stop offset="65%" stop-color="#2a525c" stop-opacity="0.09" />
+      <stop offset="100%" stop-color="#2a525c" stop-opacity="0" />
+    </linearGradient>
+    <radialGradient id="c7b-pool-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#2a525c" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#1d3a42" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: the dome + rotunda wall ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#0e1316" />
+  <rect x="104" y="0" width="56" height="66" fill="#0a0e12" />
+  <!-- dome crown, stepping down toward the walls -->
+  <rect x="0" y="0" width="160" height="2" fill="#060809" />
+  <rect x="0" y="2" width="22" height="3" fill="#080b0d" />
+  <rect x="138" y="2" width="22" height="3" fill="#070a0c" />
+  <rect x="22" y="2" width="116" height="1" fill="#0a0f12" />
+  <rect x="0" y="5" width="160" height="1" fill="#121a1e" />
+  <!-- dome ribs, fanning -->
+  <rect x="48" y="0" width="1" height="5" fill="#0a0f12" />
+  <rect x="80" y="0" width="1" height="5" fill="#0a0f12" />
+  <rect x="112" y="0" width="1" height="5" fill="#090d10" />
+  <!-- ══ The oculus, upper-LEFT: cold light through deep water ══ -->
+  <rect x="16" y="0" width="20" height="5" fill="#11242a" />
+  <rect x="19" y="0" width="14" height="4" fill="#1d3a42" />
+  <rect x="23" y="0" width="6" height="3" fill="#2a525c" />
+  <rect x="25" y="0" width="2" height="2" fill="#3a6a74" />
+  <rect x="16" y="5" width="20" height="1" fill="#15212a" />
+  <rect x="2" y="-8" width="62" height="44" fill="url(#c7b-oculus-glow)" />
+  <!-- the shaft, falling toward the wheel -->
+  <rect x="18" y="2" width="50" height="44" fill="url(#c7b-ray)" />
+  <rect x="30" y="8" width="2" height="10" fill="#1d3a42" opacity="0.30" />
+  <rect x="36" y="14" width="2" height="12" fill="#1d3a42" opacity="0.24" />
+  <rect x="44" y="20" width="2" height="12" fill="#1a343c" opacity="0.20" />
+  <rect x="52" y="26" width="2" height="10" fill="#1a343c" opacity="0.16" />
+  <!-- motes hanging in the cold shaft -->
+  <rect x="34" y="12" width="1" height="1" fill="#2a525c" opacity="0.8" />
+  <rect x="42" y="22" width="1" height="1" fill="#2a525c" opacity="0.6" />
+  <rect x="50" y="30" width="1" height="1" fill="#1d3a42" opacity="0.7" />
+
+  <!-- ══ Arched niches with the drowned dead of the stacks ══ -->
+  <rect x="4" y="12" width="14" height="22" fill="#070a0c" />
+  <rect x="6" y="10" width="10" height="2" fill="#070a0c" />
+  <rect x="6" y="10" width="10" height="1" fill="#121a1e" />
+  <rect x="8" y="16" width="6" height="14" fill="#0d1418" />
+  <rect x="9" y="14" width="4" height="2" fill="#0d1418" />
+  <rect x="4" y="33" width="14" height="1" fill="#0b0e11" />
+  <rect x="40" y="12" width="13" height="22" fill="#070a0c" />
+  <rect x="42" y="10" width="9" height="2" fill="#070a0c" />
+  <rect x="42" y="10" width="9" height="1" fill="#11181c" />
+  <rect x="44" y="17" width="5" height="13" fill="#0c1216" />
+  <rect x="45" y="15" width="3" height="2" fill="#0c1216" />
+  <rect x="108" y="12" width="13" height="22" fill="#060809" />
+  <rect x="110" y="10" width="9" height="2" fill="#060809" />
+  <rect x="110" y="10" width="9" height="1" fill="#0e1418" />
+  <rect x="112" y="16" width="5" height="14" fill="#0b1014" />
+  <rect x="113" y="14" width="3" height="2" fill="#0b1014" />
+  <rect x="138" y="12" width="14" height="22" fill="#060809" />
+  <rect x="140" y="10" width="10" height="2" fill="#060809" />
+  <rect x="140" y="10" width="10" height="1" fill="#0d1216" />
+  <rect x="143" y="17" width="5" height="13" fill="#0a0e12" />
+  <rect x="144" y="15" width="3" height="2" fill="#0a0e12" />
+  <!-- high-water stain ringing the whole rotunda -->
+  <rect x="0" y="8" width="160" height="1" fill="#1d2a2e" opacity="0.7" />
+
+  <!-- ══ Flanking columns (x24-31, x128-135) ══ -->
+  <rect x="24" y="6" width="8" height="60" fill="#121a1e" />
+  <rect x="23" y="6" width="10" height="3" fill="#182428" />
+  <rect x="23" y="6" width="10" height="1" fill="#243438" />
+  <rect x="24" y="9" width="1" height="57" fill="#1c2a2e" />
+  <rect x="31" y="9" width="1" height="57" fill="#0c1014" />
+  <rect x="23" y="60" width="10" height="6" fill="#0f1518" />
+  <rect x="23" y="60" width="10" height="1" fill="#182428" />
+  <rect x="128" y="6" width="8" height="60" fill="#0d1216" />
+  <rect x="127" y="6" width="10" height="3" fill="#10181c" />
+  <rect x="127" y="6" width="10" height="1" fill="#15212a" />
+  <rect x="128" y="9" width="1" height="57" fill="#10181c" />
+  <rect x="135" y="9" width="1" height="57" fill="#090d10" />
+  <rect x="127" y="60" width="10" height="6" fill="#0b0f12" />
+  <rect x="127" y="60" width="10" height="1" fill="#121a1e" />
+  <!-- the library's lamps, dead under verdigris -->
+  <rect x="26" y="15" width="4" height="5" fill="#16120d" />
+  <rect x="27" y="16" width="2" height="3" fill="#0b0907" />
+  <rect x="26" y="15" width="4" height="1" fill="#1f4a52" />
+  <rect x="26" y="19" width="1" height="1" fill="#16343a" />
+  <rect x="130" y="15" width="4" height="5" fill="#120f0b" />
+  <rect x="131" y="16" width="2" height="3" fill="#0a0806" />
+  <rect x="130" y="15" width="4" height="1" fill="#16343a" />
+
+  <!-- ══ The floodgate, half-raised behind the wheel ══ -->
+  <rect x="62" y="10" width="36" height="2" fill="#16120d" />
+  <rect x="62" y="10" width="36" height="1" fill="#211b13" />
+  <rect x="64" y="12" width="32" height="40" fill="#0b0907" />
+  <rect x="64" y="12" width="32" height="1" fill="#16120d" />
+  <rect x="64" y="20" width="32" height="1" fill="#080604" />
+  <rect x="64" y="29" width="32" height="1" fill="#080604" />
+  <rect x="64" y="38" width="32" height="1" fill="#080604" />
+  <rect x="64" y="47" width="32" height="1" fill="#080604" />
+  <!-- rivet studs catching the cold shaft on the left -->
+  <rect x="66" y="14" width="1" height="1" fill="#243438" />
+  <rect x="66" y="23" width="1" height="1" fill="#1c2a2e" />
+  <rect x="66" y="32" width="1" height="1" fill="#1c2a2e" />
+  <rect x="72" y="14" width="1" height="1" fill="#211b13" />
+  <rect x="80" y="14" width="1" height="1" fill="#211b13" />
+  <rect x="88" y="14" width="1" height="1" fill="#16120d" />
+  <rect x="94" y="23" width="1" height="1" fill="#16120d" />
+  <rect x="94" y="38" width="1" height="1" fill="#16120d" />
+  <!-- the gap beneath: the flood, still coming in -->
+  <rect x="66" y="52" width="28" height="5" fill="#040608" />
+  <rect x="66" y="52" width="28" height="1" fill="#0a1014" />
+  <rect x="74" y="54" width="3" height="1" fill="#1d3a42" opacity="0.8" />
+  <!-- water weeping down the gate face -->
+  <rect x="68" y="34" width="1" height="18" fill="#0d1418" opacity="0.8" />
+  <rect x="84" y="26" width="1" height="26" fill="#0d1418" opacity="0.7" />
+  <rect x="92" y="40" width="1" height="12" fill="#0b1014" opacity="0.8" />
+
+  <!-- ══ MID BAND (y38-66): quiet rotunda courses ══ -->
+  <rect x="0" y="38" width="11" height="14" fill="#11181b" />
+  <rect x="11" y="38" width="13" height="14" fill="#0e1417" />
+  <rect x="0" y="52" width="16" height="14" fill="#0e1417" />
+  <rect x="16" y="52" width="8" height="14" fill="#0c1114" />
+  <rect x="32" y="38" width="14" height="14" fill="#0e1417" />
+  <rect x="46" y="38" width="16" height="14" fill="#0c1114" />
+  <rect x="32" y="52" width="20" height="14" fill="#0c1114" />
+  <rect x="52" y="52" width="10" height="14" fill="#0a0f12" />
+  <rect x="98" y="38" width="14" height="14" fill="#0b0f13" />
+  <rect x="112" y="38" width="16" height="14" fill="#090d11" />
+  <rect x="98" y="52" width="18" height="14" fill="#090d11" />
+  <rect x="116" y="52" width="12" height="14" fill="#0b0f13" />
+  <rect x="136" y="38" width="24" height="14" fill="#090d11" />
+  <rect x="136" y="52" width="14" height="14" fill="#0a0e12" />
+  <rect x="150" y="52" width="10" height="14" fill="#080c10" />
+
+  <!-- ══ The floodgate-wheel, locked open on its dais ══ -->
+  <!-- rim -->
+  <rect x="73" y="27" width="14" height="3" fill="#16120d" />
+  <rect x="69" y="29" width="5" height="3" fill="#16120d" />
+  <rect x="86" y="29" width="5" height="3" fill="#100d0a" />
+  <rect x="66" y="32" width="4" height="4" fill="#16120d" />
+  <rect x="90" y="32" width="4" height="4" fill="#100d0a" />
+  <rect x="65" y="36" width="3" height="12" fill="#16120d" />
+  <rect x="92" y="36" width="3" height="12" fill="#0d0a08" />
+  <rect x="66" y="48" width="4" height="4" fill="#120f0b" />
+  <rect x="90" y="48" width="4" height="4" fill="#0d0a08" />
+  <rect x="69" y="51" width="5" height="3" fill="#120f0b" />
+  <rect x="86" y="51" width="5" height="3" fill="#0b0907" />
+  <rect x="73" y="53" width="14" height="3" fill="#0e0b08" />
+  <!-- the cold shaft catches the upper-left arc -->
+  <rect x="73" y="27" width="8" height="1" fill="#34494c" />
+  <rect x="69" y="29" width="4" height="1" fill="#2d4145" />
+  <rect x="66" y="32" width="2" height="2" fill="#243438" />
+  <rect x="65" y="36" width="1" height="6" fill="#1c2a2e" />
+  <!-- verdigris eating the rim -->
+  <rect x="71" y="30" width="2" height="1" fill="#1f4a52" />
+  <rect x="91" y="34" width="1" height="2" fill="#16343a" />
+  <rect x="68" y="49" width="2" height="1" fill="#16343a" />
+  <rect x="88" y="52" width="2" height="1" fill="#16343a" />
+  <!-- spokes + hub -->
+  <rect x="79" y="30" width="2" height="24" fill="#100d0a" />
+  <rect x="68" y="41" width="24" height="2" fill="#100d0a" />
+  <rect x="76" y="38" width="8" height="8" fill="#16120d" />
+  <rect x="77" y="39" width="6" height="6" fill="#211b13" />
+  <rect x="78" y="40" width="2" height="2" fill="#2d2519" />
+  <rect x="81" y="42" width="2" height="2" fill="#1f4a52" />
+  <!-- the lock-chain run up to the gate head -->
+  <rect x="88" y="30" width="1" height="1" fill="#2d2519" />
+  <rect x="89" y="27" width="1" height="2" fill="#211b13" />
+  <rect x="90" y="24" width="1" height="2" fill="#2d2519" />
+  <rect x="91" y="20" width="1" height="3" fill="#211b13" />
+  <rect x="92" y="16" width="1" height="3" fill="#2d2519" />
+  <rect x="92" y="12" width="1" height="3" fill="#211b13" />
+
+  <!-- ══ The dais (steps to y66) ══ -->
+  <rect x="60" y="58" width="40" height="3" fill="#182428" />
+  <rect x="60" y="58" width="40" height="1" fill="#243438" />
+  <rect x="60" y="58" width="18" height="1" fill="#2d4145" />
+  <rect x="56" y="61" width="48" height="5" fill="#121a1e" />
+  <rect x="56" y="61" width="48" height="1" fill="#1f2e32" />
+  <rect x="56" y="61" width="20" height="1" fill="#243438" />
+  <!-- wet sheen on the tread -->
+  <rect x="64" y="63" width="6" height="1" fill="#1c2a2e" opacity="0.8" />
+  <rect x="84" y="64" width="5" height="1" fill="#15212a" opacity="0.8" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the walkway ring + the black pool ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#0c1014" />
+  <rect x="0" y="66" width="160" height="1" fill="#050708" />
+  <rect x="1" y="67" width="14" height="4" fill="#1f2e32" />
+  <rect x="16" y="67" width="13" height="4" fill="#182428" />
+  <rect x="30" y="67" width="13" height="4" fill="#1f2e32" />
+  <rect x="44" y="67" width="11" height="4" fill="#141d21" />
+  <rect x="106" y="67" width="12" height="4" fill="#0c1216" />
+  <rect x="119" y="67" width="13" height="4" fill="#0b1014" />
+  <rect x="133" y="67" width="26" height="4" fill="#0a0f13" />
+  <rect x="1" y="67" width="14" height="1" fill="#283a3e" />
+  <rect x="16" y="67" width="13" height="1" fill="#2d4145" />
+  <rect x="0" y="72" width="15" height="5" fill="#182428" />
+  <rect x="16" y="72" width="14" height="5" fill="#1f2e32" />
+  <rect x="31" y="72" width="14" height="5" fill="#141d21" />
+  <rect x="46" y="72" width="8" height="5" fill="#121a1e" />
+  <rect x="108" y="72" width="14" height="5" fill="#0b1014" />
+  <rect x="123" y="72" width="14" height="5" fill="#0c1216" />
+  <rect x="138" y="72" width="21" height="5" fill="#0a0f13" />
+  <rect x="16" y="72" width="14" height="1" fill="#2d4145" />
+  <rect x="0" y="78" width="17" height="6" fill="#1f2e32" />
+  <rect x="18" y="78" width="16" height="6" fill="#182428" />
+  <rect x="35" y="78" width="15" height="6" fill="#1f2e32" />
+  <rect x="110" y="78" width="16" height="6" fill="#0c1216" />
+  <rect x="127" y="78" width="32" height="6" fill="#0a0f13" />
+  <rect x="0" y="78" width="17" height="1" fill="#283a3e" />
+  <rect x="18" y="78" width="16" height="1" fill="#243438" />
+  <!-- the pool below the dais, deepest black in the room -->
+  <rect x="52" y="70" width="58" height="14" fill="#04070a" />
+  <rect x="54" y="68" width="52" height="2" fill="#04070a" />
+  <rect x="54" y="68" width="52" height="1" fill="#0a1014" />
+  <rect x="52" y="70" width="2" height="1" fill="#0a1014" />
+  <rect x="108" y="70" width="2" height="1" fill="#0a1014" />
+  <!-- the wheel's reflection, broken -->
+  <rect x="74" y="72" width="12" height="1" fill="#0d1418" opacity="0.8" />
+  <rect x="71" y="74" width="6" height="1" fill="#0b1216" opacity="0.7" />
+  <rect x="83" y="75" width="7" height="1" fill="#0b1216" opacity="0.6" />
+  <!-- phosphor riding the still water -->
+  <rect x="62" y="71" width="3" height="1" fill="#1d3a42" opacity="0.9" />
+  <rect x="96" y="73" width="4" height="1" fill="#16343a" opacity="0.9" />
+  <rect x="100" y="77" width="2" height="1" fill="#2a525c" opacity="0.8" />
+  <rect x="68" y="79" width="2" height="1" fill="#1f4a52" opacity="0.7" />
+  <rect x="88" y="80" width="1" height="1" fill="#2a6a76" opacity="0.9" />
+  <rect x="48" y="64" width="64" height="22" fill="url(#c7b-pool-glow)" />
+  <!-- drowned books settling at the pool rim -->
+  <rect x="46" y="76" width="7" height="2" fill="#16100c" />
+  <rect x="47" y="76" width="2" height="1" fill="#241a14" />
+  <rect x="112" y="74" width="6" height="2" fill="#0e0b08" />
+  <!-- wet moss at the column feet -->
+  <rect x="22" y="66" width="4" height="1" fill="#1c2914" />
+  <rect x="24" y="67" width="2" height="1" fill="#2a3d1c" />
+  <rect x="134" y="66" width="3" height="1" fill="#15200f" />
+</svg>

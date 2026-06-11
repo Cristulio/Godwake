@@ -1,0 +1,252 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84" shape-rendering="crispEdges" preserveAspectRatio="none">
+  <!-- ch8-boss — Where the Line Still Holds: the centre of the old line.
+       The Marshal's great burnt standard planted on its mound between the
+       combatants, the dead of both sides massed into one column either
+       side, smoke folding down. Twin pike-stand watch-fires flank the
+       field — the LEFT one burns brighter (the key); the component lays
+       the boss blood-red ambience above. Quiet mid band y38-63 outside
+       the centre set piece; floor seam y66.
+       Shares the ch8 ramps (see ch8-combat.svg header); drum walnut:
+       #2a1a10 #38241a; brass: #54400f #6a521e #8a6c2a. -->
+  <defs>
+    <radialGradient id="c8b-brazier-l" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.30" />
+      <stop offset="45%" stop-color="#e8743a" stop-opacity="0.13" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c8b-brazier-r" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="c8b-floor-pool" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e8743a" stop-opacity="0.11" />
+      <stop offset="100%" stop-color="#e8743a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ══ FAR: smoke folding down over the field ══ -->
+  <rect x="0" y="0" width="160" height="66" fill="#1c1812" />
+  <rect x="104" y="0" width="56" height="66" fill="#16130f" />
+  <rect x="0" y="0" width="160" height="5" fill="#120e08" />
+  <rect x="0" y="5" width="160" height="4" fill="#171209" />
+  <rect x="18" y="7" width="34" height="3" fill="#120e08" />
+  <rect x="64" y="5" width="40" height="3" fill="#100c07" />
+  <rect x="118" y="8" width="30" height="3" fill="#110d08" />
+  <rect x="0" y="9" width="160" height="1" fill="#201a12" />
+  <!-- the dim line burning behind the ranks, left -->
+  <rect x="0" y="20" width="36" height="2" fill="#5a1812" />
+  <rect x="8" y="20" width="5" height="1" fill="#a33d1e" />
+  <rect x="22" y="20" width="3" height="1" fill="#7a2a16" />
+
+  <!-- ══ The column: both sides' dead, dressed into one rank ══ -->
+  <!-- far rank, left -->
+  <rect x="0" y="22" width="52" height="12" fill="#12100a" />
+  <rect x="2" y="16" width="1" height="8" fill="#0e0c08" />
+  <rect x="7" y="14" width="1" height="10" fill="#0e0c08" />
+  <rect x="12" y="17" width="1" height="7" fill="#0e0c08" />
+  <rect x="17" y="15" width="1" height="9" fill="#0e0c08" />
+  <rect x="22" y="16" width="1" height="8" fill="#0e0c08" />
+  <rect x="27" y="14" width="1" height="10" fill="#0e0c08" />
+  <rect x="32" y="17" width="1" height="7" fill="#0e0c08" />
+  <rect x="37" y="15" width="1" height="9" fill="#0e0c08" />
+  <rect x="42" y="16" width="1" height="8" fill="#0e0c08" />
+  <rect x="47" y="14" width="1" height="10" fill="#0e0c08" />
+  <!-- their helms, a row of dark moons -->
+  <rect x="1" y="24" width="3" height="2" fill="#0e0c08" />
+  <rect x="6" y="23" width="3" height="2" fill="#0e0c08" />
+  <rect x="11" y="25" width="3" height="2" fill="#0e0c08" />
+  <rect x="16" y="23" width="3" height="2" fill="#0e0c08" />
+  <rect x="21" y="24" width="3" height="2" fill="#0e0c08" />
+  <rect x="26" y="23" width="3" height="2" fill="#0e0c08" />
+  <rect x="31" y="25" width="3" height="2" fill="#0e0c08" />
+  <rect x="36" y="23" width="3" height="2" fill="#0e0c08" />
+  <rect x="41" y="24" width="3" height="2" fill="#0e0c08" />
+  <rect x="46" y="23" width="3" height="2" fill="#0e0c08" />
+  <!-- far rank, right (colder, deeper in the smoke) -->
+  <rect x="108" y="22" width="52" height="12" fill="#100e09" />
+  <rect x="110" y="15" width="1" height="9" fill="#0c0a07" />
+  <rect x="115" y="17" width="1" height="7" fill="#0c0a07" />
+  <rect x="120" y="14" width="1" height="10" fill="#0c0a07" />
+  <rect x="125" y="16" width="1" height="8" fill="#0c0a07" />
+  <rect x="130" y="15" width="1" height="9" fill="#0c0a07" />
+  <rect x="135" y="17" width="1" height="7" fill="#0c0a07" />
+  <rect x="140" y="14" width="1" height="10" fill="#0c0a07" />
+  <rect x="145" y="16" width="1" height="8" fill="#0c0a07" />
+  <rect x="150" y="15" width="1" height="9" fill="#0c0a07" />
+  <rect x="155" y="17" width="1" height="7" fill="#0c0a07" />
+  <rect x="109" y="24" width="3" height="2" fill="#0c0a07" />
+  <rect x="114" y="23" width="3" height="2" fill="#0c0a07" />
+  <rect x="119" y="25" width="3" height="2" fill="#0c0a07" />
+  <rect x="124" y="23" width="3" height="2" fill="#0c0a07" />
+  <rect x="129" y="24" width="3" height="2" fill="#0c0a07" />
+  <rect x="134" y="23" width="3" height="2" fill="#0c0a07" />
+  <rect x="139" y="25" width="3" height="2" fill="#0c0a07" />
+  <rect x="144" y="23" width="3" height="2" fill="#0c0a07" />
+  <rect x="149" y="24" width="3" height="2" fill="#0c0a07" />
+  <rect x="0" y="34" width="160" height="1" fill="#181410" />
+
+  <!-- ══ Flanking pike-stands with their watch-fires ══ -->
+  <!-- left stand: the brighter fire, the key -->
+  <rect x="24" y="20" width="8" height="2" fill="#16120d" />
+  <rect x="25" y="22" width="2" height="44" fill="#14100a" />
+  <rect x="29" y="22" width="2" height="44" fill="#110e09" />
+  <rect x="23" y="26" width="3" height="1" fill="#16120d" />
+  <rect x="30" y="26" width="3" height="1" fill="#110e09" />
+  <rect x="26" y="14" width="4" height="6" fill="#211b13" />
+  <rect x="27" y="15" width="2" height="4" fill="#0e0b08" />
+  <rect x="26" y="12" width="4" height="2" fill="#a33d1e" />
+  <rect x="27" y="10" width="2" height="2" fill="#e8743a" />
+  <rect x="27" y="11" width="1" height="1" fill="#ffb347" />
+  <rect x="28" y="9" width="1" height="1" fill="#ffe9a8" />
+  <rect x="-8" y="-14" width="74" height="60" fill="url(#c8b-brazier-l)" />
+  <!-- right stand: burning low -->
+  <rect x="128" y="20" width="8" height="2" fill="#120f0a" />
+  <rect x="129" y="22" width="2" height="44" fill="#100d08" />
+  <rect x="133" y="22" width="2" height="44" fill="#0e0b07" />
+  <rect x="127" y="26" width="3" height="1" fill="#120f0a" />
+  <rect x="134" y="26" width="3" height="1" fill="#0e0b07" />
+  <rect x="130" y="15" width="4" height="5" fill="#1c160f" />
+  <rect x="131" y="16" width="2" height="3" fill="#0c0a07" />
+  <rect x="130" y="13" width="4" height="2" fill="#7a2a16" />
+  <rect x="131" y="12" width="2" height="1" fill="#a33d1e" />
+  <rect x="100" y="-10" width="68" height="54" fill="url(#c8b-brazier-r)" />
+  <!-- embers crossing the dark -->
+  <rect x="38" y="14" width="1" height="1" fill="#e8743a" opacity="0.8" />
+  <rect x="46" y="22" width="1" height="1" fill="#a33d1e" opacity="0.7" />
+  <rect x="122" y="18" width="1" height="1" fill="#a33d1e" opacity="0.6" />
+
+  <!-- ══ The Marshal's standard, planted at the centre ══ -->
+  <!-- the pole, charred and true -->
+  <rect x="79" y="6" width="2" height="52" fill="#14100a" />
+  <rect x="79" y="6" width="1" height="52" fill="#1c1610" />
+  <rect x="78" y="5" width="4" height="2" fill="#211b13" />
+  <rect x="79" y="4" width="2" height="1" fill="#2d2519" />
+  <!-- the colour: a hundred years of holding -->
+  <rect x="70" y="8" width="9" height="22" fill="#2a0b08" />
+  <rect x="81" y="8" width="9" height="22" fill="#2a0b08" />
+  <rect x="70" y="8" width="20" height="2" fill="#3f100c" />
+  <rect x="70" y="16" width="20" height="2" fill="#3f100c" />
+  <rect x="74" y="10" width="3" height="3" fill="#1c1812" />
+  <rect x="84" y="13" width="4" height="3" fill="#16130f" />
+  <rect x="71" y="22" width="3" height="4" fill="#1c1812" />
+  <rect x="86" y="24" width="3" height="3" fill="#16130f" />
+  <!-- the device: a wheel-and-spear, almost gone -->
+  <rect x="76" y="11" width="8" height="1" fill="#5a1812" />
+  <rect x="76" y="13" width="8" height="1" fill="#5a1812" />
+  <rect x="78" y="10" width="1" height="5" fill="#5a1812" />
+  <rect x="82" y="10" width="1" height="5" fill="#5a1812" />
+  <!-- the hem, ragged, smouldering as it has for a century -->
+  <rect x="70" y="30" width="4" height="2" fill="#2a0b08" />
+  <rect x="76" y="30" width="3" height="3" fill="#2a0b08" />
+  <rect x="81" y="30" width="4" height="2" fill="#2a0b08" />
+  <rect x="87" y="30" width="3" height="3" fill="#2a0b08" />
+  <rect x="73" y="31" width="1" height="1" fill="#a33d1e" />
+  <rect x="78" y="32" width="1" height="1" fill="#e8743a" opacity="0.9" />
+  <rect x="85" y="31" width="1" height="1" fill="#a33d1e" opacity="0.9" />
+  <rect x="89" y="32" width="1" height="1" fill="#7a2a16" />
+  <!-- ash settling off the colour -->
+  <rect x="92" y="34" width="1" height="2" fill="#3a352c" opacity="0.6" />
+  <rect x="68" y="36" width="1" height="2" fill="#3a352c" opacity="0.5" />
+
+  <!-- ══ MID BAND (y38-66): the haze; the mound rises in the gap ══ -->
+  <rect x="0" y="38" width="52" height="10" fill="#1a1610" />
+  <rect x="0" y="48" width="52" height="9" fill="#17130e" />
+  <rect x="0" y="57" width="52" height="9" fill="#15110d" />
+  <rect x="52" y="38" width="56" height="10" fill="#18140e" />
+  <rect x="52" y="48" width="56" height="9" fill="#15110c" />
+  <rect x="52" y="57" width="56" height="9" fill="#13100b" />
+  <rect x="108" y="38" width="52" height="10" fill="#14110d" />
+  <rect x="108" y="48" width="52" height="9" fill="#120f0b" />
+  <rect x="108" y="57" width="52" height="9" fill="#100d0a" />
+  <!-- the mound of the centre, churned up under the standard -->
+  <rect x="62" y="58" width="36" height="8" fill="#1a140c" />
+  <rect x="66" y="55" width="28" height="3" fill="#1a140c" />
+  <rect x="72" y="53" width="16" height="2" fill="#18120b" />
+  <rect x="66" y="55" width="14" height="1" fill="#241c12" />
+  <rect x="62" y="58" width="18" height="1" fill="#282014" />
+  <!-- the drum, waiting for the next order -->
+  <rect x="64" y="56" width="9" height="7" fill="#2a1a10" />
+  <rect x="65" y="55" width="7" height="2" fill="#38241a" />
+  <rect x="65" y="55" width="7" height="1" fill="#46301e" />
+  <rect x="64" y="58" width="9" height="1" fill="#54400f" />
+  <rect x="64" y="61" width="9" height="1" fill="#54400f" />
+  <rect x="66" y="56" width="1" height="6" fill="#1f130d" />
+  <rect x="70" y="56" width="1" height="6" fill="#1f130d" />
+  <!-- a bugle, dropped mid-call -->
+  <rect x="88" y="61" width="4" height="2" fill="#54400f" />
+  <rect x="91" y="60" width="2" height="2" fill="#6a521e" />
+  <rect x="92" y="60" width="1" height="1" fill="#8a6c2a" />
+
+  <!-- ══ The ashfall ══ -->
+  <rect x="56" y="16" width="1" height="2" fill="#4a4438" opacity="0.7" />
+  <rect x="98" y="12" width="1" height="2" fill="#3a352c" opacity="0.6" />
+  <rect x="44" y="30" width="1" height="2" fill="#3a352c" opacity="0.6" />
+  <rect x="112" y="30" width="1" height="2" fill="#34302a" opacity="0.5" />
+  <rect x="16" y="44" width="1" height="2" fill="#322e26" opacity="0.5" />
+  <rect x="142" y="46" width="1" height="2" fill="#2e2a24" opacity="0.4" />
+  <rect x="100" y="52" width="1" height="2" fill="#322e26" opacity="0.4" />
+
+  <!-- ══ NEAR FLOOR (y66-84): the churned centre ══ -->
+  <rect x="0" y="66" width="160" height="18" fill="#14100c" />
+  <rect x="0" y="66" width="160" height="1" fill="#080604" />
+  <rect x="1" y="67" width="14" height="4" fill="#241c12" />
+  <rect x="16" y="67" width="13" height="4" fill="#1c1610" />
+  <rect x="30" y="67" width="14" height="4" fill="#241c12" />
+  <rect x="45" y="67" width="13" height="4" fill="#191409" />
+  <rect x="59" y="67" width="14" height="4" fill="#1c1610" />
+  <rect x="74" y="67" width="13" height="4" fill="#16120d" />
+  <rect x="88" y="67" width="14" height="4" fill="#14100c" />
+  <rect x="103" y="67" width="13" height="4" fill="#120f0b" />
+  <rect x="117" y="67" width="14" height="4" fill="#100d09" />
+  <rect x="132" y="67" width="27" height="4" fill="#0e0b08" />
+  <rect x="1" y="67" width="14" height="1" fill="#3a3328" />
+  <rect x="16" y="67" width="13" height="1" fill="#2c2820" />
+  <rect x="0" y="72" width="13" height="5" fill="#1c1610" />
+  <rect x="14" y="72" width="14" height="5" fill="#241c12" />
+  <rect x="29" y="72" width="13" height="5" fill="#1c1610" />
+  <rect x="43" y="72" width="14" height="5" fill="#191409" />
+  <rect x="58" y="72" width="13" height="5" fill="#16120d" />
+  <rect x="72" y="72" width="14" height="5" fill="#14100c" />
+  <rect x="87" y="72" width="13" height="5" fill="#120f0b" />
+  <rect x="101" y="72" width="14" height="5" fill="#100d09" />
+  <rect x="116" y="72" width="43" height="5" fill="#0e0b08" />
+  <rect x="14" y="72" width="14" height="1" fill="#322c22" />
+  <rect x="0" y="78" width="17" height="6" fill="#241c12" />
+  <rect x="18" y="78" width="16" height="6" fill="#1c1610" />
+  <rect x="35" y="78" width="17" height="6" fill="#241c12" />
+  <rect x="53" y="78" width="16" height="6" fill="#191409" />
+  <rect x="70" y="78" width="17" height="6" fill="#16120d" />
+  <rect x="88" y="78" width="16" height="6" fill="#120f0b" />
+  <rect x="105" y="78" width="17" height="6" fill="#100d09" />
+  <rect x="123" y="78" width="36" height="6" fill="#0e0b08" />
+  <rect x="0" y="78" width="17" height="1" fill="#3a3328" />
+  <rect x="18" y="78" width="16" height="1" fill="#2c2820" />
+  <!-- the march's wake: prints stamped into the char -->
+  <rect x="22" y="70" width="2" height="1" fill="#0e0b08" />
+  <rect x="26" y="72" width="2" height="1" fill="#0e0b08" />
+  <rect x="36" y="69" width="2" height="1" fill="#0c0a07" />
+  <rect x="118" y="70" width="2" height="1" fill="#0a0906" />
+  <rect x="124" y="73" width="2" height="1" fill="#0a0906" />
+  <!-- ash drifted against the mound -->
+  <rect x="58" y="68" width="8" height="2" fill="#2c2820" />
+  <rect x="60" y="67" width="4" height="1" fill="#3a3328" />
+  <rect x="96" y="69" width="7" height="2" fill="#28241c" />
+  <!-- helms where the front rank knelt and stayed -->
+  <rect x="40" y="75" width="5" height="3" fill="#2d2519" />
+  <rect x="41" y="74" width="3" height="1" fill="#3a352c" />
+  <rect x="110" y="77" width="5" height="3" fill="#211b13" />
+  <rect x="111" y="76" width="3" height="1" fill="#2d2519" />
+  <!-- a wheel the mud kept -->
+  <rect x="142" y="74" width="10" height="2" fill="#16120d" />
+  <rect x="144" y="72" width="6" height="2" fill="#14100a" />
+  <rect x="146" y="76" width="2" height="3" fill="#120f0a" />
+  <!-- old blood, black as the rest now -->
+  <rect x="48" y="80" width="8" height="2" fill="#2a0b08" opacity="0.8" />
+  <rect x="86" y="74" width="6" height="2" fill="#2a0b08" opacity="0.7" />
+  <!-- ember seams at the mound's foot -->
+  <rect x="74" y="68" width="3" height="1" fill="#5a1812" />
+  <rect x="75" y="68" width="1" height="1" fill="#a33d1e" />
+  <rect x="92" y="67" width="2" height="1" fill="#5a1812" />
+  <!-- light pooling under the left watch-fire -->
+  <rect x="-6" y="58" width="64" height="24" fill="url(#c8b-floor-pool)" />
+</svg>
