@@ -1,4 +1,4 @@
-import type { ClassId } from '../schemas/ids';
+import { FULL_CASTER_CLASS_IDS, type ClassId } from '../schemas/ids';
 
 export type CampBoonTier = 1 | 2 | 3;
 
@@ -27,9 +27,9 @@ const ALL_BOONS: CampBoon[] = [
     flavor: 'A breath. A fixed star. The world narrowed to a single straight line.',
   },
   {
-    // Wizard-side parallel to Eye of the Hawk. Wizard spells either save-for-
-    // half or auto-hit, so +1 weapon-attack is dead; the matched-power swap is
-    // +1 to spell attack rolls, mirroring the Sharpen/Whet camp choice.
+    // Caster-side parallel to Eye of the Hawk (offered to the full casters).
+    // Their spells save-for-half, auto-hit, or roll SPELL attacks, so +1
+    // weapon-attack is dead; the matched-power swap is +1 to spell attacks.
     id: 'eye-of-the-mind',
     tier: 1,
     name: 'Eye of the Mind',
@@ -90,9 +90,9 @@ const ALL_BOONS: CampBoon[] = [
     flavor: 'A vow muttered to long-dead saints. The blade does not forget.',
   },
   {
-    // Wizard-side parallel. Wizard never makes weapon-damage rolls in this
-    // build, so Blade of the Vow's reroll budget never fires. Match-power
-    // alternative: +1 spell damage on every spell that deals damage.
+    // Caster-side parallel. A casting hand rarely rolls weapon damage, so
+    // Blade of the Vow's reroll budget never fires. Match-power alternative:
+    // +1 spell damage on every spell that deals damage.
     id: 'vow-of-the-tome',
     tier: 3,
     name: 'Vow of the Tome',
@@ -107,9 +107,9 @@ const ALL_BOONS: CampBoon[] = [
     flavor: 'A glance behind eyes that have long ceased to blink. You see where the living are weak.',
   },
   {
-    // Wizard-side parallel to Eyes of the Lich. Weapon attack bonus / physical
-    // crit range are dead for Wizard (spells either auto-hit or force saves).
-    // Match-power swap: +1 spell attack bonus + widen spell-attack crit range.
+    // Caster-side parallel to Eyes of the Lich. Weapon attack bonus / physical
+    // crit range are dead in a casting hand. Match-power swap: +1 spell attack
+    // bonus + widen spell-attack crit range.
     id: 'gaze-of-the-lich',
     tier: 3,
     name: 'Gaze of the Lich',
@@ -133,14 +133,17 @@ export function listCampBoons(): CampBoon[] {
 }
 
 /**
- * The three boons offered at the given camp tier. Weapon-attack-keyed slots
- * swap to spell-keyed equivalents for Wizard. Tier 3 swaps both the middle
- * slot (blade/vow) and the last slot (eyes/gaze of the lich). Power is
- * matched 1:1 — each wizard variant grants an equivalent magnitude lever.
+ * The three boons offered at the given camp tier. Weapon-keyed slots swap to
+ * spell-keyed equivalents for the full casters (wizard/druid/bard — a weapon
+ * to-hit or damage-die lever is a dud in a casting hand). Tier 3 swaps both
+ * the middle slot (blade/vow) and the last slot (eyes/gaze of the lich).
+ * Power is matched 1:1 — each caster variant grants an equivalent magnitude
+ * lever.
  */
 export function boonsForCampTier(tier: CampBoonTier, classId: ClassId): CampBoon[] {
+  const caster = (FULL_CASTER_CLASS_IDS as readonly ClassId[]).includes(classId);
   if (tier === 1) {
-    const middle = classId === 'wizard'
+    const middle = caster
       ? getCampBoon('eye-of-the-mind')
       : getCampBoon('eye-of-the-hawk');
     return [
@@ -150,7 +153,7 @@ export function boonsForCampTier(tier: CampBoonTier, classId: ClassId): CampBoon
     ];
   }
   if (tier === 2) {
-    const middle = classId === 'wizard'
+    const middle = caster
       ? getCampBoon('surge-of-the-storm')
       : getCampBoon('might-of-the-mountain');
     return [
@@ -159,10 +162,10 @@ export function boonsForCampTier(tier: CampBoonTier, classId: ClassId): CampBoon
       getCampBoon('patience-of-ilmater'),
     ];
   }
-  const middle = classId === 'wizard'
+  const middle = caster
     ? getCampBoon('vow-of-the-tome')
     : getCampBoon('blade-of-the-vow');
-  const last = classId === 'wizard'
+  const last = caster
     ? getCampBoon('gaze-of-the-lich')
     : getCampBoon('eyes-of-the-lich');
   return [

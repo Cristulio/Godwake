@@ -1,4 +1,5 @@
 import { BlessingSchema, type Blessing, type BlessingModifiers } from '../../schemas/blessing';
+import { FULL_CASTER_CLASS_IDS } from '../../schemas/ids';
 
 // Classes whose primary action is a weapon attack roll. Spells in this build
 // either save-for-half or auto-hit, so first-attack-bonus / crit-range /
@@ -6,12 +7,11 @@ import { BlessingSchema, type Blessing, type BlessingModifiers } from '../../sch
 // here lets shrines and camps filter the offer pool by class.
 const WEAPON_CLASSES = ['fighter', 'rogue', 'barbarian', 'ranger'] as const;
 
-// Classes whose primary action is a spell. Their offer pool was the lone gap:
-// 11 blessings were weapon-keyed and ZERO were caster-keyed, so a Wizard/Druid
-// only ever saw the universal cards. Caster blessings tag this list so the
-// spell levers (DC / spell damage / spell attack) surface only for them — those
-// fields are inert for martials, the mirror of the weapon/caster split.
-const CASTER_CLASSES = ['wizard', 'druid'] as const;
+// Classes whose primary action is a spell — the shared full-caster list
+// (wizard/druid/bard). Caster blessings tag this list so the spell levers
+// (DC / spell damage / spell attack) surface only for them — those fields are
+// inert for martials, the mirror of the weapon/caster split.
+const CASTER_CLASSES = FULL_CASTER_CLASS_IDS;
 
 const POOL: Blessing[] = [
   BlessingSchema.parse({

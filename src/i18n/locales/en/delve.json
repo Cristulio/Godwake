@@ -177,7 +177,11 @@
     "skipRoll": "Skip the roll",
     "dcBadge": "{skill} DC {dc} · {bonus}",
     "checkTitle": "{skill} ({ability}) check — your bonus {bonus}{proficient}",
-    "proficientSuffix": ", proficient"
+    "proficientSuffix": ", proficient",
+    "eff": {
+      "attackRun": "+{n} weapon attack (rest of delve)",
+      "spellAttackRun": "+{n} spell attack (rest of delve)"
+    }
   },
   "wares": {
     "restores": "Restores {dice} HP.",

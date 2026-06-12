@@ -9,7 +9,8 @@ import type {
 import { getBlessing } from '../../content/blessings';
 import { blessingsForClass } from '../character/blessings';
 import { listQuirks, getQuirk } from '../../content/quirks';
-import { modifierFor } from '../character/derived';
+import { isFullCaster, modifierFor } from '../character/derived';
+import { t } from '../../i18n';
 import { skillCheck, type SkillCheckResult } from '../character/skillCheck';
 import { bossIntelBuffFor } from '../../content/bossIntel';
 import { getItem } from '../../content/items';
@@ -419,10 +420,11 @@ export function applyEventOutcome(
         break;
       }
       case 'apply_attack_bonus_run': {
-        // Class-aware: casters cast, so a weapon-attack bonus is a dud for
-        // them — route it to spell attacks instead. Mirrors the camp-choice
-        // split in delveStore (`classId === 'wizard'`).
-        const isCaster = next.classId === 'wizard';
+        // Class-aware: full casters cast, so a weapon-attack bonus is a dud
+        // for them — route it to spell attacks instead. Same split as the
+        // camp-boon table and the boss-intel weak spot. (A Valor bard or a
+        // wild-shaped druid does swing, but the simple class rule stands.)
+        const isCaster = isFullCaster(next.classId);
         next = isCaster
           ? {
               ...next,
@@ -434,7 +436,9 @@ export function applyEventOutcome(
             };
         effectsApplied.push({
           kind: effect.kind,
-          detail: `+${effect.amount} ${isCaster ? 'spell' : 'weapon'} attack (rest of delve)`,
+          detail: t(isCaster ? 'delve.event.eff.spellAttackRun' : 'delve.event.eff.attackRun', {
+            n: effect.amount,
+          }),
         });
         break;
       }
@@ -460,7 +464,9 @@ export function applyEventOutcome(
           ...next,
           bossIntel: { ...existing, [effect.bossDefId]: upgraded },
         };
-        const buff = bossIntelBuffFor(effect.bossDefId, effect.tier);
+        // Pass the class so the grant-time copy matches the edge the soul will
+        // actually get (casters read the braced-save weak spot, not the strike).
+        const buff = bossIntelBuffFor(effect.bossDefId, effect.tier, next.classId);
         effectsApplied.push({
           kind: effect.kind,
           detail: buff ? `${buff.label} — ${buff.description}` : 'edge readied',

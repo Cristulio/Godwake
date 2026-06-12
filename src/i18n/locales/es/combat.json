@@ -190,6 +190,7 @@
     "damageLine": "Daño: {headline} ({breakdown}){note}.",
     "damageHeadlineOne": "{total} de {type}",
     "lifesteal": "{name} drena {amount} PG de la herida.",
+    "spellLifesteal": "{name} bebe {amount} PG de vuelta a través del conjuro.",
     "mendKindled": "{name} siente la herida cerrarse — regeneración encendida ({n} PG/turno × 3).",
     "bleedBegin": "{target} empieza a sangrar ({n}/turno).",
     "envenom": "{target} queda envenenado — la herida supura ({n}/turno).",

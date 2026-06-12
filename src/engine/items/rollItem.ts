@@ -240,12 +240,32 @@ function legalBases(kind: BaseKind, classId: ClassId): Array<Weapon | Armor | Ac
     .filter((a) => classArmorProficient(classId, a));
 }
 
-/** Affixes that may roll onto the given base kind for the given class. */
-export function eligibleAffixes(kind: BaseKind, classId: ClassId): Affix[] {
+/**
+ * A CASTER base — the gear the `casterGearOnly` affixes (spell damage / spell
+ * attack / spell vamp) may roll onto: a `casterWeapon` weapon (the War Lute),
+ * an orb, or a robe. Ordinary arms, armour, and accessories all fail.
+ */
+export function isCasterGearBase(base: Weapon | Armor | Accessory): boolean {
+  if (base.kind === 'weapon') return base.casterWeapon === true;
+  if (base.kind === 'armor') return base.category === 'orb' || base.category === 'robe';
+  return false;
+}
+
+/**
+ * Affixes that may roll onto the given base kind for the given class. Pass the
+ * picked `base` to also enforce the `casterGearOnly` gate (rollItem always
+ * does); without it the pool is the kind+class-level view.
+ */
+export function eligibleAffixes(
+  kind: BaseKind,
+  classId: ClassId,
+  base?: Weapon | Armor | Accessory,
+): Affix[] {
   return listAffixes().filter(
     (a) =>
       a.appliesTo.includes(kind) &&
-      (!a.classGate || a.classGate.length === 0 || a.classGate.includes(classId)),
+      (!a.classGate || a.classGate.length === 0 || a.classGate.includes(classId)) &&
+      (!a.casterGearOnly || !base || isCasterGearBase(base)),
   );
 }
 
@@ -264,6 +284,7 @@ export function affixDominance(affix: Affix): number {
     (m.sneakDamageBonus ?? 0) +
     (m.followupDamageBonus ?? 0) +
     (m.lifestealPct ?? 0) +
+    (m.spellLifestealPct ?? 0) +
     (m.bleedDamage ?? 0) +
     (m.critRangeBonus ?? 0) +
     (m.tempHpPerCombat ?? 0) +
@@ -351,7 +372,7 @@ export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
   const base = pickBaseWithDepth(roller, bases, depth);
 
   const count = AFFIX_COUNT[rarity];
-  const pool = eligibleAffixes(kind, classId);
+  const pool = eligibleAffixes(kind, classId, base);
   const affixes: string[] = [];
   const seen = new Set<string>();
   let safety = 0;

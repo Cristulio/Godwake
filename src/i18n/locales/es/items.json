@@ -298,6 +298,10 @@
     "word": "de Lucidez",
     "effect": "+1 a las tiradas de ataque de conjuro."
   },
+  "soulthirst": {
+    "word": "Bebealmas",
+    "effect": "Los conjuros te curan por el 4% del daño que infligen."
+  },
   "runic": {
     "word": "Rúnica",
     "effect": "+1 espacio de conjuro de nivel 1 (se rellena al descansar)."
