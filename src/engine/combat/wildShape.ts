@@ -44,10 +44,28 @@ export function wildShapeUsesMax(character: Readonly<Character>): number {
   return 1 + moon + archdruid + grove;
 }
 
-/** Which natural-weapon profile the beast form fights with. Moon druids rend
- *  with the heavier Dire Claws. */
+/**
+ * Which natural-weapon profile the beast form fights with — the claw is the
+ * form's whole offense, so it climbs a level ladder (mirroring the monk's
+ * martialArtsWeaponId): heavier shapes answer at L9, the deep wild at L17.
+ * Moon druids walk a parallel, heavier ladder (Dire → Savage → Apex).
+ *
+ * All tiers carry `casterWeapon`, so the claw attacks and damages off the
+ * druid's WISDOM (the form-appropriate stat — playerAttack's caster-weapon
+ * read), never the caster's dumped STR/DEX. Tier thresholds are PROVISIONAL —
+ * the end-of-campaign sim batch calibrates them with the claw dice.
+ */
 export function beastWeaponId(character: Readonly<Character>): string {
-  return characterHasMechanic(character, 'circle-of-the-moon') ? 'dire-claws' : 'beast-claws';
+  const moon = characterHasMechanic(character, 'circle-of-the-moon');
+  const lvl = character.level;
+  if (moon) {
+    if (lvl >= 17) return 'dire-claws-apex';
+    if (lvl >= 9) return 'dire-claws-savage';
+    return 'dire-claws';
+  }
+  if (lvl >= 17) return 'beast-claws-primal';
+  if (lvl >= 9) return 'beast-claws-elder';
+  return 'beast-claws';
 }
 
 export interface WildShapeContext {

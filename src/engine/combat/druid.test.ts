@@ -104,7 +104,8 @@ describe('Druid — Wild Shape mechanic', () => {
       { roller, state: shaped.state, character: shaped.character },
       { kind: 'attack', targetId: mid },
     );
-    const clawLog = clawed.state.log.some((l) => /Beast Claws/i.test(l.text));
+    // At L20 the base circle wears the top claw tier (Primal Claws).
+    const clawLog = clawed.state.log.some((l) => /Primal Claws/i.test(l.text));
     // Either it connected (HP dropped) or at least the claw profile was used.
     expect(clawLog || monsterHp(clawed.state, mid) < before).toBe(true);
 

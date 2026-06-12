@@ -19,7 +19,7 @@ import { getMonster } from '../../content/monsters';
 import { getItem } from '../../content/items';
 import { getBlessing } from '../../content/blessings';
 import type { Blessing, BlessingModifiers } from '../../schemas/blessing';
-import { playerAttack } from './attack';
+import { playerAttack, attackWeaponId } from './attack';
 import { castSpell, slotsAt } from './spells';
 import { spellDamageMultiplier } from './spells/scaling';
 import { useConsumable } from './useItem';
@@ -40,13 +40,12 @@ import { useCunningAction, type CunningActionChoice } from './cunningAction';
 import { playerConditionMods } from './playerConditions';
 import { useRage } from './rage';
 import { useHuntersMark } from './huntersMark';
-import { useWildShape, beastWeaponId } from './wildShape';
-import { DRAGON_CLAW_WEAPON_ID, isDragonForm } from './shapeChange';
+import { useWildShape } from './wildShape';
+import { isDragonForm } from './shapeChange';
 import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
-  martialArtsWeaponId,
   monkFightsUnarmed,
 } from './monk';
 import { useBardicInspiration, bardInspirationLeft, spendsInspirationOnDamage } from './bard';
@@ -1389,16 +1388,11 @@ export function applyPlannedAction(
   const { roller, state, character } = ctx;
   switch (action.kind) {
     case 'attack': {
-      // A wild-shaped druid strikes with its beast profile (claws/bite); a
-      // bare-handed monk strikes with its level-scaled Martial Arts die. A monk
-      // who took up a weapon (even a monk weapon) swings that weapon plainly.
-      const weaponId = isDragonForm(character)
-        ? DRAGON_CLAW_WEAPON_ID
-        : isWildShaped(character)
-          ? beastWeaponId(character)
-          : character.classId === 'monk' && monkFightsUnarmed(character)
-            ? martialArtsWeaponId(character)
-            : (character.equipped.mainHand?.itemId ?? 'dagger');
+      // The shared dispatch pick: a transformed body (dragon / beast form)
+      // strikes with its natural arms, a bare-handed monk with its Martial Arts
+      // die, anyone else with the equipped main-hand. The bot must always be
+      // able to act, so a truly bare hand falls back to a plain dagger.
+      const weaponId = attackWeaponId(character) ?? 'dagger';
       const r = playerAttack({ roller, character, state }, action.targetId, weaponId);
       return { state: r.state, character: r.character };
     }
