@@ -125,6 +125,7 @@
     "slot": {
       "mainHand": "Main Hand",
       "offHand": "Off Hand · Shield",
+      "offHandDual": "Off Hand · Shield or Blade",
       "armor": "Body",
       "helm": "Helm",
       "amulet": "Amulet",
@@ -136,6 +137,7 @@
     "slotHint": {
       "mainHand": "A weapon or one-handed implement.",
       "offHand": "A shield only — off-hand weapons aren't wielded.",
+      "offHandDual": "A shield — or a light weapon, for hands schooled to carry two.",
       "armor": "Light, medium, or heavy armor.",
       "helm": "An affix-bearing helm.",
       "amulet": "An affix-bearing amulet.",

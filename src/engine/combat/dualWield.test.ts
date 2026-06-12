@@ -1,0 +1,413 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import { createCharacter } from '../character/initialize';
+import { presetCreationInput } from '../character/defaultCharacter';
+import {
+  canOffHandWeapon,
+  equipItem,
+  equipItemToSlot,
+  equippedRefsForItemSlot,
+  unequipSlot,
+} from '../character/equip';
+import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
+import { playerAttack } from './attack';
+import { createDiceRoller } from '../dice';
+import { getMonster } from '../../content/monsters';
+import type { CombatState, CombatLogEntry, MonsterCombatant } from '../../types/combat';
+import type { Character } from '../../types/character';
+import type { ClassId } from '../../schemas/ids';
+import type { ItemRef } from '../../schemas/item';
+
+// ─── helpers ─────────────────────────────────────────────────────────────────
+
+function makeSchooled(
+  classId: ClassId,
+  subclassId: string | null,
+  level: number,
+  mainId: string | null,
+  offId: string | null,
+  extraInventory: string[] = [],
+): Character {
+  const c = createCharacter({ id: `dw-${classId}`, ...presetCreationInput(classId) });
+  const mainRef: ItemRef | null = mainId ? { itemId: mainId } : null;
+  const offRef: ItemRef | null = offId ? { itemId: offId } : null;
+  return {
+    ...c,
+    level,
+    subclassId,
+    inventory: [
+      ...(mainRef ? [mainRef] : []),
+      ...(offRef ? [offRef] : []),
+      ...extraInventory.map((itemId) => ({ itemId })),
+    ],
+    equipped: { mainHand: mainRef, offHand: offRef, armor: null },
+  };
+}
+
+/** Index of the item with this id in the character's inventory (must exist). */
+function invIdx(c: Character, itemId: string): number {
+  const idx = c.inventory.findIndex((r) => r.itemId === itemId);
+  expect(idx, `${itemId} in inventory`).toBeGreaterThanOrEqual(0);
+  return idx;
+}
+
+function monsterByName(state: CombatState, name: string): MonsterCombatant {
+  return state.combatants.find(
+    (c) => c.kind === 'monster' && c.instance.displayName === name,
+  ) as MonsterCombatant;
+}
+
+/** Pump a monster's HP so it survives the whole pair of swings. */
+function toughen(state: CombatState, id: string, hp: number): CombatState {
+  return {
+    ...state,
+    combatants: state.combatants.map((c) =>
+      c.kind === 'monster' && c.id === id
+        ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, max: hp, current: hp } } }
+        : c,
+    ),
+  };
+}
+
+function rollLines(state: CombatState): CombatLogEntry[] {
+  return state.log.filter((l) => l.kind === 'roll');
+}
+
+function offhandLine(state: CombatState): CombatLogEntry | undefined {
+  return state.log.find((l) => l.text.includes('off-hand follows'));
+}
+
+/** The first damage-kind entry after the given log entry (its own hit's line). */
+function damageLineAfter(state: CombatState, entry: CombatLogEntry): CombatLogEntry | undefined {
+  const at = state.log.indexOf(entry);
+  return state.log.slice(at + 1).find((l) => l.kind === 'damage');
+}
+
+interface SwungPair {
+  state: CombatState;
+  character: Character;
+  mainLine: CombatLogEntry;
+  offLine: CombatLogEntry;
+}
+
+/**
+ * Run the opening attack across seeds until the main and off-hand swings both
+ * resolve with the wanted hit/miss shape — deterministic without hand-picked
+ * seeds. `mutate` lets a case surgically shape the opening state (HP etc.).
+ */
+function findOpeningPair(
+  makeChar: () => Character,
+  want: { mainHit: boolean; offHit: boolean },
+  opts: {
+    monsters?: Array<{ defId: string; displayName: string }>;
+    toughenTo?: number;
+    mutate?: (state: CombatState) => CombatState;
+  } = {},
+): SwungPair {
+  const defs = opts.monsters ?? [{ defId: 'goblin', displayName: 'Goblin A' }];
+  for (let seed = 1; seed <= 600; seed++) {
+    _resetMonsterInstanceCounter();
+    const roller = createDiceRoller(seed);
+    const init = createCombat({
+      roller,
+      character: makeChar(),
+      monsters: defs.map((d) => ({ def: getMonster(d.defId), displayName: d.displayName })),
+    });
+    let state = init.state;
+    if (opts.toughenTo) {
+      for (const d of defs) {
+        state = toughen(state, monsterByName(state, d.displayName).id, opts.toughenTo);
+      }
+    }
+    if (opts.mutate) state = opts.mutate(state);
+    const targetId = monsterByName(state, defs[0].displayName).id;
+    const r = playerAttack(
+      { roller, character: init.character, state },
+      targetId,
+      init.character.equipped.mainHand!.itemId,
+    );
+    const rolls = rollLines(r.state);
+    const off = offhandLine(r.state);
+    if (rolls.length < 2 || !off) continue;
+    const mainLine = rolls[0];
+    const mainHit = / hit\.$|CRITICAL HIT\.$/.test(mainLine.text);
+    const offHit = / hit\.$|CRITICAL HIT\.$/.test(off.text);
+    if (mainHit === want.mainHit && offHit === want.offHit) {
+      return { state: r.state, character: r.character, mainLine, offLine: off };
+    }
+  }
+  throw new Error('no seed produced the wanted hit/miss pair within 600 tries');
+}
+
+beforeEach(() => _resetMonsterInstanceCounter());
+
+// ─── equip rules ─────────────────────────────────────────────────────────────
+
+describe('dual wield — equip rules', () => {
+  it('a Thief seats a light weapon in the off-hand via the off-hand drop', () => {
+    const c = makeSchooled('rogue', 'thief', 3, 'shortsword', null, ['dagger']);
+    const next = equipItemToSlot(c, invIdx(c, 'dagger'), 'offHand');
+    expect(next.equipped.offHand?.itemId).toBe('dagger');
+    expect(next.equipped.mainHand?.itemId).toBe('shortsword');
+  });
+
+  it('only LIGHT weapons qualify — a non-light drop on the off-hand auto-routes to main', () => {
+    const c = makeSchooled('fighter', 'battle-master', 3, 'longsword', null, ['mace']);
+    expect(canOffHandWeapon(c, 'mace')).toBe(false);
+    const next = equipItemToSlot(c, invIdx(c, 'mace'), 'offHand');
+    expect(next.equipped.mainHand?.itemId).toBe('mace');
+    expect(next.equipped.offHand).toBeNull();
+  });
+
+  it('shield XOR off-hand weapon — each displaces the other in the one slot', () => {
+    const c = makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shortsword', ['shield']);
+    const shielded = equipItem(c, invIdx(c, 'shield'));
+    expect(shielded.equipped.offHand?.itemId).toBe('shield');
+    const back = equipItemToSlot(shielded, invIdx(shielded, 'shortsword'), 'offHand');
+    expect(back.equipped.offHand?.itemId).toBe('shortsword');
+  });
+
+  it('equipping a two-handed main clears the off-hand blade', () => {
+    const c = makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shortsword', [
+      'greatsword',
+    ]);
+    const next = equipItem(c, invIdx(c, 'greatsword'));
+    expect(next.equipped.mainHand?.itemId).toBe('greatsword');
+    expect(next.equipped.offHand).toBeNull();
+  });
+
+  it('dropping a light blade on the off-hand unequips a two-handed main (the shield rule)', () => {
+    const c = makeSchooled('barbarian', 'berserker', 3, 'greataxe', null, ['dagger']);
+    const next = equipItemToSlot(c, invIdx(c, 'dagger'), 'offHand');
+    expect(next.equipped.offHand?.itemId).toBe('dagger');
+    expect(next.equipped.mainHand).toBeNull();
+  });
+
+  it('classes and schools without the mechanic are unchanged', () => {
+    const champion = makeSchooled('fighter', 'champion', 3, 'longsword', null, ['dagger']);
+    expect(canOffHandWeapon(champion, 'dagger')).toBe(false);
+    const next = equipItemToSlot(champion, invIdx(champion, 'dagger'), 'offHand');
+    expect(next.equipped.mainHand?.itemId).toBe('dagger');
+    expect(next.equipped.offHand).toBeNull();
+
+    const undecided = makeSchooled('rogue', null, 3, 'shortsword', null, ['dagger']);
+    expect(canOffHandWeapon(undecided, 'dagger')).toBe(false);
+  });
+
+  it('tap-equip fills an EMPTY off-hand for a dual-wielder holding a one-hander', () => {
+    const c = makeSchooled('rogue', 'thief', 3, 'shortsword', null, ['dagger']);
+    const next = equipItem(c, invIdx(c, 'dagger'));
+    expect(next.equipped.offHand?.itemId).toBe('dagger');
+    expect(next.equipped.mainHand?.itemId).toBe('shortsword');
+  });
+
+  it('tap-equip never displaces a worn shield — that trade is the explicit drop', () => {
+    const c = makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shield', ['dagger']);
+    const next = equipItem(c, invIdx(c, 'dagger'));
+    expect(next.equipped.mainHand?.itemId).toBe('dagger');
+    expect(next.equipped.offHand?.itemId).toBe('shield');
+  });
+
+  it('unequip flows clean — the blade returns to the bag-only state', () => {
+    const c = makeSchooled('rogue', 'thief', 3, 'shortsword', 'dagger');
+    const next = unequipSlot(c, 'offHand');
+    expect(next.equipped.offHand).toBeNull();
+    expect(next.inventory.some((r) => r.itemId === 'dagger')).toBe(true);
+  });
+
+  it('the compare hover weighs a light weapon against BOTH worn hands', () => {
+    const c = makeSchooled('rogue', 'thief', 3, 'shortsword', 'dagger', ['sickle']);
+    const refs = equippedRefsForItemSlot(c, 'sickle');
+    expect(refs.map((r) => r.itemId).sort()).toEqual(['dagger', 'shortsword']);
+  });
+});
+
+// ─── the off-hand swing ──────────────────────────────────────────────────────
+
+describe('dual wield — the off-hand swing', () => {
+  it('the Attack action resolves the main swing then the automatic off-hand swing', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shortsword'),
+      { mainHit: true, offHit: true },
+      { toughenTo: 200 },
+    );
+    expect(pair.mainLine.text).toContain('with Longsword');
+    expect(pair.offLine.text).toContain('off-hand follows — Shortsword');
+    // The pair commits as one state: both events batched so the UI floats each.
+    expect(pair.state.attackEvents?.length).toBe(2);
+    // One Attack-action swing spent — the follow costs nothing.
+    expect(pair.state.playerAttacksThisTurn).toBe(1);
+    expect(pair.character.actionEconomy.actionUsed).toBe(true);
+  });
+
+  it('off-hand damage is the weapon die alone — no ability modifier', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shortsword'),
+      { mainHit: true, offHit: true },
+      { toughenTo: 200 },
+    );
+    const mainDmg = damageLineAfter(pair.state, pair.mainLine);
+    const offDmg = damageLineAfter(pair.state, pair.offLine);
+    expect(mainDmg!.text).toMatch(/\+ \d+ STR/);
+    expect(offDmg!.text).not.toMatch(/STR|DEX/);
+  });
+
+  it("the off-hand's gear edge is HALVED and never leaks onto main-hand swings", () => {
+    const make = (): Character => {
+      const c = makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shortsword');
+      const main: ItemRef = {
+        itemId: 'longsword',
+        rolled: {
+          baseId: 'longsword',
+          rarity: 'blue',
+          affixes: [],
+          enhancement: 2,
+          name: '+2 Longsword',
+        },
+      };
+      const off: ItemRef = {
+        itemId: 'shortsword',
+        rolled: {
+          baseId: 'shortsword',
+          rarity: 'blue',
+          affixes: ['cruel'],
+          enhancement: 3,
+          name: '+3 Cruel Shortsword',
+        },
+      };
+      return { ...c, inventory: [main, off], equipped: { mainHand: main, offHand: off, armor: null } };
+    };
+    const pair = findOpeningPair(make, { mainHit: true, offHit: true }, { toughenTo: 200 });
+    const mainDmg = damageLineAfter(pair.state, pair.mainLine)!;
+    const offDmg = damageLineAfter(pair.state, pair.offLine)!;
+    // Main swing: its own +2 in full; the off-hand's Cruel (+2) must NOT ride it.
+    expect(mainDmg.text).toContain('+ 2 enhancement');
+    expect(mainDmg.text).not.toContain('gear');
+    // Off-hand swing: its +3 halves to +1, its Cruel +2 halves to +1.
+    expect(offDmg.text).toContain('+ 1 enhancement');
+    expect(offDmg.text).toContain('+ 1 gear');
+  });
+
+  it('the off-hand retargets the next live foe when the main swing fells the first', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shortsword'),
+      { mainHit: true, offHit: true },
+      {
+        monsters: [
+          { defId: 'goblin', displayName: 'Goblin A' },
+          { defId: 'goblin', displayName: 'Goblin B' },
+        ],
+        // First foe drops to any landed hit; second stands through the follow.
+        mutate: (state) => {
+          const a = monsterByName(state, 'Goblin A');
+          const b = monsterByName(state, 'Goblin B');
+          let next = toughen(state, b.id, 200);
+          next = {
+            ...next,
+            combatants: next.combatants.map((c) =>
+              c.kind === 'monster' && c.id === a.id
+                ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: 1, temp: 0 } } }
+                : c,
+            ),
+          };
+          return next;
+        },
+      },
+    );
+    expect(monsterByName(pair.state, 'Goblin A').instance.hp.current).toBe(0);
+    expect(pair.offLine.text).toContain('at Goblin B');
+  });
+
+  it('once per Attack action — Extra Attack does not multiply the follow', () => {
+    // L5 Battle Master: two Attack-action swings. Only the FIRST drags the
+    // off-hand through; the second is a plain main-hand swing.
+    for (let seed = 1; seed <= 200; seed++) {
+      _resetMonsterInstanceCounter();
+      const roller = createDiceRoller(seed);
+      const character = makeSchooled('fighter', 'battle-master', 5, 'longsword', 'shortsword');
+      const init = createCombat({
+        roller,
+        character,
+        monsters: [{ def: getMonster('goblin'), displayName: 'Goblin A' }],
+      });
+      let state = toughen(init.state, monsterByName(init.state, 'Goblin A').id, 400);
+      const targetId = monsterByName(state, 'Goblin A').id;
+      let c = init.character;
+      ({ state, character: c } = playerAttack({ roller, character: c, state }, targetId, 'longsword'));
+      expect(c.actionEconomy.actionUsed).toBe(false); // swing 1 of 2
+      ({ state, character: c } = playerAttack({ roller, character: c, state }, targetId, 'longsword'));
+      expect(c.actionEconomy.actionUsed).toBe(true);
+      const follows = state.log.filter((l) => l.text.includes('off-hand follows'));
+      expect(follows.length).toBe(1);
+      expect(state.playerAttacksThisTurn).toBe(2);
+      return;
+    }
+  });
+
+  it('a bonus-action swing never triggers the follow', () => {
+    _resetMonsterInstanceCounter();
+    const roller = createDiceRoller(7);
+    const character = makeSchooled('rogue', 'thief', 3, 'shortsword', 'dagger');
+    const init = createCombat({
+      roller,
+      character,
+      monsters: [{ def: getMonster('goblin'), displayName: 'Goblin A' }],
+    });
+    const state = toughen(init.state, monsterByName(init.state, 'Goblin A').id, 200);
+    // Quick Strike shape: the Action is already spent; this swing is the bonus.
+    const c: Character = {
+      ...init.character,
+      actionEconomy: { ...init.character.actionEconomy, actionUsed: true },
+      bonusAttackAvailable: true,
+    };
+    const targetId = monsterByName(state, 'Goblin A').id;
+    const r = playerAttack({ roller, character: c, state }, targetId, 'shortsword');
+    expect(offhandLine(r.state)).toBeUndefined();
+    expect(r.character.bonusAttackAvailable).toBe(false);
+  });
+
+  it('a class without the school gets no follow even with a smuggled off-hand blade', () => {
+    _resetMonsterInstanceCounter();
+    const roller = createDiceRoller(3);
+    const character = makeSchooled('fighter', 'champion', 3, 'longsword', 'shortsword');
+    const init = createCombat({
+      roller,
+      character,
+      monsters: [{ def: getMonster('goblin'), displayName: 'Goblin A' }],
+    });
+    const state = toughen(init.state, monsterByName(init.state, 'Goblin A').id, 200);
+    const targetId = monsterByName(state, 'Goblin A').id;
+    const r = playerAttack({ roller, character: init.character, state }, targetId, 'longsword');
+    expect(offhandLine(r.state)).toBeUndefined();
+    expect(rollLines(r.state).length).toBe(1);
+  });
+});
+
+// ─── sneak attack stays once a turn ──────────────────────────────────────────
+
+describe('dual wield — Sneak Attack interplay', () => {
+  it('main lands the opener sneak — the off-hand never pays it twice', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('rogue', 'thief', 3, 'shortsword', 'dagger'),
+      { mainHit: true, offHit: true },
+      { toughenTo: 200 },
+    );
+    const sneaks = pair.state.log.filter((l) => l.text.includes('sneak ('));
+    expect(sneaks.length).toBe(1);
+    expect(pair.state.sneakAttackUsedThisTurn).toBe(true);
+    // The single payout rode the MAIN swing's damage line.
+    expect(damageLineAfter(pair.state, pair.mainLine)!.text).toContain('sneak (');
+  });
+
+  it('main whiffs the opener — the second knife is the second chance to LAND it', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('rogue', 'thief', 3, 'shortsword', 'dagger'),
+      { mainHit: false, offHit: true },
+      { toughenTo: 200 },
+    );
+    const offDmg = damageLineAfter(pair.state, pair.offLine)!;
+    expect(offDmg.text).toContain('sneak (');
+    expect(pair.state.sneakAttackUsedThisTurn).toBe(true);
+    const sneaks = pair.state.log.filter((l) => l.text.includes('sneak ('));
+    expect(sneaks.length).toBe(1);
+  });
+});

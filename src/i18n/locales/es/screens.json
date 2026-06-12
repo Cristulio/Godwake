@@ -125,6 +125,7 @@
     "slot": {
       "mainHand": "Mano principal",
       "offHand": "Mano secundaria · Escudo",
+      "offHandDual": "Mano secundaria · Escudo u hoja",
       "armor": "Cuerpo",
       "helm": "Yelmo",
       "amulet": "Amuleto",
@@ -136,6 +137,7 @@
     "slotHint": {
       "mainHand": "Un arma o un instrumento a una mano.",
       "offHand": "Solo un escudo — las armas en la otra mano no se empuñan.",
+      "offHandDual": "Un escudo — o un arma ligera, para manos adiestradas en llevar dos.",
       "armor": "Armadura ligera, media o pesada.",
       "helm": "Un yelmo con afijos.",
       "amulet": "Un amuleto con afijos.",

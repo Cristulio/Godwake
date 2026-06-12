@@ -78,7 +78,12 @@ import { buildPlayerCharacter, presetCreationInput } from '../src/engine/charact
 import { rollQuirks, renownSoulMarkMultiplier } from '../src/engine/character/quirks';
 import { MAX_ASCENSION, getAscensionLevel } from '../src/engine/delve/ascension';
 import { computeAC } from '../src/engine/character/derived';
-import { equipItem, slotForItem } from '../src/engine/character/equip';
+import {
+  canOffHandWeapon,
+  equipItem,
+  equipItemToSlot,
+  slotForItem,
+} from '../src/engine/character/equip';
 import { monkFightsUnarmed } from '../src/engine/combat/monk';
 import { characterAffixMods } from '../src/engine/items/affixMods';
 import { rollGearDrop, rollPotionDrop, rollLegendaryDrop } from '../src/engine/items/drops';
@@ -333,6 +338,15 @@ function loadoutScore(c: Character): number {
       score += avgDice(weaponDamageDice(w, offEmpty)) * 1.6;
     }
   }
+  // Dual-wield off-hand weapon: one extra swing a turn, the die alone (no
+  // ability mod, halved gear edge) — priced at HALF the main-hand die weight.
+  // The AC side of the trade prices itself: a displaced shield's +2 drops out
+  // of computeAC below, so "shield vs second blade" is a real comparison.
+  const oh = c.equipped.offHand;
+  if (oh) {
+    const ow = getItem(oh.itemId);
+    if (ow.kind === 'weapon') score += avgDice(ow.damage) * 0.8;
+  }
   score += computeAC(c) * 2.5;
   const m = characterAffixMods(c);
   score += m.attackBonus * 2.5;
@@ -364,7 +378,20 @@ function tryEquipDrop(c: Character, ref: ItemRef): Character {
   }
   const idx = c.inventory.length;
   const withItem: Character = { ...c, inventory: [...c.inventory, ref] };
-  const equipped = equipItem(withItem, idx);
+  let equipped = equipItem(withItem, idx);
+  // Dual-wielder: a light weapon can also seat in the OFF-hand (the explicit
+  // slot route — over a worn shield, where the auto-route never reaches). Try
+  // both routings and keep the higher score; the score weighs the shield's AC
+  // against the added swing, so a shield-better build keeps its shield.
+  if (canOffHandWeapon(withItem, ref.itemId)) {
+    const offRouted = equipItemToSlot(withItem, idx, 'offHand');
+    if (
+      offRouted !== withItem &&
+      (equipped === withItem || loadoutScore(offRouted) > loadoutScore(equipped))
+    ) {
+      equipped = offRouted;
+    }
+  }
   if (equipped === withItem) return c; // equip refused (class-illegal / no slot) — discard
   if (loadoutScore(equipped) > loadoutScore(c) + 0.01) return equipped;
   return c; // not an upgrade — don't hoard it
@@ -384,6 +411,14 @@ function reEquipFromInventory(c: Character): Character {
     const equipped = equipItem(best, i);
     if (equipped !== best && loadoutScore(equipped) > loadoutScore(best) + 0.01) {
       best = equipped;
+    }
+    // Dual-wielder: a bagged light weapon may now be worth the off-hand (e.g.
+    // the L3 fork just granted the mechanic) — same explicit route as drops.
+    if (canOffHandWeapon(best, ref.itemId)) {
+      const offRouted = equipItemToSlot(best, i, 'offHand');
+      if (offRouted !== best && loadoutScore(offRouted) > loadoutScore(best) + 0.01) {
+        best = offRouted;
+      }
     }
   }
   return best;

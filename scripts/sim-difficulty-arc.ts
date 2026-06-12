@@ -74,7 +74,12 @@ import { findUpgrade } from '../src/content/upgrades';
 import { buildPlayerCharacter, presetCreationInput } from '../src/engine/character/defaultCharacter';
 import { rollQuirks } from '../src/engine/character/quirks';
 import { computeAC } from '../src/engine/character/derived';
-import { equipItem, slotForItem } from '../src/engine/character/equip';
+import {
+  canOffHandWeapon,
+  equipItem,
+  equipItemToSlot,
+  slotForItem,
+} from '../src/engine/character/equip';
 import { monkFightsUnarmed } from '../src/engine/combat/monk';
 import { characterAffixMods } from '../src/engine/items/affixMods';
 import { rollGearDrop, rollPotionDrop, rollLegendaryDrop } from '../src/engine/items/drops';
@@ -282,6 +287,13 @@ function loadoutScore(c: Character): number {
     const w = getItem(mh.itemId);
     if (w.kind === 'weapon') score += avgDice(weaponDamageDice(w, !c.equipped.offHand)) * 1.6;
   }
+  // Dual-wield off-hand weapon: one extra die-only swing a turn — half the
+  // main-hand weight. The displaced shield's AC drops out of computeAC below.
+  const oh = c.equipped.offHand;
+  if (oh) {
+    const ow = getItem(oh.itemId);
+    if (ow.kind === 'weapon') score += avgDice(ow.damage) * 0.8;
+  }
   score += computeAC(c) * 2.5;
   const m = characterAffixMods(c);
   score += m.attackBonus * 2.5 + m.damageBonus * 1.6 + m.bleedDamage * 1.3 + m.lifestealPct * 0.06;
@@ -292,8 +304,20 @@ function loadoutScore(c: Character): number {
 }
 function tryEquipDrop(c: Character, ref: ItemRef): Character {
   if (monkFightsUnarmed(c) && slotForItem(ref.itemId) === 'mainHand') return c;
+  const idx = c.inventory.length;
   const withItem: Character = { ...c, inventory: [...c.inventory, ref] };
-  const equipped = equipItem(withItem, c.inventory.length);
+  let equipped = equipItem(withItem, idx);
+  // Dual-wielder: also try the light weapon in the OFF-hand (over a shield —
+  // the explicit route); keep the higher score. AC-vs-swing prices itself.
+  if (canOffHandWeapon(withItem, ref.itemId)) {
+    const offRouted = equipItemToSlot(withItem, idx, 'offHand');
+    if (
+      offRouted !== withItem &&
+      (equipped === withItem || loadoutScore(offRouted) > loadoutScore(equipped))
+    ) {
+      equipped = offRouted;
+    }
+  }
   if (equipped === withItem) return c;
   return loadoutScore(equipped) > loadoutScore(c) + 0.01 ? equipped : c;
 }
@@ -304,6 +328,10 @@ function reEquipFromInventory(c: Character): Character {
     if (monkFightsUnarmed(best) && slotForItem(ref.itemId) === 'mainHand') continue;
     const equipped = equipItem(best, i);
     if (equipped !== best && loadoutScore(equipped) > loadoutScore(best) + 0.01) best = equipped;
+    if (canOffHandWeapon(best, ref.itemId)) {
+      const offRouted = equipItemToSlot(best, i, 'offHand');
+      if (offRouted !== best && loadoutScore(offRouted) > loadoutScore(best) + 0.01) best = offRouted;
+    }
   }
   return best;
 }

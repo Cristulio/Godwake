@@ -47,12 +47,12 @@ import {
   MONK_UNARMED_DAMAGE_EDGE,
 } from '../monk';
 import { getMonster } from '../../../content/monsters';
-import { isRangedWeapon, rageBrokenByArmor } from '../../character/equip';
+import { isRangedWeapon, offHandWeaponRef, rageBrokenByArmor } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
 import { characterCampBoonMods } from '../../character/campBoons';
-import { characterAffixMods, enhancementOf } from '../../items/affixMods';
+import { enhancementOf, swingAffixMods } from '../../items/affixMods';
 import { getItem } from '../../../content/items';
 import { playerConditionMods } from '../playerConditions';
 import { playSfx, swingSfxForWeapon } from '../../audio';
@@ -177,8 +177,16 @@ export function attackWeaponId(character: Readonly<Character>): string | undefin
 /**
  * Player attacks a target with a weapon (must be the equipped main-hand).
  * Returns CombatActionResult: callers use result.state and result.character
- * directly. Internals thread a local `nextCharacter` accumulator — no in-place
- * mutation of `ctx.character` anywhere.
+ * directly.
+ *
+ * Dual wielding (the `dual-wielder` schools — Berserker, Battle Master,
+ * Thief): the turn's first Attack-action swing is followed by an automatic
+ * off-hand swing — its own attack roll with the off-hand weapon's profile,
+ * damage of the weapon's die with NO ability modifier and the gear edge
+ * halved (the flurry-extras guard). Same target while it stands, else the
+ * next live foe. Once per Attack action, so Extra Attack doesn't multiply it
+ * (an Action Surge's fresh action earns a fresh follow, like everything else
+ * it resets); bonus-action swings (Quick Strike) never trigger it.
  */
 export function playerAttack(
   ctx: AttackContext,
@@ -186,6 +194,68 @@ export function playerAttack(
   weaponItemId: string,
 ): CombatActionResult {
   const { roller, character, state } = ctx;
+  // Eligibility reads the PRE-swing state: an Attack-action swing (the action
+  // not yet spent — bonus swings enter with it already used) and the turn's
+  // first (the per-action counter still at 0), made with the equipped
+  // main-hand (a transformed body — claws, fists — fights with its own arms
+  // and follows nothing), while the off-hand holds a weapon.
+  const followEligible =
+    characterHasMechanic(character, 'dual-wielder') &&
+    character.actionEconomy.actionUsed !== true &&
+    (state.playerAttacksThisTurn ?? 0) === 0 &&
+    character.equipped.mainHand?.itemId === weaponItemId &&
+    offHandWeaponRef(character) !== null;
+  // The combat's opening attack: if the main hand whiffs it, the off-hand
+  // follow inherits the opener's Sneak window — the second chance to LAND it.
+  const openerWindow = !state.playerHasAttacked;
+
+  const main = resolveSwing(ctx, targetId, weaponItemId, null);
+  if (!followEligible || main.state.status !== 'active') return main;
+  const offRef = offHandWeaponRef(main.character);
+  if (!offRef) return main;
+  const live = main.state.combatants.filter(
+    (c) => c.kind === 'monster' && c.instance.hp.current > 0,
+  );
+  const offTarget = live.find((c) => c.id === targetId) ?? live[0];
+  if (!offTarget) return main;
+
+  const mainEvent = main.state.lastAttack;
+  const followed = resolveSwing(
+    { roller, character: main.character, state: main.state },
+    offTarget.id,
+    offRef.itemId,
+    { openerWindow },
+  );
+  // The pair commits as ONE state: lastAttack holds only the tail, so batch
+  // both events the way a monster multiattack does — the sprite floats each
+  // swing's number instead of losing the main hand's under the off-hand's.
+  const offEvent = followed.state.lastAttack;
+  if (mainEvent && offEvent && offEvent.id !== mainEvent.id) {
+    return combatResult(
+      { ...followed.state, attackEvents: [mainEvent, offEvent] },
+      followed.character,
+    );
+  }
+  return followed;
+}
+
+/**
+ * One weapon swing, resolved end to end. `offHand` marks the automatic
+ * dual-wield follow-up: it swings the OFF-hand weapon (its own enhancement
+ * and affixes — never the resting main-hand's), drops the ability modifier
+ * from damage, halves the per-hit gear edge via the flurry guard, and spends
+ * no action economy (it rides the action already paid for). Internals thread
+ * a local `nextCharacter` accumulator — no in-place mutation of
+ * `ctx.character` anywhere.
+ */
+function resolveSwing(
+  ctx: AttackContext,
+  targetId: string,
+  weaponItemId: string,
+  offHand: { openerWindow: boolean } | null,
+): CombatActionResult {
+  const { roller, character, state } = ctx;
+  const isOffHandSwing = offHand !== null;
   // Snapshot the log before the swing so every roll/damage line it appends can
   // be stamped as the player's own (markPlayerLog) for the log's emphasis.
   const beforeLog = new Set(state.log);
@@ -238,7 +308,9 @@ export function playerAttack(
   // to-hit/damage/advantage line below reads off a neutral (empty) mod set.
   const blessingMods = state.blessingsSealed ? {} : characterBlessingMods(nextCharacter);
   const boonMods = characterCampBoonMods(nextCharacter);
-  const affixMods = characterAffixMods(nextCharacter);
+  // Per-SWING affix view: while dual wielding, each weapon's affixes ride its
+  // own swings only — the resting hand's blade contributes nothing here.
+  const affixMods = swingAffixMods(nextCharacter, isOffHandSwing ? 'offHand' : 'mainHand');
   const isFirstAttack = !state.playerHasAttacked;
   const targetWounded =
     target.kind === 'monster' &&
@@ -259,9 +331,12 @@ export function playerAttack(
   attackBonus += boonMods.attackBonus ?? 0;
   // Honed weapon affix: flat +to-hit.
   attackBonus += affixMods.attackBonus;
-  // Weapon enhancement (+N): a flat axis on the swung main-hand, separate from
-  // affixes — adds to the attack roll here and to damage in the hit block.
-  const weaponEnhancement = enhancementOf(nextCharacter.equipped.mainHand);
+  // Weapon enhancement (+N): a flat axis on the swung weapon's own slot,
+  // separate from affixes — adds to the attack roll here and to damage in the
+  // hit block. The off-hand follow reads its own blade's +N, never the main's.
+  const weaponEnhancement = enhancementOf(
+    isOffHandSwing ? nextCharacter.equipped.offHand : nextCharacter.equipped.mainHand,
+  );
   attackBonus += weaponEnhancement;
   // Weapon accuracy lever: the shortbow's inherent +to-hit, traded for a smaller die.
   attackBonus += w.attackMod ?? 0;
@@ -354,16 +429,26 @@ export function playerAttack(
   logEntries.push({
     id: newLogId,
     kind: 'roll',
-    text: t('combat.log.attackRoll', {
-      name: nextCharacter.name,
-      verb: isRanged ? t('combat.log.verbFires') : t('combat.log.verbAttacks'),
-      target: displayName(target, nextCharacter),
-      weapon: weaponName,
-      mod: signed(attackBonus),
-      total: toHit.total,
-      ac,
-      result: rollResult(crit, hit),
-    }),
+    text: isOffHandSwing
+      ? t('combat.log.offhandRoll', {
+          name: nextCharacter.name,
+          target: displayName(target, nextCharacter),
+          weapon: weaponName,
+          mod: signed(attackBonus),
+          total: toHit.total,
+          ac,
+          result: rollResult(crit, hit),
+        })
+      : t('combat.log.attackRoll', {
+          name: nextCharacter.name,
+          verb: isRanged ? t('combat.log.verbFires') : t('combat.log.verbAttacks'),
+          target: displayName(target, nextCharacter),
+          weapon: weaponName,
+          mod: signed(attackBonus),
+          total: toHit.total,
+          ac,
+          result: rollResult(crit, hit),
+        }),
   });
 
   // Auto-reroll a miss if a reroll budget is available. Prefer the
@@ -477,18 +562,20 @@ export function playerAttack(
     const offTypeParts: { amount: number; type: string }[] = [];
     const damageNotes: string[] = [];
 
-    // Monk Flurry compounding guard. A Flurry strike fires AFTER the Attack
+    // Extra-strike compounding guard. A Flurry strike fires AFTER the Attack
     // action is spent (a bonus-action extra), so on entry the action is already
     // used — that's the signal this swing is an extra kit strike, not a primary
     // one. Those extras take only HALF the per-hit Grove edge (Whetstone) and
-    // gear damage (affixes + a monk weapon's enhancement), so Flurry ×
+    // gear damage (affixes + the swung weapon's enhancement), so Flurry ×
     // per-hit-edge no longer COMPOUNDS up the ascension ladder (where Grove
     // tiers + affixes are biggest, and the Monk — alone — was topping Asc 6).
     // The intrinsic Martial Arts kit (unarmed edge, Ki, Open Hand, Shadow)
     // still rides every strike in full — the kit fires; only the stacked
-    // external edge is rationed on the extra strikes.
+    // external edge is rationed on the extra strikes. A dual-wielder's
+    // automatic off-hand follow is the same shape of extra swing and takes the
+    // same ration — per-hit gear edge never multiplies across swing count.
     const diminishedExtraEdge =
-      monkKitOn && nextCharacter.actionEconomy.actionUsed === true;
+      (monkKitOn && nextCharacter.actionEconomy.actionUsed === true) || isOffHandSwing;
     const scaleExtraEdge = (v: number): number =>
       diminishedExtraEdge ? Math.floor(v / 2) : v;
 
@@ -703,8 +790,11 @@ export function playerAttack(
     const swashbucklerSneak = characterHasMechanic(nextCharacter, 'swashbuckler');
     const assassinSneak = characterHasMechanic(nextCharacter, 'assassin') && targetFullHp;
     // Opening strike: the first attack of each combat always finds the gap —
-    // the rogue steps from shadow even without setting up Hide first.
-    const openingStrike = isFirstAttack;
+    // the rogue steps from shadow even without setting up Hide first. The
+    // dual-wield follow of the OPENING pair inherits the window: a whiffed
+    // main hand hands the gap to the second knife (the once-per-turn flag
+    // above still blocks a second payout when the main hand already landed it).
+    const openingStrike = isFirstAttack || offHand?.openerWindow === true;
     // Feint guarantees the gap with no setup at all (Cunning Action above).
     const sneakTriggers =
       advantage === 'advantage' ||
@@ -836,9 +926,13 @@ export function playerAttack(
       bonusDamage -= condMods.outgoingDamagePenalty;
       onTypeParts.push({ amount: -condMods.outgoingDamagePenalty, label: 'weakened' });
     }
+    // The off-hand follow lands the weapon's die WITHOUT the ability modifier
+    // — the second blade's bite is the steel alone (the attack roll above
+    // keeps the full profile; only damage drops the mod).
+    const damageAbilMod = isOffHandSwing ? 0 : abilMod;
     const totalDamage = Math.max(
       1,
-      damageRoll.total + abilMod + damageExpr.modifier + bonusDamage,
+      damageRoll.total + damageAbilMod + damageExpr.modifier + bonusDamage,
     );
     const weaponTypeDamage = totalDamage - offTypeDamage;
 
@@ -863,7 +957,7 @@ export function playerAttack(
       if (val === 0) return;
       breakdown.push(val > 0 ? `+ ${val} ${label}` : `- ${Math.abs(val)} ${label}`);
     };
-    pushPart(abilMod, t(`combat.abil.${attackAbility}`));
+    pushPart(damageAbilMod, t(`combat.abil.${attackAbility}`));
     pushPart(damageExpr.modifier, t('combat.part.magic'));
     if (sneakDamage > 0) pushPart(sneakDamage, t('combat.part.sneak', { dice: `${sneakDice}d6` }));
     if (markDamage > 0) pushPart(markDamage, t('combat.part.mark', { dice: HUNTERS_MARK_DICE }));
@@ -1203,10 +1297,14 @@ export function playerAttack(
     });
   }
 
-  // Mark action used for the player
-  const markResult = markPlayerActionUsed(nextState, nextCharacter);
-  nextState = markResult.state;
-  nextCharacter = markResult.character;
+  // Mark action used for the player. The off-hand follow spends nothing — it
+  // rides the Attack action the main hand already paid for (and must not tick
+  // the per-action swing counter or burn a queued bonus swing).
+  if (!isOffHandSwing) {
+    const markResult = markPlayerActionUsed(nextState, nextCharacter);
+    nextState = markResult.state;
+    nextCharacter = markResult.character;
+  }
   nextState = {
     ...nextState,
     playerHasAttacked: true,

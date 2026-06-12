@@ -218,6 +218,13 @@ export const FIGHTER: Class = ClassSchema.parse({
               'Once per combat, your first hit becomes a precise maneuver: bonus damage equal to your weapon dice and a bleeding wound (3 damage each turn for 3 turns). Rewards on-hit and bleed gear that builds on the opening cut.',
             mechanicKey: 'battle-master',
           },
+          {
+            id: 'paired-steel',
+            name: 'Paired Steel',
+            description:
+              'You drill the second blade until it answers on its own. Your off-hand may carry a light weapon in a shield’s place; each turn your first strike is followed by a measured off-hand cut — its own attack roll, the weapon’s die alone with no ability bonus, half its gear’s edge. The wall you give up answers in steel.',
+            mechanicKey: 'dual-wielder',
+          },
         ],
         '10': [
           {

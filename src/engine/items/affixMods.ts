@@ -1,7 +1,7 @@
 import type { Character } from '../../types/character';
 import type { ItemRef, AffixModifiers } from '../../schemas/item';
 import type { DamageType } from '../../types/damage';
-import { getAffix } from '../../content/items';
+import { getAffix, getItem } from '../../content/items';
 import { EQUIP_SLOTS } from '../character/equip';
 import { equippedSetMods } from './setGear';
 import { affixScaleForRef, scaleAffixMagnitude } from './twoHandedPremium';
@@ -159,6 +159,38 @@ export function characterAffixMods(character: Character): AffixMods {
   // Set-gear effect payloads (each worn piece's signature + every met set-bonus
   // tier), computed LIVE from the equipped slots. The pieces' base stats / +N
   // ride the normal equipment path; only these effects fold here.
+  for (const m of equippedSetMods(character)) {
+    applyAffixModifiers(acc, m);
+  }
+  return acc;
+}
+
+/**
+ * The affix view a single weapon SWING reads: every worn slot except the
+ * weapon resting in the other hand. While dual wielding, each weapon's
+ * affixes ride its own swings only — a Cruel off-hand dagger must not deepen
+ * main-hand hits (per-hit gear edge never multiplies across swing count).
+ * For every other loadout (other hand empty / shield / orb) this is exactly
+ * {@link characterAffixMods}, so non-dual-wield behaviour is untouched.
+ */
+export function swingAffixMods(
+  character: Character,
+  swungHand: 'mainHand' | 'offHand',
+): AffixMods {
+  const otherHand = swungHand === 'mainHand' ? 'offHand' : 'mainHand';
+  const otherRef = character.equipped[otherHand];
+  if (!otherRef || getItem(otherRef.itemId).kind !== 'weapon') {
+    return characterAffixMods(character);
+  }
+  const ids: string[] = [];
+  for (const slot of EQUIP_SLOTS) {
+    if (slot === otherHand) continue;
+    ids.push(...affixIdsForRef(character.equipped[slot]));
+  }
+  const acc = aggregateAffixMods(ids);
+  for (const m of character.legendaryEffects ?? []) {
+    applyAffixModifiers(acc, m);
+  }
   for (const m of equippedSetMods(character)) {
     applyAffixModifiers(acc, m);
   }

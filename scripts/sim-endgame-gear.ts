@@ -75,7 +75,7 @@ import {
   ascensionAscendantLoot,
 } from '../src/engine/delve/ascension';
 import { computeAC } from '../src/engine/character/derived';
-import { equipItem } from '../src/engine/character/equip';
+import { canOffHandWeapon, equipItem, equipItemToSlot } from '../src/engine/character/equip';
 import { characterAffixMods, enhancementOf } from '../src/engine/items/affixMods';
 import { rollGearDrop, rollPotionDrop, rollLegendaryDrop } from '../src/engine/items/drops';
 import { buyShopConsumables } from '../src/engine/character/shopPolicy';
@@ -312,6 +312,18 @@ function loadoutScore(c: Character): number {
       score += enhancementOf(mh) * 4.1;
     }
   }
+  // Dual-wield off-hand weapon: one extra die-only swing a turn (no ability
+  // mod, damage-side gear edge halved) — half the main-hand weights. The
+  // displaced shield's AC drops out of computeAC below, so the shield-vs-blade
+  // trade is a real comparison. +N keeps full to-hit but half damage: ~half.
+  const oh = c.equipped.offHand;
+  if (oh) {
+    const ow = getItem(oh.itemId);
+    if (ow.kind === 'weapon') {
+      score += avgDice(ow.damage) * 0.8;
+      score += enhancementOf(oh) * 2.0;
+    }
+  }
   // computeAC already folds armour base + affix acBonus + legendary + permanent.
   score += computeAC(c) * 2.5;
   const m = characterAffixMods(c);
@@ -336,7 +348,18 @@ function loadoutScore(c: Character): number {
 function tryEquipDrop(c: Character, ref: ItemRef): Character {
   const idx = c.inventory.length;
   const withItem: Character = { ...c, inventory: [...c.inventory, ref] };
-  const equipped = equipItem(withItem, idx);
+  let equipped = equipItem(withItem, idx);
+  // Dual-wielder: also try the light weapon in the OFF-hand (over a shield —
+  // the explicit route); keep the higher score. AC-vs-swing prices itself.
+  if (canOffHandWeapon(withItem, ref.itemId)) {
+    const offRouted = equipItemToSlot(withItem, idx, 'offHand');
+    if (
+      offRouted !== withItem &&
+      (equipped === withItem || loadoutScore(offRouted) > loadoutScore(equipped))
+    ) {
+      equipped = offRouted;
+    }
+  }
   if (equipped === withItem) return c; // equip refused (class-illegal / no slot) — discard
   if (loadoutScore(equipped) > loadoutScore(c) + 0.01) return equipped;
   return c; // not an upgrade — don't hoard it

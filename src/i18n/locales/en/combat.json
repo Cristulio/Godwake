@@ -186,6 +186,7 @@
     "attackRoll": "{name} {verb} {target} with {weapon}. d20{mod} = {total} vs AC {ac} {result}.",
     "verbAttacks": "attacks",
     "verbFires": "fires at",
+    "offhandRoll": "{name}'s off-hand follows — {weapon} at {target}. d20{mod} = {total} vs AC {ac} {result}.",
     "reroll": "{source} — reroll. d20{mod} = {total} vs AC {ac} {result}.",
     "damageLine": "Damage: {headline} ({breakdown}){note}.",
     "damageHeadlineOne": "{total} {type}",
