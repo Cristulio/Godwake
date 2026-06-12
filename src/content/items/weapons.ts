@@ -243,17 +243,21 @@ export const SICKLE: Weapon = WeaponSchema.parse({
 
 // Wild Shape natural weapons — never sold or rolled (absent from the loot/shop
 // pools, which draw from explicit id lists). Resolved only when the engine swaps
-// the druid's attack to its beast profile. Finesse so the claw rides the druid's
-// DEX rather than its dumped STR; affinity grants the matched-weapon edge.
-// The claw is the beast form's whole offense, so it must out-bite the sickle the
-// druid drops to wear it — a 1d8+1 rend (vs the simple 1d6 sickle) makes Wild
-// Shape a real front-line spike rather than a sidegrade. Conservative; the sim
-// calibrates against the druid band.
+// the druid's attack to its beast profile (beastWeaponId picks the level tier,
+// mirroring the monk's martialArtsWeaponId ladder). `casterWeapon` is the
+// load-bearing flag: the claw attacks AND damages off the druid's WISDOM
+// (spellcasting mod, read in playerAttack) — the borrowed body fights with the
+// druid's communion with the wild, not the caster's dumped STR/DEX. Affinity
+// grants the matched-weapon edge. The claw is the beast form's whole offense,
+// so each tier must out-bite the simple arms the druid drops to wear it.
+// Dice/mods are PROVISIONAL martial-beast numbers — the end-of-campaign sim
+// batch calibrates them against the druid band.
 export const BEAST_CLAWS: Weapon = WeaponSchema.parse({
   id: 'beast-claws',
   kind: 'weapon',
   name: 'Beast Claws',
   affinity: 'druid',
+  casterWeapon: true,
   attackMod: 1,
   damageMod: 1,
   category: 'simple',
@@ -265,11 +269,46 @@ export const BEAST_CLAWS: Weapon = WeaponSchema.parse({
   description: 'Tooth and talon — the natural arms of the borrowed form.',
 });
 
+export const BEAST_CLAWS_ELDER: Weapon = WeaponSchema.parse({
+  id: 'beast-claws-elder',
+  kind: 'weapon',
+  name: 'Elder Claws',
+  affinity: 'druid',
+  casterWeapon: true,
+  attackMod: 1,
+  damageMod: 2,
+  category: 'simple',
+  damage: '1d10',
+  damageType: 'slashing',
+  properties: ['finesse', 'light'],
+  cost: 0,
+  rarity: 'common',
+  description: 'The old forest answers a deeper call — heavier shapes, longer reach, a surer rend.',
+});
+
+export const BEAST_CLAWS_PRIMAL: Weapon = WeaponSchema.parse({
+  id: 'beast-claws-primal',
+  kind: 'weapon',
+  name: 'Primal Claws',
+  affinity: 'druid',
+  casterWeapon: true,
+  attackMod: 1,
+  damageMod: 3,
+  category: 'simple',
+  damage: '2d6',
+  damageType: 'slashing',
+  properties: ['finesse', 'light'],
+  cost: 0,
+  rarity: 'common',
+  description: 'The first beasts, remembered in tooth and sinew — the wild as it was before names.',
+});
+
 export const DIRE_CLAWS: Weapon = WeaponSchema.parse({
   id: 'dire-claws',
   kind: 'weapon',
   name: 'Dire Claws',
   affinity: 'druid',
+  casterWeapon: true,
   attackMod: 1,
   damageMod: 3,
   category: 'martial',
@@ -281,18 +320,58 @@ export const DIRE_CLAWS: Weapon = WeaponSchema.parse({
   description: 'The heavier predators a Circle of the Moon druid can wear — a deeper, surer rend.',
 });
 
+export const DIRE_CLAWS_SAVAGE: Weapon = WeaponSchema.parse({
+  id: 'dire-claws-savage',
+  kind: 'weapon',
+  name: 'Savage Claws',
+  affinity: 'druid',
+  casterWeapon: true,
+  attackMod: 1,
+  damageMod: 4,
+  category: 'martial',
+  damage: '2d6',
+  damageType: 'slashing',
+  properties: ['finesse'],
+  cost: 0,
+  rarity: 'common',
+  description: 'The moon-circle’s deeper shapes — apex hunters that take the throat, not the flank.',
+});
+
+export const DIRE_CLAWS_APEX: Weapon = WeaponSchema.parse({
+  id: 'dire-claws-apex',
+  kind: 'weapon',
+  name: 'Apex Claws',
+  affinity: 'druid',
+  casterWeapon: true,
+  attackMod: 1,
+  damageMod: 5,
+  category: 'martial',
+  damage: '2d8',
+  damageType: 'slashing',
+  properties: ['finesse'],
+  cost: 0,
+  rarity: 'common',
+  description: 'Nothing in the old forest hunted these — the last shape the moon shows a druid.',
+});
+
 // Shape Change dragon claws — never sold or rolled (absent from the loot/shop
 // pools, which draw from explicit id lists). Resolved only when the engine swaps
-// the wizard's attack to its dragon profile. The +3 to-hit / +3 damage that make
-// the claws "hit like a +3 enchanted weapon" are applied in playerAttack (gated
-// on isDragonForm), NOT baked here — the weapon carries only the base 2d8 rend.
+// the wizard's attack to its dragon profile. `casterWeapon` makes the claw
+// attack AND damage off the wizard's INTELLIGENCE (spellcasting mod, read in
+// playerAttack) — the dragon strikes with the will that shaped it, not the
+// wizard's dumped STR. The +3 to-hit / +3 damage that make the claws "hit like
+// a +3 enchanted weapon" are applied in playerAttack (gated on isDragonForm),
+// NOT baked here. The 3d8 rend is a PROVISIONAL martial-beast number (a L17+
+// capstone claw threatening elite-weapon damage per swing, three swings per
+// Attack) — the end-of-campaign sim batch calibrates it.
 export const DRAGON_CLAWS: Weapon = WeaponSchema.parse({
   id: 'dragon-claws',
   kind: 'weapon',
   name: 'Dragon Claws',
   affinity: 'wizard',
+  casterWeapon: true,
   category: 'martial',
-  damage: '2d8',
+  damage: '3d8',
   damageType: 'slashing',
   properties: [],
   cost: 0,
@@ -457,7 +536,11 @@ export const ALL_WEAPONS: Weapon[] = [
   HAND_CROSSBOW,
   SICKLE,
   BEAST_CLAWS,
+  BEAST_CLAWS_ELDER,
+  BEAST_CLAWS_PRIMAL,
   DIRE_CLAWS,
+  DIRE_CLAWS_SAVAGE,
+  DIRE_CLAWS_APEX,
   DRAGON_CLAWS,
   MONK_FISTS,
   MONK_FISTS_ADEPT,

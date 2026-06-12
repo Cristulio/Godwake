@@ -116,6 +116,15 @@ export interface MonsterInstance {
    */
   legendaryResistances?: number;
   /**
+   * Encounter rank, stamped at spawn on the primary foe of an elite/boss room.
+   * Unlike {@link legendaryResistances} (a pool that decrements as it absorbs
+   * control), this never changes for the fight — it is the stable read for
+   * rank-gated effects: Power Word: Kill unmakes normals AND elites outright on
+   * a failed save, but a boss never dies to it. Absent = rank-and-file (adds
+   * and summons included).
+   */
+  rank?: 'elite' | 'boss';
+  /**
    * Staggered: turns this monster will lose to a Barbarian's Knockdown. Each of
    * its turns decrements the count and is skipped while > 0. Absent on monsters
    * that haven't been knocked down.

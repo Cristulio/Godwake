@@ -28,15 +28,13 @@ import {
   useDivineSmite,
   useWildShape,
   hasRemainingTurnPlay,
-  martialArtsWeaponId,
-  monkFightsUnarmed,
+  attackWeaponId,
   useConsumable,
   castSpell,
   chooseCombatAction,
   applyPlannedAction,
 } from '../../engine/combat';
 import { buildPostmortem } from '../../engine/combat/postmortem';
-import { DRAGON_CLAW_WEAPON_ID, isDragonForm } from '../../engine/combat/shapeChange';
 import { getSpell } from '../../content/spells';
 import { ItemPicker } from './ItemPicker';
 import { CombatLog } from './CombatLog';
@@ -487,14 +485,11 @@ export function CombatScreen({
       return;
     }
     const roller = getActiveRoller();
-    // A bare-handed monk strikes with its level-scaled Martial Arts die; a monk
-    // who took up a weapon swings that weapon's own die (a themed monk weapon
-    // keeps the Ki kit flowing around the swing; an ordinary arm stills it).
-    const weaponId = isDragonForm(character)
-      ? DRAGON_CLAW_WEAPON_ID
-      : character.classId === 'monk' && monkFightsUnarmed(character)
-        ? martialArtsWeaponId(character)
-        : character.equipped.mainHand?.itemId;
+    // The shared dispatch pick (same read as the bot's actionPolicy): a
+    // transformed body — dragon form OR a wild-shaped druid — strikes with its
+    // natural claws, a bare-handed monk with its Martial Arts die, anyone else
+    // with the equipped main-hand.
+    const weaponId = attackWeaponId(character);
     if (!weaponId) return;
     const result = playerAttack(
       { roller, character, state },
