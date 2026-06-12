@@ -242,7 +242,7 @@ export function characterAtLevel(
  */
 export function pickBlessingAtShrine(roller: DiceRoller, character: Character): Character {
   const count = 3 + (character.shrineOptionBonus ?? 0);
-  const offer = rollBlessingOptions(roller, count, character.classId, character.blessings);
+  const offer = rollBlessingOptions(roller, count, character, character.blessings);
   const pick = chooseBlessing(offer, character);
   if (!pick || character.blessings.includes(pick)) return character;
   return { ...character, blessings: [...character.blessings, pick] };

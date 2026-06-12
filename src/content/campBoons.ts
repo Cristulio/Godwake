@@ -1,4 +1,5 @@
-import { FULL_CASTER_CLASS_IDS, type ClassId } from '../schemas/ids';
+import type { Character } from '../types/character';
+import { combatLean } from '../engine/character/combatLean';
 
 export type CampBoonTier = 1 | 2 | 3;
 
@@ -134,14 +135,18 @@ export function listCampBoons(): CampBoon[] {
 
 /**
  * The three boons offered at the given camp tier. Weapon-keyed slots swap to
- * spell-keyed equivalents for the full casters (wizard/druid/bard — a weapon
- * to-hit or damage-die lever is a dud in a casting hand). Tier 3 swaps both
- * the middle slot (blade/vow) and the last slot (eyes/gaze of the lich).
- * Power is matched 1:1 — each caster variant grants an equivalent magnitude
- * lever.
+ * spell-keyed equivalents for lean-caster souls (combatLean — class +
+ * subclass at offer time, not the blunt full-caster list: a Valor bard or
+ * Moon druid keeps the weapon lever, a Radiant paladin gets the spell one).
+ * Tier 3 swaps both the middle slot (blade/vow) and the last slot (eyes/gaze
+ * of the lich). Power is matched 1:1 — each caster variant grants an
+ * equivalent magnitude lever.
  */
-export function boonsForCampTier(tier: CampBoonTier, classId: ClassId): CampBoon[] {
-  const caster = (FULL_CASTER_CLASS_IDS as readonly ClassId[]).includes(classId);
+export function boonsForCampTier(
+  tier: CampBoonTier,
+  c: Pick<Character, 'classId' | 'subclassId'>,
+): CampBoon[] {
+  const caster = combatLean(c) === 'caster';
   if (tier === 1) {
     const middle = caster
       ? getCampBoon('eye-of-the-mind')

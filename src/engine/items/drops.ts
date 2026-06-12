@@ -116,7 +116,7 @@ const POTION_DROP_CHANCE: Record<DropSource, number> = {
 /**
  * Roll whether a cleared room drops a healing draught, and which rung. The pool
  * is the HEAL side of the consumable ladder legal at the run's current chapter
- * (CONSUMABLE_MIN_CHAPTER — the same gate the shop stock reads), so found
+ * (CONSUMABLE_CHAPTER_GATE — the same gate the shop stock reads), so found
  * potions tier with depth exactly as bought ones do. Within the pool, weights
  * climb linearly toward the deepest rung (rung i of n weighs i+1), so a deep
  * clear usually pays in the potions worth carrying there. Buff consumables

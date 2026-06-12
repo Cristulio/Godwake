@@ -1,17 +1,11 @@
 import { BlessingSchema, type Blessing, type BlessingModifiers } from '../../schemas/blessing';
-import { FULL_CASTER_CLASS_IDS } from '../../schemas/ids';
 
-// Classes whose primary action is a weapon attack roll. Spells in this build
-// either save-for-half or auto-hit, so first-attack-bonus / crit-range /
-// damage-on-hit / reroll-miss blessings never fire for Wizards. Tagging them
-// here lets shrines and camps filter the offer pool by class.
-const WEAPON_CLASSES = ['fighter', 'rogue', 'barbarian', 'ranger'] as const;
-
-// Classes whose primary action is a spell — the shared full-caster list
-// (wizard/druid/bard). Caster blessings tag this list so the spell levers
-// (DC / spell damage / spell attack) surface only for them — those fields are
-// inert for martials, the mirror of the weapon/caster split.
-const CASTER_CLASSES = FULL_CASTER_CLASS_IDS;
+// Pool tags, not class lists. `pool: 'weapon'` = attack-roll-keyed (dead in a
+// casting hand: spells here save-for-half or auto-hit); `pool: 'caster'` =
+// spell levers (inert for martials); untagged = universal. Offers filter by
+// the soul's combat LEAN (engine/character/combatLean — class + subclass,
+// resolved at offer time), so the monk and the un-sworn paladin draw the
+// weapon pool, a Radiant paladin or Lore bard the caster one.
 
 const POOL: Blessing[] = [
   BlessingSchema.parse({
@@ -21,7 +15,7 @@ const POOL: Blessing[] = [
     flavor: 'A copper finds its way into your hand. You did not put it there.',
     effect: 'Reroll one missed attack per encounter.',
     modifiers: { rerollMissesPerEncounter: 1 },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   BlessingSchema.parse({
     id: 'helms-aegis',
@@ -38,7 +32,7 @@ const POOL: Blessing[] = [
     flavor: 'The first blow is always the truest. Ares has a soft spot for the brave.',
     effect: '+2 damage on the first attack of each combat.',
     modifiers: { firstAttackDamage: 2 },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   BlessingSchema.parse({
     id: 'mystras-whisper',
@@ -47,7 +41,7 @@ const POOL: Blessing[] = [
     flavor: 'The Weft hums faintly around your weapon. Your strikes carry an unseen edge.',
     effect: '+1 force damage on all attacks.',
     modifiers: { damageBonus: 1 },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   BlessingSchema.parse({
     id: 'lathanders-dawn',
@@ -64,7 +58,7 @@ const POOL: Blessing[] = [
     flavor: 'You catch them not seeing you — even when you are obviously there.',
     effect: 'Advantage on your first attack each combat.',
     modifiers: { firstAttackAdvantage: true },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   BlessingSchema.parse({
     id: 'ilmaters-patience',
@@ -90,7 +84,7 @@ const POOL: Blessing[] = [
     flavor: 'Your crit range widens. The god of war prefers a decisive ending.',
     effect: 'Crit range extends by 1 (e.g. Champion crits on 18-20 instead of 19-20).',
     modifiers: { critRangeBonus: 1 },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   BlessingSchema.parse({
     id: 'tymoras-wink',
@@ -107,7 +101,7 @@ const POOL: Blessing[] = [
     flavor: 'A reckless prayer answered. The dice tip one way — but your guard tips the other.',
     effect: 'Crit range extends by 1, but you lose 1 AC. Tyche deals what she deals.',
     modifiers: { critRangeBonus: 1, acBonus: -1 },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   BlessingSchema.parse({
     id: 'helms-bulwark',
@@ -116,7 +110,7 @@ const POOL: Blessing[] = [
     flavor: 'Your strikes carry a witness. Steel rings as if struck twice — once by you, once by Him.',
     effect: '+1 radiant damage on hits.',
     modifiers: { holyDamageBonus: 1 },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   BlessingSchema.parse({
     id: 'mystras-ward',
@@ -133,7 +127,7 @@ const POOL: Blessing[] = [
     flavor: 'A thread of the Weft guides your first strike. It does not let go until it lands.',
     effect: '+2 to-hit on the first attack of each combat.',
     modifiers: { firstAttackBonus: 2 },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   BlessingSchema.parse({
     id: 'lathanders-ember',
@@ -158,7 +152,7 @@ const POOL: Blessing[] = [
     flavor: 'The briar reaches where the blade hesitates. Wild things do not miss the opening.',
     effect: '+1 to your first attack roll each combat.',
     modifiers: { firstAttackBonus: 1 },
-    classRelevance: [...WEAPON_CLASSES],
+    pool: 'weapon',
   }),
   // --- v2 pool: relic-style conditional / scaling / synergy blessings ---
   BlessingSchema.parse({
@@ -218,7 +212,7 @@ const POOL: Blessing[] = [
     effect: 'Gain 6 temporary HP at the start of a chapter-boss fight.',
     modifiers: { bossTempHp: 6 },
   }),
-  // --- caster pool: spell-keyed blessings (wizard/druid only) ---
+  // --- caster pool: spell-keyed blessings (lean-caster souls only) ---
   BlessingSchema.parse({
     id: 'mystras-acuity',
     name: "Hecate's Acuity",
@@ -226,7 +220,7 @@ const POOL: Blessing[] = [
     flavor: 'The Weft sharpens to a point behind your eyes. Where it touches, no ward holds clean.',
     effect: '+1 to your spell save DC.',
     modifiers: { spellDcBonus: 1 },
-    classRelevance: [...CASTER_CLASSES],
+    pool: 'caster',
   }),
   BlessingSchema.parse({
     id: 'mystras-surge',
@@ -235,7 +229,7 @@ const POOL: Blessing[] = [
     flavor: 'The current runs fuller through you than the spell was meant to carry. It spills over into the world.',
     effect: '+2 damage on all spells.',
     modifiers: { spellDamageBonus: 2 },
-    classRelevance: [...CASTER_CLASSES],
+    pool: 'caster',
   }),
   BlessingSchema.parse({
     id: 'mystras-precision',
@@ -244,7 +238,7 @@ const POOL: Blessing[] = [
     flavor: 'The Weft does not let your aim wander. The bolt goes where the will points.',
     effect: '+1 to spell attack rolls.',
     modifiers: { spellAttackBonus: 1 },
-    classRelevance: [...CASTER_CLASSES],
+    pool: 'caster',
   }),
   BlessingSchema.parse({
     id: 'mystras-apex',
@@ -253,7 +247,7 @@ const POOL: Blessing[] = [
     flavor: 'For a breath the Lady of Mysteries casts through you, and the spell remembers what it was at the dawn of the Art.',
     effect: '+1 spell save DC and +1 spell damage.',
     modifiers: { spellDcBonus: 1, spellDamageBonus: 1 },
-    classRelevance: [...CASTER_CLASSES],
+    pool: 'caster',
   }),
   BlessingSchema.parse({
     id: 'selunes-beacon',
@@ -262,7 +256,7 @@ const POOL: Blessing[] = [
     flavor: 'Her light marks the target before the spell leaves your hand. You strike a thing already lit.',
     effect: '+1 to spell attack rolls and +1 spell damage.',
     modifiers: { spellAttackBonus: 1, spellDamageBonus: 1 },
-    classRelevance: [...CASTER_CLASSES],
+    pool: 'caster',
   }),
   BlessingSchema.parse({
     id: 'silvanus-wrath',
@@ -271,7 +265,7 @@ const POOL: Blessing[] = [
     flavor: 'The wild lends its weight to your calling — root, storm, and fang behind every word.',
     effect: '+1 damage on all spells.',
     modifiers: { spellDamageBonus: 1 },
-    classRelevance: [...CASTER_CLASSES],
+    pool: 'caster',
   }),
   BlessingSchema.parse({
     id: 'silvanus-insight',
@@ -280,7 +274,7 @@ const POOL: Blessing[] = [
     flavor: 'You read the quarry as the oak reads the season — its weakness plain, its dodging already foreseen.',
     effect: '+1 spell save DC and +1 to spell attack rolls.',
     modifiers: { spellDcBonus: 1, spellAttackBonus: 1 },
-    classRelevance: [...CASTER_CLASSES],
+    pool: 'caster',
   }),
   BlessingSchema.parse({
     id: 'lathanders-mantle',
@@ -289,7 +283,7 @@ const POOL: Blessing[] = [
     flavor: 'Dawn cloaks the caster — fire to throw, warmth to wear. The morning does not send its own out cold.',
     effect: '+1 spell damage and 3 temporary HP at the start of each combat.',
     modifiers: { spellDamageBonus: 1, extraTempHpPerRoom: 3 },
-    classRelevance: [...CASTER_CLASSES],
+    pool: 'caster',
   }),
   // --- universal pool: class-agnostic depth so every soul cycles fewer repeats ---
   BlessingSchema.parse({

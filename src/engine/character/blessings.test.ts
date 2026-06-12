@@ -3,7 +3,7 @@ import { createDiceRoller } from '../dice';
 import { BlessingSchema, type Blessing } from '../../schemas/blessing';
 import { aggregateBlessingModifiers, blessingSignature, characterBlessingMods, rollBlessingOptions } from './blessings';
 import { computeAC, critRange } from './derived';
-import { blessingsForClass } from './blessings';
+import { blessingsForCharacter } from './blessings';
 import { spellSaveDC, spellDamageBonus, spellAttackBonus } from '../combat/spells/helpers';
 import { characterAtLevel } from '../../test/sim/encounterStress';
 
@@ -423,7 +423,11 @@ describe('rollBlessingOptions — effect-category spread', () => {
     for (const classId of [undefined, 'fighter', 'rogue', 'wizard'] as const) {
       for (let seed = 0; seed < 200; seed += 1) {
         const roller = createDiceRoller(seed);
-        const result = rollBlessingOptions(roller, 3, classId);
+        const result = rollBlessingOptions(
+          roller,
+          3,
+          classId ? { classId, subclassId: null } : undefined,
+        );
         const counts = new Map<string, number>();
         for (const id of result) {
           const c = getBlessingCategory(getBlessing(id));
@@ -544,11 +548,9 @@ describe('aggregateBlessingModifiers — max-of-individual stacking guard (PR #8
 describe('caster blessing pool — variety expansion', () => {
   it('the caster pool is meaningfully deeper than the old universal-only floor', async () => {
     const { listBlessings } = await import('../../content/blessings');
-    const universalOnly = listBlessings().filter(
-      (b) => !b.classRelevance || b.classRelevance.length === 0,
-    ).length;
+    const universalOnly = listBlessings().filter((b) => !b.pool).length;
     for (const classId of ['wizard', 'druid', 'bard'] as const) {
-      const pool = blessingsForClass(classId);
+      const pool = blessingsForCharacter({ classId, subclassId: null });
       // Was 16 (universal-only) before this lane. The deeper pool is the fix
       // for casters cycling a tiny set fast and feeling repetitive.
       expect(pool.length).toBeGreaterThanOrEqual(25);
@@ -557,7 +559,7 @@ describe('caster blessing pool — variety expansion', () => {
   });
 
   it('the bard rides the caster pool: spell levers in, weapon-keyed cards out', () => {
-    const pool = blessingsForClass('bard');
+    const pool = blessingsForCharacter({ classId: 'bard', subclassId: null });
     const ids = pool.map((b) => b.id);
     expect(ids).toEqual(expect.arrayContaining(['mystras-acuity', 'mystras-surge', 'mystras-precision']));
     // Weapon-keyed cards stay off the bard's offers (dead in a casting hand).
@@ -568,7 +570,7 @@ describe('caster blessing pool — variety expansion', () => {
   it('martials never see a caster blessing on their offer pool', async () => {
     const { getBlessing } = await import('../../content/blessings');
     for (const classId of ['fighter', 'rogue', 'barbarian', 'ranger'] as const) {
-      for (const b of blessingsForClass(classId)) {
+      for (const b of blessingsForCharacter({ classId, subclassId: null })) {
         const m = getBlessing(b.id).modifiers;
         expect(m.spellDcBonus ?? m.spellDamageBonus ?? m.spellAttackBonus).toBeUndefined();
       }
@@ -577,7 +579,7 @@ describe('caster blessing pool — variety expansion', () => {
 
   it('every caster blessing is mechanically live — its spell lever moves an engine value', async () => {
     const { listBlessings } = await import('../../content/blessings');
-    const casterBlessings = listBlessings().filter((b) => b.classRelevance?.includes('wizard'));
+    const casterBlessings = listBlessings().filter((b) => b.pool === 'caster');
     expect(casterBlessings.length).toBeGreaterThanOrEqual(8);
 
     const base = characterAtLevel('wizard', 5);
@@ -596,6 +598,121 @@ describe('caster blessing pool — variety expansion', () => {
         m.spellDamageBonus !== undefined ||
         m.spellAttackBonus !== undefined;
       expect(hasSpellLever).toBe(true);
+    }
+  });
+});
+
+describe('blessingsForCharacter — lean-aware pools (combatLean, offer-time)', () => {
+  const WEAPON_CARD = 'tymoras-coin';
+  const CASTER_CARD = 'mystras-acuity';
+  const UNIVERSAL_CARD = 'helms-aegis';
+
+  it('the monk draws the weapon pool — the owner-found gap (it sat in NEITHER class list)', () => {
+    const ids = blessingsForCharacter({ classId: 'monk', subclassId: null }).map((b) => b.id);
+    expect(ids).toContain(WEAPON_CARD);
+    expect(ids).not.toContain(CASTER_CARD);
+  });
+
+  it('the un-sworn and Bulwark paladin draw weapon cards; the Radiant draws caster ones', () => {
+    for (const subclassId of [null, 'bulwark']) {
+      const ids = blessingsForCharacter({ classId: 'paladin', subclassId }).map((b) => b.id);
+      expect(ids).toContain(WEAPON_CARD);
+      expect(ids).not.toContain(CASTER_CARD);
+    }
+    const radiant = blessingsForCharacter({ classId: 'paladin', subclassId: 'radiant' }).map(
+      (b) => b.id,
+    );
+    expect(radiant).toContain(CASTER_CARD);
+    expect(radiant).not.toContain(WEAPON_CARD);
+  });
+
+  it('the Valor bard flips to the weapon pool; Lore and the un-chosen stay caster', () => {
+    const valor = blessingsForCharacter({ classId: 'bard', subclassId: 'valor' }).map((b) => b.id);
+    expect(valor).toContain(WEAPON_CARD);
+    expect(valor).not.toContain(CASTER_CARD);
+    for (const subclassId of [null, 'lore']) {
+      const ids = blessingsForCharacter({ classId: 'bard', subclassId }).map((b) => b.id);
+      expect(ids).toContain(CASTER_CARD);
+      expect(ids).not.toContain(WEAPON_CARD);
+    }
+  });
+
+  it('the Moon druid flips to the weapon pool; the circle-less stays caster', () => {
+    const moon = blessingsForCharacter({
+      classId: 'druid',
+      subclassId: 'circle-of-the-moon',
+    }).map((b) => b.id);
+    expect(moon).toContain(WEAPON_CARD);
+    expect(moon).not.toContain(CASTER_CARD);
+    const fresh = blessingsForCharacter({ classId: 'druid', subclassId: null }).map((b) => b.id);
+    expect(fresh).toContain(CASTER_CARD);
+    expect(fresh).not.toContain(WEAPON_CARD);
+  });
+
+  it('universal cards reach every lean', () => {
+    for (const c of [
+      { classId: 'monk', subclassId: null },
+      { classId: 'wizard', subclassId: null },
+      { classId: 'paladin', subclassId: 'radiant' },
+      { classId: 'bard', subclassId: 'valor' },
+    ] as const) {
+      expect(blessingsForCharacter(c).map((b) => b.id)).toContain(UNIVERSAL_CARD);
+    }
+  });
+
+  it('a rolled monk offer never contains a caster card and can land weapon cards', async () => {
+    const { getBlessing } = await import('../../content/blessings');
+    let sawWeaponCard = false;
+    for (let seed = 0; seed < 200; seed += 1) {
+      const roller = createDiceRoller(seed);
+      const result = rollBlessingOptions(roller, 3, { classId: 'monk', subclassId: null });
+      for (const id of result) {
+        const b = getBlessing(id);
+        expect(b.pool).not.toBe('caster');
+        if (b.pool === 'weapon') sawWeaponCard = true;
+      }
+    }
+    expect(sawWeaponCard).toBe(true);
+  });
+});
+
+describe('monk unarmed fit-check — the weapon pool stays attack-generic', () => {
+  /**
+   * Levers applied at attack RESOLUTION (playerAttack / derived critRange) —
+   * live for the bare-handed monk because nothing binds them to a held
+   * weapon item. The fit-check sweep found every current weapon-pool card
+   * uses only these, so monks draw the full pool with zero exclusions. A new
+   * weapon-pool blessing carrying a lever outside this set (a held-weapon
+   * enchant, a ranged-only rider) trips this test and forces the monk
+   * include/exclude decision to be made consciously.
+   */
+  const UNARMED_LIVE_LEVERS = new Set([
+    'firstAttackBonus',
+    'firstAttackDamage',
+    'firstAttackAdvantage',
+    'damageBonus',
+    'holyDamageBonus',
+    'critRangeBonus',
+    'critRangeBonusWhileFull',
+    'critRangeBonusWhileBloodied',
+    'rerollMissesPerEncounter',
+    'acBonus', // Tyche's Gambit's -1 AC rider on its crit card
+  ]);
+
+  it('every weapon-pool blessing uses only unarmed-live levers', async () => {
+    const { listBlessings } = await import('../../content/blessings');
+    const weaponPool = listBlessings().filter((b) => b.pool === 'weapon');
+    expect(weaponPool.length).toBeGreaterThanOrEqual(9);
+    for (const b of weaponPool) {
+      const levers = Object.keys(b.modifiers ?? {}).filter(
+        (k) => b.modifiers[k as keyof typeof b.modifiers] !== undefined,
+      );
+      expect(levers.length).toBeGreaterThan(0);
+      for (const lever of levers) {
+        expect(UNARMED_LIVE_LEVERS.has(lever), `${b.id} carries non-unarmed lever ${lever}`).toBe(
+          true,
+        );
+      }
     }
   });
 });

@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { ClassIdSchema } from './ids';
 
 /**
  * the old realms gods that grant blessings at shrine rooms.
@@ -109,9 +108,8 @@ export const BlessingModifiersSchema = z
      * Caster levers. These join the same additive spell sources the engine
      * already reads (camp boons, gear affixes, permanent bonuses) inside
      * `spellSaveDC` / `spellDamageBonus` / `spellAttackBonus` — they are NOT a
-     * new effect kind, just blessings as another contributing source. Weapon
-     * classes never cast, so caster blessings carry `classRelevance` for
-     * wizard/druid and stay off martial offer screens.
+     * new effect kind, just blessings as another contributing source. They
+     * carry `pool: 'caster'` so they stay off lean-martial offer screens.
      */
     /** +N to the caster's spell save DC (save-or-suck spells land more often). */
     spellDcBonus: z.number().optional(),
@@ -131,14 +129,15 @@ export const BlessingSchema = z.object({
   effect: z.string(),
   modifiers: BlessingModifiersSchema,
   /**
-   * Class ids this blessing is meaningful for. Omit (or empty) = all classes.
-   * Sim PR #105 caught that weapon-attack-keyed blessings (first-attack
-   * to-hit / damage, crit range, weapon damageBonus, holyDamageBonus,
-   * rerollMissesPerEncounter) are entirely dead for Wizard — those spells
-   * either save-for-half or auto-hit, never roll-to-hit. Shrine/camp
-   * blessing offers filter by this list so Wizards never get a flavor-only
-   * card on their pick screen.
+   * Offer-pool key. Omit = universal (every soul sees it). 'weapon' cards
+   * ride attack rolls (first-attack to-hit / damage, crit range, damage and
+   * radiant riders, attack rerolls) — dead in a casting hand (sim PR #105:
+   * those spells save-for-half or auto-hit). 'caster' cards carry the spell
+   * levers, inert for martials. Offers resolve the soul's combat LEAN
+   * (engine/character/combatLean — class + subclass, at offer time) rather
+   * than a static class list, so a Valor bard draws weapon cards and a
+   * Radiant paladin spell cards.
    */
-  classRelevance: z.array(ClassIdSchema).optional(),
+  pool: z.enum(['weapon', 'caster']).optional(),
 });
 export type Blessing = z.infer<typeof BlessingSchema>;

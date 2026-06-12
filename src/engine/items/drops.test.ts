@@ -104,7 +104,7 @@ describe('rollPotionDrop', () => {
     }
   });
 
-  it('only drops healing draughts the chapter already stocks — the CONSUMABLE_MIN_CHAPTER gate', () => {
+  it('only drops healing draughts the chapter already stocks — the CONSUMABLE_CHAPTER_GATE gate', () => {
     // Ch1: the basic potion only (no Greater before its gate, no buffs ever).
     expect(new Set(dropsOver('boss', 1))).toEqual(new Set(['potion-of-healing']));
     // Ch7: mid rungs reachable, deep rungs still gated.

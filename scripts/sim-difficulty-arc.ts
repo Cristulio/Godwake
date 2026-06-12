@@ -381,7 +381,7 @@ function applyCampBoon(character: Character, boon: CampBoon): Character {
 function temptTheDark(roller: DiceRoller, character: Character, tier: number): Character {
   const roll = roller.roll('1d20').total;
   if (roll >= 11) {
-    const [blessingId] = rollBlessingOptions(roller, 1, character.classId, character.blessings);
+    const [blessingId] = rollBlessingOptions(roller, 1, character, character.blessings);
     const gold = blessingId ? 15 * tier : 50 * tier;
     let c = character;
     if (blessingId) c = { ...c, blessings: [...c.blessings, blessingId] };
@@ -390,10 +390,10 @@ function temptTheDark(roller: DiceRoller, character: Character, tier: number): C
   const dmg = Math.max(1, Math.floor(character.hp.max * 0.25));
   return { ...character, hp: { ...character.hp, current: Math.max(1, character.hp.current - dmg) } };
 }
-function resolveCamp(roller: DiceRoller, character: Character, classId: ClassId, campCount: number): Character {
+function resolveCamp(roller: DiceRoller, character: Character, campCount: number): Character {
   const hpFrac = character.hp.max > 0 ? character.hp.current / character.hp.max : 1;
   const validTier = campCount >= 1 && campCount <= 3;
-  const boonOptions = validTier ? boonsForCampTier(campCount as CampBoonTier, classId as SchemaClassId) : [];
+  const boonOptions = validTier ? boonsForCampTier(campCount as CampBoonTier, character) : [];
   const riskTier = validTier ? campCount : 1;
   if (hpFrac < 0.6) return longRest(character);
   if (hpFrac > 0.8 && roller.roll('1d6').total <= 2) return temptTheDark(roller, character, riskTier);
@@ -516,7 +516,7 @@ function liveOneLife(
       character = { ...character, hp: { ...character.hp, current: Math.min(character.hp.max, character.hp.current + heal) } };
     } else if (room.kind === 'camp') {
       campCount += 1;
-      character = resolveCamp(roller, character, classId, campCount);
+      character = resolveCamp(roller, character, campCount);
     } else if (room.kind === 'shrine') {
       character = pickBlessingAtShrine(roller, character);
     } else if (room.kind === 'shop') {

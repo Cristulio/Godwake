@@ -493,7 +493,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   if (isBoss && monsters.length > 0) {
     const bossDefId = monsters[0].def.id;
     const tier = nextCharacter.bossIntel?.[bossDefId];
-    const buff = tier ? bossIntelBuffFor(bossDefId, tier, nextCharacter.classId) : null;
+    const buff = tier ? bossIntelBuffFor(bossDefId, tier, nextCharacter) : null;
     if (buff) {
       if (buff.firstStrikeAdvantage) {
         nextCharacter = { ...nextCharacter, nextAttackAdvantage: true };

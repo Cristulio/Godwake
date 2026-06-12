@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { consumableStockForChapter, rollGearStock, sellValue, tierForChapter } from './shopStock';
-import { CONSUMABLE_MIN_CHAPTER } from '../../content/items/consumables';
+import { CONSUMABLE_CHAPTER_GATE } from '../../content/items/consumables';
 import { getItem } from '../../content/items';
 import { classWeaponProficient, classArmorProficient } from '../../engine/character/equip';
 import { rolledItemCost } from '../../engine/items';
@@ -31,10 +31,12 @@ describe('consumableStockForChapter', () => {
     }
   });
 
-  it('stock grows with depth — deeper chapters strictly add draughts, cumulatively', () => {
+  it('from-gated rungs grow cumulatively with depth — a deeper merchant only adds', () => {
+    const fromGated = (ids: string[]) =>
+      ids.filter((id) => 'from' in CONSUMABLE_CHAPTER_GATE[id]);
     let prev: string[] = [];
     for (let chapter = 1; chapter <= 14; chapter++) {
-      const cur = consumableStockForChapter(chapter);
+      const cur = fromGated(consumableStockForChapter(chapter));
       expect(prev.every((id) => cur.includes(id))).toBe(true);
       prev = cur;
     }
@@ -43,12 +45,13 @@ describe('consumableStockForChapter', () => {
     );
   });
 
-  it('every consumable enters stock exactly at its CONSUMABLE_MIN_CHAPTER gate', () => {
-    for (const [id, minChapter] of Object.entries(CONSUMABLE_MIN_CHAPTER)) {
-      if (minChapter > 1) {
-        expect(consumableStockForChapter(minChapter - 1)).not.toContain(id);
+  it('every consumable obeys its gate in every chapter — from-rungs enter and stay, only-rungs shelve solely in their chapters', () => {
+    for (const [id, gate] of Object.entries(CONSUMABLE_CHAPTER_GATE)) {
+      for (let chapter = 1; chapter <= 14; chapter++) {
+        const stocked = consumableStockForChapter(chapter).includes(id);
+        const expected = 'from' in gate ? chapter >= gate.from : gate.only.includes(chapter);
+        expect(stocked, `${id} @ ch${chapter}`).toBe(expected);
       }
-      expect(consumableStockForChapter(minChapter)).toContain(id);
     }
   });
 
@@ -65,9 +68,13 @@ describe('consumableStockForChapter', () => {
     expect(consumableStockForChapter(11)).toContain('potion-of-vigor');
   });
 
-  it('antitoxin keeps its always-stocked placement (owner decision pending — one line in CONSUMABLE_MIN_CHAPTER)', () => {
+  it("antitoxin shelves ONLY in the poisoner chapters (3/4/10/13) — the vial on the shelf is the road's warning", () => {
+    const poisonerChapters = [3, 4, 10, 13];
     for (let chapter = 1; chapter <= 14; chapter++) {
-      expect(consumableStockForChapter(chapter)).toContain('antitoxin');
+      expect(
+        consumableStockForChapter(chapter).includes('antitoxin'),
+        `antitoxin @ ch${chapter}`,
+      ).toBe(poisonerChapters.includes(chapter));
     }
   });
 

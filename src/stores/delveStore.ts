@@ -606,11 +606,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     // dice roller — this is the natural seam.
     const pilgrimRank = unlocked['pilgrims-step'] ?? 0;
     if (pilgrimRank > 0) {
-      const rolled = rollBlessingOptions(
-        getActiveRoller(),
-        pilgrimRank,
-        withQuirkBudgets.classId,
-      );
+      const rolled = rollBlessingOptions(getActiveRoller(), pilgrimRank, withQuirkBudgets);
       withQuirkBudgets = {
         ...withQuirkBudgets,
         blessings: [...withQuirkBudgets.blessings, ...rolled],
@@ -822,8 +818,8 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         }
       }
       // Healing-draught drop: a rarer side channel beside the gear roll. The
-      // rung pool tiers with the run's chapter (the same CONSUMABLE_MIN_CHAPTER
-      // gate the shops read), so deep clears pay in deep potions.
+      // rung pool tiers with the run's chapter (the same CONSUMABLE_CHAPTER_GATE
+      // the shops read), so deep clears pay in deep potions.
       const potionId = rollPotionDrop(getActiveRoller(), room.kind, room.chapter ?? 1);
       if (potionId) {
         const cur = useCharacterStore.getState().character;
@@ -1270,12 +1266,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
 
     if (roll.total >= 11) {
       // The dark answers: a blessing's whisper, and coin pressed into the palm.
-      const [blessingId] = rollBlessingOptions(
-        roller,
-        1,
-        character.classId,
-        character.blessings,
-      );
+      const [blessingId] = rollBlessingOptions(roller, 1, character, character.blessings);
       const gold = blessingId ? 15 * riskTier : 50 * riskTier;
       if (blessingId) {
         charSlice.setCharacter({

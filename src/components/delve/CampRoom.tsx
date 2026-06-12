@@ -73,7 +73,7 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
   );
   const boonOptions = useMemo<CampBoon[]>(() => {
     if (!character || campTier === null) return [];
-    return boonsForCampTier(campTier, character.classId);
+    return boonsForCampTier(campTier, character);
   }, [character, campTier]);
 
   // Draughts gate on the CHAPTER (deep camps carry the deep rungs), not on the

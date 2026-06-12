@@ -497,7 +497,7 @@ function applyCampBoon(character: Character, boon: CampBoon): Character {
 function temptTheDark(roller: DiceRoller, character: Character, tier: number): Character {
   const roll = roller.roll('1d20').total;
   if (roll >= 11) {
-    const [blessingId] = rollBlessingOptions(roller, 1, character.classId, character.blessings);
+    const [blessingId] = rollBlessingOptions(roller, 1, character, character.blessings);
     const gold = blessingId ? 15 * tier : 50 * tier;
     let c = character;
     if (blessingId) c = { ...c, blessings: [...c.blessings, blessingId] };
@@ -508,10 +508,10 @@ function temptTheDark(roller: DiceRoller, character: Character, tier: number): C
 }
 
 /** Walk the campfire fork heuristically. `campCount` is 1-based (which camp this is). */
-function resolveCamp(roller: DiceRoller, character: Character, classId: ClassId, campCount: number): Character {
+function resolveCamp(roller: DiceRoller, character: Character, campCount: number): Character {
   const hpFrac = character.hp.max > 0 ? character.hp.current / character.hp.max : 1;
   const validTier = campCount >= 1 && campCount <= 3;
-  const boonOptions = validTier ? boonsForCampTier(campCount as CampBoonTier, classId as SchemaClassId) : [];
+  const boonOptions = validTier ? boonsForCampTier(campCount as CampBoonTier, character) : [];
   const riskTier = validTier ? campCount : 1;
 
   if (hpFrac < 0.6) return longRest(character); // hurt → rest the wounds shut
@@ -818,7 +818,7 @@ function liveOneLife(
       character = shortRestHeal(character, Math.floor(character.hp.max * 0.7));
     } else if (room.kind === 'camp') {
       campCount += 1;
-      character = resolveCamp(roller, character, soul.classId, campCount);
+      character = resolveCamp(roller, character, campCount);
     } else if (room.kind === 'shrine') {
       character = pickBlessingAtShrine(roller, character);
     } else if (room.kind === 'shop') {

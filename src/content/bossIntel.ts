@@ -3,7 +3,8 @@ import {
   type EventTemplate,
   type IllustrationCategory,
 } from '../schemas/event';
-import { FULL_CASTER_CLASS_IDS } from '../schemas/ids';
+import type { Character } from '../types/character';
+import { combatLean } from '../engine/character/combatLean';
 import { CHAPTER10_BOSS_INTEL } from '../engine/delve/chapter10Pools';
 import { CHAPTER11_BOSS_INTEL } from '../engine/delve/chapter11Pools';
 import { CHAPTER12_BOSS_INTEL } from '../engine/delve/chapter12Pools';
@@ -248,21 +249,22 @@ function battlePlanTempHp(chapter: BossIntelCard['chapter']): number {
  * Resolve the combat edge for a boss + tier. Returns null for an unknown boss
  * (defensive — the room only ever offers cards that exist).
  *
- * Pass `classId` at runtime (createCombat) to get the class-appropriate
- * weak-spot: weapon classes get firstStrikeAdvantage, full casters get
- * bracedSave (advantage on the first save vs the boss's opener) since their
- * spells save-for-half or auto-hit and rarely lead with a spell attack roll.
+ * Pass the character at runtime (createCombat) to get the lean-appropriate
+ * weak-spot (combatLean — class + subclass): lean-martial souls get
+ * firstStrikeAdvantage, lean-casters get bracedSave (advantage on the first
+ * save vs the boss's opener) since their spells save-for-half or auto-hit
+ * and rarely lead with a spell attack roll. A Valor bard or Moon druid keeps
+ * the strike; a Radiant paladin gets the brace.
  */
 export function bossIntelBuffFor(
   bossDefId: string,
   tier: BossIntelBuffTier,
-  classId?: string,
+  c?: Pick<Character, 'classId' | 'subclassId'>,
 ): BossIntelBuff | null {
   const card = getBossIntelCard(bossDefId);
   if (!card) return null;
   if (tier === 'weak-spot') {
-    const isCaster =
-      !!classId && (FULL_CASTER_CLASS_IDS as readonly string[]).includes(classId);
+    const isCaster = !!c && combatLean(c) === 'caster';
     return {
       tier,
       label: 'Weak Spot',

@@ -401,7 +401,7 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
       if (c.kind !== 'monster') continue;
       const tier = intel[c.instance.defId];
       if (!tier) continue;
-      const buff = bossIntelBuffFor(c.instance.defId, tier, character.classId);
+      const buff = bossIntelBuffFor(c.instance.defId, tier, character);
       if (!buff) continue;
       const live =
         (buff.firstStrikeAdvantage && character.nextAttackAdvantage === true) ||
