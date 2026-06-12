@@ -184,4 +184,22 @@ export interface DelveState {
    * in-session conclude re-entry while the delve is still held 'completed'.
    */
   renownSettled?: boolean;
+  /** The exact payout banked at settle time (death settles with the DYING
+   *  soul's marks — recomputing later with the reborn soul would show less
+   *  than was paid). The summary prefers this when present. */
+  renownSettledBreakdown?: RenownBreakdown;
+}
+
+
+/** The arithmetic behind a run's renown payout — computed by
+ *  computeDelveRenown (delveStore), stashed on the delve at settle time. */
+export interface RenownBreakdown {
+  base: number;
+  multiplier: number;
+  total: number;
+  mobsKilled: number;
+  bossesKilled: number;
+  roomsReached: number;
+  soulMarkMult: number;
+  ascensionMult: number;
 }

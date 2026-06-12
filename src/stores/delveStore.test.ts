@@ -1122,3 +1122,38 @@ describe('run ledger survives a mid-run persist round-trip (the deploy-reload pa
     expect(restored?.visitedRoomIds).toEqual(['r0', 'r1', 'r2', 'r3']);
   });
 });
+
+describe('death settles renown with the DYING soul (bane marks pay on deaths)', () => {
+  it('banks the marked-soul payout and stashes the exact breakdown', async () => {
+    const { useDelveStore, computeDelveRenown } = await import('./delveStore');
+    const { useCharacterStore } = await import('./characterStore');
+    const { buildPlayerCharacter, presetCreationInput } = await import(
+      '../engine/character/defaultCharacter'
+    );
+
+    let soul = buildPlayerCharacter(presetCreationInput('fighter'));
+    // Carry banes so the soul-mark multiplier exceeds the fresh soul's 1.0.
+    soul = { ...soul, quirks: ['touched-by-the-beyond'], renown: 0 };
+    useCharacterStore.setState({ character: soul, saveSeed: 'dying-soul' });
+    const midRun = {
+      rooms: Array.from({ length: 10 }, (_, i) => ({ id: `r${i}`, kind: i % 5 === 4 ? 'boss' : 'combat' })),
+      currentRoomIdx: 7,
+      phase: 'active',
+      mobsKilled: 40,
+      visitedRoomIds: Array.from({ length: 8 }, (_, i) => `r${i}`),
+    } as never;
+    useDelveStore.setState({ delve: midRun });
+    const expected = computeDelveRenown(
+      { ...(midRun as object), phase: 'failed' } as never,
+      soul,
+    );
+
+    useDelveStore.getState().failDelve();
+
+    const after = useCharacterStore.getState().character;
+    expect(after?.renown).toBe(expected.total);
+    const settled = useDelveStore.getState().delve;
+    expect(settled?.renownSettled).toBe(true);
+    expect(settled?.renownSettledBreakdown?.total).toBe(expected.total);
+  });
+});

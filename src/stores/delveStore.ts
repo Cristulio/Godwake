@@ -131,20 +131,8 @@ export function roomRenownReward(room: Pick<RoomSpec, 'kind' | 'monsters'>): num
   return RENOWN_PER_MOB_KILLED * mobs + bossBonus;
 }
 
-export interface RenownBreakdown {
-  /** Pre-multiplier sum: clear/fail floor + mobs + bosses + depth. */
-  base: number;
-  /** Soul-mark × ascension multiplier folded together. */
-  multiplier: number;
-  /** Final renown banked: floor(base × multiplier). */
-  total: number;
-  /** The run ledger behind `base`, for the summary's arithmetic line. */
-  mobsKilled: number;
-  bossesKilled: number;
-  roomsReached: number;
-  soulMarkMult: number;
-  ascensionMult: number;
-}
+import type { RenownBreakdown } from '../types/delve';
+export type { RenownBreakdown } from '../types/delve';
 
 /**
  * The single source of truth for a run's renown payout. `finishDelve` banks
@@ -1117,10 +1105,17 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     const charSlice = useCharacterStore.getState();
     const character = charSlice.character;
     if (!s.delve || !character) return;
-    // Death turns the wheel. Renown is settled by the finishDelve() call the
-    // reincarnation reveal makes on the way back to the hub.
-    set({ delve: { ...s.delve, phase: 'failed' } });
-    charSlice.setCharacter(reincarnateSoul(character));
+    // Death turns the wheel — but the run's renown belongs to the soul that
+    // WALKED it: settle here with the DYING character (its bane soul-marks
+    // boost the payout, per design), bank onto the reincarnated soul, and
+    // mark the delve settled so finishDelve's fall-through pays exactly once.
+    // (Previously the settle happened post-wheel with the fresh soul, so the
+    // mark multiplier silently never applied to deaths.)
+    const failed = { ...s.delve, phase: 'failed' as const };
+    const breakdown = computeDelveRenown(failed, character);
+    const reborn = reincarnateSoul(character);
+    set({ delve: { ...failed, renownSettled: true, renownSettledBreakdown: breakdown } });
+    charSlice.setCharacter({ ...reborn, renown: reborn.renown + breakdown.total });
   },
 
   abandonDelve: () => {
